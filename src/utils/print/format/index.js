@@ -40,6 +40,7 @@ const wmsRmInboundReceipt = wms.dataFormat // 入库单
 const wmsRmOutboundReceipt = wms.dataFormat // 出库单
 const wmsRmReturnReceipt = wms.dataFormat // 退库单
 const wmsRmRejectReceipt = wms.dataFormat // 退货单
+const wmsRmSupplementReceipt = wms.supplementDataFormat // 红冲记录
 const wmsRmTransferReceipt = wms.transferDataFormat // 调拨单
 
 export default {
@@ -73,5 +74,6 @@ export default {
   wmsRmOutboundReceipt, // 出库单
   wmsRmReturnReceipt, // 退库单
   wmsRmRejectReceipt, // 退货单
+  wmsRmSupplementReceipt, // 红冲记录
   wmsRmTransferReceipt // 调拨单
 }

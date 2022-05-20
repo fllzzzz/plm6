@@ -321,6 +321,13 @@ export default {
           meta: { title: '调拨明细', icon: 'project', noCache: true }
         },
         {
+          name: 'WMSReportRawMaterialSupplementRecord',
+          path: 'report/raw-material/supplement-record',
+          hidden: false,
+          component: '/wms/report/raw-material/supplement-record/index',
+          meta: { title: '红冲记录', icon: 'project', noCache: true }
+        },
+        {
           name: 'WMSReportRawMaterialMaterialRejectReceipt',
           path: 'report/raw-material/material-reject-receipt',
           hidden: false,

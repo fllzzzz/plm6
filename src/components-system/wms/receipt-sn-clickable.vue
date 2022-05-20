@@ -78,6 +78,8 @@ function openDetailPermission(type) {
       return permission.returnReceiptDetail
     case receiptTypeEnum.REJECTED.V:
       return permission.rejectReceiptDetail
+    case receiptTypeEnum.SUPPLEMENT.V:
+      return permission.supplementReceiptDetail
     default:
       return
   }

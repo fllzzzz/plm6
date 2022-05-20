@@ -28,6 +28,11 @@
   <detail-wrapper v-if="receiptExist[receiptTypeEnum.REJECTED.K]" ref="rejectDetailRef" :api="getRejectDetail">
     <reject-detail />
   </detail-wrapper>
+
+  <!-- 红冲详情 -->
+  <detail-wrapper v-if="receiptExist[receiptTypeEnum.SUPPLEMENT.K]" ref="supplementDetailRef" :api="getSupplementDetail">
+    <supplement-detail />
+  </detail-wrapper>
 </template>
 
 <script setup>
@@ -40,6 +45,7 @@ import { detail as getOutboundDetail } from '@/api/wms/material-outbound/raw-mat
 import { detail as getTransferDetail } from '@/api/wms/material-transfer/raw-material/review'
 import { detail as getReturnDetail } from '@/api/wms/material-return/raw-material/record'
 import { detail as getRejectDetail } from '@/api/wms/material-reject/raw-material/review'
+import { detail as getSupplementDetail } from '@/api/wms/report/raw-material/supplement'
 
 import useOtherCrudDetail from '@compos/use-other-crud-detail'
 import DetailWrapper from '@crud/detail-wrapper.vue'
@@ -49,6 +55,7 @@ import OutboundDetail from '@/views/wms/material-outbound/raw-material/record/mo
 import TransferDetail from '@/views/wms/material-transfer/raw-material/review/module/detail.vue'
 import ReturnDetail from '@/views/wms/material-return/raw-material/record/module/detail.vue'
 import RejectDetail from '@/views/wms/material-reject/raw-material/review/module/detail.vue'
+import SupplementDetail from '@/views/wms/report/raw-material/supplement-record/module/detail.vue'
 
 const props = defineProps({
   receiptTypes: {
@@ -80,6 +87,8 @@ const { detailRef: transferDetailRef, openDetail: openTransferDetail } = useOthe
 const { detailRef: returnDetailRef, openDetail: openReturnDetail } = useOtherCrudDetail()
 // 退货单详情
 const { detailRef: rejectDetailRef, openDetail: openRejectDetail } = useOtherCrudDetail()
+// 红冲单详情
+const { detailRef: supplementDetailRef, openDetail: openSupplementDetail } = useOtherCrudDetail()
 
 function setReceiptExist(receiptTypes = []) {
   const re = {
@@ -89,7 +98,8 @@ function setReceiptExist(receiptTypes = []) {
     [receiptTypeEnum.OUTBOUND_APPLY.K]: false,
     [receiptTypeEnum.TRANSFER.K]: false,
     [receiptTypeEnum.RETURN.K]: false,
-    [receiptTypeEnum.REJECTED.K]: false
+    [receiptTypeEnum.REJECTED.K]: false,
+    [receiptTypeEnum.SUPPLEMENT.K]: false
   }
   receiptTypes.forEach((type) => {
     re[type] = true
@@ -120,6 +130,9 @@ function openDetail(detailId, receiptType) {
       return
     case receiptTypeEnum.REJECTED.V:
       openRejectDetail(detailId)
+      return
+    case receiptTypeEnum.SUPPLEMENT.V:
+      openSupplementDetail(detailId)
       return
     case receiptTypeEnum.OUTBOUND_APPLY.V:
       return
