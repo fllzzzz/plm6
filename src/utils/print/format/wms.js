@@ -37,6 +37,21 @@ async function dataFormat({ header, table = [], footer, qrCode }) {
   }
 }
 
+// 红冲记录数据格式转化
+async function supplementDataFormat({ header, table = [], footer, qrCode }) {
+  table.forEach(v => {
+    v.supplementNo = v.serialNumber
+  })
+  await setSpecInfoToList(table)
+  await numFmtByBasicClass(table)
+  return {
+    header,
+    table,
+    footer,
+    qrCode
+  }
+}
+
 // 调拨数据格式转化
 async function transferDataFormat({ header = {}, table = [], footer, qrCode }) {
   const cloneHeader = JSON.parse(JSON.stringify(header))
@@ -122,5 +137,6 @@ export default {
   preparesCustomSummary,
   checkUnitFormat,
   dataFormat,
+  supplementDataFormat,
   transferDataFormat
 }

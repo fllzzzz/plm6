@@ -744,6 +744,41 @@ const getSendAndReceiveStorageDetail = {
               receiptType: receiptTypeEnum.INBOUND.V, // 单据类型
               serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/ // 单据编号
             }
+          },
+          {
+            id: 9,
+            classifyId: 901,
+            basicClass: matClsEnum.GAS.V,
+            quantity: 10,
+            brand: '嘻嘻',
+            remark: '66666',
+            mete: 200000,
+            invoiceType: invoiceTypeEnum.SPECIAL.V, // 发票类型
+            taxRate: 3, // 税率（百分比）
+            unitPrice: 0.01,
+            amount: 8000,
+            amountExcludingVAT: 7079.64,
+            inputVAT: 920.36,
+            requisitionsSN: 'SG-AFTER-123456',
+            project: {
+              'id|+1': 1,
+              'name|+1': ['长安街666666号辅路', '你脸红个泡泡茶壶666号主路'],
+              'shortName|+1': ['长安街', '你脸红个泡泡茶壶'],
+              serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
+            },
+            factory: {
+              id: 1,
+              name: '一号工厂'
+            },
+            warehouse: {
+              id: 1,
+              name: '666号仓库'
+            },
+            receipt: {
+              id: 1, // 单据id
+              receiptType: receiptTypeEnum.SUPPLEMENT.V, // 单据类型
+              serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/ // 单据编号
+            }
           }
         ]
         // , 'endPeriod', 'inbound', 'outbound'

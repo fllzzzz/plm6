@@ -50,10 +50,22 @@ export function wmsRmTransferReceipt(id) {
   })
 }
 
+/**
+ * 红冲记录
+ */
+export function wmsRmSupplementReceipt(params) {
+  return request({
+    url: `api/wms/supplement/print`,
+    method: 'get',
+    params
+  })
+}
+
 export default {
   wmsRmInboundReceipt, // 入库单
   wmsRmOutboundReceipt, // 出库（领料）单
   wmsRmReturnReceipt, // 退库单
   wmsRmRejectReceipt, // 退货单
-  wmsRmTransferReceipt // 调拨单
+  wmsRmTransferReceipt, // 调拨单
+  wmsRmSupplementReceipt // 红冲记录
 }
