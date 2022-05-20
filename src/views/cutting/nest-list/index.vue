@@ -138,7 +138,7 @@
         min-width="40"
       >
         <template v-slot="scope">
-          <span>{{ scope.row.currentName }} {{scope.row.importTime}}</span>
+          <span v-if='scope.row.importTime'>{{ scope.row.currentName }} {{parseTime(scope.row.importTime,'{y}-{m}-{d}')}}</span>
         </template>
       </el-table-column>
         <el-table-column width="250px" :show-overflow-tooltip="true" label="操作" align="center">
@@ -290,7 +290,7 @@ import { ref } from 'vue'
 import crudApi1 from '@/api/cutting/taskPack'
 import crudApi from '@/api/cutting/radan-controller'
 import useCRUD from '@compos/use-crud'
-// import { parseTime } from '@/utils/date'
+import { parseTime } from '@/utils/date'
 import mHeader from './module/header'
 import pagination from '@crud/Pagination'
 import { plateTypeEnum, nestingEnum, uploadEnum } from '@enum-ms/cutting'
