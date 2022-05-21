@@ -1,5 +1,5 @@
 import * as echarts from 'echarts'
-import { onMounted } from 'vue'
+import { onMounted, onBeforeUnmount } from 'vue'
 
 export default function useChart({ elementId, fetchHook, initOption = {}}) {
   let myChart = null
@@ -111,6 +111,16 @@ export default function useChart({ elementId, fetchHook, initOption = {}}) {
     console.log(option, 'option')
     option && myChart.setOption(option)
   }
+
+  // 解决：使用echarts绘制图表时，本地运行，切换图表没有问题，但是打包之后部署到线上，首次加载没有问题，再次加载就不显示了
+  // 在不展示图表的时候销毁调echarts的实例
+  onBeforeUnmount(() => {
+    if (!myChart) {
+      return
+    }
+    myChart.dispose()
+    myChart = null
+  })
 
   return {
     getMyChart
