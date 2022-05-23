@@ -1,12 +1,17 @@
 <template>
   <span class="ud-operation" style="display: inline-block">
-    <!-- <common-button
-      @click="editClick(data)"
+    <common-button
+    size="mini"
+    type="primary"
+    @click="editClick(data,false)"
+    v-if='checkPermission(permission.views)'>查看</common-button>
+    <common-button
+      @click="editClick(data,true)"
       v-if="data.state === '0' || (data.state === '1' && checkPermission(permission.edit))"
       type="warning"
       size="mini"
       >修改</common-button
-    > -->
+    >
     <el-popover
       v-if="data.state !== '2' && props.showDel && checkPermission(permission.revoke)"
       v-model:visible="pop"
@@ -73,7 +78,7 @@
   </span>
 
   <!-- 零件工单 -->
-  <!-- <common-dialog @close="closeDialog" width="70%" title="零件清单" append-to-body v-model="innerVisible">
+   <common-dialog @close="closeDialog" width="70%" title="零件清单" append-to-body v-model="innerVisible">
     <common-table v-loading="innerLoading" ref="tableRef" :data="updateData" :max-height="400" style="width: 100%" row-key="id">
       <el-table-column label="序号" type="index" align="center" width="60" />
       <el-table-column key="monomerName" prop="monomerName" :show-overflow-tooltip="true" label="单体" min-width="60" align="center">
@@ -121,12 +126,17 @@
           <span>{{ scope.row.totalNetWeight }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" :show-overflow-tooltip="true" label="操作" min-width="60">
-        <template v-slot="scope"> -->
+      <el-table-column
+      align="center"
+      :show-overflow-tooltip="true"
+      label="操作"
+      v-if="isDel"
+      min-width="60">
+        <template v-slot="scope">
           <!-- <common-button v-if="scope.row.nestingState === 1" @click="delClick(scope.row)" type="danger" icon="el-icon-delete" size="mini" /> -->
 
-          <!-- <el-popover
-            v-if="scope.row.nestingState === 1"
+           <el-popover
+            v-if="scope.row.nestingState === 1 && checkPermission(permission.delPart)"
             v-model:visible="scope.row.deleteBtn"
             placement="top"
             width="180"
@@ -145,7 +155,7 @@
           </el-popover>
 
           <el-popover
-            v-else-if="scope.row.nestingState === 2"
+            v-else-if="scope.row.nestingState === 2 && checkPermission(permission.addPart)"
             v-model:visible="scope.row.addBtn"
             placement="top"
             width="180"
@@ -161,15 +171,14 @@
             <template #reference>
               <common-button type="primary" size="mini" @click.stop="toAddBtn(scope.row)"> 新增 </common-button>
             </template>
-          </el-popover> -->
-          <!--
-          <common-button v-else-if="scope.row.nestingState === 2" @click="addClick(scope.row)" type="primary" size="mini">
+          </el-popover>
+          <!-- <common-button v-if="scope.row.nestingState === 2" @click="addClick(scope.row)" type="primary" size="mini">
             新增
           </common-button> -->
-        <!-- </template>
+         </template>
       </el-table-column>
     </common-table>
-  </common-dialog> -->
+  </common-dialog>
 </template>
 
 <script setup>
@@ -177,8 +186,8 @@ import { defineProps, ref, inject, defineEmits } from 'vue'
 import checkPermission from '@/utils/system/check-permission'
 import { regExtra } from '@compos/use-crud'
 import { ElMessage } from 'element-plus'
-import { del, uploadOrder } from '@/api/cutting/taskPack'
-// import crudApi1 from '@/api/cutting/project-data'
+import { del, uploadOrder, updateOrder, deletePartFromOrder, addPartFromOrder } from '@/api/cutting/taskPack'
+import crudApi1 from '@/api/cutting/project-data'
 
 const emit = defineEmits(['selectionChange'])
 
@@ -214,13 +223,16 @@ const props = defineProps({
 })
 
 const permission = inject('permission')
-// const innerLoading = ref(false)
+const innerLoading = ref(false)
+const addBtn = ref(false)
+const deleteBtn = ref(false)
 const pop = ref(false)
-// const innerVisible = ref(false) // 弹出层
-// const updateData = ref([]) // 弹出层数据
+const innerVisible = ref(false) // 弹出层
+const updateData = ref([]) // 弹出层数据
 const { crud } = regExtra()
-
+const isDel = ref(false)
 const nesting = ref(false)
+const currentRow = ref({})
 
 // 取消删除
 function cancelDelete() {
@@ -243,20 +255,20 @@ function toDelete() {
   pop.value = true
 }
 
-// function toDeleteBtn(row) {
-//   row.deleteBtn = true
-// }
+function toDeleteBtn(row) {
+  row.deleteBtn = true
+}
 
-// function toAddBtn(row) {
-//   row.addBtn = true
-// }
+function toAddBtn(row) {
+  row.addBtn = true
+}
 
-// function cancelDeleteBtn(row) {
-//   row.deleteBtn = false
-// }
-// function cancelAddBtn(row) {
-//   row.addBtn = false
-// }
+function cancelDeleteBtn(row) {
+  row.deleteBtn = false
+}
+function cancelAddBtn(row) {
+  row.addBtn = false
+}
 
 // 确认删除
 async function handleDelete() {
@@ -283,52 +295,54 @@ async function NestingClick(row) {
 }
 
 // 编辑弹窗？？
-// async function editClick(row) {
-//   innerLoading.value = true
-//   innerVisible.value = true
-//   //   console.log('props.data.cutTaskId', props.data.cutTaskId)
-//   try {
-//     updateData.value = await updateOrder({ cutTaskId: props.data.cutTaskId })
-//     updateData.value.forEach(v => {
-//       v.deleteBtn = false
-//       v.addBtn = false
-//     })
-//     console.log('updateData', updateData.value)
-//   } catch (err) {
-//     console.log(err)
-//   }
-//   innerLoading.value = false
-// }
+async function editClick(row, isDelValue) {
+  innerLoading.value = true
+  innerVisible.value = true
+  isDel.value = isDelValue
+  //   console.log('props.data.cutTaskId', props.data.cutTaskId)
+  try {
+    updateData.value = await updateOrder({ cutTaskId: props.data.cutTaskId })
+    updateData.value.forEach(v => {
+      v.deleteBtn = false
+      v.addBtn = false
+    })
+    plateDataGet()
+    console.log('updateData', updateData.value)
+  } catch (err) {
+    console.log(err)
+  }
+  innerLoading.value = false
+}
 
-// async function delClick(row) {
-//   try {
-//     const data = []
-//     data.push(row.id)
-//     const message = await deletePartFromOrder({ cutTaskId: props.data.cutTaskId }, data)
-//     ElMessage({ type: 'success', message: message })
-//     // 重新查询
-//     editClick()
-//   } catch (err) {
-//     console.log('addClick', err)
-//   }
-// }
+async function delClick(row) {
+  try {
+    const data = []
+    data.push(row.id)
+    const message = await deletePartFromOrder({ cutTaskId: props.data.cutTaskId }, data)
+    ElMessage({ type: 'success', message: message })
+    // 重新查询
+    editClick(row, true)
+  } catch (err) {
+    console.log('addClick', err)
+  }
+}
 
-// async function addClick(row) {
-//   try {
-//     const data = []
-//     data.push(row.id)
-//     const message = await addPartFromOrder({ cutTaskId: props.data.cutTaskId }, data)
-//     ElMessage({ type: 'success', message: message })
-//     // 重新查询
-//     editClick()
-//   } catch (err) {
-//     console.log('addClick', err)
-//   }
-// }
+async function addClick(row) {
+  try {
+    const data = []
+    data.push(row.id)
+    const message = await addPartFromOrder({ cutTaskId: props.data.cutTaskId }, data)
+    ElMessage({ type: 'success', message: message })
+    // 重新查询
+    editClick(row, true)
+  } catch (err) {
+    console.log('addClick', err)
+  }
+}
 
-// function closeDialog() {
-//   emit('query')
-// }
+function closeDialog() {
+  emit('query')
+}
 // 打开删除提示窗
 function onPopoverShow() {
   setTimeout(() => {
@@ -361,44 +375,44 @@ function onPopoverNestingHide() {
   document.removeEventListener('click', handleDocumentNestingClick)
 }
 
-// function handleDocumentDelClick(event) {
-//   deleteBtn.value = false
-// }
+function handleDocumentDelClick(event) {
+  deleteBtn.value = false
+}
 
-// function onPopoverDelClickShow() {
-//   setTimeout(() => {
-//     document.addEventListener('click', handleDocumentDelClick, { passive: false })
-//   }, 0)
-// }
+function onPopoverDelClickShow() {
+  setTimeout(() => {
+    document.addEventListener('click', handleDocumentDelClick, { passive: false })
+  }, 0)
+}
 
-// function onPopoverDelClickHide() {
-//   document.removeEventListener('click', handleDocumentDelClick)
-// }
+function onPopoverDelClickHide() {
+  document.removeEventListener('click', handleDocumentDelClick)
+}
 
-// function handleDocumentAddClick(event) {
-//   addBTn.value = false
-// }
+function handleDocumentAddClick(event) {
+  addBtn.value = false
+}
 
-// function onPopoverAddClickShow() {
-//   setTimeout(() => {
-//     document.addEventListener('click', handleDocumentAddClick, { passive: false })
-//   }, 0)
-// }
+function onPopoverAddClickShow() {
+  setTimeout(() => {
+    document.addEventListener('click', handleDocumentAddClick, { passive: false })
+  }, 0)
+}
 
-// function onPopoverAddClickHide() {
-//   document.removeEventListener('click', handleDocumentAddClick)
-// }
+function onPopoverAddClickHide() {
+  document.removeEventListener('click', handleDocumentAddClick)
+}
+
 // 请求钢板接口数据
-// async function plateDataGet(row) {
-//   currentRow.value = row
-//   try {
-//     const { content } = await crudApi1.get({ projectId: currentRow.value.projectId})
-//     console.log('content', content)
-
-//   } catch (err) {
-//     console.log('钢板清单页面接口报错', err)
-//   }
-// }
+async function plateDataGet(row) {
+  currentRow.value = row
+  try {
+    const { content } = await crudApi1.get({ projectId: currentRow.value.projectId })
+    console.log('content', content)
+  } catch (err) {
+    console.log('钢板清单页面接口报错', err)
+  }
+}
 </script>
 
 <style lang="scss" scoped>
