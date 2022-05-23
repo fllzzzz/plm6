@@ -233,6 +233,7 @@ function rowWatch(row) {
 // 计算单件重量
 async function calcTheoryLength(row) {
   row.theoryLength = await calcSteelCoilLength({
+    name: row.classifyFullName,
     weight: row.weighingTotalWeight,
     width: row.width,
     thickness: row.thickness

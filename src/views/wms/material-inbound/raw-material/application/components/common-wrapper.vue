@@ -2,6 +2,7 @@
   <div class="inbound-application-container" :style="heightStyle">
     <common-header
       :basic-class="props.basicClass"
+      :current-basic-class="props.currentBasicClass??props.basicClass"
       :edit="props.edit"
       class="header"
       ref="headerRef"
@@ -35,6 +36,9 @@ const emit = defineEmits(['purchase-order-change', 'submit'])
 
 const props = defineProps({
   basicClass: {
+    type: Number
+  },
+  currentBasicClass: {
     type: Number
   },
   validate: {

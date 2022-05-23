@@ -2,6 +2,7 @@
   <div v-permission="permission" class="steel-inbound-application-container">
     <common-wrapper
       :basic-class="STEEL_ENUM"
+      :current-basic-class="steelBasicClassKV[currentBasicClass]?.V"
       :total-value="totalWeight"
       :validate="validate"
       :edit="props.edit"
@@ -471,6 +472,37 @@ function init() {
   currentBasicClass.value = undefined // 当前分类
   totalWeight.value = 0 // 总重
   orderLoaded.value = false // 订单加载状态
+}
+
+// 导入
+cu.props.import = (importList) => {
+  const key = currentBasicClass.value
+  // 先监听，后加入数组会导致监听失效
+  // importList.forEach((v) => steelRefList[key].rowWatch(v))
+  // 截取新旧数组长度，对导入数据进行rowWatch监听
+  const oldLen = form[key].length
+  form[key].push.apply(form[key], importList)
+  const newLen = form[key].length
+  for (let i = oldLen; i < newLen; i++) {
+    steelRefList[key].rowWatch(form[key][i])
+  }
+  // 初始化选中数据，执行一次后取消当前监听
+  const initSelectedTrigger = watch(
+    matSpecRef,
+    () => {
+      if (matSpecRef.value) {
+        matSpecRef.value.initSelected(
+          importList.map((v) => {
+            return { sn: v.sn, classifyId: v.classifyId }
+          })
+        )
+        nextTick(() => {
+          initSelectedTrigger()
+        })
+      }
+    },
+    { immediate: true }
+  )
 }
 </script>
 

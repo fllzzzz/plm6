@@ -67,16 +67,18 @@
     <div class="child-mr-7">
       <store-operation v-if="!props.edit" type="cu" @clear="handleClear" />
       <common-button type="primary" size="mini" @click="openRequisitionsView">查看申购单</common-button>
-      <!-- <el-tooltip content="请先选择采购订单" :disabled="!!form.purchaseId" placement="bottom" effect="light">
+      <el-tooltip content="请先选择采购订单" :disabled="!!form.purchaseId" placement="bottom" effect="light">
         <excel-resolve-button
           icon="el-icon-upload2"
           btn-name="批量导入"
           btn-size="mini"
           btn-type="success"
+          open-loading
+          :template="importTemp"
           :disabled="!form.purchaseId"
           @success="handleExcelSuccess"
         />
-      </el-tooltip> -->
+      </el-tooltip>
       <common-button v-if="!props.edit" icon="el-icon-time" type="info" size="mini" @click="toInboundRecord" />
     </div>
   </div>
@@ -87,16 +89,23 @@ import { getRequisitionsDetailBySN } from '@/api/wms/requisitions'
 import { defineProps, defineEmits, defineExpose, ref, computed, watchEffect, nextTick, inject } from 'vue'
 import { useRouter } from 'vue-router'
 import { STEEL_ENUM } from '@/settings/config'
+import { matClsEnum } from '@/utils/enum/modules/classification'
 import { weightMeasurementModeEnum } from '@enum-ms/finance'
 import { logisticsPayerEnum, logisticsTransportTypeEnum } from '@/utils/enum/modules/logistics'
 import { patternLicensePlate } from '@/utils/validate/pattern'
 
 import { regExtra } from '@/composables/form/use-form'
 import useWeightOverDiff from '@/composables/wms/use-trains-weight-over-diff'
-// import excelResolveButton from '@/components-system/common/excel-resolve-button/index.vue'
+import excelResolveButton from '@/components-system/common/excel-resolve-button/index.vue'
 import purchaseSnSelect from '@/components-system/wms/purchase-sn-select/index.vue'
 import { isNotBlank, isBlank } from '@/utils/data-type'
 import StoreOperation from '@crud/STORE.operation.vue'
+import steelPlateTemp from '@/utils/excel/import-template/wms/inbound-application-temp/steel-plate'
+import sectionSteelTemp from '@/utils/excel/import-template/wms/inbound-application-temp/section-steel'
+import steelCoilTemp from '@/utils/excel/import-template/wms/inbound-application-temp/steel-coil'
+import auxMaterialTemp from '@/utils/excel/import-template/wms/inbound-application-temp/aux-material'
+import gasTemp from '@/utils/excel/import-template/wms/inbound-application-temp/gas'
+import { ElMessage } from 'element-plus'
 
 const emit = defineEmits(['update:purchaseId', 'purchase-order-change'])
 
@@ -105,6 +114,9 @@ const props = defineProps({
     type: String
   },
   basicClass: {
+    type: Number
+  },
+  currentBasicClass: {
     type: Number
   },
   edit: {
@@ -171,6 +183,24 @@ const rules = computed(() => {
     Object.assign(rules, overWeightRules)
   }
   return rules
+})
+
+// 当前物料“批量导入模板”
+const importTemp = computed(() => {
+  switch (props.currentBasicClass ?? props.basicClass) {
+    case matClsEnum.STEEL_PLATE.V:
+      return steelPlateTemp
+    case matClsEnum.SECTION_STEEL.V:
+      return sectionSteelTemp
+    case matClsEnum.STEEL_COIL.V:
+      return steelCoilTemp
+    case matClsEnum.MATERIAL.V:
+      return auxMaterialTemp
+    case matClsEnum.GAS.V:
+      return gasTemp
+    default:
+      return auxMaterialTemp
+  }
 })
 
 const formRef = ref()
@@ -261,9 +291,15 @@ async function fetchRequisitionsDetail(snArr) {
 }
 
 // 解析导入表格
-// function handleExcelSuccess(val) {
-//   console.log(val)
-// }
+function handleExcelSuccess(list) {
+  // 解析
+  // 根据物料种类获取
+  try {
+    cu.props.import(list)
+  } catch (error) {
+    ElMessage.error({ message: error.message, duration: 5000 })
+  }
+}
 
 // TODO:跳转到入库记录
 function toInboundRecord() {

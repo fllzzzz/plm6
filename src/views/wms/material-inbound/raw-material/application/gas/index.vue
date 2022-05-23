@@ -226,6 +226,29 @@ function handleOrderInfoChange(orderInfo) {
 function init() {
   orderLoaded.value = false
 }
+
+// 批量导入
+cu.props.import = (importList) => {
+  // 截取新旧数组长度，对导入数据进行rowWatch监听
+  form.list.push.apply(form.list, importList)
+  // 初始化选中数据，执行一次后取消当前监听
+  const initSelectedTrigger = watch(
+    matSpecRef,
+    () => {
+      if (matSpecRef.value) {
+        matSpecRef.value.initSelected(
+          importList.map((v) => {
+            return { sn: v.sn, classifyId: v.classifyId }
+          })
+        )
+        nextTick(() => {
+          initSelectedTrigger()
+        })
+      }
+    },
+    { immediate: true }
+  )
+}
 </script>
 
 <style lang="scss" scoped>

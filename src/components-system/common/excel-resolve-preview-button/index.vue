@@ -178,7 +178,7 @@ async function handleChange(file, fileList) {
     previewVisible.value = true
     resolveLoading.value = true
     const resolveData = await resolveExcel(file.raw)
-    list.value = formatExcelData(resolveData, props.template)
+    list.value = await formatExcelData(resolveData, props.template)
   } catch (error) {
     console.log('excel文件解析', error)
   } finally {

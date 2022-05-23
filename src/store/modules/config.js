@@ -48,7 +48,8 @@ const state = {
 
   classifySpec: { specKV: {}}, // 科目规格
   dict: {}, // 字典值
-  company: { // 公司信息
+  // 公司信息
+  company: {
     companyName: '', // 名称
     companyNo: '', // 编号
     telephone: '', // 电话
@@ -210,11 +211,11 @@ const actions = {
   // 加载公司信息
   async fetchCompany({ commit }) {
     // 基本信息
-    const res = await getCompanyConfig() || {}
+    const res = (await getCompanyConfig()) || {}
     commit('SET_COMPANY', res)
     // logo
     const { content = [] } = await getLogoConfig()
-    const index = content.findIndex(v => v.isDefault)
+    const index = content.findIndex((v) => v.isDefault)
     if (index !== -1) {
       commit('SET_COMPANY', { logo: content[index]?.path })
     }
@@ -290,6 +291,7 @@ const actions = {
       unit.ALL.push(n)
       unit.MAP.set(n.name, n)
       if (n.symbol) {
+        // TODO: 多符号问题处理
         // 如果存在符号，则符号也设置进map
         unit.MAP.set(n.symbol, n)
       }

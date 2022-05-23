@@ -16,7 +16,7 @@ async function getBaseUnit() {
 }
 
 // 获取单位,避免同时调用 例：库存预警页面与库存预警铃铛
-async function getUnit(pollingNumber = 1) {
+export async function getUnit(pollingNumber = 1) {
   try {
     const _unit = store.state.config.loaded.unit
     if (_unit) {
@@ -28,6 +28,8 @@ async function getUnit(pollingNumber = 1) {
     if (pollingNumber && pollingNumber <= 10) {
       await codeWait(1000)
       return await getUnit(++pollingNumber)
+    } else {
+      throw new Error('加载单位失败')
     }
   }
 }

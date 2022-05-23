@@ -188,7 +188,7 @@ export function resolveExcel(file) {
 }
 
 // excel数据格式转换
-export function formatExcelData(data, template = {}) {
+export async function formatExcelData(data, template = {}) {
   const res = []
   const startRow = template.startRow || 0
   const fields = template.fields
@@ -201,6 +201,9 @@ export function formatExcelData(data, template = {}) {
       })
       res.push(obj)
     })
+  }
+  if (typeof template.format === 'function') {
+    return await template.format(res)
   }
   return res
 }

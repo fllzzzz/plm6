@@ -104,9 +104,14 @@ export async function calcSectionSteelWeight({ length, quantity = 1, unitWeight 
  * @param {Number} lengthUnit 长度单位
  * @param {Number} precision 保留小数位
  */
-export async function calcSteelCoilLength({ weight, width, thickness, quantity = 1 }) {
+export async function calcSteelCoilLength({ name, weight, width, thickness, quantity = 1 }) {
   if (!weight || !quantity || !width || !thickness) {
     return null
+  }
+
+  let density = STEEL_DENSITY // 密度 t/m³
+  if (name && name.indexOf('不锈钢') > -1) {
+    density = STAINLESS_STEEL_DENSITY
   }
 
   const baseUnit = await getBaseUnit()
@@ -119,7 +124,7 @@ export async function calcSteelCoilLength({ weight, width, thickness, quantity =
   const weg = convertUnits(weight, weightUnit, 'kg', weightPrecision)
   const wth = convertUnits(width, lengthUnit, 'm', 3)
   // 计算结果为 m
-  theoryLength = weg / (wth * thickness * STEEL_DENSITY)
+  theoryLength = weg / (wth * thickness * density)
   theoryLength = convertUnits(theoryLength, 'm', lengthUnit)
   return Number((theoryLength * quantity).toFixed(lengthPrecision))
 }
@@ -164,6 +169,7 @@ export async function steelInboundFormFormat(form) {
         break
       case matClsEnum.STEEL_COIL.V:
         p = calcSteelCoilLength({
+          name: row.classifyFullName,
           weight: row.weighingTotalWeight,
           width: row.width,
           thickness: row.thickness

@@ -231,14 +231,14 @@ function handleOrderInfoChange(orderInfo) {
       }
       return false
     })
+    form.list = [...filterList]
     const trigger = watch(
       matSpecRef,
       () => {
         if (matSpecRef.value) {
           matSpecRef.value.clear()
-          form.list = filterList
           matSpecRef.value.initSelected(
-            form.list.map((v) => {
+            filterList.map((v) => {
               return { sn: v.sn, classifyId: v.classifyId }
             })
           )
@@ -256,6 +256,46 @@ function handleOrderInfoChange(orderInfo) {
 // 信息初始化
 function init() {
   orderLoaded.value = false
+}
+
+// 批量导入
+cu.props.import = (importList) => {
+  let unexistNameArr = []
+  importList.forEach((v) => {
+    let boolExit = false
+    for (const cid of order.value.auxMaterialIds) {
+      if (v.classifyFullPathId.includes(cid)) {
+        boolExit = true
+        break
+      }
+    }
+    if (!boolExit) {
+      unexistNameArr.push(v.classifyName)
+    }
+  })
+  if (unexistNameArr.length > 0) {
+    unexistNameArr = Array.from(new Set(unexistNameArr))
+    throw new Error(`当前订单辅材明细中不存在${unexistNameArr.map((v) => `“${v}”`).join('、')}等科目`)
+  }
+  // 截取新旧数组长度，对导入数据进行rowWatch监听
+  form.list.push.apply(form.list, importList)
+  // 初始化选中数据，执行一次后取消当前监听
+  const initSelectedTrigger = watch(
+    matSpecRef,
+    () => {
+      if (matSpecRef.value) {
+        matSpecRef.value.initSelected(
+          importList.map((v) => {
+            return { sn: v.sn, classifyId: v.classifyId }
+          })
+        )
+        nextTick(() => {
+          initSelectedTrigger()
+        })
+      }
+    },
+    { immediate: true }
+  )
 }
 </script>
 

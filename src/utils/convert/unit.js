@@ -2,6 +2,8 @@
  * 单位转换工具类
  */
 import convert from 'convert-units'
+import store from '@/store'
+import { codeWait } from '..'
 
 /**
  * 单位转换
@@ -53,6 +55,36 @@ export function getUsableUnit(unit) {
     case 'cu ft' : return 'ft3'
     case 'tcu yd' : return 'yd3'
     default: return unit
+  }
+}
+
+// 判断单位是否存在
+export async function judgeMaterialUnitExist(unit, checkUnit) {
+  const unitCfg = await getUnit()
+  const u = unitCfg.get(unit)
+  // 单位名称与符号与传入均不相同时
+  if (!u || (checkUnit !== u.name && checkUnit !== u.symbol)) {
+    return false
+  }
+  return true
+}
+
+// 获取单位,避免同时调用 例：库存预警页面与库存预警铃铛
+export async function getUnit(pollingNumber = 1) {
+  try {
+    const _unit = store.state.config.loaded.unit
+    if (_unit) {
+      return store.state.config.unit.MAP
+    }
+    await store.dispatch('config/fetchUnit')
+    return store.state.config.unit.MAP
+  } catch (error) {
+    if (pollingNumber && pollingNumber <= 10) {
+      await codeWait(1000)
+      return await getUnit(++pollingNumber)
+    } else {
+      throw new Error('加载单位失败')
+    }
   }
 }
 

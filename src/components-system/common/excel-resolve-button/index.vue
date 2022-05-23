@@ -12,17 +12,32 @@
     :auto-upload="false"
     :show-file-list="false"
   >
-    <common-button :loading="props.resolveLoading" :disabled="props.disabled" :icon="props.icon" :size="props.btnSize" :type="props.btnType">{{ props.btnName }}</common-button>
+    <common-button
+      :loading="props.resolveLoading"
+      :disabled="props.disabled"
+      :icon="props.icon"
+      :size="props.btnSize"
+      :type="props.btnType"
+      >{{ props.btnName }}</common-button
+    >
   </el-upload>
 </template>
 <script setup>
 import { defineEmits, defineProps, ref } from 'vue'
-import { ElUpload, ElMessage } from 'element-plus'
-import { resolveExcel, fileVerification } from '@/utils/file'
+import { ElUpload, ElMessage, ElLoading } from 'element-plus'
+import { resolveExcel, fileVerification, formatExcelData } from '@/utils/file'
 
-const emit = defineEmits(['data'])
+const emit = defineEmits(['data', 'success'])
 
 const props = defineProps({
+  template: {
+    type: Object
+  },
+  // 打开 loading
+  openLoading: {
+    type: Boolean,
+    default: false
+  },
   accept: {
     type: String,
     default: '.xls,.xlsx'
@@ -69,6 +84,7 @@ const props = defineProps({
   }
 })
 
+let loading
 const uploadRef = ref()
 const resolveLoading = ref(false)
 
@@ -81,16 +97,36 @@ function handleBefore(file) {
 }
 
 async function handleChange(file, fileList) {
-  resolveLoading.value = true
-  // TODO: 清空无效
-  uploadRef.value.clearFiles()
-  const data = await resolveExcel(file.raw)
-  emit('data', data)
-  resolveLoading.value = false
+  try {
+    if (props.openLoading) {
+      loading = ElLoading.service({
+        lock: true,
+        text: '正在导入数据，请稍后',
+        fullscreen: true,
+        background: 'rgba(255, 255, 255, 0.5)'
+      })
+    }
+    resolveLoading.value = true
+    // TODO: 清空无效
+    uploadRef.value.clearFiles()
+    let data = await resolveExcel(file.raw)
+    if (typeof props.template === 'object') {
+      data = await formatExcelData(data, props.template)
+    }
+    emit('data', data)
+    emit('success', data)
+  } catch (error) {
+    ElMessage.error({ message: error.message, duration: 5000 })
+  } finally {
+    resolveLoading.value = false
+    loading && loading.close()
+  }
 }
 
 function handleExceed(files, fileList) {
-  ElMessage.warning(`当前限制选择 ${props.limit} 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`)
+  ElMessage.warning(
+    `当前限制选择 ${props.limit} 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`
+  )
 }
 </script>
 
