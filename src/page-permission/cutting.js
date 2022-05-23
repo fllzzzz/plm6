@@ -64,7 +64,11 @@ export const nestingListPM = {
   get: ['nesting_list:get'], // 套料工单列表
   edit: ['nesting_list:edit'], // 修改
   revoke: ['nesting_list:revoke'], // 撤销
-  Nesting: ['nesting_list:Nesting'] // 套料
+  Nesting: ['nesting_list:Nesting'], // 套料
+  views: ['nesting_list:views'], // 查看
+  delPart: ['nesting_list:delPart'], // 从工单删除零件
+  addPart: ['nesting_list:addPart'] // 从工单添加零件
+
 }
 // ---------------------------  套料任务管理/套料工单  end ------------------
 

@@ -141,7 +141,7 @@
           <span v-if='scope.row.importTime'>{{ scope.row.currentName }} {{parseTime(scope.row.importTime,'{y}-{m}-{d}')}}</span>
         </template>
       </el-table-column>
-        <el-table-column width="250px" :show-overflow-tooltip="true" label="操作" align="center">
+        <el-table-column width="350px" :show-overflow-tooltip="true" label="操作" align="center">
           <template v-slot="scope">
             <!-- <common-button type="danger" size="mini" @click="del(scope.row)">删除</common-button>
             <common-button type="success" size="mini" @click.stop="toNesting"> 去套料 </common-button> -->
