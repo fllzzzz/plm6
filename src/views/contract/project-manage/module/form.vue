@@ -138,7 +138,7 @@ CRUD.HOOK.afterAddSuccess = () => {
 
 <style  rel="stylesheet/scss" lang="scss" scoped>
 .form-content {
-  height: calc(100vh - 120px);
+  height: calc(100vh - 150px);
   overflow: auto;
   .el-form-item {
     margin-right: 0;
