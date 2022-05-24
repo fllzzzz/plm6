@@ -21,13 +21,21 @@
         class="summary-item"
       />
       <panel name="实际收款" num-color="#1890ff" :end-val="summaryInfo.collectionAmount || 0" class="summary-item" />
-      <panel name="应收款" num-color="#1890ff" :end-val="summaryInfo.settlementAmount || 0" class="summary-item" />
+      <panel name="应收款" num-color="#1890ff" :end-val="summaryInfo.receivableAmount || 0" class="summary-item" />
     </div>
     <div style="display: flex">
       <div v-loading="loading" :style="{ height: maxHeight + 'px' }" style="flex: 1; margin-right: 20px">
         <div id="pieChart" style="width: 100%; height: 100%"></div>
       </div>
-      <common-table v-loading="loading" :height="maxHeight" :data="list" show-summary :summary-method="getSummaries" style="flex: 1">
+      <common-table
+        v-loading="loading"
+        :height="maxHeight"
+        :data="list"
+        :data-format="dataFormat"
+        show-summary
+        :summary-method="getSummaries"
+        style="flex: 1"
+      >
         <el-table-column label="序号" type="index" align="center" width="60" />
         <el-table-column prop="project.shortName" :show-overflow-tooltip="true" label="所属项目" min-width="120">
           <template #default="{ row }">
@@ -108,9 +116,20 @@ const typeEnum = {
 }
 constantize(typeEnum)
 
+const dataFormat = ref([
+  ['contractAmount', 'to-thousand'],
+  ['invoiceAmount', 'to-thousand'],
+  ['settlementAmount', 'to-thousand'],
+  ['collectionAmount', 'to-thousand'],
+  ['receivableAmount', 'to-thousand']
+])
+
 // 合计
 function getSummaries(param) {
-  return tableSummary(param, { props: ['contractAmount', 'invoiceAmount', 'settlementAmount', 'receivableAmount'] })
+  return tableSummary(param, {
+    props: ['contractAmount', 'invoiceAmount', 'settlementAmount', 'receivableAmount'],
+    toThousandFields: ['contractAmount', 'invoiceAmount', 'settlementAmount', 'receivableAmount']
+  })
 }
 
 const { getMyChart } = useChart({

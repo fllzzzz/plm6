@@ -23,6 +23,7 @@
         v-loading="loading"
         :data="list"
         :height="maxHeight"
+        :data-format="dataFormat"
         show-summary
         :summary-method="getSummaries"
         style="width: 500px; margin-left: 20px"
@@ -76,9 +77,14 @@ const { maxHeight } = useMaxHeight({
   extraHeight: 0
 })
 
+const dataFormat = ref([
+  ['income', 'to-thousand'],
+  ['expend', 'to-thousand']
+])
+
 // 合计
 function getSummaries(param) {
-  return tableSummary(param, { props: ['income', 'expend'] })
+  return tableSummary(param, { props: ['income', 'expend'], toThousandFields: ['income', 'expend'] })
 }
 
 const { getMyChart } = useChart({
