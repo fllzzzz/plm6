@@ -22,7 +22,7 @@
           />
         </el-form-item>
         <el-form-item label="项目简称" prop="shortName">
-          <el-input v-model.trim="form.shortName" class="input-underline" placeholder="项目简称"  style="width: 320px" maxlength="8"/>
+          <el-input v-model.trim="form.shortName" class="input-underline" placeholder="项目简称"  style="width: 320px" maxlength="12"/>
         </el-form-item>
       </div>
       <div class="form-row">
@@ -241,7 +241,7 @@ const rules = {
   ],
   shortName: [
     { required: true, message: '请填写项目简称', trigger: 'blur' },
-    { min: 1, max: 30, message: '长度在 1 到 30 个字符', trigger: 'blur' }
+    { min: 1, max: 12, message: '长度在 1 到 12 个字符', trigger: 'blur' }
   ],
   contractAmount: [{ required: true, validator: validateMoney, trigger: 'blur' }],
   address: [{ max: 220, message: '长度不超过 220 个字符', trigger: 'blur' }],
