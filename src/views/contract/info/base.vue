@@ -59,6 +59,7 @@
                 v-model.trim="form.shortName"
                 placeholder="项目简称"
                 style="width:320px;"
+                maxlength="12"
               />
               <span v-else>{{ detail.shortName || '-' }}</span>
             </div>
@@ -339,7 +340,7 @@ const rules = {
   ],
   shortName: [
     { required: true, message: '请填写项目简称', trigger: 'blur' },
-    { min: 1, max: 30, message: '长度在 1 到 30 个字符', trigger: 'blur' }
+    { min: 1, max: 12, message: '长度在 1 到 12 个字符', trigger: 'blur' }
   ],
   startDate: [{ required: true, message: '请选择开工日期', trigger: 'change' }],
   endDate: [{ required: true, message: '请选择完工日期', trigger: 'change' }],
