@@ -6,9 +6,9 @@ import { title, logo, sidebarLogo, projectNameShowConfig } from '@/settings/syst
 const stateStorage = storage.get('setting') || {}
 const state = {
   // logo
-  logo: stateStorage.logo || logo,
+  logo: logo,
   // 菜单栏顶部logo
-  sidebarLogo: stateStorage.sidebarLogo || sidebarLogo,
+  sidebarLogo: sidebarLogo,
   // 项目标题
   title: stateStorage.title || title,
   // 显示个人风格设置
