@@ -127,7 +127,7 @@
           <div type="warning" class="clickable" @click.stop="openRecord(row, 'inbound')">{{ row.inboundAmount }}</div>
         </template>
       </el-table-column>
-       <el-table-column prop="inboundAmount" key="inboundAmount" label="累计已付款" align="right" min-width="120" show-overflow-tooltip>
+       <el-table-column prop="paymentAmount" key="paymentAmount" label="累计已付款" align="right" min-width="120" show-overflow-tooltip>
         <template v-if="checkPermission(permission.detail)" #header>
           <el-tooltip
             effect="light"
@@ -149,7 +149,7 @@
           <span>{{ row.paymentRate }}%</span>
         </template>
       </el-table-column>
-      <el-table-column prop="inboundAmount" key="inboundAmount" label="累计已收票" align="right" min-width="120" show-overflow-tooltip>
+      <el-table-column prop="invoiceAmount" key="invoiceAmount" label="累计已收票" align="right" min-width="120" show-overflow-tooltip>
         <template v-if="checkPermission(permission.detail)" #header>
           <el-tooltip
             effect="light"

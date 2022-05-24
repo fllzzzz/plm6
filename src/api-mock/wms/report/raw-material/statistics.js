@@ -22,6 +22,7 @@ const getSendAndReceiveStorage = {
         content: [
           {
             id: 1, // 记录id
+            statId: 1,
             unitType: measureTypeEnum.ACCOUNTING.V,
             boolPartyA: true,
             classifyId: 103,
@@ -83,6 +84,7 @@ const getSendAndReceiveStorage = {
           },
           {
             id: 2,
+            statId: 2,
             unitType: measureTypeEnum.ACCOUNTING.V,
             basicClass: matClsEnum.STEEL_PLATE.V,
             classifyId: 103,
@@ -151,6 +153,7 @@ const getSendAndReceiveStorage = {
           },
           {
             id: 3,
+            statId: 3,
             boolOddmentByHalfOut: true, // 是否为整料半出剩下的余料
             unitType: measureTypeEnum.ACCOUNTING.V,
             specifications: ['57*21*3*9 * Q325B'],
@@ -212,6 +215,7 @@ const getSendAndReceiveStorage = {
           },
           {
             id: 5,
+            statId: 5,
             unitType: measureTypeEnum.ACCOUNTING.V,
             classifyId: 120,
             basicClass: matClsEnum.STEEL_COIL.V,
@@ -281,6 +285,7 @@ const getSendAndReceiveStorage = {
           },
           {
             id: 6,
+            statId: 6,
             unitType: measureTypeEnum.ACCOUNTING.V,
             classifyId: 204,
             specifications: ['M27 * 60', 'M27 * 65', 'M26 * 60'],
@@ -343,6 +348,7 @@ const getSendAndReceiveStorage = {
           },
           {
             id: 7,
+            statId: 7,
             unitType: measureTypeEnum.ACCOUNTING.V,
             classifyId: 247,
             basicClass: matClsEnum.STEEL_PLATE.V,
@@ -406,6 +412,7 @@ const getSendAndReceiveStorage = {
           },
           {
             id: 8,
+            statId: 8,
             unitType: measureTypeEnum.ACCOUNTING.V,
             classifyId: 901,
             basicClass: matClsEnum.GAS.V,

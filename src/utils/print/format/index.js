@@ -2,6 +2,7 @@ import common from './common'
 import mes from './mes'
 import wms from './wms'
 import contract from './contract'
+import scm from './supply-chain'
 
 const invoiceLedger = common.handleTaxRate
 const invoiceRecord = common.handleTaxRate
@@ -12,6 +13,11 @@ const projectList = contract.durationCalculation
 const contractLedger = contract.handleRate
 const supplierPayableSummary = contract.handleSupplierPaymentRate
 const logisticsPaymentLedger = contract.handleSupplierPaymentRate
+const supplierPaymentLedger = contract.handleSupplierPaymentOrder
+
+const orderPaymentLedger = contract.handleSupplierPaymentRate
+const scmSupplierPaymentLedger = contract.handleSupplierPaymentRate
+const purchaseLogisticsRecord = scm.handleOrderName
 
 const mesStructureProductionLine = mes.productionLineMete
 const mesStructureProcess = mes.processMete
@@ -49,6 +55,9 @@ export default {
   projectHappenedDetail,
   supplierPayableSummary,
   logisticsPaymentLedger,
+  supplierPaymentLedger,
+  orderPaymentLedger,
+  scmSupplierPaymentLedger,
   myProject,
   projectList,
   contractLedger,
@@ -69,6 +78,8 @@ export default {
   mesEnclosureProductionStatistics,
   mesEnclosureProductionStatisticsIn,
   mesEnclosureProductionLine,
+
+  purchaseLogisticsRecord, // 供应链/物流记录
 
   wmsRmInboundReceipt, // 入库单
   wmsRmOutboundReceipt, // 出库单

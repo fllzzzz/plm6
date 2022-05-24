@@ -4,7 +4,7 @@
     v-model="drawerVisible"
     direction="rtl"
     size="75%"
-    title="计量配置"
+    title="研发费用占比配置"
     :wrapper-closable="false"
     :before-close="handleClose"
   >
@@ -163,6 +163,7 @@ const { maxHeight } = useMaxHeight(
     wrapperBox: ['.el-drawer__body', '.class-unit-config'],
     navbar: false,
     clientHRepMainH: true,
+    extraHeight: 50,
     minHeight: 300
   },
   () => drawerRef.value.loaded

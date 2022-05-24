@@ -247,7 +247,7 @@
     <!-- 分页组件 -->
     <Pagination />
     <!-- 详情 -->
-    <MDetail v-model:visible="detailVisible" :material-info="currentRow" />
+    <MDetail v-model:visible="detailVisible" :material-info="currentRow" :date="crud.query.createTime" />
   </div>
 </template>
 

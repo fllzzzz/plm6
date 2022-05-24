@@ -90,7 +90,13 @@ const optShow = {
 const tableRef = ref()
 const tableRefresh = ref(true)
 const columnsDataFormat = [['rdRate', ['suffix', ' %']]]
-const { maxHeight } = useMaxHeight()
+
+const { maxHeight } = useMaxHeight(
+  {
+    navbar: false,
+    extraHeight: -20
+  }
+)
 
 const { crud, columns } = useCRUD(
   {

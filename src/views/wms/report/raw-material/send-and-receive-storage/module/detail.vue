@@ -102,6 +102,10 @@ const props = defineProps({
     type: Boolean,
     default: false
   },
+  date: {
+    type: [Number, String],
+    required: true
+  },
   materialInfo: {
     type: Object
   }
@@ -183,6 +187,8 @@ async function fetchDetail() {
   // 查询参数
   const params = {
     id: props.materialInfo.id,
+    statId: props.materialInfo.statId,
+    date: props.date,
     formType: filter.value.formType
   }
   try {

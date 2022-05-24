@@ -60,7 +60,7 @@ const scmSupplierPaymentLedger = {
   title: {
     show: true,
     allPage: false,
-    title: '项目开票明细',
+    title: '供应商付款台账',
     align: alignEnum.CENTER.V,
     verticleAlign: verticleAlignEnum.CENTER.V,
     size: 17,
@@ -198,12 +198,12 @@ const scmSupplierPaymentLedger = {
      * @param {boolean} sum 列需要合计
      */
     fields: [
-      { show: true, key: 'createTime', title: '日期', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.DATE.K, format: 'YY/MM/DD' },
-      { show: true, key: 'amount', title: '累计合同额', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.AMOUNT.K, format: { toThousand: true, precision: 2, unit: amountUnitEnum.YUAN.V }},
-      { show: true, key: 'inboundAmount', title: '累计入库额', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.AMOUNT.K, format: { toThousand: true, precision: 2, unit: amountUnitEnum.YUAN.V }},
-      { show: true, key: 'paymentAmount', title: '累计付款额', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.AMOUNT.K, format: { toThousand: true, precision: 2, unit: amountUnitEnum.YUAN.V }},
+      { show: true, key: 'supplierName', title: '供应商', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 22, type: typeEnum.COMPANY_NAME.K },
+      { show: true, key: 'amount', title: '累计合同额', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.AMOUNT.K, format: { toThousand: true, precision: 2, unit: amountUnitEnum.YUAN.V }, sum: true },
+      { show: true, key: 'inboundAmount', title: '累计入库额', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.AMOUNT.K, format: { toThousand: true, precision: 2, unit: amountUnitEnum.YUAN.V }, sum: true },
+      { show: true, key: 'paymentAmount', title: '累计已付款', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.AMOUNT.K, format: { toThousand: true, precision: 2, unit: amountUnitEnum.YUAN.V }, sum: true },
       { show: true, key: 'paymentRate', title: '付款率', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 14, type: typeEnum.RATE.K, format: { precision: 2 }},
-      { show: true, key: 'invoiceAmount', title: '累计收票额', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.AMOUNT.K, format: { toThousand: true, precision: 2, unit: amountUnitEnum.YUAN.V }},
+      { show: true, key: 'invoiceAmount', title: '累计收票款', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.AMOUNT.K, format: { toThousand: true, precision: 2, unit: amountUnitEnum.YUAN.V }, sum: true },
       { show: true, key: 'invoiceRate', title: '收票率', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 14, type: typeEnum.RATE.K, format: { precision: 2 }}
     ]
   }

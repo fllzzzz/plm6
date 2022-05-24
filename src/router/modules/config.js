@@ -17,7 +17,7 @@ export default {
           path: 'system-config',
           hidden: false,
           component: '/config-manage/main/system-config/index',
-          meta: { title: '系统配置', icon: 'project', noCache: true }
+          meta: { title: '公司配置', icon: 'project', noCache: true }
         },
         {
           name: 'UnitConfig',
