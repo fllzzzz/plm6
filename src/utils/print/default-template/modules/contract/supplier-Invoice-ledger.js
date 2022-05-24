@@ -60,7 +60,7 @@ const supplierInvoiceLedger = {
   title: {
     show: true,
     allPage: false,
-    title: '项目开票明细',
+    title: '供应商收票台账',
     align: alignEnum.CENTER.V,
     verticleAlign: verticleAlignEnum.CENTER.V,
     size: 17,

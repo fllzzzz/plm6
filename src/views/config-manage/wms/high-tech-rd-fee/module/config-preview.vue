@@ -38,7 +38,7 @@
 </template>
 
 <script setup>
-import { save } from '@/api/config/classification-manage/measure-config'
+import { save } from '@/api/config/wms/high-tech-rd-fee'
 import { computed, defineEmits, defineProps, inject, ref } from 'vue'
 import { isBlank } from '@data-type'
 import { judgeItemFieldChange } from '@/utils'

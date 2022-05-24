@@ -7,7 +7,7 @@
           :options="logisticsSearchTypeEnum.ENUM"
           class="filter-item"
           type="enum"
-          @change="crud.toQuery"
+          @change="handleTypeChange"
         />
         <el-date-picker
           v-model="query.createTime"
@@ -40,4 +40,9 @@ const defaultQuery = {
 }
 
 const { crud, query } = regHeader(defaultQuery)
+
+function handleTypeChange() {
+  crud.data = []
+  crud.toQuery()
+}
 </script>

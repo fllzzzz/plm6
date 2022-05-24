@@ -1,5 +1,6 @@
 import { isNotBlank } from '@data-type/index'
 import { dateDifference } from '@/utils/date'
+import { supplierPayTypeEnum } from '@enum-ms/contract'
 
 // 计算用时天数
 function durationCalculation({ header, table = [], footer, qrCode }) {
@@ -57,8 +58,27 @@ function handleSupplierPaymentRate({ header, table = [], footer, qrCode }) {
   }
 }
 
+// 处理供应商付款订单名称
+function handleSupplierPaymentOrder({ header, table = [], footer, qrCode }) {
+  const _table = table.map(row => {
+    if (row.propertyType === supplierPayTypeEnum.PURCHASE.V) {
+      row.orderName = row.serialNumber
+    } else {
+      row.orderName = [...row.projectNameList, ...row.serialNumberList].join('、')
+    }
+    return row
+  })
+  return {
+    header,
+    table: _table,
+    qrCode,
+    footer
+  }
+}
+
 export default {
   handleRate,
   handleSupplierPaymentRate,
-  durationCalculation
+  durationCalculation,
+  handleSupplierPaymentOrder
 }
