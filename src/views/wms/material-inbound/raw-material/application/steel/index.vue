@@ -503,6 +503,8 @@ cu.props.import = (importList) => {
     },
     { immediate: true }
   )
+  // 重新计算重量
+  calcWeight()
 }
 </script>
 

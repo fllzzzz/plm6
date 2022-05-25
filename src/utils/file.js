@@ -5,6 +5,7 @@ import { parseTime } from '@/utils/date'
 import XLSX from 'xlsx-styleable'
 import { ElMessage, ElNotification } from 'element-plus'
 import { isNotBlank } from './data-type'
+import { trimStr } from './data-type/string'
 
 // 获取文件后缀名
 export function getFileSuffix(fileName) {
@@ -197,7 +198,7 @@ export async function formatExcelData(data, template = {}) {
     _data.forEach((item) => {
       const obj = {}
       fields.forEach((f) => {
-        obj[f.field] = item[f.excelField]
+        obj[f.field] = trimStr(item[f.excelField])
       })
       res.push(obj)
     })

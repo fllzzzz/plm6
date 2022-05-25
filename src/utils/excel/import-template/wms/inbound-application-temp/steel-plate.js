@@ -3,6 +3,7 @@ import { deepClone, isNotBlank } from '@/utils/data-type'
 import { createUniqueString } from '@/utils/data-type/string'
 import { matClsEnum } from '@/utils/enum/modules/classification'
 import { calcSteelPlateWeight } from '@/utils/wms/measurement-calc'
+import { dataValidate } from '@/composables/form/use-table-validate'
 
 const sectionSteelSpecTmpl = {
   title: '钢板入库清单', // 表格名称
@@ -27,6 +28,8 @@ const sectionSteelSpecTmpl = {
   },
   // 提交前的数据格式转换
   format: async (tableList) => {
+    const validate = dataValidate(tableList, sectionSteelSpecTmpl.rules)
+    if (!validate) return
     // 加载科目树
     if (!store.state.config.loaded.matClsTree) {
       await store.dispatch('config/fetchMatClsTree')
