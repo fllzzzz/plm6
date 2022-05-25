@@ -4,7 +4,7 @@ import EO from '@enum'
 import { projectTypeEnum, projectStatusEnum, TechnologyTypeAllEnum } from '@enum-ms/contract'
 import storage from '@/utils/storage'
 import { projectsToCascade, projectNameFormatter } from '@/utils/project'
-import { isNotBlank, isBlank } from '@data-type/index'
+import { isNotBlank, isBlank, deepClone } from '@data-type/index'
 import { allPT } from '@/settings/config'
 
 const projectTypeEnumArr = EO.toArr(projectTypeEnum)
@@ -125,7 +125,7 @@ const actions = {
     const projectsCascadeMap = {}
 
     projectTypeEnumArr && projectTypeEnumArr.forEach(type => {
-      projectsMap[type.V] = projects.filter(p => p.projectType === type.V) || []
+      projectsMap[type.V] = deepClone(projects).filter(p => p.projectType === type.V) || []
       projectsCascadeMap[type.V] = projectsToCascade(projectsMap[type.V]) || []
     })
     projectsMap[allPT] = projects || []
