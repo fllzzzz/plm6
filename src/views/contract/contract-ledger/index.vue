@@ -71,7 +71,7 @@
     </el-table-column>
     <el-table-column v-if="columns.visible('collectionRate')" key="collectionRate" prop="collectionRate" label="收款比例" align="center" width="80px">
       <template v-slot="scope">
-        <div>{{ scope.row.collectionRate? scope.row.collectionRate*100+'%': '-' }}</div>
+        <div>{{ scope.row.collectionRate? (scope.row.collectionRate*100).toFixed(2)+'%': '-' }}</div>
       </template>
     </el-table-column>
     <el-table-column v-if="columns.visible('invoiceAmount')" key="invoiceAmount" prop="invoiceAmount" label="累计开票" align="center">
@@ -82,7 +82,7 @@
     </el-table-column>
     <el-table-column v-if="columns.visible('invoiceRate')" key="invoiceRate" prop="invoiceRate" label="开票比例" align="center" width="80px">
       <template v-slot="scope">
-        <div>{{ scope.row.invoiceRate? scope.row.invoiceRate*100+'%': '-' }}</div>
+        <div>{{ scope.row.invoiceRate? (scope.row.invoiceRate*100).toFixed(2)+'%': '-' }}</div>
       </template>
     </el-table-column>
     <el-table-column v-if="columns.visible('deliverInstallAmount')" key="deliverInstallAmount" prop="deliverInstallAmount" label="累计发生额" align="center">
