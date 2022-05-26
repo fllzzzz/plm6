@@ -119,10 +119,10 @@ function getSummaries(param) {
   return sums
 }
 
-async function fetchInfo(myChart) {
+async function fetchInfo() {
   try {
     summaryInfo.value = {}
-    const _myChart = myChart || getMyChart()
+    const _myChart = getMyChart()
     const { outboundAmounts, productionAnalysisDetails } = await getAuxAnalysis({ dateTime: year.value, factoryId: factoryId.value })
     list.value = outboundAmounts
     const sumProduction = productionAnalysisDetails.reduce((sum, v) => {
@@ -144,7 +144,7 @@ async function fetchInfo(myChart) {
       return sum
     }, 0)
     // summaryInfo.value.amount = sumAmount
-    summaryInfo.value.average = sumAmount / (sumProduction / 1000).toFixed(0)
+    summaryInfo.value.average = summaryInfo.value.production ? sumAmount / summaryInfo.value.production : 0
     const option = _myChart.getOption()
     option.series[0].data = chartAmountData
     _myChart.setOption(option)
