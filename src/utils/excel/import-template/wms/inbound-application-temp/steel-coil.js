@@ -1,9 +1,10 @@
 import store from '@/store/index'
 import { deepClone } from '@/utils/data-type'
-import { createUniqueString } from '@/utils/data-type/string'
+import { createUniqueString, trimStr } from '@/utils/data-type/string'
 import { matClsEnum } from '@/utils/enum/modules/classification'
 import { calcSteelCoilLength } from '@/utils/wms/measurement-calc'
 import { dataValidate } from '@/composables/form/use-table-validate'
+import { compareArray } from '@/utils/data-type/array'
 
 const sectionSteelSpecTmpl = {
   title: '钢卷入库清单', // 表格名称
@@ -47,9 +48,12 @@ const sectionSteelSpecTmpl = {
     list.forEach((row) => {
       let exist = false
       // 遍历 钢板科目，寻找与导入名称相同的科目
-      // TODO: 处理 多层级名称的情况 A/B/C
+      // 处理 多层级名称的情况 A/B/C
+      const nameArr = trimStr(row.classifyName.split('/'))
       for (const mat of matList) {
-        if (mat.name === row.classifyName) {
+        // 1.科目全路径数量必须>=导入的名称数量；2.从数组反向截取比较是否相同
+        const flag = mat.fullPathName.length >= nameArr.length && compareArray(mat.fullPathName.slice(-nameArr.length), nameArr)
+        if (flag) {
           exist = true
           row.classifyId = mat.id // 设置科目id
           existClassifyIds.push(mat.id)
@@ -62,7 +66,7 @@ const sectionSteelSpecTmpl = {
     unexistClassifyName = Array.from(new Set(unexistClassifyName))
     // 有不存在的科目时，视为导入失败
     if (unexistClassifyName.length > 0) {
-      throw new Error(`${unexistClassifyName.map(v => `“${v}”`).join('、')}等物料种类不存在`)
+      throw new Error(`${unexistClassifyName.map(v => `“${v}”`).join('、')}${unexistClassifyName.length > 1 ? '等' : ''}物料种类不存在`)
     }
     // 根据科目id获取对应科目的规格并做匹配
     const stateClassifySpec = store.state.config.classifySpec
