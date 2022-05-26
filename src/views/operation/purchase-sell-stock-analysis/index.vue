@@ -149,7 +149,7 @@ async function fetchSteelStockInfo(myChart) {
       dateTime: year.value,
       tax: currentTax
     })
-    const weight = content.map((v) => (v.weight && Number((v.weight / 1000).toFixed(0))) || 0)
+    const weight = content.map((v) => (v.weight && Number((v.weight / 1000000).toFixed(0))) || 0)
     const option = _myChart.getOption()
     option.series[0].data = weight
     _myChart.setOption(option)
