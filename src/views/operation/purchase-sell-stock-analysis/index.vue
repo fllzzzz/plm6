@@ -114,8 +114,8 @@ async function fetchPurchaseUseInfo(myChart) {
       tax: currentTax,
       type: currentType.value
     })
-    const intoAmount = content.map((v) => (v.intoAmount && Number((v.intoAmount / 1000).toFixed(2))) || 0)
-    const outAmount = content.map((v) => (v.outAmount && Number((v.outAmount / 1000).toFixed(2))) || 0)
+    const intoAmount = content.map((v) => (v.intoAmount && Number((v.intoAmount / 10000).toFixed(2))) || 0)
+    const outAmount = content.map((v) => (v.outAmount && Number((v.outAmount / 10000).toFixed(2))) || 0)
     const option = _myChart.getOption()
     option.series[0].data = intoAmount
     option.series[1].data = outAmount
@@ -133,7 +133,7 @@ async function fetchStockInfo(myChart) {
       tax: currentTax,
       type: currentType.value
     })
-    const amount = content.map((v) => (v.amount && Number((v.amount / 1000).toFixed(2))) || 0)
+    const amount = content.map((v) => (v.amount && Number((v.amount / 10000).toFixed(2))) || 0)
     const option = _myChart.getOption()
     option.series[0].data = amount
     _myChart.setOption(option)

@@ -12,7 +12,6 @@
       :default-expand-all="false"
       :expand-row-keys="expandRowKeys"
       row-key="serialNumber"
-      @selection-change="crud.selectionChangeHandler"
     >
       <el-expand-table-column :data="crud.data" v-model:expand-row-keys="expandRowKeys" row-key="serialNumber">
         <template #default="{ row }">
@@ -30,7 +29,6 @@
           </p>
         </template>
       </el-expand-table-column>
-      <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="序号" type="index" align="center" width="60">
         <template #default="{ row, $index }">
           <table-cell-tag :show="row.boolPartyA" name="甲供" type="partyA" />
@@ -52,7 +50,7 @@
         prop="createTime"
         label="编制日期"
         align="center"
-        width="100"
+        width="130"
       >
         <template #default="{ row }">
           <table-cell-tag
@@ -191,9 +189,9 @@
         width="100"
       />
       <!--编辑与删除-->
-      <el-table-column label="操作" width="230px" align="center" fixed="right">
+      <el-table-column label="操作" width="180px" align="center" fixed="right">
         <template #default="{ row }">
-          <e-operation :data="row.id" :permission="permission.download" />
+          <!-- <e-operation :data="row.id" :permission="permission.download" /> -->
           <udOperation
             :disabled-edit="row.purchaseStatus == purchaseStatusEnum.FINISHED.V"
             :data="row"
@@ -207,8 +205,8 @@
     <!--分页组件-->
     <pagination />
     <!-- 表单 -->
-    <m-raw-material-form v-if="crud.props.formType === 'rawMaterial'" />
-    <m-raw-material-detail v-if="crud.props.detailType === 'rawMaterial'" />
+    <m-raw-material-form />
+    <m-raw-material-detail />
   </div>
 </template>
 
@@ -229,7 +227,6 @@ import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
 import useCrudEnabledChange from '@compos/use-crud-enabled-change'
 import pagination from '@crud/Pagination'
-import eOperation from '@crud/E.operation'
 import udOperation from '@crud/UD.operation.vue'
 import mHeader from './module/header'
 import mRawMaterialForm from './module/form/raw-material.vue'
@@ -241,7 +238,7 @@ import useMatClsList from '@/composables/store/use-mat-class-list'
 const optShow = {
   add: false,
   edit: false,
-  del: true,
+  del: false,
   download: false
 }
 
@@ -303,15 +300,6 @@ CRUD.HOOK.handleRefresh = (crud, { data }) => {
 
     return v
   })
-}
-
-function beforeToDetail(row) {
-  crud.props.detailType = row.purchaseType === baseMaterialTypeEnum.RAW_MATERIAL.V ? 'rawMaterial' : 'manufactures'
-}
-
-// 修改
-function beforeToEdit(row) {
-  crud.props.formType = row.purchaseType === baseMaterialTypeEnum.RAW_MATERIAL.V ? 'rawMaterial' : 'manufactures'
 }
 
 function toQuery() {

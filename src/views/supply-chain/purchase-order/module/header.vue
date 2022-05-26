@@ -105,20 +105,9 @@
           size="mini"
           type="primary"
           icon="el-icon-plus"
-          @click.stop="toAddRawMaterial"
+          @click.stop="crud.toAdd"
         >
           原材料订单
-        </common-button>
-        <common-button
-          v-permission="permission.add"
-          class="filter-item"
-          size="mini"
-          type="primary"
-          icon="el-icon-plus"
-          disabled
-          @click.stop="toAddManufactures"
-        >
-          制成品订单(开发中)
         </common-button>
       </template>
     </crudOperation>
@@ -156,14 +145,4 @@ const defaultQuery = {
 const permission = inject('permission')
 const { crud, query } = regHeader(defaultQuery)
 
-// 处理原材料添加
-function toAddRawMaterial() {
-  crud.props.formType = 'rawMaterial'
-  crud.toAdd()
-}
-
-function toAddManufactures() {
-  crud.props.formType = 'manufactures'
-  crud.toAdd()
-}
 </script>

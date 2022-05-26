@@ -41,9 +41,15 @@
           </span>
         </template>
       </el-table-column>
-      <el-table-column v-if="columns.visible('projectName')" prop="projectName" :show-overflow-tooltip="true" label="项目" min-width="250">
+      <el-table-column
+        v-if="columns.visible('project.shortName')"
+        prop="project.shortName"
+        :show-overflow-tooltip="true"
+        label="所属项目"
+        min-width="250"
+      >
         <template #default="{ row }">
-          <span>{{ row.projectName }}</span>
+          <span class="project-name">{{ projectNameFormatter(row.project) }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -163,6 +169,7 @@
 import crudApi from '@/api/mes/QHSE-manage/disclosure'
 import { ref } from 'vue'
 
+import { projectNameFormatter } from '@/utils/project'
 import { problemTypeEnum } from '@enum-ms/production'
 import { improveStatusEnum } from '@enum-ms/mes'
 import { qhseDisclosurePM as permission } from '@/page-permission/mes'

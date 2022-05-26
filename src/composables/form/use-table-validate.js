@@ -191,6 +191,84 @@ export function cleanUpData(list, ditto = new Map()) {
   return list
 }
 
+/**
+ * 数据校验
+ * @param {array} list 列表
+ * @param {object} tableRules 表格规则
+ */
+export function dataValidate(list, tableRules) {
+  if (!list) return true
+  const rules = getRules(tableRules)
+  try {
+    for (const row of list) {
+      for (const rule in rules) {
+        const result = validateHasErrorMsg(rule, rules[rule], row)
+        if (!result) break
+      }
+    }
+  } catch (error) {
+    ElMessage.error({ message: error.message, duration: 3000 })
+    return false
+  }
+  return true
+}
+
+/**
+ * 校验并返回错误信息
+ * @param {string} property 字段
+ * @param {array} rules 校验规则
+ * @param {object} row 校验对象
+ * @returns
+ */
+export function validateHasErrorMsg(property, rules, row = {}) {
+  // 获取值
+  const value = getInfo(row, property)
+  let flag = true
+  // 判断是否存在校验
+  if (isBlank(rules)) {
+    return flag
+  }
+  let index = 0
+  for (index = 0; index < rules.length; index++) {
+    const rule = rules[index]
+    // for (const rule of rules) {
+    const pattern = rule.pattern
+    if (pattern && !pattern.test(value || '')) {
+      flag = false
+      break
+    }
+    const validator = rule.validator
+    if (typeof validator === 'function') {
+      const validatorResult = validator(value, row)
+      if (validatorResult === false) {
+        flag = false
+        break
+      }
+    }
+    const required = rule.required
+    if (required === true && isBlank(value)) {
+      flag = false
+      break
+    }
+    const type = rule.type
+    if (type && typeof value !== type) {
+      flag = false
+      break
+    }
+    const max = rule.max
+    const min = rule.min
+    if (typeof value === 'string' && ((min && min !== 0 && value.length < min) || (max && max !== 0 && max < value.length))) {
+      flag = false
+      break
+    }
+  }
+  if (!flag) {
+    console.error(`${property}：${rules[index].message}`)
+    throw new Error(`${rules[index].message}`)
+  }
+  return flag
+}
+
 // 获取校验规则
 function getRules(rules) {
   let _rules

@@ -32,3 +32,9 @@ export function createUniqueString() {
   const randomNum = parseInt((1 + Math.random()) * 65536) + ''
   return (+(randomNum + timestamp)).toString(32)
 }
+
+// 去前后空格
+export function trimStr(str) {
+  if (typeof str !== 'string') return str
+  return str.replace(/(^\s*)|(\s*$)/g, '')
+}

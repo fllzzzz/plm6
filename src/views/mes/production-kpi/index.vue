@@ -314,7 +314,7 @@ async function refreshOtherData() {
       v.totalWeight = (v.totalNetWeight / 1000).toFixed(0)
       v.productWeight = (v.yield / 1000).toFixed(0)
       v.productRate = (v.totalWeight && (v.productWeight / v.totalWeight) * 100) || 0
-      v.shipWeight = (v.yield / 1000).toFixed(0)
+      v.shipWeight = (v.despatchAmount / 1000).toFixed(0)
       v.shipRate = (v.totalWeight && (v.shipWeight / v.totalWeight) * 100) || 0
       return v
     })
