@@ -101,7 +101,7 @@ watch(
 const tableLoading = ref(false)
 const list = ref([])
 const dataFormat = ref([
-  ['project', ['parse-project', { onlyShortName: true }]],
+  ['project', ['parse-project']],
   ['signingDate', ['parse-time', '{y}-{m}-{d}']],
   ['contractAmount', 'to-thousand'],
   ['settlementAmount', 'to-thousand']
