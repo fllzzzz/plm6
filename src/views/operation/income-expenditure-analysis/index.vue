@@ -111,10 +111,10 @@ const { getMyChart } = useChart({
   }
 })
 
-async function fetchInfo(myChart) {
+async function fetchInfo() {
   try {
     loading.value = true
-    const _myChart = myChart || getMyChart()
+    const _myChart = getMyChart()
     const { content } = await getIncomeAnalysis({
       dateTime: year.value,
       branchCompanyId: branchCompanyId.value

@@ -389,6 +389,7 @@ async function refreshSteelPurchasingProportion() {
     })
     steelProportionList.value = content.map((v) => {
       v.mete = Number((v.mete / 1000000).toFixed(2))
+      v.ratio = v.ratio?.toFixed(2)
       return v
     })
     const option = _myChart.getOption()
@@ -414,6 +415,7 @@ async function refreshSectionPurchasingProportion() {
     })
     sectionProportionList.value = content.map((v) => {
       v.mete = Number((v.mete / 1000000).toFixed(2))
+      v.ratio = v.ratio?.toFixed(2)
       return v
     })
     const option = _myChart.getOption()
