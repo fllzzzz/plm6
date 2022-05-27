@@ -182,6 +182,6 @@ function initChart() {
 </script>
 <style lang="scss" scoped>
     #echarts {
-      margin-top: 10px;
+      padding-top: 10px;
     }
 </style>

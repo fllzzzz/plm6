@@ -98,7 +98,7 @@ function setXAxis() {
     {
       type: 'category',
       // data: [...provinceNameList.value],
-       data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+      data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
       // axisLine: { show: false }, // 坐标轴
       // axisTick: [{ // 坐标轴小标记
       //   show: false
@@ -130,21 +130,21 @@ function setSeries() {
       barMinHeight: 30, // 最小柱高
       barWidth: 40, // 柱宽度
       barMaxWidth: 100, // 最大柱宽度
-    //   // data: [...quantityList.value],
-    //   data: [120, 200, 150, 80, 70, 110, 130],
-    //   itemStyle: {
-    //     normal: { // 柱状图颜色
-    //       color: '#1890ff',
-    //       label: {
-    //         show: true, // 显示文本
-    //         position: 'inside', // 数据值位置
-    //         textStyle: {
-    //           fontSize: '14'
-    //         }
-    //       }
-    //     }
-    //   }
-    data: [120, 100, 90, 80, 70, 110, 130],
+      //   // data: [...quantityList.value],
+      //   data: [120, 200, 150, 80, 70, 110, 130],
+      //   itemStyle: {
+      //     normal: { // 柱状图颜色
+      //       color: '#1890ff',
+      //       label: {
+      //         show: true, // 显示文本
+      //         position: 'inside', // 数据值位置
+      //         textStyle: {
+      //           fontSize: '14'
+      //         }
+      //       }
+      //     }
+      //   }
+      data: [120, 100, 90, 80, 70, 110, 130],
       type: 'bar',
       showBackground: true,
       backgroundStyle: {
@@ -183,6 +183,6 @@ function initChart() {
 </script>
 <style lang="scss" scoped>
     #myEcharts {
-        margin-top: 20px;
+        padding-top: 20px;
     }
 </style>
