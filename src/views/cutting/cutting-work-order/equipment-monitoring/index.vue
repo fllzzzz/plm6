@@ -4,7 +4,7 @@
     <div class="head-container">
       <mHeader/>
     </div>
-      <!-- <common-table
+     <!-- <common-table
       ref="tableRef"
       v-loading="crud.loading"
       :data="crud.data"
@@ -19,68 +19,68 @@
       <div class="right-content">
         <projectChart  />
       </div>
-    </div>   
+    </div>
   </div>
 </template>
 
 <script setup>
-  // import crudApi from '@/api/cutting/machine'
-  import { ref } from 'vue'
-  import useCRUD from '@compos/use-crud'
-  import useMaxHeight from '@compos/use-max-height'
-  import checkPermission from '@/utils/system/check-permission'
-  // import { equipmentMonitoringPM as permission } from '@/page-permission/cutting'
-  import mHeader from './module/header'
-  import projectChart from './project-chart'
-
-  const optShow = {
-    add: false,
-    edit: false,
-    del: false,
-    download: false
+// import crudApi from '@/api/cutting/machine'
+import { getMachineInformation } from '@/api/cutting/machine'
+import { defineProps } from 'vue'
+import useCRUD from '@compos/use-crud'
+import useMaxHeight from '@compos/use-max-height'
+import mHeader from './module/header'
+import projectChart from './project-chart'
+const optShow = {
+  add: false,
+  edit: false,
+  del: false,
+  download: false
+}
+const props = defineProps({
+  detailData: {
+    type: Object
   }
- const tableRef = ref()
- 
-  const { crud,column } = useCRUD(
+})
+const { crud } = useCRUD(
   {
     title: '设备监控',
     sort: [],
     // permission: { ...permission },
     optShow: { ...optShow },
-    // crudApi: { ...crudApi },
     hasPagination: true
-  },
-  tableRef
+  }
 )
+machineInformation()
+async function machineInformation() {
+  try {
+    const content = await getMachineInformation(props.detailData)
+    console.log(content)
+  } catch (error) {
+    console.log('请求设备监控的接口失败')
+  }
+}
 
-  const { maxHeight } = useMaxHeight({
-    paginate: true,
-   
-  })
+const { maxHeight } = useMaxHeight({
+  paginate: true,
+  extraHeight: 40
+})
 </script>
 <style lang="scss" scoped>
-  .app-container {
-    width: 1700px;
-    display: flex;
-    flex-direction: column;
-  }    
   .app-content {
-      // height: 700px;
       display:flex;
-
     }
     .app-content .left-content {
-        width: 1000px;
         border: 1px solid #ccc;
         margin-right: 20px;
+        flex: 2;
+        display: flex;
+        padding: 10px;
       }
-          
-     .app-content .right-content {
-        flex: 1;  
-      }
- 
+    .app-content .right-content {
+      display: flex;
+      flex: 1;
+      flex-direction: column;
+    }
 </style>
-
-
-
 
