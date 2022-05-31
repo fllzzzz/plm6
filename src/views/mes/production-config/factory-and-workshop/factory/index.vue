@@ -25,6 +25,7 @@
       v-loading="crud.loading"
       :data="crud.data"
       highlight-current-row
+      :data-format="dataFormat"
       :max-height="maxHeight"
       :empty-text="crud.emptyText"
       style="width: 100%"
@@ -40,6 +41,19 @@
         label="工厂简称"
         min-width="140px"
       />
+      <el-table-column
+        v-if="columns.visible('targetProduction')"
+        key="targetProduction"
+        prop="targetProduction"
+        :show-overflow-tooltip="true"
+        label="目标产量(吨)"
+        align="center"
+        width="100px"
+      >
+        <template v-slot="{ row }">
+          <span>{{ row.targetProduction }}</span>
+        </template>
+      </el-table-column>
       <el-table-column
         v-if="columns.visible('tagColor')"
         key="tagColor"
@@ -144,12 +158,20 @@ const { crud, columns, CRUD } = useCRUD(
     permission: { ...permission },
     optShow: { ...optShow },
     crudApi: { ...crudApi },
-    invisibleColumns: ['shortName']
+    invisibleColumns: ['shortName', 'remark']
   },
   tableRef
 )
 
+const dataFormat = ref([['targetProduction', ['to-fixed', 2]]])
+
 const maxHeight = inject('maxHeight')
+
+CRUD.HOOK.handleRefresh = (crud, { data }) => {
+  data.content.forEach((v) => {
+    v.targetProduction = (v.targetProduction && v.targetProduction / 1000) || 0
+  })
+}
 
 async function changeStatus(data, val) {
   try {
