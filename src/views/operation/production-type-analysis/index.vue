@@ -173,6 +173,7 @@ async function refreshStructureInfo(myChart) {
     })
     structureList.value = content.map((v) => {
       v.yield = (v.yield / 1000).toFixed(2)
+      v.ratio = v.ratio?.toFixed(2)
       return v
     })
     const _myChart = myChart || getStructureChart()
@@ -198,6 +199,7 @@ async function refreshEnclosureInfo(myChart) {
     })
     enclosureList.value = content.map((v) => {
       v.yield = (v.yield / 1000).toFixed(2)
+      v.ratio = v.ratio?.toFixed(2)
       return v
     })
     const _myChart = myChart || getEnclosureChart()

@@ -1,6 +1,6 @@
 // 路由：运营分析
 export default {
-  id: 954,
+  id: 1011,
   name: '运营分析',
   children: [
     {
@@ -12,6 +12,30 @@ export default {
       redirect: '/operation/order-analysis',
       meta: { title: '首页', icon: 'config-2', noCache: true },
       children: [
+        {
+          path: '/operation/capacity-load-rate',
+          component: '/operation/capacity-load-rate/index',
+          hidden: false,
+          name: 'OperationCapacityLoadRate',
+          alwaysShow: false,
+          meta: { title: '产能负荷率', icon: 'config-2', noCache: true }
+        },
+        {
+          path: '/operation/order-delivery-rate',
+          component: '/operation/order-delivery-rate/index',
+          hidden: false,
+          name: 'OperationOrderDeliveryRate',
+          alwaysShow: false,
+          meta: { title: '订单交付率', icon: 'config-2', noCache: true }
+        },
+        {
+          path: '/operation/inspection-qualified-rate',
+          component: '/operation/inspection-qualified-rate/index',
+          hidden: false,
+          name: 'OperationOrderInspectionQualifiedRate',
+          alwaysShow: false,
+          meta: { title: '检验合格率', icon: 'config-2', noCache: true }
+        },
         {
           path: '/operation/order-analysis',
           component: '/operation/order-analysis/index',

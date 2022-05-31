@@ -80,8 +80,15 @@ const unshowAllVal = computed(() => {
 })
 
 const isHide = computed(() => {
-  const optionsLength = Object.keys(props.options).length
-  return !optionsLength || optionsLength - unshowAllVal.value.length <= 1
+  // const optionsLength = Object.keys(props.options).length
+  const _showVal = []
+  for (const item in props.options) {
+    const value = props.options[item].V
+    if (unshowAllVal.value.indexOf(value) === -1) {
+      _showVal.push(value)
+    }
+  }
+  return !_showVal.length || _showVal.length <= 1
 })
 
 const selectValue = ref()
