@@ -141,6 +141,29 @@
           </template>
         </el-table-column>
         <el-table-column
+          v-if="crud.query.category===TechnologyTypeAllEnum.BENDING.V"
+          key="bendTimes"
+          prop="bendTimes"
+          :show-overflow-tooltip="true"
+          :label="`折弯次数`"
+          min-width="100px"
+        >
+          <template v-slot="scope">
+            <el-input-number
+              v-if="scope.row.isModify"
+              v-model.number="scope.row.bendTimes"
+              :min="0"
+              :max="99999999999"
+              :step="1"
+              :precision="0"
+              placeholder="折弯次数"
+              controls-position="right"
+              style="width:100%"
+            />
+            <span v-else>{{scope.row.bendTimes? scope.row.bendTimes : '-'}}</span>
+          </template>
+        </el-table-column>
+        <el-table-column
           v-if="columns.visible('thickness') && crud.query.category !== TechnologyTypeAllEnum.TRUSS_FLOOR_PLATE.V"
           key="thickness"
           prop="thickness"
@@ -279,13 +302,13 @@
           prop="draw"
           :show-overflow-tooltip="true"
           label="画图"
-          min-width="100px"
+          min-width="120px"
         >
           <template v-slot="scope">
             <common-button size="mini" type="primary" @click="handleDraw(scope.row)" :disabled="scope.row.isModify" v-permission="permission.draw">{{
               scope.row.attachmentId ? '修改' : '画图'
             }}</common-button>
-            <export-button :params="{ id: scope.row.attachmentId }" v-if="scope.row.attachmentId" :disabled="scope.row.isModify" v-permission="permission.drawDownload"/>
+            <common-button size="mini" type="primary" icon="el-icon-view" v-permission="permission.drawDownload" @click="drawingPreview(scope.row)" v-if="scope.row.attachmentId"/>
           </template>
         </el-table-column>
         <!--状态、编辑与删除-->
@@ -366,7 +389,7 @@ import { isNotBlank } from '@data-type/index'
 import { TechnologyTypeAllEnum } from '@enum-ms/contract'
 import { validate } from '@compos/form/use-table-validate'
 import SimpleDrawing from '../components/simple-drawing'
-import ExportButton from '@comp-common/export-button/index.vue'
+// import ExportButton from '@comp-common/export-button/index.vue'
 import useDrawing from '@compos/use-drawing'
 import drawingImg from '@comp-base/drawing-img.vue'
 
@@ -408,50 +431,77 @@ const { maxHeight } = useMaxHeight({
   extraHeight: 40
 })
 
-const bendingRules = {
+// 折边件展开宽度校验
+const validateUnfoldedWidth = (value, row) => {
+  if (crud.query.category === TechnologyTypeAllEnum.BENDING.V) {
+    if (!value) return false
+    return true
+  }
+  return true
+}
+
+// 型号
+const validatePlateId = (value, row) => {
+  if (crud.query.category !== TechnologyTypeAllEnum.BENDING.V) {
+    if (!value) return false
+    return true
+  }
+  return true
+}
+
+// 有效宽度
+const validateWidth = (value, row) => {
+  if (crud.query.category !== TechnologyTypeAllEnum.BENDING.V) {
+    if (!value) return false
+    return true
+  }
+  return true
+}
+
+// 厚度
+const validateThickness = (value, row) => {
+  if (crud.query.category !== TechnologyTypeAllEnum.TRUSS_FLOOR_PLATE.V) {
+    if (!value) return false
+    return true
+  }
+  return true
+}
+
+// 折边件折弯次数
+const validateBendTimes = (value, row) => {
+  if (crud.query.category === TechnologyTypeAllEnum.BENDING.V) {
+    if (!value) return false
+    return true
+  }
+  return true
+}
+
+// 颜色
+const validateColor = (value, row) => {
+  if (crud.query.category === TechnologyTypeAllEnum.BENDING.V || crud.query.category === TechnologyTypeAllEnum.PROFILED_PLATE.V) {
+    if (!value) return false
+    return true
+  }
+  return true
+}
+
+const tableRules = {
   serialNumber: [{ required: true, message: '请输入编号', trigger: 'blur' }],
-  unfoldedWidth: [{ required: true, message: '展开宽度必填', trigger: 'change' }],
-  thickness: [{ required: true, message: '厚度必填', trigger: 'change' }],
+  unfoldedWidth: [{ validator: validateUnfoldedWidth, message: '展开宽度必填', trigger: 'change' }],
+  plateId: [{ validator: validatePlateId, message: '请选择版型', trigger: 'change' }],
+  width: [{ validator: validateWidth, message: '有效宽度必填', trigger: 'change' }],
+  thickness: [{ validator: validateThickness, message: '厚度必填', trigger: 'change' }],
   length: [{ required: true, message: '单长必填', trigger: 'change' }],
   quantity: [{ required: true, message: '数量必填', trigger: 'change' }],
   totalArea: [{ required: true, message: '总面积必填', trigger: 'change' }],
   totalLength: [{ required: true, message: '总长度必填', trigger: 'change' }],
-  color: [{ required: true, message: '请输入颜色', trigger: 'blur' }]
-}
-
-const otherRules = {
-  serialNumber: [{ required: true, message: '请输入编号', trigger: 'blur' }],
-  plateId: [{ required: true, message: '请选择版型', trigger: 'change' }],
-  width: [{ required: true, message: '有效宽度必填', trigger: 'change' }],
-  thickness: [{ required: true, message: '厚度必填', trigger: 'change' }],
-  length: [{ required: true, message: '单长必填', trigger: 'change' }],
-  quantity: [{ required: true, message: '数量必填', trigger: 'change' }],
-  totalArea: [{ required: true, message: '总面积必填', trigger: 'change' }],
-  totalLength: [{ required: true, message: '总长度必填', trigger: 'change' }]
-}
-
-const colorRules = {
-  serialNumber: [{ required: true, message: '请输入编号', trigger: 'blur' }],
-  plateId: [{ required: true, message: '请选择版型', trigger: 'change' }],
-  width: [{ required: true, message: '有效宽度必填', trigger: 'change' }],
-  thickness: [{ required: true, message: '厚度必填', trigger: 'change' }],
-  length: [{ required: true, message: '单长必填', trigger: 'change' }],
-  quantity: [{ required: true, message: '数量必填', trigger: 'change' }],
-  totalArea: [{ required: true, message: '总面积必填', trigger: 'change' }],
-  totalLength: [{ required: true, message: '总长度必填', trigger: 'change' }],
-  color: [{ required: true, message: '请输入颜色', trigger: 'blur' }]
+  bendTimes: [{ validator: validateBendTimes, message: '折弯次数必填', trigger: 'change' }],
+  color: [{ validator: validateColor, message: '请输入颜色', trigger: 'blur' }]
 }
 
 function wrongCellMask({ row, column }) {
   if (!row) return
-  let rules = {}
-  if (crud.query.category === TechnologyTypeAllEnum.BENDING.V) {
-    rules = bendingRules
-  } else if (crud.query.category === TechnologyTypeAllEnum.PROFILED_PLATE.V) {
-    rules = colorRules
-  } else {
-    rules = otherRules
-  }
+  const rules = tableRules
   let flag = true
   if (row.verify && Object.keys(row.verify) && Object.keys(row.verify).length > 0) {
     if (row.verify[column.property] === false) {
@@ -587,14 +637,7 @@ async function rowSubmit(row) {
       }
     })
   }
-  let rules = {}
-  if (crud.query.category === TechnologyTypeAllEnum.BENDING.V) {
-    rules = bendingRules
-  } else if (crud.query.category === TechnologyTypeAllEnum.PROFILED_PLATE.V) {
-    rules = colorRules
-  } else {
-    rules = otherRules
-  }
+  const rules = tableRules
   let flag = true
   row.verify = {}
   for (const rule in rules) {
