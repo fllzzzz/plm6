@@ -3,7 +3,7 @@
     <common-button
     size="mini"
     type="primary"
-    @click="editClick(data,false)"
+    @click="viewsClick"
     v-if='checkPermission(permission.views)'>查看</common-button>
     <common-button
       @click="editClick(data,true)"
@@ -179,6 +179,57 @@
       </el-table-column>
     </common-table>
   </common-dialog>
+    <!-- 查看零件工单 -->
+   <common-dialog @close="closeDialog" width="70%" title="零件清单" append-to-body v-model="viewsVisible">
+    <common-table v-loading="viewsLoading" ref="tableRef" :data="viewsData" :max-height="400" style="width: 100%" row-key="id">
+      <el-table-column label="序号" type="index" align="center" width="60" />
+      <el-table-column key="monomerName" prop="monomerName" :show-overflow-tooltip="true" label="单体" min-width="60" align="center">
+        <template v-slot="scope">
+          <span>{{ scope.row.monomerName }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column key="areaName" prop="areaName" :show-overflow-tooltip="true" label="区域" min-width="60" align="center">
+        <template v-slot="scope">
+          <span>{{ scope.row.areaName }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column key="serialNumber" prop="serialNumber" :show-overflow-tooltip="true" label="编号" min-width="60" align="center">
+        <template v-slot="scope">
+          <span>{{ scope.row.serialNumber }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column key="specification" prop="specification" :show-overflow-tooltip="true" label="规格" min-width="60" align="center">
+        <template v-slot="scope">
+          <span>{{ scope.row.specification }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column key="length" prop="length" :show-overflow-tooltip="true" label="长度" min-width="60" align="center">
+        <template v-slot="scope">
+          <span>{{ scope.row.length }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column key="material" prop="material" :show-overflow-tooltip="true" label="材质" min-width="60" align="center">
+        <template v-slot="scope">
+          <span>{{ scope.row.material }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column key="quantity" prop="quantity" :show-overflow-tooltip="true" label="数量" min-width="60" align="center">
+        <template v-slot="scope">
+          <span>{{ scope.row.quantity }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column key="netWeight" prop="netWeight" :show-overflow-tooltip="true" label="单重（kg）" min-width="60" align="center">
+        <template v-slot="scope">
+          <span>{{ scope.row.netWeight }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column key="totalNetWeight" prop="totalNetWeight" :show-overflow-tooltip="true" label="总重（kg）" min-width="60" align="center">
+        <template v-slot="scope">
+          <span>{{ scope.row.totalNetWeight }}</span>
+        </template>
+      </el-table-column>
+    </common-table>
+   </common-dialog>
 </template>
 
 <script setup>
@@ -187,6 +238,7 @@ import checkPermission from '@/utils/system/check-permission'
 import { regExtra } from '@compos/use-crud'
 import { ElMessage } from 'element-plus'
 import { del, uploadOrder, updateOrder, deletePartFromOrder, addPartFromOrder } from '@/api/cutting/taskPack'
+import { byCutTaskId } from '@/api/cutting/radan-controller'
 import crudApi1 from '@/api/cutting/project-data'
 
 const emit = defineEmits(['selectionChange'])
@@ -233,6 +285,9 @@ const { crud } = regExtra()
 const isDel = ref(false)
 const nesting = ref(false)
 const currentRow = ref({})
+const viewsData = ref([])
+const viewsVisible = ref(false)
+const viewsLoading = ref(false)
 
 // 取消删除
 function cancelDelete() {
@@ -294,6 +349,18 @@ async function NestingClick(row) {
   nesting.value = false
 }
 
+// 查看零件清单
+async function viewsClick(row) {
+  viewsLoading.value = true
+  viewsVisible.value = true
+  try {
+    const { content } = await byCutTaskId({ cutTaskId: props.data.cutTaskId })
+    viewsData.value = content
+  } catch (err) {
+    console.log(err)
+  }
+  viewsLoading.value = false
+}
 // 编辑弹窗？？
 async function editClick(row, isDelValue) {
   innerLoading.value = true

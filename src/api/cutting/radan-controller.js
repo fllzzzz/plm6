@@ -65,7 +65,7 @@ export function uploadTask({
 }
 
 // 任务id查零件清单
-export function ByCutTaskId(params) {
+export function byCutTaskId(params) {
   return request({
     url: `/api/radan/getPartByCutTaskId`,
     method: 'post',
@@ -114,7 +114,7 @@ export default {
   area,
   ByAreaId,
   uploadTask,
-  ByCutTaskId,
+  byCutTaskId,
   getTaskPack,
   creatTaskPack,
   feedingOperation,
