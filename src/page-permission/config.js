@@ -147,7 +147,9 @@ export const configMesBasePM = {
   appPrintConfigGet: ['app_print_config:get'], // 查看移动端打印配置
   appPrintConfigEdit: ['app_print_config:edit'], // 编辑移动端打印配置
   carModelConfigGet: ['car_model_config:get'], // 查看车型配置
-  carModelConfigEdit: ['car_model_config:edit'] // 编辑车型配置
+  carModelConfigEdit: ['car_model_config:edit'], // 编辑车型配置
+  foldingPriceMethodGet: ['folding_price_method:get'], // 查看围护折边件计价方式
+  foldingPriceMethodEdit: ['folding_price_method:edit'] // 编辑围护折边件计价方式
 }
 
 // MES-配置管理/构件类型配置
