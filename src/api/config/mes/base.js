@@ -130,3 +130,24 @@ export function setCarModelConfig(data) {
     data
   })
 }
+
+/**
+ * 获取围护-折边件工资计价方式
+ */
+export function getFoldingPriceMethod() {
+  return request({
+    url: '/api/config/flanging_piece_price',
+    method: 'get'
+  })
+}
+
+/**
+ * 设置围护-折边件工资计价方式
+ */
+export function setFoldingPriceMethod(data) {
+  return request({
+    url: '/api/config/flanging_piece_price',
+    method: 'put',
+    data
+  })
+}
