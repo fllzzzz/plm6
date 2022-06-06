@@ -127,14 +127,14 @@
               <span>{{ row.userName }}</span>
             </template>
           </el-table-column>
-          <el-table-column prop="mete" :show-overflow-tooltip="true" label="上月" align="center">
-            <template #default="{ row }">
-              <span>{{ row.mete }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column prop="lastMonthMete" :show-overflow-tooltip="true" label="本月" align="center">
+          <el-table-column prop="lastMonthMete" :show-overflow-tooltip="true" label="上月" align="center">
             <template #default="{ row }">
               <span>{{ row.lastMonthMete }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column prop="mete" :show-overflow-tooltip="true" label="本月" align="center">
+            <template #default="{ row }">
+              <span>{{ row.mete }}</span>
             </template>
           </el-table-column>
         </common-table>
