@@ -41,7 +41,7 @@
             key="receipt.serialNumber"
             :show-overflow-tooltip="true"
             prop="receipt.serialNumber"
-            label="退库单号"
+            label="退货单号"
             align="center"
             min-width="120"
           >
@@ -76,9 +76,18 @@
         key="amount"
         :show-overflow-tooltip="true"
         prop="amount"
-        label="红冲金额"
+        :label="`红冲金额(含税)`"
         align="right"
-        min-width="120"
+        width="110"
+      />
+      <el-table-column
+        v-if="columns.visible('amountExcludingVAT')"
+        key="amountExcludingVAT"
+        :show-overflow-tooltip="true"
+        prop="amountExcludingVAT"
+        :label="`红冲金额(不含税)`"
+        align="right"
+        width="120"
       />
     </common-table>
     <!--分页组件-->
