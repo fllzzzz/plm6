@@ -20,7 +20,7 @@
         :optionAllValue="undefined"
         type="enum"
         class="filter-item"
-        @change="crud.toQuery"
+        @change="settleChange"
       />
       <el-date-picker
         v-model="query.year"
@@ -274,6 +274,13 @@ async function getProjectNumData() {
   } catch (error) {
     console.log('获取项目数量', error)
   }
+}
+
+function settleChange() {
+  if (crud.query.settlementStatus === settlementStatusEnum.SETTLED.V) {
+    crud.query.status = undefined
+  }
+  crud.toQuery()
 }
 </script>
 <style lang="scss" scoped>

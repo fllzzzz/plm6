@@ -88,7 +88,12 @@
             <common-radio v-model="form.structureMeasureMode" :options="engineerSettlementTypeEnumN.ENUM" type="enum" :disabled="!form.structureMeasureMode"/>
           </el-form-item>
           <el-form-item label="围护结算方式" prop="enclosureMeasureMode">
-            <common-radio v-model="form.enclosureMeasureMode" :options="enclosureSettlementTypeEnum.ENUM" type="enum" :disabled="!form.enclosureMeasureMode"/>
+            <template v-if="form.measureModeList.length>0">
+              <div v-for="(item,index) in form.measureModeList" :key="index" >
+                <span style="float:left;width:90px;text-align:right;">{{TechnologyTypeAllEnum.VL[item.no]}}：</span><common-radio style="float:left;" v-model="item.measureMode" :options="enclosureSettlementTypeEnum.ENUM" type="enum"/>
+              </div>
+            </template>
+            <!-- <common-radio v-model="form.enclosureMeasureMode" :options="enclosureSettlementTypeEnum.ENUM" type="enum" :disabled="!form.enclosureMeasureMode"/> -->
           </el-form-item>
         </div>
         <div class="form-row">
@@ -160,7 +165,7 @@
       <enclosure-show :table-data="form.enclosureInfo" :show-item="showItem" @clickChange="typeChange"  v-if="showItem && showItem.length > 0"/>
       <!--围护产品数据弹窗  -->
       <common-drawer
-        v-model:visible="enclosureVisible"
+        v-model="enclosureVisible"
         :with-header="true"
         :show-close="false"
         :wrapper-closable="false"
@@ -201,7 +206,8 @@ import {
   enclosureSettlementTypeEnum,
   transportModeEnum,
   TechnologyTypeEnum,
-  TechnologyMainTypeEnum
+  TechnologyMainTypeEnum,
+  TechnologyTypeAllEnum
 } from '@enum-ms/contract'
 import { invoiceTypeEnum, paymentModeEnum } from '@enum-ms/finance'
 import { getContentInfo } from '@/api/contract/project'
@@ -250,7 +256,8 @@ const defaultForm = {
   signingDate: undefined, // 签约日期
   signingAddress: undefined, // 签约地址
   structureMeasureMode: engineerSettlementTypeEnumN.THEORY.V, // 结算方式
-  enclosureMeasureMode: enclosureSettlementTypeEnum.LENGTH.V, // 围护结算方式
+  // enclosureMeasureMode: enclosureSettlementTypeEnum.LENGTH.V, // 围护结算方式
+  measureModeList: [],
   transportMode: transportModeEnum.HOME_DELIVERY.V, // 运输方式
   payType: paymentModeEnum.PUBLIC_TRANSFER.V, // 付款方式
   isTax: isTaxContractEnum.YES.V, // 是否含税
@@ -359,7 +366,8 @@ function businessChange() {
   showItem.value = []
   showCategory.value = []
   form.value.structureMeasureMode = undefined
-  form.value.enclosureMeasureMode = undefined
+  // form.value.enclosureMeasureMode = undefined
+  form.value.measureModeList = []
   Object.assign(form.value, JSON.parse(JSON.stringify(techForm)))
   if (form.value.businessType) {
     projectContentOption.value = form.value.businessType === businessTypeEnum.MACHINING.V ? projectContent1 : projectContent2
@@ -397,6 +405,13 @@ function getShowItem(val) {
     TechnologyTypeEnum.TRUSS_FLOOR_PLATE.V,
     TechnologyTypeEnum.PRESSURE_BEARING_PLATE.V
   ]
+  const enclosureItems = [
+    TechnologyTypeAllEnum.SANDWICH_BOARD.V,
+    TechnologyTypeAllEnum.PROFILED_PLATE.V,
+    TechnologyTypeAllEnum.TRUSS_FLOOR_PLATE.V,
+    TechnologyTypeAllEnum.PRESSURE_BEARING_PLATE.V,
+    TechnologyTypeAllEnum.BENDING.V
+  ]
   const AllInfo = []
   if (val.length > 0) {
     val.map((v) => {
@@ -421,7 +436,24 @@ function getShowItem(val) {
       }
     })
     form.value.structureMeasureMode = AllInfo.findIndex(v => v.categoryType === TechnologyMainTypeEnum.STRUCTURE.V) > -1 ? engineerSettlementTypeEnumN.THEORY.V : undefined
-    form.value.enclosureMeasureMode = AllInfo.findIndex(v => v.categoryType === TechnologyMainTypeEnum.ENCLOSURE.V) > -1 ? enclosureSettlementTypeEnum.LENGTH.V : undefined
+    if (AllInfo.length > 0) {
+      const modeData = []
+      AllInfo.map(v => {
+        if (enclosureItems.indexOf(v.no) > -1) {
+          if (form.value.measureModeList.findIndex(k => k.no === v.no) < 0) {
+            modeData.push({
+              measureMode: enclosureSettlementTypeEnum.LENGTH.V,
+              no: v.no
+            })
+          } else {
+            modeData.push(form.value.measureModeList.find(k => k.no === v.no))
+          }
+        }
+      })
+      form.value.measureModeList = modeData
+    } else {
+      form.value.measureModeList = []
+    }
     if (enclosureFormRef.value) {
       enclosureSave()
     }

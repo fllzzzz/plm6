@@ -1,7 +1,7 @@
 <template>
   <div>
     <div v-show="crud.searchToggle">
-      <project-radio-button size="small" v-model="query.projectId" class="filter-item" @change="crud.toQuery" />
+      <project-radio-button size="small" :type="'all'" v-model="query.projectId" class="filter-item" @change="crud.toQuery" />
       <el-date-picker
         v-model="query.createTime"
         type="daterange"
