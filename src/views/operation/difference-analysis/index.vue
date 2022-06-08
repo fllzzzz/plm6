@@ -127,7 +127,7 @@ async function fetchList() {
         usage: 0
       }
     )
-    summaryInfo.value.diff = Math.abs(summaryInfo.value.usage - summaryInfo.value.production) || 0
+    summaryInfo.value.diff = summaryInfo.value.usage && Math.abs(summaryInfo.value.usage - summaryInfo.value.production) || 0
     summaryInfo.value.diffRatio = summaryInfo.value.usage && (summaryInfo.value.diff / summaryInfo.value.usage) * 100
     list.value = content
   } catch (error) {
