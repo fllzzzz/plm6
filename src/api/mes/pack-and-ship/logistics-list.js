@@ -15,7 +15,25 @@ export function get(params) {
   })
 }
 
-export default { get }
+export function edit(id, data) {
+  return request({
+    module: 'mes',
+    url: `cargo/${id}/change`,
+    method: 'put',
+    data
+  })
+}
+
+// 获取装车修改详情
+export function getLog(id) {
+  return request({
+    module: 'mes',
+    url: `cargo/${id}/change/log`,
+    method: 'get'
+  })
+}
+
+export default { get, edit }
 
 /**
  * 分页获取物流单位列表
@@ -61,6 +79,17 @@ export function delLogisticsPrice(id) {
     module: 'mes',
     url: `supper/price/${id}`,
     method: 'delete'
+  })
+}
+
+/**
+ * 获取物流单位车型价格配置
+ */
+export function getSupplierCarPrice(id) {
+  return request({
+    module: 'mes',
+    url: `supper/price/${id}/car`,
+    method: 'get'
   })
 }
 

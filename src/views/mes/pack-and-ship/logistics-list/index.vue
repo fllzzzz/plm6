@@ -12,8 +12,8 @@
       @sort-change="crud.handleSortChange"
       @selection-change="crud.selectionChangeHandler"
     >
-      <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="序号" type="index" align="center" width="60" />
+      <el-table-column type="selection" width="50" align="center" />
+      <el-table-column label="序号" type="index" align="center" width="50" />
       <el-table-column
         v-if="columns.visible('supplier.name')"
         key="supplier.name"
@@ -39,6 +39,56 @@
         </template>
       </el-table-column>
       <el-table-column
+        v-if="columns.visible('mete')"
+        :show-overflow-tooltip="true"
+        prop="mete"
+        label="车型"
+        align="center"
+      >
+        <template v-slot="scope">
+          <span>{{ scope.row.carModel }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        v-if="columns.visible('licensePlate')"
+        key="licensePlate"
+        prop="licensePlate"
+        sortable="custom"
+        :show-overflow-tooltip="true"
+        label="车牌号"
+        align="center"
+      />
+      <el-table-column
+        v-if="columns.visible('driverName')"
+        key="driverName"
+        prop="driverName"
+        sortable="custom"
+        :show-overflow-tooltip="true"
+        label="司机姓名"
+        align="center"
+        width="100"
+      />
+      <el-table-column
+        v-if="columns.visible('driverPhone')"
+        key="driverPhone"
+        prop="driverPhone"
+        :show-overflow-tooltip="true"
+        label="司机电话"
+        align="center"
+        min-width="120"
+      />
+       <el-table-column
+        v-if="columns.visible('mete')"
+        :show-overflow-tooltip="true"
+        prop="mete"
+        label="装载重量(t)"
+        align="center"
+      >
+        <template v-slot="scope">
+          <span>{{ convertUnits(scope.row.mete, 'kg', 't', DP.COM_WT__T) }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
         v-if="columns.visible('manufactureType')"
         key="manufactureType"
         prop="manufactureType"
@@ -53,7 +103,7 @@
           }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column v-if="columns.visible('productType')" key="productType" prop="productType" label="装载类型" width="165">
+      <el-table-column v-if="columns.visible('productType')" key="productType" prop="productType" label="装载类型" width="165" >
         <template v-slot="scope">
           <el-tag
             v-for="item in cleanArray(EO.getBits(packTypeEnum, scope.row.productType, 'V'))"
@@ -79,31 +129,22 @@
           <el-tag effect="light" disable-transitions style="width: 100%; max-width: 130px">{{ scope.row.serialNumber }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column
-        v-if="columns.visible('actualWeight')"
-        :show-overflow-tooltip="true"
-        prop="actualWeight"
-        label="装载重量(t)"
-        align="center"
-        min-width="120"
-      >
+      <el-table-column prop="priceType" label="计价方式" align="center">
         <template v-slot="scope">
-          <span>{{ convertUnits(scope.row.actualWeight, 'kg', 't', DP.COM_WT__T) }}</span>
+          <span>{{ logisticsPriceTypeEnum.VL[scope.row.priceType] }}</span>
         </template>
       </el-table-column>
       <el-table-column
         v-if="columns.visible('supplier.price')"
         :show-overflow-tooltip="true"
         prop="supplier.price"
-        label="运输单价(元)"
-        align="center"
+        label="运输单价"
+        align="right"
         min-width="120"
       >
         <template v-slot="scope">
-          <!-- <el-tag v-if="scope.row.supplier" style="margin-right:5px;" :type="logisticsPriceTypeEnum.V[scope.row.supplier.priceType].T" effect="plain">{{
-            logisticsPriceTypeEnum.VL[scope.row.supplier.priceType]
-          }}</el-tag> -->
           <span>{{ scope.row.supplier && toFixed(scope.row.supplier.price, DP.YUAN) }}</span>
+          <span :class="scope.row.priceType === logisticsPriceTypeEnum.WEIGHT.V ? 'blue':'orange'" style="margin-left:3px;">{{ logisticsPriceTypeEnum.V[scope.row.priceType].unit }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -111,50 +152,38 @@
         :show-overflow-tooltip="true"
         prop="totalPrice"
         label="运输费(元)"
-        align="center"
+        align="right"
         min-width="120"
       >
         <template v-slot="scope">
           <span>{{ toFixed(scope.row.totalPrice, DP.YUAN) }}</span>
         </template>
       </el-table-column>
-      <el-table-column
-        v-if="columns.visible('licensePlate')"
-        key="licensePlate"
-        prop="licensePlate"
-        sortable="custom"
-        :show-overflow-tooltip="true"
-        label="车牌号"
-        align="center"
-        min-width="100"
-      />
-      <el-table-column
-        v-if="columns.visible('driverName')"
-        key="driverName"
-        prop="driverName"
-        sortable="custom"
-        :show-overflow-tooltip="true"
-        label="司机姓名"
-        align="center"
-        min-width="100"
-      />
-      <el-table-column
-        v-if="columns.visible('driverPhone')"
-        key="driverPhone"
-        prop="driverPhone"
-        :show-overflow-tooltip="true"
-        label="司机电话"
-        align="center"
-        min-width="120"
-      />
       <el-table-column v-if="columns.visible('auditTime')" key="auditTime" prop="auditTime" sortable="custom" label="承运日期" width="120">
         <template v-slot="scope">
           <span v-parse-time="{ val: scope.row.auditTime, fmt: '{y}-{m}-{d}' }" />
         </template>
       </el-table-column>
+      <el-table-column label="操作" width="140px" align="center" fixed="right">
+        <template v-slot="scope">
+          <common-button
+            size="mini"
+            icon="el-icon-edit"
+            type="primary"
+            @click="openForm(scope.row,'edit')"
+          />
+          <common-button
+            size="mini"
+            icon="el-icon-view"
+            type="primary"
+            @click="openForm(scope.row,'detail')"
+          />
+        </template>
+      </el-table-column>
     </common-table>
     <!--分页组件-->
     <pagination />
+    <priceForm v-model="formVisible" :detailInfo="detailInfo" :showType="showType" @success="crud.toQuery"/>
   </div>
 </template>
 
@@ -164,7 +193,7 @@ import { ref } from 'vue'
 
 import { logisticsPM as permission } from '@/page-permission/mes'
 import { manufactureTypeEnum } from '@enum-ms/production'
-import { packTypeEnum } from '@enum-ms/mes'
+import { packTypeEnum, logisticsPriceTypeEnum } from '@enum-ms/mes'
 import { projectNameFormatter } from '@/utils/project'
 import { DP } from '@/settings/config'
 import { cleanArray } from '@/utils/data-type/array'
@@ -176,6 +205,7 @@ import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import pagination from '@crud/Pagination'
 import mHeader from './module/header'
+import priceForm from './module/form'
 
 const optShow = {
   add: false,
@@ -185,6 +215,9 @@ const optShow = {
 }
 
 const tableRef = ref()
+const formVisible = ref(false)
+const detailInfo = ref({})
+const showType = ref()
 const { crud, columns } = useCRUD(
   {
     title: '物流记录',
@@ -198,4 +231,18 @@ const { crud, columns } = useCRUD(
 )
 
 const { maxHeight } = useMaxHeight({ paginate: true })
+
+function openForm(row, type) {
+  showType.value = type
+  detailInfo.value = row?.sourceRow
+  formVisible.value = true
+}
 </script>
+<style lang="scss" scoped>
+  .blue{
+    color:#409eff;
+  }
+  .orange{
+    color:#e6a23c;
+  }
+</style>
