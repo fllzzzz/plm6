@@ -46,11 +46,11 @@
                   <span>{{ convertUnits(detailInfo.mete, 'kg', 't', DP.COM_WT__T) }}</span>
                 </el-form-item>
                 <el-form-item label="计价方式">
-                  <span>{{ logisticsPriceTypeEnum.VL[detailInfo.supplier?.priceType] }}</span>
+                  <span>{{ logisticsPriceTypeEnum.VL[detailInfo.priceType] }}</span>
                 </el-form-item>
                 <el-form-item label="运输单价">
                   <span style="margin-right:3px;">{{ toFixed(detailInfo.supplier.price, DP.YUAN) }}</span>
-                  <span :class="detailInfo.supplier.priceType === logisticsPriceTypeEnum.WEIGHT.V ? 'blue':'orange'" >{{ logisticsPriceTypeEnum.V[detailInfo.supplier.priceType].unit }}</span>
+                  <span :class="detailInfo.priceType === logisticsPriceTypeEnum.WEIGHT.V ? 'blue':'orange'" >{{ logisticsPriceTypeEnum.V[detailInfo.priceType].unit }}</span>
                 </el-form-item>
                 <el-form-item label="运输费">
                   <span><span style="margin-right:3px;">{{ toFixed(detailInfo.totalPrice, DP.YUAN)}}</span>元</span>
@@ -205,8 +205,7 @@ const { maxHeight } = useMaxHeight(
     extraBox: ['.el-drawer__header', '.detail-header'],
     wrapperBox: ['.el-drawer__body'],
     navbar: false,
-    extraHeight: 120,
-    minHeight: 300
+    extraHeight: 120
   },
   () => drawerRef.value.loaded
 )
