@@ -156,6 +156,7 @@ const printParams = computed(() => {
     productionLineId: props.info?.productionLine?.id,
     workshopId: props.info?.workshop?.id,
     productType: props.info?.productType,
+    wageQuotaType: props.info?.wageQuotaType,
     teamId: props.info.teamId,
     processId: props.info.processId
   })
