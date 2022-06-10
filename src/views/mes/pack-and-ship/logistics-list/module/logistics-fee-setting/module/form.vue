@@ -234,6 +234,7 @@ async function fetchModelData() {
 }
 
 CRUD.HOOK.afterToCU = (crud, form) => {
+  tablePriceType.value = crud.status.edit === CRUD.STATUS.PREPARED ? crud.form.priceType : logisticsPriceTypeEnum.WEIGHT.V
   fetchModelData()
 }
 

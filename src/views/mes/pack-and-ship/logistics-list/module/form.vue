@@ -15,9 +15,13 @@
     <template #content>
       <el-form ref="formRef" size="small" :model="form" :rules="rules" label-width="110px">
         <div style="display:flex;" class="detail-header">
-          <div style="flex:1;">
+          <div style="flex:1;padding-right:8px;">
+            <el-divider v-if="showType === 'edit'"><span class="title">当前信息</span></el-divider>
             <div :class="showType === 'detail'?'flex-div':''">
               <div :class="showType === 'detail'?'child-div':''">
+                <el-form-item label="承运日期" v-if="showType === 'detail'">
+                  <span v-parse-time="{ val: detailInfo.auditTime, fmt: '{y}-{m}-{d}' }" />
+                </el-form-item>
                 <el-form-item label="所属项目">
                   <span class="project-name">{{ projectNameFormatter(detailInfo.project) }}</span>
                 </el-form-item>
@@ -49,12 +53,13 @@
                   <span :class="detailInfo.supplier.priceType === logisticsPriceTypeEnum.WEIGHT.V ? 'blue':'orange'" >{{ logisticsPriceTypeEnum.V[detailInfo.supplier.priceType].unit }}</span>
                 </el-form-item>
                 <el-form-item label="运输费">
-                  <span>{{ toFixed(detailInfo.totalPrice, DP.YUAN)}}元</span>
+                  <span><span style="margin-right:3px;">{{ toFixed(detailInfo.totalPrice, DP.YUAN)}}</span>元</span>
                 </el-form-item>
               </div>
             </div>
           </div>
-          <div style="flex:1;" v-if="showType === 'edit'">
+          <div style="flex:1;padding-left:8px;" v-if="showType === 'edit'">
+            <el-divider><span class="title">变更信息</span></el-divider>
             <el-form-item label="计价方式" prop="priceType">
               <common-radio-button
                 class="filter-item"
@@ -70,16 +75,16 @@
                 :max="999999999999"
                 :precision="DP.YUAN"
                 :step="100"
-                controls-position="right"
+                :controls="false"
                 style="width: 150px;margin-right:3px;"
                 placeholder="请填写"
                 autocomplete="off"
                 @change="priceChange"
               />
-              <span :class="form.priceType === logisticsPriceTypeEnum.WEIGHT.V ? 'blue':'orange'" >{{ logisticsPriceTypeEnum.V[form.priceType].unit }}</span>
+              <span :class="form.priceType === logisticsPriceTypeEnum.WEIGHT.V ? 'blue':'orange'" style="margin-left:3px;">{{ logisticsPriceTypeEnum.V[form.priceType].unit }}</span>
             </el-form-item>
             <el-form-item label="运输费" v-if="form.priceType === logisticsPriceTypeEnum.WEIGHT.V">
-              <span>{{ toFixed(allPrice, DP.YUAN) }}元</span>
+              <span><span style="margin-right:3px;">{{ toFixed(allPrice, DP.YUAN) }}</span>元</span>
             </el-form-item>
             <el-form-item label="变更原因">
               <el-input
@@ -87,7 +92,7 @@
                 type="textarea"
                 :autosize="{ minRows: 2, maxRows: 8}"
                 placeholder="请填写"
-                style="width: 320px;"
+                style="width: 280px;"
                 :maxlength="200"
                 show-word-limit
               />
@@ -108,7 +113,7 @@
           <el-table-column label="序号" type="index" align="center" width="50" />
           <el-table-column prop="updateTime" label="日期" align="center">
             <template v-slot="scope">
-              <span v-parse-time="{ val: scope.row.updateTime, fmt: '{y}-{m}-{d}' }" />
+              <span v-parse-time="{ val: scope.row.updateTime, fmt: '{y}-{m}-{d} {h}:{i}:{s}' }" />
             </template>
           </el-table-column>
           <el-table-column prop="priceType" label="计价方式" align="center">
@@ -188,7 +193,7 @@ const validatePrice = (rule, value, callback) => {
 }
 
 const rules = {
-  price: { required: true, validator: validatePrice, trigger: 'change' },
+  price: { required: true, validator: validatePrice, trigger: 'blur' },
   priceType: { required: true, message: '请选择计价方式', trigger: 'change' }
 }
 
