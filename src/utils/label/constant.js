@@ -352,23 +352,23 @@ const AUX_MAT_COMMON_L_HTML = function ({ component = defComponent, printConfig 
   return `
   <div class="aux-mat-label">
     <div class="row">
-      <div class="col col-center" style="font-size:10pt;">${component.projectName}</div>
+      <div class="col col-center" style="font-size:10pt;">${component.projectName || ''}</div>
     </div>
     <div class="row">
-      <div class="col col-center" style="font-size:10pt;">${component.monomerName}</div>
+      <div class="col col-center" style="font-size:10pt;">${component.monomerName || ''}</div>
     </div>
     <div class="contains-rows">
       <div class="col" style="flex: 2">
         <div class="row row-3">
-          <div class="col" style="font-size:20pt;text-align:center;font-weight: 600;">${component.name}</div>
+          <div class="col" style="font-size:20pt;text-align:center;font-weight: 600;">${component.name || ''}</div>
         </div>
         <div class="row">
-          <div class="col">规格：${component.specification}</div>
-          <div class="col">总数：${component.quantity}</div>
+          <div class="col">规格：${component.specification || ''}</div>
+          <div class="col">总数：${component.quantity || ''}</div>
         </div>
         <div class="row">
-          <div class="col">颜色：${component.color}</div>
-          <div class="col">品牌：${component.brand}</div>
+          <div class="col">颜色：${component.color || ''}</div>
+          <div class="col">品牌：${component.brand || ''}</div>
         </div>
       </div>
       <div class="col" style="flex: 1">

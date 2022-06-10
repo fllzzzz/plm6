@@ -161,12 +161,14 @@ import useMaxHeight from '@compos/use-max-height'
 import useChart from '@compos/use-chart'
 import panel from '@/components/Panel'
 
-const { maxHeight: maxRightHeight } = useMaxHeight({ extraHeight: 30 })
+const minHeight = 600
+const { maxHeight: maxRightHeight } = useMaxHeight({ extraHeight: 30, minHeight })
 const { maxHeight: maxLeftHeight } = useMaxHeight({
   extraBox: ['.head-container', '.view-left-summary'],
-  extraHeight: 15
+  extraHeight: 15,
+  minHeight
 })
-const { maxHeight: maxCenterHeight } = useMaxHeight({ extraBox: ['.head-container', '.technical-summary'], extraHeight: 15 })
+const { maxHeight: maxCenterHeight } = useMaxHeight({ extraBox: ['.head-container', '.technical-summary'], extraHeight: 15, minHeight })
 
 function disabledDate(time) {
   return time > new Date()
@@ -243,6 +245,31 @@ const { getMyChart: getProjectCompleteChart } = useChart({
   }
 })
 
+const zoomData = [
+  {
+    type: 'slider', // 支持内部鼠标滚动平移
+    start: 0,
+    end: 40,
+    height: 3,
+    fillerColor: 'rgba(17, 100, 210, 0.42)', // 滚动条颜色
+    borderColor: 'rgba(17, 100, 210, 0.12)',
+    handleSize: 0, // 两边手柄尺寸
+    showDetail: false, // 拖拽时是否展示滚动条两侧的文字
+    top: '98%'
+    // zoomLock:true, // 是否只平移不缩放
+    // moveOnMouseMove:true, //鼠标移动能触发数据窗口平移
+    // zoomOnMouseWheel :true, //鼠标移动能触发数据窗口缩放
+  },
+  {
+    type: 'inside', // 支持内部鼠标滚动平移
+    start: 0,
+    end: 40,
+    zoomOnMouseWheel: false, // 关闭滚轮缩放
+    moveOnMouseWheel: true, // 开启滚轮平移
+    moveOnMouseMove: true // 鼠标移动能触发数据窗口平移
+  }
+]
+
 const { getMyChart: getUserYearMeteChart } = useChart({
   elementId: 'userYearMeteChart',
   fetchHook: refreshUserYearMeteChart,
@@ -258,7 +285,10 @@ const { getMyChart: getUserYearMeteChart } = useChart({
         type: 'line',
         data: []
       }
-    ]
+    ],
+    custom: {
+      dataZoom: zoomData
+    }
   }
 })
 
@@ -277,7 +307,10 @@ const { getMyChart: getUserMonthMeteChart } = useChart({
         type: 'line',
         data: []
       }
-    ]
+    ],
+    custom: {
+      dataZoom: zoomData
+    }
   }
 })
 
@@ -411,6 +444,11 @@ async function refreshUserYearMeteChart() {
     const option = _myChart.getOption()
     option.xAxis[0].data = content.map((v) => v.userName)
     option.series[0].data = content.map((v) => Number(v.mete.toFixed(2)))
+    const zoom = setDataZoomEnd(content?.length, 6)
+    option.dataZoom[0].end = zoom
+    if (zoom === 100) {
+      option.dataZoom[0].show = false
+    }
     _myChart.setOption(option)
   } catch (error) {
     console.log(error, '获取员工年度深化量信息失败')
@@ -436,12 +474,22 @@ async function refreshUserMonthMeteChart() {
     const option = _myChart.getOption()
     option.xAxis[0].data = userMonthMeteList.value.map((v) => v.userName)
     option.series[0].data = userMonthMeteList.value.map((v) => v.mete)
+    const zoom = setDataZoomEnd(userMonthMeteList.value?.length, 6)
+    option.dataZoom[0].end = zoom
+    if (zoom === 100) {
+      option.dataZoom[0].show = false
+    }
     _myChart.setOption(option)
   } catch (error) {
     console.log(error, '获取员工月度深化量信息失败')
   } finally {
     userMonthMeteLoading.value = false
   }
+}
+
+function setDataZoomEnd(length, target) {
+  if (!length) return 100
+  return target / length > 1 ? 100 : Number(((target / length) * 100).toFixed(0))
 }
 </script>
 
@@ -459,9 +507,11 @@ async function refreshUserMonthMeteChart() {
   .view-left,
   .view-right {
     flex: 0.5;
+    min-width: 350px;
   }
   .view-center {
     flex: 1;
+    min-width: 600px;
     margin-right: 15px;
     margin-left: 15px;
 

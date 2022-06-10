@@ -330,7 +330,7 @@ async function refreshOrderTypeInfo(myChart) {
   .project-chart {
     width: 340px;
     padding: 20px 0 20px 20px;
-    overflow: hidden;
+    // overflow: hidden;
     border-left: 1px solid #ededed;
     .chart-head {
       padding-right: 20px;
