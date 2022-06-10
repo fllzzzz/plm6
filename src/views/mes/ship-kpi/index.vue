@@ -43,9 +43,7 @@
           <el-table-column label="序号" type="index" align="center" width="60" />
           <el-table-column prop="project.shortName" :show-overflow-tooltip="true" label="所属项目">
             <template #default="{ row }">
-              <span class="project-name">{{
-                projectNameFormatter(row.project, null, false)
-              }}</span>
+              <span class="project-name">{{ projectNameFormatter(row.project, null, false) }}</span>
             </template>
           </el-table-column>
           <el-table-column prop="totalWeight" :show-overflow-tooltip="true" label="清单量" align="center" width="100">
@@ -81,9 +79,7 @@
           <el-table-column label="序号" type="index" align="center" width="50" />
           <el-table-column prop="project.shortName" :show-overflow-tooltip="true" label="所属项目">
             <template #default="{ row }">
-              <span class="project-name">{{
-                projectNameFormatter(row.project, null, false)
-              }}</span>
+              <span class="project-name">{{ projectNameFormatter(row.project, null, false) }}</span>
             </template>
           </el-table-column>
           <el-table-column prop="quantity" :show-overflow-tooltip="true" label="车次" align="center">
@@ -342,9 +338,11 @@ async function refreshTodayShipChart(myChart) {
   .view-left,
   .view-right {
     flex: 0.5;
+    min-width: 350px;
   }
   .view-center {
     flex: 1;
+    min-width: 600px;
     margin-right: 15px;
     margin-left: 15px;
 

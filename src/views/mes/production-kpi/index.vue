@@ -36,12 +36,12 @@
             <div style="flex: 1; padding: 0px 10px" class="flex-ccc" border-style="dashed">
               <div>
                 <div style="margin-bottom: 5px">目标产量</div>
-                <div style="font-size:20px;font-weight:bold;text-align:center;">{{ summaryInfo.quantity || 0 }}</div>
+                <div style="font-size: 20px; font-weight: bold; text-align: center">{{ summaryInfo.quantity || 0 }}</div>
               </div>
               <el-divider style="margin: 20px 0"></el-divider>
               <div>
                 <div style="margin-bottom: 5px">实时产量</div>
-                <div style="font-size:20px;font-weight:bold;text-align:center;">{{ summaryInfo.quantity || 0 }}</div>
+                <div style="font-size: 20px; font-weight: bold; text-align: center">{{ summaryInfo.quantity || 0 }}</div>
               </div>
             </div>
           </div>
@@ -148,7 +148,7 @@ import { projectNameFormatter } from '@/utils/project'
 import useMaxHeight from '@compos/use-max-height'
 import useChart from '@compos/use-chart'
 
-const { maxHeight } = useMaxHeight({ extraHeight: 30 })
+const { maxHeight } = useMaxHeight({ extraHeight: 30, minHeight: 600 })
 const { maxHeight: maxLeftHeight } = useMaxHeight({ extraBox: ['.head-container', '.target', '.view-line-title'], extraHeight: 15 })
 const { maxHeight: maxCenterHeight } = useMaxHeight({ extraBox: ['.head-container', '.project-summary'], extraHeight: 15 })
 
@@ -410,9 +410,11 @@ async function refreshQHSEQualityChart(myChart) {
   .view-left,
   .view-right {
     flex: 0.5;
+    min-width: 350px;
   }
   .view-center {
     flex: 1;
+    min-width: 600px;
     margin-right: 15px;
     margin-left: 15px;
 
