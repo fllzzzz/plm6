@@ -65,11 +65,15 @@
               </div>
             </el-form-item>
             <el-form-item label="围护结算方式" prop="enclosureMeasureMode">
-              <div>
+               <div v-for="(item,index) in detail.measureModeList" :key="index">
+                <span style="float:left;width:90px;text-align:right;">{{TechnologyTypeAllEnum.VL[item.no]}}：</span>
+                <span style="float:left;">{{enclosureSettlementTypeEnum.VL[item.measureMode]}}</span>
+              </div>
+              <!-- <div>
                 <span>{{
                   isNotBlank(detail.enclosureMeasureMode) ? enclosureSettlementTypeEnum.VL[detail.enclosureMeasureMode] : ''
                 }}</span>
-              </div>
+              </div> -->
             </el-form-item>
           </div>
           <div class="form-row">
@@ -123,7 +127,8 @@ import {
   engineerSettlementTypeEnumN,
   enclosureSettlementTypeEnum,
   transportModeEnum,
-  TechnologyTypeEnum
+  TechnologyTypeEnum,
+  TechnologyTypeAllEnum
 } from '@enum-ms/contract'
 import { invoiceTypeEnum, paymentModeEnum } from '@enum-ms/finance'
 import { isNotBlank } from '@data-type/index'

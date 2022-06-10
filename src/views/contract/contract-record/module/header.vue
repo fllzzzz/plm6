@@ -12,7 +12,7 @@
         value-format="YYYY"
         @change="crud.toQuery"
       />
-      <project-radio-button size="small" v-model="query.projectId" class="filter-item" @change="crud.toQuery" />
+      <project-radio-button size="small" :type="'all'"  v-model="query.projectId" class="filter-item" @change="crud.toQuery" />
       <el-input
         v-model.trim="query.leader"
         placeholder="项目搜索"

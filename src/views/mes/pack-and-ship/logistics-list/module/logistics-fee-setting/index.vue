@@ -61,13 +61,16 @@
           label="价格"
           sortable="custom"
           align="right"
-          min-width="120"
+          min-width="150"
         >
           <template v-slot="scope">
-            <el-tag :type="logisticsPriceTypeEnum.V[scope.row.priceType].T" style="width: 100%" effect="plain">
-              <span>{{ toFixed(scope.row.price, DP.YUAN) }}</span>
-              <span style="margin-left: 3px">{{ logisticsPriceTypeEnum.V[scope.row.priceType].unit }}</span>
-            </el-tag>
+            <div style="width:100%;position:relative;">
+              <span style="margin-right: 42px;" :class="scope.row.priceType === logisticsPriceTypeEnum.WEIGHT.V ? 'blue':'orange'">
+                <span>{{ toFixed(scope.row.price, DP.YUAN) }}</span>
+                <span style="margin-left: 3px;">{{ logisticsPriceTypeEnum.V[scope.row.priceType].unit }}</span>
+              </span>
+              <el-tag style="cursor:pointer;position:absolute;right:0;" @click="showAllPrice(scope.row)" type="success">ALL</el-tag>
+            </div>
           </template>
         </el-table-column>
         <el-table-column
@@ -119,12 +122,15 @@
       <!--分页组件-->
       <pagination />
       <mForm />
+      <priceAllDetail  v-model="allVisible" :detailInfo="detailInfo" />
     </template>
   </common-drawer>
 </template>
 
 <script setup>
 import { logisticsPrice as crudApi } from '@/api/mes/pack-and-ship/logistics-list'
+import { getCarModelConfig } from '@/api/config/mes/base'
+import { getSupplierCarPrice } from '@/api/mes/pack-and-ship/logistics-list'
 import { defineProps, defineEmits, ref, watch } from 'vue'
 
 import { logisticsPriceTypeEnum } from '@enum-ms/mes'
@@ -139,9 +145,14 @@ import pagination from '@crud/Pagination'
 import udOperation from '@crud/UD.operation'
 import mHeader from './module/header'
 import mForm from './module/form'
+import priceAllDetail from './module/price-all-detail'
 
 const drawerRef = ref()
 const emit = defineEmits(['update:visible'])
+const allVisible = ref(false)
+const detailInfo = ref({})
+const allCar = ref([])
+
 const props = defineProps({
   visible: {
     type: Boolean,
@@ -195,16 +206,65 @@ watch(
   (visible) => {
     if (visible) {
       crud.toQuery()
+      fetchModelData()
     }
   },
   { immediate: true }
 )
 
+async function fetchModelData() {
+  try {
+    const data = await getCarModelConfig()
+    allCar.value = data.carModels || []
+  } catch (error) {
+    console.log('获取车型配置', error)
+  }
+}
+
+async function fetchSupplierCarData(id) {
+  try {
+    const data = await getSupplierCarPrice(id)
+    if (allCar.value && allCar.value.length > 0) {
+      for (let i = 0; i < allCar.value.length; i++) {
+        if (data.length > 0 && data.findIndex(k => k.carModel === allCar.value[i]) > -1) {
+          detailInfo.value.list.push(data.find(k => k.carModel === allCar.value[i]))
+        } else {
+          detailInfo.value.list.push({
+            carModel: allCar.value[i],
+            price: undefined,
+            priceType: detailInfo.value.priceType
+          })
+        }
+      }
+    }
+    allVisible.value = true
+  } catch (error) {
+    console.log('获取物流供应商车型配置', error)
+  }
+}
+
+function showAllPrice(row) {
+  detailInfo.value.price = row.price
+  detailInfo.value.priceType = row.priceType
+  detailInfo.value.list = []
+  fetchSupplierCarData(row.id)
+}
+
 CRUD.HOOK.handleRefresh = (crud, res) => {
   res.data.content = res.data.content.map((v) => {
     v.projectId = v.project && v.project.id
     v.supplierId = v.supplier && v.supplier.id
+    v.invoiceTypeEnum = v.invoiceTypeEnum ? Number(v.invoiceTypeEnum) : undefined
     return v
   })
 }
+
 </script>
+<style lang="scss" scoped>
+  .blue{
+    color:#409eff;
+  }
+  .orange{
+    color:#e6a23c;
+  }
+</style>

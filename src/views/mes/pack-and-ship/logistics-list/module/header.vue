@@ -30,6 +30,15 @@
         class="filter-item"
         @change="crud.toQuery"
       />
+      <common-radio-button
+        v-model="query.priceType"
+        :options="logisticsPriceTypeEnum.ENUM"
+        showOptionAll
+        type="enum"
+        size="small"
+        class="filter-item"
+        @change="crud.toQuery"
+      />
       <el-date-picker
         v-model="query.deliveryDate"
         type="daterange"
@@ -43,6 +52,15 @@
         @change="handleDeliveryDateChange"
       />
       <div>
+        <el-input
+          v-model="query.supplierName"
+          placeholder="可输入物流公司搜索"
+          class="filter-item"
+          style="width: 200px"
+          size="small"
+          clearable
+          @keyup.enter="crud.toQuery"
+        />
         <el-input
           v-model="query.serialNumber"
           placeholder="可输入车次搜索"
@@ -96,7 +114,7 @@
 import { inject, ref } from 'vue'
 import moment from 'moment'
 
-import { packTypeEnum, mesEnclosureTypeEnum } from '@enum-ms/mes'
+import { packTypeEnum, mesEnclosureTypeEnum, logisticsPriceTypeEnum } from '@enum-ms/mes'
 import { manufactureTypeEnum } from '@enum-ms/production'
 import { PICKER_OPTIONS_SHORTCUTS } from '@/settings/config'
 
@@ -116,7 +134,9 @@ const defaultQuery = {
   receiptName: undefined,
   projectId: { value: undefined, resetAble: false },
   productType: { value: undefined, resetAble: false },
-  manufactureType: { value: undefined, resetAble: false }
+  manufactureType: { value: undefined, resetAble: false },
+  supplierName: undefined,
+  priceType: undefined
 }
 const { crud, query } = regHeader(defaultQuery)
 
