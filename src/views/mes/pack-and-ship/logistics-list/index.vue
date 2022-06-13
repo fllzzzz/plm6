@@ -39,9 +39,9 @@
         </template>
       </el-table-column>
       <el-table-column
-        v-if="columns.visible('mete')"
+        v-if="columns.visible('carModel')"
         :show-overflow-tooltip="true"
-        prop="mete"
+        prop="carModel"
         label="车型"
         align="center"
       >
@@ -78,14 +78,14 @@
         min-width="120"
       />
        <el-table-column
-        v-if="columns.visible('mete')"
+        v-if="columns.visible('actualWeight')"
         :show-overflow-tooltip="true"
-        prop="mete"
+        prop="actualWeight"
         label="装载重量(t)"
         align="center"
       >
         <template v-slot="scope">
-          <span>{{ convertUnits(scope.row.mete, 'kg', 't', DP.COM_WT__T) }}</span>
+          <span>{{ convertUnits(scope.row.actualWeight, 'kg', 't', DP.COM_WT__T) }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -170,12 +170,14 @@
             size="mini"
             icon="el-icon-edit"
             type="primary"
+            v-permission="permission.priceChange"
             @click="openForm(scope.row,'edit')"
           />
           <common-button
             size="mini"
             icon="el-icon-view"
             type="primary"
+            v-permission="permission.priceLog"
             @click="openForm(scope.row,'detail')"
           />
         </template>

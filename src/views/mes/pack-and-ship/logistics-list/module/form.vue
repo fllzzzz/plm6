@@ -43,7 +43,7 @@
                   <span>{{ detailInfo.carModel }}</span>
                 </el-form-item>
                 <el-form-item label="装载重量(t)">
-                  <span>{{ convertUnits(detailInfo.mete, 'kg', 't', DP.COM_WT__T) }}</span>
+                  <span>{{ convertUnits(detailInfo.actualWeight, 'kg', 't', DP.COM_WT__T) }}</span>
                 </el-form-item>
                 <el-form-item label="计价方式">
                   <span>{{ logisticsPriceTypeEnum.VL[detailInfo.priceType] }}</span>
@@ -249,7 +249,7 @@ function resetForm() {
 }
 
 function priceChange() {
-  allPrice.value = form.value.priceType === logisticsPriceTypeEnum.WEIGHT.V ? (props.detailInfo.mete * form.value.price) / 1000 : undefined
+  allPrice.value = form.value.priceType === logisticsPriceTypeEnum.WEIGHT.V ? (props.detailInfo.actualWeight * form.value.price) / 1000 : undefined
 }
 
 async function onSubmit() {

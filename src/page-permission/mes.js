@@ -430,7 +430,9 @@ export const receiptStatusPM = {
 export const logisticsPM = {
   get: ['mes_logistics:get'], // 物流列表
   edit: ['mes_logistics:edit'], // 录入物流信息
-  print: ['mes_logistics:print'] // 打印物流汇总
+  print: ['mes_logistics:print'], // 打印物流汇总
+  priceChange: ['mes_logistics:priceChange'], //更改运输费
+  priceLog: ['mes_logistics:priceLog'], //运输费更改记录
 }
 
 // 打包与发运/发运审核
