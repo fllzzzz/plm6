@@ -94,7 +94,8 @@ export const cuttingWorkingPM = {
   Production: ['cutting_working:Production'], // 任务排产
   taskLoading: ['cutting_working:taskLoading'], // 任务下发
   cleanLoading: ['cutting_working:cleanLoading'], // 任务清除
-  resetLoading: ['cutting_working:resetLoading'] // 任务重置
+  resetLoading: ['cutting_working:resetLoading'], // 任务重置
+  downloadDrawing: ['cutting_working:downloadDrawing'] // 下载钢板图形
 }
 // ---------------------------  切割工单管理/切割工单  end ------------------
 
