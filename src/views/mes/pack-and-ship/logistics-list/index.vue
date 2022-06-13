@@ -170,12 +170,14 @@
             size="mini"
             icon="el-icon-edit"
             type="primary"
+            v-permission="permission.priceChange"
             @click="openForm(scope.row,'edit')"
           />
           <common-button
             size="mini"
             icon="el-icon-view"
             type="primary"
+            v-permission="permission.priceLog"
             @click="openForm(scope.row,'detail')"
           />
         </template>
