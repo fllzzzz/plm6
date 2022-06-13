@@ -30,7 +30,6 @@
             <common-radio-button
               class="filter-item"
               v-model="form.priceType"
-              :disabled="form.boolUseEnum"
               :options="logisticsPriceTypeEnum.ENUM"
               type="enum"
               size="small"
@@ -85,7 +84,6 @@
                 type="enum"
                 size="mini"
                 @change="priceTypeChange"
-                :disabled="form.boolUseEnum"
               />
             </template>
             <template v-slot="scope">
@@ -93,7 +91,6 @@
                 class="filter-item"
                 v-model="scope.row.priceType"
                 :options="logisticsPriceTypeEnum.ENUM"
-                :disabled="form.boolUseEnum"
                 type="enum"
                 size="small"
               />
