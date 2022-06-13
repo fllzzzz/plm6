@@ -1,5 +1,38 @@
 import { isNotBlank, deepClone } from '@data-type/index'
-import { compareArray } from '@data-type/array'
+// import { compareArray } from '@data-type/array'
+
+export function compareArrayValue(a, b, order=true) {
+  if (!(a instanceof Array)) return false
+  if (!(b instanceof Array)) return false
+  if (a.length !== b.length) return false
+  if (order) {
+    // 顺序要求一致
+    for (let i = 0; i < a.length; i++) {
+      if (typeof a[i] === 'object') {
+        return isObjectValueEqual(a[i], b[i])
+      }else{
+        if (a[i] !== b[i]) {
+          return false
+        }
+      }
+    }
+  } else {
+    // 顺序可以不一致
+    for (let i = 0; i < a.length; i++) {
+      let log = false
+      for (let j = 0; j < b.length; j++) {
+        if (a[i] === b[j]) {
+          log = true
+          break
+        }
+      }
+      if (!log) {
+        return false
+      }
+    }
+  }
+  return true
+}
 
 export function isObjectValueEqual(a, b) {
   a = deepClone(a) // 深拷贝可以将proxy（代理对象）转换为普通对象
@@ -12,13 +45,18 @@ export function isObjectValueEqual(a, b) {
   if (aProps.length !== bProps.length) {
     return false
   }
-
   // 判断二，循环取出属性名，再判断属性值是否一致
   for (var i = 0; i < aProps.length; i++) {
     var propName = aProps[i]
     if (propName !== '__ob__' && a[propName] !== b[propName]) {
       if (typeof a[propName] === 'object') {
-        return isObjectValueEqual(a[propName], b[propName])
+        if(Array.isArray(a[propName])){
+          if(!compareArrayValue(a[propName], b[propName])){
+            return false
+          }
+        }else{
+          return isObjectValueEqual(a[propName], b[propName])
+        }
       } else if (a[propName] || b[propName]) {
         return false
       }
@@ -46,7 +84,7 @@ export function judgeSameValue(a, b) {
       case Object:
         return isObjectValueEqual(a, b)
       case Array:
-        return compareArray(a, b)
+        return compareArrayValue(a, b)
       default:
         return a === b
     }

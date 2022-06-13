@@ -86,6 +86,8 @@ import useVisible from '@compos/use-visible'
 import { judgeSameValue } from './judgeSameValue'
 import { projectListPM as permission } from '@/page-permission/contract'
 import ExportButton from '@comp-common/export-button/index.vue'
+import { deepClone } from '@data-type/index'
+import { compareArrayValue } from './judgeSameValue'
 
 const props = defineProps({
   projectId: {
@@ -140,34 +142,11 @@ watch(
   { deep: true, immediate: true }
 )
 
-// function confirmSettle() {
-//   baseInfoValue.value = baseRef.value.detail
-//   memberList.value = memberRef.value.checkedList || []
-//   if (props.projectStatus === projectStatusEnum.PROCESS.V) {
-//     ElMessageBox.confirm('"' + props.projectName + '"' + '项目正处于进行中状态，确定要办理结算?', '提示', {
-//       confirmButtonText: '确定',
-//       cancelButtonText: '取消',
-//       type: 'warning'
-//     }).then(() => {
-//       settleVisible.value = true
-//     }).catch(() => {
-//     })
-//   } else {
-//     settleVisible.value = true
-//   }
-// }
-
 function moneyChange() {
   moneyVisible.value = true
   baseInfoValue.value = baseRef.value.detail
   memberList.value = memberRef.value.checkedList || []
 }
-
-// function variationChange() {
-//   variationVisible.value = true
-//   baseInfoValue.value = baseRef.value.detail
-//   memberList.value = memberRef.value.checkedList || []
-// }
 
 function ModifyCancel() {
   if (isModify.value) {
@@ -202,18 +181,13 @@ async function submit() {
   memberRef.value.getUser()
   const baseChange = judgeSameValue(baseRef.value.form, baseRef.value.detail)
   const businessChange = judgeSameValue(businessRef.value.form, businessRef.value.detail)
-  const contentChange = judgeSameValue(businessRef.value.form.projectContent, businessRef.value.detail.projectContent)
-  const structureChange = judgeSameValue(businessRef.value.form.structureList, businessRef.value.detail.structureList)
-  const profiledPlateChange = judgeSameValue(businessRef.value.form.profiledPlateList, businessRef.value.detail.profiledPlateList)
-  const pressureBearingPlateChange = judgeSameValue(businessRef.value.form.pressureBearingPlateList, businessRef.value.detail.pressureBearingPlateList)
-  const trussFloorPlateChange = judgeSameValue(businessRef.value.form.trussFloorPlateList, businessRef.value.detail.trussFloorPlateList)
-  const sandwichBoardChange = judgeSameValue(businessRef.value.form.sandwichBoardList, businessRef.value.detail.sandwichBoardList)
   const customerChange = judgeSameValue(customerRef.value.form, customerRef.value.detail)
-  const userChange = judgeSameValue(memberRef.value.checkedList, memberRef.value.originUserList)
-  if (baseChange && businessChange && customerChange && userChange && contentChange && structureChange && profiledPlateChange && pressureBearingPlateChange && trussFloorPlateChange && sandwichBoardChange) {
+  const userChange = compareArrayValue(memberRef.value.checkedList, memberRef.value.originUserList, false)
+  if (baseChange && businessChange && customerChange && userChange) {
     ElMessage.error('项目未改动，请修改后提交')
     return
   }
+  baseRef.value.form.attachments = baseRef.value.form.attachmentFiles.length > 0 ? baseRef.value.form.attachmentFiles.map(v => v.id) : []
   const submitForm = {
     projectId: props.projectId,
     type: contractChangeTypeEnum.ENUM.CONTRACT_INFO.V,
