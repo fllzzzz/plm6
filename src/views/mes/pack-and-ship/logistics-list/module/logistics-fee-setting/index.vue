@@ -223,11 +223,12 @@ async function fetchModelData() {
 
 async function fetchSupplierCarData(id) {
   try {
-    const data = await getSupplierCarPrice(id)
+    const priceData = await getSupplierCarPrice(id) || {}
+    const content = priceData.content || []
     if (allCar.value && allCar.value.length > 0) {
       for (let i = 0; i < allCar.value.length; i++) {
-        if (data.length > 0 && data.findIndex(k => k.carModel === allCar.value[i]) > -1) {
-          detailInfo.value.list.push(data.find(k => k.carModel === allCar.value[i]))
+        if (content.length > 0 && content.findIndex(k => k.carModel === allCar.value[i]) > -1) {
+          detailInfo.value.list.push(content.find(k => k.carModel === allCar.value[i]))
         } else {
           detailInfo.value.list.push({
             carModel: allCar.value[i],
