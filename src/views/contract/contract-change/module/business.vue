@@ -100,7 +100,7 @@
               </div>
             </el-form-item>
             <el-form-item label="税率" prop="businessTaxRate">
-                <span>{{ detail.taxRate ? detail.taxRate*100+'%' : '' }}</span>
+                <span v-if="detail.isTax && detail.invoiceType !== invoiceTypeEnum.RECEIPT.V">{{ detail.taxRate ? detail.taxRate*100+'%' : '' }}</span>
               </el-form-item>
           </div>
           <div class="form-row">

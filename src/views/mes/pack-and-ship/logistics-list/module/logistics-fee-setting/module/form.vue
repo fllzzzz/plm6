@@ -210,7 +210,8 @@ async function fetchModelData() {
   form.list = []
   try {
     const data = await getCarModelConfig()
-    const supplierCarData = crud.status.edit === CRUD.STATUS.PREPARED ? await getSupplierCarPrice(form.id) : []
+    const priceData = crud.status.edit === CRUD.STATUS.PREPARED ? await getSupplierCarPrice(form.id) : {}
+    const supplierCarData = priceData.content || []
     if (data.carModels && data.carModels.length > 0) {
       for (let i = 0; i < data.carModels.length; i++) {
         if (supplierCarData.length > 0 && supplierCarData.findIndex(k => k.carModel === data.carModels[i]) > -1) {

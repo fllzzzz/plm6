@@ -411,10 +411,6 @@ function resetForm() {
 async function validateForm() {
   try {
     const valid = await formRef.value.validate()
-    if (valid) {
-      const data = form.value
-      data.attachments = data.attachmentFiles.length > 0 ? data.attachmentFiles.map(v => v.id) : []
-    }
     return valid
   } catch (error) {
     console.log('error', error)

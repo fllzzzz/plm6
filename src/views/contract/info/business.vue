@@ -166,10 +166,6 @@
                     <span style="float:left;">{{enclosureSettlementTypeEnum.VL[item.measureMode]}}</span>
                   </div>
                 </template>
-                <!-- <common-radio v-if="isModify" v-model="form.enclosureMeasureMode" :options="enclosureSettlementTypeEnum.ENUM" type="enum" :disabled="!form.enclosureMeasureMode"/>
-                <span v-else>{{
-                  isNotBlank(detail.enclosureMeasureMode) ? enclosureSettlementTypeEnum.VL[detail.enclosureMeasureMode] : ''
-                }}</span> -->
               </div>
             </el-form-item>
           </div>
@@ -214,6 +210,7 @@
                     class="input-underline"
                     placeholder="选择发票类型"
                     style="width: 200px"
+                    @change="invoiceTypeChange"
                   />
                 </template>
                 <template v-else>
@@ -235,10 +232,11 @@
                   style="width: 80px"
                   placeholder="0-100"
                   @change="taxChange"
+                  :disabled="!form.isTax || form.invoiceType === invoiceTypeEnum.RECEIPT.V"
                 />%
               </template>
               <template v-else>
-                <span>{{ detail.businessTaxRate ? detail.businessTaxRate+'%' : '' }}</span>
+                <span v-if="detail.isTax && detail.invoiceType !== invoiceTypeEnum.RECEIPT.V">{{ detail.businessTaxRate ? detail.businessTaxRate+'%' : '' }}</span>
               </template>
               </el-form-item>
           </div>
@@ -398,12 +396,33 @@ const validateContent = (rule, value, callback) => {
           callback(new Error('项目内容只能增加不能减少'))
         }
       })
-      callback()
+    callback()
     } else {
       callback()
     }
   }
 }
+
+const validateInvoiceType = (rule, value, callback) => {
+  if (form.value.isTax) {
+    if (!value) {
+      callback(new Error('请选择发票类型'))
+    }
+    callback()
+  }
+  callback()
+}
+
+const validateTax = (rule, value, callback) => {
+  if (form.value.invoiceType && form.value.invoiceType !== invoiceTypeEnum.RECEIPT.V) {
+    if (!value) {
+      callback(new Error('请填写税率'))
+    }
+    callback()
+  }
+  callback()
+}
+
 const rules = {
   payTypeDesc: [{ max: 200, message: '不能超过 200 个字符', trigger: 'blur' }],
   businessType: [{ required: true, message: '请选择业务类型', trigger: 'change' }],
@@ -413,7 +432,9 @@ const rules = {
   ],
   contractSignBodyId: [
     { required: true, message: '请选择合同签订主体（签订主体可在配置管理-基础配置-分支机构中创建）', trigger: 'change' }
-  ]
+  ],
+  invoiceType: [{ validator: validateInvoiceType, message: '请选择发票类型', trigger: 'change' }],
+  businessTaxRate: [{ validator: validateTax, message: '请输入税率', trigger: 'blur' }]
 }
 
 const props = defineProps({
@@ -473,6 +494,13 @@ function businessChange() {
 function isTaxChange(val) {
   if (val !== isTaxContractEnum.YES.V) {
     form.value.invoiceType = undefined
+    form.value.businessTaxRate = undefined
+    form.value.taxRate = undefined
+  }
+}
+
+function invoiceTypeChange(val){
+  if (val === invoiceTypeEnum.RECEIPT.V) {
     form.value.businessTaxRate = undefined
     form.value.taxRate = undefined
   }
