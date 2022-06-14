@@ -25,7 +25,7 @@
         </common-button>
       </div>
       <div class="filter-right-box">
-        <export-button v-permission="permission.get" :params="query" :fn="exportSendAndReceiveStorageDetailExcel" response-header-result>
+        <export-button v-permission="permission.get" :params="printParams" :fn="exportSendAndReceiveStorageDetailExcel" response-header-result>
           下载材料报表（根据查询条件）
         </export-button>
       </div>
@@ -166,6 +166,16 @@ const filterList = computed(() => {
   }
 })
 
+// 查询参数
+const printParams = computed(() => {
+  return {
+    id: props.materialInfo.id,
+    statId: props.materialInfo.statId,
+    date: props.date,
+    formType: filter.value.formType
+  }
+})
+
 // 初始化
 function init() {
   detail.value = {}
@@ -186,10 +196,7 @@ async function fetchDetail() {
   if (!props.materialInfo.id) return
   // 查询参数
   const params = {
-    id: props.materialInfo.id,
-    statId: props.materialInfo.statId,
-    date: props.date,
-    formType: filter.value.formType
+    ...printParams.value
   }
   try {
     detailLoading.value = true

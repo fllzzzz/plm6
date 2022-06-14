@@ -10,6 +10,14 @@
   >
     <template #content>
       <div class="item-name" style="float: left">钢板信息</div>
+       <common-button
+          v-if="checkPermission(permission.downloadDrawing)"
+          :disabled="detailData.dwgReportUrl === null"
+          icon="el-icon-download"
+          @click="download"
+          type="warning"
+          size="mini"
+          style="float: right">下载图形报告</common-button>
       <el-descriptions :column="2" border>
         <el-descriptions-item label="项目/单体" label-align="center" align="center">
           {{ detailData.projectName }} <span v-if="detailData.monomer"> {{detailData.monomer }}</span>
@@ -70,6 +78,9 @@
 import useVisible from '@compos/use-visible'
 import { defineProps, defineEmits, ref } from 'vue'
 // import { steelPlateEnum } from '@enum-ms/cutting'
+import checkPermission from '@/utils/system/check-permission'
+import { cuttingWorkingPM as permission } from '@/page-permission/cutting'
+import { ElNotification } from 'element-plus'
 import { getCutPart, getCutSurplus } from '@/api/cutting/project-data'
 
 const emit = defineEmits(['update:visible'])
@@ -105,6 +116,15 @@ async function CutSurplus() {
     item.platePictureUrlList = []
     item.platePictureUrlList.push(item.platePictureUrl)
   })
+}
+
+// 下载钢板图形
+function download() {
+  if (props.detailData.dwgReportUrl !== null) {
+    window.location.href = props.detailData.dwgReportUrl
+  } else {
+    ElNotification({ title: '下载失败', message: '暂无钢板图形 ', type: 'error' })
+  }
 }
 
 </script>

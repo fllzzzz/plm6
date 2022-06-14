@@ -1,5 +1,6 @@
 import { isNotBlank } from '@data-type/index'
 import { dateDifference } from '@/utils/date'
+import { convertUnits } from '@/utils/convert/unit'
 import { supplierPayTypeEnum } from '@enum-ms/contract'
 
 // 计算用时天数
@@ -76,8 +77,23 @@ function handleSupplierPaymentOrder({ header, table = [], footer, qrCode }) {
   }
 }
 
+// 处理面积单位
+function handleAreaUnit({ header, table = [], footer, qrCode }) {
+  const _table = table.map(row => {
+    row.totalArea = convertUnits(row.totalArea, 'mm2', 'm2')
+    return row
+  })
+  return {
+    header,
+    table: _table,
+    qrCode,
+    footer
+  }
+}
+
 export default {
   handleRate,
+  handleAreaUnit,
   handleSupplierPaymentRate,
   durationCalculation,
   handleSupplierPaymentOrder

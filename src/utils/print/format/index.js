@@ -14,6 +14,7 @@ const contractLedger = contract.handleRate
 const supplierPayableSummary = contract.handleSupplierPaymentRate
 const logisticsPaymentLedger = contract.handleSupplierPaymentRate
 const supplierPaymentLedger = contract.handleSupplierPaymentOrder
+const contractEnclosurePrice = contract.handleAreaUnit
 
 const orderPaymentLedger = contract.handleSupplierPaymentRate
 const scmSupplierPaymentLedger = contract.handleSupplierPaymentRate
@@ -61,6 +62,7 @@ export default {
   myProject,
   projectList,
   contractLedger,
+  contractEnclosurePrice,
   mesStructureProcess,
   mesStructureProductionLine,
   mesStructureTeamWage,

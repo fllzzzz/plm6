@@ -11,6 +11,8 @@
       :data-format="dataFormat"
       :max-height="maxHeight"
       :default-expand-all="false"
+      :cell-style="handleCellStyle"
+      :header-cell-style="handleCellStyle"
       :expand-row-keys="expandRowKeys"
       row-key="id"
       highlight-current-row
@@ -148,7 +150,7 @@
         </template>
       </el-table-column>
       <!-- ############################ 入库数据 ############################ -->
-      <el-table-column key="inboundData" prop="beginPeriodData" label="入库数据" align="center">
+      <el-table-column key="inboundData" prop="inboundData" label="入库数据" align="center">
         <el-table-column
           v-if="columns.visible('inbound.number')"
           key="inbound.number"
@@ -372,6 +374,21 @@ watch(
   },
   { immediate: true, deep: true }
 )
+
+function handleCellStyle({ row, column, rowIndex, columnIndex }) {
+  if (column.property && column.property.indexOf('beginPeriod') !== -1) {
+    return 'background-color:#f5ffef;'
+  }
+  if (column.property && column.property.indexOf('inbound') !== -1) {
+    return 'background-color:#fff9e9;'
+  }
+  if (column.property && column.property.indexOf('outbound') !== -1) {
+    return 'background-color:#fbf1eb;'
+  }
+  if (column.property && column.property.indexOf('endPeriod') !== -1) {
+    return 'background-color:#e5eaf4;'
+  }
+}
 
 // 表格行点击
 function handleRowClick(row, column, event) {

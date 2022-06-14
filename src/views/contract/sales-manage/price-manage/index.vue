@@ -67,7 +67,7 @@
 
 <script setup>
 import { cost, priceModifyCount } from '@/api/contract/sales-manage/price-manage/common'
-import { ref, computed, watch, onMounted, provide } from 'vue'
+import { ref, computed, onMounted, provide } from 'vue'
 import { mapGetters } from '@/store/lib'
 import { priceManagePM as permission } from '@/page-permission/contract'
 
@@ -95,18 +95,7 @@ const currentView = computed(() => {
   }
 })
 
-const { globalProjectId, globalProject } = mapGetters(['globalProjectId', 'globalProject'])
-
-// 围护结算类型
-const enclosureMeasureMode = ref()
-
-watch(
-  globalProject,
-  () => {
-    enclosureMeasureMode.value = globalProject.value?.enclosureMeasureMode
-  },
-  { immediate: true }
-)
+const { globalProjectId } = mapGetters(['globalProjectId'])
 
 const domRef = ref()
 const projectId = ref()
@@ -121,7 +110,6 @@ const modifyVisible = ref(false)
 provide('monomerId', monomerId)
 provide('projectId', projectId)
 provide('modifyVisible', modifyVisible)
-provide('enclosureMeasureMode', enclosureMeasureMode)
 
 onMounted(() => {
   handleProjectChange()
