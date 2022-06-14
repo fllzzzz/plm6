@@ -38,7 +38,7 @@
           </template>
         </template>
       </el-table-column>
-      <el-table-column v-if="columns.visible('totalPrice')" prop="totalPrice" align="center" min-width="120" label="金额" />
+      <el-table-column v-if="columns.visible('totalPrice')" key="totalPrice" prop="totalPrice" align="center" min-width="120" label="金额" />
       <!--详情-->
       <el-table-column v-if="checkPermission([...permission.detail])" label="操作" width="100px" align="center" fixed="right">
         <template #default="{ row }">

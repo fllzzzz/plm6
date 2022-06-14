@@ -33,7 +33,7 @@
         <print-table
           v-permission="crud.permission.print"
           api-key="contractEnclosurePrice"
-          :params="{ monomerId: query.monomerId, enclosureMeasureMode }"
+          :params="{ monomerId: query.monomerId }"
           size="mini"
           type="warning"
           class="filter-item"
@@ -46,30 +46,21 @@
             <span v-if="!costLoading">{{ monomerCost.totalQuantity }}</span>
             <i v-else class="el-icon-loading" />
           </el-tag>
-          <template v-if="enclosureMeasureMode === enclosureSettlementTypeEnum.LENGTH.V">
-            <el-tag effect="plain" type="success" size="medium" class="filter-item">
-              单体围护总长(m)：
-              <span v-if="!costLoading">{{ convertUnits(monomerCost.totalLength, 'mm', 'm', DP.MES_ENCLOSURE_L__M) }}</span>
-              <i v-else class="el-icon-loading" />
-            </el-tag>
-            <el-tag effect="plain" type="success" size="medium" class="filter-item">
-              单体围护造价：
-              <span v-if="!costLoading" v-thousand="monomerCost.totalLengthPrice" />
-              <i v-else class="el-icon-loading" />
-            </el-tag>
-          </template>
-          <template v-if="enclosureMeasureMode === enclosureSettlementTypeEnum.AREA.V">
-            <el-tag effect="plain" type="success" size="medium" class="filter-item">
-              单体围护面积(㎡)：
-              <span v-if="!costLoading">{{ convertUnits(monomerCost.totalArea, 'mm2','m2', DP.COM_AREA__M2) }}</span>
-              <i v-else class="el-icon-loading" />
-            </el-tag>
-            <el-tag effect="plain" type="success" size="medium" class="filter-item">
-              单体围护造价：
-              <span v-if="!costLoading" v-thousand="monomerCost.totalAreaPrice" />
-              <i v-else class="el-icon-loading" />
-            </el-tag>
-          </template>
+          <el-tag effect="plain" type="success" size="medium" class="filter-item">
+            单体围护总长(m)：
+            <span v-if="!costLoading">{{ convertUnits(monomerCost.totalLength, 'mm', 'm', DP.MES_ENCLOSURE_L__M) }}</span>
+            <i v-else class="el-icon-loading" />
+          </el-tag>
+          <el-tag effect="plain" type="success" size="medium" class="filter-item">
+            单体围护面积(㎡)：
+            <span v-if="!costLoading">{{ convertUnits(monomerCost.totalArea, 'mm2','m2', DP.COM_AREA__M2) }}</span>
+            <i v-else class="el-icon-loading" />
+          </el-tag>
+          <el-tag effect="plain" type="success" size="medium" class="filter-item">
+            单体围护造价：
+            <span v-if="!costLoading" v-thousand="monomerCost.totalPrice" />
+            <i v-else class="el-icon-loading" />
+          </el-tag>
         </span>
       </template>
     </crudOperation>
@@ -96,8 +87,6 @@ import mPreview from '../../preview'
 
 const projectId = inject('projectId')
 const monomerId = inject('monomerId')
-// 围护结算类型
-const enclosureMeasureMode = inject('enclosureMeasureMode')
 
 // 有变动的数据
 const modifiedData = computed(() => {
@@ -149,8 +138,8 @@ CRUD.HOOK.handleRefresh = (crud, { data }) => {
     v.originNewUnitPrice = v.newUnitPrice
     v.originUnitPrice = emptyTextFormatter(toThousand(v.unitPrice))
     v.totalLength = convertUnits(v.totalLength, 'mm', 'm', DP.MES_ENCLOSURE_L__M)
-    v.totalArea = convertUnits(v.totalArea, 'm2', 'm2', DP.COM_AREA__M2)
-    v.totalPrice = (enclosureMeasureMode.value === enclosureSettlementTypeEnum.LENGTH.V ? v.totalLength : v.totalArea) * (v.unitPrice || 0)
+    v.totalArea = convertUnits(v.totalArea, 'mm2', 'm2', DP.COM_AREA__M2)
+    v.totalPrice = (v.priceType === enclosureSettlementTypeEnum.LENGTH.V ? v.totalLength : v.totalArea) * (v.unitPrice || 0)
   })
   fetchCost()
 }
@@ -184,7 +173,7 @@ function handelModifying(status, reset = false) {
     crud.data.forEach((v) => {
       v.unitPrice = v.originUnitPrice
       v.newUnitPrice = v.originNewUnitPrice
-      v.totalPrice = (enclosureMeasureMode.value === enclosureSettlementTypeEnum.LENGTH.V ? v.totalLength : v.totalArea) * (v.newUnitPrice || 0)
+      v.totalPrice = (v.priceType === enclosureSettlementTypeEnum.LENGTH.V ? v.totalLength : v.totalArea) * (v.newUnitPrice || 0)
       return v
     })
   }
