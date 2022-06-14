@@ -126,6 +126,7 @@
               class="input-underline"
               placeholder="选择发票类型"
               style="width: 200px"
+              @change="invoiceTypeChange"
             />
           </el-form-item>
           <el-form-item label="税率" prop="businessTaxRate">
@@ -140,6 +141,7 @@
               class="input-underline"
               style="width: 80px"
               placeholder="0-100"
+              :disabled="!form.isTax || form.invoiceType === invoiceTypeEnum.RECEIPT.V"
             />%
           </el-form-item>
         </div>
@@ -283,6 +285,27 @@ const techForm = {
 }
 
 const form = ref(JSON.parse(JSON.stringify(defaultForm)))
+
+const validateInvoiceType = (rule, value, callback) => {
+  if (form.value.isTax) {
+    if (!value) {
+      callback(new Error('请选择发票类型'))
+    }
+    callback()
+  }
+  callback()
+}
+
+const validateTax = (rule, value, callback) => {
+  if (form.value.invoiceType && form.value.invoiceType !== invoiceTypeEnum.RECEIPT.V) {
+    if (!value) {
+      callback(new Error('请填写税率'))
+    }
+    callback()
+  }
+  callback()
+}
+
 const rules = {
   payTypeDesc: [{ max: 200, message: '不能超过 200 个字符', trigger: 'blur' }],
   businessType: [{ required: true, message: '请选择业务类型', trigger: 'change' }],
@@ -290,7 +313,9 @@ const rules = {
   projectContent: [{ required: true, message: '请输入项目内容', trigger: 'change' }],
   contractSignBodyId: [
     { required: true, message: '请选择合同签订主体（签订主体可在配置管理-基础配置-分支机构中创建）', trigger: 'change' }
-  ]
+  ],
+  invoiceType: [{ validator: validateInvoiceType, message: '请选择发票类型', trigger: 'change' }],
+  businessTaxRate: [{ validator: validateTax, message: '请输入税率', trigger: 'blur' }]
 }
 const defaultType = ref()
 
@@ -376,6 +401,13 @@ function businessChange() {
 function isTaxChange(val) {
   if (val !== isTaxContractEnum.YES.V) {
     form.value.invoiceType = undefined
+    form.value.businessTaxRate = undefined
+    form.value.taxRate = undefined
+  }
+}
+
+function invoiceTypeChange(val){
+  if (val === invoiceTypeEnum.RECEIPT.V) {
     form.value.businessTaxRate = undefined
     form.value.taxRate = undefined
   }
