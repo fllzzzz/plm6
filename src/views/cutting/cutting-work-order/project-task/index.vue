@@ -74,7 +74,7 @@
                   </el-tooltip>
                 </template>
                 <template v-slot="scope">
-                    <el-button v-if="checkPermission(permission.detailResult)" @click="nestResults(scope.row)">{{scope.row.thick}}</el-button>
+                    <el-tag type="primary" size="small" v-if="checkPermission(permission.detailResult)" @click="nestResults(scope.row)">{{scope.row.thick}}</el-tag>
                 </template>
              </el-table-column>
                <el-table-column
@@ -182,9 +182,9 @@
             />
             </template>
         </el-table-column>
-         <el-table-column align="center" :show-overflow-tooltip="true" label="操作" min-width="70" v-if="checkPermission(permission.detailDelete)">
+         <!-- <el-table-column align="center" :show-overflow-tooltip="true" label="操作" min-width="70" v-if="checkPermission(permission.detailDelete)">
            <common-button type="danger" size="mini" v-if="scope.row.plateState !== '3'||scope.row.plateState !== '4'" @click="del(scope.row)">删除</common-button>
-          </el-table-column>
+          </el-table-column> -->
                 <!-- <el-table-column
               v-if="columns.visible('reduce')"
               header-align="center"

@@ -280,7 +280,7 @@ const props = defineProps({
   }
 })
 
-const emit = defineEmits(['update:visible'])
+const emit = defineEmits(['update:visible', 'success'])
 const partData = ref([]) // 零件数据
 
 const handleSelection = ref([]) // 选中数据
@@ -447,6 +447,7 @@ async function nestWorkListClick() {
     const message = await createOrder(workSelectList.value, { projectId: props.detailData.projectId })
     ElMessage({ message: message, type: 'success' })
     createTask(1)
+    emit('success')
   } catch (err) {
     console.log(err)
   }
