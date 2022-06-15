@@ -126,7 +126,10 @@
     </common-table>
     <!--分页组件-->
     <pagination />
-    <detail :detail-data="detailObj" v-model:visible="specsVisible" />
+    <detail
+      :detail-data="detailObj"
+      v-model:visible="specsVisible"
+      @success="success" />
   </div>
 </template>
 
@@ -213,4 +216,8 @@ function viewDetails(row) {
   console.log(row)
 }
 
+function success() {
+  fetchProjectInfo()
+  crud.toQuery()
+}
 </script>
