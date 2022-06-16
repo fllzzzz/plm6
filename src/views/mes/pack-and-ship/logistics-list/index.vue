@@ -27,7 +27,7 @@
         </template>
       </el-table-column>
       <el-table-column
-        v-if="columns.visible('project.shortName') && !crud.query.projectId"
+        v-if="columns.visible('project.shortName')"
         key="project.shortName"
         prop="project.shortName"
         :show-overflow-tooltip="true"
