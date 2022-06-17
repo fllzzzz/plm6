@@ -13,7 +13,6 @@
         :empty-text="crud.emptyText"
         :max-height="maxHeight"
         return-source-data
-        :showEmptySymbol="false"
         style="width: 100%"
         @sort-change="crud.handleSortChange"
         class="enclosure-table"
@@ -32,20 +31,12 @@
       >
         <template #default="{ row }">
           <el-tooltip :content="row.classifyFullName" :disabled="!row.classifyFullName" :show-after="200" placement="top">
-            <span v-empty-text="row.classifyName" />
+            <span>{{ row.classifyName }}</span>
           </el-tooltip>
         </template>
       </el-table-column>
-      <el-table-column v-if="columns.visible('specification')" :show-overflow-tooltip="true" prop="specification" label="规格" align="center" min-width="200px" fixed="left">
-        <template #default="{ row }">
-          <span v-empty-text="row.specification" />
-        </template>
-      </el-table-column>
-      <el-table-column v-if="columns.visible('measureUnit')" :show-overflow-tooltip="true" prop="measureUnit" label="计量单位" align="center" min-width="70px">
-        <template #default="{ row }">
-          <span v-empty-text>{{ row.measureUnit }}</span>
-        </template>
-      </el-table-column>
+      <el-table-column v-if="columns.visible('specification')" :show-overflow-tooltip="true" prop="specification" label="规格" align="center" min-width="200px" fixed="left" />
+      <el-table-column v-if="columns.visible('measureUnit')" :show-overflow-tooltip="true" prop="measureUnit" label="计量单位" align="center" min-width="70px" />
       <el-table-column v-if="columns.visible('quantity')" :show-overflow-tooltip="true" prop="quantity" label="数量" align="center" min-width="120px">
         <template #default="{ row }">
           <common-input-number
@@ -59,14 +50,10 @@
             size="mini"
             placeholder="数量"
           />
-          <span v-else v-empty-text="row.quantity" />
+          <span v-else>{{ row.quantity }}</span>
         </template>
       </el-table-column>
-      <el-table-column v-if="columns.visible('accountingUnit')" :show-overflow-tooltip="true" prop="accountingUnit" label="核算单位" align="center" min-width="70px">
-        <template #default="{ row }">
-          <span v-empty-text>{{ row.accountingUnit }}</span>
-        </template>
-      </el-table-column>
+      <el-table-column v-if="columns.visible('accountingUnit')" :show-overflow-tooltip="true" prop="accountingUnit" label="核算单位" align="center" min-width="70px" />
       <el-table-column v-if="columns.visible('mete')" :show-overflow-tooltip="true" prop="mete" label="核算量" align="center" min-width="120px">
         <template #default="{ row }">
           <common-input-number
@@ -80,19 +67,19 @@
             size="mini"
             placeholder="核算量"
           />
-          <span v-else v-empty-text>{{ row.mete }}</span>
+          <span v-else>{{ row.mete }}</span>
         </template>
       </el-table-column>
       <el-table-column v-if="columns.visible('color')" :show-overflow-tooltip="true" prop="color" label="颜色" align="center" min-width="120px">
         <template #default="{ row }">
           <el-input v-if="row.isModify" v-model.trim="row.color" maxlength="20" size="mini" placeholder="颜色" />
-          <span v-else v-empty-text>{{ row.color }}</span>
+          <span v-else>{{ row.color }}</span>
         </template>
       </el-table-column>
       <el-table-column v-if="columns.visible('brand')" :show-overflow-tooltip="true" prop="brand" label="品牌" align="center" min-width="120px">
         <template #default="{ row }">
           <el-input v-if="row.isModify" v-model.trim="row.brand" maxlength="60" size="mini" placeholder="品牌" />
-          <span v-else v-empty-text>{{ row.color }}</span>
+          <span v-else>{{ row.brand }}</span>
         </template>
       </el-table-column>
       <el-table-column v-if="columns.visible('useProperty')" prop="useProperty" label="属性" align="center" min-width="120px">
@@ -106,7 +93,7 @@
           clearable
           placeholder="属性"
         />
-        <span v-else v-empty-text>{{ auxiliaryMaterialUseTypeEnum.VL[row.useProperty] }}</span>
+        <span v-else>{{ auxiliaryMaterialUseTypeEnum.VL[row.useProperty] }}</span>
       </template>
     </el-table-column>
       <el-table-column
