@@ -259,6 +259,34 @@ const inProductionDetailReportEnum = {
 }
 constantize(inProductionDetailReportEnum)
 
+// 构件配置传统/智能生产线
+const artifactProductLineEnum = {
+  TRADITION: { L: '传统线', K: 'TRADITION', V: 1 << 0 },
+  INTELLECT: { L: '智能线', K: 'INTELLECT', V: 1 << 1 }
+}
+constantize(artifactProductLineEnum)
+
+// 构件配置智能线父类型
+const intellectParentType = {
+  PILLAR: { L: '柱', K: 'PILLAR', V: 1 << 1 },
+  BRIDGE: { L: '梁', K: 'BRIDGE', V: 1 << 0 }
+}
+constantize(intellectParentType)
+
+// 最小数值类型
+const minEqualTypeEnum = {
+  YES: { L: '≥', K: 'YES', V: true },
+  NO: { L: '>', K: 'NO', V: false }
+}
+constantize(minEqualTypeEnum)
+
+// 最大数值类型
+const maxEqualTypeEnum = {
+  YES: { L: '≤', K: 'YES', V: true },
+  NO: { L: '<', K: 'NO', V: false }
+}
+constantize(maxEqualTypeEnum)
+
 export {
   teamTypeEnum,
   teamAttributeEnum,
@@ -290,7 +318,11 @@ export {
   printProductTypeEnum,
   surplusHandleStatusEnum,
   inProductionDetailReportEnum,
-  schedulingStatusEnum
+  schedulingStatusEnum,
+  artifactProductLineEnum,
+  intellectParentType,
+  minEqualTypeEnum,
+  maxEqualTypeEnum
 }
 
 export default {
@@ -324,5 +356,9 @@ export default {
   printProductTypeEnum,
   surplusHandleStatusEnum,
   inProductionDetailReportEnum,
-  schedulingStatusEnum
+  schedulingStatusEnum,
+  artifactProductLineEnum,
+  intellectParentType,
+  minEqualTypeEnum,
+  maxEqualTypeEnum
 }

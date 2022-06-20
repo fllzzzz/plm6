@@ -18,6 +18,11 @@
       style="width: 100%"
     >
       <el-table-column prop="index" label="序号" align="center" width="60" type="index" />
+      <el-table-column v-if="columns.visible('productionLineType')" key="productionLineType" prop="productionLineType" align="center" :show-overflow-tooltip="true" label="生产线">
+        <template v-slot="scope">
+          <span>{{ scope.row.productionLineType ? artifactProductLineEnum.VL[scope.row.productionLineType] : '-' }}</span>
+        </template>
+      </el-table-column>
       <el-table-column v-if="columns.visible('name')" key="name" prop="name" align="center" :show-overflow-tooltip="true" label="代表杆件类型" min-width="150">
         <template v-slot="scope">
           <span>{{ scope.row.name }}</span>
@@ -87,7 +92,10 @@
 <script setup>
 import crudApi from '@/api/config/system-config/machine-part-config'
 import { ref } from 'vue'
+
+import { artifactProductLineEnum } from '@enum-ms/mes'
 import { machinePartConfigPM as permission } from '@/page-permission/config'
+
 import checkPermission from '@/utils/system/check-permission'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'

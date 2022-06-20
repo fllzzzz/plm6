@@ -13,6 +13,20 @@
     </template>
     <template #content>
       <el-form ref="formRef" :model="form" :rules="rules" size="small" label-width="140px">
+        <el-form-item label="生产线" prop="productionLineType">
+          <common-select
+            v-model="form.productionLineType"
+            :options="artifactProductLineEnum.ENUM"
+            type="enum"
+            size="small"
+            clearable
+            class="filter-item"
+            placeholder="生产线"
+            style="width: 250px"
+            @change="lineTypeChange"
+            :disabled="!!form.id"
+          />
+        </el-form-item>
         <el-form-item label="代表杆件类型" prop="name">
           <el-input v-model="form.name" type="text" placeholder="代表杆件类型" style="width: 270px" maxlength="30" />
         </el-form-item>
@@ -66,6 +80,7 @@ import { ref } from 'vue'
 import { ElMessage } from 'element-plus'
 
 import { whetherEnum } from '@enum-ms/common'
+import { artifactProductLineEnum } from '@enum-ms/mes'
 import useMaxHeight from '@compos/use-max-height'
 import useTableValidate from '@compos/form/use-table-validate'
 
@@ -75,6 +90,7 @@ const formRef = ref()
 const nameArr = ref([])
 const defaultForm = {
   id: undefined,
+  productionLineType: undefined, // 生产线类型
   name: '',
   sort: undefined,
   assembleSpecList: []
@@ -83,6 +99,9 @@ const defaultForm = {
 const { crud, form, CRUD } = regForm(defaultForm, formRef)
 
 const rules = {
+  productionLineType: [
+    { required: true, message: '请选择生产线', trigger: 'change' }
+  ],
   name: [
     { required: true, message: '请填写代表杆件类型名称', trigger: 'blur' },
     { min: 1, max: 30, message: '长度在 1 到 30 个字符', trigger: 'blur' }

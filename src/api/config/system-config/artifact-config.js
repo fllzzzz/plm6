@@ -27,12 +27,12 @@ export function edit(data) {
   })
 }
 
-export function del(data) {
+export function del(ids) {
   return request({
     module: 'contract',
     url: 'system/structure-classification',
     method: 'delete',
-    data
+    data: ids
   })
 }
 
