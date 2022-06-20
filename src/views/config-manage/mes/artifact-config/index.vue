@@ -2,33 +2,33 @@
   <div class="app-container">
     <!--工具栏-->
     <div class="head-container">
-      <mHeader />
+      <common-button size="mini" @click="showType='add';formVisible=true;" icon="el-icon-plus" type="primary" v-permission="permission.add">新增</common-button>
     </div>
     <!--表格渲染-->
     <common-table
       ref="tableRef"
       class="upload-table"
-      v-loading="crud.loading"
-      :data="crud.data"
-      :empty-text="crud.emptyText"
+      :data="list"
+      v-loading="tableLoading"
+      :empty-text="'暂无数据'"
       :max-height="maxHeight"
-      return-source-data
-      :showEmptySymbol="false"
+      :row-class-name="handleRowClassName"
+      :cell-class-name="cellClassName"
       :stripe="false"
       style="width: 100%"
     >
       <el-table-column prop="index" label="序号" align="center" width="60" type="index" />
-      <el-table-column v-if="columns.visible('productionLineType')" key="productionLineType" prop="productionLineType" align="center" :show-overflow-tooltip="true" label="生产线">
+      <el-table-column key="productionLineType" prop="productionLineType" align="center" :show-overflow-tooltip="true" label="生产线">
         <template v-slot="scope">
           <span>{{ scope.row.productionLineType ? artifactProductLineEnum.VL[scope.row.productionLineType] : '-' }}</span>
         </template>
       </el-table-column>
-      <el-table-column v-if="columns.visible('mainClassificationName')" key="mainClassificationName" prop="mainClassificationName" align="center" :show-overflow-tooltip="true" label="构件类型">
+      <el-table-column key="mainClassificationName" prop="mainClassificationName" align="center" :show-overflow-tooltip="true" label="构件类型">
         <template v-slot="scope">
           <span>{{ scope.row.mainClassificationName }}</span>
         </template>
       </el-table-column>
-      <el-table-column v-if="columns.visible('classificationName')" key="classificationName" prop="classificationName" align="center" :show-overflow-tooltip="true" label="子分类" min-width="120">
+      <el-table-column key="classificationName" prop="classificationName" align="center" :show-overflow-tooltip="true" label="子分类" min-width="120">
         <template v-slot="scope">
           <template v-if="scope.row.productionLineType === artifactProductLineEnum.INTELLECT.V">
             <div v-for="(item,index) in scope.row.structureClassificationList" :key="item.id" :class="index === scope.row.structureClassificationList.length-1 ? 'sandwich-cell-bottom' : 'sandwich-cell-top'" :style="`height:${item.styleHeight};line-height:${item.lineHeight}`">
@@ -43,7 +43,7 @@
           <span v-else>-</span>
         </template>
       </el-table-column>
-      <el-table-column v-if="columns.visible('specPrefixList')" key="specPrefixList" prop="specPrefixList" label="构件规格前缀" align="center">
+      <el-table-column key="specPrefixList" prop="specPrefixList" label="构件规格前缀" align="center">
         <template v-slot="scope">
           <div v-for="(item,index) in scope.row.structureClassificationList" :key="item.id">
             <template v-if="item.specPrefixList && item.specPrefixList.length > 0">
@@ -57,7 +57,7 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column v-if="columns.visible('specPrefixList')" key="specPrefixList" prop="specPrefixList" label="是否匹配组立" align="center">
+      <el-table-column key="specPrefixList" prop="specPrefixList" label="是否匹配组立" align="center">
         <template v-slot="scope">
           <div v-for="(item,index) in scope.row.structureClassificationList" :key="item.id">
             <template v-if="item.specPrefixList && item.specPrefixList.length > 0">
@@ -71,7 +71,7 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column v-if="columns.visible('definitionWord')" key="definitionWord" prop="definitionWord" align="center" :show-overflow-tooltip="true" label="定义代码">
+      <el-table-column key="definitionWord" prop="definitionWord" align="center" :show-overflow-tooltip="true" label="定义代码">
         <template v-slot="scope">
           <div v-for="(item,index) in scope.row.structureClassificationList" :key="item.id" :class="index === scope.row.structureClassificationList.length-1 ? 'sandwich-cell-bottom' : 'sandwich-cell-top'" :style="`height:${item.styleHeight};line-height:${item.lineHeight}`">
             {{ item.definitionWord || '-' }}
@@ -79,7 +79,6 @@
         </template>
       </el-table-column>
       <el-table-column
-        v-if="columns.visible('sort')"
         key="sort"
         prop="sort"
         :show-overflow-tooltip="true"
@@ -103,52 +102,34 @@
       >
         <template v-slot="scope">
           <div v-for="(item,index) in scope.row.structureClassificationList" :key="item.id" :class="index === scope.row.structureClassificationList.length-1 ? 'sandwich-cell-bottom' : 'sandwich-cell-top'" :style="`height:${item.styleHeight};line-height:${item.lineHeight}`">
-            <ud-operation :data="item" :show-del="false"/>
+            <common-button size="mini" @click="openForm(item,'edit')" icon="el-icon-edit" type="primary" v-permission="permission.edit"/>
             <common-button size="mini" @click="handleDelete(scope.row,k)" icon="el-icon-delete" type="danger" v-permission="permission.del"/>
           </div>
         </template>
       </el-table-column>
     </common-table>
-    <!--分页组件-->
-    <pagination />
-    <mForm />
+    <mForm v-model="formVisible" :detailInfo="detailInfo" :showType="showType" @success="fetchList"/>
   </div>
 </template>
 
 <script setup>
 import crudApi from '@/api/config/system-config/artifact-config'
 import { ref } from 'vue'
+import { ElNotification } from 'element-plus'
 
 import { artifactConfigPM as permission } from '@/page-permission/config'
 import { artifactProductLineEnum, intellectParentType } from '@enum-ms/mes'
 
 import checkPermission from '@/utils/system/check-permission'
 import useMaxHeight from '@compos/use-max-height'
-import useCRUD from '@compos/use-crud'
-import pagination from '@crud/Pagination'
-import udOperation from '@crud/UD.operation'
-import mHeader from './module/header'
 import mForm from './module/form'
 
-const optShow = {
-  add: true,
-  edit: false,
-  del: false,
-  download: false
-}
-
 const tableRef = ref()
-const { CRUD, crud, columns } = useCRUD(
-  {
-    title: '构件类型配置',
-    sort: [],
-    permission: { ...permission },
-    optShow: { ...optShow },
-    crudApi: { ...crudApi },
-    hasPagination: true
-  },
-  tableRef
-)
+const list = ref([])
+const tableLoading = ref(false)
+const formVisible = ref(false)
+const detailInfo = ref({})
+const showType = ref('add')
 
 const { maxHeight } = useMaxHeight({
   wrapperBox: '.artifact-config',
@@ -156,31 +137,68 @@ const { maxHeight } = useMaxHeight({
   extraHeight: 40
 })
 
+function handleRowClassName({ row, rowIndex }) {
+  if (row.productionLineType === artifactProductLineEnum.INTELLECT.V) {
+    return 'abnormal-row'
+  } else {
+    return 'blue-row'
+  }
+}
+function cellClassName({ row, rowIndex }) {
+  if (row.productionLineType === artifactProductLineEnum.INTELLECT.V) {
+    return 'abnormal-row'
+  } else {
+    return 'blue-row'
+  }
+}
+
 async function handleDelete(row, index) {
   try {
     await crudApi.del([row.id])
-    crud.notify(`删除成功`, CRUD.NOTIFICATION_TYPE.SUCCESS)
-    crud.toQuery()
+    ElNotification.success(`删除成功`)
+    fetchList()
   } catch (e) {
     console.log(`删除`, e)
   }
 }
 
-CRUD.HOOK.handleRefresh = (crud, { data }) => {
-  data.content.forEach(v => {
-    if (v.structureClassificationList.length) {
-      v.structureClassificationList.map((k, index) => {
-        k.styleHeight = k.specPrefixList.length ? k.specPrefixList.length * 40 + 'px' : '40px'
-        k.lineHeight = k.specPrefixList.length ? k.specPrefixList.length * 30 + 'px' : '30px'
-      })
-      v.mainClassificationName = v.productionLineType === artifactProductLineEnum.INTELLECT.V ? (v.parentType ? intellectParentType.VL[v.parentType] : '-') : v.structureClassificationList[0].classificationName
-    }
-  })
+function openForm(item, type) {
+  showType.value = type
+  detailInfo.value = item
+  formVisible.value = true
+}
+
+fetchList()
+
+async function fetchList() {
+  let _list = []
+  tableLoading.value = true
+  try {
+    const { content = [] } = await crudApi.get()
+    content.forEach(v => {
+      if (v.structureClassificationList?.length) {
+        v.structureClassificationList.map((k, index) => {
+          k.styleHeight = k.specPrefixList.length ? k.specPrefixList.length * 40 + 'px' : '40px'
+          k.lineHeight = k.specPrefixList.length ? k.specPrefixList.length * 30 + 'px' : '30px'
+        })
+        v.mainClassificationName = v.productionLineType === artifactProductLineEnum.INTELLECT.V ? (v.parentType ? intellectParentType.VL[v.parentType] : '-') : v.structureClassificationList[0].classificationName
+      }
+    })
+    _list = content
+  } catch (error) {
+    console.log('获取构件类型配置失败', error)
+  } finally {
+    list.value = _list
+    tableLoading.value = false
+  }
 }
 </script>
 
 <style lang="scss" scoped>
 ::v-deep(.abnormal-row) {
+  background: #fab6b6;
+}
+::v-deep(.blue-row) {
   background: #e8f4ff;
 }
 ::v-deep(.hidden-select) {

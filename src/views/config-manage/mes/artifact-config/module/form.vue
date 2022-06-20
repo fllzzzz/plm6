@@ -1,18 +1,19 @@
 <template>
   <common-drawer
+    ref="drawerRef"
     append-to-body
+    v-model="visible"
+    :before-close="handleClose"
+    :title="showType === 'edit'?'编辑构件类型配置':'新增构件类型配置'"
+    :center="false"
     :close-on-click-modal="false"
-    :before-close="crud.cancelCU"
-    :visible="crud.status.cu > 0"
-    :title="crud.status.title"
-    :wrapper-closable="false"
-    size="860px"
+    size="800px"
   >
     <template #titleRight>
-      <common-button :loading="crud.status.cu === 2" type="primary" size="mini" @click="crud.submitCU">确认</common-button>
+      <common-button :loading="loading" type="primary" size="mini" @click="onSubmit">确认</common-button>
     </template>
     <template #content>
-      <el-form ref="formRef" :model="form" :rules="rules" size="small" label-width="140px">
+      <el-form ref="formRef" :model="form" :rules="rules" size="small" label-width="140px" :max-height="maxHeight">
         <el-form-item label="生产线" prop="productionLineType">
           <common-select
             v-model="form.productionLineType"
@@ -140,17 +141,38 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import { ElMessage } from 'element-plus'
+import crudApi from '@/api/config/system-config/artifact-config'
+import { defineProps, defineEmits, ref, watch, nextTick } from 'vue'
+import { ElMessage, ElNotification } from 'element-plus'
 
 import { isNotBlank } from '@data-type/index'
 import { whetherEnum } from '@enum-ms/common'
 import { artifactProductLineEnum, intellectParentType, minEqualTypeEnum, maxEqualTypeEnum } from '@enum-ms/mes'
 
-import { regForm } from '@compos/use-crud'
+import useVisible from '@compos/use-visible'
+import useWatchFormValidate from '@compos/form/use-watch-form-validate'
+import useMaxHeight from '@compos/use-max-height'
+
+const props = defineProps({
+  modelValue: {
+    type: Boolean,
+    require: true
+  },
+  showType: {
+    type: String,
+    default: 'detail'
+  },
+  detailInfo: {
+    type: Object,
+    default: () => {}
+  }
+})
 
 const formRef = ref()
+const drawerRef = ref()
+const loading = ref(false)
 const nameArr = ref([])
+
 const defaultForm = {
   id: undefined,
   productionLineType: undefined,
@@ -165,7 +187,8 @@ const defaultForm = {
   specPrefixList: []
 }
 
-const { crud, form, CRUD } = regForm(defaultForm, formRef)
+const form = ref(JSON.parse(JSON.stringify(defaultForm)))
+
 const validateLinks = (rule, value, callback) => {
   if (value && value.length) {
     for (const i in value) {
@@ -187,26 +210,26 @@ const validateLinks = (rule, value, callback) => {
 }
 
 const validateLength = (rule, value, callback) => {
-  if (form.parentType === intellectParentType.BRIDGE.V) {
-    if (!form.minLength && !form.maxLength) {
+  if (form.value.parentType === intellectParentType.BRIDGE.V) {
+    if (!form.value.minLength && !form.value.maxLength) {
       callback(new Error('最大值和最小值不能同时为空'))
     } else {
-      if (form.minLength && form.maxLength) {
-        if (!isNotBlank(form.boolContainsMin) || !isNotBlank(form.boolContainsMax)) {
+      if (form.value.minLength && form.value.maxLength) {
+        if (!isNotBlank(form.value.boolContainsMin) || !isNotBlank(form.value.boolContainsMax)) {
           callback(new Error('最大值和最小值符号必选'))
         }
-        if (form.maxLength < form.minLength) {
+        if (form.value.maxLength < form.value.minLength) {
           callback(new Error('最大值必须大于最小值'))
         }
         callback()
       } else {
-        if (form.minLength) {
-          if (!isNotBlank(form.boolContainsMin)) {
+        if (form.value.minLength) {
+          if (!isNotBlank(form.value.boolContainsMin)) {
             callback(new Error('最小值符号必选'))
           }
           callback()
         } else {
-          if (!isNotBlank(form.boolContainsMax)) {
+          if (!isNotBlank(form.value.boolContainsMax)) {
             callback(new Error('最大值符号必选'))
           }
           callback()
@@ -217,7 +240,7 @@ const validateLength = (rule, value, callback) => {
   callback()
 }
 const validateParentType = (rule, value, callback) => {
-  if (form.productionLineType === artifactProductLineEnum.INTELLECT.V) {
+  if (form.value.productionLineType === artifactProductLineEnum.INTELLECT.V) {
     if (!value) {
       callback(new Error('请选择类型'))
     }
@@ -227,7 +250,7 @@ const validateParentType = (rule, value, callback) => {
 }
 
 const validateDefinitionWord = (rule, value, callback) => {
-  if (form.parentType === intellectParentType.BRIDGE.V) {
+  if (form.value.parentType === intellectParentType.BRIDGE.V) {
     if (!value) {
       callback(new Error('必填'))
     }
@@ -261,32 +284,76 @@ const rules = {
   ]
 }
 
+const emit = defineEmits(['success', 'update:modelValue'])
+const { visible, handleClose } = useVisible({ emit, props })
+
+const { maxHeight } = useMaxHeight(
+  {
+    extraBox: ['.el-drawer__header', '.detail-header'],
+    wrapperBox: ['.el-drawer__body'],
+    navbar: false,
+    extraHeight: 120
+  },
+  () => drawerRef.value.loaded
+)
+
+watch(
+  () => visible.value,
+  (val) => {
+    if (val) {
+      if (props.showType === 'edit') {
+        resetForm(props.detailInfo)
+      } else {
+        resetForm()
+      }
+    }
+  },
+  { deep: true, immediate: true }
+)
+
+function resetForm(data) {
+  nameArr.value = []
+  if (formRef.value) {
+    formRef.value.resetFields()
+  }
+  if (data && Object.keys(data).length > 0) {
+    form.value = data
+  } else {
+    form.value = JSON.parse(JSON.stringify(defaultForm))
+  }
+  if (formRef.value) {
+    nextTick(() => {
+      formRef.value.clearValidate()
+    })
+  }
+  useWatchFormValidate(formRef, form)
+}
+
 function lineTypeChange(val) {
   if (val !== artifactProductLineEnum.INTELLECT.V) {
-    form.boolContainsMin = undefined
-    form.minLength = undefined
-    form.boolContainsMax = undefined
-    form.maxLength = undefined
+    form.value.boolContainsMin = undefined
+    form.value.minLength = undefined
+    form.value.boolContainsMax = undefined
+    form.value.maxLength = undefined
   }
 }
 
 function parentTypeChange(val) {
   if (val !== intellectParentType.BRIDGE.V) {
-    form.parentType = undefined
-    form.boolContainsMin = undefined
-    form.minLength = undefined
-    form.boolContainsMax = undefined
-    form.maxLength = undefined
+    form.value.boolContainsMin = undefined
+    form.value.minLength = undefined
+    form.value.boolContainsMax = undefined
+    form.value.maxLength = undefined
   }
 }
 
 function addProcess() {
-  form.specPrefixList.push({
+  form.value.specPrefixList.push({
     add: true
   })
 }
 function delProcess(index) {
-  form.specPrefixList.splice(index, 1)
+  form.value.specPrefixList.splice(index, 1)
 }
 
 function checkName(item, index) {
@@ -306,7 +373,7 @@ function checkName(item, index) {
         val.specPrefix = undefined
       } else {
         if (!/^[A-Z]+$/.test(item.specPrefix)) {
-          form.specPrefixList[index].specPrefix = undefined
+          form.value.specPrefixList[index].specPrefix = undefined
           val.specPrefix = undefined
           return
         }
@@ -318,7 +385,7 @@ function checkName(item, index) {
   } else {
     if (item.specPrefix) {
       if (!/^[A-Z]+$/.test(item.specPrefix)) {
-        form.specPrefixList[index].specPrefix = undefined
+        form.value.specPrefixList[index].specPrefix = undefined
         return
       }
       if (nameArr.value.findIndex((v) => v.specPrefix === item.specPrefix) > -1) {
@@ -326,7 +393,7 @@ function checkName(item, index) {
           message: '规格前缀已存在，请重新填写',
           type: 'error'
         })
-        form.specPrefixList[index].specPrefix = undefined
+        form.value.specPrefixList[index].specPrefix = undefined
       }
       nameArr.value.push({
         specPrefix: item.specPrefix,
@@ -336,18 +403,36 @@ function checkName(item, index) {
   }
 }
 
-CRUD.HOOK.beforeValidateCU = (crud, form) => {
-  if (crud.form.specPrefixList && crud.form.specPrefixList.length > 0) {
-    crud.form.specPrefixList.map((v) => {
+async function onSubmit() {
+  loading.value = true
+  if (form.value.specPrefixList?.length) {
+    form.value.specPrefixList.map((v) => {
       v.add = false
     })
   }
+  try {
+    const valid = await formRef.value.validate()
+    if (!valid) {
+      return
+    }
+    if (props.showType === 'edit') {
+      await crudApi.edit(form.value)
+    } else {
+      await crudApi.add(form.value)
+    }
+    const msg = props.showType === 'edit' ? '修改成功' : '新增成功'
+    ElNotification({ title: msg, type: 'success' })
+    emit('success')
+    handleClose()
+  } catch (error) {
+    console.log('价格修改失败', error)
+  } finally {
+    loading.value = false
+  }
 }
 
-CRUD.HOOK.afterToAdd = () => {
-  nameArr.value = []
-}
 </script>
+
 <style lang="scss" scoped>
 ::v-deep(.el-input-number .el-input__inner) {
   text-align: left;
