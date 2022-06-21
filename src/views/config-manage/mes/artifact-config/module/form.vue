@@ -94,7 +94,7 @@
             />
           </div>
         </el-form-item>
-        <el-form-item label="定义代码" prop="definitionWord" v-if="form.parentType === intellectParentType.BRIDGE.V">
+        <el-form-item label="定义代码" prop="definitionWord" v-if="form.productionLineType === artifactProductLineEnum.INTELLECT.V">
           <el-input v-model="form.definitionWord" type="text" placeholder="定义代码" style="width: 250px" maxlength="30" />
         </el-form-item>
         <el-form-item label="排序" prop="sort">
@@ -250,9 +250,9 @@ const validateParentType = (rule, value, callback) => {
 }
 
 const validateDefinitionWord = (rule, value, callback) => {
-  if (form.value.parentType === intellectParentType.BRIDGE.V) {
+  if (form.value.productionLineType === artifactProductLineEnum.INTELLECT.V) {
     if (!value) {
-      callback(new Error('必填'))
+      callback(new Error('请填写定义代码'))
     }
     callback()
   }

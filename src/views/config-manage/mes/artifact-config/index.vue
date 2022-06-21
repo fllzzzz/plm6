@@ -103,7 +103,18 @@
         <template v-slot="scope">
           <div v-for="(item,index) in scope.row.structureClassificationList" :key="item.id" :class="index === scope.row.structureClassificationList.length-1 ? 'sandwich-cell-bottom' : 'sandwich-cell-top'" :style="`height:${item.styleHeight};line-height:${item.lineHeight}`">
             <common-button size="mini" @click="openForm(item,'edit')" icon="el-icon-edit" type="primary" v-permission="permission.edit"/>
-            <common-button size="mini" @click="handleDelete(scope.row,k)" icon="el-icon-delete" type="danger" v-permission="permission.del"/>
+            <el-popconfirm
+                confirm-button-text="确定"
+                cancel-button-text="取消"
+                icon-color="red"
+                title="确定删除吗?"
+                @confirm="handleDelete(item,k)"
+                v-if="checkPermission(permission.del)"
+              >
+                <template #reference>
+                  <common-button size="small" class="el-icon-delete" type="danger"/>
+                </template>
+              </el-popconfirm>
           </div>
         </template>
       </el-table-column>
@@ -196,7 +207,7 @@ async function fetchList() {
 
 <style lang="scss" scoped>
 ::v-deep(.abnormal-row) {
-  background: #fab6b6;
+  background: #f5e4e4;
 }
 ::v-deep(.blue-row) {
   background: #e8f4ff;
