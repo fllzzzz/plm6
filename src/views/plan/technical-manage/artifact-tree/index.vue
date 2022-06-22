@@ -15,7 +15,7 @@
         :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
         :row-class-name="handleRowClassName"
         :cell-class-name="cellClassName"
-        row-key="id"
+        row-key="rowKey"
         style="width: 100%"
         :stripe="false"
         lazy
@@ -451,6 +451,7 @@ CRUD.HOOK.handleRefresh = (crud, data) => {
     index++
     v.machinePartDTOList = []
     v.children = []
+    v.rowKey = v.id
     v.hasChildren = !!v.hasMachinePart
     v.productType = componentTypeEnum.ARTIFACT.V
     return v
