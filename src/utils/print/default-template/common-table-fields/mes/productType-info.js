@@ -16,7 +16,7 @@ const ARTIFACT_BASE_INFO_FIELDS = [
 ]
 
 const ASSEMBLE_BASE_INFO_FIELDS = [
-  { show: true, key: 'serialNumber', title: '组立号', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 20, type: typeEnum.SERIAL_NUMBER.K },
+  { show: true, key: 'serialNumber', title: '部件号', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 20, type: typeEnum.SERIAL_NUMBER.K },
   { show: true, key: 'specification', title: '规格', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 20, type: typeEnum.SPECIFICATION.K },
   { show: true, key: 'material', title: '材质', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 20, type: typeEnum.MATERIAL.K }
 ]

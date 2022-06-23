@@ -3,7 +3,7 @@
     v-if="!unShowField.includes('serialNumber') && (isBlank(columns) || columns.visible('serialNumber'))"
     :show-overflow-tooltip="true"
     prop="serialNumber"
-    label="组立号"
+    label="部件号"
     :width="fixedWidth ? '120px' : ''"
     :min-width="!fixedWidth ? '120px' : ''"
     :fixed="fixed"
@@ -11,7 +11,7 @@
     <template v-if="snClickable" #header>
       <el-tooltip class="item" effect="light" :content="`双击编号可预览图纸`" placement="top">
         <div style="display: inline-block">
-          <span>组立号</span>
+          <span>部件号</span>
           <i class="el-icon-info" />
         </div>
       </el-tooltip>

@@ -57,7 +57,7 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column key="specPrefixList" prop="specPrefixList" label="是否匹配组立" align="center">
+      <el-table-column key="specPrefixList" prop="specPrefixList" label="是否匹配部件" align="center">
         <template v-slot="scope">
           <div v-for="(item,index) in scope.row.structureClassificationList" :key="item.id">
             <template v-if="item.specPrefixList && item.specPrefixList.length > 0">

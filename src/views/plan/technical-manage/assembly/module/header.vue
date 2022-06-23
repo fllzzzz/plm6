@@ -57,7 +57,7 @@
           :disabled="crud.data.length === 0 || deleteLoading"
           v-permission="crud.permission.download"
         >
-          下载组立清单
+          下载部件清单
         </export-button>
         <export-button
           :fn="downloadAssembleTemplate"
@@ -65,10 +65,10 @@
           :disabled="deleteLoading"
           v-permission="crud.permission.templateDownLoad"
         >
-          组立清单模板
+          部件清单模板
         </export-button>
         <el-popconfirm
-          :title="`确认清空【${currentArea.name}】下的【组立清单】么?`"
+          :title="`确认清空【${currentArea.name}】下的【部件清单】么?`"
           @confirm="deleteAssemle"
           v-if="currentArea && currentArea.id && checkPermission(crud.permission.del) && globalProject.mode!==projectModeEnum.STRUCTURE_STANDARD.V"
         >
@@ -178,7 +178,7 @@ async function deleteAssemle() {
     uploadSuccess()
     deleteLoading.value = false
   } catch (e) {
-    console.log('清空组立', e)
+    console.log('清空部件', e)
     deleteLoading.value = false
   }
 }
@@ -192,7 +192,7 @@ async function getAssembleError() {
     const { content } = await assembleError({ areaId: crud.query.areaId })
     errorList.value = content
   } catch (e) {
-    console.log('组立错误数据', e)
+    console.log('部件错误数据', e)
   }
 }
 

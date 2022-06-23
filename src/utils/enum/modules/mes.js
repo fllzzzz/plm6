@@ -16,7 +16,7 @@ constantize(teamAttributeEnum)
 
 // 工序类型
 const processTypeEnum = {
-  ONCE: { L: '一次工序', SL: '组立', K: 'ONCE', V: false },
+  ONCE: { L: '一次工序', SL: '部件', K: 'ONCE', V: false },
   TWICE: { L: '二次工序', SL: '构件', K: 'TWICE', V: true }
 }
 constantize(processTypeEnum)
@@ -32,6 +32,7 @@ constantize(processInspectTypeEnum)
 
 // 工序生产上报方式
 const processReportTypeEnum = {
+  MACHINE: { L: '机联', K: 'MACHINE', V: 4, T: '' },
   SINGLE_UNSCAN: { L: '单件(不扫码)', K: 'SINGLE_UNSCAN', V: 0, T: 'info' },
   SINGLE_SCAN: { L: '单件(需扫码)', K: 'SINGLE_SCAN', V: 1, T: 'warning' },
   BATCH_UNSCAN: { L: '批量(不扫码)', K: 'BATCH_UNSCAN', V: 2, T: 'danger' },
@@ -42,8 +43,8 @@ constantize(processReportTypeEnum)
 // mes 产品类型
 const componentTypeEnum = {
   MACHINE_PART: { L: '零件', SL: '零件', K: 'MACHINE_PART', V: 1 << 0, T: '', COLOR: '#fad400' },
-  ASSEMBLE: { L: '组立', SL: '一次工序', K: 'ASSEMBLE', V: 1 << 4, T: 'success', COLOR: '#40ed8d' },
-  ARTIFACT: { L: '构件', SL: '二次工序', K: 'ARTIFACT', V: 1 << 1, T: 'success', COLOR: '#00babd' },
+  ASSEMBLE: { L: '部件', SL: '部件', K: 'ASSEMBLE', V: 1 << 4, T: 'success', COLOR: '#40ed8d' },
+  ARTIFACT: { L: '构件', SL: '构件', K: 'ARTIFACT', V: 1 << 1, T: 'success', COLOR: '#00babd' },
   ENCLOSURE: { L: '围护', SL: '围护', K: 'ENCLOSURE', V: 1 << 2, T: 'warning', COLOR: '#ff7800' },
   AUXILIARY_MATERIAL: { L: '辅材', SL: '辅材', K: 'AUXILIARY_MATERIAL', T: 'info', V: 1 << 3, COLOR: '#f5f7fa' }
 }
@@ -59,6 +60,7 @@ constantize(artifactProcessEnum)
 // 含有工序的材料类型
 const processMaterialListTypeEnum = {
   ARTIFACT: { L: '构件', K: 'ARTIFACT', V: componentTypeEnum.ARTIFACT.V, T: '' },
+  ASSEMBLE: { L: '部件', K: 'ASSEMBLE', V: componentTypeEnum.ASSEMBLE.V, T: 'info' },
   MACHINE_PART: { L: '零件', K: 'MACHINE_PART', V: componentTypeEnum.MACHINE_PART.V, T: 'success' },
   ENCLOSURE: { L: '围护', K: 'ENCLOSURE', V: componentTypeEnum.ENCLOSURE.V, T: 'warning' }
 }
@@ -68,6 +70,7 @@ constantize(processMaterialListTypeEnum)
 const wageQuotaTypeEnum = {
   WEIGHT: { L: '按重量计价', SL: '重量', K: 'WEIGHT', V: 1 << 0, F: 'weightPrice', unit: '元/吨', meteUnit: '吨', C_UNIT: 't', DP: 'COM_WT__T' },
   LENGTH: { L: '按长度计价', SL: '长度', K: 'LENGTH', V: 1 << 1, F: 'lengthPrice', unit: '元/米', meteUnit: '米', C_UNIT: 'm', DP: 'COM_L__M' },
+  QUANTITY: { L: '按数量计价', SL: '数量', K: 'QUANTITY', V: 1 << 3, F: 'quantityPrice', unit: '元/件', meteUnit: '件', C_UNIT: '', DP: '' },
   AREA: { L: '按面积计价', SL: '面积', K: 'AREA', V: 1 << 2, F: 'areaPice', unit: '元/平方米', meteUnit: '平方米', C_UNIT: '㎡', DP: 'COM_AREA__M2' }
 }
 constantize(wageQuotaTypeEnum)
@@ -202,8 +205,8 @@ constantize(schedulingStatusEnum)
 const abnormalChangeTypeEnum = {
   ARTIFACT_REDUCE: { L: '构件减少', K: 'ARTIFACT_REDUCE', V: 1 << 0 },
   ARTIFACT_DELETE: { L: '构件删除', K: 'ARTIFACT_DELETE', V: 1 << 1 },
-  ASSEMBLE_REDUCE: { L: '组立减少', K: 'ASSEMBLE_REDUCE', V: 1 << 2 },
-  ASSEMBLE_DELETE: { L: '组立删除', K: 'ASSEMBLE_DELETE', V: 1 << 3 },
+  ASSEMBLE_REDUCE: { L: '部件减少', K: 'ASSEMBLE_REDUCE', V: 1 << 2 },
+  ASSEMBLE_DELETE: { L: '部件删除', K: 'ASSEMBLE_DELETE', V: 1 << 3 },
   MACHINE_PART_REDUCE: { L: '零件减少', K: 'MACHINE_PART_REDUCE', V: 1 << 4 },
   MACHINE_PART_DELETE: { L: '零件删除', K: 'MACHINE_PART_DELETE', V: 1 << 5 }
 }

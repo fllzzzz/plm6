@@ -150,12 +150,12 @@ Random.extend({
   },
   componentProcess: function () {
     // 工序名称
-    var name = ['组立', '总装', '焊接', '清磨', '涂装']
+    var name = ['部件', '总装', '焊接', '清磨', '涂装']
     return this.pick(name)
   },
   structureProcess: function () {
     // 构件工序名称
-    var name = ['组立', '打底焊', '埋弧焊', '电渣焊', '总装', '焊接', '抛丸除锈', '清磨', '端铣', '涂装']
+    var name = ['部件', '打底焊', '埋弧焊', '电渣焊', '总装', '焊接', '抛丸除锈', '清磨', '端铣', '涂装']
     return this.pick(name)
   },
   enclosureProcess: function () {

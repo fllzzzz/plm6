@@ -18,7 +18,7 @@ export function artifactDetail(params) {
 
 /**
  *
- * 获取生产看板-组立详情
+ * 获取生产看板-部件详情
  * @export
  * @param {*} id|required 产品id
  * @returns

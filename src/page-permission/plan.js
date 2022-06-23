@@ -92,15 +92,15 @@ export const artifactPM = {
   get: ['plan_artifact_list:get'] // 构件列表
 }
 
-// 技术管理/组立列表
+// 技术管理/部件列表
 export const assemblyListPM = {
-  get: ['plan_assembly_list:get'], // 组立列表
-  del: ['plan_assembly_list:del'], // 删除组立
-  download: ['plan_assembly_list:download'], // 下载组立
-  import: ['plan_assembly_list:import'], // 导入组立
+  get: ['plan_assembly_list:get'], // 部件列表
+  del: ['plan_assembly_list:del'], // 删除部件
+  download: ['plan_assembly_list:download'], // 下载部件
+  import: ['plan_assembly_list:import'], // 导入部件
   artifactAdd: ['plan_assembly_list:artifactAdd'], // 添加构件
   artifactDel: ['plan_assembly_list:artifactDel'], // 删除构件
-  templateDownLoad: ['plan_assembly_list:templateDownLoad'] // 下载组立模板
+  templateDownLoad: ['plan_assembly_list:templateDownLoad'] // 下载部件模板
 }
 
 // 技术管理/配套件

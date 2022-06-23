@@ -13,15 +13,15 @@ const getList = {
           'productProcessName': 'L-115',
           'processList': [{
             'processId': 1,
-            'processName': '组立1',
+            'processName': '部件1',
             'price': 1.00000000
           }, {
             'processId': 2,
-            'processName': '组立2',
+            'processName': '部件2',
             'price': 0
           }, {
             'processId': 3,
-            'processName': '组立3',
+            'processName': '部件3',
             'price': 0
           }]
         }]
@@ -68,7 +68,7 @@ const checkList = {
           'productProcessId': 1,
           'productProcessName': 'L-115',
           'processId': 1,
-          'processName': '组立1',
+          'processName': '部件1',
           'oldPrice': 1.00,
           'newPrice': 4.00,
           'auditTime': null,
@@ -93,7 +93,7 @@ const checkList = {
           'productProcessId': 1,
           'productProcessName': 'L-115',
           'processId': 1,
-          'processName': '组立1',
+          'processName': '部件1',
           'oldPrice': 1.00,
           'newPrice': 5.00,
           'auditTime': null,

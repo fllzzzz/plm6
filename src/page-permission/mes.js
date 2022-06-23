@@ -133,10 +133,10 @@ export const machinePartProductionReportPM = {
   print: ['mes_production_machine_part_report:print'] // 零件报表打印
 }
 
-// 生产管理/生产报表/组立报表
+// 生产管理/生产报表/部件报表
 export const assembleProductionReportPM = {
-  get: ['mes_production_assemble_report:get'], // 组立报表列表
-  print: ['mes_production_assemble_report:print'] // 组立报表打印
+  get: ['mes_production_assemble_report:get'], // 部件报表列表
+  print: ['mes_production_assemble_report:print'] // 部件报表打印
 }
 
 // 生产管理/生产报表/结构报表

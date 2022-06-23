@@ -1,9 +1,9 @@
 <template>
-  <common-drawer ref="drawerRef" :title="`${info.serialNumber}组立详情`" v-model="drawerVisible" direction="rtl" :before-close="handleClose" size="40%">
+  <common-drawer ref="drawerRef" :title="`${info.serialNumber}部件详情`" v-model="drawerVisible" direction="rtl" :before-close="handleClose" size="40%">
     <template #content>
       <div class="tip">
         <span>* 注意：</span>
-        <span> 可修改的组立数量总和为{{ info.canHandleTotalMete }}，请谨慎操作！</span>
+        <span> 可修改的部件数量总和为{{ info.canHandleTotalMete }}，请谨慎操作！</span>
       </div>
       <common-table ref="tableRef" v-loading="tableLoading" :data="list" :max-height="maxHeight" style="width: 100%">
         <el-table-column label="序号" type="index" align="center" width="60" />

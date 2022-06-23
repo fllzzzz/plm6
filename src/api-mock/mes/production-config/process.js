@@ -17,7 +17,6 @@ const getProcess = {
           'reportType|0-3': 2,
           'inspectType|0-3': 2,
           'type|1-2': false,
-          'sequenceType': 2,
           'productType': 16,
           'userId': 1,
           'sort': 1

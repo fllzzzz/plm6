@@ -28,7 +28,6 @@ const getScheduling = {
           'serialNumber': 'L-115',
           'specification': null,
           'productType': null,
-          'processType': false,
           'schedulingQuantity': 10,
           'taskQuantity': 10,
           'completeQuantity': 10,

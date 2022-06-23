@@ -1,186 +1,176 @@
 <template>
-  <common-dialog
-    append-to-body
-    :close-on-click-modal="false"
-    :before-close="crud.cancelCU"
+  <common-drawer
+    ref="drawerRef"
     :visible="crud.status.cu > 0"
+    :before-close="crud.cancelCU"
     :title="crud.status.title"
-    width="600px"
+    :show-close="true"
+    :size="500"
   >
     <template #titleRight>
-      <common-button :loading="crud.status.cu === 2" type="primary" size="mini" @click="crud.submitCU">确认</common-button>
+      <common-button size="mini" type="success" icon="el-icon-plus" @click="addRow(form.list)" />
+      <common-button :loading="crud.status.cu === 2" size="mini" type="primary" @click="crud.submitCU">确认</common-button>
     </template>
-    <el-form ref="formRef" :model="form" :rules="rules" size="small" label-width="110px">
-      <el-form-item label="工序类型" prop="sequenceType">
-        <common-radio-button
-          v-model="form.sequenceType"
-          :options="typeEnum.ENUM"
-          type="enum"
-          :disabled-val="disabledList"
-          size="small"
-          @change="typeChange(form.sequenceType)"
-        />
-      </el-form-item>
-      <el-form-item v-if="form.sequenceType === typeEnum.ARTIFACT.V" label="工序次序" prop="type">
-        <common-radio-button v-model="form.type" :options="processTypeEnum.ENUM" size="small" type="enum" @change="processTypeChange" />
-      </el-form-item>
-      <el-form-item label="上报类型" prop="reportType">
-        <template v-slot:label>
-          上报类型
-          <el-tooltip
-            class="item"
-            effect="light"
-            placement="top"
-            :content="`检验方式设四种方式：\n
-          单件（不扫码）：每次只能上报一个，不需要扫码；\n
-          单件（需扫码）：每次只能上报一个，需要扫码；\n
-          批量（不扫码）：每次可以上报多个，不需要扫码;\n
-          批量（需扫码）：每次可以上报多个，需要扫码。`"
+    <template #content>
+      <div class="process-main-content">
+        <el-form ref="formRef" :model="form" size="small" label-width="80px">
+          <el-form-item label="工序类型" prop="productType">
+            <span v-parse-enum="{ e: typeEnum, v: form.productType }" />
+          </el-form-item>
+          <common-table
+            border
+            :data="form.list"
+            :show-empty-symbol="false"
+            return-source-data
+            :cell-class-name="(data) => wrongCellMask(data, tableRules)"
+            :max-height="maxHeight"
+            row-key="uid"
           >
-            <i class="el-icon-info" />
-          </el-tooltip>
-        </template>
-        <common-radio-button
-          v-model="form.reportType"
-          :options="reportTypeEnum.ENUM"
-          :disabled-val="reportDisabled"
-          type="enum"
-          size="small"
-        />
-      </el-form-item>
-      <el-form-item label="检验类型" prop="inspectType">
-        <template v-slot:label>
-          检验类型
-          <el-tooltip
-            class="item"
-            effect="light"
-            placement="top"
-            :content="`检验方式设四种方式：\n
-          单件（不扫码）：每次只能检验一个，不需要扫码；\n
-          单件（需扫码）：每次只能检验一个，需要扫码；\n
-          批量（不扫码）：每次可以检验多个，不需要扫码;\n
-          批量（需扫码）：每次可以检验多个，需要扫码。`"
-          >
-            <i class="el-icon-info" />
-          </el-tooltip>
-        </template>
-        <common-radio-button
-          v-model="form.inspectType"
-          :options="inspectTypeEnum.ENUM"
-          :disabled-val="inspectDisabled"
-          type="enum"
-          size="small"
-        />
-      </el-form-item>
-      <el-form-item label="工价计价方式" prop="wageQuotaTypeArr">
-        <el-checkbox-group v-model="form.wageQuotaTypeArr">
-          <el-checkbox
-            v-for="item in wageQuotaTypeEnum.ENUM"
-            :key="item.V"
-            :label="item.V"
-            :disabled="wageQuotaTypeDisabled.indexOf(item.V) > -1"
-          >
-            {{ item.L }} ({{ item.unit }})
-          </el-checkbox>
-        </el-checkbox-group>
-      </el-form-item>
-      <el-form-item label="工序名称" prop="name">
-        <el-input v-model="form.name" type="text" placeholder="请填写工序名称" style="width: 270px" />
-      </el-form-item>
-      <el-form-item label="排序" prop="sort">
-        <el-input-number v-model.number="form.sort" :min="1" :max="999" :step="1" controls-position="right" style="width: 270px" />
-      </el-form-item>
-    </el-form>
-  </common-dialog>
+            <el-table-column label="序号" type="index" align="center" width="60" />
+            <el-table-column prop="name" label="工序" align="center" min-width="180">
+              <template v-slot="scope">
+                <el-input
+                  v-model.trim="scope.row.name"
+                  :readonly="scope.row.boolUsed"
+                  type="text"
+                  placeholder="工序"
+                  size="mini"
+                  maxlength="20"
+                  class="input-underline"
+                  style="width: 100%"
+                />
+              </template>
+            </el-table-column>
+            <el-table-column label="操作" align="center" width="80">
+              <template v-slot="scope">
+                <!-- <common-button
+                  v-if="!scope.row.boolUsed"
+                  icon="el-icon-top"
+                  type="info"
+                  style="padding: 5px"
+                  size="mini"
+                  :disabled="scope.$index === 0"
+                  @click="handleMove(scope, 'up', form.list)"
+                />
+                <common-button
+                  v-if="!scope.row.boolUsed"
+                  icon="el-icon-bottom"
+                  type="info"
+                  style="padding: 5px"
+                  size="mini"
+                  :disabled="scope.$index === form.list.length - 1"
+                  @click="handleMove(scope, 'down', form.list)"
+                /> -->
+                <common-button
+                  v-if="!scope.row.boolUsed"
+                  icon="el-icon-minus"
+                  type="danger"
+                  style="padding: 5px"
+                  size="mini"
+                  @click="removeRow(form.list, scope.$index)"
+                />
+                <svg-icon v-else class="icon icon-readonly" icon-class="readonly" />
+              </template>
+            </el-table-column>
+          </common-table>
+        </el-form>
+      </div>
+    </template>
+  </common-drawer>
 </template>
 
 <script setup>
-import { computed, ref } from 'vue'
-import {
-  processTypeEnum,
-  processMaterialListTypeEnum as typeEnum,
-  processInspectTypeEnum as inspectTypeEnum,
-  processReportTypeEnum as reportTypeEnum,
-  wageQuotaTypeEnum
-} from '@enum-ms/mes'
-import EO from '@enum'
-import { regForm } from '@compos/use-crud'
-import { isBlank } from '@/utils/data-type'
+import { ref } from 'vue'
+import { processMaterialListTypeEnum as typeEnum } from '@enum-ms/mes'
 
-const formRef = ref()
+import { regForm } from '@compos/use-crud'
+import useMaxHeight from '@compos/use-max-height'
+import useTableOperate from '@compos/form/use-table-operate'
+import useTableValidate from '@compos/form/use-table-validate'
+import SvgIcon from '@comp/SvgIcon/index.vue'
 
 const defaultForm = {
-  id: undefined,
-  name: '',
-  sort: 1,
-  inspectType: inspectTypeEnum.BATCH_SCAN.V,
-  reportType: reportTypeEnum.BATCH_SCAN.V,
-  sequenceType: typeEnum.ARTIFACT.V,
-  type: processTypeEnum.ONCE.V,
-  wageQuotaTypeArr: []
+  productType: typeEnum.ARTIFACT.V, // 工序类型
+  list: [] // 具体工序列表
 }
 
-const { crud, form, CRUD } = regForm(defaultForm, formRef)
-
-const rules = {
-  sort: [{ required: true, message: '请填写排序值', trigger: 'blur', type: 'number' }],
-  wageQuotaTypeArr: [{ required: true, message: '请选择工价计价方式', trigger: 'change' }],
-  name: [
-    { required: true, message: '请填写工序名称', trigger: 'blur' },
-    { min: 1, max: 32, message: '长度在 1 到 32 个字符', trigger: 'blur' }
-  ]
+// from.list => 行数据
+const defaultRow = {
+  name: undefined
 }
 
-CRUD.HOOK.beforeToAdd = async (crud, form) => {
-  typeChange(form.sequenceType)
+const tableRules = {
+  name: [{ required: true, message: '请输入工序', trigger: 'blur' }]
 }
 
-CRUD.HOOK.beforeSubmit = async () => {
-  form.wageQuotaType = EO.getBitsSum(form.wageQuotaTypeArr)
+const drawerRef = ref()
+const formRef = ref()
+
+const { maxHeight } = useMaxHeight(
+  {
+    extraBox: '.el-drawer__header',
+    wrapperBox: ['.el-drawer__body', '.process-main-content'],
+    navbar: false,
+    extraHeight: 70,
+    minHeight: 300
+  },
+  () => drawerRef.value.loaded
+)
+
+const { CRUD, crud, form } = regForm(defaultForm, formRef)
+const { init, addRow, removeRow } = useTableOperate(defaultRow, 10)
+
+// 初始化表单
+CRUD.HOOK.afterToAdd = () => {
+  init(form.list)
 }
+const { tableValidate, cleanUpData, wrongCellMask } = useTableValidate({ rules: tableRules })
 
-const reportDisabled = ref([])
-const inspectDisabled = ref([])
-
-const disabledList = computed(() => {
-  return form.id ? [typeEnum.ARTIFACT.V, typeEnum.MACHINE_PART.V, typeEnum.ENCLOSURE.V].filter((v) => v !== form.sequenceType) : [] // : [typeEnum.MACHINE_PART.V, typeEnum.ENCLOSURE.V] // TODO:正式部署打开现在
-})
-
-const wageQuotaTypeDisabled = computed(() => {
-  if (form.sequenceType === typeEnum.MACHINE_PART.V) {
-    return [wageQuotaTypeEnum.AREA.V]
-  } else if (form.sequenceType === typeEnum.ARTIFACT.V && form.type === processTypeEnum.ONCE.V) {
-    return [wageQuotaTypeEnum.AREA.V]
-  }
-  return []
-})
-
-function typeChange(sequenceType) {
-  if (sequenceType === typeEnum.MACHINE_PART.V) {
-    form.reportType = reportTypeEnum.BATCH_UNSCAN.V
-    form.inspectType = inspectTypeEnum.BATCH_UNSCAN.V
-    reportDisabled.value = [reportTypeEnum.BATCH_SCAN.V, reportTypeEnum.SINGLE_SCAN.V]
-    inspectDisabled.value = [inspectTypeEnum.BATCH_SCAN.V, inspectTypeEnum.SINGLE_SCAN.V]
+CRUD.HOOK.beforeValidateCU = () => {
+  const { validResult, dealList } = tableValidate(form.list)
+  if (validResult) {
+    form.list = dealList
   } else {
-    form.reportType = reportTypeEnum.BATCH_SCAN.V
-    form.inspectType = inspectTypeEnum.BATCH_SCAN.V
-    reportDisabled.value = []
-    inspectDisabled.value = []
-  }
-  if (sequenceType === typeEnum.ARTIFACT.V) {
-    form.type = isBlank(form.type) ? processTypeEnum.ONCE.V : form.type
-  } else {
-    delete form.type
+    return validResult
   }
 }
 
-function processTypeChange(type) {
-  form.wageQuotaTypeArr = []
+// // 上下移动
+// function handleMove(scope, moveType, list) {
+//   const { $index } = scope
+//   if (moveType === 'up') {
+//     if ($index === 0) return
+//     const isUp = list[$index - 1]
+//     list.splice($index - 1, 1)
+//     list.splice($index, 0, isUp)
+//   } else {
+//     if ($index === list.length - 1) return
+//     const isDown = list[$index + 1]
+//     list.splice($index + 1, 1)
+//     list.splice($index, 0, isDown)
+//   }
+// }
+
+// 表单提交数据清理
+crud.submitFormFormat = (form) => {
+  cleanUpData(form.list)
+  form.list = form.list.map((v, index) => {
+    // v.inspectType = inspectTypeEnum.BATCH_SCAN.V
+    // v.reportType = reportTypeEnum.BATCH_SCAN.V
+    // v.productType = form.productType
+    return v
+  })
+  return form
 }
 </script>
 
-<style rel="stylesheet/scss" lang="scss" scoped>
-::v-deep(.el-input-number .el-input__inner) {
-  text-align: left;
+<style lang="scss" scoped>
+.process-main-content {
+  ::v-deep(.el-input-number .el-input__inner) {
+    text-align: left;
+  }
+  ::v-deep(.el-button--mini) {
+    min-height: 20px;
+  }
 }
 </style>

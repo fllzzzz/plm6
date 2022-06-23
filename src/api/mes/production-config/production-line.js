@@ -47,4 +47,13 @@ export function editStatus({ id, boolEnabledEnum }) {
   })
 }
 
+export function productConfigInfo({ productType, boolMachineEnum }) {
+  return request({
+    module: 'mes',
+    url: 'productionLine/type',
+    method: 'get',
+    params: { productType, boolMachineEnum }
+  })
+}
+
 export default { get, add, edit, del }

@@ -66,7 +66,7 @@ constantize(planTypeEnum)
 const deepenTypeEnum = {
   ARTIFACT: { L: '构件', K: 'ARTIFACT', V: 1 << 1 },
   MACHINE_PART: { L: '零件', K: 'MACHINE_PART', V: 1 << 0 },
-  ASSEMBLY: { L: '组立', K: 'ASSEMBLY', V: 1 << 4 }
+  ASSEMBLY: { L: '部件', K: 'ASSEMBLY', V: 1 << 4 }
 }
 constantize(deepenTypeEnum)
 // 技术资料类型

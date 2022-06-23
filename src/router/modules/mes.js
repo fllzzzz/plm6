@@ -139,7 +139,7 @@ export default {
           hidden: false,
           component: '/mes/scheduling-manage/scheduling/assemble/index',
           meta: {
-            title: '组立工单',
+            title: '部件工单',
             icon: 'project',
             noCache: true
           }
@@ -300,7 +300,7 @@ export default {
           hidden: false,
           component: '/mes/production-manage/report/assemble/index',
           meta: {
-            title: '组立报表',
+            title: '部件报表',
             icon: 'project',
             noCache: true
           }

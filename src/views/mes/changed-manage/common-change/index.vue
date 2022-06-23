@@ -64,7 +64,7 @@
         key="assembleSerialNumber"
         prop="assembleSerialNumber"
         :show-overflow-tooltip="true"
-        label="组立编号"
+        label="部件编号"
         min-width="110"
       >
         <template #default="{ row }">

@@ -41,7 +41,7 @@
         label="工厂简称"
         min-width="140px"
       />
-      <el-table-column
+      <!-- <el-table-column
         v-if="columns.visible('targetProduction')"
         key="targetProduction"
         prop="targetProduction"
@@ -53,7 +53,7 @@
         <template v-slot="{ row }">
           <span>{{ row.targetProduction }}</span>
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column
         v-if="columns.visible('tagColor')"
         key="tagColor"
@@ -169,7 +169,7 @@ const maxHeight = inject('maxHeight')
 
 CRUD.HOOK.handleRefresh = (crud, { data }) => {
   data.content.forEach((v) => {
-    v.targetProduction = (v.targetProduction && v.targetProduction / 1000) || 0
+    // v.targetProduction = (v.targetProduction && v.targetProduction / 1000) || 0
   })
 }
 

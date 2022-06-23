@@ -11,22 +11,8 @@
       <common-button :loading="crud.status.cu === 2" type="primary" size="mini" @click="crud.submitCU">确认</common-button>
     </template>
     <el-form ref="formRef" :model="form" :rules="rules" size="small" label-width="90px">
-      <el-form-item label="工序类型" prop="sequenceType">
-        <common-radio-button
-          v-model="form.sequenceType"
-          :disabled="isEdit"
-          :options="typeEnum.ENUM"
-          :unshow-val="[typeEnum.MACHINE_PART.V]"
-          type="enum"
-          size="small"
-          @change="productTypeChange(form.sequenceType)"
-        />
-      </el-form-item>
-      <el-form-item v-if="form.sequenceType === typeEnum.ARTIFACT.V" label="工序次序" prop="processType">
-        <common-radio-button v-model="form.processType" :disabled="isEdit" :options="processTypeEnum.ENUM" size="small" type="enum" />
-      </el-form-item>
-      <el-form-item label="名称" prop="name">
-        <el-input v-model="form.name" type="text" :placeholder="`请填写${typeEnum.VL[form.sequenceType]}类型名称`" style="width: 270px" />
+      <el-form-item label="部件类型">
+        <span>{{ form.name }}</span>
       </el-form-item>
       <el-form-item label="工序" prop="processSequenceIds">
         <div class="process-container">
@@ -38,7 +24,7 @@
                 :size="'small'"
                 :multiple="false"
                 :clearable="true"
-                :product-type="productType"
+                :product-type="form.productType"
                 style="width: 220px"
                 :disabled-value="processDisabled(form.processSequenceIds, form.processSequenceIds[index])"
               />
@@ -66,54 +52,28 @@
 </template>
 
 <script setup>
-import { computed, ref } from 'vue'
+import { ref } from 'vue'
 import { ElMessageBox, ElMessage } from 'element-plus'
 
-import { processTypeEnum, processMaterialListTypeEnum as typeEnum, componentTypeEnum } from '@enum-ms/mes'
+import { processMaterialListTypeEnum as typeEnum } from '@enum-ms/mes'
 import { arrIsRepeat } from '@data-type/array'
 import { arr2obj } from '@/utils/convert/type'
 
 import { regForm } from '@compos/use-crud'
 import processSelect from '@comp-mes/process-select'
-import { isNotBlank } from '@/utils/data-type'
 
 const formRef = ref()
 const processSelectRef = ref([])
 
 const defaultForm = {
   id: undefined,
-  name: '',
-  processSequenceIds: [undefined],
-  sequenceType: typeEnum.ARTIFACT.V,
-  processType: processTypeEnum.ONCE.V
+  processSequenceIds: [undefined]
 }
 
 const { crud, form, CRUD } = regForm(defaultForm, formRef)
 
-const isEdit = computed(() => crud.status.edit >= 1)
-
 const rules = {
-  name: [
-    { required: true, message: '请填写类型名称', trigger: 'blur' },
-    { min: 1, max: 32, message: '长度在 1 到 32 个字符', trigger: 'blur' }
-  ],
   processSequenceIds: [{ required: true, message: '请选择工序' }]
-}
-
-const productType = computed(() => {
-  let _type = form.sequenceType
-  if (isNotBlank(form.processType) && form.processType === processTypeEnum.ONCE.V) {
-    _type = componentTypeEnum.ASSEMBLE.V
-  }
-  return _type
-})
-
-function productTypeChange(sequenceType) {
-  if (sequenceType === typeEnum.ARTIFACT.V) {
-    form.processType = processTypeEnum.ONCE.V
-  } else {
-    delete form.processType
-  }
 }
 
 // 工序禁用
@@ -129,13 +89,20 @@ function delProcess(index) {
   form.processSequenceIds.splice(index, 1)
 }
 
+CRUD.HOOK.beforeToCU = () => {
+  if (!form.processSequenceIds?.length) {
+    form.processSequenceIds = [undefined]
+  }
+  form.productType = typeEnum.ASSEMBLE.V
+}
+
 // 验证前
 CRUD.HOOK.afterValidateCU = () => {
   const processFlag =
-    crud.form.processSequenceIds && crud.form.processSequenceIds.length > 0 && !crud.form.processSequenceIds.some((v) => !v && v !== 0)
+    form.processSequenceIds && form.processSequenceIds.length > 0 && !form.processSequenceIds.some((v) => !v && v !== 0)
   if (!processFlag) {
     ElMessage({
-      message: `请正确填写${typeEnum.VL[crud.form.sequenceType]}工序信息`,
+      message: `请正确填写${typeEnum.VL[form.productType]}工序信息`,
       type: 'error'
     })
   }
@@ -144,13 +111,13 @@ CRUD.HOOK.afterValidateCU = () => {
 
 // 提交前
 CRUD.HOOK.beforeSubmit = async () => {
-  const isRepeat = arrIsRepeat(crud.form.processSequenceIds)
+  const isRepeat = arrIsRepeat(form.processSequenceIds)
   const sourceData = await processSelectRef.value[0].getSourceData()
   const processArr = arr2obj(sourceData.value, 'id')
-  const processSequence = crud.form.processSequenceIds.map((id) => `【${processArr[id].name}】`).join('→')
+  const processSequence = form.processSequenceIds.map((id) => `【${processArr[id].name}】`).join('→')
   try {
     await ElMessageBox.confirm(
-      `“${crud.form.name}”的工序为：\n${processSequence}\n${isRepeat ? '检测到重复工序，' : ''}确认提交？`,
+      `“${form.name}”的工序为：\n${processSequence}\n${isRepeat ? '检测到重复工序，' : ''}确认提交？`,
       '提示',
       {
         confirmButtonText: '确定',
@@ -159,17 +126,14 @@ CRUD.HOOK.beforeSubmit = async () => {
       }
     )
     const processSequenceIds = []
-    crud.form.processSequenceIds.forEach((v, index) => {
+    form.processSequenceIds.forEach((v, index) => {
       processSequenceIds.push({
-        processId: v,
-        productProcessId: crud.form.id,
+        id: v,
         sequence: index
       })
     })
-    crud.form.medBuildingProductProcessLinkList = processSequenceIds
-    if (crud.form.sequenceType === typeEnum.ENCLOSURE.V) {
-      crud.form.processType = processTypeEnum.TWICE.V
-    }
+    form.processLinkList = processSequenceIds
+    form.typeId = form.id
     return true
   } catch (error) {
     return false

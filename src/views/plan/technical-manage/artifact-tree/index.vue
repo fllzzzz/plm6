@@ -38,7 +38,7 @@
           prop="assembleSerialNumberList"
           sortable="custom"
           :show-overflow-tooltip="true"
-          label="组立号"
+          label="部件号"
           min-width="100px"
         >
           <template v-slot="scope">

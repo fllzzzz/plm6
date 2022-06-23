@@ -257,7 +257,7 @@ async function deleteArtifact() {
     uploadSuccess()
     deleteLoading.value = false
   } catch (e) {
-    console.log('清空组立', e)
+    console.log('清空部件', e)
     deleteLoading.value = false
   }
 }

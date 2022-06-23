@@ -2,7 +2,7 @@
   <el-input
     v-model.trim="queryVO.serialNumber"
     size="small"
-    placeholder="输入组立号搜索"
+    placeholder="输入部件号搜索"
     style="width: 170px"
     class="filter-item"
     clearable

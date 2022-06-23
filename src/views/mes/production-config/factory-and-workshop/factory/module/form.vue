@@ -27,14 +27,14 @@
           style="width: 270px;"
         />
       </el-form-item>
-      <el-form-item label="目标产量(吨)" prop="targetProduction">
+      <!-- <el-form-item label="目标产量(吨)" prop="targetProduction">
        <el-input-number
           v-model.number="form.targetProduction"
           :min="0"
           controls-position="right"
           style="width: 270px;"
         />
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item label="标签颜色" prop="tagColor">
         <el-color-picker
           v-model="form.tagColor"
@@ -67,7 +67,7 @@
 
 <script setup>
 import { ref } from 'vue'
-import { deepClone } from '@data-type/index'
+// import { deepClone } from '@data-type/index'
 import { regForm } from '@compos/use-crud'
 import { TAG_FACTORY_DEF_COLOR } from '@/settings/config'
 
@@ -77,7 +77,7 @@ const defaultForm = {
   id: undefined,
   name: '',
   shortName: '',
-  targetProduction: undefined,
+  // targetProduction: undefined,
   sort: 1,
   remark: '',
   tagColor: TAG_FACTORY_DEF_COLOR
@@ -106,9 +106,9 @@ const rules = {
   sort: [
     { required: true, message: '请填写排序值', trigger: 'blur', type: 'number' }
   ],
-  targetProduction: [
-    { required: true, message: '请填写目标产量', trigger: 'blur', type: 'number' }
-  ],
+  // targetProduction: [
+  //   { required: true, message: '请填写目标产量', trigger: 'blur', type: 'number' }
+  // ],
   name: [
     { required: true, message: '请填写工厂名称', trigger: 'blur' },
     { min: 1, max: 32, message: '长度在 1 到 32 个字符', trigger: 'blur' }
@@ -122,7 +122,7 @@ const rules = {
 
 // 提交前
 CRUD.HOOK.beforeSubmit = async () => {
-  crud.form = Object.assign(deepClone(crud.form), { targetProduction: crud.form.targetProduction * 1000 })
+//   crud.form = Object.assign(deepClone(crud.form), { targetProduction: crud.form.targetProduction * 1000 })
 }
 </script>
 

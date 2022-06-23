@@ -127,7 +127,7 @@
                     <span v-else>{{ scope.row.quantity?scope.row.quantity:'-' }}</span>
                   </template>
                 </el-table-column>
-                <el-table-column v-if="columns.visible('assembleQuantity')" prop="assembleQuantity" :show-overflow-tooltip="true" align="center" label="对应组立数量">
+                <el-table-column v-if="columns.visible('assembleQuantity')" prop="assembleQuantity" :show-overflow-tooltip="true" align="center" label="对应部件数量">
                   <template v-slot="scope">
                     <span v-if="!scope.row.add">{{ scope.row.assembleQuantity?scope.row.assembleQuantity:'-' }}</span>
                   </template>
@@ -158,11 +158,11 @@
           </template>
         </el-table-column>
         <el-table-column label="序号" type="index" align="center" width="60" />
-        <el-table-column v-if="columns.visible('serialNumber')" prop="serialNumber" :show-overflow-tooltip="true" align="center" label="组立号">
+        <el-table-column v-if="columns.visible('serialNumber')" prop="serialNumber" :show-overflow-tooltip="true" align="center" label="部件号">
           <template #header>
             <el-tooltip class="item" effect="light" :content="`双击编号可预览图纸`" placement="top">
               <div style="display: inline-block">
-                <span>组立号</span>
+                <span>部件号</span>
                 <i class="el-icon-info" />
               </div>
             </el-tooltip>
@@ -311,7 +311,7 @@ const expandArr = ref([])
 
 const { crud, columns, CRUD } = useCRUD(
   {
-    title: '组立清单',
+    title: '部件清单',
     sort: ['id.asc'],
     permission: { ...permission },
     optShow: { ...optShow },

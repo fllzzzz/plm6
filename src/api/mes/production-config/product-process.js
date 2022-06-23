@@ -9,6 +9,26 @@ export function get(params) {
   })
 }
 
+// 列表-构件种类工序
+export function getArtifact(params) {
+  return request({
+    module: 'mes',
+    url: 'productProcess/artifact',
+    method: 'get',
+    params
+  })
+}
+
+// 列表-部件种类工序
+export function getAssemble(params) {
+  return request({
+    module: 'mes',
+    url: 'productProcess/assemble',
+    method: 'get',
+    params
+  })
+}
+
 export function add(data) {
   return request({
     module: 'mes',

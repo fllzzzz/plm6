@@ -24,12 +24,33 @@
       highlight-current-row
       :data="crud.data"
       :empty-text="crud.emptyText"
+      :data-format="dataFormat"
       :max-height="maxHeight"
+      :default-expand-all="false"
+      :expand-row-keys="expandRowKeys"
+      row-key="id"
       style="width: 100%"
       @current-change="handleCurrentChange"
     >
+      <el-expand-table-column :data="crud.data" v-model:expand-row-keys="expandRowKeys" row-key="id" fixed="left">
+        <template #default="{ row }">
+          <p>
+            工厂：<span style="margin-right:20px;">{{ row.factoryName }}</span>
+            车间：<span>{{ row.workshopName }}</span>
+          </p>
+          <p v-if="row.boolMachineEnum && row.productType & componentTypeEnum.ARTIFACT.V">
+            产品标识：<span>{{ row.typeSequence }}</span>
+          </p>
+          <p v-else>
+            可生产类型：<span>{{ row.typeSequence }}</span>
+          </p>
+          <p>
+            备注：<span>{{ row.remark }}</span>
+          </p>
+        </template>
+      </el-expand-table-column>
       <el-table-column label="序号" type="index" align="center" width="60" />
-      <el-table-column
+      <!-- <el-table-column
         v-if="columns.visible('factoryName')"
         prop="factoryName"
         :show-overflow-tooltip="true"
@@ -50,7 +71,7 @@
         <template #default="{ row }">
           <span>{{ row.workshopName }}</span>
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column
         v-if="columns.visible('name')"
         key="name"
@@ -67,6 +88,31 @@
             :offset="15"
           />
           <span>{{ row.name }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        v-if="columns.visible('boolMachineEnum')"
+        prop="boolMachineEnum"
+        :show-overflow-tooltip="true"
+        label="智能线"
+        align="center"
+        width="100px"
+      >
+        <template v-slot="{ row }">
+          <span>{{ row.boolMachineEnum }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        v-if="columns.visible('targetProductionShow')"
+        key="targetProductionShow"
+        prop="targetProductionShow"
+        :show-overflow-tooltip="true"
+        label="目标产量(吨)"
+        align="center"
+        width="100px"
+      >
+        <template v-slot="{ row }">
+          <span>{{ row.targetProductionShow }}</span>
         </template>
       </el-table-column>
       <!-- <el-table-column
@@ -110,7 +156,7 @@
         </template>
       </el-table-column>
       <el-table-column v-if="columns.visible('sort')" key="sort" prop="sort" label="排序" align="center" width="80px" />
-      <el-table-column
+      <!-- <el-table-column
         v-if="columns.visible('remark')"
         key="remark"
         prop="remark"
@@ -121,7 +167,7 @@
         <template #default="{ row }">
           <span>{{ row.remark }}</span>
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <!--编辑与删除-->
       <el-table-column
         v-if="checkPermission([...permission.del, ...permission.edit])"
@@ -147,6 +193,7 @@ import { ref, defineEmits, inject } from 'vue'
 import { useStore } from 'vuex'
 import { enabledEnum } from '@enum-ms/common'
 import { componentTypeEnum } from '@enum-ms/mes'
+import { whetherEnum } from '@enum-ms/common'
 import checkPermission from '@/utils/system/check-permission'
 import { configProductionLinePM as permission } from '@/page-permission/config'
 
@@ -155,6 +202,7 @@ import udOperation from '@crud/UD.operation'
 import pagination from '@crud/Pagination'
 import mHeader from './module/header'
 import mForm from './module/form'
+import elExpandTableColumn from '@comp-common/el-expand-table-column.vue'
 import { ElMessageBox } from 'element-plus'
 
 const store = useStore()
@@ -179,6 +227,12 @@ const { crud, columns, CRUD } = useCRUD(
   },
   tableRef
 )
+// 展开keys
+const expandRowKeys = ref([])
+const dataFormat = ref([
+  ['boolMachineEnum', ['parse-enum', whetherEnum]],
+  ['targetProductionShow', ['to-fixed', 2]]
+])
 
 const maxHeight = inject('maxHeight')
 
@@ -203,6 +257,14 @@ function handleCurrentChange(val) {
   if (val) {
     emit('click-line', val)
   }
+}
+
+CRUD.HOOK.handleRefresh = (crud, { data }) => {
+  data.content.forEach((v) => {
+    v.targetProductionShow = (v.targetProduction && v.targetProduction / 1000) || 0
+    v.typeSequence = v.typeList.map((v) => `【${v.name}】`).join('')
+    v.linkIdList = v.typeList.map((v) => v.id)
+  })
 }
 
 // 编辑之后 取消缓存的已加载设置

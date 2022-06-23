@@ -135,7 +135,7 @@ export default {
           path: 'assembly',
           hidden: false,
           component: '/plan/technical-manage/assembly/index',
-          meta: { title: '构件-组立清单', icon: 'project', noCache: true }
+          meta: { title: '构件-部件清单', icon: 'project', noCache: true }
         },
         {
           name: 'PlanEnclosureList',

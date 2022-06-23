@@ -13,17 +13,17 @@ const artifactDetail = {
       'data': {
         ...artifactListInfo,
         'processSummaryDetailsList': [{
-          'name': '组立1',
+          'name': '部件1',
           'completeQuantity': 8,
           'inspectionQuantity': 8
         },
         {
-          'name': '组立2',
+          'name': '部件2',
           'completeQuantity': 1,
           'inspectionQuantity': 1
         },
         {
-          'name': '组立3',
+          'name': '部件3',
           'completeQuantity': 1,
           'inspectionQuantity': 0
         }

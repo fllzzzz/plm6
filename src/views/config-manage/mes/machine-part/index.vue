@@ -28,7 +28,7 @@
           <span>{{ scope.row.name }}</span>
         </template>
       </el-table-column>
-      <el-table-column v-if="columns.visible('assembleSpecList')" key="assembleSpecList" prop="assembleSpecList" label="组立规格前缀" align="center" min-width="260">
+      <el-table-column v-if="columns.visible('assembleSpecList')" key="assembleSpecList" prop="assembleSpecList" label="部件规格前缀" align="center" min-width="260">
         <template v-slot="scope">
           <template v-if="scope.row.assembleSpecList && scope.row.assembleSpecList.length > 0">
             <div v-for="(item,i) in scope.row.assembleSpecList" :key="item.id">

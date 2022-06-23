@@ -118,7 +118,7 @@ export default {
   mesSchedulingDetail, // 工单详情
 
   mesStructureProductionReport, // 结构生产报表
-  mesAssemblePartProductionReport, // 组立生产报表
+  mesAssemblePartProductionReport, // 部件生产报表
   mesMachinePartProductionReport, // 零件生产报表
   mesEnclosureProductionReport, // 围护生产报表
   mesStructureProductionStatistics, // 结构在制品统计

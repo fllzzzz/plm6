@@ -15,8 +15,6 @@ const getProductProcess = {
           'id|+1': 1,
           'name': '@cword(2,5)',
           'alias': '@cword(2,5)',
-          'processType|1-2': false,
-          'sequenceType': 2,
           'productType': 16,
           'boolEnabledEnum|1-2': true,
           'userId': 1,

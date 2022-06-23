@@ -27,7 +27,7 @@
           <el-form-item label="生产数量">
             <span>{{ form.producedQuantity }}</span>
           </el-form-item>
-          <el-form-item label="关联组立号">
+          <el-form-item label="关联部件号">
             <span>{{ form.name }}</span>
           </el-form-item>
         </div>

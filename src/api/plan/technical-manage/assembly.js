@@ -76,7 +76,7 @@ export function listUpload(data) {
 }
 
 /**
- * 下载组立清单
+ * 下载部件清单
  */
 export function downloadAssemble(params) {
   return request({
@@ -89,7 +89,7 @@ export function downloadAssemble(params) {
 }
 
 /**
- * 下载组立模板
+ * 下载部件模板
  */
 export function downloadAssembleTemplate() {
   return request({

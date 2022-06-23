@@ -147,7 +147,7 @@ function dataFormat() {
     typeEnum.KEYS.forEach((type) => {
       const _optionObj = {}
       _optionObj.type = typeEnum[type].V
-      _optionObj.name = typeEnum[type].SL + (typeEnum[type].V & (typeEnum.ASSEMBLE.V | typeEnum.ARTIFACT.V) ? '' : '工序')
+      _optionObj.name = typeEnum[type].L + '工序'
       _optionObj.options = process.value.filter((v) => {
         return v.productType === typeEnum[type].V
       })

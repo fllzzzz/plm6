@@ -27,13 +27,12 @@ const getArtifact = {
             'id': 1,
             'name': '生产线' + '@cword(2,15)'
           },
-          'processType|0-1': false,
           'completeStatus|1-15': [{
             'id|+1': 1,
             'taskMete|1-1000.1-8': 1,
             'completeMete|1-1000.1-8': 1,
             'completeRate|1-99.1-8': 1,
-            'processName|1': ['组立', '打底焊', '埋弧焊', '电渣焊', '总装', '清磨']
+            'processName|1': ['部件', '打底焊', '埋弧焊', '电渣焊', '总装', '清磨']
           }]
         }]
       }

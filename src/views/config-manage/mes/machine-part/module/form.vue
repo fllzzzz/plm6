@@ -45,7 +45,7 @@
           :cell-class-name="wrongCellMask"
         >
           <el-table-column label="序号" type="index" align="center" width="50" />
-          <el-table-column key="specPrefix" prop="specPrefix" label="*组立规格前缀(大写)" align="center">
+          <el-table-column key="specPrefix" prop="specPrefix" label="*部件规格前缀(大写)" align="center">
             <template v-slot="scope">
               <el-input v-model.trim="scope.row.specPrefix" type="text" placeholder="请填写大写字母" maxlength="10" @blur="checkName(scope.row,scope.$index)"/>
             </template>
@@ -116,7 +116,7 @@ const { maxHeight } = useMaxHeight({
 })
 
 const tableRules = {
-  specPrefix: [{ required: true, message: '请输入组立号规格前缀', trigger: 'blur' }],
+  specPrefix: [{ required: true, message: '请输入部件号规格前缀', trigger: 'blur' }],
   boolSchedulingEnum: [{ required: true, message: '请选择是否有生成工序', trigger: 'change' }]
 }
 
@@ -179,7 +179,7 @@ function checkName(item, index) {
 
 CRUD.HOOK.beforeValidateCU = (crud, form) => {
   if (crud.form.assembleSpecList && crud.form.assembleSpecList.length === 0) {
-    ElMessage.error('请填写组立号规格前缀明细')
+    ElMessage.error('请填写部件号规格前缀明细')
     return false
   }
   const { validResult, dealList } = tableValidate(crud.form.assembleSpecList)

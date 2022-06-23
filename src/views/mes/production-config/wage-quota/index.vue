@@ -36,11 +36,17 @@
         min-width="140px"
         align="center"
       />
-      <el-table-column v-if="columns.visible('wageQuotaTypeStr')" key="wageQuotaTypeStr" prop="wageQuotaTypeStr" label="计价方式" min-width="170px">
+      <!-- <el-table-column
+        v-if="columns.visible('wageQuotaTypeStr')"
+        key="wageQuotaTypeStr"
+        prop="wageQuotaTypeStr"
+        label="计价方式"
+        min-width="170px"
+      >
         <template v-slot="scope">
           <span>{{ scope.row.wageQuotaTypeStr }}</span>
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <template v-for="item in wageQuotaTypeEnum.ENUM" :key="item.V">
         <el-table-column :label="`${item.L} (${item.unit})`" min-width="170px" align="center">
           <template #default="{ row }">
@@ -63,47 +69,26 @@
           </template>
         </el-table-column>
       </template>
-      <el-table-column
-        v-if="columns.visible('type') && crud.query.sequenceType === typeEnum.ARTIFACT.V"
-        key="type"
-        prop="type"
-        label="工序次序"
-        align="center"
-        min-width="100px"
-      >
+      <!-- <el-table-column v-if="columns.visible('productType')" key="productType" prop="productType" label="类型" align="center" width="110px">
         <template #default="{ row }">
-          <span>{{ processTypeEnum.VL[row.type] }}</span>
+          <el-tag :type="typeEnum.V[row.productType].T">{{ typeEnum.VL[row.productType] }}</el-tag>
         </template>
-      </el-table-column>
-      <el-table-column
-        v-if="columns.visible('sequenceType')"
-        key="sequenceType"
-        prop="sequenceType"
-        label="类型"
-        align="center"
-        width="110px"
-      >
-        <template #default="{ row }">
-          <el-tag :type="typeEnum.V[row.sequenceType].T">{{ typeEnum.VL[row.sequenceType] }}</el-tag>
-        </template>
-      </el-table-column>
+      </el-table-column> -->
     </common-table>
-    <!--分页组件-->
-    <pagination />
     <m-preview v-model:visible="previewVisible" :data="crud.data" @saveSuccess="isEdit = false" />
   </div>
 </template>
 
 <script setup>
-import crudApi from '@/api/mes/production-config/process'
+import { getByProductType, editWage } from '@/api/mes/production-config/process'
 import { ref } from 'vue'
 
-import { processTypeEnum, processMaterialListTypeEnum as typeEnum, wageQuotaTypeEnum } from '@enum-ms/mes'
+import { isBlank } from '@data-type/index'
+import { processMaterialListTypeEnum as typeEnum, wageQuotaTypeEnum } from '@enum-ms/mes'
 import { configWageQuotaPM as permission } from '@/page-permission/config'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
-import pagination from '@crud/Pagination'
 import mHeader from './module/header'
 import mPreview from './module/preview'
 
@@ -112,6 +97,13 @@ const optShow = {
   edit: false,
   del: false,
   download: false
+}
+
+const wageQuotaTypeMap = {
+  [typeEnum.ARTIFACT.V]: wageQuotaTypeEnum.WEIGHT.V | wageQuotaTypeEnum.LENGTH.V | wageQuotaTypeEnum.QUANTITY.V | wageQuotaTypeEnum.AREA.V,
+  [typeEnum.ASSEMBLE.V]: wageQuotaTypeEnum.WEIGHT.V | wageQuotaTypeEnum.LENGTH.V | wageQuotaTypeEnum.QUANTITY.V,
+  [typeEnum.MACHINE_PART.V]: wageQuotaTypeEnum.WEIGHT.V | wageQuotaTypeEnum.LENGTH.V | wageQuotaTypeEnum.QUANTITY.V,
+  [typeEnum.ENCLOSURE.V]: wageQuotaTypeEnum.LENGTH.V | wageQuotaTypeEnum.QUANTITY.V | wageQuotaTypeEnum.AREA.V
 }
 
 const dataFormat = [['wageQuotaTypeStr', ['parse-enum', wageQuotaTypeEnum, { bit: true }], { source: 'wageQuotaType' }]]
@@ -123,17 +115,19 @@ const { crud, columns, CRUD } = useCRUD(
     sort: [],
     optShow: { ...optShow },
     permission: { ...permission },
-    crudApi: { ...crudApi }
+    hasPagination: false,
+    crudApi: { get: getByProductType, edit: editWage }
   },
   tableRef
 )
 
-const { maxHeight } = useMaxHeight({ paginate: true })
+const { maxHeight } = useMaxHeight({ paginate: false })
 
 const previewVisible = ref(false)
 const isEdit = ref(false)
 
 function arr2obj(arr, mark = 'id') {
+  if (isBlank(arr)) return {}
   const newObj = {}
   for (const item of arr) {
     newObj[item[mark]] = item.price || 0
@@ -142,10 +136,12 @@ function arr2obj(arr, mark = 'id') {
 }
 
 CRUD.HOOK.handleRefresh = (crud, { data }) => {
-  data.content.forEach((v, i) => {
+  data.content = data.map((v, i) => {
     v.rowId = i + '' + Math.random()
+    v.wageQuotaType = wageQuotaTypeMap[v.productType]
     v.priceMap = arr2obj(v.processWageList, 'wageQuotaType')
     v.originPriceMap = arr2obj(v.processWageList, 'wageQuotaType')
+    return v
   })
 }
 </script>

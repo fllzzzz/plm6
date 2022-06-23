@@ -50,28 +50,24 @@ const getProcessSimple = {
           'id|+1': 1,
           'name': '@cword(2,5)',
           'productType': 16,
-          'sequenceType': 2,
           'type|1-2': false
         },
         {
           'id|+1': 6,
           'name': '@cword(2,5)',
           'productType': 1,
-          'sequenceType': 1,
           'type|1-2': false
         },
         {
           'id|+1': 11,
           'name': '@cword(2,5)',
           'productType': 2,
-          'sequenceType': 2,
           'type|1-2': true
         },
         {
           'id|+1': 16,
           'name': '@cword(2,5)',
           'productType': 4,
-          'sequenceType': 4,
           'type|1-2': true
         }
         ],

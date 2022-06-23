@@ -90,7 +90,7 @@ provide('defaultQuery', {
 const tableRef = ref()
 const { crud, columns, CRUD } = useCRUD(
   {
-    title: '生产报表-组立报表',
+    title: '生产报表-部件报表',
     permission: { ...permission },
     optShow: { ...optShow },
     crudApi: { ...crudApi },

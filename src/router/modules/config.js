@@ -251,11 +251,32 @@ export default {
           meta: { title: '工序配置', icon: 'project', noCache: true }
         },
         {
-          name: 'MesConfigProductProcess',
-          path: 'product-process',
+          name: 'MesConfigArtifactProductProcess',
+          path: 'artifact-product-process',
           hidden: false,
-          component: '/mes/production-config/product-process/index',
-          meta: { title: '工序管理', icon: 'project', noCache: true }
+          component: '/mes/production-config/product-process/artifact/index',
+          meta: { title: '构件工序定义', icon: 'project', noCache: true }
+        },
+        {
+          name: 'MesConfigAssembleProductProcess',
+          path: 'assemble-product-process',
+          hidden: false,
+          component: '/mes/production-config/product-process/assemble/index',
+          meta: { title: '部件工序定义', icon: 'project', noCache: true }
+        },
+        {
+          name: 'MesConfigMachinePartProductProcess',
+          path: 'machine-part-product-process',
+          hidden: false,
+          component: '/mes/production-config/product-process/machine-part/index',
+          meta: { title: '零件工序定义', icon: 'project', noCache: true }
+        },
+        {
+          name: 'MesConfigInspectionMode',
+          path: 'inspection-mode',
+          hidden: false,
+          component: '/mes/production-config/inspection-mode/index',
+          meta: { title: '报检方式', icon: 'project', noCache: true }
         },
         {
           name: 'MesConfigWageQuota',

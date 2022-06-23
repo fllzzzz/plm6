@@ -3,7 +3,7 @@
     v-if="!unShowField.includes('serialNumber') && (isBlank(columns) || columns.visible('serialNumber'))"
     :show-overflow-tooltip="true"
     prop="serialNumber"
-    label="组立号"
+    label="部件号"
     :width="fixedWidth ? '120px' : ''"
     :min-width="!fixedWidth ? '120px' : ''"
     :fixed="fixed"

@@ -118,7 +118,7 @@
                   size="small"
                   clearable
                   class="filter-item"
-                  placeholder="是否匹配组立"
+                  placeholder="是否匹配部件"
                   style="width: 250px"
                   @change="item.add = false"
                 />
@@ -197,7 +197,7 @@ const validateLinks = (rule, value, callback) => {
           callback(new Error('请填写大写关键字母'))
         }
         if (!isNotBlank(value[i].boolUseAssemble)) {
-          callback(new Error('请选择是否匹配组立'))
+          callback(new Error('请选择是否匹配部件'))
         }
       } else {
         callback()
