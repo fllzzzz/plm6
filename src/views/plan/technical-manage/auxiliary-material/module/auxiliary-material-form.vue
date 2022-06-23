@@ -1,5 +1,5 @@
 <template>
-  <div v-permission="permission" class="aux-mat-inbound-application-container">
+  <div class="aux-mat-inbound-application-container">
     <common-wrapper
       :basic-class="currentBasicClass"
       :validate="validate"
@@ -66,9 +66,6 @@ const props = defineProps({
   }
 })
 
-// 权限
-const permission = ['planAuxiliaryMaterialList:submit']
-
 const defaultForm = {
   projectId: null, // 项目id
   monomerId: null, // 单体id
@@ -125,7 +122,6 @@ const setFormCallback = (form) => {
 const { form, FORM } = useForm(
   {
     title: '配套件清单',
-    permission: permission,
     defaultForm: defaultForm,
     useDraftCallback: setFormCallback,
     api: saveMaterial
