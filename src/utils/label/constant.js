@@ -1,7 +1,5 @@
-import {
-  labelTypeEnum,
-  componentTypeEnum
-} from '@enum-ms/mes'
+import { labelTypeEnum, componentTypeEnum } from '@enum-ms/mes'
+import { weightTypeEnum as printWeightTypeEnum } from '@enum-ms/common'
 import { parseTime } from '@/utils/date'
 
 const defComponent = {
@@ -38,7 +36,7 @@ const ARTIFACT_COMMON_L_HTML = function ({ component = defComponent, printConfig
 <div class="row">
   <div class="col">名称：${component.name}</div>
   <div class="col">数量(件)：${component.quantity}</div>
-  <div class="col">单重(kg)：${component.weight}</div>
+  <div class="col" style="${printConfig?.weight !== printWeightTypeEnum.NONE.V ? '' : 'display:none;'}">单重(kg)：${component.weight}</div>
 </div>
 <div class="contains-rows">
   <div class="col" style="flex: 2">
@@ -113,7 +111,7 @@ const ARTIFACT_CUSTOM_L_HTML = function ({ component = defComponent, printConfig
       <div class="row">
         <div class="col">数量(件)：${component.quantity}</div>
         <div class="col">长度(mm)：${component.length}</div>
-        <div class="col">单重(kg)：${component.weight}</div>
+        <div class="col" style="${printConfig?.weight !== printWeightTypeEnum.NONE.V ? '' : 'display:none;'}">单重(kg)：${component.weight}</div>
       </div>
       <div class="row">
         <div class="col">${component.name}</div>
