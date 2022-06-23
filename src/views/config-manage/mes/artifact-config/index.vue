@@ -57,7 +57,7 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column key="specPrefixList" prop="specPrefixList" label="是否匹配部件" align="center">
+      <!-- <el-table-column key="specPrefixList" prop="specPrefixList" label="是否匹配部件" align="center">
         <template v-slot="scope">
           <div v-for="(item,index) in scope.row.structureClassificationList" :key="item.id">
             <template v-if="item.specPrefixList && item.specPrefixList.length > 0">
@@ -70,7 +70,7 @@
             <div v-else class="sandwich-cell-bottom">-</div>
           </div>
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column key="definitionWord" prop="definitionWord" align="center" :show-overflow-tooltip="true" label="定义代码">
         <template v-slot="scope">
           <div v-for="(item,index) in scope.row.structureClassificationList" :key="item.id" :class="index === scope.row.structureClassificationList.length-1 ? 'sandwich-cell-bottom' : 'sandwich-cell-top'" :style="`height:${item.styleHeight};line-height:${item.lineHeight}`">

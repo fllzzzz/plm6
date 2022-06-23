@@ -6,15 +6,15 @@
     :visible="crud.status.cu > 0"
     :title="crud.status.title"
     :wrapper-closable="false"
-    size="860px"
+    size="650px"
   >
     <template #titleRight>
       <common-button :loading="crud.status.cu === 2" type="primary" size="mini" @click="crud.submitCU">确认</common-button>
     </template>
     <template #content>
       <el-form ref="formRef" :model="form" :rules="rules" size="small" label-width="140px">
-        <el-form-item label="代表杆件类型" prop="name">
-          <el-input v-model="form.name" type="text" placeholder="代表杆件类型" style="width: 270px" maxlength="30" />
+        <el-form-item label="代表部件类型" prop="name">
+          <el-input v-model="form.name" type="text" placeholder="代表部件类型" style="width: 270px" maxlength="30" />
         </el-form-item>
         <el-form-item label="排序" prop="sort">
           <el-input-number v-model.number="form.sort" :min="1" :max="999" :step="1" controls-position="right" style="width: 270px" />
@@ -36,12 +36,12 @@
               <el-input v-model.trim="scope.row.specPrefix" type="text" placeholder="请填写大写字母" maxlength="10" @blur="checkName(scope.row,scope.$index)"/>
             </template>
           </el-table-column>
-          <el-table-column key="boolSchedulingEnum" prop="boolSchedulingEnum" label="*是否有生成工序" align="center">
+          <!-- <el-table-column key="boolSchedulingEnum" prop="boolSchedulingEnum" label="*是否有生成工序" align="center">
             <template v-slot="scope">
               <common-radio v-model="scope.row.boolSchedulingEnum" :options="whetherEnum.ENUM" type="enum" />
             </template>
-          </el-table-column>
-          <el-table-column label="操作" align="center">
+          </el-table-column> -->
+          <el-table-column label="操作" align="center" width="100">
             <template v-slot="scope">
               <common-button size="small" class="el-icon-delete" type="danger" @click="deleteRow(scope.$index)" />
             </template>
@@ -65,7 +65,7 @@
 import { ref } from 'vue'
 import { ElMessage } from 'element-plus'
 
-import { whetherEnum } from '@enum-ms/common'
+// import { whetherEnum } from '@enum-ms/common'
 import useMaxHeight from '@compos/use-max-height'
 import useTableValidate from '@compos/form/use-table-validate'
 
@@ -84,7 +84,7 @@ const { crud, form, CRUD } = regForm(defaultForm, formRef)
 
 const rules = {
   name: [
-    { required: true, message: '请填写代表杆件类型名称', trigger: 'blur' },
+    { required: true, message: '请填写代表部件类型名称', trigger: 'blur' },
     { min: 1, max: 30, message: '长度在 1 到 30 个字符', trigger: 'blur' }
   ],
   sort: [{ required: true, message: '请填写排序值', trigger: 'blur', type: 'number' }]
@@ -97,8 +97,8 @@ const { maxHeight } = useMaxHeight({
 })
 
 const tableRules = {
-  specPrefix: [{ required: true, message: '请输入部件号规格前缀', trigger: 'blur' }],
-  boolSchedulingEnum: [{ required: true, message: '请选择是否有生成工序', trigger: 'change' }]
+  specPrefix: [{ required: true, message: '请输入部件号规格前缀', trigger: 'blur' }]
+  // boolSchedulingEnum: [{ required: true, message: '请选择是否有生成工序', trigger: 'change' }]
 }
 
 const { tableValidate, wrongCellMask } = useTableValidate({ rules: tableRules }) // 表格校验

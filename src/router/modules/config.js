@@ -208,7 +208,7 @@ export default {
           path: 'machine-part-config',
           hidden: false,
           component: '/config-manage/mes/machine-part/index',
-          meta: { title: '母件类型配置', icon: 'project', noCache: true }
+          meta: { title: '部件类型配置', icon: 'project', noCache: true }
         },
         {
           name: 'SteelClassic',

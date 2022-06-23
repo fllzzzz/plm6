@@ -160,10 +160,10 @@ export const artifactConfigPM = {
   del: ['artifact_config:del'] // 删除零件类型配置
 }
 
-// MES-配置管理/母件类型配置
+// MES-配置管理/部件类型配置
 export const machinePartConfigPM = {
-  get: ['machine_part_config:get'], // 母件类型配置列表
-  add: ['machine_part_config:add'], // 添加母件类型配置
+  get: ['machine_part_config:get'], // 部件类型配置列表
+  add: ['machine_part_config:add'], // 添加部件类型配置
   edit: ['machine_part_config:edit'], // 修改零件类型配置
   del: ['machine_part_config:del'] // 删除零件类型配置
 }

@@ -111,7 +111,7 @@
                   style="width: 270px; margin-right: 5px"
                   @blur="checkName(item, index)"
                 />
-                <common-select
+                <!-- <common-select
                   v-model="item.boolUseAssemble"
                   :options="whetherEnum.ENUM"
                   type="enum"
@@ -121,7 +121,7 @@
                   placeholder="是否匹配部件"
                   style="width: 250px"
                   @change="item.add = false"
-                />
+                /> -->
                 <common-button
                   v-show="form.specPrefixList && form.specPrefixList.length > 1"
                   icon="el-icon-delete"
@@ -146,7 +146,7 @@ import { defineProps, defineEmits, ref, watch, nextTick } from 'vue'
 import { ElMessage, ElNotification } from 'element-plus'
 
 import { isNotBlank } from '@data-type/index'
-import { whetherEnum } from '@enum-ms/common'
+// import { whetherEnum } from '@enum-ms/common'
 import { artifactProductLineEnum, intellectParentType, minEqualTypeEnum, maxEqualTypeEnum } from '@enum-ms/mes'
 
 import useVisible from '@compos/use-visible'
@@ -196,9 +196,9 @@ const validateLinks = (rule, value, callback) => {
         if (!value[i].specPrefix) {
           callback(new Error('请填写大写关键字母'))
         }
-        if (!isNotBlank(value[i].boolUseAssemble)) {
-          callback(new Error('请选择是否匹配部件'))
-        }
+        // if (!isNotBlank(value[i].boolUseAssemble)) {
+        //   callback(new Error('请选择是否匹配部件'))
+        // }
       } else {
         callback()
       }
