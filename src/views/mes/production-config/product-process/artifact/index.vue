@@ -55,7 +55,7 @@
 <script setup>
 import crudApi, { getArtifact } from '@/api/mes/production-config/product-process'
 import { ref } from 'vue'
-import { configProductProcessPM as permission } from '@/page-permission/config'
+import { configProductProcessArtifactPM as permission } from '@/page-permission/config'
 
 import { artifactProductLineEnum, intellectParentType } from '@enum-ms/mes'
 import { isNotBlank, deepClone } from '@data-type/index'
