@@ -17,7 +17,7 @@ const sectionSteelSpecTmpl = {
     { label: '材质', field: 'material', excelField: '__EMPTY_2' },
     { label: '定尺长度（mm）', field: 'length', type: 'number', excelField: '__EMPTY_3' },
     { label: '数量（根）', field: 'quantity', type: 'number', excelField: '__EMPTY_4' },
-    { label: '总重（kg）', field: 'weighingTotalWeight', type: 'number', excelField: '__EMPTY_5' },
+    { label: '总重（kg）', field: 'weighingTotalWeight', type: 'number', precision: 0, excelField: '__EMPTY_5' },
     { label: '品牌', field: 'brand', excelField: '__EMPTY_6' },
     { label: '炉批号', field: 'heatNoAndBatchNo', excelField: '__EMPTY_7' },
     { label: '备注', field: 'remark', excelField: '__EMPTY_8' }
@@ -140,12 +140,10 @@ const sectionSteelSpecTmpl = {
 // 计算总长
 function calcTotalLength(row) {
   if (isNotBlank(row.length) && row.quantity) {
-    row.totalLength = calcSectionSteelTotalLength(
-      {
-        length: row.length, // 长度
-        quantity: row.quantity // 数量
-      }
-    )
+    row.totalLength = calcSectionSteelTotalLength({
+      length: row.length, // 长度
+      quantity: row.quantity // 数量
+    })
   } else {
     row.totalLength = undefined
   }

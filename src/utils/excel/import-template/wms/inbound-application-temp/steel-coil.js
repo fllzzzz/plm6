@@ -17,7 +17,7 @@ const sectionSteelSpecTmpl = {
     { label: '厚（mm）', field: 'thickness', type: 'number', excelField: '__EMPTY_2' },
     { label: '宽（mm）', field: 'width', type: 'number', excelField: '__EMPTY_3' },
     { label: '长（mm）', field: 'length', type: 'number', excelField: '__EMPTY_4' },
-    { label: '总重（kg）', field: 'weighingTotalWeight', type: 'number', excelField: '__EMPTY_5' },
+    { label: '总重（kg）', field: 'weighingTotalWeight', type: 'number', precision: 0, excelField: '__EMPTY_5' },
     { label: '颜色', field: 'color', excelField: '__EMPTY_6' },
     { label: '品牌', field: 'brand', excelField: '__EMPTY_7' },
     { label: '卷号', field: 'heatNoAndBatchNo', excelField: '__EMPTY_8' },
@@ -66,7 +66,7 @@ const sectionSteelSpecTmpl = {
     unexistClassifyName = Array.from(new Set(unexistClassifyName))
     // 有不存在的科目时，视为导入失败
     if (unexistClassifyName.length > 0) {
-      throw new Error(`${unexistClassifyName.map(v => `“${v}”`).join('、')}${unexistClassifyName.length > 1 ? '等' : ''}物料种类不存在`)
+      throw new Error(`${unexistClassifyName.map((v) => `“${v}”`).join('、')}${unexistClassifyName.length > 1 ? '等' : ''}物料种类不存在`)
     }
     // 根据科目id获取对应科目的规格并做匹配
     const stateClassifySpec = store.state.config.classifySpec
