@@ -28,32 +28,33 @@
           <span>{{ scope.row.mainClassificationName }}</span>
         </template>
       </el-table-column>
-      <el-table-column key="classificationName" prop="classificationName" align="center" :show-overflow-tooltip="true" label="子分类" min-width="120">
+      <el-table-column key="classificationName" prop="classificationName" align="center" :show-overflow-tooltip="true" label="子分类">
         <template v-slot="scope">
           <template v-if="scope.row.productionLineType === artifactProductLineEnum.INTELLECT.V">
-            <div v-for="(item,index) in scope.row.structureClassificationList" :key="item.id" :class="index === scope.row.structureClassificationList.length-1 ? 'sandwich-cell-bottom' : 'sandwich-cell-top'" :style="`height:${item.styleHeight};line-height:${item.lineHeight}`">
+            <div v-for="(item,index) in scope.row.structureClassificationList" :key="item.id" :class="index === scope.row.structureClassificationList.length-1 ? 'sandwich-cell-bottom' : 'sandwich-cell-top'" :style="item.parentType === intellectParentType.BRIDGE.V?'line-height:22px;':''">
                 <span style="margin-left:5px;">{{ item.classificationName }}</span>
                 <template  v-if="item.parentType === intellectParentType.BRIDGE.V">
-                  <span v-if="item.minLength && item.maxLength">（{{item.minLength}}mm {{ item.boolContainsMin ? '≤' : '&lt;' }} 长度 {{ item.boolContainsMax ? '≤' : '&lt;' }} {{ item.maxLength}}mm）</span>
-                  <span v-else-if="item.minLength">（{{ item.boolContainsMin ? '≥' : '&gt;' }}{{ item.minLength }}mm）</span>
-                  <span v-else-if="item.maxLength">（{{ item.boolContainsMax ? '≤' : '&lt;' }}{{ item.maxLength}}mm）</span>
+                  <div v-if="item.minLength && item.maxLength">（{{item.minLength}}mm {{ item.boolContainsMin ? '≤' : '&lt;' }} 长度 {{ item.boolContainsMax ? '≤' : '&lt;' }} {{ item.maxLength}}mm）</div>
+                  <div v-else-if="item.minLength">（{{ item.boolContainsMin ? '≥' : '&gt;' }}{{ item.minLength }}mm）</div>
+                  <div v-else-if="item.maxLength">（{{ item.boolContainsMax ? '≤' : '&lt;' }}{{ item.maxLength}}mm）</div>
                 </template>
             </div>
           </template>
           <span v-else>-</span>
         </template>
       </el-table-column>
-      <el-table-column key="specPrefixList" prop="specPrefixList" label="构件规格前缀" align="center">
+      <el-table-column key="specPrefixList" prop="specPrefixList" label="构件规格前缀" align="center" min-width="120" :show-overflow-tooltip="true">
         <template v-slot="scope">
-          <div v-for="(item,index) in scope.row.structureClassificationList" :key="item.id">
+          <div v-for="(item,index) in scope.row.structureClassificationList" :key="item.id" :class="index === scope.row.structureClassificationList.length-1 ? 'sandwich-cell-bottom div-ellipsis' : 'sandwich-cell-top div-ellipsis'" :style="item.parentType === intellectParentType.BRIDGE.V?'line-height:45px;height:55px;':''">
             <template v-if="item.specPrefixList && item.specPrefixList.length > 0">
-              <div v-for="(k,i) in item.specPrefixList" :key="k.id">
+              <span v-for="k in item.specPrefixList" :key="k.id">{{`【${k.specPrefix}】`}}</span>
+              <!-- <div v-for="(k,i) in item.specPrefixList" :key="k.id">
                 <div :class="i === item.specPrefixList.length - 1 ? (index === scope.row.structureClassificationList.length-1 ? 'sandwich-cell-bottom' : 'sandwich-cell-top') : 'sandwich-cell-top'">
                   {{ k.specPrefix }}
                 </div>
-              </div>
+              </div> -->
             </template>
-            <div v-else class="sandwich-cell-bottom">-</div>
+            <!-- <div v-else class="sandwich-cell-bottom">-</div> -->
           </div>
         </template>
       </el-table-column>
@@ -73,7 +74,7 @@
       </el-table-column> -->
       <el-table-column key="definitionWord" prop="definitionWord" align="center" :show-overflow-tooltip="true" label="定义代码">
         <template v-slot="scope">
-          <div v-for="(item,index) in scope.row.structureClassificationList" :key="item.id" :class="index === scope.row.structureClassificationList.length-1 ? 'sandwich-cell-bottom' : 'sandwich-cell-top'" :style="`height:${item.styleHeight};line-height:${item.lineHeight}`">
+          <div v-for="(item,index) in scope.row.structureClassificationList" :key="item.id" :class="index === scope.row.structureClassificationList.length-1 ? 'sandwich-cell-bottom' : 'sandwich-cell-top'" :style="item.parentType === intellectParentType.BRIDGE.V?'line-height:45px;height:55px;':''">
             {{ item.definitionWord || '-' }}
           </div>
         </template>
@@ -87,7 +88,7 @@
         align="center"
       >
         <template v-slot="scope">
-          <div v-for="(item,index) in scope.row.structureClassificationList" :key="item.id" :class="index === scope.row.structureClassificationList.length-1 ? 'sandwich-cell-bottom' : 'sandwich-cell-top'" :style="`height:${item.styleHeight};line-height:${item.lineHeight}`">
+          <div v-for="(item,index) in scope.row.structureClassificationList" :key="item.id" :class="index === scope.row.structureClassificationList.length-1 ? 'sandwich-cell-bottom' : 'sandwich-cell-top'" :style="item.parentType === intellectParentType.BRIDGE.V?'line-height:45px;height:55px;':''">
             <span>{{ item.sort }}</span>
           </div>
         </template>
@@ -101,7 +102,7 @@
         fixed="right"
       >
         <template v-slot="scope">
-          <div v-for="(item,index) in scope.row.structureClassificationList" :key="item.id" :class="index === scope.row.structureClassificationList.length-1 ? 'sandwich-cell-bottom' : 'sandwich-cell-top'" :style="`height:${item.styleHeight};line-height:${item.lineHeight}`">
+          <div v-for="(item,index) in scope.row.structureClassificationList" :key="item.id" :class="index === scope.row.structureClassificationList.length-1 ? 'sandwich-cell-bottom' : 'sandwich-cell-top'" :style="item.parentType === intellectParentType.BRIDGE.V?'line-height:45px;height:55px;':''">
             <common-button size="mini" @click="openForm(item,'edit')" icon="el-icon-edit" type="primary" v-permission="permission.edit"/>
             <el-popconfirm
                 confirm-button-text="确定"
@@ -188,16 +189,16 @@ async function fetchList() {
     const { content = [] } = await crudApi.get()
     content.forEach(v => {
       if (v.structureClassificationList?.length) {
-        v.structureClassificationList.map((k, index) => {
-          k.styleHeight = k.specPrefixList.length ? k.specPrefixList.length * 40 + 'px' : '40px'
-          k.lineHeight = k.specPrefixList.length ? k.specPrefixList.length * 30 + 'px' : '30px'
-        })
+        // v.structureClassificationList.map((k, index) => {
+        //   k.styleHeight = k.specPrefixList.length ? k.specPrefixList.length * 40 + 'px' : '40px'
+        //   k.lineHeight = k.specPrefixList.length ? k.specPrefixList.length * 30 + 'px' : '30px'
+        // })
         v.mainClassificationName = v.productionLineType === artifactProductLineEnum.INTELLECT.V ? (v.parentType ? intellectParentType.VL[v.parentType] : '-') : v.structureClassificationList[0].classificationName
       }
     })
     _list = content
   } catch (error) {
-    console.log('获取构件类型配置失败', error)
+    console.log('获取构件特征定义失败', error)
   } finally {
     list.value = _list
     tableLoading.value = false
@@ -231,7 +232,7 @@ $font-size: 1.5em;
 .sandwich-cell-top,
 .sandwich-cell-bottom {
   padding: 5px;
-  height: 40px;
+  min-height: 40px;
   line-height: 30px;
   box-sizing: border-box;
   overflow: hidden;
@@ -257,5 +258,11 @@ $font-size: 1.5em;
 }
 .float-ele{
   float:left;
+}
+.div-ellipsis{
+  width:100%;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
 }
 </style>

@@ -23,7 +23,7 @@
           <span>{{ scope.row.name }}</span>
         </template>
       </el-table-column>
-      <el-table-column v-if="columns.visible('assembleSpecList')" key="assembleSpecList" prop="assembleSpecList" label="部件规格前缀" align="center" min-width="260">
+      <el-table-column v-if="columns.visible('assembleSpecList')" key="assembleSpecList" prop="assembleSpecList" label="部件规格前缀" :show-overflow-tooltip="true" align="center" min-width="260">
         <template v-slot="scope">
           <template v-if="scope.row.assembleSpecList && scope.row.assembleSpecList.length > 0">
             <span v-for="item, in scope.row.assembleSpecList" :key="item.id">
@@ -105,7 +105,7 @@ const optShow = {
 const tableRef = ref()
 const { crud, columns } = useCRUD(
   {
-    title: '部件类型配置',
+    title: '部件特征定义',
     sort: [],
     permission: { ...permission },
     optShow: { ...optShow },

@@ -4,7 +4,7 @@
     append-to-body
     v-model="visible"
     :before-close="handleClose"
-    :title="showType === 'edit'?'编辑构件类型配置':'新增构件类型配置'"
+    :title="showType === 'edit'?'编辑构件特征定义':'新增构件特征定义'"
     :center="false"
     :close-on-click-modal="false"
     size="800px"
@@ -45,19 +45,8 @@
         </el-form-item>
         <el-form-item label="长度定义(mm)" prop="minLength" v-if="form.parentType === intellectParentType.BRIDGE.V">
           <div style="margin-bottom:5px;">类型为梁时,最小值和最大值至少填一项</div>
-          <div style="margin-bottom:5px;">
-            <span style="margin-right:3px;">最小值：</span>
-            <common-select
-              v-model="form.boolContainsMin"
-              :options="minEqualTypeEnum.ENUM"
-              type="enum"
-              size="small"
-              clearable
-              class="filter-item"
-              placeholder="符号"
-              style="width: 80px;margin-right:5px;"
-            />
-             <common-input-number
+            <span style="margin-right:3px;">最小值:</span>
+            <common-input-number
               v-model="form.minLength"
               :min="0"
               :max="999999999"
@@ -66,7 +55,63 @@
               :precision="0"
               size="mini"
               placeholder="最小值"
-              style="width:100px;"
+              style="width:100px;margin-right:5px;line-height:32px !import;"
+            />
+            <common-select
+              v-model="form.boolContainsMin"
+              :options="maxEqualTypeEnum.ENUM"
+              type="enum"
+              size="mini"
+              clearable
+              class="filter-item"
+              placeholder="符号"
+              style="width: 85px;"
+            />
+            <span style="padding:0 8px;">—</span>
+            <span style="margin-right:3px;">最大值:</span>
+            <common-select
+              v-model="form.boolContainsMax"
+              :options="maxEqualTypeEnum.ENUM"
+              type="enum"
+              size="mini"
+              clearable
+              class="filter-item"
+              placeholder="符号"
+              style="width: 85px;margin-right:5px;"
+            />
+            <common-input-number
+              v-model="form.maxLength"
+              :min="0"
+              :max="999999999"
+              :controls="false"
+              :step="1"
+              :precision="0"
+              size="mini"
+              placeholder="最大值"
+              style="width:100px;line-height:32px;"
+            />
+          <!-- <div style="margin-bottom:5px;">
+            <span style="margin-right:3px;">最小值：</span>
+            <common-input-number
+              v-model="form.minLength"
+              :min="0"
+              :max="999999999"
+              :controls="false"
+              :step="1"
+              :precision="0"
+              size="mini"
+              placeholder="最小值"
+              style="width:100px;margin-right:5px;line-height:32px;"
+            />
+            <common-select
+              v-model="form.boolContainsMin"
+              :options="maxEqualTypeEnum.ENUM"
+              type="enum"
+              size="small"
+              clearable
+              class="filter-item"
+              placeholder="符号"
+              style="width: 100px;"
             />
           </div>
           <div>
@@ -79,7 +124,7 @@
               clearable
               class="filter-item"
               placeholder="符号"
-              style="width: 80px;margin-right:5px;"
+              style="width: 100px;margin-right:5px;"
             />
             <common-input-number
               v-model="form.maxLength"
@@ -90,9 +135,9 @@
               :precision="0"
               size="mini"
               placeholder="最大值"
-              style="width:100px;"
+              style="width:100px;line-height:32px;"
             />
-          </div>
+          </div> -->
         </el-form-item>
         <el-form-item label="定义代码" prop="definitionWord" v-if="form.productionLineType === artifactProductLineEnum.INTELLECT.V">
           <el-input v-model="form.definitionWord" type="text" placeholder="定义代码" style="width: 250px" maxlength="30" />
@@ -147,7 +192,7 @@ import { ElMessage, ElNotification } from 'element-plus'
 
 import { isNotBlank } from '@data-type/index'
 // import { whetherEnum } from '@enum-ms/common'
-import { artifactProductLineEnum, intellectParentType, minEqualTypeEnum, maxEqualTypeEnum } from '@enum-ms/mes'
+import { artifactProductLineEnum, intellectParentType, maxEqualTypeEnum } from '@enum-ms/mes'
 
 import useVisible from '@compos/use-visible'
 import useWatchFormValidate from '@compos/form/use-watch-form-validate'
@@ -425,7 +470,7 @@ async function onSubmit() {
     emit('success')
     handleClose()
   } catch (error) {
-    console.log('价格修改失败', error)
+    console.log('提交失败', error)
   } finally {
     loading.value = false
   }

@@ -187,7 +187,7 @@ export default {
       name: 'MesConfigManage',
       alwaysShow: true,
       redirect: '/mes-config/base',
-      meta: { title: 'MES-配置管理', icon: 'project', noCache: true },
+      meta: { title: 'MES-公共配置', icon: 'project', noCache: true },
       children: [
         {
           name: 'MesBaseConfig',
@@ -195,27 +195,6 @@ export default {
           hidden: false,
           component: '/config-manage/mes/base/index',
           meta: { title: '基础配置', icon: 'project', noCache: true }
-        },
-        {
-          name: 'ArtifactConfig',
-          path: 'artifact-config',
-          hidden: false,
-          component: '/config-manage/mes/artifact-config/index',
-          meta: { title: '构件类型配置', icon: 'project', noCache: true }
-        },
-        {
-          name: 'MachinePartConfig',
-          path: 'machine-part-config',
-          hidden: false,
-          component: '/config-manage/mes/machine-part/index',
-          meta: { title: '部件类型配置', icon: 'project', noCache: true }
-        },
-        {
-          name: 'SteelClassic',
-          path: 'steel-classic',
-          hidden: false,
-          component: '/config-manage/mes/steel-classic/index',
-          meta: { title: '零件类型配置', icon: 'project', noCache: true }
         },
         {
           name: 'ChangeReason',
@@ -235,48 +214,101 @@ export default {
       redirect: '/mes/production-config/factory-and-workshop',
       meta: { title: '建钢-生产配置', icon: 'project', noCache: true },
       children: [
-
         {
-          name: 'MesConfigProductionLine',
-          path: 'production-line',
+          path: 'characteristics-config',
+          component: '',
           hidden: false,
-          component: '/mes/production-config/production-line/index',
-          meta: { title: '生产线管理', icon: 'project', noCache: true }
+          name: 'CharacteristicsConfig',
+          alwaysShow: true,
+          redirect: '/mes/production-config/characteristics-config/artifact-config',
+          meta: { title: '构零件定义', icon: 'project', noCache: true },
+          children: [
+            {
+              name: 'ArtifactConfig',
+              path: 'artifact-config',
+              hidden: false,
+              component: '/config-manage/mes/artifact-config/index',
+              meta: { title: '构件特征定义', icon: 'project', noCache: true }
+            },
+            {
+              name: 'MachinePartConfig',
+              path: 'machine-part-config',
+              hidden: false,
+              component: '/config-manage/mes/machine-part/index',
+              meta: { title: '部件特征定义', icon: 'project', noCache: true }
+            },
+            {
+              name: 'SteelClassic',
+              path: 'steel-classic',
+              hidden: false,
+              component: '/config-manage/mes/steel-classic/index',
+              meta: { title: '零件特征定义', icon: 'project', noCache: true }
+            }
+          ]
         },
         {
-          name: 'MesConfigProcess',
-          path: 'process',
+          path: 'process-config',
+          component: '',
           hidden: false,
-          component: '/mes/production-config/process/index',
-          meta: { title: '工序配置', icon: 'project', noCache: true }
+          name: 'ProcessConfig',
+          alwaysShow: true,
+          redirect: '/mes/production-config/process-config/process',
+          meta: { title: '生产工序定义', icon: 'project', noCache: true },
+          children: [
+            {
+              name: 'MesConfigProcess',
+              path: 'process',
+              hidden: false,
+              component: '/mes/production-config/process/index',
+              meta: { title: '工序配置', icon: 'project', noCache: true }
+            },
+            {
+              name: 'MesConfigArtifactProductProcess',
+              path: 'artifact-product-process',
+              hidden: false,
+              component: '/mes/production-config/product-process/artifact/index',
+              meta: { title: '构件工序定义', icon: 'project', noCache: true }
+            },
+            {
+              name: 'MesConfigAssembleProductProcess',
+              path: 'assemble-product-process',
+              hidden: false,
+              component: '/mes/production-config/product-process/assemble/index',
+              meta: { title: '部件工序定义', icon: 'project', noCache: true }
+            },
+            {
+              name: 'MesConfigMachinePartProductProcess',
+              path: 'machine-part-product-process',
+              hidden: false,
+              component: '/mes/production-config/product-process/machine-part/index',
+              meta: { title: '零件工序定义', icon: 'project', noCache: true }
+            }
+          ]
         },
         {
-          name: 'MesConfigArtifactProductProcess',
-          path: 'artifact-product-process',
+          path: 'production-line-config',
+          component: '',
           hidden: false,
-          component: '/mes/production-config/product-process/artifact/index',
-          meta: { title: '构件工序定义', icon: 'project', noCache: true }
-        },
-        {
-          name: 'MesConfigAssembleProductProcess',
-          path: 'assemble-product-process',
-          hidden: false,
-          component: '/mes/production-config/product-process/assemble/index',
-          meta: { title: '部件工序定义', icon: 'project', noCache: true }
-        },
-        {
-          name: 'MesConfigMachinePartProductProcess',
-          path: 'machine-part-product-process',
-          hidden: false,
-          component: '/mes/production-config/product-process/machine-part/index',
-          meta: { title: '零件工序定义', icon: 'project', noCache: true }
-        },
-        {
-          name: 'MesConfigInspectionMode',
-          path: 'inspection-mode',
-          hidden: false,
-          component: '/mes/production-config/inspection-mode/index',
-          meta: { title: '报检方式', icon: 'project', noCache: true }
+          name: 'ProductionLineConfig',
+          alwaysShow: true,
+          redirect: '/mes/production-config/production-line-config/production-line',
+          meta: { title: '生产线配置', icon: 'project', noCache: true },
+          children: [
+            {
+              name: 'MesConfigProductionLine',
+              path: 'production-line',
+              hidden: false,
+              component: '/mes/production-config/production-line/index',
+              meta: { title: '生产线管理', icon: 'project', noCache: true }
+            },
+            {
+              name: 'MesConfigInspectionMode',
+              path: 'inspection-mode',
+              hidden: false,
+              component: '/mes/production-config/inspection-mode/index',
+              meta: { title: '报检方式', icon: 'project', noCache: true }
+            }
+          ]
         },
         {
           name: 'MesConfigWageQuota',

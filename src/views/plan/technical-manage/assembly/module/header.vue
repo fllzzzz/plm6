@@ -25,7 +25,7 @@
     </div>
     <crudOperation :disabled="globalProject.mode === projectModeEnum.STRUCTURE_STANDARD.V">
       <template #optLeft>
-        <upload-btn
+        <!-- <upload-btn
           v-if="currentArea && currentArea.id && globalProject.mode!==projectModeEnum.STRUCTURE_STANDARD.V"
           v-permission="crud.permission.import"
           :data="AddParam"
@@ -48,7 +48,7 @@
           btn-size="mini"
           class="filter-item"
           @success="uploadSuccess"
-        />
+        /> -->
         <export-button
           v-if="currentArea && currentArea.id"
           :fn="downloadAssemble"
@@ -102,8 +102,8 @@ import checkPermission from '@/utils/system/check-permission'
 import crudOperation from '@crud/CRUD.operation'
 import monomerSelect from '@/components-system/plan/monomer-select'
 import areaTabs from '@/components-system/plan/area-tabs'
-import uploadBtn from '@comp/file-upload/ExcelUploadBtn'
-import { listUpload } from '@/api/plan/technical-manage/assembly'
+// import uploadBtn from '@comp/file-upload/ExcelUploadBtn'
+// import { listUpload } from '@/api/plan/technical-manage/assembly'
 import ExportButton from '@comp-common/export-button/index.vue'
 import { TechnologyTypeAllEnum } from '@enum-ms/contract'
 import rrOperation from '@crud/RR.operation'
@@ -142,13 +142,13 @@ const exportParam = computed(() => {
   return param
 })
 
-const AddParam = computed(() => {
-  return { areaId: crud.query.areaId, importType: 1 }
-})
+// const AddParam = computed(() => {
+//   return { areaId: crud.query.areaId, importType: 1 }
+// })
 
-const carryParam = computed(() => {
-  return { areaId: crud.query.areaId, importType: 2 }
-})
+// const carryParam = computed(() => {
+//   return { areaId: crud.query.areaId, importType: 2 }
+// })
 
 function tabClick(val) {
   const { name, label } = val
