@@ -39,7 +39,7 @@
           style="width: 270px"
         />
       </el-form-item>
-      <el-form-item v-if="!(form.productType & componentTypeEnum.ENCLOSURE.V)" label="智能线" prop="boolMachineEnum">
+      <el-form-item v-if="form.productType & componentTypeEnum.ARTIFACT.V" label="智能线" prop="boolMachineEnum">
         <common-radio v-model="form.boolMachineEnum" :options="whetherEnum.ENUM" type="enum" />
       </el-form-item>
       <!-- <el-form-item label="生产线简称" prop="shortName">

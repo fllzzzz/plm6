@@ -10,7 +10,7 @@
     <template #titleRight>
       <common-button :loading="crud.status.cu === 2" type="primary" size="mini" @click="crud.submitCU">确认</common-button>
     </template>
-    <el-form ref="formRef" :model="form" :rules="rules" size="small" label-width="90px">
+    <el-form ref="formRef" :model="form" size="small" label-width="90px">
       <el-form-item label="部件类型">
         <span>{{ form.name }}</span>
       </el-form-item>
@@ -72,9 +72,9 @@ const defaultForm = {
 
 const { crud, form, CRUD } = regForm(defaultForm, formRef)
 
-const rules = {
-  processSequenceIds: [{ required: true, message: '请选择工序' }]
-}
+// const rules = {
+//   processSequenceIds: [{ required: true, message: '请选择工序' }]
+// }
 
 // 工序禁用
 function processDisabled(ids, currentId) {
