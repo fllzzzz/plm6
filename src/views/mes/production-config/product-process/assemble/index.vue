@@ -9,11 +9,10 @@
       :data-format="dataFormat"
       :empty-text="crud.emptyText"
       :max-height="maxHeight"
-      :span-method="spanMethod"
       style="width: 100%"
     >
       <el-table-column label="序号" type="index" align="center" width="60" />
-      <el-table-column prop="productionLineType" align="center" :show-overflow-tooltip="true" label="生产线" width="120"> </el-table-column>
+      <!-- <el-table-column prop="productionLineType" align="center" :show-overflow-tooltip="true" label="生产线" width="120"> </el-table-column> -->
       <el-table-column prop="name" align="center" :show-overflow-tooltip="true" label="部件类型">
         <template #default="{ row }">
           <span>{{ row.name }}</span>
@@ -49,7 +48,7 @@ import { ref } from 'vue'
 import { configProductProcessPM as permission } from '@/page-permission/config'
 
 import { artifactProductLineEnum, intellectParentType } from '@enum-ms/mes'
-import { isNotBlank, deepClone } from '@data-type/index'
+// import { isNotBlank, deepClone } from '@data-type/index'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
@@ -80,38 +79,43 @@ const { crud, CRUD } = useCRUD(
 
 const { maxHeight } = useMaxHeight({ paginate: true, extraBox: '' })
 
-// 合并单元格
-function spanMethod({ row, column, rowIndex, columnIndex }) {
-  if (column.property === 'productionLineType') {
-    return {
-      rowspan: row.rowspan || 0,
-      colspan: 1
-    }
-  }
-}
+// // 合并单元格
+// function spanMethod({ row, column, rowIndex, columnIndex }) {
+//   if (column.property === 'productionLineType') {
+//     return {
+//       rowspan: row.rowspan || 0,
+//       colspan: 1
+//     }
+//   }
+// }
 
 CRUD.HOOK.handleRefresh = (crud, { data }) => {
-  let _tableData = []
-  const _dataObj = {
-    [artifactProductLineEnum.TRADITION.V]: [],
-    [artifactProductLineEnum.INTELLECT.V]: []
-  }
-  if (isNotBlank(data)) {
-    const _content = deepClone(data.content)
-    for (let i = 0; i < _content.length; i++) {
-      const _v = _content[i]
-      _v.specPrefixSequence = _v.assembleSpecList?.map((v) => `【${v.specPrefix}】`).join('') || ''
-      _v.processSequence = _v.productProcessLinkList?.map((v) => `【${v.name}】`).join('→')
-      _v.processSequenceIds = _v.productProcessLinkList?.map((v) => v.processId)
-      _dataObj[_v.productionLineType].push({ ..._v })
-    }
-  }
-  for (const item in _dataObj) {
-    if (isNotBlank(_dataObj[item]) && _dataObj[item].length) {
-      _dataObj[item][0].rowspan = _dataObj[item].length
-    }
-    _tableData = _tableData.concat(_dataObj[item])
-  }
-  data.content = _tableData
+  // let _tableData = []
+  // const _dataObj = {
+  //   [artifactProductLineEnum.TRADITION.V]: [],
+  //   [artifactProductLineEnum.INTELLECT.V]: []
+  // }
+  // if (isNotBlank(data)) {
+  //   const _content = deepClone(data.content)
+  //   for (let i = 0; i < _content.length; i++) {
+  //     const _v = _content[i]
+  //     _v.specPrefixSequence = _v.assembleSpecList?.map((v) => `【${v.specPrefix}】`).join('') || ''
+  //     _v.processSequence = _v.productProcessLinkList?.map((v) => `【${v.name}】`).join('→')
+  //     _v.processSequenceIds = _v.productProcessLinkList?.map((v) => v.processId)
+  //     _dataObj[_v.productionLineType].push({ ..._v })
+  //   }
+  // }
+  // for (const item in _dataObj) {
+  //   if (isNotBlank(_dataObj[item]) && _dataObj[item].length) {
+  //     _dataObj[item][0].rowspan = _dataObj[item].length
+  //   }
+  //   _tableData = _tableData.concat(_dataObj[item])
+  // }
+  data.content = data.content.map(o => {
+    o.specPrefixSequence = o.assembleSpecList?.map((v) => `【${v.specPrefix}】`).join('') || ''
+    o.processSequence = o.productProcessLinkList?.map((v) => `【${v.name}】`).join('→')
+    o.processSequenceIds = o.productProcessLinkList?.map((v) => v.processId)
+    return o
+  })
 }
 </script>
