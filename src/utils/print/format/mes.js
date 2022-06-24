@@ -85,6 +85,7 @@ function meteUnit({ header, table = [], footer, qrCode }) {
       length: row.mate,
       weight: row.mate,
       surfaceArea: row.mate,
+      quantity: row.mate,
       wageQuotaType: row.wageQuotaType,
       showUnit: true
     }).convertMete

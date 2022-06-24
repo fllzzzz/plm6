@@ -188,6 +188,7 @@ async function fetchList() {
         length: v.mate,
         weight: v.mate,
         surfaceArea: v.mate,
+        quantity: v.mate,
         wageQuotaType: v.wageQuotaType
       }).convertMete
       // v.checkMete = v.mate
