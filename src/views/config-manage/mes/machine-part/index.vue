@@ -26,13 +26,10 @@
       <el-table-column v-if="columns.visible('assembleSpecList')" key="assembleSpecList" prop="assembleSpecList" label="部件规格前缀" align="center" min-width="260">
         <template v-slot="scope">
           <template v-if="scope.row.assembleSpecList && scope.row.assembleSpecList.length > 0">
-            <div v-for="(item,i) in scope.row.assembleSpecList" :key="item.id">
-              <div :class="i === scope.row.assembleSpecList.length - 1 ? 'sandwich-cell-bottom' : 'sandwich-cell-top'">
-                {{ item.specPrefix }}
-              </div>
-            </div>
+            <span v-for="item, in scope.row.assembleSpecList" :key="item.id">
+              {{ `【${item.specPrefix}】` }}
+            </span>
           </template>
-          <div v-else class="sandwich-cell-bottom"></div>
         </template>
       </el-table-column>
       <!-- <el-table-column v-if="columns.visible('assembleSpecList1')" key="assembleSpecList1" prop="assembleSpecList1" label="是否有生成工序" align="center" min-width="260">
