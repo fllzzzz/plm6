@@ -134,9 +134,9 @@ export const sectionSteelLibraryPM = {
 
 // ########################################################################
 
-// --------------------------- MES-配置管理 start --------------------------
+// --------------------------- MES-公共配置 start --------------------------
 
-// MES-配置管理/基础配置
+// MES-公共配置/基础配置
 export const configMesBasePM = {
   overweightSMSRecipientGet: ['overweight_sms_recipient:get'], // 查看过磅短信接收人
   overweightSMSRecipientEdit: ['overweight_sms_recipient:edit'], // 编辑过磅短信接收人
@@ -152,31 +152,7 @@ export const configMesBasePM = {
   foldingPriceMethodEdit: ['folding_price_method:edit'] // 编辑围护折边件计价方式
 }
 
-// MES-配置管理/构件类型配置
-export const artifactConfigPM = {
-  get: ['artifact_config:get'], // 构件类型配置列表
-  add: ['artifact_config:add'], // 添加构件类型配置
-  edit: ['artifact_config:edit'], // 修改零件类型配置
-  del: ['artifact_config:del'] // 删除零件类型配置
-}
-
-// MES-配置管理/部件类型配置
-export const machinePartConfigPM = {
-  get: ['machine_part_config:get'], // 部件类型配置列表
-  add: ['machine_part_config:add'], // 添加部件类型配置
-  edit: ['machine_part_config:edit'], // 修改零件类型配置
-  del: ['machine_part_config:del'] // 删除零件类型配置
-}
-
-// MES-配置管理/零件类型配置
-export const steelClassicPM = {
-  get: ['steel_classic:get'], // 零件类型配置列表
-  add: ['steel_classic:add'], // 新增零件类型配置
-  edit: ['steel_classic:edit'], // 修改零件类型配置
-  del: ['steel_classic:del'] // 删除零件类型配置
-}
-
-// MES-配置管理/变更原因
+// MES-公共配置/变更原因
 export const changeReasonPM = {
   get: ['change_reason:get'], // 变更原因列表
   add: ['change_reason:add'], // 新增变更原因
@@ -188,6 +164,30 @@ export const changeReasonPM = {
 // ########################################################################
 
 // --------------------------- 建钢-生产配置 start -------------------------
+
+// MES-公共配置/构件特征定义
+export const artifactConfigPM = {
+  get: ['artifact_config:get'], // 构件特征定义列表
+  add: ['artifact_config:add'], // 添加构件特征定义
+  edit: ['artifact_config:edit'], // 修改构件特征定义
+  del: ['artifact_config:del'] // 删除构件特征定义
+}
+
+// MES-公共配置/部件特征定义
+export const machinePartConfigPM = {
+  get: ['machine_part_config:get'], // 部件特征定义列表
+  add: ['machine_part_config:add'], // 添加部件特征定义
+  edit: ['machine_part_config:edit'], // 修改部件特征定义
+  del: ['machine_part_config:del'] // 删除部件特征定义
+}
+
+// MES-公共配置/零件特征定义
+export const steelClassicPM = {
+  get: ['steel_classic:get'], // 零件特征定义列表
+  add: ['steel_classic:add'], // 新增零件特征定义
+  edit: ['steel_classic:edit'], // 修改零件特征定义
+  del: ['steel_classic:del'] // 删除零件特征定义
+}
 
 // 建钢-生产配置/生产线管理
 export const configProductionLinePM = {
