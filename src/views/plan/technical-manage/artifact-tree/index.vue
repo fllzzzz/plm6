@@ -451,6 +451,7 @@ CRUD.HOOK.handleRefresh = (crud, data) => {
     index++
     v.machinePartDTOList = []
     v.children = []
+    v.rowKey = v.id
     v.hasChildren = !!v.hasMachinePart
     v.productType = componentTypeEnum.ARTIFACT.V
     v.rowKey = v.id

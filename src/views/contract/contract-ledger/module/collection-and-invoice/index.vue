@@ -12,9 +12,19 @@
     <template #content>
       <el-tabs v-model="activeName" class="tab-container">
         <el-tab-pane label="收款列表" name="collection">
+          <template #label>
+            <el-badge :value="currentRow?.unCheckCollectionCount" :hidden="!currentRow?.unCheckCollectionCount" class="badge-item">
+              <span>收款列表</span>
+            </el-badge>
+          </template>
           <collection class="tab-content" :projectId="props.projectId" :visibleValue="modelValue" @success="emit('success')" :currentRow="currentRow"/>
         </el-tab-pane>
         <el-tab-pane label="开票列表" name="invoice">
+          <template #label>
+            <el-badge :value="currentRow?.unCheckInvoiceCount" :hidden="!currentRow?.unCheckInvoiceCount" class="badge-item">
+              <span>收款列表</span>
+            </el-badge>
+          </template>
           <invoice class="tab-content" :projectId="props.projectId" :visibleValue="modelValue" @success="emit('success')" :currentRow="currentRow"/>
         </el-tab-pane>
       </el-tabs>
@@ -67,7 +77,7 @@ watch(
 .badge-item {
   ::v-deep(.el-badge__content) {
     top: 10px;
-    right: -2px;
+    right: 3px;
   }
 }
 

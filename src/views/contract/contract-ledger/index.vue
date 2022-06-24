@@ -55,7 +55,6 @@
     <el-table-column v-if="columns.visible('contractAmount')" key="contractAmount" prop="contractAmount" label="合同额" align="center">
       <template v-slot="scope">
         <div @click="openContractMoney(scope.row.id)" style="cursor:pointer;color:#409eff;text-align:right;">{{ isNotBlank(scope.row.contractAmount)? toThousand(scope.row.contractAmount): '-' }}</div>
-        <!-- <el-tag @click="openContractMoney(scope.row.id)" effect="plain" style="width:100%;text-align:right;">{{ scope.row.contractAmount? toThousand(scope.row.contractAmount): '-' }}</el-tag> -->
       </template>
     </el-table-column>
     <el-table-column v-if="columns.visible('settlementAmount')" key="settlementAmount" prop="settlementAmount" label="结算额" align="center">
@@ -63,10 +62,16 @@
         <div>{{ scope.row.settlementAmount? toThousand(scope.row.settlementAmount): '-' }}</div>
       </template>
     </el-table-column>
-    <el-table-column v-if="columns.visible('collectionAmount')" key="collectionAmount" prop="collectionAmount" label="累计收款" align="center">
+    <el-table-column v-if="columns.visible('collectionAmount')" key="collectionAmount" prop="collectionAmount" label="累计收款" align="right">
       <template v-slot="scope">
-        <div @click="openTab(scope.row,'collection')" style="cursor:pointer;color:#409eff;text-align:right;">{{ isNotBlank(scope.row.collectionAmount)? toThousand(scope.row.collectionAmount): '-' }}</div>
-        <!-- <el-tag @click="openTab(scope.row.id,'collection')" effect="plain" style="width:100%;text-align:right;">{{ isNotBlank(scope.row.collectionAmount)? toThousand(scope.row.collectionAmount): '-' }}</el-tag> -->
+        <div @click="openTab(scope.row,'collection')" style="cursor:pointer;">
+          <span v-if="scope.row.unCheckCollectionCount>0">
+            <el-badge :value="scope.row.unCheckCollectionCount" :max="99" :hidden="scope.row.unCheckCollectionCount < 1">
+              <svg-icon icon-class="notify"  style="color:#e6a23c;font-size:15px;"/>
+            </el-badge>
+          </span>
+          <span style="color:#409eff;text-align:right;margin-left:8px;">{{ isNotBlank(scope.row.collectionAmount)? toThousand(scope.row.collectionAmount): '-' }}</span>
+        </div>
       </template>
     </el-table-column>
     <el-table-column v-if="columns.visible('collectionRate')" key="collectionRate" prop="collectionRate" label="收款比例" align="center" width="80px">
@@ -74,10 +79,16 @@
         <div>{{ scope.row.collectionRate? (scope.row.collectionRate*100).toFixed(2)+'%': '-' }}</div>
       </template>
     </el-table-column>
-    <el-table-column v-if="columns.visible('invoiceAmount')" key="invoiceAmount" prop="invoiceAmount" label="累计开票" align="center">
+    <el-table-column v-if="columns.visible('invoiceAmount')" key="invoiceAmount" prop="invoiceAmount" label="累计开票" align="right">
       <template v-slot="scope">
-        <div @click="openTab(scope.row,'invoice')" style="cursor:pointer;color:#409eff;text-align:right;">{{ isNotBlank(scope.row.invoiceAmount)? toThousand(scope.row.invoiceAmount): '-' }}</div>
-        <!-- <el-tag @click="openTab(scope.row.id,'invoice')" effect="plain" style="width:100%;text-align:right;">{{ isNotBlank(scope.row.invoiceAmount)? toThousand(scope.row.invoiceAmount): '-' }}</el-tag> -->
+        <div @click="openTab(scope.row,'invoice')" style="cursor:pointer;">
+          <span v-if="scope.row.unCheckInvoiceCount>0">
+            <el-badge :value="scope.row.unCheckInvoiceCount" :max="99" :hidden="scope.row.unCheckInvoiceCount < 1">
+              <svg-icon icon-class="notify"  style="color:#e6a23c;font-size:15px;"/>
+            </el-badge>
+          </span>
+          <span style="color:#409eff;text-align:right;margin-left:8px;">{{ isNotBlank(scope.row.invoiceAmount)? toThousand(scope.row.invoiceAmount): '-' }}</span>
+        </div>
       </template>
     </el-table-column>
     <el-table-column v-if="columns.visible('invoiceRate')" key="invoiceRate" prop="invoiceRate" label="开票比例" align="center" width="80px">
@@ -215,5 +226,11 @@ $font-size: 1.5em;
 }
 ::v-deep(.el-tag--small){
   padding:0 3px;
+}
+::v-deep(.el-badge__content.is-fixed){
+  top:5px;
+  padding:0 3px;
+  line-height:12px;
+  height:14px;
 }
 </style>

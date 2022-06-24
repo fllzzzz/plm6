@@ -528,13 +528,11 @@ const actions = {
           Object.assign(matCls.specKV, arr2obj(classifySpec[id].specList, 'sn'))
           Object.assign(classifySpec[id], matCls)
           Object.assign(classifySpec.specKV, matCls.specKV)
-          console.log('matCls', classifySpec)
         }
       })
       allInterFace.push(ps)
     }
     await Promise.all(allInterFace)
-    console.log('classifySpec', classifySpec)
   },
   // 单体
   async fetchMonomer({ state }, projectId) {

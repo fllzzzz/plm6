@@ -4,8 +4,9 @@
 import { parseTime } from '@/utils/date'
 import XLSX from 'xlsx-styleable'
 import { ElMessage, ElNotification } from 'element-plus'
-import { isNotBlank } from './data-type'
+import { isNotBlank, toPrecision } from './data-type'
 import { trimStr } from './data-type/string'
+import { patternDP } from './validate/pattern'
 
 // 获取文件后缀名
 export function getFileSuffix(fileName) {
@@ -195,10 +196,20 @@ export async function formatExcelData(data, template = {}) {
   const fields = template.fields
   if (data.length >= startRow && fields) {
     const _data = data.slice(startRow - 1, data.length)
+    // 遍历数据
     _data.forEach((item) => {
       const obj = {}
+      // 遍历表格字段
       fields.forEach((f) => {
         obj[f.field] = trimStr(item[f.excelField])
+        // 是否为数值类型
+        if (f.type === 'number') {
+          obj[f.field] = Number(obj[f.field])
+          // 设置了小数精度
+          if (patternDP.test(f.precision)) {
+            obj[f.field] = toPrecision(obj[f.field], f.precision)
+          }
+        }
       })
       res.push(obj)
     })
