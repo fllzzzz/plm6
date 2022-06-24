@@ -33,17 +33,18 @@
       @current-change="handleCurrentChange"
     >
       <el-expand-table-column :data="crud.data" v-model:expand-row-keys="expandRowKeys" row-key="id" fixed="left">
-        <template #default="{ row }">
+        <template #default="{ row: { sourceRow: row } }">
           <p>
-            工厂：<span style="margin-right:20px;">{{ row.factoryName }}</span>
-            车间：<span>{{ row.workshopName }}</span>
+            工厂：<span style="margin-right: 20px">{{ row.factoryName }}</span> 车间：<span>{{ row.workshopName }}</span>
           </p>
-          <p v-if="row.boolMachineEnum && row.productType & componentTypeEnum.ARTIFACT.V">
-            产品标识：<span>{{ row.typeSequence }}</span>
-          </p>
-          <p v-else>
-            可生产类型：<span>{{ row.typeSequence }}</span>
-          </p>
+          <template v-if="!(row.productType & componentTypeEnum.ENCLOSURE.V)">
+            <p v-if="row.boolMachineEnum && row.productType & componentTypeEnum.ARTIFACT.V">
+              产品标识：<span>{{ row.typeSequence }}</span>
+            </p>
+            <p v-else>
+              可生产类型：<span>{{ row.typeSequence }}</span>
+            </p>
+          </template>
           <p>
             备注：<span>{{ row.remark }}</span>
           </p>

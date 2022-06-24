@@ -10,7 +10,15 @@
       :max-height="maxHeight"
       style="width: 100%"
     >
-      <el-table-column v-if="columns.visible('productType')" key="productType" prop="productType" :show-overflow-tooltip="true" label="类型" width="140px" align="center"/>
+      <el-table-column
+        v-if="columns.visible('productType')"
+        key="productType"
+        prop="productType"
+        :show-overflow-tooltip="true"
+        label="类型"
+        width="140px"
+        align="center"
+      />
       <el-table-column
         v-if="columns.visible('processSequence')"
         key="processSequence"
@@ -20,15 +28,9 @@
         min-width="160px"
       />
       <!--编辑与删除-->
-      <el-table-column
-        v-if="checkPermission([...permission.edit])"
-        label="操作"
-        width="130px"
-        align="center"
-        fixed="right"
-      >
-        <template v-slot="scope">
-          <udOperation :data="scope.row" :showDel="false"/>
+      <el-table-column v-if="checkPermission([...permission.edit])" label="操作" width="130px" align="center" fixed="right">
+        <template #default="{ row: { sourceRow: row } }">
+          <udOperation :data="row" :showDel="false" v-if="!(row.productType & typeEnum.MACHINE_PART.V)" />
         </template>
       </el-table-column>
     </common-table>

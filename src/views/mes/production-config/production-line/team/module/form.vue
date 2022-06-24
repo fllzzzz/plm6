@@ -55,7 +55,7 @@
         <common-radio v-model="form.boolExtraCountEnum" :options="whetherEnum.ENUM" type="enum" />
       </el-form-item> -->
       <el-form-item label="计价方式" prop="wageQuotaType" v-if="showWageQuotaTypeEnum?.length">
-        <common-radio v-model="form.wageQuotaType" :options="showWageQuotaTypeEnum" type="enum" />
+        <common-select v-model="form.wageQuotaType" :options="showWageQuotaTypeEnum" type="enum" style="width: 270px"/>
       </el-form-item>
     </el-form>
   </common-dialog>
@@ -66,11 +66,12 @@ import { ref, defineProps, computed } from 'vue'
 import { regForm } from '@compos/use-crud'
 import processSelect from '@comp-mes/process-select'
 import userSelect from '@comp-common/user-select'
+import { wageQuotaTypeMap } from '@/settings/config'
 // import { whetherEnum } from '@enum-ms/common'
 import { teamAttributeEnum, wageQuotaTypeEnum } from '@enum-ms/mes'
 import EO from '@enum'
 
-defineProps({
+const props = defineProps({
   productType: {
     type: Number,
     default: undefined
@@ -104,7 +105,7 @@ const rules = {
 }
 
 const showWageQuotaTypeEnum = computed(() => {
-  const _type = form.processId && processSelectRef.value?.getOption(form.processId)?.wageQuotaType
+  const _type = wageQuotaTypeMap[props.productType]
   return _type && EO.getBits(wageQuotaTypeEnum, _type)
 })
 

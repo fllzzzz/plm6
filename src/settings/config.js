@@ -1,6 +1,7 @@
 import { projectTypeEnum } from '@/utils/enum/modules/contract'
 import { componentListTypeEnum, componentTypeEnum, enclosureSettlementTypeEnum } from '@enum-ms/building-steel'
 import { matClsEnum } from '@enum-ms/classification'
+import { processMaterialListTypeEnum, wageQuotaTypeEnum } from '@enum-ms/mes'
 
 // 标签默认颜色
 export const TAG_DEF_COLOR = '#1682e6'
@@ -16,6 +17,14 @@ export const STAINLESS_STEEL_DENSITY = 7.93
 
 // 钢材的val
 export const STEEL_ENUM = matClsEnum.STEEL_PLATE.V | matClsEnum.SECTION_STEEL.V | matClsEnum.STEEL_COIL.V
+
+// 产品类型对应默认计价方式
+export const wageQuotaTypeMap = {
+  [processMaterialListTypeEnum.ARTIFACT.V]: wageQuotaTypeEnum.WEIGHT.V | wageQuotaTypeEnum.LENGTH.V | wageQuotaTypeEnum.QUANTITY.V | wageQuotaTypeEnum.AREA.V,
+  [processMaterialListTypeEnum.ASSEMBLE.V]: wageQuotaTypeEnum.WEIGHT.V | wageQuotaTypeEnum.LENGTH.V | wageQuotaTypeEnum.QUANTITY.V,
+  [processMaterialListTypeEnum.MACHINE_PART.V]: wageQuotaTypeEnum.WEIGHT.V | wageQuotaTypeEnum.QUANTITY.V,
+  [processMaterialListTypeEnum.ENCLOSURE.V]: wageQuotaTypeEnum.LENGTH.V | wageQuotaTypeEnum.QUANTITY.V | wageQuotaTypeEnum.AREA.V
+}
 
 // 项目类型：全部
 export const allPT = Object.keys(projectTypeEnum.VL).reduce((res, cur) => {

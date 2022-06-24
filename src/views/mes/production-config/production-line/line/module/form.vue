@@ -26,15 +26,9 @@
       <el-form-item label="生产线名称" prop="name">
         <el-input v-model="form.name" type="text" placeholder="请填写生产线名称" style="width: 270px" />
       </el-form-item>
-      <el-form-item label="智能线" prop="boolMachineEnum">
-        <common-radio v-model="form.boolMachineEnum" :options="whetherEnum.ENUM" type="enum" />
-      </el-form-item>
       <el-form-item label="目标产量(吨)" prop="targetProductionShow">
         <el-input-number v-model.number="form.targetProductionShow" :min="0" controls-position="right" style="width: 270px" />
       </el-form-item>
-      <!-- <el-form-item label="生产线简称" prop="shortName">
-        <el-input v-model="form.shortName" type="text" placeholder="请填写生产线简称" style="width: 270px" />
-      </el-form-item> -->
       <el-form-item label="生产线类型" prop="productType">
         <common-select
           :dataStructure="{ key: 'K', label: 'L', value: 'V' }"
@@ -45,8 +39,14 @@
           style="width: 270px"
         />
       </el-form-item>
+      <el-form-item v-if="!(form.productType & componentTypeEnum.ENCLOSURE.V)" label="智能线" prop="boolMachineEnum">
+        <common-radio v-model="form.boolMachineEnum" :options="whetherEnum.ENUM" type="enum" />
+      </el-form-item>
+      <!-- <el-form-item label="生产线简称" prop="shortName">
+        <el-input v-model="form.shortName" type="text" placeholder="请填写生产线简称" style="width: 270px" />
+      </el-form-item> -->
       <el-form-item
-        v-if="form.productType"
+        v-if="form.productType && !(form.productType & componentTypeEnum.ENCLOSURE.V)"
         :label="form.boolMachineEnum && form.productType & componentTypeEnum.ARTIFACT.V ? '产品标识' : '可生产产品类型'"
         prop="linkIdList"
       >
@@ -134,7 +134,7 @@ watchEffect(() => {
 watch(
   () => [form.productType, form.boolMachineEnum],
   () => {
-    if (form.productType) {
+    if (form.productType && !(form.productType & componentTypeEnum.ENCLOSURE.V)) {
       fetchConfigInfo()
     }
   },

@@ -84,7 +84,8 @@ import { getByProductType, editWage } from '@/api/mes/production-config/process'
 import { ref } from 'vue'
 
 import { isBlank } from '@data-type/index'
-import { processMaterialListTypeEnum as typeEnum, wageQuotaTypeEnum } from '@enum-ms/mes'
+import { wageQuotaTypeMap } from '@/settings/config'
+import { wageQuotaTypeEnum } from '@enum-ms/mes'
 import { configWageQuotaPM as permission } from '@/page-permission/config'
 
 import useMaxHeight from '@compos/use-max-height'
@@ -97,13 +98,6 @@ const optShow = {
   edit: false,
   del: false,
   download: false
-}
-
-const wageQuotaTypeMap = {
-  [typeEnum.ARTIFACT.V]: wageQuotaTypeEnum.WEIGHT.V | wageQuotaTypeEnum.LENGTH.V | wageQuotaTypeEnum.QUANTITY.V | wageQuotaTypeEnum.AREA.V,
-  [typeEnum.ASSEMBLE.V]: wageQuotaTypeEnum.WEIGHT.V | wageQuotaTypeEnum.LENGTH.V | wageQuotaTypeEnum.QUANTITY.V,
-  [typeEnum.MACHINE_PART.V]: wageQuotaTypeEnum.WEIGHT.V | wageQuotaTypeEnum.LENGTH.V | wageQuotaTypeEnum.QUANTITY.V,
-  [typeEnum.ENCLOSURE.V]: wageQuotaTypeEnum.LENGTH.V | wageQuotaTypeEnum.QUANTITY.V | wageQuotaTypeEnum.AREA.V
 }
 
 const dataFormat = [['wageQuotaTypeStr', ['parse-enum', wageQuotaTypeEnum, { bit: true }], { source: 'wageQuotaType' }]]
