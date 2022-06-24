@@ -19,7 +19,7 @@
 <script setup>
 import crudApi from '@/api/config/system-config/steel-classic'
 import { ref } from 'vue'
-import { steelClassicPM as permission } from '@/page-permission/config'
+import { configProductProcessMachinePartPM as permission } from '@/page-permission/config'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'

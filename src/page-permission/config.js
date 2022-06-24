@@ -217,18 +217,42 @@ export const configProductionLineInspectPM = {
 // 建钢-生产配置/工序配置
 export const configProcessPM = {
   get: ['process:get'], // 工序列表
-  add: ['process:add'], // 添加工序
-  edit: ['process:edit'], // 编辑工序
-  del: ['process:del'] // 删除工序
+  // add: ['process:add'], // 添加工序
+  edit: ['process:edit'] // 编辑工序
+  // del: ['process:del'] // 删除工序
 }
 
-// 建钢-生产配置/工序管理
-export const configProductProcessPM = {
-  get: ['product_process:get'], // 产品工序列表
-  add: ['product_process:add'], // 添加产品工序
-  edit: ['product_process:edit'], // 编辑产品工序
-  del: ['product_process:del'], // 删除产品工序
-  editStatus: ['product_process:editStatus'] // 更改产品工序状态
+// // 建钢-生产配置/工序管理
+// export const configProductProcessPM = {
+//   get: ['product_process:get'], // 产品工序列表
+//   add: ['product_process:add'], // 添加产品工序
+//   edit: ['product_process:edit'], // 编辑产品工序
+//   del: ['product_process:del'], // 删除产品工序
+//   editStatus: ['product_process:editStatus'] // 更改产品工序状态
+// }
+
+// 建钢-生产配置/构件工序定义
+export const configProductProcessArtifactPM = {
+  get: ['product_process_artifact:get'], // 构件工序列表
+  edit: ['product_process_artifact:edit'] // 编辑构件工序
+}
+
+// 建钢-生产配置/部件工序定义
+export const configProductProcessAssemblePM = {
+  get: ['product_process_assemble:get'], // 部件工序列表
+  edit: ['product_process_assemble:edit'] // 编辑部件工序
+}
+
+// 建钢-生产配置/零件工序定义
+export const configProductProcessMachinePartPM = {
+  get: ['product_process_machine_part:get'] // 零件工序列表
+  // edit: ['product_process_machine_part:edit'] // 编辑零件工序
+}
+
+// 建钢-生产配置/报检方式
+export const configInspectionModePM = {
+  get: ['inspection_mode:get'], // 报检方式列表
+  edit: ['inspection_mode:edit'] // 编辑报检方式
 }
 
 // 建钢-生产配置/工价定额

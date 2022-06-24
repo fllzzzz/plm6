@@ -131,7 +131,7 @@ import {
   processReportTypeEnum as reportTypeEnum
 } from '@enum-ms/mes'
 import checkPermission from '@/utils/system/check-permission'
-import { configProcessPM as permission } from '@/page-permission/config'
+import { configInspectionModePM as permission } from '@/page-permission/config'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
