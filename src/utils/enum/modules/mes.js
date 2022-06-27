@@ -70,7 +70,7 @@ constantize(processMaterialListTypeEnum)
 const wageQuotaTypeEnum = {
   WEIGHT: { L: '按重量计价', SL: '重量', K: 'WEIGHT', V: 1 << 0, F: 'weightPrice', unit: '元/吨', meteUnit: '吨', C_UNIT: 't', DP: 'COM_WT__T' },
   LENGTH: { L: '按长度计价', SL: '长度', K: 'LENGTH', V: 1 << 1, F: 'lengthPrice', unit: '元/米', meteUnit: '米', C_UNIT: 'm', DP: 'COM_L__M' },
-  QUANTITY: { L: '按数量计价', SL: '数量', K: 'QUANTITY', V: 1 << 3, F: 'quantityPrice', unit: '元/件', meteUnit: '件', C_UNIT: '', DP: '' },
+  QUANTITY: { L: '按数量计价', SL: '数量', K: 'QUANTITY', V: 1 << 3, F: 'quantityPrice', unit: '元/件', meteUnit: '件', C_UNIT: '件', DP: '' },
   AREA: { L: '按面积计价', SL: '面积', K: 'AREA', V: 1 << 2, F: 'areaPice', unit: '元/平方米', meteUnit: '平方米', C_UNIT: '㎡', DP: 'COM_AREA__M2' }
 }
 constantize(wageQuotaTypeEnum)

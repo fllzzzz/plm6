@@ -126,6 +126,7 @@ CRUD.HOOK.handleRefresh = (crud, res) => {
         length: v.mate,
         weight: v.mate,
         surfaceArea: v.mate,
+        quantity: v.mate,
         wageQuotaType: v.wageQuotaType
       }).convertMete
     }

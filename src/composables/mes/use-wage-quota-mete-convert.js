@@ -6,6 +6,7 @@ export default function useWageQuotaMeteConvert({
   W_CUR_UNIT = 'kg', weight,
   L_CUR_UNIT = 'mm', length,
   A_CUR_UNIT = 'mm2', surfaceArea,
+  quantity,
   showUnit = false,
   wageQuotaType
 }) {
@@ -19,12 +20,16 @@ export default function useWageQuotaMeteConvert({
     },
     [wageQuotaTypeEnum.AREA.V]: function ({ A_CUR_UNIT, surfaceArea, A_DP }) {
       return convertUnits(surfaceArea, A_CUR_UNIT, UNIT, precision, { showUnit })
+    },
+    [wageQuotaTypeEnum.QUANTITY.V]: function ({ quantity }) {
+      return showUnit ? quantity + UNIT : quantity
     }
   }
   const convertMete = convertFn[wageQuotaType]({
     W_CUR_UNIT, weight,
     L_CUR_UNIT, length,
-    A_CUR_UNIT, surfaceArea
+    A_CUR_UNIT, surfaceArea,
+    quantity
   })
   return {
     convertMete
