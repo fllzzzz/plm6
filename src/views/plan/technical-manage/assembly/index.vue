@@ -26,14 +26,14 @@
         <el-table-column key="selection" type="selection" width="55" />
         <el-table-column type="expand">
           <template v-slot="scope">
-            <div :key="`'singleTable${scope.row.id}'`">
+            <div :key="`'singleTable${scope.row.id}'`" style="padding:10px 20px;">
               <common-table
                 :data="scope.row.artifactDTOList"
                 class="customer-table"
                 :cell-class-name="wrongCellMask"
                 row-key="rowKey"
                 :stripe="false"
-                style="width: 100%; border-color: transparent"
+                style="width: 100%;"
                 return-source-data
                 :showEmptySymbol="false"
               >
@@ -137,7 +137,7 @@
                     <span v-if="!scope.row.add">{{ scope.row.productQuantity?scope.row.productQuantity:'-' }}</span>
                   </template>
                 </el-table-column>
-                <el-table-column label="操作" align="center">
+                <el-table-column label="操作" align="center" v-if="globalProject.mode !== projectModeEnum.STRUCTURE_STANDARD.V">
                   <template v-slot="scope">
                     <common-button
                       v-if="scope.row.add"
@@ -306,7 +306,7 @@ function wrongCellMask({ row, column }) {
       row.verify[column.property] = true
     }
   }
-  return flag ? (row.existStatus === 1 ? '' : 'abnormal-row') : 'mask-td'
+  return flag ? (row.existStatus === 1 ? '' : 'child-abnormal-row') : 'mask-td'
 }
 const expandArr = ref([])
 
@@ -425,16 +425,19 @@ CRUD.HOOK.beforeSubmit = () => {
 ::v-deep(.abnormal-row) {
   background: #ffecec;
 }
+::v-deep(.child-abnormal-row) {
+  background: #ebf3f7;
+}
 .customer-table {
-  ::v-deep(th) {
-    border: none;
-  }
-  ::v-deep(td) {
-    border: none;
-  }
-  ::v-deep(th.is-leaf) {
-    border: none;
-  }
+  // ::v-deep(th) {
+  //   border: none;
+  // }
+  // ::v-deep(td) {
+  //   border: none;
+  // }
+  // ::v-deep(th.is-leaf) {
+  //   border: none;
+  // }
   ::v-deep(.el-input__inner) {
     padding: 0;
     padding-left: 5px;
