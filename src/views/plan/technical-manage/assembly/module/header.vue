@@ -23,7 +23,7 @@
       <el-input v-model="query.material" size="small" placeholder="输入材质搜索" style="width: 170px" class="filter-item" clearable />
       <rrOperation />
     </div>
-    <crudOperation :disabled="globalProject.mode === projectModeEnum.STRUCTURE_STANDARD.V">
+    <crudOperation>
       <template #optLeft>
         <!-- <upload-btn
           v-if="currentArea && currentArea.id && globalProject.mode!==projectModeEnum.STRUCTURE_STANDARD.V"
@@ -78,6 +78,18 @@
             </common-button>
           </template>
         </el-popconfirm>
+        <common-button
+          v-if="checkPermission(crud.permission.del) && globalProject.mode!==projectModeEnum.STRUCTURE_STANDARD.V"
+          class="filter-item"
+          type="danger"
+          icon="el-icon-delete"
+          size="mini"
+          :loading="crud.delAllLoading"
+          :disabled="crud.selections.length === 0"
+          @click.stop="deleteItems(crud.selections)"
+        >
+          删除
+        </common-button>
       </template>
       <template #viewLeft>
         <el-tooltip effect="light" placement="top">
@@ -109,6 +121,7 @@ import { TechnologyTypeAllEnum } from '@enum-ms/contract'
 import rrOperation from '@crud/RR.operation'
 import { downloadAssemble, downloadAssembleTemplate, delAssemblyByArea, assembleError } from '@/api/plan/technical-manage/assembly'
 import { projectModeEnum } from '@enum-ms/contract'
+import { ElMessageBox } from 'element-plus'
 
 const defaultQuery = {
   name: '',
@@ -181,6 +194,20 @@ async function deleteAssemle() {
     console.log('清空部件', e)
     deleteLoading.value = false
   }
+}
+
+// 批量删除
+function deleteItems(data) {
+  ElMessageBox.confirm(`确认删除选中的${data.length}条数据?`, '提示', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning'
+  })
+    .then(() => {
+      crud.delAllLoading = true
+      crud.doDelete(data)
+    })
+    .catch(() => {})
 }
 
 async function getAssembleError() {

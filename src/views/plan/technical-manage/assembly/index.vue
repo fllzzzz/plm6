@@ -208,7 +208,7 @@
           </template>
         </el-table-column>
         <el-table-column
-          v-if="checkPermission([...permission.del])"
+          v-if="checkPermission([...permission.del]) && globalProject.mode !== projectModeEnum.STRUCTURE_STANDARD.V"
           label="操作"
           width="150px"
           align="center"
@@ -263,6 +263,7 @@ import { ElMessage } from 'element-plus'
 import { assemblyListPM as permission } from '@/page-permission/plan'
 import useDrawing from '@compos/use-drawing'
 import drawingPreviewFullscreenDialog from '@comp-base/drawing-preview/drawing-preview-fullscreen-dialog'
+import { projectModeEnum } from '@enum-ms/contract'
 
 const { globalProject, globalProjectId } = mapGetters(['globalProject', 'globalProjectId'])
 const { showDrawing, drawingRow, drawingPreview } = useDrawing({ pidField: 'id', productTypeField: 'ASSEMBLE' })
@@ -270,7 +271,7 @@ const { showDrawing, drawingRow, drawingPreview } = useDrawing({ pidField: 'id',
 const optShow = {
   add: false,
   edit: false,
-  del: true,
+  del: false,
   download: false
 }
 
