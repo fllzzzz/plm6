@@ -96,6 +96,8 @@ export const specialPath = {
   QR_SCAN_BRIDGE_AUXILIARY_MATERIAL: '/s/b/m'
 }
 
+export const MOBILE_MODEL_PATH = '/mobile-model-preview'
+
 export const QR_SCAN_F_TYPE = {
   MEW_PRODUCTION: 1, // 建钢产品
   MES_PACKAGE_SHIP: 2 // 建钢打包发运

@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { isNotBlank } from '@data-type/index'
 import Layout from '@/layout/index.vue'
-import { specialPath } from '@/settings/config'
+import { specialPath, MOBILE_MODEL_PATH } from '@/settings/config'
 
 /**
  * constantRoutes
@@ -48,6 +48,12 @@ const constantRoutes = [
     path: specialPath.QR_SCAN_AUXILIARY_MATERIAL,
     component: () => import('@/views/qr-scan-info/mes/auxiliary-material'),
     meta: { title: '配套件信息' },
+    hidden: true
+  },
+  {
+    path: MOBILE_MODEL_PATH,
+    component: () => import('@/views/bim/mobile-model-preview/index'),
+    meta: { title: '模型' },
     hidden: true
   },
   {
