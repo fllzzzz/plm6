@@ -22,7 +22,7 @@
         align="center"
         width="100px"
       >
-        <template #default="{ row }">
+        <template #default="{ row: { sourceRow: row } }">
           <span>{{ problemTypeEnum.VL[row.type] }}</span>
         </template>
       </el-table-column>
@@ -48,7 +48,7 @@
         label="所属项目"
         min-width="250"
       >
-        <template #default="{ row }">
+        <template #default="{ row: { sourceRow: row } }">
           <span class="project-name">{{ projectNameFormatter(row.project) }}</span>
         </template>
       </el-table-column>
@@ -89,7 +89,7 @@
         width="150px"
         align="left"
       >
-        <template #default="{ row }">
+        <template #default="{ row: { sourceRow: row } }">
           <div class="imgs-box">
             <el-image
               v-for="url in row.attachmentDTOS"
@@ -111,7 +111,7 @@
         min-width="80px"
         align="center"
       >
-        <template #default="{ row }">
+        <template #default="{ row: { sourceRow: row } }">
           <el-tag v-if="improveStatusEnum.VK[row.status]" :type="improveStatusEnum.V[row.status].T">{{
             improveStatusEnum.VL[row.status]
           }}</el-tag>
@@ -125,7 +125,7 @@
         width="150px"
         align="left"
       >
-        <template #default="{ row }">
+        <template #default="{ row: { sourceRow: row } }">
           <div class="imgs-box">
             <el-image
               v-for="url in row.rectifyAttachmentDTOS"
