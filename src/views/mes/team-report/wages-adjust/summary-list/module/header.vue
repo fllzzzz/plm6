@@ -8,7 +8,7 @@
       :options="componentTypeEnum.ENUM"
       type="enumSL"
       default
-      :unshowVal="organizationType?[componentTypeEnum.ENCLOSURE.V,componentTypeEnum.AUXILIARY_MATERIAL.V,...unshowVal]:[componentTypeEnum.AUXILIARY_MATERIAL.V,...unshowVal]"
+      :unshowVal="organizationType?[componentTypeEnum.ENCLOSURE.V,componentTypeEnum.AUXILIARY_MATERIAL.V,...unshowVal]:[componentTypeEnum.ENCLOSURE.V,componentTypeEnum.AUXILIARY_MATERIAL.V,...unshowVal]"
       class="filter-item"
       @change="crud.toQuery"
     />

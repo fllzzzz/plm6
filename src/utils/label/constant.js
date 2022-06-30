@@ -197,9 +197,9 @@ const ARTIFACT_STYLE = function ({
     }
   
     .${fClass} .artifact-label .amplify-content .amplify-text{
-      font-size: 54px; 
+      font-size: 44px; 
+      line-height: 36px;
       font-weight: 600; 
-      margin-left: 40px;
     }
   
     .${fClass} .artifact-label .amplify-content .amplify-date{

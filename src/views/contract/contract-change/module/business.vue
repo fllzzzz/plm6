@@ -64,7 +64,7 @@
                 }}</span>
               </div>
             </el-form-item>
-            <el-form-item label="围护结算方式" prop="enclosureMeasureMode">
+            <el-form-item label="围护结算方式" prop="enclosureMeasureMode" v-if="detail.measureModeList?.length>0">
                <div v-for="(item,index) in detail.measureModeList" :key="index">
                 <span style="float:left;width:90px;text-align:right;">{{TechnologyTypeAllEnum.VL[item.no]}}：</span>
                 <span style="float:left;">{{enclosureSettlementTypeEnum.VL[item.measureMode]}}</span>
