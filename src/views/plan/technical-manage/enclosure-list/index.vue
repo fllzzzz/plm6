@@ -534,7 +534,7 @@ async function changeStatus(data, val) {
       cancelButtonText: '取消',
       type: 'warning'
     })
-    await editStatus(data.id)
+    await editStatus(data.id, { boolStatusEnum: !!val })
     crud.notify(`“${data.name}”已【${messageName}】`, CRUD.NOTIFICATION_TYPE.SUCCESS)
     crud.toQuery()
   } catch (error) {

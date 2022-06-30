@@ -153,7 +153,7 @@
                 }}</span>
               </div>
             </el-form-item>
-            <el-form-item label="围护结算方式" prop="enclosureMeasureMode">
+            <el-form-item label="围护结算方式" prop="enclosureMeasureMode" v-if="isModify?(form.measureModeList?.length>0?true:false):(detail.measureModeList?.length>0?true:false)">
               <div>
                 <template v-if="isModify">
                   <div v-for="(item,index) in form.measureModeList" :key="index" >
@@ -396,7 +396,7 @@ const validateContent = (rule, value, callback) => {
           callback(new Error('项目内容只能增加不能减少'))
         }
       })
-    callback()
+      callback()
     } else {
       callback()
     }
@@ -499,7 +499,7 @@ function isTaxChange(val) {
   }
 }
 
-function invoiceTypeChange(val){
+function invoiceTypeChange(val) {
   if (val === invoiceTypeEnum.RECEIPT.V) {
     form.value.businessTaxRate = undefined
     form.value.taxRate = undefined
