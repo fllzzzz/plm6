@@ -87,7 +87,7 @@
           <el-form-item label="工程结算方式" prop="structureMeasureMode">
             <common-radio v-model="form.structureMeasureMode" :options="engineerSettlementTypeEnumN.ENUM" type="enum" :disabled="!form.structureMeasureMode"/>
           </el-form-item>
-          <el-form-item label="围护结算方式" prop="enclosureMeasureMode">
+          <el-form-item label="围护结算方式" prop="enclosureMeasureMode" v-if="form.measureModeList?.length>0">
             <template v-if="form.measureModeList.length>0">
               <div v-for="(item,index) in form.measureModeList" :key="index" >
                 <span style="float:left;width:90px;text-align:right;">{{TechnologyTypeAllEnum.VL[item.no]}}：</span><common-radio style="float:left;" v-model="item.measureMode" :options="enclosureSettlementTypeEnum.ENUM" type="enum"/>
@@ -406,7 +406,7 @@ function isTaxChange(val) {
   }
 }
 
-function invoiceTypeChange(val){
+function invoiceTypeChange(val) {
   if (val === invoiceTypeEnum.RECEIPT.V) {
     form.value.businessTaxRate = undefined
     form.value.taxRate = undefined
