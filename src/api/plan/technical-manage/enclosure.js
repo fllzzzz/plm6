@@ -37,11 +37,12 @@ export function add(data) {
   })
 }
 
-export function editStatus(id) {
+export function editStatus(id, params) {
   return request({
     module: 'plan',
     url: `enclosure/updateStatus/${id}`,
-    method: 'put'
+    method: 'put',
+    params: params
   })
 }
 

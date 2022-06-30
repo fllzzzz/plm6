@@ -31,7 +31,8 @@ constantize(configureStatusEnum)
 // 重量类型
 const weightTypeEnum = {
   NET: { L: '净重', K: 'NET', V: 0 },
-  GROSS: { L: '毛重', K: 'GROSS', V: 1 }
+  GROSS: { L: '毛重', K: 'GROSS', V: 1 },
+  NONE: { L: '不显示', K: 'NONE', V: -1 }
 }
 constantize(weightTypeEnum)
 

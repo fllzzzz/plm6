@@ -39,6 +39,9 @@ const patternLicensePlate = /^[京津晋冀蒙辽吉黑沪苏浙皖闽赣鲁豫�
 
 // ----------------------------  数字 start  ---------------------------------------
 
+// 小数精度范围
+const patternDP = /^([0-9]|1[0-9]|20)$/
+
 // 数值
 const patternNumerical = /^-?[0-9]+.?[0-9]*$/
 
@@ -88,6 +91,7 @@ const validatorEnOrNum = {
 // ----------------------------  字符组合 end -----------------------------------
 
 export {
+  patternDP,
   patternNumerical,
   positiveNumPattern,
   validatorEnOrNum,
