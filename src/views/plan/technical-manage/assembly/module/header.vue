@@ -59,15 +59,15 @@
         >
           下载部件清单
         </export-button>
-        <export-button
+        <!-- <export-button
           :fn="downloadAssembleTemplate"
           class="filter-item"
           :disabled="deleteLoading"
           v-permission="crud.permission.templateDownLoad"
         >
           部件清单模板
-        </export-button>
-        <el-popconfirm
+        </export-button> -->
+        <!-- <el-popconfirm
           :title="`确认清空【${currentArea.name}】下的【部件清单】么?`"
           @confirm="deleteAssemle"
           v-if="currentArea && currentArea.id && checkPermission(crud.permission.del) && globalProject.mode!==projectModeEnum.STRUCTURE_STANDARD.V"
@@ -77,8 +77,8 @@
               一键清空(按区域)
             </common-button>
           </template>
-        </el-popconfirm>
-        <common-button
+        </el-popconfirm> -->
+        <!-- <common-button
           v-if="checkPermission(crud.permission.del) && globalProject.mode!==projectModeEnum.STRUCTURE_STANDARD.V"
           class="filter-item"
           type="danger"
@@ -89,7 +89,7 @@
           @click.stop="deleteItems(crud.selections)"
         >
           删除
-        </common-button>
+        </common-button> -->
       </template>
       <template #viewLeft>
         <el-tooltip effect="light" placement="top">
@@ -110,7 +110,7 @@
 <script setup>
 import { defineProps, ref, computed } from 'vue'
 import { regHeader } from '@compos/use-crud'
-import checkPermission from '@/utils/system/check-permission'
+// import checkPermission from '@/utils/system/check-permission'
 import crudOperation from '@crud/CRUD.operation'
 import monomerSelect from '@/components-system/plan/monomer-select'
 import areaTabs from '@/components-system/plan/area-tabs'
@@ -119,9 +119,10 @@ import areaTabs from '@/components-system/plan/area-tabs'
 import ExportButton from '@comp-common/export-button/index.vue'
 import { TechnologyTypeAllEnum } from '@enum-ms/contract'
 import rrOperation from '@crud/RR.operation'
-import { downloadAssemble, downloadAssembleTemplate, delAssemblyByArea, assembleError } from '@/api/plan/technical-manage/assembly'
-import { projectModeEnum } from '@enum-ms/contract'
-import { ElMessageBox } from 'element-plus'
+import { downloadAssemble, assembleError } from '@/api/plan/technical-manage/assembly'
+// import { downloadAssemble, downloadAssembleTemplate, delAssemblyByArea, assembleError } from '@/api/plan/technical-manage/assembly'
+// import { projectModeEnum } from '@enum-ms/contract'
+// import { ElMessageBox } from 'element-plus'
 
 const defaultQuery = {
   name: '',
@@ -138,7 +139,7 @@ const areaInfo = ref([])
 const defaultTab = ref({})
 const deleteLoading = ref(false)
 const errorList = ref([])
-const { crud, query, CRUD } = regHeader(defaultQuery)
+const { crud, query } = regHeader(defaultQuery)
 const props = defineProps({
   projectId: {
     type: [Number, String],
@@ -171,6 +172,7 @@ function tabClick(val) {
   }
   uploadSuccess()
 }
+
 function getAreaInfo(val) {
   areaInfo.value = val || []
   if (areaInfo.value.length > 0) {
@@ -183,32 +185,32 @@ function getAreaInfo(val) {
   }
 }
 
-async function deleteAssemle() {
-  deleteLoading.value = true
-  try {
-    await delAssemblyByArea({ areaId: crud.query.areaId })
-    crud.notify('操作成功', CRUD.NOTIFICATION_TYPE.SUCCESS)
-    uploadSuccess()
-    deleteLoading.value = false
-  } catch (e) {
-    console.log('清空部件', e)
-    deleteLoading.value = false
-  }
-}
+// async function deleteAssemle() {
+//   deleteLoading.value = true
+//   try {
+//     await delAssemblyByArea({ areaId: crud.query.areaId })
+//     crud.notify('操作成功', CRUD.NOTIFICATION_TYPE.SUCCESS)
+//     uploadSuccess()
+//     deleteLoading.value = false
+//   } catch (e) {
+//     console.log('清空部件', e)
+//     deleteLoading.value = false
+//   }
+// }
 
 // 批量删除
-function deleteItems(data) {
-  ElMessageBox.confirm(`确认删除选中的${data.length}条数据?`, '提示', {
-    confirmButtonText: '确定',
-    cancelButtonText: '取消',
-    type: 'warning'
-  })
-    .then(() => {
-      crud.delAllLoading = true
-      crud.doDelete(data)
-    })
-    .catch(() => {})
-}
+// function deleteItems(data) {
+//   ElMessageBox.confirm(`确认删除选中的${data.length}条数据?`, '提示', {
+//     confirmButtonText: '确定',
+//     cancelButtonText: '取消',
+//     type: 'warning'
+//   })
+//     .then(() => {
+//       crud.delAllLoading = true
+//       crud.doDelete(data)
+//     })
+//     .catch(() => {})
+// }
 
 async function getAssembleError() {
   if (!crud.query.areaId) {

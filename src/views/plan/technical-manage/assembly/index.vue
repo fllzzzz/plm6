@@ -82,7 +82,7 @@
                       v-if="scope.row.add"
                       v-model.number="scope.row.length"
                       :min="0"
-                      :max="maxNubmer"
+                      :max="maxNumber"
                       :step="1"
                       placeholder="请填写"
                       :precision="DP.MES_ARTIFACT_L__MM"
@@ -99,7 +99,7 @@
                       v-if="scope.row.add"
                       v-model.number="scope.row.netWeight"
                       :min="0"
-                      :max="maxNubmer"
+                      :max="maxNumber"
                       :step="1"
                       placeholder="请填写"
                       :precision="DP.COM_WT__KG"
@@ -116,7 +116,7 @@
                       v-if="scope.row.add"
                       v-model.number="scope.row.quantity"
                       :min="0"
-                      :max="maxNubmer"
+                      :max="maxNumber"
                       :step="1"
                       step-strictly
                       placeholder="请填写"
@@ -137,7 +137,7 @@
                     <span v-if="!scope.row.add">{{ scope.row.productQuantity?scope.row.productQuantity:'-' }}</span>
                   </template>
                 </el-table-column>
-                <el-table-column label="操作" align="center" v-if="globalProject.mode !== projectModeEnum.STRUCTURE_STANDARD.V">
+                <!-- <el-table-column label="操作" align="center" v-if="globalProject.mode !== projectModeEnum.STRUCTURE_STANDARD.V">
                   <template v-slot="scope">
                     <common-button
                       v-if="scope.row.add"
@@ -152,7 +152,7 @@
                         </template>
                       </el-popconfirm>
                   </template>
-                </el-table-column>
+                </el-table-column> -->
               </common-table>
             </div>
           </template>
@@ -186,7 +186,7 @@
             <span>{{ scope.row.usedQuantity?scope.row.usedQuantity:'-' }}</span>
           </template>
         </el-table-column>
-        <el-table-column align="center" label="翼板腹板信息">
+        <!-- <el-table-column align="center" label="翼板腹板信息">
           <template v-for="item in keyList" :key="item.key">
             <el-table-column align="center" :label="item.label" :prop="item.key">
               <template v-slot="scope">
@@ -201,13 +201,13 @@
               </template>
             </el-table-column>
           </template>
-        </el-table-column>
+        </el-table-column> -->
         <el-table-column prop="remark" :show-overflow-tooltip="true" align="center" label="备注">
           <template v-slot="scope">
             <span>{{ scope.row.remark?scope.row.remark:'-' }}</span>
           </template>
         </el-table-column>
-        <el-table-column
+        <!-- <el-table-column
           v-if="checkPermission([...permission.del]) && globalProject.mode !== projectModeEnum.STRUCTURE_STANDARD.V"
           label="操作"
           width="150px"
@@ -231,7 +231,7 @@
               />
             </el-tooltip>
           </template>
-        </el-table-column>
+        </el-table-column> -->
       </common-table>
       <!--分页组件-->
       <pagination />
@@ -248,22 +248,23 @@
 </template>
 
 <script setup>
-import crudApi, { delAssemblyArtifact, addAssemblyArtifact } from '@/api/plan/technical-manage/assembly'
+import crudApi from '@/api/plan/technical-manage/assembly'
+// import crudApi, { delAssemblyArtifact, addAssemblyArtifact } from '@/api/plan/technical-manage/assembly'
 import { ref, watch } from 'vue'
-import checkPermission from '@/utils/system/check-permission'
+// import checkPermission from '@/utils/system/check-permission'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
-import udOperation from '@crud/UD.operation'
+// import udOperation from '@crud/UD.operation'
 import pagination from '@crud/Pagination'
 import { mapGetters } from '@/store/lib'
 import mHeader from './module/header'
 import { DP } from '@/settings/config'
 import { validate } from '@compos/form/use-table-validate'
-import { ElMessage } from 'element-plus'
+// import { ElMessage } from 'element-plus'
 import { assemblyListPM as permission } from '@/page-permission/plan'
 import useDrawing from '@compos/use-drawing'
 import drawingPreviewFullscreenDialog from '@comp-base/drawing-preview/drawing-preview-fullscreen-dialog'
-import { projectModeEnum } from '@enum-ms/contract'
+// import { projectModeEnum } from '@enum-ms/contract'
 
 const { globalProject, globalProjectId } = mapGetters(['globalProject', 'globalProjectId'])
 const { showDrawing, drawingRow, drawingPreview } = useDrawing({ pidField: 'id', productTypeField: 'ASSEMBLE' })
@@ -276,16 +277,16 @@ const optShow = {
 }
 
 const tableRef = ref()
-const maxNubmer = 999999999
-const keyList = [
-  { label: '编号', key: 'serialNumber' },
-  { label: '规格', key: 'specification' },
-  { label: '材质', key: 'material' },
-  { label: '长度', key: 'length' },
-  { label: '单净重(kg)', key: 'netWeight' },
-  { label: '数量', key: 'quantity' },
-  { label: '已使用', key: 'usedQuantity' }
-]
+const maxNumber = 999999999
+// const keyList = [
+//   { label: '编号', key: 'serialNumber' },
+//   { label: '规格', key: 'specification' },
+//   { label: '材质', key: 'material' },
+//   { label: '长度', key: 'length' },
+//   { label: '单净重(kg)', key: 'netWeight' },
+//   { label: '数量', key: 'quantity' },
+//   { label: '已使用', key: 'usedQuantity' }
+// ]
 const tableRules = {
   serialNumber: [{ required: true, max: 50, message: '不能超过 50 个字符', trigger: 'blur' }],
   specification: [{ required: true, max: 50, message: '不能超过 50 个字符', trigger: 'blur' }],
@@ -348,60 +349,60 @@ function cellClassName({ row, rowIndex }) {
   return row.abnormal === 1 ? 'abnormal-row' : ''
 }
 
-function addRow(val, index) {
-  if (expandArr.value.indexOf(val.id) < 0) {
-    expandArr.value.push(val.id)
-  }
-  val.artifactDTOList.push({
-    assembleId: val.id,
-    length: undefined,
-    material: '',
-    netWeight: undefined,
-    quantity: undefined,
-    serialNumber: '',
-    specification: '',
-    mainIndex: index,
-    existStatus: 1,
-    add: true
-  })
-}
-async function addArtifact(val) {
-  const rules = tableRules
-  let flag = true
-  val.verify = {}
-  for (const rule in rules) {
-    val.verify[rule] = validate(rule, rules[rule], val)
-    if (!val.verify[rule]) {
-      flag = false
-    }
-  }
-  if (!flag) {
-    ElMessage.error('请填写表格中标红数据')
-    return
-  }
-  try {
-    await addAssemblyArtifact(val)
-    crud.notify('添加成功', CRUD.NOTIFICATION_TYPE.SUCCESS)
-    crud.toQuery()
-  } catch (e) {
-    console.log('添加构件', e)
-  }
-}
+// function addRow(val, index) {
+//   if (expandArr.value.indexOf(val.id) < 0) {
+//     expandArr.value.push(val.id)
+//   }
+//   val.artifactDTOList.push({
+//     assembleId: val.id,
+//     length: undefined,
+//     material: '',
+//     netWeight: undefined,
+//     quantity: undefined,
+//     serialNumber: '',
+//     specification: '',
+//     mainIndex: index,
+//     existStatus: 1,
+//     add: true
+//   })
+// }
+// async function addArtifact(val) {
+//   const rules = tableRules
+//   let flag = true
+//   val.verify = {}
+//   for (const rule in rules) {
+//     val.verify[rule] = validate(rule, rules[rule], val)
+//     if (!val.verify[rule]) {
+//       flag = false
+//     }
+//   }
+//   if (!flag) {
+//     ElMessage.error('请填写表格中标红数据')
+//     return
+//   }
+//   try {
+//     await addAssemblyArtifact(val)
+//     crud.notify('添加成功', CRUD.NOTIFICATION_TYPE.SUCCESS)
+//     crud.toQuery()
+//   } catch (e) {
+//     console.log('添加构件', e)
+//   }
+// }
 
-async function deleteRow(val, index) {
-  if (!val.add) {
-    try {
-      val.popoverVisible = false
-      await delAssemblyArtifact({ artifactNo: val.serialNumber, assembleId: crud.data[val.mainIndex].id })
-      crud.notify('操作成功', CRUD.NOTIFICATION_TYPE.SUCCESS)
-      crud.toQuery()
-    } catch (e) {
-      console.log('删除构件', e)
-    }
-  } else {
-    crud.data[val.mainIndex].artifactDTOList.splice(index, 1)
-  }
-}
+// async function deleteRow(val, index) {
+//   if (!val.add) {
+//     try {
+//       val.popoverVisible = false
+//       await delAssemblyArtifact({ artifactNo: val.serialNumber, assembleId: crud.data[val.mainIndex].id })
+//       crud.notify('操作成功', CRUD.NOTIFICATION_TYPE.SUCCESS)
+//       crud.toQuery()
+//     } catch (e) {
+//       console.log('删除构件', e)
+//     }
+//   } else {
+//     crud.data[val.mainIndex].artifactDTOList.splice(index, 1)
+//   }
+// }
 
 CRUD.HOOK.handleRefresh = (crud, data) => {
   data.data.content = data.data.content.map((v, index) => {
