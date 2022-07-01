@@ -20,7 +20,14 @@
           @change="fetchList"
         />
       </div>
-      <common-table row-key="rowId" v-loading="tableLoading" :data="list" :max-height="maxHeight" style="width: 100%">
+      <common-table
+        :data-format="dataFormat"
+        row-key="rowId"
+        v-loading="tableLoading"
+        :data="list"
+        :max-height="maxHeight"
+        style="width: 100%"
+      >
         <el-table-column label="序号" type="index" align="center" width="60" />
         <belonging-info-columns showProject showMonomer />
         <el-table-column prop="userName" show-overflow-tooltip label="编辑人">
@@ -28,21 +35,13 @@
             <span>{{ row.userName }}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="createTime" show-overflow-tooltip label="编辑日期" align="center">
-          <template #default="{ row }">
-            <span v-parse-time="{ val: row.createTime, fmt: '{y}-{m}-{d}' }" />
-          </template>
-        </el-table-column>
+        <el-table-column prop="createTime" show-overflow-tooltip label="编辑日期" align="center" />
         <el-table-column prop="auditUserName" show-overflow-tooltip label="审核人">
           <template #default="{ row }">
             <span>{{ row.auditUserName }}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="auditTime" show-overflow-tooltip label="审核日期" align="center">
-          <template #default="{ row }">
-            <span v-parse-time="{ val: row.auditTime, fmt: '{y}-{m}-{d}' }" />
-          </template>
-        </el-table-column>
+        <el-table-column prop="auditTime" show-overflow-tooltip label="审核日期" align="center" />
         <el-table-column prop="auditStatus" show-overflow-tooltip label="状态" width="100px" align="center">
           <template #default="{ row }">
             <el-tag :type="reviewStatusEnum.V[row.auditStatus].TAG">
@@ -95,6 +94,11 @@ const props = defineProps({
 
 const { visible: drawerVisible, handleClose } = useVisible({ emit, props, field: 'visible', closeHook: beforeClose })
 const { handleSizeChange, handleCurrentChange, total, setTotalPage, queryPage } = usePagination({ fetchHook: fetchList })
+
+const dataFormat = ref([
+  ['createTime', ['parse-time', '{y}-{m}-{d}']],
+  ['auditTime', ['parse-time', '{y}-{m}-{d}']]
+])
 
 // 高度
 const { maxHeight } = useMaxHeight(
