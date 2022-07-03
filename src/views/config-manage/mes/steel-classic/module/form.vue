@@ -75,7 +75,7 @@
               />
             </template>
           </el-table-column>
-          <el-table-column key="boolNestEnum" prop="boolNestEnum" label="*是否参与套料" align="center">
+          <!-- <el-table-column key="boolNestEnum" prop="boolNestEnum" label="*是否参与套料" align="center">
             <template v-slot="scope">
               <common-radio v-model="scope.row.boolNestEnum" :options="whetherEnum.ENUM" type="enum" />
             </template>
@@ -84,7 +84,7 @@
             <template v-slot="scope">
               <common-radio v-model="scope.row.boolSchedulingEnum" :options="whetherEnum.ENUM" type="enum" />
             </template>
-          </el-table-column>
+          </el-table-column> -->
           <el-table-column label="操作" align="center">
             <template v-slot="scope">
               <common-button size="small" class="el-icon-delete" type="danger" @click="delProcess(scope.$index)" />
@@ -105,7 +105,7 @@ import { ElMessage } from 'element-plus'
 
 import { isNotBlank, deepClone } from '@data-type/index'
 import { matClsEnum } from '@enum-ms/classification'
-import { whetherEnum } from '@enum-ms/common'
+// import { whetherEnum } from '@enum-ms/common'
 
 import { regForm } from '@compos/use-crud'
 import MaterialCascader from '@comp-cls/material-cascader/index.vue'
@@ -149,9 +149,9 @@ const validateEnum = (value, row) => {
 
 const tableRules = {
   keyword: [{ required: true, message: '请输入大写字母', trigger: 'blur' }],
-  specIndex: [{ validator: validateEnum, message: '请选择索引', trigger: 'blur' }],
-  boolNestEnum: [{ validator: validateEnum, message: '请选择是否参与套料', trigger: 'change' }],
-  boolSchedulingEnum: [{ validator: validateEnum, message: '请选择是否排产', trigger: 'change' }]
+  specIndex: [{ validator: validateEnum, message: '请选择索引', trigger: 'blur' }]
+  // boolNestEnum: [{ validator: validateEnum, message: '请选择是否参与套料', trigger: 'change' }],
+  // boolSchedulingEnum: [{ validator: validateEnum, message: '请选择是否排产', trigger: 'change' }]
 }
 
 const { tableValidate, wrongCellMask } = useTableValidate({ rules: tableRules }) // 表格校验

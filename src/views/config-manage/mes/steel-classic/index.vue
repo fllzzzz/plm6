@@ -24,6 +24,28 @@
         </template>
       </el-table-column>
       <el-table-column
+        v-if="columns.visible('classifyNames')"
+        key="classifyNames"
+        prop="classifyNames"
+        :show-overflow-tooltip="true"
+        label="钢材科目"
+        min-width="260"
+      >
+        <template v-slot="scope">
+          <span>{{ scope.row.classifyNames }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column v-if="columns.visible('links')" key="links" prop="links" :show-overflow-tooltip="true" label="规格前缀索引" align="center" min-width="260">
+        <template v-slot="scope">
+          <template v-if="scope.row.links && scope.row.links.length > 0">
+            <span v-for="(item) in scope.row.links" :key="item.id">
+              {{`${item.keyword}【${item.specIndex ? item.specIndex : '全部'}】`}}
+            </span>
+          </template>
+          <div v-else>-</div>
+        </template>
+      </el-table-column>
+       <el-table-column
         v-if="columns.visible('sort')"
         key="sort"
         prop="sort"
@@ -36,31 +58,7 @@
           <span>{{ scope.row.sort }}</span>
         </template>
       </el-table-column>
-      <el-table-column
-        v-if="columns.visible('classifyNames')"
-        key="classifyNames"
-        prop="classifyNames"
-        :show-overflow-tooltip="true"
-        label="钢材科目"
-        min-width="260"
-      >
-        <template v-slot="scope">
-          <span>{{ scope.row.classifyNames }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column v-if="columns.visible('links')" key="links" prop="links" label="规格前缀索引" align="center" min-width="260">
-        <template v-slot="scope">
-          <template v-if="scope.row.links && scope.row.links.length > 0">
-            <div v-for="(item,i) in scope.row.links" :key="item.id">
-              <div  :class="i === scope.row.links.length - 1 ? 'sandwich-cell-bottom' : 'sandwich-cell-top'">
-                {{`${item.keyword}【${item.specIndex ? item.specIndex : '全部'}】`}}
-              </div>
-            </div>
-          </template>
-          <div v-else class="sandwich-cell-bottom"></div>
-        </template>
-      </el-table-column>
-      <el-table-column v-if="columns.visible('links')" key="links" prop="links" label="套料选择" align="center" min-width="260">
+      <!-- <el-table-column v-if="columns.visible('links')" key="links" prop="links" label="套料选择" align="center" min-width="260">
         <template v-slot="scope">
           <template v-if="scope.row.links && scope.row.links.length > 0">
             <div v-for="(item,i) in scope.row.links" :key="item.id">
@@ -71,8 +69,8 @@
           </template>
           <div v-else class="sandwich-cell-bottom"></div>
         </template>
-      </el-table-column>
-      <el-table-column v-if="columns.visible('links')" key="links" prop="links" label="参与排产" align="center" min-width="260">
+      </el-table-column> -->
+      <!-- <el-table-column v-if="columns.visible('links')" key="links" prop="links" label="参与排产" align="center" min-width="260">
         <template v-slot="scope">
           <template v-if="scope.row.links && scope.row.links.length > 0">
             <div v-for="(item,i) in scope.row.links" :key="item.id">
@@ -83,7 +81,7 @@
           </template>
           <div v-else class="sandwich-cell-bottom"></div>
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <!--编辑与删除-->
       <el-table-column
         v-if="checkPermission([...permission.del, ...permission.edit])"
