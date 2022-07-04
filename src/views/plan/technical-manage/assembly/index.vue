@@ -352,7 +352,7 @@ watch(
     if (globalProject.value.projectContentList?.length > 0) {
       if (globalProject.value.projectContentList.findIndex(v => v.no === TechnologyTypeAllEnum.STRUCTURE.V) > -1) {
         pageShow.value = globalProject.value.mode !== projectModeEnum.STRUCTURE.V
-        pageText.value = globalProject.value.mode !== projectModeEnum.STRUCTURE.V ? '当前项目内容没有包含构件,请到合同管理中进行配置' : '该项目模式不包含组立'
+        pageText.value = globalProject.value.mode !== projectModeEnum.STRUCTURE.V ? '当前项目内容没有包含构件,请到合同管理中进行配置' : '当前项目模式不包含组立'
       } else {
         pageText.value = '当前项目内容没有包含构件,请到合同管理中进行配置'
         pageShow.value = false
