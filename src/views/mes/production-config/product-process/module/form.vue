@@ -26,7 +26,7 @@
         <common-radio-button v-model="form.processType" :disabled="isEdit" :options="processTypeEnum.ENUM" size="small" type="enum" />
       </el-form-item>
       <el-form-item label="名称" prop="name">
-        <el-input v-model="form.name" type="text" :placeholder="`请填写${typeEnum.VL[form.sequenceType]}类型名称`" style="width: 270px" />
+        <el-input v-model.trim="form.name" type="text" :placeholder="`请填写${typeEnum.VL[form.sequenceType]}类型名称`" style="width: 270px" />
       </el-form-item>
       <el-form-item label="工序" prop="processSequenceIds">
         <div class="process-container">
