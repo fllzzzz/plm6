@@ -16,12 +16,12 @@
       <factory-select v-model="factoryId" class="filter-item" showOptionAll style="width: 300px" @change="fetchInfo" />
     </div>
     <div style="display: flex">
-      <div v-loading="loading" :style="{ height: maxHeight / 2 + 'px' }" style="flex: 1">
+      <div v-loading="loading" :style="{ height: maxHeight / productQuantity + 'px' }" style="flex: 1">
         <div id="yieldStructureChart" style="width: 100%; height: 100%"></div>
       </div>
       <common-table
         v-loading="loading"
-        :maxHeight="maxHeight / 2"
+        :maxHeight="maxHeight / productQuantity"
         :data="structureList"
         show-summary
         :summary-method="getSummaries"
@@ -41,41 +41,44 @@
         </template>
       </common-table>
     </div>
-    <el-divider class="divider" />
-    <div style="display: flex; margin-top: 20px">
-      <div v-loading="loading" :style="{ height: maxHeight / 2 + 'px' }" style="flex: 1">
-        <div id="yieldEnclosureChart" style="width: 100%; height: 100%"></div>
-      </div>
-      <common-table
-        v-loading="loading"
-        :maxHeight="maxHeight / 2"
-        :data="enclosureList"
-        show-summary
-        :summary-method="getSummaries"
-        style="width: 500px; margin-left: 20px"
-      >
-        <el-table-column :show-overflow-tooltip="true" label="月份" align="center">
-          <template #default="{ row }">
-            <span>{{ row.month }}</span>
-          </template>
-        </el-table-column>
-        <template v-for="(item, key) in enclosureData" :key="key">
-          <el-table-column :prop="key" :show-overflow-tooltip="true" :label="key" align="center">
-            <template #default="{ $index }">
-              <span>{{ item[$index] || 0 }}</span>
+    <template v-if="showEncl">
+      <el-divider class="divider" />
+      <div style="display: flex; margin-top: 20px">
+        <div v-loading="loading" :style="{ height: maxHeight / productQuantity + 'px' }" style="flex: 1">
+          <div id="yieldEnclosureChart" style="width: 100%; height: 100%"></div>
+        </div>
+        <common-table
+          v-loading="loading"
+          :maxHeight="maxHeight / productQuantity"
+          :data="enclosureList"
+          show-summary
+          :summary-method="getSummaries"
+          style="width: 500px; margin-left: 20px"
+        >
+          <el-table-column :show-overflow-tooltip="true" label="月份" align="center">
+            <template #default="{ row }">
+              <span>{{ row.month }}</span>
             </template>
           </el-table-column>
-        </template>
-      </common-table>
-    </div>
+          <template v-for="(item, key) in enclosureData" :key="key">
+            <el-table-column :prop="key" :show-overflow-tooltip="true" :label="key" align="center">
+              <template #default="{ $index }">
+                <span>{{ item[$index] || 0 }}</span>
+              </template>
+            </el-table-column>
+          </template>
+        </common-table>
+      </div>
+    </template>
   </div>
 </template>
 
 <script setup>
 import { getYieldAnalysis } from '@/api/operation/yield-analysis'
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import moment from 'moment'
 
+import { mapGetters } from '@/store/lib'
 import { componentTypeEnum } from '@enum-ms/mes'
 
 import useMaxHeight from '@compos/use-max-height'
@@ -94,6 +97,11 @@ const monthArr = ref([])
 for (let i = 1; i <= 12; i++) {
   monthArr.value.push(i + '月')
 }
+
+const { productMenu } = mapGetters('productMenu')
+
+const showEncl = computed(() => componentTypeEnum.ENCLOSURE.V & productMenu.value)
+const productQuantity = computed(() => (showEncl.value ? 2 : 1))
 
 const loading = ref(false)
 const structureList = ref([])
@@ -183,7 +191,9 @@ async function fetchInfo(myChart) {
     init()
     loading.value = true
     await refreshStructureInfo()
-    await refreshEnclosureInfo()
+    if (showEncl.value) {
+      await refreshEnclosureInfo()
+    }
   } catch (error) {
     console.log(error, '获取产量分析信息')
   } finally {

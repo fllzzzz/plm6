@@ -20,6 +20,7 @@ export default function useChart({ elementId, fetchHook, initOption = {}}) {
 
   function initChart(elementId) {
     var chartDom = document.getElementById(elementId)
+    if (!chartDom) return
     myChart = echarts.init(chartDom, null, { locale: 'ZH' })
 
     const labelOption = {
