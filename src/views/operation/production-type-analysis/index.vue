@@ -15,10 +15,10 @@
       />
     </div>
     <div style="display: flex">
-      <div v-loading="loading" :style="{ height: maxHeight / 2 + 'px' }" style="flex: 1">
+      <div v-loading="loading" :style="{ height: maxHeight / productQuantity + 'px' }" style="flex: 1">
         <div id="structureChart" style="width: 100%; height: 100%"></div>
       </div>
-      <common-table v-loading="loading" :height="maxHeight / 2" :data="structureList" style="flex: 1; margin-left: 20px">
+      <common-table v-loading="loading" :height="maxHeight / productQuantity" :data="structureList" style="flex: 1; margin-left: 20px">
         <el-table-column label="序号" type="index" align="center" width="60" />
         <el-table-column :show-overflow-tooltip="true" label="构件类型" min-width="100px" align="center">
           <template #default="{ row }">
@@ -37,38 +37,41 @@
         </el-table-column>
       </common-table>
     </div>
-    <el-divider class="divider" />
-    <div style="display: flex; margin-top: 20px">
-      <div v-loading="loading" :style="{ height: maxHeight / 2 + 'px' }" style="flex: 1">
-        <div id="enclosureChart" style="width: 100%; height: 100%"></div>
+    <template v-if="showEncl">
+      <el-divider class="divider" />
+      <div style="display: flex; margin-top: 20px">
+        <div v-loading="loading" :style="{ height: maxHeight / productQuantity + 'px' }" style="flex: 1">
+          <div id="enclosureChart" style="width: 100%; height: 100%"></div>
+        </div>
+        <common-table v-loading="loading" :height="maxHeight / productQuantity" :data="enclosureList" style="flex: 1; margin-left: 20px">
+          <el-table-column label="序号" type="index" align="center" width="60" />
+          <el-table-column :show-overflow-tooltip="true" label="板型" min-width="100px" align="center">
+            <template #default="{ row }">
+              <span>{{ row.typeName }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column :show-overflow-tooltip="true" label="产量" min-width="100px" align="center">
+            <template #default="{ row }">
+              <span>{{ row.yield }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column :show-overflow-tooltip="true" label="占比" min-width="100px" align="center">
+            <template #default="{ row }">
+              <span>{{ row.ratio }}%</span>
+            </template>
+          </el-table-column>
+        </common-table>
       </div>
-      <common-table v-loading="loading" :height="maxHeight / 2" :data="enclosureList" style="flex: 1; margin-left: 20px">
-        <el-table-column label="序号" type="index" align="center" width="60" />
-        <el-table-column :show-overflow-tooltip="true" label="板型" min-width="100px" align="center">
-          <template #default="{ row }">
-            <span>{{ row.typeName }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column :show-overflow-tooltip="true" label="产量" min-width="100px" align="center">
-          <template #default="{ row }">
-            <span>{{ row.yield }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column :show-overflow-tooltip="true" label="占比" min-width="100px" align="center">
-          <template #default="{ row }">
-            <span>{{ row.ratio }}%</span>
-          </template>
-        </el-table-column>
-      </common-table>
-    </div>
+    </template>
   </div>
 </template>
 
 <script setup>
 import { getProductionTypeAnalysis as getApi } from '@/api/operation/production-type-analysis'
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import moment from 'moment'
 
+import { mapGetters } from '@/store/lib'
 import { componentTypeEnum } from '@enum-ms/mes'
 
 import useMaxHeight from '@compos/use-max-height'
@@ -79,6 +82,11 @@ function disabledDate(time) {
 }
 
 const year = ref(moment().valueOf().toString())
+
+const { productMenu } = mapGetters('productMenu')
+
+const showEncl = computed(() => componentTypeEnum.ENCLOSURE.V & productMenu.value)
+const productQuantity = computed(() => showEncl.value ? 2 : 1)
 
 const loading = ref(false)
 const structureList = ref([])
@@ -157,7 +165,9 @@ async function fetchInfo(myChart) {
     init()
     loading.value = true
     await refreshStructureInfo()
-    await refreshEnclosureInfo()
+    if (showEncl.value) {
+      await refreshEnclosureInfo()
+    }
   } catch (error) {
     console.log(error, '获取产量分析信息')
   } finally {
