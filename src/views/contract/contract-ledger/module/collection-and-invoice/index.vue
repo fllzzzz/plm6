@@ -22,7 +22,7 @@
         <el-tab-pane label="开票列表" name="invoice">
           <template #label>
             <el-badge :value="currentRow?.unCheckInvoiceCount" :hidden="!currentRow?.unCheckInvoiceCount" class="badge-item">
-              <span>收款列表</span>
+              <span>开票列表</span>
             </el-badge>
           </template>
           <invoice class="tab-content" :projectId="props.projectId" :visibleValue="modelValue" @success="emit('success')" :currentRow="currentRow"/>

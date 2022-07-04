@@ -68,56 +68,52 @@
     </div>
     <crudOperation>
       <template #optRight>
-        <common-radio-button
+        <!-- <common-radio-button
           v-if="currentArea && currentArea.id"
           v-model="query.createType"
           :options="enclosureCreateTypeEnum.ENUM"
           type="enum"
           size="small"
           class="filter-item"
+        /> -->
+        <upload-btn
+          v-if="currentArea && currentArea.id && checkPermission(crud.permission.import)"
+          :data="addParam"
+          :upload-fun="listUpload"
+          success-msg="导入成功"
+          btn-name="清单增量导入"
+          btn-type="primary"
+          btn-size="mini"
+          class="filter-item"
+          @success="crud.toQuery"
         />
-        <template v-if="query.createType === enclosureCreateTypeEnum.UPLOAD.V">
-          <upload-btn
-            v-if="currentArea && currentArea.id && checkPermission(crud.permission.import)"
-            :data="addParam"
-            :upload-fun="listUpload"
-            success-msg="导入成功"
-            btn-name="清单增量导入"
-            btn-type="primary"
-            btn-size="mini"
-            class="filter-item"
-            @success="crud.toQuery"
-          />
-          <upload-btn
-            v-if="currentArea && currentArea.id && checkPermission(crud.permission.import)"
-            :data="carryParam"
-            :upload-fun="listUpload"
-            success-msg="导入成功"
-            btn-name="清单覆盖导入"
-            btn-type="success"
-            btn-size="mini"
-            class="filter-item"
-            @success="crud.toQuery"
-          />
-          <export-button
-            v-permission="crud.permission.templateDownload"
-            :fn="downloadEnclosureTemplate"
-            :params="{ category: crud.query.category }"
-            class="filter-item"
-          >
-            模板下载
-          </export-button>
-        </template>
-        <template v-else>
-          <common-button
-            type="success"
-            size="mini"
-            @click="crud.toAdd"
-            class="filter-item"
-            v-if="currentArea && currentArea.id && checkPermission(crud.permission.save)"
-            >添加</common-button
-          >
-        </template>
+        <upload-btn
+          v-if="currentArea && currentArea.id && checkPermission(crud.permission.import)"
+          :data="carryParam"
+          :upload-fun="listUpload"
+          success-msg="导入成功"
+          btn-name="清单覆盖导入"
+          btn-type="success"
+          btn-size="mini"
+          class="filter-item"
+          @success="crud.toQuery"
+        />
+        <common-button
+          type="primary"
+          size="mini"
+          @click="crud.toAdd"
+          class="filter-item"
+          v-if="currentArea && currentArea.id && checkPermission(crud.permission.save)"
+          >手动添加</common-button
+        >
+        <export-button
+          v-permission="crud.permission.templateDownload"
+          :fn="downloadEnclosureTemplate"
+          :params="{ category: crud.query.category }"
+          class="filter-item"
+        >
+          模板下载
+        </export-button>
         <export-button
           v-if="currentArea && currentArea.id && checkPermission(crud.permission.download)"
           :fn="downloadEnclosureData"
@@ -186,7 +182,6 @@ import pressedSupportTable from '@/views/contract/project-manage/module/enclosur
 import sandwichTable from '@/views/contract/project-manage/module/enclosure-table/sandwich-table'
 import pressedColorTable from '@/views/contract/project-manage/module/enclosure-table/pressed-color-table'
 import trussSupportTable from '@/views/contract/project-manage/module/enclosure-table/truss-support-table'
-import { isNotBlank } from '@data-type/index'
 import { getTotalSum } from '@/api/plan/technical-manage/enclosure'
 import { DP } from '@/settings/config'
 import { delEnclosureByArea } from '@/api/plan/technical-manage/enclosure'
@@ -223,39 +218,16 @@ const props = defineProps({
   globalProject: {
     type: Object,
     default: () => {}
+  },
+  typeOption: {
+    type: Array,
+    default: () => []
   }
 })
 const typeProp = { key: 'no', label: 'name', value: 'no' }
 const AllAreaInfo = ref([])
-const typeOption = ref([])
 const sumData = ref({})
-const techOptions = [
-  {
-    name: '压型彩板',
-    no: TechnologyTypeAllEnum.PROFILED_PLATE.V,
-    alias: 'ENCLOSURE'
-  },
-  {
-    name: '压型楼承板',
-    no: TechnologyTypeAllEnum.PRESSURE_BEARING_PLATE.V,
-    alias: 'ENCLOSURE'
-  },
-  {
-    name: '桁架楼承板',
-    no: TechnologyTypeAllEnum.TRUSS_FLOOR_PLATE.V,
-    alias: 'ENCLOSURE'
-  },
-  {
-    name: '夹芯板',
-    no: TechnologyTypeAllEnum.SANDWICH_BOARD.V,
-    alias: 'ENCLOSURE'
-  },
-  {
-    name: '折边件',
-    no: TechnologyTypeAllEnum.BENDING.V,
-    alias: 'ENCLOSURE'
-  }
-]
+
 const currentView = computed(() => {
   switch (crud.query.category) {
     case TechnologyTypeAllEnum.PROFILED_PLATE.V:
@@ -271,17 +243,9 @@ const currentView = computed(() => {
   }
 })
 watch(
-  () => props.globalProject,
+  () => props.typeOption,
   (val) => {
-    typeOption.value = []
-    if (isNotBlank(val)) {
-      techOptions.forEach((v) => {
-        if (val.projectContentList.findIndex((k) => Number(k.no) === v.no) > -1) {
-          typeOption.value.push(v)
-        }
-      })
-      query.category = typeOption.value.length > 0 ? typeOption.value[0].no : undefined
-    }
+    query.category = val?.length > 0 ? val[0].no : undefined
   },
   { deep: true, immediate: true }
 )
