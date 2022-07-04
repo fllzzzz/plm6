@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <template v-if="globalProject && globalProject.projectContentList && globalProject.projectContentList.length > 0">
+    <template v-if="pageShow">
       <!--工具栏-->
       <div class="head-container">
         <mHeader :project-id="globalProjectId" @getAreaData="getAreaData" />
@@ -315,6 +315,9 @@
         :productType="drawingRow?.productType"
       />
     </template>
+    <template v-else>
+      <span style="color:red;font-size:13px;">当前项目内容没有包含构件,请到合同管理中进行配置</span>
+    </template>
   </div>
 </template>
 
@@ -339,12 +342,14 @@ import serialNumForm from './module/serialNum-form'
 import bimPreviewDrawer from '@/components-system/bim/bim-preview-drawer'
 import drawingPreviewFullscreenDialog from '@comp-base/drawing-preview/drawing-preview-fullscreen-dialog'
 import { componentTypeEnum } from '@enum-ms/mes'
+import { TechnologyTypeAllEnum } from '@enum-ms/contract'
 
 const { globalProject, globalProjectId } = mapGetters(['globalProject', 'globalProjectId'])
 const { showDrawing, drawingRow, drawingPreview } = useDrawing({ pidField: 'id', typeField: 'productType' })
 
 const showBimDialog = ref(false)
 const showDrawingDialog = ref(false)
+const pageShow = ref(true)
 
 watch(
   [() => showBimDialog.value, () => showDrawingDialog.value],
@@ -368,6 +373,18 @@ watch(
       }
     }
   }
+)
+
+watch(
+  () => globalProject.value,
+  (val) => {
+    if (globalProject.value.projectContentList?.length > 0) {
+      pageShow.value = globalProject.value.projectContentList.findIndex(v => v.no === TechnologyTypeAllEnum.STRUCTURE.V) > -1
+    } else {
+      pageShow.value = false
+    }
+  },
+  { deep: true, immediate: true }
 )
 
 const optShow = {

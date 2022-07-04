@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <template v-if="globalProject && globalProject.projectContentList && globalProject.projectContentList.length > 0">
+    <template v-if="pageShow">
       <!--工具栏-->
       <div class="head-container">
         <mHeader :project-id="globalProjectId" />
@@ -184,9 +184,9 @@
       <!--分页组件-->
       <pagination />
     </template>
-    <!-- <template v-else>
-      <div style="color:red;font-size:14px;">*请先前去合同管理模块添加项目内容</div>
-    </template> -->
+    <template v-else>
+      <span style="color:red;font-size:13px;">当前项目内容没有包含构件,请到合同管理中进行配置</span>
+    </template>
     <!-- pdf预览 -->
     <drawing-preview-fullscreen-dialog
         v-model="showDrawing"
@@ -210,6 +210,7 @@ import mHeader from './module/header'
 import { DP } from '@/settings/config'
 import { machinePartPM as permission } from '@/page-permission/plan'
 import drawingPreviewFullscreenDialog from '@comp-base/drawing-preview/drawing-preview-fullscreen-dialog'
+import { TechnologyTypeAllEnum } from '@enum-ms/contract'
 
 const { globalProject, globalProjectId } = mapGetters(['globalProject', 'globalProjectId'])
 const { showDrawing, drawingRow, drawingPreview } = useDrawing({ pidField: 'id', productTypeField: 'MACHINE_PART' })
@@ -222,6 +223,7 @@ const optShow = {
 }
 
 const tableRef = ref()
+const pageShow = ref(true)
 const { crud, columns } = useCRUD(
   {
     title: '零件清单',
@@ -250,6 +252,18 @@ watch(
     }
   },
   { immediate: true, deep: true }
+)
+
+watch(
+  () => globalProject.value,
+  (val) => {
+    if (globalProject.value.projectContentList?.length > 0) {
+      pageShow.value = globalProject.value.projectContentList.findIndex(v => v.no === TechnologyTypeAllEnum.STRUCTURE.V) > -1
+    } else {
+      pageShow.value = false
+    }
+  },
+  { deep: true, immediate: true }
 )
 </script>
 

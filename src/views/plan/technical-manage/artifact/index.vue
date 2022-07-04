@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <template v-if="globalProject && globalProject.projectContentList && globalProject.projectContentList.length > 0">
+    <template v-if="pageShow">
       <!--工具栏-->
       <div class="head-container">
         <mHeader :project-id="globalProjectId" />
@@ -209,12 +209,17 @@
         :productType="drawingRow?.productType"
       />
     </template>
+    <template v-else>
+      <span style="color:red;font-size:13px;">当前项目内容没有包含构件,请到合同管理中进行配置</span>
+    </template>
   </div>
 </template>
 
 <script setup>
 import crudApi from '@/api/plan/technical-manage/artifact'
 import { ref, watch } from 'vue'
+
+import { TechnologyTypeAllEnum } from '@enum-ms/contract'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import useDrawing from '@compos/use-drawing'
@@ -237,6 +242,7 @@ const optShow = {
 }
 
 const tableRef = ref()
+const pageShow = ref(true)
 const { crud, columns } = useCRUD(
   {
     title: '构件清单',
@@ -265,6 +271,18 @@ watch(
     }
   },
   { immediate: true, deep: true }
+)
+
+watch(
+  () => globalProject.value,
+  (val) => {
+    if (globalProject.value.projectContentList?.length > 0) {
+      pageShow.value = globalProject.value.projectContentList.findIndex(v => v.no === TechnologyTypeAllEnum.STRUCTURE.V) > -1
+    } else {
+      pageShow.value = false
+    }
+  },
+  { deep: true, immediate: true }
 )
 </script>
 
