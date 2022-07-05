@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <template v-if="globalProject && globalProject.projectContentList && globalProject.projectContentList.length > 0">
+    <template v-if="pageShow">
       <!--工具栏-->
       <div class="head-container">
         <mHeader :project-id="globalProjectId" :globalProject="globalProject"/>
@@ -244,6 +244,9 @@
         :productType="drawingRow?.productType"
       />
     </template>
+    <template v-else>
+      <span style="color:red;font-size:13px;">{{pageText}}</span>
+    </template>
   </div>
 </template>
 
@@ -264,7 +267,7 @@ import { validate } from '@compos/form/use-table-validate'
 import { assemblyListPM as permission } from '@/page-permission/plan'
 import useDrawing from '@compos/use-drawing'
 import drawingPreviewFullscreenDialog from '@comp-base/drawing-preview/drawing-preview-fullscreen-dialog'
-// import { projectModeEnum } from '@enum-ms/contract'
+import { TechnologyTypeAllEnum, projectModeEnum } from '@enum-ms/contract'
 
 const { globalProject, globalProjectId } = mapGetters(['globalProject', 'globalProjectId'])
 const { showDrawing, drawingRow, drawingPreview } = useDrawing({ pidField: 'id', productTypeField: 'ASSEMBLE' })
@@ -287,6 +290,9 @@ const maxNumber = 999999999
 //   { label: '数量', key: 'quantity' },
 //   { label: '已使用', key: 'usedQuantity' }
 // ]
+const pageShow = ref(false)
+const pageText = ref()
+
 const tableRules = {
   serialNumber: [{ required: true, max: 50, message: '不能超过 50 个字符', trigger: 'blur' }],
   specification: [{ required: true, max: 50, message: '不能超过 50 个字符', trigger: 'blur' }],
@@ -325,7 +331,7 @@ const { crud, columns, CRUD } = useCRUD(
 )
 
 const { maxHeight } = useMaxHeight({
-  wrapperBox: '.artifact',
+  wrapperBox: '.assembly',
   paginate: true,
   extraHeight: 40
 })
@@ -340,6 +346,26 @@ watch(
   },
   { immediate: true, deep: true }
 )
+
+watch(
+  () => globalProject.value,
+  (val) => {
+    if (globalProject.value.projectContentList?.length > 0) {
+      if (globalProject.value.projectContentList.findIndex(v => v.no === TechnologyTypeAllEnum.STRUCTURE.V) > -1) {
+        pageShow.value = globalProject.value.mode !== projectModeEnum.STRUCTURE.V
+        pageText.value = globalProject.value.mode !== projectModeEnum.STRUCTURE.V ? '当前项目内容没有包含构件,请到合同管理中进行配置' : '当前项目模式不包含组立'
+      } else {
+        pageText.value = '当前项目内容没有包含构件,请到合同管理中进行配置'
+        pageShow.value = false
+      }
+    } else {
+      pageText.value = '当前项目内容没有包含构件,请到合同管理中进行配置'
+      pageShow.value = false
+    }
+  },
+  { deep: true, immediate: true }
+)
+//
 
 function handleAssemblyRowClassName({ row, rowIndex }) {
   return row.abnormal === 1 ? 'abnormal-row' : ''

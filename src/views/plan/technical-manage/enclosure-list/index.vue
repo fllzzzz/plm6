@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <template v-if="globalProject && globalProject.projectContentList && globalProject.projectContentList.length > 0">
+    <template v-if="pageShow">
       <!--工具栏-->
       <div class="head-container">
         <mHeader
@@ -8,6 +8,7 @@
           @tableAdd="tableAdd"
           :table-data="totalTechInfo"
           :globalProject="globalProject"
+          :typeOption="typeOption"
           @categoryChange="getPlate"
         />
       </div>
@@ -367,6 +368,9 @@
         :attachmentId="drawingRow?.attachmentId"
       />
     </template>
+    <template v-else>
+      <span style="color:red;font-size:13px;">当前项目内容没有包含围护制品，请到合同管理中进行配置</span>
+    </template>
   </div>
 </template>
 
@@ -401,9 +405,39 @@ const totalTechInfo = ref({})
 const simpleDrawRef = ref()
 const typeProp = { key: 'id', label: 'plateType', value: 'id' }
 const trussProp = { key: 'id', label: 'serialNumber', value: 'id' }
+const pageShow = ref(true)
+
 provide('plateOption', plateOption)
 const drawVisible = ref(false)
 const currentRow = ref({})
+const typeOption = ref([])
+const techOptions = [
+  {
+    name: '压型彩板',
+    no: TechnologyTypeAllEnum.PROFILED_PLATE.V,
+    alias: 'ENCLOSURE'
+  },
+  {
+    name: '压型楼承板',
+    no: TechnologyTypeAllEnum.PRESSURE_BEARING_PLATE.V,
+    alias: 'ENCLOSURE'
+  },
+  {
+    name: '桁架楼承板',
+    no: TechnologyTypeAllEnum.TRUSS_FLOOR_PLATE.V,
+    alias: 'ENCLOSURE'
+  },
+  {
+    name: '夹芯板',
+    no: TechnologyTypeAllEnum.SANDWICH_BOARD.V,
+    alias: 'ENCLOSURE'
+  },
+  {
+    name: '折边件',
+    no: TechnologyTypeAllEnum.BENDING.V,
+    alias: 'ENCLOSURE'
+  }
+]
 
 const optShow = {
   add: false,
@@ -524,6 +558,22 @@ watch(
     }
   },
   { immediate: true, deep: true }
+)
+
+watch(
+  () => globalProject.value,
+  (val) => {
+    typeOption.value = []
+    if (isNotBlank(val)) {
+      techOptions.forEach((v) => {
+        if (val.projectContentList.findIndex((k) => Number(k.no) === v.no) > -1) {
+          typeOption.value.push(v)
+        }
+      })
+      pageShow.value = typeOption.value.length > 0
+    }
+  },
+  { deep: true, immediate: true }
 )
 
 async function changeStatus(data, val) {
