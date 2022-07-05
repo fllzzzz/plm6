@@ -6,7 +6,7 @@ export default function usePreview({ props, initModelColor, overrideComponentsCo
   watch(
     () => props.serialNumber,
     (val) => {
-      if (props.isPreview && val) {
+      if (props.isPreview && val && !props.previewShowAll) {
         previewOverride()
       }
     },
