@@ -41,6 +41,10 @@ const props = defineProps({
     type: Boolean,
     default: false
   },
+  previewShowAll: {
+    type: Boolean,
+    default: false
+  },
   serialNumber: {
     type: String
   },
