@@ -54,6 +54,16 @@
             <common-button size="small" type="primary" @click="uploadModel(scope.row)">
               {{ scope.row.hasModelImport ? '替换' : '导入' }}
             </common-button>
+            <common-select
+              v-if="scope.row.hasModelImport"
+              v-model="scope.row.edition"
+              :options="bimTeklaEditionEnum.ENUM"
+              type="enum"
+              size="small"
+              style="width: 100px; margin-left: 5px"
+              placeholder="Tekla版本"
+              @change="modelEditionChange(scope.row, scope.row.edition)"
+            />
             <el-tag
               v-if="scope.row.modelResponseVO?.translateStatus"
               effect="plain"
@@ -107,15 +117,19 @@
 
 <script setup>
 import { monomerAll as getAll } from '@/api/plan/monomer'
+import { editEdition } from '@/api/bim/model'
 import { ref, watch } from 'vue'
 import useMaxHeight from '@compos/use-max-height'
 import { mapGetters } from '@/store/lib'
 import { isNotBlank } from '@data-type/index'
 import { TechnologyTypeAllEnum } from '@enum-ms/contract'
+import { bimTeklaEditionEnum } from '@enum-ms/bim'
 import { modelTranslateStatusEnum as translateStatusEnum } from '@enum-ms/bim'
 import deepenTable from './module/deepen-table'
 import machinePartTable from './module/machine-part-table'
 import modelImportForm from './module/model-import-form'
+import { ElMessageBox } from 'element-plus'
+import { ElNotification } from 'element-plus'
 
 const { globalProject } = mapGetters(['globalProject'])
 
@@ -176,6 +190,10 @@ async function fetchData(val = globalProject.value?.id) {
         if (index === 0) {
           v.rowSpanNum = content.length
         }
+        if (v.hasModelImport && isNotBlank(v.modelResponseVO)) {
+          v.edition = v.modelResponseVO.edition
+          v.originEdition = v.modelResponseVO.edition
+        }
       })
     }
     tableData.value = content
@@ -192,6 +210,28 @@ function objectSpanMethod({ row, column, rowIndex, columnIndex }) {
       rowspan: row.rowSpanNum,
       colspan: 1
     }
+  }
+}
+
+// 模型版本号变更
+async function modelEditionChange(data, val) {
+  try {
+    await ElMessageBox.confirm(
+      `此操作将把 “${data.name}” 模型的Tekla版本：\n由“${data.originEdition ? bimTeklaEditionEnum.VL[data.originEdition] : '无'}”变更为 “${
+        bimTeklaEditionEnum.VL[val]
+      }”, 是否继续？`,
+      '提示',
+      {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }
+    )
+    await editEdition({ monomerId: data.id, edition: val })
+    ElNotification({ title: `“${data.name}” 模型的Tekla版本变更为 “${bimTeklaEditionEnum.VL[val]}” 成功`, type: 'success' })
+  } catch (error) {
+    console.log(error)
+    data.edition = data.originEdition
   }
 }
 
