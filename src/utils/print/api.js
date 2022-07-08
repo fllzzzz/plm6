@@ -68,6 +68,7 @@ const mesShipmentSummary = mes.shipmentSummary
 const mesShipmentDetail = mes.shipmentDetail
 const mesReceiptStatusSummary = mes.receiptStatusSummary
 const mesShippingList = mes.shippingList
+const mesShipmentAudit = mes.shipmentAudit
 const mesLogisticsSummary = mes.logisticsSummary
 
 const mesWarehouseStateStructure = mes.warehouseStateStructure
@@ -148,6 +149,7 @@ export default {
   mesShipmentDetail, // 发运详情
   mesReceiptStatusSummary, // 收货状态汇总
   mesShippingList, // 发货清单
+  mesShipmentAudit, // 发运审核
   mesLogisticsSummary, // 物流汇总
 
   mesWarehouseStateStructure, // 结构出入库状态

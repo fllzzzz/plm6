@@ -54,6 +54,17 @@ export function shippingList(id) {
 }
 
 /**
+ * 发运审核
+ */
+export function shipmentAudit(params) {
+  return request({
+    url: `api/mes/building/cargo/review/print`,
+    method: 'get',
+    params
+  })
+}
+
+/**
  * 物流汇总
  */
 export function logisticsSummary(params) {
@@ -385,6 +396,7 @@ export default {
   shipmentDetail, // 发运详情
   receiptStatusSummary, // 收货状态汇总
   shippingList, // 发货清单
+  shipmentAudit, // 发运审核
   logisticsSummary, // 物流汇总
 
   // 制成品管理

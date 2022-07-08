@@ -146,8 +146,8 @@ constantize(logisticsPriceTypeEnum)
 
 // 发运审核状态
 const shipAuditStatusEnum = {
-  UNCHECKED: { L: '未审核', K: 'UNCHECKED', V: 1, T: 'warning' },
-  CHECKED: { L: '已审核', K: 'CHECKED', V: 2, T: 'success' }
+  UNCHECKED: { L: '未审核', K: 'UNCHECKED', V: 2, T: 'warning' },
+  CHECKED: { L: '已审核', K: 'CHECKED', V: 1, T: 'success' }
 }
 constantize(shipAuditStatusEnum)
 
