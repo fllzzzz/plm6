@@ -62,17 +62,14 @@
     </div>
     <crudOperation>
       <template v-slot:optLeft>
-        <!--
         <print-table
-          v-permission="[...permission.print, ...permission.detailPrint]"
-          v-model:current-key="currentKey"
-          :api-key="apiKey"
-          :params="printParams"
-          :before-print="handleBeforePrint"
+          v-permission="permission.print"
+          api-key="mesShipmentAudit"
+          :params="{ ...query }"
           size="mini"
           type="warning"
           class="filter-item"
-        /> -->
+        />
       </template>
     </crudOperation>
   </div>
