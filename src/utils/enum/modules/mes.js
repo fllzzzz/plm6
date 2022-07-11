@@ -56,6 +56,13 @@ const artifactProcessEnum = {
 }
 constantize(artifactProcessEnum)
 
+// 出入库类型
+const mesWarehouseStateTypeEnum = {
+  INBOUND: { L: '入库', K: 'INBOUND', V: 1 },
+  OUTBOUND: { L: '出库', K: 'OUTBOUND', V: 2 }
+}
+constantize(mesWarehouseStateTypeEnum)
+
 // 含有工序的材料类型
 const processMaterialListTypeEnum = {
   ARTIFACT: { L: '构件', K: 'ARTIFACT', V: componentTypeEnum.ARTIFACT.V, T: '' },
@@ -290,7 +297,8 @@ export {
   printProductTypeEnum,
   surplusHandleStatusEnum,
   inProductionDetailReportEnum,
-  schedulingStatusEnum
+  schedulingStatusEnum,
+  mesWarehouseStateTypeEnum
 }
 
 export default {
@@ -324,5 +332,6 @@ export default {
   printProductTypeEnum,
   surplusHandleStatusEnum,
   inProductionDetailReportEnum,
-  schedulingStatusEnum
+  schedulingStatusEnum,
+  mesWarehouseStateTypeEnum
 }
