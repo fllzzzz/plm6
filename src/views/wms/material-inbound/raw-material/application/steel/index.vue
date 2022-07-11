@@ -38,7 +38,7 @@
         </div>
       </div>
       <el-form ref="formRef" :model="form">
-        <component ref="steelRef" :max-height="tableMaxHeight" :is="comp" @calc-weight="calcWeight" />
+        <component ref="steelRef" :max-height="tableMaxHeight" :style="maxHeightStyle" :is="comp" @calc-weight="calcWeight" />
       </el-form>
     </common-wrapper>
     <common-drawer
@@ -261,7 +261,7 @@ if (props.edit) {
     extraHeight: 20
   }
 }
-const { fixMaxHeight, maxHeight: tableMaxHeight } = useMaxHeight(tableHeightConfig)
+const { fixMaxHeight, maxHeight: tableMaxHeight, maxHeightStyle } = useMaxHeight(tableHeightConfig)
 
 // 当前使用的组件
 const comp = computed(() => {
