@@ -10,7 +10,7 @@
 <script setup>
 import * as bimModel from '../../../public/assets/bimface/bimfaceAPI.js'
 import { getTranslate } from '@/api/bim/model.js'
-import { defineProps, watch, ref, reactive, computed } from 'vue'
+import { defineProps, watch, ref, reactive, computed, defineExpose } from 'vue'
 
 import { constantize } from '@/utils/enum/base'
 import { isBlank } from '@/utils/data-type'
@@ -38,6 +38,10 @@ const props = defineProps({
     type: Number
   },
   isPreview: {
+    type: Boolean,
+    default: false
+  },
+  previewShowAll: {
     type: Boolean,
     default: false
   },
@@ -163,6 +167,7 @@ const { createMyToolbar } = useMyToolbar({
 const { createSearchHtml, searchBySN } = useArtifactSearch({ props, addBlinkByIds, removeBlink })
 const { createColorCardHtml } = useColorCard({ menuBar, colors, objectIdGroup, bimModel, viewerPanel, modelStatus, searchBySN, fetchArtifactStatus, isolateComponentsById, clearIsolation, hideComponentsById, showComponentsById, overrideComponentsColorById })
 // const { addRightEventListener } = useRightClickEvent({ viewerPanel, fetchArtifactInfo })
+const previewSNElementIds = ref([])
 
 watch(
   () => props.monomerId,
@@ -242,7 +247,8 @@ async function loadModel(viewToken) {
           createSearchHtml()
           createColorCardHtml()
         } else {
-          usePreview({ props, initModelColor, overrideComponentsColorById, isolateComponentsById })
+          const { serialNumberElementIds } = usePreview({ props, initModelColor, overrideComponentsColorById, isolateComponentsById })
+          previewSNElementIds.value = serialNumberElementIds
         }
         createDrawing()
 
@@ -276,6 +282,14 @@ async function loadModel(viewToken) {
     console.log(error)
   }
 }
+
+// 移动端预览页面使用
+defineExpose({
+  modelLoaded,
+  clearIsolation,
+  isolateComponentsById,
+  previewSNElementIds
+})
 </script>
 
 <style lang="scss" scoped>
