@@ -14,6 +14,7 @@
       :max-height="maxHeight"
       :row-class-name="handleRowClassName"
       :cell-class-name="cellClassName"
+      :span-method="spanMethod"
       :stripe="false"
       style="width: 100%"
     >
@@ -164,6 +165,16 @@ function cellClassName({ row, rowIndex }) {
   }
 }
 
+// 合并单元格
+function spanMethod({ row, column, rowIndex, columnIndex }) {
+  if (columnIndex === 1) {
+    return {
+      rowspan: row.rowSpan || 0,
+      colspan: 1
+    }
+  }
+}
+
 async function handleDelete(row, index) {
   try {
     await crudApi.del([row.id])
@@ -189,14 +200,18 @@ async function fetchList() {
     const { content = [] } = await crudApi.get()
     content.forEach(v => {
       if (v.structureClassificationList?.length) {
-        // v.structureClassificationList.map((k, index) => {
-        //   k.styleHeight = k.specPrefixList.length ? k.specPrefixList.length * 40 + 'px' : '40px'
-        //   k.lineHeight = k.specPrefixList.length ? k.specPrefixList.length * 30 + 'px' : '30px'
-        // })
         v.mainClassificationName = v.productionLineType === artifactProductLineEnum.INTELLECT.V ? (v.parentType ? intellectParentType.VL[v.parentType] : '-') : v.structureClassificationList[0].classificationName
       }
     })
-    _list = content
+    const traditionArr = content.filter(v => v.productionLineType === artifactProductLineEnum.TRADITION.V)
+    if (traditionArr?.length) {
+      traditionArr[0].rowSpan = traditionArr.length
+    }
+    const intellectArr = content.filter(v => v.productionLineType === artifactProductLineEnum.INTELLECT.V)
+    if (intellectArr?.length) {
+      intellectArr[0].rowSpan = intellectArr.length
+    }
+    _list = _list.concat(traditionArr, intellectArr)
   } catch (error) {
     console.log('获取构件特征定义失败', error)
   } finally {
