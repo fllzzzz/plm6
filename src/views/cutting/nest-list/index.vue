@@ -145,7 +145,7 @@
           <template v-slot="scope">
             <!-- <common-button type="danger" size="mini" @click="del(scope.row)">删除</common-button>
             <common-button type="success" size="mini" @click.stop="toNesting"> 去套料 </common-button> -->
-              <del-btn @query="getPlate" :data="scope.row" />
+              <del-btn @success="success" @getPlate="getPlate" :data="scope.row" />
           </template>
       </el-table-column>
         </common-table>
@@ -287,8 +287,7 @@
 
 <script setup>
 import { ref } from 'vue'
-import crudApi1 from '@/api/cutting/taskPack'
-import crudApi from '@/api/cutting/radan-controller'
+import crudApi, { getTaskPack } from '@/api/cutting/radan-controller'
 import useCRUD from '@compos/use-crud'
 import { parseTime } from '@/utils/date'
 import mHeader from './module/header'
@@ -303,6 +302,7 @@ const tableRef = ref()
 // const dataList = ref([])
 const loadingList = ref(false)
 const currentRow = ref({})
+const isDelete = ref(false)
 
 // crud交由presenter持有
 // const permission = {
@@ -335,33 +335,34 @@ CRUD.HOOK.handleRefresh = (crud, res) => {
   res.data.content = res.data.content.map((v, index) => {
     v.subList = []
     v.rowIndex = index
+    if (isDelete.value) {
+      getPlate()
+    }
     return v
   })
 }
-
-// 获取钢板
+// 获取任务包
 async function getPlate() {
   try {
-    const data = await crudApi1.get({
-      nestingState: currentRow.value.nestingState,
+    const data = await getTaskPack({
       sort: ['createTime.desc'],
       projectId: currentRow.value.projectId
     })
     crud.data[currentRow.value.rowIndex].subList = data.content
   } catch (error) {
     console.log('请求接口数据失败')
+  } finally {
+    isDelete.value = false
   }
 }
 
-// 请求接口数据
+// 请求任务包接口数据
 async function expandChange(row, expandedRowsOrExpanded) {
   currentRow.value = row
   console.log(row, expandedRowsOrExpanded)
   loadingList.value = true
   try {
-    const data = await crudApi1.get({
-      nestingState: row.nestingState,
-      sort: ['createTime.desc'],
+    const data = await getTaskPack({
       projectId: row.projectId
     })
     console.log('data', data)
@@ -381,6 +382,10 @@ const { maxHeight } = useMaxHeight({
   extraHeight: 40
 })
 
+function success() {
+  isDelete.value = true
+  crud.toQuery()
+}
 // function NestingClick(row) {
 //   console.log('row', row.cutTaskId)
 // }
