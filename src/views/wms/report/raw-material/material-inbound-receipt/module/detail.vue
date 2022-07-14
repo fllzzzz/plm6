@@ -47,7 +47,7 @@
         <material-unit-quantity-columns :basic-class="detail.basicClass" />
         <!-- 价格信息 -->
         <template v-if="showAmount">
-          <amount-info-columns v-if="!boolPartyA" />
+          <amount-info-columns v-if="!boolPartyA" show-unit-price-e/>
         </template>
         <warehouse-info-columns show-project />
       </common-table>
