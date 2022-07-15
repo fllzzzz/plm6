@@ -245,8 +245,8 @@ export const configProductProcessAssemblePM = {
 
 // 建钢-生产配置/零件工序定义
 export const configProductProcessMachinePartPM = {
-  get: ['product_process_machine_part:get'] // 零件工序列表
-  // edit: ['product_process_machine_part:edit'] // 编辑零件工序
+  get: ['product_process_machine_part:get'], // 零件工序列表
+  edit: ['product_process_machine_part:edit'] // 编辑零件工序
 }
 
 // 建钢-生产配置/报检方式

@@ -29,6 +29,16 @@ export function getAssemble(params) {
   })
 }
 
+// 列表-零件种类工序
+export function getMachinePart(params) {
+  return request({
+    module: 'mes',
+    url: 'productProcess/machine_part',
+    method: 'get',
+    params
+  })
+}
+
 export function add(data) {
   return request({
     module: 'mes',
