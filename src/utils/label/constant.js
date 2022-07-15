@@ -1,5 +1,6 @@
 import { labelTypeEnum, componentTypeEnum } from '@enum-ms/mes'
 import { weightTypeEnum as printWeightTypeEnum } from '@enum-ms/common'
+import labelLogo from '@/assets/logo/label-logo.png'
 import { parseTime } from '@/utils/date'
 
 const defComponent = {
@@ -19,7 +20,7 @@ const defComponent = {
 }
 
 // 构件-常规标签
-const ARTIFACT_COMMON_L_HTML = function ({ component = defComponent, printConfig, manufacturerName = 'XX' }) {
+const ARTIFACT_COMMON_L_HTML = function ({ component = defComponent, printConfig, manufacturerName = '制造商名称' }) {
   return `
 <div class="artifact-label">
 <div class="row">
@@ -83,7 +84,7 @@ const ARTIFACT_SIMPLE_L_HTML = function ({ component = defComponent }) {
 }
 
 // 构件-定制标签
-const ARTIFACT_CUSTOM_L_HTML = function ({ component = defComponent, printConfig, manufacturerName = 'XX', logo = 'https://mes.dev.hzchum.com/files/logo/1642044373620_logo_cmib_black_512.png' }) {
+const ARTIFACT_CUSTOM_L_HTML = function ({ component = defComponent, printConfig, manufacturerName = '制造商名称', logo = labelLogo }) {
   return `
   <div class="artifact-label">
   <div class="row">
@@ -230,7 +231,7 @@ const ARTIFACT_STYLE = function ({
 }
 
 // 围护-常规标签
-const ENCLOSURE_COMMON_L_HTML = function ({ component = defComponent, printConfig, manufacturerName = 'XX' }) {
+const ENCLOSURE_COMMON_L_HTML = function ({ component = defComponent, printConfig, manufacturerName = '制造商名称' }) {
   console.log('ENCLOSURE_COMMON_L_HTML')
   return `
   <div class="enclosure-label">
@@ -257,11 +258,11 @@ const ENCLOSURE_COMMON_L_HTML = function ({ component = defComponent, printConfi
 }
 
 // 围护-定制标签
-const ENCLOSURE_CUSTOM_L_HTML = function ({ component = defComponent, printConfig, manufacturerName = 'XX', logo = 'https://mes.dev.hzchum.com/files/logo/1642044373620_logo_cmib_black_512.png' }) {
+const ENCLOSURE_CUSTOM_L_HTML = function ({ component = defComponent, printConfig, manufacturerName = '制造商名称', logo = labelLogo }) {
   return `
   <div class="enclosure-label">
     <div class="company">
-      <div style="width:35%;">
+      <div style="width:35%;display:flex;align-items: center;">
         <img src="${logo}" alt="logo" style="height:70%;width:100%;vertical-align: middle;">
       </div>
       <div style="flex:1;text-align:center;">${manufacturerName}</div>
@@ -550,7 +551,7 @@ export const MINI_LABEL_STYLE = {
     [labelTypeEnum.SIMPLE.V]: '',
     [labelTypeEnum.CUSTOM.V]: ENCLOSURE_STYLE({
       fClass: 'mini-cus-al',
-      headerHeight: 30,
+      headerHeight: 25,
       rowHeight: 25
     })
   }

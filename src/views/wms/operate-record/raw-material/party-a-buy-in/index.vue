@@ -24,7 +24,7 @@
       <!-- 仓库信息 -->
       <warehouse-info-columns :columns="columns" show-project />
       <!-- 价格 -->
-      <amount-info-columns :columns="columns" show-invoice-type show-tax-rate />
+      <amount-info-columns :columns="columns" show-unit-price-e show-invoice-type show-tax-rate />
       <el-table-column
         v-if="columns.visible('transferSN')"
         key="transferSN"
