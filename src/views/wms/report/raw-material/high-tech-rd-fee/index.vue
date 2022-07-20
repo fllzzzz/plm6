@@ -34,7 +34,7 @@
       <!-- 次要信息 -->
       <material-secondary-info-columns :columns="columns" :basic-class="crud.query.basicClass" show-batch-no />
       <!-- 金额信息 -->
-      <amount-info-columns :columns="columns" show-invoice-type show-tax-rate :show-input-VAT="false" />
+      <amount-info-columns :columns="columns" show-unit-price-e show-invoice-type show-tax-rate :show-input-VAT="false" />
       <!-- 仓库信息 -->
       <warehouse-info-columns :columns="columns" />
       <!-- 研发费用占比 及 研发费-->

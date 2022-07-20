@@ -239,9 +239,8 @@ import { regExtra } from '@compos/use-crud'
 import { ElMessage } from 'element-plus'
 import { del, uploadOrder, updateOrder, deletePartFromOrder, addPartFromOrder } from '@/api/cutting/taskPack'
 import { byCutTaskId } from '@/api/cutting/radan-controller'
-import crudApi1 from '@/api/cutting/project-data'
 
-const emit = defineEmits(['selectionChange'])
+const emit = defineEmits(['selectionChange', 'success', 'getPlate'])
 
 const props = defineProps({
   data: {
@@ -284,11 +283,12 @@ const updateData = ref([]) // 弹出层数据
 const { crud } = regExtra()
 const isDel = ref(false)
 const nesting = ref(false)
-const currentRow = ref({})
+// const currentRow = ref({})
 const viewsData = ref([])
 const viewsVisible = ref(false)
 const viewsLoading = ref(false)
 
+// const plateList = ref([])
 // 取消删除
 function cancelDelete() {
   pop.value = false
@@ -331,7 +331,7 @@ async function handleDelete() {
     pop.value = false
     const message = await del(props.data.cutTaskId)
     ElMessage({ type: 'success', message: message })
-    emit('query')
+    emit('success')
   } catch (err) {
     console.log(err)
   }
@@ -342,7 +342,7 @@ async function NestingClick(row) {
   try {
     const message = await uploadOrder(props.data.cutTaskId)
     ElMessage({ type: 'success', message: message })
-    emit('query')
+    emit('success')
   } catch (err) {
     console.log(err)
   }
@@ -373,7 +373,7 @@ async function editClick(row, isDelValue) {
       v.deleteBtn = false
       v.addBtn = false
     })
-    plateDataGet()
+    emit('getPlate')
     console.log('updateData', updateData.value)
   } catch (err) {
     console.log(err)
@@ -408,7 +408,7 @@ async function addClick(row) {
 }
 
 function closeDialog() {
-  emit('query')
+  emit('getPlate')
 }
 // 打开删除提示窗
 function onPopoverShow() {
@@ -471,15 +471,16 @@ function onPopoverAddClickHide() {
 }
 
 // 请求钢板接口数据
-async function plateDataGet(row) {
-  currentRow.value = row
-  try {
-    const { content } = await crudApi1.get({ projectId: currentRow.value.projectId })
-    console.log('content', content)
-  } catch (err) {
-    console.log('钢板清单页面接口报错', err)
-  }
-}
+// async function plateDataGet(row) {
+//   currentRow.value = row
+//   try {
+//     const { content } = await getTaskPack({ projectId: currentRow.value.projectId })
+//     console.log('content', content)
+//     plateList.value = content
+//   } catch (err) {
+//     console.log('钢板清单页面接口报错', err)
+//   }
+// }
 </script>
 
 <style lang="scss" scoped>

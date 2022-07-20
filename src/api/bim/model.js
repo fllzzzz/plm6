@@ -17,6 +17,18 @@ export function upload(data) {
 }
 
 /**
+ * 模型版本号变更
+ * @param {*} data
+ */
+export function editEdition({ monomerId, edition }) {
+  return request({
+    url: '/api/model/3DModel/upload/edition',
+    method: 'post',
+    params: { monomerId, edition }
+  })
+}
+
+/**
  * 获取3d模型viewToken
  * @param {number} monomerId 单体id
  */

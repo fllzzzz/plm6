@@ -87,6 +87,8 @@
         </template>
       </el-table-column>
     </common-table>
+    <!--分页组件-->
+    <pagination />
     <!-- 表单 -->
     <m-form />
     <m-batch-form />
@@ -108,6 +110,7 @@ import checkPermission from '@/utils/system/check-permission'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import useCrudEnabledChange from '@compos/use-crud-enabled-change'
+import pagination from '@crud/Pagination'
 import udOperation from '@crud/UD.operation'
 import mHeader from './module/header'
 import mForm from './module/form'

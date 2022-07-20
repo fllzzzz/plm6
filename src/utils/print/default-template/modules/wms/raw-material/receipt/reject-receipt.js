@@ -354,6 +354,17 @@ const wmsRmRejectReceipt = {
         sum: true
       },
       {
+        show: false,
+        key: 'unitPriceExcludingVAT',
+        title: '不含税单价',
+        source: dataSourceEnum.SYSTEM.V,
+        align: alignEnum.RIGHT.V,
+        minWidth: 18,
+        type: typeEnum.AMOUNT.K,
+        format: { toThousand: true, precision: 2, unit: amountUnitEnum.YUAN.V },
+        sum: false
+      },
+      {
         show: true,
         key: 'unitPrice',
         title: '含税单价',
@@ -363,6 +374,17 @@ const wmsRmRejectReceipt = {
         type: typeEnum.AMOUNT.K,
         format: { toThousand: true, precision: 2, unit: amountUnitEnum.YUAN.V },
         sum: false
+      },
+      {
+        show: false,
+        key: 'amountExcludingVAT',
+        title: '不含税金额',
+        source: dataSourceEnum.SYSTEM.V,
+        align: alignEnum.RIGHT.V,
+        minWidth: 18,
+        type: typeEnum.AMOUNT.K,
+        format: { toThousand: true, precision: 2, unit: amountUnitEnum.YUAN.V },
+        sum: true
       },
       {
         show: true,

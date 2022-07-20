@@ -42,7 +42,7 @@
       <material-unit-quantity-columns :columns="columns" :basic-class="basicClass" />
       <!-- 价格信息 -->
       <template v-if="showAmount">
-        <amount-info-columns :columns="columns" show-invoice-type />
+        <amount-info-columns :columns="columns" show-unit-price-e show-invoice-type />
       </template>
       <warehouse-info-columns :columns="columns" show-project />
       <el-table-column
@@ -166,6 +166,7 @@ const { CRUD, crud, columns } = useCRUD(
       'invoiceType',
       'taxRate',
       'unitPrice',
+      'unitPriceExcludingVAT',
       'amount',
       'amountExcludingVAT',
       'inputVAT'

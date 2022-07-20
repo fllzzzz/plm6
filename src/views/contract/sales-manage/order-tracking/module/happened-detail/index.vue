@@ -72,7 +72,7 @@ const dataFormat = ref([
   ['unitPrice', 'to-thousand'],
   ['totalPrice', 'to-thousand']
 ])
-const { crud, columns } = useCRUD(
+const { crud, columns, CRUD } = useCRUD(
   {
     title: '发运记录',
     sort: [],
@@ -85,4 +85,12 @@ const { crud, columns } = useCRUD(
 )
 
 const { maxHeight } = useMaxHeight({ paginate: true })
+
+CRUD.HOOK.handleRefresh = async (crud, { data }) => {
+  data.content.forEach((row) => {
+    if (row.totalMete) {
+      row.totalMete = Number(row.totalMete.toFixed(2)) ? row.totalMete.toFixed(2) : Number(row.totalMete.toFixed(5))
+    }
+  })
+}
 </script>

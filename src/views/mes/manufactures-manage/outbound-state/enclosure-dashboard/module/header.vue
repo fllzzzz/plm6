@@ -56,7 +56,7 @@
 import { getBoardForEnclosureSummary as getSummary } from '@/api/mes/manufactures-manage/common'
 import { ref, defineExpose, defineEmits } from 'vue'
 
-import { componentTypeEnum } from '@enum-ms/mes'
+import { componentTypeEnum, mesWarehouseStateTypeEnum } from '@enum-ms/mes'
 import { DP } from '@/settings/config'
 import { toFixed } from '@data-type'
 import { mapGetters } from '@/store/lib'
@@ -76,6 +76,7 @@ const defaultQuery = {
   serialNumber: '',
   plate: '',
   color: '',
+  type: mesWarehouseStateTypeEnum.OUTBOUND.V,
   status: { value: undefined, resetAble: false },
   monomerId: { value: undefined, resetAble: false },
   areaId: { value: undefined, resetAble: false },

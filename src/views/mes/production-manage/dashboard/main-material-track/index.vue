@@ -44,8 +44,8 @@
       </el-table-column>
       <el-table-column prop="diff" :show-overflow-tooltip="true" label="差异(kg)" align="center">
         <template #default="{ row }">
-          <span v-if="row.useMete >= row.listMete" class="tc-success">+{{ row.diff }}</span>
-          <span v-else class="tc-danger">-{{ row.diff }}</span>
+          <span v-if="row.useMete >= row.listMete" class="tc-success">{{ row.diff }}</span>
+          <span v-else class="tc-danger">{{ row.diff }}</span>
         </template>
       </el-table-column>
       <el-table-column prop="diffRate" :show-overflow-tooltip="true" label="差异率(%)" align="center">

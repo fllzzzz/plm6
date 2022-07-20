@@ -1,6 +1,8 @@
 import { labelTypeEnum, componentTypeEnum } from '@enum-ms/mes'
 import { weightTypeEnum as printWeightTypeEnum } from '@enum-ms/common'
+import labelLogo from '@/assets/logo/label-logo.png'
 import { parseTime } from '@/utils/date'
+import { emptyTextFormatter } from '@/utils/data-type'
 
 const defComponent = {
   projectName: '项目名称',
@@ -19,36 +21,36 @@ const defComponent = {
 }
 
 // 构件-常规标签
-const ARTIFACT_COMMON_L_HTML = function ({ component = defComponent, printConfig, manufacturerName = 'XX' }) {
+const ARTIFACT_COMMON_L_HTML = function ({ component = defComponent, printConfig, manufacturerName = '制造商名称' }) {
   return `
 <div class="artifact-label">
 <div class="row">
-  <div class="col" style="font-size:10pt;${printConfig?.showMonomer ? '' : 'border:none;'}">${component.projectName}</div>
-  <div class="col" style="font-size:10pt;${printConfig?.showMonomer ? '' : 'display:none;'}">${component.monomerName}</div>
+  <div class="col" style="font-size:10pt;${printConfig?.showMonomer ? '' : 'border:none;'}">${emptyTextFormatter(component.projectName)}</div>
+  <div class="col" style="font-size:10pt;${printConfig?.showMonomer ? '' : 'display:none;'}">${emptyTextFormatter(component.monomerName)}</div>
 </div>
 <div class="row row-2">
   <div class="col amplify-content">
     <span class="amplify-no">NO:</span>
-    <span class="amplify-text">${component.serialNumber}</span>
-    <span class="amplify-date" style="${printConfig?.dateInProduced ? '' : 'display:none;'}">生产日期：${component.printTime}</span>
+    <span class="amplify-text">${emptyTextFormatter(component.serialNumber)}</span>
+    <span class="amplify-date">生产日期：${emptyTextFormatter(component.printTime)}</span>
   </div>
 </div>
 <div class="row">
-  <div class="col">名称：${component.name}</div>
-  <div class="col">数量(件)：${component.quantity}</div>
-  <div class="col" style="${printConfig?.weight !== printWeightTypeEnum.NONE.V ? '' : 'display:none;'}">单重(kg)：${component.weight}</div>
+  <div class="col">名称：${emptyTextFormatter(component.name)}</div>
+  <div class="col">数量(件)：${emptyTextFormatter(component.quantity)}</div>
+  <div class="col" style="${printConfig?.weight !== printWeightTypeEnum.NONE.V ? '' : 'display:none;'}">单重(kg)：${emptyTextFormatter(component.weight)}</div>
 </div>
 <div class="contains-rows">
   <div class="col" style="flex: 2">
     <div class="row">
-      <div class="col">长度(mm)：${component.length}</div>
-      <div class="col">规格：${component.specification}</div>
+      <div class="col">长度(mm)：${emptyTextFormatter(component.length)}</div>
+      <div class="col">规格：${emptyTextFormatter(component.specification)}</div>
     </div>
     <div class="row">
-      <div class="col" style="${printConfig?.showArea ? '' : 'display:none;'}">区域：${component.areaName}</div>
+      <div class="col" style="${printConfig?.showArea ? '' : 'display:none;'}">区域：${emptyTextFormatter(component.areaName)}</div>
     </div>
     <div class="row">
-      <div class="col">${manufacturerName}</div>
+      <div class="col">${emptyTextFormatter(manufacturerName)}</div>
     </div>
   </div>
   <div class="col" style="flex: 1">
@@ -68,12 +70,12 @@ const ARTIFACT_SIMPLE_L_HTML = function ({ component = defComponent, printConfig
 <div class="artifact-label">
 <div class="row">
   <div class="col">
-    <span style="font-size: 60px; font-weight: 600;">${component.serialNumber}</span>
+    <span style="font-size: 60px; font-weight: 600;">${emptyTextFormatter(component.serialNumber)}</span>
   </div>
 </div>
 <div class="row">
-  <div class="col" style="${printConfig?.dateInProduced ? 'flex:2;' : 'flex:2;display:none;'}">
-    生产日期：${component.printTime}
+  <div class="col" style="flex:2;" style="font-size: 60px;">
+    生产日期：${emptyTextFormatter(component.printTime)}
   </div>
   <div class="col qr-content" style="flex:1;">
   </div>
@@ -83,39 +85,39 @@ const ARTIFACT_SIMPLE_L_HTML = function ({ component = defComponent, printConfig
 }
 
 // 构件-定制标签
-const ARTIFACT_CUSTOM_L_HTML = function ({ component = defComponent, printConfig, manufacturerName = 'XX', logo = 'https://mes.dev.hzchum.com/files/logo/1642044373620_logo_cmib_black_512.png' }) {
+const ARTIFACT_CUSTOM_L_HTML = function ({ component = defComponent, printConfig, manufacturerName = '制造商名称', logo = labelLogo }) {
   return `
   <div class="artifact-label">
   <div class="row">
     <div class="col" style="justify-content:center;">
       <img src="${logo}" alt="logo" style="height:70%;max-width: 96%;vertical-align: middle;">
     </div>
-    <div class="col" style="font-size:10pt;">${manufacturerName}</div>
+    <div class="col" style="font-size:10pt;">${emptyTextFormatter(manufacturerName)}</div>
   </div>
   <div class="row row-2">
     <div class="col amplify-content">
       <span class="amplify-no">NO:</span>
-      <span class="amplify-text">${component.serialNumber}</span>
-      <span class="amplify-date" style="${printConfig?.dateInProduced ? '' : 'display:none;'}">生产日期：${component.printTime}</span>
+      <span class="amplify-text">${emptyTextFormatter(component.serialNumber)}</span>
+      <span class="amplify-date" style="${printConfig?.dateInProduced ? '' : 'display:none;'}">生产日期：${emptyTextFormatter(component.printTime)}</span>
     </div>
   </div>
   <div class="row">
-    <div class="col" style="${printConfig?.showMonomer ? '' : 'border:none;'}">${component.projectName}</div>
-    <div class="col" style="${printConfig?.showMonomer ? '' : 'display:none;'}">${component.monomerName}</div>
+    <div class="col" style="${printConfig?.showMonomer ? '' : 'border:none;'}">${emptyTextFormatter(component.projectName)}</div>
+    <div class="col" style="${printConfig?.showMonomer ? '' : 'display:none;'}">${emptyTextFormatter(component.monomerName)}</div>
   </div>
   <div class="contains-rows">
     <div class="col" style="flex: 2">
       <div class="row">
-        <div class="col" style="${printConfig?.showArea ? '' : 'display:none;'}">区域：${component.areaName}</div>
+        <div class="col" style="${printConfig?.showArea ? '' : 'display:none;'}">区域：${emptyTextFormatter(component.areaName)}</div>
       </div>
       <div class="row">
-        <div class="col">数量(件)：${component.quantity}</div>
-        <div class="col">长度(mm)：${component.length}</div>
-        <div class="col" style="${printConfig?.weight !== printWeightTypeEnum.NONE.V ? '' : 'display:none;'}">单重(kg)：${component.weight}</div>
+        <div class="col">数量(件)：${emptyTextFormatter(component.quantity)}</div>
+        <div class="col">长度(mm)：${emptyTextFormatter(component.length)}</div>
+        <div class="col" style="${printConfig?.weight !== printWeightTypeEnum.NONE.V ? '' : 'display:none;'}">单重(kg)：${emptyTextFormatter(component.weight)}</div>
       </div>
       <div class="row">
-        <div class="col">${component.name}</div>
-        <div class="col">${component.specification}</div>
+        <div class="col">${emptyTextFormatter(component.name)}</div>
+        <div class="col">${emptyTextFormatter(component.specification)}</div>
       </div>
     </div>
     <div class="col" style="flex: 1">
@@ -230,7 +232,7 @@ const ARTIFACT_STYLE = function ({
 }
 
 // 围护-常规标签
-const ENCLOSURE_COMMON_L_HTML = function ({ component = defComponent, printConfig, manufacturerName = 'XX' }) {
+const ENCLOSURE_COMMON_L_HTML = function ({ component = defComponent, printConfig, manufacturerName = '制造商名称' }) {
   console.log('ENCLOSURE_COMMON_L_HTML')
   return `
   <div class="enclosure-label">
@@ -240,16 +242,16 @@ const ENCLOSURE_COMMON_L_HTML = function ({ component = defComponent, printConfi
         </div>
       </div>
       <div class="flex-2">
-        <div class="row">品名：${component.name}</div>
-        <div class="row">厚度(mm)：${component.thickness}</div>
-        <div class="row">单长(mm)：${component.length}</div>
-        <div class="row">颜色：${component.color}</div>
+        <div class="row">品名：${emptyTextFormatter(component.name)}</div>
+        <div class="row">厚度(mm)：${emptyTextFormatter(component.thickness)}</div>
+        <div class="row">单长(mm)：${emptyTextFormatter(component.length)}</div>
+        <div class="row">颜色：${emptyTextFormatter(component.color)}</div>
       </div>
       <div class="flex-2">
-        <div class="row">编号：${component.serialNumber}</div>
-        <div class="row">总张数：${component.quantity}</div>
-        <div class="row">板型：${component.plate}</div>
-        <div class="row" style="${printConfig?.dateInProduced ? '' : 'display:none;'}">生产日期：${component.printTime}</div>
+        <div class="row">编号：${emptyTextFormatter(component.serialNumber)}</div>
+        <div class="row">总张数：${emptyTextFormatter(component.quantity)}</div>
+        <div class="row">板型：${emptyTextFormatter(component.plate)}</div>
+        <div class="row" style="${printConfig?.dateInProduced ? '' : 'display:none;'}">生产日期：${emptyTextFormatter(component.printTime)}</div>
       </div>
     </div>
   </div>
@@ -257,27 +259,27 @@ const ENCLOSURE_COMMON_L_HTML = function ({ component = defComponent, printConfi
 }
 
 // 围护-定制标签
-const ENCLOSURE_CUSTOM_L_HTML = function ({ component = defComponent, printConfig, manufacturerName = 'XX', logo = 'https://mes.dev.hzchum.com/files/logo/1642044373620_logo_cmib_black_512.png' }) {
+const ENCLOSURE_CUSTOM_L_HTML = function ({ component = defComponent, printConfig, manufacturerName = '制造商名称', logo = labelLogo }) {
   return `
   <div class="enclosure-label">
     <div class="company">
-      <div style="width:35%;">
+      <div style="width:35%;display:flex;align-items: center;">
         <img src="${logo}" alt="logo" style="height:70%;width:100%;vertical-align: middle;">
       </div>
-      <div style="flex:1;text-align:center;">${manufacturerName}</div>
+      <div style="flex:1;text-align:center;">${emptyTextFormatter(manufacturerName)}</div>
     </div>
     <div class="content">
       <div class="flex-2">
-        <div class="row">品名：${component.name}</div>
-        <div class="row">厚度(mm)：${component.thickness}</div>
-        <div class="row">单长(mm)：${component.length}</div>
-        <div class="row">颜色：${component.color}</div>
+        <div class="row">品名：${emptyTextFormatter(component.name)}</div>
+        <div class="row">厚度(mm)：${emptyTextFormatter(component.thickness)}</div>
+        <div class="row">单长(mm)：${emptyTextFormatter(component.length)}</div>
+        <div class="row">颜色：${emptyTextFormatter(component.color)}</div>
       </div>
       <div class="flex-2">
-        <div class="row">编号：${component.serialNumber}</div>
-        <div class="row">总张数：${component.quantity}</div>
-        <div class="row">板型：${component.plate}</div>
-        <div class="row" style="${printConfig?.dateInProduced ? '' : 'display:none;'}">生产日期：${component.printTime}</div>
+        <div class="row">编号：${emptyTextFormatter(component.serialNumber)}</div>
+        <div class="row">总张数：${emptyTextFormatter(component.quantity)}</div>
+        <div class="row">板型：${emptyTextFormatter(component.plate)}</div>
+        <div class="row" style="${printConfig?.dateInProduced ? '' : 'display:none;'}">生产日期：${emptyTextFormatter(component.printTime)}</div>
       </div>
       <div class="flex-1">
         <div class="qr-content">
@@ -350,23 +352,23 @@ const AUX_MAT_COMMON_L_HTML = function ({ component = defComponent, printConfig 
   return `
   <div class="aux-mat-label">
     <div class="row">
-      <div class="col col-center" style="font-size:10pt;">${component.projectName || ''}</div>
+      <div class="col col-center" style="font-size:10pt;">${emptyTextFormatter(component.projectName)}</div>
     </div>
     <div class="row">
-      <div class="col col-center" style="font-size:10pt;">${component.monomerName || ''}</div>
+      <div class="col col-center" style="font-size:10pt;">${emptyTextFormatter(component.monomerName)}</div>
     </div>
     <div class="contains-rows">
       <div class="col" style="flex: 2">
         <div class="row row-3">
-          <div class="col" style="font-size:20pt;text-align:center;font-weight: 600;">${component.name || ''}</div>
+          <div class="col" style="font-size:20pt;text-align:center;font-weight: 600;">${emptyTextFormatter(component.name)}</div>
         </div>
         <div class="row">
-          <div class="col">规格：${component.specification || ''}</div>
-          <div class="col">总数：${component.quantity || ''}</div>
+          <div class="col">规格：${emptyTextFormatter(component.specification)}</div>
+          <div class="col">总数：${emptyTextFormatter(component.quantity)}</div>
         </div>
         <div class="row">
-          <div class="col">颜色：${component.color || ''}</div>
-          <div class="col">品牌：${component.brand || ''}</div>
+          <div class="col">颜色：${emptyTextFormatter(component.color)}</div>
+          <div class="col">品牌：${emptyTextFormatter(component.brand)}</div>
         </div>
       </div>
       <div class="col" style="flex: 1">
@@ -550,7 +552,7 @@ export const MINI_LABEL_STYLE = {
     [labelTypeEnum.SIMPLE.V]: '',
     [labelTypeEnum.CUSTOM.V]: ENCLOSURE_STYLE({
       fClass: 'mini-cus-al',
-      headerHeight: 30,
+      headerHeight: 25,
       rowHeight: 25
     })
   }

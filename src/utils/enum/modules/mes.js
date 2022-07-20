@@ -56,6 +56,13 @@ const artifactProcessEnum = {
 }
 constantize(artifactProcessEnum)
 
+// 出入库类型
+const mesWarehouseStateTypeEnum = {
+  INBOUND: { L: '入库', K: 'INBOUND', V: 1 },
+  OUTBOUND: { L: '出库', K: 'OUTBOUND', V: 2 }
+}
+constantize(mesWarehouseStateTypeEnum)
+
 // 含有工序的材料类型
 const processMaterialListTypeEnum = {
   ARTIFACT: { L: '构件', K: 'ARTIFACT', V: componentTypeEnum.ARTIFACT.V, T: '' },
@@ -146,8 +153,8 @@ constantize(logisticsPriceTypeEnum)
 
 // 发运审核状态
 const shipAuditStatusEnum = {
-  UNCHECKED: { L: '未审核', K: 'UNCHECKED', V: 1, T: 'warning' },
-  CHECKED: { L: '已审核', K: 'CHECKED', V: 2, T: 'success' }
+  UNCHECKED: { L: '未审核', K: 'UNCHECKED', V: 2, T: 'warning' },
+  CHECKED: { L: '已审核', K: 'CHECKED', V: 1, T: 'success' }
 }
 constantize(shipAuditStatusEnum)
 
@@ -324,7 +331,8 @@ export {
   deliveryStatusEnum,
   deliveryReceiptStatusEnum,
   searchDateTypeEnum,
-  freightChangeTypeEnum
+  freightChangeTypeEnum,
+  mesWarehouseStateTypeEnum
 }
 
 export default {
@@ -362,5 +370,6 @@ export default {
   deliveryStatusEnum,
   deliveryReceiptStatusEnum,
   searchDateTypeEnum,
-  freightChangeTypeEnum
+  freightChangeTypeEnum,
+  mesWarehouseStateTypeEnum
 }
