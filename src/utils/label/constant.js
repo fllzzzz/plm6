@@ -30,7 +30,7 @@ const ARTIFACT_COMMON_L_HTML = function ({ component = defComponent, printConfig
   <div class="col amplify-content">
     <span class="amplify-no">NO:</span>
     <span class="amplify-text">${component.serialNumber}</span>
-    <span class="amplify-date">生产日期：${component.printTime}</span>
+    <span class="amplify-date" style="${printConfig?.dateInProduced ? '' : 'display:none;'}">生产日期：${component.printTime}</span>
   </div>
 </div>
 <div class="row">
@@ -63,7 +63,7 @@ const ARTIFACT_COMMON_L_HTML = function ({ component = defComponent, printConfig
 }
 
 // 构件-简约标签
-const ARTIFACT_SIMPLE_L_HTML = function ({ component = defComponent }) {
+const ARTIFACT_SIMPLE_L_HTML = function ({ component = defComponent, printConfig }) {
   return `
 <div class="artifact-label">
 <div class="row">
@@ -72,7 +72,7 @@ const ARTIFACT_SIMPLE_L_HTML = function ({ component = defComponent }) {
   </div>
 </div>
 <div class="row">
-  <div class="col" style="flex:2;" style="font-size: 60px;">
+  <div class="col" style="${printConfig?.dateInProduced ? 'flex:2;' : 'flex:2;display:none;'}">
     生产日期：${component.printTime}
   </div>
   <div class="col qr-content" style="flex:1;">
@@ -96,7 +96,7 @@ const ARTIFACT_CUSTOM_L_HTML = function ({ component = defComponent, printConfig
     <div class="col amplify-content">
       <span class="amplify-no">NO:</span>
       <span class="amplify-text">${component.serialNumber}</span>
-      <span class="amplify-date">生产日期：${component.printTime}</span>
+      <span class="amplify-date" style="${printConfig?.dateInProduced ? '' : 'display:none;'}">生产日期：${component.printTime}</span>
     </div>
   </div>
   <div class="row">
@@ -249,7 +249,7 @@ const ENCLOSURE_COMMON_L_HTML = function ({ component = defComponent, printConfi
         <div class="row">编号：${component.serialNumber}</div>
         <div class="row">总张数：${component.quantity}</div>
         <div class="row">板型：${component.plate}</div>
-        <div class="row">生产日期：${component.printTime}</div>
+        <div class="row" style="${printConfig?.dateInProduced ? '' : 'display:none;'}">生产日期：${component.printTime}</div>
       </div>
     </div>
   </div>
@@ -277,7 +277,7 @@ const ENCLOSURE_CUSTOM_L_HTML = function ({ component = defComponent, printConfi
         <div class="row">编号：${component.serialNumber}</div>
         <div class="row">总张数：${component.quantity}</div>
         <div class="row">板型：${component.plate}</div>
-        <div class="row">生产日期：${component.printTime}</div>
+        <div class="row" style="${printConfig?.dateInProduced ? '' : 'display:none;'}">生产日期：${component.printTime}</div>
       </div>
       <div class="flex-1">
         <div class="qr-content">

@@ -14,6 +14,20 @@
     >
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="序号" type="index" align="center" width="60" />
+      <el-table-column
+        v-if="columns.visible('serialNumber')"
+        key="serialNumber"
+        prop="serialNumber"
+        sortable="custom"
+        label="车次"
+        align="center"
+        min-width="140px"
+      >
+        <template v-slot="scope">
+          <table-cell-tag :show="scope.row.deliveryStatus===deliveryStatusEnum.RETURN.V" name="已取消" color="#f56c6c"/>
+          <span>{{ scope.row.serialNumber }}</span>
+        </template>
+      </el-table-column>
       <el-table-column v-if="columns.visible('auditTime')" key="auditTime" prop="auditTime" sortable="custom" label="发运日期" width="120">
         <template v-slot="scope">
           <span v-parse-time="{ val: scope.row.auditTime, fmt: '{y}-{m}-{d}' }" />
@@ -57,19 +71,6 @@
             disable-transitions
             >{{ packTypeEnum.VL[item] }}</el-tag
           >
-        </template>
-      </el-table-column>
-      <el-table-column
-        v-if="columns.visible('serialNumber')"
-        key="serialNumber"
-        prop="serialNumber"
-        sortable="custom"
-        label="车次"
-        align="center"
-        min-width="140px"
-      >
-        <template v-slot="scope">
-          <el-tag effect="light" disable-transitions style="width: 100%; max-width: 130px">{{ scope.row.serialNumber }}</el-tag>
         </template>
       </el-table-column>
       <el-table-column
@@ -177,6 +178,9 @@
     <pagination />
     <m-detail v-model:visible="detailVisible" :detail-info="shipInfo" title="装车详情" :detailFunc="detail">
       <template #tip>
+        <div style="width:150px;height:53px;overflow:hidden;position:absolute;top:-18px;left:-20px;">
+          <table-cell-tag :show="shipInfo.deliveryStatus===deliveryStatusEnum.RETURN.V" name="已取消" color="#f56c6c"/>
+        </div>
         <el-tag effect="plain" size="medium" type="danger">车次：{{ shipInfo.serialNumber }}</el-tag>
         <el-tag effect="plain" size="medium">项目：{{ shipInfo.project && shipInfo.project.shortName }}</el-tag>
         <el-tag effect="plain" size="medium" type="success">办理人：{{ shipInfo.auditUserName }}</el-tag>
@@ -191,7 +195,7 @@ import { ref } from 'vue'
 
 import { mesShipPM as permission } from '@/page-permission/mes'
 import { manufactureTypeEnum } from '@enum-ms/production'
-import { packTypeEnum } from '@enum-ms/mes'
+import { packTypeEnum, deliveryStatusEnum } from '@enum-ms/mes'
 import { DP } from '@/settings/config'
 import { cleanArray } from '@/utils/data-type/array'
 import EO from '@enum'

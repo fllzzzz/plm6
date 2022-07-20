@@ -42,7 +42,7 @@
             <common-button :loading="uploadZipLoading" type="primary" :disabled="errorList && errorList.length > 0" @click="uploadZip">上传</common-button>
           </template>
           <template v-else>
-            <el-popconfirm title="保存后无法删除,确定上传?" @confirm="uploadZip">
+            <el-popconfirm :title="dataType?'保存后无法删除,确定上传?':'确定上传?'" @confirm="uploadZip">
               <template #reference>
                 <common-button :loading="uploadZipLoading" type="primary" :disabled="errorList && errorList.length > 0">上传</common-button>
               </template>

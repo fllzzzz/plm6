@@ -160,14 +160,16 @@ function setOption(basicClass) {
     opts = matClsLeafList.value
   }
   if (isNotBlank(props.classifyIds)) {
-    opts = opts.filter((v) => {
-      for (const cid of props.classifyIds) {
-        if (v.fullPathId.includes(cid)) {
-          return true
+    if (!props.classifyIds.includes(0)) {
+      opts = opts.filter((v) => {
+        for (const cid of props.classifyIds) {
+          if (v.fullPathId.includes(cid)) {
+            return true
+          }
         }
-      }
-      return false
-    })
+        return false
+      })
+    }
   }
   if (props.autoSelected && isNotBlank(opts)) {
     setSelection(opts[0])

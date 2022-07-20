@@ -13,7 +13,12 @@
       @selection-change="crud.selectionChangeHandler"
     >
       <el-table-column type="selection" width="50" align="center" />
-      <el-table-column label="序号" type="index" align="center" width="50" />
+      <el-table-column label="序号" align="center" width="50">
+         <template v-slot="scope">
+          <span>{{scope.$index+1}}</span>
+          <table-cell-tag :show="scope.row.deliveryStatus===deliveryStatusEnum.RETURN.V && scope.row.changeFreight===freightChangeTypeEnum.CANCEL.V" name="已作废" color="#f56c6c"/>
+        </template>
+      </el-table-column>
       <el-table-column
         v-if="columns.visible('supplier.name')"
         key="supplier.name"
@@ -170,6 +175,7 @@
             size="mini"
             icon="el-icon-edit"
             type="primary"
+            v-if="!(scope.row.deliveryStatus===deliveryStatusEnum.RETURN.V && scope.row.changeFreight===freightChangeTypeEnum.CANCEL.V)"
             v-permission="permission.edit"
             @click="openForm(scope.row,'edit')"
           />
@@ -195,7 +201,7 @@ import { ref } from 'vue'
 
 import { logisticsPM as permission } from '@/page-permission/mes'
 import { manufactureTypeEnum } from '@enum-ms/production'
-import { packTypeEnum, logisticsPriceTypeEnum } from '@enum-ms/mes'
+import { packTypeEnum, logisticsPriceTypeEnum, deliveryStatusEnum, freightChangeTypeEnum } from '@enum-ms/mes'
 import { projectNameFormatter } from '@/utils/project'
 import { DP } from '@/settings/config'
 import { cleanArray } from '@/utils/data-type/array'

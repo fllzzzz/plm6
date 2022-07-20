@@ -30,6 +30,15 @@
         class="filter-item"
         @change="crud.toQuery"
       />
+      <common-radio-button
+        v-model="query.deliveryStatus"
+        :options="deliveryStatusEnum.ENUM"
+        showOptionAll
+        type="enum"
+        size="small"
+        class="filter-item"
+        @change="crud.toQuery"
+      />
       <el-date-picker
         v-model="query.deliveryDate"
         type="daterange"
@@ -45,7 +54,7 @@
       <div>
         <el-input
           v-model="query.blurry"
-          placeholder="可按名称或编号搜索"
+          placeholder="产品名称/产品编号"
           class="filter-item"
           style="width: 200px"
           size="small"
@@ -88,6 +97,7 @@
           clearable
           @keyup.enter="crud.toQuery"
         />
+        <el-input-number v-model.number="query.minNum" :min="0" :max="query.maxNum || 999" :precision="2" :controls="false" size="small" style="width: 80px" class="filter-item" placeholder="差值率"/>%~<el-input-number v-model.number="query.maxNum" class="filter-item" :min="query.minNum || 0" :precision="2" :max="999" :controls="false" size="small" style="width: 80px" placeholder="差值率" />%
         <rrOperation />
       </div>
     </div>
@@ -120,7 +130,7 @@ import { getSummaryShipMete } from '@/api/mes/pack-and-ship/ship-list'
 import { inject, onMounted, ref, computed } from 'vue'
 import moment from 'moment'
 
-import { packTypeEnum, mesEnclosureTypeEnum } from '@enum-ms/mes'
+import { packTypeEnum, mesEnclosureTypeEnum, deliveryStatusEnum } from '@enum-ms/mes'
 import { manufactureTypeEnum } from '@enum-ms/production'
 import { DP } from '@/settings/config'
 import { convertUnits } from '@/utils/convert/unit'
@@ -142,7 +152,9 @@ const defaultQuery = {
   auditEndDate: undefined,
   projectId: { value: undefined, resetAble: false },
   productType: { value: undefined, resetAble: false },
-  manufactureType: { value: undefined, resetAble: false }
+  manufactureType: { value: undefined, resetAble: false },
+  minNum: undefined,
+  maxNum: undefined
 }
 const { crud, query, CRUD } = regHeader(defaultQuery)
 
@@ -217,4 +229,5 @@ function handleDateChange() {
   }
   crud.toQuery()
 }
+
 </script>

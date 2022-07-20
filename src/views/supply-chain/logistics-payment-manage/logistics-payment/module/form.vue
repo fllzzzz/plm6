@@ -208,8 +208,8 @@ CRUD.HOOK.afterToAdd = () => {
 
 CRUD.HOOK.beforeSubmit = () => {
   crud.form.attachmentIds = crud.form.attachments ? crud.form.attachments.map((v) => v.id) : undefined
-  crud.form.supplierId = props.detailInfo.supplierId || 1
-  crud.form.branchCompanyId = props.detailInfo.branchCompanyId || 1
+  crud.form.supplierId = props.detailInfo.supplierId
+  crud.form.branchCompanyId = props.detailInfo.branchCompanyId
   crud.form.applyAmount = 0
   crud.form.detailSaveParams = []
   freightDetails.value.map(v => {

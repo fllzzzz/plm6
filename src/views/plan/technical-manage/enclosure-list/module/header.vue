@@ -145,6 +145,19 @@
           v-if="query.category !== TechnologyTypeAllEnum.BENDING.V && checkPermission(crud.permission.techDetail)"
           >技术交底</common-button
         >
+        <zip-upload-btn
+          ref="changeFileRef"
+          v-if="query.category === TechnologyTypeAllEnum.BENDING.V && checkPermission(crud.permission.draw) && query.areaId"
+          :upload-fun="uploadBendingZip"
+          :data="{ areaId: query.areaId }"
+          :btn-name="'批量上传图纸'"
+          :btn-type="'warning'"
+          :btn-size="'mini'"
+          :accept="'.zip,.jpg,.jpeg,.png'"
+          class="filter-item"
+          @success="crud.toQuery"
+          :tip="'.jpg,.jpeg,.png'"
+        />
       </template>
     </crudOperation>
     <common-drawer
@@ -166,6 +179,7 @@
 </template>
 
 <script setup>
+import { uploadBendingZip } from '@/api/plan/technical-manage/enclosure'
 import { defineProps, ref, computed, defineEmits, watch } from 'vue'
 import { regHeader } from '@compos/use-crud'
 import rrOperation from '@crud/RR.operation'
@@ -186,6 +200,7 @@ import { getTotalSum } from '@/api/plan/technical-manage/enclosure'
 import { DP } from '@/settings/config'
 import { delEnclosureByArea } from '@/api/plan/technical-manage/enclosure'
 import checkPermission from '@/utils/system/check-permission'
+import zipUploadBtn from '@/views/plan/technical-data-manage/components/drawing-upload-btn'
 
 const defaultQuery = {
   name: undefined,

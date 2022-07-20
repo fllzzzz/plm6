@@ -29,19 +29,60 @@
         class="filter-item"
         @change="crud.toQuery"
       />
-      <el-date-picker
-        v-model="query.deliveryDate"
-        type="daterange"
-        range-separator=":"
+      <common-radio-button
+        v-model="query.shipmentStatus"
+        :options="deliveryReceiptStatusEnum.ENUM"
+        showOptionAll
+        type="enum"
         size="small"
-        class="filter-item date-item"
-        start-placeholder="发运开始日期"
-        end-placeholder="发运结束日期"
-        style="width: 240px"
-        :shortcuts="PICKER_OPTIONS_SHORTCUTS"
-        @change="handleDeliveryDateChange"
+        class="filter-item"
+        @change="crud.toQuery"
       />
-      <el-date-picker
+      <div  class="date-div" style="position:relative;padding-left:115px;vertical-align:0px;display:inline-block;border:1px solid #dcdfe6;border-radius:4px;height:31px;">
+        <common-select
+          v-model="query.searchType"
+          :options="searchDateTypeEnum.ENUM"
+          type="enum"
+          class="date-select"
+          style="width:115px;vertical-align:middle;"
+          @change="handleDateChange"
+        />
+        <el-date-picker
+          v-model="query.deliveryDate"
+          type="daterange"
+          range-separator=":"
+          size="small"
+          class="filter-item date-item date-change"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
+          style="width: 240px;vertical-align:middle;"
+          :shortcuts="PICKER_OPTIONS_SHORTCUTS"
+          @change="handleDateChange"
+        />
+      </div>
+      <!-- <div style="position:relative;padding-left:115px;vertical-align:middle;display:inline-block;">
+        <common-select
+          v-model="query.searchType"
+          :options="searchDateTypeEnum.ENUM"
+          type="enum"
+          class="date-select"
+          style="width:115px;vertical-align:middle;"
+          @change="handleDateChange"
+        />
+        <el-date-picker
+          v-model="query.deliveryDate"
+          type="daterange"
+          range-separator=":"
+          size="small"
+          class="filter-item date-item"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
+          style="width: 240px;vertical-align:middle;"
+          :shortcuts="PICKER_OPTIONS_SHORTCUTS"
+          @change="handleDateChange"
+        />
+      </div> -->
+      <!-- <el-date-picker
         v-model="query.receiptDate"
         type="daterange"
         range-separator=":"
@@ -51,8 +92,17 @@
         end-placeholder="收货结束日期"
         style="width: 230px"
         @change="handleReceiptDateChange"
-      />
+      /> -->
       <div>
+        <el-input
+          v-model="query.blurry"
+          placeholder="产品名称/产品编号"
+          class="filter-item"
+          style="width: 200px"
+          size="small"
+          clearable
+          @keyup.enter="crud.toQuery"
+        />
         <el-input
           v-model="query.serialNumber"
           placeholder="可输入车次搜索"
@@ -131,7 +181,7 @@
 import { inject, onMounted, ref, computed } from 'vue'
 import moment from 'moment'
 
-import { packTypeEnum, receiptStatusEnum } from '@enum-ms/mes'
+import { packTypeEnum, receiptStatusEnum, deliveryReceiptStatusEnum, searchDateTypeEnum } from '@enum-ms/mes'
 import { manufactureTypeEnum } from '@enum-ms/production'
 import { isNotBlank } from '@data-type/index'
 import { PICKER_OPTIONS_SHORTCUTS } from '@/settings/config'
@@ -153,7 +203,8 @@ const defaultQuery = {
   receiptName: undefined,
   projectId: { value: undefined, resetAble: false },
   productType: { value: undefined, resetAble: false },
-  manufactureType: { value: undefined, resetAble: false }
+  manufactureType: { value: undefined, resetAble: false },
+  shipmentStatus: undefined
 }
 const { crud, query } = regHeader(defaultQuery)
 
@@ -189,25 +240,56 @@ function handleBeforePrint() {
   }
 }
 
-function handleDeliveryDateChange() {
+function handleDateChange() {
   if (query.deliveryDate && query.deliveryDate.length > 1) {
-    query.auditStartDate = moment(query.deliveryDate[0]).valueOf()
-    query.auditEndDate = moment(query.deliveryDate[1]).valueOf()
+    if (query.searchType === searchDateTypeEnum.DELIVERY_DATE.V) {
+      query.auditStartDate = moment(query.deliveryDate[0]).valueOf()
+      query.auditEndDate = moment(query.deliveryDate[1]).valueOf()
+      query.statusUpdateStartDate = undefined
+      query.statusUpdateEndDate = undefined
+    } else {
+      query.statusUpdateStartDate = moment(query.deliveryDate[0]).valueOf()
+      query.statusUpdateEndDate = moment(query.deliveryDate[1]).valueOf()
+      query.auditStartDate = undefined
+      query.auditEndDate = undefined
+    }
   } else {
+    query.statusUpdateStartDate = undefined
+    query.statusUpdateEndDate = undefined
     query.auditStartDate = undefined
     query.auditEndDate = undefined
   }
-  crud.toQuery()
-}
-
-function handleReceiptDateChange() {
-  if (query.receiptDate && query.receiptDate.length > 1) {
-    query.auditReceiptStartDate = moment(query.receiptDate[0]).valueOf()
-    query.auditReceiptEndDate = moment(query.receiptDate[1]).valueOf
-  } else {
-    query.auditReceiptStartDate = undefined
-    query.auditReceiptEndDate = undefined
-  }
-  crud.toQuery()
 }
 </script>
+<style lang="scss" scoped>
+.date-select{
+  position:absolute;
+  top:0;
+  left:3px;
+  ::v-deep(.el-input__inner){
+    border:0 none;
+    // border-right:0 none;
+    line-height:29px;
+    height:29px;
+    padding-left:2px;
+    padding-right:32px;
+  }
+}
+::v-deep(.date-change.el-input__inner){
+  border:0 none;
+  line-height:29px;
+  height:29px;
+}
+.date-div{
+  &::before{
+    content:'';
+    width:1px;
+    height:30px;
+    position:absolute;
+    top:0;
+    left:116px;
+    background-color:#dcdfe6;
+    z-index:500;
+  }
+}
+</style>
