@@ -14,7 +14,7 @@
       <div v-show="showOperate" class="operate-content">
         <div v-if="multipleDrawing" class="operate-left">
           <el-radio-group v-model="curDSN">
-            <el-radio-button v-for="item in drawingSN" :key="item" :label="item">{{ serialNumber + '-' + item }}</el-radio-button>
+            <el-radio-button v-for="item in drawingSN" :key="item" :label="item">{{ serialNumber + '_' + item }}</el-radio-button>
           </el-radio-group>
         </div>
         <div v-else class="operate-left">{{ serialNumber }}</div>
