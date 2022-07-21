@@ -63,7 +63,7 @@
     <crudOperation>
       <template v-slot:optLeft>
         <print-table
-          v-permission="permission.print"
+          v-permission="crud.permission.print"
           api-key="mesShipmentAudit"
           :params="{ ...query }"
           size="mini"
@@ -76,11 +76,7 @@
 </template>
 
 <script setup>
-import { inject, onMounted, ref } from 'vue'
-
 import { packTypeEnum, shipAuditStatusEnum } from '@enum-ms/mes'
-// import { isNotBlank } from '@data-type/index'
-import checkPermission from '@/utils/system/check-permission'
 
 import { regHeader } from '@compos/use-crud'
 import crudOperation from '@crud/CRUD.operation'
@@ -96,35 +92,4 @@ const defaultQuery = {
 }
 const { crud, query } = regHeader(defaultQuery)
 
-const permission = inject('permission')
-// const currentKey = ref()
-const apiKey = ref([])
-
-onMounted(() => {
-  if (checkPermission(permission.print)) {
-    apiKey.value.push('STEEL_MES_PACK_SHIP')
-  }
-  if (checkPermission(permission.detailPrint)) {
-    apiKey.value.push('STEEL_MES_PACK_SHIP_DETAIL')
-  }
-})
-
-// const printParams = computed(() => {
-//   if (currentKey.value === 'STEEL_MES_PACK_SHIP') {
-//     return { ...query }
-//   }
-//   if (currentKey.value === 'STEEL_MES_PACK_SHIP_DETAIL' && isNotBlank(crud.selections)) {
-//     return crud.selections.map(row => {
-//       return row.id
-//     })
-//   }
-//   return undefined
-// })
-
-// function handleBeforePrint() {
-//   if (currentKey.value === 'STEEL_MES_PACK_SHIP_DETAIL' && !isNotBlank(printParams)) {
-//     $message.warning('至少选择一条需要打印的发运信息')
-//     return false
-//   }
-// }
 </script>

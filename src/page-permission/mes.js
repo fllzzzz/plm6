@@ -437,7 +437,8 @@ export const logisticsPM = {
 export const shipAuditPM = {
   get: ['mes_ship_audit:get'], // 审核列表
   detail: ['mes_ship_audit:detail'], // 装车明细
-  print: ['mes_ship_audit:print'], // 打印详情
+  print: ['mes_ship_audit:print'], // 打印发运审核
+  download: ['mes_ship_audit:download'], // 下载发运详情
   audit: ['mes_ship_audit:audit'] // 发运审核
 }
 
