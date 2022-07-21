@@ -25,11 +25,13 @@
         <drawing-preview-small-view
           ref="drawingRef"
           :boolBim="boolBim"
+          :drawingSN="drawingSN"
           :serial-number="serialNumber"
           :productId="productId"
           :productType="productType"
           class="drawing"
-          :style="{ height: `${maxHeight}px`, overflow: 'auto' }"
+          style="position: relative"
+          :style="{ height: `${maxHeight}px` }"
         ></drawing-preview-small-view>
       </div>
     </template>
@@ -58,6 +60,9 @@ const props = defineProps({
   monomerId: {
     type: Number,
     default: undefined
+  },
+  drawingSN: {
+    type: [String, Array]
   },
   serialNumber: {
     type: String

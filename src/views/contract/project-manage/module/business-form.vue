@@ -150,9 +150,9 @@
             <el-input
               v-model.trim="form.payTypeDesc"
               type="textarea"
-              :autosize="{ minRows: 4, maxRows: 4 }"
+              :autosize="{ minRows: 4, maxRows: 8 }"
               class="input-underline"
-              maxlength="200"
+              maxlength="2000"
               show-word-limit
               style="width: 550px"
               placeholder="付款方式描述"
@@ -307,7 +307,7 @@ const validateTax = (rule, value, callback) => {
 }
 
 const rules = {
-  payTypeDesc: [{ max: 200, message: '不能超过 200 个字符', trigger: 'blur' }],
+  payTypeDesc: [{ max: 2000, message: '不能超过 2000 个字符', trigger: 'blur' }],
   businessType: [{ required: true, message: '请选择业务类型', trigger: 'change' }],
   projectType: [{ required: true, message: '请选择项目类型', trigger: 'change' }],
   projectContent: [{ required: true, message: '请输入项目内容', trigger: 'change' }],
