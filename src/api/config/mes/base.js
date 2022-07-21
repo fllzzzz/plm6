@@ -90,6 +90,27 @@ export function setDriverConfig(data) {
 }
 
 /**
+ * 获取图纸识别规则
+ */
+export function getDrawingConfig() {
+  return request({
+    url: '/api/drawing/rules',
+    method: 'get'
+  })
+}
+
+/**
+ * 设置图纸识别规则
+ */
+export function setDrawingConfig(data) {
+  return request({
+    url: '/api/drawing/rules',
+    method: 'post',
+    data
+  })
+}
+
+/**
  * 获取app-打印配置
  */
 export function getPrintConfig() {
