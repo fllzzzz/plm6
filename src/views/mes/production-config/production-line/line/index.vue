@@ -108,9 +108,9 @@
         key="targetProductionShow"
         prop="targetProductionShow"
         :show-overflow-tooltip="true"
-        label="目标产量(吨)"
+        label="目标产量(吨/月)"
         align="center"
-        width="100px"
+        width="110px"
       >
         <template v-slot="{ row }">
           <span>{{ row.targetProductionShow }}</span>
