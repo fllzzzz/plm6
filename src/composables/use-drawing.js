@@ -10,6 +10,7 @@ export default function useDrawing({ pidField = 'id', typeField = 'productType',
       boolBim: row.boolBim,
       monomerId: row.monomerId,
       serialNumber: row.serialNumber,
+      drawingSN: row.numbers, // 图纸编号
       attachmentId: row.attachmentId,
       productId: row[pidField],
       productType: productTypeField && componentTypeEnum[productTypeField]?.V || row[typeField]

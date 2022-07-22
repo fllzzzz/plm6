@@ -127,6 +127,7 @@
     <bim-preview-drawer
       v-model:visible="showDrawing"
       :bool-bim="drawingRow?.boolBim"
+      :drawingSN="drawingRow?.drawingSN"
       :monomer-id="drawingRow?.monomerId"
       :serial-number="drawingRow?.serialNumber"
       :productId="drawingRow?.productId"

@@ -154,7 +154,7 @@ watch(
   (val) => {
     if (val.id) {
       crud.query.projectId = val.id
-      crud.toQuery()
+      // crud.toQuery()
     }
   },
   { immediate: true, deep: true }
@@ -179,6 +179,17 @@ watch(
   (val) => {
     if (val) {
       crud.query.monomerId = val
+      // crud.toQuery()
+    }
+  },
+  { immediate: true, deep: true }
+)
+
+watch(
+  () => crud.query.monomerId,
+  (val) => {
+    if (val) {
+      // crud.query.monomerId = val
       crud.toQuery()
     }
   },
