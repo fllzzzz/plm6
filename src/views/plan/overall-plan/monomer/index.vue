@@ -250,6 +250,7 @@ const tableRef = ref()
 const originDetailRow = ref({})
 const techOptions = [
   { label: '构件', key: 'mainStructure', dateKey: 'mainStructureDate', no: TechnologyTypeAllEnum.STRUCTURE.V, alias: 'STRUCTURE', unit: 't' },
+  { label: '箱体', key: 'bridgeStructure', dateKey: 'bridgeStructureDate', no: TechnologyTypeAllEnum.BRIDGE.V, alias: 'STRUCTURE', unit: 't' },
   {
     label: '夹芯板',
     key: 'battenBoard',

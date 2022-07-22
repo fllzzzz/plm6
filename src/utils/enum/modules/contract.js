@@ -66,7 +66,8 @@ const TechnologyTypeAllEnum = {
   TRUSS_FLOOR_PLATE: { L: '桁架楼承板', K: 'TRUSS_FLOOR_PLATE', V: 1 << 3 },
   PRESSURE_BEARING_PLATE: { L: '压型楼承板', K: 'PRESSURE_BEARING_PLATE', V: 1 << 4 },
   SANDWICH_BOARD: { L: '夹芯板', K: 'SANDWICH_BOARD', V: 1 << 2 },
-  BENDING: { L: '折边件', K: 'BENDING', V: 1 << 5 }
+  BENDING: { L: '折边件', K: 'BENDING', V: 1 << 5 },
+  BRIDGE: { L: '箱体', K: 'BENDING', V: 1 << 7 }
 }
 constantize(TechnologyTypeAllEnum)
 

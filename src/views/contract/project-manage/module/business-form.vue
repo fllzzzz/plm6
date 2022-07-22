@@ -23,7 +23,29 @@
               clearable
               placeholder="业务类型"
               class="input-underline"
+            />
+            <!-- <common-select
+              v-model="form.businessType"
+              :options="businessTypeEnum.ENUM"
+              type="enum"
+              size="small"
+              clearable
+              placeholder="业务类型"
+              class="input-underline"
               @change="businessChange"
+            /> -->
+          </el-form-item>
+          <el-form-item label="项目类型" prop="projectType">
+            <common-select
+              v-model="form.projectType"
+              :options="projectTypeEnum.ENUM"
+              type="enum"
+              size="small"
+              clearable
+              placeholder="项目类型"
+              style="width: 200px"
+              class="input-underline"
+              @change="projectTypeChange"
             />
           </el-form-item>
           <el-form-item label="项目内容" prop="projectContent">
@@ -43,18 +65,6 @@
           </el-form-item>
         </div>
         <div class="form-row">
-          <el-form-item label="项目类型" prop="projectType">
-            <common-select
-              v-model="form.projectType"
-              :options="projectTypeEnum.ENUM"
-              type="enum"
-              size="small"
-              clearable
-              placeholder="项目类型"
-              style="width: 200px"
-              class="input-underline"
-            />
-          </el-form-item>
           <el-form-item label="签约人" prop="signerId">
             <user-dept-cascader
               v-model="form.signerId"
@@ -219,10 +229,13 @@ import enclosureShow from './enclosure-show'
 import { isNotBlank } from '@/utils/data-type'
 
 const formRef = ref()
-let projectContent1 = []
+// const projectContent1 = []
 let AllContent1 = []
-let projectContent2 = []
-let AllContent2 = []
+let artifactContent = []
+let bridgeContent = []
+let carbarnContent = []
+// const projectContent2 = []
+// const AllContent2 = []
 const projectContentOption = ref([])
 const showItem = ref([])
 const showCategory = ref([])
@@ -354,12 +367,10 @@ contentInfo()
 
 async function contentInfo() {
   AllContent1 = []
-  AllContent2 = []
   try {
-    const data1 = await getContentInfo({ businessType: businessTypeEnum.MACHINING.V })
-    const data2 = await getContentInfo({ businessType: businessTypeEnum.INSTALLATION.V })
-    if (data1 && data1.content.length > 0) {
-      data1.content.map(v => {
+    const data = await getContentInfo({ businessType: businessTypeEnum.MACHINING.V })
+    if (data && data[projectTypeEnum.STEEL.V].length > 0) {
+      data[projectTypeEnum.STEEL.V].map(v => {
         v.name = v.categoryName
         if (v.children && v.children.length > 0) {
           v.children.map(k => {
@@ -368,36 +379,59 @@ async function contentInfo() {
         }
       })
     }
-    if (data2 && data2.content.length > 0) {
-      data2.content.map(v => {
+    if (data && data[projectTypeEnum.BRIDGE.V].length > 0) {
+      data[projectTypeEnum.BRIDGE.V].map(v => {
         v.name = v.categoryName
-        if (v.children && v.children.length > 0) {
-          v.children.map(k => {
-            AllContent2.push(k)
-          })
-        }
       })
     }
-    projectContent1 = data1.content || []
-    projectContent2 = data2.content || []
+    if (data && data[projectTypeEnum.CARBARN.V].length > 0) {
+      data[projectTypeEnum.CARBARN.V].map(v => {
+        v.name = v.categoryName
+      })
+    }
+    artifactContent = data[projectTypeEnum.STEEL.V] || []
+    bridgeContent = data[projectTypeEnum.BRIDGE.V] || []
+    carbarnContent = data[projectTypeEnum.CARBARN.V] || []
   } catch (error) {
     console.log(error)
   }
 }
 
-function businessChange() {
+function projectTypeChange() {
   projectContentOption.value = []
   form.value.projectContent = []
   showItem.value = []
   showCategory.value = []
   form.value.structureMeasureMode = undefined
-  // form.value.enclosureMeasureMode = undefined
   form.value.measureModeList = []
   Object.assign(form.value, JSON.parse(JSON.stringify(techForm)))
-  if (form.value.businessType) {
-    projectContentOption.value = form.value.businessType === businessTypeEnum.MACHINING.V ? projectContent1 : projectContent2
+  if (form.value.projectType) {
+    switch (form.value.projectType) {
+      case projectTypeEnum.STEEL.V:
+        projectContentOption.value = artifactContent
+        break
+      case projectTypeEnum.BRIDGE.V:
+        projectContentOption.value = bridgeContent
+        break
+      case projectTypeEnum.CARBARN.V:
+        projectContentOption.value = carbarnContent
+        break
+      default: return ''
+    }
   }
 }
+// function businessChange() {
+//   projectContentOption.value = []
+//   form.value.projectContent = []
+//   showItem.value = []
+//   showCategory.value = []
+//   form.value.structureMeasureMode = undefined
+//   form.value.measureModeList = []
+//   Object.assign(form.value, JSON.parse(JSON.stringify(techForm)))
+//   if (form.value.businessType) {
+//     projectContentOption.value = form.value.businessType === businessTypeEnum.MACHINING.V ? projectContent1 : projectContent2
+//   }
+// }
 function isTaxChange(val) {
   if (val !== isTaxContractEnum.YES.V) {
     form.value.invoiceType = undefined
@@ -422,6 +456,10 @@ function handleAddEnclosure() {
 }
 
 function getShowItem(val) {
+  if (form.value.projectType === projectTypeEnum.BRIDGE.V) {
+    form.value.structureMeasureMode = engineerSettlementTypeEnumN.THEORY.V
+    return
+  }
   showItem.value = []
   showCategory.value = []
   const totalItems = [

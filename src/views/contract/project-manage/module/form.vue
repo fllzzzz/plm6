@@ -62,7 +62,7 @@ const steps = {
   3: { K: 'projectMembersRef', L: '项目成员', V: 3 }
 }
 
-const stepActive = ref(0)
+const stepActive = ref(1)
 const loading = ref(false)
 
 function nextStepValidate() {
