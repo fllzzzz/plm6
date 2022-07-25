@@ -209,6 +209,9 @@ export async function formatExcelData(data, template = {}) {
           if (patternDP.test(f.precision)) {
             obj[f.field] = toPrecision(obj[f.field], f.precision)
           }
+        } else if (typeof obj[f.field] === 'number') {
+          // 非数值类型的 表格解析为数值的转为字符串
+          obj[f.field] = String(obj[f.field])
         }
       })
       res.push(obj)
