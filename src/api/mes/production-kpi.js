@@ -20,6 +20,16 @@ export function getCargoList(params) {
   })
 }
 
+// 目标达成
+export function getTargetComplete(params) {
+  return request({
+    module: 'mes',
+    url: 'kpi/production/complete/year',
+    method: 'get',
+    params: params
+  })
+}
+
 // 获取每月生产量
 export function getYieldList(params) {
   return request({
