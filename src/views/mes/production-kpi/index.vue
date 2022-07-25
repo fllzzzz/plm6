@@ -15,7 +15,7 @@
     </div>
     <div class="flex-r">
       <div class="view-left">
-        <el-card v-loading="loading" class="target" style="margin-bottom: 15px">
+        <el-card v-loading="targetLoading" class="target" style="margin-bottom: 15px">
           <template #header>
             <span>目标达成</span>
           </template>
@@ -23,7 +23,7 @@
             <div class="flex-rcc" style="flex: 1">
               <el-progress
                 type="circle"
-                :percentage="Number(summaryInfo.completeRate || 0)"
+                :percentage="Number(targetInfo.completeRate || 0)"
                 :stroke-width="16"
                 :width="140"
                 :color="colors"
@@ -36,12 +36,12 @@
             <div style="flex: 1; padding: 0px 10px" class="flex-ccc" border-style="dashed">
               <div>
                 <div style="margin-bottom: 5px">目标产量</div>
-                <div style="font-size: 20px; font-weight: bold; text-align: center">{{ summaryInfo.quantity || 0 }}</div>
+                <div style="font-size: 20px; font-weight: bold; text-align: center">{{ targetInfo.target || 0 }}</div>
               </div>
               <el-divider style="margin: 20px 0"></el-divider>
               <div>
                 <div style="margin-bottom: 5px">实时产量</div>
-                <div style="font-size: 20px; font-weight: bold; text-align: center">{{ summaryInfo.quantity || 0 }}</div>
+                <div style="font-size: 20px; font-weight: bold; text-align: center">{{ targetInfo.completeMete || 0 }}</div>
               </div>
             </div>
           </div>
@@ -134,6 +134,7 @@
 <script setup>
 import {
   getProjectSummary,
+  getTargetComplete,
   getCargoList,
   getYieldList,
   getLineYieldList,
@@ -169,9 +170,11 @@ const colors = [
   { color: '#6f7ad3', percentage: 100 }
 ]
 
+const targetInfo = ref({})
 const summaryInfo = ref({})
 const lineYieldList = ref([])
 const projectYieldList = ref([])
+const targetLoading = ref(false)
 const summaryLoading = ref(false)
 const monthYieldLoading = ref(false)
 const shipYieldLoading = ref(false)
@@ -293,6 +296,18 @@ async function refreshOtherData() {
     console.log(error, '获取项目数量统计失败')
   } finally {
     summaryLoading.value = false
+  }
+  try {
+    targetLoading.value = true
+    const data = await getTargetComplete({ dateTime: year.value })
+    data.completeMete = data.completeMete && (data.completeMete / 1000).toFixed(2) || 0
+    data.target = data.target && (data.target / 1000).toFixed(2) || 0
+    data.completeRate = data.target && Number(((data.completeMete / data.target) * 100)) || 0
+    targetInfo.value = data
+  } catch (error) {
+    console.log(error, '获取目标达成失败')
+  } finally {
+    targetLoading.value = false
   }
   try {
     lineYieldLoading.value = true
