@@ -9,6 +9,8 @@ export default function useDashboardIndex({ headRef, scrollBoxRef, crud, CRUD, p
     globalProjectId,
     (val) => {
       boardList.value = []
+      crud.query.monomerId = undefined
+      crud.query.areaId = undefined
     },
     { immediate: true }
   )
