@@ -21,7 +21,9 @@
       </div>
       <div v-if="multipleDrawing" class="operate-left">
         <el-radio-group v-model="curDSN" size="mini">
-          <el-radio-button v-for="item in drawingSN" :key="item" :label="item">{{ serialNumber + '_' + item }}</el-radio-button>
+          <el-radio-button v-for="item in drawingSN" :key="item" :label="item">
+            {{ `${serialNumber}${item ? '_' + item : ''}` }}
+          </el-radio-button>
         </el-radio-group>
       </div>
     </div>
@@ -39,6 +41,7 @@
 
 <script setup>
 import { defineProps, provide, ref, computed, defineExpose, nextTick, watch } from 'vue'
+import { isBlank } from '@data-type/index'
 import bimDrawingView from '@/components-system/bim/bim-drawing-view.vue'
 import pdfView from './pdf-view'
 import { ElRadioGroup } from 'element-plus'
@@ -96,7 +99,7 @@ provide('drawingSN', curDSN)
 watch(
   () => curDSN.value,
   () => {
-    if (!curDSN.value) return
+    if (isBlank(curDSN.value)) return
     nextTick(() => {
       if (props.boolBim) {
         viewBimRef.value?.fetchDrawing()
@@ -109,6 +112,10 @@ watch(
     })
   }
 )
+
+function closeHandle() {
+  curDSN.value = undefined
+}
 
 function fetch() {
   if (multipleDrawing.value) {
@@ -137,7 +144,8 @@ function fullscreen() {
 }
 
 defineExpose({
-  fetch
+  fetch,
+  closeHandle
 })
 </script>
 

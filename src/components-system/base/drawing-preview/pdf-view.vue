@@ -9,6 +9,7 @@ import { previewPDF } from '@/api/plan/technical-data-manage/deepen'
 
 import { ElNotification } from 'element-plus'
 import { defineEmits, defineExpose, inject, ref } from 'vue'
+import { isNotBlank } from '@data-type/index'
 import pdf from '@/components/PDF/pdf'
 
 const emit = defineEmits(['changeFileLoading'])
@@ -42,7 +43,7 @@ async function fetchDrawing() {
       productId: productId.value,
       productType: productType.value
     }
-    if (multipleDrawing.value) {
+    if (multipleDrawing.value && isNotBlank(drawingSN.value)) {
       param.number = drawingSN.value
     }
     const res = await previewPDF(param)
