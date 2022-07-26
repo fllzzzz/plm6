@@ -77,7 +77,7 @@ const props = defineProps({
   }
 })
 
-const { visible: drawerVisible, handleClose } = useVisible({ emit, props, field: 'visible', showHook: show })
+const { visible: drawerVisible, handleClose } = useVisible({ emit, props, field: 'visible', showHook: show, closeHook: close })
 
 // 高度
 const maxHeight = computed(() => document.documentElement.clientHeight * 0.5)
@@ -86,6 +86,10 @@ function show() {
   nextTick(() => {
     drawingRef.value?.fetch()
   })
+}
+
+function close() {
+  drawingRef.value?.closeHandle()
 }
 </script>
 
