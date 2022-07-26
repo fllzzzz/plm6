@@ -64,13 +64,14 @@ const props = defineProps({
 })
 
 const { globalProject, currentMenu, globalProjectId, globalProContentBit } = mapGetters(['globalProject', 'currentMenu', 'globalProjectId', 'globalProContentBit'])
-const allEnclosure = ['PlanEnclosureList', 'PlanArtifactTreeList', 'PlanArtifactList', 'PlanMachinePartList', 'PlanAssemblyList']
+const allEnclosure = ['PlanEnclosureList', 'PlanArtifactTreeList', 'PlanArtifactList', 'PlanMachinePartList', 'PlanAssemblyList', 'PlanArtifactManifest', 'PlanPartsManifest']
 const enclosureItem = [
   { name: 'PlanTrussSupportList', no: TechnologyTypeAllEnum.TRUSS_FLOOR_PLATE.V },
   { name: 'PlanSandwichList', no: TechnologyTypeAllEnum.SANDWICH_BOARD.V },
   { name: 'PlanPressedSupportList', no: TechnologyTypeAllEnum.PRESSURE_BEARING_PLATE.V },
   { name: 'PlanPressedColorList', no: TechnologyTypeAllEnum.PROFILED_PLATE.V },
-  { name: 'PlanArtifactTreeList', no: TechnologyTypeAllEnum.STRUCTURE.V }
+  { name: 'PlanArtifactTreeList', no: TechnologyTypeAllEnum.STRUCTURE.V },
+  { name: 'PlanArtifactManifest', no: TechnologyTypeAllEnum.BRIDGE.V }
 ]
 const showItem = ref([])
 watch(
@@ -94,6 +95,8 @@ watch(
                 arr.push('PlanAssemblyList')
               }
               arr.push('PlanArtifactList', 'PlanMachinePartList')
+            } else if (value.no === TechnologyTypeAllEnum.BRIDGE.V) {
+              arr.push('PlanPartsManifest')
             }
           }
         })

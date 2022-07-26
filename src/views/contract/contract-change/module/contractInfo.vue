@@ -7,7 +7,7 @@
     :before-close="handleClose"
     title="合同信息变更"
     :wrapper-closable="false"
-    size="80%"
+    size="85%"
   >
     <template #title>
       <div class="dialog-title">

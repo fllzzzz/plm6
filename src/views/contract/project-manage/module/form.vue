@@ -6,7 +6,7 @@
     :append-to-body="true"
     :close-on-click-modal="false"
     direction="rtl"
-    size="80%"
+    size="85%"
   >
     <template #titleRight>
       <!-- <span class="drawer-title">合同立项</span> -->
@@ -62,7 +62,7 @@ const steps = {
   3: { K: 'projectMembersRef', L: '项目成员', V: 3 }
 }
 
-const stepActive = ref(1)
+const stepActive = ref(0)
 const loading = ref(false)
 
 function nextStepValidate() {

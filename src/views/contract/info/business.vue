@@ -40,10 +40,37 @@
                   clearable
                   placeholder="业务类型"
                   class="input-underline"
-                  @change="businessChange"
                   :disabled="detail.monomerQuantity>0"
                 />
                 <span v-else>{{ detail.businessType? businessTypeEnum.VL[detail.businessType]: '-' }}</span>
+              </div>
+            </el-form-item>
+            <el-form-item label="项目类型" prop="projectType">
+              <template #label>
+                项目类型
+                <el-tooltip
+                  effect="light"
+                  :content="`已创建工作计划时不能修改`"
+                  placement="top"
+                >
+                  <i class="el-icon-info" />
+                </el-tooltip>
+              </template>
+              <div style="width: 200px">
+                <common-select
+                  v-if="isModify"
+                  v-model="form.projectType"
+                  :options="projectTypeEnum.ENUM"
+                  type="enum"
+                  size="small"
+                  clearable
+                  placeholder="项目类型"
+                  style="width: 200px"
+                  class="input-underline"
+                  @change="projectTypeChange"
+                  :disabled="detail.monomerQuantity>0"
+                />
+                <span v-else>{{ detail.projectType? projectTypeEnum.VL[detail.projectType]: '-' }}</span>
               </div>
             </el-form-item>
             <el-form-item label="项目内容" prop="projectContent">
@@ -62,17 +89,6 @@
                   @change="getShowItem"
                   filterable
                 />
-                <!-- <el-select
-                  v-if="isModify"
-                  v-model="form.projectContent"
-                  multiple
-                  placeholder="项目内容,可多选"
-                  class="input-underline"
-                  style="width: 320px"
-                  @change="getShowItem"
-                >
-                  <el-option v-for="item in projectContentOption" :key="item.id" :label="item.name" :value="item.id" :disabled="detail.monomerQuantity>0 && originContent.indexOf(item.id)>-1"/>
-                </el-select> -->
                 <template v-else>
                   <span v-for="item in detail.projectContentList" :key="item.id">{{ item.name }}&nbsp;</span>
                 </template>
@@ -80,22 +96,6 @@
             </el-form-item>
           </div>
           <div class="form-row">
-            <el-form-item label="项目类型" prop="projectType">
-              <div style="width: 200px">
-                <common-select
-                  v-if="isModify"
-                  v-model="form.projectType"
-                  :options="projectTypeEnum.ENUM"
-                  type="enum"
-                  size="small"
-                  clearable
-                  placeholder="项目类型"
-                  style="width: 200px"
-                  class="input-underline"
-                />
-                <span v-else>{{ detail.projectType? projectTypeEnum.VL[detail.projectType]: '-' }}</span>
-              </div>
-            </el-form-item>
             <el-form-item label="签约人" prop="signerId">
               <div style="width: 200px">
                 <template v-if="isModify">
@@ -113,8 +113,6 @@
                 <span v-else>{{ detail.signerName }}</span>
               </div>
             </el-form-item>
-          </div>
-          <div class="form-row">
             <el-form-item label="签订日期" prop="signingDate">
               <div style="width: 200px">
                 <el-date-picker
@@ -325,11 +323,8 @@ import { getContractBusiness, getContractTechInfo, getContentInfo } from '@/api/
 import { parseTime } from '@/utils/date'
 
 const formRef = ref()
-let projectContent1 = []
-const AllContent1 = []
-let projectContent2 = []
-const AllContent2 = []
-const projectContentOption = ref([])
+let machiningData = []
+let installData = []
 const showItem = ref([])
 const showCategory = ref([])
 const enclosureVisible = ref(false)
@@ -357,7 +352,6 @@ const defaultForm = {
   signingAddress: undefined, // 签约地址
   structureMeasureMode: engineerSettlementTypeEnumN.THEORY.V, // 结算方式
   measureModeList: [],
-  // enclosureMeasureMode: enclosureSettlementTypeEnum.LENGTH.V, // 围护结算方式
   transportMode: transportModeEnum.HOME_DELIVERY.V, // 运输方式
   payType: paymentModeEnum.PUBLIC_TRANSFER.V, // 付款方式
   isTax: isTaxContractEnum.YES.V, // 是否含税
@@ -448,6 +442,39 @@ const props = defineProps({
   }
 })
 
+const AllContent = computed(() => {
+  if (form.value.businessType) {
+    const typeData = form.value.businessType === businessTypeEnum.MACHINING.V ? machiningData : installData
+    const arr = []
+    if (typeData && typeData[projectTypeEnum.STEEL.V].length > 0) {
+      typeData[projectTypeEnum.STEEL.V].map(v => {
+        if (v.children && v.children.length > 0) {
+          v.children.map(k => {
+            arr.push(k)
+          })
+        }
+      })
+    }
+    return arr
+  } else {
+    return []
+  }
+})
+
+const projectContentOption = computed(() => {
+  if (form.value.businessType && form.value.projectType) {
+    switch (form.value.projectType) {
+      case projectTypeEnum.STEEL.V:
+        return form.value.businessType === businessTypeEnum.MACHINING.V ? machiningData[projectTypeEnum.STEEL.V] : installData[projectTypeEnum.STEEL.V]
+      case projectTypeEnum.BRIDGE.V:
+        return form.value.businessType === businessTypeEnum.MACHINING.V ? machiningData[projectTypeEnum.BRIDGE.V] : installData[projectTypeEnum.BRIDGE.V]
+      default: return form.value.businessType === businessTypeEnum.MACHINING.V ? machiningData[projectTypeEnum.CARBARN.V] : installData[projectTypeEnum.CARBARN.V]
+    }
+  } else {
+    return []
+  }
+})
+
 watch(
   () => props.projectId,
   (val) => {
@@ -462,7 +489,6 @@ function resetForm() {
   }
   form.value = JSON.parse(JSON.stringify(detail.value))
   form.value.projectContent = []
-  projectContentOption.value = form.value.businessType === businessTypeEnum.INSTALLATION.V ? projectContent2 : projectContent1
   if (detail.value.projectContentList && detail.value.projectContentList.length > 0) {
     detail.value.projectContentList.forEach((v) => {
       form.value.projectContent.push(v.id)
@@ -477,18 +503,13 @@ function resetForm() {
   useWatchFormValidate(formRef, form)
 }
 
-function businessChange() {
-  projectContentOption.value = []
+function projectTypeChange() {
   form.value.projectContent = []
   showItem.value = []
   showCategory.value = []
   form.value.structureMeasureMode = undefined
   form.value.measureModeList = []
-  // form.value.enclosureMeasureMode = undefined
   Object.assign(form.value, JSON.parse(JSON.stringify(techForm)))
-  if (form.value.businessType) {
-    projectContentOption.value = form.value.businessType === businessTypeEnum.MACHINING.V ? projectContent1 : projectContent2
-  }
 }
 
 function isTaxChange(val) {
@@ -510,15 +531,15 @@ function taxChange() {
   form.value.taxRate = form.value.businessTaxRate ? form.value.businessTaxRate / 100 : undefined
 }
 
-// function handleAddEnclosure() {
-//   if (!form.value.projectContent || form.value.projectContent.length === 0) {
-//     ElMessage.error('请先选择项目内容')
-//     return
-//   }
-//   enclosureVisible.value = true
-// }
-
 function getShowItem(val, type) {
+  if (form.value.projectType === projectTypeEnum.BRIDGE.V) {
+    form.value.structureMeasureMode = engineerSettlementTypeEnumN.THEORY.V
+    showItem.value = []
+    showCategory.value = []
+    form.value.measureModeList = []
+    Object.assign(form.value, JSON.parse(JSON.stringify(techForm)))
+    return
+  }
   showItem.value = []
   showCategory.value = []
   const allItems = [
@@ -554,7 +575,7 @@ function getShowItem(val, type) {
   const AllInfo = []
   if (val.length > 0) {
     val.map((v) => {
-      const val = AllContent1.find((k) => k.id === v)
+      const val = AllContent.value.find((k) => k.id === v)
       AllInfo.push(val)
       if (val.categoryType === TechnologyMainTypeEnum.STRUCTURE.V) {
         if (showItem.value.indexOf(TechnologyTypeEnum.STRUCTURE.V) < 0) {
@@ -657,30 +678,26 @@ async function fetchDetail() {
     _detail.trussFloorPlateList = data.trussFloorPlateList ? data.trussFloorPlateList : []
     _detail.pressureBearingPlateList = data.pressureBearingPlateList ? data.pressureBearingPlateList : []
     _detail.sandwichBoardList = data.sandwichBoardList ? data.sandwichBoardList : []
-    const data1 = await getContentInfo({ businessType: businessTypeEnum.MACHINING.V })
-    const data2 = await getContentInfo({ businessType: businessTypeEnum.INSTALLATION.V })
-    if (data1 && data1.content.length > 0) {
-      data1.content.map(v => {
-        v.name = v.categoryName
-        if (v.children && v.children.length > 0) {
-          v.children.map(k => {
-            AllContent1.push(k)
-          })
-        }
-      })
+    machiningData = await getContentInfo({ businessType: businessTypeEnum.MACHINING.V })
+    installData = await getContentInfo({ businessType: businessTypeEnum.INSTALLATION.V })
+    const dataArr = [machiningData, installData]
+    for (let i = 0; i < dataArr.length; i++) {
+      if (dataArr[i] && dataArr[i][projectTypeEnum.STEEL.V].length > 0) {
+        dataArr[i][projectTypeEnum.STEEL.V].map(v => {
+          v.name = v.categoryName
+        })
+      }
+      if (dataArr[i] && dataArr[i][projectTypeEnum.BRIDGE.V].length > 0) {
+        dataArr[i][projectTypeEnum.BRIDGE.V].map(v => {
+          v.name = v.categoryName
+        })
+      }
+      if (dataArr[i] && dataArr[i][projectTypeEnum.CARBARN.V].length > 0) {
+        dataArr[i][projectTypeEnum.CARBARN.V].map(v => {
+          v.name = v.categoryName
+        })
+      }
     }
-    if (data2 && data2.content.length > 0) {
-      data2.content.map(v => {
-        v.name = v.categoryName
-        if (v.children && v.children.length > 0) {
-          v.children.map(k => {
-            AllContent2.push(k)
-          })
-        }
-      })
-    }
-    projectContent1 = data1.content || []
-    projectContent2 = data2.content || []
     _detail.businessTaxRate = _detail.taxRate ? _detail.taxRate * 100 : undefined
   } catch (error) {
     console.log('error', error)
@@ -689,7 +706,6 @@ async function fetchDetail() {
     resetForm()
     form.value.projectContent = []
     originContentValue.value = []
-    projectContentOption.value = form.value.businessType === businessTypeEnum.INSTALLATION.V ? projectContent2 : projectContent1
     if (detail.value.projectContentList && detail.value.projectContentList.length > 0) {
       detail.value.projectContentList.forEach((v) => {
         form.value.projectContent.push(v.id)

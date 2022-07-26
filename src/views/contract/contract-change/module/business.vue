@@ -26,6 +26,11 @@
                 <span>{{ detail.businessType?businessTypeEnum.VL[detail.businessType]:'-' }}</span>
               </div>
             </el-form-item>
+            <el-form-item label="项目类型" prop="projectType">
+              <div style="width: 200px">
+                <span>{{ detail.projectType?projectTypeEnum.VL[detail.projectType]:'-' }}</span>
+              </div>
+            </el-form-item>
             <el-form-item label="项目内容" prop="projectContent">
               <div style="width: 320px">
                 <span v-for="item in detail.projectContentList" :key="item.id">{{ item.name }}&nbsp;</span>
@@ -33,18 +38,11 @@
             </el-form-item>
           </div>
           <div class="form-row">
-            <el-form-item label="项目类型" prop="projectType">
-              <div style="width: 200px">
-                <span>{{ detail.projectType?projectTypeEnum.VL[detail.projectType]:'-' }}</span>
-              </div>
-            </el-form-item>
-            <el-form-item label="签约人" prop="signerId">
+              <el-form-item label="签约人" prop="signerId">
               <div style="width: 200px">
                 <span>{{ detail.signerName }}</span>
               </div>
             </el-form-item>
-          </div>
-          <div class="form-row">
             <el-form-item label="签订日期" prop="signingDate">
               <div style="width: 200px">
                 <span v-if="detail.signingDate">{{ parseTime(detail.signingDate,'{y}-{m}-{d}') }}</span>
@@ -69,11 +67,6 @@
                 <span style="float:left;width:90px;text-align:right;">{{TechnologyTypeAllEnum.VL[item.no]}}：</span>
                 <span style="float:left;">{{enclosureSettlementTypeEnum.VL[item.measureMode]}}</span>
               </div>
-              <!-- <div>
-                <span>{{
-                  isNotBlank(detail.enclosureMeasureMode) ? enclosureSettlementTypeEnum.VL[detail.enclosureMeasureMode] : ''
-                }}</span>
-              </div> -->
             </el-form-item>
           </div>
           <div class="form-row">
