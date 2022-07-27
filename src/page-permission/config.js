@@ -263,6 +263,14 @@ export const configWageQuotaPM = {
   edit: ['wage_quota:edit'] // 编辑工价定额
 }
 
+// 建钢-生产配置/切割配置
+export const mesCuttingConfigPM = {
+  get: ['mes_cutting_config:get'], // 切割配置列表
+  add: ['mes_cutting_config:add'], // 添加切割配置
+  edit: ['mes_cutting_config:edit'], // 编辑切割配置
+  del: ['mes_cutting_config:del'] // 删除切割配置
+}
+
 // ---------------------------- 基础配置 end -------------------------------
 
 // ########################################################################
