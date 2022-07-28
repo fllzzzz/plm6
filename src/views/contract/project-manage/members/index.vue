@@ -108,6 +108,11 @@ watch(
   { immediate: true, deep: true }
 )
 
+// tree过滤输入监听
+watch(filterText, (val) => {
+  tree.value.filter(val)
+})
+
 const userList = computed(() => {
   return isEditing.value ? noDisabledUser.value : disabledUser.value
 })

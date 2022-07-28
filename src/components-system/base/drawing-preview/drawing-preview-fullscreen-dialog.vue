@@ -12,11 +12,19 @@
         <component ref="viewRef" :is="currentView" @changeFileLoading="changeFileLoading"> </component>
       </div>
       <div v-show="showOperate" class="operate-content">
-        <div class="operate-left">{{ serialNumber }}</div>
-        <div v-if="!boolBim" class="operate-middle">{{ `${pageNum} / ${pageTotalNum}` }}</div>
-        <div v-else class="operate-middle"></div>
-        <div class="operate-right" />
+        <div v-if="multipleDrawing" class="operate-left">
+          <el-radio-group v-model="curDSN">
+            <el-radio-button v-for="item in drawingSN" :key="item" :label="item">
+              {{ `${serialNumber}${item ? '_' + item : ''}` }}
+            </el-radio-button>
+          </el-radio-group>
+        </div>
+        <div v-else class="operate-left">{{ serialNumber }}</div>
+        <div class="operate-middle" />
+        <!-- <div v-if="!boolBim" class="operate-right">{{ `${pageNum} / ${pageTotalNum}` }}</div> -->
+        <div class="operate-right"></div>
       </div>
+
       <div class="quick-operation">
         <div class="icon-box" @click="scaleZoom">
           <svg-icon class="icon" icon-class="comp-zoom" />
@@ -45,10 +53,12 @@
 </template>
 
 <script setup>
-import { defineEmits, defineProps, provide, ref, computed, nextTick } from 'vue'
+import { defineEmits, defineProps, provide, ref, computed, nextTick, watch } from 'vue'
+import { isBlank } from '@data-type/index'
 import useVisible from '@compos/use-visible'
 import bimDrawingView from '@/components-system/bim/bim-drawing-view.vue'
 import pdfView from './pdf-view'
+import { ElRadioGroup } from 'element-plus'
 // bim内手动挂载组件需引入涉及组件
 import { ElDialog } from 'element-plus'
 import SvgIcon from '@comp/SvgIcon/index.vue'
@@ -62,6 +72,12 @@ const props = defineProps({
   boolBim: {
     type: Boolean,
     default: false
+  },
+  drawingSN: {
+    type: [String, Array]
+  },
+  curDrawingSN: {
+    type: [String, Number]
   },
   serialNumber: {
     // 编号
@@ -87,29 +103,55 @@ provide(
   computed(() => props.productType)
 )
 
-const { visible: dialogVisible, handleClose } = useVisible({ emit, props, field: 'modelValue', showHook: initPreview })
+const { visible: dialogVisible, handleClose } = useVisible({ emit, props, field: 'modelValue', showHook: initPreview, closeHook: closeHandle })
 
 const viewRef = ref()
-const showOperate = ref(false)
+const showOperate = ref(true)
 const pageNum = ref()
 const pageTotalNum = ref()
 const fileLoading = ref(false)
+const curDSN = ref()
 
 const currentView = computed(() => {
   console.log(props.boolBim, 'props.boolBim')
   return props.boolBim ? bimDrawingView : pdfView
 })
+const multipleDrawing = computed(() => Array.isArray(props.drawingSN) && props.drawingSN?.length)
+
+provide('multipleDrawing', multipleDrawing)
+provide('drawingSN', curDSN)
+
+watch(
+  () => curDSN.value,
+  () => {
+    if (isBlank(curDSN.value)) return
+    pageNum.value = 1
+    pageTotalNum.value = 1
+    nextTick(() => {
+      viewRef.value.fetchDrawing()
+      viewRef.value.reset()
+    })
+  }
+)
+
+function closeHandle() {
+  curDSN.value = undefined
+}
 
 function initPreview() {
   if (!dialogVisible.value) {
     return
   }
-  pageNum.value = 1
-  pageTotalNum.value = 1
-  nextTick(() => {
-    viewRef.value.fetchDrawing()
-    viewRef.value.reset()
-  })
+  if (multipleDrawing.value) {
+    curDSN.value = props.curDrawingSN || props.drawingSN[0]
+  } else {
+    pageNum.value = 1
+    pageTotalNum.value = 1
+    nextTick(() => {
+      viewRef.value.fetchDrawing()
+      viewRef.value.reset()
+    })
+  }
 }
 
 function changeOperate(state) {
@@ -222,8 +264,8 @@ function reset() {
   height: 50px;
   width: 100%;
   box-sizing: border-box;
-  padding: 0 100px;
-  background: #323639;
+  padding: 0px 100px 0px 20px;
+  background: rgb(50 54 57 / 50%);
   color: white;
   @extend .flex-rbc;
   .operate-middle {

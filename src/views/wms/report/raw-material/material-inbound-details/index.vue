@@ -50,7 +50,7 @@
       <material-unit-quantity-columns :columns="columns" :basic-class="basicClass" />
       <!-- 价格信息 -->
       <template v-if="showAmount">
-        <amount-info-columns :columns="columns" show-invoice-type show-tax-rate />
+        <amount-info-columns :columns="columns" show-unit-price-e show-invoice-type show-tax-rate />
       </template>
       <warehouse-info-columns :columns="columns" show-project />
       <el-table-column
