@@ -247,8 +247,8 @@ export const configProductProcessAssemblePM = {
 
 // 建钢-生产配置/零件工序定义
 export const configProductProcessMachinePartPM = {
-  get: ['product_process_machine_part:get'] // 零件工序列表
-  // edit: ['product_process_machine_part:edit'] // 编辑零件工序
+  get: ['product_process_machine_part:get'], // 零件工序列表
+  edit: ['product_process_machine_part:edit'] // 编辑零件工序
 }
 
 // 建钢-生产配置/报检方式
@@ -261,6 +261,14 @@ export const configInspectionModePM = {
 export const configWageQuotaPM = {
   get: ['wage_quota:get'], // 工价定额列表
   edit: ['wage_quota:edit'] // 编辑工价定额
+}
+
+// 建钢-生产配置/切割配置
+export const mesCuttingConfigPM = {
+  get: ['mes_cutting_config:get'], // 切割配置列表
+  add: ['mes_cutting_config:add'], // 添加切割配置
+  edit: ['mes_cutting_config:edit'], // 编辑切割配置
+  del: ['mes_cutting_config:del'] // 删除切割配置
 }
 
 // ---------------------------- 基础配置 end -------------------------------

@@ -30,7 +30,7 @@
       <!--编辑与删除-->
       <el-table-column v-if="checkPermission([...permission.edit])" label="操作" width="130px" align="center" fixed="right">
         <template #default="{ row: { sourceRow: row } }">
-          <udOperation :data="row" :showDel="false" v-if="!(row.productType & typeEnum.MACHINE_PART.V)" />
+          <udOperation :data="row" :showDel="false" />
         </template>
       </el-table-column>
     </common-table>

@@ -310,6 +310,14 @@ const codingTypeEnum = {
   BATCH: { L: '一码多件', K: 'BATCH', V: 2 }
 }
 constantize(codingTypeEnum)
+// 切割配置/切割类型
+const cuttingConfigEnum = {
+  FLAME_CUT: { L: '火焰切割', K: 'FLAME_CUT', V: 1 << 0 },
+  PLASMA_CUT: { L: '等离子切割', K: 'PLASMA_CUT', V: 1 << 1 },
+  LASER_CUT: { L: '激光切割', K: 'LASER_CUT', V: 1 << 2 },
+  PLATE_CUT: { L: '剪版', K: 'PLATE_CUT', V: 1 << 3 }
+}
+constantize(cuttingConfigEnum)
 
 export {
   teamTypeEnum,
@@ -349,7 +357,8 @@ export {
   maxEqualTypeEnum,
   mesWarehouseStateTypeEnum,
   artifactTypeEnum,
-  codingTypeEnum
+  codingTypeEnum,
+  cuttingConfigEnum
 }
 
 export default {
@@ -390,5 +399,6 @@ export default {
   maxEqualTypeEnum,
   mesWarehouseStateTypeEnum,
   artifactTypeEnum,
-  codingTypeEnum
+  codingTypeEnum,
+  cuttingConfigEnum
 }
