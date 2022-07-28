@@ -14,7 +14,9 @@
       <div v-show="showOperate" class="operate-content">
         <div v-if="multipleDrawing" class="operate-left">
           <el-radio-group v-model="curDSN">
-            <el-radio-button v-for="item in drawingSN" :key="item" :label="item">{{ serialNumber + '_' + item }}</el-radio-button>
+            <el-radio-button v-for="item in drawingSN" :key="item" :label="item">
+              {{ `${serialNumber}${item ? '_' + item : ''}` }}
+            </el-radio-button>
           </el-radio-group>
         </div>
         <div v-else class="operate-left">{{ serialNumber }}</div>
@@ -52,6 +54,7 @@
 
 <script setup>
 import { defineEmits, defineProps, provide, ref, computed, nextTick, watch } from 'vue'
+import { isBlank } from '@data-type/index'
 import useVisible from '@compos/use-visible'
 import bimDrawingView from '@/components-system/bim/bim-drawing-view.vue'
 import pdfView from './pdf-view'
@@ -100,7 +103,7 @@ provide(
   computed(() => props.productType)
 )
 
-const { visible: dialogVisible, handleClose } = useVisible({ emit, props, field: 'modelValue', showHook: initPreview })
+const { visible: dialogVisible, handleClose } = useVisible({ emit, props, field: 'modelValue', showHook: initPreview, closeHook: closeHandle })
 
 const viewRef = ref()
 const showOperate = ref(true)
@@ -121,7 +124,7 @@ provide('drawingSN', curDSN)
 watch(
   () => curDSN.value,
   () => {
-    if (!curDSN.value) return
+    if (isBlank(curDSN.value)) return
     pageNum.value = 1
     pageTotalNum.value = 1
     nextTick(() => {
@@ -130,6 +133,10 @@ watch(
     })
   }
 )
+
+function closeHandle() {
+  curDSN.value = undefined
+}
 
 function initPreview() {
   if (!dialogVisible.value) {
@@ -258,7 +265,7 @@ function reset() {
   width: 100%;
   box-sizing: border-box;
   padding: 0px 100px 0px 20px;
-  background:rgb(50 54 57 / 50%);
+  background: rgb(50 54 57 / 50%);
   color: white;
   @extend .flex-rbc;
   .operate-middle {
