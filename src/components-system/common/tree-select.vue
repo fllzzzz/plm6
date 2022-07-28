@@ -67,7 +67,8 @@ watch(
 // 菜单过滤
 function filterNode(value, data) {
   if (!value) return true
-  return data.name.indexOf(value) !== -1
+  // menu/tree 接口为 label
+  return (data.name || data.label || '').indexOf(value) !== -1
 }
 
 // 切换清单
