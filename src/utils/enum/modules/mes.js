@@ -297,6 +297,20 @@ const maxEqualTypeEnum = {
 }
 constantize(maxEqualTypeEnum)
 
+// 构件类型
+const artifactTypeEnum = {
+  COMMON: { L: '普通构件', K: 'COMMON', V: 1 },
+  SMALL: { L: '次构件', K: 'SMALL', V: 2 }
+}
+constantize(artifactTypeEnum)
+
+// 打码方式
+const codingTypeEnum = {
+  SINGLE: { L: '一物一码', K: 'SINGLE', V: 1 },
+  BATCH: { L: '一码多件', K: 'BATCH', V: 2 }
+}
+constantize(codingTypeEnum)
+
 export {
   teamTypeEnum,
   teamAttributeEnum,
@@ -333,7 +347,9 @@ export {
   intellectParentType,
   minEqualTypeEnum,
   maxEqualTypeEnum,
-  mesWarehouseStateTypeEnum
+  mesWarehouseStateTypeEnum,
+  artifactTypeEnum,
+  codingTypeEnum
 }
 
 export default {
@@ -372,5 +388,7 @@ export default {
   intellectParentType,
   minEqualTypeEnum,
   maxEqualTypeEnum,
-  mesWarehouseStateTypeEnum
+  mesWarehouseStateTypeEnum,
+  artifactTypeEnum,
+  codingTypeEnum
 }
