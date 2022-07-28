@@ -346,7 +346,7 @@ const actions = {
   },
   // 工序
   async fetchProcess({ commit }) {
-    const { content = [] } = await getProcessAllSimple()
+    const content = await getProcessAllSimple() || []
     commit('SET_PROCESS', content)
     commit('SET_LOADED', { key: 'process' })
     return content
