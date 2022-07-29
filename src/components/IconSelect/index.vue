@@ -26,7 +26,7 @@ const iconList = reactive({
 
 function filterIcons() {
   if (name.value) {
-    iconList.data = iconList.data.filter(item => item.includes(name.value))
+    iconList.data = icons.filter(item => item.includes(name.value))
   } else {
     iconList.data = icons
   }
@@ -53,6 +53,8 @@ defineExpose({
       overflow-y: scroll;
       display: flex;
       flex-wrap: wrap;
+      align-items: start;
+      align-content: start;
       div {
         min-height: 30px;
         cursor: pointer;
