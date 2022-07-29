@@ -16,7 +16,7 @@
           v-model="form.label"
           placeholder="输入字典标签"
           class="filter-item"
-          style="width: 200px"
+          style="width: 350px"
           size="small"
           clearable
         />
@@ -28,7 +28,7 @@
           placeholder="请填写"
           type="text"
           controls-position="right"
-          style="width: 200px"
+          style="width: 350px"
           :min="0"
         />
       </el-form-item>
