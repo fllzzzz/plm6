@@ -12,7 +12,7 @@
     </template>
     <el-form ref="formRef" :model="form" :rules="rules" size="small" label-width="80px">
      <el-form-item label="类型名称" prop="name">
-        <el-input v-model="form.name" style="width: 300px;" placeholder="类型名称" />
+        <el-input v-model="form.name" style="width: 450px;" placeholder="类型名称" />
       </el-form-item>
       <el-form-item label="类型图标" prop="icon">
         <el-popover
@@ -21,9 +21,9 @@
           trigger="click"
           v-model:visible="visible"
         >
-          <IconSelect ref="iconSelect" @selected="selected" style="width:400px;"/>
+          <IconSelect ref="iconSelect" @selected="selected" style="width:424px;"/>
           <template #reference>
-            <el-input v-model="form.icon" style="width: 300px;" placeholder="点击选择图标" readonly>
+            <el-input v-model="form.icon" style="width: 450px;" placeholder="点击选择图标" readonly>
               <template #prefix>
                 <svg-icon v-if="form.icon" :icon-class="form.icon" class="el-input__icon" style="height: 32px;width: 16px;" />
                 <i v-else class="el-icon-search el-input__icon" />
@@ -33,7 +33,7 @@
         </el-popover>
       </el-form-item>
       <el-form-item label="类型排序" prop="sort">
-        <el-input-number v-model.number="form.sort" :min="0" :max="999" controls-position="right" style="width: 300px;" />
+        <el-input-number v-model.number="form.sort" :min="0" :max="999" controls-position="right" style="width: 450px;" />
       </el-form-item>
     </el-form>
   </common-dialog>

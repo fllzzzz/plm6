@@ -301,6 +301,7 @@
       <bim-preview-drawer
         v-model:visible="showBimDialog"
         :bool-bim="drawingRow?.boolBim"
+        :drawingSN="drawingRow?.drawingSN"
         :monomer-id="drawingRow?.monomerId"
         :serial-number="drawingRow?.serialNumber"
         :productId="drawingRow?.productId"
@@ -309,6 +310,7 @@
       <!-- pdf预览 -->
       <drawing-preview-fullscreen-dialog
         v-model="showDrawingDialog"
+        :drawingSN="drawingRow?.drawingSN"
         :bool-bim="drawingRow?.boolBim"
         :serial-number="drawingRow?.serialNumber"
         :productId="drawingRow?.productId"

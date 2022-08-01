@@ -8,7 +8,6 @@
         class="filter-item"
         :default="false"
         :defaultValue="queryMonomerId"
-        @change="crud.toQuery"
         @getCurrentInfo="handleCurrent"
       />
       <common-radio-button
