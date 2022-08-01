@@ -128,8 +128,8 @@ export default function useArtifactInfo({ menuBar, bimModel, viewerPanel, modelS
     const _els = document.getElementsByClassName('bf-panel-machine-sn')
     for (let i = 0; i < _els.length; i++) {
       _els[i].onclick = () => {
-        const { boolBim, serialNumber, productId, productType } = _els[i].dataset
-        fetchDrawing({ boolBim: Number(boolBim), serialNumber, productId, productType })
+        const { boolBim, serialNumber, productId, productType, numbers: drawingSN } = _els[i].dataset
+        fetchDrawing({ boolBim: Number(boolBim), serialNumber, productId, productType, drawingSN })
       }
     }
   }
@@ -191,7 +191,8 @@ export default function useArtifactInfo({ menuBar, bimModel, viewerPanel, modelS
           boolBim: currentInfo.value.boolBim,
           serialNumber: currentInfo.value.serialNumber,
           productId: currentInfo.value.id,
-          productType: currentInfo.value.productType
+          productType: currentInfo.value.productType,
+          drawingSN: currentInfo.value.numbers
         })
       })
     } catch (error) {

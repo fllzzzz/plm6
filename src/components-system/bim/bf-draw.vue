@@ -5,6 +5,7 @@
     :serial-number="serialNumber"
     :productId="productId"
     :productType="productType"
+    :drawingSN="drawingSN"
   />
 </template>
 
@@ -36,6 +37,10 @@ const props = defineProps({
     default: undefined
   },
   productType: {
+    type: Number,
+    default: undefined
+  },
+  drawingSN: {
     type: Number,
     default: undefined
   }
