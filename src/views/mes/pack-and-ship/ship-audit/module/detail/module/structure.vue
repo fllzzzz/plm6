@@ -17,6 +17,11 @@
       </template>
     </el-table-column>
     <el-table-column prop="showQuantity" label="数量" align="center" />
+    <el-table-column :show-overflow-tooltip="true" prop="totalLength" :label="`总长\n(m)`" align="center">
+      <template v-slot="scope">
+        {{ toFixed(scope.row.totalLength, DP.MES_ARTIFACT_L__M) }}
+      </template>
+    </el-table-column>
     <el-table-column :show-overflow-tooltip="true" prop="totalMete" :label="`总重\n（t）`" align="center">
       <template v-slot="scope">
         {{ toFixed(scope.row.totalMete, DP.COM_WT__T) }}
