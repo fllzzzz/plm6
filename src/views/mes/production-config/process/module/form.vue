@@ -41,12 +41,12 @@
                 />
               </template>
             </el-table-column>
-            <el-table-column label="操作" align="center" width="80">
+            <el-table-column label="操作" align="center" width="110">
               <template v-slot="scope">
-                <!-- <common-button
+                <common-button
                   v-if="!scope.row.boolUsed"
                   icon="el-icon-top"
-                  type="info"
+                  type="primary"
                   style="padding: 5px"
                   size="mini"
                   :disabled="scope.$index === 0"
@@ -55,12 +55,12 @@
                 <common-button
                   v-if="!scope.row.boolUsed"
                   icon="el-icon-bottom"
-                  type="info"
+                  type="primary"
                   style="padding: 5px"
                   size="mini"
                   :disabled="scope.$index === form.list.length - 1"
                   @click="handleMove(scope, 'down', form.list)"
-                /> -->
+                />
                 <common-button
                   v-if="!scope.row.boolUsed"
                   icon="el-icon-minus"
@@ -135,21 +135,21 @@ CRUD.HOOK.beforeValidateCU = () => {
   }
 }
 
-// // 上下移动
-// function handleMove(scope, moveType, list) {
-//   const { $index } = scope
-//   if (moveType === 'up') {
-//     if ($index === 0) return
-//     const isUp = list[$index - 1]
-//     list.splice($index - 1, 1)
-//     list.splice($index, 0, isUp)
-//   } else {
-//     if ($index === list.length - 1) return
-//     const isDown = list[$index + 1]
-//     list.splice($index + 1, 1)
-//     list.splice($index, 0, isDown)
-//   }
-// }
+// 上下移动
+function handleMove(scope, moveType, list) {
+  const { $index } = scope
+  if (moveType === 'up') {
+    if ($index === 0) return
+    const isUp = list[$index - 1]
+    list.splice($index - 1, 1)
+    list.splice($index, 0, isUp)
+  } else {
+    if ($index === list.length - 1) return
+    const isDown = list[$index + 1]
+    list.splice($index + 1, 1)
+    list.splice($index, 0, isDown)
+  }
+}
 
 // 表单提交数据清理
 crud.submitFormFormat = (form) => {
@@ -158,6 +158,7 @@ crud.submitFormFormat = (form) => {
     // v.inspectType = inspectTypeEnum.BATCH_SCAN.V
     // v.reportType = reportTypeEnum.BATCH_SCAN.V
     // v.productType = form.productType
+    v.sort = index + 1
     return v
   })
   return form
