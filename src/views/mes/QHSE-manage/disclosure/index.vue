@@ -97,6 +97,7 @@
               :initial-index="1"
               :key="url.id"
               :src="url.tinyImageUrl"
+              scroll-container=".el-table__body-wrapper"
               lazy
             ></el-image>
           </div>
@@ -133,6 +134,7 @@
               :initial-index="1"
               :key="url.id"
               :src="url.tinyImageUrl"
+              scroll-container=".el-table__body-wrapper"
               lazy
             ></el-image>
           </div>
