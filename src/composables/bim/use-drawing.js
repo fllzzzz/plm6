@@ -22,13 +22,14 @@ export default function useDrawing() {
     drawingApp.value._container._vnode.component.props.showDraw = false
   }
 
-  function fetchDrawing({ boolBim, serialNumber, productId, productType }) {
+  function fetchDrawing({ boolBim, serialNumber, productId, productType, drawingSN }) {
     drawingApp.value._container._vnode.component.props.handleClose = handleClose
     drawingApp.value._container._vnode.component.props.showDraw = true
     drawingApp.value._container._vnode.component.props.boolBim = boolBim
     drawingApp.value._container._vnode.component.props.serialNumber = serialNumber
     drawingApp.value._container._vnode.component.props.productId = productId
     drawingApp.value._container._vnode.component.props.productType = productType
+    drawingApp.value._container._vnode.component.props.drawingSN = drawingSN
   }
 
   return {

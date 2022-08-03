@@ -13,7 +13,7 @@
       </div>
       <div v-show="showOperate" class="operate-content">
         <div v-if="multipleDrawing" class="operate-left">
-          <el-radio-group v-model="curDSN">
+          <el-radio-group v-model="curDSN" size="small">
             <el-radio-button v-for="item in drawingSN" :key="item" :label="item">
               {{ `${serialNumber}${item ? '_' + item : ''}` }}
             </el-radio-button>
@@ -60,6 +60,7 @@ import bimDrawingView from '@/components-system/bim/bim-drawing-view.vue'
 import pdfView from './pdf-view'
 import { ElRadioGroup } from 'element-plus'
 // bim内手动挂载组件需引入涉及组件
+import { ElRadioButton } from 'element-plus'
 import { ElDialog } from 'element-plus'
 import SvgIcon from '@comp/SvgIcon/index.vue'
 
