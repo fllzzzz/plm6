@@ -172,9 +172,9 @@ import { completeData, projectNumData } from '@/api/contract/project'
 import branchCompanySelect from '@comp-base/branch-company-select.vue'
 import Panel from '@/components/Panel'
 
-const projectContentOption = ref([])
-let projectContent1 = []
-let projectContent2 = []
+// const projectContentOption = ref([])
+let machiningData = []
+let installData = []
 const cascaderProps = computed(() => {
   return {
     value: 'id',
@@ -204,6 +204,20 @@ const props = defineProps({
     default: undefined
   }
 })
+const projectContentOption = computed(() => {
+  if (query.businessType && query.projectType) {
+    console.log(machiningData)
+    switch (query.projectType) {
+      case projectTypeEnum.STEEL.V:
+        return query.businessType === businessTypeEnum.MACHINING.V ? machiningData[projectTypeEnum.STEEL.V] : installData[projectTypeEnum.STEEL.V]
+      case projectTypeEnum.BRIDGE.V:
+        return query.businessType === businessTypeEnum.MACHINING.V ? machiningData[projectTypeEnum.BRIDGE.V] : installData[projectTypeEnum.BRIDGE.V]
+      default: return query.businessType === businessTypeEnum.MACHINING.V ? machiningData[projectTypeEnum.CARBARN.V] : installData[projectTypeEnum.CARBARN.V]
+    }
+  } else {
+    return []
+  }
+})
 watch(
   () => props.currentProjectType,
   (val) => {
@@ -219,32 +233,32 @@ contentInfo()
 
 async function contentInfo() {
   try {
-    const data1 = await getContentInfo({ businessType: businessTypeEnum.MACHINING.V })
-    const data2 = await getContentInfo({ businessType: businessTypeEnum.INSTALLATION.V })
-    if (data1 && data1.content.length > 0) {
-      data1.content.map(v => {
-        v.name = v.categoryName
-      })
+    machiningData = await getContentInfo({ businessType: businessTypeEnum.MACHINING.V })
+    installData = await getContentInfo({ businessType: businessTypeEnum.INSTALLATION.V })
+    const dataArr = [machiningData, installData]
+    for (let i = 0; i < dataArr.length; i++) {
+      if (dataArr[i] && dataArr[i][projectTypeEnum.STEEL.V].length > 0) {
+        dataArr[i][projectTypeEnum.STEEL.V].map(v => {
+          v.name = v.categoryName
+        })
+      }
+      if (dataArr[i] && dataArr[i][projectTypeEnum.BRIDGE.V].length > 0) {
+        dataArr[i][projectTypeEnum.BRIDGE.V].map(v => {
+          v.name = v.categoryName
+        })
+      }
+      if (dataArr[i] && dataArr[i][projectTypeEnum.CARBARN.V].length > 0) {
+        dataArr[i][projectTypeEnum.CARBARN.V].map(v => {
+          v.name = v.categoryName
+        })
+      }
     }
-    if (data2 && data2.content.length > 0) {
-      data2.content.map(v => {
-        v.name = v.categoryName
-      })
-    }
-    projectContent1 = data1.content || []
-    projectContent2 = data2.content || []
   } catch (error) {
     console.log(error)
   }
 }
 
 function businessChange() {
-  crud.query.projectContent = undefined
-  if (crud.query.businessType) {
-    projectContentOption.value = crud.query.businessType === 1 ? projectContent1 : projectContent2
-  } else {
-    projectContentOption.value = []
-  }
   crud.toQuery()
 }
 

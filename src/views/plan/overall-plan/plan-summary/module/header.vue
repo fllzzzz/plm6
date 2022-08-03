@@ -21,7 +21,7 @@
     </div>
     <crudOperation>
       <template #optLeft>
-        <el-tag>{{ query.type===TechnologyTypeAllEnum.STRUCTURE.V? '单位(t)': '单位(m)' }}</el-tag>
+        <el-tag>{{ query.type===TechnologyTypeAllEnum.STRUCTURE.V ||  query.type===TechnologyTypeAllEnum.BRIDGE.V? '单位(t)': '单位(m)' }}</el-tag>
       </template>
     </crudOperation>
   </div>

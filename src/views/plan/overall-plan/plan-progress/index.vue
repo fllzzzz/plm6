@@ -226,8 +226,8 @@ CRUD.HOOK.handleRefresh = (crud, data) => {
             value.completedMete = value.completedMete || 0
             value.meteRate = value.completedMete && value.mete ? Number((value.completedMete / value.mete * 100).toFixed(1)) : 0
             value.meteColor = '#1890ff'
-            value.decimal = k.type === TechnologyTypeAllEnum.STRUCTURE.V ? DP.COM_WT__KG : DP.MES_ENCLOSURE_L__M
-            value.unit = k.type === TechnologyTypeAllEnum.STRUCTURE.V ? 't' : 'm'
+            value.decimal = k.type === TechnologyTypeAllEnum.STRUCTURE.V || k.type === TechnologyTypeAllEnum.BRIDGE.V ? DP.COM_WT__KG : DP.MES_ENCLOSURE_L__M
+            value.unit = k.type === TechnologyTypeAllEnum.STRUCTURE.V || k.type === TechnologyTypeAllEnum.BRIDGE.V ? 't' : 'm'
           })
         }
         const deepVal = k.detailTraceList.find(m => m.type === areaPlanTypeEnum.DEEPEN.V) || undefined
@@ -253,8 +253,8 @@ CRUD.HOOK.handleRefresh = (crud, data) => {
                 values.completedMete = values.completedMete || 0
                 values.meteRate = values.completedMete && values.mete ? Number((values.completedMete / values.mete * 100).toFixed(1)) : 0
                 values.meteColor = '#1890ff'
-                values.decimal = k.type === TechnologyTypeAllEnum.STRUCTURE.V ? DP.COM_WT__KG : DP.MES_ENCLOSURE_L__M
-                values.unit = k.type === TechnologyTypeAllEnum.STRUCTURE.V ? 't' : 'm'
+                values.decimal = k.type === TechnologyTypeAllEnum.STRUCTURE.V || k.type === TechnologyTypeAllEnum.BRIDGE.V ? DP.COM_WT__KG : DP.MES_ENCLOSURE_L__M
+                values.unit = k.type === TechnologyTypeAllEnum.STRUCTURE.V || k.type === TechnologyTypeAllEnum.BRIDGE.V ? 't' : 'm'
               })
             }
             const deepVal = value.planDetailList.find(m => m.type === areaPlanTypeEnum.DEEPEN.V)

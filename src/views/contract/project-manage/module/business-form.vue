@@ -23,7 +23,19 @@
               clearable
               placeholder="业务类型"
               class="input-underline"
-              @change="businessChange"
+            />
+          </el-form-item>
+          <el-form-item label="项目类型" prop="projectType">
+            <common-select
+              v-model="form.projectType"
+              :options="projectTypeEnum.ENUM"
+              type="enum"
+              size="small"
+              clearable
+              placeholder="项目类型"
+              style="width: 200px"
+              class="input-underline"
+              @change="projectTypeChange"
             />
           </el-form-item>
           <el-form-item label="项目内容" prop="projectContent">
@@ -37,24 +49,12 @@
               :show-all-levels="true"
               :clearable="true"
               style="width: 320px"
-              @change="getShowItem"
               filterable
+              @change="getShowItem"
             />
           </el-form-item>
         </div>
         <div class="form-row">
-          <el-form-item label="项目类型" prop="projectType">
-            <common-select
-              v-model="form.projectType"
-              :options="projectTypeEnum.ENUM"
-              type="enum"
-              size="small"
-              clearable
-              placeholder="项目类型"
-              style="width: 200px"
-              class="input-underline"
-            />
-          </el-form-item>
           <el-form-item label="签约人" prop="signerId">
             <user-dept-cascader
               v-model="form.signerId"
@@ -63,12 +63,10 @@
               clearable
               show-all-levels
               class="input-underline"
-              style="width: 320px"
+              style="width: 200px"
               placeholder="签约人"
             />
           </el-form-item>
-        </div>
-        <div class="form-row">
           <el-form-item label="签订日期" prop="signingDate">
             <el-date-picker
               v-model="form.signingDate"
@@ -93,7 +91,6 @@
                 <span style="float:left;width:90px;text-align:right;">{{TechnologyTypeAllEnum.VL[item.no]}}：</span><common-radio style="float:left;" v-model="item.measureMode" :options="enclosureSettlementTypeEnum.ENUM" type="enum"/>
               </div>
             </template>
-            <!-- <common-radio v-model="form.enclosureMeasureMode" :options="enclosureSettlementTypeEnum.ENUM" type="enum" :disabled="!form.enclosureMeasureMode"/> -->
           </el-form-item>
         </div>
         <div class="form-row">
@@ -160,8 +157,8 @@
           </el-form-item>
         </div>
       </div>
-      <el-divider><span class="title">技术交底</span></el-divider>
-      <div style="text-align: right; margin-right: 20px">
+      <el-divider v-if="form.projectType!==projectTypeEnum.BRIDGE.V"><span class="title">技术交底</span></el-divider>
+      <div style="text-align: right; margin-right: 20px" v-if="form.projectType!==projectTypeEnum.BRIDGE.V">
         <common-button style="margin-left: 20px" type="success" size="small" :disabled="!(showItem && showItem.length > 0)" @click="handleAddEnclosure">添加</common-button>
       </div>
       <enclosure-show :table-data="form.enclosureInfo" :show-item="showItem" @clickChange="typeChange"  v-if="showItem && showItem.length > 0"/>
@@ -219,11 +216,8 @@ import enclosureShow from './enclosure-show'
 import { isNotBlank } from '@/utils/data-type'
 
 const formRef = ref()
-let projectContent1 = []
-let AllContent1 = []
-let projectContent2 = []
-let AllContent2 = []
-const projectContentOption = ref([])
+let machiningData = []
+let installData = []
 const showItem = ref([])
 const showCategory = ref([])
 const enclosureVisible = ref(false)
@@ -239,15 +233,12 @@ const cascaderProps = computed(() => {
     checkStrictly: false
   }
 })
+
 const props = defineProps({
   formData: {
     type: Object,
     default: () => {}
   }
-  // projectType: {
-  //   type: Number,
-  //   default: undefined
-  // }
 })
 const defaultForm = {
   contractSignBodyId: undefined, // 合同签订主体
@@ -258,7 +249,6 @@ const defaultForm = {
   signingDate: undefined, // 签约日期
   signingAddress: undefined, // 签约地址
   structureMeasureMode: engineerSettlementTypeEnumN.THEORY.V, // 结算方式
-  // enclosureMeasureMode: enclosureSettlementTypeEnum.LENGTH.V, // 围护结算方式
   measureModeList: [],
   transportMode: transportModeEnum.HOME_DELIVERY.V, // 运输方式
   payType: paymentModeEnum.PUBLIC_TRANSFER.V, // 付款方式
@@ -319,6 +309,39 @@ const rules = {
 }
 const defaultType = ref()
 
+const AllContent = computed(() => {
+  if (form.value.businessType) {
+    const typeData = form.value.businessType === businessTypeEnum.MACHINING.V ? machiningData : installData
+    const arr = []
+    if (typeData && typeData[projectTypeEnum.STEEL.V].length > 0) {
+      typeData[projectTypeEnum.STEEL.V].map(v => {
+        if (v.children && v.children.length > 0) {
+          v.children.map(k => {
+            arr.push(k)
+          })
+        }
+      })
+    }
+    return arr
+  } else {
+    return []
+  }
+})
+
+const projectContentOption = computed(() => {
+  if (form.value.businessType && form.value.projectType) {
+    switch (form.value.projectType) {
+      case projectTypeEnum.STEEL.V:
+        return form.value.businessType === businessTypeEnum.MACHINING.V ? machiningData[projectTypeEnum.STEEL.V] : installData[projectTypeEnum.STEEL.V]
+      case projectTypeEnum.BRIDGE.V:
+        return form.value.businessType === businessTypeEnum.MACHINING.V ? machiningData[projectTypeEnum.BRIDGE.V] : installData[projectTypeEnum.BRIDGE.V]
+      default: return form.value.businessType === businessTypeEnum.MACHINING.V ? machiningData[projectTypeEnum.CARBARN.V] : installData[projectTypeEnum.CARBARN.V]
+    }
+  } else {
+    return []
+  }
+})
+
 watch(
   () => props.formData,
   (val) => {
@@ -353,51 +376,41 @@ function resetForm(data) {
 contentInfo()
 
 async function contentInfo() {
-  AllContent1 = []
-  AllContent2 = []
   try {
-    const data1 = await getContentInfo({ businessType: businessTypeEnum.MACHINING.V })
-    const data2 = await getContentInfo({ businessType: businessTypeEnum.INSTALLATION.V })
-    if (data1 && data1.content.length > 0) {
-      data1.content.map(v => {
-        v.name = v.categoryName
-        if (v.children && v.children.length > 0) {
-          v.children.map(k => {
-            AllContent1.push(k)
-          })
-        }
-      })
+    machiningData = await getContentInfo({ businessType: businessTypeEnum.MACHINING.V })
+    installData = await getContentInfo({ businessType: businessTypeEnum.INSTALLATION.V })
+    const dataArr = [machiningData, installData]
+    for (let i = 0; i < dataArr.length; i++) {
+      if (dataArr[i] && dataArr[i][projectTypeEnum.STEEL.V].length > 0) {
+        dataArr[i][projectTypeEnum.STEEL.V].map(v => {
+          v.name = v.categoryName
+        })
+      }
+      if (dataArr[i] && dataArr[i][projectTypeEnum.BRIDGE.V].length > 0) {
+        dataArr[i][projectTypeEnum.BRIDGE.V].map(v => {
+          v.name = v.categoryName
+        })
+      }
+      if (dataArr[i] && dataArr[i][projectTypeEnum.CARBARN.V].length > 0) {
+        dataArr[i][projectTypeEnum.CARBARN.V].map(v => {
+          v.name = v.categoryName
+        })
+      }
     }
-    if (data2 && data2.content.length > 0) {
-      data2.content.map(v => {
-        v.name = v.categoryName
-        if (v.children && v.children.length > 0) {
-          v.children.map(k => {
-            AllContent2.push(k)
-          })
-        }
-      })
-    }
-    projectContent1 = data1.content || []
-    projectContent2 = data2.content || []
   } catch (error) {
     console.log(error)
   }
 }
 
-function businessChange() {
-  projectContentOption.value = []
+function projectTypeChange() {
   form.value.projectContent = []
   showItem.value = []
   showCategory.value = []
   form.value.structureMeasureMode = undefined
-  // form.value.enclosureMeasureMode = undefined
   form.value.measureModeList = []
   Object.assign(form.value, JSON.parse(JSON.stringify(techForm)))
-  if (form.value.businessType) {
-    projectContentOption.value = form.value.businessType === businessTypeEnum.MACHINING.V ? projectContent1 : projectContent2
-  }
 }
+
 function isTaxChange(val) {
   if (val !== isTaxContractEnum.YES.V) {
     form.value.invoiceType = undefined
@@ -422,6 +435,14 @@ function handleAddEnclosure() {
 }
 
 function getShowItem(val) {
+  if (form.value.projectType === projectTypeEnum.BRIDGE.V) {
+    form.value.structureMeasureMode = engineerSettlementTypeEnumN.THEORY.V
+    showItem.value = []
+    showCategory.value = []
+    form.value.measureModeList = []
+    Object.assign(form.value, JSON.parse(JSON.stringify(techForm)))
+    return
+  }
   showItem.value = []
   showCategory.value = []
   const totalItems = [
@@ -447,7 +468,7 @@ function getShowItem(val) {
   const AllInfo = []
   if (val.length > 0) {
     val.map((v) => {
-      const val = AllContent1.find((k) => k.id === v)
+      const val = AllContent.value.find((k) => k.id === v)
       AllInfo.push(val)
       if (val.categoryType === TechnologyMainTypeEnum.STRUCTURE.V) {
         if (showItem.value.indexOf(TechnologyTypeEnum.STRUCTURE.V) < 0) {

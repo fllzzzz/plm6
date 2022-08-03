@@ -6,7 +6,7 @@
     :append-to-body="true"
     :close-on-click-modal="false"
     direction="rtl"
-    size="80%"
+    size="85%"
   >
     <template #titleRight>
       <!-- <span class="drawer-title">合同立项</span> -->
