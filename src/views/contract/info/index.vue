@@ -86,7 +86,6 @@ import useVisible from '@compos/use-visible'
 import { judgeSameValue } from './judgeSameValue'
 import { projectListPM as permission } from '@/page-permission/contract'
 import ExportButton from '@comp-common/export-button/index.vue'
-import { deepClone } from '@data-type/index'
 import { compareArrayValue } from './judgeSameValue'
 
 const props = defineProps({

@@ -133,7 +133,8 @@ const packStatusTypeEnum = {
   // CHECKED: { L: '已出库', K: 'CHECKED', V: 3 }
   UNENTRUCK: { L: '未装车', K: 'UNENTRUCK', V: 0, T: '' },
   ENTRUCK: { L: '已装车', K: 'ENTRUCK', V: 1, T: 'warning' },
-  SHIPMENT: { L: '已发运', K: 'SHIPMENT', V: 2, T: 'success' }
+  SHIPMENT: { L: '已发运', K: 'SHIPMENT', V: 2, T: 'success' },
+  CANCEL: { L: '取消发运', K: 'CANCEL', V: 4, T: 'danger' }
 }
 constantize(packStatusTypeEnum)
 
@@ -290,9 +291,9 @@ constantize(searchDateTypeEnum)
 
 // 收货运费变更类型
 const freightChangeTypeEnum = {
-  CONTINUE: { L: '运费保留', K: 'CONTINUE', V: 1 << 0 },
-  CANCEL: { L: '运费作废', K: 'CANCEL', V: 1 << 1 },
-  CHANGE: { L: '运费变更', K: 'CHANGE', V: 1 << 2 }
+  CONTINUE: { L: '运费保留', K: 'CONTINUE', SL: '运费正常', V: 1 << 0 },
+  CANCEL: { L: '运费作废', K: 'CANCEL', SL: '运费作废', V: 1 << 1 },
+  CHANGE: { L: '运费变更', K: 'CHANGE', SL: '运费变更', V: 1 << 2 }
 }
 constantize(freightChangeTypeEnum)
 

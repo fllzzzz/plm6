@@ -22,7 +22,7 @@
         </el-col>
         <el-col :span="10">
           <el-form-item label="计价方式">
-            <span>{{ logisticsPriceTypeEnum.VL[detailInfo?.logisticsDTO?.priceType] }}</span>
+            <span v-empty-text>{{ logisticsPriceTypeEnum.VL[detailInfo?.logisticsDTO?.priceType] }}</span>
           </el-form-item>
         </el-col>
       </el-row>
@@ -35,7 +35,7 @@
         <el-col :span="10">
           <el-form-item label="运输单价">
             <span style="margin-right:3px;">{{ toFixed(detailInfo?.logisticsDTO?.price, DP.YUAN) }}</span>
-            <span :class="detailInfo?.logisticsDTO?.priceType === logisticsPriceTypeEnum.WEIGHT.V ? 'blue':'orange'" >{{ logisticsPriceTypeEnum.V[detailInfo?.logisticsDTO?.priceType].unit }}</span>
+            <span :class="detailInfo?.logisticsDTO?.priceType === logisticsPriceTypeEnum.WEIGHT.V ? 'blue':'orange'" >{{ detailInfo?.logisticsDTO?.priceType?logisticsPriceTypeEnum.V[detailInfo?.logisticsDTO?.priceType].unit:'' }}</span>
           </el-form-item>
         </el-col>
       </el-row>
@@ -69,7 +69,7 @@
             autocomplete="off"
             @change="priceChange"
           />
-          <span :class="form.priceType === logisticsPriceTypeEnum.WEIGHT.V ? 'blue':'orange'" style="margin-left:3px;">{{ logisticsPriceTypeEnum.V[form.priceType].unit }}</span>
+          <span :class="form.priceType === logisticsPriceTypeEnum.WEIGHT.V ? 'blue':'orange'" style="margin-left:3px;">{{ form.priceType?logisticsPriceTypeEnum.V[form.priceType].unit:'' }}</span>
         </el-form-item>
         <el-form-item label="运输费" v-if="form.priceType === logisticsPriceTypeEnum.WEIGHT.V">
           <span><span style="margin-right:3px;">{{ toFixed(allPrice, DP.YUAN) }}</span>元</span>

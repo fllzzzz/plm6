@@ -86,6 +86,7 @@ import { roleAll } from '@/api/user-manage/role'
 import { jobAll } from '@/api/user-manage/job'
 import { defineProps, ref } from 'vue'
 import { mapGetters } from '@/store/lib'
+import { useStore } from 'vuex'
 
 import { userSexEnum } from '@enum-ms/user'
 import { enabledEnum } from '@enum-ms/common'
@@ -98,6 +99,7 @@ import menuSelect from '@/components-system/common/tree-select.vue'
 import { ElRadioGroup } from 'element-plus'
 
 const { user } = mapGetters(['user'])
+const store = useStore()
 
 const formRef = ref()
 const menuPopover = ref()
@@ -204,6 +206,17 @@ CRUD.HOOK.afterToEdit = (crud, form) => {
     const value = allMenu.find(v => v.id === form.deptId)
     form.deptName = value.name
   }
+}
+
+async function handleSuccess() {
+  try {
+    await store.dispatch('config/fetchUserDeptTree')
+  } catch (e) {
+    console.log(e)
+  }
+}
+CRUD.HOOK.afterSubmit = () => {
+  handleSuccess()
 }
 </script>
 <style lang="scss" scoped>

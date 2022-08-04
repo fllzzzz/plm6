@@ -51,8 +51,8 @@
               <el-input-number
                 v-model.number="scope.row.applyAmount"
                 v-show-thousand
-                :min="0"
-                :max="scope.row.freight-scope.row.paymentAmount"
+                :min="scope.row.paymentAmount>scope.row.freight?(-(scope.row.paymentAmount-scope.row.freight)):0"
+                :max="scope.row.paymentAmount>scope.row.freight?0:scope.row.freight-scope.row.paymentAmount"
                 :step="100"
                 :precision="DP.YUAN"
                 placeholder="本次支付(元)"
@@ -163,13 +163,13 @@ CRUD.HOOK.beforeSubmit = () => {
   const listData = JSON.parse(JSON.stringify(crud.form.paymentDetails))
   const submitData = []
   listData.map(v => {
-    if (v.applyAmount > 0) {
+    if (v.applyAmount !== 0) {
       crud.form.applyAmount += v.applyAmount
       submitData.push(v)
     }
   })
   if (submitData.length === 0) {
-    ElMessage.error('请填写本次申请明细且金额大于0')
+    ElMessage.error('请填写本次申请明细')
     return false
   }
   crud.form.paymentDetails = submitData
