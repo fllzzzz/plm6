@@ -32,17 +32,17 @@
       <i v-if="!refreshLoading" class="el-icon-refresh" style="cursor: pointer" @click="refreshProjectList" />
       <i v-else class="el-icon-loading" />
     </el-tooltip>
-    <div style="font-size: 13px; margin-left: 15px; color: #333">
-      <el-tag v-if="globalProject && globalProject.endDate" type="info" effect="plain">
+    <div style="font-size: 13px; margin-left: 15px; margin-bottom: 5px; color: #333">
+      <el-tag v-if="globalProject && globalProject.endDate" type="info" effect="plain" style="margin-top: 5px;">
         完成日期:
         <span v-parse-time="{ val: globalProject.endDate, fmt: '{y}-{m}-{d}' }" />
         | 工期:
         {{ dateDifferenceReduce(globalProject.startDate, globalProject.endDate) }}天
       </el-tag>
-      <el-tag v-if="globalProject && globalProject.businessType" type="info" effect="plain" style="margin-left: 5px">
+      <el-tag v-if="globalProject && globalProject.businessType" type="info" effect="plain" style="margin-top: 5px;margin-left: 5px">
         {{ businessTypeEnum.VL[globalProject.businessType] }}
       </el-tag>
-      <el-tag v-if="globalProject && globalProject.mode" type="info" effect="plain" style="margin-left: 5px">
+      <el-tag v-if="globalProject && globalProject.mode" type="info" effect="plain" style="margin-top: 5px;margin-left: 5px">
         {{ '项目模式:' + projectModeEnum.VL[globalProject.mode] }}
       </el-tag>
     </div>
