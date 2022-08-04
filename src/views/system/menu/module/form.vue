@@ -16,8 +16,8 @@
           v-model="form.type"
           :options="systemMenusTypeEnum.ENUM"
           type="enum"
-          size="mini"
-          style="width: 178px;margin-right:178px;"
+          size="small"
+          style="width: 178px;margin-right:178px;display: block;"
         />
       </el-form-item>
       <el-form-item v-show="form.type === systemMenusTypeEnum.MODULE.V" label="类别" prop="category">
@@ -25,15 +25,15 @@
           v-model="form.category"
           :options="systemMenusCategoryEnum.ENUM"
           type="enum"
-          size="mini"
-          style="width: 178px"
+          size="small"
+          style="width: 178px;display: block;"
         />
       </el-form-item>
       <el-form-item v-show="form.type !== systemMenusTypeEnum.BUTTON.V" label="菜单标题" prop="name">
-        <el-input v-model="form.name" :style="form.type === systemMenusTypeEnum.MODULE.V ? 'width: 450px' : 'width: 178px'" placeholder="菜单标题" />
+        <el-input v-model="form.name" style="width: 450px" placeholder="菜单标题" />
       </el-form-item>
       <el-form-item v-show="form.type === systemMenusTypeEnum.BUTTON.V" label="按钮名称" prop="name">
-        <el-input v-model="form.name" placeholder="按钮名称" style="width: 178px;" />
+        <el-input v-model="form.name" placeholder="按钮名称" style="width: 450px;" />
       </el-form-item>
       <el-form-item v-show="form.type !== systemMenusTypeEnum.MODULE.V" label="权限标识" prop="permission">
         <el-input v-model="form.permission" :disabled="form.iframe" placeholder="权限标识" style="width: 450px;" />
@@ -67,34 +67,34 @@
         <el-input v-model="form.component" style="width: 450px;" placeholder="组件路径" />
       </el-form-item>
       <el-form-item v-show="!form.iframe && form.type === systemMenusTypeEnum.MENU.V" label="组件名称" prop="componentName">
-        <el-input v-model="form.componentName" style="width: 178px;" placeholder="匹配组件内Name字段" />
+        <el-input v-model="form.componentName" style="width: 450px;" placeholder="匹配组件内Name字段" />
       </el-form-item>
       <el-form-item v-show="form.type !== systemMenusTypeEnum.BUTTON.V" label="外链菜单" prop="iframe">
-        <el-radio-group v-model="form.iframe" size="mini">
+        <el-radio-group v-model="form.iframe" size="small">
           <el-radio-button :label="true">是</el-radio-button>
           <el-radio-button :label="false">否</el-radio-button>
         </el-radio-group>
       </el-form-item>
       <el-form-item v-show="form.type === systemMenusTypeEnum.MENU.V" label="菜单缓存" prop="cache" style="min-width: 258px;">
-        <el-radio-group v-model="form.cache" size="mini">
+        <el-radio-group v-model="form.cache" size="small">
           <el-radio-button :label="true">是</el-radio-button>
           <el-radio-button :label="false">否</el-radio-button>
         </el-radio-group>
       </el-form-item>
       <el-form-item v-show="form.type !== systemMenusTypeEnum.BUTTON.V" label="菜单可见" prop="hidden">
-        <el-radio-group v-model="form.hidden" size="mini">
+        <el-radio-group v-model="form.hidden" size="small">
           <el-radio-button :label="false">是</el-radio-button>
           <el-radio-button :label="true">否</el-radio-button>
         </el-radio-group>
       </el-form-item>
       <el-form-item v-show="form.type === systemMenusTypeEnum.MENU.V" label="单个子菜单可见" prop="alwaysShow" label-width="120px" style="min-width: 257px;">
-        <el-radio-group v-model="form.alwaysShow" size="mini" style="width: 100px;">
+        <el-radio-group v-model="form.alwaysShow" size="small" style="width: 100px;">
           <el-radio-button :label="true">是</el-radio-button>
           <el-radio-button :label="false">否</el-radio-button>
         </el-radio-group>
       </el-form-item>
       <el-form-item v-if="form.type === systemMenusTypeEnum.BUTTON.V" label="权限类型" prop="type">
-        <el-select v-model="form.permissionTypeId" placeholder="请选择权限类型" style="width: 178px;">
+        <el-select v-model="form.permissionTypeId" placeholder="请选择权限类型" style="width: 450px;">
           <el-option
             v-for="item in permissionTypes"
             :key="item.id"
@@ -104,7 +104,7 @@
         </el-select>
       </el-form-item>
       <el-form-item label="菜单排序" prop="sort">
-        <el-input-number v-model.number="form.sort" :min="1" :max="999" controls-position="right" style="width: 178px;" />
+        <el-input-number v-model.number="form.sort" :min="1" :max="999" controls-position="right" style="width: 450px;" />
       </el-form-item>
       <el-form-item label="上级类目" prop="pid">
         <el-popover

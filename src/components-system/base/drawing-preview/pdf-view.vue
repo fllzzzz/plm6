@@ -9,11 +9,14 @@ import { previewPDF } from '@/api/plan/technical-data-manage/deepen'
 
 import { ElNotification } from 'element-plus'
 import { defineEmits, defineExpose, inject, ref } from 'vue'
+import { isNotBlank } from '@data-type/index'
 import pdf from '@/components/PDF/pdf'
 
 const emit = defineEmits(['changeFileLoading'])
 const productId = inject('productId')
 const productType = inject('productType')
+const multipleDrawing = inject('multipleDrawing')
+const drawingSN = inject('drawingSN')
 const pdfjsDistPath = import.meta.env.BASE_URL + 'assets'
 const source = ref()
 const scale = ref(1)
@@ -39,6 +42,9 @@ async function fetchDrawing() {
     const param = {
       productId: productId.value,
       productType: productType.value
+    }
+    if (multipleDrawing.value && isNotBlank(drawingSN.value)) {
+      param.number = drawingSN.value
     }
     const res = await previewPDF(param)
     if (res.headers['content-disposition']) {

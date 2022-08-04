@@ -204,6 +204,7 @@
       <drawing-preview-fullscreen-dialog
         v-model="showDrawing"
         :bool-bim="drawingRow?.boolBim"
+        :drawingSN="drawingRow?.drawingSN"
         :serial-number="drawingRow?.serialNumber"
         :productId="drawingRow?.productId"
         :productType="drawingRow?.productType"

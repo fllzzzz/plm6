@@ -7,8 +7,8 @@
       </template>
     </el-input>
     <div class="icon-list">
-      <div v-for="(item, index) in iconList.data" :key="index" @click="selectedIcon(item)">
-        <svg-icon :icon-class="item" style="height: 30px;width: 16px;" />
+      <div v-for="(item, index) in iconList.data" :key="index" class="flex-rcc" @click="selectedIcon(item)">
+        <svg-icon :icon-class="item" style="height: 30px;width: 16px;margin-right: 4px;" />
         <span>{{ item }}</span>
       </div>
     </div>
@@ -26,7 +26,7 @@ const iconList = reactive({
 
 function filterIcons() {
   if (name.value) {
-    iconList.data = iconList.data.filter(item => item.includes(name.value))
+    iconList.data = icons.filter(item => item.includes(name.value))
   } else {
     iconList.data = icons
   }
@@ -51,19 +51,18 @@ defineExpose({
     .icon-list {
       height: 200px;
       overflow-y: scroll;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: start;
+      align-content: start;
       div {
-        height: 30px;
-        line-height: 30px;
-        margin-bottom: -5px;
+        min-height: 30px;
         cursor: pointer;
         width: 33%;
-        float: left;
+        padding-right: 4px;
       }
       span {
-        display: inline-block;
-        vertical-align: -0.15em;
-        fill: currentColor;
-        overflow: hidden;
+        flex: 1;
       }
     }
   }
