@@ -23,6 +23,7 @@
       value-format="x"
       @change="handleDateChange"
     />
+    <factory-select v-model="query.factoryId" clearable class="filter-item" style="width: 250px" @change="crud.toQuery" />
     <rrOperation />
   </div>
   <crudOperation>
@@ -72,6 +73,7 @@ import { reportComponentTypeEnum } from '@enum-ms/mes'
 import { PICKER_OPTIONS_SHORTCUTS } from '@/settings/config'
 import checkPermission from '@/utils/system/check-permission'
 
+import FactorySelect from '@/components-system/base/factory-select.vue'
 import { regHeader } from '@compos/use-crud'
 import crudOperation from '@crud/CRUD.operation'
 import rrOperation from '@crud/RR.operation'
@@ -81,7 +83,8 @@ const defaultQuery = {
   startDate: moment().startOf('month').valueOf(),
   endDate: moment().valueOf(),
   projectId: { value: undefined, resetAble: false },
-  productType: { value: undefined, resetAble: false }
+  productType: { value: undefined, resetAble: false },
+  factoryId: undefined
 }
 
 const { crud, query, CRUD } = regHeader(defaultQuery)

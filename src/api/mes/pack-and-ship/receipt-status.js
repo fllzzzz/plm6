@@ -64,4 +64,22 @@ export function detail(id) {
   })
 }
 
+// 取消送货
+export function deliveryCancel(data) {
+  return request({
+    module: 'mes',
+    url: 'cargo/cancel',
+    method: 'put',
+    data
+  })
+}
+
+// 到场签收
+export function deliverySign(id) {
+  return request({
+    module: 'mes',
+    url: `cargo/sign/${id}`,
+    method: 'put'
+  })
+}
 export default { get, download }

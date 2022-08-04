@@ -133,7 +133,8 @@ const packStatusTypeEnum = {
   // CHECKED: { L: '已出库', K: 'CHECKED', V: 3 }
   UNENTRUCK: { L: '未装车', K: 'UNENTRUCK', V: 0, T: '' },
   ENTRUCK: { L: '已装车', K: 'ENTRUCK', V: 1, T: 'warning' },
-  SHIPMENT: { L: '已发运', K: 'SHIPMENT', V: 2, T: 'success' }
+  SHIPMENT: { L: '已发运', K: 'SHIPMENT', V: 2, T: 'success' },
+  CANCEL: { L: '取消发运', K: 'CANCEL', V: 4, T: 'danger' }
 }
 constantize(packStatusTypeEnum)
 
@@ -266,6 +267,36 @@ const inProductionDetailReportEnum = {
 }
 constantize(inProductionDetailReportEnum)
 
+// 送货状态
+const deliveryStatusEnum = {
+  NORMAL: { L: '正常送货', K: 'NORMAL', V: 1 << 0 },
+  RETURN: { L: '取消送货', K: 'RETURN', V: 1 << 1 }
+}
+constantize(deliveryStatusEnum)
+
+// 送货状态
+const deliveryReceiptStatusEnum = {
+  DELIVERY: { L: '送货中', K: 'DELIVERY', V: 1 << 0, T: '' },
+  SIGN: { L: '已签收', K: 'SIGN', V: 1 << 2, T: 'success' },
+  RETURN: { L: '取消送货', K: 'RETURN', V: 1 << 1, T: 'warning' }
+}
+constantize(deliveryReceiptStatusEnum)
+
+// 日期查询类型
+const searchDateTypeEnum = {
+  DELIVERY_DATE: { L: '发运日期', K: 'DELIVERY_DATE', V: 1 << 0 },
+  UPDATE_DATE: { L: '状态更新日期', K: 'UPDATE_DATE', V: 1 << 1 }
+}
+constantize(searchDateTypeEnum)
+
+// 收货运费变更类型
+const freightChangeTypeEnum = {
+  CONTINUE: { L: '运费保留', K: 'CONTINUE', SL: '运费正常', V: 1 << 0 },
+  CANCEL: { L: '运费作废', K: 'CANCEL', SL: '运费作废', V: 1 << 1 },
+  CHANGE: { L: '运费变更', K: 'CHANGE', SL: '运费变更', V: 1 << 2 }
+}
+constantize(freightChangeTypeEnum)
+
 export {
   teamTypeEnum,
   teamAttributeEnum,
@@ -298,6 +329,10 @@ export {
   surplusHandleStatusEnum,
   inProductionDetailReportEnum,
   schedulingStatusEnum,
+  deliveryStatusEnum,
+  deliveryReceiptStatusEnum,
+  searchDateTypeEnum,
+  freightChangeTypeEnum,
   mesWarehouseStateTypeEnum
 }
 
@@ -333,5 +368,9 @@ export default {
   surplusHandleStatusEnum,
   inProductionDetailReportEnum,
   schedulingStatusEnum,
+  deliveryStatusEnum,
+  deliveryReceiptStatusEnum,
+  searchDateTypeEnum,
+  freightChangeTypeEnum,
   mesWarehouseStateTypeEnum
 }

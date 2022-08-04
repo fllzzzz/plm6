@@ -13,6 +13,20 @@
       <span>{{ row.width }}</span>
     </template>
   </el-table-column>
+  <el-table-column
+    v-if="!unShowField.includes('unfoldedWidth') && !(unShowEWVal & category) && (isBlank(columns) || columns.visible('unfoldedWidth')) && (category!==mesEnclosureTypeEnum.SANDWICH_BOARD.V && category!==mesEnclosureTypeEnum.TRUSS_FLOOR_PLATE.V)"
+    :show-overflow-tooltip="true"
+    prop="width"
+    :label="`展开宽度${unitNewLine ? '\n' : ''}(mm)`"
+    :width="fixedWidth ? '80px' : ''"
+    :min-width="!fixedWidth ? '80px' : ''"
+    align="center"
+    :fixed="fixed"
+  >
+    <template #default="{ row }">
+      <span>{{ row.unfoldedWidth }}</span>
+    </template>
+  </el-table-column>
   <!-- <el-table-column
     v-if="!unShowField.includes('width') && !(unShowWVal & category) && (isBlank(columns) || columns.visible('width'))"
     :show-overflow-tooltip="true"

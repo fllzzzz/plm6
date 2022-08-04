@@ -44,7 +44,8 @@
                 prop="auxMaterialNames"
                 style="width: 100%; word-break: break-all"
               >
-                <span v-split="detail.auxMaterialNames" />
+                <span v-if="detail.auxMaterialIds.includes(0)">所有辅材</span>
+                <span v-else v-split="detail.auxMaterialNames" />
               </el-form-item>
 
               <template v-if="detail.supplyType === orderSupplyTypeEnum.SELF.V">

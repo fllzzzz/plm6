@@ -33,7 +33,17 @@ export function getDeptAllSimple(hasRoot = true) {
     module: 'user',
     url: 'dept/all/simple',
     method: 'get',
-    params: { hasRoot }
+    params: { hasRoot: true }
+  })
+}
+
+// 获取部门用户
+export function getDeptAllUser(params) {
+  return request({
+    module: 'user',
+    url: 'user/dept',
+    method: 'get',
+    params
   })
 }
 

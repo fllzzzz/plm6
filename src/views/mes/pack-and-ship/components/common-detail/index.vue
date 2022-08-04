@@ -13,6 +13,7 @@
       <slot name="titleRight" />
     </template>
     <div class="head-container">
+      <div style="color:red;margin-bottom:8px;" v-if="(detailInfo.deliveryStatus===deliveryStatusEnum.RETURN.V || detailInfo.shipmentStatus===deliveryReceiptStatusEnum.RETURN.V) && detailInfo.cancelDeliveryReason">当前发运已取消，取消原因：{{detailInfo.cancelDeliveryReason}}</div>
       <el-radio-group v-model="curProductType" v-if="productTypeBits.length > 1" size="small" class="filter-item">
         <el-radio-button
           v-if="packTypeEnum.STRUCTURE.V & productType"
@@ -55,7 +56,7 @@
 import { defineProps, ref, defineEmits, watch, computed } from 'vue'
 import { ElRadioGroup } from 'element-plus'
 
-import { packTypeEnum } from '@enum-ms/mes'
+import { packTypeEnum, deliveryStatusEnum, deliveryReceiptStatusEnum } from '@enum-ms/mes'
 import { weightTypeEnum } from '@enum-ms/common'
 import { convertUnits } from '@/utils/convert/unit'
 import EO from '@enum'

@@ -47,7 +47,13 @@
               <span style="display: flex; align-items: center">
                 <span style="margin-right: 3px">单体</span><el-checkbox v-model="printConfig.showMonomer" />
                 <span style="margin-right: 3px">区域</span><el-checkbox v-model="printConfig.showArea" />
+                <span style="margin-right: 3px">生产日期</span><el-checkbox v-model="printConfig.dateInProduced" />
                 <!-- <span style="margin-right: 3px">生产线</span><el-checkbox v-model="printConfig.showProductionLine" /> -->
+              </span>
+            </el-form-item>
+            <el-form-item label="显示" v-show="productType & componentTypeEnum.ENCLOSURE.V">
+              <span style="display: flex; align-items: center">
+                <span style="margin-right: 3px">生产日期</span><el-checkbox v-model="printConfig.dateInProduced" />
               </span>
             </el-form-item>
             <el-form-item label="制造商名称">
@@ -78,6 +84,7 @@
             <span v-show="productType & componentTypeEnum.ARTIFACT.V">重量：{{printWeightTypeEnum.VL[sourcePrintConfig.weight]}}，</span>
             <span v-show="productType & componentTypeEnum.ARTIFACT.V">区域：{{isShowText(sourcePrintConfig.showArea)}}，</span>
             <span v-show="productType & componentTypeEnum.ARTIFACT.V">单体：{{isShowText(sourcePrintConfig.showMonomer)}}，</span>
+            <span v-show="productType & componentTypeEnum.ARTIFACT.V || productType & componentTypeEnum.ENCLOSURE.V">生产日期：{{isShowText(sourcePrintConfig.dateInProduced)}}，</span>
             <span>制造商名称：{{sourcePrintConfig.manufacturerName || '-'}}，</span>
             <span>份数：{{sourcePrintConfig.copiesQuantity}}</span>
           </span>
@@ -155,6 +162,7 @@ let printConfig = reactive({
   type: labelTypeEnum.COMMON.V,
   showArea: true,
   showMonomer: true,
+  dateInProduced: true,
   // showProductionLine: true,
   manufacturerName: '',
   copiesQuantity: 1
@@ -186,12 +194,13 @@ async function fetchPrintConfig() {
     configLoading.value = true
     const _data = await getPrintConfig(globalProjectId.value, printType)
     if (_data) {
-      const { type, weight, showArea, showMonomer, manufacturerName, copiesQuantity } = _data
+      const { type, weight, showArea, showMonomer, dateInProduced, manufacturerName, copiesQuantity } = _data
       printConfig.weight = weight
       printConfig.type = type
       // printConfig.showProductionLine = showProductionLine
       printConfig.showArea = showArea
       printConfig.showMonomer = showMonomer
+      printConfig.dateInProduced = dateInProduced
       printConfig.manufacturerName = manufacturerName
       printConfig.copiesQuantity = copiesQuantity || 1
       sourcePrintConfig.value = deepClone(printConfig)
@@ -220,7 +229,8 @@ async function saveConfig() {
       printType,
       // showProductionLine: printConfig.showProductionLine,
       showArea: printConfig.showArea,
-      showMonomer: printConfig.showMonomer
+      showMonomer: printConfig.showMonomer,
+      dateInProduced: printConfig.dateInProduced
     })
     printConfigVisible.value = false
     sourcePrintConfig.value = deepClone(printConfig)

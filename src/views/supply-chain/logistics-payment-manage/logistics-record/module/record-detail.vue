@@ -13,6 +13,15 @@
       <el-tag v-if="props.type===logisticsSearchTypeEnum.PRODUCT.V" effect="plain">{{ detailInfo.projectName }}</el-tag>
       <el-tag v-if="props.type===logisticsSearchTypeEnum.MATERIAL.V" effect="plain">{{ detailInfo.serialNumber }}</el-tag>
       <el-tag v-if="props.type===logisticsSearchTypeEnum.COMPANY.V" effect="plain">{{ detailInfo.supplierName }}</el-tag>
+      <common-radio-button
+        v-model="freightChangeType"
+        :options="freightChangeTypeEnum.ENUM"
+        showOptionAll
+        type="enumSL"
+        size="small"
+        class="filter-item"
+        @change="fetchList"
+      />
     </template>
     <template #titleRight>
       <div class="print-wrap">
@@ -38,6 +47,7 @@
         <el-table-column prop="driverName" label="司机姓名" align="center" show-overflow-tooltip />
         <el-table-column prop="driverPhone" label="电话" align="center" show-overflow-tooltip />
         <el-table-column prop="freight" label="运费额" align="center" show-overflow-tooltip />
+        <el-table-column prop="changeFreight" label="状态" align="center" show-overflow-tooltip />
       </common-table>
       <!--分页组件-->
       <el-pagination
@@ -56,7 +66,9 @@
 <script setup>
 import { logisticsRecordDetail } from '@/api/supply-chain/logistics-payment-manage/logistics-record-ledger'
 import { ref, defineEmits, defineProps, watch, computed } from 'vue'
+
 import { logisticsSearchTypeEnum } from '@enum-ms/contract'
+import { freightChangeTypeEnum } from '@enum-ms/mes'
 import useVisible from '@/composables/use-visible'
 import useMaxHeight from '@compos/use-max-height'
 import usePagination from '@compos/use-pagination'
@@ -82,6 +94,7 @@ const props = defineProps({
   }
 })
 
+const freightChangeType = ref(undefined)
 const { visible, handleClose } = useVisible({ emit, props })
 const { handleSizeChange, handleCurrentChange, total, setTotalPage, queryPage } = usePagination({ fetchHook: fetchList })
 
@@ -90,7 +103,8 @@ const params = computed(() => {
   return {
     id: props.detailInfo.id || props.detailInfo.supplierId,
     type: props.type,
-    branchCompanyId: props.detailInfo.supplierId ? props.detailInfo.branchCompanyId : undefined
+    branchCompanyId: props.detailInfo.supplierId ? props.detailInfo.branchCompanyId : undefined,
+    changeFreight: freightChangeType.value
   }
 })
 
@@ -98,6 +112,7 @@ watch(
   visible,
   (val) => {
     if (val) {
+      freightChangeType.value = undefined
       fetchList()
     }
   }
@@ -110,7 +125,8 @@ const dataFormat = ref([
   ['shipDate', ['parse-time', '{y}-{m}-{d}']],
   ['type', ['parse-enum', logisticsSearchTypeEnum]],
   ['loadingWeight', ['to-fixed', 2]],
-  ['freight', 'to-thousand']
+  ['freight', 'to-thousand'],
+  ['changeFreight', ['parse-enum', freightChangeTypeEnum, { f: 'SL' }]]
 ])
 
 const { maxHeight } = useMaxHeight(

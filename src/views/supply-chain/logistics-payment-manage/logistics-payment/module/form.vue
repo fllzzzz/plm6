@@ -53,8 +53,8 @@
                 v-if="scope.row.freight!==scope.row.paymentAmount"
                 v-model.number="scope.row.applyAmount"
                 v-show-thousand
-                :min="0"
-                :max="scope.row.freight-scope.row.paymentAmount"
+                :min="scope.row.paymentAmount>scope.row.freight?(-(scope.row.paymentAmount-scope.row.freight)):0"
+                :max="scope.row.paymentAmount>scope.row.freight?0:scope.row.freight-scope.row.paymentAmount"
                 :step="100"
                 :precision="DP.YUAN"
                 placeholder="本次支付(元)"
@@ -208,23 +208,23 @@ CRUD.HOOK.afterToAdd = () => {
 
 CRUD.HOOK.beforeSubmit = () => {
   crud.form.attachmentIds = crud.form.attachments ? crud.form.attachments.map((v) => v.id) : undefined
-  crud.form.supplierId = props.detailInfo.supplierId || 1
-  crud.form.branchCompanyId = props.detailInfo.branchCompanyId || 1
+  crud.form.supplierId = props.detailInfo.supplierId
+  crud.form.branchCompanyId = props.detailInfo.branchCompanyId
   crud.form.applyAmount = 0
   crud.form.detailSaveParams = []
   freightDetails.value.map(v => {
-    if (v.applyAmount > 0) {
+    if (v.applyAmount !== 0) {
       crud.form.applyAmount += v.applyAmount
       crud.form.detailSaveParams.push({
         projectId: v.projectId,
         purchaseId: v.purchaseId,
         type: v.type,
-        applyAmount: v.applyAmount
+        applyAmount: Number(v.applyAmount.toFixed(DP.YUAN))
       })
     }
   })
   if (crud.form.detailSaveParams.length === 0) {
-    ElMessage.error('请填写本次申请明细且金额大于0')
+    ElMessage.error('请填写本次申请明细')
     return false
   }
 }

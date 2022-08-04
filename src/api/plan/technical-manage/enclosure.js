@@ -134,4 +134,27 @@ export function getTotalSum(params) {
     params
   })
 }
+
+// 折边件上传照片单个
+export function uploadBendingSingle(data) {
+  return request({
+    module: 'plan',
+    url: 'enclosure/importAttachment/drawing',
+    method: 'post',
+    headers: { 'Content-Type': 'multipart/form-data' },
+    data
+  })
+}
+
+// 折边件上传压缩包
+export function uploadBendingZip(data) {
+  return request({
+    module: 'plan',
+    url: 'enclosure/importAttachment/zip',
+    method: 'post',
+    headers: { 'Content-Type': 'multipart/form-data' },
+    data
+  })
+}
+
 export default { get, edit, del, add }
