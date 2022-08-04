@@ -21,15 +21,23 @@
       />
       <rrOperation />
     </div>
-    <crudOperation />
+    <crudOperation>
+       <template #viewLeft>
+        <export-button :fn="downloadJobUser" class="filter-item" :params="{enabled:query.enabled}" v-permission="crud.permission.get" :disabled="crud.data.length === 0">
+          人员设置清单
+        </export-button>
+      </template>
+    </crudOperation>
   </div>
 </template>
 
 <script setup>
+import { downloadJobUser } from '@/api/user-manage/job'
 import { regHeader } from '@compos/use-crud'
 import rrOperation from '@crud/RR.operation'
 import crudOperation from '@crud/CRUD.operation'
 import { systemEnabledEnum } from '@enum-ms/system'
+import ExportButton from '@comp-common/export-button/index.vue'
 
 const defaultQuery = {
   name: undefined,

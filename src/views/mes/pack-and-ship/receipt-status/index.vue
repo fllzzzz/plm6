@@ -13,8 +13,8 @@
       @sort-change="crud.handleSortChange"
       @selection-change="crud.selectionChangeHandler"
     >
-      <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="序号" type="index" align="center" width="60" />
+      <el-table-column type="selection" width="50" align="center" />
+      <el-table-column label="序号" type="index" align="center" width="50" />
       <el-table-column
         v-if="columns.visible('project.shortName') && !crud.query.projectId"
         key="project.shortName"
@@ -69,18 +69,45 @@
         </template>
       </el-table-column>
       <el-table-column
-        v-if="columns.visible('receiptStatus')"
-        key="receiptStatus"
-        prop="receiptStatus"
+        v-if="columns.visible('auditTime')"
+        key="auditTime"
+        prop="auditTime"
+        align="center"
         sortable="custom"
-        label="收货状态"
+        label="发运日期"
+        width="120"
+      >
+        <template v-slot="scope">
+          <span>{{ scope.row.auditTime }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        v-if="columns.visible('statusUpdateDate')"
+        key="statusUpdateDate"
+        prop="statusUpdateDate"
+        sortable="custom"
+        label="状态更新日期"
+        align="center"
+        width="120"
+      >
+        <template v-slot="scope">
+          <span>{{ scope.row.statusUpdateDate }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        v-if="columns.visible('shipmentStatus')"
+        key="shipmentStatus"
+        prop="shipmentStatus"
+        sortable="custom"
+        label="发运状态"
         align="center"
         min-width="90"
       >
         <template v-slot="scope">
-          <el-tag :type="receiptStatusEnum.V[scope.row.receiptStatus].T" disable-transitions effect="plain">{{
-            receiptStatusEnum.VL[scope.row.receiptStatus]
+          <el-tag :type="deliveryReceiptStatusEnum.V[scope.row.shipmentStatus].T" disable-transitions effect="plain" v-if="scope.row.sourceRow.shipmentStatus">{{
+            deliveryReceiptStatusEnum.VL[scope.row.shipmentStatus]
           }}</el-tag>
+          <span v-else>-</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -142,70 +169,62 @@
         align="center"
         min-width="100"
       />
-      <el-table-column
-        v-if="columns.visible('auditTime')"
-        key="auditTime"
-        prop="auditTime"
-        align="center"
-        sortable="custom"
-        label="发运日期"
-        width="120"
-      >
-        <template v-slot="scope">
-          <span>{{ scope.row.auditTime }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column
-        v-if="columns.visible('auditReceiptTime')"
-        key="auditReceiptTime"
-        prop="auditReceiptTime"
-        sortable="custom"
-        label="收货日期"
-        align="center"
-        width="120"
-      >
-        <template v-slot="scope">
-          <span>{{ scope.row.auditReceiptTime }}</span>
-        </template>
-      </el-table-column>
       <!--详情与下载-->
-      <el-table-column v-if="checkPermission([...permission.detail])" label="操作" width="100px" align="center" fixed="right">
+      <el-table-column v-if="checkPermission([...permission.detail])" label="操作" width="180px" align="center" fixed="right">
         <template v-slot="scope">
           <!-- 详情 -->
-          <common-button type="primary" icon="el-icon-view" size="mini" @click.stop="showDetail(scope.row)" />
+          <common-button type="primary" icon="el-icon-view" size="mini" @click.stop="showDetail(scope.row,'detail')" />
+          <common-button size="mini" type="success" v-if="scope.row.shipmentStatus===deliveryReceiptStatusEnum.DELIVERY.V && scope.row.project?.businessType===businessTypeEnum.MACHINING.V" @click.stop="showDetail(scope.row,'sign')"><svg-icon icon-class="sign" /></common-button>
+          <common-button type="warning" size="mini" v-if="scope.row.shipmentStatus===deliveryReceiptStatusEnum.DELIVERY.V" @click.stop="showDetail(scope.row,'cancel')"><svg-icon icon-class="delivery-cancel" style="font-size:14px;" /></common-button>
         </template>
       </el-table-column>
     </common-table>
     <!--分页组件-->
     <pagination />
-    <m-detail v-model:visible="detailVisible" :detail-info="receiptInfo" title="装车详情" :detailFunc="detail">
+    <m-detail v-model:visible="detailVisible" :detail-info="receiptInfo" :title="showType==='detail'?'装车详情':(showType==='cancel'?'取消送货':'到场签收')" :detailFunc="detail">
       <template #tip>
+        <div style="width:150px;height:53px;overflow:hidden;position:absolute;top:-18px;left:-20px;">
+          <table-cell-tag :show="receiptInfo.shipmentStatus===deliveryReceiptStatusEnum.RETURN.V" name="已取消" color="#f56c6c"/>
+        </div>
+        <el-tag effect="plain" size="medium" v-if="receiptInfo.shipmentStatus" :type="deliveryReceiptStatusEnum.V[receiptInfo.shipmentStatus].T">{{deliveryReceiptStatusEnum.VL[receiptInfo.shipmentStatus]}}</el-tag>
         <el-tag effect="plain" size="medium" style="margin-left: 5px" type="danger">车次：{{ receiptInfo.serialNumber }}</el-tag>
         <el-tag effect="plain" size="medium">项目：{{ receiptInfo.project && receiptInfo.project.shortName }}</el-tag>
         <el-tag effect="plain" size="medium" type="success">发运人：{{ receiptInfo.auditUserName }}</el-tag>
         <el-tag effect="plain" size="medium" type="success">收货人：{{ receiptInfo.receiptName }}</el-tag>
       </template>
+      <template #titleRight>
+        <common-button type="warning" size="mini" v-if="showType==='cancel'" @click.stop="cancelVisible=true">取消送货</common-button>
+        <el-popconfirm title="确定签收吗?" @confirm="signSubmit" v-if="showType==='sign'">
+          <template #reference>
+            <common-button type="success" size="mini">确认签收</common-button>
+          </template>
+        </el-popconfirm>
+      </template>
     </m-detail>
+    <cancelForm v-model="cancelVisible" :detailInfo="detailInfo" @success="detailVisible=false;crud.toQuery()"/>
   </div>
 </template>
 
 <script setup>
-import crudApi, { detail } from '@/api/mes/pack-and-ship/receipt-status'
+import crudApi, { detail, deliverySign } from '@/api/mes/pack-and-ship/receipt-status'
 import { ref } from 'vue'
 
 import { receiptStatusPM as permission } from '@/page-permission/mes'
 import { manufactureTypeEnum } from '@enum-ms/production'
-import { packTypeEnum, receiptStatusEnum } from '@enum-ms/mes'
+import { businessTypeEnum } from '@enum-ms/contract'
+import { packTypeEnum, deliveryReceiptStatusEnum } from '@enum-ms/mes'
 import { projectNameFormatter } from '@/utils/project'
 import { cleanArray } from '@/utils/data-type/array'
 import EO from '@enum'
 import checkPermission from '@/utils/system/check-permission'
+import { ElNotification } from 'element-plus'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import pagination from '@crud/Pagination'
 import mHeader from './module/header'
 import mDetail from '../components/common-detail'
+import cancelForm from './module/cancel-form'
 
 const optShow = {
   add: false,
@@ -216,10 +235,13 @@ const optShow = {
 
 const dataFormat = [
   ['auditTime', ['parse-time', '{y}-{m}-{d}']],
-  ['auditReceiptName', ['parse-time', '{y}-{m}-{d}']]
+  ['statusUpdateDate', ['parse-time', '{y}-{m}-{d}']]
 ]
 
 const tableRef = ref()
+const cancelVisible = ref(false)
+const detailInfo = ref({})
+const showType = ref('detail')
 const { crud, columns } = useCRUD(
   {
     title: '收货状态',
@@ -237,8 +259,21 @@ const { maxHeight } = useMaxHeight({ paginate: true })
 const detailVisible = ref(false)
 const receiptInfo = ref({})
 
-function showDetail(row) {
+function showDetail(row, type) {
+  showType.value = type
   receiptInfo.value = row
+  detailInfo.value = row
   detailVisible.value = true
+}
+
+async function signSubmit() {
+  try {
+    await deliverySign(receiptInfo.value.id)
+    ElNotification({ title: '签收成功', type: 'success' })
+    detailVisible.value = false
+    crud.toQuery()
+  } catch (error) {
+    console.log('签收失败', error)
+  }
 }
 </script>

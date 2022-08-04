@@ -57,20 +57,31 @@
                   </div>
                 </el-form-item>
                 <el-form-item v-if="form.basicClass & matClsEnum.MATERIAL.V" class="el-form-item-5" label="辅材明细" prop="auxMaterialIds">
-                  <material-cascader
-                    v-model="form.auxMaterialIds"
-                    :basic-class="matClsEnum.MATERIAL.V"
-                    :deep="2"
-                    :disabled="form.boolUsed"
-                    multiple
-                    :collapse-tags="false"
-                    separator=" > "
-                    clearable
-                    placeholder="请选择辅材"
-                    class="input-underline"
-                    size="small"
-                    style="width: 100%"
-                  />
+                   <div class="flex-rss child-mr-10">
+                    <!-- 是否选择所有辅材 -->
+                    <el-checkbox
+                      v-model="form.isAllMaterial"
+                      :disabled="form.boolUsed"
+                      label="所有辅材"
+                      size="mini"
+                      border
+                      style="margin-top: 3px;margin-right:5px;"
+                    />
+                    <material-cascader
+                      v-model="form.auxMaterialIds"
+                      :basic-class="matClsEnum.MATERIAL.V"
+                      :deep="2"
+                      :disabled="form.boolUsed || form.isAllMaterial"
+                      multiple
+                      :collapse-tags="false"
+                      separator=" > "
+                      clearable
+                      placeholder="请选择辅材"
+                      class="input-underline"
+                      size="small"
+                      style="width: 100%"
+                    />
+                  </div>
                 </el-form-item>
                 <el-form-item class="el-form-item-7" label="供应商" prop="supplierId">
                   <supplier-select
@@ -305,6 +316,7 @@ const defaultForm = {
   supplyType: orderSupplyTypeEnum.SELF.V, // 供货类型
   purchaseType: baseMaterialTypeEnum.RAW_MATERIAL.V, // 物料种类
   basicClass: null, // 物料类型
+  isAllMaterial: false, // 是否选择全部辅材
   auxMaterialIds: undefined, // 辅材明细ids
   projectIds: undefined, // 项目ids
   requisitionsSN: undefined, // 申购单编号
@@ -384,9 +396,22 @@ const partyARules = {
   projectIds: [{ required: true, message: '请选择项目', trigger: 'change' }]
 }
 
+const validateAuxMat = (rule, value, callback) => {
+  if (!form.isAllMaterial) {
+    if (!value) {
+      callback(new Error('请选择辅材'))
+      return
+    } else {
+      callback()
+    }
+  } else {
+    callback()
+  }
+}
+
 // 辅材校验
 const auxMatRules = {
-  auxMaterialIds: [{ required: true, message: '请选择辅材', trigger: 'change' }]
+  auxMaterialIds: [{ required: true, validator: validateAuxMat, trigger: 'change' }]
 }
 
 // rules变更
@@ -501,13 +526,14 @@ CRUD.HOOK.beforeEditDetailLoaded = async (crud, form) => {
   }
 }
 
-CRUD.HOOK.beforeSubmit = () => {
+CRUD.HOOK.beforeSubmit = (crud, form) => {
   if (!checkHasSortingEdit()) return false
 }
 
 // 表单提交数据清理
 crud.submitFormFormat = (form) => {
   form.attachmentIds = form.attachments ? form.attachments.map((v) => v.id) : undefined
+  form.auxMaterialIds = form.isAllMaterial ? [0] : form.auxMaterialIds
   return form
 }
 
@@ -557,6 +583,7 @@ function saveSortingInfo() {
 function boolPartyAChange(val) {
   form.supplyType = val ? orderSupplyTypeEnum.PARTY_A.V : orderSupplyTypeEnum.SELF.V
 }
+
 </script>
 
 <style lang="scss" scoped>

@@ -39,6 +39,17 @@
         </template>
       </el-table-column>
       <el-table-column
+        v-if="columns.visible('factoryName') && crud.query.factoryId"
+        key="factoryName"
+        prop="factoryName"
+        :show-overflow-tooltip="true"
+        label="工厂"
+      >
+        <template v-slot="scope">
+          <span>{{ scope.row.factoryName }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
         v-if="columns.visible('productType')"
         key="productType"
         prop="productType"

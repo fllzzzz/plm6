@@ -41,4 +41,17 @@ export function audit({ id, status }) {
   })
 }
 
-export default { get }
+/**
+ * 下载发运详情
+ * @param {*} id 文件id
+ */
+export function download({ id }) {
+  return request({
+    module: 'mes',
+    url: `cargo/review/${id}/download`,
+    method: 'get',
+    responseType: 'blob'
+  })
+}
+
+export default { get, download }

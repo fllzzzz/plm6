@@ -26,7 +26,7 @@
         class="enclosure-table"
         :cell-class-name="wrongCellMask"
       >
-        <el-table-column label="序号" type="index" align="center" width="60" />
+        <el-table-column label="序号" type="index" align="center" width="50" />
         <el-table-column v-if="columns.visible('name')" key="name" prop="name" :show-overflow-tooltip="true" label="名称" min-width="100">
           <template v-slot="scope">
             <div>{{ scope.row.name }}</div>
@@ -118,7 +118,7 @@
           </template>
         </el-table-column>
         <el-table-column
-          v-if="columns.visible('unfoldedWidth') && crud.query.category === TechnologyTypeAllEnum.BENDING.V"
+          v-if="columns.visible('unfoldedWidth') && (crud.query.category===TechnologyTypeAllEnum.BENDING.V || (crud.query.category===TechnologyTypeAllEnum.PROFILED_PLATE.V || crud.query.category===TechnologyTypeAllEnum.PRESSURE_BEARING_PLATE.V))"
           key="unfoldedWidth"
           prop="unfoldedWidth"
           :show-overflow-tooltip="true"
@@ -127,7 +127,7 @@
         >
           <template v-slot="scope">
             <el-input-number
-              v-if="scope.row.isModify && !scope.row.inProductionQuantity"
+              v-if="scope.row.isModify && !scope.row.inProductionQuantity && crud.query.category===TechnologyTypeAllEnum.BENDING.V"
               v-model.number="scope.row.unfoldedWidth"
               :min="0"
               :max="99999999999"
@@ -147,11 +147,11 @@
           prop="bendTimes"
           :show-overflow-tooltip="true"
           :label="`折弯次数`"
-          min-width="100px"
+          width="80px"
         >
           <template v-slot="scope">
             <el-input-number
-              v-if="scope.row.isModify"
+              v-if="scope.row.isModify && !scope.row.inProductionQuantity"
               v-model.number="scope.row.bendTimes"
               :min="0"
               :max="99999999999"
@@ -184,6 +184,7 @@
               placeholder="板厚"
               controls-position="right"
               style="width: 100%"
+              @change="thicknessChange(scope.row)"
             />
             <span v-else>{{ scope.row.thickness ? scope.row.thickness.toFixed(DP.MES_ENCLOSURE_T__MM) : '-' }}</span>
           </template>
@@ -263,6 +264,18 @@
           </template>
         </el-table-column>
         <el-table-column
+          v-if="crud.query.category!==TechnologyTypeAllEnum.SANDWICH_BOARD.V"
+          key="weight"
+          prop="weight"
+          :label="`总重量(kg)`"
+          align="left"
+          min-width="100px"
+        >
+          <template v-slot="scope">
+            {{ scope.row.weight ? scope.row.weight.toFixed(DP.COM_WT__KG) : '-' }}
+          </template>
+        </el-table-column>
+        <el-table-column
           v-if="
             columns.visible('brand') &&
             crud.query.category !== TechnologyTypeAllEnum.SANDWICH_BOARD.V &&
@@ -290,7 +303,7 @@
           prop="color"
           :show-overflow-tooltip="true"
           label="颜色"
-          width="100px"
+          width="80px"
         >
           <template v-slot="scope">
             <el-input v-if="scope.row.isModify" v-model="scope.row.color" placeholder="颜色" maxlength="10" style="width: 100%" />
@@ -303,11 +316,23 @@
           prop="draw"
           :show-overflow-tooltip="true"
           label="画图"
-          min-width="120px"
+          min-width="190px"
         >
           <template v-slot="scope">
+              <upload-btn
+              :upload-fun="uploadBendingSingle"
+              :data="{ id: scope.row.id }"
+              :fileClassify="undefined"
+              :accept="'.jpg,.jpeg,.png'"
+              success-msg="上传成功"
+              :btn-name="`上传`"
+              btn-type="warning"
+              btn-size="mini"
+              @success="uploadSuccess"
+              style="display:inline-block;margin-right:5px;"
+            />
             <common-button size="mini" type="primary" @click="handleDraw(scope.row)" :disabled="scope.row.isModify" v-permission="permission.draw">{{
-              scope.row.attachmentId ? '修改' : '画图'
+              scope.row.attachmentId ? '换图' : '画图'
             }}</common-button>
             <common-button size="mini" type="primary" icon="el-icon-view" v-permission="permission.drawDownload" @click="drawingPreview(scope.row)" v-if="scope.row.attachmentId"/>
           </template>
@@ -375,7 +400,7 @@
 </template>
 
 <script setup>
-import crudApi, { editStatus } from '@/api/plan/technical-manage/enclosure'
+import crudApi, { editStatus, uploadBendingSingle } from '@/api/plan/technical-manage/enclosure'
 import { getContractTechInfo } from '@/api/contract/project'
 import { ref, watch, provide } from 'vue'
 import { enclosureListPM as permission } from '@/page-permission/plan'
@@ -396,6 +421,7 @@ import SimpleDrawing from '../components/simple-drawing'
 // import ExportButton from '@comp-common/export-button/index.vue'
 import useDrawing from '@compos/use-drawing'
 import drawingImg from '@comp-base/drawing-img.vue'
+import uploadBtn from '@comp/file-upload/SingleFileUploadBtn'
 
 const { globalProject, globalProjectId } = mapGetters(['globalProject', 'globalProjectId'])
 const { showDrawing, drawingRow, drawingPreview } = useDrawing({})
@@ -592,6 +618,11 @@ async function changeStatus(data, val) {
     data.boolStatusEnum = data.boolStatusEnum === processingEnum.PROCESS.V ? processingEnum.PAUSE.V : processingEnum.PROCESS.V
   }
 }
+function uploadSuccess() {
+  ElMessage.success('上传成功')
+  crud.toQuery()
+}
+
 function getPlate() {
   plateOption.value = crud.query.category !== TechnologyTypeAllEnum.BENDING.V ? totalTechInfo.value[crud.query.category] : []
 }
@@ -615,6 +646,7 @@ function plateChange(row, index) {
   const choseVal = plateOption.value.find((v) => v.id === row.plateId)
   if (crud.query.category === TechnologyTypeAllEnum.TRUSS_FLOOR_PLATE.V) {
     crud.data[index].plate = choseVal.serialNumber
+    crud.data[index].weightMeter = choseVal.weightMeter
   } else {
     crud.data[index].plate = choseVal.plateType
     crud.data[index].brand = choseVal.brand
@@ -628,6 +660,7 @@ function plateChange(row, index) {
 function getTotalData(row) {
   if (row.length && row.quantity) {
     row.totalLength = (row.length * row.quantity) / 1000
+    thicknessChange(row)
   }
   if (crud.query.category === TechnologyTypeAllEnum.BENDING.V) {
     if (row.length && row.quantity && row.unfoldedWidth) {
@@ -636,6 +669,18 @@ function getTotalData(row) {
   } else {
     if (row.length && row.quantity && row.width) {
       row.totalArea = (row.width * row.length * row.quantity) / 1000000
+    }
+  }
+}
+
+function thicknessChange(row) {
+  if (crud.query.category === TechnologyTypeAllEnum.BENDING.V || (crud.query.category === TechnologyTypeAllEnum.PROFILED_PLATE.V || crud.query.category === TechnologyTypeAllEnum.PRESSURE_BEARING_PLATE.V)) {
+    if (row.unfoldedWidth && row.thickness && row.totalLength) {
+      row.weight = (row.unfoldedWidth / 1000) * row.thickness * row.totalLength * 7.85
+    }
+  } else if (crud.query.category === TechnologyTypeAllEnum.TRUSS_FLOOR_PLATE.V) {
+    if (row.weightMeter && row.totalLength) {
+      row.weight = row.weightMeter * row.totalLength
     }
   }
 }

@@ -102,7 +102,7 @@
             </template>
           </el-table-column>
           <el-table-column
-            v-if="crud.query.category===TechnologyTypeAllEnum.BENDING.V"
+            v-if="crud.query.category===TechnologyTypeAllEnum.BENDING.V || (crud.query.category===TechnologyTypeAllEnum.PROFILED_PLATE.V || crud.query.category===TechnologyTypeAllEnum.PRESSURE_BEARING_PLATE.V)"
             key="unfoldedWidth"
             prop="unfoldedWidth"
             :show-overflow-tooltip="true"
@@ -111,6 +111,7 @@
           >
             <template v-slot="scope">
               <el-input-number
+                v-if="crud.query.category===TechnologyTypeAllEnum.BENDING.V"
                 v-model.number="scope.row.unfoldedWidth"
                 :min="0"
                 :max="99999999999"
@@ -121,6 +122,7 @@
                 style="width:100%"
                 @change="getTotalData(scope.row)"
               />
+              <div v-else>{{ scope.row.unfoldedWidth? scope.row.unfoldedWidth.toFixed(DP.MES_ENCLOSURE_W__MM): '-' }}</div>
             </template>
           </el-table-column>
           <el-table-column
@@ -163,6 +165,7 @@
                 placeholder="板厚"
                 controls-position="right"
                 style="width:100%"
+                @change="thicknessChange(scope.row)"
               />
             </template>
           </el-table-column>
@@ -230,6 +233,18 @@
           >
             <template v-slot="scope">
               {{ scope.row.totalLength ? scope.row.totalLength.toFixed(DP.MES_ENCLOSURE_L__M) : '-' }}
+            </template>
+          </el-table-column>
+          <el-table-column
+            v-if="crud.query.category!==TechnologyTypeAllEnum.SANDWICH_BOARD.V"
+            key="weight"
+            prop="weight"
+            :label="`总重量(kg)`"
+            align="left"
+            min-width="100px"
+          >
+            <template v-slot="scope">
+              {{ scope.row.weight ? scope.row.weight.toFixed(DP.COM_WT__KG) : '-' }}
             </template>
           </el-table-column>
           <el-table-column
@@ -408,11 +423,13 @@ function plateChange(row, index) {
   const choseVal = plateOption.value.find(v => v.id === row.plateId)
   if (crud.query.category === TechnologyTypeAllEnum.TRUSS_FLOOR_PLATE.V) {
     form.list[index].plate = choseVal.serialNumber
+    form.list[index].weightMeter = choseVal.weightMeter
   } else {
     form.list[index].plate = choseVal.plateType
     form.list[index].brand = choseVal.brand
     form.list[index].thickness = choseVal.thickness
     form.list[index].color = choseVal.colour
+    form.list[index].unfoldedWidth = choseVal.unfoldedWidth
   }
   form.list[index].width = choseVal.effectiveWidth
   getTotalData(row)
@@ -421,6 +438,7 @@ function plateChange(row, index) {
 function getTotalData(row) {
   if (row.length && row.quantity) {
     row.totalLength = row.length * row.quantity / 1000
+    thicknessChange(row)
   }
   if (crud.query.category === TechnologyTypeAllEnum.BENDING.V) {
     if (row.length && row.quantity && row.unfoldedWidth) {
@@ -429,6 +447,18 @@ function getTotalData(row) {
   } else {
     if (row.length && row.quantity && row.width) {
       row.totalArea = row.width * row.length * row.quantity / 1000000
+    }
+  }
+}
+
+function thicknessChange(row) {
+  if (crud.query.category === TechnologyTypeAllEnum.BENDING.V || (crud.query.category === TechnologyTypeAllEnum.PROFILED_PLATE.V || crud.query.category === TechnologyTypeAllEnum.PRESSURE_BEARING_PLATE.V)) {
+    if (row.unfoldedWidth && row.thickness && row.totalLength) {
+      row.weight = (row.unfoldedWidth / 1000) * row.thickness * row.totalLength * 7.85
+    }
+  } else if (crud.query.category === TechnologyTypeAllEnum.TRUSS_FLOOR_PLATE.V) {
+    if (row.weightMeter && row.totalLength) {
+      row.weight = row.weightMeter * row.totalLength
     }
   }
 }

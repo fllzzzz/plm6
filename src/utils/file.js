@@ -93,7 +93,7 @@ export function downloadFileByResponse(response, fileName) {
     fileName = getFileName(response)
   }
   const _nameArr = fileName.split('.')
-  fileName = `${_nameArr[0]}_${parseTime(new Date(), '{y}{m}{d}{h}{i}{s}')}.${_nameArr[1]}` // 处理文件名乱码问题
+  fileName = `${_nameArr[_nameArr.length - 2]}_${parseTime(new Date(), '{y}{m}{d}{h}{i}{s}')}.${_nameArr[_nameArr.length - 1]}` // 处理文件名乱码问题
   downloadElement.download = fileName // 下载后文件名
   document.body.appendChild(downloadElement)
   downloadElement.click() // 点击下载

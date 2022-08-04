@@ -9,6 +9,9 @@
     :close-on-click-modal="false"
     size="800px"
   >
+    <template #titleAfter>
+      <el-tag type="warning" v-if="detailInfo.deliveryStatus===deliveryStatusEnum.RETURN.V && detailInfo.changeFreight===freightChangeTypeEnum.CANCEL.V">已作废</el-tag>
+    </template>
     <template #titleRight>
       <common-button :loading="loading" type="primary" size="mini" @click="onSubmit" v-if="showType === 'edit'">确认</common-button>
     </template>
@@ -29,7 +32,7 @@
                   <span>{{ detailInfo.supplier && detailInfo.supplier.name }}</span>
                 </el-form-item>
                 <el-form-item label="车次编号">
-                  <el-tag effect="light" disable-transitions style="width: 100%; max-width: 130px">{{ detailInfo.serialNumber }}</el-tag>
+                  <span>{{ detailInfo.serialNumber }}</span>
                 </el-form-item>
                 <el-form-item label="车牌号">
                   <span>{{ detailInfo.licensePlate }}</span>
@@ -53,7 +56,7 @@
                   <span :class="detailInfo.priceType === logisticsPriceTypeEnum.WEIGHT.V ? 'blue':'orange'" >{{ logisticsPriceTypeEnum.V[detailInfo.priceType].unit }}</span>
                 </el-form-item>
                 <el-form-item label="运输费">
-                  <span><span style="margin-right:3px;">{{ toFixed(detailInfo.totalPrice, DP.YUAN)}}</span>元</span>
+                  <span><span style="margin-right:3px;">{{ detailInfo.totalPrice?toFixed(detailInfo.totalPrice, DP.YUAN):'-'}}</span>元</span>
                 </el-form-item>
               </div>
             </div>
@@ -146,7 +149,7 @@ import { ElNotification } from 'element-plus'
 
 import { DP } from '@/settings/config'
 import { toFixed } from '@/utils/data-type'
-import { logisticsPriceTypeEnum } from '@enum-ms/mes'
+import { logisticsPriceTypeEnum, deliveryStatusEnum, freightChangeTypeEnum } from '@enum-ms/mes'
 import { projectNameFormatter } from '@/utils/project'
 import { convertUnits } from '@/utils/convert/unit'
 

@@ -53,4 +53,33 @@ export function roleAll() {
   })
 }
 
+// 获取角色对应的人员及岗位
+export function roleBindUser(params) {
+  return request({
+    module: 'user',
+    url: 'role/user',
+    method: 'get',
+    params
+  })
+}
+
+// 保存角色对应人员及岗位
+export function saveRoleBindUser(data) {
+  return request({
+    module: 'user',
+    url: 'role/update/user',
+    method: 'put',
+    data
+  })
+}
+
+// 下载角色已配置人员
+export function downloadRoleUser(params) {
+  return request({
+    module: 'user',
+    url: 'role/export',
+    responseType: 'blob',
+    method: 'get'
+  })
+}
 export default { add, edit, del, get }
