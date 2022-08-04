@@ -1,7 +1,7 @@
 <template>
-  <div class="app-container">
+  <div class="app-container manual-pack-wrapper">
     <div>
-      <div class="filter-container">
+      <div class="filter-container manual-pack-common-header">
         <div class="filter-left-box">
           <component-radio-button v-model="packType" :options="packTypeEnum.ENUM" :disabledVal="[packTypeEnum.AUXILIARY_MATERIAL.V]" type="enum" size="small" class="filter-item" />
           <common-radio-button
@@ -32,6 +32,7 @@
     <component
       ref="mainRef"
       :is="currentView"
+      :maxHeight="maxHeight"
       :project-id="globalProjectId"
       :factory-id="factoryId"
       :monomer-id="monomerId"
@@ -53,6 +54,7 @@ import { isBlank, isNotBlank } from '@data-type/index'
 import { packTypeEnum, mesEnclosureTypeEnum } from '@enum-ms/mes'
 import { manualPackPM as permission } from '@/page-permission/mes'
 
+import useMaxHeight from '@compos/use-max-height'
 import factorySelect from '@comp-base/factory-select'
 import structureTable from './structure'
 import enclosureTable from './enclosure'
@@ -85,6 +87,8 @@ const totalBadge = computed(() => {
   }
   return num
 })
+
+const { maxHeight } = useMaxHeight({ wrapperBox: '.manual-pack-wrapper', extraBox: ['.manual-pack-common-header', '.head-container'] })
 
 provide('packData', packData)
 provide('permission', permission)

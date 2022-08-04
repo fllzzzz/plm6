@@ -208,7 +208,6 @@ import { DP } from '@/settings/config'
 import { toFixed } from '@data-type'
 import { packTypeEnum } from '@enum-ms/mes'
 
-import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import mHeader from './module/header'
 import factoryTableCellTag from '@comp-base/factory-table-cell-tag'
@@ -235,8 +234,6 @@ const { crud, columns, CRUD } = useCRUD(
   tableRef
 )
 
-const { maxHeight } = useMaxHeight({ paginate: false })
-
 const packTypeK = packTypeEnum.ENCLOSURE.K
 const emit = defineEmits(['add'])
 const props = defineProps({
@@ -257,6 +254,10 @@ const props = defineProps({
     default: undefined
   },
   areaId: {
+    type: [String, Number],
+    default: undefined
+  },
+  maxHeight: {
     type: [String, Number],
     default: undefined
   }
