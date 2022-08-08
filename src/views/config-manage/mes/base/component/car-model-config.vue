@@ -18,11 +18,18 @@
         <common-button size="mini" type="warning" style="float: right" v-else @click="cancel">取消编辑</common-button>
       </div>
     </template>
-    <common-table v-loading="dataLoading" :maxHeight="maxHeight" :data="carModels" return-source-data>
+    <common-table v-loading="dataLoading" :maxHeight="maxHeight" :data="carModels" return-source-data :show-empty-symbol="false">
       <el-table-column label="序号" type="index" align="center" width="60" />
       <el-table-column prop="name" label="车型">
         <template v-slot="scope">
-          <el-input v-if="isEdit" v-model="scope.row.name" size="mini" placeholder="车型" style="width:100%;"></el-input>
+          <el-input
+            v-if="isEdit"
+            v-model="scope.row.name"
+            oninput="value=value.replace(/[^\d.]/g, '').replace(/^\./g, '0.').replace('.','$#$').replace(/\./g,'').replace('$#$','.')"
+            size="mini"
+            placeholder="车型"
+            style="width: 100%"
+          ></el-input>
           <span v-else>{{ scope.row.name }}</span>
         </template>
       </el-table-column>
@@ -48,6 +55,7 @@ import { getCarModelConfig as getConfig, setCarModelConfig as setConfig } from '
 import { ref, onMounted, inject } from 'vue'
 
 import { deepClone } from '@/utils/data-type'
+import { cleanArray } from '@/utils/data-type/array'
 
 import useMaxHeight from '@compos/use-max-height'
 import { ElNotification } from 'element-plus'
@@ -75,10 +83,10 @@ async function fetchData() {
   dataLoading.value = true
   try {
     const data = await getConfig()
-    carModels.value = data.carModels.map(v => {
+    carModels.value = data.carModels.map((v) => {
       return { name: v }
     })
-    originCarModels.value = data.carModels.map(v => {
+    originCarModels.value = data.carModels.map((v) => {
       return { name: v }
     })
   } catch (error) {
@@ -111,14 +119,19 @@ function add() {
 async function submit() {
   submitLoading.value = true
   try {
-    const _list = carModels.value.map(v => v.name)
+    const _list = cleanArray(carModels.value.map((v) => v.name))
     await setConfig({ carModels: _list })
     ElNotification({
       title: '车型配置成功',
       type: 'success',
       duration: 2500
     })
-    originCarModels.value = deepClone(carModels.value)
+    carModels.value = _list.map((v) => {
+      return { name: v }
+    })
+    originCarModels.value = _list.map((v) => {
+      return { name: v }
+    })
     isEdit.value = false
   } catch (error) {
     console.log('设置车型配置', error)
