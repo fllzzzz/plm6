@@ -33,6 +33,15 @@
     </template>
     <template #content>
       <el-form class="form" :disabled="formDisabled">
+        <inspection-return-info
+          class="inspection-return-info"
+          v-if="form.returnList?.length"
+          :basic-class="form.basicClass"
+          :list="form.returnList"
+          :showTableColumnSecondary="showTableColumnSecondary"
+          :showAmount="showAmount"
+          :boolPartyA="boolPartyA"
+        />
         <common-table
           :data="form.list"
           :max-height="maxHeight"
@@ -107,7 +116,7 @@
 <script setup>
 import { getPendingReviewIdList, detail, reviewPassed, reviewReturned } from '@/api/wms/material-inbound/raw-material/review'
 import { inject, computed, ref, defineEmits, defineProps, watch } from 'vue'
-import { inboundFillWayEnum, orderSupplyTypeEnum } from '@enum-ms/wms'
+import { inboundFillWayEnum, orderSupplyTypeEnum, inspectionStatusEnum } from '@enum-ms/wms'
 import { logisticsPayerEnum } from '@/utils/enum/modules/logistics'
 import { tableSummary } from '@/utils/el-extra'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
@@ -131,6 +140,7 @@ import purchaseDetailButton from '@/components-system/wms/purchase-detail-button
 import reviewConvenientOperate from '@/components-system/common/review-convenient-operate.vue'
 import ReviewConfirmButton from '@/components-system/common/review-confirm-button.vue'
 
+import inspectionReturnInfo from '@/views/wms/material-inbound/raw-material/components/inspection-return-info.vue'
 import logisticsForm from '@/views/wms/material-inbound/raw-material/components/logistics-form.vue'
 import priceSetColumns from '@/views/wms/material-inbound/raw-material/components/price-set-columns.vue'
 import warehouseSetColumns from '@/views/wms/material-inbound/raw-material/components/warehouse-set-columns.vue'
@@ -245,7 +255,7 @@ const { crud } = regExtra()
 const { maxHeight } = useMaxHeight(
   {
     mainBox: '.raw-mat-inbound-application-review-form',
-    extraBox: ['.el-drawer__header', '.approval-comments', '.logistics-form-content'],
+    extraBox: ['.el-drawer__header', '.approval-comments', '.logistics-form-content', '.inspection-return-info'],
     wrapperBox: ['.el-drawer__body'],
     clientHRepMainH: true,
     minHeight: 300,
@@ -333,6 +343,9 @@ async function detailFormat(form) {
     toNum: true
   })
   form.list.forEach((item) => (item.sourceRequisitionsSN = item.requisitionsSN))
+  form.originList = deepClone(form.list)
+  form.list = form.originList.filter((v) => v.qualityTestingEnum & (inspectionStatusEnum.ALL_PASS.V | inspectionStatusEnum.NO.V))
+  form.returnList = form.originList.filter((v) => v.qualityTestingEnum & inspectionStatusEnum.ALL_REFUSE.V)
   setDitto(form.list) // 在list变化时设置同上
   return form
 }

@@ -16,6 +16,15 @@
       <purchase-detail-button :purchase-id="order.id" size="mini" />
     </template>
     <template #content>
+      <inspection-return-info
+      class="inspection-return-info"
+        v-if="detail.returnList?.length"
+        :basic-class="detail.basicClass"
+        :list="detail.returnList"
+        :showTableColumnSecondary="showTableColumnSecondary"
+        :showAmount="showAmount"
+        :boolPartyA="boolPartyA"
+      />
       <common-table
         :data="detail.list"
         :data-format="columnsDataFormat"
@@ -52,8 +61,9 @@
 
 <script setup>
 import { computed, ref, inject } from 'vue'
-import { inboundFillWayEnum, orderSupplyTypeEnum } from '@enum-ms/wms'
+import { inboundFillWayEnum, orderSupplyTypeEnum, inspectionStatusEnum } from '@enum-ms/wms'
 import { tableSummary } from '@/utils/el-extra'
+import { deepClone } from '@data-type/index'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { setSpecInfoToList } from '@/utils/wms/spec'
 import { materialHasAmountColumns } from '@/utils/columns-format/wms'
@@ -69,6 +79,7 @@ import amountInfoColumns from '@/components-system/wms/table-columns/amount-info
 import warehouseInfoColumns from '@/components-system/wms/table-columns/warehouse-info-columns/index.vue'
 import expandSecondaryInfo from '@/components-system/wms/table-columns/expand-secondary-info/index.vue'
 import titleAfterInfo from '@/views/wms/material-inbound/raw-material/components/title-after-info.vue'
+import inspectionReturnInfo from '@/views/wms/material-inbound/raw-material/components/inspection-return-info.vue'
 import purchaseDetailButton from '@/components-system/wms/purchase-detail-button/index.vue'
 import checkPermission from '@/utils/system/check-permission'
 
@@ -85,7 +96,7 @@ const { inboundFillWayCfg } = useWmsConfig()
 const { maxHeight } = useMaxHeight(
   {
     mainBox: '.raw-mat-inbound-application-record-preview',
-    extraBox: ['.el-drawer__header'],
+    extraBox: ['.el-drawer__header', '.inspection-return-info'],
     wrapperBox: ['.el-drawer__body'],
     clientHRepMainH: true,
     minHeight: 300,
@@ -126,6 +137,9 @@ CRUD.HOOK.beforeDetailLoaded = async (crud, detail) => {
     toSmallest: false,
     toNum: false
   })
+  detail.originList = deepClone(detail.list)
+  detail.list = detail.originList.filter((v) => v.qualityTestingEnum & (inspectionStatusEnum.ALL_PASS.V | inspectionStatusEnum.NO.V))
+  detail.returnList = detail.originList.filter((v) => v.qualityTestingEnum & inspectionStatusEnum.ALL_REFUSE.V)
 }
 
 // 合计

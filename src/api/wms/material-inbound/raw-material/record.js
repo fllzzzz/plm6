@@ -62,4 +62,16 @@ export function detail(id) {
   })
 }
 
+/**
+ * 质检详情
+ * @param {*} id 详情id
+ */
+export function inspectionDetail(id) {
+  return request({
+    module: 'wms',
+    url: `inbound/application/record/quality-testing/${id}`,
+    method: 'get'
+  })
+}
+
 export default { get, edit, del, detail }

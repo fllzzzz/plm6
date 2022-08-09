@@ -121,6 +121,31 @@ export default {
       ]
     },
     {
+      path: '/wms/quality-inspection-manage',
+      component: 'Layout',
+      hidden: false,
+      name: 'WMSQualityInspectionManage',
+      alwaysShow: true,
+      redirect: '/wms/quality-inspection-manage/inbound-inspection/index',
+      meta: { title: '质检管理', icon: 'contract', noCache: true },
+      children: [
+        {
+          name: 'InboundInspection',
+          path: 'inbound-inspection',
+          hidden: false,
+          component: '/wms/quality-inspection-manage/inbound-inspection/index',
+          meta: { title: '入库质检表', icon: 'project', noCache: true }
+        },
+        {
+          name: 'InboundInspectionDetail',
+          path: 'inbound-inspection-detail',
+          hidden: false,
+          component: '/wms/quality-inspection-manage/inbound-inspection-detail/index',
+          meta: { title: '入库质检明细', icon: 'project', noCache: true }
+        }
+      ]
+    },
+    {
       path: '/wms/inbound-and-outbound-review',
       component: 'Layout',
       hidden: false,

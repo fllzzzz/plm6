@@ -16,6 +16,15 @@
       <purchase-detail-button v-permission="permission.purchaseOrderDetail" :purchase-id="order.id" size="mini" />
     </template>
     <template #content>
+      <inspection-return-info
+        class="inspection-return-info"
+        v-if="detail.returnList?.length"
+        :basic-class="detail.basicClass"
+        :list="detail.returnList"
+        :showTableColumnSecondary="true"
+        :showAmount="showAmount"
+        :boolPartyA="boolPartyA"
+      />
       <common-table
         :data="detail.list"
         :data-format="columnsDataFormat"
@@ -47,7 +56,7 @@
         <material-unit-quantity-columns :basic-class="detail.basicClass" />
         <!-- 价格信息 -->
         <template v-if="showAmount">
-          <amount-info-columns v-if="!boolPartyA" show-unit-price-e/>
+          <amount-info-columns v-if="!boolPartyA" show-unit-price-e />
         </template>
         <warehouse-info-columns show-project />
       </common-table>
@@ -57,11 +66,11 @@
 
 <script setup>
 import { inject, computed, ref } from 'vue'
-import { orderSupplyTypeEnum } from '@enum-ms/wms'
+import { orderSupplyTypeEnum, inspectionStatusEnum } from '@enum-ms/wms'
 import { tableSummary } from '@/utils/el-extra'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { setSpecInfoToList } from '@/utils/wms/spec'
-import { isNotBlank } from '@/utils/data-type'
+import { isNotBlank, deepClone } from '@/utils/data-type'
 import { materialHasAmountColumns } from '@/utils/columns-format/wms'
 import checkPermission from '@/utils/system/check-permission'
 
@@ -74,6 +83,7 @@ import materialSecondaryInfoColumns from '@/components-system/wms/table-columns/
 import amountInfoColumns from '@/components-system/wms/table-columns/amount-info-columns/index.vue'
 import warehouseInfoColumns from '@/components-system/wms/table-columns/warehouse-info-columns/index.vue'
 import titleAfterInfo from '@/views/wms/material-inbound/raw-material/components/title-after-info.vue'
+import inspectionReturnInfo from '@/views/wms/material-inbound/raw-material/components/inspection-return-info.vue'
 import purchaseDetailButton from '@/components-system/wms/purchase-detail-button/index.vue'
 import RejectInfoTable from '@/views/wms/material-reject/raw-material/components/reject-info-table.vue'
 
@@ -89,7 +99,7 @@ const columnsDataFormat = ref([...materialHasAmountColumns])
 const { maxHeight } = useMaxHeight(
   {
     mainBox: '.raw-mat-inbound-application-record-detail',
-    extraBox: ['.el-drawer__header'],
+    extraBox: ['.el-drawer__header', '.inspection-return-info'],
     wrapperBox: ['.el-drawer__body'],
     clientHRepMainH: true,
     minHeight: 300,
@@ -126,6 +136,9 @@ CRUD.HOOK.beforeDetailLoaded = async (crud, detail) => {
   })
   await setSpecInfoToList(rejectList)
   await numFmtByBasicClass(rejectList)
+  detail.originList = deepClone(detail.list)
+  detail.list = detail.originList.filter((v) => v.qualityTestingEnum & (inspectionStatusEnum.ALL_PASS.V | inspectionStatusEnum.NO.V))
+  detail.returnList = detail.originList.filter((v) => v.qualityTestingEnum & inspectionStatusEnum.ALL_REFUSE.V)
 }
 
 // 合计

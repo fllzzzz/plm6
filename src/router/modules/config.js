@@ -177,6 +177,13 @@ export default {
           hidden: false,
           component: '/config-manage/wms/scrap-definition/index',
           meta: { title: '废料定义', icon: 'project', noCache: true }
+        },
+        {
+          name: 'ConfigInspectionRawMaterial',
+          path: 'inspection-raw-material',
+          hidden: false,
+          component: '/config-manage/wms/inspection-raw-material/index',
+          meta: { title: '入库质检物料', icon: 'project', noCache: true }
         }
       ]
     },

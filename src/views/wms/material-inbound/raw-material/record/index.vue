@@ -93,6 +93,28 @@
         min-width="200"
       />
       <el-table-column
+        v-if="columns.visible('attachments')"
+        key="attachments"
+        prop="attachments"
+        :show-overflow-tooltip="false"
+        label="质检图片"
+        width="150px"
+        align="left"
+      >
+        <template #default="{ row: { sourceRow: row } }">
+          <div class="imgs-box">
+            <el-image
+              v-for="url in row.attachments"
+              :preview-src-list="row.imgUrls"
+              :initial-index="1"
+              :key="url.id"
+              :src="url.tinyImageUrl"
+              lazy
+            ></el-image>
+          </div>
+        </template>
+      </el-table-column>
+      <el-table-column
         v-if="columns.visible('applicantName')"
         key="applicantName"
         :show-overflow-tooltip="true"
@@ -107,6 +129,15 @@
         :show-overflow-tooltip="true"
         prop="editorName"
         label="编辑人"
+        align="center"
+        min-width="100"
+      />
+      <el-table-column
+        v-if="columns.visible('qualityTestingUserName')"
+        key="qualityTestingUserName"
+        :show-overflow-tooltip="true"
+        prop="qualityTestingUserName"
+        label="质检人"
         align="center"
         min-width="100"
       />
@@ -129,6 +160,15 @@
         width="140"
       />
       <el-table-column
+        v-if="columns.visible('qualityTestingTime')"
+        key="qualityTestingTime"
+        :show-overflow-tooltip="true"
+        prop="qualityTestingTime"
+        label="质检时间"
+        align="center"
+        width="140"
+      />
+      <el-table-column
         v-if="columns.visible('userUpdateTime')"
         key="userUpdateTime"
         :show-overflow-tooltip="true"
@@ -147,12 +187,29 @@
         width="140"
       />
       <el-table-column
+        v-if="columns.visible('qualityTestingEnum')"
+        key="qualityTestingEnum"
+        :show-overflow-tooltip="true"
+        prop="qualityTestingEnum"
+        label="质检状态"
+        align="center"
+        width="100"
+        fixed="right"
+      >
+        <template #default="{ row }">
+          <el-tag :type="inspectionStatusEnum.V[row.qualityTestingEnum].TAG">
+            {{ inspectionStatusEnum.V[row.qualityTestingEnum].SL }}
+          </el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column
         v-if="columns.visible('reviewStatus')"
         key="reviewStatus"
         :show-overflow-tooltip="true"
         prop="reviewStatus"
-        label="状态"
+        label="审核状态"
         align="center"
+        width="80"
         fixed="right"
       >
         <template #default="{ row }">
@@ -186,6 +243,7 @@ import { rawMaterialInboundRecordPM as permission } from '@/page-permission/wms'
 
 import { ref } from 'vue'
 import { reviewStatusEnum } from '@enum-ms/common'
+import { inspectionStatusEnum } from '@enum-ms/wms'
 import { wmsReceiptColumns } from '@/utils/columns-format/wms'
 
 import useCRUD from '@compos/use-crud'
@@ -207,7 +265,7 @@ const optShow = {
 const expandRowKeys = ref([])
 const tableRef = ref()
 // 表格列数据格式转换
-const columnsDataFormat = ref([...wmsReceiptColumns, ['approvalComments', 'empty-text']])
+const columnsDataFormat = ref([...wmsReceiptColumns, ['qualityTestingTime', 'parse-time'], ['approvalComments', 'empty-text']])
 const { crud, columns } = useCRUD(
   {
     title: '入库记录',
@@ -222,3 +280,19 @@ const { crud, columns } = useCRUD(
 
 const { maxHeight } = useMaxHeight({ paginate: true })
 </script>
+
+<style lang="scss" scoped>
+.imgs-box {
+  & > .el-image {
+    width: 50px;
+    height: 40px;
+    border: 2px solid #dcdfe6;
+    border-radius: 6px;
+    background-color: white;
+    cursor: pointer;
+    + .el-image {
+      margin-left: -40px;
+    }
+  }
+}
+</style>

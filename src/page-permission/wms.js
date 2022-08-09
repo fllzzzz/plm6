@@ -61,6 +61,17 @@ export const rawMaterialInboundReviewPM = {
   showAmount: ['wms_rawMat_inbound_review:showAmount'] // 显示金额
 }
 
+// 质检管理/入库质检表
+export const inboundInspectionPM = {
+  get: ['wms_inbound_inspection:get'],
+  detail: ['wms_inbound_inspection:detail'] // 详情
+}
+
+// 质检管理/入库质检明细
+export const inboundInspectionDetailPM = {
+  get: ['wms_inbound_inspection_detail:get']
+}
+
 // --------------------------- 入库模块 end --------------------------------
 
 // ########################################################################
