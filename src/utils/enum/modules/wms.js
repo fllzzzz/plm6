@@ -183,6 +183,24 @@ const receiptRejectStatusEnum = {
 }
 constantize(receiptRejectStatusEnum)
 
+// 质检状态
+const inspectionStatusEnum = {
+  UNREVIEWED: { L: '待质检', SL: '待质检', K: 'UNREVIEWED', V: 1 << 0, TAG: '' },
+  PART_PASS: { L: '部分质检通过', SL: '部分通过', K: 'PART_PASS', V: 1 << 2, TAG: 'warning' },
+  ALL_PASS: { L: '全部质检通过', SL: '全部通过', K: 'ALL_PASS', V: 1 << 1, TAG: 'success' },
+  ALL_REFUSE: { L: '全部退回', SL: '全部退回', K: 'ALL_REFUSE', V: 1 << 3, TAG: 'danger' },
+  NO: { L: '无质检', SL: '无质检', K: 'NO', V: 1 << 4, TAG: 'info' }
+}
+constantize(inspectionStatusEnum)
+
+// 质检详情状态
+const inspectionDetailStatusEnum = {
+  UNREVIEWED: { L: '待质检', K: 'UNREVIEWED', V: inspectionStatusEnum.UNREVIEWED.V, TAG: '' },
+  PASS: { L: '通过', K: 'PASS', V: inspectionStatusEnum.ALL_PASS.V, TAG: 'success' },
+  REFUSE: { L: '退回', K: 'REFUSE', V: inspectionStatusEnum.ALL_REFUSE.V, TAG: 'danger' }
+}
+constantize(inspectionDetailStatusEnum)
+
 export {
   receiptTypeEnum, // 单据类型
   inboundFillWayEnum,
@@ -206,6 +224,8 @@ export {
   transferCreateTypeEnum,
   materialRejectStatusEnum,
   receiptRejectStatusEnum,
+  inspectionStatusEnum,
+  inspectionDetailStatusEnum,
   materialLabelPrintTypeEnum
 }
 
@@ -232,5 +252,7 @@ export default {
   transferCreateTypeEnum,
   materialRejectStatusEnum,
   receiptRejectStatusEnum,
+  inspectionStatusEnum,
+  inspectionDetailStatusEnum,
   materialLabelPrintTypeEnum
 }

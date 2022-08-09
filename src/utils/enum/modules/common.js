@@ -53,7 +53,7 @@ constantize(businessAuditStatusEnum)
 
 // 审核状态
 const reviewStatusEnum = {
-  UNREVIEWED: { L: '未审核', SL: '待确签', K: 'UNREVIEWED', V: 1 << 0, TAG: '' },
+  UNREVIEWED: { L: '待审核', SL: '待确签', K: 'UNREVIEWED', V: 1 << 0, TAG: '' },
   PASS: { L: '已通过', SL: '已确签', K: 'PASS', V: 1 << 1, TAG: 'success' },
   REFUSE: { L: '已拒绝', SL: '已拒绝', K: 'REFUSE', V: 1 << 2, TAG: 'danger' }
 }

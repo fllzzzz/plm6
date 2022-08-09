@@ -21,6 +21,15 @@
       />
       <common-radio-button
         type="enum"
+        v-model="query.qualityTestingEnum"
+        :options="inspectionStatusEnum.ENUM"
+        show-option-all
+        clearable
+        class="filter-item"
+        @change="crud.toQuery"
+      />
+      <common-radio-button
+        type="enum"
         v-model="query.reviewStatus"
         :options="reviewStatusEnum.ENUM"
         show-option-all
@@ -40,6 +49,12 @@
         start-placeholder="申请日期"
         end-placeholder="申请日期"
         style="width: 270px"
+        class="filter-item"
+        @change="crud.toQuery"
+      />
+      <warehouse-project-cascader
+        v-model:projectId="query.projectId"
+        v-model:projectWarehouseType="query.projectWarehouseType"
         class="filter-item"
         @change="crud.toQuery"
       />
@@ -63,13 +78,6 @@
         placeholder="申请人/编辑人/审核人"
         class="filter-item"
         @keyup.enter="crud.toQuery"
-      />
-      <br />
-      <warehouse-project-cascader
-        v-model:projectId="query.projectId"
-        v-model:projectWarehouseType="query.projectWarehouseType"
-        class="filter-item"
-        @change="crud.toQuery"
       />
       <el-input
         v-model.trim="query.purchaseSN"
@@ -132,7 +140,7 @@ import { PICKER_OPTIONS_SHORTCUTS } from '@/settings/config'
 import { supplierTypeEnum } from '@enum-ms/supplier'
 import { reviewStatusEnum } from '@enum-ms/common'
 import { rawMatClsEnum } from '@enum-ms/classification'
-import { orderSupplyTypeEnum } from '@/utils/enum/modules/wms'
+import { orderSupplyTypeEnum, inspectionStatusEnum } from '@/utils/enum/modules/wms'
 
 import { regHeader } from '@compos/use-crud'
 import rrOperation from '@crud/RR.operation'
@@ -146,6 +154,7 @@ const defaultQuery = {
   createTime: [], // [开始日期，结束日期]
   orderSupplyType: undefined, // 订单供货类型
   basicClass: undefined, // 采购类型
+  qualityTestingEnum: undefined, // 质检状态
   reviewStatus: reviewStatusEnum.UNREVIEWED.V, // 审核状态
   projectId: undefined, // 项目id
   projectWarehouseType: undefined, // 仓库类型

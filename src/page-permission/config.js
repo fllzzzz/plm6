@@ -303,6 +303,13 @@ export const configWmsScrapDefinitionPM = {
   steelScrapDefinitionEdit: ['config_wms_steelScrapDefinition:edit']
 }
 
+// WMS-配置管理/入库质检物料
+export const configWmsInspectionRawMaterialPM = {
+  get: ['config_wms_inspectionRawMaterial:get'], // 入库质检物料列表
+  edit: ['config_wms_inspectionRawMaterial:edit'], // 添加入库质检物料
+  del: ['config_wms_inspectionRawMaterial:del'] // 删除入库质检物料
+}
+
 // --------------------------- WMS-配置管理 end ----------------------------
 
 // ########################################################################
