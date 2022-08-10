@@ -14,7 +14,7 @@
     >
       <el-table-column label="序号" type="index" align="center" width="60" />
       <el-table-column prop="productionLineType" align="center" :show-overflow-tooltip="true" label="生产线" width="120"> </el-table-column>
-      <el-table-column prop="classificationName" align="center" :show-overflow-tooltip="true" label="构件类型">
+      <el-table-column prop="classificationName" align="center" :show-overflow-tooltip="true" label="类型">
         <template #default="{ row: { sourceRow: row } }">
           <span v-if="row.productionLineType & artifactProductLineEnum.INTELLECT.V">{{ intellectParentType.VL[row.parentType] }}</span>
           <span v-else>{{ row.classificationName }}</span>
@@ -36,7 +36,14 @@
           <span v-else>-</span>
         </template>
       </el-table-column>
+      <el-table-column prop="artifactType" align="center" :show-overflow-tooltip="true" label="构件类型">
+        <template #default="{ row: { sourceRow: row } }">
+          <span v-if="row.artifactType">{{ artifactTypeEnum.VL[row.artifactType] }}</span>
+          <span v-else>-</span>
+        </template>
+      </el-table-column>
       <el-table-column prop="specPrefixSequence" align="center" :show-overflow-tooltip="true" label="构件前缀"> </el-table-column>
+      <el-table-column prop="prefixListArr" align="center" :show-overflow-tooltip="true" label="编号前缀"> </el-table-column>
       <el-table-column prop="definitionWord" align="center" :show-overflow-tooltip="true" label="标识"> </el-table-column>
       <el-table-column prop="processSequence" :show-overflow-tooltip="true" label="工序" min-width="200"> </el-table-column>
       <!--编辑与删除-->
@@ -57,7 +64,7 @@ import crudApi, { getArtifact } from '@/api/mes/production-config/product-proces
 import { ref } from 'vue'
 import { configProductProcessArtifactPM as permission } from '@/page-permission/config'
 
-import { artifactProductLineEnum, intellectParentType } from '@enum-ms/mes'
+import { artifactProductLineEnum, intellectParentType, artifactTypeEnum } from '@enum-ms/mes'
 import { isNotBlank, deepClone } from '@data-type/index'
 
 import useMaxHeight from '@compos/use-max-height'
@@ -73,7 +80,9 @@ const optShow = {
   download: false
 }
 
-const dataFormat = ref([['productionLineType', ['parse-enum', artifactProductLineEnum]]])
+const dataFormat = ref([
+  ['productionLineType', ['parse-enum', artifactProductLineEnum]]
+])
 
 const tableRef = ref()
 const { crud, CRUD } = useCRUD(
@@ -120,6 +129,7 @@ CRUD.HOOK.handleRefresh = (crud, { data }) => {
         _v.specPrefixSequence = _v.specPrefixList?.map((v) => `【${v.specPrefix}】`).join('') || ''
         _v.processSequence = _v.productProcessLinkList?.map((v) => `【${v.name}】`).join('→')
         _v.processSequenceIds = _v.productProcessLinkList?.map((v) => v.processId)
+        _v.prefixListArr = _v.serialNumberPrefixList && _v.artifactType === artifactTypeEnum.SMALL.V ? _v.serialNumberPrefixList.map((v) => `【${v.serialNumberPrefix}】`).join('') : ''
         if (parentType) {
           _v.classRowSpan = o === 0 ? _cList.length : 0
         } else {

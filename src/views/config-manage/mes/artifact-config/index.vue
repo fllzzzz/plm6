@@ -14,21 +14,22 @@
       :max-height="maxHeight"
       :row-class-name="handleRowClassName"
       :cell-class-name="cellClassName"
+      :span-method="spanMethod"
       :stripe="false"
       style="width: 100%"
     >
       <el-table-column prop="index" label="序号" align="center" width="60" type="index" />
-      <el-table-column key="productionLineType" prop="productionLineType" align="center" :show-overflow-tooltip="true" label="生产线">
+      <el-table-column key="productionLineType" prop="productionLineType" align="center" :show-overflow-tooltip="true" label="生产线" width="80">
         <template v-slot="scope">
           <span>{{ scope.row.productionLineType ? artifactProductLineEnum.VL[scope.row.productionLineType] : '-' }}</span>
         </template>
       </el-table-column>
-      <el-table-column key="mainClassificationName" prop="mainClassificationName" align="center" :show-overflow-tooltip="true" label="构件类型">
+      <el-table-column key="mainClassificationName" prop="mainClassificationName" align="center" :show-overflow-tooltip="true" label="类型">
         <template v-slot="scope">
           <span>{{ scope.row.mainClassificationName }}</span>
         </template>
       </el-table-column>
-      <el-table-column key="classificationName" prop="classificationName" align="center" :show-overflow-tooltip="true" label="子分类">
+      <el-table-column key="classificationName" prop="classificationName" align="center" :show-overflow-tooltip="true" label="子分类" min-width="120">
         <template v-slot="scope">
           <template v-if="scope.row.productionLineType === artifactProductLineEnum.INTELLECT.V">
             <div v-for="(item,index) in scope.row.structureClassificationList" :key="item.id" :class="index === scope.row.structureClassificationList.length-1 ? 'sandwich-cell-bottom' : 'sandwich-cell-top'" :style="item.parentType === intellectParentType.BRIDGE.V?'line-height:22px;':''">
@@ -43,35 +44,35 @@
           <span v-else>-</span>
         </template>
       </el-table-column>
+      <el-table-column key="artifactType" prop="artifactType" align="center" :show-overflow-tooltip="true" label="构件类型">
+        <template v-slot="scope">
+          <span>{{ scope.row.artifactType? artifactTypeEnum.VL[scope.row.artifactType] : '-' }}</span>
+        </template>
+      </el-table-column>
       <el-table-column key="specPrefixList" prop="specPrefixList" label="构件规格前缀" align="center" min-width="120" :show-overflow-tooltip="true">
         <template v-slot="scope">
           <div v-for="(item,index) in scope.row.structureClassificationList" :key="item.id" :class="index === scope.row.structureClassificationList.length-1 ? 'sandwich-cell-bottom div-ellipsis' : 'sandwich-cell-top div-ellipsis'" :style="item.parentType === intellectParentType.BRIDGE.V?'line-height:45px;height:55px;':''">
             <template v-if="item.specPrefixList && item.specPrefixList.length > 0">
               <span v-for="k in item.specPrefixList" :key="k.id">{{`【${k.specPrefix}】`}}</span>
-              <!-- <div v-for="(k,i) in item.specPrefixList" :key="k.id">
-                <div :class="i === item.specPrefixList.length - 1 ? (index === scope.row.structureClassificationList.length-1 ? 'sandwich-cell-bottom' : 'sandwich-cell-top') : 'sandwich-cell-top'">
-                  {{ k.specPrefix }}
-                </div>
-              </div> -->
             </template>
-            <!-- <div v-else class="sandwich-cell-bottom">-</div> -->
           </div>
         </template>
       </el-table-column>
-      <!-- <el-table-column key="specPrefixList" prop="specPrefixList" label="是否匹配部件" align="center">
+       <el-table-column key="serialNumberPrefixList" prop="serialNumberPrefixList" label="编号前缀" align="center" min-width="120" :show-overflow-tooltip="true">
         <template v-slot="scope">
-          <div v-for="(item,index) in scope.row.structureClassificationList" :key="item.id">
-            <template v-if="item.specPrefixList && item.specPrefixList.length > 0">
-              <div v-for="(k,i) in item.specPrefixList" :key="k.id">
-                <div :class="i === item.specPrefixList.length - 1 ? (index === scope.row.structureClassificationList.length-1 ? 'sandwich-cell-bottom' : 'sandwich-cell-top') : 'sandwich-cell-top'">
-                  {{ k.boolUseAssemble ? '√' : '-' }}
-                </div>
-              </div>
+          <div v-for="(item,index) in scope.row.structureClassificationList" :key="item.id" :class="index === scope.row.structureClassificationList.length-1 ? 'sandwich-cell-bottom div-ellipsis' : 'sandwich-cell-top div-ellipsis'" :style="item.parentType === intellectParentType.BRIDGE.V?'line-height:45px;height:55px;':''">
+            <template v-if="scope.row.artifactType===artifactTypeEnum.SMALL.V && item.serialNumberPrefixList && item.serialNumberPrefixList.length > 0">
+              <span v-for="k in item.serialNumberPrefixList" :key="k.id">{{`【${k.serialNumberPrefix}】`}}</span>
             </template>
-            <div v-else class="sandwich-cell-bottom">-</div>
+            <span v-else>-</span>
           </div>
         </template>
-      </el-table-column> -->
+      </el-table-column>
+      <el-table-column key="codingType" prop="codingType" align="center" :show-overflow-tooltip="true" label="打码方式" width="100">
+        <template v-slot="scope">
+          <span>{{ scope.row.codingType && scope.row.artifactType === artifactTypeEnum.SMALL.V? codingTypeEnum.VL[scope.row.codingType]:'-' }}</span>
+        </template>
+      </el-table-column>
       <el-table-column key="definitionWord" prop="definitionWord" align="center" :show-overflow-tooltip="true" label="定义代码">
         <template v-slot="scope">
           <div v-for="(item,index) in scope.row.structureClassificationList" :key="item.id" :class="index === scope.row.structureClassificationList.length-1 ? 'sandwich-cell-bottom' : 'sandwich-cell-top'" :style="item.parentType === intellectParentType.BRIDGE.V?'line-height:45px;height:55px;':''">
@@ -84,7 +85,7 @@
         prop="sort"
         :show-overflow-tooltip="true"
         label="排序"
-        width="80"
+        width="60"
         align="center"
       >
         <template v-slot="scope">
@@ -130,7 +131,7 @@ import { ref } from 'vue'
 import { ElNotification } from 'element-plus'
 
 import { artifactConfigPM as permission } from '@/page-permission/config'
-import { artifactProductLineEnum, intellectParentType } from '@enum-ms/mes'
+import { artifactProductLineEnum, intellectParentType, artifactTypeEnum, codingTypeEnum } from '@enum-ms/mes'
 
 import checkPermission from '@/utils/system/check-permission'
 import useMaxHeight from '@compos/use-max-height'
@@ -164,6 +165,16 @@ function cellClassName({ row, rowIndex }) {
   }
 }
 
+// 合并单元格
+function spanMethod({ row, column, rowIndex, columnIndex }) {
+  if (columnIndex === 1) {
+    return {
+      rowspan: row.rowSpan || 0,
+      colspan: 1
+    }
+  }
+}
+
 async function handleDelete(row, index) {
   try {
     await crudApi.del([row.id])
@@ -189,14 +200,20 @@ async function fetchList() {
     const { content = [] } = await crudApi.get()
     content.forEach(v => {
       if (v.structureClassificationList?.length) {
-        // v.structureClassificationList.map((k, index) => {
-        //   k.styleHeight = k.specPrefixList.length ? k.specPrefixList.length * 40 + 'px' : '40px'
-        //   k.lineHeight = k.specPrefixList.length ? k.specPrefixList.length * 30 + 'px' : '30px'
-        // })
         v.mainClassificationName = v.productionLineType === artifactProductLineEnum.INTELLECT.V ? (v.parentType ? intellectParentType.VL[v.parentType] : '-') : v.structureClassificationList[0].classificationName
+        v.artifactType = v.structureClassificationList[0].artifactType
+        v.codingType = v.structureClassificationList[0].codingType
       }
     })
-    _list = content
+    const traditionArr = content.filter(v => v.productionLineType === artifactProductLineEnum.TRADITION.V)
+    if (traditionArr?.length) {
+      traditionArr[0].rowSpan = traditionArr.length
+    }
+    const intellectArr = content.filter(v => v.productionLineType === artifactProductLineEnum.INTELLECT.V)
+    if (intellectArr?.length) {
+      intellectArr[0].rowSpan = intellectArr.length
+    }
+    _list = _list.concat(traditionArr, intellectArr)
   } catch (error) {
     console.log('获取构件特征定义失败', error)
   } finally {

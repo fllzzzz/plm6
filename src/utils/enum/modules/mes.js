@@ -298,6 +298,19 @@ const maxEqualTypeEnum = {
 }
 constantize(maxEqualTypeEnum)
 
+// 构件类型
+const artifactTypeEnum = {
+  COMMON: { L: '普通构件', K: 'COMMON', V: 1 },
+  SMALL: { L: '次构件', K: 'SMALL', V: 2 }
+}
+constantize(artifactTypeEnum)
+
+// 打码方式
+const codingTypeEnum = {
+  SINGLE: { L: '一物一码', K: 'SINGLE', V: 1 },
+  BATCH: { L: '一码多件', K: 'BATCH', V: 2 }
+}
+constantize(codingTypeEnum)
 // 切割配置/切割类型
 const cuttingConfigEnum = {
   FLAME_CUT: { L: '火焰切割', K: 'FLAME_CUT', V: 1 << 0 },
@@ -378,7 +391,9 @@ export {
   deliveryReceiptStatusEnum,
   searchDateTypeEnum,
   freightChangeTypeEnum,
-  mesWarehouseStateTypeEnum
+  mesWarehouseStateTypeEnum,
+  artifactTypeEnum,
+  codingTypeEnum
 }
 
 export default {
@@ -422,5 +437,7 @@ export default {
   deliveryReceiptStatusEnum,
   searchDateTypeEnum,
   freightChangeTypeEnum,
-  mesWarehouseStateTypeEnum
+  mesWarehouseStateTypeEnum,
+  artifactTypeEnum,
+  codingTypeEnum
 }
