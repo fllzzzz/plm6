@@ -1,7 +1,9 @@
 <template>
   <div class="app-container">
     <template v-if="globalProject && globalProject.projectContentList && globalProject.projectContentList.length > 0">
-      <div style="height: 60px">
+      <div class="head-container">
+        <common-button :loading="integrationLoading" type="primary" @click="toIntegrationModel" :disabled="!monomerIds?.length ||hasProcessingIM">集成模型</common-button>
+        <common-button type="danger" :loading="resetLoading" @click="toDelIntegrationModel" v-if="hasIntegrationModel" :disabled="hasProcessingIM">重置集成模型</common-button>
         <common-button size="small" style="float: right" type="primary">操作日志</common-button>
       </div>
       <!--表格渲染-->
@@ -18,7 +20,9 @@
         return-source-data
         :showEmptySymbol="false"
         :span-method="objectSpanMethod"
+        @select="handleSelect"
       >
+        <el-table-column type="selection" width="55" align="center" fixed :selectable="selectable" />
         <el-table-column key="projectName" prop="projectName" :show-overflow-tooltip="true" label="项目" align="center">
           <template v-slot="scope">
             <el-tooltip
@@ -49,7 +53,7 @@
             <div v-else class="sandwich-cell-bottom"></div>
           </template>
         </el-table-column>
-        <el-table-column key="model" prop="model" :show-overflow-tooltip="true" label="模型" align="center">
+        <el-table-column key="model" prop="model" :show-overflow-tooltip="true" label="模型" align="center" width="350">
           <template v-slot="scope">
             <common-button size="small" type="primary" @click="uploadModel(scope.row)">
               {{ scope.row.hasModelImport ? '替换' : '导入' }}
@@ -70,6 +74,16 @@
               style="margin-left: 5px"
               :type="translateStatusEnum.V[scope.row.modelResponseVO?.translateStatus].T"
               >{{ translateStatusEnum.VL[scope.row.modelResponseVO?.translateStatus] }}</el-tag
+            >
+            <el-tag
+              v-if="
+                scope.row.modelResponseVO?.integrationStatus &&
+                scope.row.modelResponseVO?.integrationStatus !== integrationStatusEnum.PROCESSING_NO.V
+              "
+              effect="plain"
+              style="margin-left: 5px"
+              :type="integrationStatusEnum.V[scope.row.modelResponseVO?.integrationStatus].T"
+              >{{ integrationStatusEnum.VL[scope.row.modelResponseVO?.integrationStatus] }}</el-tag
             >
           </template>
         </el-table-column>
@@ -117,19 +131,20 @@
 
 <script setup>
 import { monomerAll as getAll } from '@/api/plan/monomer'
-import { editEdition } from '@/api/bim/model'
+import { editEdition, integrationModel, integrationModelDel } from '@/api/bim/model'
 import { ref, watch } from 'vue'
+
 import useMaxHeight from '@compos/use-max-height'
 import { mapGetters } from '@/store/lib'
 import { isNotBlank } from '@data-type/index'
 import { TechnologyTypeAllEnum } from '@enum-ms/contract'
 import { bimTeklaEditionEnum } from '@enum-ms/bim'
-import { modelTranslateStatusEnum as translateStatusEnum } from '@enum-ms/bim'
+import { modelTranslateStatusEnum as translateStatusEnum, modelIntegrationStatusEnum as integrationStatusEnum } from '@enum-ms/bim'
+
 import deepenTable from './module/deepen-table'
 import machinePartTable from './module/machine-part-table'
 import modelImportForm from './module/model-import-form'
-import { ElMessageBox } from 'element-plus'
-import { ElNotification } from 'element-plus'
+import { ElNotification, ElMessageBox } from 'element-plus'
 
 const { globalProject } = mapGetters(['globalProject'])
 
@@ -176,6 +191,16 @@ watch(
   { deep: true, immediate: true }
 )
 
+const monomerIds = ref([])
+const integrationLoading = ref(false)
+const resetLoading = ref(false)
+const hasIntegrationModel = ref(false)
+const hasProcessingIM = ref(false)
+
+function selectable(row, rowIndex) {
+  return !(row.modelResponseVO?.integrationStatus === integrationStatusEnum.SUCCESS.V || row.modelResponseVO?.integrationStatus === integrationStatusEnum.PROCESSING.V)
+}
+
 async function fetchData(val = globalProject.value?.id) {
   loading.value = true
   try {
@@ -194,6 +219,12 @@ async function fetchData(val = globalProject.value?.id) {
           v.edition = v.modelResponseVO.edition
           v.originEdition = v.modelResponseVO.edition
         }
+        if (v.modelResponseVO?.integrationStatus === integrationStatusEnum.SUCCESS.V || v.modelResponseVO?.integrationStatus === integrationStatusEnum.PROCESSING.V) {
+          hasIntegrationModel.value = true
+        }
+        if (v.modelResponseVO?.integrationStatus === integrationStatusEnum.PROCESSING.V) {
+          hasProcessingIM.value = true
+        }
       })
     }
     tableData.value = content
@@ -205,7 +236,7 @@ async function fetchData(val = globalProject.value?.id) {
 }
 
 function objectSpanMethod({ row, column, rowIndex, columnIndex }) {
-  if (columnIndex === 0) {
+  if (columnIndex === 1) {
     return {
       rowspan: row.rowSpanNum,
       colspan: 1
@@ -233,6 +264,45 @@ async function modelEditionChange(data, val) {
     console.log(error)
     data.edition = data.originEdition
   }
+}
+
+function handleSelect(selection, row) {
+  monomerIds.value = selection.map(v => v.id)
+}
+
+// 集成模型
+async function toIntegrationModel() {
+  try {
+    if (!monomerIds.value?.length) return
+    integrationLoading.value = true
+    await integrationModel({ projectId: globalProject.value.id, monomerIds: monomerIds.value })
+    ElNotification({ title: '集成模型请求发送成功', type: 'success' })
+    fetchData()
+  } catch (error) {
+    console.log('集成模型失败', error)
+  } finally {
+    integrationLoading.value = false
+  }
+}
+
+// 重置集成模型
+async function toDelIntegrationModel() {
+  ElMessageBox.confirm(`是否确认重置 “${globalProject.value.shortName}” 项目下的集成模型`, '提示', {
+    confirmButtonText: '确认',
+    cancelButtonText: '取消',
+    type: 'warning'
+  }).then(async () => {
+    try {
+      resetLoading.value = true
+      await integrationModelDel({ projectId: globalProject.value.id })
+      ElNotification({ title: '重置集成模型成功', type: 'success' })
+      fetchData()
+    } catch (error) {
+      console.log('重置集成模型失败', error)
+    } finally {
+      resetLoading.value = false
+    }
+  })
 }
 
 function uploadModel(row) {

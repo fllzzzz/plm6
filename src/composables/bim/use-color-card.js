@@ -1,9 +1,9 @@
-import { getStatusDetail } from '@/api/bim/model'
+import { getStatusDetail, getIntegrateStatusDetail } from '@/api/bim/model'
 import bfColorCard from '@/components-system/bim/bf-color-card.vue'
 import { createApp, watch, ref } from 'vue'
 import { modelMenuBarEnum } from '@enum-ms/bim'
 
-export default function useColorCard({ menuBar, colors, objectIdGroup, bimModel, viewerPanel, modelStatus, searchBySN, fetchArtifactStatus, isolateComponentsById, clearIsolation, hideComponentsById, showComponentsById, overrideComponentsColorById }) {
+export default function useColorCard({ props, menuBar, colors, objectIdGroup, bimModel, viewerPanel, modelStatus, searchBySN, fetchArtifactStatus, isolateComponentsById, clearIsolation, hideComponentsById, showComponentsById, overrideComponentsColorById }) {
   const curElementIds = ref([])
   const ccApp = ref()
 
@@ -93,7 +93,13 @@ export default function useColorCard({ menuBar, colors, objectIdGroup, bimModel,
     _panel && _panel.show()
 
     try {
-      const { proportion, quantity, totalGrossWeight, basicsVOS, elementIds } = await getStatusDetail({ fileId: modelStatus.value.fileId, status: card.value, menuBar: menuBar.value })
+      let data
+      if (props.showMonomerModel) {
+        data = await getStatusDetail({ fileId: modelStatus.value.fileId, status: card.value, menuBar: menuBar.value })
+      } else {
+        data = await getIntegrateStatusDetail({ projectId: props.projectId, status: card.value, menuBar: menuBar.value })
+      }
+      const { proportion, quantity, totalGrossWeight, basicsVOS, elementIds } = data
       curElementIds.value = elementIds
       const _el = document.getElementsByClassName('bf-panel-color-card')[0].getElementsByClassName('bf-panel-container')[0]
       _el.innerHTML = ''
