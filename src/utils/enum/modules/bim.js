@@ -11,6 +11,15 @@ const modelTranslateStatusEnum = {
 }
 constantize(modelTranslateStatusEnum)
 
+// 集成模型状态
+const modelIntegrationStatusEnum = {
+  PROCESSING_NO: { L: '未集成', K: 'PROCESSING_NO', V: 'processing_no', T: '' },
+  PROCESSING: { L: '集成中', K: 'PROCESSING', V: 'processing', T: 'warning' },
+  SUCCESS: { L: '集成成功', K: 'SUCCESS', V: 'success', T: 'success' },
+  FAILED: { L: '集成失败', K: 'FAILED', V: 'failed', T: 'danger' }
+}
+constantize(modelIntegrationStatusEnum)
+
 // tekla常见版本
 const bimTeklaEditionEnum = {
   SIXTEEN: { L: '16版本', K: 'SIXTEEN', V: 16 },
@@ -51,11 +60,13 @@ constantize(modelMenuBarEnum)
 export {
   modelTranslateStatusEnum,
   bimTeklaEditionEnum,
+  modelIntegrationStatusEnum,
   modelMenuBarEnum
 }
 
 export default {
   modelTranslateStatusEnum, // 模型转换状态
   bimTeklaEditionEnum,
+  modelIntegrationStatusEnum,
   modelMenuBarEnum
 }

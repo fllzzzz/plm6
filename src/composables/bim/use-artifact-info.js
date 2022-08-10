@@ -1,8 +1,8 @@
-import { getArtifactInfo } from '@/api/bim/model'
+import { getArtifactInfo, getIntegrateArtifactInfo } from '@/api/bim/model'
 import { ref } from 'vue'
 import { modelMenuBarEnum } from '@enum-ms/bim'
 
-export default function useArtifactInfo({ menuBar, bimModel, viewerPanel, modelStatus, viewer, fetchDrawing }) {
+export default function useArtifactInfo({ props, menuBar, bimModel, viewerPanel, modelStatus, viewer, fetchDrawing }) {
   const currentInfo = ref({})
 
   function createArtifactInfoPanel() {
@@ -139,7 +139,12 @@ export default function useArtifactInfo({ menuBar, bimModel, viewerPanel, modelS
     if (!_panel.isShow) return
     if (!elementId) return
     try {
-      const info = await getArtifactInfo({ fileId: modelStatus.value.fileId, elementId, menuBar: menuBar.value })
+      let info
+      if (props.showMonomerModel) {
+        info = await getArtifactInfo({ fileId: modelStatus.value.fileId, elementId, menuBar: menuBar.value })
+      } else {
+        info = await getIntegrateArtifactInfo({ projectId: props.projectId, elementId, menuBar: menuBar.value })
+      }
       currentInfo.value = info
 
       const _el = document.getElementsByClassName('bf-panel-artifact-info')[0].getElementsByClassName('bf-panel-container')[0]
