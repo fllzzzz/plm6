@@ -1,4 +1,4 @@
-import { getArtifactSearch } from '@/api/bim/model'
+import { getArtifactSearch, getIntegrateArtifactSearch } from '@/api/bim/model'
 import { ref } from 'vue'
 
 export default function useArtifactSearch({ props, addBlinkByIds, removeBlink }) {
@@ -38,10 +38,18 @@ export default function useArtifactSearch({ props, addBlinkByIds, removeBlink })
   async function toSearch(serialNumber) {
     if (!serialNumber) return
     try {
-      const _elementIds = await getArtifactSearch({
-        serialNumber: serialNumber,
-        monomerId: props.monomerId
-      })
+      let _elementIds
+      if (props.showMonomerModel) {
+        _elementIds = await getArtifactSearch({
+          serialNumber: serialNumber,
+          monomerId: props.monomerId
+        })
+      } else {
+        _elementIds = await getIntegrateArtifactSearch({
+          serialNumber: serialNumber,
+          projectId: props.projectId
+        })
+      }
       addBlinkByIds(_elementIds)
       elementIds.value = _elementIds
     } catch (error) {

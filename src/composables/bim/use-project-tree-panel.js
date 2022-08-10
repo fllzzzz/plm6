@@ -1,8 +1,9 @@
-import { getProjectTree } from '@/api/bim/model'
+import { getProjectTree, getIntegrateMonomer } from '@/api/bim/model'
 import { ref, watch } from 'vue'
 
-export default function useProjectTreePanel({ props, bimModel, viewerPanel, viewProAreaTree, addBlinkByIds, removeBlink, getModelViewSize }) {
+export default function useProjectTreePanel({ props, bimModel, viewerPanel, viewProAreaTree, setSelectedComponentsByObjectData, clearSelectedComponents, addBlinkByIds, removeBlink, getModelViewSize }) {
   const areaList = ref([])
+  const monomerMap = ref({})
 
   watch(
     () => props.monomerId,
@@ -15,7 +16,7 @@ export default function useProjectTreePanel({ props, bimModel, viewerPanel, view
   function createProTreePanel() {
     const _panelConfig = bimModel.getPanelConfig()
     _panelConfig.className = 'bf-panel bf-panel-pro-tree'
-    _panelConfig.title = '区域单元'
+    _panelConfig.title = props.showMonomerModel ? '区域单元' : '单体单元'
     _panelConfig.css.width = '230px'
     _panelConfig.element = document.getElementsByClassName('bf-container')[0]
     const _panel = bimModel.createPanel(_panelConfig)
@@ -44,7 +45,7 @@ export default function useProjectTreePanel({ props, bimModel, viewerPanel, view
   function createArtifactListByAreaPanel() {
     const _panelConfig = bimModel.getPanelConfig()
     _panelConfig.className = 'bf-panel bf-panel-artifact-list-by-area'
-    _panelConfig.title = '区域构件明细'
+    _panelConfig.title = props.showMonomerModel ? '区域构件明细' : '单体构件明细'
     _panelConfig.element = document.getElementsByClassName('bf-container')[0]
     _panelConfig.css.width = '300px'
     _panelConfig.css.height = '300px'
@@ -67,6 +68,111 @@ export default function useProjectTreePanel({ props, bimModel, viewerPanel, view
     _panel.initPosition()
     _panel && _panel.show()
 
+    if (props.showMonomerModel) {
+      await toArea()
+    } else {
+      await toMonomer()
+    }
+  }
+
+  async function toMonomer() {
+    const _treeConfig = bimModel.getTreeConfig()
+    _treeConfig.className = 'bf-tree bf-tree-monomer'
+    _treeConfig.hasCheckbox = false
+    _treeConfig.selection = false
+    _treeConfig.title = '单体列表'
+    const _el = document.getElementsByClassName('bf-panel-pro-tree')[0].getElementsByClassName('bf-panel-container')[0]
+    _treeConfig.element = _el
+    _el.innerHTML = ``
+    const _tree = bimModel.createTree(_treeConfig)
+    _tree.setData(-1, `${props.projectName}`)
+
+    try {
+      const { content } = await getIntegrateMonomer(props.projectId)
+      for (let i = 0; i < content.length; i++) {
+        const _monomerItem = content[i]
+        const _treeNodeConfig = bimModel.getTreeConfig()
+        _treeNodeConfig.hasCheckbox = false
+        // _treeNodeConfig.hasExpand = true
+        _treeNodeConfig.hasExpand = false
+        _treeNodeConfig.id = _monomerItem.monomerId
+        console.log(_treeNodeConfig, '_treeNodeConfig')
+        const _treeNode = bimModel.createTree(_treeNodeConfig)
+        _treeNode.setData({ ..._monomerItem, type: 'monomer' }, `${_monomerItem.monomerName}`)
+        _tree.addChildNode(_treeNode)
+        monomerMap.value[_monomerItem.monomerId] = {}
+        monomerMap.value[_monomerItem.monomerId].treeNode = _treeNode
+        monomerMap.value[_monomerItem.monomerId].areaList = []
+        // const iconDom = _treeNode.expandIcon
+        // iconDom.dataset.monomerId = _monomerItem.monomerId
+        // iconDom.addEventListener('click', async (e) => {
+        //   const { monomerId } = e.target.dataset
+        //   await toAreaByMonomer(monomerId, monomerMap.value[monomerId].treeNode)
+        // })
+      }
+
+      _tree.expand()
+      const _treeApi = bimModel.getTreeApi(_tree)
+      console.log(_treeApi, '_treeApi')
+      _treeApi.addEventListener('SelectionChanged', (node, selected) => {
+        const { type } = node.id
+        if (type === 'monomer') {
+          if (selected) {
+            fetchArtifactList(node)
+            const { fileId } = node.id
+            setSelectedComponentsByObjectData([{ 'fileId': String(fileId) }])
+          } else {
+            clearSelectedComponents()
+          }
+        }
+        if (type === 'area') {
+          clearSelectedComponents()
+          if (selected) {
+          // 若选中 渲染之前区域单元 并展示该区域下构件数量和重量明细
+            fetchArtifactList(node)
+            const { elementIds } = node.id
+            addBlinkByIds(elementIds)
+          } else {
+          // 取消选中 则关闭构件明细
+            const _panel = viewerPanel.artifactListByArea.panel
+            if (_panel.isShow) _panel.hide()
+            removeBlink()
+          }
+        }
+      })
+      viewProAreaTree.value = {
+        config: _treeConfig,
+        tree: _tree,
+        treeApi: _treeApi
+      }
+    } catch (error) {
+      console.log('集成模型获取单体信息失败', error)
+    }
+  }
+
+  // async function toAreaByMonomer(monomerId, parentNode) {
+  //   const { areaList = [] } = monomerMap.value[monomerId]
+  //   // 如果有数据 不重新渲染 直接打开即可
+  //   if (areaList && areaList.length) return
+  //   // 获取区域数据
+  //   try {
+  //     const { content } = await getProjectTree(monomerId)
+  //     // const content = [{ area: { id: 1, name: '区域1' }}, { area: { id: 2, name: '区域2' }}]
+  //     monomerMap.value[monomerId].areaList = content
+  //     for (let i = 0; i < content.length; i++) {
+  //       const _areaItem = content[i]
+  //       const _treeNodeConfig = bimModel.getTreeConfig()
+  //       _treeNodeConfig.hasCheckbox = false
+  //       const _treeNode = bimModel.createTree(_treeNodeConfig)
+  //       _treeNode.setData({ ..._areaItem, type: 'area' }, _areaItem.area.name)
+  //       parentNode.addChildNode(_treeNode)
+  //     }
+  //   } catch (error) {
+  //     console.log(error, '获取区域')
+  //   }
+  // }
+
+  async function toArea() {
     // 如果有数据 不重新渲染 直接打开即可
     if (areaList.value && areaList.value.length) return
 
@@ -136,7 +242,7 @@ export default function useProjectTreePanel({ props, bimModel, viewerPanel, view
 
     // 渲染构件明细弹窗内容
     const { basicsVOS: artifactList, totalGrossWeight, quantity } = node.id
-    const areaName = node.name
+    const unitName = node.name
 
     const _el = document.querySelector('.bf-panel-artifact-list-by-area .bf-panel-container')
     _el.innerHTML = '' // 清空旧数据
@@ -144,7 +250,7 @@ export default function useProjectTreePanel({ props, bimModel, viewerPanel, view
       <div class="bf-area-artifact-container">
         <div>
           <span>单元</span>
-          <span>${areaName}</span>
+          <span>${unitName}</span>
         </div>
         <div>
           <span>构件数量（件）</span>
@@ -182,6 +288,7 @@ export default function useProjectTreePanel({ props, bimModel, viewerPanel, view
 
   function clearProTreePanel() {
     removeBlink()
+    clearSelectedComponents()
     const { tree, treeApi } = viewProAreaTree.value
     treeApi.clear(tree)
     const _panel = viewerPanel.proTree.panel
