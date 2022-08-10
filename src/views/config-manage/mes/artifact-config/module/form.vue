@@ -28,6 +28,18 @@
             :disabled="!!form.id"
           />
         </el-form-item>
+        <el-form-item label="构件类型" prop="artifactType" v-if="form.productionLineType === artifactProductLineEnum.TRADITION.V">
+          <common-select
+            v-model="form.artifactType"
+            :options="artifactTypeEnum.ENUM"
+            type="enum"
+            size="small"
+            class="filter-item"
+            placeholder="构件类型"
+            style="width: 250px"
+            :disabled="!!form.id"
+          />
+        </el-form-item>
         <el-form-item label="类型" prop="parentType" v-if="form.productionLineType === artifactProductLineEnum.INTELLECT.V">
           <common-select
             v-model="form.parentType"
@@ -156,17 +168,6 @@
                   style="width: 270px; margin-right: 5px"
                   @blur="checkName(item, index)"
                 />
-                <!-- <common-select
-                  v-model="item.boolUseAssemble"
-                  :options="whetherEnum.ENUM"
-                  type="enum"
-                  size="small"
-                  clearable
-                  class="filter-item"
-                  placeholder="是否匹配部件"
-                  style="width: 250px"
-                  @change="item.add = false"
-                /> -->
                 <common-button
                   v-show="form.specPrefixList && form.specPrefixList.length > 1"
                   icon="el-icon-delete"
@@ -177,8 +178,43 @@
                 />
               </div>
             </div>
-            <common-button icon="el-icon-plus" size="mini" type="success" style="margin: 0 0 12px 6px" @click="addProcess" />
+            <common-button icon="el-icon-plus" size="mini" type="success" style="margin: 0 0 12px 6px" @click="addProcess" v-if="plusShow"/>
           </div>
+        </el-form-item>
+        <el-form-item label="编号类型索引" prop="serialNumberPrefixList" v-if="form.artifactType===artifactTypeEnum.SMALL.V">
+          <div class="process-container">
+            <div class="process-box">
+              <div v-for="(item, index) in form.serialNumberPrefixList" :key="index" class="process-drawer">
+                <el-input
+                  v-model="item.serialNumberPrefix"
+                  type="text"
+                  placeholder="大写字母"
+                  style="width: 270px; margin-right: 5px"
+                  @blur="checkSerialNumber(item, index)"
+                />
+                <common-button
+                  v-show="form.serialNumberPrefixList	 && form.serialNumberPrefixList.length > 1"
+                  icon="el-icon-delete"
+                  size="mini"
+                  type="danger"
+                  style="margin-left: 6px"
+                  @click="delSerialNumber(index)"
+                />
+              </div>
+            </div>
+            <common-button icon="el-icon-plus" size="mini" type="success" style="margin: 0 0 12px 6px" @click="addSerialNumber" />
+          </div>
+        </el-form-item>
+        <el-form-item label="打码方式" prop="codingType" v-if="form.productionLineType === artifactProductLineEnum.TRADITION.V">
+          <common-select
+            v-model="form.codingType"
+            :options="codingTypeEnum.ENUM"
+            type="enum"
+            size="small"
+            class="filter-item"
+            placeholder="打码方式"
+            style="width: 250px"
+          />
         </el-form-item>
       </el-form>
     </template>
@@ -187,12 +223,12 @@
 
 <script setup>
 import crudApi from '@/api/config/system-config/artifact-config'
-import { defineProps, defineEmits, ref, watch, nextTick } from 'vue'
+import { defineProps, defineEmits, ref, watch, nextTick, computed } from 'vue'
 import { ElMessage, ElNotification } from 'element-plus'
 
 import { isNotBlank } from '@data-type/index'
 // import { whetherEnum } from '@enum-ms/common'
-import { artifactProductLineEnum, intellectParentType, maxEqualTypeEnum } from '@enum-ms/mes'
+import { artifactProductLineEnum, intellectParentType, maxEqualTypeEnum, artifactTypeEnum, codingTypeEnum } from '@enum-ms/mes'
 
 import useVisible from '@compos/use-visible'
 import useWatchFormValidate from '@compos/form/use-watch-form-validate'
@@ -217,11 +253,13 @@ const formRef = ref()
 const drawerRef = ref()
 const loading = ref(false)
 const nameArr = ref([])
+const serialNumberArr = ref([])
 
 const defaultForm = {
   id: undefined,
   productionLineType: undefined,
   parentType: undefined, // 类型选择
+  artifactType: undefined, // 构件类型
   classificationName: '', // 类型命名
   boolContainsMin: undefined, // 最小值是否包含等于
   minLength: undefined, // 长度最小值
@@ -229,10 +267,15 @@ const defaultForm = {
   maxLength: undefined, // 长度最大值
   definitionWord: undefined, // 定义代码
   sort: undefined,
-  specPrefixList: []
+  specPrefixList: [],
+  serialNumberPrefixList: [],
+  codingType: undefined
 }
 
 const form = ref(JSON.parse(JSON.stringify(defaultForm)))
+const plusShow = computed(() => {
+  return form.value.productionLineType === artifactProductLineEnum.TRADITION.V ? (form.value.specPrefixList?.length < 1 ? true : (form.value.artifactType === artifactTypeEnum.COMMON.V)) : true
+})
 
 const validateLinks = (rule, value, callback) => {
   if (value && value.length) {
@@ -251,6 +294,23 @@ const validateLinks = (rule, value, callback) => {
     callback()
   } else {
     callback(new Error('请填写大写规格前缀'))
+  }
+}
+
+const validateSerialNumberLinks = (rule, value, callback) => {
+  if (value && value.length) {
+    for (const i in value) {
+      if (!value[i].add) {
+        if (!value[i].serialNumberPrefix) {
+          callback(new Error('请填写编号前缀'))
+        }
+      } else {
+        callback()
+      }
+    }
+    callback()
+  } else {
+    callback(new Error('请填写编号前缀'))
   }
 }
 
@@ -308,6 +368,9 @@ const rules = {
   productionLineType: [
     { required: true, message: '请选择生产线', trigger: 'change' }
   ],
+  artifactType: [
+    { required: true, message: '请选择构件类型', trigger: 'change' }
+  ],
   parentType: [
     { required: true, validator: validateParentType, message: '请选择类型', trigger: 'change' }
   ],
@@ -326,6 +389,13 @@ const rules = {
   specPrefixList: [
     { required: true, message: '请填写规格前缀' },
     { validator: validateLinks, trigger: 'change' }
+  ],
+  serialNumberPrefixList: [
+    { required: true, message: '请填写编号前缀' },
+    { validator: validateSerialNumberLinks, trigger: 'change' }
+  ],
+  codingType: [
+    { required: true, message: '请选择打码方式', trigger: 'change' }
   ]
 }
 
@@ -401,6 +471,15 @@ function delProcess(index) {
   form.value.specPrefixList.splice(index, 1)
 }
 
+function addSerialNumber() {
+  form.value.serialNumberPrefixList.push({
+    add: true
+  })
+}
+function delSerialNumber(index) {
+  form.value.serialNumberPrefixList.splice(index, 1)
+}
+
 function checkName(item, index) {
   item.add = false
   const val = nameArr.value.find((v) => v.index === index)
@@ -448,12 +527,57 @@ function checkName(item, index) {
   }
 }
 
+function checkSerialNumber(item, index) {
+  item.add = false
+  const val = serialNumberArr.value.find((v) => v.index === index)
+  if (val) {
+    if (item.serialNumberPrefix) {
+      if (val.serialNumberPrefix === item.serialNumberPrefix) {
+        return
+      }
+      if (serialNumberArr.value.findIndex((v) => v.serialNumberPrefix === item.serialNumberPrefix) > -1) {
+        ElMessage({
+          message: '编号前缀已存在，请重新填写',
+          type: 'error'
+        })
+        item.serialNumberPrefix = undefined
+        val.serialNumberPrefix = undefined
+      } else {
+        val.serialNumberPrefix = item.serialNumberPrefix
+      }
+    } else {
+      val.serialNumberPrefix = undefined
+    }
+  } else {
+    if (item.serialNumberPrefix) {
+      if (serialNumberArr.value.findIndex((v) => v.serialNumberPrefix === item.serialNumberPrefix) > -1) {
+        ElMessage({
+          message: '编号前缀已存在，请重新填写',
+          type: 'error'
+        })
+        form.value.serialNumberPrefixList[index].serialNumberPrefix = undefined
+      }
+      serialNumberArr.value.push({
+        serialNumberPrefix: item.serialNumberPrefix,
+        index: index
+      })
+    }
+  }
+}
 async function onSubmit() {
   loading.value = true
   if (form.value.specPrefixList?.length) {
     form.value.specPrefixList.map((v) => {
       v.add = false
     })
+  }
+  if (form.value.serialNumberPrefixList?.length) {
+    form.value.serialNumberPrefixList.map((v) => {
+      v.add = false
+    })
+  }
+  if (form.value.productionLineType === artifactProductLineEnum.INTELLECT.V) {
+    form.value.artifactType = artifactTypeEnum.COMMON.V
   }
   try {
     const valid = await formRef.value.validate()
