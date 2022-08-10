@@ -22,6 +22,7 @@
       <el-table-column label="人员设置" align="center">
         <template v-slot="scope">
           <common-button
+            v-if="checkPermission(permission.edit)"
             size="mini"
             icon="el-icon-edit"
             type="primary"
