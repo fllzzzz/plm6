@@ -193,8 +193,8 @@
         <el-tag effect="plain" size="medium" type="success">收货人：{{ receiptInfo.receiptName }}</el-tag>
       </template>
       <template #titleRight>
-        <common-button type="warning" size="mini" v-if="showType==='cancel'" @click.stop="cancelVisible=true">取消送货</common-button>
-        <el-popconfirm title="确定签收吗?" @confirm="signSubmit" v-if="showType==='sign'">
+        <common-button type="warning" size="mini" v-if="showType==='cancel' && checkPermission(permission.cancelDelivery)" @click.stop="cancelVisible=true">取消送货</common-button>
+        <el-popconfirm title="确定签收吗?" @confirm="signSubmit" v-if="showType==='sign' && checkPermission(permission.confirmDelivery)">
           <template #reference>
             <common-button type="success" size="mini">确认签收</common-button>
           </template>

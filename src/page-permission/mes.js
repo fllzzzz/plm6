@@ -423,7 +423,9 @@ export const receiptStatusPM = {
   get: ['mes_receipt_status:get'], // 收货列表
   detail: ['mes_receipt_status:detail'], // 查看收货详情
   print: ['mes_receipt_status:print'], // 打印收货汇总
-  detailPrint: ['mes_receipt_status:detailPrint'] // 打印收货详情
+  detailPrint: ['mes_receipt_status:detailPrint'], // 打印收货详情
+  cancelDelivery: ['mes_receipt_status:cancelDelivery'], // 取消发运
+  confirmDelivery: ['mes_receipt_status:confirmDelivery'] // 确定签收
 }
 
 // 打包与发运/物流记录
