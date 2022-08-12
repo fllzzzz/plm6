@@ -14,6 +14,7 @@
       <div class="model-drawer-container">
         <bim-model-view
           :monomer-id="monomerId"
+          :area-id="areaId"
           :serial-number="serialNumber"
           :productId="productId"
           :productType="productType"
@@ -59,6 +60,10 @@ const props = defineProps({
   },
   monomerId: {
     type: Number,
+    default: undefined
+  },
+  areaId: {
+    type: [Number, String],
     default: undefined
   },
   drawingSN: {

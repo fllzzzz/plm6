@@ -1,9 +1,9 @@
 <template>
   <div class="model-container" :style="{ height: `${maxHeight}px` }">
-    <el-tag v-if="tip !== tipStatusEnum.SUCCESS.V" :type="tipStatusEnum.V[tip]?.T" :style="isPreview || !showMonomerModel?'margin-left: 10px;margin-top: 10px;':''">
-      {{ tipStatusEnum.VL[tip] }} {{ modelStatus.reason }}
+    <el-tag v-if="tip !== commonTipStatusEnum.SUCCESS.V" :type="commonTipStatusEnum.V[tip]?.T" :style="isPreview || !showMonomerModel?'margin-left: 10px;margin-top: 10px;':''">
+      {{ commonTipStatusEnum.VL[tip] }} {{ modelStatus.reason }}
     </el-tag>
-    <div v-if="tip === tipStatusEnum.SUCCESS.V" id="modelView"></div>
+    <div v-if="tip === commonTipStatusEnum.SUCCESS.V" id="modelView"></div>
   </div>
 </template>
 
@@ -15,7 +15,7 @@ import { defineProps, watch, ref, reactive, computed, defineExpose } from 'vue'
 import { constantize } from '@/utils/enum/base'
 import { isBlank } from '@/utils/data-type'
 
-import { modelTranslateStatusEnum, modelMenuBarEnum } from '@enum-ms/bim'
+import { modelTranslateStatusEnum, modelIntegrationStatusEnum as imTipStatusEnum, modelMenuBarEnum } from '@enum-ms/bim'
 
 import useMyToolbar from '@compos/bim/use-my-toolbar'
 import useColorCard from '@compos/bim/use-color-card'
@@ -32,6 +32,9 @@ import usePreview from '@compos/bim/use-preview'
 const props = defineProps({
   monomerId: {
     type: Number
+  },
+  areaId: {
+    type: [Number, String]
   },
   projectId: {
     type: Number
@@ -96,6 +99,10 @@ const modelStatus = ref({
 const _viewer3DEvent = ref()
 const _viewer = ref()
 const _3DConfig = ref()
+
+const commonTipStatusEnum = computed(() => {
+  return modelStatus.value.modelType === 'integration' ? imTipStatusEnum : tipStatusEnum
+})
 
 const viewerPanel = reactive({
   panelPositions: {},
@@ -162,8 +169,8 @@ const {
 const { createDrawing, fetchDrawing } = useDrawing()
 const { createArtifactInfoPanel, fetchArtifactInfo, clearArtifactInfoPanel } = useArtifactInfo({ props, menuBar, bimModel, viewer: _viewer, viewerPanel, modelStatus, fetchDrawing })
 const { createStatusInfoPanel, fetchStatusInfo, clearStatusInfoPanel } = useStatusInfo({ props, menuBar, bimModel, viewerPanel, modelStatus })
-const { createProTreePanel, clearProTreePanel, fetchProTree } = useProjectTreePanel({ props, bimModel, viewerPanel, viewProAreaTree, setSelectedComponentsByObjectData, clearSelectedComponents, addBlinkByIds, removeBlink, getModelViewSize })
-const { createLogisticsBtn, hideLogisticsBtn } = useLogisticsInfo({ props, bimModel, viewerPanel, monomerId: computed(() => props.monomerId), addBlinkByIds, removeBlink })
+const { createProTreePanel, clearProTreePanel, fetchProTree } = useProjectTreePanel({ props, bimModel, modelStatus, viewerPanel, viewProAreaTree, setSelectedComponentsByObjectData, clearSelectedComponents, addBlinkByIds, removeBlink, getModelViewSize })
+const { createLogisticsBtn, hideLogisticsBtn } = useLogisticsInfo({ props, modelStatus, bimModel, viewerPanel, monomerId: computed(() => props.monomerId), addBlinkByIds, removeBlink })
 const { createMyToolbar } = useMyToolbar({
   menuBar, publicPath, bimModel, viewerPanel, viewProAreaTree, colors,
   createLogisticsBtn, hideLogisticsBtn,
@@ -172,13 +179,13 @@ const { createMyToolbar } = useMyToolbar({
   clearStatusInfoPanel, fetchStatusInfo,
   clearSelectedComponents
 })
-const { createSearchHtml, searchBySN } = useArtifactSearch({ props, addBlinkByIds, removeBlink })
+const { createSearchHtml, searchBySN } = useArtifactSearch({ props, modelStatus, addBlinkByIds, removeBlink })
 const { createColorCardHtml } = useColorCard({ props, menuBar, colors, objectIdGroup, bimModel, viewerPanel, modelStatus, searchBySN, fetchArtifactStatus, isolateComponentsById, clearIsolation, hideComponentsById, showComponentsById, overrideComponentsColorById })
 // const { addRightEventListener } = useRightClickEvent({ viewerPanel, fetchArtifactInfo })
 const previewSNElementIds = ref([])
 
 watch(
-  () => [props.monomerId, props.showMonomerModel, props.projectId],
+  () => [props.monomerId, props.showMonomerModel, props.projectId, props.areaId],
   () => {
     fetchTranslate(props.monomerId)
   },
@@ -204,14 +211,16 @@ async function fetchTranslate(monomerId) {
   init()
   try {
     if (props.showMonomerModel) {
-      const { viewToken, reason, status, fileId } = await getTranslate(monomerId)
+      const { viewToken, reason, status, fileId, modelType, integrationStatus } = await getTranslate(monomerId, props.areaId)
       modelStatus.value = {
         fileId,
         viewToken,
         reason,
-        status
+        status,
+        modelType,
+        integrationStatus
       }
-      tip.value = status
+      tip.value = modelType === 'file' ? status : integrationStatus
     } else {
       const { viewToken, reason, status, fileId } = await getIMTranslate(props.projectId)
       modelStatus.value = {
@@ -266,7 +275,7 @@ async function loadModel(viewToken) {
           createSearchHtml()
           createColorCardHtml()
         } else {
-          const { serialNumberElementIds } = usePreview({ props, initModelColor, overrideComponentsColorById, isolateComponentsById })
+          const { serialNumberElementIds } = usePreview({ props, modelStatus, initModelColor, overrideComponentsColorById, isolateComponentsById })
           previewSNElementIds.value = serialNumberElementIds
         }
         createDrawing()

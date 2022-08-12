@@ -1,11 +1,11 @@
 <template>
   <div class="app-container">
     <template v-if="globalProject && globalProject.projectContentList && globalProject.projectContentList.length > 0">
-      <div class="head-container">
+      <!-- <div class="head-container">
         <common-button :loading="integrationLoading" type="primary" @click="toIntegrationModel" :disabled="!monomerIds?.length ||hasProcessingIM">集成模型</common-button>
         <common-button type="danger" :loading="resetLoading" @click="toDelIntegrationModel" v-if="hasIntegrationModel" :disabled="hasProcessingIM">重置集成模型</common-button>
         <common-button size="small" style="float: right" type="primary">操作日志</common-button>
-      </div>
+      </div> -->
       <!--表格渲染-->
       <common-table
         v-loading="loading"
@@ -20,9 +20,8 @@
         return-source-data
         :showEmptySymbol="false"
         :span-method="objectSpanMethod"
-        @select="handleSelect"
       >
-        <el-table-column type="selection" width="55" align="center" fixed :selectable="selectable" />
+        <!-- <el-table-column type="selection" width="55" align="center" fixed :selectable="selectable" /> -->
         <el-table-column key="projectName" prop="projectName" :show-overflow-tooltip="true" label="项目" align="center">
           <template v-slot="scope">
             <el-tooltip
@@ -53,12 +52,20 @@
             <div v-else class="sandwich-cell-bottom"></div>
           </template>
         </el-table-column>
-        <el-table-column key="model" prop="model" :show-overflow-tooltip="true" label="模型" align="center" width="350">
+        <el-table-column key="model" prop="model" :show-overflow-tooltip="true" label="模型" align="center">
           <template v-slot="scope">
-            <common-button size="small" type="primary" @click="uploadModel(scope.row)">
+            <common-button size="small" type="warning" @click="configModel(scope.row)">配置</common-button>
+            <common-button
+              size="small"
+              type="primary"
+              @click="uploadModel(scope.row)"
+              :disabled="!scope.row.importMode || !scope.row.edition"
+              >操作</common-button
+            >
+            <!-- <common-button size="small" type="primary" @click="uploadModel(scope.row)">
               {{ scope.row.hasModelImport ? '替换' : '导入' }}
-            </common-button>
-            <common-select
+            </common-button> -->
+            <!-- <common-select
               v-if="scope.row.hasModelImport"
               v-model="scope.row.edition"
               :options="bimTeklaEditionEnum.ENUM"
@@ -67,15 +74,15 @@
               style="width: 100px; margin-left: 5px"
               placeholder="Tekla版本"
               @change="modelEditionChange(scope.row, scope.row.edition)"
-            />
-            <el-tag
+            /> -->
+            <!-- <el-tag
               v-if="scope.row.modelResponseVO?.translateStatus"
               effect="plain"
               style="margin-left: 5px"
               :type="translateStatusEnum.V[scope.row.modelResponseVO?.translateStatus].T"
               >{{ translateStatusEnum.VL[scope.row.modelResponseVO?.translateStatus] }}</el-tag
-            >
-            <el-tag
+            > -->
+            <!-- <el-tag
               v-if="
                 scope.row.modelResponseVO?.integrationStatus &&
                 scope.row.modelResponseVO?.integrationStatus !== integrationStatusEnum.PROCESSING_NO.V
@@ -84,7 +91,7 @@
               style="margin-left: 5px"
               :type="integrationStatusEnum.V[scope.row.modelResponseVO?.integrationStatus].T"
               >{{ integrationStatusEnum.VL[scope.row.modelResponseVO?.integrationStatus] }}</el-tag
-            >
+            > -->
           </template>
         </el-table-column>
         <el-table-column key="deepen" prop="deepen" :show-overflow-tooltip="true" label="深化图纸" align="center">
@@ -124,27 +131,47 @@
           <machinePartTable :queryMonomerId="queryMonomerId" :currentProject="currentProject" />
         </template>
       </common-drawer>
-      <model-import-form v-model:visible="modelVisible" :info="currentRow" @success="fetchData"></model-import-form>
+      <common-drawer
+        ref="drawerRef"
+        show-close
+        size="50%"
+        :title="`模型${currentRow.importMode ? '【' + modelImportModeEnum.VL[currentRow.importMode] + '】' : ''}`"
+        append-to-body
+        v-model="modelVisible"
+      >
+        <template #content>
+          <component
+            ref="modelContentRef"
+            :is="currentView"
+            :info="currentRow"
+            :project-id="globalProject.id"
+            @close="modelVisible = false"
+          ></component>
+        </template>
+      </common-drawer>
+      <model-config-form v-model:visible="modelConfigVisible" :info="currentRow" @success="fetchData" />
     </template>
   </div>
 </template>
 
 <script setup>
 import { monomerAll as getAll } from '@/api/plan/monomer'
-import { editEdition, integrationModel, integrationModelDel } from '@/api/bim/model'
-import { ref, watch } from 'vue'
+// import { editEdition } from '@/api/bim/model'
+import { ref, watch, computed, nextTick } from 'vue'
 
 import useMaxHeight from '@compos/use-max-height'
 import { mapGetters } from '@/store/lib'
 import { isNotBlank } from '@data-type/index'
 import { TechnologyTypeAllEnum } from '@enum-ms/contract'
-import { bimTeklaEditionEnum } from '@enum-ms/bim'
-import { modelTranslateStatusEnum as translateStatusEnum, modelIntegrationStatusEnum as integrationStatusEnum } from '@enum-ms/bim'
+import { modelImportModeEnum } from '@enum-ms/bim'
+// import { modelTranslateStatusEnum as translateStatusEnum, modelIntegrationStatusEnum as integrationStatusEnum } from '@enum-ms/bim'
 
 import deepenTable from './module/deepen-table'
 import machinePartTable from './module/machine-part-table'
-import modelImportForm from './module/model-import-form'
-import { ElNotification, ElMessageBox } from 'element-plus'
+import modelConfigForm from './module/model-config-form'
+import modelMonomerMode from './module/model-monomer-mode'
+import modelIntegrateMode from './module/model-integrate-mode'
+// import { ElNotification, ElMessageBox } from 'element-plus'
 
 const { globalProject } = mapGetters(['globalProject'])
 
@@ -152,12 +179,14 @@ const tableRef = ref()
 const loading = ref(false)
 const deepenVisible = ref(false)
 const machinePartVisible = ref(false)
+const modelConfigVisible = ref(false)
 const modelVisible = ref(false)
 const queryMonomerId = ref()
 const currentProject = ref()
 const currentRow = ref({})
 const deepenRef = ref()
 const drawerRef = ref()
+const modelContentRef = ref()
 
 const { maxHeight } = useMaxHeight({
   wrapperBox: '.deep',
@@ -191,15 +220,18 @@ watch(
   { deep: true, immediate: true }
 )
 
-const monomerIds = ref([])
-const integrationLoading = ref(false)
-const resetLoading = ref(false)
-const hasIntegrationModel = ref(false)
-const hasProcessingIM = ref(false)
+// const monomerIds = ref([])
+// const integrationLoading = ref(false)
+// const resetLoading = ref(false)
+// const hasIntegrationModel = ref(false)
+// const hasProcessingIM = ref(false)
 
-function selectable(row, rowIndex) {
-  return !(row.modelResponseVO?.integrationStatus === integrationStatusEnum.SUCCESS.V || row.modelResponseVO?.integrationStatus === integrationStatusEnum.PROCESSING.V)
-}
+// function selectable(row, rowIndex) {
+//   return !(row.modelResponseVO?.integrationStatus === integrationStatusEnum.SUCCESS.V || row.modelResponseVO?.integrationStatus === integrationStatusEnum.PROCESSING.V)
+// }
+const currentView = computed(() => {
+  return currentRow.value.importMode === modelImportModeEnum.INTEGRATION.V ? modelIntegrateMode : modelMonomerMode
+})
 
 async function fetchData(val = globalProject.value?.id) {
   loading.value = true
@@ -210,21 +242,23 @@ async function fetchData(val = globalProject.value?.id) {
         v.projectName = globalProject.value.name
         v.projectShortName = globalProject.value.shortName
         v.projectSerialNumber = globalProject.value.serialNumber
-        v.hasModelImport = isNotBlank(v.modelResponseVO?.id)
+        v.edition = v.bimConfig?.edition
+        v.importMode = v.bimConfig?.importMode
+        // v.hasModelImport = isNotBlank(v.modelResponseVO?.id)
         v.areaArr = v.areaSimpleList.filter((k) => k.productType === TechnologyTypeAllEnum.STRUCTURE.V)
         if (index === 0) {
           v.rowSpanNum = content.length
         }
-        if (v.hasModelImport && isNotBlank(v.modelResponseVO)) {
-          v.edition = v.modelResponseVO.edition
-          v.originEdition = v.modelResponseVO.edition
-        }
-        if (v.modelResponseVO?.integrationStatus === integrationStatusEnum.SUCCESS.V || v.modelResponseVO?.integrationStatus === integrationStatusEnum.PROCESSING.V) {
-          hasIntegrationModel.value = true
-        }
-        if (v.modelResponseVO?.integrationStatus === integrationStatusEnum.PROCESSING.V) {
-          hasProcessingIM.value = true
-        }
+        // if (v.hasModelImport && isNotBlank(v.modelResponseVO)) {
+        //   v.edition = v.modelResponseVO.edition
+        //   v.originEdition = v.modelResponseVO.edition
+        // }
+        // if (v.modelResponseVO?.integrationStatus === integrationStatusEnum.SUCCESS.V || v.modelResponseVO?.integrationStatus === integrationStatusEnum.PROCESSING.V) {
+        //   hasIntegrationModel.value = true
+        // }
+        // if (v.modelResponseVO?.integrationStatus === integrationStatusEnum.PROCESSING.V) {
+        //   hasProcessingIM.value = true
+        // }
       })
     }
     tableData.value = content
@@ -236,7 +270,7 @@ async function fetchData(val = globalProject.value?.id) {
 }
 
 function objectSpanMethod({ row, column, rowIndex, columnIndex }) {
-  if (columnIndex === 1) {
+  if (columnIndex === 0) {
     return {
       rowspan: row.rowSpanNum,
       colspan: 1
@@ -245,70 +279,79 @@ function objectSpanMethod({ row, column, rowIndex, columnIndex }) {
 }
 
 // 模型版本号变更
-async function modelEditionChange(data, val) {
-  try {
-    await ElMessageBox.confirm(
-      `此操作将把 “${data.name}” 模型的Tekla版本：\n由“${data.originEdition ? bimTeklaEditionEnum.VL[data.originEdition] : '无'}”变更为 “${
-        bimTeklaEditionEnum.VL[val]
-      }”, 是否继续？`,
-      '提示',
-      {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }
-    )
-    await editEdition({ monomerId: data.id, edition: val })
-    ElNotification({ title: `“${data.name}” 模型的Tekla版本变更为 “${bimTeklaEditionEnum.VL[val]}” 成功`, type: 'success' })
-  } catch (error) {
-    console.log(error)
-    data.edition = data.originEdition
-  }
-}
+// async function modelEditionChange(data, val) {
+//   try {
+//     await ElMessageBox.confirm(
+//       `此操作将把 “${data.name}” 模型的Tekla版本：\n由“${data.originEdition ? bimTeklaEditionEnum.VL[data.originEdition] : '无'}”变更为 “${
+//         bimTeklaEditionEnum.VL[val]
+//       }”, 是否继续？`,
+//       '提示',
+//       {
+//         confirmButtonText: '确定',
+//         cancelButtonText: '取消',
+//         type: 'warning'
+//       }
+//     )
+//     await editEdition({ monomerId: data.id, edition: val })
+//     ElNotification({ title: `“${data.name}” 模型的Tekla版本变更为 “${bimTeklaEditionEnum.VL[val]}” 成功`, type: 'success' })
+//   } catch (error) {
+//     console.log(error)
+//     data.edition = data.originEdition
+//   }
+// }
 
-function handleSelect(selection, row) {
-  monomerIds.value = selection.map(v => v.id)
-}
+// function handleSelect(selection, row) {
+//   monomerIds.value = selection.map(v => v.id)
+// }
 
-// 集成模型
-async function toIntegrationModel() {
-  try {
-    if (!monomerIds.value?.length) return
-    integrationLoading.value = true
-    await integrationModel({ projectId: globalProject.value.id, monomerIds: monomerIds.value })
-    ElNotification({ title: '集成模型请求发送成功', type: 'success' })
-    fetchData()
-  } catch (error) {
-    console.log('集成模型失败', error)
-  } finally {
-    integrationLoading.value = false
-  }
-}
+// // 集成模型
+// async function toIntegrationModel() {
+//   try {
+//     if (!monomerIds.value?.length) return
+//     integrationLoading.value = true
+//     await integrationModel({ projectId: globalProject.value.id, monomerIds: monomerIds.value })
+//     ElNotification({ title: '集成模型请求发送成功', type: 'success' })
+//     fetchData()
+//   } catch (error) {
+//     console.log('集成模型失败', error)
+//   } finally {
+//     integrationLoading.value = false
+//   }
+// }
 
-// 重置集成模型
-async function toDelIntegrationModel() {
-  ElMessageBox.confirm(`是否确认重置 “${globalProject.value.shortName}” 项目下的集成模型`, '提示', {
-    confirmButtonText: '确认',
-    cancelButtonText: '取消',
-    type: 'warning'
-  }).then(async () => {
-    try {
-      resetLoading.value = true
-      await integrationModelDel({ projectId: globalProject.value.id })
-      ElNotification({ title: '重置集成模型成功', type: 'success' })
-      fetchData()
-    } catch (error) {
-      console.log('重置集成模型失败', error)
-    } finally {
-      resetLoading.value = false
-    }
-  })
+// // 重置集成模型
+// async function toDelIntegrationModel() {
+//   ElMessageBox.confirm(`是否确认重置 “${globalProject.value.shortName}” 项目下的集成模型`, '提示', {
+//     confirmButtonText: '确认',
+//     cancelButtonText: '取消',
+//     type: 'warning'
+//   }).then(async () => {
+//     try {
+//       resetLoading.value = true
+//       await integrationModelDel({ projectId: globalProject.value.id })
+//       ElNotification({ title: '重置集成模型成功', type: 'success' })
+//       fetchData()
+//     } catch (error) {
+//       console.log('重置集成模型失败', error)
+//     } finally {
+//       resetLoading.value = false
+//     }
+//   })
+// }
+
+function configModel(row) {
+  currentRow.value = Object.assign({}, row)
+  modelConfigVisible.value = true
 }
 
 function uploadModel(row) {
   currentRow.value = Object.assign({}, row)
   modelVisible.value = true
+  nextTick(() => {
+      modelContentRef.value?.fetchData()
+  })
 }
+
 function uploadDeepen(row) {
   deepenVisible.value = true
   queryMonomerId.value = row.id

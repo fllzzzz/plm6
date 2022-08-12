@@ -2,7 +2,7 @@ import { getLogistics, getIntegrateLogistics } from '@/api/bim/model'
 import { parseTime } from '@/utils/date'
 import { ref } from 'vue'
 
-export default function useLogisticsInfo({ props, bimModel, viewerPanel, monomerId, addBlinkByIds, removeBlink }) {
+export default function useLogisticsInfo({ props, bimModel, modelStatus, viewerPanel, monomerId, addBlinkByIds, removeBlink }) {
   const logisticsList = ref([])
 
   function createLogisticsBtn() {
@@ -74,7 +74,7 @@ export default function useLogisticsInfo({ props, bimModel, viewerPanel, monomer
     try {
       let data
       if (props.showMonomerModel) {
-        data = await getLogistics({ monomerId: monomerId.value })
+        data = await getLogistics({ fileId: modelStatus.value.fileId })
       } else {
         data = await getIntegrateLogistics({ projectId: props.projectId })
       }

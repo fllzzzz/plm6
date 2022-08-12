@@ -20,6 +20,13 @@ const modelIntegrationStatusEnum = {
 }
 constantize(modelIntegrationStatusEnum)
 
+// 模型导入模式
+const modelImportModeEnum = {
+  MONOMER: { L: '单体模式', K: 'MONOMER', V: 1 },
+  INTEGRATION: { L: '集成模式', K: 'INTEGRATION', V: 2 }
+}
+constantize(modelImportModeEnum)
+
 // tekla常见版本
 const bimTeklaEditionEnum = {
   SIXTEEN: { L: '16版本', K: 'SIXTEEN', V: 16 },
@@ -61,6 +68,7 @@ export {
   modelTranslateStatusEnum,
   bimTeklaEditionEnum,
   modelIntegrationStatusEnum,
+  modelImportModeEnum,
   modelMenuBarEnum
 }
 
@@ -68,5 +76,6 @@ export default {
   modelTranslateStatusEnum, // 模型转换状态
   bimTeklaEditionEnum,
   modelIntegrationStatusEnum,
+  modelImportModeEnum,
   modelMenuBarEnum
 }
