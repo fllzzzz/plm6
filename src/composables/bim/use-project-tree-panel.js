@@ -1,7 +1,7 @@
 import { getProjectTree, getIntegrateMonomer } from '@/api/bim/model'
 import { ref, watch } from 'vue'
 
-export default function useProjectTreePanel({ props, bimModel, viewerPanel, viewProAreaTree, setSelectedComponentsByObjectData, clearSelectedComponents, addBlinkByIds, removeBlink, getModelViewSize }) {
+export default function useProjectTreePanel({ props, bimModel, modelStatus, viewerPanel, viewProAreaTree, setSelectedComponentsByObjectData, clearSelectedComponents, addBlinkByIds, removeBlink, getModelViewSize }) {
   const areaList = ref([])
   const monomerMap = ref({})
 
@@ -190,7 +190,7 @@ export default function useProjectTreePanel({ props, bimModel, viewerPanel, view
     let _treeApi
     // 获取区域数据
     try {
-      const { content } = await getProjectTree(props.monomerId)
+      const { content } = await getProjectTree(modelStatus.value.fileId)
       areaList.value = content
       for (let i = 0; i < content.length; i++) {
         const _areaItem = content[i]
@@ -206,13 +206,21 @@ export default function useProjectTreePanel({ props, bimModel, viewerPanel, view
         if (selected) {
           // 若选中 渲染之前区域单元 并展示该区域下构件数量和重量明细
           fetchArtifactList(node)
-          const { elementIds } = node.id
-          addBlinkByIds(elementIds)
+          const { elementIds, fileId } = node.id
+          if (modelStatus.value.modelType === 'file') {
+            addBlinkByIds(elementIds)
+          } else {
+            setSelectedComponentsByObjectData([{ 'fileId': String(fileId) }])
+          }
         } else {
           // 取消选中 则关闭构件明细
           const _panel = viewerPanel.artifactListByArea.panel
           if (_panel.isShow) _panel.hide()
-          removeBlink()
+          if (modelStatus.value.modelType === 'file') {
+            removeBlink()
+          } else {
+            clearSelectedComponents()
+          }
         }
       })
 
