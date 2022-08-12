@@ -303,6 +303,7 @@
         :bool-bim="drawingRow?.boolBim"
         :drawingSN="drawingRow?.drawingSN"
         :monomer-id="drawingRow?.monomerId"
+        :area-id="crud.query.areaId"
         :serial-number="drawingRow?.serialNumber"
         :productId="drawingRow?.productId"
         :productType="drawingRow?.productType"

@@ -17,25 +17,58 @@ export function upload(data) {
 }
 
 /**
+ * 单体模型信息
+ */
+export function monomerModelInfo({ monomerId }) {
+  return request({
+    url: 'api/model/3DModel/monomer',
+    method: 'get',
+    params: { monomerId }
+  })
+}
+
+/**
+ * 区域模型信息
+ */
+export function areaModelInfo({ monomerId }) {
+  return request({
+    url: 'api/model/3DModel/area',
+    method: 'get',
+    params: { monomerId }
+  })
+}
+
+/**
+ * 模型删除
+ */
+export function modelDel({ monomerId, areaId }) {
+  return request({
+    url: 'api/model/3DModel',
+    method: 'delete',
+    params: { monomerId, areaId }
+  })
+}
+
+/**
  * 集成模型
  */
-export function integrationModel({ projectId, monomerIds }) {
+export function integrationModel({ monomerId, areaIds }) {
   return request({
     url: 'api/model/3DModel/model/integration',
     method: 'post',
-    params: { projectId },
-    data: monomerIds
+    params: { monomerId },
+    data: areaIds
   })
 }
 
 /**
  * 集成模型删除
  */
-export function integrationModelDel({ projectId }) {
+export function integrationModelDel({ monomerId }) {
   return request({
     url: 'api/model/3DModel/remove/integration',
     method: 'delete',
-    params: { projectId }
+    params: { monomerId }
   })
 }
 
@@ -45,9 +78,21 @@ export function integrationModelDel({ projectId }) {
  */
 export function editEdition({ monomerId, edition }) {
   return request({
-    url: '/api/model/3DModel/upload/edition',
+    url: 'api/model/3DModel/upload/edition',
     method: 'post',
     params: { monomerId, edition }
+  })
+}
+
+/**
+ * 模型配置
+ * @param {*} data
+ */
+export function modelConfig(data) {
+  return request({
+    url: 'api/model/configure',
+    method: 'put',
+    data
   })
 }
 
@@ -67,11 +112,11 @@ export function getIMTranslate(projectId) {
  * 获取3d模型viewToken
  * @param {number} monomerId 单体id
  */
-export function getTranslate(monomerId) {
+export function getTranslate(monomerId, areaId) {
   return request({
     url: 'api/model/3DModel/translate',
     method: 'get',
-    params: { monomerId }
+    params: { monomerId, areaId }
   })
 }
 
@@ -111,14 +156,14 @@ export function getIntegrateMonomer(projectId) {
 
 /**
  * 获取项目树构件信息
- * @param {number} monomerId 单体id
+ * @param {number} fileId 单体id
  */
-export function getProjectTree(monomerId) {
+export function getProjectTree(fileId) {
   return request({
     url: '/api/model/3DModel/project/tree',
     method: 'get',
     timeout: 600000,
-    params: { monomerId }
+    params: { fileId }
   })
 }
 
@@ -152,14 +197,14 @@ export function getIntegrateArtifactInfo({ projectId, elementId, menuBar }) {
 /**
  * 通过构件编号搜索
  * @param {number} serialNumber 构件编号
- * @param {number} monomerId 元件id
+ * @param {number} fileId 元件id
  */
-export function getArtifactSearch({ serialNumber, monomerId }) {
+export function getArtifactSearch({ serialNumber, fileId }) {
   return request({
     url: '/api/model/3DModel/artifact/element',
     method: 'get',
     timeout: 600000,
-    params: { serialNumber, monomerId }
+    params: { serialNumber, fileId }
   })
 }
 
@@ -231,14 +276,14 @@ export function getIntegrateStatusDetail({ projectId, status, menuBar }) {
 
 /**
  * 获取物流信息
- * @param {number} monomerId 单体id
+ * @param {number} fileId 单体id
  */
-export function getLogistics({ monomerId }) {
+export function getLogistics({ fileId }) {
   return request({
     url: '/api/model/3DModel/logistics',
     method: 'get',
     timeout: 600000,
-    params: { monomerId }
+    params: { fileId }
   })
 }
 
