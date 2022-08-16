@@ -26,7 +26,7 @@
         <span v-if="checkPermission(crud.permission.save)" style="margin-right: 6px">
           <span v-if="modifying">
             <common-button type="warning" size="mini" @click="handelModifying(false, true)">取消录入</common-button>
-            <common-button type="success" size="mini" @click="previewVisible = true">预览并保存</common-button>
+            <common-button type="success" size="mini" @click="confirmModifying">预览并保存</common-button>
           </span>
           <common-button v-else type="primary" size="mini" @click="handelModifying(true)">录入价格</common-button>
         </span>
@@ -65,13 +65,14 @@
 
 <script setup>
 import { cost } from '@/api/contract/sales-manage/price-manage/structure'
-import { ref, watch, nextTick, inject, computed, defineExpose } from 'vue'
+import { ref, watch, nextTick, inject, computed, defineExpose, defineEmits, defineProps } from 'vue'
 
 import checkPermission from '@/utils/system/check-permission'
 import { packTypeEnum } from '@enum-ms/mes'
 import { convertUnits } from '@/utils/convert/unit'
 import { toThousand } from '@/utils/data-type/number'
 import { emptyTextFormatter } from '@/utils/data-type'
+import { pricingMannerEnum } from '@enum-ms/contract'
 import { DP } from '@/settings/config'
 
 import { regHeader } from '@compos/use-crud'
@@ -81,10 +82,16 @@ import mPreview from '../../preview'
 
 const projectId = inject('projectId')
 const monomerId = inject('monomerId')
-
+const emit = defineEmits(['checkSubmit'])
+const props = defineProps({
+  showAble: {
+    type: Boolean,
+    default: false
+  }
+})
 // 有变动的数据
 const modifiedData = computed(() => {
-  return crud.data.filter((v) => v.unitPrice !== v.originUnitPrice)
+  return crud.data.filter((v) => (v.pricingManner !== v.originPricingManner && v.unitPrice !== '-') || (v.unitPrice !== v.originUnitPrice && v.newUnitPrice))
 })
 
 // 预览参数
@@ -130,7 +137,8 @@ CRUD.HOOK.handleRefresh = (crud, { data }) => {
     v.newUnitPrice = v.unitPrice // number类型的单价（unitPrice可能会有千位符）
     v.originNewUnitPrice = v.newUnitPrice
     v.originUnitPrice = emptyTextFormatter(toThousand(v.unitPrice))
-    v.totalPrice = v.totalWeight * (v.unitPrice || 0)
+    v.totalPrice = v.pricingManner === pricingMannerEnum.WEIGHT.V ? v.totalWeight * (v.unitPrice || 0) : v.totalLength * (v.unitPrice || 0)
+    v.originPricingManner = v.pricingManner
   })
   fetchCost()
 }
@@ -164,16 +172,23 @@ function handelModifying(status, reset = false) {
     crud.data.forEach((v) => {
       v.unitPrice = v.originUnitPrice
       v.newUnitPrice = v.originNewUnitPrice
+      v.pricingManner = v.originPricingManner
       if (typeof v.newUnitPrice === 'string') {
         v.totalPrice = 0
       } else {
-        v.totalPrice = v.totalWeight * (v.newUnitPrice || 0)
+        v.totalPrice = v.pricingManner === pricingMannerEnum.WEIGHT.V ? v.totalWeight * (v.unitPrice || 0) : v.totalLength * (v.unitPrice || 0)
       }
     })
   }
   modifying.value = status
 }
 
+function confirmModifying() {
+  emit('checkSubmit')
+  nextTick(() => {
+    previewVisible.value = props.showAble
+  })
+}
 // 提交成功后
 function handleSuccess() {
   modifying.value = false
