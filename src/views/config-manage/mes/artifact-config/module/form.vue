@@ -205,7 +205,7 @@
             <common-button icon="el-icon-plus" size="mini" type="success" style="margin: 0 0 12px 6px" @click="addSerialNumber" />
           </div>
         </el-form-item>
-        <el-form-item label="打码方式" prop="codingType" v-if="form.productionLineType === artifactProductLineEnum.TRADITION.V">
+        <el-form-item label="打码方式" prop="codingType" v-if="form.artifactType===artifactTypeEnum.SMALL.V">
           <common-select
             v-model="form.codingType"
             :options="codingTypeEnum.ENUM"
