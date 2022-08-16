@@ -78,6 +78,7 @@ import { ElRadioGroup } from 'element-plus'
 
 import { packTypeEnum } from '@enum-ms/mes'
 import { weightMeasurementModeEnum, enclosureSettlementTypeEnum } from '@enum-ms/finance'
+import { pricingMannerEnum } from '@enum-ms/contract'
 import { weightTypeEnum } from '@enum-ms/common'
 import { convertUnits } from '@/utils/convert/unit'
 import { DP } from '@/settings/config'
@@ -168,7 +169,7 @@ const list = computed(() => {
             contract.value.structureMeasureMode === weightMeasurementModeEnum.OVERWEIGHT.V
               ? convertUnits(v.totalWeight, 'kg', 't')
               : convertUnits(v.weight * v.showQuantity, 'kg', 't')
-          v.totalPrice = v.unitPrice * v.totalMete || 0
+          v.totalPrice = v.pricingManner === pricingMannerEnum.WEIGHT.V ? v.totalMete * (v.unitPrice || 0) : v.totalLength * (v.unitPrice || 0)
           return v
         })
       )

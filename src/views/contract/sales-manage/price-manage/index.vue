@@ -175,6 +175,23 @@ $default-cell-mask-color: #52f09840;
     }
   }
 }
+
+::v-deep(.wrong-td) {
+  .cell {
+    &:after {
+      content: '';
+      position: absolute;
+      z-index: 1;
+      background-color: #ff000021;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      pointer-events: none; // 穿透
+    }
+  }
+}
+
 ::v-deep(.el-table.businessTable) {
   th,
   td {
