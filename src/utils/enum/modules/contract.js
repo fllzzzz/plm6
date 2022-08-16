@@ -43,9 +43,9 @@ constantize(projectTypeEnum)
 
 // 技术交底type
 const TechnologyMainTypeEnum = {
-  STRUCTURE: { L: '结构', K: 'STRUCTURE', V: 1 << 0 },
-  ENCLOSURE: { L: '围护', K: 'ENCLOSURE', V: 1 << 1 },
-  AUXILIARY_MATERIAL: { L: '配套件', K: 'AUXILIARY_MATERIAL', V: 1 << 2 }
+  STRUCTURE: { L: '结构', K: 'STRUCTURE', V: 1 << 1 },
+  ENCLOSURE: { L: '围护', K: 'ENCLOSURE', V: 1 << 2 },
+  AUXILIARY_MATERIAL: { L: '配套件', K: 'AUXILIARY_MATERIAL', V: 1 << 3 }
 }
 constantize(TechnologyMainTypeEnum)
 
@@ -277,6 +277,13 @@ const logisticsSearchTypeEnum = {
 }
 constantize(logisticsSearchTypeEnum)
 
+// 价格管理构件计价方式
+const pricingMannerEnum = {
+  WEIGHT: { L: '重量', K: 'WEIGHT', V: 0 },
+  LENGTH: { L: '长度', K: 'LENGTH', V: 1 }
+}
+constantize(pricingMannerEnum)
+
 export {
   projectStatusEnum, // 项目状态
   projectTypeEnum, // 项目类型
@@ -308,7 +315,8 @@ export {
   purchaseOrderStatusEnum,
   logisticsSearchTypeEnum,
   payableSearchTypeEnum,
-  TechnologyMainTypeEnum
+  TechnologyMainTypeEnum,
+  pricingMannerEnum
 }
 
 export default {
@@ -342,5 +350,6 @@ export default {
   purchaseOrderStatusEnum,
   logisticsSearchTypeEnum,
   payableSearchTypeEnum,
-  TechnologyMainTypeEnum
+  TechnologyMainTypeEnum,
+  pricingMannerEnum
 }
