@@ -38,7 +38,6 @@
             placeholder="构件类型"
             style="width: 250px"
             :disabled="!!form.id"
-            @change="artifactTypeChange"
           />
         </el-form-item>
         <el-form-item label="类型" prop="parentType" v-if="form.productionLineType === artifactProductLineEnum.INTELLECT.V">
@@ -215,7 +214,6 @@
             class="filter-item"
             placeholder="打码方式"
             style="width: 250px"
-            :disabled="form.artifactType===artifactTypeEnum.COMMON.V"
           />
         </el-form-item>
       </el-form>
@@ -444,14 +442,6 @@ function resetForm(data) {
     })
   }
   useWatchFormValidate(formRef, form)
-}
-
-function artifactTypeChange(val) {
-  if (form.value.artifactType === artifactTypeEnum.COMMON.V) {
-    form.value.codingType = codingTypeEnum.SINGLE.V
-  } else {
-    form.value.codingType = undefined
-  }
 }
 
 function lineTypeChange(val) {
