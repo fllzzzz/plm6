@@ -29,7 +29,7 @@
         <div style="display: flex; justify-content: center">
           <upload-btn
             :upload-fun="upload"
-            :data="{ monomerId: row?.id }"
+            :data="{ monomerId: info?.id }"
             :fileClassify="undefined"
             :accept="'.ifc'"
             success-msg="模型导入成功"
