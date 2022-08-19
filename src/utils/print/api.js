@@ -57,6 +57,7 @@ const mesMachinePartDetail = mes.machinePartDetail
 const mesPaintingList = mes.paintingList
 const mesStructureProjectSummary = mes.structureProjectSummary
 const mesEnclosureProjectSummary = mes.enclosureProjectSummary
+const mesQHSEProductionLineReport = mes.qhseProductionLineReport
 
 const mesStructureTeamWage = mes.teamWage
 const mesEnclosureTeamWage = mes.teamWage
@@ -138,6 +139,7 @@ export default {
   mesPaintingList, // 涂装列表
   mesStructureProjectSummary, // 结构项目汇总
   mesEnclosureProjectSummary, // 围护项目汇总
+  mesQHSEProductionLineReport, // 生产线质检报表
 
   mesStructureTeamWage, // 结构班组工资
   mesEnclosureTeamWage, // 围护班组工资

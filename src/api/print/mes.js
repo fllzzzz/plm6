@@ -364,6 +364,17 @@ export function enclosureProjectSummary(params) {
   })
 }
 
+/**
+ * 生产线质检报表
+ */
+export function qhseProductionLineReport(params) {
+  return request({
+    url: `/api/mes/building/report/inspection/summary/review/print`,
+    method: 'get',
+    params
+  })
+}
+
 export default {
   // 项目制造
   machinePartDetail, // 零件生产详情
@@ -381,6 +392,8 @@ export default {
   productionStatisticsUn, // 在制品统计明细-未生产
   productionStatisticsComplete, // 在制品统计明细-完成品
   unfinishedList, // 未完成清单
+
+  qhseProductionLineReport, // 生产线质检报表
 
   // 班组报表
   enclosureProductionLine, // 围护生产线报表
