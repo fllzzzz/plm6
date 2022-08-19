@@ -15,7 +15,7 @@
       @sort-change="crud.handleSortChange"
       @selection-change="crud.selectionChangeHandler"
     >
-      <el-table-column type="selection" width="55" align="center" />
+      <el-table-column type="selection" width="55" align="center" :selectable="selectable" />
       <el-table-column label="序号" type="index" align="center" width="60" />
       <el-table-column
         v-if="columns.visible('name')"
@@ -197,12 +197,20 @@
         width="120px"
       >
         <template v-slot="scope">
-          <el-input-number v-model="scope.row.printQuantity" :step="1" :min="0" size="mini" style="width: 100%" controls-position="right" />
+          <el-input-number
+            v-model="scope.row.printQuantity"
+            :step="1"
+            :min="0"
+            size="mini"
+            :disabled="scope.row.boolOneCode"
+            style="width: 100%"
+            controls-position="right"
+          />
         </template>
       </el-table-column>
       <el-table-column label="操作" width="225px" align="center" fixed="right">
         <template v-slot="scope">
-          <common-button icon="el-icon-printer" type="success" size="mini" @click="printLabel(scope.row)" />
+          <common-button icon="el-icon-printer" type="success" size="mini" @click="beforePrintLabel(scope.row)" />
           <common-button icon="el-icon-view" type="primary" size="mini" @click="previewLabel(scope.row)" />
           <common-button type="info" size="mini" @click="openRecordView(scope.row)">打印记录</common-button>
         </template>
@@ -210,15 +218,27 @@
     </common-table>
     <!--分页组件-->
     <pagination />
-    <printed-record-drawer v-model:visible="recordVisible" :task-id="currentTaskId" :getPrintRecord="getPrintRecord"/>
-    <label-dlg v-model:visible="labelVisible" :label-data="currentLabel" :productType="productType" :labelType="labelType" />
+    <printed-record-drawer v-model:visible="recordVisible" :task-id="currentTaskId" :getPrintRecord="getPrintRecord" />
+    <label-dlg v-model:visible="labelVisible" :label-data="currentLabel" :productType="productType" :labelType="labelType">
+      <template #oneCode v-if="curNumberList.length">
+        <one-code-number-list style="margin-bottom:15px;" v-model="previewCode" :list="curNumberList" :tagWidth="50" :multiple="false" :max-height="80"/>
+      </template>
+    </label-dlg>
+    <!-- 一物一码 选择弹窗 -->
+    <common-dialog title="选择一物一码编号" v-model="oneCodeVisible" :center="false" :close-on-click-modal="false" width="450px">
+      <template #titleRight>
+        <common-button type="primary" size="mini" @click="oneCodeSave">确认</common-button>
+      </template>
+      <one-code-number-list v-model="curRowSelect" :list="curNumberList" />
+    </common-dialog>
   </div>
 </template>
 
 <script setup>
 import { getForTask as getPrintRecord } from '@/api/mes/label-print/print-record'
 import crudApi from '@/api/mes/label-print/artifact'
-import { ref, provide, computed } from 'vue'
+import { ref, provide, computed, watch } from 'vue'
+import { ElMessage } from 'element-plus'
 
 import { weightTypeEnum as printWeightTypeEnum } from '@enum-ms/common'
 import { componentTypeEnum, printProductTypeEnum } from '@enum-ms/mes'
@@ -235,6 +255,7 @@ import tableCellTag from '@comp-common/table-cell-tag/index'
 import mHeader from '../components/label-print-header.vue'
 import printedRecordDrawer from '../components/task-printed-record-drawer.vue'
 import labelDlg from '../components/label-dlg'
+import oneCodeNumberList from '@/components-system/mes/one-code-number-list'
 
 const optShow = {
   add: false,
@@ -272,6 +293,52 @@ const labelType = computed(() => {
   return headRef.value?.printConfig?.type
 })
 
+const curRow = ref()
+const oneCodeVisible = ref(false)
+const saveOneCodeData = ref()
+const curNumberList = ref([])
+const curRowSelect = ref([])
+const previewCode = ref()
+
+function selectable(row, rowIndex) {
+  return !row.boolOneCode
+}
+
+function getNumberList(quantity) {
+  const _numArr = []
+  for (let i = 0; i < quantity; i++) {
+    _numArr.push({ number: i + 1 })
+  }
+  return _numArr
+}
+
+function beforePrintLabel(row) {
+  if (row.boolOneCode) {
+    curNumberList.value = getNumberList(row.quantity)
+    saveOneCodeData.value = { row }
+    oneCodeVisible.value = true
+  } else {
+    printLabel(row)
+  }
+}
+
+async function oneCodeSave() {
+  if (!curRowSelect.value?.length) {
+    ElMessage.warning('请选择需要打印的一物一码编号')
+    return
+  }
+  try {
+    const { row } = saveOneCodeData.value
+    row.numberList = curRowSelect.value
+    row.printQuantity = curRowSelect.value.length
+    await printLabel(row)
+  } catch (error) {
+    console.log('一物一码打印标签失败', error)
+  } finally {
+    oneCodeVisible.value = false
+  }
+}
+
 async function printLabel(row) {
   try {
     await headRef.value.print([row])
@@ -280,8 +347,25 @@ async function printLabel(row) {
   }
 }
 
+watch(
+  () => previewCode.value,
+  () => {
+    if (labelVisible.value) {
+      currentLabel.value = getLabelInfo(curRow.value, previewCode.value)
+    }
+  }
+)
+
 function previewLabel(row) {
-  currentLabel.value = getLabelInfo(row)
+  curRow.value = row
+  if (row.boolOneCode) {
+    curNumberList.value = getNumberList(row.quantity)
+    previewCode.value = 1
+    currentLabel.value = getLabelInfo(row, previewCode.value)
+  } else {
+    curNumberList.value = []
+    currentLabel.value = getLabelInfo(row)
+  }
   labelVisible.value = true
 }
 
@@ -290,7 +374,7 @@ function openRecordView(row) {
   recordVisible.value = true
 }
 
-function getLabelInfo(row) {
+function getLabelInfo(row, num) {
   // const { getLine, printConfig, spliceQrCodeUrl, QR_SCAN_PATH, requestUrl, companyName } = headRef.value
   const { printConfig, spliceQrCodeUrl, QR_SCAN_PATH, requestUrl, companyName } = headRef.value
   // 标签构件信息
@@ -304,29 +388,34 @@ function getLabelInfo(row) {
     quantity: row.quantity,
     specification: row.specification,
     drawingNumber: row.drawingNumber,
-    weight: printConfig.weight === printWeightTypeEnum.NET.V ? row.netWeight.toFixed(DP.COM_WT__KG) : row.grossWeight.toFixed(DP.COM_WT__KG),
+    weight:
+      printConfig.weight === printWeightTypeEnum.NET.V ? row.netWeight.toFixed(DP.COM_WT__KG) : row.grossWeight.toFixed(DP.COM_WT__KG),
     length: row.length
   }
   // 生产线信息
   // const productionLine = getLine()
   const baseUrl = requestUrl
+  const qrCodeObj = {
+    id: row.id, // id
+    ftype: QR_SCAN_F_TYPE.MEW_PRODUCTION,
+    factoryId: row.factoryId, // 工厂id
+    taskId: row.taskId, // 任务id
+    type: productType, // 类型
+    wt: printConfig.weight, // 重量类型
+    // sl: Number(printConfig.showProductionLine), // 显示生产线
+    sa: Number(printConfig.showArea), // 显示区域
+    sm: Number(printConfig.showMonomer) // 显示单体
+  }
+  if (row.boolOneCode) {
+    qrCodeObj.num = num
+  }
   return {
     productType,
     labelType: labelType.value,
     component,
     printConfig,
     manufacturerName: printConfig.manufacturerName || companyName,
-    qrCode: spliceQrCodeUrl(`${baseUrl}${QR_SCAN_PATH.ARTIFACT_TASK}`, {
-      id: row.id, // id
-      ftype: QR_SCAN_F_TYPE.MEW_PRODUCTION,
-      factoryId: row.factoryId, // 工厂id
-      taskId: row.taskId, // 任务id
-      type: productType, // 类型
-      wt: printConfig.weight, // 重量类型
-      // sl: Number(printConfig.showProductionLine), // 显示生产线
-      sa: Number(printConfig.showArea), // 显示区域
-      sm: Number(printConfig.showMonomer) // 显示单体
-    })
+    qrCode: spliceQrCodeUrl(`${baseUrl}${QR_SCAN_PATH.ARTIFACT_TASK}`, qrCodeObj)
   }
 }
 

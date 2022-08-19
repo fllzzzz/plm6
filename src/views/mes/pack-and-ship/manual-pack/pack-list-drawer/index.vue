@@ -12,7 +12,14 @@
             {{ item.L }}({{ listObj['source' + item.K].length }})
           </el-radio-button>
         </el-radio-group> -->
-        <component-radio-button v-model="packType" size="small" class="filter-item" :options="packTypeEnum.ENUM" type="enum" :disabledVal="disabledVal">
+        <component-radio-button
+          v-model="packType"
+          size="small"
+          class="filter-item"
+          :options="packTypeEnum.ENUM"
+          type="enum"
+          :disabledVal="disabledVal"
+        >
           <template #suffix="{ item }"> ({{ listObj['source' + item.K].length }})</template>
         </component-radio-button>
         <factory-select
@@ -33,7 +40,24 @@
         :max-height="maxHeight"
         style="width: 100%"
         class="manual-pack-list"
+        :expand-row-keys="expandRowKeys"
+        default-expand-all
+        row-key="rowKey"
       >
+        <el-table-column type="expand">
+          <template #default="{ row }">
+            <el-form v-if="row.boolOneCode" style="padding-top: 20px; padding-left: 20px">
+              <el-form-item label="一物一码编号：">
+                <one-code-number-list
+                  v-model="row.numberList"
+                  :list="row.originNumberList"
+                  :tag-width="100"
+                  @change="oneCodeSelectChange(row)"
+                ></one-code-number-list>
+              </el-form-item>
+            </el-form>
+          </template>
+        </el-table-column>
         <el-table-column label="序号" type="index" align="center" width="60" />
         <template v-if="packType === packTypeEnum.STRUCTURE.V">
           <el-table-column key="name" prop="name" :show-overflow-tooltip="true" label="名称" width="120px">
@@ -133,16 +157,21 @@
         <el-table-column key="inQuantity" prop="inQuantity" label="入库量" align="center" min-width="80px" />
         <el-table-column key="unPackageQuantity" prop="unPackageQuantity" label="可打包量" align="center" min-width="80px" />
         <el-table-column prop="productQuantity" label="打包数量" align="center" width="120px" fixed="right">
-          <template v-slot="scope">
-            <el-input-number
-              v-model="scope.row.productQuantity"
-              :step="1"
-              :min="1"
-              :max="scope.row.unPackageQuantity || scope.row.inQuantity - scope.row.packageQuantity"
-              size="mini"
-              style="width: 100%"
-              controls-position="right"
-            />
+          <template #default="{ row }">
+            <template v-if="!row.boolOneCode">
+              <el-input-number
+                v-model="row.productQuantity"
+                :step="1"
+                :min="1"
+                :max="row.unPackageQuantity || row.inQuantity - row.packageQuantity"
+                size="mini"
+                style="width: 100%"
+                controls-position="right"
+              />
+            </template>
+            <template v-else>
+              <span>{{ row.productQuantity }}</span>
+            </template>
           </template>
         </el-table-column>
         <el-table-column label="操作" width="70" align="center" fixed="right">
@@ -182,12 +211,14 @@ import { tableSummary } from '@/utils/el-extra'
 
 import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'
+import oneCodeNumberList from '@/components-system/mes/one-code-number-list'
 import factorySelect from '@comp-base/factory-select'
 import factoryTableCellTag from '@comp-base/factory-table-cell-tag'
 import choseAddMethodDialog from '../chose-add-method-dialog'
 
 const drawerRef = ref()
 const choseDialogRef = ref()
+const expandRowKeys = ref([])
 
 const packData = inject('packData')
 const permission = inject('permission')
@@ -308,6 +339,7 @@ async function handlePack({ bagId, isNew, selectBagId }) {
     params.packageLinks = _list.map((v) => {
       return {
         id: v.id,
+        numberList: v.numberList,
         quantity: v.productQuantity
       }
     })
@@ -335,6 +367,10 @@ async function handlePack({ bagId, isNew, selectBagId }) {
   } finally {
     packLoading.value = false
   }
+}
+
+function oneCodeSelectChange(row) {
+  row.productQuantity = row.numberList.length
 }
 
 function del(id) {

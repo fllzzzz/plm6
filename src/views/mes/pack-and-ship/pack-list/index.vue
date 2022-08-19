@@ -202,7 +202,7 @@ import { ElNotification } from 'element-plus'
 import { packTypeEnum, packStatusTypeEnum } from '@enum-ms/mes'
 import checkPermission from '@/utils/system/check-permission'
 import { DP } from '@/settings/config'
-import { toFixed } from '@data-type/index'
+import { deepClone, toFixed } from '@data-type/index'
 import { projectNameFormatter } from '@/utils/project'
 import { convertUnits } from '@/utils/convert/unit'
 import { parseTime } from '@/utils/date'
@@ -297,6 +297,8 @@ function handleDataFormat({ artifactList, enclosureList, auxList }) {
       v.weight = v.netWeight || v.grossWeight
       v.totalWeight = convertUnits(v.weight * v.packageQuantity, 'kg', 't')
       v.productQuantity = v.packageQuantity
+      v.originNumberList = deepClone(v.numberList)
+      v.numberList = v.numberList.filter(v => v.boolPackage).map(v => v.number)
       return v
     })
   data.enclosureList =
@@ -305,6 +307,8 @@ function handleDataFormat({ artifactList, enclosureList, auxList }) {
       v.processingPrice = v.processingPrice || v.processingPrice === 0 ? v.processingPrice : undefined
       v.totalLength = convertUnits(v.length * v.packageQuantity, 'mm', 'm')
       v.productQuantity = v.packageQuantity
+      v.originNumberList = deepClone(v.numberList)
+      v.numberList = v.numberList.filter(v => v.boolPackage).map(v => v.number)
       return v
     })
   data.auxList =
@@ -312,6 +316,8 @@ function handleDataFormat({ artifactList, enclosureList, auxList }) {
     auxList.map((v) => {
       v.fullClassName = `${v.firstName}/${v.secondName}/${v.thirdName}`
       v.productQuantity = v.packageQuantity
+      v.originNumberList = deepClone(v.numberList)
+      v.numberList = v.numberList.filter(v => v.boolPackage).map(v => v.number)
       return v
     })
   return JSON.stringify(data)
