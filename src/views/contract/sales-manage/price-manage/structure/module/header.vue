@@ -173,7 +173,7 @@ function handelModifying(status, reset = false) {
       v.unitPrice = v.originUnitPrice
       v.newUnitPrice = v.originNewUnitPrice
       v.pricingManner = v.originPricingManner
-      if (typeof v.newUnitPrice === 'string') {
+      if (!v.newUnitPrice) {
         v.totalPrice = 0
       } else {
         v.totalPrice = v.pricingManner === pricingMannerEnum.WEIGHT.V ? v.totalWeight * (v.unitPrice || 0) : v.totalLength * (v.unitPrice || 0)
