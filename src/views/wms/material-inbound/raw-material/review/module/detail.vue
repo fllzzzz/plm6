@@ -137,6 +137,8 @@ CRUD.HOOK.beforeDetailLoaded = async (crud, detail) => {
     toSmallest: false,
     toNum: false
   })
+  // 未质检单据不进行过滤
+  if (detail.qualityTestingEnum & inspectionStatusEnum.UNREVIEWED.V) return
   detail.originList = deepClone(detail.list)
   detail.list = detail.originList.filter((v) => v.qualityTestingEnum & (inspectionStatusEnum.ALL_PASS.V | inspectionStatusEnum.NO.V))
   detail.returnList = detail.originList.filter((v) => v.qualityTestingEnum & inspectionStatusEnum.ALL_REFUSE.V)
