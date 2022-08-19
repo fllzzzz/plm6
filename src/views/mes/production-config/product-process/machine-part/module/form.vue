@@ -124,15 +124,20 @@ CRUD.HOOK.beforeSubmit = async () => {
   const processArr = arr2obj(sourceData.value, 'id')
   const processSequence = _processSequenceIds.map((id) => `【${processArr[id].name}】`).join('→')
   try {
-    await ElMessageBox.confirm(`“${form.name}”的工序为：\n${processSequence || '-'}\n${isRepeat ? '检测到重复工序，' : ''}确认提交？`, '提示', {
-      confirmButtonText: '确定',
-      cancelButtonText: '取消',
-      type: 'warning'
-    })
+    await ElMessageBox.confirm(
+      `“${form.name}”的工序为：\n${processSequence || '-'}\n${isRepeat ? '检测到重复工序，' : ''}确认提交？`,
+      '提示',
+      {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }
+    )
     const processSequenceIds = []
     _processSequenceIds.forEach((v, index) => {
       processSequenceIds.push({
         id: v,
+        nodeTime: 0,
         sequence: index
       })
     })

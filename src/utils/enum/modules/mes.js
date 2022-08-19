@@ -21,6 +21,16 @@ const processTypeEnum = {
 }
 constantize(processTypeEnum)
 
+// 工序类
+const processCategoryEnum = {
+  ASSEMBLY_RIVETING_WELDING: { L: '组铆焊类', K: 'ASSEMBLY_RIVETING_WELDING', V: 1 << 0 },
+  PAINT: { L: '油漆类', K: 'PAINT', V: 1 << 1 },
+  MAKINGS: { L: '下料类', K: 'MAKINGS', V: 1 << 2 },
+  DRILL_HOLE: { L: '钻孔类', K: 'DRILL_HOLE', V: 1 << 3 },
+  PRESSING: { L: '压板类', K: 'PRESSING', V: 1 << 4 }
+}
+constantize(processCategoryEnum)
+
 // 工序生产检验方式
 const processInspectTypeEnum = {
   SINGLE_UNSCAN: { L: '单件(不扫码)', K: 'SINGLE_UNSCAN', V: 0, T: 'info' },
@@ -356,6 +366,7 @@ export {
   componentTypeEnum,
   processMaterialListTypeEnum,
   processTypeEnum,
+  processCategoryEnum,
   processInspectTypeEnum,
   processReportTypeEnum,
   wageQuotaTypeEnum,
@@ -402,6 +413,7 @@ export default {
   componentTypeEnum,
   processMaterialListTypeEnum,
   processTypeEnum,
+  processCategoryEnum,
   processInspectTypeEnum,
   processReportTypeEnum,
   wageQuotaTypeEnum,
