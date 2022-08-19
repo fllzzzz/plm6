@@ -2,7 +2,16 @@
   <div class="app-container">
     <!--工具栏-->
     <div class="head-container">
-      <common-button size="mini" @click="showType='add';formVisible=true;" icon="el-icon-plus" type="primary" v-permission="permission.add">新增</common-button>
+      <common-button size="mini" @click="showType='add';formVisible=true;" icon="el-icon-plus" type="primary" v-permission="permission.add" class="filter-item">新增</common-button>
+      <common-radio-button
+        v-model="productionLineType"
+        :options="artifactProductLineEnum.ENUM"
+        showOptionAll
+        :optionAllValue="undefined"
+        type="enum"
+        @change="lineTypeChange"
+        class="filter-item"
+      />
     </div>
     <!--表格渲染-->
     <common-table
@@ -29,7 +38,7 @@
           <span>{{ scope.row.mainClassificationName }}</span>
         </template>
       </el-table-column>
-      <el-table-column key="classificationName" prop="classificationName" align="center" :show-overflow-tooltip="true" label="子分类" min-width="120">
+      <el-table-column key="classificationName" prop="classificationName" align="center" :show-overflow-tooltip="true" label="子分类" min-width="120" v-if="productionLineType!==artifactProductLineEnum.TRADITION.V">
         <template v-slot="scope">
           <template v-if="scope.row.productionLineType === artifactProductLineEnum.INTELLECT.V">
             <div v-for="(item,index) in scope.row.structureClassificationList" :key="item.id" :class="index === scope.row.structureClassificationList.length-1 ? 'sandwich-cell-bottom' : 'sandwich-cell-top'" :style="item.parentType === intellectParentType.BRIDGE.V?'line-height:22px;':''">
@@ -44,7 +53,7 @@
           <span v-else>-</span>
         </template>
       </el-table-column>
-      <el-table-column key="artifactType" prop="artifactType" align="center" :show-overflow-tooltip="true" label="构件类型">
+      <el-table-column key="artifactType" prop="artifactType" align="center" :show-overflow-tooltip="true" label="构件类型" v-if="productionLineType!==artifactProductLineEnum.INTELLECT.V">
         <template v-slot="scope">
           <span>{{ scope.row.artifactType? artifactTypeEnum.VL[scope.row.artifactType] : '-' }}</span>
         </template>
@@ -58,7 +67,7 @@
           </div>
         </template>
       </el-table-column>
-       <el-table-column key="serialNumberPrefixList" prop="serialNumberPrefixList" label="编号前缀" align="center" min-width="120" :show-overflow-tooltip="true">
+       <el-table-column key="serialNumberPrefixList" prop="serialNumberPrefixList" label="编号前缀" align="center" min-width="120" :show-overflow-tooltip="true" v-if="productionLineType!==artifactProductLineEnum.INTELLECT.V">
         <template v-slot="scope">
           <div v-for="(item,index) in scope.row.structureClassificationList" :key="item.id" :class="index === scope.row.structureClassificationList.length-1 ? 'sandwich-cell-bottom div-ellipsis' : 'sandwich-cell-top div-ellipsis'" :style="item.parentType === intellectParentType.BRIDGE.V?'line-height:45px;height:55px;':''">
             <template v-if="scope.row.artifactType===artifactTypeEnum.SMALL.V && item.serialNumberPrefixList && item.serialNumberPrefixList.length > 0">
@@ -68,12 +77,12 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column key="codingType" prop="codingType" align="center" :show-overflow-tooltip="true" label="打码方式" width="100">
+      <el-table-column key="codingType" prop="codingType" align="center" :show-overflow-tooltip="true" label="打码方式" width="100" v-if="productionLineType!==artifactProductLineEnum.INTELLECT.V">
         <template v-slot="scope">
           <span>{{ scope.row.codingType && scope.row.artifactType===artifactTypeEnum.SMALL.V? codingTypeEnum.VL[scope.row.codingType]:'-' }}</span>
         </template>
       </el-table-column>
-      <el-table-column key="definitionWord" prop="definitionWord" align="center" :show-overflow-tooltip="true" label="定义代码">
+      <el-table-column key="definitionWord" prop="definitionWord" align="center" :show-overflow-tooltip="true" label="定义代码" v-if="productionLineType!==artifactProductLineEnum.TRADITION.V">
         <template v-slot="scope">
           <div v-for="(item,index) in scope.row.structureClassificationList" :key="item.id" :class="index === scope.row.structureClassificationList.length-1 ? 'sandwich-cell-bottom' : 'sandwich-cell-top'" :style="item.parentType === intellectParentType.BRIDGE.V?'line-height:45px;height:55px;':''">
             {{ item.definitionWord || '-' }}
@@ -143,6 +152,9 @@ const tableLoading = ref(false)
 const formVisible = ref(false)
 const detailInfo = ref({})
 const showType = ref('add')
+const productionLineType = ref()
+const traditionArr = ref([])
+const intellectArr = ref([])
 
 const { maxHeight } = useMaxHeight({
   wrapperBox: '.artifact-config',
@@ -191,10 +203,20 @@ function openForm(item, type) {
   formVisible.value = true
 }
 
+function lineTypeChange(val) {
+  if (val) {
+    list.value = val === artifactProductLineEnum.INTELLECT.V ? intellectArr.value : traditionArr.value
+  } else {
+    list.value = [].concat(traditionArr.value, intellectArr.value)
+  }
+}
+
 fetchList()
 
 async function fetchList() {
   let _list = []
+  traditionArr.value = []
+  intellectArr.value = []
   tableLoading.value = true
   try {
     const { content = [] } = await crudApi.get()
@@ -205,15 +227,15 @@ async function fetchList() {
         v.codingType = v.structureClassificationList[0].codingType
       }
     })
-    const traditionArr = content.filter(v => v.productionLineType === artifactProductLineEnum.TRADITION.V)
-    if (traditionArr?.length) {
-      traditionArr[0].rowSpan = traditionArr.length
+    traditionArr.value = content.filter(v => v.productionLineType === artifactProductLineEnum.TRADITION.V)
+    if (traditionArr.value?.length) {
+      traditionArr.value[0].rowSpan = traditionArr.value.length
     }
-    const intellectArr = content.filter(v => v.productionLineType === artifactProductLineEnum.INTELLECT.V)
-    if (intellectArr?.length) {
-      intellectArr[0].rowSpan = intellectArr.length
+    intellectArr.value = content.filter(v => v.productionLineType === artifactProductLineEnum.INTELLECT.V)
+    if (intellectArr.value?.length) {
+      intellectArr.value[0].rowSpan = intellectArr.value.length
     }
-    _list = _list.concat(traditionArr, intellectArr)
+    _list = _list.concat(traditionArr.value, intellectArr.value)
   } catch (error) {
     console.log('获取构件特征定义失败', error)
   } finally {
@@ -225,7 +247,7 @@ async function fetchList() {
 
 <style lang="scss" scoped>
 ::v-deep(.abnormal-row) {
-  background: #f5e4e4;
+  background: #eef7ea;
 }
 ::v-deep(.blue-row) {
   background: #e8f4ff;
