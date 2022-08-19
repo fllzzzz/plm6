@@ -21,19 +21,13 @@
           </template>
           <div class="flex-r">
             <div class="flex-rcc" style="flex: 1">
-              <el-progress
-                type="circle"
-                :percentage="Number(targetInfo.completeRate || 0)"
-                :stroke-width="16"
-                :width="140"
-                :color="colors"
-              >
+              <el-progress type="circle" :percentage="Number(targetInfo.completeRate || 0)" :stroke-width="16" :width="140" :color="colors">
                 <!-- <template #default="{ percentage }"> -->
                 <!-- <span style="font-size: 16px">{{ toFixed(percentage, 2) }}%</span> -->
                 <!-- </template> -->
               </el-progress>
             </div>
-            <div style="flex: 1; padding: 0px 10px" class="flex-ccc" border-style="dashed">
+            <div style="flex: 1; padding: 0px 10px; text-align: center" class="flex-ccc" border-style="dashed">
               <div>
                 <div style="margin-bottom: 5px">目标产量</div>
                 <div style="font-size: 20px; font-weight: bold; text-align: center">{{ targetInfo.target || 0 }}</div>
@@ -300,9 +294,9 @@ async function refreshOtherData() {
   try {
     targetLoading.value = true
     const data = await getTargetComplete({ dateTime: year.value })
-    data.completeMete = data.completeMete && (data.completeMete / 1000).toFixed(2) || 0
-    data.target = data.target && (data.target / 1000).toFixed(2) || 0
-    data.completeRate = data.target && Number(((data.completeMete / data.target) * 100)) || 0
+    data.completeMete = (data.completeMete && (data.completeMete / 1000).toFixed(2)) || 0
+    data.target = (data.target && (data.target / 1000).toFixed(2)) || 0
+    data.completeRate = (data.target && Number(((data.completeMete / data.target) * 100).toFixed(2))) || 0
     targetInfo.value = data
   } catch (error) {
     console.log(error, '获取目标达成失败')
