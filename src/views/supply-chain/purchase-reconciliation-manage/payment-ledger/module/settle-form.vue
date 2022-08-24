@@ -81,6 +81,7 @@
         </el-form-item>
         <el-form-item label="备注" prop="remark">
           <el-input
+            v-if="showType==='add'"
             v-model="form.remark"
             type="textarea"
             style="width: 100%"
@@ -88,6 +89,7 @@
             :autosize="{ minRows: 2, maxRows: 4 }"
             placeholder="请输入备注"
           />
+          <span v-else>{{ detailInfo.settlementRemark }}</span>
         </el-form-item>
         <el-form-item label="附件">
           <template #label>
