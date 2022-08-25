@@ -54,8 +54,9 @@
         </el-table-column>
         <el-table-column key="model" prop="model" :show-overflow-tooltip="true" label="模型" align="center">
           <template v-slot="scope">
-            <common-button size="small" type="warning" @click="configModel(scope.row)">配置</common-button>
+            <common-button v-permission="permission.model.import" size="small" type="warning" @click="configModel(scope.row)">配置</common-button>
             <common-button
+              v-permission="permission.model.import"
               size="small"
               type="primary"
               @click="uploadModel(scope.row)"
@@ -164,6 +165,7 @@ import { mapGetters } from '@/store/lib'
 import { isNotBlank } from '@data-type/index'
 import { TechnologyTypeAllEnum } from '@enum-ms/contract'
 import { modelImportModeEnum } from '@enum-ms/bim'
+import { deepenListPM as permission } from '@/page-permission/plan'
 // import { modelTranslateStatusEnum as translateStatusEnum, modelIntegrationStatusEnum as integrationStatusEnum } from '@enum-ms/bim'
 
 import deepenTable from './module/deepen-table'
