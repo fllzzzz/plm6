@@ -13,6 +13,7 @@
   <crudOperation>
     <template #optLeft>
       <common-button
+        v-permission="crud.permission.integration"
         :loading="integrationLoading"
         type="primary"
         class="filter-item"
@@ -22,6 +23,7 @@
         >集成模型</common-button
       >
       <common-button
+        v-permission="crud.permission.integrationDel"
         type="danger"
         size="mini"
         class="filter-item"

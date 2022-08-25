@@ -49,7 +49,7 @@
         </template>
       </el-table-column>
       <!--编辑与删除-->
-      <el-table-column v-permission="[...permission.del]" label="操作" width="170px" align="center" fixed="right">
+      <el-table-column label="操作" width="170px" align="center" fixed="right">
         <template #default="{ row }">
           <div style="display: flex; justify-content: center">
             <upload-btn
@@ -64,7 +64,14 @@
               style="margin-right: 5px"
               @success="handleSuccess"
             />
-            <common-button v-if="row?.hasModelImport" type="danger" size="mini" style="margin-left: 5px" @click="delIt(row)">
+            <common-button
+              v-permission="permission.model.del"
+              v-if="row?.hasModelImport"
+              type="danger"
+              size="mini"
+              style="margin-left: 5px"
+              @click="delIt(row)"
+            >
               删除
             </common-button>
           </div>
@@ -79,6 +86,7 @@ import { upload, modelDel, areaModelInfo } from '@/api/bim/model'
 // import crudApi from '@/api/bim/model'
 import { ref, defineProps, provide, defineExpose } from 'vue'
 import { ElNotification, ElMessageBox } from 'element-plus'
+import { deepenListPM as permission } from '@/page-permission/plan'
 
 import {
   modelTranslateStatusEnum as translateStatusEnum,
@@ -102,14 +110,6 @@ const props = defineProps({
   }
 })
 
-// crud交由presenter持有
-const permission = {
-  get: [''],
-  edit: [''],
-  add: [''],
-  del: ['']
-}
-
 const optShow = {
   add: false,
   edit: false,
@@ -122,7 +122,7 @@ const { crud, CRUD } = useCRUD(
   {
     title: '',
     sort: [],
-    permission: { ...permission },
+    permission: { ...permission.model },
     optShow: { ...optShow },
     crudApi: { get: areaModelInfo, del: modelDel },
     queryOnPresenterCreated: false
