@@ -298,9 +298,16 @@ export default {
           hidden: false,
           name: 'ProductionLineConfig',
           alwaysShow: true,
-          redirect: '/mes/production-config/production-line-config/production-line',
+          redirect: '/mes/production-config/production-line-config/production-team',
           meta: { title: '生产线配置', icon: 'project', noCache: true },
           children: [
+            {
+              name: 'MesConfigProductionTeam',
+              path: 'production-team',
+              hidden: false,
+              component: '/mes/production-config/production-team/index',
+              meta: { title: '班组管理', icon: 'project', noCache: true }
+            },
             {
               name: 'MesConfigProductionLine',
               path: 'production-line',

@@ -11,6 +11,9 @@
       <common-button :loading="crud.status.cu === 2" type="primary" size="mini" @click="crud.submitCU">确认</common-button>
     </template>
     <el-form ref="formRef" :model="form" :rules="rules" size="small" label-width="90px">
+      <el-form-item label="工厂" prop="factoryId">
+        <factory-select :disabled="isEdit" v-model="form.factoryId" placeholder="请选择工厂" style="width: 270px" />
+      </el-form-item>
       <el-form-item label="工序" prop="processId">
         <process-select v-model="form.processId" :productType="productType" containsMachinePart :multiple="false" style="width: 270px" />
       </el-form-item>
@@ -29,8 +32,9 @@
 </template>
 
 <script setup>
-import { ref, defineProps } from 'vue'
+import { ref, defineProps, computed } from 'vue'
 import { regForm } from '@compos/use-crud'
+import factorySelect from '@comp-base/factory-select.vue'
 import processSelect from '@comp-mes/process-select'
 import userSelect from '@comp-common/user-select'
 
@@ -51,8 +55,10 @@ const defaultForm = {
 }
 
 const { crud, form } = regForm(defaultForm, formRef)
+const isEdit = computed(() => crud.status.edit >= 1)
 
 const rules = {
+  factoryId: [{ required: true, message: '请选择工厂', trigger: 'change' }],
   processId: [{ required: true, message: '请选择工序', trigger: 'change' }],
   inspectorIds: [{ required: true, message: '请选择质检', trigger: 'change' }]
 }

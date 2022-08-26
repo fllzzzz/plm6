@@ -11,16 +11,19 @@
       <common-button :loading="crud.status.cu === 2" type="primary" size="mini" @click="crud.submitCU">确认</common-button>
     </template>
     <el-form ref="formRef" :model="form" :rules="rules" size="small" label-width="90px">
+      <el-form-item label="工厂" prop="factoryId">
+        <factory-select :disabled="isEdit" v-model="form.factoryId" placeholder="请选择工厂" style="width: 270px" />
+      </el-form-item>
       <el-form-item label="工序" prop="processId">
         <process-select
           ref="processSelectRef"
           v-model="form.processId"
-          :productType="productType"
           containsMachinePart
           :disabled="isEdit"
           :size="'small'"
           :multiple="false"
           style="width: 270px"
+          @change="processChange"
         />
       </el-form-item>
       <el-form-item label="班组属性" prop="organizationType">
@@ -55,15 +58,16 @@
         <common-radio v-model="form.boolExtraCountEnum" :options="whetherEnum.ENUM" type="enum" />
       </el-form-item> -->
       <el-form-item label="计价方式" prop="wageQuotaType" v-if="showWageQuotaTypeEnum?.length">
-        <common-select v-model="form.wageQuotaType" :options="showWageQuotaTypeEnum" type="enum" style="width: 270px"/>
+        <common-select v-model="form.wageQuotaType" :options="showWageQuotaTypeEnum" type="enum" style="width: 270px" />
       </el-form-item>
     </el-form>
   </common-dialog>
 </template>
 
 <script setup>
-import { ref, defineProps, computed } from 'vue'
+import { ref, computed } from 'vue'
 import { regForm } from '@compos/use-crud'
+import factorySelect from '@comp-base/factory-select.vue'
 import processSelect from '@comp-mes/process-select'
 import userSelect from '@comp-common/user-select'
 import { wageQuotaTypeMap } from '@/settings/config'
@@ -71,17 +75,11 @@ import { wageQuotaTypeMap } from '@/settings/config'
 import { teamAttributeEnum, wageQuotaTypeEnum } from '@enum-ms/mes'
 import EO from '@enum'
 
-const props = defineProps({
-  productType: {
-    type: Number,
-    default: undefined
-  }
-})
-
 const formRef = ref()
 const processSelectRef = ref()
 const leaderSelectRef = ref()
 const memberSelectRef = ref()
+const productType = ref()
 
 const defaultForm = {
   id: undefined,
@@ -96,6 +94,7 @@ const { crud, form } = regForm(defaultForm, formRef)
 const isEdit = computed(() => crud.status.edit >= 1)
 
 const rules = {
+  factoryId: [{ required: true, message: '请选择工厂', trigger: 'change' }],
   processId: [{ required: true, message: '请选择工序', trigger: 'change' }],
   organizationType: [{ required: true, message: '请选择班组属性', trigger: 'change' }],
   leaderId: [{ required: true, message: '请选择组长', trigger: 'change' }],
@@ -105,9 +104,13 @@ const rules = {
 }
 
 const showWageQuotaTypeEnum = computed(() => {
-  const _type = wageQuotaTypeMap[props.productType]
+  const _type = wageQuotaTypeMap[productType.value]
   return _type && EO.getBits(wageQuotaTypeEnum, _type)
 })
+
+function processChange(val) {
+  productType.value = processSelectRef.value?.getOption(val)?.productType
+}
 
 function leaderChange(userlist) {
   form.leader = userlist

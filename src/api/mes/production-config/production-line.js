@@ -56,4 +56,24 @@ export function productConfigInfo({ productType, boolMachineEnum }) {
   })
 }
 
+// 生产线下批量绑定班组
+export function productAddTeam({ productLineId, teamIds }) {
+  return request({
+    module: 'mes',
+    url: 'productionLine/team',
+    method: 'post',
+    data: { id: productLineId, teamIds }
+  })
+}
+
+// 生产线下批量绑定质检班组
+export function productAddInspectionTeam({ productLineId, teamIds }) {
+  return request({
+    module: 'mes',
+    url: 'productionLine/inspection_team',
+    method: 'post',
+    data: { id: productLineId, teamIds }
+  })
+}
+
 export default { get, add, edit, del }

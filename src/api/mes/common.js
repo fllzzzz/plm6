@@ -36,6 +36,26 @@ export function getProcessAllSimple(params) {
   })
 }
 
+// 所有生产班组
+export function getProductionTeamAllSimple(params) {
+  return request({
+    module: 'mes',
+    url: 'team',
+    method: 'get',
+    params
+  })
+}
+
+// 所有质检班组
+export function getInspectionTeamAllSimple(params) {
+  return request({
+    module: 'mes',
+    url: 'inspectionTeam',
+    method: 'get',
+    params
+  })
+}
+
 /**
  * 获取所有生产线
  * @export
