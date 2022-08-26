@@ -183,10 +183,32 @@
         key="quantity"
         prop="quantity"
         sortable="custom"
-        label="数量"
+        label="清单数量"
         align="center"
-        min-width="70px"
+        min-width="80px"
       />
+      <el-table-column
+        v-if="columns.visible('taskQuantity')"
+        key="taskQuantity"
+        prop="taskQuantity"
+        sortable="custom"
+        label="任务数量"
+        align="center"
+        min-width="80px"
+      />
+      <el-table-column
+        v-if="columns.visible('askCompleteTime')"
+        key="askCompleteTime"
+        prop="askCompleteTime"
+        sortable="custom"
+        label="要求完成时间"
+        align="center"
+        width="115px"
+      >
+        <template #default="{ row: { sourceRow: row } }">
+          <span>{{ parseTime(row.askCompleteTime, '{y}-{m}-{d}') }}</span>
+        </template>
+      </el-table-column>
       <el-table-column
         v-if="columns.visible('printQuantity')"
         key="printQuantity"
@@ -221,7 +243,18 @@
     <printed-record-drawer v-model:visible="recordVisible" :task-id="currentTaskId" :getPrintRecord="getPrintRecord" />
     <label-dlg v-model:visible="labelVisible" :label-data="currentLabel" :productType="productType" :labelType="labelType">
       <template #oneCode v-if="curNumberList.length">
-        <one-code-number-list style="margin-bottom:15px;" v-model="previewCode" :list="curNumberList" :tagWidth="50" :multiple="false" :max-height="80"/>
+        <one-code-number-list
+          style="margin-bottom: 15px"
+          v-model="previewCode"
+          :list="curNumberList"
+          :tagWidth="100"
+          :multiple="false"
+          :max-height="80"
+        >
+          <template #suffix="{ data: item }">
+            <span style="margin-left: 5px; margin-right: 5px"> | </span><span>{{ item.name }}</span>
+          </template>
+        </one-code-number-list>
       </template>
     </label-dlg>
     <!-- 一物一码 选择弹窗 -->
@@ -229,7 +262,11 @@
       <template #titleRight>
         <common-button type="primary" size="mini" @click="oneCodeSave">确认</common-button>
       </template>
-      <one-code-number-list v-model="curRowSelect" :list="curNumberList" />
+      <one-code-number-list v-model="curRowSelect" :list="curNumberList">
+        <template #suffix="{ data: item }">
+          <span style="margin-left: 5px; margin-right: 5px"> | </span><span>{{ item.name }}</span>
+        </template>
+      </one-code-number-list>
     </common-dialog>
   </div>
 </template>
@@ -274,7 +311,7 @@ const { crud, columns } = useCRUD(
     crudApi: { ...crudApi },
     requiredQuery: ['areaId', 'productionLineId'],
     queryOnPresenterCreated: false,
-    invisibleColumns: ['totalNetWeight', 'totalGrossWeight', 'drawingNumber', 'surfaceArea', 'remark']
+    invisibleColumns: ['totalNetWeight', 'totalGrossWeight', 'drawingNumber', 'surfaceArea', 'remark', 'askCompleteTime']
   },
   tableRef
 )
@@ -304,18 +341,11 @@ function selectable(row, rowIndex) {
   return !row.boolOneCode
 }
 
-function getNumberList(quantity) {
-  const _numArr = []
-  for (let i = 0; i < quantity; i++) {
-    _numArr.push({ number: i + 1 })
-  }
-  return _numArr
-}
-
 function beforePrintLabel(row) {
   if (row.boolOneCode) {
-    curNumberList.value = getNumberList(row.quantity)
+    curNumberList.value = row.numberStatusDTOS
     saveOneCodeData.value = { row }
+    curRowSelect.value = []
     oneCodeVisible.value = true
   } else {
     printLabel(row)
@@ -359,7 +389,7 @@ watch(
 function previewLabel(row) {
   curRow.value = row
   if (row.boolOneCode) {
-    curNumberList.value = getNumberList(row.quantity)
+    curNumberList.value = row.numberStatusDTOS
     previewCode.value = 1
     currentLabel.value = getLabelInfo(row, previewCode.value)
   } else {

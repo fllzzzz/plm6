@@ -8,7 +8,8 @@
         @click="handleSelectChange(item.number, item)"
         class="pointer"
       >
-        {{ item.number }}
+        <span>{{ item.number }}</span>
+        <slot name="suffix" :data="item"></slot>
       </el-tag>
     </template>
   </div>
