@@ -723,6 +723,17 @@ export default {
         }
       },
       {
+        name: 'MesQHSEManageProductionLineReport',
+        path: 'production-line-report',
+        hidden: false,
+        component: '/mes/QHSE-manage/production-line-report/index',
+        meta: {
+          title: '产线报表',
+          icon: 'project',
+          noCache: true
+        }
+      },
+      {
         name: 'MesQHSEManageDisclosure',
         path: 'disclosure',
         hidden: false,

@@ -6,12 +6,13 @@
     direction="rtl"
     :before-close="handleClose"
     size="100%"
+    custom-class="mes-report-detail"
   >
     <template #titleRight> </template>
     <template #content>
       <!-- 表格渲染 -->
       <div v-loading="contentLoading">
-        <component :is="currentTableView" :table-data="tableData" :max-height="maxHeight - 50" :is-summary="isSummary" />
+        <component :is="currentTableView" :table-data="tableData" :max-height="maxHeight" :is-summary="isSummary" />
         <!--分页组件-->
         <el-pagination
           :total="total"
@@ -29,13 +30,13 @@
 
 <script setup>
 import { getEnclosureDetail, getArtifactDetail } from '@/api/mes/manufactures-manage/report'
-import { defineProps, defineEmits, ref, watch, inject, reactive, computed } from 'vue'
+import { defineProps, defineEmits, ref, inject, computed } from 'vue'
 
 import { reportComponentTypeEnum } from '@enum-ms/mes'
-import { mapGetters } from '@/store/lib'
 
 import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'
+import usePagination from '@compos/use-pagination'
 import structureComponent from './structure'
 import enclosureComponent from './enclosure'
 
@@ -60,30 +61,24 @@ const props = defineProps({
   }
 })
 
-const { visible: drawerVisible, handleClose } = useVisible({ emit, props, field: 'visible' })
+const { visible: drawerVisible, handleClose } = useVisible({ emit, props, field: 'visible', showHook: fetchList })
+const { handleSizeChange, handleCurrentChange, total, setTotalPage, queryPage } = usePagination({ fetchHook: fetchList })
 
 // 高度
 const { maxHeight } = useMaxHeight(
   {
+    mainBox: '.mes-report-detail',
     extraBox: ['.el-drawer__header'],
     wrapperBox: ['.el-drawer__body'],
     navbar: false,
+    minHeight: 400,
+    paginate: true,
     clientHRepMainH: true
   },
   drawerRef
 )
 
 const reportTypeEnum = inject('reportTypeEnum')
-
-watch(
-  () => props.visible,
-  (visible) => {
-    if (visible) {
-      fetchList()
-    }
-  },
-  { immediate: true }
-)
 
 const productType = computed(() => {
   return parseInt(props.itemInfo.productType) || query.productType
@@ -101,23 +96,6 @@ const currentTableView = computed(() => {
       return ''
   }
 })
-
-// 分页操作
-const { tablePageSize } = mapGetters('tablePageSize')
-const queryPage = reactive({
-  pageNumber: 1,
-  pageSize: tablePageSize
-})
-const total = ref(0)
-function handleSizeChange(val) {
-  queryPage.pageNumber = 1
-  queryPage.pageSize = val
-  fetchList()
-}
-function handleCurrentChange(val) {
-  queryPage.pageNumber = val
-  fetchList()
-}
 
 // 获取数据
 const query = inject('query')
@@ -139,7 +117,7 @@ async function fetchList() {
       default:
         break
     }
-    total.value = _data.totalElements
+    setTotalPage(_data.totalElements)
     tableData.value = _data.content.map((v, i) => {
       v.rowId = i + '' + Math.random()
       return v
@@ -150,5 +128,4 @@ async function fetchList() {
     contentLoading.value = false
   }
 }
-
 </script>

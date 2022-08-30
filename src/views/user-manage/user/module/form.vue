@@ -210,6 +210,7 @@ CRUD.HOOK.afterToEdit = (crud, form) => {
 
 async function handleSuccess() {
   try {
+    await store.dispatch('config/fetchUsers')
     await store.dispatch('config/fetchUserDeptTree')
   } catch (e) {
     console.log(e)

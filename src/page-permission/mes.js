@@ -304,6 +304,13 @@ export const qualityInspectionReportPM = {
   detail: ['mes_quality_inspection_report:detail'] // 质检报表详情
 }
 
+// 质安管理/生产线报表
+export const qhseProductionLineReportPM = {
+  get: ['mes_production_line_report:get'], // 生产线报表
+  detail: ['mes_production_line_report:detail'], // 生产线报表详情
+  print: ['mes_production_line_report_detail:print'] // 生产线报表详情
+}
+
 // 质安管理/问题曝光
 export const qhseDisclosurePM = {
   get: ['mes_qhse_disclosure:get'] // 问题曝光列表
