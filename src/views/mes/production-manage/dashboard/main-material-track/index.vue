@@ -50,7 +50,7 @@
       </el-table-column>
       <el-table-column prop="diffRate" :show-overflow-tooltip="true" label="差异率(%)" align="center">
         <template #default="{ row }">
-          <span>{{ row.diffRate * 100 }}</span>
+          <span>{{ (row.diffRate * 100).toFixed(2) }}</span>
         </template>
       </el-table-column>
     </common-table>
