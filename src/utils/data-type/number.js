@@ -64,6 +64,14 @@ export function getBitsSum(enumerate) {
   }, 0)
 }
 
+// 科学计数法转为普通数值
+export function getFullNum(num) {
+  if (isNaN(num)) return num
+  const str = '' + num
+  if (!/e/i.test(str)) return num
+  return (num).toFixed(18).replace(/\.?0+$/, '')
+}
+
 /**
  * 数字转大写中文
  *

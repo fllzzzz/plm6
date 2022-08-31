@@ -5,6 +5,7 @@ import { convertUnits } from '../convert/unit'
 import { deepClone, isBlank, isNotBlank, toFixed, toPrecision } from '../data-type'
 import { unitTypeEnum } from '../enum/modules/common'
 import { patternNumerical } from '../validate/pattern'
+import { getFullNum } from '../data-type/number'
 
 async function getBaseUnit() {
   const _unit = store.getters.baseUnit
@@ -247,6 +248,7 @@ function otherRawMatFormat(
         unitPrecision: 10,
         type: _accountingUnit.type,
         toSmallest: !toSmallest,
+        boolPrice: true,
         showUnit,
         toNum
       })
@@ -313,20 +315,24 @@ function unitNetFormat({
 }
 
 // 转换
-function fieldsFormat({ data, fields, symbol, unitPrecision, type, toSmallest, showUnit, toNum }) {
+function fieldsFormat({ data, fields, symbol, unitPrecision, type, toSmallest, showUnit, toNum, boolPrice = false }) {
   // 获取单位类型
   const UT = getUnitType(type)
   if (type && symbol) {
     const curUnit = toSmallest ? symbol : MIN_UNIT[UT] // 当前单位
     const fmtUnit = toSmallest ? MIN_UNIT[UT] : symbol // 转换单位
-    const precision = toSmallest ? MIN_UNIT[`${UT}_DP`] : unitPrecision // 小数精度
+    const precision = toSmallest && !boolPrice ? MIN_UNIT[`${UT}_DP`] : unitPrecision // 小数精度
     fields.forEach((field) => {
+      // 科学计数法转为普通数值
+      data[field] = getFullNum(data[field])
       if (patternNumerical.test(data[field])) {
         data[field] = convertUnits(data[field], curUnit, fmtUnit, precision, { showUnit, toNum })
       }
     })
   } else {
     fields.forEach((field) => {
+      // 科学计数法转为普通数值
+      data[field] = getFullNum(data[field])
       if (patternNumerical.test(data[field])) {
         data[field] = toFixed(data[field], unitPrecision, { toNum: toNum })
       }

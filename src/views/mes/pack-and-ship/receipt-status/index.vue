@@ -169,13 +169,12 @@
         align="center"
         min-width="100"
       />
-      <!--详情与下载-->
       <el-table-column v-if="checkPermission([...permission.detail,...permission.cancelDelivery,...permission.confirmDelivery])" label="操作" width="180px" align="center" fixed="right">
-        <template v-slot="scope">
+        <template #default="{ row: { sourceRow: row } }">
           <!-- 详情 -->
-          <common-button type="primary" icon="el-icon-view" size="mini" v-if="checkPermission(permission.detail)"  @click.stop="showDetail(scope.row,'detail')" />
-          <common-button size="mini" type="success" v-if="scope.row.shipmentStatus===deliveryReceiptStatusEnum.DELIVERY.V && scope.row.project?.businessType===businessTypeEnum.MACHINING.V && checkPermission(permission.confirmDelivery)" @click.stop="showDetail(scope.row,'sign')"><svg-icon icon-class="sign" /></common-button>
-          <common-button type="warning" size="mini" v-if="scope.row.shipmentStatus===deliveryReceiptStatusEnum.DELIVERY.V && checkPermission(permission.cancelDelivery)" @click.stop="showDetail(scope.row,'cancel')"><svg-icon icon-class="delivery-cancel" style="font-size:14px;" /></common-button>
+          <common-button type="primary" icon="el-icon-view" size="mini" v-if="checkPermission(permission.detail)" @click.stop="showDetail(row,'detail')" />
+          <common-button size="mini" type="success" v-if="row.shipmentStatus===deliveryReceiptStatusEnum.DELIVERY.V && row.project?.businessType===businessTypeEnum.MACHINING.V && checkPermission(permission.confirmDelivery)" @click.stop="showDetail(row,'sign')"><svg-icon icon-class="sign" /></common-button>
+          <common-button type="warning" size="mini" v-if="row.shipmentStatus===deliveryReceiptStatusEnum.DELIVERY.V && checkPermission(permission.cancelDelivery)" @click.stop="showDetail(row,'cancel')"><svg-icon icon-class="delivery-cancel" style="font-size:14px;" /></common-button>
         </template>
       </el-table-column>
     </common-table>

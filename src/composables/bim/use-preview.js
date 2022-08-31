@@ -2,7 +2,7 @@ import { getArtifactSearch } from '@/api/bim/model'
 import { watch, ref } from 'vue'
 import { ElLoading } from 'element-plus'
 
-export default function usePreview({ props, initModelColor, overrideComponentsColorById, isolateComponentsById }) {
+export default function usePreview({ props, modelStatus, initModelColor, overrideComponentsColorById, isolateComponentsById }) {
   const serialNumberElementIds = ref()
 
   watch(
@@ -26,7 +26,7 @@ export default function usePreview({ props, initModelColor, overrideComponentsCo
     try {
       const _elementIds = await getArtifactSearch({
         serialNumber: props.serialNumber,
-        monomerId: props.monomerId
+        fileId: modelStatus.value.fileId
       })
       initModelColor()
       overrideComponentsColorById(_elementIds, { color: '#1682e6', opacity: 1 })
