@@ -100,6 +100,7 @@ import crudApi, { editEnabled } from '@/api/config/wms/warehouse'
 import { configWmsFactoryWarehousePM as permission } from '@/page-permission/config'
 
 import { ref } from 'vue'
+import { useStore } from 'vuex'
 import EO from '@enum'
 import { matClsEnum } from '@enum-ms/classification'
 import { enabledEnum } from '@/utils/enum/modules/common'
@@ -125,6 +126,7 @@ const optShow = {
 }
 
 const tableRef = ref()
+const store = useStore()
 const columnsDataFormat = [...baseTimeColumns, ['type', ['parse-enum', warehouseTypeEnum]]]
 const { maxHeight } = useMaxHeight()
 
@@ -149,5 +151,20 @@ CRUD.HOOK.handleRefresh = (crud, { data: { content }}) => {
     const mt = v.materialType
     v.materialTypeName = EO.getBits(matClsEnum.ENUM, mt, 'L')
   })
+}
+
+// 添加之后
+CRUD.HOOK.afterSubmit = () => {
+  store.dispatch('config/fetchWarehouse')
+}
+
+// 批量添加之后
+CRUD.HOOK.afterBatchSubmit = () => {
+  store.dispatch('config/fetchWarehouse')
+}
+
+// 删除后
+CRUD.HOOK.afterDelete = () => {
+  store.dispatch('config/fetchWarehouse')
 }
 </script>
