@@ -237,19 +237,21 @@ CRUD.HOOK.afterToCU = (crud, form) => {
 }
 
 CRUD.HOOK.beforeSubmit = (crud, form) => {
-  const { validResult, dealList } = tableValidate(crud.form.list)
-  if (validResult) {
-    crud.form.list = dealList
-  } else {
-    return validResult
-  }
-  crud.form.linkList = []
-  crud.form.list.map(v => {
-    if (v.price && v.price > 0) {
-      v.supplierPriceId = crud.form.supplierPriceId
-      crud.form.linkList.push(v)
+  if (crud.form.list.length > 0) {
+    const { validResult, dealList } = tableValidate(crud.form.list)
+    if (validResult) {
+      crud.form.list = dealList
+    } else {
+      return validResult
     }
-  })
+    crud.form.linkList = []
+    crud.form.list.map(v => {
+      if (v.price && v.price > 0) {
+        v.supplierPriceId = crud.form.supplierPriceId
+        crud.form.linkList.push(v)
+      }
+    })
+  }
 }
 </script>
 <style lang="scss" scoped>

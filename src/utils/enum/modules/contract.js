@@ -230,7 +230,9 @@ constantize(contractPayForEnum)
 // TODO: 付款属性1
 const supplierPayTypeEnum = {
   PURCHASE: { L: '采购订单', K: 'PURCHASE', V: 1 << 0 },
-  TRANSPORT: { L: '物流', K: 'TRANSPORT', V: 1 << 1 }
+  TRANSPORT: { L: '物流', K: 'TRANSPORT', V: 1 << 1 },
+  PRODUCT: { L: '制成品', K: 'PURCHASE', V: 1 << 2 },
+  SUBCONTRACT: { L: '分包订单', K: 'SUBCONTRACT', V: 1 << 3 }
 }
 constantize(supplierPayTypeEnum)
 
@@ -249,6 +251,7 @@ const payableSearchTypeEnum = {
   TRANSPORT: { L: '物流', K: 'TRANSPORT', V: 1024 }
 }
 constantize(payableSearchTypeEnum)
+
 // TODO: 有无应付
 const hasPayEnum = {
   YES: { L: '有应付', K: 'YES', V: true },
@@ -284,6 +287,20 @@ const pricingMannerEnum = {
   LENGTH: { L: '长度', K: 'LENGTH', V: 1 }
 }
 constantize(pricingMannerEnum)
+// 分包订单项目结算状态
+const subOrderSettleEnum = {
+  UNSETTLEMENT: { L: '进行中', K: 'UNSETTLEMENT', V: 0 },
+  SETTLED: { L: '已结算', K: 'SETTLED', V: 1 }
+}
+constantize(subOrderSettleEnum)
+
+// 分包订单项目状态
+const subOrderStatusEnum = {
+  PROCESS: { L: '进行中', K: 'PROCESS', V: 1 << 0, TAG: '' },
+  SUSPEND: { L: '已暂停', K: 'SUSPEND', V: 1 << 1, TAG: 'danger' },
+  COMPLETE: { L: '已完工', K: 'COMPLETE', V: 1 << 2, TAG: 'warning' }
+}
+constantize(subOrderStatusEnum)
 
 export {
   projectStatusEnum, // 项目状态
@@ -317,7 +334,9 @@ export {
   logisticsSearchTypeEnum,
   payableSearchTypeEnum,
   TechnologyMainTypeEnum,
-  pricingMannerEnum
+  pricingMannerEnum,
+  subOrderSettleEnum,
+  subOrderStatusEnum
 }
 
 export default {
@@ -352,5 +371,7 @@ export default {
   logisticsSearchTypeEnum,
   payableSearchTypeEnum,
   TechnologyMainTypeEnum,
-  pricingMannerEnum
+  pricingMannerEnum,
+  subOrderSettleEnum,
+  subOrderStatusEnum
 }
