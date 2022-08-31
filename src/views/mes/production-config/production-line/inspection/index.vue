@@ -28,7 +28,7 @@
         </template>
         <common-select
           v-model="selectValue"
-          :options="inspectionTeam"
+          :options="inspectionTeamOptions"
           :type="'other'"
           multiple
           filterable
@@ -94,6 +94,8 @@ const lineId = computed(() => {
 })
 
 const list = computed(() => cleanArray(props.modelValue.map((v) => inspectionTeamKV.value[v])))
+
+const inspectionTeamOptions = computed(() => inspectionTeam.value.filter((v) => props.line?.productType & v.productType))
 
 async function submitIt() {
   try {
