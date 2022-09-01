@@ -45,6 +45,8 @@ const getters = {
   clsTree: state => state.config.clsTree,
   // 材料类科目树
   matClsTree: state => state.config.matClsTree,
+  // 科目规格
+  classifySpec: state => state.config.classifySpec,
   // 材料科目规格 key:value
   matClsSpecKV: state => state.config.classifySpec.specKV,
   // 用户部门树

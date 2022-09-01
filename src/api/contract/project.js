@@ -30,6 +30,16 @@ export function getUserVisaProjects(params) {
   })
 }
 
+// 获取项目树
+export function getProjectTree(params) {
+  return request({
+    module: 'contract',
+    url: `project/tree`,
+    method: 'get',
+    params
+  })
+}
+
 // 获取项目内容
 export function getContentInfo(params) {
   return request({

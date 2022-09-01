@@ -309,6 +309,7 @@ CRUD.HOOK.handleRefresh = (crud, data) => {
 
 function handleChange() {
   store.dispatch('project/fetchUserProjects')
+  store.dispatch('project/fetchProjectTree')
 }
 CRUD.HOOK.afterDelete = () => {
   handleChange()
