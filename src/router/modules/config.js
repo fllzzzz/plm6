@@ -325,6 +325,31 @@ export default {
           ]
         },
         {
+          path: 'statistical-config',
+          component: '',
+          hidden: false,
+          name: 'StatisticalConfig',
+          alwaysShow: true,
+          redirect: '/mes/production-config/statistical-config/coating-config',
+          meta: { title: '统计配置', icon: 'project', noCache: true },
+          children: [
+            {
+              name: 'MesConfigCoatingConfig',
+              path: 'coating-config',
+              hidden: false,
+              component: '/mes/production-config/statistical-config/coating-config/index',
+              meta: { title: '涂装配置', icon: 'project', noCache: true }
+            },
+            {
+              name: 'MesConfigFabricatedConfig',
+              path: 'fabricated-config',
+              hidden: false,
+              component: '/mes/production-config/statistical-config/fabricated-config/index',
+              meta: { title: '栓钉套筒', icon: 'project', noCache: true }
+            }
+          ]
+        },
+        {
           name: 'MesConfigWageQuota',
           path: 'wage-quota',
           hidden: false,

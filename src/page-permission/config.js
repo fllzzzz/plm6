@@ -216,6 +216,19 @@ export const configProductionLineInspectPM = {
   del: ['productionLine_inspect:del'] // 删除质检
 }
 
+// 建钢-生产配置/统计配置/涂装配置
+export const configStatisticalCoatingPM = {
+  get: ['statistical_coating_config:get'], // 涂装配置列表
+  edit: ['statistical_coating_config:edit'] // 编辑涂装配置
+}
+
+// 建钢-生产配置/统计配置/栓钉套筒
+export const configStatisticalFabricatedPM = {
+  get: ['statistical_fabricated_config:get'], // 栓钉套筒列表
+  del: ['statistical_fabricated_config:del'], // 删除栓钉套筒
+  edit: ['statistical_fabricated_config:edit'] // 编辑栓钉套筒
+}
+
 // 建钢-生产配置/工序配置
 export const configProcessPM = {
   get: ['process:get'], // 工序列表
