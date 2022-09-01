@@ -1,4 +1,4 @@
-import { getUserProjects, getUserVisaProjects } from '@/api/contract/project'
+import { getUserProjects, getUserVisaProjects, getProjectTree } from '@/api/contract/project'
 import { addRoutes, resetRouter } from '@/router'
 import EO from '@enum'
 import { projectTypeEnum, projectStatusEnum, TechnologyTypeAllEnum } from '@enum-ms/contract'
@@ -34,6 +34,16 @@ const state = {
   userProjectsCascadeMap: {},
   // 加载状态
   loaded: false,
+  // 项目树状态
+  projectTreeLoaded: false,
+  // 项目树（所有项目）
+  projectTree: [],
+  // 项目map（key:id,val:详情）
+  projectMap: {},
+  // 单体map（key:id,val:详情）
+  monomerMap: {},
+  // 区域map（key:id,val:详情）
+  areaMap: {},
   // 用户可签证的项目列表
   userVisaProjects: [],
   // 可签证项目加载状态
@@ -49,6 +59,9 @@ const mutations = {
   },
   SET_VISA_LOADED(state, loaded) {
     state.visaLoaded = loaded
+  },
+  SET_PROJECT_TREE_LOADED(state, loaded) {
+    state.projectTreeLoaded = loaded
   },
   SET_PROJECT_ID: (state, id) => {
     state.id = id
@@ -99,6 +112,18 @@ const mutations = {
   },
   SET_USER_VISA_PROJECTS: (state, projects) => {
     state.userVisaProjects = projects
+  },
+  SET_PROJECT_TREE: (state, tree) => {
+    state.projectTree = tree
+  },
+  SET_PROJECT_MAP: (state, map) => {
+    state.projectMap = map
+  },
+  SET_MONOMER_MAP: (state, map) => {
+    state.monomerMap = map
+  },
+  SET_AREA_MAP: (state, map) => {
+    state.areaMap = map
   },
   // 设置showAll
   SET_NAVBAR_SHOW_ALL: (state, showAll) => {
@@ -167,6 +192,28 @@ const actions = {
     })
     commit('SET_USER_VISA_PROJECTS', projects)
     commit('SET_VISA_LOADED', true)
+  },
+  // 获取项目树
+  async fetchProjectTree({ commit, state }, params) {
+    commit('SET_PROJECT_TREE_LOADED', false)
+    const { content: tree = [] } = await getProjectTree(params)
+    const projectMap = {}
+    const monomerMap = {}
+    const areaMap = {}
+    tree?.forEach(project => {
+      projectMap[project.id] = project
+      project?.children?.forEach(monomer => {
+        monomerMap[monomer.id] = monomer
+        monomer?.children?.forEach(area => {
+          areaMap[area.id] = area
+        })
+      })
+    })
+    commit('SET_PROJECT_TREE', tree)
+    commit('SET_PROJECT_MAP', projectMap)
+    commit('SET_MONOMER_MAP', monomerMap)
+    commit('SET_AREA_MAP', areaMap)
+    commit('SET_PROJECT_TREE_LOADED', true)
   }
 }
 
