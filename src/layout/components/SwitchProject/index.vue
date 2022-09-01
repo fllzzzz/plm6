@@ -62,6 +62,8 @@ import { getBitwiseBack } from '@/utils/data-type/number'
 import { dateDifferenceReduce } from '@/utils/date'
 
 const store = useStore()
+// 项目启动时获取项目树
+store.dispatch('project/fetchProjectTree')
 
 const props = defineProps({
   modelValue: {
