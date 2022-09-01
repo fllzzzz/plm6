@@ -1,5 +1,5 @@
 <template>
-  <div v-loading="loading.data" class="app-container" id="hhaa">
+  <div v-loading="loading.data" class="app-container">
     <div id="card-main-content" class="flex-rsc" style="padding-bottom: 20px; overflow-x: auto">
       <root-card class="box-card lv-one-card" :level="1" :data="listMap.LV1" @add="openAddDlg" @del="handleDelSuccess" />
       <child-card class="box-card lv-two-card" :level="2" :data="listMap.LV2" @add="openAddDlg" @del="handleDelSuccess" />
@@ -105,14 +105,14 @@ function tree2listByDeep(tree, parent, deep = 1) {
   })
 }
 
-function handleAddSuccess() {
-  fetchList()
-  useRefreshStore('classification')
+async function handleAddSuccess() {
+  await fetchList()
+  useRefreshStore(['classification', 'classificationTree'])
 }
 
-function handleDelSuccess() {
-  fetchList()
-  useRefreshStore('classification')
+async function handleDelSuccess() {
+  await fetchList()
+  useRefreshStore(['classification', 'classificationTree'])
 }
 </script>
 
