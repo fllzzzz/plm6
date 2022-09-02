@@ -72,9 +72,9 @@
           clearable
         />
       </el-form-item>
-      <el-form-item>
+      <!-- <el-form-item>
         <span class="form-item-tip">* 也可在入库单审核通过后，于物流订单模块处添加</span>
-      </el-form-item>
+      </el-form-item> -->
     </el-form>
   </div>
 </template>
