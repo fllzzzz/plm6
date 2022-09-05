@@ -574,7 +574,7 @@ function getShowItem(val, type) {
         }
       }
     })
-    form.value.structureMeasureMode = AllInfo.findIndex(v => v.categoryType === TechnologyMainTypeEnum.STRUCTURE.V) > -1 ? engineerSettlementTypeEnumN.THEORY.V : undefined
+    form.value.structureMeasureMode = AllInfo.findIndex(v => v.categoryType === TechnologyMainTypeEnum.STRUCTURE.V) > -1 ? form.value.structureMeasureMode || engineerSettlementTypeEnumN.THEORY.V : undefined
     if (AllInfo.length > 0) {
       if (type !== 'detail') {
         const modeData = []
