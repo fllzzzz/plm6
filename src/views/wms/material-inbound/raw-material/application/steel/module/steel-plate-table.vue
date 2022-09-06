@@ -146,7 +146,7 @@
 <script setup>
 import { defineEmits, defineExpose, ref, inject, watchEffect, reactive, watch } from 'vue'
 import { matClsEnum } from '@/utils/enum/modules/classification'
-import { isBlank, isNotBlank } from '@/utils/data-type'
+import { isBlank, isNotBlank, toPrecision } from '@/utils/data-type'
 
 import { regExtra } from '@/composables/form/use-form'
 import useTableValidate from '@compos/form/use-table-validate'
@@ -263,7 +263,7 @@ async function calcTheoryWeight(row) {
 function calcTotalWeight(row) {
   if (isNotBlank(row.theoryWeight) && row.quantity) {
     row.theoryTotalWeight = row.theoryWeight * row.quantity
-    row.weighingTotalWeight = row.theoryWeight * row.quantity
+    row.weighingTotalWeight = toPrecision(row.theoryWeight * row.quantity)
   } else {
     row.theoryTotalWeight = undefined
     row.weighingTotalWeight = undefined
