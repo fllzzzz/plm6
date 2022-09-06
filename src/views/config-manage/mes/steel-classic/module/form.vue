@@ -57,7 +57,16 @@
           <el-table-column label="序号" type="index" align="center" width="50" />
           <el-table-column key="keyword" prop="keyword" label="*大写字母" align="center">
             <template v-slot="scope">
-              <el-input v-model.trim="scope.row.keyword" type="text" placeholder="大写字母" maxlength="20" @blur="checkName(scope.row, scope.$index)"/>
+              <common-select
+                v-model="scope.row.keyword"
+                :options="partKeyWordEnum.ENUM"
+                type="enum"
+                size="small"
+                clearable
+                class="filter-item"
+                placeholder="大写字母"
+                @change="checkName(scope.row, scope.$index)"
+              />
             </template>
           </el-table-column>
           <el-table-column key="specIndex" prop="specIndex" label="*索引" align="center">
@@ -105,7 +114,7 @@ import { ElMessage } from 'element-plus'
 
 import { isNotBlank, deepClone } from '@data-type/index'
 import { matClsEnum } from '@enum-ms/classification'
-// import { whetherEnum } from '@enum-ms/common'
+import { partKeyWordEnum } from '@enum-ms/mes'
 
 import { regForm } from '@compos/use-crud'
 import MaterialCascader from '@comp-cls/material-cascader/index.vue'
@@ -195,31 +204,30 @@ function checkName(item, index) {
           message: '关键字母已存在，请重新填写',
           type: 'error'
         })
-        item.keyword = undefined
-        val.keyword = undefined
-      } else {
-        if (!/^[A-Z]+$/.test(item.keyword)) {
-          form.links[index].keyword = undefined
+        nextTick(() => {
+          item.keyword = undefined
           val.keyword = undefined
-          return
-        }
-        val.keyword = item.keyword
+        })
+      } else {
+        nextTick(() => {
+          val.keyword = item.keyword
+        })
       }
     } else {
-      val.keyword = undefined
+      nextTick(() => {
+        val.keyword = undefined
+      })
     }
   } else {
     if (item.keyword) {
-      if (!/^[A-Z]+$/.test(item.keyword)) {
-        form.links[index].keyword = undefined
-        return
-      }
       if (nameArr.value.findIndex((v) => v.keyword === item.keyword) > -1) {
         ElMessage({
           message: '关键字母已存在，请重新填写',
           type: 'error'
         })
-        form.links[index].keyword = undefined
+        nextTick(() => {
+          item.keyword = undefined
+        })
       }
       nameArr.value.push({
         keyword: item.keyword,
@@ -242,7 +250,11 @@ CRUD.HOOK.beforeSubmit = (crud, form) => {
   }
 }
 
-CRUD.HOOK.afterToAdd = () => {
+CRUD.HOOK.beforeToAdd = () => {
+  nameArr.value = []
+}
+
+CRUD.HOOK.beforeToEdit = () => {
   nameArr.value = []
 }
 
