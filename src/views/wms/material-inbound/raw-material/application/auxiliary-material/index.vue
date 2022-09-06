@@ -261,18 +261,21 @@ function init() {
 // 批量导入
 cu.props.import = (importList) => {
   let unexistNameArr = []
-  importList.forEach((v) => {
-    let boolExit = false
-    for (const cid of order.value.auxMaterialIds) {
-      if (v.classifyFullPathId.includes(cid)) {
-        boolExit = true
-        break
+  // 0代表所有辅材
+  if (!order.value.auxMaterialIds.includes(0)) {
+    importList.forEach((v) => {
+      let boolExit = false
+      for (const cid of order.value.auxMaterialIds) {
+        if (v.classifyFullPathId.includes(cid)) {
+          boolExit = true
+          break
+        }
       }
-    }
-    if (!boolExit) {
-      unexistNameArr.push(v.classifyName)
-    }
-  })
+      if (!boolExit) {
+        unexistNameArr.push(v.classifyName)
+      }
+    })
+  }
   if (unexistNameArr.length > 0) {
     unexistNameArr = Array.from(new Set(unexistNameArr))
     throw new Error(`当前订单辅材明细中不存在${unexistNameArr.map((v) => `“${v}”`).join('、')}等科目`)
