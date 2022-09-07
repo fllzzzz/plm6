@@ -13,13 +13,13 @@
     </template>
     <template #content>
       <el-form ref="formRef" :model="form" :rules="rules" size="small" label-width="140px">
-        <el-form-item label="钢材名称" prop="name">
-          <el-input v-model="form.name" type="text" placeholder="钢材分类名称" style="width: 270px" maxlength="30" />
+        <el-form-item label="名称" prop="name">
+          <el-input v-model="form.name" type="text" placeholder="分类名称" style="width: 270px" maxlength="30" />
         </el-form-item>
-        <el-form-item label="钢材科目匹配" prop="classifyIds">
+        <el-form-item label="零件科目匹配" prop="classifyIds">
           <common-radio-button
             v-model="form.basicClass"
-            :options="[matClsEnum.STEEL_PLATE, matClsEnum.SECTION_STEEL, matClsEnum.STEEL_COIL]"
+            :options="[matClsEnum.STEEL_PLATE, matClsEnum.SECTION_STEEL,matClsEnum.MATERIAL]"
             type="enum"
             size="small"
             style="margin-bottom:5px;"
@@ -34,7 +34,7 @@
             separator=" > "
             clearable
             :disabledVal="disabledClassifyIds"
-            placeholder="请选择钢材科目"
+            placeholder="请选择科目"
             size="small"
             style="width: 270px"
           />
@@ -58,6 +58,7 @@
           <el-table-column key="keyword" prop="keyword" label="*大写字母" align="center">
             <template v-slot="scope">
               <common-select
+                v-if="form.basicClass === matClsEnum.STEEL_PLATE.V"
                 v-model="scope.row.keyword"
                 :options="partKeyWordEnum.ENUM"
                 type="enum"
@@ -67,6 +68,7 @@
                 placeholder="大写字母"
                 @change="checkName(scope.row, scope.$index)"
               />
+              <el-input v-else v-model.trim="scope.row.keyword" type="text" placeholder="大写字母" maxlength="20" @blur="checkName(scope.row, scope.$index)"/>
             </template>
           </el-table-column>
           <el-table-column key="specIndex" prop="specIndex" label="*索引" align="center">
@@ -167,16 +169,24 @@ const { tableValidate, wrongCellMask } = useTableValidate({ rules: tableRules })
 
 const rules = {
   name: [
-    { required: true, message: '请填写钢材分类名称', trigger: 'blur' },
+    { required: true, message: '请填写分类名称', trigger: 'blur' },
     { min: 1, max: 30, message: '长度在 1 到 30 个字符', trigger: 'blur' }
   ],
   sort: [{ required: true, message: '请填写排序值', trigger: 'blur', type: 'number' }],
-  classifyIds: [{ required: true, message: '请选择绑定的钢材科目', trigger: 'change' }]
+  classifyIds: [{ required: true, message: '请选择科目', trigger: 'change' }]
 }
 
 watch(
   () => form.basicClass,
   (val, oldVal) => {
+    if (oldVal === matClsEnum.STEEL_PLATE.V) {
+      nameArr.value = []
+      form.links = []
+    }
+    if (val === matClsEnum.STEEL_PLATE.V && oldVal !== matClsEnum.STEEL_PLATE.V) {
+      nameArr.value = []
+      form.links = []
+    }
     if (val && oldVal) {
       form.classifyIds = []
     }
@@ -209,9 +219,20 @@ function checkName(item, index) {
           val.keyword = undefined
         })
       } else {
-        nextTick(() => {
-          val.keyword = item.keyword
-        })
+        if (form.basicClass !== matClsEnum.STEEL_PLATE.V && item.keyword.substring(0, 1) === 'P') {
+          ElMessage({
+            message: '关键字母不能以P或PL开头，请重新填写',
+            type: 'error'
+          })
+          nextTick(() => {
+            item.keyword = undefined
+            val.keyword = undefined
+          })
+        } else {
+          nextTick(() => {
+            val.keyword = item.keyword
+          })
+        }
       }
     } else {
       nextTick(() => {
@@ -229,10 +250,21 @@ function checkName(item, index) {
           item.keyword = undefined
         })
       }
-      nameArr.value.push({
-        keyword: item.keyword,
-        index: index
-      })
+      if (form.basicClass !== matClsEnum.STEEL_PLATE.V && item.keyword.substring(0, 1) === 'P') {
+        ElMessage({
+          message: '关键字母不能以P或PL开头，请重新填写',
+          type: 'error'
+        })
+        nextTick(() => {
+          item.keyword = undefined
+        })
+      }
+      if (item.keyword) {
+        nameArr.value.push({
+          keyword: item.keyword,
+          index: index
+        })
+      }
     }
   }
 }
