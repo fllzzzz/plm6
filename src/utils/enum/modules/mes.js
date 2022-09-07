@@ -376,6 +376,13 @@ const freightChangeTypeEnum = {
 }
 constantize(freightChangeTypeEnum)
 
+// mes配置-零件前缀类型
+const partKeyWordEnum = {
+  P: { L: 'P', K: 'P', V: 'P' },
+  PL: { L: 'PL', K: 'PL', V: 'PL' }
+}
+constantize(partKeyWordEnum)
+
 export {
   teamTypeEnum,
   teamAttributeEnum,
@@ -422,7 +429,8 @@ export {
   freightChangeTypeEnum,
   mesWarehouseStateTypeEnum,
   artifactTypeEnum,
-  codingTypeEnum
+  codingTypeEnum,
+  partKeyWordEnum
 }
 
 export default {
@@ -471,5 +479,6 @@ export default {
   freightChangeTypeEnum,
   mesWarehouseStateTypeEnum,
   artifactTypeEnum,
-  codingTypeEnum
+  codingTypeEnum,
+  partKeyWordEnum
 }
