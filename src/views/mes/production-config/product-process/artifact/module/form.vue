@@ -80,7 +80,8 @@ import processSelect from '@comp-mes/process-select'
 
 const formRef = ref()
 const processSelectRef = ref([])
-const processProType = typeEnum.ARTIFACT.V | typeEnum.ASSEMBLE.V
+// const processProType = typeEnum.ARTIFACT.V | typeEnum.ASSEMBLE.V
+const processProType = typeEnum.ARTIFACT.V
 
 const defaultForm = {
   id: undefined,

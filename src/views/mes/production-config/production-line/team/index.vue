@@ -1,9 +1,9 @@
 <template>
   <div>
-    <div v-show="!lineId">
-      <div class="my-code">点击生产线查看详情</div>
+    <div v-show="!groupId">
+      <div class="my-code">点击生产组查看详情</div>
     </div>
-    <div v-show="lineId">
+    <div v-show="groupId">
       <!--表格渲染-->
       <common-table
         ref="tableRef"
@@ -11,26 +11,38 @@
         :data="list"
         :data-format="dataFormat"
         :max-height="maxHeight + 135"
+        :default-expand-all="false"
+        :expand-row-keys="expandRowKeys"
+        row-key="id"
         style="width: 100%"
       >
-        <el-table-column label="序号" type="index" align="center" width="60" />
-        <el-table-column key="processName" prop="processName" :show-overflow-tooltip="true" label="工序名称" min-width="100px">
+        <el-expand-table-column :data="list" v-model:expand-row-keys="expandRowKeys" row-key="id" fixed="left">
+          <template #default="{ row }">
+            <!-- <p>
+              计价方式：<span>{{ row.wageQuotaType }}</span>
+            </p> -->
+            <p>
+              组员：<span>{{ row.leaderName }}</span>
+            </p>
+          </template>
+        </el-expand-table-column>
+        <el-table-column key="processName" prop="processName" :show-overflow-tooltip="true" label="工序名称" min-width="100px" align="center">
           <template #default="{ row }">
             <span>{{ row.processName }}</span>
           </template>
         </el-table-column>
-        <el-table-column key="wageQuotaType" prop="wageQuotaType" label="计价方式" align="center" width="75px">
+        <!-- <el-table-column key="wageQuotaType" prop="wageQuotaType" label="计价方式" align="center" width="75px">
           <template #default="{ row }">
             <span>{{ row.wageQuotaType }}</span>
           </template>
-        </el-table-column>
-        <el-table-column key="organizationType" prop="organizationType" label="属性" align="center" width="75px">
+        </el-table-column> -->
+        <!-- <el-table-column key="organizationType" prop="organizationType" label="属性" align="center" width="65px">
           <template v-slot="scope">
             {{ teamAttributeEnum.VL[scope.row.organizationType] }}
           </template>
-        </el-table-column>
-        <el-table-column key="leaderName" prop="leaderName" label="组长" width="80px" />
-        <el-table-column key="memberNames" prop="memberNames" :show-overflow-tooltip="true" label="组员" min-width="160px" />
+        </el-table-column> -->
+        <el-table-column key="leaderName" prop="leaderName" label="组长" min-width="100px" />
+        <!-- <el-table-column key="memberNames" prop="memberNames" :show-overflow-tooltip="true" label="组员" min-width="160px" /> -->
       </common-table>
       <common-dialog
         title="选择班组"
@@ -69,17 +81,21 @@
 </template>
 
 <script setup>
-import { productAddTeam } from '@/api/mes/production-config/production-line'
+import { productAddTeam } from '@/api/mes/production-config/production-line-group'
 import { defineProps, defineExpose, ref, defineEmits, watch, computed, inject } from 'vue'
-import { teamAttributeEnum, wageQuotaTypeEnum } from '@enum-ms/mes'
+// import { teamAttributeEnum, wageQuotaTypeEnum } from '@enum-ms/mes'
+import { wageQuotaTypeEnum } from '@enum-ms/mes'
 import { cleanArray } from '@data-type/array'
 
 import useProductionTeam from '@compos/store/use-production-team'
+import elExpandTableColumn from '@comp-common/el-expand-table-column.vue'
 import { ElNotification } from 'element-plus'
 
 const dataFormat = [['wageQuotaType', ['parse-enum', wageQuotaTypeEnum, { f: 'SL', extra: '计价' }]]]
 
 const maxHeight = inject('maxHeight')
+// 展开keys
+const expandRowKeys = ref([])
 
 const { loaded, productionTeamKV, productionTeam } = useProductionTeam()
 const selectValue = ref([])
@@ -93,6 +109,10 @@ const props = defineProps({
     default: () => []
   },
   line: {
+    type: Object,
+    default: () => {}
+  },
+  group: {
     type: Object,
     default: () => {}
   }
@@ -115,8 +135,8 @@ watch(
   }
 )
 
-const lineId = computed(() => {
-  return props.line && props.line.id
+const groupId = computed(() => {
+  return props.group && props.group.id
 })
 
 const list = computed(() => cleanArray(props.modelValue.map((v) => productionTeamKV.value[v])))
@@ -127,7 +147,7 @@ async function submitIt() {
   try {
     submitLoading.value = true
     await productAddTeam({
-      productLineId: lineId.value,
+      groupId: groupId.value,
       teamIds: selectValue.value
     })
     ElNotification({

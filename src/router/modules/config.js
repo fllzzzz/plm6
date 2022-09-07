@@ -330,22 +330,43 @@ export default {
           hidden: false,
           name: 'StatisticalConfig',
           alwaysShow: true,
-          redirect: '/mes/production-config/statistical-config/coating-config',
+          redirect: '/mes/production-config/statistical-config/artifact/rivet-weld-config',
           meta: { title: '统计配置', icon: 'project', noCache: true },
           children: [
             {
+              name: 'MesConfigArtifactTypeConfig',
+              path: 'artifact/artifact-type-config',
+              hidden: false,
+              component: '/mes/production-config/statistical-config/artifact-type-config/index',
+              meta: { title: '构件-种类配置', icon: 'project', noCache: true }
+            },
+            {
+              name: 'MesConfigRivetWeldConfig',
+              path: 'artifact/rivet-weld-config',
+              hidden: false,
+              component: '/mes/production-config/statistical-config/rivet-weld-config/index',
+              meta: { title: '构件-组铆焊配置', icon: 'project', noCache: true }
+            },
+            {
               name: 'MesConfigCoatingConfig',
-              path: 'coating-config',
+              path: 'artifact/coating-config',
               hidden: false,
               component: '/mes/production-config/statistical-config/coating-config/index',
-              meta: { title: '涂装配置', icon: 'project', noCache: true }
+              meta: { title: '构件-涂装配置', icon: 'project', noCache: true }
             },
             {
               name: 'MesConfigFabricatedConfig',
-              path: 'fabricated-config',
+              path: 'artifact/fabricated-config',
               hidden: false,
               component: '/mes/production-config/statistical-config/fabricated-config/index',
-              meta: { title: '栓钉套筒', icon: 'project', noCache: true }
+              meta: { title: '构件-栓钉套筒', icon: 'project', noCache: true }
+            },
+            {
+              name: 'MesConfigDrillHoleConfig',
+              path: 'parts/drill-hole-config',
+              hidden: false,
+              component: '/mes/production-config/statistical-config/drill-hole-config/index',
+              meta: { title: '零件-钻孔配置', icon: 'project', noCache: true }
             }
           ]
         },

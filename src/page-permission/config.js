@@ -200,6 +200,14 @@ export const configProductionLinePM = {
   editStatus: ['productionLine:editStatus'] // 更改生产线状态
 }
 
+// 建钢-生产配置/生产线管理:生产组
+export const configProductionLineGroupPM = {
+  get: ['productionLine_group:get'], // 班组列表
+  add: ['productionLine_group:add'], // 添加班组
+  edit: ['productionLine_group:edit'], // 编辑班组
+  del: ['productionLine_group:del'] // 删除班组
+}
+
 // 建钢-生产配置/生产线管理:班组
 export const configProductionLineTeamPM = {
   get: ['productionLine_team:get'], // 班组列表
@@ -216,17 +224,41 @@ export const configProductionLineInspectPM = {
   del: ['productionLine_inspect:del'] // 删除质检
 }
 
-// 建钢-生产配置/统计配置/涂装配置
-export const configStatisticalCoatingPM = {
-  get: ['statistical_coating_config:get'], // 涂装配置列表
-  edit: ['statistical_coating_config:edit'] // 编辑涂装配置
+// 建钢-生产配置/统计配置/构件-种类配置
+export const configArtifactTypeConfigPM = {
+  get: ['statistical_artifact_type_config:get'], // 构件-种类配置列表
+  add: ['statistical_artifact_type_config:add'], // 新增构件-种类配置
+  edit: ['statistical_artifact_type_config:edit'], // 编辑构件-种类配置
+  del: ['statistical_artifact_type_config:del'] // 删除构件-种类配置
 }
 
-// 建钢-生产配置/统计配置/栓钉套筒
+// 建钢-生产配置/统计配置/构件-组铆焊配置
+export const configRivetWeldConfigPM = {
+  get: ['statistical_rivet_weld_config:get'], // 构件-组铆焊配置列表
+  add: ['statistical_rivet_weld_config:add'], // 新增构件-组铆焊配置
+  edit: ['statistical_rivet_weld_config:edit'], // 编辑构件-组铆焊配置
+  del: ['statistical_rivet_weld_config:del'] // 删除构件-组铆焊配置
+}
+
+// 建钢-生产配置/统计配置/构件-涂装配置
+export const configStatisticalCoatingPM = {
+  get: ['statistical_coating_config:get'], // 构件-涂装配置列表
+  edit: ['statistical_coating_config:edit'] // 编辑构件-涂装配置
+}
+
+// 建钢-生产配置/统计配置/构件-栓钉套筒
 export const configStatisticalFabricatedPM = {
-  get: ['statistical_fabricated_config:get'], // 栓钉套筒列表
-  del: ['statistical_fabricated_config:del'], // 删除栓钉套筒
-  edit: ['statistical_fabricated_config:edit'] // 编辑栓钉套筒
+  get: ['statistical_fabricated_config:get'], // 构件-栓钉套筒列表
+  del: ['statistical_fabricated_config:del'], // 删除构件-栓钉套筒
+  edit: ['statistical_fabricated_config:edit'] // 编辑构件-栓钉套筒
+}
+
+// 建钢-生产配置/统计配置/零件-钻孔配置
+export const configStatisticalDrillHolePM = {
+  get: ['statistical_drill_hole_config:get'], // 零件-钻孔配置列表
+  add: ['statistical_drill_hole_config:add'], // 添加零件-钻孔配置
+  del: ['statistical_drill_hole_config:del'], // 删除零件-钻孔配置
+  edit: ['statistical_drill_hole_config:edit'] // 编辑零件-钻孔配置
 }
 
 // 建钢-生产配置/工序配置

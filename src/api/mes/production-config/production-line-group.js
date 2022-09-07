@@ -3,7 +3,7 @@ import request from '@/utils/request'
 export function get(params) {
   return request({
     module: 'mes',
-    url: 'productionLine/page',
+    url: 'groups/page',
     method: 'get',
     params
   })
@@ -12,7 +12,7 @@ export function get(params) {
 export function add(data) {
   return request({
     module: 'mes',
-    url: 'productionLine',
+    url: 'groups',
     method: 'post',
     data
   })
@@ -21,7 +21,7 @@ export function add(data) {
 export function edit(data) {
   return request({
     module: 'mes',
-    url: 'productionLine',
+    url: 'groups',
     method: 'put',
     data
   })
@@ -30,29 +30,29 @@ export function edit(data) {
 export function del(ids) {
   return request({
     module: 'mes',
-    url: 'productionLine',
+    url: 'groups',
     method: 'delete',
-    data: {
-      ids: ids
-    }
+    data: { ids }
   })
 }
 
-export function editStatus({ id, boolEnabledEnum }) {
+// 生产组下批量绑定班组
+export function productAddTeam({ productLineId, groupId, teamIds }) {
   return request({
     module: 'mes',
-    url: 'productionLine/changeState',
-    method: 'put',
-    data: { id, boolEnabledEnum }
+    url: 'groups/team',
+    method: 'post',
+    data: { id: groupId, teamIds }
   })
 }
 
-export function productConfigInfo({ productType, boolMachineEnum }) {
+// 生产组下批量绑定质检班组
+export function productAddInspectionTeam({ productLineId, groupId, teamIds }) {
   return request({
     module: 'mes',
-    url: 'productionLine/type',
-    method: 'get',
-    params: { productType, boolMachineEnum }
+    url: 'groups/inspection_team',
+    method: 'post',
+    data: { id: groupId, teamIds }
   })
 }
 

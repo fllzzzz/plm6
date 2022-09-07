@@ -1,13 +1,13 @@
 <template>
   <div>
-    <div v-show="!lineId">
-      <div class="my-code">点击生产线查看详情</div>
+    <div v-show="!groupId">
+      <div class="my-code">点击生产组查看详情</div>
     </div>
-    <div v-show="lineId">
+    <div v-show="groupId">
       <!--表格渲染-->
       <common-table ref="tableRef" v-loading="!loaded" returnSourceData :data="list" :max-height="maxHeight + 42 + 55" style="width: 100%">
-        <el-table-column label="序号" type="index" align="center" width="60" />
-        <el-table-column key="processName" prop="processName" :show-overflow-tooltip="true" label="工序名称" width="120px" />
+        <!-- <el-table-column label="序号" type="index" align="center" width="60" /> -->
+        <el-table-column key="processName" prop="processName" :show-overflow-tooltip="true" label="工序名称" align="center" width="120px" />
         <el-table-column key="inspectorNames" prop="inspectorNames" :show-overflow-tooltip="true" label="质检" min-width="160px" />
       </common-table>
       <common-dialog
@@ -47,7 +47,7 @@
 </template>
 
 <script setup>
-import { productAddInspectionTeam } from '@/api/mes/production-config/production-line'
+import { productAddInspectionTeam } from '@/api/mes/production-config/production-line-group'
 import { defineExpose, defineEmits, ref, defineProps, watch, computed, inject } from 'vue'
 import useInspectionTeam from '@compos/store/use-inspection-team'
 import { ElNotification } from 'element-plus'
@@ -67,6 +67,10 @@ const props = defineProps({
     default: () => []
   },
   line: {
+    type: Object,
+    default: () => {}
+  },
+  group: {
     type: Object,
     default: () => {}
   }
@@ -89,8 +93,8 @@ watch(
   }
 )
 
-const lineId = computed(() => {
-  return props.line && props.line.id
+const groupId = computed(() => {
+  return props.group && props.group.id
 })
 
 const list = computed(() => cleanArray(props.modelValue.map((v) => inspectionTeamKV.value[v])))
@@ -101,7 +105,7 @@ async function submitIt() {
   try {
     submitLoading.value = true
     await productAddInspectionTeam({
-      productLineId: lineId.value,
+      groupId: groupId.value,
       teamIds: selectValue.value
     })
     ElNotification({
