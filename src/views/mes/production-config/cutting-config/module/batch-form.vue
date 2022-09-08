@@ -7,7 +7,7 @@
     :title="crud.bStatus.title"
     :show-close="false"
     custom-class="mes-cutting-config"
-    width="700px"
+    width="800px"
     top="10vh"
   >
     <template #titleRight>
@@ -34,14 +34,20 @@
         >
           <el-table-column label="序号" type="index" align="center" width="60" />
           <el-table-column key="type" prop="type" label="切割形式" align="center" min-width="180">
+            <template #default="{ row }">
+              <el-input v-model="row.cutType" placeholder="切割形式" style="width: 100%" />
+            </template>
+          </el-table-column>
+          <el-table-column key="layingOffWay" prop="layingOffWay" label="下料方式" align="center" min-width="180">
             <template #default="{ row, $index }">
               <common-select
                 :key="Math.random()"
-                v-model="row.cutType"
-                :options="cuttingConfigEnum.ENUM"
+                v-model="row.layingOffWay"
+                :options="props.detailData"
+                :data-structure="{ key: 'id', label: 'layingOffWay', value: 'layingOffWay' }"
                 :show-extra="$index !== 0"
-                type="enum"
-                placeholder="切割形式"
+                type="other"
+                placeholder="下料方式"
                 style="width: 100%"
               />
             </template>
@@ -96,10 +102,8 @@
 </template>
 
 <script setup>
-import { computed, ref } from 'vue'
-import { cuttingConfigEnum } from '@enum-ms/mes'
+import { computed, ref, defineProps } from 'vue'
 import { whetherEnum } from '@enum-ms/common'
-
 import { regBatchForm } from '@compos/use-crud'
 import useTableOperate from '@compos/form/use-table-operate'
 import useTableValidate from '@compos/form/use-table-validate'
@@ -108,28 +112,36 @@ import StoreOperation from '@crud/STORE.operation.vue'
 
 const tableRules = {
   thickness: [{ required: true, message: '请填写厚度', trigger: 'blur' }],
-  symbol: [{ max: 3, message: '不能超过3个字符', trigger: 'blur' }],
-  cutType: [{ required: true, message: '请选择切割形式', trigger: 'change' }]
+  cutType: [{ required: true, message: '请输入切割形式', trigger: 'blur' }],
+  layingOffWay: [{ required: true, message: '请选择下料方式', trigger: 'change' }]
 }
 
 const defaultForm = { list: [] }
 
+const props = defineProps({
+  detailData: {
+    type: Array,
+    default: () => []
+  }
+})
 const defaultRow = {
-  name: undefined,
-  symbol: undefined,
   boolDrillEnum: whetherEnum.FALSE.V,
-  cutType: undefined
+  cutType: undefined,
+  thickness: undefined
 }
 
 // 同上的选项与值
-const ditto = new Map([['cutType', -1]])
+const ditto = new Map([
+  ['cutType', '同上'],
+  ['layingOffWay', -1]
+])
 
 const formRef = ref()
 
 const { CRUD, crud, form, ADD_FORM } = regBatchForm(defaultForm, formRef)
 const dialogVisible = computed(() => crud.bStatus.cu > CRUD.STATUS.NORMAL)
 
-const { init, addRow, removeRow } = useTableOperate(defaultRow, 10, ditto)
+const { init, addRow, removeRow } = useTableOperate(defaultRow, 3, ditto)
 const { tableValidate, cleanUpData, wrongCellMask } = useTableValidate({ rules: tableRules, ditto })
 
 const { maxHeight } = useMaxHeight(
@@ -149,10 +161,10 @@ ADD_FORM.init = () => init(form.list)
 // 表单校验
 CRUD.HOOK.beforeValidateBCU = () => {
   const { validResult, dealList } = tableValidate(form.list)
-  if (validResult) {
-    form.list = dealList
-  } else {
+  if (!validResult) {
     return validResult
+  } else {
+    form.list = dealList
   }
 }
 
