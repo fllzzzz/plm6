@@ -11,22 +11,22 @@
       <common-button :loading="crud.status.cu === 2" type="primary" size="mini" @click="crud.submitCU">确认</common-button>
     </template>
     <el-form ref="formRef" :model="form" :rules="rules" size="small" label-width="110px" label-position="right">
-      <el-form-item label="构件类型" prop="classificationId">
+      <el-form-item label="部件类型" prop="sysAssembleId">
         <common-select
-          v-model="form.classificationId"
-          :options="artifactTypeList"
+          v-model="form.sysAssembleId"
+          :options="assembleTypeList"
           type="other"
           class="input-underline"
-          :dataStructure="{ key: 'id', label: 'classificationName', value: 'id' }"
-          placeholder="构件类型"
+          :dataStructure="{ key: 'id', label: 'name', value: 'id' }"
+          placeholder="部件类型"
           :disabled="isEdit"
           style="width: 100%"
           @change="handleClassificationChange"
         />
       </el-form-item>
       <el-form-item label="截面前缀" prop="specPrefixStr">
-        <el-tag v-if="form.classificationId">{{ artifactTypeListObj[form.classificationId]?.specPrefixStr }}</el-tag>
-        <el-tag v-else>请选择构件类型</el-tag>
+        <el-tag v-if="form.sysAssembleId">{{ assembleTypeListObj[form.sysAssembleId]?.specPrefixStr }}</el-tag>
+        <el-tag v-else>请选择部件类型</el-tag>
       </el-form-item>
       <el-form-item label="数值" prop="numerical">
         <common-input-number
@@ -58,7 +58,7 @@
       </el-form-item>
       <el-tag
         v-if="isNotBlank(typeProcessObj)"
-        style="width: 100%; text-align: center; margin-bottom: 10px'margin-top: 10px"
+        style="width: 100%; text-align: center; margin-bottom: 15px; margin-top: 10px"
         type="info"
         size="small"
       >
@@ -113,12 +113,12 @@ const defaultForm = {
 }
 
 const processListObj = inject('processListObj')
-const artifactTypeList = inject('artifactTypeList')
-const artifactTypeListObj = inject('artifactTypeListObj')
+const assembleTypeList = inject('assembleTypeList')
+const assembleTypeListObj = inject('assembleTypeListObj')
 
 const { crud, CRUD, form } = regForm(defaultForm, formRef)
 
-const typeProcessObj = computed(() => artifactTypeListObj.value[form.classificationId]?.typeProcessObj || {})
+const typeProcessObj = computed(() => assembleTypeListObj.value[form.sysAssembleId]?.typeProcessObj || {})
 // 是否是编辑状态
 const isEdit = computed(() => {
   return crud.status.edit > 0
@@ -132,7 +132,7 @@ const validateNumerical = (rule, value, callback) => {
 }
 
 const rules = {
-  classificationId: [{ required: true, message: '请选择构件类型', trigger: 'change' }],
+  sysAssembleId: [{ required: true, message: '请选择部件类型', trigger: 'change' }],
   numerical: [{ required: true, validator: validateNumerical, message: '请填写数值', trigger: 'blur' }]
 }
 
@@ -143,7 +143,6 @@ function handleClassificationChange() {
 }
 
 CRUD.HOOK.beforeSubmit = (crud, form) => {
-  crud.form.artifactTypeId = crud.query.id
   crud.form.structureProcessPriceList = obj2arr(crud.form.processObj)
 }
 </script>

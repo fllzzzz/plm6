@@ -81,5 +81,5 @@ const { crud } = useCRUD(
   tableRef
 )
 
-const { maxHeight } = useMaxHeight({ paginate: true })
+const { maxHeight } = useMaxHeight()
 </script>

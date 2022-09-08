@@ -17,9 +17,9 @@
       <el-table-column type="selection" width="55" align="center" fixed="left" />
       <el-table-column label="序号" type="index" align="center" width="60" fixed="left" />
       <el-table-column
-        prop="classificationName"
+        prop="sysAssembleName"
         :show-overflow-tooltip="true"
-        label="构件类型"
+        label="部件类型"
         align="center"
         min-width="200px"
         fixed="left"
@@ -62,15 +62,15 @@
       </el-table-column>
     </common-table>
     <mForm />
-    <m-batch-form :currentType="crud.query.id" />
+    <m-batch-form />
   </div>
 </template>
 
 <script setup>
-import crudApi, { getRivetWeld, getProcess, getArtifactProcess } from '@/api/mes/production-config/rivet-weld-config'
-import { onMounted, provide, ref } from 'vue'
+import crudApi, { getProcess, getAssembleProcess } from '@/api/mes/production-config/assemble-rivet-weld-config'
+import { provide, ref } from 'vue'
 
-import { configRivetWeldConfigPM as permission } from '@/page-permission/config'
+import { configAssembleRivetWeldConfigPM as permission } from '@/page-permission/config'
 import { wageQuotaTypeEnum } from '@enum-ms/mes'
 import { isNotBlank } from '@data-type/index'
 import { arr2obj } from '@/utils/convert/type'
@@ -93,38 +93,34 @@ const optShow = {
 const tableRef = ref()
 const { crud, CRUD } = useCRUD(
   {
-    title: '组铆焊配置',
+    title: '部件-组铆焊价格配置',
     sort: [],
     permission: { ...permission },
     optShow: { ...optShow },
     crudApi: { ...crudApi },
-    hasPagination: false,
-    requiredQuery: ['id']
+    hasPagination: false
   },
   tableRef
 )
 
 const { maxHeight } = useMaxHeight()
 
-const rivetWeldList = ref([])
-const rivetWeldListObj = ref({})
-const artifactTypeList = ref([])
-const artifactTypeListObj = ref({})
+const preload = ref(false)
+const assembleTypeList = ref([])
+const assembleTypeListObj = ref({})
 const processList = ref([])
 const processListObj = ref({})
 
-provide('rivetWeldList', rivetWeldList)
-provide('rivetWeldListObj', rivetWeldListObj)
-provide('artifactTypeList', artifactTypeList)
-provide('artifactTypeListObj', artifactTypeListObj)
+provide('assembleTypeList', assembleTypeList)
+provide('assembleTypeListObj', assembleTypeListObj)
 provide('processList', processList)
 provide('processListObj', processListObj)
 
 async function fetchPreloadData() {
   try {
-    const content = await getArtifactProcess()
-    artifactTypeList.value = content.map((v) => {
-      v.specPrefixStr = v.specPrefixList.map((o) => o.specPrefix).join(' / ')
+    const content = await getAssembleProcess()
+    assembleTypeList.value = content.map((v) => {
+      v.specPrefixStr = v.assembleSpecList.map((o) => o.specPrefix).join(' / ')
       const _obj = {}
       const _processIds = []
       if (v.productProcessLinkList) {
@@ -140,16 +136,9 @@ async function fetchPreloadData() {
       v.processIds = _processIds
       return v
     })
-    artifactTypeListObj.value = arr2obj(artifactTypeList.value, 'id')
+    assembleTypeListObj.value = arr2obj(assembleTypeList.value, 'id')
   } catch (error) {
-    console.log(error, '获取构件类型失败')
-  }
-  try {
-    const { content } = await getRivetWeld()
-    rivetWeldList.value = content
-    rivetWeldListObj.value = arr2obj(content, 'id')
-  } catch (error) {
-    console.log(error, '获取构件种类配置失败')
+    console.log(error, '获取部件类型失败')
   }
   try {
     const content = await getProcess()
@@ -160,17 +149,20 @@ async function fetchPreloadData() {
   }
 }
 
-onMounted(() => {
-  fetchPreloadData()
-})
+CRUD.HOOK.beforeRefresh = async (crud) => {
+  if (!preload.value) {
+    await fetchPreloadData()
+    preload.value = true
+  }
+}
 
 CRUD.HOOK.handleRefresh = (crud, res) => {
   res.data.content = res.data.content.map((v) => {
-    v.editMode = false
-    v.editLoading = false
     v.specPrefixStr = v.crossSectionPrefix.join(' / ')
-    v.needProcessIds = artifactTypeListObj.value[v.classificationId].processIds
-    v.processObj = (v.structureProcessPriceList?.length && arr2obj(v.structureProcessPriceList, 'processId')) || {}
+    v.needProcessIds = assembleTypeListObj.value[v.sysAssembleId].processIds
+    v.processObj =
+      (v.structureProcessPriceList?.length && arr2obj(v.structureProcessPriceList, 'processId')) ||
+      assembleTypeListObj.value[v.sysAssembleId].typeProcessObj
     return v
   })
 }

@@ -14,7 +14,7 @@
       <el-form-item label="零件规格前缀" prop="specPrefix">
         <common-select
           v-model="form.specPrefix"
-          :options="partsSpecPrefixEnum.ENUM"
+          :options="partKeyWordEnum.ENUM"
           clearable
           type="enum"
           :disabled="isEdit"
@@ -95,7 +95,7 @@
 
 <script setup>
 import { ref, computed } from 'vue'
-import { partsSpecPrefixEnum } from '@enum-ms/mes'
+import { partKeyWordEnum } from '@enum-ms/mes'
 import { regForm } from '@compos/use-crud'
 
 const formRef = ref()
