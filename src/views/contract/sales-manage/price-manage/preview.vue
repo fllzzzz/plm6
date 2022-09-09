@@ -18,6 +18,12 @@
         <el-table-column prop="name" label="名称" align="center" />
         <el-table-column prop="material" label="材质" align="center" />
         <el-table-column prop="totalQuantity" label="数量" align="center" />
+        <el-table-column align="center" prop="pricingManner" label="计价方式">
+          <template #default="{ row }">
+            <span v-if="row.pricingManner === row.originPricingManner">{{ pricingMannerEnum.VL[row.originPricingManner] }}</span>
+            <cell-change-preview :old="pricingMannerEnum.VL[row.originPricingManner]" :new="pricingMannerEnum.VL[row.pricingManner]" v-else />
+          </template>
+        </el-table-column>
       </template>
       <template v-if="props.params.type === packTypeEnum.ENCLOSURE.V">
         <el-table-column prop="name" label="名称" align="center" />
@@ -31,7 +37,11 @@
       </template>
       <el-table-column align="center" prop="price" label="综合单价">
         <template #default="{ row }">
-          <cell-change-preview :old="row.originUnitPrice" :new="row.unitPrice" />
+          <template v-if="props.params.type === packTypeEnum.STRUCTURE.V">
+            <span v-if="row.originUnitPrice === row.unitPrice">{{ row.unitPrice }}</span>
+            <cell-change-preview :old="row.originUnitPrice" :new="row.unitPrice" v-else/>
+          </template>
+          <cell-change-preview :old="row.originUnitPrice" :new="row.unitPrice" v-else/>
         </template>
       </el-table-column>
     </common-table>
@@ -57,6 +67,7 @@ import { defineEmits, defineProps, ref, useAttrs } from 'vue'
 import { ElNotification } from 'element-plus'
 
 import { packTypeEnum } from '@enum-ms/mes'
+import { pricingMannerEnum } from '@enum-ms/contract'
 
 import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'
@@ -99,10 +110,19 @@ const { maxHeight } = useMaxHeight(
 async function submit() {
   try {
     submitLoading.value = true
-    const _list = props.modifiedData.map((v) => {
-      return {
-        id: v.id,
-        unitPrice: v.newUnitPrice
+    const _list = []
+    props.modifiedData.map((v) => {
+      if (props.params.type === packTypeEnum.STRUCTURE.V) {
+        _list.push({
+          id: v.id,
+          unitPrice: v.newUnitPrice ? v.newUnitPrice : (v.unitPrice !== '-' ? v.unitPrice : null),
+          pricingManner: props.params.type === packTypeEnum.STRUCTURE.V ? v.pricingManner : undefined
+        })
+      } else {
+        _list.push({
+          id: v.id,
+          unitPrice: v.newUnitPrice
+        })
       }
     })
     await save({
