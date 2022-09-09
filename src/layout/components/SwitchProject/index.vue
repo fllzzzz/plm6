@@ -19,6 +19,7 @@
         :options="options"
         :props="cascaderProps"
         :filterable="props.filterable"
+        :filter-method="filterMethod"
         :clearable="props.clearable"
         :show-all-levels="props.showAllLevels"
         :placeholder="props.placeholder"
@@ -129,6 +130,12 @@ const options = computed(() => {
   }
   return processProjects.value
 })
+
+function filterMethod(node, keyword) {
+  if (node.data.fullName.indexOf(keyword) > -1 || node.data.name.indexOf(keyword) > -1 || node.data.shortName.indexOf(keyword) > -1) {
+    return true
+  }
+}
 
 const cascaderProps = computed(() => {
   return {

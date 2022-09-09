@@ -171,7 +171,11 @@ CRUD.HOOK.beforeValidateCU = (crud, form) => {
   }
 }
 
-CRUD.HOOK.afterToAdd = () => {
+CRUD.HOOK.beforeToAdd = () => {
+  nameArr.value = []
+}
+
+CRUD.HOOK.beforeToEdit = () => {
   nameArr.value = []
 }
 </script>
