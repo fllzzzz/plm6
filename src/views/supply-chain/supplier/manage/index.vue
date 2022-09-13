@@ -81,6 +81,7 @@ import { supplierClassEnum, supplierIsHideEnum } from '@enum-ms/supplier'
 import { getLabelByBit } from '@/utils/enum/base'
 import { parseTime } from '@/utils/date'
 import checkPermission from '@/utils/system/check-permission'
+import { useStore } from 'vuex'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
@@ -90,6 +91,8 @@ import mHeader from './module/header'
 import mForm from './module/form'
 import mDetail from './module/detail'
 import mBatchForm from './module/batch-form'
+
+const store = useStore()
 
 import { ElMessageBox } from 'element-plus'
 
@@ -134,7 +137,7 @@ async function changeEnabled(data, val) {
     crud.refresh()
     crud.notify(supplierIsHideEnum.VL[val] + '成功', CRUD.NOTIFICATION_TYPE.SUCCESS)
   } catch (error) {
-    console.log('操作构件工序状态', error)
+    console.log('操作供应商状态', error)
     data.enabled = !data.enabled
   }
 }
@@ -145,6 +148,22 @@ CRUD.HOOK.handleRefresh = (crud, res) => {
     v.supplierClassification = getLabelByBit(supplierClassEnum, parseInt(v.supplierClassification), '、')
     return v
   })
+}
+
+function handleSuccess() {
+  store.dispatch('config/fetchSuppliers')
+}
+
+CRUD.HOOK.afterSubmit = () => {
+  handleSuccess()
+}
+
+CRUD.HOOK.afterBatchAddSuccess = () => {
+  handleSuccess()
+}
+
+CRUD.HOOK.afterDelete = () => {
+  handleSuccess()
 }
 
 CRUD.HOOK.beforeToAdd = (crud, data) => {

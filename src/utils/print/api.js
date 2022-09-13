@@ -2,6 +2,7 @@ import contract from '@/api/print/contract'
 import mes from '@/api/print/mes'
 import wms from '@/api/print/wms'
 import supply from '@/api/print/supply-chain'
+import project from '@/api/print/project'
 
 // 合同
 const myProject = contract.myProject
@@ -83,6 +84,12 @@ const wmsRmRejectReceipt = wms.wmsRmRejectReceipt // 退货
 const wmsRmTransferReceipt = wms.wmsRmTransferReceipt // 调拨
 const wmsRmSupplementReceipt = wms.wmsRmSupplementReceipt // 红冲
 
+// project
+const deliveryCargoList = project.deliveryCargoList // 自制收货记录
+const deliveryReportList = project.deliveryReportList // 收货报表
+const deliveryInstallList = project.deliveryInstallList // 收安报表
+const installReportList = project.installReportList // 安装报表
+
 export default {
   myProject, // 我的项目
   projectList, // 项目列表
@@ -162,5 +169,11 @@ export default {
   wmsRmReturnReceipt, // 退库单
   wmsRmRejectReceipt, // 退货单
   wmsRmTransferReceipt, // 调拨单
-  wmsRmSupplementReceipt // 红冲记录
+  wmsRmSupplementReceipt, // 红冲记录
+
+  // 项目管理
+  deliveryCargoList, // 自制收货记录
+  deliveryReportList, // 收货报表
+  deliveryInstallList, // 收安报表
+  installReportList // 安装报表
 }
