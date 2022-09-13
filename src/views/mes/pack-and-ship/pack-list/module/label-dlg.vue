@@ -1,5 +1,6 @@
 <template>
   <common-dialog :title="`${packageInfo.serialNumber}`" top="5vh" v-model="dialogVisible" width="600px" :before-close="handleClose">
+    <div style="font-weight: bold; font-size: 16pt;color: #333;padding-bottom: 10pt;">{{ packageInfo.project.name }}</div>
     <table border="1" bordercolor="#000000">
       <tr>
         <td rowspan="2">
