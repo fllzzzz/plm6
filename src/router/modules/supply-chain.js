@@ -90,6 +90,31 @@ export default {
       ]
     },
     {
+      path: '/supply-chain/subcontract-manage',
+      component: 'Layout',
+      hidden: false,
+      name: 'SupplyChainSubcontract',
+      alwaysShow: false,
+      redirect: '/supply-chain/subcontract-manage/subcontract-order',
+      meta: { title: '分包管理', icon: 'contract', noCache: true },
+      children: [
+        {
+          name: 'subcontractOrder',
+          path: 'subcontract-order',
+          hidden: false,
+          component: '/supply-chain/subcontract-order/index',
+          meta: { title: '分包订单', icon: 'project', noCache: true }
+        },
+        {
+          name: 'subcontractOrderPayment',
+          path: 'subcontract-order-payment',
+          hidden: false,
+          component: '/supply-chain/subcontract-order-payment/index',
+          meta: { title: '付款台账', icon: 'project', noCache: true }
+        }
+      ]
+    },
+    {
       path: '/supply-chain/logistics-manage',
       component: 'Layout',
       hidden: false,

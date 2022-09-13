@@ -33,15 +33,15 @@
       <i v-if="!refreshLoading" class="el-icon-refresh" style="cursor: pointer" @click="refreshProjectList" />
       <i v-else class="el-icon-loading" />
     </el-tooltip>
-    <div style="font-size: 13px; margin-left: 15px; margin-bottom: 5px; color: #333">
+    <div style="font-size: 13px; margin-left: 15px; margin-bottom: 5px; color: #333" v-if="!routeBusinessType || (globalProject && globalProject.businessType===routeBusinessType)">
       <el-tag v-if="globalProject && globalProject.endDate" type="info" effect="plain" style="margin-top: 5px;">
         完成日期:
         <span v-parse-time="{ val: globalProject.endDate, fmt: '{y}-{m}-{d}' }" />
         | 工期:
         {{ dateDifferenceReduce(globalProject.startDate, globalProject.endDate) }}天
       </el-tag>
-      <el-tag v-if="globalProject && globalProject.businessType" type="info" effect="plain" style="margin-top: 5px;margin-left: 5px">
-        {{ businessTypeEnum.VL[globalProject.businessType] }}
+      <el-tag v-if="(globalProject && globalProject.businessType) || routeBusinessType" type="info" effect="plain" style="margin-left: 5px">
+        {{ globalProject?.businessType?businessTypeEnum.VL[globalProject.businessType]: businessTypeEnum.VL[routeBusinessType]}}
       </el-tag>
       <el-tag v-if="globalProject && globalProject.mode" type="info" effect="plain" style="margin-top: 5px;margin-left: 5px">
         {{ '项目模式:' + projectModeEnum.VL[globalProject.mode] }}
@@ -111,24 +111,26 @@ const projectType = ref(allPT)
 const refreshLoading = ref(false)
 let currentProjectChange = false
 
-const { routeProjectType, currentProjectType, globalProjectId, globalProject, navbarShowAll } = mapGetters([
+const { routeProjectType, currentProjectType, globalProjectId, globalProject, navbarShowAll, routeBusinessType } = mapGetters([
   'routeProjectType',
   'currentProjectType',
   'globalProjectId',
   'globalProject',
-  'navbarShowAll'
+  'navbarShowAll',
+  'routeBusinessType'
 ])
 
 // 是否显示
 const showable = computed(() => isNotBlank(routeProjectType.value))
 
-const { projectsCascade, processProjects, projects } = useUserProjects()
+const { projectsCascade, processProjects, projects, businessTypeProjectMap, userBusinessTypeProjectsCascadeMap } = useUserProjects()
 
 const options = computed(() => {
+  const projectTypeVal = projectType.value || allPT
   if (navbarShowAll.value) {
-    return projectsCascade.value
+    return routeBusinessType.value ? userBusinessTypeProjectsCascadeMap.value[routeBusinessType.value + '_' + projectTypeVal] : projectsCascade.value
   }
-  return processProjects.value
+  return routeBusinessType.value ? businessTypeProjectMap.value[routeBusinessType.value + '_' + projectTypeVal] : processProjects.value
 })
 
 function filterMethod(node, keyword) {
@@ -152,10 +154,10 @@ const cascaderProps = computed(() => {
 // 当前目录禁用
 const disabledTypeArr = computed(() => {
   const types = []
-  if (routeProjectType !== allPT) {
+  if (routeProjectType.value !== allPT) {
     Object.keys(projectTypeEnum.VL).forEach((v) => {
-      if (!(v & routeProjectType)) {
-        types.push(v)
+      if (!(v & routeProjectType.value)) {
+        types.push(Number(v))
       }
     })
   }
@@ -165,11 +167,12 @@ const disabledTypeArr = computed(() => {
 watch(
   navbarShowAll,
   (flag) => {
+    const projectTypeVal = projectType.value || allPT
     let isExit = false
     if (flag) {
-      isExit = projects.value.some((v) => v.id === copyValue.value)
+      isExit = routeBusinessType.value ? userBusinessTypeProjectsCascadeMap.value[routeBusinessType.value + '_' + projectTypeVal].some((v) => v.id === copyValue.value) : projects.value.some((v) => v.id === copyValue.value)
     } else {
-      isExit = processProjects.value.some((v) => v.id === copyValue.value)
+      isExit = routeBusinessType.value ? businessTypeProjectMap.value[routeBusinessType.value + '_' + projectTypeVal].some((v) => v.id === copyValue.value) : processProjects.value.some((v) => v.id === copyValue.value)
     }
     if (!isExit) {
       projectChange(undefined)
@@ -181,8 +184,16 @@ watch(
 watch(
   globalProjectId,
   (val) => {
-    if (!currentProjectChange) {
-      copyValue.value = val
+    if (val) {
+      if ((routeBusinessType.value && globalProject.value.businessType === routeBusinessType.value) || !routeBusinessType.value) {
+        if (!currentProjectChange) {
+          copyValue.value = val
+        }
+      } else {
+        projectChange(undefined)
+      }
+    } else {
+      projectChange(undefined)
     }
   },
   { immediate: true }

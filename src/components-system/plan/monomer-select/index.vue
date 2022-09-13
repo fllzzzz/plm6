@@ -37,7 +37,7 @@ const props = defineProps({
     type: [Number, String]
   },
   modelValue: {
-    type: [Number, String]
+    type: [Number, String, Array]
   },
   size: {
     type: String,
@@ -68,7 +68,7 @@ const props = defineProps({
     default: true
   },
   defaultValue: {
-    type: [Number, String],
+    type: [Number, String, Array],
     default: undefined
   },
   placeholder: {
@@ -76,7 +76,11 @@ const props = defineProps({
     default: '请选择单体'
   },
   productType: {
-    type: [Number, String],
+    type: [Number, String], // 产品类型
+    default: undefined
+  },
+  mainProductType: {
+    type: [Number, String], // 产品分类 2构件 4围护 8配套件
     default: undefined
   },
   filterArea: {
@@ -98,6 +102,15 @@ watch(
 )
 
 watch(
+  () => props.mainProductType,
+  (val) => {
+    if (val) {
+      fetchData()
+    }
+  }
+)
+
+watch(
   () => props.modelValue,
   (val) => {
     if (val) {
@@ -106,15 +119,6 @@ watch(
   },
   { immediate: true }
 )
-
-watch(
-  () => selectValue.value,
-  (val) => {
-    selectChange(val)
-  }
-)
-
-fetchData()
 
 async function fetchData() {
   options.value = []
@@ -127,7 +131,7 @@ async function fetchData() {
   let optionData = []
   loading.value = true
   try {
-    const { content = [] } = (await getAll(props.projectId)) || {}
+    const { content = [] } = (await getAll(props.projectId, { productType: props.mainProductType })) || {}
     originOptions.value = content || []
     optionData = content.map((o) => {
       return {
@@ -167,23 +171,25 @@ function getProductType(val) {
 }
 
 function selectChange(val) {
-  let monomerVal = {}
-  if (!val) {
-    val = undefined
-    monomerVal = {}
-  } else {
-    monomerVal = originOptions.value.find((k) => k.id === val)
-  }
-  let areaInfo = []
-  if (props.filterArea && props.productType) {
-    areaInfo = (monomerVal?.areaSimpleList?.length && monomerVal.areaSimpleList.filter((v) => v.productType & props.productType)) || []
-  } else {
-    areaInfo = monomerVal?.areaSimpleList
+  if (!Array.isArray(val)) {
+    let monomerVal = {}
+    if (!val) {
+      val = undefined
+      monomerVal = {}
+    } else {
+      monomerVal = originOptions.value.find((k) => k.id === val)
+    }
+    let areaInfo = []
+    if (props.filterArea && props.productType) {
+      areaInfo = (monomerVal?.areaSimpleList?.length && monomerVal.areaSimpleList.filter((v) => v.productType & props.productType)) || []
+    } else {
+      areaInfo = monomerVal?.areaSimpleList
+    }
+    emit('getAreaInfo', areaInfo)
+    emit('getCurrentInfo', monomerVal)
   }
   emit('update:modelValue', val)
   emit('change', val)
-  emit('getAreaInfo', areaInfo)
-  emit('getCurrentInfo', monomerVal)
 }
 
 defineExpose({

@@ -357,6 +357,49 @@ export default {
           meta: { title: '项目成员配置', icon: 'project', noCache: true }
         }
       ]
+    },
+    {
+      path: '/supply-chain-config',
+      component: 'Layout',
+      hidden: false,
+      name: 'SupplyChainConfig',
+      alwaysShow: true,
+      redirect: '/supply-chain-config/subcontract-config',
+      meta: { title: '供应链配置管理', icon: 'project', noCache: true },
+      children: [
+        {
+          name: 'SubcontractConfig',
+          path: 'subcontract-config',
+          hidden: false,
+          component: '/config-manage/supply-chain/base/index',
+          meta: { title: '分包配置', icon: 'project', noCache: true }
+        }
+      ]
+    },
+    {
+      path: '/project-config',
+      component: 'Layout',
+      hidden: false,
+      name: 'ProjectConfigManage',
+      alwaysShow: true,
+      redirect: '/project-config/subcontract-config',
+      meta: { title: '项目管理配置', icon: 'project', noCache: true },
+      children: [
+        {
+          name: 'QualityProblemConfig',
+          path: 'quality-problem-config',
+          hidden: false,
+          component: '/config-manage/project/quality-problem-config/index',
+          meta: { title: '问题分类', icon: 'project', noCache: true }
+        },
+        {
+          name: 'VisaReasonConfig',
+          path: 'visa-reason-config',
+          hidden: false,
+          component: '/config-manage/project/visa-reason-config/index',
+          meta: { title: '分包签证原因', icon: 'project', noCache: true }
+        }
+      ]
     }
   ]
 }

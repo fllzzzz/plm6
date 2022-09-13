@@ -169,6 +169,27 @@ export const contractSupplierLogisticsPM = {
   }
 }
 
+// 供应商付款/分包订单
+export const contractSupplierSubcontractPM = {
+  get: ['contract_supplier_subcontract:get'], // 分包订单列表
+  settleDetail: ['contract_supplier_subcontract:settleDetail'], // 结算详情
+  settleAudit: ['contract_supplier_subcontract:settleAudit'], // 结算审核
+  payment: {
+    get: ['contract_supplier_subcontract_payment:get'], // 付款列表
+    detail: ['contract_supplier_subcontract_payment:detail'], // 付款详情
+    audit: ['contract_supplier_subcontract_payment:audit'], // 付款审核
+    print: ['contract_supplier_subcontract_payment:print'] // 付款打印下载
+  },
+  invoice: {
+    get: ['contract_supplier_subcontract_invoice:get'], // 开票列表
+    add: ['contract_supplier_subcontract_invoice:add'], // 开票添加
+    edit: ['contract_supplier_subcontract_invoice:edit'], // 开票修改
+    del: ['contract_supplier_subcontract_invoice:del'], // 开票删除
+    audit: ['contract_supplier_subcontract_invoice:audit'], // 开票审核
+    print: ['contract_supplier_subcontract_invoice:print'] // 开票打印下载
+  }
+}
+
 // 供应商付款/应付汇总
 export const contractSupplierPayablePM = {
   get: ['contract_supplier_payable:get'], // 应付汇总列表
