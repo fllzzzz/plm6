@@ -15,7 +15,7 @@
     </template>
     <template #content>
       <el-form ref="formRef" size="small" label-width="130px">
-        <common-table :data="list" v-loading="tableLoading" :max-height="maxHeight" return-source-data :showEmptySymbol="false" :span-method="objectSpanMethod">
+        <common-table :data="list" v-loading="tableLoading" return-source-data :showEmptySymbol="false" :span-method="objectSpanMethod">
           <el-table-column key="project" prop="project" label="项目" align="center" min-width="120">
             <template v-slot="scope">
               <span class="project-name">{{ projectNameFormatter(scope.row.project) }}</span>
@@ -52,7 +52,7 @@
                 filterable
                 clearable
                 show-all-levels
-                :placeholder="请选择"
+                placeholder="请选择"
                 @change="handleChange(scope.row.line,scope.row)"
                 style="width:250px;"
                 :disabled="!scope.row.quantity"
@@ -100,6 +100,7 @@ import { auditTypeEnum } from '@enum-ms/contract'
 import { DP } from '@/settings/config'
 import { parseTime } from '@/utils/date'
 import { toThousand } from '@/utils/data-type/number'
+import { judgeSameValue } from '@/views/contract/info/judgeSameValue'
 // import checkPermission from '@/utils/system/check-permission'
 
 const emit = defineEmits(['success', 'update:modelValue'])
@@ -128,6 +129,7 @@ const options = ref([])
 // const drawerRef = ref()
 const tableLoading = ref(false)
 const isEdit = ref(false)
+const originData = ref([])
 
 const cascaderProps = {
   value: 'id',
@@ -198,9 +200,16 @@ function setOptions(tree) {
 }
 
 function handleChange(val, row) {
-  row.factoryId = val[0]
-  row.workshopId = val[1]
-  row.productionLineId = val[2] || undefined
+  if (val && val.length) {
+    row.factoryId = val[0]
+    row.workshopId = val[1]
+    row.productionLineId = val[2] || undefined
+  } else {
+    row.factoryId = undefined
+    row.workshopId = undefined
+    row.productionLineId = undefined
+  }
+  console.log(row)
 }
 
 function timeChange(value) {
@@ -224,9 +233,11 @@ async function fetchDetail() {
     let totalWeight = 0
     content.map(v => {
       totalWeight += v.totalNetWeight
-      v.monomerId = v.monomer?.id
       v.timeArr = []
       v.line = []
+      v.projectId = v.project?.id
+      v.monomerId = v.monomer?.id
+      v.areaId = v.area?.id
       if (v.startDate && v.endDate) {
         v.timeArr.push(v.startDate, v.endDate)
       }
@@ -251,6 +262,7 @@ async function fetchDetail() {
     }
     list.value[0].projectSpan = list.value.length
     list.value[0].totalWeight = totalWeight
+    originData.value = JSON.parse(JSON.stringify(list.value))
   } catch (error) {
     console.log('生产订单详情失败', error)
   }
@@ -261,13 +273,21 @@ async function onSubmit() {
   try {
     const submitData = []
     list.value.map(v => {
-      if (v.line.length && v.timeArr.length) {
-        v.projectId = v.project?.id
-        v.monomerId = v.monomer?.id
-        v.areaId = v.area?.id
-        submitData.push(v)
+      const val = originData.value.find(k => k.areaId === v.areaId)
+      if (!judgeSameValue(val.timeArr, v.timeArr) || !judgeSameValue(val.line, v.line)) {
+        submitData.push({
+          areaId: v.areaId,
+          endDate: v.endDate || null,
+          factoryId: v.factoryId || null,
+          monomerId: v.monomerId,
+          productionLineId: v.productionLineId || null,
+          projectId: v.projectId,
+          startDate: v.startDate || null,
+          workshopId: v.workshopId || null
+        })
       }
     })
+    console.log(submitData)
     if (!submitData.length) {
       ElMessage.error('请至少提交一条信息')
       return

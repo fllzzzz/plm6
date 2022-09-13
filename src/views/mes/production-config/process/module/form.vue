@@ -61,7 +61,7 @@
                   type="primary"
                   style="padding: 5px"
                   size="mini"
-                  :disabled="scope.$index === 0"
+                  :disabled="scope.$index === 0 || scope.row.name==='下料'"
                   @click="handleMove(scope, 'up', form.list)"
                 />
                 <common-button
@@ -70,7 +70,7 @@
                   type="primary"
                   style="padding: 5px"
                   size="mini"
-                  :disabled="scope.$index === form.list.length - 1"
+                  :disabled="scope.$index === form.list.length - 1 || scope.row.name==='下料'"
                   @click="handleMove(scope, 'down', form.list)"
                 />
                 <common-button
@@ -79,6 +79,7 @@
                   type="danger"
                   style="padding: 5px"
                   size="mini"
+                  :disabled="scope.row.name==='下料'"
                   @click="removeRow(form.list, scope.$index)"
                 />
                 <svg-icon v-else class="icon icon-readonly" icon-class="readonly" />
