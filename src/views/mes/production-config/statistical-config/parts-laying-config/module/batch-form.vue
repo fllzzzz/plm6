@@ -33,7 +33,7 @@
         row-key="uid"
       >
         <el-table-column label="序号" type="index" align="center" width="60" />
-        <el-table-column prop="specPrefix" :show-overflow-tooltip="true" label="零件规格前缀" width="160">
+        <el-table-column prop="specPrefix" :show-overflow-tooltip="true" label="截面类型" width="160">
           <template #default="{ row, $index }">
             <common-select
               v-model="row.specPrefix"
@@ -41,16 +41,31 @@
               clearable
               :show-extra="$index !== 0"
               type="enum"
-              placeholder="零件规格前缀"
+              placeholder="截面类型"
               style="width: 100%"
               class="input-underline"
             />
           </template>
         </el-table-column>
-        <el-table-column prop="numThickness" :show-overflow-tooltip="true" label="板厚数值（毫米）" min-width="200" align="center">
+        <el-table-column prop="layingOffWay" :show-overflow-tooltip="true" label="下料方式" width="160">
+          <template #default="{ row, $index }">
+            <common-select
+              v-model="row.layingOffWay"
+              :options="layingList"
+              clearable
+              :show-extra="$index !== 0"
+              type="other"
+              placeholder="下料方式"
+              :dataStructure="{ key: 'name', label: 'name', value: 'name' }"
+              style="width: 100%"
+              class="input-underline"
+            />
+          </template>
+        </el-table-column>
+        <el-table-column prop="numerical" :show-overflow-tooltip="true" label="数值范围" min-width="200" align="center">
           <template #default="{ row }">
             <common-input-number
-              v-model="row.minThickness"
+              v-model="row.minNumerical"
               :step="1"
               :min="0"
               :precision="2"
@@ -58,52 +73,38 @@
               :controls="false"
               size="mini"
               class="input-underline"
-              placeholder="最小板厚(毫米)"
+              placeholder="最小数值"
               style="width: 45%"
             />
             <span> ~ </span>
             <common-input-number
-              v-model="row.maxThickness"
+              v-model="row.maxNumerical"
               :step="1"
               :precision="2"
               class="input-underline"
               :controls="false"
               size="mini"
               clearable
-              placeholder="最大板厚(毫米)"
+              placeholder="最大数值"
               style="width: 45%"
             />
           </template>
         </el-table-column>
-        <el-table-column prop="numBoreDiameter" :show-overflow-tooltip="true" label="孔径数值范围（毫米）" min-width="200" align="center">
-          <template #default="{ row }">
-            <common-input-number
-              v-model="row.minBoreDiameter"
-              :step="1"
-              :min="0"
-              :precision="2"
+        <el-table-column prop="wageQuotaType" :show-overflow-tooltip="true" label="计量方式" width="160">
+          <template #default="{ row, $index }">
+            <common-select
+              v-model="row.wageQuotaType"
+              :options="wageQuotaTypeEnum.ENUM"
               clearable
-              :controls="false"
-              size="mini"
+              :show-extra="$index !== 0"
+              type="enum"
+              placeholder="计量方式"
+              style="width: 100%"
               class="input-underline"
-              placeholder="最小孔径(毫米)"
-              style="width: 45%"
-            />
-            <span> ~ </span>
-            <common-input-number
-              v-model="row.maxBoreDiameter"
-              :step="1"
-              :precision="2"
-              class="input-underline"
-              :controls="false"
-              size="mini"
-              clearable
-              placeholder="最大孔径(毫米)"
-              style="width: 45%"
             />
           </template>
         </el-table-column>
-        <el-table-column :show-overflow-tooltip="true" prop="unitPrice" label="单价（元/个）" align="center" width="100px">
+        <el-table-column :show-overflow-tooltip="true" prop="unitPrice" label="单价" align="center" width="100px">
           <template #default="{ row }">
             <common-input-number
               v-model="row.unitPrice"
@@ -136,8 +137,8 @@
 </template>
 
 <script setup>
-import { computed, ref, nextTick } from 'vue'
-import { partKeyWordEnum } from '@enum-ms/mes'
+import { computed, ref, nextTick, inject } from 'vue'
+import { partKeyWordEnum, wageQuotaTypeEnum } from '@enum-ms/mes'
 
 import { regBatchForm } from '@compos/use-crud'
 import useTableOperate from '@compos/form/use-table-operate'
@@ -145,22 +146,20 @@ import useTableValidate from '@compos/form/use-table-validate'
 import useMaxHeight from '@compos/use-max-height'
 import StoreOperation from '@crud/STORE.operation.vue'
 
-const validateNumThickness = (value, row) => {
-  if (!row.minThickness || !row.maxThickness || row.maxThickness < row.minThickness) return false
-  return true
-}
-
-const validateNumBoreDiameter = (value, row) => {
-  if (!row.minBoreDiameter || !row.maxBoreDiameter || row.maxBoreDiameter < row.minBoreDiameter) return false
+const validateNumerical = (value, row) => {
+  if (!row.minNumerical || !row.maxNumerical || row.maxNumerical < row.minNumerical) return false
   return true
 }
 
 const tableRules = {
-  specPrefix: [{ required: true, message: '请选择零件规格前缀', trigger: 'change' }],
+  specPrefix: [{ required: true, message: '请选择截面类型', trigger: 'change' }],
+  layingOffWay: [{ required: true, message: '请选择下料方式', trigger: 'change' }],
+  wageQuotaType: [{ required: true, message: '请选择计量方式', trigger: 'change' }],
   unitPrice: [{ required: true, message: '请填写单价', trigger: 'blur' }],
-  numThickness: [{ validator: validateNumThickness, message: '请填写板厚并且最大板厚不得小于最小板厚', trigger: 'blur' }],
-  numBoreDiameter: [{ validator: validateNumBoreDiameter, message: '请填写孔径并且最大孔径不得小于最小孔径', trigger: 'blur' }]
+  numerical: [{ validator: validateNumerical, message: '请填写数值并且最大数值不得小于最小数值', trigger: 'blur' }]
 }
+
+const layingList = inject('layingList')
 
 const defaultForm = { list: [] }
 
@@ -169,7 +168,11 @@ const defaultRow = {
 }
 
 // 同上的选项与值
-const ditto = new Map([['specPrefix', -1]])
+const ditto = new Map([
+  ['specPrefix', -1],
+  ['layingOffWay', -1],
+  ['wageQuotaType', -1]
+])
 
 const formRef = ref()
 // 刷新表格

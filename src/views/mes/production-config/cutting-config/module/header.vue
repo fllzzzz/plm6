@@ -1,15 +1,6 @@
 <template>
   <div class="head-container">
-    <common-select
-      v-model="query.type"
-      :options="cuttingConfigEnum.ENUM"
-      type="enum"
-      clearable
-      placeholder="切割形式"
-      class="filter-item"
-      style="width: 200px"
-      @change="crud.toQuery"
-    />
+    <el-input v-model="query.type" clearable placeholder="切割形式" class="filter-item" style="width: 200px" @change="crud.toQuery" />
     <common-select
       v-model="query.boolDrillEnum"
       :options="whetherEnum.ENUM"
@@ -30,12 +21,16 @@
       @keyup.enter="crud.toQuery"
     />
     <rrOperation />
-    <crudOperation />
+    <crudOperation>
+      <template #viewLeft>
+        <slot name="layConfig">
+        </slot>
+      </template>
+    </crudOperation>
   </div>
 </template>
 
 <script setup>
-import { cuttingConfigEnum } from '@enum-ms/mes'
 import { whetherEnum } from '@enum-ms/common'
 import { regHeader } from '@compos/use-crud'
 import crudOperation from '@crud/CRUD.operation'

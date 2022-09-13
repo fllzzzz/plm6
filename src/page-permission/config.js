@@ -232,12 +232,12 @@ export const configArtifactTypeConfigPM = {
   del: ['statistical_artifact_type_config:del'] // 删除构件-种类配置
 }
 
-// 建钢-生产配置/统计配置/构件-组铆焊配置
-export const configRivetWeldConfigPM = {
-  get: ['statistical_rivet_weld_config:get'], // 构件-组铆焊配置列表
-  add: ['statistical_rivet_weld_config:add'], // 新增构件-组铆焊配置
-  edit: ['statistical_rivet_weld_config:edit'], // 编辑构件-组铆焊配置
-  del: ['statistical_rivet_weld_config:del'] // 删除构件-组铆焊配置
+// 建钢-生产配置/统计配置/构件-组铆焊价格配置
+export const configArtifactRivetWeldConfigPM = {
+  get: ['statistical_artifact_rivet_weld_config:get'], // 构件-组铆焊配置列表
+  add: ['statistical_artifact_rivet_weld_config:add'], // 新增构件-组铆焊价格配置
+  edit: ['statistical_artifact_rivet_weld_config:edit'], // 编辑构件-组铆焊价格配置
+  del: ['statistical_artifact_rivet_weld_config:del'] // 删除构件-组铆焊价格配置
 }
 
 // 建钢-生产配置/统计配置/构件-涂装配置
@@ -246,11 +246,19 @@ export const configStatisticalCoatingPM = {
   edit: ['statistical_coating_config:edit'] // 编辑构件-涂装配置
 }
 
-// 建钢-生产配置/统计配置/构件-栓钉套筒
+// 建钢-生产配置/统计配置/部件-组铆焊价格配置
+export const configAssembleRivetWeldConfigPM = {
+  get: ['statistical_assemble_rivet_weld_config:get'], // 部件-组铆焊配置列表
+  add: ['statistical_assemble_rivet_weld_config:add'], // 新增部件-组铆焊价格配置
+  edit: ['statistical_assemble_rivet_weld_config:edit'], // 编辑部件-组铆焊价格配置
+  del: ['statistical_assemble_rivet_weld_config:del'] // 删除部件-组铆焊价格配置
+}
+
+// 建钢-生产配置/统计配置/零件-栓钉套筒配置
 export const configStatisticalFabricatedPM = {
-  get: ['statistical_fabricated_config:get'], // 构件-栓钉套筒列表
-  del: ['statistical_fabricated_config:del'], // 删除构件-栓钉套筒
-  edit: ['statistical_fabricated_config:edit'] // 编辑构件-栓钉套筒
+  get: ['statistical_fabricated_config:get'], // 零件-栓钉套筒配置列表
+  del: ['statistical_fabricated_config:del'], // 删除零件-栓钉套筒配置
+  edit: ['statistical_fabricated_config:edit'] // 编辑零件-栓钉套筒配置
 }
 
 // 建钢-生产配置/统计配置/零件-钻孔配置
@@ -259,6 +267,14 @@ export const configStatisticalDrillHolePM = {
   add: ['statistical_drill_hole_config:add'], // 添加零件-钻孔配置
   del: ['statistical_drill_hole_config:del'], // 删除零件-钻孔配置
   edit: ['statistical_drill_hole_config:edit'] // 编辑零件-钻孔配置
+}
+
+// 建钢-生产配置/统计配置/零件-下料配置
+export const configStatisticalPartsLayingPM = {
+  get: ['statistical_parts_laying_config:get'], // 零件-下料配置列表
+  add: ['statistical_parts_laying_config:add'], // 添加零件-下料配置
+  del: ['statistical_parts_laying_config:del'], // 删除零件-下料配置
+  edit: ['statistical_parts_laying_config:edit'] // 编辑零件-下料配置
 }
 
 // 建钢-生产配置/工序配置

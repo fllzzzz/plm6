@@ -31,13 +31,6 @@ const processCategoryEnum = {
 }
 constantize(processCategoryEnum)
 
-// 零件规格前缀枚举
-const partsSpecPrefixEnum = {
-  P: { L: 'P', K: 'P', V: 'P' },
-  PL: { L: 'PL', K: 'PL', V: 'PL' }
-}
-constantize(partsSpecPrefixEnum)
-
 // 工序生产检验方式
 const processInspectTypeEnum = {
   SINGLE_UNSCAN: { L: '单件(不扫码)', K: 'SINGLE_UNSCAN', V: 0, T: 'info' },
@@ -396,7 +389,6 @@ export {
   componentTypeEnum,
   processMaterialListTypeEnum,
   processTypeEnum,
-  partsSpecPrefixEnum,
   processCategoryEnum,
   processInspectTypeEnum,
   processReportTypeEnum,
@@ -447,7 +439,6 @@ export default {
   componentTypeEnum,
   processMaterialListTypeEnum,
   processTypeEnum,
-  partsSpecPrefixEnum,
   processCategoryEnum,
   processInspectTypeEnum,
   processReportTypeEnum,

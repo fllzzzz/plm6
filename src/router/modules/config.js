@@ -341,11 +341,11 @@ export default {
               meta: { title: '构件-种类配置', icon: 'project', noCache: true }
             },
             {
-              name: 'MesConfigRivetWeldConfig',
+              name: 'MesConfigArtifactRivetWeldConfig',
               path: 'artifact/rivet-weld-config',
               hidden: false,
-              component: '/mes/production-config/statistical-config/rivet-weld-config/index',
-              meta: { title: '构件-组铆焊配置', icon: 'project', noCache: true }
+              component: '/mes/production-config/statistical-config/artifact-rivet-weld-config/index',
+              meta: { title: '构件-组铆焊价格配置', icon: 'project', noCache: true }
             },
             {
               name: 'MesConfigCoatingConfig',
@@ -355,11 +355,18 @@ export default {
               meta: { title: '构件-涂装配置', icon: 'project', noCache: true }
             },
             {
+              name: 'MesConfigAssembleRivetWeldConfig',
+              path: 'assemble/rivet-weld-config',
+              hidden: false,
+              component: '/mes/production-config/statistical-config/assemble-rivet-weld-config/index',
+              meta: { title: '部件-组铆焊价格配置', icon: 'project', noCache: true }
+            },
+            {
               name: 'MesConfigFabricatedConfig',
               path: 'artifact/fabricated-config',
               hidden: false,
               component: '/mes/production-config/statistical-config/fabricated-config/index',
-              meta: { title: '构件-栓钉套筒', icon: 'project', noCache: true }
+              meta: { title: '零件-栓钉套筒配置', icon: 'project', noCache: true }
             },
             {
               name: 'MesConfigDrillHoleConfig',
@@ -367,6 +374,13 @@ export default {
               hidden: false,
               component: '/mes/production-config/statistical-config/drill-hole-config/index',
               meta: { title: '零件-钻孔配置', icon: 'project', noCache: true }
+            },
+            {
+              name: 'MesConfigPartsLayingConfig',
+              path: 'parts/parts-laying-config',
+              hidden: false,
+              component: '/mes/production-config/statistical-config/parts-laying-config/index',
+              meta: { title: '零件-下料配置', icon: 'project', noCache: true }
             }
           ]
         },
