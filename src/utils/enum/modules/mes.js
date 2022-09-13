@@ -383,6 +383,13 @@ const partKeyWordEnum = {
 }
 constantize(partKeyWordEnum)
 
+// 生产订单排期状态
+const scheduleStatusEnum = {
+  NOT: { L: '未排期', K: 'NOT', V: 1 << 0 },
+  PART: { L: '部分排期', K: 'PART', V: 1 << 1 },
+  COMPLETED: { L: '排期完毕', K: 'COMPLETED', V: 1 << 2 }
+}
+constantize(scheduleStatusEnum)
 export {
   teamTypeEnum,
   teamAttributeEnum,
@@ -430,7 +437,8 @@ export {
   mesWarehouseStateTypeEnum,
   artifactTypeEnum,
   codingTypeEnum,
-  partKeyWordEnum
+  partKeyWordEnum,
+  scheduleStatusEnum
 }
 
 export default {
@@ -480,5 +488,6 @@ export default {
   mesWarehouseStateTypeEnum,
   artifactTypeEnum,
   codingTypeEnum,
-  partKeyWordEnum
+  partKeyWordEnum,
+  scheduleStatusEnum
 }

@@ -100,6 +100,32 @@ export default {
     ]
   },
   {
+    path: '/mes/production-order-manage',
+    component: 'Layout',
+    hidden: false,
+    name: 'MesProductionOrderManage',
+    alwaysShow: false,
+    redirect: '/mes/production-order-manage/production-order',
+    meta: {
+      title: '生产订单管理',
+      icon: 'project',
+      noCache: true
+    },
+    children: [
+      {
+        name: 'ProductionOrder',
+        path: 'production-order',
+        hidden: false,
+        component: '/mes/production-order/index',
+        meta: {
+          title: '生产订单',
+          icon: 'project',
+          noCache: true
+        }
+      }
+    ]
+  },
+  {
     path: '/mes/scheduling-manage',
     component: 'Layout',
     hidden: false,
