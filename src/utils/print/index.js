@@ -126,6 +126,7 @@ async function printPackageLabel({ packageInfo, qrCode, printMode = PrintMode.QU
     [packTypeEnum.AUXILIARY_MATERIAL.V]: ''
   }
   const headHtml = `
+      <div style="font-weight: bold; font-size: 12pt;color: #333;padding-bottom: 2pt;">${packageInfo.project.shortName}</div>
       <div class="package-label">
         <div class="flex">
           <div class="row-2 w-1 col border-r border-b">
@@ -177,12 +178,12 @@ async function printPackageLabel({ packageInfo, qrCode, printMode = PrintMode.QU
   try {
     LODOP = await getLODOP()
     LODOP.SET_PRINT_PAGESIZE(2, 1030, 680, '1') /* 纸张大小*/ // 100mm* 75mm
-    LODOP.ADD_PRINT_HTM('3mm', '1.5mm', '67mm', '24mm', headStrHtml)
+    LODOP.ADD_PRINT_HTM('3mm', '1.5mm', '67mm', '29.5mm', headStrHtml)
     LODOP.SET_PRINT_STYLEA(0, 'ItemType', 1)
-    LODOP.ADD_PRINT_HTM('26mm', '1.5mm', '67mm', '66mm', strHtml)
-    LODOP.ADD_PRINT_HTM('96mm', '1.5mm', '67mm', '5mm', pageHtml)
+    LODOP.ADD_PRINT_HTM('31.5mm', '1.5mm', '67mm', '66mm', strHtml)
+    LODOP.ADD_PRINT_HTM('101.5mm', '1.5mm', '67mm', '5mm', pageHtml)
     LODOP.SET_PRINT_STYLEA(0, 'ItemType', 1)
-    LODOP.ADD_PRINT_BARCODE('3.3mm', '1.8mm', '16.4mm', '16.4mm', 'QRCode', qrCode)
+    LODOP.ADD_PRINT_BARCODE('8.8mm', '1.8mm', '16.4mm', '16.4mm', 'QRCode', qrCode)
     LODOP.SET_PRINT_STYLEA(0, 'QRCodeVersion', 3)
     LODOP.SET_PRINT_STYLEA(0, 'ItemType', 1)
     // LODOP.PRINT_DESIGN()/* 打印设计*/
