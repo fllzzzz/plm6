@@ -11,11 +11,11 @@
         <panel name="损耗" num-color="#1890ff" :end-val="summaryInfo.loss || 0" />
       </el-col>
       <el-col :span="6" class="card-panel-col">
-        <panel name="损耗率(%)" num-color="#1890ff" :end-val="summaryInfo.monthNewQuantity || 0" :precision="2" />
+        <panel name="损耗率(%)" num-color="#1890ff" :end-val="summaryInfo.lossRate || 0" :precision="2" />
       </el-col>
     </el-row>
 
-    <common-table v-loading="compareLoading" :data="compareList" :maxHeight="maxHeight"  style="width: 100%; margin-top: 20px">
+    <common-table v-loading="compareLoading" :data="compareList" :maxHeight="maxHeight" style="width: 100%; margin-top: 20px">
       <el-table-column label="序号" type="index" align="center" width="60" />
       <el-table-column prop="name" :show-overflow-tooltip="true" label="品名" align="center">
         <template #default="{ row }">
@@ -75,7 +75,7 @@
 
 <script setup>
 import { getSummary, getCompare } from '@/api/mes/production-manage/dashboard/main-material-track'
-import { reactive, ref, watch } from 'vue'
+import { reactive, ref, watch, onMounted } from 'vue'
 
 import { mainMaterialTrackPM as permission } from '@/page-permission/mes'
 import checkPermission from '@/utils/system/check-permission'
@@ -128,7 +128,7 @@ async function fetchSummary() {
     summaryInfo.artifacts = data.artifacts
     summaryInfo.plates = data.plates
     summaryInfo.loss = data.plates - data.artifacts
-    summaryInfo.lossRate = data.plates ? (data.plates - data.artifacts) / data.plates : 0
+    summaryInfo.lossRate = data.plates ? ((data.plates - data.artifacts) / data.plates) * 100 : 0
   } catch (error) {
     console.log('汇总信息', error)
   } finally {
@@ -156,13 +156,19 @@ async function fetchCompareList() {
   }
 }
 
+onMounted(() => {
+  fetchSummary()
+  fetchCompareList()
+})
+
 watch(
   globalProjectId,
   (val) => {
     console.log(val, 'summary')
     fetchSummary()
     fetchCompareList()
+    updateChart()
   },
-  { immediate: true, deep: true }
+  { deep: true }
 )
 </script>

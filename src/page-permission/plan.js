@@ -128,7 +128,11 @@ export const enclosureListPM = {
 // 技术管理/深化列表
 export const deepenListPM = {
   model: {
-    import: ['plan_deepen_model:get'] // 模型导入
+    import: ['plan_deepen_model:get'], // 模型导入
+    get: ['plan_deepen_model:get'], // 模型导入
+    del: ['plan_deepen_model:del'], // 模型删除
+    integration: ['plan_deepen_model_integration:edit'], // 模型集成
+    integrationDel: ['plan_deepen_model_integration:del'] // 删除模型集成
   },
   deepen: {
     get: ['plan_deepen:get'], // 深化图纸列表

@@ -33,6 +33,7 @@ export const projectNameShowConfig = {
 export const showProjectSearch = [
   // bim
   { component: '/bim/model-show/index', type: pt.STEEL.V, required: true },
+  { component: '/bim/integration-model-show/index', type: pt.STEEL.V, required: true },
   // MES
   { component: '/mes/projects/index' },
   { component: '/mes/overall-plan/monomer/index', type: pt.STEEL.V, required: true },

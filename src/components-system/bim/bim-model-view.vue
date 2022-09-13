@@ -1,21 +1,21 @@
 <template>
   <div class="model-container" :style="{ height: `${maxHeight}px` }">
-    <el-tag v-if="tip !== tipStatusEnum.SUCCESS.V" :type="tipStatusEnum.V[tip]?.T" :style="isPreview?'margin-left: 10px;margin-top: 10px;':''">
-      {{ tipStatusEnum.VL[tip] }} {{ modelStatus.reason }}
+    <el-tag v-if="tip !== commonTipStatusEnum.SUCCESS.V" :type="commonTipStatusEnum.V[tip]?.T" :style="isPreview || !showMonomerModel?'margin-left: 10px;margin-top: 10px;':''">
+      {{ commonTipStatusEnum.VL[tip] }} {{ modelStatus.reason }}
     </el-tag>
-    <div v-if="tip === tipStatusEnum.SUCCESS.V" id="modelView"></div>
+    <div v-if="tip === commonTipStatusEnum.SUCCESS.V" id="modelView"></div>
   </div>
 </template>
 
 <script setup>
 import * as bimModel from '../../../public/assets/bimface/bimfaceAPI.js'
-import { getTranslate } from '@/api/bim/model.js'
+import { getTranslate, getIMTranslate } from '@/api/bim/model.js'
 import { defineProps, watch, ref, reactive, computed, defineExpose } from 'vue'
 
 import { constantize } from '@/utils/enum/base'
 import { isBlank } from '@/utils/data-type'
 
-import { modelTranslateStatusEnum, modelMenuBarEnum } from '@enum-ms/bim'
+import { modelTranslateStatusEnum, modelIntegrationStatusEnum as imTipStatusEnum, modelMenuBarEnum } from '@enum-ms/bim'
 
 import useMyToolbar from '@compos/bim/use-my-toolbar'
 import useColorCard from '@compos/bim/use-color-card'
@@ -31,8 +31,17 @@ import usePreview from '@compos/bim/use-preview'
 
 const props = defineProps({
   monomerId: {
-    type: Number,
-    require: true
+    type: Number
+  },
+  areaId: {
+    type: [Number, String]
+  },
+  projectId: {
+    type: Number
+  },
+  showMonomerModel: {
+    type: Boolean,
+    default: true
   },
   maxHeight: {
     type: Number
@@ -67,6 +76,7 @@ const props = defineProps({
 const publicPath = import.meta.env.BASE_URL + 'assets'
 
 const tipStatusEnum = {
+  PROCESSING_NO: { L: '3D模型未集成', K: 'PROCESSING_NO', V: 'processing_no', T: 'warning' },
   PROCESSING: { L: '3D模型正在转换，请稍后刷新重试', K: 'PROCESSING', V: 'processing', T: 'warning' },
   SUCCESS: { L: '成功', K: 'SUCCESS', V: 'success', T: 'success' },
   FAILED: { L: '3D模型转换失败，请联系管理员或重新上传', K: 'FAILED', V: 'failed', T: 'danger' },
@@ -89,6 +99,10 @@ const modelStatus = ref({
 const _viewer3DEvent = ref()
 const _viewer = ref()
 const _3DConfig = ref()
+
+const commonTipStatusEnum = computed(() => {
+  return modelStatus.value.modelType === 'integration' ? imTipStatusEnum : tipStatusEnum
+})
 
 const viewerPanel = reactive({
   panelPositions: {},
@@ -149,13 +163,14 @@ const {
   isolateComponentsById, clearIsolation,
   hideComponentsById, showComponentsById,
   overrideComponentsColorById,
+  setSelectedComponentsByObjectData,
   clearSelectedComponents
-} = useArtifactColoring({ bimModel, modelStatus, viewer: _viewer, colors, objectIdGroup })
+} = useArtifactColoring({ props, bimModel, modelStatus, viewer: _viewer, colors, objectIdGroup })
 const { createDrawing, fetchDrawing } = useDrawing()
-const { createArtifactInfoPanel, fetchArtifactInfo, clearArtifactInfoPanel } = useArtifactInfo({ menuBar, bimModel, viewer: _viewer, viewerPanel, modelStatus, fetchDrawing })
-const { createStatusInfoPanel, fetchStatusInfo, clearStatusInfoPanel } = useStatusInfo({ menuBar, bimModel, viewerPanel, modelStatus })
-const { createProTreePanel, clearProTreePanel, fetchProTree } = useProjectTreePanel({ props, bimModel, viewerPanel, viewProAreaTree, addBlinkByIds, removeBlink, getModelViewSize })
-const { createLogisticsBtn, hideLogisticsBtn } = useLogisticsInfo({ bimModel, viewerPanel, monomerId: computed(() => props.monomerId), addBlinkByIds, removeBlink })
+const { createArtifactInfoPanel, fetchArtifactInfo, clearArtifactInfoPanel } = useArtifactInfo({ props, menuBar, bimModel, viewer: _viewer, viewerPanel, modelStatus, fetchDrawing })
+const { createStatusInfoPanel, fetchStatusInfo, clearStatusInfoPanel } = useStatusInfo({ props, menuBar, bimModel, viewerPanel, modelStatus })
+const { createProTreePanel, clearProTreePanel, fetchProTree } = useProjectTreePanel({ props, bimModel, modelStatus, viewerPanel, viewProAreaTree, setSelectedComponentsByObjectData, clearSelectedComponents, addBlinkByIds, removeBlink, getModelViewSize })
+const { createLogisticsBtn, hideLogisticsBtn } = useLogisticsInfo({ props, modelStatus, bimModel, viewerPanel, monomerId: computed(() => props.monomerId), addBlinkByIds, removeBlink })
 const { createMyToolbar } = useMyToolbar({
   menuBar, publicPath, bimModel, viewerPanel, viewProAreaTree, colors,
   createLogisticsBtn, hideLogisticsBtn,
@@ -164,17 +179,15 @@ const { createMyToolbar } = useMyToolbar({
   clearStatusInfoPanel, fetchStatusInfo,
   clearSelectedComponents
 })
-const { createSearchHtml, searchBySN } = useArtifactSearch({ props, addBlinkByIds, removeBlink })
-const { createColorCardHtml } = useColorCard({ menuBar, colors, objectIdGroup, bimModel, viewerPanel, modelStatus, searchBySN, fetchArtifactStatus, isolateComponentsById, clearIsolation, hideComponentsById, showComponentsById, overrideComponentsColorById })
+const { createSearchHtml, searchBySN } = useArtifactSearch({ props, modelStatus, addBlinkByIds, removeBlink })
+const { createColorCardHtml } = useColorCard({ props, menuBar, colors, objectIdGroup, bimModel, viewerPanel, modelStatus, searchBySN, fetchArtifactStatus, isolateComponentsById, clearIsolation, hideComponentsById, showComponentsById, overrideComponentsColorById })
 // const { addRightEventListener } = useRightClickEvent({ viewerPanel, fetchArtifactInfo })
 const previewSNElementIds = ref([])
 
 watch(
-  () => props.monomerId,
-  (val) => {
-    if (val) {
-      fetchTranslate(val)
-    }
+  () => [props.monomerId, props.showMonomerModel, props.projectId, props.areaId],
+  () => {
+    fetchTranslate(props.monomerId)
   },
   { immediate: true }
 )
@@ -190,21 +203,36 @@ function init() {
 }
 
 async function fetchTranslate(monomerId) {
+  if (props.showMonomerModel && !monomerId) return
+  if (!props.showMonomerModel && !props.projectId) return
   // 获取加载model所需的访问令牌
   modelLoaded.value = false
   tip.value = tipStatusEnum.QUERY.V
   init()
   try {
-    const { viewToken, reason, status, fileId } = await getTranslate(monomerId)
-    modelStatus.value = {
-      fileId,
-      viewToken,
-      reason,
-      status
+    if (props.showMonomerModel) {
+      const { viewToken, reason, status, fileId, modelType, integrationStatus } = await getTranslate(monomerId, props.areaId)
+      modelStatus.value = {
+        fileId,
+        viewToken,
+        reason,
+        status,
+        modelType,
+        integrationStatus
+      }
+      tip.value = modelType === 'file' ? status : integrationStatus
+    } else {
+      const { viewToken, reason, status, fileId } = await getIMTranslate(props.projectId)
+      modelStatus.value = {
+        fileId,
+        viewToken,
+        reason,
+        status
+      }
+      tip.value = status
     }
-    tip.value = status
-    if (status === modelTranslateStatusEnum.SUCCESS.V) {
-      loadModel(viewToken)
+    if (tip.value === modelTranslateStatusEnum.SUCCESS.V) {
+      loadModel(modelStatus.value.viewToken)
     }
   } catch (error) {
     console.log('获取模型viewToken', error)
@@ -247,7 +275,7 @@ async function loadModel(viewToken) {
           createSearchHtml()
           createColorCardHtml()
         } else {
-          const { serialNumberElementIds } = usePreview({ props, initModelColor, overrideComponentsColorById, isolateComponentsById })
+          const { serialNumberElementIds } = usePreview({ props, modelStatus, initModelColor, overrideComponentsColorById, isolateComponentsById })
           previewSNElementIds.value = serialNumberElementIds
         }
         createDrawing()

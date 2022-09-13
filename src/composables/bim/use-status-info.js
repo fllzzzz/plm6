@@ -1,7 +1,7 @@
-import { getArtifactProduction } from '@/api/bim/model'
+import { getArtifactProduction, getIntegrateArtifactProduction } from '@/api/bim/model'
 import { modelMenuBarEnum } from '@enum-ms/bim'
 
-export default function useStatusInfo({ menuBar, bimModel, viewerPanel, modelStatus }) {
+export default function useStatusInfo({ props, menuBar, bimModel, viewerPanel, modelStatus }) {
   function createStatusInfoPanel() {
     const _panelConfig = bimModel.getPanelConfig()
     _panelConfig.className = 'bf-panel bf-panel-status-info'
@@ -28,7 +28,13 @@ export default function useStatusInfo({ menuBar, bimModel, viewerPanel, modelSta
     _panel && _panel.show()
 
     try {
-      const { content } = await getArtifactProduction({ fileId: modelStatus.value.fileId, menuBar: menuBar.value })
+      let data
+      if (props.showMonomerModel) {
+        data = await getArtifactProduction({ fileId: modelStatus.value.fileId, menuBar: menuBar.value })
+      } else {
+        data = await getIntegrateArtifactProduction({ projectId: props.projectId, menuBar: menuBar.value })
+      }
+      const { content } = data
       const _el = document.getElementsByClassName('bf-panel-status-info')[0].getElementsByClassName('bf-panel-container')[0]
       _el.innerHTML = ''
       _el.innerHTML = `
@@ -51,7 +57,7 @@ export default function useStatusInfo({ menuBar, bimModel, viewerPanel, modelSta
         <tr class="bf-group-title">
           <td colspan="2">
             <i class="bf-icon"></i>
-            ${item.areaName}
+            ${props.showMonomerModel ? item.areaName : item.monomerName}
           </td>
           ${infoTableTdHtml(tdList, 'title')}
         </tr>
