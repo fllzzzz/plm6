@@ -82,7 +82,6 @@ import { supplierClassEnum, supplierIsHideEnum } from '@enum-ms/supplier'
 import { getLabelByBit } from '@/utils/enum/base'
 import { parseTime } from '@/utils/date'
 import checkPermission from '@/utils/system/check-permission'
-import { useStore } from 'vuex'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
@@ -106,7 +105,6 @@ const optShow = {
 }
 
 const tableRef = ref()
-const store = useStore()
 const { crud, columns, CRUD } = useCRUD(
   {
     title: '供应商',
