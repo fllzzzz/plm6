@@ -19,7 +19,7 @@
         </div>
       </div>
       <el-form ref="formRef" :model="form">
-        <aux-mat-table ref="tableRef" :max-height="tableMaxHeight" />
+        <aux-mat-table ref="tableRef" :max-height="tableMaxHeight" :bool-party-a="boolPartyA" />
       </el-form>
     </common-wrapper>
     <common-drawer
@@ -56,6 +56,7 @@ import { auxMatInboundApplicationPM as permission } from '@/page-permission/wms'
 
 import { defineProps, defineEmits, ref, watch, provide, nextTick, reactive, computed } from 'vue'
 import { matClsEnum } from '@/utils/enum/modules/classification'
+import { orderSupplyTypeEnum } from '@/utils/enum/modules/wms'
 
 import useForm from '@/composables/form/use-form'
 import useMaxHeight from '@compos/use-max-height'
@@ -91,6 +92,7 @@ const formRef = ref() // form表单ref
 const drawerRef = ref()
 const order = ref() // 订单信息
 const orderLoaded = ref(false) // 订单加载状态
+const boolPartyA = ref(false) // 是否“甲供”
 
 const materialSelectVisible = ref(false) // 显示物料选择
 const currentBasicClass = matClsEnum.MATERIAL.V // 当前基础分类
@@ -221,6 +223,7 @@ function handleOrderInfoChange(orderInfo) {
   init()
   order.value = orderInfo
   cu.props.order = orderInfo
+  boolPartyA.value = orderInfo?.supplyType === orderSupplyTypeEnum.PARTY_A.V
   // 筛除当前订单未指定的辅材科目
   if (orderInfo && isNotBlank(orderInfo.auxMaterialIds)) {
     const filterList = form.list.filter((v) => {
@@ -256,6 +259,7 @@ function handleOrderInfoChange(orderInfo) {
 // 信息初始化
 function init() {
   orderLoaded.value = false
+  boolPartyA.value = false // 是否“甲供”
 }
 
 // 批量导入

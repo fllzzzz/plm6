@@ -38,6 +38,12 @@
           <template #default="{ row }">
             <expand-secondary-info v-if="!showTableColumnSecondary" :basic-class="detail.basicClass" :row="row" show-brand />
             <p>
+              单体：<span>{{ row.monomerName }}</span>
+            </p>
+            <p>
+              区域：<span>{{ row.areaName }}</span>
+            </p>
+            <p>
               备注：<span>{{ row.remark }}</span>
             </p>
           </template>
@@ -53,7 +59,7 @@
           <amount-info-columns v-if="!boolPartyA" />
         </template>
         <el-table-column prop="requisitionsSN" label="申购单" align="left" min-width="120px" show-overflow-tooltip />
-        <warehouse-info-columns show-project />
+        <warehouse-info-columns show-project show-monomer show-area />
       </common-table>
     </template>
   </common-drawer>
@@ -61,7 +67,7 @@
 
 <script setup>
 import { computed, ref, inject } from 'vue'
-import { inboundFillWayEnum, orderSupplyTypeEnum, inspectionStatusEnum } from '@enum-ms/wms'
+import { orderSupplyTypeEnum, inspectionStatusEnum } from '@enum-ms/wms'
 import { tableSummary } from '@/utils/el-extra'
 import { deepClone } from '@data-type/index'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
@@ -70,7 +76,7 @@ import { materialHasAmountColumns } from '@/utils/columns-format/wms'
 
 import { regDetail } from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
-import useWmsConfig from '@/composables/store/use-wms-config'
+// import useWmsConfig from '@/composables/store/use-wms-config'
 import elExpandTableColumn from '@comp-common/el-expand-table-column.vue'
 import materialBaseInfoColumns from '@/components-system/wms/table-columns/material-base-info-columns/index.vue'
 import materialUnitQuantityColumns from '@/components-system/wms/table-columns/material-unit-quantity-columns/index.vue'
@@ -90,7 +96,7 @@ const columnsDataFormat = ref([...materialHasAmountColumns, ['remark', 'empty-te
 const drawerRef = ref()
 const expandRowKeys = ref([])
 const { CRUD, crud, detail } = regDetail()
-const { inboundFillWayCfg } = useWmsConfig()
+// const { inboundFillWayCfg } = useWmsConfig()
 
 // 表格高度处理
 const { maxHeight } = useMaxHeight(
@@ -108,10 +114,11 @@ const { maxHeight } = useMaxHeight(
 // 采购订单信息
 const order = computed(() => detail.purchaseOrder || {})
 
-// 可填写金额
-const fillableAmount = computed(() =>
-  inboundFillWayCfg.value ? inboundFillWayCfg.value.amountFillWay === inboundFillWayEnum.REVIEWING.V : false
-)
+// 可填写金额（统一为入库填写，取消后台配置）
+const fillableAmount = ref(false)
+// const fillableAmount = computed(() =>
+//   inboundFillWayCfg.value ? inboundFillWayCfg.value.amountFillWay === inboundFillWayEnum.REVIEWING.V : false
+// )
 
 // 显示金额
 const showAmount = computed(() => checkPermission(permission.showAmount) || fillableAmount.value)

@@ -26,7 +26,7 @@
 </template>
 
 <script setup>
-import { defineProps, computed, watchEffect, ref } from 'vue'
+import { defineProps, computed, watchEffect, ref, nextTick } from 'vue'
 
 import factorySelect from '@/components-system/base/factory-select.vue'
 import warehouseSelect from '@/components-system/wms/warehouse-select.vue'
@@ -65,7 +65,9 @@ function handleFactoryChange(val, index, row) {
   if (val !== -1) {
     row.warehouseId = undefined
   } else {
-    if (isBlank(row.warehouseId)) row.warehouseId = -1
+    nextTick(() => {
+      if (isBlank(row.warehouseId)) row.warehouseId = -1
+    })
   }
 }
 </script>

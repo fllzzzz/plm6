@@ -266,7 +266,7 @@ const expandRowKeys = ref([])
 const tableRef = ref()
 // 表格列数据格式转换
 const columnsDataFormat = ref([...wmsReceiptColumns, ['qualityTestingTime', 'parse-time'], ['approvalComments', 'empty-text']])
-const { crud, columns } = useCRUD(
+const { crud, columns, CRUD } = useCRUD(
   {
     title: '入库记录',
     sort: ['id.desc'],
@@ -279,6 +279,13 @@ const { crud, columns } = useCRUD(
 )
 
 const { maxHeight } = useMaxHeight({ paginate: true })
+
+CRUD.HOOK.handleRefresh = async (crud, { data }) => {
+  data.content = data.content.map(v => {
+    v.imgUrls = v.attachments?.map(o => o.imageUrl) || []
+    return v
+  })
+}
 </script>
 
 <style lang="scss" scoped>

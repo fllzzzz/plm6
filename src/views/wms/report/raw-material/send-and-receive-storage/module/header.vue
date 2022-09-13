@@ -87,6 +87,8 @@
 <script setup>
 import { exportSendAndReceiveStorageExcel } from '@/api/wms/report/raw-material/statistics'
 import { computed, inject, ref } from 'vue'
+import { mapGetters } from '@/store/lib'
+import { supplierClassEnum } from '@enum-ms/supplier'
 import { rawMatClsEnum } from '@/utils/enum/modules/classification'
 import { unitTypeEnum, orderSupplyTypeEnum } from '@/utils/enum/modules/wms'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
@@ -101,6 +103,8 @@ import MatHeaderQuery from '@/components-system/wms/header-query/raw-mat/index.v
 import Panel from '@/components/Panel'
 import warehouseProjectCascader from '@comp-wms/warehouse-project-cascader'
 import ExportButton from '@comp-common/export-button/index.vue'
+
+const { classifySpec } = mapGetters('classifySpec')
 
 const permission = inject('permission')
 const defaultTime = ref([new Date(2000, 1, 1, 0, 0, 0)])
@@ -136,6 +140,11 @@ CRUD.HOOK.handleRefresh = async (crud, { data }) => {
   const fmtFields = ['beginPeriod', 'endPeriod', 'inbound', 'outbound']
   const allPs = []
   for (const row of data.content) {
+    // 辅材显示一级科目+末尾科目
+    const fullPathName = classifySpec.value?.[row.classifyId]?.fullPathName
+    if (row.basicClass === supplierClassEnum.MATERIAL.V && fullPathName.length) {
+      row.classifyName = fullPathName[0] + ' / ' + fullPathName.at(-1)
+    }
     fmtFields.forEach((k) => {
       const ps = numFmtByBasicClass(row[k], {
         basicClass: row.basicClass, // 基础分类

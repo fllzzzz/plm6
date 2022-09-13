@@ -77,9 +77,14 @@
           :precision="row.accountingPrecision"
           size="mini"
           placeholder="核算量"
+          @change="handleWeightChange($event, row)"
         />
       </template>
     </el-table-column>
+
+    <!-- 金额设置 -->
+    <price-set-columns v-if="!props.boolPartyA" weight-attribute="mete" />
+
     <el-table-column prop="brand" label="品牌" align="center" min-width="120px">
       <template #default="{ row }">
         <el-input v-model.trim="row.brand" maxlength="60" size="mini" placeholder="品牌" />
@@ -94,13 +99,23 @@
 </template>
 
 <script setup>
-import { defineExpose, ref, inject, reactive } from 'vue'
+import { defineExpose, defineProps, computed, ref, inject, reactive } from 'vue'
 import { createUniqueString } from '@/utils/data-type/string'
 import { positiveNumPattern } from '@/utils/validate/pattern'
+import { isNotBlank, toPrecision } from '@/utils/data-type'
 
 import { regExtra } from '@/composables/form/use-form'
 import useTableValidate from '@compos/form/use-table-validate'
 import elExpandTableColumn from '@comp-common/el-expand-table-column.vue'
+
+import priceSetColumns from '@/views/wms/material-inbound/raw-material/components/price-set-columns.vue'
+
+const props = defineProps({
+  boolPartyA: {
+    type: Boolean,
+    default: false
+  }
+})
 
 const matSpecRef = inject('matSpecRef') // 调用父组件matSpecRef
 const { form } = regExtra() // 表单
@@ -113,7 +128,7 @@ const validateQuantity = (value, row) => {
   return true
 }
 
-const tableRules = {
+const rules = {
   classifyId: [{ required: true, message: '请选择物料种类', trigger: 'change' }],
   quantity: [{ validator: validateQuantity, message: '请填写数量', trigger: 'blur' }],
   mete: [
@@ -121,6 +136,31 @@ const tableRules = {
     { pattern: positiveNumPattern, message: '核算量必须大于0', trigger: 'blur' }
   ]
 }
+
+// 金额校验
+const validateAmount = (value, row) => {
+  if (isNotBlank(row.mete) && isNotBlank(row.unitPrice)) {
+    return +(row.mete * row.unitPrice).toFixed(2) === value
+  }
+  return false
+}
+
+// 甲供不需要填写价格
+const amountRules = {
+  unitPrice: [{ required: true, message: '请填写单价', trigger: 'blur' }],
+  amount: [
+    { required: true, message: '请填写金额', trigger: 'blur' },
+    { validator: validateAmount, message: '金额有误，请手动修改', trigger: 'blur' }
+  ]
+}
+
+const tableRules = computed(() => {
+  let _rules = Object.assign({}, rules)
+  if (!props.boolPartyA) {
+    _rules = Object.assign(_rules, amountRules)
+  }
+  return _rules
+})
 
 const { tableValidate, wrongCellMask } = useTableValidate({ rules: tableRules }) // 表格校验
 
@@ -144,7 +184,20 @@ function rowInit(row) {
     measurePrecision: row.classify.measurePrecision, // 计量单位小数精度
     quantity: undefined // 数量
   })
+
+  // 非甲供
+  if (!props.boolPartyA) {
+    _row.unitPrice = undefined // 含税单价
+    _row.amount = undefined // 金额
+  }
   return _row
+}
+
+// 处理重量变化
+function handleWeightChange(val, row) {
+  if (isNotBlank(row.unitPrice) && isNotBlank(val)) {
+    row.amount = toPrecision(val * row.unitPrice, 2)
+  }
 }
 
 // 删除行

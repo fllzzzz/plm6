@@ -14,7 +14,7 @@
     <material-secondary-info-columns :basic-class="basicClass" />
     <!-- 单位及其数量 -->
     <material-unit-quantity-columns :basic-class="basicClass" reject-type-mode :number-prop-field="numberPropField" />
-    <warehouse-info-columns show-project />
+    <warehouse-info-columns show-project show-monomer show-area />
     <el-table-column key="status" prop="status" label="状态" align="center" width="80" show-overflow-tooltip>
       <template #default="{ row }">
         <el-tag :type="materialStatusEnum.V[row.sourceRow.reviewStatus].TAG">{{ row.reviewStatus }}</el-tag>

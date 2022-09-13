@@ -412,6 +412,24 @@ const wmsRmTransferReceipt = {
           showSerialNumber: true,
           projectNameShowConfig: projectNameArrangementModeEnum.SERIAL_NUMBER_START.V
         }
+      },
+      {
+        show: false,
+        key: 'monomerName',
+        title: '单体',
+        source: dataSourceEnum.SYSTEM.V,
+        align: alignEnum.LEFT.V,
+        minWidth: 18,
+        type: typeEnum.MONOMER_NAME.K
+      },
+      {
+        show: false,
+        key: 'areaName',
+        title: '区域',
+        source: dataSourceEnum.SYSTEM.V,
+        align: alignEnum.LEFT.V,
+        minWidth: 18,
+        type: typeEnum.AREA_NAME.K
       }
     ]
   }

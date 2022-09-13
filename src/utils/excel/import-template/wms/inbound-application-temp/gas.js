@@ -18,8 +18,10 @@ const sectionSteelSpecTmpl = {
     { label: '数量', field: 'quantity', type: 'number', excelField: '__EMPTY_3' },
     { label: '核算单位', field: 'accountingUnit', excelField: '__EMPTY_4' },
     { label: '核算量', field: 'mete', type: 'number', excelField: '__EMPTY_5' },
-    { label: '品牌', field: 'brand', excelField: '__EMPTY_6' },
-    { label: '备注', field: 'remark', excelField: '__EMPTY_7' }
+    { label: '含税单价', field: 'unitPrice', excelField: '__EMPTY_6' },
+    { label: '金额', field: 'amount', excelField: '__EMPTY_7' },
+    { label: '品牌', field: 'brand', excelField: '__EMPTY_8' },
+    { label: '备注', field: 'remark', excelField: '__EMPTY_9' }
   ],
   // 校验规则
   rules: {

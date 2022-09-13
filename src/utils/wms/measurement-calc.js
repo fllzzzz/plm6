@@ -141,6 +141,8 @@ export async function steelInboundFormFormat(form) {
     row.uid = row.id
     row.weighingTotalWeight = row.mete // 过磅重量
     row.specificationMap = row.specKV // 规格KV格式
+    row.projectId = row.projectId || row.project?.id // 项目id
+    row.warehouseId = row.warehouseId || row.warehouse?.id // 仓库id
     switch (row.basicClass) {
       case matClsEnum.STEEL_PLATE.V:
         p = calcSteelPlateWeight({

@@ -47,6 +47,25 @@ export function setInboundSteelConf(data) {
   })
 }
 
+// 获取报表中心配置
+export function getReportCenterConf() {
+  return request({
+    module: 'wms',
+    url: 'config/report/download',
+    method: 'get'
+  })
+}
+
+// 保存报表中心配置
+export function setReportCenterConf(data) {
+  return request({
+    module: 'wms',
+    url: 'config/report/download',
+    method: 'put',
+    data
+  })
+}
+
 // 获取出库基础配置
 export function getOutboundBasicConf() {
   return request({

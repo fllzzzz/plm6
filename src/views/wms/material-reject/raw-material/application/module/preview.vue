@@ -20,7 +20,7 @@
         <!-- 单位及其数量 -->
         <material-unit-quantity-columns :basic-class="basicClass" reject-type-mode />
         <!-- 仓库位置信息 -->
-        <warehouse-info-columns show-project />
+        <warehouse-info-columns show-project show-monomer show-area />
       </common-table>
       <el-input
         v-model="form.remark"

@@ -65,7 +65,7 @@
           <!-- 甲供设置 -->
           <set-party-a-info v-if="showAmount && form && form.list" :form="form" />
           <!-- 仓库信息 -->
-          <warehouse-info-columns show-project />
+          <warehouse-info-columns show-project show-monomer show-area />
         </common-table>
         <div class="flex-rss footer-info">
           <el-form-item v-if="showPriceSet" class="invoice-type-item" label="发票及税率" prop="invoiceType" label-width="95px">

@@ -57,7 +57,7 @@
           :precision="baseUnit.weight.precision"
           size="mini"
           placeholder="重量"
-          @change="emit('calc-weight')"
+          @change="handleWeightChange($event, row)"
         />
       </template>
     </el-table-column>
@@ -122,6 +122,10 @@
         <el-input v-model.trim="row.color" maxlength="20" size="mini" placeholder="颜色" />
       </template>
     </el-table-column>
+
+    <!-- 金额设置 -->
+    <price-set-columns v-if="!props.boolPartyA" />
+
     <el-table-column prop="brand" label="品牌" align="center" min-width="100px">
       <template #default="{ row }">
         <el-input v-model.trim="row.brand" maxlength="60" size="mini" placeholder="品牌" />
@@ -141,9 +145,9 @@
 </template>
 
 <script setup>
-import { defineEmits, defineExpose, ref, inject, reactive, watch } from 'vue'
+import { defineEmits, defineProps, computed, defineExpose, ref, inject, reactive, watch } from 'vue'
 import { matClsEnum } from '@/utils/enum/modules/classification'
-import { isBlank, isNotBlank } from '@/utils/data-type'
+import { isBlank, isNotBlank, toPrecision } from '@/utils/data-type'
 
 import { regExtra } from '@/composables/form/use-form'
 import useTableValidate from '@compos/form/use-table-validate'
@@ -153,12 +157,21 @@ import { createUniqueString } from '@/utils/data-type/string'
 import { calcSteelCoilLength } from '@/utils/wms/measurement-calc'
 import { positiveNumPattern } from '@/utils/validate/pattern'
 
+import priceSetColumns from '@/views/wms/material-inbound/raw-material/components/price-set-columns.vue'
+
 const emit = defineEmits(['calc-weight'])
+
+const props = defineProps({
+  boolPartyA: {
+    type: Boolean,
+    default: false
+  }
+})
 
 // 当前物料基础类型
 const basicClass = matClsEnum.STEEL_COIL.V
 
-const tableRules = {
+const rules = {
   classifyId: [{ required: true, message: '请选择物料种类', trigger: 'change' }],
   width: [
     { required: true, message: '请填写宽度', trigger: 'blur' },
@@ -178,6 +191,31 @@ const tableRules = {
   ]
   // quantity: [{ required: true, message: '请填写数量', trigger: 'blur' }]
 }
+
+// 金额校验
+const validateAmount = (value, row) => {
+  if (isNotBlank(row.weighingTotalWeight) && isNotBlank(row.unitPrice)) {
+    return +(row.weighingTotalWeight * row.unitPrice).toFixed(2) === value
+  }
+  return false
+}
+
+// 甲供不需要填写价格
+const amountRules = {
+  unitPrice: [{ required: true, message: '请填写单价', trigger: 'blur' }],
+  amount: [
+    { required: true, message: '请填写金额', trigger: 'blur' },
+    { validator: validateAmount, message: '金额有误，请手动修改', trigger: 'blur' }
+  ]
+}
+
+const tableRules = computed(() => {
+  let _rules = Object.assign({}, rules)
+  if (!props.boolPartyA) {
+    _rules = Object.assign(_rules, amountRules)
+  }
+  return _rules
+})
 
 const matSpecRef = inject('matSpecRef') // 调用父组件matSpecRef
 const { baseUnit } = useMatBaseUnit(basicClass) // 当前分类基础单位
@@ -214,6 +252,12 @@ function rowInit(row) {
     theoryLength: undefined, // 理论单件重量
     weighingTotalWeight: undefined // 过磅重量
   })
+
+  // 非甲供
+  if (!props.boolPartyA) {
+    _row.unitPrice = undefined // 含税单价
+    _row.amount = undefined // 金额
+  }
   rowWatch(_row)
   return _row
 }
@@ -248,6 +292,14 @@ function calcTotalLength(row) {
     row.length = undefined
   }
   // row.quantity = row.length
+}
+
+// 处理重量变化
+function handleWeightChange(val, row) {
+  if (isNotBlank(row.unitPrice) && isNotBlank(val)) {
+    row.amount = toPrecision(val * row.unitPrice, 2)
+  }
+  emit('calc-weight')
 }
 
 // 删除行

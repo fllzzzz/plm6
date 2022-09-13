@@ -38,7 +38,7 @@
         </div>
       </div>
       <el-form ref="formRef" :model="form">
-        <component ref="steelRef" :max-height="tableMaxHeight" :style="maxHeightStyle" :is="comp" @calc-weight="calcWeight" />
+        <component ref="steelRef" :max-height="tableMaxHeight" :style="maxHeightStyle" :is="comp" :bool-party-a="boolPartyA" @calc-weight="calcWeight" />
       </el-form>
     </common-wrapper>
     <common-drawer
@@ -76,6 +76,7 @@ import { defineProps, defineEmits, ref, computed, watch, provide, nextTick, reac
 import { STEEL_ENUM } from '@/settings/config'
 import { matClsEnum } from '@/utils/enum/modules/classification'
 import { weightMeasurementModeEnum } from '@/utils/enum/modules/finance'
+import { orderSupplyTypeEnum } from '@/utils/enum/modules/wms'
 
 import useForm from '@/composables/form/use-form'
 import useMaxHeight from '@compos/use-max-height'
@@ -130,6 +131,7 @@ const materialSelectVisible = ref(false) // 显示物料选择
 const currentBasicClass = ref() // 当前基础分类
 const list = ref([]) // 当前操作的表格list
 const totalWeight = ref() // 总重
+const boolPartyA = ref(false) // 是否“甲供”
 
 // 钢材三个组件的ref列表
 const steelRefList = reactive({
@@ -425,6 +427,7 @@ function handleOrderInfoChange(orderInfo) {
   init()
   order.value = orderInfo
   cu.props.order = orderInfo
+  boolPartyA.value = orderInfo?.supplyType === orderSupplyTypeEnum.PARTY_A.V
   if (orderInfo) {
     Object.keys(steelBasicClassKV).forEach((k) => {
       if (steelBasicClassKV[k].V & orderInfo.basicClass) {
@@ -472,6 +475,7 @@ function init() {
   currentBasicClass.value = undefined // 当前分类
   totalWeight.value = 0 // 总重
   orderLoaded.value = false // 订单加载状态
+  boolPartyA.value = false // 是否“甲供”
 }
 
 // 导入

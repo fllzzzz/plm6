@@ -3,14 +3,19 @@
     <div v-if="crud.searchToggle">
       <!-- 物料查询相关 -->
       <mat-header-query :basic-class="query.basicClass" :query="query" :to-query="crud.toQuery" show-project-Warehouse-type>
-        <template #firstLineRight>
-          <span class="child-mr-6">
-            <current-user-outbound-list ref="currentUserOutboundListRef" @refresh="crud.toQuery" />
-            <common-button icon="el-icon-time" size="mini" type="info" @click="toOutboundRecord">出库记录</common-button>
-            <common-button type="info" size="mini" icon="el-icon-lock" @click="openFreezeRecords">
-              冻结记录
-            </common-button>
-          </span>
+        <template #afterProjectWarehouseType>
+          <monomer-select-area-select
+            v-if="query.projectWarehouseType === projectWarehouseTypeEnum.PROJECT.V"
+            v-model:monomerId="query.monomerId"
+            v-model:areaId="query.areaId"
+            clearable
+            areaClearable
+            :filterArea="false"
+            :project-id="query.projectId"
+            :monomerDisabled="!query.projectId"
+            :areaDisabled="!query.projectId"
+            @change="crud.toQuery"
+          />
         </template>
       </mat-header-query>
       <rr-operation />
@@ -23,6 +28,13 @@
         </common-button>
         <common-button class="filter-item" v-permission="permission.transfer" type="warning" size="mini" @click="toBatchTransfer">
           <svg-icon icon-class="wms-transfer" /> 批量调拨
+        </common-button>
+      </template>
+      <template #viewLeft>
+        <current-user-outbound-list ref="currentUserOutboundListRef" @refresh="crud.toQuery" />
+        <common-button class="filter-item" icon="el-icon-time" size="mini" type="info" @click="toOutboundRecord">出库记录</common-button>
+        <common-button class="filter-item" type="info" size="mini" icon="el-icon-lock" @click="openFreezeRecords">
+          冻结记录
         </common-button>
       </template>
     </crud-operation>
@@ -46,6 +58,7 @@
 <script setup>
 import { defineExpose } from 'vue'
 import { rawMatClsEnum } from '@/utils/enum/modules/classification'
+import { projectWarehouseTypeEnum } from '@/utils/enum/modules/wms'
 
 import useHeaderInfo from '../../compos/use-header-info'
 import RrOperation from '@crud/RR.operation'
@@ -54,6 +67,7 @@ import MatHeaderQuery from '@/components-system/wms/header-query/raw-mat/index.v
 import CurrentUserOutboundList from '@/views/wms/material-outbound/raw-material/components/current-user-outbound-list/index.vue'
 import OutboundBatchHandlingForm from '@/views/wms/material-outbound/raw-material/components/outbound-batch-handling-form/index.vue'
 import TransferBatchHandlingForm from '@/views/wms/material-transfer/raw-material/components/transfer-batch-handling-form/index.vue'
+import monomerSelectAreaSelect from '@comp-base/monomer-select-area-select'
 
 const {
   crud,

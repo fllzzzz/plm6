@@ -279,8 +279,10 @@ export const mesCuttingConfigPM = {
 
 // WMS-配置管理/基础配置
 export const configWmsBasicForPM = {
-  basicInboundGet: ['config_wms_basicInbound:get'], // 查看 基础入库配置信息
-  basicInboundEdit: ['config_wms_basicInbound:edit'], // 编辑 基础入库配置信息
+  // basicInboundGet: ['config_wms_basicInbound:get'], // 查看 基础入库配置信息
+  // basicInboundEdit: ['config_wms_basicInbound:edit'], // 编辑 基础入库配置信息
+  reportCenterGet: ['config_wms_reportCenter:get'], // 查看 报表中心下载配置信息
+  reportCenterEdit: ['config_wms_reportCenter:edit'], // 编辑 报表中心下载配置信息
   steelInboundGet: ['config_wms_steelInbound:get'], // 查看 钢材入库配置信息
   steelInboundEdit: ['config_wms_steelInbound:edit'], // 编辑 钢材入库配置信息
   basicOutboundGet: ['config_wms_basicOutbound:get'], // 查看 基础出库配置信息

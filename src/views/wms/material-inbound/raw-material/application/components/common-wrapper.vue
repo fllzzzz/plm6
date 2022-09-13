@@ -4,6 +4,7 @@
       :basic-class="props.basicClass"
       :current-basic-class="props.currentBasicClass??props.basicClass"
       :edit="props.edit"
+      :validate="validate"
       class="header"
       ref="headerRef"
       @purchase-order-change="handleOrderInfoChange"

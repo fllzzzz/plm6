@@ -19,6 +19,15 @@
         class="filter-item"
         @change="crud.toQuery"
       />
+      <common-radio-button
+        type="enum"
+        v-model="query.boolRealReturn"
+        :options="returnStatusEnum.ENUM"
+        show-option-all
+        clearable
+        class="filter-item"
+        @change="crud.toQuery"
+      />
       <el-date-picker
         v-model="query.createTime"
         :default-time="defaultTime"
@@ -84,6 +93,7 @@ import { ref, inject, onMounted, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { PICKER_OPTIONS_SHORTCUTS } from '@/settings/config'
 import { reviewStatusEnum } from '@enum-ms/common'
+import { returnStatusEnum } from '@enum-ms/wms'
 import { rawMatClsEnum } from '@enum-ms/classification'
 
 import { regHeader } from '@compos/use-crud'

@@ -43,13 +43,34 @@
           <material-unit-quantity-columns :basic-class="props.basicClass" />
           <!-- 次要信息 -->
           <material-secondary-info-columns v-if="showTableColumnSecondary" :basic-class="props.basicClass" />
+
+          <template v-if="!boolPartyA">
+              <el-table-column key="unitPrice" prop="unitPrice" align="right" width="120" label="含税单价">
+                <template #default="{ row: { sourceRow: row } }">
+                  <span>{{ row.unitPrice }}</span>
+                </template>
+              </el-table-column>
+              <el-table-column key="amount" prop="amount" align="right" width="120" label="金额">
+                <template #default="{ row }">
+                  <span>{{ row.amount }}</span>
+              </template>
+            </el-table-column>
+          </template>
+
           <!-- 金额设置 -->
-          <price-set-columns
+          <!-- <price-set-columns
             v-if="fillableAmount"
             :form="form"
             :order="order"
+            :show-price="false"
             :requisitions="cu.props.requisitions"
             @amount-change="handleAmountChange"
+          /> -->
+          <!-- 项目设置 -->
+          <project-set-columns
+            :form="form"
+            :order="order"
+            :requisitions="cu.props.requisitions"
           />
           <!-- 仓库设置 -->
           <warehouse-set-columns :form="form" v-if="fillableWarehouse" />
@@ -64,26 +85,27 @@
         />
       </el-form>
     </template>
-    <common-footer class="footer" unit="元" :total-value="amount" :show-total="fillableAmount" is-submit />
+    <common-footer class="footer" unit="元" :total-value="amount" is-submit />
   </common-dialog>
 </template>
 
 <script setup>
 import { computed, defineEmits, defineProps, provide, ref, watch } from 'vue'
-import { inboundFillWayEnum, orderSupplyTypeEnum } from '@enum-ms/wms'
+import { orderSupplyTypeEnum } from '@enum-ms/wms'
 import { STEEL_ENUM } from '@/settings/config'
 import { matClsEnum } from '@/utils/enum/modules/classification'
 import { logisticsPayerEnum } from '@/utils/enum/modules/logistics'
 import { tableSummary } from '@/utils/el-extra'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
-import { isBlank, isNotBlank, toFixed, toPrecision } from '@/utils/data-type'
+// import { isBlank, isNotBlank, toFixed } from '@/utils/data-type'
+import { isBlank, isNotBlank } from '@/utils/data-type'
 import { materialHasAmountColumns } from '@/utils/columns-format/wms'
 
 import { regExtra } from '@/composables/form/use-form'
 import useTableValidate from '@/composables/form/use-table-validate'
 import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'
-import useWmsConfig from '@/composables/store/use-wms-config'
+// import useWmsConfig from '@/composables/store/use-wms-config'
 import elExpandTableColumn from '@comp-common/el-expand-table-column.vue'
 import materialBaseInfoColumns from '@/components-system/wms/table-columns/material-base-info-columns/index.vue'
 import materialUnitQuantityColumns from '@/components-system/wms/table-columns/material-unit-quantity-columns/index.vue'
@@ -92,7 +114,8 @@ import expandSecondaryInfo from '@/components-system/wms/table-columns/expand-se
 import purchaseDetailButton from '@/components-system/wms/purchase-detail-button/index.vue'
 
 import logisticsForm from '@/views/wms/material-inbound/raw-material/components/logistics-form.vue'
-import priceSetColumns from '@/views/wms/material-inbound/raw-material/components/price-set-columns.vue'
+// import priceSetColumns from '@/views/wms/material-inbound/raw-material/components/price-set-columns.vue'
+import projectSetColumns from '@/views/wms/material-inbound/raw-material/components/project-set-columns.vue'
 import warehouseSetColumns from '@/views/wms/material-inbound/raw-material/components/warehouse-set-columns.vue'
 import titleAfterInfo from '@/views/wms/material-inbound/raw-material/components/title-after-info.vue'
 import commonFooter from './common-footer.vue'
@@ -137,15 +160,14 @@ const projectRules = {
 }
 
 const tableRules = computed(() => {
-  const rules = {}
+  const rules = { ...warehouseRules }
   // 甲供不填写金额方面的信息
-  if (fillableAmount.value && !boolPartyA.value) {
+  if (!boolPartyA.value) {
     Object.assign(rules, amountRules)
     if (isNotBlank(order.value.projects)) {
       Object.assign(rules, projectRules)
     }
   }
-  if (fillableWarehouse.value) Object.assign(rules, warehouseRules)
   return rules
 })
 
@@ -154,16 +176,18 @@ const amount = ref() // 金额
 
 const { visible: dialogVisible, handleClose } = useVisible({ emit, props, closeHook: closeHook })
 const { cu, form, FORM } = regExtra() // 表单
-const { inboundFillWayCfg } = useWmsConfig()
+// const { inboundFillWayCfg } = useWmsConfig()
 
 // 物流组件ref
 const logisticsRef = ref()
 // 订单信息
 const order = computed(() => cu.props.order || {})
 // 显示金额相关信息（由采购填写的信息）
-const fillableAmount = computed(() => inboundFillWayCfg.value ? inboundFillWayCfg.value.amountFillWay === inboundFillWayEnum.APPLICATION.V : false)
+const fillableAmount = ref(true)
+// const fillableAmount = computed(() => inboundFillWayCfg.value ? inboundFillWayCfg.value.amountFillWay === inboundFillWayEnum.APPLICATION.V : false)
 // 显示仓库（由仓库填写的信息）
-const fillableWarehouse = computed(() => inboundFillWayCfg.value ? inboundFillWayCfg.value.warehouseFillWay === inboundFillWayEnum.APPLICATION.V : false)
+const fillableWarehouse = ref(true)
+// const fillableWarehouse = computed(() => inboundFillWayCfg.value ? inboundFillWayCfg.value.warehouseFillWay === inboundFillWayEnum.APPLICATION.V : false)
 // 显示物流信息
 const fillableLogistics = computed(() => order.value.logisticsPayerType === logisticsPayerEnum.DEMAND.V && fillableAmount.value)
 // 是否“甲供”
@@ -194,6 +218,8 @@ const { maxHeight } = useMaxHeight(
 const ditto = new Map([
   ['requisitionsSN', -1],
   ['projectId', -1],
+  ['monomerId', -1],
+  ['areaId', -1],
   ['factoryId', -1],
   ['warehouseId', -1]
 ])
@@ -206,16 +232,14 @@ watch(
   (visible) => {
     if (visible) {
       setDitto(form.list) // 在list变化时设置同上
-      form.list.forEach((v) => {
-        if (isNotBlank(v.amount) && isNotBlank(v.mete)) {
-          // 量发生变化，清空金额
-          const unitPrice = toPrecision(v.amount / v.mete, 10)
-          if (v.unitPrice !== unitPrice) {
-            v.unitPrice = undefined
-            v.amount = undefined
+      amount.value = 0
+      if (!boolPartyA.value) {
+        form.list.forEach((v) => {
+          if (isNotBlank(v.amount)) {
+            amount.value += +v.amount
           }
-        }
-      })
+        })
+      }
     }
   },
   { immediate: true }
@@ -301,20 +325,20 @@ function setDitto(list) {
 }
 
 // 金额变化
-function handleAmountChange() {
-  if (!form.list) return
-  amount.value = toFixed(
-    form.list.reduce((sum, cur) => {
-      const value = Number(cur.amount)
-      if (!isNaN(value)) {
-        return sum + cur.amount
-      } else {
-        return sum
-      }
-    }, 0),
-    2
-  )
-}
+// function handleAmountChange() {
+//   if (!form.list) return
+//   amount.value = toFixed(
+//     form.list.reduce((sum, cur) => {
+//       const value = Number(cur.amount)
+//       if (!isNaN(value)) {
+//         return sum + cur.amount
+//       } else {
+//         return sum
+//       }
+//     }, 0),
+//     2
+//   )
+// }
 
 // 合计
 function getSummaries(param) {

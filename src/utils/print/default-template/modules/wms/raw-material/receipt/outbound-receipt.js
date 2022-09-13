@@ -344,6 +344,33 @@ const wmsRmOutboundReceipt = {
       },
       {
         show: false,
+        key: 'monomerName',
+        title: '单体',
+        source: dataSourceEnum.SYSTEM.V,
+        align: alignEnum.LEFT.V,
+        minWidth: 18,
+        type: typeEnum.MONOMER_NAME.K
+      },
+      {
+        show: false,
+        key: 'areaName',
+        title: '区域',
+        source: dataSourceEnum.SYSTEM.V,
+        align: alignEnum.LEFT.V,
+        minWidth: 18,
+        type: typeEnum.AREA_NAME.K
+      },
+      {
+        show: false,
+        key: 'workshop.name',
+        title: '车间',
+        source: dataSourceEnum.SYSTEM.V,
+        align: alignEnum.LEFT.V,
+        minWidth: 18,
+        type: typeEnum.WORKSHOP.K
+      },
+      {
+        show: false,
         key: 'warehouse.name',
         title: '存储位置',
         source: dataSourceEnum.SYSTEM.V,

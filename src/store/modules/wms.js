@@ -10,6 +10,7 @@ const state = {
   inboundFillWayCfg: {}, //  入库配置
   outboundCfg: {}, // 出库基础配置
   rejectCfg: {}, // 退货基础配置
+  reportCfg: {}, // 报表中心（入库明细和出库明细）配置
   partyABorrowReturnCfg: {}, // 甲供借用归还配置
   notPrintedMaterialNumber: { totalMaterial: 0, inboundMaterial: 0, outboundMaterial: 0, transferMaterial: 0, returnMaterial: 0 }, // 未打印物料数量
   loaded: {
@@ -39,6 +40,9 @@ const mutations = {
   SET_REJECT_CFG(state, config) {
     state.rejectCfg = config
   },
+  SET_REPORT_CFG(state, config) {
+    state.reportCfg = config
+  },
   SET_PARTY_A_BORROW_RETURN_CFG(state, config) {
     state.partyABorrowReturnCfg = config
   },
@@ -54,11 +58,12 @@ const actions = {
   },
   // wms 基础配置
   async fetchWmsConfig({ commit }) {
-    const { inbound = {}, outbound = {}, reject = {}, partyABorrowReturn = {}} = await getWmsConfig()
+    const { inbound = {}, outbound = {}, reject = {}, report = {}, partyABorrowReturn = {}} = await getWmsConfig()
     commit('SET_INBOUND_STEEL_CFG', inbound.steel)
     commit('SET_INBOUND_FILL_WAY_CFG', inbound.fillWay)
     commit('SET_OUTBOUND_CFG', outbound)
     commit('SET_REJECT_CFG', reject)
+    commit('SET_REPORT_CFG', report)
     commit('SET_PARTY_A_BORROW_RETURN_CFG', partyABorrowReturn)
     commit('SET_LOADED', { key: 'config' })
   },

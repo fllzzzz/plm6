@@ -29,6 +29,12 @@
           <template #default="{ row }">
             <expand-secondary-info v-if="!showTableColumnSecondary" :basic-class="detail.basicClass" :row="row" show-brand />
             <p>
+              单体：<span>{{ row.monomerName }}</span>
+            </p>
+            <p>
+              区域：<span>{{ row.areaName }}</span>
+            </p>
+            <p>
               备注：<span>{{ row.remark }}</span>
             </p>
           </template>
@@ -45,6 +51,8 @@
         </template>
         <el-table-column prop="requisitionsSN" label="申购单" align="left" min-width="120px" show-overflow-tooltip />
         <el-table-column prop="project" label="项目" align="left" min-width="120px" show-overflow-tooltip />
+        <el-table-column prop="monomerName" label="单体" align="left" min-width="120px" show-overflow-tooltip />
+        <el-table-column prop="areaName" label="区域" align="left" min-width="120px" show-overflow-tooltip />
         <warehouse-info-columns />
       </common-table>
     </template>
@@ -53,7 +61,7 @@
 
 <script setup>
 import { inject, computed, ref } from 'vue'
-import { inboundFillWayEnum, orderSupplyTypeEnum } from '@enum-ms/wms'
+import { orderSupplyTypeEnum } from '@enum-ms/wms'
 import { tableSummary } from '@/utils/el-extra'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { setSpecInfoToList } from '@/utils/wms/spec'
@@ -61,7 +69,7 @@ import { materialHasAmountColumns } from '@/utils/columns-format/wms'
 
 import { regDetail } from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
-import useWmsConfig from '@/composables/store/use-wms-config'
+// import useWmsConfig from '@/composables/store/use-wms-config'
 import elExpandTableColumn from '@comp-common/el-expand-table-column.vue'
 import materialBaseInfoColumns from '@/components-system/wms/table-columns/material-base-info-columns/index.vue'
 import materialUnitQuantityColumns from '@/components-system/wms/table-columns/material-unit-quantity-columns/index.vue'
@@ -75,13 +83,13 @@ import checkPermission from '@/utils/system/check-permission'
 
 const permission = inject('permission')
 // 表格列数据格式转换
-const columnsDataFormat = ref([...materialHasAmountColumns, ['remark', 'empty-text']])
+const columnsDataFormat = ref([...materialHasAmountColumns, ['remark', 'empty-text'], ['monomerName', 'empty-text'], ['areaName', 'empty-text']])
 
 const drawerRef = ref()
 const expandRowKeys = ref([])
 const { CRUD, crud, detail } = regDetail()
 
-const { inboundFillWayCfg } = useWmsConfig()
+// const { inboundFillWayCfg } = useWmsConfig()
 
 // 表格高度处理
 const { maxHeight } = useMaxHeight(
@@ -99,10 +107,11 @@ const { maxHeight } = useMaxHeight(
 // 采购订单信息
 const order = computed(() => detail.purchaseOrder || {})
 
-// 可填写金额
-const fillableAmount = computed(() =>
-  inboundFillWayCfg.value ? inboundFillWayCfg.value.amountFillWay === inboundFillWayEnum.APPLICATION.V : false
-)
+// 显示金额相关信息（（统一为入库填写，取消后台配置）
+const fillableAmount = ref(true)
+// const fillableAmount = computed(() =>
+//   inboundFillWayCfg.value ? inboundFillWayCfg.value.amountFillWay === inboundFillWayEnum.APPLICATION.V : false
+// )
 
 // 显示金额
 const showAmount = computed(() => checkPermission(permission.showAmount) || fillableAmount.value)

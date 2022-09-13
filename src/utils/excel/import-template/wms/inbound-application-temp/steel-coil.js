@@ -18,10 +18,12 @@ const sectionSteelSpecTmpl = {
     { label: '宽（mm）', field: 'width', type: 'number', excelField: '__EMPTY_3' },
     { label: '长（mm）', field: 'length', type: 'number', excelField: '__EMPTY_4' },
     { label: '总重（kg）', field: 'weighingTotalWeight', type: 'number', precision: 0, excelField: '__EMPTY_5' },
-    { label: '颜色', field: 'color', excelField: '__EMPTY_6' },
-    { label: '品牌', field: 'brand', excelField: '__EMPTY_7' },
-    { label: '卷号', field: 'heatNoAndBatchNo', excelField: '__EMPTY_8' },
-    { label: '备注', field: 'remark', excelField: '__EMPTY_9' }
+    { label: '含税单价', field: 'unitPrice', excelField: '__EMPTY_6' },
+    { label: '金额', field: 'amount', excelField: '__EMPTY_7' },
+    { label: '颜色', field: 'color', excelField: '__EMPTY_8' },
+    { label: '品牌', field: 'brand', excelField: '__EMPTY_9' },
+    { label: '卷号', field: 'heatNoAndBatchNo', excelField: '__EMPTY_10' },
+    { label: '备注', field: 'remark', excelField: '__EMPTY_11' }
   ],
   // 校验规则
   rules: {

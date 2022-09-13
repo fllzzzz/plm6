@@ -41,7 +41,7 @@
       />
       <!-- 次要信息 -->
       <material-secondary-info-columns :columns="columns" :basic-class="basicClass" />
-      <warehouse-info-columns :columns="columns" :show-project="crud.query.projectWarehouseType === projectWarehouseTypeEnum.PROJECT.V" />
+      <warehouse-info-columns :columns="columns" :show-project="showProjectInfo" :show-monomer="showProjectInfo" :show-area="showProjectInfo" />
     </common-table>
     <!--分页组件-->
     <pagination />
@@ -105,6 +105,9 @@ const { maxHeight } = useMaxHeight({ paginate: true })
 
 // 基础类型
 const basicClass = computed(() => crud.query.basicClass || matClsEnum.STEEL_PLATE.V)
+
+// 是否显示项目相关信息
+const showProjectInfo = computed(() => crud.query.projectWarehouseType === projectWarehouseTypeEnum.PROJECT.V)
 
 // 处理刷新
 CRUD.HOOK.handleRefresh = async (crud, { data }) => {
