@@ -27,11 +27,16 @@ const supply = {
   logistics_reconciliation: '物流对账报表'
 }
 
+const project = {
+  delivery_manage: '收货管理',
+  install_manage: '安装管理'
+}
 const moduleType = {
   contract: { L: '合同管理', V: contract },
   supply: { L: '供应链', V: supply },
   wms: { L: 'WMS', V: wms },
-  mes: { L: 'MES', V: mes }
+  mes: { L: 'MES', V: mes },
+  project: { L: '项目管理', V: project }
 }
 
 const mt = moduleType
@@ -116,7 +121,13 @@ const tableType = {
   mesShipmentAudit: { L: '发运审核', M: 'mes_logistics', T: mt.mes.L + ' / ' + mes.mes_logistics },
   mesReceiptStatusSummary: { L: '收货状态汇总', M: 'mes_logistics', T: mt.mes.L + ' / ' + mes.mes_logistics },
   mesShippingList: { L: '发货清单', M: 'mes_logistics', T: mt.mes.L + ' / ' + mes.mes_logistics },
-  mesLogisticsSummary: { L: '物流汇总', M: 'mes_logistics', T: mt.mes.L + ' / ' + mes.mes_logistics }
+  mesLogisticsSummary: { L: '物流汇总', M: 'mes_logistics', T: mt.mes.L + ' / ' + mes.mes_logistics },
+
+  // 项目管理
+  deliveryCargoList: { L: '自制收货记录', M: 'delivery_manage', T: mt.project.L + ' / ' + project.delivery_manage },
+  deliveryReportList: { L: '收货报表', M: 'delivery_manage', T: mt.project.L + ' / ' + project.delivery_manage },
+  deliveryInstallList: { L: '收安报表', M: 'delivery_manage', T: mt.project.L + ' / ' + project.delivery_manage },
+  installReportList: { L: '安装报表', M: 'install_manage', T: mt.project.L + ' / ' + project.install_manage }
 }
 
 // 一个模板对应多个接口，尽量一一对应，在特殊情况下需要做特殊处理

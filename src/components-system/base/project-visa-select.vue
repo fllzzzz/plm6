@@ -86,11 +86,12 @@ const selectValue = ref()
 
 const store = useStore()
 
-const { visaProjects } = useUserVisaProjects({ businessType: props.businessType })
+const { visaProjects } = useUserVisaProjects()
 
 const options = computed(() => {
+  const projectData = visaProjects.value.filter(v => v.businessType === props.businessType)
   // 是否过滤有结算记录的项目
-  return visaProjects.value.filter(v => {
+  return projectData.filter(v => {
     // isSubmitSettle === true 表示该项目有结算记录
     return !props.filterSettlement || props.filterSettlement === !v.isSubmitSettle
   })
@@ -128,17 +129,9 @@ watch(
   }
 )
 
-// 项目业务类型
-watch(
-  () => props.businessType,
-  (val) => {
-    fetchProjects()
-  }
-)
-
 // 重新获取签证项目
 function fetchProjects() {
-  store.dispatch('project/fetchUserVisaProjects', { businessType: props.businessType })
+  store.dispatch('project/fetchUserVisaProjects')
 }
 
 // change

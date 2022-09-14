@@ -1,14 +1,13 @@
 import { computed, watch } from 'vue'
 import { useStore } from 'vuex'
-import { businessTypeEnum } from '@enum-ms/contract'
 
 // 获取可签证项目
-const useUserVisaProjects = (params = { businessType: businessTypeEnum.MACHINING.V }, loadedCallBack) => {
+const useUserVisaProjects = (loadedCallBack) => {
   const store = useStore()
   const loaded = computed(() => store.state.project.visaLoaded)
   // 未加载则拉取
   if (!loaded.value) {
-    store.dispatch('project/fetchUserVisaProjects', params)
+    store.dispatch('project/fetchUserVisaProjects')
   }
   // 加载成功回调
   if (loadedCallBack) {
