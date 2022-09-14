@@ -64,6 +64,7 @@ export const visaSettlePM = {
   get: ['visa_settle:get'], // 列表
   add: ['visa_settle:add'], // 新增签证或结算
   edit: ['visa_settle:edit'], // 编辑签证或结算
+  detail: ['visa_settle:detail'], // 签证或结算详情
   audit: ['visa_settle:audit'], // 签证或结算审核
   download: ['visa_settle:download'] // 下载签证或结算
 }

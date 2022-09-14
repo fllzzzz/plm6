@@ -33,10 +33,10 @@ import { isNotBlank } from '@data-type/index'
 import { installSetEnum } from '@enum-ms/project'
 import { useStore } from 'vuex'
 
-import { systemConfigPM } from '@/page-permission/config'
+import { installConfigPM } from '@/page-permission/project'
 import { ElMessage } from 'element-plus'
 
-const permission = systemConfigPM.project
+const permission = installConfigPM.reportMethod
 const defaultData = {
   reportMethod: undefined
 }

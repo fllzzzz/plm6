@@ -55,7 +55,7 @@
         <el-table-column key="auditReceiptTime" prop="auditReceiptTime" label="收货日期" align="center" min-width="120"/>
         <el-table-column
           label="操作"
-          width="130px"
+          width="150px"
           align="center"
           fixed="right"
         >
@@ -68,7 +68,7 @@
               @click="openDetail(scope.row,'detail')"
             />
             <common-button
-              v-if="checkPermission(permission.audit) && !isNotBlank(scope.row.boolProblemReceiving)"
+              v-if="checkPermission(permission.audit) && scope.row.status===deliveryStatusEnum.SHIPMENT.V"
               size="mini"
               icon="el-icon-s-check"
               type="primary"
