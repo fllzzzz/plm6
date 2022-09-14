@@ -3,7 +3,7 @@
     <template #header>
       <div class="clearfix">
         <span class="card-title">分包类别</span>
-        <common-button size="mini" type="primary" style="float: right" @click="crud.toAdd">
+        <common-button size="mini" type="primary" style="float: right" @click="crud.toAdd" v-permission="permission.add">
           新增
         </common-button>
       </div>
