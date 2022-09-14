@@ -170,19 +170,4 @@ CRUD.HOOK.beforeToAdd = (crud, data) => {
   crud.form.processType = crud.query.processType
   crud.form.sequenceType = crud.query.sequenceType
 }
-
-// 添加之后
-CRUD.HOOK.afterSubmit = () => {
-  store.dispatch('config/fetchSuppliers')
-}
-
-// 批量添加之后
-CRUD.HOOK.afterBatchSubmit = () => {
-  store.dispatch('config/fetchSuppliers')
-}
-
-// 删除后
-CRUD.HOOK.afterDelete = () => {
-  store.dispatch('config/fetchSuppliers')
-}
 </script>
