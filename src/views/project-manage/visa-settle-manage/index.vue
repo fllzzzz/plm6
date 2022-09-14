@@ -56,7 +56,7 @@
 import crudApi, { addVisa, addSettlement, editVisa, editSettlement } from '@/api/project-manage/visa-settle-manage'
 import { ref, computed } from 'vue'
 
-import { visaManagePM as permission } from '@/page-permission/contract'
+import { visaSettlePM as permission } from '@/page-permission/project'
 import { reviewStatusEnum, visaTypeEnum } from '@enum-ms/common'
 import { settlementStatusEnum } from '@enum-ms/finance'
 import checkPermission from '@/utils/system/check-permission'
