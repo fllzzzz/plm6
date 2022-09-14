@@ -64,7 +64,7 @@
 import crudApi from '@/api/config/project-config/subcontract-config'
 import { ref } from 'vue'
 
-import { branchCompanyPM as permission } from '@/page-permission/config'
+import { subcontractConfigPM as permission } from '@/page-permission/config'
 import checkPermission from '@/utils/system/check-permission'
 import { ElMessage } from 'element-plus'
 
