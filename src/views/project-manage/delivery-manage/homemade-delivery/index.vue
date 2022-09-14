@@ -15,7 +15,7 @@
         style="width: 100%"
       >
         <el-table-column type="index" prop="index" label="序号" align="center" width="60" />
-        <el-table-column key="auditTime" prop="auditTime" label="发运日期" align="center" width="160">
+        <el-table-column key="auditTime" prop="auditTime" label="发运日期" align="center" width="160" :show-overflow-tooltip="true" >
           <template v-slot="scope">
             <table-cell-tag :show="isNotBlank(scope.row.boolProblemReceiving) && scope.row.sourceRow?.status===deliveryStatusEnum.DELIVERY.V" :name="scope.row.boolProblemReceiving?'问题收货':'正常收货'" :color="scope.row.boolProblemReceiving?'#f56c6c':'#67c23a'" @click="openDetail(scope.row,'detail')"/>
             <span style="margin-left: 14px">{{ scope.row.auditTime? parseTime(scope.row.auditTime,'{y}-{m}-{d} {h}:{i}:{s}'): '-' }}</span>
@@ -32,12 +32,12 @@
             <span class="project-name">{{ projectNameFormatter(scope.row.project) }}</span>
           </template>
         </el-table-column>
-        <el-table-column key="licensePlate" prop="licensePlate" label="车牌号" align="center" />
-        <el-table-column key="serialNumber" prop="serialNumber" label="车次" align="center" />
-        <el-table-column key="driverName" prop="driverName" label="司机姓名" align="center" />
-        <el-table-column key="driverPhone" prop="driverPhone" label="司机电话" align="center" />
-        <el-table-column key="auditUserName" prop="auditUserName" label="办理人" align="center" />
-        <el-table-column key="productType" prop="productType" label="装载物品" align="center">
+        <el-table-column key="licensePlate" prop="licensePlate" label="车牌号" align="center" :show-overflow-tooltip="true" />
+        <el-table-column key="serialNumber" prop="serialNumber" label="车次" align="center" :show-overflow-tooltip="true" />
+        <el-table-column key="driverName" prop="driverName" label="司机姓名" align="center" :show-overflow-tooltip="true" />
+        <el-table-column key="driverPhone" prop="driverPhone" label="司机电话" align="center" :show-overflow-tooltip="true" />
+        <el-table-column key="auditUserName" prop="auditUserName" label="办理人" align="center" :show-overflow-tooltip="true" />
+        <el-table-column key="productType" prop="productType" label="装载物品" align="center" min-width="120" :show-overflow-tooltip="true">
           <template v-slot="scope">
             <el-tag
               v-for="item in cleanArray(EO.getBits(packTypeEnum, scope.row.productType, 'V'))"
@@ -50,9 +50,9 @@
             >
           </template>
         </el-table-column>
-        <el-table-column key="status" prop="status" label="状态" align="center" />
-        <el-table-column key="auditReceiptName" prop="auditReceiptName" label="收货人" align="center" />
-        <el-table-column key="auditReceiptTime" prop="auditReceiptTime" label="收货日期" align="center" min-width="120"/>
+        <el-table-column key="status" prop="status" label="状态" align="center" :show-overflow-tooltip="true" />
+        <el-table-column key="auditReceiptName" prop="auditReceiptName" label="收货人" align="center" :show-overflow-tooltip="true" />
+        <el-table-column key="auditReceiptTime" prop="auditReceiptTime" label="收货日期" align="center" min-width="120" :show-overflow-tooltip="true" />
         <el-table-column
           label="操作"
           width="150px"
@@ -68,7 +68,7 @@
               @click="openDetail(scope.row,'detail')"
             />
             <common-button
-              v-if="checkPermission(permission.audit) && scope.row.status===deliveryStatusEnum.SHIPMENT.V"
+              v-if="checkPermission(permission.audit) && scope.row.sourceRow.status===deliveryStatusEnum.SHIPMENT.V"
               size="mini"
               icon="el-icon-s-check"
               type="primary"
