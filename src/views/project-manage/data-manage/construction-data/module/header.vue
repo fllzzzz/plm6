@@ -13,7 +13,7 @@
     </div>
     <crudOperation>
       <template #optLeft>
-        <common-button type="warning" size="mini" @click="emit('handleUpload')" v-permission="crud.permission.import" class="filter-item">
+        <common-button type="warning" size="mini" @click="emit('handleUpload')" v-if="checkPermission(crud.permission.add)" class="filter-item">
           新增
         </common-button>
       </template>
@@ -23,6 +23,8 @@
 
 <script setup>
 import { defineEmits } from 'vue'
+import checkPermission from '@/utils/system/check-permission'
+
 import { regHeader } from '@compos/use-crud'
 import crudOperation from '@crud/CRUD.operation'
 
