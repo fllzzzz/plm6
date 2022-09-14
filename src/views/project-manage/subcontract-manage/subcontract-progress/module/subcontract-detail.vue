@@ -10,7 +10,7 @@
     size="80%"
   >
     <template #titleAfter>
-      <el-tag effect="plain" size="medium" v-if="detailInfo.supplierName">分包公司：{{detailInfo.supplierName}}</el-tag>
+      <el-tag effect="plain" size="medium" v-if="detailInfo.supplierName">分包单位：{{detailInfo.supplierName}}</el-tag>
     </template>
     <template #content>
       <common-table :data="list" v-loading="tableLoading" show-summary :summary-method="getSummaries" :data-format="dataFormat" :max-height="maxHeight">
