@@ -82,7 +82,6 @@ import { supplierClassEnum, supplierIsHideEnum } from '@enum-ms/supplier'
 import { getLabelByBit } from '@/utils/enum/base'
 import { parseTime } from '@/utils/date'
 import checkPermission from '@/utils/system/check-permission'
-import { useStore } from 'vuex'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
@@ -106,7 +105,6 @@ const optShow = {
 }
 
 const tableRef = ref()
-const store = useStore()
 const { crud, columns, CRUD } = useCRUD(
   {
     title: '供应商',
@@ -171,20 +169,5 @@ CRUD.HOOK.afterDelete = () => {
 CRUD.HOOK.beforeToAdd = (crud, data) => {
   crud.form.processType = crud.query.processType
   crud.form.sequenceType = crud.query.sequenceType
-}
-
-// 添加之后
-CRUD.HOOK.afterSubmit = () => {
-  store.dispatch('config/fetchSuppliers')
-}
-
-// 批量添加之后
-CRUD.HOOK.afterBatchSubmit = () => {
-  store.dispatch('config/fetchSuppliers')
-}
-
-// 删除后
-CRUD.HOOK.afterDelete = () => {
-  store.dispatch('config/fetchSuppliers')
 }
 </script>
