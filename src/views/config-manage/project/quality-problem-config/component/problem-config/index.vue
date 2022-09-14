@@ -3,7 +3,7 @@
     <template #header>
       <div class="clearfix">
         <span class="card-title">问题分类</span>
-        <common-button size="mini" type="primary" style="float: right" @click="crud.toAdd">
+        <common-button size="mini" type="primary" style="float: right" @click="crud.toAdd" v-permission="permission.add">
           新增
         </common-button>
       </div>
@@ -64,7 +64,7 @@
 import crudApi from '@/api/config/project-config/quality-problem-config'
 import { ref } from 'vue'
 
-import { branchCompanyPM as permission } from '@/page-permission/config'
+import { projectProblemConfigPM as permission } from '@/page-permission/config'
 import checkPermission from '@/utils/system/check-permission'
 import { ElMessage } from 'element-plus'
 
