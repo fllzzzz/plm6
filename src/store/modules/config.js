@@ -26,6 +26,9 @@ import { arr2obj } from '@/utils/convert/type'
 import { formatClsTree } from '@/utils/system/classification'
 import { monomerAll } from '@/api/plan/monomer'
 import { get as getChangeReasonConfig } from '@/api/config/system-config/change-reason'
+import { get as getSubcontractType } from '@/api/config/project-config/subcontract-config'
+import { get as getQualityProblemType } from '@/api/config/project-config/quality-problem-config'
+import { get as getVisaReason } from '@/api/config/project-config/visa-reason-config'
 
 /**
  * TODO: 后期设计配置变更，增加接口加载状态：未加载，加载中，加载完成，加载失败
@@ -77,6 +80,9 @@ const state = {
   changeReasonConfig: [],
   steelClassifyConf: [], // 钢材材料分类配置
   steelClassifyConfICKV: {}, // 钢材材料分类配置 key: id, value: boundFinalClassifyIds
+  subcontractType: [],
+  qualityProblemType: [],
+  visaReason: [],
   loaded: {
     // 接口是否加载
     company: false,
@@ -97,7 +103,10 @@ const state = {
     unclosedRequisitions: false,
     unclosedPurchaseOrder: false,
     changeReasonConfig: false,
-    steelClassifyConf: false
+    steelClassifyConf: false,
+    subcontractType: false,
+    qualityProblemType: false,
+    visaReason: false
   }
 }
 
@@ -200,6 +209,15 @@ const mutations = {
       state.steelClassifyConfKV[row.id] = row
       state.steelClassifyConfICKV[row.id] = row.boundFinalClassifyIds
     })
+  },
+  SET_SUBCONTRACT_TYPE(state, subcontractType) {
+    state.subcontractType = subcontractType
+  },
+  SET_QUALITY_PROBLEM_TYPE(state, qualityProblemType) {
+    state.qualityProblemType = qualityProblemType
+  },
+  SET_VISA_REASON(state, visaReason) {
+    state.visaReason = visaReason
   }
 }
 
@@ -545,6 +563,27 @@ const actions = {
     const { content = [] } = await getChangeReasonConfig()
     commit('SET_CHANGE_REASON_CONFIG', content)
     commit('SET_LOADED', { key: 'changeReasonConfig' })
+    return content
+  },
+  // 分包类别
+  async fetchSubcontractType({ commit }) {
+    const { content = [] } = await getSubcontractType()
+    commit('SET_SUBCONTRACT_TYPE', content)
+    commit('SET_LOADED', { key: 'subcontractType' })
+    return content
+  },
+  // 质安问题分类
+  async fetchQualityProblemType({ commit }) {
+    const { content = [] } = await getQualityProblemType()
+    commit('SET_QUALITY_PROBLEM_TYPE', content)
+    commit('SET_LOADED', { key: 'qualityProblemType' })
+    return content
+  },
+  // 签证原因
+  async fetchVisaReason({ commit }) {
+    const { content = [] } = await getVisaReason()
+    commit('SET_VISA_REASON', content)
+    commit('SET_LOADED', { key: 'visaReason' })
     return content
   }
 }

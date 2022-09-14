@@ -119,3 +119,29 @@ export const supplierPM = {
 export const purchaseOrderDetailCPM = commonPM.purchaseOrderDetail
 
 // --------------------------- 其他模块/组件 end ---------------------------
+
+// ########################################################################
+
+// --------------------------- 分包订单 start --------------------------------
+
+// 分包订单
+export const subcontractOrderPM = {
+  get: ['subcontract_order:get'], // 列表
+  add: ['subcontract_order:add'], // 添加
+  edit: ['subcontract_order:edit'], // 编辑
+  detail: ['subcontract_order:detail'] // 详情
+}
+
+// 分包订单付款台账
+export const supplyChainSubcontractPaymentPM = {
+  get: ['subcontract_chain_subcontract_payment:get'], // 列表
+  payment: {
+    get: ['subcontract_chain_subcontract_payment_manage:get'], // 付款记录列表
+    print: ['subcontract_chain_subcontract_payment_manage:print'] // 付款记录打印下载
+  },
+  invoice: {
+    get: ['subcontract_chain_subcontract_invoice:get'], // 收票记录列表
+    print: ['subcontract_chain_subcontract_invoice:print'] // 收票记录打印下载
+  }
+}
+// --------------------------- 分包订单 end ---------------------------------
