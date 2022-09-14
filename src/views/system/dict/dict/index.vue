@@ -81,7 +81,7 @@ const { crud, columns, CRUD } = useCRUD(
 const { maxHeight } = useMaxHeight({
   wrapperBox: '.dict-box',
   paginate: true,
-  extraHeight: 157
+  extraHeight: 190
 })
 
 function handleCurrentChange(val) {
