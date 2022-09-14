@@ -345,3 +345,25 @@ export const memberConfigPM = {
 // --------------------------- 项目配置 end ----------------------------
 
 // ########################################################################
+
+// --------------------------- 项目管理配置 start --------------------------
+
+// 项目管理配置/质安问题分类配置
+export const projectProblemConfigPM = {
+  get: ['project_problem_config:get'], // 列表
+  add: ['project_problem_config:add'], // 新增
+  edit: ['project_problem_config:edit'], // 修改
+  del: ['project_problem_config:del'] // 删除
+}
+
+// 项目管理配置/签证原因分类配置
+export const projectVisaReasonConfigPM = {
+  get: ['project_visa_reason_config:get'], // 列表
+  add: ['project_visa_reason_config:add'], // 新增
+  edit: ['project_visa_reason_config:edit'], // 修改
+  del: ['project_visa_reason_config:del'] // 删除
+}
+
+// --------------------------- 项目管理配置 end ----------------------------
+
+// ########################################################################

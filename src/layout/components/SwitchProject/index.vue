@@ -33,19 +33,23 @@
       <i v-if="!refreshLoading" class="el-icon-refresh" style="cursor: pointer" @click="refreshProjectList" />
       <i v-else class="el-icon-loading" />
     </el-tooltip>
-    <div style="font-size: 13px; margin-left: 15px; margin-bottom: 5px; color: #333" v-if="!routeBusinessType || (globalProject && globalProject.businessType===routeBusinessType)">
-      <el-tag v-if="globalProject && globalProject.endDate" type="info" effect="plain" style="margin-top: 5px;">
-        完成日期:
-        <span v-parse-time="{ val: globalProject.endDate, fmt: '{y}-{m}-{d}' }" />
-        | 工期:
-        {{ dateDifferenceReduce(globalProject.startDate, globalProject.endDate) }}天
-      </el-tag>
+    <div style="font-size: 13px; margin-left: 15px; margin-bottom: 5px; color: #333">
+      <template v-if="!routeBusinessType || (globalProject && globalProject.businessType===routeBusinessType)">
+        <el-tag v-if="globalProject && globalProject.endDate" type="info" effect="plain" style="margin-top: 5px;">
+          完成日期:
+          <span v-parse-time="{ val: globalProject.endDate, fmt: '{y}-{m}-{d}' }" />
+          | 工期:
+          {{ dateDifferenceReduce(globalProject.startDate, globalProject.endDate) }}天
+        </el-tag>
+      </template>
       <el-tag v-if="(globalProject && globalProject.businessType) || routeBusinessType" type="info" effect="plain" style="margin-left: 5px">
         {{ globalProject?.businessType?businessTypeEnum.VL[globalProject.businessType]: businessTypeEnum.VL[routeBusinessType]}}
       </el-tag>
-      <el-tag v-if="globalProject && globalProject.mode" type="info" effect="plain" style="margin-top: 5px;margin-left: 5px">
-        {{ '项目模式:' + projectModeEnum.VL[globalProject.mode] }}
-      </el-tag>
+      <template v-if="!routeBusinessType || (globalProject && globalProject.businessType===routeBusinessType)">
+        <el-tag v-if="globalProject && globalProject.mode" type="info" effect="plain" style="margin-top: 5px;margin-left: 5px">
+          {{ '项目模式:' + projectModeEnum.VL[globalProject.mode] }}
+        </el-tag>
+      </template>
     </div>
   </div>
 </template>
