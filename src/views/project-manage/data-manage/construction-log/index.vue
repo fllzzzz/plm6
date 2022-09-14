@@ -27,7 +27,7 @@
         </template>
       </el-calendar>
     </el-config-provider>
-    <mDetail v-if="checkPermission(permission.detail)" v-model="journal.visible" :info="journal.info" :day="journal.day" :project-id="globalProjectId"  @success="fetchList" :permission="permission" :activeMonth="activeMonth"/>
+    <mDetail v-if="checkPermission(permission.detail)" v-model="journal.visible" :info="journal.info" :day="journal.day" :project-id="globalProjectId"  @success="fetchList" :activeMonth="activeMonth"/>
   </div>
 </template>
 
@@ -95,6 +95,9 @@ function initVal() {
 // 获取列表
 async function fetchList() {
   initVal()
+  if (!checkPermission(permission.get)) {
+    return
+  }
   if (globalProject.value?.businessType !== businessTypeEnum.INSTALLATION.V) {
     return
   }
@@ -117,6 +120,9 @@ async function fetchList() {
 // 打开施工日志
 function openJournal(day) {
   if (globalProject.value?.businessType !== businessTypeEnum.INSTALLATION.V) {
+    return
+  }
+  if (!checkPermission(permission.detail) || !checkPermission(permission.add)) {
     return
   }
   if (moment(day).valueOf() > moment().valueOf()) return

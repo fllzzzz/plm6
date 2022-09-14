@@ -18,7 +18,7 @@
       >下载施工日志</export-button>
         <common-button size="mini" v-if="info.id && isEdit" @click="isEdit=false">取消</common-button>
         <common-button v-if="isEdit" :loading="loading" type="primary" size="mini" @click="submit">提交</common-button>
-        <common-button v-if="!isEdit" size="mini" @click="isEdit=true" type="primary">修改</common-button>
+        <common-button v-if="checkPermission(permission.add) && !isEdit" size="mini" @click="isEdit=true" type="primary">修改</common-button>
         <common-button size="mini" @click="handleClose">关闭</common-button>
       </div>
     </div>
@@ -228,6 +228,7 @@ import crudApi, { download } from '@/api/project-manage/data-manage/construction
 import { ElNotification } from 'element-plus'
 import useWatchFormValidate from '@compos/form/use-watch-form-validate'
 
+import { constructionLogPM as permission } from '@/page-permission/project'
 import checkPermission from '@/utils/system/check-permission'
 import useTableValidate from '@compos/form/use-table-validate'
 import useVisible from '@compos/use-visible'
@@ -238,10 +239,6 @@ import userDeptCascader from '@comp-base/user-dept-cascader.vue'
 import ExportButton from '@comp-common/export-button/index.vue'
 
 const props = defineProps({
-  permission: {
-    type: Object,
-    default: () => {}
-  },
   modelValue: {
     type: Boolean,
     require: true
