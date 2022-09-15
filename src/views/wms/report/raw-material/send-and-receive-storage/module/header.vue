@@ -20,6 +20,7 @@
             unlink-panels
             :clearable="false"
             placeholder="查询月份"
+            :disabled-date="disabledDate"
             style="width: 135px"
             class="filter-item"
             @change="crud.toQuery"
@@ -125,6 +126,10 @@ const totalAmount = ref({})
 
 // 是否有显示金额权限
 const showAmount = computed(() => checkPermission(permission.showAmount))
+
+function disabledDate(time) {
+  return time > new Date()
+}
 
 // 加载后数据处理
 CRUD.HOOK.handleRefresh = async (crud, { data }) => {
