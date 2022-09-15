@@ -155,7 +155,7 @@
             show-word-limit
             maxlength="500"
           />
-          <span v-else>{{ form.safetyRecord  }}</span>
+          <span v-else>{{ form.safetyInspectionDesc  }}</span>
         </el-form-item>
         <el-form-item label="工地重大事件" prop="siteImportantEvent">
           <el-input

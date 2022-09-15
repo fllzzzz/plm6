@@ -75,6 +75,7 @@
       </el-table-column>
       <!--编辑与删除-->
       <el-table-column
+        v-if="checkPermission([...permission.detail,...permission.audit,...permission.close])"
         label="操作"
         width="190px"
         align="center"
