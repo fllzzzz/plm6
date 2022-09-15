@@ -21,6 +21,7 @@
       <el-table-column v-if="columns.visible('userName')" key="userName" prop="userName" :show-overflow-tooltip="true" label="创建人" align="center" />
       <!--编辑与删除-->
       <el-table-column
+        v-if="checkPermission([...permission.detail,...permission.edit])"
         label="操作"
         width="180px"
         align="center"
@@ -46,6 +47,7 @@ import crudApi from '@/api/supply-chain/subcontract-manage/subcontract-order'
 import { ref } from 'vue'
 
 import { subcontractOrderPM as permission } from '@/page-permission/supply-chain'
+import checkPermission from '@/utils/system/check-permission'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
