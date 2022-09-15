@@ -195,7 +195,7 @@ const rules = {
 // 金额校验
 const validateAmount = (value, row) => {
   if (isNotBlank(row.weighingTotalWeight) && isNotBlank(row.unitPrice)) {
-    return +(row.weighingTotalWeight * row.unitPrice).toFixed(2) === value
+    return +(row.weighingTotalWeight * row.unitPrice).toFixed(2) === +value
   }
   return false
 }
