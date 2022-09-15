@@ -33,11 +33,6 @@
           style="width: 100%"
         >
           <el-table-column label="序号" type="index" align="center" width="60" />
-          <el-table-column key="type" prop="type" label="切割形式" align="center" min-width="180">
-            <template #default="{ row }">
-              <el-input v-model="row.cutType" placeholder="切割形式" style="width: 100%" />
-            </template>
-          </el-table-column>
           <el-table-column key="layingOffWay" prop="layingOffWay" label="下料方式" align="center" min-width="180">
             <template #default="{ row, $index }">
               <common-select
@@ -50,6 +45,11 @@
                 placeholder="下料方式"
                 style="width: 100%"
               />
+            </template>
+          </el-table-column>
+          <el-table-column key="type" prop="type" label="切割形式" align="center" min-width="180">
+            <template #default="{ row }">
+              <el-input v-model="row.cutType" placeholder="切割形式" style="width: 100%" />
             </template>
           </el-table-column>
           <el-table-column key="thickness" prop="thickness" :show-overflow-tooltip="true" align="center" label="厚度" min-width="120">

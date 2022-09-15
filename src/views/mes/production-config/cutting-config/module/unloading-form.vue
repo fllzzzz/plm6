@@ -14,6 +14,14 @@
       <common-button :loading="submitLoading" type="primary" size="mini" @click="submit">提 交</common-button>
     </template>
     <div>
+      <common-radio-button
+      style="margin-bottom: 8px"
+      class="filter-item"
+      v-model="materialType"
+      :options="materialTypeEnum.ENUM"
+      type="enum"
+      size="small"
+    />
       <el-form ref="formRef" :model="form" :disabled="submitLoading">
         <common-table
           :data="form.list"
@@ -51,6 +59,7 @@
 <script setup>
 import { ref, defineEmits, defineProps, watch, reactive } from 'vue'
 import { batchUnloadingAdd } from '@/api/mes/production-config/unloading-config'
+import { materialTypeEnum } from '@enum-ms/uploading-form'
 import { deepClone } from '@data-type/index'
 import useVisible from '@compos/use-visible'
 import useTableOperate from '@compos/form/use-table-operate'
@@ -65,9 +74,13 @@ const tableRules = {
 
 const form = reactive({ list: [] })
 
-const defaultRow = {}
+const defaultRow = {
+
+}
 const formRef = ref()
+const originList = ref()
 const submitLoading = ref(false)
+const materialType = ref(materialTypeEnum.MANMADE_BLANKING.V)
 const emit = defineEmits(['success', 'update:modelValue'])
 const props = defineProps({
   modelValue: {
@@ -104,10 +117,24 @@ watch(
   () => visible.value,
   (val) => {
     if (val) {
-      form.list = JSON.parse(JSON.stringify(props.detailData))
+      originList.value = JSON.parse(JSON.stringify(props.detailData)) || []
+      form.list = originList.value.filter(v => {
+        return v.materialType === materialType.value
+      })
     }
   },
   { immediate: true }
+)
+
+watch(
+  () => materialType.value,
+  (val) => {
+    if (val) {
+      form.list = originList.value.filter(v => {
+        return v.materialType === materialType.value
+      })
+    }
+  }
 )
 
 // 提交表单
@@ -125,7 +152,7 @@ async function submit() {
         submitData.push(v.layingOffWay)
       })
       // 数据格式化
-      await batchUnloadingAdd(submitData)
+      await batchUnloadingAdd({ materialType: materialType.value, layingOffWays: submitData })
       // 清除本地缓存
       clearFormStorage()
       emit('success')
