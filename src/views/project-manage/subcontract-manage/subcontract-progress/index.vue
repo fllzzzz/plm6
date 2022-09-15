@@ -71,6 +71,7 @@
           </template>
         </el-table-column>
         <el-table-column
+          v-if="checkPermission([...permission.detail])"
           label="操作"
           width="100px"
           align="center"

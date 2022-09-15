@@ -70,13 +70,14 @@
       </el-table-column>
       <!--编辑与删除-->
       <el-table-column
+        v-if="checkPermission([...permission.settle,...permission.paymentManage.get])"
         label="操作"
         width="120px"
         align="center"
       >
         <template #default="{ row }">
-          <common-button type="primary" icon="el-icon-plus" size="mini" @click="openApplication(row)" v-if="checkPermission(permission.paymentManage.get)"/>
-          <common-button type="success" icon="el-icon-money" size="mini" @click="openSettle(row)" v-if="(row.boolSettlementStatus!== (!!settlementStatusEnum.SETTLED.V) && !row.unCheckSettlementCount) && checkPermission(permission.settle)"/>
+          <common-button type="primary" icon="el-icon-plus" size="mini" @click="openApplication(row)" v-if="checkPermission(permission.paymentManage.get)" />
+          <common-button type="success" icon="el-icon-money" size="mini" @click="openSettle(row)" v-if="(row.boolSettlementStatus!== (!!settlementStatusEnum.SETTLED.V) && !row.unCheckSettlementCount) && checkPermission(permission.settle)" />
         </template>
       </el-table-column>
     </common-table>
@@ -95,10 +96,10 @@
       :close-on-click-modal="false"
     >
       <template #content>
-        <paymentApplication :visibleValue="applicationVisible" :detail-info="detailInfo"/>
+        <paymentApplication :visibleValue="applicationVisible" :detail-info="detailInfo" />
       </template>
     </common-drawer>
-    <settleForm v-model="settleVisible" :detail-info="detailInfo" @success="crud.toQuery" :showType="showType"/>
+    <settleForm v-model="settleVisible" :detail-info="detailInfo" @success="crud.toQuery" :showType="showType" />
   </div>
 </template>
 

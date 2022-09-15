@@ -54,6 +54,7 @@
         <el-table-column key="auditReceiptName" prop="auditReceiptName" label="收货人" align="center" :show-overflow-tooltip="true" />
         <el-table-column key="auditReceiptTime" prop="auditReceiptTime" label="收货日期" align="center" min-width="120" :show-overflow-tooltip="true" />
         <el-table-column
+          v-if="checkPermission([...permission.detail,...permission.audit])"
           label="操作"
           width="150px"
           align="center"
