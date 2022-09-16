@@ -140,7 +140,7 @@ const rules = {
 // 金额校验
 const validateAmount = (value, row) => {
   if (isNotBlank(row.mete) && isNotBlank(row.unitPrice)) {
-    return +(row.mete * row.unitPrice).toFixed(2) === value
+    return +(row.mete * row.unitPrice).toFixed(2) === +value
   }
   return false
 }

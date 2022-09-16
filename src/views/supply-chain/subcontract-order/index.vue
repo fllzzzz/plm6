@@ -47,6 +47,7 @@ import crudApi from '@/api/supply-chain/subcontract-manage/subcontract-order'
 import { ref } from 'vue'
 
 import { subcontractOrderPM as permission } from '@/page-permission/supply-chain'
+import checkPermission from '@/utils/system/check-permission'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
