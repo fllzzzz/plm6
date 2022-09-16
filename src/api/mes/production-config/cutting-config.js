@@ -15,7 +15,7 @@ export function batchAdd(data) {
     module: 'mes',
     url: 'cut/list',
     method: 'post',
-    data
+    data: data.list
   })
 }
 

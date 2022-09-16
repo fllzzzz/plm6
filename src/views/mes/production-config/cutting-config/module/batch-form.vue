@@ -169,5 +169,15 @@ CRUD.HOOK.beforeValidateBCU = () => {
 }
 
 // 表单提交数据清理
-crud.submitBatchFormFormat = (form) => cleanUpData(form.list)
+crud.submitBatchFormFormat = (form) => {
+  cleanUpData(form.list)
+  form.list.map(k => {
+    // 传入任务前缀参数 taskPrefix
+    const val = props.detailData.find(v => v.layingOffWay === k.layingOffWay)
+    console.log(val)
+    k.taskPrefix = val.taskPrefix
+  })
+  console.log(form.list)
+  return form
+}
 </script>

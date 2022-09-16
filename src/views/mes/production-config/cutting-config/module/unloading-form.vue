@@ -15,13 +15,13 @@
     </template>
     <div>
       <common-radio-button
-      style="margin-bottom: 8px"
-      class="filter-item"
-      v-model="materialType"
-      :options="materialTypeEnum.ENUM"
-      type="enum"
-      size="small"
-    />
+        style="margin-bottom: 8px"
+        class="filter-item"
+        v-model="materialType"
+        :options="materialTypeEnum.ENUM"
+        type="enum"
+        size="small"
+      />
       <el-form ref="formRef" :model="form" :disabled="submitLoading">
         <common-table
           :data="form.list"
@@ -37,6 +37,11 @@
           <el-table-column key="layingOffWay" prop="layingOffWay" label="下料方式" align="center" min-width="180">
             <template #default="{ row }">
               <el-input v-model="row.layingOffWay" placeholder="下料方式" style="width: 100%" />
+            </template>
+          </el-table-column>
+          <el-table-column key="taskPrefix" prop="taskPrefix" label="任务前缀" align="center" min-width="180">
+            <template #default="{ row }">
+              <el-input v-model="row.taskPrefix" placeholder="任务前缀" style="width: 100%" />
             </template>
           </el-table-column>
           <el-table-column label="操作" width="70px" align="center">
@@ -69,14 +74,13 @@ import useMaxHeight from '@compos/use-max-height'
 import { ElMessage } from 'element-plus'
 
 const tableRules = {
-  layingOffWay: [{ required: true, message: '请输入下料方式', trigger: 'blur' }]
+  layingOffWay: [{ required: true, message: '请输入下料方式', trigger: 'blur' }],
+  taskPrefix: [{ require: true, message: '请输入任务前缀', trigger: 'blur' }]
 }
 
 const form = reactive({ list: [] })
 
-const defaultRow = {
-
-}
+const defaultRow = {}
 const formRef = ref()
 const originList = ref()
 const submitLoading = ref(false)
@@ -118,7 +122,7 @@ watch(
   (val) => {
     if (val) {
       originList.value = JSON.parse(JSON.stringify(props.detailData)) || []
-      form.list = originList.value.filter(v => {
+      form.list = originList.value.filter((v) => {
         return v.materialType === materialType.value
       })
     }
@@ -130,7 +134,7 @@ watch(
   () => materialType.value,
   (val) => {
     if (val) {
-      form.list = originList.value.filter(v => {
+      form.list = originList.value.filter((v) => {
         return v.materialType === materialType.value
       })
     }
@@ -145,14 +149,21 @@ async function submit() {
     form.list = dealList
     if (validResult) {
       // 清除无用数据
-      const _list = cleanUpData(deepClone(dealList))
       form.list = props.detailData
+      const _list = cleanUpData(deepClone(dealList))
+
       const submitData = []
       _list.map((v) => {
-        submitData.push(v.layingOffWay)
+        submitData.push({
+          layingOffWay: v.layingOffWay,
+          taskPrefix: v.taskPrefix.toUpperCase()
+        })
       })
       // 数据格式化
-      await batchUnloadingAdd({ materialType: materialType.value, layingOffWays: submitData })
+      await batchUnloadingAdd({
+        materialType: materialType.value,
+        mesBuildingLayWayDTOParams: submitData
+      })
       // 清除本地缓存
       clearFormStorage()
       emit('success')
