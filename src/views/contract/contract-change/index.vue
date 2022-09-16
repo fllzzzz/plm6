@@ -84,10 +84,10 @@
         :show-overflow-tooltip="true"
         label="变更描述"
         align="center"
-        min-width="120"
+        width="160"
       >
         <template v-slot="scope">
-          <div>{{ scope.row.changeDesc?scope.row.changeDesc:'-' }}</div>
+          <div style="width:150px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ scope.row.changeDesc?scope.row.changeDesc:'-' }}</div>
         </template>
       </el-table-column>
       <!-- <el-table-column
