@@ -17,9 +17,9 @@
     :showEmptySymbol="false"
   >
     <el-table-column prop="index" label="序号" align="center" width="60" type="index" />
-    <el-table-column v-if="columns.visible('project')" key="project.shortName" prop="project" :show-overflow-tooltip="true" label="项目" align="center">
+    <el-table-column v-if="columns.visible('project')" key="project.shortName" prop="project" :show-overflow-tooltip="true" label="项目" min-width="150">
       <template v-slot="scope">
-        <span class="project-name">{{ projectNameFormatter(scope.row.project) }}</span>
+        <span>{{ projectNameFormatter(scope.row.project) }}</span>
       </template>
     </el-table-column>
     <el-table-column v-if="columns.visible('signingDate')" key="signingDate" prop="signingDate" label="签约日期" align="center">

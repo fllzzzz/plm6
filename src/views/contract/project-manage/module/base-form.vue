@@ -8,6 +8,17 @@
         <el-form-item label="项目名称" prop="name">
           <el-input v-model.trim="form.name" class="input-underline" placeholder="项目名称" style="width: 320px" />
         </el-form-item>
+        <el-form-item label="订单来源" prop="orderSourceType">
+          <common-select
+            v-model="form.orderSourceType"
+            :options="orderSourceTypeEnum.ENUM"
+            type="enum"
+            class="input-underline"
+            size="small"
+            placeholder="订单来源"
+            style="width: 200px"
+          />
+        </el-form-item>
       </div>
       <div>
         <el-form-item label="开工时间" prop="startDate">
@@ -184,6 +195,7 @@ import { dateDifferenceReduce } from '@/utils/date'
 import regionCascader from '@comp-base/region-cascader'
 import userDeptCascader from '@comp-base/user-dept-cascader.vue'
 import useDict from '@compos/store/use-dict'
+import { orderSourceTypeEnum } from '@enum-ms/contract'
 import { fileClassifyEnum } from '@enum-ms/file'
 import uploadList from '@comp/file-upload/UploadList.vue'
 import useWatchFormValidate from '@compos/form/use-watch-form-validate'
@@ -216,7 +228,8 @@ const defaultForm = {
   businessLeaderId: undefined, // 业务负责人1
   businessLeaderTwoId: undefined, // 业务负责人2
   attachmentFiles: [], // 附件
-  attachments: []
+  attachments: [],
+  orderSourceType: undefined
 }
 
 const form = ref(JSON.parse(JSON.stringify(defaultForm)))
@@ -243,6 +256,7 @@ const rules = {
     { required: true, message: '请填写项目简称', trigger: 'blur' },
     { min: 1, max: 12, message: '长度在 1 到 12 个字符', trigger: 'blur' }
   ],
+  orderSourceType: [{ required: true, message: '请选择订单来源', trigger: 'change' }],
   contractAmount: [{ required: true, validator: validateMoney, trigger: 'blur' }],
   address: [{ max: 220, message: '长度不超过 220 个字符', trigger: 'blur' }],
   signingAddress: [{ max: 220, message: '长度不超过 220 个字符', trigger: 'blur' }]

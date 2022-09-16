@@ -23,7 +23,7 @@
     </el-table-column>
     <el-table-column v-if="columns.visible('shortName')" align="center" key="shortName" prop="shortName" :show-overflow-tooltip="true" label="项目名称">
       <template v-slot="scope">
-        <span class="project-name">{{ scope.row.shortName }}</span>
+        <span>{{ scope.row.shortName }}</span>
       </template>
     </el-table-column>
     <el-table-column v-if="columns.visible('businessType')" key="businessType" prop="businessType" label="订单类型" align="center">

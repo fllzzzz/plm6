@@ -17,16 +17,14 @@
     :stripe="false"
   >
     <el-table-column prop="index" label="序号" align="center" width="60" type="index" />
-    <el-table-column v-if="columns.visible('businessType')" key="businessType" prop="businessType" :show-overflow-tooltip="true" label="业务类型">
+    <el-table-column v-if="columns.visible('businessType')" key="businessType" prop="businessType" :show-overflow-tooltip="true" label="业务类型" align="center">
       <template v-slot="scope">
         <span>{{ scope.row.businessType?businessTypeEnum.VL[scope.row.businessType]:'-'}}</span>
       </template>
     </el-table-column>
-    <el-table-column v-if="columns.visible('project')" key="project.serialNumber" prop="project" :show-overflow-tooltip="true" label="所属项目">
+    <el-table-column v-if="columns.visible('project')" key="project.serialNumber" prop="project" :show-overflow-tooltip="true" label="所属项目" min-width="150">
       <template v-slot="scope">
-        <el-tooltip :content="scope.row.project.serialNumber+' '+scope.row.project.name" :show-after="50" placement="top" v-if="scope.row.project && scope.row.project.serialNumber">
-          <span class="project-name">{{ projectNameFormatter(scope.row.project) }}</span>
-        </el-tooltip>
+        <span>{{ projectNameFormatter(scope.row.project) }}</span>
       </template>
     </el-table-column>
     <el-table-column v-if="columns.visible('collectionUnit')" key="collectionUnit" prop="collectionUnit" :show-overflow-tooltip="true" label="签约主体" align="center">
