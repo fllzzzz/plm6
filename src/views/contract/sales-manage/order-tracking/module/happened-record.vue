@@ -2,7 +2,7 @@
   <!-- 发运记录 -->
   <common-drawer
     ref="shipDrawerRef"
-    title="发运记录"
+    title="出库记录"
     :close-on-click-modal="false"
     v-model="visible"
     direction="rtl"

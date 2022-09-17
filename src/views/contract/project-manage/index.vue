@@ -15,7 +15,7 @@
       :showEmptySymbol="false"
       style="width: 100%"
     >
-      <el-table-column prop="index" label="序号" align="center" width="60" type="index" fixed="left"/>
+      <el-table-column prop="index" label="序号" align="center" width="50" type="index" fixed="left"/>
       <el-table-column
         v-if="columns.visible('serialNumber')"
         key="serialNumber"
@@ -51,10 +51,22 @@
         prop="projectType"
         label="项目类型"
         align="center"
-        width="100"
+        width="90"
       >
         <template v-slot="scope">
           <div>{{ scope.row.projectType ? projectTypeEnum.VL[scope.row.projectType] : '-' }}</div>
+        </template>
+      </el-table-column>
+      <el-table-column
+        v-if="columns.visible('orderSourceType')"
+        key="orderSourceType"
+        prop="orderSourceType"
+        label="订单来源"
+        align="center"
+        width="80"
+      >
+        <template v-slot="scope">
+          <div>{{ scope.row.orderSourceType ? orderSourceTypeEnum.VL[scope.row.orderSourceType] : '-' }}</div>
         </template>
       </el-table-column>
       <el-table-column
@@ -217,7 +229,7 @@ import pagination from '@crud/Pagination'
 import { mapGetters } from '@/store/lib'
 import mHeader from './module/header'
 import mForm from './module/form'
-import { projectTypeEnum, businessTypeEnum, projectStatusEnum } from '@enum-ms/contract'
+import { projectTypeEnum, businessTypeEnum, projectStatusEnum, orderSourceTypeEnum } from '@enum-ms/contract'
 import { ElMessageBox } from 'element-plus'
 import contractInfo from '@/views/contract/info/index'
 import members from './members'

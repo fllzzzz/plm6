@@ -26,6 +26,9 @@ const supplierPayableSummary = contract.payableSummary
 const supplierPaymentLedger = contract.supplierPayableLedger
 const supplierInvoiceLedger = contract.supplierInvoiceLedger
 
+const saleOrderTracking = contract.saleOrderTracking
+const projectWarehouseRecord = contract.warehouseRecord
+
 // 供应链
 const purchaseInvoiceRecord = supply.invoiceDetail
 const purchaseInboundRecord = supply.inboundRecord
@@ -113,6 +116,8 @@ export default {
   projectInvoiceDetail, // 项目开票详情
   projectHappenedDetail, // 项目发运详情
   transactionRecord, // 客户交易记录
+  saleOrderTracking, // 订单跟踪
+  projectWarehouseRecord, // 销售管理入库记录
 
   // 供应链
   purchaseInvoiceRecord, // 收票记录
