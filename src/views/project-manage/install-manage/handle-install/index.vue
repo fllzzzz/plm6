@@ -48,6 +48,7 @@
         <el-table-column key="reportQuantity" prop="reportQuantity" label="本次安装填报" align="center" v-if="globalProject?.installReportMethod === installSetEnum.PC.V">
           <template v-slot="scope">
             <el-input-number
+              v-if="scope.row.installAbleNum>0"
               v-model.number="scope.row.sourceRow.reportQuantity"
               :min="0"
               :max="scope.row.installAbleNum"

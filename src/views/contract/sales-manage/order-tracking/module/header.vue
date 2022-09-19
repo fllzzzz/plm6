@@ -1,38 +1,55 @@
 <template>
   <div class="head-container">
+    <div v-show="crud.searchToggle">
+      <common-radio-button
+        v-model="query.orderSourceType"
+        :options="orderSourceTypeEnum.ENUM"
+        showOptionAll
+        type="enumSL"
+        size="small"
+        class="filter-item"
+        @change="crud.toQuery"
+      />
+      <common-radio-button
+        v-model="query.productType"
+        :options="packTypeEnum.ENUM"
+        showOptionAll
+        type="enumSL"
+        size="small"
+        class="filter-item"
+        @change="crud.toQuery"
+      />
+      <project-visa-select
+        v-model="query.projectId"
+        class="filter-item"
+        style="width: 300px"
+        @change="crud.toQuery"
+        placeholder="可选择项目搜索"
+        clearable
+      />
+      <el-date-picker
+        v-model="query.date"
+        type="daterange"
+        range-separator=":"
+        size="small"
+        class="filter-item date-item"
+        start-placeholder="开始时间"
+        end-placeholder="结束时间"
+        style="width: 240px"
+        @change="handleDateChange"
+      />
+      <rrOperation/>
+    </div>
     <crudOperation>
-      <template #optLeft>
-        <div v-show="crud.searchToggle">
-          <common-radio-button
-            v-model="query.productType"
-            :options="packTypeEnum.ENUM"
-            showOptionAll
-            type="enumSL"
-            size="small"
-            class="filter-item"
-            @change="crud.toQuery"
-          />
-          <project-visa-select
-            v-model="query.projectId"
-            class="filter-item"
-            style="width: 300px"
-            @change="crud.toQuery"
-            placeholder="可选择项目搜索"
-            clearable
-          />
-          <el-date-picker
-            v-model="query.date"
-            type="daterange"
-            range-separator=":"
-            size="small"
-            class="filter-item date-item"
-            start-placeholder="开始时间"
-            end-placeholder="结束时间"
-            style="width: 240px"
-            @change="handleDateChange"
-          />
-          <rrOperation/>
-        </div>
+      <template #viewLeft>
+        <print-table
+          v-permission="crud.permission.print"
+          api-key="saleOrderTracking"
+          :params="{ ...query }"
+          size="mini"
+          type="warning"
+          class="filter-item"
+        />
       </template>
     </crudOperation>
   </div>
@@ -41,6 +58,7 @@
 <script setup>
 import moment from 'moment'
 import { packTypeEnum } from '@enum-ms/mes'
+import { orderSourceTypeEnum } from '@enum-ms/contract'
 
 import { regHeader } from '@compos/use-crud'
 import crudOperation from '@crud/CRUD.operation'
@@ -49,6 +67,7 @@ import projectVisaSelect from '@comp-base/project-visa-select'
 
 const defaultQuery = {
   date: undefined, startDate: undefined, endDate: undefined,
+  orderSourceType: undefined,
   productType: { value: undefined, resetAble: false },
   projectId: { value: undefined, resetAble: false }
 }
