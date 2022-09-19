@@ -57,6 +57,18 @@ export const supplierMaterialPaymentPM = {
   }
 }
 
+// 采购对账管理/验收记录
+export const purchaseAcceptanceLogPM = {
+  get: ['purchaseAcceptanceLogPM:get'], // 查看
+  download: ['purchaseAcceptanceLogPM:download'] // 下载
+}
+
+// 采购对账管理/供应商对账
+export const supplierReconciliationLogPM = {
+  get: ['supplierReconciliationLogPM:get'], // 查看
+  download: ['supplierReconciliationLogPM:download'] // 下载
+}
+
 // 物流对账管理/物流记录
 export const supplierLogisticsLogPM = {
   get: ['supplier_logistics_Log:get'], // 物流记录列表
