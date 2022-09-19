@@ -34,9 +34,9 @@
           style="width: 100%"
         >
           <el-table-column label="序号" type="index" align="center" width="60" />
-          <el-table-column key="layingOffWay" prop="layingOffWay" label="下料方式" align="center" min-width="180">
+          <el-table-column key="layingOffWayName" prop="layingOffWayName" label="下料方式" align="center" min-width="180">
             <template #default="{ row }">
-              <el-input v-model="row.layingOffWay" placeholder="下料方式" style="width: 100%" />
+              <el-input v-model="row.layingOffWayName" placeholder="下料方式" style="width: 100%" />
             </template>
           </el-table-column>
           <el-table-column key="taskPrefix" prop="taskPrefix" label="任务前缀" align="center" min-width="180">
@@ -74,7 +74,7 @@ import useMaxHeight from '@compos/use-max-height'
 import { ElMessage } from 'element-plus'
 
 const tableRules = {
-  layingOffWay: [{ required: true, message: '请输入下料方式', trigger: 'blur' }],
+  layingOffWayName: [{ required: true, message: '请输入下料方式', trigger: 'blur' }],
   taskPrefix: [{ require: true, message: '请输入任务前缀', trigger: 'blur' }]
 }
 
@@ -155,7 +155,7 @@ async function submit() {
       const submitData = []
       _list.map((v) => {
         submitData.push({
-          layingOffWay: v.layingOffWay,
+          layingOffWayName: v.layingOffWayName,
           taskPrefix: v.taskPrefix.toUpperCase()
         })
       })

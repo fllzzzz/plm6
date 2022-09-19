@@ -19,9 +19,9 @@
     >
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="序号" type="index" align="center" width="60" />
-      <el-table-column v-if="columns.visible('layingOffWay')" align="center" key="layingOffWay" prop="layingOffWay" label="下料方式">
+      <el-table-column v-if="columns.visible('layingOffWayName')" align="center" key="layingOffWayName" prop="layingOffWayName" label="下料方式">
         <template #default="{ row }">
-          <span> {{ row.layingOffWay }} </span>
+          <span> {{ row.layingOffWayName }} </span>
         </template>
       </el-table-column>
       <el-table-column v-if="columns.visible('cutType')" :show-overflow-tooltip="true" prop="cutType" label="切割形式" align="center">
@@ -118,7 +118,7 @@ const { maxHeight } = useMaxHeight({ extraBox: ['.unloading-mode'], paginate: fa
 
 CRUD.HOOK.handleRefresh = (crud, { data }) => {
   data.content = data.content.map((v) => {
-    v.cutTypeLabel = `“${v.layingOffWay}-${v.cutType}-${v.thickness}”的切孔改为：`
+    v.cutTypeLabel = `“${v.layingOffWayName}-${v.cutType}-${v.thickness}”的切孔改为：`
     return v
   })
 }
