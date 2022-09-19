@@ -5,6 +5,10 @@
         <div class="total-name">{{ props.totalName }}</div>
         <div class="total-item">{{ `${props.totalValue || 0} ${props.unit || ''}` }}</div>
       </template>
+      <template v-if="props.showTotalAmount">
+        <div class="total-name">金额合计</div>
+        <div class="total-item">{{ `${props.totalAmount || 0} 元` }}</div>
+      </template>
     </div>
     <div>
       <slot name="calculator" />
@@ -50,6 +54,14 @@ const props = defineProps({
   showTotal: {
     type: Boolean,
     default: true
+  },
+  showTotalAmount: {
+    type: Boolean,
+    default: false
+  },
+  totalAmount: {
+    type: [Number, String],
+    default: 0
   },
   isSubmit: {
     type: Boolean,

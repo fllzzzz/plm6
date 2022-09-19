@@ -4,6 +4,8 @@
       :basic-class="STEEL_ENUM"
       :current-basic-class="steelBasicClassKV[currentBasicClass]?.V"
       :total-value="totalWeight"
+      :total-amount="totalAmount"
+      :show-total-amount="!boolPartyA"
       :validate="validate"
       :edit="props.edit"
       unit="kg"
@@ -141,6 +143,33 @@ const steelRefList = reactive({
 })
 
 const addable = computed(() => !!(currentBasicClass.value && order.value)) // 可添加的状态（选择了采购订单）
+const totalAmount = computed(() => {
+  let amount = 0
+  if (!boolPartyA.value) {
+    if (isNotBlank(form.steelPlateList)) {
+      form.steelPlateList.forEach((v) => {
+        if (isNotBlank(v.amount)) {
+          amount += +v.amount
+        }
+      })
+    }
+    if (isNotBlank(form.sectionSteelList)) {
+      form.sectionSteelList.forEach((v) => {
+        if (isNotBlank(v.amount)) {
+          amount += +v.amount
+        }
+      })
+    }
+    if (isNotBlank(form.steelCoilList)) {
+      form.steelCoilList.forEach((v) => {
+        if (isNotBlank(v.amount)) {
+          amount += +v.amount
+        }
+      })
+    }
+  }
+  return toFixed(amount, 2)
+})
 
 provide('matSpecRef', matSpecRef) // 供兄弟组件调用 删除
 

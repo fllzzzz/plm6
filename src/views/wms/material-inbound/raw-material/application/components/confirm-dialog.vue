@@ -85,7 +85,7 @@
         />
       </el-form>
     </template>
-    <common-footer class="footer" unit="元" :total-value="amount" is-submit />
+    <common-footer class="footer" :show-total="false" is-submit />
   </common-dialog>
 </template>
 
@@ -172,7 +172,6 @@ const tableRules = computed(() => {
 })
 
 const expandRowKeys = ref([]) // 展开行key
-const amount = ref() // 金额
 
 const { visible: dialogVisible, handleClose } = useVisible({ emit, props, closeHook: closeHook })
 const { cu, form, FORM } = regExtra() // 表单
@@ -232,14 +231,6 @@ watch(
   (visible) => {
     if (visible) {
       setDitto(form.list) // 在list变化时设置同上
-      amount.value = 0
-      if (!boolPartyA.value) {
-        form.list.forEach((v) => {
-          if (isNotBlank(v.amount)) {
-            amount.value += +v.amount
-          }
-        })
-      }
     }
   },
   { immediate: true }
@@ -342,7 +333,7 @@ function setDitto(list) {
 
 // 合计
 function getSummaries(param) {
-  return tableSummary(param, { props: ['quantity', 'mete'] })
+  return tableSummary(param, { props: ['quantity', 'mete', 'amount'] })
 }
 </script>
 
