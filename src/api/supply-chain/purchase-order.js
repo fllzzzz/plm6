@@ -15,6 +15,20 @@ export function getPurchasingPurchaseOrderBrief(params) {
 }
 
 /**
+ * 全部采购订单（含已完成的）
+ * @param {*} params
+ * @returns
+ */
+export function getPurchaseOrder(params) {
+  return request({
+    module: 'scm',
+    url: 'purchase-order/purchasing/serialNumber',
+    method: 'get',
+    params
+  })
+}
+
+/**
  * 订单列表
  *
  * @param {String} serialNumber 订单号/合同号

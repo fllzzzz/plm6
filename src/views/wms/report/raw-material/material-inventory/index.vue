@@ -21,7 +21,7 @@
       <!-- 价格信息 -->
       <amount-info-columns :columns="columns" :basic-class="basicClass" show-unit-price-e :showInput-v-a-t="false" />
       <!-- 仓库信息 -->
-      <warehouse-info-columns :columns="columns" show-project />
+      <warehouse-info-columns :columns="columns" show-project show-monomer show-area />
     </common-table>
     <!--分页组件-->
     <pagination />

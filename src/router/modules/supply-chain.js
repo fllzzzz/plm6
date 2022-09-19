@@ -61,6 +61,20 @@ export default {
           hidden: false,
           component: '/supply-chain/purchase-reconciliation-manage/payment-ledger/index',
           meta: { title: '付款台账', icon: 'project', noCache: true }
+        },
+        {
+          name: 'AcceptanceLog',
+          path: 'acceptance-log',
+          hidden: false,
+          component: '/supply-chain/purchase-reconciliation-manage/acceptance-log/index',
+          meta: { title: '验收记录', icon: 'project', noCache: true }
+        },
+        {
+          name: 'ReconciliationLog',
+          path: 'reconciliation-log',
+          hidden: false,
+          component: '/supply-chain/purchase-reconciliation-manage/reconciliation-log/index',
+          meta: { title: '供应商对账', icon: 'project', noCache: true }
         }
       ]
     },

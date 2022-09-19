@@ -14,7 +14,7 @@ import { getSuppliersBrief } from '@/api/common'
 import { getTaxRateBrief } from '@/api/config/wms/tax-rate'
 import { getCompanyConfig, getLogoConfig } from '@/api/config/main/system-config'
 import { getUnclosedRequisitionsBrief } from '@/api/wms/requisitions'
-import { getPurchasingPurchaseOrderBrief } from '@/api/supply-chain/purchase-order'
+import { getPurchasingPurchaseOrderBrief, getPurchaseOrder } from '@/api/supply-chain/purchase-order'
 import { getWarehouseBrief } from '@/api/config/wms/warehouse'
 import { getSteelClassifyConfBrief } from '@/api/config/system-config/steel-classic'
 
@@ -76,6 +76,8 @@ const state = {
   taxRateKV: {}, // 税率列表KV  key:基础分类，value：税率列表
   unclosedRequisitions: [], // 未关闭的申购单
   unclosedPurchaseOrder: [], // 采购中（未完成）的采购订单
+  purchaseOrders: [], // 采购订单列表
+  purchaseOrderKV: {}, // 采购订单id:value 格式
   monomers: {}, // 单体
   changeReasonConfig: [],
   steelClassifyConf: [], // 钢材材料分类配置
@@ -102,6 +104,7 @@ const state = {
     taxRate: false,
     unclosedRequisitions: false,
     unclosedPurchaseOrder: false,
+    purchaseOrders: false,
     changeReasonConfig: false,
     steelClassifyConf: false,
     subcontractType: false,
@@ -197,6 +200,13 @@ const mutations = {
   },
   SET_UNCLOSED_PURCHASE_ORDER(state, order) {
     state.unclosedPurchaseOrder = order
+  },
+  SET_PURCHASE_ORDERS(state, purchaseOrders) {
+    state.purchaseOrders = purchaseOrders
+    state.purchaseOrderKV = {}
+    purchaseOrders.forEach((v) => {
+      state.purchaseOrderKV[v.id] = v
+    })
   },
   SET_CHANGE_REASON_CONFIG(state, changeReasonConfig) {
     state.changeReasonConfig = changeReasonConfig
@@ -423,6 +433,16 @@ const actions = {
     })
     commit('SET_UNCLOSED_PURCHASE_ORDER', content)
     commit('SET_LOADED', { key: 'unclosedPurchaseOrder' })
+    return content
+  },
+  // 加载全部采购订单
+  async fetchPurchaseOrder({ commit }) {
+    const { content = [] } = await getPurchaseOrder()
+    // content.forEach((v) => {
+    //   if (v.projects) v.projectIds = v.projects.map((v) => v.id)
+    // })
+    commit('SET_PURCHASE_ORDERS', content)
+    commit('SET_LOADED', { key: 'purchaseOrders' })
     return content
   },
   async fetchSteelClassifyConf({ commit }) {
