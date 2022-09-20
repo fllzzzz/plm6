@@ -1,5 +1,6 @@
 <template>
    <common-drawer
+    ref="drawerRef"
     append-to-body
     :close-on-click-modal="false"
     :before-close="handleClose"
@@ -10,12 +11,12 @@
     custom-class="schedule-detail"
   >
     <template #titleRight>
-      <common-button v-loading="submitLoading" size="mini" type="warning" @click="isEdit=true" v-if="!isEdit">修改</common-button>
+      <common-button v-loading="submitLoading" size="mini" type="warning" @click="isEdit=true" v-if="!isEdit && checkPermission(permission.edit)">修改</common-button>
       <common-button v-loading="submitLoading" size="mini" type="primary" @click="onSubmit(auditTypeEnum.PASS.V)" v-if="isEdit">提交</common-button>
     </template>
     <template #content>
       <el-form ref="formRef" size="small" label-width="130px">
-        <common-table :data="list" v-loading="tableLoading" return-source-data :showEmptySymbol="false" :span-method="objectSpanMethod">
+        <common-table :data="list" v-loading="tableLoading" return-source-data :showEmptySymbol="false" :span-method="objectSpanMethod" :max-height="maxHeight-70">
           <el-table-column key="project" prop="project" label="项目" align="center" min-width="120">
             <template v-slot="scope">
               <span class="project-name">{{ projectNameFormatter(scope.row.project) }}</span>
@@ -92,7 +93,7 @@ import { ref, defineProps, defineEmits, watch } from 'vue'
 import { scheduleDetail, updateSchedule } from '@/api/mes/production-order-manage/production-order'
 import { ElNotification, ElMessage } from 'element-plus'
 
-// import useMaxHeight from '@compos/use-max-height'
+import useMaxHeight from '@compos/use-max-height'
 import useProductLines from '@compos/store/use-product-lines'
 import { projectNameFormatter } from '@/utils/project'
 import useVisible from '@compos/use-visible'
@@ -101,7 +102,7 @@ import { DP } from '@/settings/config'
 import { parseTime } from '@/utils/date'
 import { toThousand } from '@/utils/data-type/number'
 import { judgeSameValue } from '@/views/contract/info/judgeSameValue'
-// import checkPermission from '@/utils/system/check-permission'
+import checkPermission from '@/utils/system/check-permission'
 
 const emit = defineEmits(['success', 'update:modelValue'])
 const { visible, handleClose } = useVisible({ emit, props })
@@ -126,7 +127,7 @@ const { productLines } = useProductLines()
 const submitLoading = ref(false)
 const list = ref([])
 const options = ref([])
-// const drawerRef = ref()
+const drawerRef = ref()
 const tableLoading = ref(false)
 const isEdit = ref(false)
 const originData = ref([])
@@ -138,18 +139,14 @@ const cascaderProps = {
   checkStrictly: true
 }
 
-// const { maxHeight } = useMaxHeight(
-//   {
-//     mainBox: '.schedule-detail',
-//     extraBox: '.el-drawer__header',
-//     wrapperBox: '.el-drawer__body',
-//     paginate: true,
-//     minHeight: 300,
-//     navbar: false,
-//     clientHRepMainH: true
-//   },
-//   drawerRef
-// )
+const { maxHeight } = useMaxHeight(
+  {
+    mainBox: '.schedule-detail',
+    extraBox: '.el-drawer__header',
+    wrapperBox: '.el-drawer__body'
+  },
+  drawerRef
+)
 
 watch(
   productLines,
@@ -287,7 +284,6 @@ async function onSubmit() {
         })
       }
     })
-    console.log(submitData)
     if (!submitData.length) {
       ElMessage.error('请至少提交一条信息')
       return
@@ -304,18 +300,3 @@ async function onSubmit() {
 }
 
 </script>
-<style lang="scss" scoped>
-.imgs-box {
-  & > .el-image {
-    width: 50px;
-    height: 40px;
-    border: 2px solid #dcdfe6;
-    border-radius: 6px;
-    background-color: white;
-    cursor: pointer;
-    + .el-image {
-      margin-left: -40px;
-    }
-  }
-}
-</style>

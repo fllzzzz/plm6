@@ -19,7 +19,8 @@ const mes = {
   mes_production: '生产报表',
   mes_warehouse: '出入库报表',
   mes_logistics: '物流报表',
-  mes_wage: '工资报表'
+  mes_wage: '工资报表',
+  mes_production_order: '生产订单'
 }
 
 const supply = {
@@ -116,7 +117,11 @@ const tableType = {
   mesShipmentAudit: { L: '发运审核', M: 'mes_logistics', T: mt.mes.L + ' / ' + mes.mes_logistics },
   mesReceiptStatusSummary: { L: '收货状态汇总', M: 'mes_logistics', T: mt.mes.L + ' / ' + mes.mes_logistics },
   mesShippingList: { L: '发货清单', M: 'mes_logistics', T: mt.mes.L + ' / ' + mes.mes_logistics },
-  mesLogisticsSummary: { L: '物流汇总', M: 'mes_logistics', T: mt.mes.L + ' / ' + mes.mes_logistics }
+  mesLogisticsSummary: { L: '物流汇总', M: 'mes_logistics', T: mt.mes.L + ' / ' + mes.mes_logistics },
+
+  mesArtifactClassList: { L: '构件分类清单明细', M: 'mes_production_order', T: mt.mes.L + ' / ' + mes.mes_production_order },
+  mesAssembleClassList: { L: '部件分类清单明细', M: 'mes_production_order', T: mt.mes.L + ' / ' + mes.mes_production_order },
+  mesMachinePartClassList: { L: '零件分类清单明细', M: 'mes_production_order', T: mt.mes.L + ' / ' + mes.mes_production_order }
 }
 
 // 一个模板对应多个接口，尽量一一对应，在特殊情况下需要做特殊处理

@@ -76,6 +76,10 @@ const mesWarehouseStateStructure = mes.warehouseStateStructure
 const mesWarehouseStateEnclosure = mes.warehouseStateEnclosure
 const mesWarehouseStateReport = mes.warehouseStateReport
 
+const mesArtifactClassList = mes.artifactClassList
+const mesAssembleClassList = mes.assembleClassList
+const mesMachinePartClassList = mes.machinePartClassList
+
 // wms
 const wmsRmOutboundReceipt = wms.wmsRmOutboundReceipt // 出库
 const wmsRmInboundReceipt = wms.wmsRmInboundReceipt // 入库
@@ -157,6 +161,10 @@ export default {
   mesWarehouseStateStructure, // 结构出入库状态
   mesWarehouseStateEnclosure, // 围护出入库状态
   mesWarehouseStateReport, // 入发存报表
+
+  mesArtifactClassList, // 构件分类清单明细
+  mesAssembleClassList, // 部件分类清单明细
+  mesMachinePartClassList, // 零件分类清单明细
 
   // wms
   wmsRmOutboundReceipt, // 出库（领料单）单

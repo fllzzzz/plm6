@@ -452,3 +452,16 @@ export const shipAuditPM = {
 }
 
 // --------------------------- 打包与发运 end --------------------------------
+// ########################################################################
+
+// --------------------------- 生产订单 start --------------------------------
+
+// 生产订单
+export const mesProductionOrderPM = {
+  get: ['mes_production_order:get'], // 列表
+  detail: ['mes_production_order:detail'], // 查看计划详情
+  edit: ['mes_production_order:edit'], // 排产计划修改
+  detailList: ['mes_production_order:detailList'] // 清单详情
+}
+
+// --------------------------- 生产订单 end --------------------------------
