@@ -18,6 +18,8 @@
       :total-name="props.totalName"
       :total-value="props.totalValue"
       :show-total="props.showTotal"
+      :show-total-amount="props.showTotalAmount"
+      :total-amount="props.totalAmount"
       :btn-name="props.btnName"
       @submit="submit"
     />
@@ -64,6 +66,14 @@ const props = defineProps({
   showTotal: {
     type: Boolean,
     default: true
+  },
+  showTotalAmount: {
+    type: Boolean,
+    default: true
+  },
+  totalAmount: {
+    type: [Number, String],
+    default: 0
   },
   edit: {
     type: Boolean,
