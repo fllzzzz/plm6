@@ -328,7 +328,7 @@ async function rowSubmit(row, index) {
     ElMessage.error('生产计划必填')
     return
   }
-  if (globalProject.value.businessType === businessTypeEnum.INSTALLATION.V && !isNotBlank(row.areaList[index].installVal.timeArr)) {
+  if (globalProject.value.businessType === businessTypeEnum.INSTALLATION.V && isNotBlank(originDetailRow.value.installVal.timeArr) && !isNotBlank(row.areaList[index].installVal.timeArr)) {
     ElMessage.error('安装计划必填')
     return
   }

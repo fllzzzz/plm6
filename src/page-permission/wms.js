@@ -303,6 +303,12 @@ export const reportRawMaterialRejectReceiptPM = {
   inboundReceiptDetail: commonPM.rawMatInboundReceiptDetail // 入库详情
 }
 
+// 报表中心/原材料/库存报表
+export const reportRawMaterialInventoryPM = {
+  get: ['reportRawMaterialInventoryPM:get'], // 查看
+  download: ['reportRawMaterialInventoryPM:download'] // 下载
+}
+
 // 报表中心/原材料/收发存报表
 export const reportRawMaterialSendAndReceiveStoragePM = {
   get: ['wms_report_rawMat_sendAndReceiveStorage:get'], // 查看

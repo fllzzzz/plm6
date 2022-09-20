@@ -37,11 +37,12 @@ export function del(ids) {
 }
 
 // 获取所有单体信息 及对应已建区域信息
-export function monomerAll(projectId) {
+export function monomerAll(projectId, params) {
   return request({
     module: 'plan',
     url: `monomer/listByProjectId/${projectId}`,
     method: 'get',
+    params,
     cancelKey: false
   })
 }

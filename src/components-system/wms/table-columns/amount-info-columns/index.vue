@@ -1,5 +1,5 @@
 <template>
-  <component :is="comp" :columns="columns" :show-invoice-type="showInvoiceType" :show-tax-rate="showTaxRate" />
+  <component :is="comp" :columns="columns" :show-invoice-type="showInvoiceType" :show-tax-rate="showTaxRate" :showInput-v-a-t="showInputVAT" />
 </template>
 
 <script setup>
@@ -23,6 +23,11 @@ const props = defineProps({
   showTaxRate: {
     type: Boolean,
     default: false
+  },
+  // 显示进项税
+  showInputVAT: {
+    type: Boolean,
+    default: true
   }
 })
 

@@ -92,6 +92,8 @@ import mForm from './module/form'
 import mDetail from './module/detail'
 import mBatchForm from './module/batch-form'
 
+const store = useStore()
+
 import { ElMessageBox } from 'element-plus'
 
 const optShow = {
@@ -103,7 +105,6 @@ const optShow = {
 }
 
 const tableRef = ref()
-const store = useStore()
 const { crud, columns, CRUD } = useCRUD(
   {
     title: '供应商',
@@ -136,7 +137,7 @@ async function changeEnabled(data, val) {
     crud.refresh()
     crud.notify(supplierIsHideEnum.VL[val] + '成功', CRUD.NOTIFICATION_TYPE.SUCCESS)
   } catch (error) {
-    console.log('操作构件工序状态', error)
+    console.log('操作供应商状态', error)
     data.enabled = !data.enabled
   }
 }
@@ -149,23 +150,24 @@ CRUD.HOOK.handleRefresh = (crud, res) => {
   })
 }
 
+function handleSuccess() {
+  store.dispatch('config/fetchSuppliers')
+}
+
+CRUD.HOOK.afterSubmit = () => {
+  handleSuccess()
+}
+
+CRUD.HOOK.afterBatchAddSuccess = () => {
+  handleSuccess()
+}
+
+CRUD.HOOK.afterDelete = () => {
+  handleSuccess()
+}
+
 CRUD.HOOK.beforeToAdd = (crud, data) => {
   crud.form.processType = crud.query.processType
   crud.form.sequenceType = crud.query.sequenceType
-}
-
-// 添加之后
-CRUD.HOOK.afterSubmit = () => {
-  store.dispatch('config/fetchSuppliers')
-}
-
-// 批量添加之后
-CRUD.HOOK.afterBatchSubmit = () => {
-  store.dispatch('config/fetchSuppliers')
-}
-
-// 删除后
-CRUD.HOOK.afterDelete = () => {
-  store.dispatch('config/fetchSuppliers')
 }
 </script>

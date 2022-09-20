@@ -177,12 +177,10 @@
 <script setup>
 import crudApi, { editStatus } from '@/api/contract/supplier-manage/pay-invoice/invoice'
 import { ref, defineProps, watch, provide, defineEmits, nextTick } from 'vue'
+
 import { tableSummary } from '@/utils/el-extra'
 import checkPermission from '@/utils/system/check-permission'
-import useMaxHeight from '@compos/use-max-height'
-import useCRUD from '@compos/use-crud'
-import pagination from '@crud/Pagination'
-import { auditTypeEnum } from '@enum-ms/contract'
+import { auditTypeEnum, supplierPayTypeEnum } from '@enum-ms/contract'
 import { invoiceTypeEnum } from '@enum-ms/finance'
 import { parseTime } from '@/utils/date'
 import { DP } from '@/settings/config'
@@ -190,11 +188,15 @@ import { toThousand } from '@data-type/number'
 import { digitUppercase } from '@/utils/data-type/number'
 import { validate } from '@compos/form/use-table-validate'
 import { ElMessage } from 'element-plus'
-import mForm from './form'
 import { contractSupplierMaterialPM } from '@/page-permission/contract'
 import { fileClassifyEnum } from '@enum-ms/file'
+
+import useMaxHeight from '@compos/use-max-height'
+import useCRUD from '@compos/use-crud'
+import pagination from '@crud/Pagination'
 import UploadBtn from '@comp/file-upload/UploadBtn'
 import showPdfAndImg from '@comp-base/show-pdf-and-img.vue'
+import mForm from './form'
 
 const permission = contractSupplierMaterialPM.invoice
 const emit = defineEmits(['success'])
@@ -285,6 +287,7 @@ watch(
   (val) => {
     if (val) {
       crud.query.orderId = props.currentRow.id
+      crud.query.propertyType = supplierPayTypeEnum.PURCHASE.V
       crud.toQuery()
     }
   },

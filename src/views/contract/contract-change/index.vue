@@ -22,35 +22,15 @@
         prop="project.shortName"
         :show-overflow-tooltip="true"
         label="项目"
-        min-width="250"
+        min-width="150"
       >
         <template v-slot="scope">
-          <el-tooltip :content="scope.row.project.serialNumber+' '+scope.row.project.name" :show-after="50" placement="top" v-if="scope.row.project && scope.row.project.serialNumber">
-            <span class="project-name">{{ projectNameFormatter(scope.row.project) }}</span>
-          </el-tooltip>
+          <span>{{ projectNameFormatter(scope.row.project) }}</span>
         </template>
       </el-table-column>
-      <el-table-column v-if="columns.visible('type')" key="type" prop="type" :show-overflow-tooltip="true" label="内容" min-width="120">
+      <el-table-column v-if="columns.visible('type')" key="type" prop="type" :show-overflow-tooltip="true" label="内容">
         <template v-slot="scope">
           <span>{{ scope.row.type ? contractChangeTypeEnum.VL[scope.row.type] : '' }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column
-        v-if="columns.visible('amount')"
-        key="amount"
-        prop="amount"
-        :show-overflow-tooltip="true"
-        label="金额(元)"
-        min-width="180"
-      >
-        <template v-slot="scope">
-          <span v-if="scope.row.type === contractChangeTypeEnum.CONTRACT_INFO.V">{{toThousand(scope.row.contractAmount)}}</span>
-          <!-- <span v-if="scope.row.type === contractChangeTypeEnum.CONTRACT_SETTLE.V">{{toThousand(scope.row.settlementAmount)}}</span> -->
-          <template v-if="scope.row.type === contractChangeTypeEnum.CONTRACT_AMOUNT.V">
-            <span>{{toThousand(scope.row.contractAmount)}}</span>
-            <span>{{scope.row.contractAmount<scope.row.changeAmount?'<':'>'}}</span>
-            <span :class="scope.row.contractAmount>scope.row.changeAmount?'tip-red':'tip-green'">{{ toThousand(scope.row.changeAmount) }}</span>
-          </template>
         </template>
       </el-table-column>
       <el-table-column
@@ -60,36 +40,10 @@
         :show-overflow-tooltip="true"
         label="变更日期"
         align="center"
-        min-width="120"
+        width="80"
       >
         <template v-slot="scope">
           <div>{{ scope.row.changeDate?parseTime(scope.row.changeDate,'{y}-{m}-{d}'):'-' }}</div>
-        </template>
-      </el-table-column>
-      <el-table-column
-        v-if="columns.visible('changeDesc')"
-        key="changeDesc"
-        prop="changeDesc"
-        :show-overflow-tooltip="true"
-        label="变更描述"
-        align="center"
-        min-width="120"
-      >
-        <template v-slot="scope">
-          <div>{{ scope.row.changeDesc?scope.row.changeDesc:'-' }}</div>
-        </template>
-      </el-table-column>
-      <el-table-column
-        v-if="columns.visible('createTime')"
-        key="createTime"
-        prop="createTime"
-        :show-overflow-tooltip="true"
-        label="创建日期"
-        align="center"
-        min-width="120"
-      >
-        <template v-slot="scope">
-          <div>{{ scope.row.createTime?parseTime(scope.row.createTime,'{y}-{m}-{d}'):'-' }}</div>
         </template>
       </el-table-column>
       <el-table-column
@@ -105,6 +59,50 @@
           <div>{{ scope.row.userName }}</div>
         </template>
       </el-table-column>
+      <el-table-column
+        v-if="columns.visible('amount')"
+        key="amount"
+        prop="amount"
+        :show-overflow-tooltip="true"
+        label="金额(元)"
+        min-width="120"
+      >
+        <template v-slot="scope">
+          <span v-if="scope.row.type === contractChangeTypeEnum.CONTRACT_INFO.V">{{toThousand(scope.row.contractAmount)}}</span>
+          <!-- <span v-if="scope.row.type === contractChangeTypeEnum.CONTRACT_SETTLE.V">{{toThousand(scope.row.settlementAmount)}}</span> -->
+          <template v-if="scope.row.type === contractChangeTypeEnum.CONTRACT_AMOUNT.V">
+            <span>{{toThousand(scope.row.contractAmount)}}</span>
+            <span>{{scope.row.contractAmount<scope.row.changeAmount?'<':'>'}}</span>
+            <span :class="scope.row.contractAmount>scope.row.changeAmount?'tip-red':'tip-green'">{{ toThousand(scope.row.changeAmount) }}</span>
+          </template>
+        </template>
+      </el-table-column>
+      <el-table-column
+        v-if="columns.visible('changeDesc')"
+        key="changeDesc"
+        prop="changeDesc"
+        :show-overflow-tooltip="true"
+        label="变更描述"
+        align="center"
+        width="160"
+      >
+        <template v-slot="scope">
+          <div style="width:150px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ scope.row.changeDesc?scope.row.changeDesc:'-' }}</div>
+        </template>
+      </el-table-column>
+      <!-- <el-table-column
+        v-if="columns.visible('createTime')"
+        key="createTime"
+        prop="createTime"
+        :show-overflow-tooltip="true"
+        label="创建日期"
+        align="center"
+        width="80"
+      >
+        <template v-slot="scope">
+          <div>{{ scope.row.createTime?parseTime(scope.row.createTime,'{y}-{m}-{d}'):'-' }}</div>
+        </template>
+      </el-table-column> -->
       <!-- <el-table-column
         v-if="columns.visible('leaderList')"
         key="leaderList"
@@ -121,19 +119,6 @@
         </template>
       </el-table-column> -->
       <el-table-column
-        v-if="columns.visible('auditTime')"
-        key="auditTime"
-        prop="auditTime"
-        label="审核日期"
-        align="center"
-        width="110px"
-        :show-overflow-tooltip="true"
-      >
-        <template v-slot="scope">
-           <div>{{ scope.row.auditTime? parseTime(scope.row.auditTime,'{y}-{m}-{d}'): '-' }}</div>
-        </template>
-      </el-table-column>
-      <el-table-column
         v-if="columns.visible('auditorName')"
         key="auditorName"
         prop="auditorName"
@@ -144,6 +129,19 @@
       >
         <template v-slot="scope">
           <div>{{ scope.row.auditorName }}</div>
+        </template>
+      </el-table-column>
+      <el-table-column
+        v-if="columns.visible('auditTime')"
+        key="auditTime"
+        prop="auditTime"
+        label="审核日期"
+        align="center"
+        width="110px"
+        :show-overflow-tooltip="true"
+      >
+        <template v-slot="scope">
+           <div>{{ scope.row.auditTime? parseTime(scope.row.auditTime,'{y}-{m}-{d}'): '-' }}</div>
         </template>
       </el-table-column>
       <el-table-column

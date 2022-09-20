@@ -122,14 +122,17 @@
 <script setup>
 import { ref, defineProps, watch, inject, nextTick } from 'vue'
 import { regForm } from '@compos/use-crud'
+
 import { ElMessage } from 'element-plus'
 import { DP } from '@/settings/config'
 import useMaxHeight from '@compos/use-max-height'
 import { digitUppercase } from '@/utils/data-type/number'
 import { toThousand } from '@data-type/number'
 import { invoiceTypeEnum } from '@enum-ms/finance'
+import { supplierPayTypeEnum } from '@enum-ms/contract'
 import useTableValidate from '@compos/form/use-table-validate'
 import { fileClassifyEnum } from '@enum-ms/file'
+
 import UploadBtn from '@comp/file-upload/UploadBtn'
 
 const formRef = ref()
@@ -209,7 +212,7 @@ function addRow() {
   form.list.push({
     id: undefined,
     orderId: props.currentRow.id,
-    propertyType: props.propertyType,
+    propertyType: supplierPayTypeEnum.PURCHASE.V,
     invoiceAmount: undefined,
     receiveInvoiceDate: undefined,
     invoiceType: props.currentRow.invoiceType,
