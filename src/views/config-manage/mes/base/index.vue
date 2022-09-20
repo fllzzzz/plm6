@@ -5,7 +5,7 @@
         <overweightSMSRecipient v-permission="permission.overweightSMSRecipientGet" style="margin-bottom: 20px" />
         <safeAmount v-permission="permission.safeAmountFactorGet" style="margin-bottom: 20px" />
         <!-- <installationAudit v-permission="permission.installationAuditGet" style="margin-top: 20px" /> -->
-        <driverFillConfig v-permission="permission.driverFillConfigGet" style="margin-bottom: 20px" />
+        <!-- <driverFillConfig v-permission="permission.driverFillConfigGet" style="margin-bottom: 20px" /> -->
       </el-col>
       <el-col :xs="24" :sm="24" :md="12" :lg="8">
         <drawingSNConfig v-permission="permission.drawingSNConfigGet" style="margin-bottom: 20px"/>
@@ -32,7 +32,7 @@ import { componentTypeEnum } from '@enum-ms/mes'
 import overweightSMSRecipient from './component/overweight-sms-config'
 import safeAmount from './component/safe-amount-config'
 // import installationAudit from './component/installation-audit'
-import driverFillConfig from './component/driver-fill-config'
+// import driverFillConfig from './component/driver-fill-config'
 import drawingSNConfig from './component/drawing-sn-config'
 import appPrintConfig from './component/app-print-config'
 import carModelConfig from './component/car-model-config'
