@@ -40,6 +40,19 @@
         <el-descriptions-item label-class-name="contractLabel" label="开票应收">
           {{ toFixed(contract.billingReceivableAmount, DP.YUAN) }}
         </el-descriptions-item>
+        <el-descriptions-item label-class-name="contractLabel" label="附件">
+          <div class="imgs-box">
+            <el-image
+              v-for="url in contract.attachmentDTOS"
+              :preview-src-list="contract.attachmentImgSrc"
+              :initial-index="1"
+              :key="url.id"
+              :src="url.tinyImageUrl"
+              lazy
+              style="margin:0 2px;"
+            ></el-image>
+          </div>
+        </el-descriptions-item>
       </el-descriptions>
       <el-radio-group v-model="curProductType" v-if="productTypeBits.length > 1" size="small" class="filter-item">
         <el-radio-button
@@ -228,6 +241,7 @@ async function fetchDetail() {
     enclosureList.value = data.enclosureList || []
     auxList.value = data.auxList || []
     contract.value = data.review || {}
+    contract.value.attachmentImgSrc = contract.value.attachmentDTOS && contract.value.attachmentDTOS.map((k) => k.imageUrl)
   } catch (error) {
     console.log('详情', error)
   } finally {
@@ -235,3 +249,18 @@ async function fetchDetail() {
   }
 }
 </script>
+<style lang="scss" scoped>
+.imgs-box {
+  & > .el-image {
+    width: 50px;
+    height: 40px;
+    border: 2px solid #dcdfe6;
+    border-radius: 6px;
+    background-color: white;
+    cursor: pointer;
+    + .el-image {
+      margin-left: -40px;
+    }
+  }
+}
+</style>
