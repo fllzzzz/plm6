@@ -56,6 +56,10 @@ const props = defineProps({
   fixed: {
     // 定位
     type: String
+  },
+  sortable: {
+    type: [String, Boolean],
+    default: false
   }
 })
 

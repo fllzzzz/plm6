@@ -13,6 +13,8 @@
       :default-expand-all="false"
       :expand-row-keys="expandRowKeys"
       row-key="id"
+      show-summary
+      :summary-method="getSummaries"
       @sort-change="crud.handleSortChange"
       @selection-change="crud.selectionChangeHandler"
     >
@@ -85,6 +87,7 @@ import { steelMaterialWarehousePM as permission } from '@/page-permission/wms'
 import { ref } from 'vue'
 import { matClsEnum, rawMatClsEnum } from '@enum-ms/classification'
 import { materialOperateColumns } from '@/utils/columns-format/wms'
+import { tableSummary } from '@/utils/el-extra'
 
 import useCRUD from '@compos/use-crud'
 import useIndexInfo from '../compos/use-index-info'
@@ -139,4 +142,8 @@ const {
   handleTransferSuccess,
   handleRefresh
 } = useIndexInfo({ CRUD, crud, defaultBasicClass: rawMatClsEnum.STEEL_PLATE.V })
+
+function getSummaries(param) {
+  return tableSummary(param, { props: ['quantity', 'mete'] })
+}
 </script>
