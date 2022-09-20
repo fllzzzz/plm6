@@ -1,5 +1,5 @@
 <template>
-  <!-- 发运记录 -->
+  <!-- 出库记录 -->
   <common-drawer
     ref="shipDrawerRef"
     title="出库记录"
@@ -15,7 +15,7 @@
         <span v-parse-project="{ project: detailInfo.project, onlyShortName: true }" v-empty-text />
       </el-tag>
       <el-tag effect="plain" size="medium">
-        <span>累计发运额：</span>
+        <span>累计出库额：</span>
         <span v-thousand="detailInfo.happenedAmount" v-empty-text />
       </el-tag>
       <el-tag effect="plain" size="medium">
