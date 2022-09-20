@@ -60,7 +60,7 @@
           <span>{{ row.invoiceRate }}%</span>
         </template>
       </el-table-column>
-      <el-table-column v-if="columns.visible('happenedAmount')" prop="happenedAmount" key="happenedAmount" label="累计发运额" align="right" min-width="120" show-overflow-tooltip>
+      <el-table-column v-if="columns.visible('happenedAmount')" prop="happenedAmount" key="happenedAmount" label="累计出库额" align="right" min-width="120" show-overflow-tooltip>
         <template v-if="checkPermission(permission.detail)" #header>
           <el-tooltip
             effect="light"
@@ -68,7 +68,7 @@
             content="点击行可以查看详情"
           >
             <div style="display: inline-block">
-              <span>累计发运额 </span>
+              <span>累计出库额 </span>
               <i class="el-icon-info" />
             </div>
           </el-tooltip>
@@ -77,7 +77,7 @@
           <div class="clickable" @click.stop="openRecord(row, 'happened')">{{ row.happenedAmount }}</div>
         </template>
       </el-table-column>
-      <el-table-column v-if="columns.visible('happenedRate')" key="happenedRate" prop="happenedRate" label="发运额比例" align="center" width="90">
+      <el-table-column v-if="columns.visible('happenedRate')" key="happenedRate" prop="happenedRate" label="出库额比例" align="center" width="90">
         <template #default="{ row }">
           <span>{{ row.happenedRate }}%</span>
         </template>
@@ -185,7 +185,7 @@ CRUD.HOOK.handleRefresh = (crud, { data }) => {
     v.collectionRate = v.contractAmount ? (v.collectionAmount || 0) / (v.contractAmount || 0) * 100 : 0
     // 开票比例
     v.invoiceRate = v.collectionAmount ? (v.invoiceAmount || 0) / (v.collectionAmount || 0) * 100 : 0
-    // 发运比例
+    // 出库比例
     v.happenedRate = v.collectionAmount ? (v.happenedAmount || 0) / (v.collectionAmount || 0) * 100 : 0
   })
 }
