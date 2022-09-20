@@ -96,7 +96,7 @@
             content="点击行可以查看详情"
           >
             <div style="display: inline-block">
-              <span>累计发运额 </span>
+              <span>累计出库额 </span>
               <i class="el-icon-info" />
             </div>
           </el-tooltip>
@@ -214,7 +214,7 @@ CRUD.HOOK.handleRefresh = (crud, { data }) => {
     v.collectionRate = (v.settlementAmount || v.contractAmount) ? (v.collectionAmount || 0) / (v.settlementAmount || v.contractAmount) * 100 : 0
     // 开票比例
     v.invoiceRate = (v.settlementAmount || v.contractAmount) ? (v.invoiceAmount || 0) / (v.settlementAmount || v.contractAmount) * 100 : 0
-    // 发运比例
+    // 出库比例
     v.happenedRate = (v.settlementAmount || v.contractAmount) ? (v.happenedAmount || 0) / (v.settlementAmount || v.contractAmount) * 100 : 0
     // 入库比例
     v.warehouseRate = (v.settlementAmount || v.contractAmount) ? (v.warehouseAmount || 0) / (v.settlementAmount || v.contractAmount) * 100 : 0
