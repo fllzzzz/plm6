@@ -85,6 +85,10 @@ const sectionSteelSpecTmpl = {
         throw new Error(`${row.classifyName}不是末级科目`)
       }
       const materialInfo = stateClassifySpec[row.classifyId]
+      // 未配置核算单位
+      if (materialInfo.hasUnitConfig === false) {
+        throw new Error(`${row.classifyName}未配置核算单位`)
+      }
       // 当前规格的物料信息
       let materialSpecInfo
       const specification = row.specification ?? '' // 对应入库“规格”列
