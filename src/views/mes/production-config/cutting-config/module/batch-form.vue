@@ -33,23 +33,23 @@
           style="width: 100%"
         >
           <el-table-column label="序号" type="index" align="center" width="60" />
-          <el-table-column key="type" prop="type" label="切割形式" align="center" min-width="180">
-            <template #default="{ row }">
-              <el-input v-model="row.cutType" placeholder="切割形式" style="width: 100%" />
-            </template>
-          </el-table-column>
-          <el-table-column key="layingOffWay" prop="layingOffWay" label="下料方式" align="center" min-width="180">
+          <el-table-column key="layingOffWayName" prop="layingOffWayName" label="下料方式" align="center" min-width="180">
             <template #default="{ row, $index }">
               <common-select
                 :key="Math.random()"
-                v-model="row.layingOffWay"
+                v-model="row.layingOffWayName"
                 :options="props.detailData"
-                :data-structure="{ key: 'id', label: 'layingOffWay', value: 'layingOffWay' }"
+                :data-structure="{ key: 'id', label: 'layingOffWayName', value: 'layingOffWayName' }"
                 :show-extra="$index !== 0"
                 type="other"
                 placeholder="下料方式"
                 style="width: 100%"
               />
+            </template>
+          </el-table-column>
+          <el-table-column key="type" prop="type" label="切割形式" align="center" min-width="180">
+            <template #default="{ row }">
+              <el-input v-model="row.cutType" placeholder="切割形式" style="width: 100%" />
             </template>
           </el-table-column>
           <el-table-column key="thickness" prop="thickness" :show-overflow-tooltip="true" align="center" label="厚度" min-width="120">
@@ -113,7 +113,7 @@ import StoreOperation from '@crud/STORE.operation.vue'
 const tableRules = {
   thickness: [{ required: true, message: '请填写厚度', trigger: 'blur' }],
   cutType: [{ required: true, message: '请输入切割形式', trigger: 'blur' }],
-  layingOffWay: [{ required: true, message: '请选择下料方式', trigger: 'change' }]
+  layingOffWayName: [{ required: true, message: '请选择下料方式', trigger: 'change' }]
 }
 
 const defaultForm = { list: [] }
@@ -133,7 +133,7 @@ const defaultRow = {
 // 同上的选项与值
 const ditto = new Map([
   ['cutType', '同上'],
-  ['layingOffWay', -1]
+  ['layingOffWayName', -1]
 ])
 
 const formRef = ref()
@@ -169,5 +169,15 @@ CRUD.HOOK.beforeValidateBCU = () => {
 }
 
 // 表单提交数据清理
-crud.submitBatchFormFormat = (form) => cleanUpData(form.list)
+crud.submitBatchFormFormat = (form) => {
+  cleanUpData(form.list)
+  form.list.map(k => {
+    // 传入任务前缀参数 taskPrefix
+    const val = props.detailData.find(v => v.layingOffWayName === k.layingOffWayName)
+    console.log(val)
+    k.taskPrefix = val.taskPrefix
+  })
+  console.log(form.list)
+  return form
+}
 </script>

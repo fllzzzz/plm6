@@ -14,6 +14,14 @@
       <common-button :loading="submitLoading" type="primary" size="mini" @click="submit">提 交</common-button>
     </template>
     <div>
+      <common-radio-button
+        style="margin-bottom: 8px"
+        class="filter-item"
+        v-model="materialType"
+        :options="materialTypeEnum.ENUM"
+        type="enum"
+        size="small"
+      />
       <el-form ref="formRef" :model="form" :disabled="submitLoading">
         <common-table
           :data="form.list"
@@ -26,9 +34,14 @@
           style="width: 100%"
         >
           <el-table-column label="序号" type="index" align="center" width="60" />
-          <el-table-column key="layingOffWay" prop="layingOffWay" label="下料方式" align="center" min-width="180">
+          <el-table-column key="layingOffWayName" prop="layingOffWayName" label="下料方式" align="center" min-width="180">
             <template #default="{ row }">
-              <el-input v-model="row.layingOffWay" placeholder="下料方式" style="width: 100%" />
+              <el-input v-model="row.layingOffWayName" placeholder="下料方式" style="width: 100%" />
+            </template>
+          </el-table-column>
+          <el-table-column key="taskPrefix" prop="taskPrefix" label="任务前缀" align="center" min-width="180">
+            <template #default="{ row }">
+              <el-input v-model="row.taskPrefix" placeholder="任务前缀" style="width: 100%" />
             </template>
           </el-table-column>
           <el-table-column label="操作" width="70px" align="center">
@@ -51,6 +64,7 @@
 <script setup>
 import { ref, defineEmits, defineProps, watch, reactive } from 'vue'
 import { batchUnloadingAdd } from '@/api/mes/production-config/unloading-config'
+import { materialTypeEnum } from '@enum-ms/uploading-form'
 import { deepClone } from '@data-type/index'
 import useVisible from '@compos/use-visible'
 import useTableOperate from '@compos/form/use-table-operate'
@@ -60,14 +74,17 @@ import useMaxHeight from '@compos/use-max-height'
 import { ElMessage } from 'element-plus'
 
 const tableRules = {
-  layingOffWay: [{ required: true, message: '请输入下料方式', trigger: 'blur' }]
+  layingOffWayName: [{ required: true, message: '请输入下料方式', trigger: 'blur' }],
+  taskPrefix: [{ require: true, message: '请输入任务前缀', trigger: 'blur' }]
 }
 
 const form = reactive({ list: [] })
 
 const defaultRow = {}
 const formRef = ref()
+const originList = ref()
 const submitLoading = ref(false)
+const materialType = ref(materialTypeEnum.MANMADE_BLANKING.V)
 const emit = defineEmits(['success', 'update:modelValue'])
 const props = defineProps({
   modelValue: {
@@ -104,10 +121,24 @@ watch(
   () => visible.value,
   (val) => {
     if (val) {
-      form.list = JSON.parse(JSON.stringify(props.detailData))
+      originList.value = JSON.parse(JSON.stringify(props.detailData)) || []
+      form.list = originList.value.filter((v) => {
+        return v.materialType === materialType.value
+      })
     }
   },
   { immediate: true }
+)
+
+watch(
+  () => materialType.value,
+  (val) => {
+    if (val) {
+      form.list = originList.value.filter((v) => {
+        return v.materialType === materialType.value
+      })
+    }
+  }
 )
 
 // 提交表单
@@ -118,14 +149,21 @@ async function submit() {
     form.list = dealList
     if (validResult) {
       // 清除无用数据
-      const _list = cleanUpData(deepClone(dealList))
       form.list = props.detailData
+      const _list = cleanUpData(deepClone(dealList))
+
       const submitData = []
       _list.map((v) => {
-        submitData.push(v.layingOffWay)
+        submitData.push({
+          layingOffWayName: v.layingOffWayName,
+          taskPrefix: v.taskPrefix.toUpperCase()
+        })
       })
       // 数据格式化
-      await batchUnloadingAdd(submitData)
+      await batchUnloadingAdd({
+        materialType: materialType.value,
+        mesBuildingLayWayDTOParams: submitData
+      })
       // 清除本地缓存
       clearFormStorage()
       emit('success')
