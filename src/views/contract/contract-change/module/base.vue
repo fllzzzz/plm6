@@ -46,7 +46,7 @@
           </el-form-item>
           <el-form-item label="总工期(天)" prop="totalDuration">
             <div class="input-underline">
-              <span>{{ detail.startDate && detail.endDate? dateDifferenceReduce(detail.startDate, detail.endDate): '-' }}</span>
+              <span>{{ detail.startDate && detail.endDate? dateDifference(detail.startDate, detail.endDate): '-' }}</span>
             </div>
           </el-form-item>
         </div>
@@ -124,7 +124,7 @@
 <script setup>
 import { ref, defineProps } from 'vue'
 
-import { dateDifferenceReduce } from '@/utils/date'
+import { dateDifference } from '@/utils/date'
 import useDict from '@compos/store/use-dict'
 import { fileClassifyEnum } from '@enum-ms/file'
 import { orderSourceTypeEnum } from '@enum-ms/contract'

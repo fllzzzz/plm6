@@ -228,7 +228,7 @@ import { mapGetters } from '@/store/lib'
 import { businessTypeEnum } from '@enum-ms/contract'
 import { manufactureTypeEnum, areaPlanTypeEnum } from '@enum-ms/plan'
 import { isNotBlank } from '@data-type/index'
-import { dateDifferenceReduce } from '@/utils/date'
+import { dateDifference } from '@/utils/date'
 import { parseTime } from '@/utils/date'
 import { planMakeListPM as permission } from '@/page-permission/plan'
 import { TechnologyTypeAllEnum } from '@enum-ms/contract'
@@ -316,7 +316,7 @@ function totalTime(k) {
   const startDate = k.deepVal?.startDate || k.processVal?.startDate || k?.startDate || undefined
   const endDate = k.installVal?.endDate || k.processVal?.endDate || k.deepVal?.endDate || undefined
   if (startDate && endDate) {
-    k.totalDays = dateDifferenceReduce(startDate, endDate)
+    k.totalDays = dateDifference(startDate, endDate)
   }
 }
 async function rowSubmit(row, index) {
