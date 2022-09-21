@@ -153,7 +153,7 @@ import { mapGetters } from '@/store/lib'
 import { TechnologyTypeAllEnum, businessTypeEnum } from '@enum-ms/contract'
 import { manufactureTypeEnum, areaPlanTypeEnum } from '@enum-ms/plan'
 import { projectProgressPM as permission } from '@/page-permission/project'
-import { dateDifferenceReduce } from '@/utils/date'
+import { dateDifference } from '@/utils/date'
 import { DP } from '@/settings/config'
 import { isNotBlank } from '@/utils/data-type'
 
@@ -225,8 +225,8 @@ CRUD.HOOK.handleRefresh = (crud, data) => {
         const currentDate = new Date().getTime()
         if (k.detailTraceList && k.detailTraceList.length > 0) {
           k.detailTraceList.map((value, index) => {
-            value.totalDays = value.startDate && value.endDate ? dateDifferenceReduce(value.startDate, value.endDate) : 0
-            value.actualDays = value.startDate && value.startDate <= currentDate ? (value.completeDate ? dateDifferenceReduce(value.startDate, value.completeDate) : dateDifferenceReduce(value.startDate, currentDate)) : 0
+            value.totalDays = value.startDate && value.endDate ? dateDifference(value.startDate, value.endDate) : 0
+            value.actualDays = value.startDate && value.startDate <= currentDate ? (value.completeDate ? dateDifference(value.startDate, value.completeDate) : dateDifference(value.startDate, currentDate)) : 0
             value.dayRate = value.totalDays ? Number((value.actualDays / value.totalDays * 100).toFixed(1)) : 0
             value.dayColor = '#1890ff'
             value.completedMete = value.completedMete || 0
@@ -252,8 +252,8 @@ CRUD.HOOK.handleRefresh = (crud, data) => {
             value.produceArr.push(value.type)
             if (value.planDetailList && value.planDetailList.length > 0) {
               value.planDetailList.map((values, index) => {
-                values.totalDays = values.startDate && values.endDate ? dateDifferenceReduce(values.startDate, values.endDate) : 0
-                values.actualDays = values.startDate && values.startDate <= currentDate ? (values.completeDate ? dateDifferenceReduce(values.startDate, values.completeDate) : dateDifferenceReduce(values.startDate, currentDate)) : 0
+                values.totalDays = values.startDate && values.endDate ? dateDifference(values.startDate, values.endDate) : 0
+                values.actualDays = values.startDate && values.startDate <= currentDate ? (values.completeDate ? dateDifference(values.startDate, values.completeDate) : dateDifference(values.startDate, currentDate)) : 0
                 values.dayRate = values.totalDays ? Number((values.actualDays / values.totalDays * 100).toFixed(1)) : 0
                 values.dayColor = '#1890ff'
                 values.completedMete = values.completedMete || 0
