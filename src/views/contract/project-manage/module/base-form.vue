@@ -49,7 +49,7 @@
           />
         </el-form-item>
         <el-form-item label="总工期(天)" prop="totalDuration">
-          <span v-if="form.startDate && form.endDate">{{ dateDifferenceReduce(form.startDate, form.endDate) }}</span>
+          <span v-if="form.startDate && form.endDate">{{ dateDifference(form.startDate, form.endDate) }}</span>
         </el-form-item>
       </div>
       <div class="form-row">
@@ -191,7 +191,7 @@
 
 <script setup>
 import { ref, defineProps, watch, computed, defineExpose, nextTick } from 'vue'
-import { dateDifferenceReduce } from '@/utils/date'
+import { dateDifference } from '@/utils/date'
 import regionCascader from '@comp-base/region-cascader'
 import userDeptCascader from '@comp-base/user-dept-cascader.vue'
 import useDict from '@compos/store/use-dict'
