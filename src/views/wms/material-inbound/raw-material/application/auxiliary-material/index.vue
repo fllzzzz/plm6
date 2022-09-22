@@ -5,6 +5,8 @@
       :validate="validate"
       :edit="props.edit"
       :show-total="false"
+      :total-amount="totalAmount"
+      :show-total-amount="!boolPartyA"
       @purchase-order-change="handleOrderInfoChange"
     >
       <div class="filter-container">
@@ -57,13 +59,13 @@ import { auxMatInboundApplicationPM as permission } from '@/page-permission/wms'
 import { defineProps, defineEmits, ref, watch, provide, nextTick, reactive, computed } from 'vue'
 import { matClsEnum } from '@/utils/enum/modules/classification'
 import { orderSupplyTypeEnum } from '@/utils/enum/modules/wms'
+import { isNotBlank, toFixed } from '@/utils/data-type'
 
 import useForm from '@/composables/form/use-form'
 import useMaxHeight from '@compos/use-max-height'
 import CommonWrapper from '@/views/wms/material-inbound/raw-material/application/components/common-wrapper.vue'
 import MaterialTableSpecSelect from '@/components-system/classification/material-table-spec-select.vue'
 import AuxMatTable from './module/aux-mat-table.vue'
-import { isNotBlank } from '@/utils/data-type'
 
 const emit = defineEmits(['success'])
 
@@ -98,6 +100,19 @@ const materialSelectVisible = ref(false) // 显示物料选择
 const currentBasicClass = matClsEnum.MATERIAL.V // 当前基础分类
 
 const addable = computed(() => !!(currentBasicClass && order.value)) // 可添加的状态（选择了采购订单）
+const totalAmount = computed(() => {
+  let amount = 0
+  if (!boolPartyA.value) {
+    if (isNotBlank(form.list)) {
+      form.list.forEach((v) => {
+        if (isNotBlank(v.amount)) {
+          amount += +v.amount
+        }
+      })
+    }
+  }
+  return toFixed(amount, 2)
+})
 
 provide('matSpecRef', matSpecRef) // 供兄弟组件调用 删除
 
