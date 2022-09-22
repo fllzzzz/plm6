@@ -293,7 +293,7 @@
 
 <script setup>
 import { ref, defineProps, watch, computed, defineExpose, nextTick } from 'vue'
-import { dateDifferenceReduce } from '@/utils/date'
+import { dateDifference } from '@/utils/date'
 import { cleanArray } from '@data-type/array'
 import regionCascader from '@comp-base/region-cascader'
 import userDeptCascader from '@comp-base/user-dept-cascader.vue'
@@ -400,7 +400,7 @@ watch(
 
 const totalDuration = computed(() => {
   if (form.value.startDate && form.value.endDate) {
-    return dateDifferenceReduce(form.value.startDate, form.value.endDate)
+    return dateDifference(form.value.startDate, form.value.endDate)
   }
   return ''
 })
@@ -475,7 +475,7 @@ async function fetchDetail() {
     _detail = JSON.parse(JSON.stringify(res))
     _detail.startDate = _detail.startDate ? String(_detail.startDate) : ''
     _detail.endDate = _detail.endDate ? String(_detail.endDate) : ''
-    _detail.totalDuration = _detail.startDate && _detail.endDate ? dateDifferenceReduce(_detail.startDate, _detail.endDate) : ''
+    _detail.totalDuration = _detail.startDate && _detail.endDate ? dateDifference(_detail.startDate, _detail.endDate) : ''
     _detail.managementFee = _detail.managementFeeRate && _detail.contractAmount ? _detail.managementFeeRate * _detail.contractAmount / 100 : ''
     _detail.attachments = _detail.attachments || []
     _detail.attachmentFiles = _detail.attachments

@@ -150,7 +150,7 @@ async function confirmEvent(name) {
 //   data.data.content = data.data.content.map(v => {
 //     v.typeTagType = v.type === manufactureTypeEnum.HOMEMADE.V ? '' : 'warning'
 //     if (v.startDate && v.endDate) {
-//       v.dateDifference = dateDifferenceReduce(v.startDate, v.endDate) + '天'
+//       v.dateDifference = dateDifference(v.startDate, v.endDate) + '天'
 //     } else {
 //       v.dateDifference = ''
 //     }

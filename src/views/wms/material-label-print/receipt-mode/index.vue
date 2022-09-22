@@ -157,7 +157,7 @@ const { CRUD, crud, columns } = useCRUD(
 crud.props.copies = 1
 const { print } = usePrint()
 const { getDetailMaterialList } = useGetPrintInfo()
-const { maxHeight } = useMaxHeight({ paginate: true })
+const { maxHeight } = useMaxHeight({ paginate: true, extraHeight: 60 })
 
 CRUD.HOOK.beforeRefresh = () => {
   emit('printed-success')
