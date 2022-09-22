@@ -46,28 +46,32 @@ export const surplusListPM = {
 export const assembleSchedulingPM = {
   get: ['mes_scheduling_assemble:get'], // 列表
   save: ['mes_scheduling_assemble:save'], // 分配一次工单
-  clear: ['mes_scheduling_assemble:clear'] // 清空任务
+  clear: ['mes_scheduling_assemble:clear'], // 清空任务
+  import: ['mes_scheduling_assemble:import'] // 任务导入
 }
 
 // 工单管理/构件工单/二次工单
 export const artifactSchedulingPM = {
   get: ['mes_scheduling_artifact:get'], // 列表
   save: ['mes_scheduling_artifact:save'], // 分配二次工单
-  clear: ['mes_scheduling_artifact:clear'] // 清空任务
+  clear: ['mes_scheduling_artifact:clear'], // 清空任务
+  import: ['mes_scheduling_artifact:import'] // 任务导入
 }
 
 // 工单管理/构件工单/零件工单
 export const machinePartSchedulingPM = {
   get: ['mes_scheduling_machine_part:get'], // 零件工单列表
   save: ['mes_scheduling_machine_part:save'], // 分配零件工单
-  clear: ['mes_scheduling_machine_part:clear'] // 清空任务
+  clear: ['mes_scheduling_machine_part:clear'], // 清空任务
+  import: ['mes_scheduling_machine_part:import'] // 任务导入
 }
 
 // 工单管理/围护工单
 export const enclosureSchedulingPM = {
   get: ['mes_scheduling_enclosure:get'], // 围护工单列表
   save: ['mes_scheduling_enclosure:save'], // 分配围护工单
-  clear: ['mes_scheduling_enclosure:clear'] // 清空任务
+  clear: ['mes_scheduling_enclosure:clear'], // 清空任务
+  import: ['mes_scheduling_enclosure:import'] // 任务导入
 }
 
 // 工单管理/构件排产
