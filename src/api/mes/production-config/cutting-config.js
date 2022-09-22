@@ -10,15 +10,32 @@ export function get(params) {
   })
 }
 
-export function batchAdd(data) {
+// export function batchAdd(data) {
+//   return request({
+//     module: 'mes',
+//     url: 'cut/list',
+//     method: 'post',
+//     data: data.list
+//   })
+// }
+
+export function add(data) {
   return request({
     module: 'mes',
-    url: 'cut/list',
+    url: 'cut',
     method: 'post',
-    data: data.list
+    data
   })
 }
 
+export function edit(data) {
+  return request({
+    module: 'mes',
+    url: 'cut',
+    method: 'put',
+    data
+  })
+}
 export function editHole(data) {
   return request({
     module: 'mes',
@@ -33,8 +50,8 @@ export function del(ids) {
     module: 'mes',
     url: 'cut/list',
     method: 'delete',
-    data: { ids }
+    data: ids
   })
 }
 
-export default { get, batchAdd, del }
+export default { get, add, edit, del }
