@@ -17,7 +17,7 @@
     :stripe="false"
   >
     <el-table-column prop="index" label="序号" align="center" width="60" type="index" />
-    <el-table-column v-if="columns.visible('businessType')" key="businessType" prop="businessType" :show-overflow-tooltip="true" label="业务类型">
+    <el-table-column v-if="columns.visible('businessType')" key="businessType" prop="businessType" :show-overflow-tooltip="true" label="业务类型" align="center">
       <template v-slot="scope">
         <span>{{ scope.row.businessType?businessTypeEnum.VL[scope.row.businessType]:'-'}}</span>
       </template>

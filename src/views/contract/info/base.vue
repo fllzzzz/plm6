@@ -33,6 +33,21 @@
               <span v-else>{{ detail.name || '-' }}</span>
             </div>
           </el-form-item>
+          <el-form-item label="订单来源" prop="orderSourceType">
+            <div class="input-underline">
+              <common-select
+                v-if="isModify"
+                v-model="form.orderSourceType"
+                :options="orderSourceTypeEnum.ENUM"
+                type="enum"
+                class="input-underline"
+                size="small"
+                placeholder="订单来源"
+                style="width: 200px"
+              />
+              <span v-else>{{detail.orderSourceType?orderSourceTypeEnum.VL[detail.orderSourceType]:'-'}}</span>
+            </div>
+          </el-form-item>
         </div>
         <div>
           <el-form-item label="开工时间" prop="startDate">
@@ -278,12 +293,13 @@
 
 <script setup>
 import { ref, defineProps, watch, computed, defineExpose, nextTick } from 'vue'
-import { dateDifferenceReduce } from '@/utils/date'
+import { dateDifference } from '@/utils/date'
 import { cleanArray } from '@data-type/array'
 import regionCascader from '@comp-base/region-cascader'
 import userDeptCascader from '@comp-base/user-dept-cascader.vue'
 import useDict from '@compos/store/use-dict'
 import { fileClassifyEnum } from '@enum-ms/file'
+import { orderSourceTypeEnum } from '@enum-ms/contract'
 import uploadList from '@comp/file-upload/UploadList.vue'
 import useWatchFormValidate from '@compos/form/use-watch-form-validate'
 import { DP } from '@/settings/config'
@@ -317,7 +333,8 @@ const defaultForm = {
   businessLeaderId: undefined, // 业务负责人1
   businessLeaderTwoId: undefined, // 业务负责人2
   attachmentFiles: [], // 附件
-  attachments: []
+  attachments: [],
+  orderSourceType: undefined
 }
 
 const form = ref(JSON.parse(JSON.stringify(defaultForm)))
@@ -342,6 +359,7 @@ const rules = {
     { required: true, message: '请填写项目简称', trigger: 'blur' },
     { min: 1, max: 12, message: '长度在 1 到 12 个字符', trigger: 'blur' }
   ],
+  orderSourceType: [{ required: true, message: '请选择订单来源', trigger: 'change' }],
   startDate: [{ required: true, message: '请选择开工日期', trigger: 'change' }],
   endDate: [{ required: true, message: '请选择完工日期', trigger: 'change' }],
   contractAmount: [{ required: true, validator: validateMoney, trigger: 'blur' }],
@@ -382,7 +400,7 @@ watch(
 
 const totalDuration = computed(() => {
   if (form.value.startDate && form.value.endDate) {
-    return dateDifferenceReduce(form.value.startDate, form.value.endDate)
+    return dateDifference(form.value.startDate, form.value.endDate)
   }
   return ''
 })
@@ -457,7 +475,7 @@ async function fetchDetail() {
     _detail = JSON.parse(JSON.stringify(res))
     _detail.startDate = _detail.startDate ? String(_detail.startDate) : ''
     _detail.endDate = _detail.endDate ? String(_detail.endDate) : ''
-    _detail.totalDuration = _detail.startDate && _detail.endDate ? dateDifferenceReduce(_detail.startDate, _detail.endDate) : ''
+    _detail.totalDuration = _detail.startDate && _detail.endDate ? dateDifference(_detail.startDate, _detail.endDate) : ''
     _detail.managementFee = _detail.managementFeeRate && _detail.contractAmount ? _detail.managementFeeRate * _detail.contractAmount / 100 : ''
     _detail.attachments = _detail.attachments || []
     _detail.attachmentFiles = _detail.attachments

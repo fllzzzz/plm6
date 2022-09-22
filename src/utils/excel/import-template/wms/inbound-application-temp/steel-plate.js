@@ -37,6 +37,7 @@ const sectionSteelSpecTmpl = {
     }
     // 获取 钢板科目
     const matList = store.state.config.rawMatClsList.filter((v) => v.basicClass === matClsEnum.STEEL_PLATE.V)
+    const rawMatClsKV = store.state.config.rawMatClsKV
     // 遍历导入表格
     const list = deepClone(tableList)
     // 匹配到的id
@@ -79,7 +80,15 @@ const sectionSteelSpecTmpl = {
     }
     // 匹配规格
     for (const row of list) {
+      // 必须是末级科目
+      if (rawMatClsKV?.[row.classifyId]?.isLeaf === false) {
+        throw new Error(`${row.classifyName}不是末级科目`)
+      }
       const materialInfo = stateClassifySpec[row.classifyId]
+      // 未配置核算单位
+      if (materialInfo.hasUnitConfig === false) {
+        throw new Error(`${row.classifyName}未配置核算单位`)
+      }
       // 当前规格的物料信息
       let materialSpecInfo
       const specification = row.material ?? '' // 对应入库“规格”列

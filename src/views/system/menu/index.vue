@@ -138,11 +138,7 @@ const { crud, columns, CRUD } = useCRUD(
   tableRef
 )
 
-const { maxHeight } = useMaxHeight({
-  wrapperBox: '.menu',
-  paginate: true,
-  extraHeight: 157
-})
+const { maxHeight } = useMaxHeight()
 
 // 获取所有数据
 function getAllData(data, pid) {

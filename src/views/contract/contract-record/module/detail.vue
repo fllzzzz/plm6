@@ -1,6 +1,7 @@
 <template>
   <common-drawer
     append-to-body
+    ref="drawerRef"
     v-model="visible"
     top="10vh"
     width="600px"
@@ -8,20 +9,13 @@
     title="文件详情"
     :wrapper-closable="false"
     size="900px"
+    custom-class="contract-change"
   >
-    <template #title>
-      <div class="dialog-title">
-        <span style="margin-right: 5px">文件详情</span>
-        <span style="position: absolute; right: 20px">
-          <common-button size="small" @click="handleClose">关闭</common-button>
-        </span>
-      </div>
-    </template>
     <template #content>
       <common-table
         ref="tableRef"
         :data="currentInfo"
-        :max-height="maxHeight"
+        :max-height="maxHeight-70"
         style="width: 100%"
         return-source-data
         :showEmptySymbol="false"
@@ -39,7 +33,7 @@
       </el-table-column>
       <el-table-column key="createTime" prop="createTime" :show-overflow-tooltip="true" label="上传时间" min-width="150px">
         <template v-slot="scope">
-          <span>{{ scope.row.createTime }}</span>
+          <span>{{ scope.row.createTime?parseTime(scope.row.createTime,'{y}-{m}-{d}'):'-' }}</span>
         </template>
       </el-table-column>
       <el-table-column key="createUserName" prop="createUserName" :show-overflow-tooltip="true" label="操作人" min-width="150px">
@@ -58,9 +52,12 @@
 </template>
 
 <script setup>
-import { defineProps, defineEmits, inject } from 'vue'
+import { defineProps, defineEmits, inject, ref } from 'vue'
+
+import { parseTime } from '@/utils/date'
 import useVisible from '@compos/use-visible'
 import useMaxHeight from '@compos/use-max-height'
+
 import ExportButton from '@comp-common/export-button/index.vue'
 
 const permission = inject('permission')
@@ -75,13 +72,17 @@ const props = defineProps({
   }
 })
 
+const drawerRef = ref()
 const emit = defineEmits(['success', 'update:modelValue'])
 const { visible, handleClose } = useVisible({ emit, props })
-const { maxHeight } = useMaxHeight({
-  wrapperBox: '.contractChange',
-  paginate: true,
-  extraHeight: 40
-})
+const { maxHeight } = useMaxHeight(
+  {
+    mainBox: '.contract-change',
+    extraBox: '.el-drawer__header',
+    wrapperBox: '.el-drawer__body'
+  },
+  drawerRef
+)
 </script>
 <style lang="scss" scoped>
 ::v-deep(.el-input-number .el-input__inner) {

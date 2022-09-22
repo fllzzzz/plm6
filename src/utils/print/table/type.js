@@ -64,6 +64,8 @@ const tableType = {
   projectInvoiceDetail: { L: '项目开票明细表', M: 'sales_manage', T: mt.contract.L + ' / ' + contract.sales_manage },
   projectHappenedDetail: { L: '项目出库明细表', M: 'sales_manage', T: mt.contract.L + ' / ' + contract.sales_manage },
   transactionRecord: { L: '客户交易记录', M: 'sales_manage', T: mt.contract.L + ' / ' + contract.sales_manage },
+  saleOrderTracking: { L: '订单跟踪', M: 'sales_manage', T: mt.contract.L + ' / ' + contract.sales_manage },
+  projectWarehouseRecord: { L: '入库记录', M: 'sales_manage', T: mt.contract.L + ' / ' + contract.sales_manage },
 
   // 供应链
   purchaseInvoiceRecord: { L: '收票记录', M: 'purchase_reconciliation', T: mt.supply.L + ' / ' + supply.purchase_reconciliation },

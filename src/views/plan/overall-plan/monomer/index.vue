@@ -173,7 +173,7 @@
             <template v-if="scope.row.monomerDetailList.length > 0">
               <div v-for="(k,i) in scope.row.monomerDetailList" :key="k.type">
                 <div :class="i===scope.row.monomerDetailList.length-1?'sandwich-cell-bottom':'sandwich-cell-top'">
-                  {{ globalProject.startDate && k.date?dateDifferenceReduce(globalProject.startDate,k.date):'-' }}
+                  {{ globalProject.startDate && k.date?dateDifference(globalProject.startDate,k.date):'-' }}
                 </div>
               </div>
             </template>
@@ -234,7 +234,7 @@ import { mapGetters } from '@/store/lib'
 import mHeader from './module/header'
 import mForm from './module/form'
 import { DP } from '@/settings/config'
-import { parseTime, dateDifferenceReduce } from '@/utils/date'
+import { parseTime, dateDifference } from '@/utils/date'
 import { ElMessage } from 'element-plus'
 
 const { globalProject, globalProjectId } = mapGetters(['globalProject', 'globalProjectId'])
