@@ -18,7 +18,7 @@
       <el-table-column type="selection" width="55" align="center" fixed="left" />
       <el-table-column label="序号" type="index" align="center" width="60" />
       <el-table-column prop="specPrefix" :show-overflow-tooltip="true" label="截面类型" align="center" min-width="160px" />
-      <el-table-column prop="layingOffWay" :show-overflow-tooltip="true" label="下料方式" align="center" min-width="160px" />
+      <el-table-column prop="name" :show-overflow-tooltip="true" label="下料方式" align="center" min-width="160px" />
       <el-table-column :show-overflow-tooltip="true" label="数值范围" align="center" min-width="200px">
         <template #default="{ row }">
           <span>{{ row.minNumerical }}</span>
@@ -93,7 +93,7 @@ async function fetchLayingList() {
     const content = await getLayingWay()
     layingList.value = content.map((v) => {
       return {
-        name: v.layingOffWay,
+        name: v.name,
         id: v.id
       }
     })

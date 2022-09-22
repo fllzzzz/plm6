@@ -18,9 +18,9 @@
       >
         <el-table-column label="序号" type="index" align="center" width="60" />
         <el-table-column
-          v-if="columns.visible('cutType')"
-          key="cutType"
-          prop="cutType"
+          v-if="columns.visible('name')"
+          key="name"
+          prop="name"
           :show-overflow-tooltip="true"
           label="切割形式"
           align="center"

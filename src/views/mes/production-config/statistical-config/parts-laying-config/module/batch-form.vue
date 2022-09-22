@@ -47,10 +47,10 @@
             />
           </template>
         </el-table-column>
-        <el-table-column prop="layingOffWay" :show-overflow-tooltip="true" label="下料方式" width="160">
+        <el-table-column prop="name" :show-overflow-tooltip="true" label="下料方式" width="160">
           <template #default="{ row, $index }">
             <common-select
-              v-model="row.layingOffWay"
+              v-model="row.name"
               :options="layingList"
               clearable
               :show-extra="$index !== 0"
@@ -153,7 +153,7 @@ const validateNumerical = (value, row) => {
 
 const tableRules = {
   specPrefix: [{ required: true, message: '请选择截面类型', trigger: 'change' }],
-  layingOffWay: [{ required: true, message: '请选择下料方式', trigger: 'change' }],
+  name: [{ required: true, message: '请选择下料方式', trigger: 'change' }],
   wageQuotaType: [{ required: true, message: '请选择计量方式', trigger: 'change' }],
   unitPrice: [{ required: true, message: '请填写单价', trigger: 'blur' }],
   numerical: [{ validator: validateNumerical, message: '请填写数值并且最大数值不得小于最小数值', trigger: 'blur' }]
@@ -170,7 +170,7 @@ const defaultRow = {
 // 同上的选项与值
 const ditto = new Map([
   ['specPrefix', -1],
-  ['layingOffWay', -1],
+  ['name', -1],
   ['wageQuotaType', -1]
 ])
 

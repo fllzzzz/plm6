@@ -30,11 +30,11 @@
     >
       <el-table-column label="序号" type="index" align="center" width="60" />
       <el-table-column
-        v-if="columns.visible('layingOffWayName')"
+        v-if="columns.visible('name')"
         header-align="center"
         align="left"
-        key="layingOffWayName"
-        prop="layingOffWayName"
+        key="name"
+        prop="name"
         label="下料方式"
       >
         <template #default="{ row }">
@@ -44,7 +44,7 @@
             :color="materialTypeEnum.V[row.materialType].COLOR"
             :offset="15"
           />
-          <span> {{ row.layingOffWayName }} </span>
+          <span> {{ row.name }} </span>
         </template>
       </el-table-column>
       <el-table-column v-if="columns.visible('taskPrefix')" :show-overflow-tooltip="true" prop="taskPrefix" label="任务前缀" align="center">

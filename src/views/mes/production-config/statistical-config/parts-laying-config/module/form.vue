@@ -23,9 +23,9 @@
           class="input-underline"
         />
       </el-form-item>
-      <el-form-item label="下料方式" prop="layingOffWay">
+      <el-form-item label="下料方式" prop="name">
         <common-select
-          v-model="form.layingOffWay"
+          v-model="form.name"
           :options="layingList"
           :dataStructure="{ key: 'name', label: 'name', value: 'name' }"
           clearable
@@ -119,7 +119,7 @@ const validateNumerical = (rule, value, callback) => {
 
 const rules = {
   specPrefix: [{ required: true, message: '请选择截面类型', trigger: 'change' }],
-  layingOffWay: [{ required: true, message: '请选择下料方式', trigger: 'change' }],
+  name: [{ required: true, message: '请选择下料方式', trigger: 'change' }],
   wageQuotaType: [{ required: true, message: '请选择计量方式', trigger: 'change' }],
   unitPrice: [{ required: true, message: '请填写单价', trigger: 'blur' }],
   numerical: [{ required: true, validator: validateNumerical, message: '请填写数值', trigger: 'blur' }]

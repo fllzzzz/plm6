@@ -3,7 +3,7 @@
     <crudOperation>
       <template #optLeft>
         <el-input
-          v-model="query.layingOffWayName"
+          v-model="query.name"
           placeholder="可输入下料方式搜索"
           class="filter-item"
           style="width: 200px"
@@ -23,7 +23,7 @@ import crudOperation from '@crud/CRUD.operation'
 import rrOperation from '@crud/RR.operation'
 
 const defaultQuery = {
-  layingOffWayName: undefined
+  name: undefined
 }
 
 const { crud, query } = regHeader(defaultQuery)

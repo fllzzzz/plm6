@@ -74,14 +74,14 @@ const props = defineProps({
 
 async function changeStatus(data, val) {
   try {
-    await ElMessageBox.confirm(`此操作将${props.cutConfigRow.cutType}的开孔方式改为${whetherEnum.VL[val]}, 是否继续？`, '提示', {
+    await ElMessageBox.confirm(`此操作将${props.cutConfigRow.name}的开孔方式改为${whetherEnum.VL[val]}, 是否继续？`, '提示', {
       confirmButtonText: '确定',
       cancelButtonText: '取消',
       type: 'warning'
     })
     await edit({ id: data.id, boolDrillEnum: val })
     refreshCutConfig()
-    ElNotification({ title: `${props.cutConfigRow.cutType}的开孔方式修改成功`, type: 'success', duration: 3000 })
+    ElNotification({ title: `${props.cutConfigRow.name}的开孔方式修改成功`, type: 'success', duration: 3000 })
   } catch (error) {
     console.log('变更是否开孔状态', error)
     data.boolDrillEnum = data.boolDrillEnum === whetherEnum.TRUE.V ? whetherEnum.FALSE.V : whetherEnum.TRUE.V

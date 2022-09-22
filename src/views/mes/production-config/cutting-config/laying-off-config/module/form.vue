@@ -32,8 +32,8 @@
             class="filter-item"
           />
         </el-form-item>
-        <el-form-item prop="layingOffWayName" label="下料方式：">
-          <el-input v-model="form.layingOffWayName" class="filter-item" placeholder="输入下料方式" style="width: 270px" />
+        <el-form-item prop="name" label="下料方式：">
+          <el-input v-model="form.name" class="filter-item" placeholder="输入下料方式" style="width: 270px" />
         </el-form-item>
         <el-form-item prop="taskPrefix" label="任务前缀：">
           <el-input v-model="form.taskPrefix" class="filter-item" placeholder="输入任务前缀" style="width: 270px" />
@@ -52,7 +52,7 @@ const formRef = ref()
 
 const defaultForm = {
   materialType: '', // 下料类别
-  layingOffWayName: '', // 下料方式
+  name: '', // 下料方式
   taskPrefix: '' // 任务前缀
 }
 
@@ -60,8 +60,8 @@ const { crud, form, CRUD } = regForm(defaultForm, formRef)
 
 const rules = {
   materialType: [{ required: true, message: '请选择下料类别', trigger: 'blur' }],
-  layingOffWayName: [{ required: true, message: '请输入下料方式', trigger: 'blur' }],
-  taskPrefix: [{ required: true, message: '请选择任务前缀', trigger: 'blur' }]
+  name: [{ required: true, message: '请输入下料方式', trigger: 'blur' }],
+  taskPrefix: [{ required: true, pattern: /^[A-Z]*$/, message: '请输入大写字母', trigger: 'blur' }]
 }
 </script>
 

@@ -11,8 +11,8 @@
       <common-button :loading="crud.status.cu === 2" type="primary" size="mini" @click="crud.submitCU">确认</common-button>
     </template>
     <el-form ref="formRef" :model="form" :rules="rules" size="small" label-width="90px">
-      <el-form-item label="切割方式" prop="cutType">
-        <el-input v-model="form.cutType" type="text" placeholder="请填写切割方式" style="width: 270px" />
+      <el-form-item label="切割方式" prop="name">
+        <el-input v-model="form.name" type="text" placeholder="请填写切割方式" style="width: 270px" />
       </el-form-item>
     </el-form>
   </common-dialog>
@@ -26,12 +26,12 @@ const formRef = ref()
 
 const defaultForm = {
   id: undefined,
-  cutType: undefined
+  name: undefined
 }
 
 const { crud, form } = regForm(defaultForm, formRef)
 
 const rules = {
-  cutType: [{ required: true, message: '请填写切割方式', trigger: 'blur' }]
+  name: [{ required: true, message: '请填写切割方式', trigger: 'blur' }]
 }
 </script>
