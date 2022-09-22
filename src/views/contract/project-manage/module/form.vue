@@ -115,6 +115,7 @@ CRUD.HOOK.beforeToCU = (crud, form) => {
 async function handleSuccess() {
   try {
     await store.dispatch('project/fetchUserProjects')
+    await store.dispatch('project/fetchProjectTree')
   } catch (e) {
     console.log(e)
   }

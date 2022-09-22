@@ -42,6 +42,7 @@ import { inboundFillWayEnum } from '@enum-ms/wms'
 import { isObjectValueEqual } from '@data-type/object'
 import { deepClone } from '@/utils/data-type'
 
+import useRefreshStore from '@/composables/store/use-refresh-store'
 import { ElNotification } from 'element-plus'
 
 const permission = inject('permission')
@@ -100,8 +101,7 @@ async function submit() {
     })
     dataSource.value = deepClone(form.value)
     // fetchData()
-    // TODO:更新配置
-    // await store.dispatch('config/fetchConfigInfo')
+    useRefreshStore('wmsConfig')
   } catch (error) {
     ElNotification({
       title: '入库基础配置设置失败',

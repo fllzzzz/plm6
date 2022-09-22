@@ -32,7 +32,7 @@ async function getBaseUnit() {
  * @param {Number} weightToUnit 重量转化至什么单位
  * @param {Number} precision 保留小数位
  */
-export async function calcSteelPlateWeight({ name, length, width, thickness, quantity = 1 }, boolPrecise = true) {
+export async function calcSteelPlateWeight({ name, length, width, thickness, quantity = 1 }, boolPrecise = false) {
   if (!name || !length || !width || !thickness) {
     return null
   }
@@ -40,7 +40,7 @@ export async function calcSteelPlateWeight({ name, length, width, thickness, qua
   const baseUnit = await getBaseUnit()
   const lengthUnit = baseUnit[STEEL_PLATE].length.unit
   const weightUnit = baseUnit[STEEL_PLATE].weight.unit
-  const dp = boolPrecise ? baseUnit[STEEL_PLATE].weight.precision : 10
+  const dp = boolPrecise ? baseUnit[STEEL_PLATE].weight.precision : 2
 
   let density = STEEL_DENSITY // 密度 t/m³
   if (name && name.indexOf('不锈钢') > -1) {
@@ -77,14 +77,14 @@ export function calcSectionSteelTotalLength({ length = 0, lengthUnit = 'mm', qua
  * @param {Number} weightToUnit 重量转化至什么单位
  * @param {Number} precision 保留小数位
  */
-export async function calcSectionSteelWeight({ length, quantity = 1, unitWeight }, boolPrecise = true) {
+export async function calcSectionSteelWeight({ length, quantity = 1, unitWeight }, boolPrecise = false) {
   if (!length || !quantity || !unitWeight) {
     return null
   }
   const baseUnit = await getBaseUnit()
   const lengthUnit = baseUnit[SECTION_STEEL].length.unit
   const weightUnit = baseUnit[SECTION_STEEL].weight.unit
-  const dp = boolPrecise ? baseUnit[SECTION_STEEL].weight.precision : 10
+  const dp = boolPrecise ? baseUnit[SECTION_STEEL].weight.precision : 2
 
   let theoryWeight
   const _length = convertUnits(length, lengthUnit, 'm', 3)
@@ -140,6 +140,7 @@ export async function steelInboundFormFormat(form) {
   for (const row of form.list) {
     row.uid = row.id
     row.weighingTotalWeight = row.mete // 过磅重量
+    row.specificationMap = row.specKV // 规格KV格式
     switch (row.basicClass) {
       case matClsEnum.STEEL_PLATE.V:
         p = calcSteelPlateWeight({
