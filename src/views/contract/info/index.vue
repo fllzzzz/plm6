@@ -180,7 +180,7 @@ const rules = {
 }
 
 watch(
-  () => props.modelValue,
+  () => props.projectId,
   (val) => {
     if (val) {
       showName.value = 'contract'
@@ -260,7 +260,6 @@ async function onSubmit() {
   }
   try {
     await editContract({
-      ...changeForm.value,
       projectId: props.projectId,
       type: contractChangeTypeEnum.ENUM.CONTRACT_INFO.V,
       projectUpdateDTOParam: {
@@ -268,7 +267,8 @@ async function onSubmit() {
         businessUpdateDTOParam: businessRef.value.form,
         customerUpdateDTOParam: customerRef.value.form,
         userIdList: memberRef.value.checkedList
-      }
+      },
+      ...changeForm.value
     })
     ElNotification({ title: '提交成功', type: 'success' })
     baseRef.value.resetForm()
