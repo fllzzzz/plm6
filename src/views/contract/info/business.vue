@@ -218,7 +218,7 @@
                 </template>
               </div>
             </el-form-item>
-            <el-form-item label="税率" prop="businessTaxRate">
+            <el-form-item label="税率" prop="businessTaxRate" v-if="!isModify || (isModify && form.isTax && form.invoiceType !== invoiceTypeEnum.RECEIPT.V)">
               <template v-if="isModify">
                 <el-input-number
                   v-model="form.businessTaxRate"
