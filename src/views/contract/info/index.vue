@@ -180,7 +180,7 @@ const rules = {
 }
 
 watch(
-  () => props.projectId,
+  () => props.modelValue,
   (val) => {
     if (val) {
       showName.value = 'contract'
@@ -251,17 +251,6 @@ async function validateSubmit() {
   baseRef.value.form.attachments = baseRef.value.form.attachmentFiles.length > 0 ? baseRef.value.form.attachmentFiles.map(v => v.id) : []
   changeVisible.value = true
   resetChangeForm()
-  changeForm.value = {
-    projectId: props.projectId,
-    type: contractChangeTypeEnum.ENUM.CONTRACT_INFO.V,
-    projectUpdateDTOParam: {
-      baseUpdateDTOParam: baseRef.value.form,
-      businessUpdateDTOParam: businessRef.value.form,
-      customerUpdateDTOParam: customerRef.value.form,
-      userIdList: memberRef.value.checkedList
-    },
-    ...changeForm.value
-  }
 }
 
 async function onSubmit() {
@@ -270,7 +259,17 @@ async function onSubmit() {
     return
   }
   try {
-    await editContract(changeForm.value)
+    await editContract({
+      projectId: props.projectId,
+      type: contractChangeTypeEnum.ENUM.CONTRACT_INFO.V,
+      projectUpdateDTOParam: {
+        baseUpdateDTOParam: baseRef.value.form,
+        businessUpdateDTOParam: businessRef.value.form,
+        customerUpdateDTOParam: customerRef.value.form,
+        userIdList: memberRef.value.checkedList
+      },
+      ...changeForm.value
+    })
     ElNotification({ title: '提交成功', type: 'success' })
     baseRef.value.resetForm()
     businessRef.value.resetForm()
