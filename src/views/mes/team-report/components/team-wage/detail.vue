@@ -40,6 +40,11 @@
         <el-table-column label="序号" type="index" align="center" width="60" />
         <belonging-info-columns showProject showMonomer showProcess />
         <productType-base-info-columns :productType="info?.productType" :unShowField="['color']" />
+        <el-table-column prop="completeQuantity" :show-overflow-tooltip="true" label="数量" align="center">
+          <template #default="{ row }">
+            <span>{{ row.completeQuantity }}</span>
+          </template>
+        </el-table-column>
         <el-table-column prop="userName" :show-overflow-tooltip="true" label="报工人" align="center">
           <template #default="{ row }">
             <span>{{ row.userName }}</span>
@@ -125,6 +130,7 @@ const { maxHeight } = useMaxHeight(
     extraBox: ['.el-drawer__header'],
     wrapperBox: ['.el-drawer__body'],
     navbar: false,
+    paginate: true,
     clientHRepMainH: true
   },
   drawerRef
