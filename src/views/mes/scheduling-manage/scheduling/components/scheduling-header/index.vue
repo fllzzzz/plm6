@@ -73,6 +73,21 @@
         >
           快速分配
         </common-button>
+        <common-button
+          v-if="(query.areaId || hiddenArea) && checkPermission(permission.import)"
+          type="success"
+          size="mini"
+          @click="taskImportVisible = true"
+          >任务导入</common-button
+        >
+        <export-button
+          v-if="(query.areaId || hiddenArea) && checkPermission(permission.import)"
+          :fn="downloadTemplate"
+          style="margin-left: 10px"
+          :params="{ areaId: query.areaId, productType: productType, statusType: query.statusType }"
+        >
+          任务导入模板下载
+        </export-button>
       </template>
       <template v-slot:viewLeft>
         <common-button :loading="!loaded" type="success" size="mini" @click.stop="productionLineVisible = true">{{
@@ -84,10 +99,12 @@
   <mPreview v-model:visible="previewVisible" :data="crud.data" :lines="lines" @success="handleSaveSuccess" />
   <production-line-drawer v-model:visible="productionLineVisible" :lines="lines" @changeLines="handleChangeLines" />
   <quickly-assign-drawer v-model:visible="quicklyAssignVisible" :data="crud.data" :lines="lines" @success="handleSaveSuccess" />
+  <task-import-dialog v-model:visible="taskImportVisible" :query="query" :productType="productType" />
 </template>
 
 <script setup>
-import { ref, defineProps, defineEmits, inject } from 'vue'
+import { downloadTemplate } from '@/api/mes/scheduling-manage/scheduling/common'
+import { ref, defineProps, defineEmits, inject, nextTick } from 'vue'
 import checkPermission from '@/utils/system/check-permission'
 
 import { abnormalStatusEnum, schedulingStatusEnum } from '@enum-ms/mes'
@@ -101,10 +118,12 @@ import useGlobalProjectIdChangeToQuery from '@compos/use-global-project-id-chang
 import crudOperation from '@crud/CRUD.operation'
 import rrOperation from '@crud/RR.operation'
 import { ElMessage } from 'element-plus'
+import ExportButton from '@comp-common/export-button/index.vue'
 import monomerSelectAreaTabs from '@comp-base/monomer-select-area-tabs'
 import productTypeQuery from '@comp-mes/header-query/product-type-query'
 import productionLineDrawer from '../production-line-drawer'
 import quicklyAssignDrawer from '../quickly-assign-drawer'
+import taskImportDialog from '../task-import-dialog'
 import mPreview from '../scheduling-preview'
 
 const defaultQuery = {
@@ -135,6 +154,7 @@ const emit = defineEmits(['update:lines', 'update:modifying', 'refreshSummary'])
 
 const previewVisible = ref(false) // 分配预览dlg
 const quicklyAssignVisible = ref(false) // 快速分配dlg
+const taskImportVisible = ref(false) // 任务导入dlg
 // TODO
 const currentArea = {
   name: ''
@@ -162,15 +182,17 @@ CRUD.HOOK.handleRefresh = (crud, res) => {
 }
 
 function dataHasFormatHook() {
-  if (loaded?.value) {
-    // 如果列表已经加载则对列表数据做一次处理
-    crud.data = crud.data.map((v) => {
-      // 工单表单：schedulingMap，对于页面任务分配的数量存储在schedulingMap中， k-v, k:productionLineId, v:表单内容
-      v.schedulingMap = useFormatSchedulingList(v.schedulingList, schedulingMapTemplate)
-      v.sourceSchedulingMap = deepClone(v.schedulingMap)
-      return v
-    })
-  }
+  nextTick(() => {
+    if (loaded?.value) {
+      // 如果列表已经加载则对列表数据做一次处理
+      crud.data = crud.data.map((v) => {
+        // 工单表单：schedulingMap，对于页面任务分配的数量存储在schedulingMap中， k-v, k:productionLineId, v:表单内容
+        v.schedulingMap = useFormatSchedulingList(v.schedulingList, schedulingMapTemplate)
+        v.sourceSchedulingMap = deepClone(v.schedulingMap)
+        return v
+      })
+    }
+  })
 }
 
 function openQuicklyAssignDlg() {

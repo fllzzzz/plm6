@@ -180,7 +180,7 @@ const rules = {
 }
 
 watch(
-  () => props.modelValue,
+  () => props.projectId,
   (val) => {
     if (val) {
       showName.value = 'contract'
