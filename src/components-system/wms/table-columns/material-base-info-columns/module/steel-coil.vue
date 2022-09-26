@@ -43,6 +43,7 @@
       :label="`厚 (${baseUnit.thickness.unit})`"
       show-overflow-tooltip
       :fixed="fixed"
+      :sortable="sortable"
     />
     <el-table-column
       v-if="showWidth"
@@ -86,6 +87,10 @@ const props = defineProps({
   showThickness: {
     type: Boolean,
     default: true
+  },
+  sortable: {
+    type: [String, Boolean],
+    default: false
   }
 })
 

@@ -71,6 +71,10 @@ const props = defineProps({
   showLength: {
     type: Boolean,
     default: true
+  },
+  sortable: {
+    type: [String, Boolean],
+    default: false
   }
 })
 

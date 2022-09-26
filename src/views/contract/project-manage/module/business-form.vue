@@ -126,7 +126,7 @@
               @change="invoiceTypeChange"
             />
           </el-form-item>
-          <el-form-item label="税率" prop="businessTaxRate">
+          <el-form-item label="税率" prop="businessTaxRate" v-if="form.isTax && form.invoiceType !== invoiceTypeEnum.RECEIPT.V">
             <el-input-number
               v-model="form.businessTaxRate"
               :step="1"
