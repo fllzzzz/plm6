@@ -32,7 +32,7 @@ const ARTIFACT_COMMON_L_HTML = function ({ component = defComponent, printConfig
   <div class="col amplify-content">
     <span class="amplify-no">NO:</span>
     <span class="amplify-text">${emptyTextFormatter(component.serialNumber)}</span>
-    <span class="amplify-date">生产日期：${emptyTextFormatter(component.printTime)}</span>
+    <span class="amplify-date" style="${printConfig?.dateInProduced ? '' : 'display:none;'}">生产日期：${emptyTextFormatter(component.printTime)}</span>
   </div>
 </div>
 <div class="row">
@@ -75,7 +75,9 @@ const ARTIFACT_SIMPLE_L_HTML = function ({ component = defComponent, printConfig
 </div>
 <div class="row">
   <div class="col" style="flex:2;" style="font-size: 60px;">
-    生产日期：${emptyTextFormatter(component.printTime)}
+    <span style="${printConfig?.dateInProduced ? '' : 'display:none;'}">
+      生产日期：${emptyTextFormatter(component.printTime)}
+    </span>
   </div>
   <div class="col qr-content" style="flex:1;">
   </div>

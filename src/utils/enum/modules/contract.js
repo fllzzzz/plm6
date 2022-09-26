@@ -303,8 +303,8 @@ constantize(subOrderStatusEnum)
 
 // 订单来源
 const orderSourceTypeEnum = {
-  INSIDE: { L: '内部', K: 'INSIDE', V: 1 << 0 },
-  OUTSIDE: { L: '外部', K: 'OUTSIDE', V: 1 << 1 }
+  INSIDE: { L: '内部', SL: '内部订单', K: 'INSIDE', V: 1 << 0 },
+  OUTSIDE: { L: '外部', SL: '外部订单', K: 'OUTSIDE', V: 1 << 1 }
 }
 constantize(orderSourceTypeEnum)
 

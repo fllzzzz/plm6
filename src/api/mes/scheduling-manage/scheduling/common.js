@@ -24,3 +24,31 @@ export function clear(data) {
   })
 }
 
+/**
+ * 下载任务导入模板
+ */
+export function downloadTemplate(params) {
+  return request({
+    module: 'mes',
+    url: 'scheduling/template/export',
+    responseType: 'blob',
+    method: 'get',
+    params
+  })
+}
+
+/**
+ * 任务导入
+ */
+export function taskImport(data, params) {
+  return request({
+    module: 'mes',
+    url: 'scheduling/import',
+    method: 'post',
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    },
+    params,
+    data
+  })
+}

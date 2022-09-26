@@ -63,4 +63,16 @@ export function collectionRecord(params) {
   })
 }
 
+/**
+ * 入库记录
+ * @param {number} projectId|required 项目id
+ */
+export function warehouseRecord(params) {
+  return request({
+    url: `/api/mes/building/warehouse/list-record`,
+    method: 'get',
+    params
+  })
+}
+
 export default { get }

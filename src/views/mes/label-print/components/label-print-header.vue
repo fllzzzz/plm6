@@ -31,7 +31,7 @@
                 />
                 <el-popover placement="right" :title="labelTypeEnum.VL[printConfig.type]" :width="400" trigger="hover">
                   <div style="height: 350px; margin-top: -40px">
-                    <span v-html="getMiniLabelHtml({ productType, labelType: printConfig.type })"></span>
+                    <span v-html="getMiniLabelHtml({ productType, labelType: printConfig.type, labelData: { printConfig } })"></span>
                   </div>
                   <template #reference>
                     <div style="margin-left: 5px">

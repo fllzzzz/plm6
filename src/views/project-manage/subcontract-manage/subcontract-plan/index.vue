@@ -56,7 +56,7 @@
             <template v-slot="scope">
               <template v-if="scope.row.startDate && scope.row.endDate">
                 <div>{{`${parseTime(scope.row.startDate,'{y}-{m}-{d}')}~${parseTime(scope.row.endDate,'{y}-{m}-{d}')}`}}</div>
-                <div><span style="margin-right:2px;">{{`${dateDifferenceReduce(scope.row.startDate,scope.row.endDate)}`}}</span>天</div>
+                <div><span style="margin-right:2px;">{{`${dateDifference(scope.row.startDate,scope.row.endDate)}`}}</span>天</div>
               </template>
               <template v-else>-</template>
             </template>
@@ -180,7 +180,7 @@ import crudApi from '@/api/project-manage/subcontract-plan'
 import { ref, watch } from 'vue'
 
 import { isNotBlank } from '@data-type/index'
-import { dateDifferenceReduce } from '@/utils/date'
+import { dateDifference } from '@/utils/date'
 import { DP } from '@/settings/config'
 import { parseTime } from '@/utils/date'
 import { subcontractPlanPM as permission } from '@/page-permission/project'
