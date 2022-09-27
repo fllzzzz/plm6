@@ -30,7 +30,7 @@
       <!--编辑与删除-->
       <el-table-column v-if="checkPermission([...permission.edit])" label="操作" width="130px" align="center" fixed="right">
         <template #default="{ row: { sourceRow: row } }">
-          <udOperation :data="row" :showDel="false" />
+          <udOperation :disabledEdit="row.productType === 1" :data="row" :showDel="false" />
         </template>
       </el-table-column>
     </common-table>
@@ -70,7 +70,6 @@ const { crud, columns, CRUD } = useCRUD(
 )
 
 const { maxHeight } = useMaxHeight()
-
 const dataPath = {
   [typeEnum.ARTIFACT.K]: 'artifactProcessList',
   [typeEnum.ASSEMBLE.K]: 'assembleProcessList',

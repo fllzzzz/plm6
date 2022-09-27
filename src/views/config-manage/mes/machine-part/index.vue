@@ -18,16 +18,44 @@
       style="width: 100%"
     >
       <el-table-column prop="index" label="序号" align="center" width="60" type="index" />
-      <el-table-column v-if="columns.visible('name')" key="name" prop="name" align="center" :show-overflow-tooltip="true" label="代表杆件类型" min-width="150">
+      <el-table-column
+        v-if="columns.visible('name')"
+        key="name"
+        prop="name"
+        align="center"
+        :show-overflow-tooltip="true"
+        label="代表杆件类型"
+        min-width="150"
+      >
         <template v-slot="scope">
           <span>{{ scope.row.name }}</span>
         </template>
       </el-table-column>
-      <el-table-column v-if="columns.visible('assembleSpecList')" key="assembleSpecList" prop="assembleSpecList" label="部件规格前缀" :show-overflow-tooltip="true" align="center" min-width="260">
+      <el-table-column
+        v-if="columns.visible('classifyNames')"
+        key="classifyNames"
+        prop="classifyNames"
+        :show-overflow-tooltip="true"
+        label="型材科目"
+        min-width="260"
+      >
+        <template v-slot="scope">
+          <span>{{ scope.row.classifyNames }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        v-if="columns.visible('assembleSpecList')"
+        key="assembleSpecList"
+        prop="assembleSpecList"
+        label="部件规格前缀"
+        :show-overflow-tooltip="true"
+        align="center"
+        min-width="260"
+      >
         <template v-slot="scope">
           <template v-if="scope.row.assembleSpecList && scope.row.assembleSpecList.length > 0">
-            <span v-for="item, in scope.row.assembleSpecList" :key="item.id">
-              {{ `【${item.specPrefix}】` }}
+            <span v-for="item in scope.row.assembleSpecList" :key="item.id">
+              {{ item.specPrefix + '  ' + (scope.row.boolSectionSteel ? '【' + (item.specIndex ? item.specIndex : '全部') + '】' : '') }}
             </span>
           </template>
         </template>
@@ -77,7 +105,7 @@
     </common-table>
     <!--分页组件-->
     <pagination />
-    <mForm />
+    <mForm :boundAllClassifyIds="boundAllClassifyIds" />
   </div>
 </template>
 
@@ -86,7 +114,7 @@ import crudApi from '@/api/config/system-config/machine-part-config'
 import { ref } from 'vue'
 
 import { machinePartConfigPM as permission } from '@/page-permission/config'
-
+import { matClsEnum } from '@enum-ms/classification'
 import checkPermission from '@/utils/system/check-permission'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
@@ -99,18 +127,18 @@ const optShow = {
   add: true,
   edit: false,
   del: false,
-  download: false
+  download: false,
 }
 
 const tableRef = ref()
-const { crud, columns } = useCRUD(
+const { CRUD, crud, columns } = useCRUD(
   {
     title: '部件特征定义',
     sort: [],
     permission: { ...permission },
     optShow: { ...optShow },
     crudApi: { ...crudApi },
-    hasPagination: true
+    hasPagination: true,
   },
   tableRef
 )
@@ -118,8 +146,21 @@ const { crud, columns } = useCRUD(
 const { maxHeight } = useMaxHeight({
   wrapperBox: '.machinePartConfig',
   paginate: true,
-  extraHeight: 40
+  extraHeight: 40,
 })
+
+const boundAllClassifyIds = ref([])
+
+CRUD.HOOK.handleRefresh = (crud, { data }) => {
+  boundAllClassifyIds.value = []
+  data.content.forEach((v) => {
+    if (v.boolSectionSteel) {
+      v.classifyNames = v.classifyLinks.map((v) => v.classifyName).join('、')
+      v.classifyIds = v.classifyLinks.map((v) => v.classifyId)
+      boundAllClassifyIds.value = boundAllClassifyIds.value.concat(v.classifyIds)
+    }
+  })
+}
 </script>
 
 <style lang="scss" scoped>

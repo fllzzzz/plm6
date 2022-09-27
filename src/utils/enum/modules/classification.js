@@ -58,13 +58,21 @@ const projectPreparationMatClsEnum = {
 }
 constantize(projectPreparationMatClsEnum)
 
+// 型材、非型材筛选
+const extrusionClsEnum = {
+  SECTION_STEEL: { L: '型材', K: 'SECTION_STEEL', V: true },
+  NOT_SECTION_STEEL: { L: '非型材', K: 'NOT_SECTION_STEEL', V: false },
+}
+constantize(extrusionClsEnum)
+
 export {
   classificationEnum,
   matClsEnum,
   rawMatClsEnum,
   manufClsEnum,
   steelClsEnum,
-  projectPreparationMatClsEnum
+  projectPreparationMatClsEnum,
+  extrusionClsEnum
 }
 
 export default {
@@ -73,5 +81,6 @@ export default {
   rawMatClsEnum,
   manufClsEnum,
   steelClsEnum,
-  projectPreparationMatClsEnum
+  projectPreparationMatClsEnum,
+  extrusionClsEnum
 }
