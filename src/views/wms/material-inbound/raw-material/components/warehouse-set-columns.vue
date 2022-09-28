@@ -62,7 +62,7 @@ const formList = computed(() => {
   return currentForm.value.list || []
 })
 
-watchEffect(() => initFactoryScopeList(formList))
+watchEffect(() => initFactoryScopeList(formList.value))
 
 function handleFactoryChange(val, index, row) {
   handleFactoryChangeForValue(val, index)
