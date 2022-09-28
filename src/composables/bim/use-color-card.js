@@ -22,7 +22,7 @@ export default function useColorCard({ props, menuBar, colors, objectIdGroup, bi
         clearColorCardPanel()
       } else {
         showComponentsById(objectIdGroup.value[0])
-        if ([2, 3, 4, 5, 6, 7].indexOf(card.value) !== -1) {
+        if ([2, 3, 4, 5, 6, 7, 10, 11, 12].indexOf(card.value) !== -1) {
           await fetchColorCardPanel(card)
           elementIds = curElementIds.value
         }

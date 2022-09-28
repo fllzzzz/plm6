@@ -58,8 +58,8 @@ const modelMenuBarEnum = {
   ] },
   INSTALL_STATE: { L: '安装状态', K: 'INSTALL_STATE', V: 5, ICON: 'installation.png', COLORS: [
     { title: '未收货', color: '#f5f7fa', opacity: 1, value: 10, qField: 'unProducedQuantity', wField: 'unProducedTotalGrossWeight' },
-    { title: '已收货', color: '#ffba00', opacity: 1, value: 11, qField: 'completeQuantity', wField: 'completeTotalGrossWeight' },
-    { title: '已安装', color: '#32d3a6', opacity: 1, value: 12, qField: 'inProductionQuantity', wField: 'inProductionTotalGrossWeight' }
+    { title: '已收货', color: '#ffba00', opacity: 1, value: 11, qField: 'storageQuantity', wField: 'storageTotalGrossWeight' },
+    { title: '已安装', color: '#32d3a6', opacity: 1, value: 12, qField: 'producedQuantity', wField: 'producedTotalGrossWeight' }
   ] }
 }
 constantize(modelMenuBarEnum)

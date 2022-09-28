@@ -32,7 +32,7 @@ export default function useArtifactColoring({ props, bimModel, modelStatus, view
 
   // 初始化根据构件状态着色
   async function fetchArtifactStatus(menuBar) {
-    if (menuBar === modelMenuBarEnum.PROJECT_TREE.V || menuBar === modelMenuBarEnum.INSTALL_STATE.V) {
+    if (menuBar === modelMenuBarEnum.PROJECT_TREE.V) {
       initModelColor()
       return
     }
