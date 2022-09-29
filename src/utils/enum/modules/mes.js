@@ -131,6 +131,22 @@ const taskIssueTypeEnum = {
 }
 constantize(taskIssueTypeEnum)
 
+// 零件排产下发状态
+const machinePartSchedulingIssueStatusEnum = {
+  NOT_NESTING: { L: '未套料', K: 'NOT_NESTING', V: 1 << 0, T: 'info' },
+  IN_NESTING: { L: '套料中', K: 'IN_NESTING', V: 1 << 1, T: 'warning' },
+  OUT_NESTING: { L: '套料完成', K: 'OUT_NESTING', V: 1 << 2, T: 'primary' },
+  HAS_ISSUED: { L: '已下发', K: 'HAS_ISSUED', V: 1 << 3, T: 'success' }
+}
+constantize(machinePartSchedulingIssueStatusEnum)
+
+// 零件排产套料状态
+const machinePartNestingStatusEnum = {
+  NOT_NESTING: machinePartSchedulingIssueStatusEnum.NOT_NESTING,
+  HAS_NESTING: { L: '已套料', K: 'HAS_NESTING', V: machinePartSchedulingIssueStatusEnum.IN_NESTING.V | machinePartSchedulingIssueStatusEnum.OUT_NESTING.V | machinePartSchedulingIssueStatusEnum.HAS_ISSUED.V }
+}
+constantize(machinePartNestingStatusEnum)
+
 // 可打包类型
 const packTypeEnum = {
   STRUCTURE: { L: '结构', SL: '结构', K: 'STRUCTURE', V: componentTypeEnum.ARTIFACT.V, T: '' },
@@ -295,6 +311,13 @@ const artifactProductLineEnum = {
 }
 constantize(artifactProductLineEnum)
 
+// 构件配置传统/智能生产线 Boolean
+const productLineTypeBoolEnum = {
+  TRADITION: { L: '传统线', K: 'TRADITION', V: false },
+  INTELLECT: { L: '智能线', K: 'INTELLECT', V: true }
+}
+constantize(productLineTypeBoolEnum)
+
 // 构件配置智能线父类型
 const intellectParentType = {
   PILLAR: { L: '柱', K: 'PILLAR', V: 1 << 1 },
@@ -414,6 +437,8 @@ export {
   mesEnclosureTypeEnum,
   floorPlateTypeEnum,
   taskIssueTypeEnum,
+  machinePartSchedulingIssueStatusEnum,
+  machinePartNestingStatusEnum,
   packTypeEnum,
   packStatusTypeEnum,
   receiptStatusEnum,
@@ -436,6 +461,7 @@ export {
   inProductionDetailReportEnum,
   schedulingStatusEnum,
   artifactProductLineEnum,
+  productLineTypeBoolEnum,
   intellectParentType,
   minEqualTypeEnum,
   maxEqualTypeEnum,
@@ -466,6 +492,8 @@ export default {
   mesEnclosureTypeEnum,
   floorPlateTypeEnum,
   taskIssueTypeEnum,
+  machinePartSchedulingIssueStatusEnum,
+  machinePartNestingStatusEnum,
   packTypeEnum,
   packStatusTypeEnum,
   receiptStatusEnum,
@@ -488,6 +516,7 @@ export default {
   inProductionDetailReportEnum,
   schedulingStatusEnum,
   artifactProductLineEnum,
+  productLineTypeBoolEnum,
   intellectParentType,
   minEqualTypeEnum,
   maxEqualTypeEnum,
