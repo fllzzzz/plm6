@@ -37,7 +37,7 @@
           <p>
             工厂：<span style="margin-right: 20px">{{ row.factoryName }}</span> 车间：<span>{{ row.workshopName }}</span>
           </p>
-          <template v-if="!(row.productType & componentTypeEnum.ENCLOSURE.V)">
+          <template v-if="!(row.productType & (componentTypeEnum.ENCLOSURE.V | componentTypeEnum.MACHINE_PART.V))">
             <p v-if="row.boolMachineEnum && row.productType & componentTypeEnum.ARTIFACT.V">
               产品标识：<span>{{ row.typeSequence }}</span>
             </p>
@@ -263,8 +263,8 @@ function handleCurrentChange(val) {
 CRUD.HOOK.handleRefresh = (crud, { data }) => {
   data.content.forEach((v) => {
     v.targetProductionShow = (v.targetProduction && v.targetProduction / 1000) || 0
-    v.typeSequence = v.typeList.map((v) => `【${v.name}】`).join('')
-    v.linkIdList = v.typeList.map((v) => v.id)
+    v.typeSequence = v?.typeList?.map((v) => `【${v?.name}】`)?.join('')
+    v.linkIdList = v?.typeList?.map((v) => v.id) || []
   })
 }
 

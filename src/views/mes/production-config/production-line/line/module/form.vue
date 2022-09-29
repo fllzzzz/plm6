@@ -46,7 +46,7 @@
         <el-input v-model="form.shortName" type="text" placeholder="请填写生产线简称" style="width: 270px" />
       </el-form-item> -->
       <el-form-item
-        v-if="form.productType && !(form.productType & componentTypeEnum.ENCLOSURE.V)"
+        v-if="form.productType && !(form.productType & (componentTypeEnum.ENCLOSURE.V | componentTypeEnum.MACHINE_PART.V))"
         :label="form.boolMachineEnum && form.productType & componentTypeEnum.ARTIFACT.V ? '产品标识' : '可生产产品类型'"
         prop="linkIdList"
       >
