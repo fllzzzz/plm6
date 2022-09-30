@@ -59,18 +59,28 @@
           </el-table-column>
           <el-table-column
             v-if="crud.query.category!==TechnologyTypeAllEnum.BENDING.V"
-            key="plateId"
-            prop="plateId"
+            :key="technicalTypeStatus ? 'plateId' : 'plate'"
+            :prop="technicalTypeStatus ? 'plateId' : 'plate'"
             :show-overflow-tooltip="true"
             label="版型"
             min-width="100px"
           >
             <template v-slot="scope">
               <common-select
+                v-if="technicalTypeStatus"
                 v-model="scope.row.plateId"
                 :options="plateOption"
                 :type="'other'"
                 :dataStructure="crud.query.category===TechnologyTypeAllEnum.TRUSS_FLOOR_PLATE.V?trussProp:typeProp"
+                size="small"
+                placeholder="版型"
+                @change="plateChange(scope.row,scope.$index)"
+              />
+              <common-select
+                v-else
+                v-model="scope.row.plate"
+                :options="enclosureDictKV?.['plate_type']"
+                :dataStructure="defaultProp"
                 size="small"
                 placeholder="版型"
                 @change="plateChange(scope.row,scope.$index)"
@@ -302,22 +312,29 @@
 </template>
 
 <script setup>
-import { ref, inject } from 'vue'
-import { regForm } from '@compos/use-crud'
-import { ElMessage } from 'element-plus'
-import { TechnologyTypeAllEnum } from '@enum-ms/contract'
+import { getEnclosureDictList } from '@/api/contract/project'
+import { ref, inject, watch, computed } from 'vue'
+
 import { DP } from '@/settings/config'
+import { TechnologyTypeAllEnum } from '@enum-ms/contract'
+
+import { ElMessage } from 'element-plus'
+import { regForm } from '@compos/use-crud'
 import { validate } from '@compos/form/use-table-validate'
 import useMaxHeight from '@compos/use-max-height'
 
 const formRef = ref()
 const detailRef = ref()
+const enclosureDictKV = ref({}) // 围护配置
 const defaultForm = {
   list: []
 }
 const typeProp = { key: 'id', label: 'plateType', value: 'id' }
 const trussProp = { key: 'id', label: 'serialNumber', value: 'id' }
+const defaultProp = { key: 'name', label: 'name', value: 'name' }
+
 const plateOption = inject('plateOption')
+const technicalTypeStatus = inject('technicalTypeStatus') // 技术交底状态
 
 const { CRUD, crud, form } = regForm(defaultForm, formRef)
 
@@ -380,10 +397,9 @@ const validateColor = (value, row) => {
   return true
 }
 
-const tableRules = {
+const rules = {
   serialNumber: [{ required: true, message: '请输入编号', trigger: 'blur' }],
   unfoldedWidth: [{ validator: validateUnfoldedWidth, message: '展开宽度必填', trigger: 'change' }],
-  plateId: [{ validator: validatePlateId, message: '请选择版型', trigger: 'change' }],
   width: [{ validator: validateWidth, message: '有效宽度必填', trigger: 'change' }],
   thickness: [{ validator: validateThickness, message: '厚度必填', trigger: 'change' }],
   length: [{ required: true, message: '单长必填', trigger: 'change' }],
@@ -394,9 +410,78 @@ const tableRules = {
   color: [{ validator: validateColor, message: '请输入颜色', trigger: 'blur' }]
 }
 
+// 禁用技术交底配置时，前端不加任何限制，后端处理
+const tableRules = computed(() => {
+  let data = {}
+  if (technicalTypeStatus.value) {
+    data = {
+      plateId: [{ validator: validatePlateId, message: '请选择版型', trigger: 'change' }]
+    }
+  } else {
+    data = {
+      plate: [{ required: true, message: '请选择版型', trigger: 'change' }]
+    }
+  }
+  return { ...rules, ...data }
+})
+
+watch(
+  () => crud.query.category,
+  () => {
+    getConfig()
+  },
+  { immediate: true }
+)
+
+watch(
+  () => technicalTypeStatus.value,
+  () => {
+    getConfig()
+  },
+  { immediate: true }
+)
+
+// 获取围护配置信息列表
+async function getConfig() {
+  enclosureDictKV.value = {}
+  if (technicalTypeStatus.value || !crud.query.category || crud.query.category === TechnologyTypeAllEnum.BENDING.V) return
+  try {
+    const { content = [] } = await getEnclosureDictList(crud.query.category) || {}
+    const plateKV = {}
+    if (crud.query.category === TechnologyTypeAllEnum.TRUSS_FLOOR_PLATE.V) {
+      enclosureDictKV.value['plate_type'] = content.map(row => {
+        let effectiveWidth = ''
+        row?.list.forEach(v => {
+          if (v.name === 'effectiveWidth') {
+            effectiveWidth = v.value
+          }
+        })
+        plateKV[row.code] = { effectiveWidth }
+        return { name: row.code }
+      })
+    } else {
+      content.forEach((row) => {
+        if (row.name === 'plate_type') {
+          (row.plateTypeList || []).forEach(v => {
+            plateKV[v.plateType] = v
+          })
+          enclosureDictKV.value[row.name] = (row.labels || []).map(v => {
+            return {
+              name: v
+            }
+          })
+        }
+      })
+    }
+    enclosureDictKV.value.KV = plateKV
+  } catch (error) {
+    console.log('获取围护配置信息列表', error)
+  }
+}
+
 function wrongCellMask({ row, column }) {
   if (!row) return
-  const rules = tableRules
+  const rules = tableRules.value
   let flag = true
   if (row.verify && Object.keys(row.verify) && Object.keys(row.verify).length > 0) {
     if (row.verify[column.property] === false) {
@@ -420,19 +505,30 @@ function addRow() {
 }
 
 function plateChange(row, index) {
-  const choseVal = plateOption.value.find(v => v.id === row.plateId)
-  if (crud.query.category === TechnologyTypeAllEnum.TRUSS_FLOOR_PLATE.V) {
-    form.list[index].plate = choseVal.serialNumber
-    form.list[index].weightMeter = choseVal.weightMeter
+  // 关联技术交底
+  if (row.plateId) {
+    const choseVal = plateOption.value.find(v => v.id === row.plateId)
+    if (crud.query.category === TechnologyTypeAllEnum.TRUSS_FLOOR_PLATE.V) {
+      form.list[index].plate = choseVal.serialNumber
+      form.list[index].weightMeter = choseVal.weightMeter
+    } else {
+      form.list[index].plate = choseVal.plateType
+      form.list[index].brand = choseVal.brand
+      form.list[index].thickness = choseVal.thickness
+      form.list[index].color = choseVal.colour
+      form.list[index].unfoldedWidth = choseVal.unfoldedWidth
+    }
+    form.list[index].width = choseVal.effectiveWidth
+    getTotalData(row)
   } else {
-    form.list[index].plate = choseVal.plateType
-    form.list[index].brand = choseVal.brand
-    form.list[index].thickness = choseVal.thickness
-    form.list[index].color = choseVal.colour
-    form.list[index].unfoldedWidth = choseVal.unfoldedWidth
+    const data = enclosureDictKV.value.KV?.[row.plate] || {}
+    if (crud.query.category === TechnologyTypeAllEnum.TRUSS_FLOOR_PLATE.V) {
+      form.list[index].width = +data.effectiveWidth
+    } else if (crud.query.category === TechnologyTypeAllEnum.PROFILED_PLATE.V || crud.query.category === TechnologyTypeAllEnum.PRESSURE_BEARING_PLATE.V) {
+      form.list[index].width = +data.effectiveWidth
+      form.list[index].unfoldedWidth = +data.unfoldedWidth
+    }
   }
-  form.list[index].width = choseVal.effectiveWidth
-  getTotalData(row)
 }
 
 function getTotalData(row) {
@@ -468,7 +564,7 @@ CRUD.HOOK.beforeValidateCU = (crud, form) => {
     ElMessage({ message: '请先添加围护信息', type: 'error' })
     return false
   }
-  const rules = tableRules
+  const rules = tableRules.value
   let flag = true
   crud.form.list.map(row => {
     row.verify = {}
