@@ -22,7 +22,7 @@ export default function useProjectTreePanel({ props, bimModel, modelStatus, view
     const _panel = bimModel.createPanel(_panelConfig)
     _panel.isShow = false
     console.log(_panel, '_panel')
-    const closeDom = document.querySelector('.bf-panel-pro-tree>.bf-close')
+    const closeDom = document.querySelector('.bf-panel-pro-tree .bf-close')
     closeDom.addEventListener('click', () => {
       const _panel2 = viewerPanel.artifactListByArea.panel
       if (_panel2?.isShow) {
