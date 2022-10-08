@@ -209,6 +209,8 @@ const { cu, form, FORM } = useForm(
   formRef,
   props.detail
 )
+// 设置 boolRealReturn 状态
+cu.updateProp('boolRealReturn', props.detail && Object.prototype.hasOwnProperty.call(props.detail, 'boolRealReturn') ? props.detail.boolRealReturn : true)
 
 // 通用计算校验
 const { calcMaxMete, extractSource, checkOverSource, initCheckOverMaxWeight } = useCommonCalc({ cu, form, basicClass })
@@ -270,6 +272,20 @@ function rowWatch(row) {
     },
     { immediate: true }
   )
+  setRow(row, row.source)
+}
+
+// 设置行默认值
+function setRow(row, sourceRow) {
+  row.width = row.width || sourceRow.width
+  row.length = row.length || sourceRow.length
+  row.quantity = row.quantity || sourceRow.quantity
+  row.factoryId = row.factoryId || sourceRow.factory?.id
+  row.warehouseId = row.warehouseId || sourceRow.warehouse?.id
+  calcTheoryWeight(row)
+  setTimeout(() => {
+    row.mete = row.mete || sourceRow.mete
+  })
 }
 
 // 计算单件理论重量

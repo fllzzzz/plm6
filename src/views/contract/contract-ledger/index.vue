@@ -28,13 +28,10 @@
       :show-overflow-tooltip="true"
       label="项目"
       min-width="150"
-      align="center"
       fixed="left"
     >
       <template v-slot="scope">
-        <el-tooltip :content="scope.row.serialNumber+' '+scope.row.name" :show-after="50" placement="top" v-if="scope.row.serialNumber && scope.row.name">
-          <span class="project-name">{{ projectNameFormatter(scope.row) }}</span>
-        </el-tooltip>
+        <span>{{ projectNameFormatter(scope.row) }}</span>
       </template>
     </el-table-column>
     <el-table-column v-if="columns.visible('businessType')" key="businessType" prop="businessType" label="业务类型" align="center" width="80">

@@ -89,7 +89,7 @@
       </el-tooltip>
     </template>
   </el-table-column>
-  <component v-bind="$attrs" :is="comp" :columns="columns" :basic-class="basicClass" :spec-merge="specMerge" :fixed="fixed" />
+  <component v-bind="$attrs" :is="comp" :columns="columns" :basic-class="basicClass" :spec-merge="specMerge" :fixed="fixed" :sortable="sortable" />
 
   <!-- 冻结记录 -->
   <common-dialog

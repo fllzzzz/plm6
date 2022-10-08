@@ -107,7 +107,7 @@ const { crud, columns, CRUD } = useCRUD(
 const { maxHeight } = useMaxHeight({
   wrapperBox: '.dict-detail-card',
   paginate: true,
-  extraHeight: 157
+  extraHeight: 190
 })
 
 const props = defineProps({

@@ -36,7 +36,7 @@
         <template v-if="showAmount">
           <amount-info-columns v-if="!boolPartyA" />
         </template>
-        <warehouse-info-columns show-project />
+        <warehouse-info-columns show-project show-monomer show-area />
       </common-table>
       <p class="remark">
         <span class="label-after">备注</span>

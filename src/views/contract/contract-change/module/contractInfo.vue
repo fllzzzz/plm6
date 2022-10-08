@@ -121,6 +121,7 @@ const inputValid = (val) => {
 async function handleSuccess() {
   try {
     await store.dispatch('project/fetchUserProjects')
+    await store.dispatch('project/fetchProjectTree')
     if (globalProjectId.value) {
       await store.dispatch('project/setProjectId', globalProjectId.value)
     }

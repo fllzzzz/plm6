@@ -19,9 +19,11 @@ const sectionSteelSpecTmpl = {
     { label: '长（mm）', field: 'length', type: 'number', excelField: '__EMPTY_4' },
     { label: '数量（张）', field: 'quantity', type: 'number', excelField: '__EMPTY_5' },
     { label: '总重（kg）', field: 'weighingTotalWeight', type: 'number', precision: 0, excelField: '__EMPTY_6' },
-    { label: '品牌', field: 'brand', excelField: '__EMPTY_7' },
-    { label: '炉批号', field: 'heatNoAndBatchNo', excelField: '__EMPTY_8' },
-    { label: '备注', field: 'remark', excelField: '__EMPTY_9' }
+    { label: '含税单价', field: 'unitPrice', excelField: '__EMPTY_7' },
+    { label: '金额', field: 'amount', excelField: '__EMPTY_8' },
+    { label: '品牌', field: 'brand', excelField: '__EMPTY_9' },
+    { label: '炉批号', field: 'heatNoAndBatchNo', excelField: '__EMPTY_10' },
+    { label: '备注', field: 'remark', excelField: '__EMPTY_11' }
   ],
   // 校验规则
   rules: {
@@ -37,6 +39,7 @@ const sectionSteelSpecTmpl = {
     }
     // 获取 钢板科目
     const matList = store.state.config.rawMatClsList.filter((v) => v.basicClass === matClsEnum.STEEL_PLATE.V)
+    const rawMatClsKV = store.state.config.rawMatClsKV
     // 遍历导入表格
     const list = deepClone(tableList)
     // 匹配到的id
@@ -79,7 +82,15 @@ const sectionSteelSpecTmpl = {
     }
     // 匹配规格
     for (const row of list) {
+      // 必须是末级科目
+      if (rawMatClsKV?.[row.classifyId]?.isLeaf === false) {
+        throw new Error(`${row.classifyName}不是末级科目`)
+      }
       const materialInfo = stateClassifySpec[row.classifyId]
+      // 未配置核算单位
+      if (materialInfo.hasUnitConfig === false) {
+        throw new Error(`${row.classifyName}未配置核算单位`)
+      }
       // 当前规格的物料信息
       let materialSpecInfo
       const specification = row.material ?? '' // 对应入库“规格”列

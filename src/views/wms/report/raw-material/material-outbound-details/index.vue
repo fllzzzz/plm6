@@ -47,9 +47,9 @@
       <material-unit-quantity-columns :columns="columns" :basic-class="basicClass" />
       <!-- 价格信息 -->
       <template v-if="showAmount">
-        <amount-info-columns :columns="columns" show-unit-price-e show-invoice-type />
+        <amount-info-columns :columns="columns" show-unit-price-e show-invoice-type :show-amount="amountCfg" :show-amount-excluding-v-a-t="amountExcludingVATCfg" />
       </template>
-      <warehouse-info-columns :columns="columns" show-project />
+      <warehouse-info-columns :columns="columns" show-project show-monomer show-area show-workshop />
       <el-table-column
         v-if="columns.visible('outboundReceipt.serialNumber')"
         key="outboundReceipt.serialNumber"
@@ -69,6 +69,15 @@
         :show-overflow-tooltip="true"
         prop="outboundReceipt.applicantName"
         label="申请人"
+        align="center"
+        min-width="100"
+      />
+      <el-table-column
+        v-if="columns.visible('recipientName')"
+        key="recipientName"
+        :show-overflow-tooltip="true"
+        prop="recipientName"
+        label="领料人"
         align="center"
         min-width="100"
       />
@@ -109,6 +118,8 @@
 import { computed, ref } from 'vue'
 import { getDetails as get } from '@/api/wms/report/raw-material/outbound'
 import { reportRawMaterialOutboundDetailsPM as permission } from '@/page-permission/wms'
+import { mapGetters } from '@/store/lib'
+import { supplierClassEnum } from '@enum-ms/supplier'
 import { setSpecInfoToList } from '@/utils/wms/spec'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { materialHasAmountColumns } from '@/utils/columns-format/wms'
@@ -116,6 +127,7 @@ import checkPermission from '@/utils/system/check-permission'
 
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
+import useWmsConfig from '@/composables/store/use-wms-config'
 import Pagination from '@crud/Pagination'
 import MHeader from './module/header'
 
@@ -127,6 +139,8 @@ import MaterialSecondaryInfoColumns from '@/components-system/wms/table-columns/
 import AmountInfoColumns from '@/components-system/wms/table-columns/amount-info-columns/index.vue'
 import WarehouseInfoColumns from '@/components-system/wms/table-columns/warehouse-info-columns/index.vue'
 import ReceiptSnClickable from '@/components-system/wms/receipt-sn-clickable'
+
+const { classifySpec } = mapGetters('classifySpec')
 
 const optShow = {
   add: false,
@@ -146,6 +160,9 @@ const columnsDataFormat = ref([
   ['outboundReceipt.createTime', 'parse-time']
 ])
 
+// 报表配置
+const { reportCfg } = useWmsConfig()
+
 const { CRUD, crud, columns } = useCRUD(
   {
     title: '出库明细',
@@ -155,6 +172,7 @@ const { CRUD, crud, columns } = useCRUD(
       'outboundReceipt.reviewerName',
       'outboundReceipt.createTime',
       'outboundReceipt.reviewTime',
+      'recipientName',
       'invoiceType',
       'taxRate'
     ],
@@ -167,8 +185,12 @@ const { CRUD, crud, columns } = useCRUD(
 
 const { maxHeight } = useMaxHeight({ paginate: true })
 
+// 后台金额配置
+const amountCfg = computed(() => !!reportCfg.value.amountShow)
+const amountExcludingVATCfg = computed(() => !!reportCfg.value.amountExcludingTAXShow)
+
 // 是否有显示金额权限
-const showAmount = computed(() => checkPermission(permission.showAmount))
+const showAmount = computed(() => checkPermission(permission.showAmount) && (amountCfg.value || amountExcludingVATCfg.value))
 
 const basicClass = computed(() => (crud.query ? crud.query.basicClass : undefined))
 
@@ -182,6 +204,10 @@ CRUD.HOOK.handleRefresh = async (crud, { data }) => {
   // 退货信息转换
   const rejectList = []
   data.content.forEach((row) => {
+    const fullPathName = classifySpec.value?.[row.classifyId]?.fullPathName
+    if (row.basicClass === supplierClassEnum.MATERIAL.V && fullPathName.length) {
+      row.classifyName = fullPathName[0] + ' / ' + fullPathName.at(-1)
+    }
     if (Array.isArray(row.rejectList)) {
       row.rejectList.forEach((rr) => {
         rejectList.push(rr.material)

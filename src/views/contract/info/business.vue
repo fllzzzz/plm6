@@ -216,7 +216,7 @@
                 </template>
               </div>
             </el-form-item>
-            <el-form-item label="税率" prop="businessTaxRate">
+            <el-form-item label="税率" prop="businessTaxRate" v-if="!isModify || (isModify && form.isTax && form.invoiceType !== invoiceTypeEnum.RECEIPT.V)">
               <template v-if="isModify">
                 <el-input-number
                   v-model="form.businessTaxRate"
@@ -595,7 +595,7 @@ function getShowItem(val, type) {
         }
       }
     })
-    form.value.structureMeasureMode = AllInfo.findIndex(v => v.categoryType === TechnologyMainTypeEnum.STRUCTURE.V) > -1 ? engineerSettlementTypeEnumN.THEORY.V : undefined
+    form.value.structureMeasureMode = AllInfo.findIndex(v => v.categoryType === TechnologyMainTypeEnum.STRUCTURE.V) > -1 ? form.value.structureMeasureMode || engineerSettlementTypeEnumN.THEORY.V : undefined
     if (AllInfo.length > 0) {
       if (type !== 'detail') {
         const modeData = []

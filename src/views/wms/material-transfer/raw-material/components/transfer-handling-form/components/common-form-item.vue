@@ -8,9 +8,33 @@
       size="small"
     />
   </el-form-item>
-  <el-form-item v-if="showProjectSelect" label="项目" prop="projectId">
-    <project-cascader v-model="currentForm.projectId" clearable style="width: 100%" />
-  </el-form-item>
+  <template v-if="showProjectSelect">
+    <el-form-item label="项目" prop="projectId">
+      <project-cascader v-model="currentForm.projectId" clearable style="width: 100%" />
+    </el-form-item>
+    <el-form-item label="单体" prop="monomerId">
+      <common-select
+        v-model="currentForm.monomerId"
+        :options="currentForm.projectId && projectMap?.[currentForm.projectId]?.children || []"
+        :dataStructure="{ key: 'id', label: 'name', value: 'id' }"
+        clearable
+        type="other"
+        placeholder="可选择单体"
+        style="width: 100%"
+      />
+    </el-form-item>
+    <el-form-item label="区域" prop="areaId">
+      <common-select
+        v-model="currentForm.areaId"
+        :options="currentForm.monomerId && monomerMap?.[currentForm.monomerId]?.children || []"
+        :dataStructure="{ key: 'id', label: 'name', value: 'id' }"
+        clearable
+        type="other"
+        placeholder="可选择区域"
+        style="width: 100%"
+      />
+    </el-form-item>
+  </template>
   <el-form-item v-if="showFactoryAndWare" label="工厂" prop="factoryId">
     <factory-select v-model="currentForm.factoryId" placeholder="工厂" style="width: 100%" />
   </el-form-item>
@@ -56,6 +80,7 @@ import { transferNormalTypeEnum } from '@/utils/enum/modules/wms'
 import ProjectCascader from '@comp-base/project-cascader.vue'
 import FactorySelect from '@/components-system/base/factory-select.vue'
 import WarehouseSelect from '@/components-system/wms/warehouse-select.vue'
+import useProjectTree from '@compos/store/use-project-tree'
 
 const props = defineProps({
   material: {
@@ -68,11 +93,15 @@ const props = defineProps({
   }
 })
 
+const { projectMap, monomerMap } = useProjectTree()
+
 // 表单
 const currentForm = ref({
   // 当前表单字段
   transferType: undefined, // 调拨类型
   projectId: undefined, // 项目id
+  monomerId: undefined, // 单体id
+  areaId: undefined, // 区域id
   factoryId: undefined, // 工厂id
   warehouseId: undefined, // 仓库id
   quantity: undefined, // 数量

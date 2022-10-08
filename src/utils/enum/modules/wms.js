@@ -14,6 +14,13 @@ const measureTypeEnum = {
 }
 constantize(measureTypeEnum)
 
+// 退库状态
+const returnStatusEnum = {
+  TRUE: { L: '真实退库', K: 'TRUE', V: true },
+  FALSE: { L: '虚拟退库', K: 'FALSE', V: false }
+}
+constantize(returnStatusEnum)
+
 // 单位类型(报表查询)
 const unitTypeEnum = {
   MEASURE: { L: '计量单位', K: 'MEASURE', V: measureTypeEnum.MEASURE.V },
@@ -203,6 +210,7 @@ constantize(inspectionDetailStatusEnum)
 
 export {
   receiptTypeEnum, // 单据类型
+  returnStatusEnum,
   inboundFillWayEnum,
   measureTypeEnum,
   unitTypeEnum,
@@ -231,6 +239,7 @@ export {
 
 export default {
   receiptTypeEnum, // 单据类型
+  returnStatusEnum,
   inboundFillWayEnum,
   measureTypeEnum,
   unitTypeEnum,

@@ -53,7 +53,7 @@
         <template v-if="showAmount">
           <amount-info-columns v-if="!boolPartyA" />
         </template>
-        <warehouse-info-columns show-project />
+        <warehouse-info-columns show-project show-monomer show-area />
         <el-table-column label="操作" width="100" align="center" fixed="right">
           <template #default="{ row: { sourceRow: row } }">
             <common-button

@@ -105,6 +105,13 @@ export default {
           meta: { title: '物流', icon: 'contract2', noCache: true }
         },
         {
+          name: 'subcontractPaymentManage',
+          path: 'subcontract-payment-manage',
+          hidden: false,
+          component: '/contract/payment-manage/supplier-manage/subcontract-manage/index',
+          meta: { title: '分包订单', icon: 'contract2', noCache: true }
+        },
+        {
           name: 'supplierPayable',
           path: 'payable',
           hidden: false,

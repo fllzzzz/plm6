@@ -56,8 +56,8 @@ export default function useMyToolbar({
   {
     ...modelMenuBarEnum.INSTALL_STATE,
     clickEvent: function (i) {
-      // menuBar.value = i
-      // fetchStatusInfo()
+      menuBar.value = i
+      fetchStatusInfo()
     },
     unActiveEvent: function () {
       clearStatusInfoPanel()
@@ -75,7 +75,8 @@ export default function useMyToolbar({
           if (el.innerText === modelMenuBarEnum.VL[val]) {
             el.className = 'bf-button bf-button-active'
           } else {
-            el.className = el.innerText === modelMenuBarEnum.INSTALL_STATE.L ? 'bf-button bf-button-disabled' : 'bf-button'
+            // el.className = el.innerText === modelMenuBarEnum.INSTALL_STATE.L ? 'bf-button bf-button-disabled' : 'bf-button'
+            el.className = 'bf-button'
           }
         })
         colors.value = MY_TOOLBAR_INFO[val - 1].COLORS
@@ -99,9 +100,9 @@ export default function useMyToolbar({
       const btn = MY_TOOLBAR_INFO[i]
       const _btnConfig = bimModel.getButtonConfig()
       _btnConfig.title = btn.L
-      if (btn.V === modelMenuBarEnum.INSTALL_STATE.V) {
-        _btnConfig.className = 'bf-button bf-button-disabled'
-      }
+      // if (btn.V === modelMenuBarEnum.INSTALL_STATE.V) {
+      //   _btnConfig.className = 'bf-button bf-button-disabled'
+      // }
       const _button = bimModel.createButton(_btnConfig)
       _button.setHtml(
         `<div style="display:flex;flex-direction: column;justify-content: center;align-items: center;width: 70px;">

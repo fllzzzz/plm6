@@ -48,11 +48,11 @@ export default function useCommonCalc({ cu, form, basicClass, baseUnit }) {
           sourceKV[sourceId] = v.source
         }
         if (isNotBlank(mete[sourceId])) {
-          quantity[sourceId] += v.quantity || 0
+          quantity[sourceId] += Number(v.quantity) || 0
           mete[sourceId] += v.mete || 0
           length[sourceId] += v.length * Number(v.quantity) || 0
         } else {
-          quantity[sourceId] = v.quantity || 0
+          quantity[sourceId] = Number(v.quantity) || 0
           mete[sourceId] = v.mete || 0
           length[sourceId] = v.length * Number(v.quantity) || 0
         }

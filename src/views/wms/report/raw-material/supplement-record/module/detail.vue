@@ -25,6 +25,14 @@
               <span class="project-name">{{ projectNameFormatter(detail.project) }}</span>
             </el-form-item>
 
+            <el-form-item label="单体" prop="monomerName">
+              <span v-empty-text>{{ detail.monomerName }}</span>
+            </el-form-item>
+
+            <el-form-item label="区域" prop="areaName">
+              <span v-empty-text>{{ detail.areaName }}</span>
+            </el-form-item>
+
             <el-form-item label="工厂" prop="factory.name">
               <span v-empty-text>{{ detail.factory?.name }}</span>
             </el-form-item>

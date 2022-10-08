@@ -149,6 +149,7 @@ export const filterAsyncRoutes = (commit, routes, moduleId, basePath, hasLayout 
           if (item.component === component) {
             route.meta.needProject = item.required
             route.meta.projectType = item.type
+            route.meta.businessType = item.businessType
           }
         }
       }

@@ -47,7 +47,7 @@
         </el-table-column>
       </template>
       <!-- 仓库信息 -->
-      <warehouse-info-columns :columns="columns" show-project />
+      <warehouse-info-columns :columns="columns" show-project show-monomer show-area />
       <el-table-column
         v-if="columns.visible('outboundSN')"
         key="outboundSN"
@@ -80,7 +80,7 @@
         width="100"
         sortable="custom"
       />
-      <el-table-column class="return-btn-column" v-if="props.isComponent" label="退库" align="center" width="100" sortable="custom">
+      <el-table-column class="return-btn-column" v-if="props.isComponent" label="退库" align="center" width="100" sortable="custom" fixed="right">
         <template #default="{ row: { sourceRow: row } }">
           <el-badge :value="returnNumber[row.id]" :hidden="returnNumber[row.id] === 0" class="badge-item">
             <!-- 编辑状态下， -->

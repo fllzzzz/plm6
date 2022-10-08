@@ -1,5 +1,5 @@
 <template>
-  <component :is="comp" :columns="columns" :show-project="showProject" :show-transfer="showTransfer" :field="field" />
+  <component :is="comp" :columns="columns" :show-project="showProject" :show-transfer="showTransfer" :show-monomer="showMonomer" :show-area="showArea" :show-workshop="showWorkshop" :field="field" />
 </template>
 
 <script setup>
@@ -18,6 +18,18 @@ const props = defineProps({
   },
   showTransfer: {
     // 项目标签 显示调拨
+    type: Boolean,
+    default: false
+  },
+  showMonomer: { // 显示单体
+    type: Boolean,
+    default: false
+  },
+  showArea: { // 显示区域
+    type: Boolean,
+    default: false
+  },
+  showWorkshop: { // 显示车间
     type: Boolean,
     default: false
   },

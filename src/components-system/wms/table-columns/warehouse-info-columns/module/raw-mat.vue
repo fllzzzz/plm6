@@ -15,6 +15,33 @@
     </template>
   </el-table-column>
   <el-table-column
+    v-if="showMonomer"
+    key="monomerName"
+    :show-overflow-tooltip="true"
+    prop="monomerName"
+    label="单体"
+    align="left"
+    min-width="100"
+  />
+  <el-table-column
+    v-if="showArea"
+    key="areaName"
+    :show-overflow-tooltip="true"
+    prop="areaName"
+    label="区域"
+    align="left"
+    min-width="100"
+  />
+  <el-table-column
+    v-if="showWorkshop"
+    key="workshop.name"
+    :show-overflow-tooltip="true"
+    prop="workshop.name"
+    label="车间"
+    align="left"
+    min-width="100"
+  />
+  <el-table-column
     v-if="showWarehouse"
     key="warehouse"
     prop="warehouse"
@@ -47,6 +74,18 @@ const props = defineProps({
     type: Boolean,
     default: false
   },
+  showMonomer: { // 显示单体
+    type: Boolean,
+    default: false
+  },
+  showArea: { // 显示区域
+    type: Boolean,
+    default: false
+  },
+  showWorkshop: { // 显示车间
+    type: Boolean,
+    default: false
+  },
   showFactory: {
     // 显示工厂
     type: Boolean,
@@ -64,4 +103,7 @@ const props = defineProps({
 
 const showWarehouse = computed(() => isBlank(props.columns) || props.columns.visible('warehouse'))
 const showProject = computed(() => props.showProject && (isBlank(props.columns) || props.columns.visible('project')))
+const showMonomer = computed(() => props.showMonomer && (isBlank(props.columns) || props.columns.visible('monomerName')))
+const showArea = computed(() => props.showArea && (isBlank(props.columns) || props.columns.visible('areaName')))
+const showWorkshop = computed(() => props.showWorkshop && (isBlank(props.columns) || props.columns.visible('workshop.name')))
 </script>

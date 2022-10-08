@@ -22,11 +22,33 @@
             @change="crud.toQuery"
           />
         </template>
+        <template #afterWarehouse>
+          <workshop-select
+            v-model="query.workshopId"
+            :factory-id="query.factoryId"
+            placeholder="车间"
+            class="filter-item"
+            style="width: 200px"
+            clearable
+            @change="crud.toQuery"
+          />
+        </template>
         <template #secondLineFirstItem>
           <warehouse-project-cascader
             v-model:projectId="query.projectId"
             v-model:projectWarehouseType="query.projectWarehouseType"
             class="filter-item"
+            @change="crud.toQuery"
+          />
+          <monomer-select-area-select
+            v-model:monomerId="query.monomerId"
+            v-model:areaId="query.areaId"
+            clearable
+            areaClearable
+            :filterArea="false"
+            :project-id="query.projectId"
+            :monomerDisabled="!query.projectId"
+            :areaDisabled="!query.projectId"
             @change="crud.toQuery"
           />
           <el-date-picker
@@ -56,9 +78,9 @@
           <el-input
             v-model.trim="query.operatorName"
             clearable
-            style="width: 140px"
+            style="width: 150px"
             size="small"
-            placeholder="申请人/审核人"
+            placeholder="申请/审核/领用人"
             class="filter-item"
             @keyup.enter="crud.toQuery"
           />
@@ -92,6 +114,8 @@ import CrudOperation from '@crud/CRUD.operation'
 import MatHeaderQuery from '@/components-system/wms/header-query/raw-mat/index.vue'
 import ExportButton from '@comp-common/export-button/index.vue'
 import warehouseProjectCascader from '@comp-wms/warehouse-project-cascader'
+import monomerSelectAreaSelect from '@comp-base/monomer-select-area-select'
+import workshopSelect from '@comp-mes/workshop-select'
 
 const defaultTime = ref([new Date(2000, 1, 1, 0, 0, 0), new Date(2000, 2, 1, 23, 59, 59)])
 
@@ -100,9 +124,13 @@ const defaultQuery = {
   basicClass: undefined, // 物料类型
   orderSupplyType: undefined, // 供货类型
   projectId: undefined, // 项目id
+  monomerId: undefined, // 单体id
+  areaId: undefined, // 区域id
+  workshopId: undefined, // 仓库id
+  factoryId: undefined, // 工厂id
   projectWarehouseType: undefined, // 仓库类型
   outboundSN: undefined, // 出库单号
-  operatorName: undefined // 申请人/编辑人/审核人
+  operatorName: undefined // 申请/审核/领用人
 }
 
 const permission = inject('permission')

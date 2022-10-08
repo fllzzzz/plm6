@@ -33,6 +33,7 @@ const useWmsConfig = (loadedCallBack) => {
     inboundFillWayCfg: computed(() => store.state.wms.inboundFillWayCfg), // 入库填写方式
     outboundCfg: computed(() => store.state.wms.outboundCfg), // 出库配置
     rejectCfg: computed(() => store.state.wms.rejectCfg), // 退货配置
+    reportCfg: computed(() => store.state.wms.reportCfg), // 报表中心（入库明细和出库明细）配置
     partyABorrowReturnCfg: computed(() => store.state.wms.partyABorrowReturnCfg) // 甲供借用归还配置
   }
 }

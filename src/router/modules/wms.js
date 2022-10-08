@@ -360,6 +360,13 @@ export default {
           meta: { title: '退货单表', icon: 'project', noCache: true }
         },
         {
+          name: 'WMSReportRawMaterialMaterialInventory',
+          path: 'report/raw-material/material-inventory',
+          hidden: false,
+          component: '/wms/report/raw-material/material-inventory/index',
+          meta: { title: '库存报表', icon: 'project', noCache: true }
+        },
+        {
           name: 'WMSReportRawMaterialSendAndReceiveStorageReceipt',
           path: 'report/raw-material/send-and-receive-storage',
           hidden: false,

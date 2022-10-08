@@ -29,7 +29,7 @@
       <material-unit-quantity-columns :columns="columns" :basic-class="basicClass" label-prefix="解冻" outbound-type-mode />
       <!-- 次要信息 -->
       <material-secondary-info-columns :columns="columns" :basic-class="basicClass" :show-batch-no="false" />
-      <warehouse-info-columns :columns="columns" :show-project="crud.query.projectWarehouseType === projectWarehouseTypeEnum.PROJECT.V" />
+      <warehouse-info-columns :columns="columns" :show-project="showProjectInfo" :show-monomer="showProjectInfo" :show-area="showProjectInfo" />
       <el-table-column
         v-if="columns.visible('freezeTypeName')"
         key="freezeTypeName"
@@ -161,6 +161,9 @@ const { maxHeight } = useMaxHeight({ paginate: true })
 
 // 基础类型
 const basicClass = computed(() => crud.query.basicClass)
+
+// 显示项目信息
+const showProjectInfo = computed(() => crud.query.projectWarehouseType === projectWarehouseTypeEnum.PROJECT.V)
 
 // 处理刷新
 CRUD.HOOK.handleRefresh = async (crud, { data }) => {

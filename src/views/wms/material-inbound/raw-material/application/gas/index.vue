@@ -5,6 +5,8 @@
       :validate="validate"
       :edit="props.edit"
       :show-total="false"
+      :total-amount="totalAmount"
+      :show-total-amount="!boolPartyA"
       @purchase-order-change="handleOrderInfoChange"
     >
       <div class="filter-container">
@@ -19,7 +21,7 @@
         </div>
       </div>
       <el-form ref="formRef" :model="form">
-        <gas-table ref="tableRef" :max-height="tableMaxHeight" />
+        <gas-table ref="tableRef" :max-height="tableMaxHeight" :bool-party-a="boolPartyA" />
       </el-form>
     </common-wrapper>
     <common-drawer
@@ -55,6 +57,8 @@ import { gasInboundApplicationPM as permission } from '@/page-permission/wms'
 
 import { defineProps, defineEmits, ref, watch, provide, nextTick, reactive, computed } from 'vue'
 import { matClsEnum } from '@/utils/enum/modules/classification'
+import { orderSupplyTypeEnum } from '@/utils/enum/modules/wms'
+import { isNotBlank, toFixed } from '@/utils/data-type'
 
 import useForm from '@/composables/form/use-form'
 import useMaxHeight from '@compos/use-max-height'
@@ -89,11 +93,25 @@ const formRef = ref() // form表单ref
 const drawerRef = ref()
 const order = ref() // 订单信息
 const orderLoaded = ref(false) // 订单加载状态
+const boolPartyA = ref(false) // 是否“甲供”
 
 const materialSelectVisible = ref(false) // 显示物料选择
 const currentBasicClass = matClsEnum.GAS.V // 当前基础分类
 
 const addable = computed(() => !!(currentBasicClass && order.value)) // 可添加的状态（选择了采购订单）
+const totalAmount = computed(() => {
+  let amount = 0
+  if (!boolPartyA.value) {
+    if (isNotBlank(form.list)) {
+      form.list.forEach((v) => {
+        if (isNotBlank(v.amount)) {
+          amount += +v.amount
+        }
+      })
+    }
+  }
+  return toFixed(amount, 2)
+})
 
 provide('matSpecRef', matSpecRef) // 供兄弟组件调用 删除
 
@@ -219,12 +237,14 @@ function handleOrderInfoChange(orderInfo) {
   init()
   order.value = orderInfo
   cu.props.order = orderInfo
+  boolPartyA.value = orderInfo?.supplyType === orderSupplyTypeEnum.PARTY_A.V
   orderLoaded.value = true
 }
 
 // 信息初始化
 function init() {
   orderLoaded.value = false
+  boolPartyA.value = false // 是否“甲供”
 }
 
 // 批量导入

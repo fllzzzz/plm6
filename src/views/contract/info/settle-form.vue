@@ -29,9 +29,9 @@
     </template>
     <el-form ref="formRef" :model="form" :rules="rules" size="small" label-width="150px">
       <el-form-item label="项目" prop="serialNumber">
-        <span v-if="!auditStatus" class="project-name">{{ projectNameFormatter(detailInfo) }}</span>
+        <span v-if="!auditStatus">{{ projectNameFormatter(detailInfo) }}</span>
         <template v-else>
-          <span class="project-name" v-if="detailInfo.project">{{ projectNameFormatter(detailInfo.project) }}</span>
+          <span v-if="detailInfo.project">{{ projectNameFormatter(detailInfo.project) }}</span>
         </template>
       </el-form-item>
       <el-form-item label="合同金额" prop="serialNumber">

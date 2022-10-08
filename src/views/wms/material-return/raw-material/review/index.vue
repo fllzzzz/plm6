@@ -70,6 +70,16 @@
         </template>
       </el-table-column>
       <el-table-column
+        v-if="columns.visible('boolRealReturn')"
+        key="boolRealReturn"
+        :show-overflow-tooltip="true"
+        prop="boolRealReturn"
+        label="状态"
+        align="center"
+        width="80"
+        fixed="right"
+      />
+      <el-table-column
         v-if="columns.visible('applicantName')"
         key="applicantName"
         :show-overflow-tooltip="true"
@@ -164,6 +174,7 @@ import { rawMaterialReturnReviewPM as permission } from '@/page-permission/wms'
 
 import { ref } from 'vue'
 import { reviewStatusEnum } from '@enum-ms/common'
+import { returnStatusEnum } from '@enum-ms/wms'
 import { wmsReceiptColumns } from '@/utils/columns-format/wms'
 import checkPermission from '@/utils/system/check-permission'
 
@@ -192,7 +203,7 @@ const expandRowKeys = ref([])
 const tableRef = ref()
 
 // 表格列数据格式转换
-const columnsDataFormat = ref([...wmsReceiptColumns, ['approvalComments', 'empty-text']])
+const columnsDataFormat = ref([...wmsReceiptColumns, ['approvalComments', 'empty-text'], ['boolRealReturn', ['parse-enum', returnStatusEnum]]])
 const { CRUD, crud, columns } = useCRUD(
   {
     title: '退库审核',

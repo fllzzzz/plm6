@@ -8,7 +8,7 @@ import {
   pageFormatEnum,
   amountUnitEnum
 } from '@/utils/print/enum'
-// import { projectNameArrangementModeEnum } from '@/utils/enum/modules/contract'
+import { projectNameArrangementModeEnum } from '@/utils/enum/modules/contract'
 // 入库单
 const wmsRmInboundReceipt = {
   fontUnit: 'pt', // 字体单位
@@ -407,6 +407,38 @@ const wmsRmInboundReceipt = {
         sum: true
       },
       // { show: false, key: 'purchaseNo', title: '申购单号', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 18, type: typeEnum.GUID.K },
+      {
+        show: false,
+        key: 'project',
+        title: '所属项目',
+        source: dataSourceEnum.SYSTEM.V,
+        align: alignEnum.LEFT.V,
+        minWidth: 25,
+        type: typeEnum.PROJECT.K,
+        format: {
+          showProjectFullName: false,
+          showSerialNumber: true,
+          projectNameShowConfig: projectNameArrangementModeEnum.SERIAL_NUMBER_START.V
+        }
+      },
+      {
+        show: false,
+        key: 'monomerName',
+        title: '单体',
+        source: dataSourceEnum.SYSTEM.V,
+        align: alignEnum.LEFT.V,
+        minWidth: 18,
+        type: typeEnum.MONOMER_NAME.K
+      },
+      {
+        show: false,
+        key: 'areaName',
+        title: '区域',
+        source: dataSourceEnum.SYSTEM.V,
+        align: alignEnum.LEFT.V,
+        minWidth: 18,
+        type: typeEnum.AREA_NAME.K
+      },
       {
         show: false,
         key: 'factory.name',

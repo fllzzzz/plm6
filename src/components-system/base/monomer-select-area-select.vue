@@ -24,7 +24,7 @@
     :noDataText="copyMonomerId ? '暂无数据' : '未选择单体'"
     class="filter-item"
     placeholder="请选择区域"
-    style="width: 250px"
+    style="width: 200px"
     @change="handleChange"
   />
 </template>
@@ -81,6 +81,10 @@ const props = defineProps({
     type: Boolean,
     default: false
   },
+  filterArea: {
+    type: Boolean,
+    default: true
+  },
   areaMultiple: {
     type: Boolean,
     default: false
@@ -113,7 +117,10 @@ watch(
 )
 
 const areaOptions = computed(() => {
-  return areaList.value && areaList.value.filter((v) => v.productType & proType.value)
+  if (props.filterArea) {
+    return areaList.value && areaList.value.filter((v) => v.productType & proType.value)
+  }
+  return areaList.value
 })
 
 function handleChange(val) {

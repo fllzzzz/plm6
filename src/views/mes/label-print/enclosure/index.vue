@@ -280,7 +280,7 @@ function openRecordView(row) {
   recordVisible.value = true
 }
 
-function getLabelInfo(row) {
+function getLabelInfo({ sourceRow: row }) {
   const { printConfig, spliceQrCodeUrl, QR_SCAN_PATH, requestUrl, companyName } = headRef.value
   // 标签构件信息
   const component = {
@@ -292,7 +292,7 @@ function getLabelInfo(row) {
     serialNumber: row.serialNumber,
     color: row.color,
     plate: row.plate,
-    thickness: row.thickness && row.thickness.toFixed(DP.MES_ENCLOSURE_T__MM),
+    thickness: row.thickness && row.thickness?.toFixed(DP.MES_ENCLOSURE_T__MM),
     length: row.length,
     quantity: row.quantity,
     specification: row.specification,

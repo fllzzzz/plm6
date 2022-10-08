@@ -42,6 +42,7 @@
       width="100px"
       :label="`厚 (${baseUnit.thickness.unit})`"
       :fixed="fixed"
+      :sortable="sortable"
       show-overflow-tooltip
     />
     <el-table-column
@@ -99,6 +100,10 @@ const props = defineProps({
   showThickness: {
     type: Boolean,
     default: true
+  },
+  sortable: {
+    type: [String, Boolean],
+    default: false
   }
 })
 
