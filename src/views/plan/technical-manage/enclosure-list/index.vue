@@ -402,6 +402,7 @@
 <script setup>
 import crudApi, { editStatus, uploadBendingSingle } from '@/api/plan/technical-manage/enclosure'
 import { getContractTechInfo } from '@/api/contract/project'
+import { getTechnicalType } from '@/api/config/mes/base'
 import { ref, watch, provide } from 'vue'
 import { enclosureListPM as permission } from '@/page-permission/plan'
 import checkPermission from '@/utils/system/check-permission'
@@ -427,6 +428,7 @@ const { globalProject, globalProjectId } = mapGetters(['globalProject', 'globalP
 const { showDrawing, drawingRow, drawingPreview } = useDrawing({})
 
 const plateOption = ref([])
+const technicalTypeStatus = ref(true) // 技术交底状态
 const totalTechInfo = ref({})
 const simpleDrawRef = ref()
 const typeProp = { key: 'id', label: 'plateType', value: 'id' }
@@ -434,6 +436,7 @@ const trussProp = { key: 'id', label: 'serialNumber', value: 'id' }
 const pageShow = ref(true)
 
 provide('plateOption', plateOption)
+provide('technicalTypeStatus', technicalTypeStatus)
 const drawVisible = ref(false)
 const currentRow = ref({})
 const typeOption = ref([])
@@ -601,6 +604,19 @@ watch(
   },
   { deep: true, immediate: true }
 )
+
+getTechnicalTypeStatus()
+
+// 获取技术交底配置状态
+async function getTechnicalTypeStatus() {
+  try {
+    const { technicalType = true } = await getTechnicalType()
+    technicalTypeStatus.value = technicalType
+  } catch (error) {
+    console.log('获取技术交底配置状态', error)
+    technicalTypeStatus.value = true
+  }
+}
 
 async function changeStatus(data, val) {
   try {

@@ -172,3 +172,26 @@ export function setFoldingPriceMethod(data) {
     data
   })
 }
+
+/**
+ * 获取围护配置状态
+ */
+export function getTechnicalType() {
+  return request({
+    module: 'config',
+    url: 'getTechnicalType',
+    method: 'get'
+  })
+}
+
+/**
+ * 设置围护配置状态
+ */
+export function setTechnicalType(data) {
+  return request({
+    module: 'config',
+    url: 'setTechnicalType',
+    method: 'put',
+    data
+  })
+}
