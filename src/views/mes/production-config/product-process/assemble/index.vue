@@ -12,7 +12,7 @@
       style="width: 100%"
     >
       <el-table-column label="序号" type="index" align="center" width="60" />
-      <!-- <el-table-column prop="productionLineType" align="center" :show-overflow-tooltip="true" label="生产线" width="120"> </el-table-column> -->
+      <!-- <el-table-column prop="productionLineTypeEnum" align="center" :show-overflow-tooltip="true" label="生产线" width="120"> </el-table-column> -->
       <el-table-column prop="name" align="center" :show-overflow-tooltip="true" label="部件类型">
         <template #default="{ row }">
           <span>{{ row.name }}</span>
@@ -95,7 +95,7 @@ const optShow = {
   download: false
 }
 
-const dataFormat = ref([['productionLineType', ['parse-enum', artifactProductLineEnum]]])
+const dataFormat = ref([['productionLineTypeEnum', ['parse-enum', artifactProductLineEnum]]])
 
 const tableRef = ref()
 const { crud, CRUD } = useCRUD(
@@ -113,7 +113,7 @@ const { maxHeight } = useMaxHeight({ paginate: true, extraBox: '' })
 
 // // 合并单元格
 // function spanMethod({ row, column, rowIndex, columnIndex }) {
-//   if (column.property === 'productionLineType') {
+//   if (column.property === 'productionLineTypeEnum') {
 //     return {
 //       rowspan: row.rowspan || 0,
 //       colspan: 1
@@ -134,7 +134,7 @@ CRUD.HOOK.handleRefresh = (crud, { data }) => {
   //     _v.specPrefixSequence = _v.assembleSpecList?.map((v) => `【${v.specPrefix}】`).join('') || ''
   //     _v.processSequence = _v.productProcessLinkList?.map((v) => `【${v.name}】`).join('→')
   //     _v.processSequenceIds = _v.productProcessLinkList?.map((v) => v.processId)
-  //     _dataObj[_v.productionLineType].push({ ..._v })
+  //     _dataObj[_v.productionLineTypeEnum].push({ ..._v })
   //   }
   // }
   // for (const item in _dataObj) {

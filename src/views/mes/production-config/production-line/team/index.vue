@@ -141,7 +141,7 @@ const groupId = computed(() => {
 
 const list = computed(() => cleanArray(props.modelValue.map((v) => productionTeamKV.value[v])))
 
-const productionTeamOptions = computed(() => productionTeam.value.filter((v) => props.line?.productType & v.productType))
+const productionTeamOptions = computed(() => productionTeam.value.filter((v) => props.line?.productType & v.productType && props.line?.productionLineTypeEnum & v.productionLineTypeEnum))
 
 async function submitIt() {
   try {

@@ -38,6 +38,7 @@
                   :disabled="!currentGroup.name"
                   size="mini"
                   type="enum"
+                  :unshowVal="currentLine.productType === componentTypeEnum.MACHINE_PART.V? [teamTypeEnum.INSPECTION.V] : []"
                   :options="teamTypeEnum.ENUM"
                 />
                 <el-tag v-if="currentGroup.name" size="medium" style="margin-left: 10px">{{
@@ -92,7 +93,7 @@
 <script setup>
 import { provide, ref } from 'vue'
 
-import { teamTypeEnum } from '@enum-ms/mes'
+import { teamTypeEnum, componentTypeEnum } from '@enum-ms/mes'
 import checkPermission from '@/utils/system/check-permission'
 import { configProductionLineGroupPM as permission } from '@/page-permission/config'
 

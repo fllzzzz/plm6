@@ -38,7 +38,7 @@
             工厂：<span style="margin-right: 20px">{{ row.factoryName }}</span> 车间：<span>{{ row.workshopName }}</span>
           </p>
           <template v-if="!(row.productType & (componentTypeEnum.ENCLOSURE.V | componentTypeEnum.MACHINE_PART.V))">
-            <p v-if="row.boolMachineEnum && row.productType & componentTypeEnum.ARTIFACT.V">
+            <p v-if="row.productionLineTypeEnum === 2 && row.productType & componentTypeEnum.ARTIFACT.V">
               产品标识：<span>{{ row.typeSequence }}</span>
             </p>
             <p v-else>
@@ -92,15 +92,15 @@
         </template>
       </el-table-column>
       <el-table-column
-        v-if="columns.visible('boolMachineEnum')"
-        prop="boolMachineEnum"
+        v-if="columns.visible('productionLineTypeEnum')"
+        prop="productionLineTypeEnum"
         :show-overflow-tooltip="true"
-        label="智能线"
+        label="生产线类型"
         align="center"
         width="100px"
       >
         <template v-slot="{ row }">
-          <span>{{ row.boolMachineEnum }}</span>
+          <span>{{ artifactProductLineEnum.VL[row.productionLineTypeEnum] }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -193,8 +193,7 @@ import crudApi, { editStatus } from '@/api/mes/production-config/production-line
 import { ref, defineEmits, inject } from 'vue'
 import { useStore } from 'vuex'
 import { enabledEnum } from '@enum-ms/common'
-import { componentTypeEnum } from '@enum-ms/mes'
-import { whetherEnum } from '@enum-ms/common'
+import { componentTypeEnum, artifactProductLineEnum } from '@enum-ms/mes'
 import checkPermission from '@/utils/system/check-permission'
 import { configProductionLinePM as permission } from '@/page-permission/config'
 
@@ -231,7 +230,6 @@ const { crud, columns, CRUD } = useCRUD(
 // 展开keys
 const expandRowKeys = ref([])
 const dataFormat = ref([
-  ['boolMachineEnum', ['parse-enum', whetherEnum]],
   ['targetProductionShow', ['to-fixed', 2]]
 ])
 

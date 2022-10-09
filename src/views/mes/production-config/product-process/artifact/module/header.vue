@@ -1,7 +1,7 @@
 <template>
   <div v-show="crud.searchToggle">
     <common-radio-button
-      v-model="query.productionLineType"
+      v-model="query.productionLineTypeEnum"
       :options="artifactProductLineEnum.ENUM"
       show-option-all
       type="enum"

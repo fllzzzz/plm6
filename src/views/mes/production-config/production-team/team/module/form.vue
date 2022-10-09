@@ -10,7 +10,7 @@
     <template #titleRight>
       <common-button :loading="crud.status.cu === 2" type="primary" size="mini" @click="crud.submitCU">确认</common-button>
     </template>
-    <el-form ref="formRef" :model="form" :rules="rules" size="small" label-width="90px">
+    <el-form ref="formRef" :model="form" :rules="rules" size="small" label-width="100px">
       <el-form-item label="工厂" prop="factoryId">
         <factory-select :disabled="isEdit" v-model="form.factoryId" placeholder="请选择工厂" style="width: 270px" />
       </el-form-item>
@@ -26,11 +26,16 @@
           @change="processChange"
         />
       </el-form-item>
-      <el-form-item label="班组属性" prop="organizationType">
+      <el-form-item v-if="componentTypeEnum.ARTIFACT.V === productType" label="生产线类型" prop="productionLineTypeEnum">
+        <el-select v-model="form.productionLineTypeEnum" placeholder="请选择生产线类型" :size="'small'" style="width: 270px" :disabled="isEdit">
+          <el-option v-for="item in artifactProductLineEnum.ENUM" :key="item.V" :label="item.L" :value="item.V" />
+        </el-select>
+      </el-form-item>
+      <!-- <el-form-item label="班组属性" prop="organizationType">
         <el-select v-model="form.organizationType" placeholder="请选择班组属性" :size="'small'" style="width: 270px" :disabled="isEdit">
           <el-option v-for="item in teamAttributeEnum.ENUM" :key="item.V" :label="item.L" :value="item.V" />
         </el-select>
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item label="组长" prop="leaderId">
         <user-select
           ref="leaderSelectRef"
@@ -57,9 +62,9 @@
       <!-- <el-form-item label="工资单列" prop="boolExtraCountEnum">
         <common-radio v-model="form.boolExtraCountEnum" :options="whetherEnum.ENUM" type="enum" />
       </el-form-item> -->
-      <el-form-item label="计价方式" prop="wageQuotaType" v-if="showWageQuotaTypeEnum?.length">
+      <!-- <el-form-item label="计价方式" prop="wageQuotaType" v-if="showWageQuotaTypeEnum?.length">
         <common-select v-model="form.wageQuotaType" :options="showWageQuotaTypeEnum" type="enum" style="width: 270px" />
-      </el-form-item>
+      </el-form-item> -->
     </el-form>
   </common-dialog>
 </template>
@@ -70,10 +75,10 @@ import { regForm } from '@compos/use-crud'
 import factorySelect from '@comp-base/factory-select.vue'
 import processSelect from '@comp-mes/process-select'
 import userSelect from '@comp-common/user-select'
-import { wageQuotaTypeMap } from '@/settings/config'
+// import { wageQuotaTypeMap } from '@/settings/config'
 // import { whetherEnum } from '@enum-ms/common'
-import { teamAttributeEnum, wageQuotaTypeEnum } from '@enum-ms/mes'
-import EO from '@enum'
+import { teamAttributeEnum, artifactProductLineEnum, componentTypeEnum } from '@enum-ms/mes'
+// import EO from '@enum'
 
 const formRef = ref()
 const processSelectRef = ref()
@@ -85,7 +90,8 @@ const defaultForm = {
   id: undefined,
   processId: undefined,
   leaderId: undefined,
-  organizationType: undefined,
+  organizationType: teamAttributeEnum.IN_STAFF.V,
+  productionLineTypeEnum: artifactProductLineEnum.TRADITION.V,
   // boolExtraCountEnum: false,
   memberIds: []
 }
@@ -96,17 +102,18 @@ const isEdit = computed(() => crud.status.edit >= 1)
 const rules = {
   factoryId: [{ required: true, message: '请选择工厂', trigger: 'change' }],
   processId: [{ required: true, message: '请选择工序', trigger: 'change' }],
-  organizationType: [{ required: true, message: '请选择班组属性', trigger: 'change' }],
+  // organizationType: [{ required: true, message: '请选择班组属性', trigger: 'change' }],
+  productionLineTypeEnum: [{ required: true, message: '请选择生产线类型', trigger: 'change' }],
   leaderId: [{ required: true, message: '请选择组长', trigger: 'change' }],
-  memberIds: [{ required: true, message: '请选择组员', trigger: 'change' }],
+  memberIds: [{ required: true, message: '请选择组员', trigger: 'change' }]
   // boolExtraCountEnum: [{ required: true, message: '请选择工资是否单列', trigger: 'change', type: 'boolean' }],
-  wageQuotaType: [{ required: true, message: '请选择计价方式', trigger: 'change' }]
+  // wageQuotaType: [{ required: true, message: '请选择计价方式', trigger: 'change' }]
 }
 
-const showWageQuotaTypeEnum = computed(() => {
-  const _type = wageQuotaTypeMap[productType.value]
-  return _type && EO.getBits(wageQuotaTypeEnum, _type)
-})
+// const showWageQuotaTypeEnum = computed(() => {
+//   const _type = wageQuotaTypeMap[productType.value]
+//   return _type && EO.getBits(wageQuotaTypeEnum, _type)
+// })
 
 function processChange(val) {
   productType.value = processSelectRef.value?.getOption(val)?.productType
