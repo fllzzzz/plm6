@@ -132,7 +132,7 @@
             <common-button type="danger" size="mini" class="filter-item">一键清空(按区域)</common-button>
           </template>
         </el-popconfirm>
-        <el-tag type="success" effect="plain" class="filter-item" v-if="sumData.totalLength" style="margin-left: 10px !important">
+        <el-tag type="success" size="medium" effect="plain" class="filter-item" v-if="sumData.totalLength">
           <span>{{ `总长度:${sumData.totalLength.toFixed(DP.MES_ENCLOSURE_L__M)}m` }}</span>
           <span>{{ ` | 总数量:${sumData.totalQuantity}张` }}</span>
         </el-tag>
@@ -143,7 +143,7 @@
           size="mini"
           @click="techVisible = true"
           v-if="query.category !== TechnologyTypeAllEnum.BENDING.V && checkPermission(crud.permission.techDetail)"
-          >技术交底</common-button
+          >技术交底配置（已{{ enabledEnum.V?.[technicalTypeStatus]?.L }}）</common-button
         >
         <zip-upload-btn
           ref="changeFileRef"
@@ -180,7 +180,7 @@
 
 <script setup>
 import { uploadBendingZip } from '@/api/plan/technical-manage/enclosure'
-import { defineProps, ref, computed, defineEmits, watch } from 'vue'
+import { defineProps, ref, computed, defineEmits, watch, inject } from 'vue'
 import { regHeader } from '@compos/use-crud'
 import rrOperation from '@crud/RR.operation'
 import crudOperation from '@crud/CRUD.operation'
@@ -188,6 +188,7 @@ import monomerSelect from '@/components-system/plan/monomer-select'
 import areaTabs from '@/components-system/plan/area-tabs'
 import { enclosureCreateTypeEnum } from '@enum-ms/plan'
 import { TechnologyTypeAllEnum } from '@enum-ms/contract'
+import { enabledEnum } from '@enum-ms/common'
 import uploadBtn from '@comp/file-upload/ExcelUploadBtn'
 import { listUpload } from '@/api/plan/technical-manage/enclosure'
 import ExportButton from '@comp-common/export-button/index.vue'
@@ -242,6 +243,7 @@ const props = defineProps({
 const typeProp = { key: 'no', label: 'name', value: 'no' }
 const AllAreaInfo = ref([])
 const sumData = ref({})
+const technicalTypeStatus = inject('technicalTypeStatus') // 技术交底状态
 
 const currentView = computed(() => {
   switch (crud.query.category) {
