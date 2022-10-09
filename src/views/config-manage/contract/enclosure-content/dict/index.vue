@@ -2,6 +2,20 @@
   <el-card class="line-box box-card">
     <template v-slot:header>
       <span style="line-height: 28px">{{ crud.title }}列表</span>
+      <span v-if="checkPermission(permission.get)" style="float: right;">
+        <el-tag size="medium" style="margin-right: 10px">是否关联技术交底</el-tag>
+        <el-switch
+          v-model="technicalTypeStatus"
+          :disabled="!checkPermission(permission.editStatus)"
+          active-color="#409EFF"
+          inactive-color="#F56C6C"
+          :active-value="enabledEnum.TRUE.V"
+          :inactive-value="enabledEnum.FALSE.V"
+          :active-text="enabledEnum.TRUE.L"
+          :inactive-text="enabledEnum.FALSE.L"
+          @change="changeTechnicalTypeStatus(technicalTypeStatus)"
+        />
+      </span>
     </template>
     <mHeader @type-change="handleCurrentChange" :selectArr="selectArr"/>
     <!--表格渲染-->
@@ -11,7 +25,7 @@
       highlight-current-row
       :data="crud.data"
       :empty-text="crud.emptyText"
-      :max-height="600"
+      :max-height="maxHeight"
       style="width: 100%;margin-top:10px;"
       @current-change="handleCurrentChange"
       v-if="crud.query.type!=TechnologyTypeEnum.TRUSS_FLOOR_PLATE.V"
@@ -78,9 +92,11 @@
 
 <script setup>
 import crudApi, { editStatus } from '@/api/contract/enclosure-config/enclosure'
+import { getTechnicalType, setTechnicalType } from '@/api/config/mes/base'
 import { ref, defineEmits } from 'vue'
 import { enclosureInfoConfigPM as permission } from '@/page-permission/config'
 import checkPermission from '@/utils/system/check-permission'
+import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import mHeader from './module/header'
 import mForm from './module/form'
@@ -100,6 +116,7 @@ const optShow = {
 const tableRef = ref()
 const multipleTable = ref()
 const selectArr = ref([])
+const technicalTypeStatus = ref(true) // 技术交底状态
 const { crud, columns, CRUD } = useCRUD(
   {
     title: '围护配置',
@@ -112,6 +129,38 @@ const { crud, columns, CRUD } = useCRUD(
   tableRef,
   multipleTable
 )
+
+const { maxHeight } = useMaxHeight({
+  extraHeight: 160
+})
+
+getTechnicalTypeStatus()
+
+// 获取技术交底配置状态
+async function getTechnicalTypeStatus() {
+  try {
+    const { technicalType = true } = await getTechnicalType()
+    technicalTypeStatus.value = technicalType
+  } catch (error) {
+    console.log('获取技术交底配置状态', error)
+    technicalTypeStatus.value = true
+  }
+}
+
+async function changeTechnicalTypeStatus(val) {
+  try {
+    await ElMessageBox.confirm('此操作将 "' + enabledEnum.VL[val] + '" ' + '技术交底配置, 是否继续？', '提示', {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning'
+    })
+    await setTechnicalType({ technicalType: val })
+    crud.notify('技术交底配置' + enabledEnum.VL[val] + '成功', CRUD.NOTIFICATION_TYPE.SUCCESS)
+  } catch (error) {
+    console.log('变更技术交底配置状态', error)
+    technicalTypeStatus.value = !technicalTypeStatus.value
+  }
+}
 
 async function changeStatus(data, val) {
   try {
