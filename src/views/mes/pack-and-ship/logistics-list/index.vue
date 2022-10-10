@@ -10,9 +10,7 @@
       style="width: 100%"
       :max-height="maxHeight"
       @sort-change="crud.handleSortChange"
-      @selection-change="crud.selectionChangeHandler"
     >
-      <el-table-column type="selection" width="50" align="center" />
       <el-table-column label="序号" align="center" width="50">
          <template v-slot="scope">
           <span>{{scope.$index+1}}</span>
