@@ -57,7 +57,7 @@
           <!-- 单位及其数量 -->
           <material-unit-quantity-columns :basic-class="form.basicClass" />
           <!-- 仓库信息 -->
-          <warehouse-info-columns show-project />
+          <warehouse-info-columns show-project show-monomer show-area />
         </common-table>
         <el-input
           class="approval-comments"

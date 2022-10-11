@@ -1,7 +1,6 @@
 import { validatorPhone } from '@/utils/validate/pattern'
 import configRouter from '@/router/modules/config'
 import mesRouter from '@/router/modules/mes'
-import projectRouter from '@/router/modules/project'
 import wmsRouter from '@/router/modules/wms'
 import planRouter from '@/router/modules/plan'
 import contractRouter from '@/router/modules/contract'
@@ -144,10 +143,8 @@ const userMenu = {
       message: '成功',
       data: [
         configRouter,
-        projectRouter,
         wmsRouter,
         mesRouter,
-        projectRouter,
         planRouter,
         contractRouter,
         supplyChainRouter,

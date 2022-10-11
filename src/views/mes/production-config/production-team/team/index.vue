@@ -34,7 +34,7 @@
           <span>{{ row.processName }}</span>
         </template>
       </el-table-column>
-      <el-table-column
+      <!-- <el-table-column
         v-if="columns.visible('wageQuotaType')"
         key="wageQuotaType"
         prop="wageQuotaType"
@@ -45,8 +45,8 @@
         <template #default="{ row }">
           <span>{{ row.wageQuotaType }}</span>
         </template>
-      </el-table-column>
-      <el-table-column
+      </el-table-column> -->
+      <!-- <el-table-column
         v-if="columns.visible('organizationType')"
         key="organizationType"
         prop="organizationType"
@@ -56,6 +56,17 @@
       >
         <template v-slot="scope">
           {{ teamAttributeEnum.VL[scope.row.organizationType] }}
+        </template>
+      </el-table-column> -->
+      <el-table-column
+        v-if="columns.visible('productionLineTypeEnum')"
+        key="productionLineTypeEnum"
+        prop="productionLineTypeEnum"
+        label="生产线类型"
+        width="100px"
+      >
+        <template v-slot="scope">
+          {{ artifactProductLineEnum.VL[scope.row.productionLineTypeEnum] }}
         </template>
       </el-table-column>
       <!-- <el-table-column
@@ -102,7 +113,7 @@
 import crudApi from '@/api/mes/production-config/production-line-team'
 import { defineExpose, ref } from 'vue'
 import { useStore } from 'vuex'
-import { teamAttributeEnum, wageQuotaTypeEnum } from '@enum-ms/mes'
+import { artifactProductLineEnum, wageQuotaTypeEnum } from '@enum-ms/mes'
 // import { whetherEnum } from '@enum-ms/common'
 import checkPermission from '@/utils/system/check-permission'
 import { configProductionLineTeamPM as permission } from '@/page-permission/config'

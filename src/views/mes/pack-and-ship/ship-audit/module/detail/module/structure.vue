@@ -4,6 +4,7 @@
     <el-table-column :show-overflow-tooltip="true" prop="name" label="名称" />
     <!-- <el-table-column :show-overflow-tooltip="true" prop="monomer.name" label="单体" /> -->
     <el-table-column :show-overflow-tooltip="true" prop="serialNumber" label="编号" />
+    <el-table-column :show-overflow-tooltip="true" prop="specification" label="规格" min-width="120" />
     <!-- <el-table-column :show-overflow-tooltip="true" prop="specification" label="规格" /> -->
     <!-- <el-table-column :show-overflow-tooltip="true" prop="material" label="材质" align="center" /> -->
     <el-table-column :show-overflow-tooltip="true" prop="length" :label="`长度\n(mm)`" align="center">

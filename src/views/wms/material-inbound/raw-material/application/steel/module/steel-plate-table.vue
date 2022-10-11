@@ -121,10 +121,15 @@
             size="mini"
             placeholder="重量"
             :class="{ 'over-weight-tip': row.hasOver }"
+            @change="handleWeightChange(row)"
           />
         </el-tooltip>
       </template>
     </el-table-column>
+
+    <!-- 金额设置 -->
+    <price-set-columns v-if="!props.boolPartyA" />
+
     <el-table-column prop="brand" label="品牌" align="center" min-width="100px">
       <template #default="{ row }">
         <el-input v-model.trim="row.brand" maxlength="60" size="mini" placeholder="品牌" />
@@ -144,9 +149,9 @@
 </template>
 
 <script setup>
-import { defineEmits, defineExpose, ref, inject, watchEffect, reactive, watch } from 'vue'
+import { defineEmits, defineProps, computed, defineExpose, ref, inject, watchEffect, reactive, watch } from 'vue'
 import { matClsEnum } from '@/utils/enum/modules/classification'
-import { isBlank, isNotBlank } from '@/utils/data-type'
+import { isBlank, isNotBlank, toPrecision } from '@/utils/data-type'
 
 import { regExtra } from '@/composables/form/use-form'
 import useTableValidate from '@compos/form/use-table-validate'
@@ -157,7 +162,16 @@ import { createUniqueString } from '@/utils/data-type/string'
 import { calcSteelPlateWeight } from '@/utils/wms/measurement-calc'
 import { positiveNumPattern } from '@/utils/validate/pattern'
 
+import priceSetColumns from '@/views/wms/material-inbound/raw-material/components/price-set-columns.vue'
+
 const emit = defineEmits(['calc-weight'])
+
+const props = defineProps({
+  boolPartyA: {
+    type: Boolean,
+    default: false
+  }
+})
 
 // 当前物料基础类型
 const basicClass = matClsEnum.STEEL_PLATE.V
@@ -169,7 +183,7 @@ const expandRowKeys = ref([]) // 展开行key
 
 const { overDiffTip, weightOverDiff, diffSubmitValidate } = useWeightOverDiff(baseUnit) // 过磅重量超出理论重量处理
 
-const tableRules = {
+const rules = {
   classifyId: [{ required: true, message: '请选择物料种类', trigger: 'change' }],
   width: [
     { required: true, message: '请填写宽度', trigger: 'blur' },
@@ -193,6 +207,31 @@ const tableRules = {
     { pattern: positiveNumPattern, message: '数量必须大于0', trigger: 'blur' }
   ]
 }
+
+// 金额校验
+const validateAmount = (value, row) => {
+  if (isNotBlank(row.weighingTotalWeight) && isNotBlank(row.unitPrice)) {
+    return +(row.weighingTotalWeight * row.unitPrice).toFixed(2) === +value
+  }
+  return false
+}
+
+// 甲供不需要填写价格
+const amountRules = {
+  unitPrice: [{ required: true, message: '请填写单价', trigger: 'blur' }],
+  amount: [
+    { required: true, message: '请填写金额', trigger: 'blur' },
+    { validator: validateAmount, message: '金额有误，请手动修改', trigger: 'blur' }
+  ]
+}
+
+const tableRules = computed(() => {
+  let _rules = Object.assign({}, rules)
+  if (!props.boolPartyA) {
+    _rules = Object.assign(_rules, amountRules)
+  }
+  return _rules
+})
 
 const { tableValidate, wrongCellMask } = useTableValidate({ rules: tableRules, errorMsg: '请修正【钢板清单】中标红的信息' }) // 表格校验
 
@@ -222,6 +261,12 @@ function rowInit(row) {
     theoryTotalWeight: undefined, // 理论总重量
     weighingTotalWeight: undefined // 过磅重量
   })
+
+  // 非甲供
+  if (!props.boolPartyA) {
+    _row.unitPrice = undefined // 含税单价
+    _row.amount = undefined // 金额
+  }
   rowWatch(_row)
   return _row
 }
@@ -241,8 +286,8 @@ function rowWatch(row) {
     () => row.weighingTotalWeight,
     () => {
       emit('calc-weight')
-    },
-    { immediate: true }
+      handleWeightChange(row)
+    }
   )
 }
 
@@ -263,10 +308,17 @@ async function calcTheoryWeight(row) {
 function calcTotalWeight(row) {
   if (isNotBlank(row.theoryWeight) && row.quantity) {
     row.theoryTotalWeight = row.theoryWeight * row.quantity
-    row.weighingTotalWeight = row.theoryWeight * row.quantity
+    row.weighingTotalWeight = toPrecision(row.theoryWeight * row.quantity)
   } else {
     row.theoryTotalWeight = undefined
     row.weighingTotalWeight = undefined
+  }
+}
+
+// 处理重量变化
+function handleWeightChange(row) {
+  if (isNotBlank(row.unitPrice) && isNotBlank(row.weighingTotalWeight)) {
+    row.amount = toPrecision(row.weighingTotalWeight * row.unitPrice, 2)
   }
 }
 

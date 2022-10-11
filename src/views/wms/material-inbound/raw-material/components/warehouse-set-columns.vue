@@ -18,7 +18,7 @@
         v-model="row.warehouseId"
         :factory-id="getFactoryVal($index)"
         :basic-class="row.basicClass"
-        :show-extra="!warehouseDittoableIndex.includes($index)"
+        :show-extra="(formList[$index - 1] && formList[$index]?.basicClass ===  formList[$index - 1]?.basicClass) && !warehouseDittoableIndex.includes($index)"
         placeholder="存储位置"
       />
     </template>
@@ -26,7 +26,7 @@
 </template>
 
 <script setup>
-import { defineProps, computed, watchEffect, ref } from 'vue'
+import { defineProps, computed, watchEffect, ref, nextTick } from 'vue'
 
 import factorySelect from '@/components-system/base/factory-select.vue'
 import warehouseSelect from '@/components-system/wms/warehouse-select.vue'
@@ -58,14 +58,20 @@ const warehouseDittoableIndex = computed(() => {
   return getFactoryNotDittoArr()
 })
 
-watchEffect(() => initFactoryScopeList(currentForm.value.list || []))
+const formList = computed(() => {
+  return currentForm.value.list || []
+})
+
+watchEffect(() => initFactoryScopeList(formList.value))
 
 function handleFactoryChange(val, index, row) {
   handleFactoryChangeForValue(val, index)
   if (val !== -1) {
     row.warehouseId = undefined
   } else {
-    if (isBlank(row.warehouseId)) row.warehouseId = -1
+    nextTick(() => {
+      if (isBlank(row.warehouseId)) row.warehouseId = -1
+    })
   }
 }
 </script>

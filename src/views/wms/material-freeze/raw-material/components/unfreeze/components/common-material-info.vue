@@ -19,9 +19,17 @@
     <span v-empty="{ val: material.brand }" />
   </el-form-item>
   <slot name="afterBrand" />
-  <el-form-item v-if="material.project" label="项目">
-    <span v-parse-project="{ project: material.project, onlyShortName: true }" v-empty-text />
-  </el-form-item>
+  <template v-if="material.project">
+    <el-form-item label="项目">
+      <span v-parse-project="{ project: material.project, onlyShortName: true }" v-empty-text />
+    </el-form-item>
+    <el-form-item label="单体">
+      <span v-empty="{ val: material.monomerName }" />
+    </el-form-item>
+    <el-form-item label="区域">
+      <span v-empty="{ val: material.areaName }" />
+    </el-form-item>
+  </template>
   <el-form-item label="仓库">
     <span v-empty="{ val: warehouseName }" />
   </el-form-item>

@@ -20,6 +20,11 @@
               <span>{{ detail.name || '-' }}</span>
             </div>
           </el-form-item>
+          <el-form-item label="订单来源" prop="orderSourceType">
+            <div class="input-underline">
+              <span>{{ detail.orderSourceType? orderSourceTypeEnum.VL[detail.orderSourceType]: '-' }}</span>
+            </div>
+          </el-form-item>
         </div>
         <div>
           <el-form-item label="开工时间" prop="startDate">
@@ -41,7 +46,7 @@
           </el-form-item>
           <el-form-item label="总工期(天)" prop="totalDuration">
             <div class="input-underline">
-              <span>{{ detail.startDate && detail.endDate? dateDifferenceReduce(detail.startDate, detail.endDate): '-' }}</span>
+              <span>{{ detail.startDate && detail.endDate? dateDifference(detail.startDate, detail.endDate): '-' }}</span>
             </div>
           </el-form-item>
         </div>
@@ -118,15 +123,18 @@
 
 <script setup>
 import { ref, defineProps } from 'vue'
-import { dateDifferenceReduce } from '@/utils/date'
+
+import { dateDifference } from '@/utils/date'
 import useDict from '@compos/store/use-dict'
 import { fileClassifyEnum } from '@enum-ms/file'
-import uploadList from '@comp/file-upload/UploadList.vue'
+import { orderSourceTypeEnum } from '@enum-ms/contract'
 import { DP } from '@/settings/config'
 import { downloadBaseAttachments } from '@/api/contract/project'
 import { parseTime } from '@/utils/date'
 import { toThousand } from '@data-type/number'
 import { digitUppercase } from '@/utils/data-type/number'
+
+import uploadList from '@comp/file-upload/UploadList.vue'
 
 const formRef = ref()
 const dict = useDict(['margin_type', 'currency_type'])

@@ -38,7 +38,7 @@
           <!-- 单位及其数量 -->
           <material-unit-quantity-columns :basic-class="material.basicClass" />
           <!-- 仓库位置信息 -->
-          <warehouse-info-columns show-project />
+        <warehouse-info-columns show-project show-monomer show-area />
         </common-table>
       </div>
       <el-divider class="divider"><span class="title">匹配物料</span></el-divider>
@@ -63,7 +63,7 @@
           <!-- 单位及其数量 -->
           <material-unit-operate-quantity-columns :basic-class="material.basicClass" reject-type-mode />
           <!-- 仓库位置信息 -->
-          <warehouse-info-columns show-project />
+          <warehouse-info-columns show-project show-monomer show-area />
           <el-table-column label="退货数量" width="170px" align="center" fixed="right">
             <template #default="{ row: { sourceRow: row } }">
               <span class="flex-rbc">

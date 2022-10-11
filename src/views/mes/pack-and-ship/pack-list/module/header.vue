@@ -215,6 +215,7 @@ async function getLabelInfo(row) {
     serialNumber: row.serialNumber,
     list: _list,
     productType: row.productType,
+    project: row.project,
     companyName: printConfig.manufacturerName
   }
   // 生产线信息

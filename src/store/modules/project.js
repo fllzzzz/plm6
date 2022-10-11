@@ -1,10 +1,10 @@
-import { getUserProjects, getUserVisaProjects } from '@/api/contract/project'
+import { getUserProjects, getUserVisaProjects, getProjectTree } from '@/api/contract/project'
 import { addRoutes, resetRouter } from '@/router'
 import EO from '@enum'
-import { projectTypeEnum, projectStatusEnum, TechnologyTypeAllEnum } from '@enum-ms/contract'
+import { projectTypeEnum, projectStatusEnum, TechnologyTypeAllEnum, businessTypeEnum } from '@enum-ms/contract'
 import storage from '@/utils/storage'
 import { projectsToCascade, projectNameFormatter } from '@/utils/project'
-import { isNotBlank, isBlank, deepClone } from '@data-type/index'
+import { isNotBlank, isBlank } from '@data-type/index'
 import { allPT } from '@/settings/config'
 
 const projectTypeEnumArr = EO.toArr(projectTypeEnum)
@@ -18,6 +18,7 @@ const state = {
   curProContentBit: storage.get('curProContentBit'),
   // 当前路由项目类型
   routeProjectType: storage.get('routeProjectType'),
+  routeBusinessType: storage.get('routeBusinessType'),
   // 当前项目类型
   projectType: storage.get('projectType') || allPT,
   // 用户项目列表(当前项目类型的项目列表)
@@ -32,8 +33,20 @@ const state = {
   userProjectsMap: {},
   // 用户项目级联列表Map（key:项目类型,val:项目级联列表）
   userProjectsCascadeMap: {},
+  userBusinessTypeProjectMap: {},
+  userBusinessTypeProjectsCascadeMap: {},
   // 加载状态
   loaded: false,
+  // 项目树状态
+  projectTreeLoaded: false,
+  // 项目树（所有项目）
+  projectTree: [],
+  // 项目map（key:id,val:详情）
+  projectMap: {},
+  // 单体map（key:id,val:详情）
+  monomerMap: {},
+  // 区域map（key:id,val:详情）
+  areaMap: {},
   // 用户可签证的项目列表
   userVisaProjects: [],
   // 可签证项目加载状态
@@ -49,6 +62,9 @@ const mutations = {
   },
   SET_VISA_LOADED(state, loaded) {
     state.visaLoaded = loaded
+  },
+  SET_PROJECT_TREE_LOADED(state, loaded) {
+    state.projectTreeLoaded = loaded
   },
   SET_PROJECT_ID: (state, id) => {
     state.id = id
@@ -100,10 +116,32 @@ const mutations = {
   SET_USER_VISA_PROJECTS: (state, projects) => {
     state.userVisaProjects = projects
   },
+  SET_PROJECT_TREE: (state, tree) => {
+    state.projectTree = tree
+  },
+  SET_PROJECT_MAP: (state, map) => {
+    state.projectMap = map
+  },
+  SET_MONOMER_MAP: (state, map) => {
+    state.monomerMap = map
+  },
+  SET_AREA_MAP: (state, map) => {
+    state.areaMap = map
+  },
   // 设置showAll
   SET_NAVBAR_SHOW_ALL: (state, showAll) => {
     state.navbarShowAll = showAll
     storage.set('navbarShowAll', showAll)
+  },
+  SET_USER_BUSINESS_PROJECTS_MAP: (state, map) => {
+    state.userBusinessTypeProjectMap = map
+  },
+  SET_USER_BUSINESS_PROJECTS_CASCADE_MAP: (state, map) => {
+    state.userBusinessTypeProjectsCascadeMap = map
+  },
+  SET_ROUTE_BUSINESS_TYPE: (state, type) => {
+    state.routeBusinessType = type
+    storage.set('routeBusinessType', type)
   }
 }
 
@@ -116,22 +154,36 @@ const actions = {
   // },
   setRouteProjectByMeta({ commit }, meta) {
     const _projectType = meta && isNotBlank(meta.projectType) ? meta.projectType : undefined
+    const businessType = meta && isNotBlank(meta.businessType) ? meta.businessType : undefined
     commit('SET_ROUTE_PROJECT_TYPE', _projectType)
+    commit('SET_ROUTE_BUSINESS_TYPE', businessType)
   },
   async fetchUserProjects({ dispatch, commit, state }) {
     commit('SET_LOADED', false)
     const { content: projects = [] } = await getUserProjects()
     const projectsMap = {}
     const projectsCascadeMap = {}
+    const businessTypeProjectMap = {}
+    const businessTypeProjectsCascadeMap = {}
 
     projectTypeEnumArr && projectTypeEnumArr.forEach(type => {
-      projectsMap[type.V] = deepClone(projects).filter(p => p.projectType === type.V) || []
+      projectsMap[type.V] = projects.filter(p => p.projectType === type.V) || []
       projectsCascadeMap[type.V] = projectsToCascade(projectsMap[type.V]) || []
+      businessTypeProjectMap[businessTypeEnum.MACHINING.V + '_' + type.V] = projects.filter(p => (p.projectType === type.V && p.businessType === businessTypeEnum.MACHINING.V && p.status === projectStatusEnum.PROCESS.V)) || []
+      businessTypeProjectMap[businessTypeEnum.INSTALLATION.V + '_' + type.V] = projects.filter(p => (p.projectType === type.V && p.businessType === businessTypeEnum.INSTALLATION.V && p.status === projectStatusEnum.PROCESS.V)) || []
+      businessTypeProjectsCascadeMap[businessTypeEnum.MACHINING.V + '_' + type.V] = projectsToCascade(businessTypeProjectMap[businessTypeEnum.MACHINING.V + '_' + type.V]) || []
+      businessTypeProjectsCascadeMap[businessTypeEnum.INSTALLATION.V + '_' + type.V] = projectsToCascade(businessTypeProjectMap[businessTypeEnum.INSTALLATION.V + '_' + type.V]) || []
     })
     projectsMap[allPT] = projects || []
+    businessTypeProjectMap[businessTypeEnum.MACHINING.V + '_' + allPT] = projects.filter(p => p.businessType === businessTypeEnum.MACHINING.V && p.status === projectStatusEnum.PROCESS.V) || []
+    businessTypeProjectMap[businessTypeEnum.INSTALLATION.V + '_' + allPT] = projects.filter(p => p.businessType === businessTypeEnum.INSTALLATION.V && p.status === projectStatusEnum.PROCESS.V) || []
     projectsCascadeMap[allPT] = projectsToCascade(projects) || []
+    businessTypeProjectsCascadeMap[businessTypeEnum.MACHINING.V + '_' + allPT] = projectsToCascade(businessTypeProjectMap[businessTypeEnum.MACHINING.V + '_' + allPT]) || []
+    businessTypeProjectsCascadeMap[businessTypeEnum.INSTALLATION.V + '_' + allPT] = projectsToCascade(businessTypeProjectMap[businessTypeEnum.INSTALLATION.V + '_' + allPT]) || []
     commit('SET_USER_PROJECTS_MAP', projectsMap)
     commit('SET_USER_PROJECTS_CASCADE_MAP', projectsCascadeMap)
+    commit('SET_USER_BUSINESS_PROJECTS_MAP', businessTypeProjectMap)
+    commit('SET_USER_BUSINESS_PROJECTS_CASCADE_MAP', businessTypeProjectsCascadeMap)
     // 根据项目类型选择项目级联
     dispatch('changeProjectType', state.projectType)
   },
@@ -159,14 +211,36 @@ const actions = {
     })
   },
   // 获取可签证项目
-  async fetchUserVisaProjects({ commit, state }, params) {
+  async fetchUserVisaProjects({ commit, state }) {
     commit('SET_VISA_LOADED', false)
-    const { content: projects = [] } = await getUserVisaProjects(params)
+    const { content: projects = [] } = await getUserVisaProjects()
     projects.forEach(p => {
       p.fullName = projectNameFormatter(p, null, false)
     })
     commit('SET_USER_VISA_PROJECTS', projects)
     commit('SET_VISA_LOADED', true)
+  },
+  // 获取项目树
+  async fetchProjectTree({ commit, state }, params) {
+    commit('SET_PROJECT_TREE_LOADED', false)
+    const { content: tree = [] } = await getProjectTree(params)
+    const projectMap = {}
+    const monomerMap = {}
+    const areaMap = {}
+    tree?.forEach(project => {
+      projectMap[project.id] = project
+      project?.children?.forEach(monomer => {
+        monomerMap[monomer.id] = monomer
+        monomer?.children?.forEach(area => {
+          areaMap[area.id] = area
+        })
+      })
+    })
+    commit('SET_PROJECT_TREE', tree)
+    commit('SET_PROJECT_MAP', projectMap)
+    commit('SET_MONOMER_MAP', monomerMap)
+    commit('SET_AREA_MAP', areaMap)
+    commit('SET_PROJECT_TREE_LOADED', true)
   }
 }
 

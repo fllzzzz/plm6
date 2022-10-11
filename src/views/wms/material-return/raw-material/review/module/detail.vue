@@ -49,7 +49,7 @@
         <!-- 单位及其数量 -->
         <material-unit-quantity-columns :basic-class="detail.basicClass" />
         <!-- 仓库信息 -->
-        <warehouse-info-columns show-project />
+        <warehouse-info-columns show-project show-monomer show-area />
       </common-table>
     </template>
   </common-drawer>

@@ -116,6 +116,9 @@ const props = defineProps({
   basicClass: {
     type: Number
   },
+  validate: {
+    type: Function
+  },
   currentBasicClass: {
     type: Number
   },
@@ -296,6 +299,7 @@ function handleExcelSuccess(list) {
   // 根据物料种类获取
   try {
     cu.props.import(list)
+    props.validate()
   } catch (error) {
     ElMessage.error({ message: error.message, duration: 5000 })
   }

@@ -17,7 +17,7 @@
         :key="item.id"
         :label="item.name"
         :value="item.id"
-        :disabled="disabledValue ? disabledValue.indexOf(item.id) > -1 : false"
+        :disabled="disabledValue ? (disabledValue.indexOf(item.id) > -1 || disabledProductType.indexOf(item.productType) > -1) : false"
       />
     </el-option-group>
   </el-select>
@@ -37,7 +37,7 @@ const props = defineProps({
   // 查询指定工序次序，不传查所有
   productType: {
     // Value
-    type: [Number, Boolean],
+    type: [Number, Boolean, Array],
     default: undefined
   },
   // eslint-disable-next-line vue/require-default-prop
@@ -64,6 +64,10 @@ const props = defineProps({
   size: {
     type: String,
     default: 'small'
+  },
+  disabledProductType: {
+    type: Array,
+    default: () => []
   },
   disabledValue: {
     type: Array,

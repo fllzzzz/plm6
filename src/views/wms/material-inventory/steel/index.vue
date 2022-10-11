@@ -13,6 +13,8 @@
       :default-expand-all="false"
       :expand-row-keys="expandRowKeys"
       row-key="id"
+      show-summary
+      :summary-method="getSummaries"
       @sort-change="crud.handleSortChange"
       @selection-change="crud.selectionChangeHandler"
     >
@@ -43,7 +45,7 @@
       <!-- 次要信息 -->
       <material-secondary-info-columns :columns="columns" :basic-class="basicClass" />
       <!-- 仓库信息 -->
-      <warehouse-info-columns :columns="columns" />
+      <warehouse-info-columns :columns="columns" :show-project="showProjectInfo" :show-monomer="showProjectInfo" :show-area="showProjectInfo" />
       <!--编辑与删除-->
       <el-table-column label="操作" width="180px" align="center" fixed="right">
         <template #default="{ row: { sourceRow: row } }">
@@ -82,9 +84,11 @@
 import { getSteelPlateInventory } from '@/api/wms/material-inventory'
 import { steelMaterialWarehousePM as permission } from '@/page-permission/wms'
 
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { matClsEnum, rawMatClsEnum } from '@enum-ms/classification'
 import { materialOperateColumns } from '@/utils/columns-format/wms'
+import { projectWarehouseTypeEnum } from '@/utils/enum/modules/wms'
+import { tableSummary } from '@/utils/el-extra'
 
 import useCRUD from '@compos/use-crud'
 import useIndexInfo from '../compos/use-index-info'
@@ -139,4 +143,20 @@ const {
   handleTransferSuccess,
   handleRefresh
 } = useIndexInfo({ CRUD, crud, defaultBasicClass: rawMatClsEnum.STEEL_PLATE.V })
+
+const showProjectInfo = computed(() => { // 是否显示项目相关信息
+  return crud.query?.projectWarehouseType === projectWarehouseTypeEnum.PROJECT.V
+})
+
+// 刷新前
+CRUD.HOOK.beforeToQuery = async (crud) => {
+  if (!crud.query.projectId) {
+    crud.query.monomerId = undefined
+    crud.query.areaId = undefined
+  }
+}
+
+function getSummaries(param) {
+  return tableSummary(param, { props: ['quantity', 'mete'] })
+}
 </script>

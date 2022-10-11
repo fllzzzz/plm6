@@ -23,6 +23,24 @@
       <div class="filter-right-box child-mr-7">
         <store-operation v-if="!props.edit" type="cu" @clear="handleClear" />
         <!-- <common-button v-if="cu.props.abnormalList" type="danger" @click="abnormalVisible = true" size="mini">异常列表</common-button> -->
+        <el-tooltip
+          effect="light"
+          placement="bottom"
+          :content="`1.真实退库：正常退库。
+            2.虚拟退库：只对当前物料成本进行退库，库存量不发生改变。
+            3.虚拟退库后会在下个月初产生相应的出库记录，库存量不发生改变。`"
+        >
+          <el-checkbox
+            v-model="boolRealReturn"
+            size="mini"
+            border
+            style="margin-right: 6px"
+            @change="boolRealReturnChange"
+          >
+            <span>真实退库</span>
+            <i class="el-icon-info" style="margin-left: 4px" />
+          </el-checkbox>
+        </el-tooltip>
         <common-button :loading="cu.status.edit === FORM.STATUS.PROCESSING" size="mini" type="primary" @click="cu.submit">
           提 交
         </common-button>
@@ -97,6 +115,8 @@ const allMete = ref()
 const allQuantity = ref()
 // 总长度
 const allLength = ref()
+// 是否真实退库
+const boolRealReturn = ref(true)
 
 // 显示可归还列表
 const returnableVisible = ref(false)
@@ -104,6 +124,18 @@ const returnableVisible = ref(false)
 // const abnormalVisible = ref(false)
 // 当前分类基础单位
 const { baseUnit } = useMatBaseUnit(props.basicClass)
+
+// 编辑前获取 真实退库 状态
+FORM.HOOK.beforeToCU = () => {
+  boolRealReturn.value = Object.prototype.hasOwnProperty.call(cu.props, 'boolRealReturn') ? cu.props.boolRealReturn : true
+}
+
+// 提交前把 真实退库 状态放到列表里
+FORM.HOOK.beforeSubmit = () => {
+  cu.form.list.forEach(v => {
+    v.boolRealReturn = boolRealReturn.value
+  })
+}
 
 // 提交后清除校验结果
 FORM.HOOK.afterSubmit = () => {
@@ -126,6 +158,11 @@ function handleAdd(data) {
 // 打开
 function openReturnableList() {
   returnableVisible.value = true
+}
+
+// 真实退库状态改变
+function boolRealReturnChange(val) {
+  cu.updateProp('boolRealReturn', val)
 }
 
 // 计算所有退库钢材总重

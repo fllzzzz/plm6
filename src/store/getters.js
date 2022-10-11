@@ -45,6 +45,8 @@ const getters = {
   clsTree: state => state.config.clsTree,
   // 材料类科目树
   matClsTree: state => state.config.matClsTree,
+  // 科目规格
+  classifySpec: state => state.config.classifySpec,
   // 材料科目规格 key:value
   matClsSpecKV: state => state.config.classifySpec.specKV,
   // 用户部门树
@@ -94,7 +96,9 @@ const getters = {
   // 项目级联列表(当前项目类型的级联列表)
   projectsCascade: state => state.project.projectsCascade,
   // 项目级联列表Map（key:项目类型,val:项目级联列表）
-  projectsCascadeMap: state => state.project.projectsCascadeMap
+  projectsCascadeMap: state => state.project.projectsCascadeMap,
+  // 当前页面业务类型
+  routeBusinessType: state => state.project.routeBusinessType
 }
 
 export default getters

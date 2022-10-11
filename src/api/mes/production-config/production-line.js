@@ -47,12 +47,12 @@ export function editStatus({ id, boolEnabledEnum }) {
   })
 }
 
-export function productConfigInfo({ productType, boolMachineEnum }) {
+export function productConfigInfo({ productType, productionLineTypeEnum }) {
   return request({
     module: 'mes',
     url: 'productionLine/type',
     method: 'get',
-    params: { productType, boolMachineEnum }
+    params: { productType, productionLineTypeEnum }
   })
 }
 

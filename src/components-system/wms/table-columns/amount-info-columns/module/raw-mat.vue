@@ -67,17 +67,27 @@ const props = defineProps({
   showInputVAT: {
     type: Boolean,
     default: true
+  },
+  // 显示金额
+  showAmount: {
+    type: Boolean,
+    default: true
+  },
+  // 显示不含税金额
+  showAmountExcludingVAT: {
+    type: Boolean,
+    default: true
   }
 })
 
 const showInvoiceType = computed(() => props.showInvoiceType && (isBlank(props.columns) || props.columns.visible('invoiceType')))
 const showTaxRate = computed(() => props.showTaxRate && (isBlank(props.columns) || props.columns.visible('taxRate')))
 
-const showUnitPrice = computed(() => isBlank(props.columns) || props.columns.visible('unitPrice'))
+const showUnitPrice = computed(() => props.showAmount && (isBlank(props.columns) || props.columns.visible('unitPrice')))
 const showUnitPriceExcludingVAT = computed(
-  () => props.showUnitPriceE && (isBlank(props.columns) || props.columns.visible('unitPriceExcludingVAT'))
+  () => props.showAmountExcludingVAT && (props.showUnitPriceE && (isBlank(props.columns) || props.columns.visible('unitPriceExcludingVAT')))
 )
-const showAmount = computed(() => isBlank(props.columns) || props.columns.visible('amount'))
-const showAmountExcludingVAT = computed(() => isBlank(props.columns) || props.columns.visible('amountExcludingVAT'))
+const showAmount = computed(() => props.showAmount && (isBlank(props.columns) || props.columns.visible('amount')))
+const showAmountExcludingVAT = computed(() => props.showAmountExcludingVAT && (isBlank(props.columns) || props.columns.visible('amountExcludingVAT')))
 const showInputVAT = computed(() => props.showInputVAT && (isBlank(props.columns) || props.columns.visible('inputVAT')))
 </script>

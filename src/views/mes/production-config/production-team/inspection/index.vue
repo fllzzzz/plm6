@@ -21,6 +21,17 @@
     >
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="序号" type="index" align="center" width="60" />
+       <el-table-column
+        v-if="columns.visible('productionLineTypeEnum')"
+        key="productionLineTypeEnum"
+        prop="productionLineTypeEnum"
+        label="生产线类型"
+        width="100px"
+      >
+        <template v-slot="scope">
+          {{ artifactProductLineEnum.VL[scope.row.productionLineTypeEnum] }}
+        </template>
+      </el-table-column>
       <el-table-column
         v-if="columns.visible('processName')"
         key="processName"
@@ -63,6 +74,7 @@ import { useStore } from 'vuex'
 
 import checkPermission from '@/utils/system/check-permission'
 import { configProductionLineInspectPM as permission } from '@/page-permission/config'
+import { artifactProductLineEnum } from '@enum-ms/mes'
 
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'

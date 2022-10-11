@@ -50,6 +50,8 @@ const comp = computed(() => {
 })
 
 CRUD.HOOK.beforeEditDetailLoaded = async (crud, detail) => {
+  // 真实退库状态
+  crud.updateProp('boolRealReturn', detail.boolRealReturn || true)
   await setSpecInfoToList(detail.list)
   await numFmtByBasicClass(detail.list, { toNum: true })
   await calcTheoryWeight(detail.list)

@@ -61,6 +61,20 @@ export default {
           hidden: false,
           component: '/supply-chain/purchase-reconciliation-manage/payment-ledger/index',
           meta: { title: '付款台账', icon: 'project', noCache: true }
+        },
+        {
+          name: 'AcceptanceLog',
+          path: 'acceptance-log',
+          hidden: false,
+          component: '/supply-chain/purchase-reconciliation-manage/acceptance-log/index',
+          meta: { title: '验收记录', icon: 'project', noCache: true }
+        },
+        {
+          name: 'ReconciliationLog',
+          path: 'reconciliation-log',
+          hidden: false,
+          component: '/supply-chain/purchase-reconciliation-manage/reconciliation-log/index',
+          meta: { title: '供应商对账', icon: 'project', noCache: true }
         }
       ]
     },
@@ -86,6 +100,31 @@ export default {
           hidden: false,
           component: '/supply-chain/logistics-payment-manage/logistics-payment/index',
           meta: { title: '付款明细', icon: 'project', noCache: true }
+        }
+      ]
+    },
+    {
+      path: '/supply-chain/subcontract-manage',
+      component: 'Layout',
+      hidden: false,
+      name: 'SupplyChainSubcontract',
+      alwaysShow: false,
+      redirect: '/supply-chain/subcontract-manage/subcontract-order',
+      meta: { title: '分包管理', icon: 'contract', noCache: true },
+      children: [
+        {
+          name: 'subcontractOrder',
+          path: 'subcontract-order',
+          hidden: false,
+          component: '/supply-chain/subcontract-order/index',
+          meta: { title: '分包订单', icon: 'project', noCache: true }
+        },
+        {
+          name: 'subcontractOrderPayment',
+          path: 'subcontract-order-payment',
+          hidden: false,
+          component: '/supply-chain/subcontract-order-payment/index',
+          meta: { title: '付款台账', icon: 'project', noCache: true }
         }
       ]
     },

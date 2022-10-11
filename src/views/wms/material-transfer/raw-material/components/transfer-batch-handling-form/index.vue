@@ -23,13 +23,45 @@
             @change="handleTypeChange"
           />
         </el-form-item>
-        <el-form-item v-if="showProjectSelect" label="项目" prop="projectId">
-          <project-cascader v-model="form.projectId" clearable class="input-underline" style="width: 300px" />
-        </el-form-item>
-        <el-form-item v-if="showFactoryAndWare" label="工厂" prop="factoryId">
+        <template v-if="showProjectSelect">
+            <el-form-item label="项目" prop="projectId" label-width="55px">
+              <project-cascader
+                v-model="form.projectId"
+                clearable
+                class="input-underline"
+                style="width: 200px"
+                @change="handleProjectChange"
+              />
+            </el-form-item>
+            <el-form-item label="单体" prop="monomerId" label-width="55px">
+              <common-select
+                v-model="form.monomerId"
+                :options="form.projectId && projectMap?.[form.projectId]?.children || []"
+                :dataStructure="{ key: 'id', label: 'name', value: 'id' }"
+                class="input-underline"
+                clearable
+                type="other"
+                placeholder="可选择单体"
+                style="width: 200px"
+              />
+            </el-form-item>
+            <el-form-item label="区域" prop="areaId" label-width="55px">
+              <common-select
+                v-model="form.areaId"
+                :options="form.monomerId && monomerMap?.[form.monomerId]?.children || []"
+                :dataStructure="{ key: 'id', label: 'name', value: 'id' }"
+                class="input-underline"
+                clearable
+                type="other"
+                placeholder="可选择区域"
+                style="width: 200px"
+              />
+            </el-form-item>
+          </template>
+        <el-form-item v-if="showFactoryAndWare" label="工厂" prop="factoryId" label-width="55px">
           <factory-select v-model="form.factoryId" placeholder="工厂" class="input-underline" style="width: 200px" />
         </el-form-item>
-        <el-form-item v-if="showFactoryAndWare" label="仓库" prop="warehouseId">
+        <el-form-item v-if="showFactoryAndWare" label="仓库" prop="warehouseId" label-width="55px">
           <warehouse-select
             v-model="form.warehouseId"
             :factory-id="form.factoryId"
@@ -113,6 +145,7 @@ import { materialOperateColumns } from '@/utils/columns-format/wms'
 import useVisible from '@compos/use-visible'
 import useMaxHeight from '@compos/use-max-height'
 import ProjectCascader from '@comp-base/project-cascader.vue'
+import useProjectTree from '@compos/store/use-project-tree'
 import FactorySelect from '@/components-system/base/factory-select.vue'
 import WarehouseSelect from '@/components-system/wms/warehouse-select.vue'
 import elExpandTableColumn from '@comp-common/el-expand-table-column.vue'
@@ -142,6 +175,8 @@ const props = defineProps({
     default: () => []
   }
 })
+
+const { projectMap, monomerMap } = useProjectTree()
 
 // 校验
 const rules = {
@@ -256,6 +291,8 @@ async function submit() {
     const data = {
       transferType: form.value.transferType, // 调拨类型
       projectId: form.value.projectId, // 项目id
+      monomerId: form.value.monomerId, // 单体id
+      areaId: form.value.areaId, // 区域id
       factoryId: form.value.factoryId, // 工厂id
       warehouseId: form.value.warehouseId, // 仓库id
       list: []

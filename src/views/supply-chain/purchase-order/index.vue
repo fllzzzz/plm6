@@ -215,6 +215,7 @@ import crudApi, { editPurchaseStatus } from '@/api/supply-chain/purchase-order'
 import { purchaseOrderPM as permission } from '@/page-permission/supply-chain'
 
 import { ref, computed } from 'vue'
+import { useStore } from 'vuex'
 import EO from '@enum'
 import { invoiceTypeEnum, settlementStatusEnum } from '@enum-ms/finance'
 import { orderSupplyTypeEnum, purchaseStatusEnum, baseMaterialTypeEnum } from '@enum-ms/wms'
@@ -244,6 +245,7 @@ const optShow = {
 
 const tableRef = ref()
 const expandRowKeys = ref([])
+const store = useStore()
 // 表格列数据格式转换
 const columnsDataFormat = ref([
   ...wmsReceiptColumns,
@@ -300,6 +302,16 @@ CRUD.HOOK.handleRefresh = (crud, { data }) => {
 
     return v
   })
+}
+
+// 添加之后
+CRUD.HOOK.afterSubmit = () => {
+  store.dispatch('config/fetchPurchaseOrder')
+}
+
+// 删除后
+CRUD.HOOK.afterDelete = () => {
+  store.dispatch('config/fetchPurchaseOrder')
 }
 
 function toQuery() {

@@ -16,21 +16,21 @@
       style="width: 100%"
     >
       <el-table-column label="序号" type="index" align="center" width="60" />
-      <el-table-column prop="productionLineType" align="center" :show-overflow-tooltip="true" label="生产线" width="120"> </el-table-column>
+      <el-table-column prop="productionLineTypeEnum" align="center" :show-overflow-tooltip="true" label="生产线" width="120"> </el-table-column>
       <el-table-column prop="classificationName" align="center" :show-overflow-tooltip="true" label="类型">
         <template #default="{ row: { sourceRow: row } }">
-          <span v-if="row.productionLineType & artifactProductLineEnum.INTELLECT.V">{{ intellectParentType.VL[row.parentType] }}</span>
+          <span v-if="row.productionLineTypeEnum & artifactProductLineEnum.INTELLECT.V">{{ intellectParentType.VL[row.parentType] }}</span>
           <span v-else>{{ row.classificationName }}</span>
         </template>
       </el-table-column>
       <el-table-column
-        v-if="crud.query.productionLineType !== artifactProductLineEnum.TRADITION.V"
+        v-if="crud.query.productionLineTypeEnum !== artifactProductLineEnum.TRADITION.V"
         align="center"
         :show-overflow-tooltip="true"
         label="子分类"
       >
         <template #default="{ row: { sourceRow: row } }">
-          <template v-if="row.productionLineType & artifactProductLineEnum.INTELLECT.V">
+          <template v-if="row.productionLineTypeEnum & artifactProductLineEnum.INTELLECT.V">
             <span>{{ row.classificationName }}</span>
             <template v-if="row.parentType & intellectParentType.BRIDGE.V">
               <span v-if="row.minLength && row.maxLength">
@@ -52,7 +52,7 @@
       </el-table-column>
       <el-table-column prop="specPrefixSequence" align="center" :show-overflow-tooltip="true" label="构件前缀"> </el-table-column>
       <el-table-column
-        v-if="crud.query.productionLineType !== artifactProductLineEnum.INTELLECT.V"
+        v-if="crud.query.productionLineTypeEnum !== artifactProductLineEnum.INTELLECT.V"
         prop="prefixListArr"
         align="center"
         :show-overflow-tooltip="true"
@@ -60,7 +60,7 @@
       >
       </el-table-column>
       <el-table-column
-        v-if="crud.query.productionLineType !== artifactProductLineEnum.TRADITION.V"
+        v-if="crud.query.productionLineTypeEnum !== artifactProductLineEnum.TRADITION.V"
         prop="definitionWord"
         align="center"
         :show-overflow-tooltip="true"
@@ -135,7 +135,7 @@ const optShow = {
   download: false
 }
 
-const dataFormat = ref([['productionLineType', ['parse-enum', artifactProductLineEnum]]])
+const dataFormat = ref([['productionLineTypeEnum', ['parse-enum', artifactProductLineEnum]]])
 
 const tableRef = ref()
 const { crud, CRUD } = useCRUD(
@@ -153,7 +153,7 @@ const { maxHeight } = useMaxHeight({ paginate: true })
 
 // 合并单元格
 function spanMethod({ row, column, rowIndex, columnIndex }) {
-  if (column.property === 'productionLineType') {
+  if (column.property === 'productionLineTypeEnum') {
     return {
       rowspan: row.rowspan || 0,
       colspan: 1
@@ -195,7 +195,7 @@ CRUD.HOOK.handleRefresh = (crud, { data }) => {
         } else {
           _v.classRowSpan = 1
         }
-        _dataObj[_v.productionLineType].push({ ..._v })
+        _dataObj[_v.productionLineTypeEnum].push({ ..._v })
       }
     }
   }

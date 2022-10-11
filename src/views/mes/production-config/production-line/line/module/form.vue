@@ -29,25 +29,43 @@
       <el-form-item label="目标产量(吨/月)" prop="targetProductionShow">
         <el-input-number v-model.number="form.targetProductionShow" :min="0" controls-position="right" style="width: 270px" />
       </el-form-item>
-      <el-form-item label="生产线类型" prop="productType">
+      <el-form-item label="生产线类型" prop="productionLineTypeEnum">
+        <!-- <common-radio v-model="form.boolMachineEnum" :options="whetherEnum.ENUM" type="enum" /> -->
+        <el-select v-model="form.productionLineTypeEnum" placeholder="请选择生产线类型" :size="'small'" style="width: 270px">
+          <el-option v-for="item in artifactProductLineEnum.ENUM" :key="item.V" :label="item.L" :value="item.V" />
+        </el-select>
+      </el-form-item>
+      <el-form-item label="产品类型" prop="productType">
         <common-select
           :dataStructure="{ key: 'K', label: 'L', value: 'V' }"
           v-model="form.productType"
           :options="componentTypeEnum.ENUM"
-          :unshowOptions="[componentTypeEnum.AUXILIARY_MATERIAL.K]"
-          placeholder="请选择生产线类型"
+          :unshowOptions="
+            form.productionLineTypeEnum === 2
+              ? [
+                  componentTypeEnum.AUXILIARY_MATERIAL.K,
+                  componentTypeEnum.MACHINE_PART.K,
+                  componentTypeEnum.ASSEMBLE.K,
+                  componentTypeEnum.ENCLOSURE.K,
+                ]
+              : [componentTypeEnum.AUXILIARY_MATERIAL.K]
+          "
+          placeholder="请选择产品类型"
           style="width: 270px"
         />
       </el-form-item>
-      <el-form-item v-if="form.productType & componentTypeEnum.ARTIFACT.V" label="智能线" prop="boolMachineEnum">
+      <!-- <el-form-item v-if="form.productType & componentTypeEnum.ARTIFACT.V" label="智能线" prop="boolMachineEnum">
         <common-radio v-model="form.boolMachineEnum" :options="whetherEnum.ENUM" type="enum" />
-      </el-form-item>
+      </el-form-item> -->
       <!-- <el-form-item label="生产线简称" prop="shortName">
         <el-input v-model="form.shortName" type="text" placeholder="请填写生产线简称" style="width: 270px" />
       </el-form-item> -->
       <el-form-item
-        v-if="form.productType && !(form.productType & componentTypeEnum.ENCLOSURE.V)"
-        :label="form.boolMachineEnum && form.productType & componentTypeEnum.ARTIFACT.V ? '产品标识' : '可生产产品类型'"
+        v-if="
+          (form.productionLineTypeEnum === 2 && form.productType & componentTypeEnum.ARTIFACT.V) |
+            (form.productionLineTypeEnum === 1 && form.productType & componentTypeEnum.ARTIFACT.V)
+        "
+        :label="form.productionLineTypeEnum === 2 && form.productType & componentTypeEnum.ARTIFACT.V ? '产品标识' : '可生产产品种类'"
         prop="linkIdList"
       >
         <common-select
@@ -56,7 +74,7 @@
           :options="configList"
           :loading="configLoading"
           multiple
-          :placeholder="`请选择${form.boolMachineEnum && form.productType & componentTypeEnum.ARTIFACT.V ? '产品标识' : '可生产产品类型'}`"
+          :placeholder="`请选择${form.productionLineTypeEnum && form.productType & componentTypeEnum.ARTIFACT.V ? '产品标识' : '可生产产品种类'}`"
           style="width: 270px"
         />
       </el-form-item>
@@ -80,8 +98,8 @@
 import { productConfigInfo } from '@/api/mes/production-config/production-line'
 import { ref, computed, watch, watchEffect } from 'vue'
 
-import { componentTypeEnum } from '@enum-ms/mes'
-import { whetherEnum } from '@enum-ms/common'
+import { componentTypeEnum, artifactProductLineEnum } from '@enum-ms/mes'
+// import { whetherEnum } from '@enum-ms/common'
 
 import { regForm } from '@compos/use-crud'
 import factorySelect from '@comp-base/factory-select.vue'
@@ -94,7 +112,7 @@ const defaultForm = {
   factoryId: undefined,
   workshopId: undefined,
   productType: undefined,
-  boolMachineEnum: whetherEnum.FALSE.V,
+  productionLineTypeEnum: undefined,
   targetProductionShow: undefined,
   targetProduction: undefined,
   name: '',
@@ -111,8 +129,8 @@ const isEdit = computed(() => crud.status.edit >= 1)
 const rules = {
   workshopId: [{ required: true, message: '请选择车间', trigger: 'change' }],
   factoryId: [{ required: true, message: '请选择工厂', trigger: 'change' }],
-  productType: [{ required: true, message: '请选择生产线类型', trigger: 'change' }],
-  boolMachineEnum: [{ required: true, message: '请选择是否是智能线', trigger: 'change' }],
+  productType: [{ required: true, message: '请选择产品类型', trigger: 'change' }],
+  productionLineTypeEnum: [{ required: true, message: '请选择生产线类型', trigger: 'change' }],
   linkIdList: [{ required: true, message: '请选择', trigger: 'change' }],
   sort: [{ required: true, message: '请填写排序值', trigger: 'blur', type: 'number' }],
   name: [
@@ -132,7 +150,7 @@ watchEffect(() => {
 })
 
 watch(
-  () => [form.productType, form.boolMachineEnum],
+  () => [form.productType, form.productionLineTypeEnum],
   () => {
     if (form.productType && !(form.productType & componentTypeEnum.ENCLOSURE.V)) {
       fetchConfigInfo()
@@ -144,8 +162,8 @@ watch(
 async function fetchConfigInfo() {
   try {
     configLoading.value = true
-    const { boolMachineEnum, productType } = form
-    const content = await productConfigInfo({ boolMachineEnum, productType })
+    const { productionLineTypeEnum, productType } = form
+    const content = await productConfigInfo({ productionLineTypeEnum, productType })
     configList.value = content
   } catch (error) {
     console.log('获取可生产类型配置信息', error)

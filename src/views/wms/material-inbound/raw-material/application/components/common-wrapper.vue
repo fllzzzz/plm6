@@ -4,6 +4,7 @@
       :basic-class="props.basicClass"
       :current-basic-class="props.currentBasicClass??props.basicClass"
       :edit="props.edit"
+      :validate="validate"
       class="header"
       ref="headerRef"
       @purchase-order-change="handleOrderInfoChange"
@@ -17,6 +18,8 @@
       :total-name="props.totalName"
       :total-value="props.totalValue"
       :show-total="props.showTotal"
+      :show-total-amount="props.showTotalAmount"
+      :total-amount="props.totalAmount"
       :btn-name="props.btnName"
       @submit="submit"
     />
@@ -63,6 +66,14 @@ const props = defineProps({
   showTotal: {
     type: Boolean,
     default: true
+  },
+  showTotalAmount: {
+    type: Boolean,
+    default: true
+  },
+  totalAmount: {
+    type: [Number, String],
+    default: 0
   },
   edit: {
     type: Boolean,

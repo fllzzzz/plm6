@@ -56,6 +56,12 @@
             <template #default="{ row }">
               <expand-secondary-info v-if="!showTableColumnSecondary" :basic-class="row.basicClass" :row="row" show-brand />
               <p>
+                单体：<span>{{ row.monomerName }}</span>
+              </p>
+              <p>
+                区域：<span>{{ row.areaName }}</span>
+              </p>
+              <p>
                 备注：<span>{{ row.remark }}</span>
               </p>
             </template>
@@ -76,15 +82,19 @@
               @amount-change="handleAmountChange"
             />
             <template v-else>
-              <el-table-column prop="unitPrice" label="含税单价" align="left" min-width="120px" show-overflow-tooltip />
-              <el-table-column prop="amount" label="金额" align="left" min-width="120px" show-overflow-tooltip />
+              <el-table-column prop="unitPrice" label="含税单价" align="right" min-width="120px" show-overflow-tooltip />
+              <el-table-column prop="amount" label="金额" align="right" min-width="120px" show-overflow-tooltip />
               <el-table-column prop="sourceRequisitionsSN" label="申购单" align="left" min-width="120px" show-overflow-tooltip />
               <el-table-column prop="project" label="项目" align="left" min-width="120px" show-overflow-tooltip />
+              <el-table-column prop="monomerName" label="单体" align="left" min-width="120px" show-overflow-tooltip />
+              <el-table-column prop="areaName" label="区域" align="left" min-width="120px" show-overflow-tooltip />
             </template>
           </template>
           <template v-else>
             <el-table-column prop="sourceRequisitionsSN" label="申购单" align="left" min-width="120px" show-overflow-tooltip />
             <el-table-column prop="project" label="项目" align="left" min-width="120px" show-overflow-tooltip />
+            <el-table-column prop="monomerName" label="单体" align="left" min-width="120px" show-overflow-tooltip />
+            <el-table-column prop="areaName" label="区域" align="left" min-width="120px" show-overflow-tooltip />
           </template>
           <!-- 仓库设置 -->
           <warehouse-set-columns v-if="fillableWarehouse" :form="form" />
@@ -116,7 +126,7 @@
 <script setup>
 import { getPendingReviewIdList, detail, reviewPassed, reviewReturned } from '@/api/wms/material-inbound/raw-material/review'
 import { inject, computed, ref, defineEmits, defineProps, watch } from 'vue'
-import { inboundFillWayEnum, orderSupplyTypeEnum, inspectionStatusEnum } from '@enum-ms/wms'
+import { orderSupplyTypeEnum, inspectionStatusEnum } from '@enum-ms/wms'
 import { logisticsPayerEnum } from '@/utils/enum/modules/logistics'
 import { tableSummary } from '@/utils/el-extra'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
@@ -127,7 +137,7 @@ import { materialHasAmountColumns } from '@/utils/columns-format/wms'
 import { regExtra } from '@compos/use-crud'
 import useTableValidate from '@/composables/form/use-table-validate'
 import useMaxHeight from '@compos/use-max-height'
-import useWmsConfig from '@/composables/store/use-wms-config'
+// import useWmsConfig from '@/composables/store/use-wms-config'
 import useVisible from '@compos/use-visible'
 import elExpandTableColumn from '@comp-common/el-expand-table-column.vue'
 import materialBaseInfoColumns from '@/components-system/wms/table-columns/material-base-info-columns/index.vue'
@@ -183,19 +193,23 @@ const pendingReviewIdList = ref([]) // 待审核列表
 // const currentReviewIndex = ref(0) // 当前审核下标
 const currentInboundId = ref() // 当前id
 
-const { inboundFillWayCfg } = useWmsConfig()
+// const { inboundFillWayCfg } = useWmsConfig()
 
-// 可填写金额
-const fillableAmount = computed(() =>
-  inboundFillWayCfg.value ? inboundFillWayCfg.value.amountFillWay === inboundFillWayEnum.REVIEWING.V : false
-)
+// 可填写金额（统一为入库填写，取消后台配置）
+const fillableAmount = ref(false)
+// const fillableAmount = computed(() =>
+//   inboundFillWayCfg.value ? inboundFillWayCfg.value.amountFillWay === inboundFillWayEnum.REVIEWING.V : false
+// )
+
 // 显示金额相关信息（由采购填写的信息）
 const showAmount = computed(() => checkPermission(permission.showAmount) || fillableAmount.value)
 
-// 可填写仓库信息（由仓库填写的信息）
-const fillableWarehouse = computed(() =>
-  inboundFillWayCfg.value ? inboundFillWayCfg.value.warehouseFillWay === inboundFillWayEnum.REVIEWING.V : false
-)
+// 可填写仓库信息（统一为入库填写，取消后台配置）
+const fillableWarehouse = ref(false)
+// const fillableWarehouse = computed(() =>
+//   inboundFillWayCfg.value ? inboundFillWayCfg.value.warehouseFillWay === inboundFillWayEnum.REVIEWING.V : false
+// )
+
 // 显示物流信息
 const fillableLogistics = computed(() => order.value.logisticsPayerType === logisticsPayerEnum.DEMAND.V && fillableAmount.value)
 // 是否“甲供”
@@ -476,7 +490,7 @@ function handleAmountChange() {
 
 // 合计
 function getSummaries(param) {
-  return tableSummary(param, { props: ['quantity', 'mete'] })
+  return tableSummary(param, { props: ['quantity', 'mete', 'amount'] })
 }
 </script>
 

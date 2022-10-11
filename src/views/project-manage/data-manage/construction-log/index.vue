@@ -1,5 +1,13 @@
 <template>
   <div class="app-container">
+    <div style="height:32px;">
+      <export-button
+        :params="{yearMonth: activeMonth,projectId: globalProjectId }"
+        :fn="download"
+        style="float:right;"
+        v-if="checkPermission(permission.download) && globalProject?.businessType===businessTypeEnum.INSTALLATION.V"
+      >批量下载施工日志</export-button>
+    </div>
     <el-config-provider :locale="locale">
       <el-calendar v-model="journal.date">
         <template
@@ -7,47 +15,41 @@
         >
           <div
             class="calendar-item"
-            :class="[!$isNotBlank(journal.map[data.day]) && moment(data.date).valueOf() < activeDateEndTp && moment(data.date).valueOf()>=activeDateStartTp ?'need':'',data.isSelected ? 'is-selected' : '']"
+            :class="[moment(data.date).valueOf() < activeDateEndTp && moment(data.date).valueOf()>=activeDateStartTp ?(isNotBlank(journal.map[data.day])?'has-content':'need'):'',data.isSelected ? 'is-selected' : '']"
             @click="openJournal(data.day)"
           >
             <span>{{ data.day.split('-').slice(1).join('-') }}</span>
-            <div v-if="$isNotBlank(journal.map[data.day])" style="margin-top:10px;">
+            <div v-if="isNotBlank(journal.map[data.day])" style="margin-top:10px;">
               <div class="journal-info">{{ journal.map[data.day].morningWeather }} | {{ journal.map[data.day].afternoonWeather }}</div>
-              <div class="journal-info">{{ journal.map[data.day].minTemperature }} ℃ ~ {{ journal.map[data.day].maxTemperature }} ℃</div>
+              <div class="journal-info">{{ journal.map[data.day].morningTemperature }} ℃ ~ {{ journal.map[data.day].afternoonTemperature }} ℃</div>
             </div>
           </div>
         </template>
       </el-calendar>
     </el-config-provider>
-    <mDetail v-if="checkPermission(permission.detail)" v-model:visible="journal.visible" :info="journal.info" :isEdit="journal.isEdit" :day="journal.day" :project-id="globalProjectId" @refresh="fetchList" />
+    <mDetail v-if="checkPermission(permission.detail)" v-model="journal.visible" :info="journal.info" :day="journal.day" :project-id="globalProjectId"  @success="fetchList" :activeMonth="activeMonth"/>
   </div>
 </template>
 
 <script setup>
+import crudApi, { download } from '@/api/project-manage/data-manage/construction-log'
+import { reactive, computed, watch } from 'vue'
+
+import { businessTypeEnum } from '@enum-ms/contract'
 import { ElCalendar, ElConfigProvider } from 'element-plus'
 import zhCn from 'element-plus/lib/locale/lang/zh-cn'
-import crudApi from '@/api/project/data-manage/construction-log'
-import { reactive, provide, computed, getCurrentInstance } from 'vue'
+import { constructionLogPM as permission } from '@/page-permission/project'
 import checkPermission from '@/utils/system/check-permission'
 import moment from 'moment'
 import { mapGetters } from '@/store/lib'
+import { isNotBlank } from '@data-type/index'
+
 import mDetail from './module/detail'
-
-// 权限
-const permission = {
-  get: ['project_constructionLog:get'],
-  add: ['project_constructionLog:add'],
-  detail: ['project_constructionLog:detail']
-}
-
-provide('permission', permission)
-provide('crudApi', crudApi)
+import ExportButton from '@comp-common/export-button/index.vue'
 
 const locale = reactive(zhCn)
 
-const { globalProjectId } = mapGetters(['globalProjectId'])
-
-const { proxy } = getCurrentInstance()
+const { globalProjectId, globalProject } = mapGetters(['globalProjectId', 'globalProject'])
 
 const journal = reactive({
   day: '',
@@ -63,6 +65,15 @@ const activeMonth = computed(() => {
   return moment(journal.date).format('YYYY-MM')
 })
 
+watch(
+  () => activeMonth.value,
+  (newVal, oldVal) => {
+    if (newVal === oldVal) return
+    if (moment(activeMonth.value).valueOf() > moment().valueOf()) return
+    fetchList()
+  },
+  { deep: true, immediate: true }
+)
 // 当前浏览月份 - 开始时间戳
 const activeDateStartTp = computed(() => {
   return moment(activeMonth.value).startOf('month').valueOf()
@@ -75,8 +86,6 @@ const activeDateEndTp = computed(() => {
   return end > today ? today : end
 })
 
-fetchList()
-
 // 初始化
 function initVal() {
   journal.list = []
@@ -85,19 +94,21 @@ function initVal() {
 
 // 获取列表
 async function fetchList() {
-  if (!checkPermission(permission.get)) return
   initVal()
+  if (!checkPermission(permission.get)) {
+    return
+  }
+  if (globalProject.value?.businessType !== businessTypeEnum.INSTALLATION.V) {
+    return
+  }
   try {
-    const startDate = moment(activeMonth.value).startOf('month').valueOf()
-    const endDate = moment(activeMonth.value).endOf('month').valueOf()
     const query = {
-      endDate,
-      startDate,
-      projectId: globalProjectId
+      yearMonth: activeMonth.value,
+      projectId: globalProjectId.value
     }
     const { content = [] } = await crudApi.get(query)
     journal.list = content.map(v => {
-      v.day = moment(v.subTime).format('YYYY-MM-DD')
+      v.day = moment(v.constructionDate).format('YYYY-MM-DD')
       journal.map[v.day] = v
       return v
     })
@@ -108,9 +119,15 @@ async function fetchList() {
 
 // 打开施工日志
 function openJournal(day) {
+  if (globalProject.value?.businessType !== businessTypeEnum.INSTALLATION.V) {
+    return
+  }
+  if (!checkPermission(permission.detail) || !checkPermission(permission.add)) {
+    return
+  }
   if (moment(day).valueOf() > moment().valueOf()) return
   journal.day = day
-  journal.info = proxy.$isNotBlank(this.journal.map[day]) && this.journal.map[day] || {}
+  journal.info = isNotBlank(journal.map[day]) && journal.map[day] || {}
   journal.visible = true
 }
 </script>
@@ -133,6 +150,10 @@ function openJournal(day) {
 
 .need{
   background-color:#fdf5e9;
+}
+
+.has-content{
+  background-color:#b3e19d;
 }
 
 .is-selected {

@@ -188,6 +188,8 @@ const { cu, form, FORM } = useForm(
   formRef,
   props.detail
 )
+// 设置 boolRealReturn 状态
+cu.updateProp('boolRealReturn', props.detail && Object.prototype.hasOwnProperty.call(props.detail, 'boolRealReturn') ? props.detail.boolRealReturn : true)
 
 // 通用计算校验
 const { calcMaxMete, extractSource, checkOverSource, initCheckOverMaxWeight } = useCommonCalc({ cu, form, basicClass, baseUnit })
@@ -229,11 +231,13 @@ function init() {
 
 // 添加材质
 function rowWatch(row) {
+  setRow(row, row.source)
   // 计算最大总重
   watch([() => row.quantity], () => {
     calcMaxMete(row)
     headerRef.value && headerRef.value.calcAllQuantity()
-  })
+  },
+  { immediate: true })
   // 计算理论及单重
   watch([() => row.length, baseUnit], () => {
     calcTheoryWeight(row)
@@ -255,6 +259,18 @@ function rowWatch(row) {
     },
     { immediate: true }
   )
+}
+
+// 设置行默认值
+function setRow(row, sourceRow) {
+  row.length = row.length || sourceRow.length
+  row.quantity = row.quantity || sourceRow.quantity
+  row.factoryId = row.factoryId || sourceRow.factory?.id
+  row.warehouseId = row.warehouseId || sourceRow.warehouse?.id
+  calcTheoryWeight(row)
+  setTimeout(() => {
+    row.mete = row.mete || sourceRow.mete
+  })
 }
 
 // 计算单件理论重量

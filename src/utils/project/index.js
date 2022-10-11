@@ -105,6 +105,7 @@ export function projectsToCascade(projects, timeField = 'createTime') {
         })
       })
     }
+    project.fullName = project.name
     project.name = projectNameFormatter(project)
     // 设置级联第三级：项目
     if (statusValArr.indexOf(project.status) > -1) {

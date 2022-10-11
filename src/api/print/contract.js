@@ -215,6 +215,29 @@ export function transactionRecord(params) {
   })
 }
 
+/**
+ * 订单跟踪列表
+ */
+export function saleOrderTracking(params) {
+  return request({
+    module: 'contract',
+    url: 'project/tracking/print',
+    method: 'get',
+    params
+  })
+}
+
+/**
+ * 入库记录
+ */
+export function warehouseRecord(params) {
+  return request({
+    url: '/api/mes/building/warehouse/list-record/print',
+    method: 'get',
+    params
+  })
+}
+
 export default {
   contractLedger, // 合同台账（合同登记表）
   collectionLedger, // 收款记录
@@ -232,5 +255,7 @@ export default {
   collectionDetail, // 项目收款详情
   invoiceDetail, // 项目开票详情
   happenedDetail, // 项目发运详情
-  transactionRecord // 客户交易记录
+  transactionRecord, // 客户交易记录
+  saleOrderTracking, // 订单跟踪列表
+  warehouseRecord // 入库记录
 }

@@ -288,6 +288,7 @@ const { maxHeight } = useMaxHeight({ paginate: true })
 
 CRUD.HOOK.handleRefresh = (crud, { data }) => {
   data.content.forEach((v) => {
+    v.imgUrls = v.attachments?.map(o => o.imageUrl) || []
     v.reviewable =
       v.reviewStatus === reviewStatusEnum.UNREVIEWED.V &&
       checkPermission(permission.review) &&

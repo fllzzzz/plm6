@@ -3,14 +3,19 @@
     <div v-if="crud.searchToggle">
       <!-- 物料查询相关 -->
       <mat-header-query :basic-class="query.basicClass" :query="query" :to-query="crud.toQuery" show-project-Warehouse-type>
-        <template #firstLineRight>
-          <span class="child-mr-6">
-            <current-user-outbound-list ref="currentUserOutboundListRef" @refresh="handleCurrentUserOutbound" />
-            <common-button icon="el-icon-time" size="mini" type="info" @click="toOutboundRecord">出库记录</common-button>
-            <common-button type="info" size="mini" icon="el-icon-lock" @click="openFreezeRecords"> 冻结记录 </common-button>
-          </span>
-        </template>
         <template #afterProjectWarehouseType>
+          <monomer-select-area-select
+            v-if="query.projectWarehouseType === projectWarehouseTypeEnum.PROJECT.V"
+            v-model:monomerId="query.monomerId"
+            v-model:areaId="query.areaId"
+            clearable
+            areaClearable
+            :filterArea="false"
+            :project-id="query.projectId"
+            :monomerDisabled="!query.projectId"
+            :areaDisabled="!query.projectId"
+            @change="crud.toQuery"
+          />
           <common-radio-button
             v-model="query.basicClass"
             :options="steelClsEnum.ENUM"
@@ -40,6 +45,9 @@
             标签打印
           </common-button>
         </el-badge>
+        <current-user-outbound-list ref="currentUserOutboundListRef" @refresh="handleCurrentUserOutbound" />
+        <common-button class="filter-item" icon="el-icon-time" size="mini" type="info" @click="toOutboundRecord">出库记录</common-button>
+        <common-button class="filter-item" type="info" size="mini" icon="el-icon-lock" @click="openFreezeRecords"> 冻结记录 </common-button>
       </template>
     </crud-operation>
     <outbound-batch-handling-form
@@ -68,6 +76,7 @@
 import { getSteelPlateInventory, getSectionSteelInventory, getSteelCoilInventory } from '@/api/wms/material-inventory'
 import { computed, defineExpose, onMounted, ref } from 'vue'
 import { steelClsEnum } from '@/utils/enum/modules/classification'
+import { projectWarehouseTypeEnum } from '@/utils/enum/modules/wms'
 
 import useHeaderInfo from '../../compos/use-header-info'
 import useGetNotPrintedMaterial from '@/composables/store/use-get-not-printed-material'
@@ -78,6 +87,7 @@ import CurrentUserOutboundList from '@/views/wms/material-outbound/raw-material/
 import OutboundBatchHandlingForm from '@/views/wms/material-outbound/raw-material/components/outbound-batch-handling-form/index.vue'
 import TransferBatchHandlingForm from '@/views/wms/material-transfer/raw-material/components/transfer-batch-handling-form/index.vue'
 import materialLabelPrintView from '@/views/wms/material-label-print/index.vue'
+import monomerSelectAreaSelect from '@comp-base/monomer-select-area-select'
 
 const {
   crud,

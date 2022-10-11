@@ -483,6 +483,8 @@ CRUD.HOOK.beforeEditDetailLoaded = async (crud, form) => {
   if (isBlank(form.attachments)) {
     form.attachments = []
   }
+  // 是否选中所有辅材，0表示所有
+  form.isAllMaterial = form.auxMaterialIds?.includes(0)
   // 是否甲供
   form.boolPartyA = form.supplyType === orderSupplyTypeEnum.PARTY_A.V
   // 签订主体id
