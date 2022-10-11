@@ -45,7 +45,6 @@
             </el-tooltip>
           </template>
           <template v-slot="scope">
-            <!-- <span>{{ scope.row.serialNumber }}</span> -->
             <span style="cursor: pointer" @dblclick="drawingPreview(scope.row)">{{ scope.row.serialNumber }}</span>
           </template>
         </el-table-column>
@@ -90,15 +89,6 @@
           label="数量"
           align="left"
           min-width="80px"
-        />
-        <el-table-column
-          v-if="columns.visible('producedQuantity')"
-          key="producedQuantity"
-          prop="producedQuantity"
-          sortable="custom"
-          label="已生产量"
-          align="left"
-          min-width="90px"
         />
         <el-table-column
           v-if="columns.visible('netWeight')"
@@ -155,15 +145,6 @@
           </template>
         </el-table-column>
         <el-table-column
-          v-if="columns.visible('drawingNumber')"
-          key="drawingNumber"
-          prop="drawingNumber"
-          sortable="custom"
-          :show-overflow-tooltip="true"
-          label="图号"
-          min-width="100px"
-        />
-        <el-table-column
           v-if="columns.visible('surfaceArea')"
           key="surfaceArea"
           prop="surfaceArea"
@@ -177,26 +158,14 @@
           </template>
         </el-table-column>
         <el-table-column
-          v-if="columns.visible('remark')"
-          key="remark"
-          prop="remark"
+          v-if="columns.visible('drawingNumber')"
+          key="drawingNumber"
+          prop="drawingNumber"
+          sortable="custom"
           :show-overflow-tooltip="true"
-          label="备注"
-          min-width="120"
+          label="图号"
+          min-width="100px"
         />
-        <el-table-column
-          v-if="columns.visible('userName')"
-          key="userName"
-          prop="userName"
-          :show-overflow-tooltip="true"
-          label="上传人"
-          min-width="110"
-        />
-        <el-table-column v-if="columns.visible('createTime')" key="createTime" prop="createTime" label="上传时间" min-width="160px">
-          <template v-slot="scope">
-            <div>{{ scope.row.createTime ? parseTime(scope.row.createTime, '{y}-{m}-{d}') : '-' }}</div>
-          </template>
-        </el-table-column>
       </common-table>
       <!--分页组件-->
       <pagination />
@@ -228,7 +197,6 @@ import pagination from '@crud/Pagination'
 import { mapGetters } from '@/store/lib'
 import mHeader from './module/header'
 import { DP } from '@/settings/config'
-import { parseTime } from '@/utils/date'
 import { artifactPM as permission } from '@/page-permission/plan'
 import drawingPreviewFullscreenDialog from '@comp-base/drawing-preview/drawing-preview-fullscreen-dialog'
 

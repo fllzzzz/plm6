@@ -25,30 +25,6 @@
     </div>
     <crudOperation>
       <template #optLeft>
-        <!-- <upload-btn
-          v-if="currentArea && currentArea.id && globalProject.mode!==projectModeEnum.STRUCTURE_STANDARD.V"
-          v-permission="crud.permission.import"
-          :data="AddParam"
-          :upload-fun="listUpload"
-          success-msg="导入成功"
-          btn-name="清单增量导入"
-          btn-type="primary"
-          btn-size="mini"
-          class="filter-item"
-          @success="uploadSuccess"
-        />
-        <upload-btn
-          v-if="currentArea && currentArea.id && globalProject.mode!==projectModeEnum.STRUCTURE_STANDARD.V"
-          v-permission="crud.permission.import"
-          :data="carryParam"
-          :upload-fun="listUpload"
-          success-msg="导入成功"
-          btn-name="清单覆盖导入"
-          btn-type="success"
-          btn-size="mini"
-          class="filter-item"
-          @success="uploadSuccess"
-        /> -->
         <export-button
           v-if="currentArea && currentArea.id"
           :fn="downloadAssemble"
@@ -66,20 +42,31 @@
           v-permission="crud.permission.templateDownLoad"
         >
           部件清单模板
-        </export-button> -->
-        <!-- <el-popconfirm
+        </export-button>
+        <el-popconfirm
           :title="`确认清空【${currentArea.name}】下的【部件清单】么?`"
           @confirm="deleteAssemle"
-          v-if="currentArea && currentArea.id && checkPermission(crud.permission.del) && globalProject.mode!==projectModeEnum.STRUCTURE_STANDARD.V"
+          v-if="currentArea && currentArea.id && checkPermission(crud.permission.del)"
         >
           <template #reference>
             <common-button type="danger" size="mini" :loading="deleteLoading" class="filter-item" :disabled="crud.data.length === 0">
               一键清空(按区域)
             </common-button>
           </template>
-        </el-popconfirm> -->
-        <!-- <common-button
-          v-if="checkPermission(crud.permission.del) && globalProject.mode!==projectModeEnum.STRUCTURE_STANDARD.V"
+        </el-popconfirm>
+        <el-popconfirm
+          :title="`确认部分删除【${currentArea.name}】下的【部件清单】么?`"
+          @confirm="deleteAssemle"
+          v-if="currentArea && currentArea.id && checkPermission(crud.permission.del)"
+        >
+          <template #reference>
+            <common-button type="danger" size="mini" :loading="deleteLoading" class="filter-item" :disabled="crud.data.length === 0">
+              部分删除
+            </common-button>
+          </template>
+        </el-popconfirm>
+        <common-button
+          v-if="checkPermission(crud.permission.del)"
           class="filter-item"
           type="danger"
           icon="el-icon-delete"
@@ -91,7 +78,7 @@
           删除
         </common-button> -->
       </template>
-      <template #viewLeft>
+      <!-- <template #viewLeft>
         <el-tooltip effect="light" placement="top">
           <template #content>
             <div>{{ errorList.join(',') }}</div>
@@ -102,7 +89,7 @@
             </el-tag>
           </div>
         </el-tooltip>
-      </template>
+      </template> -->
     </crudOperation>
   </div>
 </template>
@@ -119,7 +106,7 @@ import areaTabs from '@/components-system/plan/area-tabs'
 import ExportButton from '@comp-common/export-button/index.vue'
 import { TechnologyTypeAllEnum } from '@enum-ms/contract'
 import rrOperation from '@crud/RR.operation'
-import { downloadAssemble, assembleError } from '@/api/plan/technical-manage/assembly'
+import { downloadAssemble } from '@/api/plan/technical-manage/assembly'
 // import { downloadAssemble, downloadAssembleTemplate, delAssemblyByArea, assembleError } from '@/api/plan/technical-manage/assembly'
 // import { projectModeEnum } from '@enum-ms/contract'
 // import { ElMessageBox } from 'element-plus'
@@ -138,7 +125,7 @@ const currentArea = ref({})
 const areaInfo = ref([])
 const defaultTab = ref({})
 const deleteLoading = ref(false)
-const errorList = ref([])
+// const errorList = ref([])
 const { crud, query } = regHeader(defaultQuery)
 const props = defineProps({
   projectId: {
@@ -198,7 +185,7 @@ function getAreaInfo(val) {
 //   }
 // }
 
-// 批量删除
+// // 批量删除
 // function deleteItems(data) {
 //   ElMessageBox.confirm(`确认删除选中的${data.length}条数据?`, '提示', {
 //     confirmButtonText: '确定',
@@ -212,21 +199,21 @@ function getAreaInfo(val) {
 //     .catch(() => {})
 // }
 
-async function getAssembleError() {
-  if (!crud.query.areaId) {
-    errorList.value = []
-    return
-  }
-  try {
-    const { content } = await assembleError({ areaId: crud.query.areaId })
-    errorList.value = content
-  } catch (e) {
-    console.log('部件错误数据', e)
-  }
-}
+// async function getAssembleError() {
+//   if (!crud.query.areaId) {
+//     errorList.value = []
+//     return
+//   }
+//   try {
+//     const { content } = await assembleError({ areaId: crud.query.areaId })
+//     errorList.value = content
+//   } catch (e) {
+//     console.log('部件错误数据', e)
+//   }
+// }
 
 function uploadSuccess() {
-  getAssembleError()
+  // getAssembleError()
   crud.toQuery()
 }
 </script>

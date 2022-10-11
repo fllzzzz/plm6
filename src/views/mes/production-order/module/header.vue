@@ -41,7 +41,7 @@
           <Panel name="已排产（t）" text-color="#626262" num-color="#1890ff" :end-val="totalAmount.schedulingTotalNetWeight || 0" :precision="DP.COM_WT__T" />
         </el-col>
         <el-col :span="6" class="card-panel-col">
-          <Panel name="未排产（t）" text-color="#626262" num-color="#f56c6c" :end-val="totalAmount.punSchedulingTotalNetWeight || 0" :precision="DP.COM_WT__T" />
+          <Panel name="未排产（t）" text-color="#626262" num-color="#f56c6c" :end-val="totalAmount.unSchedulingTotalNetWeight || 0" :precision="DP.COM_WT__T" />
         </el-col>
       </el-row>
     </div>

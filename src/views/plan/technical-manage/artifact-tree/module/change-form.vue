@@ -1,12 +1,11 @@
 <template>
-  <common-drawer
+  <common-dialog
     append-to-body
     :close-on-click-modal="false"
     :before-close="handleClose"
     v-model="visible"
-    title="数量变更"
-    :wrapper-closable="false"
-    size="60%"
+    title="构件变更"
+    width="650px"
   >
     <template #titleRight>
       <common-button
@@ -15,71 +14,65 @@
         @click="onSubmit"
       >确认</common-button>
     </template>
-    <template #content>
-      <el-form ref="formRef" :model="form" :rules="rules" size="small" label-width="130px">
-        <el-tag size="medium" type="info" effect="dark">构件信息</el-tag>
-        <div style="display: flex; width: 100%">
-          <el-form-item label="名称">
-            <div style="width:100px">{{ detailInfo.name }}</div>
-          </el-form-item>
-          <el-form-item label="编号">
-            <div style="width:100px">{{ detailInfo.serialNumber }}</div>
-          </el-form-item>
-          <el-form-item label="材质" prop="material">
-            <div style="width: 100px">
-              <div style="width:100px">{{ detailInfo.material }}</div>
-            </div>
-          </el-form-item>
-        </div>
-        <div style="display: flex; width: 100%">
-          <el-form-item label="单净重(kg)" prop="netWeight">
-            <div style="width:100px">{{ detailInfo.netWeight }}</div>
-          </el-form-item>
-          <el-form-item label="单毛重(kg)" prop="grossWeight">
-            <div style="width:100px">{{ detailInfo.grossWeight }}</div>
-          </el-form-item>
-          <el-form-item label="规格" prop="specification">
-            <div style="width:100px">{{ detailInfo.specification }}</div>
-          </el-form-item>
-        </div>
-        <div style="display: flex; width: 100%">
-          <el-form-item label="面积(㎡)" prop="surfaceArea">
-            <div style="width:100px">{{ detailInfo.surfaceArea }}</div>
-          </el-form-item>
-          <el-form-item label="长度(mm)" prop="length">
-            <div style="width:100px">{{ detailInfo.length }}</div>
-          </el-form-item>
-           <el-form-item label="图号" prop="drawingNumber">
-            <div style="width:100px">{{ detailInfo.drawingNumber }}</div>
-          </el-form-item>
-        </div>
-        <div style="display: flex; width: 100%">
-          <el-form-item label="清单数量">
-            <div style="width:100px">{{ detailInfo.quantity }}</div>
-          </el-form-item>
-          <el-form-item label="生产数量">
-            <div style="width:100px">{{ detailInfo.productionQuantity }}</div>
-          </el-form-item>
-          <el-form-item label="发运数量">
-            <div style="width:100px">{{ transportedNum  }}</div>
-          </el-form-item>
-        </div>
-        <div style="display: flex">
-          <el-form-item label="变更后清单数量" prop="quantity">
-            <div style="width: 270px">
-              <el-input-number
-                v-model.number="form.quantity"
-                :min="transportedNum?transportedNum :0"
-                :max="maxNumber"
-                :step="1"
-                step-strictly
-                placeholder=""
-                controls-position="right"
-                style="width: 200px"/>
-            </div>
-          </el-form-item>
-        </div>
-        <el-tag size="medium" type="info" effect="dark">变更原因及附件</el-tag>
+    <el-form ref="formRef" :model="form" :rules="rules" size="small" label-width="130px">
+        <el-form-item label="名称">
+          {{ detailInfo.name }}
+        </el-form-item>
+        <el-form-item label="编号">
+          {{ detailInfo.serialNumber }}
+        </el-form-item>
+        <el-form-item label="规格" prop="specification">
+          {{ detailInfo.specification }}
+        </el-form-item>
+        <el-form-item label="长度(mm)" prop="length">
+          {{ detailInfo.length }}
+        </el-form-item>
+        <el-form-item label="数量" prop="quantity">
+          <el-input-number
+            v-model.number="form.quantity"
+            :min="transportedNum?transportedNum :0"
+            :max="maxNumber"
+            :step="1"
+            step-strictly
+            placeholder=""
+            controls-position="right"
+            style="width: 200px"/>
+        </el-form-item>
+        <el-form-item label="单净重(kg)" prop="netWeight">
+          {{ detailInfo.netWeight }}
+        </el-form-item>
+        <el-form-item label="单毛重(kg)" prop="grossWeight">
+          <el-input-number
+            v-model.number="form.grossWeight"
+            :min="0"
+            :max="99999999999"
+            :step="1"
+            :precision="DP.COM_WT__KG"
+            placeholder="单毛重"
+            controls-position="right"
+            style="width: 220px;"
+          />
+        </el-form-item>
+        <el-form-item label="面积(㎡)" prop="surfaceArea">
+          <el-input-number
+            v-model.number="form.surfaceArea"
+            :min="0"
+            :max="99999999999"
+            :step="1"
+            :precision="DP.COM_AREA__M2"
+            placeholder="面积"
+            controls-position="right"
+            style="width: 220px;"
+          />
+        </el-form-item>
+        <el-form-item label="图号" prop="drawingNumber">
+          <el-input
+            v-model.trim="form.drawingNumber"
+            type="text"
+            :maxlength="20"
+            placeholder="请输入图号"
+            style="width: 220px"/>
+        </el-form-item>
         <el-form-item label="原因类型" prop="reasonId">
           <changeRemarkSelect v-model="form.reasonId" clearable/>
         </el-form-item>
@@ -92,28 +85,19 @@
             placeholder="请填写原因描述"
             style="width: 320px"/>
         </el-form-item>
-        <el-form-item label="附件上传" prop="attachmentFiles">
-          <upload-list
-            ref="uploadRef"
-            :show-download="false"
-            :file-classify="fileClassifyEnum.CHANGE_LIST_ATT.V"
-            v-model:files="form.attachmentFiles"
-            empty-text="暂未附件"
-          />
-        </el-form-item>
       </el-form>
-    </template>
-  </common-drawer>
+  </common-dialog>
 </template>
 
 <script setup>
 import { ref, defineProps, defineEmits, nextTick, watch } from 'vue'
-import { fileClassifyEnum } from '@enum-ms/file'
 import { ElNotification } from 'element-plus'
+
+import { DP } from '@/settings/config'
 import useVisible from '@compos/use-visible'
 import useWatchFormValidate from '@compos/form/use-watch-form-validate'
+
 import changeRemarkSelect from '@comp-base/change-reason-select'
-import uploadList from '@comp/file-upload/UploadList.vue'
 import { numChange, artifactInfo } from '@/api/plan/technical-manage/artifact-tree'
 
 const formRef = ref()
@@ -121,11 +105,9 @@ const maxNumber = 999999999
 const defaultForm = {
   quantity: undefined,
   reasonId: undefined,
-  changeRemark: undefined,
-  attachmentFiles: []
+  changeRemark: undefined
 }
 const form = ref(JSON.parse(JSON.stringify(defaultForm)))
-const uploadRef = ref()
 const props = defineProps({
   modelValue: {
     type: Boolean,
@@ -202,11 +184,10 @@ async function onSubmit(val) {
   try {
     await formRef.value.validate()
     form.value.id = props.detailInfo.id
-    form.value.attachments = form.value.attachmentFiles && form.value.attachmentFiles.length > 0 ? form.value.attachmentFiles.map((v) => v.id) : []
     await numChange(form.value)
     handleSuccess()
   } catch (e) {
-    console.log('修改构件数量', e)
+    console.log('修改构件信息', e)
   }
 }
 </script>
