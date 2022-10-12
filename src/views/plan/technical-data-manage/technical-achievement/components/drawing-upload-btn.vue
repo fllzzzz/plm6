@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="display: inline-block;">
     <el-upload
       ref="uploadRef"
       action=""
@@ -22,9 +22,9 @@
       top="10vh"
       :before-close="handleZipDlgClose"
     >
-      <span v-if="errorList && errorList.length > 0" class="red-tip" style="display:inline-block;margin-bottom:10px">含 {{ errorList.length }} 个文件后缀不为“ {{ tip }} ”的文件,请重新打包上传</span>
+      <span v-if="errorList.length" class="red-tip" style="display:inline-block;margin-bottom:10px">含 {{ errorList.length }} 个文件后缀不为“ {{ tip }} ”的文件,请重新打包上传</span>
       <div class="zip-box">
-        <ul v-if="errorList && errorList.length > 0" class="zip-list">
+        <ul v-if="errorList.length" class="zip-list">
           <li v-for="(file,index) in errorList" :key="index">
             <span style="color:red">{{ file.name }}</span>
           </li>
@@ -38,16 +38,7 @@
       <template #footer>
         <span class="dialog-footer">
           <common-button @click="handleZipDlgClose">取 消</common-button>
-          <template v-if="dataType===technicalDataTypeEnum.DEEPEN.V">
-            <common-button :loading="uploadZipLoading" type="primary" :disabled="errorList && errorList.length > 0" @click="uploadZip">上传</common-button>
-          </template>
-          <template v-else>
-            <el-popconfirm :title="dataType?'保存后无法删除,确定上传?':'确定上传?'" @confirm="uploadZip">
-              <template #reference>
-                <common-button :loading="uploadZipLoading" type="primary" :disabled="errorList && errorList.length > 0">上传</common-button>
-              </template>
-            </el-popconfirm>
-          </template>
+          <common-button :loading="uploadZipLoading" type="primary" :disabled="!!errorList.length" @click="uploadZip">上传</common-button>
         </span>
       </template>
     </common-dialog>
@@ -56,14 +47,17 @@
 
 <script setup>
 import { ref, defineEmits, defineProps } from 'vue'
+import { upload } from '@/api/plan/technical-data-manage/technical-achievement'
+
 import { getToken } from '@/utils/storage'
 import { getFileSuffix } from '@/utils/file'
 import { fileClassifyEnum } from '@enum-ms/file'
+
 import { ElUpload, ElMessage, ElNotification } from 'element-plus'
-import { technicalDataTypeEnum } from '@enum-ms/plan'
 import JSZip from 'jszip'
 
 const emit = defineEmits(['success'])
+
 const props = defineProps({
   data: {
     type: Object,
@@ -71,7 +65,7 @@ const props = defineProps({
   },
   uploadFun: {
     type: Function,
-    default: undefined
+    default: upload
   },
   fileClassify: {
     type: Number,
@@ -91,15 +85,15 @@ const props = defineProps({
   },
   btnType: {
     type: String,
-    default: 'primary'
+    default: 'success'
   },
   btnSize: {
     type: String,
-    default: 'small'
+    default: 'mini'
   },
   btnName: {
     type: String,
-    default: '文件上传'
+    default: '文件导入'
   },
   sizeLimit: {
     type: Number,
@@ -136,37 +130,15 @@ const zipList = ref([])
 const errorList = ref([])
 const uploadZipLoading = ref(false)
 const dialogVisible = ref(false)
-// const tip = ref()
 const currentFile = ref()
 const uploadRef = ref()
 
-// watch(
-//   () => props.materialType,
-//   (val) => {
-//     if (val === 2) {
-//       tip.value = '.png, .jpg, .jpeg ,.pdf'
-//       // 修改可解析的zip格式
-//     } else {
-//       tip.value = '.pdf'
-//     }
-//   },
-//   { deep: true, immediate: true }
-// )
-
-// function handleClose() {
-//   dialogVisible.value = false
-// }
 async function handleRequest(file) {
   try {
     uploadLoading.value = true
     const fileObj = file.file
     const formData = new FormData() // 添加参数
-    if (props.data.id) {
-      formData.append('multipartFile', fileObj)
-    } else {
-      formData.append('file', fileObj)
-    }
-    // formData.append('fileType', props.fileClassify)
+    formData.append('file', fileObj)
     for (const key in props.data) {
       if (props.data[key]) {
         formData.append(key, props.data[key])
@@ -213,13 +185,13 @@ function handleBefore(file) {
     ElMessage({ message: `上传文件大小不能超过 ${props.sizeLimit}MB!`, type: 'error' })
     return false
   }
-  console.log(file)
   if (suffix === '.zip') { // 文件类型为zip时做处理
     currentFile.value = file
     handleZip(file)
     return false
   }
 }
+
 async function handleZip(zip) {
   const jsZip = new JSZip()
   const zipListData = []
@@ -237,7 +209,9 @@ async function handleZip(zip) {
         '.PNG': suffix === '.png',
         '.JPEG': suffix === '.jpeg',
         '.DWG': suffix === '.dwg',
-        '.DXF': suffix === '.dxf'
+        '.DXF': suffix === '.dxf',
+        '.NC1': suffix === '.nc1',
+        '.XML': suffix === '.xml'
       }
       if (props.tip && props.tip.length > 0) {
         const errArr = []
@@ -256,6 +230,7 @@ async function handleZip(zip) {
   errorList.value = errorListData
   previewZip() // 预览zip
 }
+
 // 上传zip
 async function uploadZip() {
   uploadZipLoading.value = true
@@ -271,12 +246,15 @@ async function uploadZip() {
     handleZipDlgClose()
   }
 }
+
 function handleExceed(files, fileList) {
   ElMessage({ message: `当前限制选择 ${this.limit} 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`, type: 'warning' })
 }
+
 function previewZip() {
   dialogVisible.value = true
 }
+
 function handleZipDlgClose() {
   dialogVisible.value = false
 }
@@ -288,13 +266,13 @@ function handleZipDlgClose() {
   height: 60vh;
 }
 ::v-deep(.el-dialog__body){
-    padding: 10px 20px;
-    .zip-list {
-      padding: 0 10px;
-      &>li{
-        white-space: nowrap;
-        line-height: 25px;
-      }
+  padding: 10px 20px;
+  .zip-list {
+    padding: 0 10px;
+    &>li{
+      white-space: nowrap;
+      line-height: 25px;
     }
+  }
 }
 </style>
