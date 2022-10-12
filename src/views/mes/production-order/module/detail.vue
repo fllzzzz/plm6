@@ -16,7 +16,7 @@
     </template>
     <template #content>
       <el-form ref="formRef" size="small" label-width="130px">
-        <common-table :data="list" v-loading="tableLoading" return-source-data :showEmptySymbol="false" :span-method="objectSpanMethod" :max-height="maxHeight-70">
+        <common-table :data="list" v-loading="tableLoading" return-source-data :showEmptySymbol="false" :span-method="objectSpanMethod" :max-height="maxHeight">
           <el-table-column key="project" prop="project" label="项目" align="center" min-width="120">
             <template v-slot="scope">
               <span class="project-name">{{ projectNameFormatter(scope.row.project) }}</span>
@@ -143,9 +143,12 @@ const { maxHeight } = useMaxHeight(
   {
     mainBox: '.schedule-detail',
     extraBox: '.el-drawer__header',
-    wrapperBox: '.el-drawer__body'
+    wrapperBox: '.el-drawer__body',
+    navbar: false,
+    clientHRepMainH: true,
+    minHeight: 300
   },
-  drawerRef
+  () => drawerRef.value.loaded
 )
 
 watch(
