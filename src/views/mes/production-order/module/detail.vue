@@ -16,7 +16,7 @@
     </template>
     <template #content>
       <el-form ref="formRef" size="small" label-width="130px">
-        <common-table :data="list" v-loading="tableLoading" return-source-data :showEmptySymbol="false" :span-method="objectSpanMethod" :max-height="maxHeight">
+        <common-table :data="list" v-loading="tableLoading" return-source-data :showEmptySymbol="false" :span-method="objectSpanMethod" :max-height="maxHeight" :stripe="false">
           <el-table-column key="project" prop="project" label="项目" align="center" min-width="120">
             <template v-slot="scope">
               <span class="project-name">{{ projectNameFormatter(scope.row.project) }}</span>
@@ -33,7 +33,7 @@
           </el-table-column>
           <el-table-column key="totalWeight" prop="totalWeight" label="合计（kg）" align="center">
             <template v-slot="scope">
-              <span v-if="scope.row.totalWeight">{{toThousand(scope.row.totalWeight,DP.COM_WT__KG)}}</span>
+              <span v-if="scope.row.totalWeight" style="cursor:pointer;color:#409eff;" @click="drawerVisible=true">{{toThousand(scope.row.totalWeight,DP.COM_WT__KG)}}</span>
               <span v-else>-</span>
             </template>
           </el-table-column>
@@ -84,6 +84,23 @@
           </el-table-column>
         </common-table>
       </el-form>
+      <common-drawer
+        append-to-body
+        ref="detailRef"
+        v-model="drawerVisible"
+        top="10vh"
+        :before-close="()=>{
+          drawerVisible=false
+        }"
+        title="构零件清单"
+        :wrapper-closable="false"
+        custom-class="artifact-tree-drawer"
+        size="90%"
+      >
+        <template #content>
+          <structure-list :drawerVisible="drawerVisible" :currentId="currentId"/>
+        </template>
+      </common-drawer>
     </template>
   </common-drawer>
 </template>
@@ -103,6 +120,8 @@ import { parseTime } from '@/utils/date'
 import { toThousand } from '@/utils/data-type/number'
 import { judgeSameValue } from '@/views/contract/info/judgeSameValue'
 import checkPermission from '@/utils/system/check-permission'
+
+import structureList from './structure-list'
 
 const emit = defineEmits(['success', 'update:modelValue'])
 const { visible, handleClose } = useVisible({ emit, props })
@@ -131,6 +150,8 @@ const drawerRef = ref()
 const tableLoading = ref(false)
 const isEdit = ref(false)
 const originData = ref([])
+const detailRef = ref()
+const drawerVisible = ref(false)
 
 const cascaderProps = {
   value: 'id',
