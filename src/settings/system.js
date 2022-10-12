@@ -90,6 +90,12 @@ export const showProjectSearch = [
   { component: '/mes/pack-and-ship/receipt-status/index', type: pt.STEEL.V, required: false },
   { component: '/mes/pack-and-ship/logistics-list/index', type: pt.STEEL.V, required: false },
   { component: '/mes/pack-and-ship/ship-audit/index', type: pt.STEEL.V, required: false },
+
+  // 计划管理
+  { component: '/plan/technical-data-manage/technical-achievement/model/index', type: allPT, required: true },
+  { component: '/plan/technical-data-manage/technical-achievement/drawing/index', type: allPT, required: true },
+  { component: '/plan/technical-data-manage/technical-achievement/cnc/index', type: allPT, required: true },
+  { component: '/plan/technical-data-manage/technical-achievement/xml/index', type: allPT, required: true },
   { component: '/plan/overall-plan/monomer/index', type: allPT, required: true },
   { component: '/plan/project-list/index', type: allPT, required: true },
   { component: '/plan/overall-plan/area/index', type: allPT, required: true },

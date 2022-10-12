@@ -166,23 +166,39 @@ export const changeFileListPM = {
   import: ['plan_change_file:import'] // 导入
 }
 
-// // 技术管理/模型列表
-// export const modelListPM = {
-//   get: ['plan_model:get'], // 模型列表
-//   edit: ['plan_model:edit'], // 修改模型
-//   del: ['plan_model:del'], // 删除模型
-//   download: ['plan_model:download'], // 下载
-//   import: ['plan_model:import'] // 导入
-// }
+// 技术成果/模型文件管理
+export const modelFileListPM = {
+  get: ['plan_model_file:get'], // 列表
+  del: ['plan_model_file:del'], // 删除
+  detail: ['plan_model_file:detail'], // 详情
+  import: ['plan_model_file:import'], // 导入
+  integration: ['plan_model_file:integration'], // 模型集成
+  integrationDel: ['plan_model_file:integrationDel'] // 删除模型集成
+}
 
-// // 技术管理/其他文件列表
-// export const otherFileListPM = {
-//   get: ['plan_other_file:get'], // 其他文件列表
-//   edit: ['plan_other_file:edit'], // 修改其他文件
-//   del: ['plan_other_file:del'], // 删除其他文件
-//   download: ['plan_other_file:download'], // 下载
-//   import: ['plan_other_file:import'] // 导入
-// }
+// 技术成果/图纸文件管理
+export const drawingFileListPM = {
+  get: ['plan_drawing_file:get'], // 列表
+  del: ['plan_drawing_file:del'], // 删除
+  detail: ['plan_drawing_file:detail'], // 详情
+  import: ['plan_drawing_file:import'] // 导入
+}
+
+// 技术成果/数控文件管理
+export const cncFileListPM = {
+  get: ['plan_cnc_file:get'], // 列表
+  del: ['plan_cnc_file:del'], // 删除
+  detail: ['plan_cnc_file:detail'], // 详情
+  import: ['plan_cnc_file:import'] // 导入
+}
+
+// 技术成果/XML文件管理
+export const xmlFileListPM = {
+  get: ['plan_xml_file:get'], // 列表
+  del: ['plan_xml_file:del'], // 删除
+  detail: ['plan_xml_file:detail'], // 详情
+  import: ['plan_xml_file:import'] // 导入
+}
 
 // 技术管理/清单合计列表
 export const summaryListPM = {
