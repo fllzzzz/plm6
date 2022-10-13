@@ -16,7 +16,7 @@
     </template>
     <template #content>
       <el-form ref="formRef" size="small" label-width="130px">
-        <el-form-item label="采购单号">
+        <el-form-item label="采购合同编号">
           <span>{{ detailInfo.serialNumber }}</span>
         </el-form-item>
         <el-form-item label="供应商">

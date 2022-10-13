@@ -19,7 +19,7 @@
         </template>
       </el-table-column>
       <el-table-column v-if="columns.visible('createTime')" show-overflow-tooltip key="createTime" prop="createTime" label="日期" align="center" width="130" />
-      <el-table-column v-if="columns.visible('serialNumber')" key="serialNumber" prop="serialNumber" :show-overflow-tooltip="true" label="采购订单" align="center" min-width="130" />
+      <el-table-column v-if="columns.visible('serialNumber')" key="serialNumber" prop="serialNumber" :show-overflow-tooltip="true" label="采购合同编号" align="center" min-width="130" />
       <el-table-column v-if="columns.visible('supplierName')" show-overflow-tooltip key="supplierName" prop="supplierName" label="供应商" min-width="150" />
       <el-table-column v-if="columns.visible('typeText')" show-overflow-tooltip key="typeText" prop="typeText" label="物料种类" min-width="150" />
       <el-table-column v-if="columns.visible('amount')" prop="amount" key="amount" label="合同额" align="right" min-width="120" show-overflow-tooltip />
