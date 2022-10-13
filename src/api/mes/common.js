@@ -91,6 +91,17 @@ export function getAllFactoryWorkshopLines(params) {
 }
 
 /**
+ * @description: 切割配置列表
+ */
+export function getAllCutConfigs() {
+  return request({
+    module: 'mes',
+    url: `cut/list/cut`,
+    method: 'get'
+  })
+}
+
+/**
  * 所有包单号列表
  * @export
  * @returns
@@ -111,11 +122,19 @@ export function getAllPackage(params) {
  * @param {number} productType 类型
  * @returns
  */
-export function getHasTaskLine({ areaId, monomerId, productType }) {
+export function getHasTaskLine({
+  areaId,
+  monomerId,
+  productType
+}) {
   return request({
     module: 'mes',
     url: 'task/productionLine/hasTask',
     method: 'get',
-    params: { areaId, monomerId, productType }
+    params: {
+      areaId,
+      monomerId,
+      productType
+    }
   })
 }

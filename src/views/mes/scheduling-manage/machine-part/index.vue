@@ -1,0 +1,333 @@
+<template>
+  <div class="app-container wrap">
+    <div class="wrap-left">
+      <project-list ref="projectListRef" :maxHeight="maxHeight" @project-click="handleProjectClick" />
+    </div>
+    <div class="wrap-right">
+      <el-tag v-if="!crud.query?.projectIds?.length" type="info" size="medium"> * 请先选择项目，进行零件排产 </el-tag>
+      <template v-else>
+        <div class="head-container">
+          <mHeader ref="headRef" @load="load">
+            <template #optLeft>
+              <div style="display: flex">
+                <el-checkbox
+                  v-model="checkAll"
+                  size="mini"
+                  style="margin-right: 5px"
+                  :indeterminate="checkedNodes.length > 0 && checkedNodes.length !== boardList && !checkAll"
+                  border
+                  @change="handleCheckedAll"
+                  >全选</el-checkbox
+                >
+                <common-button type="success" class="filter-item" size="mini" @click="previewIt">预览并保存</common-button>
+              </div>
+            </template>
+          </mHeader>
+        </div>
+        <!--看板渲染-->
+        <div
+          v-if="crud.firstLoaded"
+          ref="scrollBoxRef"
+          v-infinite-scroll="load"
+          class="board-container"
+          :infinite-scroll-disabled="crud.loading || !crud.page.hasNextPage"
+          :infinite-scroll-delay="200"
+          :infinite-scroll-distance="200"
+          :infinite-scroll-immediate-check="true"
+          :style="{ 'max-height': `${maxHeight}px` }"
+        >
+          <template v-for="item in boardList" :key="item.id">
+            <el-tooltip
+              :open-delay="300"
+              class="item"
+              effect="light"
+              :content="`${item.project?.shortName}\n
+          编号：${item.serialNumber}\n
+          长度：${item.length} mm\n
+          单重：${item.netWeight} kg\n
+          数量：${item.quantity}\n
+          `"
+              placement="left-start"
+            >
+              <div
+                class="board-box"
+                style="position: relative; cursor: pointer"
+                :style="{ 'background-color': `${item.boxColor}`, ...boxStyle }"
+              >
+                <span class="ellipsis-text text">
+                  {{ item.serialNumber }}
+                </span>
+                <el-image src="" fit="scale-down" />
+                <span class="ellipsis-text text">{{ item.specification }}/{{ item.quantity }}</span>
+                <el-checkbox
+                  style="position: absolute; left: 10px; top: 0px"
+                  v-model="item.checked"
+                  @click.stop
+                  @change="handleCheckedChange($event, item)"
+                ></el-checkbox>
+              </div>
+            </el-tooltip>
+          </template>
+          <span v-if="!boardList.length && !crud.loading" class="red-tip">* 暂无数据</span>
+          <div v-if="crud.loading" class="loading-box" :style="boxStyle">
+            <span>加载中</span>
+            <i class="el-icon-loading" />
+          </div>
+        </div>
+        <m-preview
+          v-model:visible="previewVisible"
+          :artifactDateTime="artifactDateTime"
+          :list="checkedNodes"
+          @success="refresh"
+        ></m-preview>
+      </template>
+    </div>
+  </div>
+</template>
+
+<script setup>
+import crudApi from '@/api/mes/scheduling-manage/machine-part'
+import { computed, ref, onUnmounted, onMounted, nextTick } from 'vue'
+import { ElMessage } from 'element-plus'
+
+import RAF from '@/utils/raf'
+// import { componentTypeEnum } from '@enum-ms/mes'
+import { machinePartSchedulingPM as permission } from '@/page-permission/mes'
+
+import useMaxHeight from '@compos/use-max-height'
+import useCRUD from '@compos/use-crud'
+import mHeader from './module/header'
+import mPreview from './module/preview'
+import projectList from './module/project-list'
+
+const optShow = {
+  add: false,
+  edit: false,
+  del: false,
+  download: false
+}
+
+const projectListRef = ref()
+const tableRef = ref()
+const { crud, CRUD } = useCRUD(
+  {
+    title: '零件排产',
+    sort: [],
+    permission: { ...permission },
+    optShow: { ...optShow },
+    crudApi: { ...crudApi },
+    queryOnPresenterCreated: false,
+    requiredQuery: ['dateTime', 'material', 'projectIds', 'thick']
+  },
+  tableRef
+)
+
+const { maxHeight } = useMaxHeight({ paginate: true })
+
+const boardList = ref([])
+
+const artifactDateTime = computed(() => {
+  return projectListRef?.value?.artifactDateTime
+})
+
+CRUD.HOOK.handleRefresh = (crud, res) => {
+  clearCheck()
+  res.data.content = res.data.content.map((v) => {
+    v.checked = false
+    return v
+  })
+}
+
+// --------------------------- start ------------------------------
+const headRef = ref()
+const scrollBoxRef = ref()
+const pageSize = 20
+const intervalTime = 1000
+
+const boxScale = computed(() => {
+  if (headRef.value) {
+    checkHasScrollBar()
+    return headRef.value.boxScale
+  }
+  return 1
+})
+
+const boxStyle = computed(() => {
+  return {
+    'font-size': `${(16 * boxScale.value).toFixed(0)}px`,
+    width: `${(120 * boxScale.value).toFixed(0)}px`,
+    height: `${(120 * boxScale.value).toFixed(0)}px`
+  }
+})
+
+onMounted(() => {
+  // 处理容器一开始撑满，size改变之后，未撑满的情况
+  window.addEventListener('resize', checkHasScrollBar, { passive: false })
+})
+
+onUnmounted(() => {
+  window.removeEventListener('resize', checkHasScrollBar)
+})
+
+function checkHasScrollBar() {
+  RAF.clearInterval()
+  const distance = 200
+  const boxEl = scrollBoxRef.value
+  const flag = !boxEl || !crud.page.hasNextPage || boxEl.scrollHeight > boxEl.clientHeight + distance
+  if (flag) return
+  let pollingTimes = 0 // 避免异常无限轮询
+  console.log(intervalTime)
+  RAF.setInterval(() => {
+    const _flag = boxEl && crud.page.hasNextPage && boxEl.scrollHeight < boxEl.clientHeight + distance
+    if (_flag && ++pollingTimes <= 10) {
+      load()
+    } else {
+      RAF.clearInterval()
+    }
+  }, intervalTime)
+}
+
+async function load() {
+  if (crud.firstLoaded && crud.page.hasNextPage) {
+    await crud.pageChangeHandler(++crud.page.page)
+  }
+}
+
+CRUD.HOOK.beforeRefresh = () => {
+  crud.page.size = pageSize
+  if (crud.page.page === 1) {
+    boardList.value = []
+  }
+}
+
+CRUD.HOOK.afterRefresh = () => {
+  crud.data.forEach((component) => {
+    boardList.value.push(component)
+  })
+}
+// --------------------------- end --------------------------------
+
+function handleProjectClick(val, time) {
+  crud.query.dateTime = time
+  crud.query.projectIds = val.map((v) => v.projectId)
+  nextTick(() => {
+    headRef.value?.refreshConditions()
+  })
+}
+
+function refresh() {
+  checkAll.value = false
+  headRef.value?.refreshConditions()
+}
+
+// --------------------------- 选择操作 start ------------------------------
+
+const checkAll = ref(false)
+const checkedNodes = ref([])
+
+// 切换项目清除选择
+function clearCheck() {
+  checkedNodes.value = []
+}
+function handleCheckedChange(value, item) {
+  const _checkedIndex = checkedNodes.value.findIndex((v) => v.id === item.id)
+  if (value) {
+    if (_checkedIndex === -1) checkedNodes.value.push(item)
+  } else {
+    if (_checkedIndex > -1) checkedNodes.value.splice(_checkedIndex, 1)
+  }
+}
+function handleCheckedAll(val) {
+  checkAll.value = val
+  boardList.value.forEach((v) => {
+    v.checked = val
+    handleCheckedChange(val, v)
+  })
+}
+
+// --------------------------- 选择操作 end --------------------------------
+
+// --------------------------- 预览并保存 start ------------------------------
+
+const previewVisible = ref(false)
+
+function previewIt() {
+  if (!checkedNodes.value?.length) {
+    ElMessage.warning('请至少选择一条数据')
+    return
+  }
+
+  previewVisible.value = true
+}
+// --------------------------- 预览并保存 end --------------------------------
+</script>
+
+<style lang="scss" scoped>
+.wrap {
+  display: flex;
+  .wrap-left {
+    width: 380px;
+    margin-right: 20px;
+  }
+  .wrap-right {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+  }
+}
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-thumb {
+  border-radius: 6px;
+}
+
+.board-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  flex-wrap: wrap;
+  overflow: auto;
+
+  .board-box {
+    width: 120px;
+    height: 120px;
+    box-sizing: border-box;
+    padding: 2px;
+    margin: 0 10px 10px 0;
+    font-size: 16px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid #dfe4ed;
+    border-radius: 6px;
+
+    .text {
+      display: inline-block;
+      width: 100%;
+      text-align: center;
+      padding: 5px 0px;
+      font-size: 14px;
+    }
+  }
+  .loading-box {
+    width: 120px;
+    height: 120px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: #46a6ff;
+    > span {
+      margin-bottom: 10px;
+    }
+  }
+  .gif-content {
+    width: 260px;
+    height: 120px;
+  }
+}
+</style>

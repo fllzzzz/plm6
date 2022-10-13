@@ -165,6 +165,7 @@ function abnormalClose(ls, trigger) {
     inEdit = typeof trigger === 'function' ? trigger() : trigger.value
   }
   // 当在编辑中,并且初始表单内容与当前表单内容不一致时，将信息存为异常保存
+  console.log(ls.initForm, ls.form, 'abnormalClose')
   if (inEdit && !isObjectValueEqual(ls.initForm, ls.form)) {
     saveFormToStorage(ls, null, ADD_FORM.TYPE.browserClose)
   }

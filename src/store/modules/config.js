@@ -9,6 +9,7 @@ import { getAllFactoryWorkshopLines } from '@/api/mes/common'
 import { getLinesAllSimple } from '@/api/mes/common'
 import { getProductionTeamAllSimple } from '@/api/mes/common'
 import { getInspectionTeamAllSimple } from '@/api/mes/common'
+import { getAllCutConfigs } from '@/api/mes/common'
 import { getProcessAllSimple } from '@/api/mes/common'
 import { getUserAllSimple } from '@/api/common'
 import { getDeptAllSimple } from '@/api/common'
@@ -72,6 +73,8 @@ const state = {
   inspectionTeam: [], // 质检班组
   inspectionTeamKV: {}, // 生产班组id:value 格式
   onlyProductLines: [], // 生产线
+  cutConfigs: [], // 切割配置（所有）
+  cutConfigKV: {}, // 切割配置 id:value 格式
   process: [], // 工序
   users: [], // 人员列表
   dept: [], // 部门列表
@@ -101,6 +104,7 @@ const state = {
     inspectionTeam: false,
     productLines: false,
     onlyProductLines: false,
+    cutConfigs: false,
     process: false,
     users: false,
     dept: false,
@@ -195,6 +199,13 @@ const mutations = {
   },
   SET_ONLY_PRODUCT_LINES(state, onlyProductLines) {
     state.onlyProductLines = onlyProductLines
+  },
+  SET_CUT_CONFIGS(state, cutConfigs) {
+    state.cutConfigs = cutConfigs
+    state.cutConfigKV = {}
+    // cutConfigs.forEach((v) => {
+    //   state.cutConfigKV[v.id] = v
+    // })
   },
   SET_PROCESS(state, process) {
     state.process = process
@@ -416,6 +427,13 @@ const actions = {
     const { content = [] } = await getLinesAllSimple()
     commit('SET_ONLY_PRODUCT_LINES', content)
     commit('SET_LOADED', { key: 'onlyProductLines', loaded: true })
+    return content
+  },
+  // 切割配置
+  async fetchCutConfig({ commit }) {
+    const content = await getAllCutConfigs() || []
+    commit('SET_CUT_CONFIGS', content)
+    commit('SET_LOADED', { key: 'cutConfigs', loaded: true })
     return content
   },
   // 工序
