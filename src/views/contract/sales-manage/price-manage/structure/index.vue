@@ -119,7 +119,10 @@ const { crud, columns } = useCRUD(
   tableRef
 )
 
-const { maxHeight } = useMaxHeight({ paginate: true })
+const { maxHeight } = useMaxHeight({
+  paginate: true,
+  extraHeight: 100
+})
 
 const validatePrice = (value, row) => {
   if (row.pricingManner !== row.originPricingManner || row.unitPrice !== row.originUnitPrice) {

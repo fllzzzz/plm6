@@ -102,7 +102,7 @@ const purchaseInvoiceRecord = {
      * @param {*} format 格式转换
      */
     fields: [ // 字段内容
-      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'serialNumber', title: '采购单号：', width: 120, type: typeEnum.ORDER_TYPE.K },
+      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'serialNumber', title: '采购合同编号：', width: 120, type: typeEnum.ORDER_TYPE.K },
       { show: true, source: dataSourceEnum.SYSTEM.V, key: 'signingTime', title: '签订日期：', width: 60, type: typeEnum.DATE.K, format: 'YY/MM/DD kk:mm:ss' },
       { show: true, source: dataSourceEnum.SYSTEM.V, key: 'supplierName', title: '供应商：', width: 120, type: typeEnum.COMPANY_NAME.K },
       { show: true, source: dataSourceEnum.SYSTEM.V, key: 'amount', title: '合同金额：', width: 60, type: typeEnum.AMOUNT.K, format: { toThousand: true, precision: 2, unit: amountUnitEnum.YUAN.V }},

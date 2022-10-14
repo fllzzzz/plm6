@@ -22,10 +22,10 @@
           <div class="form-content" :style="heightStyle">
             <div class="form-left">
               <div class="order-details">
-                <el-form-item class="el-form-item-1" label="采购订单号" prop="serialNumber">
+                <el-form-item class="el-form-item-1" label="采购合同编号" prop="serialNumber">
                   <el-input
                     v-model.trim="form.serialNumber"
-                    placeholder="可输入采购订单号（不填写则自动生成）"
+                    placeholder="可输入采购合同编号（不填写则自动生成）"
                     :disabled="form.boolUsed"
                     maxlength="30"
                     size="small"

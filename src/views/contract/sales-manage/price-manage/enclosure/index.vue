@@ -101,7 +101,10 @@ const { crud, columns } = useCRUD(
   tableRef
 )
 
-const { maxHeight } = useMaxHeight({ paginate: true })
+const { maxHeight } = useMaxHeight({
+  paginate: true,
+  extraHeight: 100
+})
 const { changedCellMask } = useTableChange({ fieldMap: sourceMap })
 
 // 价格变动
