@@ -104,7 +104,7 @@ const { maxHeight } = useMaxHeight(
   () => computed(() => !crud.detailLoading)
 )
 
-// 采购订单信息
+// 采购合同信息
 const order = computed(() => detail.purchaseOrder || {})
 
 // 显示金额相关信息（（统一为入库填写，取消后台配置）

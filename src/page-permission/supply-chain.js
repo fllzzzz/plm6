@@ -1,7 +1,7 @@
 // --------------------------- 公共权限 start ------------------------------
 
 export const commonPM = {
-  // 采购订单详情
+  // 采购合同详情
   purchaseOrderDetail: ['scm_purchaseOrder:detail']
 }
 
@@ -15,9 +15,9 @@ export const wmsCommonPM = {
 
 // ########################################################################
 
-// --------------------------- 采购订单 start ------------------------------
+// --------------------------- 采购合同 start ------------------------------
 
-// 采购订单
+// 采购合同
 export const purchaseOrderPM = {
   get: ['scm_purchaseOrder:get'], // 列表
   add: ['scm_purchaseOrder:add'], // 添加
@@ -27,7 +27,7 @@ export const purchaseOrderPM = {
   del: ['scm_purchaseOrder:del'] // 删除
 }
 
-// --------------------------- 采购订单 end --------------------------------
+// --------------------------- 采购合同 end --------------------------------
 
 // ########################################################################
 
@@ -102,7 +102,7 @@ export const logisticsOrderPM = {
   edit: ['scm_logisticsOrder:edit'], // 编辑
   del: ['scm_logisticsOrder:del'], // 删除
   inboundReceiptDetail: wmsCommonPM.rawMatInboundReceiptDetail, // 入库详情
-  purchaseOrderDetail: commonPM.purchaseOrderDetail // 采购订单
+  purchaseOrderDetail: commonPM.purchaseOrderDetail // 采购合同
 }
 
 // --------------------------- 物流订单 end --------------------------------
@@ -127,7 +127,7 @@ export const supplierPM = {
 
 // --------------------------- 其他模块/组件 start -------------------------
 
-// 组件·采购单选择， purchase-sn-select，purchase-detail-button
+// 组件·采购合同选择， purchase-sn-select，purchase-detail-button
 export const purchaseOrderDetailCPM = commonPM.purchaseOrderDetail
 
 // --------------------------- 其他模块/组件 end ---------------------------

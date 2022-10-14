@@ -229,7 +229,7 @@ constantize(contractPayForEnum)
 
 // TODO: 付款属性1
 const supplierPayTypeEnum = {
-  PURCHASE: { L: '采购订单', K: 'PURCHASE', V: 1 << 0 },
+  PURCHASE: { L: '采购合同', K: 'PURCHASE', V: 1 << 0 },
   TRANSPORT: { L: '物流', K: 'TRANSPORT', V: 1 << 1 },
   PRODUCT: { L: '制成品', K: 'PURCHASE', V: 1 << 2 },
   SUBCONTRACT: { L: '分包订单', K: 'SUBCONTRACT', V: 1 << 3 }
@@ -247,7 +247,7 @@ constantize(projectModeEnum)
 
 // TODO: 应付查询属性
 const payableSearchTypeEnum = {
-  PURCHASE: { L: '采购订单', K: 'PURCHASE', V: 127 },
+  PURCHASE: { L: '采购合同', K: 'PURCHASE', V: 127 },
   TRANSPORT: { L: '物流', K: 'TRANSPORT', V: 1024 }
 }
 constantize(payableSearchTypeEnum)
@@ -266,7 +266,7 @@ const hasTaxEnum = {
 }
 constantize(hasTaxEnum)
 
-// 采购订单状态
+// 采购合同状态
 const purchaseOrderStatusEnum = {
   PROCESS: { L: '进行中', K: 'PROCESS', V: 1 },
   COMPLETE: { L: '已完成', K: 'COMPLETE', V: 2 }

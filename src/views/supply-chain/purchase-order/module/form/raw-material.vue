@@ -207,7 +207,7 @@
                   show-download
                   :file-classify="fileClassifyEnum.PURCHASE_ORDER_ATT.V"
                   v-model:files="form.attachments"
-                  empty-text="暂未上传采购订单附件"
+                  empty-text="暂未上传采购合同附件"
                 />
               </div>
             </div>
@@ -311,7 +311,7 @@ import MaterialSecondaryInfoColumns from '@/components-system/wms/table-columns/
 import { ElMessage } from 'element-plus'
 
 const defaultForm = {
-  serialNumber: undefined, // 采购订单编号
+  serialNumber: undefined, // 采购合同编号编号
   boolPartyA: false, // 是否甲供
   supplyType: orderSupplyTypeEnum.SELF.V, // 供货类型
   purchaseType: baseMaterialTypeEnum.RAW_MATERIAL.V, // 物料种类

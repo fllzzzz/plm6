@@ -28,7 +28,7 @@ const getReceiptList = {
             basicClass: STEEL_ENUM, // 采购物料基础类型
             rejectStatus: receiptRejectStatusEnum.PENDING_REVIEW.V, // 退货状态
             serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 入库单号
-            // 采购单号
+            // 采购合同编号
             purchaseOrder: {
               id: 1,
               serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
@@ -67,7 +67,7 @@ const getReceiptList = {
             serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 入库单号
             purchaseOrder: {
               id: 1,
-              serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/ // 采购单号
+              serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/ // 采购合同编号
             },
             shipmentNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 邮递-物流单号
             licensePlate: patternLicensePlate, // 车牌号
@@ -105,7 +105,7 @@ const getReceiptList = {
             serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 入库单号
             purchaseOrder: {
               id: 1,
-              serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/ // 采购单号
+              serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/ // 采购合同编号
             },
             shipmentNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 邮递-物流单号
             licensePlate: patternLicensePlate, // 车牌号
@@ -143,7 +143,7 @@ const getReceiptList = {
             serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 入库单号
             purchaseOrder: {
               id: 1,
-              serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/ // 采购单号
+              serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/ // 采购合同编号
             },
             shipmentNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 邮递-物流单号
             licensePlate: patternLicensePlate, // 车牌号
@@ -885,7 +885,7 @@ const getDetails = {
               },
               purchaseOrder: {
                 id: 1,
-                serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/ // 采购单号
+                serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/ // 采购合同编号
               },
               applicantName: '@cname', // 创建人（填写入库的人）
               editorName: '@cname', // 编辑人（最后编辑的用户）
@@ -978,7 +978,7 @@ const getDetails = {
               },
               purchaseOrder: {
                 id: 1,
-                serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/ // 采购单号
+                serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/ // 采购合同编号
               },
               applicantName: '@cname', // 创建人（填写入库的人）
               editorName: '@cname', // 编辑人（最后编辑的用户）
@@ -1074,7 +1074,7 @@ const getDetails = {
               },
               purchaseOrder: {
                 id: 1,
-                serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/ // 采购单号
+                serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/ // 采购合同编号
               },
               applicantName: '@cname', // 创建人（填写入库的人）
               editorName: '@cname', // 编辑人（最后编辑的用户）
@@ -1132,7 +1132,7 @@ const getDetails = {
               },
               purchaseOrder: {
                 id: 1,
-                serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/ // 采购单号
+                serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/ // 采购合同编号
               },
               applicantName: '@cname', // 创建人（填写入库的人）
               editorName: '@cname', // 编辑人（最后编辑的用户）
@@ -1183,7 +1183,7 @@ const getDetails = {
               },
               purchaseOrder: {
                 id: 1,
-                serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/ // 采购单号
+                serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/ // 采购合同编号
               },
               applicantName: '@cname', // 创建人（填写入库的人）
               editorName: '@cname', // 编辑人（最后编辑的用户）
@@ -1234,7 +1234,7 @@ const getDetails = {
               },
               purchaseOrder: {
                 id: 1,
-                serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/ // 采购单号
+                serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/ // 采购合同编号
               },
               applicantName: '@cname', // 创建人（填写入库的人）
               editorName: '@cname', // 编辑人（最后编辑的用户）
@@ -1286,7 +1286,7 @@ const getDetails = {
               },
               purchaseOrder: {
                 id: 1,
-                serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/ // 采购单号
+                serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/ // 采购合同编号
               },
               applicantName: '@cname', // 创建人（填写入库的人）
               editorName: '@cname', // 编辑人（最后编辑的用户）

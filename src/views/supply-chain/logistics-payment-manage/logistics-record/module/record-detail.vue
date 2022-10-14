@@ -38,7 +38,7 @@
       <common-table :data="list" :data-format="dataFormat" :max-height="maxHeight">
         <el-table-column label="序号" type="index" align="center" width="60" />
         <el-table-column prop="shipDate" label="运输日期" align="center" show-overflow-tooltip />
-        <el-table-column prop="name" label="所属项目或采购单" align="center" show-overflow-tooltip v-if="props.type===logisticsSearchTypeEnum.COMPANY.V" />
+        <el-table-column prop="name" label="所属项目或采购合同" align="center" show-overflow-tooltip v-if="props.type===logisticsSearchTypeEnum.COMPANY.V" />
         <el-table-column prop="supplierName" label="物流公司" align="center" show-overflow-tooltip v-if="props.type!==logisticsSearchTypeEnum.COMPANY.V" />
         <el-table-column prop="type" label="运输属性" align="center" show-overflow-tooltip />
         <el-table-column prop="licensePlate" label="车牌号" align="center" show-overflow-tooltip />

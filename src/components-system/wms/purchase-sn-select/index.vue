@@ -1,4 +1,4 @@
-<!-- 采购订单:下拉选择框 -->
+<!-- 采购合同:下拉选择框 -->
 <template>
   <span class="purchase-sn-select-container" :class="{ 'show-detail-icon': props.detailable && checkPermission(permission) }">
     <common-select
@@ -54,7 +54,7 @@
         <el-icon-view />
       </el-icon>
     </span>
-    <!-- 采购订单详情 -->
+    <!-- 采购合同详情 -->
     <detail-wrapper ref="purchaseOrderRef" :api="getPurchaseOrderDetail">
       <purchase-order-detail />
     </detail-wrapper>
@@ -128,7 +128,7 @@ const props = defineProps({
   },
   placeholder: {
     type: String,
-    default: '选择采购订单'
+    default: '选择采购合同编号'
   }
 })
 
@@ -157,7 +157,7 @@ const options = computed(() => {
   return list
 })
 
-// 采购单详情
+// 采购合同详情
 const { detailRef: purchaseOrderRef, openDetail } = useOtherCrudDetail()
 
 watch(

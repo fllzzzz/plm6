@@ -21,7 +21,7 @@
       :stripe="false"
     >
       <el-table-column prop="index" label="序号" align="center" width="50" type="index" />
-      <el-table-column key="serialNumber" prop="serialNumber" :show-overflow-tooltip="true" label="采购订单" align="center">
+      <el-table-column key="serialNumber" prop="serialNumber" :show-overflow-tooltip="true" label="采购合同编号" align="center">
         <template v-slot="scope">
           <span>{{ scope.row.serialNumber || currentRow.serialNumber }}</span>
         </template>

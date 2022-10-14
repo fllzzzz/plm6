@@ -68,7 +68,7 @@ const getRequisitionsList = {
             'purchaseNo': 'XXX工程', // 申购单号
             'purchaseOrderNoList': [
               '浙江宝板2021'
-            ], // 关联采购单号
+            ], // 关联采购合同编号
             status: purchaseStatusEnum.UNFINISHED.V, // 采购状态
             writtenByName: '@cname', // 填写人
             applicantName: '@cname', // 创建人
@@ -88,7 +88,7 @@ const getRequisitionsList = {
   }
 }
 
-// 添加采购订单
+// 添加采购合同
 const add = {
   url: '/api/wms/requisitions',
   method: 'post',
@@ -101,7 +101,7 @@ const add = {
   }
 }
 
-// 修改采购订单
+// 修改采购合同
 const edit = {
   url: '/api/wms/requisitions',
   method: 'put',
@@ -114,7 +114,7 @@ const edit = {
   }
 }
 
-// 修改采购单状态状态
+// 修改采购合同状态状态
 const editStatus = {
   url: '/api/wms/requisitions/status',
   method: 'put',
@@ -127,7 +127,7 @@ const editStatus = {
   }
 }
 
-// 删除采购订单
+// 删除采购合同
 const del = {
   url: '/api/wms/requisitions',
   method: 'delete',

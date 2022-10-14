@@ -16,7 +16,7 @@ const wmsRmInboundReceipt = {
       data: {
         header: {
           inboundSN: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 人库单号
-          purchaseSN: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 采购单号
+          purchaseSN: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 采购合同编号
           weightMeasurementMode: weightMeasurementModeEnum.OVERWEIGHT.V, // 计量方式
           logisticsPayerType: logisticsPayerEnum.SUPPLIER.V, // 物流费用承担
           supplierName: '@cname', // 供应商名称
@@ -418,7 +418,7 @@ const wmsRmRejectReceipt = {
         header: {
           inboundSN: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 人库单号
           rejectSN: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 退货单号
-          purchaseSN: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 采购单号
+          purchaseSN: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 采购合同编号
           weightMeasurementMode: weightMeasurementModeEnum.OVERWEIGHT.V, // 计量方式
           logisticsPayerType: logisticsPayerEnum.SUPPLIER.V, // 物流费用承担
           supplierName: '@cname', // 供应商名称

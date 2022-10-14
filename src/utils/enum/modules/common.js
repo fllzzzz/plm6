@@ -116,7 +116,7 @@ constantize(operationTypeEnum)
 //   SUPPLIER_ATT: { L: '供应商附件', K: 'SUPPLIER_ATT', V: 7 },
 //   SECTION_ATT: { L: '型材导入附件', K: 'SECTION_ATT', V: 8 },
 //   CONTRACT_BUSINESS_SETTLEMENT_ATT: { L: '合同商务结算附件', K: 'CONTRACT_BUSINESS_SETTLEMENT_ATT', V: 9 },
-//   PURCHASE_ORDER_AIT: { L: '采购订单附件', K: 'PURCHASE_ORDER_AIT', V: 12 },
+//   PURCHASE_ORDER_AIT: { L: '采购合同附件', K: 'PURCHASE_ORDER_AIT', V: 12 },
 //   CONSTRUCTION_AIT: { L: '施工资料附件', K: 'CONSTRUCTION_AIT', V: 801 }
 // }
 // constantize(fileClassifyEnum)

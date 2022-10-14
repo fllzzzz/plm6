@@ -10,7 +10,7 @@
     size="100%"
   >
      <template #titleAfter>
-      <span>采购订单:{{currentRow.serialNumber}}</span>
+      <span>采购合同编号:{{currentRow.serialNumber}}</span>
     </template>
     <template #content>
       <el-tabs v-model="activeName" class="tab-container">
