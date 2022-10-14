@@ -57,9 +57,8 @@
               <el-color-picker v-model="defaultColor"></el-color-picker>
             </button>
             <div v-else-if="index == 1" class="slide">
-              <svg-icon :icon-class="item.icon" />
-              <span>{{ item.name }}</span
-              >&emsp;&emsp;
+              <!-- <svg-icon :icon-class="item.icon" /> -->
+              <span style="color:#fff;">{{ item.name }}</span>
               <el-slider
                 ref="slide"
                 v-model="slide"
@@ -708,7 +707,8 @@ export default {
   overflow: hidden;
 }
 .imgDraw {
-    background-color: #eeeeee;
+    // background-color: #a8a8a8;
+    background-color:#ffc000;
     height:100vh;
     padding: 10px 20px;
     flex: 1;
@@ -779,7 +779,7 @@ export default {
         position: absolute;
         display: flex;
         z-index: 5;
-        background: #ffffff;
+        background: #333;
         transition: all 0.2s ease-in-out;
       }
       .settings {
@@ -790,7 +790,7 @@ export default {
         padding: 5px 10px;
         border-bottom-left-radius: 4px;
         border-bottom-right-radius: 4px;
-        border: 1px solid #eeeeee;
+        border: 1px solid #333;
         border-top: 0;
         width: auto;
         .tool_item {
@@ -891,17 +891,15 @@ export default {
           position: absolute;
           top: 50px;
           right: 0;
-          padding: 15px;
           background-color: #ffffff;
           border-radius: 5px;
-          border: 1px solid #eeeeee;
+          border: 1px solid #ffc000;
         }
         .tool_item {
           cursor: pointer;
+          padding: 10px;
           &:not(:last-of-type) {
-            margin-bottom: 15px;
             border-bottom: 1px solid #dddddd;
-            padding-bottom: 10px;
           }
           svg {
             font-size: 24px;
@@ -920,12 +918,13 @@ export default {
           }
         }
         .activeTool {
-          border-color: dodgerblue !important;
+          background: linear-gradient(to right,blue,purple);
+          border-color: #fff;
           svg {
-            color: dodgerblue;
+            color: #fff;
           }
           span {
-            color: dodgerblue;
+            color: #fff;
           }
         }
         .arrow {
