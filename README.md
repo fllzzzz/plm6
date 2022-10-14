@@ -44,12 +44,12 @@ Vue 3 中函数式组件的性能提升很小，可以直接使用常规组件
 2.完善物流订单
 
 ## 极端BUG 
-代码build后，生产环境部署时入库办理时通过“采购单号选择组件” 查看 采购订单详情，导致"分配重量按钮"消失（异常报错，insertBefore）
+代码build后，生产环境部署时入库办理时通过“采购合同编号选择组件” 查看 采购合同详情，导致"分配重量按钮"消失（异常报错，insertBefore）
 PS: 
 1.开发环境（本地运行）正常
 2.两个组件之间无任何关联
 
-原因：采购订单详情中使用了"上传列表组件（uploadList）",上传列表组件中的export-button组件的attr中的params使用了“props.files[index].id”,
+原因：采购合同详情中使用了"上传列表组件（uploadList）",上传列表组件中的export-button组件的attr中的params使用了“props.files[index].id”,
       代码如下 ：
       <export-button
         v-show="props.showDownload"

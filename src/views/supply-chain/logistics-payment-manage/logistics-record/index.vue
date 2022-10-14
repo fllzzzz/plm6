@@ -18,7 +18,7 @@
   >
     <el-table-column prop="index" label="序号" align="center" width="60" type="index" />
     <el-table-column v-if="crud.query.type===logisticsSearchTypeEnum.PRODUCT.V && columns.visible('projectName')" key="projectName" prop="projectName" show-overflow-tooltip label="所属项目" align="center" min-width="140" />
-    <el-table-column v-if="crud.query.type===logisticsSearchTypeEnum.MATERIAL.V && columns.visible('serialNumber')" key="serialNumber" prop="serialNumber" show-overflow-tooltip label="采购编号" align="center" min-width="140" />
+    <el-table-column v-if="crud.query.type===logisticsSearchTypeEnum.MATERIAL.V && columns.visible('serialNumber')" key="serialNumber" prop="serialNumber" show-overflow-tooltip label="采购合同编号" align="center" min-width="140" />
     <el-table-column v-if="crud.query.type===logisticsSearchTypeEnum.COMPANY.V && columns.visible('supplierName')" key="supplierName" prop="supplierName" show-overflow-tooltip label="物流公司" align="center" min-width="140" />
     <el-table-column v-if="columns.visible('trainNumber')" key="trainNumber" prop="trainNumber" show-overflow-tooltip label="累计使用车次" align="center" min-width="100" />
      <el-table-column v-if="columns.visible('freight')" key="freight" prop="freight" show-overflow-tooltip label="累计运费" align="right" min-width="100" />

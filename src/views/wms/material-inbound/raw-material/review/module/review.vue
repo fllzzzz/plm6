@@ -190,7 +190,7 @@ const fillableWarehouse = computed(() =>
 const fillableLogistics = computed(() => order.value.logisticsPayerType === logisticsPayerEnum.DEMAND.V && fillableAmount.value)
 // 是否“甲供”
 const boolPartyA = computed(() => order.value.supplyType === orderSupplyTypeEnum.PARTY_A.V)
-// 采购订单信息
+// 采购合同信息
 const order = computed(() => form.value.purchaseOrder || {})
 // 申购单信息
 const requisitions = computed(() => form.value.requisitions || {})

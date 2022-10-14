@@ -3,7 +3,7 @@ import { patternLicensePlate } from '@/utils/validate/pattern'
 import { invoiceTypeEnum } from '@enum-ms/finance'
 import { baseMaterialTypeEnum } from '@enum-ms/wms'
 
-// 获取采购订单（入库审核通过的）
+// 获取采购合同（入库审核通过的）
 const getList = {
   url: '/api/wms/logistics-order',
   method: 'get',
@@ -19,7 +19,7 @@ const getList = {
             purchaseType: baseMaterialTypeEnum.RAW_MATERIAL.V, // 采购类型
             serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 系统物流编号
             inboundSN: '21/11/25/R-001', // 入库单号
-            purchaseSN: 'CG-211125-123213', // 采购单号
+            purchaseSN: 'CG-211125-123213', // 采购合同编号
             licensePlate: patternLicensePlate, // 车牌号
             shipmentNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 邮递-物流单号
             logisticsTransportType: logisticsTransportTypeEnum.FREIGHT.V,
@@ -52,7 +52,7 @@ const getList = {
             shipmentNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 邮递-物流单号
             serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 订单编号
             inboundSN: '21/11/25/R-002', // 入库单号
-            purchaseSN: 'CG-211125-123213', // 采购单号
+            purchaseSN: 'CG-211125-123213', // 采购合同编号
             logisticsTransportType: logisticsTransportTypeEnum.POST.V,
             'projects|2': [
               {

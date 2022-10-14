@@ -33,7 +33,7 @@ export function getBySupplier(params) {
  * 付款记录（下面两个字段必传一个）
  * @param {number} orderId|required 订单id
  * @param {number} supplierId|required 采购供应商id
- * @param {number} propertyType|required 属性 1采购订单 2物流费
+ * @param {number} propertyType|required 属性 1采购合同 2物流费
  * @param {number} page|required 页码
  * @param {number} size|required 页大小
  */

@@ -70,7 +70,7 @@
             clearable
             style="width: 160px"
             size="small"
-            placeholder="采购订单号"
+            placeholder="采购合同编号"
             class="filter-item"
             @keyup.enter="crud.toQuery"
           />
@@ -154,7 +154,7 @@ const defaultQuery = {
   projectWarehouseType: undefined, // 仓库类型
   shipmentNumber: undefined, // 物流单号
   licensePlate: undefined, // 车牌号
-  purchaseSN: undefined, // 采购单号
+  purchaseSN: undefined, // 采购合同编号
   inboundSN: undefined, // 入库单号
   supplierId: undefined, // 供应商id
   operatorName: undefined // 申请人/编辑人/审核人

@@ -736,7 +736,7 @@ const detail_id5 = {
   }
 }
 
-// 修改采购订单
+// 修改采购合同
 const edit = {
   url: '/api/wms/return/application/record/raw-materials',
   method: 'put',
@@ -749,7 +749,7 @@ const edit = {
   }
 }
 
-// 删除采购订单
+// 删除采购合同
 const del = {
   url: '/api/wms/return/application/record/raw-materials',
   method: 'delete',

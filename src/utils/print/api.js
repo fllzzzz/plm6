@@ -122,7 +122,7 @@ export default {
   purchaseInvoiceRecord, // 收票记录
   purchaseInboundRecord, // 入库记录
   purchasePaymentRecord, // 付款记录
-  orderPaymentLedger, // 采购订单付款台账
+  orderPaymentLedger, // 采购合同付款台账
   scmSupplierPaymentLedger, // 供应商付款台账
 
   purchaseLogisticsRecord, // 物流记录

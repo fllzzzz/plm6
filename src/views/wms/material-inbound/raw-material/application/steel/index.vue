@@ -28,7 +28,7 @@
           >
             按过磅重量自动分配（钢卷不参与分配)
           </common-button>
-          <el-tooltip :disabled="addable" effect="light" content="请先选择采购订单" placement="left-start">
+          <el-tooltip :disabled="addable" effect="light" content="请先选择采购合同编号" placement="left-start">
             <span>
               <common-button class="filter-item" type="success" @click="materialSelectVisible = true" :disabled="!addable">
                 添加物料
@@ -108,7 +108,7 @@ const steelBasicClassKV = {
 }
 
 const defaultForm = {
-  purchaseId: null, // 采购单id
+  purchaseId: null, // 采购合同id
   loadingWeight: null, // 装载重量
   licensePlate: null, // 车牌号
   shipmentNumber: null, // 物流单号
@@ -138,7 +138,7 @@ const steelRefList = reactive({
   steelCoilList: null
 })
 
-const addable = computed(() => !!(currentBasicClass.value && order.value)) // 可添加的状态（选择了采购订单）
+const addable = computed(() => !!(currentBasicClass.value && order.value)) // 可添加的状态（选择了采购合同编号）
 
 provide('matSpecRef', matSpecRef) // 供兄弟组件调用 删除
 
@@ -300,7 +300,7 @@ init()
 
 FORM.HOOK.beforeToEdit = async (crud, form) => {
   if (!props.edit) return
-  // 采购单id
+  // 采购合同id
   form.purchaseId = form.purchaseOrder.id
   if (!form.logistics) form.logistics = {}
   // 修改的情况下，数据预处理

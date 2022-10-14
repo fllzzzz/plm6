@@ -1,5 +1,5 @@
 <template>
-  <!-- 采购订单详情 -->
+  <!-- 采购合同详情 -->
   <detail-wrapper v-if="receiptExist[receiptTypeEnum.PURCHASE.K]" ref="purchaseOrderRef" :api="getPurchaseOrderDetail">
     <purchase-order-detail />
   </detail-wrapper>
@@ -75,7 +75,7 @@ watch(
   { immediate: true }
 )
 
-// 采购单详情
+// 采购合同详情
 const { detailRef: purchaseOrderRef, openDetail: openPurchaseDetail } = useOtherCrudDetail()
 // 入库单详情
 const { detailRef: inboundDetailRef, openDetail: openInboundDetail } = useOtherCrudDetail()

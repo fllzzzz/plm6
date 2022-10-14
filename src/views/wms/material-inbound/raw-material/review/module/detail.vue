@@ -94,7 +94,7 @@ const { maxHeight } = useMaxHeight(
   () => computed(() => !crud.detailLoading)
 )
 
-// 采购订单信息
+// 采购合同信息
 const order = computed(() => detail.purchaseOrder || {})
 
 // 可填写金额

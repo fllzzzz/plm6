@@ -76,7 +76,7 @@
         clearable
         style="width: 200px"
         size="small"
-        placeholder="采购订单号"
+        placeholder="采购合同编号"
         class="filter-item"
         @keyup.enter="crud.toQuery"
       />
@@ -149,7 +149,7 @@ const defaultQuery = {
   reviewStatus: reviewStatusEnum.UNREVIEWED.V, // 审核状态
   projectId: undefined, // 项目id
   projectWarehouseType: undefined, // 仓库类型
-  purchaseSN: undefined, // 采购单号
+  purchaseSN: undefined, // 采购合同编号
   shipmentNumber: undefined, // 物流单号
   licensePlate: undefined, // 车牌号
   serialNumber: undefined, // 入库单号

@@ -21,7 +21,7 @@ const getInboundListForRejectable = {
             serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 入库单号
             purchaseOrder: {
               id: 1,
-              serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/ // 采购单号
+              serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/ // 采购合同编号
             },
             shipmentNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 邮递-物流单号
             licensePlate: patternLicensePlate, // 车牌号
@@ -51,7 +51,7 @@ const getInboundListForRejectable = {
             serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 入库单号
             purchaseOrder: {
               id: 1,
-              serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/ // 采购单号
+              serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/ // 采购合同编号
             },
             shipmentNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 邮递-物流单号
             licensePlate: patternLicensePlate, // 车牌号
@@ -84,7 +84,7 @@ const getInboundListForRejectable = {
             serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 入库单号
             purchaseOrder: {
               id: 1,
-              serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/ // 采购单号
+              serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/ // 采购合同编号
             },
             shipmentNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 邮递-物流单号
             licensePlate: patternLicensePlate, // 车牌号

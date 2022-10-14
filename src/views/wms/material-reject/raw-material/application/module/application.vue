@@ -163,7 +163,7 @@ const { maxHeight } = useMaxHeight(
 
 // 是否有显示金额权限
 const showAmount = computed(() => checkPermission(permission.showAmount))
-// 采购订单信息
+// 采购合同信息
 const order = computed(() => detail.value.purchaseOrder || {})
 // 是否甲供订单
 const boolPartyA = computed(() => order.value.supplyType === orderSupplyTypeEnum.PARTY_A.V)

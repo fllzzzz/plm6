@@ -20,7 +20,7 @@
           end-placeholder="结束日期"
           style="width: 240px"
         />
-        <el-input v-model="query.name" placeholder="项目名称/采购编号/物流公司搜索" style="width: 230px" class="filter-item" />
+        <el-input v-model="query.name" placeholder="项目名称/采购合同编号/物流公司搜索" style="width: 230px" class="filter-item" />
         <rrOperation />
       </div>
     </template>

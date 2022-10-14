@@ -3,7 +3,7 @@ import { commonPM as SCM_COMMON_PM } from './supply-chain'
 // --------------------------- 公共权限 start ------------------------------
 
 export const commonPM = {
-  // 采购订单详情
+  // 采购合同详情
   purchaseOrderDetail: SCM_COMMON_PM.purchaseOrderDetail,
   // 原材料-备料详情
   rawMatPreparationReceiptDetail: ['wms_rawMat_preparation:detail'],
@@ -213,7 +213,7 @@ export const rawMaterialReturnReviewPM = {
 export const rawMaterialRejectApplicationPM = {
   get: ['wms_rawMat_reject_application:get'], // 查看
   showAmount: ['wms_rawMat_reject_application:showAmount'], // 显示金额
-  purchaseOrderDetail: commonPM.purchaseOrderDetail // 采购订单
+  purchaseOrderDetail: commonPM.purchaseOrderDetail // 采购合同
 }
 
 // 退货办理/退货记录
@@ -222,7 +222,7 @@ export const rawMaterialRejectRecordPM = {
   del: ['wms_rawMat_reject_record:del'], // 删除
   showAmount: ['wms_rawMat_reject_record:showAmount'], // 显示金额
   inboundReceiptDetail: commonPM.rawMatInboundReceiptDetail, // 入库详情
-  purchaseOrderDetail: commonPM.purchaseOrderDetail // 采购订单
+  purchaseOrderDetail: commonPM.purchaseOrderDetail // 采购合同
 }
 
 // 出入库审核/退货审核
@@ -231,7 +231,7 @@ export const rawMaterialRejectReviewPM = {
   review: ['wms_rawMat_reject_review:review'], // 审核
   showAmount: ['wms_rawMat_reject_review:showAmount'], // 显示金额
   inboundReceiptDetail: commonPM.rawMatInboundReceiptDetail, // 入库详情
-  purchaseOrderDetail: commonPM.purchaseOrderDetail // 采购订单
+  purchaseOrderDetail: commonPM.purchaseOrderDetail // 采购合同
 }
 
 // --------------------------- 退货模块 end --------------------------------
@@ -256,14 +256,14 @@ export const operateRecordPartyABuyInPM = {
 export const reportRawMaterialInboundReceiptPM = {
   get: ['wms_report_rawMat_inbound_receipt:get'], // 查看
   showAmount: ['wms_report_rawMat_inbound_receipt:showAmount'], // 显示金额
-  purchaseOrderDetail: commonPM.purchaseOrderDetail // 采购订单详情
+  purchaseOrderDetail: commonPM.purchaseOrderDetail // 采购合同详情
 }
 
 // 报表中心/原材料/入库单表
 export const reportRawMaterialInboundDetailsPM = {
   get: ['wms_report_rawMat_inbound_details:get'], // 查看
   showAmount: ['wms_report_rawMat_inbound_details:showAmount'], // 显示金额
-  purchaseOrderDetail: commonPM.purchaseOrderDetail, // 采购订单详情
+  purchaseOrderDetail: commonPM.purchaseOrderDetail, // 采购合同详情
   inboundReceiptDetail: commonPM.rawMatInboundReceiptDetail // 入库详情
 }
 
@@ -299,7 +299,7 @@ export const reportRawMaterialSupplementDetailsPM = {
 export const reportRawMaterialRejectReceiptPM = {
   get: ['wms_report_rawMat_reject_details:get'], // 查看
   showAmount: ['wms_report_rawMat_reject_details:showAmount'], // 显示金额
-  purchaseOrderDetail: commonPM.purchaseOrderDetail, // 采购订单详情
+  purchaseOrderDetail: commonPM.purchaseOrderDetail, // 采购合同详情
   inboundReceiptDetail: commonPM.rawMatInboundReceiptDetail // 入库详情
 }
 

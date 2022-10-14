@@ -10,14 +10,14 @@ export default {
       name: 'SupplyChainPurchaseOrder',
       alwaysShow: false,
       redirect: '/supply-chain/purchase-order',
-      meta: { title: '采购订单管理', icon: 'contract', noCache: true },
+      meta: { title: '采购合同管理', icon: 'contract', noCache: true },
       children: [
         {
           name: 'PurchaseOrder',
           path: 'purchase-order',
           hidden: false,
           component: '/supply-chain/purchase-order/index',
-          meta: { title: '原材料-采购订单', icon: 'project', noCache: true }
+          meta: { title: '原材料-采购合同', icon: 'project', noCache: true }
         }
       ]
     },

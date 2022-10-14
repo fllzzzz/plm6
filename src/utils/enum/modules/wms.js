@@ -114,7 +114,7 @@ constantize(baseMaterialTypeEnum)
 const receiptTypeEnum = {
   PREPARATION: { L: '备料', K: 'PREPARATION', V: 1, DOC: '备料单' },
   REQUISITIONS: { L: '申购', K: 'REQUISITIONS', V: 2, DOC: '申购单' },
-  PURCHASE: { L: '采购', K: 'PURCHASE', V: 11, DOC: '采购单' },
+  PURCHASE: { L: '采购', K: 'PURCHASE', V: 11, DOC: '采购合同' },
   INBOUND: { L: '入库', K: 'INBOUND', V: 12, DOC: '入库单' },
   OUTBOUND_APPLY: { L: '出库申请', K: 'OUTBOUND_APPLY', V: 13, DOC: '出库申请单' },
   OUTBOUND: { L: '出库', K: 'OUTBOUND', V: 14, DOC: '出库单' },
@@ -150,7 +150,7 @@ const pickUpModeEnum = {
 }
 constantize(pickUpModeEnum)
 
-// 采购订单付款付款方式
+// 采购合同付款付款方式
 const purchaseOrderPaymentModeEnum = {
   FUTURES: { L: '期货订单', K: 'FUTURES', V: 1 << 0 },
   STOCK: { L: '现款订单', K: 'STOCK', V: 1 << 1 },
