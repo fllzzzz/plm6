@@ -53,5 +53,14 @@ export function delNotNeedNesting(data) {
     data
   })
 }
+// 型材套料
+export function extrusionNesting(data) {
+  return request({
+    module: 'mes',
+    url: 'section_steel/nesting/wait',
+    method: 'post',
+    data
+  })
+}
 
 export default { get }

@@ -424,6 +424,35 @@ const monthNumEnum = {
 }
 constantize(monthNumEnum)
 
+// 任务跟踪/工单跟踪
+const taskTrackingSchedulingStatusEnum = {
+  NOT_FINISHED: { L: '未完成', K: 'NOT_FINISHED', V: 1 },
+  FINISHED: { L: '已完成', K: 'FINISHED', V: 2 }
+}
+constantize(taskTrackingSchedulingStatusEnum)
+
+// 型材套料状态
+const nestingStatusEnum = {
+  NOT_NESTING: { L: '未套料', K: 'NOT_NESTING', V: 0, T: 'danger', COLOR: '#E82121' },
+  PARTIAL_NESTING: { L: '部分套料', K: 'PARTIAL_NESTING', V: 1, T: 'warning', COLOR: '' },
+  END_NESTING: { L: '已套料', K: 'END_NESTING', V: 2, T: 'success', COLOR: '#35D552' }
+}
+constantize(nestingStatusEnum)
+
+// 型材套料成果/套料文件
+const nestingFileTypeEnum = {
+  NESTING_FILE: { L: '套料文件', K: 'NESTING_FILE', V: 0 },
+  MATERIAL_LIST: { L: '材料清单', K: 'MATERIAL_LIST', V: 1 }
+}
+constantize(nestingFileTypeEnum)
+
+// 套料设置
+const typeSettingTypeEnum = {
+  UN_LOSSY: { L: '无损套料', K: 'UN_LOSSY', V: 1 },
+  LOSSY: { L: '有损套料', K: 'LOSSY', V: 2 }
+}
+constantize(typeSettingTypeEnum)
+
 export {
   teamTypeEnum,
   teamAttributeEnum,
@@ -476,7 +505,11 @@ export {
   partKeyWordEnum,
   scheduleStatusEnum,
   hasHoleEnum,
-  monthNumEnum
+  monthNumEnum,
+  taskTrackingSchedulingStatusEnum,
+  nestingStatusEnum,
+  nestingFileTypeEnum,
+  typeSettingTypeEnum
 }
 
 export default {
@@ -531,5 +564,9 @@ export default {
   partKeyWordEnum,
   scheduleStatusEnum,
   hasHoleEnum,
-  monthNumEnum
+  monthNumEnum,
+  taskTrackingSchedulingStatusEnum,
+  nestingStatusEnum,
+  nestingFileTypeEnum,
+  typeSettingTypeEnum
 }

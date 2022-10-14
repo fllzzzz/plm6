@@ -93,6 +93,17 @@
         @change="handleModeChange"
       />
       <common-button
+        v-if="curMode === 'nesting'"
+        class="filter-item"
+        type="success"
+        size="mini"
+        icon="el-icon-menu"
+        :disabled="crud.selections.length === 0"
+        @click="handleExtrusionNesting"
+      >
+        型材套排
+      </common-button>
+      <common-button
         v-if="curMode === 'edit'"
         class="filter-item"
         type="warning"
@@ -111,6 +122,7 @@
   </crudOperation>
   <!-- <filter-drawer v-model:visible="filterVisible" :list="filterList"></filter-drawer> -->
   <no-nesting-drawer v-model:visible="noNestingVisible" @refresh="crud.toQuery" />
+  <extrusion-nesting-setting v-model:visible="dialogVisible" :detail-data="crud.selections" :projectId="globalProjectId" />
 </template>
 
 <script setup>
@@ -127,6 +139,7 @@ import rrOperation from '@crud/RR.operation'
 import monomerSelectAreaSelect from '@comp-base/monomer-select-area-select'
 import tagTabs from '@comp-common/tag-tabs'
 import noNestingDrawer from './no-nesting-drawer.vue'
+import extrusionNestingSetting from './extrusion-nesting-setting.vue'
 import { deepClone } from '@/utils/data-type'
 
 const emits = defineEmits(['change-mode'])
@@ -137,6 +150,8 @@ const defaultQuery = { projectId: globalProjectId.value }
 const { crud, CRUD, query } = regHeader(defaultQuery)
 
 const noNestingVisible = ref(false)
+const dialogVisible = ref(false)
+const detailData = ref({})
 const curMode = ref('nesting')
 const specPrefixList = ref([])
 const specificationList = ref([])
@@ -255,5 +270,11 @@ async function handleNotNeedNesting() {
   } catch (er) {
     console.log(er, '无需套料设置失败')
   }
+}
+
+// 型材套排
+function handleExtrusionNesting(val) {
+  dialogVisible.value = true
+  detailData.value = val
 }
 </script>
