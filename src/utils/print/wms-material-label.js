@@ -87,7 +87,7 @@ export async function printSectionSteelLabel({ material, copies = 1, printMode =
     let firstLineStr = `名称: ${material.classifyName}`
     firstLineStr = `${firstLineStr}　${spliceMaterialSpec(material)}`
     // 第二行：钢材尺寸
-    const secondLineStr = `规格: ${spliceSteelSize(material)}`
+    const secondLineStr = `长度: ${material.length}　规格: ${spliceSteelSize(material)}`
     // 拼接主体信息
     const contentHtml = `
     <div class="material-info">

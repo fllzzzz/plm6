@@ -1,23 +1,25 @@
 <template>
   <div class="head-container">
-    <common-radio-button
-      v-model="query.boolHide"
-      :options="supplierIsHideEnum.ENUM"
-      type="enum"
-      showOptionAll
-      class="filter-item"
-      @change="crud.toQuery"
-    />
-    <el-input
-      v-model="query.name"
-      placeholder="请输入供应商名称"
-      class="filter-item"
-      style="width: 200px"
-      size="small"
-      clearable
-      @keyup.enter="crud.toQuery"
-    />
-    <rrOperation />
+    <div v-show="crud.searchToggle">
+      <common-radio-button
+        v-model="query.boolHide"
+        :options="supplierIsHideEnum.ENUM"
+        type="enum"
+        showOptionAll
+        class="filter-item"
+        @change="crud.toQuery"
+      />
+      <el-input
+        v-model="query.name"
+        placeholder="请输入供应商名称"
+        class="filter-item"
+        style="width: 200px"
+        size="small"
+        clearable
+        @keyup.enter="crud.toQuery"
+      />
+      <rrOperation />
+    </div>
     <crudOperation />
   </div>
 </template>
