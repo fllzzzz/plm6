@@ -32,7 +32,7 @@
       />
       <el-input
         v-model="query.serialNumber"
-        placeholder="采购订单"
+        placeholder="采购合同编号"
         class="filter-item"
         style="width: 200px"
         size="small"

@@ -58,20 +58,43 @@
       />
       <rrOperation />
     </div>
-    <crudOperation />
+    <crudOperation>
+      <template #optLeft>
+        <export-button v-permission="permission.get" :params="query" :fn="downLoad">
+          构件清单（根据查询条件）
+        </export-button>
+      </template>
+      <template #viewLeft>
+        <el-tag v-loading="summaryData.loading" effect="plain" size="medium">
+          构件清单量合计（数量/总净重/总毛重）：{{ summaryData.quantity }}件 / {{ summaryData.totalNetWeight }}kg / {{ summaryData.totalGrossWeight }}kg
+        </el-tag>
+      </template>
+    </crudOperation>
   </div>
 </template>
 
 <script setup>
-import { defineProps, ref } from 'vue'
+import { summary, downLoad } from '@/api/plan/technical-manage/artifact'
+import { defineProps, ref, inject } from 'vue'
+
+import { TechnologyTypeAllEnum } from '@enum-ms/contract'
+import { processingEnum } from '@enum-ms/plan'
+import checkPermission from '@/utils/system/check-permission'
+
 import { regHeader } from '@compos/use-crud'
 import rrOperation from '@crud/RR.operation'
 import crudOperation from '@crud/CRUD.operation'
+import { ElRadioGroup } from 'element-plus'
 import monomerSelect from '@/components-system/plan/monomer-select'
 import areaTabs from '@/components-system/plan/area-tabs'
-import { processingEnum } from '@enum-ms/plan'
-import { ElRadioGroup } from 'element-plus'
-import { TechnologyTypeAllEnum } from '@enum-ms/contract'
+import ExportButton from '@comp-common/export-button/index.vue'
+
+const props = defineProps({
+  projectId: {
+    type: [Number, String],
+    default: undefined
+  }
+})
 
 const defaultQuery = {
   name: '',
@@ -87,13 +110,36 @@ const monomerSelectRef = ref()
 const currentArea = ref({})
 const areaInfo = ref([])
 const defaultTab = ref({})
-const { crud, query } = regHeader(defaultQuery)
-const props = defineProps({
-  projectId: {
-    type: [Number, String],
-    default: undefined
-  }
+const summaryData = ref({
+  loading: false,
+  quantity: 0,
+  totalNetWeight: 0,
+  totalGrossWeight: 0
 })
+
+const permission = inject('permission')
+
+const { crud, query, CRUD } = regHeader(defaultQuery)
+
+CRUD.HOOK.handleRefresh = (crud, res) => {
+  fetchSummary()
+}
+
+// 获取项目汇总数据
+async function fetchSummary() {
+  if (!checkPermission(permission.get)) return
+  summaryData.value.loading = true
+  try {
+    const { quantity = 0, totalNetWeight = 0, totalGrossWeight = 0 } = await summary(query) || {}
+    summaryData.value.quantity = quantity
+    summaryData.value.totalNetWeight = totalNetWeight
+    summaryData.value.totalGrossWeight = totalGrossWeight
+  } catch (error) {
+    console.log('获取构件清单汇总数据', error)
+  } finally {
+    summaryData.value.loading = false
+  }
+}
 
 function tabClick(val) {
   const { name, label } = val
@@ -103,6 +149,7 @@ function tabClick(val) {
   }
   crud.toQuery()
 }
+
 function getAreaInfo(val) {
   areaInfo.value = val || []
   if (areaInfo.value.length > 0) {

@@ -81,7 +81,7 @@
         clearable
         style="width: 200px"
         size="small"
-        placeholder="按订单号搜索"
+        placeholder="按采购合同编号搜索"
         class="filter-item"
         @keyup.enter="crud.toQuery"
       />

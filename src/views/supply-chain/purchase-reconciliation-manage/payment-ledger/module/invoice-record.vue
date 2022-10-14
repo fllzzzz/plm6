@@ -10,7 +10,7 @@
     size="80%"
   >
     <template #titleAfter>
-      <el-tag v-if="detailInfo.serialNumber" type="success" effect="plain" size="medium">采购订单：{{detailInfo.serialNumber}}</el-tag>
+      <el-tag v-if="detailInfo.serialNumber" type="success" effect="plain" size="medium">采购合同编号：{{detailInfo.serialNumber}}</el-tag>
       <el-tag v-else type="warning" effect="plain" size="medium">供应商：{{detailInfo.supplierName}}</el-tag>
     </template>
     <template #titleRight>

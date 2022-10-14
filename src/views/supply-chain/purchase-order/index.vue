@@ -66,7 +66,7 @@
         key="serialNumber"
         :show-overflow-tooltip="true"
         prop="serialNumber"
-        label="订单号"
+        label="采购合同编号"
         min-width="160px"
       />
       <el-table-column
