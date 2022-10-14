@@ -1,17 +1,32 @@
 <template>
   <common-dialog ref="dialogRef" title="套料设定" v-model:visible="dialogVisible" direction="rtl" :before-close="handleClose" width="400px">
-    <el-form ref="formRef" :model="form" :rules="rules" size="small" label-width="100px" class="demo-form">
-      <el-form-item label="预留割缝" prop="kerfLength">
+    <template #titleRight>
+      <common-button v-loading.fullscreen.lock="fullscreenLoading" type="success" size="mini" @click="submitForm(formRef)">
+        开始套料
+      </common-button>
+    </template>
+    <el-form ref="formRef" :model="form" :rules="rules" size="small" label-width="130px" class="demo-form">
+      <el-form-item label="预留割缝≤" prop="kerfLength">
         <el-input v-model="form.kerfLength" placeholder="输入长度 单位：mm" />
       </el-form-item>
-      <el-form-item label="母材长度" prop="length">
+      <el-form-item label="母材长度≤" prop="length">
         <el-input v-model="form.length" placeholder="输入长度 单位：mm" />
       </el-form-item>
       <el-form-item label="套料方式" prop="typesettingTypeEnum">
+        <template #label>
+          套料方式
+          <el-tooltip
+            effect="dark"
+            :content="`如焊接型部件，可选择无损套料，选择无损套料将会按照约定的长度内进行套料\n
+              如型材部件，可选择无损套料，选择有损套料，可能会产生一定的材料损耗`"
+            placement="bottom"
+          >
+            <i class="el-icon-info" />
+          </el-tooltip>
+        </template>
         <common-radio class="filter-item" v-model="form.typesettingTypeEnum" :options="typeSettingTypeEnum.ENUM" type="enum" size="small" />
       </el-form-item>
-      <el-form-item style="">
-        <common-button type="info" size="small" @click="cancelForm(formRef)">取消</common-button>
+      <!-- <el-form-item>
         <common-button
             v-loading.fullscreen.lock="fullscreenLoading"
             type="success"
@@ -19,10 +34,10 @@
             @click="submitForm(formRef)"
           >开始套料</common-button
         >
-      </el-form-item>
+      </el-form-item> -->
     </el-form>
   </common-dialog>
-  <nesting-progress v-model="extrusionVisible" :nesting-progress-data="nestingProgressData" />
+  <nesting-progress v-model="extrusionVisible" :batchId="batchId" />
 </template>
 
 <script setup>
@@ -30,13 +45,13 @@ import { defineProps, ref, defineEmits, reactive } from 'vue'
 import { typeSettingTypeEnum } from '@enum-ms/mes'
 import useVisible from '@compos/use-visible'
 import { extrusionNesting } from '@/api/mes/craft-manage/section-steel/nesting-setting'
-import nestingProgress from './nesting-progress.vue'
+// import nestingProgress from './nesting-progress.vue'
 
 const formRef = ref()
 const dialogRef = ref()
 const fullscreenLoading = ref(false)
 const extrusionVisible = ref(false)
-const nestingProgressData = ref([])
+const batchId = ref()
 const props = defineProps({
   visible: {
     type: Boolean,
