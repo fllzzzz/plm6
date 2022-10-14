@@ -1,5 +1,6 @@
 <template>
   <common-dialog
+    ref="dialogRef"
     append-to-body
     :close-on-click-modal="false"
     :before-close="handleClose"
@@ -7,12 +8,13 @@
     title="生产状态"
     :wrapper-closable="false"
     size="60%"
+    custom-class="production-state-detail"
   >
     <common-table
       ref="tableRef"
       border
       :data="list"
-      :max-height="260"
+      :max-height="maxHeight"
       style="width: 100%"
       class="table-form"
       :stripe="false"
@@ -34,6 +36,7 @@
 import { ref, defineProps, defineEmits } from 'vue'
 
 import useVisible from '@compos/use-visible'
+import useMaxHeight from '@compos/use-max-height'
 
 const props = defineProps({
   modelValue: {
@@ -47,9 +50,21 @@ const props = defineProps({
 })
 
 const tableRef = ref()
+const dialogRef = ref()
 
 const emit = defineEmits(['success', 'update:modelValue'])
 const { visible, handleClose } = useVisible({ emit, props })
+
+const { maxHeight } = useMaxHeight(
+  {
+    mainBox: '.production-state-detail',
+    extraBox: '.el-dialog__header',
+    wrapperBox: '.el-dialog__body',
+    navbar: false,
+    clientHRepMainH: true
+  },
+  visible
+)
 
 </script>
 <style rel="stylesheet/scss" lang="scss" scoped>
