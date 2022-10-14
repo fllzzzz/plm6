@@ -1,5 +1,6 @@
 <template>
   <common-drawer
+    ref="drawerRef"
     append-to-body
     :close-on-click-modal="false"
     :before-close="handleClose"
@@ -7,6 +8,7 @@
     title="部分删除"
     :wrapper-closable="false"
     size="60%"
+    custom-class="delete-detail"
   >
     <template #titleRight>
       <el-popconfirm
@@ -25,7 +27,7 @@
         ref="tableRef"
         border
         :data="list"
-        :max-height="260"
+        :max-height="maxHeight"
         style="width: 100%"
         class="table-form"
         :stripe="false"
@@ -66,6 +68,7 @@ import crudApi from '@/api/plan/technical-manage/artifact-tree'
 import useVisible from '@compos/use-visible'
 import { ElNotification } from 'element-plus'
 import { DP } from '@/settings/config'
+import useMaxHeight from '@compos/use-max-height'
 
 const props = defineProps({
   modelValue: {
@@ -96,6 +99,19 @@ const emit = defineEmits(['success', 'update:modelValue'])
 const { visible, handleClose } = useVisible({ emit, props })
 const listSelection = ref([])
 const deleteLoading = ref(false)
+const drawerRef = ref()
+
+const { maxHeight } = useMaxHeight(
+  {
+    mainBox: '.delete-detail',
+    extraBox: '.el-drawer__header',
+    wrapperBox: '.el-drawer__body',
+    navbar: false,
+    clientHRepMainH: true,
+    minHeight: 300
+  },
+  () => drawerRef.value.loaded
+)
 
 function handleSelectionChange(val) {
   listSelection.value = val.map((v) => v.id)

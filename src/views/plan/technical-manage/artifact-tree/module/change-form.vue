@@ -8,11 +8,11 @@
     width="650px"
   >
     <template #titleRight>
-      <common-button
+      <!-- <common-button
         type="primary"
         size="mini"
         @click="onSubmit"
-      >确认</common-button>
+      >确认</common-button> -->
     </template>
     <el-form ref="formRef" :model="form" :rules="rules" size="small" label-width="130px">
         <el-form-item label="名称">
@@ -91,14 +91,14 @@
 
 <script setup>
 import { ref, defineProps, defineEmits, nextTick, watch } from 'vue'
-import { ElNotification } from 'element-plus'
+// import { ElNotification } from 'element-plus'
 
 import { DP } from '@/settings/config'
 import useVisible from '@compos/use-visible'
 import useWatchFormValidate from '@compos/form/use-watch-form-validate'
 
 import changeRemarkSelect from '@comp-base/change-reason-select'
-import { numChange, artifactInfo } from '@/api/plan/technical-manage/artifact-tree'
+// import { numChange, artifactInfo } from '@/api/plan/technical-manage/artifact-tree'
 
 const formRef = ref()
 const maxNumber = 999999999
@@ -154,7 +154,6 @@ function resetForm() {
     formRef.value.resetFields()
   }
   form.value.quantity = props.detailInfo.quantity
-  getInfo(props.detailInfo)
   if (formRef.value) {
     nextTick(() => {
       formRef.value.clearValidate()
@@ -162,34 +161,24 @@ function resetForm() {
   }
 }
 
-async function getInfo(detailInfo) {
-  transportedNum.value = 0
-  try {
-    const data = await artifactInfo({ serialNumber: detailInfo.serialNumber, areaId: detailInfo.areaId })
-    transportedNum.value = data.shipQuantity ? data.shipQuantity : 0
-  } catch (error) {
-    console.log('获取构件信息', error)
-  }
-}
-
 useWatchFormValidate(formRef, form)
 
-function handleSuccess() {
-  ElNotification({ title: '更改成功', type: 'success' })
-  emit('success')
-  handleClose()
-}
+// function handleSuccess() {
+//   ElNotification({ title: '更改成功', type: 'success' })
+//   emit('success')
+//   handleClose()
+// }
 
-async function onSubmit(val) {
-  try {
-    await formRef.value.validate()
-    form.value.id = props.detailInfo.id
-    await numChange(form.value)
-    handleSuccess()
-  } catch (e) {
-    console.log('修改构件信息', e)
-  }
-}
+// async function onSubmit(val) {
+//   try {
+//     await formRef.value.validate()
+//     form.value.id = props.detailInfo.id
+//     await numChange(form.value)
+//     handleSuccess()
+//   } catch (e) {
+//     console.log('修改构件信息', e)
+//   }
+// }
 </script>
 <style rel="stylesheet/scss" lang="scss" scoped>
 ::v-deep(.el-input-number .el-input__inner) {
