@@ -4,9 +4,9 @@
       v-model="query.productionLineTypeEnum"
       :options="artifactProductLineEnum.ENUM"
       type="enum"
-      show-option-all
+      default
       class="filter-item"
-      @change="fetchOtherCondition"
+      @change="handleProductionLineTypeChange"
     />
     <monomer-select-area-select
       v-model:monomerId="query.monomerId"
@@ -49,11 +49,11 @@
       @change="crud.toQuery"
     />
     <tag-tabs
-      v-model="query.structureClassId"
+      v-model="query.assembleConfigId"
       class="filter-item"
       :style="'width:calc(100% - 0px)'"
       :data="summaryList"
-      itemKey="id"
+      itemKey="assembleConfigId"
       @change="crud.toQuery"
     >
       <template #default="{ item }">
@@ -81,6 +81,7 @@
   <crudOperation>
     <template #optLeft>
       <common-radio-button
+        v-if="isTradition"
         v-model="curMode"
         :options="[
           { type: 'nesting', label: '套料模式' },
@@ -103,18 +104,18 @@
       </common-button>
     </template>
     <template #viewLeft>
-      <common-button class="filter-item" type="success" size="mini" icon="el-icon-view" @click="noNestingVisible = true">
+      <common-button v-if="isTradition" class="filter-item" type="success" size="mini" icon="el-icon-view" @click="noNestingVisible = true">
         查看【无需套料清单】
       </common-button>
     </template>
   </crudOperation>
   <!-- <filter-drawer v-model:visible="filterVisible" :list="filterList"></filter-drawer> -->
-  <no-nesting-drawer v-model:visible="noNestingVisible" @refresh="crud.toQuery"/>
+  <no-nesting-drawer v-model:visible="noNestingVisible" @refresh="crud.toQuery" />
 </template>
 
 <script setup>
 import { getCondition, setNotNeedNesting, getNestingSummary } from '@/api/mes/craft-manage/section-steel/nesting-setting'
-import { ref, watch, watchEffect, defineEmits } from 'vue'
+import { ref, watch, computed, watchEffect, defineEmits } from 'vue'
 import { mapGetters } from '@/store/lib'
 import { ElMessage, ElNotification, ElMessageBox } from 'element-plus'
 
@@ -126,13 +127,14 @@ import rrOperation from '@crud/RR.operation'
 import monomerSelectAreaSelect from '@comp-base/monomer-select-area-select'
 import tagTabs from '@comp-common/tag-tabs'
 import noNestingDrawer from './no-nesting-drawer.vue'
+import { deepClone } from '@/utils/data-type'
 
 const emits = defineEmits(['change-mode'])
 
-const defaultQuery = {}
+const { globalProjectId } = mapGetters('globalProjectId')
+const defaultQuery = { projectId: globalProjectId.value }
 
 const { crud, CRUD, query } = regHeader(defaultQuery)
-const { globalProjectId } = mapGetters('globalProjectId')
 
 const noNestingVisible = ref(false)
 const curMode = ref('nesting')
@@ -140,6 +142,8 @@ const specPrefixList = ref([])
 const specificationList = ref([])
 const materialList = ref([])
 const summaryList = ref([])
+
+const isTradition = computed(() => query.productionLineTypeEnum === artifactProductLineEnum.TRADITION.V)
 
 watchEffect(() => {
   query.projectId = globalProjectId.value
@@ -152,6 +156,14 @@ watch(
   },
   { immediate: true }
 )
+
+function handleProductionLineTypeChange(val) {
+  if (!isTradition.value) {
+    curMode.value = 'nesting'
+    handleModeChange(curMode.value)
+  }
+  fetchOtherCondition()
+}
 
 async function fetchOtherCondition() {
   if (!query.projectId) return
@@ -174,7 +186,11 @@ async function fetchSummary() {
   if (!query.projectId) return
   try {
     summaryList.value = []
-    const data = await getNestingSummary(query)
+    const _query = deepClone(query)
+    if (_query.assembleConfigId) {
+      delete _query.assembleConfigId
+    }
+    const data = await getNestingSummary(_query)
     summaryList.value = data?.content || []
   } catch (er) {
     console.log(er, '获取汇总列表')
