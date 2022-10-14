@@ -17,7 +17,7 @@
               <span v-if="detail.branchCompany">{{ detail.branchCompany.name }}</span>
             </el-form-item>
 
-            <el-form-item label="采购订单" prop="serialNumber">
+            <el-form-item label="采购合同编号" prop="serialNumber">
               {{ detail.serialNumber }}
             </el-form-item>
 
@@ -128,7 +128,7 @@
               :file-classify="fileClassifyEnum.PURCHASE_ORDER_ATT.V"
               v-model:files="detail.attachments"
               :uploadable="false"
-              empty-text="暂未上传采购订单附件"
+              empty-text="暂未上传采购合同编号附件"
             />
           </div>
         </el-form>

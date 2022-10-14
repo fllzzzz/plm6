@@ -90,9 +90,9 @@ export const collectionWarnPM = {
 
 // --------------------------- 供应商付款 start ------------------------------
 
-// 供应商付款/采购订单
+// 供应商付款/采购合同
 export const contractSupplierMaterialPM = {
-  get: ['contract_supplier_material:get'], // 采购订单列表
+  get: ['contract_supplier_material:get'], // 采购合同列表
   print: ['contract_supplier_material:print'], // 打印下载
   settleDetail: ['contract_supplier_material:settleDetail'], // 结算详情
   settleAudit: ['contract_supplier_material:settleAudit'], // 结算审核

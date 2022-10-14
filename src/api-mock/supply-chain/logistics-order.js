@@ -3,7 +3,7 @@ import { patternLicensePlate } from '@/utils/validate/pattern'
 import { invoiceTypeEnum } from '@enum-ms/finance'
 import { baseMaterialTypeEnum } from '@enum-ms/wms'
 
-// 获取采购订单（入库审核通过的）
+// 获取采购合同（入库审核通过的）
 const getList = {
   url: '/api/scm/logistics-order',
   method: 'get',
@@ -23,7 +23,7 @@ const getList = {
               id: 1,
               serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
             },
-            // 采购单号
+            // 采购合同编号
             purchaseOrder: {
               id: 1,
               serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
@@ -64,7 +64,7 @@ const getList = {
               id: 1,
               serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
             },
-            // 采购单号
+            // 采购合同编号
             purchaseOrder: {
               id: 1,
               serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/

@@ -36,7 +36,7 @@
         key="purchaseSN"
         :show-overflow-tooltip="true"
         prop="purchaseSN"
-        label="采购单号"
+        label="采购合同编号"
         min-width="155"
       >
         <template #default="{ row }">

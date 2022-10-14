@@ -3,7 +3,7 @@ import { invoiceTypeEnum, settlementStatusEnum, weightMeasurementModeEnum } from
 import { matClsEnum } from '@/utils/enum/modules/classification'
 import { logisticsPayerEnum, logisticsTransportTypeEnum } from '@/utils/enum/modules/logistics'
 
-// 获取采购订单
+// 获取采购合同
 const getPurchaseOrder = {
   url: '/api/wms/purchase-order',
   method: 'get',
@@ -374,7 +374,7 @@ const detail_3 = {
   }
 }
 
-// 添加采购订单
+// 添加采购合同
 const add = {
   url: '/api/wms/purchase-order',
   method: 'post',
@@ -387,7 +387,7 @@ const add = {
   }
 }
 
-// 修改采购订单
+// 修改采购合同
 const edit = {
   url: '/api/wms/purchase-order',
   method: 'put',
@@ -400,7 +400,7 @@ const edit = {
   }
 }
 
-// 修改采购单状态状态
+// 修改采购合同状态状态
 const editPurchaseStatus = {
   url: '/api/wms/purchase-order/purchase-status',
   method: 'put',
@@ -413,7 +413,7 @@ const editPurchaseStatus = {
   }
 }
 
-// 删除采购订单
+// 删除采购合同
 const del = {
   url: '/api/wms/purchase-order',
   method: 'delete',

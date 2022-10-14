@@ -67,7 +67,7 @@
     <div class="child-mr-7">
       <store-operation v-if="!props.edit" type="cu" @clear="handleClear" />
       <common-button type="primary" size="mini" @click="openRequisitionsView">查看申购单</common-button>
-      <el-tooltip content="请先选择采购订单" :disabled="!!form.purchaseId" placement="bottom" effect="light">
+      <el-tooltip content="请先选择采购合同编号" :disabled="!!form.purchaseId" placement="bottom" effect="light">
         <excel-resolve-button
           icon="el-icon-upload2"
           btn-name="批量导入"
@@ -243,7 +243,7 @@ function init() {
   })
 }
 
-// 采购订单id变更
+// 采购合同编号id变更
 function handlePurchaseIdChange(val) {
   nextTick(() => {
     trainsDiff.value = {}

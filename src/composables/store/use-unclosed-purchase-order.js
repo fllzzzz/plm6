@@ -1,7 +1,7 @@
 import { computed, watch } from 'vue'
 import { useStore } from 'vuex'
 
-// 获取未关闭的采购单
+// 获取未关闭的采购合同
 const useUnclosedRequisition = (loadedCallBack, reload = false) => {
   const store = useStore()
   const loaded = computed(() => store.state.config.loaded.unclosedPurchaseOrder)

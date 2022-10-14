@@ -136,8 +136,8 @@
           <el-tooltip
             class="item"
             effect="light"
-            :content="`采购执行完毕后，该采购单不可在入库办理处选择。\n
-            已结算的采购单不可再打开采购状态。`"
+            :content="`采购执行完毕后，该采购合同不可在入库办理处选择。\n
+            已结算的采购合同不可再打开采购状态。`"
             placement="top"
           >
             <div style="display: inline-block">
@@ -255,7 +255,7 @@ const columnsDataFormat = ref([
 ])
 const { CRUD, crud, columns } = useCRUD(
   {
-    title: '采购订单',
+    title: '采购合同',
     sort: ['id.desc'],
     invisibleColumns: ['branchCompany.name', 'invoiceType', 'userUpdateTime'],
     permission: { ...permission },

@@ -22,7 +22,7 @@ const get = {
             boolHasUnfreeze: true, // 是否解冻
             purchaseOrder: {
               id: 1,
-              serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/ // 采购单号
+              serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/ // 采购合同编号
             },
             // 入库单
             inboundReceipt: {
@@ -54,7 +54,7 @@ const get = {
             serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 退货单号
             purchaseOrder: {
               id: 1,
-              serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/ // 采购单号
+              serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/ // 采购合同编号
             },
             // 入库单
             inboundReceipt: {
@@ -87,7 +87,7 @@ const get = {
             serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 退货单号
             purchaseOrder: {
               id: 1,
-              serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/ // 采购单号
+              serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/ // 采购合同编号
             },
             // 入库单
             inboundReceipt: {
@@ -121,7 +121,7 @@ const get = {
             serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 退货单号
             purchaseOrder: {
               id: 1,
-              serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/ // 采购单号
+              serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/ // 采购合同编号
             },
             // 入库单
             inboundReceipt: {
@@ -568,7 +568,7 @@ const detail_id3 = {
   }
 }
 
-// 修改采购订单
+// 修改采购合同
 const edit = {
   url: '/api/wms/reject/application/record/raw-materials',
   method: 'put',
@@ -581,7 +581,7 @@ const edit = {
   }
 }
 
-// 删除采购订单
+// 删除采购合同
 const del = {
   url: '/api/wms/reject/application/record/raw-materials',
   method: 'delete',

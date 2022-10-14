@@ -9,7 +9,7 @@
     >
       <div class="filter-container">
         <div class="filter-right-box">
-          <el-tooltip :disabled="addable" effect="light" content="请先选择采购订单" placement="left-start">
+          <el-tooltip :disabled="addable" effect="light" content="请先选择采购合同编号" placement="left-start">
             <span>
               <common-button class="filter-item" type="success" @click="materialSelectVisible = true" :disabled="!addable">
                 添加物料
@@ -95,7 +95,7 @@ const orderLoaded = ref(false) // 订单加载状态
 const materialSelectVisible = ref(false) // 显示物料选择
 const currentBasicClass = matClsEnum.MATERIAL.V // 当前基础分类
 
-const addable = computed(() => !!(currentBasicClass && order.value)) // 可添加的状态（选择了采购订单）
+const addable = computed(() => !!(currentBasicClass && order.value)) // 可添加的状态（选择了采购合同编号）
 
 provide('matSpecRef', matSpecRef) // 供兄弟组件调用 删除
 
@@ -190,7 +190,7 @@ init()
 
 FORM.HOOK.beforeToEdit = async (crud, form) => {
   if (!props.edit) return
-  // 采购单id
+  // 采购合同id
   form.purchaseId = form.purchaseOrder.id
   if (!form.logistics) form.logistics = {}
   // 设置监听等
