@@ -27,7 +27,7 @@
           show-summary
           :summary-method="getSummaries"
         >
-          <el-table-column key="projectName" prop="projectName" label="项目/采购订单" align="center" >
+          <el-table-column key="projectName" prop="projectName" label="项目/采购合同编号" align="center" >
             <template v-slot="scope">
               <div>{{ scope.row.projectName || scope.row.serialNumber  }}</div>
             </template>

@@ -21,7 +21,7 @@
           <span>{{ scope.$index + 1 }}</span>
         </template>
       </el-table-column>
-      <el-table-column v-if="columns.visible('serialNumber')" key="serialNumber" prop="serialNumber" :show-overflow-tooltip="true" label="采购订单" align="center">
+      <el-table-column v-if="columns.visible('serialNumber')" key="serialNumber" prop="serialNumber" :show-overflow-tooltip="true" label="采购合同编号" align="center">
         <template v-slot="scope">
           <span>{{ scope.row.serialNumber }}</span>
         </template>

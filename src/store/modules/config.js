@@ -75,7 +75,7 @@ const state = {
   supplierKV: {}, // 供应商id:value 格式
   taxRateKV: {}, // 税率列表KV  key:基础分类，value：税率列表
   unclosedRequisitions: [], // 未关闭的申购单
-  unclosedPurchaseOrder: [], // 采购中（未完成）的采购订单
+  unclosedPurchaseOrder: [], // 采购中（未完成）的采购合同
   purchaseOrders: [], // 采购订单列表
   purchaseOrderKV: {}, // 采购订单id:value 格式
   monomers: {}, // 单体

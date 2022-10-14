@@ -88,7 +88,7 @@ const { crud, query } = regHeader(defaultQuery)
 
 // 列表类型
 const listTypeEnum = {
-  ORDER: { L: '采购订单', K: 'ORDER', V: 1 },
+  ORDER: { L: '采购合同', K: 'ORDER', V: 1 },
   SUPPLIER: { L: '供应商', K: 'SUPPLIER', V: 2 }
 }
 

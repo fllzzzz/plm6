@@ -1,7 +1,7 @@
 import request from '@/utils/request'
 
 /**
- * 采购订单-采购中（简要的）
+ * 采购合同-采购中（简要的）
  * @param {*} params
  * @returns
  */
@@ -121,8 +121,8 @@ export function editPurchaseStatus(data) {
 }
 
 /**
- * 导出采购订单
- * @param {*} id  采购订单id
+ * 导出采购合同
+ * @param {*} id  采购合同id
  */
 export function download(id) {
   return request({

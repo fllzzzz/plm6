@@ -25,7 +25,7 @@
     <el-descriptions class="margin-top" :column="2" border>
       <el-descriptions-item label-class-name="contractLabel" label="申请人" >{{currentInfo.applyUserName}}</el-descriptions-item>
       <el-descriptions-item label-class-name="contractLabel" label="申请日期">{{currentInfo.createTime? parseTime(currentInfo.createTime,'{y}-{m}-{d}'): '-'}}</el-descriptions-item>
-      <el-descriptions-item label-class-name="contractLabel" label="采购单号">{{currentRow.serialNumber}}</el-descriptions-item>
+      <el-descriptions-item label-class-name="contractLabel" label="采购合同编号">{{currentRow.serialNumber}}</el-descriptions-item>
       <el-descriptions-item label-class-name="contractLabel" label="所属项目">
         <template v-if="currentRow.projects && currentRow.projects.length>0">
           <div v-for="item in currentRow.projects" :key="item.id">

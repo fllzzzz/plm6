@@ -126,7 +126,7 @@ const defaultQuery = {
   purchaseStatus: purchaseStatusEnum.UNFINISHED.V, // 采购状态
   projectWarehouseType: undefined, // 仓库类型
   projectId: undefined, // 项目id
-  serialNumber: undefined, // 采购单号搜索
+  serialNumber: undefined, // 采购合同编号搜索
   branchCompanyId: undefined, // 签订主体
   supplierId: undefined, // 供应商id
   operatorName: undefined // 创建人 or 最后操作人

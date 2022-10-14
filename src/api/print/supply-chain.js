@@ -37,7 +37,7 @@ export function paymentRecord(params) {
 }
 
 /**
- * 采购订单付款台账
+ * 采购合同付款台账
  */
 export function orderPaymentLedger(params) {
   return request({
@@ -76,7 +76,7 @@ export default {
   invoiceDetail, // 收票记录
   paymentRecord, // 付款记录
   inboundRecord, // 入库记录
-  orderPaymentLedger, // 采购订单付款台账
+  orderPaymentLedger, // 采购合同付款台账
   supplierPaymentLedger, // 供应商付款台账
   logisticsRecord // 物流记录
 }

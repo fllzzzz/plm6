@@ -1,7 +1,7 @@
 <template>
   <span v-if="checkPermission(permission)" class="purchase-detail-button">
     <common-button v-bind="$attrs" @click="openDetail(props.purchaseId)" type="info">{{ props.btnName }}</common-button>
-    <!-- 采购订单详情 -->
+    <!-- 采购合同详情 -->
     <detail-wrapper ref="purchaseOrderRef" :api="getPurchaseOrderDetail">
       <purchase-order-detail />
     </detail-wrapper>
@@ -24,11 +24,11 @@ const props = defineProps({
   },
   btnName: {
     type: String,
-    default: '采购单详情'
+    default: '采购合同详情'
   }
 })
 
-// 采购单详情
+// 采购合同详情
 const { detailRef: purchaseOrderRef, openDetail } = useOtherCrudDetail()
 
 </script>

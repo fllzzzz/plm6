@@ -21,7 +21,7 @@ const get = {
             basicClass: 7, // 采购物料基础类型
             boolPartyA: true, // 是否甲供
             serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 入库单号
-            purchaseSN: 'CG-211125-123213', // 采购单号
+            purchaseSN: 'CG-211125-123213', // 采购合同编号
             shipmentNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 邮递-物流单号
             licensePlate: patternLicensePlate, // 车牌号
             // 项目id
@@ -51,7 +51,7 @@ const get = {
             id: 2, // 入库单id
             basicClass: matClsEnum.MATERIAL.V, // 采购物料基础类型
             serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 入库单号
-            purchaseSN: 'CG-211125-123213', // 采购单号
+            purchaseSN: 'CG-211125-123213', // 采购合同编号
             shipmentNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 邮递-物流单号
             licensePlate: patternLicensePlate, // 车牌号
             'projects|2': [
@@ -82,7 +82,7 @@ const get = {
             id: 3, // 入库单id
             basicClass: matClsEnum.STEEL_PLATE.V6, // 采购物料基础类型
             serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 入库单号
-            purchaseSN: 'CG-211125-123213', // 采购单号
+            purchaseSN: 'CG-211125-123213', // 采购合同编号
             shipmentNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 邮递-物流单号
             licensePlate: patternLicensePlate, // 车牌号
             'projects|2': [
@@ -113,7 +113,7 @@ const get = {
             id: 4, // 入库单id
             basicClass: matClsEnum.MATERIAL.V, // 采购物料基础类型
             serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 入库单号
-            purchaseSN: 'CG-211125-123213', // 采购单号
+            purchaseSN: 'CG-211125-123213', // 采购合同编号
             shipmentNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 邮递-物流单号
             licensePlate: patternLicensePlate, // 车牌号
             supplier: {
@@ -495,7 +495,7 @@ const detail_id3 = {
   }
 }
 
-// 修改采购订单
+// 修改采购合同
 const edit = {
   url: '/api/wms/inbound/application/record/raw-materials',
   method: 'put',
@@ -508,7 +508,7 @@ const edit = {
   }
 }
 
-// 删除采购订单
+// 删除采购合同
 const del = {
   url: '/api/wms/inbound/application/record/raw-materials',
   method: 'delete',

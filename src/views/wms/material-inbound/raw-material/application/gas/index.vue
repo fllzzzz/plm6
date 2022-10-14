@@ -11,7 +11,7 @@
     >
       <div class="filter-container">
         <div class="filter-right-box">
-          <el-tooltip :disabled="addable" effect="light" content="请先选择采购订单" placement="left-start">
+          <el-tooltip :disabled="addable" effect="light" content="请先选择采购合同编号" placement="left-start">
             <span>
               <common-button class="filter-item" type="success" @click="materialSelectVisible = true" :disabled="!addable">
                 添加物料
@@ -79,7 +79,7 @@ const props = defineProps({
 })
 
 const defaultForm = {
-  purchaseId: null, // 采购单id
+  purchaseId: null, // 采购合同id
   loadingWeight: null, // 装载重量
   licensePlate: null, // 车牌号
   shipmentNumber: null, // 物流单号
@@ -98,7 +98,7 @@ const boolPartyA = ref(false) // 是否“甲供”
 const materialSelectVisible = ref(false) // 显示物料选择
 const currentBasicClass = matClsEnum.GAS.V // 当前基础分类
 
-const addable = computed(() => !!(currentBasicClass && order.value)) // 可添加的状态（选择了采购订单）
+const addable = computed(() => !!(currentBasicClass && order.value)) // 可添加的状态（选择了采购合同编号）
 const totalAmount = computed(() => {
   let amount = 0
   if (!boolPartyA.value) {
@@ -206,7 +206,7 @@ init()
 
 FORM.HOOK.beforeToEdit = async (crud, form) => {
   if (!props.edit) return
-  // 采购单id
+  // 采购合同id
   form.purchaseId = form.purchaseOrder.id
   if (!form.logistics) form.logistics = {}
   // 设置监听等

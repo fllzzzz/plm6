@@ -129,7 +129,7 @@ const detail = ref({})
 const columnsDataFormat = ref([...materialHasAmountColumns])
 const { crud } = regExtra()
 
-// 采购订单信息
+// 采购合同信息
 const order = computed(() => detail.value.purchaseOrder || {})
 // 是否有显示金额权限
 const showAmount = computed(() => checkPermission(permission.showAmount))
