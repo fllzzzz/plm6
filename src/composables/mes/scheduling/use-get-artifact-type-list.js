@@ -5,17 +5,20 @@ import { artifactTypeEnum } from '@enum-ms/mes'
  *
  * @param {*} queryParams {productionLineTypeEnum,areaIdList}
  */
-export default function useGetArtifactTypeList({ getApi, initHook }) {
+export default function useGetArtifactTypeList({ getApi, initHook }, isRequireLineType = false) {
   const artifactTypeList = ref([])
 
   async function fetch({ productionLineTypeEnum, areaIdList }) {
-    // if (!productionLineTypeEnum || !areaIdList?.length) {
-    //   artifactTypeList.value = []
-    //   return
-    // }
-    if (!areaIdList?.length) {
-      artifactTypeList.value = []
-      return
+    if (isRequireLineType) {
+      if (!productionLineTypeEnum || !areaIdList?.length) {
+        artifactTypeList.value = []
+        return
+      }
+    } else {
+      if (!areaIdList?.length) {
+        artifactTypeList.value = []
+        return
+      }
     }
     try {
       const { content } = await getApi({ productionLineTypeEnum, areaIdList })

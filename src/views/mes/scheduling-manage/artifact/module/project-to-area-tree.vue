@@ -64,6 +64,8 @@ defineProps({
 const treeMenuRef = ref()
 const currentMonomerId = ref()
 
+const curMonthValue = moment().startOf('month').valueOf()
+
 const timeList = ref([])
 const month = ref()
 const filterText = ref()
@@ -78,7 +80,7 @@ async function fetchTime() {
     const { content } = await getAreaTreeTime()
     timeList.value = content.map((v) => moment(v, 'YYYY/MM').valueOf())
     if (timeList.value?.length) {
-      month.value = timeList.value[0].toString()
+      month.value = timeList.value.includes(curMonthValue) ? curMonthValue.toString() : timeList.value[0].toString()
       fetchTree()
     }
   } catch (error) {
@@ -126,7 +128,6 @@ function dataFormat(content) {
           disabled: false,
           type: ''
         })
-        console.log(_area, '_area')
       }
       _monomer.push({
         id: monomers[x].id,
@@ -138,7 +139,6 @@ function dataFormat(content) {
         disabled: true,
         type: '单体'
       })
-      console.log(_monomer, '_monomer')
     }
     _tree.push({
       id: content[i].id,
@@ -165,7 +165,7 @@ function dataFormat(content) {
 // 切换区域
 function handleNodeClick(data, node) {
   if (data.isLeaf) {
-    console.log(data, node, currentMonomerId.value)
+    // console.log(data, node, currentMonomerId.value)
     if (!node.checked) {
       if (data.monomerId === currentMonomerId.value) {
         treeMenuRef.value.setChecked(node, true)
