@@ -135,7 +135,7 @@ import { ref, provide, computed } from 'vue'
 import { ElMessage } from 'element-plus'
 import moment from 'moment'
 
-import { deepClone } from '@data-type/index'
+// import { deepClone } from '@data-type/index'
 import { componentTypeEnum } from '@enum-ms/mes'
 import { artifactSchedulingPM as permission } from '@/page-permission/mes'
 

@@ -41,7 +41,7 @@
           v-model="form.productType"
           :options="componentTypeEnum.ENUM"
           :unshowOptions="
-            form.productionLineTypeEnum === 2
+            form.productionLineTypeEnum === artifactProductLineEnum.INTELLECT.V
               ? [
                   componentTypeEnum.AUXILIARY_MATERIAL.K,
                   componentTypeEnum.MACHINE_PART.K,
@@ -62,10 +62,10 @@
       </el-form-item> -->
       <el-form-item
         v-if="
-          (form.productionLineTypeEnum === 2 && form.productType & componentTypeEnum.ARTIFACT.V) |
-            (form.productionLineTypeEnum === 1 && form.productType & componentTypeEnum.ARTIFACT.V)
+          (form.productionLineTypeEnum === artifactProductLineEnum.INTELLECT.V && form.productType & componentTypeEnum.ARTIFACT.V) |
+            (form.productionLineTypeEnum === artifactProductLineEnum.TRADITION.V && form.productType & componentTypeEnum.ARTIFACT.V)
         "
-        :label="form.productionLineTypeEnum === 2 && form.productType & componentTypeEnum.ARTIFACT.V ? '产品标识' : '可生产产品种类'"
+        :label="form.productionLineTypeEnum === artifactProductLineEnum.INTELLECT.V && form.productType & componentTypeEnum.ARTIFACT.V ? '产品标识' : '可生产产品种类'"
         prop="linkIdList"
       >
         <common-select

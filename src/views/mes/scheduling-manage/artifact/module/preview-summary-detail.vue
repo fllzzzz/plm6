@@ -18,15 +18,13 @@
           :options="artifactProductLineEnum.ENUM"
           type="enum"
           size="small"
-          showOptionAll
           class="filter-item"
-          @change="fetch"
         />
         <tag-tabs
           ref="tagTabsRef"
           v-model="queryVO.structureClassId"
           class="filter-item"
-          :style="'width:calc(100% - 205px)'"
+          :style="'width:calc(100% - 150px)'"
           :data="artifactTypeList"
           :unselectable="artifactTypeList.length > 1"
           itemKey="structureClassId"
@@ -83,19 +81,27 @@
         :max-height="maxHeight"
         :stripe="false"
         :data-format="dataFormat"
+        row-key="id"
         style="width: 100%"
         @selection-change="selectionChangeHandler"
       >
         <el-table-column label="序号" type="index" align="center" width="60" />
         <el-table-column prop="groups.name" :show-overflow-tooltip="true" label="车间>生产线>生产组" min-width="170" align="center">
-          <template #default="{ row }">
-            <div class="flex-ccc">
-              <span>{{ row.workshop?.name }}>{{ row.productionLine?.name }}>{{ row.groups?.name }}</span>
-              <el-tag type="success" effect="plain" style="margin-top: 5px; padding: 0px 15px">
-                <span>{{ row.mergeQuantity }} 件</span>
-                <span style="margin-right: 5px; margin-left: 5px">|</span>
-                <span>{{ row.mergeWeight }} kg</span>
-              </el-tag>
+          <template #default="{ row, $index }">
+            <div class="flex-rsc">
+              <el-checkbox
+                v-model="row.groupCheck"
+                :indeterminate="row.isIndeterminateCheck"
+                @change="handleCheckAllChange($event, row, $index)"
+              />
+              <div class="flex-ccc" style="flex: 1">
+                <span>{{ row.workshop?.name }}>{{ row.productionLine?.name }}>{{ row.groups?.name }}</span>
+                <el-tag type="success" effect="plain" style="margin-top: 5px; padding: 0px 15px">
+                  <span>{{ row.mergeQuantity }} 件</span>
+                  <span style="margin-right: 5px; margin-left: 5px">|</span>
+                  <span>{{ row.mergeWeight }} kg</span>
+                </el-tag>
+              </div>
             </div>
           </template>
         </el-table-column>
@@ -178,6 +184,8 @@ const props = defineProps({
   }
 })
 
+const crud = inject('crud')
+
 const selectionModeEnum = {
   SCHEDULING: { K: 'SCHEDULING', L: '排产模式', V: 1 },
   EDIT: { K: 'EDIT', L: '编辑模式', V: 2 }
@@ -186,7 +194,7 @@ const selectionMode = ref(selectionModeEnum.SCHEDULING.V)
 
 const { visible: drawerVisible, handleClose } = useVisible({ emit, props, field: 'visible', showHook, closeHook })
 
-const { artifactTypeList, refreshArtifactType } = useGetArtifactTypeList({ getApi: getArtifactRecordType, initHook: artifactTypeInit })
+const { artifactTypeList, refreshArtifactType } = useGetArtifactTypeList({ getApi: getArtifactRecordType, initHook: artifactTypeInit }, true)
 
 const areaIdObj = inject('areaIdObj')
 const dataFormat = ref([['askCompleteTime', ['parse-time', '{y}-{m}-{d}']]])
@@ -196,7 +204,10 @@ const curAreaNames = computed(() => {
 
 const tableData = ref([])
 const tableLoading = ref(false)
-const queryVO = ref({})
+const listObjIdsByGroup = ref({})
+const queryVO = ref({
+  productionLineTypeEnum: crud.query.productionLineTypeEnum || artifactProductLineEnum.TRADITION.V
+})
 const closeRefreshOut = ref(false)
 
 const artifactTypeParams = computed(() => {
@@ -207,7 +218,7 @@ const artifactTypeParams = computed(() => {
 })
 
 const listProductionLineTypeEnum = computed(() => {
-  return tagTabsRef.value?.getOption(queryVO.value.structureClassId) || queryVO.value.productionLineTypeEnum
+  return tagTabsRef.value?.getOption(queryVO.value.structureClassId)?.productionLineTypeEnum || queryVO.value.productionLineTypeEnum
 })
 
 // 高度
@@ -233,6 +244,9 @@ function artifactTypeInit() {
   if (artifactTypeList.value?.length === 1) {
     queryVO.value.structureClassId = artifactTypeList.value[0].structureClassId
     fetch()
+  } else {
+    tableData.value = []
+    listObjIdsByGroup.value = {}
   }
 }
 
@@ -254,7 +268,6 @@ function closeHook() {
 }
 
 function resetQuery() {
-  queryVO.value.productionLineTypeEnum = undefined
   queryVO.value.serialNumber = undefined
   queryVO.value.structureClassId = undefined
 }
@@ -262,6 +275,8 @@ function resetQuery() {
 async function fetch() {
   try {
     tableLoading.value = true
+    tableData.value = []
+    listObjIdsByGroup.value = {}
     const { content } = await record({ ...props.otherQuery, ...queryVO.value })
     const _list = content
     let _curNeedMergeIndex = 0 // 首行为初始需要的合并行
@@ -269,6 +284,8 @@ async function fetch() {
     let _mergeQuantity = 0
     let _mergeWeight = 0
     for (let i = 0; i < _list.length; i++) {
+      const _curGroupId = _list[i].groups?.id
+      _list[i].mergeIndex = _curNeedMergeIndex
       // 处理首行
       if (i === 0) {
         _mergeRowspan++
@@ -277,7 +294,7 @@ async function fetch() {
       }
       if (i > 0) {
         // 与上行合并
-        if (_list[i].groups?.id === _list[i - 1].groups?.id) {
+        if (_curGroupId === _list[i - 1].groups?.id) {
           _mergeRowspan++
           _mergeQuantity += _list[i].schedulingQuantity
           _mergeWeight += _list[i].schedulingTotalNetWeight
@@ -304,12 +321,33 @@ async function fetch() {
       }
       // 其他处理数据
       _list[i].needSchedulingQuantity = _list[i].schedulingQuantity
+      _list[i].groupCheck = false
+      _list[i].isIndeterminateCheck = false
+      if (!listObjIdsByGroup.value[_curGroupId]) {
+        listObjIdsByGroup.value[_curGroupId] = []
+      }
+      listObjIdsByGroup.value[_curGroupId].push(_list[i].id)
     }
     tableData.value = _list
   } catch (error) {
     console.log('获取构件排产预览记录失败', error)
   } finally {
     tableLoading.value = false
+  }
+}
+
+function handleCheckAllChange(val, row, index) {
+  const _groupId = row.groups?.id
+  console.log(row, _groupId, val, listObjIdsByGroup.value[_groupId], 'handleCheckAllChange')
+  if (_groupId && listObjIdsByGroup.value[_groupId]) {
+    tableData.value.forEach((v) => {
+      if (listObjIdsByGroup.value[_groupId].includes(v.id)) {
+        recordTableRef?.value?.toggleRowSelection(v, val)
+      }
+    })
+  }
+  if (!val) {
+    tableData.value[index].isIndeterminateCheck = false
   }
 }
 
@@ -341,6 +379,27 @@ const itemInfo = ref({})
 const selections = ref([])
 
 function selectionChangeHandler(val) {
+  console.log(val, 'selectionChangeHandler')
+  if (val.length) {
+    for (const item in listObjIdsByGroup.value) {
+      const _groupsId = Number(item)
+      const compareLength = listObjIdsByGroup.value[item].length
+      const _list = val.filter((v) => v.groups.id === _groupsId)
+      console.log(_groupsId, compareLength, _list.length, 'compareLength')
+      if (_list.length) {
+        const _index = _list[0].mergeIndex
+        tableData.value[_index].isIndeterminateCheck = _list.length > 0 && _list.length < compareLength
+        tableData.value[_index].groupCheck = _list.length > 0 && _list.length === compareLength
+      }
+    }
+  } else {
+    for (let i = 0; i < tableData.value.length; i++) {
+      const v = tableData.value[i]
+      v.isIndeterminateCheck = false
+      v.groupCheck = false
+    }
+  }
+
   selections.value = val
 }
 // --------------------------- 操作数据 end --------------------------------

@@ -6,8 +6,8 @@
     </template>
     <template #content>
       <div class="head-container">
-        <span class="filter-item">构件排产信息：</span>
-        <tag-tabs v-model="curGroupsId" class="filter-item" :style="'width:calc(100% - 125px)'" :data="tagList" itemKey="groupsId">
+        <!-- <span class="filter-item">构件排产信息：</span> -->
+        <tag-tabs v-model="curGroupsId" class="filter-item" :style="'width:calc(100% - 125px)'" :data="showTagList" itemKey="groupsId">
           <template #default="{ item }">
             <span>{{ item.label }}</span>
             <template v-if="item.groupsId !== paGroupId">
@@ -18,10 +18,10 @@
           </template>
         </tag-tabs>
       </div>
-      <div class="tip">
+      <!-- <div class="tip">
         <span>* 提示：</span>
         <span> 系统自动默认与构件相同的产线进行部件生产，也可在生产组列修改产线或生产组。</span>
-      </div>
+      </div> -->
       <common-table
         v-loading="tableLoading"
         :data="tableData"
@@ -47,7 +47,7 @@
         <el-table-column prop="netWeight" :show-overflow-tooltip="true" label="单净重（kg）" min-width="90" align="center" />
         <el-table-column prop="needSchedulingQuantity" :show-overflow-tooltip="true" label="数量" min-width="90" align="center">
           <template #default="{ row: { sourceRow: row } }">
-            <el-input-number
+            <!-- <el-input-number
               v-model="row.needSchedulingQuantity"
               :step="1"
               :min="0"
@@ -56,7 +56,8 @@
               size="mini"
               controls-position="right"
               style="width: 100%"
-            />
+            /> -->
+            <span>{{ row.needSchedulingQuantity }}</span>
           </template>
         </el-table-column>
         <el-table-column :show-overflow-tooltip="true" prop="groupsId" label="生产组" min-width="150px" align="center">
@@ -88,6 +89,16 @@
           </template>
         </el-table-column>
       </common-table>
+      <handle-surplus-assemble-dialog
+        ref="handleSurplusRef"
+        v-model:visible="surplusAssembleVisible"
+        :surplusList="surplusAssembleList"
+        :groupsId="props.artifactList[0]?.groups?.id"
+      >
+        <template #saveBtn>
+          <common-button size="mini" :loading="saveSurplusLoading" type="primary" @click="toSaveHandleSurplus"> 保存并下发 </common-button>
+        </template>
+      </handle-surplus-assemble-dialog>
     </template>
   </common-drawer>
 </template>
@@ -109,6 +120,7 @@ import { manualFetchGroupsTree } from '@compos/mes/scheduling/use-scheduling-gro
 import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'
 import tagTabs from '@comp-common/tag-tabs'
+import handleSurplusAssembleDialog from './handle-surplus-assemble-dialog'
 
 const productType = componentTypeEnum.ASSEMBLE.V
 
@@ -148,9 +160,23 @@ const paGroupId = -1 // 母件 默认一组 组id为-1
 const tableLoading = ref()
 const tagObj = ref({})
 const tagList = ref([])
+const showTagGroupIds = ref([])
 const curGroupsId = ref()
+const originAssembleSchedulingList = ref([])
+const surplusAssembleList = ref([])
+const surplusAssembleVisible = ref(false)
 
 const tableData = computed(() => tagObj.value[curGroupsId.value]?.assembleList || [])
+const showTagList = computed(() => {
+  const _arr = []
+  for (let i = 0; i < tagList.value.length; i++) {
+    const v = tagList.value[i]
+    if (showTagGroupIds.value.includes(v.groupsId)) {
+      _arr.push(v)
+    }
+  }
+  return _arr
+})
 
 const tableRules = {
   needSchedulingQuantity: [{ required: true, message: '请填写数量', trigger: 'blur' }],
@@ -185,17 +211,21 @@ async function fetch() {
   // if (!ids || !ids.length) return
   try {
     tableLoading.value = true
+    surplusAssembleList.value = []
     const _ids = props.artifactList.map((v) => {
       return {
         id: v.id,
         quantity: v.schedulingQuantity
       }
     })
-    const { assembleSchedulingList, assembleTypesetting } = await getAssemble(_ids)
+    const { assembleSchedulingList, assembleTypesetting, surplusAssemble } = await getAssemble(_ids)
+    showTagGroupIds.value = []
+    originAssembleSchedulingList.value = assembleSchedulingList
     // 处理部件信息
     for (let i = 0; i < assembleSchedulingList.length; i++) {
       const v = assembleSchedulingList[i]
-      if (tagObj.value[v.groupsId]) {
+      if (v?.groupsId && tagObj.value[v.groupsId]) {
+        showTagGroupIds.value.push(v.groupsId)
         tagObj.value[v.groupsId].assembleList = []
         for (let o = 0; o < v.assembleList.length; o++) {
           const _o = v.assembleList[o]
@@ -221,12 +251,26 @@ async function fetch() {
     }
     // 处理母件信息
     if (assembleTypesetting?.length) {
-      const _list = assembleTypesetting.map((v) => {
+      const _list = []
+      for (let x = 0; x < assembleTypesetting.length; x++) {
+        const v = assembleTypesetting[x]
+        v.productId = v.id
         v.attributeType = '套料'
         v.boolStructuralEnum = true
         v.needSchedulingQuantity = 1
-        return v
-      })
+        if (x !== 0) {
+          v.groupsId = '同上'
+          v.askCompleteTime = '同上'
+        }
+        if (v.assembleConfigId && isBlank(classIdGroupsObj[v.assembleConfigId])) {
+          classIdGroupsObj[v.assembleConfigId] = await manualFetchGroupsTree({
+            productType,
+            structureClassId: v.assembleConfigId,
+            _factoryIds: factoryIds.value
+          })
+        }
+        _list.push(v)
+      }
       const _obj = {
         label: '母件',
         mergeQuantity: 0,
@@ -237,7 +281,10 @@ async function fetch() {
       }
       tagObj.value[paGroupId] = _obj
       tagList.value.push(_obj)
+      showTagGroupIds.value.push(paGroupId)
     }
+    surplusAssembleList.value = surplusAssemble || []
+    curGroupsId.value = showTagGroupIds.value[0]
   } catch (error) {
     console.log('获取部件排产列表失败', error)
   } finally {
@@ -273,54 +320,92 @@ function initArtifactData(list) {
   }
   tagObj.value = _tagObj
   tagList.value = obj2arr(_tagObj)
-  curGroupsId.value = tagList.value[0].groupsId
 }
 
 // --------------------------- 任务下发 start ------------------------------
+const handleSurplusRef = ref()
 const taskLoading = ref(false)
+const saveSurplusLoading = ref(false)
+const saveTaskParams = ref({})
+
+async function toSaveHandleSurplus() {
+  try {
+    saveSurplusLoading.value = true
+    const _surplusRes = handleSurplusRef?.value.handleValidate()
+    if (!_surplusRes) return
+    saveTaskParams.value.matchingDetailList = _surplusRes
+    await saveTask(saveTaskParams.value)
+    ElNotification({
+      title: '保存并下发成功',
+      type: 'success',
+      duration: 2500
+    })
+    surplusAssembleVisible.value = false
+    emit('task-issue-success')
+    handleClose()
+  } catch (er) {
+    console.log(er, '保存多余部件处理')
+  } finally {
+    saveSurplusLoading.value = false
+  }
+}
 
 async function toTaskIssue() {
-  if (props.productionLineTypeEnum === artifactProductLineEnum.INTELLECT.V && Object.keys(tagObj.value).length > 1) {
-    ElMessage.warning('智能线下存在未套料的部件，请先进行套料！')
-    return
-  }
+  // if (props.productionLineTypeEnum === artifactProductLineEnum.INTELLECT.V && originAssembleSchedulingList.value.length > 0) {
+  //   ElMessage.warning('智能线下存在未套料的部件，请先进行套料！')
+  //   return
+  // }
   try {
     taskLoading.value = true
+    saveTaskParams.value = {}
     let _artifact = []
     let _assemble = []
     let flag = true
     for (const item in tagObj.value) {
-      const _curList = tagObj.value[item].assembleList
-      const { validResult, dealList } = tableValidate(_curList)
-      if (validResult) {
-        cleanUpData(deepClone(dealList))
-        const _list = dealList.map((v) => {
-          return {
-            askCompleteTime: v.askCompleteTime,
-            boolStructuralEnum: v.boolStructuralEnum,
-            groupsId: v.groupsId,
-            productId: v.productId,
-            projectId: v.projectId,
-            quantity: v.needSchedulingQuantity
-          }
-        })
-        _artifact = _artifact.concat(tagObj.value[item].ids)
-        _assemble = _assemble.concat(_list)
+      // 显示的组才需要验证
+      if (showTagGroupIds.value.includes(Number(item))) {
+        const _curList = tagObj.value[item]?.assembleList
+        const { validResult, dealList } = tableValidate(_curList)
+        if (validResult) {
+          const copyDealList = deepClone(dealList)
+          cleanUpData(copyDealList)
+          const _list = copyDealList.map((v) => {
+            return {
+              askCompleteTime: v.askCompleteTime,
+              boolStructuralEnum: v.boolStructuralEnum,
+              groupsId: v.groupsId,
+              productId: v.productId,
+              projectId: v.projectId,
+              quantity: v.needSchedulingQuantity
+            }
+          })
+          _artifact = _artifact.concat(tagObj.value[item].ids)
+          _assemble = _assemble.concat(_list)
+        } else {
+          curGroupsId.value = tagObj.value[item].groupsId
+          flag = false
+          break
+        }
       } else {
-        curGroupsId.value = tagObj.value[item].groupsId
-        flag = false
-        break
+        _artifact = _artifact.concat(tagObj.value[item].ids)
       }
     }
     if (!flag) {
       return
     }
-    await saveTask({
+    saveTaskParams.value = {
       artifactSchedulingList: _artifact,
-      assembleDetailList: _assemble
-    })
+      assembleDetailList: _assemble,
+      productionLineTypeEnum: props.productionLineTypeEnum
+    }
+    console.log(saveTaskParams.value, 'saveTaskParams.value')
+    if (surplusAssembleList.value.length && !surplusAssembleVisible.value) {
+      surplusAssembleVisible.value = true
+      return
+    }
+    await saveTask(saveTaskParams.value)
     ElNotification({
-      title: '删除任务成功',
+      title: '任务下发成功',
       type: 'success',
       duration: 2500
     })
