@@ -75,7 +75,7 @@
           <common-button type="primary" size="mini" @click="views(row)">查看</common-button>
           <el-popconfirm confirm-button-text="确定" cancel-button-text="取消" title="确定下发吗?" @confirm="issued(row)">
             <template #reference>
-              <common-button size="mini" type="success">下发</common-button>
+              <common-button size="mini" type="success" :disabled="row.statusIssueEnum === taskIssueTypeEnum.HAS_ISSUED.V">下发</common-button>
             </template>
           </el-popconfirm>
           <el-popconfirm
@@ -208,7 +208,6 @@ function batchIssued() {
 
 // 查看
 function views(row) {
-  console.log(row, 'row')
   nestingFileVisible.value = true
 }
 

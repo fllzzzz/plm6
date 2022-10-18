@@ -14,16 +14,17 @@
       <el-table-column
         key="nestingResult"
         prop="nestingResult"
-        :show-overflow-tooltip="true"
         label="套料成果"
         align="center"
       >
         <template v-slot="scope">
           <template v-if="scope.row.linkDOList.length > 0">
-            <div style="display: flex; justify-content: center;" v-for="item in scope.row.linkDOList" :key="item">
-              <div :style="`width: ${30 * (scope.row.typesettingLength / item.length)}px; height: 30px; background-color: ${item.lengthColor};line-height: 30px;`">
+            <div style="display: flex;justify-content: flex-start;overflow: auto">
+            <div v-for="item in scope.row.linkDOList" :key="item">
+              <div :style="`width: ${35 * (scope.row.typesettingLength / item.length)}px; height: 30px; background-color: ${item.lengthColor};line-height: 30px;margin-left: 1px`">
                 {{ item.serialNumber }}
               </div>
+            </div>
             </div>
           </template>
         </template>
@@ -35,33 +36,32 @@
         label="材料属性"
         align="center"
         width="120px"
-        fixed="right"
       >
         <template v-slot="scope">
           <span>{{ scope.row.typesettingAssembleTypeEnum ? materialTypeEnum.VL[scope.row.typesettingAssembleTypeEnum] : '-' }}</span>
         </template>
       </el-table-column>
-      <el-table-column key="length" prop="length" :show-overflow-tooltip="true" label="母材长度（mm）" align="center" width="130px" fixed="right">
+      <el-table-column key="length" prop="length" :show-overflow-tooltip="true" label="母材长度（mm）" align="center" width="120px">
         <template v-slot="scope">
           <span>{{ scope.row.length }}</span>
         </template>
       </el-table-column>
-      <el-table-column key="specification" prop="specification" :show-overflow-tooltip="true" label="母材规格" align="center" width="150px" fixed="right">
+      <el-table-column key="specification" prop="specification" :show-overflow-tooltip="true" label="母材规格" align="center" width="120px">
         <template v-slot="scope">
           <span>{{ scope.row.specification }}</span>
         </template>
       </el-table-column>
-      <el-table-column key="quantity" prop="quantity" :show-overflow-tooltip="true" label="数量" align="center" width="100px" fixed="right">
+      <el-table-column key="quantity" prop="quantity" :show-overflow-tooltip="true" label="数量" align="center" width="120px">
         <template v-slot="scope">
           <span>{{ scope.row.quantity }}</span>
         </template>
       </el-table-column>
-      <el-table-column key="typesettingLength" prop="typesettingLength" :show-overflow-tooltip="true" label="套料长度（mm）" align="center" width="130px" fixed="right">
+      <el-table-column key="typesettingLength" prop="typesettingLength" :show-overflow-tooltip="true" label="套料长度（mm）" align="center" width="120px">
         <template v-slot="scope">
           <span>{{ scope.row.typesettingLength }}</span>
         </template>
       </el-table-column>
-      <el-table-column key="lossRate" prop="lossRate" :show-overflow-tooltip="true" label="损耗" align="center" width="100px" fixed="right">
+      <el-table-column key="lossRate" prop="lossRate" :show-overflow-tooltip="true" label="损耗" align="center" width="120px">
         <template v-slot="scope">
           <span>{{ scope.row.lossRate }}</span>
         </template>
@@ -92,7 +92,7 @@ const props = defineProps({
 })
 const { visible: dialogVisible, handleClose } = useVisible({ emit, props, field: 'visible', showHook: nestingResultGet })
 
-const colorObj = ref({}) // id: color
+const colorObj = ref({}) // serialNumber: color
 
 // 套料成果
 async function nestingResultGet() {
@@ -101,10 +101,10 @@ async function nestingResultGet() {
     const { content } = await nestingProgress({ batchId: props.batchId })
     content[0].typesettingDTOS.forEach((v) => {
       v.linkDOList.map((m) => {
-        if (!colorObj.value[m.id]) {
-          colorObj.value[m.id] = getLightColor()
+        if (!colorObj.value[m.serialNumber]) {
+          colorObj.value[m.serialNumber] = getLightColor()
         }
-        m.lengthColor = colorObj.value[m.id]
+        m.lengthColor = colorObj.value[m.serialNumber]
       })
     })
 
@@ -144,23 +144,5 @@ async function delNesting() {
 </script>
 
 <style lang="scss" scoped>
-.item-name {
-  padding: 8px 16px;
-  background-color: #ecf8ff;
-  border-radius: 4px;
-  border-left: 5px solid #50bfff;
-  margin: 10px 0;
-  margin-left: 10px;
-  width: 150px;
-}
-.demo-progress .el-progress--line {
-  margin-bottom: 15px;
-  width: 300px;
-}
-::v-deep(.el-progress-bar__inner) {
-  border-radius: 0;
-}
-::v-deep(.el-progress-bar__outer) {
-  border-radius: 0;
-}
+
 </style>
