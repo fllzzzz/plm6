@@ -5,12 +5,12 @@
         开始套料
       </common-button>
     </template>
-    <el-form ref="formRef" :model="form" :rules="rules" size="small" label-width="130px" class="demo-form">
+    <el-form ref="formRef" :model="form" :rules="rules" size="small" label-width="120px" class="demo-form">
       <el-form-item label="预留割缝≤" prop="kerfLength">
-        <el-input v-model="form.kerfLength" placeholder="输入长度 单位：mm" />
+        <el-input v-model="form.kerfLength" style="width: 200px" placeholder="输入长度 单位：mm" />
       </el-form-item>
       <el-form-item label="母材长度≤" prop="length">
-        <el-input v-model="form.length" placeholder="输入长度 单位：mm" />
+        <el-input v-model="form.length" style="width: 200px" placeholder="输入长度 单位：mm" />
       </el-form-item>
       <el-form-item label="套料方式" prop="typesettingTypeEnum">
         <template #label>
@@ -24,31 +24,23 @@
             <i class="el-icon-info" />
           </el-tooltip>
         </template>
-        <common-radio class="filter-item" v-model="form.typesettingTypeEnum" :options="typeSettingTypeEnum.ENUM" type="enum" size="small" />
+        <common-radio class="filter-item" v-model="form.typesettingTypeEnum" :options="nestingSettingTypeEnum.ENUM" type="enum" size="small" />
       </el-form-item>
-      <!-- <el-form-item>
-        <common-button
-            v-loading.fullscreen.lock="fullscreenLoading"
-            type="success"
-            size="small"
-            @click="submitForm(formRef)"
-          >开始套料</common-button
-        >
-      </el-form-item> -->
     </el-form>
   </common-dialog>
-  <nesting-progress v-model="extrusionVisible" :batchId="batchId" />
+  <nesting-progress v-model:visible="extrusionVisible" :batchId="batchId" @success="crud.toQuery" />
 </template>
 
 <script setup>
-import { defineProps, ref, defineEmits, reactive } from 'vue'
-import { typeSettingTypeEnum } from '@enum-ms/mes'
+import { defineProps, ref, defineEmits, reactive, inject } from 'vue'
+import { nestingSettingTypeEnum } from '@enum-ms/mes'
 import useVisible from '@compos/use-visible'
 import { extrusionNesting } from '@/api/mes/craft-manage/section-steel/nesting-setting'
-// import nestingProgress from './nesting-progress.vue'
+import nestingProgress from './nesting-progress.vue'
 
 const formRef = ref()
 const dialogRef = ref()
+const crud = inject('crud')
 const fullscreenLoading = ref(false)
 const extrusionVisible = ref(false)
 const batchId = ref()
@@ -66,7 +58,7 @@ const props = defineProps({
     default: () => []
   }
 })
-const emit = defineEmits(['update:visible', 'refresh'])
+const emit = defineEmits(['update:visible'])
 const { visible: dialogVisible, handleClose } = useVisible({ emit, props, field: 'visible' })
 
 const form = reactive({
@@ -96,16 +88,17 @@ async function submitForm(formRef) {
       kerfLength: form.kerfLength,
       typesettingTypeEnum: form.typesettingTypeEnum
     }
-    await extrusionNesting(_list)
+    batchId.value = await extrusionNesting(_list)
     handleClose()
     fullscreenLoading.value = true
     setTimeout(() => {
       fullscreenLoading.value = false
     }, 2000)
-    console.log(props.detailData, 'props.detailData')
+    crud.toQuery()
     extrusionVisible.value = true
   } catch (err) {
     console.log('套料失败')
   }
 }
+
 </script>

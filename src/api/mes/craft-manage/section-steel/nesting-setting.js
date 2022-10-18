@@ -62,5 +62,23 @@ export function extrusionNesting(data) {
     data
   })
 }
+// 套料成果
+export function nestingProgress(params) {
+  return request({
+    module: 'mes',
+    url: 'section_steel/nesting/wait/batch',
+    method: 'get',
+    params
+  })
+}
+
+export function delNestingResult(data) {
+  return request({
+    module: 'mes',
+    url: 'section_steel/nesting/wait/batch',
+    method: 'delete',
+    data
+  })
+}
 
 export default { get }
