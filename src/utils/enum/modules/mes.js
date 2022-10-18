@@ -424,6 +424,13 @@ const monthNumEnum = {
 }
 constantize(monthNumEnum)
 
+// 构件规格是否修正
+const artifactSpecReviseEnum = {
+  NOT: { L: '未修正', K: 'NOT', V: false },
+  REVISED: { L: '已修正', K: 'REVISED', V: true }
+}
+constantize(artifactSpecReviseEnum)
+
 // 任务跟踪/工单跟踪
 const taskTrackingSchedulingStatusEnum = {
   NOT_FINISHED: { L: '未完成', K: 'NOT_FINISHED', V: 1 },
@@ -513,6 +520,7 @@ export {
   scheduleStatusEnum,
   hasHoleEnum,
   monthNumEnum,
+  artifactSpecReviseEnum,
   taskTrackingSchedulingStatusEnum,
   projectNestingStatusEnum,
   nestingFileTypeEnum,
@@ -573,6 +581,7 @@ export default {
   scheduleStatusEnum,
   hasHoleEnum,
   monthNumEnum,
+  artifactSpecReviseEnum,
   taskTrackingSchedulingStatusEnum,
   projectNestingStatusEnum,
   nestingFileTypeEnum,
