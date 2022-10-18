@@ -76,6 +76,30 @@ export default {
     },
     children: [
       {
+        name: 'MesArtifactSpecificationManage',
+        path: 'artifact-specification-manage',
+        hidden: false,
+        redirect: '/mes/craft-manage/artifact-specification-manage/artifact-specification-revise',
+        meta: {
+          title: '构件规格管理',
+          icon: 'project',
+          noCache: true
+        },
+        children: [
+          {
+            name: 'MesArtifactSpecificationRevise',
+            path: 'artifact-specification-revise',
+            hidden: false,
+            component: '/mes/craft-manage/artifact-specification-revise/index',
+            meta: {
+              title: '构件规格修正',
+              icon: 'project',
+              noCache: true
+            }
+          }
+        ]
+      },
+      {
         name: 'MesCraftSectionSteel',
         path: 'section-steel',
         hidden: false,

@@ -424,6 +424,13 @@ const monthNumEnum = {
 }
 constantize(monthNumEnum)
 
+// 构件规格是否修正
+const artifactSpecReviseEnum = {
+  NOT: { L: '未修正', K: 'NOT', V: false },
+  REVISED: { L: '已修正', K: 'REVISED', V: true }
+}
+constantize(artifactSpecReviseEnum)
+
 export {
   teamTypeEnum,
   teamAttributeEnum,
@@ -476,7 +483,8 @@ export {
   partKeyWordEnum,
   scheduleStatusEnum,
   hasHoleEnum,
-  monthNumEnum
+  monthNumEnum,
+  artifactSpecReviseEnum
 }
 
 export default {
@@ -531,5 +539,6 @@ export default {
   partKeyWordEnum,
   scheduleStatusEnum,
   hasHoleEnum,
-  monthNumEnum
+  monthNumEnum,
+  artifactSpecReviseEnum
 }

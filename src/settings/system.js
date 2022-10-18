@@ -91,7 +91,7 @@ export const showProjectSearch = [
   { component: '/mes/pack-and-ship/receipt-status/index', type: pt.STEEL.V, required: false },
   { component: '/mes/pack-and-ship/logistics-list/index', type: pt.STEEL.V, required: false },
   { component: '/mes/pack-and-ship/ship-audit/index', type: pt.STEEL.V, required: false },
-
+  { component: '/mes/craft-manage/artifact-specification-revise/index', type: pt.STEEL.V, required: true },
   // 计划管理
   { component: '/plan/technical-data-manage/technical-achievement/model/index', type: allPT, required: true },
   { component: '/plan/technical-data-manage/technical-achievement/drawing/index', type: allPT, required: true },
