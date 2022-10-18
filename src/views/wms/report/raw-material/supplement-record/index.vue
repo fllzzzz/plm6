@@ -11,7 +11,7 @@
       :max-height="maxHeight"
     >
       <!-- 基础信息 -->
-      <material-base-info-columns :columns="columns" show-project :basic-class="basicClass" spec-merge sortable>
+      <material-base-info-columns :columns="columns" show-project show-classification classify-name-alias="名称" :basic-class="basicClass" spec-merge sortable>
         <template #afterIndex>
           <el-table-column
             v-if="columns.visible('createTime')"

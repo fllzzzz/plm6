@@ -26,6 +26,8 @@
         :basic-class="basicClass"
         show-reject-status
         reject-detail-viewable
+        show-classification
+        classify-name-alias="名称"
         spec-merge
         sortable
         fixed="left"
@@ -168,8 +170,6 @@
 import { computed, ref } from 'vue'
 import { getDetails as get } from '@/api/wms/report/raw-material/inbound'
 import { reportRawMaterialInboundDetailsPM as permission } from '@/page-permission/wms'
-import { mapGetters } from '@/store/lib'
-import { supplierClassEnum } from '@enum-ms/supplier'
 import checkPermission from '@/utils/system/check-permission'
 import { setSpecInfoToList } from '@/utils/wms/spec'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
@@ -189,8 +189,6 @@ import MaterialSecondaryInfoColumns from '@/components-system/wms/table-columns/
 import AmountInfoColumns from '@/components-system/wms/table-columns/amount-info-columns/index.vue'
 import WarehouseInfoColumns from '@/components-system/wms/table-columns/warehouse-info-columns/index.vue'
 import ReceiptSnClickable from '@/components-system/wms/receipt-sn-clickable'
-
-const { classifySpec } = mapGetters('classifySpec')
 
 const optShow = {
   add: false,
@@ -251,10 +249,6 @@ CRUD.HOOK.handleRefresh = async (crud, { data }) => {
   await setSpecInfoToList(data.content)
   data.content = await numFmtByBasicClass(data.content)
   data.content.forEach((row) => {
-    const fullPathName = classifySpec.value?.[row.classifyId]?.fullPathName
-    if (row.basicClass === supplierClassEnum.MATERIAL.V && fullPathName.length) {
-      row.classifyName = fullPathName[0] + ' / ' + fullPathName.at(-1)
-    }
     if (!row.inboundReceipt) row.inboundReceipt = {}
   })
   // 退货信息转换

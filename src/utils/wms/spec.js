@@ -4,6 +4,7 @@ import { uniqueArr } from '../data-type/array'
 import { measureTypeEnum } from '../enum/modules/wms'
 import { rawMatClsEnum } from '@enum-ms/classification'
 import { specFormat } from './spec-format'
+import { STEEL_ENUM } from '@/settings/config'
 
 /**
  * 为列表设置规格
@@ -87,6 +88,8 @@ export function setSpecInfoForData(data, info, multipleSpec = false) {
     data.classifyId = info.classify.id // 科目id
     data.classifyFullPathId = info.classify.fullPathId // 全路径id
     data.classifyFullName = info.classify.fullName // 全路径名称
+    // 分类（辅材、气体显示一级科目，钢板、钢卷、型材显示为钢材）
+    data.classification = data.basicClass < STEEL_ENUM ? '钢材' : info.classify.fullPathName[0]
     data.classifyName = info.classify.name // 当前科目名称
     data.classifyParentFullName = info.classify.parentFullName // 父级路径名称
     data.measureUnit = info.classify.measureUnit // 计量单位

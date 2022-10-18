@@ -63,9 +63,19 @@
     </template>
   </el-table-column>
   <el-table-column
+    v-if="showClassification"
+    prop="classification"
+    label="分类"
+    align="center"
+    width="100px"
+    :fixed="fixed"
+    show-overflow-tooltip
+    :sortable="sortable"
+  />
+  <el-table-column
     v-if="showClassifyName"
     prop="classifyName"
-    label="物料种类"
+    :label="classifyNameAlias"
     align="center"
     show-overflow-tooltip
     :width="classifyNameWidth"
@@ -163,6 +173,10 @@ const props = defineProps({
     type: Boolean,
     default: true
   },
+  showClassification: {
+    type: Boolean,
+    default: false
+  },
   showSerialNumber: {
     // 显示物料编号
     type: Boolean,
@@ -229,6 +243,10 @@ const props = defineProps({
   sortable: {
     type: Boolean,
     default: false
+  },
+  classifyNameAlias: {
+    type: String,
+    default: '物料种类' // wms/报表中心：需要拆分成分类、名称两列
   }
 })
 
