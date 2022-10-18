@@ -23,7 +23,7 @@
         </template>
       </el-expand-table-column>
       <!-- 基础信息 -->
-      <material-base-info-columns :columns="columns" :basic-class="basicClass" spec-merge sortable fixed="left">
+      <material-base-info-columns :columns="columns" :basic-class="basicClass" show-classification classify-name-alias="名称" spec-merge sortable fixed="left">
         <template #afterIndex>
           <el-table-column
             v-if="columns.visible('transferReceipt.transferTime')"

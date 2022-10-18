@@ -21,7 +21,7 @@
         </template>
       </el-expand-table-column>
       <!-- 基础信息 -->
-      <material-base-info-columns :columns="columns" :basic-class="basicClass" spec-merge sortable fixed="left">
+      <material-base-info-columns :columns="columns" :basic-class="basicClass" show-classification classify-name-alias="名称" fixed="left">
         <template #afterIndex>
           <el-table-column
             v-if="columns.visible('outboundReceipt.outboundTime')"
@@ -33,7 +33,6 @@
             width="125"
             fixed="left"
             sortable="custom"
-
           >
             <template #default="{ row }">
               <span v-parse-time="row.outboundReceipt.outboundTime" />
@@ -118,8 +117,6 @@
 import { computed, ref } from 'vue'
 import { getDetails as get } from '@/api/wms/report/raw-material/outbound'
 import { reportRawMaterialOutboundDetailsPM as permission } from '@/page-permission/wms'
-import { mapGetters } from '@/store/lib'
-import { supplierClassEnum } from '@enum-ms/supplier'
 import { setSpecInfoToList } from '@/utils/wms/spec'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { materialHasAmountColumns } from '@/utils/columns-format/wms'
@@ -139,8 +136,6 @@ import MaterialSecondaryInfoColumns from '@/components-system/wms/table-columns/
 import AmountInfoColumns from '@/components-system/wms/table-columns/amount-info-columns/index.vue'
 import WarehouseInfoColumns from '@/components-system/wms/table-columns/warehouse-info-columns/index.vue'
 import ReceiptSnClickable from '@/components-system/wms/receipt-sn-clickable'
-
-const { classifySpec } = mapGetters('classifySpec')
 
 const optShow = {
   add: false,
@@ -204,10 +199,6 @@ CRUD.HOOK.handleRefresh = async (crud, { data }) => {
   // 退货信息转换
   const rejectList = []
   data.content.forEach((row) => {
-    const fullPathName = classifySpec.value?.[row.classifyId]?.fullPathName
-    if (row.basicClass === supplierClassEnum.MATERIAL.V && fullPathName.length) {
-      row.classifyName = fullPathName[0] + ' / ' + fullPathName.at(-1)
-    }
     if (Array.isArray(row.rejectList)) {
       row.rejectList.forEach((rr) => {
         rejectList.push(rr.material)

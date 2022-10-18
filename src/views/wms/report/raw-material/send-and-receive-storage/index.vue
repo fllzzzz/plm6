@@ -38,10 +38,20 @@
         show-overflow-tooltip
       />
       <el-table-column
+        v-if="columns.visible('classification')"
+        prop="classification"
+        key="classification"
+        label="分类"
+        align="center"
+        width="100"
+        fixed="left"
+        show-overflow-tooltip
+      />
+      <el-table-column
         v-if="columns.visible('classifyName')"
         prop="classifyName"
         key="classifyName"
-        label="物料种类"
+        label="名称"
         align="center"
         show-overflow-tooltip
         :width="classifyNameWidth"

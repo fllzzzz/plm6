@@ -16,7 +16,7 @@
       @sort-change="crud.handleSortChange"
     >
       <!-- 基础信息 -->
-      <material-base-info-columns :columns="columns" :basic-class="crud.query.basicClass" :show-party-a="false" fixed="left" />
+      <material-base-info-columns :columns="columns" :basic-class="crud.query.basicClass" :show-party-a="false" show-classification classify-name-alias="名称" fixed="left" />
       <!-- 次要信息 -->
       <material-secondary-info-columns :columns="columns" :basic-class="crud.query.basicClass" />
       <!-- 单位及其数量 -->

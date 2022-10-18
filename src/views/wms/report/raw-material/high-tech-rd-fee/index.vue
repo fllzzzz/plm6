@@ -15,7 +15,7 @@
       @sort-change="crud.handleSortChange"
     >
       <!-- 基础信息 -->
-      <material-base-info-columns :columns="columns" :basic-class="crud.query.basicClass" show-project spec-merge>
+      <material-base-info-columns :columns="columns" :basic-class="crud.query.basicClass" show-classification classify-name-alias="名称" show-project spec-merge>
         <template #afterIndex>
           <el-table-column
             v-if="columns.visible('outboundReceipt.outboundTime')"

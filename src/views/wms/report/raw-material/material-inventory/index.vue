@@ -15,7 +15,7 @@
       :summary-method="getSummaries"
     >
       <!-- 基础信息 -->
-      <material-base-info-columns :columns="columns" :basic-class="basicClass" fixed="left" />
+      <material-base-info-columns :columns="columns" :basic-class="basicClass" show-classification classify-name-alias="名称" fixed="left" />
       <!-- 单位及其数量 -->
       <material-unit-quantity-columns />
       <!-- 价格信息 -->
