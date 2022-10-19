@@ -63,6 +63,91 @@ export default {
     ]
   },
   {
+    path: '/mes/craft-manage',
+    component: 'Layout',
+    hidden: false,
+    name: 'MesCraftManage',
+    alwaysShow: false,
+    redirect: '/mes/craft-manage/section-steel',
+    meta: {
+      title: '工艺管理',
+      icon: 'project',
+      noCache: true
+    },
+    children: [
+      {
+        name: 'MesArtifactSpecificationManage',
+        path: 'artifact-specification-manage',
+        hidden: false,
+        redirect: '/mes/craft-manage/artifact-specification-manage/artifact-specification-revise',
+        meta: {
+          title: '构件规格管理',
+          icon: 'project',
+          noCache: true
+        },
+        children: [
+          {
+            name: 'MesArtifactSpecificationRevise',
+            path: 'artifact-specification-revise',
+            hidden: false,
+            component: '/mes/craft-manage/artifact-specification-revise/index',
+            meta: {
+              title: '构件规格修正',
+              icon: 'project',
+              noCache: true
+            }
+          }
+        ]
+      },
+      {
+        name: 'MesCraftSectionSteel',
+        path: 'section-steel',
+        hidden: false,
+        redirect: '/mes/craft-manage/section-steel/nesting',
+        meta: {
+          title: '型材套料',
+          icon: 'project',
+          noCache: true
+        },
+        children: [
+          {
+            name: 'MesCraftSectionSteelNesting',
+            path: 'nesting',
+            hidden: false,
+            component: '/mes/craft-manage/section-steel/nesting/index',
+            meta: {
+              title: '型材套料',
+              icon: 'project',
+              noCache: true
+            }
+          },
+          {
+            name: 'MesCraftSectionSteelNestingSetting',
+            path: 'nesting-setting',
+            hidden: false,
+            component: '/mes/craft-manage/section-steel/nesting-setting/index',
+            meta: {
+              title: '套料设置',
+              icon: 'project',
+              noCache: true
+            }
+          },
+          {
+            name: 'MesCraftSectionSteelNestingResult',
+            path: 'nesting-result',
+            hidden: false,
+            component: '/mes/craft-manage/section-steel/nesting-result/index',
+            meta: {
+              title: '套料成果',
+              icon: 'project',
+              noCache: true
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
     path: '/mes/changed-manage',
     component: 'Layout',
     hidden: false,
@@ -100,164 +185,287 @@ export default {
     ]
   },
   {
+    path: '/mes/production-order-manage',
+    component: 'Layout',
+    hidden: false,
+    name: 'MesProductionOrderManage',
+    alwaysShow: false,
+    redirect: '/mes/production-order-manage/production-order',
+    meta: {
+      title: '生产订单管理',
+      icon: 'project',
+      noCache: true
+    },
+    children: [
+      {
+        name: 'ProductionOrder',
+        path: 'production-order',
+        hidden: false,
+        component: '/mes/production-order/index',
+        meta: {
+          title: '生产订单',
+          icon: 'project',
+          noCache: true
+        }
+      }
+    ]
+  },
+  {
     path: '/mes/scheduling-manage',
     component: 'Layout',
     hidden: false,
     name: 'MesSchedulingManage',
-    alwaysShow: false,
+    alwaysShow: true,
     redirect: '/mes/scheduling-manage/scheduling/artifact',
+    meta: {
+      title: '生产排产',
+      icon: 'project',
+      noCache: true
+    },
+    children: [
+      {
+        name: 'MesSchedulingArtifact',
+        path: 'scheduling/artifact',
+        hidden: false,
+        component: '/mes/scheduling-manage/artifact/index',
+        meta: {
+          title: '构件排产',
+          icon: 'project',
+          noCache: true
+        }
+      },
+      {
+        name: 'MesSchedulingMachinePart',
+        path: 'scheduling/machine-part',
+        component: '',
+        hidden: false,
+        alwaysShow: true,
+        redirect: '/mes/scheduling-manage/scheduling/machine-part/index',
+        meta: {
+          title: '零件排产',
+          icon: 'project',
+          noCache: true
+        },
+        children: [
+          {
+            name: 'MesSchedulingMachinePartIndex',
+            path: 'index',
+            hidden: false,
+            component: '/mes/scheduling-manage/machine-part/index',
+            meta: {
+              title: '零件排产',
+              icon: 'project',
+              noCache: true
+            }
+          },
+          {
+            name: 'MesSchedulingMachinePartRecord',
+            path: 'record',
+            hidden: false,
+            component: '/mes/scheduling-manage/machine-part/record/index',
+            meta: {
+              title: '预览记录',
+              icon: 'project',
+              noCache: true
+            }
+          },
+          {
+            name: 'MesSchedulingMachinePartNestingResult',
+            path: 'nesting-result',
+            hidden: false,
+            component: '/mes/scheduling-manage/machine-part/nesting-result/index',
+            meta: {
+              title: '套料成果',
+              icon: 'project',
+              noCache: true
+            }
+          }
+        ]
+      }
+      // {
+      //   name: 'MesSchedulingArtifact',
+      //   path: 'scheduling/artifact',
+      //   hidden: false,
+      //   redirect: '/mes/task-manage/scheduling/artifact/assemble',
+      //   meta: {
+      //     title: '结构工单',
+      //     icon: 'project',
+      //     noCache: true
+      //   },
+      //   children: [
+      //     {
+      //       name: 'MesSchedulingArtifactMachinePart',
+      //       path: 'machine-part',
+      //       hidden: false,
+      //       component: '/mes/scheduling-manage/scheduling/machine-part-summary/index',
+      //       meta: {
+      //         title: '零件工单',
+      //         icon: 'project',
+      //         noCache: true
+      //       }
+      //     },
+      //     {
+      //       name: 'MesSchedulingArtifactAssemble',
+      //       path: 'assemble',
+      //       hidden: false,
+      //       component: '/mes/scheduling-manage/scheduling/assemble/index',
+      //       meta: {
+      //         title: '部件工单',
+      //         icon: 'project',
+      //         noCache: true
+      //       }
+      //     },
+      //     {
+      //       name: 'MesSchedulingArtifactArtifact',
+      //       path: 'artifact',
+      //       hidden: false,
+      //       component: '/mes/scheduling-manage/scheduling/artifact/index',
+      //       meta: {
+      //         title: '构件工单',
+      //         icon: 'project',
+      //         noCache: true
+      //       }
+      //     }
+
+      //   ]
+      // },
+      // {
+      //   name: 'MesSchedulingEnclosure',
+      //   path: 'scheduling/enclosure',
+      //   hidden: false,
+      //   redirect: '/mes/task-manage/scheduling/enclosure/contour-plate',
+      //   meta: {
+      //     title: '围护工单',
+      //     icon: 'project',
+      //     noCache: true
+      //   },
+      //   children: [{
+      //     name: 'MesSchedulingPressedPlate',
+      //     path: 'pressed-plate',
+      //     hidden: false,
+      //     component: '/mes/scheduling-manage/scheduling/enclosure/pressed-plate/index',
+      //     meta: {
+      //       title: '压型板工单',
+      //       icon: 'project',
+      //       noCache: true
+      //     }
+      //   },
+      //   {
+      //     name: 'MesSchedulingFloorPlate',
+      //     path: 'floor-plate',
+      //     hidden: false,
+      //     component: '/mes/scheduling-manage/scheduling/enclosure/floor-plate/index',
+      //     meta: {
+      //       title: '压型楼承板工单',
+      //       icon: 'project',
+      //       noCache: true
+      //     }
+      //   },
+      //   {
+      //     name: 'MesSchedulingTrussFloorPlate',
+      //     path: 'truss-floor-plate',
+      //     hidden: false,
+      //     component: '/mes/scheduling-manage/scheduling/enclosure/truss-floor-plate/index',
+      //     meta: {
+      //       title: '桁架楼承板工单',
+      //       icon: 'project',
+      //       noCache: true
+      //     }
+      //   },
+      //   {
+      //     name: 'MesSchedulingSandwichBoard',
+      //     path: 'sandwich-board',
+      //     hidden: false,
+      //     component: '/mes/scheduling-manage/scheduling/enclosure/sandwich-board/index',
+      //     meta: {
+      //       title: '夹芯板工单',
+      //       icon: 'project',
+      //       noCache: true
+      //     }
+      //   },
+      //   {
+      //     name: 'MesSchedulingFoldingPiece',
+      //     path: 'folding-piece',
+      //     hidden: false,
+      //     component: '/mes/scheduling-manage/scheduling/enclosure/folding-piece/index',
+      //     meta: {
+      //       title: '折边件工单',
+      //       icon: 'project',
+      //       noCache: true
+      //     }
+      //   }
+      //   ]
+      // },
+      // {
+      //   name: 'MesTaskArtifact',
+      //   path: 'task/artifact',
+      //   hidden: false,
+      //   component: '/mes/scheduling-manage/task/artifact/index',
+      //   meta: {
+      //     title: '构件排产',
+      //     icon: 'project',
+      //     noCache: true
+      //   }
+      // },
+      // {
+      //   name: 'MesTaskMachinePart',
+      //   path: 'task/machine-part',
+      //   hidden: false,
+      //   component: '/mes/scheduling-manage/task/machine-part/index',
+      //   meta: {
+      //     title: '零件排产',
+      //     icon: 'project',
+      //     noCache: true
+      //   }
+      // },
+      // {
+      //   name: 'MesTaskEnclosure',
+      //   path: 'task/enclosure',
+      //   hidden: false,
+      //   component: '/mes/scheduling-manage/task/enclosure/index',
+      //   meta: {
+      //     title: '围护排产',
+      //     icon: 'project',
+      //     noCache: true
+      //   }
+      // }
+    ]
+  },
+  {
+    path: '/mes/work-order-manage',
+    component: 'Layout',
+    hidden: false,
+    name: 'MesWorkOrderManage',
+    alwaysShow: true,
+    redirect: '/mes/work-order-manage/artifact',
     meta: {
       title: '工单管理',
       icon: 'project',
       noCache: true
     },
-    children: [{
-      name: 'MesSchedulingArtifact',
-      path: 'scheduling/artifact',
-      hidden: false,
-      redirect: '/mes/task-manage/scheduling/artifact/assemble',
-      meta: {
-        title: '结构工单',
-        icon: 'project',
-        noCache: true
-      },
-      children: [
-        {
-          name: 'MesSchedulingArtifactMachinePart',
-          path: 'machine-part',
-          hidden: false,
-          component: '/mes/scheduling-manage/scheduling/machine-part-summary/index',
-          meta: {
-            title: '零件工单',
-            icon: 'project',
-            noCache: true
-          }
-        },
-        {
-          name: 'MesSchedulingArtifactAssemble',
-          path: 'assemble',
-          hidden: false,
-          component: '/mes/scheduling-manage/scheduling/assemble/index',
-          meta: {
-            title: '部件工单',
-            icon: 'project',
-            noCache: true
-          }
-        },
-        {
-          name: 'MesSchedulingArtifactArtifact',
-          path: 'artifact',
-          hidden: false,
-          component: '/mes/scheduling-manage/scheduling/artifact/index',
-          meta: {
-            title: '构件工单',
-            icon: 'project',
-            noCache: true
-          }
-        }
-
-      ]
-    },
-    {
-      name: 'MesSchedulingEnclosure',
-      path: 'scheduling/enclosure',
-      hidden: false,
-      redirect: '/mes/task-manage/scheduling/enclosure/contour-plate',
-      meta: {
-        title: '围护工单',
-        icon: 'project',
-        noCache: true
-      },
-      children: [{
-        name: 'MesSchedulingPressedPlate',
-        path: 'pressed-plate',
-        hidden: false,
-        component: '/mes/scheduling-manage/scheduling/enclosure/pressed-plate/index',
-        meta: {
-          title: '压型板工单',
-          icon: 'project',
-          noCache: true
-        }
-      },
+    children: [
       {
-        name: 'MesSchedulingFloorPlate',
-        path: 'floor-plate',
+        name: 'MesWorkOrderArtifact',
+        path: 'artifact',
         hidden: false,
-        component: '/mes/scheduling-manage/scheduling/enclosure/floor-plate/index',
+        component: '/mes/work-order-manage/artifact/index',
         meta: {
-          title: '压型楼承板工单',
-          icon: 'project',
-          noCache: true
-        }
-      },
-      {
-        name: 'MesSchedulingTrussFloorPlate',
-        path: 'truss-floor-plate',
-        hidden: false,
-        component: '/mes/scheduling-manage/scheduling/enclosure/truss-floor-plate/index',
-        meta: {
-          title: '桁架楼承板工单',
-          icon: 'project',
-          noCache: true
-        }
-      },
-      {
-        name: 'MesSchedulingSandwichBoard',
-        path: 'sandwich-board',
-        hidden: false,
-        component: '/mes/scheduling-manage/scheduling/enclosure/sandwich-board/index',
-        meta: {
-          title: '夹芯板工单',
-          icon: 'project',
-          noCache: true
-        }
-      },
-      {
-        name: 'MesSchedulingFoldingPiece',
-        path: 'folding-piece',
-        hidden: false,
-        component: '/mes/scheduling-manage/scheduling/enclosure/folding-piece/index',
-        meta: {
-          title: '折边件工单',
+          title: '结构工单',
           icon: 'project',
           noCache: true
         }
       }
-      ]
-    },
-    {
-      name: 'MesTaskArtifact',
-      path: 'task/artifact',
-      hidden: false,
-      component: '/mes/scheduling-manage/task/artifact/index',
-      meta: {
-        title: '构件排产',
-        icon: 'project',
-        noCache: true
-      }
-    },
-    {
-      name: 'MesTaskMachinePart',
-      path: 'task/machine-part',
-      hidden: false,
-      component: '/mes/scheduling-manage/task/machine-part/index',
-      meta: {
-        title: '零件排产',
-        icon: 'project',
-        noCache: true
-      }
-    },
-    {
-      name: 'MesTaskEnclosure',
-      path: 'task/enclosure',
-      hidden: false,
-      component: '/mes/scheduling-manage/task/enclosure/index',
-      meta: {
-        title: '围护排产',
-        icon: 'project',
-        noCache: true
-      }
-    }
+      // {
+      //   name: 'MesSchedulingMachinePart',
+      //   path: 'scheduling/machine-part',
+      //   hidden: false,
+      //   component: '/mes/scheduling-manage/machine-part/index',
+      //   meta: {
+      //     title: '零件排产',
+      //     icon: 'project',
+      //     noCache: true
+      //   }
+      // }
     ]
   },
   {

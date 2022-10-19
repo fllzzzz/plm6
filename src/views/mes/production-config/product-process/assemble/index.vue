@@ -12,7 +12,7 @@
       style="width: 100%"
     >
       <el-table-column label="序号" type="index" align="center" width="60" />
-      <!-- <el-table-column prop="productionLineType" align="center" :show-overflow-tooltip="true" label="生产线" width="120"> </el-table-column> -->
+      <!-- <el-table-column prop="productionLineTypeEnum" align="center" :show-overflow-tooltip="true" label="生产线" width="120"> </el-table-column> -->
       <el-table-column prop="name" align="center" :show-overflow-tooltip="true" label="部件类型">
         <template #default="{ row }">
           <span>{{ row.name }}</span>
@@ -28,7 +28,39 @@
         </template>
       </el-table-column>
       <el-table-column prop="specPrefixSequence" align="center" :show-overflow-tooltip="true" label="部件前缀"> </el-table-column>
-      <el-table-column prop="processSequence" :show-overflow-tooltip="true" label="工序" min-width="200"> </el-table-column>
+      <el-table-column prop="productProcessLinkList" label="工序" min-width="200">
+        <template #default="{ row: { sourceRow: row } }">
+          <el-tooltip :content="`${row.processSequence}`" placement="top-start">
+            <div style="display: flex; align-items: center; white-space: nowrap">
+              <div style="display: flex; align-items: center" v-for="(item, index) in row.productProcessLinkList" :key="item.id">
+                <span>【{{ item.name }}】</span>
+                <div
+                  style="
+                    display: flex;
+                    align-items: center;
+                    flex-direction: column;
+                    height: 35px;
+                    width: 25px;
+                    text-align: center;
+                    justify-content: center;
+                    position: relative;
+                  "
+                  v-if="index !== row.productProcessLinkList.length - 1"
+                >
+                  <div
+                    v-if="item.nodeTime"
+                    style="position: absolute; top: -5px; font-weight: 600; left: 44%; transform: translateX(-50%)"
+                    class="tc-warning"
+                  >
+                    {{ item.nodeTime }}
+                  </div>
+                  <div style="font-size: 25px; margin-top: 1px; position: absolute; top: 50%; transform: translateY(-50%)">→</div>
+                </div>
+              </div>
+            </div>
+          </el-tooltip>
+        </template>
+      </el-table-column>
       <!--编辑与删除-->
       <el-table-column v-permission="[...permission.edit]" label="操作" width="100px" align="center" fixed="right">
         <template v-slot="scope">
@@ -63,7 +95,7 @@ const optShow = {
   download: false
 }
 
-const dataFormat = ref([['productionLineType', ['parse-enum', artifactProductLineEnum]]])
+const dataFormat = ref([['productionLineTypeEnum', ['parse-enum', artifactProductLineEnum]]])
 
 const tableRef = ref()
 const { crud, CRUD } = useCRUD(
@@ -81,7 +113,7 @@ const { maxHeight } = useMaxHeight({ paginate: true, extraBox: '' })
 
 // // 合并单元格
 // function spanMethod({ row, column, rowIndex, columnIndex }) {
-//   if (column.property === 'productionLineType') {
+//   if (column.property === 'productionLineTypeEnum') {
 //     return {
 //       rowspan: row.rowspan || 0,
 //       colspan: 1
@@ -102,7 +134,7 @@ CRUD.HOOK.handleRefresh = (crud, { data }) => {
   //     _v.specPrefixSequence = _v.assembleSpecList?.map((v) => `【${v.specPrefix}】`).join('') || ''
   //     _v.processSequence = _v.productProcessLinkList?.map((v) => `【${v.name}】`).join('→')
   //     _v.processSequenceIds = _v.productProcessLinkList?.map((v) => v.processId)
-  //     _dataObj[_v.productionLineType].push({ ..._v })
+  //     _dataObj[_v.productionLineTypeEnum].push({ ..._v })
   //   }
   // }
   // for (const item in _dataObj) {
@@ -111,10 +143,14 @@ CRUD.HOOK.handleRefresh = (crud, { data }) => {
   //   }
   //   _tableData = _tableData.concat(_dataObj[item])
   // }
-  data.content = data.content.map(o => {
+  data.content = data.content.map((o) => {
+    o.processSequenceObj = {}
     o.specPrefixSequence = o.assembleSpecList?.map((v) => `【${v.specPrefix}】`).join('') || ''
-    o.processSequence = o.productProcessLinkList?.map((v) => `【${v.name}】`).join('→')
-    o.processSequenceIds = o.productProcessLinkList?.map((v) => v.processId)
+    o.processSequence = o.productProcessLinkList?.map((v) => `【${v.name}】${v.nodeTime ? '→ ' + v.nodeTime + ' ' : ''}`).join('→')
+    o.processSequenceIds = o.productProcessLinkList?.map((v) => {
+      o.processSequenceObj[v.processId] = v.nodeTime
+      return v.processId
+    })
     return o
   })
 }

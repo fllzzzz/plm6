@@ -189,6 +189,45 @@ export default {
           hidden: false,
           component: '/plan/technical-manage/summary-list/index',
           meta: { title: '清单合计', icon: 'project', noCache: true }
+        },
+        {
+          path: 'technical-achievement',
+          component: '',
+          hidden: false,
+          name: 'TechnicalAchievement',
+          alwaysShow: false,
+          redirect: '/plan/technical-manage/technical-achievement/model',
+          meta: { title: '技术成果', icon: 'contract', noCache: true },
+          children: [
+            {
+              name: 'ModelFile',
+              path: 'model',
+              hidden: false,
+              component: '/plan/technical-data-manage/technical-achievement/model/index',
+              meta: { title: '模型文件管理', icon: 'project', noCache: true }
+            },
+            {
+              name: 'DrawingFile',
+              path: 'drawing',
+              hidden: false,
+              component: '/plan/technical-data-manage/technical-achievement/drawing/index',
+              meta: { title: '图纸文件管理', icon: 'project', noCache: true }
+            },
+            {
+              name: 'CNCFile',
+              path: 'cnc',
+              hidden: false,
+              component: '/plan/technical-data-manage/technical-achievement/cnc/index',
+              meta: { title: '数控文件管理', icon: 'project', noCache: true }
+            },
+            {
+              name: 'XMLFile',
+              path: 'xml',
+              hidden: false,
+              component: '/plan/technical-data-manage/technical-achievement/xml/index',
+              meta: { title: 'XML文件管理', icon: 'project', noCache: true }
+            }
+          ]
         }
       ]
     },

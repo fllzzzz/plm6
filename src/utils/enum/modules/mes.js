@@ -21,6 +21,16 @@ const processTypeEnum = {
 }
 constantize(processTypeEnum)
 
+// 工序类
+const processCategoryEnum = {
+  ASSEMBLY_RIVETING_WELDING: { L: '组铆焊类', K: 'ASSEMBLY_RIVETING_WELDING', V: 1 << 0 },
+  PAINT: { L: '油漆类', K: 'PAINT', V: 1 << 1 },
+  MAKINGS: { L: '下料类', K: 'MAKINGS', V: 1 << 2 },
+  DRILL_HOLE: { L: '钻孔类', K: 'DRILL_HOLE', V: 1 << 3 },
+  PRESSING: { L: '压板类', K: 'PRESSING', V: 1 << 4 }
+}
+constantize(processCategoryEnum)
+
 // 工序生产检验方式
 const processInspectTypeEnum = {
   SINGLE_UNSCAN: { L: '单件(不扫码)', K: 'SINGLE_UNSCAN', V: 0, T: 'info' },
@@ -120,6 +130,22 @@ const taskIssueTypeEnum = {
   HAS_ISSUED: { L: '已下发', K: 'HAS_ISSUED', V: true, T: 'success' }
 }
 constantize(taskIssueTypeEnum)
+
+// 零件排产下发状态
+const machinePartSchedulingIssueStatusEnum = {
+  NOT_NESTING: { L: '未套料', K: 'NOT_NESTING', V: 1 << 0, T: 'info' },
+  IN_NESTING: { L: '套料中', K: 'IN_NESTING', V: 1 << 1, T: 'warning' },
+  OUT_NESTING: { L: '套料完成', K: 'OUT_NESTING', V: 1 << 2, T: 'primary' },
+  HAS_ISSUED: { L: '已下发', K: 'HAS_ISSUED', V: 1 << 3, T: 'success' }
+}
+constantize(machinePartSchedulingIssueStatusEnum)
+
+// 零件排产套料状态
+const machinePartNestingStatusEnum = {
+  NOT_NESTING: machinePartSchedulingIssueStatusEnum.NOT_NESTING,
+  HAS_NESTING: { L: '已套料', K: 'HAS_NESTING', V: machinePartSchedulingIssueStatusEnum.IN_NESTING.V | machinePartSchedulingIssueStatusEnum.OUT_NESTING.V | machinePartSchedulingIssueStatusEnum.HAS_ISSUED.V }
+}
+constantize(machinePartNestingStatusEnum)
 
 // 可打包类型
 const packTypeEnum = {
@@ -237,6 +263,14 @@ const paintingTypeEnum = {
 }
 constantize(paintingTypeEnum)
 
+// 油漆计量单位
+const paintingMeasureUnitEnum = {
+  AREA: { L: '按面积（m²）', K: 'AREA', V: 1 << 0 },
+  WEIGHT: { L: '按重量（kg）', K: 'WEIGHT', V: 1 << 1 },
+  QUANTITY: { L: '按数量', K: 'QUANTITY', V: 1 << 2 }
+}
+constantize(paintingMeasureUnitEnum)
+
 // 标签类型
 const labelTypeEnum = {
   COMMON: { L: '常规型', K: 'COMMON', V: 1 << 0, size: {
@@ -277,6 +311,13 @@ const artifactProductLineEnum = {
 }
 constantize(artifactProductLineEnum)
 
+// 构件配置传统/智能生产线 Boolean
+const productLineTypeBoolEnum = {
+  TRADITION: { L: '传统线', K: 'TRADITION', V: false },
+  INTELLECT: { L: '智能线', K: 'INTELLECT', V: true }
+}
+constantize(productLineTypeBoolEnum)
+
 // 构件配置智能线父类型
 const intellectParentType = {
   PILLAR: { L: '柱', K: 'PILLAR', V: 1 << 1 },
@@ -311,6 +352,7 @@ const codingTypeEnum = {
   BATCH: { L: '一码多件', K: 'BATCH', V: 2 }
 }
 constantize(codingTypeEnum)
+
 // 切割配置/切割类型
 const cuttingConfigEnum = {
   FLAME_CUT: { L: '火焰切割', K: 'FLAME_CUT', V: 1 << 0 },
@@ -350,18 +392,96 @@ const freightChangeTypeEnum = {
 }
 constantize(freightChangeTypeEnum)
 
+// mes配置-零件前缀类型
+const partKeyWordEnum = {
+  P: { L: 'P', K: 'P', V: 'P' },
+  PL: { L: 'PL', K: 'PL', V: 'PL' }
+}
+constantize(partKeyWordEnum)
+
+// 生产订单排期状态
+const scheduleStatusEnum = {
+  NOT: { L: '未排期', K: 'NOT', V: 1 << 0 },
+  PART: { L: '部分排期', K: 'PART', V: 1 << 1 },
+  COMPLETED: { L: '排期完毕', K: 'COMPLETED', V: 1 << 2 }
+}
+constantize(scheduleStatusEnum)
+
+// 生产订单 零件是否有孔
+const hasHoleEnum = {
+  TRUE: { L: '有孔', K: 'TRUE', V: true },
+  FALSE: { L: '无孔', K: 'FALSE', V: false }
+}
+constantize(hasHoleEnum)
+
+// 生产订单 月份
+const monthNumEnum = {
+  ONE: { L: '最近一个月交货', K: 'ONE', V: 1 },
+  TWO: { L: '最近二个月交货', K: 'TWO', V: 2 },
+  THREE: { L: '最近三个月交货', K: 'THREE', V: 3 },
+  SIX: { L: '最近半年交货', K: 'SIX', V: 6 },
+  TWELVE: { L: '最近一年交货', K: 'TWELVE', V: 12 }
+}
+constantize(monthNumEnum)
+
+// 构件规格是否修正
+const artifactSpecReviseEnum = {
+  NOT: { L: '未修正', K: 'NOT', V: false },
+  REVISED: { L: '已修正', K: 'REVISED', V: true }
+}
+constantize(artifactSpecReviseEnum)
+
+// 任务跟踪/工单跟踪
+const taskTrackingSchedulingStatusEnum = {
+  NOT_FINISHED: { L: '未完成', K: 'NOT_FINISHED', V: 1 },
+  FINISHED: { L: '已完成', K: 'FINISHED', V: 2 }
+}
+constantize(taskTrackingSchedulingStatusEnum)
+
+// 型材套料状态
+const projectNestingStatusEnum = {
+  NOT_NESTING: { L: '未套料', K: 'NOT_NESTING', V: 1 << 0, T: 'danger', COLOR: '#E82121' },
+  PARTIAL_NESTING: { L: '部分套料', K: 'PARTIAL_NESTING', V: 1 << 1, T: 'warning', COLOR: '' },
+  END_NESTING: { L: '已套料', K: 'END_NESTING', V: 1 << 2, T: 'success', COLOR: '#35D552' }
+}
+constantize(projectNestingStatusEnum)
+
+// 型材套料成果/套料文件
+const nestingFileTypeEnum = {
+  NESTING_FILE: { L: '套料文件', K: 'NESTING_FILE', V: 0 },
+  MATERIAL_LIST: { L: '材料清单', K: 'MATERIAL_LIST', V: 1 }
+}
+constantize(nestingFileTypeEnum)
+
+// 套料设置
+const nestingSettingTypeEnum = {
+  UN_LOSSY: { L: '无损套料', K: 'UN_LOSSY', V: 1 },
+  LOSSY: { L: '有损套料', K: 'LOSSY', V: 2 }
+}
+constantize(nestingSettingTypeEnum)
+
+// 套料成果
+const mesBuildingTypeSettingAssembleTypeEnum = {
+  WELDING: { L: '焊接型材', K: 'WELDING', V: 1 },
+  FINISHED: { L: '成品型材', K: 'FINISHED', V: 2 }
+}
+constantize(mesBuildingTypeSettingAssembleTypeEnum)
+
 export {
   teamTypeEnum,
   teamAttributeEnum,
   componentTypeEnum,
   processMaterialListTypeEnum,
   processTypeEnum,
+  processCategoryEnum,
   processInspectTypeEnum,
   processReportTypeEnum,
   wageQuotaTypeEnum,
   mesEnclosureTypeEnum,
   floorPlateTypeEnum,
   taskIssueTypeEnum,
+  machinePartSchedulingIssueStatusEnum,
+  machinePartNestingStatusEnum,
   packTypeEnum,
   packStatusTypeEnum,
   receiptStatusEnum,
@@ -376,6 +496,7 @@ export {
   projectComponentTypeEnum,
   artifactProcessEnum,
   paintingTypeEnum,
+  paintingMeasureUnitEnum,
   reportComponentTypeEnum,
   labelTypeEnum,
   printProductTypeEnum,
@@ -383,6 +504,7 @@ export {
   inProductionDetailReportEnum,
   schedulingStatusEnum,
   artifactProductLineEnum,
+  productLineTypeBoolEnum,
   intellectParentType,
   minEqualTypeEnum,
   maxEqualTypeEnum,
@@ -393,7 +515,17 @@ export {
   freightChangeTypeEnum,
   mesWarehouseStateTypeEnum,
   artifactTypeEnum,
-  codingTypeEnum
+  codingTypeEnum,
+  partKeyWordEnum,
+  scheduleStatusEnum,
+  hasHoleEnum,
+  monthNumEnum,
+  artifactSpecReviseEnum,
+  taskTrackingSchedulingStatusEnum,
+  projectNestingStatusEnum,
+  nestingFileTypeEnum,
+  nestingSettingTypeEnum,
+  mesBuildingTypeSettingAssembleTypeEnum
 }
 
 export default {
@@ -402,12 +534,15 @@ export default {
   componentTypeEnum,
   processMaterialListTypeEnum,
   processTypeEnum,
+  processCategoryEnum,
   processInspectTypeEnum,
   processReportTypeEnum,
   wageQuotaTypeEnum,
   mesEnclosureTypeEnum,
   floorPlateTypeEnum,
   taskIssueTypeEnum,
+  machinePartSchedulingIssueStatusEnum,
+  machinePartNestingStatusEnum,
   packTypeEnum,
   packStatusTypeEnum,
   receiptStatusEnum,
@@ -422,6 +557,7 @@ export default {
   projectComponentTypeEnum,
   artifactProcessEnum,
   paintingTypeEnum,
+  paintingMeasureUnitEnum,
   reportComponentTypeEnum,
   labelTypeEnum,
   printProductTypeEnum,
@@ -429,6 +565,7 @@ export default {
   inProductionDetailReportEnum,
   schedulingStatusEnum,
   artifactProductLineEnum,
+  productLineTypeBoolEnum,
   intellectParentType,
   minEqualTypeEnum,
   maxEqualTypeEnum,
@@ -439,5 +576,15 @@ export default {
   freightChangeTypeEnum,
   mesWarehouseStateTypeEnum,
   artifactTypeEnum,
-  codingTypeEnum
+  codingTypeEnum,
+  partKeyWordEnum,
+  scheduleStatusEnum,
+  hasHoleEnum,
+  monthNumEnum,
+  artifactSpecReviseEnum,
+  taskTrackingSchedulingStatusEnum,
+  projectNestingStatusEnum,
+  nestingFileTypeEnum,
+  nestingSettingTypeEnum,
+  mesBuildingTypeSettingAssembleTypeEnum
 }

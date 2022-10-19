@@ -12,11 +12,43 @@
       <el-table-column label="序号" type="index" align="center" width="60" />
       <el-table-column prop="name" align="center" :show-overflow-tooltip="true" label="零件类型" min-width="200"></el-table-column>
       <el-table-column prop="specSequence" :show-overflow-tooltip="true" label="规格前缀索引" min-width="300"></el-table-column>
-      <el-table-column prop="processSequence" :show-overflow-tooltip="true" label="工序" min-width="400"> </el-table-column>
+      <el-table-column prop="productProcessLinkList" label="工序" min-width="200">
+        <template #default="{ row: { sourceRow: row } }">
+          <el-tooltip :content="`${row.processSequence}`" placement="top-start">
+            <div style="display: flex; align-items: center; white-space: nowrap">
+              <div style="display: flex; align-items: center" v-for="(item, index) in row.productProcessLinkList" :key="item.id">
+                <span>【{{ item.name }}】</span>
+                <div
+                  style="
+                    display: flex;
+                    align-items: center;
+                    flex-direction: column;
+                    height: 35px;
+                    width: 25px;
+                    text-align: center;
+                    justify-content: center;
+                    position: relative;
+                  "
+                  v-if="index !== row.productProcessLinkList.length - 1"
+                >
+                  <div
+                    v-if="item.nodeTime"
+                    style="position: absolute; top: -5px; font-weight: 600; left: 44%; transform: translateX(-50%)"
+                    class="tc-warning"
+                  >
+                    {{ item.nodeTime }}
+                  </div>
+                  <div style="font-size: 25px; margin-top: 1px; position: absolute; top: 50%; transform: translateY(-50%)">→</div>
+                </div>
+              </div>
+            </div>
+          </el-tooltip>
+        </template>
+      </el-table-column>
       <!--编辑与删除-->
       <el-table-column v-permission="[...permission.edit]" label="操作" width="100px" align="center" fixed="right">
         <template v-slot="scope">
-          <udOperation :data="scope.row" :showDel="false" />
+          <udOperation :data="scope.row" :disabledEdit="scope.row.basicClass !== 1" :showDel="false" />
         </template>
       </el-table-column>
     </common-table>

@@ -17,42 +17,41 @@
         :summary-method="getSummaries"
         return-source-data
         :showEmptySymbol="false"
-        @selection-change="crud.selectionChangeHandler"
       >
       <el-table-column prop="index" label="序号" align="center" width="60" type="index" />
       <el-table-column v-if="columns.visible('name')" key="name" prop="name" :show-overflow-tooltip="true" label="钢材种类" width="140px">
         <template v-slot="scope">
-          <span style="cursor: pointer;">{{ scope.row.name }}</span>
+          <span>{{ scope.row.name }}</span>
         </template>
       </el-table-column>
       <el-table-column v-if="columns.visible('thickness')" key="thickness" prop="thickness" :show-overflow-tooltip="true" label="厚度/规格" min-width="160px">
         <template v-slot="scope">
-          <span style="cursor: pointer;">{{ scope.row.thickness }}</span>
+          <span>{{ scope.row.thickness }}</span>
         </template>
       </el-table-column>
       <el-table-column v-if="columns.visible('material')" key="material" prop="material" :show-overflow-tooltip="true" label="材质" min-width="160px">
         <template v-slot="scope">
-          <span style="cursor: pointer;">{{ scope.row.material }}</span>
+          <span>{{ scope.row.material }}</span>
         </template>
       </el-table-column>
       <el-table-column v-if="columns.visible('listMete')" key="listMete" prop="listMete" :show-overflow-tooltip="true" label="清单量(kg)" min-width="160px">
         <template v-slot="scope">
-          <span style="cursor: pointer;">{{ scope.row.listMete }}</span>
+          <span>{{ scope.row.listMete }}</span>
         </template>
       </el-table-column>
       <el-table-column v-if="columns.visible('stockMete')" key="stockMete" prop="stockMete" :show-overflow-tooltip="true" label="当前库存(kg)" min-width="160px">
         <template v-slot="scope">
-          <span style="cursor: pointer;">{{ scope.row.stockMete }}</span>
+          <span>{{ scope.row.stockMete }}</span>
         </template>
       </el-table-column>
       <el-table-column v-if="columns.visible('diff')" key="diff" prop="diff" :show-overflow-tooltip="true" label="差异" min-width="160px">
         <template v-slot="scope">
-          <span style="cursor: pointer;" :class="scope.row.diffClass">{{ scope.row.diff }}</span>
+          <span :class="scope.row.diffClass">{{ scope.row.diff }}</span>
         </template>
       </el-table-column>
       <el-table-column v-if="columns.visible('diffRate')" key="diffRate" prop="diffRate" :show-overflow-tooltip="true" label="差异率" min-width="160px">
         <template v-slot="scope">
-          <span style="cursor: pointer;" :class="scope.row.diffRateClass">{{ scope.row.diffRate }}</span>
+          <span :class="scope.row.diffRateClass">{{ scope.row.diffRate }}</span>
         </template>
       </el-table-column>
     </common-table>

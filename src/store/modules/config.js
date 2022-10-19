@@ -7,6 +7,9 @@ import { getUserTree, getRegionalCascade } from '@/api/common'
 import { getWorkshopsAllSimple } from '@/api/mes/common'
 import { getAllFactoryWorkshopLines } from '@/api/mes/common'
 import { getLinesAllSimple } from '@/api/mes/common'
+import { getProductionTeamAllSimple } from '@/api/mes/common'
+import { getInspectionTeamAllSimple } from '@/api/mes/common'
+import { getAllCutConfigs } from '@/api/mes/common'
 import { getProcessAllSimple } from '@/api/mes/common'
 import { getUserAllSimple } from '@/api/common'
 import { getDeptAllSimple } from '@/api/common'
@@ -65,7 +68,13 @@ const state = {
   warehouse: [], // 存储仓库
   workshops: [], // 车间
   productLines: [], // 工厂-车间-生产线
+  productionTeam: [], // 生产班组
+  productionTeamKV: {}, // 生产班组id:value 格式
+  inspectionTeam: [], // 质检班组
+  inspectionTeamKV: {}, // 生产班组id:value 格式
   onlyProductLines: [], // 生产线
+  cutConfigs: [], // 切割配置（所有）
+  cutConfigKV: {}, // 切割配置 id:value 格式
   process: [], // 工序
   users: [], // 人员列表
   dept: [], // 部门列表
@@ -91,8 +100,11 @@ const state = {
     factories: false,
     warehouse: false,
     workshops: false,
+    productionTeam: false,
+    inspectionTeam: false,
     productLines: false,
     onlyProductLines: false,
+    cutConfigs: false,
     process: false,
     users: false,
     dept: false,
@@ -166,11 +178,34 @@ const mutations = {
   SET_WAREHOUSE(state, warehouse) {
     state.warehouse = warehouse
   },
+  SET_PRODUCTION_TEAM(state, productionTeam) {
+    state.productionTeam = productionTeam
+    // kv
+    state.productionTeamKV = {}
+    productionTeam.forEach((v) => {
+      state.productionTeamKV[v.id] = v
+    })
+  },
+  SET_INSPECTION_TEAM(state, inspectionTeam) {
+    state.inspectionTeam = inspectionTeam
+    // kv
+    state.inspectionTeamKV = {}
+    inspectionTeam.forEach((v) => {
+      state.inspectionTeamKV[v.id] = v
+    })
+  },
   SET_PRODUCT_LINES(state, productLines) {
     state.productLines = productLines
   },
   SET_ONLY_PRODUCT_LINES(state, onlyProductLines) {
     state.onlyProductLines = onlyProductLines
+  },
+  SET_CUT_CONFIGS(state, cutConfigs) {
+    state.cutConfigs = cutConfigs
+    state.cutConfigKV = {}
+    // cutConfigs.forEach((v) => {
+    //   state.cutConfigKV[v.id] = v
+    // })
   },
   SET_PROCESS(state, process) {
     state.process = process
@@ -358,6 +393,28 @@ const actions = {
     commit('SET_LOADED', { key: 'workshops' })
     return content
   },
+  async fetchProductionTeam({ commit }) {
+    const { content = [] } = await getProductionTeamAllSimple()
+    const list = content.map(v => {
+      v.leaderName = v.userLinkList.find(o => o.boolLeaderEnum)?.userName
+      v.memberNames = v.userLinkList?.filter(o => !o.boolLeaderEnum)?.map(o => o.userName)?.join(', ')
+      v.label = `${v.leaderName} - ${v.processName}`
+      return v
+    })
+    commit('SET_PRODUCTION_TEAM', list)
+    commit('SET_LOADED', { key: 'productionTeam' })
+    return content
+  },
+  async fetchInspectionTeam({ commit }) {
+    const { content = [] } = await getInspectionTeamAllSimple()
+    const list = content.map(v => {
+      v.inspectorNames = v.userLinkList?.map(o => o.userName)?.join(', ')
+      return v
+    })
+    commit('SET_INSPECTION_TEAM', list)
+    commit('SET_LOADED', { key: 'inspectionTeam' })
+    return content
+  },
   // 生产线
   async fetchProductLines({ commit }) {
     const { content = [] } = await getAllFactoryWorkshopLines()
@@ -370,6 +427,13 @@ const actions = {
     const { content = [] } = await getLinesAllSimple()
     commit('SET_ONLY_PRODUCT_LINES', content)
     commit('SET_LOADED', { key: 'onlyProductLines', loaded: true })
+    return content
+  },
+  // 切割配置
+  async fetchCutConfig({ commit }) {
+    const content = await getAllCutConfigs() || []
+    commit('SET_CUT_CONFIGS', content)
+    commit('SET_LOADED', { key: 'cutConfigs', loaded: true })
     return content
   },
   // 工序

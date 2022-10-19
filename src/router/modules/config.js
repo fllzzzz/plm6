@@ -298,9 +298,16 @@ export default {
           hidden: false,
           name: 'ProductionLineConfig',
           alwaysShow: true,
-          redirect: '/mes/production-config/production-line-config/production-line',
+          redirect: '/mes/production-config/production-line-config/production-team',
           meta: { title: '生产线配置', icon: 'project', noCache: true },
           children: [
+            {
+              name: 'MesConfigProductionTeam',
+              path: 'production-team',
+              hidden: false,
+              component: '/mes/production-config/production-team/index',
+              meta: { title: '班组管理', icon: 'project', noCache: true }
+            },
             {
               name: 'MesConfigProductionLine',
               path: 'production-line',
@@ -318,6 +325,66 @@ export default {
           ]
         },
         {
+          path: 'statistical-config',
+          component: '',
+          hidden: false,
+          name: 'StatisticalConfig',
+          alwaysShow: true,
+          redirect: '/mes/production-config/statistical-config/artifact/rivet-weld-config',
+          meta: { title: '统计配置', icon: 'project', noCache: true },
+          children: [
+            {
+              name: 'MesConfigArtifactTypeConfig',
+              path: 'artifact/artifact-type-config',
+              hidden: false,
+              component: '/mes/production-config/statistical-config/artifact-type-config/index',
+              meta: { title: '构件-清单种类', icon: 'project', noCache: true }
+            },
+            {
+              name: 'MesConfigArtifactRivetWeldConfig',
+              path: 'artifact/rivet-weld-config',
+              hidden: false,
+              component: '/mes/production-config/statistical-config/artifact-rivet-weld-config/index',
+              meta: { title: '构件-组铆焊价格', icon: 'project', noCache: true }
+            },
+            {
+              name: 'MesConfigCoatingConfig',
+              path: 'artifact/coating-config',
+              hidden: false,
+              component: '/mes/production-config/statistical-config/coating-config/index',
+              meta: { title: '构件-涂装', icon: 'project', noCache: true }
+            },
+            {
+              name: 'MesConfigAssembleRivetWeldConfig',
+              path: 'assemble/rivet-weld-config',
+              hidden: false,
+              component: '/mes/production-config/statistical-config/assemble-rivet-weld-config/index',
+              meta: { title: '部件-组铆焊价格', icon: 'project', noCache: true }
+            },
+            {
+              name: 'MesConfigFabricatedConfig',
+              path: 'artifact/fabricated-config',
+              hidden: false,
+              component: '/mes/production-config/statistical-config/fabricated-config/index',
+              meta: { title: '零件-栓钉套筒', icon: 'project', noCache: true }
+            },
+            {
+              name: 'MesConfigDrillHoleConfig',
+              path: 'parts/drill-hole-config',
+              hidden: false,
+              component: '/mes/production-config/statistical-config/drill-hole-config/index',
+              meta: { title: '零件-钻孔', icon: 'project', noCache: true }
+            },
+            {
+              name: 'MesConfigPartsLayingConfig',
+              path: 'parts/parts-laying-config',
+              hidden: false,
+              component: '/mes/production-config/statistical-config/parts-laying-config/index',
+              meta: { title: '零件-下料', icon: 'project', noCache: true }
+            }
+          ]
+        },
+        {
           name: 'MesConfigWageQuota',
           path: 'wage-quota',
           hidden: false,
@@ -329,7 +396,7 @@ export default {
           path: 'cutting-config',
           hidden: false,
           component: '/mes/production-config/cutting-config/index',
-          meta: { title: '切割配置', icon: 'project', noCache: true }
+          meta: { title: '下料配置', icon: 'project', noCache: true }
         }
       ]
     },

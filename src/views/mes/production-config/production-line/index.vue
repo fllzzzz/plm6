@@ -4,38 +4,86 @@
       <el-col :xs="24" :sm="24" :md="24" :lg="12" :xl="12" style="margin-bottom: 10px">
         <line-config @click-line="handleChangeLine" />
       </el-col>
-      <el-col :xs="24" :sm="24" :md="24" :lg="12" :xl="12">
+      <el-col :xs="12" :sm="12" :md="12" :lg="6" :xl="6">
         <el-card class="box-card team-card">
           <template v-slot:header class="clearfix card-header">
-            <common-radio-button v-model="teamType" :disabled="!currentLine.name" size="mini" type="enum" :options="teamTypeEnum.ENUM" />
-            <el-tag v-if="currentLine.factory && currentLine.name" size="medium">{{
-              `${currentLine.factory.name} - ${currentLine.name}`
-            }}</el-tag>
-            <common-button
-              v-if="teamType === teamTypeEnum.TEAM.V && teamRef && checkPermission(teamRef.permission.add) && currentLine.id"
-              size="mini"
-              style="float: right; padding: 6px 10px; margin-bottom: 0px"
-              type="primary"
-              icon="el-icon-plus"
-              @click="teamRef.toAdd"
-            >
-              新增
-            </common-button>
-            <common-button
-              v-if="
-                teamType === teamTypeEnum.INSPECTION.V && inspectionRef && checkPermission(inspectionRef.permission.add) && currentLine.id
-              "
-              size="mini"
-              style="float: right; padding: 6px 10px; margin-bottom: 0px"
-              type="primary"
-              icon="el-icon-plus"
-              @click="inspectionRef.toAdd"
-            >
-              新增
-            </common-button>
+            <div style="display: flex; align-items: center; justify-content: space-between">
+              <span style="display: flex; align-items: center">
+                <span>生产组列表</span>
+                <el-tag v-if="currentLine.factoryName && currentLine.name" size="medium" style="margin-left: 10px">{{
+                  `${currentLine.factoryName} - ${currentLine.name}`
+                }}</el-tag>
+              </span>
+              <common-button
+                size="mini"
+                style="float: right; padding: 6px 10px; margin-bottom: 0px"
+                type="primary"
+                icon="el-icon-edit"
+                @click="groupRef?.toAdd"
+              >
+                新增
+              </common-button>
+            </div>
           </template>
-          <team-config v-if="teamType === teamTypeEnum.TEAM.V" ref="teamRef" :line="currentLine" />
-          <inspection-config v-if="teamType === teamTypeEnum.INSPECTION.V" ref="inspectionRef" :line="currentLine" />
+          <group-config ref="groupRef" :line="currentLine" @click-group="handleChangeGroup"/>
+        </el-card>
+      </el-col>
+      <el-col :xs="12" :sm="12" :md="12" :lg="6" :xl="6">
+        <el-card class="box-card team-card">
+          <template v-slot:header class="clearfix card-header">
+            <div style="display: flex; align-items: center; justify-content: space-between">
+              <span style="display: flex; align-items: center">
+                <common-radio-button
+                  v-model="teamType"
+                  :disabled="!currentGroup.name"
+                  size="mini"
+                  type="enum"
+                  :unshowVal="currentLine.productType === componentTypeEnum.MACHINE_PART.V? [teamTypeEnum.INSPECTION.V] : []"
+                  :options="teamTypeEnum.ENUM"
+                />
+                <el-tag v-if="currentGroup.name" size="medium" style="margin-left: 10px">{{
+                  `${currentGroup.name}`
+                }}</el-tag>
+              </span>
+
+              <common-button
+                v-if="teamType === teamTypeEnum.TEAM.V && teamRef && checkPermission(permission.edit) && currentGroup.id"
+                size="mini"
+                style="float: right; padding: 6px 10px; margin-bottom: 0px"
+                type="primary"
+                icon="el-icon-edit"
+                @click="teamRef?.toAdd"
+              >
+                编辑
+              </common-button>
+              <common-button
+                v-if="teamType === teamTypeEnum.INSPECTION.V && inspectionRef && checkPermission(permission.edit) && currentGroup.id"
+                size="mini"
+                style="float: right; padding: 6px 10px; margin-bottom: 0px"
+                type="primary"
+                icon="el-icon-edit"
+                @click="inspectionRef?.toAdd"
+              >
+                编辑
+              </common-button>
+            </div>
+          </template>
+          <team-config
+            v-model="currentGroup.teamIds"
+            v-if="teamType === teamTypeEnum.TEAM.V"
+            ref="teamRef"
+            :line="currentLine"
+            :group="currentGroup"
+            @change="productionTeamChange"
+          />
+          <inspection-config
+            v-model="currentGroup.inspectionTeamIds"
+            v-if="teamType === teamTypeEnum.INSPECTION.V"
+            ref="inspectionRef"
+            :line="currentLine"
+            :group="currentGroup"
+            @change="inspectionTeamChange"
+          />
         </el-card>
       </el-col>
     </el-row>
@@ -43,13 +91,15 @@
 </template>
 
 <script setup>
-import { provide, reactive, ref } from 'vue'
+import { provide, ref } from 'vue'
 
-import { teamTypeEnum } from '@enum-ms/mes'
+import { teamTypeEnum, componentTypeEnum } from '@enum-ms/mes'
 import checkPermission from '@/utils/system/check-permission'
+import { configProductionLineGroupPM as permission } from '@/page-permission/config'
 
 import useMaxHeight from '@compos/use-max-height'
 import lineConfig from './line'
+import groupConfig from './group'
 import teamConfig from './team'
 import inspectionConfig from './inspection'
 
@@ -62,14 +112,31 @@ const { maxHeight } = useMaxHeight({
 
 provide('maxHeight', maxHeight)
 
+const groupRef = ref()
 const teamType = ref(teamTypeEnum.TEAM.V)
 const teamRef = ref()
 const inspectionRef = ref()
-let currentLine = reactive({})
+const currentLine = ref({})
+const currentGroup = ref({})
 
 function handleChangeLine(val) {
   if (val) {
-    currentLine = Object.assign(currentLine, val)
+    currentLine.value = val
+    currentGroup.value = {}
   }
+}
+
+function handleChangeGroup(val) {
+  if (val) {
+    currentGroup.value = val
+  }
+}
+
+function productionTeamChange(val) {
+  currentGroup.value.teamIds = val
+}
+
+function inspectionTeamChange(val) {
+  currentGroup.value.inspectionTeamIds = val
 }
 </script>

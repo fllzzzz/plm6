@@ -185,7 +185,7 @@ function selectChange(val) {
     } else {
       areaInfo = monomerVal?.areaSimpleList
     }
-    emit('getAreaInfo', areaInfo)
+    emit('getAreaInfo', areaInfo, val)
     emit('getCurrentInfo', monomerVal)
   }
   emit('update:modelValue', val)

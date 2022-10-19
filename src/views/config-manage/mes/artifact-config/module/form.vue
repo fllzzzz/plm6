@@ -14,9 +14,9 @@
     </template>
     <template #content>
       <el-form ref="formRef" :model="form" :rules="rules" size="small" label-width="140px" :max-height="maxHeight">
-        <el-form-item label="生产线" prop="productionLineType">
+        <el-form-item label="生产线" prop="productionLineTypeEnum">
           <common-select
-            v-model="form.productionLineType"
+            v-model="form.productionLineTypeEnum"
             :options="artifactProductLineEnum.ENUM"
             type="enum"
             size="small"
@@ -28,7 +28,7 @@
             :disabled="!!form.id"
           />
         </el-form-item>
-        <el-form-item label="构件类型" prop="artifactType" v-if="form.productionLineType === artifactProductLineEnum.TRADITION.V">
+        <el-form-item label="构件类型" prop="artifactType" v-if="form.productionLineTypeEnum === artifactProductLineEnum.TRADITION.V">
           <common-select
             v-model="form.artifactType"
             :options="artifactTypeEnum.ENUM"
@@ -40,7 +40,7 @@
             :disabled="!!form.id"
           />
         </el-form-item>
-        <el-form-item label="类型" prop="parentType" v-if="form.productionLineType === artifactProductLineEnum.INTELLECT.V">
+        <el-form-item label="类型" prop="parentType" v-if="form.productionLineTypeEnum === artifactProductLineEnum.INTELLECT.V">
           <common-select
             v-model="form.parentType"
             :options="intellectParentType.ENUM"
@@ -69,7 +69,7 @@
               placeholder="最小值"
               style="width:100px;margin-right:5px;line-height:32px !import;"
             />
-            <common-select
+            <!-- <common-select
               v-model="form.boolContainsMin"
               :options="maxEqualTypeEnum.ENUM"
               type="enum"
@@ -78,10 +78,10 @@
               class="filter-item"
               placeholder="符号"
               style="width: 85px;"
-            />
+            /> -->
             <span style="padding:0 8px;">—</span>
             <span style="margin-right:3px;">最大值:</span>
-            <common-select
+            <!-- <common-select
               v-model="form.boolContainsMax"
               :options="maxEqualTypeEnum.ENUM"
               type="enum"
@@ -90,7 +90,7 @@
               class="filter-item"
               placeholder="符号"
               style="width: 85px;margin-right:5px;"
-            />
+            /> -->
             <common-input-number
               v-model="form.maxLength"
               :min="0"
@@ -151,7 +151,7 @@
             />
           </div> -->
         </el-form-item>
-        <el-form-item label="定义代码" prop="definitionWord" v-if="form.productionLineType === artifactProductLineEnum.INTELLECT.V">
+        <el-form-item label="定义代码" prop="definitionWord" v-if="form.productionLineTypeEnum === artifactProductLineEnum.INTELLECT.V">
           <el-input v-model="form.definitionWord" type="text" placeholder="定义代码" style="width: 250px" maxlength="30" />
         </el-form-item>
         <el-form-item label="排序" prop="sort">
@@ -226,9 +226,9 @@ import crudApi from '@/api/config/system-config/artifact-config'
 import { defineProps, defineEmits, ref, watch, nextTick, computed } from 'vue'
 import { ElMessage, ElNotification } from 'element-plus'
 
-import { isNotBlank } from '@data-type/index'
+// import { isNotBlank } from '@data-type/index'
 // import { whetherEnum } from '@enum-ms/common'
-import { artifactProductLineEnum, intellectParentType, maxEqualTypeEnum, artifactTypeEnum, codingTypeEnum } from '@enum-ms/mes'
+import { artifactProductLineEnum, intellectParentType, artifactTypeEnum, codingTypeEnum } from '@enum-ms/mes'
 
 import useVisible from '@compos/use-visible'
 import useWatchFormValidate from '@compos/form/use-watch-form-validate'
@@ -257,13 +257,13 @@ const serialNumberArr = ref([])
 
 const defaultForm = {
   id: undefined,
-  productionLineType: undefined,
+  productionLineTypeEnum: undefined,
   parentType: undefined, // 类型选择
   artifactType: undefined, // 构件类型
   classificationName: '', // 类型命名
-  boolContainsMin: undefined, // 最小值是否包含等于
+  // boolContainsMin: undefined, // 最小值是否包含等于
   minLength: undefined, // 长度最小值
-  boolContainsMax: undefined, // 最大值是否包含等于
+  // boolContainsMax: undefined, // 最大值是否包含等于
   maxLength: undefined, // 长度最大值
   definitionWord: undefined, // 定义代码
   sort: undefined,
@@ -274,7 +274,7 @@ const defaultForm = {
 
 const form = ref(JSON.parse(JSON.stringify(defaultForm)))
 const plusShow = computed(() => {
-  return form.value.productionLineType === artifactProductLineEnum.TRADITION.V ? (form.value.specPrefixList?.length < 1 ? true : (form.value.artifactType === artifactTypeEnum.COMMON.V)) : true
+  return form.value.productionLineTypeEnum === artifactProductLineEnum.TRADITION.V ? (form.value.specPrefixList?.length < 1 ? true : (form.value.artifactType === artifactTypeEnum.COMMON.V)) : true
 })
 
 const validateLinks = (rule, value, callback) => {
@@ -320,32 +320,33 @@ const validateLength = (rule, value, callback) => {
       callback(new Error('最大值和最小值不能同时为空'))
     } else {
       if (form.value.minLength && form.value.maxLength) {
-        if (!isNotBlank(form.value.boolContainsMin) || !isNotBlank(form.value.boolContainsMax)) {
-          callback(new Error('最大值和最小值符号必选'))
-        }
+        // if (!isNotBlank(form.value.boolContainsMin) || !isNotBlank(form.value.boolContainsMax)) {
+        //   callback(new Error('最大值和最小值符号必选'))
+        // }
         if (form.value.maxLength < form.value.minLength) {
           callback(new Error('最大值必须大于最小值'))
         }
         callback()
-      } else {
-        if (form.value.minLength) {
-          if (!isNotBlank(form.value.boolContainsMin)) {
-            callback(new Error('最小值符号必选'))
-          }
-          callback()
-        } else {
-          if (!isNotBlank(form.value.boolContainsMax)) {
-            callback(new Error('最大值符号必选'))
-          }
-          callback()
-        }
       }
+      // else {
+      //   if (form.value.minLength) {
+      //     if (!isNotBlank(form.value.boolContainsMin)) {
+      //       callback(new Error('最小值符号必选'))
+      //     }
+      //     callback()
+      //   } else {
+      //     if (!isNotBlank(form.value.boolContainsMax)) {
+      //       callback(new Error('最大值符号必选'))
+      //     }
+      //     callback()
+      //   }
+      // }
     }
   }
   callback()
 }
 const validateParentType = (rule, value, callback) => {
-  if (form.value.productionLineType === artifactProductLineEnum.INTELLECT.V) {
+  if (form.value.productionLineTypeEnum === artifactProductLineEnum.INTELLECT.V) {
     if (!value) {
       callback(new Error('请选择类型'))
     }
@@ -355,7 +356,7 @@ const validateParentType = (rule, value, callback) => {
 }
 
 const validateDefinitionWord = (rule, value, callback) => {
-  if (form.value.productionLineType === artifactProductLineEnum.INTELLECT.V) {
+  if (form.value.productionLineTypeEnum === artifactProductLineEnum.INTELLECT.V) {
     if (!value) {
       callback(new Error('请填写定义代码'))
     }
@@ -365,7 +366,7 @@ const validateDefinitionWord = (rule, value, callback) => {
 }
 
 const rules = {
-  productionLineType: [
+  productionLineTypeEnum: [
     { required: true, message: '请选择生产线', trigger: 'change' }
   ],
   artifactType: [
@@ -446,18 +447,18 @@ function resetForm(data) {
 
 function lineTypeChange(val) {
   if (val !== artifactProductLineEnum.INTELLECT.V) {
-    form.value.boolContainsMin = undefined
+    // form.value.boolContainsMin = undefined
     form.value.minLength = undefined
-    form.value.boolContainsMax = undefined
+    // form.value.boolContainsMax = undefined
     form.value.maxLength = undefined
   }
 }
 
 function parentTypeChange(val) {
   if (val !== intellectParentType.BRIDGE.V) {
-    form.value.boolContainsMin = undefined
+    // form.value.boolContainsMin = undefined
     form.value.minLength = undefined
-    form.value.boolContainsMax = undefined
+    // form.value.boolContainsMax = undefined
     form.value.maxLength = undefined
   }
 }
@@ -576,7 +577,7 @@ async function onSubmit() {
       v.add = false
     })
   }
-  if (form.value.productionLineType === artifactProductLineEnum.INTELLECT.V) {
+  if (form.value.productionLineTypeEnum === artifactProductLineEnum.INTELLECT.V) {
     form.value.artifactType = artifactTypeEnum.COMMON.V
   }
   try {

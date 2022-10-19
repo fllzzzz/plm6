@@ -96,7 +96,7 @@
         />
         <rrOperation/>
       </div>
-       <el-row v-loading="crud.loading" v-if="checkPermission(crud.permission.get)" :gutter="20" class="panel-group">
+      <el-row v-loading="crud.loading" v-if="checkPermission(crud.permission.get)" :gutter="20" class="panel-group">
         <el-col :span="4" class="card-panel-col">
           <Panel name="项目数" text-color="#626262" num-color="#1890ff" :end-val="totalAmount.sumQuantity || 0" :precision="0" />
         </el-col>

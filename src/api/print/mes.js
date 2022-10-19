@@ -375,6 +375,33 @@ export function qhseProductionLineReport(params) {
   })
 }
 
+// 构件分类清单明细
+export function artifactClassList(params) {
+  return request({
+    url: `/api/mes/building/scheduling/area/listArtifact/print`,
+    method: 'get',
+    params
+  })
+}
+
+// 部件分类清单明细
+export function assembleClassList(params) {
+  return request({
+    url: `/api/mes/building/scheduling/area/listAssemble/print`,
+    method: 'get',
+    params
+  })
+}
+
+// 零件分类清单明细
+export function machinePartClassList(params) {
+  return request({
+    url: `/api/mes/building/scheduling/area/listMachinePart/print`,
+    method: 'get',
+    params
+  })
+}
+
 export default {
   // 项目制造
   machinePartDetail, // 零件生产详情
@@ -415,6 +442,11 @@ export default {
   // 制成品管理
   warehouseStateStructure, // 结构出入库状态
   warehouseStateEnclosure, // 围护出入库状态
-  warehouseStateReport // 入发存报表
+  warehouseStateReport, // 入发存报表
+
+  // 生产订单
+  artifactClassList, // 构件分类清单明细
+  assembleClassList, // 部件分类清单明细
+  machinePartClassList // 零件分类清单明细
 }
 

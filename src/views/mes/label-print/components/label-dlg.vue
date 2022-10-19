@@ -5,6 +5,7 @@
     width="640px"
     :before-close="handleClose"
   >
+    <slot name="oneCode"/>
     <div style="position: relative">
       <span v-html="showInfo.showHtml"> </span>
       <qrcode-vue

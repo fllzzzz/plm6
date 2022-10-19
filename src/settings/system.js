@@ -37,6 +37,9 @@ export const showProjectSearch = [
   // MES
   { component: '/mes/projects/index', type: allPT, required: true },
   { component: '/mes/overall-plan/monomer/index', type: pt.STEEL.V, required: true },
+  { component: '/mes/craft-manage/section-steel/nesting-setting/index', type: pt.STEEL.V, required: true },
+  // { component: '/mes/craft-manage/section-steel/nesting/index', type: pt.STEEL.V, required: true },
+  { component: '/mes/craft-manage/section-steel/nesting-result/index', type: pt.STEEL.V, required: true },
   { component: '/mes/changed-manage/artifact/index', type: pt.STEEL.V, required: false },
   { component: '/mes/changed-manage/machine-part/index', type: pt.STEEL.V, required: false },
   { component: '/mes/changed-manage/assemble/index', type: pt.STEEL.V, required: false },
@@ -90,6 +93,12 @@ export const showProjectSearch = [
   { component: '/mes/pack-and-ship/receipt-status/index', type: pt.STEEL.V, required: false },
   { component: '/mes/pack-and-ship/logistics-list/index', type: pt.STEEL.V, required: false },
   { component: '/mes/pack-and-ship/ship-audit/index', type: pt.STEEL.V, required: false },
+  { component: '/mes/craft-manage/artifact-specification-revise/index', type: pt.STEEL.V, required: true },
+  // 计划管理
+  { component: '/plan/technical-data-manage/technical-achievement/model/index', type: allPT, required: true },
+  { component: '/plan/technical-data-manage/technical-achievement/drawing/index', type: allPT, required: true },
+  { component: '/plan/technical-data-manage/technical-achievement/cnc/index', type: allPT, required: true },
+  { component: '/plan/technical-data-manage/technical-achievement/xml/index', type: allPT, required: true },
   { component: '/plan/overall-plan/monomer/index', type: allPT, required: true },
   { component: '/plan/project-list/index', type: allPT, required: true },
   { component: '/plan/overall-plan/area/index', type: allPT, required: true },
@@ -177,14 +186,14 @@ export const routerMetaSetting = [
   {
     name: 'MesSchedulingArtifactAssemble',
     productType: ttEnum.STRUCTURE.V,
-    mode: projectModeEnum.STRUCTURE_ASSEMBLE.V | projectModeEnum.STRUCTURE_PART_ASSEMBLE.V
+    mode: projectModeEnum.STRUCTURE_ASSEMBLE.V
   },
   {
     name: 'MesSchedulingArtifactArtifact',
     productType: ttEnum.STRUCTURE.V,
-    mode: projectModeEnum.STRUCTURE.V | projectModeEnum.STRUCTURE_ASSEMBLE.V | projectModeEnum.STRUCTURE_PART_ASSEMBLE.V
+    mode: projectModeEnum.STRUCTURE.V | projectModeEnum.STRUCTURE_ASSEMBLE.V
   },
-  { name: 'MesSchedulingArtifactMachinePart', productType: ttEnum.STRUCTURE.V, mode: projectModeEnum.STRUCTURE_PART_ASSEMBLE.V },
+  { name: 'MesSchedulingArtifactMachinePart', productType: ttEnum.STRUCTURE.V, mode: projectModeEnum.STRUCTURE_ASSEMBLE.V },
   { name: 'MesSchedulingEnclosure', productType: ENCLOSURE_ALL_BIT },
   { name: 'MesSchedulingPressedPlate', productType: ttEnum.PROFILED_PLATE.V },
   { name: 'MesSchedulingFloorPlate', productType: ttEnum.PRESSURE_BEARING_PLATE.V },
@@ -194,11 +203,10 @@ export const routerMetaSetting = [
   {
     name: 'MesTaskArtifact',
     productType: ttEnum.STRUCTURE.V,
-    mode: projectModeEnum.STRUCTURE.V | projectModeEnum.STRUCTURE_ASSEMBLE.V | projectModeEnum.STRUCTURE_PART_ASSEMBLE.V
+    mode: projectModeEnum.STRUCTURE.V | projectModeEnum.STRUCTURE_ASSEMBLE.V
   },
-  { name: 'MesTaskMachinePart', productType: ttEnum.STRUCTURE.V, mode: projectModeEnum.STRUCTURE_PART_ASSEMBLE.V },
+  { name: 'MesTaskMachinePart', productType: ttEnum.STRUCTURE.V, mode: projectModeEnum.STRUCTURE_ASSEMBLE.V },
   { name: 'MesTaskEnclosure', productType: ENCLOSURE_ALL_BIT },
-  { name: 'MesProductionReportMachinePart', mode: projectModeEnum.STRUCTURE_PART_ASSEMBLE.V },
-  { name: 'MesProductionReportAssemble', mode: projectModeEnum.STRUCTURE_ASSEMBLE.V | projectModeEnum.STRUCTURE_PART_ASSEMBLE.V }
-  // { name: 'MesProductionDashboardAssemblyMatch', mode: projectModeEnum.STRUCTURE_STANDARD.V | projectModeEnum.STRUCTURE_ASSEMBLE.V | projectModeEnum.STRUCTURE_PART_ASSEMBLE.V }
+  { name: 'MesProductionReportMachinePart', mode: projectModeEnum.STRUCTURE_ASSEMBLE.V },
+  { name: 'MesProductionReportAssemble', mode: projectModeEnum.STRUCTURE_ASSEMBLE.V | projectModeEnum.STRUCTURE_ASSEMBLE.V }
 ]

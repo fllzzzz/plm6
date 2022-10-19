@@ -36,6 +36,26 @@ export function getProcessAllSimple(params) {
   })
 }
 
+// 所有生产班组
+export function getProductionTeamAllSimple(params) {
+  return request({
+    module: 'mes',
+    url: 'team',
+    method: 'get',
+    params
+  })
+}
+
+// 所有质检班组
+export function getInspectionTeamAllSimple(params) {
+  return request({
+    module: 'mes',
+    url: 'inspectionTeam',
+    method: 'get',
+    params
+  })
+}
+
 /**
  * 获取所有生产线
  * @export
@@ -71,6 +91,17 @@ export function getAllFactoryWorkshopLines(params) {
 }
 
 /**
+ * @description: 切割配置列表
+ */
+export function getAllCutConfigs() {
+  return request({
+    module: 'mes',
+    url: `cut/list/cut`,
+    method: 'get'
+  })
+}
+
+/**
  * 所有包单号列表
  * @export
  * @returns
@@ -91,11 +122,19 @@ export function getAllPackage(params) {
  * @param {number} productType 类型
  * @returns
  */
-export function getHasTaskLine({ areaId, monomerId, productType }) {
+export function getHasTaskLine({
+  areaId,
+  monomerId,
+  productType
+}) {
   return request({
     module: 'mes',
     url: 'task/productionLine/hasTask',
     method: 'get',
-    params: { areaId, monomerId, productType }
+    params: {
+      areaId,
+      monomerId,
+      productType
+    }
   })
 }

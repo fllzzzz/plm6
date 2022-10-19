@@ -5,7 +5,7 @@
     :before-close="crud.cancelCU"
     :title="crud.status.title"
     :show-close="true"
-    :size="500"
+    :size="700"
   >
     <template #titleRight>
       <common-button size="mini" type="success" icon="el-icon-plus" @click="addRow(form.list)" />
@@ -28,15 +28,27 @@
           >
             <el-table-column label="序号" type="index" align="center" width="60" />
             <el-table-column prop="name" label="工序" align="center" min-width="180">
-              <template v-slot="scope">
+              <template #default="{ row }">
                 <el-input
-                  v-model.trim="scope.row.name"
-                  :readonly="scope.row.boolUsed"
+                  v-model.trim="row.name"
+                  :readonly="row.boolUsed"
                   type="text"
                   placeholder="工序"
                   size="mini"
                   maxlength="20"
                   class="input-underline"
+                  style="width: 100%"
+                />
+              </template>
+            </el-table-column>
+            <el-table-column prop="type" label="类型" align="center" min-width="180">
+              <template #default="{ row }">
+                <common-select
+                  v-model="row.type"
+                  class="input-underline"
+                  :options="pcByProductTypeEnum"
+                  type="enum"
+                  placeholder="类型"
                   style="width: 100%"
                 />
               </template>
@@ -49,7 +61,7 @@
                   type="primary"
                   style="padding: 5px"
                   size="mini"
-                  :disabled="scope.$index === 0"
+                  :disabled="scope.$index === 0 || scope.row.name==='下料'"
                   @click="handleMove(scope, 'up', form.list)"
                 />
                 <common-button
@@ -58,7 +70,7 @@
                   type="primary"
                   style="padding: 5px"
                   size="mini"
-                  :disabled="scope.$index === form.list.length - 1"
+                  :disabled="scope.$index === form.list.length - 1 || scope.row.name==='下料'"
                   @click="handleMove(scope, 'down', form.list)"
                 />
                 <common-button
@@ -67,6 +79,7 @@
                   type="danger"
                   style="padding: 5px"
                   size="mini"
+                  :disabled="scope.row.name==='下料'"
                   @click="removeRow(form.list, scope.$index)"
                 />
                 <svg-icon v-else class="icon icon-readonly" icon-class="readonly" />
@@ -80,8 +93,8 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import { processMaterialListTypeEnum as typeEnum } from '@enum-ms/mes'
+import { computed, ref } from 'vue'
+import { processMaterialListTypeEnum as typeEnum, processCategoryEnum } from '@enum-ms/mes'
 
 import { regForm } from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
@@ -99,8 +112,21 @@ const defaultRow = {
   name: undefined
 }
 
+const pcByProductTypeEnum = computed(() => {
+  if (form.productType & typeEnum.ARTIFACT.V) {
+    return [processCategoryEnum.ASSEMBLY_RIVETING_WELDING, processCategoryEnum.PAINT]
+  } else if (form.productType & typeEnum.ASSEMBLE.V) {
+    return [processCategoryEnum.ASSEMBLY_RIVETING_WELDING]
+  } else if (form.productType & typeEnum.MACHINE_PART.V) {
+    return [processCategoryEnum.DRILL_HOLE, processCategoryEnum.MAKINGS]
+  } else {
+    return processCategoryEnum.ENUM
+  }
+})
+
 const tableRules = {
-  name: [{ required: true, message: '请输入工序', trigger: 'blur' }]
+  name: [{ required: true, message: '请输入工序', trigger: 'blur' }],
+  type: [{ required: true, message: '请选择类型', trigger: 'change' }]
 }
 
 const drawerRef = ref()
