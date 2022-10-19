@@ -42,7 +42,8 @@ export function getUsableUnit(unit) {
     case 't' : return 'mt' // 国内的t等于国外的mt
     case 'mm²' : return 'mm2'
     case 'cm²' : return 'cm2'
-    case '㎡' : return 'm2'
+    case '㎡' :
+    case 'm²' : return 'm2'
     case 'km²' : return 'km2'
     case 'sq.in' : return 'in2'
     case 'sq.ft' : return 'ft2'
