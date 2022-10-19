@@ -6,25 +6,32 @@
     </template>
     <common-table v-loading="resultLoading" ref="tableRef" :data="nestingProgressData" :max-height="500" style="width: 100%" row-key="id">
       <el-table-column label="序号" type="index" align="center" width="60" fixed="left" />
-      <el-table-column key="serialNumber" prop="serialNumber" :show-overflow-tooltip="true" label="套料编号" align="center" width="180px" fixed="left">
+      <el-table-column
+        key="serialNumber"
+        prop="serialNumber"
+        :show-overflow-tooltip="true"
+        label="套料编号"
+        align="center"
+        width="180px"
+        fixed="left"
+      >
         <template v-slot="scope">
           <span>{{ scope.row.serialNumber }}</span>
         </template>
       </el-table-column>
-      <el-table-column
-        key="nestingResult"
-        prop="nestingResult"
-        label="套料成果"
-        align="center"
-      >
+      <el-table-column key="nestingResult" prop="nestingResult" label="套料成果" align="center">
         <template v-slot="scope">
           <template v-if="scope.row.linkDOList.length > 0">
-            <div style="display: flex;justify-content: flex-start;overflow: auto">
-            <div v-for="item in scope.row.linkDOList" :key="item">
-              <div :style="`width: ${35 * (scope.row.typesettingLength / item.length)}px; height: 30px; background-color: ${item.lengthColor};line-height: 30px;margin-left: 1px`">
-                {{ item.serialNumber }}
+            <div style="display: flex; justify-content: flex-start; overflow: auto">
+              <div v-for="item in scope.row.linkDOList" :key="item">
+                <div
+                  :style="`min-width: 60px;width: ${scope.row.typesettingLength / item.length}%; height: 30px; background-color: ${
+                    item.lengthColor
+                  };line-height: 30px;margin-left: 1px`"
+                >
+                  {{ item.serialNumber }}
+                </div>
               </div>
-            </div>
             </div>
           </template>
         </template>
@@ -56,7 +63,14 @@
           <span>{{ scope.row.quantity }}</span>
         </template>
       </el-table-column>
-      <el-table-column key="typesettingLength" prop="typesettingLength" :show-overflow-tooltip="true" label="套料长度（mm）" align="center" width="120px">
+      <el-table-column
+        key="typesettingLength"
+        prop="typesettingLength"
+        :show-overflow-tooltip="true"
+        label="套料长度（mm）"
+        align="center"
+        width="120px"
+      >
         <template v-slot="scope">
           <span>{{ scope.row.typesettingLength }}</span>
         </template>
@@ -144,5 +158,4 @@ async function delNesting() {
 </script>
 
 <style lang="scss" scoped>
-
 </style>
