@@ -116,6 +116,13 @@ const preparationStatusEnum = {
 }
 constantize(preparationStatusEnum)
 
+// 涂装类型
+const paintTypeEnum = {
+  FACTORY: { L: '工厂涂装', K: 'FACTORY', V: 1 << 0 },
+  CONSTRUCTION_SITE: { L: '工地涂装', K: 'CONSTRUCTION_SITE', V: 1 << 1 }
+}
+constantize(paintTypeEnum)
+
 export {
   manufactureTypeEnum, // 制造类型
   overallPlanTypeEnum, // 部门计划类型
@@ -130,7 +137,8 @@ export {
   deepenTypeEnum,
   serialNumChangeTypeEnum,
   preparationRangeEnum, // 备料范围（类型）
-  preparationStatusEnum // 备料状态
+  preparationStatusEnum, // 备料状态
+  paintTypeEnum
 }
 
 export default {
@@ -147,5 +155,6 @@ export default {
   deepenTypeEnum,
   serialNumChangeTypeEnum,
   preparationRangeEnum, // 备料范围（类型）
-  preparationStatusEnum // 备料状态
+  preparationStatusEnum, // 备料状态
+  paintTypeEnum
 }

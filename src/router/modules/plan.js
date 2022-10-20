@@ -152,6 +152,13 @@ export default {
           meta: { title: '配套件清单', icon: 'project', noCache: true }
         },
         {
+          name: 'PlanProductionList',
+          path: 'product-list',
+          hidden: false,
+          component: '/plan/technical-manage/production-list/index',
+          meta: { title: '配套件汇总', icon: 'project', noCache: true }
+        },
+        {
           path: 'plan-document',
           component: '',
           hidden: false,

@@ -119,6 +119,7 @@ export const showProjectSearch = [
   { component: '/plan/technical-manage/summary-list/index', type: allPT, required: true },
   { component: '/plan/technical-manage/steel-statistical/index', type: allPT, required: true },
   { component: '/plan/technical-manage/auxiliary-material/index', type: allPT, required: true },
+  { component: '/plan/technical-manage/production-list/index', type: allPT, required: true },
   { component: '/plan/material-preparation/project-preparation/index', type: allPT, required: false },
   { component: '/contract/contract-change/index', type: allPT, required: false },
   { component: '/contract/contract-record/index', type: allPT, required: false },

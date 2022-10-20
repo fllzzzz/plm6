@@ -250,6 +250,13 @@ export default {
               hidden: false,
               component: '/config-manage/mes/steel-classic/index',
               meta: { title: '零件特征定义', icon: 'project', noCache: true }
+            },
+            {
+              name: 'AuxiliaryMaterialConfig',
+              path: 'auxiliary-material-config',
+              hidden: false,
+              component: '/config-manage/mes/auxiliary-material-config/index',
+              meta: { title: '配套件特征定义', icon: 'project', noCache: true }
             }
           ]
         },

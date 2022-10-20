@@ -433,7 +433,7 @@ function resetForm(data) {
     formRef.value.resetFields()
   }
   if (data && Object.keys(data).length > 0) {
-    form.value = data
+    form.value = JSON.parse(JSON.stringify(data))
   } else {
     form.value = JSON.parse(JSON.stringify(defaultForm))
   }
