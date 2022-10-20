@@ -6,32 +6,26 @@
     </template>
     <common-table v-loading="resultLoading" ref="tableRef" :data="nestingProgressData" :max-height="500" style="width: 100%" row-key="id">
       <el-table-column label="序号" type="index" align="center" width="60" />
-      <el-table-column
-        key="serialNumber"
-        prop="serialNumber"
-        :show-overflow-tooltip="true"
-        label="套料编号"
-        align="center"
-      >
+      <el-table-column key="serialNumber" prop="serialNumber" :show-overflow-tooltip="true" label="套料编号" align="center" width="180px">
         <template v-slot="scope">
           <span>{{ scope.row.serialNumber }}</span>
         </template>
       </el-table-column>
-      <el-table-column key="nestingResult" prop="nestingResult" label="套料成果" align="center" width="700px">
+      <el-table-column key="nestingResult" prop="nestingResult" label="套料成果" align="center" >
         <template v-slot="scope">
           <template v-if="scope.row.linkDOList.length > 0">
-            <div style="display: flex; justify-content: flex-start; overflow: auto;">
-              <div v-for="item in scope.row.linkDOList" :key="item">
+            <template v-for="item in scope.row.linkDOList" :key="item">
+              <el-tooltip effect="dark" :content="item.serialNumber" placement="top-start">
                 <div
-                  :style="`min-width: 160px; overflow: hidden; width: ${scope.row.typesettingLength / item.length}%; height: 30px; background-color: ${
-                    item.lengthColor
-                  };line-height: 30px;margin-left: 1px`"
+                  :style="`padding: 0 5px; display:inline-block; width: ${
+                    (item.length / scope.row.typesettingLength) * 100
+                  }%; color: #fff; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; height: 30px; background-color: ${item.lengthColor};line-height: 30px; border-right: 1px solid #fff`"
                 >
-                <!-- 17dh13535487865887486 -->
+                  <!-- 17dh13535487865887486 -->
                   {{ item.serialNumber }}
                 </div>
-              </div>
-            </div>
+              </el-tooltip>
+            </template>
           </template>
         </template>
       </el-table-column>
@@ -41,38 +35,33 @@
         :show-overflow-tooltip="true"
         label="材料属性"
         align="center"
+        width="120px"
       >
         <template v-slot="scope">
           <span>{{ scope.row.typesettingAssembleTypeEnum ? materialTypeEnum.VL[scope.row.typesettingAssembleTypeEnum] : '-' }}</span>
         </template>
       </el-table-column>
-      <el-table-column key="length" prop="length" :show-overflow-tooltip="true" label="母材长度（mm）" align="center">
+      <el-table-column key="length" prop="length" :show-overflow-tooltip="true" label="母材长度（mm）" align="center" width="150px">
         <template v-slot="scope">
           <span>{{ scope.row.length }}</span>
         </template>
       </el-table-column>
-      <el-table-column key="specification" prop="specification" :show-overflow-tooltip="true" label="母材规格" align="center">
+      <el-table-column key="specification" prop="specification" :show-overflow-tooltip="true" label="母材规格" align="center" width="150px">
         <template v-slot="scope">
           <span>{{ scope.row.specification }}</span>
         </template>
       </el-table-column>
-      <el-table-column key="quantity" prop="quantity" :show-overflow-tooltip="true" label="数量" align="center">
+      <el-table-column key="quantity" prop="quantity" :show-overflow-tooltip="true" label="数量" align="center" width="120px">
         <template v-slot="scope">
           <span>{{ scope.row.quantity }}</span>
         </template>
       </el-table-column>
-      <el-table-column
-        key="typesettingLength"
-        prop="typesettingLength"
-        :show-overflow-tooltip="true"
-        label="套料长度（mm）"
-        align="center"
-      >
+      <el-table-column key="typesettingLength" prop="typesettingLength" :show-overflow-tooltip="true" label="套料长度（mm）" align="center" width="150px">
         <template v-slot="scope">
           <span>{{ scope.row.typesettingLength }}</span>
         </template>
       </el-table-column>
-      <el-table-column key="lossRate" prop="lossRate" :show-overflow-tooltip="true" label="损耗" align="center">
+      <el-table-column key="lossRate" prop="lossRate" :show-overflow-tooltip="true" label="损耗" align="center" width="80px">
         <template v-slot="scope">
           <span>{{ scope.row.lossRate }}</span>
         </template>
@@ -116,6 +105,7 @@ async function nestingResultGet() {
           colorObj.value[m.serialNumber] = getLightColor()
         }
         m.lengthColor = colorObj.value[m.serialNumber]
+        emit('success')
       })
     })
 
