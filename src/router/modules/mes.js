@@ -1207,6 +1207,139 @@ export default {
       //   meta: { title: '发运限制', icon: 'project', noCache: true }
       // }
     ]
+  },
+  {
+    path: '/mes/task-tracking',
+    component: 'Layout',
+    hidden: false,
+    name: 'MesTaskTracking',
+    alwaysShow: false,
+    redirect: '/mes/task-tracking',
+    meta: {
+      title: '任务跟踪',
+      icon: 'project',
+      noCache: true
+    },
+    children: [
+      {
+        name: 'MesWorkOrderTracking',
+        path: 'work-order-tracking',
+        hidden: false,
+        component: '/mes/task-tracking/work-order-tracking/index',
+        meta: {
+          title: '工单跟踪',
+          icon: 'project',
+          noCache: true
+        }
+      },
+      {
+        name: 'MesMonthlyTaskTracking',
+        path: 'monthly-task-tracking',
+        hidden: false,
+        component: '/mes/task-tracking/monthly-task-tracking/index',
+        meta: {
+          title: '月度任务跟踪',
+          icon: 'project',
+          noCache: true
+        }
+      },
+      {
+        name: 'MesProductionLineTracking',
+        path: 'production-line-tracking',
+        hidden: false,
+        component: '/mes/task-tracking/production-line-tracking/index',
+        meta: {
+          title: '产线跟踪',
+          icon: 'project',
+          noCache: true
+        }
+      },
+      {
+        name: 'MesProcessSluggish',
+        path: 'process-sluggish',
+        hidden: false,
+        component: '/mes/task-tracking/process-sluggish/index',
+        meta: {
+          title: '工序呆滞',
+          icon: 'project',
+          noCache: true
+        }
+      }
+    ]
+  },
+  {
+    path: '/mes/factory-report',
+    component: 'Layout',
+    hidden: false,
+    name: 'MesFactoryReport',
+    alwaysShow: false,
+    redirect: '/mes/factory-report',
+    meta: {
+      title: '工厂报表',
+      icon: 'project',
+      noCache: true
+    },
+    children: [
+      {
+        name: 'MesWorkshopReport',
+        path: 'workshop-report',
+        hidden: false,
+        component: '/mes/factory-report/workshop-report/index',
+        meta: {
+          title: '车间报表',
+          icon: 'project',
+          noCache: true
+        }
+      }
+    ]
+  },
+  {
+    path: '/mes/production-line-wage-statistics',
+    component: 'Layout',
+    hidden: false,
+    name: 'MesProductionLineWageStatistics',
+    alwaysShow: false,
+    redirect: '/mes/production-line-wage-statistics',
+    meta: {
+      title: '产线工资统计',
+      icon: 'project',
+      noCache: true
+    },
+    children: [
+      {
+        name: 'MesProductionStatistics',
+        path: 'production-statistics',
+        hidden: false,
+        component: '/mes/production-line-wage-statistics/production-statistics/index',
+        meta: {
+          title: '产量统计',
+          icon: 'project',
+          noCache: true
+        }
+      },
+      {
+        name: 'MesStudSleeveStatistics',
+        path: 'stud-sleeve-statistics',
+        hidden: false,
+        component: '/mes/production-line-wage-statistics/stud-sleeve-statistics/index',
+        meta: {
+          title: '栓钉套筒统计',
+          icon: 'project',
+          noCache: true
+        }
+      },
+      {
+        name: 'MesWageAdjust',
+        path: 'wage-adjust',
+        hidden: false,
+        component: '/mes/production-line-wage-statistics/wage-adjust/index',
+        meta: {
+          title: '工价调整',
+          icon: 'project',
+          noCache: true
+        }
+      }
+    ]
   }
     // {
     //   path: '/mes/production-state',

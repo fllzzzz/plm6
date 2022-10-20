@@ -84,6 +84,14 @@ const mesArtifactClassList = mes.artifactClassList
 const mesAssembleClassList = mes.assembleClassList
 const mesMachinePartClassList = mes.machinePartClassList
 
+const mesProcessList = mes.processList
+const mesProductionLineList = mes.productionLineList
+const mesWorkOrderTrackingList = mes.workOrderTrackingList
+
+const mesWorkshopReport = mes.workshopReport
+
+const mesStudSleeveStatisticsList = mes.studSleeveStatisticsList
+
 // wms
 const wmsRmOutboundReceipt = wms.wmsRmOutboundReceipt // 出库
 const wmsRmInboundReceipt = wms.wmsRmInboundReceipt // 入库
@@ -177,6 +185,14 @@ export default {
   mesArtifactClassList, // 构件分类清单明细
   mesAssembleClassList, // 部件分类清单明细
   mesMachinePartClassList, // 零件分类清单明细
+
+  mesProductionLineList, //  产线跟踪清单详情
+  mesWorkOrderTrackingList, // 工单跟踪清单详情
+  mesProcessList, // 工序呆滞清单详情
+
+  mesWorkshopReport, // 车间报表清单详情
+
+  mesStudSleeveStatisticsList, // 栓钉套筒统计清单详情
 
   // wms
   wmsRmOutboundReceipt, // 出库（领料单）单
