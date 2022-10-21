@@ -48,7 +48,8 @@ async function fetchDrawing() {
     }
     const res = await previewPDF(param)
     if (res.headers['content-disposition']) {
-      const suffix = res.headers['content-disposition'].split('=')[1].split('.')[1]
+      const fileNameArr = res.headers['content-disposition'].split('=')[1].split('.')
+      const suffix = fileNameArr[fileNameArr.length - 1]
       if (suffix !== 'pdf') throw new Error('非.pdf格式')
     } else {
       throw new Error('获取文件格式失败')
