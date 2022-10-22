@@ -24,7 +24,7 @@
         class="filter-item"
         placeholder="可选择供应商搜索"
         show-hide
-        style="width: 300px"
+        style="width: 240px"
         @change="crud.toQuery"
       />
       <purchase-order-select
@@ -33,7 +33,7 @@
         :supplier-id="query.supplierId"
         :year="query.year"
         clearable
-        style="width: 300px"
+        style="width: 240px"
         @change="crud.toQuery"
       />
       <el-date-picker
@@ -49,6 +49,18 @@
         :shortcuts="PICKER_OPTIONS_SHORTCUTS"
         :disabled-date="disabledDate"
         style="width:240px"
+        @change="crud.toQuery"
+      />
+      <material-cascader
+        v-model="query.classifyId"
+        separator=" > "
+        check-strictly
+        show-all-levels
+        clearable
+        size="small"
+        class="filter-item"
+        style="width: 300px"
+        placeholder="可选择/输入科目、编号搜索"
         @change="crud.toQuery"
       />
       <rrOperation/>
@@ -81,6 +93,7 @@ import rrOperation from '@crud/RR.operation'
 import ExportButton from '@comp-common/export-button/index.vue'
 import purchaseOrderSelect from '@/components-system/wms/purchase-order-select/index.vue'
 import supplierSelect from '@comp-base/supplier-select/index.vue'
+import MaterialCascader from '@comp-cls/material-cascader/index.vue'
 
 const defaultTime = ref([new Date(2000, 1, 1, 0, 0, 0), new Date(2000, 2, 1, 23, 59, 59)])
 
@@ -88,6 +101,7 @@ const defaultQuery = {
   inboundTime: [], // [开始时间，结束时间]
   year: undefined,
   supplierId: undefined,
+  classifyId: undefined,
   purchaseOrderId: undefined
 }
 
