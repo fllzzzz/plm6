@@ -3,6 +3,7 @@ import mes from '@/api/print/mes'
 import wms from '@/api/print/wms'
 import supply from '@/api/print/supply-chain'
 import project from '@/api/print/project'
+import plan from '@/api/print/plan'
 
 // 合同
 const myProject = contract.myProject
@@ -106,6 +107,9 @@ const deliveryReportList = project.deliveryReportList // 收货报表
 const deliveryInstallList = project.deliveryInstallList // 收安报表
 const installReportList = project.installReportList // 安装报表
 
+// plan
+const auxiliaryMaterialSummary = plan.auxiliaryMaterialSummary // 配套件汇总
+
 export default {
   myProject, // 我的项目
   projectList, // 项目列表
@@ -206,5 +210,8 @@ export default {
   deliveryCargoList, // 自制收货记录
   deliveryReportList, // 收货报表
   deliveryInstallList, // 收安报表
-  installReportList // 安装报表
+  installReportList, // 安装报表
+
+  // 计划管理
+  auxiliaryMaterialSummary // 配套件汇总
 }

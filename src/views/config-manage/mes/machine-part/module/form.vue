@@ -100,7 +100,12 @@
           </el-table-column>
         </common-table>
         <div class="add-row-box">
-          <common-button size="mini" icon="el-icon-circle-plus-outline" type="warning" style="margin-top: 15px" @click="addRow()"
+          <common-button
+            size="mini"
+            icon="el-icon-circle-plus-outline"
+            type="warning"
+            style="margin-top: 15px"
+            @click="addRow()"
             >添加</common-button
           >
         </div>
@@ -134,25 +139,25 @@ const defaultForm = {
 const props = defineProps({
   boundAllClassifyIds: {
     type: Array,
-    default: () => [],
-  },
+    default: () => []
+  }
 })
 const disabledClassifyIds = ref([])
 const specIndexEnum = {
   1: { L: '1', K: '1', V: 1 },
   2: { L: '2', K: '2', V: 2 },
   3: { L: '3', K: '3', V: 3 },
-  4: { L: '4', K: '4', V: 4 },
+  4: { L: '4', K: '4', V: 4 }
 }
 
 const { crud, form, CRUD } = regForm(defaultForm, formRef)
 const rules = {
   name: [
     { required: true, message: '请填写代表部件类型名称', trigger: 'blur' },
-    { min: 1, max: 30, message: '长度在 1 到 30 个字符', trigger: 'blur' },
+    { min: 1, max: 30, message: '长度在 1 到 30 个字符', trigger: 'blur' }
   ],
   boolSectionSteel: [{ required: true, message: '请选择是否型材', trigger: 'blur' }],
-  sort: [{ required: true, message: '请填写排序值', trigger: 'blur', type: 'number' }],
+  sort: [{ required: true, message: '请填写排序值', trigger: 'blur', type: 'number' }]
 }
 
 watchEffect([() => form.classifyIds, () => form.boolSectionSteel], ([cls, bol]) => {
@@ -165,22 +170,22 @@ watchEffect([() => form.classifyIds, () => form.boolSectionSteel], ([cls, bol]) 
 const { maxHeight } = useMaxHeight({
   wrapperBox: '.addForm',
   paginate: true,
-  extraHeight: 120,
+  extraHeight: 120
 })
 
 const tableRules = {
   specPrefix: [{ required: true, message: '请输入部件号规格前缀', trigger: 'blur' }],
-  specIndex: [{ required: true, message: '请选择索引', trigger: 'blur' }],
+  specIndex: [{ required: true, message: '请选择索引', trigger: 'blur' }]
   // boolSchedulingEnum: [{ required: true, message: '请选择是否有生成工序', trigger: 'change' }]
 }
 
 const { tableValidate, wrongCellMask } = useTableValidate({ rules: tableRules }) // 表格校验
 
 function addRow() {
-    form.assembleSpecList.push({
-      add: true,
-      specIndex: 0,
-    })
+  form.assembleSpecList.push({
+    add: true,
+    specIndex: 0
+  })
 }
 function deleteRow(index) {
   form.assembleSpecList.splice(index, 1)
@@ -196,7 +201,7 @@ function checkName(item, index) {
       if (nameArr.value.findIndex((v) => v.specPrefix === item.specPrefix) > -1) {
         ElMessage({
           message: '规格前缀已存在，请重新填写',
-          type: 'error',
+          type: 'error'
         })
         item.specPrefix = undefined
         val.specPrefix = undefined
@@ -220,13 +225,13 @@ function checkName(item, index) {
       if (nameArr.value.findIndex((v) => v.specPrefix === item.specPrefix) > -1) {
         ElMessage({
           message: '规格前缀已存在，请重新填写',
-          type: 'error',
+          type: 'error'
         })
         form.assembleSpecList[index].specPrefix = undefined
       }
       nameArr.value.push({
         specPrefix: item.specPrefix,
-        index: index,
+        index: index
       })
     }
   }
