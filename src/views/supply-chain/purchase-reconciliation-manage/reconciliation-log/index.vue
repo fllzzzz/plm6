@@ -15,7 +15,56 @@
       :summary-method="getSummaries"
     >
       <!-- 基础信息 -->
-      <material-base-info-columns />
+      <el-table-column label="序号" type="index" align="center" width="55" fixed="left">
+        <template #default="{ row, $index }">
+          <!-- 是否甲供材料 -->
+          <table-cell-tag :show="!!row.boolPartyA" name="甲供" type="partyA" />
+          <span>{{ $index + 1 }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        v-if="columns.visible('classifySerialNumber')"
+        prop="classifySerialNumber"
+        key="classifySerialNumber"
+        label="物料编号"
+        align="center"
+        width="110px"
+        fixed="left"
+        show-overflow-tooltip
+      />
+      <el-table-column
+        v-if="columns.visible('classifyName')"
+        prop="classifyName"
+        key="classifyName"
+        label="物料种类"
+        align="center"
+        show-overflow-tooltip
+        fixed="left"
+      >
+        <template #default="{ row }">
+          <el-tooltip :content="row.classifyParentFullName" :disabled="!row.classifyParentFullName" :show-after="500" placement="top">
+            {{ row.classifyName }}
+          </el-tooltip>
+        </template>
+      </el-table-column>
+      <el-table-column
+        v-if="columns.visible('specification')"
+        key="specification"
+        prop="specification"
+        label="规格"
+        min-width="200"
+        align="center"
+      >
+        <template #default="{ row }">
+          <div class="spec-box">
+            <el-tooltip :content="row.specTip" placement="left">
+              <span class="spec-info ellipsis-text">
+                {{ row.formatSpec }}
+              </span>
+            </el-tooltip>
+          </div>
+        </template>
+      </el-table-column>
       <!-- 单位及其数量 -->
       <material-unit-quantity-columns />
       <el-table-column
@@ -62,7 +111,6 @@ import useCRUD from '@compos/use-crud'
 import pagination from '@crud/Pagination'
 import mHeader from './module/header'
 import materialUnitQuantityColumns from '@/components-system/wms/table-columns/material-unit-quantity-columns/index.vue'
-import materialBaseInfoColumns from '@/components-system/wms/table-columns/material-base-info-columns/index.vue'
 
 const optShow = {
   add: false,
@@ -79,7 +127,7 @@ const columnsDataFormat = ref([
 
 const { crud, columns } = useCRUD(
   {
-    title: '验收记录',
+    title: '供应商对账',
     sort: [],
     permission: { ...permission },
     crudApi: { ...crudApi },

@@ -53,6 +53,15 @@
         style="width:240px"
         @change="crud.toQuery"
       />
+      <el-input
+        v-model.trim="query.classifyName"
+        clearable
+        style="width: 200px"
+        size="small"
+        placeholder="物料种类搜索"
+        class="filter-item"
+        @keyup.enter="crud.toQuery"
+      />
       <rrOperation/>
       <div v-if="query.purchaseOrderId" v-loading="crud.loading">
         <el-tag class="tips" effect="plain" size="medium">采购合同编号：{{ purchaseOrder.serialNumber }}</el-tag>
@@ -91,6 +100,7 @@ import { PICKER_OPTIONS_SHORTCUTS, STEEL_ENUM } from '@/settings/config'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { setSpecInfoToList } from '@/utils/wms/spec'
 import { toThousand, getDP } from '@data-type/number'
+import { specFormat, specTip } from '@/utils/wms/spec-format'
 
 import { regHeader } from '@compos/use-crud'
 import crudOperation from '@crud/CRUD.operation'
@@ -106,6 +116,7 @@ const defaultQuery = {
   inboundTime: [], // [开始时间，结束时间]
   year: undefined,
   supplierId: undefined,
+  classifyName: undefined,
   purchaseOrderId: undefined
 }
 
@@ -174,14 +185,32 @@ CRUD.HOOK.handleRefresh = async (crud, { data }) => {
   totalAmount.value = toThousand(data.supplierReconciliationAmount) || 0
   projectList.value = data.project || []
   data.content = await setSpecInfoToList(data.content)
-  data.content.forEach(v => {
-    if (v.basicClass < STEEL_ENUM) {
+
+  data.content.forEach(row => {
+    if (row.basicClass < STEEL_ENUM) {
       // 此页面钢材默认显示吨，保留3位
-      v.accountingUnit = '吨'
-      v.accountingPrecision = 3
+      row.accountingUnit = '吨'
+      row.accountingPrecision = 3
     }
-    return v
+
+    // --------------------- 处理规格 -------------------------
+    /**
+   * 规格展示
+   * 钢板和钢卷：只展示厚度和材质（规格配置）
+   * 其他：只展示材质（规格配置）
+   */
+
+    // 规格格式转换
+    const fmtObj = {
+      basicClass: row.basicClass, // 基础分类
+      thickness: row.thickness, // 厚度
+      specification: row.specification // 规格
+    }
+    row.formatSpec = specFormat(fmtObj)
+    // 规格提示信息
+    row.specTip = specTip({ ...fmtObj, specificationLabels: row.specificationLabels })
   })
+
   data.content = await numFmtByBasicClass(data.content, { toNum: true })
   data.content.forEach(v => {
     v.unitPriceExcludingVAT = toThousand(v.unitPriceExcludingVAT, getDP(v.unitPriceExcludingVAT))
