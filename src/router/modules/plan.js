@@ -144,18 +144,18 @@ export default {
           component: '/plan/technical-manage/enclosure-list/index',
           meta: { title: '围护清单', icon: 'project', noCache: true }
         },
+        // {
+        //   name: 'PlanAuxiliaryMaterialList',
+        //   path: 'planAuxiliaryMaterialList',
+        //   hidden: false,
+        //   component: '/plan/technical-manage/auxiliary-material/index',
+        //   meta: { title: '配套件清单', icon: 'project', noCache: true }
+        // },
         {
-          name: 'PlanAuxiliaryMaterialList',
-          path: 'planAuxiliaryMaterialList',
+          name: 'PlanAuxiliaryMaterialSummary',
+          path: 'auxiliary-material-summary',
           hidden: false,
-          component: '/plan/technical-manage/auxiliary-material/index',
-          meta: { title: '配套件清单', icon: 'project', noCache: true }
-        },
-        {
-          name: 'PlanProductionList',
-          path: 'product-list',
-          hidden: false,
-          component: '/plan/technical-manage/production-list/index',
+          component: '/plan/technical-manage/auxiliary-material-summary/index',
           meta: { title: '配套件汇总', icon: 'project', noCache: true }
         },
         {

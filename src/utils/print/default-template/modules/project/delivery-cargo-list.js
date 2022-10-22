@@ -212,5 +212,5 @@ const deliveryCargoList = {
 }
 
 export default {
-  deliveryCargoList // 收款台账
+  deliveryCargoList // 自制收货记录
 }

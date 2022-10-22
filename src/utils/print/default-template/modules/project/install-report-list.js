@@ -213,5 +213,5 @@ const installReportList = {
 }
 
 export default {
-  installReportList // 收货报表
+  installReportList // 安装报表
 }

@@ -35,12 +35,18 @@ const project = {
   delivery_manage: '收货管理',
   install_manage: '安装管理'
 }
+
+const plan = {
+  technical_manage: '技术管理'
+}
+
 const moduleType = {
   contract: { L: '合同管理', V: contract },
   supply: { L: '供应链', V: supply },
   wms: { L: 'WMS', V: wms },
   mes: { L: 'MES', V: mes },
-  project: { L: '项目管理', V: project }
+  project: { L: '项目管理', V: project },
+  plan: { L: '计划管理', V: plan }
 }
 
 const mt = moduleType
@@ -145,7 +151,11 @@ const tableType = {
   deliveryCargoList: { L: '自制收货记录', M: 'delivery_manage', T: mt.project.L + ' / ' + project.delivery_manage },
   deliveryReportList: { L: '收货报表', M: 'delivery_manage', T: mt.project.L + ' / ' + project.delivery_manage },
   deliveryInstallList: { L: '收安报表', M: 'delivery_manage', T: mt.project.L + ' / ' + project.delivery_manage },
-  installReportList: { L: '安装报表', M: 'install_manage', T: mt.project.L + ' / ' + project.install_manage }
+  installReportList: { L: '安装报表', M: 'install_manage', T: mt.project.L + ' / ' + project.install_manage },
+
+  // 计划管理
+  auxiliaryMaterialSummary: { L: '配套件汇总', M: 'technical_manage', T: mt.plan.L + ' / ' + plan.technical_manage }
+
 }
 
 // 一个模板对应多个接口，尽量一一对应，在特殊情况下需要做特殊处理

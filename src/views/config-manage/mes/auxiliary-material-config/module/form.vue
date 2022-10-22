@@ -27,7 +27,7 @@
                 <el-input
                   v-model="item.serialNumber"
                   type="text"
-                  placeholder="大写字母"
+                  placeholder="编号"
                   style="width: 270px; margin-right: 5px"
                   @blur="checkName(item, index)"
                 />

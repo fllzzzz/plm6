@@ -12,8 +12,7 @@
         :data="crud.data"
         :empty-text="crud.emptyText"
         :max-height="maxHeight"
-        return-source-data
-        :showEmptySymbol="false"
+        :data-format="dataFormat"
         style="width: 100%"
       >
         <el-table-column prop="index" label="序号" align="center" width="60" type="index" />
@@ -23,7 +22,7 @@
           prop="name"
           :show-overflow-tooltip="true"
           label="名称"
-          min-width="100px"
+          align="center"
         />
         <el-table-column
           v-if="columns.visible('length')"
@@ -31,13 +30,8 @@
           prop="length"
           :show-overflow-tooltip="true"
           label="长度(mm)"
-          align="left"
-          min-width="85px"
-        >
-          <template v-slot="scope">
-            {{ scope.row.length ? scope.row.length.toFixed(DP.MES_ARTIFACT_L__MM) : '-' }}
-          </template>
-        </el-table-column>
+          align="center"
+        />
         <el-table-column
           v-if="columns.visible('material')"
           key="material"
@@ -45,33 +39,28 @@
           :show-overflow-tooltip="true"
           label="材质"
           align="center"
-          min-width="80px"
-        >
-          <template v-slot="scope">
-            {{ scope.row.material || '-' }}
-          </template>
-        </el-table-column>
+        />
         <el-table-column
           v-if="columns.visible('specification')"
           key="specification"
           prop="specification"
           :show-overflow-tooltip="true"
+          align="center"
           label="规格"
-          min-width="120"
         />
         <el-table-column
           v-if="columns.visible('quantity')"
           key="quantity"
           prop="quantity"
           label="数量"
-          align="left"
-          min-width="80px"
+          align="center"
         />
         <el-table-column
           v-if="columns.visible('remark')"
           key="remark"
           prop="remark"
           :show-overflow-tooltip="true"
+          align="center"
           label="备注"
         />
       </common-table>
@@ -82,9 +71,10 @@
 </template>
 
 <script setup>
-import crudApi from '@/api/plan/technical-manage/artifact'
+import crudApi from '@/api/plan/technical-manage/auxiliary-material-summary'
 import { ref, watch } from 'vue'
 
+import { DP } from '@/settings/config'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import pagination from '@crud/Pagination'
@@ -104,11 +94,11 @@ const optShow = {
 const tableRef = ref()
 const { crud, columns } = useCRUD(
   {
-    title: '成品清单',
+    title: '配套件汇总',
     sort: ['id.asc'],
     // permission: { ...permission },
     optShow: { ...optShow },
-    requiredQuery: ['areaId'],
+    requiredQuery: ['projectId'],
     crudApi: { ...crudApi },
     hasPagination: true
   },
@@ -116,22 +106,25 @@ const { crud, columns } = useCRUD(
 )
 
 const { maxHeight } = useMaxHeight({
-  wrapperBox: '.production-list',
+  wrapperBox: '.auxiliary-material-summary',
   paginate: true,
   extraHeight: 40
 })
 
 watch(
-  () => globalProjectId,
+  () => globalProjectId.value,
   (val) => {
     if (val) {
-      crud.query.projectId = globalProjectId
+      crud.query.projectId = globalProjectId.value
       crud.toQuery()
     }
   },
   { immediate: true, deep: true }
 )
 
+const dataFormat = ref([
+  ['length', ['to-fixed', DP.MES_ARTIFACT_L__MM]]
+])
 </script>
 
 <style lang="scss" scoped>

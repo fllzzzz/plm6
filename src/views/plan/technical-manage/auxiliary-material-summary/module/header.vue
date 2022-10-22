@@ -8,6 +8,7 @@
           :project-id="props.projectId"
           class="filter-item"
           :default="false"
+          clearable
           :productType="TechnologyTypeAllEnum.STRUCTURE.V"
           @getAreaInfo="getAreaInfo"
           @change="crud.toQuery"
@@ -25,7 +26,15 @@
           @change="crud.toQuery"
         />
       </template>
-
+      <template #viewLeft>
+        <print-table
+          api-key="auxiliaryMaterialSummary"
+          :params="{ ...query }"
+          size="mini"
+          type="warning"
+          class="filter-item"
+        />
+      </template>
     </crudOperation>
   </div>
 </template>
