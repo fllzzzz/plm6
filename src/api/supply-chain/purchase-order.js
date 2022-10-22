@@ -15,7 +15,7 @@ export function getPurchasingPurchaseOrderBrief(params) {
 }
 
 /**
- * 全部采购订单（含已完成的）
+ * 全部采购合同（含已完成的）
  * @param {*} params
  * @returns
  */

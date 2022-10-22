@@ -1,4 +1,4 @@
-<!-- 采购订单:下拉选择框 -->
+<!-- 采购合同:下拉选择框 -->
 <template>
   <span class="purchase-order-select-container">
     <common-select
@@ -42,13 +42,13 @@
 </template>
 
 <script setup>
-import { defineProps, defineEmits, ref, watch, computed } from 'vue'
+import { defineProps, defineEmits, ref, watch, computed, nextTick } from 'vue'
 import { rawMatClsEnum } from '@/utils/enum/modules/classification'
 import { isNotBlank, isBlank, judgeSameValue, deepClone } from '@data-type/index'
 
 import usePurchaseOrder from '@compos/store/use-purchase-order'
 
-const emit = defineEmits(['change', 'info-change', 'update:modelValue', 'update:info'])
+const emit = defineEmits(['change', 'info-change', 'update:modelValue'])
 
 const props = defineProps({
   modelValue: {
@@ -101,7 +101,15 @@ const props = defineProps({
   },
   placeholder: {
     type: String,
-    default: '选择采购订单'
+    default: '选择采购合同'
+  },
+  supplierId: { // 有值时只保留当前供应商的采购合同
+    type: [Number, String],
+    default: ''
+  },
+  year: { // 有值时只保留当前年份的采购合同
+    type: String,
+    default: ''
   }
 })
 
@@ -114,9 +122,8 @@ const DS = computed(() => {
 })
 
 const selectValue = ref()
-const purchaseOrderKV = ref({})
 
-const { loaded, purchaseOrders } = usePurchaseOrder(loadedCallBack, props.reload)
+const { loaded, purchaseOrders, purchaseOrderKV } = usePurchaseOrder(loadedCallBack, props.reload)
 
 const options = computed(() => {
   let list = deepClone(purchaseOrders.value)
@@ -127,6 +134,14 @@ const options = computed(() => {
       return v
     })
   }
+  // 只保留当前供应商
+  if (props.supplierId) {
+    list = list.filter(v => v.supplier?.id === props.supplierId)
+  }
+  // 只保留当前年份
+  if (props.year) {
+    list = list.filter(v => v.createYear === props.year)
+  }
   return list
 })
 
@@ -134,10 +149,16 @@ watch(
   () => props.modelValue,
   (value) => {
     selectValue.value = value
-    setDefault()
   },
   { immediate: true }
 )
+
+// watch(
+//   [() => props.basicClass, () => props.supplierId, () => props.year],
+//   () => {
+//     setDefault()
+//   }
+// )
 
 function handleChange(val) {
   let data = val
@@ -157,17 +178,10 @@ function handleChange(val) {
 function emitInfo(val, oldVal) {
   const res = val ? purchaseOrderKV.value[val] : null
   const oldRes = oldVal ? purchaseOrderKV.value[oldVal] : null
-  emit('update:info', res)
   emit('info-change', res, oldRes)
 }
 
 function loadedCallBack() {
-  purchaseOrderKV.value = {}
-  if (isNotBlank(options.value)) {
-    options.value.forEach((v) => {
-      purchaseOrderKV.value[v.id] = v
-    })
-  }
   if (isNotBlank(selectValue.value)) {
     emitInfo(selectValue.value)
   } else {
@@ -180,23 +194,25 @@ function loadedCallBack() {
  * 有默认值的情况，并且value为空，则给value赋值
  */
 function setDefault() {
-  if (isBlank(options.value) || selectValue.value) {
-    return
-  }
-  if (props.onlyOneDefault && options.value.length === 1) {
-    selectValue.value = options.value[0].id
-    handleChange(selectValue.value)
-    return
-  }
-  if (props.default) {
-    selectValue.value = options.value[0].id
-    handleChange(selectValue.value)
-    return
-  }
-  // 未赋予默认值
-  if (isBlank(selectValue.value) && isNotBlank(props.info)) {
-    emitInfo()
-  }
+  nextTick(() => {
+    if (isBlank(options.value) || selectValue.value) {
+      return
+    }
+    if (props.onlyOneDefault && options.value.length === 1) {
+      selectValue.value = options.value[0].id
+      handleChange(selectValue.value)
+      return
+    }
+    if (props.default) {
+      selectValue.value = options.value[0].id
+      handleChange(selectValue.value)
+      return
+    }
+    // 未赋予默认值
+    if (isBlank(selectValue.value) && isNotBlank(props.info)) {
+      emitInfo()
+    }
+  })
 }
 </script>
 

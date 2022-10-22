@@ -29,6 +29,7 @@ import { get as getChangeReasonConfig } from '@/api/config/system-config/change-
 import { get as getSubcontractType } from '@/api/config/project-config/subcontract-config'
 import { get as getQualityProblemType } from '@/api/config/project-config/quality-problem-config'
 import { get as getVisaReason } from '@/api/config/project-config/visa-reason-config'
+import moment from 'moment'
 
 /**
  * TODO: 后期设计配置变更，增加接口加载状态：未加载，加载中，加载完成，加载失败
@@ -76,8 +77,8 @@ const state = {
   taxRateKV: {}, // 税率列表KV  key:基础分类，value：税率列表
   unclosedRequisitions: [], // 未关闭的申购单
   unclosedPurchaseOrder: [], // 采购中（未完成）的采购合同
-  purchaseOrders: [], // 采购订单列表
-  purchaseOrderKV: {}, // 采购订单id:value 格式
+  purchaseOrders: [], // 采购合同列表
+  purchaseOrderKV: {}, // 采购合同id:value 格式
   monomers: {}, // 单体
   changeReasonConfig: [],
   steelClassifyConf: [], // 钢材材料分类配置
@@ -435,13 +436,15 @@ const actions = {
     commit('SET_LOADED', { key: 'unclosedPurchaseOrder' })
     return content
   },
-  // 加载全部采购订单
+  // 加载全部采购合同
   async fetchPurchaseOrder({ commit }) {
     const { content = [] } = await getPurchaseOrder()
-    // content.forEach((v) => {
-    //   if (v.projects) v.projectIds = v.projects.map((v) => v.id)
-    // })
-    commit('SET_PURCHASE_ORDERS', content)
+    // 倒叙
+    commit('SET_PURCHASE_ORDERS', content.reverse().map(v => {
+      // 创建年份
+      v.createYear = moment(v.createTime).format('YYYY')
+      return v
+    }))
     commit('SET_LOADED', { key: 'purchaseOrders' })
     return content
   },
