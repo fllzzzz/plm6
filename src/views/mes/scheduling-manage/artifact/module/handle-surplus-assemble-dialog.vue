@@ -9,6 +9,7 @@
           :data="surplusList"
           :max-height="maxHeight"
           :stripe="false"
+          return-source-data
           style="width: 100%"
           :cell-class-name="wrongCellMask"
           highlight-current-row
@@ -40,6 +41,7 @@
           :max-height="maxHeight"
           :stripe="false"
           style="width: 100%"
+          return-source-data
           highlight-current-row
           @current-change="handleArtifactClickRow"
           @selection-change="handleArtifactSelectionChange"
@@ -51,7 +53,7 @@
           <el-table-column prop="length" :show-overflow-tooltip="true" label="长度（mm）" min-width="90" align="center" />
           <el-table-column prop="netWeight" :show-overflow-tooltip="true" label="单净重（kg）" min-width="90" align="center" />
           <el-table-column :show-overflow-tooltip="true" label="可匹配数量" width="90" align="center">
-            <template #default="{ row: { sourceRow: row } }">
+            <template #default="{ row }">
               <el-tooltip content="未排产数量" placement="top">
                 <span>{{ row.artifactCanHandleQ }}</span>
               </el-tooltip>
@@ -64,7 +66,7 @@
             </template>
           </el-table-column>
           <el-table-column prop="quantity" :show-overflow-tooltip="true" label="匹配数量" width="100" align="center">
-            <template #default="{ row: { sourceRow: row } }">
+            <template #default="{ row }">
               <el-input-number
                 v-if="row.artifactCanHandleQ"
                 v-model="row.editQuantity"
@@ -87,6 +89,7 @@
           :data="schedulingList"
           :max-height="maxHeight"
           :stripe="false"
+          return-source-data
           style="width: 100%"
           @select="handleSchedulingSelectionChange"
           @select-all="handleSchedulingSelectionChange"
@@ -95,7 +98,7 @@
           <el-table-column prop="groups.name" :show-overflow-tooltip="true" label="生产组" min-width="100" align="center" />
           <el-table-column prop="quantity" :show-overflow-tooltip="true" label="可匹配数量" width="90" align="center" />
           <el-table-column prop="editQuantity" :show-overflow-tooltip="true" label="匹配数量" width="100" align="center">
-            <template #default="{ row: { sourceRow: row } }">
+            <template #default="{ row }">
               <el-input-number
                 v-model="row.editQuantity"
                 :step="1"
@@ -117,6 +120,7 @@
 <script setup>
 import { defineEmits, defineProps, ref, watch, defineExpose } from 'vue'
 
+import { isNotBlank, isBlank, deepClone } from '@data-type/index'
 import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'
 import useTableValidate from '@compos/form/use-table-validate'
@@ -195,22 +199,32 @@ function calcAssembleHandleQuantity(row) {
 
 function handleAssembleRowClick(val) {
   curAssemble.value = val
-  artifactList.value = val?.artifactList.map((v) => {
-    const findObj = val?.selectArtifact.find(o => o.id === v.id)
-    if (val?.selectArtifact && findObj) {
-      v.editQuantity = findObj.editQuantity
-      artifactTableRef.value?.toggleRowSelection(v)
-    } else {
-      v.editQuantity = 0
-    }
-    v.schedulingCanHandleQ = v.artifactSchedulingList.reduce((pre, cur) => {
-      return pre + cur.quantity
-    }, 0)
-    v.artifactCanHandleQ = v.quantity - v.schedulingCanHandleQ
-    v.selectScheduling = []
-    rowArtifactWatch(v)
-    return v
-  }) || []
+  artifactTableRef.value?.setCurrentRow()
+  schedulingList.value = []
+  console.log(val, 'handleAssembleRowClick')
+  const _selectArtifact = (val?.selectArtifact?.length && deepClone(val.selectArtifact)) || []
+  artifactList.value =
+    val?.artifactList.map((v) => {
+      const findObj = _selectArtifact.find((o) => o.id === v.id)
+      console.log(_selectArtifact, v, findObj)
+      if (isNotBlank(findObj)) {
+        v.editQuantity = findObj.editQuantity
+        v.allHandledQ = findObj.allHandledQ
+        v.artifactCanHandleQ = findObj.artifactCanHandleQ
+        v.schedulingCanHandleQ = findObj.schedulingCanHandleQ
+        v.selectScheduling = findObj.selectScheduling
+        artifactTableRef.value?.toggleRowSelection(v)
+      } else {
+        v.editQuantity = 0
+        v.selectScheduling = []
+        v.schedulingCanHandleQ = v.artifactSchedulingList.reduce((pre, cur) => {
+          return pre + cur.quantity
+        }, 0)
+        v.artifactCanHandleQ = v.quantity - v.schedulingCanHandleQ
+      }
+      rowArtifactWatch(v)
+      return v
+    }) || []
 }
 
 function rowArtifactWatch(row) {
@@ -224,16 +238,18 @@ function rowArtifactWatch(row) {
 }
 
 function handleArtifactClickRow(val) {
+  if (isBlank(val)) return
   curArtifact.value = val
+  console.log(val, 'handleArtifactClickRow')
+  const _selectScheduling = (val?.selectScheduling?.length && deepClone(val.selectScheduling)) || []
   schedulingList.value = val.artifactSchedulingList.map((v) => {
-    const findObj = val?.selectScheduling.find(o => o.id === v.id)
-    if (val?.selectScheduling && findObj) {
+    const findObj = _selectScheduling.find((o) => o.id === v.id)
+    if (isNotBlank(findObj)) {
       v.editQuantity = findObj.editQuantity
-      schedulingTableRef.value?.toggleRowSelection(v)
+      schedulingTableRef.value?.toggleRowSelection(v, true)
     } else {
       v.editQuantity = 0
     }
-    v.editQuantity = 0
     rowSchedulingWatch(v)
     return v
   })
@@ -256,6 +272,7 @@ function calcArtifactHandledQuantity(row) {
 }
 
 function handleArtifactSelectionChange(selections) {
+  console.log(selections, 'handleArtifactSelectionChange')
   curAssemble.value.selectArtifact = selections
 }
 

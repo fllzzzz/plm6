@@ -7,7 +7,19 @@ import request from '@/utils/request'
 export function get(params) {
   return request({
     module: 'mes',
-    url: 'task/order/page',
+    url: 'task/order/artifact/page',
+    method: 'get',
+    params
+  })
+}
+
+/**
+ * @description: 获取生产任务单
+ */
+export function productTask(params) {
+  return request({
+    module: 'mes',
+    url: 'task/order/product/task',
     method: 'get',
     params
   })

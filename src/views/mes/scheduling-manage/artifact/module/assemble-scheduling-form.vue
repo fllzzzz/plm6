@@ -108,9 +108,9 @@ import { getAssemble } from '@/api/mes/scheduling-manage/artifact'
 import { saveTask } from '@/api/mes/scheduling-manage/common'
 import { defineProps, defineEmits, ref, inject, reactive, computed } from 'vue'
 import moment from 'moment'
-import { ElNotification, ElMessage } from 'element-plus'
+import { ElNotification } from 'element-plus'
 
-import { artifactProductLineEnum } from '@enum-ms/mes'
+import { artifactProductLineEnum, mesBuildingTypeSettingAssembleTypeEnum } from '@enum-ms/mes'
 import { componentTypeEnum } from '@enum-ms/mes'
 import { isBlank, deepClone } from '@/utils/data-type'
 import { obj2arr } from '@/utils/convert/type'
@@ -227,18 +227,37 @@ async function fetch() {
       if (v?.groupsId && tagObj.value[v.groupsId]) {
         showTagGroupIds.value.push(v.groupsId)
         tagObj.value[v.groupsId].assembleList = []
+        tagObj.value[v.groupsId].unshowList = []
         for (let o = 0; o < v.assembleList.length; o++) {
           const _o = v.assembleList[o]
           if (o !== 0) {
             _o.groupsId = '同上'
             _o.askCompleteTime = '同上'
           }
-          tagObj.value[v.groupsId].assembleList.push({
+          const _obj = {
             ..._o,
             boolStructuralEnum: false,
             attributeType: '部件',
-            needSchedulingQuantity: _o.quantity
-          })
+            needSchedulingQuantity: _o.quantity,
+            boolTypesettinglEnum: false // 是否是母件
+          }
+          if (
+            (props.productionLineTypeEnum === artifactProductLineEnum.TRADITION.V && !v.boolProcess) ||
+            (props.productionLineTypeEnum === artifactProductLineEnum.INTELLECT.V && v.boolSectionSteel)
+          ) {
+            tagObj.value[v.groupsId].unshowList.push({
+              boolTypesettinglEnum: v.boolTypesettinglEnum,
+              boolSectionSteel: v.boolSectionSteel,
+              boolProcess: v.boolProcess,
+              productId: o.productId,
+              projectId: o.projectId,
+              quantity: o.quantity,
+              boolStructuralEnum: v.boolStructuralEnum
+            })
+          } else {
+            tagObj.value[v.groupsId].assembleList.push(_obj)
+          }
+
           if (isBlank(classIdGroupsObj[_o.assembleConfigId])) {
             classIdGroupsObj[_o.assembleConfigId] = await manualFetchGroupsTree({
               productType,
@@ -252,11 +271,13 @@ async function fetch() {
     // 处理母件信息
     if (assembleTypesetting?.length) {
       const _list = []
+      const _unshowList = []
       for (let x = 0; x < assembleTypesetting.length; x++) {
         const v = assembleTypesetting[x]
         v.productId = v.id
         v.attributeType = '套料'
         v.boolStructuralEnum = true
+        v.boolTypesettinglEnum = true
         v.needSchedulingQuantity = 1
         if (x !== 0) {
           v.groupsId = '同上'
@@ -269,13 +290,30 @@ async function fetch() {
             _factoryIds: factoryIds.value
           })
         }
-        _list.push(v)
+        // _list.push(v)
+        if (
+          (props.productionLineTypeEnum === artifactProductLineEnum.INTELLECT.V && v.typesettingAssembleTypeEnum === mesBuildingTypeSettingAssembleTypeEnum.FINISHED.V) ||
+          (props.productionLineTypeEnum === artifactProductLineEnum.TRADITION.V && !v.boolProcess)
+        ) {
+          _unshowList.push({
+            boolStructuralEnum: v.boolStructuralEnum,
+            boolTypesettinglEnum: v.boolTypesettinglEnum,
+            typesettingAssembleTypeEnum: v.typesettingAssembleTypeEnum,
+            boolProcess: v.boolProcess,
+            productId: v.productId,
+            projectId: v.projectId,
+            quantity: v.quantity
+          })
+        } else {
+          _list.push(v)
+        }
       }
       const _obj = {
         label: '母件',
         mergeQuantity: 0,
         mergeWeight: 0,
         assembleList: _list,
+        unshowList: _unshowList,
         ids: [],
         groupsId: paGroupId
       }
@@ -363,8 +401,8 @@ async function toTaskIssue() {
     let flag = true
     for (const item in tagObj.value) {
       // 显示的组才需要验证
-      if (showTagGroupIds.value.includes(Number(item))) {
-        const _curList = tagObj.value[item]?.assembleList
+      const _curList = tagObj.value[item]?.assembleList
+      if (showTagGroupIds.value.includes(Number(item)) && _curList?.length) {
         const { validResult, dealList } = tableValidate(_curList)
         if (validResult) {
           const copyDealList = deepClone(dealList)
@@ -376,7 +414,11 @@ async function toTaskIssue() {
               groupsId: v.groupsId,
               productId: v.productId,
               projectId: v.projectId,
-              quantity: v.needSchedulingQuantity
+              quantity: v.needSchedulingQuantity,
+              boolTypesettinglEnum: v.boolTypesettinglEnum,
+              typesettingAssembleTypeEnum: v.typesettingAssembleTypeEnum,
+              boolSectionSteel: v.boolSectionSteel,
+              boolProcess: v.boolProcess
             }
           })
           _artifact = _artifact.concat(tagObj.value[item].ids)
@@ -388,6 +430,9 @@ async function toTaskIssue() {
         }
       } else {
         _artifact = _artifact.concat(tagObj.value[item].ids)
+      }
+      if (tagObj.value[item]?.unshowList && tagObj.value[item]?.unshowList?.length) {
+        _assemble = _assemble.concat(tagObj.value[item]?.unshowList)
       }
     }
     if (!flag) {

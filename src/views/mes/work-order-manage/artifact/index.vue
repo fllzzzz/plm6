@@ -13,23 +13,33 @@
       :max-height="maxHeight"
       style="width: 100%"
     >
-      <el-table-column label="序号" type="index" align="center" width="60" />
+      <el-table-column label="序号" type="index" align="center" width="70">
+        <template #default="{ row, $index }">
+          <table-cell-tag :show="row.boolPrinted" name="已打印" type="printed" />
+          <span>{{ $index + 1 }}</span>
+        </template>
+      </el-table-column>
       <el-table-column
-        v-if="columns.visible('createTime')"
+        v-if="columns.visible('scheduleTime')"
         :show-overflow-tooltip="true"
-        prop="createTime"
+        prop="scheduleTime"
         label="排产日期"
         width="110px"
         align="center"
       />
       <el-table-column
-        v-if="columns.visible('orderNumber')"
+        v-if="columns.visible('scheduleOrder')"
         :show-overflow-tooltip="true"
-        prop="orderNumber"
-        label="排产单号"
+        prop="scheduleOrder"
+        label="任务工单号"
         min-width="110px"
         align="center"
-      />
+      >
+        <template #default="{ row }">
+          <table-cell-tag :show="row.boolIntellect" name="智" />
+          <span>{{ row.scheduleOrder }}</span>
+        </template>
+      </el-table-column>
       <el-table-column
         v-if="columns.visible('userName')"
         :show-overflow-tooltip="true"
@@ -43,53 +53,52 @@
         :show-overflow-tooltip="true"
         prop="productType"
         label="类型"
-        width="80px"
+        width="100px"
         align="center"
       >
         <template #default="{ row }">
-          <el-tag :type="componentTypeEnum.V[row.productType].T" effect="plain">{{ componentTypeEnum.VL[row.productType] }}</el-tag>
+          <el-tag :type="row.productType & componentTypeEnum.ASSEMBLE.V ? '' : 'success'" effect="plain">
+            {{ componentTypeEnum.VL[row.productType] }}
+          </el-tag>
         </template>
       </el-table-column>
       <el-table-column
-        v-if="columns.visible('factory.name')"
+        v-if="columns.visible('workshopName')"
         :show-overflow-tooltip="true"
-        prop="factory.name"
+        prop="workshopName"
         label="车间"
         min-width="110px"
         align="center"
       />
       <el-table-column
-        v-if="columns.visible('productionLine.name')"
+        v-if="columns.visible('productionLineName')"
         :show-overflow-tooltip="true"
-        prop="productionLine.name"
+        prop="productionLineName"
         label="生产线"
         min-width="110px"
         align="center"
       />
       <el-table-column
-        v-if="columns.visible('quantity')"
+        v-if="columns.visible('taskQuantity')"
         :show-overflow-tooltip="true"
-        prop="quantity"
+        prop="taskQuantity"
         label="任务数（件）"
         min-width="110px"
         align="center"
       />
       <el-table-column
-        v-if="columns.visible('totalNetWeight')"
+        v-if="columns.visible('taskMete')"
         :show-overflow-tooltip="true"
-        prop="totalNetWeight"
+        prop="taskMete"
         label="任务量（kg）"
         min-width="110px"
         align="center"
       />
-      <el-table-column
-        v-if="columns.visible('status')"
-        :show-overflow-tooltip="true"
-        prop="status"
-        label="状态"
-        min-width="110px"
-        align="center"
-      />
+      <el-table-column label="操作" width="110px" align="center">
+        <template #default="{ row }">
+          <common-button type="primary" size="mini" @click="showDetail(row)">查看</common-button>
+        </template>
+      </el-table-column>
     </common-table>
     <!--分页组件-->
     <pagination />
@@ -100,7 +109,7 @@
 import crudApi from '@/api/mes/work-order-manage/artifact.js'
 import { ref } from 'vue'
 
-import { componentTypeEnum } from '@enum-ms/mes'
+import { componentTypeEnum, artifactProductLineEnum } from '@enum-ms/mes'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
@@ -129,19 +138,26 @@ const { crud, columns, CRUD } = useCRUD(
     sort: [],
     permission: { ...permission },
     optShow: { ...optShow },
-    crudApi: { ...crudApi },
-    invisibleColumns: []
+    crudApi: { ...crudApi }
   },
   tableRef
 )
 
-const dataFormat = ref([['createTime', ['parse-time', '{y}-{m}-{d}']]])
+const dataFormat = ref([['scheduleTime', ['parse-time', '{y}-{m}-{d}']]])
 
 const { maxHeight } = useMaxHeight({ paginate: true })
 
 CRUD.HOOK.handleRefresh = (crud, res) => {
   res.data.content = res.data.content.map((v) => {
+    v.boolPrinted = Boolean(v.printQuantity)
+    v.boolIntellect = v.productionLineTypeEnum === artifactProductLineEnum.INTELLECT.V
     return v
   })
+}
+
+const itemInfo = ref()
+
+function showDetail(row) {
+  itemInfo.value = Object.assign({}, row)
 }
 </script>

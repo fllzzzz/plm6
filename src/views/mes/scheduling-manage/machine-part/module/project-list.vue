@@ -13,12 +13,15 @@
       @change="fetchTime"
     />
     <common-select
+      v-loading="timeLoading"
       v-model="date"
       :options="timeList"
+      :loading="timeLoading"
+      loading-text="加载中"
       :clearable="false"
       style="width: 48%"
       class="filter-item"
-      placeholder="选择日期"
+      :placeholder="timeLoading ? '加载中' : '选择日期'"
       :dataStructure="{ key: 'dateTime', label: 'date', value: 'dateTime' }"
       @change="fetchProject"
     />
@@ -57,6 +60,7 @@ defineProps({
 })
 
 const timeList = ref([])
+const timeLoading = ref(false)
 const projectTableRef = ref()
 const date = ref()
 const month = ref(moment().valueOf().toString())
@@ -71,6 +75,7 @@ async function fetchTime() {
     timeList.value = []
     tableData.value = []
     date.value = undefined
+    timeLoading.value = true
     const { content } = await getDate({
       dateTime: month.value
     })
@@ -87,6 +92,8 @@ async function fetchTime() {
     }
   } catch (error) {
     console.log('获取排程信息时间错误', error)
+  } finally {
+    timeLoading.value = false
   }
 }
 

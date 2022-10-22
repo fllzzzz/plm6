@@ -53,6 +53,7 @@ export const showProjectSearch = [
   { component: '/mes/scheduling-manage/scheduling/enclosure/truss-floor-plate/index', type: pt.STEEL.V, required: true },
   { component: '/mes/scheduling-manage/scheduling/enclosure/sandwich-board/index', type: pt.STEEL.V, required: true },
   { component: '/mes/scheduling-manage/scheduling/enclosure/folding-piece/index', type: pt.STEEL.V, required: true },
+  { component: '/mes/work-order-manage/artifact/index', type: pt.STEEL.V, required: false },
   { component: '/mes/scheduling-manage/task/artifact/index', type: pt.STEEL.V, required: false },
   { component: '/mes/scheduling-manage/task/machine-part/index', type: pt.STEEL.V, required: false },
   { component: '/mes/scheduling-manage/task/enclosure/index', type: pt.STEEL.V, required: false },
