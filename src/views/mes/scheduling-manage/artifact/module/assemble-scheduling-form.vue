@@ -25,7 +25,7 @@
       <common-table
         v-loading="tableLoading"
         :data="tableData"
-        :max-height="maxHeight"
+        :max-height="otherData.length ? maxHeight / 2 : maxHeight"
         :cell-class-name="wrongCellMask"
         :stripe="false"
         style="width: 100%"
@@ -88,6 +88,28 @@
             />
           </template>
         </el-table-column>
+      </common-table>
+      <common-table
+        v-if="otherData.length"
+        v-loading="tableLoading"
+        :data="otherData"
+        :max-height="maxHeight / 2"
+        :cell-class-name="wrongCellMask"
+        :stripe="false"
+        style="width: 100%; margin-top: 15px"
+      >
+        <el-table-column label="序号" type="index" align="center" width="60" />
+        <el-table-column prop="attributeType" :show-overflow-tooltip="true" label="属性" width="90" align="center">
+          <template #default="{ row }">
+            <el-tag :type="row.attributeType === '部件' ? 'warning' : 'success'">{{ row.attributeType }}</el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column prop="assembleConfigName" :show-overflow-tooltip="true" label="部件类型" min-width="100" align="center" />
+        <el-table-column prop="serialNumber" :show-overflow-tooltip="true" label="编号" min-width="100" align="center" />
+        <el-table-column prop="specification" :show-overflow-tooltip="true" label="规格" min-width="120" align="center" />
+        <el-table-column prop="length" :show-overflow-tooltip="true" label="长度（mm）" min-width="90" align="center" />
+        <el-table-column prop="netWeight" :show-overflow-tooltip="true" label="单净重（kg）" min-width="90" align="center" />
+        <el-table-column prop="quantity" :show-overflow-tooltip="true" label="数量" min-width="90" align="center" />
       </common-table>
       <handle-surplus-assemble-dialog
         ref="handleSurplusRef"
@@ -167,6 +189,7 @@ const surplusAssembleList = ref([])
 const surplusAssembleVisible = ref(false)
 
 const tableData = computed(() => tagObj.value[curGroupsId.value]?.assembleList || [])
+const otherData = computed(() => tagObj.value[curGroupsId.value]?.otherList || [])
 const showTagList = computed(() => {
   const _arr = []
   for (let i = 0; i < tagList.value.length; i++) {
@@ -228,6 +251,7 @@ async function fetch() {
         showTagGroupIds.value.push(v.groupsId)
         tagObj.value[v.groupsId].assembleList = []
         tagObj.value[v.groupsId].unshowList = []
+        tagObj.value[v.groupsId].otherList = []
         for (let o = 0; o < v.assembleList.length; o++) {
           const _o = v.assembleList[o]
           _o.boolStructuralEnum = false
@@ -248,6 +272,7 @@ async function fetch() {
               quantity: _o.quantity,
               boolStructuralEnum: _o.boolStructuralEnum
             })
+            tagObj.value[v.groupsId].otherList.push({ ..._o })
           } else {
             tagObj.value[v.groupsId].assembleList.push({ ..._o })
           }
@@ -266,6 +291,7 @@ async function fetch() {
     if (assembleTypesetting?.length) {
       const _list = []
       const _unshowList = []
+      const _otherList = []
       for (let x = 0; x < assembleTypesetting.length; x++) {
         const v = assembleTypesetting[x]
         v.productId = v.id
@@ -299,6 +325,7 @@ async function fetch() {
             projectId: v.projectId,
             quantity: v.quantity
           })
+          _otherList.push(v)
         } else {
           _list.push(v)
         }
@@ -309,6 +336,7 @@ async function fetch() {
         mergeWeight: 0,
         assembleList: _list,
         unshowList: _unshowList,
+        otherList: _otherList,
         ids: [],
         groupsId: paGroupId
       }
