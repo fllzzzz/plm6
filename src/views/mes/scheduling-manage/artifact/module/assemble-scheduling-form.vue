@@ -230,32 +230,26 @@ async function fetch() {
         tagObj.value[v.groupsId].unshowList = []
         for (let o = 0; o < v.assembleList.length; o++) {
           const _o = v.assembleList[o]
+          _o.boolStructuralEnum = false
+          _o.attributeType = '部件'
+          _o.needSchedulingQuantity = _o.quantity
+          _o.boolTypesettinglEnum = false
           if (o !== 0) {
             _o.groupsId = '同上'
             _o.askCompleteTime = '同上'
           }
-          const _obj = {
-            ..._o,
-            boolStructuralEnum: false,
-            attributeType: '部件',
-            needSchedulingQuantity: _o.quantity,
-            boolTypesettinglEnum: false // 是否是母件
-          }
-          if (
-            (props.productionLineTypeEnum === artifactProductLineEnum.TRADITION.V && !v.boolProcess) ||
-            (props.productionLineTypeEnum === artifactProductLineEnum.INTELLECT.V && v.boolSectionSteel)
-          ) {
+          if (!_o.boolProcess || (props.productionLineTypeEnum === artifactProductLineEnum.INTELLECT.V && _o.boolSectionSteel)) {
             tagObj.value[v.groupsId].unshowList.push({
-              boolTypesettinglEnum: v.boolTypesettinglEnum,
-              boolSectionSteel: v.boolSectionSteel,
-              boolProcess: v.boolProcess,
-              productId: o.productId,
-              projectId: o.projectId,
-              quantity: o.quantity,
-              boolStructuralEnum: v.boolStructuralEnum
+              boolTypesettinglEnum: _o.boolTypesettinglEnum,
+              boolSectionSteel: _o.boolSectionSteel,
+              boolProcess: _o.boolProcess,
+              productId: _o.productId,
+              projectId: _o.projectId,
+              quantity: _o.quantity,
+              boolStructuralEnum: _o.boolStructuralEnum
             })
           } else {
-            tagObj.value[v.groupsId].assembleList.push(_obj)
+            tagObj.value[v.groupsId].assembleList.push({ ..._o })
           }
 
           if (isBlank(classIdGroupsObj[_o.assembleConfigId])) {
@@ -292,7 +286,8 @@ async function fetch() {
         }
         // _list.push(v)
         if (
-          (props.productionLineTypeEnum === artifactProductLineEnum.INTELLECT.V && v.typesettingAssembleTypeEnum === mesBuildingTypeSettingAssembleTypeEnum.FINISHED.V) ||
+          (props.productionLineTypeEnum === artifactProductLineEnum.INTELLECT.V &&
+            v.typesettingAssembleTypeEnum === mesBuildingTypeSettingAssembleTypeEnum.FINISHED.V) ||
           (props.productionLineTypeEnum === artifactProductLineEnum.TRADITION.V && !v.boolProcess)
         ) {
           _unshowList.push({
