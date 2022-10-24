@@ -1,5 +1,8 @@
 <template>
   <common-dialog ref="dialogRef" title="套料设定" v-model:visible="dialogVisible" direction="rtl" :before-close="handleClose" width="400px">
+    <template #titleLeft>
+      <el-tag>单位：mm</el-tag>
+    </template>
     <template #titleRight>
       <common-button v-loading.fullscreen.lock="fullscreenLoading" type="success" size="mini" @click="submitForm(formRef)">
         开始套料
@@ -62,7 +65,7 @@ const emit = defineEmits(['update:visible'])
 const { visible: dialogVisible, handleClose } = useVisible({ emit, props, field: 'visible' })
 
 const form = reactive({
-  kerfLength: 2, // 预留割缝
+  kerfLength: 20, // 预留割缝
   length: 12000, // 母材长度
   typesettingTypeEnum: undefined // 套料方式
 })
