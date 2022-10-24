@@ -92,6 +92,7 @@
               <el-checkbox
                 v-model="row.groupCheck"
                 :indeterminate="row.isIndeterminateCheck"
+                :disabled="getDisabled(row)"
                 @change="handleCheckAllChange($event, row, $index)"
               />
               <div class="flex-ccc" style="flex: 1">
@@ -285,7 +286,6 @@ async function fetch() {
     let _mergeWeight = 0
     for (let i = 0; i < _list.length; i++) {
       const _curGroupId = _list[i].groups?.id
-      _list[i].mergeIndex = _curNeedMergeIndex
       // 处理首行
       if (i === 0) {
         _mergeRowspan++
@@ -320,6 +320,7 @@ async function fetch() {
         _list[_curNeedMergeIndex].mergeWeight = _mergeWeight.toFixed(2)
       }
       // 其他处理数据
+      _list[i].mergeIndex = _curNeedMergeIndex
       _list[i].needSchedulingQuantity = _list[i].schedulingQuantity
       _list[i].groupCheck = false
       _list[i].isIndeterminateCheck = false
@@ -373,6 +374,17 @@ function selectable(row, rowIndex) {
   return true
 }
 
+function getDisabled(row) {
+  if (selectionMode.value === selectionModeEnum.EDIT.V || listProductionLineTypeEnum.value === artifactProductLineEnum.INTELLECT.V) {
+    if (!selections.value?.length) {
+      return false
+    } else {
+      return !(row.groups?.id === selections.value[0]?.groups?.id)
+    }
+  }
+  return false
+}
+
 // --------------------------- 操作数据 start ------------------------------
 
 const itemInfo = ref({})
@@ -385,9 +397,9 @@ function selectionChangeHandler(val) {
       const _groupsId = Number(item)
       const compareLength = listObjIdsByGroup.value[item].length
       const _list = val.filter((v) => v.groups.id === _groupsId)
-      console.log(_groupsId, compareLength, _list.length, 'compareLength')
       if (_list.length) {
         const _index = _list[0].mergeIndex
+        console.log(_index, _list, listObjIdsByGroup.value[item], 'selectionChangeHandler_index')
         tableData.value[_index].isIndeterminateCheck = _list.length > 0 && _list.length < compareLength
         tableData.value[_index].groupCheck = _list.length > 0 && _list.length === compareLength
       }
