@@ -39,7 +39,7 @@
         <el-table-column label="单体" key="monomerName" prop="monomerName" align="center" />
         <el-table-column label="区域" key="areaName" prop="areaName" align="center" />
         <el-table-column label="编号" key="serialNumber" prop="serialNumber" align="center" />
-        <el-table-column label="规格" key="specification" prop="specification" align="center" />
+        <el-table-column label="规格" key="specification" prop="specification" align="center" min-width="110px"/>
         <el-table-column label="长度（mm）" key="length" prop="length" align="center" />
         <el-table-column label="单重（kg）" key="netWeight" prop="netWeight" align="center" />
         <el-table-column label="任务数" key="quantity" prop="quantity" align="center" />
@@ -206,7 +206,7 @@ async function processGet() {
       productionLineId: props.detailData.productionLineId
     })
     processList.value = data
-    processId.value = data[0].id
+    processId.value = data[0]?.id
     handleProcessChange()
   } catch (error) {
     console.log('获取工序', error)
@@ -220,6 +220,7 @@ async function fetch() {
     const data = await productTask({
       ...query
     })
+    console.log(data, 'data')
     tableData.value = data
   } catch (err) {
     console.log('获取生产任务单', err)
