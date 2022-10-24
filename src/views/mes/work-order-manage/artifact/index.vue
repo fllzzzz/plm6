@@ -102,6 +102,8 @@
     </common-table>
     <!--分页组件-->
     <pagination />
+    <!-- 查看 -->
+    <detail v-model:visible="drawerVisible" :detail-data="detailData" />
   </div>
 </template>
 
@@ -115,6 +117,7 @@ import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import pagination from '@crud/Pagination'
 import mHeader from './module/header'
+import detail from './module/detail.vue'
 
 // crud交由presenter持有
 const permission = {
@@ -156,8 +159,12 @@ CRUD.HOOK.handleRefresh = (crud, res) => {
 }
 
 const itemInfo = ref()
+const detailData = ref({})
+const drawerVisible = ref(false)
 
 function showDetail(row) {
+  drawerVisible.value = true
+  detailData.value = row
   itemInfo.value = Object.assign({}, row)
 }
 </script>
