@@ -413,10 +413,10 @@ async function toSaveHandleSurplus() {
 }
 
 async function toTaskIssue() {
-  if (props.productionLineTypeEnum === artifactProductLineEnum.INTELLECT.V && originAssembleSchedulingList.value.length > 0) {
-    ElMessage.warning('智能线下存在未套料的部件，请先进行套料！')
-    return
-  }
+  // if (props.productionLineTypeEnum === artifactProductLineEnum.INTELLECT.V && originAssembleSchedulingList.value.length > 0) {
+  //   ElMessage.warning('智能线下存在未套料的部件，请先进行套料！')
+  //   return
+  // }
   try {
     taskLoading.value = true
     saveTaskParams.value = {}
