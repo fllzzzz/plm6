@@ -61,7 +61,7 @@
               color="#00babd"
               :offset="15"
             />
-            <span>{{ item.serialNumber }}</span>
+            <span>{{ row.serialNumber }}</span>
           </div>
         </template>
       </el-table-column>
