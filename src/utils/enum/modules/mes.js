@@ -453,12 +453,12 @@ const nestingSettingTypeEnum = {
 }
 constantize(nestingSettingTypeEnum)
 
-// 套料成果
-const mesBuildingTypeSettingAssembleTypeEnum = {
-  WELDING: { L: '焊接型材', K: 'WELDING', V: 1 },
-  FINISHED: { L: '成品型材', K: 'FINISHED', V: 2 }
+// 工单管理/零件工单
+const mesMachinePartOrderTypeEnum = {
+  CUTTING_ORDER: { L: '切割工单', K: 'CUTTING_ORDER', V: 1 << 2 },
+  DRILL_ORDER: { L: '钻孔工单', K: 'DRILL_ORDER', V: 1 << 3 }
 }
-constantize(mesBuildingTypeSettingAssembleTypeEnum)
+constantize(mesMachinePartOrderTypeEnum)
 
 export {
   teamTypeEnum,
@@ -517,7 +517,7 @@ export {
   projectNestingStatusEnum,
   nestingFileTypeEnum,
   nestingSettingTypeEnum,
-  mesBuildingTypeSettingAssembleTypeEnum
+  mesMachinePartOrderTypeEnum
 }
 
 export default {
@@ -577,5 +577,5 @@ export default {
   projectNestingStatusEnum,
   nestingFileTypeEnum,
   nestingSettingTypeEnum,
-  mesBuildingTypeSettingAssembleTypeEnum
+  mesMachinePartOrderTypeEnum
 }
