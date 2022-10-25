@@ -79,7 +79,6 @@ async function submitForm(formRef) {
   try {
     const _data = []
     const _content = []
-    console.log(props.detailData, ' props.detailData')
     props.detailData.map((v) => {
       _data.push({
         id: v.id,

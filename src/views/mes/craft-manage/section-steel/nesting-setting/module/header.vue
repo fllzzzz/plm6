@@ -228,7 +228,7 @@ async function fetchSummary() {
     }
     const data = await getNestingSummary(_query)
     summaryList.value = data?.content || []
-    query.queryId = query.productionLineTypeEnum === artifactProductLineEnum.TRADITION.V ? data?.content[0].assembleClassId : data?.content[0].structureClassId
+    // query.queryId = query.productionLineTypeEnum === artifactProductLineEnum.TRADITION.V ? data?.content[0].assembleClassId : data?.content[0].structureClassId
     tabChange()
   } catch (er) {
     console.log(er, '获取汇总列表')

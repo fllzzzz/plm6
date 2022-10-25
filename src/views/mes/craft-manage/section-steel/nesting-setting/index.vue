@@ -39,7 +39,32 @@
         label="部件编号"
         min-width="120px"
         align="center"
-      />
+      >
+        <template #default="{ row }">
+          <div v-for="item in row.artifactTypesettingDTOS" :key="item">
+            <!-- 暂时写死，目前只有钢柱、长短梁、短梁 -->
+            <table-cell-tag
+              v-if="row.productionLineTypeEnum === artifactProductLineEnum.INTELLECT.V && item.classificationName === '钢柱'"
+              name="钢柱"
+              color="#fad400"
+              :offset="15"
+            />
+            <table-cell-tag
+              v-if="row.productionLineTypeEnum === artifactProductLineEnum.INTELLECT.V && item.classificationName === '长短梁'"
+              name="长短梁"
+              color="#40ed8d"
+              :offset="15"
+            />
+            <table-cell-tag
+              v-if="row.productionLineTypeEnum === artifactProductLineEnum.INTELLECT.V && item.classificationName === '短梁'"
+              name="短梁"
+              color="#00babd"
+              :offset="15"
+            />
+            <span>{{ item.serialNumber }}</span>
+          </div>
+        </template>
+      </el-table-column>
       <el-table-column
         v-if="columns.visible('quantity')"
         prop="quantity"
@@ -131,7 +156,7 @@
 <script setup>
 import crudApi from '@/api/mes/craft-manage/section-steel/nesting-setting'
 import { ref } from 'vue'
-
+import { artifactProductLineEnum } from '@enum-ms/mes'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 // import pagination from '@crud/Pagination'
