@@ -89,6 +89,7 @@
           </template>
         </el-table-column>
       </common-table>
+      <el-divider v-if="otherData.length"><span class="title">型材</span></el-divider>
       <common-table
         v-if="otherData.length"
         v-loading="tableLoading"
@@ -130,7 +131,7 @@ import { getAssemble } from '@/api/mes/scheduling-manage/artifact'
 import { saveTask } from '@/api/mes/scheduling-manage/common'
 import { defineProps, defineEmits, ref, inject, reactive, computed } from 'vue'
 import moment from 'moment'
-import { ElNotification } from 'element-plus'
+import { ElNotification, ElMessage } from 'element-plus'
 
 import { artifactProductLineEnum, mesBuildingTypeSettingAssembleTypeEnum } from '@enum-ms/mes'
 import { componentTypeEnum } from '@enum-ms/mes'
@@ -412,10 +413,10 @@ async function toSaveHandleSurplus() {
 }
 
 async function toTaskIssue() {
-  // if (props.productionLineTypeEnum === artifactProductLineEnum.INTELLECT.V && originAssembleSchedulingList.value.length > 0) {
-  //   ElMessage.warning('智能线下存在未套料的部件，请先进行套料！')
-  //   return
-  // }
+  if (props.productionLineTypeEnum === artifactProductLineEnum.INTELLECT.V && originAssembleSchedulingList.value.length > 0) {
+    ElMessage.warning('智能线下存在未套料的部件，请先进行套料！')
+    return
+  }
   try {
     taskLoading.value = true
     saveTaskParams.value = {}

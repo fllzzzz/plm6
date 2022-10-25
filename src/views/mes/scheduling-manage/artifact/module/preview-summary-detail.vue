@@ -82,6 +82,11 @@
         :stripe="false"
         :data-format="dataFormat"
         row-key="id"
+        :class="
+          selectionMode === selectionModeEnum.EDIT.V || listProductionLineTypeEnum === artifactProductLineEnum.INTELLECT.V
+            ? 'hidden-table-check-all'
+            : ''
+        "
         style="width: 100%"
         @selection-change="selectionChangeHandler"
       >
@@ -195,7 +200,10 @@ const selectionMode = ref(selectionModeEnum.SCHEDULING.V)
 
 const { visible: drawerVisible, handleClose } = useVisible({ emit, props, field: 'visible', showHook, closeHook })
 
-const { artifactTypeList, refreshArtifactType } = useGetArtifactTypeList({ getApi: getArtifactRecordType, initHook: artifactTypeInit }, true)
+const { artifactTypeList, refreshArtifactType } = useGetArtifactTypeList(
+  { getApi: getArtifactRecordType, initHook: artifactTypeInit },
+  true
+)
 
 const areaIdObj = inject('areaIdObj')
 const dataFormat = ref([['askCompleteTime', ['parse-time', '{y}-{m}-{d}']]])
@@ -481,3 +489,11 @@ function handleTaskIssueSuccess() {
   refreshArtifactType({ ...artifactTypeParams.value })
 }
 </script>
+
+<style lang="scss" scoped>
+.hidden-table-check-all {
+  ::v-deep(.el-table__header .el-table-column--selection .el-checkbox) {
+    display: none !important;
+  }
+}
+</style>
