@@ -31,7 +31,7 @@ export function productTask(params) {
 export function processInfo(params) {
   return request({
     module: 'mes',
-    url: 'task/order/process/user',
+    url: 'task/order/process/list',
     method: 'get',
     params
   })

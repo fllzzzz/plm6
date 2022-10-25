@@ -13,6 +13,7 @@
         type="other"
         :dataStructure="{ key: 'id', label: 'name', value: 'id' }"
         size="small"
+        showOptionAll
         class="filter-item"
         style="margin-bottom: 8px"
         @change="handleProcessChange"
@@ -202,11 +203,10 @@ watch(
 async function processGet() {
   try {
     const data = await processInfo({
-      productType: props.detailData.productType,
+      orderId: props.detailData.orderId,
       productionLineId: props.detailData.productionLineId
     })
     processList.value = data
-    processId.value = data[0]?.id
     handleProcessChange()
   } catch (error) {
     console.log('获取工序', error)
@@ -220,7 +220,6 @@ async function fetch() {
     const data = await productTask({
       ...query
     })
-    console.log(data, 'data')
     tableData.value = data
   } catch (err) {
     console.log('获取生产任务单', err)
