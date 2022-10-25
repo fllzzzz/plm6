@@ -53,7 +53,7 @@
       class="filter-item"
       :style="'width:calc(100% - 0px)'"
       :data="summaryList"
-      :itemKey="query.productionLineTypeEnum===artifactProductLineEnum.TRADITION.V? 'assembleClassId':'structureClassId'"
+      :itemKey="query.productionLineTypeEnum === artifactProductLineEnum.TRADITION.V ? 'assembleClassId' : 'structureClassId'"
       @change="tabChange"
     >
       <template #default="{ item }">
@@ -98,7 +98,7 @@
         type="success"
         size="mini"
         icon="el-icon-menu"
-        :disabled="crud.selections.length === 0"
+        :disabled="crud.selections.length === 0 || !query.queryId"
         @click="handleExtrusionNesting"
       >
         型材套排
@@ -168,6 +168,7 @@ watch(
   [() => query.projectId, () => query.monomerId, () => query.areaId],
   ([monomerId, areaId]) => {
     fetchOtherCondition()
+    fetchSummary()
   },
   { immediate: true }
 )
@@ -190,10 +191,10 @@ function handleProductionLineTypeChange(val) {
 
 function tabChange(val) {
   if (query.productionLineTypeEnum === artifactProductLineEnum.TRADITION.V) {
-    query.assembleClassId = query.queryId
+    query.assembleClassId = val
     query.structureClassId = undefined
   } else {
-    query.structureClassId = query.queryId
+    query.structureClassId = val
     query.assembleClassId = undefined
   }
   crud.toQuery()
@@ -228,7 +229,9 @@ async function fetchSummary() {
     }
     const data = await getNestingSummary(_query)
     summaryList.value = data?.content || []
-    // query.queryId = query.productionLineTypeEnum === artifactProductLineEnum.TRADITION.V ? data?.content[0].assembleClassId : data?.content[0].structureClassId
+    if (summaryList.value.length === 1) {
+      query.queryId = query.productionLineTypeEnum === artifactProductLineEnum.TRADITION.V ? data?.content[0].assembleClassId : data?.content[0].structureClassId
+    }
     tabChange()
   } catch (er) {
     console.log(er, '获取汇总列表')
