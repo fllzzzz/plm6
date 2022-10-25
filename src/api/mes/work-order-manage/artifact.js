@@ -25,5 +25,17 @@ export function productTask(params) {
   })
 }
 
+/**
+ * @description: 获取用户的工序列表
+*/
+export function processInfo(params) {
+  return request({
+    module: 'mes',
+    url: 'task/order/process/user',
+    method: 'get',
+    params
+  })
+}
+
 export default { get }
 
