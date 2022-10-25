@@ -454,6 +454,17 @@ export default {
           icon: 'project',
           noCache: true
         }
+      },
+      {
+        name: 'MesMachinePartOrder',
+        path: 'machinePart',
+        hidden: false,
+        component: '/mes/work-order-manage/machine-part/index',
+        meta: {
+          title: '零件工单',
+          icon: 'project',
+          noCache: true
+        }
       }
       // {
       //   name: 'MesSchedulingMachinePart',

@@ -460,6 +460,13 @@ const mesBuildingTypeSettingAssembleTypeEnum = {
 }
 constantize(mesBuildingTypeSettingAssembleTypeEnum)
 
+// 工单管理/零件工单
+const mesMachinePartOrderTypeEnum = {
+  CUTTING_ORDER: { L: '切割工单', K: 'CUTTING_ORDER', V: 1 << 2 },
+  DRILL_ORDER: { L: '钻孔工单', K: 'DRILL_ORDER', V: 1 << 3 }
+}
+constantize(mesMachinePartOrderTypeEnum)
+
 export {
   teamTypeEnum,
   teamAttributeEnum,
@@ -517,7 +524,8 @@ export {
   projectNestingStatusEnum,
   nestingFileTypeEnum,
   nestingSettingTypeEnum,
-  mesBuildingTypeSettingAssembleTypeEnum
+  mesBuildingTypeSettingAssembleTypeEnum,
+  mesMachinePartOrderTypeEnum
 }
 
 export default {
@@ -577,5 +585,6 @@ export default {
   projectNestingStatusEnum,
   nestingFileTypeEnum,
   nestingSettingTypeEnum,
-  mesBuildingTypeSettingAssembleTypeEnum
+  mesBuildingTypeSettingAssembleTypeEnum,
+  mesMachinePartOrderTypeEnum
 }

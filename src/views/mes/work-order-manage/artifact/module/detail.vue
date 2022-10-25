@@ -13,6 +13,7 @@
         type="other"
         :dataStructure="{ key: 'id', label: 'name', value: 'id' }"
         size="small"
+        showOptionAll
         class="filter-item"
         style="margin-bottom: 8px"
         @change="handleProcessChange"
@@ -84,9 +85,9 @@
         v-if="props.detailData.productType === componentTypeEnum.ASSEMBLE.V && type === typeEnum.MATERIAL_LIST.V"
       >
         <el-table-column label="套料编号" key="serialNumber" prop="serialNumber" align="center" min-width="130px" />
-        <el-table-column label="材料属性" key="typesettingAssembleType" prop="typesettingAssembleType" align="center">
+        <el-table-column label="材料属性" key="typesettingAssembleName" prop="typesettingAssembleName" align="center">
           <template v-slot="scope">
-            <span>{{ materialTypeEnum.VL[scope.row.typesettingAssembleType] }}</span>
+            <span>{{ scope.row.typesettingAssembleName }}</span>
           </template>
         </el-table-column>
         <el-table-column label="规格" key="specification" prop="specification" align="center" />
@@ -135,10 +136,7 @@
 <script setup>
 import { processInfo, productTask } from '@/api/mes/work-order-manage/artifact.js'
 import { defineProps, defineEmits, ref, computed, watch } from 'vue'
-import {
-  componentTypeEnum,
-  mesBuildingTypeSettingAssembleTypeEnum as materialTypeEnum
-} from '@enum-ms/mes'
+import { componentTypeEnum } from '@enum-ms/mes'
 import { constantize } from '@/utils/enum/base'
 import { parseTime } from '@/utils/date'
 import useMaxHeight from '@compos/use-max-height'
@@ -202,11 +200,10 @@ watch(
 async function processGet() {
   try {
     const data = await processInfo({
-      productType: props.detailData.productType,
+      orderId: props.detailData.orderId,
       productionLineId: props.detailData.productionLineId
     })
     processList.value = data
-    processId.value = data[0]?.id
     handleProcessChange()
   } catch (error) {
     console.log('获取工序', error)
@@ -220,7 +217,6 @@ async function fetch() {
     const data = await productTask({
       ...query
     })
-    console.log(data, 'data')
     tableData.value = data
   } catch (err) {
     console.log('获取生产任务单', err)

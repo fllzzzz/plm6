@@ -78,17 +78,20 @@ const rules = {
 async function submitForm(formRef) {
   try {
     const _data = []
+    const _content = []
     props.detailData.map((v) => {
       _data.push({
         id: v.id,
         quantity: v.quantity
       })
+      _content.push(v.productionLineTypeEnum)
     })
     const _list = {
       assembleSettingList: _data,
       projectId: props.projectId,
       length: form.length,
       kerfLength: form.kerfLength,
+      productionLineTypeEnum: _content[0],
       typesettingTypeEnum: form.typesettingTypeEnum
     }
     batchId.value = await extrusionNesting(_list)
