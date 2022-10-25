@@ -69,7 +69,13 @@
         :show-overflow-tooltip="true"
         label="关联构件"
         min-width="160px"
-      />
+      >
+        <template #default="{ row }">
+          <div v-for="item in row.artifactTypesettingDTOS" :key="item">
+            <span>{{ item.serialNumber }}</span>
+          </div>
+        </template>
+      </el-table-column>
       <el-table-column
         v-if="columns.visible('specification')"
         prop="specification"
@@ -167,8 +173,13 @@ const curEditMode = ref('nesting')
 
 CRUD.HOOK.handleRefresh = (crud, res) => {
   res.data.content = res.data.content.map((v) => {
-    v.artifactStr = v.artifactList?.join('，') || ''
     v.editQuantity = v.quantity
+    const artifactArr = []
+    v.artifactTypesettingDTOS.map((m) => {
+      artifactArr.push(m.serialNumber)
+      m.serialNumber = artifactArr?.join('，') || ''
+      return m
+    })
     return v
   })
 }

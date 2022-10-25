@@ -49,12 +49,12 @@
       @change="crud.toQuery"
     />
     <tag-tabs
-      v-model="query.assembleConfigId"
+      v-model="query.queryId"
       class="filter-item"
       :style="'width:calc(100% - 0px)'"
       :data="summaryList"
-      itemKey="assembleConfigId"
-      @change="crud.toQuery"
+      :itemKey="query.productionLineTypeEnum===artifactProductLineEnum.TRADITION.V? 'assembleClassId':'structureClassId'"
+      @change="tabChange"
     >
       <template #default="{ item }">
         <span>{{ item.name }}：</span>
@@ -145,9 +145,9 @@ import { deepClone } from '@/utils/data-type'
 const emits = defineEmits(['change-mode'])
 
 const { globalProjectId } = mapGetters('globalProjectId')
-const defaultQuery = { projectId: globalProjectId.value }
+const defaultQuery = { projectId: globalProjectId.value, queryId: undefined, structureClassId: undefined, assembleClassId: undefined }
 
-const { crud, CRUD, query } = regHeader(defaultQuery)
+const { crud, query } = regHeader(defaultQuery)
 
 const noNestingVisible = ref(false)
 const dialogVisible = ref(false)
@@ -172,6 +172,14 @@ watch(
   { immediate: true }
 )
 
+watch(
+  () => query.productionLineTypeEnum,
+  (val) => {
+    fetchSummary()
+  },
+  { immediate: true }
+)
+
 function handleProductionLineTypeChange(val) {
   if (!isTradition.value) {
     curMode.value = 'nesting'
@@ -180,6 +188,16 @@ function handleProductionLineTypeChange(val) {
   fetchOtherCondition()
 }
 
+function tabChange(val) {
+  if (query.productionLineTypeEnum === artifactProductLineEnum.TRADITION.V) {
+    query.assembleClassId = query.queryId
+    query.structureClassId = undefined
+  } else {
+    query.structureClassId = query.queryId
+    query.assembleClassId = undefined
+  }
+  crud.toQuery()
+}
 async function fetchOtherCondition() {
   if (!query.projectId) return
   try {
@@ -198,6 +216,9 @@ async function fetchOtherCondition() {
 }
 
 async function fetchSummary() {
+  query.structureClassId = undefined
+  query.assembleClassId = undefined
+  query.queryId = undefined
   if (!query.projectId) return
   try {
     summaryList.value = []
@@ -207,13 +228,11 @@ async function fetchSummary() {
     }
     const data = await getNestingSummary(_query)
     summaryList.value = data?.content || []
+    query.queryId = query.productionLineTypeEnum === artifactProductLineEnum.TRADITION.V ? data?.content[0].assembleClassId : data?.content[0].structureClassId
+    tabChange()
   } catch (er) {
     console.log(er, '获取汇总列表')
   }
-}
-
-CRUD.HOOK.beforeRefresh = () => {
-  fetchSummary()
 }
 
 function handleSpecPreFixChange(val) {
