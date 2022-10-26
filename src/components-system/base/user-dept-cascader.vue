@@ -96,6 +96,11 @@ const props = defineProps({
   extraOptionValue: {
     type: [Number, String, Array, Boolean],
     default: -1
+  },
+  // 是否过滤非钉钉用户
+  filterNotDdUser: {
+    type: Boolean,
+    default: false
   }
 })
 
@@ -166,10 +171,15 @@ function handleChange(val) {
 // 设置级联数据
 function setOptions(tree) {
   options.value = []
+  let list = deepClone(tree)
   try {
     if (tree) {
+      // 过滤非钉钉用户（订单审批使用）
+      if (props.filterNotDdUser) {
+        list = getDdUser(list)
+      }
       // 过滤空部门
-      options.value = filterBlankDept(deepClone(tree))
+      options.value = filterBlankDept(list)
       // 加入额外的选项
       if (props.showExtra) {
         options.value.unshift({ id: props.extraOptionValue, label: props.extraOptionLabel })
@@ -178,6 +188,19 @@ function setOptions(tree) {
   } catch (error) {
     console.log('获取人员部门树失败', error)
   }
+}
+
+// 获取钉钉用户
+function getDdUser(list = []) {
+  return list.filter(v => {
+    if (v.isUser) {
+      return !!v.ddUserId
+    } else if (v.children?.length) {
+      v.children = getDdUser(v.children)
+      return !!v.children.length
+    }
+    return false
+  })
 }
 
 // 过滤空部门

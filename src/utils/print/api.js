@@ -38,6 +38,8 @@ const scmSupplierPaymentLedger = supply.supplierPaymentLedger
 
 const purchaseLogisticsRecord = supply.logisticsRecord
 
+const scmRequisitionsDetail = supply.requisitionsDetail // 申购详情
+
 // mes
 const mesSchedulingDetail = mes.schedulingDetail
 
@@ -127,6 +129,8 @@ export default {
   scmSupplierPaymentLedger, // 供应商付款台账
 
   purchaseLogisticsRecord, // 物流记录
+
+  scmRequisitionsDetail, // 申购详情
 
   // mes
   mesSchedulingDetail, // 工单详情
