@@ -1,19 +1,19 @@
 <template>
   <div class="header-container">
-     <el-date-picker
-        v-model="query.date"
-        type="daterange"
-        range-separator=":"
-        size="small"
-        value-format="x"
-        :shortcuts="PICKER_OPTIONS_SHORTCUTS"
-        unlink-panels
-        start-placeholder="开始日期"
-        end-placeholder="结束日期"
-        style="width: 240px; margin-right: 10px;"
-        class="filter-item date-item"
-        @change="handleDateChange"
-      />
+    <el-date-picker
+      v-model="query.date"
+      type="daterange"
+      range-separator=":"
+      size="small"
+      value-format="x"
+      :shortcuts="PICKER_OPTIONS_SHORTCUTS"
+      unlink-panels
+      start-placeholder="开始日期"
+      end-placeholder="结束日期"
+      style="width: 240px; margin-right: 10px"
+      class="filter-item date-item"
+      @change="handleDateChange"
+    />
     <project-radio-button size="small" v-model="query.projectId" :type="'all'" class="filter-item" @change="crud.toQuery" />
   </div>
 </template>
@@ -45,5 +45,4 @@ function handleDateChange() {
 </script>
 
 <style>
-
 </style>

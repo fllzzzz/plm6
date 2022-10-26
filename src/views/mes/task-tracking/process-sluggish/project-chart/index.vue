@@ -1,26 +1,26 @@
 <template>
   <div class="project-chart">
     <div class="chart-head">
-       <common-select
-        v-model="productionLine"
-        :options="productionList"
-        clearable
-        type="other"
-        :data-structure="{ key: 'productionLine', label: 'productionLine', value: 'productionLine' }"
-        placeholder="请选择产线"
+      <tag-tabs
+        v-model="productionLineId"
         class="filter-item"
-      />
-        <!-- <production-line-select
-           ref="productionLineRef"
-          v-model="productionLineId"
-          :factory-id="factoryId"
-          placeholder="请先选择生产线"
-          style="width: 200px"
-          defaultValue /> -->
-      <span class="filter-item" style="font-size: 14px; align-self: center">单位：件/吨</span>
+        :style="'width:calc(100% - 100px)'"
+        :data="productionLineList"
+        :itemKey="'workshopId'"
+        @change="tabChange"
+      >
+        <template #default="{ item }">
+          <span>{{ item.productionLine }}</span>
+        </template>
+      </tag-tabs>
+      <span class="filter-item" style="width: 80px;font-size: 14px; align-self: center">单位：件/吨</span>
     </div>
     <div v-loading="projectInfo.loading" v-permission="permission.statistics" class="chart-container" :style="{ height: maxHeight + 'px' }">
-      <chart style="border: 1px solid #ededed" id="projectChart" width="300px" v-if="route.name !== 'PlanProject'" @success="handleEchartsChange" />
+      <chart
+        id="projectChart"
+        width="300px"
+        @success="handleEchartsChange"
+      />
     </div>
   </div>
 </template>
@@ -30,17 +30,21 @@ import { ref, inject, defineEmits, onMounted } from 'vue'
 import useMaxHeight from '@compos/use-max-height'
 import { parseTime } from '@/utils/date'
 import chart from './module/chart'
-import { useRoute } from 'vue-router'
+import tagTabs from '@comp-common/tag-tabs'
 
 const emit = defineEmits(['update:year', 'change', 'success'])
-const route = useRoute()
+
 const projectInfo = inject('projectInfo')
 const permission = inject('permission')
 
 const year = ref(parseTime(new Date(), '{y}'))
 
-const productionLine = ref()
-const productionList = [{ productionLine: '一线' }, { productionLine: '二线' }, { productionLine: '三线' }]
+const productionLineId = ref()
+const productionLineList = [
+  { workshopId: 1, productionLine: '一线' },
+  { workshopId: 2, productionLine: '二线' },
+  { workshopId: 3, productionLine: '三线' }
+]
 const { maxHeight } = useMaxHeight({
   extraBox: ['.chart-head'],
   wrapperBox: ['.chart-container'],
@@ -61,7 +65,6 @@ function handleYearChange(val) {
 function handleEchartsChange(val) {
   emit('success', val)
 }
-
 </script>
 
 <style lang="scss" scoped>

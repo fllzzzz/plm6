@@ -1,10 +1,17 @@
 <template>
-  <common-drawer ref="drawerRef" :title="`产线： ${detailData.workshopInf}>${detailData.productionLine}`" v-model="drawerVisible" direction="rtl" :before-close="handleClose" :size="1200">
+  <common-drawer
+    ref="drawerRef"
+    :title="`产线：${detailData.workshopInf}>${detailData.productionLine}`"
+    v-model="drawerVisible"
+    direction="rtl"
+    :before-close="handleClose"
+    :size="1200"
+  >
+    <template #titleRight>
+      <print-table api-key="productionLineList" size="mini" type="warning" class="filter-item" />
+    </template>
     <template #content>
       <!--表格渲染-->
-      <div style="width: 300px; float: right; margin-bottom: 8px">
-          <print-table api-key="productionLineList"  size="mini" type="warning" class="filter-item" />
-      </div>
       <common-table ref="tableRef" :data="partData" style="width: 100%">
         <el-table-column prop="index" label="序号" align="center" min-width="60" type="index" />
         <el-table-column prop="monomer" label="项目" align="center" min-width="180"></el-table-column>

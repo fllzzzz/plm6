@@ -16,12 +16,12 @@ export function get(params) {
  * @description: 获取零件工单详情
 */
 export function partDetail(params) {
-  return {
+  return request({
     module: 'mes',
     url: 'task/order/machinePart/detail',
     method: 'get',
     params
-  }
+  })
 }
 
 export default { get }

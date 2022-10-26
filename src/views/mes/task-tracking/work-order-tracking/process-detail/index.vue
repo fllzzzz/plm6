@@ -1,6 +1,7 @@
 <template>
   <div class="app-container">
-    <div>
+    <div v-show="!processList.id" class="my-code" style="width: 100%">*点击左侧表格行查看详情</div>
+    <div v-show="processList.id" style="width: 100%">
       <common-table
         ref="tableRef"
         :data="transformTab === processMaterialListTypeEnum.MACHINE_PART.V ? partProcessList : ArtifactProcessList"
@@ -55,7 +56,19 @@ defineProps({
   }
 })
 const ArtifactProcessList = [
-  { process: '组立', type: 1, complete: 40, quantity: 25, weight: 1000, planDate: 1630000, currentDate: 1620000, productionLineList: [{ workshop: '一车间', productionLine: '一线' }, { workshop: '二车间', productionLine: '二线' }] },
+  {
+    process: '组立',
+    type: 1,
+    complete: 40,
+    quantity: 25,
+    weight: 1000,
+    planDate: 1630000,
+    currentDate: 1620000,
+    productionLineList: [
+      { workshop: '一车间', productionLine: '一线' },
+      { workshop: '二车间', productionLine: '二线' }
+    ]
+  },
   { process: '埋弧', type: 2, complete: 60, quantity: 59, weight: 1000, planDate: 1630000, currentDate: 1620000 },
   { process: '总装', type: 4, complete: 27, quantity: 70, weight: 1000, planDate: 20000000, currentDate: 1620000 },
   { process: '焊接', type: 16, complete: 45, quantity: 45, weight: 1000, planDate: 20000000, currentDate: 1620000 }

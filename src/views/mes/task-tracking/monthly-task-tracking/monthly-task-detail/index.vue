@@ -1,5 +1,7 @@
 <template>
   <div class="app-container">
+    <div v-show="!props.monthlyData.id" class="my-code" style="width: 100%">*点击左侧表格行查看详情</div>
+    <div v-show="props.monthlyData.id" style="width: 100%">
     <common-table
       ref="tableRef"
       :data="monthlyData"
@@ -9,6 +11,7 @@
       style="width: 100%; cursor: pointer"
       @current-change="handleProjectDetail"
     >
+     <el-table-column type="index" label="序号" key="index" align="center" width="60px" />
       <el-table-column align="center" key="projectName" prop="projectName" :show-overflow-tooltip="true" label="项目">
         <template v-slot="scope">
           <span>{{ scope.row.projectName }}</span>
@@ -52,20 +55,21 @@
         </template>
       </el-table-column>
     </common-table>
+    </div>
     <project-detail v-model:visible="drawerVisible" :detail-data="detailData"/>
   </div>
 </template>
 <script setup>
-import { ref } from 'vue'
+import { ref, defineProps } from 'vue'
 import useMaxHeight from '@compos/use-max-height'
 import projectDetail from '../project-detail/index.vue'
 
-// const props = defineProps({
-//   monthlyData: {
-//     type: Object,
-//     default: () => {}
-//   }
-// })
+const props = defineProps({
+  monthlyData: {
+    type: Object,
+    default: () => {}
+  }
+})
 // const monthlyData = ref([])
 const monthlyData = [
   { projectName: '浙江国家大学科技园', monomer: ['一号楼', '二号楼'], area: ['第一批', '第二批'], totalQuantity: 200, totalWeight: 1000, finishedRate: 36, actualQuantity: 100, actualWeight: 1000 }

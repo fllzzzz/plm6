@@ -17,7 +17,7 @@
         v-model="query.workshopInfId"
         placeholder="请选择车间"
         :factory-id="query.factoryId"
-        style="width: 270px"
+        style="width: 200px"
         class="filter-item"
         defaultValue
       />
@@ -27,7 +27,7 @@
         v-model="query.productionLineId"
         :factory-id="query.factoryId"
         placeholder="请选择生产线"
-        style="width: 270px"
+        style="width: 200px"
         clearable
         defaultValue
       />

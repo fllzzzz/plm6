@@ -9,35 +9,22 @@
   >
     <template #content>
       <div style="display: flex; justify-content: space-between; margin-bottom: 8px">
-        <div>
-          <!-- <el-tag style="cursor: pointer;" v-for="item in props.detailData.productionLineList" :key="item">产线：{{ item.workshop }}>{{ item.productionLine }}</el-tag> -->
-          <common-select
-              v-model="workshopInf"
-              :options="props.detailData.productionLineList"
-              :data-structure="{ key: 'workshop', label: 'workshop', value: 'workshop' }"
-              clearable
-              filterable
-              type="other"
-              size="small"
-              class="filter-item"
-              placeholder="请选择车间"
-              @change="handleProductionChange"
-            />
-          <common-select
-              v-model="line"
-              :options="props.detailData.productionLineList"
-              :data-structure="{ key: 'productionLine', label: 'productionLine', value: 'productionLine' }"
-              clearable
-              filterable
-              type="other"
-              size="small"
-              class="filter-item"
-              style="margin-left: 8px"
-              placeholder="请选择产线"
-              @change="handleProductionChange"
-            />
-        </div>
-        <print-table api-key="workOrderTrackingList" :params="{ ...query }" size="mini" type="warning" class="filter-item" />
+        <tag-tabs
+          v-model="workshopAndProductionLine"
+          class="filter-item"
+          :style="'width:calc(100% - 320px)'"
+          :data="summaryList"
+          :itemKey="'workshopId'"
+          @change="tabChange"
+        >
+          <template #default="{ item }">
+            <span>产线：</span>
+            <span>{{ item.workshopName }}</span>
+            <span> > </span>
+            <span>{{ item.productionLineName }}</span>
+          </template>
+        </tag-tabs>
+        <print-table api-key="workOrderTrackingList" :params="{ ...query }" size="mini" type="warning" class="filter-item" style="width: 300px" />
       </div>
       <!--表格渲染-->
       <common-table ref="tableRef" :data="partData" style="width: 100%">
@@ -69,6 +56,7 @@
 
 <script setup>
 import useVisible from '@compos/use-visible'
+import tagTabs from '@comp-common/tag-tabs'
 import { defineProps, defineEmits, ref } from 'vue'
 import { parseTime } from '@/utils/date'
 import { processMaterialListTypeEnum } from '@enum-ms/mes'
@@ -76,8 +64,6 @@ import { getCutPart } from '@/api/cutting/project-data'
 
 const emit = defineEmits(['update:visible', 'change'])
 const partData = ref([])
-const line = ref()
-const workshopInf = ref()
 const props = defineProps({
   visible: {
     type: Boolean,
@@ -88,6 +74,13 @@ const props = defineProps({
     default: () => {}
   }
 })
+
+const summaryList = [
+  { workshopId: 1, workshopName: '一车间', productionLineName: '一线' },
+  { workshopId: 2, workshopName: '一车间', productionLineName: '二线' },
+  { workshopId: 3, workshopName: '二车间', productionLineName: '一线' }
+]
+const workshopAndProductionLine = ref()
 const { visible: drawerVisible, handleClose } = useVisible({ emit, props, field: 'visible', showHook: CutPart })
 
 async function CutPart() {
@@ -97,8 +90,8 @@ async function CutPart() {
   }
 }
 
-function handleProductionChange(val) {
-  emit('change', val)
+function tabChange(val) {
+  console.log(val, 'val')
 }
 </script>
 

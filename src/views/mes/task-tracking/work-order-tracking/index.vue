@@ -3,7 +3,7 @@
     <div class="head-container">
       <mHeader @change="handleProductType" />
     </div>
-    <div style="display: flex;justify-content: space-between">
+    <div style="display: flex;">
       <common-table
         ref="tableRef"
         v-loading="crud.loading"
@@ -12,7 +12,7 @@
         :empty-text="crud.emptyText"
         :max-height="maxHeight"
         row-key="projectId"
-        style="width: 100%; flex: 4;"
+        style="width: 70%;"
         @current-change="currentChange"
       >
         <el-table-column prop="index" label="序号" align="center" width="60" type="index" />
@@ -102,7 +102,7 @@
         </el-table-column>
       </common-table>
       <div style="border-right: 1px solid #ededed; margin: 0 20px; height: calc(100vh - 180px)"></div>
-      <process-detail :process-list="processList" :transform-tab="transformTab" style="flex: 2"/>
+      <process-detail :process-list="processList" :transform-tab="transformTab" style="flex: 1" />
     </div>
   </div>
 </template>
@@ -124,8 +124,8 @@ const optShow = {
   download: false
 }
 const workOderData = [
-  { schedulingOrderNumber: '构-2022/10/13-01', projectName: '111-项目', endDate: 1670000000, quantity: 20, weight: 1000, actualQuantity: 10, actualWeight: 800, completeRate: 85, schedulingName: '超级管理员' },
-  { schedulingOrderNumber: '构-2022/10/13-02', projectName: '222-项目', endDate: 1670000000, quantity: 50, weight: 1000, actualQuantity: 30, actualWeight: 600, completeRate: 65, schedulingName: '超级管理员' }
+  { id: 1, schedulingOrderNumber: '构-2022/10/13-01', projectName: '111-项目', endDate: 1670000000, quantity: 20, weight: 1000, actualQuantity: 10, actualWeight: 800, completeRate: 85, schedulingName: '超级管理员' },
+  { id: 2, schedulingOrderNumber: '构-2022/10/13-02', projectName: '222-项目', endDate: 1670000000, quantity: 50, weight: 1000, actualQuantity: 30, actualWeight: 600, completeRate: 65, schedulingName: '超级管理员' }
 ]
 const tableRef = ref()
 const transformTab = ref()

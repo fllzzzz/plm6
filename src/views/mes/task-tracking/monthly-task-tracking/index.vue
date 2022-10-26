@@ -13,14 +13,14 @@
         highlight-current-row
         returnSourceData
         row-key="projectId"
-        style="width: 100%; flex: 2; cursor: pointer"
+        style="width: 35%; cursor: pointer"
         show-summary
         :summary-method="getSummaries"
         @current-change="monthlyTaskChange"
       >
-        <el-table-column prop="month" label="月份" align="center" width="60">
-          <template v-slot="scope">
-            <span>{{ scope.row.month }}</span>
+        <el-table-column prop="index" label="月份" align="center" width="60">
+          <template #default="{ $index }">
+            <span>{{ $index + 1 }}月</span>
           </template>
         </el-table-column>
         <el-table-column
@@ -69,7 +69,7 @@
         </el-table-column>
       </common-table>
       <div style="border-right: 1px solid #ededed; margin: 0 20px; height: calc(100vh - 180px)"></div>
-      <monthly-task-detail :monthly-data="monthlyData" style="flex: 4" />
+      <monthly-task-detail :monthly-data="monthlyData" style="flex: 1" />
     </div>
   </div>
 </template>
@@ -89,20 +89,19 @@ const optShow = {
 }
 
 const monthArr = ref([])
-
 for (let i = 1; i <= 12; i++) {
   monthArr.value.push(i + '月')
 }
 
 const plateList = [
-  { totalQuantity: 200, totalWeight: 1000, fulfillmentRate: 36, actualQuantity: 100, actualWeight: 1000, month: '1月' },
-  { totalQuantity: 200, totalWeight: 1000, fulfillmentRate: 30, actualQuantity: 80, actualWeight: 1000, month: '2月' },
-  { totalQuantity: 200, totalWeight: 1000, fulfillmentRate: 46, actualQuantity: 80, actualWeight: 1000, month: '3月' }
+  { id: 1, totalQuantity: 200, totalWeight: 1000, fulfillmentRate: 36, actualQuantity: 100, actualWeight: 1000 },
+  { id: 2, totalQuantity: 200, totalWeight: 1000, fulfillmentRate: 30, actualQuantity: 80, actualWeight: 1000 },
+  { id: 3, totalQuantity: 200, totalWeight: 1000, fulfillmentRate: 46, actualQuantity: 80, actualWeight: 1000 }
 ]
 const tableRef = ref()
 const monthlyData = ref([])
 
-const { crud, columns } = useCRUD(
+const { crud, CRUD, columns } = useCRUD(
   {
     title: '月度任务跟踪',
     sort: [],
@@ -113,6 +112,7 @@ const { crud, columns } = useCRUD(
   },
   tableRef
 )
+
 const { maxHeight } = useMaxHeight({
   extraBox: ['.head-container'],
   paginate: true
@@ -120,6 +120,14 @@ const { maxHeight } = useMaxHeight({
 
 function monthlyTaskChange(row) {
   monthlyData.value = row
+}
+
+CRUD.HOOK.handleRefresh = (crud, res) => {
+  res.data.content = res.data.content.map((v, index) => {
+    v.monthArr = []
+    v.monthArr = monthArr.value
+    return v
+  })
 }
 
 // 合计
