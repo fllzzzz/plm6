@@ -38,7 +38,7 @@
         </div>
       </div>
       <el-form ref="formRef" :model="form">
-        <component ref="steelRef" :max-height="tableMaxHeight" :style="maxHeightStyle" :is="comp" @calc-weight="calcWeight" />
+        <component ref="steelRef" :max-height="tableMaxHeight" :style="maxHeightStyle" :is="comp" />
       </el-form>
     </common-wrapper>
     <common-drawer
@@ -129,7 +129,6 @@ const disabledBasicClass = ref({}) // 禁用的基础分类
 const materialSelectVisible = ref(false) // 显示物料选择
 const currentBasicClass = ref() // 当前基础分类
 const list = ref([]) // 当前操作的表格list
-const totalWeight = ref() // 总重
 
 // 钢材三个组件的ref列表
 const steelRefList = reactive({
@@ -139,6 +138,27 @@ const steelRefList = reactive({
 })
 
 const addable = computed(() => !!(currentBasicClass.value && order.value)) // 可添加的状态（选择了采购合同编号）
+
+// 总重
+const totalWeight = computed(() => {
+  let weight = 0
+  if (isNotBlank(form.steelPlateList)) {
+    form.steelPlateList.forEach((v) => {
+      weight += v.weighingTotalWeight ? v.weighingTotalWeight : 0
+    })
+  }
+  if (isNotBlank(form.sectionSteelList)) {
+    form.sectionSteelList.forEach((v) => {
+      weight += v.weighingTotalWeight ? v.weighingTotalWeight : 0
+    })
+  }
+  if (isNotBlank(form.steelCoilList)) {
+    form.steelCoilList.forEach((v) => {
+      weight += v.weighingTotalWeight ? v.weighingTotalWeight : 0
+    })
+  }
+  return toFixed(weight, 2)
+})
 
 provide('matSpecRef', matSpecRef) // 供兄弟组件调用 删除
 
@@ -295,6 +315,14 @@ watch(list, (val) => {
   form[currentBasicClass.value] = val
 })
 
+// 用于与车的过磅重量比较
+watch(
+  () => totalWeight.value,
+  (val) => {
+    cu.props.totalWeight = val
+  }
+)
+
 // 初始化
 init()
 
@@ -398,28 +426,6 @@ function automaticAssignWeight() {
   ElMessage.warning('已自动分配车次过磅重量')
 }
 
-// 计算总重
-function calcWeight() {
-  let weight = 0
-  if (isNotBlank(form.steelPlateList)) {
-    form.steelPlateList.forEach((v) => {
-      weight += v.weighingTotalWeight ? v.weighingTotalWeight : 0
-    })
-  }
-  if (isNotBlank(form.sectionSteelList)) {
-    form.sectionSteelList.forEach((v) => {
-      weight += v.weighingTotalWeight ? v.weighingTotalWeight : 0
-    })
-  }
-  if (isNotBlank(form.steelCoilList)) {
-    form.steelCoilList.forEach((v) => {
-      weight += v.weighingTotalWeight ? v.weighingTotalWeight : 0
-    })
-  }
-  cu.props.totalWeight = toFixed(weight, 2) // 用于与车的过磅重量比较
-  totalWeight.value = cu.props.totalWeight
-}
-
 // 订单变化
 function handleOrderInfoChange(orderInfo) {
   init()
@@ -457,7 +463,6 @@ function handleOrderInfoChange(orderInfo) {
       steelRefList.steelCoilList = null
     })
   }
-  calcWeight()
   orderLoaded.value = true
 }
 
@@ -503,8 +508,6 @@ cu.props.import = (importList) => {
     },
     { immediate: true }
   )
-  // 重新计算重量
-  calcWeight()
 }
 </script>
 

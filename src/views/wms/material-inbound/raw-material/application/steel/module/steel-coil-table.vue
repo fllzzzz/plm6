@@ -57,7 +57,6 @@
           :precision="baseUnit.weight.precision"
           size="mini"
           placeholder="重量"
-          @change="emit('calc-weight')"
         />
       </template>
     </el-table-column>
@@ -141,7 +140,7 @@
 </template>
 
 <script setup>
-import { defineEmits, defineExpose, ref, inject, reactive, watch } from 'vue'
+import { defineExpose, ref, inject, reactive, watch } from 'vue'
 import { matClsEnum } from '@/utils/enum/modules/classification'
 import { isBlank, isNotBlank } from '@/utils/data-type'
 
@@ -152,8 +151,6 @@ import elExpandTableColumn from '@comp-common/el-expand-table-column.vue'
 import { createUniqueString } from '@/utils/data-type/string'
 import { calcSteelCoilLength } from '@/utils/wms/measurement-calc'
 import { positiveNumPattern } from '@/utils/validate/pattern'
-
-const emit = defineEmits(['calc-weight'])
 
 // 当前物料基础类型
 const basicClass = matClsEnum.STEEL_COIL.V
@@ -257,7 +254,6 @@ function delRow(sn, $index) {
   } else {
     form.steelCoilList.splice($index, 1)
   }
-  emit('calc-weight')
 }
 
 // 校验
