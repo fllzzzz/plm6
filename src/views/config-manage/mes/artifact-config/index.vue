@@ -44,8 +44,8 @@
             <div v-for="(item,index) in scope.row.structureClassificationList" :key="item.id" :class="index === scope.row.structureClassificationList.length-1 ? 'sandwich-cell-bottom' : 'sandwich-cell-top'" :style="item.parentType === intellectParentType.BRIDGE.V?'line-height:22px;':''">
                 <span style="margin-left:5px;">{{ item.classificationName }}</span>
                 <template  v-if="item.parentType === intellectParentType.BRIDGE.V">
-                  <div v-if="item.minLength && item.maxLength">（{{item.minLength}}mm {{ '≤' }} 长度 {{ '≤' }} {{ item.maxLength}}mm）</div>
-                  <div v-else-if="item.minLength">（{{ '≥' }}{{ item.minLength }}mm）</div>
+                  <div v-if="item.minLength && item.maxLength">（{{item.minLength}}mm &lt; 长度 {{ '≤' }} {{ item.maxLength}}mm）</div>
+                  <div v-else-if="item.minLength">（&gt;{{ item.minLength }}mm）</div>
                   <div v-else-if="item.maxLength">（{{ '≤' }}{{ item.maxLength}}mm）</div>
                 </template>
             </div>
