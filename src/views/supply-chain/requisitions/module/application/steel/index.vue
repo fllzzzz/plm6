@@ -125,8 +125,20 @@ const { form, FORM } = useForm(
 watch(
   () => props.detail,
   (val = {}) => {
-    form.type = form.type === preparationTypeEnum.PUBLIC.V ? undefined : val?.type
-    form.projectId = val?.projectId
+    form.type = val.type
+    // 项目id
+    if (val.type === preparationTypeEnum.PROJECT.V) {
+      form.projectId = val.projectId
+    } else if (val.type === preparationTypeEnum.PUBLIC.V) {
+      form.projectId = []
+    } else {
+      // Array.isArray
+      if (Array.isArray(val.projectId)) {
+        form.projectId = []
+      } else {
+        form.projectId = val.projectId ? [val.projectId] : val.projectId
+      }
+    }
   },
   { deep: true, immediate: true }
 )
@@ -221,12 +233,7 @@ function validate() {
   }
   const tableValidateRes = validateTable()
   if (tableValidateRes) {
-    form.list = [...form.steelPlateList, ...form.sectionSteelList, ...form.steelCoilList.map(v => {
-      // m转为mm
-      v.length *= 1000
-      v.quantity *= 1000
-      return v
-    })]
+    form.list = [...form.steelPlateList, ...form.sectionSteelList, ...form.steelCoilList]
     form.list.forEach((v) => {
       v.mete = v.weighingTotalWeight
       v.weight = v.weighingTotalWeight

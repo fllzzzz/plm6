@@ -3,49 +3,32 @@
     v-bind="$attrs"
     :data="form.list"
     :cell-class-name="wrongCellMask"
-    :expand-row-keys="expandRowKeys"
     :show-empty-symbol="false"
     return-source-data
     row-key="uid"
   >
-    <el-expand-table-column :data="form.list" v-model:expand-row-keys="expandRowKeys" row-key="uid" fixed="left">
-      <template #default="{ row }">
-        <div class="mtb-10">
-          <el-input
-            v-model="row.remark"
-            :rows="1"
-            :autosize="{ minRows: 1, maxRows: 1 }"
-            type="textarea"
-            placeholder="备注"
-            maxlength="200"
-            show-word-limit
-            style="width: 400px"
-          />
-        </div>
-      </template>
-    </el-expand-table-column>
     <el-table-column label="序号" type="index" align="center" width="60" fixed="left" />
-    <el-table-column prop="serialNumber" label="编号" align="center" width="110px" fixed="left" show-overflow-tooltip />
-    <el-table-column prop="classifyName" label="物料种类" align="center" fixed="left" min-width="150" show-overflow-tooltip>
+    <el-table-column prop="serialNumber" label="编号" align="center" fixed="left" show-overflow-tooltip />
+    <el-table-column prop="classifyName" label="物料种类" align="center" fixed="left" show-overflow-tooltip>
       <template #default="{ row }">
         <el-tooltip :content="row.classifyParentFullName" :disabled="!row.classifyParentFullName" :show-after="500" placement="top">
           <span v-empty-text="row.classifyName" />
         </el-tooltip>
       </template>
     </el-table-column>
-    <el-table-column prop="specification" label="规格" align="center" min-width="200px" fixed="left" show-overflow-tooltip>
+    <el-table-column prop="specification" label="规格" align="center" fixed="left" show-overflow-tooltip>
       <template #default="{ row }">
         <el-tooltip :content="row.specificationLabels" placement="top">
           <span v-empty-text="row.specification" />
         </el-tooltip>
       </template>
     </el-table-column>
-    <el-table-column prop="measureUnit" label="计量单位" align="center" min-width="70px">
+    <el-table-column prop="measureUnit" label="计量单位" align="center" >
       <template #default="{ row }">
         <span v-empty-text>{{ row.measureUnit }}</span>
       </template>
     </el-table-column>
-    <el-table-column prop="quantity" label="数量" align="center" min-width="120px">
+    <el-table-column prop="quantity" label="数量" align="center" >
       <template #default="{ row }">
         <common-input-number
           v-if="row.measureUnit"
@@ -61,12 +44,12 @@
         <span v-else v-empty-text />
       </template>
     </el-table-column>
-    <el-table-column prop="accountingUnit" label="核算单位" align="center" min-width="70px">
+    <el-table-column prop="accountingUnit" label="核算单位" align="center" >
       <template #default="{ row }">
         <span v-empty-text>{{ row.accountingUnit }}</span>
       </template>
     </el-table-column>
-    <el-table-column prop="mete" label="核算量" align="center" min-width="120px">
+    <el-table-column prop="mete" label="核算量" align="center" >
       <template #default="{ row }">
         <common-input-number
           v-model="row.mete"
@@ -81,12 +64,12 @@
       </template>
     </el-table-column>
 
-    <el-table-column prop="color" label="颜色" align="center" min-width="120px">
+    <el-table-column prop="color" label="颜色" align="center" >
       <template #default="{ row }">
         <el-input v-model.trim="row.color" maxlength="20" size="mini" placeholder="颜色" />
       </template>
     </el-table-column>
-    <el-table-column prop="brand" label="品牌" align="center" min-width="120px">
+    <el-table-column prop="brand" label="品牌" align="center" >
       <template #default="{ row }">
         <el-input v-model.trim="row.brand" maxlength="60" size="mini" placeholder="品牌" />
       </template>
@@ -100,17 +83,15 @@
 </template>
 
 <script setup>
-import { defineExpose, ref, inject, reactive } from 'vue'
+import { defineExpose, inject, reactive } from 'vue'
 import { createUniqueString } from '@/utils/data-type/string'
 import { positiveNumPattern } from '@/utils/validate/pattern'
 
 import { regExtra } from '@/composables/form/use-form'
 import useTableValidate from '@compos/form/use-table-validate'
-import elExpandTableColumn from '@comp-common/el-expand-table-column.vue'
 
 const matSpecRef = inject('matSpecRef') // 调用父组件matSpecRef
 const { form } = regExtra() // 表单
-const expandRowKeys = ref([]) // 展开行key
 
 // 数量校验方式
 const validateQuantity = (value, row) => {

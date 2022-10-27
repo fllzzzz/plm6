@@ -22,9 +22,10 @@ constantize(ddApprovalProcessStatusEnum)
 // 钉钉审核状态
 const ddReviewStatusEnum = {
   UNREVIEWED: { L: '待审核', K: 'UNREVIEWED', V: 1 << 0, TAG: '' },
+  AUDITING: { L: '审核中', K: 'AUDITING', V: 1 << 4, TAG: 'warning' },
   PASS: { L: '已通过', K: 'PASS', V: 1 << 1, TAG: 'success' },
   REFUSE: { L: '已拒绝', K: 'REFUSE', V: 1 << 2, TAG: 'danger' },
-  CANCEL: { L: '已撤销', K: 'REFUSE', V: 1 << 3, TAG: 'warning' }
+  CANCEL: { L: '已撤销', K: 'REFUSE', V: 1 << 3, TAG: 'danger' }
 }
 constantize(ddReviewStatusEnum)
 

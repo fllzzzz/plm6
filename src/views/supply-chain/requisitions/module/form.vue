@@ -24,10 +24,19 @@
           size="small"
         />
         <project-cascader
+          v-if="form.type === preparationTypeEnum.PROJECT.V"
+          v-model="form.projectId"
+          clearable
+          multiple
+          collapse-tags
+          style="width: 340px;height: 32px;"
+        />
+        <project-cascader
+          v-else
           v-model="form.projectId"
           clearable
           :disabled="form.type === preparationTypeEnum.PUBLIC.V"
-          style="width: 300px"
+          style="width: 340px;"
         />
       </div>
       <component :is="comp" :detail="form" @success="handleSuccess" />
@@ -52,7 +61,7 @@ import AuxMatApplication from './application/auxiliary-material/index'
 const defaultForm = {
   materialType: materialPurchaseClsEnum.STEEL.V, // 申购类型
   type: preparationTypeEnum.PROJECT.V, // 备料类型
-  projectId: undefined, // 项目id
+  projectId: [], // 项目id （项目备料可以多选）
   arrivalTime: '', // 到厂时间
   serialNumber: '', // 申购单号
   steelPlateList: [],

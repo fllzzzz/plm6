@@ -24,7 +24,6 @@
       <div class="table-header">
         <el-tag effect="plain" size="medium">申购编号：{{ detail?.serialNumber }}</el-tag>
         <el-tag effect="plain" size="medium">备料类型：{{ preparationTypeEnum.VL?.[detail?.type] }}</el-tag>
-        <el-tag v-if="detail?.project" effect="plain" size="medium">项目：{{ detail?.project?.serialNumber }} {{ detail?.project?.shortName }}</el-tag>
         <el-tag type="success" effect="plain" size="medium">申购人：{{ detail?.applicantName }}</el-tag>
         <el-tag type="success" effect="plain" size="medium">到厂日期：{{ parseTime(detail?.arrivalTime, '{y}-{m}-{d}') }}</el-tag>
       </div>
@@ -43,8 +42,16 @@
         <material-secondary-info-columns :basic-class="detail.basicClass" />
       </common-table>
       <div class="table-remark">
+        <span>项目</span>
+        <span>
+          <span>{{ projectName }}</span>
+        </span>
+      </div>
+      <div class="table-remark">
         <span>备注</span>
-        <span>{{ detail.remark }}</span>
+        <span>
+          <span>{{ detail.remark }}</span>
+        </span>
       </div>
     </template>
   </common-drawer>
@@ -85,6 +92,14 @@ const { maxHeight } = useMaxHeight(
   },
   () => computed(() => !crud.detailLoading)
 )
+
+// 项目名称
+const projectName = computed(() => {
+  if (detail.type === preparationTypeEnum.PROJECT.V) {
+    return detail.projects?.map(v => `${v.serialNumber} ${v.shortName}`)?.join('、')
+  }
+  return ''
+})
 
 CRUD.HOOK.beforeDetailLoaded = async (crud, detail) => {
   await setSpecInfoToList(detail.detailList)

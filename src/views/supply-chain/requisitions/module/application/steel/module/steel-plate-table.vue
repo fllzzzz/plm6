@@ -8,22 +8,22 @@
     row-key="uid"
   >
     <el-table-column label="序号" type="index" align="center" width="60" fixed="left" />
-    <el-table-column prop="serialNumber" label="编号" align="center" width="110px" fixed="left" />
-    <el-table-column prop="classifyName" label="物料种类" align="center" fixed="left" width="120" show-overflow-tooltip>
+    <el-table-column prop="serialNumber" label="编号" align="center" fixed="left" />
+    <el-table-column prop="classifyName" label="物料种类" align="center" fixed="left" show-overflow-tooltip>
       <template #default="{ row }">
         <el-tooltip :content="row.classifyParentFullName" :disabled="!row.classifyParentFullName" :show-after="500" placement="top">
           <span v-empty-text="row.classifyName" />
         </el-tooltip>
       </template>
     </el-table-column>
-    <el-table-column prop="specification" label="规格" align="center" width="100px" fixed="left" show-overflow-tooltip>
+    <el-table-column prop="specification" label="规格" align="center" fixed="left" show-overflow-tooltip>
       <template #default="{ row }">
         <el-tooltip :content="row.specificationLabels" placement="top">
           <span>{{ row.specification }}</span>
         </el-tooltip>
       </template>
     </el-table-column>
-    <el-table-column prop="thickness" align="center" width="100px" :label="`厚 (${baseUnit.thickness.unit})`">
+    <el-table-column prop="thickness" align="center" :label="`厚 (${baseUnit.thickness.unit})`">
       <template #default="{ row }">
         <common-input-number
           v-model="row.thickness"
@@ -37,7 +37,7 @@
         />
       </template>
     </el-table-column>
-    <el-table-column prop="width" align="center" width="135px" :label="`宽 (${baseUnit.width.unit})`">
+    <el-table-column prop="width" align="center" :label="`宽 (${baseUnit.width.unit})`">
       <template #default="{ row }">
         <common-input-number
           v-model="row.width"
@@ -51,7 +51,7 @@
         />
       </template>
     </el-table-column>
-    <el-table-column prop="length" align="center" width="135px" :label="`长 (${baseUnit.length.unit})`">
+    <el-table-column prop="length" align="center" :label="`长 (${baseUnit.length.unit})`">
       <template #default="{ row }">
         <common-input-number
           v-model="row.length"
@@ -64,7 +64,7 @@
         />
       </template>
     </el-table-column>
-    <el-table-column prop="quantity" align="center" width="135px" :label="`数量 (${baseUnit.measure.unit})`">
+    <el-table-column prop="quantity" align="center" :label="`数量 (${baseUnit.measure.unit})`">
       <template #default="{ row }">
         <common-input-number
           v-model="row.quantity"
@@ -84,7 +84,6 @@
       prop="weighingTotalWeight"
       align="center"
       :label="`总重 (${baseUnit.weight.unit})`"
-      width="135px"
     >
       <template #default="{ row }">
         <el-tooltip
@@ -109,7 +108,7 @@
       </template>
     </el-table-column>
 
-    <el-table-column prop="brand" label="品牌" align="center" min-width="100px">
+    <el-table-column prop="brand" label="品牌" align="center">
       <template #default="{ row }">
         <el-input v-model.trim="row.brand" maxlength="60" size="mini" placeholder="品牌" />
       </template>

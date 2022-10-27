@@ -135,7 +135,6 @@ cu.submitFormFormat = async (form) => {
 
 // 表单提交前校验
 FORM.HOOK.beforeSubmit = async () => {
-  console.log('form: ', form)
   if (!form.serialNumber) {
     ElMessage.error('获取申购单号失败，无法提交')
     return false
