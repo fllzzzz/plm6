@@ -240,6 +240,7 @@ async function fetchList() {
     console.log('获取构件特征定义失败', error)
   } finally {
     list.value = _list
+    lineTypeChange(productionLineTypeEnum.value)
     tableLoading.value = false
   }
 }
