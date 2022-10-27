@@ -27,6 +27,7 @@
           :on-exceed="handleExceed"
           :auto-upload="false"
           :limit="1"
+          :on-success="emit('success')"
         >
           <common-button size="mini" :loading="uploadLoading" type="warning">选择文件</common-button>
         </el-upload>
@@ -44,7 +45,7 @@ import useVisible from '@compos/use-visible'
 
 import { ElUpload, ElMessage } from 'element-plus'
 
-const emit = defineEmits(['update:visible'])
+const emit = defineEmits(['update:visible', 'success'])
 const props = defineProps({
   visible: {
     type: Boolean,
