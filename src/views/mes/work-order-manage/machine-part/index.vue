@@ -120,6 +120,8 @@
     </common-table>
     <!-- 分页 -->
     <pagination />
+    <!-- 零件工单详情 -->
+    <detail v-model:visible="drawerVisible" :detail-data="detailData" />
   </div>
 </template>
 <script setup>
@@ -131,6 +133,7 @@ import pagination from '@crud/Pagination'
 import { parseTime } from '@/utils/date'
 import { boolPrintedEnum } from '@enum-ms/common'
 import mHeader from './module/header.vue'
+import detail from './module/detail.vue'
 
 const optShow = {
   add: false,
@@ -140,6 +143,8 @@ const optShow = {
 }
 
 const tableRef = ref()
+const detailData = ref({})
+const drawerVisible = ref(false)
 const { crud, columns } = useCRUD(
   {
     title: '零件工单',
@@ -157,7 +162,8 @@ const { maxHeight } = useMaxHeight({
 
 // 查看
 function views(row) {
-  console.log(row, 'row')
+  drawerVisible.value = true
+  detailData.value = row
 }
 
 // 打印

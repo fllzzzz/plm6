@@ -227,8 +227,8 @@ const { crud, columns } = useCRUD(
 )
 
 // 合计
-function getSummaries(params) {
-  return tableSummary(params, {
+function getSummaries(param) {
+  return tableSummary(param, {
     props: ['studQuantity', 'sleeveQuantity']
   })
 }

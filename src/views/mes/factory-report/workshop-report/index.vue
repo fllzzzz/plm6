@@ -166,7 +166,7 @@ tableRef
 // 合计
 function getSummaries(param) {
   return tableSummary(param, {
-    props: ['length', 'quantity', 'totalWeight']
+    props: ['quantity', 'totalWeight']
   })
 }
 </script>
