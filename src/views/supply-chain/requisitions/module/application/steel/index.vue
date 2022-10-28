@@ -132,7 +132,6 @@ watch(
     } else if (val.type === preparationTypeEnum.PUBLIC.V) {
       form.projectId = []
     } else {
-      // Array.isArray
       if (Array.isArray(val.projectId)) {
         form.projectId = []
       } else {
@@ -239,7 +238,7 @@ function validate() {
       v.weight = v.weighingTotalWeight
     })
   }
-  // 进入仓库级价格填写页面
+  // 进入汇总页面
   return tableValidateRes
 }
 

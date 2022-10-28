@@ -35,12 +35,11 @@
           :summary-method="getSummaries"
         >
           <!-- 基础信息 -->
-          <material-base-info-columns :basic-class="props.basicClass" fixed="left" />
+          <material-base-info-columns fixed="left" />
           <!-- 单位及其数量 -->
-          <el-table-column key="measureUnit" prop="measureUnit" align="center" label="计量单位" />
-          <material-unit-quantity-columns :basic-class="props.basicClass" />
+          <material-unit-quantity-columns />
           <!-- 次要信息 -->
-          <material-secondary-info-columns :basic-class="props.basicClass" :showBatchNo="false" />
+          <material-secondary-info-columns :showBatchNo="false" />
         </common-table>
         <div class="table-remark">
           <span>项目</span>
@@ -91,9 +90,6 @@ const props = defineProps({
   modelValue: {
     type: Boolean,
     default: false
-  },
-  basicClass: {
-    type: Number
   }
 })
 

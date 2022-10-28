@@ -94,8 +94,19 @@ const { form, FORM } = useForm(
 watch(
   () => props.detail,
   (val = {}) => {
-    form.type = form.type === preparationTypeEnum.PUBLIC.V ? undefined : val?.type
-    form.projectId = val?.projectId
+    form.type = val.type
+    // 项目id
+    if (val.type === preparationTypeEnum.PROJECT.V) {
+      form.projectId = val.projectId
+    } else if (val.type === preparationTypeEnum.PUBLIC.V) {
+      form.projectId = []
+    } else {
+      if (Array.isArray(val.projectId)) {
+        form.projectId = []
+      } else {
+        form.projectId = val.projectId ? [val.projectId] : val.projectId
+      }
+    }
   },
   { deep: true, immediate: true }
 )
@@ -138,7 +149,7 @@ function validate() {
     ElMessage.warning('请选择项目')
     return false
   }
-  // 进入仓库级价格填写页面
+  // 进入汇总页面
   return tableRef.value ? tableRef.value.validate() : true
 }
 

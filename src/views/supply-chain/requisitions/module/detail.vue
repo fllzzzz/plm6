@@ -35,11 +35,11 @@
         :summary-method="getSummaries"
       >
         <!-- 基础信息 -->
-        <material-base-info-columns :basic-class="detail.basicClass" fixed="left" />
+        <material-base-info-columns fixed="left" />
         <!-- 单位及其数量 -->
-        <material-unit-quantity-columns :basic-class="detail.basicClass" />
+        <material-unit-quantity-columns />
         <!-- 次要信息 -->
-        <material-secondary-info-columns :basic-class="detail.basicClass" />
+        <material-secondary-info-columns />
       </common-table>
       <div class="table-remark">
         <span>项目</span>
@@ -110,10 +110,7 @@ CRUD.HOOK.beforeDetailLoaded = async (crud, detail) => {
       v.measurePrecision = 3
     }
   })
-  detail.detailList = await numFmtByBasicClass(detail.detailList, {
-    toSmallest: false,
-    toNum: false
-  })
+  detail.detailList = await numFmtByBasicClass(detail.detailList)
 }
 
 // 合计

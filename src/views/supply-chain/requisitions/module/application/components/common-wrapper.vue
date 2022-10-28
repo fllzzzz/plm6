@@ -12,7 +12,7 @@
       :btn-name="props.btnName"
       @submit="submit"
     />
-    <confirm-dialog v-model="previewVisible" :basic-class="props.basicClass" />
+    <confirm-dialog v-model="previewVisible" />
   </div>
 </template>
 
@@ -24,9 +24,6 @@ import commonFooter from './common-footer.vue'
 import confirmDialog from './confirm-dialog.vue'
 
 const props = defineProps({
-  basicClass: {
-    type: Number
-  },
   currentBasicClass: {
     type: Number
   },

@@ -110,9 +110,9 @@ const scmRequisitionsDetail = {
      * @param {*} format 格式转换
      */
     fields: [ // 字段内容
-      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'serialNumber', title: '申购单号：', width: 70, type: typeEnum.GUID.K },
+      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'serialNumber', title: '申购单号：', width: 65, type: typeEnum.GUID.K },
       { show: true, source: dataSourceEnum.SYSTEM.V, key: 'type', title: '备料类型：', width: 45, type: typeEnum.ENUM.K, format: { enum: 'preparationTypeEnum' }},
-      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'arrivalTime', title: '到厂日期：', width: 40, type: typeEnum.DATE.K, format: 'YY/MM/DD' },
+      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'arrivalTime', title: '到厂日期：', width: 45, type: typeEnum.DATE.K, format: 'YY/MM/DD' },
       { show: true, source: dataSourceEnum.SYSTEM.V, key: 'applicantName', title: '申购人：', width: 35, type: typeEnum.USER_NAME.K },
       { show: false, source: dataSourceEnum.SYSTEM.V, key: 'printDate', title: '打印时间：', width: 155, type: typeEnum.DATE.K, format: 'YY/MM/DD kk:mm:ss' },
       { show: false, source: dataSourceEnum.SYSTEM.V, key: 'printer', title: '打印人：', width: 35, type: typeEnum.USER_NAME.K }
@@ -265,7 +265,8 @@ const scmRequisitionsDetail = {
         align: alignEnum.RIGHT.V,
         minWidth: 18,
         type: typeEnum.QUANTITY.K,
-        format: { toThousand: false, rowUnit: 'measureUnit' }
+        format: { toThousand: false, rowUnit: 'measureUnit' },
+        sum: true
       },
       {
         show: true,
