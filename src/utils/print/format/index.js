@@ -20,7 +20,7 @@ const saleOrderTracking = contract.handleRate
 const orderPaymentLedger = contract.handleSupplierPaymentRate
 const scmSupplierPaymentLedger = contract.handleSupplierPaymentRate
 const purchaseLogisticsRecord = scm.handleOrderName
-const scmRequisitionsDetail = wms.dataFormat
+const scmRequisitionsDetail = scm.handleRequisitionsRecord
 
 const mesStructureProductionLine = mes.productionLineMete
 const mesStructureProcess = mes.processMete

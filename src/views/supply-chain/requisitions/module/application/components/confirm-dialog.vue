@@ -10,7 +10,8 @@
     fullscreen
   >
     <template #titleAfter>
-      <span>申购单号：{{ serialNumber?.[boolPartyA] }}</span>
+      <el-tag effect="plain" size="medium">申购编号：{{ serialNumber?.[boolPartyA] }}</el-tag>
+      <el-tag type="success" effect="plain" size="medium">申购人：{{ user.name }}</el-tag>
     </template>
     <template #titleRight>
       <el-date-picker
@@ -36,10 +37,15 @@
           <!-- 基础信息 -->
           <material-base-info-columns :basic-class="props.basicClass" fixed="left" />
           <!-- 单位及其数量 -->
+          <el-table-column key="measureUnit" prop="measureUnit" align="center" label="计量单位" />
           <material-unit-quantity-columns :basic-class="props.basicClass" />
           <!-- 次要信息 -->
           <material-secondary-info-columns :basic-class="props.basicClass" :showBatchNo="false" />
         </common-table>
+        <div class="table-remark">
+          <span>项目</span>
+          <span>{{ projectName }}</span>
+        </div>
         <div class="table-remark">
           <span>备注</span>
           <el-input
@@ -61,6 +67,7 @@
 <script setup>
 import { getSerialNumber } from '@/api/supply-chain/requisitions-manage/requisitions'
 import { defineEmits, defineProps, ref, watch, computed } from 'vue'
+import { mapGetters } from '@/store/lib'
 import { tableSummary } from '@/utils/el-extra'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { materialColumns } from '@/utils/columns-format/wms'
@@ -90,6 +97,9 @@ const props = defineProps({
   }
 })
 
+const { user } = mapGetters('user')
+const { projectMap } = mapGetters('projectMap')
+
 // 表格列数据格式转换
 const columnsDataFormat = ref([
   ...materialColumns
@@ -103,7 +113,7 @@ const { cu, form, FORM } = regExtra() // 表单
 const { maxHeight } = useMaxHeight(
   {
     mainBox: '.requisitions-application-preview',
-    extraBox: ['.el-dialog__header', '.footer'],
+    extraBox: ['.el-dialog__header', '.footer', '.table-remark'],
     wrapperBox: ['.el-dialog__body'],
     clientHRepMainH: true,
     minHeight: 300,
@@ -111,6 +121,14 @@ const { maxHeight } = useMaxHeight(
   },
   dialogVisible
 )
+
+// 项目名称
+const projectName = computed(() => {
+  return form.projectId?.map(id => {
+    const data = projectMap.value?.[id] || {}
+    return `${data.serialNumber} ${data.shortName}`
+  })?.join('、')
+})
 
 // 是否甲供
 const boolPartyA = computed(() => {
@@ -160,7 +178,7 @@ async function getNO() {
 
 // 合计
 function getSummaries(param) {
-  return tableSummary(param, { props: ['quantity', 'mete'] })
+  return tableSummary(param, { props: [['quantity', 3], 'mete'] })
 }
 </script>
 
@@ -182,6 +200,16 @@ function getSummaries(param) {
       line-height: 44px;
       text-align: center;
       border-right: 1px solid #ebeef5;
+    }
+    >span:last-child {
+      flex: 1;
+      height: 40px;
+      padding: 6px 10px;
+      display: -webkit-box;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
     }
     ::v-deep(.el-textarea__inner) {
       line-height: 1.26;

@@ -1,5 +1,3 @@
-import { projectNameArrangementModeEnum } from '@/utils/enum/modules/contract'
-
 import {
   dataSourceEnum,
   alignEnum,
@@ -97,7 +95,7 @@ const scmRequisitionsDetail = {
     verticleAlign: verticleAlignEnum.CENTER.V,
     size: 10,
     bold: 'bold',
-    height: 12,
+    height: 6,
     width: 190,
     emptyVal: '',
     /**
@@ -113,11 +111,9 @@ const scmRequisitionsDetail = {
      */
     fields: [ // 字段内容
       { show: true, source: dataSourceEnum.SYSTEM.V, key: 'serialNumber', title: '申购单号：', width: 70, type: typeEnum.GUID.K },
-      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'type', title: '备料类型：', width: 85, type: typeEnum.ENUM.K, format: { enum: 'preparationTypeEnum' }},
+      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'type', title: '备料类型：', width: 45, type: typeEnum.ENUM.K, format: { enum: 'preparationTypeEnum' }},
+      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'arrivalTime', title: '到厂日期：', width: 40, type: typeEnum.DATE.K, format: 'YY/MM/DD' },
       { show: true, source: dataSourceEnum.SYSTEM.V, key: 'applicantName', title: '申购人：', width: 35, type: typeEnum.USER_NAME.K },
-      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'arrivalTime', title: '申购日期：', width: 70, type: typeEnum.DATE.K, format: 'YY/MM/DD' },
-      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'project', title: '项目：', width: 120, type: typeEnum.PROJECT.K, format: { showProjectFullName: false, showSerialNumber: true, projectNameShowConfig: projectNameArrangementModeEnum.SERIAL_NUMBER_START.V, lineBreak: false }},
-      { show: false, source: dataSourceEnum.SYSTEM.V, key: 'remark', title: '备注：', width: 190, type: typeEnum.OTHER.K },
       { show: false, source: dataSourceEnum.SYSTEM.V, key: 'printDate', title: '打印时间：', width: 155, type: typeEnum.DATE.K, format: 'YY/MM/DD kk:mm:ss' },
       { show: false, source: dataSourceEnum.SYSTEM.V, key: 'printer', title: '打印人：', width: 35, type: typeEnum.USER_NAME.K }
     ]
@@ -137,13 +133,13 @@ const scmRequisitionsDetail = {
    * @param {array} fields // 字段
    */
   footer: {
-    show: false,
+    show: true,
     allPage: false,
     align: alignEnum.LEFT.V,
     verticleAlign: verticleAlignEnum.CENTER.V,
     size: 10,
     bold: 'bold',
-    height: 8,
+    height: 12,
     width: 190,
     emptyVal: '',
     /**
@@ -167,7 +163,10 @@ const scmRequisitionsDetail = {
      * @param {enum} type 数据类型
      * @param {*} format 格式转换
      */
-    fields: []
+    fields: [
+      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'projectName', title: '项目：', width: 190, type: typeEnum.OTHER.K },
+      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'remark', title: '备注：', width: 190, type: typeEnum.OTHER.K }
+    ]
   },
   table: {
     /**
@@ -199,13 +198,6 @@ const scmRequisitionsDetail = {
      * @param {string} title 合计名称
      */
     summary: { show: true, title: '合计' },
-    // extraFields: [
-    //   { key: 'basicClass', title: '基础类型', type: typeEnum.ENUM.K, format: { enum: 'rawMatClsEnum' }},
-    //   { key: 'accountingUnit', title: '核算单位', type: typeEnum.ACCOUNTING_UNIT.K },
-    //   { key: 'accountingPrecision', title: '核算单位小数精度', type: typeEnum.DP.K },
-    //   { key: 'measureUnit', title: '计量单位', type: typeEnum.MEASUREMENT_UNIT.K },
-    //   { key: 'measurePrecision', title: '计量单位小数精度', type: typeEnum.DP.K }
-    // ],
     /**
      * 表格列
      * @param {boolean} show 是否显示

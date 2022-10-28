@@ -119,7 +119,7 @@ CRUD.HOOK.beforeDetailLoaded = async (crud, detail) => {
 // 合计
 function getSummaries(param) {
   return tableSummary(param, {
-    props: ['quantity', 'mete']
+    props: [['quantity', 3], 'mete']
   })
 }
 </script>

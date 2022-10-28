@@ -19,6 +19,15 @@
         class="filter-item"
         @change="crud.toQuery"
       />
+      <common-radio-button
+        v-model="query.enabled"
+        :options="enabledEnum.ENUM"
+        show-option-all
+        type="enum"
+        size="small"
+        class="filter-item"
+        @change="crud.toQuery"
+      />
       <el-date-picker
         v-model="query.times"
         type="daterange"
@@ -53,6 +62,7 @@
 import { PICKER_OPTIONS_SHORTCUTS } from '@/settings/config'
 import { ddReviewStatusEnum } from '@enum-ms/dd'
 import { materialPurchaseClsEnum } from '@enum-ms/classification'
+import { enabledEnum } from '@enum-ms/common'
 
 import { regHeader } from '@compos/use-crud'
 import crudOperation from '@crud/CRUD.operation'

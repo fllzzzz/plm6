@@ -70,17 +70,16 @@
         />
       </template>
     </el-table-column>
-    <el-table-column prop="newLength" align="center" :label="`长 (m)`">
+    <el-table-column prop="length" align="center" :label="`长 (m)`">
       <template #default="{ row }">
         <common-input-number
-          v-model="row.newLength"
+          v-model="row.length"
           :min="0"
           :max="999999999"
-          :precision="3"
+          :precision="row.measurePrecision"
           :controls="false"
           size="mini"
           placeholder="长"
-          @change="handleLengthChange($event, row)"
         />
       </template>
     </el-table-column>
@@ -157,11 +156,13 @@ function rowInit(row) {
     basicClass: row.classify.basicClass, // 基础类型
     specification: row.spec, // 规格
     specificationMap: row.specKV, // 规格KV格式
-    measureUnit: row.classify.measureUnit, // 计量单位
+    // measureUnit: row.classify.measureUnit, // 计量单位
     accountingUnit: row.classify.accountingUnit, // 核算单位
     accountingPrecision: row.classify.accountingPrecision, // 核算单位小数精度
-    measurePrecision: row.classify.measurePrecision, // 计量单位小数精度
+    // measurePrecision: row.classify.measurePrecision, // 计量单位小数精度
     // quantity: undefined, // 数量（毫米，计量单位对应的值）
+    measureUnit: '米', // 计量单位
+    measurePrecision: 3, // 计量单位小数精度
     quantity: undefined, // 数量（米，计量单位对应的值）
     color: undefined, // 颜色
     brand: undefined, // 品牌
@@ -198,19 +199,8 @@ async function calcTheoryLength(row) {
 // 计算总长(没有数量概念，可以直接和calcTheoryLength合并)
 function calcTotalLength(row) {
   if (isNotBlank(row.theoryLength)) {
-    // 转为m
-    row.newLength = row.theoryLength / 1000
-    row.length = row.theoryLength
-  } else {
-    row.newLength = undefined
-    row.length = undefined
-  }
-}
-
-// 长度变化
-function handleLengthChange(val, row) {
-  if (val) {
-    row.length = val * 1000
+    // mm转为m
+    row.length = row.theoryLength / 1000
   } else {
     row.length = undefined
   }

@@ -68,4 +68,14 @@ export function del(ids) {
   })
 }
 
+// 编辑申购单状态
+export function editStatus({ id, enabled }) {
+  return request({
+    module: 'scm',
+    url: `apply-purchase/enabled`,
+    method: 'put',
+    params: { id, enabled }
+  })
+}
+
 export default { add, del, detail, get }

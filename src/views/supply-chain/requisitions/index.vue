@@ -35,14 +35,35 @@
           />
         </template>
       </el-table-column>
+      <el-table-column
+          v-if="columns.visible('enabled')"
+          key="enabled"
+          prop="enabled"
+          label="状态"
+          align="center"
+          width="80px"
+        >
+        <template #default="{ row: { sourceRow: row } }">
+            <el-switch
+              v-if="row.reviewStatus === ddReviewStatusEnum.PASS.V"
+              v-model="row.enabled"
+              :disabled="!checkPermission(permission.edit)"
+              active-color="#409EFF"
+              inactive-color="#F56C6C"
+              :active-value="enabledEnum.TRUE.V"
+              :inactive-value="enabledEnum.FALSE.V"
+              @change="changeStatus(row, row.enabled)"
+            />
+          </template>
+        </el-table-column>
       <!--详情与审核-->
       <el-table-column v-permission="[...permission.detail, ...permission.del]" align="center" label="操作" width="120">
-        <template #default="{ row }">
+        <template #default="{ row: { sourceRow: row } }">
           <udOperation
           :data="{ id: row.id }"
             :permission="permission"
             :show-edit="false"
-            :show-del="row?.sourceRow?.reviewStatus === ddReviewStatusEnum.UNREVIEWED.V"
+            :show-del="row.reviewStatus === ddReviewStatusEnum.UNREVIEWED.V"
             delPrompt="确定撤销本条数据吗？"
           />
         </template>
@@ -56,13 +77,15 @@
 </template>
 
 <script setup>
-import crudApi from '@/api/supply-chain/requisitions-manage/requisitions'
+import crudApi, { editStatus } from '@/api/supply-chain/requisitions-manage/requisitions'
 import { ref } from 'vue'
 
 import { scmRequisitionsPM as permission } from '@/page-permission/supply-chain'
 import { ddReviewStatusEnum } from '@enum-ms/dd'
 import { materialPurchaseClsEnum } from '@enum-ms/classification'
 import checkPermission from '@/utils/system/check-permission'
+import { enabledEnum } from '@enum-ms/common'
+import { ElMessageBox } from 'element-plus'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
@@ -86,7 +109,7 @@ const dataFormat = ref([
   ['materialType', ['parse-enum', materialPurchaseClsEnum, { f: 'L' }]],
   ['createTime', 'parse-time']
 ])
-const { crud, columns } = useCRUD(
+const { CRUD, crud, columns } = useCRUD(
   {
     title: '材料申购',
     permission: { ...permission },
@@ -98,6 +121,22 @@ const { crud, columns } = useCRUD(
 )
 
 const { maxHeight } = useMaxHeight({ paginate: true })
+
+async function changeStatus(data, val) {
+  try {
+    await ElMessageBox.confirm('此操作将 "' + enabledEnum.VL[val] + '" ' + data.serialNumber + ', 是否继续？', '提示', {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning'
+    })
+    await editStatus({ id: data.id, enabled: val })
+    crud.refresh()
+    crud.notify(enabledEnum.VL[val] + '成功', CRUD.NOTIFICATION_TYPE.SUCCESS)
+  } catch (error) {
+    console.log('申购单状态', error)
+    data.enabled = data.enabled === enabledEnum.TRUE.V ? enabledEnum.FALSE.V : enabledEnum.TRUE.V
+  }
+}
 </script>
 <style lang="scss" scoped>
 .clickable {
