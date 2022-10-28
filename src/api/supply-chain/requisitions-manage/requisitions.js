@@ -34,15 +34,13 @@ export function detail(id) {
 
 /**
  * 获取申购单号
- * @param {Boolean} boolPartyA 是否为甲供（项目备料类型）
  * @returns
  */
-export function getSerialNumber(params) {
+export function getSerialNumber() {
   return request({
     module: 'scm',
     url: `apply-purchase/get-serial-number`,
-    method: 'get',
-    params
+    method: 'get'
   })
 }
 

@@ -113,7 +113,7 @@ constantize(borrowReturnStatusEnum)
 // 备料类型
 const preparationTypeEnum = {
   PROJECT: { L: '项目备料', K: 'PROJECT', V: 1 << 0 },
-  PARTY_A: { L: '项目甲供备料', K: 'PARTY_A', V: 1 << 1 },
+  // PARTY_A: { L: '项目甲供备料', K: 'PARTY_A', V: 1 << 1 },
   PUBLIC: { L: '公共备料', K: 'PROJECT', V: 1 << 2 },
   MANUFACTURED: { L: '外协加工', K: 'PROJECT', V: 1 << 3 }
 }

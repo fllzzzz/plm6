@@ -10,7 +10,7 @@
     fullscreen
   >
     <template #titleAfter>
-      <el-tag effect="plain" size="medium">申购编号：{{ serialNumber?.[boolPartyA] }}</el-tag>
+      <el-tag effect="plain" size="medium">申购编号：{{ form.serialNumber }}</el-tag>
       <el-tag type="success" effect="plain" size="medium">申购人：{{ user.name }}</el-tag>
     </template>
     <template #titleRight>
@@ -20,6 +20,7 @@
         size="small"
         value-format="x"
         :disabled="cu.status.edit === FORM.STATUS.PROCESSING"
+          :disabledDate="(v) => moment(v).valueOf() < moment().subtract(1, 'days').valueOf()"
         placeholder="选择到厂日期"
         style="width: 140px"
       />
@@ -70,7 +71,7 @@ import { mapGetters } from '@/store/lib'
 import { tableSummary } from '@/utils/el-extra'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { materialColumns } from '@/utils/columns-format/wms'
-import { preparationTypeEnum } from '@enum-ms/wms'
+import moment from 'moment'
 
 import { regExtra } from '@/composables/form/use-form'
 import useMaxHeight from '@compos/use-max-height'
@@ -100,7 +101,6 @@ const { projectMap } = mapGetters('projectMap')
 const columnsDataFormat = ref([
   ...materialColumns
 ])
-const serialNumber = ref({}) // 申购单号 {true: 甲供单号，false: 非甲供单号}
 
 const { visible: dialogVisible, handleClose } = useVisible({ emit, props })
 const { cu, form, FORM } = regExtra() // 表单
@@ -126,15 +126,10 @@ const projectName = computed(() => {
   })?.join('、')
 })
 
-// 是否甲供
-const boolPartyA = computed(() => {
-  return cu.form.type === preparationTypeEnum.PARTY_A.V
-})
-
 watch(
   () => props.modelValue,
   (val) => {
-    if (val && !serialNumber.value?.[boolPartyA.value]) {
+    if (val && !form.serialNumber) {
       getNO()
     }
   },
@@ -162,13 +157,11 @@ FORM.HOOK.beforeSubmit = async () => {
 // 表单提交后：关闭预览窗口
 FORM.HOOK.afterSubmit = () => {
   handleClose()
-  serialNumber.value = {}
 }
 
 // 获取申购单号
 async function getNO() {
-  const data = await getSerialNumber({ boolPartyA: boolPartyA.value }) || ''
-  serialNumber.value[boolPartyA.value] = data
+  const data = await getSerialNumber() || ''
   form.serialNumber = data
 }
 

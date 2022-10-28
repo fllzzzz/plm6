@@ -95,10 +95,7 @@ const { maxHeight } = useMaxHeight(
 
 // 项目名称
 const projectName = computed(() => {
-  if (detail.type === preparationTypeEnum.PROJECT.V) {
-    return detail.projects?.map(v => `${v.serialNumber} ${v.shortName}`)?.join('、')
-  }
-  return ''
+  return (detail.projects || [])?.map(v => `${v.serialNumber} ${v.shortName}`)?.join('、')
 })
 
 CRUD.HOOK.beforeDetailLoaded = async (crud, detail) => {

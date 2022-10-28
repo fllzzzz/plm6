@@ -14,11 +14,11 @@
       style="width: 100%"
     >
       <el-table-column prop="index" label="序号" align="center" width="60" type="index" />
-      <el-table-column v-if="columns.visible('name')" key="name" prop="name" show-overflow-tooltip label="审批名称" min-width="120" />
-      <el-table-column v-if="columns.visible('process')" key="process" prop="process" show-overflow-tooltip label="审批流程" min-width="200" />
-      <el-table-column v-if="columns.visible('node')" key="node" prop="node" show-overflow-tooltip label="抄送节点" width="120" align="center" />
-      <el-table-column v-if="columns.visible('ccUserName')" key="ccUserName" prop="ccUserName" show-overflow-tooltip label="抄送人" min-width="160" />
-      <el-table-column v-if="columns.visible('updateTime')" key="updateTime" prop="updateTime" show-overflow-tooltip label="更新时间"  align="center"  width="130" />
+      <el-table-column v-if="columns.visible('name')" key="name" prop="name" show-overflow-tooltip label="审批名称" min-width="160" />
+      <el-table-column v-if="columns.visible('process')" key="process" prop="process" show-overflow-tooltip label="审批流程" min-width="260" />
+      <!-- <el-table-column v-if="columns.visible('node')" key="node" prop="node" show-overflow-tooltip label="抄送节点" width="120" align="center" /> -->
+      <!-- <el-table-column v-if="columns.visible('ccUserName')" key="ccUserName" prop="ccUserName" show-overflow-tooltip label="抄送人" min-width="160" /> -->
+      <el-table-column v-if="columns.visible('updateTime')" key="updateTime" prop="updateTime" show-overflow-tooltip label="更新时间"  align="center"  min-width="130" />
       <!--编辑-->
       <el-table-column
         v-if="checkPermission(permission.edit)"
@@ -40,7 +40,7 @@
 import crudApi from '@/api/config/approval-config/company-process'
 import { ref } from 'vue'
 
-import { ddApproveTypeEnum, ddApprovalPositionEnum, ddTaskActionTypeEnum } from '@enum-ms/dd'
+import { ddApproveTypeEnum, ddTaskActionTypeEnum } from '@enum-ms/dd'
 
 import { companyProcessConfigPM as permission } from '@/page-permission/config'
 import checkPermission from '@/utils/system/check-permission'
@@ -81,7 +81,7 @@ const { maxHeight } = useMaxHeight()
 CRUD.HOOK.handleRefresh = (crud, data) => {
   data.data.content = data.data.map((v) => {
     v.name = ddApproveTypeEnum.VL?.[v.type]
-    v.node = ddApprovalPositionEnum.VL?.[v.ccPosition]
+    // v.node = ddApprovalPositionEnum.VL?.[v.ccPosition]
     v.process = v.approvers?.map(v => `【${ddTaskActionTypeEnum?.VL[v.type]}：${v.userName}】`).join('→')
     return v
   })

@@ -23,7 +23,7 @@
             style="width: 320px"
           />
         </el-form-item>
-        <el-form-item label="抄送节点" prop="ccPosition">
+        <!-- <el-form-item label="抄送节点" prop="ccPosition">
           <common-select
             v-model="form.ccPosition"
             :options="ddApprovalPositionEnum.ENUM"
@@ -46,7 +46,7 @@
             placeholder="选择抄送人"
             style="width: 320px"
           />
-        </el-form-item>
+        </el-form-item> -->
         <div style="padding-bottom: 10px;">
           <el-divider><span class="title">审批流程</span></el-divider>
         </div>
@@ -131,7 +131,7 @@
 <script setup>
 import { ref } from 'vue'
 
-import { ddApprovalPositionEnum, ddTaskActionTypeEnum } from '@enum-ms/dd'
+import { ddTaskActionTypeEnum } from '@enum-ms/dd'
 
 import { regForm } from '@compos/use-crud'
 import { ElMessage } from 'element-plus'
@@ -152,9 +152,9 @@ const approveList = ref([{
 
 const defaultForm = {
   id: void 0,
-  ccPosition: void 0, // 抄送节点
+  // ccPosition: void 0, // 抄送节点
+  // ccUserIds: [], // 抄送人
   applicantIds: [], // 发起人
-  ccUserIds: [], // 抄送人
   list: [] // 审批流程
 }
 
