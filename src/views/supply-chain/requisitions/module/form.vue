@@ -29,14 +29,14 @@
           clearable
           multiple
           collapse-tags
-          style="width: 340px;height: 32px;"
+          style="width: 400px;height: 32px;"
         />
         <project-cascader
           v-else
           v-model="form.projectId"
           clearable
           :disabled="form.type === preparationTypeEnum.PUBLIC.V"
-          style="width: 340px;"
+          style="width: 400px;"
         />
       </div>
       <component :is="comp" :detail="form" @success="handleSuccess" />

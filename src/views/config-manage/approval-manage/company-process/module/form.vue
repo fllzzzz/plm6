@@ -11,50 +11,52 @@
     </template>
     <template #content>
       <el-form ref="formRef" :model="form" :rules="rules" size="small" label-width="80px">
-        <el-form-item label="发起人" prop="applicantIds">
-          <user-dept-cascader
-            v-model="form.applicantIds"
-            :filterNotDdUser="true"
-            multiple
-            filterable
-            clearable
-            show-all-levels
-            placeholder="选择发起人"
-            style="width: 320px"
-          />
-        </el-form-item>
-        <!-- <el-form-item label="抄送节点" prop="ccPosition">
-          <common-select
-            v-model="form.ccPosition"
-            :options="ddApprovalPositionEnum.ENUM"
-            clearable
-            type="enum"
-            size="small"
-            class="filter-item"
-            placeholder="选择抄送节点"
-            style="width: 320px"
-          />
-        </el-form-item>
-        <el-form-item label="抄送人" prop="ccUserIds">
-          <user-dept-cascader
-            v-model="form.ccUserIds"
-            :filterNotDdUser="true"
-            multiple
-            filterable
-            clearable
-            show-all-levels
-            placeholder="选择抄送人"
-            style="width: 320px"
-          />
-        </el-form-item> -->
-        <div style="padding-bottom: 10px;">
-          <el-divider><span class="title">审批流程</span></el-divider>
+        <div class="table-header">
+          <el-form-item label="发起人" prop="applicantIds">
+            <user-dept-cascader
+              v-model="form.applicantIds"
+              :filterNotDdUser="true"
+              multiple
+              filterable
+              clearable
+              show-all-levels
+              placeholder="选择发起人"
+              style="width: 320px"
+            />
+          </el-form-item>
+          <!-- <el-form-item label="抄送节点" prop="ccPosition">
+            <common-select
+              v-model="form.ccPosition"
+              :options="ddApprovalPositionEnum.ENUM"
+              clearable
+              type="enum"
+              size="small"
+              class="filter-item"
+              placeholder="选择抄送节点"
+              style="width: 320px"
+            />
+          </el-form-item>
+          <el-form-item label="抄送人" prop="ccUserIds">
+            <user-dept-cascader
+              v-model="form.ccUserIds"
+              :filterNotDdUser="true"
+              multiple
+              filterable
+              clearable
+              show-all-levels
+              placeholder="选择抄送人"
+              style="width: 320px"
+            />
+          </el-form-item> -->
+          <div style="padding-bottom: 10px;">
+            <el-divider><span class="title">审批流程</span></el-divider>
+          </div>
         </div>
         <common-table
           ref="detailRef"
           border
           :data="approveList"
-          :max-height="300"
+          :max-height="maxHeight"
           style="width: 100%"
           class="table-form"
           return-source-data
@@ -134,6 +136,7 @@ import { ref } from 'vue'
 import { ddTaskActionTypeEnum } from '@enum-ms/dd'
 
 import { regForm } from '@compos/use-crud'
+import useMaxHeight from '@compos/use-max-height'
 import { ElMessage } from 'element-plus'
 import userDeptCascader from '@comp-base/user-dept-cascader.vue'
 import useTableValidate from '@compos/form/use-table-validate'
@@ -190,6 +193,16 @@ const tableRules = {
 
 const { CRUD, crud, form } = regForm(defaultForm, formRef)
 const { tableValidate, wrongCellMask } = useTableValidate({ rules: tableRules })
+
+// 表格高度处理
+const { maxHeight } = useMaxHeight(
+  {
+    clientHRepMainH: true,
+    navbar: false,
+    minHeight: 300,
+    extraHeight: 150
+  }
+)
 
 // 编辑
 CRUD.HOOK.afterToEdit = (crud, form) => {
