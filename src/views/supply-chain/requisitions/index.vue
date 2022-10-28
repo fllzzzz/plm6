@@ -25,7 +25,7 @@
           <el-tag :type="ddReviewStatusEnum.V[row?.sourceRow?.reviewStatus].TAG" size="medium" effect="plain">{{ row.reviewStatus }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column v-if="checkPermission(permission.detail) && columns.visible('mete')" prop="mete" key="mete" label="申购量" align="center" width="120" show-overflow-tooltip>
+      <el-table-column v-if="checkPermission(permission.detail) && columns.visible('mete')" prop="mete" key="mete" label="申购量" align="center" width="110" show-overflow-tooltip>
         <template #default="{ row }">
           <udOperation
             show-detail
@@ -41,13 +41,12 @@
           prop="enabled"
           label="状态"
           align="center"
-          width="80px"
+          width="110"
         >
         <template #default="{ row: { sourceRow: row } }">
             <el-switch
-              v-if="row.reviewStatus === ddReviewStatusEnum.PASS.V"
               v-model="row.enabled"
-              :disabled="!checkPermission(permission.edit)"
+              :disabled="!checkPermission(permission.edit) || row.reviewStatus !== ddReviewStatusEnum.PASS.V"
               active-color="#409EFF"
               inactive-color="#F56C6C"
               :active-value="enabledEnum.TRUE.V"
@@ -57,13 +56,13 @@
           </template>
         </el-table-column>
       <!--详情与审核-->
-      <el-table-column v-permission="[...permission.detail, ...permission.del]" align="center" label="操作" width="120">
+      <el-table-column v-permission="[...permission.detail, ...permission.del]" align="center" label="操作" width="110">
         <template #default="{ row: { sourceRow: row } }">
           <udOperation
           :data="{ id: row.id }"
             :permission="permission"
             :show-edit="false"
-            :show-del="row.reviewStatus === ddReviewStatusEnum.UNREVIEWED.V"
+            :disabled-del="row.reviewStatus !== ddReviewStatusEnum.UNREVIEWED.V"
             delPrompt="确定撤销本条数据吗？"
           />
         </template>
