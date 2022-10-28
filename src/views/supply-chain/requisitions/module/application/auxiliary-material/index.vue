@@ -102,9 +102,13 @@ watch(
       form.projectId = []
     } else {
       if (Array.isArray(val.projectId)) {
-        form.projectId = []
+        if (val.projectId.length === 1) {
+          form.projectId = val.projectId
+        } else {
+          form.projectId = []
+        }
       } else {
-        form.projectId = val.projectId ? [val.projectId] : val.projectId
+        form.projectId = val.projectId ? [val.projectId] : []
       }
     }
   },
