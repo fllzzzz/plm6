@@ -36,31 +36,28 @@
       clearable
       @change="crud.toQuery"
     />
+    <div v-show="crud.searchToggle">
+      <common-radio-button
+        v-model="query.productionLineTypeEnum"
+        :options="artifactProductLineEnum.ENUM"
+        type="enum"
+        showOptionAll
+        class="filter-item"
+        @change="crud.toQuery"
+      />
+      <el-input
+        v-model.trim="query.name"
+        placeholder="输入生产线名称搜索"
+        class="filter-item"
+        style="width: 200px"
+        size="small"
+        clearable
+        @keyup.enter="crud.toQuery"
+      />
+      <rrOperation />
+      <crudOperation />
+    </div>
   </div>
-  <crudOperation>
-    <template v-slot:optLeft>
-      <div v-show="crud.searchToggle">
-        <common-radio-button
-          v-model="query.productionLineTypeEnum"
-          :options="artifactProductLineEnum.ENUM"
-          type="enum"
-          showOptionAll
-          class="filter-item"
-          @change="crud.toQuery"
-        />
-        <el-input
-          v-model.trim="query.name"
-          placeholder="输入生产线名称搜索"
-          class="filter-item"
-          style="width: 200px"
-          size="small"
-          clearable
-          @keyup.enter="crud.toQuery"
-        />
-        <rrOperation />
-      </div>
-    </template>
-  </crudOperation>
 </template>
 
 <script setup>
