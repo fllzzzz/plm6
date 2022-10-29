@@ -37,6 +37,7 @@
             class="filter-item"
             placeholder="构件类型"
             style="width: 250px"
+            @change="artifactTypeChange"
             :disabled="!!form.id"
           />
         </el-form-item>
@@ -450,6 +451,12 @@ function lineTypeChange(val) {
     form.value.minLength = undefined
     form.value.boolContainsMax = undefined
     form.value.maxLength = undefined
+    form.value.parentType = undefined
+    form.value.definitionWord = undefined
+  } else {
+    form.value.serialNumberPrefixList = []
+    form.value.artifactType = undefined
+    form.value.codingType = undefined
   }
 }
 
@@ -459,6 +466,12 @@ function parentTypeChange(val) {
     form.value.minLength = undefined
     form.value.boolContainsMax = undefined
     form.value.maxLength = undefined
+  }
+}
+
+function artifactTypeChange(val) {
+  if (val !== artifactTypeEnum.SMALL.V) {
+    form.value.serialNumberPrefixList = []
   }
 }
 
