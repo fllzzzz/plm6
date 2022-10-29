@@ -159,6 +159,7 @@ const cascaderProps = {
   value: 'id',
   label: 'name',
   children: 'children',
+  expandTrigger: 'hover',
   checkStrictly: true
 }
 
