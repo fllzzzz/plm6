@@ -183,7 +183,7 @@ watch(
       nameArr.value = []
       form.links = []
     }
-    if (val === matClsEnum.STEEL_PLATE.V && oldVal !== matClsEnum.STEEL_PLATE.V) {
+    if (val === matClsEnum.STEEL_PLATE.V && oldVal && oldVal !== matClsEnum.STEEL_PLATE.V) {
       nameArr.value = []
       form.links = []
     }
