@@ -181,7 +181,7 @@ function selectChange(val) {
     if (props.filterArea && props.productType) {
       areaInfo = (monomerVal?.areaSimpleList?.length && monomerVal.areaSimpleList.filter((v) => v.productType & props.productType)) || []
     } else {
-      areaInfo = monomerVal?.areaSimpleList
+      areaInfo = monomerVal?.areaSimpleList || []
     }
     emit('getAreaInfo', areaInfo)
     emit('getCurrentInfo', monomerVal)
