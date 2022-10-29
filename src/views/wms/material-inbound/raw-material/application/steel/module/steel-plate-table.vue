@@ -144,7 +144,7 @@
 </template>
 
 <script setup>
-import { defineEmits, defineExpose, ref, inject, watchEffect, reactive, watch } from 'vue'
+import { defineExpose, ref, inject, watchEffect, reactive, watch } from 'vue'
 import { matClsEnum } from '@/utils/enum/modules/classification'
 import { isBlank, isNotBlank, toPrecision } from '@/utils/data-type'
 
@@ -156,8 +156,6 @@ import elExpandTableColumn from '@comp-common/el-expand-table-column.vue'
 import { createUniqueString } from '@/utils/data-type/string'
 import { calcSteelPlateWeight } from '@/utils/wms/measurement-calc'
 import { positiveNumPattern } from '@/utils/validate/pattern'
-
-const emit = defineEmits(['calc-weight'])
 
 // 当前物料基础类型
 const basicClass = matClsEnum.STEEL_PLATE.V
@@ -236,14 +234,6 @@ function rowWatch(row) {
   watch([() => row.length, () => row.width, () => row.thickness, baseUnit], () => calcTheoryWeight(row))
   // 计算总重
   watch([() => row.theoryWeight, () => row.quantity], () => calcTotalWeight(row))
-  // 钢材总重计算
-  watch(
-    () => row.weighingTotalWeight,
-    () => {
-      emit('calc-weight')
-    },
-    { immediate: true }
-  )
 }
 
 // 总重计算与单位重量计算分开，避免修改数量时需要重新计算单件重量
@@ -277,7 +267,6 @@ function delRow(sn, $index) {
   } else {
     form.steelPlateList.splice($index, 1)
   }
-  emit('calc-weight')
 }
 
 // 校验
