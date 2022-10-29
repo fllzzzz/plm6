@@ -79,7 +79,7 @@
       </el-table-column>
       <el-table-column key="codingType" prop="codingType" align="center" :show-overflow-tooltip="true" label="打码方式" width="100" v-if="productionLineTypeEnum!==artifactProductLineEnum.INTELLECT.V">
         <template v-slot="scope">
-          <span>{{ scope.row.codingType && scope.row.artifactType===artifactTypeEnum.SMALL.V? codingTypeEnum.VL[scope.row.codingType]:'-' }}</span>
+          <span>{{ scope.row.codingType && scope.row.productionLineTypeEnum===artifactProductLineEnum.TRADITION.V? codingTypeEnum.VL[scope.row.codingType]:'-' }}</span>
         </template>
       </el-table-column>
       <el-table-column key="definitionWord" prop="definitionWord" align="center" :show-overflow-tooltip="true" label="定义代码" v-if="productionLineTypeEnum!==artifactProductLineEnum.TRADITION.V">

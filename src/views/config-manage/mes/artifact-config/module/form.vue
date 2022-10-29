@@ -37,6 +37,7 @@
             class="filter-item"
             placeholder="构件类型"
             style="width: 250px"
+            @change="artifactTypeChange"
             :disabled="!!form.id"
           />
         </el-form-item>
@@ -205,7 +206,7 @@
             <common-button icon="el-icon-plus" size="mini" type="success" style="margin: 0 0 12px 6px" @click="addSerialNumber" />
           </div>
         </el-form-item>
-        <el-form-item label="打码方式" prop="codingType" v-if="form.artifactType===artifactTypeEnum.SMALL.V">
+        <el-form-item label="打码方式" prop="codingType" v-if="form.productionLineTypeEnum === artifactProductLineEnum.TRADITION.V">
           <common-select
             v-model="form.codingType"
             :options="codingTypeEnum.ENUM"
@@ -451,6 +452,12 @@ function lineTypeChange(val) {
     form.value.minLength = undefined
     // form.value.boolContainsMax = undefined
     form.value.maxLength = undefined
+    form.value.parentType = undefined
+    form.value.definitionWord = undefined
+  } else {
+    form.value.serialNumberPrefixList = []
+    form.value.artifactType = undefined
+    form.value.codingType = undefined
   }
 }
 
@@ -463,6 +470,11 @@ function parentTypeChange(val) {
   }
 }
 
+function artifactTypeChange(val) {
+  if (val !== artifactTypeEnum.SMALL.V) {
+    form.value.serialNumberPrefixList = []
+  }
+}
 function addProcess() {
   form.value.specPrefixList.push({
     add: true
