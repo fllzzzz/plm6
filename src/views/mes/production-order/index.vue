@@ -51,7 +51,7 @@
         </template>
       </el-table-column>
     </common-table>
-    <fDetail v-model="detailVisible" :currentId="currentId" @success="crud.toQuery" :permission="permission"/>
+    <fDetail v-model="detailVisible" :currentId="currentId" @success="crud.refresh" :permission="permission"/>
     <common-drawer
       append-to-body
       ref="drawerRef"

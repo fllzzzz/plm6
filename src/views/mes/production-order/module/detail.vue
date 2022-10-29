@@ -16,28 +16,28 @@
     </template>
     <template #content>
       <el-form ref="formRef" size="small" label-width="130px">
-        <common-table :data="list" v-loading="tableLoading" return-source-data :showEmptySymbol="false" :span-method="objectSpanMethod" :max-height="maxHeight" :stripe="false">
-          <el-table-column key="project" prop="project" label="项目" align="center" min-width="120">
+        <common-table :data="list" v-loading="tableLoading" return-source-data :showEmptySymbol="false" :span-method="objectSpanMethod" :max-height="maxHeight" :cell-class-name="wrongCellMask" :stripe="false">
+          <el-table-column key="project" prop="project" label="项目" align="center" min-width="120" :show-overflow-tooltip="true">
             <template v-slot="scope">
               <span class="project-name">{{ projectNameFormatter(scope.row.project) }}</span>
             </template>
           </el-table-column>
-          <el-table-column key="monomer.name" prop="monomer.name" label="单体" align="center" />
-          <el-table-column key="area.name" prop="area.name" label="区域" align="center" />
-          <el-table-column key="quantity" prop="quantity" label="数量（件）" align="center" />
-          <el-table-column key="totalNetWeight" prop="totalNetWeight" label="重量（kg）" align="center">
+          <el-table-column key="monomer.name" prop="monomer.name" label="单体" align="center" :show-overflow-tooltip="true" />
+          <el-table-column key="area.name" prop="area.name" label="区域" align="center" :show-overflow-tooltip="true" />
+          <el-table-column key="quantity" prop="quantity" label="数量（件）" align="center" :show-overflow-tooltip="true" />
+          <el-table-column key="totalNetWeight" prop="totalNetWeight" label="重量（kg）" align="center" :show-overflow-tooltip="true">
             <template v-slot="scope">
               <span v-if="scope.row.totalNetWeight">{{toThousand(scope.row.totalNetWeight,DP.COM_WT__KG)}}</span>
               <span v-else>-</span>
             </template>
           </el-table-column>
-          <el-table-column key="totalWeight" prop="totalWeight" label="合计（kg）" align="center">
+          <el-table-column key="totalWeight" prop="totalWeight" label="合计（kg）" align="center" :show-overflow-tooltip="true">
             <template v-slot="scope">
               <span v-if="scope.row.totalWeight" style="cursor:pointer;color:#409eff;" @click="drawerVisible=true">{{toThousand(scope.row.totalWeight,DP.COM_WT__KG)}}</span>
               <span v-else>-</span>
             </template>
           </el-table-column>
-          <el-table-column key="closingDate" prop="closingDate" label="截止日" align="center">
+          <el-table-column key="closingDate" prop="closingDate" label="截止日" align="center" :show-overflow-tooltip="true">
             <template v-slot="scope">
               {{scope.row.closingDate?parseTime(scope.row.closingDate,'{y}-{m}-{d}'):'-'}}
             </template>
@@ -115,11 +115,13 @@ import useProductLines from '@compos/store/use-product-lines'
 import { projectNameFormatter } from '@/utils/project'
 import useVisible from '@compos/use-visible'
 import { auditTypeEnum } from '@enum-ms/contract'
+import { isNotBlank } from '@data-type/index'
 import { DP } from '@/settings/config'
 import { parseTime } from '@/utils/date'
 import { toThousand } from '@/utils/data-type/number'
 import { judgeSameValue } from '@/views/contract/info/judgeSameValue'
 import checkPermission from '@/utils/system/check-permission'
+import useTableValidate from '@compos/form/use-table-validate'
 
 import structureList from './structure-list'
 
@@ -191,6 +193,24 @@ watch(
   { deep: true, immediate: true }
 )
 
+// 车间产线
+const validateLine = (value, row) => {
+  if (isNotBlank(row.timeArr)) {
+    if (isNotBlank(value)) {
+      return true
+    } else {
+      return false
+    }
+  }
+  return true
+}
+
+const tableRules = {
+  line: [{ validator: validateLine, message: '请选择车间', trigger: 'change' }]
+}
+
+const { tableValidate, wrongCellMask } = useTableValidate({ rules: tableRules })
+
 function objectSpanMethod({ row, column, rowIndex, columnIndex }) {
   if (columnIndex === 0 || columnIndex === 1 || columnIndex === 5) {
     return {
@@ -230,7 +250,6 @@ function handleChange(val, row) {
     row.workshopId = undefined
     row.productionLineId = undefined
   }
-  console.log(row)
 }
 
 function timeChange(value) {
@@ -290,6 +309,12 @@ async function fetchDetail() {
 }
 
 async function onSubmit() {
+  const { validResult, dealList } = tableValidate(list.value)
+  if (validResult) {
+    list.value = dealList
+  } else {
+    return validResult
+  }
   submitLoading.value = true
   try {
     const submitData = []
@@ -309,7 +334,7 @@ async function onSubmit() {
       }
     })
     if (!submitData.length) {
-      ElMessage.error('请至少提交一条信息')
+      ElMessage.error('请至少提交或更改一条信息')
       return
     }
     await updateSchedule(submitData)
@@ -320,6 +345,8 @@ async function onSubmit() {
   } catch (error) {
     submitLoading.value = false
     console.log('生产订单排期', error)
+  } finally {
+    submitLoading.value = false
   }
 }
 
