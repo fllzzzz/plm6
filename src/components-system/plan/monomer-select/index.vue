@@ -148,9 +148,7 @@ async function fetchData() {
       selectChange(selectValue.value)
     } else {
       selectValue.value = props.defaultValue ? props.defaultValue : undefined
-      if (selectValue.value) {
-        selectChange(selectValue.value)
-      }
+      selectChange(selectValue.value)
     }
     loading.value = false
   }
