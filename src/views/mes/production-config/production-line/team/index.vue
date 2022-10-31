@@ -22,7 +22,7 @@
               计价方式：<span>{{ row.wageQuotaType }}</span>
             </p> -->
             <p>
-              组员：<span>{{ row.leaderName }}</span>
+              组员：<span>{{ row.memberNames }}</span>
             </p>
           </template>
         </el-expand-table-column>
