@@ -95,6 +95,7 @@ watch(
   () => props.detail,
   (val = {}) => {
     form.type = val.type
+    form.materialType = val.materialType
     // 项目id
     if (val.type === preparationTypeEnum.PROJECT.V) {
       form.projectId = val.projectId
