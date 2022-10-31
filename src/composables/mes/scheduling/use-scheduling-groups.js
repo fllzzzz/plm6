@@ -104,7 +104,7 @@ function dataFormat(list, _factoryIds, returnAll = false) {
       const productionLines = workshops[w].productionLineList
       for (let p = 0; p < productionLines.length; p++) {
         const _groups = []
-        const groups = productionLines[w].groupsList
+        const groups = productionLines[p].groupsList
         for (let g = 0; g < groups.length; g++) {
           _groups.push({
             id: groups[g].id,
