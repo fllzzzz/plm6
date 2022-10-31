@@ -91,7 +91,7 @@ const props = defineProps({
 const dataFormat = ref([
   ['applyDate', ['parse-time', '{y}-{m}-{d}']],
   ['paymentDate', ['parse-time', '{y}-{m}-{d}']],
-  ['auditTime', 'parse-time'],
+  ['auditTime', ['parse-time', '{y}-{m}-{d}']],
   ['applyAmount', 'to-thousand']
 ])
 
