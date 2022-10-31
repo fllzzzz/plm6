@@ -71,6 +71,12 @@
           placeholder="请选择班组"
           style="width: 100%"
         >
+        <template #empty>
+          <div style="text-align: center;display: flex;flex-direction: column;padding: 10px;color: #c0c4cc;">
+            <span>暂无数据</span>
+            <span style="margin-top: 5px;color: #f56c6c;">*请到班组管理进行配置</span>
+          </div>
+        </template>
           <!-- <template #view="{ data: item }">
             <span>{{ item.leaderName }} | {{ item.processName }} | {{ teamAttributeEnum.VL[item.organizationType] }}</span>
           </template> -->
