@@ -1,36 +1,36 @@
 <template>
   <div class="app-container">
-    <div v-show="!processList.id" class="my-code" style="width: 100%">*点击左侧表格行查看详情</div>
-    <div v-show="processList.id" style="width: 100%">
+    <div v-show="!processList.taskOrderId" class="my-code" style="width: 100%">*点击左侧表格行查看详情</div>
+    <div v-show="processList.taskOrderId" style="width: 100%">
       <common-table
         ref="tableRef"
-        :data="transformTab === processMaterialListTypeEnum.MACHINE_PART.V ? partProcessList : ArtifactProcessList"
+        :data="processData"
         :empty-text="'暂无数据'"
         :max-height="maxHeight"
         highlight-current-row
         row-key="projectId"
         style="width: 100%; cursor: pointer"
-        @current-change="handleCurrenChange"
+        @row-click="handleRowChange"
       >
-        <el-table-column align="center" key="process" prop="process" :show-overflow-tooltip="true" label="工序">
+        <el-table-column align="center" key="name" prop="name" :show-overflow-tooltip="true" label="工序">
           <template v-slot="scope">
-            <el-icon :size="20" style="top: 5px; color: red"><BellFilled /></el-icon>
-            <span>{{ scope.row.process }}</span>
+            <el-icon v-if="scope.row.status === 0" :size="20" style="top: 5px; color: red"><BellFilled /></el-icon>
+            <span>{{ scope.row.name }}</span>
           </template>
         </el-table-column>
-        <el-table-column align="center" key="complete" prop="complete" :show-overflow-tooltip="true" label="进度" min-width="100px">
+        <el-table-column align="center" key="rate" prop="rate" :show-overflow-tooltip="true" label="进度" min-width="100px">
           <template v-slot="scope">
-            <el-progress :text-inside="true" stroke-linecap="square" :stroke-width="22" :percentage="scope.row.complete" status="success" />
+            <el-progress :text-inside="true" stroke-linecap="square" :stroke-width="22" :percentage="scope.row.rate" status="success" />
           </template>
         </el-table-column>
-        <el-table-column align="center" key="task" prop="task" :show-overflow-tooltip="true" label="任务（件/kg）">
+        <el-table-column align="center" key="quantity" prop="quantity" :show-overflow-tooltip="true" label="任务（件/kg）">
           <template v-slot="scope">
-            <span>{{ scope.row.quantity }}/{{ scope.row.weight }}</span>
+            <span>{{ scope.row.quantity }}/{{ scope.row.mete }}</span>
           </template>
         </el-table-column>
-        <el-table-column align="center" key="finish" prop="finish" :show-overflow-tooltip="true" label="完成（件/kg）">
+        <el-table-column align="center" key="completeQuantity" prop="completeQuantity" :show-overflow-tooltip="true" label="完成（件/kg）">
           <template v-slot="scope">
-            <span>{{ scope.row.quantity }}/{{ scope.row.weight }}</span>
+            <span>{{ scope.row.completeQuantity }}/{{ scope.row.completeMete }}</span>
           </template>
         </el-table-column>
       </common-table>
@@ -39,55 +39,77 @@
   </div>
 </template>
 <script setup>
-import { ref, defineProps } from 'vue'
+import { process, machineProcess } from '@/api/mes/task-tracking/work-order-tracking.js'
+import { componentTypeEnum } from '@enum-ms/mes'
+import { ref, defineProps, watch, inject } from 'vue'
 import { BellFilled } from '@element-plus/icons'
-import { processMaterialListTypeEnum } from '@enum-ms/mes'
 import useMaxHeight from '@compos/use-max-height'
 import productionLineDetail from '../production-line-detail/index.vue'
+import { modelTranslateStatusEnum } from '@/utils/enum/modules/bim'
 
-defineProps({
+const props = defineProps({
   processList: {
     type: Object,
-    default: () => {}
+    default: () => {},
   },
-  transformTab: {
-    type: Number,
-    default: undefined
-  }
 })
-const ArtifactProcessList = [
-  {
-    process: '组立',
-    type: 1,
-    complete: 40,
-    quantity: 25,
-    weight: 1000,
-    planDate: 1630000,
-    currentDate: 1620000,
-    productionLineList: [
-      { workshop: '一车间', productionLine: '一线' },
-      { workshop: '二车间', productionLine: '二线' }
-    ]
-  },
-  { process: '埋弧', type: 2, complete: 60, quantity: 59, weight: 1000, planDate: 1630000, currentDate: 1620000 },
-  { process: '总装', type: 4, complete: 27, quantity: 70, weight: 1000, planDate: 20000000, currentDate: 1620000 },
-  { process: '焊接', type: 16, complete: 45, quantity: 45, weight: 1000, planDate: 20000000, currentDate: 1620000 }
-]
-const partProcessList = [
-  { process: '切割', type: 8, complete: 40, quantity: 25, weight: 1000, planDate: 1630000, currentDate: 1620000 },
-  { process: '钻孔', type: 8, complete: 60, quantity: 59, weight: 1000, planDate: 1630000, currentDate: 1620000 }
-]
 
 const tableRef = ref()
 const detailData = ref({})
+const processData = ref([])
 const drawerVisible = ref(false)
 
+const productType = inject('productType')
+watch(
+  () => props.processList,
+  (val) => {
+    if (val) {
+      if(productType.value === componentTypeEnum.ARTIFACT.V) {
+        processGet()
+      } else {
+        machineProcessGet()
+      }
+    }
+  },
+  { deep: true }
+)
+
+async function processGet() {
+  processData.value = []
+  if(!props.processList?.taskOrderId){
+    return
+  }
+  try {
+      const data = await process({
+        productType: productType.value,
+        taskOrderId: props.processList.taskOrderId,
+      })
+    processData.value = data?.artifactList?.concat(data?.assembleList)
+  } catch (e) {
+    console.log('获取构件部件工序进度', e)
+  }
+}
+async function machineProcessGet() {
+  processData.value = []
+  if(!props.processList?.taskOrderId){
+    return
+  }
+  try {
+    const data = await machineProcess({
+      productType: productType.value,
+      taskOrderId: props.processList.taskOrderId,
+    })
+    processData.value = data
+  } catch (e) {
+    console.log('获取零件工序进度', e)
+  }
+}
 const { maxHeight } = useMaxHeight({
   extraBox: ['.head-container'],
-  paginate: true
+  paginate: true,
 })
 
-function handleCurrenChange(row) {
+function handleRowChange(row) {
   drawerVisible.value = true
   detailData.value = row
 }

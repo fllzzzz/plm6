@@ -638,6 +638,17 @@ export default {
       noCache: true
     },
     children: [{
+      name: 'MesProductionDashboardProjectOverview',
+      path: 'project-overview',
+      hidden: false,
+      component: '/mes/production-manage/dashboard/project-overview/index',
+      meta: {
+        title: '项目总览',
+        icon: 'project',
+        noCache: true
+      }
+    },
+    {
       name: 'MesProductionDashboardProjectDashboard',
       path: 'project-dashboard',
       hidden: false,

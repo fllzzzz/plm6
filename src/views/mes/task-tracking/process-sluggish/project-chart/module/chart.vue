@@ -28,11 +28,16 @@ const chart = ref()
 const provinceList = ref([])
 
 const provinceNameList = computed(() => {
-  return provinceList.value.map((v) => v.provinceName)
+  return provinceList.value.map((v) => v.name)
 })
 
 const quantityList = computed(() => {
-  return provinceList.value.map((v) => v.quantity)
+  return provinceList.value.map((v) => {
+    return {
+      value: v.quantity,
+      ...v
+    }
+  })
 })
 
 const fontWidth = computed(() => {
@@ -136,6 +141,12 @@ function setSeries() {
             position: 'inside', // 数据值位置
             textStyle: {
               fontSize: '14'
+            },
+            formatter(params) {
+              console.log(params)
+              if (params.value) {
+                return params.data.quantity + ' / ' + ((params.data.mete) / 1000).toFixed(2)
+              }
             }
           }
         }
@@ -177,6 +188,7 @@ function initChart() {
     series: setSeries()
   })
   chart.value.on('click', function (params) {
+    console.log(params)
     emit('success', params)
   })
 }

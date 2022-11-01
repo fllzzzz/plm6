@@ -1,66 +1,71 @@
 <template>
   <div class="app-container">
-    <div v-show="!props.monthlyData.id" class="my-code" style="width: 100%">*点击左侧表格行查看详情</div>
-    <div v-show="props.monthlyData.id" style="width: 100%">
-    <common-table
-      ref="tableRef"
-      :data="monthlyData"
-      :empty-text="'暂无数据'"
-      :max-height="maxHeight"
-      row-key="projectId"
-      style="width: 100%; cursor: pointer"
-      @current-change="handleProjectDetail"
-    >
-     <el-table-column type="index" label="序号" key="index" align="center" width="60px" />
-      <el-table-column align="center" key="projectName" prop="projectName" :show-overflow-tooltip="true" label="项目">
-        <template v-slot="scope">
-          <span>{{ scope.row.projectName }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column align="center" key="monomer" prop="monomer" :show-overflow-tooltip="true" label="包含单体">
-        <template v-slot="scope">
-          <template v-for="item in scope.row.monomer" :key="item">
-            <span>{{ item }}/</span>
+    <div v-show="!props.monthlyData.month" class="my-code" style="width: 100%">*点击左侧表格行查看详情</div>
+    <div v-show="props.monthlyData.month" style="width: 100%">
+      <common-table
+        ref="tableRef"
+        :data="monthlyList"
+        :empty-text="'暂无数据'"
+        :max-height="maxHeight"
+        row-key="projectId"
+        style="width: 100%; cursor: pointer"
+        @row-click="handleProjectDetail"
+      >
+        <el-table-column type="index" label="序号" key="index" align="center" width="60px" />
+        <el-table-column key="projectName" prop="projectName" :show-overflow-tooltip="true" label="项目" min-width="150px">
+          <template v-slot="scope">
+            <span>{{ scope.row.projectNumber }}-{{ scope.row.projectName }}</span>
           </template>
-        </template>
-      </el-table-column>
-      <el-table-column align="center" key="area" prop="area" :show-overflow-tooltip="true" label="包含区域">
-        <template v-slot="scope">
-          <template v-for="item in scope.row.area" :key="item">
-            <span>{{ item }}/</span>
+        </el-table-column>
+        <el-table-column align="center" key="monomer" prop="monomer" :show-overflow-tooltip="true" label="包含单体">
+          <template v-slot="scope">
+            <template v-for="item in scope.row.monomerDO" :key="item">
+              <span v-if="scope.row.monomerDO.length > 1">{{ item.name }}/</span>
+              <span v-else-if="scope.row.monomerDO.length === 1">{{ item.name }}</span>
+              <span v-else>-</span>
+            </template>
           </template>
-        </template>
-      </el-table-column>
-      <el-table-column align="center" key="projectName" prop="projectName" :show-overflow-tooltip="true" label="排产量（件/吨）">
-        <template v-slot="scope">
-          <span>{{ scope.row.totalQuantity }}/{{ scope.row.totalWeight }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column align="center" key="projectName" prop="projectName" :show-overflow-tooltip="true" label="完成率">
-        <template v-slot="scope">
-          <span>
-            <el-progress
-              :text-inside="true"
-              stroke-linecap="square"
-              :stroke-width="22"
-              :percentage="scope.row.finishedRate"
-              status="success"
-            />
-          </span>
-        </template>
-      </el-table-column>
-      <el-table-column align="center" key="projectName" prop="projectName" :show-overflow-tooltip="true" label="实际完成（件/吨）">
-        <template v-slot="scope">
-          <span>{{ scope.row.actualQuantity }}/{{ scope.row.actualWeight }}</span>
-        </template>
-      </el-table-column>
-    </common-table>
+        </el-table-column>
+        <el-table-column align="center" key="area" prop="area" :show-overflow-tooltip="true" label="包含区域">
+          <template v-slot="scope">
+            <template v-for="item in scope.row.areaDO" :key="item">
+              <span v-if="scope.row.areaDO.length > 1">{{ item.name }}/</span>
+              <span v-else-if="scope.row.areaDO.length === 1">{{ item.name }}</span>
+              <span v-else>-</span>
+            </template>
+          </template>
+        </el-table-column>
+        <el-table-column align="center" key="quantity" prop="quantity" :show-overflow-tooltip="true" label="排产量（件/吨）">
+          <template v-slot="scope">
+            <span>{{ scope.row.quantity }}/{{ scope.row.mete }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column align="center" key="rate" prop="rate" :show-overflow-tooltip="true" label="完成率">
+          <template v-slot="scope">
+            <span>
+              <el-progress :text-inside="true" stroke-linecap="square" :stroke-width="22" :percentage="scope.row.rate" status="success" />
+            </span>
+          </template>
+        </el-table-column>
+        <el-table-column
+          align="center"
+          key="completeQuantity"
+          prop="completeQuantity"
+          :show-overflow-tooltip="true"
+          label="实际完成（件/吨）"
+        >
+          <template v-slot="scope">
+            <span>{{ scope.row.completeQuantity }}/{{ scope.row.completeMete }}</span>
+          </template>
+        </el-table-column>
+      </common-table>
     </div>
-    <project-detail v-model:visible="drawerVisible" :detail-data="detailData"/>
+    <project-detail v-model:visible="drawerVisible" :detail-data="detailData" />
   </div>
 </template>
 <script setup>
-import { ref, defineProps } from 'vue'
+import { monthlyProject } from '@/api/mes/task-tracking/monthly-task-tracking.js'
+import { ref, defineProps, watch } from 'vue'
 import useMaxHeight from '@compos/use-max-height'
 import projectDetail from '../project-detail/index.vue'
 
@@ -68,12 +73,13 @@ const props = defineProps({
   monthlyData: {
     type: Object,
     default: () => {}
+  },
+  query: {
+    type: Object
   }
 })
-// const monthlyData = ref([])
-const monthlyData = [
-  { projectName: '浙江国家大学科技园', monomer: ['一号楼', '二号楼'], area: ['第一批', '第二批'], totalQuantity: 200, totalWeight: 1000, finishedRate: 36, actualQuantity: 100, actualWeight: 1000 }
-]
+
+const monthlyList = ref([])
 const tableRef = ref()
 const detailData = ref({})
 const drawerVisible = ref(false)
@@ -81,6 +87,26 @@ const { maxHeight } = useMaxHeight({
   extraBox: ['.head-container'],
   paginate: true
 })
+
+watch(
+  () => props.monthlyData.month,
+  (val) => {
+    if (val) {
+      fetchMonthly()
+    }
+  }
+)
+
+async function fetchMonthly() {
+  try {
+    const data = await monthlyProject({
+      ...props.query
+    })
+    monthlyList.value = data
+  } catch (e) {
+    console.log('获取当前月的项目数据失败', e)
+  }
+}
 
 function handleProjectDetail(row) {
   console.log(row, 'row')

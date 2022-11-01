@@ -74,7 +74,7 @@ import rrOperation from '@crud/RR.operation'
 import workshopSelect from '@comp-mes/workshop-select'
 import moment from 'moment'
 
-// const defaultTime = moment().startOf('month').valueOf()
+const defaultTime = moment().startOf('month').valueOf()
 
 const orderComponentTypeEnum = {
   ARTIFACT: componentTypeEnum.ARTIFACT,
@@ -82,8 +82,8 @@ const orderComponentTypeEnum = {
 }
 
 const defaultQuery = {
-  productType: componentTypeEnum.ARTIFACT.V
-  // localDateTime: defaultTime.toString()
+  productType: componentTypeEnum.ARTIFACT.V,
+  localDateTime: defaultTime.toString()
 }
 
 const { crud, query } = regHeader(defaultQuery)

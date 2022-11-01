@@ -1,7 +1,7 @@
 <template>
   <common-drawer
     ref="drawerRef"
-    :title="`产线：${detailData.workshopInf}>${detailData.productionLine}`"
+    :title="`产线：${detailData.workShopName}>${detailData.name}`"
     v-model="drawerVisible"
     direction="rtl"
     :before-close="handleClose"
@@ -12,16 +12,20 @@
     </template>
     <template #content>
       <!--表格渲染-->
-      <common-table ref="tableRef" :data="partData" style="width: 100%">
+      <common-table ref="tableRef" :data="productionLineData" style="width: 100%">
         <el-table-column prop="index" label="序号" align="center" min-width="60" type="index" />
-        <el-table-column prop="monomer" label="项目" align="center" min-width="180"></el-table-column>
-        <el-table-column prop="monomer" label="单体" align="center"></el-table-column>
-        <el-table-column prop="area" label="区域" align="center"></el-table-column>
-        <el-table-column prop="serialNumber" label="编号" align="center"></el-table-column>
-        <el-table-column prop="specification" label="规格" align="center"></el-table-column>
-        <el-table-column prop="quantity" label="任务数" align="center"></el-table-column>
-        <el-table-column prop="weight" label="单重" align="center"></el-table-column>
-        <el-table-column prop="finishQuantity" label="完成数" align="center"></el-table-column>
+        <el-table-column prop="monomer" label="项目" min-width="180">
+          <template #default="{ row }">
+            <span>{{row.projectNumber}}-{{row.projectName}}</span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="monomerName" key="monomerName" label="单体" align="center"></el-table-column>
+        <el-table-column prop="areaName" key="areaName" label="区域" align="center"></el-table-column>
+        <el-table-column prop="serialNumber" key="serialNumber" label="编号" align="center"></el-table-column>
+        <el-table-column prop="specification" key="specification" label="规格" min-width="120" align="center"></el-table-column>
+        <el-table-column prop="quantity" key="quantity" label="任务数" align="center"></el-table-column>
+        <el-table-column prop="weight" key="weight" label="单重" align="center"></el-table-column>
+        <el-table-column prop="completeQuantity" key="completeQuantity" label="完成数" align="center"></el-table-column>
         <el-table-column prop="status" label="状态" align="center"></el-table-column>
       </common-table>
     </template>
@@ -29,12 +33,12 @@
 </template>
 
 <script setup>
+import { productionLineDetail } from '@/api/mes/task-tracking/production-line-tracking.js'
 import useVisible from '@compos/use-visible'
 import { defineProps, defineEmits, ref } from 'vue'
-import { getCutPart } from '@/api/cutting/project-data'
 
 const emit = defineEmits(['update:visible'])
-const partData = ref([])
+const productionLineData = ref([])
 const props = defineProps({
   visible: {
     type: Boolean,
@@ -45,16 +49,17 @@ const props = defineProps({
     default: () => {}
   }
 })
-const { visible: drawerVisible, handleClose } = useVisible({ emit, props, field: 'visible', showHook: showHook })
+const { visible: drawerVisible, handleClose } = useVisible({ emit, props, field: 'visible', showHook: productionLineDetailGet })
 
-function showHook() {
-  CutPart()
-}
-
-async function CutPart() {
-  partData.value = await getCutPart(props.detailData.taskId)
-  if (partData.value === '没有零件') {
-    partData.value = []
+async function productionLineDetailGet() {
+  try {
+    const data = await productionLineDetail({
+      productionLineId: props.detailData.id,
+      productType: props.detailData.productType
+    })
+    productionLineData.value = data
+  } catch (e) {
+    console.log('获取产线跟踪详情失败', e)
   }
 }
 </script>

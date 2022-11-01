@@ -8,7 +8,7 @@
       v-loading="crud.loading"
       :data="crud.data"
       :empty-text="crud.emptyText"
-      :max-height="maxHeight"
+      max-height="330px"
       show-summary
       :summary-method="getSummaries"
       row-key="projectId"
@@ -36,24 +36,22 @@
         align="center"
         :show-overflow-tooltip="true"
         label="名称"
-        min-width="60"
       >
         <template v-slot="scope">
           <span>{{ scope.row.name }}</span>
         </template>
       </el-table-column>
       <el-table-column
-        v-if="columns.visible('artifactNumber')"
+        v-if="columns.visible('serialNumber')"
         header-align="center"
-        key="artifactNumber"
-        prop="artifactNumber"
+        key="serialNumber"
+        prop="serialNumber"
         align="center"
         :show-overflow-tooltip="true"
         label="构件编号"
-        min-width="60"
       >
         <template v-slot="scope">
-          <span>{{ scope.row.artifactNumber }}</span>
+          <span>{{ scope.row.serialNumber }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -64,7 +62,6 @@
         align="center"
         :show-overflow-tooltip="true"
         label="规格"
-        min-width="60"
       >
         <template v-slot="scope">
           <span>{{ scope.row.specification }}</span>
@@ -78,7 +75,6 @@
         align="center"
         :show-overflow-tooltip="true"
         label="长度（mm）"
-        min-width="60"
       >
         <template v-slot="scope">
           <span>{{ scope.row.length }}</span>
@@ -92,7 +88,6 @@
         align="center"
         :show-overflow-tooltip="true"
         label="材质"
-        min-width="60"
       >
         <template v-slot="scope">
           <span>{{ scope.row.material }}</span>
@@ -106,24 +101,22 @@
         align="center"
         :show-overflow-tooltip="true"
         label="生产数"
-        min-width="60"
       >
         <template v-slot="scope">
           <span>{{ scope.row.quantity }}</span>
         </template>
       </el-table-column>
       <el-table-column
-        v-if="columns.visible('totalWeight')"
+        v-if="columns.visible('mete')"
         header-align="center"
-        key="totalWeight"
-        prop="totalWeight"
+        key="mete"
+        prop="mete"
         align="center"
         :show-overflow-tooltip="true"
         label="总重（kg）"
-        min-width="60"
       >
         <template v-slot="scope">
-          <span>{{ scope.row.totalWeight }}</span>
+          <span>{{ scope.row.mete }}</span>
         </template>
       </el-table-column>
     </common-table>
@@ -133,18 +126,14 @@
 </template>
 
 <script setup>
+import crudApi from '@/api/mes/factory-report/workshop-report.js'
 import { ref } from 'vue'
 import useCRUD from '@compos/use-crud'
 import pagination from '@crud/Pagination'
-import useMaxHeight from '@compos/use-max-height'
 import { tableSummary } from '@/utils/el-extra'
 import mHeader from './module/header'
 
 const tableRef = ref()
-const { maxHeight } = useMaxHeight({
-  extraBox: ['.head-container'],
-  paginate: true
-})
 const optShow = {
   add: false,
   edit: false,
@@ -152,21 +141,25 @@ const optShow = {
   download: false
 }
 
-const { crud, columns } = useCRUD({
+const { crud, CRUD, columns } = useCRUD({
   title: '车间报表',
   sort: [],
   optShow: { ...optShow },
-  //   crudApi: { ...crudApi },
-  // permission: { ...permission },
+  crudApi: { ...crudApi },
   hasPagination: true
 },
 tableRef
 )
 
+CRUD.HOOK.handleRefresh = (crud, res) => {
+  res.data.content = res.data.content.map((v) => {
+    return v
+  })
+}
 // 合计
 function getSummaries(param) {
   return tableSummary(param, {
-    props: ['quantity', 'totalWeight']
+    props: ['quantity', 'mete']
   })
 }
 </script>
