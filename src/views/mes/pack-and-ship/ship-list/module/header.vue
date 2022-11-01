@@ -101,6 +101,20 @@
         <rrOperation />
       </div>
     </div>
+    <el-row v-loading="crud.loading" :gutter="20" class="panel-group">
+      <el-col :span="6" class="card-panel-col">
+        <Panel name="全年发运量（t）" text-color="#626262" num-color="#1890ff" :end-val="totalAmount.shipMete || 0" :precision="DP.COM_WT__T" />
+      </el-col>
+      <el-col :span="6" class="card-panel-col">
+        <Panel name="全年发运车次" text-color="#626262" num-color="#1890ff" :end-val="totalAmount.shipCarQuantity || 0" :precision="0" />
+      </el-col>
+      <el-col :span="6" class="card-panel-col">
+        <Panel name="本月发运量（t）" text-color="#626262" num-color="#1890ff" :end-val="totalAmount.shipMete || 0" :precision="DP.COM_WT__T" />
+      </el-col>
+      <el-col :span="6" class="card-panel-col">
+        <Panel name="本月发运车次" text-color="#626262" num-color="#1890ff" :end-val="totalAmount.shipCarQuantity || 0" :precision="0" />
+      </el-col>
+    </el-row>
     <crudOperation>
       <template v-slot:optLeft>
         <print-table
@@ -141,6 +155,7 @@ import checkPermission from '@/utils/system/check-permission'
 import { regHeader } from '@compos/use-crud'
 import crudOperation from '@crud/CRUD.operation'
 import rrOperation from '@crud/RR.operation'
+import Panel from '@/components/Panel'
 import { ElMessage } from 'element-plus'
 
 const defaultQuery = {
@@ -163,6 +178,7 @@ const summaryLoading = ref(false)
 const shipWeight = ref(0)
 const currentKey = ref()
 const apiKey = ref([])
+const totalAmount = ref({})
 
 onMounted(() => {
   if (checkPermission(permission.print)) {
@@ -231,3 +247,21 @@ function handleDateChange() {
 }
 
 </script>
+<style lang="scss" scoped>
+.panel-group {
+  margin-bottom:10px;
+  ::v-deep(.card-panel) {
+    .card-panel-description {
+      .card-panel-text {
+        text-align:left;
+        margin-top: 2px;
+      }
+      .card-panel-num {
+        display:block;
+        font-size: 18px;
+        text-align:right;
+      }
+    }
+  }
+}
+</style>

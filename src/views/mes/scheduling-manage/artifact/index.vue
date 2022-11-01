@@ -54,7 +54,7 @@
               <el-input-number
                 v-model="row.needSchedulingQuantity"
                 :step="1"
-                :min="0"
+                :min="1"
                 :max="row.unSchedulingQuantity"
                 :precision="0"
                 size="mini"
@@ -137,6 +137,7 @@ import moment from 'moment'
 
 // import { deepClone } from '@data-type/index'
 import { componentTypeEnum } from '@enum-ms/mes'
+import { positiveNumPattern } from '@/utils/validate/pattern'
 import { artifactSchedulingPM as permission } from '@/page-permission/mes'
 
 import useSchedulingGroups from '@compos/mes/scheduling/use-scheduling-groups'
@@ -199,7 +200,10 @@ provide('areaIdObj', curAreaIdObj)
 provide('curFactoryIds', curFactoryIds)
 
 const tableRules = {
-  needSchedulingQuantity: [{ required: true, message: '请填写数量', trigger: 'blur' }],
+  needSchedulingQuantity: [
+    { required: true, message: '请填写数量', trigger: 'blur' },
+    { pattern: positiveNumPattern, message: '数量必须大于0', trigger: 'blur' }
+  ],
   groupsId: [{ required: true, message: '请选择生产组', trigger: 'change' }],
   askCompleteTime: [{ required: true, message: '请选择需求完成日期', trigger: 'change' }]
 }

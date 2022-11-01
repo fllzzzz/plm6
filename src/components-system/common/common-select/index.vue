@@ -35,6 +35,9 @@
         <slot name="view" :data="item" />
       </el-option>
     </template>
+    <template #empty>
+      <slot name="empty" />
+    </template>
   </el-select>
 </template>
 

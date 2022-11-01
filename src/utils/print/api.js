@@ -92,6 +92,7 @@ const mesWorkOrderTrackingList = mes.workOrderTrackingList
 const mesWorkshopReport = mes.workshopReport
 
 const mesStudSleeveStatisticsList = mes.studSleeveStatisticsList
+const mesProjectShipDetail = mes.mesProjectShipDetail
 
 // wms
 const wmsRmOutboundReceipt = wms.wmsRmOutboundReceipt // 出库
@@ -197,6 +198,8 @@ export default {
   mesWorkshopReport, // 车间报表清单详情
 
   mesStudSleeveStatisticsList, // 栓钉套筒统计清单详情
+
+  mesProjectShipDetail, // 发运管理项目发运详情
 
   // wms
   wmsRmOutboundReceipt, // 出库（领料单）单

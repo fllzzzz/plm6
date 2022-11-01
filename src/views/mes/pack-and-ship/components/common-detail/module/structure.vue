@@ -1,9 +1,9 @@
 <template>
   <common-table :data="list" :max-height="maxHeight" empty-text="暂无数据" style="width: 100%">
     <el-table-column label="序号" type="index" align="center" width="60" />
-    <el-table-column :show-overflow-tooltip="true" prop="name" label="名称" />
     <el-table-column :show-overflow-tooltip="true" prop="monomer.name" label="单体" />
     <el-table-column v-if="isSuspend" :show-overflow-tooltip="true" prop="area.name" label="区域" />
+    <el-table-column :show-overflow-tooltip="true" prop="name" label="名称" />
     <el-table-column :show-overflow-tooltip="true" prop="serialNumber" label="编号" />
     <el-table-column :show-overflow-tooltip="true" prop="specification" label="规格" />
     <el-table-column :show-overflow-tooltip="true" prop="material" label="材质" align="center" />
