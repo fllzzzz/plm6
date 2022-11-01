@@ -38,7 +38,7 @@
                   :disabled="!currentGroup.name"
                   size="mini"
                   type="enum"
-                  :unshowVal="currentLine.productType === componentTypeEnum.MACHINE_PART.V? [teamTypeEnum.INSPECTION.V] : []"
+                  :unshowVal="currentLine.productType & componentTypeEnum.MACHINE_PART.V? [teamTypeEnum.INSPECTION.V] : []"
                   :options="teamTypeEnum.ENUM"
                 />
                 <el-tag v-if="currentGroup.name" size="medium" style="margin-left: 10px">{{
@@ -123,6 +123,9 @@ function handleChangeLine(val) {
   if (val) {
     currentLine.value = val
     currentGroup.value = {}
+    if (currentLine.value.productType & componentTypeEnum.MACHINE_PART.V) {
+      teamType.value = teamTypeEnum.TEAM.V
+    }
   }
 }
 

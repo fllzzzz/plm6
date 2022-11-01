@@ -38,6 +38,8 @@
         >
           <template v-for="item in boardList" :key="item.id">
             <el-tooltip
+              v-model="item.visibleTip"
+              manual
               :open-delay="300"
               class="item"
               effect="light"
@@ -53,6 +55,7 @@
                 class="board-box"
                 style="position: relative; cursor: pointer"
                 :style="{ 'background-color': `${item.boxColor}`, ...boxStyle }"
+                @click.stop="item.visibleTip = !item.visibleTip"
               >
                 <span class="ellipsis-text text">
                   {{ item.serialNumber }}
@@ -134,6 +137,7 @@ CRUD.HOOK.handleRefresh = (crud, res) => {
   clearCheck()
   res.data.content = res.data.content.map((v) => {
     v.checked = false
+    v.visibleTip = false
     return v
   })
 }
