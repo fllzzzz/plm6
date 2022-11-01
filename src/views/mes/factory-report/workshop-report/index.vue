@@ -16,16 +16,16 @@
     >
       <el-table-column prop="index" label="序号" align="center" width="60" type="index" />
       <el-table-column
-        v-if="columns.visible('projectName')"
+        v-if="columns.visible('project')"
         header-align="center"
-        key="projectName"
-        prop="projectName"
+        key="project.shortName"
+        prop="project"
         :show-overflow-tooltip="true"
         label="项目"
         min-width="60"
       >
         <template v-slot="scope">
-          <span>{{ scope.row.projectNumber }}-{{ scope.row.projectName }}</span>
+          <span>{{ projectNameFormatter(scope.row.project) }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -131,6 +131,7 @@ import { ref } from 'vue'
 import useCRUD from '@compos/use-crud'
 import pagination from '@crud/Pagination'
 import { tableSummary } from '@/utils/el-extra'
+import { projectNameFormatter } from '@/utils/project'
 import mHeader from './module/header'
 
 const tableRef = ref()

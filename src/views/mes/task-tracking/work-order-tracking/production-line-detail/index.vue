@@ -9,8 +9,12 @@
   >
     <template #titleRight>
       <print-table
-        api-key="workOrderTrackingList"
-        :params="{ ...query }"
+        api-key="mesWorkOrderTrackingList"
+        :params="{
+          processId: props.detailData.id,
+          productType: props.detailData.productType,
+          taskProcessId: props.detailData.taskProcessId,
+        }"
         size="mini"
         type="warning"
         class="filter-item"
@@ -54,7 +58,7 @@
         <el-table-column prop="weight" key="weight" label="单重" align="center"></el-table-column>
         <el-table-column prop="completeQuantity" key="completeQuantity" label="完成数" align="center">
           <template #default="{ row }">
-            <span v-if="row.status === 1">{{ row.completeQuantity }}</span>
+            <span v-if="row.status === workOrderTypeEnum.NORMAL.V">{{ row.completeQuantity }}</span>
             <span style="color: red" v-else>{{ row.completeQuantity }}</span>
           </template>
         </el-table-column>
@@ -65,8 +69,8 @@
         </el-table-column>
         <el-table-column prop="status" label="状态" align="center" sortable>
           <template #default="{ row }">
-            <span style="color: red" v-if="row.status === 0">滞后</span>
-            <span v-else>正常</span>
+            <span style="color: red" v-if="row.status === workOrderTypeEnum.DELAY.V">{{ workOrderTypeEnum.VL[row.status] }}</span>
+            <span v-else>{{ workOrderTypeEnum.VL[row.status] }}</span>
           </template>
         </el-table-column>
       </common-table>
@@ -80,7 +84,7 @@ import useVisible from '@compos/use-visible'
 import tagTabs from '@comp-common/tag-tabs'
 import { defineProps, defineEmits, ref, inject } from 'vue'
 import { parseTime } from '@/utils/date'
-import { componentTypeEnum } from '@enum-ms/mes'
+import { componentTypeEnum, workOrderTypeEnum } from '@enum-ms/mes'
 
 const emit = defineEmits(['update:visible', 'change'])
 const processDetailData = ref([])
@@ -103,7 +107,7 @@ async function processDetailGet() {
     const data = await processDetail({
       processId: props.detailData.id,
       productType: props.detailData.productType,
-      taskProcessId: props.detailData.taskProcessId
+      taskProcessId: props.detailData.taskProcessId,
     })
     processDetailData.value = data
   } catch (e) {
@@ -114,7 +118,6 @@ async function processDetailGet() {
 function tabChange(val) {
   console.log(val, 'val')
 }
-
 </script>
 
 <style rel="stylesheet/scss" lang="scss" scoped>

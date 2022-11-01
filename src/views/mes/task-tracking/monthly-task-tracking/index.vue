@@ -82,7 +82,7 @@
   </div>
 </template>
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import crudApi from '@/api/mes/task-tracking/monthly-task-tracking.js'
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
@@ -99,7 +99,6 @@ const optShow = {
 
 const query = computed(() => {
   return {
-    dateTime: crud.query.dateTime,
     workShopId: crud.query.workShopId,
     productionLineId: crud.query.productionLineId
   }
@@ -117,6 +116,23 @@ const { crud, CRUD, columns } = useCRUD(
     hasPagination: false
   },
   tableRef
+)
+
+watch(
+  () => crud.query.dateTime,
+  (val) => {
+    if(val) {
+      monthlyData.value = {}
+    }
+  }
+)
+watch(
+  () => query.value,
+  (val) => {
+    if(val) {
+      monthlyData.value = {}
+    }
+  }
 )
 
 const { maxHeight } = useMaxHeight({

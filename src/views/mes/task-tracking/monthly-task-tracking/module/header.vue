@@ -19,6 +19,7 @@
         :factory-id="query.factoryId"
         style="width: 200px"
         class="filter-item"
+        clearable
         @change="crud.toQuery"
       />
       <production-line-select
@@ -26,6 +27,7 @@
         class="filter-item"
         v-model="query.productionLineId"
         :factory-id="query.factoryId"
+        :workshop-id="query.workShopId"
         placeholder="请选择生产线"
         style="width: 200px"
         clearable
@@ -40,9 +42,12 @@ import { regHeader } from '@compos/use-crud'
 import rrOperation from '@crud/RR.operation'
 import workshopSelect from '@comp-mes/workshop-select'
 import productionLineSelect from '@comp-mes/production-line-select'
+import moment from 'moment'
+
+const defaultTime = moment().startOf('month').valueOf()
 
 const defaultQuery = {
-  dateTime: new Date().getTime(),
+  dateTime: defaultTime.toString(),
   workShopId: undefined,
   productionLineId: undefined
 }

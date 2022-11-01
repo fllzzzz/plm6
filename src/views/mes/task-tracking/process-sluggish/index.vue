@@ -15,29 +15,29 @@
         <div v-show="processList.name">
           <div style="display: flex; justify-content: space-between; margin-bottom: 8px">
             <el-tag style="align-self: center; font-weight: 900">工序：{{ processList.name }}</el-tag>
-            <print-table api-key="processList" :params="{ year: crud.query.year }" size="mini" type="warning" />
+            <print-table api-key="mesProcessList" :params="{ productType: productType, processId: crud.query.processId }" size="mini" type="warning" />
           </div>
           <common-table
             ref="tableRef"
             v-loading="crud.loading"
             :data="crud.data"
             :data-format="dataFormat"
+            return-source-data
             :empty-text="crud.emptyText"
             :max-height="maxHeight"
             style="width: 100%"
           >
             <el-table-column prop="index" label="序号" align="center" width="60" type="index" fixed="left" />
             <el-table-column
-              v-if="columns.visible('name')"
-              key="name"
-              prop="name"
+              v-if="columns.visible('project')"
+              key="project.shortName"
+              prop="project"
               :show-overflow-tooltip="true"
               min-width="150"
-              align="center"
               label="项目"
             >
               <template v-slot="scope">
-                <span>{{ scope.row.serialNumber }}-{{ scope.row.projectName }}</span>
+                <span>{{ projectNameFormatter(scope.row.project) }}</span>
               </template>
             </el-table-column>
             <el-table-column
@@ -97,6 +97,7 @@ import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import { parseTime } from '@/utils/date'
 // import pagination from '@crud/Pagination'
+import { projectNameFormatter } from '@/utils/project'
 import mHeader from './module/header'
 import projectChart from './project-chart'
 

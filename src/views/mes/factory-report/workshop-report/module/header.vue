@@ -62,7 +62,7 @@
         class="filter-item date-item"
         @change="handleDateChange"
       />
-      <project-cascader v-model="query.projectId" class="filter-item" @change="handleProjectIdChange" />
+      <project-cascader v-model="query.projectId" class="filter-item" @change="handleProjectIdChange" clearable />
       <el-tag type="success" class="filter-item" size="medium">
         <span>产量（吨）</span>
         <span>：</span>
@@ -70,7 +70,7 @@
         </el-tag>
       <crudOperation>
         <template #optLeft>
-          <print-table api-key="workshopReport" :params="{ ...query }" size="mini" type="warning" class="filter-item" />
+          <print-table api-key="mesWorkshopReport" :params="{ startTime: query.startTime, endTime: query.endTime, projectId: query.projectId }" size="mini" type="warning" class="filter-item" />
         </template>
       </crudOperation>
     </div>

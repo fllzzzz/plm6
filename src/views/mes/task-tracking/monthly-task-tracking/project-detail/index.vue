@@ -20,28 +20,42 @@
           :project-id="props.detailData.projectId"
           @change="showProjectChange"
         />
-        <el-input v-model.trim="serialNumber" size="small" placeholder="输入编号搜索" style="width: 170px" class="filter-item" clearable @keyup.enter="showProjectChange"/>
-        <common-button class="filter-item" size="mini" type="success" icon="el-icon-search" @click.stop="searchQuery">搜索</common-button>
-        <common-button
+        <el-input
+          v-model.trim="serialNumber"
+          size="small"
+          placeholder="输入编号搜索"
+          style="width: 170px"
           class="filter-item"
-          size="mini"
-          type="warning"
-          icon="el-icon-refresh-left"
-          @click.stop="resetQuery"
-        >
+          clearable
+          @keyup.enter="showProjectChange"
+        />
+        <common-button class="filter-item" size="mini" type="success" icon="el-icon-search" @click.stop="searchQuery">搜索</common-button>
+        <common-button class="filter-item" size="mini" type="warning" icon="el-icon-refresh-left" @click.stop="resetQuery">
           重置
         </common-button>
       </div>
       <div>
-        <print-table api-key="contractLedger" :params="{ ...query }" size="mini" type="warning" class="filter-item" />
+        <print-table
+          api-key="mesMonthlyTaskList"
+          :params="{
+            projectId: props.detailData.project.id,
+            monomerId: monomerId,
+            areaId: areaId,
+            serialNumber: serialNumber,
+          }"
+          size="mini"
+          type="warning"
+          class="filter-item"
+        />
       </div>
     </div>
     <!--表格渲染-->
-    <common-table ref="tableRef" :data="projectDetailData" style="width: 100%">
+    <common-table ref="tableRef" :data="projectDetailData" 
+    return-source-data :showEmptySymbol="false" style="width: 100%">
       <el-table-column prop="index" label="序号" align="center" width="60" type="index" />
-      <el-table-column prop="name" label="项目" align="center" min-width="150">
-        <template #default="{ row }">
-          <span>{{row.projectNumber}}-{{row.projectName}}</span>
+      <el-table-column prop="project" key="project.shortName" label="项目" min-width="150">
+        <template v-slot="scope">
+         <span>{{ projectNameFormatter(scope.row.project) }}</span>
         </template>
       </el-table-column>
       <el-table-column prop="monomerName" label="单体" align="center"></el-table-column>
@@ -63,7 +77,8 @@ import { projectDetail } from '@/api/mes/task-tracking/monthly-task-tracking.js'
 import useVisible from '@compos/use-visible'
 import { defineProps, defineEmits, ref } from 'vue'
 import monomerSelectAreaSelect from '@comp-base/monomer-select-area-select'
-// import mHeader from './module/header.vue'
+import { projectNameFormatter } from '@/utils/project'
+
 
 const emit = defineEmits(['update:visible'])
 const projectDetailData = ref([])
@@ -74,12 +89,12 @@ const serialNumber = ref()
 const props = defineProps({
   visible: {
     type: Boolean,
-    default: false
+    default: false,
   },
   detailData: {
     type: Object,
-    default: () => {}
-  }
+    default: () => {},
+  },
 })
 
 const { visible: drawerVisible, handleClose } = useVisible({ emit, props, field: 'visible', showHook: showProjectDetail })
@@ -87,10 +102,10 @@ const { visible: drawerVisible, handleClose } = useVisible({ emit, props, field:
 async function showProjectDetail() {
   try {
     const data = await projectDetail({
-      projectId: props.detailData.projectId,
+      projectId: props.detailData.project.id,
       monomerId: monomerId.value,
       areaId: areaId.value,
-      serialNumber: serialNumber.value
+      serialNumber: serialNumber.value,
     })
     projectDetailData.value = data
   } catch (e) {

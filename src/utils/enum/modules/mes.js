@@ -475,6 +475,13 @@ const shipStatusEnum = {
 }
 constantize(shipStatusEnum)
 
+// 工单跟踪
+const workOrderTypeEnum = {
+  DELAY: { L: '滞后', K: 'DELAY', V: 0 },
+  NORMAL: { L: '正常', K: 'NORMAL', V: 1 }
+}
+constantize(workOrderTypeEnum)
+
 export {
   teamTypeEnum,
   teamAttributeEnum,
@@ -534,7 +541,8 @@ export {
   nestingSettingTypeEnum,
   mesBuildingTypeSettingAssembleTypeEnum,
   mesMachinePartOrderTypeEnum,
-  shipStatusEnum
+  shipStatusEnum,
+  workOrderTypeEnum
 }
 
 export default {
@@ -596,5 +604,6 @@ export default {
   nestingSettingTypeEnum,
   mesBuildingTypeSettingAssembleTypeEnum,
   mesMachinePartOrderTypeEnum,
-  shipStatusEnum
+  shipStatusEnum,
+  workOrderTypeEnum
 }

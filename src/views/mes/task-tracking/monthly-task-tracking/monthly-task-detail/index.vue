@@ -12,9 +12,9 @@
         @row-click="handleProjectDetail"
       >
         <el-table-column type="index" label="序号" key="index" align="center" width="60px" />
-        <el-table-column key="projectName" prop="projectName" :show-overflow-tooltip="true" label="项目" min-width="150px">
+        <el-table-column key="project.shortName" prop="project" :show-overflow-tooltip="true" label="项目" min-width="150px">
           <template v-slot="scope">
-            <span>{{ scope.row.projectNumber }}-{{ scope.row.projectName }}</span>
+            <span>{{ projectNameFormatter(scope.row.project) }}</span>
           </template>
         </el-table-column>
         <el-table-column align="center" key="monomer" prop="monomer" :show-overflow-tooltip="true" label="包含单体">
@@ -68,6 +68,8 @@ import { monthlyProject } from '@/api/mes/task-tracking/monthly-task-tracking.js
 import { ref, defineProps, watch } from 'vue'
 import useMaxHeight from '@compos/use-max-height'
 import projectDetail from '../project-detail/index.vue'
+import { projectNameFormatter } from '@/utils/project'
+import moment from 'moment'
 
 const props = defineProps({
   monthlyData: {
@@ -99,8 +101,13 @@ watch(
 
 async function fetchMonthly() {
   try {
+    const time = (moment().set('month', props.monthlyData.month - 1))._d;
+    const current = new Date(time.getFullYear() + '-' + props.monthlyData.month).getTime()
+    // console.log(current);
+    // console.log(new Date(current).getTime());
     const data = await monthlyProject({
-      ...props.query
+      ...props.query,
+      dateTime: current
     })
     monthlyList.value = data
   } catch (e) {

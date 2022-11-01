@@ -35,6 +35,7 @@
           size="small"
           value-format="x"
           unlink-panels
+          clearable
           :clearable="false"
           placeholder="查询月份"
           style="width: 160px"

@@ -14,7 +14,7 @@
       >
         <el-table-column align="center" key="name" prop="name" :show-overflow-tooltip="true" label="工序">
           <template v-slot="scope">
-            <el-icon v-if="scope.row.status === 0" :size="20" style="top: 5px; color: red"><BellFilled /></el-icon>
+            <el-icon v-if="scope.row.status === workOrderTypeEnum.DELAY.V" :size="20" style="top: 5px; color: red"><BellFilled /></el-icon>
             <span>{{ scope.row.name }}</span>
           </template>
         </el-table-column>
@@ -40,7 +40,7 @@
 </template>
 <script setup>
 import { process, machineProcess } from '@/api/mes/task-tracking/work-order-tracking.js'
-import { componentTypeEnum } from '@enum-ms/mes'
+import { componentTypeEnum, workOrderTypeEnum } from '@enum-ms/mes'
 import { ref, defineProps, watch, inject } from 'vue'
 import { BellFilled } from '@element-plus/icons'
 import useMaxHeight from '@compos/use-max-height'

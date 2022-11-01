@@ -85,6 +85,7 @@ const mesArtifactClassList = mes.artifactClassList
 const mesAssembleClassList = mes.assembleClassList
 const mesMachinePartClassList = mes.machinePartClassList
 
+const mesMonthlyTaskList = mes.monthlyTaskList
 const mesProcessList = mes.processList
 const mesProductionLineList = mes.productionLineList
 const mesWorkOrderTrackingList = mes.workOrderTrackingList
@@ -191,6 +192,7 @@ export default {
   mesAssembleClassList, // 部件分类清单明细
   mesMachinePartClassList, // 零件分类清单明细
 
+  mesMonthlyTaskList,    // 月度任务跟踪清单详情
   mesProductionLineList, //  产线跟踪清单详情
   mesWorkOrderTrackingList, // 工单跟踪清单详情
   mesProcessList, // 工序呆滞清单详情

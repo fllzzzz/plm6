@@ -28,6 +28,7 @@
         class="filter-item"
         v-model="query.productionLineId"
         :factory-id="query.factoryId"
+        :workshop-id="query.workshopId"
         placeholder="请选择生产线"
         style="width: 200px"
         clearable
