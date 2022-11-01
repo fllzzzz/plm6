@@ -402,6 +402,15 @@ export function machinePartClassList(params) {
   })
 }
 
+// 发运管理-项目发运详情
+export function mesProjectShipDetail(params) {
+  return request({
+    url: ``,
+    method: 'get',
+    params
+  })
+}
+
 export default {
   // 项目制造
   machinePartDetail, // 零件生产详情
@@ -447,6 +456,9 @@ export default {
   // 生产订单
   artifactClassList, // 构件分类清单明细
   assembleClassList, // 部件分类清单明细
-  machinePartClassList // 零件分类清单明细
+  machinePartClassList, // 零件分类清单明细
+
+  // 发运管理
+  mesProjectShipDetail // 项目发运详情
 }
 
