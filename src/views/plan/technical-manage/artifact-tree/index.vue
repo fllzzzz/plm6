@@ -32,7 +32,7 @@
             <span v-else class="child">{{ changeIndex(scope.row) }}</span>
           </template>
         </el-table-column>
-        <el-table-column
+        <!-- <el-table-column
           v-if="columns.visible('assembleSerialNumberList')"
           key="assembleSerialNumberList"
           prop="assembleSerialNumberList"
@@ -48,7 +48,7 @@
                 : ''
             }}</span>
           </template>
-        </el-table-column>
+        </el-table-column> -->
         <el-table-column
           v-if="columns.visible('name')"
           key="name"
