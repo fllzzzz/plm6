@@ -189,7 +189,7 @@
                 <el-input
                   v-model="item.serialNumberPrefix"
                   type="text"
-                  placeholder="大写字母"
+                  placeholder="编号类型索引"
                   style="width: 270px; margin-right: 5px"
                   @blur="checkSerialNumber(item, index)"
                 />
