@@ -35,27 +35,27 @@
           style="width: 100%"
           @selection-change="crud.selectionChangeHandler"
         >
-          <el-table-column type="selection" width="55" align="center" class="selection" />
+          <el-table-column type="selection" width="55" align="center" class="selection" :selectable="selectable" />
           <el-table-column label="序号" type="index" align="center" width="60" />
           <el-table-column
-            v-if="columns.visible('orderNumber')"
-            prop="orderNumber"
+            v-if="columns.visible('cutNumber')"
+            prop="cutNumber"
             :show-overflow-tooltip="true"
             label="切割指令号"
             min-width="120"
             align="center"
           />
           <el-table-column
-            v-if="columns.visible('orderNumber')"
-            prop="orderNumber"
+            v-if="columns.visible('spec')"
+            prop="spec"
             :show-overflow-tooltip="true"
             label="原材料规格"
             min-width="120"
             align="center"
           />
           <el-table-column
-            v-if="columns.visible('orderNumber')"
-            prop="orderNumber"
+            v-if="columns.visible('num')"
+            prop="num"
             :show-overflow-tooltip="true"
             label="零件数量(件)"
             min-width="120"
@@ -68,10 +68,14 @@
             label="套料文档"
             width="100"
             align="center"
-          />
+          >
+            <template #default="{ row }">
+              <common-button size="mini" type="primary" @click="showPdf(row)">查看</common-button>
+            </template>
+          </el-table-column>
           <el-table-column
-            v-if="columns.visible('orderNumber')"
-            prop="orderNumber"
+            v-if="columns.visible('cutName')"
+            prop="cutName"
             :show-overflow-tooltip="true"
             label="切割方式"
             width="100"
@@ -87,6 +91,7 @@
           >
             <template #default="{ row: { sourceRow: row }, $index }">
               <el-cascader
+                v-if="!row.boolIssueEnum"
                 v-model="row.groupsId"
                 :options="schedulingGroups.list"
                 :props="{ value: 'id', label: 'name', children: 'children', expandTrigger: 'hover', emitPath: false }"
@@ -96,6 +101,7 @@
                 :placeholder="$index === 0 ? '请选择生产组' : '同上'"
                 @change="handleGroupsChange($event, row, $index)"
               />
+              <span v-else>{{ row.groups?.name }}</span>
             </template>
           </el-table-column>
           <el-table-column
@@ -107,6 +113,7 @@
           >
             <template #default="{ row: { sourceRow: row }, $index }">
               <el-date-picker
+                v-if="!row.boolIssueEnum"
                 v-model="row.askCompleteTime"
                 type="date"
                 size="mini"
@@ -116,6 +123,7 @@
                 :placeholder="$index === 0 ? '需求完成日期' : '同上'"
                 @change="handleAskCompleteTimeChange($event, row, $index)"
               />
+              <span v-else>{{ row.askCompleteTime }}</span>
             </template>
           </el-table-column>
           <el-table-column v-permission="[...permission.del]" label="操作" width="100px" align="center" fixed="right">
@@ -213,11 +221,15 @@ CRUD.HOOK.beforeRefresh = async () => {
 
 CRUD.HOOK.handleRefresh = (crud, res) => {
   res.data = res.data.map((v, i) => {
-    if (i > 0) {
+    if (i > 0 && !v.boolIssueEnum) {
       v.askCompleteTime = '同上'
       v.groupsId = '同上'
     }
+    if (v.boolIssueEnum) {
+      v.askCompleteTime = moment(v.askCompleteTime).format('YYYY-MM-DD')
+    }
     v.rowKey = i + '' + Math.random()
+    v.spec = `${v.thick}*${v.width}*${v.length}`
     return v
   })
 }
@@ -232,6 +244,18 @@ function handleAskCompleteTimeChange(val, row, index) {
   if (index !== 0 && !val) {
     row.askCompleteTime = '同上'
   }
+}
+
+function showPdf(row) {
+  if (row.pdfUrl) {
+    window.open(row.pdfUrl)
+  } else {
+    ElMessage.error('文档不存在')
+  }
+}
+
+function selectable(row, rowIndex) {
+  return !row.boolIssueEnum
 }
 
 const currentNesting = ref()
@@ -257,6 +281,7 @@ async function toBatchIssue() {
         return {
           askCompleteTime: v.askCompleteTime,
           groupsId: v.groupsId,
+          id: v.id,
           nestCutPlateId: v.nestCutPlateId
         }
       })
