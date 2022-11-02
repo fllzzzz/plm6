@@ -1,10 +1,10 @@
 <template>
   <div class="app-container">
-    <div class="head-container">
-      <mHeader />
-    </div>
     <div style="display: flex">
-      <div style="width:25%;">
+      <div style="width: 25%">
+        <div class="head-container">
+          <mHeader />
+        </div>
         <common-table
           ref="tableRef"
           v-loading="crud.loading"
@@ -19,7 +19,7 @@
           <el-table-column prop="index" label="序号" align="center" width="60" type="index" />
           <el-table-column
             v-if="columns.visible('projectName')"
-            align="center"
+            header-align="center"
             key="projectName"
             prop="projectName"
             :show-overflow-tooltip="true"
@@ -40,7 +40,7 @@
         </common-table>
         <pagination />
       </div>
-      <div style="border-right: 1px solid #ededed; margin: 0 20px; height: calc(100vh - 180px)"></div>
+      <div style="border-right: 1px solid #ededed; margin: 0 20px; height: calc(100vh - 130px)"></div>
       <nesting-result-detail :batch-row="batchRow" v-if="isNotBlank(batchRow)" @success="crud.toQuery" style="flex: 3" />
     </div>
   </div>
@@ -62,7 +62,7 @@ const optShow = {
   add: false,
   edit: false,
   del: false,
-  download: false
+  download: false,
 }
 const tableRef = ref()
 const batchRow = ref({})
@@ -73,14 +73,14 @@ const { crud, columns } = useCRUD(
     optShow: { ...optShow },
     // permission: { ...permission },
     crudApi: { ...crudApi },
-    hasPagination: true
+    hasPagination: true,
   },
   tableRef
 )
 
 const { maxHeight } = useMaxHeight({
   extraBox: ['.head-container'],
-  paginate: true
+  paginate: true,
 })
 
 function handleChangeProject(row) {

@@ -32,6 +32,10 @@ const props = defineProps({
     type: [Number, String],
     default: undefined
   },
+  workshopId: {
+    type: [Number, String],
+    default: undefined
+  },
   size: {
     type: String,
     default: 'small'
@@ -98,13 +102,13 @@ watch(
   },
   { immediate: true }
 )
-// watch(
-//   () => props.workshopInfId,
-//   (value) => {
-//     dataFormat()
-//   },
-//   { immediate: true }
-// )
+watch(
+  () => props.workshopId,
+  (value) => {
+    dataFormat()
+  },
+  { immediate: true }
+)
 
 function handleChange(val) {
   if (props.modelValue !== val) {

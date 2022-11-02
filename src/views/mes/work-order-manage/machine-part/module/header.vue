@@ -1,25 +1,6 @@
 <template>
   <div v-show="crud.searchToggle">
-    <el-date-picker
-      v-model="query.localDateTime"
-      type="month"
-      size="small"
-      class="date-item filter-item"
-      style="width: 130px !important"
-      placeholder="选择月"
-      format="YYYY/MM"
-      value-format="x"
-      @change="crud.toQuery"
-    />
-    <workshop-select
-      v-model="query.workshopId"
-      placeholder="请选择车间"
-      :factory-id="query.factoryId"
-      style="width: 270px"
-      class="filter-item"
-      defaultValue
-      @change="crud.toQuery"
-    />
+    <project-radio-button size="small" v-model="query.projectId" class="filter-item" @change="crud.toQuery" />
     <common-radio-button
       v-model="query.processType"
       :options="mesMachinePartOrderTypeEnum.ENUM"
@@ -40,6 +21,26 @@
     />
     <crudOperation>
       <template #optLeft>
+        <el-date-picker
+          v-model="query.localDateTime"
+          type="month"
+          size="small"
+          class="date-item filter-item"
+          style="width: 130px !important"
+          placeholder="选择月"
+          format="YYYY-MM"
+          value-format="x"
+          @change="crud.toQuery"
+        />
+        <workshop-select
+          v-model="query.workshopId"
+          placeholder="请选择车间"
+          :factory-id="query.factoryId"
+          style="width: 200px"
+          class="filter-item"
+          defaultValue
+          @change="crud.toQuery"
+        />
         <el-input
           v-model="query.orderNumber"
           placeholder="指令号搜索"
@@ -61,14 +62,18 @@ import { boolPrintedEnum } from '@enum-ms/common'
 import workshopSelect from '@comp-mes/workshop-select'
 import crudOperation from '@crud/CRUD.operation'
 import rrOperation from '@crud/RR.operation'
+import moment from 'moment'
+
+const defaultTime = moment().startOf('month').valueOf()
 
 const defaultQuery = {
-  localDateTime: undefined,
+  projectId: undefined,
+  localDateTime: defaultTime.toString(),
   factoryId: undefined,
   workshopId: undefined,
   processType: undefined,
   printType: undefined,
-  orderNumber: undefined
+  orderNumber: undefined,
 }
 const { crud, query } = regHeader(defaultQuery)
 </script>

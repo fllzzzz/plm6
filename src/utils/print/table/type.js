@@ -23,7 +23,8 @@ const mes = {
   mes_production_order: '生产订单',
   mes_task_tracking: '任务跟踪报表',
   mes_factory_report: '工厂报表',
-  mes_production_line_wage_statistics: '产线工资统计'
+  mes_production_line_wage_statistics: '产线工资统计',
+  mes_pack_and_ship_manage: '发运管理'
 }
 
 const supply = {
@@ -140,12 +141,14 @@ const tableType = {
   mesMachinePartClassList: { L: '零件分类清单明细', M: 'mes_production_order', T: mt.mes.L + ' / ' + mes.mes_production_order },
 
   mesWorkOrderTrackingList: { L: '工单跟踪清单详情', M: 'mes_task_tracking', T: mt.mes.L + ' / ' + mes.mes_task_tracking },
+  mesMonthlyTaskList: { L: '月度任务清单详情', M: 'mes_task_tracking', T: mt.mes.L + ' / ' + mes.mes_task_tracking },
   mesProductionLineList: { L: '产线跟踪清单详情', M: 'mes_task_tracking', T: mt.mes.L + ' / ' + mes.mes_task_tracking },
   mesProcessList: { L: '工序呆滞清单详情', M: 'mes_task_tracking', T: mt.mes.L + ' / ' + mes.mes_task_tracking },
 
   mesWorkshopReport: { L: '车间报表清单详情', M: 'mes_factory_report', T: mt.mes.L + ' / ' + mes.mes_factory_report },
 
   mesStudSleeveStatisticsList: { L: '栓钉套筒统计清单详情', M: 'mes_production_line_wage_statistics', T: mt.mes.L + ' / ' + mes.mes_production_line_wage_statistics },
+  mesProjectShipDetail: { L: '项目发运详情报表', M: 'mes_pack_and_ship_manage', T: mt.mes.L + ' / ' + mes.mes_pack_and_ship_manage },
 
   // 项目管理
   deliveryCargoList: { L: '自制收货记录', M: 'delivery_manage', T: mt.project.L + ' / ' + project.delivery_manage },

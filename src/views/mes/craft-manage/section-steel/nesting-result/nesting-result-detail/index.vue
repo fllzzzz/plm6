@@ -1,8 +1,8 @@
 <template>
-  <div>
-    <div class="batch-operation" style="display: flex; justify-content: space-between; margin-bottom: 8px">
-      <el-tag type="primary" style="font-size: 14px; align-self: center">当前项目：{{ props.batchRow.projectName }}</el-tag>
-      <div>
+  <div >
+    <div class="batch-operation head-container" style="display: flex; justify-content: space-between;">
+      <el-tag class="filter-item" size="medium" style="align-self: center">当前项目：{{ props.batchRow.projectName }}</el-tag>
+      <div class="filter-item">
         <common-button type="danger" size="mini" :disabled="handleSelectionData.length === 0" @click="batchDel">批量删除</common-button>
         <common-button type="success" size="mini" :disabled="handleSelectionData.length === 0" @click="batchIssued">批量下发</common-button>
       </div>
@@ -16,7 +16,7 @@
       style="width: 100%"
       @selection-change="handleSelectionChange"
     >
-      <el-table-column type="selection" align="center" width="60" />
+      <el-table-column type="selection" align="center" width="60" class="selection" :selectable="selectable" />
       <el-table-column key="batchNumber" prop="batchNumber" :show-overflow-tooltip="true" label="套料批次号" min-width="120" align="center">
         <template #default="{ row }">
           <span>{{ row.batchNumber }}</span>
@@ -86,13 +86,12 @@
             @confirm="delNestingResult(row)"
           >
             <template #reference>
-              <common-button size="mini" type="danger">删除</common-button>
+              <common-button size="mini" type="danger" :disabled="row.statusIssueEnum === taskIssueTypeEnum.HAS_ISSUED.V">删除</common-button>
             </template>
           </el-popconfirm>
         </template>
       </el-table-column>
     </common-table>
-    <pagination />
     <nesting-file v-model:visible="nestingFileVisible" :detail-data="detailData" />
   </div>
 </template>
@@ -105,7 +104,6 @@ import useMaxHeight from '@compos/use-max-height'
 import { ElMessageBox, ElNotification } from 'element-plus'
 import { taskIssueTypeEnum } from '@enum-ms/mes'
 import { nestingBatchIssued, nestingBatchDel } from '@/api/mes/craft-manage/section-steel/nesting-result'
-import pagination from '@crud/Pagination'
 import nestingFile from '../nesting-file/index.vue'
 
 const emit = defineEmits(['success'])
@@ -116,7 +114,6 @@ const props = defineProps({
   }
 })
 const { maxHeight } = useMaxHeight({
-  extraBox: ['.batch-operation'],
   paginate: true
 })
 const tableRef = ref()
@@ -147,6 +144,9 @@ async function fetchData() {
   }
 }
 
+function selectable(row, rowIndex) {
+  return row.statusIssueEnum === taskIssueTypeEnum.NOT_ISSUED.V
+}
 // 选中进行批量操作
 function handleSelectionChange(val) {
   handleSelectionData.value = val
@@ -249,11 +249,5 @@ async function delNestingResult(row) {
 </script>
 
 <style lang="scss" scoped>
-.item-name {
-  padding: 2px 8px;
-  background-color: #ecf8ff;
-  border-radius: 2px;
-  border-left: 5px solid #50bfff;
-  margin-left: 5px;
-}
+
 </style>

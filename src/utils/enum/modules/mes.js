@@ -475,6 +475,21 @@ const mesMachinePartOrderTypeEnum = {
 }
 constantize(mesMachinePartOrderTypeEnum)
 
+// 收货状态
+const shipStatusEnum = {
+  SHIPPING: { L: '发货中', K: 'SHIPPING', V: 1 << 0 },
+  SHIPPED: { L: '发货完毕', K: 'SHIPPED', V: 1 << 1 },
+  SETTLED: { L: '已结算', K: 'SETTLED', V: 1 << 2 }
+}
+constantize(shipStatusEnum)
+
+// 工单跟踪
+const workOrderTypeEnum = {
+  DELAY: { L: '滞后', K: 'DELAY', V: 0 },
+  NORMAL: { L: '正常', K: 'NORMAL', V: 1 }
+}
+constantize(workOrderTypeEnum)
+
 export {
   teamTypeEnum,
   teamAttributeEnum,
@@ -534,7 +549,9 @@ export {
   nestingSettingTypeEnum,
   mesBuildingTypeSettingAssembleTypeEnum,
   mesSchedulingStatusEnum,
-  mesMachinePartOrderTypeEnum
+  mesMachinePartOrderTypeEnum,
+  shipStatusEnum,
+  workOrderTypeEnum
 }
 
 export default {
@@ -596,5 +613,7 @@ export default {
   nestingSettingTypeEnum,
   mesBuildingTypeSettingAssembleTypeEnum,
   mesSchedulingStatusEnum,
-  mesMachinePartOrderTypeEnum
+  mesMachinePartOrderTypeEnum,
+  shipStatusEnum,
+  workOrderTypeEnum
 }

@@ -18,7 +18,7 @@
       </el-table-column>
       <el-table-column align="center" key="team" prop="team" :show-overflow-tooltip="true" label="班组">
         <template v-slot="scope">
-          <span>{{ scope.row.team }}</span>
+          <span>{{ scope.row.team }}（{{scope.row.userName}}）</span>
         </template>
       </el-table-column>
       <el-table-column align="center" key="production" prop="production" :show-overflow-tooltip="true" label="产量（件/吨）">
@@ -33,7 +33,7 @@
       </el-table-column>
       <el-table-column align="center" key="productionProportion" prop="productionProportion" :show-overflow-tooltip="true" label="产量占比">
         <template v-slot="scope">
-          <span>{{ scope.row.productionProportion }}</span>
+          <el-progress :text-inside="true" stroke-linecap="square" :stroke-width="22" :percentage="scope.row.productionProportion" status="success" />
         </template>
       </el-table-column>
       <el-table-column align="center" :show-overflow-tooltip="true" label="操作">
@@ -52,7 +52,7 @@
       size="80%"
     >
       <template #titleAfter>
-        <el-tag style="font-weight: 700">班组：{{productionData.team}}</el-tag>
+        <el-tag style="font-weight: 700">班组：{{productionData.team}}>{{productionData.userName}}</el-tag>
       </template>
       <template #titleRight>
         <print-table :api-key="apiKey" :params="{ ...query }" size="mini" type="warning" class="filter-item" />
@@ -93,7 +93,8 @@ const workshopList = [
   {
     workshop: '一车间',
     productionLine: '一线',
-    team: '一组（超级管理员）',
+    team: '一组',
+    userName: '超级管理员',
     productionQuantity: 60,
     productionWeight: 1000,
     wage: 100,
@@ -103,7 +104,8 @@ const workshopList = [
   {
     workshop: '一车间',
     productionLine: '一线',
-    team: '二组（超级管理员）',
+    team: '二组',
+    userName: '超级管理员',
     productionQuantity: 60,
     productionWeight: 1000,
     wage: 100,
@@ -114,7 +116,8 @@ const workshopList = [
   {
     workshop: '一车间',
     productionLine: '二线',
-    team: '一组（超级管理员）',
+    team: '一组',
+    userName: '超级管理员',
     productionQuantity: 60,
     productionWeight: 1000,
     wage: 100,
@@ -124,7 +127,8 @@ const workshopList = [
   {
     workshop: '一车间',
     productionLine: '二线',
-    team: '二组（超级管理员）',
+    team: '二组',
+    userName: '超级管理员',
     productionQuantity: 60,
     productionWeight: 1000,
     wage: 100,
