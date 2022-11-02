@@ -75,7 +75,7 @@ watch(
   () => props.modelValue,
   (value) => {
     selectValue.value = value
-    if (props.default && isBlank(value) && isNotBlank(options)) {
+    if (props.default && isBlank(value) && isNotBlank(options.value)) {
       selectValue.value = options.value[0].value
       handleChange(selectValue.value)
     }

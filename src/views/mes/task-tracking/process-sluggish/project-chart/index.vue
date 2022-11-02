@@ -1,50 +1,93 @@
 <template>
   <div class="project-chart">
     <div class="chart-head">
-      <tag-tabs
-        v-model="productionLineId"
-        class="filter-item"
-        :style="'width:calc(100% - 100px)'"
-        :data="productionLineList"
-        :itemKey="'workshopId'"
-        @change="tabChange"
-      >
-        <template #default="{ item }">
-          <span>{{ item.productionLine }}</span>
-        </template>
-      </tag-tabs>
-      <span class="filter-item" style="width: 80px;font-size: 14px; align-self: center">单位：件/吨</span>
+      <div style="width: calc(100% - 90px)">
+        <tag-tabs
+          v-if="productionLineList?.length"
+          v-model="productionLineId"
+          class="filter-item"
+          style="width: 100%"
+          :data="productionLineList"
+          itemKey="id"
+          @change="tabChange"
+        >
+          <template #default="{ item }">
+            <span>{{ item.name }}</span>
+          </template>
+        </tag-tabs>
+      </div>
+      <span class="filter-item" style="width: 80px; font-size: 14px; align-self: center">单位：件/吨</span>
     </div>
-    <div v-loading="projectInfo.loading" v-permission="permission.statistics" class="chart-container" :style="{ height: maxHeight + 'px' }">
-      <chart
-        id="projectChart"
-        width="300px"
-        @success="handleEchartsChange"
-      />
+    <div v-permission="permission.statistics" class="chart-container" :style="{ height: maxHeight + 'px' }">
+      <chart id="projectChart" width="300px" @success="handleEchartsChange" />
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, inject, defineEmits, onMounted } from 'vue'
+import { productionLineProcess } from '@/api/mes/task-tracking/process-sluggish.js'
+import { ref, inject, defineEmits, onMounted, watch } from 'vue'
 import useMaxHeight from '@compos/use-max-height'
-import { parseTime } from '@/utils/date'
 import chart from './module/chart'
 import tagTabs from '@comp-common/tag-tabs'
 
 const emit = defineEmits(['update:year', 'change', 'success'])
 
-const projectInfo = inject('projectInfo')
 const permission = inject('permission')
 
-const year = ref(parseTime(new Date(), '{y}'))
-
 const productionLineId = ref()
-const productionLineList = [
-  { workshopId: 1, productionLine: '一线' },
-  { workshopId: 2, productionLine: '二线' },
-  { workshopId: 3, productionLine: '三线' }
-]
+const productionLineList = ref([])
+
+const productType = inject('productType')
+const workShopId = inject('workShopId')
+
+watch(
+  () => productType.value,
+  (val) => {
+    if (val) {
+      productionLineGet()
+    }
+  },
+  { deep: true, immediate: true }
+)
+
+watch(
+  () => workShopId.value,
+  (val) => {
+    if (val) {
+      productionLineGet()
+    }
+  },
+  { deep: true, immediate: true }
+)
+
+// 首次默认车间生产线的时候先调用生产线接口
+watch(
+  () => productionLineId.value,
+  (val) => {
+    if (val) {
+      tabChange(val)
+    }
+  },
+  { deep: true, immediate: true }
+)
+
+async function productionLineGet() {
+  productionLineList.value = []
+  if (!productType.value || !workShopId.value) {
+    return
+  }
+  try {
+    const data = await productionLineProcess({
+      productType: productType.value,
+      workShopId: workShopId.value
+    })
+    productionLineList.value = data
+    productionLineId.value = data[0].id
+  } catch (e) {
+    console.log('获取当前车间下的生产线失败', e)
+  }
+}
 const { maxHeight } = useMaxHeight({
   extraBox: ['.chart-head'],
   wrapperBox: ['.chart-container'],
@@ -54,14 +97,13 @@ const { maxHeight } = useMaxHeight({
 })
 
 onMounted(() => {
-  // 默认选择当年
-  handleYearChange(year.value)
+  productionLineGet()
 })
 
-function handleYearChange(val) {
-  emit('update:year', val)
+function tabChange(val) {
+  emit('change', val)
+  emit('success', {})
 }
-
 function handleEchartsChange(val) {
   emit('success', val)
 }
@@ -74,6 +116,7 @@ function handleEchartsChange(val) {
   overflow: hidden;
   border-right: 1px solid #ededed;
   .chart-head {
+    width: 100%;
     display: flex;
     justify-content: space-between;
     padding-right: 20px;

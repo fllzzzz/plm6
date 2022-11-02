@@ -1,72 +1,78 @@
 <template>
   <div class="head-container">
      <el-date-picker
-        v-model="query.month"
+        v-model="query.dateTime"
         type="month"
         size="small"
         class="date-item filter-item"
         style="width: 120px !important"
-        format="YYYY/MM"
-        value-format="YYYY/MM"
+        format="YYYY-MM"
+        value-format="x"
         placeholder="选择月"
         :disabled-date="disabledDate"
         @change="crud.toQuery"
       />
       <workshop-select
         ref="workshopInfRef"
-        v-model="query.workshopInfId"
+        v-model="query.workshopId"
         placeholder="请选择车间"
         :factory-id="query.factoryId"
-        style="width: 270px"
+        style="width: 200px"
         class="filter-item"
+        clearable
         defaultValue
+        @change="crud.toQuery"
       />
       <production-line-select
         ref="productionLineRef"
         class="filter-item"
         v-model="query.productionLineId"
         :factory-id="query.factoryId"
+        :workshop-id="query.workshopId"
         placeholder="请选择生产线"
-        style="width: 270px"
+        style="width: 200px"
         clearable
         defaultValue
+        @change="crud.toQuery"
       />
         <common-radio-button
         v-model="query.productType"
-        :options="[processMaterialListTypeEnum.ARTIFACT,processMaterialListTypeEnum.MACHINE_PART]"
+        :options="[componentTypeEnum.ARTIFACT,componentTypeEnum.MACHINE_PART]"
         class="filter-item"
         type="enum"
-        @change="productEnum"
+        @change="crud.toQuery"
       />
         <common-radio-button
-        v-model="query.schedulingStatus"
+        v-model="query.status"
         :options="taskTrackingSchedulingStatusEnum.ENUM"
         showOptionAll
         class="filter-item"
         type="enum"
         @change="crud.toQuery"
       />
+      <rrOperation />
   </div>
 </template>
 
 <script setup>
 import { defineEmits } from 'vue'
 import { regHeader } from '@compos/use-crud'
-import { parseTime } from '@/utils/date'
-import { processMaterialListTypeEnum, taskTrackingSchedulingStatusEnum } from '@enum-ms/mes'
-import moment from 'moment'
+import { componentTypeEnum, taskTrackingSchedulingStatusEnum } from '@enum-ms/mes'
 import workshopSelect from '@comp-mes/workshop-select'
 import productionLineSelect from '@comp-mes/production-line-select'
+import rrOperation from '@crud/RR.operation'
+import moment from 'moment'
 
-// const transformTab = ref(componentTypeEnum.ARTIFACT.V)
+
 const emit = defineEmits(['change'])
+
+const defaultTime = moment().startOf('month').valueOf()
 const defaultQuery = {
-  month: parseTime(new Date(), '{y}/{m}'),
-  date: [moment().subtract(1, 'month').valueOf(), moment().valueOf()],
-  startDate: moment().subtract(1, 'month').valueOf(),
-  endDate: moment().valueOf(),
-  productType: processMaterialListTypeEnum.ARTIFACT.V,
-  schedulingStatus: undefined
+  dateTime: defaultTime.toString(),
+  workshopId: undefined,
+  productionLineId: undefined,
+  productType: componentTypeEnum.ARTIFACT.V,
+  status: undefined
 }
 
 const { crud, query } = regHeader(defaultQuery)
@@ -76,7 +82,7 @@ function disabledDate(time) {
   return time > new Date()
 }
 
-function productEnum(val) {
+function transformTab(val) {
   emit('change', val)
 }
 

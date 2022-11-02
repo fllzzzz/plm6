@@ -18,7 +18,7 @@
       :options="timeList"
       :loading="timeLoading"
       loading-text="加载中"
-      :clearable="false"
+      clearable
       style="width: 48%"
       class="filter-item"
       :placeholder="timeLoading ? '加载中' : '选择日期'"
@@ -63,12 +63,13 @@ const timeList = ref([])
 const timeLoading = ref(false)
 const projectTableRef = ref()
 const date = ref()
-const month = ref(moment().valueOf().toString())
+const month = ref(moment().startOf('month').valueOf().toString())
 const tableData = ref([])
 const loading = ref(false)
 const dataFormat = ref([['project', 'parse-project']])
 
 fetchTime()
+fetchProject()
 
 async function fetchTime() {
   try {
@@ -76,6 +77,7 @@ async function fetchTime() {
     tableData.value = []
     date.value = undefined
     timeLoading.value = true
+    fetchProject()
     const { content } = await getDate({
       dateTime: month.value
     })
@@ -86,10 +88,10 @@ async function fetchTime() {
         date: moment(_dateTime).date() + '日'
       }
     })
-    if (timeList.value?.length) {
-      date.value = timeList.value[0].dateTime
-      fetchProject()
-    }
+    // if (timeList.value?.length) {
+    //   date.value = timeList.value[0].dateTime
+    //   fetchProject()
+    // }
   } catch (error) {
     console.log('获取排程信息时间错误', error)
   } finally {
@@ -106,7 +108,8 @@ async function fetchProject() {
     loading.value = true
     tableData.value = []
     const { content } = await getProject({
-      dateTime: date.value
+      dateTime: date.value,
+      month: month.value
     })
     tableData.value = content.map((v) => {
       v.projectId = v.project?.id
@@ -120,11 +123,11 @@ async function fetchProject() {
 }
 
 function handleSelectionChange(val) {
-  emit('project-click', val, date.value)
+  emit('project-click', val, date.value, month.value)
 }
 
 defineExpose({
-  artifactDateTime: date
+  artifactDateTime: date.value ? date : month
 })
 </script>
 

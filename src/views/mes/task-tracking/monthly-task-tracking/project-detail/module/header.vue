@@ -1,13 +1,11 @@
 <template>
   <div class="head-container">
-    <project-cascader v-model="query.projectId" placeholder="所属项目" clearable class="filter-item" style="width: 300px" />
     <monomer-select-area-select
       v-model:monomerId="query.monomerId"
       v-model:areaId="query.areaId"
-      :productType="query.productType"
       needConvert
       clearable
-      :project-id="query.projectId"
+      @change="handleMonomerChange"
     />
     <el-input
       v-model.trim="query.serialNumber"
@@ -16,18 +14,19 @@
       style="width: 170px"
       class="filter-item"
       clearable
-      @keyup.enter="toQuery"
+      @change="handleSerialNumberChange"
     />
     <rrOperation />
   </div>
 </template>
 
 <script setup>
+import { defineEmits } from 'vue'
 import { regHeader } from '@compos/use-crud'
 import rrOperation from '@crud/RR.operation'
-import projectCascader from '@comp-base/project-cascader'
 import monomerSelectAreaSelect from '@comp-base/monomer-select-area-select'
 
+const emit = defineEmits(['change'])
 const defaultQuery = {
   projectId: undefined,
   monomerId: undefined,
@@ -36,6 +35,13 @@ const defaultQuery = {
 }
 
 const { query } = regHeader(defaultQuery)
+
+function handleMonomerChange(val) {
+  emit('change', val)
+}
+function handleSerialNumberChange(val) {
+  emit('change', val)
+}
 </script>
 
 <style>

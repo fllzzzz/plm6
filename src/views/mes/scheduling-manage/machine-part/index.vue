@@ -55,13 +55,12 @@
                 class="board-box"
                 style="position: relative; cursor: pointer"
                 :style="{ 'background-color': `${item.boxColor}`, ...boxStyle }"
-                @click.stop="item.visibleTip = !item.visibleTip"
               >
                 <span class="ellipsis-text text">
                   {{ item.serialNumber }}
                 </span>
-                <el-image src="" fit="scale-down" />
-                <span class="ellipsis-text text">{{ item.specification }}/{{ item.quantity }}</span>
+                <el-image :src="item.picturePath" fit="scale-down" />
+                <span class="ellipsis-text text" @click.stop="item.visibleTip = !item.visibleTip">{{ item.specification }}/{{ item.quantity }}</span>
                 <el-checkbox
                   style="position: absolute; left: 10px; top: 0px"
                   v-model="item.checked"
@@ -120,7 +119,7 @@ const { crud, CRUD } = useCRUD(
     optShow: { ...optShow },
     crudApi: { ...crudApi },
     queryOnPresenterCreated: false,
-    requiredQuery: ['dateTime', 'material', 'projectIds', 'thick']
+    requiredQuery: ['month', 'material', 'projectIds', 'thick']
   },
   tableRef
 )
@@ -211,8 +210,9 @@ CRUD.HOOK.afterRefresh = () => {
 }
 // --------------------------- end --------------------------------
 
-function handleProjectClick(val, time) {
+function handleProjectClick(val, time, month) {
   crud.query.dateTime = time
+  crud.query.month = month
   crud.query.projectIds = val.map((v) => v.projectId)
   nextTick(() => {
     headRef.value?.refreshConditions()

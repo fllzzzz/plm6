@@ -1,13 +1,13 @@
 import { dataSourceEnum, alignEnum, verticleAlignEnum, fieldTypeEnum as typeEnum, cssUnitEnum, cssUnitPrecisionEnum, pageFormatEnum } from '@/utils/print/enum'
 import { projectNameArrangementModeEnum } from '@/utils/enum/modules/contract'
 
-// 工序呆滞
-const mesProcessList = {
+// 月度任务跟踪
+const mesMonthlyTaskList = {
   fontUnit: 'pt', // 字体单位
   unit: cssUnitEnum.MM.V, // 长度单位
   unitPrecision: cssUnitPrecisionEnum.ZERO.V, // 长度单位精度
-  type: 'mesProcessList', // 表格类型 KEY
-  name: '工序清单（平台）', // 表格名称
+  type: 'mesWorkOrderTrackingList', // 表格类型 KEY
+  name: '月度任务跟踪清单详情（平台）', // 表格名称
   width: 210, // 打印纸的宽度
   height: 297, // 打印纸的高度
   paddingLR: 10, // 左右内边距
@@ -61,7 +61,7 @@ const mesProcessList = {
   title: {
     show: true,
     allPage: false,
-    title: '工序呆滞清单',
+    title: '月度任务跟踪清单',
     align: alignEnum.CENTER.V,
     verticleAlign: verticleAlignEnum.CENTER.V,
     size: 17,
@@ -201,18 +201,20 @@ const mesProcessList = {
      */
     fields: [
       { show: true, key: 'project', title: '项目名称', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 28, type: typeEnum.PROJECT.K, format: { showProjectFullName: false, showSerialNumber: true, projectNameShowConfig: projectNameArrangementModeEnum.SERIAL_NUMBER_START.V }},
-      { show: true, key: 'monomerName', title: '单体', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.OTHER.K },
-      { show: true, key: 'areaName', title: '区域', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.OTHER.K },
-      { show: true, key: 'serialNumber', title: '编号', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.OTHER.K },
-      { show: true, key: 'specification', title: '规格', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 28, type: typeEnum.OTHER.K },
-      { show: true, key: 'unQuantity', title: '未完成数', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 10, type: typeEnum.OTHER.K },
-      { show: true, key: 'weight', title: '单重', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.OTHER.K },
-      { show: true, key: 'completeDate', title: '完成日期', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 28, type: typeEnum.DATE.K, format: 'YY/MM/DD' },
-      { show: true, key: 'groupName', title: '负责班组', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 13, type: typeEnum.OTHER.K }
+      { show: true, key: 'monomerName', title: '单体', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 10, type: typeEnum.OTHER.K },
+      { show: true, key: 'areaName', title: '区域', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 10, type: typeEnum.OTHER.K },
+      { show: true, key: 'serialNumber', title: '编号', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 10, type: typeEnum.OTHER.K },
+      { show: true, key: 'specification', title: '规格', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 20, type: typeEnum.OTHER.K },
+      { show: true, key: 'material', title: '材质', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 20, type: typeEnum.OTHER.K },
+      { show: true, key: 'length', title: '长度', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 10, type: typeEnum.OTHER.K },
+      { show: true, key: 'netWeight', title: '单重', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 10, type: typeEnum.OTHER.K },
+      { show: true, key: 'quantity', title: '排产数', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 10, type: typeEnum.OTHER.K },
+      { show: true, key: 'completeQuantity', title: '完成数', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 10, type: typeEnum.OTHER.K },
+      { show: true, key: 'completeMete', title: '完成重', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 10, type: typeEnum.OTHER.K },     
     ]
   }
 }
 
 export default {
-  mesProcessList // 工序呆滞
+    mesMonthlyTaskList // 月度任务跟踪
 }

@@ -31,6 +31,7 @@
         min-width="100px"
       >
         <template #default="{ row }">
+          <table-cell-tag :show="row.productionLineTypeEnum === artifactProductLineEnum.INTELLECT.V" name="智能线" :offset="10" />
           <span>{{ row.processName }}</span>
         </template>
       </el-table-column>
@@ -58,7 +59,7 @@
           {{ teamAttributeEnum.VL[scope.row.organizationType] }}
         </template>
       </el-table-column> -->
-      <el-table-column
+      <!-- <el-table-column
         v-if="columns.visible('productionLineTypeEnum')"
         key="productionLineTypeEnum"
         prop="productionLineTypeEnum"
@@ -67,6 +68,18 @@
       >
         <template v-slot="scope">
           {{ artifactProductLineEnum.VL[scope.row.productionLineTypeEnum] }}
+        </template>
+      </el-table-column> -->
+      <el-table-column
+        v-if="columns.visible('productType')"
+        key="productType"
+        prop="productType"
+        label="类型"
+        align="center"
+        width="100px"
+      >
+        <template v-slot="scope">
+          <span>{{ componentTypeEnum.VL[scope.row.productType] }}</span>
         </template>
       </el-table-column>
       <!-- <el-table-column
@@ -113,7 +126,7 @@
 import crudApi from '@/api/mes/production-config/production-line-team'
 import { defineExpose, ref } from 'vue'
 import { useStore } from 'vuex'
-import { artifactProductLineEnum, wageQuotaTypeEnum } from '@enum-ms/mes'
+import { componentTypeEnum, artifactProductLineEnum, wageQuotaTypeEnum } from '@enum-ms/mes'
 // import { whetherEnum } from '@enum-ms/common'
 import checkPermission from '@/utils/system/check-permission'
 import { configProductionLineTeamPM as permission } from '@/page-permission/config'

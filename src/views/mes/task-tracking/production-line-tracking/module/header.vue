@@ -2,11 +2,12 @@
   <div class="head-container">
       <workshop-select
         ref="workshopInfRef"
-        v-model="query.workshopInfId"
+        v-model="query.workShopId"
         placeholder="请选择车间"
         :factory-id="query.factoryId"
-        style="width: 270px"
+        style="width: 200px"
         class="filter-item"
+        clearable
         defaultValue
         @change="crud.toQuery"
       />
@@ -32,6 +33,7 @@
         class="filter-item date-item"
         @change="handleDateChange"
       />
+      <rrOperation />
   </div>
 </template>
 
@@ -41,23 +43,25 @@ import moment from 'moment'
 import { componentTypeEnum } from '@enum-ms/mes'
 import { PICKER_OPTIONS_SHORTCUTS } from '@/settings/config'
 import workshopSelect from '@comp-mes/workshop-select'
+import rrOperation from '@crud/RR.operation'
 
 const defaultQuery = {
-  workshop: undefined,
+  workShopId: undefined,
+  productType: undefined,
   date: [moment().subtract(1, 'month').valueOf(), moment().valueOf()],
-  startDate: moment().subtract(1, 'month').valueOf(),
-  endDate: moment().valueOf()
+  startTime: moment().subtract(1, 'month').valueOf(),
+  endTime: moment().valueOf()
 }
 
 const { crud, query } = regHeader(defaultQuery)
 
 function handleDateChange() {
   if (query.date && query.date.length > 1) {
-    query.startDate = query.date[0]
-    query.endDate = query.date[1]
+    query.startTime = query.date[0]
+    query.endTime = query.date[1]
   } else {
-    query.startDate = undefined
-    query.endDate = undefined
+    query.startTime = undefined
+    query.endTime = undefined
   }
   crud.toQuery()
 }

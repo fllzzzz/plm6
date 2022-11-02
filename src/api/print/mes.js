@@ -411,6 +411,49 @@ export function mesProjectShipDetail(params) {
   })
 }
 
+// 工厂报表-车间报表详情
+ export function workshopReport(params) {
+  return request({
+    url: `/api/mes/building/workshop/artifact/summary/print`,
+    method: 'get',
+    params
+  })
+}
+
+// 任务跟踪-工单跟踪报表详情
+export function workOrderTrackingList(params) {
+  return request({
+    url: `/api/mes/building/task/process/product/print`,
+    method: 'get',
+    params
+  })
+}
+
+// 任务跟踪-月度任务跟踪报表详情
+export function monthlyTaskList(params) {
+  return request({
+    url: `/api/mes/building/task/tracking/month/project/print`,
+    method: 'get',
+    params
+  })
+}
+// 任务跟踪-产线跟踪报表详情
+export function productionLineList(params) {
+  return request({
+    url: `/api/mes/building/task/tracking/productionLine/detail/print`,
+    method: 'get',
+    params
+  })
+}
+// 任务跟踪-工序呆滞报表详情
+export function processList(params) {
+  return request({
+    url: `/api/mes/building/task/dull/process/detail/print`,
+    method: 'get',
+    params
+  })
+}
+
 export default {
   // 项目制造
   machinePartDetail, // 零件生产详情
@@ -459,6 +502,15 @@ export default {
   machinePartClassList, // 零件分类清单明细
 
   // 发运管理
-  mesProjectShipDetail // 项目发运详情
+  mesProjectShipDetail, // 项目发运详情
+
+  // 工厂报表-车间报表
+  workshopReport,  // 车间报表详情
+
+  // 任务跟踪
+  workOrderTrackingList,  // 工单跟踪报表详情
+  monthlyTaskList,  // 月度任务跟踪清单详情
+  productionLineList, // 产线跟踪清单详情
+  processList  //工序呆滞清单详情
 }
 

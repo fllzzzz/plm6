@@ -2,25 +2,27 @@
   <div class="head-container">
     <div>
       <el-date-picker
-        v-model="query.year"
+        v-model="query.dateTime"
         type="year"
         size="small"
         class="date-item filter-item"
-        style="width: 100px !important"
+        style="width: 120px !important"
         format="YYYY"
-        value-format="YYYY"
+        clearable
+        value-format="x"
         placeholder="选择年"
         :disabled-date="disabledDate"
         @change="crud.toQuery"
       />
       <workshop-select
         ref="workshopInfRef"
-        v-model="query.workshopInfId"
+        v-model="query.workShopId"
         placeholder="请选择车间"
         :factory-id="query.factoryId"
-        style="width: 270px"
+        style="width: 200px"
         class="filter-item"
-        defaultValue
+        clearable
+        @change="handleWorkshopChange"
       />
       <production-line-select
         ref="productionLineRef"
@@ -28,16 +30,20 @@
         v-model="query.productionLineId"
         :factory-id="query.factoryId"
         placeholder="请选择生产线"
-        style="width: 270px"
+        style="width: 200px"
         clearable
-        defaultValue
+        @change="handleProductionLineChange"
       />
-      <el-tag effect="plain" class="filter-item" size="medium"> <span>全年累计产量（吨）</span> : <span>444</span> </el-tag>
+      <el-tag class="filter-item" size="medium">
+        <span>全年累计产量（吨）</span>
+        <span>：</span>
+        <span>{{ (yearProductionData.mete / 1000).toFixed(2) }}</span>
+      </el-tag>
       <rrOperation />
     </div>
-    <div>
+    <div >
       <div style="width: 100%; height: 250px; display: flex" v-loading="loading">
-        <div v-loading="loading" id="orderDeliveryRateChart" style="width: 100%; height: 250px"></div>
+        <div v-loading="loading" id="workshopDeliveryChart" style="width: 100%; height: 250px"></div>
       </div>
     </div>
     <el-divider class="divider" />
@@ -56,11 +62,15 @@
         class="filter-item date-item"
         @change="handleDateChange"
       />
-      <project-cascader v-model="query.projectId" class="filter-item" />
-      <el-tag effect="success" class="filter-item" size="medium"> <span>产量（吨）</span> : <span>1200</span> </el-tag>
+      <project-cascader v-model="query.projectId" class="filter-item" @change="handleProjectIdChange" clearable />
+      <el-tag type="success" class="filter-item" size="medium">
+        <span>产量（吨）</span>
+        <span>：</span>
+        <span>{{(summaryList.mete / 1000).toFixed(2)}}</span>
+        </el-tag>
       <crudOperation>
         <template #optLeft>
-          <print-table api-key="workshopReport" :params="{ ...query }" size="mini" type="warning" class="filter-item" />
+          <print-table api-key="mesWorkshopReport" :params="{ startTime: query.startTime, endTime: query.endTime, projectId: query.projectId }" size="mini" type="warning" class="filter-item" />
         </template>
       </crudOperation>
     </div>
@@ -68,28 +78,34 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, reactive } from 'vue'
 import { regHeader } from '@compos/use-crud'
-import { parseTime } from '@/utils/date'
 import useChart from '@compos/use-chart'
-// import useMaxHeight from '@compos/use-max-height'
 import moment from 'moment'
 import { PICKER_OPTIONS_SHORTCUTS } from '@/settings/config'
-import { getOrderDeliveryRate } from '@/api/operation/order-delivery-rate'
+// import { getOrderDeliveryRate } from '@/api/operation/order-delivery-rate'
+import { fullYearProduction, workshopEcharts, workshopProduction } from '@/api/mes/factory-report/workshop-report.js'
 import workshopSelect from '@comp-mes/workshop-select'
 import productionLineSelect from '@comp-mes/production-line-select'
 import projectCascader from '@comp-base/project-cascader'
 import rrOperation from '@crud/RR.operation'
 import crudOperation from '@crud/CRUD.operation'
 
+const yearProductionData = reactive({
+  mete: 0
+})
+const summaryList = reactive({
+  mete: 0
+})
 const defaultQuery = {
-  year: parseTime(new Date(), '{y}'),
-  date: [moment().subtract(1, 'month').valueOf(), moment().valueOf()],
-  startDate: moment().subtract(1, 'month').valueOf(),
-  endDate: moment().valueOf(),
-  projectId: undefined
+  dateTime: new Date().getTime(),
+  date: [moment().startOf('month').valueOf(), moment().valueOf()],
+  startTime: moment().startOf('month').valueOf(),
+  endTime: moment().valueOf(),
+  projectId: undefined,
+  workShopId: undefined,
+  productionLineId: undefined
 }
-
 const { crud, query } = regHeader(defaultQuery)
 
 // 如果时间选取的时间年份比当前的时间大就被禁用
@@ -97,14 +113,59 @@ function disabledDate(time) {
   return time > new Date()
 }
 
+fetchSummary()
+workshopSummary()
+
+async function fetchSummary() {
+  try {
+    const data = await fullYearProduction({
+      dateTime: query.dateTime,
+      workShopId: query.workShopId,
+      productionLineId: query.productionLineId
+    })
+    yearProductionData.mete = data
+  } catch (e) {
+    console.log('获取全年产量失败', e)
+  }
+}
+
+async function workshopSummary() {
+  try {
+    const data = await workshopProduction({
+      startTime: query.startTime,
+      endTime: query.endTime,
+      projectId: query.projectId
+    })
+    summaryList.mete = data
+  } catch (e) {
+    console.log('获取全年产量失败', e)
+  }
+}
 function handleDateChange() {
   if (query.date && query.date.length > 1) {
-    query.startDate = query.date[0]
-    query.endDate = query.date[1]
+    query.startTime = query.date[0]
+    query.endTime = query.date[1]
   } else {
-    query.startDate = undefined
-    query.endDate = undefined
+    query.startTime = undefined
+    query.endTime = undefined
   }
+  workshopSummary()
+  crud.toQuery()
+}
+
+function handleWorkshopChange() {
+  fetchSummary()
+  fetchChart()
+  crud.toQuery()
+}
+function handleProductionLineChange() {
+  fetchSummary()
+  fetchChart()
+  crud.toQuery()
+}
+
+function handleProjectIdChange() {
+  workshopSummary()
   crud.toQuery()
 }
 const workshopInfRef = ref()
@@ -113,13 +174,11 @@ for (let i = 1; i <= 12; i++) {
   monthArr.value.push(i + '月')
 }
 
-const year = ref(moment().valueOf().toString())
 const loading = ref(false)
 const chartLoading = ref(false)
-const summaryInfo = ref({})
 
 const { getMyChart } = useChart({
-  elementId: 'orderDeliveryRateChart',
+  elementId: 'workshopDeliveryChart',
   fetchHook: fetchChart,
   initOption: {
     legend: { show: false },
@@ -144,13 +203,7 @@ const { getMyChart } = useChart({
     },
     series: [
       {
-        name: '计划',
-        type: 'bar',
-        yAxisIndex: 0,
-        data: []
-      },
-      {
-        name: '实际',
+        name: '产量',
         type: 'bar',
         yAxisIndex: 0,
         data: []
@@ -163,33 +216,21 @@ async function fetchChart() {
   try {
     chartLoading.value = true
     const _myChart = getMyChart()
-    const {
-      details = [],
-      completeSummary = 0,
-      avgDeliverRatio = 0,
-      orderSummary = 0
-    } = await getOrderDeliveryRate({ dateTime: year.value })
+    const productionData = []
+    const data = await workshopEcharts({
+      dateTime: query.dateTime,
+      workShopId: query.workShopId,
+      productionLineId: query.productionLineId
+    })
     const option = _myChart.getOption()
-    summaryInfo.value = {
-      completeSummary,
-      avgDeliverRatio,
-      orderSummary,
-      totalRatio: (completeSummary / orderSummary) * 100
+    for (const i in data) {
+      productionData.push(data[i])
     }
-    option.series[0].data = details.map((v) => (v.order && Number((v.order / 1000).toFixed(2))) || 0)
-    // option.series[1].data = details.map((v) => {
-    //   const value = (v.complete && Number((v.complete / 1000).toFixed(2))) || 0
-    //   return {
-    //     value,
-    //     itemStyle: {
-    //       color: value && !v.order ? '#cccccc' : '#91cc75'
-    //     }
-    //   }
-    // })
-    // option.series[2].data = details.map((v) => v.deliverRatio || 0)
+    console.log(productionData)
+    option.series[0].data = productionData.map((v) => (v && Number((v / 1000).toFixed(2))) || 0)
     _myChart.setOption(option)
   } catch (error) {
-    console.log(error, '获取车间产量信息失败')
+    console.log(error, '获取车间报表信息失败')
   } finally {
     chartLoading.value = false
   }

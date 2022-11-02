@@ -135,10 +135,18 @@ constantize(taskIssueTypeEnum)
 const machinePartSchedulingIssueStatusEnum = {
   NOT_NESTING: { L: '未套料', K: 'NOT_NESTING', V: 1 << 0, T: 'info' },
   IN_NESTING: { L: '套料中', K: 'IN_NESTING', V: 1 << 1, T: 'warning' },
-  OUT_NESTING: { L: '套料完成', K: 'OUT_NESTING', V: 1 << 2, T: 'primary' },
+  OUT_NESTING: { L: '套料完成', K: 'OUT_NESTING', V: 1 << 2, T: '' },
   HAS_ISSUED: { L: '已下发', K: 'HAS_ISSUED', V: 1 << 3, T: 'success' }
 }
 constantize(machinePartSchedulingIssueStatusEnum)
+
+// 排产状态
+const mesSchedulingStatusEnum = {
+  NOT: { L: '未排产', K: 'NOT', V: 1 << 0, T: 'info' },
+  PARTIAL: { L: '部分排产', K: 'PARTIAL', V: 1 << 1, T: 'warning' },
+  HAS: { L: '已排产', K: 'HAS', V: 1 << 2, T: '' }
+}
+constantize(mesSchedulingStatusEnum)
 
 // 零件排产套料状态
 const machinePartNestingStatusEnum = {
@@ -475,6 +483,13 @@ const shipStatusEnum = {
 }
 constantize(shipStatusEnum)
 
+// 工单跟踪
+const workOrderTypeEnum = {
+  DELAY: { L: '滞后', K: 'DELAY', V: 0 },
+  NORMAL: { L: '正常', K: 'NORMAL', V: 1 }
+}
+constantize(workOrderTypeEnum)
+
 export {
   teamTypeEnum,
   teamAttributeEnum,
@@ -533,8 +548,10 @@ export {
   nestingFileTypeEnum,
   nestingSettingTypeEnum,
   mesBuildingTypeSettingAssembleTypeEnum,
+  mesSchedulingStatusEnum,
   mesMachinePartOrderTypeEnum,
-  shipStatusEnum
+  shipStatusEnum,
+  workOrderTypeEnum
 }
 
 export default {
@@ -595,6 +612,8 @@ export default {
   nestingFileTypeEnum,
   nestingSettingTypeEnum,
   mesBuildingTypeSettingAssembleTypeEnum,
+  mesSchedulingStatusEnum,
   mesMachinePartOrderTypeEnum,
-  shipStatusEnum
+  shipStatusEnum,
+  workOrderTypeEnum
 }

@@ -10,7 +10,7 @@
         class="filter-item"
         type="enumSL"
         default
-        :unshowVal="[componentTypeEnum.ENCLOSURE.V,componentTypeEnum.AUXILIARY_MATERIAL.V,...unshowVal]"
+        :unshowVal="[componentTypeEnum.ENCLOSURE.V,componentTypeEnum.AUXILIARY_MATERIAL.V]"
         @change="crud.toQuery"
       />
       <factory-select v-model="query.factoryId" clearable class="filter-item" style="width: 200px" @change="crud.toQuery" />

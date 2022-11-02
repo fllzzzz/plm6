@@ -31,12 +31,12 @@
     </el-table-column>
     <el-table-column :show-overflow-tooltip="true" label="套料状态" min-width="60" align="center">
       <template #default="{ row }">
-        <span>{{ row.issueStatusEnum }}</span>
+        <el-tag v-if="row.issueStatusEnum" effect="plain" :type="issueStatusEnum.V[row.issueStatusEnum].T">{{ issueStatusEnum.VL[row.issueStatusEnum]}}</el-tag>
       </template>
     </el-table-column>
     <el-table-column :show-overflow-tooltip="true" label="排产状态" min-width="60" align="center">
       <template #default="{ row }">
-        <span>{{ row.issueStatusEnum }}</span>
+        <el-tag v-if="row.taskStatusEnum" effect="plain" :type="mesSchedulingStatusEnum.V[row.taskStatusEnum].T">{{ mesSchedulingStatusEnum.VL[row.taskStatusEnum]}}</el-tag>
       </template>
     </el-table-column>
   </common-table>
@@ -46,6 +46,8 @@
 import { getNestingTask } from '@/api/mes/scheduling-manage/machine-part'
 import { ref, defineProps, defineEmits } from 'vue'
 import moment from 'moment'
+
+import { machinePartSchedulingIssueStatusEnum as issueStatusEnum, mesSchedulingStatusEnum } from '@enum-ms/mes'
 
 const emit = defineEmits(['nesting-task-click'])
 defineProps({

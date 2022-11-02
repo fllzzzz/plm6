@@ -1,51 +1,55 @@
 <template>
   <div class="head-container">
      <el-date-picker
-        v-model="query.year"
+        v-model="query.dateTime"
         type="year"
         size="small"
         class="date-item filter-item"
         style="width: 120px !important"
         format="YYYY"
-        value-format="YYYY"
+        value-format="x"
         placeholder="选择年"
         :disabled-date="disabledDate"
         @change="crud.toQuery"
       />
       <workshop-select
         ref="workshopInfRef"
-        v-model="query.workshopInfId"
+        v-model="query.workShopId"
         placeholder="请选择车间"
         :factory-id="query.factoryId"
         style="width: 200px"
         class="filter-item"
-        defaultValue
+        clearable
+        @change="crud.toQuery"
       />
       <production-line-select
         ref="productionLineRef"
         class="filter-item"
         v-model="query.productionLineId"
         :factory-id="query.factoryId"
+        :workshop-id="query.workShopId"
         placeholder="请选择生产线"
         style="width: 200px"
         clearable
-        defaultValue
+        @change="crud.toQuery"
       />
+      <rrOperation />
   </div>
 </template>
 
 <script setup>
 import { regHeader } from '@compos/use-crud'
-import { parseTime } from '@/utils/date'
-import moment from 'moment'
+import rrOperation from '@crud/RR.operation'
 import workshopSelect from '@comp-mes/workshop-select'
 import productionLineSelect from '@comp-mes/production-line-select'
+import moment from 'moment'
+
+const defaultTime = moment().startOf('month').valueOf()
 
 const defaultQuery = {
-  year: parseTime(new Date(), '{y}'),
-  date: [moment().subtract(1, 'month').valueOf(), moment().valueOf()],
-  startDate: moment().subtract(1, 'month').valueOf(),
-  endDate: moment().valueOf()
+  dateTime: defaultTime.toString(),
+  workShopId: undefined,
+  productionLineId: undefined
 }
 
 const { crud, query } = regHeader(defaultQuery)
