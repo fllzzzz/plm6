@@ -139,6 +139,16 @@
           </template>
         </el-table-column>
       </common-table>
+      <!--分页组件-->
+      <el-pagination
+        :total="total"
+        :current-page="queryPage.pageNumber"
+        :page-size="queryPage.pageSize"
+        style="margin-top: 8px"
+        layout="total, prev, pager, next, sizes"
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+      />
       <edit-form v-model:visible="editVisible" :itemInfo="itemInfo" @refresh="fetch" />
       <batch-edit-form
         v-model:visible="batchEditVisible"
@@ -167,6 +177,7 @@ import { artifactProductLineEnum } from '@enum-ms/mes'
 
 import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'
+import usePagination from '@compos/use-pagination'
 import useGetArtifactTypeList from '@compos/mes/scheduling/use-get-artifact-type-list'
 import editForm from './edit-form'
 import batchEditForm from './batch-edit-form'
@@ -174,6 +185,8 @@ import delForm from './del-form'
 import batchDelForm from './batch-del-form'
 import assembleSchedulingForm from './assemble-scheduling-form'
 import tagTabs from '@comp-common/tag-tabs'
+
+const { handleSizeChange, handleCurrentChange, total, setTotalPage, queryPage } = usePagination({ fetchHook: fetch })
 
 const drawerRef = ref()
 const recordTableRef = ref()
@@ -233,10 +246,12 @@ const listProductionLineTypeEnum = computed(() => {
 // 高度
 const { maxHeight } = useMaxHeight(
   {
-    extraBox: ['.el-drawer__header'],
+    extraBox: ['.el-drawer__header', '.head-container'],
     wrapperBox: ['.el-drawer__body'],
     navbar: false,
-    clientHRepMainH: true
+    paginate: true,
+    clientHRepMainH: true,
+    extraHeight: 50
   },
   drawerRef
 )
@@ -286,7 +301,8 @@ async function fetch() {
     tableLoading.value = true
     tableData.value = []
     listObjIdsByGroup.value = {}
-    const { content } = await record({ ...props.otherQuery, ...queryVO.value })
+    const { content, totalElements } = await record({ ...props.otherQuery, ...queryVO.value, ...queryPage })
+    setTotalPage(totalElements)
     const _list = content
     let _curNeedMergeIndex = 0 // 首行为初始需要的合并行
     let _mergeRowspan = 0
