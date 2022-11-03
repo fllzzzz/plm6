@@ -12,7 +12,17 @@
     </template>
     <el-form ref="formRef" :model="form" :rules="rules" size="small" label-width="100px">
       <el-form-item label="厚度：" prop="thickness">
-        <el-input v-model="form.thickness" clearable placeholder="输入厚度" class="filter-item" style="width: 270px" />
+        <!-- <el-input v-model="form.thickness" clearable placeholder="输入厚度" class="filter-item" style="width: 270px" /> -->
+        <el-input-number
+          class="filter-item"
+          v-model="form.thickness"
+          placeholder="输入厚度"
+          type="text"
+          controls-position="right"
+          style="width: 270px"
+          :min="0"
+          :max="999999999"
+        />
       </el-form-item>
       <el-form-item label="是否开孔：" prop="boolDrillEnum">
         <common-select
