@@ -482,6 +482,13 @@ const workOrderTypeEnum = {
 }
 constantize(workOrderTypeEnum)
 
+// 型材套料：套料设定
+const assembleTypeEnum = {
+  SUB_ASSEMBLE: { L: '次部件', K: 'SUB_ASSEMBLE', V: 0 },
+  MAIN_ASSEMBLE: { L: '主部件', K: 'MAIN_ASSEMBLE', V: 1 }
+}
+constantize(assembleTypeEnum)
+
 export {
   teamTypeEnum,
   teamAttributeEnum,
@@ -542,7 +549,8 @@ export {
   mesBuildingTypeSettingAssembleTypeEnum,
   mesMachinePartOrderTypeEnum,
   shipStatusEnum,
-  workOrderTypeEnum
+  workOrderTypeEnum,
+  assembleTypeEnum
 }
 
 export default {
@@ -605,5 +613,6 @@ export default {
   mesBuildingTypeSettingAssembleTypeEnum,
   mesMachinePartOrderTypeEnum,
   shipStatusEnum,
-  workOrderTypeEnum
+  workOrderTypeEnum,
+  assembleTypeEnum
 }

@@ -91,12 +91,12 @@
         :show-overflow-tooltip="true"
         prop="taskMete"
         label="任务量（kg）"
-        min-width="110px"
         align="center"
       />
-      <el-table-column label="操作" width="110px" align="center">
+      <el-table-column label="操作" min-width="110px" align="center">
         <template #default="{ row }">
           <common-button type="primary" size="mini" @click="showDetail(row)">查看</common-button>
+          <common-button type="danger" size="mini" @click="delDetail(row)">删除</common-button>
         </template>
       </el-table-column>
     </common-table>

@@ -36,7 +36,7 @@
 
 <script setup>
 import { defineProps, ref, defineEmits, reactive, inject } from 'vue'
-import { nestingSettingTypeEnum } from '@enum-ms/mes'
+import { nestingSettingTypeEnum, artifactProductLineEnum } from '@enum-ms/mes'
 import useVisible from '@compos/use-visible'
 import { extrusionNesting } from '@/api/mes/craft-manage/section-steel/nesting-setting'
 import nestingProgress from './nesting-progress.vue'
@@ -81,7 +81,7 @@ async function submitForm(formRef) {
     const _content = []
     props.detailData.map((v) => {
       _data.push({
-        id: v.id,
+        id: v.productionLineTypeEnum === artifactProductLineEnum.INTELLECT.V? v.assembleDetailId:v.id,
         quantity: v.quantity
       })
       _content.push(v.productionLineTypeEnum)

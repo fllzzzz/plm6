@@ -7,27 +7,34 @@
       <el-tag>任务单号：{{ props.detailData.scheduleOrder }}</el-tag>
     </template>
     <template #content>
-      <common-radio-button
-        v-model="processId"
-        :options="processList"
-        type="other"
-        :dataStructure="{ key: 'id', label: 'name', value: 'id' }"
-        size="small"
-        showOptionAll
-        class="filter-item"
-        style="margin-bottom: 8px"
-        @change="handleProcessChange"
-      />
-      <common-radio-button
-        v-if="props.detailData.productType === componentTypeEnum.ASSEMBLE.V"
-        v-model="type"
-        :options="typeEnum.ENUM"
-        type="enum"
-        size="small"
-        class="filter-item"
-        style="margin: 0 0 8px 8px"
-        @change="handleTypeChange"
-      />
+      <div style="display: flex; justify-content: space-between">
+        <div>
+          <common-radio-button
+            v-model="processId"
+            :options="processList"
+            type="other"
+            :dataStructure="{ key: 'id', label: 'name', value: 'id' }"
+            size="small"
+            showOptionAll
+            class="filter-item"
+            style="margin-bottom: 8px"
+            @change="handleProcessChange"
+          />
+          <common-radio-button
+            v-if="props.detailData.productType === componentTypeEnum.ASSEMBLE.V"
+            v-model="type"
+            :options="typeEnum.ENUM"
+            type="enum"
+            size="small"
+            class="filter-item"
+            style="margin: 0 0 8px 8px"
+            @change="handleTypeChange"
+          />
+        </div>
+        <div style="width: 300px">
+          <print-table :api-key="props.detailData.productType === componentTypeEnum.ASSEMBLE.V? 'mesAssembleProductionTaskOrder':'mesProductionTaskOrder'" :params="{ ...query }" size="mini" type="warning" class="filter-item" />
+        </div>
+      </div>
       <common-table
         ref="table"
         :data="tableData.taskList"
@@ -40,7 +47,7 @@
         <el-table-column label="单体" key="monomerName" prop="monomerName" align="center" />
         <el-table-column label="区域" key="areaName" prop="areaName" align="center" />
         <el-table-column label="编号" key="serialNumber" prop="serialNumber" align="center" />
-        <el-table-column label="规格" key="specification" prop="specification" align="center" min-width="110px"/>
+        <el-table-column label="规格" key="specification" prop="specification" align="center" min-width="110px" />
         <el-table-column label="长度（mm）" key="length" prop="length" align="center" />
         <el-table-column label="单重（kg）" key="netWeight" prop="netWeight" align="center" />
         <el-table-column label="任务数" key="quantity" prop="quantity" align="center" />
@@ -147,19 +154,19 @@ const emit = defineEmits(['update:visible'])
 const props = defineProps({
   visible: {
     type: Boolean,
-    default: false
+    default: false,
   },
   detailData: {
     type: Object,
-    default: () => {}
-  }
+    default: () => {},
+  },
 })
 
 const { visible: drawerVisible, handleClose } = useVisible({ emit, props, field: 'visible' })
 
 const typeEnum = {
   TASK_LIST: { L: '任务清单', K: 'TASK_LIST', V: 1 },
-  MATERIAL_LIST: { L: '材料清单', K: 'MATERIAL_LIST', V: 2 }
+  MATERIAL_LIST: { L: '材料清单', K: 'MATERIAL_LIST', V: 2 },
 }
 constantize(typeEnum)
 // 高度
@@ -168,7 +175,7 @@ const { maxHeight } = useMaxHeight(
     extraBox: ['.el-drawer__header'],
     wrapperBox: ['.el-drawer__body'],
     navbar: false,
-    clientHRepMainH: true
+    clientHRepMainH: true,
   },
   drawerRef
 )
@@ -182,7 +189,7 @@ const params = computed(() => {
   return {
     orderId: props.detailData.orderId,
     processId: processId.value,
-    productType: props.detailData.productType
+    productType: props.detailData.productType,
   }
 })
 
@@ -201,7 +208,7 @@ async function processGet() {
   try {
     const data = await processInfo({
       orderId: props.detailData.orderId,
-      productionLineId: props.detailData.productionLineId
+      productionLineId: props.detailData.productionLineId,
     })
     processList.value = data
     handleProcessChange()
@@ -215,7 +222,7 @@ async function fetch() {
     const query =
       props.detailData.productType === componentTypeEnum.ARTIFACT.V ? { ...params.value } : { ...params.value, type: type.value }
     const data = await productTask({
-      ...query
+      ...query,
     })
     tableData.value = data
   } catch (err) {

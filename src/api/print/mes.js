@@ -298,6 +298,17 @@ export function schedulingDetail(params) {
   })
 }
 
+/**
+ * 工单管理：生产任务单
+ */
+export function productionTaskOrder(params) {
+  return request({
+    url: ``,
+    method: 'get',
+    params
+  })
+}
+
 // /**
 //  * 编外工资汇总
 //  */
@@ -454,15 +465,26 @@ export function processList(params) {
   })
 }
 
+// 项目制造：项目总览
+export function projectOverviewList(params) {
+  return request({
+    url: `/api/mes/building/kanban/project/process/summary/detail/print`,
+    method: 'get',
+    params
+  })
+}
+
 export default {
   // 项目制造
   machinePartDetail, // 零件生产详情
   paintingList, // 涂装列表
   structureProjectSummary, // 结构项目汇总
   enclosureProjectSummary, // 围护项目汇总
+  projectOverviewList, // 项目总览工序清单
 
   // 工单管理
   schedulingDetail, // 工单详情
+  productionTaskOrder, // 工单管理：生产任务单
 
   // 生产报表
   productionReport, // 生产报表

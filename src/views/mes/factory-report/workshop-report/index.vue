@@ -160,7 +160,7 @@ CRUD.HOOK.handleRefresh = (crud, res) => {
 // 合计
 function getSummaries(param) {
   return tableSummary(param, {
-    props: ['quantity', 'mete']
+    props: ['length', 'quantity', 'mete']
   })
 }
 </script>
