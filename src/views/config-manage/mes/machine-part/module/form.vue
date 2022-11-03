@@ -6,6 +6,7 @@
     :visible="crud.status.cu > 0"
     :title="crud.status.title"
     :wrapper-closable="false"
+    ref="drawerRef"
     size="650px"
   >
     <template #titleRight>
@@ -13,42 +14,44 @@
     </template>
     <template #content>
       <el-form ref="formRef" :model="form" :rules="rules" size="small" label-width="140px">
-        <el-form-item label="是否型材" prop="classifyIds">
-          <!-- <common-radio-button
-            v-model="form.boolSectionSteel"
-            :options="whetherEnum.ENUM"
-            type="enum"
-            size="small"
-            class="filter-item"
-            style="margin-bottom: 5px"
-          /> -->
-           <el-switch
+        <div class="detail-header">
+          <el-form-item label="是否型材" prop="classifyIds">
+            <!-- <common-radio-button
+              v-model="form.boolSectionSteel"
+              :options="whetherEnum.ENUM"
+              type="enum"
+              size="small"
+              class="filter-item"
+              style="margin-bottom: 5px"
+            /> -->
+            <el-switch
               v-model="form.boolSectionSteel"
               :active-value="whetherEnum.TRUE.V"
               :inactive-value="whetherEnum.FALSE.V"
               class="drawer-switch"
             />
-          <br />
-          <material-cascader
-            v-model="form.classifyIds"
-            :basic-class="matClsEnum.SECTION_STEEL.V"
-            :disabled="!form.boolSectionSteel"
-            multiple
-            :collapse-tags="false"
-            separator=" > "
-            clearable
-            :disabledVal="disabledClassifyIds"
-            placeholder="请选择科目"
-            size="small"
-            style="width: 270px"
-          />
-        </el-form-item>
-        <el-form-item label="代表部件类型" prop="name">
-          <el-input v-model="form.name" type="text" placeholder="代表部件类型" style="width: 270px" maxlength="30" />
-        </el-form-item>
-        <el-form-item label="排序" prop="sort">
-          <el-input-number v-model.number="form.sort" :min="1" :max="999" :step="1" controls-position="right" style="width: 270px" />
-        </el-form-item>
+            <br />
+            <material-cascader
+              v-model="form.classifyIds"
+              :basic-class="matClsEnum.SECTION_STEEL.V"
+              :disabled="!form.boolSectionSteel"
+              multiple
+              :collapse-tags="false"
+              separator=" > "
+              clearable
+              :disabledVal="disabledClassifyIds"
+              placeholder="请选择科目"
+              size="small"
+              style="width: 270px"
+            />
+          </el-form-item>
+          <el-form-item label="代表部件类型" prop="name">
+            <el-input v-model="form.name" type="text" placeholder="代表部件类型" style="width: 270px" maxlength="30" />
+          </el-form-item>
+          <el-form-item label="排序" prop="sort">
+            <el-input-number v-model.number="form.sort" :min="1" :max="999" :step="1" controls-position="right" style="width: 270px" />
+          </el-form-item>
+        </div>
         <common-table
           ref="detailRef"
           border
@@ -129,10 +132,11 @@ import { regForm } from '@compos/use-crud'
 
 const formRef = ref()
 const nameArr = ref([])
+const drawerRef = ref()
 const defaultForm = {
   id: undefined,
   name: '',
-  boolSectionSteel: undefined,
+  boolSectionSteel: whetherEnum.FALSE.V,
   sort: undefined,
   assembleSpecList: []
 }
@@ -167,11 +171,15 @@ watchEffect([() => form.classifyIds, () => form.boolSectionSteel], ([cls, bol]) 
     form.classifyIds = []
   }
 })
-const { maxHeight } = useMaxHeight({
-  wrapperBox: '.addForm',
-  paginate: true,
-  extraHeight: 120
-})
+const { maxHeight } = useMaxHeight(
+  {
+    extraBox: ['.el-drawer__header', '.detail-header'],
+    wrapperBox: ['.el-drawer__body', '.table-form'],
+    navbar: false,
+    extraHeight: 120
+  },
+  () => drawerRef.value.loaded
+)
 
 const tableRules = {
   specPrefix: [{ required: true, message: '请输入部件号规格前缀', trigger: 'blur' }],
@@ -256,6 +264,12 @@ CRUD.HOOK.beforeToAdd = () => {
 
 CRUD.HOOK.beforeToEdit = () => {
   nameArr.value = []
+  form.assembleSpecList.map((v, index) => {
+    nameArr.value.push({
+      specPrefix: v.specPrefix,
+      index: index
+    })
+  })
 }
 CRUD.HOOK.beforeToCU = () => {
   nextTick(() => {

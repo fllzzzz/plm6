@@ -6,6 +6,7 @@
     :visible="crud.status.cu > 0"
     :title="crud.status.title"
     :wrapper-closable="false"
+    ref="drawerRef"
     size="60%"
   >
     <template #titleRight>
@@ -13,36 +14,38 @@
     </template>
     <template #content>
       <el-form ref="formRef" :model="form" :rules="rules" size="small" label-width="140px">
-        <el-form-item label="名称" prop="name">
+        <div class="detail-header">
+          <el-form-item label="名称" prop="name">
           <el-input v-model="form.name" type="text" placeholder="分类名称" style="width: 270px" maxlength="30" />
-        </el-form-item>
-        <el-form-item label="零件科目匹配" prop="classifyIds">
-          <common-radio-button
-            v-model="form.basicClass"
-            :options="[matClsEnum.STEEL_PLATE, matClsEnum.MATERIAL]"
-            type="enum"
-            size="small"
-            style="margin-bottom:5px;"
-          />
-          <br/>
-          <material-cascader
-            v-model="form.classifyIds"
-            :basic-class="form.basicClass"
-            :disabled="!form.basicClass"
-            multiple
-            :collapse-tags="false"
-            separator=" > "
-            clearable
-            :disabledVal="disabledClassifyIds"
-            placeholder="请选择科目"
-            size="small"
-            style="width: 270px"
-          />
-        </el-form-item>
-        <el-form-item label="排序" prop="sort">
-          <el-input-number v-model.number="form.sort" :min="1" :max="999" :step="1" controls-position="right" style="width: 270px" />
-        </el-form-item>
-        <el-divider><span class="title">零件规格前缀明细</span></el-divider>
+          </el-form-item>
+          <el-form-item label="零件科目匹配" prop="classifyIds">
+            <common-radio-button
+              v-model="form.basicClass"
+              :options="[matClsEnum.STEEL_PLATE, matClsEnum.MATERIAL]"
+              type="enum"
+              size="small"
+              style="margin-bottom:5px;"
+            />
+            <br/>
+            <material-cascader
+              v-model="form.classifyIds"
+              :basic-class="form.basicClass"
+              :disabled="!form.basicClass"
+              multiple
+              :collapse-tags="false"
+              separator=" > "
+              clearable
+              :disabledVal="disabledClassifyIds"
+              placeholder="请选择科目"
+              size="small"
+              style="width: 270px"
+            />
+          </el-form-item>
+          <el-form-item label="排序" prop="sort">
+            <el-input-number v-model.number="form.sort" :min="1" :max="999" :step="1" controls-position="right" style="width: 270px" />
+          </el-form-item>
+          <el-divider><span class="title">零件规格前缀明细</span></el-divider>
+        </div>
          <common-table
           ref="detailRef"
           border
@@ -132,6 +135,7 @@ const props = defineProps({
 
 const formRef = ref()
 const nameArr = ref([])
+const drawerRef = ref()
 const disabledClassifyIds = ref([])
 const specIndexEnum = {
   1: { L: '1', K: '1', V: 1 },
@@ -147,11 +151,16 @@ const defaultForm = {
 }
 
 const { crud, form, CRUD } = regForm(defaultForm, formRef)
-const { maxHeight } = useMaxHeight({
-  wrapperBox: '.addForm',
-  paginate: true,
-  extraHeight: 240
-})
+const { maxHeight } = useMaxHeight(
+  {
+    extraBox: ['.el-drawer__header', '.detail-header'],
+    wrapperBox: ['.el-drawer__body'],
+    navbar: false,
+    extraHeight: 120
+  },
+  () => drawerRef.value.loaded
+)
+
 // 序号校验
 const validateEnum = (value, row) => {
   if (!isNotBlank(value)) return false
@@ -215,7 +224,7 @@ function checkName(item, index) {
           type: 'error'
         })
         nextTick(() => {
-          item.keyword = undefined
+          form.links[index].keyword = undefined
           val.keyword = undefined
         })
       } else {
@@ -225,7 +234,7 @@ function checkName(item, index) {
             type: 'error'
           })
           nextTick(() => {
-            item.keyword = undefined
+            form.links[index].keyword = undefined
             val.keyword = undefined
           })
         } else {
@@ -288,6 +297,12 @@ CRUD.HOOK.beforeToAdd = () => {
 
 CRUD.HOOK.beforeToEdit = () => {
   nameArr.value = []
+  form.links.map((v, index) => {
+    nameArr.value.push({
+      keyword: v.keyword,
+      index: index
+    })
+  })
 }
 
 CRUD.HOOK.beforeToCU = () => {
