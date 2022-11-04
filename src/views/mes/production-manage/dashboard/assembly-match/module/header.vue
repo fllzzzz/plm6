@@ -9,11 +9,11 @@
       />
       <div>
         <tag-tabs
-          v-model="query.classId"
+          v-model="query.structureClassId"
           class="filter-item"
           :style="'width:calc(100% - 0px)'"
           :data="summaryList"
-          :itemKey="'classId'"
+          :itemKey="'id'"
           @change="tabChange"
         >
           <template #default="{ item }">
@@ -68,15 +68,15 @@ import rrOperation from '@crud/RR.operation'
 import ColorCard from '@comp/ColorCard'
 import Scale from '@comp/Scale'
 import tagTabs from '@comp-common/tag-tabs'
-import factorySelect from '@comp-base/factory-select'
 import monomerSelectAreaTabs from '@comp-base/monomer-select-area-tabs'
 
 const summaryList = ref([])
 const defaultQuery = {
   serialNumber: '',
+  structureClassId: undefined,
   monomerId: { value: undefined, resetAble: false },
   areaId: { value: undefined, resetAble: false },
-  status: { value: undefined, resetAble: false },
+  status: { value: undefined, resetAble: false }
 }
 const { crud, query, CRUD } = regHeader(defaultQuery)
 const projectId = useGlobalProjectIdChangeToQuery(crud)
@@ -87,7 +87,7 @@ const boxScale = ref(1)
 const { colors, boxZoomOut, getColorByValue, getTagByValue } = useDashboardHeader({
   colorCardTitles: ['不具备', '部分具备', '完全具备'],
   emit,
-  crud,
+  crud
 })
 
 const checkAll = ref(false)
@@ -99,13 +99,20 @@ function batchMatch() {
 }
 
 async function artifactInfoGet() {
+  summaryList.value = []
+  if (!query.monomerId || !query.areaId) {
+    return
+  }
   try {
     const data = await artifactInfo({
       projectId: query.projectId,
       monomerId: query.monomerId,
-      areaId: query.areaId,
+      areaId: query.areaId
     })
-    summaryList.value = data
+    summaryList.value = data || []
+    if (summaryList.value.length === 1) {
+      query.structureClassId = summaryList.value[0].id
+    }
   } catch (e) {
     console.log('获取区域下的构件汇总信息', e)
   }
@@ -126,18 +133,24 @@ CRUD.HOOK.handleRefresh = (crud, res) => {
 function fetchMonomerAndArea({ monomerId, areaId }) {
   query.monomerId = monomerId
   query.areaId = areaId
+  query.structureClassId = undefined
   artifactInfoGet()
-  crud.toQuery() 
+  crud.toQuery()
+}
+
+function tabChange(val) {
+  query.structureClassId = val
+  crud.toQuery()
 }
 
 defineProps({
   isIndeterminate: {
     type: Boolean,
-    default: false,
-  },
+    default: false
+  }
 })
 
 defineExpose({
-  boxScale,
+  boxScale
 })
 </script>

@@ -1,15 +1,9 @@
 <template>
   <div class="app-container">
     <div style="width: 300px; float: right; margin-bottom: 8px">
-      <print-table
-        api-key="mesMachinePartList"
-        :params="{...props.query}"
-        size="mini"
-        type="warning"
-        class="filter-item"
-      />
+      <print-table api-key="mesMachinePartList" :params="{ ...props.query }" size="mini" type="warning" class="filter-item" />
     </div>
-    <common-table ref="tableRef" :data="machinePartData" :empty-text="'暂无数据'" :max-height="700" row-key="id" style="width: 100%">
+    <common-table ref="tableRef" :data="machinePartData" :empty-text="'暂无数据'" :max-height="maxHeight" row-key="id" style="width: 100%">
       <el-table-column prop="index" label="序号" align="center" width="60" type="index" />
       <el-table-column align="center" key="serialNumber" prop="serialNumber" :show-overflow-tooltip="true" label="零部件编号">
         <template v-slot="scope">
@@ -39,8 +33,8 @@ const machinePartData = ref([])
 
 const props = defineProps({
   query: {
-    type: Object,
-  },
+    type: Object
+  }
 })
 
 watch(
@@ -50,23 +44,10 @@ watch(
       partDataGet()
     }
   },
-  { immediate: true }
-)
-
-watch(
-  () => props.query.areaId,
-  (val) => {
-    if (val) {
-      partDataGet()
-    }
-  },
-  { immediate: true }
+  { deep: true, immediate: true }
 )
 
 async function partDataGet() {
-  if (!props.query.projectId || !props.query.monomerId || !props.query.areaId) {
-    return
-  }
   machinePartData.value = []
   try {
     const data = await productionDetail({
@@ -78,7 +59,7 @@ async function partDataGet() {
   }
 }
 const { maxHeight } = useMaxHeight({
-  paginate: true,
+  paginate: true
 })
 </script>
 <style lang="scss" scoped>

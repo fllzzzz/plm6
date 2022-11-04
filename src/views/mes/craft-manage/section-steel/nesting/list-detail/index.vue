@@ -10,7 +10,7 @@
       <div class="content-container" style="margin-bottom: 8px">
         <common-radio-button v-model="productionLineTypeEnum" :options="artifactProductLineEnum.ENUM" type="enum" class="filter-item" />
       </div>
-      <common-table v-loading="innerLoading" ref="tableDrawerRef" :data="assembleData" :max-height="400" style="width: 100%" row-key="id">
+      <common-table v-loading="innerLoading" ref="tableDrawerRef" :data="assembleData" :max-height="maxHeight" style="width: 100%" row-key="id">
         <el-table-column label="序号" type="index" align="center" width="60" />
         <el-table-column key="monomer.name" prop="monomer" :show-overflow-tooltip="true" label="单体" align="center">
           <template #default="{ row }">
@@ -78,14 +78,16 @@
               <upload-btn
                 :data="{
                   monomerId: row.monomer.id,
-                  productId: row.productionLineTypeEnum === artifactProductLineEnum.TRADITION.V ? row.id : row.assembleDetailId,
                   projectId: row.project.id,
                   productType: componentTypeEnum.ASSEMBLE.V,
                   dataType: technicalDataTypeEnum.NC_DRAWING.V,
                 }"
                 :accept="`.nc1`"
                 tip=".nc1"
+                :upload-fun="upload"
+                :match-serialNumber="row.serialNumber"
                 btn-type="primary"
+                btn-name="文件导入"
                 btn-size="mini"
                 class="filter-item"
                 @success="uploadSuccess"
@@ -102,13 +104,14 @@
 
 <script  setup>
 import useVisible from '@compos/use-visible'
+import useMaxHeight from '@compos/use-max-height'
 import { getAssembleList } from '@/api/mes/craft-manage/section-steel/nesting'
 import { artifactProductLineEnum, componentTypeEnum } from '@enum-ms/mes'
 import { technicalDataTypeEnum } from '@enum-ms/plan'
 import { ref, defineProps, defineEmits, watch } from 'vue'
 import pagination from '@crud/Pagination'
-// import { update } from '@/api/plan/technical-data-manage/technical-achievement'
-import uploadBtn from '@/views/plan/technical-data-manage/technical-achievement/components/drawing-upload-btn.vue'
+import { upload } from '@/api/plan/technical-data-manage/technical-achievement'
+import uploadBtn from '@/components/file-upload/SingleFileUploadBtn.vue'
 
 const emit = defineEmits(['success'])
 const productionLineTypeEnum = ref(artifactProductLineEnum.TRADITION.V)
@@ -172,6 +175,11 @@ async function initAssembleData() {
     console.log('获取部件清单失败', e)
   }
 }
+
+const { maxHeight } = useMaxHeight({
+  extraBox: ['.head-container'],
+  paginate: true
+})
 </script>
 
 <style>
