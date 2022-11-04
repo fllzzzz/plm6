@@ -11,6 +11,7 @@ import { emptyTextFormatter } from '@/utils/data-type'
 import { convertUnits } from '@/utils/convert/unit'
 
 import { projectNameFormatter } from '@/utils/project'
+import { ElMessage } from 'element-plus'
 
 import {
   orientEnum,
@@ -155,8 +156,15 @@ async function printTable({ header, table, footer, qrCode, config, printMode = P
       }
       if (isNotBlank(config.logo) && config.logo.show && config.logo.url) {
         var img = new Image()
-        img.addEventListener('load', loadHandler)
         img.src = config.logo.url
+        img.onload = function (res) {
+          loadHandler()
+        }
+        img.onerror = function (error) {
+          console.log('img error: ', error)
+          ElMessage.warning('获取logo失败')
+          loadHandler()
+        }
       } else {
         loadHandler()
       }
