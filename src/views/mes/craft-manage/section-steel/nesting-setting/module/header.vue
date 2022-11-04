@@ -8,6 +8,13 @@
       class="filter-item"
       @change="handleProductionLineTypeChange"
     />
+    <common-radio-button
+      v-model="query.boolMainAssemble"
+      :options="assembleTypeEnum.ENUM"
+      type="enum"
+      class="filter-item"
+      @change="handleProductionLineTypeChange"
+    />
     <monomer-select-area-select
       v-model:monomerId="query.monomerId"
       v-model:areaId="query.areaId"
@@ -131,7 +138,7 @@ import { ref, watch, computed, watchEffect, defineEmits } from 'vue'
 import { mapGetters } from '@/store/lib'
 import { ElMessage, ElNotification, ElMessageBox } from 'element-plus'
 
-import { artifactProductLineEnum } from '@enum-ms/mes'
+import { artifactProductLineEnum, assembleTypeEnum } from '@enum-ms/mes'
 
 import { regHeader } from '@compos/use-crud'
 import crudOperation from '@crud/CRUD.operation'
@@ -145,7 +152,7 @@ import { deepClone } from '@/utils/data-type'
 const emits = defineEmits(['change-mode'])
 
 const { globalProjectId } = mapGetters('globalProjectId')
-const defaultQuery = { projectId: globalProjectId.value, queryId: undefined, structureClassId: undefined, assembleClassId: undefined }
+const defaultQuery = { projectId: globalProjectId.value, queryId: undefined, structureClassId: undefined, assembleClassId: undefined, boolMainAssemble: assembleTypeEnum.MAIN_ASSEMBLE.V }
 
 const { crud, query } = regHeader(defaultQuery)
 
@@ -175,6 +182,13 @@ watch(
 
 watch(
   () => query.productionLineTypeEnum,
+  (val) => {
+    fetchSummary()
+  },
+  { immediate: true }
+)
+watch(
+  () => query.boolMainAssemble,
   (val) => {
     fetchSummary()
   },

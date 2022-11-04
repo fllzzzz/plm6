@@ -41,6 +41,7 @@ const purchaseLogisticsRecord = supply.logisticsRecord
 
 // mes
 const mesSchedulingDetail = mes.schedulingDetail
+const mesProductionTaskOrder = mes.productionTaskOrder
 
 const mesStructureProductionReport = mes.productionReport
 const mesAssemblePartProductionReport = mes.productionReport
@@ -59,10 +60,12 @@ const mesEnclosureProductionLine = mes.enclosureProductionLine
 const mesStructureProductionLine = mes.structureProductionLine
 const mesStructureProcess = mes.structureProcess
 const mesMachinePartDetail = mes.machinePartDetail
+const mesMachinePartList = mes.machinePartList
 const mesPaintingList = mes.paintingList
 const mesStructureProjectSummary = mes.structureProjectSummary
 const mesEnclosureProjectSummary = mes.enclosureProjectSummary
 const mesQHSEProductionLineReport = mes.qhseProductionLineReport
+const mesProjectOverviewList = mes.projectOverviewList
 
 const mesStructureTeamWage = mes.teamWage
 const mesEnclosureTeamWage = mes.teamWage
@@ -148,6 +151,7 @@ export default {
 
   // mes
   mesSchedulingDetail, // 工单详情
+  mesProductionTaskOrder, // 工单管理：生产任务单
 
   mesStructureProductionReport, // 结构生产报表
   mesAssemblePartProductionReport, // 部件生产报表
@@ -166,10 +170,12 @@ export default {
   mesStructureProductionLine, // 结构生产线报表
   mesStructureProcess, // 结构工序报表
   mesMachinePartDetail, // 零件生产详情
+  mesMachinePartList, // 零部件生产清单详情
   mesPaintingList, // 涂装列表
   mesStructureProjectSummary, // 结构项目汇总
   mesEnclosureProjectSummary, // 围护项目汇总
   mesQHSEProductionLineReport, // 生产线质检报表
+  mesProjectOverviewList, // 工序生产明细清单
 
   mesStructureTeamWage, // 结构班组工资
   mesEnclosureTeamWage, // 围护班组工资

@@ -7,38 +7,25 @@
         :project-id="projectId"
         @change="fetchMonomerAndArea"
       />
-      <factory-select v-model="query.factoryId" show-all class="filter-item" style="width: 200px" @change="crud.toQuery" />
-      <el-input
-        v-model="query.name"
-        size="small"
-        placeholder="输入名称搜索"
-        style="width: 170px"
-        class="filter-item"
-        clearable
-        @keyup.enter="crud.toQuery"
-      />
+      <div>
+        <tag-tabs
+          v-model="query.structureClassId"
+          class="filter-item"
+          :style="'width:calc(100% - 0px)'"
+          :data="summaryList"
+          :itemKey="'id'"
+          @change="tabChange"
+        >
+          <template #default="{ item }">
+            <span>{{ item.name }}：</span>
+            <span>{{ item.quantity }}件</span>
+          </template>
+        </tag-tabs>
+      </div>
       <el-input
         v-model="query.serialNumber"
         size="small"
         placeholder="输入编号搜索"
-        style="width: 170px"
-        class="filter-item"
-        clearable
-        @keyup.enter="crud.toQuery"
-      />
-      <el-input
-        v-model="query.specification"
-        size="small"
-        placeholder="输入规格搜索"
-        style="width: 170px"
-        class="filter-item"
-        clearable
-        @keyup.enter="crud.toQuery"
-      />
-      <el-input
-        v-model="query.material"
-        size="small"
-        placeholder="输入材质搜索"
         style="width: 170px"
         class="filter-item"
         clearable
@@ -72,7 +59,7 @@
 import { ref, defineExpose, defineProps, defineEmits } from 'vue'
 
 import { componentTypeEnum } from '@enum-ms/mes'
-
+import { artifactInfo } from '@/api/mes/production-manage/dashboard/assembly-match'
 import useDashboardHeader from '@compos/mes/dashboard/use-dashboard-header'
 import { regHeader } from '@compos/use-crud'
 import useGlobalProjectIdChangeToQuery from '@compos/use-global-project-id-change-to-query'
@@ -80,17 +67,15 @@ import crudOperation from '@crud/CRUD.operation'
 import rrOperation from '@crud/RR.operation'
 import ColorCard from '@comp/ColorCard'
 import Scale from '@comp/Scale'
-import factorySelect from '@comp-base/factory-select'
+import tagTabs from '@comp-common/tag-tabs'
 import monomerSelectAreaTabs from '@comp-base/monomer-select-area-tabs'
 
+const summaryList = ref([])
 const defaultQuery = {
-  name: '',
   serialNumber: '',
-  specification: '',
-  material: '',
+  structureClassId: undefined,
   monomerId: { value: undefined, resetAble: false },
   areaId: { value: undefined, resetAble: false },
-  factoryId: { value: undefined, resetAble: false },
   status: { value: undefined, resetAble: false }
 }
 const { crud, query, CRUD } = regHeader(defaultQuery)
@@ -113,6 +98,26 @@ function batchMatch() {
   emit('batchMatch')
 }
 
+async function artifactInfoGet() {
+  summaryList.value = []
+  if (!query.monomerId || !query.areaId) {
+    return
+  }
+  try {
+    const data = await artifactInfo({
+      projectId: query.projectId,
+      monomerId: query.monomerId,
+      areaId: query.areaId
+    })
+    summaryList.value = data || []
+    if (summaryList.value.length === 1) {
+      query.structureClassId = summaryList.value[0].id
+    }
+  } catch (e) {
+    console.log('获取区域下的构件汇总信息', e)
+  }
+}
+
 CRUD.HOOK.handleRefresh = (crud, res) => {
   emit('clear')
   checkAll.value = false
@@ -128,6 +133,13 @@ CRUD.HOOK.handleRefresh = (crud, res) => {
 function fetchMonomerAndArea({ monomerId, areaId }) {
   query.monomerId = monomerId
   query.areaId = areaId
+  query.structureClassId = undefined
+  artifactInfoGet()
+  crud.toQuery()
+}
+
+function tabChange(val) {
+  query.structureClassId = val
   crud.toQuery()
 }
 

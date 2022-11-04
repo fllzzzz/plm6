@@ -12,7 +12,6 @@
           highlight-current-row
           :empty-text="crud.emptyText"
           :max-height="maxHeight"
-          row-key="id"
           style="width: 100%"
           @row-click="currentChange"
         >
@@ -127,7 +126,7 @@ const optShow = {
   add: false,
   edit: false,
   del: false,
-  download: false,
+  download: false
 }
 
 const tableRef = ref()
@@ -138,9 +137,9 @@ const { crud, CRUD, columns } = useCRUD(
     title: '工单跟踪',
     sort: [],
     optShow: { ...optShow },
-    requireQuery:['productType'],
+    requireQuery: ['productType'],
     crudApi: { get },
-    hasPagination: true,
+    hasPagination: true
   },
   tableRef
 )
@@ -149,7 +148,7 @@ watch(
   (val) => {
     processList.value = {}
   }
- )
+)
 const productType = computed(() => {
   return crud.query.productType
 })
@@ -158,16 +157,15 @@ provide('productType', productType)
 
 const { maxHeight } = useMaxHeight({
   extraBox: ['.head-container'],
-  paginate: true,
+  paginate: true
 })
 
 function currentChange(row) {
   processList.value = row
 }
 
-
 CRUD.HOOK.beforeToQuery = () => {
-  crud.crudApi.get= crud.query.productType === componentTypeEnum.ARTIFACT.V ? get : machinePart
+  crud.crudApi.get = crud.query.productType === componentTypeEnum.ARTIFACT.V ? get : machinePart
 }
 
 CRUD.HOOK.handleRefresh = (crud, data) => {

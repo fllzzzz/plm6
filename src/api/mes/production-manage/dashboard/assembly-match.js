@@ -34,4 +34,27 @@ export function detail(params) {
   })
 }
 
+/**
+ * @description：获取区域下零部件生产数据
+ */
+export function productionDetail(params) {
+  return request({
+    module: 'mes',
+    url: 'kanban/assemble_matching/area/product',
+    method: 'get',
+    params
+  })
+}
+/**
+ * @description：获取区域下构件汇总
+ */
+export function artifactInfo(params) {
+  return request({
+    module: 'mes',
+    url: 'kanban/assemble_matching/area/artifact',
+    method: 'get',
+    params
+  })
+}
+
 export default { get }

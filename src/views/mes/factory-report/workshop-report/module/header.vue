@@ -29,6 +29,7 @@
         class="filter-item"
         v-model="query.productionLineId"
         :factory-id="query.factoryId"
+        :workshop-id="query.workShopId"
         placeholder="请选择生产线"
         style="width: 200px"
         clearable
@@ -41,36 +42,44 @@
       </el-tag>
       <rrOperation />
     </div>
-    <div >
+    <div>
       <div style="width: 100%; height: 250px; display: flex" v-loading="loading">
         <div v-loading="loading" id="workshopDeliveryChart" style="width: 100%; height: 250px"></div>
       </div>
     </div>
     <el-divider class="divider" />
     <div style="margin-top: 10px">
-      <el-date-picker
-        v-model="query.date"
-        type="daterange"
-        range-separator=":"
-        size="small"
-        value-format="x"
-        :shortcuts="PICKER_OPTIONS_SHORTCUTS"
-        unlink-panels
-        start-placeholder="开始日期"
-        end-placeholder="结束日期"
-        style="width: 240px; margin-right: 10px"
-        class="filter-item date-item"
-        @change="handleDateChange"
-      />
-      <project-cascader v-model="query.projectId" class="filter-item" @change="handleProjectIdChange" clearable />
-      <el-tag type="success" class="filter-item" size="medium">
-        <span>产量（吨）</span>
-        <span>：</span>
-        <span>{{(summaryList.mete / 1000).toFixed(2)}}</span>
-        </el-tag>
       <crudOperation>
         <template #optLeft>
-          <print-table api-key="mesWorkshopReport" :params="{ startTime: query.startTime, endTime: query.endTime, projectId: query.projectId }" size="mini" type="warning" class="filter-item" />
+          <el-date-picker
+            v-model="query.date"
+            type="daterange"
+            range-separator=":"
+            size="small"
+            value-format="x"
+            :shortcuts="PICKER_OPTIONS_SHORTCUTS"
+            unlink-panels
+            start-placeholder="开始日期"
+            end-placeholder="结束日期"
+            style="width: 240px; margin-right: 10px"
+            class="filter-item date-item"
+            @change="handleDateChange"
+          />
+          <project-cascader v-model="query.projectId" class="filter-item" @change="handleProjectIdChange" clearable />
+          <el-tag type="success" class="filter-item" size="medium">
+            <span>产量（吨）</span>
+            <span>：</span>
+            <span>{{ (summaryList.mete / 1000).toFixed(2) }}</span>
+          </el-tag>
+        </template>
+        <template #viewLeft>
+          <print-table
+            api-key="mesWorkshopReport"
+            :params="{ startTime: query.startTime, endTime: query.endTime, projectId: query.projectId }"
+            size="mini"
+            type="warning"
+            class="filter-item"
+          />
         </template>
       </crudOperation>
     </div>

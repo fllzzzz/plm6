@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
-    <div v-show="!processList.taskOrderId" class="my-code" style="width: 100%">*点击左侧表格行查看详情</div>
-    <div v-show="processList.taskOrderId" style="width: 100%">
+    <div v-show="!props.processList?.taskOrderId" class="my-code" style="width: 100%">*点击左侧表格行查看详情</div>
+    <div v-show="props.processList?.taskOrderId" style="width: 100%">
       <common-table
         ref="tableRef"
         :data="processData"
@@ -45,13 +45,12 @@ import { ref, defineProps, watch, inject } from 'vue'
 import { BellFilled } from '@element-plus/icons'
 import useMaxHeight from '@compos/use-max-height'
 import productionLineDetail from '../production-line-detail/index.vue'
-import { modelTranslateStatusEnum } from '@/utils/enum/modules/bim'
 
 const props = defineProps({
   processList: {
     type: Object,
-    default: () => {},
-  },
+    default: () => {}
+  }
 })
 
 const tableRef = ref()
@@ -64,7 +63,7 @@ watch(
   () => props.processList,
   (val) => {
     if (val) {
-      if(productType.value === componentTypeEnum.ARTIFACT.V) {
+      if (productType.value === componentTypeEnum.ARTIFACT.V) {
         processGet()
       } else {
         machineProcessGet()
@@ -76,37 +75,37 @@ watch(
 
 async function processGet() {
   processData.value = []
-  if(!props.processList?.taskOrderId){
+  if (!props.processList?.taskOrderId) {
     return
   }
   try {
-      const data = await process({
-        productType: productType.value,
-        taskOrderId: props.processList.taskOrderId,
-      })
-    processData.value = data?.artifactList?.concat(data?.assembleList)
+    const data = await process({
+      productType: productType.value,
+      taskOrderId: props.processList.taskOrderId
+    })
+    processData.value = data?.artifactList?.concat(data?.assembleList || [])
   } catch (e) {
     console.log('获取构件部件工序进度', e)
   }
 }
 async function machineProcessGet() {
   processData.value = []
-  if(!props.processList?.taskOrderId){
+  if (!props.processList?.taskOrderId) {
     return
   }
   try {
     const data = await machineProcess({
       productType: productType.value,
-      taskOrderId: props.processList.taskOrderId,
+      taskOrderId: props.processList.taskOrderId
     })
-    processData.value = data
+    processData.value = data || []
   } catch (e) {
     console.log('获取零件工序进度', e)
   }
 }
 const { maxHeight } = useMaxHeight({
   extraBox: ['.head-container'],
-  paginate: true,
+  paginate: true
 })
 
 function handleRowChange(row) {

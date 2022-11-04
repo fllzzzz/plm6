@@ -4,7 +4,7 @@
     v-model="dialogVisible"
     direction="rtl"
     fullscreen
-    :title="`${props.detailData.process}生产明细`"
+    :title="`${props.detailData.name}工序生产明细`"
     :before-close="handleClose"
     :show-close="false"
     :close-on-click-modal="false"
@@ -12,7 +12,7 @@
   >
     <template #titleRight>
       <div style="display: flex">
-        <print-table :api-key="apiKey" :params="{ ...query }" size="mini" type="warning" class="filter-item" />
+        <print-table api-key="mesProjectOverviewList" :params="{ ...query, processId: props.detailData.id }" size="mini" type="warning" class="filter-item" />
         <common-button size="mini" style="margin-left: 8px" @click="handleClose">关 闭</common-button>
       </div>
     </template>
@@ -25,7 +25,7 @@
       <el-table-column prop="specification" label="规格" align="center"></el-table-column>
       <el-table-column prop="material" label="材质" align="center"></el-table-column>
       <el-table-column prop="length" label="长度" align="center"></el-table-column>
-      <el-table-column prop="weight" label="单重（kg）" align="center"></el-table-column>
+      <el-table-column prop="netWeight" label="单重（kg）" align="center"></el-table-column>
       <el-table-column prop="quantity" label="清单数" align="center"></el-table-column>
       <el-table-column prop="completeQuantity" label="完成数" align="center">
         <template #default="{ row }">
@@ -34,12 +34,12 @@
       </el-table-column>
     </common-table>
   </common-dialog>
-  <detail-drawer v-model:visible="drawerVisible" :team-data="teamData" />
+  <detail-drawer v-model:visible="drawerVisible" :query="query" :team-data="teamData" />
 </template>
 
 <script setup>
-import { projectDetail } from '@/api/mes/task-tracking/monthly-task-tracking.js'
-import { defineProps, defineEmits, ref } from 'vue'
+import { getProcessDetail } from '@/api/mes/production-manage/dashboard/project-overview'
+import { defineProps, defineEmits, ref, watch, computed } from 'vue'
 import { tableSummary } from '@/utils/el-extra'
 import useVisible from '@compos/use-visible'
 import useMaxHeight from '@compos/use-max-height'
@@ -47,7 +47,7 @@ import monomerSelectAreaSelect from '@comp-base/monomer-select-area-select'
 import detailDrawer from './detail-drawer.vue'
 
 const emit = defineEmits(['update:visible'])
-// const processDetailData = ref([])
+const processDetailData = ref([])
 const serialNumber = ref()
 const drawerVisible = ref(false)
 const teamData = ref({})
@@ -61,21 +61,44 @@ const props = defineProps({
     type: Object,
     default: () => {},
   },
+  projectId: {
+    type: Number
+  }
 })
 
-const processDetailData = [
-  {monomerName: '单体1',areaName: '区域1',serialNumber:'7-1GKT-1', specification: 'PL6*45', material: 'Q235B', length: 1250, weight: 1245.00, quantity: 25, completeQuantity: 2 }
-]
+const query = computed(() => {
+  return {
+    productType: props.detailData.productType,
+    projectId: props.projectId
+  }
+})
 
-const { visible: dialogVisible, handleClose } = useVisible({ emit, props, field: 'visible', showHook: showHook })
+const { visible: dialogVisible, handleClose } = useVisible({ emit, props, field: 'visible', showHook: processDetailGet })
+
+watch(
+  () => dialogVisible.value,
+  (val) => {
+    if (val) {
+      processDetailGet()
+    }
+  }
+)
+
+async function processDetailGet() {
+  try {
+    const data = await getProcessDetail({
+      processId: props.detailData.id,
+      ...query.value
+    })
+    processDetailData.value = data
+  } catch (e) {
+    console.log('获取工序的生产明细失败', e);
+  }
+}
 
 const { maxHeight } = useMaxHeight({
   paginate: true
 })
-
-function showHook() {
-  console.log(props.detailData)
-}
 
 // 点击完成数显示详情
 function showQuantity(row) {

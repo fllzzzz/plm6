@@ -1,16 +1,16 @@
 <template>
   <div class="app-container">
     <div style="display: flex">
-      <div style="width: 30%;">
+      <div style="width: 25%;">
         <div class="head-container">
             <mHeader />
         </div>
         <common-table
           ref="tableRef"
           v-loading="crud.loading"
-          :data="plateList"
+          :data="crud.data"
           :empty-text="crud.emptyText"
-          :max-height="maxHeight"
+          :max-height="500"
           highlight-current-row
           returnSourceData
           row-key="projectId"
@@ -20,14 +20,13 @@
           <el-table-column prop="index" type="index" label="序号" align="center" width="60" />
           <el-table-column
             v-if="columns.visible('projectName')"
-            align="center"
             key="projectName"
             prop="projectName"
             :show-overflow-tooltip="true"
             label="项目"
           >
             <template v-slot="scope">
-              <span>{{ scope.row.projectName }}</span>
+              <span>{{ scope.row.serialNumber }}-{{ scope.row.name }}</span>
             </template>
           </el-table-column>
         </common-table>
@@ -39,7 +38,7 @@
 </template>
 <script setup>
 import { ref } from 'vue'
-// import crudApi from ''
+import crudApi from '@/api/mes/production-manage/dashboard/project-overview'
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
 import mHeader from './module/header.vue'
@@ -54,14 +53,14 @@ const optShow = {
 
 const processData = ref({})
 const tableRef = ref()
-const { crud, columns } = useCRUD(
+const { crud, CRUD, columns } = useCRUD(
   {
     title: '项目总览',
     sort: [],
     optShow: { ...optShow },
     // permission: { ...permission },
-    // crudApi: { ...crudApi },
-    hasPagination: true
+    crudApi: { ...crudApi },
+    hasPagination: false
   },
   tableRef
 )
@@ -75,11 +74,9 @@ function handleProjectChange(row) {
   processData.value = row
 }
 
-// CRUD.HOOK.handleRefresh = (crud, res) => {
-//   res.data.content = res.data.content.map((v) => {
-//     return v
-//   })
-// }
+CRUD.HOOK.handleRefresh = (crud, res) => {
+  res.data.content = res.data
+}
 </script>
 <style lang="scss" scoped>
 </style>
