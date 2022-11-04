@@ -43,23 +43,10 @@
             <span>{{ scope.row.totalQuantity }}/{{ (scope.row.totalMete / 1000).toFixed(2) }}</span>
           </template>
         </el-table-column>
-        <el-table-column
-          v-if="columns.visible('rate')"
-          align="center"
-          key="rate"
-          prop="rate"
-          :show-overflow-tooltip="true"
-          label="达成率"
-        >
+        <el-table-column v-if="columns.visible('rate')" align="center" key="rate" prop="rate" :show-overflow-tooltip="true" label="达成率">
           <template v-slot="scope">
             <span>
-              <el-progress
-                :text-inside="true"
-                stroke-linecap="square"
-                :stroke-width="22"
-                :percentage="scope.row.rate"
-                status="success"
-              />
+              <el-progress :text-inside="true" stroke-linecap="square" :stroke-width="22" :percentage="scope.row.rate" status="success" />
             </span>
           </template>
         </el-table-column>
@@ -72,7 +59,7 @@
           label="实际完成（件/吨）"
         >
           <template v-slot="scope">
-            <span>{{ scope.row.completeQuantity }}/{{ (scope.row.completeMete / 1000).toFixed(2)}}</span>
+            <span>{{ scope.row.completeQuantity }}/{{ (scope.row.completeMete / 1000).toFixed(2) }}</span>
           </template>
         </el-table-column>
       </common-table>
@@ -121,7 +108,7 @@ const { crud, CRUD, columns } = useCRUD(
 watch(
   () => crud.query.dateTime,
   (val) => {
-    if(val) {
+    if (val) {
       monthlyData.value = {}
     }
   }
@@ -129,7 +116,7 @@ watch(
 watch(
   () => query.value,
   (val) => {
-    if(val) {
+    if (val) {
       monthlyData.value = {}
     }
   }
@@ -160,9 +147,7 @@ function getSummaries(param) {
     }
     if (index === 2) {
       sums[index] = 0
-      data.map((v) =>
-        ave.push(v.rate)
-      )
+      data.map((v) => ave.push(v.rate))
       for (let i = 0; i <= ave.length - 1; i++) {
         sums[index] = sums[index] + ave[i]
       }

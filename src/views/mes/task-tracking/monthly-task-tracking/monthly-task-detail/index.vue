@@ -7,6 +7,7 @@
         :data="monthlyList"
         :empty-text="'暂无数据'"
         :max-height="maxHeight"
+        highlight-current-row
         row-key="projectId"
         style="width: 100%; cursor: pointer"
         @row-click="handleProjectDetail"
@@ -85,6 +86,7 @@ const monthlyList = ref([])
 const tableRef = ref()
 const detailData = ref({})
 const drawerVisible = ref(false)
+
 const { maxHeight } = useMaxHeight({
   extraBox: ['.head-container'],
   paginate: true
@@ -101,7 +103,7 @@ watch(
 
 async function fetchMonthly() {
   try {
-    const time = (moment().set('month', props.monthlyData.month - 1))._d;
+    const time = (moment().set('month', props.monthlyData.month - 1))._d
     const current = new Date(time.getFullYear() + '-' + props.monthlyData.month).getTime()
     // console.log(current);
     // console.log(new Date(current).getTime());

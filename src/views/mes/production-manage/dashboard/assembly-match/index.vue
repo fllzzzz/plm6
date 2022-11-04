@@ -1,32 +1,34 @@
 <template>
   <div class="app-container">
     <!--工具栏-->
-    <mHeader
-      ref="headRef"
-      @load="load"
-      :isIndeterminate="checkedNodes.length > 0 && checkedNodes.length !== boardList && !checkAll"
-      @checkedAll="handleCheckedAll"
-      @batchMatch="handleBatchMatch"
-      @clear="clearCheck"
-    />
-    <!--看板渲染-->
-    <div
-      v-if="crud.firstLoaded"
-      ref="scrollBoxRef"
-      v-infinite-scroll="load"
-      class="board-container"
-      :infinite-scroll-disabled="crud.loading || !crud.page.hasNextPage"
-      :infinite-scroll-delay="200"
-      :infinite-scroll-distance="200"
-      :infinite-scroll-immediate-check="true"
-      :style="{ 'max-height': `${maxHeight}px` }"
-    >
-      <template v-for="item in boardList" :key="item.id">
-        <el-tooltip
-          :open-delay="300"
-          class="item"
-          effect="light"
-          :content="`${item.name} ${item.serialNumber}\n
+    <div style="display: flex">
+      <div style="width: 70%">
+        <mHeader
+          ref="headRef"
+          @load="load"
+          :isIndeterminate="checkedNodes.length > 0 && checkedNodes.length !== boardList && !checkAll"
+          @checkedAll="handleCheckedAll"
+          @batchMatch="handleBatchMatch"
+          @clear="clearCheck"
+        />
+        <!--看板渲染-->
+        <div
+          v-if="crud.firstLoaded"
+          ref="scrollBoxRef"
+          v-infinite-scroll="load"
+          class="board-container"
+          :infinite-scroll-disabled="crud.loading || !crud.page.hasNextPage"
+          :infinite-scroll-delay="200"
+          :infinite-scroll-distance="200"
+          :infinite-scroll-immediate-check="true"
+          :style="{ 'max-height': `${maxHeight}px` }"
+        >
+          <template v-for="item in boardList" :key="item.id">
+            <el-tooltip
+              :open-delay="300"
+              class="item"
+              effect="light"
+              :content="`${item.name} ${item.serialNumber}\n
           规格：${item.specification}\n
           长度：${item.length} mm\n
           材质：${item.material}\n
@@ -34,30 +36,36 @@
           单毛重：${item.grossWeight.toFixed(DP.COM_WT__KG)} kg\n
           所需数量：${item.needQuantity}\n
           `"
-          placement="left-start"
-        >
-          <div
-            class="board-box"
-            style="position: relative;cursor: pointer;"
-            :style="{ 'background-color': `${item.boxColor}`, ...boxStyle }"
-            @click="showStatus(item)"
-          >
-            <span class="ellipsis-text">{{ item.name }}</span>
-            <span class="ellipsis-text">{{ item.serialNumber }}</span>
-            <span class="ellipsis-text">{{ item.needQuantity }}</span>
-            <el-checkbox
-              style="position: absolute; right: 10px; bottom: 0px"
-              v-model="item.checked"
-              @click.stop
-              @change="handleCheckedChange($event, item)"
-            ></el-checkbox>
+              placement="left-start"
+            >
+              <div
+                class="board-box"
+                style="position: relative; cursor: pointer"
+                :style="{ 'background-color': `${item.boxColor}`, ...boxStyle }"
+                @click="showStatus(item)"
+              >
+                <span class="ellipsis-text">{{ item.name }}</span>
+                <span class="ellipsis-text">{{ item.serialNumber }}</span>
+                <span class="ellipsis-text">{{ item.needQuantity }}</span>
+                <el-checkbox
+                  style="position: absolute; right: 10px; bottom: 0px"
+                  v-model="item.checked"
+                  @click.stop
+                  @change="handleCheckedChange($event, item)"
+                ></el-checkbox>
+              </div>
+            </el-tooltip>
+          </template>
+          <span v-if="!boardList.length && !crud.loading" class="red-tip">* 暂无数据</span>
+          <div v-if="crud.loading" class="loading-box" :style="boxStyle">
+            <span>加载中</span>
+            <i class="el-icon-loading" />
           </div>
-        </el-tooltip>
-      </template>
-      <span v-if="!boardList.length && !crud.loading" class="red-tip">* 暂无数据</span>
-      <div v-if="crud.loading" class="loading-box" :style="boxStyle">
-        <span>加载中</span>
-        <i class="el-icon-loading" />
+        </div>
+      </div>
+      <!-- <div style="border-right: 1px solid #ededed; margin: 0 20px; height: calc(100vh - 130px)"></div> -->
+      <div style="flex: 1">
+        <part-production-list :query="crud.query" />
       </div>
     </div>
     <partProductionStatus v-model:visible="statusVisible" :ids="detailIds" :names="detailNames"></partProductionStatus>
@@ -77,6 +85,7 @@ import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import mHeader from './module/header'
 import partProductionStatus from './module/part-production-status.vue'
+import partProductionList from './module/part-production-list.vue'
 
 const optShow = {
   add: false,
@@ -90,7 +99,7 @@ const headRef = ref()
 const tableRef = ref()
 const { crud, CRUD } = useCRUD(
   {
-    title: '零件齐套',
+    title: '项目齐套',
     permission: { ...permission },
     crudApi: { ...crudApi },
     optShow: { ...optShow },
@@ -99,6 +108,7 @@ const { crud, CRUD } = useCRUD(
   },
   tableRef
 )
+
 const { maxHeight } = useMaxHeight({ paginate: false })
 
 const { boxStyle, load, boardList } = useDashboardIndex({ headRef, scrollBoxRef, crud, CRUD, pageSize: 20, intervalTime: 1000 })

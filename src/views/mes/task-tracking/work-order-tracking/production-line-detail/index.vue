@@ -40,7 +40,7 @@
         </tag-tabs>
       </div>  -->
       <!--表格渲染-->
-      <common-table ref="tableRef" :data="processDetailData" style="width: 100%">
+      <common-table ref="tableRef" :data="processDetailData" :max-height="maxHeight" style="width: 100%">
         <el-table-column prop="index" label="序号" align="center" width="60" type="index" />
         <el-table-column prop="monomerName" key="monomerName" label="单体" align="center"></el-table-column>
         <el-table-column prop="areaName" key="areaName" label="区域" align="center"></el-table-column>
@@ -81,8 +81,9 @@
 <script setup>
 import { processDetail } from '@/api/mes/task-tracking/work-order-tracking.js'
 import useVisible from '@compos/use-visible'
-import tagTabs from '@comp-common/tag-tabs'
-import { defineProps, defineEmits, ref, inject } from 'vue'
+import useMaxHeight from '@compos/use-max-height'
+// import tagTabs from '@comp-common/tag-tabs'
+import { defineProps, defineEmits, ref } from 'vue'
 import { parseTime } from '@/utils/date'
 import { componentTypeEnum, workOrderTypeEnum } from '@enum-ms/mes'
 
@@ -91,32 +92,32 @@ const processDetailData = ref([])
 const props = defineProps({
   visible: {
     type: Boolean,
-    default: false,
+    default: false
   },
   detailData: {
     type: Object,
-    default: () => {},
-  },
+    default: () => {}
+  }
 })
 
-const productionLineId = ref()
 const { visible: drawerVisible, handleClose } = useVisible({ emit, props, field: 'visible', showHook: processDetailGet })
+
+const { maxHeight } = useMaxHeight({
+  extraBox: ['.head-container'],
+  paginate: true
+})
 
 async function processDetailGet() {
   try {
     const data = await processDetail({
       processId: props.detailData.id,
       productType: props.detailData.productType,
-      taskProcessId: props.detailData.taskProcessId,
+      taskProcessId: props.detailData.taskProcessId
     })
     processDetailData.value = data
   } catch (e) {
     console.log('获取工序详情失败', e)
   }
-}
-
-function tabChange(val) {
-  console.log(val, 'val')
 }
 </script>
 

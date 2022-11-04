@@ -25,17 +25,17 @@
               :color="projectNestingStatusEnum.V[scope.row.nestingStatusEnum].COLOR"
               :offset="15"
             />
-            <span>{{scope.row.areaName}}</span>
+            <span>{{ scope.row.areaName }}</span>
           </template>
         </el-table-column>
         <el-table-column align="center" key="endDate" prop="endDate" :show-overflow-tooltip="true" label="完成日期">
           <template v-slot="scope">
-          <span>{{ scope.row.endDate }}</span>
+            <span>{{ scope.row.endDate }}</span>
           </template>
         </el-table-column>
         <el-table-column align="center" key="listEditor" prop="listEditor" :show-overflow-tooltip="true" label="清单编辑">
           <template v-slot="scope">
-            <span>{{scope.row.listEditor}}</span>
+            <span>{{ scope.row.listEditor }}</span>
           </template>
         </el-table-column>
         <el-table-column align="center" key="quantity" prop="quantity" :show-overflow-tooltip="true" label="部件数量">
@@ -45,7 +45,7 @@
         </el-table-column>
         <el-table-column align="center" key="totalNetWeight" prop="totalNetWeight" :show-overflow-tooltip="true" label="部件重量">
           <template v-slot="scope">
-            <span>{{scope.row.totalNetWeight}}</span>
+            <span>{{ scope.row.totalNetWeight }}</span>
           </template>
         </el-table-column>
         <el-table-column align="center" :show-overflow-tooltip="true" label="操作">
@@ -70,11 +70,11 @@ import listDetail from '../list-detail/index.vue'
 const props = defineProps({
   projectData: {
     type: Object,
-    default: () => {},
-  },
+    default: () => {}
+  }
 })
 const { maxHeight } = useMaxHeight({
-  paginate: true,
+  paginate: true
 })
 const innerVisible = ref(false)
 const assembleList = ref({})
@@ -96,7 +96,7 @@ async function projectDetail() {
   const _list = []
   try {
     const { content } = await getProjectNesting({
-      projectId: props.projectData.id,
+      projectId: props.projectData.id
     })
     console.log(content, 'content')
     content?.map((v) => {
@@ -106,7 +106,7 @@ async function projectDetail() {
             monomerName: v.name,
             areaName: k.name,
             ...k,
-            rowspan: index === 0 ? v.assembleBatchAreaDOList?.length : 0,
+            rowspan: index === 0 ? v.assembleBatchAreaDOList?.length : 0
           })
         })
       }
@@ -129,7 +129,7 @@ function spanMethod({ row, column, rowIndex, columnIndex }) {
   if (columnIndex === 0) {
     return {
       rowspan: row.rowspan || 0,
-      colspan: 1,
+      colspan: 1
     }
   }
 }

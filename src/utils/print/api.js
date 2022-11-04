@@ -60,6 +60,7 @@ const mesEnclosureProductionLine = mes.enclosureProductionLine
 const mesStructureProductionLine = mes.structureProductionLine
 const mesStructureProcess = mes.structureProcess
 const mesMachinePartDetail = mes.machinePartDetail
+const mesMachinePartList = mes.machinePartList
 const mesPaintingList = mes.paintingList
 const mesStructureProjectSummary = mes.structureProjectSummary
 const mesEnclosureProjectSummary = mes.enclosureProjectSummary
@@ -169,6 +170,7 @@ export default {
   mesStructureProductionLine, // 结构生产线报表
   mesStructureProcess, // 结构工序报表
   mesMachinePartDetail, // 零件生产详情
+  mesMachinePartList, // 零部件生产清单详情
   mesPaintingList, // 涂装列表
   mesStructureProjectSummary, // 结构项目汇总
   mesEnclosureProjectSummary, // 围护项目汇总

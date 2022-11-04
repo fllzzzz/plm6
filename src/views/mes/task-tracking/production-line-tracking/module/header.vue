@@ -1,39 +1,39 @@
 <template>
   <div class="head-container">
-      <workshop-select
-        ref="workshopInfRef"
-        v-model="query.workShopId"
-        placeholder="请选择车间"
-        :factory-id="query.factoryId"
-        style="width: 200px"
-        class="filter-item"
-        clearable
-        defaultValue
-        @change="crud.toQuery"
-      />
-      <common-radio-button
-        v-model="query.productType"
-        :options="[componentTypeEnum.ARTIFACT,componentTypeEnum.ASSEMBLE,componentTypeEnum.MACHINE_PART]"
-        showOptionAll
-        class="filter-item"
-        type="enum"
-        @change="crud.toQuery"
-      />
-      <el-date-picker
-        v-model="query.date"
-        type="daterange"
-        range-separator=":"
-        size="small"
-        value-format="x"
-        :shortcuts="PICKER_OPTIONS_SHORTCUTS"
-        unlink-panels
-        start-placeholder="开始日期"
-        end-placeholder="结束日期"
-        style="width: 240px; margin-right: 10px"
-        class="filter-item date-item"
-        @change="handleDateChange"
-      />
-      <rrOperation />
+    <common-radio-button
+      v-model="query.productType"
+      :options="[componentTypeEnum.ARTIFACT, componentTypeEnum.ASSEMBLE, componentTypeEnum.MACHINE_PART]"
+      showOptionAll
+      class="filter-item"
+      type="enum"
+      @change="crud.toQuery"
+    />
+    <el-date-picker
+      v-model="query.date"
+      type="daterange"
+      range-separator=":"
+      size="small"
+      value-format="x"
+      :shortcuts="PICKER_OPTIONS_SHORTCUTS"
+      unlink-panels
+      start-placeholder="开始日期"
+      end-placeholder="结束日期"
+      style="width: 240px; margin-right: 10px"
+      class="filter-item date-item"
+      @change="handleDateChange"
+    />
+    <workshop-select
+      ref="workshopInfRef"
+      v-model="query.workShopId"
+      placeholder="请选择车间"
+      :factory-id="query.factoryId"
+      style="width: 200px"
+      class="filter-item"
+      clearable
+      defaultValue
+      @change="crud.toQuery"
+    />
+    <rrOperation />
   </div>
 </template>
 
@@ -65,9 +65,7 @@ function handleDateChange() {
   }
   crud.toQuery()
 }
-
 </script>
 
 <style>
-
 </style>

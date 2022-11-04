@@ -8,7 +8,7 @@
       class="filter-item"
       clearable
       default
-      defaultValue
+      @change="crud.toQuery"
     />
     <common-radio-button
       v-model="query.productType"

@@ -145,7 +145,7 @@ function setSeries() {
             formatter(params) {
               console.log(params)
               if (params.value) {
-                return params.data.quantity + ' / ' + ((params.data.mete) / 1000).toFixed(2)
+                return params.data.quantity + ' / ' + (params.data.mete / 1000).toFixed(2)
               }
             }
           }

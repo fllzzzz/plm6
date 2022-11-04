@@ -1,15 +1,16 @@
 <template>
-  <common-dialog
+  <common-drawer
     ref="drawerRef"
     v-model="drawerVisible"
     direction="rtl"
-    fullscreen
+    size="80%"
     :title="`项目详情`"
     :before-close="handleClose"
     :show-close="true"
     :close-on-click-modal="false"
     top="10vh"
   >
+  <template #content>
     <div class="head-container" style="display: flex; justify-content: space-between">
       <div>
         <monomer-select-area-select
@@ -17,7 +18,7 @@
           v-model:areaId="areaId"
           needConvert
           clearable
-          :project-id="props.detailData.projectId"
+          :project-id="props.detailData.project.id"
           @change="showProjectChange"
         />
         <el-input
@@ -50,12 +51,19 @@
       </div>
     </div>
     <!--表格渲染-->
-    <common-table ref="tableRef" :data="projectDetailData" 
-    return-source-data :showEmptySymbol="false" style="width: 100%">
+    <common-table
+      ref="tableRef"
+      :data="projectDetailData"
+      return-source-data
+      :max-height="maxHeight"
+      highlight-current-row
+      :showEmptySymbol="false"
+      style="width: 100%"
+    >
       <el-table-column prop="index" label="序号" align="center" width="60" type="index" />
       <el-table-column prop="project" key="project.shortName" label="项目" min-width="150">
         <template v-slot="scope">
-         <span>{{ projectNameFormatter(scope.row.project) }}</span>
+          <span>{{ projectNameFormatter(scope.row.project) }}</span>
         </template>
       </el-table-column>
       <el-table-column prop="monomerName" label="单体" align="center"></el-table-column>
@@ -69,16 +77,17 @@
       <el-table-column prop="completeQuantity" label="完成数" align="center"></el-table-column>
       <el-table-column prop="completeMete" label="完成量" align="center"></el-table-column>
     </common-table>
-  </common-dialog>
+    </template>
+  </common-drawer>
 </template>
 
 <script setup>
 import { projectDetail } from '@/api/mes/task-tracking/monthly-task-tracking.js'
 import useVisible from '@compos/use-visible'
+import useMaxHeight from '@compos/use-max-height'
 import { defineProps, defineEmits, ref } from 'vue'
 import monomerSelectAreaSelect from '@comp-base/monomer-select-area-select'
 import { projectNameFormatter } from '@/utils/project'
-
 
 const emit = defineEmits(['update:visible'])
 const projectDetailData = ref([])
@@ -89,14 +98,18 @@ const serialNumber = ref()
 const props = defineProps({
   visible: {
     type: Boolean,
-    default: false,
+    default: false
   },
   detailData: {
     type: Object,
-    default: () => {},
-  },
+    default: () => {}
+  }
 })
 
+const { maxHeight } = useMaxHeight({
+  extraBox: ['.head-container'],
+  paginate: true
+})
 const { visible: drawerVisible, handleClose } = useVisible({ emit, props, field: 'visible', showHook: showProjectDetail })
 
 async function showProjectDetail() {
@@ -105,7 +118,7 @@ async function showProjectDetail() {
       projectId: props.detailData.project.id,
       monomerId: monomerId.value,
       areaId: areaId.value,
-      serialNumber: serialNumber.value,
+      serialNumber: serialNumber.value
     })
     projectDetailData.value = data
   } catch (e) {

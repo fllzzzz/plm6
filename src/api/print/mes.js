@@ -343,6 +343,17 @@ export function machinePartDetail(params) {
 }
 
 /**
+ * 零部件生产清单详情
+ */
+export function machinePartList(params) {
+  return request({
+    url: `/api/mes/building/kanban/assemble_matching/area/product/print`,
+    method: 'get',
+    params
+  })
+}
+
+/**
  * 零件生产详情
  */
 export function paintingList(params) {
@@ -477,6 +488,7 @@ export function projectOverviewList(params) {
 export default {
   // 项目制造
   machinePartDetail, // 零件生产详情
+  machinePartList, // 零部件生产清单
   paintingList, // 涂装列表
   structureProjectSummary, // 结构项目汇总
   enclosureProjectSummary, // 围护项目汇总
