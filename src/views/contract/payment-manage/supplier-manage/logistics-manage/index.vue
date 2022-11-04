@@ -32,6 +32,18 @@
       </template>
     </el-table-column>
     <el-table-column v-if="columns.visible('paymentAmount')" key="paymentAmount" prop="paymentAmount" label="付款额" align="center" min-width="100">
+      <template v-if="checkPermission(crud.permission.get)" #header>
+        <el-tooltip
+          effect="light"
+          placement="top"
+          content="点击行可以查看详情"
+        >
+          <div style="display: inline-block">
+            <span>付款额 </span>
+            <i class="el-icon-info" />
+          </div>
+        </el-tooltip>
+      </template>
       <template v-slot="scope">
         <span style="cursor:pointer;margin-right:10px;" @click="openTab(scope.row,'payment')">{{ isNotBlank(scope.row.paymentAmount)? toThousand(scope.row.paymentAmount): 0 }}</span>
         <span @click="openPaymentAudit(scope.row)" style="cursor:pointer;" v-if="checkPermission(crud.permission.get) && scope.row.unCheckPaymentCount>0">
@@ -47,6 +59,18 @@
       </template>
     </el-table-column>
     <el-table-column v-if="columns.visible('invoiceAmount')" key="invoiceAmount" prop="invoiceAmount" label="收票额" align="center" min-width="100">
+      <template v-if="checkPermission(crud.permission.get)" #header>
+        <el-tooltip
+          effect="light"
+          placement="top"
+          content="点击行可以查看详情"
+        >
+          <div style="display: inline-block">
+            <span>收票额 </span>
+            <i class="el-icon-info" />
+          </div>
+        </el-tooltip>
+      </template>
       <template v-slot="scope">
         <div @click="openTab(scope.row,'invoice')" style="cursor:pointer;">
           <span style="margin-right:10px;">{{ isNotBlank(scope.row.invoiceAmount)? toThousand(scope.row.invoiceAmount): 0 }}</span>
