@@ -148,9 +148,7 @@ async function fetchData() {
       selectChange(selectValue.value)
     } else {
       selectValue.value = props.defaultValue ? props.defaultValue : undefined
-      if (selectValue.value) {
-        selectChange(selectValue.value)
-      }
+      selectChange(selectValue.value)
     }
     loading.value = false
   }
@@ -183,7 +181,7 @@ function selectChange(val) {
     if (props.filterArea && props.productType) {
       areaInfo = (monomerVal?.areaSimpleList?.length && monomerVal.areaSimpleList.filter((v) => v.productType & props.productType)) || []
     } else {
-      areaInfo = monomerVal?.areaSimpleList
+      areaInfo = monomerVal?.areaSimpleList || []
     }
     emit('getAreaInfo', areaInfo)
     emit('getCurrentInfo', monomerVal)
