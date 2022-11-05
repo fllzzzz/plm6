@@ -40,4 +40,25 @@ export function nestingBatchDel(data) {
   })
 }
 
+// 查询套料成果材料清单
+export function getMaterialList(params) {
+  return request({
+    module: 'mes',
+    url: 'section_steel/nesting/list/batch',
+    method: 'get',
+    params
+  })
+}
+
+// 下载套料成果材料清单  excel
+export function getMaterialListExcelFn(params) {
+  return request({
+    module: 'mes',
+    url: 'section_steel/nesting/export/batch',
+    method: 'get',
+    responseType: 'blob',
+    params
+  })
+}
+
 export default { get }

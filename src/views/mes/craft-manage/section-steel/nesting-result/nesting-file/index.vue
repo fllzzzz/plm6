@@ -14,6 +14,9 @@
       <export-button
           v-if="nestingFileType === nestingFileTypeEnum.MATERIAL_LIST.V"
           class="filter-item"
+          :fn="getMaterialListExcelFn"
+          :params="{ id: props.detailData.id }"
+          :disabled="nestingProgressData.length === 0"
         >
           材料清单
         </export-button>
@@ -149,7 +152,7 @@ import useVisible from '@compos/use-visible'
 import useMaxHeight from '@compos/use-max-height'
 import { getLightColor } from '@/utils/color'
 import { nestingProgress } from '@/api/mes/craft-manage/section-steel/nesting-setting'
-import { getMaterialList } from '@/api/mes/craft-manage/section-steel/nesting'
+import { getMaterialList, getMaterialListExcelFn } from '@/api/mes/craft-manage/section-steel/nesting-result'
 import { ref, defineProps, defineEmits } from 'vue'
 import { nestingFileTypeEnum, mesBuildingTypeSettingAssembleTypeEnum as materialTypeEnum } from '@enum-ms/mes'
 import ExportButton from '@comp-common/export-button/index.vue'
