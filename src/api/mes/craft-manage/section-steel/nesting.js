@@ -29,4 +29,14 @@ export function getAssembleList(params) {
   })
 }
 
+// 查询套料成果材料清单
+export function getMaterialList(params) {
+  return request({
+    module: 'mes',
+    url: 'section_steel/nesting/list/batch',
+    method: 'get',
+    params
+  })
+}
+
 export default { get }

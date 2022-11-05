@@ -1,98 +1,120 @@
 <template>
-  <div >
-    <div class="batch-operation head-container" style="display: flex; justify-content: space-between;">
-      <el-tag class="filter-item" size="medium" style="align-self: center">当前项目：{{ props.batchRow.projectName }}</el-tag>
-      <div class="filter-item">
-        <common-button type="danger" size="mini" :disabled="handleSelectionData.length === 0" @click="batchDel">批量删除</common-button>
-        <common-button type="success" size="mini" :disabled="handleSelectionData.length === 0" @click="batchIssued">批量下发</common-button>
+  <div class="app-container">
+    <div v-show="!props.batchRow.id" class="my-code">*点击左侧项目行查看详情</div>
+    <div v-show="props.batchRow.id">
+      <div class="batch-operation head-container" style="display: flex; justify-content: space-between">
+        <el-tag class="filter-item" size="medium" style="align-self: center">当前项目：{{ props.batchRow.projectName }}</el-tag>
+        <div class="filter-item">
+          <common-button type="danger" size="mini" :disabled="handleSelectionData.length === 0" @click="batchDel">批量删除</common-button>
+          <common-button type="success" size="mini" :disabled="handleSelectionData.length === 0" @click="batchIssued">
+            批量下发
+          </common-button>
+        </div>
       </div>
+      <common-table
+        ref="tableRef"
+        :data="batchList"
+        :empty-text="'暂无数据'"
+        :max-height="maxHeight"
+        row-key="id"
+        style="width: 100%"
+        @selection-change="handleSelectionChange"
+      >
+        <el-table-column type="selection" align="center" width="60" class="selection" :selectable="selectable" />
+        <el-table-column
+          key="batchNumber"
+          prop="batchNumber"
+          :show-overflow-tooltip="true"
+          label="套料批次号"
+          min-width="120"
+          align="center"
+        >
+          <template #default="{ row }">
+            <span>{{ row.batchNumber }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column key="userName" prop="userName" :show-overflow-tooltip="true" label="套料操作人" align="center">
+          <template #default="{ row }">
+            <span>{{ row.userName }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column
+          key="assembleTotalQuantity"
+          prop="assembleTotalQuantity"
+          :show-overflow-tooltip="true"
+          label="部件总数"
+          align="center"
+        >
+          <template #default="{ row }">
+            <span>{{ row.assembleTotalQuantity }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column
+          key="assembleTotalNetWeight"
+          prop="assembleTotalNetWeight"
+          :show-overflow-tooltip="true"
+          label="部件总重"
+          align="center"
+        >
+          <template #default="{ row }">
+            <span>{{ row.assembleTotalNetWeight }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column
+          key="nestingTotalQuantity"
+          prop="nestingTotalQuantity"
+          :show-overflow-tooltip="true"
+          label="套料总数"
+          align="center"
+        >
+          <template #default="{ row }">
+            <span>{{ row.nestingTotalQuantity }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column
+          key="typesettingTotalNetWeight"
+          prop="typesettingTotalNetWeight"
+          :show-overflow-tooltip="true"
+          label="母材总重"
+          align="center"
+        >
+          <template #default="{ row }">
+            <span>{{ row.typesettingTotalNetWeight }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column key="statusIssueEnum" prop="statusIssueEnum" :show-overflow-tooltip="true" label="状态" align="center">
+          <template #default="{ row }">
+            <el-tag :type="taskIssueTypeEnum.V[row.statusIssueEnum].T">{{ taskIssueTypeEnum.VL[row.statusIssueEnum] }}</el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column :show-overflow-tooltip="true" label="操作" min-width="150px" align="center">
+          <template #default="{ row }">
+            <common-button type="primary" size="mini" @click="views(row)">查看</common-button>
+            <el-popconfirm confirm-button-text="确定" cancel-button-text="取消" title="确定下发吗?" @confirm="issued(row)">
+              <template #reference>
+                <common-button size="mini" type="success" :disabled="row.statusIssueEnum === taskIssueTypeEnum.HAS_ISSUED.V">
+                  下发
+                </common-button>
+              </template>
+            </el-popconfirm>
+            <el-popconfirm
+              confirm-button-text="确定"
+              cancel-button-text="取消"
+              icon-color="red"
+              title="确定删除吗?"
+              @confirm="delNestingResult(row)"
+            >
+              <template #reference>
+                <common-button size="mini" type="danger" :disabled="row.statusIssueEnum === taskIssueTypeEnum.HAS_ISSUED.V">
+                  删除
+                </common-button>
+              </template>
+            </el-popconfirm>
+          </template>
+        </el-table-column>
+      </common-table>
+      <nesting-file v-model:visible="nestingFileVisible" :detail-data="detailData" />
     </div>
-    <common-table
-      ref="tableRef"
-      :data="batchList"
-      :empty-text="'暂无数据'"
-      :max-height="maxHeight"
-      row-key="id"
-      style="width: 100%"
-      @selection-change="handleSelectionChange"
-    >
-      <el-table-column type="selection" align="center" width="60" class="selection" :selectable="selectable" />
-      <el-table-column key="batchNumber" prop="batchNumber" :show-overflow-tooltip="true" label="套料批次号" min-width="120" align="center">
-        <template #default="{ row }">
-          <span>{{ row.batchNumber }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column key="userName" prop="userName" :show-overflow-tooltip="true" label="套料操作人" align="center">
-        <template #default="{ row }">
-          <span>{{ row.userName }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column
-        key="assembleTotalQuantity"
-        prop="assembleTotalQuantity"
-        :show-overflow-tooltip="true"
-        label="部件总数"
-        align="center"
-      >
-        <template #default="{ row }">
-          <span>{{ row.assembleTotalQuantity }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column
-        key="assembleTotalNetWeight"
-        prop="assembleTotalNetWeight"
-        :show-overflow-tooltip="true"
-        label="部件总重"
-        align="center"
-      >
-        <template #default="{ row }">
-          <span>{{ row.assembleTotalNetWeight }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column key="nestingTotalQuantity" prop="nestingTotalQuantity" :show-overflow-tooltip="true" label="套料总数" align="center">
-        <template #default="{ row }">
-          <span>{{ row.nestingTotalQuantity }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column
-        key="typesettingTotalNetWeight"
-        prop="typesettingTotalNetWeight"
-        :show-overflow-tooltip="true"
-        label="母材总重"
-        align="center"
-      >
-        <template #default="{ row }">
-          <span>{{ row.typesettingTotalNetWeight }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column key="statusIssueEnum" prop="statusIssueEnum" :show-overflow-tooltip="true" label="状态" align="center">
-        <template #default="{ row }">
-          <el-tag :type="taskIssueTypeEnum.V[row.statusIssueEnum].T">{{ taskIssueTypeEnum.VL[row.statusIssueEnum] }}</el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column :show-overflow-tooltip="true" label="操作" min-width="150px" align="center">
-        <template #default="{ row }">
-          <common-button type="primary" size="mini" @click="views(row)">查看</common-button>
-          <el-popconfirm confirm-button-text="确定" cancel-button-text="取消" title="确定下发吗?" @confirm="issued(row)">
-            <template #reference>
-              <common-button size="mini" type="success" :disabled="row.statusIssueEnum === taskIssueTypeEnum.HAS_ISSUED.V">下发</common-button>
-            </template>
-          </el-popconfirm>
-          <el-popconfirm
-            confirm-button-text="确定"
-            cancel-button-text="取消"
-            icon-color="red"
-            title="确定删除吗?"
-            @confirm="delNestingResult(row)"
-          >
-            <template #reference>
-              <common-button size="mini" type="danger" :disabled="row.statusIssueEnum === taskIssueTypeEnum.HAS_ISSUED.V">删除</common-button>
-            </template>
-          </el-popconfirm>
-        </template>
-      </el-table-column>
-    </common-table>
-    <nesting-file v-model:visible="nestingFileVisible" :detail-data="detailData" />
   </div>
 </template>
 
@@ -209,6 +231,7 @@ function batchIssued() {
 // 查看
 function views(row) {
   nestingFileVisible.value = true
+  detailData.value = row
 }
 
 // 下发
@@ -249,5 +272,7 @@ async function delNestingResult(row) {
 </script>
 
 <style lang="scss" scoped>
-
+.app-container {
+  padding: 0;
+}
 </style>
