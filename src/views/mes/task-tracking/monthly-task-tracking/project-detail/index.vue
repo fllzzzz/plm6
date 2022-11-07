@@ -69,7 +69,7 @@
       <el-table-column prop="monomerName" label="单体" align="center"></el-table-column>
       <el-table-column prop="areaName" label="区域" align="center"></el-table-column>
       <el-table-column prop="serialNumber" label="编号" align="center"></el-table-column>
-      <el-table-column prop="specification" label="规格" align="center"></el-table-column>
+      <el-table-column prop="specification" label="规格" align="center" width="150px"></el-table-column>
       <el-table-column prop="material" label="材质" align="center"></el-table-column>
       <el-table-column prop="length" label="长度" align="center"></el-table-column>
       <el-table-column prop="netWeight" label="单重" align="center"></el-table-column>

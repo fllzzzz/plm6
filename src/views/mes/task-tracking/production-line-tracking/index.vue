@@ -145,7 +145,7 @@ CRUD.HOOK.handleRefresh = (crud, { data }) => {
   const _content = []
   for (const key in data) {
     const productType = key === 'artifactList' ? componentTypeEnum.ARTIFACT.V : (key === 'assembleList' ? componentTypeEnum.ASSEMBLE.V : componentTypeEnum.MACHINE_PART.V)
-    data[key].map(v => {
+    data[key]?.map(v => {
       v.productType = productType
       _content.push(v)
     })
