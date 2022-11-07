@@ -1,7 +1,7 @@
 <template>
   <div class="app-container wrap">
     <div class="wrap-left">
-      <nesting-task-list :maxHeight="maxHeight" @nesting-task-click="handleNestingTaskClick" />
+      <nesting-task-list ref="nestingTaskRef" :maxHeight="maxHeight" @nesting-task-click="handleNestingTaskClick" />
     </div>
     <div class="wrap-right">
       <el-tag v-if="!crud.query?.id" type="info" size="medium"> * 请先选择套料任务，进行零件任务下发 </el-tag>
@@ -189,6 +189,7 @@ const { crud, columns, CRUD } = useCRUD(
 )
 
 const { maxHeight } = useMaxHeight({ paginate: false })
+const nestingTaskRef = ref()
 
 // --------------------------- 获取生产班组 start ------------------------------
 const groupLoad = ref(false)
@@ -290,6 +291,7 @@ async function toBatchIssue() {
       })
       ElNotification({ title: '任务下发成功', type: 'success', duration: 3000 })
       crud.toQuery()
+      nestingTaskRef?.value?.refresh()
     }
   } catch (e) {
     console.log(`任务下发失败`, e)
