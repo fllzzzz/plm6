@@ -27,7 +27,13 @@
             <i class="el-icon-info" />
           </el-tooltip>
         </template>
-        <common-radio class="filter-item" v-model="form.typesettingTypeEnum" :options="nestingSettingTypeEnum.ENUM" type="enum" size="small" />
+        <common-radio
+          class="filter-item"
+          v-model="form.typesettingTypeEnum"
+          :options="nestingSettingTypeEnum.ENUM"
+          type="enum"
+          size="small"
+        />
       </el-form-item>
     </el-form>
   </common-dialog>
@@ -81,7 +87,7 @@ async function submitForm(formRef) {
     const _content = []
     props.detailData.map((v) => {
       _data.push({
-        id: v.productionLineTypeEnum === artifactProductLineEnum.INTELLECT.V? v.assembleDetailId:v.id,
+        id: v.productionLineTypeEnum === artifactProductLineEnum.INTELLECT.V ? v.assembleDetailId : v.id,
         quantity: v.quantity
       })
       _content.push(v.productionLineTypeEnum)
@@ -106,5 +112,4 @@ async function submitForm(formRef) {
     console.log('套料失败')
   }
 }
-
 </script>
