@@ -4,6 +4,7 @@
 
 <script setup>
 import { ref, computed, watch, defineProps, defineEmits, inject, onMounted, onBeforeUnmount } from 'vue'
+import { DP } from '@/settings/config'
 
 import * as echarts from 'echarts'
 
@@ -145,7 +146,7 @@ function setSeries() {
             formatter(params) {
               console.log(params)
               if (params.value) {
-                return params.data.quantity + ' / ' + (params.data.mete / 1000).toFixed(2)
+                return params.data.quantity + ' / ' + (params.data.mete / 1000).toFixed(DP.COM_WT__T)
               }
             }
           }
