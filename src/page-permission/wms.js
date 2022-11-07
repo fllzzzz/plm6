@@ -306,6 +306,13 @@ export const reportRawMaterialSupplementDetailsPM = {
   print: ['wms_report_rawMat_supplement_details:print'] // 打印红冲记录
 }
 
+// 报表中心/原材料/进销存记录
+export const reportRawMaterialPsiPM = {
+  get: ['wms_report_rawMat_psi:get'], // 查看
+  detail: ['wms_report_rawMat_psi:detail'], // 详情
+  download: ['wms_report_rawMat_psi:download'] // 下载
+}
+
 // 报表中心/原材料/退货明细
 export const reportRawMaterialRejectReceiptPM = {
   get: ['wms_report_rawMat_reject_details:get'], // 查看
