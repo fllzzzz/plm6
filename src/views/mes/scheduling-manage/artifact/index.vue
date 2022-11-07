@@ -47,7 +47,7 @@
             :show-overflow-tooltip="true"
             prop="needSchedulingQuantity"
             label="数量"
-            min-width="100px"
+            min-width="120px"
             align="center"
           >
             <template #default="{ row: { sourceRow: row } }">
