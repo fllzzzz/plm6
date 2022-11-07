@@ -11,7 +11,7 @@
           <span>{{ scope.row.serialNumber }}</span>
         </template>
       </el-table-column>
-      <el-table-column key="nestingResult" prop="nestingResult" label="套料成果" align="center" >
+      <el-table-column key="nestingResult" prop="nestingResult" label="套料成果" align="center">
         <template v-slot="scope">
           <template v-if="scope.row.linkDOList.length > 0">
             <template v-for="item in scope.row.linkDOList" :key="item">
@@ -19,7 +19,9 @@
                 <div
                   :style="`padding: 0 5px; display:inline-block; width: ${
                     (item.length / scope.row.typesettingLength) * 100
-                  }%; color: #fff; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; height: 30px; background-color: ${item.lengthColor};line-height: 30px; border-right: 1px solid #fff`"
+                  }%; color: #fff; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; height: 30px; background-color: ${
+                    item.lengthColor
+                  };line-height: 30px; border-right: 1px solid #fff`"
                 >
                   <!-- 17dh13535487865887486 -->
                   {{ item.serialNumber }}
@@ -51,19 +53,43 @@
           <span>{{ scope.row.specification }}</span>
         </template>
       </el-table-column>
+      <el-table-column key="material" prop="material" :show-overflow-tooltip="true" label="材质" align="center" width="110px">
+        <template v-slot="scope">
+          <span>{{ scope.row.material }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        key="totalNetWeight"
+        prop="totalNetWeight"
+        :show-overflow-tooltip="true"
+        label="母材总重"
+        align="center"
+        width="150px"
+      >
+        <template v-slot="scope">
+          <span>{{ scope.row.totalNetWeight }}</span>
+        </template>
+      </el-table-column>
       <el-table-column key="quantity" prop="quantity" :show-overflow-tooltip="true" label="数量" align="center" width="120px">
         <template v-slot="scope">
           <span>{{ scope.row.quantity }}</span>
         </template>
       </el-table-column>
-      <el-table-column key="typesettingLength" prop="typesettingLength" :show-overflow-tooltip="true" label="套料长度（mm）" align="center" width="150px">
+      <el-table-column
+        key="typesettingLength"
+        prop="typesettingLength"
+        :show-overflow-tooltip="true"
+        label="套料长度（mm）"
+        align="center"
+        width="150px"
+      >
         <template v-slot="scope">
           <span>{{ scope.row.typesettingLength }}</span>
         </template>
       </el-table-column>
       <el-table-column key="lossRate" prop="lossRate" :show-overflow-tooltip="true" label="损耗" align="center" width="80px">
         <template v-slot="scope">
-          <span>{{ scope.row.lossRate }}</span>
+          <span>{{ scope.row.lossRate }}%</span>
         </template>
       </el-table-column>
     </common-table>

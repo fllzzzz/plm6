@@ -15,7 +15,6 @@
       <el-table-column prop="index" label="序号" align="center" width="60" type="index" />
       <el-table-column
         v-if="columns.visible('name')"
-        align="center"
         key="name"
         prop="name"
         :show-overflow-tooltip="true"
@@ -25,7 +24,7 @@
           <span>{{scope.row.workShopName}}>{{ scope.row.name }}</span>
         </template>
       </el-table-column>
-      <el-table-column v-if="columns.visible('taskType')" align="center" key="taskType" prop="taskType" :show-overflow-tooltip="true" label="类别">
+      <el-table-column v-if="columns.visible('taskType')" align="center" key="taskType" prop="taskType" :show-overflow-tooltip="true" label="类别" width="80px">
         <template v-slot="scope">
           <el-tag effect="plain" :type="componentTypeTag[componentTypeEnum.VK[scope.row.taskType]]">{{ componentTypeEnum.VL[scope.row.taskType] }}</el-tag>
         </template>
@@ -82,7 +81,7 @@
           <el-progress :text-inside="true" stroke-linecap="square" :stroke-width="22" :percentage="scope.row.rate" status="success" />
         </template>
       </el-table-column>
-      <el-table-column align="center" :show-overflow-tooltip="true" label="操作">
+      <el-table-column align="center" :show-overflow-tooltip="true" label="操作" width="100px">
         <template v-slot="scope">
           <common-button type="primary" size="mini" @click="views(scope.row)">查看</common-button>
         </template>

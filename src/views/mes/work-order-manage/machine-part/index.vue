@@ -23,7 +23,7 @@
         label="排产日期"
       >
         <template v-slot="scope">
-          <span>{{ scope.row.scheduleTime ? parseTime(scope.row.scheduleTime, '{y}/{m}/{d}') : '-' }}</span>
+          <span>{{ scope.row.scheduleTime ? parseTime(scope.row.scheduleTime, '{y}-{m}-{d}') : '-' }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -35,7 +35,7 @@
         label="切割指令号"
       >
         <template v-slot="scope">
-          <table-cell-tag :name="boolPrintedEnum.V[!!scope.row.printQuantity].L" :offset="15" />
+          <table-cell-tag :show="scope.row.boolPrinted" name="已打印" type="printed" />
           <span>{{ scope.row.OrderNumber }}</span>
         </template>
       </el-table-column>
@@ -108,13 +108,13 @@
         label="完成日期"
       >
         <template v-slot="scope">
-          <span>{{ scope.row.completeTime ? parseTime(scope.row.completeTime, '{y}/{m}/{d}') : '-' }}</span>
+          <span>{{ scope.row.completeTime ? parseTime(scope.row.completeTime, '{y}-{m}-{d}') : '-' }}</span>
         </template>
       </el-table-column>
       <el-table-column align="center" :show-overflow-tooltip="true" label="操作">
         <template v-slot="scope">
           <common-button type="primary" size="mini" @click="views(scope.row)">查看</common-button>
-          <common-button type="info" size="mini" @click="printDetail(scope.row)">打印</common-button>
+          <common-button type="success" size="mini" @click="printDetail(scope.row)">打印</common-button>
         </template>
       </el-table-column>
     </common-table>
@@ -131,7 +131,6 @@ import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
 import pagination from '@crud/Pagination'
 import { parseTime } from '@/utils/date'
-import { boolPrintedEnum } from '@enum-ms/common'
 import mHeader from './module/header.vue'
 import detail from './module/detail.vue'
 
@@ -145,7 +144,7 @@ const optShow = {
 const tableRef = ref()
 const detailData = ref({})
 const drawerVisible = ref(false)
-const { crud, columns } = useCRUD(
+const { crud, CRUD, columns } = useCRUD(
   {
     title: '零件工单',
     sort: [],
@@ -169,6 +168,13 @@ function views(row) {
 // 打印
 function printDetail(row) {
   console.log(row, 'row')
+}
+
+CRUD.HOOK.handleRefresh = (crud, res) => {
+  res.data.content = res.data.content.map((v) => {
+    v.boolPrinted = Boolean(v.printQuantity)
+    return v
+  })
 }
 </script>
 <style lang="scss" scoped>

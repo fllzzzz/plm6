@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <div style="display: flex">
-      <div style="width: 25%">
+      <div style="min-width: 25%">
         <div class="head-container">
           <mHeader />
         </div>
@@ -41,16 +41,13 @@
         <pagination />
       </div>
       <div style="border-right: 1px solid #ededed; margin: 0 20px; height: calc(100vh - 130px)"></div>
-      <nesting-result-detail :batch-row="batchRow" v-if="isNotBlank(batchRow)" @success="crud.toQuery" style="flex: 3" />
+      <nesting-result-detail :batch-row="batchRow" @success="crud.toQuery" style="flex: 1" />
     </div>
   </div>
 </template>
 <script setup>
 import { ref } from 'vue'
 import crudApi from '@/api/mes/craft-manage/section-steel/nesting-result'
-
-import { isNotBlank } from '@/utils/data-type'
-
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
 import { projectNestingStatusEnum } from '@enum-ms/mes'
@@ -62,7 +59,7 @@ const optShow = {
   add: false,
   edit: false,
   del: false,
-  download: false,
+  download: false
 }
 const tableRef = ref()
 const batchRow = ref({})
@@ -73,14 +70,14 @@ const { crud, columns } = useCRUD(
     optShow: { ...optShow },
     // permission: { ...permission },
     crudApi: { ...crudApi },
-    hasPagination: true,
+    hasPagination: true
   },
   tableRef
 )
 
 const { maxHeight } = useMaxHeight({
   extraBox: ['.head-container'],
-  paginate: true,
+  paginate: true
 })
 
 function handleChangeProject(row) {

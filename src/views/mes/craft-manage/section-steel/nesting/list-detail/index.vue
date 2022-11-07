@@ -10,7 +10,7 @@
       <div class="content-container" style="margin-bottom: 8px">
         <common-radio-button v-model="productionLineTypeEnum" :options="artifactProductLineEnum.ENUM" type="enum" class="filter-item" />
       </div>
-      <common-table v-loading="innerLoading" ref="tableDrawerRef" :data="assembleData" :max-height="400" style="width: 100%" row-key="id">
+      <common-table v-loading="innerLoading" ref="tableDrawerRef" :data="assembleData" :max-height="maxHeight" style="width: 100%" row-key="id">
         <el-table-column label="序号" type="index" align="center" width="60" />
         <el-table-column key="monomer.name" prop="monomer" :show-overflow-tooltip="true" label="单体" align="center">
           <template #default="{ row }">
@@ -22,7 +22,14 @@
             <span>{{ row.area.name }}</span>
           </template>
         </el-table-column>
-        <el-table-column key="artifactStr" prop="artifactStr" :show-overflow-tooltip="true" label="关联构件编号" min-width="120px" align="center">
+        <el-table-column
+          key="artifactStr"
+          prop="artifactStr"
+          :show-overflow-tooltip="true"
+          label="关联构件编号"
+          min-width="120px"
+          align="center"
+        >
           <template #default="{ row }">
             <table-cell-tag
               v-if="row.productionLineTypeEnum === artifactProductLineEnum.INTELLECT.V"
@@ -33,13 +40,7 @@
             <span>{{ row.artifactStr }}</span>
           </template>
         </el-table-column>
-        <el-table-column
-          key="serialNumber"
-          prop="serialNumber"
-          :show-overflow-tooltip="true"
-          label="部件编号"
-          align="center"
-        >
+        <el-table-column key="serialNumber" prop="serialNumber" :show-overflow-tooltip="true" label="部件编号" align="center">
           <template #default="{ row }">
             <span>{{ row.serialNumber }}</span>
           </template>
@@ -69,16 +70,24 @@
             <span>{{ row.netWeight }}</span>
           </template>
         </el-table-column>
-        <el-table-column key="boolHaveNC1" prop="boolHaveNC1" :show-overflow-tooltip="true" label="套料文件" align="center" sortable> 
+        <el-table-column key="boolHaveNC1" prop="boolHaveNC1" :show-overflow-tooltip="true" label="套料文件" align="center" sortable>
           <template #default="{ row }">
             <div v-if="row.boolHaveNC1"><i style="color: #5ded5d" class="el-icon-check" /></div>
             <div v-else>
               <!-- 这里accept设置只能单个导入文件 不能导入.zip  需要导入压缩包使用 :accept="`.zip,.nc1`"-->
               <upload-btn
-                :data="{ monomerId: row.monomer.id, productId:row.productionLineTypeEnum === artifactProductLineEnum.TRADITION.V? row.id:row.assembleDetailId,projectId: row.project.id, productType: componentTypeEnum.ASSEMBLE.V, dataType: technicalDataTypeEnum.NC_DRAWING.V }"
+                :data="{
+                  monomerId: row.monomer.id,
+                  projectId: row.project.id,
+                  productType: componentTypeEnum.ASSEMBLE.V,
+                  dataType: technicalDataTypeEnum.NC_DRAWING.V,
+                }"
                 :accept="`.nc1`"
                 tip=".nc1"
+                :upload-fun="upload"
+                :match-serialNumber="row.serialNumber"
                 btn-type="primary"
+                btn-name="文件导入"
                 btn-size="mini"
                 class="filter-item"
                 @success="uploadSuccess"
@@ -95,31 +104,30 @@
 
 <script  setup>
 import useVisible from '@compos/use-visible'
+import useMaxHeight from '@compos/use-max-height'
 import { getAssembleList } from '@/api/mes/craft-manage/section-steel/nesting'
 import { artifactProductLineEnum, componentTypeEnum } from '@enum-ms/mes'
 import { technicalDataTypeEnum } from '@enum-ms/plan'
 import { ref, defineProps, defineEmits, watch } from 'vue'
 import pagination from '@crud/Pagination'
-import { update } from '@/api/plan/technical-data-manage/technical-achievement'
-import uploadBtn from '@/views/plan/technical-data-manage/technical-achievement/components/drawing-upload-btn.vue'
-import { objectMerge } from '@/utils/data-type/object'
+import { upload } from '@/api/plan/technical-data-manage/technical-achievement'
+import uploadBtn from '@/components/file-upload/SingleFileUploadBtn.vue'
 
 const emit = defineEmits(['success'])
 const productionLineTypeEnum = ref(artifactProductLineEnum.TRADITION.V)
-// const innerVisible = ref(false)
+
 const assembleData = ref([])
 const lossQuantity = ref(0)
 const innerLoading = ref(false)
-const areaId = ref()
 const props = defineProps({
   visible: {
     type: Boolean,
-    default: false,
+    default: false
   },
   assembleList: {
     type: Object,
-    default: () => {},
-  },
+    default: () => {}
+  }
 })
 
 watch(
@@ -151,15 +159,15 @@ async function initAssembleData() {
   try {
     const { content } = await getAssembleList({
       areaId: props.assembleList.id,
-      productionLineTypeEnum: productionLineTypeEnum.value,
+      productionLineTypeEnum: productionLineTypeEnum.value
     })
-    content.map(v => {
-      v.artifactStr = v.artifactTypesettingDTOS.map(o=>o.serialNumber)?.join('，') || ''
-      v.classificationName = v.artifactTypesettingDTOS.map(o=>o.classificationName)[0]
-      if(v.boolHaveNC1 === false) {
+    content.map((v) => {
+      v.artifactStr = v.artifactTypesettingDTOS.map((o) => o.serialNumber)?.join('，') || ''
+      v.classificationName = v.artifactTypesettingDTOS.map((o) => o.classificationName)[0]
+      if (v.boolHaveNC1 === false) {
         lossQuantity.value += v.quantity
       } else {
-         lossQuantity.value = 0
+        lossQuantity.value = 0
       }
     })
     assembleData.value = content
@@ -168,6 +176,10 @@ async function initAssembleData() {
   }
 }
 
+const { maxHeight } = useMaxHeight({
+  extraBox: ['.head-container'],
+  paginate: true
+})
 </script>
 
 <style>

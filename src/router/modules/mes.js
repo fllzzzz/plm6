@@ -720,7 +720,7 @@ export default {
       hidden: false,
       component: '/mes/production-manage/dashboard/assembly-match/index',
       meta: {
-        title: '零件齐套',
+        title: '项目齐套',
         icon: 'project',
         noCache: true
       }

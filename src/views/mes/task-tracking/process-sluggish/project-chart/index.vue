@@ -114,7 +114,6 @@ function handleEchartsChange(val) {
   width: 340px;
   padding: 0 0 20px 0;
   overflow: hidden;
-  border-right: 1px solid #ededed;
   .chart-head {
     width: 100%;
     display: flex;

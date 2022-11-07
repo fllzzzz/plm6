@@ -12,7 +12,7 @@
         :max-height="maxHeight"
         highlight-current-row
         row-key="projectId"
-        style="width: 30%;"
+        style="width: 30%"
         @row-click="handleRowChange"
       >
         <el-table-column prop="index" label="序号" align="center" width="60" type="index" />
@@ -29,11 +29,13 @@
         </el-table-column>
         <el-table-column align="center" key="nestingStatusEnum" prop="nestingStatusEnum" :show-overflow-tooltip="true" label="状态">
           <template v-slot="scope">
-            <el-tag style="width: 80px" :type="projectNestingStatusEnum.V[scope.row.nestingStatusEnum].T">{{ projectNestingStatusEnum.VL[scope.row.nestingStatusEnum] }}</el-tag>
+            <el-tag style="width: 80px" :type="projectNestingStatusEnum.V[scope.row.nestingStatusEnum].T">{{
+              projectNestingStatusEnum.VL[scope.row.nestingStatusEnum]
+            }}</el-tag>
           </template>
         </el-table-column>
       </common-table>
-       <div style="border-right: 1px solid #ededed; margin: 0 20px; height: calc(100vh - 180px)"></div>
+      <div style="border-right: 1px solid #ededed; margin: 0 20px; height: calc(100vh - 180px)"></div>
       <project-detail :project-data="projectData" style="flex: 1" />
     </div>
   </div>
@@ -67,7 +69,7 @@ const { crud, columns } = useCRUD(
   tableRef
 )
 function handleRowChange(row) {
-  console.log(row,'row');
+  console.log(row, 'row')
   projectData.value = row
 }
 

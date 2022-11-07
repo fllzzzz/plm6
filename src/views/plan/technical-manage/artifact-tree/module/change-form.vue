@@ -8,11 +8,12 @@
     width="650px"
   >
     <template #titleRight>
-      <!-- <common-button
+      <common-button
         type="primary"
         size="mini"
+        :loading="loading"
         @click="onSubmit"
-      >确认</common-button> -->
+      >确认</common-button>
     </template>
     <el-form ref="formRef" :model="form" :rules="rules" size="small" label-width="130px">
         <el-form-item label="名称">
@@ -38,7 +39,7 @@
             controls-position="right"
             style="width: 200px"/>
         </el-form-item>
-        <el-form-item label="单净重(kg)" prop="netWeight">
+        <!-- <el-form-item label="单净重(kg)" prop="netWeight">
           {{ detailInfo.netWeight }}
         </el-form-item>
         <el-form-item label="单毛重(kg)" prop="grossWeight">
@@ -72,7 +73,7 @@
             :maxlength="20"
             placeholder="请输入图号"
             style="width: 220px"/>
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item label="原因类型" prop="reasonId">
           <changeRemarkSelect v-model="form.reasonId" clearable/>
         </el-form-item>
@@ -91,14 +92,14 @@
 
 <script setup>
 import { ref, defineProps, defineEmits, nextTick, watch } from 'vue'
-// import { ElNotification } from 'element-plus'
+import { ElNotification } from 'element-plus'
 
-import { DP } from '@/settings/config'
+// import { DP } from '@/settings/config'
 import useVisible from '@compos/use-visible'
 import useWatchFormValidate from '@compos/form/use-watch-form-validate'
 
 import changeRemarkSelect from '@comp-base/change-reason-select'
-// import { numChange, artifactInfo } from '@/api/plan/technical-manage/artifact-tree'
+import { numChange } from '@/api/plan/technical-manage/artifact-tree'
 
 const formRef = ref()
 const maxNumber = 999999999
@@ -108,6 +109,7 @@ const defaultForm = {
   changeRemark: undefined
 }
 const form = ref(JSON.parse(JSON.stringify(defaultForm)))
+const loading = ref(false)
 const props = defineProps({
   modelValue: {
     type: Boolean,
@@ -153,6 +155,7 @@ function resetForm() {
   if (formRef.value) {
     formRef.value.resetFields()
   }
+  loading.value = false
   form.value.quantity = props.detailInfo.quantity
   if (formRef.value) {
     nextTick(() => {
@@ -163,22 +166,25 @@ function resetForm() {
 
 useWatchFormValidate(formRef, form)
 
-// function handleSuccess() {
-//   ElNotification({ title: '更改成功', type: 'success' })
-//   emit('success')
-//   handleClose()
-// }
+function handleSuccess() {
+  ElNotification({ title: '更改成功', type: 'success' })
+  emit('success')
+  handleClose()
+}
 
-// async function onSubmit(val) {
-//   try {
-//     await formRef.value.validate()
-//     form.value.id = props.detailInfo.id
-//     await numChange(form.value)
-//     handleSuccess()
-//   } catch (e) {
-//     console.log('修改构件信息', e)
-//   }
-// }
+async function onSubmit(val) {
+  try {
+    await formRef.value.validate()
+    loading.value = true
+    form.value.id = props.detailInfo.id
+    await numChange(form.value)
+    handleSuccess()
+  } catch (e) {
+    console.log('修改构件信息', e)
+  } finally {
+    loading.value = false
+  }
+}
 </script>
 <style rel="stylesheet/scss" lang="scss" scoped>
 ::v-deep(.el-input-number .el-input__inner) {

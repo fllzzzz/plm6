@@ -37,5 +37,29 @@ export function processInfo(params) {
   })
 }
 
+/**
+ * @description: 获取任务清单
+*/
+export function getTaskList(params) {
+  return request({
+    module: 'mes',
+    url: 'task/order/product/task/list',
+    method: 'get',
+    params
+  })
+}
+
+/**
+ * @description: 获取部件套料清单
+*/
+export function getNestingList(params) {
+  return request({
+    module: 'mes',
+    url: 'task/order/nesting/task/list',
+    method: 'get',
+    params
+  })
+}
+
 export default { get }
 

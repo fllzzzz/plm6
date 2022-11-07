@@ -1,10 +1,10 @@
 <template>
   <div class="app-container">
-    <div class="head-container">
-      <mHeader />
-    </div>
     <div class="app-wrap">
       <div class="project-chart">
+        <div class="head-container">
+          <mHeader />
+        </div>
         <projectChart v-model:year="year" @change="processChange" @success="handleEchartsData" />
       </div>
       <!--表格渲染-->
@@ -15,7 +15,12 @@
         <div v-show="processList.name">
           <div style="display: flex; justify-content: space-between; margin-bottom: 8px">
             <el-tag style="align-self: center; font-weight: 900">工序：{{ processList.name }}</el-tag>
-            <print-table api-key="mesProcessList" :params="{ productType: productType, processId: crud.query.processId }" size="mini" type="warning" />
+            <print-table
+              api-key="mesProcessList"
+              :params="{ productType: productType, processId: crud.query.processId }"
+              size="mini"
+              type="warning"
+            />
           </div>
           <common-table
             ref="tableRef"
@@ -105,20 +110,20 @@ const optShow = {
   add: false,
   edit: false,
   del: false,
-  download: false,
+  download: false
 }
 const dataFormat = ref([
   ['createTime', 'parse-time'],
   ['startDate', ['parse-time', '{y}-{m}-{d}']],
   ['endDate', ['parse-time', '{y}-{m}-{d}']],
-  ['completeDate', ['parse-time', '{y}-{m}-{d}']],
+  ['completeDate', ['parse-time', '{y}-{m}-{d}']]
 ])
 
 // 项目汇总数据（子页面使用）
 const projectInfo = reactive({
   summary: {}, // 项目汇总数量
   provinceList: [], // 项目数量汇总
-  loading: true,
+  loading: true
 })
 
 const tableRef = ref()
@@ -143,7 +148,7 @@ const { crud, CRUD, columns } = useCRUD(
     optShow: { ...optShow },
     crudApi: { get },
     invisibleColumns: [],
-    hasPagination: false,
+    hasPagination: false
   },
   tableRef
 )
@@ -160,7 +165,7 @@ watch(
 const { maxHeight } = useMaxHeight({
   extraBox: ['.head-container', '.content'],
   wrapperBox: ['.app-wrap'],
-  paginate: true,
+  paginate: true
 })
 
 // 获取工序呆滞列表数据
@@ -182,7 +187,7 @@ async function fetchProjectInfo() {
 
 function handleEchartsData(val) {
   processList.value = val
-  console.log(val?.data?.id,'val');
+  console.log(val?.data?.id, 'val')
   crud.query.processId = val?.data?.id
   crud.toQuery()
 }
@@ -199,6 +204,9 @@ CRUD.HOOK.handleRefresh = (crud, res) => {
 <style lang="scss" scoped>
 .app-wrap {
   display: flex;
+  .project-chart {
+    border-right: 1px solid #ededed;
+  }
   .content {
     flex: 1;
     min-width: 0;

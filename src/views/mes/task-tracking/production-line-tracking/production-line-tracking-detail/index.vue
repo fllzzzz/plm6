@@ -21,9 +21,7 @@
     </template>
     <template #content>
       <!--表格渲染-->
-      <common-table ref="tableRef" :data="productionLineData" 
-      return-source-data
-      style="width: 100%">
+      <common-table ref="tableRef" :max-height="maxHeight" :data="productionLineData" return-source-data style="width: 100%">
         <el-table-column prop="index" label="序号" align="center" min-width="60" type="index" />
         <el-table-column prop="project" key="project.shortName" label="项目" min-width="180">
           <template v-slot="scope">
@@ -57,6 +55,7 @@
 import { productionLineDetail } from '@/api/mes/task-tracking/production-line-tracking.js'
 import { workOrderTypeEnum } from '@enum-ms/mes'
 import useVisible from '@compos/use-visible'
+import useMaxHeight from '@compos/use-max-height'
 import { defineProps, defineEmits, ref } from 'vue'
 import { projectNameFormatter } from '@/utils/project'
 
@@ -65,20 +64,26 @@ const productionLineData = ref([])
 const props = defineProps({
   visible: {
     type: Boolean,
-    default: false,
+    default: false
   },
   detailData: {
     type: Object,
-    default: () => {},
-  },
+    default: () => {}
+  }
 })
+
+const { maxHeight } = useMaxHeight({
+  extraBox: ['.head-container'],
+  paginate: true
+})
+
 const { visible: drawerVisible, handleClose } = useVisible({ emit, props, field: 'visible', showHook: productionLineDetailGet })
 
 async function productionLineDetailGet() {
   try {
     const data = await productionLineDetail({
       productionLineId: props.detailData.id,
-      productType: props.detailData.productType,
+      productType: props.detailData.productType
     })
     productionLineData.value = data
   } catch (e) {

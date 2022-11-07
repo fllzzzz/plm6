@@ -1,10 +1,9 @@
 <template>
   <div class="head-container">
-    <crudOperation>
-      <template #optLeft>
+      <div v-show="crud.searchToggle">
         <el-input
           v-model="query.name"
-          placeholder="可输入下料方式搜索"
+          placeholder="输入下料方式搜索"
           class="filter-item"
           style="width: 200px"
           size="small"
@@ -12,8 +11,8 @@
           @keyup.enter="crud.toQuery"
         />
         <rrOperation />
-      </template>
-    </crudOperation>
+      </div>
+    <crudOperation />
   </div>
 </template>
 
