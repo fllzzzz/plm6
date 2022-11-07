@@ -58,7 +58,7 @@
 
 <script setup>
 import { getNestingTask } from '@/api/mes/scheduling-manage/machine-part'
-import { ref, defineProps, defineEmits } from 'vue'
+import { ref, defineProps, defineEmits, defineExpose } from 'vue'
 import moment from 'moment'
 
 import { machinePartSchedulingIssueStatusEnum as issueStatusEnum, mesSchedulingStatusEnum } from '@enum-ms/mes'
@@ -73,7 +73,7 @@ defineProps({
   }
 })
 
-const month = ref(moment().valueOf().toString())
+const month = ref(moment().startOf('month').valueOf().toString())
 const tableData = ref([])
 const loading = ref(false)
 const dataFormat = ref([['project', 'parse-project']])
@@ -87,7 +87,7 @@ async function fetchTaskList() {
     loading.value = true
     tableData.value = []
     const { content, totalElements } = await getNestingTask({
-      // date: month.value
+      date: month.value,
       ...queryPage
     })
     setTotalPage(totalElements)
@@ -105,4 +105,8 @@ async function fetchTaskList() {
 function handleClickChange(val) {
   emit('nesting-task-click', val)
 }
+
+defineExpose({
+  refresh: fetchTaskList
+})
 </script>

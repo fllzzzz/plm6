@@ -36,7 +36,7 @@
     >
       <template #default="{ node, data }">
         <div style="padding: 3px 5px; border-radius: 3px; width: 100%">
-          <span style="font-weight: bold">{{ node.label }}</span>
+          <span :style="`font-size:${data.fontSize}px;${node.isLeaf ? '' : `font-weight: bold;`}`">{{ node.label }}</span>
           <span style="float: right; padding: 0 2px 0 6px; font-size: 10px; color: #ccc">
             <span>{{ data.type }}</span>
           </span>
@@ -126,6 +126,7 @@ function dataFormat(content) {
           workshopId: areas[y].workshop?.id,
           isLeaf: true,
           disabled: false,
+          fontSize: 14,
           type: ''
         })
       }
@@ -137,6 +138,7 @@ function dataFormat(content) {
         children: _area,
         isLeaf: false,
         disabled: true,
+        fontSize: 15,
         type: '单体'
       })
     }
@@ -155,6 +157,7 @@ function dataFormat(content) {
       ),
       children: _monomer,
       isLeaf: false,
+      fontSize: 16,
       disabled: true,
       type: '项目'
     })

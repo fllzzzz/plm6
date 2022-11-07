@@ -31,7 +31,7 @@
       <el-table-column prop="productProcessLinkList" label="工序" min-width="200">
         <template #default="{ row: { sourceRow: row } }">
           <el-tooltip :content="`${row.processSequence}`" placement="top-start">
-            <div style="display: flex; align-items: center; white-space: nowrap">
+            <div style="display: flex; align-items: center;flex-wrap: wrap; white-space: nowrap">
               <div style="display: flex; align-items: center" v-for="(item, index) in row.productProcessLinkList" :key="item.id">
                 <span>【{{ item.name }}】</span>
                 <div
