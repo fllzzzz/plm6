@@ -184,19 +184,6 @@ const ENCLOSURE_ALL_BIT =
   ttEnum.PROFILED_PLATE.V | ttEnum.TRUSS_FLOOR_PLATE.V | ttEnum.PRESSURE_BEARING_PLATE.V | ttEnum.SANDWICH_BOARD.V | ttEnum.BENDING.V
 
 export const routerMetaSetting = [
-  { name: 'MesSchedulingManage', productType: ENCLOSURE_ALL_BIT | ttEnum.STRUCTURE.V },
-  { name: 'MesSchedulingArtifact', productType: ttEnum.STRUCTURE.V },
-  {
-    name: 'MesSchedulingArtifactAssemble',
-    productType: ttEnum.STRUCTURE.V,
-    mode: projectModeEnum.STRUCTURE_ASSEMBLE.V
-  },
-  {
-    name: 'MesSchedulingArtifactArtifact',
-    productType: ttEnum.STRUCTURE.V,
-    mode: projectModeEnum.STRUCTURE.V | projectModeEnum.STRUCTURE_ASSEMBLE.V
-  },
-  { name: 'MesSchedulingArtifactMachinePart', productType: ttEnum.STRUCTURE.V, mode: projectModeEnum.STRUCTURE_ASSEMBLE.V },
   { name: 'MesSchedulingEnclosure', productType: ENCLOSURE_ALL_BIT },
   { name: 'MesSchedulingPressedPlate', productType: ttEnum.PROFILED_PLATE.V },
   { name: 'MesSchedulingFloorPlate', productType: ttEnum.PRESSURE_BEARING_PLATE.V },

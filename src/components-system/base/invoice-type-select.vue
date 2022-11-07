@@ -4,6 +4,7 @@
       v-model="copyInvoiceType"
       :options="invoiceTypeEnum.ENUM"
       type="enum"
+      :unshowOptions="props.unshowOptions"
       :clearable="props.clearable"
       :disabled="props.disabled"
       style="width: 150px"
@@ -53,6 +54,10 @@ const props = defineProps({
   },
   classification: {
     type: Number
+  },
+  unshowOptions: {
+    type: Array,
+    default: () => []
   },
   default: {
     type: Boolean,

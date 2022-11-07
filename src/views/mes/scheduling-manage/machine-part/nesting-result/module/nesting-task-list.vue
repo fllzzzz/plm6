@@ -19,9 +19,9 @@
     highlight-current-row
     :data="tableData"
     :stripe="false"
-    :max-height="maxHeight"
+    :max-height="maxHeight - 45"
     style="width: 100%"
-    @current-change="handleCurrentChange"
+    @current-change="handleClickChange"
   >
     <el-table-column prop="orderNumber" :show-overflow-tooltip="true" label="任务单号" min-width="100" align="center" />
     <el-table-column :show-overflow-tooltip="true" label="数量（件）" min-width="60" align="center">
@@ -31,15 +31,29 @@
     </el-table-column>
     <el-table-column :show-overflow-tooltip="true" label="套料状态" min-width="60" align="center">
       <template #default="{ row }">
-        <el-tag v-if="row.issueStatusEnum" effect="plain" :type="issueStatusEnum.V[row.issueStatusEnum].T">{{ issueStatusEnum.VL[row.issueStatusEnum]}}</el-tag>
+        <el-tag v-if="row.issueStatusEnum" effect="plain" :type="issueStatusEnum.V[row.issueStatusEnum].T">{{
+          issueStatusEnum.VL[row.issueStatusEnum]
+        }}</el-tag>
       </template>
     </el-table-column>
     <el-table-column :show-overflow-tooltip="true" label="排产状态" min-width="60" align="center">
       <template #default="{ row }">
-        <el-tag v-if="row.taskStatusEnum" effect="plain" :type="mesSchedulingStatusEnum.V[row.taskStatusEnum].T">{{ mesSchedulingStatusEnum.VL[row.taskStatusEnum]}}</el-tag>
+        <el-tag v-if="row.taskStatusEnum" effect="plain" :type="mesSchedulingStatusEnum.V[row.taskStatusEnum].T">{{
+          mesSchedulingStatusEnum.VL[row.taskStatusEnum]
+        }}</el-tag>
       </template>
     </el-table-column>
   </common-table>
+  <!--分页组件-->
+  <el-pagination
+    :total="total"
+    :current-page="queryPage.pageNumber"
+    :page-size="queryPage.pageSize"
+    style="margin-top: 8px"
+    layout="total, prev, pager, next, sizes"
+    @size-change="handleSizeChange"
+    @current-change="handleCurrentChange"
+  />
 </template>
 
 <script setup>
@@ -48,6 +62,8 @@ import { ref, defineProps, defineEmits } from 'vue'
 import moment from 'moment'
 
 import { machinePartSchedulingIssueStatusEnum as issueStatusEnum, mesSchedulingStatusEnum } from '@enum-ms/mes'
+
+import usePagination from '@compos/use-pagination'
 
 const emit = defineEmits(['nesting-task-click'])
 defineProps({
@@ -62,15 +78,19 @@ const tableData = ref([])
 const loading = ref(false)
 const dataFormat = ref([['project', 'parse-project']])
 
+const { handleSizeChange, handleCurrentChange, total, setTotalPage, queryPage } = usePagination({ fetchHook: fetchTaskList })
+
 fetchTaskList()
 
 async function fetchTaskList() {
   try {
     loading.value = true
     tableData.value = []
-    const { content } = await getNestingTask({
+    const { content, totalElements } = await getNestingTask({
       // date: month.value
+      ...queryPage
     })
+    setTotalPage(totalElements)
     tableData.value = content.map((v) => {
       // v.projectId = v.project?.id
       return v
@@ -82,7 +102,7 @@ async function fetchTaskList() {
   }
 }
 
-function handleCurrentChange(val) {
+function handleClickChange(val) {
   emit('nesting-task-click', val)
 }
 </script>

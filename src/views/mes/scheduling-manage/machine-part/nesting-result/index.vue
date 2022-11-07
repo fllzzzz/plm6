@@ -263,7 +263,7 @@ const issueLoading = ref(false)
 
 function handleNestingTaskClick(val) {
   currentNesting.value = val
-  crud.query.id = val.id
+  crud.query.id = val?.id
   crud.toQuery()
 }
 

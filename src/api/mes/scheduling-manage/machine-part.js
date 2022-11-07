@@ -134,7 +134,7 @@ export function saveNesting(data) {
 export function getNestingTask(params) {
   return request({
     module: 'mes',
-    url: 'machine_part/scheduling/task',
+    url: 'machine_part/scheduling/task/page',
     method: 'get',
     params
   })

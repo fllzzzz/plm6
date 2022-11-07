@@ -2,32 +2,35 @@
   <div class="head-container">
     <div v-show="crud.searchToggle">
       <el-date-picker
-        v-model="query.year"
+        v-model="query.dateTime"
         type="year"
         format="YYYY"
-        value-format="YYYY"
+        value-format="x"
         placeholder="请选择"
+        style="width: 100px"
         class="filter-item"
         @change="crud.toQuery"
       />
       <common-radio-button
-        v-model="query.status"
+        v-model="query.sendStatus"
         :options="shipStatusEnum.ENUM"
         showOptionAll
-        :optionAllValue="undefined"
         type="enum"
         class="filter-item"
         @change="statusChange"
       />
-      <el-row v-loading="crud.loading" :gutter="20" class="panel-group">
-        <el-col :span="8" class="card-panel-col">
-          <Panel name="构件累计发运量（t）" text-color="#626262" num-color="#1890ff" :end-val="totalAmount.artifactShipMete || 0" :precision="0" />
+      <el-row v-loading="summaryLoading" :gutter="20" class="panel-group">
+        <el-col :span="12" class="card-panel-col">
+          <Panel
+            name="累计发运（吨）"
+            text-color="#626262"
+            num-color="#1890ff"
+            :end-val="summaryInfo.mete&&summaryInfo.mete/1000 || 0"
+            :precision="2"
+          />
         </el-col>
-        <el-col :span="8" class="card-panel-col">
-          <Panel name="围护累计发运量（m）" text-color="#626262" num-color="#1890ff" :end-val="totalAmount.enclosureShipMete || 0" :precision="0" />
-        </el-col>
-        <el-col :span="8" class="card-panel-col">
-          <Panel name="累计车次" text-color="#626262" num-color="#1890ff" :end-val="totalAmount.shipCarQuantity || 0" :precision="0" />
+        <el-col :span="12" class="card-panel-col">
+          <Panel name="累计车次" text-color="#626262" num-color="#1890ff" :end-val="summaryInfo.quantity || 0" :precision="0" />
         </el-col>
       </el-row>
     </div>
@@ -40,26 +43,26 @@ import { shipmentSummary } from '@/api/mes/pack-and-ship/ship-summary'
 
 import { regHeader } from '@compos/use-crud'
 import { shipStatusEnum } from '@enum-ms/mes'
+import moment from 'moment'
 // import checkPermission from '@/utils/system/check-permission'
 
 import Panel from '@/components/Panel'
 
 const defaultQuery = {
-  year: new Date().getFullYear(),
-  shipStatus: undefined,
-  settlementStatus: undefined
+  dateTime: moment().startOf('year').valueOf().toString(),
+  sendStatus: undefined,
+  settled: undefined
 }
 const { crud, query } = regHeader(defaultQuery)
 
-const totalAmount = ref({})
+const summaryInfo = ref({})
+const summaryLoading = ref(false)
 
 function statusChange(val) {
-  if (query.status === shipStatusEnum.SETTLED.V) {
-    query.shipStatus = undefined
-    query.settlementStatus = 1
+  if (query.sendStatus === shipStatusEnum.SETTLED.V) {
+    query.settled = 1
   } else {
-    query.shipStatus = val
-    query.settlementStatus = undefined
+    query.settled = undefined
   }
   crud.toQuery()
 }
@@ -76,24 +79,28 @@ watch(
 
 async function getData() {
   try {
+    summaryLoading.value = true
     const data = await shipmentSummary(query)
-    totalAmount.value = data || {}
+    summaryInfo.value = data || {}
   } catch (error) {
     console.log('获取累计发运', error)
+  } finally {
+    summaryLoading.value = false
   }
 }
+
 </script>
 <style lang="scss" scoped>
 .panel-group {
-  margin-bottom:10px;
+  margin-bottom: 10px;
   ::v-deep(.card-panel) {
     .card-panel-description {
       .card-panel-text {
         margin-top: 2px;
       }
       .card-panel-num {
-        display:block;
-        font-size: 18px;
+        display: block;
+        font-size: 20px;
       }
     }
   }
