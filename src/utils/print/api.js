@@ -97,6 +97,8 @@ const mesWorkshopReport = mes.workshopReport
 
 const mesStudSleeveStatisticsList = mes.studSleeveStatisticsList
 const mesProjectShipDetail = mes.mesProjectShipDetail
+const mesProductSendReceiveStorage = mes.productSendReceiveStorage
+const productSendReceiveStorageDetail = mes.productSendReceiveStorageDetail
 
 // wms
 const wmsRmOutboundReceipt = wms.wmsRmOutboundReceipt // 出库
@@ -198,7 +200,7 @@ export default {
   mesAssembleClassList, // 部件分类清单明细
   mesMachinePartClassList, // 零件分类清单明细
 
-  mesMonthlyTaskList,    // 月度任务跟踪清单详情
+  mesMonthlyTaskList, // 月度任务跟踪清单详情
   mesProductionLineList, //  产线跟踪清单详情
   mesWorkOrderTrackingList, // 工单跟踪清单详情
   mesProcessList, // 工序呆滞清单详情
@@ -208,6 +210,8 @@ export default {
   mesStudSleeveStatisticsList, // 栓钉套筒统计清单详情
 
   mesProjectShipDetail, // 发运管理项目发运详情
+  mesProductSendReceiveStorage, // 发运管理制成品入发存
+  productSendReceiveStorageDetail, // 发运管理制成品入发存详情
 
   // wms
   wmsRmOutboundReceipt, // 出库（领料单）单

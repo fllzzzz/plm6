@@ -13,7 +13,7 @@
         style="width:120px;"
       />
       <project-radio-button size="small" :type="'all'" v-model="query.projectId" class="filter-item" @change="crud.toQuery" />
-      <el-input
+      <!-- <el-input
         v-model.trim="query.name"
         size="small"
         placeholder="项目名称"
@@ -21,30 +21,30 @@
         class="filter-item"
         clearable
         @blur="crud.toQuery"
-      />
+      /> -->
       <rrOperation />
       <el-row v-loading="summaryLoading" v-if="checkPermission(crud.permission.get)" :gutter="20" class="panel-group">
         <el-col :span="8" class="card-panel-col">
-          <Panel name="累计入库(t)" text-color="#626262" num-color="#1890ff" :endVal="(totalAmount.inboundMete)/1000 || 0"  :precision="DP.COM_WT__T" />
+          <Panel name="累计入库(t)" text-color="#626262" num-color="#1890ff" :endVal="(totalAmount.inboundMete)/1000 || 0"  :precision="DP.COM_WT__KG" />
         </el-col>
         <el-col :span="8" class="card-panel-col">
-          <Panel name="累计出库(t)" text-color="#626262" num-color="#1890ff" :endVal="(totalAmount.outboundMete)/1000 || 0" :precision="DP.COM_WT__T" />
+          <Panel name="累计出库(t)" text-color="#626262" num-color="#1890ff" :endVal="(totalAmount.outboundMete)/1000 || 0" :precision="DP.COM_WT__KG" />
         </el-col>
         <el-col :span="8" class="card-panel-col">
-          <Panel name="实时库存(t)" text-color="#626262" num-color="#1890ff" :end-val="(totalAmount.stockMete)/1000 || 0" :precision="DP.COM_WT__T" />
+          <Panel name="实时库存(t)" text-color="#626262" num-color="#1890ff" :end-val="(totalAmount.stockMete)/1000 || 0" :precision="DP.COM_WT__KG" />
         </el-col>
       </el-row>
     </div>
     <crudOperation>
        <template #viewLeft>
-          <!-- <print-table
+          <print-table
             v-permission="crud.permission.print"
-            api-key="deliveryInstallList"
-            :params="{ ...query, queryType: 1 }"
+            api-key="mesProductSendReceiveStorage"
+            :params="{ ...query }"
             size="mini"
             type="warning"
             class="filter-item"
-          /> -->
+          />
       </template>
     </crudOperation>
   </div>
@@ -64,7 +64,7 @@ import Panel from '@/components/Panel'
 
 const defaultQuery = {
   dateTime: undefined,
-  name: undefined,
+  // name: undefined,
   projectId: undefined
 }
 

@@ -10,7 +10,7 @@ export function get(params) {
 
 export function detail(params) {
   return request({
-    url: '/api/mes/building/warehouse/finish-product/detail',
+    url: '/api/mes/building/warehouse/finish-product/detail/page',
     method: 'get',
     params
   })
