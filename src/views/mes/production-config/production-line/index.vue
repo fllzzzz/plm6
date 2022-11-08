@@ -10,9 +10,16 @@
             <div style="display: flex; align-items: center; justify-content: space-between">
               <span style="display: flex; align-items: center">
                 <span>生产组列表</span>
-                <el-tag v-if="currentLine.factoryName && currentLine.name" size="medium" style="margin-left: 10px">{{
-                  `${currentLine.factoryName} - ${currentLine.name}`
-                }}</el-tag>
+                <el-tooltip
+                  v-if="currentLine.factoryName && currentLine.name"
+                  class="item"
+                  :content="`${currentLine.factoryName} - ${currentLine.name}`"
+                  placement="top"
+                >
+                  <el-tag size="medium" style="margin-left: 10px; max-width: 180px; overflow: hidden; text-overflow: ellipsis">{{
+                    `${currentLine.factoryName} - ${currentLine.name}`
+                  }}</el-tag>
+                </el-tooltip>
               </span>
               <common-button
                 size="mini"
@@ -25,7 +32,7 @@
               </common-button>
             </div>
           </template>
-          <group-config ref="groupRef" :line="currentLine" @click-group="handleChangeGroup"/>
+          <group-config ref="groupRef" :line="currentLine" @click-group="handleChangeGroup" />
         </el-card>
       </el-col>
       <el-col :xs="12" :sm="12" :md="12" :lg="6" :xl="6">
@@ -38,12 +45,10 @@
                   :disabled="!currentGroup.name"
                   size="mini"
                   type="enum"
-                  :unshowVal="currentLine.productType & componentTypeEnum.MACHINE_PART.V? [teamTypeEnum.INSPECTION.V] : []"
+                  :unshowVal="currentLine.productType & componentTypeEnum.MACHINE_PART.V ? [teamTypeEnum.INSPECTION.V] : []"
                   :options="teamTypeEnum.ENUM"
                 />
-                <el-tag v-if="currentGroup.name" size="medium" style="margin-left: 10px">{{
-                  `${currentGroup.name}`
-                }}</el-tag>
+                <el-tag v-if="currentGroup.name" size="medium" style="margin-left: 10px">{{ `${currentGroup.name}` }}</el-tag>
               </span>
 
               <common-button

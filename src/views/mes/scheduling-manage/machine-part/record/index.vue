@@ -3,7 +3,15 @@
     <div class="head-container">
       <mHeader>
         <template #optRight>
-          <common-button class="filter-item" :disabled="!crud.selections?.length" size="mini" icon="el-icon-edit" type="primary" @click="toBatchIssue">套料下发</common-button>
+          <common-button
+            class="filter-item"
+            :disabled="!crud.selections?.length"
+            size="mini"
+            icon="el-icon-edit"
+            type="primary"
+            @click="toBatchIssue"
+            >套料下发</common-button
+          >
         </template>
       </mHeader>
     </div>
@@ -77,13 +85,27 @@
         min-width="90"
         align="center"
       />
-      <el-table-column prop="cutConfigId" :show-overflow-tooltip="true" label="切割方式" min-width="90" align="center">
+      <el-table-column
+        v-if="columns.visible('cutConfigId')"
+        prop="cutConfigId"
+        :show-overflow-tooltip="true"
+        label="切割方式"
+        min-width="90"
+        align="center"
+      >
         <template #default="{ row: { sourceRow: row } }">
           <cut-config-select v-if="row.issueStatusEnum === issueStatusEnum.NOT_NESTING.V" v-model="row.cutConfigId" clearable />
           <span v-else>{{ row.cutConfigName }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="issueStatusEnum" :show-overflow-tooltip="true" label="下发状态" width="90" align="center">
+      <el-table-column
+        v-if="columns.visible('issueStatusEnum')"
+        prop="issueStatusEnum"
+        :show-overflow-tooltip="true"
+        label="下发状态"
+        width="90"
+        align="center"
+      >
         <template #default="{ row: { sourceRow: row } }">
           <el-tag v-if="row.issueStatusEnum && issueStatusEnum.V[row.issueStatusEnum]" :type="issueStatusEnum.V[row.issueStatusEnum].T">
             {{ issueStatusEnum.VL[row.issueStatusEnum] }}

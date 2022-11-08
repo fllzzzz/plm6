@@ -48,7 +48,7 @@
 
 <script setup>
 import { getProject, getDate } from '@/api/mes/scheduling-manage/machine-part'
-import { ref, defineProps, defineEmits, defineExpose } from 'vue'
+import { ref, defineProps, defineEmits, defineExpose, nextTick } from 'vue'
 import moment from 'moment'
 
 const emit = defineEmits(['project-click'])
@@ -71,13 +71,13 @@ const dataFormat = ref([['project', 'parse-project']])
 fetchTime()
 fetchProject()
 
-async function fetchTime() {
+async function fetchTime(lastQuery) {
   try {
     timeList.value = []
     tableData.value = []
     date.value = undefined
     timeLoading.value = true
-    fetchProject()
+    await fetchProject(lastQuery)
     const { content } = await getDate({
       dateTime: month.value
     })
@@ -103,7 +103,7 @@ async function fetchTime() {
 //   return timeList.value?.indexOf(moment(time).valueOf()) === -1 && moment(time).month() === month.value
 // }
 
-async function fetchProject() {
+async function fetchProject(lastQuery) {
   try {
     loading.value = true
     tableData.value = []
@@ -111,9 +111,18 @@ async function fetchProject() {
       dateTime: date.value,
       month: month.value
     })
-    tableData.value = content.map((v) => {
+    const needSelectIndex = []
+    tableData.value = content.map((v, index) => {
       v.projectId = v.project?.id
+      if (lastQuery && lastQuery?.projectIds.indexOf(v.projectId) !== -1) {
+        needSelectIndex.push(index)
+      }
       return v
+    })
+    needSelectIndex.forEach(i => {
+      nextTick(() => {
+        projectTableRef.value?.toggleRowSelection(tableData.value[i], true)
+      })
     })
   } catch (error) {
     console.log('获取排程信息，项目树错误', error)
@@ -127,6 +136,7 @@ function handleSelectionChange(val) {
 }
 
 defineExpose({
+  refresh: fetchTime,
   artifactDateTime: date.value ? date : month
 })
 </script>

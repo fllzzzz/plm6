@@ -5,7 +5,6 @@
       type="month"
       size="small"
       value-format="x"
-      format="YYYY年MM月"
       :clearable="false"
       placeholder="选择月份"
       style="width: 48%"

@@ -44,6 +44,7 @@
             </template>
           </el-table-column>
           <el-table-column
+            v-if="columns.visible('needSchedulingQuantity')"
             :show-overflow-tooltip="true"
             prop="needSchedulingQuantity"
             label="数量"
@@ -64,6 +65,7 @@
             </template>
           </el-table-column>
           <el-table-column
+            v-if="columns.visible('groupsId')"
             :show-overflow-tooltip="true"
             prop="groupsId"
             label="生产组"
@@ -84,6 +86,7 @@
             </template>
           </el-table-column>
           <el-table-column
+            v-if="columns.visible('askCompleteTime')"
             prop="askCompleteTime"
             label="要求完成日期"
             align="center"
@@ -270,7 +273,7 @@ function previewIt() {
     return
   }
   // const _list = deepClone(crud.selections)
-  const _list = crud.selections.map(v => v)
+  const _list = crud.selections.map((v) => v)
   const { validResult, dealList } = tableValidate(_list)
   console.log(crud.selections, dealList, crud.ref.table.selection)
   if (validResult) {

@@ -27,7 +27,7 @@
         <el-input v-model="form.name" type="text" placeholder="请填写生产线名称" style="width: 270px" />
       </el-form-item>
       <el-form-item label="目标产量(吨/月)" prop="targetProductionShow">
-        <el-input-number v-model.number="form.targetProductionShow" :min="0" controls-position="right" style="width: 270px" />
+        <el-input-number v-model.number="form.targetProductionShow" :min="0" :max="999999999" controls-position="right" style="width: 270px" />
       </el-form-item>
       <el-form-item label="生产线类型" prop="productionLineTypeEnum">
         <!-- <common-radio v-model="form.boolMachineEnum" :options="whetherEnum.ENUM" type="enum" /> -->

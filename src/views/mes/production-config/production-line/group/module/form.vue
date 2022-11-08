@@ -12,7 +12,7 @@
     </template>
     <el-form ref="formRef" :model="form" :rules="rules" size="small" label-width="90px">
       <el-form-item label="生产组" prop="name">
-        <el-input v-model="form.name" type="text" placeholder="请填写生产组名称" style="width: 270px" />
+        <el-input v-model="form.name" maxlength="32" type="text" placeholder="请填写生产组名称" style="width: 270px" />
       </el-form-item>
       <!-- <el-form-item label="排序" prop="sort">
         <el-input-number v-model.number="form.sort" :min="1" :max="999" :step="1" controls-position="right" style="width: 270px" />
