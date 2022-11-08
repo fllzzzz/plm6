@@ -1,7 +1,7 @@
 <template>
   <div class="header-container">
     <el-date-picker
-      style="margin-right: 5px; width: 120px"
+      style="margin-right: 5px; width: 100px"
       v-model="query.year"
       type="year"
       size="small"
@@ -10,6 +10,14 @@
       value-format="YYYY"
       placeholder="请选择年"
       :disabled-date="disabledDate"
+      @change="crud.toQuery"
+    />
+    <project-cascader
+      v-model="query.projectId"
+      placeholder="请选择项目"
+      class="filter-item"
+      style="width: 200px"
+      clearable
       @change="crud.toQuery"
     />
     <common-radio-button
@@ -28,9 +36,11 @@
 import { parseTime } from '@/utils/date'
 import { regHeader } from '@compos/use-crud'
 import { projectNestingStatusEnum } from '@enum-ms/mes'
+import projectCascader from '@comp-base/project-cascader.vue'
 
 const defaultQuery = {
   year: parseTime(new Date(), '{y}'),
+  projectId: undefined,
   nestingStatusEnum: undefined
 }
 // 如果时间选取的时间年份比当前的时间大就被禁用

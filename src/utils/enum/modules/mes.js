@@ -497,6 +497,13 @@ const assembleTypeEnum = {
 }
 constantize(assembleTypeEnum)
 
+// 型材套料: nc1文件缺失
+const fileNC1TypeEnum = {
+  NO_IMPORT: { L: '未导入', K: 'NO_IMPORT', V: 0 },
+  HAS_IMPORT: { L: '已导入', K: 'HAS_IMPORT', V: 1 }
+}
+constantize(fileNC1TypeEnum)
+
 export {
   teamTypeEnum,
   teamAttributeEnum,
@@ -559,7 +566,8 @@ export {
   mesMachinePartOrderTypeEnum,
   shipStatusEnum,
   workOrderTypeEnum,
-  assembleTypeEnum
+  assembleTypeEnum,
+  fileNC1TypeEnum
 }
 
 export default {
@@ -624,5 +632,6 @@ export default {
   mesMachinePartOrderTypeEnum,
   shipStatusEnum,
   workOrderTypeEnum,
-  assembleTypeEnum
+  assembleTypeEnum,
+  fileNC1TypeEnum
 }

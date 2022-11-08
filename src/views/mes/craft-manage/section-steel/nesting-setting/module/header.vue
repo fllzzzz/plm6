@@ -9,11 +9,12 @@
       @change="handleProductionLineTypeChange"
     />
     <common-radio-button
+      v-if="!isTradition"
       v-model="query.boolMainAssemble"
       :options="assembleTypeEnum.ENUM"
       type="enum"
       class="filter-item"
-      @change="handleProductionLineTypeChange"
+      @change="crud.toQuery"
     />
     <monomer-select-area-select
       v-model:monomerId="query.monomerId"
@@ -152,7 +153,13 @@ import { deepClone } from '@/utils/data-type'
 const emits = defineEmits(['change-mode'])
 
 const { globalProjectId } = mapGetters('globalProjectId')
-const defaultQuery = { projectId: globalProjectId.value, queryId: undefined, structureClassId: undefined, assembleClassId: undefined, boolMainAssemble: assembleTypeEnum.MAIN_ASSEMBLE.V }
+const defaultQuery = {
+  projectId: globalProjectId.value,
+  queryId: undefined,
+  structureClassId: undefined,
+  assembleClassId: undefined,
+  boolMainAssemble: assembleTypeEnum.MAIN_ASSEMBLE.V
+}
 
 const { crud, query } = regHeader(defaultQuery)
 
@@ -191,8 +198,8 @@ watch(
   () => query.boolMainAssemble,
   (val) => {
     fetchSummary()
-  },
-  { immediate: true }
+    crud.toQuery()
+  }
 )
 
 function handleProductionLineTypeChange(val) {
@@ -241,11 +248,17 @@ async function fetchSummary() {
     if (_query.assembleConfigId) {
       delete _query.assembleConfigId
     }
+    if (_query.productionLineTypeEnum === artifactProductLineEnum.TRADITION.V) {
+      delete _query.boolMainAssemble
+    }
     const data = await getNestingSummary(_query)
     summaryList.value = data?.content || []
     console.log(summaryList.value[0])
     if (summaryList.value.length === 1) {
-      query.queryId = query.productionLineTypeEnum === artifactProductLineEnum.TRADITION.V ? summaryList.value[0].assembleConfigId : summaryList.value[0].structureClassId
+      query.queryId =
+        query.productionLineTypeEnum === artifactProductLineEnum.TRADITION.V
+          ? summaryList.value[0].assembleConfigId
+          : summaryList.value[0].structureClassId
     }
     tabChange()
   } catch (er) {

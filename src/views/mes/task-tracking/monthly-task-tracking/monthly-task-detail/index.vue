@@ -38,13 +38,19 @@
         </el-table-column>
         <el-table-column align="center" key="quantity" prop="quantity" :show-overflow-tooltip="true" label="排产量（件/吨）">
           <template v-slot="scope">
-            <span>{{ scope.row.quantity }}/{{ scope.row.mete }}</span>
+            <span>{{ scope.row.quantity }}/{{ ((scope.row.mete) / 1000).toFixed(DP.COM_WT__T) }}</span>
           </template>
         </el-table-column>
         <el-table-column align="center" key="rate" prop="rate" :show-overflow-tooltip="true" label="完成率">
           <template v-slot="scope">
             <span>
-              <el-progress :text-inside="true" stroke-linecap="square" :stroke-width="22" :percentage="scope.row.rate" status="success" />
+              <el-progress
+                :text-inside="true"
+                stroke-linecap="square"
+                :stroke-width="22"
+                :percentage="((scope.row.completeMete / scope.row.mete) * 100 ).toFixed(2)"
+                status="success"
+              />
             </span>
           </template>
         </el-table-column>
@@ -56,7 +62,7 @@
           label="实际完成（件/吨）"
         >
           <template v-slot="scope">
-            <span>{{ scope.row.completeQuantity }}/{{ scope.row.completeMete }}</span>
+            <span>{{ scope.row.completeQuantity }}/{{ scope.row.completeMete / 1000 }}</span>
           </template>
         </el-table-column>
       </common-table>
@@ -70,6 +76,7 @@ import { ref, defineProps, watch } from 'vue'
 import useMaxHeight from '@compos/use-max-height'
 import projectDetail from '../project-detail/index.vue'
 import { projectNameFormatter } from '@/utils/project'
+import { DP } from '@/settings/config'
 import moment from 'moment'
 
 const props = defineProps({
@@ -103,7 +110,7 @@ watch(
 
 async function fetchMonthly() {
   try {
-    const time = (moment().set('month', props.monthlyData.month - 1))._d
+    const time = moment().set('month', props.monthlyData.month - 1)._d
     const current = new Date(time.getFullYear() + '-' + props.monthlyData.month).getTime()
     // console.log(current);
     // console.log(new Date(current).getTime());

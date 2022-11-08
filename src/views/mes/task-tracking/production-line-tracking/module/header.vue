@@ -14,6 +14,7 @@
       range-separator=":"
       size="small"
       value-format="x"
+      :clearable="false"
       :shortcuts="PICKER_OPTIONS_SHORTCUTS"
       unlink-panels
       start-placeholder="开始日期"

@@ -7,14 +7,14 @@
         format="YYYY"
         value-format="x"
         placeholder="请选择"
+        style="width: 100px"
         class="filter-item"
         @change="crud.toQuery"
       />
       <common-radio-button
-        v-model="query.status"
+        v-model="query.sendStatus"
         :options="shipStatusEnum.ENUM"
         showOptionAll
-        :optionAllValue="undefined"
         type="enum"
         class="filter-item"
         @change="statusChange"
@@ -50,7 +50,8 @@ const defaultQuery = {
 }
 const { crud, query } = regHeader(defaultQuery)
 
-const totalAmount = ref({})
+const summaryInfo = ref({})
+const summaryLoading = ref(false)
 
 function statusChange(val) {
   if (query.status === shipStatusEnum.SETTLED.V) {
@@ -75,24 +76,28 @@ watch(
 
 async function getData() {
   try {
+    summaryLoading.value = true
     const data = await shipmentSummary(query)
-    totalAmount.value = data || {}
+    summaryInfo.value = data || {}
   } catch (error) {
     console.log('获取累计发运', error)
+  } finally {
+    summaryLoading.value = false
   }
 }
+
 </script>
 <style lang="scss" scoped>
 .panel-group {
-  margin-bottom:10px;
+  margin-bottom: 10px;
   ::v-deep(.card-panel) {
     .card-panel-description {
       .card-panel-text {
         margin-top: 2px;
       }
       .card-panel-num {
-        display:block;
-        font-size: 18px;
+        display: block;
+        font-size: 20px;
       }
     }
   }

@@ -38,7 +38,6 @@ export const showProjectSearch = [
   { component: '/mes/projects/index', type: allPT, required: true },
   { component: '/mes/overall-plan/monomer/index', type: pt.STEEL.V, required: true },
   { component: '/mes/craft-manage/section-steel/nesting-setting/index', type: pt.STEEL.V, required: true },
-  { component: '/mes/craft-manage/section-steel/nesting/index', type: pt.STEEL.V, required: true },
   { component: '/mes/changed-manage/artifact/index', type: pt.STEEL.V, required: false },
   { component: '/mes/changed-manage/machine-part/index', type: pt.STEEL.V, required: false },
   { component: '/mes/changed-manage/assemble/index', type: pt.STEEL.V, required: false },
@@ -184,19 +183,6 @@ const ENCLOSURE_ALL_BIT =
   ttEnum.PROFILED_PLATE.V | ttEnum.TRUSS_FLOOR_PLATE.V | ttEnum.PRESSURE_BEARING_PLATE.V | ttEnum.SANDWICH_BOARD.V | ttEnum.BENDING.V
 
 export const routerMetaSetting = [
-  { name: 'MesSchedulingManage', productType: ENCLOSURE_ALL_BIT | ttEnum.STRUCTURE.V },
-  { name: 'MesSchedulingArtifact', productType: ttEnum.STRUCTURE.V },
-  {
-    name: 'MesSchedulingArtifactAssemble',
-    productType: ttEnum.STRUCTURE.V,
-    mode: projectModeEnum.STRUCTURE_ASSEMBLE.V
-  },
-  {
-    name: 'MesSchedulingArtifactArtifact',
-    productType: ttEnum.STRUCTURE.V,
-    mode: projectModeEnum.STRUCTURE.V | projectModeEnum.STRUCTURE_ASSEMBLE.V
-  },
-  { name: 'MesSchedulingArtifactMachinePart', productType: ttEnum.STRUCTURE.V, mode: projectModeEnum.STRUCTURE_ASSEMBLE.V },
   { name: 'MesSchedulingEnclosure', productType: ENCLOSURE_ALL_BIT },
   { name: 'MesSchedulingPressedPlate', productType: ttEnum.PROFILED_PLATE.V },
   { name: 'MesSchedulingFloorPlate', productType: ttEnum.PRESSURE_BEARING_PLATE.V },

@@ -13,20 +13,24 @@
       style="width: 100%"
     >
       <el-table-column prop="index" label="序号" align="center" width="60" type="index" />
-      <el-table-column
-        v-if="columns.visible('name')"
-        key="name"
-        prop="name"
-        :show-overflow-tooltip="true"
-        label="产线"
-      >
+      <el-table-column v-if="columns.visible('name')" key="name" prop="name" :show-overflow-tooltip="true" label="产线">
         <template v-slot="scope">
-          <span>{{scope.row.workShopName}}>{{ scope.row.name }}</span>
+          <span>{{ scope.row.workShopName }}>{{ scope.row.name }}</span>
         </template>
       </el-table-column>
-      <el-table-column v-if="columns.visible('taskType')" align="center" key="taskType" prop="taskType" :show-overflow-tooltip="true" label="类别" width="80px">
+      <el-table-column
+        v-if="columns.visible('taskType')"
+        align="center"
+        key="taskType"
+        prop="taskType"
+        :show-overflow-tooltip="true"
+        label="类别"
+        width="80px"
+      >
         <template v-slot="scope">
-          <el-tag effect="plain" :type="componentTypeTag[componentTypeEnum.VK[scope.row.taskType]]">{{ componentTypeEnum.VL[scope.row.taskType] }}</el-tag>
+          <el-tag effect="plain" :type="componentTypeTag[componentTypeEnum.VK[scope.row.taskType]]">{{
+            componentTypeEnum.VL[scope.row.taskType]
+          }}</el-tag>
         </template>
       </el-table-column>
       <el-table-column
@@ -39,7 +43,9 @@
         min-width="120px"
       >
         <template v-slot="scope">
-          <span style="color: blue">{{ scope.row.startDate ? parseTime(scope.row.startDate, '{y}-{m}-{d}') : '-' }} ~
+          <span
+style="color: blue"
+            >{{ scope.row.startDate ? parseTime(scope.row.startDate, '{y}-{m}-{d}') : '-' }} ~
             {{ scope.row.endDate ? parseTime(scope.row.endDate, '{y}-{m}-{d}') : '-' }}</span
           >
         </template>
@@ -53,7 +59,7 @@
         label="任务量（件/kg）"
       >
         <template v-slot="scope">
-          <span>{{ scope.row.taskQuantity }}/{{ scope.row.taskMete }}</span>
+          <span>{{ scope.row.taskQuantity }}/{{ (scope.row.taskMete).toFixed(DP.COM_WT__KG) }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -65,7 +71,7 @@
         label="完成量（件/kg）"
       >
         <template v-slot="scope">
-          <span>{{ scope.row.completeQuantity }}/{{ scope.row.completeMete }}</span>
+          <span>{{ scope.row.completeQuantity }}/{{ (scope.row.completeMete).toFixed(DP.COM_WT__KG) }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -78,7 +84,13 @@
         min-width="180px"
       >
         <template v-slot="scope">
-          <el-progress :text-inside="true" stroke-linecap="square" :stroke-width="22" :percentage="scope.row.rate" status="success" />
+          <el-progress
+            :text-inside="true"
+            stroke-linecap="square"
+            :stroke-width="22"
+            :percentage="((scope.row.completeMete / scope.row.taskMete) * 100).toFixed(2)"
+            status="success"
+          />
         </template>
       </el-table-column>
       <el-table-column align="center" :show-overflow-tooltip="true" label="操作" width="100px">
@@ -97,6 +109,7 @@
 import { ref } from 'vue'
 import crudApi from '@/api/mes/task-tracking/production-line-tracking.js'
 import useCRUD from '@compos/use-crud'
+import { DP } from '@/settings/config'
 import { parseTime } from '@/utils/date'
 import { componentTypeEnum } from '@enum-ms/mes'
 import useMaxHeight from '@compos/use-max-height'
@@ -144,8 +157,13 @@ function views(row) {
 CRUD.HOOK.handleRefresh = (crud, { data }) => {
   const _content = []
   for (const key in data) {
-    const productType = key === 'artifactList' ? componentTypeEnum.ARTIFACT.V : (key === 'assembleList' ? componentTypeEnum.ASSEMBLE.V : componentTypeEnum.MACHINE_PART.V)
-    data[key].map(v => {
+    const productType =
+      key === 'artifactList'
+        ? componentTypeEnum.ARTIFACT.V
+        : key === 'assembleList'
+          ? componentTypeEnum.ASSEMBLE.V
+          : componentTypeEnum.MACHINE_PART.V
+    data[key]?.map((v) => {
       v.productType = productType
       _content.push(v)
     })

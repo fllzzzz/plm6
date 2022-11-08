@@ -2,7 +2,8 @@ import request from '@/utils/request'
 
 export function get(params) {
   return request({
-    url: `/api/mes/building/cargo/project/summary/page`,
+    module: 'mes',
+    url: `cargo/project/summary`,
     method: 'get',
     params
   })
@@ -20,7 +21,8 @@ export function inboundDetail(params) {
 // 发运汇总
 export function shipmentSummary(params) {
   return request({
-    url: `/api/mes/building/cargo/year/summary`,
+    module: 'mes',
+    url: `cargo/year/summary`,
     method: 'get',
     params
   })

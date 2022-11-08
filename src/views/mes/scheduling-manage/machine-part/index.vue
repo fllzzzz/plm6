@@ -59,7 +59,7 @@
                 <span class="ellipsis-text text">
                   {{ item.serialNumber }}
                 </span>
-                <el-image :src="item.picturePath" fit="scale-down" />
+                <el-image style="flex: 1;width: 95%;" :src="item.picturePath" fit="scale-down" />
                 <span class="ellipsis-text text" @click.stop="item.visibleTip = !item.visibleTip">{{ item.specification }}/{{ item.quantity }}</span>
                 <el-checkbox
                   style="position: absolute; left: 10px; top: 0px"

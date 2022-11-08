@@ -72,7 +72,7 @@ import { ElMessageBox, ElMessage } from 'element-plus'
 
 import { processMaterialListTypeEnum as typeEnum } from '@enum-ms/mes'
 import { arrIsRepeat } from '@data-type/array'
-import { isNotBlank } from '@data-type/index'
+import { isNotBlank, isBlank } from '@data-type/index'
 import { arr2obj } from '@/utils/convert/type'
 
 import { regForm } from '@compos/use-crud'
@@ -124,23 +124,27 @@ CRUD.HOOK.beforeToCU = () => {
 
 // 验证前
 CRUD.HOOK.afterValidateCU = () => {
-  const processFlag =
-    form.processSequenceIds &&
-    form.processSequenceIds.length > 0 &&
-    !form.processSequenceIds.some(
-      (v, index) => (!v && v !== 0) || (index !== form.processSequenceIds.length - 1 && !processSequenceObj.value[v])
-    )
-  if (!processFlag) {
-    ElMessage({
-      message: `请正确填写${typeEnum.VL[form.productType]}工序信息`,
-      type: 'error'
-    })
-  }
-  return processFlag
+  // const processFlag =
+  //   form.processSequenceIds &&
+  //   form.processSequenceIds.length > 0 &&
+  //   !form.processSequenceIds.some(
+  //     (v, index) => (!v && v !== 0) || (index !== form.processSequenceIds.length - 1 && !processSequenceObj.value[v])
+  //   )
+  // if (!processFlag) {
+  //   ElMessage({
+  //     message: `请正确填写${typeEnum.VL[form.productType]}工序信息`,
+  //     type: 'error'
+  //   })
+  // }
+  // return processFlag
 }
 
 // 提交前
 CRUD.HOOK.beforeSubmit = async () => {
+  if (form.processSequenceIds.length === 1 && isBlank(form.processSequenceIds[0])) {
+    form.typeId = form.id
+    return true
+  }
   const isRepeat = arrIsRepeat(form.processSequenceIds)
   const sourceData = await processSelectRef.value[0].getSourceData()
   const processArr = arr2obj(sourceData.value, 'id')

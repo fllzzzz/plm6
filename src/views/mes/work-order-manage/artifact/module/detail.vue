@@ -32,12 +32,20 @@
           />
         </div>
         <div style="width: 300px">
-          <print-table :api-key="props.detailData.productType === componentTypeEnum.ASSEMBLE.V? 'mesAssembleProductionTaskOrder':'mesProductionTaskOrder'" :params="{ ...query }" size="mini" type="warning" class="filter-item" />
+          <print-table
+            :api-key="
+              props.detailData.productType === componentTypeEnum.ASSEMBLE.V ? 'mesAssembleProductionTaskOrder' : 'mesProductionTaskOrder'
+            "
+            :params="{ ...query }"
+            size="mini"
+            type="warning"
+            class="filter-item"
+          />
         </div>
       </div>
       <common-table
         ref="table"
-        :data="tableData.taskList"
+        :data="tableData"
         empty-text="暂无数据"
         :max-height="maxHeight"
         style="width: 100%"
@@ -59,7 +67,7 @@
       </common-table>
       <common-table
         ref="table"
-        :data="tableData.taskList"
+        :data="tableData"
         empty-text="暂无数据"
         :max-height="maxHeight"
         style="width: 100%"
@@ -84,7 +92,7 @@
       </common-table>
       <common-table
         ref="table"
-        :data="tableData.typesettingList"
+        :data="tableData"
         empty-text="暂无数据"
         :max-height="maxHeight"
         style="width: 100%"
@@ -134,14 +142,18 @@
           </template>
         </el-table-column>
         <el-table-column label="利用长度" key="aLength" prop="aLength" align="center" />
-        <el-table-column label="利用率" key="lossRate" prop="lossRate" align="center" />
+        <el-table-column label="利用率" key="lossRate" prop="lossRate" align="center">
+          <template v-slot="scope">
+            <span>{{ scope.row.lossRate }}%</span>
+          </template>
+        </el-table-column>
       </common-table>
     </template>
   </common-drawer>
 </template>
 
 <script setup>
-import { processInfo, productTask } from '@/api/mes/work-order-manage/artifact.js'
+import { processInfo, getTaskList, getNestingList } from '@/api/mes/work-order-manage/artifact.js'
 import { defineProps, defineEmits, ref, computed, watch } from 'vue'
 import { componentTypeEnum } from '@enum-ms/mes'
 import { constantize } from '@/utils/enum/base'
@@ -154,19 +166,19 @@ const emit = defineEmits(['update:visible'])
 const props = defineProps({
   visible: {
     type: Boolean,
-    default: false,
+    default: false
   },
   detailData: {
     type: Object,
-    default: () => {},
-  },
+    default: () => {}
+  }
 })
 
 const { visible: drawerVisible, handleClose } = useVisible({ emit, props, field: 'visible' })
 
 const typeEnum = {
   TASK_LIST: { L: '任务清单', K: 'TASK_LIST', V: 1 },
-  MATERIAL_LIST: { L: '材料清单', K: 'MATERIAL_LIST', V: 2 },
+  MATERIAL_LIST: { L: '材料清单', K: 'MATERIAL_LIST', V: 2 }
 }
 constantize(typeEnum)
 // 高度
@@ -175,7 +187,7 @@ const { maxHeight } = useMaxHeight(
     extraBox: ['.el-drawer__header'],
     wrapperBox: ['.el-drawer__body'],
     navbar: false,
-    clientHRepMainH: true,
+    clientHRepMainH: true
   },
   drawerRef
 )
@@ -190,6 +202,7 @@ const params = computed(() => {
     orderId: props.detailData.orderId,
     processId: processId.value,
     productType: props.detailData.productType,
+    projectId: props.detailData.projectId
   }
 })
 
@@ -208,7 +221,7 @@ async function processGet() {
   try {
     const data = await processInfo({
       orderId: props.detailData.orderId,
-      productionLineId: props.detailData.productionLineId,
+      productionLineId: props.detailData.productionLineId
     })
     processList.value = data
     handleProcessChange()
@@ -216,13 +229,31 @@ async function processGet() {
     console.log('获取工序', error)
   }
 }
+
+// 构件查看、部件任务清单接口
 async function fetch() {
   try {
     tableLoading.value = true
     const query =
-      props.detailData.productType === componentTypeEnum.ARTIFACT.V ? { ...params.value } : { ...params.value, type: type.value }
-    const data = await productTask({
-      ...query,
+      props.detailData.productType === componentTypeEnum.ARTIFACT.V ? { ...params.value } : { ...params.value, type: typeEnum.TASK_LIST.V }
+    const data = await getTaskList({
+      ...query
+    })
+    tableData.value = data
+  } catch (err) {
+    console.log('获取生产任务单', err)
+  } finally {
+    tableLoading.value = false
+  }
+}
+
+// 部件套料清单
+async function assembleListGet() {
+  try {
+    tableLoading.value = true
+    const data = await getNestingList({
+      ...params.value,
+      type: typeEnum.MATERIAL_LIST.V
     })
     tableData.value = data
   } catch (err) {
@@ -232,11 +263,19 @@ async function fetch() {
   }
 }
 function handleTypeChange(val) {
-  fetch()
+  if (val === typeEnum.MATERIAL_LIST.V) {
+    assembleListGet()
+  } else {
+    fetch()
+  }
 }
 
 function handleProcessChange(val) {
-  fetch()
+  if (type.value === typeEnum.MATERIAL_LIST.V) {
+    assembleListGet()
+  } else {
+    fetch()
+  }
 }
 </script>
 <style lang="scss" scoped>

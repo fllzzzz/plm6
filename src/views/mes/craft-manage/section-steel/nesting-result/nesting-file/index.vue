@@ -1,6 +1,6 @@
 <template>
   <!-- 套料文件弹窗 -->
-  <common-drawer :before-close="handleClose" size="70%" modal append-to-body v-model:visible="nestingFileVisible">
+  <common-drawer :before-close="handleClose" size="90%" modal append-to-body v-model:visible="nestingFileVisible">
     <template #title>
       <common-radio-button
         style="margin-right: 8px"
@@ -9,69 +9,137 @@
         :options="nestingFileTypeEnum.ENUM"
         type="enum"
         size="small"
+        @change="handleChange"
       />
-       <common-button size="small" @click="handleClose">关闭</common-button>
+      <export-button
+          v-if="nestingFileType === nestingFileTypeEnum.MATERIAL_LIST.V"
+          class="filter-item"
+          :fn="getMaterialListExcelFn"
+          :params="{ id: props.detailData.id }"
+          :disabled="nestingProgressData.length === 0"
+        >
+          材料清单
+        </export-button>
+      <common-button size="small" @click="handleClose">关闭</common-button>
     </template>
     <template #content>
       <common-table
-        v-loading="innerLoading"
-        ref="tableDrawerRef"
-        :data="props.detailData"
-        :max-height="400"
+        v-loading="resultLoading"
+        ref="tableRef"
+        :data="nestingProgressData"
+        :max-height="maxHeight"
         style="width: 100%"
         row-key="id"
       >
+        <el-table-column type="expand" v-if="nestingFileType === nestingFileTypeEnum.MATERIAL_LIST.V">
+          <template #default="prop">
+            <common-table :data="prop.row.linkDOList">
+              <el-table-column label="单体" prop="monomerName" align="center" />
+              <el-table-column label="区域" prop="areaName" align="center" />
+              <el-table-column label="包含部件" prop="serialNumber" align="center" />
+              <el-table-column label="长度（mm）" prop="length" align="center" />
+              <el-table-column label="重量（kg）" prop="netWeight" align="center" />
+              <el-table-column label="数量" prop="quantity" align="center" />
+            </common-table>
+          </template>
+        </el-table-column>
         <el-table-column label="序号" type="index" align="center" width="60" />
-        <el-table-column key="monomerId" prop="monomerId" :show-overflow-tooltip="true" label="单体" min-width="60" align="center">
-          <template #default="{ row }">
-            <span>{{ row.mete }}</span>
+        <el-table-column key="serialNumber" prop="serialNumber" :show-overflow-tooltip="true" label="套料编号" align="center" width="180px">
+          <template v-slot="scope">
+            <span>{{ scope.row.serialNumber }}</span>
           </template>
         </el-table-column>
-        <el-table-column key="areaName" prop="areaName" :show-overflow-tooltip="true" label="区域" min-width="60" align="center">
-          <template #default="{ row }">
-            <span>{{ row.areaName }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column key="artifactNumber" prop="artifactNumber" :show-overflow-tooltip="true" label="关联构件编号" align="center">
-          <template #default="{ row }">
-            <span>{{ row.artifactNumber }}</span>
+        <el-table-column key="nestingResult" prop="nestingResult" label="套料成果" align="center" v-if="nestingFileType === nestingFileTypeEnum.NESTING_FILE.V" width="600px">
+          <template v-slot="scope">
+            <template v-if="scope.row.linkDOList.length > 0">
+              <template v-for="item in scope.row.linkDOList" :key="item">
+                <el-tooltip effect="dark" :content="item.serialNumber" placement="top-start">
+                  <div
+                    :style="`padding: 0 5px; display:inline-block; width: ${
+                      (item.length / scope.row.typesettingLength) * 100
+                    }%; color: #fff; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; height: 30px; background-color: ${
+                      item.lengthColor
+                    };line-height: 30px; border-right: 1px solid #fff`"
+                  >
+                    <!-- 17dh13535487865887486 -->
+                    {{ item.serialNumber }}
+                  </div>
+                </el-tooltip>
+              </template>
+            </template>
           </template>
         </el-table-column>
         <el-table-column
-          key="serialNumber"
-          prop="serialNumber"
+          key="typesettingAssembleTypeEnum"
+          prop="typesettingAssembleTypeEnum"
           :show-overflow-tooltip="true"
-          label="部件编号"
-          min-width="60"
+          label="材料属性"
           align="center"
         >
-          <template #default="{ row }">
-            <span>{{ row.serialNumber }}</span>
+          <template v-slot="scope">
+            <span>{{ scope.row.typesettingAssembleTypeEnum ? materialTypeEnum.VL[scope.row.typesettingAssembleTypeEnum] : '-' }}</span>
           </template>
         </el-table-column>
-        <el-table-column key="specification" prop="specification" :show-overflow-tooltip="true" label="规格" min-width="60" align="center">
-          <template #default="{ row }">
-            <span>{{ row.specification }}</span>
+        <el-table-column key="length" prop="length" :show-overflow-tooltip="true" label="母材长度（mm）" align="center" width="130px">
+          <template v-slot="scope">
+            <span>{{ scope.row.length }}</span>
           </template>
         </el-table-column>
-        <el-table-column key="length" prop="length" :show-overflow-tooltip="true" label="长度" min-width="60" align="center">
-          <template #default="{ row }">
-            <span>{{ row.length }}</span>
+        <el-table-column
+          key="specification"
+          prop="specification"
+          :show-overflow-tooltip="true"
+          label="母材规格"
+          align="center"
+          min-width="150px"
+        >
+          <template v-slot="scope">
+            <span>{{ scope.row.specification }}</span>
           </template>
         </el-table-column>
-        <el-table-column key="material" prop="material" :show-overflow-tooltip="true" label="材质" min-width="60" align="center">
-          <template #default="{ row }">
-            <span>{{ row.material }}</span>
+        <el-table-column
+          key="material"
+          prop="material"
+          :show-overflow-tooltip="true"
+          label="材质"
+          align="center"
+          width="110px"
+        >
+          <template v-slot="scope">
+            <span>{{ scope.row.material }}</span>
           </template>
         </el-table-column>
-        <el-table-column key="quantity" prop="quantity" :show-overflow-tooltip="true" label="数量" min-width="60" align="center">
-          <template #default="{ row }">
-            <span>{{ row.quantity }}</span>
+        <el-table-column
+          key="totalNetWeight"
+          prop="totalNetWeight"
+          :show-overflow-tooltip="true"
+          label="母材总重"
+          align="center"
+        >
+          <template v-slot="scope">
+            <span>{{ scope.row.totalNetWeight }}</span>
           </template>
         </el-table-column>
-        <el-table-column key="netWeight" prop="netWeight" :show-overflow-tooltip="true" label="单重（kg）" min-width="60" align="center">
-          <template #default="{ row }">
-            <span>{{ row.netWeight }}</span>
+        <el-table-column key="quantity" prop="quantity" :show-overflow-tooltip="true" label="数量" align="center">
+          <template v-slot="scope">
+            <span>{{ scope.row.quantity }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column
+          key="typesettingLength"
+          prop="typesettingLength"
+          :show-overflow-tooltip="true"
+          label="套料长度（mm）"
+          align="center"
+          width="130px"
+        >
+          <template v-slot="scope">
+            <span>{{ scope.row.typesettingLength }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column key="lossRate" prop="lossRate" :show-overflow-tooltip="true" label="损耗" align="center">
+          <template v-slot="scope">
+            <span>{{ scope.row.lossRate }}%</span>
           </template>
         </el-table-column>
       </common-table>
@@ -81,10 +149,16 @@
 
 <script  setup>
 import useVisible from '@compos/use-visible'
-// import useMaxHeight from '@compos/use-max-height'
+import useMaxHeight from '@compos/use-max-height'
+import { getLightColor } from '@/utils/color'
+import { nestingProgress } from '@/api/mes/craft-manage/section-steel/nesting-setting'
+import { getMaterialList, getMaterialListExcelFn } from '@/api/mes/craft-manage/section-steel/nesting-result'
 import { ref, defineProps, defineEmits } from 'vue'
-import { nestingFileTypeEnum } from '@enum-ms/mes'
+import { nestingFileTypeEnum, mesBuildingTypeSettingAssembleTypeEnum as materialTypeEnum } from '@enum-ms/mes'
+import ExportButton from '@comp-common/export-button/index.vue'
 
+const nestingProgressData = ref([])
+const resultLoading = ref(false)
 const nestingFileType = ref(nestingFileTypeEnum.NESTING_FILE.V)
 const emit = defineEmits(['success'])
 const props = defineProps({
@@ -97,7 +171,56 @@ const props = defineProps({
     default: () => {}
   }
 })
-const { visible: nestingFileVisible, handleClose } = useVisible({ emit, props, field: 'visible' })
+const { visible: nestingFileVisible, handleClose } = useVisible({ emit, props, field: 'visible', showHook: nestingResultGet })
+
+const colorObj = ref({}) // serialNumber: color
+
+// 套料文件
+async function nestingResultGet() {
+  try {
+    resultLoading.value = true
+    const { content } = await nestingProgress({ batchId: props.detailData.id })
+    content[0].typesettingDTOS.forEach((v) => {
+      v.linkDOList.map((m) => {
+        if (!colorObj.value[m.serialNumber]) {
+          colorObj.value[m.serialNumber] = getLightColor()
+        }
+        m.lengthColor = colorObj.value[m.serialNumber]
+      })
+    })
+    nestingProgressData.value = content[0].typesettingDTOS
+  } catch (error) {
+    console.log('获取套料文件失败')
+  } finally {
+    resultLoading.value = false
+  }
+}
+
+// 材料清单
+async function nestingListGet() {
+  try {
+    resultLoading.value = true
+    const { content } = await getMaterialList({ id: props.detailData.id })
+    console.log(content, 'content')
+  } catch (error) {
+    console.log('获取材料清单失败')
+  } finally {
+    resultLoading.value = false
+  }
+}
+
+function handleChange(val) {
+  if (val === nestingFileTypeEnum.MATERIAL_LIST.V) {
+    nestingListGet()
+  } else {
+    nestingResultGet()
+  }
+}
+
+const { maxHeight } = useMaxHeight({
+  extraBox: ['.head-container'],
+  paginate: true
+})
 </script>
 
 <style>

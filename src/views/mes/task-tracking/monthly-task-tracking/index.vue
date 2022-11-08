@@ -32,34 +32,40 @@
           </template>
         </el-table-column>
         <el-table-column
-          v-if="columns.visible('totalQuantity')"
+          v-if="columns.visible('list')"
           align="center"
-          key="totalQuantity"
-          prop="totalQuantity"
+          key="list"
+          prop="list"
           :show-overflow-tooltip="true"
           label="排产量（件/吨）"
         >
           <template v-slot="scope">
-            <span>{{ scope.row.totalQuantity }}/{{ (scope.row.totalMete / 1000).toFixed(2) }}</span>
+            <span>{{ scope.row.quantity }}/{{ (scope.row.mete / 1000).toFixed(DP.COM_WT__T) }}</span>
           </template>
         </el-table-column>
         <el-table-column v-if="columns.visible('rate')" align="center" key="rate" prop="rate" :show-overflow-tooltip="true" label="达成率">
           <template v-slot="scope">
             <span>
-              <el-progress :text-inside="true" stroke-linecap="square" :stroke-width="22" :percentage="scope.row.rate" status="success" />
+              <el-progress
+                :text-inside="true"
+                stroke-linecap="square"
+                :stroke-width="22"
+                :percentage="((scope.row.completeMete / scope.row.mete) * 100).toFixed(2)"
+                status="success"
+              />
             </span>
           </template>
         </el-table-column>
         <el-table-column
-          v-if="columns.visible('completeQuantity')"
+          v-if="columns.visible('complete')"
           align="center"
-          key="completeQuantity"
-          prop="completeQuantity"
+          key="complete"
+          prop="complete"
           :show-overflow-tooltip="true"
           label="实际完成（件/吨）"
         >
           <template v-slot="scope">
-            <span>{{ scope.row.completeQuantity }}/{{ (scope.row.completeMete / 1000).toFixed(2) }}</span>
+            <span>{{ scope.row.completeQuantity }}/{{ (scope.row.completeMete / 1000).toFixed(DP.COM_WT__T) }}</span>
           </template>
         </el-table-column>
       </common-table>
@@ -73,6 +79,7 @@ import { ref, computed, watch } from 'vue'
 import crudApi from '@/api/mes/task-tracking/monthly-task-tracking.js'
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
+import { DP } from '@/settings/config'
 // import { tableSummary } from '@/utils/el-extra'
 import mHeader from './module/header.vue'
 import monthlyTaskDetail from './monthly-task-detail/index.vue'
@@ -154,10 +161,28 @@ function getSummaries(param) {
       sums[index] = (sums[index] / ave.length).toFixed(2) + '%'
       return
     }
-    if (column.property === 'totalQuantity' || column.property === 'completeQuantity') {
-      const values = data.map((item) => Number(item[column.property]))
+    // if (column.property === 'totalQuantity' || column.property === 'completeQuantity') {
+    //   const values = data.map((item) => Number(item[column.property]))
+    //   if (!values.every((value) => isNaN(value))) {
+    //     sums[index] = values.reduce((prev, curr) => {
+    //       const value = Number(curr)
+    //       if (!isNaN(value)) {
+    //         return prev + curr
+    //       } else {
+    //         return prev
+    //       }
+    //     }, 0)
+    //   }
+    // }
+    if (column.property === 'list' || column.property === 'complete') {
+      const valueKeys = column.property === 'list' ? 'quantity' : column.property + 'Quantity'
+      const values = data.map((item) => Number(item?.[valueKeys]))
+      let valuesSum = 0
+      const valueWeightKeys = column.property === 'list' ? 'mete' : column.property + 'Mete'
+      const valueWeight = data.map((item) => Number(item?.[valueWeightKeys] / 1000))
+      let valueWeightSum = 0
       if (!values.every((value) => isNaN(value))) {
-        sums[index] = values.reduce((prev, curr) => {
+        valuesSum = values.reduce((prev, curr) => {
           const value = Number(curr)
           if (!isNaN(value)) {
             return prev + curr
@@ -166,6 +191,17 @@ function getSummaries(param) {
           }
         }, 0)
       }
+      if (!valueWeight.every((value) => isNaN(value))) {
+        valueWeightSum = valueWeight.reduce((prev, curr) => {
+          const value = Number(curr)
+          if (!isNaN(value)) {
+            return prev + curr
+          } else {
+            return prev
+          }
+        }, 0)
+      }
+      sums[index] = valuesSum + ' / ' + valueWeightSum.toFixed(DP.COM_WT__T)
     }
   })
   return sums

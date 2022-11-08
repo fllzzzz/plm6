@@ -41,6 +41,18 @@
         width="120px"
       />
       <el-table-column
+        v-if="columns.visible('productType')"
+        key="productType"
+        prop="productType"
+        label="类型"
+        align="center"
+        width="100px"
+      >
+        <template v-slot="scope">
+          <span>{{ componentTypeEnum.VL[scope.row.productType] }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
         v-if="columns.visible('inspectorNames')"
         key="inspectorNames"
         prop="inspectorNames"
@@ -74,7 +86,7 @@ import { useStore } from 'vuex'
 
 import checkPermission from '@/utils/system/check-permission'
 import { configProductionLineInspectPM as permission } from '@/page-permission/config'
-import { artifactProductLineEnum } from '@enum-ms/mes'
+import { componentTypeEnum, artifactProductLineEnum } from '@enum-ms/mes'
 
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'

@@ -20,17 +20,23 @@
         </el-table-column>
         <el-table-column align="center" key="rate" prop="rate" :show-overflow-tooltip="true" label="进度" min-width="100px">
           <template v-slot="scope">
-            <el-progress :text-inside="true" stroke-linecap="square" :stroke-width="22" :percentage="scope.row.rate" status="success" />
+            <el-progress
+              :text-inside="true"
+              stroke-linecap="square"
+              :stroke-width="22"
+              :percentage="((scope.row.completeMete / scope.row.mete) * 100).toFixed(2)"
+              status="success"
+            />
           </template>
         </el-table-column>
         <el-table-column align="center" key="quantity" prop="quantity" :show-overflow-tooltip="true" label="任务（件/kg）">
           <template v-slot="scope">
-            <span>{{ scope.row.quantity }}/{{ scope.row.mete }}</span>
+            <span>{{ scope.row.quantity }}/{{ (scope.row.mete).toFixed(DP.COM_WT__KG) }}</span>
           </template>
         </el-table-column>
         <el-table-column align="center" key="completeQuantity" prop="completeQuantity" :show-overflow-tooltip="true" label="完成（件/kg）">
           <template v-slot="scope">
-            <span>{{ scope.row.completeQuantity }}/{{ scope.row.completeMete }}</span>
+            <span>{{ scope.row.completeQuantity }}/{{ (scope.row.completeMete).toFixed(DP.COM_WT__KG) }}</span>
           </template>
         </el-table-column>
       </common-table>
@@ -42,6 +48,7 @@
 import { process, machineProcess } from '@/api/mes/task-tracking/work-order-tracking.js'
 import { componentTypeEnum, workOrderTypeEnum } from '@enum-ms/mes'
 import { ref, defineProps, watch, inject } from 'vue'
+import { DP } from '@/settings/config'
 import { BellFilled } from '@element-plus/icons'
 import useMaxHeight from '@compos/use-max-height'
 import productionLineDetail from '../production-line-detail/index.vue'

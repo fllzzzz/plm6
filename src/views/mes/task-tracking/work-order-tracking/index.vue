@@ -62,7 +62,7 @@
             label="总量（件/kg）"
           >
             <template v-slot="scope">
-              <span>{{ scope.row.totalQuantity }}/{{ scope.row.totalMete }}</span>
+              <span>{{ scope.row.totalQuantity }}/{{ (scope.row.totalMete).toFixed(DP.COM_WT__KG) }}</span>
             </template>
           </el-table-column>
           <el-table-column
@@ -71,10 +71,10 @@
             key="completeQuantity"
             prop="completeQuantity"
             :show-overflow-tooltip="true"
-            label="实际完成"
+            label="实际完成（件/kg）"
           >
             <template v-slot="scope">
-              <span>{{ scope.row.completeQuantity }}/{{ scope.row.completeMete }}</span>
+              <span>{{ scope.row.completeQuantity }}/{{ (scope.row.completeMete).toFixed(DP.COM_WT__KG) }}</span>
             </template>
           </el-table-column>
           <el-table-column
@@ -86,7 +86,7 @@
             label="完成率"
           >
             <template v-slot="scope">
-              <span>{{ scope.row.rate }}</span>
+              <span>{{ ((scope.row.completeMete / scope.row.totalMete) * 100).toFixed(2) }}%</span>
             </template>
           </el-table-column>
           <el-table-column
@@ -118,6 +118,7 @@ import { parseTime } from '@/utils/date'
 import { componentTypeEnum } from '@enum-ms/mes'
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
+import { DP } from '@/settings/config'
 import pagination from '@crud/Pagination'
 import mHeader from './module/header.vue'
 import processDetail from './process-detail/index.vue'
