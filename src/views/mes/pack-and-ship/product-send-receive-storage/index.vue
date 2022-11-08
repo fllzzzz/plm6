@@ -60,6 +60,7 @@ import { ref, nextTick } from 'vue'
 import { deliveryInstallListPM as permission } from '@/page-permission/project'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
+import { DP } from '@/settings/config'
 
 import mHeader from './module/header'
 import pagination from '@crud/Pagination'
@@ -145,7 +146,7 @@ function getSummaries(param) {
           }
         }, 0)
       }
-      sums[index] = valuesSum + ' / ' + valueWeightSum
+      sums[index] = valuesSum + ' / ' + valueWeightSum.toFixed(DP.COM_WT__KG)
     }
   })
   return sums

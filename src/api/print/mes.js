@@ -485,6 +485,24 @@ export function projectOverviewList(params) {
   })
 }
 
+// 制成品入发存
+export function productSendReceiveStorage(params) {
+  return request({
+    url: `/api/mes/building/warehouse/finish-product/print`,
+    method: 'get',
+    params
+  })
+}
+
+// 制成品入发存详情
+export function productSendReceiveStorageDetail(params) {
+  return request({
+    url: `/api/mes/building/warehouse/finish-product/detail/print`,
+    method: 'get',
+    params
+  })
+}
+
 export default {
   // 项目制造
   machinePartDetail, // 零件生产详情
@@ -545,6 +563,10 @@ export default {
   workOrderTrackingList, // 工单跟踪报表详情
   monthlyTaskList, // 月度任务跟踪清单详情
   productionLineList, // 产线跟踪清单详情
-  processList // 工序呆滞清单详情
+  processList, // 工序呆滞清单详情
+
+  // 发运管理
+  productSendReceiveStorage, // 制成品入发存
+  productSendReceiveStorageDetail // 制成品入发存详情
 }
 

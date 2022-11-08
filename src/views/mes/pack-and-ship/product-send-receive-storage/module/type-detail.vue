@@ -7,19 +7,19 @@
     direction="rtl"
     :before-close="handleClose"
     custom-class="type-detail"
-    size="80%"
+    size="90%"
   >
     <template #titleAfter>
       <el-tag size="medium">{{`项目：${projectNameFormatter(detailInfo.project)}`}}</el-tag>
     </template>
     <template #titleRight>
-      <!-- <print-table
-        api-key="deliveryCargoList"
-        :params="props.detailInfo?.id"
+      <print-table
+        api-key="productSendReceiveStorageDetail"
+        :params="{ ...props.detailQuery,...query.value }"
         size="mini"
         type="warning"
         class="filter-item"
-      /> -->
+      />
     </template>
     <template #content>
       <monomer-select
@@ -56,27 +56,26 @@
       <common-button class="filter-item" size="mini" type="warning" icon="el-icon-refresh-left" @click="query={};fetchList()">重置</common-button>
       <common-table :data="list" v-loading="tableLoading" :data-format="dataFormat" show-summary :summary-method="getSummaries" :max-height="maxHeight" v-if="visible">
         <el-table-column label="序号" type="index" align="center" width="60" />
-        <el-table-column key="monomerName" prop="monomerName" label="单体" align="center" />
-        <el-table-column key="areaName" prop="areaName" label="区域" align="center" />
-        <el-table-column key="serialNumber" prop="serialNumber" label="编号" align="center" />
-        <el-table-column key="specification" prop="specification" label="规格" align="center" />
-        <el-table-column key="length" prop="length" label="长度(mm)" align="center" />
-        <el-table-column key="material" prop="material" label="材质" align="center" />
+        <el-table-column key="monomerName" prop="monomerName" label="单体" align="center" show-overflow-tooltip />
+        <el-table-column key="areaName" prop="areaName" label="区域" align="center" show-overflow-tooltip />
+        <el-table-column key="serialNumber" prop="serialNumber" label="编号" align="center" show-overflow-tooltip />
+        <el-table-column key="specification" prop="specification" label="规格" align="center" show-overflow-tooltip />
+        <el-table-column key="length" prop="length" label="长度(mm)" align="center" show-overflow-tooltip />
         <el-table-column label="清单数(件/kg)" align="center">
-          <el-table-column key="quantity" prop="quantity" label="入库数" align="center" />
-          <el-table-column key="totalNetWeight" prop="totalNetWeight" label="重量" align="center" />
+          <el-table-column key="quantity" prop="quantity" label="入库数" align="center" show-overflow-tooltip />
+          <el-table-column key="mete" prop="mete" label="重量" align="center" show-overflow-tooltip />
         </el-table-column>
         <el-table-column label="入库(件/kg)" align="center">
-          <el-table-column key="intoQuantity" prop="intoQuantity" label="入库数" align="center" />
-          <el-table-column key="intoWeight" prop="intoWeight" label="重量" align="center" />
+          <el-table-column key="inboundQuantity" prop="inboundQuantity" label="入库数" align="center" show-overflow-tooltip />
+          <el-table-column key="inboundMete" prop="inboundMete" label="重量" align="center" show-overflow-tooltip />
         </el-table-column>
         <el-table-column label="出库(件/kg)" align="center">
-          <el-table-column key="outQuantity" prop="outQuantity" label="出库数" align="center" />
-          <el-table-column key="outWeight" prop="outWeight" label="重量" align="center" />
+          <el-table-column key="outboundQuantity" prop="outboundQuantity" label="出库数" align="center" show-overflow-tooltip />
+          <el-table-column key="outboundMete" prop="outboundMete" label="重量" align="center" show-overflow-tooltip />
         </el-table-column>
         <el-table-column label="库存(件/kg)" align="center">
-          <el-table-column key="stockQuantity" prop="stockQuantity" label="库存数" align="center" />
-          <el-table-column key="stockWeight" prop="stockWeight" label="重量" align="center" />
+          <el-table-column key="stockQuantity" prop="stockQuantity" label="库存数" align="center" show-overflow-tooltip />
+          <el-table-column key="stockMete" prop="stockMete" label="重量" align="center" show-overflow-tooltip />
         </el-table-column>
       </common-table>
       <!--分页组件-->
@@ -142,7 +141,7 @@ watch(
   visible,
   (val) => {
     if (val) {
-      // fetchList()
+      fetchList()
     }
   }
 )
@@ -166,19 +165,16 @@ const { maxHeight } = useMaxHeight(
 )
 
 const dataFormat = ref([
-  ['totalNetWeight', ['to-fixed', DP.COM_WT__KG]],
-  ['quantity', ['to-fixed', DP.COM_WT__KG]],
-  ['weight', ['to-fixed', DP.COM_WT__KG]],
-  ['intoWeight', ['to-fixed', DP.COM_WT__KG]],
-  ['outWeight', ['to-fixed', DP.COM_WT__KG]],
-  ['stockWeight', ['to-fixed', DP.COM_WT__KG]],
-  ['createTime', 'parse-time']
+  ['mete', ['to-fixed', DP.COM_WT__KG]],
+  ['inboundMete', ['to-fixed', DP.COM_WT__KG]],
+  ['outboundMete', ['to-fixed', DP.COM_WT__KG]],
+  ['stockMete', ['to-fixed', DP.COM_WT__KG]]
 ])
 
 // 合计
 function getSummaries(param) {
   const summary = tableSummary(param, {
-    props: ['intoQuantity', 'outQuantity', 'stockQuantity', 'weight', 'intoWeight', 'outWeight', 'stockWeight', 'quantity', 'totalNetWeight']
+    props: ['inboundQuantity', 'inboundMete', 'outboundQuantity', 'outboundMete', 'quantity', 'mete', 'stockMete', 'stockQuantity']
   })
   return summary
 }
