@@ -2,13 +2,13 @@
   <div class="head-container">
     <div v-show="crud.searchToggle">
       <el-date-picker
-        v-model="query.year"
+        v-model="query.dateTime"
         type="year"
         size="small"
         class="date-item filter-item"
         placeholder="选择年"
         format="YYYY"
-        value-format="YYYY"
+        value-format="x"
         @change="crud.toQuery"
         style="width:120px;"
       />
@@ -25,13 +25,13 @@
       <rrOperation />
       <el-row v-loading="summaryLoading" v-if="checkPermission(crud.permission.get)" :gutter="20" class="panel-group">
         <el-col :span="8" class="card-panel-col">
-          <Panel name="累计入库(t)" text-color="#626262" num-color="#1890ff" :endVal="totalAmount.intoWeight || 0" />
+          <Panel name="累计入库(t)" text-color="#626262" num-color="#1890ff" :endVal="(totalAmount.inboundMete)/1000 || 0"  :precision="DP.COM_WT__T" />
         </el-col>
         <el-col :span="8" class="card-panel-col">
-          <Panel name="累计出库(t)" text-color="#626262" num-color="#1890ff" :endVal="totalAmount.outWeight || 0" />
+          <Panel name="累计出库(t)" text-color="#626262" num-color="#1890ff" :endVal="(totalAmount.outboundMete)/1000 || 0" :precision="DP.COM_WT__T" />
         </el-col>
         <el-col :span="8" class="card-panel-col">
-          <Panel name="实时库存(t)" text-color="#626262" num-color="#1890ff" :end-val="totalAmount.stockWeight || 0" />
+          <Panel name="实时库存(t)" text-color="#626262" num-color="#1890ff" :end-val="(totalAmount.stockMete)/1000 || 0" :precision="DP.COM_WT__T" />
         </el-col>
       </el-row>
     </div>
@@ -63,7 +63,7 @@ import rrOperation from '@crud/RR.operation'
 import Panel from '@/components/Panel'
 
 const defaultQuery = {
-  year: undefined,
+  dateTime: undefined,
   name: undefined,
   projectId: undefined
 }

@@ -43,48 +43,33 @@
       </div>
     </div>
     <common-table :data="list" v-loading="tableLoading" :max-height="maxHeight-70">
-      <el-table-column key="monomer.name" prop="monomer.name" label="单体" align="center" :show-overflow-tooltip="true"/>
-      <el-table-column key="area.name" prop="area.name" label="区域" align="center" :show-overflow-tooltip="true"/>
+      <el-table-column key="monomerName" prop="monomerName" label="单体" align="center" :show-overflow-tooltip="true"/>
+      <el-table-column key="areaName" prop="areaName" label="区域" align="center" :show-overflow-tooltip="true"/>
       <el-table-column key="serialNumber" prop="serialNumber" label="编号" align="center" :show-overflow-tooltip="true" />
-      <el-table-column key="productType" prop="productType" label="类型" align="center" :show-overflow-tooltip="true">
+      <el-table-column key="weight" prop="weight" label="总量" align="right" :show-overflow-tooltip="true">
         <template v-slot="scope">
-          <span>{{componentTypeEnum.VL[scope.row.productType]}}</span>
-        </template>
-      </el-table-column>
-      <el-table-column key="unitMete" prop="unitMete" label="单量" align="center" :show-overflow-tooltip="true">
-        <template v-slot="scope">
-          <span v-if="scope.row.productType===componentTypeEnum.ARTIFACT.V">
-            <span>{{toThousand(scope.row.unitMete,DP.COM_WT__KG)}}</span>
-          </span>
-          <span v-if="scope.row.productType===componentTypeEnum.ENCLOSURE.V">
-            <span>{{toThousand(scope.row.unitMete,DP.COM_L__M)}}</span>
-          </span>
-        </template>
-      </el-table-column>
-      <el-table-column key="unit" prop="unit" label="单位" align="center" :show-overflow-tooltip="true" width="60">
-        <template v-slot="scope">
-          <span v-if="scope.row.productType===componentTypeEnum.ARTIFACT.V">
-            <span style="margin-left:3px;">kg</span>
-          </span>
-          <span v-if="scope.row.productType===componentTypeEnum.ENCLOSURE.V">
-            <span style="margin-left:3px;">m</span>
-          </span>
+          <span>{{toThousand(scope.row.weight,DP.COM_WT__KG)}}</span><span style="margin-left:3px;">kg</span>
         </template>
       </el-table-column>
       <el-table-column key="quantity" prop="quantity" label="清单数" align="center" :show-overflow-tooltip="true" />
-      <el-table-column key="warehouseQuantity" prop="warehouseQuantity" label="入库数" align="center" :show-overflow-tooltip="true" />
-      <el-table-column key="shipQuantity" prop="shipQuantity" label="发运数" align="center" :show-overflow-tooltip="true" />
-      <el-table-column key="shipMete" prop="shipMete" label="发运量" align="center" :show-overflow-tooltip="true">
+      <el-table-column key="inboundQuantity" prop="inboundQuantity" label="入库数" align="center" :show-overflow-tooltip="true" />
+      <el-table-column key="cargoQuantity" prop="cargoQuantity" label="发运数" align="center" :show-overflow-tooltip="true" />
+      <el-table-column key="cargoMete" prop="cargoMete" label="发运量" align="right" :show-overflow-tooltip="true">
         <template v-slot="scope">
-          <span v-if="scope.row.productType===componentTypeEnum.ARTIFACT.V">
-            <span>{{toThousand(scope.row.shipMete,DP.COM_WT__KG)}}</span>
-          </span>
-          <span v-if="scope.row.productType===componentTypeEnum.ENCLOSURE.V">
-            <span>{{toThousand(scope.row.shipMete,DP.COM_L__M)}}</span>
-          </span>
+         <span>{{toThousand(scope.row.cargoMete,DP.COM_WT__KG)}}</span><span style="margin-left:3px;">kg</span>
         </template>
       </el-table-column>
     </common-table>
+    <!--分页组件-->
+    <el-pagination
+      :total="total"
+      :current-page="queryPage.pageNumber"
+      :page-size="queryPage.pageSize"
+      style="margin-top: 8px"
+      layout="total, prev, pager, next, sizes"
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
+    />
   </div>
 </template>
 
@@ -95,7 +80,7 @@ import { inboundDetail } from '@/api/mes/pack-and-ship/ship-summary'
 import useMaxHeight from '@compos/use-max-height'
 import { DP } from '@/settings/config'
 import { toThousand } from '@/utils/data-type/number'
-import { componentTypeEnum } from '@enum-ms/mes'
+import usePagination from '@compos/use-pagination'
 
 import monomerSelect from '@/components-system/plan/monomer-select'
 
@@ -115,12 +100,13 @@ const query = ref({
 })
 
 const { maxHeight } = useMaxHeight({ extraBox: '.tag-div', wrapperBox: ['.app-container', '.detail-container'] })
+const { handleSizeChange, handleCurrentChange, total, setTotalPage, queryPage } = usePagination({ fetchHook: fetchDetail })
 
 watch(
   () => props.currentRow.projectId,
   (val) => {
     if (val) {
-      // fetchDetail()
+      fetchDetail()
     }
   },
   { deep: true, immediate: true }
@@ -137,8 +123,9 @@ async function fetchDetail() {
   }
   tableLoading.value = true
   try {
-    const { content } = await inboundDetail({ projectId: props.currentRow.projectId, ...query.value })
+    const { content = [], totalElements } = await inboundDetail({ projectId: props.currentRow.projectId, ...query.value, ...queryPage })
     list.value = content
+    setTotalPage(totalElements)
     tableLoading.value = false
   } catch (error) {
     console.log('获取详情失败', error)

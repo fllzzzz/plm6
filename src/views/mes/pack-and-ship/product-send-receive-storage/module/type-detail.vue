@@ -48,7 +48,7 @@
         v-model.trim="query.serialNumber"
         size="small"
         placeholder="编号搜索"
-        style="width: 200px;margin-bottom:10px;"
+        style="width: 200px;margin-bottom:10px;margin-left:3px;"
         class="filter-item"
         clearable
       />
@@ -192,7 +192,7 @@ async function fetchList() {
   let _list = []
   tableLoading.value = true
   try {
-    const { content = [], totalElements } = await detail({ ...props.detailQuery, ...queryPage, ...query })
+    const { content = [], totalElements } = await detail({ ...props.detailQuery, ...queryPage, ...query.value })
     _list = content
     setTotalPage(totalElements)
   } catch (error) {

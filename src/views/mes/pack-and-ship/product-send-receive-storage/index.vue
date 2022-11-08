@@ -18,22 +18,22 @@
       <el-table-column key="project" prop="project" v-if="columns.visible('project')" :show-overflow-tooltip="true" label="项目" align="left" />
       <el-table-column key="list" prop="list" v-if="columns.visible('list')" :show-overflow-tooltip="true" label="清单数（件/kg）" align="center">
         <template v-slot="scope">
-          <span>{{ scope.row.quantity+' / '+scope.row.totalNetWeight }}</span>
+          <span>{{ scope.row.quantity+' / '+scope.row.mete }}</span>
         </template>
       </el-table-column>
-      <el-table-column key="into" prop="into" v-if="columns.visible('into')" :show-overflow-tooltip="true" label="入库量（件/kg）" align="center">
+      <el-table-column key="inbound" prop="inbound" v-if="columns.visible('inbound')" :show-overflow-tooltip="true" label="入库量（件/kg）" align="center">
         <template v-slot="scope">
-          <span>{{ scope.row.intoQuantity+' / '+scope.row.intoWeight }}</span>
+          <span>{{ scope.row.inboundQuantity+' / '+scope.row.inboundMete }}</span>
         </template>
       </el-table-column>
-      <el-table-column key="out" prop="out" v-if="columns.visible('out')" :show-overflow-tooltip="true" label="使用量（件/kg）" align="center" >
+      <el-table-column key="outbound" prop="outbound" v-if="columns.visible('outbound')" :show-overflow-tooltip="true" label="使用量（件/kg）" align="center" >
         <template v-slot="scope">
-          <span>{{ scope.row.outQuantity+' / '+scope.row.outWeight }}</span>
+          <span>{{ scope.row.outboundQuantity+' / '+scope.row.outboundMete }}</span>
         </template>
       </el-table-column>
       <el-table-column key="stock" prop="stock" v-if="columns.visible('stock')" :show-overflow-tooltip="true" label="库存（件/kg）" align="center">
         <template v-slot="scope">
-          <span>{{ scope.row.stockQuantity+' / '+scope.row.stockWeight }}</span>
+          <span>{{ scope.row.stockQuantity+' / '+scope.row.stockMete }}</span>
         </template>
       </el-table-column>
       <!--编辑与删除-->
@@ -103,8 +103,7 @@ function openDetail(row, show) {
   showType.value = show
   currentRow.value = row.sourceRow
   detailQuery.value = {
-    // projectId: row.sourceRow.project.id,
-    year: crud.query.year
+    projectId: row.sourceRow.project.id
   }
   nextTick(() => {
     detailVisible.value = true
@@ -119,11 +118,11 @@ function getSummaries(param) {
       sums[index] = '合计'
       return
     }
-    if (column.property === 'list' || column.property === 'into' || column.property === 'out' || column.property === 'stock') {
+    if (column.property === 'list' || column.property === 'inbound' || column.property === 'outbound' || column.property === 'stock') {
       const valueKeys = column.property === 'list' ? 'quantity' : column.property + 'Quantity'
       const values = data.map((item) => Number(item.sourceRow?.[valueKeys]))
       let valuesSum = 0
-      const valueWeightKeys = column.property === 'list' ? 'totalNetWeight' : column.property + 'Weight'
+      const valueWeightKeys = column.property === 'list' ? 'mete' : column.property + 'Mete'
       const valueWeight = data.map((item) => Number(item.sourceRow?.[valueWeightKeys]))
       let valueWeightSum = 0
       if (!values.every((value) => isNaN(value))) {

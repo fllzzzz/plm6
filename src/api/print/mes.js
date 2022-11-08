@@ -427,14 +427,14 @@ export function machinePartClassList(params) {
 // 发运管理-项目发运详情
 export function mesProjectShipDetail(params) {
   return request({
-    url: ``,
+    url: `/api/mes/building/cargo/project/cargoList/details/print`,
     method: 'get',
     params
   })
 }
 
 // 工厂报表-车间报表详情
- export function workshopReport(params) {
+export function workshopReport(params) {
   return request({
     url: `/api/mes/building/workshop/artifact/summary/print`,
     method: 'get',
@@ -539,12 +539,12 @@ export default {
   mesProjectShipDetail, // 项目发运详情
 
   // 工厂报表-车间报表
-  workshopReport,  // 车间报表详情
+  workshopReport, // 车间报表详情
 
   // 任务跟踪
-  workOrderTrackingList,  // 工单跟踪报表详情
-  monthlyTaskList,  // 月度任务跟踪清单详情
+  workOrderTrackingList, // 工单跟踪报表详情
+  monthlyTaskList, // 月度任务跟踪清单详情
   productionLineList, // 产线跟踪清单详情
-  processList  //工序呆滞清单详情
+  processList // 工序呆滞清单详情
 }
 
