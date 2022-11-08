@@ -103,7 +103,7 @@
                 :accept="`.nc1`"
                 tip=".nc1"
                 :upload-fun="upload"
-                :match-serialNumber="row.serialNumber"
+                :before-upload-hook="(file) => beforeUploadHook(file, row.serialNumber)"
                 btn-type="primary"
                 btn-name="文件导入"
                 btn-size="mini"
@@ -129,7 +129,7 @@
   </common-drawer>
 </template>
 
-<script  setup>
+<script setup>
 import useVisible from '@compos/use-visible'
 import useMaxHeight from '@compos/use-max-height'
 import { getAssembleList, getNoFileList } from '@/api/mes/craft-manage/section-steel/nesting'
@@ -139,6 +139,7 @@ import { ref, defineProps, defineEmits, watch, reactive } from 'vue'
 import usePagination from '@compos/use-pagination'
 import { upload } from '@/api/plan/technical-data-manage/technical-achievement'
 import uploadBtn from '@/components/file-upload/SingleFileUploadBtn.vue'
+import { ElMessage, ElNotification } from 'element-plus'
 
 const emit = defineEmits(['success'])
 const productionLineTypeEnum = ref(artifactProductLineEnum.TRADITION.V)
@@ -188,7 +189,23 @@ function showHook() {
   }
 }
 
+function beforeUploadHook(file, matchSerialNumber) {
+  const assembleNumber = file.name.substring(0, file.name.indexOf('.'))
+  if (matchSerialNumber) {
+    if (matchSerialNumber !== assembleNumber) {
+      ElMessage.error(`上传文件编号需为${matchSerialNumber}`)
+      return false
+    }
+  }
+  return true
+}
+
 function uploadSuccess() {
+  ElNotification({
+    title: '上传成功',
+    type: 'success',
+    duration: 2500
+  })
   initAssembleData()
   initNoFileList()
 }
@@ -243,5 +260,4 @@ const { maxHeight } = useMaxHeight({
 })
 </script>
 
-<style>
-</style>
+<style></style>

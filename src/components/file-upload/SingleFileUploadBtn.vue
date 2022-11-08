@@ -15,7 +15,6 @@
     :file-list="fileList"
     :show-file-list="false"
     :accept="props.accept"
-    :matchSerialNumber="props.matchSerialNumber"
     :disabled="props.disabled"
   >
     <common-button :loading="uploadLoading" :disabled="props.disabled" :icon="props.icon" :size="props.btnSize" :type="props.btnType">{{
@@ -93,9 +92,8 @@ const props = defineProps({
     type: String,
     default: ''
   },
-  matchSerialNumber: {
-    type: String,
-    default: ''
+  beforeUploadHook: {
+    type: Function
   }
 })
 
@@ -138,12 +136,8 @@ function handleBefore(file) {
       return false
     }
   }
-  const assembleNumber = file.name.substring(0, file.name.indexOf('.'))
-  if (props.matchSerialNumber) {
-    if (props.matchSerialNumber !== assembleNumber) {
-      ElMessage.error(`上传文件编号需为${props.matchSerialNumber}`)
-      return false
-    }
+  if (typeof props.beforeUploadHook === 'function' && !props.beforeUploadHook(file)) {
+    return false
   }
   const sizeM = file.size / 1024 / 1024
   const isLimit = !props.sizeLimit || (props.sizeLimit && sizeM < props.sizeLimit)
