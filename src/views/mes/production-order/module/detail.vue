@@ -58,7 +58,7 @@
                 style="width:250px;"
                 :disabled="!scope.row.quantity"
               />
-              <span v-else>{{scope.row.workshop?.id?scope.row.factory.name+'/'+scope.row.workshop.name+(scope.row.productionLine?.id?'/'+scope.row.productionLine.name:''):'-'}}</span>
+              <span v-else>{{scope.row.workshop?.id?scope.row.workshop.name+(scope.row.productionLine?.id?'/'+scope.row.productionLine.name:''):'-'}}</span>
             </template>
           </el-table-column>
           <el-table-column key="timeArr" prop="timeArr" label="排期操作" align="center" width="250">
@@ -106,7 +106,7 @@
 </template>
 
 <script setup>
-import { ref, defineProps, defineEmits, watch } from 'vue'
+import { ref, defineProps, defineEmits, watch, computed } from 'vue'
 import { scheduleDetail, updateSchedule } from '@/api/mes/production-order-manage/production-order'
 import { ElNotification, ElMessage } from 'element-plus'
 
@@ -155,13 +155,15 @@ const originData = ref([])
 const detailRef = ref()
 const drawerVisible = ref(false)
 
-const cascaderProps = {
-  value: 'id',
-  label: 'name',
-  children: 'children',
-  expandTrigger: 'hover',
-  checkStrictly: true
-}
+const cascaderProps = computed(() => {
+  return {
+    value: 'id',
+    label: 'name',
+    children: 'children',
+    expandTrigger: 'hover',
+    checkStrictly: true
+  }
+})
 
 const { maxHeight } = useMaxHeight(
   {
@@ -224,6 +226,7 @@ function objectSpanMethod({ row, column, rowIndex, columnIndex }) {
 // 设置级联数据
 function setOptions(tree) {
   options.value = []
+  const workshopTree = []
   try {
     if (tree) {
       const treeData = JSON.parse(JSON.stringify(tree.value))
@@ -231,10 +234,11 @@ function setOptions(tree) {
         v.disabled = true
         v.workshopList.map(k => {
           k.children = k.productionLineList || []
+          workshopTree.push(k)
         })
         v.children = v.workshopList || []
       })
-      options.value = treeData
+      options.value = workshopTree
     }
   } catch (error) {
     console.log('获取工厂车间生产线树失败', error)
@@ -243,9 +247,10 @@ function setOptions(tree) {
 
 function handleChange(val, row) {
   if (val && val.length) {
-    row.factoryId = val[0]
-    row.workshopId = val[1]
-    row.productionLineId = val[2] || undefined
+    const filterVal = options.value.find(v => v.id === val[0])
+    row.factoryId = filterVal.factoryId
+    row.workshopId = val[0]
+    row.productionLineId = val[1] || undefined
   } else {
     row.factoryId = undefined
     row.workshopId = undefined
@@ -286,10 +291,10 @@ async function fetchDetail() {
       v.workshopId = v.workshop?.id
       v.productionLineId = v.productionLine?.id
       if (v.productionLineId) {
-        v.line.push(v.factoryId, v.workshopId, v.productionLineId)
+        v.line.push(v.workshopId, v.productionLineId)
       } else {
         if (v.workshopId) {
-          v.line.push(v.factoryId, v.workshopId)
+          v.line.push(v.workshopId)
         }
       }
       if (monomerArr.indexOf(v.monomerId) < 0) {

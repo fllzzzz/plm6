@@ -35,13 +35,13 @@
           <Panel name="项目总数（个）" text-color="#626262" num-color="#1890ff" :end-val="totalAmount.projectQuantity || 0" :precision="0" />
         </el-col>
         <el-col :span="6" class="card-panel-col">
-          <Panel name="项目总量（t）" text-color="#626262" num-color="#1890ff" :end-val="totalAmount.projectQuantityWeight || 0" :precision="DP.COM_WT__T" />
+          <Panel name="项目总量（t）" text-color="#626262" num-color="#1890ff" :end-val="totalAmount.projectQuantityWeight || 0" :precision="DP.COM_WT__KG" />
         </el-col>
         <el-col :span="6" class="card-panel-col">
-          <Panel name="已排产（t）" text-color="#626262" num-color="#1890ff" :end-val="totalAmount.schedulingTotalNetWeight || 0" :precision="DP.COM_WT__T" />
+          <Panel name="已排产（t）" text-color="#626262" num-color="#1890ff" :end-val="totalAmount.schedulingTotalNetWeight || 0" :precision="DP.COM_WT__KG" />
         </el-col>
         <el-col :span="6" class="card-panel-col">
-          <Panel name="未排产（t）" text-color="#626262" num-color="#f56c6c" :end-val="totalAmount.unSchedulingTotalNetWeight || 0" :precision="DP.COM_WT__T" />
+          <Panel name="未排产（t）" text-color="#626262" num-color="#f56c6c" :end-val="totalAmount.unSchedulingTotalNetWeight || 0" :precision="DP.COM_WT__KG" />
         </el-col>
       </el-row>
     </div>

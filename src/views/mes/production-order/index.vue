@@ -129,8 +129,8 @@ const { maxHeight } = useMaxHeight({
 
 CRUD.HOOK.handleRefresh = (crud, { data }) => {
   data.content.forEach(v => {
-    v.netWeight = v.totalNetWeight ? (v.totalNetWeight / 1000).toFixed(DP.COM_WT__T) : undefined
-    v.schedulingNetWeight = v.schedulingTotalNetWeight ? (v.schedulingTotalNetWeight / 1000).toFixed(DP.COM_WT__T) : undefined
+    v.netWeight = v.totalNetWeight ? (v.totalNetWeight / 1000).toFixed(DP.COM_WT__KG) : undefined
+    v.schedulingNetWeight = v.schedulingTotalNetWeight ? (v.schedulingTotalNetWeight / 1000).toFixed(DP.COM_WT__KG) : undefined
   })
 }
 function openList(row) {
