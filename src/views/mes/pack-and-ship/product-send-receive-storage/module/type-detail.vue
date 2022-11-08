@@ -15,7 +15,7 @@
     <template #titleRight>
       <print-table
         api-key="productSendReceiveStorageDetail"
-        :params="{ ...props.detailQuery,...query.value }"
+        :params="{ ...props.detailQuery,...query}"
         size="mini"
         type="warning"
         class="filter-item"
@@ -111,6 +111,7 @@ const query = ref({
   areaId: undefined,
   serialNumber: undefined
 })
+
 const props = defineProps({
   modelValue: {
     type: Boolean,
