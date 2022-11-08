@@ -21,10 +21,10 @@
       />
       <el-row v-loading="crud.loading" :gutter="20" class="panel-group">
         <el-col :span="12" class="card-panel-col">
-          <Panel name="累计发运量（t）" text-color="#626262" num-color="#1890ff" :end-val="(totalAmount.mete/1000) || 0" :precision="DP.COM_WT__T" />
+          <Panel name="累计发运量（t）" text-color="#626262" num-color="#1890ff" :end-val="(summaryInfo.mete/1000) || 0" :precision="DP.COM_WT__T" />
         </el-col>
         <el-col :span="12" class="card-panel-col">
-          <Panel name="累计车次" text-color="#626262" num-color="#1890ff" :end-val="totalAmount.quantity || 0" :precision="0" />
+          <Panel name="累计车次" text-color="#626262" num-color="#1890ff" :end-val="summaryInfo.quantity || 0" :precision="0" />
         </el-col>
       </el-row>
     </div>
