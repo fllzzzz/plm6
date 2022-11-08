@@ -62,7 +62,7 @@
           :show-overflow-tooltip="true"
           label="价格"
           sortable="custom"
-          align="left"
+          align="right"
           min-width="150"
         >
           <template v-slot="scope">
@@ -72,7 +72,6 @@
                 <span style="margin-left: 3px">{{ logisticsPriceTypeEnum.V[scope.row.priceType].unit }}</span>
               </span>
               <el-tag
-                v-if="!scope.row.boolPersonalEnum"
                 style="cursor: pointer; margin-left: 5px"
                 @click="showAllPrice(scope.row)"
                 type="success"

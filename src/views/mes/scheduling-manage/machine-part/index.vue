@@ -59,8 +59,12 @@
                 <span class="ellipsis-text text">
                   {{ item.serialNumber }}
                 </span>
-                <el-image style="flex: 1;width: 95%;" :src="item.picturePath" fit="scale-down" />
-                <span class="ellipsis-text text" @click.stop="item.visibleTip = !item.visibleTip">{{ item.specification }}/{{ item.quantity }}</span>
+                <el-image style="flex: 1; width: 95%" :src="item.picturePath" fit="scale-down" />
+                <span
+class="ellipsis-text text"
+@click.stop="item.visibleTip = !item.visibleTip"
+                  >{{ item.specification }}/{{ item.quantity }}</span
+                >
                 <el-checkbox
                   style="position: absolute; left: 10px; top: 0px"
                   v-model="item.checked"
@@ -80,7 +84,7 @@
           v-model:visible="previewVisible"
           :artifactDateTime="artifactDateTime"
           :list="checkedNodes"
-          @success="refresh"
+          @success="handleSaveSuccess"
         ></m-preview>
       </template>
     </div>
@@ -101,6 +105,8 @@ import useCRUD from '@compos/use-crud'
 import mHeader from './module/header'
 import mPreview from './module/preview'
 import projectList from './module/project-list'
+import { deepClone } from '@/utils/data-type'
+import { cleanArray } from '@data-type/array'
 
 const optShow = {
   add: false,
@@ -208,20 +214,26 @@ CRUD.HOOK.afterRefresh = () => {
     boardList.value.push(component)
   })
 }
+
 // --------------------------- end --------------------------------
 
 function handleProjectClick(val, time, month) {
   crud.query.dateTime = time
   crud.query.month = month
-  crud.query.projectIds = val.map((v) => v.projectId)
+  crud.query.projectIds = cleanArray(val).map((v) => v.projectId)
   nextTick(() => {
     headRef.value?.refreshConditions()
   })
 }
 
-function refresh() {
+async function handleSaveSuccess() {
+  console.log(crud.query.projectIds)
+  const lastQuery = deepClone(crud.query)
   checkAll.value = false
-  headRef.value?.refreshConditions()
+  boardList.value = []
+  crud.page.page = 1
+  await projectListRef?.value?.refresh(lastQuery)
+  await headRef.value?.refreshConditions(lastQuery)
 }
 
 // --------------------------- 选择操作 start ------------------------------

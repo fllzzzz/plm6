@@ -73,6 +73,7 @@ import tagTabs from '@comp-common/tag-tabs'
 import crudOperation from '@crud/CRUD.operation'
 import rrOperation from '@crud/RR.operation'
 import Scale from '@comp/Scale'
+import { isBlank } from '@/utils/data-type'
 
 const defaultQuery = {}
 
@@ -92,7 +93,8 @@ function boxZoomOut() {
   }
 }
 
-async function fetchMaterial() {
+async function fetchMaterial(lastQuery) {
+  if (isBlank(query.projectIds)) return
   try {
     materialList.value = []
     thickList.value = []
@@ -108,10 +110,15 @@ async function fetchMaterial() {
           name: v
         }
       }) || []
-    if (materialList.value?.length) {
+    if (lastQuery && lastQuery?.material && content?.length && content.indexOf(lastQuery.material) !== -1) {
+      query.material = lastQuery.material
+      nextTick(() => {
+        materialRefWidth.value = materialRef.value.$el.clientWidth + 15
+        fetchTick(lastQuery)
+      })
+    } else if (materialList.value?.length) {
       query.material = materialList.value[0].name
       nextTick(() => {
-        console.log(materialRef, materialRef.value.$el.clientWidth)
         materialRefWidth.value = materialRef.value.$el.clientWidth + 15
         fetchTick()
       })
@@ -121,7 +128,8 @@ async function fetchMaterial() {
   }
 }
 
-async function fetchTick() {
+async function fetchTick(lastQuery) {
+  if (isBlank(query.projectIds)) return
   try {
     thickList.value = []
     const { content } = await getThick({
@@ -135,7 +143,10 @@ async function fetchTick() {
           name: v
         }
       }) || []
-    if (thickList.value?.length) {
+    if (lastQuery && lastQuery?.thick && content?.length && content.indexOf(lastQuery.thick) !== -1) {
+      query.thick = lastQuery.thick
+      crud.toQuery()
+    } else if (thickList.value?.length) {
       query.thick = thickList.value[0].name
       crud.toQuery()
     }
@@ -146,8 +157,6 @@ async function fetchTick() {
 
 defineExpose({
   boxScale,
-  refreshConditions: () => {
-    fetchMaterial()
-  }
+  refreshConditions: fetchMaterial
 })
 </script>

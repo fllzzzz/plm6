@@ -24,7 +24,7 @@
             />
           </el-form-item>
           <el-form-item label="选择承运类型" prop="boolPersonalEnum">
-            <el-radio-group v-model="form.boolPersonalEnum" size="small">
+            <el-radio-group :disabled="form.id" v-model="form.boolPersonalEnum" size="small">
               <el-radio :label="false">物流单位承运</el-radio>
               <el-radio :label="true">个人承运</el-radio>
             </el-radio-group>
@@ -41,6 +41,19 @@
               style="width: 300px"
             />
           </el-form-item>
+          <el-form-item v-if="form.boolPersonalEnum" label="选择车型" prop="carModel" class="form-label-require">
+            <common-select
+              v-model="form.carModel"
+              :options="carModelList"
+              clearable
+              :dataStructure="{ key: 'key', label: 'name', value: 'name' }"
+              type="other"
+              size="small"
+              placeholder="车型"
+              style="width: 300px"
+              class="input-underline"
+            />
+          </el-form-item>
           <el-form-item label="计价方式" prop="priceType">
             <common-radio-button
               class="filter-item"
@@ -50,7 +63,7 @@
               size="small"
             />
           </el-form-item>
-          <el-form-item label="基础价格" prop="price">
+          <el-form-item :label="form.boolPersonalEnum ? '价格' : '基础价格'" prop="price">
             <el-input-number
               v-model="form.price"
               :max="999999999999"
@@ -59,7 +72,7 @@
               :step="100"
               :controls="false"
               style="width: 100px"
-              placeholder="基础价格"
+              :placeholder="form.boolPersonalEnum ? '价格' : '基础价格'"
               autocomplete="off"
             />
             <span :class="form.priceType === logisticsPriceTypeEnum.WEIGHT.V ? 'blue' : 'orange'">{{
@@ -159,6 +172,7 @@ import invoiceTypeSelect from '@comp-base/invoice-type-select.vue'
 const formRef = ref()
 const drawerRef = ref()
 
+const carModelList = ref([])
 const defaultForm = {
   id: undefined,
   projectId: undefined,
@@ -216,6 +230,14 @@ const validateLicensePlate = (rule, value, callback) => {
   }
 }
 
+const validateCarModel = (rule, value, callback) => {
+  if (!value && form.boolPersonalEnum) {
+    callback(new Error('请选择车型'))
+  } else {
+    callback()
+  }
+}
+
 const rules = {
   projectId: [{ required: true, message: '请选择项目', trigger: 'change' }],
   boolPersonalEnum: [{ required: true, message: '选择承运类型', trigger: 'change' }],
@@ -226,6 +248,9 @@ const rules = {
   licensePlate: [
     { validator: validateLicensePlate, trigger: 'blur' },
     { pattern: patternLicensePlate, message: '请填写正确的车牌号', trigger: 'blur' }
+  ],
+  carModel: [
+    { validator: validateCarModel, trigger: 'change' }
   ]
 }
 
@@ -265,12 +290,17 @@ function priceTypeChange(val) {
 
 async function fetchModelData() {
   form.list = []
+  carModelList.value = []
   try {
     const data = await getCarModelConfig()
     const priceData = crud.status.edit === CRUD.STATUS.PREPARED ? await getSupplierCarPrice(form.id) : {}
     const supplierCarData = priceData.content || []
     if (data.carModels && data.carModels.length > 0) {
       for (let i = 0; i < data.carModels.length; i++) {
+        carModelList.value.push({
+          name: data.carModels[i],
+          key: i
+        })
         if (supplierCarData.length > 0 && supplierCarData.findIndex((k) => k.carModel === data.carModels[i]) > -1) {
           form.list.push(supplierCarData.find((k) => k.carModel === data.carModels[i]))
         } else {
@@ -280,6 +310,11 @@ async function fetchModelData() {
             priceType: form.priceType || logisticsPriceTypeEnum.WEIGHT.V,
             supplierPriceId: undefined
           })
+        }
+        if (form.boolPersonalEnum && supplierCarData?.length) {
+          form.priceType = supplierCarData[0].priceType
+          form.price = supplierCarData[0].price
+          form.carModel = supplierCarData[0].carModel
         }
       }
     }
@@ -294,6 +329,13 @@ CRUD.HOOK.afterToCU = (crud, form) => {
 }
 
 CRUD.HOOK.beforeSubmit = (crud, form) => {
+  if (crud.form.boolPersonalEnum) {
+    crud.form.linkList = [{
+      carModel: crud.form.carModel,
+      price: crud.form.price,
+      priceType: crud.form.priceType
+    }]
+  }
   if (crud.form.list.length > 0 && !crud.form.boolPersonalEnum) {
     const { validResult, dealList } = tableValidate(crud.form.list)
     if (validResult) {

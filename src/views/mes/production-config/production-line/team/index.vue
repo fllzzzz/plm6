@@ -56,7 +56,7 @@
         width="500px"
       >
         <template #titleRight>
-          <common-button :loading="submitLoading" :disabled="!selectValue?.length" size="mini" type="primary" @click="submitIt">
+          <common-button :loading="submitLoading" size="mini" type="primary" @click="submitIt">
             保存
           </common-button>
         </template>
@@ -161,12 +161,12 @@ async function submitIt() {
       type: 'success',
       duration: 2500
     })
+    dialogVisible.value = false
     emit('update:modelValue', selectValue.value)
     emit('change', selectValue.value)
   } catch (error) {
     console.log(error, '绑定班组')
   } finally {
-    dialogVisible.value = false
     submitLoading.value = false
   }
 }
