@@ -28,5 +28,14 @@ export function getAssembleList(params) {
     params
   })
 }
+// 查询区域部件缺少NC1清单数量
+export function getNoFileList(params) {
+  return request({
+    module: 'mes',
+    url: 'section_steel/nesting/area/status/number',
+    method: 'get',
+    params
+  })
+}
 
 export default { get }

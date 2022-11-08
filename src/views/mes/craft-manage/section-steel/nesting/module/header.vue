@@ -1,7 +1,7 @@
 <template>
   <div class="header-container">
     <el-date-picker
-      style="margin-right: 5px; width: 80px"
+      style="margin-right: 5px; width: 100px"
       v-model="query.year"
       type="year"
       size="small"
