@@ -342,7 +342,7 @@ constantize(maxEqualTypeEnum)
 
 // 构件类型
 const artifactTypeEnum = {
-  COMMON: { L: '普通构件', K: 'COMMON', V: 1 },
+  COMMON: { L: '主构件', K: 'COMMON', V: 1 },
   SMALL: { L: '次构件', K: 'SMALL', V: 2 }
 }
 constantize(artifactTypeEnum)

@@ -280,7 +280,6 @@ CRUD.HOOK.handleRefresh = (crud, data) => {
     index++
     v.rowKey = v.id
     v.hasChildren = !!v.detailDTOList.length
-    console.log(v)
     return v
   })
 }
