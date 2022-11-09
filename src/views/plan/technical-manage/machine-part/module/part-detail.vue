@@ -1,9 +1,9 @@
 <template>
   <div class="detail-container">
-    <div style="margin-bottom:10px;">
+    <div style="margin-bottom:10px;" class="tag-div">
       <el-tag>{{`厚度(mm)：${currentRow.thick}`}}</el-tag><el-tag style="margin-left:5px;">{{`材质：${currentRow.material}`}}</el-tag>
     </div>
-    <common-table :data="list" v-loading="tableLoading" :max-height="maxHeight-40">
+    <common-table :data="list" v-loading="tableLoading" :max-height="maxHeight">
       <el-table-column prop="index" label="序号" align="center" width="55" type="index" />
       <el-table-column
         key="serialNumber"
@@ -79,7 +79,7 @@ const props = defineProps({
 const list = ref([])
 const tableLoading = ref(false)
 
-const { maxHeight } = useMaxHeight({ extraBox: '.tag-div', wrapperBox: ['.app-container', '.detail-container'] })
+const { maxHeight } = useMaxHeight({ extraBox: '.tag-div', paginate: true })
 const { handleSizeChange, handleCurrentChange, total, setTotalPage, queryPage } = usePagination({ fetchHook: fetchDetail })
 
 // 请求参数
