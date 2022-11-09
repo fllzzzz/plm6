@@ -56,6 +56,7 @@ watch(
   (val) => {
     if (val) {
       productionLineGet()
+      tabChange()
     }
   },
   { deep: true, immediate: true }

@@ -138,7 +138,7 @@ const { crud, CRUD, columns } = useCRUD(
     title: '工单跟踪',
     sort: [],
     optShow: { ...optShow },
-    requireQuery: ['productType'],
+    requiredQuery: ['productType'],
     crudApi: { get },
     hasPagination: true
   },

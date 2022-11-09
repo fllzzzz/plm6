@@ -6,7 +6,6 @@
       :factory-id="query.factoryId"
       style="width: 200px"
       class="filter-item"
-      clearable
       default
       @change="crud.toQuery"
     />

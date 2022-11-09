@@ -148,6 +148,7 @@ const { crud, CRUD, columns } = useCRUD(
     optShow: { ...optShow },
     crudApi: { get },
     invisibleColumns: [],
+    requiredQuery: ['processId'],
     hasPagination: false
   },
   tableRef
@@ -163,8 +164,8 @@ watch(
 )
 
 const { maxHeight } = useMaxHeight({
-  extraBox: ['.head-container', '.content'],
-  wrapperBox: ['.app-wrap'],
+  // extraBox: ['.head-container', '.content'],
+  // wrapBox: ['.app-container'],
   paginate: true
 })
 
