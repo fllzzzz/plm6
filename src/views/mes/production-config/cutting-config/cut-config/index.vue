@@ -11,7 +11,7 @@
         :data="crud.data"
         highlight-current-row
         :empty-text="crud.emptyText"
-        :max-height="maxHeight + 42"
+        :max-height="maxHeight + 92"
         style="width: 100%"
         row-key="id"
         @current-change="handleCurrentChange"
