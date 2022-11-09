@@ -159,38 +159,6 @@ export default {
           meta: { title: '配套件汇总', icon: 'project', noCache: true }
         },
         {
-          path: 'plan-document',
-          component: '',
-          hidden: false,
-          name: 'PlanDocument',
-          alwaysShow: false,
-          redirect: '/plan/technical-manage/plan-document/deepen',
-          meta: { title: '技术资料', icon: 'contract', noCache: true },
-          children: [
-            {
-              name: 'PlanDeepen',
-              path: 'deepen',
-              hidden: false,
-              component: '/plan/technical-data-manage/deepen/index',
-              meta: { title: '技术成果', icon: 'project', noCache: true }
-            },
-            {
-              name: 'PlanChangeFile',
-              path: 'change-file',
-              hidden: false,
-              component: '/plan/technical-data-manage/change-file/index',
-              meta: { title: '变更文件', icon: 'project', noCache: true }
-            },
-            {
-              name: 'PlanBlueprint',
-              path: 'blueprint',
-              hidden: false,
-              component: '/plan/technical-data-manage/blueprint/index',
-              meta: { title: '施工蓝图', icon: 'project', noCache: true }
-            }
-          ]
-        },
-        {
           name: 'SummaryList',
           path: 'summary-list',
           hidden: false,
@@ -233,46 +201,60 @@ export default {
               hidden: false,
               component: '/plan/technical-data-manage/technical-achievement/xml/index',
               meta: { title: 'XML文件管理', icon: 'project', noCache: true }
+            },
+            {
+              name: 'PlanChangeFile',
+              path: 'change-file',
+              hidden: false,
+              component: '/plan/technical-data-manage/change-file/index',
+              meta: { title: '变更文件', icon: 'project', noCache: true }
+            },
+            {
+              name: 'PlanBlueprint',
+              path: 'blueprint',
+              hidden: false,
+              component: '/plan/technical-data-manage/blueprint/index',
+              meta: { title: '施工蓝图', icon: 'project', noCache: true }
             }
           ]
         }
       ]
-    },
-    {
-      path: '/plan/material-preparation',
-      component: 'Layout',
-      hidden: false,
-      name: 'PlanMaterialPreparation',
-      alwaysShow: false,
-      redirect: '/plan/material-preparation/project-preparation',
-      meta: { title: '备料管理', icon: 'contract', noCache: true },
-      children: [
-        {
-          name: 'MaterialProjectPreparation',
-          path: 'project-preparation',
-          hidden: false,
-          component: '/plan/material-preparation/project-preparation/index',
-          meta: { title: '项目备料', icon: 'project', noCache: true }
-        }
-      ]
-    },
-    {
-      path: '/plan/dosage-statistical',
-      component: 'Layout',
-      hidden: false,
-      name: 'DosageStatistical',
-      alwaysShow: false,
-      redirect: '/plan/dosage-statistical/steel-statistical',
-      meta: { title: '标准用量统计', icon: 'contract', noCache: true },
-      children: [
-        {
-          name: 'SteelStatistical',
-          path: 'steel-statistical',
-          hidden: false,
-          component: '/plan/technical-manage/steel-statistical/index',
-          meta: { title: '钢材使用用量对比', icon: 'project', noCache: true }
-        }
-      ]
     }
+    // {
+    //   path: '/plan/material-preparation',
+    //   component: 'Layout',
+    //   hidden: false,
+    //   name: 'PlanMaterialPreparation',
+    //   alwaysShow: false,
+    //   redirect: '/plan/material-preparation/project-preparation',
+    //   meta: { title: '备料管理', icon: 'contract', noCache: true },
+    //   children: [
+    //     {
+    //       name: 'MaterialProjectPreparation',
+    //       path: 'project-preparation',
+    //       hidden: false,
+    //       component: '/plan/material-preparation/project-preparation/index',
+    //       meta: { title: '项目备料', icon: 'project', noCache: true }
+    //     }
+    //   ]
+    // }
+    // {
+    //   path: '/plan/dosage-statistical',
+    //   component: 'Layout',
+    //   hidden: false,
+    //   name: 'DosageStatistical',
+    //   alwaysShow: false,
+    //   redirect: '/plan/dosage-statistical/steel-statistical',
+    //   meta: { title: '标准用量统计', icon: 'contract', noCache: true },
+    //   children: [
+    //     {
+    //       name: 'SteelStatistical',
+    //       path: 'steel-statistical',
+    //       hidden: false,
+    //       component: '/plan/technical-manage/steel-statistical/index',
+    //       meta: { title: '钢材使用用量对比', icon: 'project', noCache: true }
+    //     }
+    //   ]
+    // }
   ]
 }

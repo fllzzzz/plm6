@@ -192,7 +192,7 @@ export default {
     alwaysShow: false,
     redirect: '/mes/production-order-manage/production-order',
     meta: {
-      title: '生产订单管理',
+      title: '生产排期管理',
       icon: 'project',
       noCache: true
     },
@@ -203,7 +203,7 @@ export default {
         hidden: false,
         component: '/mes/production-order/index',
         meta: {
-          title: '生产订单',
+          title: '生产排期',
           icon: 'project',
           noCache: true
         }
