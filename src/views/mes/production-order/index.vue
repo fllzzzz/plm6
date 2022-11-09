@@ -17,7 +17,7 @@
       <el-table-column prop="index" label="序号" align="center" width="50" type="index" />
       <el-table-column v-if="columns.visible('createTime')" key="createTime" prop="createTime" label="立项日期" align="center" />
       <el-table-column v-if="columns.visible('project')" key="project" prop="project" label="所属项目" min-width="150" :show-overflow-tooltip="true" />
-      <el-table-column v-if="columns.visible('date')" key="date" prop="date" label="交期" align="center" :show-overflow-tooltip="true" min-width="150">
+      <el-table-column v-if="columns.visible('date')" key="date" prop="date" label="项目开始~结束日期" align="center" :show-overflow-tooltip="true" min-width="150">
         <template v-slot="scope">
           <span>{{`${parseTime(scope.row.startDate,'{y}-{m}-{d}')}~${parseTime(scope.row.endDate,'{y}-{m}-{d}')}`}}</span>
         </template>

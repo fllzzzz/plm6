@@ -33,7 +33,7 @@
           </el-table-column>
         </common-table>
       </div>
-      <div style="border-right: 1px solid #ededed; height: calc(100vh - 200px)"></div>
+      <div style="border-right: 1px solid #ededed; height: calc(100vh - 260px)"></div>
       <div style="width:54%;padding-left:10px;">
         <type-detail :currentRow="currentRow" v-if="isNotBlank(currentRow)" :productType="productType"/>
         <div class="my-code" v-else>*点击左表操作查看明细</div>
