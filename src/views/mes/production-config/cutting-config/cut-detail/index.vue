@@ -5,7 +5,7 @@
     </div>
     <div v-show="cutConfigRow?.id">
       <!--表格渲染-->
-      <common-table ref="tableRef" :data="cutConfigRow.detailConfigDTOList" :max-height="maxHeight" style="width: 100%">
+      <common-table ref="tableRef" :data="cutConfigRow.detailConfigDTOList" :max-height="maxHeight + 92" style="width: 100%">
         <el-table-column label="序号" type="index" align="center" width="60" />
         <el-table-column key="thickness" prop="thickness" :show-overflow-tooltip="true" align="center" label="厚度" width="140">
           <template #default="{ row }">

@@ -4,7 +4,7 @@
       <el-col :xs="24" :sm="24" :md="24" :lg="9" :xl="9" style="margin-bottom: 10px">
         <laying-off-config @click-laying-off="handleChangeLayingOff" />
       </el-col>
-      <el-col :xs="12" :sm="12" :md="12" :lg="6" :xl="6">
+      <el-col :xs="12" :sm="12" :md="12" :lg="6" :xl="6" style="margin-bottom: 10px">
         <el-card class="box-card team-card">
           <template v-slot:header class="clearfix card-header">
             <div style="display: flex; align-items: center; justify-content: space-between">
@@ -29,7 +29,7 @@
           />
         </el-card>
       </el-col>
-      <el-col :xs="12" :sm="12" :md="12" :lg="9" :xl="9">
+      <el-col :xs="12" :sm="12" :md="12" :lg="9" :xl="9" style="margin-bottom: 10px">
         <el-card class="box-card team-card">
           <template v-slot:header class="clearfix card-header">
             <div style="display: flex; align-items: center; justify-content: space-between">
