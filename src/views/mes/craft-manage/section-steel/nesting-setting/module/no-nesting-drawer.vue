@@ -110,7 +110,7 @@ async function batchDelete() {
       type: 'warning'
     }).then(async () => {
       try {
-        const _ids = selections.value.map((v) => v.id)
+        const _ids = selections.value.map((v) => v.assembleDetailId)
         await delNotNeedNesting(_ids)
         ElNotification({
           title: '移出成功',
@@ -130,7 +130,7 @@ async function batchDelete() {
 
 async function delRow(row) {
   try {
-    await delNotNeedNesting([row.id])
+    await delNotNeedNesting([row.assembleDetailId])
     ElNotification({
       title: '移出成功',
       type: 'success',

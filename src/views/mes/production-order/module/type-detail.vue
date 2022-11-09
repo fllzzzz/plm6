@@ -41,7 +41,7 @@
         />
       </div>
     </div>
-    <common-table :data="list" v-loading="tableLoading" :max-height="maxHeight-70">
+    <common-table :data="list" v-loading="tableLoading" :max-height="maxHeight-140">
       <el-table-column key="name" prop="name" label="名称" align="center" :show-overflow-tooltip="true" v-if="productType===componentTypeEnum.ARTIFACT.V"/>
       <el-table-column key="serialNumber" prop="serialNumber" label="编号" align="center" :show-overflow-tooltip="true" />
       <el-table-column key="specification" prop="specification" label="规格" align="center" min-width="120" :show-overflow-tooltip="true" />

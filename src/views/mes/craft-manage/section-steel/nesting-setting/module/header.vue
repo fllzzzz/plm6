@@ -14,7 +14,7 @@
       :options="assembleTypeEnum.ENUM"
       type="enum"
       class="filter-item"
-      @change="crud.toQuery"
+      @change="fetchSummary"
     />
     <monomer-select-area-select
       v-model:monomerId="query.monomerId"
@@ -54,23 +54,8 @@
       type="other"
       :data-structure="{ key: 'material', label: 'material', value: 'material' }"
       class="filter-item"
-      @change="crud.toQuery"
+      @change="fetchSummary"
     />
-    <tag-tabs
-      v-model="query.queryId"
-      class="filter-item"
-      :style="'width:calc(100% - 0px)'"
-      :data="summaryList"
-      :itemKey="query.productionLineTypeEnum === artifactProductLineEnum.TRADITION.V ? 'assembleConfigId' : 'structureClassId'"
-      @change="tabChange"
-    >
-      <template #default="{ item }">
-        <span>{{ item.name }}：</span>
-        <span>{{ item.totalQuantity }}件</span>
-        <span> | </span>
-        <span>{{ item.totalNetWeight }}吨</span>
-      </template>
-    </tag-tabs>
   </div>
   <div v-show="crud.searchToggle">
     <el-tag effect="plain" size="medium" class="filter-item">长度≥：</el-tag>
@@ -82,10 +67,25 @@
       style="width: 200px"
       class="filter-item"
       clearable
-      @keyup.enter="crud.toQuery"
+      @keyup.enter="fetchSummary"
     />
     <rrOperation />
   </div>
+  <tag-tabs
+    v-model="query.structureClassId"
+    class="filter-item"
+    style="width: 100%"
+    :data="summaryList"
+    itemKey="structureClassId"
+    @change="crud.toQuery"
+  >
+    <template #default="{ item }">
+      <span>{{ item.name }}：</span>
+      <span>{{ item.totalQuantity }}件</span>
+      <span> | </span>
+      <span>{{ item.totalNetWeight }}吨</span>
+    </template>
+  </tag-tabs>
   <crudOperation>
     <template #optLeft>
       <common-radio-button
@@ -106,7 +106,7 @@
         type="success"
         size="mini"
         icon="el-icon-menu"
-        :disabled="!query.queryId || crud.selections.length === 0"
+        :disabled="!query.structureClassId || crud.selections.length === 0"
         @click="handleExtrusionNesting"
       >
         型材套排
@@ -129,7 +129,7 @@
     </template>
   </crudOperation>
   <!-- <filter-drawer v-model:visible="filterVisible" :list="filterList"></filter-drawer> -->
-  <no-nesting-drawer v-model:visible="noNestingVisible" @refresh="crud.toQuery" />
+  <no-nesting-drawer v-model:visible="noNestingVisible" @refresh="fetchSummary" />
   <extrusion-nesting-setting v-model:visible="dialogVisible" :detail-data="crud.selections" :projectId="globalProjectId" />
 </template>
 
@@ -155,9 +155,7 @@ const emits = defineEmits(['change-mode'])
 const { globalProjectId } = mapGetters('globalProjectId')
 const defaultQuery = {
   projectId: globalProjectId.value,
-  queryId: undefined,
   structureClassId: undefined,
-  assembleClassId: undefined,
   boolMainAssemble: assembleTypeEnum.MAIN_ASSEMBLE.V
 }
 
@@ -182,24 +180,8 @@ watch(
   [() => query.projectId, () => query.monomerId, () => query.areaId],
   ([monomerId, areaId]) => {
     fetchOtherCondition()
-    fetchSummary()
   },
   { immediate: true }
-)
-
-watch(
-  () => query.productionLineTypeEnum,
-  (val) => {
-    fetchSummary()
-  },
-  { immediate: true }
-)
-watch(
-  () => query.boolMainAssemble,
-  (val) => {
-    fetchSummary()
-    crud.toQuery()
-  }
 )
 
 function handleProductionLineTypeChange(val) {
@@ -210,16 +192,6 @@ function handleProductionLineTypeChange(val) {
   fetchOtherCondition()
 }
 
-function tabChange(val) {
-  if (query.productionLineTypeEnum === artifactProductLineEnum.TRADITION.V) {
-    query.assembleConfigId = val
-    query.structureClassId = undefined
-  } else {
-    query.structureClassId = val
-    query.assembleConfigId = undefined
-  }
-  crud.toQuery()
-}
 async function fetchOtherCondition() {
   if (!query.projectId) return
   try {
@@ -231,7 +203,7 @@ async function fetchOtherCondition() {
       areaId: query.areaId
     })
     specPrefixList.value = data?.content || []
-    crud.toQuery()
+    fetchSummary()
   } catch (er) {
     console.log(er, '获取其他筛选条件列表')
   }
@@ -239,28 +211,19 @@ async function fetchOtherCondition() {
 
 async function fetchSummary() {
   query.structureClassId = undefined
-  query.assembleClassId = undefined
-  query.queryId = undefined
   if (!query.projectId) return
   try {
     summaryList.value = []
     const _query = deepClone(query)
-    if (_query.assembleConfigId) {
-      delete _query.assembleConfigId
-    }
     if (_query.productionLineTypeEnum === artifactProductLineEnum.TRADITION.V) {
       delete _query.boolMainAssemble
     }
     const data = await getNestingSummary(_query)
     summaryList.value = data?.content || []
-    console.log(summaryList.value[0])
-    if (summaryList.value.length === 1) {
-      query.queryId =
-        query.productionLineTypeEnum === artifactProductLineEnum.TRADITION.V
-          ? summaryList.value[0].assembleConfigId
-          : summaryList.value[0].structureClassId
+    if (summaryList.value?.length) {
+      query.structureClassId = summaryList.value[0].structureClassId
     }
-    tabChange()
+    crud.toQuery()
   } catch (er) {
     console.log(er, '获取汇总列表')
   }
@@ -268,7 +231,7 @@ async function fetchSummary() {
 
 function handleSpecPreFixChange(val) {
   specificationList.value = specPrefixList.value.find((v) => v.specPrefix === val)?.specificationList || []
-  crud.toQuery()
+  fetchSummary()
 }
 
 function handleSpecificationChange(val) {
@@ -280,7 +243,7 @@ function handleSpecificationChange(val) {
           material: v
         }
       }) || []
-  crud.toQuery()
+  fetchSummary()
 }
 
 function handleModeChange(mode) {
@@ -302,7 +265,8 @@ async function handleNotNeedNesting() {
       try {
         const _data = crud.selections.map((v) => {
           return {
-            id: v.id,
+            // id: v.id,
+            assembleDetailId: v.assembleDetailId,
             quantity: v.editQuantity
           }
         })
@@ -312,7 +276,7 @@ async function handleNotNeedNesting() {
           type: 'success',
           duration: 2500
         })
-        crud.toQuery()
+        fetchSummary()
       } catch (error) {
         console.log('无需套料设置失败', error)
       }

@@ -41,7 +41,7 @@
         align="center"
       >
         <template #default="{ row }">
-          <!-- <div v-for="item in row.artifactTypesettingDTOS" :key="item"> -->
+          <!-- <div v-for="item in row.artifactTypesettingDTO" :key="item"> -->
           <!-- 暂时写死，目前只有钢柱、长短梁、短梁 -->
           <table-cell-tag
             v-if="row.productionLineTypeEnum === artifactProductLineEnum.INTELLECT.V"
@@ -74,7 +74,7 @@
         width="120px"
       >
         <template #default="{ row: { sourceRow: row } }">
-          <el-input-number
+          <!-- <el-input-number
             v-if="curEditMode === 'edit'"
             v-model="row.editQuantity"
             :step="1"
@@ -84,8 +84,8 @@
             size="mini"
             controls-position="right"
             style="width: 100%"
-          />
-          <span v-else>{{ row.quantity }}</span>
+          /> -->
+          <span>{{ row.quantity }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -181,7 +181,7 @@ const { crud, columns, CRUD } = useCRUD(
     crudApi: { ...crudApi },
     hasPagination: false,
     queryOnPresenterCreated: false,
-    requiredQuery: ['projectId']
+    requiredQuery: ['projectId', 'structureClassId']
   },
   tableRef
 )
@@ -193,8 +193,8 @@ const curEditMode = ref('nesting')
 CRUD.HOOK.handleRefresh = (crud, res) => {
   res.data.content = res.data.content.map((v) => {
     v.editQuantity = v.quantity
-    v.artifactStr = v.artifactTypesettingDTOS.map((o) => o.serialNumber)?.join('，') || ''
-    v.classificationName = v.artifactTypesettingDTOS.map((o) => o.classificationName)[0]
+    v.artifactStr = v.artifactTypesettingDTO?.serialNumber
+    v.classificationName = v.artifactTypesettingDTO?.classificationName
     return v
   })
 }

@@ -58,7 +58,7 @@
           </el-table-column>
         </common-table>
         </div>
-        <div style="border-right: 1px solid #ededed; height: calc(100vh - 120px)"></div>
+        <div style="border-right: 1px solid #ededed; height: calc(100vh - 160px)"></div>
         <div style="width:59%;padding-left:10px;">
           <partDetail :currentRow="currentRow" v-if="isNotBlank(currentRow)" />
           <div class="my-code" v-else>*点击左表操作查看明细</div>
@@ -113,8 +113,7 @@ const { crud, CRUD, columns } = useCRUD(
 
 const { maxHeight } = useMaxHeight({
   wrapperBox: '.machine-part',
-  paginate: true,
-  extraHeight: 40
+  paginate: true
 })
 
 watch(

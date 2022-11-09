@@ -48,9 +48,15 @@
                   :unshowVal="currentLine.productType & componentTypeEnum.MACHINE_PART.V ? [teamTypeEnum.INSPECTION.V] : []"
                   :options="teamTypeEnum.ENUM"
                 />
-                <el-tag v-if="currentGroup.name" size="medium" style="margin-left: 10px">{{ `${currentGroup.name}` }}</el-tag>
+                <el-tooltip v-if="currentGroup.name" class="item" :content="`${currentGroup.name}`" placement="top">
+                  <el-tag
+                    v-if="currentGroup.name"
+                    size="medium"
+                    style="margin-left: 10px; max-width: 150px; overflow: hidden; text-overflow: ellipsis"
+                    >{{ `${currentGroup.name}` }}</el-tag
+                  >
+                </el-tooltip>
               </span>
-
               <common-button
                 v-if="teamType === teamTypeEnum.TEAM.V && teamRef && checkPermission(permission.edit) && currentGroup.id"
                 size="mini"

@@ -152,7 +152,7 @@ const rules = {
   ],
   axis: [
     { required: true, message: '请填写轴线或标高', trigger: 'blur' },
-    { min: 1, max: 32, message: '长度在 1 到 64 个字符', trigger: 'blur' }
+    { min: 1, max: 32, message: '长度在 1 到 32 个字符', trigger: 'blur' }
   ],
   remark: [{ max: 500, message: '不能超过 500 个字符', trigger: 'blur' }]
 }

@@ -168,7 +168,7 @@ CRUD.HOOK.handleRefresh = (crud, data) => {
     if (v.details && v.details.length > 0) {
       v.monthSummary = 0
       v.details.map(k => {
-        v['month' + Number(k.month)] = k.mete
+        v['month' + Number(k.month)] = k.mete ? k.mete : 0
         v.monthSummary = k.mete ? v.monthSummary + k.mete : v.monthSummary
       })
     }

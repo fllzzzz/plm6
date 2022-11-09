@@ -11,7 +11,7 @@
     custom-class="schedule-detail"
   >
     <template #titleRight>
-      <common-button v-loading="submitLoading" size="mini" type="warning" @click="isEdit=true" v-if="!isEdit && checkPermission(permission.edit)">修改</common-button>
+      <common-button v-loading="submitLoading" size="mini" type="warning" @click="isEdit=true" v-if="!isEdit && checkPermission(permission.edit)">创建计划</common-button>
       <common-button v-loading="submitLoading" size="mini" type="primary" @click="onSubmit(auditTypeEnum.PASS.V)" v-if="isEdit">提交</common-button>
     </template>
     <template #content>
@@ -61,23 +61,19 @@
               <span v-else>{{scope.row.workshop?.id?scope.row.workshop.name+(scope.row.productionLine?.id?'/'+scope.row.productionLine.name:''):'-'}}</span>
             </template>
           </el-table-column>
-          <el-table-column key="timeArr" prop="timeArr" label="排期操作" align="center" width="250">
+          <el-table-column key="timeArr" prop="timeArr" label="交货日期" align="center" width="250">
             <template v-slot="scope">
               <el-date-picker
                 v-if="isEdit"
-                v-model="scope.row.timeArr"
-                type="daterange"
-                range-separator=":"
-                size="small"
-                class="date-item filter-item"
+                v-model="scope.row.endDate"
+                type="date"
                 value-format="x"
-                start-placeholder="开始"
-                end-placeholder="结束"
+                placeholder="请选择交货日期"
                 :disabled="!scope.row.quantity"
                 @change="timeChange(scope.row)"
               />
               <template v-else>
-                <span v-if="scope.row.startDate && scope.row.endDate">{{`${parseTime(scope.row.startDate,'{y}-{m}-{d}')}~${parseTime(scope.row.endDate,'{y}-{m}-{d}')}`}}</span>
+                <span v-if="scope.row.endDate">{{`${parseTime(scope.row.endDate,'{y}-{m}-{d}')}`}}</span>
                 <span v-else>-</span>
               </template>
             </template>
@@ -259,12 +255,10 @@ function handleChange(val, row) {
 }
 
 function timeChange(value) {
-  if (value.timeArr?.length) {
-    value.startDate = value.timeArr[0]
-    value.endDate = value.timeArr[1]
+  if (value.endDate) {
+    value.startDate = new Date().getTime()
   } else {
     value.startDate = undefined
-    value.endDate = undefined
   }
 }
 
@@ -279,14 +273,10 @@ async function fetchDetail() {
     let totalWeight = 0
     content.map(v => {
       totalWeight += v.totalNetWeight
-      v.timeArr = []
       v.line = []
       v.projectId = v.project?.id
       v.monomerId = v.monomer?.id
       v.areaId = v.area?.id
-      if (v.startDate && v.endDate) {
-        v.timeArr.push(v.startDate, v.endDate)
-      }
       v.factoryId = v.factory?.id
       v.workshopId = v.workshop?.id
       v.productionLineId = v.productionLine?.id
@@ -326,7 +316,7 @@ async function onSubmit() {
     const submitData = []
     list.value.map(v => {
       const val = originData.value.find(k => k.areaId === v.areaId)
-      if (!judgeSameValue(val.timeArr, v.timeArr) || !judgeSameValue(val.line, v.line)) {
+      if (!judgeSameValue(val.endDate, v.endDate) || !judgeSameValue(val.line, v.line)) {
         submitData.push({
           areaId: v.areaId,
           endDate: v.endDate || null,
