@@ -12,7 +12,7 @@
     </template>
     <el-form ref="formRef" :model="form" :rules="rules" size="small" label-width="90px">
       <el-form-item label="切割方式" prop="name">
-        <el-input v-model="form.name" type="text" placeholder="请填写切割方式" style="width: 270px" />
+        <el-input v-model="form.name" :maxlength="8" placeholder="请填写切割方式" style="width: 270px" />
       </el-form-item>
     </el-form>
   </common-dialog>
@@ -32,6 +32,9 @@ const defaultForm = {
 const { crud, form } = regForm(defaultForm, formRef)
 
 const rules = {
-  name: [{ required: true, message: '请填写切割方式', trigger: 'blur' }]
+  name: [
+    { required: true, message: '请填写切割方式', trigger: 'blur' },
+    { max: 8, message: '不能超过8个字符', trigger: 'blur' }
+  ]
 }
 </script>
