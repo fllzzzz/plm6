@@ -31,7 +31,8 @@
       style="height: 100%"
       expand-on-click-node
       node-key="rowKey"
-      default-expand-all
+      :auto-expand-parent="false"
+      :default-expanded-keys="expandedKeys"
       @node-click="handleNodeClick"
     >
       <template #default="{ node, data }">
@@ -72,6 +73,7 @@ const filterText = ref()
 const filterIds = ref([])
 const treeData = ref([])
 const loading = ref(false)
+const expandedKeys = ref([])
 
 fetchTime()
 
@@ -95,6 +97,7 @@ function disabledDate(time) {
 async function fetchTree() {
   try {
     loading.value = true
+    expandedKeys.value = []
     const { content } = await getProjectToAreaTree({
       dateTime: month.value
     })
@@ -115,9 +118,10 @@ function dataFormat(content) {
       const areas = monomers[x].areaSchedulingDetailDO
       const _area = []
       for (let y = 0; y < areas.length; y++) {
+        const rowKey = 'area_' + areas[y].id
         _area.push({
           id: areas[y].id,
-          rowKey: 'area_' + areas[y].id,
+          rowKey: rowKey,
           label: areas[y].name,
           name: areas[y].name,
           parentIds: [monomers[x].id, content[i].id],
@@ -129,10 +133,12 @@ function dataFormat(content) {
           fontSize: 14,
           type: ''
         })
+        expandedKeys.value.push(rowKey)
       }
+      const rowKey = 'monomer_' + monomers[x].id
       _monomer.push({
         id: monomers[x].id,
-        rowKey: 'monomer_' + monomers[x].id,
+        rowKey: rowKey,
         parentIds: [content[i].id],
         label: monomers[x].name,
         children: _area,
@@ -141,6 +147,7 @@ function dataFormat(content) {
         fontSize: 15,
         type: '单体'
       })
+      expandedKeys.value.push(rowKey)
     }
     _tree.push({
       id: content[i].id,

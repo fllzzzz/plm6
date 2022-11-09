@@ -220,11 +220,11 @@ async function initAssembleData() {
       boolHaveNC1: boolHaveNC1.value,
       ...queryPage
     })
-    content.map((v) => {
-      v.artifactStr = v.artifactTypesettingDTOS.map((o) => o.serialNumber)?.join('，') || ''
-      v.classificationName = v.artifactTypesettingDTOS.map((o) => o.classificationName)[0]
+    _list = content.map((v) => {
+      v.artifactStr = v.artifactTypesettingDTO?.serialNumber
+      v.classificationName = v.artifactTypesettingDTO?.classificationName
+      return v
     })
-    _list = content
     setTotalPage(totalElements)
   } catch (e) {
     console.log('获取部件清单失败', e)

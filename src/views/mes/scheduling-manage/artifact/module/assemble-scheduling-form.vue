@@ -345,7 +345,9 @@ async function fetch() {
       tagList.value.push(_obj)
       showTagGroupIds.value.push(paGroupId)
     }
-    surplusAssembleList.value = surplusAssemble || []
+    if (props.productionLineTypeEnum & artifactProductLineEnum.INTELLECT.V) {
+      surplusAssembleList.value = surplusAssemble || []
+    }
     curGroupsId.value = showTagGroupIds.value[0]
   } catch (error) {
     console.log('获取部件排产列表失败', error)
