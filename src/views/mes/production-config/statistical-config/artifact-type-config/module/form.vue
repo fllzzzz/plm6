@@ -14,7 +14,7 @@
       <el-form-item label="种类" prop="typeName">
         <el-input v-model.trim="form.typeName" type="text" placeholder="请填写种类" style="width: 270px" />
       </el-form-item>
-      <el-form-item label="包含清单名称" prop="inventoryNames">
+      <el-form-item label="包含构件编号" prop="inventoryNames">
         <el-tag
           v-for="tag in form.inventoryNames"
           :key="tag"
@@ -32,6 +32,7 @@
           ref="inputRef"
           v-model="inputValue"
           size="small"
+          placeholder="大写字母"
           style="width: 120px"
           @keyup.enter="handleInputConfirm"
           @blur="handleInputConfirm"
@@ -61,7 +62,7 @@ const { crud, form } = regForm(defaultForm, formRef)
 
 const rules = {
   typeName: [{ required: true, message: '请填写种类', trigger: 'blur' }],
-  inventoryNames: [{ required: true, message: '请填写包含清单名称', trigger: 'blur' }]
+  inventoryNames: [{ required: true, message: '请填写包含构件编号', trigger: 'blur' }]
 }
 
 const handleClose = (tag) => {
@@ -76,7 +77,10 @@ const showInput = () => {
 }
 
 const handleInputConfirm = () => {
-  if (inputValue.value) {
+  if (!/^[A-Z]+$/.test(inputValue.value)) {
+    inputValue.value = ''
+    return
+  } else if (inputValue.value) {
     form.inventoryNames.push(inputValue.value)
   }
   inputVisible.value = false

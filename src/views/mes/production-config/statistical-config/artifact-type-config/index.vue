@@ -29,7 +29,7 @@
         v-if="columns.visible('inventoryNamesStr')"
         prop="inventoryNamesStr"
         :show-overflow-tooltip="true"
-        label="包含清单名称"
+        label="包含构件编号"
         min-width="200px"
       >
         <template #default="{ row }">

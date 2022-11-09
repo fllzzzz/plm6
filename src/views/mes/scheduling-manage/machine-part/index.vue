@@ -55,6 +55,7 @@
                 class="board-box"
                 style="position: relative; cursor: pointer"
                 :style="{ 'background-color': `${item.boxColor}`, ...boxStyle }"
+                @mouseleave="item.visibleTip = false"
               >
                 <span class="ellipsis-text text">
                   {{ item.serialNumber }}
