@@ -21,13 +21,13 @@
         return-source-data
         :showEmptySymbol="false"
       >
-        <el-table-column prop="index" label="序号" align="center" width="60">
+        <el-table-column v-if="columns.visible('index')" prop="index" label="序号" align="center" width="60">
           <template v-slot="scope">
             <span v-if="scope.row.dataType===2">{{ changeIndex(scope.row) }}</span>
             <span v-else class="child">{{ changeIndex(scope.row) }}</span>
           </template>
         </el-table-column>
-        <el-table-column key="productionLineTypeEnum" prop="productionLineTypeEnum" align="center" :show-overflow-tooltip="true" label="生产线" width="80">
+        <el-table-column v-if="columns.visible('productionLineTypeEnum')" key="productionLineTypeEnum" prop="productionLineTypeEnum" align="center" :show-overflow-tooltip="true" label="生产线" width="80">
           <template v-slot="scope">
             <span>{{ scope.row.productionLineTypeEnum && scope.row.dataType===2? artifactProductLineEnum.VL[scope.row.productionLineTypeEnum] : '' }}</span>
           </template>

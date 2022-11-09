@@ -26,7 +26,7 @@
         :showEmptySymbol="false"
       >
         <el-table-column key="selection" type="selection" width="55" />
-        <el-table-column prop="index" label="序号" align="center" width="60">
+        <el-table-column v-if="columns.visible('index')" prop="index" label="序号" align="center" width="60">
           <template v-slot="scope">
             <span v-if="scope.row.children">{{ changeIndex(scope.row) }}</span>
             <span v-else class="child">{{ changeIndex(scope.row) }}</span>
