@@ -56,6 +56,7 @@
             />
             <el-table-column
               v-if="columns.visible('areaName')"
+              :show-overflow-tooltip="true"
               key="areaName"
               prop="areaName"
               label="区域"
@@ -64,6 +65,7 @@
             />
             <el-table-column
               v-if="columns.visible('serialNumber')"
+              :show-overflow-tooltip="true"
               key="serialNumber"
               prop="serialNumber"
               label="编号"
@@ -72,20 +74,21 @@
             />
             <el-table-column
               v-if="columns.visible('specification')"
+              :show-overflow-tooltip="true"
               key="specification"
               prop="specification"
               label="规格"
               align="center"
               min-width="100"
             />
-            <el-table-column v-if="columns.visible('unQuantity')" key="unQuantity" prop="unQuantity" label="未完成数" align="center" />
-            <el-table-column v-if="columns.visible('weight')" key="weight" prop="weight" label="单重" align="center" />
-            <el-table-column v-if="columns.visible('completeDate')" key="completeDate" prop="completeDate" label="完成日期" align="center">
+            <el-table-column v-if="columns.visible('unQuantity')" :show-overflow-tooltip="true" key="unQuantity" prop="unQuantity" label="未完成数" align="center" />
+            <el-table-column v-if="columns.visible('weight')" :show-overflow-tooltip="true" key="weight" prop="weight" label="单重" align="center" />
+            <el-table-column v-if="columns.visible('completeDate')" :show-overflow-tooltip="true" key="completeDate" prop="completeDate" label="完成日期" align="center">
               <template v-slot="scope">
                 <span>{{ scope.row.completeDate ? parseTime(scope.row.completeDate, '{y}-{m}-{d}') : '-' }}</span>
               </template>
             </el-table-column>
-            <el-table-column v-if="columns.visible('groupName')" key="groupName" prop="groupName" label="负责班组" align="center" />
+            <el-table-column v-if="columns.visible('groupName')" :show-overflow-tooltip="true" key="groupName" prop="groupName" label="负责班组" align="center" />
           </common-table>
         </div>
         <!--分页组件-->

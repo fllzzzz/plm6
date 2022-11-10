@@ -38,7 +38,7 @@
         </el-table-column>
         <el-table-column align="center" key="rate" prop="rate" :show-overflow-tooltip="true" label="完成率" min-width="150px">
           <template v-slot="scope">
-            <el-progress :text-inside="true" :stroke-width="26" :percentage="scope.row.rate" status="success" />
+            <el-progress :text-inside="true" :stroke-width="26" :percentage="((scope.row.completeQuantity/scope.row.quantity) * 100).toFixed(2)" status="success" />
           </template>
         </el-table-column>
         <el-table-column align="center" :show-overflow-tooltip="true" label="操作">
@@ -68,8 +68,8 @@ const dialogVisible = ref(false)
 const props = defineProps({
   processData: {
     type: Object,
-    default: () => {},
-  },
+    default: () => {}
+  }
 })
 
 watch(
@@ -86,7 +86,7 @@ provide('areaId', areaId)
 
 const { maxHeight } = useMaxHeight({
   extraBox: ['.head-container'],
-  paginate: true,
+  paginate: true
 })
 
 async function processListGet() {
@@ -94,7 +94,7 @@ async function processListGet() {
     const data = await getProcessList({
       monomerId: monomerId.value,
       areaId: areaId.value,
-      projectId: props.processData.id,
+      projectId: props.processData.id
     })
     processList.value = data
   } catch (e) {
@@ -103,7 +103,7 @@ async function processListGet() {
 }
 
 function handleMonomerAreaChange() {
-    processListGet()
+  processListGet()
 }
 
 function showDetail(row) {

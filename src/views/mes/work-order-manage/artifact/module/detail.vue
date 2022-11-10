@@ -7,8 +7,8 @@
       <el-tag>任务单号：{{ props.detailData.scheduleOrder }}</el-tag>
     </template>
     <template #content>
-      <div style="display: flex; justify-content: space-between">
-        <div>
+      <div class="head-container">
+        <div style="float: left">
           <common-radio-button
             v-model="processId"
             :options="processList"
@@ -17,7 +17,6 @@
             size="small"
             showOptionAll
             class="filter-item"
-            style="margin-bottom: 8px"
             @change="handleProcessChange"
           />
           <common-radio-button
@@ -27,11 +26,10 @@
             type="enum"
             size="small"
             class="filter-item"
-            style="margin: 0 0 8px 8px"
             @change="handleTypeChange"
           />
         </div>
-        <div style="width: 300px">
+        <div style="float:right; width: 300px">
           <print-table
             :api-key="
               props.detailData.productType === componentTypeEnum.ASSEMBLE.V ? 'mesAssembleProductionTaskOrder' : 'mesProductionTaskOrder'
@@ -42,7 +40,7 @@
             class="filter-item"
           />
         </div>
-      </div>
+        </div>
       <common-table
         ref="table"
         :data="tableData"
@@ -61,7 +59,7 @@
         <el-table-column label="任务数" key="quantity" prop="quantity" align="center" />
         <el-table-column label="完成日期" key="complete" prop="completeTime" align="center">
           <template v-slot="scope">
-            <span>{{ scope.row.completeTime ? parseTime(scope.row.completeTime, '{y}/{m}/{d}') : '-' }}</span>
+            <span>{{ scope.row.completeTime ? parseTime(scope.row.completeTime, '{y}-{m}-{d}') : '-' }}</span>
           </template>
         </el-table-column>
       </common-table>
@@ -86,7 +84,7 @@
         <el-table-column label="单重" key="netWeight" prop="netWeight" align="center" />
         <el-table-column label="完成日期" key="complete" prop="completeTime" align="center">
           <template v-slot="scope">
-            <span>{{ scope.row.completeTime ? parseTime(scope.row.completeTime, '{y}/{m}/{d}') : '-' }}</span>
+            <span>{{ scope.row.completeTime ? parseTime(scope.row.completeTime, '{y}-{m}-{d}') : '-' }}</span>
           </template>
         </el-table-column>
       </common-table>
@@ -142,7 +140,7 @@
           </template>
         </el-table-column>
         <el-table-column label="利用长度" key="aLength" prop="aLength" align="center" />
-        <el-table-column label="利用率" key="lossRate" prop="lossRate" align="center">
+        <el-table-column label="损耗率" key="lossRate" prop="lossRate" align="center">
           <template v-slot="scope">
             <span>{{ scope.row.lossRate }}%</span>
           </template>
@@ -184,7 +182,7 @@ constantize(typeEnum)
 // 高度
 const { maxHeight } = useMaxHeight(
   {
-    extraBox: ['.el-drawer__header'],
+    extraBox: ['.el-drawer__header', '.head-container'],
     wrapperBox: ['.el-drawer__body'],
     navbar: false,
     clientHRepMainH: true

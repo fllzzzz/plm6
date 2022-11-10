@@ -42,9 +42,10 @@
       <!--表格渲染-->
       <common-table ref="tableRef" :data="processDetailData" :max-height="maxHeight" style="width: 100%">
         <el-table-column prop="index" label="序号" align="center" width="60" type="index" />
-        <el-table-column prop="monomerName" key="monomerName" label="单体" align="center"></el-table-column>
-        <el-table-column prop="areaName" key="areaName" label="区域" align="center"></el-table-column>
+        <el-table-column :show-overflow-tooltip="true" prop="monomerName" key="monomerName" label="单体" align="center"></el-table-column>
+        <el-table-column :show-overflow-tooltip="true" prop="areaName" key="areaName" label="区域" align="center"></el-table-column>
         <el-table-column
+        :show-overflow-tooltip="true"
           prop="name"
           v-if="props.detailData.productType === componentTypeEnum.ARTIFACT.V"
           label="名称"
@@ -52,22 +53,22 @@
           align="center"
           min-width="100"
         ></el-table-column>
-        <el-table-column prop="serialNumber" key="serialNumber" label="编号" align="center"></el-table-column>
-        <el-table-column prop="specification" key="specification" label="规格" align="center" min-width="120px"></el-table-column>
-        <el-table-column prop="quantity" key="quantity" label="数量" align="center"></el-table-column>
-        <el-table-column prop="weight" key="weight" label="单重" align="center"></el-table-column>
-        <el-table-column prop="completeQuantity" key="completeQuantity" label="完成数" align="center">
+        <el-table-column :show-overflow-tooltip="true" prop="serialNumber" key="serialNumber" label="编号" align="center"></el-table-column>
+        <el-table-column :show-overflow-tooltip="true" prop="specification" key="specification" label="规格" align="center" min-width="120px"></el-table-column>
+        <el-table-column :show-overflow-tooltip="true" prop="quantity" key="quantity" label="数量" align="center"></el-table-column>
+        <el-table-column :show-overflow-tooltip="true" prop="weight" key="weight" label="单重" align="center"></el-table-column>
+        <el-table-column :show-overflow-tooltip="true" prop="completeQuantity" key="completeQuantity" label="完成数" align="center">
           <template #default="{ row }">
             <span v-if="row.status === workOrderTypeEnum.NORMAL.V">{{ row.completeQuantity }}</span>
             <span style="color: red" v-else>{{ row.completeQuantity }}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="completeDate" key="completeDate" label="完成日期" align="center">
+        <el-table-column :show-overflow-tooltip="true" prop="completeDate" key="completeDate" label="完成日期" align="center">
           <template v-slot="scope">
             <span>{{ scope.row.completeDate ? parseTime(scope.row.completeDate, '{y}-{m}-{d}') : '-' }}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="status" label="状态" align="center" sortable>
+        <el-table-column :show-overflow-tooltip="true" prop="status" label="状态" align="center" sortable>
           <template #default="{ row }">
             <span style="color: red" v-if="row.status === workOrderTypeEnum.DELAY.V">{{ workOrderTypeEnum.VL[row.status] }}</span>
             <span v-else>{{ workOrderTypeEnum.VL[row.status] }}</span>

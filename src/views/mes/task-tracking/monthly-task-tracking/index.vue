@@ -158,7 +158,7 @@ function getSummaries(param) {
       for (let i = 0; i <= ave.length - 1; i++) {
         sums[index] = sums[index] + ave[i]
       }
-      sums[index] = (sums[index] / ave.length).toFixed(2) + '%'
+      sums[index] = ((sums[index] / ave.length) * 100).toFixed(2) + '%'
       return
     }
     // if (column.property === 'totalQuantity' || column.property === 'completeQuantity') {

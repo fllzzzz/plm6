@@ -38,10 +38,8 @@ const props = defineProps({
 
 const { maxHeight } = useMaxHeight(
   {
-    extraBox: ['.el-drawer__header'],
     wrapperBox: ['.el-drawer__body'],
-    navbar: false,
-    clientHRepMainH: true
+    navbar: false
   },
   drawerRef
 )

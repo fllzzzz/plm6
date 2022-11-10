@@ -1,14 +1,13 @@
 <template>
   <div class="app-container">
-    <div v-show="!props.processList?.taskOrderId" class="my-code" style="width: 100%">*点击左侧表格行查看详情</div>
-    <div v-show="props.processList?.taskOrderId" style="width: 100%">
+    <div v-show="!props.processList?.taskOrderId" class="my-code">*点击左侧表格行查看详情</div>
+    <div v-show="props.processList?.taskOrderId">
       <common-table
         ref="tableRef"
         :data="processData"
         :empty-text="'暂无数据'"
         :max-height="maxHeight"
         highlight-current-row
-        row-key="projectId"
         style="width: 100%; cursor: pointer"
         @row-click="handleRowChange"
       >
@@ -18,7 +17,7 @@
             <span>{{ scope.row.name }}</span>
           </template>
         </el-table-column>
-        <el-table-column align="center" key="rate" prop="rate" :show-overflow-tooltip="true" label="进度" min-width="100px">
+        <el-table-column align="center" key="rate" prop="rate" :show-overflow-tooltip="true" label="进度" width="140px">
           <template v-slot="scope">
             <el-progress
               :text-inside="true"
