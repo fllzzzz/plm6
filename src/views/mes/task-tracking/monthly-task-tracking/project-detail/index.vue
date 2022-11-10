@@ -61,21 +61,21 @@
       style="width: 100%"
     >
       <el-table-column prop="index" label="序号" align="center" width="60" type="index" />
-      <el-table-column prop="project" key="project.shortName" label="项目" min-width="150">
+      <el-table-column :show-overflow-tooltip="true" prop="project" key="project.shortName" label="项目" min-width="150">
         <template v-slot="scope">
           <span>{{ projectNameFormatter(scope.row.project) }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="monomerName" label="单体" align="center"></el-table-column>
-      <el-table-column prop="areaName" label="区域" align="center"></el-table-column>
-      <el-table-column prop="serialNumber" label="编号" align="center"></el-table-column>
-      <el-table-column prop="specification" label="规格" align="center" width="150px"></el-table-column>
-      <el-table-column prop="material" label="材质" align="center"></el-table-column>
-      <el-table-column prop="length" label="长度" align="center"></el-table-column>
-      <el-table-column prop="netWeight" label="单重" align="center"></el-table-column>
-      <el-table-column prop="quantity" label="排产数" align="center"></el-table-column>
-      <el-table-column prop="completeQuantity" label="完成数" align="center"></el-table-column>
-      <el-table-column prop="completeMete" label="完成量" align="center"></el-table-column>
+      <el-table-column :show-overflow-tooltip="true" prop="monomerName" label="单体" align="center"></el-table-column>
+      <el-table-column :show-overflow-tooltip="true" prop="areaName" label="区域" align="center"></el-table-column>
+      <el-table-column :show-overflow-tooltip="true" prop="serialNumber" label="编号" align="center"></el-table-column>
+      <el-table-column :show-overflow-tooltip="true" prop="specification" label="规格" align="center" width="150px"></el-table-column>
+      <el-table-column :show-overflow-tooltip="true" prop="material" label="材质" align="center"></el-table-column>
+      <el-table-column :show-overflow-tooltip="true" prop="length" label="长度" align="center"></el-table-column>
+      <el-table-column :show-overflow-tooltip="true" prop="netWeight" label="单重" align="center"></el-table-column>
+      <el-table-column :show-overflow-tooltip="true" prop="quantity" label="排产数" align="center"></el-table-column>
+      <el-table-column :show-overflow-tooltip="true" prop="completeQuantity" label="完成数" align="center"></el-table-column>
+      <el-table-column :show-overflow-tooltip="true" prop="completeMete" label="完成量" align="center"></el-table-column>
     </common-table>
     </template>
   </common-drawer>

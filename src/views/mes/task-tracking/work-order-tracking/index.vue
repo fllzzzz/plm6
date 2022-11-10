@@ -4,7 +4,7 @@
       <mHeader />
     </div>
     <div style="display: flex">
-      <div style="width: 70%">
+      <div style="width:60%">
         <common-table
           ref="tableRef"
           v-loading="crud.loading"
@@ -106,7 +106,9 @@
         <pagination />
       </div>
       <div style="border-right: 1px solid #ededed; margin: 0 20px; height: calc(100vh - 180px)"></div>
-      <process-detail :process-list="processList" style="flex: 1" />
+      <div style="width:38%;">
+        <process-detail :process-list="processList" />
+      </div>
     </div>
   </div>
 </template>

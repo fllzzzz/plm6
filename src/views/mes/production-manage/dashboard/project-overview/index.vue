@@ -40,7 +40,7 @@
 import { ref } from 'vue'
 import crudApi from '@/api/mes/production-manage/dashboard/project-overview'
 import useCRUD from '@compos/use-crud'
-import useMaxHeight from '@compos/use-max-height'
+// import useMaxHeight from '@compos/use-max-height'
 import mHeader from './module/header.vue'
 import projectProcessDetail from './project-process-detail/index.vue'
 
@@ -65,10 +65,10 @@ const { crud, CRUD, columns } = useCRUD(
   tableRef
 )
 
-const { maxHeight } = useMaxHeight({
-  extraBox: ['.head-container'],
-  paginate: true
-})
+// const { maxHeight } = useMaxHeight({
+//   extraBox: ['.head-container'],
+//   paginate: true
+// })
 
 function handleProjectChange(row) {
   processData.value = row

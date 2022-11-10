@@ -12,12 +12,25 @@
   >
     <template #titleRight>
       <div style="display: flex">
-        <print-table api-key="mesProjectOverviewList" :params="{ ...query, processId: props.detailData.id }" size="mini" type="warning" class="filter-item" />
+        <print-table
+          api-key="mesProjectOverviewList"
+          :params="{ ...query, processId: props.detailData.id }"
+          size="mini"
+          type="warning"
+          class="filter-item"
+        />
         <common-button size="mini" style="margin-left: 8px" @click="handleClose">关 闭</common-button>
       </div>
     </template>
     <!--表格渲染-->
-    <common-table ref="tableRef" :data="processDetailData" :max-height="500"       show-summary :summary-method="getSummaries" style="width: 100%">
+    <common-table
+      ref="tableRef"
+      :data="processDetailData"
+      :max-height="500"
+      show-summary
+      :summary-method="getSummaries"
+      style="width: 100%"
+    >
       <el-table-column prop="index" label="序号" align="center" width="60" type="index" />
       <el-table-column prop="monomerName" label="单体" align="center"></el-table-column>
       <el-table-column prop="areaName" label="区域" align="center"></el-table-column>
@@ -42,24 +55,21 @@ import { getProcessDetail } from '@/api/mes/production-manage/dashboard/project-
 import { defineProps, defineEmits, ref, watch, computed } from 'vue'
 import { tableSummary } from '@/utils/el-extra'
 import useVisible from '@compos/use-visible'
-import useMaxHeight from '@compos/use-max-height'
-import monomerSelectAreaSelect from '@comp-base/monomer-select-area-select'
 import detailDrawer from './detail-drawer.vue'
 
 const emit = defineEmits(['update:visible'])
 const processDetailData = ref([])
-const serialNumber = ref()
 const drawerVisible = ref(false)
 const teamData = ref({})
 
 const props = defineProps({
   visible: {
     type: Boolean,
-    default: false,
+    default: false
   },
   detailData: {
     type: Object,
-    default: () => {},
+    default: () => {}
   },
   projectId: {
     type: Number
@@ -92,19 +102,19 @@ async function processDetailGet() {
     })
     processDetailData.value = data
   } catch (e) {
-    console.log('获取工序的生产明细失败', e);
+    console.log('获取工序的生产明细失败', e)
   }
 }
 
-const { maxHeight } = useMaxHeight({
-  paginate: true
-})
+// const { maxHeight } = useMaxHeight({
+//   paginate: true
+// })
 
 // 点击完成数显示详情
 function showQuantity(row) {
   drawerVisible.value = true
   teamData.value = row
-} 
+}
 // 合计
 function getSummaries(param) {
   return tableSummary(param, {

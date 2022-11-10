@@ -3,16 +3,16 @@
     <template #content>
       <common-table ref="tableRef" :data="teamDetailData" style="width: 100%">
         <el-table-column prop="index" label="序号" align="center" width="60" type="index" />
-        <el-table-column prop="productionLine" label="产线>班组" align="center" >
-            <template #default="{ row }">
-                <span>{{ row.workshopName }}>{{ row.productionLineName }}>{{ row.groupName }}</span>
-            </template>
+        <el-table-column prop="productionLine" label="产线>班组" align="center">
+          <template #default="{ row }">
+            <span>{{ row.workshopName }}>{{ row.productionLineName }}>{{ row.groupName }}</span>
+          </template>
         </el-table-column>
-        <el-table-column prop="serialNumber" label="编号" align="center" ></el-table-column>
-        <el-table-column prop="quantity" label="任务数" align="center" ></el-table-column>
-        <el-table-column prop="completeQuantity" label="完成数" align="center" ></el-table-column>
-      </common-table> 
-      </template>
+        <el-table-column prop="serialNumber" label="编号" align="center"></el-table-column>
+        <el-table-column prop="quantity" label="任务数" align="center"></el-table-column>
+        <el-table-column prop="completeQuantity" label="完成数" align="center"></el-table-column>
+      </common-table>
+    </template>
   </common-drawer>
 </template>
 
@@ -26,11 +26,11 @@ const emit = defineEmits(['update:visible'])
 const props = defineProps({
   visible: {
     type: Boolean,
-    default: false,
+    default: false
   },
   teamData: {
     type: Object,
-    default: () => {},
+    default: () => {}
   },
   query: {
     type: Object
@@ -42,19 +42,18 @@ const monomerId = inject('monomerId')
 const areaId = inject('areaId')
 
 async function teamListGet() {
-    try {
-        const data = await getTeamDetail({
-            monomerId: monomerId.value,
-            areaId: areaId.value,
-            ...props.query,
-            productId: props.teamData.id,
-        })
-        teamDetailData.value = data
-    } catch (e) {
-        console.log('获取班组任务详情失败', e);
-    }
+  try {
+    const data = await getTeamDetail({
+      monomerId: monomerId.value,
+      areaId: areaId.value,
+      ...props.query,
+      productId: props.teamData.id
+    })
+    teamDetailData.value = data
+  } catch (e) {
+    console.log('获取班组任务详情失败', e)
+  }
 }
-
 </script>
 <style lang="scss" scoped>
 </style>
