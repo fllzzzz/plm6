@@ -80,7 +80,7 @@
           </el-table-column>
           <el-table-column key="month11" prop="month11" align="center" label="11月">
             <template v-slot="scope">
-              <div>{{ isNotBlank(scope.row.month11)? scope.row.month12.toFixed(2): '-' }}</div>
+              <div>{{ isNotBlank(scope.row.month11)? scope.row.month11.toFixed(2): '-' }}</div>
             </template>
           </el-table-column>
           <el-table-column key="month12" prop="month12" align="center" label="12月">

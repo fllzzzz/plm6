@@ -56,6 +56,12 @@
           class="filter-item"
           @change="handleModeChange"
         />
+        <span class="filter-item">
+          <el-tag size="medium" effect="plain" style="margin-left: 5px"> 数量(件)：{{ summaryInfo.quantity || 0 }} </el-tag>
+          <el-tag size="medium" effect="plain" style="margin-left: 5px">
+            重量(kg)：{{ summaryInfo.totalNetWeight?.toFixed(2) || 0 }}
+          </el-tag>
+        </span>
         <common-button v-if="selectionMode === selectionModeEnum.EDIT.V" size="mini" type="danger" style="float: right" @click="toBatchDel">
           批量删除
         </common-button>
@@ -169,7 +175,7 @@
 </template>
 
 <script setup>
-import { record, getArtifactRecordType } from '@/api/mes/scheduling-manage/artifact'
+import { record, getArtifactRecordType, recordSummary } from '@/api/mes/scheduling-manage/artifact'
 import { ElMessage } from 'element-plus'
 import { defineProps, defineEmits, ref, inject, computed, watch } from 'vue'
 
@@ -227,6 +233,7 @@ const curAreaNames = computed(() => {
 const tableData = ref([])
 const tableLoading = ref(false)
 const listObjIdsByGroup = ref({})
+const summaryInfo = ref({})
 const queryVO = ref({
   productionLineTypeEnum: crud.query.productionLineTypeEnum || artifactProductLineEnum.TRADITION.V
 })
@@ -301,6 +308,7 @@ async function fetch() {
     tableLoading.value = true
     tableData.value = []
     listObjIdsByGroup.value = {}
+    summaryInfo.value = (await recordSummary({ ...props.otherQuery, ...queryVO.value })) || {}
     const { content, totalElements } = await record({ ...props.otherQuery, ...queryVO.value, ...queryPage })
     setTotalPage(totalElements)
     const _list = content

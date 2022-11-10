@@ -13,10 +13,13 @@
     />
   </div>
   <common-table
+    ref="nestingTaskTableRef"
     v-loading="loading"
     :data-format="dataFormat"
     highlight-current-row
     :data="tableData"
+    return-source-data
+    row-key="id"
     :stripe="false"
     :max-height="maxHeight - 45"
     style="width: 100%"
@@ -57,12 +60,13 @@
 
 <script setup>
 import { getNestingTask } from '@/api/mes/scheduling-manage/machine-part'
-import { ref, defineProps, defineEmits, defineExpose } from 'vue'
+import { ref, defineProps, defineEmits, defineExpose, nextTick } from 'vue'
 import moment from 'moment'
 
 import { machinePartSchedulingIssueStatusEnum as issueStatusEnum, mesSchedulingStatusEnum } from '@enum-ms/mes'
 
 import usePagination from '@compos/use-pagination'
+import { isNotBlank } from '@/utils/data-type'
 
 const emit = defineEmits(['nesting-task-click'])
 defineProps({
@@ -72,6 +76,7 @@ defineProps({
   }
 })
 
+const nestingTaskTableRef = ref()
 const month = ref(moment().startOf('month').valueOf().toString())
 const tableData = ref([])
 const loading = ref(false)
@@ -81,7 +86,7 @@ const { handleSizeChange, handleCurrentChange, total, setTotalPage, queryPage } 
 
 fetchTaskList()
 
-async function fetchTaskList() {
+async function fetchTaskList(nestingTaskInfo) {
   try {
     loading.value = true
     tableData.value = []
@@ -92,6 +97,11 @@ async function fetchTaskList() {
     setTotalPage(totalElements)
     tableData.value = content.map((v) => {
       // v.projectId = v.project?.id
+      if (nestingTaskInfo && isNotBlank(nestingTaskInfo) && v.id === nestingTaskInfo.id) {
+        nextTick(() => {
+          nestingTaskTableRef.value?.setCurrentRow(v)
+        })
+      }
       return v
     })
   } catch (error) {

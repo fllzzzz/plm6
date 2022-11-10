@@ -22,6 +22,14 @@
                 <common-button type="success" class="filter-item" size="mini" @click="previewIt">预览并保存</common-button>
               </div>
             </template>
+            <template #viewLeft>
+              <el-tag size="medium" effect="plain" style="margin-right: 5px">
+                数量(件)：{{ summaryInfo.quantity || 0 }}
+              </el-tag>
+              <el-tag size="medium" effect="plain" style="margin-right: 10px">
+                重量(kg)：{{ summaryInfo.totalNetWeight?.toFixed(2) || 0 }}
+              </el-tag>
+            </template>
           </mHeader>
         </div>
         <!--看板渲染-->
@@ -126,6 +134,7 @@ const { crud, CRUD } = useCRUD(
     optShow: { ...optShow },
     crudApi: { ...crudApi },
     queryOnPresenterCreated: false,
+    hasPagination: false,
     requiredQuery: ['month', 'material', 'projectIds', 'thick']
   },
   tableRef
@@ -134,6 +143,7 @@ const { crud, CRUD } = useCRUD(
 const { maxHeight } = useMaxHeight({ paginate: true })
 
 const boardList = ref([])
+const summaryInfo = ref({ totalNetWeight: 0, quantity: 0 })
 
 const artifactDateTime = computed(() => {
   return projectListRef?.value?.artifactDateTime
@@ -141,7 +151,9 @@ const artifactDateTime = computed(() => {
 
 CRUD.HOOK.handleRefresh = (crud, res) => {
   clearCheck()
-  res.data.content = res.data.content.map((v) => {
+  summaryInfo.value.totalNetWeight = res.data?.totalNetWeight || 0
+  summaryInfo.value.quantity = res.data?.quantity || 0
+  res.data.content = res.data.collect.map((v) => {
     v.checked = false
     v.visibleTip = false
     return v
@@ -151,7 +163,6 @@ CRUD.HOOK.handleRefresh = (crud, res) => {
 // --------------------------- start ------------------------------
 const headRef = ref()
 const scrollBoxRef = ref()
-const pageSize = 20
 const intervalTime = 1000
 
 const boxScale = computed(() => {
@@ -204,10 +215,8 @@ async function load() {
 }
 
 CRUD.HOOK.beforeRefresh = () => {
-  crud.page.size = pageSize
-  if (crud.page.page === 1) {
-    boardList.value = []
-  }
+  boardList.value = []
+  summaryInfo.value = { totalNetWeight: 0, quantity: 0 }
 }
 
 CRUD.HOOK.afterRefresh = () => {
