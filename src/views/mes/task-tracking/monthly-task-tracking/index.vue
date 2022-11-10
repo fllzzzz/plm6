@@ -154,7 +154,7 @@ function getSummaries(param) {
     }
     if (index === 2) {
       sums[index] = 0
-      data.map((v) => ave.push(v.rate))
+      data.map((v) => ave.push(v.completeMete / v.mete))
       for (let i = 0; i <= ave.length - 1; i++) {
         sums[index] = sums[index] + ave[i]
       }
