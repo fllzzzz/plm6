@@ -86,7 +86,7 @@
             label="完成率"
           >
             <template v-slot="scope">
-              <span>{{ ((scope.row.completeMete / scope.row.totalMete) * 100).toFixed(2) }}%</span>
+              <span>{{ ((scope.row.completeQuantity / scope.row.totalQuantity) * 100).toFixed(2) }}%</span>
             </template>
           </el-table-column>
           <el-table-column

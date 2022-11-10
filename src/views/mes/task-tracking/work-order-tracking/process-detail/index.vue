@@ -17,13 +17,13 @@
             <span>{{ scope.row.name }}</span>
           </template>
         </el-table-column>
-        <el-table-column align="center" key="rate" prop="rate" :show-overflow-tooltip="true" label="进度" width="140px">
+        <el-table-column align="center" key="rate" prop="rate" :show-overflow-tooltip="true" label="进度" width="160px">
           <template v-slot="scope">
             <el-progress
               :text-inside="true"
               stroke-linecap="square"
               :stroke-width="22"
-              :percentage="((scope.row.completeMete / scope.row.mete) * 100).toFixed(2)"
+              :percentage="((scope.row.completeQuantity / scope.row.quantity) * 100).toFixed(2)"
               status="success"
             />
           </template>
