@@ -26,6 +26,7 @@
         <el-tag effect="plain" size="medium">备料类型：{{ preparationTypeEnum.VL?.[detail?.type] }}</el-tag>
         <el-tag type="success" effect="plain" size="medium">申购人：{{ detail?.applicantName }}</el-tag>
         <el-tag type="success" effect="plain" size="medium">到厂日期：{{ parseTime(detail?.arrivalTime, '{y}-{m}-{d}') }}</el-tag>
+        <el-tag type="success" effect="plain" size="medium">审批流程：{{ detail?.approveInfoName || '-' }}</el-tag>
       </div>
       <common-table
         :data="detail.detailList"

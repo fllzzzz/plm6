@@ -20,6 +20,7 @@
           <el-tag size="medium" effect="plain">{{ row.materialType }}</el-tag>
         </template>
       </el-table-column>
+      <el-table-column v-if="columns.visible('approveInfoName')" key="approveInfoName" prop="approveInfoName" show-overflow-tooltip align="center" label="审批流程" />
       <el-table-column v-if="columns.visible('reviewStatus')" key="reviewStatus" prop="reviewStatus" show-overflow-tooltip align="center" label="审核状态">
         <template #default="{ row }">
           <el-tag :type="ddReviewStatusEnum.V[row?.sourceRow?.reviewStatus].TAG" size="medium" effect="plain">{{ row.reviewStatus }}</el-tag>

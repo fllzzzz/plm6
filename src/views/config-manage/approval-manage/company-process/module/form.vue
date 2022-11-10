@@ -12,6 +12,21 @@
     <template #content>
       <el-form ref="formRef" :model="form" :rules="rules" size="small" label-width="80px">
         <div class="table-header">
+          <el-form-item label="审批类型" prop="type">
+            <common-select
+              v-model="form.type"
+              :options="approvalTypeOptions"
+              type="other"
+              :dataStructure="{ key: 'id', label: 'showName', value: 'id' }"
+              size="small"
+              placeholder="选择审批类型"
+              @change="approvalTypeChange"
+              style="width:320px"
+            />
+          </el-form-item>
+          <el-form-item label="审批名称" prop="approveInfoName">
+            <el-input v-model.trim="form.approveInfoName" type="text" maxlength="30" size="small" placeholder="审批名称" style="width: 320px" />
+          </el-form-item>
           <el-form-item label="发起人" prop="applicantIds">
             <user-dept-cascader
               v-model="form.applicantIds"
@@ -132,8 +147,9 @@
 
 <script setup>
 import { ref } from 'vue'
+import { getApproveType } from '@/api/config/approval-config/company-process'
 
-import { ddTaskActionTypeEnum } from '@enum-ms/dd'
+import { ddApproveTypeEnum, ddTaskActionTypeEnum } from '@enum-ms/dd'
 
 import { regForm } from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
@@ -143,7 +159,7 @@ import useTableValidate from '@compos/form/use-table-validate'
 
 const formRef = ref()
 const detailRef = ref()
-
+const approvalTypeOptions = ref([])
 const defaultTable = {
   type: void 0,
   userIds: [],
@@ -155,6 +171,9 @@ const approveList = ref([{
 
 const defaultForm = {
   id: void 0,
+  type: undefined,
+  approvalCode: undefined,
+  approveInfoName: undefined,
   // ccPosition: void 0, // 抄送节点
   // ccUserIds: [], // 抄送人
   applicantIds: [], // 发起人
@@ -178,6 +197,12 @@ const validateUserId = (value, row) => {
 const rules = {
   applicantIds: [
     { required: true, message: '发起人', trigger: 'blur', type: 'array' }
+  ],
+  type: [
+    { required: true, message: '审批类型', trigger: 'change' }
+  ],
+  approveInfoName: [
+    { required: true, message: '审批名称', trigger: 'blur' }
   ]
 }
 
@@ -248,6 +273,25 @@ function addRow() {
   approveList.value.push({
     ...defaultTable
   })
+}
+
+fetchApproveType()
+
+async function fetchApproveType() {
+  try {
+    const data = await getApproveType() || []
+    data.map(v => {
+      v.showName = ddApproveTypeEnum.VL[v.id]
+    })
+    approvalTypeOptions.value = data
+  } catch (error) {
+    console.log('error', error)
+  }
+}
+
+function approvalTypeChange(val) {
+  const filterVal = approvalTypeOptions.value.find(v => v.id === val)
+  form.approvalCode = filterVal?.name
 }
 
 </script>

@@ -24,6 +24,16 @@
         placeholder="选择到厂日期"
         style="width: 140px"
       />
+      <common-select
+        v-model="form.approveProcessId"
+        :options="approvalProcessOptions"
+        type="other"
+        :dataStructure="{ key: 'id', label: 'approveInfoName', value: 'id' }"
+        size="small"
+        placeholder="选择审批流程"
+        :disabled="cu.status.edit === FORM.STATUS.PROCESSING"
+        style="width:220px"
+      />
     </template>
     <!-- 不刷新组件无法正常更新 -->
     <template v-if="dialogVisible">
@@ -66,6 +76,7 @@
 
 <script setup>
 import { getSerialNumber } from '@/api/supply-chain/requisitions-manage/requisitions'
+import { get as getApprovalProcess } from '@/api/config/approval-config/company-process'
 import { defineEmits, defineProps, ref, watch, computed } from 'vue'
 import { mapGetters } from '@/store/lib'
 import { tableSummary } from '@/utils/el-extra'
@@ -96,6 +107,7 @@ const props = defineProps({
 
 const { user } = mapGetters('user')
 const { projectMap } = mapGetters('projectMap')
+const approvalProcessOptions = ref([])
 
 // 表格列数据格式转换
 const columnsDataFormat = ref([
@@ -129,8 +141,12 @@ const projectName = computed(() => {
 watch(
   () => props.modelValue,
   (val) => {
+    approvalProcessOptions.value = []
     if (val && !form.serialNumber) {
       getNO()
+    }
+    if (val) {
+      fetchApprovalProcess()
     }
   },
   { immediate: true }
@@ -152,6 +168,10 @@ FORM.HOOK.beforeSubmit = async () => {
     ElMessage.warning('请选择到厂时间')
     return false
   }
+  if (!form.approveProcessId) {
+    ElMessage.warning('请选择审批流程')
+    return false
+  }
 }
 
 // 表单提交后：关闭预览窗口
@@ -163,6 +183,11 @@ FORM.HOOK.afterSubmit = () => {
 async function getNO() {
   const data = await getSerialNumber() || ''
   form.serialNumber = data
+}
+
+async function fetchApprovalProcess() {
+  const data = await getApprovalProcess() || []
+  approvalProcessOptions.value = data
 }
 
 // 合计
