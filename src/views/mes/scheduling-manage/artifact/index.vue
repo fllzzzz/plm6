@@ -12,6 +12,12 @@
               <common-button type="success" size="mini" @click="previewIt">预览并保存</common-button>
             </template>
             <template #viewLeft>
+              <el-tag size="medium" effect="plain" style="margin-right: 5px">
+                数量(件)：{{ summaryInfo.quantity || 0 }}
+              </el-tag>
+              <el-tag size="medium" effect="plain" style="margin-right: 10px">
+                重量(kg)：{{ summaryInfo.totalNetWeight?.toFixed(2) || 0 }}
+              </el-tag>
               <common-button type="primary" size="mini" @click="previewRecord">构件排产记录</common-button>
             </template>
           </mHeader>
@@ -133,7 +139,7 @@
 </template>
 
 <script setup>
-import crudApi from '@/api/mes/scheduling-manage/artifact'
+import crudApi, { getSummary } from '@/api/mes/scheduling-manage/artifact'
 import { ref, provide, computed } from 'vue'
 import { ElMessage } from 'element-plus'
 import moment from 'moment'
@@ -192,6 +198,7 @@ const { crud, columns, CRUD } = useCRUD(
 
 const { maxHeight, heightStyle } = useMaxHeight({ extraHeight: 15 })
 
+const summaryInfo = ref({})
 const queryParams = computed(() => {
   return {
     productType: productType,
@@ -216,6 +223,10 @@ const ditto = new Map([
 ])
 const { tableValidate, cleanUpData, wrongCellMask } = useTableValidate({ rules: tableRules, ditto })
 
+CRUD.HOOK.beforeToQuery = () => {
+  fetchSummary()
+}
+
 CRUD.HOOK.handleRefresh = (crud, res) => {
   res.data.content = res.data.content.map((v, i) => {
     v.needSchedulingQuantity = v.unSchedulingQuantity // 需要排产的数量
@@ -227,6 +238,14 @@ CRUD.HOOK.handleRefresh = (crud, res) => {
     v.rowKey = i + '' + Math.random()
     return v
   })
+}
+
+async function fetchSummary() {
+  try {
+    summaryInfo.value = await getSummary(crud.query) || {}
+  } catch (error) {
+    console.log(error, '获取汇总信息')
+  }
 }
 
 function handleGroupsChange(val, row, index) {

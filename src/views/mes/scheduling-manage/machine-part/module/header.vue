@@ -60,6 +60,7 @@
       <slot name="optLeft" />
     </template>
     <template #viewLeft>
+      <slot name="viewLeft" />
       <scale class="filter-item" v-model:value="boxScale" :intervals="400" @zoom-out="boxZoomOut" />
     </template>
   </crudOperation>

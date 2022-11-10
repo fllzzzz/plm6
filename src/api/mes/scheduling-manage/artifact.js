@@ -14,6 +14,18 @@ export function get(params) {
 }
 
 /**
+ * @description: 获取构件排产汇总信息
+ */
+export function getSummary(params) {
+  return request({
+    module: 'mes',
+    url: 'scheduling/artifact/summary',
+    method: 'get',
+    params
+  })
+}
+
+/**
  * @description: 保存构件排产
  */
 export function save(data) {
@@ -32,6 +44,18 @@ export function record(params) {
   return request({
     module: 'mes',
     url: 'scheduling/artifact/record/page',
+    method: 'get',
+    params
+  })
+}
+
+/**
+ * @description: 获取构件预排产汇总信息
+ */
+export function recordSummary(params) {
+  return request({
+    module: 'mes',
+    url: 'scheduling/artifact/record/summary',
     method: 'get',
     params
   })
