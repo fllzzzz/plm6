@@ -18,6 +18,7 @@
         class="filter-item date-item"
         start-placeholder="开始时间"
         end-placeholder="结束时间"
+        value-format="x"
         style="width: 240px"
         @change="handleDateChange"
       />
@@ -50,8 +51,6 @@
 </template>
 
 <script setup>
-import moment from 'moment'
-
 import { regHeader } from '@compos/use-crud'
 import { settlementStatusEnum } from '@enum-ms/finance'
 import { supplierPayTypeEnum } from '@enum-ms/contract'
@@ -59,7 +58,7 @@ import crudOperation from '@crud/CRUD.operation'
 import rrOperation from '@crud/RR.operation'
 
 const defaultQuery = {
-  date: undefined,
+  date: [],
   startDate: undefined,
   endDate: undefined,
   projectName: undefined,
@@ -70,10 +69,10 @@ const defaultQuery = {
 const { crud, query } = regHeader(defaultQuery)
 
 // 时间变动
-function handleDateChange() {
-  if (query.date && query.date.length > 1) {
-    query.startDate = moment(query.date[0]).valueOf()
-    query.endDate = moment(query.date[1]).valueOf()
+function handleDateChange(val) {
+  if (val && val.length > 1) {
+    query.startDate = val[0]
+    query.endDate = val[1]
   } else {
     query.startDate = undefined
     query.endDate = undefined
