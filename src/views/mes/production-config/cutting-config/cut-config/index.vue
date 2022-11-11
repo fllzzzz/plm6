@@ -24,7 +24,25 @@
           :show-overflow-tooltip="true"
           label="切割形式"
           align="center"
-          min-width="140px"
+          min-width="120px"
+        />
+        <el-table-column
+          v-if="columns.visible('thickness')"
+          key="thickness"
+          prop="thickness"
+          :show-overflow-tooltip="true"
+          label="支持板厚(mm) ≤"
+          align="center"
+          min-width="120px"
+        />
+        <el-table-column
+          v-if="columns.visible('cuttingHolesJoint')"
+          key="cuttingHolesJoint"
+          prop="cuttingHolesJoint"
+          :show-overflow-tooltip="true"
+          label="切孔联割(φ) ≥"
+          align="center"
+          min-width="120px"
         />
         <!--编辑与删除-->
         <el-table-column

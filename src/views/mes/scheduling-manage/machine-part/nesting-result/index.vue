@@ -156,6 +156,7 @@ import useCRUD from '@compos/use-crud'
 import udOperation from '@crud/UD.operation'
 import mHeader from './module/header'
 import nestingTaskList from './module/nesting-task-list.vue'
+import { deepClone } from '@/utils/data-type'
 
 // crud交由presenter持有
 const permission = {
@@ -265,7 +266,9 @@ const issueLoading = ref(false)
 function handleNestingTaskClick(val) {
   currentNesting.value = val
   crud.query.id = val?.id
-  crud.toQuery()
+  if (val?.id) {
+    crud.toQuery()
+  }
 }
 
 async function toBatchIssue() {
@@ -290,8 +293,8 @@ async function toBatchIssue() {
         machinePartDetailList: _resList
       })
       ElNotification({ title: '任务下发成功', type: 'success', duration: 3000 })
-      crud.toQuery()
-      nestingTaskRef?.value?.refresh()
+      const _nestingTaskInfo = deepClone(currentNesting.value)
+      await nestingTaskRef?.value?.refresh(_nestingTaskInfo)
     }
   } catch (e) {
     console.log(`任务下发失败`, e)

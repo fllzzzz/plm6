@@ -43,11 +43,10 @@
         min-width="120px"
       >
         <template v-slot="scope">
-          <span
-style="color: blue"
-            >{{ scope.row.startDate ? parseTime(scope.row.startDate, '{y}-{m}-{d}') : '-' }} ~
-            {{ scope.row.endDate ? parseTime(scope.row.endDate, '{y}-{m}-{d}') : '-' }}</span
-          >
+          <span style="color: blue">
+            {{ scope.row.startDate ? parseTime(scope.row.startDate, '{y}-{m}-{d}') : '-' }} ~
+            {{ scope.row.endDate ? parseTime(scope.row.endDate, '{y}-{m}-{d}') : '-' }}
+          </span>
         </template>
       </el-table-column>
       <el-table-column
@@ -59,7 +58,7 @@ style="color: blue"
         label="任务量（件/kg）"
       >
         <template v-slot="scope">
-          <span>{{ scope.row.taskQuantity }}/{{ (scope.row.taskMete).toFixed(DP.COM_WT__KG) }}</span>
+          <span>{{ scope.row.taskQuantity }}/{{ scope.row.taskMete.toFixed(DP.COM_WT__KG) }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -71,7 +70,7 @@ style="color: blue"
         label="完成量（件/kg）"
       >
         <template v-slot="scope">
-          <span>{{ scope.row.completeQuantity }}/{{ (scope.row.completeMete).toFixed(DP.COM_WT__KG) }}</span>
+          <span>{{ scope.row.completeQuantity }}/{{ scope.row.completeMete.toFixed(DP.COM_WT__KG) }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -88,7 +87,7 @@ style="color: blue"
             :text-inside="true"
             stroke-linecap="square"
             :stroke-width="22"
-            :percentage="((scope.row.completeMete / scope.row.taskMete) * 100).toFixed(2)"
+            :percentage="((scope.row.completeQuantity / scope.row.taskQuantity) * 100).toFixed(2)"
             status="success"
           />
         </template>

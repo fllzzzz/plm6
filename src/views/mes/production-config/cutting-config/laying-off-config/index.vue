@@ -47,11 +47,11 @@
           <span> {{ row.name }} </span>
         </template>
       </el-table-column>
-      <el-table-column v-if="columns.visible('taskPrefix')" :show-overflow-tooltip="true" prop="taskPrefix" label="任务前缀" align="center">
+      <!-- <el-table-column v-if="columns.visible('taskPrefix')" :show-overflow-tooltip="true" prop="taskPrefix" label="任务前缀" align="center">
         <template #default="{ row }">
           <span> {{ row.taskPrefix }}</span>
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <!--编辑与删除-->
       <el-table-column v-permission="permission.del" label="操作" width="130px" align="center">
         <template #default="{ row }">

@@ -41,14 +41,14 @@
             <span>{{ scope.row.quantity }}/{{ ((scope.row.mete) / 1000).toFixed(DP.COM_WT__T) }}</span>
           </template>
         </el-table-column>
-        <el-table-column align="center" key="rate" prop="rate" :show-overflow-tooltip="true" label="完成率">
+        <el-table-column align="center" key="rate" prop="rate" :show-overflow-tooltip="true" label="完成率" width="160px">
           <template v-slot="scope">
             <span>
               <el-progress
                 :text-inside="true"
                 stroke-linecap="square"
                 :stroke-width="22"
-                :percentage="((scope.row.completeMete / scope.row.mete) * 100 ).toFixed(2)"
+                :percentage="((scope.row.completeQuantity / scope.row.quantity) * 100 ).toFixed(2)"
                 status="success"
               />
             </span>
@@ -62,7 +62,7 @@
           label="实际完成（件/吨）"
         >
           <template v-slot="scope">
-            <span>{{ scope.row.completeQuantity }}/{{ scope.row.completeMete / 1000 }}</span>
+            <span>{{ scope.row.completeQuantity }}/{{ ((scope.row.completeMete) / 1000).toFixed(DP.COM_WT__T) }}</span>
           </template>
         </el-table-column>
       </common-table>

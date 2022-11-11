@@ -43,14 +43,14 @@
             <span>{{ scope.row.quantity }}/{{ (scope.row.mete / 1000).toFixed(DP.COM_WT__T) }}</span>
           </template>
         </el-table-column>
-        <el-table-column v-if="columns.visible('rate')" align="center" key="rate" prop="rate" :show-overflow-tooltip="true" label="达成率">
+        <el-table-column v-if="columns.visible('rate')" align="center" key="rate" prop="rate" :show-overflow-tooltip="true" label="达成率" width="160px">
           <template v-slot="scope">
             <span>
               <el-progress
                 :text-inside="true"
                 stroke-linecap="square"
                 :stroke-width="22"
-                :percentage="((scope.row.completeMete / scope.row.mete) * 100).toFixed(2)"
+                :percentage="((scope.row.completeQuantity / scope.row.quantity) * 100).toFixed(2)"
                 status="success"
               />
             </span>
@@ -154,26 +154,13 @@ function getSummaries(param) {
     }
     if (index === 2) {
       sums[index] = 0
-      data.map((v) => ave.push(v.completeMete / v.mete))
+      data.map((v) => ave.push(v.completeQuantity / v.quantity))
       for (let i = 0; i <= ave.length - 1; i++) {
         sums[index] = sums[index] + ave[i]
       }
       sums[index] = ((sums[index] / ave.length) * 100).toFixed(2) + '%'
       return
     }
-    // if (column.property === 'totalQuantity' || column.property === 'completeQuantity') {
-    //   const values = data.map((item) => Number(item[column.property]))
-    //   if (!values.every((value) => isNaN(value))) {
-    //     sums[index] = values.reduce((prev, curr) => {
-    //       const value = Number(curr)
-    //       if (!isNaN(value)) {
-    //         return prev + curr
-    //       } else {
-    //         return prev
-    //       }
-    //     }, 0)
-    //   }
-    // }
     if (column.property === 'list' || column.property === 'complete') {
       const valueKeys = column.property === 'list' ? 'quantity' : column.property + 'Quantity'
       const values = data.map((item) => Number(item?.[valueKeys]))
@@ -201,7 +188,7 @@ function getSummaries(param) {
           }
         }, 0)
       }
-      sums[index] = valuesSum + ' / ' + valueWeightSum.toFixed(DP.COM_WT__T)
+      sums[index] = valuesSum + '/' + valueWeightSum.toFixed(DP.COM_WT__T)
     }
   })
   return sums
