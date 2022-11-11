@@ -1,11 +1,18 @@
 <template>
-  <common-dialog title="构件排产预览" v-model="dialogVisible" width="1100px" :before-close="handleClose">
+  <common-dialog
+    title="构件排产预览"
+    custom-class="artifact-scheduling-preview"
+    v-model="dialogVisible"
+    width="1100px"
+    top="10vh"
+    :before-close="handleClose"
+  >
     <template #titleRight>
       <common-button @click="submitIt" :loading="submitLoading" size="mini" type="primary">保存</common-button>
     </template>
     <common-table :data="list" :data-format="dataFormat" :max-height="maxHeight" style="width: 100%">
       <el-table-column label="序号" type="index" align="center" width="60" />
-      <productType-base-info-columns :productType="productType" fixedWidth/>
+      <productType-base-info-columns :productType="productType" fixedWidth />
       <el-table-column :show-overflow-tooltip="true" prop="netWeight" :label="`单净重(kg)`" min-width="80px" align="center">
         <template #default="{ row }">
           <span>{{ row.netWeight }}</span>
@@ -57,6 +64,7 @@ const submitLoading = ref(false)
 const { visible: dialogVisible, handleClose } = useVisible({ emit, props, field: 'visible' })
 const { maxHeight } = useMaxHeight(
   {
+    mainBox: '.artifact-scheduling-preview',
     extraBox: ['.el-dialog__header'],
     wrapperBox: ['.el-dialog__body'],
     clientHRepMainH: true,
