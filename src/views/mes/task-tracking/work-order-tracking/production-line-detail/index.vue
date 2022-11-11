@@ -13,7 +13,7 @@
         :params="{
           processId: props.detailData.id,
           productType: props.detailData.productType,
-          orderId: props.orderId,
+          orderId: props.detailData.taskOrderId,
         }"
         size="mini"
         type="warning"
@@ -98,9 +98,6 @@ const props = defineProps({
   detailData: {
     type: Object,
     default: () => {}
-  },
-  orderId: {
-    type: Number
   }
 })
 
@@ -116,7 +113,7 @@ async function processDetailGet() {
     const data = await processDetail({
       processId: props.detailData.id,
       productType: props.detailData.productType,
-      orderId: props.orderId
+      orderId: props.detailData.taskOrderId
     })
     processDetailData.value = data
   } catch (e) {

@@ -40,7 +40,7 @@
         </el-table-column>
       </common-table>
     </div>
-    <production-line-detail v-model:visible="drawerVisible" :orderId="props.processList.taskOrderId" :detail-data="detailData" />
+    <production-line-detail v-model:visible="drawerVisible" :detail-data="detailData" />
   </div>
 </template>
 <script setup>
