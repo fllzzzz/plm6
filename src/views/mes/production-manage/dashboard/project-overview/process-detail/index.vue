@@ -26,21 +26,21 @@
     <common-table
       ref="tableRef"
       :data="processDetailData"
-      :max-height="500"
+      :max-height="maxHeight"
       show-summary
       :summary-method="getSummaries"
       style="width: 100%"
     >
-      <el-table-column prop="index" label="序号" align="center" width="60" type="index" />
-      <el-table-column prop="monomerName" label="单体" align="center"></el-table-column>
-      <el-table-column prop="areaName" label="区域" align="center"></el-table-column>
-      <el-table-column prop="serialNumber" label="编号" align="center"></el-table-column>
-      <el-table-column prop="specification" label="规格" align="center"></el-table-column>
-      <el-table-column prop="material" label="材质" align="center"></el-table-column>
-      <el-table-column prop="length" label="长度" align="center"></el-table-column>
-      <el-table-column prop="netWeight" label="单重（kg）" align="center"></el-table-column>
-      <el-table-column prop="quantity" label="清单数" align="center"></el-table-column>
-      <el-table-column prop="completeQuantity" label="完成数" align="center">
+      <el-table-column :show-overflow-tooltip="true" prop="index" label="序号" align="center" width="60" type="index" />
+      <el-table-column :show-overflow-tooltip="true" prop="monomerName" label="单体" align="center"></el-table-column>
+      <el-table-column :show-overflow-tooltip="true" prop="areaName" label="区域" align="center"></el-table-column>
+      <el-table-column :show-overflow-tooltip="true" prop="serialNumber" label="编号" align="center"></el-table-column>
+      <el-table-column :show-overflow-tooltip="true" prop="specification" label="规格" align="center"></el-table-column>
+      <el-table-column :show-overflow-tooltip="true" prop="material" label="材质" align="center"></el-table-column>
+      <el-table-column :show-overflow-tooltip="true" prop="length" label="长度" align="center"></el-table-column>
+      <el-table-column :show-overflow-tooltip="true" prop="netWeight" label="单重（kg）" align="center"></el-table-column>
+      <el-table-column :show-overflow-tooltip="true" prop="quantity" label="清单数" align="center"></el-table-column>
+      <el-table-column :show-overflow-tooltip="true" prop="completeQuantity" label="完成数" align="center">
         <template #default="{ row }">
           <el-tag type="primary" style="cursor: pointer" @click="showQuantity(row)">{{ row.completeQuantity }}</el-tag>
         </template>
@@ -55,6 +55,7 @@ import { getProcessDetail } from '@/api/mes/production-manage/dashboard/project-
 import { defineProps, defineEmits, ref, watch, computed } from 'vue'
 import { tableSummary } from '@/utils/el-extra'
 import useVisible from '@compos/use-visible'
+import useMaxHeight from '@compos/use-max-height'
 import detailDrawer from './detail-drawer.vue'
 
 const emit = defineEmits(['update:visible'])
@@ -106,9 +107,9 @@ async function processDetailGet() {
   }
 }
 
-// const { maxHeight } = useMaxHeight({
-//   paginate: true
-// })
+const { maxHeight } = useMaxHeight({
+  paginate: true
+})
 
 // 点击完成数显示详情
 function showQuantity(row) {

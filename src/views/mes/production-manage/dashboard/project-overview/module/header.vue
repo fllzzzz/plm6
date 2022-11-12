@@ -35,7 +35,6 @@
 </template>
 <script setup>
 import { projectStatusEnum } from '@enum-ms/contract'
-import { parseTime } from '@/utils/date'
 import { regHeader } from '@compos/use-crud'
 import rrOperation from '@crud/RR.operation'
 import moment from 'moment'
