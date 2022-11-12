@@ -4,7 +4,7 @@
     <template #titleRight>
       <common-button @click.stop="delNesting" class="filter-item" type="danger" size="mini">删除</common-button>
     </template>
-    <common-table v-loading="resultLoading" ref="tableRef" :data="nestingProgressData" :max-height="500" style="width: 100%" row-key="id">
+    <common-table v-loading="resultLoading" ref="tableRef" :data="nestingProgressData" :max-height="maxHeight" style="width: 100%" row-key="id">
       <el-table-column label="序号" type="index" align="center" width="60" />
       <el-table-column key="serialNumber" prop="serialNumber" :show-overflow-tooltip="true" label="套料编号" align="center" width="180px">
         <template v-slot="scope">
@@ -102,6 +102,7 @@ import { mesBuildingTypeSettingAssembleTypeEnum as materialTypeEnum } from '@enu
 import { ElMessageBox, ElNotification } from 'element-plus'
 import { getLightColor } from '@/utils/color'
 import useVisible from '@compos/use-visible'
+import useMaxHeight from '@compos/use-max-height'
 
 const emit = defineEmits(['update:visible'])
 const nestingProgressData = ref([])
@@ -118,6 +119,7 @@ const props = defineProps({
 })
 const { visible: dialogVisible, handleClose } = useVisible({ emit, props, field: 'visible', showHook: nestingResultGet })
 
+const { maxHeight } = useMaxHeight()
 const colorObj = ref({}) // serialNumber: color
 
 // 套料成果
