@@ -17,7 +17,11 @@
             <el-tag style="align-self: center; font-weight: 900">工序：{{ processList.name }}</el-tag>
             <print-table
               api-key="mesProcessList"
-              :params="{ productType: productType, processId: crud.query.processId }"
+              :params="{
+                productionLineId: crud.query.productionLineId,
+                productType: crud.query.productType,
+                processId: crud.query.processId,
+              }"
               size="mini"
               type="warning"
             />
@@ -46,19 +50,19 @@
               </template>
             </el-table-column>
             <el-table-column
-              v-if="columns.visible('monomerName')"
-              key="monomerName"
-              prop="monomerName"
+              v-if="columns.visible('monomer.name')"
+              key="monomer.name"
+              prop="monomer.name"
               :show-overflow-tooltip="true"
               min-width="140"
               align="center"
               label="单体"
             />
             <el-table-column
-              v-if="columns.visible('areaName')"
+              v-if="columns.visible('area.name')"
               :show-overflow-tooltip="true"
-              key="areaName"
-              prop="areaName"
+              key="area.name"
+              prop="area.name"
               label="区域"
               align="center"
               min-width="100"
@@ -81,18 +85,46 @@
               align="center"
               min-width="100"
             />
-            <el-table-column v-if="columns.visible('unQuantity')" :show-overflow-tooltip="true" key="unQuantity" prop="unQuantity" label="未完成数" align="center" />
-            <el-table-column v-if="columns.visible('weight')" :show-overflow-tooltip="true" key="weight" prop="weight" label="单重" align="center" />
-            <el-table-column v-if="columns.visible('completeDate')" :show-overflow-tooltip="true" key="completeDate" prop="completeDate" label="完成日期" align="center">
+            <el-table-column
+              v-if="columns.visible('unQuantity')"
+              :show-overflow-tooltip="true"
+              key="unQuantity"
+              prop="unQuantity"
+              label="未完成数"
+              align="center"
+            />
+            <el-table-column
+              v-if="columns.visible('weight')"
+              :show-overflow-tooltip="true"
+              key="weight"
+              prop="weight"
+              label="单重"
+              align="center"
+            />
+            <el-table-column
+              v-if="columns.visible('completeDate')"
+              :show-overflow-tooltip="true"
+              key="completeDate"
+              prop="completeDate"
+              label="完成日期"
+              align="center"
+            >
               <template v-slot="scope">
                 <span>{{ scope.row.completeDate ? parseTime(scope.row.completeDate, '{y}-{m}-{d}') : '-' }}</span>
               </template>
             </el-table-column>
-            <el-table-column v-if="columns.visible('groupName')" :show-overflow-tooltip="true" key="groupName" prop="groupName" label="负责班组" align="center" />
+            <el-table-column
+              v-if="columns.visible('groupName')"
+              :show-overflow-tooltip="true"
+              key="groupName"
+              prop="groupName"
+              label="负责班组"
+              align="center"
+            />
           </common-table>
+          <!--分页组件-->
+          <pagination />
         </div>
-        <!--分页组件-->
-        <!-- <pagination /> -->
       </div>
     </div>
   </div>
@@ -104,7 +136,7 @@ import { ref, watch, provide, reactive, computed } from 'vue'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import { parseTime } from '@/utils/date'
-// import pagination from '@crud/Pagination'
+import pagination from '@crud/Pagination'
 import { projectNameFormatter } from '@/utils/project'
 import mHeader from './module/header'
 import projectChart from './project-chart'
@@ -134,25 +166,26 @@ const year = ref() // 年份（子组件使用）
 const processList = ref({})
 const productionLineId = ref()
 
-const productType = computed(() => {
-  return crud.query.productType
+const searchProductType = computed(() => {
+  return crud.query.searchProductType
 })
 const workShopId = computed(() => {
   return crud.query.workShopId
 })
 
 provide('projectInfo', projectInfo)
-provide('productType', productType)
+provide('searchProductType', searchProductType)
 provide('workShopId', workShopId)
 
 const { crud, CRUD, columns } = useCRUD(
   {
     title: '工序呆滞',
+    sort: [],
     optShow: { ...optShow },
     crudApi: { get },
     invisibleColumns: [],
-    requiredQuery: ['processId'],
-    hasPagination: false
+    requiredQuery: ['processId', 'productType'],
+    hasPagination: true
   },
   tableRef
 )
@@ -167,21 +200,25 @@ watch(
 )
 
 const { maxHeight } = useMaxHeight({
-  // extraBox: ['.head-container', '.content'],
-  // wrapBox: ['.app-container'],
   paginate: true
 })
 
 // 获取工序呆滞列表数据
 async function fetchProjectInfo() {
+  projectInfo.provinceList = []
+  if (!productionLineId.value) {
+    return
+  }
   projectInfo.loading = true
   try {
     const data =
-      (await processSluggish({ productType: productType.value, workShopId: workShopId.value, productionLineId: productionLineId.value })) ||
-      {}
+      (await processSluggish({
+        productType: searchProductType.value,
+        workShopId: workShopId.value,
+        productionLineId: productionLineId.value
+      })) || {}
     projectInfo.provinceList = data
     delete data.provinceList
-    // projectInfo.summary = data
   } catch (error) {
     console.log('获取项目汇总图表数据', error)
   } finally {
@@ -191,18 +228,18 @@ async function fetchProjectInfo() {
 
 function handleEchartsData(val) {
   processList.value = val
-  console.log(val?.data?.id, 'val')
   crud.query.processId = val?.data?.id
+  crud.query.productType = val?.data?.productType
+  crud.query.productionLineId = val?.data?.productionLineId
   crud.toQuery()
 }
 
 function processChange(val) {
   productionLineId.value = val
+  fetchProjectInfo()
 }
 
-CRUD.HOOK.handleRefresh = (crud, res) => {
-  res.data.content = res.data
-}
+CRUD.HOOK.handleRefresh = (crud, res) => {}
 </script>
 
 <style lang="scss" scoped>

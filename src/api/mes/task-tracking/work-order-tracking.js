@@ -50,7 +50,7 @@ export function machineProcess(params) {
 export function processDetail(params) {
   return request({
     module: 'mes',
-    url: 'task/process/product',
+    url: 'task/process/product/page',
     method: 'get',
     params
   })

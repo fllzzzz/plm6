@@ -30,12 +30,12 @@
         </el-table-column>
         <el-table-column align="center" key="quantity" prop="quantity" :show-overflow-tooltip="true" label="任务（件/kg）">
           <template v-slot="scope">
-            <span>{{ scope.row.quantity }}/{{ (scope.row.mete).toFixed(DP.COM_WT__KG) }}</span>
+            <span>{{ scope.row.quantity }}/{{ scope.row.mete.toFixed(DP.COM_WT__KG) }}</span>
           </template>
         </el-table-column>
         <el-table-column align="center" key="completeQuantity" prop="completeQuantity" :show-overflow-tooltip="true" label="完成（件/kg）">
           <template v-slot="scope">
-            <span>{{ scope.row.completeQuantity }}/{{ (scope.row.completeMete).toFixed(DP.COM_WT__KG) }}</span>
+            <span>{{ scope.row.completeQuantity }}/{{ scope.row.completeMete.toFixed(DP.COM_WT__KG) }}</span>
           </template>
         </el-table-column>
       </common-table>

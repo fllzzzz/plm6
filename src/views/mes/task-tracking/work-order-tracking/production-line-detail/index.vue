@@ -22,30 +22,13 @@
       />
     </template>
     <template #content>
-      <!-- <div style="display: flex; justify-content: space-between; margin-bottom: 8px">
-         <tag-tabs
-          v-model="productionLineId"
-          class="filter-item"
-          :style="'width:calc(100% - 320px)'"
-          :data="summaryList"
-          :itemKey="'workshopId'"
-          @change="tabChange"
-        >
-          <template #default="{ item }">
-            <span>产线：</span>
-            <span>{{ item.workshopName }}</span>
-            <span> > </span>
-            <span>{{ item.productionLineName }}</span>
-          </template>
-        </tag-tabs>
-      </div>  -->
       <!--表格渲染-->
       <common-table ref="tableRef" :data="processDetailData" :max-height="maxHeight" style="width: 100%">
         <el-table-column prop="index" label="序号" align="center" width="60" type="index" />
-        <el-table-column :show-overflow-tooltip="true" prop="monomerName" key="monomerName" label="单体" align="center"></el-table-column>
-        <el-table-column :show-overflow-tooltip="true" prop="areaName" key="areaName" label="区域" align="center"></el-table-column>
+        <el-table-column :show-overflow-tooltip="true" prop="monomer.name" key="monomer.name" label="单体" align="center"></el-table-column>
+        <el-table-column :show-overflow-tooltip="true" prop="area.name" key="area.name" label="区域" align="center"></el-table-column>
         <el-table-column
-        :show-overflow-tooltip="true"
+          :show-overflow-tooltip="true"
           prop="name"
           v-if="props.detailData.productType === componentTypeEnum.ARTIFACT.V"
           label="名称"
@@ -54,7 +37,14 @@
           min-width="100"
         ></el-table-column>
         <el-table-column :show-overflow-tooltip="true" prop="serialNumber" key="serialNumber" label="编号" align="center"></el-table-column>
-        <el-table-column :show-overflow-tooltip="true" prop="specification" key="specification" label="规格" align="center" min-width="120px"></el-table-column>
+        <el-table-column
+          :show-overflow-tooltip="true"
+          prop="specification"
+          key="specification"
+          label="规格"
+          align="center"
+          min-width="120px"
+        ></el-table-column>
         <el-table-column :show-overflow-tooltip="true" prop="quantity" key="quantity" label="数量" align="center"></el-table-column>
         <el-table-column :show-overflow-tooltip="true" prop="weight" key="weight" label="单重" align="center"></el-table-column>
         <el-table-column :show-overflow-tooltip="true" prop="completeQuantity" key="completeQuantity" label="完成数" align="center">
@@ -75,6 +65,16 @@
           </template>
         </el-table-column>
       </common-table>
+      <!-- 分页 -->
+      <el-pagination
+        :total="total"
+        :current-page="queryPage.pageNumber"
+        :page-size="queryPage.pageSize"
+        style="margin-top: 8px"
+        layout="total, prev, pager, next, sizes"
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+      />
     </template>
   </common-drawer>
 </template>
@@ -83,7 +83,7 @@
 import { processDetail } from '@/api/mes/task-tracking/work-order-tracking.js'
 import useVisible from '@compos/use-visible'
 import useMaxHeight from '@compos/use-max-height'
-// import tagTabs from '@comp-common/tag-tabs'
+import usePagination from '@compos/use-pagination'
 import { defineProps, defineEmits, ref } from 'vue'
 import { parseTime } from '@/utils/date'
 import { componentTypeEnum, workOrderTypeEnum } from '@enum-ms/mes'
@@ -103,21 +103,28 @@ const props = defineProps({
 
 const { visible: drawerVisible, handleClose } = useVisible({ emit, props, field: 'visible', showHook: processDetailGet })
 
+const { handleSizeChange, handleCurrentChange, total, setTotalPage, queryPage } = usePagination({ fetchHook: processDetailGet })
+
 const { maxHeight } = useMaxHeight({
   extraBox: ['.head-container'],
   paginate: true
 })
 
 async function processDetailGet() {
+  let _list = []
   try {
-    const data = await processDetail({
+    const { content = [], totalElements } = await processDetail({
       processId: props.detailData.id,
-      productType: props.detailData.productType,
-      orderId: props.detailData.taskOrderId
+      taskType: props.detailData.productType,
+      orderId: props.detailData.taskOrderId,
+      ...queryPage
     })
-    processDetailData.value = data
+    setTotalPage(totalElements)
+    _list = content
   } catch (e) {
     console.log('获取工序详情失败', e)
+  } finally {
+    processDetailData.value = _list
   }
 }
 </script>

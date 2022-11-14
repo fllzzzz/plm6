@@ -3,10 +3,10 @@ import request from '@/utils/request'
 /**
  * @description: 获取工序呆滞列表详情
  */
- export function get(params) {
+export function get(params) {
   return request({
     module: 'mes',
-    url: 'task/dull/process/detail',
+    url: 'task/dull/process/detail/page',
     method: 'get',
     params
   })
@@ -35,5 +35,4 @@ export function processSluggish(params) {
 }
 
 export default { get }
-
 

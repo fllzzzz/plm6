@@ -38,7 +38,12 @@
         </el-table-column>
         <el-table-column align="center" key="rate" prop="rate" :show-overflow-tooltip="true" label="完成率" min-width="150px">
           <template v-slot="scope">
-            <el-progress :text-inside="true" :stroke-width="26" :percentage="((scope.row.completeQuantity/scope.row.quantity) * 100).toFixed(2)" status="success" />
+            <el-progress
+              :text-inside="true"
+              :stroke-width="26"
+              :percentage="((scope.row.completeQuantity / scope.row.quantity) * 100).toFixed(2)"
+              status="success"
+            />
           </template>
         </el-table-column>
         <el-table-column align="center" :show-overflow-tooltip="true" label="操作">

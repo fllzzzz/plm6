@@ -17,7 +17,7 @@ export function get(params) {
 export function productionLineDetail(params) {
   return request({
     module: 'mes',
-    url: 'task/tracking/productionLine/detail',
+    url: 'task/tracking/productionLine/detail/page',
     method: 'get',
     params
   })

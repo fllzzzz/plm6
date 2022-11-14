@@ -17,7 +17,7 @@ export function get(params) {
 export function monthlyProject(params) {
   return request({
     module: 'mes',
-    url: 'task/tracking/month/detail',
+    url: 'task/tracking/month/page',
     method: 'get',
     params
   })
@@ -28,7 +28,7 @@ export function monthlyProject(params) {
 export function projectDetail(params) {
   return request({
     module: 'mes',
-    url: 'task/tracking/month/project',
+    url: 'task/tracking/month/project/page',
     method: 'get',
     params
   })

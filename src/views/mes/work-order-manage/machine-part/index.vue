@@ -113,15 +113,24 @@
       </el-table-column>
       <el-table-column align="center" :show-overflow-tooltip="true" label="操作">
         <template v-slot="scope">
-          <common-button type="primary" size="mini" @click="views(scope.row)">查看</common-button>
+          <common-button
+            v-if="crud.query.processType === mesMachinePartOrderTypeEnum.DRILL_ORDER.V"
+            type="primary"
+            size="mini"
+            @click="showDrill(scope.row)"
+            >查看</common-button
+          >
+          <common-button v-else type="primary" size="mini" @click="showCuttingDetail(scope.row)">查看</common-button>
           <common-button type="success" size="mini" @click="printDetail(scope.row)">打印</common-button>
         </template>
       </el-table-column>
     </common-table>
     <!-- 分页 -->
     <pagination />
-    <!-- 零件工单详情 -->
-    <detail v-model:visible="drawerVisible" :detail-data="detailData" />
+    <!-- 钻孔工单详情 -->
+    <detail v-model:visible="drawerVisible" :process-type="crud.query.processType" :detail-data="detailData" />
+    <!-- 切割工单详情 -->
+    <cutting-detail v-model:visible="cuttingDrawerVisible" :cutting-detail-data="cuttingDetailData" />
   </div>
 </template>
 <script setup>
@@ -131,8 +140,10 @@ import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
 import pagination from '@crud/Pagination'
 import { parseTime } from '@/utils/date'
+import { mesMachinePartOrderTypeEnum } from '@enum-ms/mes'
 import mHeader from './module/header.vue'
 import detail from './module/detail.vue'
+import cuttingDetail from './module/cutting-detail.vue'
 
 const optShow = {
   add: false,
@@ -140,10 +151,11 @@ const optShow = {
   del: false,
   download: false
 }
-
 const tableRef = ref()
-const detailData = ref({})
+const detailData = ref({}) // 钻孔
 const drawerVisible = ref(false)
+const cuttingDetailData = ref({})
+const cuttingDrawerVisible = ref(false)
 const { crud, CRUD, columns } = useCRUD(
   {
     title: '零件工单',
@@ -154,13 +166,20 @@ const { crud, CRUD, columns } = useCRUD(
   },
   tableRef
 )
+
 const { maxHeight } = useMaxHeight({
   extraBox: ['.head-container'],
   paginate: true
 })
 
-// 查看
-function views(row) {
+// 预览切割工单 pdf
+function showCuttingDetail(row) {
+  cuttingDrawerVisible.value = true
+  cuttingDetailData.value = row
+}
+
+// 查看钻孔工单详情
+function showDrill(row) {
   drawerVisible.value = true
   detailData.value = row
 }
