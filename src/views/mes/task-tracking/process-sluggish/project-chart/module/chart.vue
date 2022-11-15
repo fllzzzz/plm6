@@ -124,10 +124,18 @@ function setSeries() {
     {
       name: '',
       type: 'bar',
-      tooltip: { show: false },
-      barMinHeight: 30, // 最小柱高
+      tooltip: {
+        show: true,
+        formatter(params) {
+          console.log(params)
+          if (params.value) {
+            return params.data.name + '：' + params.data.quantity + ' / ' + (params.data.mete / 1000).toFixed(DP.COM_WT__T)
+          }
+        }
+      },
+      barMinHeight: 80, // 最小柱高
       barWidth: 40, // 柱宽度
-      barMaxWidth: 100, // 最大柱宽度
+      barMaxWidth: 160, // 最大柱宽度
       data: [...quantityList.value],
       itemStyle: {
         normal: {
@@ -139,9 +147,9 @@ function setSeries() {
           // },
           label: {
             show: true, // 显示文本
-            position: 'inside', // 数据值位置
+            position: 'insideLeft', // 数据值位置
             textStyle: {
-              fontSize: '14'
+              fontSize: '12'
             },
             formatter(params) {
               console.log(params)
