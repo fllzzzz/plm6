@@ -27,13 +27,6 @@
         />
       </div>
       <div style="float:right;">
-        <!-- <print-table
-          v-permission="permission.print"
-          api-key="productShipmentDetail"
-          :params="{ projectId: props.currentRow.projectId, ...query.value }"
-          size="mini"
-          type="warning"
-        /> -->
         <print-table
           api-key="mesProjectShipDetail"
           :params="{ projectId: props.currentRow.projectId, ...query.value }"

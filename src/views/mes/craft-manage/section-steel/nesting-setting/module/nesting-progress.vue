@@ -4,30 +4,44 @@
     <template #titleRight>
       <common-button @click.stop="delNesting" class="filter-item" type="danger" size="mini">删除</common-button>
     </template>
-    <common-table v-loading="resultLoading" ref="tableRef" :data="nestingProgressData" :max-height="maxHeight" style="width: 100%" row-key="id">
+    <common-table
+      v-loading="resultLoading"
+      ref="tableRef"
+      :data="nestingProgressData"
+      :max-height="maxHeight"
+      style="width: 100%"
+      row-key="id"
+    >
       <el-table-column label="序号" type="index" align="center" width="60" />
       <el-table-column key="serialNumber" prop="serialNumber" :show-overflow-tooltip="true" label="套料编号" align="center" width="180px">
         <template v-slot="scope">
           <span>{{ scope.row.serialNumber }}</span>
         </template>
       </el-table-column>
-      <el-table-column key="nestingResult" prop="nestingResult" label="套料成果" align="center">
+      <el-table-column key="nestingResult" prop="nestingResult" label="套料成果" header-align="center">
         <template v-slot="scope">
           <template v-if="scope.row.linkDOList.length > 0">
-            <template v-for="item in scope.row.linkDOList" :key="item">
-              <el-tooltip effect="dark" :content="item.serialNumber" placement="top-start">
+            <div style="width: 100%; display: inline-block">
+              <template v-for="item in scope.row.linkDOList" :key="item">
+                <el-tooltip effect="dark" :content="item.serialNumber" placement="top-start">
+                  <div
+                    :style="`padding: 0 5px; display:inline-block; width:${
+                      (item.length / scope.row.length) * 100
+                    }%; color: #fff; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; height: 30px; background-color: ${
+                      item.lengthColor
+                    };line-height: 30px; border-right: 1px solid #fff;`"
+                  >
+                    <!-- 17dh13535487865887486 -->
+                    {{ item.serialNumber }}
+                  </div>
+                </el-tooltip>
+              </template>
+              <el-tooltip effect="dark" content="余料" placement="top-start">
                 <div
-                  :style="`padding: 0 5px; display:inline-block; width: ${
-                    (item.length / scope.row.typesettingLength) * 100
-                  }%; color: #fff; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; height: 30px; background-color: ${
-                    item.lengthColor
-                  };line-height: 30px; border-right: 1px solid #fff`"
-                >
-                  <!-- 17dh13535487865887486 -->
-                  {{ item.serialNumber }}
-                </div>
+                  :style="`display:inline-block; width: ${scope.row.lossRate}%; color: #fff;overflow: hidden; text-overflow: ellipsis; white-space: nowrap; height: 30px; background-color: #5e5d5d;line-height: 30px;`"
+                ></div>
               </el-tooltip>
-            </template>
+            </div>
           </template>
         </template>
       </el-table-column>

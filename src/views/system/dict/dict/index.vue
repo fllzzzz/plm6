@@ -1,7 +1,7 @@
 <template>
   <el-card class="line-box box-card">
     <template v-slot:header>
-      <span style="line-height: 28px">{{ crud.title }}列表</span>
+      <span style="line-height: 28px">{{ crud.title }}</span>
     </template>
     <mHeader />
     <!--表格渲染-->

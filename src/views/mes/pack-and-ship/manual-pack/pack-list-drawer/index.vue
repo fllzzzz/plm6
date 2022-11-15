@@ -22,13 +22,21 @@
         >
           <template #suffix="{ item }"> ({{ listObj['source' + item.K].length }})</template>
         </component-radio-button>
-        <factory-select
+        <workshop-select
+          v-if="packType !== packTypeEnum.AUXILIARY_MATERIAL.V"
+          v-model="workshopId"
+          placeholder="请选择车间"
+          clearable
+          style="width: 200px"
+          class="filter-item"
+        />
+        <!-- <factory-select
           v-if="packType !== packTypeEnum.AUXILIARY_MATERIAL.V"
           v-model="factoryId"
           class="filter-item"
           clearable
           style="width: 200px"
-        />
+        /> -->
       </div>
       <common-table
         :data="listObj[packTypeEnum.VK[packType]]"
@@ -62,7 +70,7 @@
         <template v-if="packType === packTypeEnum.STRUCTURE.V">
           <el-table-column key="name" prop="name" :show-overflow-tooltip="true" label="名称" width="120px">
             <template v-slot="scope">
-              <factory-table-cell-tag :id="scope.row.factory ? scope.row.factory.id : scope.row.factoryId" />
+              <table-cell-tag v-if="scope.row.workshopInf" :name="scope.row.workshopInf.name" />
               <span>{{ scope.row.name }}</span>
             </template>
           </el-table-column>
@@ -105,7 +113,7 @@
         <template v-if="packType === packTypeEnum.ENCLOSURE.V">
           <el-table-column key="name" prop="name" :show-overflow-tooltip="true" label="名称" width="120px">
             <template v-slot="scope">
-              <factory-table-cell-tag :id="scope.row.factory ? scope.row.factory.id : scope.row.factoryId" />
+              <table-cell-tag v-if="scope.row.workshopInf" :name="scope.row.workshopInf.name" />
               <span>{{ scope.row.name }}</span>
             </template>
           </el-table-column>
@@ -212,9 +220,9 @@ import { tableSummary } from '@/utils/el-extra'
 import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'
 import oneCodeNumberList from '@/components-system/mes/one-code-number-list'
-import factorySelect from '@comp-base/factory-select'
-import factoryTableCellTag from '@comp-base/factory-table-cell-tag'
+import workshopSelect from '@comp-mes/workshop-select'
 import choseAddMethodDialog from '../chose-add-method-dialog'
+import tableCellTag from '@comp-common/table-cell-tag/index.vue'
 
 const drawerRef = ref()
 const choseDialogRef = ref()
@@ -257,7 +265,8 @@ const { maxHeight } = useMaxHeight(
 const packType = ref(packTypeEnum.STRUCTURE.V)
 const packLoading = ref(false)
 const choseVisible = ref(false)
-const factoryId = ref()
+// const factoryId = ref()
+const workshopId = ref()
 const remark = ref()
 const listObj = reactive({
   // [packTypeEnum.STRUCTURE.K]: [],
@@ -278,10 +287,10 @@ const disabledVal = computed(() => {
   return _arr
 })
 
-watch(factoryId, (val) => {
+watch(workshopId, (val) => {
   for (const item in packTypeEnum.ENUM) {
     if (listObj['source' + item].length) {
-      listObj[item] = listObj['source' + item].filter((v) => val === v.factory.id || !val)
+      listObj[item] = listObj['source' + item].filter((v) => val === v.workshopInf.id || !val)
     }
   }
 })
@@ -323,7 +332,8 @@ function handleSuccess() {
   handleClose()
   remark.value = ''
   packType.value = packTypeEnum.STRUCTURE.V
-  factoryId.value = undefined
+  workshopId.value = undefined
+  // factoryId.value = undefined
 }
 
 async function handlePack({ bagId, isNew, selectBagId }) {

@@ -12,14 +12,14 @@
         @change="handleChange"
       />
       <export-button
-          v-if="nestingFileType === nestingFileTypeEnum.MATERIAL_LIST.V"
-          class="filter-item"
-          :fn="getMaterialListExcelFn"
-          :params="{ id: props.detailData.id }"
-          :disabled="nestingProgressData.length === 0"
-        >
-          材料清单
-        </export-button>
+        v-if="nestingFileType === nestingFileTypeEnum.MATERIAL_LIST.V"
+        class="filter-item"
+        :fn="getMaterialListExcelFn"
+        :params="{ id: props.detailData.id }"
+        :disabled="nestingProgressData.length === 0"
+      >
+        材料清单
+      </export-button>
       <common-button size="small" @click="handleClose">关闭</common-button>
     </template>
     <template #content>
@@ -49,23 +49,37 @@
             <span>{{ scope.row.serialNumber }}</span>
           </template>
         </el-table-column>
-        <el-table-column key="nestingResult" prop="nestingResult" label="套料成果" align="center" v-if="nestingFileType === nestingFileTypeEnum.NESTING_FILE.V" width="600px">
+        <el-table-column
+          key="nestingResult"
+          prop="nestingResult"
+          label="套料成果"
+          header-align="center"
+          v-if="nestingFileType === nestingFileTypeEnum.NESTING_FILE.V"
+          width="600px"
+        >
           <template v-slot="scope">
             <template v-if="scope.row.linkDOList.length > 0">
-              <template v-for="item in scope.row.linkDOList" :key="item">
-                <el-tooltip effect="dark" :content="item.serialNumber" placement="top-start">
+              <div style="width: 100%; display: inline-block">
+                <template v-for="item in scope.row.linkDOList" :key="item">
+                  <el-tooltip effect="dark" :content="item.serialNumber" placement="top-start">
+                    <div
+                      :style="`padding: 0 5px; display:inline-block; width:${
+                        (item.length / scope.row.length) * 100
+                      }%; color: #fff; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; height: 30px; background-color: ${
+                        item.lengthColor
+                      };line-height: 30px; border-right: 1px solid #fff;`"
+                    >
+                      <!-- 17dh13535487865887486 -->
+                      {{ item.serialNumber }}
+                    </div>
+                  </el-tooltip>
+                </template>
+                <el-tooltip effect="dark" content="余料" placement="top-start">
                   <div
-                    :style="`padding: 0 5px; display:inline-block; width: ${
-                      (item.length / scope.row.typesettingLength) * 100
-                    }%; color: #fff; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; height: 30px; background-color: ${
-                      item.lengthColor
-                    };line-height: 30px; border-right: 1px solid #fff`"
-                  >
-                    <!-- 17dh13535487865887486 -->
-                    {{ item.serialNumber }}
-                  </div>
+                    :style="`display:inline-block; width: ${scope.row.lossRate}%; color: #fff;overflow: hidden; text-overflow: ellipsis; white-space: nowrap; height: 30px; background-color: #5e5d5d;line-height: 30px;`"
+                  ></div>
                 </el-tooltip>
-              </template>
+              </div>
             </template>
           </template>
         </el-table-column>
@@ -97,25 +111,12 @@
             <span>{{ scope.row.specification }}</span>
           </template>
         </el-table-column>
-        <el-table-column
-          key="material"
-          prop="material"
-          :show-overflow-tooltip="true"
-          label="材质"
-          align="center"
-          width="110px"
-        >
+        <el-table-column key="material" prop="material" :show-overflow-tooltip="true" label="材质" align="center" width="110px">
           <template v-slot="scope">
             <span>{{ scope.row.material }}</span>
           </template>
         </el-table-column>
-        <el-table-column
-          key="totalNetWeight"
-          prop="totalNetWeight"
-          :show-overflow-tooltip="true"
-          label="母材总重"
-          align="center"
-        >
+        <el-table-column key="totalNetWeight" prop="totalNetWeight" :show-overflow-tooltip="true" label="母材总重" align="center">
           <template v-slot="scope">
             <span>{{ scope.row.totalNetWeight }}</span>
           </template>
@@ -223,5 +224,8 @@ const { maxHeight } = useMaxHeight({
 })
 </script>
 
-<style>
+<style lang="scss" scope>
+.c {
+  background-color: #5e5d5d;
+}
 </style>
