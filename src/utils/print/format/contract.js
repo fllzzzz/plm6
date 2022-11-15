@@ -1,7 +1,7 @@
 import { isNotBlank } from '@data-type/index'
 import { dateDifference } from '@/utils/date'
 import { convertUnits } from '@/utils/convert/unit'
-import { supplierPayTypeEnum } from '@enum-ms/contract'
+// import { supplierPayTypeEnum } from '@enum-ms/contract'
 
 // 计算用时天数
 function durationCalculation({ header, table = [], footer, qrCode }) {
@@ -62,9 +62,11 @@ function handleSupplierPaymentRate({ header, table = [], footer, qrCode }) {
 // 处理供应商付款订单名称
 function handleSupplierPaymentOrder({ header, table = [], footer, qrCode }) {
   const _table = table.map(row => {
-    if (row.propertyType === supplierPayTypeEnum.PURCHASE.V) {
+    if (row.serialNumber) {
       row.orderName = row.serialNumber
     } else {
+      row.projectNameList = row.projectNameList || []
+      row.serialNumberList = row.serialNumberList || []
       row.orderName = [...row.projectNameList, ...row.serialNumberList].join('、')
     }
     return row

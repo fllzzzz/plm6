@@ -49,7 +49,7 @@
     </el-table-column>
     <el-table-column v-if="columns.visible('collectionReason')" key="collectionReason" prop="collectionReason" label="收款事由" align="center">
       <template v-slot="scope">
-        <div>{{ scope.row.collectionReason && dict && dict.label && dict.label['payment_reason']? dict.label['payment_reason'][ scope.row.collectionReason]: '' }}</div>
+        <div>{{ scope.row.collectionReason }}</div>
       </template>
     </el-table-column>
   </common-table>
@@ -66,7 +66,6 @@ import useCRUD from '@compos/use-crud'
 import pagination from '@crud/Pagination'
 import mHeader from './module/header'
 import { businessTypeEnum } from '@enum-ms/contract'
-import useDict from '@compos/store/use-dict'
 import { parseTime } from '@/utils/date'
 import { toThousand } from '@data-type/number'
 import { projectNameFormatter } from '@/utils/project'
@@ -82,7 +81,6 @@ const optShow = {
 }
 
 const tableRef = ref()
-const dict = useDict(['payment_reason'])
 const { crud, columns, CRUD } = useCRUD(
   {
     title: '收款台账',

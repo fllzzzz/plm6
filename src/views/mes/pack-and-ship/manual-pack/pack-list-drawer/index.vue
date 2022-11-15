@@ -1,5 +1,5 @@
 <template>
-  <common-drawer ref="drawerRef" title="打包列表" v-model="drawerVisible" direction="rtl" :before-close="handleClose" size="75%">
+  <common-drawer ref="drawerRef" title="打包列表" v-model="drawerVisible" direction="rtl" :before-close="handleClose" size="75%" custom-class="drawer-detail">
     <template #titleRight>
       <common-button v-permission="permission.pack" type="primary" :loading="packLoading" size="mini" @click="packClick">
         {{ packTypeEnum.VL[packType] }}打包({{ listObj['source' + packTypeEnum.VK[packType]].length }})
@@ -189,6 +189,7 @@
         </el-table-column>
       </common-table>
       <el-input
+        class="remark-detail"
         v-model.trim="remark"
         type="textarea"
         :autosize="{ minRows: 3, maxRows: 3 }"
@@ -252,14 +253,15 @@ const { visible: drawerVisible, handleClose } = useVisible({ emit, props, field:
 // 高度
 const { maxHeight } = useMaxHeight(
   {
-    mainBox: '.common-drawer',
-    extraBox: ['.el-drawer__header', '.tip'],
+    mainBox: '.drawer-detail',
+    extraBox: ['.el-drawer__header', '.head-container', '.remark-detail'],
     wrapperBox: ['.el-drawer__body'],
     navbar: false,
     clientHRepMainH: true,
-    minHeight: 300
+    minHeight: 300,
+    extraHeight: 80
   },
-  drawerRef
+  drawerVisible
 )
 
 const packType = ref(packTypeEnum.STRUCTURE.V)
