@@ -39,7 +39,7 @@
           完成日期:
           <span v-parse-time="{ val: globalProject.endDate, fmt: '{y}-{m}-{d}' }" />
           | 工期:
-          {{ dateDifferenceReduce(globalProject.startDate, globalProject.endDate) }}天
+          {{ dateDifference(globalProject.startDate, globalProject.endDate) }}天
         </el-tag>
       </template>
       <el-tag v-if="(globalProject && globalProject.businessType) || routeBusinessType" type="info" effect="plain" style="margin-left: 5px">
@@ -64,7 +64,7 @@ import { projectTypeEnum, businessTypeEnum, projectModeEnum } from '@enum-ms/con
 
 import useUserProjects from '@compos/store/use-user-projects'
 import { getBitwiseBack } from '@/utils/data-type/number'
-import { dateDifferenceReduce } from '@/utils/date'
+import { dateDifference } from '@/utils/date'
 
 const store = useStore()
 // 项目启动时获取项目树
