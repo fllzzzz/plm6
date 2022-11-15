@@ -15,10 +15,26 @@
         <el-input v-model="form.name" :maxlength="8" placeholder="请填写切割方式" style="width: 270px" />
       </el-form-item>
       <el-form-item label="支持板厚(mm) ≤" prop="thickness">
-        <common-input-number v-model="form.thickness" :step="1" :min="0" placeholder="请填写支持板厚" style="width: 270px" />
+        <common-input-number
+          v-model="form.thickness"
+          :step="1"
+          :min="0"
+          :max="999999999"
+          :precision="0"
+          placeholder="请填写支持板厚"
+          style="width: 270px"
+        />
       </el-form-item>
       <el-form-item label="切孔联割(φ) ≥" prop="cuttingHolesJoint">
-        <common-input-number v-model="form.cuttingHolesJoint" :step="1" :min="0" placeholder="请填写切孔联割" style="width: 270px" />
+        <common-input-number
+          v-model="form.cuttingHolesJoint"
+          :step="1"
+          :min="0"
+          :max="999999999"
+          :precision="0"
+          placeholder="请填写切孔联割"
+          style="width: 270px"
+        />
       </el-form-item>
     </el-form>
   </common-dialog>

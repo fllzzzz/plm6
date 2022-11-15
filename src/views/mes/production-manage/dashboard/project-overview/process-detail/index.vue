@@ -26,35 +26,47 @@
     <common-table
       ref="tableRef"
       :data="processDetailData"
-      :max-height="500"
+      :max-height="maxHeight"
       show-summary
       :summary-method="getSummaries"
       style="width: 100%"
     >
-      <el-table-column prop="index" label="序号" align="center" width="60" type="index" />
-      <el-table-column prop="monomerName" label="单体" align="center"></el-table-column>
-      <el-table-column prop="areaName" label="区域" align="center"></el-table-column>
-      <el-table-column prop="serialNumber" label="编号" align="center"></el-table-column>
-      <el-table-column prop="specification" label="规格" align="center"></el-table-column>
-      <el-table-column prop="material" label="材质" align="center"></el-table-column>
-      <el-table-column prop="length" label="长度" align="center"></el-table-column>
-      <el-table-column prop="netWeight" label="单重（kg）" align="center"></el-table-column>
-      <el-table-column prop="quantity" label="清单数" align="center"></el-table-column>
-      <el-table-column prop="completeQuantity" label="完成数" align="center">
+      <el-table-column :show-overflow-tooltip="true" prop="index" label="序号" align="center" width="60" type="index" />
+      <el-table-column :show-overflow-tooltip="true" prop="monomer.name" label="单体" align="center"></el-table-column>
+      <el-table-column :show-overflow-tooltip="true" prop="area.name" label="区域" align="center"></el-table-column>
+      <el-table-column :show-overflow-tooltip="true" prop="serialNumber" label="编号" align="center"></el-table-column>
+      <el-table-column :show-overflow-tooltip="true" prop="specification" label="规格" align="center"></el-table-column>
+      <el-table-column :show-overflow-tooltip="true" prop="material" label="材质" align="center"></el-table-column>
+      <el-table-column :show-overflow-tooltip="true" prop="length" label="长度" align="center"></el-table-column>
+      <el-table-column :show-overflow-tooltip="true" prop="netWeight" label="单重（kg）" align="center"></el-table-column>
+      <el-table-column :show-overflow-tooltip="true" prop="quantity" label="清单数" align="center"></el-table-column>
+      <el-table-column :show-overflow-tooltip="true" prop="completeQuantity" label="完成数" align="center">
         <template #default="{ row }">
-          <el-tag type="primary" style="cursor: pointer" @click="showQuantity(row)">{{ row.completeQuantity }}</el-tag>
+          <el-tag style="cursor: pointer" @click="showQuantity(row)">{{ row.completeQuantity }}</el-tag>
         </template>
       </el-table-column>
     </common-table>
+    <!-- 分页 -->
+    <el-pagination
+      :total="total"
+      :current-page="queryPage.pageNumber"
+      :page-size="queryPage.pageSize"
+      style="margin-top: 8px"
+      layout="total, prev, pager, next, sizes"
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
+    />
   </common-dialog>
   <detail-drawer v-model:visible="drawerVisible" :query="query" :team-data="teamData" />
 </template>
 
 <script setup>
 import { getProcessDetail } from '@/api/mes/production-manage/dashboard/project-overview'
-import { defineProps, defineEmits, ref, watch, computed } from 'vue'
+import { defineProps, defineEmits, ref, watch, computed, inject } from 'vue'
 import { tableSummary } from '@/utils/el-extra'
 import useVisible from '@compos/use-visible'
+import usePagination from '@compos/use-pagination'
+import useMaxHeight from '@compos/use-max-height'
 import detailDrawer from './detail-drawer.vue'
 
 const emit = defineEmits(['update:visible'])
@@ -76,6 +88,9 @@ const props = defineProps({
   }
 })
 
+const monomerId = inject('monomerId')
+const areaId = inject('areaId')
+
 const query = computed(() => {
   return {
     productType: props.detailData.productType,
@@ -85,30 +100,40 @@ const query = computed(() => {
 
 const { visible: dialogVisible, handleClose } = useVisible({ emit, props, field: 'visible', showHook: processDetailGet })
 
+const { handleSizeChange, handleCurrentChange, total, setTotalPage, queryPage } = usePagination({ fetchHook: processDetailGet })
+
 watch(
   () => dialogVisible.value,
   (val) => {
     if (val) {
       processDetailGet()
     }
-  }
+  },
+  { deep: true }
 )
 
 async function processDetailGet() {
+  let _list = []
   try {
-    const data = await getProcessDetail({
+    const { content = [], totalElements } = await getProcessDetail({
       processId: props.detailData.id,
-      ...query.value
+      monomerId: monomerId.value,
+      areaId: areaId.value,
+      ...query.value,
+      ...queryPage
     })
-    processDetailData.value = data
+    setTotalPage(totalElements)
+    _list = content
   } catch (e) {
     console.log('获取工序的生产明细失败', e)
+  } finally {
+    processDetailData.value = _list
   }
 }
 
-// const { maxHeight } = useMaxHeight({
-//   paginate: true
-// })
+const { maxHeight } = useMaxHeight({
+  paginate: true
+})
 
 // 点击完成数显示详情
 function showQuantity(row) {

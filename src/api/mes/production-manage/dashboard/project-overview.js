@@ -7,7 +7,7 @@ import request from '@/utils/request'
 export function get(params) {
   return request({
     module: 'mes',
-    url: 'kanban/project/year',
+    url: 'kanban/project/year/page',
     method: 'get',
     params
   })
@@ -31,7 +31,7 @@ export function getProcessList(params) {
 export function getProcessDetail(params) {
   return request({
     module: 'mes',
-    url: 'kanban/project/process/summary/detail',
+    url: 'kanban/project/process/summary/detail/page',
     method: 'get',
     params
   })
@@ -43,7 +43,7 @@ export function getProcessDetail(params) {
 export function getTeamDetail(params) {
   return request({
     module: 'mes',
-    url: 'kanban/project/group/task/detail',
+    url: 'kanban/project/group/task/detail/page',
     method: 'get',
     params
   })

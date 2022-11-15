@@ -7,6 +7,7 @@
             class="filter-item"
             :disabled="!crud.selections?.length"
             size="mini"
+            :loading="issueLoading"
             icon="el-icon-edit"
             type="primary"
             @click="toBatchIssue"
@@ -173,6 +174,7 @@ const { maxHeight } = useMaxHeight({ paginate: true })
 
 const detailVisible = ref(false)
 const currentRow = ref()
+const issueLoading = ref(false)
 
 const tableRules = {
   cutConfigId: [{ required: true, message: '请选择切割方式', trigger: 'change' }]
@@ -200,6 +202,7 @@ async function toBatchIssue() {
     return
   }
   try {
+    issueLoading.value = true
     const { validResult, dealList } = tableValidate(crud.selections)
     if (validResult) {
       const _resList = dealList.map((v) => {
@@ -214,6 +217,8 @@ async function toBatchIssue() {
     }
   } catch (e) {
     console.log(`套料下发失败`, e)
+  } finally {
+    issueLoading.value = false
   }
 }
 </script>

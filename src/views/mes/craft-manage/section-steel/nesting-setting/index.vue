@@ -1,7 +1,13 @@
 <template>
   <div class="app-container">
     <div class="head-container">
-      <mHeader @change-mode="handleModeChange" />
+      <mHeader @change-mode="handleModeChange">
+        <template #viewLeft>
+          <el-tag size="medium" type="warning" effect="plain" style="margin-right: 5px">
+            清单量：{{ summaryInfo.totalQuantity || 0 }} 件 | {{ summaryInfo.totalNetWeight || 0 }} kg</el-tag
+          >
+        </template>
+      </mHeader>
     </div>
     <!--表格渲染-->
     <common-table
@@ -93,7 +99,8 @@
         prop="artifactStr"
         :show-overflow-tooltip="true"
         label="关联构件"
-        min-width="160px"
+        min-width="120px"
+        align="center"
       />
       <el-table-column
         v-if="columns.visible('specification')"
@@ -156,14 +163,6 @@ import useCRUD from '@compos/use-crud'
 // import pagination from '@crud/Pagination'
 import mHeader from './module/header'
 
-// crud交由presenter持有
-const permission = {
-  get: [''],
-  edit: [''],
-  add: [''],
-  del: ['']
-}
-
 const optShow = {
   add: false,
   edit: false,
@@ -176,12 +175,12 @@ const { crud, columns, CRUD } = useCRUD(
   {
     title: '套料设置',
     sort: [],
-    permission: { ...permission },
+    // permission: { ...permission },
     optShow: { ...optShow },
     crudApi: { ...crudApi },
     hasPagination: false,
     queryOnPresenterCreated: false,
-    requiredQuery: ['projectId', 'structureClassId']
+    requiredQuery: ['projectId', 'specPrefix']
   },
   tableRef
 )
@@ -189,14 +188,19 @@ const { crud, columns, CRUD } = useCRUD(
 const { maxHeight } = useMaxHeight()
 
 const curEditMode = ref('nesting')
+const summaryInfo = ref({})
 
 CRUD.HOOK.handleRefresh = (crud, res) => {
-  res.data.content = res.data.content.map((v) => {
+  summaryInfo.value = {
+    totalNetWeight: res.data?.totalNetWeight,
+    totalQuantity: res.data?.totalQuantity
+  }
+  res.data.content = res.data?.nestingDTOS.map((v) => {
     v.editQuantity = v.quantity
     v.artifactStr = v.artifactTypesettingDTO?.serialNumber
     v.classificationName = v.artifactTypesettingDTO?.classificationName
     return v
-  })
+  }) || []
 }
 
 // 长度排序 true 升序 false 降序

@@ -30,15 +30,15 @@
             </template>
           </el-table-column>
           <el-table-column
-            v-if="columns.visible('projectName') && productType !== componentTypeEnum.MACHINE_PART.V"
-            key="projectName"
-            prop="projectName"
+            v-if="columns.visible('project') && productType !== componentTypeEnum.MACHINE_PART.V"
+            key="project.name"
+            prop="project"
             :show-overflow-tooltip="true"
             label="所属项目"
-            min-width="120px"
+            min-width="100px"
           >
             <template v-slot="scope">
-              <span>{{ scope.row.contractNo }}-{{ scope.row.shortName }}</span>
+              <span>{{ projectNameFormatter(scope.row.project) }}</span>
             </template>
           </el-table-column>
           <el-table-column
@@ -117,6 +117,7 @@
 import { ref, provide, computed, watch } from 'vue'
 import { get, machinePart } from '@/api/mes/task-tracking/work-order-tracking.js'
 import { parseTime } from '@/utils/date'
+import { projectNameFormatter } from '@/utils/project'
 import { componentTypeEnum } from '@enum-ms/mes'
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'

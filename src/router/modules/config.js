@@ -391,13 +391,13 @@ export default {
             }
           ]
         },
-        {
-          name: 'MesConfigWageQuota',
-          path: 'wage-quota',
-          hidden: false,
-          component: '/mes/production-config/wage-quota/index',
-          meta: { title: '工价定额', icon: 'project', noCache: true }
-        },
+        // {
+        //   name: 'MesConfigWageQuota',
+        //   path: 'wage-quota',
+        //   hidden: false,
+        //   component: '/mes/production-config/wage-quota/index',
+        //   meta: { title: '工价定额', icon: 'project', noCache: true }
+        // },
         {
           name: 'MesConfigCutting',
           path: 'cutting-config',

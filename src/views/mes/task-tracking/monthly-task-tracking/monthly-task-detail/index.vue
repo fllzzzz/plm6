@@ -38,7 +38,7 @@
         </el-table-column>
         <el-table-column align="center" key="quantity" prop="quantity" :show-overflow-tooltip="true" label="排产量（件/吨）">
           <template v-slot="scope">
-            <span>{{ scope.row.quantity }}/{{ ((scope.row.mete) / 1000).toFixed(DP.COM_WT__T) }}</span>
+            <span>{{ scope.row.quantity }}/{{ (scope.row.mete / 1000).toFixed(DP.COM_WT__T) }}</span>
           </template>
         </el-table-column>
         <el-table-column align="center" key="rate" prop="rate" :show-overflow-tooltip="true" label="完成率" width="160px">
@@ -48,7 +48,7 @@
                 :text-inside="true"
                 stroke-linecap="square"
                 :stroke-width="22"
-                :percentage="((scope.row.completeQuantity / scope.row.quantity) * 100 ).toFixed(2)"
+                :percentage="((scope.row.completeQuantity / scope.row.quantity) * 100).toFixed(2)"
                 status="success"
               />
             </span>
@@ -62,10 +62,20 @@
           label="实际完成（件/吨）"
         >
           <template v-slot="scope">
-            <span>{{ scope.row.completeQuantity }}/{{ ((scope.row.completeMete) / 1000).toFixed(DP.COM_WT__T) }}</span>
+            <span>{{ scope.row.completeQuantity }}/{{ (scope.row.completeMete / 1000).toFixed(DP.COM_WT__T) }}</span>
           </template>
         </el-table-column>
       </common-table>
+      <!-- 分页 -->
+      <el-pagination
+        :total="total"
+        :current-page="queryPage.pageNumber"
+        :page-size="queryPage.pageSize"
+        style="margin-top: 8px"
+        layout="total, prev, pager, next, sizes"
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+      />
     </div>
     <project-detail v-model:visible="drawerVisible" :detail-data="detailData" />
   </div>
@@ -74,6 +84,7 @@
 import { monthlyProject } from '@/api/mes/task-tracking/monthly-task-tracking.js'
 import { ref, defineProps, watch } from 'vue'
 import useMaxHeight from '@compos/use-max-height'
+import usePagination from '@compos/use-pagination'
 import projectDetail from '../project-detail/index.vue'
 import { projectNameFormatter } from '@/utils/project'
 import { DP } from '@/settings/config'
@@ -107,25 +118,28 @@ watch(
     }
   }
 )
+const { handleSizeChange, handleCurrentChange, total, setTotalPage, queryPage } = usePagination({ fetchHook: fetchMonthly })
 
 async function fetchMonthly() {
+  let _list = []
   try {
     const time = moment().set('month', props.monthlyData.month - 1)._d
     const current = new Date(time.getFullYear() + '-' + props.monthlyData.month).getTime()
-    // console.log(current);
-    // console.log(new Date(current).getTime());
-    const data = await monthlyProject({
+    const { content = [], totalElements } = await monthlyProject({
       ...props.query,
-      dateTime: current
+      dateTime: current,
+      ...queryPage
     })
-    monthlyList.value = data
+    setTotalPage(totalElements)
+    _list = content
   } catch (e) {
     console.log('获取当前月的项目数据失败', e)
+  } finally {
+    monthlyList.value = _list
   }
 }
 
 function handleProjectDetail(row) {
-  console.log(row, 'row')
   drawerVisible.value = true
   detailData.value = row
 }

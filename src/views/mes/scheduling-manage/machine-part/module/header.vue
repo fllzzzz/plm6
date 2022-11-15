@@ -33,25 +33,37 @@
         clearable
         @keyup.enter="crud.toQuery"
       />
-      <el-input
-        v-model="query.length"
+      <el-input-number
+        v-model.number="query.minLength"
+        :min="0"
+        :max="query.maxLength || 999999999"
+        :precision="0"
+        :controls="false"
         size="small"
-        placeholder="输入长度搜索"
-        style="width: 170px"
+        style="width: 130px"
         class="filter-item"
         clearable
+        placeholder="最小长度(mm)"
         @keyup.enter="crud.toQuery"
       />
-      <el-input
-        v-model="query.width"
-        size="small"
-        placeholder="输入宽度搜索"
-        style="width: 170px"
+      <span class="filter-item">~</span>
+      <el-input-number
+        v-model.number="query.maxLength"
         class="filter-item"
+        :min="query.minLength || 0"
+        :precision="0"
+        :max="999999999"
+        :controls="false"
+        size="small"
+        style="width: 130px"
         clearable
+        placeholder="最大长度(mm)"
         @keyup.enter="crud.toQuery"
       />
-      <rrOperation />
+      <common-button class="filter-item" size="mini" type="success" icon="el-icon-search" @click.stop="crud.toQuery">搜索</common-button>
+      <common-button class="filter-item" size="mini" type="warning" icon="el-icon-refresh-left" @click.stop="resetQuery">
+        重置
+      </common-button>
       <slot name="searchRight"></slot>
     </div>
   </div>
@@ -72,7 +84,6 @@ import { defineEmits, ref, defineExpose, nextTick } from 'vue'
 import { regHeader } from '@compos/use-crud'
 import tagTabs from '@comp-common/tag-tabs'
 import crudOperation from '@crud/CRUD.operation'
-import rrOperation from '@crud/RR.operation'
 import Scale from '@comp/Scale'
 import { isBlank } from '@/utils/data-type'
 
@@ -87,6 +98,13 @@ const materialRefWidth = ref()
 const boxScale = ref(1)
 const materialList = ref([])
 const thickList = ref([])
+
+function resetQuery() {
+  query.serialNumber = undefined
+  query.maxLength = undefined
+  query.minLength = undefined
+  crud.toQuery()
+}
 
 function boxZoomOut() {
   if (crud.page.hasNextPage) {

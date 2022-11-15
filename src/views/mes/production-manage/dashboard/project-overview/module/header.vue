@@ -13,7 +13,7 @@
     />
     <common-radio-button
       v-model="query.status"
-      :options="[projectStatusEnum.PROCESS, projectStatusEnum.COMPLETE]"
+      :options="[projectStatusEnum.PROCESS, projectStatusEnum.COMPLETE, projectStatusEnum.SUSPEND]"
       type="enum"
       size="small"
       class="filter-item"
@@ -22,20 +22,19 @@
   </div>
   <div>
     <el-input
-    v-model.trim="query.name"
-    size="small"
-    placeholder="输入项目搜索"
-    style="width: 240px"
-    class="filter-item"
-    clearable
-    @keyup.enter="crud.toQuery"
-  />
-  <rrOperation />
+      v-model.trim="query.name"
+      size="small"
+      placeholder="输入项目搜索"
+      style="width: 240px"
+      class="filter-item"
+      clearable
+      @keyup.enter="crud.toQuery"
+    />
+    <rrOperation />
   </div>
 </template>
 <script setup>
 import { projectStatusEnum } from '@enum-ms/contract'
-import { parseTime } from '@/utils/date'
 import { regHeader } from '@compos/use-crud'
 import rrOperation from '@crud/RR.operation'
 import moment from 'moment'

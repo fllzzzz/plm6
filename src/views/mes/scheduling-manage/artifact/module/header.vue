@@ -22,7 +22,10 @@
       </template>
     </tag-tabs>
     <product-type-query :productType="productType" :toQuery="crud.toQuery" :query="query" />
-    <rrOperation />
+    <common-button class="filter-item" size="mini" type="success" icon="el-icon-search" @click.stop="crud.toQuery">搜索</common-button>
+    <common-button class="filter-item" size="mini" type="warning" icon="el-icon-refresh-left" @click.stop="resetQuery">
+      重置
+    </common-button>
   </div>
   <crudOperation>
     <template #optLeft>
@@ -43,7 +46,6 @@ import { artifactProductLineEnum } from '@enum-ms/mes'
 import { regHeader } from '@compos/use-crud'
 import useGetArtifactTypeList from '@compos/mes/scheduling/use-get-artifact-type-list'
 import crudOperation from '@crud/CRUD.operation'
-import rrOperation from '@crud/RR.operation'
 import tagTabs from '@comp-common/tag-tabs'
 import productTypeQuery from '@comp-mes/header-query/product-type-query'
 
@@ -67,6 +69,14 @@ watch(
 // watch([() => query.structureClassId], () => {
 //   crud.toQuery()
 // })
+
+function resetQuery() {
+  query.name = undefined
+  query.serialNumber = undefined
+  query.specification = undefined
+  query.material = undefined
+  crud.toQuery()
+}
 
 function artifactTypeInit() {
   query.structureClassId = artifactTypeList.value?.length ? artifactTypeList.value[0].structureClassId : undefined

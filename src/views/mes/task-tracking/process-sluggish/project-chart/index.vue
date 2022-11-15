@@ -32,13 +32,12 @@ import chart from './module/chart'
 import tagTabs from '@comp-common/tag-tabs'
 
 const emit = defineEmits(['update:year', 'change', 'success'])
-
 const permission = inject('permission')
 
 const productionLineId = ref()
 const productionLineList = ref([])
 
-const productType = inject('productType')
+const productType = inject('searchProductType')
 const workShopId = inject('workShopId')
 
 watch(
@@ -62,19 +61,9 @@ watch(
   { deep: true, immediate: true }
 )
 
-// 首次默认车间生产线的时候先调用生产线接口
-watch(
-  () => productionLineId.value,
-  (val) => {
-    if (val) {
-      tabChange(val)
-    }
-  },
-  { deep: true, immediate: true }
-)
-
 async function productionLineGet() {
   productionLineList.value = []
+  productionLineId.value = undefined
   if (!productType.value || !workShopId.value) {
     return
   }
@@ -84,9 +73,11 @@ async function productionLineGet() {
       workShopId: workShopId.value
     })
     productionLineList.value = data
-    productionLineId.value = data[0].id
+    productionLineId.value = data[0]?.id
   } catch (e) {
     console.log('获取当前车间下的生产线失败', e)
+  } finally {
+    tabChange(productionLineId.value)
   }
 }
 const { maxHeight } = useMaxHeight({

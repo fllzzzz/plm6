@@ -8,11 +8,11 @@
         class="date-item filter-item"
         style="width: 120px !important"
         format="YYYY"
-        clearable
+        :clearable="false"
         value-format="x"
         placeholder="选择年"
         :disabled-date="disabledDate"
-        @change="crud.toQuery"
+        @change="handleDateTimeChange"
       />
       <workshop-select
         ref="workshopInfRef"
@@ -38,7 +38,7 @@
       <el-tag class="filter-item" size="medium">
         <span>全年累计产量（吨）</span>
         <span>：</span>
-        <span>{{ (yearProductionData.mete / 1000).toFixed(2) }}</span>
+        <span>{{ (yearProductionData.mete / 1000).toFixed(DP.COM_WT__T) }}</span>
       </el-tag>
       <rrOperation />
     </div>
@@ -69,7 +69,7 @@
           <el-tag type="success" class="filter-item" size="medium">
             <span>产量（吨）</span>
             <span>：</span>
-            <span>{{ (summaryList.mete / 1000).toFixed(2) }}</span>
+            <span>{{ (summaryList.mete / 1000).toFixed(DP.COM_WT__T) }}</span>
           </el-tag>
         </template>
         <template #viewLeft>
@@ -91,6 +91,7 @@ import { ref, reactive } from 'vue'
 import { regHeader } from '@compos/use-crud'
 import useChart from '@compos/use-chart'
 import moment from 'moment'
+import { DP } from '@/settings/config'
 import { PICKER_OPTIONS_SHORTCUTS } from '@/settings/config'
 // import { getOrderDeliveryRate } from '@/api/operation/order-delivery-rate'
 import { fullYearProduction, workshopEcharts, workshopProduction } from '@/api/mes/factory-report/workshop-report.js'
@@ -147,7 +148,7 @@ async function workshopSummary() {
     })
     summaryList.mete = data
   } catch (e) {
-    console.log('获取全年产量失败', e)
+    console.log('获取车间产量失败', e)
   }
 }
 function handleDateChange() {
@@ -165,17 +166,22 @@ function handleDateChange() {
 function handleWorkshopChange() {
   fetchSummary()
   fetchChart()
-  crud.toQuery()
 }
 function handleProductionLineChange() {
   fetchSummary()
   fetchChart()
-  crud.toQuery()
 }
 
 function handleProjectIdChange() {
   workshopSummary()
   crud.toQuery()
+}
+
+function handleDateTimeChange() {
+  query.workShopId = undefined
+  query.productionLineId = undefined
+  fetchSummary()
+  fetchChart()
 }
 const workshopInfRef = ref()
 const monthArr = ref([])
@@ -236,7 +242,7 @@ async function fetchChart() {
       productionData.push(data[i])
     }
     console.log(productionData)
-    option.series[0].data = productionData.map((v) => (v && Number((v / 1000).toFixed(2))) || 0)
+    option.series[0].data = productionData.map((v) => (v && Number((v / 1000).toFixed(DP.COM_WT__T))) || 0)
     _myChart.setOption(option)
   } catch (error) {
     console.log(error, '获取车间报表信息失败')

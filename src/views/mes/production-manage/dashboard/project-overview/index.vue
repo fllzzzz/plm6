@@ -1,16 +1,16 @@
 <template>
   <div class="app-container">
     <div style="display: flex">
-      <div style="width: 25%;">
+      <div style="width: 25%">
         <div class="head-container">
-            <mHeader />
+          <mHeader />
         </div>
         <common-table
           ref="tableRef"
           v-loading="crud.loading"
           :data="crud.data"
           :empty-text="crud.emptyText"
-          :max-height="500"
+          :max-height="maxHeight"
           highlight-current-row
           returnSourceData
           row-key="projectId"
@@ -30,6 +30,8 @@
             </template>
           </el-table-column>
         </common-table>
+        <!-- 分页 -->
+        <pagination />
       </div>
       <div style="border-right: 1px solid #ededed; margin: 0 20px; height: calc(100vh - 130px)"></div>
       <project-process-detail :process-data="processData" style="flex: 1" />
@@ -40,7 +42,8 @@
 import { ref } from 'vue'
 import crudApi from '@/api/mes/production-manage/dashboard/project-overview'
 import useCRUD from '@compos/use-crud'
-// import useMaxHeight from '@compos/use-max-height'
+import useMaxHeight from '@compos/use-max-height'
+import pagination from '@crud/Pagination'
 import mHeader from './module/header.vue'
 import projectProcessDetail from './project-process-detail/index.vue'
 
@@ -60,23 +63,21 @@ const { crud, CRUD, columns } = useCRUD(
     optShow: { ...optShow },
     // permission: { ...permission },
     crudApi: { ...crudApi },
-    hasPagination: false
+    hasPagination: true
   },
   tableRef
 )
 
-// const { maxHeight } = useMaxHeight({
-//   extraBox: ['.head-container'],
-//   paginate: true
-// })
+const { maxHeight } = useMaxHeight({
+  extraBox: ['.head-container'],
+  paginate: true
+})
 
 function handleProjectChange(row) {
   processData.value = row
 }
 
-CRUD.HOOK.handleRefresh = (crud, res) => {
-  res.data.content = res.data
-}
+CRUD.HOOK.handleRefresh = (crud, res) => {}
 </script>
 <style lang="scss" scoped>
 </style>

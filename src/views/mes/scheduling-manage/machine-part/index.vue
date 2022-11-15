@@ -23,9 +23,7 @@
               </div>
             </template>
             <template #viewLeft>
-              <el-tag size="medium" effect="plain" style="margin-right: 5px">
-                数量(件)：{{ summaryInfo.quantity || 0 }}
-              </el-tag>
+              <el-tag size="medium" effect="plain" style="margin-right: 5px"> 数量(件)：{{ summaryInfo.quantity || 0 }} </el-tag>
               <el-tag size="medium" effect="plain" style="margin-right: 10px">
                 重量(kg)：{{ summaryInfo.totalNetWeight?.toFixed(2) || 0 }}
               </el-tag>
@@ -42,7 +40,7 @@
           :infinite-scroll-delay="200"
           :infinite-scroll-distance="200"
           :infinite-scroll-immediate-check="true"
-          :style="{ 'max-height': `${maxHeight}px` }"
+          :style="{ 'max-height': `${maxHeight - 90}px` }"
         >
           <template v-for="item in boardList" :key="item.id">
             <el-tooltip
@@ -68,7 +66,7 @@
                 <span class="ellipsis-text text">
                   {{ item.serialNumber }}
                 </span>
-                <el-image style="flex: 1; width: 95%" :src="item.picturePath" fit="scale-down" />
+                <el-image style="flex: 1; width: 95%" :src="item.picturePath" @error="item.imgLoad = false" />
                 <span
 class="ellipsis-text text"
 @click.stop="item.visibleTip = !item.visibleTip"
@@ -77,6 +75,7 @@ class="ellipsis-text text"
                 <el-checkbox
                   style="position: absolute; left: 10px; top: 0px"
                   v-model="item.checked"
+                  :disabled="!item.imgLoad"
                   @click.stop
                   @change="handleCheckedChange($event, item)"
                 ></el-checkbox>
@@ -140,7 +139,7 @@ const { crud, CRUD } = useCRUD(
   tableRef
 )
 
-const { maxHeight } = useMaxHeight({ paginate: true })
+const { maxHeight } = useMaxHeight()
 
 const boardList = ref([])
 const summaryInfo = ref({ totalNetWeight: 0, quantity: 0 })
@@ -156,6 +155,7 @@ CRUD.HOOK.handleRefresh = (crud, res) => {
   res.data.content = res.data.collect.map((v) => {
     v.checked = false
     v.visibleTip = false
+    v.imgLoad = true
     return v
   })
 }
@@ -266,8 +266,10 @@ function handleCheckedChange(value, item) {
 function handleCheckedAll(val) {
   checkAll.value = val
   boardList.value.forEach((v) => {
-    v.checked = val
-    handleCheckedChange(val, v)
+    if (v.imgLoad) {
+      v.checked = val
+      handleCheckedChange(val, v)
+    }
   })
 }
 
