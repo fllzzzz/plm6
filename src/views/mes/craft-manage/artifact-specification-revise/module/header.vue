@@ -13,7 +13,7 @@
       <monomer-select
         ref="monomerSelectRef"
         v-model="query.monomerId"
-        :project-id="props.projectId"
+        :project-id="query.projectId"
         :productType="TechnologyTypeAllEnum.STRUCTURE.V"
         :default="false"
         clearable
@@ -49,8 +49,19 @@
         class="filter-item"
         clearable
       />
+
       <el-input
-        v-model="query.specification"
+        v-if="query.boolAmendStatus!==artifactSpecReviseEnum.REVISED.V"
+        v-model="query.oldSpecification"
+        size="small"
+        placeholder="输入规格搜索"
+        style="width: 170px"
+        class="filter-item"
+        clearable
+      />
+      <el-input
+        v-else
+        v-model="query.newSpecification"
         size="small"
         placeholder="输入规格搜索"
         style="width: 170px"
@@ -72,11 +83,12 @@
 </template>
 
 <script setup>
-import { defineProps, ref } from 'vue'
+import { ref, watch } from 'vue'
 import { regHeader } from '@compos/use-crud'
 
 import { TechnologyTypeAllEnum } from '@enum-ms/contract'
 import { artifactSpecReviseEnum } from '@enum-ms/mes'
+import { mapGetters } from '@/store/lib'
 
 import rrOperation from '@crud/RR.operation'
 import crudOperation from '@crud/CRUD.operation'
@@ -85,23 +97,37 @@ import changeTable from './change-table'
 
 const defaultQuery = {
   boolAmendStatus: artifactSpecReviseEnum.NOT.V,
-  name: '',
-  serialNumber: '',
-  specification: '',
-  monomerId: { value: undefined, resetAble: false },
-  areaId: { value: undefined, resetAble: false }
+  projectId: { value: undefined, resetAble: false },
+  name: undefined,
+  serialNumber: undefined,
+  newSpecification: undefined,
+  oldSpecification: undefined,
+  monomerId: undefined,
+  areaId: undefined
 }
 
 const monomerSelectRef = ref()
 const areaInfo = ref([])
 const changeVisible = ref(false)
+const { globalProjectId } = mapGetters(['globalProjectId'])
 const { crud, query } = regHeader(defaultQuery)
-const props = defineProps({
-  projectId: {
-    type: [Number, String],
-    default: undefined
-  }
-})
+// const props = defineProps({
+//   projectId: {
+//     type: [Number, String],
+//     default: undefined
+//   }
+// })
+
+watch(
+  () => globalProjectId,
+  (val) => {
+    if (val) {
+      crud.query.projectId = globalProjectId
+      crud.toQuery()
+    }
+  },
+  { immediate: true, deep: true }
+)
 
 function getAreaInfo(val) {
   areaInfo.value = val || []

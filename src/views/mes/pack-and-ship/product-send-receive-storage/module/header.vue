@@ -22,7 +22,7 @@
         clearable
         @blur="crud.toQuery"
       /> -->
-      <rrOperation />
+      <!-- <rrOperation /> -->
       <el-row v-loading="summaryLoading" v-if="checkPermission(crud.permission.get)" :gutter="20" class="panel-group">
         <el-col :span="8" class="card-panel-col">
           <Panel name="累计入库(t)" text-color="#626262" num-color="#1890ff" :endVal="(totalAmount.inboundMete)/1000 || 0"  :precision="DP.COM_WT__KG" />
@@ -59,7 +59,7 @@ import { DP } from '@/settings/config'
 
 import { regHeader } from '@compos/use-crud'
 import crudOperation from '@crud/CRUD.operation'
-import rrOperation from '@crud/RR.operation'
+// import rrOperation from '@crud/RR.operation'
 import Panel from '@/components/Panel'
 
 const defaultQuery = {

@@ -34,7 +34,7 @@
         <span>{{invoiceTypeEnum.VL[detail.invoiceType]}}</span>
       </el-form-item>
       <el-form-item label="税率" prop="taxRate">
-        <span>{{detail.taxRate}}%</span>
+        <span>{{detail.invoiceType!==invoiceTypeEnum.RECEIPT.V?detail.taxRate:'-'}}%</span>
       </el-form-item>
       <el-form-item label="备注" prop="remark">
         <span>{{detail.remark}}</span>

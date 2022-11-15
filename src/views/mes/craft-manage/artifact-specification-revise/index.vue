@@ -2,7 +2,7 @@
   <div class="app-container">
       <!--工具栏-->
       <div class="head-container">
-        <mHeader :project-id="globalProjectId" />
+        <mHeader />
       </div>
       <!--表格渲染-->
       <common-table
@@ -147,12 +147,12 @@
 
 <script setup>
 import crudApi, { specConfig } from '@/api/mes/craft-manage/artifact-specification-revise'
-import { ref, watch, provide } from 'vue'
+import { ref, provide } from 'vue'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import pagination from '@crud/Pagination'
-import { mapGetters } from '@/store/lib'
+// import { mapGetters } from '@/store/lib'
 import { DP } from '@/settings/config'
 import { artifactProductLineEnum } from '@enum-ms/mes'
 // import { artifactPM as permission } from '@/page-permission/plan'
@@ -161,7 +161,7 @@ import udOperation from '@crud/UD.operation'
 import mHeader from './module/header'
 import mForm from './module/form'
 
-const { globalProjectId } = mapGetters(['globalProjectId'])
+// const { globalProjectId } = mapGetters(['globalProjectId'])
 
 const optShow = {
   add: false,
@@ -191,16 +191,16 @@ const { maxHeight } = useMaxHeight({
   extraHeight: 40
 })
 
-watch(
-  () => globalProjectId,
-  (val) => {
-    if (val) {
-      crud.query.projectId = globalProjectId
-      crud.toQuery()
-    }
-  },
-  { immediate: true, deep: true }
-)
+// watch(
+//   () => globalProjectId,
+//   (val) => {
+//     if (val) {
+//       crud.query.projectId = globalProjectId
+//       crud.toQuery()
+//     }
+//   },
+//   { immediate: true, deep: true }
+// )
 
 getSpecConfig()
 

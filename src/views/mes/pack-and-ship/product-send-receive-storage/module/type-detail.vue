@@ -22,38 +22,40 @@
       />
     </template>
     <template #content>
-      <monomer-select
-        ref="monomerSelectRef"
-        v-model="query.monomerId"
-        :project-id="props.detailInfo.project.id"
-        :default="false"
-        clearable
-        class="filter-item"
-        @change="fetchList"
-        @getAreaInfo="getAreaInfo"
-      />
-      <common-select
-        v-model="query.areaId"
-        :options="areaInfo"
-        type="other"
-        :dataStructure="{ key: 'id', label: 'name', value: 'id' }"
-        size="small"
-        clearable
-        placeholder="请选择区域"
-        class="filter-item"
-        style="width:200px;margin-left:3px;"
-        @change="fetchList"
-      />
-      <el-input
-        v-model.trim="query.serialNumber"
-        size="small"
-        placeholder="编号搜索"
-        style="width: 200px;margin-bottom:10px;margin-left:3px;"
-        class="filter-item"
-        clearable
-      />
-      <common-button class="filter-item" size="mini" type="success" icon="el-icon-search" @click="fetchList" style="margin-left:10px;">搜索</common-button>
-      <common-button class="filter-item" size="mini" type="warning" icon="el-icon-refresh-left" @click="query={};fetchList()">重置</common-button>
+      <div class="header-div">
+        <monomer-select
+          ref="monomerSelectRef"
+          v-model="query.monomerId"
+          :project-id="props.detailInfo.project.id"
+          :default="false"
+          clearable
+          class="filter-item"
+          @change="fetchList"
+          @getAreaInfo="getAreaInfo"
+        />
+        <common-select
+          v-model="query.areaId"
+          :options="areaInfo"
+          type="other"
+          :dataStructure="{ key: 'id', label: 'name', value: 'id' }"
+          size="small"
+          clearable
+          placeholder="请选择区域"
+          class="filter-item"
+          style="width:200px;margin-left:3px;"
+          @change="fetchList"
+        />
+        <el-input
+          v-model.trim="query.serialNumber"
+          size="small"
+          placeholder="编号搜索"
+          style="width: 200px;margin-bottom:10px;margin-left:3px;"
+          class="filter-item"
+          clearable
+        />
+        <common-button class="filter-item" size="mini" type="success" icon="el-icon-search" @click="fetchList" style="margin-left:10px;">搜索</common-button>
+        <common-button class="filter-item" size="mini" type="warning" icon="el-icon-refresh-left" @click="query={};fetchList()">重置</common-button>
+      </div>
       <common-table :data="list" v-loading="tableLoading" :data-format="dataFormat" show-summary :summary-method="getSummaries" :max-height="maxHeight" v-if="visible">
         <el-table-column label="序号" type="index" align="center" width="60" />
         <el-table-column key="monomerName" prop="monomerName" label="单体" align="center" show-overflow-tooltip />
@@ -155,14 +157,14 @@ const tableLoading = ref(false)
 const { maxHeight } = useMaxHeight(
   {
     mainBox: '.type-detail',
-    extraBox: '.el-drawer__header',
+    extraBox: ['.el-drawer__header', '.header-div'],
     wrapperBox: '.el-drawer__body',
     paginate: true,
     minHeight: 300,
     navbar: false,
     clientHRepMainH: true
   },
-  drawerRef
+  visible
 )
 
 const dataFormat = ref([
