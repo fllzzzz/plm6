@@ -7,7 +7,7 @@
       value-format="x"
       :clearable="false"
       placeholder="查询月份"
-      style="width: 48%"
+      style="width: 38%"
       :disabled-date="disabledDate"
       class="filter-item"
       @change="fetchTree"
@@ -16,7 +16,7 @@
       v-model.trim="filterText"
       class="filter-item"
       size="small"
-      style="width: 48%"
+      style="width: 58%"
       clearable
       placeholder="输入项目/单体/区域搜索"
     />
@@ -29,6 +29,7 @@
       :props="{ children: 'children', label: 'label' }"
       :filter-node-method="filterNode"
       style="height: 100%"
+      :indent="20"
       expand-on-click-node
       node-key="rowKey"
       :auto-expand-parent="false"
@@ -36,11 +37,27 @@
       @node-click="handleNodeClick"
     >
       <template #default="{ node, data }">
-        <div style="padding: 3px 5px; border-radius: 3px; width: 100%">
-          <span :style="`font-size:${data.fontSize}px;${node.isLeaf ? '' : `font-weight: bold;`}`">{{ node.label }}</span>
-          <span style="float: right; padding: 0 2px 0 6px; font-size: 10px; color: #ccc">
+        <div style="padding: 3px 5px; border-radius: 3px; width: 100%; position: relative" class="tree-custom-content">
+          <template v-if="data.rowKey.indexOf('project') === -1">
+            <div style="position: absolute; width: 10px; border-bottom: 1px dashed #dcdfe6; height: 1px; top: 50%; left: -10px"></div>
+            <div
+              style="position: absolute; width: 1px; border-right: 1px dashed #dcdfe6; left: -10px"
+              :style="{
+                height: data.isLast
+                  ? 'calc(50% - 2px)'
+                  : data.children?.length && node.expanded
+                  ? `${1 + data.children?.length}00%`
+                  : '100%',
+              }"
+            ></div>
+          </template>
+          <div style="width: 100%; overflow: hidden; text-overflow: ellipsis">
+            <svg-icon style="margin-right: 5px" :icon-class="data.icon" />
+            <span :style="`font-size:${data.fontSize}px;${node.isLeaf ? '' : `font-weight: bold;`}`">{{ node.label }}</span>
+          </div>
+          <!-- <span style="float: right; padding: 0 2px 0 6px; font-size: 10px; color: #ccc">
             <span>{{ data.type }}</span>
-          </span>
+          </span> -->
         </div>
       </template>
     </el-tree>
@@ -121,6 +138,7 @@ function dataFormat(content) {
         const rowKey = 'area_' + areas[y].id
         _area.push({
           id: areas[y].id,
+          isLast: y === areas.length - 1,
           rowKey: rowKey,
           label: areas[y].name,
           name: areas[y].name,
@@ -131,13 +149,15 @@ function dataFormat(content) {
           isLeaf: true,
           disabled: false,
           fontSize: 14,
-          type: ''
+          type: '',
+          icon: 'config-2'
         })
         expandedKeys.value.push(rowKey)
       }
       const rowKey = 'monomer_' + monomers[x].id
       _monomer.push({
         id: monomers[x].id,
+        isLast: x === monomers.length - 1,
         rowKey: rowKey,
         parentIds: [content[i].id],
         label: monomers[x].name,
@@ -145,12 +165,14 @@ function dataFormat(content) {
         isLeaf: false,
         disabled: true,
         fontSize: 15,
-        type: '单体'
+        type: '单体',
+        icon: 'document'
       })
       expandedKeys.value.push(rowKey)
     }
     _tree.push({
       id: content[i].id,
+      isLast: i === content.length - 1,
       rowKey: 'project_' + content[i].id,
       parentIds: [],
       label: projectNameFormatter(
@@ -166,7 +188,8 @@ function dataFormat(content) {
       isLeaf: false,
       fontSize: 16,
       disabled: true,
-      type: '项目'
+      type: '项目',
+      icon: 'project'
     })
   }
   return _tree
@@ -226,8 +249,19 @@ function judgeFilterIds(ids) {
   padding-right: 5px;
   font-size: 15px;
 
-  ::v-deep(.el-tree-node.is-checked > .el-tree-node__content) {
+  ::v-deep(.el-tree-node.is-checked > .el-tree-node__content .tree-custom-content) {
     background-color: #ffe48d !important;
+  }
+  ::v-deep(.el-tree-node__content:hover) {
+    background-color: transparent !important;
+  }
+
+  ::v-deep(.el-tree-node:focus > .el-tree-node__content) {
+    background-color: transparent !important;
+  }
+
+  ::v-deep(.el-tree-node__content > .el-tree-node__expand-icon) {
+    display: none;
   }
 }
 

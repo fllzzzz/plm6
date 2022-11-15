@@ -19,6 +19,7 @@
           type="enum"
           size="small"
           class="filter-item"
+          @change="fetch"
         />
         <tag-tabs
           ref="tagTabsRef"
@@ -130,6 +131,8 @@
         <el-table-column prop="serialNumber" :show-overflow-tooltip="true" label="编号" min-width="100" align="center">
           <template #default="{ row }">
             <span>{{ row.serialNumber }}</span>
+            <br />
+            <el-tag v-if="row.structureClass?.name">{{ row.structureClass?.name }}</el-tag>
           </template>
         </el-table-column>
         <el-table-column type="selection" width="55" align="center" class="selection" :selectable="selectable" />
@@ -272,7 +275,10 @@ watch(
 )
 
 function artifactTypeInit() {
-  if (artifactTypeList.value?.length === 1) {
+  if (
+    artifactTypeList.value?.length &&
+    (artifactTypeList.value?.length === 1 || queryVO.value.productionLineTypeEnum === artifactProductLineEnum.INTELLECT.V)
+  ) {
     queryVO.value.structureClassId = artifactTypeList.value[0].structureClassId
     fetch()
   } else {
@@ -300,10 +306,14 @@ function closeHook() {
 
 function resetQuery() {
   queryVO.value.serialNumber = undefined
-  queryVO.value.structureClassId = undefined
+  if (queryVO.value.productionLineTypeEnum !== artifactProductLineEnum.INTELLECT.V) {
+    queryVO.value.structureClassId = undefined
+  }
+  fetch()
 }
 
 async function fetch() {
+  if (queryVO.value.productionLineTypeEnum === artifactProductLineEnum.INTELLECT.V && !queryVO.value.structureClassId) return
   try {
     tableLoading.value = true
     tableData.value = []
@@ -386,7 +396,7 @@ function handleCheckAllChange(val, row, index) {
 
 // 合并单元格
 function spanMethod({ row, column, rowIndex, columnIndex }) {
-  if (columnIndex === 1) {
+  if (columnIndex === 1 || columnIndex === 2) {
     return {
       rowspan: row.rowspan || 0,
       colspan: 1

@@ -196,7 +196,7 @@ const { crud, columns, CRUD } = useCRUD(
   tableRef
 )
 
-const { maxHeight, heightStyle } = useMaxHeight({ extraHeight: 15 })
+const { maxHeight, heightStyle } = useMaxHeight({ paginate: true })
 
 const summaryInfo = ref({})
 const queryParams = computed(() => {
@@ -319,8 +319,8 @@ function previewRecord() {
 .wrap {
   display: flex;
   .wrap-left {
-    width: 380px;
-    margin-right: 20px;
+    width: 300px;
+    margin-right: 10px;
   }
   .wrap-right {
     flex: 1;
