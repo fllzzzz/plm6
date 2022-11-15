@@ -104,7 +104,7 @@ import { getLightColor } from '@/utils/color'
 import useVisible from '@compos/use-visible'
 import useMaxHeight from '@compos/use-max-height'
 
-const emit = defineEmits(['update:visible'])
+const emit = defineEmits(['update:visible', 'success'])
 const nestingProgressData = ref([])
 const resultLoading = ref(false)
 const props = defineProps({

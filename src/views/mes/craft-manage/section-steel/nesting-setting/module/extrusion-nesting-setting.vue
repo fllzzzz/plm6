@@ -1,5 +1,5 @@
 <template>
-  <common-dialog ref="dialogRef" title="套料设定" v-model:visible="dialogVisible" direction="rtl" :before-close="handleClose" width="400px">
+  <common-dialog ref="dialogRef" title="套料设定" v-model:visible="dialogVisible" :before-close="handleClose" width="400px">
     <template #titleLeft>
       <el-tag>单位：mm</el-tag>
     </template>

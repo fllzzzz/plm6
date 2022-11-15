@@ -1,61 +1,101 @@
 <template>
   <div v-show="crud.searchToggle">
-    <common-radio-button
-      v-model="query.productionLineTypeEnum"
-      :options="artifactProductLineEnum.ENUM"
-      type="enum"
-      default
-      class="filter-item"
-      @change="handleProductionLineTypeChange"
-    />
-    <common-radio-button
-      v-if="!isTradition"
-      v-model="query.boolMainAssemble"
-      :options="assembleTypeEnum.ENUM"
-      type="enum"
-      class="filter-item"
-      @change="fetchSummary"
-    />
-    <monomer-select-area-select
-      v-model:monomerId="query.monomerId"
-      v-model:areaId="query.areaId"
-      clearable
-      areaClearable
-      :project-id="query.projectId"
-    />
-    <common-select
-      v-model="query.specPrefix"
-      :options="specPrefixList"
-      type="other"
-      :data-structure="{ key: 'specPrefix', label: 'specPrefix', value: 'specPrefix' }"
-      class="filter-item"
-      clearable
-      style="width: 200px"
-      placeholder="请选择截面类型"
-      @change="handleSpecPreFixChange"
-    />
-    <common-select
-      v-model="query.specification"
-      :options="specificationList"
-      type="other"
-      clearable
-      :data-structure="{ key: 'specification', label: 'specification', value: 'specification' }"
-      class="filter-item"
-      style="width: 200px"
-      placeholder="请选择规格"
-      @change="handleSpecificationChange"
-    />
-    <common-radio-button
-      v-if="materialList.length"
-      v-model="query.material"
-      :options="materialList"
-      show-option-all
-      clearable
-      type="other"
-      :data-structure="{ key: 'material', label: 'material', value: 'material' }"
-      class="filter-item"
-      @change="fetchSummary"
-    />
+    <el-form style="display: flex; flex-wrap: wrap">
+      <el-form-item label="所属项目" class="form-label-require">
+        <project-cascader
+          v-model="query.projectId"
+          placeholder="所属项目"
+          clearable
+          class="filter-item"
+          style="width: 300px"
+          @change="fetchOtherCondition"
+        />
+      </el-form-item>
+      <el-form-item label="项目单体" class="form-label-require">
+        <monomer-select-area-select
+          v-model:monomerId="query.monomerId"
+          v-model:areaId="query.ids"
+          clearable
+          areaClearable
+          areaMultiple
+          :project-id="query.projectId"
+          @change="fetchOtherCondition"
+        />
+      </el-form-item>
+      <el-form-item label="生产模式" class="form-label-require">
+        <common-radio-button
+          v-model="query.productionLineTypeEnum"
+          :options="artifactProductLineEnum.ENUM"
+          type="enum"
+          default
+          class="filter-item"
+          @change="handleProductionLineTypeChange"
+        />
+        <common-radio-button
+          v-if="!isTradition"
+          v-model="query.boolMainAssemble"
+          :options="assembleTypeEnum.ENUM"
+          type="enum"
+          class="filter-item"
+          @change="crud.toQuery"
+        />
+      </el-form-item>
+    </el-form>
+    <el-form style="display: flex; flex-wrap: wrap">
+      <el-form-item label="生产类型" class="form-label-require">
+        <common-select
+          v-model="query.structureClassId"
+          :options="assembleList"
+          :disabled="isTradition"
+          type="other"
+          :data-structure="{ key: 'assembleId', label: 'label', value: 'assembleId' }"
+          class="filter-item"
+          clearable
+          style="width: 300px"
+          placeholder="请选择生产类型"
+          @change="handleAssembleChange"
+        />
+      </el-form-item>
+      <el-form-item label="部件类型" class="form-label-require">
+        <common-select
+          v-model="query.specPrefix"
+          :options="assemblePropertyList"
+          type="other"
+          :data-structure="{ key: 'specPrefix', label: 'label', value: 'specPrefix' }"
+          class="filter-item"
+          clearable
+          style="width: 200px"
+          placeholder="请选择部件类型"
+          @change="handleAssemblePropertyChange"
+        />
+      </el-form-item>
+      <el-form-item label="规格筛选">
+        <common-select
+          v-model="query.specification"
+          :options="specificationList"
+          type="other"
+          clearable
+          :data-structure="{ key: 'specification', label: 'specification', value: 'specification' }"
+          class="filter-item"
+          style="width: 200px"
+          placeholder="请选择规格"
+          @change="handleSpecificationChange"
+        />
+      </el-form-item>
+      <el-form-item label="材质筛选">
+        <common-select
+          v-model="query.material"
+          :options="materialList"
+          type="other"
+          clearable
+          :data-structure="{ key: 'material', label: 'material', value: 'material' }"
+          class="filter-item"
+          style="width: 200px"
+          placeholder="请选择材质"
+          @change="crud.toQuery"
+        />
+      </el-form-item>
+    </el-form>
   </div>
   <div v-show="crud.searchToggle">
     <el-tag effect="plain" size="medium" class="filter-item">长度≥：</el-tag>
@@ -67,25 +107,10 @@
       style="width: 200px"
       class="filter-item"
       clearable
-      @keyup.enter="fetchSummary"
+      @keyup.enter="crud.toQuery"
     />
     <rrOperation />
   </div>
-  <tag-tabs
-    v-model="query.structureClassId"
-    class="filter-item"
-    style="width: 100%"
-    :data="summaryList"
-    itemKey="structureClassId"
-    @change="crud.toQuery"
-  >
-    <template #default="{ item }">
-      <span>{{ item.name }}：</span>
-      <span>{{ item.totalQuantity }}件</span>
-      <span> | </span>
-      <span>{{ item.totalNetWeight }}吨</span>
-    </template>
-  </tag-tabs>
   <crudOperation>
     <template #optLeft>
       <common-radio-button
@@ -123,20 +148,20 @@
       </common-button>
     </template>
     <template #viewLeft>
+      <slot name="viewLeft" />
       <common-button v-if="isTradition" class="filter-item" type="success" size="mini" icon="el-icon-view" @click="noNestingVisible = true">
         查看【无需套料清单】
       </common-button>
     </template>
   </crudOperation>
   <!-- <filter-drawer v-model:visible="filterVisible" :list="filterList"></filter-drawer> -->
-  <no-nesting-drawer v-model:visible="noNestingVisible" @refresh="fetchSummary" />
-  <extrusion-nesting-setting v-model:visible="dialogVisible" :detail-data="crud.selections" :projectId="globalProjectId" />
+  <no-nesting-drawer v-model:visible="noNestingVisible" @refresh="crud.toQuery" />
+  <extrusion-nesting-setting v-model:visible="dialogVisible" :detail-data="crud.selections" :projectId="query.projectId" />
 </template>
 
 <script setup>
-import { getCondition, setNotNeedNesting, getNestingSummary } from '@/api/mes/craft-manage/section-steel/nesting-setting'
-import { ref, watch, computed, watchEffect, defineEmits } from 'vue'
-import { mapGetters } from '@/store/lib'
+import { getCondition, setNotNeedNesting } from '@/api/mes/craft-manage/section-steel/nesting-setting'
+import { ref, computed, defineEmits, watchEffect } from 'vue'
 import { ElMessage, ElNotification, ElMessageBox } from 'element-plus'
 
 import { artifactProductLineEnum, assembleTypeEnum } from '@enum-ms/mes'
@@ -145,17 +170,17 @@ import { regHeader } from '@compos/use-crud'
 import crudOperation from '@crud/CRUD.operation'
 import rrOperation from '@crud/RR.operation'
 import monomerSelectAreaSelect from '@comp-base/monomer-select-area-select'
-import tagTabs from '@comp-common/tag-tabs'
 import noNestingDrawer from './no-nesting-drawer.vue'
 import extrusionNestingSetting from './extrusion-nesting-setting.vue'
-import { deepClone } from '@/utils/data-type'
 
 const emits = defineEmits(['change-mode'])
 
-const { globalProjectId } = mapGetters('globalProjectId')
 const defaultQuery = {
-  projectId: globalProjectId.value,
+  projectId: { value: undefined, resetAble: false },
+  monomerId: { value: undefined, resetAble: false },
+  ids: { value: [], resetAble: false },
   structureClassId: undefined,
+  specPrefix: undefined,
   boolMainAssemble: assembleTypeEnum.MAIN_ASSEMBLE.V
 }
 
@@ -165,26 +190,38 @@ const noNestingVisible = ref(false)
 const dialogVisible = ref(false)
 const detailData = ref({})
 const curMode = ref('nesting')
-const specPrefixList = ref([])
+const conditionInfo = ref({})
+const assembleList = ref([])
+const assemblePropertyList = ref([])
 const specificationList = ref([])
 const materialList = ref([])
-const summaryList = ref([])
 
 const isTradition = computed(() => query.productionLineTypeEnum === artifactProductLineEnum.TRADITION.V)
 
 watchEffect(() => {
-  query.projectId = globalProjectId.value
+  if (isTradition.value) {
+    assembleList.value = []
+    assemblePropertyList.value =
+      (conditionInfo.value[artifactProductLineEnum.TRADITION.V] &&
+        conditionInfo.value[artifactProductLineEnum.TRADITION.V][0]?.assemblePropertyDTOS?.map((v) => {
+          v.label = `【${v.specPrefix}】${v.name}`
+          return v
+        })) ||
+      []
+  } else {
+    assembleList.value =
+      conditionInfo.value[artifactProductLineEnum.INTELLECT.V]?.map((v) => {
+        v.label = `【${v.definitionWord}】${v.classificationName}`
+        return v
+      }) || []
+  }
 })
 
-watch(
-  [() => query.projectId, () => query.monomerId, () => query.areaId],
-  ([monomerId, areaId]) => {
-    fetchOtherCondition()
-  },
-  { immediate: true }
-)
-
 function handleProductionLineTypeChange(val) {
+  query.structureClassId = undefined
+  query.specPrefix = undefined
+  query.specification = undefined
+  query.material = undefined
   if (!isTradition.value) {
     curMode.value = 'nesting'
     handleModeChange(curMode.value)
@@ -193,45 +230,35 @@ function handleProductionLineTypeChange(val) {
 }
 
 async function fetchOtherCondition() {
-  if (!query.projectId) return
+  if (!query.projectId || !query.monomerId) return
   try {
-    specPrefixList.value = []
+    conditionInfo.value = {}
     const data = await getCondition({
       projectId: query.projectId,
-      productionLineTypeEnum: query.productionLineTypeEnum,
       monomerId: query.monomerId,
-      areaId: query.areaId
+      ids: query.ids
     })
-    specPrefixList.value = data?.content || []
-    fetchSummary()
+    conditionInfo.value = data
+    crud.toQuery()
   } catch (er) {
     console.log(er, '获取其他筛选条件列表')
   }
 }
 
-async function fetchSummary() {
-  query.structureClassId = undefined
-  if (!query.projectId) return
-  try {
-    summaryList.value = []
-    const _query = deepClone(query)
-    if (_query.productionLineTypeEnum === artifactProductLineEnum.TRADITION.V) {
-      delete _query.boolMainAssemble
-    }
-    const data = await getNestingSummary(_query)
-    summaryList.value = data?.content || []
-    if (summaryList.value?.length) {
-      query.structureClassId = summaryList.value[0].structureClassId
-    }
-    crud.toQuery()
-  } catch (er) {
-    console.log(er, '获取汇总列表')
-  }
+function handleAssembleChange(val) {
+  assemblePropertyList.value =
+    assembleList.value
+      .find((v) => v.assembleId === val)
+      ?.assemblePropertyDTOS?.map((v) => {
+        v.label = `【${v.specPrefix}】${v.name}`
+        return v
+      }) || []
+  crud.toQuery()
 }
 
-function handleSpecPreFixChange(val) {
-  specificationList.value = specPrefixList.value.find((v) => v.specPrefix === val)?.specificationList || []
-  fetchSummary()
+function handleAssemblePropertyChange(val) {
+  specificationList.value = assemblePropertyList.value.find((v) => v.specPrefix === val)?.specificationList || []
+  crud.toQuery()
 }
 
 function handleSpecificationChange(val) {
@@ -243,7 +270,7 @@ function handleSpecificationChange(val) {
           material: v
         }
       }) || []
-  fetchSummary()
+  crud.toQuery()
 }
 
 function handleModeChange(mode) {
@@ -276,7 +303,7 @@ async function handleNotNeedNesting() {
           type: 'success',
           duration: 2500
         })
-        fetchSummary()
+        crud.toQuery()
       } catch (error) {
         console.log('无需套料设置失败', error)
       }
@@ -292,3 +319,10 @@ function handleExtrusionNesting(val) {
   detailData.value = val
 }
 </script>
+
+<style lang="scss" scoped>
+::v-deep(.el-form-item--small.el-form-item) {
+  margin-bottom: 0;
+  margin-right: 10px;
+}
+</style>
