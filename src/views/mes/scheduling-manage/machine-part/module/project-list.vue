@@ -10,7 +10,7 @@
       placeholder="选择月份"
       style="width: 48%"
       class="filter-item"
-      @change="fetchTime"
+      @change="fetchTime(null)"
     />
     <common-select
       v-loading="timeLoading"
