@@ -37,7 +37,6 @@ export const showProjectSearch = [
   // MES
   { component: '/mes/projects/index', type: allPT, required: true },
   { component: '/mes/overall-plan/monomer/index', type: pt.STEEL.V, required: true },
-  { component: '/mes/craft-manage/section-steel/nesting-setting/index', type: pt.STEEL.V, required: true },
   { component: '/mes/changed-manage/artifact/index', type: pt.STEEL.V, required: false },
   { component: '/mes/changed-manage/machine-part/index', type: pt.STEEL.V, required: false },
   { component: '/mes/changed-manage/assemble/index', type: pt.STEEL.V, required: false },

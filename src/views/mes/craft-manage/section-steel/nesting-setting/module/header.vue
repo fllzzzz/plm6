@@ -48,7 +48,7 @@
           :options="assembleList"
           :disabled="isTradition"
           type="other"
-          :data-structure="{ key: 'assembleId', label: 'label', value: 'assembleId' }"
+          :data-structure="{ key: 'id', label: 'label', value: 'id' }"
           class="filter-item"
           clearable
           style="width: 300px"
@@ -131,7 +131,7 @@
         type="success"
         size="mini"
         icon="el-icon-menu"
-        :disabled="!query.structureClassId || crud.selections.length === 0"
+        :disabled="crud.selections.length === 0"
         @click="handleExtrusionNesting"
       >
         型材套排
@@ -214,6 +214,7 @@ watchEffect(() => {
         v.label = `【${v.definitionWord}】${v.classificationName}`
         return v
       }) || []
+    assemblePropertyList.value = []
   }
 })
 
@@ -248,7 +249,7 @@ async function fetchOtherCondition() {
 function handleAssembleChange(val) {
   assemblePropertyList.value =
     assembleList.value
-      .find((v) => v.assembleId === val)
+      .find((v) => v.id === val)
       ?.assemblePropertyDTOS?.map((v) => {
         v.label = `【${v.specPrefix}】${v.name}`
         return v
