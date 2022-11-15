@@ -1,6 +1,7 @@
 <template>
   <div class="head-container">
-    <el-date-picker
+    <project-header-time v-model="month" :data="timeList" @change="fetchTree" />
+    <!-- <el-date-picker
       v-model="month"
       type="month"
       size="small"
@@ -19,7 +20,7 @@
       style="width: 58%"
       clearable
       placeholder="输入项目/单体/区域搜索"
-    />
+    /> -->
   </div>
   <div :style="heightStyle">
     <el-tree
@@ -71,6 +72,8 @@ import moment from 'moment'
 
 import { projectNameFormatter } from '@/utils/project'
 
+import projectHeaderTime from './project-header-time.vue'
+
 const emit = defineEmits(['area-click'])
 defineProps({
   heightStyle: {
@@ -97,9 +100,19 @@ fetchTime()
 async function fetchTime() {
   try {
     const { content } = await getAreaTreeTime()
-    timeList.value = content.map((v) => moment(v, 'YYYY/MM').valueOf())
-    if (timeList.value?.length) {
-      month.value = timeList.value.includes(curMonthValue) ? curMonthValue.toString() : timeList.value[0].toString()
+    const timeStamp = []
+    timeList.value = content.map((v) => {
+      const _t = moment(v, 'YYYY/MM')
+      timeStamp.push(_t.valueOf())
+      return {
+        year: _t.year(),
+        month: _t.month() + 1,
+        timeStamp: _t.valueOf()
+      }
+    })
+    // timeList.value = timeList.value.concat(timeList.value).concat(timeList.value).concat(timeList.value)
+    if (timeStamp?.length) {
+      month.value = timeStamp.includes(curMonthValue) ? curMonthValue : timeStamp[0]
       fetchTree()
     }
   } catch (error) {
@@ -107,9 +120,9 @@ async function fetchTime() {
   }
 }
 
-function disabledDate(time) {
-  return timeList.value?.indexOf(moment(time).valueOf()) === -1
-}
+// function disabledDate(time) {
+//   return timeList.value?.indexOf(moment(time).valueOf()) === -1
+// }
 
 async function fetchTree() {
   try {

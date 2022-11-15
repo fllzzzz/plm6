@@ -5,7 +5,7 @@
       :options="artifactProductLineEnum.ENUM"
       type="enum"
       size="small"
-      showOptionAll
+      default
       class="filter-item"
     />
     <tag-tabs
