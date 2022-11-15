@@ -27,16 +27,16 @@
         </template>
       </el-table-column>
       <el-table-column
-        v-if="columns.visible('OrderNumber')"
+        v-if="columns.visible('cutNumber')"
         align="center"
-        key="OrderNumber"
-        prop="OrderNumber"
+        key="cutNumber"
+        prop="cutNumber"
         :show-overflow-tooltip="true"
         label="切割指令号"
       >
         <template v-slot="scope">
           <table-cell-tag :show="scope.row.boolPrinted" name="已打印" type="printed" />
-          <span>{{ scope.row.OrderNumber }}</span>
+          <span>{{ scope.row.cutNumber }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -52,39 +52,39 @@
         </template>
       </el-table-column>
       <el-table-column
-        v-if="columns.visible('materialTypeName')"
+        v-if="columns.visible('config')"
         align="center"
-        key="materialTypeName"
-        prop="materialTypeName"
+        key="config.name"
+        prop="config.name"
         :show-overflow-tooltip="true"
         label="下料方式"
       >
         <template v-slot="scope">
-          <span>{{ scope.row.materialTypeName }}</span>
+          <span>{{ scope.row.config?.name }}</span>
         </template>
       </el-table-column>
       <el-table-column
-        v-if="columns.visible('workshopName')"
+        v-if="columns.visible('workshop')"
         align="center"
-        key="workshopName"
-        prop="workshopName"
+        key="workshop.name"
+        prop="workshop.name"
         :show-overflow-tooltip="true"
         label="车间"
       >
         <template v-slot="scope">
-          <span>{{ scope.row.workshopName }}</span>
+          <span>{{ scope.row.workshop?.name }}</span>
         </template>
       </el-table-column>
       <el-table-column
-        v-if="columns.visible('productionLineName')"
+        v-if="columns.visible('productionLine')"
         align="center"
-        key="productionLineName"
-        prop="productionLineName"
+        key="productionLine.name"
+        prop="productionLine.name"
         :show-overflow-tooltip="true"
         label="生产线"
       >
         <template v-slot="scope">
-          <span>{{ scope.row.productionLineName }}</span>
+          <span>{{ scope.row.productionLine?.name }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -121,7 +121,7 @@
             >查看</common-button
           >
           <common-button v-else type="primary" size="mini" @click="showCuttingDetail(scope.row)">查看</common-button>
-          <common-button type="success" size="mini" @click="printDetail(scope.row)">打印</common-button>
+          <common-button type="success" size="mini" @click="beforePrintLabel(scope.row)">打印</common-button>
         </template>
       </el-table-column>
     </common-table>
@@ -130,12 +130,12 @@
     <!-- 钻孔工单详情 -->
     <detail v-model:visible="drawerVisible" :process-type="crud.query.processType" :detail-data="detailData" />
     <!-- 切割工单详情 -->
-    <cutting-detail v-model:visible="cuttingDrawerVisible" :cutting-detail-data="cuttingDetailData" />
+    <cutting-detail :process-type="crud.query.processType" v-model:visible="cuttingDrawerVisible" :cutting-detail-data="cuttingDetailData" />
   </div>
 </template>
 <script setup>
 import { ref } from 'vue'
-import crudApi from '@/api/mes/work-order-manage/machine-part.js'
+import crudApi, { printInfo } from '@/api/mes/work-order-manage/machine-part.js'
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
 import pagination from '@crud/Pagination'
@@ -174,6 +174,7 @@ const { maxHeight } = useMaxHeight({
 
 // 预览切割工单 pdf
 function showCuttingDetail(row) {
+  console.log(row, 'row')
   cuttingDrawerVisible.value = true
   cuttingDetailData.value = row
 }
@@ -185,8 +186,16 @@ function showDrill(row) {
 }
 
 // 打印
-function printDetail(row) {
-  console.log(row, 'row')
+async function beforePrintLabel(row) {
+  try {
+    const data = await printInfo({
+      cutId: row.id,
+      processType: crud.query.processType
+    })
+    console.log(data, 'data')
+  } catch (e) {
+    console.log('打印失败', e)
+  }
 }
 
 CRUD.HOOK.handleRefresh = (crud, res) => {

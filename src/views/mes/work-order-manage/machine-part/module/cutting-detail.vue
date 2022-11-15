@@ -1,14 +1,14 @@
 <template>
   <common-drawer
     ref="drawerRef"
-    :title="`${props.detailData?.workshop?.name}>${props.detailData?.productionLine?.name}钻孔详情`"
-    v-model="drawerVisible"
+    :title="`${props.cuttingDetailData?.workshop?.name}>${props.cuttingDetailData?.productionLine?.name}切割详情`"
+    v-model="cuttingDrawerVisible"
     direction="rtl"
     :before-close="handleClose"
-    size="60%"
+    size="63%"
   >
     <template #content>
-      <div class="head-container">
+      <div class="header">
         <common-radio-button
           v-model="orderType"
           :options="typeEnum.ENUM"
@@ -19,35 +19,11 @@
         />
       </div>
       <div v-if="orderType === typeEnum.NESTING_TASK_ORDER.V">
-        <common-table
-          ref="table"
-          :data="drillData"
-          empty-text="暂无数据"
-          :max-height="maxHeight"
-          style="width: 100%"
-          show-summary
-          :summary-method="getSummaries"
-        >
-          <el-table-column :show-overflow-tooltip="true" prop="index" label="序号" align="center" width="60" type="index" />
-          <el-table-column :show-overflow-tooltip="true" prop="project" key="project.shortName" label="项目" min-width="120">
-            <template v-slot="scope">
-              <span>{{ projectNameFormatter(scope.row.project) }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column :show-overflow-tooltip="true" prop="serialNumber" key="serialNumber" label="编号" align="center" />
-          <el-table-column :show-overflow-tooltip="true" prop="specification" key="specification" label="规格" align="center" />
-          <el-table-column :show-overflow-tooltip="true" prop="material" key="material" label="材质" align="center" />
-          <el-table-column :show-overflow-tooltip="true" prop="quantity" key="quantity" label="数量" align="center" />
-          <el-table-column :show-overflow-tooltip="true" prop="weight" key="weight" label="重量（kg）" align="center" />
-          <el-table-column :show-overflow-tooltip="true" prop="picturePath" key="picturePath" label="图形" align="center">
-            <template v-slot="scope">
-              <el-image style="width: 100%; height: 100%" :src="scope.row.picturePath" fit="cover" />
-            </template>
-          </el-table-column>
-        </common-table>
+        <pdf :url="source" :type="'canvas'" :pdfjsDistPath="pdfjsDistPath" />
       </div>
+      <!--表格渲染-->
       <div v-if="orderType === typeEnum.SORTING_ORDER.V">
-        <common-table ref="table" :data="drillSortData" empty-text="暂无数据" :max-height="maxHeight" style="width: 100%">
+        <common-table ref="table" :data="cuttingData" empty-text="暂无数据" :max-height="maxHeight" style="width: 100%">
           <el-table-column :show-overflow-tooltip="true" prop="index" label="序号" align="center" width="60" type="index" />
           <el-table-column :show-overflow-tooltip="true" prop="picturePath" key="picturePath" label="图形" align="center">
             <template v-slot="scope">
@@ -93,15 +69,13 @@ import useMaxHeight from '@compos/use-max-height'
 import usePagination from '@compos/use-pagination'
 import { constantize } from '@/utils/enum/base'
 import { defineProps, defineEmits, ref } from 'vue'
-import { tableSummary } from '@/utils/el-extra'
-import { projectNameFormatter } from '@/utils/project'
-import { showDrillDetail, showInfo } from '@/api/mes/work-order-manage/machine-part.js'
+import { showCuttingPdf, showInfo } from '@/api/mes/work-order-manage/machine-part.js'
+import pdf from '@/components/PDF/pdf'
 
+const pdfjsDistPath = import.meta.env.BASE_URL + 'assets'
 const emit = defineEmits(['update:visible'])
 const drawerRef = ref()
-const drillData = ref([]) // 钻孔工单详情数据
-const drillSortData = ref([]) // 钻孔分拣单
-const workshopList = ref([])
+const cuttingData = ref([]) // 切割分拣单详情数据
 
 const typeEnum = {
   NESTING_TASK_ORDER: { L: '套料任务单', K: 'NESTING_TASK_ORDER', V: 1 },
@@ -109,14 +83,16 @@ const typeEnum = {
 }
 constantize(typeEnum)
 
+const source = ref('')
 const orderType = ref(typeEnum.NESTING_TASK_ORDER.V)
+const workshopList = ref([])
 
 const props = defineProps({
   visible: {
     type: Boolean,
     required: true
   },
-  detailData: {
+  cuttingDetailData: {
     type: Object,
     default: () => {}
   },
@@ -125,33 +101,53 @@ const props = defineProps({
   }
 })
 
-const { maxHeight } = useMaxHeight(
-  {
-    wrapperBox: ['.el-drawer__body'],
-    navbar: false
-  },
-  drawerRef
-)
-const { visible: drawerVisible, handleClose } = useVisible({ emit, props, field: 'visible', showHook: drillDetailGet })
+const { maxHeight } = useMaxHeight({ extraBox: ['.header'] })
 
-const { handleSizeChange, handleCurrentChange, total, setTotalPage, queryPage } = usePagination({ fetchHook: drillingSortGet })
+const { visible: cuttingDrawerVisible, handleClose } = useVisible({ emit, props, field: 'visible', showHook: nestingDetailGet })
 
-async function drillDetailGet() {
+const { handleSizeChange, handleCurrentChange, total, setTotalPage, queryPage } = usePagination({ fetchHook: cuttingDetailGet })
+
+// 切割 套料任务单
+async function nestingDetailGet() {
+  orderType.value = typeEnum.NESTING_TASK_ORDER.V
   try {
-    const data = await showDrillDetail({ cutId: props.detailData.id, processType: props.processType })
-    drillData.value = data
+    const data = await showCuttingPdf({ cutId: props.cuttingDetailData.id })
+    source.value = await getUrlByFileReader(data)
   } catch (error) {
-    console.log('获取钻孔工单详情失败', error)
+    console.log('获取套料任务单失败', error)
   }
 }
 
-// 钻孔分拣单
-async function drillingSortGet() {
+function getUrlByFileReader(res) {
+  return new Promise((resolve, reject) => {
+    if (res && res.data && res.data.size) {
+      const dataInfo = res.data
+      const reader = new window.FileReader()
+      // 使用readAsArrayBuffer读取文件, result属性中将包含一个 ArrayBuffer 对象以表示所读取文件的数据
+      reader.readAsArrayBuffer(dataInfo)
+      reader.onload = function (e) {
+        console.log(e, dataInfo, 'rrrr')
+        const result = e.target.result
+        const contentType = dataInfo.type
+        // 生成blob图片,需要参数(字节数组, 文件类型)
+        const blob = new Blob([result], { type: contentType })
+        // 使用 Blob 创建一个指向类型化数组的URL, URL.createObjectURL是new Blob文件的方法,可以生成一个普通的url,可以直接使用,比如用在img.src上
+        const url = window.URL.createObjectURL(blob)
+        console.log(url) // 产生一个类似 blob:d3958f5c-0777-0845-9dcf-2cb28783acaf 这样的URL字符串
+        resolve(url)
+      }
+    } else {
+      reject()
+    }
+  })
+}
+
+// 切割 分拣单
+async function cuttingDetailGet() {
   let _list = []
-  workshopList.value = []
   try {
     const { content = [], totalElements } = await showInfo({
-      cutId: props.detailData.id,
+      cutId: props.cuttingDetailData.id,
       processType: props.processType,
       ...queryPage
     })
@@ -177,28 +173,24 @@ async function drillingSortGet() {
     })
     _list = content
   } catch (error) {
-    console.log('获取钻孔分拣单失败', error)
+    console.log('获取切割分拣单失败', error)
   } finally {
-    drillSortData.value = _list
+    cuttingData.value = _list
   }
 }
 
 function handleChange(val) {
   if (val === typeEnum.SORTING_ORDER.V) {
-    drillingSortGet()
+    cuttingDetailGet()
   } else {
-    drillDetailGet()
+    nestingDetailGet()
   }
-}
-
-// 合计
-function getSummaries(param) {
-  return tableSummary(param, {
-    props: ['quantity', 'weight']
-  })
 }
 </script>
 
 <style lang="scss" scoped>
+::v-deep(.pdfViewer .page) {
+  margin: 1px;
+}
 </style>
 
