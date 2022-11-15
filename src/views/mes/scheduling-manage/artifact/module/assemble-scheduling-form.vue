@@ -36,7 +36,11 @@
             <el-tag :type="row.attributeType === '部件' ? 'warning' : 'success'">{{ row.attributeType }}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="assembleConfigName" :show-overflow-tooltip="true" label="部件类型" min-width="100" align="center" />
+        <el-table-column prop="typesettingAssembleTypeEnum" :show-overflow-tooltip="true" label="部件类型" min-width="100" align="center">
+          <template #default="{ row: { sourceRow: row } }">
+            <span>{{row.typesettingAssembleTypeEnum?typesettingAssembleTypeEnum.VL[row.typesettingAssembleTypeEnum]:'-'}}</span>
+          </template>
+        </el-table-column>
         <el-table-column prop="serialNumber" :show-overflow-tooltip="true" label="编号" min-width="100" align="center">
           <template #default="{ row }">
             <span>{{ row.serialNumber }}</span>
@@ -105,7 +109,11 @@
             <el-tag :type="row.attributeType === '部件' ? 'warning' : 'success'">{{ row.attributeType }}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="assembleConfigName" :show-overflow-tooltip="true" label="部件类型" min-width="100" align="center" />
+        <el-table-column prop="typesettingAssembleTypeEnum" :show-overflow-tooltip="true" label="部件类型" min-width="100" align="center">
+          <template #default="{ row: { sourceRow: row } }">
+            <span>{{row.typesettingAssembleTypeEnum?typesettingAssembleTypeEnum.VL[row.typesettingAssembleTypeEnum]:'-'}}</span>
+          </template>
+        </el-table-column>
         <el-table-column prop="serialNumber" :show-overflow-tooltip="true" label="编号" min-width="100" align="center" />
         <el-table-column prop="specification" :show-overflow-tooltip="true" label="规格" min-width="120" align="center" />
         <el-table-column prop="length" :show-overflow-tooltip="true" label="长度（mm）" min-width="90" align="center" />
@@ -131,7 +139,7 @@ import { getAssemble } from '@/api/mes/scheduling-manage/artifact'
 import { saveTask } from '@/api/mes/scheduling-manage/common'
 import { defineProps, defineEmits, ref, inject, reactive, computed } from 'vue'
 import moment from 'moment'
-import { ElNotification, ElMessage } from 'element-plus'
+import { ElNotification } from 'element-plus'
 
 import { artifactProductLineEnum, mesBuildingTypeSettingAssembleTypeEnum } from '@enum-ms/mes'
 import { componentTypeEnum } from '@enum-ms/mes'
