@@ -1324,6 +1324,41 @@ export default {
           icon: 'project',
           noCache: true
         }
+      },
+      {
+        name: 'MesAssistanceOperate',
+        path: 'assistance-operate',
+        hidden: false,
+        component: '',
+        meta: {
+          title: '协同操作',
+          icon: 'project',
+          noCache: true
+        },
+        children: [
+          {
+            name: 'MesAssistanceProductionLine',
+            path: 'productionLine-assistance',
+            hidden: false,
+            component: '/mes/task-tracking/assistance-operate/productionLine-assistance/index',
+            meta: {
+              title: '产线协同',
+              icon: 'project',
+              noCache: true
+            }
+          },
+          {
+            name: 'MesAssistanceProcess',
+            path: 'process-assistance',
+            hidden: false,
+            component: '/mes/task-tracking/assistance-operate/process-assistance/index',
+            meta: {
+              title: '工序协同',
+              icon: 'project',
+              noCache: true
+            }
+          }
+        ]
       }
     ]
   },
