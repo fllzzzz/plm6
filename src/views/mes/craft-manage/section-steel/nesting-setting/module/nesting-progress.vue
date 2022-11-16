@@ -73,15 +73,15 @@
         </template>
       </el-table-column>
       <el-table-column
-        key="totalNetWeight"
-        prop="totalNetWeight"
+        key="netWeight"
+        prop="netWeight"
         :show-overflow-tooltip="true"
         label="母材总重"
         align="center"
         width="150px"
       >
         <template v-slot="scope">
-          <span>{{ scope.row.totalNetWeight }}</span>
+          <span>{{ scope.row.netWeight }}</span>
         </template>
       </el-table-column>
       <el-table-column key="quantity" prop="quantity" :show-overflow-tooltip="true" label="数量" align="center" width="120px">
@@ -133,7 +133,17 @@ const props = defineProps({
 })
 const { visible: dialogVisible, handleClose } = useVisible({ emit, props, field: 'visible', showHook: nestingResultGet })
 
-const { maxHeight } = useMaxHeight()
+const { maxHeight } = useMaxHeight(
+  {
+    extraBox: ['.el-dialog__header'],
+    wrapperBox: ['.el-dialog__body'],
+    clientHRepMainH: true,
+    minHeight: 300,
+    navbar: false
+  },
+  dialogVisible
+)
+
 const colorObj = ref({}) // serialNumber: color
 
 // 套料成果

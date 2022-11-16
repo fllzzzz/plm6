@@ -65,6 +65,9 @@ const props = defineProps({
   detailData: {
     type: Array,
     default: () => []
+  },
+  monomerId: {
+    type: Number
   }
 })
 const emit = defineEmits(['update:visible'])
@@ -95,6 +98,7 @@ async function submitForm(formRef) {
     const _list = {
       assembleSettingList: _data,
       projectId: props.projectId,
+      monomerId: props.monomerId,
       length: form.length,
       kerfLength: form.kerfLength,
       productionLineTypeEnum: _content[0],
