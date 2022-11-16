@@ -66,7 +66,14 @@
                 <span class="ellipsis-text text">
                   {{ item.serialNumber }}
                 </span>
-                <el-image style="flex: 1; width: 95%" :src="item.picturePath" @error="item.imgLoad = false" />
+                <el-image style="flex: 1; width: 95%" :src="item.picturePath" @error="item.imgLoad = false">
+                  <template #error>
+                    <div class="error-slot">
+                      <span v-if="item.picturePath">加载失败</span>
+                      <span v-else>未导入DXF</span>
+                    </div>
+                  </template>
+                </el-image>
                 <span
 class="ellipsis-text text"
 @click.stop="item.visibleTip = !item.visibleTip"
@@ -291,6 +298,16 @@ function previewIt() {
 </script>
 
 <style lang="scss" scoped>
+.error-slot {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  background: #f5f7fa;
+  color: #c0c4cc;
+  font-size: 14px;
+}
 .wrap {
   display: flex;
   .wrap-left {

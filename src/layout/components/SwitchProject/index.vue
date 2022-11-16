@@ -110,11 +110,6 @@ const props = defineProps({
   }
 })
 
-const copyValue = ref()
-const projectType = ref(allPT)
-const refreshLoading = ref(false)
-let currentProjectChange = false
-
 const { routeProjectType, currentProjectType, globalProjectId, globalProject, navbarShowAll, routeBusinessType } = mapGetters([
   'routeProjectType',
   'currentProjectType',
@@ -123,6 +118,11 @@ const { routeProjectType, currentProjectType, globalProjectId, globalProject, na
   'navbarShowAll',
   'routeBusinessType'
 ])
+
+const copyValue = ref()
+const projectType = ref(currentProjectType.value)
+const refreshLoading = ref(false)
+let currentProjectChange = false
 
 // 是否显示
 const showable = computed(() => isNotBlank(routeProjectType.value))
@@ -164,6 +164,7 @@ const disabledTypeArr = computed(() => {
         types.push(Number(v))
       }
     })
+    types.push(allPT)
   }
   return types
 })
@@ -206,17 +207,16 @@ watch(
 // 监听当前路由的项目类型
 watch(
   routeProjectType,
-  (val) => {
+  (newVal, oldVal) => {
     // 如果值存在， 并且该值未包含当前项目类型
-    if (val && !(val & projectType.value)) {
+    if (newVal && !(newVal & projectType.value)) {
       // 获取项目类型的种类
-      const bitArr = getBitwiseBack(routeProjectType)
+      const bitArr = getBitwiseBack(routeProjectType.value)
       // 如果有多种项目类型，则默认取第一个
-      projectType.value = bitArr.length && bitArr.length <= 1 ? val : val & currentProjectType ? currentProjectType : bitArr[0]
+      projectType.value = bitArr.length && bitArr.length <= 1 ? newVal : newVal & currentProjectType ? currentProjectType : bitArr[0]
       handleTypeChange(projectType.value)
     }
-  },
-  { immediate: true }
+  }
 )
 
 // 处理项目类型变更
