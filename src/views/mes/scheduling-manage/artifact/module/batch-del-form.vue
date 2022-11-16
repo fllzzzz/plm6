@@ -1,5 +1,12 @@
 <template>
-  <common-dialog title="批量删除任务" v-model="dialogVisible" width="1100px" :before-close="handleClose">
+  <common-dialog
+    title="批量删除任务"
+    customClass="artifact-scheduling-batch-del"
+    v-model="dialogVisible"
+    top="10vh"
+    width="1100px"
+    :before-close="handleClose"
+  >
     <template #titleAfter>
       <el-tag size="small" effect="plain">
         <span>原产线：</span>
@@ -70,6 +77,7 @@ const props = defineProps({
 const { visible: dialogVisible, handleClose } = useVisible({ emit, props, field: 'visible', showHook })
 const { maxHeight } = useMaxHeight(
   {
+    mainBox: '.artifact-scheduling-batch-del',
     extraBox: ['.el-dialog__header'],
     wrapperBox: ['.el-dialog__body'],
     clientHRepMainH: true,

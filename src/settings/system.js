@@ -53,6 +53,8 @@ export const showProjectSearch = [
   { component: '/mes/work-order-manage/artifact/index', type: pt.STEEL.V, required: false },
   { component: '/mes/work-order-manage/machine-part/index', type: pt.STEEL.V, required: false },
   { component: '/mes/task-tracking/production-line-tracking/index', type: pt.STEEL.V, required: false },
+  { component: '/mes/task-tracking/assistance-operate/productionLine-assistance/index', type: pt.STEEL.V, required: false },
+  { component: '/mes/task-tracking/assistance-operate/process-assistance/index', type: pt.STEEL.V, required: false },
   { component: '/mes/scheduling-manage/task/artifact/index', type: pt.STEEL.V, required: false },
   { component: '/mes/scheduling-manage/task/machine-part/index', type: pt.STEEL.V, required: false },
   { component: '/mes/scheduling-manage/task/enclosure/index', type: pt.STEEL.V, required: false },
