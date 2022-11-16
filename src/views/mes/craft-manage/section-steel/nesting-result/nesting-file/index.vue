@@ -219,10 +219,17 @@ function handleChange(val) {
   }
 }
 
-const { maxHeight } = useMaxHeight({
-  extraBox: ['.head-container'],
-  paginate: true
-})
+// 高度
+const { maxHeight } = useMaxHeight(
+  {
+    mainBox: '.common-drawer',
+    extraBox: ['.el-drawer__header'],
+    wrapperBox: ['.el-drawer__body'],
+    navbar: false,
+    clientHRepMainH: true,
+    minHeight: 300
+  }
+)
 </script>
 
 <style lang="scss" scope>
