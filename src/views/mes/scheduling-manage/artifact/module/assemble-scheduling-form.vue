@@ -38,7 +38,7 @@
         </el-table-column>
         <el-table-column prop="typesettingAssembleTypeEnum" :show-overflow-tooltip="true" label="部件类型" min-width="100" align="center">
           <template #default="{ row: { sourceRow: row } }">
-            <span>{{row.typesettingAssembleTypeEnum?typesettingAssembleTypeEnum.VL[row.typesettingAssembleTypeEnum]:'-'}}</span>
+            <span>{{ row.typesettingAssembleTypeEnum ? mesBuildingTypeSettingAssembleTypeEnum.VL[row.typesettingAssembleTypeEnum] : '-' }}</span>
           </template>
         </el-table-column>
         <el-table-column prop="serialNumber" :show-overflow-tooltip="true" label="编号" min-width="100" align="center">
@@ -111,7 +111,9 @@
         </el-table-column>
         <el-table-column prop="typesettingAssembleTypeEnum" :show-overflow-tooltip="true" label="部件类型" min-width="100" align="center">
           <template #default="{ row: { sourceRow: row } }">
-            <span>{{row.typesettingAssembleTypeEnum?typesettingAssembleTypeEnum.VL[row.typesettingAssembleTypeEnum]:'-'}}</span>
+            <span>{{
+              row.typesettingAssembleTypeEnum ? mesBuildingTypeSettingAssembleTypeEnum.VL[row.typesettingAssembleTypeEnum] : '-'
+            }}</span>
           </template>
         </el-table-column>
         <el-table-column prop="serialNumber" :show-overflow-tooltip="true" label="编号" min-width="100" align="center" />
