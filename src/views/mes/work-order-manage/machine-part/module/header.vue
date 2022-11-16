@@ -4,7 +4,6 @@
     <common-radio-button
       v-model="query.processType"
       :options="mesMachinePartOrderTypeEnum.ENUM"
-      showOptionAll
       type="enum"
       size="small"
       class="filter-item"
@@ -30,6 +29,7 @@
           placeholder="选择月"
           format="YYYY-MM"
           value-format="x"
+          :disabled-date="disabledDate"
           @change="crud.toQuery"
         />
         <workshop-select
@@ -42,7 +42,7 @@
           @change="crud.toQuery"
         />
         <el-input
-          v-model="query.orderNumber"
+          v-model="query.cutNumber"
           placeholder="指令号搜索"
           class="filter-item"
           style="width: 200px"
@@ -71,9 +71,15 @@ const defaultQuery = {
   localDateTime: defaultTime.toString(),
   factoryId: undefined,
   workshopId: undefined,
-  processType: undefined,
+  processType: mesMachinePartOrderTypeEnum.CUTTING_ORDER.V,
   printType: undefined,
-  orderNumber: undefined,
+  cutNumber: undefined
 }
+
+// 如果时间选取的时间年份比当前的时间大就被禁用
+function disabledDate(time) {
+  return time > new Date()
+}
+
 const { crud, query } = regHeader(defaultQuery)
 </script>
