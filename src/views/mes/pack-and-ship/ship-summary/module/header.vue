@@ -54,14 +54,15 @@ const summaryInfo = ref({})
 const summaryLoading = ref(false)
 
 function statusChange(val) {
-  if (query.status === shipStatusEnum.SETTLED.V) {
+  if (val === shipStatusEnum.SETTLED.V) {
     query.sendStatus = undefined
     query.settled = 1
   } else {
     query.sendStatus = val
     query.settled = undefined
   }
-  crud.toQuery()
+  console.log(query)
+  // crud.toQuery()
 }
 
 watch(
