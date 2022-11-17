@@ -64,7 +64,7 @@
         <el-table-column key="specification" prop="specification" label="规格" align="center" show-overflow-tooltip />
         <el-table-column key="length" prop="length" label="长度(mm)" align="center" show-overflow-tooltip />
         <el-table-column label="清单数(件/kg)" align="center">
-          <el-table-column key="quantity" prop="quantity" label="入库数" align="center" show-overflow-tooltip />
+          <el-table-column key="quantity" prop="quantity" label="清单数" align="center" show-overflow-tooltip />
           <el-table-column key="mete" prop="mete" label="重量" align="center" show-overflow-tooltip />
         </el-table-column>
         <el-table-column label="入库(件/kg)" align="center">
