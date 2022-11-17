@@ -16,7 +16,7 @@
           <div style="display: flex; justify-content: space-between">
             <div class="head-container">
               <el-tag size="large" class="filter-item">工序：{{ processList.name }}</el-tag>
-              <project-cascader v-model="projectId" clearable class="filter-item" style="width: 270px"/>
+              <project-cascader v-model="projectId" clearable class="filter-item" style="width: 300px"/>
               <div>
                 <monomer-select-area-select
                   v-model:monomerId="monomerId"
@@ -300,9 +300,10 @@ async function fetchProjectInfo() {
 
 function handleEchartsData(val) {
   processList.value = val
+  console.log(val?.data)
   crud.query.processId = val?.data?.id
   crud.query.productType = val?.data?.productType
-  crud.query.productionLineId = val?.data?.productionLineId
+  crud.query.productionLineId = productionLineId.value
   crud.toQuery()
 }
 

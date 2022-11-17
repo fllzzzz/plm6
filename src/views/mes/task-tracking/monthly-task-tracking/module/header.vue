@@ -42,12 +42,9 @@ import { regHeader } from '@compos/use-crud'
 import rrOperation from '@crud/RR.operation'
 import workshopSelect from '@comp-mes/workshop-select'
 import productionLineSelect from '@comp-mes/production-line-select'
-import moment from 'moment'
-
-const defaultTime = moment().startOf('month').valueOf()
 
 const defaultQuery = {
-  dateTime: defaultTime.toString(),
+  dateTime: undefined,
   workShopId: undefined,
   productionLineId: undefined
 }
