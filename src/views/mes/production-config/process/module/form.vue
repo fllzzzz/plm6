@@ -61,7 +61,7 @@
                   type="primary"
                   style="padding: 5px"
                   size="mini"
-                  :disabled="scope.$index === 0 || scope.row.name==='下料'"
+                  :disabled="scope.$index === 0 || Boolean(scope.row.name === '下料' && form.productType & typeEnum.MACHINE_PART.V)"
                   @click="handleMove(scope, 'up', form.list)"
                 />
                 <common-button
@@ -70,7 +70,7 @@
                   type="primary"
                   style="padding: 5px"
                   size="mini"
-                  :disabled="scope.$index === form.list.length - 1 || scope.row.name==='下料'"
+                  :disabled="scope.$index === form.list.length - 1 || Boolean(scope.row.name === '下料' && form.productType & typeEnum.MACHINE_PART.V)"
                   @click="handleMove(scope, 'down', form.list)"
                 />
                 <common-button
@@ -79,7 +79,7 @@
                   type="danger"
                   style="padding: 5px"
                   size="mini"
-                  :disabled="scope.row.name==='下料'"
+                  :disabled="Boolean(scope.row.name === '下料' && form.productType & typeEnum.MACHINE_PART.V)"
                   @click="removeRow(form.list, scope.$index)"
                 />
                 <svg-icon v-else class="icon icon-readonly" icon-class="readonly" />

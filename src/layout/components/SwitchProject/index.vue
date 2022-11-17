@@ -209,12 +209,14 @@ watch(
   routeProjectType,
   (newVal, oldVal) => {
     // 如果值存在， 并且该值未包含当前项目类型
-    if (newVal && !(newVal & projectType.value)) {
-      // 获取项目类型的种类
-      const bitArr = getBitwiseBack(routeProjectType.value)
-      // 如果有多种项目类型，则默认取第一个
-      projectType.value = bitArr.length && bitArr.length <= 1 ? newVal : newVal & currentProjectType ? currentProjectType : bitArr[0]
-      handleTypeChange(projectType.value)
+    if (newVal && newVal !== allPT) {
+      if (projectType.value === allPT || (!(newVal & projectType.value) && projectType.value !== allPT)) {
+        // 获取项目类型的种类
+        const bitArr = getBitwiseBack(routeProjectType.value)
+        // 如果有多种项目类型，则默认取第一个
+        projectType.value = bitArr.length && bitArr.length <= 1 ? newVal : newVal & currentProjectType ? currentProjectType : bitArr[0]
+        handleTypeChange(projectType.value)
+      }
     }
   }
 )

@@ -1,7 +1,9 @@
 <template>
   <common-drawer ref="drawerRef" title="产线协同" v-model="drawerVisible" direction="rtl" :before-close="handleClose" size="80%">
     <template #titleAfter>
-      <el-tag effect="plain"> 原生产组：{{ info.workshop?.name }}>{{ info.productionLine?.name }}>{{ info.groups?.name }} </el-tag>
+      <el-tag effect="plain" v-if="crud.query.taskTypeEnum !== taskTypeENUM.MACHINE_PART.V">
+        原生产组：{{ info.workshop?.name }}>{{ info.productionLine?.name }}>{{ info.groups?.name }}
+      </el-tag>
     </template>
     <template #titleRight>
       <common-button size="mini" type="primary" @click="previewIt">预览并保存</common-button>
@@ -9,7 +11,7 @@
     <template #content>
       <div class="tip">
         <span>* 提示：</span>
-        <span> 产线协同只能对未开始生产的构件或部件进行协同，已经开始生产无法协同</span>
+        <span> 产线协同只能对未开始生产的构件或部件或零件进行协同，已经开始生产无法协同</span>
       </div>
       <div class="head-container">
         <el-input
@@ -40,14 +42,30 @@
         v-loading="tableLoading"
         :max-height="maxHeight"
         :cell-class-name="wrongCellMask"
+        :data-format="dataFormat"
         @selection-change="handleSelectChange"
         style="width: 100%"
       >
         <el-table-column type="selection" width="55" align="center" />
         <el-table-column label="序号" type="index" align="center" width="60" />
-        <el-table-column prop="area.name" :show-overflow-tooltip="true" label="区域" min-width="100px" align="center" />
         <el-table-column
-          v-if="crud.query.taskTypeEnum !== taskTypeENUM.ARTIFACT.V"
+          v-if="crud.query.taskTypeEnum !== taskTypeENUM.MACHINE_PART.V"
+          prop="area.name"
+          :show-overflow-tooltip="true"
+          label="区域"
+          min-width="100px"
+          align="center"
+        />
+        <el-table-column
+          v-if="crud.query.taskTypeEnum === taskTypeENUM.MACHINE_PART.V"
+          prop="cutNumber"
+          :show-overflow-tooltip="true"
+          label="切割指令号"
+          min-width="100px"
+          align="center"
+        />
+        <el-table-column
+          v-if="crud.query.taskTypeEnum === taskTypeENUM.ASSEMBLE.V"
           prop="attributeType"
           :show-overflow-tooltip="true"
           label="属性"
@@ -58,10 +76,29 @@
             <el-tag :type="row.attributeType === '部件' ? 'warning' : 'success'">{{ row.attributeType }}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="serialNumber" :show-overflow-tooltip="true" label="编号" min-width="100px" align="center" />
+        <el-table-column
+          v-if="crud.query.taskTypeEnum !== taskTypeENUM.MACHINE_PART.V"
+          prop="serialNumber"
+          :show-overflow-tooltip="true"
+          label="编号"
+          min-width="100px"
+          align="center"
+        />
         <el-table-column prop="specification" :show-overflow-tooltip="true" label="规格" min-width="100px" align="center" />
-        <el-table-column prop="length" :show-overflow-tooltip="true" label="长度(mm)" width="100px" align="center" />
-        <el-table-column :show-overflow-tooltip="true" label="协同数量" min-width="120px" align="center">
+        <el-table-column
+          v-if="crud.query.taskTypeEnum !== taskTypeENUM.MACHINE_PART.V"
+          prop="length"
+          :show-overflow-tooltip="true"
+          label="长度(mm)"
+          width="100px"
+          align="center"
+        />
+        <el-table-column
+          :show-overflow-tooltip="true"
+          label="协同数量"
+          min-width="100px"
+          align="center"
+        >
           <template #default="{ row: { sourceRow: row } }">
             <el-input-number
               v-model="row.editQuantity"
@@ -84,6 +121,25 @@
             >
           </template>
         </el-table-column> -->
+        <el-table-column
+          v-if="crud.query.taskTypeEnum === taskTypeENUM.MACHINE_PART.V"
+          align="center"
+          prop="askCompleteTime"
+          :show-overflow-tooltip="true"
+          label="计划完成日期"
+          width="120px"
+        />
+        <el-table-column
+          v-if="crud.query.taskTypeEnum === taskTypeENUM.MACHINE_PART.V"
+          prop="group.name"
+          :show-overflow-tooltip="true"
+          label="原生产组"
+          min-width="180px"
+        >
+          <template #default="{ row }">
+            <span>{{ row.workshop?.name }}>{{ row.productionLine?.name }}>{{ row.groups?.name }}</span>
+          </template>
+        </el-table-column>
         <el-table-column :show-overflow-tooltip="true" prop="groupsId" label="生产组" min-width="150px" align="center">
           <template #default="{ row: { sourceRow: row }, $index }">
             <el-cascader
@@ -146,6 +202,8 @@ const { maxHeight } = useMaxHeight(
   drawerRef
 )
 
+const dataFormat = ref([['askCompleteTime', ['parse-time', '{y}-{m}-{d}']]])
+
 const crud = inject('crud')
 const query = ref({})
 const tableData = ref([])
@@ -194,13 +252,20 @@ async function fetch() {
       v.attributeType = v.taskTypeEnum === taskTypeENUM.ASSEMBLE.V ? '部件' : '套料'
       v.editQuantity = v.quantity
       if (!classIdGroupsObj.value[v.configId]) {
-        const res = await manualFetchGroupsTree({
-          productType: crud.query.taskTypeEnum,
-          structureClassId: v.configId,
-          disabledIds: (props.info?.groups?.id && [props.info?.groups?.id]) || [],
-          _factoryIds: (props.info?.factory?.id && [props.info?.factory?.id]) || []
-        })
-        console.log(res)
+        let res = {}
+        if (crud.query.taskTypeEnum === taskTypeENUM.MACHINE_PART.V) {
+          res = await manualFetchGroupsTree({
+            productType: crud.query.taskTypeEnum,
+            disabledIds: (v?.groups?.id && [v?.groups?.id]) || []
+          })
+        } else {
+          res = await manualFetchGroupsTree({
+            productType: crud.query.taskTypeEnum,
+            structureClassId: v.configId,
+            disabledIds: (props.info?.groups?.id && [props.info?.groups?.id]) || [],
+            _factoryIds: (props.info?.factory?.id && [props.info?.factory?.id]) || []
+          })
+        }
         classIdGroupsObj.value[v.configId] = res
       }
       if (i > 0) {
@@ -227,7 +292,9 @@ function previewIt() {
     submitList.value = dealList.map((v, i) => {
       return {
         ...v,
-        ...classIdGroupsObj.value[v.configId].obj[v.groupsId]
+        assistance: {
+          ...classIdGroupsObj.value[v.configId].obj[v.groupsId]
+        }
       }
     })
   } else {

@@ -16,7 +16,7 @@
         <project-radio-button size="small" v-model="query.projectId" class="filter-item" @change="crud.toQuery" />
         <common-radio-button
           v-model="query.taskTypeEnum"
-          :options="taskTypeEnum"
+          :options="queryTaskTypeENUM"
           type="enum"
           default
           class="filter-item"
@@ -38,9 +38,10 @@ import moment from 'moment'
 
 const defaultTime = moment().startOf('month').valueOf()
 
-const taskTypeEnum = {
+const queryTaskTypeENUM = {
   ARTIFACT: taskTypeENUM.ARTIFACT,
-  ASSEMBLE: taskTypeENUM.ASSEMBLE
+  ASSEMBLE: taskTypeENUM.ASSEMBLE,
+  MACHINE_PART: taskTypeENUM.MACHINE_PART
 }
 
 const defaultQuery = {
