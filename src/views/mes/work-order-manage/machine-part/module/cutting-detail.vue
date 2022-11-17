@@ -19,7 +19,7 @@
       />
     </template>
     <template #titleRight>
-      <common-button size="mini" type="success" @click="printInf">打印</common-button>
+      <common-button size="mini" type="success" @click="printIt">打印</common-button>
     </template>
     <template #content>
       <div :style="`height:${maxHeight}px`" v-if="orderType === typeEnum.NESTING_TASK_ORDER.V">
@@ -74,9 +74,13 @@ import useMaxHeight from '@compos/use-max-height'
 import usePagination from '@compos/use-pagination'
 import { sortingListEnum as typeEnum } from '@enum-ms/mes'
 import { defineProps, defineEmits, ref } from 'vue'
-import { showCuttingPdf, showInfo } from '@/api/mes/work-order-manage/machine-part.js'
-import { printPDF } from '@/utils/print/pdf-print'
+import { showCuttingPdf, showInfo, printInfo } from '@/api/mes/work-order-manage/machine-part.js'
+import { printPDFJSCanvas } from '@/utils/print/pdf-print'
+import { printSeparateOrderLabel } from '@/utils/print/index'
 import pdf from '@/components/PDF/pdf'
+import { ElNotification, ElLoading } from 'element-plus'
+
+import { codeWait } from '@/utils'
 
 const pdfjsDistPath = import.meta.env.BASE_URL + 'assets'
 const emit = defineEmits(['update:visible'])
@@ -84,7 +88,6 @@ const drawerRef = ref()
 const cuttingData = ref([]) // 切割分拣单详情数据
 
 const source = ref('')
-const sourceBase64 = ref('')
 const orderType = ref(typeEnum.NESTING_TASK_ORDER.V)
 const workshopList = ref([])
 
@@ -122,7 +125,6 @@ async function nestingDetailGet() {
   try {
     const data = await showCuttingPdf({ cutId: props.cuttingDetailData.id })
     source.value = await getUrlByFileReader(data)
-    sourceBase64.value = await getBase64ByFileReader(data)
   } catch (error) {
     console.log('获取套料任务单失败', error)
   }
@@ -153,26 +155,53 @@ function getUrlByFileReader(res) {
   })
 }
 
-// 文件流转换为base64
-function getBase64ByFileReader(res) {
-  return new Promise((resolve, reject) => {
-    if (res && res.data && res.data.size) {
-      const dataInfo = res.data
-      const reader = new window.FileReader()
-      reader.readAsDataURL(dataInfo)
+// --------------------------- 打印 start ------------------------------
+const printLoading = ref()
 
-      reader.onload = function (e) {
-        const result = e.target.result.split('base64,')[1]
-        resolve(result)
-      }
-    } else {
-      reject()
-    }
+async function printIt() {
+  printLoading.value = ElLoading.service({
+    lock: true,
+    text: '正在准备加入打印队列',
+    spinner: 'el-icon-loading',
+    fullscreen: true
   })
+  try {
+    // --------------------------- PDF 打印 start ------------------------------
+    const canvasELs = document.querySelectorAll('#viewerContainer .canvasWrapper canvas')
+    for (let i = 0; i < canvasELs.length; i++) {
+      const canvasBase64 = canvasELs[i].toDataURL()
+      printLoading.value.text = `正在加入打印队列：套料任务单 第${i + 1}页`
+      await codeWait(500)
+      await printPDFJSCanvas({ canvasBase64 })
+    }
+    // --------------------------- PDF 打印 end --------------------------------
+    // --------------------------- 分拣单 打印 start ------------------------------
+    const { content } = await printInfo({ cutId: props.cuttingDetailData.id, processType: props.processType })
+    const separateOrderInfo = content.map(v => {
+      v.obj = {}
+      v.list.forEach(p => {
+        v.obj[p.productionLineId] = p
+      })
+      return v
+    })
+    const productionLinesList = (content.length && content[0].list) || []
+    console.log(separateOrderInfo, productionLinesList)
+    printLoading.value.text = `正在加入打印队列：分拣单`
+    await codeWait(500)
+    await printSeparateOrderLabel({ separateOrderInfo, productionLinesList })
+    // --------------------------- 分拣单 打印 end --------------------------------
+    printLoading.value.text = `已全部加入打印队列`
+    await codeWait(500)
+  } catch (error) {
+    ElNotification({ title: '加入打印队列失败，请重试', type: 'error', duration: 2500 })
+    throw new Error(error)
+  } finally {
+    printLoading.value.close()
+  }
 }
-function printInf() {
-  printPDF({ pdfData: sourceBase64.value })
-}
+
+// --------------------------- 打印 end --------------------------------
+
 // 切割 分拣单
 async function cuttingDetailGet() {
   let _list = []
@@ -224,4 +253,3 @@ function handleChange(val) {
   margin: 1px;
 }
 </style>
-

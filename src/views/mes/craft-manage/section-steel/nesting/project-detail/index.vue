@@ -20,22 +20,12 @@
         </el-table-column>
         <el-table-column align="center" key="areaName" prop="areaName" :show-overflow-tooltip="true" label="区域">
           <template v-slot="scope">
-            <table-cell-tag
-              :name="projectNestingStatusEnum.VL[scope.row.nestingStatusEnum]"
-              :color="projectNestingStatusEnum.V[scope.row.nestingStatusEnum].COLOR"
-              :offset="15"
-            />
             <span>{{ scope.row.areaName }}</span>
           </template>
         </el-table-column>
-        <el-table-column align="center" key="endDate" prop="endDate" :show-overflow-tooltip="true" label="完成日期">
+        <el-table-column align="center" key="date" prop="date" :show-overflow-tooltip="true" label="完成日期">
           <template v-slot="scope">
-            <span>{{ scope.row.endDate }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column align="center" key="listEditor" prop="listEditor" :show-overflow-tooltip="true" label="清单编辑">
-          <template v-slot="scope">
-            <span>{{ scope.row.listEditor }}</span>
+            <span>{{ parseTime(scope.row.date, '{y}-{m}-{d}') }}</span>
           </template>
         </el-table-column>
         <el-table-column align="center" key="quantity" prop="quantity" :show-overflow-tooltip="true" label="部件数量">
@@ -46,6 +36,16 @@
         <el-table-column align="center" key="totalNetWeight" prop="totalNetWeight" :show-overflow-tooltip="true" label="部件重量">
           <template v-slot="scope">
             <span>{{ scope.row.totalNetWeight }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column align="center" key="nestingQuantity " prop="nestingQuantity " :show-overflow-tooltip="true" label="可套数量（件）">
+          <template v-slot="scope">
+            <table-cell-tag
+              :name="projectNestingStatusEnum.VL[scope.row.nestingStatusEnum]"
+              :color="projectNestingStatusEnum.V[scope.row.nestingStatusEnum].COLOR"
+              :offset="15"
+            />
+            <span>{{ scope.row.nestingQuantity  }}</span>
           </template>
         </el-table-column>
         <el-table-column align="center" :show-overflow-tooltip="true" label="操作">
@@ -63,6 +63,7 @@
 import { ref, defineProps, watch } from 'vue'
 import { getProjectNesting } from '@/api/mes/craft-manage/section-steel/nesting'
 import useMaxHeight from '@compos/use-max-height'
+import { parseTime } from '@/utils/date'
 import { projectNestingStatusEnum } from '@enum-ms/mes'
 import tableCellTag from '@comp-common/table-cell-tag/index.vue'
 import listDetail from '../list-detail/index.vue'
