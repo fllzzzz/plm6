@@ -35,7 +35,7 @@
         label="切割指令号"
       >
         <template v-slot="scope">
-          <table-cell-tag :show="scope.row.boolPrinted" name="已打印" type="printed" />
+          <table-cell-tag :show="scope.row.boolPrinted" color="#e64242" name="已打印" :offset="15" />
           <span>{{ scope.row.cutNumber }}</span>
         </template>
       </el-table-column>
@@ -130,12 +130,16 @@
     <!-- 钻孔工单详情 -->
     <detail v-model:visible="drawerVisible" :process-type="crud.query.processType" :detail-data="detailData" />
     <!-- 切割工单详情 -->
-    <cutting-detail :process-type="crud.query.processType" v-model:visible="cuttingDrawerVisible" :cutting-detail-data="cuttingDetailData" />
+    <cutting-detail
+      :process-type="crud.query.processType"
+      v-model:visible="cuttingDrawerVisible"
+      :cutting-detail-data="cuttingDetailData"
+    />
   </div>
 </template>
 <script setup>
 import { ref } from 'vue'
-import crudApi, { printInfo } from '@/api/mes/work-order-manage/machine-part.js'
+import crudApi from '@/api/mes/work-order-manage/machine-part.js'
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
 import pagination from '@crud/Pagination'
@@ -156,6 +160,7 @@ const detailData = ref({}) // 钻孔
 const drawerVisible = ref(false)
 const cuttingDetailData = ref({})
 const cuttingDrawerVisible = ref(false)
+
 const { crud, CRUD, columns } = useCRUD(
   {
     title: '零件工单',
@@ -186,16 +191,8 @@ function showDrill(row) {
 }
 
 // 打印
-async function beforePrintLabel(row) {
-  try {
-    const data = await printInfo({
-      cutId: row.id,
-      processType: crud.query.processType
-    })
-    console.log(data, 'data')
-  } catch (e) {
-    console.log('打印失败', e)
-  }
+function beforePrintLabel(row) {
+
 }
 
 CRUD.HOOK.handleRefresh = (crud, res) => {

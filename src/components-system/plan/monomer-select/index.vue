@@ -113,9 +113,9 @@ watch(
 watch(
   () => props.modelValue,
   (val) => {
-    if (val) {
-      selectValue.value = val
-    }
+    // if (val) {
+    selectValue.value = val
+    // }
   },
   { immediate: true }
 )

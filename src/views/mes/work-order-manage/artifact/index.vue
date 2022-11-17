@@ -63,17 +63,17 @@
         </template>
       </el-table-column>
       <el-table-column
-        v-if="columns.visible('workshopName')"
+        v-if="columns.visible('workshop.name')"
         :show-overflow-tooltip="true"
-        prop="workshopName"
+        prop="workshop.name"
         label="车间"
         min-width="110px"
         align="center"
       />
       <el-table-column
-        v-if="columns.visible('productionLineName')"
+        v-if="columns.visible('productionLine.name')"
         :show-overflow-tooltip="true"
-        prop="productionLineName"
+        prop="productionLine.name"
         label="生产线"
         min-width="110px"
         align="center"

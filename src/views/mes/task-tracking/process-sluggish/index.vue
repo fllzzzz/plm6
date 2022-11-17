@@ -13,15 +13,58 @@
           <div class="my-code">*点击左侧未完成任务的工序图表查看详情</div>
         </div>
         <div v-show="processList.name">
-          <div style="display: flex; justify-content: space-between; margin-bottom: 8px">
-            <el-tag style="align-self: center; font-weight: 900">工序：{{ processList.name }}</el-tag>
+          <div style="display: flex; justify-content: space-between">
+            <div class="head-container">
+              <el-tag size="large" class="filter-item">工序：{{ processList.name }}</el-tag>
+              <project-cascader v-model="projectId" clearable class="filter-item" style="width: 270px"/>
+              <div>
+                <monomer-select-area-select
+                  v-model:monomerId="monomerId"
+                  v-model:areaId="areaId"
+                  needConvert
+                  clearable
+                  :project-id="projectId"
+                  style="width: 100px !important"
+                />
+                <el-input
+                  v-model.trim="serialNumber"
+                  size="small"
+                  placeholder="输入编号搜索"
+                  style="width: 170px"
+                  class="filter-item"
+                  clearable
+                  @keyup.enter="handleChange"
+                />
+                <el-input
+                  v-model.trim="groupName"
+                  placeholder="输入班组搜索"
+                  class="filter-item"
+                  style="width: 170px"
+                  size="small"
+                  clearable
+                  @keyup.enter="handleChange"
+                />
+                <common-button class="filter-item" size="mini" type="success" icon="el-icon-search" @click.stop="searchQuery">
+                  搜索
+                </common-button>
+                <common-button class="filter-item" size="mini" type="warning" icon="el-icon-refresh-left" @click.stop="resetQuery">
+                  重置
+                </common-button>
+              </div>
+            </div>
             <print-table
               api-key="mesProcessList"
               :params="{
                 productionLineId: crud.query.productionLineId,
                 productType: crud.query.productType,
                 processId: crud.query.processId,
+                projectId: crud.query.projectId,
+                monomerId: crud.query.monomerId,
+                areaId: crud.query.areaId,
+                serialNumber: crud.query.serialNumber,
+                groupName: crud.query.groupName,
               }"
+              style="width: 300px"
               size="mini"
               type="warning"
             />
@@ -33,7 +76,7 @@
             :data-format="dataFormat"
             return-source-data
             :empty-text="crud.emptyText"
-            :max-height="maxHeight"
+            :max-height="maxHeight - 50"
             style="width: 100%"
           >
             <el-table-column prop="index" label="序号" align="center" width="60" type="index" fixed="left" />
@@ -138,6 +181,8 @@ import useCRUD from '@compos/use-crud'
 import { parseTime } from '@/utils/date'
 import pagination from '@crud/Pagination'
 import { projectNameFormatter } from '@/utils/project'
+import monomerSelectAreaSelect from '@comp-base/monomer-select-area-select'
+import projectCascader from '@comp-base/project-cascader.vue'
 import mHeader from './module/header'
 import projectChart from './project-chart'
 
@@ -165,6 +210,11 @@ const tableRef = ref()
 const year = ref() // 年份（子组件使用）
 const processList = ref({})
 const productionLineId = ref()
+const projectId = ref()
+const monomerId = ref()
+const areaId = ref()
+const groupName = ref()
+const serialNumber = ref()
 
 const searchProductType = computed(() => {
   return crud.query.searchProductType
@@ -197,6 +247,28 @@ watch(
     crud.toQuery()
   },
   { deep: true }
+)
+
+watch(
+  () => projectId.value,
+  (val) => {
+    crud.query.projectId = projectId.value
+    crud.toQuery()
+  }
+)
+watch(
+  () => monomerId.value,
+  (val) => {
+    crud.query.monomerId = monomerId.value
+    crud.toQuery()
+  }
+)
+watch(
+  () => areaId.value,
+  (val) => {
+    crud.query.areaId = areaId.value
+    crud.toQuery()
+  }
 )
 
 const { maxHeight } = useMaxHeight({
@@ -237,6 +309,27 @@ function handleEchartsData(val) {
 function processChange(val) {
   productionLineId.value = val
   fetchProjectInfo()
+}
+
+function handleChange() {
+  crud.query.monomerId = monomerId.value
+  crud.query.areaId = areaId.value
+  crud.query.groupName = groupName.value
+  crud.query.serialNumber = serialNumber.value
+  crud.toQuery()
+}
+
+// 搜索
+function searchQuery() {
+  crud.toQuery()
+}
+// 重置
+function resetQuery() {
+  monomerId.value = undefined
+  areaId.value = undefined
+  projectId.value = undefined
+  serialNumber.value = undefined
+  crud.toQuery()
 }
 
 CRUD.HOOK.handleRefresh = (crud, res) => {}

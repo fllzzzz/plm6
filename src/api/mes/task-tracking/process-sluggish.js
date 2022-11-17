@@ -6,7 +6,7 @@ import request from '@/utils/request'
 export function get(params) {
   return request({
     module: 'mes',
-    url: 'task/dull/process/detail/page',
+    url: 'task/process/dull/process/detail/page',
     method: 'get',
     params
   })
@@ -28,7 +28,7 @@ export function productionLineProcess(params) {
 export function processSluggish(params) {
   return request({
     module: 'mes',
-    url: 'task/dull/process',
+    url: 'task/process/dull/process',
     method: 'get',
     params
   })

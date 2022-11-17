@@ -129,13 +129,13 @@ function setSeries() {
         formatter(params) {
           console.log(params)
           if (params.value) {
-            return params.data.name + '：' + params.data.quantity + ' / ' + (params.data.mete / 1000).toFixed(DP.COM_WT__T)
+            return params.data.name + '：' + params.data.quantity + ' / ' + (params.data.mete / 1000).toFixed(DP.COM_WT__KG)
           }
         }
       },
       barMinHeight: 80, // 最小柱高
       barWidth: 40, // 柱宽度
-      barMaxWidth: 160, // 最大柱宽度
+      barMaxWidth: 100, // 最大柱宽度
       data: [...quantityList.value],
       itemStyle: {
         normal: {
@@ -154,7 +154,7 @@ function setSeries() {
             formatter(params) {
               console.log(params)
               if (params.value) {
-                return params.data.quantity + ' / ' + (params.data.mete / 1000).toFixed(DP.COM_WT__T)
+                return params.data.quantity + ' / ' + (params.data.mete / 1000).toFixed(DP.COM_WT__KG)
               }
             }
           }

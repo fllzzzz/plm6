@@ -1,24 +1,28 @@
 <template>
   <common-drawer
     ref="drawerRef"
+    customClass="cutting-detail"
     :title="`${props.cuttingDetailData?.workshop?.name}>${props.cuttingDetailData?.productionLine?.name}切割详情`"
     v-model="cuttingDrawerVisible"
     direction="rtl"
     :before-close="handleClose"
     size="63%"
   >
+    <template #titleAfter>
+      <common-radio-button
+        v-model="orderType"
+        :options="typeEnum.ENUM"
+        type="enum"
+        size="mini"
+        class="filter-item"
+        @change="handleChange"
+      />
+    </template>
+    <template #titleRight>
+      <common-button size="mini" type="success" @click="printInf">打印</common-button>
+    </template>
     <template #content>
-      <div class="header">
-        <common-radio-button
-          v-model="orderType"
-          :options="typeEnum.ENUM"
-          type="enum"
-          size="small"
-          class="filter-item"
-          @change="handleChange"
-        />
-      </div>
-      <div v-if="orderType === typeEnum.NESTING_TASK_ORDER.V">
+      <div :style="`height:${maxHeight}px`" v-if="orderType === typeEnum.NESTING_TASK_ORDER.V">
         <pdf :url="source" :type="'canvas'" :pdfjsDistPath="pdfjsDistPath" />
       </div>
       <!--表格渲染-->
@@ -27,7 +31,7 @@
           <el-table-column :show-overflow-tooltip="true" prop="index" label="序号" align="center" width="60" type="index" />
           <el-table-column :show-overflow-tooltip="true" prop="picturePath" key="picturePath" label="图形" align="center">
             <template v-slot="scope">
-              <el-image style="width: 100%; height: 100%" :src="scope.row.picturePath" fit="cover" />
+              <el-image style="width: 100%" :src="scope.row.picturePath" fit="cover" />
             </template>
           </el-table-column>
           <el-table-column :show-overflow-tooltip="true" prop="serialNumber" key="serialNumber" label="编号" align="center">
@@ -42,6 +46,7 @@
             v-for="item in workshopList"
             :label="`${item.workShopName}>${item.productionLineName}`"
             align="center"
+            min-width="110px"
           >
             <template v-slot="scope">
               <span>{{ scope.row[`quantity${item.productionLineId}`] || '0' }}</span>
@@ -67,9 +72,10 @@
 import useVisible from '@compos/use-visible'
 import useMaxHeight from '@compos/use-max-height'
 import usePagination from '@compos/use-pagination'
-import { constantize } from '@/utils/enum/base'
+import { sortingListEnum as typeEnum } from '@enum-ms/mes'
 import { defineProps, defineEmits, ref } from 'vue'
 import { showCuttingPdf, showInfo } from '@/api/mes/work-order-manage/machine-part.js'
+import { printPDF } from '@/utils/print/pdf-print'
 import pdf from '@/components/PDF/pdf'
 
 const pdfjsDistPath = import.meta.env.BASE_URL + 'assets'
@@ -77,13 +83,8 @@ const emit = defineEmits(['update:visible'])
 const drawerRef = ref()
 const cuttingData = ref([]) // 切割分拣单详情数据
 
-const typeEnum = {
-  NESTING_TASK_ORDER: { L: '套料任务单', K: 'NESTING_TASK_ORDER', V: 1 },
-  SORTING_ORDER: { L: '分拣单', K: 'SORTING_ORDER', V: 2 }
-}
-constantize(typeEnum)
-
 const source = ref('')
+const sourceBase64 = ref('')
 const orderType = ref(typeEnum.NESTING_TASK_ORDER.V)
 const workshopList = ref([])
 
@@ -101,7 +102,15 @@ const props = defineProps({
   }
 })
 
-const { maxHeight } = useMaxHeight({ extraBox: ['.header'] })
+const { maxHeight } = useMaxHeight({
+  mainBox: ['.cutting-detail'],
+  extraBox: ['.el-drawer__header'],
+  wrapperBox: ['.el-drawer__body'],
+  navbar: false,
+  extraHeight: 100,
+  clientHRepMainH: true,
+  paginate: true
+})
 
 const { visible: cuttingDrawerVisible, handleClose } = useVisible({ emit, props, field: 'visible', showHook: nestingDetailGet })
 
@@ -113,11 +122,13 @@ async function nestingDetailGet() {
   try {
     const data = await showCuttingPdf({ cutId: props.cuttingDetailData.id })
     source.value = await getUrlByFileReader(data)
+    sourceBase64.value = await getBase64ByFileReader(data)
   } catch (error) {
     console.log('获取套料任务单失败', error)
   }
 }
 
+// 转化为文件流
 function getUrlByFileReader(res) {
   return new Promise((resolve, reject) => {
     if (res && res.data && res.data.size) {
@@ -142,6 +153,26 @@ function getUrlByFileReader(res) {
   })
 }
 
+// 文件流转换为base64
+function getBase64ByFileReader(res) {
+  return new Promise((resolve, reject) => {
+    if (res && res.data && res.data.size) {
+      const dataInfo = res.data
+      const reader = new window.FileReader()
+      reader.readAsDataURL(dataInfo)
+
+      reader.onload = function (e) {
+        const result = e.target.result.split('base64,')[1]
+        resolve(result)
+      }
+    } else {
+      reject()
+    }
+  })
+}
+function printInf() {
+  printPDF({ pdfData: sourceBase64.value })
+}
 // 切割 分拣单
 async function cuttingDetailGet() {
   let _list = []

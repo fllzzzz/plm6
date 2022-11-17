@@ -1,8 +1,8 @@
 <template>
   <common-drawer ref="drawerRef" title="生产任务单" v-model="drawerVisible" direction="rtl" :before-close="handleClose" size="60%">
     <template #titleAfter>
-      <el-tag>项目：{{ props.detailData.serialNumber }}-{{ props.detailData.projectName }}</el-tag>
-      <el-tag>产线：{{ props.detailData.workshopName }}>{{ props.detailData.productionLineName }}</el-tag>
+      <el-tag>项目：{{ props.detailData.project?.name }}</el-tag>
+      <el-tag>产线：{{ props.detailData.workshop?.name }}>{{ props.detailData.productionLine?.name }}</el-tag>
       <el-tag>总量：{{ props.detailData.taskQuantity }}/{{ props.detailData.taskMete }}</el-tag>
       <el-tag>任务单号：{{ props.detailData.scheduleOrder }}</el-tag>
     </template>
@@ -29,7 +29,7 @@
             @change="handleTypeChange"
           />
         </div>
-        <div style="float:right; width: 300px">
+        <div style="float: right; width: 300px">
           <print-table
             :api-key="
               props.detailData.productType === componentTypeEnum.ASSEMBLE.V ? 'mesAssembleProductionTaskOrder' : 'mesProductionTaskOrder'
@@ -40,7 +40,7 @@
             class="filter-item"
           />
         </div>
-        </div>
+      </div>
       <common-table
         ref="table"
         :data="tableData"
@@ -50,10 +50,17 @@
         v-if="props.detailData.productType === componentTypeEnum.ARTIFACT.V"
       >
         <el-table-column label="序号" type="index" align="center" width="60" />
-        <el-table-column  :show-overflow-tooltip="true" label="单体" key="monomerName" prop="monomerName" align="center" />
-        <el-table-column :show-overflow-tooltip="true" label="区域" key="areaName" prop="areaName" align="center" />
+        <el-table-column :show-overflow-tooltip="true" label="单体" key="monomer.name" prop="monomer.name" align="center" />
+        <el-table-column :show-overflow-tooltip="true" label="区域" key="area.name" prop="area.name" align="center" />
         <el-table-column :show-overflow-tooltip="true" label="编号" key="serialNumber" prop="serialNumber" align="center" />
-        <el-table-column :show-overflow-tooltip="true" label="规格" key="specification" prop="specification" align="center" min-width="110px" />
+        <el-table-column
+          :show-overflow-tooltip="true"
+          label="规格"
+          key="specification"
+          prop="specification"
+          align="center"
+          min-width="110px"
+        />
         <el-table-column :show-overflow-tooltip="true" label="长度（mm）" key="length" prop="length" align="center" />
         <el-table-column :show-overflow-tooltip="true" label="单重（kg）" key="netWeight" prop="netWeight" align="center" />
         <el-table-column :show-overflow-tooltip="true" label="任务数" key="quantity" prop="quantity" align="center" />
@@ -63,89 +70,118 @@
           </template>
         </el-table-column>
       </common-table>
-      <common-table
-        ref="table"
-        :data="tableData"
-        empty-text="暂无数据"
-        :max-height="maxHeight"
-        style="width: 100%"
-        v-if="props.detailData.productType === componentTypeEnum.ASSEMBLE.V && type === typeEnum.TASK_LIST.V"
-      >
-        <el-table-column :show-overflow-tooltip="true" label="属性" key="taskType" prop="typeType" align="center">
-          <template v-slot="scope">
-            <el-tag v-if="scope.row.taskType === componentTypeEnum.ASSEMBLE.V" type="warning">部件</el-tag>
-            <el-tag v-else type="success">套料</el-tag>
-          </template>
-        </el-table-column>
-        <el-table-column :show-overflow-tooltip="true" label="编号" key="serialNumber" prop="serialNumber" align="center" min-width="130px" />
-        <el-table-column :show-overflow-tooltip="true" label="规格" key="specification" prop="specification" align="center" />
-        <el-table-column :show-overflow-tooltip="true" label="长度（mm）" key="length" prop="length" align="center" />
-        <el-table-column :show-overflow-tooltip="true" label="数量" key="quantity" prop="quantity" align="center" />
-        <el-table-column :show-overflow-tooltip="true" label="单重" key="netWeight" prop="netWeight" align="center" />
-        <el-table-column :show-overflow-tooltip="true" label="完成日期" key="complete" prop="completeTime" align="center">
-          <template v-slot="scope">
-            <span>{{ scope.row.completeTime ? parseTime(scope.row.completeTime, '{y}-{m}-{d}') : '-' }}</span>
-          </template>
-        </el-table-column>
-      </common-table>
-      <common-table
-        ref="table"
-        :data="tableData"
-        empty-text="暂无数据"
-        :max-height="maxHeight"
-        style="width: 100%"
-        class="upload-table"
-        v-if="props.detailData.productType === componentTypeEnum.ASSEMBLE.V && type === typeEnum.MATERIAL_LIST.V"
-      >
-        <el-table-column :show-overflow-tooltip="true" label="套料编号" key="serialNumber" prop="serialNumber" align="center" min-width="130px" />
-        <el-table-column :show-overflow-tooltip="true" label="材料属性" key="typesettingAssembleName" prop="typesettingAssembleName" align="center">
-          <template v-slot="scope">
-            <span>{{ scope.row.typesettingAssembleName }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column :show-overflow-tooltip="true" label="规格" key="specification" prop="specification" align="center" />
-        <el-table-column :show-overflow-tooltip="true" label="材质" key="material" prop="material" align="center" />
-        <el-table-column :show-overflow-tooltip="true" label="母材长度" key="length" prop="length" align="center" />
-        <el-table-column :show-overflow-tooltip="true" label="部件" key="serialNumber" prop="serialNumber" align="center">
-          <template v-slot="scope">
-            <div
-              v-for="(item, index) in scope.row.assembleList"
-              :key="item"
-              :class="index === scope.row.assembleList.length - 1 ? 'sandwich-cell-bottom' : 'sandwich-cell-top'"
-            >
-              <span>{{ item.serialNumber }}</span>
-            </div>
-          </template>
-        </el-table-column>
-        <el-table-column :show-overflow-tooltip="true" label="重量" key="weight" prop="weight" align="center">
-          <template v-slot="scope">
-            <div
-              v-for="(item, index) in scope.row.assembleList"
-              :key="item"
-              :class="index === scope.row.assembleList.length - 1 ? 'sandwich-cell-bottom' : 'sandwich-cell-top'"
-            >
-              <span>{{ item.weight }}</span>
-            </div>
-          </template>
-        </el-table-column>
-        <el-table-column :show-overflow-tooltip="true" label="数量" key="quantity" prop="quantity" align="center">
-          <template v-slot="scope">
-            <div
-              v-for="(item, index) in scope.row.assembleList"
-              :key="item"
-              :class="index === scope.row.assembleList.length - 1 ? 'sandwich-cell-bottom' : 'sandwich-cell-top'"
-            >
-              <span>{{ item.quantity }}</span>
-            </div>
-          </template>
-        </el-table-column>
-        <el-table-column :show-overflow-tooltip="true" label="利用长度" key="aLength" prop="aLength" align="center" />
-        <el-table-column :show-overflow-tooltip="true" label="损耗率" key="lossRate" prop="lossRate" align="center">
-          <template v-slot="scope">
-            <span>{{ scope.row.lossRate }}%</span>
-          </template>
-        </el-table-column>
-      </common-table>
+      <div v-if="props.detailData.productType === componentTypeEnum.ASSEMBLE.V && type === typeEnum.TASK_LIST.V">
+        <common-table ref="table" :data="tableData" empty-text="暂无数据" :max-height="maxHeight" style="width: 100%">
+          <el-table-column :show-overflow-tooltip="true" label="属性" key="taskType" prop="typeType" align="center">
+            <template v-slot="scope">
+              <el-tag v-if="scope.row.taskType === componentTypeEnum.ASSEMBLE.V" type="warning">部件</el-tag>
+              <el-tag v-else type="success">套料</el-tag>
+            </template>
+          </el-table-column>
+          <el-table-column
+            :show-overflow-tooltip="true"
+            label="编号"
+            key="serialNumber"
+            prop="serialNumber"
+            align="center"
+            min-width="130px"
+          />
+          <el-table-column :show-overflow-tooltip="true" label="规格" key="specification" prop="specification" align="center" />
+          <el-table-column :show-overflow-tooltip="true" label="长度（mm）" key="length" prop="length" align="center" />
+          <el-table-column :show-overflow-tooltip="true" label="数量" key="quantity" prop="quantity" align="center" />
+          <el-table-column :show-overflow-tooltip="true" label="单重" key="netWeight" prop="netWeight" align="center" />
+          <el-table-column :show-overflow-tooltip="true" label="完成日期" key="complete" prop="completeTime" align="center">
+            <template v-slot="scope">
+              <span>{{ scope.row.completeTime ? parseTime(scope.row.completeTime, '{y}-{m}-{d}') : '-' }}</span>
+            </template>
+          </el-table-column>
+        </common-table>
+        <!--分页组件-->
+        <el-pagination
+          :total="total"
+          :current-page="queryPage.pageNumber"
+          :page-size="queryPage.pageSize"
+          style="margin-top: 8px"
+          layout="total, prev, pager, next, sizes"
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+        />
+      </div>
+      <div v-if="props.detailData.productType === componentTypeEnum.ASSEMBLE.V && type === typeEnum.MATERIAL_LIST.V">
+        <common-table ref="table" :data="tableData" empty-text="暂无数据" :max-height="maxHeight" style="width: 100%" class="upload-table">
+          <el-table-column
+            :show-overflow-tooltip="true"
+            label="套料编号"
+            key="serialNumber"
+            prop="serialNumber"
+            align="center"
+            min-width="130px"
+          />
+          <el-table-column
+            :show-overflow-tooltip="true"
+            label="材料属性"
+            key="typesettingAssembleName"
+            prop="typesettingAssembleName"
+            align="center"
+          >
+            <template v-slot="scope">
+              <span>{{ scope.row.typesettingAssembleName }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column :show-overflow-tooltip="true" label="规格" key="specification" prop="specification" align="center" />
+          <el-table-column :show-overflow-tooltip="true" label="材质" key="material" prop="material" align="center" />
+          <el-table-column :show-overflow-tooltip="true" label="母材长度" key="length" prop="length" align="center" />
+          <el-table-column :show-overflow-tooltip="true" label="部件" key="serialNumber" prop="serialNumber" align="center">
+            <template v-slot="scope">
+              <div
+                v-for="(item, index) in scope.row.assembleList"
+                :key="item"
+                :class="index === scope.row.assembleList.length - 1 ? 'sandwich-cell-bottom' : 'sandwich-cell-top'"
+              >
+                <span>{{ item.serialNumber }}</span>
+              </div>
+            </template>
+          </el-table-column>
+          <el-table-column :show-overflow-tooltip="true" label="重量" key="weight" prop="weight" align="center">
+            <template v-slot="scope">
+              <div
+                v-for="(item, index) in scope.row.assembleList"
+                :key="item"
+                :class="index === scope.row.assembleList.length - 1 ? 'sandwich-cell-bottom' : 'sandwich-cell-top'"
+              >
+                <span>{{ item.weight }}</span>
+              </div>
+            </template>
+          </el-table-column>
+          <el-table-column :show-overflow-tooltip="true" label="数量" key="quantity" prop="quantity" align="center">
+            <template v-slot="scope">
+              <div
+                v-for="(item, index) in scope.row.assembleList"
+                :key="item"
+                :class="index === scope.row.assembleList.length - 1 ? 'sandwich-cell-bottom' : 'sandwich-cell-top'"
+              >
+                <span>{{ item.quantity }}</span>
+              </div>
+            </template>
+          </el-table-column>
+          <el-table-column :show-overflow-tooltip="true" label="利用长度" key="aLength" prop="aLength" align="center" />
+          <el-table-column :show-overflow-tooltip="true" label="损耗率" key="lossRate" prop="lossRate" align="center">
+            <template v-slot="scope">
+              <span>{{ scope.row.lossRate }}%</span>
+            </template>
+          </el-table-column>
+        </common-table>
+        <!--分页组件-->
+        <el-pagination
+          :total="total"
+          :current-page="queryPage.pageNumber"
+          :page-size="queryPage.pageSize"
+          style="margin-top: 8px"
+          layout="total, prev, pager, next, sizes"
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+        />
+      </div>
     </template>
   </common-drawer>
 </template>
@@ -157,6 +193,7 @@ import { componentTypeEnum } from '@enum-ms/mes'
 import { constantize } from '@/utils/enum/base'
 import { parseTime } from '@/utils/date'
 import useMaxHeight from '@compos/use-max-height'
+import usePagination from '@compos/use-pagination'
 import useVisible from '@compos/use-visible'
 
 const drawerRef = ref()
@@ -173,6 +210,7 @@ const props = defineProps({
 })
 
 const { visible: drawerVisible, handleClose } = useVisible({ emit, props, field: 'visible' })
+const { handleSizeChange, handleCurrentChange, total, setTotalPage, queryPage } = usePagination({ fetchHook: fetch })
 
 const typeEnum = {
   TASK_LIST: { L: '任务清单', K: 'TASK_LIST', V: 1 },
@@ -219,7 +257,7 @@ async function processGet() {
   try {
     const data = await processInfo({
       orderId: props.detailData.orderId,
-      productionLineId: props.detailData.productionLineId
+      productionLineId: props.detailData.productionLine.id
     })
     processList.value = data
     handleProcessChange()
@@ -230,33 +268,41 @@ async function processGet() {
 
 // 构件查看、部件任务清单接口
 async function fetch() {
+  let _list = []
   try {
     tableLoading.value = true
     const query =
       props.detailData.productType === componentTypeEnum.ARTIFACT.V ? { ...params.value } : { ...params.value, type: typeEnum.TASK_LIST.V }
-    const data = await getTaskList({
-      ...query
+    const { content = [], totalElements } = await getTaskList({
+      ...query,
+      ...queryPage
     })
-    tableData.value = data
+    setTotalPage(totalElements)
+    _list = content
   } catch (err) {
     console.log('获取生产任务单', err)
   } finally {
+    tableData.value = _list
     tableLoading.value = false
   }
 }
 
 // 部件套料清单
 async function assembleListGet() {
+  let _content = []
   try {
     tableLoading.value = true
-    const data = await getNestingList({
+    const { content = [], totalElements } = await getNestingList({
       ...params.value,
-      type: typeEnum.MATERIAL_LIST.V
+      type: typeEnum.MATERIAL_LIST.V,
+      ...queryPage
     })
-    tableData.value = data
+    setTotalPage(totalElements)
+    _content = content
   } catch (err) {
     console.log('获取生产任务单', err)
   } finally {
+    tableData.value = _content
     tableLoading.value = false
   }
 }

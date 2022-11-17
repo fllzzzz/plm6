@@ -18,6 +18,7 @@
             v-model:areaId="areaId"
             needConvert
             clearable
+            :default="false"
             :project-id="props.detailData.project.id"
             @change="showProjectChange"
           />

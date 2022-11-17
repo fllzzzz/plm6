@@ -5,15 +5,50 @@
     v-model="drawerVisible"
     direction="rtl"
     :before-close="handleClose"
-    :size="1200"
+    size="80%"
   >
+    <template #titleAfter>
+      <monomer-select-area-select
+        v-model:monomerId="monomerId"
+        v-model:areaId="areaId"
+        needConvert
+        clearable
+        :project-id="props.projectId"
+      />
+      <el-input
+        v-model.trim="name"
+        size="small"
+        placeholder="输入名称搜索"
+        style="width: 170px"
+        class="filter-item"
+        clearable
+        @keyup.enter="handleChange"
+      />
+      <el-input
+        v-model.trim="serialNumber"
+        size="small"
+        placeholder="输入编号搜索"
+        style="width: 170px"
+        class="filter-item"
+        clearable
+        @keyup.enter="handleChange"
+      />
+       <common-button class="filter-item" size="mini" type="success" icon="el-icon-search" @click.stop="searchQuery">搜索</common-button>
+          <common-button class="filter-item" size="mini" type="warning" icon="el-icon-refresh-left" @click.stop="resetQuery">
+            重置
+          </common-button>
+    </template>
     <template #titleRight>
       <print-table
         api-key="mesWorkOrderTrackingList"
         :params="{
           processId: props.detailData.id,
-          productType: props.detailData.productType,
+          taskType: props.detailData.productType,
           orderId: props.detailData.taskOrderId,
+          name: name,
+          monomerId: monomerId,
+          areaId: areaId,
+          serialNumber: serialNumber,
         }"
         size="mini"
         type="warning"
@@ -84,12 +119,18 @@ import { processDetail } from '@/api/mes/task-tracking/work-order-tracking.js'
 import useVisible from '@compos/use-visible'
 import useMaxHeight from '@compos/use-max-height'
 import usePagination from '@compos/use-pagination'
-import { defineProps, defineEmits, ref } from 'vue'
+import { defineProps, defineEmits, ref, watch } from 'vue'
 import { parseTime } from '@/utils/date'
 import { componentTypeEnum, workOrderTypeEnum } from '@enum-ms/mes'
+import monomerSelectAreaSelect from '@comp-base/monomer-select-area-select'
 
-const emit = defineEmits(['update:visible', 'change'])
+const emit = defineEmits(['update:visible'])
 const processDetailData = ref([])
+const monomerId = ref()
+const areaId = ref()
+const name = ref()
+const serialNumber = ref()
+
 const props = defineProps({
   visible: {
     type: Boolean,
@@ -98,8 +139,23 @@ const props = defineProps({
   detailData: {
     type: Object,
     default: () => {}
+  },
+  projectId: {
+    type: Number
   }
 })
+watch(
+  () => monomerId.value,
+  (val) => {
+    processDetailGet()
+  }
+)
+watch(
+  () => areaId.value,
+  (val) => {
+    processDetailGet()
+  }
+)
 
 const { visible: drawerVisible, handleClose } = useVisible({ emit, props, field: 'visible', showHook: processDetailGet })
 
@@ -117,6 +173,10 @@ async function processDetailGet() {
       processId: props.detailData.id,
       taskType: props.detailData.productType,
       orderId: props.detailData.taskOrderId,
+      name: name.value,
+      monomerId: monomerId.value,
+      areaId: areaId.value,
+      serialNumber: serialNumber.value,
       ...queryPage
     })
     setTotalPage(totalElements)
@@ -126,6 +186,22 @@ async function processDetailGet() {
   } finally {
     processDetailData.value = _list
   }
+}
+
+// 搜索
+function searchQuery() {
+  processDetailGet()
+}
+// 重置
+function resetQuery() {
+  monomerId.value = undefined
+  areaId.value = undefined
+  name.value = undefined
+  serialNumber.value = undefined
+  processDetailGet()
+}
+function handleChange() {
+  processDetailGet()
 }
 </script>
 

@@ -470,7 +470,7 @@ export function productionLineList(params) {
 // 任务跟踪-工序呆滞报表详情
 export function processList(params) {
   return request({
-    url: `/api/mes/building/task/dull/process/detail/print`,
+    url: `/api/mes/building/task/process/dull/process/detail/print`,
     method: 'get',
     params
   })

@@ -91,7 +91,7 @@
 import useVisible from '@compos/use-visible'
 import useMaxHeight from '@compos/use-max-height'
 import usePagination from '@compos/use-pagination'
-import { constantize } from '@/utils/enum/base'
+import { sortingListEnum as typeEnum } from '@enum-ms/mes'
 import { defineProps, defineEmits, ref } from 'vue'
 import { tableSummary } from '@/utils/el-extra'
 import { projectNameFormatter } from '@/utils/project'
@@ -102,13 +102,6 @@ const drawerRef = ref()
 const drillData = ref([]) // 钻孔工单详情数据
 const drillSortData = ref([]) // 钻孔分拣单
 const workshopList = ref([])
-
-const typeEnum = {
-  NESTING_TASK_ORDER: { L: '套料任务单', K: 'NESTING_TASK_ORDER', V: 1 },
-  SORTING_ORDER: { L: '分拣单', K: 'SORTING_ORDER', V: 2 }
-}
-constantize(typeEnum)
-
 const orderType = ref(typeEnum.NESTING_TASK_ORDER.V)
 
 const props = defineProps({

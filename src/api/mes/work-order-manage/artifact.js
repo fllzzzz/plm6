@@ -31,7 +31,7 @@ export function productTask(params) {
 export function processInfo(params) {
   return request({
     module: 'mes',
-    url: 'task/order/process/list',
+    url: 'task/process/list',
     method: 'get',
     params
   })
@@ -43,7 +43,7 @@ export function processInfo(params) {
 export function getTaskList(params) {
   return request({
     module: 'mes',
-    url: 'task/order/product/task/list',
+    url: 'task/process/product/task/list/page',
     method: 'get',
     params
   })
@@ -55,7 +55,7 @@ export function getTaskList(params) {
 export function getNestingList(params) {
   return request({
     module: 'mes',
-    url: 'task/order/nesting/task/list',
+    url: 'task/process/nesting/task/list/page',
     method: 'get',
     params
   })

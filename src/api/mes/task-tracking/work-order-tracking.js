@@ -6,7 +6,7 @@ import request from '@/utils/request'
 export function get(params) {
   return request({
     module: 'mes',
-    url: 'task/tracking/artifact/page',
+    url: 'task/order/tracking/artifact/page',
     method: 'get',
     params
   })
@@ -17,7 +17,7 @@ export function get(params) {
 export function machinePart(params) {
   return request({
     module: 'mes',
-    url: 'task/tracking/machine_part/page',
+    url: 'task/order/tracking/machine_part/page',
     method: 'get',
     params
   })
@@ -28,7 +28,7 @@ export function machinePart(params) {
 export function process(params) {
   return request({
     module: 'mes',
-    url: 'task/artifact/process',
+    url: 'task/process/artifact/process',
     method: 'get',
     params
   })
@@ -39,7 +39,7 @@ export function process(params) {
 export function machineProcess(params) {
   return request({
     module: 'mes',
-    url: 'task/machine_part/process',
+    url: 'task/process/machine_part/process',
     method: 'get',
     params
   })

@@ -514,6 +514,13 @@ const fileNC1TypeEnum = {
 }
 constantize(fileNC1TypeEnum)
 
+// 零件工单
+const sortingListEnum = {
+  NESTING_TASK_ORDER: { L: '套料任务单', K: 'NESTING_TASK_ORDER', V: 1 },
+  SORTING_ORDER: { L: '分拣单', K: 'SORTING_ORDER', V: 2 }
+}
+constantize(sortingListEnum)
+
 export {
   teamTypeEnum,
   teamAttributeEnum,
@@ -578,7 +585,8 @@ export {
   workOrderTypeEnum,
   assembleTypeEnum,
   taskTypeENUM,
-  fileNC1TypeEnum
+  fileNC1TypeEnum,
+  sortingListEnum
 }
 
 export default {
@@ -645,5 +653,6 @@ export default {
   workOrderTypeEnum,
   assembleTypeEnum,
   taskTypeENUM,
-  fileNC1TypeEnum
+  fileNC1TypeEnum,
+  sortingListEnum
 }
