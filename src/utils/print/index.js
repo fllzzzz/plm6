@@ -196,6 +196,116 @@ async function printPackageLabel({ packageInfo, qrCode, printMode = PrintMode.QU
 }
 
 /**
+   * 建钢：零件工单-分拣单
+   * @param {object}
+   * @param separateOrderInfo 分拣单信息
+   * @param productionLinesList 生产线信息
+   * @param printMode 打印模式
+   * @author duhh
+   */
+export async function printSeparateOrderLabel({ taskNumberOrder = '', separateOrderInfo, productionLinesList, printMode = PrintMode.QUEUE.V } = {}) {
+  const marginNum = '5mm'
+  const pageHtml = `<div style="text-align:center;"><span tdata='pageNO'>##</span> / <span tdata='pageCount'>##</span></div>`
+  const headHtml = `
+  <div style="font-size: 17pt; font-weight: bold; height: 10mm; text-align:center;">零件分拣单</div>
+  <div style="font-size: 12pt; padding:0 ${marginNum};margin-top: 3mm;margin-bottom: 1mm;">任务单：${taskNumberOrder}</div>
+  `
+  let listHtml = ``
+
+  const piWidth = '25mm' // 零件信息宽度
+  const snHeight = '5mm' // 零件编号-高度
+  const imgHeight = '19mm'// 零件图片-高度
+  for (let o = 0; o < separateOrderInfo.length; o++) {
+    const s = separateOrderInfo[o]
+
+    // 产线信息
+    let pListHtml = ``
+
+    for (let i = 0; i < productionLinesList.length; i++) {
+      const p = productionLinesList[i]
+      pListHtml += `
+      <div class="separate-production-line-info">
+        <div class="separate-sn">${o === 0 ? p.workShopName + '>' + p.productionLineName : ''}</div>
+        <div style="height:${imgHeight};display:flex;align-items: center;justify-content: center;">${s.obj[p.productionLineId]?.quantity || 0}</div>
+      </div>
+      `
+    }
+
+    listHtml += `
+    <div style="display:flex;width:100%;border-top:1px solid #000;box-sizing: border-box;${(o + 1) % 7 === 0 || o === separateOrderInfo.length - 1 ? 'border-bottom:1px solid #000;margin-bottom:3mm;' : ''}">
+      <div class="separate-part-info">
+        <div class="separate-sn">${s.serialNumber}</div>
+        <div style="height:${imgHeight}">
+          ${s && s.absolutePicturePath ? `
+          <img
+          style="width:95%;"
+          src="${s.absolutePicturePath || ''}"
+          >` : ''}
+        </div>
+      </div>
+      ${pListHtml}
+    </div>
+    `
+  }
+
+  const bodyHtml = `<div style="font-size: 10pt;box-sizing: border-box;margin-right:${marginNum};margin-left:${marginNum};">
+    ${listHtml}  
+  </div>`
+
+  const separate_style = `
+  <style>
+    .separate-part-info{
+      width:${piWidth};
+      display:flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction:column;
+      box-sizing: border-box;
+      border-right:1px solid #000;
+      border-left:1px solid #000;
+    }
+    .separate-production-line-info{
+      flex:1;
+      display:flex;
+      flex-direction:column;
+      align-items: center;
+      justify-content: center;
+      box-sizing: border-box;
+      border-right:1px solid #000;
+    }
+    .separate-sn{
+      height:${snHeight};
+      line-height:${snHeight};
+      width:100%;
+      text-align:center;
+      background-color: #d9d9d9;
+      box-sizing: border-box;
+      border-bottom:1px solid #000;
+    }
+  </style>`
+  const strHtml = combineHtml(separate_style, bodyHtml)
+
+  let result = false
+  try {
+    const headHeight = 25
+    const bodyHeight = 172
+    LODOP = await getLODOP()
+    LODOP.SET_PRINT_PAGESIZE(2, 2100, 2970, '1') /* 纸张大小*/ // 100mm* 75mm
+    LODOP.ADD_PRINT_HTM('5mm', '0mm', '100%', `${headHeight}mm`, headHtml)
+    LODOP.SET_PRINT_STYLEA(0, 'ItemType', 1)
+    LODOP.ADD_PRINT_HTM(`${headHeight}mm`, 0, '100%', `${bodyHeight}mm`, strHtml)
+    LODOP.ADD_PRINT_HTM(`${headHeight + bodyHeight + 5}mm`, '0', '100%', '5mm', pageHtml)
+    LODOP.SET_PRINT_STYLEA(0, 'ItemType', 1)
+    // LODOP.PRINT_DESIGN()/* 打印设计*/
+    // LODOP.PREVIEW()/* 打印预览*/
+    result = await printByMode(printMode)
+  } catch (error) {
+    throw new Error(error)
+  }
+  return result
+}
+
+/**
  * 物料仓 --钢板打印
  */
 export async function printSteelPlateLabel({ secondClassName, projectName, thirdClassName, specification, qrCode, number = 1, printMode = PrintMode.QUEUE.V }) {
