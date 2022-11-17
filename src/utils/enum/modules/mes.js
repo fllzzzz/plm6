@@ -452,7 +452,7 @@ constantize(taskTrackingSchedulingStatusEnum)
 // 型材套料状态
 const projectNestingStatusEnum = {
   NOT_NESTING: { L: '未套料', K: 'NOT_NESTING', V: 1 << 0, T: 'danger', COLOR: '#E82121' },
-  PARTIAL_NESTING: { L: '部分套料', K: 'PARTIAL_NESTING', V: 1 << 1, T: 'warning', COLOR: '' },
+  PARTIAL_NESTING: { L: '部分套料', K: 'PARTIAL_NESTING', V: 1 << 1, T: 'warning', COLOR: '#E6A23C' },
   END_NESTING: { L: '已套料', K: 'END_NESTING', V: 1 << 2, T: 'success', COLOR: '#35D552' }
 }
 constantize(projectNestingStatusEnum)

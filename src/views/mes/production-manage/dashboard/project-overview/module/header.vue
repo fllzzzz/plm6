@@ -9,6 +9,7 @@
       placeholder="选择年"
       format="YYYY"
       value-format="x"
+      :disabled-date="disabledDate"
       @change="crud.toQuery"
     />
     <common-radio-button
@@ -37,14 +38,17 @@
 import { projectStatusEnum } from '@enum-ms/contract'
 import { regHeader } from '@compos/use-crud'
 import rrOperation from '@crud/RR.operation'
-import moment from 'moment'
-
-const defaultTime = moment().startOf('year').valueOf()
 
 const defaultQuery = {
-  date: defaultTime.toString(),
+  date: undefined,
   status: projectStatusEnum.PROCESS.V,
   name: undefined
 }
+
+// 如果时间选取的时间年份比当前的时间大就被禁用
+function disabledDate(time) {
+  return time > new Date()
+}
+
 const { crud, query } = regHeader(defaultQuery)
 </script>

@@ -13,7 +13,7 @@
           :empty-text="crud.emptyText"
           :max-height="maxHeight"
           style="width: 100%"
-          @row-click="currentChange"
+          @current-change="currentChange"
         >
           <el-table-column prop="index" label="序号" align="center" width="60" type="index" />
           <el-table-column
@@ -151,6 +151,8 @@ watch(
   () => crud.query.productType,
   (val) => {
     processList.value = {}
+    crud.query.workshopId = undefined
+    crud.query.productionLineId = undefined
   }
 )
 const productType = computed(() => {

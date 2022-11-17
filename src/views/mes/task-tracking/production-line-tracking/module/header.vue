@@ -49,7 +49,7 @@ import rrOperation from '@crud/RR.operation'
 const defaultQuery = {
   workShopId: undefined,
   productType: undefined,
-  date: [moment().subtract(1, 'month').valueOf(), moment().valueOf()],
+  date: undefined,
   startTime: moment().subtract(1, 'month').valueOf(),
   endTime: moment().valueOf()
 }

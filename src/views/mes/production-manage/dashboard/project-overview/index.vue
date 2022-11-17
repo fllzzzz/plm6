@@ -39,7 +39,7 @@
   </div>
 </template>
 <script setup>
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import crudApi from '@/api/mes/production-manage/dashboard/project-overview'
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
@@ -66,6 +66,25 @@ const { crud, CRUD, columns } = useCRUD(
     hasPagination: true
   },
   tableRef
+)
+
+watch(
+  () => crud.query.year,
+  (val) => {
+    processData.value = {}
+  }
+)
+watch(
+  () => crud.query.status,
+  (val) => {
+    processData.value = {}
+  }
+)
+watch(
+  () => crud.query.name,
+  (val) => {
+    processData.value = {}
+  }
 )
 
 const { maxHeight } = useMaxHeight({

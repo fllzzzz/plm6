@@ -29,6 +29,7 @@
       v-model="query.productionLineId"
       :factory-id="query.factoryId"
       :workshop-id="query.workshopId"
+      :productType="query.productType"
       placeholder="请选择生产线"
       style="width: 200px"
       clearable
@@ -60,11 +61,9 @@ import { componentTypeEnum, taskTrackingSchedulingStatusEnum } from '@enum-ms/me
 import workshopSelect from '@comp-mes/workshop-select'
 import productionLineSelect from '@comp-mes/production-line-select'
 import rrOperation from '@crud/RR.operation'
-import moment from 'moment'
 
-const defaultTime = moment().startOf('month').valueOf()
 const defaultQuery = {
-  dateTime: defaultTime.toString(),
+  dateTime: undefined,
   workshopId: undefined,
   productionLineId: undefined,
   productType: componentTypeEnum.ARTIFACT.V,

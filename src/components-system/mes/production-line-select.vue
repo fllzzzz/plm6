@@ -17,7 +17,7 @@
 </template>
 
 <script setup>
-import { defineProps, defineEmits, ref, watch,defineExpose } from 'vue'
+import { defineProps, defineEmits, ref, watch, defineExpose } from 'vue'
 import { isNotBlank, isBlank, deepClone } from '@data-type/index'
 import useOnlyProductLines from '@compos/store/use-only-product-lines'
 
@@ -33,6 +33,10 @@ const props = defineProps({
     default: undefined
   },
   workshopId: {
+    type: [Number, String],
+    default: undefined
+  },
+  productType: {
     type: [Number, String],
     default: undefined
   },
@@ -67,7 +71,7 @@ const props = defineProps({
   defaultValue: {
     type: Boolean,
     default: false
-  },
+  }
 })
 
 const selectValue = ref()
@@ -125,6 +129,7 @@ function dataFormat() {
       let list = deepClone(onlyProductLines.value)
       if (props.factoryId) list = list.filter((v) => props.factoryId === v.factoryId)
       if (props.workshopId) list = list.filter((v) => props.workshopId === v.workshopId)
+      if (props.productType) list = list.filter((v) => props.productType & v.productType)
       _options = list.map((o) => {
         return {
           value: o.id,
