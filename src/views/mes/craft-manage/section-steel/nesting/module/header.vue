@@ -16,7 +16,7 @@
       v-model="query.projectId"
       placeholder="请选择项目"
       class="filter-item"
-      style="width: 200px"
+      style="width: 300px"
       clearable
       @change="crud.toQuery"
     />

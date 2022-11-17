@@ -151,6 +151,8 @@ watch(
   () => crud.query.productType,
   (val) => {
     processList.value = {}
+    crud.query.workshopId = undefined
+    crud.query.productionLineId = undefined
   }
 )
 const productType = computed(() => {

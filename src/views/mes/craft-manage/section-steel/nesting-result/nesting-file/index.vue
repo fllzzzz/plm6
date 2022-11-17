@@ -63,17 +63,19 @@
                 <template v-for="item in scope.row.linkDOList" :key="item">
                   <el-tooltip effect="dark" :content="item.serialNumber" placement="top-start">
                     <div
-                      :style="`padding: 0 5px; display:inline-block; width:${(item.length / scope.row.assembleLength) * 100
-                      }%; color: #fff; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; height: 30px; background-color: ${
+                      class="assemble-shadow"
+                      :style="`width:${((item.length / scope.row.assembleLength) * 100).toFixed(2)}%; background-color: ${
                         item.lengthColor
-                      };line-height: 30px; border-right: 1px solid #fff;`"
+                      }; margin-left: ${(scope.row.kerfLength / scope.row.assembleLength) * 100}% ;margin-right: ${
+                        (scope.row.kerfLength / scope.row.assembleLength) * 100
+                      }%`"
                     >
                       <!-- 17dh13535487865887486 -->
                       {{ item.serialNumber }}
                     </div>
                   </el-tooltip>
                 </template>
-                <el-tooltip v-if="scope.row.lossRate > 0" effect="dark" content="余料" placement="top-start">
+                <el-tooltip v-if="scope.row.typesettingTypeEnum === nestingSettingTypeEnum.LOSSY.V" effect="dark" content="余料" placement="top-start">
                   <div class="shadow" style="flex: 1"></div>
                 </el-tooltip>
               </div>
@@ -93,7 +95,8 @@
         </el-table-column>
         <el-table-column key="length" prop="length" :show-overflow-tooltip="true" label="母材长度（mm）" align="center" width="130px">
           <template v-slot="scope">
-            <span>{{ scope.row.length }}</span>
+            <span v-if="scope.row.typesettingTypeEnum === nestingSettingTypeEnum.UN_LOSSY.V">-</span>
+            <span v-else>{{ scope.row.length }}</span>
           </template>
         </el-table-column>
         <el-table-column
@@ -115,7 +118,8 @@
         </el-table-column>
         <el-table-column key="netWeight" prop="netWeight" :show-overflow-tooltip="true" label="母材总重" align="center">
           <template v-slot="scope">
-            <span>{{ scope.row.netWeight }}</span>
+            <span v-if="scope.row.typesettingTypeEnum === nestingSettingTypeEnum.UN_LOSSY.V">-</span>
+            <span v-else>{{ scope.row.netWeight }}</span>
           </template>
         </el-table-column>
         <el-table-column key="quantity" prop="quantity" :show-overflow-tooltip="true" label="数量" align="center" width="60px">
@@ -152,7 +156,7 @@ import { getLightColor } from '@/utils/color'
 import { nestingProgress } from '@/api/mes/craft-manage/section-steel/nesting-setting'
 import { getMaterialList, getMaterialListExcelFn } from '@/api/mes/craft-manage/section-steel/nesting-result'
 import { ref, defineProps, defineEmits } from 'vue'
-import { nestingFileTypeEnum, mesBuildingTypeSettingAssembleTypeEnum as materialTypeEnum } from '@enum-ms/mes'
+import { nestingFileTypeEnum, mesBuildingTypeSettingAssembleTypeEnum as materialTypeEnum, nestingSettingTypeEnum } from '@enum-ms/mes'
 import ExportButton from '@comp-common/export-button/index.vue'
 
 const nestingProgressData = ref([])
@@ -179,13 +183,13 @@ async function nestingResultGet() {
     resultLoading.value = true
     const { content } = await nestingProgress({ batchId: props.detailData.id })
     content[0].typesettingDTOS.forEach((v) => {
-      v.assembleLength = v.lossRate === 0 ? 0 : v.length
+      v.assembleLength = v.typesettingTypeEnum === nestingSettingTypeEnum.UN_LOSSY.V ? 0 : v.length
       v.linkDOList.map((m) => {
         if (!colorObj.value[m.serialNumber]) {
           colorObj.value[m.serialNumber] = getLightColor()
         }
         m.lengthColor = colorObj.value[m.serialNumber]
-        if (v.lossRate === 0) {
+        if (v.typesettingTypeEnum === nestingSettingTypeEnum.UN_LOSSY.V) {
           v.assembleLength += m.length
         }
       })
@@ -220,16 +224,14 @@ function handleChange(val) {
 }
 
 // 高度
-const { maxHeight } = useMaxHeight(
-  {
-    mainBox: '.common-drawer',
-    extraBox: ['.el-drawer__header'],
-    wrapperBox: ['.el-drawer__body'],
-    navbar: false,
-    clientHRepMainH: true,
-    minHeight: 300
-  }
-)
+const { maxHeight } = useMaxHeight({
+  mainBox: '.common-drawer',
+  extraBox: ['.el-drawer__header'],
+  wrapperBox: ['.el-drawer__body'],
+  navbar: false,
+  clientHRepMainH: true,
+  minHeight: 300
+})
 </script>
 
 <style lang="scss" scope>
@@ -239,5 +241,14 @@ const { maxHeight } = useMaxHeight(
   color: #dbfaff;
   height: 30px;
   display: inline-block;
+}
+.assemble-shadow {
+  padding: 0 5px;
+  display: inline-block;
+  color: #fff;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  height: 30px;
 }
 </style>

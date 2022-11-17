@@ -46,7 +46,7 @@
   </div>
 </template>
 <script setup>
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import crudApi from '@/api/mes/craft-manage/section-steel/nesting-result'
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
@@ -75,6 +75,19 @@ const { crud, columns } = useCRUD(
   tableRef
 )
 
+watch(
+  () => crud.query.year,
+  (val) => {
+    batchRow.value = {}
+  }
+)
+
+watch(
+  () => crud.query.nestingStatusEnum,
+  (val) => {
+    batchRow.value = {}
+  }
+)
 const { maxHeight } = useMaxHeight({
   extraBox: ['.head-container'],
   paginate: true

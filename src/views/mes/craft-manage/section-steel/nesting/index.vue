@@ -12,7 +12,7 @@
         :max-height="maxHeight"
         highlight-current-row
         row-key="projectId"
-        style="width: 30%"
+        style="width: 35%"
         @row-click="handleRowChange"
       >
         <el-table-column prop="index" label="序号" align="center" width="60" type="index" />
@@ -41,7 +41,7 @@
   </div>
 </template>
 <script setup>
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import crudApi from '@/api/mes/craft-manage/section-steel/nesting'
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
@@ -67,6 +67,27 @@ const { crud, columns } = useCRUD(
     hasPagination: true
   },
   tableRef
+)
+
+watch(
+  () => crud.query.year,
+  (val) => {
+    projectData.value = {}
+  }
+)
+
+watch(
+  () => crud.query.projectId,
+  (val) => {
+    projectData.value = {}
+  }
+)
+
+watch(
+  () => crud.query.nestingStatusEnum,
+  (val) => {
+    projectData.value = {}
+  }
 )
 function handleRowChange(row) {
   console.log(row, 'row')
