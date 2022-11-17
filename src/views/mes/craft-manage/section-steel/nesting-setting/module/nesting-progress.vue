@@ -133,15 +133,16 @@ const props = defineProps({
 })
 const { visible: dialogVisible, handleClose } = useVisible({ emit, props, field: 'visible', showHook: nestingResultGet })
 
+// 高度
 const { maxHeight } = useMaxHeight(
   {
+    mainBox: '.common-dialog',
     extraBox: ['.el-dialog__header'],
     wrapperBox: ['.el-dialog__body'],
+    navbar: false,
     clientHRepMainH: true,
-    minHeight: 300,
-    navbar: false
-  },
-  dialogVisible
+    minHeight: 300
+  }
 )
 
 const colorObj = ref({}) // serialNumber: color
