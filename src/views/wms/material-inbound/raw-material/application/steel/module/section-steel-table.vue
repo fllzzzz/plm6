@@ -122,7 +122,7 @@
 </template>
 
 <script setup>
-import { defineEmits, defineProps, computed, defineExpose, ref, inject, watchEffect, reactive, watch } from 'vue'
+import { defineProps, computed, defineExpose, ref, inject, watchEffect, reactive, watch } from 'vue'
 import { matClsEnum } from '@/utils/enum/modules/classification'
 import { isBlank, isNotBlank, toPrecision } from '@/utils/data-type'
 
@@ -136,8 +136,6 @@ import { calcSectionSteelTotalLength, calcSectionSteelWeight } from '@/utils/wms
 import { positiveNumPattern } from '@/utils/validate/pattern'
 
 import priceSetColumns from '@/views/wms/material-inbound/raw-material/components/price-set-columns.vue'
-
-const emit = defineEmits(['calc-weight'])
 
 const props = defineProps({
   boolPartyA: {
@@ -254,13 +252,6 @@ function rowWatch(row) {
   })
   // 计算总长度
   watch([() => row.length, () => row.quantity], () => { calcTotalLength(row) })
-  // 钢材总重计算
-  watch(
-    () => row.weighingTotalWeight,
-    () => {
-      emit('calc-weight')
-    }
-  )
 }
 
 // 总重计算与单位重量计算分开，避免修改数量时需要重新计算单件重量
@@ -313,7 +304,6 @@ function delRow(sn, $index) {
   } else {
     form.sectionSteelList.splice($index, 1)
   }
-  emit('calc-weight')
 }
 
 // 校验

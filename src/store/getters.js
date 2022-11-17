@@ -79,6 +79,8 @@ const getters = {
 
   // 用户项目
   userProjects: state => state.project.userProjects,
+  // 项目Map
+  projectMap: state => state.project.projectMap,
   // 系统当前项目id（Navbar）
   globalProjectId: state => state.project.id,
   // 系统当前项目

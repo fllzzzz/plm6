@@ -21,24 +21,24 @@ export default {
         }
       ]
     },
-    // {
-    //   path: '/supply-chain/requisitions-manage',
-    //   component: 'Layout',
-    //   hidden: false,
-    //   name: 'SupplyChainRequisitions',
-    //   alwaysShow: false,
-    //   redirect: '/supply-chain/requisitions',
-    //   meta: { title: '申购订单管理', icon: 'contract', noCache: true },
-    //   children: [
-    //     {
-    //       name: 'requisitions',
-    //       path: 'requisitions',
-    //       hidden: false,
-    //       component: '/supply-chain/requisitions/index',
-    //       meta: { title: '申购订单', icon: 'project', noCache: true }
-    //     }
-    //   ]
-    // },
+    {
+      path: '/supply-chain/requisitions-manage',
+      component: 'Layout',
+      hidden: false,
+      name: 'SupplyChainRequisitions',
+      alwaysShow: false,
+      redirect: '/supply-chain/requisitions',
+      meta: { title: '申购管理', icon: 'contract', noCache: true },
+      children: [
+        {
+          name: 'Requisitions',
+          path: 'requisitions',
+          hidden: false,
+          component: '/supply-chain/requisitions/index',
+          meta: { title: '材料申购', icon: 'project', noCache: true }
+        }
+      ]
+    },
     {
       path: '/supply-chain/purchase-reconciliation-manage',
       component: 'Layout',

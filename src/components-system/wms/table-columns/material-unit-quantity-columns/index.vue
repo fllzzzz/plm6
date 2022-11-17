@@ -5,6 +5,7 @@
     :columns="props.columns"
     :basic-class="props.basicClass"
     :showUnit="props.showUnit"
+    :showMete="props.showMete"
     :outbound-type-mode="outboundTypeMode"
     :label-prefix="props.labelPrefix"
     :quantity-field="quantityField"
@@ -23,6 +24,11 @@ const props = defineProps({
   },
   showUnit: {
     // 是否显示单位
+    type: Boolean,
+    default: true
+  },
+  showMete: {
+    // 是否显示核算量
     type: Boolean,
     default: true
   },

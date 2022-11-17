@@ -5,6 +5,7 @@
       v-model="copyValue"
       :options="options"
       :props="cascaderProps"
+      :collapse-tags="collapseTags"
       :filterable="props.filterable"
       :clearable="props.clearable"
       :disabled="props.disabled"
@@ -44,6 +45,11 @@ const props = defineProps({
     // 次级菜单的展开方式
     type: String,
     default: 'hover'
+  },
+  collapseTags: {
+    // 多选模式下是否折叠Tag
+    type: Boolean,
+    default: false
   },
   emitPath: {
     type: Boolean,

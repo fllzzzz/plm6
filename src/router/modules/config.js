@@ -433,6 +433,24 @@ export default {
       ]
     },
     {
+      path: '/approval-manage',
+      component: 'Layout',
+      hidden: false,
+      name: 'ApprovalManage',
+      alwaysShow: true,
+      redirect: '/config-manage/approval-manage/company-process',
+      meta: { title: '审批管理', icon: 'project', noCache: true },
+      children: [
+        {
+          name: 'CompanyProcess',
+          path: 'company-process',
+          hidden: false,
+          component: '/config-manage/approval-manage/company-process/index',
+          meta: { title: '公司审批流程', icon: 'project', noCache: true }
+        }
+      ]
+    },
+    {
       path: '/supply-chain-config',
       component: 'Layout',
       hidden: false,

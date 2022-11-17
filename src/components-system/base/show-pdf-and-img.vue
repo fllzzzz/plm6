@@ -75,7 +75,8 @@ async function checkSuffix() {
     const msg = props.showType ? '附件' : '图纸'
     // 获取文件格式
     if (res.headers['content-disposition']) {
-      suffix.value = res.headers['content-disposition'].split('=')[1].split('.')[1]
+      const fileNameArr = res.headers['content-disposition'].split('=')[1].split('.')
+      suffix.value = fileNameArr[fileNameArr.length - 1]
       ImgShow.value = suffix.value !== 'pdf'
       PdfShow.value = suffix.value === 'pdf'
     } else {
