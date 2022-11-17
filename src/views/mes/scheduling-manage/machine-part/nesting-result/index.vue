@@ -57,7 +57,7 @@
             v-if="columns.visible('num')"
             prop="num"
             :show-overflow-tooltip="true"
-            label="零件数量(件)"
+            label="板材数量(件)"
             min-width="120"
             align="center"
           />

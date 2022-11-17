@@ -60,6 +60,16 @@ const componentTypeEnum = {
 }
 constantize(componentTypeEnum)
 
+const taskTypeENUM = {
+  MACHINE_PART: componentTypeEnum.MACHINE_PART,
+  ASSEMBLE: componentTypeEnum.ASSEMBLE,
+  ARTIFACT: componentTypeEnum.ARTIFACT,
+  ENCLOSURE: componentTypeEnum.ENCLOSURE,
+  AUXILIARY_MATERIAL: componentTypeEnum.AUXILIARY_MATERIAL,
+  PARENT_PART: { L: '母件', SL: '母件', K: 'PARENT_PART', V: 1 << 5 }
+}
+constantize(taskTypeENUM)
+
 // 构件工序
 const artifactProcessEnum = {
   ONCE: { L: '一次工序', K: 'ONCE', V: componentTypeEnum.ASSEMBLE.V },
@@ -567,6 +577,7 @@ export {
   shipStatusEnum,
   workOrderTypeEnum,
   assembleTypeEnum,
+  taskTypeENUM,
   fileNC1TypeEnum
 }
 
@@ -633,5 +644,6 @@ export default {
   shipStatusEnum,
   workOrderTypeEnum,
   assembleTypeEnum,
+  taskTypeENUM,
   fileNC1TypeEnum
 }

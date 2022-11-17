@@ -59,12 +59,11 @@
         >
           <template v-slot="scope">
             <template v-if="scope.row.linkDOList.length > 0">
-              <div style="width: 100%; display: inline-block">
+              <div style="width: 100%; display: flex">
                 <template v-for="item in scope.row.linkDOList" :key="item">
                   <el-tooltip effect="dark" :content="item.serialNumber" placement="top-start">
                     <div
-                      :style="`padding: 0 5px; display:inline-block; width:${
-                        (item.length / scope.row.length) * 100
+                      :style="`padding: 0 5px; display:inline-block; width:${(item.length / scope.row.assembleLength) * 100
                       }%; color: #fff; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; height: 30px; background-color: ${
                         item.lengthColor
                       };line-height: 30px; border-right: 1px solid #fff;`"
@@ -74,10 +73,8 @@
                     </div>
                   </el-tooltip>
                 </template>
-                <el-tooltip effect="dark" content="余料" placement="top-start">
-                  <div
-                    :style="`display:inline-block; width: ${scope.row.lossRate}%; color: #fff;overflow: hidden; text-overflow: ellipsis; white-space: nowrap; height: 30px; background-color: #5e5d5d;line-height: 30px;`"
-                  ></div>
+                <el-tooltip v-if="scope.row.lossRate > 0" effect="dark" content="余料" placement="top-start">
+                  <div class="shadow" style="flex: 1"></div>
                 </el-tooltip>
               </div>
             </template>
@@ -116,12 +113,12 @@
             <span>{{ scope.row.material }}</span>
           </template>
         </el-table-column>
-        <el-table-column key="totalNetWeight" prop="totalNetWeight" :show-overflow-tooltip="true" label="母材总重" align="center">
+        <el-table-column key="netWeight" prop="netWeight" :show-overflow-tooltip="true" label="母材总重" align="center">
           <template v-slot="scope">
-            <span>{{ scope.row.totalNetWeight }}</span>
+            <span>{{ scope.row.netWeight }}</span>
           </template>
         </el-table-column>
-        <el-table-column key="quantity" prop="quantity" :show-overflow-tooltip="true" label="数量" align="center">
+        <el-table-column key="quantity" prop="quantity" :show-overflow-tooltip="true" label="数量" align="center" width="60px">
           <template v-slot="scope">
             <span>{{ scope.row.quantity }}</span>
           </template>
@@ -182,11 +179,15 @@ async function nestingResultGet() {
     resultLoading.value = true
     const { content } = await nestingProgress({ batchId: props.detailData.id })
     content[0].typesettingDTOS.forEach((v) => {
+      v.assembleLength = v.lossRate === 0 ? 0 : v.length
       v.linkDOList.map((m) => {
         if (!colorObj.value[m.serialNumber]) {
           colorObj.value[m.serialNumber] = getLightColor()
         }
         m.lengthColor = colorObj.value[m.serialNumber]
+        if (v.lossRate === 0) {
+          v.assembleLength += m.length
+        }
       })
     })
     nestingProgressData.value = content[0].typesettingDTOS
@@ -218,14 +219,25 @@ function handleChange(val) {
   }
 }
 
-const { maxHeight } = useMaxHeight({
-  extraBox: ['.head-container'],
-  paginate: true
-})
+// 高度
+const { maxHeight } = useMaxHeight(
+  {
+    mainBox: '.common-drawer',
+    extraBox: ['.el-drawer__header'],
+    wrapperBox: ['.el-drawer__body'],
+    navbar: false,
+    clientHRepMainH: true,
+    minHeight: 300
+  }
+)
 </script>
 
 <style lang="scss" scope>
-.c {
-  background-color: #5e5d5d;
+.shadow {
+  background: linear-gradient(135deg, #ffffff 25%, #5588aa 0, #5588aa 50%, #ffffff 0, #ffffff 75%, #5588aa 0);
+  background-size: 15px 15px;
+  color: #dbfaff;
+  height: 30px;
+  display: inline-block;
 }
 </style>

@@ -156,7 +156,7 @@
   </crudOperation>
   <!-- <filter-drawer v-model:visible="filterVisible" :list="filterList"></filter-drawer> -->
   <no-nesting-drawer v-model:visible="noNestingVisible" @refresh="crud.toQuery" />
-  <extrusion-nesting-setting v-model:visible="dialogVisible" :detail-data="crud.selections" :projectId="query.projectId" />
+  <extrusion-nesting-setting v-model:visible="dialogVisible" :detail-data="crud.selections" :monomerId="query.monomerId" :projectId="query.projectId" />
 </template>
 
 <script setup>
