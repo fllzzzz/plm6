@@ -300,9 +300,10 @@ async function fetchProjectInfo() {
 
 function handleEchartsData(val) {
   processList.value = val
+  console.log(val?.data)
   crud.query.processId = val?.data?.id
   crud.query.productType = val?.data?.productType
-  crud.query.productionLineId = val?.data?.productionLineId
+  crud.query.productionLineId = productionLineId.value
   crud.toQuery()
 }
 
