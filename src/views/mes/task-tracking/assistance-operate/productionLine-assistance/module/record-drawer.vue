@@ -8,10 +8,19 @@
     :before-close="handleClose"
     size="100%"
   >
-    <template #titleRight> </template>
+    <template #titleAfter>
+      <common-radio-button
+        v-model="query.taskTypeEnum"
+        :options="queryTaskTypeENUM"
+        type="enum"
+        default
+        class="filter-item"
+        @change="fetch"
+      />
+    </template>
     <template #content>
       <div style="display: flex; height: 100%">
-        <div style="flex: 1">
+        <div style="width: 45%">
           <common-table
             v-loading="recordLoading"
             highlight-current-row
@@ -26,14 +35,27 @@
             <el-table-column align="center" prop="orderNumber" :show-overflow-tooltip="true" label="排产工单号" min-width="120px" />
             <el-table-column prop="createTime" :show-overflow-tooltip="true" label="日期" width="100px" align="center" />
             <el-table-column prop="user.name" :show-overflow-tooltip="true" label="协同操作人" width="100px" align="center" />
-            <el-table-column prop="taskTypeEnum" :show-overflow-tooltip="true" label="属性" width="90px" align="center" />
-            <el-table-column align="center" prop="monomer.name" :show-overflow-tooltip="true" label="单体" width="100px" />
+            <!-- <el-table-column prop="taskTypeEnum" :show-overflow-tooltip="true" label="属性" width="90px" align="center" /> -->
+            <el-table-column
+              v-if="query.taskTypeEnum !== taskTypeENUM.MACHINE_PART.V"
+              align="center"
+              prop="monomer.name"
+              :show-overflow-tooltip="true"
+              label="单体"
+              width="100px"
+            />
             <el-table-column prop="quantity" :show-overflow-tooltip="true" label="协同数（件/kg）" width="120px" align="center">
               <template #default="{ row }">
                 <span>{{ row.quantity }} / {{ row.totalNetWeight }}</span>
               </template>
             </el-table-column>
-            <el-table-column prop="group.name" :show-overflow-tooltip="true" label="原生产组" min-width="150px">
+            <el-table-column
+              v-if="query.taskTypeEnum !== taskTypeENUM.MACHINE_PART.V"
+              prop="group.name"
+              :show-overflow-tooltip="true"
+              label="原生产组"
+              min-width="150px"
+            >
               <template #default="{ row }">
                 <span>{{ row.workshop?.name }}>{{ row.productionLine?.name }}>{{ row.groups?.name }}</span>
               </template>
@@ -56,11 +78,47 @@
           <template v-else>
             <common-table v-loading="detailLoading" :data="detailList" :max-height="maxHeight" style="width: 100%">
               <el-table-column label="序号" type="index" align="center" width="60" />
-              <el-table-column align="center" prop="orderNumber" :show-overflow-tooltip="true" label="排产工单号" min-width="120px" />
-              <el-table-column prop="area.name" :show-overflow-tooltip="true" label="区域" width="100px" align="center" />
-              <el-table-column prop="serialNumber" :show-overflow-tooltip="true" label="编号" width="100px" align="center" />
+              <el-table-column
+                v-if="currentInfo.taskTypeEnum !== taskTypeENUM.MACHINE_PART.V"
+                align="center"
+                prop="orderNumber"
+                :show-overflow-tooltip="true"
+                label="排产工单号"
+                min-width="120px"
+              />
+              <el-table-column
+                v-if="currentInfo.taskTypeEnum === taskTypeENUM.MACHINE_PART.V"
+                align="center"
+                prop="cutNumber"
+                :show-overflow-tooltip="true"
+                label="切割指令号"
+                min-width="120px"
+              />
+              <el-table-column
+                v-if="currentInfo.taskTypeEnum !== taskTypeENUM.MACHINE_PART.V"
+                prop="area.name"
+                :show-overflow-tooltip="true"
+                label="区域"
+                width="100px"
+                align="center"
+              />
+              <el-table-column
+                v-if="currentInfo.taskTypeEnum !== taskTypeENUM.MACHINE_PART.V"
+                prop="serialNumber"
+                :show-overflow-tooltip="true"
+                label="编号"
+                width="100px"
+                align="center"
+              />
               <el-table-column prop="specification" :show-overflow-tooltip="true" label="规格" min-width="100px" align="center" />
-              <el-table-column prop="length" :show-overflow-tooltip="true" label="长度(mm)" width="80" align="center" />
+              <el-table-column
+                v-if="currentInfo.taskTypeEnum !== taskTypeENUM.MACHINE_PART.V"
+                prop="length"
+                :show-overflow-tooltip="true"
+                label="长度(mm)"
+                width="80"
+                align="center"
+              />
               <el-table-column prop="quantity" :show-overflow-tooltip="true" label="协同数量" width="80" align="center" />
               <el-table-column prop="groups?.name" :show-overflow-tooltip="true" label="协同生产组" min-width="150">
                 <template #default="{ row }">
@@ -109,6 +167,12 @@ const { maxHeight } = useMaxHeight(
   drawerRef
 )
 
+const queryTaskTypeENUM = {
+  ARTIFACT: taskTypeENUM.ARTIFACT,
+  ASSEMBLE: taskTypeENUM.ASSEMBLE,
+  MACHINE_PART: taskTypeENUM.MACHINE_PART
+}
+
 const dataFormat = ref([
   ['createTime', ['parse-time', '{y}-{m}-{d}']],
   ['taskTypeEnum', ['parse-enum', taskTypeENUM]]
@@ -123,11 +187,13 @@ const recordList = ref([])
 const detailLoading = ref(false)
 const detailList = ref([])
 const query = ref({})
+const currentInfo = ref({})
 
 async function fetch() {
   try {
     recordLoading.value = true
     recordList.value = []
+    detailList.value = []
     const { content, totalElements } = await record({ ...query.value, ...queryPage })
     recordList.value = content
     setTotalPage(totalElements)
@@ -153,7 +219,7 @@ async function detail(row) {
 }
 
 function handleClickChange(val) {
-  console.log(val)
+  currentInfo.value = val
   detail(val)
 }
 </script>

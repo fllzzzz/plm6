@@ -25,6 +25,18 @@ export function save(data) {
 }
 
 /**
+ * @description: 变更的切割任务
+ */
+export function saveNest(data) {
+  return request({
+    module: 'mes',
+    url: `task/change/nest`,
+    method: 'post',
+    data
+  })
+}
+
+/**
  * @description: 获取变更记录-分页
  */
 export function record(params) {

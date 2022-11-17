@@ -26,34 +26,52 @@
         label="排产工单号"
         min-width="120px"
       />
-      <el-table-column v-if="columns.visible('project')" prop="project" :show-overflow-tooltip="true" label="所属项目" min-width="160px" />
-      <el-table-column
-        v-if="columns.visible('monomer.name')"
-        align="center"
-        prop="monomer.name"
-        :show-overflow-tooltip="true"
-        label="单体"
-        min-width="120px"
-      />
-      <el-table-column
-        v-if="columns.visible('group.name')"
-        prop="group.name"
-        :show-overflow-tooltip="true"
-        label="原生产组"
-        min-width="160px"
-      >
-        <template #default="{ row }">
-          <span>{{ row.workshop?.name }}>{{ row.productionLine?.name }}>{{ row.groups?.name }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column
-        v-if="columns.visible('askCompleteTime')"
-        align="center"
-        prop="askCompleteTime"
-        :show-overflow-tooltip="true"
-        label="计划完成日期"
-        width="120px"
-      />
+      <template v-if="!(crud.query.taskTypeEnum & taskTypeENUM.MACHINE_PART.V)">
+        <el-table-column
+          v-if="columns.visible('project')"
+          prop="project"
+          :show-overflow-tooltip="true"
+          label="所属项目"
+          min-width="160px"
+        />
+        <el-table-column
+          v-if="columns.visible('monomer.name')"
+          align="center"
+          prop="monomer.name"
+          :show-overflow-tooltip="true"
+          label="单体"
+          min-width="120px"
+        />
+        <el-table-column
+          v-if="columns.visible('group.name')"
+          prop="group.name"
+          :show-overflow-tooltip="true"
+          label="原生产组"
+          min-width="160px"
+        >
+          <template #default="{ row }">
+            <span>{{ row.workshop?.name }}>{{ row.productionLine?.name }}>{{ row.groups?.name }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column
+          v-if="columns.visible('askCompleteTime')"
+          align="center"
+          prop="askCompleteTime"
+          :show-overflow-tooltip="true"
+          label="计划完成日期"
+          width="120px"
+        />
+      </template>
+      <template v-if="crud.query.taskTypeEnum & taskTypeENUM.MACHINE_PART.V">
+        <el-table-column
+          v-if="columns.visible('cutConfig.name')"
+          prop="cutConfig.name"
+          :show-overflow-tooltip="true"
+          label="切割方式"
+          width="135px"
+          align="center"
+        />
+      </template>
       <el-table-column
         v-if="columns.visible('quantity')"
         align="center"
@@ -91,7 +109,7 @@
         </template>
       </el-table-column>
       <el-table-column
-        v-if="columns.visible('user.name')"
+        v-if="columns.visible('user.name') && !(crud.query.taskTypeEnum & taskTypeENUM.MACHINE_PART.V)"
         align="center"
         prop="user.name"
         :show-overflow-tooltip="true"
@@ -115,6 +133,7 @@
 import crudApi from '@/api/mes/task-tracking/assistance-operate/common'
 import { ref } from 'vue'
 
+import { taskTypeENUM } from '@enum-ms/mes'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import pagination from '@crud/Pagination'
