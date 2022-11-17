@@ -432,6 +432,100 @@ export default {
     ]
   },
   {
+    path: '/mes/task-tracking',
+    component: 'Layout',
+    hidden: false,
+    name: 'MesTaskTracking',
+    alwaysShow: false,
+    redirect: '/mes/task-tracking',
+    meta: {
+      title: '任务跟踪',
+      icon: 'project',
+      noCache: true
+    },
+    children: [
+      {
+        name: 'MesWorkOrderTracking',
+        path: 'work-order-tracking',
+        hidden: false,
+        component: '/mes/task-tracking/work-order-tracking/index',
+        meta: {
+          title: '工单跟踪',
+          icon: 'project',
+          noCache: true
+        }
+      },
+      {
+        name: 'MesMonthlyTaskTracking',
+        path: 'monthly-task-tracking',
+        hidden: false,
+        component: '/mes/task-tracking/monthly-task-tracking/index',
+        meta: {
+          title: '月度任务跟踪',
+          icon: 'project',
+          noCache: true
+        }
+      },
+      {
+        name: 'MesProductionLineTracking',
+        path: 'production-line-tracking',
+        hidden: false,
+        component: '/mes/task-tracking/production-line-tracking/index',
+        meta: {
+          title: '产线跟踪',
+          icon: 'project',
+          noCache: true
+        }
+      },
+      {
+        name: 'MesProcessSluggish',
+        path: 'process-sluggish',
+        hidden: false,
+        component: '/mes/task-tracking/process-sluggish/index',
+        meta: {
+          title: '工序呆滞',
+          icon: 'project',
+          noCache: true
+        }
+      },
+      {
+        name: 'MesAssistanceOperate',
+        path: 'assistance-operate',
+        hidden: false,
+        component: '',
+        meta: {
+          title: '协同操作',
+          icon: 'project',
+          noCache: true
+        },
+        children: [
+          {
+            name: 'MesAssistanceProductionLine',
+            path: 'productionLine-assistance',
+            hidden: false,
+            component: '/mes/task-tracking/assistance-operate/productionLine-assistance/index',
+            meta: {
+              title: '产线协同',
+              icon: 'project',
+              noCache: true
+            }
+          },
+          {
+            name: 'MesAssistanceProcess',
+            path: 'process-assistance',
+            hidden: false,
+            component: '/mes/task-tracking/assistance-operate/process-assistance/index',
+            meta: {
+              title: '工序协同',
+              icon: 'project',
+              noCache: true
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
     path: '/mes/work-order-manage',
     component: 'Layout',
     hidden: false,
@@ -1266,100 +1360,6 @@ export default {
       //   component: '/mes/pack-and-ship/limit-list/index',
       //   meta: { title: '发运限制', icon: 'project', noCache: true }
       // }
-    ]
-  },
-  {
-    path: '/mes/task-tracking',
-    component: 'Layout',
-    hidden: false,
-    name: 'MesTaskTracking',
-    alwaysShow: false,
-    redirect: '/mes/task-tracking',
-    meta: {
-      title: '任务跟踪',
-      icon: 'project',
-      noCache: true
-    },
-    children: [
-      {
-        name: 'MesWorkOrderTracking',
-        path: 'work-order-tracking',
-        hidden: false,
-        component: '/mes/task-tracking/work-order-tracking/index',
-        meta: {
-          title: '工单跟踪',
-          icon: 'project',
-          noCache: true
-        }
-      },
-      {
-        name: 'MesMonthlyTaskTracking',
-        path: 'monthly-task-tracking',
-        hidden: false,
-        component: '/mes/task-tracking/monthly-task-tracking/index',
-        meta: {
-          title: '月度任务跟踪',
-          icon: 'project',
-          noCache: true
-        }
-      },
-      {
-        name: 'MesProductionLineTracking',
-        path: 'production-line-tracking',
-        hidden: false,
-        component: '/mes/task-tracking/production-line-tracking/index',
-        meta: {
-          title: '产线跟踪',
-          icon: 'project',
-          noCache: true
-        }
-      },
-      {
-        name: 'MesProcessSluggish',
-        path: 'process-sluggish',
-        hidden: false,
-        component: '/mes/task-tracking/process-sluggish/index',
-        meta: {
-          title: '工序呆滞',
-          icon: 'project',
-          noCache: true
-        }
-      },
-      {
-        name: 'MesAssistanceOperate',
-        path: 'assistance-operate',
-        hidden: false,
-        component: '',
-        meta: {
-          title: '协同操作',
-          icon: 'project',
-          noCache: true
-        },
-        children: [
-          {
-            name: 'MesAssistanceProductionLine',
-            path: 'productionLine-assistance',
-            hidden: false,
-            component: '/mes/task-tracking/assistance-operate/productionLine-assistance/index',
-            meta: {
-              title: '产线协同',
-              icon: 'project',
-              noCache: true
-            }
-          },
-          {
-            name: 'MesAssistanceProcess',
-            path: 'process-assistance',
-            hidden: false,
-            component: '/mes/task-tracking/assistance-operate/process-assistance/index',
-            meta: {
-              title: '工序协同',
-              icon: 'project',
-              noCache: true
-            }
-          }
-        ]
-      }
     ]
   },
   {
