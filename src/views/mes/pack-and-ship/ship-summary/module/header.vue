@@ -61,8 +61,7 @@ function statusChange(val) {
     query.sendStatus = val
     query.settled = undefined
   }
-  console.log(query)
-  // crud.toQuery()
+  crud.toQuery()
 }
 
 watch(
