@@ -16,7 +16,7 @@
           <div style="display: flex; justify-content: space-between">
             <div class="head-container">
               <el-tag size="large" class="filter-item">工序：{{ processList.name }}</el-tag>
-              <project-cascader v-model="projectId" clearable class="filter-item" style="width: 300px"/>
+              <project-cascader v-model="projectId" clearable class="filter-item" style="width: 300px" />
               <div>
                 <monomer-select-area-select
                   v-model:monomerId="monomerId"
@@ -267,6 +267,20 @@ watch(
   () => areaId.value,
   (val) => {
     crud.query.areaId = areaId.value
+    crud.toQuery()
+  }
+)
+watch(
+  () => groupName.value,
+  (val) => {
+    crud.query.groupName = groupName.value
+    crud.toQuery()
+  }
+)
+watch(
+  () => serialNumber.value,
+  (val) => {
+    crud.query.serialNumber = serialNumber.value
     crud.toQuery()
   }
 )

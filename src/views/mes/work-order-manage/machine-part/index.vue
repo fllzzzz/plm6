@@ -121,7 +121,6 @@
             >查看</common-button
           >
           <common-button v-else type="primary" size="mini" @click="showCuttingDetail(scope.row)">查看</common-button>
-          <common-button type="success" size="mini" @click="beforePrintLabel(scope.row)">打印</common-button>
         </template>
       </el-table-column>
     </common-table>
@@ -188,11 +187,6 @@ function showCuttingDetail(row) {
 function showDrill(row) {
   drawerVisible.value = true
   detailData.value = row
-}
-
-// 打印
-function beforePrintLabel(row) {
-
 }
 
 CRUD.HOOK.handleRefresh = (crud, res) => {

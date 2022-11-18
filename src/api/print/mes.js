@@ -299,11 +299,33 @@ export function schedulingDetail(params) {
 }
 
 /**
- * 工单管理：生产任务单
+ * 工单管理：构件生产任务单
  */
 export function productionTaskOrder(params) {
   return request({
-    url: ``,
+    url: `/api/mes/building/task/process/product/task/list/print`,
+    method: 'get',
+    params
+  })
+}
+
+/**
+ * 工单管理：部件生产任务单
+ */
+export function assembleProductionTaskOrder(params) {
+  return request({
+    url: `/api/mes/building/task/process/product/task/list/print`,
+    method: 'get',
+    params
+  })
+}
+
+/**
+ * 工单管理：钻孔生产任务单
+ */
+export function drillProductionTaskOrder(params) {
+  return request({
+    url: `/api/mes/building/task/order/drilling`,
     method: 'get',
     params
   })
@@ -514,8 +536,9 @@ export default {
 
   // 工单管理
   schedulingDetail, // 工单详情
-  productionTaskOrder, // 工单管理：生产任务单
-
+  productionTaskOrder, // 工单管理：构件生产任务单
+  assembleProductionTaskOrder, // 工单管理：部件生产任务单
+  drillProductionTaskOrder, // 工单管理： 钻孔生产任务单
   // 生产报表
   productionReport, // 生产报表
   productionStatistics, // 在制品统计

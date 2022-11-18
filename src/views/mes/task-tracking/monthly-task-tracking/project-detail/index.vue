@@ -67,7 +67,7 @@
             <span>{{ projectNameFormatter(scope.row.project) }}</span>
           </template>
         </el-table-column>
-        <el-table-column :show-overflow-tooltip="true" prop="monomer.name" label="单体" align="center"></el-table-column>
+        <el-table-column :show-overflow-tooltip="true" prop="monomer.name" label="单体" align="center" width="160px"></el-table-column>
         <el-table-column :show-overflow-tooltip="true" prop="area.name" label="区域" align="center"></el-table-column>
         <el-table-column :show-overflow-tooltip="true" prop="serialNumber" label="编号" align="center"></el-table-column>
         <el-table-column :show-overflow-tooltip="true" prop="specification" label="规格" align="center" width="150px"></el-table-column>

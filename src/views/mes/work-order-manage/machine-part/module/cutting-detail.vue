@@ -31,7 +31,7 @@
           <el-table-column :show-overflow-tooltip="true" prop="index" label="序号" align="center" width="60" type="index" />
           <el-table-column :show-overflow-tooltip="true" prop="picturePath" key="picturePath" label="图形" align="center">
             <template v-slot="scope">
-              <el-image style="width: 100%" :src="scope.row.picturePath" fit="cover" />
+              <el-image style="width: 100%; height: 100%" :src="scope.row.picturePath" fit="scale-down" />
             </template>
           </el-table-column>
           <el-table-column :show-overflow-tooltip="true" prop="serialNumber" key="serialNumber" label="编号" align="center">

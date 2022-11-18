@@ -40,7 +40,10 @@
         <span>：</span>
         <span>{{ (yearProductionData.mete / 1000).toFixed(DP.COM_WT__KG) }}</span>
       </el-tag>
-      <rrOperation />
+      <common-button class="filter-item" size="mini" type="success" icon="el-icon-search" @click.stop="searchQuery">搜索</common-button>
+      <common-button class="filter-item" size="mini" type="warning" icon="el-icon-refresh-left" @click.stop="resetQuery">
+        重置
+      </common-button>
     </div>
     <div>
       <div style="width: 100%; height: 250px; display: flex" v-loading="loading">
@@ -98,7 +101,6 @@ import { fullYearProduction, workshopEcharts, workshopProduction } from '@/api/m
 import workshopSelect from '@comp-mes/workshop-select'
 import productionLineSelect from '@comp-mes/production-line-select'
 import projectCascader from '@comp-base/project-cascader'
-import rrOperation from '@crud/RR.operation'
 import crudOperation from '@crud/CRUD.operation'
 
 const yearProductionData = reactive({
@@ -175,6 +177,20 @@ function handleProductionLineChange() {
 function handleProjectIdChange() {
   workshopSummary()
   crud.toQuery()
+}
+
+// 搜索
+function searchQuery() {
+  fetchSummary()
+  fetchChart()
+}
+// 重置
+function resetQuery() {
+  query.dateTime = undefined
+  query.workShopId = undefined
+  query.productionLineId = undefined
+  fetchSummary()
+  fetchChart()
 }
 
 function handleDateTimeChange() {
