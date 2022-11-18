@@ -1343,6 +1343,8 @@ function dataFormat({ row = {}, val, field, emptyVal = '' }) {
       return emptyTextFormatter(quantityFormat(val, field.format), emptyVal)
     case fieldTypeEnum.ENUM.K:
       return emptyTextFormatter(enumFormat(val, field.format), emptyVal)
+    case fieldTypeEnum.IMAGE.K:
+      return ''
     default:
       return emptyTextFormatter(val, emptyVal)
   }
