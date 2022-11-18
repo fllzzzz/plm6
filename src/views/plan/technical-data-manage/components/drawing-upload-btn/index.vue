@@ -62,6 +62,7 @@ import { fileClassifyEnum } from '@enum-ms/file'
 import { ElUpload, ElMessage, ElNotification } from 'element-plus'
 import { technicalDataTypeEnum } from '@enum-ms/plan'
 import JSZip from 'jszip'
+import iconv from 'iconv-lite'
 
 const emit = defineEmits(['success'])
 const props = defineProps({
@@ -226,7 +227,11 @@ async function handleZip(zip) {
   const errorListData = []
   const tipArr = props.tip && props.tip.length > 0 ? props.tip.split(',') : []
   // 获取解析zip对象
-  const resolveZip = await jsZip.loadAsync(zip)
+  const resolveZip = await jsZip.loadAsync(zip, {
+    decodeFileName: function (bytes) {
+      return iconv.decode(bytes, 'gbk') // 按中文编码
+    }
+  })
   resolveZip.forEach((relativePath, zipEntry) => { // 2) print entries
     const suffix = `.${getFileSuffix(zipEntry.name)}`.toLowerCase()
     if (zipEntry.name.indexOf('.') > -1) { // 判断是否是目录
