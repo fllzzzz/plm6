@@ -312,7 +312,13 @@ const setting = {
         // let _content = row && field && field.key && isNotBlank(row[field.key]) ? row[field.key] : ''
         // 格式转换
         const _content = this.dataFormat({ row, field, emptyVal: config.emptyVal })
-        html += `<td style="${field.style}"><div style="${field.style}">${_content}</div></td>`
+        // 设置图片样式
+        if (field.type === fieldTypeEnum.IMAGE.K) {
+          const _imgStyle = `width: 100%;display:flex;justify-content:${this.flexAlign(field.align)};align-items:center;`
+          html += `<td style="${field.style}"><div style="${_imgStyle}">${_content}</div></td>`
+        } else {
+          html += `<td style="${field.style}"><div style="${field.style}">${_content}</div></td>`
+        }
       }
       if (needBlankColumn) {
         html += `<td class="blank-column"><div></div></td>`
@@ -574,6 +580,8 @@ const setting = {
         return emptyTextFormatter(this.quantityFormat(val, field.format), emptyVal)
       case fieldTypeEnum.ENUM.K:
         return emptyTextFormatter(this.enumFormat(val, field.format), emptyVal)
+      case fieldTypeEnum.IMAGE.K:
+        return ` <img style="width:95%;" src="${val || ''}"/>`
       default:
         return emptyTextFormatter(val, emptyVal)
     }
