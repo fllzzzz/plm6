@@ -1,5 +1,12 @@
 <template>
-  <common-dialog title="批量重新分配" v-model="dialogVisible" width="1400px" :before-close="handleClose">
+  <common-dialog
+    title="批量重新分配"
+    customClass="artifact-scheduling-batch-edit"
+    top="10vh"
+    v-model="dialogVisible"
+    width="1400px"
+    :before-close="handleClose"
+  >
     <template #titleAfter>
       <el-tag size="small" effect="plain">
         <span>原产线：</span>
@@ -55,6 +62,7 @@
           <el-cascader
             v-model="row.curGroupsId"
             :options="groupsTree"
+            popper-class="group-cascader"
             :props="{ value: 'id', label: 'name', children: 'children', expandTrigger: 'hover', emitPath: false }"
             :show-all-levels="false"
             filterable
@@ -123,6 +131,7 @@ const { tableValidate, cleanUpData, wrongCellMask } = useTableValidate({ rules: 
 
 const { maxHeight } = useMaxHeight(
   {
+    mainBox: '.artifact-scheduling-batch-edit',
     extraBox: ['.el-dialog__header'],
     wrapperBox: ['.el-dialog__body'],
     clientHRepMainH: true,

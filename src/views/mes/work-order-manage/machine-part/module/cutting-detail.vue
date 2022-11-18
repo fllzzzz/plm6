@@ -22,11 +22,11 @@
       <common-button size="mini" type="success" @click="printIt">打印</common-button>
     </template>
     <template #content>
-      <div :style="`height:${maxHeight}px`" v-if="orderType === typeEnum.NESTING_TASK_ORDER.V">
+      <div :style="`height:${maxHeight}px`" v-show="orderType === typeEnum.NESTING_TASK_ORDER.V">
         <pdf :url="source" :type="'canvas'" :pdfjsDistPath="pdfjsDistPath" />
       </div>
       <!--表格渲染-->
-      <div v-if="orderType === typeEnum.SORTING_ORDER.V">
+      <div v-show="orderType === typeEnum.SORTING_ORDER.V">
         <common-table ref="table" :data="cuttingData" empty-text="暂无数据" :max-height="maxHeight" style="width: 100%">
           <el-table-column :show-overflow-tooltip="true" prop="index" label="序号" align="center" width="60" type="index" />
           <el-table-column :show-overflow-tooltip="true" prop="picturePath" key="picturePath" label="图形" align="center">
