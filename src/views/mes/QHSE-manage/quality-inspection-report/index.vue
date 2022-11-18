@@ -60,7 +60,7 @@
     </common-table>
     <!--分页组件-->
     <pagination />
-    <m-detail v-model:visible="detailVisible" :info="itemInfo"></m-detail>
+    <m-detail v-model:visible="detailVisible" :info="itemInfo" :projectId="crud.query.projectId" ></m-detail>
   </div>
 </template>
 
