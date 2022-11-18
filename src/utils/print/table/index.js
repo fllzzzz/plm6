@@ -376,7 +376,12 @@ function getTableHtml({ header, footer, table, globalConfig }) {
       // let _content = row && column && column.key && isNotBlank(row[column.key]) ? row[column.key] : ''
       // 格式转换
       const _content = dataFormat({ row, field: column, emptyVal: config.emptyVal })
-      html += `<td class="td" style="${column.style}"><div style="${column.style}">${_content}</div></td>`
+      // 设置图片样式
+      if (column.type === fieldTypeEnum.IMAGE.K) {
+        html += `<td ${column.style}"><div style="style="padding:0mm 1mm;${column.style}">${_content}</div></td>`
+      } else {
+        html += `<td class="td" style="${column.style}"><div style="${column.style}">${_content}</div></td>`
+      }
     }
     if (needBlankColumn) {
       html += `<td class="td blank-column"><div></div></td>`
@@ -843,6 +848,8 @@ function dataFormat({ row = {}, val, field, emptyVal = '' }) {
       return emptyTextFormatter(quantityFormat(val, field.format), emptyVal)
     case fieldTypeEnum.ENUM.K:
       return emptyTextFormatter(enumFormat(val, field.format), emptyVal)
+    case fieldTypeEnum.IMAGE.K:
+      return ` <img style="width:95%;" src="${val || ''}"/>`
     default:
       return emptyTextFormatter(val, emptyVal)
   }
