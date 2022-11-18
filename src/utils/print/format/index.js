@@ -20,6 +20,7 @@ const saleOrderTracking = contract.handleRate
 const orderPaymentLedger = contract.handleSupplierPaymentRate
 const scmSupplierPaymentLedger = contract.handleSupplierPaymentRate
 const purchaseLogisticsRecord = scm.handleOrderName
+const scmRequisitionsDetail = scm.handleRequisitionsRecord
 
 const mesStructureProductionLine = mes.productionLineMete
 const mesStructureProcess = mes.processMete
@@ -84,6 +85,7 @@ export default {
   mesEnclosureProductionLine,
 
   purchaseLogisticsRecord, // 供应链/物流记录
+  scmRequisitionsDetail, // 供应商/申购详情
 
   wmsRmInboundReceipt, // 入库单
   wmsRmOutboundReceipt, // 出库单

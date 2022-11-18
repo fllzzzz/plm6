@@ -15,7 +15,6 @@
                 size="mini"
                 icon="el-icon-edit"
                 type="primary"
-                :loading="issueLoading"
                 @click="toBatchIssue"
               >
                 任务下发
@@ -135,15 +134,15 @@
         <!--分页组件-->
         <!-- <pagination /> -->
       </template>
+      <preview-dialog v-model:visible="previewVisible" :list="submitList" @success="handleIssueSuccess"/>
     </div>
   </div>
 </template>
 
 <script setup>
 import { getNestingTaskDetail } from '@/api/mes/scheduling-manage/machine-part'
-import { saveTask } from '@/api/mes/scheduling-manage/common'
 import { ref } from 'vue'
-import { ElNotification, ElMessage } from 'element-plus'
+import { ElMessage } from 'element-plus'
 import moment from 'moment'
 
 import { componentTypeEnum } from '@enum-ms/mes'
@@ -156,6 +155,7 @@ import useCRUD from '@compos/use-crud'
 import udOperation from '@crud/UD.operation'
 import mHeader from './module/header'
 import nestingTaskList from './module/nesting-task-list.vue'
+import previewDialog from './module/preview-dialog'
 import { deepClone } from '@/utils/data-type'
 
 // crud交由presenter持有
@@ -261,7 +261,8 @@ function selectable(row, rowIndex) {
 }
 
 const currentNesting = ref()
-const issueLoading = ref(false)
+const previewVisible = ref(false)
+const submitList = ref([])
 
 function handleNestingTaskClick(val) {
   currentNesting.value = val
@@ -271,35 +272,28 @@ function handleNestingTaskClick(val) {
   }
 }
 
-async function toBatchIssue() {
+async function handleIssueSuccess() {
+  const _nestingTaskInfo = deepClone(currentNesting.value)
+  await nestingTaskRef?.value?.refresh(_nestingTaskInfo)
+}
+
+function toBatchIssue() {
   if (!crud.selections) {
     ElMessage.warning('请至少选择一条数据')
     return
   }
-  try {
-    issueLoading.value = true
-    const { validResult, dealList } = tableValidate(crud.selections)
-    if (validResult) {
-      cleanUpData(dealList)
-      const _resList = dealList.map((v) => {
-        return {
-          askCompleteTime: v.askCompleteTime,
-          groupsId: v.groupsId,
-          id: v.id,
-          nestCutPlateId: v.nestCutPlateId
-        }
-      })
-      await saveTask({
-        machinePartDetailList: _resList
-      })
-      ElNotification({ title: '任务下发成功', type: 'success', duration: 3000 })
-      const _nestingTaskInfo = deepClone(currentNesting.value)
-      await nestingTaskRef?.value?.refresh(_nestingTaskInfo)
-    }
-  } catch (e) {
-    console.log(`任务下发失败`, e)
-  } finally {
-    issueLoading.value = false
+  submitList.value = []
+  const _list = crud.selections.map((v) => v)
+  const { validResult, dealList } = tableValidate(_list)
+  if (validResult) {
+    cleanUpData(dealList)
+    submitList.value = dealList.map(v => {
+      return {
+        ...v,
+        ...schedulingGroups.value.obj[v.groupsId]
+      }
+    })
+    previewVisible.value = true
   }
 }
 </script>

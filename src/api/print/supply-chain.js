@@ -72,11 +72,23 @@ export function logisticsRecord(params) {
   })
 }
 
+/**
+ * 申购详情
+ */
+export function requisitionsDetail({ id }) {
+  return request({
+    module: 'scm',
+    url: `apply-purchase/${id}/print`,
+    method: 'get'
+  })
+}
+
 export default {
   invoiceDetail, // 收票记录
   paymentRecord, // 付款记录
   inboundRecord, // 入库记录
   orderPaymentLedger, // 采购合同付款台账
   supplierPaymentLedger, // 供应商付款台账
-  logisticsRecord // 物流记录
+  logisticsRecord, // 物流记录
+  requisitionsDetail // 申购详情
 }

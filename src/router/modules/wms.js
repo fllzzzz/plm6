@@ -374,6 +374,13 @@ export default {
           meta: { title: '收发存报表', icon: 'project', noCache: true }
         },
         {
+          name: 'WMSReportRawMaterialPSIReceipt',
+          path: 'report/raw-material/psi',
+          hidden: false,
+          component: '/wms/report/raw-material/psi/index',
+          meta: { title: '进销存记录', icon: 'project', noCache: true }
+        },
+        {
           name: 'WMSReportRawMaterialHighTechResearchAndDevelopmentFee',
           path: 'report/raw-material/high-tech-rd-fee',
           hidden: false,

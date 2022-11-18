@@ -208,6 +208,13 @@ const { crud, columns, CRUD } = useCRUD(
 
 const { maxHeight } = useMaxHeight({ paginate: true })
 
+CRUD.HOOK.beforeToQuery = () => {
+  // 只有质量问题需要传projectId
+  if (crud.query.type !== problemTypeEnum.QUALITY.V) {
+    crud.query.projectId = undefined
+  }
+}
+
 CRUD.HOOK.handleRefresh = (crud, res) => {
   res.data.content = res.data.content.map((v) => {
     v.qualityTypeListStr = v.qualityTypeList && v.qualityTypeList.join('、')

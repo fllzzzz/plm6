@@ -33,7 +33,7 @@
           <div v-if="qrCfg?.show" class="qr-info" :style="qrStyle">
             <qrcode-vue :value="qrContent" :size="150" :margin="1" />
           </div>
-          <div v-if="tableFieldsCfg?.show" class="title-info" :style="titleStyle" v-html="titleHtml" />
+          <div v-if="titleCfg?.show" class="title-info" :style="titleStyle" v-html="titleHtml" />
           <div v-if="headerCfg?.show" class="header-info" :style="headerStyle" v-html="headerHtml" />
           <div v-if="tableCfg && isNotBlank(filterExampleTableData)" class="table-info" :style="tableStyle">
             <div v-html="tableCfg.style" />
@@ -584,6 +584,10 @@ function handlePageHtmlChange() {
         width: 100%;
         height: 100%;
         vertical-align: middle;
+      }
+      canvas {
+        width: 100% !important;
+        height: 100% !important;
       }
     }
     .page-info {

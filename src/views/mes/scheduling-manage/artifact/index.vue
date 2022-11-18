@@ -294,7 +294,6 @@ function previewIt() {
   // const _list = deepClone(crud.selections)
   const _list = crud.selections.map((v) => v)
   const { validResult, dealList } = tableValidate(_list)
-  console.log(crud.selections, dealList, crud.ref.table.selection)
   if (validResult) {
     cleanUpData(dealList) // 同上赋值
     submitList.value = dealList.map((v, i) => {
