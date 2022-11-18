@@ -9,6 +9,7 @@
         size="mini"
         type="primary"
         icon="el-icon-plus"
+        :disabled="true"
         @click="crud.toAdd"
       >
         新增
@@ -29,14 +30,7 @@
       @current-change="handleCurrentChange"
     >
       <el-table-column label="序号" type="index" align="center" width="60" />
-      <el-table-column
-        v-if="columns.visible('name')"
-        header-align="center"
-        align="left"
-        key="name"
-        prop="name"
-        label="下料方式"
-      >
+      <el-table-column v-if="columns.visible('name')" header-align="center" align="left" key="name" prop="name" label="下料方式">
         <template #default="{ row }">
           <table-cell-tag
             v-if="row.materialType"
@@ -55,7 +49,7 @@
       <!--编辑与删除-->
       <el-table-column v-permission="permission.del" label="操作" width="130px" align="center">
         <template #default="{ row }">
-          <udOperation :show-edit="true" :show-del="true" :data="row" />
+          <udOperation :disabledEdit="true" :disabledDel="true" :show-edit="true" :show-del="true" :data="row" />
         </template>
       </el-table-column>
     </common-table>
@@ -110,5 +104,4 @@ function handleCurrentChange(val) {
     emit('click-laying-off', val)
   }
 }
-
 </script>

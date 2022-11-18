@@ -403,7 +403,7 @@ export default {
           path: 'cutting-config',
           hidden: false,
           component: '/mes/production-config/cutting-config/index',
-          meta: { title: '下料配置', icon: 'project', noCache: true }
+          meta: { title: '零件下料配置', icon: 'project', noCache: true }
         }
       ]
     },
