@@ -225,7 +225,7 @@ export async function printSeparateOrderLabel({ taskNumberOrder = '', separateOr
       const p = productionLinesList[i]
       pListHtml += `
       <div class="separate-production-line-info">
-        <div class="separate-sn">${o === 0 ? p.workShopName + '>' + p.productionLineName : ''}</div>
+        <div class="separate-sn">${o % 7 === 0 ? p.workShopName + '>' + p.productionLineName : ''}</div>
         <div style="height:${imgHeight};display:flex;align-items: center;justify-content: center;">${s.obj[p.productionLineId]?.quantity || 0}</div>
       </div>
       `
@@ -235,11 +235,11 @@ export async function printSeparateOrderLabel({ taskNumberOrder = '', separateOr
     <div style="display:flex;width:100%;border-top:1px solid #000;box-sizing: border-box;${(o + 1) % 7 === 0 || o === separateOrderInfo.length - 1 ? 'border-bottom:1px solid #000;margin-bottom:3mm;' : ''}">
       <div class="separate-part-info">
         <div class="separate-sn">${s.serialNumber}</div>
-        <div style="height:${imgHeight}">
-          ${s && s.absolutePicturePath ? `
+        <div style="width:100%;display:flex;align-items: center;justify-content: center;height:${imgHeight}">
+          ${s && s.picturePath ? `
           <img
           style="width:95%;"
-          src="${s.absolutePicturePath || ''}"
+          src="${s.picturePath || ''}"
           >` : ''}
         </div>
       </div>
