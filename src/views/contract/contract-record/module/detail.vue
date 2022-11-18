@@ -15,7 +15,7 @@
       <common-table
         ref="tableRef"
         :data="currentInfo"
-        :max-height="maxHeight-70"
+        :max-height="maxHeight"
         style="width: 100%"
         return-source-data
         :showEmptySymbol="false"
@@ -81,7 +81,7 @@ const { maxHeight } = useMaxHeight(
     extraBox: '.el-drawer__header',
     wrapperBox: '.el-drawer__body'
   },
-  drawerRef
+  visible
 )
 </script>
 <style lang="scss" scoped>
