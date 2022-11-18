@@ -12,6 +12,7 @@
       v-model="query.structureClassId"
       class="filter-item"
       :style="'width:calc(100% - 205px)'"
+      style="display: inline-block;"
       :data="artifactTypeList"
       itemKey="structureClassId"
       @change="crud.toQuery"

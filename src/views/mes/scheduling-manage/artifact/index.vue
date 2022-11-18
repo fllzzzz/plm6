@@ -161,6 +161,7 @@ import projectToAreaTree from './module/project-to-area-tree'
 import productTypeBaseInfoColumns from '@comp-mes/table-columns/productType-base-info-columns'
 import useDrawing from '@compos/use-drawing'
 import bimPreviewDrawer from '@/components-system/bim/bim-preview-drawer'
+import { debounce } from '@/utils'
 
 const productType = componentTypeEnum.ARTIFACT.V
 provide('productType', productType)
@@ -267,7 +268,7 @@ function refresh(isRefreshTypeList = false) {
   crud.toQuery()
 }
 
-function handleAreaClick(nodes = []) {
+const handleAreaClick = debounce(function (nodes = []) {
   console.log(nodes, 'handleAreaClick')
   const _areaIds = []
   const _areaIdObj = {}
@@ -284,7 +285,7 @@ function handleAreaClick(nodes = []) {
   curFactoryIds.value = _factoryIds
   curWorkshopIds.value = _workshopIds
   crud.toQuery()
-}
+}, 500)
 
 function previewIt() {
   if (!crud.selections?.length) {
