@@ -6,6 +6,7 @@
     :title="title"
     top="5vh"
     width="65vw"
+    custom-class="audit-detail"
     @closed="handleClose"
   >
     <template #titleAfter> <slot name="tip"></slot> </template>
@@ -134,9 +135,11 @@ const props = defineProps({
 const { visible: dialogVisible, handleClose } = useVisible({ emit, props, field: 'visible' })
 const { maxHeight } = useMaxHeight(
   {
+    mainBox: '.audit-detail',
     extraBox: ['.el-dialog__header', '.head-container'],
     wrapperBox: ['.el-dialog__body'],
-    clientHRepMainH: true
+    clientHRepMainH: true,
+    navbar: false
   },
   dialogVisible
 )
