@@ -9,11 +9,14 @@
       </common-button>
     </template>
     <el-form ref="formRef" :model="form" :rules="rules" size="small" label-width="120px" class="demo-form">
-      <el-form-item label="预留割缝≤" prop="kerfLength">
+      <el-form-item label="预留割缝≤：" prop="kerfLength">
         <el-input v-model="form.kerfLength" style="width: 200px" placeholder="输入长度 单位：mm" />
       </el-form-item>
-      <el-form-item label="母材长度≤" prop="length">
+      <el-form-item label="母材长度≤：" prop="length">
         <el-input v-model="form.length" style="width: 200px" placeholder="输入长度 单位：mm" />
+      </el-form-item>
+      <el-form-item label="材料属性：" prop="typesettingAssembleTypeEnum">
+        <span>{{ materialTypeEnum.VL[props.detailData[0]?.typesettingAssembleTypeEnum] }}</span>
       </el-form-item>
       <el-form-item label="套料方式" prop="typesettingTypeEnum">
         <template #label>
@@ -42,7 +45,7 @@
 
 <script setup>
 import { defineProps, ref, defineEmits, reactive, inject } from 'vue'
-import { nestingSettingTypeEnum } from '@enum-ms/mes'
+import { nestingSettingTypeEnum, mesBuildingTypeSettingAssembleTypeEnum as materialTypeEnum } from '@enum-ms/mes'
 import useVisible from '@compos/use-visible'
 import { extrusionNesting } from '@/api/mes/craft-manage/section-steel/nesting-setting'
 import nestingProgress from './nesting-progress.vue'

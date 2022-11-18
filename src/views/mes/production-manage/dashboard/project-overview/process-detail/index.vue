@@ -26,7 +26,7 @@
     <common-table
       ref="tableRef"
       :data="processDetailData"
-      :max-height="maxHeight"
+      :max-height="maxHeight + 115"
       show-summary
       :summary-method="getSummaries"
       style="width: 100%"

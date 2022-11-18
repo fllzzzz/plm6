@@ -58,7 +58,7 @@
     </template>
     <template #content>
       <!--表格渲染-->
-      <common-table ref="tableRef" :data="processDetailData" :max-height="maxHeight" style="width: 100%">
+      <common-table ref="tableRef" :data="processDetailData" :max-height="maxHeight + 80" style="width: 100%">
         <el-table-column prop="index" label="序号" align="center" width="60" type="index" />
         <el-table-column :show-overflow-tooltip="true" prop="monomer.name" key="monomer.name" label="单体" align="center"></el-table-column>
         <el-table-column :show-overflow-tooltip="true" prop="area.name" key="area.name" label="区域" align="center"></el-table-column>

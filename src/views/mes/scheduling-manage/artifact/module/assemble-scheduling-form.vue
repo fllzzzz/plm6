@@ -296,65 +296,103 @@ async function fetch() {
             })
           }
         }
+        // 处理母件
+        for (let x = 0; x < v.assembleTypesetting.length; x++) {
+          const _o = assembleTypesetting[x]
+          _o.productId = _o.id
+          _o.attributeType = '套料'
+          _o.boolStructuralEnum = true
+          _o.boolTypesettinglEnum = true
+          _o.needSchedulingQuantity = 1
+          if (x !== 0) {
+            _o.groupsId = '同上'
+            _o.askCompleteTime = '同上'
+          }
+          if (_o.assembleConfigId && isBlank(classIdGroupsObj[_o.assembleConfigId])) {
+            classIdGroupsObj[_o.assembleConfigId] = await manualFetchGroupsTree({
+              productType,
+              structureClassId: _o.assembleConfigId,
+              _factoryIds: factoryIds.value
+            })
+          }
+          if (
+            (props.productionLineTypeEnum === artifactProductLineEnum.INTELLECT.V &&
+            _o.typesettingAssembleTypeEnum === mesBuildingTypeSettingAssembleTypeEnum.FINISHED.V) ||
+          (props.productionLineTypeEnum === artifactProductLineEnum.TRADITION.V && !_o.boolProcess)
+          ) {
+            tagObj.value[v.groupsId].unshowList.push({
+              boolStructuralEnum: _o.boolStructuralEnum,
+              boolTypesettinglEnum: _o.boolTypesettinglEnum,
+              typesettingAssembleTypeEnum: _o.typesettingAssembleTypeEnum,
+              boolProcess: _o.boolProcess,
+              productId: _o.productId,
+              projectId: _o.projectId,
+              quantity: _o.quantity
+            })
+            tagObj.value[v.groupsId].otherList.push({ ..._o })
+          } else {
+            tagObj.value[v.groupsId].assembleList.push({ ..._o })
+          }
+        }
       }
     }
     // 处理母件信息
-    if (assembleTypesetting?.length) {
-      const _list = []
-      const _unshowList = []
-      const _otherList = []
-      for (let x = 0; x < assembleTypesetting.length; x++) {
-        const v = assembleTypesetting[x]
-        v.productId = v.id
-        v.attributeType = '套料'
-        v.boolStructuralEnum = true
-        v.boolTypesettinglEnum = true
-        v.needSchedulingQuantity = 1
-        if (x !== 0) {
-          v.groupsId = '同上'
-          v.askCompleteTime = '同上'
-        }
-        if (v.assembleConfigId && isBlank(classIdGroupsObj[v.assembleConfigId])) {
-          classIdGroupsObj[v.assembleConfigId] = await manualFetchGroupsTree({
-            productType,
-            structureClassId: v.assembleConfigId,
-            _factoryIds: factoryIds.value
-          })
-        }
-        // _list.push(v)
-        if (
-          (props.productionLineTypeEnum === artifactProductLineEnum.INTELLECT.V &&
-            v.typesettingAssembleTypeEnum === mesBuildingTypeSettingAssembleTypeEnum.FINISHED.V) ||
-          (props.productionLineTypeEnum === artifactProductLineEnum.TRADITION.V && !v.boolProcess)
-        ) {
-          _unshowList.push({
-            boolStructuralEnum: v.boolStructuralEnum,
-            boolTypesettinglEnum: v.boolTypesettinglEnum,
-            typesettingAssembleTypeEnum: v.typesettingAssembleTypeEnum,
-            boolProcess: v.boolProcess,
-            productId: v.productId,
-            projectId: v.projectId,
-            quantity: v.quantity
-          })
-          _otherList.push(v)
-        } else {
-          _list.push(v)
-        }
-      }
-      const _obj = {
-        label: '母件',
-        mergeQuantity: 0,
-        mergeWeight: 0,
-        assembleList: _list,
-        unshowList: _unshowList,
-        otherList: _otherList,
-        ids: [],
-        groupsId: paGroupId
-      }
-      tagObj.value[paGroupId] = _obj
-      tagList.value.push(_obj)
-      showTagGroupIds.value.push(paGroupId)
-    }
+    // if (assembleTypesetting?.length) {
+    //   const _list = []
+    //   const _unshowList = []
+    //   const _otherList = []
+    //   for (let x = 0; x < assembleTypesetting.length; x++) {
+    //     const v = assembleTypesetting[x]
+    //     v.productId = v.id
+    //     v.attributeType = '套料'
+    //     v.boolStructuralEnum = true
+    //     v.boolTypesettinglEnum = true
+    //     v.needSchedulingQuantity = 1
+    //     if (x !== 0) {
+    //       v.groupsId = '同上'
+    //       v.askCompleteTime = '同上'
+    //     }
+    //     if (v.assembleConfigId && isBlank(classIdGroupsObj[v.assembleConfigId])) {
+    //       classIdGroupsObj[v.assembleConfigId] = await manualFetchGroupsTree({
+    //         productType,
+    //         structureClassId: v.assembleConfigId,
+    //         _factoryIds: factoryIds.value
+    //       })
+    //     }
+    //     // _list.push(v)
+    //     if (
+    //       (props.productionLineTypeEnum === artifactProductLineEnum.INTELLECT.V &&
+    //         v.typesettingAssembleTypeEnum === mesBuildingTypeSettingAssembleTypeEnum.FINISHED.V) ||
+    //       (props.productionLineTypeEnum === artifactProductLineEnum.TRADITION.V && !v.boolProcess)
+    //     ) {
+    //       _unshowList.push({
+    //         boolStructuralEnum: v.boolStructuralEnum,
+    //         boolTypesettinglEnum: v.boolTypesettinglEnum,
+    //         typesettingAssembleTypeEnum: v.typesettingAssembleTypeEnum,
+    //         boolProcess: v.boolProcess,
+    //         productId: v.productId,
+    //         projectId: v.projectId,
+    //         quantity: v.quantity
+    //       })
+    //       _otherList.push(v)
+    //     } else {
+    //       _list.push(v)
+    //     }
+    //   }
+    //   const _obj = {
+    //     label: '母件',
+    //     mergeQuantity: 0,
+    //     mergeWeight: 0,
+    //     assembleList: _list,
+    //     unshowList: _unshowList,
+    //     otherList: _otherList,
+    //     ids: [],
+    //     groupsId: paGroupId
+    //   }
+    //   tagObj.value[paGroupId] = _obj
+    //   tagList.value.push(_obj)
+    //   showTagGroupIds.value.push(paGroupId)
+    // }
     if (props.productionLineTypeEnum & artifactProductLineEnum.INTELLECT.V) {
       surplusAssembleList.value = surplusAssemble || []
     }

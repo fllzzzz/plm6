@@ -56,7 +56,7 @@
         ref="tableRef"
         :data="projectDetailData"
         return-source-data
-        :max-height="maxHeight"
+        :max-height="maxHeight + 30"
         highlight-current-row
         :showEmptySymbol="false"
         style="width: 100%"
