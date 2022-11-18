@@ -234,12 +234,12 @@ export function getFileName(response) {
   if (!_fullPathName || _fullPathName.length === 0) {
     return false
   }
-  const _suffix = `${decodeURI(_fullPathName.pop())}` // 处理文件名乱码问题,后缀名
+  const _suffix = `${decodeURIComponent(_fullPathName.pop())}` // 处理文件名乱码问题,后缀名
   if (!_suffix) {
     return false
   }
   // 获取文件名
-  const _name = `${decodeURI(_fullPathName.join('.'))}` // 处理文件名乱码问题
+  const _name = `${decodeURIComponent(_fullPathName.join('.'))}` // 处理文件名乱码问题
   const fileName = `${_name}.${_suffix}` // 处理文件名乱码问题
   return fileName
 }

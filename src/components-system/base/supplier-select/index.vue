@@ -44,13 +44,13 @@
 </template>
 
 <script setup>
-import { defineProps, defineEmits, ref, watch, computed } from 'vue'
+import { defineProps, defineEmits, ref, watch, computed, nextTick } from 'vue'
 import { supplierIsHideEnum, supplierTypeEnum, supplierClassEnum } from '@/utils/enum/modules/supplier'
-import { isNotBlank, isBlank, judgeSameValue } from '@data-type/index'
+import { isBlank, isNotBlank, judgeSameValue } from '@data-type/index'
 import useSuppliers from '@compos/store/use-suppliers'
 import addSupplier from './module/add-supplier.vue'
 
-const emit = defineEmits(['change', 'update:modelValue'])
+const emit = defineEmits(['change', 'info-change', 'update:modelValue'])
 
 const props = defineProps({
   modelValue: {
@@ -129,7 +129,7 @@ const permission = {
 const addVisible = ref(false)
 const selectValue = ref()
 
-const { loaded, suppliers } = useSuppliers(loadedCallBack)
+const { loaded, suppliers, supplierKV } = useSuppliers(loadedCallBack)
 
 const options = computed(() => {
   const supplierList = props.showHide ? suppliers.value : suppliers.value.filter((v) => v.boolHide === supplierIsHideEnum.FALSE.V)
@@ -162,14 +162,16 @@ watch(
   () => props.modelValue,
   (value) => {
     selectValue.value = value
-    // 有默认值的情况，并且value为空，则给value赋值
-    if (props.default && isBlank(value) && isNotBlank(suppliers.value)) {
-      selectValue.value = suppliers.value[0].value
-      handleChange(selectValue.value)
-    }
   },
   { immediate: true }
 )
+
+// watch(
+//   [() => props.basicClass, () => props.type],
+//   () => {
+//     setDefault()
+//   }
+// )
 
 function handleChange(val) {
   let data = val
@@ -182,18 +184,43 @@ function handleChange(val) {
   if (isChange && !allBlank) {
     emit('update:modelValue', data)
     emit('change', data)
+    emitInfo(data, props.modelValue)
   }
 }
 
+function emitInfo(val, oldVal) {
+  const res = val ? supplierKV.value[val] : null
+  const oldRes = oldVal ? supplierKV.value[oldVal] : null
+  emit('info-change', res, oldRes)
+}
+
 function loadedCallBack() {
-  if (isNotBlank(suppliers.value) && props.default && !selectValue.value) {
-    selectValue.value = suppliers.value[0].value
-    handleChange(selectValue.value)
+  if (isNotBlank(selectValue.value)) {
+    emitInfo(selectValue.value)
+  } else {
+    setDefault()
   }
 }
 
 function handlePopoverClose() {
   addVisible.value = false
+}
+
+/**
+ * 设置默认值
+ * 有默认值的情况，并且value为空，则给value赋值
+ */
+function setDefault() {
+  nextTick(() => {
+    if (isBlank(options.value) || selectValue.value) {
+      return
+    }
+    if (props.default) {
+      selectValue.value = options.value[0].id
+      handleChange(selectValue.value)
+      return
+    }
+  })
 }
 </script>
 

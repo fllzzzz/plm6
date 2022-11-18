@@ -41,7 +41,7 @@
         show-overflow-tooltip
         key="amountExcludingVAT"
         prop="amountExcludingVAT"
-        label="金额"
+        label="金额（不含税）"
         min-width="130"
         align="right"
       />
@@ -73,10 +73,7 @@ import crudApi from '@/api/supply-chain/purchase-reconciliation-manage/acceptanc
 import { ref } from 'vue'
 
 import { purchaseAcceptanceLogPM as permission } from '@/page-permission/supply-chain'
-import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
-import { setSpecInfoToList } from '@/utils/wms/spec'
 import { tableSummary } from '@/utils/el-extra'
-import { materialHasAmountColumns } from '@/utils/columns-format/wms'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
@@ -95,16 +92,15 @@ const optShow = {
 const tableRef = ref()
 // 表格列数据格式转换
 const columnsDataFormat = ref([
-  ...materialHasAmountColumns,
+  ['amountExcludingVAT', 'to-thousand'],
   ['inboundTime', 'parse-time']
 ])
 
-const { crud, columns, CRUD } = useCRUD(
+const { crud, columns } = useCRUD(
   {
     title: '验收记录',
     sort: [],
     permission: { ...permission },
-    requiredQuery: ['purchaseOrderId'],
     crudApi: { ...crudApi },
     invisibleColumns: [],
     optShow: { ...optShow }
@@ -117,14 +113,10 @@ const { maxHeight } = useMaxHeight({ paginate: true })
 // 合计
 function getSummaries(param) {
   return tableSummary(param, {
-    props: ['quantity', 'mete', 'amountExcludingVAT'],
+    // 此页面钢材默认显示吨，保留3位，金额显示4位
+    props: ['quantity', ['mete', 3], 'amountExcludingVAT'],
     toThousandFields: ['amountExcludingVAT']
   })
 }
 
-// 处理刷新
-CRUD.HOOK.handleRefresh = async (crud, { data }) => {
-  data.content = await setSpecInfoToList(data.content)
-  data.content = await numFmtByBasicClass(data.content)
-}
 </script>

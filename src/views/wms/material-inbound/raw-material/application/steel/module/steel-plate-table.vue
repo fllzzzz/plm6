@@ -149,7 +149,7 @@
 </template>
 
 <script setup>
-import { defineEmits, defineProps, computed, defineExpose, ref, inject, watchEffect, reactive, watch } from 'vue'
+import { defineProps, computed, defineExpose, ref, inject, watchEffect, reactive, watch } from 'vue'
 import { matClsEnum } from '@/utils/enum/modules/classification'
 import { isBlank, isNotBlank, toPrecision } from '@/utils/data-type'
 
@@ -163,8 +163,6 @@ import { calcSteelPlateWeight } from '@/utils/wms/measurement-calc'
 import { positiveNumPattern } from '@/utils/validate/pattern'
 
 import priceSetColumns from '@/views/wms/material-inbound/raw-material/components/price-set-columns.vue'
-
-const emit = defineEmits(['calc-weight'])
 
 const props = defineProps({
   boolPartyA: {
@@ -285,7 +283,6 @@ function rowWatch(row) {
   watch(
     () => row.weighingTotalWeight,
     () => {
-      emit('calc-weight')
       handleWeightChange(row)
     }
   )
@@ -329,7 +326,6 @@ function delRow(sn, $index) {
   } else {
     form.steelPlateList.splice($index, 1)
   }
-  emit('calc-weight')
 }
 
 // 校验
