@@ -1,7 +1,10 @@
 <template>
   <div class="project-chart">
     <div class="chart-head">
-      <div style="width: calc(100% - 90px)">
+      <div style="width: 100%;display: flex;justify-content: flex-end; margin-bottom: 8px">
+        <span style="font-size: 14px">单位：件/吨</span>
+      </div>
+      <div style="width: calc(100% - 0px)">
         <tag-tabs
           v-if="productionLineList?.length"
           v-model="productionLineId"
@@ -16,7 +19,6 @@
           </template>
         </tag-tabs>
       </div>
-      <span class="filter-item" style="width: 80px; font-size: 14px; align-self: center">单位：件/吨</span>
     </div>
     <div v-permission="permission.statistics" class="chart-container" :style="{ height: maxHeight + 'px' }">
       <chart id="projectChart" width="300px" @success="handleEchartsChange" />
@@ -108,8 +110,8 @@ function handleEchartsChange(val) {
   overflow: hidden;
   .chart-head {
     width: 100%;
-    display: flex;
-    justify-content: space-between;
+    // display: flex;
+    // justify-content: space-between;
     padding-right: 20px;
     padding-bottom: 10px;
   }

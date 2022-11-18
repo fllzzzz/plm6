@@ -9,7 +9,7 @@
       @change="crud.toQuery"
     />
     <project-radio-button
-      v-show="!(query.type & (problemTypeEnum.SECURITY.V | problemTypeEnum.ENVIRONMENT.V))"
+      v-show="!(query.type & (problemTypeEnum.SECURITY.V | problemTypeEnum.ENVIRONMENT.V | problemTypeEnum.SPECIAL_QUALITY.V))"
       :type="'all'"
       size="small"
       v-model="query.projectId"

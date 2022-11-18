@@ -14,7 +14,7 @@
       ref="tableRef"
       v-loading="crud.loading"
       :data="crud.data"
-      :empty-text="crud.emptyText"
+      :empty-text="'暂无数据'"
       :max-height="maxHeight"
       style="width: 100%"
       @sort-change="handleSortChange"

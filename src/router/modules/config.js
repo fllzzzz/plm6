@@ -403,7 +403,7 @@ export default {
           path: 'cutting-config',
           hidden: false,
           component: '/mes/production-config/cutting-config/index',
-          meta: { title: '下料配置', icon: 'project', noCache: true }
+          meta: { title: '零件下料配置', icon: 'project', noCache: true }
         }
       ]
     },
@@ -429,6 +429,24 @@ export default {
           hidden: false,
           component: '/config-manage/contract/setting-config/info-manage/index',
           meta: { title: '项目成员配置', icon: 'project', noCache: true }
+        }
+      ]
+    },
+    {
+      path: '/approval-manage',
+      component: 'Layout',
+      hidden: false,
+      name: 'ApprovalManage',
+      alwaysShow: true,
+      redirect: '/config-manage/approval-manage/company-process',
+      meta: { title: '审批管理', icon: 'project', noCache: true },
+      children: [
+        {
+          name: 'CompanyProcess',
+          path: 'company-process',
+          hidden: false,
+          component: '/config-manage/approval-manage/company-process/index',
+          meta: { title: '公司审批流程', icon: 'project', noCache: true }
         }
       ]
     },

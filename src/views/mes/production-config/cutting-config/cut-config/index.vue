@@ -53,7 +53,12 @@
           fixed="right"
         >
           <template v-slot="scope">
-            <udOperation :data="scope.row" :permission="permission" />
+            <udOperation
+              :disabledEdit="props.layingOffRow?.name === '无需套料' ? true : false"
+              :disabledDel="props.layingOffRow?.name === '无需套料' ? true : false"
+              :data="scope.row"
+              :permission="permission"
+            />
           </template>
         </el-table-column>
       </common-table>

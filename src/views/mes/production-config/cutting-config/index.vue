@@ -16,16 +16,14 @@
                 style="float: right; padding: 6px 10px; margin-bottom: 0px"
                 type="primary"
                 icon="el-icon-plus"
+                :disabled="layingOffRow?.name === '无需套料' ? true : false"
                 @click="cutConfigRef?.toAdd"
               >
                 新增
               </common-button>
             </div>
           </template>
-          <cut-config
-            ref="cutConfigRef"
-            :layingOffRow="layingOffRow"
-          />
+          <cut-config ref="cutConfigRef" :layingOffRow="layingOffRow" />
         </el-card>
       </el-col>
     </el-row>

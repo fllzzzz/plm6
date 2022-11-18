@@ -107,6 +107,7 @@
         align="center"
         width="125"
       />
+      <el-table-column v-if="columns.visible('remark')" key="remark" prop="remark" :show-overflow-tooltip="true" label="备注" min-width="150px" />
     </common-table>
     <!--分页组件-->
     <pagination />

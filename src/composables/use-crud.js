@@ -290,6 +290,8 @@ function getDefaultOption() {
     requiredQuery: [],
     // 查询数据的参数
     params: {},
+    // 查询处理结果记录数组
+    refreshResult: [],
     // 当前行详情
     rowDetail: {},
     // 详情通过接口加载
@@ -516,16 +518,16 @@ function addCrudBusinessMethod(crud) {
     }
     const now = Date.now()
     // TODO: 存在问题，待优化，当queryTime时间呗，第二次进入的参数传的不一样时，会被拦截的问题
-    const flag =
-      (crud.firstQueryTime && now - crud.firstQueryTime > CRUD.QUERY_DEBOUNCE_TIME) || (!crud.firstQueryTime && crud.firstQueryTime !== 0)
-    if (flag) {
-      if (!crud.firstQueryTime) {
-        _toQuery()
-        crud.firstQueryTime = now
-      } else {
-        _toQueryByDebounce()
-      }
+    // const flag =
+    //   (crud.firstQueryTime && now - crud.firstQueryTime > CRUD.QUERY_DEBOUNCE_TIME) || (!crud.firstQueryTime && crud.firstQueryTime !== 0)
+    // if (flag) {
+    if (!crud.firstQueryTime) {
+      _toQuery()
+      crud.firstQueryTime = now
+    } else {
+      _toQueryByDebounce()
     }
+    // }
   }
 
   // 刷新
@@ -548,15 +550,21 @@ function addCrudBusinessMethod(crud) {
     try {
       crud.loading = true
       data = await crud.crudApi.get(crud.getQueryParams())
+      const currentResultKey = crud.refreshResult.length + 1
+      crud.refreshResult.push(currentResultKey)
       const res = { data: data }
       crud.emptyText = '暂无数据'
       // data.content = data.content || []
       await callVmHook(crud, CRUD.HOOK.handleRefresh, res)
-      crud.page.total = data.totalElements
-      crud.page.hasNextPage = data.hasNextPage
-      crud.data = isNotBlank(crud.dataPath) ? res.data[crud.dataPath] || [] : res.data || []
-      crud.resetDataStatus()
-      crud.loading = false
+      const maxKey = Math.max(...crud.refreshResult)
+      if (maxKey === currentResultKey) {
+        crud.page.total = data.totalElements
+        crud.page.hasNextPage = data.hasNextPage
+        crud.data = isNotBlank(crud.dataPath) ? res.data[crud.dataPath] || [] : res.data || []
+        crud.resetDataStatus()
+        crud.loading = false
+        crud.refreshResult = []
+      }
     } catch (error) {
       crud.page.total = 0
       crud.page.hasNextPage = false

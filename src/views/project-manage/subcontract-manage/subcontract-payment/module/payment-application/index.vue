@@ -19,20 +19,20 @@
       :showEmptySymbol="false"
     >
       <el-table-column prop="index" label="序号" align="center" width="50" type="index" />
-      <el-table-column key="receivingUnit" prop="receivingUnit" label="分包公司" align="center" />
-      <el-table-column key="applyUserName" prop="applyUserName" label="申请人" align="center" />
-      <el-table-column key="paymentDate" prop="paymentDate" label="申请日期" align="center" />
-      <el-table-column key="applyAmount" prop="applyAmount" label="申请金额" align="right" />
-      <el-table-column key="paymentReasonName" prop="paymentReasonName" label="付款事由" align="center" />
-      <el-table-column key="auditStatus" prop="auditStatus" label="状态" align="center">
+      <el-table-column key="receivingUnit" prop="receivingUnit" label="分包公司" align="center" show-overflow-tooltip />
+      <el-table-column key="applyUserName" prop="applyUserName" label="申请人" align="center" show-overflow-tooltip />
+      <el-table-column key="paymentDate" prop="paymentDate" label="申请日期" align="center" show-overflow-tooltip />
+      <el-table-column key="applyAmount" prop="applyAmount" label="申请金额" align="right" show-overflow-tooltip />
+      <el-table-column key="paymentReasonName" prop="paymentReasonName" label="付款事由" align="center" show-overflow-tooltip />
+      <el-table-column key="auditStatus" prop="auditStatus" label="状态" align="center" show-overflow-tooltip >
         <template v-slot="scope">
           <el-tag type="warning" v-if="scope.row.auditStatus===auditTypeEnum.REJECT.V">{{ auditTypeEnum.VL[scope.row.auditStatus] }}</el-tag>
           <el-tag :type="scope.row.auditStatus===auditTypeEnum.PASS.V?'success':''" v-else>{{ auditTypeEnum.VL[scope.row.auditStatus] }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column key="actuallyPaymentAmount" prop="actuallyPaymentAmount" label="实付金额" align="right" />
-      <el-table-column key="auditUserName" prop="auditUserName" label="审核人" align="center" />
-      <el-table-column key="auditTime" prop="auditTime" label="审核日期" align="center" />
+      <el-table-column key="actuallyPaymentAmount" prop="actuallyPaymentAmount" label="实付金额" align="right" show-overflow-tooltip />
+      <el-table-column key="auditUserName" prop="auditUserName" label="审核人" align="center" show-overflow-tooltip />
+      <el-table-column key="auditTime" prop="auditTime" label="审核日期" align="center" show-overflow-tooltip />
       <!--编辑与删除-->
       <el-table-column
         v-if="checkPermission([ ...permission.edit,...permission.del])"
@@ -90,7 +90,8 @@ const props = defineProps({
 
 const dataFormat = ref([
   ['applyDate', ['parse-time', '{y}-{m}-{d}']],
-  ['auditTime', 'parse-time'],
+  ['paymentDate', ['parse-time', '{y}-{m}-{d}']],
+  ['auditTime', ['parse-time', '{y}-{m}-{d}']],
   ['applyAmount', 'to-thousand']
 ])
 

@@ -12,7 +12,7 @@ const useSchedulingGroups = ({ queryParams, factoryIds, disabledIds }) => {
   watch(
     () => queryParams.value,
     () => {
-      console.log('useSchedulingGroups', queryParams.value, factoryIds)
+      // console.log('useSchedulingGroups', queryParams.value, factoryIds)
       loaded.value = false
       fetchGroupsTree()
     },
@@ -40,7 +40,7 @@ const useSchedulingGroups = ({ queryParams, factoryIds, disabledIds }) => {
     groupsObj.value = {}
     if (loaded.value) {
       const { list: _groupsTree, obj: _groupsObj } = dataFormat(list, factoryIds.value)
-      console.log(_groupsObj, 'initOptions')
+      // console.log(_groupsObj, 'initOptions')
       options.value = _groupsTree
       groupsObj.value = _groupsObj
     }
@@ -52,7 +52,7 @@ const useSchedulingGroups = ({ queryParams, factoryIds, disabledIds }) => {
 
   function setData(list, disabledIds = []) {
     for (let i = 0; i < list.length; i++) {
-      console.log(disabledIds, 'disabledIds')
+      // console.log(disabledIds, 'disabledIds')
       list[i].disabled = disabledIds && disabledIds?.includes(list[i].id) || false
       if (list[i]?.children?.length) {
         setData(list[i].children, disabledIds)
@@ -61,7 +61,7 @@ const useSchedulingGroups = ({ queryParams, factoryIds, disabledIds }) => {
   }
 
   function getCurGroupsTree(workshopId) {
-    console.log('getCurGroupsTree', options.value)
+    // console.log('getCurGroupsTree', options.value)
     return workshopId ? options.value.filter(v => v.id === workshopId) : options.value
   }
 
@@ -97,7 +97,7 @@ function dataFormat(list, _factoryIds, disabledIds = [], returnAll = false) {
       }
     }
     const _workshops = []
-    console.log({ _allWorkshops })
+    // console.log({ _allWorkshops })
     const workshops = _allWorkshops
     for (let w = 0; w < workshops.length; w++) {
       const _lines = []
@@ -123,13 +123,13 @@ function dataFormat(list, _factoryIds, disabledIds = [], returnAll = false) {
           children: _groups
         })
       }
-      console.log({ workshops: workshops[w] })
+      // console.log({ workshops: workshops[w] })
       _workshops.push({
         id: workshops[w].id,
         name: workshops[w].name,
         children: _lines
       })
-      console.log({ _workshops })
+      // console.log({ _workshops })
     }
     return {
       list: _workshops,

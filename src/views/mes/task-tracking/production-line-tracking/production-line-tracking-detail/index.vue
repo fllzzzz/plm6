@@ -8,7 +8,7 @@
     size="100%"
   >
     <template #titleAfter>
-      <project-cascader v-model="projectId" clearable class="filter-item" />
+      <project-cascader v-model="projectId" clearable class="filter-item" style="width: 300px" />
       <monomer-select-area-select v-model:monomerId="monomerId" v-model:areaId="areaId" needConvert clearable :project-id="projectId" />
       <el-input
         v-model.trim="serialNumber"

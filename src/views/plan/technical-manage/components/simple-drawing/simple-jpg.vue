@@ -72,6 +72,9 @@
               <span>{{ item.name }}</span>
             </button>
           </div>
+          <div class="tool_item" style="width:60px;">
+            <button @click.stop="handleChangeToolType(7)">选择</button>
+          </div>
           <div class="tool_item" v-for="item in btns" :key="item.icon">
             <button
               @click.stop="item.fun"
@@ -112,34 +115,63 @@
           </div>
         </div>
         <div :class="['tools', 'bars']">
-          <div
-            class="el-icon-s-tools arrow"
-            v-if="!showTools"
-            title="展开"
-            @click.stop="handleShowTools(1)"
-          ></div>
-          <div
-            class="el-icon-arrow-right arrow"
-            v-else
-            title="收起"
-            @click.stop="handleShowTools(0)"
-          ></div>
-          <transition name="slide-fade" appear>
-            <div v-if="showTools" class="right_tool">
+          <template v-if="deleteShow">
+            <div class="right_tool" style="min-height:300px;">
+              <div style="background:#f38c8c;color:#fff;padding:3px;">选择</div>
               <div
                 :class="[
                   'tool_item',
-                  activeTool == item.toolType ? 'activeTool' : '',
+                  activeTool == 'delete' ? 'activeTool' : '',
                 ]"
-                v-for="item in tools"
-                :key="item.toolType"
-                @click.stop="handleChangeToolType(item.toolType)"
+                @click.stop="selectDelete"
               >
-                <svg-icon :icon-class="item.icon" />
-                <span>{{ item.name }}</span>
+                <svg-icon icon-class="delete" />
+                <span>删除</span>
+              </div>
+              <div
+                :class="[
+                  'tool_item',
+                  activeTool == 'delete' ? 'activeTool' : '',
+                ]"
+                style="border-bottom: 1px solid #dddddd;"
+                @click.stop="selectCancel"
+              >
+                <svg-icon icon-class="cancel" />
+                <span style="vertical-align:1px;">取消</span>
               </div>
             </div>
-          </transition>
+          </template>
+          <template v-else>
+            <div
+              class="el-icon-s-tools arrow"
+              v-if="!showTools"
+              title="展开"
+              @click.stop="handleShowTools(1)"
+            ></div>
+            <div
+              class="el-icon-arrow-right arrow"
+              v-else
+              title="收起"
+              @click.stop="handleShowTools(0)"
+            ></div>
+            <transition name="slide-fade" appear>
+              <div v-if="showTools" class="right_tool">
+                <div style="background:#f38c8c;color:#fff;padding:3px;">工具</div>
+                <div
+                  :class="[
+                    'tool_item',
+                    activeTool == item.toolType ? 'activeTool' : '',
+                  ]"
+                  v-for="item in tools"
+                  :key="item.toolType"
+                  @click.stop="handleChangeToolType(item.toolType)"
+                >
+                  <svg-icon :icon-class="item.icon" />
+                  <span>{{ item.name }}</span>
+                </div>
+              </div>
+            </transition>
+          </template>
         </div>
       </div>
   </div>
@@ -298,7 +330,12 @@ export default {
       prevDis: true,
       nextDis: true,
       tl: 0,
-      tt: 0
+      tt: 0,
+      deleteShow: false,
+      deleteX: 0,
+      deleteY: 0,
+      deleteWidth: 0,
+      deleteHeight: 0
     }
   },
   created() {
@@ -338,6 +375,9 @@ export default {
           break
         case 6:
           this.cursor = `url('${cursors.text}'),auto`
+          break
+        case 7:
+          this.cursor = `crosshair`
           break
         default:
           this.cursor = `url('${cursors.pen}'),auto`
@@ -387,6 +427,8 @@ export default {
       this.ctx_back.fillStyle = this.bgColor
       this.ctx_base.fillRect(0, 0, width, height)
       this.ctx_back.fillRect(0, 0, width, height)
+      this.ctx_front.setLineDash([0])
+      this.selectCancel()
     },
     // 改变画布大小
     handleCanvasSizeChange() {
@@ -499,9 +541,14 @@ export default {
       // 鼠标按下
       const mousedown = (e) => {
         // 笔触颜色
-        this.ctx_front.strokeStyle = this.defaultColor
+        if (type === 7) {
+          this.ctx_front.strokeStyle = 'red'
+        } else {
+          this.ctx_front.strokeStyle = this.defaultColor
+        }
         // 线的粗细
         this.ctx_front.lineWidth = this.slide
+        this.ctx_front.setLineDash([0])
         e = e || window.event
         const clientRect = this.canvas_front.getBoundingClientRect()
         offsetTop = clientRect.top
@@ -602,6 +649,18 @@ export default {
                 e.offsetY - this.slide / 2 - 20
               )
               break
+            case 7:
+              this.handleFrommatCanvas()
+              this.ctx_front.lineWidth = 2
+              this.ctx_front.beginPath()
+              this.ctx_front.setLineDash([5])
+              this.ctx_front.moveTo(sx - 30, sy - 30 - this.ctx_front.lineWidth / 2)
+              this.ctx_front.lineTo(mx - 30 - this.ctx_front.lineWidth / 2, sy - 30 - this.ctx_front.lineWidth / 2)
+              this.ctx_front.lineTo(mx - 30 - this.ctx_front.lineWidth / 2, my - 30 - this.ctx_front.lineWidth / 2)
+              this.ctx_front.lineTo(sx - 30 - this.ctx_front.lineWidth / 2, my - 30 - this.ctx_front.lineWidth / 2)
+              this.ctx_front.lineTo(sx - 30 - this.ctx_front.lineWidth / 2, sy - 30 - this.ctx_front.lineWidth)
+              this.ctx_front.stroke()
+              break
           }
         }
       }
@@ -609,7 +668,13 @@ export default {
         if (this.canDraw) {
           this.canDraw = false
           this.ctx_front.closePath()
-          if (type !== 6) {
+          if (type === 7) {
+            this.deleteX = sx - 30
+            this.deleteY = sy - 30 - this.ctx_front.lineWidth / 2
+            this.deleteWidth = mx - sx - this.ctx_front.lineWidth
+            this.deleteHeight = my - sy
+            this.deleteShow = true
+          } else if (type !== 6) {
             console.log('非文字存储')
             this.handleSaveCanvasStore()
           }
@@ -620,6 +685,38 @@ export default {
       this.canvas_front.onmouseup = (e) => mouseup(e)
       this.canvas_front.onmouseout = (e) => mouseup(e)
       this.canvas_front.onmouseleave = (e) => mouseup(e)
+    },
+    // 删除所选区域
+    selectDelete() {
+      this.ctx_front.clearRect(0, 0, this.canvas_front.width, this.canvas_front.height)
+      const cbx = this.ctx_base.getImageData(
+        this.deleteX,
+        this.deleteY,
+        this.deleteWidth,
+        this.deleteHeight
+      )
+      this.ctx_front.putImageData(
+        cbx,
+        this.deleteX,
+        this.deleteY
+      )
+      this.handleSaveCanvasStore()
+      this.deleteX = 0
+      this.deleteY = 0
+      this.deleteWidth = 0
+      this.deleteHeight = 0
+      this.deleteShow = false
+      this.handleChangeToolType(1)
+    },
+    // 取消选择区域
+    selectCancel() {
+      this.deleteX = 0
+      this.deleteY = 0
+      this.deleteWidth = 0
+      this.deleteHeight = 0
+      this.ctx_front.clearRect(0, 0, this.canvas_front.width, this.canvas_front.height)
+      this.deleteShow = false
+      this.handleChangeToolType(1)
     },
     /** 失焦或者回车绘制文本，框隐藏*/
     handleTextBlur() {

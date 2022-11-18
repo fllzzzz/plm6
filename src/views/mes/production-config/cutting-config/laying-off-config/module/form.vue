@@ -20,7 +20,7 @@
     </template>
     <div class="form">
       <el-form ref="formRef" :model="form" :rules="rules" size="small" label-width="100px" class="demo-form">
-        <el-form-item label="下料类别：" prop="materialType">
+        <!-- <el-form-item label="下料类别：" prop="materialType">
           <common-select
             ref="materialTypeRef"
             type="enum"
@@ -31,7 +31,7 @@
             style="width: 270px"
             class="filter-item"
           />
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item prop="name" label="下料方式：">
           <el-input v-model="form.name" :maxlength="8" class="filter-item" placeholder="输入下料方式" style="width: 270px" />
         </el-form-item>
@@ -46,7 +46,7 @@
 <script setup>
 import { ref } from 'vue'
 import { regForm } from '@compos/use-crud'
-import { materialTypeEnum } from '@enum-ms/uploading-form'
+// import { materialTypeEnum } from '@enum-ms/uploading-form'
 
 const formRef = ref()
 

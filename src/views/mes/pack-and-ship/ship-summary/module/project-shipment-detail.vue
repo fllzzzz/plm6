@@ -39,7 +39,7 @@
       <el-table-column key="monomerName" prop="monomerName" label="单体" align="center" :show-overflow-tooltip="true"/>
       <el-table-column key="areaName" prop="areaName" label="区域" align="center" :show-overflow-tooltip="true"/>
       <el-table-column key="serialNumber" prop="serialNumber" label="编号" align="center" :show-overflow-tooltip="true" />
-      <el-table-column key="weight" prop="weight" label="总量" align="right" :show-overflow-tooltip="true">
+      <el-table-column key="weight" prop="weight" label="单重" align="right" :show-overflow-tooltip="true">
         <template v-slot="scope">
           <span>{{toThousand(scope.row.weight,DP.COM_WT__KG)}}</span><span style="margin-left:3px;">kg</span>
         </template>
