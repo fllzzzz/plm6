@@ -17,7 +17,7 @@
       </span>
     </template>
     <el-form ref="formRef" :model="form" :rules="rules" size="small" label-width="135px">
-      <el-form-item prop="materialFeederEnum" label="下料方式：">
+      <el-form-item prop="materialFeederEnum" label="下料方式">
         <common-radio
           class="filter-item"
           v-model="form.materialFeederEnum"
