@@ -85,6 +85,7 @@ function artifactTypeInit() {
 }
 
 function refreshTypeList() {
+  query.structureClassId = undefined
   refreshArtifactType({
     productionLineTypeEnum: query.productionLineTypeEnum,
     areaIdList: crud.query.areaIdList
