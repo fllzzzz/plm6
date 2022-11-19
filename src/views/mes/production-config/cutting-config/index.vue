@@ -1,66 +1,119 @@
 <template>
   <div class="app-container">
-    <el-row :gutter="10" id="laying-off-content">
-      <el-col :xs="24" :sm="24" :md="24" :lg="10" :xl="10" style="margin-bottom: 10px">
-        <laying-off-config @click-laying-off="handleChangeLayingOff" />
-      </el-col>
-      <el-col :xs="24" :sm="24" :md="24" :lg="14" :xl="14" style="margin-bottom: 10px">
-        <el-card class="box-card team-card">
-          <template v-slot:header class="clearfix card-header">
-            <div style="display: flex; align-items: center; justify-content: space-between">
-              <span style="display: flex; align-items: center">
-                <span>切割配置列表</span>
-              </span>
-              <common-button
-                size="mini"
-                style="float: right; padding: 6px 10px; margin-bottom: 0px"
-                type="primary"
-                icon="el-icon-plus"
-                :disabled="layingOffRow?.name === '无需套料' ? true : false"
-                @click="cutConfigRef?.toAdd"
-              >
-                新增
-              </common-button>
-            </div>
-          </template>
-          <cut-config ref="cutConfigRef" :layingOffRow="layingOffRow" />
-        </el-card>
-      </el-col>
-    </el-row>
+    <div class="head-container">
+      <mHeader />
+    </div>
+    <common-table
+      ref="tableRef"
+      v-loading="crud.loading"
+      :data="crud.data"
+      highlight-current-row
+      :empty-text="crud.emptyText"
+      :max-height="maxHeight"
+      style="width: 100%"
+      row-key="id"
+    >
+      <el-table-column label="序号" type="index" align="center" width="60" />
+      <el-table-column
+        v-if="columns.visible('name')"
+        key="name"
+        prop="name"
+        :show-overflow-tooltip="true"
+        label="切割形式"
+        align="center"
+        min-width="120px"
+      >
+      <template #default="{ row }">
+         <table-cell-tag
+            :name="layOffWayTypeEnum.VL[row.materialFeederEnum]"
+            :color="layOffWayTypeEnum.V[row.materialFeederEnum].COLOR"
+            :offset="15"
+          />
+          <span>{{ row.name}}</span>
+      </template>
+      </el-table-column>
+      <el-table-column
+        v-if="columns.visible('thickness')"
+        key="thickness"
+        prop="thickness"
+        :show-overflow-tooltip="true"
+        label="支持板厚(mm) ≤"
+        align="center"
+        min-width="120px"
+      />
+      <el-table-column
+        v-if="columns.visible('cuttingHolesJoint')"
+        key="cuttingHolesJoint"
+        prop="cuttingHolesJoint"
+        :show-overflow-tooltip="true"
+        label="切孔联割(φ) ≥"
+        align="center"
+        min-width="120px"
+      />
+      <!--编辑与删除-->
+      <el-table-column
+        v-if="checkPermission([...permission.edit, ...permission.del])"
+        label="操作"
+        width="130px"
+        align="center"
+        fixed="right"
+      >
+        <template v-slot="scope">
+          <udOperation :data="scope.row" :permission="permission" />
+        </template>
+      </el-table-column>
+    </common-table>
+    <!-- 表单 -->
+    <mForm />
   </div>
 </template>
-
 <script setup>
-import { provide, ref } from 'vue'
+import { ref } from 'vue'
+import { useStore } from 'vuex'
 import useMaxHeight from '@compos/use-max-height'
-import layingOffConfig from './laying-off-config'
-import cutConfig from './cut-config'
+import crudApi from '@/api/mes/production-config/cutting-config'
+import checkPermission from '@/utils/system/check-permission'
+import { configProductionLineGroupPM as permission } from '@/page-permission/config'
+import { layOffWayTypeEnum } from '@enum-ms/uploading-form'
+import useCRUD from '@compos/use-crud'
+import udOperation from '@crud/UD.operation'
+import mHeader from './module/header.vue'
+import mForm from './module/form'
 
+const store = useStore()
+const optShow = {
+  add: true,
+  edit: false,
+  del: false,
+  download: false
+}
+const tableRef = ref()
+const { crud, CRUD, columns } = useCRUD(
+  {
+    title: '零件下料配置',
+    sort: [],
+    optShow: { ...optShow },
+    permission: { ...permission },
+    crudApi: { ...crudApi },
+    hasPagination: false
+  },
+  tableRef
+)
 const { maxHeight } = useMaxHeight({
-  wrapperBox: ['.app-container', '#laying-off-content'],
-  extraBox: ['.head-container', '.el-card__header'],
-  paginate: true,
-  extraHeight: 55
+  extraBox: ['.head-container'],
+  paginate: false
 })
 
-provide('maxHeight', maxHeight)
-
-const cutConfigRef = ref()
-// const cutConfigDetailRef = ref()
-const layingOffRow = ref({})
-const cutConfigRow = ref({})
-
-function handleChangeLayingOff(val) {
-  if (val) {
-    layingOffRow.value = val
-    cutConfigRow.value = {}
-  }
+// 编辑之后 取消缓存的已加载设置
+CRUD.HOOK.afterSubmit = () => {
+  changeStoreLoaded()
 }
-
-// function handleChangeCutConfig(val) {
-//   console.log('handleChangeCutConfig', val)
-//   if (val) {
-//     cutConfigRow.value = val
-//   }
-// }
+CRUD.HOOK.afterDelete = () => {
+  changeStoreLoaded()
+}
+function changeStoreLoaded() {
+  store.commit('config/SET_LOADED', { key: 'cutConfigs', loaded: false })
+}
 </script>
+<style lang="scss" scoped>
+</style>

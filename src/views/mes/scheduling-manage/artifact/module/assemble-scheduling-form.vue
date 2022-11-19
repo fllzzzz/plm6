@@ -48,7 +48,7 @@
         </el-table-column>
         <el-table-column prop="specification" :show-overflow-tooltip="true" label="规格" min-width="120" align="center" />
         <el-table-column prop="length" :show-overflow-tooltip="true" label="长度（mm）" min-width="90" align="center" />
-        <el-table-column prop="netWeight" :show-overflow-tooltip="true" label="单净重（kg）" min-width="90" align="center" />
+        <el-table-column prop="netWeight" :show-overflow-tooltip="true" label="重量（kg）" min-width="90" align="center" />
         <el-table-column prop="needSchedulingQuantity" :show-overflow-tooltip="true" label="数量" min-width="90" align="center">
           <template #default="{ row: { sourceRow: row } }">
             <!-- <el-input-number
@@ -119,7 +119,7 @@
         <el-table-column prop="serialNumber" :show-overflow-tooltip="true" label="编号" min-width="100" align="center" />
         <el-table-column prop="specification" :show-overflow-tooltip="true" label="规格" min-width="120" align="center" />
         <el-table-column prop="length" :show-overflow-tooltip="true" label="长度（mm）" min-width="90" align="center" />
-        <el-table-column prop="netWeight" :show-overflow-tooltip="true" label="单净重（kg）" min-width="90" align="center" />
+        <el-table-column prop="netWeight" :show-overflow-tooltip="true" label="重量（kg）" min-width="90" align="center" />
         <el-table-column prop="quantity" :show-overflow-tooltip="true" label="数量" min-width="90" align="center" />
       </common-table>
       <handle-surplus-assemble-dialog
@@ -256,7 +256,7 @@ async function fetch() {
     showTagGroupIds.value = []
     originAssembleSchedulingList.value = assembleSchedulingList
     // 处理部件信息
-    for (let i = 0; i < assembleSchedulingList.length; i++) {
+    for (let i = 0; i < assembleSchedulingList?.length; i++) {
       const v = assembleSchedulingList[i]
       if (v?.groupsId && tagObj.value[v.groupsId]) {
         showTagGroupIds.value.push(v.groupsId)
@@ -297,7 +297,7 @@ async function fetch() {
           }
         }
         // 处理母件
-        for (let x = 0; x < v.assembleTypesetting.length; x++) {
+        for (let x = 0; x < v.assembleTypesetting?.length; x++) {
           const _o = assembleTypesetting[x]
           _o.productId = _o.id
           _o.attributeType = '套料'

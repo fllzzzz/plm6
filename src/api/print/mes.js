@@ -467,7 +467,7 @@ export function mesProjectShipDetail(params) {
 }
 
 // 工厂报表-车间报表详情
-export function workshopReport(params) {
+export function factoryWorkshopReport(params) {
   return request({
     url: `/api/mes/building/workshop/artifact/summary/print`,
     method: 'get',
@@ -592,7 +592,7 @@ export default {
   mesProjectShipDetail, // 项目发运详情
 
   // 工厂报表-车间报表
-  workshopReport, // 车间报表详情
+  factoryWorkshopReport, // 车间报表详情
 
   // 任务跟踪
   workOrderTrackingList, // 工单跟踪报表详情

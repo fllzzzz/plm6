@@ -11,9 +11,9 @@
     :placeholder="placeholder"
     @change="handleChange"
   >
-    <el-option-group v-for="group in cutConfigs" :key="group.id" :label="group.name">
+    <el-option-group v-for="(group, index) in cutConfigs" :key="index + 1" :label="layOffWayTypeEnum.VL[index]">
       <el-option
-        v-for="item in group.mesBuildingCutConfigDTOS"
+        v-for="item in group"
         :key="item.id"
         :label="item.name"
         :value="item.id"
@@ -26,6 +26,7 @@
 <script setup>
 import { defineProps, defineEmits, ref, watch } from 'vue'
 import { isBlank, judgeSameValue } from '@data-type/index'
+import { layOffWayTypeEnum } from '@enum-ms/uploading-form'
 import useCutConfig from '@compos/store/use-cut-config'
 
 const emit = defineEmits(['change', 'update:modelValue'])
@@ -86,6 +87,7 @@ watch(
 )
 
 function handleChange(val) {
+  console.log(val, 'val')
   let data = val
   if (isBlank(data)) data = undefined
   // 发生变化

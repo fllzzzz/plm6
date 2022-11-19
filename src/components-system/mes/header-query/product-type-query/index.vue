@@ -9,6 +9,7 @@ import { componentTypeEnum } from '@enum-ms/mes'
 import artifact from './module/artifact'
 import assemble from './module/assemble'
 import enclosure from './module/enclosure'
+import machinePart from './module/machine-part'
 
 const emit = defineEmits(['to-query'])
 
@@ -40,7 +41,7 @@ const currentView = computed(() => {
     case componentTypeEnum.ARTIFACT.V:
       return artifact
     case componentTypeEnum.MACHINE_PART.V:
-      return artifact
+      return machinePart
     case componentTypeEnum.ENCLOSURE.V:
       return enclosure
     case componentTypeEnum.AUXILIARY_MATERIAL.V:
