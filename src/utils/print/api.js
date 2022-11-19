@@ -97,7 +97,7 @@ const mesProcessList = mes.processList
 const mesProductionLineList = mes.productionLineList
 const mesWorkOrderTrackingList = mes.workOrderTrackingList
 
-const mesWorkshopReport = mes.workshopReport
+const mesFactoryWorkshopReport = mes.factoryWorkshopReport
 
 const mesStudSleeveStatisticsList = mes.studSleeveStatisticsList
 const mesProjectShipDetail = mes.mesProjectShipDetail
@@ -213,7 +213,7 @@ export default {
   mesWorkOrderTrackingList, // 工单跟踪清单详情
   mesProcessList, // 工序呆滞清单详情
 
-  mesWorkshopReport, // 车间报表清单详情
+  mesFactoryWorkshopReport, // 车间报表清单详情
 
   mesStudSleeveStatisticsList, // 栓钉套筒统计清单详情
 

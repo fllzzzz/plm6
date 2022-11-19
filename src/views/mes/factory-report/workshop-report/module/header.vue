@@ -77,7 +77,7 @@
         </template>
         <template #viewLeft>
           <print-table
-            api-key="mesWorkshopReport"
+            api-key="mesFactoryWorkshopReport"
             :params="{ startTime: query.startTime, endTime: query.endTime, projectId: query.projectId }"
             size="mini"
             type="warning"

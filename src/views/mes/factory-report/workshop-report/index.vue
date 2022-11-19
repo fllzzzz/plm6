@@ -116,7 +116,7 @@
         label="总重（kg）"
       >
         <template v-slot="scope">
-          <span>{{ scope.row.mete }}</span>
+          <span>{{ (scope.row.mete).toFixed(2) }}</span>
         </template>
       </el-table-column>
     </common-table>
@@ -160,7 +160,7 @@ CRUD.HOOK.handleRefresh = (crud, res) => {
 // 合计
 function getSummaries(param) {
   return tableSummary(param, {
-    props: ['length', 'quantity', 'mete']
+    props: ['length', 'quantity', ['mete', 2]]
   })
 }
 </script>
