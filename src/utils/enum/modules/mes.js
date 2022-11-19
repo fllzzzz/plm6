@@ -531,7 +531,7 @@ constantize(drillListEnum)
 // 结构工单
 const structureOrderTypeEnum = {
   ASSEMBLE: { L: '部件', K: 'ASSEMBLE', V: 1 << 4, T: 'warning' },
-  NESTING: { L: '套料', K: 'SORTING_ORDER', V: 1 << 5, T: 'success' }
+  NESTING: { L: '套料', K: 'NESTING', V: 1 << 5, T: 'success' }
 }
 constantize(structureOrderTypeEnum)
 
