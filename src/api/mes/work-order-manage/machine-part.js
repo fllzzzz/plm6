@@ -46,24 +46,26 @@ export function showDrillDetail(params) {
     params
   })
 }
+
 /**
- * @description: 根据任务单号查询零件分拣信息(分页)
+ * @description: 获取零件-分拣单
 */
-export function showInfo(params) {
+export function getSeparateOrder(params) {
   return request({
     module: 'mes',
-    url: `machine_part/separate/page`,
+    url: `machine_part/separate`,
     method: 'get',
     params
   })
 }
+
 /**
- * @description: 打印分拣单
+ * @description: 零件工单：打印标记
 */
-export function printInfo(params) {
+export function printSign(params) {
   return request({
     module: 'mes',
-    url: `machine_part/separate`,
+    url: `machine_part/separate/print/sign`,
     method: 'get',
     params
   })

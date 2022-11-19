@@ -61,5 +61,17 @@ export function getNestingList(params) {
   })
 }
 
+/**
+ * @description: 结构工单：打印标记
+*/
+export function printSign(params) {
+  return request({
+    module: 'mes',
+    url: `task/process/task/list/sign`,
+    method: 'get',
+    params
+  })
+}
+
 export default { get }
 

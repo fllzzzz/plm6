@@ -32,11 +32,16 @@
         <div style="float: right; width: 300px">
           <print-table
             :api-key="
-              props.detailData.productType === componentTypeEnum.ARTIFACT.V ? 'mesProductionTaskOrder' : 'mesAssembleProductionTaskOrder'
+              props.detailData.productType === componentTypeEnum.ARTIFACT.V
+                ? 'mesProductionTaskOrder'
+                : type === typeEnum.TASK_LIST.V
+                ? 'mesAssembleProductionTaskOrder'
+                : 'mesAssembleNestingOrder'
             "
             :params="
               props.detailData.productType === componentTypeEnum.ARTIFACT.V ? { ...params } : { ...params, type: typeEnum.TASK_LIST.V }
             "
+            @print-success="addPrintRecord"
             size="mini"
             type="warning"
             class="filter-item"
@@ -189,7 +194,7 @@
 </template>
 
 <script setup>
-import { processInfo, getTaskList, getNestingList } from '@/api/mes/work-order-manage/artifact.js'
+import { processInfo, getTaskList, getNestingList, printSign } from '@/api/mes/work-order-manage/artifact.js'
 import { defineProps, defineEmits, ref, computed, watch } from 'vue'
 import { componentTypeEnum, structureOrderTypeEnum } from '@enum-ms/mes'
 import { constantize } from '@/utils/enum/base'
@@ -199,7 +204,7 @@ import usePagination from '@compos/use-pagination'
 import useVisible from '@compos/use-visible'
 
 const drawerRef = ref()
-const emit = defineEmits(['update:visible'])
+const emit = defineEmits(['update:visible', 'refresh'])
 const props = defineProps({
   visible: {
     type: Boolean,
@@ -324,6 +329,16 @@ function fetchHook() {
     assembleListGet()
   } else {
     fetch()
+  }
+}
+
+async function addPrintRecord() {
+  if (props.detailData.productType !== componentTypeEnum.ARTIFACT.V) return
+  try {
+    await printSign({ ...params.value })
+    emit('refresh')
+  } catch (error) {
+    console.log('添加打印记录失败', error)
   }
 }
 </script>

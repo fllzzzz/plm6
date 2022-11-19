@@ -111,7 +111,7 @@
           <span>{{ scope.row.completeTime ? parseTime(scope.row.completeTime, '{y}-{m}-{d}') : '-' }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" :show-overflow-tooltip="true" label="操作">
+      <el-table-column align="center" :show-overflow-tooltip="true" label="操作" width="100">
         <template v-slot="scope">
           <common-button
             v-if="crud.query.processType === mesMachinePartOrderTypeEnum.DRILL_ORDER.V"
@@ -133,6 +133,7 @@
       :process-type="crud.query.processType"
       v-model:visible="cuttingDrawerVisible"
       :cutting-detail-data="cuttingDetailData"
+      @refresh="crud.toQuery"
     />
   </div>
 </template>
