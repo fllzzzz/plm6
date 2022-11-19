@@ -53,6 +53,31 @@ function productionStatisticsMete({ header, table = [], footer, qrCode }) {
   }
 }
 
+// 部件套料清单
+function assembleNestingOrder({ header, table = [], footer, qrCode }) {
+  const _table = []
+  for (let i = 0; i < table.length; i++) {
+    const row = table[i]
+    const rowspan = row.assembleList.length
+    for (let o = 0; o < row.assembleList.length; o++) {
+      const item = row.assembleList[o]
+      _table.push({
+        ...row,
+        rowspan: o > 0 ? 0 : rowspan,
+        assembleSerialNumber: item.serialNumber,
+        assembleWeight: item.weight,
+        assembleQuantity: item.quantity
+      })
+    }
+  }
+  return {
+    header,
+    table: _table,
+    qrCode,
+    footer
+  }
+}
+
 // 结构工序的量和未完成数
 function processMete({ header, table = [], footer, qrCode }) {
   const _table = table.map(row => {
@@ -334,6 +359,7 @@ function steelDosageFormat({ header, table = [], footer, qrCode }) {
 export default {
   productionLineMete,
   productionStatisticsMete,
+  assembleNestingOrder,
   processMete,
   meteUnit,
   surfaceArea,

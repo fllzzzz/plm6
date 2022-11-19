@@ -321,11 +321,22 @@ export function assembleProductionTaskOrder(params) {
 }
 
 /**
+ * 工单管理：部件套料清单
+ */
+export function assembleNestingOrder(params) {
+  return request({
+    url: `/api/mes/building/task/process/nesting/task/list/print`,
+    method: 'get',
+    params
+  })
+}
+
+/**
  * 工单管理：钻孔生产任务单
  */
 export function drillProductionTaskOrder(params) {
   return request({
-    url: `/api/mes/building/task/order/drilling`,
+    url: `/api/mes/building/task/order/drilling/print`,
     method: 'get',
     params
   })
@@ -537,6 +548,7 @@ export default {
   // 工单管理
   schedulingDetail, // 工单详情
   productionTaskOrder, // 工单管理：构件生产任务单
+  assembleNestingOrder, // // 工单管理：部件套料清单
   assembleProductionTaskOrder, // 工单管理：部件生产任务单
   drillProductionTaskOrder, // 工单管理： 钻孔生产任务单
   // 生产报表
