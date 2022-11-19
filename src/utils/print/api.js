@@ -44,6 +44,8 @@ const scmRequisitionsDetail = supply.requisitionsDetail // 申购详情
 // mes
 const mesSchedulingDetail = mes.schedulingDetail
 const mesProductionTaskOrder = mes.productionTaskOrder
+const mesAssembleProductionTaskOrder = mes.assembleProductionTaskOrder
+const mesDrillProductionTaskOrder = mes.drillProductionTaskOrder
 
 const mesStructureProductionReport = mes.productionReport
 const mesAssemblePartProductionReport = mes.productionReport
@@ -157,7 +159,9 @@ export default {
 
   // mes
   mesSchedulingDetail, // 工单详情
-  mesProductionTaskOrder, // 工单管理：生产任务单
+  mesProductionTaskOrder, // 工单管理：构件生产任务单
+  mesAssembleProductionTaskOrder, // 工单管理：部件生产任务单
+  mesDrillProductionTaskOrder, // 工单管理：钻孔生产任务单
 
   mesStructureProductionReport, // 结构生产报表
   mesAssemblePartProductionReport, // 部件生产报表

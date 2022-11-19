@@ -32,9 +32,11 @@
         <div style="float: right; width: 300px">
           <print-table
             :api-key="
-              props.detailData.productType === componentTypeEnum.ASSEMBLE.V ? 'mesAssembleProductionTaskOrder' : 'mesProductionTaskOrder'
+              props.detailData.productType === componentTypeEnum.ARTIFACT.V ? 'mesProductionTaskOrder' : 'mesAssembleProductionTaskOrder'
             "
-            :params="{ ...query }"
+            :params="
+              props.detailData.productType === componentTypeEnum.ARTIFACT.V ? { ...params } : { ...params, type: typeEnum.TASK_LIST.V }
+            "
             size="mini"
             type="warning"
             class="filter-item"
@@ -78,10 +80,9 @@
         :max-height="maxHeight"
         style="width: 100%"
       >
-        <el-table-column :show-overflow-tooltip="true" label="属性" key="taskType" prop="typeType" align="center">
+        <el-table-column :show-overflow-tooltip="true" label="属性" key="taskType" prop="taskType" align="center">
           <template v-slot="scope">
-            <el-tag v-if="scope.row.taskType === componentTypeEnum.ASSEMBLE.V" type="warning">部件</el-tag>
-            <el-tag v-else type="success">套料</el-tag>
+            <el-tag :type="structureOrderTypeEnum.V[scope.row.taskType].T">{{ structureOrderTypeEnum.VL[scope.row.taskType] }}</el-tag>
           </template>
         </el-table-column>
         <el-table-column
@@ -190,7 +191,7 @@
 <script setup>
 import { processInfo, getTaskList, getNestingList } from '@/api/mes/work-order-manage/artifact.js'
 import { defineProps, defineEmits, ref, computed, watch } from 'vue'
-import { componentTypeEnum } from '@enum-ms/mes'
+import { componentTypeEnum, structureOrderTypeEnum } from '@enum-ms/mes'
 import { constantize } from '@/utils/enum/base'
 import { parseTime } from '@/utils/date'
 import useMaxHeight from '@compos/use-max-height'
