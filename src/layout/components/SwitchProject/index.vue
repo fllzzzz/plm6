@@ -39,7 +39,7 @@
           完成日期:
           <span v-parse-time="{ val: globalProject.endDate, fmt: '{y}-{m}-{d}' }" />
           | 工期:
-          {{ dateDifferenceReduce(globalProject.startDate, globalProject.endDate) }}天
+          {{ dateDifference(globalProject.startDate, globalProject.endDate) }}天
         </el-tag>
       </template>
       <el-tag v-if="(globalProject && globalProject.businessType) || routeBusinessType" type="info" effect="plain" style="margin-left: 5px">
@@ -64,7 +64,7 @@ import { projectTypeEnum, businessTypeEnum, projectModeEnum } from '@enum-ms/con
 
 import useUserProjects from '@compos/store/use-user-projects'
 import { getBitwiseBack } from '@/utils/data-type/number'
-import { dateDifferenceReduce } from '@/utils/date'
+import { dateDifference } from '@/utils/date'
 
 const store = useStore()
 // 项目启动时获取项目树
@@ -110,11 +110,6 @@ const props = defineProps({
   }
 })
 
-const copyValue = ref()
-const projectType = ref(allPT)
-const refreshLoading = ref(false)
-let currentProjectChange = false
-
 const { routeProjectType, currentProjectType, globalProjectId, globalProject, navbarShowAll, routeBusinessType } = mapGetters([
   'routeProjectType',
   'currentProjectType',
@@ -123,6 +118,11 @@ const { routeProjectType, currentProjectType, globalProjectId, globalProject, na
   'navbarShowAll',
   'routeBusinessType'
 ])
+
+const copyValue = ref()
+const projectType = ref(currentProjectType.value)
+const refreshLoading = ref(false)
+let currentProjectChange = false
 
 // 是否显示
 const showable = computed(() => isNotBlank(routeProjectType.value))
@@ -164,6 +164,7 @@ const disabledTypeArr = computed(() => {
         types.push(Number(v))
       }
     })
+    types.push(allPT)
   }
   return types
 })
@@ -206,17 +207,18 @@ watch(
 // 监听当前路由的项目类型
 watch(
   routeProjectType,
-  (val) => {
+  (newVal, oldVal) => {
     // 如果值存在， 并且该值未包含当前项目类型
-    if (val && !(val & projectType.value)) {
-      // 获取项目类型的种类
-      const bitArr = getBitwiseBack(routeProjectType)
-      // 如果有多种项目类型，则默认取第一个
-      projectType.value = bitArr.length && bitArr.length <= 1 ? val : val & currentProjectType ? currentProjectType : bitArr[0]
-      handleTypeChange(projectType.value)
+    if (newVal && newVal !== allPT) {
+      if (projectType.value === allPT || (!(newVal & projectType.value) && projectType.value !== allPT)) {
+        // 获取项目类型的种类
+        const bitArr = getBitwiseBack(routeProjectType.value)
+        // 如果有多种项目类型，则默认取第一个
+        projectType.value = bitArr.length && bitArr.length <= 1 ? newVal : newVal & currentProjectType ? currentProjectType : bitArr[0]
+        handleTypeChange(projectType.value)
+      }
     }
-  },
-  { immediate: true }
+  }
 )
 
 // 处理项目类型变更

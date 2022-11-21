@@ -13,12 +13,15 @@ import { useStore } from 'vuex'
 import { ElConfigProvider } from 'element-plus'
 import zhCn from 'element-plus/lib/locale/lang/zh-cn'
 
+import { allPT } from '@/settings/config'
+
 const store = useStore()
 const route = useRoute()
 
 watch(
   () => route.path,
   () => {
+    route.meta.projectType = route.path === '/' ? allPT : (route.meta.ownProductType || route.meta.projectType)
     nextTick(() => {
       store.dispatch('project/setRouteProjectByMeta', route.meta)
     })

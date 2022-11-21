@@ -334,6 +334,42 @@ export default {
       ]
     },
     {
+      path: '/bridge/production-config',
+      component: 'Layout',
+      hidden: false,
+      name: 'BridgeProductionConfig',
+      alwaysShow: false,
+      redirect: '/bridge/production-config/factory-and-workshop',
+      meta: { title: '桥梁-生产配置', icon: 'project', noCache: true },
+      children: [
+        {
+          path: 'bridge-characteristics-config',
+          component: '',
+          hidden: false,
+          name: 'BridgeCharacteristicsConfig',
+          alwaysShow: true,
+          redirect: '/bridge/production-config/bridge-characteristics-config/artifact-config',
+          meta: { title: '分段单元定义', icon: 'project', noCache: true },
+          children: [
+            {
+              name: 'BoxConfig',
+              path: 'box-config',
+              hidden: false,
+              component: '/bridge/bridge-production-config/bridge-characteristics-config/box-config/index',
+              meta: { title: '分段特征定义', icon: 'project', noCache: true }
+            },
+            {
+              name: 'CellConfig',
+              path: 'cell-config',
+              hidden: false,
+              component: '/bridge/bridge-production-config/bridge-characteristics-config/cell-config/index',
+              meta: { title: '单元特征定义', icon: 'project', noCache: true }
+            }
+          ]
+        }
+      ]
+    },
+    {
       path: '/contract/enclosure-config',
       component: 'Layout',
       hidden: false,
