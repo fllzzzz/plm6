@@ -21,19 +21,19 @@
           <span>{{ scope.row.quantity+' / '+scope.row.mete }}</span>
         </template>
       </el-table-column>
-      <el-table-column key="inbound" prop="inbound" v-if="columns.visible('inbound')" :show-overflow-tooltip="true" label="入库量（件/kg）" align="center">
+      <el-table-column key="inbound" prop="inbound" v-if="columns.visible('inbound')" :show-overflow-tooltip="true" label="累计入库（件/kg）" align="center">
         <template v-slot="scope">
-          <span>{{ scope.row.inboundQuantity+' / '+scope.row.inboundMete }}</span>
+          <span style="cursor:pointer;color:#0d84ff;" @click="openDetail(scope.row, 'INBOUND')">{{ scope.row.inboundQuantity+' / '+scope.row.inboundMete }}</span>
         </template>
       </el-table-column>
-      <el-table-column key="outbound" prop="outbound" v-if="columns.visible('outbound')" :show-overflow-tooltip="true" label="使用量（件/kg）" align="center" >
+      <el-table-column key="outbound" prop="outbound" v-if="columns.visible('outbound')" :show-overflow-tooltip="true" label="累计出库（件/kg）" align="center" >
         <template v-slot="scope">
-          <span>{{ scope.row.outboundQuantity+' / '+scope.row.outboundMete }}</span>
+          <span style="cursor:pointer;color:#0d84ff;" @click="openDetail(scope.row, 'OUTBOUND')">{{ scope.row.outboundQuantity+' / '+scope.row.outboundMete }}</span>
         </template>
       </el-table-column>
-      <el-table-column key="stock" prop="stock" v-if="columns.visible('stock')" :show-overflow-tooltip="true" label="库存（件/kg）" align="center">
+      <el-table-column key="stock" prop="stock" v-if="columns.visible('stock')" :show-overflow-tooltip="true" label="实时库存（件/kg）" align="center">
         <template v-slot="scope">
-          <span>{{ scope.row.stockQuantity+' / '+scope.row.stockMete }}</span>
+          <span style="cursor:pointer;color:#0d84ff;" @click="openDetail(scope.row, 'STOCK')">{{ scope.row.stockQuantity+' / '+scope.row.stockMete }}</span>
         </template>
       </el-table-column>
       <!--编辑与删除-->
@@ -49,13 +49,13 @@
       </el-table-column>
     </common-table>
     <pagination />
-    <component :is="typeDetail" :showType="showType" v-model="detailVisible" :detailQuery="detailQuery" :detailInfo="currentRow"/>
+    <component :is="showComponent" :showType="showType" v-model="detailVisible" :detailQuery="detailQuery" :detailInfo="currentRow"/>
   </div>
 </template>
 
 <script setup>
 import crudApi from '@/api/mes/pack-and-ship/product-receive-send-storage'
-import { ref, nextTick } from 'vue'
+import { ref, nextTick, computed } from 'vue'
 
 import { deliveryInstallListPM as permission } from '@/page-permission/project'
 import useMaxHeight from '@compos/use-max-height'
@@ -64,6 +64,7 @@ import { DP } from '@/settings/config'
 
 import mHeader from './module/header'
 import pagination from '@crud/Pagination'
+import mDetail from './module/detail'
 import typeDetail from './module/type-detail'
 
 const optShow = {
@@ -78,6 +79,11 @@ const detailVisible = ref(false)
 const showType = ref('detail')
 const currentRow = ref({})
 const detailQuery = ref({})
+
+const showComponent = computed(() => {
+  return showType.value === 'detail' ? mDetail : typeDetail
+})
+
 const { crud, columns } = useCRUD(
   {
     title: '制成品入发存',
