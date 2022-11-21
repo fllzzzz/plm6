@@ -1,5 +1,5 @@
 <template>
-  <common-drawer ref="drawerRef" title="部件排产" v-model="drawerVisible" direction="rtl" :before-close="handleClose" size="100%">
+  <common-drawer ref="assembleDrawerRef" modalClass="assemble-scheduling-drawer" title="部件排产" v-model="drawerVisible" direction="rtl" :before-close="handleClose" size="100%">
     <template #titleRight>
       <common-button size="mini" type="success" @click="handleClose"> 上一步【构件排产预览】 </common-button>
       <common-button size="mini" :loading="taskLoading" type="primary" @click="toTaskIssue"> 任务下发 </common-button>
@@ -93,7 +93,7 @@
           </template>
         </el-table-column>
       </common-table>
-      <el-divider v-if="otherData.length"><span class="title">型材</span></el-divider>
+      <el-divider v-if="otherData.length" class="assemble-scheduling-divider"><span class="title">型材</span></el-divider>
       <common-table
         v-if="otherData.length"
         v-loading="tableLoading"
@@ -139,7 +139,7 @@
 <script setup>
 import { getAssemble } from '@/api/mes/scheduling-manage/artifact'
 import { saveTask } from '@/api/mes/scheduling-manage/common'
-import { defineProps, defineEmits, ref, inject, reactive, computed } from 'vue'
+import { defineProps, defineEmits, ref, inject, reactive, computed, nextTick } from 'vue'
 import moment from 'moment'
 import { ElNotification } from 'element-plus'
 
@@ -157,7 +157,7 @@ import handleSurplusAssembleDialog from './handle-surplus-assemble-dialog'
 
 const productType = componentTypeEnum.ASSEMBLE.V
 
-const drawerRef = ref()
+const assembleDrawerRef = ref()
 const emit = defineEmits(['update:visible', 'task-issue-success'])
 const props = defineProps({
   visible: {
@@ -179,14 +179,15 @@ const factoryIds = inject('curFactoryIds')
 const classIdGroupsObj = reactive({}) // {部件类型id：{list：groupsTree，obj：groupsObj}}
 
 // 高度
-const { maxHeight } = useMaxHeight(
+const { fixMaxHeight, maxHeight } = useMaxHeight(
   {
-    extraBox: ['.el-drawer__header'],
+    mainBox: '.assemble-scheduling-drawer',
+    extraBox: ['.el-drawer__header', '.head-container', '.assemble-scheduling-divider'],
     wrapperBox: ['.el-drawer__body'],
     navbar: false,
     clientHRepMainH: true
   },
-  drawerRef
+  assembleDrawerRef
 )
 
 const paGroupId = -1 // 母件 默认一组 组id为-1
@@ -401,6 +402,7 @@ async function fetch() {
     console.log('获取部件排产列表失败', error)
   } finally {
     tableLoading.value = false
+    nextTick(() => { fixMaxHeight() })
   }
 }
 

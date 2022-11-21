@@ -4,8 +4,8 @@
       <project-to-area-tree :heightStyle="heightStyle" @area-click="handleAreaClick" />
     </div>
     <div class="wrap-right">
-      <el-tag v-if="!crud.query?.areaIdList?.length" type="info" size="medium"> * 请先选择区域，进行构件区域排产 </el-tag>
-      <template v-else>
+      <el-tag v-show="!crud.query?.areaIdList?.length" type="info" size="medium"> * 请先选择区域，进行构件区域排产 </el-tag>
+      <div v-show="crud.query?.areaIdList?.length">
         <div class="head-container">
           <mHeader ref="mHeaderRef">
             <template #optLeft>
@@ -121,7 +121,7 @@
         </common-table>
         <!--分页组件-->
         <pagination />
-      </template>
+      </div>
       <!-- pdf预览 -->
       <bim-preview-drawer
         v-model:visible="showDrawing"

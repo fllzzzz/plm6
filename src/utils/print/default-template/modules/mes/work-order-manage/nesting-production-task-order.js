@@ -1,13 +1,13 @@
 import { dataSourceEnum, alignEnum, verticleAlignEnum, fieldTypeEnum as typeEnum, cssUnitEnum, weightUnitEnum, cssUnitPrecisionEnum, pageFormatEnum } from '@/utils/print/enum'
 import { projectNameArrangementModeEnum } from '@/utils/enum/modules/contract'
 
-// 工单管理：钻孔生产任务单
-const mesDrillProductionTaskOrder = {
+// 工单管理：生产任务单
+const mesNestingProductionTaskOrder = {
   fontUnit: 'pt', // 字体单位
   unit: cssUnitEnum.MM.V, // 长度单位
   unitPrecision: cssUnitPrecisionEnum.ZERO.V, // 长度单位精度
-  type: 'mesDrillProductionTaskOrder', // 表格类型 KEY
-  name: '钻孔生产任务单（平台）', // 表格名称
+  type: 'mesNestingProductionTaskOrder', // 表格类型 KEY
+  name: '生产任务单（平台）', // 表格名称
   width: 210, // 打印纸的宽度
   height: 297, // 打印纸的高度
   paddingLR: 10, // 左右内边距
@@ -70,7 +70,7 @@ const mesDrillProductionTaskOrder = {
   title: {
     show: true,
     allPage: false,
-    title: '钻孔生产任务单',
+    title: '生产任务单',
     align: alignEnum.CENTER.V,
     verticleAlign: verticleAlignEnum.TOP.V,
     size: 17,
@@ -225,5 +225,5 @@ const mesDrillProductionTaskOrder = {
 }
 
 export default {
-  mesDrillProductionTaskOrder // 钻孔生产任务单
+  mesNestingProductionTaskOrder // 生产任务单
 }

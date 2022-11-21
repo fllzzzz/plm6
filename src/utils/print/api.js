@@ -47,6 +47,7 @@ const mesProductionTaskOrder = mes.productionTaskOrder
 const mesAssembleNestingOrder = mes.assembleNestingOrder
 const mesAssembleProductionTaskOrder = mes.assembleProductionTaskOrder
 const mesDrillProductionTaskOrder = mes.drillProductionTaskOrder
+const mesNestingProductionTaskOrder = mes.drillProductionTaskOrder
 
 const mesStructureProductionReport = mes.productionReport
 const mesAssemblePartProductionReport = mes.productionReport
@@ -163,6 +164,7 @@ export default {
   mesProductionTaskOrder, // 工单管理：构件生产任务单
   mesAssembleNestingOrder, // 工单管理：部件套料清单
   mesAssembleProductionTaskOrder, // 工单管理：部件生产任务单
+  mesNestingProductionTaskOrder, // 工单管理：切割生产任务单
   mesDrillProductionTaskOrder, // 工单管理：钻孔生产任务单
 
   mesStructureProductionReport, // 结构生产报表

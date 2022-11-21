@@ -41,11 +41,11 @@
             prop="cutNumber"
             :show-overflow-tooltip="true"
             label="切割指令号"
-            min-width="120"
+            min-width="160"
             align="center"
           />
           <el-table-column
-            v-if="columns.visible('spec')"
+            v-if="columns.visible('spec') && currentNesting.boolNestCutEnum"
             prop="spec"
             :show-overflow-tooltip="true"
             label="原材料规格"
@@ -53,15 +53,15 @@
             align="center"
           />
           <el-table-column
-            v-if="columns.visible('num')"
+            v-if="columns.visible('num') && currentNesting.boolNestCutEnum"
             prop="num"
             :show-overflow-tooltip="true"
             label="板材数量(件)"
-            min-width="120"
+            width="100"
             align="center"
           />
           <el-table-column
-            v-if="columns.visible('orderNumber')"
+            v-if="columns.visible('orderNumber') && currentNesting.boolNestCutEnum"
             prop="orderNumber"
             :show-overflow-tooltip="true"
             label="套料文档"
@@ -264,7 +264,7 @@ const currentNesting = ref()
 const previewVisible = ref(false)
 const submitList = ref([])
 
-function handleNestingTaskClick(val) {
+function handleNestingTaskClick(val, query) {
   currentNesting.value = val
   crud.query.id = val?.id
   if (val?.id) {

@@ -38,7 +38,7 @@ export function showCuttingPdf(params) {
 /**
  * @description: 获取钻孔任务单
 */
-export function showDrillDetail(params) {
+export function productionTaskDetail(params) {
   return request({
     module: 'mes',
     url: 'task/order/drilling',

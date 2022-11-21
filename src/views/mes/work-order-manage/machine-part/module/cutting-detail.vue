@@ -9,7 +9,14 @@
     size="63%"
   >
     <template #titleAfter>
-      <common-radio-button v-model="orderType" :options="typeEnum.ENUM" type="enum" size="mini" class="filter-item" />
+      <common-radio-button
+        v-model="orderType"
+        :options="typeEnum.ENUM"
+        :unshowVal="cuttingDetailData.boolNestCut ? [typeEnum.PRODUCTION_TASK_ORDER.V] : [typeEnum.NESTING_TASK_ORDER.V]"
+        type="enum"
+        size="mini"
+        class="filter-item"
+      />
     </template>
     <template #titleRight>
       <common-button size="mini" icon="el-icon-printer" type="success" @click="printIt">打印【任务单、分拣单】</common-button>
@@ -18,6 +25,10 @@
       <!--任务单-->
       <div v-loading="taskLoading" :style="`height:${maxHeight}px`" v-show="orderType === typeEnum.NESTING_TASK_ORDER.V">
         <pdf :url="taskOrderPDF" :type="'canvas'" :pdfjsDistPath="pdfjsDistPath" />
+      </div>
+      <!-- 生产任务单 -->
+      <div v-show="orderType === typeEnum.PRODUCTION_TASK_ORDER.V">
+        <production-task-order :tableData="productionData" :maxHeight="maxHeight" :tableLoading="taskLoading"/>
       </div>
       <!--分拣单-->
       <div v-loading="separateLoading" v-show="orderType === typeEnum.SORTING_ORDER.V">
@@ -28,7 +39,8 @@
 </template>
 
 <script setup>
-import { showCuttingPdf, printSign } from '@/api/mes/work-order-manage/machine-part.js'
+import fetchFn from '@/utils/print/api'
+import { showCuttingPdf, productionTaskDetail, printSign } from '@/api/mes/work-order-manage/machine-part.js'
 import { defineProps, defineEmits, ref, computed } from 'vue'
 import { ElNotification, ElLoading } from 'element-plus'
 
@@ -36,11 +48,15 @@ import { sortingListEnum as typeEnum } from '@enum-ms/mes'
 
 import { printPDFJSCanvas } from '@/utils/print/pdf-print'
 import { printSeparateOrderLabel } from '@/utils/print/index'
+import printTemplate from '@/utils/print/default-template'
+import { printTable } from '@/utils/print/table'
+import { printModeEnum } from '@/utils/print/enum'
 
 import useVisible from '@compos/use-visible'
 import useMaxHeight from '@compos/use-max-height'
 import useGetSeparateOrder from '@compos/mes/work-order-manage/use-get-separate-order'
 import separateOrderTable from './separate-order-table'
+import productionTaskOrder from './production-task-order'
 import pdf from '@/components/PDF/pdf'
 
 import { codeWait } from '@/utils'
@@ -63,8 +79,10 @@ const props = defineProps({
   }
 })
 
+const taskOrderPrintKey = 'mesNestingProductionTaskOrder'
 const taskOrderPDF = ref('')
 const taskLoading = ref(false)
+const productionData = ref([])
 const orderType = ref(typeEnum.NESTING_TASK_ORDER.V)
 
 const { maxHeight } = useMaxHeight({
@@ -83,10 +101,31 @@ const { separateLoading, separateOrderInfo, fetchSeparateOrder } = useGetSeparat
 const { visible: cuttingDrawerVisible, handleClose } = useVisible({ emit, props, field: 'visible', showHook: showHook })
 
 async function showHook() {
-  orderType.value = typeEnum.NESTING_TASK_ORDER.V
-  await nestingDetailGet()
+  if (props.cuttingDetailData.boolNestCut) {
+    orderType.value = typeEnum.NESTING_TASK_ORDER.V
+    await nestingDetailGet()
+  } else {
+    orderType.value = typeEnum.NESTING_TASK_ORDER.V
+    await productionDetailGet()
+  }
+
   await fetchSeparateOrder()
 }
+
+// --------------------------- 获取生产任务单 start ------------------------------
+
+async function productionDetailGet() {
+  try {
+    taskLoading.value = true
+    const data = await productionTaskDetail({ ...commonParams.value })
+    productionData.value = data
+  } catch (error) {
+    console.log('获取生产任务单详情失败', error)
+  } finally {
+    taskLoading.value = false
+  }
+}
+// --------------------------- 获取生产任务单 end --------------------------------
 
 // --------------------------- 获取任务单 start ------------------------------
 
@@ -139,15 +178,37 @@ async function printIt() {
     fullscreen: true
   })
   try {
-    // --------------------------- PDF 打印 start ------------------------------
-    const canvasELs = document.querySelectorAll('#viewerContainer .canvasWrapper canvas')
-    for (let i = 0; i < canvasELs.length; i++) {
-      const canvasBase64 = canvasELs[i].toDataURL()
-      printLoading.value.text = `正在加入打印队列：套料任务单 第${i + 1}页`
-      await codeWait(500)
-      await printPDFJSCanvas({ canvasBase64 })
-    }
+    if (props.cuttingDetailData.boolNestCut) {
+      // --------------------------- PDF 打印 start ------------------------------
+      const canvasELs = document.querySelectorAll('#viewerContainer .canvasWrapper canvas')
+      for (let i = 0; i < canvasELs.length; i++) {
+        const canvasBase64 = canvasELs[i].toDataURL()
+        printLoading.value.text = `正在加入打印队列：套料任务单 第${i + 1}页`
+        await codeWait(500)
+        await printPDFJSCanvas({ canvasBase64 })
+      }
     // --------------------------- PDF 打印 end --------------------------------
+    } else {
+      // ---------------------------生产任务单 打印 start ------------------------------
+      printLoading.value.text = `正在加载数据：生产任务单`
+      const config = printTemplate[taskOrderPrintKey]
+      const { header, footer, table, qrCode } = (await fetchFn[taskOrderPrintKey]({ ...commonParams.value })) || {}
+      printLoading.value.text = `正在加入打印队列：生产任务单`
+      await codeWait(500)
+      const result = await printTable({
+        printMode: printModeEnum.QUEUE.V,
+        header,
+        footer,
+        table,
+        qrCode,
+        config
+      })
+      if (!result) {
+        throw new Error('导出失败')
+      }
+    // ---------------------------生产任务单 打印 end --------------------------------
+    }
+
     // --------------------------- 分拣单 打印 start ------------------------------
     printLoading.value.text = `正在加入打印队列：分拣单`
     await codeWait(500)
