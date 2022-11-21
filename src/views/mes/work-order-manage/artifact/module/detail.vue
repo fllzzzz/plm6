@@ -34,7 +34,7 @@
             :api-key="
               props.detailData.productType === componentTypeEnum.ARTIFACT.V
                 ? 'mesProductionTaskOrder'
-                : type === typeEnum.TASK_LIST.V
+                : listType === typeEnum.TASK_LIST.V
                 ? 'mesAssembleProductionTaskOrder'
                 : 'mesAssembleNestingOrder'
             "
