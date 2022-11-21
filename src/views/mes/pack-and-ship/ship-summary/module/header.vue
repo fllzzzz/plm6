@@ -12,7 +12,7 @@
         @change="crud.toQuery"
       />
       <common-radio-button
-        v-model="query.sendStatus"
+        v-model="query.status"
         :options="shipStatusEnum.ENUM"
         showOptionAll
         type="enum"
@@ -46,6 +46,7 @@ import Panel from '@/components/Panel'
 const defaultQuery = {
   dateTime: moment().valueOf(),
   sendStatus: undefined,
+  status: undefined,
   settled: undefined
 }
 const { crud, query } = regHeader(defaultQuery)
