@@ -360,6 +360,13 @@ export default {
           meta: { title: '退货单表', icon: 'project', noCache: true }
         },
         {
+          name: 'WMSReportRawMaterialCutSurplusReceipt',
+          path: 'report/raw-material/cut-surplus-receipt',
+          hidden: false,
+          component: '/wms/report/raw-material/cut-surplus-receipt/index',
+          meta: { title: '切割余料表', icon: 'project', noCache: true }
+        },
+        {
           name: 'WMSReportRawMaterialMaterialInventory',
           path: 'report/raw-material/material-inventory',
           hidden: false,

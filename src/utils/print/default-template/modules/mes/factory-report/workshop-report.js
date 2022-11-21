@@ -2,11 +2,11 @@ import { dataSourceEnum, alignEnum, verticleAlignEnum, fieldTypeEnum as typeEnum
 import { projectNameArrangementModeEnum } from '@/utils/enum/modules/contract'
 
 // 车间报表
-const mesWorkshopReport = {
+const mesFactoryWorkshopReport = {
   fontUnit: 'pt', // 字体单位
   unit: cssUnitEnum.MM.V, // 长度单位
   unitPrecision: cssUnitPrecisionEnum.ZERO.V, // 长度单位精度
-  type: 'mesWorkshopReport', // 表格类型 KEY
+  type: 'mesFactoryWorkshopReport', // 表格类型 KEY
   name: '车间报表清单（平台）', // 表格名称
   width: 210, // 打印纸的宽度
   height: 297, // 打印纸的高度
@@ -61,7 +61,7 @@ const mesWorkshopReport = {
   title: {
     show: true,
     allPage: false,
-    title: '车间报表清单',
+    title: '车间报表清单（平台）',
     align: alignEnum.CENTER.V,
     verticleAlign: verticleAlignEnum.CENTER.V,
     size: 17,
@@ -209,12 +209,12 @@ const mesWorkshopReport = {
       { show: true, key: 'quantity', title: '生产数', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 28, type: typeEnum.OTHER.K, sum: true },
       {
         show: true, key: 'mete', title: '总重（kg）', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 24, type: typeEnum.WEIGHT.K,
-        format: { toThousand: true, precision: 2 }, sum: true
+        format: { precision: 2 }, sum: true
       }
     ]
   }
 }
 
 export default {
-  mesWorkshopReport // 车间报表
+  mesFactoryWorkshopReport // 车间报表
 }

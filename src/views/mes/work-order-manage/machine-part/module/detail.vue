@@ -7,19 +7,29 @@
     :before-close="handleClose"
     size="60%"
   >
+    <template #titleAfter>
+      <common-radio-button
+        v-model="orderType"
+        :options="typeEnum.ENUM"
+        type="enum"
+        size="mini"
+        class="filter-item"
+      />
+    </template>
+    <template #titleRight>
+      <!-- <print-table
+        api-key="mesDrillProductionTaskOrder"
+        :params="{ ...commonParams }"
+        size="mini"
+        type="warning"
+        class="filter-item"
+      /> -->
+      <common-button size="mini" icon="el-icon-printer" type="success" @click="printIt">打印【任务单、分拣单】</common-button>
+    </template>
     <template #content>
-      <div class="head-container">
-        <common-radio-button
-          v-model="orderType"
-          :options="typeEnum.ENUM"
-          type="enum"
-          size="small"
-          class="filter-item"
-          @change="handleChange"
-        />
-      </div>
-      <div v-if="orderType === typeEnum.NESTING_TASK_ORDER.V">
+      <div v-if="orderType === typeEnum.PRODUCTION_TASK_ORDER.V">
         <common-table
+          v-loading="taskLoading"
           ref="table"
           :data="drillData"
           empty-text="暂无数据"
@@ -41,68 +51,43 @@
           <el-table-column :show-overflow-tooltip="true" prop="weight" key="weight" label="重量（kg）" align="center" />
           <el-table-column :show-overflow-tooltip="true" prop="picturePath" key="picturePath" label="图形" align="center">
             <template v-slot="scope">
-              <el-image style="width: 100%; height: 100%" :src="scope.row.picturePath" fit="cover" />
+              <el-image style="width: 100%; height: 100%" :src="scope.row.picturePath" fit="scale-down" />
             </template>
           </el-table-column>
         </common-table>
       </div>
-      <div v-if="orderType === typeEnum.SORTING_ORDER.V">
-        <common-table ref="table" :data="drillSortData" empty-text="暂无数据" :max-height="maxHeight" style="width: 100%">
-          <el-table-column :show-overflow-tooltip="true" prop="index" label="序号" align="center" width="60" type="index" />
-          <el-table-column :show-overflow-tooltip="true" prop="picturePath" key="picturePath" label="图形" align="center">
-            <template v-slot="scope">
-              <el-image style="width: 100%; height: 100%" :src="scope.row.picturePath" fit="cover" />
-            </template>
-          </el-table-column>
-          <el-table-column :show-overflow-tooltip="true" prop="serialNumber" key="serialNumber" label="编号" align="center">
-            <template v-slot="scope">
-              <span>{{ scope.row.serialNumber }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column
-            :show-overflow-tooltip="true"
-            prop="workshopLine"
-            :key="item"
-            v-for="item in workshopList"
-            :label="`${item.workShopName}>${item.productionLineName}`"
-            align="center"
-          >
-            <template v-slot="scope">
-              <span>{{ scope.row[`quantity${item.productionLineId}`] || '0' }}</span>
-            </template>
-          </el-table-column>
-        </common-table>
-        <!-- 分页 -->
-        <el-pagination
-          :total="total"
-          :current-page="queryPage.pageNumber"
-          :page-size="queryPage.pageSize"
-          style="margin-top: 8px"
-          layout="total, prev, pager, next, sizes"
-          @size-change="handleSizeChange"
-          @current-change="handleCurrentChange"
-        />
+      <div v-loading="separateLoading" v-if="orderType === typeEnum.SORTING_ORDER.V">
+        <separate-order-table :separateOrderInfo="separateOrderInfo" />
       </div>
     </template>
   </common-drawer>
 </template>
 
 <script setup>
-import useVisible from '@compos/use-visible'
-import useMaxHeight from '@compos/use-max-height'
-import usePagination from '@compos/use-pagination'
-import { sortingListEnum as typeEnum } from '@enum-ms/mes'
-import { defineProps, defineEmits, ref } from 'vue'
+import fetchFn from '@/utils/print/api'
+import { showDrillDetail, printSign } from '@/api/mes/work-order-manage/machine-part.js'
+import { defineProps, defineEmits, ref, computed } from 'vue'
+import { ElNotification, ElLoading } from 'element-plus'
+
+import { drillListEnum as typeEnum } from '@enum-ms/mes'
+import { printModeEnum } from '@/utils/print/enum'
 import { tableSummary } from '@/utils/el-extra'
 import { projectNameFormatter } from '@/utils/project'
-import { showDrillDetail, showInfo } from '@/api/mes/work-order-manage/machine-part.js'
+import { printSeparateOrderLabel } from '@/utils/print/index'
+import { codeWait } from '@/utils'
+import printTemplate from '@/utils/print/default-template'
+import { printTable } from '@/utils/print/table'
+
+import useMaxHeight from '@compos/use-max-height'
+import useVisible from '@compos/use-visible'
+import useGetSeparateOrder from '@compos/mes/work-order-manage/use-get-separate-order'
+import separateOrderTable from './separate-order-table'
 
 const emit = defineEmits(['update:visible'])
 const drawerRef = ref()
 const drillData = ref([]) // 钻孔工单详情数据
-const drillSortData = ref([]) // 钻孔分拣单
-const workshopList = ref([])
-const orderType = ref(typeEnum.NESTING_TASK_ORDER.V)
+const taskLoading = ref(false)
+const orderType = ref(typeEnum.PRODUCTION_TASK_ORDER.V)
 
 const props = defineProps({
   visible: {
@@ -125,64 +110,78 @@ const { maxHeight } = useMaxHeight(
   },
   drawerRef
 )
-const { visible: drawerVisible, handleClose } = useVisible({ emit, props, field: 'visible', showHook: drillDetailGet })
 
-const { handleSizeChange, handleCurrentChange, total, setTotalPage, queryPage } = usePagination({ fetchHook: drillingSortGet })
+const taskOrderPrintKey = 'mesDrillProductionTaskOrder'
+const commonParams = computed(() => {
+  return { cutId: props.detailData.id, processType: props.processType }
+})
+const { separateLoading, separateOrderInfo, fetchSeparateOrder } = useGetSeparateOrder(commonParams)
+const { visible: drawerVisible, handleClose } = useVisible({ emit, props, field: 'visible', showHook })
+
+async function showHook() {
+  await drillDetailGet()
+  await fetchSeparateOrder()
+}
 
 async function drillDetailGet() {
   try {
-    const data = await showDrillDetail({ cutId: props.detailData.id, processType: props.processType })
+    taskLoading.value = true
+    const data = await showDrillDetail({ ...commonParams.value })
     drillData.value = data
   } catch (error) {
     console.log('获取钻孔工单详情失败', error)
-  }
-}
-
-// 钻孔分拣单
-async function drillingSortGet() {
-  let _list = []
-  workshopList.value = []
-  try {
-    const { content = [], totalElements } = await showInfo({
-      cutId: props.detailData.id,
-      processType: props.processType,
-      ...queryPage
-    })
-    setTotalPage(totalElements)
-    content.map((v) => {
-      v.list.map((m) => {
-        if (workshopList.value.findIndex((k) => k.productionLineId === m.productionLineId) < 0) {
-          workshopList.value.push({
-            productionLineId: m.productionLineId,
-            productionLineName: m.productionLineName,
-            workShopId: m.workShopId,
-            workShopName: m.workShopName
-          })
-        }
-      })
-      v.list.map((m) => {
-        workshopList.value.map((k) => {
-          if (m.productionLineId === k.productionLineId) {
-            v[`quantity${k.productionLineId}`] = m.quantity
-          }
-        })
-      })
-    })
-    _list = content
-  } catch (error) {
-    console.log('获取钻孔分拣单失败', error)
   } finally {
-    drillSortData.value = _list
+    taskLoading.value = false
   }
 }
 
-function handleChange(val) {
-  if (val === typeEnum.SORTING_ORDER.V) {
-    drillingSortGet()
-  } else {
-    drillDetailGet()
+// --------------------------- 打印 start ------------------------------
+const printLoading = ref()
+
+async function printIt() {
+  printLoading.value = ElLoading.service({
+    lock: true,
+    text: '正在准备加入打印队列',
+    spinner: 'el-icon-loading',
+    fullscreen: true
+  })
+  try {
+    // ---------------------------生产任务单 打印 start ------------------------------
+    printLoading.value.text = `正在加载数据：生产任务单`
+    const config = printTemplate[taskOrderPrintKey]
+    const { header, footer, table, qrCode } = (await fetchFn[taskOrderPrintKey]({ ...commonParams.value })) || {}
+    printLoading.value.text = `正在加入打印队列：生产任务单`
+    await codeWait(500)
+    const result = await printTable({
+      printMode: printModeEnum.QUEUE.V,
+      header,
+      footer,
+      table,
+      qrCode,
+      config
+    })
+    if (!result) {
+      throw new Error('导出失败')
+    }
+    // ---------------------------生产任务单 打印 end --------------------------------
+    // --------------------------- 分拣单 打印 start ------------------------------
+    printLoading.value.text = `正在加入打印队列：分拣单`
+    await codeWait(500)
+    await printSeparateOrderLabel({ taskNumberOrder: props.detailData.orderNumber, separateOrderInfo: separateOrderInfo.value })
+    // --------------------------- 分拣单 打印 end --------------------------------
+    printLoading.value.text = `已全部加入打印队列`
+    await codeWait(500)
+  } catch (error) {
+    ElNotification({ title: '加入打印队列失败，请重试', type: 'error', duration: 2500 })
+    throw new Error(error)
+  } finally {
+    printLoading.value.close()
+    await printSign({ ...commonParams.value })
+    emit('refresh')
   }
 }
+
+// --------------------------- 打印 end --------------------------------
 
 // 合计
 function getSummaries(param) {
@@ -192,6 +191,4 @@ function getSummaries(param) {
 }
 </script>
 
-<style lang="scss" scoped>
-</style>
-
+<style lang="scss" scoped></style>

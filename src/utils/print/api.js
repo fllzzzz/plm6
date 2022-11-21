@@ -44,6 +44,9 @@ const scmRequisitionsDetail = supply.requisitionsDetail // 申购详情
 // mes
 const mesSchedulingDetail = mes.schedulingDetail
 const mesProductionTaskOrder = mes.productionTaskOrder
+const mesAssembleNestingOrder = mes.assembleNestingOrder
+const mesAssembleProductionTaskOrder = mes.assembleProductionTaskOrder
+const mesDrillProductionTaskOrder = mes.drillProductionTaskOrder
 
 const mesStructureProductionReport = mes.productionReport
 const mesAssemblePartProductionReport = mes.productionReport
@@ -95,7 +98,7 @@ const mesProcessList = mes.processList
 const mesProductionLineList = mes.productionLineList
 const mesWorkOrderTrackingList = mes.workOrderTrackingList
 
-const mesWorkshopReport = mes.workshopReport
+const mesFactoryWorkshopReport = mes.factoryWorkshopReport
 
 const mesStudSleeveStatisticsList = mes.studSleeveStatisticsList
 const mesProjectShipDetail = mes.mesProjectShipDetail
@@ -157,7 +160,10 @@ export default {
 
   // mes
   mesSchedulingDetail, // 工单详情
-  mesProductionTaskOrder, // 工单管理：生产任务单
+  mesProductionTaskOrder, // 工单管理：构件生产任务单
+  mesAssembleNestingOrder, // 工单管理：部件套料清单
+  mesAssembleProductionTaskOrder, // 工单管理：部件生产任务单
+  mesDrillProductionTaskOrder, // 工单管理：钻孔生产任务单
 
   mesStructureProductionReport, // 结构生产报表
   mesAssemblePartProductionReport, // 部件生产报表
@@ -209,7 +215,7 @@ export default {
   mesWorkOrderTrackingList, // 工单跟踪清单详情
   mesProcessList, // 工序呆滞清单详情
 
-  mesWorkshopReport, // 车间报表清单详情
+  mesFactoryWorkshopReport, // 车间报表清单详情
 
   mesStudSleeveStatisticsList, // 栓钉套筒统计清单详情
 

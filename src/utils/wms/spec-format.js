@@ -57,7 +57,7 @@ function steelPlateSpec(row) {
   if (isNotBlank(row.length)) {
     twl.push(row.length)
   }
-  spec.push(twl.join('*'))
+  if (isNotBlank(twl)) spec.push(twl.join('*'))
   if (isNotBlank(row.specification)) spec.push(row.specification)
   return spec.join(' * ')
 }
@@ -80,7 +80,7 @@ function steelCoilSpec(row) {
   if (isNotBlank(row.width)) {
     twl.push(row.width)
   }
-  spec.push(twl.join('*'))
+  if (isNotBlank(twl)) spec.push(twl.join('*'))
   if (isNotBlank(row.specification) && row.specificationLabels !== '无规格') spec.push(row.specification)
   if (isNotBlank(row.color)) spec.push(row.color)
   return spec.join(' * ')
@@ -115,7 +115,7 @@ function steelPlateSpecTip(row) {
   if (isNotBlank(row.length)) {
     twl.push('长(mm)')
   }
-  tip.push(twl.join('*'))
+  if (isNotBlank(twl)) tip.push(twl.join('*'))
   if (isNotBlank(row.specificationLabels) && row.specificationLabels !== '无规格') tip.push(row.specificationLabels)
   return tip.join(' * ')
 }
@@ -140,7 +140,7 @@ function steelCoilSpecTip(row) {
   if (isNotBlank(row.width)) {
     twl.push('宽(mm)')
   }
-  tip.push(twl.join('*'))
+  if (isNotBlank(twl)) tip.push(twl.join('*'))
   if (isNotBlank(row.specificationLabels) && row.specificationLabels !== '无规格') tip.push(row.specificationLabels)
   if (isNotBlank(row.color)) tip.push('颜色')
   return tip.join(' * ')

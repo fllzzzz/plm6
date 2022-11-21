@@ -299,11 +299,44 @@ export function schedulingDetail(params) {
 }
 
 /**
- * 工单管理：生产任务单
+ * 工单管理：构件生产任务单
  */
 export function productionTaskOrder(params) {
   return request({
-    url: ``,
+    url: `/api/mes/building/task/process/product/task/list/print`,
+    method: 'get',
+    params
+  })
+}
+
+/**
+ * 工单管理：部件生产任务单
+ */
+export function assembleProductionTaskOrder(params) {
+  return request({
+    url: `/api/mes/building/task/process/product/task/list/print`,
+    method: 'get',
+    params
+  })
+}
+
+/**
+ * 工单管理：部件套料清单
+ */
+export function assembleNestingOrder(params) {
+  return request({
+    url: `/api/mes/building/task/process/nesting/task/list/print`,
+    method: 'get',
+    params
+  })
+}
+
+/**
+ * 工单管理：钻孔生产任务单
+ */
+export function drillProductionTaskOrder(params) {
+  return request({
+    url: `/api/mes/building/task/order/drilling/print`,
     method: 'get',
     params
   })
@@ -434,7 +467,7 @@ export function mesProjectShipDetail(params) {
 }
 
 // 工厂报表-车间报表详情
-export function workshopReport(params) {
+export function factoryWorkshopReport(params) {
   return request({
     url: `/api/mes/building/workshop/artifact/summary/print`,
     method: 'get',
@@ -514,8 +547,10 @@ export default {
 
   // 工单管理
   schedulingDetail, // 工单详情
-  productionTaskOrder, // 工单管理：生产任务单
-
+  productionTaskOrder, // 工单管理：构件生产任务单
+  assembleNestingOrder, // // 工单管理：部件套料清单
+  assembleProductionTaskOrder, // 工单管理：部件生产任务单
+  drillProductionTaskOrder, // 工单管理： 钻孔生产任务单
   // 生产报表
   productionReport, // 生产报表
   productionStatistics, // 在制品统计
@@ -557,7 +592,7 @@ export default {
   mesProjectShipDetail, // 项目发运详情
 
   // 工厂报表-车间报表
-  workshopReport, // 车间报表详情
+  factoryWorkshopReport, // 车间报表详情
 
   // 任务跟踪
   workOrderTrackingList, // 工单跟踪报表详情

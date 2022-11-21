@@ -13,7 +13,12 @@
       <slot />
     </div>
     <div class="square-content">
-      <steel-plate-square v-if="showGraphics" :width="row.width" :length="row.length" />
+      <div v-if="showGraphics">
+        <a v-if="row.surplusGraphicsPath" download target="_blank" :href="row.surplusGraphicsPath">
+          <img :src="row.surplusGraphicsPath" style="max-height: 100px;" />
+        </a>
+        <steel-plate-square v-else :width="row.width" :length="row.length" />
+      </div>
     </div>
   </div>
 </template>

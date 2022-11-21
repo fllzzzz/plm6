@@ -15,7 +15,7 @@
     >
       <el-table-column label="序号" type="index" align="center" width="70">
         <template #default="{ row, $index }">
-          <table-cell-tag :show="row.boolPrinted" name="已打印" type="printed" />
+          <table-cell-tag :show="row.boolPrinted" color="#e64242" name="已打印" type="printed" />
           <span>{{ $index + 1 }}</span>
         </template>
       </el-table-column>
@@ -102,7 +102,7 @@
     <!--分页组件-->
     <pagination />
     <!-- 查看 -->
-    <detail v-model:visible="drawerVisible" :detail-data="detailData" />
+    <detail v-model:visible="drawerVisible" :detail-data="detailData" @refresh="crud.toQuery"/>
   </div>
 </template>
 

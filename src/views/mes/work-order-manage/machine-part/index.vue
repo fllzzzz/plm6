@@ -111,7 +111,7 @@
           <span>{{ scope.row.completeTime ? parseTime(scope.row.completeTime, '{y}-{m}-{d}') : '-' }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" :show-overflow-tooltip="true" label="操作">
+      <el-table-column align="center" :show-overflow-tooltip="true" label="操作" width="100">
         <template v-slot="scope">
           <common-button
             v-if="crud.query.processType === mesMachinePartOrderTypeEnum.DRILL_ORDER.V"
@@ -121,7 +121,6 @@
             >查看</common-button
           >
           <common-button v-else type="primary" size="mini" @click="showCuttingDetail(scope.row)">查看</common-button>
-          <common-button type="success" size="mini" @click="beforePrintLabel(scope.row)">打印</common-button>
         </template>
       </el-table-column>
     </common-table>
@@ -134,6 +133,7 @@
       :process-type="crud.query.processType"
       v-model:visible="cuttingDrawerVisible"
       :cutting-detail-data="cuttingDetailData"
+      @refresh="crud.toQuery"
     />
   </div>
 </template>
@@ -188,11 +188,6 @@ function showCuttingDetail(row) {
 function showDrill(row) {
   drawerVisible.value = true
   detailData.value = row
-}
-
-// 打印
-function beforePrintLabel(row) {
-
 }
 
 CRUD.HOOK.handleRefresh = (crud, res) => {

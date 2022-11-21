@@ -102,6 +102,15 @@ const transferCreateTypeEnum = {
 }
 constantize(transferCreateTypeEnum)
 
+// 出库关联类型
+const outboundRelationTypeEnum = {
+  ROUTINE: { L: '常规', K: 'ROUTINE', V: 1 << 0 },
+  TRANSFER: { L: '调拨', K: 'TRANSFER', V: 1 << 1 },
+  CUT: { L: '切割', K: 'CUT', V: 1 << 2 },
+  CUT_TRANSFER: { L: '切割调拨', K: 'CUT_TRANSFER', V: 1 << 3 }
+}
+constantize(outboundRelationTypeEnum)
+
 // 借用归还状态
 const borrowReturnStatusEnum = {
   NOT_RETURNED: { L: '未归还完', K: 'SELF', V: 1 << 0 },
@@ -146,7 +155,8 @@ const materialFreezeTypeEnum = {
   PREPARATION: receiptTypeEnum.PREPARATION,
   OUTBOUND_APPLY: { L: '出库', K: 'OUTBOUND_APPLY', V: receiptTypeEnum.OUTBOUND_APPLY.V, DOC: '出库申请单' },
   TRANSFER: receiptTypeEnum.TRANSFER,
-  REJECTED: receiptTypeEnum.REJECTED
+  REJECTED: receiptTypeEnum.REJECTED,
+  NESTING: { L: '套料', K: 'NESTING', V: 18, DOC: '套料工单' }
 }
 constantize(materialFreezeTypeEnum)
 
@@ -231,6 +241,7 @@ export {
   orderSupplyTypeEnum,
   partyAMatTransferEnum,
   borrowReturnStatusEnum,
+  outboundRelationTypeEnum,
   preparationTypeEnum,
   baseMaterialTypeEnum,
   purchaseStatusEnum,
@@ -261,6 +272,7 @@ export default {
   orderSupplyTypeEnum,
   partyAMatTransferEnum,
   borrowReturnStatusEnum,
+  outboundRelationTypeEnum,
   preparationTypeEnum,
   baseMaterialTypeEnum,
   purchaseStatusEnum,

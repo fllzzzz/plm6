@@ -432,6 +432,54 @@ export default {
     ]
   },
   {
+    path: '/mes/work-order-manage',
+    component: 'Layout',
+    hidden: false,
+    name: 'MesWorkOrderManage',
+    alwaysShow: true,
+    redirect: '/mes/work-order-manage/artifact',
+    meta: {
+      title: '工单管理',
+      icon: 'project',
+      noCache: true
+    },
+    children: [
+      {
+        name: 'MesWorkOrderArtifact',
+        path: 'artifact',
+        hidden: false,
+        component: '/mes/work-order-manage/artifact/index',
+        meta: {
+          title: '结构工单',
+          icon: 'project',
+          noCache: true
+        }
+      },
+      {
+        name: 'MesMachinePartOrder',
+        path: 'machinePart',
+        hidden: false,
+        component: '/mes/work-order-manage/machine-part/index',
+        meta: {
+          title: '零件工单',
+          icon: 'project',
+          noCache: true
+        }
+      }
+      // {
+      //   name: 'MesSchedulingMachinePart',
+      //   path: 'scheduling/machine-part',
+      //   hidden: false,
+      //   component: '/mes/scheduling-manage/machine-part/index',
+      //   meta: {
+      //     title: '零件排产',
+      //     icon: 'project',
+      //     noCache: true
+      //   }
+      // }
+    ]
+  },
+  {
     path: '/mes/task-tracking',
     component: 'Layout',
     hidden: false,
@@ -523,54 +571,6 @@ export default {
           }
         ]
       }
-    ]
-  },
-  {
-    path: '/mes/work-order-manage',
-    component: 'Layout',
-    hidden: false,
-    name: 'MesWorkOrderManage',
-    alwaysShow: true,
-    redirect: '/mes/work-order-manage/artifact',
-    meta: {
-      title: '工单管理',
-      icon: 'project',
-      noCache: true
-    },
-    children: [
-      {
-        name: 'MesWorkOrderArtifact',
-        path: 'artifact',
-        hidden: false,
-        component: '/mes/work-order-manage/artifact/index',
-        meta: {
-          title: '结构工单',
-          icon: 'project',
-          noCache: true
-        }
-      },
-      {
-        name: 'MesMachinePartOrder',
-        path: 'machinePart',
-        hidden: false,
-        component: '/mes/work-order-manage/machine-part/index',
-        meta: {
-          title: '零件工单',
-          icon: 'project',
-          noCache: true
-        }
-      }
-      // {
-      //   name: 'MesSchedulingMachinePart',
-      //   path: 'scheduling/machine-part',
-      //   hidden: false,
-      //   component: '/mes/scheduling-manage/machine-part/index',
-      //   meta: {
-      //     title: '零件排产',
-      //     icon: 'project',
-      //     noCache: true
-      //   }
-      // }
     ]
   },
   {

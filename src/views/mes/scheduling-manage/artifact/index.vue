@@ -281,6 +281,7 @@ const handleAreaClick = debounce(function (nodes = []) {
     _workshopIds.push(nodes[x].workshopId)
   }
   crud.query.areaIdList = _areaIds
+  crud.query.structureClassId = undefined
   curAreaIdObj.value = _areaIdObj
   curFactoryIds.value = _factoryIds
   curWorkshopIds.value = _workshopIds

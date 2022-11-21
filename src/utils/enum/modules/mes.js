@@ -514,7 +514,7 @@ const fileNC1TypeEnum = {
 }
 constantize(fileNC1TypeEnum)
 
-// 零件工单
+// 切割工单
 const sortingListEnum = {
   NESTING_TASK_ORDER: { L: '套料任务单', K: 'NESTING_TASK_ORDER', V: 1 },
   SORTING_ORDER: { L: '分拣单', K: 'SORTING_ORDER', V: 2 }
@@ -529,6 +529,19 @@ const productSearchTypeEnum = {
   STOCK: { L: '库存', K: 'STOCK', V: 4 }
 }
 constantize(productSearchTypeEnum)
+// 钻孔工单
+const drillListEnum = {
+  PRODUCTION_TASK_ORDER: { L: '生产任务单', K: 'PRODUCTION_TASK_ORDER', V: 1 },
+  SORTING_ORDER: { L: '分拣单', K: 'SORTING_ORDER', V: 2 }
+}
+constantize(drillListEnum)
+
+// 结构工单
+const structureOrderTypeEnum = {
+  ASSEMBLE: { L: '部件', K: 'ASSEMBLE', V: 1 << 4, T: 'warning' },
+  NESTING: { L: '套料', K: 'NESTING', V: 1 << 5, T: 'success' }
+}
+constantize(structureOrderTypeEnum)
 
 export {
   teamTypeEnum,
@@ -596,7 +609,9 @@ export {
   taskTypeENUM,
   fileNC1TypeEnum,
   sortingListEnum,
-  productSearchTypeEnum
+  productSearchTypeEnum,
+  drillListEnum,
+  structureOrderTypeEnum
 }
 
 export default {
@@ -665,5 +680,7 @@ export default {
   taskTypeENUM,
   fileNC1TypeEnum,
   sortingListEnum,
-  productSearchTypeEnum
+  productSearchTypeEnum,
+  drillListEnum,
+  structureOrderTypeEnum
 }
