@@ -90,9 +90,9 @@
             </common-button>
           </template>
         </el-popconfirm>
-        <common-button type="danger" size="mini" :loading="deleteLoading" class="filter-item" @click="deleteVisible=true" :disabled="crud.selections.length === 0" v-if="currentArea && currentArea.id && checkPermission(crud.permission.del)">
+        <!-- <common-button type="danger" size="mini" :loading="deleteLoading" class="filter-item" @click="deleteVisible=true" :disabled="crud.selections.length === 0" v-if="currentArea && currentArea.id && checkPermission(crud.permission.del)">
           部分删除
-        </common-button>
+        </common-button> -->
       </template>
       <template #viewLeft>
         <el-tooltip effect="light" :content="`${mismatchList.join(',')}`" placement="top">

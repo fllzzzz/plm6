@@ -104,7 +104,7 @@
 <script setup>
 import { ref, defineProps, defineEmits, watch, computed } from 'vue'
 import { scheduleDetail, updateSchedule } from '@/api/mes/production-order-manage/production-order'
-import { ElNotification, ElMessage } from 'element-plus'
+import { ElNotification, ElMessage, ElMessageBox } from 'element-plus'
 
 import useMaxHeight from '@compos/use-max-height'
 import useProductLines from '@compos/store/use-product-lines'
@@ -314,7 +314,11 @@ async function onSubmit() {
   submitLoading.value = true
   try {
     const submitData = []
+    let isTimeGreater = false
     list.value.map(v => {
+      if (v.closingDate && v.endDate > v.closingDate) {
+        isTimeGreater = true
+      }
       const val = originData.value.find(k => k.areaId === v.areaId)
       if (!judgeSameValue(val.endDate, v.endDate) || !judgeSameValue(val.line, v.line)) {
         submitData.push({
@@ -331,7 +335,15 @@ async function onSubmit() {
     })
     if (!submitData.length) {
       ElMessage.error('请至少提交或更改一条信息')
+      submitLoading.value = false
       return
+    }
+    if (isTimeGreater) {
+      await ElMessageBox.confirm('排期计划大于项目主计划，是否继续？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      })
     }
     await updateSchedule(submitData)
     submitLoading.value = false
@@ -341,8 +353,6 @@ async function onSubmit() {
   } catch (error) {
     submitLoading.value = false
     console.log('生产订单排期', error)
-  } finally {
-    submitLoading.value = false
   }
 }
 
