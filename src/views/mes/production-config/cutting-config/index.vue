@@ -25,8 +25,8 @@
       >
       <template #default="{ row }">
          <table-cell-tag
-            :name="layOffWayTypeEnum.VL[row.materialFeederEnum]"
-            :color="layOffWayTypeEnum.V[row.materialFeederEnum].COLOR"
+            :name="layOffWayTypeEnum.VL[row.boolNestCutEnum]"
+            :color="layOffWayTypeEnum.V[row.boolNestCutEnum].COLOR"
             :offset="15"
           />
           <span>{{ row.name}}</span>

@@ -17,10 +17,10 @@
       </span>
     </template>
     <el-form ref="formRef" :model="form" :rules="rules" size="small" label-width="135px">
-      <el-form-item prop="materialFeederEnum" label="下料方式">
+      <el-form-item prop="boolNestCutEnum" label="下料方式">
         <common-radio
           class="filter-item"
-          v-model="form.materialFeederEnum"
+          v-model="form.boolNestCutEnum"
           :options="layOffWayTypeEnum.ENUM"
           type="enum"
           size="small"
@@ -65,13 +65,13 @@ const formRef = ref()
 const defaultForm = {
   id: undefined,
   name: undefined,
-  materialFeederEnum: undefined
+  boolNestCutEnum: undefined
 }
 
 const { crud, CRUD, form } = regForm(defaultForm, formRef)
 
 const rules = {
-  materialFeederEnum: [
+  boolNestCutEnum: [
     { required: true, message: '请选择下料方式', trigger: 'blur' }
   ],
   name: [
