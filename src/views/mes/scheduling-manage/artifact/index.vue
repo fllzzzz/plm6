@@ -12,9 +12,7 @@
               <common-button type="success" size="mini" @click="previewIt">预览并保存</common-button>
             </template>
             <template #viewLeft>
-              <el-tag size="medium" effect="plain" style="margin-right: 5px">
-                数量(件)：{{ summaryInfo.quantity || 0 }}
-              </el-tag>
+              <el-tag size="medium" effect="plain" style="margin-right: 5px"> 数量(件)：{{ summaryInfo.quantity || 0 }} </el-tag>
               <el-tag size="medium" effect="plain" style="margin-right: 10px">
                 重量(kg)：{{ summaryInfo.totalNetWeight?.toFixed(2) || 0 }}
               </el-tag>
@@ -80,13 +78,22 @@
           >
             <template #default="{ row: { sourceRow: row }, $index }">
               <el-cascader
+                :ref="(el) => (cascaderRef[$index] = el)"
                 v-model="row.groupsId"
                 :options="groupsTree"
-                :props="{ value: 'id', label: 'name', children: 'children', expandTrigger: 'hover', emitPath: false }"
+                :props="{
+                  value: 'id',
+                  label: 'name',
+                  children: 'children',
+                  expandTrigger: 'hover',
+                  emitPath: false,
+                }"
                 :show-all-levels="false"
                 filterable
                 clearable
                 :placeholder="$index === 0 ? '请选择生产组' : '同上'"
+                @expand-change="handleExpandChange($event, row, $index, cascaderRef[$index])"
+                @focus="handleFocusChange($event, row, $index, cascaderRef[$index])"
                 @change="handleGroupsChange($event, row, $index)"
               />
             </template>
@@ -199,6 +206,7 @@ const { crud, columns, CRUD } = useCRUD(
 
 const { maxHeight, heightStyle } = useMaxHeight({ paginate: true })
 
+const cascaderRef = ref([])
 const summaryInfo = ref({})
 const queryParams = computed(() => {
   return {
@@ -209,6 +217,34 @@ const queryParams = computed(() => {
 const { getCurGroupsTree, groupsTree, groupsObj } = useSchedulingGroups({ queryParams, factoryIds: curFactoryIds })
 provide('areaIdObj', curAreaIdObj)
 provide('curFactoryIds', curFactoryIds)
+
+// --------------------------- 设置级联数据默认展开第一个【防止面板跳来跳去】 start ------------------------------
+
+function handleFocusChange(expend, row, index, curCascaderRef) {
+  if (!row.groupsId || row.groupsId === '同上') {
+    const menus = curCascaderRef.panel.menuList[0]
+    setCascaderExpandNode(menus, menus.nodes[0])
+  }
+}
+
+function setCascaderExpandNode(menus, node) {
+  if (!node.isLeaf) {
+    menus.panel.expandNode(node, true)
+    if (!node.children[0].isLeaf) {
+      setCascaderExpandNode(menus, node.children[0])
+    }
+  }
+}
+
+function handleExpandChange(expend, row, index, curCascaderRef) {
+  const menus = curCascaderRef.panel.menuList[0]
+  const curExpandingNode = menus.panel.expandingNode
+  if (!curExpandingNode.children[0].isLeaf) {
+    setCascaderExpandNode(menus, curExpandingNode.children[0])
+  }
+}
+
+// --------------------------- 设置级联数据默认展开第一个【防止面板跳来跳去】 end --------------------------------
 
 const tableRules = {
   needSchedulingQuantity: [
@@ -243,7 +279,7 @@ CRUD.HOOK.handleRefresh = (crud, res) => {
 
 async function fetchSummary() {
   try {
-    summaryInfo.value = await getSummary(crud.query) || {}
+    summaryInfo.value = (await getSummary(crud.query)) || {}
   } catch (error) {
     console.log(error, '获取汇总信息')
   }
