@@ -457,6 +457,16 @@ const projectNestingStatusEnum = {
 }
 constantize(projectNestingStatusEnum)
 
+// 型材套料成果 下发状态
+const MesBuildingTypesettingStatusEnum = {
+  UNCONFIRMED: { L: '待确认', K: 'UNCONFIRMED', V: 1 << 0, T: '' },
+  COMPLETE: { L: '套料完成', K: 'COMPLETE', V: 1 << 1, T: 'success' },
+  EXPIRED: { L: '已过期', K: 'EXPIRED', V: 1 << 2, T: 'info' },
+  ISSUED: { L: '已下发', K: 'ISSUED', V: 1 << 3, T: 'warning' },
+  PRODUCTION: { L: '生产中', K: 'PRODUCTION', V: 1 << 4, T: 'danger' }
+}
+constantize(MesBuildingTypesettingStatusEnum)
+
 // 型材套料成果/套料文件
 const nestingFileTypeEnum = {
   NESTING_FILE: { L: '套料文件', K: 'NESTING_FILE', V: 0 },
@@ -599,6 +609,7 @@ export {
   artifactSpecReviseEnum,
   taskTrackingSchedulingStatusEnum,
   projectNestingStatusEnum,
+  MesBuildingTypesettingStatusEnum,
   nestingFileTypeEnum,
   nestingSettingTypeEnum,
   mesBuildingTypeSettingAssembleTypeEnum,
@@ -670,6 +681,7 @@ export default {
   artifactSpecReviseEnum,
   taskTrackingSchedulingStatusEnum,
   projectNestingStatusEnum,
+  MesBuildingTypesettingStatusEnum,
   nestingFileTypeEnum,
   nestingSettingTypeEnum,
   mesBuildingTypeSettingAssembleTypeEnum,
