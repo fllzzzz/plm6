@@ -4,40 +4,24 @@
       v-model="query.workShopId"
       placeholder="请选择车间"
       :factory-id="query.factoryId"
-      style="width: 200px"
+      style="width: 300px"
       class="filter-item"
       default
-      @change="workShopChange"
-    />
-    <common-radio-button
-      v-model="query.searchProductType"
-      :options="[processMaterialListTypeEnum.ARTIFACT, processMaterialListTypeEnum.MACHINE_PART]"
-      class="filter-item"
-      type="enum"
-      @change="searchChange"
+      @change="crud.toQuery"
     />
   </div>
 </template>
 
 <script setup>
 import { regHeader } from '@compos/use-crud'
-import { processMaterialListTypeEnum } from '@enum-ms/mes'
 import workshopSelect from '@comp-mes/workshop-select'
 
 const defaultQuery = {
-  workShopId: undefined,
-  searchProductType: processMaterialListTypeEnum.ARTIFACT.V
+  workShopId: undefined
 }
 
 const { crud, query } = regHeader(defaultQuery)
-function searchChange() {
-  crud.query.productType = undefined
-  crud.toQuery()
-}
-function workShopChange() {
-  crud.query.productionLineId = undefined
-  crud.toQuery()
-}
+
 </script>
 
 <style>

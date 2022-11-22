@@ -44,7 +44,7 @@
           </template>
         </el-table-column>
         <el-table-column label="序号" type="index" align="center" width="60" />
-        <el-table-column key="serialNumber" prop="serialNumber" :show-overflow-tooltip="true" label="套料编号" align="center" width="180px">
+        <el-table-column key="serialNumber" prop="serialNumber" :show-overflow-tooltip="true" label="套料编号" align="center" width="120px">
           <template v-slot="scope">
             <span>{{ scope.row.serialNumber }}</span>
           </template>
@@ -93,7 +93,7 @@
             <span>{{ scope.row.typesettingAssembleTypeEnum ? materialTypeEnum.VL[scope.row.typesettingAssembleTypeEnum] : '-' }}</span>
           </template>
         </el-table-column>
-        <el-table-column key="length" prop="length" :show-overflow-tooltip="true" label="母材长度（mm）" align="center" width="130px">
+        <el-table-column key="length" prop="length" :show-overflow-tooltip="true" label="母材长度（mm）" align="center" width="120px">
           <template v-slot="scope">
             <span v-if="scope.row.typesettingTypeEnum === nestingSettingTypeEnum.UN_LOSSY.V">-</span>
             <span v-else>{{ scope.row.length }}</span>
@@ -111,7 +111,7 @@
             <span>{{ scope.row.specification }}</span>
           </template>
         </el-table-column>
-        <el-table-column key="material" prop="material" :show-overflow-tooltip="true" label="材质" align="center" width="110px">
+        <el-table-column key="material" prop="material" :show-overflow-tooltip="true" label="材质" align="center" width="80px">
           <template v-slot="scope">
             <span>{{ scope.row.material }}</span>
           </template>
@@ -133,15 +133,20 @@
           :show-overflow-tooltip="true"
           label="套料长度（mm）"
           align="center"
-          width="130px"
+          width="120px"
         >
           <template v-slot="scope">
             <span>{{ scope.row.typesettingLength }}</span>
           </template>
         </el-table-column>
-        <el-table-column key="lossRate" prop="lossRate" :show-overflow-tooltip="true" label="损耗" align="center">
+        <el-table-column key="lossRate" prop="lossRate" :show-overflow-tooltip="true" label="损耗" align="center" width="60px">
           <template v-slot="scope">
             <span>{{ scope.row.lossRate }}%</span>
+          </template>
+        </el-table-column>
+        <el-table-column key="statusEnum" prop="statusEnum" :show-overflow-tooltip="true" label="状态" align="center">
+          <template v-slot="scope">
+            <el-tag :type="typeEnum.V[scope.row.statusEnum].T">{{ typeEnum.VL[scope.row.statusEnum] }}</el-tag>
           </template>
         </el-table-column>
       </common-table>
@@ -156,7 +161,7 @@ import { getLightColor } from '@/utils/color'
 import { nestingProgress } from '@/api/mes/craft-manage/section-steel/nesting-setting'
 import { getMaterialList, getMaterialListExcelFn } from '@/api/mes/craft-manage/section-steel/nesting-result'
 import { ref, defineProps, defineEmits } from 'vue'
-import { nestingFileTypeEnum, mesBuildingTypeSettingAssembleTypeEnum as materialTypeEnum, nestingSettingTypeEnum } from '@enum-ms/mes'
+import { nestingFileTypeEnum, mesBuildingTypeSettingAssembleTypeEnum as materialTypeEnum, nestingSettingTypeEnum, MesBuildingTypesettingStatusEnum as typeEnum } from '@enum-ms/mes'
 import ExportButton from '@comp-common/export-button/index.vue'
 
 const nestingProgressData = ref([])

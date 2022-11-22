@@ -33,6 +33,17 @@ export function processSluggish(params) {
     params
   })
 }
+/**
+ * @description: 获取车间下的所有工序
+ */
+export function getAllProcess(params) {
+  return request({
+    module: 'mes',
+    url: 'task/process/dull/process',
+    method: 'get',
+    params
+  })
+}
 
 export default { get }
 

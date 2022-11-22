@@ -84,7 +84,7 @@
         </el-table-column>
         <el-table-column key="statusIssueEnum" prop="statusIssueEnum" :show-overflow-tooltip="true" label="状态" align="center">
           <template #default="{ row }">
-            <el-tag :type="taskIssueTypeEnum.V[row.statusIssueEnum].T">{{ taskIssueTypeEnum.VL[row.statusIssueEnum] }}</el-tag>
+            <el-tag :type="typeEnum.V[row.statusIssueEnum].T">{{ typeEnum.VL[row.statusIssueEnum] }}</el-tag>
           </template>
         </el-table-column>
         <el-table-column :show-overflow-tooltip="true" label="操作" min-width="150px" align="center">
@@ -92,7 +92,7 @@
             <common-button type="primary" size="mini" @click="views(row)">查看</common-button>
             <el-popconfirm confirm-button-text="确定" cancel-button-text="取消" title="确定下发吗?" @confirm="issued(row)">
               <template #reference>
-                <common-button size="mini" type="success" :disabled="row.statusIssueEnum === taskIssueTypeEnum.HAS_ISSUED.V">
+                <common-button size="mini" type="success" :disabled="row.statusIssueEnum === typeEnum.ISSUED.V">
                   下发
                 </common-button>
               </template>
@@ -105,7 +105,7 @@
               @confirm="delNestingResult(row)"
             >
               <template #reference>
-                <common-button size="mini" type="danger" :disabled="row.statusIssueEnum === taskIssueTypeEnum.HAS_ISSUED.V">
+                <common-button size="mini" type="danger" :disabled="row.statusIssueEnum === typeEnum.ISSUED.V && row.statusIssueEnum === typeEnum.PRODUCTION.V">
                   删除
                 </common-button>
               </template>
@@ -124,7 +124,7 @@ import { nestingBatchList } from '@/api/mes/craft-manage/section-steel/nesting-r
 
 import useMaxHeight from '@compos/use-max-height'
 import { ElMessageBox, ElNotification } from 'element-plus'
-import { taskIssueTypeEnum } from '@enum-ms/mes'
+import { MesBuildingTypesettingStatusEnum as typeEnum } from '@enum-ms/mes'
 import { nestingBatchIssued, nestingBatchDel } from '@/api/mes/craft-manage/section-steel/nesting-result'
 import nestingFile from '../nesting-file/index.vue'
 
@@ -145,7 +145,7 @@ const handleSelectionData = ref([])
 const batchList = ref([])
 
 watch(
-  () => props.batchRow.id,
+  () => props.batchRow?.id,
   (val) => {
     if (val) {
       fetchData()
@@ -155,11 +155,11 @@ watch(
 )
 
 async function fetchData() {
-  if (!props.batchRow.id) {
+  if (!props.batchRow?.id) {
     return
   }
   try {
-    const { content } = await nestingBatchList({ id: props.batchRow.id })
+    const { content } = await nestingBatchList({ id: props.batchRow?.id })
     batchList.value = content
   } catch (error) {
     console.log('获取套料批次数据失败')
@@ -167,7 +167,7 @@ async function fetchData() {
 }
 
 function selectable(row, rowIndex) {
-  return row.statusIssueEnum === taskIssueTypeEnum.NOT_ISSUED.V
+  return row.statusIssueEnum === typeEnum.COMPLETE.V
 }
 // 选中进行批量操作
 function handleSelectionChange(val) {

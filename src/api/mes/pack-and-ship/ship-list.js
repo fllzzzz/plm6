@@ -36,6 +36,17 @@ export function getSummaryShipMete(params) {
     params
   })
 }
+/**
+ * 当年/当月发运记录汇总
+ */
+export function getSummaryMonthMete(params) {
+  return request({
+    module: 'mes',
+    url: 'cargo/yearAndMonth/summary',
+    method: 'get',
+    params
+  })
+}
 
 /**
  * 下载物流详单

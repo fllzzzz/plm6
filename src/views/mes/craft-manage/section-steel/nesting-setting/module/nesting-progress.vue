@@ -1,8 +1,17 @@
 <template>
   <!-- 套料进度 -->
-  <common-dialog width="100%" :show-close="false" modal fullscreen title="套料成果" append-to-body v-model="dialogVisible" :before-close="handleClose">
+  <common-dialog
+    width="100%"
+    :show-close="false"
+    modal
+    fullscreen
+    title="套料成果"
+    append-to-body
+    v-model="dialogVisible"
+    :before-close="handleClose"
+  >
     <template #titleRight>
-       <common-button @click.stop="handleClose" class="filter-item" type="success" size="mini">确认</common-button>
+      <common-button @click.stop="handleClose" class="filter-item" type="success" size="mini">确认</common-button>
       <common-button @click.stop="delNesting" class="filter-item" type="danger" size="mini">删除</common-button>
     </template>
     <common-table
@@ -39,7 +48,12 @@
                   </div>
                 </el-tooltip>
               </template>
-              <el-tooltip v-if="scope.row.typesettingTypeEnum === nestingSettingTypeEnum.LOSSY.V" effect="dark" content="余料" placement="top-start">
+              <el-tooltip
+                v-if="scope.row.typesettingTypeEnum === nestingSettingTypeEnum.LOSSY.V"
+                effect="dark"
+                content="余料"
+                placement="top-start"
+              >
                 <div class="shadow" style="flex: 1"></div>
               </el-tooltip>
             </div>
@@ -102,13 +116,22 @@
           <span>{{ scope.row.lossRate }}%</span>
         </template>
       </el-table-column>
+      <!-- <el-table-column key="statusEnum" prop="statusEnum" :show-overflow-tooltip="true" label="状态" align="center">
+        <template v-slot="scope">
+          <el-tag :type="typeEnum.V[scope.row.statusEnum].T">{{ typeEnum.VL[scope.row.statusEnum] }}</el-tag>
+        </template>
+      </el-table-column> -->
     </common-table>
   </common-dialog>
 </template>
 <script setup>
 import { ref, defineProps, defineEmits } from 'vue'
 import { nestingProgress, delNestingResult } from '@/api/mes/craft-manage/section-steel/nesting-setting'
-import { mesBuildingTypeSettingAssembleTypeEnum as materialTypeEnum, nestingSettingTypeEnum } from '@enum-ms/mes'
+import {
+  mesBuildingTypeSettingAssembleTypeEnum as materialTypeEnum,
+  nestingSettingTypeEnum,
+  MesBuildingTypesettingStatusEnum as typeEnum
+} from '@enum-ms/mes'
 import { ElMessageBox, ElNotification } from 'element-plus'
 import { getLightColor } from '@/utils/color'
 import useVisible from '@compos/use-visible'
