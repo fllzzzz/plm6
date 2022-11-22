@@ -88,6 +88,7 @@
           :show-overflow-tooltip="true"
           label="材料属性"
           align="center"
+          width="110px"
         >
           <template v-slot="scope">
             <span>{{ scope.row.typesettingAssembleTypeEnum ? materialTypeEnum.VL[scope.row.typesettingAssembleTypeEnum] : '-' }}</span>
@@ -105,24 +106,24 @@
           :show-overflow-tooltip="true"
           label="母材规格"
           align="center"
-          min-width="150px"
+          min-width="110px"
         >
           <template v-slot="scope">
             <span>{{ scope.row.specification }}</span>
           </template>
         </el-table-column>
-        <el-table-column key="material" prop="material" :show-overflow-tooltip="true" label="材质" align="center" width="80px">
+        <el-table-column key="material" prop="material" :show-overflow-tooltip="true" label="材质" align="center">
           <template v-slot="scope">
             <span>{{ scope.row.material }}</span>
           </template>
         </el-table-column>
-        <el-table-column key="netWeight" prop="netWeight" :show-overflow-tooltip="true" label="母材总重" align="center">
+        <el-table-column key="netWeight" prop="netWeight" :show-overflow-tooltip="true" label="母材总重" align="center" width="100px">
           <template v-slot="scope">
             <span v-if="scope.row.typesettingTypeEnum === nestingSettingTypeEnum.UN_LOSSY.V">-</span>
             <span v-else>{{ scope.row.netWeight }}</span>
           </template>
         </el-table-column>
-        <el-table-column key="quantity" prop="quantity" :show-overflow-tooltip="true" label="数量" align="center" width="60px">
+        <el-table-column key="quantity" prop="quantity" :show-overflow-tooltip="true" label="数量" align="center" width="80px">
           <template v-slot="scope">
             <span>{{ scope.row.quantity }}</span>
           </template>
@@ -139,12 +140,12 @@
             <span>{{ scope.row.typesettingLength }}</span>
           </template>
         </el-table-column>
-        <el-table-column key="lossRate" prop="lossRate" :show-overflow-tooltip="true" label="损耗" align="center" width="60px">
+        <el-table-column key="lossRate" prop="lossRate" :show-overflow-tooltip="true" label="损耗" align="center" width="80px">
           <template v-slot="scope">
             <span>{{ scope.row.lossRate }}%</span>
           </template>
         </el-table-column>
-        <el-table-column key="statusEnum" prop="statusEnum" :show-overflow-tooltip="true" label="状态" align="center">
+        <el-table-column  v-if="nestingFileType === nestingFileTypeEnum.NESTING_FILE.V" key="statusEnum" prop="statusEnum" :show-overflow-tooltip="true" label="状态" align="center">
           <template v-slot="scope">
             <el-tag :type="typeEnum.V[scope.row.statusEnum].T">{{ typeEnum.VL[scope.row.statusEnum] }}</el-tag>
           </template>
