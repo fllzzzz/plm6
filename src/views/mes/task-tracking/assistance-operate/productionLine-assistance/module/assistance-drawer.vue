@@ -194,7 +194,7 @@ const { visible: drawerVisible, handleClose } = useVisible({ emit, props, field:
 // 高度
 const { maxHeight } = useMaxHeight(
   {
-    extraBox: ['.el-drawer__header'],
+    extraBox: ['.el-drawer__header', '.tip', '.head-container'],
     wrapperBox: ['.el-drawer__body'],
     navbar: false,
     clientHRepMainH: true

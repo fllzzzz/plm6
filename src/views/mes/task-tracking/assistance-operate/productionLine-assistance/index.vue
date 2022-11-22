@@ -77,14 +77,14 @@
         align="center"
         prop="quantity"
         :show-overflow-tooltip="true"
-        label="总量（件/kg）"
+        label="可协同量（件/kg）"
         width="135px"
       >
         <template #default="{ row }">
           <span>{{ row.quantity }} / {{ row.totalNetWeight }}</span>
         </template>
       </el-table-column>
-      <el-table-column
+      <!-- <el-table-column
         v-if="columns.visible('completeQuantity')"
         align="center"
         prop="completeQuantity"
@@ -107,7 +107,7 @@
         <template #default="{ row }">
           <span>{{ row.completeRatio }}%</span>
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column
         v-if="columns.visible('user.name') && !(crud.query.taskTypeEnum & taskTypeENUM.MACHINE_PART.V)"
         align="center"

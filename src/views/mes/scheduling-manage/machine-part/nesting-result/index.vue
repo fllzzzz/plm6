@@ -134,7 +134,7 @@
         <!--分页组件-->
         <!-- <pagination /> -->
       </template>
-      <preview-dialog v-model:visible="previewVisible" :list="submitList" @success="handleIssueSuccess"/>
+      <preview-dialog v-model:visible="previewVisible" :list="submitList" :info="currentNesting" @success="handleIssueSuccess"/>
     </div>
   </div>
 </template>

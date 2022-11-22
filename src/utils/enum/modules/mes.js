@@ -527,8 +527,8 @@ constantize(fileNC1TypeEnum)
 // 切割工单
 const sortingListEnum = {
   NESTING_TASK_ORDER: { L: '套料任务单', K: 'NESTING_TASK_ORDER', V: 1 },
-  SORTING_ORDER: { L: '分拣单', K: 'SORTING_ORDER', V: 2 },
-  PRODUCTION_TASK_ORDER: { L: '生产任务单', K: 'PRODUCTION_TASK_ORDER', V: 3 }
+  PRODUCTION_TASK_ORDER: { L: '生产任务单', K: 'PRODUCTION_TASK_ORDER', V: 3 },
+  SORTING_ORDER: { L: '分拣单', K: 'SORTING_ORDER', V: 2 }
 }
 constantize(sortingListEnum)
 
