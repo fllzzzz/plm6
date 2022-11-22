@@ -13,12 +13,12 @@
               class="show-detail"
               v-for="m in item?.arr"
               :key="m"
-              style="background-color: #e6a23c; margin: 0 20px 10px 0"
+              style="background-color: #e6a23c; margin: 0 15px 10px 0"
               @click="layOffDetail(m)"
             >
               <span class="process-way">{{ m.process?.name }}</span>
               <el-divider style="margin: 0" />
-              <span class="process-data">{{ m.quantity }}/{{ m.mete }}</span>
+              <span class="process-data">{{ m.quantity }}/{{ convertUnits(m.mete, 'kg', 't', DP.COM_WT__T) }}</span>
             </div>
           </div>
         </div>
@@ -32,12 +32,12 @@
               class="show-detail"
               v-for="m in item?.arr"
               :key="m"
-              style="background-color: #409eff; margin: 0 20px 10px 0"
+              style="background-color: #409eff; margin: 0 15px 10px 0"
               @click="layOffDetail(m)"
             >
               <span class="process-way">{{ m.process?.name }}</span>
               <el-divider style="margin: 0" />
-              <span class="process-data">{{ m.quantity }}/{{ m.mete }}</span>
+              <span class="process-data">{{ m.quantity }}/{{ convertUnits(m.mete, 'kg', 't', DP.COM_WT__T) }}</span>
             </div>
           </div>
         </div>
@@ -51,12 +51,12 @@
               class="show-detail"
               v-for="m in item?.arr"
               :key="m"
-              style="background-color: #67c23a; margin: 0 20px 10px 0"
+              style="background-color: #67c23a; margin: 0 15px 10px 0"
               @click="layOffDetail(m)"
             >
               <span class="process-way">{{ m.process?.name }}</span>
               <el-divider style="margin: 0" />
-              <span class="process-data">{{ m.quantity }}/{{ m.mete }}</span>
+              <span class="process-data">{{ m.quantity }}/{{ convertUnits(m.mete, 'kg', 't', DP.COM_WT__T) }}</span>
             </div>
           </div>
         </div>
@@ -69,6 +69,8 @@
 import { ref, defineEmits, defineProps, watch } from 'vue'
 import { getAllProcess } from '@/api/mes/task-tracking/process-sluggish.js'
 import { componentTypeEnum } from '@enum-ms/mes'
+import { DP } from '@/settings/config'
+import { convertUnits } from '@/utils/convert/unit'
 
 const processData = ref([])
 const emit = defineEmits(['change'])
@@ -119,7 +121,7 @@ function layOffDetail(val) {
   padding: 0 20px 20px 0;
 }
 .show-detail {
-  width: 28%;
+  width: 29%;
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
@@ -129,10 +131,10 @@ function layOffDetail(val) {
   font-size: 14px;
   margin-bottom: 10px;
   .process-way {
-    padding: 10px;
+    padding: 10px 0;
   }
   .process-data {
-    padding: 10px;
+    padding: 10px 0;
   }
 }
 </style>

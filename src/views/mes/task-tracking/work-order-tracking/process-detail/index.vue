@@ -19,7 +19,7 @@
           v-model="productionLineId"
           :factory-id="factoryId"
           :workshop-id="workshopId"
-          :productType="productType"
+          :productType="lineProductType"
           placeholder="请选择生产线"
           style="width: 200px"
           clearable
@@ -86,7 +86,7 @@
           </el-table-column>
         </common-table>
       </div>
-      <div>
+      <div style="margin-bottom: 20px">
         <div class="head-container" v-if="processData[0]?.productType === componentTypeEnum.ARTIFACT.V">
           <el-tag effect="dark" :type="componentTypeTag[componentTypeEnum.VK[processData[0]?.productType]]">
             {{ componentTypeEnum.VL[processData[0]?.productType] }}
@@ -97,6 +97,10 @@
           <span style="margin-left: 8px; font-size: 14px">工单号：{{ processData[0]?.orderNumber }}</span>
         </div>
         <common-table
+          v-if="
+            (productType === componentTypeEnum.ARTIFACT.V && processData[0]?.productType === componentTypeEnum.ARTIFACT.V) ||
+            (productType === componentTypeEnum.MACHINE_PART.V && processData[0]?.productType === componentTypeEnum.MACHINE_PART.V)
+          "
           ref="tableRef"
           :data="processData"
           :empty-text="'暂无数据'"
@@ -149,7 +153,7 @@
 <script setup>
 import { process, machineProcess } from '@/api/mes/task-tracking/work-order-tracking.js'
 import { componentTypeEnum, workOrderTypeEnum } from '@enum-ms/mes'
-import { ref, defineProps, watch, inject } from 'vue'
+import { ref, defineProps, watch, inject, computed } from 'vue'
 import { DP } from '@/settings/config'
 import { BellFilled } from '@element-plus/icons'
 import useMaxHeight from '@compos/use-max-height'
@@ -182,6 +186,15 @@ const productionLineId = ref()
 const factoryId = ref()
 
 const productType = inject('productType')
+
+// 产线过滤
+const lineProductType = computed(() => {
+  if (productType.value === componentTypeEnum.ARTIFACT.V) {
+    return productType.value | componentTypeEnum.ASSEMBLE.V
+  }
+  return productType.value
+})
+
 watch(
   () => props.processList,
   (val) => {

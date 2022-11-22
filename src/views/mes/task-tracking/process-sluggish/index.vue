@@ -44,7 +44,6 @@
                   style="width: 170px"
                   class="filter-item"
                   clearable
-                  @keyup.enter="handleChange"
                 />
                 <!-- <el-input
                   v-model.trim="groupName"
