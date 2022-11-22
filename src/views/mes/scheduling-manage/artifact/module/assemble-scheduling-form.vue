@@ -47,8 +47,8 @@
           </template>
         </el-table-column>
         <el-table-column prop="specification" :show-overflow-tooltip="true" label="规格" min-width="120" align="center" />
-        <el-table-column prop="length" :show-overflow-tooltip="true" label="长度（mm）" min-width="90" align="center" />
-        <el-table-column prop="netWeight" :show-overflow-tooltip="true" label="重量（kg）" min-width="90" align="center" />
+        <el-table-column prop="commonLength" :show-overflow-tooltip="true" label="长度（mm）" min-width="90" align="center" />
+        <el-table-column prop="weight" :show-overflow-tooltip="true" label="重量（kg）" min-width="90" align="center" />
         <el-table-column prop="needSchedulingQuantity" :show-overflow-tooltip="true" label="数量" min-width="90" align="center">
           <template #default="{ row: { sourceRow: row } }">
             <!-- <el-input-number
@@ -118,8 +118,8 @@
         </el-table-column>
         <el-table-column prop="serialNumber" :show-overflow-tooltip="true" label="编号" min-width="100" align="center" />
         <el-table-column prop="specification" :show-overflow-tooltip="true" label="规格" min-width="120" align="center" />
-        <el-table-column prop="length" :show-overflow-tooltip="true" label="长度（mm）" min-width="90" align="center" />
-        <el-table-column prop="netWeight" :show-overflow-tooltip="true" label="重量（kg）" min-width="90" align="center" />
+        <el-table-column prop="commonLength" :show-overflow-tooltip="true" label="长度（mm）" min-width="90" align="center" />
+        <el-table-column prop="weight" :show-overflow-tooltip="true" label="重量（kg）" min-width="90" align="center" />
         <el-table-column prop="quantity" :show-overflow-tooltip="true" label="数量" min-width="90" align="center" />
       </common-table>
       <handle-surplus-assemble-dialog
@@ -268,6 +268,8 @@ async function fetch() {
           const _o = v.assembleList[o]
           _o.boolStructuralEnum = false
           _o.attributeType = '部件'
+          _o.weight = _o.netWeight
+          _o.commonLength = _o.length
           _o.needSchedulingQuantity = _o.quantity
           _o.boolTypesettinglEnum = false
           if (o !== 0) {
@@ -302,6 +304,8 @@ async function fetch() {
           const _o = assembleTypesetting[x]
           _o.productId = _o.id
           _o.attributeType = '套料'
+          _o.weight = _o.nestingNetWeight
+          _o.commonLength = _o.typesettingLength
           _o.boolStructuralEnum = true
           _o.boolTypesettinglEnum = true
           _o.needSchedulingQuantity = 1
@@ -347,6 +351,8 @@ async function fetch() {
     //     v.productId = v.id
     //     v.attributeType = '套料'
     //     v.boolStructuralEnum = true
+    // v.weight = v.netWeight
+    // v.commonLength = v.length
     //     v.boolTypesettinglEnum = true
     //     v.needSchedulingQuantity = 1
     //     if (x !== 0) {

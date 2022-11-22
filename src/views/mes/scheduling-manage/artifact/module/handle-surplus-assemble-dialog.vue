@@ -25,7 +25,7 @@
           <el-table-column prop="serialNumber" :show-overflow-tooltip="true" label="编号" min-width="100" align="center" />
           <el-table-column prop="specification" :show-overflow-tooltip="true" label="规格" min-width="120" align="center" />
           <el-table-column prop="length" :show-overflow-tooltip="true" label="长度（mm）" min-width="90" align="center" />
-          <el-table-column prop="netWeight" :show-overflow-tooltip="true" label="单净重（kg）" min-width="90" align="center" />
+          <el-table-column prop="netWeight" :show-overflow-tooltip="true" label="重量（kg）" min-width="90" align="center" />
           <el-table-column prop="quantity" :show-overflow-tooltip="true" label="数量" width="90" align="center" />
           <el-table-column prop="unHandleQuantity" :show-overflow-tooltip="true" label="未匹配数量" width="90" align="center">
             <template #default="{ row }">
@@ -51,7 +51,7 @@
           <el-table-column prop="serialNumber" :show-overflow-tooltip="true" label="构件编号" min-width="100" align="center" />
           <el-table-column prop="specification" :show-overflow-tooltip="true" label="规格" min-width="120" align="center" />
           <el-table-column prop="length" :show-overflow-tooltip="true" label="长度（mm）" min-width="90" align="center" />
-          <el-table-column prop="netWeight" :show-overflow-tooltip="true" label="单净重（kg）" min-width="90" align="center" />
+          <el-table-column prop="netWeight" :show-overflow-tooltip="true" label="重量（kg）" min-width="90" align="center" />
           <el-table-column :show-overflow-tooltip="true" label="可匹配数量" width="90" align="center">
             <template #default="{ row }">
               <el-tooltip content="未排产数量" placement="top">
