@@ -196,16 +196,6 @@ function openSettleAudit(row, type) {
   settleVisible.value = true
 }
 
-CRUD.HOOK.beforeRefresh = () => {
-  if (crud.query.createTime?.length > 0) {
-    crud.query.startDate = crud.query.createTime[0]
-    crud.query.endDate = crud.query.createTime[1]
-  } else {
-    crud.query.startDate = undefined
-    crud.query.endDate = undefined
-  }
-}
-
 CRUD.HOOK.handleRefresh = (crud, { data }) => {
   data.content.forEach(v => {
     // 付款比例
