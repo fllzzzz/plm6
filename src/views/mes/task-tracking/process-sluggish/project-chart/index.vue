@@ -2,7 +2,7 @@
   <div class="project-chart">
     <div class="chart-head">
       <div style="width: 100%;display: flex;justify-content: flex-end; margin-bottom: 8px">
-        <span style="font-size: 14px">单位：件/吨</span>
+        <span style="font-size: 14px">单位：件|吨</span>
       </div>
       <div style="width: calc(100% - 0px)">
         <tag-tabs

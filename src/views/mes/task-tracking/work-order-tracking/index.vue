@@ -1,10 +1,10 @@
 <template>
   <div class="app-container">
-    <div class="head-container">
-      <mHeader />
-    </div>
     <div style="display: flex">
-      <div style="width:60%">
+      <div style="width: 60%">
+        <div class="head-container">
+          <mHeader />
+        </div>
         <common-table
           ref="tableRef"
           v-loading="crud.loading"
@@ -62,7 +62,7 @@
             label="总量（件/kg）"
           >
             <template v-slot="scope">
-              <span>{{ scope.row.totalQuantity }}/{{ (scope.row.totalMete).toFixed(DP.COM_WT__KG) }}</span>
+              <span>{{ scope.row.totalQuantity }}/{{ scope.row.totalMete.toFixed(DP.COM_WT__KG) }}</span>
             </template>
           </el-table-column>
           <el-table-column
@@ -74,7 +74,7 @@
             label="实际完成（件/kg）"
           >
             <template v-slot="scope">
-              <span>{{ scope.row.completeQuantity }}/{{ (scope.row.completeMete).toFixed(DP.COM_WT__KG) }}</span>
+              <span>{{ scope.row.completeQuantity }}/{{ scope.row.completeMete.toFixed(DP.COM_WT__KG) }}</span>
             </template>
           </el-table-column>
           <el-table-column
@@ -105,8 +105,8 @@
         <!-- 分页 -->
         <pagination />
       </div>
-      <div style="border-right: 1px solid #ededed; margin: 0 20px; height: calc(100vh - 180px)"></div>
-      <div style="width:38%;">
+      <div style="border-right: 1px solid #ededed; margin: 0 20px; height: calc(100vh - 130px)"></div>
+      <div style="width: 38%">
         <process-detail :process-list="processList" />
       </div>
     </div>

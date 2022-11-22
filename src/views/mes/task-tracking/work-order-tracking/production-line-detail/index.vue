@@ -13,9 +13,11 @@
         v-model:areaId="areaId"
         needConvert
         clearable
+        areaClearable
         :project-id="props.projectId"
       />
       <el-input
+        v-if="props.detailData.productType === componentTypeEnum.ARTIFACT.V"
         v-model.trim="name"
         size="small"
         placeholder="输入名称搜索"
@@ -33,10 +35,10 @@
         clearable
         @keyup.enter="handleChange"
       />
-       <common-button class="filter-item" size="mini" type="success" icon="el-icon-search" @click.stop="searchQuery">搜索</common-button>
-          <common-button class="filter-item" size="mini" type="warning" icon="el-icon-refresh-left" @click.stop="resetQuery">
-            重置
-          </common-button>
+      <common-button class="filter-item" size="mini" type="success" icon="el-icon-search" @click.stop="searchQuery">搜索</common-button>
+      <common-button class="filter-item" size="mini" type="warning" icon="el-icon-refresh-left" @click.stop="resetQuery">
+        重置
+      </common-button>
     </template>
     <template #titleRight>
       <print-table
@@ -46,6 +48,7 @@
           taskType: props.detailData.productType,
           orderId: props.detailData.taskOrderId,
           name: name,
+          groupId: props.detailData.group?.id,
           monomerId: monomerId,
           areaId: areaId,
           serialNumber: serialNumber,
@@ -58,7 +61,7 @@
     </template>
     <template #content>
       <!--表格渲染-->
-      <common-table ref="tableRef" :data="processDetailData" :max-height="maxHeight + 80" style="width: 100%">
+      <common-table ref="tableRef" :data="processDetailData" :max-height="maxHeight + 50" style="width: 100%">
         <el-table-column prop="index" label="序号" align="center" width="60" type="index" />
         <el-table-column :show-overflow-tooltip="true" prop="monomer.name" key="monomer.name" label="单体" align="center"></el-table-column>
         <el-table-column :show-overflow-tooltip="true" prop="area.name" key="area.name" label="区域" align="center"></el-table-column>
@@ -156,13 +159,29 @@ watch(
     processDetailGet()
   }
 )
+watch(
+  () => props.detailData.id,
+  (val) => {
+    monomerId.value = undefined
+    areaId.value = undefined
+    name.value = undefined
+    serialNumber.value = undefined
+    processDetailGet()
+  }
+)
 
 const { visible: drawerVisible, handleClose } = useVisible({ emit, props, field: 'visible', showHook: processDetailGet })
 
 const { handleSizeChange, handleCurrentChange, total, setTotalPage, queryPage } = usePagination({ fetchHook: processDetailGet })
 
 const { maxHeight } = useMaxHeight({
-  extraBox: ['.head-container'],
+  mainBox: '.common-drawer',
+  extraBox: ['.el-drawer__header'],
+  wrapperBox: ['.el-drawer__body'],
+  navbar: false,
+  clientHRepMainH: true,
+  extraHeight: 50,
+  minHeight: 300,
   paginate: true
 })
 
@@ -173,6 +192,7 @@ async function processDetailGet() {
       processId: props.detailData.id,
       taskType: props.detailData.productType,
       orderId: props.detailData.taskOrderId,
+      groupId: props.detailData.group?.id,
       name: name.value,
       monomerId: monomerId.value,
       areaId: areaId.value,

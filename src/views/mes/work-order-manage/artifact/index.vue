@@ -79,6 +79,14 @@
         align="center"
       />
       <el-table-column
+        v-if="columns.visible('group.name')"
+        :show-overflow-tooltip="true"
+        prop="group.name"
+        label="生产组"
+        min-width="80px"
+        align="center"
+      />
+      <el-table-column
         v-if="columns.visible('taskQuantity')"
         :show-overflow-tooltip="true"
         prop="taskQuantity"
