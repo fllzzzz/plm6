@@ -105,7 +105,7 @@ async function showHook() {
     orderType.value = typeEnum.NESTING_TASK_ORDER.V
     await nestingDetailGet()
   } else {
-    orderType.value = typeEnum.NESTING_TASK_ORDER.V
+    orderType.value = typeEnum.PRODUCTION_TASK_ORDER.V
     await productionDetailGet()
   }
 
@@ -132,6 +132,7 @@ async function productionDetailGet() {
 async function nestingDetailGet() {
   try {
     taskLoading.value = true
+    taskOrderPDF.value = ''
     const data = await showCuttingPdf({ ...commonParams.value })
     taskOrderPDF.value = await getUrlByFileReader(data)
   } catch (error) {

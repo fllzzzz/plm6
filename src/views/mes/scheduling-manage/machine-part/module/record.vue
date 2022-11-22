@@ -74,9 +74,14 @@
         </el-table-column>
         <el-table-column prop="issueStatusEnum" :show-overflow-tooltip="true" label="下发状态" width="90" align="center">
           <template #default="{ row: { sourceRow: row } }">
-            <el-tag v-if="row.issueStatusEnum && issueStatusEnum.V[row.issueStatusEnum]" :type="issueStatusEnum.V[row.issueStatusEnum].T">
-              {{ issueStatusEnum.VL[row.issueStatusEnum] }}
+            <el-tag v-if="row.issueStatusEnum !== issueStatusEnum.NOT_NESTING.V && !row.boolNestCutEnum" type="warning">
+              {{ layOffWayTypeEnum.VL[row.boolNestCutEnum] }}
             </el-tag>
+            <template v-else>
+              <el-tag v-if="row.issueStatusEnum && issueStatusEnum.V[row.issueStatusEnum]" :type="issueStatusEnum.V[row.issueStatusEnum].T">
+                {{ issueStatusEnum.VL[row.issueStatusEnum] }}
+              </el-tag>
+            </template>
           </template>
         </el-table-column>
         <!-- <el-table-column :show-overflow-tooltip="true" prop="groupsId" label="生产组" min-width="100px" align="center">
@@ -152,6 +157,7 @@ import {
   machinePartSchedulingIssueStatusEnum as issueStatusEnum,
   machinePartNestingStatusEnum as nestingStatusEnum
 } from '@enum-ms/mes'
+import { layOffWayTypeEnum } from '@enum-ms/uploading-form'
 
 import useTableValidate from '@compos/form/use-table-validate'
 import { manualFetchGroupsTree } from '@compos/mes/scheduling/use-scheduling-groups'

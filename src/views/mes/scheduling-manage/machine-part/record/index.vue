@@ -108,9 +108,14 @@
         align="center"
       >
         <template #default="{ row: { sourceRow: row } }">
-          <el-tag v-if="row.issueStatusEnum && issueStatusEnum.V[row.issueStatusEnum]" :type="issueStatusEnum.V[row.issueStatusEnum].T">
-            {{ issueStatusEnum.VL[row.issueStatusEnum] }}
-          </el-tag>
+          <el-tag v-if="row.issueStatusEnum !== issueStatusEnum.NOT_NESTING.V && !row.boolNestCutEnum" type="danger">
+              {{ layOffWayTypeEnum.VL[row.boolNestCutEnum] }}
+            </el-tag>
+            <template v-else>
+              <el-tag v-if="row.issueStatusEnum && issueStatusEnum.V[row.issueStatusEnum]" :type="issueStatusEnum.V[row.issueStatusEnum].T">
+                {{ issueStatusEnum.VL[row.issueStatusEnum] }}
+              </el-tag>
+            </template>
         </template>
       </el-table-column>
       <el-table-column v-permission="[...permission.del]" label="操作" width="140px" align="center" fixed="right">
@@ -132,6 +137,7 @@ import { ref } from 'vue'
 import { ElNotification, ElMessage } from 'element-plus'
 
 import { machinePartSchedulingIssueStatusEnum as issueStatusEnum } from '@enum-ms/mes'
+import { layOffWayTypeEnum } from '@enum-ms/uploading-form'
 
 import useTableValidate from '@compos/form/use-table-validate'
 import useMaxHeight from '@compos/use-max-height'

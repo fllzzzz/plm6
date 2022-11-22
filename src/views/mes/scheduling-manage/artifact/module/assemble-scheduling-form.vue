@@ -139,7 +139,7 @@
 <script setup>
 import { getAssemble } from '@/api/mes/scheduling-manage/artifact'
 import { saveTask } from '@/api/mes/scheduling-manage/common'
-import { defineProps, defineEmits, ref, inject, reactive, computed, nextTick } from 'vue'
+import { defineProps, defineEmits, ref, inject, reactive, computed, nextTick, watch } from 'vue'
 import moment from 'moment'
 import { ElNotification } from 'element-plus'
 
@@ -202,6 +202,7 @@ const surplusAssembleVisible = ref(false)
 
 const tableData = computed(() => tagObj.value[curGroupsId.value]?.assembleList || [])
 const otherData = computed(() => tagObj.value[curGroupsId.value]?.otherList || [])
+const hasOtherData = computed(() => Boolean(otherData.value?.length))
 const showTagList = computed(() => {
   const _arr = []
   for (let i = 0; i < tagList.value.length; i++) {
@@ -212,6 +213,13 @@ const showTagList = computed(() => {
   }
   return _arr
 })
+
+watch(
+  () => hasOtherData.value,
+  () => {
+    nextTick(() => { fixMaxHeight() })
+  }
+)
 
 const tableRules = {
   needSchedulingQuantity: [{ required: true, message: '请填写数量', trigger: 'blur' }],
