@@ -12,7 +12,7 @@
       class="filter-item"
       @change="fetchTime(null)"
     />
-    <common-select
+    <!-- <common-select
       v-loading="timeLoading"
       v-model="date"
       :options="timeList"
@@ -24,7 +24,7 @@
       :placeholder="timeLoading ? '加载中' : '选择日期'"
       :dataStructure="{ key: 'dateTime', label: 'date', value: 'dateTime' }"
       @change="fetchProject"
-    />
+    /> -->
   </div>
   <common-table
     ref="projectTableRef"

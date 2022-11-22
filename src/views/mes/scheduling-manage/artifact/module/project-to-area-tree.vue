@@ -159,6 +159,7 @@ function dataFormat(content) {
           monomerId: monomers[x].id,
           factoryId: areas[y].factory?.id,
           workshopId: areas[y].workshop?.id,
+          endDate: areas[y].endDate,
           isLeaf: true,
           disabled: false,
           fontSize: 14,

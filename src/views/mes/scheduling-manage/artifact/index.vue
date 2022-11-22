@@ -148,7 +148,7 @@
 <script setup>
 import crudApi, { getSummary } from '@/api/mes/scheduling-manage/artifact'
 import { ref, provide, computed } from 'vue'
-import { ElMessage } from 'element-plus'
+import { ElMessage, ElMessageBox } from 'element-plus'
 import moment from 'moment'
 
 // import { deepClone } from '@data-type/index'
@@ -177,6 +177,7 @@ const mHeaderRef = ref()
 const curFactoryIds = ref([])
 const curWorkshopIds = ref([])
 const curAreaIdObj = ref({})
+const curMainScheduleDate = ref()
 const submitList = ref([])
 const previewVisible = ref(false)
 const previewSummaryVisible = ref(false)
@@ -310,11 +311,13 @@ const handleAreaClick = debounce(function (nodes = []) {
   const _areaIdObj = {}
   const _factoryIds = []
   const _workshopIds = []
+  curMainScheduleDate.value = undefined
   for (let x = 0; x < nodes.length; x++) {
     _areaIds.push(nodes[x].id)
     _areaIdObj[nodes[x].id] = nodes[x]
     _factoryIds.push(nodes[x].factoryId)
     _workshopIds.push(nodes[x].workshopId)
+    curMainScheduleDate.value = curMainScheduleDate.value ? Math.min(nodes[x].endDate, curMainScheduleDate.value) : nodes[x].endDate
   }
   crud.query.areaIdList = _areaIds
   crud.query.structureClassId = undefined
@@ -324,7 +327,7 @@ const handleAreaClick = debounce(function (nodes = []) {
   crud.toQuery()
 }, 500)
 
-function previewIt() {
+async function previewIt() {
   if (!crud.selections?.length) {
     ElMessage.warning('请至少选择一条数据')
     return
@@ -334,12 +337,29 @@ function previewIt() {
   const { validResult, dealList } = tableValidate(_list)
   if (validResult) {
     cleanUpData(dealList) // 同上赋值
+    let timeFlag = false
     submitList.value = dealList.map((v, i) => {
+      if (v.askCompleteTime > curMainScheduleDate.value) {
+        timeFlag = true
+      }
       return {
         ...v,
         ...groupsObj.value[v.groupsId]
       }
     })
+    if (timeFlag) {
+      try {
+        await ElMessageBox.confirm('排期计划大于排期主计划是否确定', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        })
+        previewVisible.value = true
+      } catch (er) {
+        console.log(er, '取消')
+      }
+      return
+    }
   } else {
     return validResult
   }
