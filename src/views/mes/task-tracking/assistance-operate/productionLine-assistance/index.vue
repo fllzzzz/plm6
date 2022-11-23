@@ -81,7 +81,7 @@
         width="135px"
       >
         <template #default="{ row }">
-          <span>{{ row.quantity }} / {{ row.totalNetWeight }}</span>
+          <span>{{ row.quantity || 0 }} / {{ row.totalNetWeight || 0 }}</span>
         </template>
       </el-table-column>
       <!-- <el-table-column
@@ -130,7 +130,7 @@
 </template>
 
 <script setup>
-import crudApi from '@/api/mes/task-tracking/assistance-operate/common'
+import crudApi from '@/api/mes/task-tracking/assistance-operate/productionLine-assistance'
 import { ref } from 'vue'
 
 import { taskTypeENUM } from '@enum-ms/mes'

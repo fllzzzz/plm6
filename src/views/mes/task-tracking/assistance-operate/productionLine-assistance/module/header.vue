@@ -36,7 +36,7 @@ import { regHeader } from '@compos/use-crud'
 import crudOperation from '@crud/CRUD.operation'
 import moment from 'moment'
 
-const defaultTime = moment().startOf('month').valueOf()
+const defaultTime = moment().startOf('month').valueOf().toString()
 
 const queryTaskTypeENUM = {
   ARTIFACT: taskTypeENUM.ARTIFACT,
