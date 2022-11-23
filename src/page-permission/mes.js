@@ -78,6 +78,26 @@ export const machinePartSchedulingNestingResultPM = {
 
 // ########################################################################
 
+// --------------------------- 工单管理 start ------------------------------
+
+// 工单管理/结构工单
+export const artifactWorkOrderPM = {
+  get: ['mes_work_order_artifact:get'], // 列表
+  detail: ['mes_work_order_artifact:detail'], // 查看
+  print: ['mes_work_order_artifact:print'] // 打印
+}
+
+// 工单管理/零件工单
+export const machinePartWorkOrderPM = {
+  get: ['mes_work_order_machine_part:get'], // 列表
+  detail: ['mes_work_order_machine_part:detail'], // 查看
+  print: ['mes_work_order_machine_part:print'] // 打印
+}
+
+// --------------------------- 工单管理 end --------------------------------
+
+// ########################################################################
+
 // --------------------------- 生产管理 start ------------------------------
 
 // 生产管理/生产报表/零件报表
@@ -218,33 +238,6 @@ export const offStaffWagesAdjustPM = {
   edit: ['mes_off_staff_wages_adjust:edit'], // 工价调整编辑
   audit: ['mes_off_staff_wages_adjust:audit'] // 工价调整审核
 }
-
-// // 班组报表/编内-计件制
-// export const inStaffPieceworkSystemPM = {
-//   get: ['mes_in_staff_piecework:get'], // 编内-计件制列表
-//   detail: ['mes_in_staff_piecework:detail'], // 编内-计件制-详情
-//   summaryDetail: ['mes_in_staff_piecework_summary:detail'] // 编内-计件制-汇总详情
-// }
-
-// // 班组报表/编外-工价
-// export const offStaffWagesConfigPM = {
-//   get: ['mes_off_staff_wages:get'], // 编外-工价列表
-//   edit: ['mes_off_staff_wages:edit'], // 编外-工价编辑
-//   audit: ['mes_off_staff_wages:audit'] // 编外-工价审核
-// }
-
-// // 班组报表/编外-工资结算
-// export const offStaffSettlementPM = {
-//   get: ['mes_off_staff_settlement:get'], // 编外-工资结算
-//   detail: ['mes_off_staff_settlement:detail'] // 编外-工资结算
-// }
-
-// // 班组报表/工价调整
-// export const wagesAdjustPM = {
-//   get: ['mes_wages_adjust:get'], // 工价调整列表
-//   edit: ['mes_wages_adjust:edit'], // 工价调整编辑
-//   audit: ['mes_wages_adjust:audit'] // 工价调整审核
-// }
 // --------------------------- 班组报表 end --------------------------------
 
 // ########################################################################
