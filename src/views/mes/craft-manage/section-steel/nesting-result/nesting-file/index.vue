@@ -45,7 +45,7 @@
           </template>
         </el-table-column>
         <el-table-column label="序号" type="index" align="center" width="60" />
-        <el-table-column key="serialNumber" prop="serialNumber" :show-overflow-tooltip="true" label="套料编号" align="center" width="120px">
+        <el-table-column key="serialNumber" prop="serialNumber" :show-overflow-tooltip="true" label="套料编号" align="left" width="200px">
           <template v-slot="scope">
             <span>{{ scope.row.serialNumber }}</span>
           </template>
@@ -56,7 +56,7 @@
           label="套料成果"
           header-align="center"
           v-if="nestingFileType === nestingFileTypeEnum.NESTING_FILE.V"
-          width="600px"
+          width="550px"
         >
           <template v-slot="scope">
             <template v-if="scope.row.linkDOList.length > 0">
@@ -124,7 +124,7 @@
             <span v-else>{{ scope.row.netWeight }}</span>
           </template>
         </el-table-column>
-        <el-table-column key="quantity" prop="quantity" :show-overflow-tooltip="true" label="数量" align="center" width="80px">
+        <el-table-column key="quantity" prop="quantity" :show-overflow-tooltip="true" label="数量" align="center" width="60px">
           <template v-slot="scope">
             <span>{{ scope.row.quantity }}</span>
           </template>
