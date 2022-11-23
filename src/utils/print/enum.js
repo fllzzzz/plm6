@@ -127,7 +127,9 @@ const fieldTypeEnum = {
 
   INVOICE_NO: { L: '发票编号', K: 'INVOICE_NO' },
   BANK: { L: '银行', K: 'BANK' },
-  BANK_ACCOUNT: { L: '银行账号', K: 'BANK_ACCOUNT' } // 非银行卡号
+  BANK_ACCOUNT: { L: '银行账号', K: 'BANK_ACCOUNT' }, // 非银行卡号
+
+  IMAGE: { L: '图片', K: 'IMAGE' }
 }
 
 // 数据来源

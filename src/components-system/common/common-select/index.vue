@@ -35,11 +35,14 @@
         <slot name="view" :data="item" />
       </el-option>
     </template>
+    <template #empty v-if="slotsEmpty">
+      <slot name="empty" />
+    </template>
   </el-select>
 </template>
 
 <script setup>
-import { defineProps, defineEmits, computed, watch, ref } from 'vue'
+import { defineProps, defineEmits, computed, useSlots, watch, ref } from 'vue'
 import { getBits } from '@data-type/number'
 import { deepClone, isBlank, isNotBlank, judgeSameValue } from '@data-type/index'
 import { obj2arr } from '@/utils/convert/type'
@@ -47,7 +50,8 @@ import { obj2arr } from '@/utils/convert/type'
 import useCommonDataStructureByType from '@compos/use-common-data-structure-by-type'
 
 const emit = defineEmits(['change', 'blur', 'update:modelValue'])
-
+const slots = useSlots()
+const slotsEmpty = ref(!!slots.empty)
 const props = defineProps({
   modelValue: {
     type: [Number, String, Array, Boolean]

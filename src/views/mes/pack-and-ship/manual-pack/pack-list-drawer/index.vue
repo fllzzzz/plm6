@@ -1,5 +1,5 @@
 <template>
-  <common-drawer ref="drawerRef" title="打包列表" v-model="drawerVisible" direction="rtl" :before-close="handleClose" size="75%">
+  <common-drawer ref="drawerRef" title="打包列表" v-model="drawerVisible" direction="rtl" :before-close="handleClose" size="75%" custom-class="drawer-detail">
     <template #titleRight>
       <common-button v-permission="permission.pack" type="primary" :loading="packLoading" size="mini" @click="packClick">
         {{ packTypeEnum.VL[packType] }}打包({{ listObj['source' + packTypeEnum.VK[packType]].length }})
@@ -12,16 +12,31 @@
             {{ item.L }}({{ listObj['source' + item.K].length }})
           </el-radio-button>
         </el-radio-group> -->
-        <component-radio-button v-model="packType" size="small" class="filter-item" :options="packTypeEnum.ENUM" type="enum" :disabledVal="disabledVal">
+        <component-radio-button
+          v-model="packType"
+          size="small"
+          class="filter-item"
+          :options="packTypeEnum.ENUM"
+          type="enum"
+          :disabledVal="disabledVal"
+        >
           <template #suffix="{ item }"> ({{ listObj['source' + item.K].length }})</template>
         </component-radio-button>
-        <factory-select
+        <workshop-select
+          v-if="packType !== packTypeEnum.AUXILIARY_MATERIAL.V"
+          v-model="workshopId"
+          placeholder="请选择车间"
+          clearable
+          style="width: 200px"
+          class="filter-item"
+        />
+        <!-- <factory-select
           v-if="packType !== packTypeEnum.AUXILIARY_MATERIAL.V"
           v-model="factoryId"
           class="filter-item"
           clearable
           style="width: 200px"
-        />
+        /> -->
       </div>
       <common-table
         :data="listObj[packTypeEnum.VK[packType]]"
@@ -33,12 +48,29 @@
         :max-height="maxHeight"
         style="width: 100%"
         class="manual-pack-list"
+        :expand-row-keys="expandRowKeys"
+        default-expand-all
+        row-key="rowKey"
       >
+        <el-table-column type="expand">
+          <template #default="{ row }">
+            <el-form v-if="row.boolOneCode" style="padding-top: 20px; padding-left: 20px">
+              <el-form-item label="一物一码编号：">
+                <one-code-number-list
+                  v-model="row.numberList"
+                  :list="row.originNumberList"
+                  :tag-width="100"
+                  @change="oneCodeSelectChange(row)"
+                ></one-code-number-list>
+              </el-form-item>
+            </el-form>
+          </template>
+        </el-table-column>
         <el-table-column label="序号" type="index" align="center" width="60" />
         <template v-if="packType === packTypeEnum.STRUCTURE.V">
           <el-table-column key="name" prop="name" :show-overflow-tooltip="true" label="名称" width="120px">
             <template v-slot="scope">
-              <factory-table-cell-tag :id="scope.row.factory ? scope.row.factory.id : scope.row.factoryId" />
+              <table-cell-tag v-if="scope.row.workshopInf" :name="scope.row.workshopInf.name" />
               <span>{{ scope.row.name }}</span>
             </template>
           </el-table-column>
@@ -81,7 +113,7 @@
         <template v-if="packType === packTypeEnum.ENCLOSURE.V">
           <el-table-column key="name" prop="name" :show-overflow-tooltip="true" label="名称" width="120px">
             <template v-slot="scope">
-              <factory-table-cell-tag :id="scope.row.factory ? scope.row.factory.id : scope.row.factoryId" />
+              <table-cell-tag v-if="scope.row.workshopInf" :name="scope.row.workshopInf.name" />
               <span>{{ scope.row.name }}</span>
             </template>
           </el-table-column>
@@ -133,16 +165,21 @@
         <el-table-column key="inQuantity" prop="inQuantity" label="入库量" align="center" min-width="80px" />
         <el-table-column key="unPackageQuantity" prop="unPackageQuantity" label="可打包量" align="center" min-width="80px" />
         <el-table-column prop="productQuantity" label="打包数量" align="center" width="120px" fixed="right">
-          <template v-slot="scope">
-            <el-input-number
-              v-model="scope.row.productQuantity"
-              :step="1"
-              :min="1"
-              :max="scope.row.unPackageQuantity || scope.row.inQuantity - scope.row.packageQuantity"
-              size="mini"
-              style="width: 100%"
-              controls-position="right"
-            />
+          <template #default="{ row }">
+            <template v-if="!row.boolOneCode">
+              <el-input-number
+                v-model="row.productQuantity"
+                :step="1"
+                :min="1"
+                :max="row.unPackageQuantity || row.inQuantity - row.packageQuantity"
+                size="mini"
+                style="width: 100%"
+                controls-position="right"
+              />
+            </template>
+            <template v-else>
+              <span>{{ row.productQuantity }}</span>
+            </template>
           </template>
         </el-table-column>
         <el-table-column label="操作" width="70" align="center" fixed="right">
@@ -152,6 +189,7 @@
         </el-table-column>
       </common-table>
       <el-input
+        class="remark-detail"
         v-model.trim="remark"
         type="textarea"
         :autosize="{ minRows: 3, maxRows: 3 }"
@@ -182,12 +220,14 @@ import { tableSummary } from '@/utils/el-extra'
 
 import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'
-import factorySelect from '@comp-base/factory-select'
-import factoryTableCellTag from '@comp-base/factory-table-cell-tag'
+import oneCodeNumberList from '@/components-system/mes/one-code-number-list'
+import workshopSelect from '@comp-mes/workshop-select'
 import choseAddMethodDialog from '../chose-add-method-dialog'
+import tableCellTag from '@comp-common/table-cell-tag/index.vue'
 
 const drawerRef = ref()
 const choseDialogRef = ref()
+const expandRowKeys = ref([])
 
 const packData = inject('packData')
 const permission = inject('permission')
@@ -213,20 +253,22 @@ const { visible: drawerVisible, handleClose } = useVisible({ emit, props, field:
 // 高度
 const { maxHeight } = useMaxHeight(
   {
-    mainBox: '.common-drawer',
-    extraBox: ['.el-drawer__header', '.tip'],
+    mainBox: '.drawer-detail',
+    extraBox: ['.el-drawer__header', '.head-container', '.remark-detail'],
     wrapperBox: ['.el-drawer__body'],
     navbar: false,
     clientHRepMainH: true,
-    minHeight: 300
+    minHeight: 300,
+    extraHeight: 80
   },
-  drawerRef
+  drawerVisible
 )
 
 const packType = ref(packTypeEnum.STRUCTURE.V)
 const packLoading = ref(false)
 const choseVisible = ref(false)
-const factoryId = ref()
+// const factoryId = ref()
+const workshopId = ref()
 const remark = ref()
 const listObj = reactive({
   // [packTypeEnum.STRUCTURE.K]: [],
@@ -247,10 +289,10 @@ const disabledVal = computed(() => {
   return _arr
 })
 
-watch(factoryId, (val) => {
+watch(workshopId, (val) => {
   for (const item in packTypeEnum.ENUM) {
     if (listObj['source' + item].length) {
-      listObj[item] = listObj['source' + item].filter((v) => val === v.factory.id || !val)
+      listObj[item] = listObj['source' + item].filter((v) => val === v.workshopInf.id || !val)
     }
   }
 })
@@ -292,7 +334,8 @@ function handleSuccess() {
   handleClose()
   remark.value = ''
   packType.value = packTypeEnum.STRUCTURE.V
-  factoryId.value = undefined
+  workshopId.value = undefined
+  // factoryId.value = undefined
 }
 
 async function handlePack({ bagId, isNew, selectBagId }) {
@@ -308,6 +351,7 @@ async function handlePack({ bagId, isNew, selectBagId }) {
     params.packageLinks = _list.map((v) => {
       return {
         id: v.id,
+        numberList: v.numberList,
         quantity: v.productQuantity
       }
     })
@@ -335,6 +379,10 @@ async function handlePack({ bagId, isNew, selectBagId }) {
   } finally {
     packLoading.value = false
   }
+}
+
+function oneCodeSelectChange(row) {
+  row.productQuantity = row.numberList.length
 }
 
 function del(id) {

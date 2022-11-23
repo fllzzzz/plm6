@@ -17,7 +17,9 @@
     :accept="props.accept"
     :disabled="props.disabled"
   >
-    <common-button :loading="uploadLoading" :disabled="props.disabled" :icon="props.icon" :size="props.btnSize" :type="props.btnType">{{ props.btnName }}</common-button>
+    <common-button :loading="uploadLoading" :disabled="props.disabled" :icon="props.icon" :size="props.btnSize" :type="props.btnType">{{
+      props.btnName
+    }}</common-button>
   </el-upload>
 </template>
 
@@ -89,6 +91,9 @@ const props = defineProps({
   successMsg: {
     type: String,
     default: ''
+  },
+  beforeUploadHook: {
+    type: Function
   }
 })
 
@@ -98,7 +103,9 @@ const uploadLoading = ref(false)
 const fileList = ref([])
 
 function handleExceed(files, fileList) {
-  ElMessage.warning(`当前限制选择 ${props.limit} 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`)
+  ElMessage.warning(
+    `当前限制选择 ${props.limit} 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`
+  )
 }
 
 async function handleRequest(file) {
@@ -128,6 +135,9 @@ function handleBefore(file) {
       ElMessage.error(`上传文件后缀需为${props.accept}格式`)
       return false
     }
+  }
+  if (typeof props.beforeUploadHook === 'function' && !props.beforeUploadHook(file)) {
+    return false
   }
   const sizeM = file.size / 1024 / 1024
   const isLimit = !props.sizeLimit || (props.sizeLimit && sizeM < props.sizeLimit)
@@ -177,5 +187,4 @@ function handleError() {
 function handleProgress() {
   uploadLoading.value = true
 }
-
 </script>

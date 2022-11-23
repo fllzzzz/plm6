@@ -22,6 +22,8 @@ const scmSupplierPaymentLedger = contract.handleSupplierPaymentRate
 const purchaseLogisticsRecord = scm.handleOrderName
 const scmRequisitionsDetail = scm.handleRequisitionsRecord
 
+const mesAssembleNestingOrder = mes.assembleNestingOrder
+
 const mesStructureProductionLine = mes.productionLineMete
 const mesStructureProcess = mes.processMete
 
@@ -66,6 +68,9 @@ export default {
   contractLedger,
   contractEnclosurePrice,
   saleOrderTracking,
+
+  mesAssembleNestingOrder,
+
   mesStructureProcess,
   mesStructureProductionLine,
   mesStructureTeamWage,

@@ -26,19 +26,19 @@
         :showEmptySymbol="false"
       >
         <el-table-column key="selection" type="selection" width="55" />
-        <el-table-column prop="index" label="序号" align="center" width="60">
+        <el-table-column v-if="columns.visible('index')" prop="index" label="序号" align="center" width="60">
           <template v-slot="scope">
             <span v-if="scope.row.children">{{ changeIndex(scope.row) }}</span>
             <span v-else class="child">{{ changeIndex(scope.row) }}</span>
           </template>
         </el-table-column>
-        <el-table-column
+        <!-- <el-table-column
           v-if="columns.visible('assembleSerialNumberList')"
           key="assembleSerialNumberList"
           prop="assembleSerialNumberList"
           sortable="custom"
           :show-overflow-tooltip="true"
-          label="部件号"
+          label="组立号"
           min-width="100px"
         >
           <template v-slot="scope">
@@ -48,7 +48,7 @@
                 : ''
             }}</span>
           </template>
-        </el-table-column>
+        </el-table-column> -->
         <el-table-column
           v-if="columns.visible('name')"
           key="name"
@@ -76,7 +76,6 @@
             </el-tooltip>
           </template>
           <template v-slot="scope">
-            <!-- <span>{{ scope.row.serialNumber }}</span> -->
             <span style="cursor: pointer" @dblclick="drawingPreview(scope.row)">{{ scope.row.serialNumber }}</span>
           </template>
         </el-table-column>
@@ -189,19 +188,6 @@
           </template>
         </el-table-column>
         <el-table-column
-          v-if="columns.visible('drawingNumber')"
-          key="drawingNumber"
-          prop="drawingNumber"
-          sortable="custom"
-          :show-overflow-tooltip="true"
-          label="图号"
-          min-width="100px"
-        >
-          <template v-slot="scope">
-            {{ scope.row.drawingNumber ? scope.row.drawingNumber : '-' }}
-          </template>
-        </el-table-column>
-        <el-table-column
           v-if="columns.visible('surfaceArea')"
           key="surfaceArea"
           prop="surfaceArea"
@@ -215,12 +201,25 @@
           </template>
         </el-table-column>
         <el-table-column
+          v-if="columns.visible('drawingNumber')"
+          key="drawingNumber"
+          prop="drawingNumber"
+          sortable="custom"
+          :show-overflow-tooltip="true"
+          label="图号"
+          min-width="100px"
+        >
+          <template v-slot="scope">
+            {{ scope.row.drawingNumber ? scope.row.drawingNumber : '-' }}
+          </template>
+        </el-table-column>
+        <el-table-column
           v-if="columns.visible('remark')"
           key="remark"
           prop="remark"
           :show-overflow-tooltip="true"
           label="备注"
-          min-width="120"
+          min-width="100"
         >
          <template v-slot="scope">
             {{ scope.row.remark ? scope.row.remark : '-' }}
@@ -231,7 +230,7 @@
           key="userName"
           prop="userName"
           :show-overflow-tooltip="true"
-          label="上传人"
+          label="导入人"
           min-width="110"
         >
           <template v-slot="scope">
@@ -244,21 +243,6 @@
           </template>
         </el-table-column>
         <el-table-column v-if="columns.visible('status')" key="status" prop="status" label="状态" align="center" width="80px" fixed="right">
-          <!-- <template slot="header">
-          <el-tooltip
-            class="item"
-            effect="light"
-            :content="`零构件进行与暂停: \n
-          1.无论有无生产均可以执行暂停；\n
-          2.暂停后，无法扫码上传。\n`"
-            placement="top"
-          >
-            <div style="display:inline-block;">
-              <span>状态</span>
-              <i class="el-icon-info" />
-            </div>
-          </el-tooltip>
-        </template> -->
           <template v-slot="scope">
             <el-switch
               v-model="scope.row.boolStatusEnum"
@@ -273,30 +257,24 @@
         <!--编辑与删除-->
         <el-table-column
           label="操作"
-          width="220px"
+          width="160px"
           align="center"
           fixed="right"
         >
           <template v-slot="scope">
             <template v-if="scope.row.dataType === 2">
-              <el-tooltip class="item" effect="dark" content="数量更改" placement="top">
-                <common-button size="mini" @click="handleNum(scope.row)" v-permission="permission.editNum"><svg-icon icon-class="document" /></common-button>
-              </el-tooltip>
-              <el-tooltip class="item" effect="dark" content="信息修改" placement="top">
-                <common-button size="mini" @click="handleList(scope.row)" icon="el-icon-edit" type="primary" v-permission="permission.editInfo"/>
-              </el-tooltip>
-              <el-tooltip class="item" effect="dark" content="编号更改" placement="top">
-                <common-button size="mini" @click="handleSerial(scope.row)" type="success"><svg-icon icon-class="expand" v-permission="permission.editSerialNum"/></common-button>
-              </el-tooltip>
+              <common-button size="mini" @click="handleNum(scope.row)" icon="el-icon-edit" v-permission="permission.editNum" />
+              <common-button size="mini" @click="viewState(scope.row)" v-permission="permission.editNum"><svg-icon icon-class="document" /></common-button>
+              <!-- <common-button @click="configVisible=true">涂装</common-button> -->
             </template>
           </template>
         </el-table-column>
       </common-table>
       <!--分页组件-->
       <pagination />
-      <numForm v-model="numVisible" :detailInfo="currentRow" @success="handleSuccess" />
-      <listForm v-model="listVisible" :detailInfo="currentRow" @success="handleSuccess" :allArea="allArea" />
-      <serialNumForm v-model="serialVisible" :detailInfo="currentRow" @success="handleSuccess" @numSuccess="handleNumSuccess" :allArea="allArea" />
+      <changeForm v-model="numVisible" :detailInfo="currentRow" @success="handleSuccess" />
+      <productionState v-model="stateVisible" :detailInfo="currentRow" @success="handleSuccess" />
+      <artifactPaintConfig v-model="configVisible" />
       <!-- pdf预览 -->
       <bim-preview-drawer
         v-model:visible="showBimDialog"
@@ -333,19 +311,20 @@ import checkPermission from '@/utils/system/check-permission'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import useDrawing from '@compos/use-drawing'
-import pagination from '@crud/Pagination'
-import { mapGetters } from '@/store/lib'
-import mHeader from './module/header'
 import { DP } from '@/settings/config'
 import { ElMessageBox } from 'element-plus'
 import { parseTime } from '@/utils/date'
-import numForm from './module/num-form'
-import listForm from './module/list-form'
-import serialNumForm from './module/serialNum-form'
-import bimPreviewDrawer from '@/components-system/bim/bim-preview-drawer'
-import drawingPreviewFullscreenDialog from '@comp-base/drawing-preview/drawing-preview-fullscreen-dialog'
+import { mapGetters } from '@/store/lib'
 import { componentTypeEnum } from '@enum-ms/mes'
 import { TechnologyTypeAllEnum } from '@enum-ms/contract'
+
+import pagination from '@crud/Pagination'
+import mHeader from './module/header'
+import changeForm from './module/change-form'
+import productionState from './module/production-state'
+import bimPreviewDrawer from '@/components-system/bim/bim-preview-drawer'
+import drawingPreviewFullscreenDialog from '@comp-base/drawing-preview/drawing-preview-fullscreen-dialog'
+import artifactPaintConfig from './module/artifact-paint-config'
 
 const { globalProject, globalProjectId } = mapGetters(['globalProject', 'globalProjectId'])
 const { showDrawing, drawingRow, drawingPreview } = useDrawing({ pidField: 'id', typeField: 'productType' })
@@ -400,9 +379,9 @@ const optShow = {
 const tableRef = ref()
 const currentRow = ref({})
 const numVisible = ref(false)
-const listVisible = ref(false)
-const serialVisible = ref(false)
+const stateVisible = ref(false)
 const allArea = ref([])
+const configVisible = ref(false)
 const { crud, columns, CRUD } = useCRUD(
   {
     title: '零构件清单',
@@ -435,14 +414,9 @@ function handleNum(row) {
   numVisible.value = true
 }
 
-function handleList(row) {
+function viewState(row) {
   currentRow.value = row
-  listVisible.value = true
-}
-
-function handleSerial(row) {
-  currentRow.value = row
-  serialVisible.value = true
+  stateVisible.value = true
 }
 
 function handleRowClassName({ row, rowIndex }) {
@@ -534,10 +508,6 @@ function getAreaData(val) {
 
 function handleSuccess() {
   tableRef.value.refreshParent(currentRow.value)
-  crud.toQuery()
-}
-
-function handleNumSuccess() {
   crud.toQuery()
 }
 </script>

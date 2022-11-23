@@ -97,10 +97,56 @@
           clearable
           @keyup.enter="crud.toQuery"
         />
-        <el-input-number v-model.number="query.minNum" :min="0" :max="query.maxNum || 999" :precision="2" :controls="false" size="small" style="width: 80px" class="filter-item" placeholder="差值率"/>%~<el-input-number v-model.number="query.maxNum" class="filter-item" :min="query.minNum || 0" :precision="2" :max="999" :controls="false" size="small" style="width: 80px" placeholder="差值率" />%
+        <el-input-number
+          v-model.number="query.minNum"
+          :min="0"
+          :max="query.maxNum || 999"
+          :precision="2"
+          :controls="false"
+          size="small"
+          style="width: 80px"
+          class="filter-item"
+          placeholder="差值率"
+        />%~<el-input-number
+          v-model.number="query.maxNum"
+          class="filter-item"
+          :min="query.minNum || 0"
+          :precision="2"
+          :max="999"
+          :controls="false"
+          size="small"
+          style="width: 80px"
+          placeholder="差值率"
+        />%
         <rrOperation />
       </div>
     </div>
+    <el-row v-loading="crud.loading" :gutter="20" class="panel-group">
+      <el-col :span="6" class="card-panel-col">
+        <Panel
+          name="全年发运量（t）"
+          text-color="#626262"
+          num-color="#1890ff"
+          :end-val="convertUnits(totalAmount.yearMete, 'kg', 't', DP.COM_WT__T) || 0"
+          :precision="DP.COM_WT__T"
+        />
+      </el-col>
+      <el-col :span="6" class="card-panel-col">
+        <Panel name="全年发运车次" text-color="#626262" num-color="#1890ff" :end-val="totalAmount.yearQuantity || 0" :precision="0" />
+      </el-col>
+      <el-col :span="6" class="card-panel-col">
+        <Panel
+          name="本月发运量（t）"
+          text-color="#626262"
+          num-color="#1890ff"
+          :end-val="convertUnits(totalAmount.monthMete, 'kg', 't', DP.COM_WT__T) || 0"
+          :precision="DP.COM_WT__T"
+        />
+      </el-col>
+      <el-col :span="6" class="card-panel-col">
+        <Panel name="本月发运车次" text-color="#626262" num-color="#1890ff" :end-val="totalAmount.monthQuantity || 0" :precision="0" />
+      </el-col>
+    </el-row>
     <crudOperation>
       <template v-slot:optLeft>
         <print-table
@@ -126,7 +172,7 @@
 </template>
 
 <script setup>
-import { getSummaryShipMete } from '@/api/mes/pack-and-ship/ship-list'
+import { getSummaryShipMete, getSummaryMonthMete } from '@/api/mes/pack-and-ship/ship-list'
 import { inject, onMounted, ref, computed } from 'vue'
 import moment from 'moment'
 
@@ -141,6 +187,7 @@ import checkPermission from '@/utils/system/check-permission'
 import { regHeader } from '@compos/use-crud'
 import crudOperation from '@crud/CRUD.operation'
 import rrOperation from '@crud/RR.operation'
+import Panel from '@/components/Panel'
 import { ElMessage } from 'element-plus'
 
 const defaultQuery = {
@@ -163,6 +210,7 @@ const summaryLoading = ref(false)
 const shipWeight = ref(0)
 const currentKey = ref()
 const apiKey = ref([])
+const totalAmount = ref({})
 
 onMounted(() => {
   if (checkPermission(permission.print)) {
@@ -194,6 +242,7 @@ function handleBeforePrint() {
 
 CRUD.HOOK.afterToQuery = () => {
   fetchSummary()
+  fetchMonthSummary()
 }
 
 CRUD.HOOK.handleRefresh = (crud, res) => {
@@ -219,6 +268,15 @@ async function fetchSummary() {
   }
 }
 
+async function fetchMonthSummary() {
+  try {
+    const data = await getSummaryMonthMete({ dateTime: new Date().getTime() })
+    totalAmount.value = data || {}
+  } catch (e) {
+    console.log('获取发运记录汇总失败', e)
+  }
+}
+
 function handleDateChange() {
   if (query.deliveryDate && query.deliveryDate.length > 1) {
     query.auditStartDate = moment(query.deliveryDate[0]).valueOf()
@@ -229,5 +287,22 @@ function handleDateChange() {
   }
   crud.toQuery()
 }
-
 </script>
+<style lang="scss" scoped>
+.panel-group {
+  margin-bottom: 10px;
+  ::v-deep(.card-panel) {
+    .card-panel-description {
+      .card-panel-text {
+        text-align: left;
+        margin-top: 2px;
+      }
+      .card-panel-num {
+        display: block;
+        font-size: 18px;
+        text-align: right;
+      }
+    }
+  }
+}
+</style>

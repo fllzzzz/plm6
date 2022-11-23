@@ -26,7 +26,7 @@
           重置
         </common-button>
       </div>
-      <common-table v-loading="tableLoading" :data="list" :max-height="maxHeight" row-key="rowId" style="width: 100%">
+      <common-table v-loading="tableLoading" :data="list" :max-height="maxHeight - 155" row-key="rowId" style="width: 100%">
         <el-table-column label="序号" type="index" align="center" width="60" />
         <belonging-info-columns showProject />
         <el-table-column :show-overflow-tooltip="true" prop="name" label="名称" width="120px">
@@ -94,6 +94,9 @@ const props = defineProps({
   },
   info: {
     type: Object
+  },
+  projectId: {
+    type: Number
   }
 })
 
@@ -142,6 +145,7 @@ async function fetchList() {
       productType,
       startDate,
       userId: props.info?.userId,
+      projectId: props.projectId,
       ...queryPage,
       ...detailQuery.value
     })

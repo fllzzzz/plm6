@@ -24,7 +24,7 @@
         width="120px"
       >
         <template v-slot="scope">
-          <factory-table-cell-tag :id="scope.row.factory ? scope.row.factory.id : scope.row.factoryId" />
+          <table-cell-tag v-if="scope.row.workshopInf" :name="scope.row.workshopInf.name" />
           <span>{{ scope.row.name }}</span>
         </template>
       </el-table-column>
@@ -210,7 +210,7 @@ import { packTypeEnum } from '@enum-ms/mes'
 
 import useCRUD from '@compos/use-crud'
 import mHeader from './module/header'
-import factoryTableCellTag from '@comp-base/factory-table-cell-tag'
+import tableCellTag from '@comp-common/table-cell-tag/index.vue'
 
 const optShow = {
   add: false,
@@ -241,7 +241,7 @@ const props = defineProps({
     type: [String, Number],
     default: undefined
   },
-  factoryId: {
+  workShopId: {
     type: [String, Number],
     default: undefined
   },
@@ -269,7 +269,7 @@ const ids = computed(() => {
 })
 
 watch(
-  () => [props.projectId, props.factoryId, props.monomerId, props.areaId, props.category],
+  () => [props.projectId, props.workshopId, props.monomerId, props.areaId, props.category],
   () => {
     crud.toQuery()
   },
@@ -278,7 +278,7 @@ watch(
 
 CRUD.HOOK.beforeRefresh = () => {
   crud.query.projectId = props.projectId
-  crud.query.factoryId = props.factoryId
+  crud.query.workshopId = props.workshopId
   crud.query.category = props.category
   crud.query.monomerId = props.monomerId
   crud.query.areaId = props.areaId

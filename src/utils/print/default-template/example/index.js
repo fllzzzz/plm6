@@ -283,6 +283,9 @@ function getDataByType(field) {
       })
       _md = licensePlate.data
       break
+    case fieldTypeEnum.IMAGE.K:
+      _md = Random.dataImage('100x100')
+      break
     default:
       _md = Random.cword(3, 10)
   }

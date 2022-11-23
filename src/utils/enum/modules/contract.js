@@ -67,7 +67,7 @@ const TechnologyTypeAllEnum = {
   PRESSURE_BEARING_PLATE: { L: '压型楼承板', K: 'PRESSURE_BEARING_PLATE', V: 1 << 4 },
   SANDWICH_BOARD: { L: '夹芯板', K: 'SANDWICH_BOARD', V: 1 << 2 },
   BENDING: { L: '折边件', K: 'BENDING', V: 1 << 5 },
-  BRIDGE: { L: '箱体', K: 'BENDING', V: 1 << 7 }
+  BRIDGE: { L: '箱体', K: 'BRIDGE', V: 1 << 7 }
 }
 constantize(TechnologyTypeAllEnum)
 
@@ -238,10 +238,8 @@ constantize(supplierPayTypeEnum)
 
 // TODO: 项目模式
 const projectModeEnum = {
-  STRUCTURE: { L: '便捷模式(构件)', K: 'STRUCTURE', V: 1 << 0 },
-  // STRUCTURE_STANDARD: { L: '构件(标准型)', K: 'STRUCTURE_STANDARD', V: 1 << 3 },
-  STRUCTURE_ASSEMBLE: { L: '标准模式(构件&部件)', K: 'STRUCTURE_ASSEMBLE', V: 1 << 1 },
-  STRUCTURE_PART_ASSEMBLE: { L: '精益模式(构件&零件&部件)', K: 'MATERIAL_TRANSPORT', V: 1 << 2 }
+  STRUCTURE: { L: '简约模式', K: 'STRUCTURE', V: 1 << 0 },
+  STRUCTURE_ASSEMBLE: { L: '标准模式', K: 'STRUCTURE_ASSEMBLE', V: 1 << 1 }
 }
 constantize(projectModeEnum)
 

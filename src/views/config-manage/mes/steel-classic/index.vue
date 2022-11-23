@@ -18,7 +18,7 @@
       style="width: 100%"
     >
       <el-table-column prop="index" label="序号" align="center" width="60" type="index" />
-      <el-table-column v-if="columns.visible('name')" key="name" prop="name" :show-overflow-tooltip="true" label="钢材名称" align="center" min-width="150">
+      <el-table-column v-if="columns.visible('name')" key="name" prop="name" :show-overflow-tooltip="true" label="名称" align="center" min-width="150">
         <template v-slot="scope">
           <span>{{ scope.row.name }}</span>
         </template>
@@ -28,7 +28,7 @@
         key="classifyNames"
         prop="classifyNames"
         :show-overflow-tooltip="true"
-        label="钢材科目"
+        label="零件科目"
         min-width="260"
       >
         <template v-slot="scope">

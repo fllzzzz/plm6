@@ -25,7 +25,7 @@
     <el-table-column key="frozenTime" :show-overflow-tooltip="true" prop="frozenTime" label="冻结日期" align="center" width="100" />
     <el-table-column label="操作" width="85px" align="center">
       <template #default="{ row: { sourceRow: row } }">
-        <template v-if="row.freezeType !== materialFreezeTypeEnum.PREPARATION.V">
+        <template v-if="row.freezeType !== materialFreezeTypeEnum.PREPARATION.V && row.freezeType !== materialFreezeTypeEnum.NESTING.V">
           <common-button v-if="checkUnFreezePermission(row.freezeType)" type="primary" size="mini" @click="toUnfreeze(row)">
             解 冻
           </common-button>
@@ -36,7 +36,7 @@
             1.仅一张备料单时，可直接解冻；
             2.备料单有多张时，也可针对各个备料单解冻，但需要控制解冻上限。
           -->
-          <el-tooltip effect="dark" content="若需要解除冻结，请通知备料人员减少备料单数量，目前不提供备料单直接解冻功能" placement="top-start">
+          <el-tooltip effect="dark" content="若需要解除冻结，请删除钢板对应的套料工单" placement="top-start">
             <el-icon color="#909399">
               <el-question-filled />
             </el-icon>

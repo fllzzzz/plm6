@@ -6,6 +6,7 @@
     :visible="crud.status.cu > 0"
     :title="crud.status.title"
     :wrapper-closable="false"
+    ref="drawerRef"
     size="60%"
   >
     <template #titleRight>
@@ -13,36 +14,38 @@
     </template>
     <template #content>
       <el-form ref="formRef" :model="form" :rules="rules" size="small" label-width="140px">
-        <el-form-item label="钢材名称" prop="name">
-          <el-input v-model="form.name" type="text" placeholder="钢材分类名称" style="width: 270px" maxlength="30" />
-        </el-form-item>
-        <el-form-item label="钢材科目匹配" prop="classifyIds">
-          <common-radio-button
-            v-model="form.basicClass"
-            :options="[matClsEnum.STEEL_PLATE, matClsEnum.SECTION_STEEL, matClsEnum.STEEL_COIL]"
-            type="enum"
-            size="small"
-            style="margin-bottom:5px;"
-          />
-          <br/>
-          <material-cascader
-            v-model="form.classifyIds"
-            :basic-class="form.basicClass"
-            :disabled="!form.basicClass"
-            multiple
-            :collapse-tags="false"
-            separator=" > "
-            clearable
-            :disabledVal="disabledClassifyIds"
-            placeholder="请选择钢材科目"
-            size="small"
-            style="width: 270px"
-          />
-        </el-form-item>
-        <el-form-item label="排序" prop="sort">
-          <el-input-number v-model.number="form.sort" :min="1" :max="999" :step="1" controls-position="right" style="width: 270px" />
-        </el-form-item>
-        <el-divider><span class="title">零件规格前缀明细</span></el-divider>
+        <div class="detail-header">
+          <el-form-item label="名称" prop="name">
+          <el-input v-model="form.name" type="text" placeholder="分类名称" style="width: 270px" maxlength="30" />
+          </el-form-item>
+          <el-form-item label="零件科目匹配" prop="classifyIds">
+            <common-radio-button
+              v-model="form.basicClass"
+              :options="[matClsEnum.STEEL_PLATE, matClsEnum.MATERIAL]"
+              type="enum"
+              size="small"
+              style="margin-bottom:5px;"
+            />
+            <br/>
+            <material-cascader
+              v-model="form.classifyIds"
+              :basic-class="form.basicClass"
+              :disabled="!form.basicClass"
+              multiple
+              :collapse-tags="false"
+              separator=" > "
+              clearable
+              :disabledVal="disabledClassifyIds"
+              placeholder="请选择科目"
+              size="small"
+              style="width: 270px"
+            />
+          </el-form-item>
+          <el-form-item label="排序" prop="sort">
+            <el-input-number v-model.number="form.sort" :min="1" :max="999" :step="1" controls-position="right" style="width: 270px" />
+          </el-form-item>
+          <el-divider><span class="title">零件规格前缀明细</span></el-divider>
+        </div>
          <common-table
           ref="detailRef"
           border
@@ -57,7 +60,18 @@
           <el-table-column label="序号" type="index" align="center" width="50" />
           <el-table-column key="keyword" prop="keyword" label="*大写字母" align="center">
             <template v-slot="scope">
-              <el-input v-model.trim="scope.row.keyword" type="text" placeholder="大写字母" maxlength="20" @blur="checkName(scope.row, scope.$index)"/>
+              <common-select
+                v-if="form.basicClass === matClsEnum.STEEL_PLATE.V"
+                v-model="scope.row.keyword"
+                :options="partKeyWordEnum.ENUM"
+                type="enum"
+                size="small"
+                clearable
+                class="filter-item"
+                placeholder="大写字母"
+                @change="checkName(scope.row, scope.$index)"
+              />
+              <el-input v-else v-model.trim="scope.row.keyword" type="text" placeholder="大写字母" maxlength="20" @blur="checkName(scope.row, scope.$index)"/>
             </template>
           </el-table-column>
           <el-table-column key="specIndex" prop="specIndex" label="*索引" align="center">
@@ -105,7 +119,7 @@ import { ElMessage } from 'element-plus'
 
 import { isNotBlank, deepClone } from '@data-type/index'
 import { matClsEnum } from '@enum-ms/classification'
-// import { whetherEnum } from '@enum-ms/common'
+import { partKeyWordEnum } from '@enum-ms/mes'
 
 import { regForm } from '@compos/use-crud'
 import MaterialCascader from '@comp-cls/material-cascader/index.vue'
@@ -121,6 +135,7 @@ const props = defineProps({
 
 const formRef = ref()
 const nameArr = ref([])
+const drawerRef = ref()
 const disabledClassifyIds = ref([])
 const specIndexEnum = {
   1: { L: '1', K: '1', V: 1 },
@@ -136,11 +151,16 @@ const defaultForm = {
 }
 
 const { crud, form, CRUD } = regForm(defaultForm, formRef)
-const { maxHeight } = useMaxHeight({
-  wrapperBox: '.addForm',
-  paginate: true,
-  extraHeight: 240
-})
+const { maxHeight } = useMaxHeight(
+  {
+    extraBox: ['.el-drawer__header', '.detail-header'],
+    wrapperBox: ['.el-drawer__body'],
+    navbar: false,
+    extraHeight: 120
+  },
+  () => drawerRef.value.loaded
+)
+
 // 序号校验
 const validateEnum = (value, row) => {
   if (!isNotBlank(value)) return false
@@ -158,16 +178,24 @@ const { tableValidate, wrongCellMask } = useTableValidate({ rules: tableRules })
 
 const rules = {
   name: [
-    { required: true, message: '请填写钢材分类名称', trigger: 'blur' },
+    { required: true, message: '请填写分类名称', trigger: 'blur' },
     { min: 1, max: 30, message: '长度在 1 到 30 个字符', trigger: 'blur' }
   ],
   sort: [{ required: true, message: '请填写排序值', trigger: 'blur', type: 'number' }],
-  classifyIds: [{ required: true, message: '请选择绑定的钢材科目', trigger: 'change' }]
+  classifyIds: [{ required: true, message: '请选择科目', trigger: 'change' }]
 }
 
 watch(
   () => form.basicClass,
   (val, oldVal) => {
+    if (oldVal === matClsEnum.STEEL_PLATE.V) {
+      nameArr.value = []
+      form.links = []
+    }
+    if (val === matClsEnum.STEEL_PLATE.V && oldVal && oldVal !== matClsEnum.STEEL_PLATE.V) {
+      nameArr.value = []
+      form.links = []
+    }
     if (val && oldVal) {
       form.classifyIds = []
     }
@@ -195,36 +223,57 @@ function checkName(item, index) {
           message: '关键字母已存在，请重新填写',
           type: 'error'
         })
-        item.keyword = undefined
-        val.keyword = undefined
-      } else {
-        if (!/^[A-Z]+$/.test(item.keyword)) {
+        nextTick(() => {
           form.links[index].keyword = undefined
           val.keyword = undefined
-          return
+        })
+      } else {
+        if (form.basicClass !== matClsEnum.STEEL_PLATE.V && item.keyword.substring(0, 1) === 'P') {
+          ElMessage({
+            message: '关键字母不能以P或PL开头，请重新填写',
+            type: 'error'
+          })
+          nextTick(() => {
+            form.links[index].keyword = undefined
+            val.keyword = undefined
+          })
+        } else {
+          nextTick(() => {
+            val.keyword = item.keyword
+          })
         }
-        val.keyword = item.keyword
       }
     } else {
-      val.keyword = undefined
+      nextTick(() => {
+        val.keyword = undefined
+      })
     }
   } else {
     if (item.keyword) {
-      if (!/^[A-Z]+$/.test(item.keyword)) {
-        form.links[index].keyword = undefined
-        return
-      }
       if (nameArr.value.findIndex((v) => v.keyword === item.keyword) > -1) {
         ElMessage({
           message: '关键字母已存在，请重新填写',
           type: 'error'
         })
-        form.links[index].keyword = undefined
+        nextTick(() => {
+          item.keyword = undefined
+        })
       }
-      nameArr.value.push({
-        keyword: item.keyword,
-        index: index
-      })
+      if (form.basicClass !== matClsEnum.STEEL_PLATE.V && item.keyword.substring(0, 1) === 'P') {
+        ElMessage({
+          message: '关键字母不能以P或PL开头，请重新填写',
+          type: 'error'
+        })
+        nextTick(() => {
+          item.keyword = undefined
+        })
+      }
+      if (item.keyword) {
+        nameArr.value.push({
+          keyword: item.keyword,
+          index: index
+        })
+      }
     }
   }
 }
@@ -248,6 +297,12 @@ CRUD.HOOK.beforeToAdd = () => {
 
 CRUD.HOOK.beforeToEdit = () => {
   nameArr.value = []
+  form.links.map((v, index) => {
+    nameArr.value.push({
+      keyword: v.keyword,
+      index: index
+    })
+  })
 }
 
 CRUD.HOOK.beforeToCU = () => {

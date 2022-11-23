@@ -3,6 +3,7 @@ import mes from '@/api/print/mes'
 import wms from '@/api/print/wms'
 import supply from '@/api/print/supply-chain'
 import project from '@/api/print/project'
+import plan from '@/api/print/plan'
 
 // 合同
 const myProject = contract.myProject
@@ -42,6 +43,11 @@ const scmRequisitionsDetail = supply.requisitionsDetail // 申购详情
 
 // mes
 const mesSchedulingDetail = mes.schedulingDetail
+const mesProductionTaskOrder = mes.productionTaskOrder
+const mesAssembleNestingOrder = mes.assembleNestingOrder
+const mesAssembleProductionTaskOrder = mes.assembleProductionTaskOrder
+const mesDrillProductionTaskOrder = mes.drillProductionTaskOrder
+const mesNestingProductionTaskOrder = mes.drillProductionTaskOrder
 
 const mesStructureProductionReport = mes.productionReport
 const mesAssemblePartProductionReport = mes.productionReport
@@ -60,10 +66,12 @@ const mesEnclosureProductionLine = mes.enclosureProductionLine
 const mesStructureProductionLine = mes.structureProductionLine
 const mesStructureProcess = mes.structureProcess
 const mesMachinePartDetail = mes.machinePartDetail
+const mesMachinePartList = mes.machinePartList
 const mesPaintingList = mes.paintingList
 const mesStructureProjectSummary = mes.structureProjectSummary
 const mesEnclosureProjectSummary = mes.enclosureProjectSummary
 const mesQHSEProductionLineReport = mes.qhseProductionLineReport
+const mesProjectOverviewList = mes.projectOverviewList
 
 const mesStructureTeamWage = mes.teamWage
 const mesEnclosureTeamWage = mes.teamWage
@@ -82,6 +90,22 @@ const mesWarehouseStateStructure = mes.warehouseStateStructure
 const mesWarehouseStateEnclosure = mes.warehouseStateEnclosure
 const mesWarehouseStateReport = mes.warehouseStateReport
 
+const mesArtifactClassList = mes.artifactClassList
+const mesAssembleClassList = mes.assembleClassList
+const mesMachinePartClassList = mes.machinePartClassList
+
+const mesMonthlyTaskList = mes.monthlyTaskList
+const mesProcessList = mes.processList
+const mesProductionLineList = mes.productionLineList
+const mesWorkOrderTrackingList = mes.workOrderTrackingList
+
+const mesFactoryWorkshopReport = mes.factoryWorkshopReport
+
+const mesStudSleeveStatisticsList = mes.studSleeveStatisticsList
+const mesProjectShipDetail = mes.mesProjectShipDetail
+const mesProductSendReceiveStorage = mes.productSendReceiveStorage
+const productSendReceiveStorageDetail = mes.productSendReceiveStorageDetail
+
 // wms
 const wmsRmOutboundReceipt = wms.wmsRmOutboundReceipt // 出库
 const wmsRmInboundReceipt = wms.wmsRmInboundReceipt // 入库
@@ -95,6 +119,9 @@ const deliveryCargoList = project.deliveryCargoList // 自制收货记录
 const deliveryReportList = project.deliveryReportList // 收货报表
 const deliveryInstallList = project.deliveryInstallList // 收安报表
 const installReportList = project.installReportList // 安装报表
+
+// plan
+const auxiliaryMaterialSummary = plan.auxiliaryMaterialSummary // 配套件汇总
 
 export default {
   myProject, // 我的项目
@@ -134,6 +161,11 @@ export default {
 
   // mes
   mesSchedulingDetail, // 工单详情
+  mesProductionTaskOrder, // 工单管理：构件生产任务单
+  mesAssembleNestingOrder, // 工单管理：部件套料清单
+  mesAssembleProductionTaskOrder, // 工单管理：部件生产任务单
+  mesNestingProductionTaskOrder, // 工单管理：切割生产任务单
+  mesDrillProductionTaskOrder, // 工单管理：钻孔生产任务单
 
   mesStructureProductionReport, // 结构生产报表
   mesAssemblePartProductionReport, // 部件生产报表
@@ -152,10 +184,12 @@ export default {
   mesStructureProductionLine, // 结构生产线报表
   mesStructureProcess, // 结构工序报表
   mesMachinePartDetail, // 零件生产详情
+  mesMachinePartList, // 零部件生产清单详情
   mesPaintingList, // 涂装列表
   mesStructureProjectSummary, // 结构项目汇总
   mesEnclosureProjectSummary, // 围护项目汇总
   mesQHSEProductionLineReport, // 生产线质检报表
+  mesProjectOverviewList, // 工序生产明细清单
 
   mesStructureTeamWage, // 结构班组工资
   mesEnclosureTeamWage, // 围护班组工资
@@ -174,6 +208,23 @@ export default {
   mesWarehouseStateEnclosure, // 围护出入库状态
   mesWarehouseStateReport, // 入发存报表
 
+  mesArtifactClassList, // 构件分类清单明细
+  mesAssembleClassList, // 部件分类清单明细
+  mesMachinePartClassList, // 零件分类清单明细
+
+  mesMonthlyTaskList, // 月度任务跟踪清单详情
+  mesProductionLineList, //  产线跟踪清单详情
+  mesWorkOrderTrackingList, // 工单跟踪清单详情
+  mesProcessList, // 工序呆滞清单详情
+
+  mesFactoryWorkshopReport, // 车间报表清单详情
+
+  mesStudSleeveStatisticsList, // 栓钉套筒统计清单详情
+
+  mesProjectShipDetail, // 发运管理项目发运详情
+  mesProductSendReceiveStorage, // 发运管理制成品入发存
+  productSendReceiveStorageDetail, // 发运管理制成品入发存详情
+
   // wms
   wmsRmOutboundReceipt, // 出库（领料单）单
   wmsRmInboundReceipt, // 入库单
@@ -186,5 +237,8 @@ export default {
   deliveryCargoList, // 自制收货记录
   deliveryReportList, // 收货报表
   deliveryInstallList, // 收安报表
-  installReportList // 安装报表
+  installReportList, // 安装报表
+
+  // 计划管理
+  auxiliaryMaterialSummary // 配套件汇总
 }

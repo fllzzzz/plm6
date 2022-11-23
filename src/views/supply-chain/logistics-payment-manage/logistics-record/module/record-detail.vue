@@ -10,9 +10,9 @@
     size="80%"
   >
     <template #titleAfter>
-      <el-tag v-if="props.type===logisticsSearchTypeEnum.PRODUCT.V" effect="plain">{{ detailInfo.projectName }}</el-tag>
-      <el-tag v-if="props.type===logisticsSearchTypeEnum.MATERIAL.V" effect="plain">{{ detailInfo.serialNumber }}</el-tag>
-      <el-tag v-if="props.type===logisticsSearchTypeEnum.COMPANY.V" effect="plain">{{ detailInfo.supplierName }}</el-tag>
+      <el-tag v-if="props.type === logisticsSearchTypeEnum.PRODUCT.V" effect="plain">{{ detailInfo.projectName }}</el-tag>
+      <el-tag v-if="props.type === logisticsSearchTypeEnum.MATERIAL.V" effect="plain">{{ detailInfo.serialNumber }}</el-tag>
+      <el-tag v-if="props.type === logisticsSearchTypeEnum.COMPANY.V" effect="plain">{{ detailInfo.supplierName }}</el-tag>
       <common-radio-button
         v-model="freightChangeType"
         :options="freightChangeTypeEnum.ENUM"
@@ -38,10 +38,32 @@
       <common-table :data="list" :data-format="dataFormat" :max-height="maxHeight">
         <el-table-column label="序号" type="index" align="center" width="60" />
         <el-table-column prop="shipDate" label="运输日期" align="center" show-overflow-tooltip />
-        <el-table-column prop="name" label="所属项目或采购合同" align="center" show-overflow-tooltip v-if="props.type===logisticsSearchTypeEnum.COMPANY.V" />
-        <el-table-column prop="supplierName" label="物流公司" align="center" show-overflow-tooltip v-if="props.type!==logisticsSearchTypeEnum.COMPANY.V" />
+        <el-table-column
+          prop="name"
+          label="所属项目或采购合同"
+          align="center"
+          show-overflow-tooltip
+          v-if="props.type === logisticsSearchTypeEnum.COMPANY.V"
+        />
+        <el-table-column
+          prop="supplierName"
+          label="物流公司"
+          align="center"
+          show-overflow-tooltip
+          v-if="props.type !== logisticsSearchTypeEnum.COMPANY.V"
+        >
+          <template #default="{ row }">
+            <span v-if="row.boolPersonalEnum">-</span>
+            <span v-else>{{ row.supplierName }}</span>
+          </template>
+        </el-table-column>
         <el-table-column prop="type" label="运输属性" align="center" show-overflow-tooltip />
-        <el-table-column prop="licensePlate" label="车牌号" align="center" show-overflow-tooltip />
+        <el-table-column prop="licensePlate" label="车牌号" align="center" show-overflow-tooltip>
+          <template #default="{ row }">
+            <table-cell-tag :show="Boolean(row.boolPersonalEnum)" name="个人" :offset="15" />
+            <span>{{ row.licensePlate }}</span>
+          </template>
+        </el-table-column>
         <el-table-column prop="loadingWeight" label="装载重量(kg)" align="center" show-overflow-tooltip />
         <el-table-column prop="carModel" label="车型" align="center" show-overflow-tooltip />
         <el-table-column prop="driverName" label="司机姓名" align="center" show-overflow-tooltip />
@@ -103,20 +125,18 @@ const params = computed(() => {
   return {
     id: props.detailInfo.id || props.detailInfo.supplierId,
     type: props.type,
+    boolPersonalEnum: props.detailInfo?.boolPersonalEnum,
     branchCompanyId: props.detailInfo.supplierId ? props.detailInfo.branchCompanyId : undefined,
     changeFreight: freightChangeType.value
   }
 })
 
-watch(
-  visible,
-  (val) => {
-    if (val) {
-      freightChangeType.value = undefined
-      fetchList()
-    }
+watch(visible, (val) => {
+  if (val) {
+    freightChangeType.value = undefined
+    fetchList()
   }
-)
+})
 
 const list = ref([])
 const dialogRef = ref()

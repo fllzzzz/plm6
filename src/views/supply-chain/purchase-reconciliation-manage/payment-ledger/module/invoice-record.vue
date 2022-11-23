@@ -64,6 +64,7 @@
 import { invoiceRecord } from '@/api/supply-chain/purchase-reconciliation-manage/payment-ledger'
 import { ref, defineEmits, defineProps, watch, computed } from 'vue'
 
+import { auditTypeEnum } from '@enum-ms/contract'
 import { invoiceTypeEnum } from '@enum-ms/finance'
 import { digitUppercase, getDP, toThousand } from '@/utils/data-type/number'
 import { tableSummary } from '@/utils/el-extra'
@@ -97,12 +98,14 @@ const params = computed(() => {
   // 订单列表
   if (props.detailInfo.id) {
     return {
-      orderId: props.detailInfo.id
+      orderId: props.detailInfo.id,
+      auditStatus: auditTypeEnum.PASS.V
     }
   }
   // 汇总列表
   return {
-    supplierId: props.detailInfo.supplierId
+    supplierId: props.detailInfo.supplierId,
+    auditStatus: auditTypeEnum.PASS.V
   }
 })
 

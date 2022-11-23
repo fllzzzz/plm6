@@ -50,7 +50,9 @@
           min-width="140"
         >
           <template v-slot="scope">
-            <span>{{ scope.row.supplier && scope.row.supplier?.name }}</span>
+            <table-cell-tag :show="scope.row.boolPersonalEnum" name="个人" :offset="15"/>
+            <span v-if="!scope.row.boolPersonalEnum">{{ scope.row.supplier && scope.row.supplier?.name }}</span>
+            <span v-else>{{ scope.row.licensePlate }}</span>
           </template>
         </el-table-column>
         <el-table-column
@@ -64,12 +66,17 @@
           min-width="150"
         >
           <template v-slot="scope">
-            <div style="width:100%;position:relative;">
-              <span style="margin-right: 42px;" :class="scope.row.priceType === logisticsPriceTypeEnum.WEIGHT.V ? 'blue':'orange'">
+            <div style="width: 100%">
+              <span :class="scope.row.priceType === logisticsPriceTypeEnum.WEIGHT.V ? 'blue' : 'orange'">
                 <span>{{ toFixed(scope.row.price, DP.YUAN) }}</span>
-                <span style="margin-left: 3px;">{{ logisticsPriceTypeEnum.V[scope.row.priceType].unit }}</span>
+                <span style="margin-left: 3px">{{ logisticsPriceTypeEnum.V[scope.row.priceType].unit }}</span>
               </span>
-              <el-tag style="cursor:pointer;position:absolute;right:0;" @click="showAllPrice(scope.row)" type="success">ALL</el-tag>
+              <el-tag
+                style="cursor: pointer; margin-left: 5px"
+                @click="showAllPrice(scope.row)"
+                type="success"
+                >ALL</el-tag
+              >
             </div>
           </template>
         </el-table-column>
@@ -122,7 +129,7 @@
       <!--分页组件-->
       <pagination />
       <mForm />
-      <priceAllDetail  v-model="allVisible" :detailInfo="detailInfo" />
+      <priceAllDetail v-model="allVisible" :detailInfo="detailInfo" />
     </template>
   </common-drawer>
 </template>
@@ -223,12 +230,12 @@ async function fetchModelData() {
 
 async function fetchSupplierCarData(id) {
   try {
-    const priceData = await getSupplierCarPrice(id) || {}
+    const priceData = (await getSupplierCarPrice(id)) || {}
     const content = priceData.content || []
     if (allCar.value && allCar.value.length > 0) {
       for (let i = 0; i < allCar.value.length; i++) {
-        if (content.length > 0 && content.findIndex(k => k.carModel === allCar.value[i]) > -1) {
-          detailInfo.value.list.push(content.find(k => k.carModel === allCar.value[i]))
+        if (content.length > 0 && content.findIndex((k) => k.carModel === allCar.value[i]) > -1) {
+          detailInfo.value.list.push(content.find((k) => k.carModel === allCar.value[i]))
         } else {
           detailInfo.value.list.push({
             carModel: allCar.value[i],
@@ -259,13 +266,12 @@ CRUD.HOOK.handleRefresh = (crud, res) => {
     return v
   })
 }
-
 </script>
 <style lang="scss" scoped>
-  .blue{
-    color:#409eff;
-  }
-  .orange{
-    color:#e6a23c;
-  }
+.blue {
+  color: #409eff;
+}
+.orange {
+  color: #e6a23c;
+}
 </style>

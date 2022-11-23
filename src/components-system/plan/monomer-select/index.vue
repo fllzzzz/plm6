@@ -113,9 +113,9 @@ watch(
 watch(
   () => props.modelValue,
   (val) => {
-    if (val) {
-      selectValue.value = val
-    }
+    // if (val) {
+    selectValue.value = val
+    // }
   },
   { immediate: true }
 )
@@ -183,7 +183,7 @@ function selectChange(val) {
     } else {
       areaInfo = monomerVal?.areaSimpleList || []
     }
-    emit('getAreaInfo', areaInfo)
+    emit('getAreaInfo', areaInfo, val)
     emit('getCurrentInfo', monomerVal)
   }
   emit('update:modelValue', val)

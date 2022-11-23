@@ -80,7 +80,7 @@
           </el-table-column>
           <el-table-column key="month11" prop="month11" align="center" label="11月">
             <template v-slot="scope">
-              <div>{{ isNotBlank(scope.row.month11)? scope.row.month12.toFixed(2): '-' }}</div>
+              <div>{{ isNotBlank(scope.row.month11)? scope.row.month11.toFixed(2): '-' }}</div>
             </template>
           </el-table-column>
           <el-table-column key="month12" prop="month12" align="center" label="12月">
@@ -168,7 +168,7 @@ CRUD.HOOK.handleRefresh = (crud, data) => {
     if (v.details && v.details.length > 0) {
       v.monthSummary = 0
       v.details.map(k => {
-        v['month' + Number(k.month)] = k.mete
+        v['month' + Number(k.month)] = k.mete ? k.mete : 0
         v.monthSummary = k.mete ? v.monthSummary + k.mete : v.monthSummary
       })
     }

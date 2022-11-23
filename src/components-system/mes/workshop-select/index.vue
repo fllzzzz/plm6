@@ -17,7 +17,7 @@
 </template>
 
 <script setup>
-import { defineProps, defineEmits, ref, watch,defineExpose } from 'vue'
+import { defineProps, defineEmits, ref, watch, defineExpose } from 'vue'
 import { isNotBlank, isBlank, deepClone } from '@data-type/index'
 import useWorkshop from '@compos/store/use-workshops'
 
@@ -75,7 +75,7 @@ watch(
   () => props.modelValue,
   (value) => {
     selectValue.value = value
-    if (props.default && isBlank(value) && isNotBlank(options)) {
+    if (props.default && isBlank(value) && isNotBlank(options.value)) {
       selectValue.value = options.value[0].value
       handleChange(selectValue.value)
     }
@@ -127,7 +127,6 @@ function dataFormat() {
     if (isNotBlank(options.value) && props.default && !selectValue.value) {
       selectValue.value = options.value[0].value
     }
-    console.log(options.value,selectValue.value,props.modelValue)
     const isExit = options.value.some((v) => v.value === selectValue.value)
     if (!isExit && !props.defaultValue) {
       selectValue.value = undefined

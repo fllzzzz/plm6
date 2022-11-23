@@ -139,7 +139,7 @@
 import { getProjectList as get, getProjectInfo } from '@/api/common'
 import { ref, watch, provide, reactive } from 'vue'
 
-import { dateDifference, dateDifferenceReduce } from '@/utils/date'
+import { dateDifference } from '@/utils/date'
 import { isNotBlank } from '@data-type/index'
 import checkPermission from '@/utils/system/check-permission'
 import { planProjectsPM as permission } from '@/page-permission/plan'
@@ -203,7 +203,7 @@ CRUD.HOOK.handleRefresh = (crud, data) => {
       }
       // 用时天数（清单内所有任务全部入库，自动停止计时）
       const completeDate = v.completeDate || new Date().getTime()
-      v.alreadyDays = v.completeDate === v.endDate ? dateDifference(v.startDate, v.endDate) : dateDifferenceReduce(v.startDate, completeDate)
+      v.alreadyDays = v.completeDate === v.endDate ? dateDifference(v.startDate, v.endDate) : dateDifference(v.startDate, completeDate)
     }
     return v
   })

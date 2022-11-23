@@ -216,5 +216,5 @@ const deliveryInstallList = {
 }
 
 export default {
-  deliveryInstallList // 收款台账
+  deliveryInstallList // 收安报表
 }

@@ -3,6 +3,7 @@ import { getLODOP, printByMode, combineHtml } from './base'
 import { projectNameFormatter } from '@/utils/project'
 import { packTypeEnum, labelTypeEnum } from '@enum-ms/mes'
 import { getPrintLabelHtml } from '@/utils/label/index'
+import { isNotBlank } from '@data-type/index'
 
 let LODOP
 
@@ -185,6 +186,110 @@ async function printPackageLabel({ packageInfo, qrCode, printMode = PrintMode.QU
     LODOP.SET_PRINT_STYLEA(0, 'ItemType', 1)
     LODOP.ADD_PRINT_BARCODE('8.8mm', '1.8mm', '16.4mm', '16.4mm', 'QRCode', qrCode)
     LODOP.SET_PRINT_STYLEA(0, 'QRCodeVersion', 3)
+    LODOP.SET_PRINT_STYLEA(0, 'ItemType', 1)
+    // LODOP.PRINT_DESIGN()/* 打印设计*/
+    // LODOP.PREVIEW()/* 打印预览*/
+    result = await printByMode(printMode)
+  } catch (error) {
+    throw new Error(error)
+  }
+  return result
+}
+
+/**
+   * 建钢：零件工单-分拣单
+   * @param {object}
+   * @param separateOrderInfo 分拣单信息
+   * @param productionLineList 生产线信息
+   * @param printMode 打印模式
+   * @author duhh
+   */
+export async function printSeparateOrderLabel({ taskNumberOrder = '', separateOrderInfo, printMode = PrintMode.QUEUE.V } = {}) {
+  const marginNum = '5mm'
+  const pageHtml = `<div style="text-align:center;"><span tdata='pageNO'>##</span> / <span tdata='pageCount'>##</span></div>`
+  const headHtml = `
+  <div style="font-size: 17pt; font-weight: bold; height: 10mm; text-align:center;">零件分拣单</div>
+  <div style="font-size: 12pt; padding:0 ${marginNum};margin-top: 3mm;margin-bottom: 1mm;">任务单：${taskNumberOrder}</div>
+  `
+  let listHtml = ``
+  const piWidth = '25mm' // 零件信息宽度
+  const imgHeight = '23mm'// 零件图片-高度
+  for (let o = 0; o < separateOrderInfo.length; o++) {
+    const s = separateOrderInfo[o]
+
+    // 产线信息
+    let pHeadHtml = ``
+    let pConHtml = ``
+
+    for (let i = 0; i < s.productionLineList?.length; i++) {
+      const p = s.productionLineList[i]
+      pHeadHtml += `
+      <td>
+        ${isNotBlank(p) ? `<span>${p.workShopName}>${p.productionLineName}</span>` : '<span>\\</span>'}
+      </td>
+      `
+      pConHtml += `
+      <td>
+        ${isNotBlank(p) ? `<span>${p.quantity}</span>` : '<span>\\</span>'}
+      </td>
+      `
+    }
+    listHtml += `
+        <tr class="separate-thead">
+          <td style="width: ${piWidth}">${s.serialNumber}</td>
+          ${pHeadHtml}
+        </tr>
+        <tr>
+          <td class="separate-td-img">
+            ${s.picturePath ? `<img src='${s.picturePath}' />` : '<span>\\</span>'}
+          </td>
+          ${pConHtml}
+        </tr>
+     
+    `
+  }
+
+  const bodyHtml = `<table class="separate-table" cellspacing="0" cellpadding="0" border="1">
+        <tbody>
+          ${listHtml}  
+        </tbody>
+      </table>`
+
+  const separate_style = `
+  <style>
+    .separate-table {
+      width: 100%;
+      table-layout: fixed;
+      border-collapse: collapse;  
+    }
+    .separate-table td {
+      text-align: center;
+    }
+    .separate-table .separate-thead {
+      background-color: #d9d9d9;
+    }
+    .separate-table .separate-thead td {
+      font-size: 10pt;
+    }
+    .separate-table .separate-td-img {
+      height: ${imgHeight};
+    }
+    
+    .separate-table .separate-td-img img {
+      width: 95%;
+    }
+  </style>`
+  const strHtml = combineHtml(separate_style, bodyHtml)
+  let result = false
+  try {
+    const headHeight = 25
+    const bodyHeight = 255
+    LODOP = await getLODOP()
+    LODOP.SET_PRINT_PAGESIZE(1, 2100, 2970, '1') /* 纸张大小*/ // 100mm* 75mm
+    LODOP.ADD_PRINT_HTM('5mm', '0mm', '100%', `${headHeight}mm`, headHtml)
+    LODOP.SET_PRINT_STYLEA(0, 'ItemType', 1)
+    LODOP.ADD_PRINT_TABLE(`${headHeight}mm`, '5mm', '200mm', `${bodyHeight}mm`, strHtml)
+    LODOP.ADD_PRINT_HTM(`${headHeight + bodyHeight + 5}mm`, '0', '100%', '5mm', pageHtml)
     LODOP.SET_PRINT_STYLEA(0, 'ItemType', 1)
     // LODOP.PRINT_DESIGN()/* 打印设计*/
     // LODOP.PREVIEW()/* 打印预览*/

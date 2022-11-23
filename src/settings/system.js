@@ -50,6 +50,11 @@ export const showProjectSearch = [
   { component: '/mes/scheduling-manage/scheduling/enclosure/truss-floor-plate/index', type: pt.STEEL.V, required: true },
   { component: '/mes/scheduling-manage/scheduling/enclosure/sandwich-board/index', type: pt.STEEL.V, required: true },
   { component: '/mes/scheduling-manage/scheduling/enclosure/folding-piece/index', type: pt.STEEL.V, required: true },
+  { component: '/mes/work-order-manage/artifact/index', type: pt.STEEL.V, required: false },
+  { component: '/mes/work-order-manage/machine-part/index', type: pt.STEEL.V, required: false },
+  { component: '/mes/task-tracking/production-line-tracking/index', type: pt.STEEL.V, required: false },
+  { component: '/mes/task-tracking/assistance-operate/productionLine-assistance/index', type: pt.STEEL.V, required: false },
+  { component: '/mes/task-tracking/assistance-operate/process-assistance/index', type: pt.STEEL.V, required: false },
   { component: '/mes/scheduling-manage/task/artifact/index', type: pt.STEEL.V, required: false },
   { component: '/mes/scheduling-manage/task/machine-part/index', type: pt.STEEL.V, required: false },
   { component: '/mes/scheduling-manage/task/enclosure/index', type: pt.STEEL.V, required: false },
@@ -90,6 +95,7 @@ export const showProjectSearch = [
   { component: '/mes/pack-and-ship/receipt-status/index', type: pt.STEEL.V, required: false },
   { component: '/mes/pack-and-ship/logistics-list/index', type: pt.STEEL.V, required: false },
   { component: '/mes/pack-and-ship/ship-audit/index', type: pt.STEEL.V, required: false },
+  // 计划管理
   { component: '/plan/overall-plan/monomer/index', type: pt.STEEL.V, required: true },
   { component: '/plan/project-list/index', type: pt.STEEL.V, required: true },
   { component: '/plan/overall-plan/area/index', type: pt.STEEL.V, required: true },
@@ -111,15 +117,22 @@ export const showProjectSearch = [
   { component: '/plan/technical-manage/steel-statistical/index', type: pt.STEEL.V, required: true },
   { component: '/plan/technical-manage/auxiliary-material/index', type: pt.STEEL.V, required: true },
   { component: '/plan/material-preparation/project-preparation/index', type: pt.STEEL.V, required: false },
+  { component: '/mes/craft-manage/artifact-specification-revise/index', type: pt.STEEL.V, required: true },
+  { component: '/plan/technical-data-manage/technical-achievement/model/index', type: pt.STEEL.V, required: true },
+  { component: '/plan/technical-data-manage/technical-achievement/drawing/index', type: pt.STEEL.V, required: true },
+  { component: '/plan/technical-data-manage/technical-achievement/cnc/index', type: pt.STEEL.V, required: true },
+  { component: '/plan/technical-data-manage/technical-achievement/xml/index', type: pt.STEEL.V, required: true },
+  { component: '/plan/technical-manage/auxiliary-material-summary/index', type: pt.STEEL.V, required: true },
+  { component: '/plan/material-preparation/project-preparation/index', type: pt.STEEL.V, required: false },
   { component: '/contract/contract-change/index', type: allPT, required: false },
   { component: '/contract/contract-record/index', type: allPT, required: false },
   { component: '/contract/contract-ledger/index', type: allPT, required: false },
   { component: '/contract/collection-ledger/index', type: allPT, required: false },
   { component: '/contract/collection-warn/index', type: allPT, required: false },
+  // 项目管理
   { component: '/project-manage/progress-manage/project-progress/index', type: allPT, required: true, businessType: businessTypeEnum.INSTALLATION.V },
   { component: '/project-manage/subcontract-manage/subcontract-plan/index', type: allPT, required: true, businessType: businessTypeEnum.INSTALLATION.V },
   { component: '/project-manage/subcontract-manage/subcontract-progress/index', type: allPT, required: true, businessType: businessTypeEnum.INSTALLATION.V },
-  // { component: '/project-manage/subcontract-manage/subcontract-visa-manage/index', type: allPT, required: false, businessType: businessTypeEnum.INSTALLATION.V },
   { component: '/project-manage/delivery-manage/homemade-delivery/index', type: allPT, required: true, businessType: businessTypeEnum.INSTALLATION.V },
   { component: '/project-manage/delivery-manage/outsource-delivery/index', type: allPT, required: true, businessType: businessTypeEnum.INSTALLATION.V },
   { component: '/project-manage/delivery-manage/delivery-report/report-list/index', type: allPT, required: true, businessType: businessTypeEnum.INSTALLATION.V },
@@ -178,19 +191,6 @@ const ENCLOSURE_ALL_BIT =
   ttEnum.PROFILED_PLATE.V | ttEnum.TRUSS_FLOOR_PLATE.V | ttEnum.PRESSURE_BEARING_PLATE.V | ttEnum.SANDWICH_BOARD.V | ttEnum.BENDING.V
 
 export const routerMetaSetting = [
-  { name: 'MesSchedulingManage', productType: ENCLOSURE_ALL_BIT | ttEnum.STRUCTURE.V },
-  { name: 'MesSchedulingArtifact', productType: ttEnum.STRUCTURE.V },
-  {
-    name: 'MesSchedulingArtifactAssemble',
-    productType: ttEnum.STRUCTURE.V,
-    mode: projectModeEnum.STRUCTURE_ASSEMBLE.V | projectModeEnum.STRUCTURE_PART_ASSEMBLE.V
-  },
-  {
-    name: 'MesSchedulingArtifactArtifact',
-    productType: ttEnum.STRUCTURE.V,
-    mode: projectModeEnum.STRUCTURE.V | projectModeEnum.STRUCTURE_ASSEMBLE.V | projectModeEnum.STRUCTURE_PART_ASSEMBLE.V
-  },
-  { name: 'MesSchedulingArtifactMachinePart', productType: ttEnum.STRUCTURE.V, mode: projectModeEnum.STRUCTURE_PART_ASSEMBLE.V },
   { name: 'MesSchedulingEnclosure', productType: ENCLOSURE_ALL_BIT },
   { name: 'MesSchedulingPressedPlate', productType: ttEnum.PROFILED_PLATE.V },
   { name: 'MesSchedulingFloorPlate', productType: ttEnum.PRESSURE_BEARING_PLATE.V },
@@ -200,11 +200,10 @@ export const routerMetaSetting = [
   {
     name: 'MesTaskArtifact',
     productType: ttEnum.STRUCTURE.V,
-    mode: projectModeEnum.STRUCTURE.V | projectModeEnum.STRUCTURE_ASSEMBLE.V | projectModeEnum.STRUCTURE_PART_ASSEMBLE.V
+    mode: projectModeEnum.STRUCTURE.V | projectModeEnum.STRUCTURE_ASSEMBLE.V
   },
-  { name: 'MesTaskMachinePart', productType: ttEnum.STRUCTURE.V, mode: projectModeEnum.STRUCTURE_PART_ASSEMBLE.V },
+  { name: 'MesTaskMachinePart', productType: ttEnum.STRUCTURE.V, mode: projectModeEnum.STRUCTURE_ASSEMBLE.V },
   { name: 'MesTaskEnclosure', productType: ENCLOSURE_ALL_BIT },
-  { name: 'MesProductionReportMachinePart', mode: projectModeEnum.STRUCTURE_PART_ASSEMBLE.V },
-  { name: 'MesProductionReportAssemble', mode: projectModeEnum.STRUCTURE_ASSEMBLE.V | projectModeEnum.STRUCTURE_PART_ASSEMBLE.V }
-  // { name: 'MesProductionDashboardAssemblyMatch', mode: projectModeEnum.STRUCTURE_STANDARD.V | projectModeEnum.STRUCTURE_ASSEMBLE.V | projectModeEnum.STRUCTURE_PART_ASSEMBLE.V }
+  { name: 'MesProductionReportMachinePart', mode: projectModeEnum.STRUCTURE_ASSEMBLE.V },
+  { name: 'MesProductionReportAssemble', mode: projectModeEnum.STRUCTURE_ASSEMBLE.V | projectModeEnum.STRUCTURE_ASSEMBLE.V }
 ]

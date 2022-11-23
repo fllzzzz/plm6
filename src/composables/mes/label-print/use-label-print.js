@@ -45,12 +45,24 @@ export default function useLabelPrint({ getPrintTotalNumber, getLabelInfo, getLo
     let printedTimes = 0 // 已打印次数
     const startTime = new Date().getTime()
     try {
-      const labelInfo = await getLabelInfo(row)
-      while (pollingTimes--) {
-        printLoading.value.text = `正在加入打印队列：${getLoadingTextFunc(row)} 第${printedTimes + 1}张`
-        await codeWait(500)
-        await printLabelFunc(labelInfo)
-        printedTimes++
+      if (!row.boolOneCode) {
+        const labelInfo = await getLabelInfo(row)
+        while (pollingTimes--) {
+          printLoading.value.text = `正在加入打印队列：${getLoadingTextFunc(row)} 第${printedTimes + 1}张`
+          await codeWait(500)
+          await printLabelFunc(labelInfo)
+          printedTimes++
+        }
+      } else {
+        pollingTimes = row.numberList?.length || 0
+        while (pollingTimes--) {
+          const code = row.numberList[printedTimes]
+          printLoading.value.text = `正在加入打印队列：${getLoadingTextFunc(row)}，当前一物一码编号：${code}`
+          await codeWait(500)
+          const labelInfo = await getLabelInfo(row, code)
+          await printLabelFunc(labelInfo)
+          printedTimes++
+        }
       }
     } catch (error) {
       console.log('打印标签时发生错误', error)
@@ -59,16 +71,16 @@ export default function useLabelPrint({ getPrintTotalNumber, getLabelInfo, getLo
       const endTime = new Date().getTime()
       if (needAddPrintRecord) {
         console.log(row, row[addPrintIdField], addPrintIdField)
-        addPrintRecord(row, { id: row[addPrintIdField], quantity: printedTimes, startTime, endTime })
+        addPrintRecord(row, { id: row[addPrintIdField], quantity: printedTimes, startTime, endTime, numberList: row.numberList })
       }
     }
   }
 
-  async function addPrintRecord(row, { id, quantity, startTime, endTime }) {
+  async function addPrintRecord(row, { id, quantity, startTime, endTime, numberList }) {
     if (!id || !quantity) return
     try {
       console.log('添加打印记录')
-      await addPrintRecordReq({ id, quantity, startTime, endTime })
+      await addPrintRecordReq({ id, quantity, startTime, endTime, numberList })
       row.printedQuantity += quantity
     } catch (error) {
       console.log('添加打印记录失败', error)

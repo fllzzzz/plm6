@@ -1,6 +1,6 @@
 import { provide, inject, reactive, ref, watch, getCurrentInstance, onMounted, onBeforeUnmount, onUnmounted, nextTick } from 'vue'
 import { mapGetters } from '@/store/lib'
-import { isNotBlank } from '@data-type/index'
+import { isNotBlank, isBlank } from '@data-type/index'
 import { debounce } from '@/utils'
 import { fileDownload } from '@/utils/file'
 import checkPermission from '@/utils/system/check-permission'
@@ -483,7 +483,7 @@ function addCrudBusinessMethod(crud) {
 
   // 校验
   const verifyQuery = () => {
-    const result = crud.requiredQuery.some((v) => crud.query[v] === null || crud.query[v] === undefined)
+    const result = crud.requiredQuery.some((v) => isBlank(crud.query[v]))
     return !result
   }
 

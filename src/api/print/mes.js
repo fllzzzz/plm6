@@ -298,6 +298,50 @@ export function schedulingDetail(params) {
   })
 }
 
+/**
+ * 工单管理：构件生产任务单
+ */
+export function productionTaskOrder(params) {
+  return request({
+    url: `/api/mes/building/task/process/product/task/list/print`,
+    method: 'get',
+    params
+  })
+}
+
+/**
+ * 工单管理：部件生产任务单
+ */
+export function assembleProductionTaskOrder(params) {
+  return request({
+    url: `/api/mes/building/task/process/product/task/list/print`,
+    method: 'get',
+    params
+  })
+}
+
+/**
+ * 工单管理：部件套料清单
+ */
+export function assembleNestingOrder(params) {
+  return request({
+    url: `/api/mes/building/task/process/nesting/task/list/print`,
+    method: 'get',
+    params
+  })
+}
+
+/**
+ * 工单管理：钻孔生产任务单
+ */
+export function drillProductionTaskOrder(params) {
+  return request({
+    url: `/api/mes/building/task/order/drilling/print`,
+    method: 'get',
+    params
+  })
+}
+
 // /**
 //  * 编外工资汇总
 //  */
@@ -326,6 +370,17 @@ export function schedulingDetail(params) {
 export function machinePartDetail(params) {
   return request({
     url: `/api/mes/building/kanban/assemble_matching/detail/print`,
+    method: 'get',
+    params
+  })
+}
+
+/**
+ * 零部件生产清单详情
+ */
+export function machinePartList(params) {
+  return request({
+    url: `/api/mes/building/kanban/assemble_matching/area/product/print`,
     method: 'get',
     params
   })
@@ -375,16 +430,127 @@ export function qhseProductionLineReport(params) {
   })
 }
 
+// 构件分类清单明细
+export function artifactClassList(params) {
+  return request({
+    url: `/api/mes/building/scheduling/area/listArtifact/print`,
+    method: 'get',
+    params
+  })
+}
+
+// 部件分类清单明细
+export function assembleClassList(params) {
+  return request({
+    url: `/api/mes/building/scheduling/area/listAssemble/print`,
+    method: 'get',
+    params
+  })
+}
+
+// 零件分类清单明细
+export function machinePartClassList(params) {
+  return request({
+    url: `/api/mes/building/scheduling/area/listMachinePart/print`,
+    method: 'get',
+    params
+  })
+}
+
+// 发运管理-项目发运详情
+export function mesProjectShipDetail(params) {
+  return request({
+    url: `/api/mes/building/cargo/project/cargoList/details/print`,
+    method: 'get',
+    params
+  })
+}
+
+// 工厂报表-车间报表详情
+export function factoryWorkshopReport(params) {
+  return request({
+    url: `/api/mes/building/workshop/artifact/summary/print`,
+    method: 'get',
+    params
+  })
+}
+
+// 任务跟踪-工单跟踪报表详情
+export function workOrderTrackingList(params) {
+  return request({
+    url: `/api/mes/building/task/process/product/print`,
+    method: 'get',
+    params
+  })
+}
+
+// 任务跟踪-月度任务跟踪报表详情
+export function monthlyTaskList(params) {
+  return request({
+    url: `/api/mes/building/task/tracking/month/project/print`,
+    method: 'get',
+    params
+  })
+}
+// 任务跟踪-产线跟踪报表详情
+export function productionLineList(params) {
+  return request({
+    url: `/api/mes/building/task/tracking/productionLine/detail/print`,
+    method: 'get',
+    params
+  })
+}
+// 任务跟踪-工序呆滞报表详情
+export function processList(params) {
+  return request({
+    url: `/api/mes/building/task/process/dull/process/detail/print`,
+    method: 'get',
+    params
+  })
+}
+
+// 项目制造：项目总览
+export function projectOverviewList(params) {
+  return request({
+    url: `/api/mes/building/kanban/project/process/summary/detail/print`,
+    method: 'get',
+    params
+  })
+}
+
+// 制成品入发存
+export function productSendReceiveStorage(params) {
+  return request({
+    url: `/api/mes/building/warehouse/finish-product/print`,
+    method: 'get',
+    params
+  })
+}
+
+// 制成品入发存详情
+export function productSendReceiveStorageDetail(params) {
+  return request({
+    url: `/api/mes/building/warehouse/finish-product/detail/print`,
+    method: 'get',
+    params
+  })
+}
+
 export default {
   // 项目制造
   machinePartDetail, // 零件生产详情
+  machinePartList, // 零部件生产清单
   paintingList, // 涂装列表
   structureProjectSummary, // 结构项目汇总
   enclosureProjectSummary, // 围护项目汇总
+  projectOverviewList, // 项目总览工序清单
 
   // 工单管理
   schedulingDetail, // 工单详情
-
+  productionTaskOrder, // 工单管理：构件生产任务单
+  assembleNestingOrder, // // 工单管理：部件套料清单
+  assembleProductionTaskOrder, // 工单管理：部件生产任务单
+  drillProductionTaskOrder, // 工单管理： 钻孔生产任务单
   // 生产报表
   productionReport, // 生产报表
   productionStatistics, // 在制品统计
@@ -415,6 +581,27 @@ export default {
   // 制成品管理
   warehouseStateStructure, // 结构出入库状态
   warehouseStateEnclosure, // 围护出入库状态
-  warehouseStateReport // 入发存报表
+  warehouseStateReport, // 入发存报表
+
+  // 生产订单
+  artifactClassList, // 构件分类清单明细
+  assembleClassList, // 部件分类清单明细
+  machinePartClassList, // 零件分类清单明细
+
+  // 发运管理
+  mesProjectShipDetail, // 项目发运详情
+
+  // 工厂报表-车间报表
+  factoryWorkshopReport, // 车间报表详情
+
+  // 任务跟踪
+  workOrderTrackingList, // 工单跟踪报表详情
+  monthlyTaskList, // 月度任务跟踪清单详情
+  productionLineList, // 产线跟踪清单详情
+  processList, // 工序呆滞清单详情
+
+  // 发运管理
+  productSendReceiveStorage, // 制成品入发存
+  productSendReceiveStorageDetail // 制成品入发存详情
 }
 

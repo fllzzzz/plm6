@@ -5,7 +5,7 @@
     :before-close="handleClose"
     v-model="visible"
     title="编辑项目模式"
-    width="450px"
+    width="860px"
   >
     <template #titleRight>
       <common-button :loading="submitLoading" type="primary" size="mini" @click="onSubmit">确认</common-button>
@@ -13,17 +13,12 @@
     <el-form ref="formRef" :model="form" :rules="rules" size="small" label-width="100px">
       <el-form-item label="项目模式" prop="projectMode">
         <div style="width: 260px">
-          <common-select
-            v-model="form.projectMode"
-            :options="modeOption"
-            type="other"
-            size="small"
-            clearable
-            class="filter-item"
-            placeholder="项目模式"
-            style="width: 250px"
-            :dataStructure="typeProp"
-          />
+          <el-radio-group v-model="form.projectMode">
+            <template v-for="(item,index) in modeOption" :key="index">
+              <el-radio :label="projectModeEnum.STRUCTURE.V" v-if="item.V===projectModeEnum.STRUCTURE.V">简约模式 <span style="color:red;">（简约模式下，只对构件生产过程进行管理）</span></el-radio>
+              <el-radio :label="projectModeEnum.STRUCTURE_ASSEMBLE.V" v-if="item.V===projectModeEnum.STRUCTURE_ASSEMBLE.V">标准模式 <span style="color:red;">（标准模式下，可将清单中构件和零件拆分为二，生成构件清单和零件清单，对其进行分开排产和管理）</span></el-radio>
+            </template>
+          </el-radio-group>
         </div>
       </el-form-item>
     </el-form>
@@ -32,10 +27,13 @@
 
 <script setup>
 import { ref, watch, defineProps, defineEmits } from 'vue'
+import { ElRadioGroup } from 'element-plus'
+
 import useWatchFormValidate from '@compos/form/use-watch-form-validate'
 import useVisible from '@compos/use-visible'
 import { modeList, modeData, edit } from '@/api/config/system-config/project-mode'
 import { ElNotification } from 'element-plus'
+import { projectModeEnum } from '@enum-ms/contract'
 
 const formRef = ref()
 const defaultForm = {
@@ -50,11 +48,9 @@ const props = defineProps({
 })
 
 const originData = [
-  { L: '便捷模式(构件)', K: 'STRUCTURE', V: 1 << 0 },
-  { L: '标准模式(构件&部件)', K: 'STRUCTURE_ASSEMBLE', V: 1 << 1 },
-  { L: '精益模式(构件&零件&部件)', K: 'MATERIAL_TRANSPORT', V: 1 << 2 }
+  { L: '简约模式', K: 'STRUCTURE', V: 1 << 0 },
+  { L: '标准模式', K: 'STRUCTURE_ASSEMBLE', V: 1 << 1 }
 ]
-const typeProp = { key: 'V', label: 'L', value: 'V' }
 const form = ref(JSON.parse(JSON.stringify(defaultForm)))
 const submitLoading = ref(false)
 const emit = defineEmits(['success', 'update:modelValue'])

@@ -39,7 +39,12 @@
         :offset="15"
       />
       <!-- 半出余料/在收发存报表中使用 -->
-      <table-cell-tag v-if="showOddmentByHalfOut" :show="!!row.boolOddmentByHalfOut" name="半出余料" color="#e6a23c" />
+      <table-cell-tag
+        v-if="showOddmentByHalfOut"
+        :show="!!row.boolOddmentByHalfOut"
+        :color="(row.outboundRelationType === outboundRelationTypeEnum.CUT.V || row.outboundRelationType === outboundRelationTypeEnum.CUT_TRANSFER.V) ? '#214283' : '#e6a23c'"
+        :name="(row.outboundRelationType === outboundRelationTypeEnum.CUT.V || row.outboundRelationType === outboundRelationTypeEnum.CUT_TRANSFER.V) ? '切割半出' : '半出余料'"
+      />
 
       <!-- 出库方式 -->
       <table-cell-tag
@@ -139,7 +144,7 @@ import { materialBaseInfoCPM as permission } from '@/page-permission/wms'
 import { defineEmits, defineProps, computed, ref } from 'vue'
 import { STEEL_ENUM } from '@/settings/config'
 import { rawMatClsEnum } from '@/utils/enum/modules/classification'
-import { materialRejectStatusEnum, materialIsWholeEnum, materialOutboundModeEnum, partyAMatTransferEnum } from '@/utils/enum/modules/wms'
+import { materialRejectStatusEnum, materialIsWholeEnum, materialOutboundModeEnum, partyAMatTransferEnum, outboundRelationTypeEnum } from '@/utils/enum/modules/wms'
 import { isNotBlank, isBlank } from '@/utils/data-type'
 import checkPermission from '@/utils/system/check-permission'
 

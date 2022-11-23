@@ -10,7 +10,12 @@
     :fixed="fixed"
   >
     <template #default="{ row }">
-      <table-cell-tag v-if="showTransfer && getInfo(row, 'boolTransfer')" name="调拨" type="transfer" :offset="15" />
+      <table-cell-tag
+        v-if="showTransfer && getInfo(row, 'outboundRelationType') && getInfo(row, 'outboundRelationType') !== outboundRelationTypeEnum.ROUTINE.V"
+        :name="outboundRelationTypeEnum.VL?.[getInfo(row, 'outboundRelationType')]"
+        type="transfer"
+        :offset="15"
+      />
       {{ getInfo(row, 'project') }}
     </template>
   </el-table-column>
@@ -64,6 +69,7 @@
 <script setup>
 import { defineProps, computed, inject } from 'vue'
 import { isBlank } from '@/utils/data-type'
+import { outboundRelationTypeEnum } from '@/utils/enum/modules/wms'
 import factoryTableCellTag from '@comp-base/factory-table-cell-tag.vue'
 
 const props = defineProps({

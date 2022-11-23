@@ -3,7 +3,14 @@
     <div>
       <div class="filter-container manual-pack-common-header">
         <div class="filter-left-box">
-          <component-radio-button v-model="packType" :options="packTypeEnum.ENUM" :disabledVal="[packTypeEnum.AUXILIARY_MATERIAL.V]" type="enum" size="small" class="filter-item" />
+          <component-radio-button
+            v-model="packType"
+            :options="packTypeEnum.ENUM"
+            :disabledVal="[packTypeEnum.AUXILIARY_MATERIAL.V]"
+            type="enum"
+            size="small"
+            class="filter-item"
+          />
           <common-radio-button
             v-if="packType === packTypeEnum.ENCLOSURE.V"
             type="enum"
@@ -13,13 +20,21 @@
             placeholder="请选择围护类型"
             class="filter-item"
           />
-          <factory-select
+          <workshop-select
+            v-if="packType !== packTypeEnum.AUXILIARY_MATERIAL.V"
+            v-model="workshopId"
+            placeholder="请选择车间"
+            clearable
+            style="width: 200px"
+            class="filter-item"
+          />
+          <!-- <factory-select
             v-if="packType !== packTypeEnum.AUXILIARY_MATERIAL.V"
             v-model="factoryId"
             class="filter-item"
             clearable
             style="width: 200px"
-          />
+          /> -->
           <monomer-select v-model="monomerId" :default="false" clearable :project-id="globalProjectId" class="filter-item" />
         </div>
         <div class="filter-right-box">
@@ -34,13 +49,20 @@
       :is="currentView"
       :maxHeight="maxHeight"
       :project-id="globalProjectId"
-      :factory-id="factoryId"
+      :workshop-id="workshopId"
       :monomer-id="monomerId"
       :area-id="areaId"
       :category="category"
-      @add="addIn"
+      @add="beforeAddIn"
     />
     <pack-list-drawer v-model:visible="packVisible" :bagId="bagId" :edit-data="editData" @handleSuccess="handleSuccess" />
+    <!-- 一物一码 选择弹窗 -->
+    <common-dialog title="选择一物一码编号" v-model="oneCodeVisible" :center="false" :close-on-click-modal="false" width="680px" custom-class="code-dialog">
+      <template #titleRight>
+        <common-button type="primary" size="mini" @click="oneCodeSave">确认</common-button>
+      </template>
+      <one-code-number-list v-model="curRowSelect" :list="curNumberList" :maxHeight="560"></one-code-number-list>
+    </common-dialog>
   </div>
 </template>
 
@@ -55,21 +77,29 @@ import { packTypeEnum, mesEnclosureTypeEnum } from '@enum-ms/mes'
 import { manualPackPM as permission } from '@/page-permission/mes'
 
 import useMaxHeight from '@compos/use-max-height'
-import factorySelect from '@comp-base/factory-select'
+// import factorySelect from '@comp-base/factory-select'
+import workshopSelect from '@comp-mes/workshop-select'
 import structureTable from './structure'
 import enclosureTable from './enclosure'
 import auxiliaryMaterialTable from './auxiliary-material'
 import packListDrawer from './pack-list-drawer'
 import monomerSelect from '@/components-system/plan/monomer-select'
+import oneCodeNumberList from '@/components-system/mes/one-code-number-list'
 
 const route = useRoute()
 const mainRef = ref()
 const { globalProjectId } = mapGetters(['globalProjectId'])
 const packType = ref(packTypeEnum.STRUCTURE.V)
-const factoryId = ref()
+// const factoryId = ref()
+const workshopId = ref()
 const category = ref()
 const monomerId = ref()
 const areaId = ref()
+// 一物一码选择
+const oneCodeVisible = ref(false)
+const saveOneCodeData = ref()
+const curRowSelect = ref([])
+const curNumberList = ref([])
 // 编辑信息（打包记录页面传过来的参数）
 const editData = ref({})
 const bagId = ref()
@@ -156,6 +186,25 @@ function handleSuccess() {
   mainRef.value.refresh()
   bagId.value = undefined
   editData.value = {}
+}
+
+function beforeAddIn(row, packTypeK) {
+  if (row.boolOneCode) {
+    saveOneCodeData.value = { row, packTypeK }
+    curRowSelect.value = []
+    curNumberList.value = row.originNumberList
+    oneCodeVisible.value = true
+  } else {
+    addIn(row, packTypeK)
+  }
+}
+
+function oneCodeSave() {
+  const { row, packTypeK } = saveOneCodeData.value
+  row.numberList = curRowSelect.value
+  row.productQuantity = curRowSelect.value.length
+  oneCodeVisible.value = false
+  addIn(row, packTypeK)
 }
 
 function addIn(row, packTypeK) {

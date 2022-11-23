@@ -14,7 +14,7 @@
   <slot name="middle"></slot>
   <common-select
     v-model="copyAreaId"
-    :options="areaOptions"
+    :options="areaList"
     size="small"
     :default="areaDefault"
     :disabled="areaDisabled"
@@ -116,21 +116,18 @@ watch(
   { immediate: true }
 )
 
-const areaOptions = computed(() => {
-  if (props.filterArea) {
-    return areaList.value && areaList.value.filter((v) => v.productType & proType.value)
-  }
-  return areaList.value
-})
-
 function handleChange(val) {
   emit('update:areaId', copyAreaId.value)
   emit('change', { monomerId: copyMonomerId.value, areaId: copyAreaId.value })
 }
 
-function getAreaInfo(val) {
+function getAreaInfo(val, monomerValue) {
+  console.log(val, 'getAreaInfo')
+  if (props.filterArea) {
+    areaList.value = val && val.filter((v) => v.productType & proType.value)
+  }
   areaList.value = val || []
-  emit('update:monomerId', copyMonomerId.value)
+  emit('update:monomerId', monomerValue)
   emit('change', { monomerId: copyMonomerId.value })
 }
 

@@ -19,7 +19,12 @@ const mes = {
   mes_production: '生产报表',
   mes_warehouse: '出入库报表',
   mes_logistics: '物流报表',
-  mes_wage: '工资报表'
+  mes_wage: '工资报表',
+  mes_production_order: '生产订单',
+  mes_task_tracking: '任务跟踪报表',
+  mes_factory_report: '工厂报表',
+  mes_production_line_wage_statistics: '产线工资统计',
+  mes_pack_and_ship_manage: '发运管理'
 }
 
 const supply = {
@@ -31,12 +36,18 @@ const project = {
   delivery_manage: '收货管理',
   install_manage: '安装管理'
 }
+
+const plan = {
+  technical_manage: '技术管理'
+}
+
 const moduleType = {
   contract: { L: '合同管理', V: contract },
   supply: { L: '供应链', V: supply },
   wms: { L: 'WMS', V: wms },
   mes: { L: 'MES', V: mes },
-  project: { L: '项目管理', V: project }
+  project: { L: '项目管理', V: project },
+  plan: { L: '计划管理', V: plan }
 }
 
 const mt = moduleType
@@ -86,6 +97,10 @@ const tableType = {
 
   // mes
   mesSchedulingDetail: { L: '工单详情', M: 'mes_task', T: mt.mes.L + ' / ' + mes.mes_task },
+  mesProductionTaskOrder: { L: '构件生产任务单', M: 'mes_task', T: mt.mes.L + ' / ' + mes.mes_task },
+  mesAssembleProductionTaskOrder: { L: '部件生产任务单', M: 'mes_task', T: mt.mes.L + ' / ' + mes.mes_task },
+  mesAssembleNestingOrder: { L: '部件套料清单', M: 'mes_task', T: mt.mes.L + ' / ' + mes.mes_task },
+  // mesDrillProductionTaskOrder: { L: '钻孔生产任务单', M: 'mes_task', T: mt.mes.L + ' / ' + mes.mes_task },
 
   mesAssemblePartProductionReport: { L: '部件生产报表', M: 'mes_production', T: mt.mes.L + ' / ' + mes.mes_production },
   mesMachinePartProductionReport: { L: '零件生产报表', M: 'mes_production', T: mt.mes.L + ' / ' + mes.mes_production },
@@ -106,8 +121,10 @@ const tableType = {
   mesStructureProjectSummary: { L: '结构项目汇总', M: 'mes_production', T: mt.mes.L + ' / ' + mes.mes_production },
   mesEnclosureProjectSummary: { L: '围护项目汇总', M: 'mes_production', T: mt.mes.L + ' / ' + mes.mes_production },
   mesMachinePartDetail: { L: '零件生产详情', M: 'mes_production', T: mt.mes.L + ' / ' + mes.mes_production },
+  mesMachinePartList: { L: '零部件生产清单详情', M: 'mes_production', T: mt.mes.L + ' / ' + mes.mes_production },
   mesPaintingList: { L: '涂装列表', M: 'mes_production', T: mt.mes.L + ' / ' + mes.mes_production },
   mesQHSEProductionLineReport: { L: '生产线质检不合格报表', M: 'mes_production', T: mt.mes.L + ' / ' + mes.mes_production },
+  mesProjectOverviewList: { L: '工序生产明细清单', M: 'mes_production', T: mt.mes.L + ' / ' + mes.mes_production },
 
   mesStructureTeamWage: { L: '结构班组工资', M: 'mes_wage', T: mt.mes.L + ' / ' + mes.mes_wage },
   mesEnclosureTeamWage: { L: '围护班组工资', M: 'mes_wage', T: mt.mes.L + ' / ' + mes.mes_wage },
@@ -126,11 +143,31 @@ const tableType = {
   mesShippingList: { L: '发货清单', M: 'mes_logistics', T: mt.mes.L + ' / ' + mes.mes_logistics },
   mesLogisticsSummary: { L: '物流汇总', M: 'mes_logistics', T: mt.mes.L + ' / ' + mes.mes_logistics },
 
+  mesArtifactClassList: { L: '构件分类清单明细', M: 'mes_production_order', T: mt.mes.L + ' / ' + mes.mes_production_order },
+  mesAssembleClassList: { L: '部件分类清单明细', M: 'mes_production_order', T: mt.mes.L + ' / ' + mes.mes_production_order },
+  mesMachinePartClassList: { L: '零件分类清单明细', M: 'mes_production_order', T: mt.mes.L + ' / ' + mes.mes_production_order },
+
+  mesWorkOrderTrackingList: { L: '工单跟踪清单详情', M: 'mes_task_tracking', T: mt.mes.L + ' / ' + mes.mes_task_tracking },
+  mesMonthlyTaskList: { L: '月度任务清单详情', M: 'mes_task_tracking', T: mt.mes.L + ' / ' + mes.mes_task_tracking },
+  mesProductionLineList: { L: '产线跟踪清单详情', M: 'mes_task_tracking', T: mt.mes.L + ' / ' + mes.mes_task_tracking },
+  mesProcessList: { L: '工序呆滞清单详情', M: 'mes_task_tracking', T: mt.mes.L + ' / ' + mes.mes_task_tracking },
+
+  mesFactoryWorkshopReport: { L: '车间报表清单（平台）', M: 'mes_factory_report', T: mt.mes.L + ' / ' + mes.mes_factory_report },
+
+  mesStudSleeveStatisticsList: { L: '栓钉套筒统计清单详情', M: 'mes_production_line_wage_statistics', T: mt.mes.L + ' / ' + mes.mes_production_line_wage_statistics },
+  mesProjectShipDetail: { L: '项目发运详情报表', M: 'mes_pack_and_ship_manage', T: mt.mes.L + ' / ' + mes.mes_pack_and_ship_manage },
+  mesProductSendReceiveStorage: { L: '制成品入发存', M: 'mes_pack_and_ship_manage', T: mt.mes.L + ' / ' + mes.mes_pack_and_ship_manage },
+  productSendReceiveStorageDetail: { L: '制成品入发存详情', M: 'mes_pack_and_ship_manage', T: mt.mes.L + ' / ' + mes.mes_pack_and_ship_manage },
+
   // 项目管理
   deliveryCargoList: { L: '自制收货记录', M: 'delivery_manage', T: mt.project.L + ' / ' + project.delivery_manage },
   deliveryReportList: { L: '收货报表', M: 'delivery_manage', T: mt.project.L + ' / ' + project.delivery_manage },
   deliveryInstallList: { L: '收安报表', M: 'delivery_manage', T: mt.project.L + ' / ' + project.delivery_manage },
-  installReportList: { L: '安装报表', M: 'install_manage', T: mt.project.L + ' / ' + project.install_manage }
+  installReportList: { L: '安装报表', M: 'install_manage', T: mt.project.L + ' / ' + project.install_manage },
+
+  // 计划管理
+  auxiliaryMaterialSummary: { L: '配套件汇总', M: 'technical_manage', T: mt.plan.L + ' / ' + plan.technical_manage }
+
 }
 
 // 一个模板对应多个接口，尽量一一对应，在特殊情况下需要做特殊处理

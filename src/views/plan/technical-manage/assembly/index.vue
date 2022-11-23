@@ -12,152 +12,26 @@
         :data="crud.data"
         :empty-text="crud.emptyText"
         :max-height="maxHeight"
-        row-key="id"
-        :row-class-name="handleAssemblyRowClassName"
-        :cell-class-name="cellClassName"
-        :expand-row-keys="expandArr"
-        class="assembly-table"
+        :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
+        row-key="rowKey"
         style="width: 100%"
         :stripe="false"
+        lazy
+        :load="load"
         return-source-data
         :showEmptySymbol="false"
-        @selection-change="crud.selectionChangeHandler"
       >
-        <el-table-column key="selection" type="selection" width="55" />
-        <el-table-column type="expand">
+        <el-table-column v-if="columns.visible('index')" prop="index" label="序号" align="center" width="60">
           <template v-slot="scope">
-            <div :key="`'singleTable${scope.row.id}'`" style="padding:10px 20px;">
-              <common-table
-                :data="scope.row.artifactDTOList"
-                class="customer-table"
-                :cell-class-name="wrongCellMask"
-                row-key="rowKey"
-                :stripe="false"
-                style="width: 100%;"
-                return-source-data
-                :showEmptySymbol="false"
-              >
-                <el-table-column key="serialNumber" prop="serialNumber" label="构件编号" align="center">
-                  <template v-slot="scope">
-                    <el-input
-                      v-if="scope.row.add"
-                      v-model="scope.row.serialNumber"
-                      type="text"
-                      placeholder="构件编号"
-                      style="min-width: 100px"
-                      size="mini"
-                    />
-                    <span v-else>{{ scope.row.serialNumber }}</span>
-                  </template>
-                </el-table-column>
-                <el-table-column key="specification" prop="specification" label="规格" align="center">
-                  <template v-slot="scope">
-                    <el-input
-                      v-if="scope.row.add"
-                      v-model="scope.row.specification"
-                      type="text"
-                      placeholder="规格"
-                      style="min-width: 100px"
-                      size="mini"
-                    />
-                    <span v-else>{{ scope.row.specification?scope.row.specification:'-' }}</span>
-                  </template>
-                </el-table-column>
-                <el-table-column key="material" prop="material" label="材质" align="center">
-                  <template v-slot="scope">
-                    <el-input
-                      v-if="scope.row.add"
-                      v-model="scope.row.material"
-                      type="text"
-                      placeholder="材质"
-                      style="min-width: 100px"
-                      size="mini"
-                    />
-                    <span v-else>{{ scope.row.material }}</span>
-                  </template>
-                </el-table-column>
-                <el-table-column key="length" prop="length" label="长度" align="center">
-                  <template v-slot="scope">
-                    <el-input-number
-                      v-if="scope.row.add"
-                      v-model.number="scope.row.length"
-                      :min="0"
-                      :max="maxNumber"
-                      :step="1"
-                      placeholder="请填写"
-                      :precision="DP.MES_ARTIFACT_L__MM"
-                      controls-position="right"
-                      style="width: 90px"
-                      size="mini"
-                    />
-                    <span v-else>{{ scope.row.length ? scope.row.length.toFixed(DP.MES_MACHINE_PART_L__MM) : '-' }}</span>
-                  </template>
-                </el-table-column>
-                <el-table-column key="netWeight" prop="netWeight" label="单净重" align="center">
-                  <template v-slot="scope">
-                    <el-input-number
-                      v-if="scope.row.add"
-                      v-model.number="scope.row.netWeight"
-                      :min="0"
-                      :max="maxNumber"
-                      :step="1"
-                      placeholder="请填写"
-                      :precision="DP.COM_WT__KG"
-                      controls-position="right"
-                      style="width: 120px"
-                      size="mini"
-                    />
-                    <span v-else>{{ scope.row.netWeight ? scope.row.netWeight.toFixed(DP.COM_WT__KG) : '-' }}</span>
-                  </template>
-                </el-table-column>
-                <el-table-column key="quantity" prop="quantity" label="数量" align="center">
-                  <template v-slot="scope">
-                    <el-input-number
-                      v-if="scope.row.add"
-                      v-model.number="scope.row.quantity"
-                      :min="0"
-                      :max="maxNumber"
-                      :step="1"
-                      step-strictly
-                      placeholder="请填写"
-                      controls-position="right"
-                      style="width: 140px"
-                      size="mini"
-                    />
-                    <span v-else>{{ scope.row.quantity?scope.row.quantity:'-' }}</span>
-                  </template>
-                </el-table-column>
-                <el-table-column v-if="columns.visible('assembleQuantity')" prop="assembleQuantity" :show-overflow-tooltip="true" align="center" label="对应部件数量">
-                  <template v-slot="scope">
-                    <span v-if="!scope.row.add">{{ scope.row.assembleQuantity?scope.row.assembleQuantity:'-' }}</span>
-                  </template>
-                </el-table-column>
-                <el-table-column key="add" prop="add" label="已生产" align="center">
-                  <template v-slot="scope">
-                    <span v-if="!scope.row.add">{{ scope.row.productQuantity?scope.row.productQuantity:'-' }}</span>
-                  </template>
-                </el-table-column>
-                <!-- <el-table-column label="操作" align="center" v-if="globalProject.mode !== projectModeEnum.STRUCTURE_STANDARD.V">
-                  <template v-slot="scope">
-                    <common-button
-                      v-if="scope.row.add"
-                      type="primary"
-                      size="mini"
-                      plain
-                      @click="addArtifact(scope.row)"
-                      >保存</common-button>
-                      <el-popconfirm title="确定删除吗?" @confirm="deleteRow(scope.row, scope.$index)" v-if="checkPermission(permission.artifactDel) || scope.row.add">
-                        <template #reference>
-                          <common-button type="danger" size="mini" plain>删除</common-button>
-                        </template>
-                      </el-popconfirm>
-                  </template>
-                </el-table-column> -->
-              </common-table>
-            </div>
+            <span v-if="scope.row.dataType===2">{{ changeIndex(scope.row) }}</span>
+            <span v-else class="child">{{ changeIndex(scope.row) }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="序号" type="index" align="center" width="60" />
+        <el-table-column v-if="columns.visible('productionLineTypeEnum')" key="productionLineTypeEnum" prop="productionLineTypeEnum" align="center" :show-overflow-tooltip="true" label="生产线" width="80">
+          <template v-slot="scope">
+            <span>{{ scope.row.productionLineTypeEnum && scope.row.dataType===2? artifactProductLineEnum.VL[scope.row.productionLineTypeEnum] : '' }}</span>
+          </template>
+        </el-table-column>
         <el-table-column v-if="columns.visible('serialNumber')" prop="serialNumber" :show-overflow-tooltip="true" align="center" label="部件号">
           <template #header>
             <el-tooltip class="item" effect="light" :content="`双击编号可预览图纸`" placement="top">
@@ -171,67 +45,127 @@
             <span style="cursor: pointer" @dblclick="drawingPreview(scope.row)">{{ scope.row.serialNumber }}</span>
           </template>
         </el-table-column>
-        <el-table-column v-if="columns.visible('quantity')" prop="quantity" :show-overflow-tooltip="true" align="center" label="总数">
-          <template v-slot="scope">
-            <span>{{ scope.row.quantity?scope.row.quantity:'-' }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column v-if="columns.visible('producedQuantity')" prop="producedQuantity" :show-overflow-tooltip="true" align="center" label="已生产">
-          <template v-slot="scope">
-            <span>{{ scope.row.producedQuantity?scope.row.producedQuantity:'-' }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column v-if="columns.visible('usedQuantity')" prop="usedQuantity" :show-overflow-tooltip="true" align="center" label="已使用">
-          <template v-slot="scope">
-            <span>{{ scope.row.usedQuantity?scope.row.usedQuantity:'-' }}</span>
-          </template>
-        </el-table-column>
-        <!-- <el-table-column align="center" label="翼板腹板信息">
-          <template v-for="item in keyList" :key="item.key">
-            <el-table-column align="center" :label="item.label" :prop="item.key">
-              <template v-slot="scope">
-                <template v-if="scope.row.detailDTOList.length > 0">
-                  <div v-for="(k,i) in scope.row.detailDTOList" :key="k.id">
-                    <div :class="i===scope.row.detailDTOList.length-1?'sandwich-cell-bottom':'sandwich-cell-top'">
-                      {{k[item.key]?k[item.key]:'-'}}
-                    </div>
-                  </div>
-                </template>
-                <template v-else>-</template>
-              </template>
-            </el-table-column>
-          </template>
-        </el-table-column> -->
-        <el-table-column prop="remark" :show-overflow-tooltip="true" align="center" label="备注">
-          <template v-slot="scope">
-            <span>{{ scope.row.remark?scope.row.remark:'-' }}</span>
-          </template>
-        </el-table-column>
-        <!-- <el-table-column
-          v-if="checkPermission([...permission.del]) && globalProject.mode !== projectModeEnum.STRUCTURE_STANDARD.V"
-          label="操作"
-          width="150px"
+        <el-table-column
+          v-if="columns.visible('specification')"
+          key="specification"
+          prop="specification"
+          sortable="custom"
+          :show-overflow-tooltip="true"
+          label="规格"
           align="center"
+          min-width="120"
         >
           <template v-slot="scope">
-            <udOperation :data="scope.row" :show-edit="false" />
-            <el-tooltip
-              class="item"
-              effect="dark"
-              content="绑定构件"
-              placement="top"
-            >
-              <common-button
-                type="primary"
-                icon="el-icon-plus"
-                size="mini"
-                v-permission="crud.permission.artifactAdd"
-                @click="addRow(scope.row, scope.$index)"
-                style="margin-left: 8px"
-              />
-            </el-tooltip>
+            {{ scope.row.specification ? scope.row.specification : '-' }}
           </template>
-        </el-table-column> -->
+        </el-table-column>
+        <el-table-column
+          v-if="columns.visible('length')"
+          key="length"
+          prop="length"
+          sortable="custom"
+          :show-overflow-tooltip="true"
+          :label="`长度\n(mm)`"
+          align="center"
+          min-width="85px"
+        >
+          <template v-slot="scope">
+            {{ scope.row.length ? scope.row.length.toFixed(DP.MES_ARTIFACT_L__MM) : '-' }}
+          </template>
+        </el-table-column>
+        <el-table-column
+          v-if="columns.visible('material')"
+          key="material"
+          prop="material"
+          sortable="custom"
+          :show-overflow-tooltip="true"
+          label="材质"
+          align="center"
+          min-width="80px"
+        >
+          <template v-slot="scope">
+            {{ scope.row.material ? scope.row.material : '-' }}
+          </template>
+        </el-table-column>
+        <el-table-column
+          v-if="columns.visible('quantity')"
+          key="quantity"
+          prop="quantity"
+          sortable="custom"
+          label="数量"
+          align="center"
+          min-width="80px"
+        >
+         <template v-slot="scope">
+            {{ scope.row.quantity ? scope.row.quantity : '-' }}
+          </template>
+        </el-table-column>
+        <el-table-column
+          v-if="columns.visible('netWeight')"
+          key="netWeight"
+          prop="netWeight"
+          sortable="custom"
+          :show-overflow-tooltip="true"
+          :label="`单重(kg)`"
+          align="center"
+          min-width="80px"
+        >
+          <template v-slot="scope">
+            {{ scope.row.netWeight? scope.row.netWeight.toFixed(DP.COM_WT__KG) : '-' }}
+          </template>
+        </el-table-column>
+        <el-table-column
+          v-if="columns.visible('totalNetWeight')"
+          key="totalNetWeight"
+          prop="totalNetWeight"
+          :show-overflow-tooltip="true"
+          :label="`总重(kg)`"
+          align="center"
+          min-width="95px"
+        >
+          <template v-slot="scope">
+            {{ scope.row.totalNetWeight ? scope.row.totalNetWeight.toFixed(DP.COM_WT__KG) : '-' }}
+          </template>
+        </el-table-column>
+        <el-table-column
+          v-if="columns.visible('drawingNumber')"
+          key="drawingNumber"
+          prop="drawingNumber"
+          :show-overflow-tooltip="true"
+          align="center"
+          label="图号"
+          min-width="80px"
+        >
+          <template v-slot="scope">
+            {{ scope.row.drawingNumber ? scope.row.drawingNumber : '-' }}
+          </template>
+        </el-table-column>
+        <el-table-column
+          v-if="columns.visible('remark')"
+          key="remark"
+          prop="remark"
+          :show-overflow-tooltip="true"
+          label="备注"
+          align="center"
+          min-width="100"
+        >
+         <template v-slot="scope">
+            {{ scope.row.remark ? scope.row.remark : '-' }}
+          </template>
+        </el-table-column>
+        <el-table-column
+          v-if="columns.visible('userName')"
+          key="userName"
+          prop="userName"
+          :show-overflow-tooltip="true"
+          label="导入人"
+          align="center"
+          min-width="110"
+        >
+          <template v-slot="scope">
+            {{ scope.row.userName ? scope.row.userName : '-' }}
+          </template>
+        </el-table-column>
       </common-table>
       <!--分页组件-->
       <pagination />
@@ -252,22 +186,20 @@
 
 <script setup>
 import crudApi from '@/api/plan/technical-manage/assembly'
-// import crudApi, { delAssemblyArtifact, addAssemblyArtifact } from '@/api/plan/technical-manage/assembly'
-import { ref, watch } from 'vue'
-// import checkPermission from '@/utils/system/check-permission'
+import { ref, watch, nextTick } from 'vue'
+
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
-// import udOperation from '@crud/UD.operation'
-import pagination from '@crud/Pagination'
+import { artifactProductLineEnum } from '@enum-ms/mes'
 import { mapGetters } from '@/store/lib'
-import mHeader from './module/header'
 import { DP } from '@/settings/config'
-import { validate } from '@compos/form/use-table-validate'
-// import { ElMessage } from 'element-plus'
 import { assemblyListPM as permission } from '@/page-permission/plan'
 import useDrawing from '@compos/use-drawing'
-import drawingPreviewFullscreenDialog from '@comp-base/drawing-preview/drawing-preview-fullscreen-dialog'
 import { TechnologyTypeAllEnum, projectModeEnum } from '@enum-ms/contract'
+
+import pagination from '@crud/Pagination'
+import mHeader from './module/header'
+import drawingPreviewFullscreenDialog from '@comp-base/drawing-preview/drawing-preview-fullscreen-dialog'
 
 const { globalProject, globalProjectId } = mapGetters(['globalProject', 'globalProjectId'])
 const { showDrawing, drawingRow, drawingPreview } = useDrawing({ pidField: 'id', productTypeField: 'ASSEMBLE' })
@@ -280,42 +212,8 @@ const optShow = {
 }
 
 const tableRef = ref()
-const maxNumber = 999999999
-// const keyList = [
-//   { label: '编号', key: 'serialNumber' },
-//   { label: '规格', key: 'specification' },
-//   { label: '材质', key: 'material' },
-//   { label: '长度', key: 'length' },
-//   { label: '单净重(kg)', key: 'netWeight' },
-//   { label: '数量', key: 'quantity' },
-//   { label: '已使用', key: 'usedQuantity' }
-// ]
 const pageShow = ref(false)
 const pageText = ref()
-
-const tableRules = {
-  serialNumber: [{ required: true, max: 50, message: '不能超过 50 个字符', trigger: 'blur' }],
-  specification: [{ required: true, max: 50, message: '不能超过 50 个字符', trigger: 'blur' }],
-  quantity: [{ required: true, max: 50, message: '不能超过 50 个字符', trigger: 'blur' }],
-  length: [{ required: true, max: 50, message: '不能超过 50 个字符', trigger: 'blur' }],
-  material: [{ required: true, max: 50, message: '不能超过 50 个字符', trigger: 'blur' }],
-  netWeight: [{ required: true, max: 50, message: '不能超过 50 个字符', trigger: 'blur' }]
-}
-function wrongCellMask({ row, column }) {
-  if (!row) return
-  const rules = tableRules
-  let flag = true
-  if (row.verify && Object.keys(row.verify) && Object.keys(row.verify).length > 0) {
-    if (row.verify[column.property] === false) {
-      flag = validate(column.property, rules[column.property], row)
-    }
-    if (flag) {
-      row.verify[column.property] = true
-    }
-  }
-  return flag ? (row.existStatus === 1 ? '' : 'child-abnormal-row') : 'mask-td'
-}
-const expandArr = ref([])
 
 const { crud, columns, CRUD } = useCRUD(
   {
@@ -365,82 +263,48 @@ watch(
   },
   { deep: true, immediate: true }
 )
-//
 
-function handleAssemblyRowClassName({ row, rowIndex }) {
-  return row.abnormal === 1 ? 'abnormal-row' : ''
+function changeIndex(val) {
+  if (val.dataType === 2) {
+    return val.index
+  } else {
+    return val.childIndex
+  }
 }
-
-function cellClassName({ row, rowIndex }) {
-  return row.abnormal === 1 ? 'abnormal-row' : ''
-}
-
-// function addRow(val, index) {
-//   if (expandArr.value.indexOf(val.id) < 0) {
-//     expandArr.value.push(val.id)
-//   }
-//   val.artifactDTOList.push({
-//     assembleId: val.id,
-//     length: undefined,
-//     material: '',
-//     netWeight: undefined,
-//     quantity: undefined,
-//     serialNumber: '',
-//     specification: '',
-//     mainIndex: index,
-//     existStatus: 1,
-//     add: true
-//   })
-// }
-// async function addArtifact(val) {
-//   const rules = tableRules
-//   let flag = true
-//   val.verify = {}
-//   for (const rule in rules) {
-//     val.verify[rule] = validate(rule, rules[rule], val)
-//     if (!val.verify[rule]) {
-//       flag = false
-//     }
-//   }
-//   if (!flag) {
-//     ElMessage.error('请填写表格中标红数据')
-//     return
-//   }
-//   try {
-//     await addAssemblyArtifact(val)
-//     crud.notify('添加成功', CRUD.NOTIFICATION_TYPE.SUCCESS)
-//     crud.toQuery()
-//   } catch (e) {
-//     console.log('添加构件', e)
-//   }
-// }
-
-// async function deleteRow(val, index) {
-//   if (!val.add) {
-//     try {
-//       val.popoverVisible = false
-//       await delAssemblyArtifact({ artifactNo: val.serialNumber, assembleId: crud.data[val.mainIndex].id })
-//       crud.notify('操作成功', CRUD.NOTIFICATION_TYPE.SUCCESS)
-//       crud.toQuery()
-//     } catch (e) {
-//       console.log('删除构件', e)
-//     }
-//   } else {
-//     crud.data[val.mainIndex].artifactDTOList.splice(index, 1)
-//   }
-// }
 
 CRUD.HOOK.handleRefresh = (crud, data) => {
-  data.data.content = data.data.content.map((v, index) => {
-    v.mainEdit = false
-    if (v.artifactDTOList && v.artifactDTOList.length > 0) {
-      v.artifactDTOList.forEach((k) => {
-        k.mainIndex = index
-        k.popoverVisible = false
-      })
-    }
+  let index = 1
+  data.data.content = data.data.content.map((v) => {
+    v.dataType = 2
+    v.index = index
+    index++
+    v.rowKey = v.id
+    v.hasChildren = !!v.detailDTOList.length
     return v
   })
+}
+
+async function load({ row, treeNode, resolve }) {
+  try {
+    const content = row.detailDTOList
+    let childIndex = 1
+    if (content.length > 0) {
+      content.map((v) => {
+        v.dataType = 1
+        v.rowKey = `${row.id}__${v.id}`
+        v.childIndex = childIndex
+        childIndex++
+        return v
+      })
+    }
+    resolve(content)
+    // 解决lazy首次异步加载数据完成后不展开
+    nextTick(() => {
+      tableRef.value.toggleRowExpansion(row, true)
+    })
+  } catch (error) {
+    console.log('获取翼腹板信息', error)
+  }
 }
 
 CRUD.HOOK.beforeSubmit = () => {
@@ -449,53 +313,13 @@ CRUD.HOOK.beforeSubmit = () => {
 </script>
 
 <style lang="scss" scoped>
-::v-deep(.abnormal-row) {
-  background: #ffecec;
-}
-::v-deep(.child-abnormal-row) {
-  background: #ebf3f7;
-}
-.customer-table {
-  // ::v-deep(th) {
-  //   border: none;
-  // }
-  // ::v-deep(td) {
-  //   border: none;
-  // }
-  // ::v-deep(th.is-leaf) {
-  //   border: none;
-  // }
-  ::v-deep(.el-input__inner) {
-    padding: 0;
-    padding-left: 5px;
-    text-align: left;
-  }
-  &::before {
-    width: 0;
-  }
-}
-.sandwich-cell-top {
-  border-bottom: 1px solid #dfe6ec;
-}
-.sandwich-cell-top,
-.sandwich-cell-bottom {
-  padding: 5px;
-  height: 40px;
-  line-height: 30px;
-  box-sizing: border-box;
-  overflow: hidden;
-  ::v-deep(.el-input__inner) {
-    padding: 0;
-    padding-left: 2px;
-  }
-}
-.assembly-table {
-  ::v-deep(.cell) {
-    padding-left: 0;
-    padding-right: 0;
-  }
-  ::v-deep(thead.is-group th) {
-    background: #fff;
-  }
+$font-size: 1.5em;
+.child {
+  width: $font-size;
+  height: $font-size;
+  display: inline-block;
+  border: 1px solid;
+  border-radius: 50%;
+  line-height: $font-size;
 }
 </style>

@@ -38,7 +38,7 @@
       <template #footer>
         <span class="dialog-footer">
           <common-button @click="handleZipDlgClose">取 消</common-button>
-          <template v-if="dataType===technicalDataTypeEnum.DEEPEN.V || dataType===technicalDataTypeEnum.MACHINE_PART.V">
+          <template v-if="dataType===technicalDataTypeEnum.DEEPEN.V">
             <common-button :loading="uploadZipLoading" type="primary" :disabled="errorList && errorList.length > 0" @click="uploadZip">上传</common-button>
           </template>
           <template v-else>

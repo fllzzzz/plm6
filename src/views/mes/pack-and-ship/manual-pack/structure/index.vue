@@ -24,7 +24,7 @@
         width="120px"
       >
         <template #default="{ row }">
-          <factory-table-cell-tag :id="row.factory ? row.factory.id : row.factoryId" />
+          <table-cell-tag v-if="row.workshopInf" :name="row.workshopInf.name" />
           <span>{{ row.name }}</span>
         </template>
       </el-table-column>
@@ -181,7 +181,7 @@
         </template>
       </el-table-column> -->
       <el-table-column v-permission="permission.pack" label="操作" width="70" align="center" fixed="right">
-        <template #default="{ row }">
+        <template #default="{ row: { sourceRow: row } }">
           <common-button type="success" icon="el-icon-plus" :disabled="ids.includes(`${row.id}`)" size="mini" @click="add(row)" />
         </template>
       </el-table-column>
@@ -200,7 +200,8 @@ import { artifactManualPackPM as permission } from '@/page-permission/mes'
 
 import useCRUD from '@compos/use-crud'
 import mHeader from './module/header'
-import factoryTableCellTag from '@comp-base/factory-table-cell-tag'
+import { deepClone } from '@/utils/data-type'
+import tableCellTag from '@comp-common/table-cell-tag/index.vue'
 
 const optShow = {
   add: false,
@@ -231,7 +232,7 @@ const props = defineProps({
     type: [String, Number],
     default: undefined
   },
-  factoryId: {
+  workshopId: {
     type: [String, Number],
     default: undefined
   },
@@ -255,7 +256,7 @@ const ids = computed(() => {
 })
 
 watch(
-  () => [props.projectId, props.factoryId, props.monomerId, props.areaId],
+  () => [props.projectId, props.workshopId, props.monomerId, props.areaId],
   () => {
     crud.toQuery()
   },
@@ -268,14 +269,16 @@ function add(row) {
 
 CRUD.HOOK.beforeRefresh = () => {
   crud.query.projectId = props.projectId
-  crud.query.factoryId = props.factoryId
+  crud.query.workshopId = props.workshopId
   crud.query.monomerId = props.monomerId
   crud.query.areaId = props.areaId
 }
 
 CRUD.HOOK.handleRefresh = (crud, res) => {
-  res.data.content = res.data.artifactList.map((v) => {
+  res.data.content = res.data.artifactList.map((v, index) => {
+    v.rowKey = `${packTypeK}_${Math.random()}_${index}`
     v.productQuantity = v.unPackageQuantity
+    v.originNumberList = v.numberList && deepClone(v.numberList) || []
     return v
   })
 }

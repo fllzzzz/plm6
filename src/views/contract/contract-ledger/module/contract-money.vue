@@ -7,6 +7,7 @@
     :before-close="handleClose"
     title="合同额"
     :wrapper-closable="false"
+    custom-class="amount-detail"
     size="900px"
   >
     <template #content>
@@ -65,11 +66,18 @@ const props = defineProps({
 const tableData = ref([])
 const emit = defineEmits(['success', 'update:modelValue'])
 const { visible, handleClose } = useVisible({ emit, props })
-const { maxHeight } = useMaxHeight({
-  wrapperBox: '.contractMoneyLog',
-  paginate: true,
-  extraHeight: 40
-})
+const { maxHeight } = useMaxHeight(
+  {
+    mainBox: '.amount-detail',
+    extraBox: ['.el-drawer__header'],
+    wrapperBox: '.el-drawer__body',
+    paginate: false,
+    minHeight: 300,
+    navbar: false,
+    clientHRepMainH: true
+  },
+  visible
+)
 
 watch(
   () => props.projectId,

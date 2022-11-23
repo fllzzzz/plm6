@@ -52,12 +52,12 @@ export function getForPackage(id) {
  * @param {number} endTime|required 打印结束时间【时间戳】
  * @returns
  */
-export function taskAdd({ id, quantity, startTime, endTime }) {
+export function taskAdd({ id, quantity, startTime, endTime, numberList }) {
   return request({
     module: 'mes',
     url: 'print/record/task',
     method: 'post',
-    data: { taskId: id, quantity, startTime, endTime }
+    data: { taskId: id, quantity, startTime, endTime, numberList }
   })
 }
 

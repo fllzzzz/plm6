@@ -37,8 +37,8 @@
           <p>
             工厂：<span style="margin-right: 20px">{{ row.factoryName }}</span> 车间：<span>{{ row.workshopName }}</span>
           </p>
-          <template v-if="!(row.productType & componentTypeEnum.ENCLOSURE.V)">
-            <p v-if="row.boolMachineEnum && row.productType & componentTypeEnum.ARTIFACT.V">
+          <template v-if="!(row.productType & (componentTypeEnum.ENCLOSURE.V | componentTypeEnum.MACHINE_PART.V))">
+            <p v-if="row.productionLineTypeEnum === artifactProductLineEnum.INTELLECT.V && row.productType & componentTypeEnum.ARTIFACT.V">
               产品标识：<span>{{ row.typeSequence }}</span>
             </p>
             <p v-else>
@@ -51,28 +51,6 @@
         </template>
       </el-expand-table-column>
       <el-table-column label="序号" type="index" align="center" width="60" />
-      <!-- <el-table-column
-        v-if="columns.visible('factoryName')"
-        prop="factoryName"
-        :show-overflow-tooltip="true"
-        label="工厂"
-        min-width="100px"
-      >
-        <template #default="{ row }">
-          <span>{{ row.factoryName }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column
-        v-if="columns.visible('workshopName')"
-        prop="workshopName"
-        :show-overflow-tooltip="true"
-        label="车间"
-        min-width="100px"
-      >
-        <template #default="{ row }">
-          <span>{{ row.workshopName }}</span>
-        </template>
-      </el-table-column> -->
       <el-table-column
         v-if="columns.visible('name')"
         key="name"
@@ -92,15 +70,15 @@
         </template>
       </el-table-column>
       <el-table-column
-        v-if="columns.visible('boolMachineEnum')"
-        prop="boolMachineEnum"
+        v-if="columns.visible('productionLineTypeEnum')"
+        prop="productionLineTypeEnum"
         :show-overflow-tooltip="true"
-        label="智能线"
+        label="生产线类型"
         align="center"
         width="100px"
       >
         <template v-slot="{ row }">
-          <span>{{ row.boolMachineEnum }}</span>
+          <span>{{ artifactProductLineEnum.VL[row.productionLineTypeEnum] }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -157,19 +135,6 @@
         </template>
       </el-table-column>
       <el-table-column v-if="columns.visible('sort')" key="sort" prop="sort" label="排序" align="center" width="80px" />
-      <!-- <el-table-column
-        v-if="columns.visible('remark')"
-        key="remark"
-        prop="remark"
-        :show-overflow-tooltip="true"
-        label="备注"
-        min-width="140px"
-      >
-        <template #default="{ row }">
-          <span>{{ row.remark }}</span>
-        </template>
-      </el-table-column> -->
-      <!--编辑与删除-->
       <el-table-column
         v-if="checkPermission([...permission.del, ...permission.edit])"
         label="操作"
@@ -193,8 +158,7 @@ import crudApi, { editStatus } from '@/api/mes/production-config/production-line
 import { ref, defineEmits, inject } from 'vue'
 import { useStore } from 'vuex'
 import { enabledEnum } from '@enum-ms/common'
-import { componentTypeEnum } from '@enum-ms/mes'
-import { whetherEnum } from '@enum-ms/common'
+import { componentTypeEnum, artifactProductLineEnum } from '@enum-ms/mes'
 import checkPermission from '@/utils/system/check-permission'
 import { configProductionLinePM as permission } from '@/page-permission/config'
 
@@ -231,7 +195,6 @@ const { crud, columns, CRUD } = useCRUD(
 // 展开keys
 const expandRowKeys = ref([])
 const dataFormat = ref([
-  ['boolMachineEnum', ['parse-enum', whetherEnum]],
   ['targetProductionShow', ['to-fixed', 2]]
 ])
 
@@ -263,8 +226,8 @@ function handleCurrentChange(val) {
 CRUD.HOOK.handleRefresh = (crud, { data }) => {
   data.content.forEach((v) => {
     v.targetProductionShow = (v.targetProduction && v.targetProduction / 1000) || 0
-    v.typeSequence = v.typeList.map((v) => `【${v.name}】`).join('')
-    v.linkIdList = v.typeList.map((v) => v.id)
+    v.typeSequence = v?.typeList?.map((v) => `【${v?.name}】`)?.join('')
+    v.linkIdList = v?.typeList?.map((v) => v.id) || []
   })
 }
 

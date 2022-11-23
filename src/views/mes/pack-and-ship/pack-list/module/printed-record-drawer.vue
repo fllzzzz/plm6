@@ -51,7 +51,7 @@ const recordList = ref([])
 const loading = ref(false)
 
 watch(
-  () => props.packageId,
+  () => drawerVisible.value,
   (val) => {
     if (val) {
       fetchRecord()
@@ -61,6 +61,9 @@ watch(
 )
 
 async function fetchRecord() {
+  if (!props.packageId) {
+    return
+  }
   loading.value = true
   let _recordList = []
   try {
