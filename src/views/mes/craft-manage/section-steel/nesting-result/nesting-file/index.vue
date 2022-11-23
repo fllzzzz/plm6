@@ -140,7 +140,7 @@
             <span>{{ scope.row.typesettingLength }}</span>
           </template>
         </el-table-column>
-        <el-table-column key="lossRate" prop="lossRate" :show-overflow-tooltip="true" label="损耗" align="center" width="80px">
+        <el-table-column key="lossRate" prop="lossRate" :show-overflow-tooltip="true" label="损耗" align="center" width="70px">
           <template v-slot="scope">
             <span>{{ scope.row.lossRate }}%</span>
           </template>
