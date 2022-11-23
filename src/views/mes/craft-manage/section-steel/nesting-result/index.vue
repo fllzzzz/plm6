@@ -51,6 +51,7 @@ import crudApi from '@/api/mes/craft-manage/section-steel/nesting-result'
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
 import { projectNestingStatusEnum } from '@enum-ms/mes'
+import { mesNestingResultPM as permission } from '@/page-permission/mes'
 import pagination from '@crud/Pagination'
 import mHeader from './module/header.vue'
 import nestingResultDetail from './nesting-result-detail/index.vue'
@@ -68,7 +69,7 @@ const { crud, columns } = useCRUD(
     title: '套料成果',
     sort: [],
     optShow: { ...optShow },
-    // permission: { ...permission },
+    permission: { ...permission },
     crudApi: { ...crudApi },
     hasPagination: true
   },

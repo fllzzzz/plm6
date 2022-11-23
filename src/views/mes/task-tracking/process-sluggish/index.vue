@@ -63,6 +63,7 @@
               </div>
             </div>
             <print-table
+              v-permission="permission.print"
               api-key="mesProcessList"
               :params="{
                 productionLineId: crud.query.productionLineId,
@@ -186,6 +187,7 @@
 <script setup>
 import { get } from '@/api/mes/task-tracking/process-sluggish.js'
 import { ref, watch, provide, computed } from 'vue'
+import { mesProcessSluggishPM as permission } from '@/page-permission/mes'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import { parseTime } from '@/utils/date'
@@ -230,6 +232,7 @@ const { crud, CRUD, columns } = useCRUD(
     sort: [],
     optShow: { ...optShow },
     crudApi: { get },
+    permission: { ...permission },
     invisibleColumns: [],
     requiredQuery: ['processId', 'productType'],
     hasPagination: true

@@ -26,6 +26,7 @@
     </template>
     <template #titleRight>
       <print-table
+      v-permission="permission.print"
         api-key="mesProductionLineList"
         :params="{
           productionLineId: props.detailData.id,
@@ -99,6 +100,7 @@ import usePagination from '@compos/use-pagination'
 import useMaxHeight from '@compos/use-max-height'
 import { defineProps, defineEmits, ref, watch } from 'vue'
 import { projectNameFormatter } from '@/utils/project'
+import { mesProductionLineTrackingPM as permission } from '@/page-permission/mes'
 import monomerSelectAreaSelect from '@comp-base/monomer-select-area-select'
 import projectCascader from '@comp-base/project-cascader.vue'
 

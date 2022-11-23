@@ -77,6 +77,7 @@
         </template>
         <template #viewLeft>
           <print-table
+          v-permission="permission.print"
             api-key="mesFactoryWorkshopReport"
             :params="{ startTime: query.startTime, endTime: query.endTime, projectId: query.projectId }"
             size="mini"
@@ -98,6 +99,7 @@ import { DP } from '@/settings/config'
 import { PICKER_OPTIONS_SHORTCUTS } from '@/settings/config'
 // import { getOrderDeliveryRate } from '@/api/operation/order-delivery-rate'
 import { fullYearProduction, workshopEcharts, workshopProduction } from '@/api/mes/factory-report/workshop-report.js'
+import { mesFactoryReportPM as permission } from '@/page-permission/mes'
 import workshopSelect from '@comp-mes/workshop-select'
 import productionLineSelect from '@comp-mes/production-line-select'
 import projectCascader from '@comp-base/project-cascader'

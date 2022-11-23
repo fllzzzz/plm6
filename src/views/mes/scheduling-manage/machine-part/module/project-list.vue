@@ -51,6 +51,9 @@ import { getProject, getDate } from '@/api/mes/scheduling-manage/machine-part'
 import { ref, defineProps, defineEmits, defineExpose, nextTick } from 'vue'
 import moment from 'moment'
 
+import checkPermission from '@/utils/system/check-permission'
+import { machinePartSchedulingPM as permission } from '@/page-permission/mes'
+
 const emit = defineEmits(['project-click'])
 defineProps({
   maxHeight: {
@@ -72,6 +75,7 @@ fetchTime()
 fetchProject()
 
 async function fetchTime(lastQuery) {
+  if (!checkPermission(permission.get)) return
   try {
     timeList.value = []
     tableData.value = []
@@ -104,6 +108,7 @@ async function fetchTime(lastQuery) {
 // }
 
 async function fetchProject(lastQuery) {
+  if (!checkPermission(permission.get)) return
   try {
     loading.value = true
     tableData.value = []

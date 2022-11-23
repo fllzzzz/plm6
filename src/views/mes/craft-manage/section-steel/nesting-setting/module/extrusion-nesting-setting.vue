@@ -4,7 +4,7 @@
       <el-tag>单位：mm</el-tag>
     </template>
     <template #titleRight>
-      <common-button v-loading.fullscreen.lock="fullscreenLoading" type="success" size="mini" @click="submitForm(formRef)">
+      <common-button v-loading.fullscreen.lock="fullscreenLoading" v-permission="permission.extrusionNesting" type="success" size="mini" @click="submitForm(formRef)">
         开始套料
       </common-button>
     </template>
@@ -47,6 +47,7 @@
 import { defineProps, ref, defineEmits, reactive, inject } from 'vue'
 import { nestingSettingTypeEnum, mesBuildingTypeSettingAssembleTypeEnum as materialTypeEnum } from '@enum-ms/mes'
 import useVisible from '@compos/use-visible'
+import { mesNestingSettingPM as permission } from '@/page-permission/mes'
 import { extrusionNesting } from '@/api/mes/craft-manage/section-steel/nesting-setting'
 import nestingProgress from './nesting-progress.vue'
 

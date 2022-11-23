@@ -71,6 +71,8 @@ import { ref, defineProps, defineEmits, watch } from 'vue'
 import moment from 'moment'
 
 import { projectNameFormatter } from '@/utils/project'
+import checkPermission from '@/utils/system/check-permission'
+import { artifactSchedulingPM as permission } from '@/page-permission/mes'
 
 import projectHeaderTime from './project-header-time.vue'
 
@@ -98,6 +100,7 @@ const expandedKeys = ref([])
 fetchTime()
 
 async function fetchTime() {
+  if (!checkPermission(permission.get)) return
   try {
     const { content } = await getAreaTreeTime()
     const timeStamp = []

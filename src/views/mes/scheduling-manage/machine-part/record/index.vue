@@ -4,6 +4,7 @@
       <mHeader>
         <template #optRight>
           <common-button
+            v-permission="permission.save"
             class="filter-item"
             :disabled="!crud.selections?.length"
             size="mini"
@@ -109,18 +110,18 @@
       >
         <template #default="{ row: { sourceRow: row } }">
           <el-tag v-if="row.issueStatusEnum !== issueStatusEnum.NOT_NESTING.V && !row.boolNestCutEnum" type="danger">
-              {{ layOffWayTypeEnum.VL[row.boolNestCutEnum] }}
+            {{ layOffWayTypeEnum.VL[row.boolNestCutEnum] }}
+          </el-tag>
+          <template v-else>
+            <el-tag v-if="row.issueStatusEnum && issueStatusEnum.V[row.issueStatusEnum]" :type="issueStatusEnum.V[row.issueStatusEnum].T">
+              {{ issueStatusEnum.VL[row.issueStatusEnum] }}
             </el-tag>
-            <template v-else>
-              <el-tag v-if="row.issueStatusEnum && issueStatusEnum.V[row.issueStatusEnum]" :type="issueStatusEnum.V[row.issueStatusEnum].T">
-                {{ issueStatusEnum.VL[row.issueStatusEnum] }}
-              </el-tag>
-            </template>
+          </template>
         </template>
       </el-table-column>
-      <el-table-column v-permission="[...permission.del]" label="操作" width="140px" align="center" fixed="right">
+      <el-table-column v-permission="[...permission.del, ...permission.detail]" label="操作" width="140px" align="center" fixed="right">
         <template #default="{ row }">
-          <common-button type="info" icon="el-icon-view" size="mini" @click="toDetail(row)" />
+          <common-button v-permission="permission.detail" type="info" icon="el-icon-view" size="mini" @click="toDetail(row)" />
           <udOperation :showEdit="false" :showDel="row.issueStatusEnum === issueStatusEnum.NOT_NESTING.V" :data="row" />
         </template>
       </el-table-column>
@@ -138,6 +139,7 @@ import { ElNotification, ElMessage } from 'element-plus'
 
 import { machinePartSchedulingIssueStatusEnum as issueStatusEnum } from '@enum-ms/mes'
 import { layOffWayTypeEnum } from '@enum-ms/uploading-form'
+import { machinePartSchedulingRecordPM as permission } from '@/page-permission/mes'
 
 import useTableValidate from '@compos/form/use-table-validate'
 import useMaxHeight from '@compos/use-max-height'
@@ -147,14 +149,6 @@ import udOperation from '@crud/UD.operation'
 import mHeader from './module/header'
 import recordDetail from './module/record-detail.vue'
 import cutConfigSelect from '@/components-system/base/cut-config-select.vue'
-
-// crud交由presenter持有
-const permission = {
-  get: [''],
-  edit: [''],
-  add: [''],
-  del: ['']
-}
 
 const optShow = {
   add: false,

@@ -132,6 +132,7 @@ import useCRUD from '@compos/use-crud'
 import pagination from '@crud/Pagination'
 import { tableSummary } from '@/utils/el-extra'
 import { projectNameFormatter } from '@/utils/project'
+import { mesFactoryReportPM as permission } from '@/page-permission/mes'
 import mHeader from './module/header'
 
 const tableRef = ref()
@@ -146,6 +147,7 @@ const { crud, CRUD, columns } = useCRUD({
   title: '车间报表',
   sort: [],
   optShow: { ...optShow },
+  permission: { ...permission },
   crudApi: { ...crudApi },
   hasPagination: true
 },

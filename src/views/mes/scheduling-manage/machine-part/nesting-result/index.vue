@@ -10,6 +10,7 @@
           <mHeader>
             <template #optRight>
               <common-button
+              v-permission="permission.save"
                 class="filter-item"
                 :disabled="!crud.selections?.length"
                 size="mini"
@@ -146,6 +147,7 @@ import { ElMessage } from 'element-plus'
 import moment from 'moment'
 
 import { componentTypeEnum } from '@enum-ms/mes'
+import { machinePartSchedulingNestingResultPM as permission } from '@/page-permission/mes'
 
 import useTableValidate from '@compos/form/use-table-validate'
 import { manualFetchGroupsTree } from '@compos/mes/scheduling/use-scheduling-groups'
@@ -157,14 +159,6 @@ import mHeader from './module/header'
 import nestingTaskList from './module/nesting-task-list.vue'
 import previewDialog from './module/preview-dialog'
 import { deepClone } from '@/utils/data-type'
-
-// crud交由presenter持有
-const permission = {
-  get: [''],
-  edit: [''],
-  add: [''],
-  del: ['']
-}
 
 const optShow = {
   add: false,

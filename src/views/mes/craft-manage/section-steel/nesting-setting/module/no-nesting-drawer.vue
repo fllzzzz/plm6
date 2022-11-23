@@ -1,7 +1,7 @@
 <template>
   <common-drawer ref="drawerRef" title="无需套料清单" v-model="drawerVisible" direction="rtl" :before-close="handleClose" size="60%">
     <template #titleRight>
-      <common-button type="danger" size="mini" icon="el-icon-delete" @click="batchDelete">批量移出</common-button>
+      <common-button v-permission="permission.moveOutNoNestingList" type="danger" size="mini" icon="el-icon-delete" @click="batchDelete">批量移出</common-button>
     </template>
     <template #content>
       <common-table
@@ -42,7 +42,7 @@ import { defineProps, defineEmits, ref, inject } from 'vue'
 import { ElMessage, ElNotification, ElMessageBox } from 'element-plus'
 
 import PopoverConfirm from '@/components-system/common/popover-confirm.vue'
-
+import { mesNestingSettingPM as permission } from '@/page-permission/mes'
 import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'
 

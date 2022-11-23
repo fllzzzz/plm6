@@ -41,6 +41,7 @@
 <script setup>
 import { ref, watch } from 'vue'
 import crudApi from '@/api/mes/production-manage/dashboard/project-overview'
+import { mesProjectOverviewPM as permission } from '@/page-permission/mes'
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
 import pagination from '@crud/Pagination'
@@ -61,7 +62,7 @@ const { crud, CRUD, columns } = useCRUD(
     title: '项目总览',
     sort: [],
     optShow: { ...optShow },
-    // permission: { ...permission },
+    permission: { ...permission },
     crudApi: { ...crudApi },
     hasPagination: true
   },
