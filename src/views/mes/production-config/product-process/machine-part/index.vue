@@ -90,7 +90,7 @@ const { maxHeight } = useMaxHeight()
 
 CRUD.HOOK.handleRefresh = (crud, res) => {
   res.data.content = res.data.content.map((v) => {
-    v.specSequence = v.links.map((v) => `${v.keyword}【${v.specIndex ? v.specIndex : '全部'}】`).join('、')
+    v.specSequence = v.links?.map((v) => `${v.keyword}【${v.specIndex ? v.specIndex : '全部'}】`).join('、')
     v.processSequence = v.productProcessLinkList?.map((v) => `【${v.name}】`).join('→')
     v.processSequenceIds = v.productProcessLinkList?.map((v) => v.processId)
     return v
