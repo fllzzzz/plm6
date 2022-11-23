@@ -29,6 +29,7 @@
       <template #viewLeft>
         <print-table
           api-key="auxiliaryMaterialSummary"
+          v-permission="crud.permission.print"
           :params="{ ...query }"
           size="mini"
           type="warning"

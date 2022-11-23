@@ -37,19 +37,20 @@
         </template>
       </el-table-column>
       <!--编辑与删除-->
-      <el-table-column label="操作" width="130px" align="center" fixed="right">
+      <el-table-column label="操作" width="130px" align="center" v-if="checkPermission([...permission.detail])" fixed="right">
         <template v-slot="scope">
           <common-button
             size="mini"
             icon="el-icon-view"
             type="primary"
+            v-permission="permission.detail"
             @click="openDetail(scope.row, 'detail')"
           />
         </template>
       </el-table-column>
     </common-table>
     <pagination />
-    <component :is="showComponent" :showType="showType" v-model="detailVisible" :detailQuery="detailQuery" :detailInfo="currentRow"/>
+    <component :is="showComponent" :showType="showType" v-model="detailVisible" :detailQuery="detailQuery" :detailInfo="currentRow" :permission="permission"/>
   </div>
 </template>
 
@@ -57,10 +58,11 @@
 import crudApi from '@/api/mes/pack-and-ship/product-receive-send-storage'
 import { ref, nextTick, computed } from 'vue'
 
-import { deliveryInstallListPM as permission } from '@/page-permission/project'
+import { mesProductSendReceiveStoragePM as permission } from '@/page-permission/mes'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import { DP } from '@/settings/config'
+import checkPermission from '@/utils/system/check-permission'
 
 import mHeader from './module/header'
 import pagination from '@crud/Pagination'

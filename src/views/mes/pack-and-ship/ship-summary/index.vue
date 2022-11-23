@@ -32,7 +32,7 @@
       </div>
       <div style="border-right: 1px solid #ededed; height: calc(100vh - 130px)"></div>
       <div style="width: 59%; padding-left: 10px">
-        <projectShipmentDetail :currentRow="currentRow" v-if="isNotBlank(currentRow)" />
+        <projectShipmentDetail :currentRow="currentRow" v-if="isNotBlank(currentRow)" :permission="permission"/>
         <div class="my-code" v-else>*点击左表操作查看明细</div>
       </div>
     </div>
@@ -43,7 +43,7 @@
 import crudApi from '@/api/mes/pack-and-ship/ship-summary'
 import { ref } from 'vue'
 
-// import { productShipmentPM as permission } from '@/page-permission/project'
+import { mesShipSummaryPM as permission } from '@/page-permission/mes'
 import { isNotBlank } from '@data-type/index'
 
 import useMaxHeight from '@compos/use-max-height'
@@ -68,7 +68,7 @@ const { crud, CRUD } = useCRUD(
   {
     title: '发运管理',
     sort: [],
-    // permission: { ...permission },
+    permission: { ...permission },
     dataPath: '',
     optShow: { ...optShow },
     crudApi: { ...crudApi },

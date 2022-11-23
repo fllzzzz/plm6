@@ -71,11 +71,8 @@
       <rrOperation />
     </div>
     <crudOperation>
-      <!-- <template #optLeft>
-        <el-tag type="danger">未修正：{{crud.page.total}}件</el-tag>
-      </template> -->
       <template #viewLeft>
-        <common-button type="primary" :disabled="crud.selections.length===0" @click="changeVisible=true">批量修改</common-button>
+        <common-button type="primary" :disabled="crud.selections.length===0" @click="changeVisible=true" v-permission="crud.permission.edit">批量修改</common-button>
       </template>
     </crudOperation>
     <changeTable v-model="changeVisible" :list="crud.selections" @success="crud.toQuery"/>
@@ -111,12 +108,6 @@ const areaInfo = ref([])
 const changeVisible = ref(false)
 const { globalProjectId } = mapGetters(['globalProjectId'])
 const { crud, query } = regHeader(defaultQuery)
-// const props = defineProps({
-//   projectId: {
-//     type: [Number, String],
-//     default: undefined
-//   }
-// })
 
 watch(
   () => globalProjectId,

@@ -73,8 +73,7 @@ export const planSummaryListPM = {
 export const artifactTreePM = {
   get: ['plan_artifact_tree_list:get'], // 零构件列表
   editNum: ['plan_artifact_tree_list:editNum'], // 修改构件数量
-  editInfo: ['plan_artifact_tree_list:editInfo'], // 修改零构件信息
-  editSerialNum: ['plan_artifact_tree_list:editSerialNum'], // 修改构件编号
+  productionStatus: ['plan_artifact_tree_list:productionStatus'], // 生产状态
   del: ['plan_artifact_tree_list:del'], // 删除零构件
   download: ['plan_artifact_tree_list:download'], // 下载零构件
   import: ['plan_artifact_tree_list:import'], // 导入零构件
@@ -94,21 +93,13 @@ export const artifactPM = {
 
 // 技术管理/部件列表
 export const assemblyListPM = {
-  get: ['plan_assembly_list:get'], // 部件列表
-  del: ['plan_assembly_list:del'], // 删除部件
-  download: ['plan_assembly_list:download'], // 下载部件
-  import: ['plan_assembly_list:import'], // 导入部件
-  artifactAdd: ['plan_assembly_list:artifactAdd'], // 添加构件
-  artifactDel: ['plan_assembly_list:artifactDel'], // 删除构件
-  templateDownLoad: ['plan_assembly_list:templateDownLoad'] // 下载部件模板
+  get: ['plan_assembly_list:get'] // 部件列表
 }
 
-// 技术管理/配套件
-export const auxiliaryMaterialPM = {
-  get: ['auxiliary-material:get'], // 配套件列表
-  add: ['auxiliary-material:add'], // 新增配套件
-  del: ['auxiliary-material:del'], // 删除配套件
-  edit: ['auxiliary-material:edit'] // 修改配套件
+// 技术管理/配套件汇总
+export const auxiliaryMaterialSummaryPM = {
+  get: ['auxiliary-material-summary:get'], // 配套件汇总列表
+  print: ['auxiliary-material-summary:print'] // 配套件下载
 }
 
 // 技术管理/围护列表
@@ -123,31 +114,6 @@ export const enclosureListPM = {
   drawDownload: ['plan_enclosure_list:drawDownload'], // 下载图片
   templateDownload: ['plan_enclosure_list:templateDownload'], // 下载围护模板
   techDetail: ['plan_enclosure_list:techDetail'] // 技术交底
-}
-
-// 技术管理/深化列表
-export const deepenListPM = {
-  model: {
-    import: ['plan_deepen_model:get'], // 模型导入
-    get: ['plan_deepen_model:get'], // 模型导入
-    del: ['plan_deepen_model:del'], // 模型删除
-    integration: ['plan_deepen_model_integration:edit'], // 模型集成
-    integrationDel: ['plan_deepen_model_integration:del'] // 删除模型集成
-  },
-  deepen: {
-    get: ['plan_deepen:get'], // 深化图纸列表
-    import: ['plan_deepen:import'], // 导入深化图纸
-    del: ['plan_deepen:del'], // 删除深化图纸
-    edit: ['plan_deepen:edit'], // 修改深化图纸
-    download: ['plan_deepen:download'] // 下载深化图纸
-  },
-  machinePart: {
-    get: ['plan_deepen_machine_part:get'], // 深化图纸列表
-    import: ['plan_deepen_machine_part:import'], // 导入深化图纸
-    del: ['plan_deepen_machine_part:del'], // 删除深化图纸
-    edit: ['plan_deepen_machine_part:edit'], // 修改深化图纸
-    download: ['plan_deepen_machine_part:download'] // 下载深化图纸
-  }
 }
 
 // 技术管理/蓝图列表
