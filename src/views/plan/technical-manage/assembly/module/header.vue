@@ -31,65 +31,11 @@
           :params="exportParam"
           class="filter-item"
           :disabled="crud.data.length === 0 || deleteLoading"
-          v-permission="crud.permission.download"
+          v-permission="crud.permission.get"
         >
           下载部件清单
         </export-button>
-        <!-- <export-button
-          :fn="downloadAssembleTemplate"
-          class="filter-item"
-          :disabled="deleteLoading"
-          v-permission="crud.permission.templateDownLoad"
-        >
-          部件清单模板
-        </export-button>
-        <el-popconfirm
-          :title="`确认清空【${currentArea.name}】下的【部件清单】么?`"
-          @confirm="deleteAssemle"
-          v-if="currentArea && currentArea.id && checkPermission(crud.permission.del)"
-        >
-          <template #reference>
-            <common-button type="danger" size="mini" :loading="deleteLoading" class="filter-item" :disabled="crud.data.length === 0">
-              一键清空(按区域)
-            </common-button>
-          </template>
-        </el-popconfirm>
-        <el-popconfirm
-          :title="`确认部分删除【${currentArea.name}】下的【部件清单】么?`"
-          @confirm="deleteAssemle"
-          v-if="currentArea && currentArea.id && checkPermission(crud.permission.del)"
-        >
-          <template #reference>
-            <common-button type="danger" size="mini" :loading="deleteLoading" class="filter-item" :disabled="crud.data.length === 0">
-              部分删除
-            </common-button>
-          </template>
-        </el-popconfirm>
-        <common-button
-          v-if="checkPermission(crud.permission.del)"
-          class="filter-item"
-          type="danger"
-          icon="el-icon-delete"
-          size="mini"
-          :loading="crud.delAllLoading"
-          :disabled="crud.selections.length === 0"
-          @click.stop="deleteItems(crud.selections)"
-        >
-          删除
-        </common-button> -->
       </template>
-      <!-- <template #viewLeft>
-        <el-tooltip effect="light" placement="top">
-          <template #content>
-            <div>{{ errorList.join(',') }}</div>
-          </template>
-          <div class="filter-item">
-            <el-tag v-if="errorList.length > 0" type="danger" class="filter-item" effect="plain">
-              本区域存在{{ errorList.length }}条未绑定构件,鼠标悬停查看
-            </el-tag>
-          </div>
-        </el-tooltip>
-      </template> -->
     </crudOperation>
   </div>
 </template>
@@ -97,19 +43,13 @@
 <script setup>
 import { defineProps, ref, computed } from 'vue'
 import { regHeader } from '@compos/use-crud'
-// import checkPermission from '@/utils/system/check-permission'
 import crudOperation from '@crud/CRUD.operation'
 import monomerSelect from '@/components-system/plan/monomer-select'
 import areaTabs from '@/components-system/plan/area-tabs'
-// import uploadBtn from '@comp/file-upload/ExcelUploadBtn'
-// import { listUpload } from '@/api/plan/technical-manage/assembly'
 import ExportButton from '@comp-common/export-button/index.vue'
 import { TechnologyTypeAllEnum } from '@enum-ms/contract'
 import rrOperation from '@crud/RR.operation'
 import { downloadAssemble } from '@/api/plan/technical-manage/assembly'
-// import { downloadAssemble, downloadAssembleTemplate, delAssemblyByArea, assembleError } from '@/api/plan/technical-manage/assembly'
-// import { projectModeEnum } from '@enum-ms/contract'
-// import { ElMessageBox } from 'element-plus'
 
 const defaultQuery = {
   name: '',
@@ -125,7 +65,6 @@ const currentArea = ref({})
 const areaInfo = ref([])
 const defaultTab = ref({})
 const deleteLoading = ref(false)
-// const errorList = ref([])
 const { crud, query } = regHeader(defaultQuery)
 const props = defineProps({
   projectId: {
@@ -142,14 +81,6 @@ const exportParam = computed(() => {
   const param = { ...crud.query }
   return param
 })
-
-// const AddParam = computed(() => {
-//   return { areaId: crud.query.areaId, importType: 1 }
-// })
-
-// const carryParam = computed(() => {
-//   return { areaId: crud.query.areaId, importType: 2 }
-// })
 
 function tabClick(val) {
   const { name, label } = val
@@ -172,48 +103,7 @@ function getAreaInfo(val) {
   }
 }
 
-// async function deleteAssemle() {
-//   deleteLoading.value = true
-//   try {
-//     await delAssemblyByArea({ areaId: crud.query.areaId })
-//     crud.notify('操作成功', CRUD.NOTIFICATION_TYPE.SUCCESS)
-//     uploadSuccess()
-//     deleteLoading.value = false
-//   } catch (e) {
-//     console.log('清空部件', e)
-//     deleteLoading.value = false
-//   }
-// }
-
-// // 批量删除
-// function deleteItems(data) {
-//   ElMessageBox.confirm(`确认删除选中的${data.length}条数据?`, '提示', {
-//     confirmButtonText: '确定',
-//     cancelButtonText: '取消',
-//     type: 'warning'
-//   })
-//     .then(() => {
-//       crud.delAllLoading = true
-//       crud.doDelete(data)
-//     })
-//     .catch(() => {})
-// }
-
-// async function getAssembleError() {
-//   if (!crud.query.areaId) {
-//     errorList.value = []
-//     return
-//   }
-//   try {
-//     const { content } = await assembleError({ areaId: crud.query.areaId })
-//     errorList.value = content
-//   } catch (e) {
-//     console.log('部件错误数据', e)
-//   }
-// }
-
 function uploadSuccess() {
-  // getAssembleError()
   crud.toQuery()
 }
 </script>

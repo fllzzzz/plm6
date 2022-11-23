@@ -390,26 +390,57 @@ export const reportWarehouseStatePM = {
 
 // ########################################################################
 
-// --------------------------- 打包与发运 start --------------------------------
+// --------------------------- 工艺管理 start --------------------------------
 
-// 打包与发运/手工打包:手工打包
+// 工艺管理/构件规格修正
+export const artifactSpecificationRevisePM = {
+  get: ['artifact-specification-revise:get'], // 列表
+  edit: ['artifact-specification-revise:edit'] // 构件规格修改
+}
+
+// --------------------------- 工艺管理 end --------------------------------
+// ########################################################################
+
+// --------------------------- 生产订单 start --------------------------------
+
+// 生产订单/生产排期
+export const mesProductionOrderPM = {
+  get: ['mes_production_order:get'], // 列表
+  detail: ['mes_production_order:detail'], // 查看计划详情
+  edit: ['mes_production_order:edit'], // 排产计划修改
+  detailList: ['mes_production_order:detailList'] // 清单详情
+}
+
+// --------------------------- 生产订单 end --------------------------------
+
+// ########################################################################
+
+// --------------------------- 发运管理 start --------------------------------
+
+// 发运管理/发运管理列表
+export const mesShipSummaryPM = {
+  get: ['mes_ship_summary:get'], // 列表
+  print: ['mes_ship_summary:print'] // 发运详情打印
+}
+
+// 发运管理/手工打包:手工打包
 export const manualPackPM = {
   pack: ['mes_manual_pack:pack'] // 手工打包
 }
 
-// 打包与发运/手工打包:结构
+// 发运管理/手工打包:结构
 export const artifactManualPackPM = {
   get: ['mes_manual_pack_artifact:get'], // 结构打包列表
   pack: manualPackPM.pack // 手工打包
 }
 
-// 打包与发运/手工打包:围护
+// 发运管理/手工打包:围护
 export const enclosureManualPackPM = {
   get: ['mes_manual_pack_enclosure:get'], // 围护打包列表
   pack: manualPackPM.pack // 手工打包
 }
 
-// 打包与发运/打包记录
+// 发运管理/打包记录
 export const mesPackPM = {
   get: ['mes_pack:get'], // 打包列表
   detail: ['mes_pack:detail'], // 查看打包清单
@@ -421,7 +452,7 @@ export const mesPackPM = {
   printPackList: ['mes_pack:printPackList'] // 打印包单清单
 }
 
-// 打包与发运/发运记录
+// 发运管理/发运记录
 export const mesShipPM = {
   get: ['mes_ship:get'], // 发运列表
   detail: ['mes_ship:detail'], // 查看车次详情
@@ -429,7 +460,7 @@ export const mesShipPM = {
   detailPrint: ['mes_ship:detailPrint'] // 打印车次详情
 }
 
-// 打包与发运/收货状态
+// 发运管理/收货状态
 export const receiptStatusPM = {
   get: ['mes_receipt_status:get'], // 收货列表
   detail: ['mes_receipt_status:detail'], // 查看收货详情
@@ -439,14 +470,14 @@ export const receiptStatusPM = {
   confirmDelivery: ['mes_receipt_status:confirmDelivery'] // 确定签收
 }
 
-// 打包与发运/物流记录
+// 发运管理/物流记录
 export const logisticsPM = {
   get: ['mes_logistics:get'], // 物流列表
   edit: ['mes_logistics:edit'], // 录入物流信息
   print: ['mes_logistics:print'] // 打印物流汇总
 }
 
-// 打包与发运/发运审核
+// 发运管理/发运审核
 export const shipAuditPM = {
   get: ['mes_ship_audit:get'], // 审核列表
   detail: ['mes_ship_audit:detail'], // 装车明细
@@ -455,17 +486,11 @@ export const shipAuditPM = {
   audit: ['mes_ship_audit:audit'] // 发运审核
 }
 
-// --------------------------- 打包与发运 end --------------------------------
-// ########################################################################
-
-// --------------------------- 生产订单 start --------------------------------
-
-// 生产订单
-export const mesProductionOrderPM = {
-  get: ['mes_production_order:get'], // 列表
-  detail: ['mes_production_order:detail'], // 查看计划详情
-  edit: ['mes_production_order:edit'], // 排产计划修改
-  detailList: ['mes_production_order:detailList'] // 清单详情
+// 发运管理/制成品入发存
+export const mesProductSendReceiveStoragePM = {
+  get: ['mes_product-send-receive-storage:get'], // 列表
+  print: ['mes_product-send-receive-storage:print'], // 制成品入发存打印
+  detail: ['mes_product-send-receive-storage:detail'], // 制成品入发存详情
+  detailPrint: ['mes_product-send-receive-storage:detailPrint'] // 制成品入发存详情打印
 }
-
-// --------------------------- 生产订单 end --------------------------------
+// --------------------------- 发运管理 end --------------------------------

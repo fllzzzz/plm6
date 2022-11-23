@@ -120,22 +120,14 @@
         </el-table-column>
         <!--编辑与删除-->
         <el-table-column
-          v-if="crud.query.boolAmendStatus===false"
+          v-if="crud.query.boolAmendStatus===false && checkPermission([...permission.edit])"
           label="操作"
           width="130px"
           align="center"
           fixed="right"
         >
-        <!-- <el-table-column
-          v-if="checkPermission([...permission.edit])"
-          label="操作"
-          width="130px"
-          align="center"
-          fixed="right"
-        > -->
           <template v-slot="scope">
-            <!-- <udOperation :data="scope.row" :permission="permission" :show-del="false" :show-edit="!scope.row.newSpecPrefix"/> -->
-            <udOperation :data="scope.row" :show-del="false" :show-edit="!scope.row.newSpecPrefix"/>
+            <udOperation :data="scope.row" :show-del="false" :show-edit="!scope.row.newSpecPrefix" :permission="permission" />
           </template>
         </el-table-column>
       </common-table>
@@ -152,16 +144,14 @@ import { ref, provide } from 'vue'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import pagination from '@crud/Pagination'
-// import { mapGetters } from '@/store/lib'
 import { DP } from '@/settings/config'
 import { artifactProductLineEnum } from '@enum-ms/mes'
-// import { artifactPM as permission } from '@/page-permission/plan'
+import { artifactSpecificationRevisePM as permission } from '@/page-permission/mes'
+import checkPermission from '@/utils/system/check-permission'
 
 import udOperation from '@crud/UD.operation'
 import mHeader from './module/header'
 import mForm from './module/form'
-
-// const { globalProjectId } = mapGetters(['globalProjectId'])
 
 const optShow = {
   add: false,
@@ -176,7 +166,7 @@ const { crud, columns } = useCRUD(
   {
     title: '构件规格修正',
     sort: ['id.asc'],
-    // permission: { ...permission },
+    permission: { ...permission },
     optShow: { ...optShow },
     requiredQuery: ['projectId'],
     crudApi: { ...crudApi },
@@ -190,17 +180,6 @@ const { maxHeight } = useMaxHeight({
   paginate: true,
   extraHeight: 40
 })
-
-// watch(
-//   () => globalProjectId,
-//   (val) => {
-//     if (val) {
-//       crud.query.projectId = globalProjectId
-//       crud.toQuery()
-//     }
-//   },
-//   { immediate: true, deep: true }
-// )
 
 getSpecConfig()
 

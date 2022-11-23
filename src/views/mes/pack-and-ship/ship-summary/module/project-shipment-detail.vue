@@ -29,6 +29,7 @@
       <div style="float:right;">
         <print-table
           api-key="mesProjectShipDetail"
+          v-permission="permission.print"
           :params="{ projectId: props.currentRow.projectId, ...query.value }"
           size="mini"
           type="warning"
@@ -79,6 +80,10 @@ import monomerSelect from '@/components-system/plan/monomer-select'
 
 const props = defineProps({
   currentRow: {
+    type: Object,
+    default: () => {}
+  },
+  permission: {
     type: Object,
     default: () => {}
   }

@@ -16,6 +16,7 @@
     "echarts": "^5.2.2",
     "element-plus": "^1.1.0-beta.19",
     "gsap": "^3.8.0",
+    "iconv-lite": "^0.6.3",
     "jr-qrcode": "^1.1.4",
     "jsencrypt": "^3.2.1",
     "jszip": "^3.7.1",
