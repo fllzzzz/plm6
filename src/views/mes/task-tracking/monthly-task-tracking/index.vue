@@ -77,6 +77,7 @@
 <script setup>
 import { ref, computed, watch } from 'vue'
 import crudApi from '@/api/mes/task-tracking/monthly-task-tracking.js'
+import { mesMonthlyTaskTrackingPM as permission } from '@/page-permission/mes'
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
 import { DP } from '@/settings/config'
@@ -105,7 +106,7 @@ const { crud, CRUD, columns } = useCRUD(
     title: '月度任务跟踪',
     sort: [],
     optShow: { ...optShow },
-    // permission: { ...permission },
+    permission: { ...permission },
     crudApi: { ...crudApi },
     hasPagination: false
   },

@@ -42,6 +42,7 @@
     </template>
     <template #titleRight>
       <print-table
+        v-permission="permission.print"
         api-key="mesWorkOrderTrackingList"
         :params="{
           processId: props.detailData.id,
@@ -123,6 +124,7 @@ import useVisible from '@compos/use-visible'
 import useMaxHeight from '@compos/use-max-height'
 import usePagination from '@compos/use-pagination'
 import { defineProps, defineEmits, ref, watch } from 'vue'
+import { mesWorkOrderTrackingPM as permission } from '@/page-permission/mes'
 import { parseTime } from '@/utils/date'
 import { componentTypeEnum, workOrderTypeEnum } from '@enum-ms/mes'
 import monomerSelectAreaSelect from '@comp-base/monomer-select-area-select'

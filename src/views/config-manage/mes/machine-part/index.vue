@@ -114,7 +114,7 @@ import crudApi from '@/api/config/system-config/machine-part-config'
 import { ref } from 'vue'
 
 import { machinePartConfigPM as permission } from '@/page-permission/config'
-import { matClsEnum } from '@enum-ms/classification'
+// import { matClsEnum } from '@enum-ms/classification'
 import checkPermission from '@/utils/system/check-permission'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
@@ -127,7 +127,7 @@ const optShow = {
   add: true,
   edit: false,
   del: false,
-  download: false,
+  download: false
 }
 
 const tableRef = ref()
@@ -138,7 +138,7 @@ const { CRUD, crud, columns } = useCRUD(
     permission: { ...permission },
     optShow: { ...optShow },
     crudApi: { ...crudApi },
-    hasPagination: true,
+    hasPagination: true
   },
   tableRef
 )
@@ -146,7 +146,7 @@ const { CRUD, crud, columns } = useCRUD(
 const { maxHeight } = useMaxHeight({
   wrapperBox: '.machinePartConfig',
   paginate: true,
-  extraHeight: 40,
+  extraHeight: 40
 })
 
 const boundAllClassifyIds = ref([])

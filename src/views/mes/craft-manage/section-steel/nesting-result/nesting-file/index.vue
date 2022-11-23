@@ -12,6 +12,7 @@
         @change="handleChange"
       />
       <export-button
+      v-permission="permission.downloadList"
         v-if="nestingFileType === nestingFileTypeEnum.MATERIAL_LIST.V"
         class="filter-item"
         :fn="getMaterialListExcelFn"
@@ -162,6 +163,7 @@ import { getLightColor } from '@/utils/color'
 import { nestingProgress } from '@/api/mes/craft-manage/section-steel/nesting-setting'
 import { getMaterialList, getMaterialListExcelFn } from '@/api/mes/craft-manage/section-steel/nesting-result'
 import { ref, defineProps, defineEmits } from 'vue'
+import { mesNestingResultPM as permission } from '@/page-permission/mes'
 import { nestingFileTypeEnum, mesBuildingTypeSettingAssembleTypeEnum as materialTypeEnum, nestingSettingTypeEnum, MesBuildingTypesettingStatusEnum as typeEnum } from '@enum-ms/mes'
 import ExportButton from '@comp-common/export-button/index.vue'
 

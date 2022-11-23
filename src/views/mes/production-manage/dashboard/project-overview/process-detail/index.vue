@@ -13,6 +13,7 @@
     <template #titleRight>
       <div style="display: flex">
         <print-table
+          v-permission="permission.print"
           api-key="mesProjectOverviewList"
           :params="{ ...query, processId: props.detailData.id }"
           size="mini"
@@ -64,6 +65,7 @@
 import { getProcessDetail } from '@/api/mes/production-manage/dashboard/project-overview'
 import { defineProps, defineEmits, ref, watch, computed, inject } from 'vue'
 import { tableSummary } from '@/utils/el-extra'
+import { mesProjectOverviewPM as permission } from '@/page-permission/mes'
 import useVisible from '@compos/use-visible'
 import usePagination from '@compos/use-pagination'
 import useMaxHeight from '@compos/use-max-height'

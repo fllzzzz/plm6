@@ -158,6 +158,7 @@
 import crudApi from '@/api/mes/craft-manage/section-steel/nesting-setting'
 import { ref } from 'vue'
 import { artifactProductLineEnum } from '@enum-ms/mes'
+import { mesNestingSettingPM as permission } from '@/page-permission/mes'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 // import pagination from '@crud/Pagination'
@@ -175,7 +176,7 @@ const { crud, columns, CRUD } = useCRUD(
   {
     title: '套料设置',
     sort: [],
-    // permission: { ...permission },
+    permission: { ...permission },
     optShow: { ...optShow },
     crudApi: { ...crudApi },
     hasPagination: false,

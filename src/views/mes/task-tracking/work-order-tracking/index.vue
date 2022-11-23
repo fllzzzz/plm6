@@ -118,6 +118,7 @@ import { ref, provide, computed, watch } from 'vue'
 import { get, machinePart } from '@/api/mes/task-tracking/work-order-tracking.js'
 import { parseTime } from '@/utils/date'
 import { projectNameFormatter } from '@/utils/project'
+import { mesWorkOrderTrackingPM as permission } from '@/page-permission/mes'
 import { componentTypeEnum } from '@enum-ms/mes'
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
@@ -141,6 +142,7 @@ const { crud, CRUD, columns } = useCRUD(
     title: '工单跟踪',
     sort: [],
     optShow: { ...optShow },
+    permission: { ...permission },
     requiredQuery: ['productType'],
     crudApi: { get },
     hasPagination: true

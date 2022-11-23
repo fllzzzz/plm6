@@ -46,6 +46,7 @@ import crudApi from '@/api/mes/craft-manage/section-steel/nesting'
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
 import { projectNestingStatusEnum } from '@enum-ms/mes'
+import { mesExtrusionNestingPM as permission } from '@/page-permission/mes'
 import mHeader from './module/header.vue'
 import projectDetail from './project-detail/index.vue'
 
@@ -62,7 +63,7 @@ const { crud, columns } = useCRUD(
     title: '型材套料',
     sort: [],
     optShow: { ...optShow },
-    // permission: { ...permission },
+    permission: { ...permission },
     crudApi: { ...crudApi },
     hasPagination: true
   },
