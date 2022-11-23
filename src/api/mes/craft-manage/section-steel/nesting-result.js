@@ -61,4 +61,14 @@ export function getMaterialListExcelFn(params) {
   })
 }
 
+// 下载套料成果压缩包
+export function downloadZipGet(params) {
+  return request({
+    module: 'mes',
+    url: 'section_steel/nesting/download',
+    method: 'get',
+    responseType: 'blob',
+    params
+  })
+}
 export default { get }
