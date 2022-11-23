@@ -285,6 +285,14 @@ export const configStatisticalPartsLayingPM = {
   edit: ['statistical_parts_laying_config:edit'] // 编辑零件-下料配置
 }
 
+// 建钢-生产配置/零件下料配置
+export const configMachinePartLayingPM = {
+  get: ['machine_part_laying_config:get'], // 零件下料配置列表
+  add: ['machine_part_laying_config:add'], // 添加零件下料配置
+  del: ['machine_part_laying_config:del'], // 删除零件下料配置
+  edit: ['machine_part_laying_config:edit'] // 编辑零件下料配置
+}
+
 // 建钢-生产配置/工序配置
 export const configProcessPM = {
   get: ['process:get'], // 工序列表
