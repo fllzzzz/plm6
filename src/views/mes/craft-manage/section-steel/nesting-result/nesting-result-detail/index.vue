@@ -5,8 +5,22 @@
       <div class="batch-operation head-container" style="display: flex; justify-content: space-between">
         <el-tag class="filter-item" size="medium" style="align-self: center">当前项目：{{ props.batchRow.projectName }}</el-tag>
         <div class="filter-item">
-          <common-button type="danger" size="mini" :disabled="handleSelectionData.length === 0" @click="batchDel">批量删除</common-button>
-          <common-button type="success" size="mini" :disabled="handleSelectionData.length === 0" @click="batchIssued">
+          <common-button
+            type="danger"
+            v-permission="permission.del"
+            size="mini"
+            :disabled="handleSelectionData.length === 0"
+            @click="batchDel"
+          >
+            批量删除
+          </common-button>
+          <common-button
+            type="success"
+            size="mini"
+            v-permission="permission.issued"
+            :disabled="handleSelectionData.length === 0"
+            @click="batchIssued"
+          >
             批量下发
           </common-button>
         </div>
@@ -82,13 +96,20 @@
         </el-table-column>
         <el-table-column :show-overflow-tooltip="true" label="操作" min-width="200px" align="center">
           <template #default="{ row }">
-            <common-button type="primary" size="mini" @click="views(row)">查看</common-button>
+            <common-button v-permission="permission.detail" type="primary" size="mini" @click="views(row)">查看</common-button>
             <el-popconfirm confirm-button-text="确定" cancel-button-text="取消" title="确定下发吗?" @confirm="issued(row)">
               <template #reference>
-                <common-button size="mini" type="success" :disabled="row.statusIssueEnum === typeEnum.ISSUED.V"> 下发 </common-button>
+                <common-button
+                  size="mini"
+                  v-permission="permission.issued"
+                  type="success"
+                  :disabled="row.statusIssueEnum === typeEnum.ISSUED.V"
+                >
+                  下发
+                </common-button>
               </template>
             </el-popconfirm>
-            <export-button type="warning" size="mini" :params="{ id: row.id }" :fn="downloadZipGet" :icon="''">下载</export-button>
+            <export-button type="warning" v-permission="permission.downloadZip" size="mini" :params="{ id: row.id }" :fn="downloadZipGet" :icon="''">下载</export-button>
             <el-popconfirm
               confirm-button-text="确定"
               cancel-button-text="取消"
@@ -99,6 +120,7 @@
               <template #reference>
                 <common-button
                   size="mini"
+                  v-permission="permission.del"
                   type="danger"
                   :disabled="row.statusIssueEnum === typeEnum.ISSUED.V && row.statusIssueEnum === typeEnum.PRODUCTION.V"
                 >
@@ -122,6 +144,7 @@ import useMaxHeight from '@compos/use-max-height'
 import { ElMessageBox, ElNotification } from 'element-plus'
 import { MesBuildingTypesettingStatusEnum as typeEnum } from '@enum-ms/mes'
 import { nestingBatchIssued, nestingBatchDel } from '@/api/mes/craft-manage/section-steel/nesting-result'
+import { mesNestingResultPM as permission } from '@/page-permission/mes'
 import ExportButton from '@comp-common/export-button/index.vue'
 import nestingFile from '../nesting-file/index.vue'
 

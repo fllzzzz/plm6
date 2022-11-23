@@ -38,6 +38,7 @@
         </div>
         <div>
           <print-table
+          v-permission="permission.print"
             api-key="mesMonthlyTaskList"
             :params="{
               projectId: props.detailData.project.id,
@@ -98,6 +99,7 @@ import useVisible from '@compos/use-visible'
 import useMaxHeight from '@compos/use-max-height'
 import usePagination from '@compos/use-pagination'
 import { defineProps, defineEmits, ref } from 'vue'
+import { mesMonthlyTaskTrackingPM as permission } from '@/page-permission/mes'
 import monomerSelectAreaSelect from '@comp-base/monomer-select-area-select'
 import { projectNameFormatter } from '@/utils/project'
 

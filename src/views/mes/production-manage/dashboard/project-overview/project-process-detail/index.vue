@@ -46,7 +46,7 @@
             />
           </template>
         </el-table-column>
-        <el-table-column align="center" :show-overflow-tooltip="true" label="操作">
+        <el-table-column v-permission="permission.detail" align="center" :show-overflow-tooltip="true" label="操作">
           <template v-slot="scope">
             <common-button type="primary" size="mini" @click.stop="showDetail(scope.row)">查看</common-button>
           </template>
@@ -59,6 +59,7 @@
 <script setup>
 import { ref, defineProps, watch, provide } from 'vue'
 import { getProcessList } from '@/api/mes/production-manage/dashboard/project-overview'
+import { mesProjectOverviewPM as permission } from '@/page-permission/mes'
 import useMaxHeight from '@compos/use-max-height'
 import monomerSelectAreaSelect from '@comp-base/monomer-select-area-select'
 import processDetail from '../process-detail/index.vue'

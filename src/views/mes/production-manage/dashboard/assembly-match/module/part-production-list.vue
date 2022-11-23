@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <div style="width: 300px; float: right; margin-bottom: 8px">
-      <print-table api-key="mesMachinePartList" :params="{ ...props.query }" size="mini" type="warning" class="filter-item" />
+      <print-table v-permission="permission.printDetail" api-key="mesMachinePartList" :params="{ ...props.query }" size="mini" type="warning" class="filter-item" />
     </div>
     <common-table ref="tableRef" :data="machinePartData" :empty-text="'暂无数据'" :max-height="maxHeight" row-key="id" style="width: 100%">
       <el-table-column prop="index" label="序号" align="center" width="60" type="index" />
@@ -26,6 +26,7 @@
 <script setup>
 import { ref, defineProps, watch } from 'vue'
 import { productionDetail } from '@/api/mes/production-manage/dashboard/assembly-match'
+import { assemblyMatchDashboardPM as permission } from '@/page-permission/mes'
 import useMaxHeight from '@compos/use-max-height'
 
 const tableRef = ref()

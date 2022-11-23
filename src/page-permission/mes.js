@@ -207,7 +207,8 @@ export const projectReportDashboardPM = {
 // 项目制造/零件齐套
 export const assemblyMatchDashboardPM = {
   get: ['mes_assembly_match:get'], // 零件齐套列表
-  print: ['mes_assembly_match:print'] // 零件齐套详情打印
+  print: ['mes_assembly_match:print'], // 零件齐套详情打印
+  printDetail: ['mes_assembly_match:printDetail'] // 零部件生产清单详情打印
 }
 
 // 项目制造/涂装计算
@@ -390,7 +391,7 @@ export const reportWarehouseStatePM = {
 
 // ########################################################################
 
-// --------------------------- 工艺管理 start --------------------------------
+// --------------------------- 6.0 工艺管理 start --------------------------------
 
 // 工艺管理/构件规格修正
 export const artifactSpecificationRevisePM = {
@@ -398,10 +399,38 @@ export const artifactSpecificationRevisePM = {
   edit: ['artifact-specification-revise:edit'] // 构件规格修改
 }
 
+// 工艺管理/型材套料
+export const mesExtrusionNestingPM = {
+  get: ['mes_extrusion_nesting:get'], // 型材套料列表
+  detail: ['mes_extrusion_nesting:detail'] // 查看型材套料详情
+}
+
+// 工艺管理/套料设置
+export const mesNestingSettingPM = {
+  get: ['mes_nesting_setting:get'], // 套料设置列表
+  extrusionNestingDetail: ['mes_nesting_setting:extrusionNestingDetail'], // 型材套料详情
+  noNesting: ['mes_nesting_setting:noNesting'], // 无需套料
+  noNestingDetail: ['mes_nesting_setting:noNestingDetail'], // 查看无需套料清单
+  moveOutNoNestingList: ['mes_nesting_setting:moveOutNoNestingList'], // 批量移出无需套料清单
+  extrusionNesting: ['mes_nesting_setting:extrusionNesting'], // 开始型材套料
+  downloadResult: ['mes_nesting_setting:downloadResult'], // 下载套料成果压缩包
+  saveNestingResult: ['mes_nesting_setting:downloadResult'], // 保存套料成果
+  delNestingResult: ['mes_nesting_setting:delNestingResult'] // 删除套料成果
+}
+
+// 型材套料/套料成果
+export const mesNestingResultPM = {
+  get: ['mes_nesting_result:get'], // 套料成果列表
+  detail: ['mes_nesting_result:detail'], // 查看套料成果详情
+  issued: ['mes_nesting_result:issued'], // 下发
+  downloadZip: ['mes_nesting_result:downloadZip'], // 下载压缩包
+  del: ['mes_nesting_result:del'], // 删除
+  downloadList: ['mes_nesting_result:downloadList'] // 下载材料清单
+}
 // --------------------------- 工艺管理 end --------------------------------
 // ########################################################################
 
-// --------------------------- 生产订单 start --------------------------------
+// --------------------------- 6.0 生产订单 start --------------------------------
 
 // 生产订单/生产排期
 export const mesProductionOrderPM = {
@@ -415,7 +444,7 @@ export const mesProductionOrderPM = {
 
 // ########################################################################
 
-// --------------------------- 发运管理 start --------------------------------
+// --------------------------- 6.0 发运管理 start --------------------------------
 
 // 发运管理/发运管理列表
 export const mesShipSummaryPM = {
@@ -494,3 +523,50 @@ export const mesProductSendReceiveStoragePM = {
   detailPrint: ['mes_product-send-receive-storage:detailPrint'] // 制成品入发存详情打印
 }
 // --------------------------- 发运管理 end --------------------------------
+
+// --------------------------- 6.0 任务跟踪 start --------------------------------
+
+// 任务跟踪/工单跟踪
+export const mesWorkOrderTrackingPM = {
+  get: ['mes_work_order_tracking:get'], // 工单跟踪列表
+  print: ['mes_work_order_tracking:print'] // 工单跟踪详情打印
+}
+
+// 任务跟踪/月度任务跟踪
+export const mesMonthlyTaskTrackingPM = {
+  get: ['mes_monthly_task_tracking:get'], // 月度任务跟踪列表
+  print: ['mes_monthly_task_tracking:print'] // 月度任务跟踪详情打印
+}
+
+// 任务跟踪/产线跟踪
+export const mesProductionLineTrackingPM = {
+  get: ['mes_production_line_tracking:get'], // 产线跟踪列表
+  detail: ['mes_production_line_tracking:detail'], // 查看产线跟踪详情
+  print: ['mes_production_line_tracking:print'] // 产线跟踪详情打印
+}
+
+// 任务跟踪/工序呆滞
+export const mesProcessSluggishPM = {
+  get: ['mes_process_sluggish:get'], // 工序呆滞列表
+  print: ['mes_process_sluggish:print'] // 工序呆滞详情打印
+}
+
+// --------------------------- 6.0 任务跟踪 end --------------------------------
+
+// --------------------------- 6.0 项目总览 start --------------------------------
+
+// 项目制造/项目总览
+export const mesProjectOverviewPM = {
+  get: ['mes_project_overview:get'], // 项目总览列表
+  detail: ['mes_project_overview:detail'], // 项目总览查看详情
+  print: ['mes_project_overview:print'] // 项目总览详情打印
+}
+
+// --------------------------- 6.0 项目总览 end --------------------------------
+
+// --------------------------- 6.0 车间报表 start --------------------------------
+export const mesFactoryReportPM = {
+  get: ['mes_factory_report:get'], // 车间报表列表
+  print: ['mes_factory_report:print'] // 车间报表详情打印
+}
+// --------------------------- 6.0 车间报表 end --------------------------------
