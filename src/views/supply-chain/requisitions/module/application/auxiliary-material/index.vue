@@ -1,5 +1,5 @@
 <template>
-  <div v-permission="permission" class="aux-mat-requisitions-application-container">
+  <div class="aux-mat-requisitions-application-container">
     <common-wrapper
       :basic-class="currentBasicClass"
       :validate="validate"
@@ -43,7 +43,6 @@
 
 <script setup>
 import crudApi from '@/api/supply-chain/requisitions-manage/requisitions'
-import { auxMatInboundApplicationPM as permission } from '@/page-permission/wms'
 
 import { defineProps, defineEmits, ref, provide, watch } from 'vue'
 import { matClsEnum } from '@/utils/enum/modules/classification'
@@ -82,7 +81,6 @@ provide('matSpecRef', matSpecRef) // 供兄弟组件调用 删除
 const { form, FORM } = useForm(
   {
     title: '辅材申购',
-    permission: permission,
     defaultForm: defaultForm,
     clearDraftCallback: init,
     api: crudApi.add
