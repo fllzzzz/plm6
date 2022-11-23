@@ -7,17 +7,26 @@
       </el-tag>
     </template>
     <template #titleRight>
-      <common-button v-show="selectionMode === selectionModeEnum.SCHEDULING.V" size="mini" type="success" @click="toAssembleScheduling">
+      <common-button
+        v-permission="permission.assembleGet"
+        v-show="selectionMode === selectionModeEnum.SCHEDULING.V"
+        size="mini"
+        type="success"
+        @click="toAssembleScheduling"
+      >
         下一步【部件排产】
       </common-button>
     </template>
     <template #content>
       <div class="head-container">
         <common-radio-button
+          v-if="lineTypeLoad"
           v-model="queryVO.productionLineTypeEnum"
           :options="artifactProductLineEnum.ENUM"
           type="enum"
           size="small"
+          :unshowVal="unshowLineType"
+          default
           class="filter-item"
           @change="fetch"
         />
@@ -26,6 +35,7 @@
           v-model="queryVO.structureClassId"
           class="filter-item"
           :style="'width:calc(100% - 150px)'"
+          style="display: inline-block"
           :data="artifactTypeList"
           :unselectable="artifactTypeList.length > 1"
           itemKey="structureClassId"
@@ -63,12 +73,20 @@
             重量(kg)：{{ summaryInfo.totalNetWeight?.toFixed(2) || 0 }}
           </el-tag>
         </span>
-        <common-button v-if="selectionMode === selectionModeEnum.EDIT.V" size="mini" type="danger" style="float: right" @click="toBatchDel">
+        <common-button
+          v-permission="permission.recordDel"
+          v-if="selectionMode === selectionModeEnum.EDIT.V"
+          size="mini"
+          type="danger"
+          style="float: right"
+          @click="toBatchDel"
+        >
           批量删除
         </common-button>
         <el-tooltip class="item" effect="light" :disabled="!!queryVO.structureClassId" content="请选择构件类型" placement="left">
           <span style="float: right; margin-right: 5px">
             <common-button
+              v-permission="permission.recordEdit"
               v-if="selectionMode === selectionModeEnum.EDIT.V"
               :disabled="!queryVO.structureClassId"
               size="mini"
@@ -141,10 +159,16 @@
         <el-table-column prop="schedulingQuantity" :show-overflow-tooltip="true" label="数量" min-width="90" align="center" />
         <el-table-column prop="schedulingTotalNetWeight" :show-overflow-tooltip="true" label="总重（kg）" min-width="90" align="center" />
         <el-table-column prop="askCompleteTime" :show-overflow-tooltip="true" label="完成日期" min-width="90" align="center" />
-        <el-table-column v-if="selectionMode === selectionModeEnum.EDIT.V" label="操作" width="200" align="center">
+        <el-table-column
+          v-permission="[...permission.recordEdit,...permission.recordDel]"
+          v-if="selectionMode === selectionModeEnum.EDIT.V"
+          label="操作"
+          width="200"
+          align="center"
+        >
           <template #default="{ row }">
-            <common-button size="mini" type="primary" @click="toEdit(row)">重新分配</common-button>
-            <common-button size="mini" type="danger" @click="toDel(row)">删除任务</common-button>
+            <common-button v-permission="permission.recordEdit" size="mini" type="primary" @click="toEdit(row)">重新分配</common-button>
+            <common-button v-permission="permission.recordDel" size="mini" type="danger" @click="toDel(row)">删除任务</common-button>
           </template>
         </el-table-column>
       </common-table>
@@ -178,11 +202,12 @@
 </template>
 
 <script setup>
-import { record, getArtifactRecordType, recordSummary } from '@/api/mes/scheduling-manage/artifact'
+import { record, getArtifactRecordType, getLineRecordType, recordSummary } from '@/api/mes/scheduling-manage/artifact'
 import { ElMessage } from 'element-plus'
 import { defineProps, defineEmits, ref, inject, computed, watch } from 'vue'
 
 import { artifactProductLineEnum } from '@enum-ms/mes'
+import { artifactSchedulingPM as permission } from '@/page-permission/mes'
 
 import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'
@@ -212,8 +237,6 @@ const props = defineProps({
   }
 })
 
-const crud = inject('crud')
-
 const selectionModeEnum = {
   SCHEDULING: { K: 'SCHEDULING', L: '排产模式', V: 1 },
   EDIT: { K: 'EDIT', L: '编辑模式', V: 2 }
@@ -237,10 +260,10 @@ const tableData = ref([])
 const tableLoading = ref(false)
 const listObjIdsByGroup = ref({})
 const summaryInfo = ref({})
-const queryVO = ref({
-  productionLineTypeEnum: crud.query.productionLineTypeEnum || artifactProductLineEnum.TRADITION.V
-})
+const queryVO = ref({})
 const closeRefreshOut = ref(false)
+const unshowLineType = ref([])
+const lineTypeLoad = ref(false)
 
 const artifactTypeParams = computed(() => {
   return {
@@ -274,6 +297,26 @@ watch(
   { deep: true }
 )
 
+async function fetchLineType() {
+  const areaIdList = props.otherQuery.areaIdList
+  queryVO.value.productionLineTypeEnum = undefined
+  unshowLineType.value = []
+  lineTypeLoad.value = false
+  if (!areaIdList?.length) return
+  try {
+    const { content } = await getLineRecordType({ areaIdList })
+    for (const item in artifactProductLineEnum.ENUM) {
+      if (content.indexOf(artifactProductLineEnum[item].V) === -1) {
+        unshowLineType.value.push(artifactProductLineEnum[item].V)
+      }
+    }
+  } catch (er) {
+    console.log('获取产线类型失败')
+  } finally {
+    lineTypeLoad.value = true
+  }
+}
+
 function artifactTypeInit() {
   if (
     artifactTypeList.value?.length &&
@@ -292,9 +335,9 @@ function handleModeChange() {
 }
 
 function showHook() {
+  fetchLineType()
   recordTableRef.value?.clearSelection()
   resetQuery()
-  refreshArtifactType({ ...artifactTypeParams.value })
 }
 
 function closeHook() {
@@ -313,7 +356,10 @@ function resetQuery() {
 }
 
 async function fetch() {
-  if (queryVO.value.productionLineTypeEnum === artifactProductLineEnum.INTELLECT.V && !queryVO.value.structureClassId) return
+  if (
+    (queryVO.value.productionLineTypeEnum === artifactProductLineEnum.INTELLECT.V && !queryVO.value.structureClassId) ||
+    !queryVO.value.productionLineTypeEnum
+  ) { return }
   try {
     tableLoading.value = true
     tableData.value = []
@@ -484,8 +530,8 @@ const delVisible = ref(false)
 const batchDelVisible = ref(false)
 
 function handleDelSuccess() {
+  fetchLineType()
   fetch()
-  refreshArtifactType({ ...artifactTypeParams.value })
   closeRefreshOut.value = true // 删除会导致外层数据变更需刷新
 }
 
@@ -519,8 +565,8 @@ function toAssembleScheduling() {
 // --------------------------- 部件排产 end --------------------------------
 
 function handleTaskIssueSuccess() {
+  fetchLineType()
   fetch()
-  refreshArtifactType({ ...artifactTypeParams.value })
 }
 </script>
 

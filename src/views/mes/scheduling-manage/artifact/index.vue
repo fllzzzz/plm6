@@ -9,14 +9,14 @@
         <div class="head-container">
           <mHeader ref="mHeaderRef">
             <template #optLeft>
-              <common-button type="success" size="mini" @click="previewIt">预览并保存</common-button>
+              <common-button v-permission="permission.save" type="success" size="mini" @click="previewIt">预览并保存</common-button>
             </template>
             <template #viewLeft>
               <el-tag size="medium" effect="plain" style="margin-right: 5px"> 数量(件)：{{ summaryInfo.quantity || 0 }} </el-tag>
               <el-tag size="medium" effect="plain" style="margin-right: 10px">
                 重量(kg)：{{ summaryInfo.totalNetWeight?.toFixed(2) || 0 }}
               </el-tag>
-              <common-button type="primary" size="mini" @click="previewRecord">构件排产记录</common-button>
+              <common-button v-permission="permission.recordGet" type="primary" size="mini" @click="previewRecord">构件排产记录</common-button>
             </template>
           </mHeader>
         </div>
@@ -196,7 +196,7 @@ const { crud, columns, CRUD } = useCRUD(
   {
     title: '构件排产',
     sort: [],
-    permission: { ...permission },
+    permission: { get: permission.get },
     optShow: { ...optShow },
     crudApi: { ...crudApi },
     queryOnPresenterCreated: false,
@@ -215,7 +215,7 @@ const queryParams = computed(() => {
     structureClassId: crud.query.structureClassId
   }
 })
-const { getCurGroupsTree, groupsTree, groupsObj } = useSchedulingGroups({ queryParams, factoryIds: curFactoryIds })
+const { groupsTree, groupsObj } = useSchedulingGroups({ queryParams, factoryIds: curFactoryIds })
 provide('areaIdObj', curAreaIdObj)
 provide('curFactoryIds', curFactoryIds)
 

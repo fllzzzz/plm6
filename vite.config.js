@@ -18,7 +18,7 @@ export default ({ command }) => {
     server: {
       open: true,
       // host: '172.16.1.9',
-      host: 'localhost',
+      host: '0.0.0.0',
       port: 668, // 本地服务端口
       strictPort: false // 设为 true 时若端口已被占用则会直接退出，而不是尝试下一个可用端口
       // proxy: {

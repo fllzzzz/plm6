@@ -14,6 +14,18 @@ export function get(params) {
 }
 
 /**
+ * @description: 构件可排产生产线类型
+ */
+export function getLineType(params) {
+  return request({
+    module: 'mes',
+    url: 'scheduling/artifact/line/type/list',
+    method: 'get',
+    params
+  })
+}
+
+/**
  * @description: 获取构件排产汇总信息
  */
 export function getSummary(params) {
@@ -134,6 +146,20 @@ export function getArtifactRecordType(params) {
   return request({
     module: 'mes',
     url: 'scheduling/artifact/record/type/list',
+    method: 'get',
+    params
+  })
+}
+
+/**
+ * 获取生产线类型
+ * @export
+ * @returns
+ */
+export function getLineRecordType(params) {
+  return request({
+    module: 'mes',
+    url: 'scheduling/artifact/record/line/type/list',
     method: 'get',
     params
   })

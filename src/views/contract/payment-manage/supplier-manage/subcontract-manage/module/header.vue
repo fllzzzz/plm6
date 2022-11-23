@@ -20,7 +20,6 @@
         end-placeholder="结束时间"
         value-format="x"
         style="width: 240px"
-        value-format="x"
         @change="handleDateChange"
       />
       <el-input
