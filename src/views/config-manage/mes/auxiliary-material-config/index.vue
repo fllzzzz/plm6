@@ -76,7 +76,7 @@
 import crudApi from '@/api/config/system-config/auxiliary-material-config'
 import { ref } from 'vue'
 
-import { machinePartConfigPM as permission } from '@/page-permission/config'
+import { auxiliaryMaterialConfigPM as permission } from '@/page-permission/config'
 import checkPermission from '@/utils/system/check-permission'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'

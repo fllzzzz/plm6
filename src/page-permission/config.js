@@ -167,7 +167,7 @@ export const changeReasonPM = {
 
 // --------------------------- 建钢-生产配置 start -------------------------
 
-// MES-公共配置/构件特征定义
+// 建钢-生产配置/构件特征定义
 export const artifactConfigPM = {
   get: ['artifact_config:get'], // 构件特征定义列表
   add: ['artifact_config:add'], // 添加构件特征定义
@@ -175,7 +175,7 @@ export const artifactConfigPM = {
   del: ['artifact_config:del'] // 删除构件特征定义
 }
 
-// MES-公共配置/部件特征定义
+// 建钢-生产配置/部件特征定义
 export const machinePartConfigPM = {
   get: ['machine_part_config:get'], // 部件特征定义列表
   add: ['machine_part_config:add'], // 添加部件特征定义
@@ -183,12 +183,20 @@ export const machinePartConfigPM = {
   del: ['machine_part_config:del'] // 删除部件特征定义
 }
 
-// MES-公共配置/零件特征定义
+// 建钢-生产配置/零件特征定义
 export const steelClassicPM = {
   get: ['steel_classic:get'], // 零件特征定义列表
   add: ['steel_classic:add'], // 新增零件特征定义
   edit: ['steel_classic:edit'], // 修改零件特征定义
   del: ['steel_classic:del'] // 删除零件特征定义
+}
+
+// 建钢-生产配置/配套件特征定义
+export const auxiliaryMaterialConfigPM = {
+  get: ['auxiliary-material-config:get'], // 配套件特征定义列表
+  add: ['auxiliary-material-config:add'], // 新增配套件特征定义
+  edit: ['auxiliary-material-config:edit'], // 修改配套件特征定义
+  del: ['auxiliary-material-config:del'] // 删除配套件特征定义
 }
 
 // 建钢-生产配置/生产线管理
