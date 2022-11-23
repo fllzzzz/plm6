@@ -19,7 +19,7 @@
       />
     </template>
     <template #titleRight>
-      <common-button size="mini" icon="el-icon-printer" type="success" @click="printIt">打印【任务单、分拣单】</common-button>
+      <common-button size="mini" v-permission="permission.print" icon="el-icon-printer" type="success" @click="printIt">打印【任务单、分拣单】</common-button>
     </template>
     <template #content>
       <!--任务单-->
@@ -41,7 +41,7 @@
 <script setup>
 import fetchFn from '@/utils/print/api'
 import { showCuttingPdf, productionTaskDetail, printSign } from '@/api/mes/work-order-manage/machine-part.js'
-import { defineProps, defineEmits, ref, computed } from 'vue'
+import { defineProps, defineEmits, ref, computed, inject } from 'vue'
 import { ElNotification, ElLoading } from 'element-plus'
 
 import { sortingListEnum as typeEnum } from '@enum-ms/mes'
@@ -79,6 +79,7 @@ const props = defineProps({
   }
 })
 
+const permission = inject('permission')
 const taskOrderPrintKey = 'mesNestingProductionTaskOrder'
 const taskOrderPDF = ref('')
 const taskLoading = ref(false)

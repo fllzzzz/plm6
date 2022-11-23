@@ -147,43 +147,43 @@ export default {
       }
     ]
   },
-  {
-    path: '/mes/changed-manage',
-    component: 'Layout',
-    hidden: false,
-    name: 'MesChangedManage',
-    alwaysShow: false,
-    redirect: '/mes/changed-manage/artifact',
-    meta: {
-      title: '变更管理',
-      icon: 'project',
-      noCache: true
-    },
-    children: [
-      {
-        name: 'MesCommonChanged',
-        path: 'common-change',
-        hidden: false,
-        component: '/mes/changed-manage/common-change/index',
-        meta: {
-          title: '变更列表',
-          icon: 'project',
-          noCache: true
-        }
-      },
-      {
-        name: 'MesSurplusList',
-        path: 'surplus-list',
-        hidden: false,
-        component: '/mes/changed-manage/surplus-list/index',
-        meta: {
-          title: '多余列表',
-          icon: 'project',
-          noCache: true
-        }
-      }
-    ]
-  },
+  // {
+  //   path: '/mes/changed-manage',
+  //   component: 'Layout',
+  //   hidden: false,
+  //   name: 'MesChangedManage',
+  //   alwaysShow: false,
+  //   redirect: '/mes/changed-manage/artifact',
+  //   meta: {
+  //     title: '变更管理',
+  //     icon: 'project',
+  //     noCache: true
+  //   },
+  //   children: [
+  //     {
+  //       name: 'MesCommonChanged',
+  //       path: 'common-change',
+  //       hidden: false,
+  //       component: '/mes/changed-manage/common-change/index',
+  //       meta: {
+  //         title: '变更列表',
+  //         icon: 'project',
+  //         noCache: true
+  //       }
+  //     },
+  //     {
+  //       name: 'MesSurplusList',
+  //       path: 'surplus-list',
+  //       hidden: false,
+  //       component: '/mes/changed-manage/surplus-list/index',
+  //       meta: {
+  //         title: '多余列表',
+  //         icon: 'project',
+  //         noCache: true
+  //       }
+  //     }
+  //   ]
+  // },
   {
     path: '/mes/production-order-manage',
     component: 'Layout',

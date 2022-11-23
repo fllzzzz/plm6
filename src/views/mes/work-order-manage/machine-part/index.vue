@@ -111,7 +111,7 @@
           <span>{{ scope.row.completeTime ? parseTime(scope.row.completeTime, '{y}-{m}-{d}') : '-' }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" :show-overflow-tooltip="true" label="操作" width="100">
+      <el-table-column v-permission="[...permission.detail]" align="center" :show-overflow-tooltip="true" label="操作" width="100">
         <template v-slot="scope">
           <common-button
             v-if="crud.query.processType === mesMachinePartOrderTypeEnum.DRILL_ORDER.V"
@@ -145,6 +145,7 @@ import useMaxHeight from '@compos/use-max-height'
 import pagination from '@crud/Pagination'
 import { parseTime } from '@/utils/date'
 import { mesMachinePartOrderTypeEnum } from '@enum-ms/mes'
+import { artifactWorkOrderPM as permission } from '@/page-permission/mes'
 import mHeader from './module/header.vue'
 import detail from './module/detail.vue'
 import cuttingDetail from './module/cutting-detail.vue'
@@ -197,6 +198,4 @@ CRUD.HOOK.handleRefresh = (crud, res) => {
   })
 }
 </script>
-<style lang="scss" scoped>
-</style>
-
+<style lang="scss" scoped></style>

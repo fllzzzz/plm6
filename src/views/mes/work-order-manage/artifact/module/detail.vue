@@ -31,6 +31,7 @@
         </div>
         <div style="float: right; width: 300px">
           <print-table
+            v-permission="permission.print"
             :api-key="
               props.detailData.productType === componentTypeEnum.ARTIFACT.V
                 ? 'mesProductionTaskOrder'
@@ -200,7 +201,7 @@
 
 <script setup>
 import { processInfo, getTaskList, getNestingList, printSign } from '@/api/mes/work-order-manage/artifact.js'
-import { defineProps, defineEmits, ref, computed, watch } from 'vue'
+import { defineProps, defineEmits, ref, computed, watch, inject } from 'vue'
 import { componentTypeEnum, structureOrderTypeEnum } from '@enum-ms/mes'
 import { constantize } from '@/utils/enum/base'
 import { parseTime } from '@/utils/date'
@@ -208,6 +209,7 @@ import useMaxHeight from '@compos/use-max-height'
 import usePagination from '@compos/use-pagination'
 import useVisible from '@compos/use-visible'
 
+const permission = inject('permission')
 const drawerRef = ref()
 const emit = defineEmits(['update:visible', 'refresh'])
 const props = defineProps({

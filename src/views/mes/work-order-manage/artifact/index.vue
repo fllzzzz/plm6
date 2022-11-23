@@ -101,16 +101,16 @@
         label="任务量（kg）"
         align="center"
       />
-      <el-table-column label="操作" min-width="60px" align="center">
+      <el-table-column v-permission="[...permission.detail]" label="操作" min-width="60px" align="center">
         <template #default="{ row }">
-          <common-button type="primary" size="mini" @click="showDetail(row)">查看</common-button>
+          <common-button v-permission="permission.detail" type="primary" size="mini" @click="showDetail(row)">查看</common-button>
         </template>
       </el-table-column>
     </common-table>
     <!--分页组件-->
     <pagination />
     <!-- 查看 -->
-    <detail v-model:visible="drawerVisible" :detail-data="detailData" @refresh="crud.toQuery"/>
+    <detail v-model:visible="drawerVisible" :detail-data="detailData" @refresh="crud.toQuery" />
   </div>
 </template>
 
@@ -119,20 +119,13 @@ import crudApi from '@/api/mes/work-order-manage/artifact.js'
 import { ref } from 'vue'
 
 import { componentTypeEnum, artifactProductLineEnum } from '@enum-ms/mes'
+import { artifactWorkOrderPM as permission } from '@/page-permission/mes'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import pagination from '@crud/Pagination'
 import mHeader from './module/header'
 import detail from './module/detail.vue'
-
-// crud交由presenter持有
-const permission = {
-  get: [''],
-  edit: [''],
-  add: [''],
-  del: ['']
-}
 
 const optShow = {
   add: false,

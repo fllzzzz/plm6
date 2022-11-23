@@ -24,7 +24,7 @@
         type="warning"
         class="filter-item"
       /> -->
-      <common-button size="mini" icon="el-icon-printer" type="success" @click="printIt">打印【任务单、分拣单】</common-button>
+      <common-button v-permission="permission.print" size="mini" icon="el-icon-printer" type="success" @click="printIt">打印【任务单、分拣单】</common-button>
     </template>
     <template #content>
       <div v-if="orderType === typeEnum.PRODUCTION_TASK_ORDER.V">
@@ -40,7 +40,7 @@
 <script setup>
 import fetchFn from '@/utils/print/api'
 import { productionTaskDetail, printSign } from '@/api/mes/work-order-manage/machine-part.js'
-import { defineProps, defineEmits, ref, computed } from 'vue'
+import { defineProps, defineEmits, ref, computed, inject } from 'vue'
 import { ElNotification, ElLoading } from 'element-plus'
 
 import { drillListEnum as typeEnum } from '@enum-ms/mes'
@@ -57,6 +57,7 @@ import useGetSeparateOrder from '@compos/mes/work-order-manage/use-get-separate-
 import separateOrderTable from './separate-order-table'
 import productionTaskOrder from './production-task-order'
 
+const permission = inject('permission')
 const emit = defineEmits(['update:visible'])
 const drawerRef = ref()
 const drillData = ref([]) // 钻孔工单详情数据

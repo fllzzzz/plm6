@@ -40,92 +40,61 @@ export const surplusListPM = {
 
 // ########################################################################
 
-// --------------------------- 工单管理 start ------------------------------
+// --------------------------- 生产排产 start ------------------------------
 
-// 工单管理/构件工单/一次工单
-export const assembleSchedulingPM = {
-  get: ['mes_scheduling_assemble:get'], // 列表
-  save: ['mes_scheduling_assemble:save'], // 分配一次工单
-  clear: ['mes_scheduling_assemble:clear'], // 清空任务
-  import: ['mes_scheduling_assemble:import'] // 任务导入
-}
-
-// 工单管理/构件工单/二次工单
+// 生产排产/构件排产
 export const artifactSchedulingPM = {
   get: ['mes_scheduling_artifact:get'], // 列表
-  save: ['mes_scheduling_artifact:save'], // 分配二次工单
-  clear: ['mes_scheduling_artifact:clear'], // 清空任务
-  import: ['mes_scheduling_artifact:import'] // 任务导入
+  save: ['mes_scheduling_artifact:save'], // 构件排产保存
+  recordGet: ['mes_scheduling_artifact_record:get'], // 获取构件排产记录
+  recordEdit: ['mes_scheduling_artifact_record:edit'], // 构件排产记录编辑
+  recordDel: ['mes_scheduling_artifact_record:del'], // 构件排产记录删除
+  assembleGet: ['mes_scheduling_assemble:get'], // 获取部件排产信息
+  assembleSave: ['mes_scheduling_assemble:save'] // 部件排产保存
 }
 
-// 工单管理/构件工单/零件工单
+// 生产排产/零件排产/零件排产
 export const machinePartSchedulingPM = {
-  get: ['mes_scheduling_machine_part:get'], // 零件工单列表
-  save: ['mes_scheduling_machine_part:save'], // 分配零件工单
-  clear: ['mes_scheduling_machine_part:clear'], // 清空任务
-  import: ['mes_scheduling_machine_part:import'] // 任务导入
+  get: ['mes_scheduling_machine_part:get'], // 列表
+  save: ['mes_scheduling_machine_part:save'] // 零件排产保存
 }
 
-// 工单管理/围护工单
-export const enclosureSchedulingPM = {
-  get: ['mes_scheduling_enclosure:get'], // 围护工单列表
-  save: ['mes_scheduling_enclosure:save'], // 分配围护工单
-  clear: ['mes_scheduling_enclosure:clear'], // 清空任务
-  import: ['mes_scheduling_enclosure:import'] // 任务导入
+// 生产排产/零件排产/预览记录
+export const machinePartSchedulingRecordPM = {
+  get: ['mes_scheduling_machine_part_record:get'], // 列表
+  del: ['mes_scheduling_machine_part_record:del'], // 零件排产记录删除
+  detail: ['mes_scheduling_machine_part_record:detail'], // 套料明细
+  save: ['mes_scheduling_machine_part_record:save'] // 套料下发
 }
 
-// 工单管理/构件排产
-export const artifactTaskPM = {
-  get: ['mes_task_artifact:get'], // 构件排产列表
-  detail: ['mes_task_artifact:detail'], // 构件排产详情
-  task: {
-    get: ['mes_task_artifact:detail'], // 构件排产详情
-    add: ['mes_task_artifact:add'], // 任务下发
-    del: ['mes_task_artifact:del'], // 任务删除
-    print: ['mes_task_artifact:print'] // 打印
-  },
-  assistance: {
-    get: ['mes_task_assistance_artifact:get'], // 协同任务列表
-    edit: ['mes_task_assistance_artifact:edit'], // 协同任务编辑
-    del: ['mes_task_assistance_artifact:del'] // 协同任务删除
-  }
+// 生产排产/零件排产/套料成果
+export const machinePartSchedulingNestingResultPM = {
+  get: ['mes_scheduling_machine_part_nesting_result:get'], // 列表
+  del: ['mes_scheduling_machine_part_nesting_result:del'], // 删除
+  save: ['mes_scheduling_machine_part_nesting_result:save'] // 任务下发
 }
 
-// 工单管理/围护排产
-export const enclosureTaskPM = {
-  get: ['mes_task_enclosure:get'], // 围护排产列表
-  detail: ['mes_task_enclosure:detail'], // 任务详情
-  task: {
-    get: ['mes_task_enclosure:detail'], // 任务详情
-    add: ['mes_task_enclosure:add'], // 任务下发
-    del: ['mes_task_enclosure:del'], // 任务删除
-    print: ['mes_task_enclosure:print'] // 打印
-  },
-  assistance: {
-    get: ['mes_task_assistance_enclosure:get'], // 协同任务列表
-    edit: ['mes_task_assistance_enclosure:edit'], // 协同任务编辑
-    del: ['mes_task_assistance_enclosure:del'] // 协同任务删除
-  }
+// --------------------------- 生产排产 end --------------------------------
+
+// ########################################################################
+
+// --------------------------- 工单管理 start ------------------------------
+
+// 工单管理/结构工单
+export const artifactWorkOrderPM = {
+  get: ['mes_work_order_artifact:get'], // 列表
+  detail: ['mes_work_order_artifact:detail'], // 查看
+  print: ['mes_work_order_artifact:print'] // 打印
 }
 
-// 工单管理/零件排产
-export const machinePartTaskPM = {
-  get: ['mes_task_machine_part:get'], // 零件排产列表
-  detail: ['mes_task_machine_part:detail'], // 任务详情
-  task: {
-    get: ['mes_task_machine_part:detail'], // 任务详情
-    add: ['mes_task_machine_part:add'], // 任务下发
-    del: ['mes_task_machine_part:del'], // 任务删除
-    print: ['mes_task_machine_part:print'] // 打印
-  },
-  assistance: {
-    get: ['mes_task_assistance_machine_part:get'], // 协同任务列表
-    edit: ['mes_task_assistance_machine_part:edit'], // 协同任务编辑
-    del: ['mes_task_assistance_machine_part:del'] // 协同任务删除
-  }
+// 工单管理/零件工单
+export const machinePartWorkOrderPM = {
+  get: ['mes_work_order_machine_part:get'], // 列表
+  detail: ['mes_work_order_machine_part:detail'], // 查看
+  print: ['mes_work_order_machine_part:print'] // 打印
 }
 
-// ---------------------------- 工单管理 end -------------------------------
+// --------------------------- 工单管理 end --------------------------------
 
 // ########################################################################
 
@@ -270,33 +239,6 @@ export const offStaffWagesAdjustPM = {
   edit: ['mes_off_staff_wages_adjust:edit'], // 工价调整编辑
   audit: ['mes_off_staff_wages_adjust:audit'] // 工价调整审核
 }
-
-// // 班组报表/编内-计件制
-// export const inStaffPieceworkSystemPM = {
-//   get: ['mes_in_staff_piecework:get'], // 编内-计件制列表
-//   detail: ['mes_in_staff_piecework:detail'], // 编内-计件制-详情
-//   summaryDetail: ['mes_in_staff_piecework_summary:detail'] // 编内-计件制-汇总详情
-// }
-
-// // 班组报表/编外-工价
-// export const offStaffWagesConfigPM = {
-//   get: ['mes_off_staff_wages:get'], // 编外-工价列表
-//   edit: ['mes_off_staff_wages:edit'], // 编外-工价编辑
-//   audit: ['mes_off_staff_wages:audit'] // 编外-工价审核
-// }
-
-// // 班组报表/编外-工资结算
-// export const offStaffSettlementPM = {
-//   get: ['mes_off_staff_settlement:get'], // 编外-工资结算
-//   detail: ['mes_off_staff_settlement:detail'] // 编外-工资结算
-// }
-
-// // 班组报表/工价调整
-// export const wagesAdjustPM = {
-//   get: ['mes_wages_adjust:get'], // 工价调整列表
-//   edit: ['mes_wages_adjust:edit'], // 工价调整编辑
-//   audit: ['mes_wages_adjust:audit'] // 工价调整审核
-// }
 // --------------------------- 班组报表 end --------------------------------
 
 // ########################################################################

@@ -19,7 +19,7 @@
                   @change="handleCheckedAll"
                   >全选</el-checkbox
                 >
-                <common-button type="success" class="filter-item" size="mini" @click="previewIt">预览并保存</common-button>
+                <common-button v-permission="permission.save" type="success" class="filter-item" size="mini" @click="previewIt">预览并保存</common-button>
               </div>
             </template>
             <template #viewLeft>
