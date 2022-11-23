@@ -167,20 +167,34 @@ export default {
         meta: { title: '配套件清单', icon: 'project', noCache: true }
       },
       {
-        path: 'plan-document',
+        path: 'technical-achievement',
         component: '',
         hidden: false,
-        name: 'PlanDocument',
+        name: 'TechnicalAchievement',
         alwaysShow: false,
-        redirect: '/plan/technical-manage/plan-document/deepen',
-        meta: { title: '技术资料', icon: 'contract', noCache: true },
+        redirect: '/plan/technical-manage/technical-achievement/model',
+        meta: { title: '技术成果', icon: 'contract', noCache: true },
         children: [
           {
-            name: 'PlanDeepen',
-            path: 'deepen',
+            name: 'ModelFile',
+            path: 'model',
             hidden: false,
-            component: '/plan/technical-data-manage/deepen/index',
-            meta: { title: '技术成果', icon: 'project', noCache: true }
+            component: '/plan/technical-data-manage/technical-achievement/model/index',
+            meta: { title: '模型文件管理', icon: 'project', noCache: true }
+          },
+          {
+            name: 'DrawingFile',
+            path: 'drawing',
+            hidden: false,
+            component: '/plan/technical-data-manage/technical-achievement/drawing/index',
+            meta: { title: '图纸文件管理', icon: 'project', noCache: true }
+          },
+          {
+            name: 'CNCFile',
+            path: 'cnc',
+            hidden: false,
+            component: '/plan/technical-data-manage/technical-achievement/cnc/index',
+            meta: { title: '数控文件管理', icon: 'project', noCache: true }
           },
           {
             name: 'PlanChangeFile',

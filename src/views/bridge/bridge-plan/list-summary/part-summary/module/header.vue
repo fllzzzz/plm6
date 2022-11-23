@@ -71,7 +71,7 @@
 <script setup>
 import { defineProps, ref, watch } from 'vue'
 import { regHeader } from '@compos/use-crud'
-import { partTotalWeight } from '@/api/plan/technical-manage/bridge/part-summary'
+import { partTotalWeight } from '@/api/bridge/bridge-plan/part-summary'
 
 import { TechnologyTypeAllEnum } from '@enum-ms/contract'
 import { DP } from '@/settings/config'

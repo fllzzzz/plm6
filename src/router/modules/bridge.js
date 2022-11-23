@@ -110,6 +110,52 @@ export default {
               meta: { title: '零件清单汇总', icon: 'project', noCache: true }
             }
           ]
+        },
+        {
+          path: 'bridge-technical-achievement',
+          component: '',
+          hidden: false,
+          name: 'BridgeTechnicalAchievement',
+          alwaysShow: false,
+          redirect: '/bridge/technical-manage/bridge-technical-achievement/bridge-model',
+          meta: { title: '技术成果', icon: 'contract', noCache: true },
+          children: [
+            {
+              name: 'BridgeModelFile',
+              path: 'bridge-model',
+              hidden: false,
+              component: '/plan/technical-data-manage/technical-achievement/model/index',
+              meta: { title: '模型文件管理', icon: 'project', noCache: true, ownProductType: 2 }
+            },
+            {
+              name: 'BridgeDrawingFile',
+              path: 'bridge-drawing',
+              hidden: false,
+              component: '/plan/technical-data-manage/technical-achievement/drawing/index',
+              meta: { title: '图纸文件管理', icon: 'project', noCache: true, ownProductType: 2 }
+            },
+            {
+              name: 'BridgeCNCFile',
+              path: 'bridge-cnc',
+              hidden: false,
+              component: '/plan/technical-data-manage/technical-achievement/cnc/index',
+              meta: { title: '数控文件管理', icon: 'project', noCache: true, ownProductType: 2 }
+            },
+            {
+              name: 'BridgePlanChangeFile',
+              path: 'bridge-change-file',
+              hidden: false,
+              component: '/plan/technical-data-manage/change-file/index',
+              meta: { title: '变更文件', icon: 'project', noCache: true, ownProductType: 2 }
+            },
+            {
+              name: 'BridgePlanBlueprint',
+              path: 'bridge-blueprint',
+              hidden: false,
+              component: '/plan/technical-data-manage/blueprint/index',
+              meta: { title: '施工蓝图', icon: 'project', noCache: true, ownProductType: 2 }
+            }
+          ]
         }
       ]
     }
