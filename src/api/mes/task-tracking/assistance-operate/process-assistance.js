@@ -1,12 +1,12 @@
 import request from '@/utils/request'
 
 /**
- * @description: 可变更的任务工单列表
+ * @description: 工序协同列表
  */
 export function get(params) {
   return request({
     module: 'mes',
-    url: 'task/change/task_order/page',
+    url: 'assist/top_task_order/page',
     method: 'get',
     params
   })
