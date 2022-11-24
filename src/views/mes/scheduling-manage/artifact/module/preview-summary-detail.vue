@@ -20,7 +20,7 @@
     <template #content>
       <div class="head-container">
         <common-radio-button
-          v-if="lineTypeLoad"
+          v-if="lineTypeLoad && unshowLineType.length !== artifactProductLineEnum.KEYS.length"
           v-model="queryVO.productionLineTypeEnum"
           :options="artifactProductLineEnum.ENUM"
           type="enum"
@@ -31,6 +31,7 @@
           @change="fetch"
         />
         <tag-tabs
+          v-if="artifactTypeList.length"
           ref="tagTabsRef"
           v-model="queryVO.structureClassId"
           class="filter-item"
@@ -160,7 +161,7 @@
         <el-table-column prop="schedulingTotalNetWeight" :show-overflow-tooltip="true" label="总重（kg）" min-width="90" align="center" />
         <el-table-column prop="askCompleteTime" :show-overflow-tooltip="true" label="完成日期" min-width="90" align="center" />
         <el-table-column
-          v-permission="[...permission.recordEdit,...permission.recordDel]"
+          v-permission="[...permission.recordEdit, ...permission.recordDel]"
           v-if="selectionMode === selectionModeEnum.EDIT.V"
           label="操作"
           width="200"
@@ -356,14 +357,17 @@ function resetQuery() {
 }
 
 async function fetch() {
+  tableData.value = []
+  listObjIdsByGroup.value = {}
+  summaryInfo.value = {}
   if (
     (queryVO.value.productionLineTypeEnum === artifactProductLineEnum.INTELLECT.V && !queryVO.value.structureClassId) ||
     !queryVO.value.productionLineTypeEnum
-  ) { return }
+  ) {
+    return
+  }
   try {
     tableLoading.value = true
-    tableData.value = []
-    listObjIdsByGroup.value = {}
     summaryInfo.value = (await recordSummary({ ...props.otherQuery, ...queryVO.value })) || {}
     const { content, totalElements } = await record({ ...props.otherQuery, ...queryVO.value, ...queryPage })
     setTotalPage(totalElements)
