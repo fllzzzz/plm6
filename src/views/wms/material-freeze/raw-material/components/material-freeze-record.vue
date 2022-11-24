@@ -36,7 +36,7 @@
             1.仅一张备料单时，可直接解冻；
             2.备料单有多张时，也可针对各个备料单解冻，但需要控制解冻上限。
           -->
-          <el-tooltip effect="dark" content="若需要解除冻结，请删除钢板对应的套料工单" placement="top-start">
+          <el-tooltip effect="dark" content="备料冻结、套料冻结无法手动解冻" placement="top-start">
             <el-icon color="#909399">
               <el-question-filled />
             </el-icon>

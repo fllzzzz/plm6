@@ -250,7 +250,7 @@ watch(
 watch(
   () => groupId.value,
   (val) => {
-    crud.query.groupId = groupId.value
+    crud.query.groupId = val
     crud.toQuery()
   }
 )
@@ -292,7 +292,7 @@ function processDetailChange(val) {
   processList.value = val
   crud.query.processId = val?.process?.id
   crud.query.productType = val?.productType
-  crud.query.groupId = undefined
+  groupId.value = undefined
   crud.query.productionLineId = val?.productionLine?.id
   groupData.value = val?.groupList
   crud.toQuery()

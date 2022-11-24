@@ -22,9 +22,7 @@
         width="500px"
       >
         <template #titleRight>
-          <common-button :loading="submitLoading" size="mini" type="primary" @click="submitIt">
-            保存
-          </common-button>
+          <common-button :loading="submitLoading" size="mini" type="primary" @click="submitIt"> 保存 </common-button>
         </template>
         <common-select
           v-model="selectValue"
@@ -33,14 +31,14 @@
           multiple
           filterable
           clearable
-          :dataStructure="{ key: 'id', label: 'processName', value: 'id' }"
+          :dataStructure="{ key: 'id', label: 'label', value: 'id' }"
           placeholder="请选择质检班组"
           style="width: 100%"
         >
           <template #empty>
-            <div style="text-align: center;display: flex;flex-direction: column;padding: 10px;color: #c0c4cc;">
+            <div style="text-align: center; display: flex; flex-direction: column; padding: 10px; color: #c0c4cc">
               <span>暂无数据</span>
-              <span style="margin-top: 5px;color: #f56c6c;">*请到班组管理进行配置</span>
+              <span style="margin-top: 5px; color: #f56c6c">*请到班组管理进行配置</span>
             </div>
           </template>
           <!-- <template #view="{ data: item }">
@@ -105,8 +103,12 @@ const groupId = computed(() => {
 
 const list = computed(() => cleanArray(props.modelValue.map((v) => inspectionTeamKV.value[v])))
 
-const inspectionTeamOptions = computed(() => inspectionTeam.value.filter((v) => props.line?.productType & v.productType && props.line?.productionLineTypeEnum === v.productionLineTypeEnum))
-
+const inspectionTeamOptions = computed(() =>
+  inspectionTeam.value.filter((v) => {
+    v.label = v.processName + ' - ' + v.inspectorNames
+    return props.line?.productType & v.productType && props.line?.productionLineTypeEnum === v.productionLineTypeEnum
+  })
+)
 async function submitIt() {
   try {
     submitLoading.value = true
