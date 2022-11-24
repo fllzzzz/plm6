@@ -43,7 +43,8 @@ import crudApi from '@/api/mes/production-config/process'
 import { ref } from 'vue'
 import { useStore } from 'vuex'
 
-import { processMaterialListTypeEnum as typeEnum } from '@enum-ms/mes'
+import { bridgeProcessTypeEnum as typeEnum } from '@enum-ms/bridge'
+// import { processMaterialListTypeEnum as typeEnum } from '@enum-ms/mes'
 import checkPermission from '@/utils/system/check-permission'
 import { configProcessPM as permission } from '@/page-permission/config'
 
@@ -71,9 +72,9 @@ const { crud, columns, CRUD } = useCRUD(
 
 const { maxHeight } = useMaxHeight()
 const dataPath = {
-  [typeEnum.ARTIFACT.K]: 'artifactProcessList',
-  [typeEnum.ASSEMBLE.K]: 'assembleProcessList',
-  [typeEnum.MACHINE_PART.K]: 'machinePartProcessList'
+  // [typeEnum.ARTIFACT.K]: 'artifactProcessList',
+  // [typeEnum.ASSEMBLE.K]: 'assembleProcessList',
+  // [typeEnum.MACHINE_PART.K]: 'machinePartProcessList'
 }
 
 CRUD.HOOK.handleRefresh = (crud, { data }) => {

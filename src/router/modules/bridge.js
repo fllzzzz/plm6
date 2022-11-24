@@ -17,42 +17,42 @@ export default {
           path: 'bridge-monomer',
           hidden: false,
           component: '/plan/overall-plan/monomer/index',
-          meta: { title: '项目单体', icon: 'project', noCache: true, ownProductType: 2 }
+          meta: { title: '项目单体', icon: 'project', noCache: true }
         },
         {
           name: 'BridgeAreaManage',
           path: 'bridge-area',
           hidden: false,
           component: '/plan/overall-plan/area/index',
-          meta: { title: '区域列表', icon: 'project', noCache: true, ownProductType: 2 }
+          meta: { title: '区域列表', icon: 'project', noCache: true }
         },
         {
           name: 'BridgeMakeManage',
           path: 'bridge-make',
           hidden: false,
           component: '/plan/overall-plan/plan-make/index',
-          meta: { title: '工作计划', icon: 'project', noCache: true, ownProductType: 2 }
+          meta: { title: '工作计划', icon: 'project', noCache: true }
         },
         {
           name: 'BridgePlanSummary',
           path: 'bridge-plan-summary',
           hidden: false,
           component: '/plan/overall-plan/plan-summary/index',
-          meta: { title: '工单汇总', icon: 'project', noCache: true, ownProductType: 2 }
+          meta: { title: '工单汇总', icon: 'project', noCache: true }
         },
         {
           name: 'BridgeProgress',
           path: 'bridge-progress',
           hidden: false,
           component: '/plan/overall-plan/plan-progress/index',
-          meta: { title: '计划跟踪', icon: 'project', noCache: true, ownProductType: 2 }
+          meta: { title: '计划跟踪', icon: 'project', noCache: true }
         },
         {
           name: 'BridgeConfirm',
           path: 'bridge-confirm',
           hidden: false,
           component: '/plan/overall-plan/plan-confirm/index',
-          meta: { title: '工作确认', icon: 'project', noCache: true, ownProductType: 2 }
+          meta: { title: '工作确认', icon: 'project', noCache: true }
         }
       ]
     },
@@ -125,35 +125,35 @@ export default {
               path: 'bridge-model',
               hidden: false,
               component: '/plan/technical-data-manage/technical-achievement/model/index',
-              meta: { title: '模型文件管理', icon: 'project', noCache: true, ownProductType: 2 }
+              meta: { title: '模型文件管理', icon: 'project', noCache: true }
             },
             {
               name: 'BridgeDrawingFile',
               path: 'bridge-drawing',
               hidden: false,
               component: '/plan/technical-data-manage/technical-achievement/drawing/index',
-              meta: { title: '图纸文件管理', icon: 'project', noCache: true, ownProductType: 2 }
+              meta: { title: '图纸文件管理', icon: 'project', noCache: true }
             },
             {
               name: 'BridgeCNCFile',
               path: 'bridge-cnc',
               hidden: false,
               component: '/plan/technical-data-manage/technical-achievement/cnc/index',
-              meta: { title: '数控文件管理', icon: 'project', noCache: true, ownProductType: 2 }
+              meta: { title: '数控文件管理', icon: 'project', noCache: true }
             },
             {
               name: 'BridgePlanChangeFile',
               path: 'bridge-change-file',
               hidden: false,
               component: '/plan/technical-data-manage/change-file/index',
-              meta: { title: '变更文件', icon: 'project', noCache: true, ownProductType: 2 }
+              meta: { title: '变更文件', icon: 'project', noCache: true }
             },
             {
               name: 'BridgePlanBlueprint',
               path: 'bridge-blueprint',
               hidden: false,
               component: '/plan/technical-data-manage/blueprint/index',
-              meta: { title: '施工蓝图', icon: 'project', noCache: true, ownProductType: 2 }
+              meta: { title: '施工蓝图', icon: 'project', noCache: true }
             }
           ]
         }
