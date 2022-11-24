@@ -349,7 +349,7 @@ async function previewIt() {
     })
     if (timeFlag) {
       try {
-        await ElMessageBox.confirm('排期计划大于排期主计划是否确定', '提示', {
+        await ElMessageBox.confirm('排产计划大于排期计划，是否确定？', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
