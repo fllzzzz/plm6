@@ -103,13 +103,21 @@
                   size="mini"
                   v-permission="permission.issued"
                   type="success"
-                  :disabled="row.statusIssueEnum === typeEnum.ISSUED.V"
+                  :disabled="row.statusIssueEnum === typeEnum.ISSUED.V || row.statusIssueEnum === typeEnum.EXPIRED.V"
                 >
                   下发
                 </common-button>
               </template>
             </el-popconfirm>
-            <export-button type="warning" v-permission="permission.downloadZip" size="mini" :params="{ id: row.id }" :fn="downloadZipGet" :icon="''">下载</export-button>
+            <export-button
+              type="warning"
+              v-permission="permission.downloadZip"
+              size="mini"
+              :params="{ id: row.id }"
+              :fn="downloadZipGet"
+              :icon="''"
+              >下载</export-button
+            >
             <el-popconfirm
               confirm-button-text="确定"
               cancel-button-text="取消"
@@ -122,7 +130,7 @@
                   size="mini"
                   v-permission="permission.del"
                   type="danger"
-                  :disabled="row.statusIssueEnum === typeEnum.ISSUED.V && row.statusIssueEnum === typeEnum.PRODUCTION.V"
+                  :disabled="row.statusIssueEnum === typeEnum.ISSUED.V || row.statusIssueEnum === typeEnum.PRODUCTION.V"
                 >
                   删除
                 </common-button>
