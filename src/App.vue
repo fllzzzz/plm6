@@ -14,14 +14,16 @@ import { ElConfigProvider } from 'element-plus'
 import zhCn from 'element-plus/lib/locale/lang/zh-cn'
 
 import { allPT } from '@/settings/config'
+import { projectTypeEnum } from '@enum-ms/contract'
 
 const store = useStore()
 const route = useRoute()
+const bridgeRouteArr = ['BridgeMonomerManage', 'BridgeAreaManage', 'BridgeMakeManage', 'BridgePlanSummary', 'BridgeProgress', 'BridgeConfirm', 'BridgeModelFile', 'BridgeDrawingFile', 'BridgeCNCFile', 'BridgePlanChangeFile', 'BridgePlanBlueprint']
 
 watch(
   () => route.path,
   () => {
-    route.meta.projectType = route.path === '/' ? allPT : (route.meta.ownProductType || route.meta.projectType)
+    route.meta.projectType = route.path === '/' ? allPT : (bridgeRouteArr.indexOf(route.name) > -1 ? projectTypeEnum.BRIDGE.V : route.meta.projectType)
     nextTick(() => {
       store.dispatch('project/setRouteProjectByMeta', route.meta)
     })
