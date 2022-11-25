@@ -13,6 +13,7 @@
       </el-tag>
     </template>
     <template #titleRight>
+      <common-button size="mini" type="danger" @click="toBatchDelete">批量删除【协同班组】</common-button>
       <common-button size="mini" type="primary" @click="previewIt">预览并保存</common-button>
     </template>
     <template #content>
@@ -49,7 +50,7 @@
         @selection-change="handleSelectChange"
         style="width: 100%"
       >
-      <el-table-column type="selection" width="55" align="center" :selectable="selectable" />
+        <el-table-column type="selection" width="55" align="center" :selectable="selectable" />
         <el-table-column label="序号" type="index" align="center" width="60" />
         <el-table-column
           v-if="crud.query.taskTypeEnum !== taskTypeENUM.MACHINE_PART.V"
@@ -148,9 +149,9 @@
 </template>
 
 <script setup>
-import { detail } from '@/api/mes/task-tracking/assistance-operate/process-assistance'
+import { detail, del } from '@/api/mes/task-tracking/assistance-operate/process-assistance'
 import { defineProps, defineEmits, ref, inject } from 'vue'
-import { ElMessage } from 'element-plus'
+import { ElMessage, ElNotification, ElMessageBox } from 'element-plus'
 
 import { taskTypeENUM } from '@enum-ms/mes'
 
@@ -243,7 +244,9 @@ async function fetch() {
       v.areaName = v.area?.name
       v.configId = v.config?.id
       v.groupsId = v.groups?.id
-      v.isComplete = Boolean(v.totalCompleteMete?.quantity && v.totalTaskMete?.quantity && v.totalCompleteMete?.quantity === v.totalTaskMete?.quantity)
+      v.isComplete = Boolean(
+        v.totalCompleteMete?.quantity && v.totalTaskMete?.quantity && v.totalCompleteMete?.quantity === v.totalTaskMete?.quantity
+      )
       if (!classIdGroupsObj.value[v.configId]) {
         let res = {}
         if (crud.query.taskTypeEnum === taskTypeENUM.MACHINE_PART.V) {
@@ -297,9 +300,29 @@ function previewIt() {
   previewVisible.value = true
 }
 
+function toBatchDelete() {
+  if (!selections.value?.length) {
+    ElMessage.warning('请至少选择一条数据')
+    return
+  }
+  ElMessageBox.confirm(`是否确认删除所选择的班组协同？`, '提示', {
+    confirmButtonText: '确认',
+    cancelButtonText: '取消',
+    type: 'warning'
+  }).then(async () => {
+    try {
+      const ids = selections.value.map(v => v.id)
+      await del({ ids })
+      ElNotification({ title: '班组删除成功', type: 'success' })
+      fetch()
+    } catch (error) {
+      console.log('班组删除失败', error)
+    }
+  })
+}
+
 function handleSuccess() {
-  handleClose()
-  emit('success')
+  fetch()
 }
 </script>
 
