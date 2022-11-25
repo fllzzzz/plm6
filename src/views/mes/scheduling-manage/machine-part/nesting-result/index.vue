@@ -126,11 +126,11 @@
               <span v-else>{{ row.askCompleteTime }}</span>
             </template>
           </el-table-column>
-          <el-table-column v-permission="[...permission.del]" label="操作" width="100px" align="center" fixed="right">
+          <!-- <el-table-column v-permission="[...permission.del]" label="操作" width="100px" align="center" fixed="right">
             <template #default="{ row }">
               <udOperation :showEdit="false" :data="row" />
             </template>
-          </el-table-column>
+          </el-table-column> -->
         </common-table>
         <!--分页组件-->
         <!-- <pagination /> -->
@@ -154,7 +154,7 @@ import { manualFetchGroupsTree } from '@compos/mes/scheduling/use-scheduling-gro
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 // import pagination from '@crud/Pagination'
-import udOperation from '@crud/UD.operation'
+// import udOperation from '@crud/UD.operation'
 import mHeader from './module/header'
 import nestingTaskList from './module/nesting-task-list.vue'
 import previewDialog from './module/preview-dialog'
@@ -163,7 +163,7 @@ import { deepClone } from '@/utils/data-type'
 const optShow = {
   add: false,
   edit: false,
-  del: true,
+  del: false,
   download: false
 }
 

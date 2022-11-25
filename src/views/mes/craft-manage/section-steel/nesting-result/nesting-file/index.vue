@@ -181,8 +181,12 @@ const props = defineProps({
     default: () => {}
   }
 })
-const { visible: nestingFileVisible, handleClose } = useVisible({ emit, props, field: 'visible', showHook: nestingResultGet })
+const { visible: nestingFileVisible, handleClose } = useVisible({ emit, props, field: 'visible', showHook: showHook })
 
+function showHook() {
+  nestingFileType.value = nestingFileTypeEnum.NESTING_FILE.V
+  nestingResultGet()
+}
 const colorObj = ref({}) // serialNumber: color
 
 // 套料文件
@@ -215,7 +219,8 @@ async function nestingListGet() {
   try {
     resultLoading.value = true
     const { content } = await getMaterialList({ id: props.detailData.id })
-    console.log(content, 'content')
+    console.log(content)
+    nestingProgressData.value = content[0].typesettingDTOS
   } catch (error) {
     console.log('获取材料清单失败')
   } finally {

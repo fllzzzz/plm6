@@ -234,5 +234,6 @@ async function printIt() {
 <style lang="scss" scoped>
 ::v-deep(.pdfViewer .page) {
   margin: 1px;
+  border: none;
 }
 </style>
