@@ -19,7 +19,14 @@
                   @change="handleCheckedAll"
                   >全选</el-checkbox
                 >
-                <common-button v-permission="permission.save" type="success" class="filter-item" size="mini" @click="previewIt">预览并保存</common-button>
+                <common-button
+v-permission="permission.save"
+type="success"
+class="filter-item"
+size="mini"
+@click="previewIt"
+                  >预览并保存</common-button
+                >
               </div>
             </template>
             <template #viewLeft>
@@ -63,9 +70,17 @@
                 :style="{ 'background-color': `${item.boxColor}`, ...boxStyle }"
                 @mouseleave="item.visibleTip = false"
               >
-                <span class="ellipsis-text text">
-                  {{ item.serialNumber }}
-                </span>
+                <div style="display: flex; justify-content: space-between; width: 100%; align-items: center; padding: 0 5px">
+                  <el-checkbox
+                    v-model="item.checked"
+                    :disabled="!item.imgLoad"
+                    @click.stop
+                    @change="handleCheckedChange($event, item)"
+                  ></el-checkbox>
+                  <span class="ellipsis-text text">
+                    {{ item.serialNumber }}
+                  </span>
+                </div>
                 <el-image style="flex: 1; width: 95%" :src="item.picturePath" @error="item.imgLoad = false">
                   <template #error>
                     <div class="error-slot">
@@ -79,13 +94,6 @@ class="ellipsis-text text"
 @click.stop="item.visibleTip = !item.visibleTip"
                   >{{ item.specification }}/{{ item.quantity }}</span
                 >
-                <el-checkbox
-                  style="position: absolute; left: 10px; top: 0px"
-                  v-model="item.checked"
-                  :disabled="!item.imgLoad"
-                  @click.stop
-                  @change="handleCheckedChange($event, item)"
-                ></el-checkbox>
               </div>
             </el-tooltip>
           </template>
