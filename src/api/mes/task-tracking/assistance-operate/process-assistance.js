@@ -47,4 +47,16 @@ export function save(data) {
   })
 }
 
+/**
+ * @description: 删除班组协同
+ */
+export function del(data) {
+  return request({
+    module: 'mes',
+    url: `assist`,
+    method: 'delete',
+    data
+  })
+}
+
 export default { get }

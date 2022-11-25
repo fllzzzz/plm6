@@ -21,16 +21,17 @@
     <el-table-column v-if="crud.query.type===logisticsSearchTypeEnum.MATERIAL.V && columns.visible('serialNumber')" key="serialNumber" prop="serialNumber" show-overflow-tooltip label="采购合同编号" align="center" min-width="140" />
     <el-table-column v-if="crud.query.type===logisticsSearchTypeEnum.COMPANY.V && columns.visible('supplierName')" key="supplierName" prop="supplierName" show-overflow-tooltip label="物流公司" align="center" min-width="140" />
     <el-table-column v-if="columns.visible('trainNumber')" key="trainNumber" prop="trainNumber" show-overflow-tooltip label="累计使用车次" align="center" min-width="100" />
-     <el-table-column v-if="columns.visible('freight')" key="freight" prop="freight" show-overflow-tooltip label="累计运费" align="right" min-width="100" />
+    <el-table-column v-if="columns.visible('freight')" key="freight" prop="freight" show-overflow-tooltip label="累计运费" align="right" min-width="100" />
     <el-table-column
-        label="操作"
-        width="180"
-        align="center"
-      >
-        <template v-slot="scope">
-          <common-button type="primary" icon="el-icon-view" size="mini" @click="openDetail(scope.row)" v-if="checkPermission(permission.detail)"/>
-        </template>
-      </el-table-column>
+      v-if="checkPermission([...permission.detail])"
+      label="操作"
+      width="180"
+      align="center"
+    >
+      <template v-slot="scope">
+        <common-button type="primary" icon="el-icon-view" size="mini" @click="openDetail(scope.row)" v-if="checkPermission(permission.detail)"/>
+      </template>
+    </el-table-column>
   </common-table>
   <!--分页组件-->
   <pagination />

@@ -28,7 +28,7 @@
     <el-table-column v-if="columns.visible('settlementAmount')" key="settlementAmount" prop="settlementAmount"  :show-overflow-tooltip="true" label="结算额" align="center">
       <template v-slot="scope">
         <span style="margin-right:10px;" @click="openSettleAudit(scope.row,'detail')">{{ scope.row.sourceRow.settlementAmount? toThousand(scope.row.sourceRow.settlementAmount): '-' }}</span>
-        <span @click="openSettleAudit(scope.row,'audit')" style="cursor:pointer;" v-if="checkPermission(crud.permission.payment.get) && scope.row.sourceRow.unCheckSettlementCount>0">
+        <span @click="openSettleAudit(scope.row,'audit')" style="cursor:pointer;" v-if="checkPermission(permission.settleAudit) && scope.row.sourceRow.unCheckSettlementCount>0">
           <el-badge :value="1" :max="99" :hidden="scope.row.sourceRow.unCheckSettlementCount < 1">
             <svg-icon icon-class="notify"  style="color:#e6a23c;font-size:15px;"/>
           </el-badge>
@@ -95,7 +95,7 @@
   </common-table>
   <paymentAudit v-model="auditVisible" :currentRow="currentRow" :propertyType="crud.query.propertyType" @success="crud.toQuery"/>
   <!-- 收付款 -->
-  <paymentAndInvoice v-model="tabVisible" :currentRow="currentRow" :tabName="activeName" :propertyType="crud.query.propertyType" @success="crud.toQuery"/>
+  <paymentAndInvoice v-model="tabVisible" :currentRow="currentRow" :tabName="activeName" :propertyType="crud.query.propertyType" @success="crud.toQuery" :permission="permission"/>
   <!-- 结算审核 -->
   <settleForm v-model="settleVisible" :detail-info="currentRow" :showType="showType" @success="crud.toQuery"/>
   <!--分页组件-->

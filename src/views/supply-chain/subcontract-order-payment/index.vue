@@ -25,7 +25,7 @@
       <el-table-column v-if="columns.visible('settlementAmount')" prop="settlementAmount" key="settlementAmount" label="结算额" align="right"  show-overflow-tooltip />
       <el-table-column v-if="columns.visible('subcontractClassName')" show-overflow-tooltip key="subcontractClassName" prop="subcontractClassName" label="分类" />
       <el-table-column v-if="columns.visible('paymentAmount')" prop="paymentAmount" key="paymentAmount" label="付款额" align="right" show-overflow-tooltip>
-        <template v-if="checkPermission(permission.detail)" #header>
+        <template v-if="checkPermission(permission.payment.get)" #header>
           <el-tooltip
             effect="light"
             placement="top"
@@ -47,7 +47,7 @@
         </template>
       </el-table-column>
       <el-table-column v-if="columns.visible('invoiceAmount')" prop="invoiceAmount" key="invoiceAmount" label="收票额" align="right" min-width="120" show-overflow-tooltip>
-        <template v-if="checkPermission(permission.detail)" #header>
+        <template v-if="checkPermission(permission.invoice.get)" #header>
           <el-tooltip
             effect="light"
             placement="top"
