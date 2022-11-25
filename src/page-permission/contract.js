@@ -32,8 +32,8 @@ export const projectListPM = {
 // 合同管理/合同变更
 export const contractChangePM = {
   get: ['contract_change:get'], // 变更列表
-  detail: ['contract_project:detail'], // 变更详情
-  audit: ['contract_project:audit'] // 变更审核
+  detail: ['contract_change:detail'], // 变更详情
+  audit: ['contract_change:audit'] // 变更审核
 }
 
 // 合同管理/合同档案

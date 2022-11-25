@@ -32,7 +32,7 @@
       </template>
     </el-table-column>
     <el-table-column v-if="columns.visible('paymentAmount')" key="paymentAmount" prop="paymentAmount" label="付款额" align="center" min-width="100">
-      <template v-if="checkPermission(crud.permission.get)" #header>
+      <template v-if="checkPermission(permission.invoice.get)" #header>
         <el-tooltip
           effect="light"
           placement="top"
@@ -46,7 +46,7 @@
       </template>
       <template v-slot="scope">
         <span style="cursor:pointer;margin-right:10px;" @click="openTab(scope.row,'payment')">{{ isNotBlank(scope.row.paymentAmount)? toThousand(scope.row.paymentAmount): 0 }}</span>
-        <span @click="openPaymentAudit(scope.row)" style="cursor:pointer;" v-if="checkPermission(crud.permission.get) && scope.row.unCheckPaymentCount>0">
+        <span @click="openPaymentAudit(scope.row)" style="cursor:pointer;" v-if="checkPermission(permission.payment.get) && scope.row.unCheckPaymentCount>0">
           <el-badge :value="scope.row.unCheckPaymentCount" :max="99" :hidden="scope.row.unCheckPaymentCount < 1">
             <svg-icon icon-class="notify"  style="color:#e6a23c;font-size:15px;"/>
           </el-badge>
@@ -74,7 +74,7 @@
       <template v-slot="scope">
         <div @click="openTab(scope.row,'invoice')" style="cursor:pointer;">
           <span style="margin-right:10px;">{{ isNotBlank(scope.row.invoiceAmount)? toThousand(scope.row.invoiceAmount): 0 }}</span>
-          <template v-if="checkPermission(crud.permission.get) && scope.row.unCheckInvoiceCount>0">
+          <template v-if="checkPermission(permission.invoice.get) && scope.row.unCheckInvoiceCount>0">
             <el-badge :value="scope.row.unCheckInvoiceCount" :max="99" :hidden="scope.row.unCheckInvoiceCount < 1">
               <svg-icon icon-class="notify"  style="color:#e6a23c;font-size:15px;"/>
             </el-badge>
@@ -93,7 +93,7 @@
   <!-- 物流记录 -->
   <recordDetail v-model="stockVisible" :detailInfo="currentRow" :type="logisticsSearchTypeEnum.COMPANY.V"/>
   <!-- 收付款 -->
-  <paymentAndInvoice v-model="tabVisible" :currentRow="currentRow" :tabName="activeName" :propertyType="supplierPayTypeEnum.TRANSPORT.V" @success="crud.toQuery"/>
+  <paymentAndInvoice v-model="tabVisible" :currentRow="currentRow" :tabName="activeName" :propertyType="supplierPayTypeEnum.TRANSPORT.V" @success="crud.toQuery" :permission="permission"/>
   <!-- 审核 -->
   <paymentAudit v-model="auditVisible" :currentRow="currentRow" :propertyType="supplierPayTypeEnum.TRANSPORT.V" @success="crud.toQuery"/>
   </div>
@@ -157,6 +157,9 @@ function openStockAmount(row) {
 }
 
 function openTab(row, name) {
+  if (!checkPermission(permission[name].get)) {
+    return
+  }
   activeName.value = name
   currentRow.value = row
   tabVisible.value = true

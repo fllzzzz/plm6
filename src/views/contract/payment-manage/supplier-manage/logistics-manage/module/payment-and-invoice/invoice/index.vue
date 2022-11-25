@@ -2,7 +2,7 @@
   <div class="app-container">
     <!--表格渲染-->
     <div>
-      <common-button type="primary" size="mini" @click="crud.toAdd" style="margin-right:10px;">添加</common-button>
+      <common-button type="primary" size="mini" @click="crud.toAdd" style="margin-right:10px;" v-permission="permission.add">添加</common-button>
       <el-tag type="success" size="medium" v-if="currentRow.freight">{{`运输额:${toThousand(currentRow.freight)}`}}</el-tag>
     </div>
     <common-table

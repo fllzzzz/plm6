@@ -44,8 +44,7 @@ export const areaListPM = {
 // 计划管理/计划列表
 export const planMakeListPM = {
   get: ['plan_make_manage:get'], // 计划列表
-  edit: ['plan_make_manage:edit'], // 修改计划
-  print: ['plan_make_manage:print'] // 打印下载
+  edit: ['plan_make_manage:edit'] // 修改计划
 }
 
 // 计划管理/计划跟踪
