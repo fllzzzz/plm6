@@ -72,6 +72,7 @@ export const planSummaryListPM = {
 // 技术管理/零构件列表
 export const artifactTreePM = {
   get: ['plan_artifact_tree_list:get'], // 零构件列表
+  edit: ['plan_artifact_tree_list:edit'], // 编辑零构件状态
   editNum: ['plan_artifact_tree_list:editNum'], // 修改构件数量
   productionStatus: ['plan_artifact_tree_list:productionStatus'], // 生产状态
   del: ['plan_artifact_tree_list:del'], // 删除零构件

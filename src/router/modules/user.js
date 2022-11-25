@@ -1,6 +1,6 @@
 // 路由：人员管理
 export default {
-  id: 794,
+  id: 8,
   name: '人员管理',
   children: [
     {

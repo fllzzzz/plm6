@@ -95,7 +95,7 @@ const { crud, CRUD, columns } = useCRUD(
 const { maxHeight } = useMaxHeight({
   wrapperBox: '.subcontractConfig',
   paginate: true,
-  extraHeight: 40
+  extraHeight: 160
 })
 
 async function rowSubmit(row) {

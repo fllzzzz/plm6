@@ -86,6 +86,7 @@ export const materialLabelPrintPM = {
 // 物料仓/钢材仓库
 export const steelMaterialWarehousePM = {
   get: ['wms_matWarehouse_steel:get'], // 查看 钢材仓库
+  labelPrint: materialLabelPrintPM.get,
   outbound: ['wms_matWarehouse_steel:outbound'], // 钢材出库
   transfer: ['wms_matWarehouse_steel:transfer'] // 钢材调拨
 }
@@ -121,7 +122,7 @@ export const rawMaterialOutboundReviewPM = {
 
 // --------------------------- 废料模块 start ------------------------------
 
-// 废料管理
+// 废料管理/钢材列表
 export const steelScrapPM = {
   get: ['wms_steel_scrap:get']
 }
@@ -207,7 +208,7 @@ export const rawMaterialReturnRecordPM = {
   outboundReceiptDetail: commonPM.rawMatOutboundReceiptDetail // 出库详情
 }
 
-// crud交由presenter持有
+// 出入库办理/退库审核
 export const rawMaterialReturnReviewPM = {
   get: ['wms_rawMat_return_review:get'], // 查看
   review: ['wms_rawMat_return_review:review'], // 审核
@@ -270,7 +271,7 @@ export const reportRawMaterialInboundReceiptPM = {
   purchaseOrderDetail: commonPM.purchaseOrderDetail // 采购合同详情
 }
 
-// 报表中心/原材料/入库单表
+// 报表中心/原材料/入库明细
 export const reportRawMaterialInboundDetailsPM = {
   get: ['wms_report_rawMat_inbound_details:get'], // 查看
   showAmount: ['wms_report_rawMat_inbound_details:showAmount'], // 显示金额
@@ -313,7 +314,7 @@ export const reportRawMaterialPsiPM = {
   download: ['wms_report_rawMat_psi:download'] // 下载
 }
 
-// 报表中心/原材料/退货明细
+// 报表中心/原材料/退货单表
 export const reportRawMaterialRejectReceiptPM = {
   get: ['wms_report_rawMat_reject_details:get'], // 查看
   showAmount: ['wms_report_rawMat_reject_details:showAmount'], // 显示金额
@@ -336,6 +337,14 @@ export const reportRawMaterialInventoryPM = {
 export const reportRawMaterialSendAndReceiveStoragePM = {
   get: ['wms_report_rawMat_sendAndReceiveStorage:get'], // 查看
   showAmount: ['wms_report_rawMat_sendAndReceiveStorage:showAmount'] // 显示金额
+}
+
+// 报表中心/原材料/存货明细帐
+export const reportRawMaterialInventoryDetailPM = {
+  get: ['wms_report_rawMat_inventory_detail:get'], // 查看
+  showAmount: ['wms_report_rawMat_inventory_detail:showAmount'], // 显示金额
+  detail: ['wms_report_rawMat_inventory_detail:detail'], // 详情
+  download: ['wms_report_rawMat_inventory_detail:download'] // 下载
 }
 
 // 报表中心/原材料/高新研发费

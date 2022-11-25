@@ -7,11 +7,14 @@
 
 <script setup>
 import { getDetailNumberByCurrentUser } from '@/api/wms/material-outbound/raw-material/review'
-import { defineEmits, defineExpose, onMounted, ref } from 'vue'
+import { defineEmits, defineExpose, onMounted, ref, inject } from 'vue'
+import checkPermission from '@/utils/system/check-permission'
 
 import list from './module/list.vue'
 
 const emit = defineEmits(['refresh'])
+
+const permission = inject('permission')
 
 // 出库清单中的记录的数量
 const outboundListNumber = ref(0)
@@ -24,7 +27,9 @@ onMounted(async () => {
 
 // 获取出库清单数量
 async function getOutboundListNumber() {
-  outboundListNumber.value = await getDetailNumberByCurrentUser()
+  if (checkPermission(permission.outbound)) {
+    outboundListNumber.value = await getDetailNumberByCurrentUser()
+  }
   return outboundListNumber.value
 }
 

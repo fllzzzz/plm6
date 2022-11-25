@@ -35,19 +35,19 @@ export const configWorkshopPM = {
   editStatus: ['workshop:editStatus'] // 更改车间状态
 }
 
-// 基础配置/系统配置
+// 基础配置/公司配置
 export const systemConfigPM = {
   company: {
-    get: ['configCompany:get'], // 查看公司信息
-    edit: ['configCompany:edit'] // 编辑公司信息
+    get: ['config_company:get'], // 查看公司信息
+    edit: ['config_company:edit'] // 编辑公司信息
   },
   logo: {
-    get: ['configLogo:get'], // 查看公司logo
-    edit: ['configLogo:edit'] // 编辑公司logo
+    get: ['config_logo:get'], // 查看公司logo
+    edit: ['config_logo:edit'] // 编辑公司logo
   },
   project: {
-    get: ['configProject:get'], // 查看项目信息
-    edit: ['configProject:edit'] // 编辑项目信息
+    get: ['config_project:get'], // 查看项目信息
+    edit: ['config_project:edit'] // 编辑项目信息
   }
 }
 
@@ -142,8 +142,8 @@ export const configMesBasePM = {
   overweightSMSRecipientEdit: ['overweight_sms_recipient:edit'], // 编辑过磅短信接收人
   safeAmountFactorGet: ['safe_amount_factor:get'], // 查看安全余额系数
   safeAmountFactorEdit: ['safe_amount_factor:edit'], // 编辑安全余额系数
-  driverFillConfigGet: ['driver_fill_config:get'], // 查看物流信息填写配置
-  driverFillConfigEdit: ['driver_fill_config:edit'], // 编辑物流信息填写配置
+  // driverFillConfigGet: ['driver_fill_config:get'], // 查看物流信息填写配置
+  // driverFillConfigEdit: ['driver_fill_config:edit'], // 编辑物流信息填写配置
   drawingSNConfigGet: ['drawing_sn_config:get'], // 查看图纸识别规则配置
   drawingSNConfigEdit: ['drawing_sn_config:edit'], // 编辑图纸识别规则配置
   appPrintConfigGet: ['app_print_config:get'], // 查看移动端打印配置
@@ -406,7 +406,7 @@ export const enclosureInfoConfigPM = {
   detailInfo: {
     get: ['enclosure_info_detail:get'], // 围护详情列表
     add: ['enclosure_info_detail:add'], // 新增围护详情
-    edit: ['enclosure_info_detail:editStatus'], // 修改围护详情
+    edit: ['enclosure_info_detail:edit'], // 修改围护详情
     del: ['enclosure_info_detail:del'] // 删除围护详情
   }
 }
