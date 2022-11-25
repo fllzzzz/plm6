@@ -46,7 +46,7 @@
       </template>
       <template v-slot="scope">
         <span style="cursor:pointer;margin-right:10px;" @click="openTab(scope.row,'payment')">{{ isNotBlank(scope.row.paymentAmount)? toThousand(scope.row.paymentAmount): 0 }}</span>
-        <span @click="openPaymentAudit(scope.row)" style="cursor:pointer;" v-if="checkPermission(permission.payment.get) && scope.row.unCheckPaymentCount>0">
+        <span @click="openPaymentAudit(scope.row)" style="cursor:pointer;" v-if="checkPermission(permission.payment.audit) && scope.row.unCheckPaymentCount>0">
           <el-badge :value="scope.row.unCheckPaymentCount" :max="99" :hidden="scope.row.unCheckPaymentCount < 1">
             <svg-icon icon-class="notify"  style="color:#e6a23c;font-size:15px;"/>
           </el-badge>
@@ -74,7 +74,7 @@
       <template v-slot="scope">
         <div @click="openTab(scope.row,'invoice')" style="cursor:pointer;">
           <span style="margin-right:10px;">{{ isNotBlank(scope.row.invoiceAmount)? toThousand(scope.row.invoiceAmount): 0 }}</span>
-          <template v-if="checkPermission(permission.invoice.get) && scope.row.unCheckInvoiceCount>0">
+          <template v-if="checkPermission(permission.invoice.audit) && scope.row.unCheckInvoiceCount>0">
             <el-badge :value="scope.row.unCheckInvoiceCount" :max="99" :hidden="scope.row.unCheckInvoiceCount < 1">
               <svg-icon icon-class="notify"  style="color:#e6a23c;font-size:15px;"/>
             </el-badge>
@@ -91,7 +91,7 @@
   <!--分页组件-->
   <pagination />
   <!-- 物流记录 -->
-  <recordDetail v-model="stockVisible" :detailInfo="currentRow" :type="logisticsSearchTypeEnum.COMPANY.V"/>
+  <recordDetail v-model="stockVisible" :detailInfo="currentRow" :type="logisticsSearchTypeEnum.COMPANY.V" :permission="permission.logisticsLog"/>
   <!-- 收付款 -->
   <paymentAndInvoice v-model="tabVisible" :currentRow="currentRow" :tabName="activeName" :propertyType="supplierPayTypeEnum.TRANSPORT.V" @success="crud.toQuery" :permission="permission"/>
   <!-- 审核 -->
