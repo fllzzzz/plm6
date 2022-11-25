@@ -14,10 +14,10 @@
     </template>
     <template #content>
       <el-tabs v-model="activeName" class="tab-container">
-        <el-tab-pane label="付款列表" name="payment">
+        <el-tab-pane label="付款列表" name="payment" v-if="checkPermission(permission.payment?.get)">
           <payment class="tab-content" :currentRow="props.currentRow" :propertyType="props.propertyType" :visibleValue="modelValue"/>
         </el-tab-pane>
-        <el-tab-pane label="收票列表" name="invoice">
+        <el-tab-pane label="收票列表" name="invoice" v-if="checkPermission(permission.invoice?.get)">
           <invoice class="tab-content" :currentRow="props.currentRow" :propertyType="props.propertyType" :visibleValue="modelValue" @success="emit('success')"/>
         </el-tab-pane>
       </el-tabs>
@@ -29,6 +29,7 @@
 import { defineProps, defineEmits, watch, ref } from 'vue'
 import { ElTabs, ElTabPane } from 'element-plus'
 import useVisible from '@compos/use-visible'
+import checkPermission from '@/utils/system/check-permission'
 import Payment from './payment'
 import Invoice from './invoice'
 
@@ -49,6 +50,10 @@ const props = defineProps({
   propertyType: {
     type: [Number, String],
     default: undefined
+  },
+  permission: {
+    type: Object,
+    default: () => {}
   }
 })
 const emit = defineEmits(['success', 'update:modelValue'])

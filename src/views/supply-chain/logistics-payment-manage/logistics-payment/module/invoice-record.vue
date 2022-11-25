@@ -1,7 +1,7 @@
 <template>
   <common-drawer
     ref="dialogRef"
-    title="开票记录"
+    title="收票记录"
     :close-on-click-modal="false"
     v-model="visible"
     direction="rtl"
