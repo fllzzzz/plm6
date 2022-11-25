@@ -18,7 +18,12 @@
         type="enum"
         size="small"
         class="filter-item"
-        @change="crud.toQuery"
+        @change="
+          () => {
+            crud.toQuery()
+            query.shipmentStatus = undefined
+          }
+        "
       />
       <component-radio-button
         v-model="query.productType"
@@ -33,18 +38,30 @@
         v-model="query.shipmentStatus"
         :options="deliveryReceiptStatusEnum.ENUM"
         showOptionAll
+        :unshowVal="query.receiptStatus === receiptStatusEnum.RECEIVED.V ? [deliveryReceiptStatusEnum.DELIVERY.V] : []"
         type="enum"
         size="small"
         class="filter-item"
         @change="crud.toQuery"
       />
-      <div  class="date-div" style="position:relative;padding-left:115px;vertical-align:0px;display:inline-block;border:1px solid #dcdfe6;border-radius:4px;height:31px;">
+      <div
+        class="date-div"
+        style="
+          position: relative;
+          padding-left: 115px;
+          vertical-align: 0px;
+          display: inline-block;
+          border: 1px solid #dcdfe6;
+          border-radius: 4px;
+          height: 31px;
+        "
+      >
         <common-select
           v-model="query.searchType"
           :options="searchDateTypeEnum.ENUM"
           type="enum"
           class="date-select"
-          style="width:115px;vertical-align:middle;"
+          style="width: 115px; vertical-align: middle"
           @change="handleDateChange"
         />
         <el-date-picker
@@ -55,7 +72,7 @@
           class="filter-item date-item date-change"
           start-placeholder="开始日期"
           end-placeholder="结束日期"
-          style="width: 240px;vertical-align:middle;"
+          style="width: 240px; vertical-align: middle"
           :shortcuts="PICKER_OPTIONS_SHORTCUTS"
           @change="handleDateChange"
         />
@@ -226,7 +243,7 @@ const printParams = computed(() => {
     return { ...query }
   }
   if (currentKey.value === 'mesShippingList' && isNotBlank(crud.selections)) {
-    return crud.selections.map(row => {
+    return crud.selections.map((row) => {
       return row.id
     })
   }
@@ -262,34 +279,34 @@ function handleDateChange() {
 }
 </script>
 <style lang="scss" scoped>
-.date-select{
-  position:absolute;
-  top:0;
-  left:3px;
-  ::v-deep(.el-input__inner){
-    border:0 none;
+.date-select {
+  position: absolute;
+  top: 0;
+  left: 3px;
+  ::v-deep(.el-input__inner) {
+    border: 0 none;
     // border-right:0 none;
-    line-height:29px;
-    height:29px;
-    padding-left:2px;
-    padding-right:32px;
+    line-height: 29px;
+    height: 29px;
+    padding-left: 2px;
+    padding-right: 32px;
   }
 }
-::v-deep(.date-change.el-input__inner){
-  border:0 none;
-  line-height:29px;
-  height:29px;
+::v-deep(.date-change.el-input__inner) {
+  border: 0 none;
+  line-height: 29px;
+  height: 29px;
 }
-.date-div{
-  &::before{
-    content:'';
-    width:1px;
-    height:30px;
-    position:absolute;
-    top:0;
-    left:116px;
-    background-color:#dcdfe6;
-    z-index:500;
+.date-div {
+  &::before {
+    content: '';
+    width: 1px;
+    height: 30px;
+    position: absolute;
+    top: 0;
+    left: 116px;
+    background-color: #dcdfe6;
+    z-index: 500;
   }
 }
 </style>

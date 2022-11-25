@@ -12,4 +12,51 @@ export function get(params) {
   })
 }
 
+/**
+ * @description: 获取可以班组协同的任务工单
+ */
+export function getTask({ topTaskOrderId }) {
+  return request({
+    module: 'mes',
+    url: `assist/${topTaskOrderId}/task_order/list`,
+    method: 'get'
+  })
+}
+
+/**
+ * @description: 获取可以班组协同的产品
+ */
+export function detail(params) {
+  return request({
+    module: 'mes',
+    url: `assist/task_order/product/list`,
+    method: 'get',
+    params
+  })
+}
+
+/**
+ * @description: 添加班组协同
+ */
+export function save(data) {
+  return request({
+    module: 'mes',
+    url: `assist`,
+    method: 'post',
+    data
+  })
+}
+
+/**
+ * @description: 删除班组协同
+ */
+export function del(data) {
+  return request({
+    module: 'mes',
+    url: `assist`,
+    method: 'delete',
+    data
+  })
+}
+
 export default { get }

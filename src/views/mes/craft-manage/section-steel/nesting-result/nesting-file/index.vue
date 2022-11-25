@@ -45,7 +45,7 @@
           </template>
         </el-table-column>
         <el-table-column label="序号" type="index" align="center" width="60" />
-        <el-table-column key="serialNumber" prop="serialNumber" :show-overflow-tooltip="true" label="套料编号" align="left" width="200px">
+        <el-table-column key="serialNumber" prop="serialNumber" :show-overflow-tooltip="true" label="套料编号" align="left" width="240px">
           <template v-slot="scope">
             <span>{{ scope.row.serialNumber }}</span>
           </template>
@@ -56,7 +56,7 @@
           label="套料成果"
           header-align="center"
           v-if="nestingFileType === nestingFileTypeEnum.NESTING_FILE.V"
-          width="550px"
+          width="600px"
         >
           <template v-slot="scope">
             <template v-if="scope.row.linkDOList.length > 0">
@@ -107,7 +107,7 @@
           :show-overflow-tooltip="true"
           label="母材规格"
           align="center"
-          min-width="110px"
+          width="200px"
         >
           <template v-slot="scope">
             <span>{{ scope.row.specification }}</span>
@@ -146,7 +146,7 @@
             <span>{{ scope.row.lossRate }}%</span>
           </template>
         </el-table-column>
-        <el-table-column  v-if="nestingFileType === nestingFileTypeEnum.NESTING_FILE.V" key="statusEnum" prop="statusEnum" :show-overflow-tooltip="true" label="状态" align="center">
+        <el-table-column  v-if="nestingFileType === nestingFileTypeEnum.NESTING_FILE.V" key="statusEnum" prop="statusEnum" :show-overflow-tooltip="true" label="状态" align="center" fixed="right" width="100px">
           <template v-slot="scope">
             <el-tag :type="typeEnum.V[scope.row.statusEnum].T">{{ typeEnum.VL[scope.row.statusEnum] }}</el-tag>
           </template>
