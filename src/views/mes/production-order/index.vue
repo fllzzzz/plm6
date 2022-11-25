@@ -24,7 +24,7 @@
       </el-table-column>
       <el-table-column v-if="columns.visible('quantity')" key="quantity" prop="quantity" label="清单量（件/吨）" align="center" :show-overflow-tooltip="true" min-width="150">
         <template v-slot="scope">
-          <span v-if="scope.row.quantity && scope.row.netWeight" style="cursor:pointer;" @click="openList(scope.row)">{{`${scope.row.quantity} | ${scope.row.netWeight}`}}</span>
+          <span v-if="scope.row.quantity && scope.row.netWeight" style="cursor:pointer;color:#409eff;" @click="openList(scope.row)">{{`${scope.row.quantity} | ${scope.row.netWeight}`}}</span>
           <span v-else>-</span>
         </template>
       </el-table-column>
