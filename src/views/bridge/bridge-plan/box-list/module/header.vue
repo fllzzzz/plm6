@@ -85,17 +85,12 @@ import { listUpload, downloadBoxCellTemplate, downloadBoxCell, delBoxCellByArea 
 import ExportButton from '@comp-common/export-button/index.vue'
 import { TechnologyTypeAllEnum } from '@enum-ms/contract'
 import rrOperation from '@crud/RR.operation'
-// import { downloadAssemble } from '@/api/plan/technical-manage/assembly'
-// import { downloadAssemble, downloadAssembleTemplate, delAssemblyByArea, assembleError } from '@/api/plan/technical-manage/assembly'
-// import { projectModeEnum } from '@enum-ms/contract'
-// import { ElMessageBox } from 'element-plus'
 
 const defaultQuery = {
-  name: '',
-  serialNumber: '',
-  specification: '',
-  material: '',
-  // monomerId: { value: undefined, resetAble: false },
+  serialNumber: undefined,
+  specification: undefined,
+  material: undefined,
+  monomerId: { value: undefined, resetAble: false },
   areaId: { value: undefined, resetAble: false }
 }
 
@@ -104,7 +99,6 @@ const currentArea = ref({})
 const areaInfo = ref([])
 const defaultTab = ref({})
 const deleteLoading = ref(false)
-// const errorList = ref([])
 const { crud, query, CRUD } = regHeader(defaultQuery)
 const props = defineProps({
   projectId: {
@@ -122,14 +116,6 @@ const exportParam = computed(() => {
   return param
 })
 
-// const AddParam = computed(() => {
-//   return { areaId: crud.query.areaId, importType: 1 }
-// })
-
-// const carryParam = computed(() => {
-//   return { areaId: crud.query.areaId, importType: 2 }
-// })
-
 function tabClick(val) {
   const { name, label } = val
   currentArea.value = {
@@ -140,7 +126,6 @@ function tabClick(val) {
 }
 
 function getAreaInfo(val) {
-  console.log(areaInfo.value)
   areaInfo.value = val || []
   if (areaInfo.value.length > 0) {
     defaultTab.value = {

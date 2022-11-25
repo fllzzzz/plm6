@@ -222,7 +222,7 @@ import useCRUD from '@compos/use-crud'
 import useDrawing from '@compos/use-drawing'
 import { mapGetters } from '@/store/lib'
 import { DP } from '@/settings/config'
-import { machinePartPM as permission } from '@/page-permission/plan'
+import { cellSummaryListPM as permission } from '@/page-permission/bridge'
 import { TechnologyTypeAllEnum, projectTypeEnum } from '@enum-ms/contract'
 import { bridgeDeepenTypeEnum } from '@enum-ms/plan'
 

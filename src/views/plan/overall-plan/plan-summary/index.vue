@@ -100,12 +100,19 @@
 
 <script setup>
 import crudApi from '@/api/plan/plan-summary'
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
+
+import { mapGetters } from '@/store/lib'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
-import mHeader from './module/header'
 import { isNotBlank } from '@data-type/index'
-import { planSummaryListPM as permission } from '@/page-permission/plan'
+import { bridgePlanSummaryListPM } from '@/page-permission/bridge'
+import { planSummaryListPM } from '@/page-permission/plan'
+import { projectTypeEnum } from '@enum-ms/contract'
+
+import mHeader from './module/header'
+
+const { globalProject } = mapGetters(['globalProject'])
 
 const optShow = {
   add: false,
@@ -114,11 +121,15 @@ const optShow = {
   download: false
 }
 
+const permission = computed(() => {
+  return globalProject.projectType === projectTypeEnum.STEEL.V ? planSummaryListPM : bridgePlanSummaryListPM
+})
+
 const tableRef = ref()
 const { crud, columns, CRUD } = useCRUD(
   {
     title: '排产汇总',
-    permission: { ...permission },
+    permission: { ...permission.value },
     optShow: { ...optShow },
     requiredQuery: ['type', 'year'],
     crudApi: { ...crudApi },

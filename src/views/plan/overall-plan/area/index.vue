@@ -56,18 +56,22 @@
 
 <script setup>
 import crudApi from '@/api/plan/area'
-import { ref, watch } from 'vue'
-import { areaListPM as permission } from '@/page-permission/plan'
+import { ref, watch, computed } from 'vue'
+
+import { bridgeAreaListPM } from '@/page-permission/bridge'
+import { areaListPM } from '@/page-permission/plan'
 import checkPermission from '@/utils/system/check-permission'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
-import udOperation from '@crud/UD.operation'
-import pagination from '@crud/Pagination'
 import { mapGetters } from '@/store/lib'
-import mHeader from './module/header'
-import mForm from './module/form'
+import { projectTypeEnum } from '@enum-ms/contract'
 import { manufactureTypeEnum } from '@enum-ms/plan'
 import { parseTime } from '@/utils/date'
+
+import mHeader from './module/header'
+import mForm from './module/form'
+import udOperation from '@crud/UD.operation'
+import pagination from '@crud/Pagination'
 
 const { globalProject, globalProjectId } = mapGetters(['globalProject', 'globalProjectId'])
 
@@ -78,13 +82,17 @@ const optShow = {
   download: false
 }
 
+const permission = computed(() => {
+  return globalProject.projectType === projectTypeEnum.STEEL.V ? areaListPM : bridgeAreaListPM
+})
+
 const tableRef = ref()
 const typeInfo = ref([])
 const { crud, columns, CRUD } = useCRUD(
   {
     title: '区域',
     sort: ['sort.asc', 'id.desc'],
-    permission: { ...permission },
+    permission: { ...permission.value },
     optShow: { ...optShow },
     requiredQuery: ['productType'],
     crudApi: { ...crudApi },

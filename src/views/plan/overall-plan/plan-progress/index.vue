@@ -145,13 +145,15 @@
 
 <script setup>
 import crudApi from '@/api/plan/plan-progress'
-import { ref, watch } from 'vue'
+import { ref, watch, computed } from 'vue'
+
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import { mapGetters } from '@/store/lib'
-import { TechnologyTypeAllEnum, businessTypeEnum } from '@enum-ms/contract'
+import { TechnologyTypeAllEnum, projectTypeEnum } from '@enum-ms/contract'
 import { manufactureTypeEnum, areaPlanTypeEnum } from '@enum-ms/plan'
-import { planProgressListPM as permission } from '@/page-permission/plan'
+import { bridgePlanProgressListPM } from '@/page-permission/bridge'
+import { planProgressListPM } from '@/page-permission/plan'
 import { dateDifference } from '@/utils/date'
 import { DP } from '@/settings/config'
 import { isNotBlank } from '@/utils/data-type'
@@ -165,12 +167,16 @@ const optShow = {
   download: false
 }
 
+const permission = computed(() => {
+  return globalProject.projectType === projectTypeEnum.STEEL.V ? planProgressListPM : bridgePlanProgressListPM
+})
+
 const tableRef = ref()
 const { crud, columns, CRUD } = useCRUD(
   {
     title: '计划跟踪',
     sort: ['id.desc'],
-    permission: { ...permission },
+    permission: { ...permission.value },
     optShow: { ...optShow },
     crudApi: { ...crudApi },
     hasPagination: false
