@@ -76,7 +76,7 @@
         </template>
       <template v-slot="scope">
         <span style="cursor:pointer;margin-right:10px;" @click="openTab(scope.row,'payment')">{{ scope.row.paymentAmount? toThousand(scope.row.paymentAmount): '-' }}</span>
-        <span @click="openPaymentAudit(scope.row)" style="cursor:pointer;" v-if="checkPermission(crud.permission.payment.get) && scope.row.unCheckPaymentCount>0">
+        <span @click="openPaymentAudit(scope.row)" style="cursor:pointer;" v-if="checkPermission(crud.permission.payment.audit) && scope.row.unCheckPaymentCount>0">
           <el-badge :value="scope.row.unCheckPaymentCount" :max="99" :hidden="scope.row.unCheckPaymentCount < 1">
             <svg-icon icon-class="notify"  style="color:#e6a23c;font-size:15px;"/>
           </el-badge>
@@ -104,7 +104,7 @@
       <template v-slot="scope">
         <div @click="openTab(scope.row,'invoice')" style="cursor:pointer;">
           <span style="cursor:pointer;margin-right:10px;">{{ scope.row.invoiceAmount? toThousand(scope.row.invoiceAmount): '-' }}</span>
-          <template v-if="checkPermission(crud.permission.invoice.get) && scope.row.unCheckInvoiceCount>0">
+          <template v-if="checkPermission(crud.permission.invoice.audit) && scope.row.unCheckInvoiceCount>0">
             <el-badge :value="scope.row.unCheckInvoiceCount" :max="99" :hidden="scope.row.unCheckInvoiceCount < 1">
               <svg-icon icon-class="notify"  style="color:#e6a23c;font-size:15px;"/>
             </el-badge>
@@ -130,7 +130,7 @@
     </el-table-column>
   </common-table>
   <!-- 入库记录 -->
-  <inboundRecord v-model="stockVisible" :detail-info="currentRow" />
+  <inboundRecord v-model="stockVisible" :detail-info="currentRow" :permission="permission.inbound"/>
   <paymentAudit v-model="auditVisible" :currentRow="currentRow" :propertyType="crud.query.propertyType" @success="crud.toQuery"/>
   <!-- 收付款 -->
   <paymentAndInvoice v-model="tabVisible" :currentRow="currentRow" :tabName="activeName" :propertyType="crud.query.propertyType" @success="crud.toQuery" :permission="permission"/>

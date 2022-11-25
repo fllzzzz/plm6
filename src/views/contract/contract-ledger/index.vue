@@ -62,7 +62,7 @@
     <el-table-column v-if="columns.visible('collectionAmount')" key="collectionAmount" prop="collectionAmount" label="累计收款" align="right">
       <template v-slot="scope">
         <div @click="openTab(scope.row,'collection')" style="cursor:pointer;">
-          <span v-if="scope.row.unCheckCollectionCount>0 && checkPermission(permission.collection.get)">
+          <span v-if="scope.row.unCheckCollectionCount>0 && checkPermission(permission.collection.audit)">
             <el-badge :value="scope.row.unCheckCollectionCount" :max="99" :hidden="scope.row.unCheckCollectionCount < 1">
               <svg-icon icon-class="notify"  style="color:#e6a23c;font-size:15px;"/>
             </el-badge>
@@ -79,7 +79,7 @@
     <el-table-column v-if="columns.visible('invoiceAmount')" key="invoiceAmount" prop="invoiceAmount" label="累计开票" align="right">
       <template v-slot="scope">
         <div @click="openTab(scope.row,'invoice')" style="cursor:pointer;">
-          <span v-if="scope.row.unCheckInvoiceCount>0 && checkPermission(permission.invoice.get)">
+          <span v-if="scope.row.unCheckInvoiceCount>0 && checkPermission(permission.invoice.audit)">
             <el-badge :value="scope.row.unCheckInvoiceCount" :max="99" :hidden="scope.row.unCheckInvoiceCount < 1">
               <svg-icon icon-class="notify"  style="color:#e6a23c;font-size:15px;"/>
             </el-badge>

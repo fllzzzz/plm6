@@ -214,7 +214,7 @@ CRUD.HOOK.beforeSubmit = () => {
   crud.form.applyAmount = 0
   crud.form.detailSaveParams = []
   freightDetails.value.map(v => {
-    if (v.applyAmount !== 0) {
+    if (v.applyAmount && v.applyAmount !== 0) {
       crud.form.applyAmount += v.applyAmount
       crud.form.detailSaveParams.push({
         projectId: v.projectId,
