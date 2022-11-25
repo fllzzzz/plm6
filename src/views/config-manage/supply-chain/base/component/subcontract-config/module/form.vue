@@ -6,6 +6,8 @@
     :visible="crud.status.cu > 0"
     :title="crud.status.title"
     :wrapper-closable="false"
+    custom-class="config-detail"
+    ref="drawerRef"
     size="860px"
   >
     <template #titleRight>
@@ -17,7 +19,7 @@
           ref="detailRef"
           border
           :data="form.list"
-          :max-height="300"
+          :max-height="maxHeight"
           style="width: 100%"
           class="table-form"
           return-source-data
@@ -54,6 +56,7 @@
 import { ref } from 'vue'
 import { regForm } from '@compos/use-crud'
 
+import useMaxHeight from '@compos/use-max-height'
 import { useStore } from 'vuex'
 import { validate } from '@compos/form/use-table-validate'
 import { ElMessage } from 'element-plus'
@@ -61,11 +64,25 @@ import { ElMessage } from 'element-plus'
 const store = useStore()
 const formRef = ref()
 const detailRef = ref()
+const drawerRef = ref()
 const defaultForm = {
   list: []
 }
 
 const { CRUD, crud, form } = regForm(defaultForm, formRef)
+
+const { maxHeight } = useMaxHeight(
+  {
+    mainBox: '.config-detail',
+    extraBox: '.el-drawer__header',
+    wrapperBox: '.el-drawer__body',
+    navbar: false,
+    clientHRepMainH: true,
+    extraHeight: 80,
+    minHeight: 300
+  },
+  () => drawerRef.value.loaded
+)
 
 const tableRules = {
   name: [{ required: true, message: '请输入分包类别', trigger: 'blur' }]
