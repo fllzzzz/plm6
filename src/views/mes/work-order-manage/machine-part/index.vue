@@ -28,11 +28,12 @@
       </el-table-column>
       <el-table-column
         v-if="columns.visible('cutNumber')"
-        align="center"
+        header-align="center"
         key="cutNumber"
         prop="cutNumber"
         :show-overflow-tooltip="true"
         label="切割指令号"
+        width="220px"
       >
         <template v-slot="scope">
           <table-cell-tag :show="scope.row.boolPrinted" color="#e64242" name="已打印" :offset="15" />
