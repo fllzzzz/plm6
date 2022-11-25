@@ -16,7 +16,13 @@
               <el-tag size="medium" effect="plain" style="margin-right: 10px">
                 重量(kg)：{{ summaryInfo.totalNetWeight?.toFixed(2) || 0 }}
               </el-tag>
-              <common-button v-permission="permission.recordGet" type="primary" size="mini" @click="previewRecord">构件排产记录</common-button>
+              <common-button
+v-permission="permission.recordGet"
+type="primary"
+size="mini"
+@click="previewRecord"
+                >构件排产记录</common-button
+              >
             </template>
           </mHeader>
         </div>
@@ -307,6 +313,7 @@ function refresh(isRefreshTypeList = false) {
 
 const handleAreaClick = debounce(function (nodes = []) {
   console.log(nodes, 'handleAreaClick')
+  summaryInfo.value = {}
   const _areaIds = []
   const _areaIdObj = {}
   const _factoryIds = []

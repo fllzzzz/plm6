@@ -37,7 +37,7 @@ const ARTIFACT_COMMON_L_HTML = function ({ component = defComponent, printConfig
 </div>
 <div class="row">
   <div class="col">名称：${emptyTextFormatter(component.name)}</div>
-  <div class="col">数量(件)：${emptyTextFormatter(component.quantity)}</div>
+  <div class="col">任务数(件)：${emptyTextFormatter(component.quantity)}</div>
   <div class="col" style="${printConfig?.weight !== printWeightTypeEnum.NONE.V ? '' : 'display:none;'}">单重(kg)：${emptyTextFormatter(component.weight)}</div>
 </div>
 <div class="contains-rows">
@@ -113,7 +113,7 @@ const ARTIFACT_CUSTOM_L_HTML = function ({ component = defComponent, printConfig
         <div class="col" style="${printConfig?.showArea ? '' : 'display:none;'}">区域：${emptyTextFormatter(component.areaName)}</div>
       </div>
       <div class="row">
-        <div class="col">数量(件)：${emptyTextFormatter(component.quantity)}</div>
+        <div class="col">任务数(件)：${emptyTextFormatter(component.quantity)}</div>
         <div class="col">长度(mm)：${emptyTextFormatter(component.length)}</div>
         <div class="col" style="${printConfig?.weight !== printWeightTypeEnum.NONE.V ? '' : 'display:none;'}">单重(kg)：${emptyTextFormatter(component.weight)}</div>
       </div>
