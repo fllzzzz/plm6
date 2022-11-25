@@ -66,22 +66,19 @@ export const supplierMaterialPaymentPM = {
     add: ['supplier_material_payment_application:add'], // 添加付款申请
     edit: ['supplier_material_payment_application:edit'], // 编辑付款申请
     del: ['supplier_material_payment_application:del'] // 删除付款申请
-  },
-  paymentLog: {
-    get: ['supplier_material_paymentLog:get'] // 付款记录
   }
 }
 
 // 采购对账管理/验收记录
 export const purchaseAcceptanceLogPM = {
-  get: ['purchaseAcceptanceLogPM:get'], // 查看
-  download: ['purchaseAcceptanceLogPM:download'] // 下载
+  get: ['purchase_acceptance_log:get'], // 查看
+  download: ['purchase_acceptance_log:download'] // 下载
 }
 
 // 采购对账管理/供应商对账
 export const supplierReconciliationLogPM = {
-  get: ['supplierReconciliationLogPM:get'], // 查看
-  download: ['supplierReconciliationLogPM:download'] // 下载
+  get: ['supplier_reconciliation_Log:get'], // 查看
+  download: ['supplier_reconciliation_Log:download'] // 下载
 }
 
 // 物流对账管理/物流记录

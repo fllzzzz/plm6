@@ -31,7 +31,7 @@
         </common-button>
       </template>
       <template #viewLeft>
-        <current-user-outbound-list ref="currentUserOutboundListRef" @refresh="crud.toQuery" />
+        <current-user-outbound-list v-permission="permission.outbound" ref="currentUserOutboundListRef" @refresh="crud.toQuery" />
         <common-button class="filter-item" icon="el-icon-time" size="mini" type="info" @click="toOutboundRecord">出库记录</common-button>
         <common-button class="filter-item" type="info" size="mini" icon="el-icon-lock" @click="openFreezeRecords">
           冻结记录

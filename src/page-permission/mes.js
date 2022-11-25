@@ -356,7 +356,7 @@ export const mesNestingSettingPM = {
   moveOutNoNestingList: ['mes_nesting_setting:moveOutNoNestingList'], // 批量移出无需套料清单
   extrusionNesting: ['mes_nesting_setting:extrusionNesting'], // 开始型材套料
   downloadResult: ['mes_nesting_setting:downloadResult'], // 下载套料成果压缩包
-  saveNestingResult: ['mes_nesting_setting:downloadResult'], // 保存套料成果
+  saveNestingResult: ['mes_nesting_setting:saveNestingResult'], // 保存套料成果
   delNestingResult: ['mes_nesting_setting:delNestingResult'] // 删除套料成果
 }
 

@@ -1,6 +1,6 @@
 // 路由：运营分析
 export default {
-  id: 1011,
+  id: 10,
   name: '运营分析',
   children: [
     {
