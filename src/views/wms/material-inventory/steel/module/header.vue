@@ -45,7 +45,7 @@
             标签打印
           </common-button>
         </el-badge>
-        <current-user-outbound-list v-permission="permission.outbound" ref="currentUserOutboundListRef" @refresh="handleCurrentUserOutbound" />
+        <current-user-outbound-list v-if="checkPermission(permission.outbound)" ref="currentUserOutboundListRef" @refresh="handleCurrentUserOutbound" />
         <common-button class="filter-item" icon="el-icon-time" size="mini" type="info" @click="toOutboundRecord">出库记录</common-button>
         <common-button class="filter-item" type="info" size="mini" icon="el-icon-lock" @click="openFreezeRecords"> 冻结记录 </common-button>
       </template>
@@ -77,6 +77,7 @@ import { getSteelPlateInventory, getSectionSteelInventory, getSteelCoilInventory
 import { computed, defineExpose, onMounted, ref } from 'vue'
 import { steelClsEnum } from '@/utils/enum/modules/classification'
 import { projectWarehouseTypeEnum } from '@/utils/enum/modules/wms'
+import checkPermission from '@/utils/system/check-permission'
 
 import useHeaderInfo from '../../compos/use-header-info'
 import useGetNotPrintedMaterial from '@/composables/store/use-get-not-printed-material'

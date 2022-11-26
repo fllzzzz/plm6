@@ -58,7 +58,7 @@
             <svg-icon icon-class="wms-transfer" />
           </common-button>
           <!--打印-->
-          <material-print-button :material="row" />
+          <material-print-button  v-if="checkPermission(permission.labelPrint)" :material="row" />
         </template>
       </el-table-column>
     </common-table>
@@ -88,6 +88,7 @@ import { ref, computed } from 'vue'
 import { matClsEnum, rawMatClsEnum } from '@enum-ms/classification'
 import { materialOperateColumns } from '@/utils/columns-format/wms'
 import { projectWarehouseTypeEnum } from '@/utils/enum/modules/wms'
+import checkPermission from '@/utils/system/check-permission'
 import { tableSummary } from '@/utils/el-extra'
 
 import useCRUD from '@compos/use-crud'
