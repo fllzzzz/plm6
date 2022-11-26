@@ -149,20 +149,23 @@ const { crud, CRUD, columns } = useCRUD(
   },
   tableRef
 )
-watch(
-  () => crud.query.productType,
-  (val) => {
-    processList.value = {}
-    crud.query.workshopId = undefined
-    crud.query.productionLineId = undefined
-  }
-)
 const productType = computed(() => {
   return crud.query.productType
 })
 
 provide('productType', productType)
 
+watch(
+  () => productType.value,
+  (val) => {
+    if (val) {
+      processList.value = {}
+      crud.query.workshopId = undefined
+      crud.query.productionLineId = undefined
+    }
+  },
+  { immediate: true, deep: true }
+)
 const { maxHeight } = useMaxHeight({
   extraBox: ['.head-container'],
   paginate: true
