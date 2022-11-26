@@ -47,7 +47,7 @@
     </div>
     <crudOperation>
       <template #optLeft>
-        <upload-btn
+        <!-- <upload-btn
           v-if="currentArea && currentArea.id && checkPermission(crud.permission.import)"
           :data="{ areaId: crud.query.areaId, importType: 1 }"
           :upload-fun="listUpload"
@@ -66,7 +66,9 @@
           btn-size="mini"
           class="filter-item"
           @success="uploadSuccess"
-        />
+        /> -->
+        <common-button type="primary" class="filter-item" size="mini" v-if="currentArea && currentArea.id && checkPermission(crud.permission.import)" @click="openUpload(1)">清单增量导入</common-button>
+        <common-button type="success" class="filter-item" size="mini" v-if="currentArea && currentArea.id && checkPermission(crud.permission.import)" @click="openUpload(2)">清单覆盖导入</common-button>
         <export-button
           v-if="currentArea && currentArea.id && checkPermission(crud.permission.download)"
           :fn="downloadArtifactTree"
@@ -119,6 +121,43 @@
         <structureTable :table-data="tableData[TechnologyTypeAllEnum.STRUCTURE.V]" :is-show="true" style="margin-top: 20px" />
       </template>
     </common-drawer>
+    <common-dialog
+      append-to-body
+      :close-on-click-modal="false"
+      :before-close="
+        () => {
+          uploadVisible = false
+        }
+      "
+      :visible="uploadVisible"
+      :title="importType===1 ? '清单增量导入' : '清单覆盖导入'"
+      width="400px"
+    >
+       <div class="parent-div">
+          <span class="parent-span"><span style="color:red;">*</span><span class="title-span">模式:</span></span>
+          <common-select
+            v-model="JDImportType"
+            :options="importTypeEnum.ENUM"
+            type="enum"
+            size="small"
+            placeholder="模式"
+            style="width:200px"
+          />
+     </div>
+      <div class="parent-div">
+        <span class="parent-span title-span">上传清单:</span>
+        <upload-btn
+          :data="{ areaId: crud.query.areaId, importType: importType, JDImportType: JDImportType }"
+          :upload-fun="listUpload"
+          :btn-name="importType===1 ? '增量导入' : '覆盖导入'"
+          :btn-type="importType===1 ? 'primary' : 'success'"
+          btn-size="mini"
+          style="float:left;"
+          :disabled="!JDImportType"
+          @success="uploadSuccess"
+        />
+     </div>
+    </common-dialog>
   </div>
 </template>
 
@@ -128,6 +167,7 @@ import { listUpload } from '@/api/plan/technical-manage/artifact-tree'
 
 import { regHeader } from '@compos/use-crud'
 import { TechnologyTypeAllEnum } from '@enum-ms/contract'
+import { importTypeEnum } from '@enum-ms/plan'
 import {
   downloadArtifactTree,
   downloadArtifactTreeTemplate,
@@ -162,6 +202,9 @@ const defaultTab = ref({})
 const tableData = ref({})
 const deleteLoading = ref(false)
 const techVisible = ref(false)
+const uploadVisible = ref(false)
+const importType = ref()
+const JDImportType = ref()
 const { crud, query, CRUD } = regHeader(defaultQuery)
 const emit = defineEmits(['getAreaData'])
 const mismatchList = ref([])
@@ -214,6 +257,7 @@ function monomerChange() {
 }
 
 function uploadSuccess() {
+  uploadVisible.value = false
   getErrorArtifactData()
   crud.toQuery()
 }
@@ -277,4 +321,24 @@ async function getTechInfo() {
   }
 }
 
+function openUpload(type) {
+  importType.value = type
+  uploadVisible.value = true
+  JDImportType.value = undefined
+}
 </script>
+<style lang="scss" scoped>
+.parent-div{
+  margin-bottom:20px;
+  height:28px;
+}
+.parent-span{
+  float:left;
+  margin-right:8px;
+  width:60px;
+  text-align:right;
+}
+.title-span{
+  line-height:28px;
+}
+</style>

@@ -123,6 +123,16 @@ const paintTypeEnum = {
 }
 constantize(paintTypeEnum)
 
+// 经典清单导入模式
+const importTypeEnum = {
+  UNIVERSAL: { L: '通用模板', K: 'UNIVERSAL', V: 1 << 0 },
+  NET_WEIGHT: { L: '经典模板-净重', K: 'NET_WEIGHT', V: 1 << 1 },
+  UNIT_WEIGHT_ACTUAL: { L: '经典模板-实际单重', K: 'UNIT_WEIGHT_ACTUAL', V: 1 << 2 },
+  UNIT_WEIGHT_WEIGHTED: { L: '经典模板-加权单重', K: 'UNIT_WEIGHT_WEIGHTED', V: 1 << 3 },
+  UNIT_WEIGHT_ADD: { L: '经典模板-L+30单重', K: 'UNIT_WEIGHT_ADD', V: 1 << 4 }
+}
+constantize(importTypeEnum)
+
 export {
   manufactureTypeEnum, // 制造类型
   overallPlanTypeEnum, // 部门计划类型
@@ -138,7 +148,8 @@ export {
   serialNumChangeTypeEnum,
   preparationRangeEnum, // 备料范围（类型）
   preparationStatusEnum, // 备料状态
-  paintTypeEnum
+  paintTypeEnum,
+  importTypeEnum
 }
 
 export default {
@@ -156,5 +167,6 @@ export default {
   serialNumChangeTypeEnum,
   preparationRangeEnum, // 备料范围（类型）
   preparationStatusEnum, // 备料状态
-  paintTypeEnum
+  paintTypeEnum,
+  importTypeEnum
 }
