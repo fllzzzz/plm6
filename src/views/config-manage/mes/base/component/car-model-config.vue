@@ -65,7 +65,8 @@ const permission = inject('permission')
 const { maxHeight } = useMaxHeight({
   extraBox: ['.el-card__header'],
   wrapperBox: ['.app-container', '.el-card__body'],
-  minHeight: 300
+  minHeight: 300,
+  extraHeight: 25
 })
 const isEdit = ref(false)
 // 表单

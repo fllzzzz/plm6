@@ -1,7 +1,7 @@
 <template>
   <div v-show="crud.searchToggle">
     <common-radio-button
-      v-if="lineTypeLoad"
+      v-if="lineTypeLoad && unshowLineType.length !== artifactProductLineEnum.KEYS.length"
       v-model="query.productionLineTypeEnum"
       :options="artifactProductLineEnum.ENUM"
       type="enum"
@@ -11,6 +11,7 @@
       class="filter-item"
     />
     <tag-tabs
+      v-if="artifactTypeList.length"
       v-model="query.structureClassId"
       class="filter-item"
       :style="'width:calc(100% - 205px)'"

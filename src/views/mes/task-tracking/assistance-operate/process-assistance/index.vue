@@ -140,6 +140,7 @@ import crudApi, { getTask } from '@/api/mes/task-tracking/assistance-operate/pro
 import { ref } from 'vue'
 
 import { componentTypeEnum } from '@enum-ms/mes'
+import { mesProcessAssistancePM as permission } from '@/page-permission/mes'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
@@ -170,7 +171,7 @@ const { crud, columns, CRUD } = useCRUD(
   {
     title: '工序协同',
     sort: [],
-    permission: { get: [''] },
+    permission: { ...permission },
     optShow: { ...optShow },
     crudApi: { ...crudApi }
   },

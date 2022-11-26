@@ -3,7 +3,7 @@
     <div class="head-container">
       <mHeader>
         <template #viewLeft>
-          <common-button size="mini" type="info" icon="el-icon-time" @click="recordVisible = true">协同记录</common-button>
+          <common-button v-permission="permission.record" size="mini" type="info" icon="el-icon-time" @click="recordVisible = true">协同记录</common-button>
         </template>
       </mHeader>
     </div>
@@ -140,7 +140,7 @@ import pagination from '@crud/Pagination'
 import mHeader from './module/header'
 import assistanceDrawer from './module/assistance-drawer.vue'
 import recordDrawer from './module/record-drawer.vue'
-// import { mesProductionOrderPM as permission } from '@/page-permission/mes'
+import { mesProductionLineAssistancePM as permission } from '@/page-permission/mes'
 
 const optShow = {
   add: false,
@@ -159,7 +159,7 @@ const { crud, columns, CRUD } = useCRUD(
   {
     title: '产线协同',
     sort: [],
-    // permission: { ...permission },
+    permission: { ...permission },
     optShow: { ...optShow },
     crudApi: { ...crudApi }
   },

@@ -493,6 +493,20 @@ export const mesProcessSluggishPM = {
   print: ['mes_process_sluggish:print'] // 工序呆滞详情打印
 }
 
+// 任务跟踪/协同操作/产线协同
+export const mesProductionLineAssistancePM = {
+  get: ['mes_production_line_assistance:get'], // 列表
+  save: ['mes_production_line_assistance:save'], // 协同保存
+  record: ['mes_production_line_assistance:record'] // 协同记录
+}
+
+// 任务跟踪/协同操作/工序协同
+export const mesProcessAssistancePM = {
+  get: ['mes_process_assistance:get'], // 列表
+  save: ['mes_process_assistance:save'], // 协同保存
+  del: ['mes_process_assistance:del'] // 协同保存
+}
+
 // --------------------------- 6.0 任务跟踪 end --------------------------------
 
 // --------------------------- 6.0 项目总览 start --------------------------------
