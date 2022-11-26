@@ -27,6 +27,7 @@
             v-model="scope.row.name"
             oninput="value=value.replace(/[^\d.]/g, '').replace(/^\./g, '0.').replace('.','$#$').replace(/\./g,'').replace('$#$','.')"
             size="mini"
+            maxlength="50"
             placeholder="车型"
             style="width: 100%"
           ></el-input>
