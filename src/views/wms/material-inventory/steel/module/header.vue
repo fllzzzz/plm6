@@ -46,8 +46,8 @@
           </common-button>
         </el-badge>
         <current-user-outbound-list v-if="checkPermission(permission.outbound)" ref="currentUserOutboundListRef" @refresh="handleCurrentUserOutbound" />
-        <common-button class="filter-item" icon="el-icon-time" size="mini" type="info" @click="toOutboundRecord">出库记录</common-button>
-        <common-button class="filter-item" type="info" size="mini" icon="el-icon-lock" @click="openFreezeRecords"> 冻结记录 </common-button>
+        <common-button v-permission="permission.outboundRecord" class="filter-item" icon="el-icon-time" size="mini" type="info" @click="toOutboundRecord">出库记录</common-button>
+        <common-button v-permission="permission.freezeRecord" class="filter-item" type="info" size="mini" icon="el-icon-lock" @click="openFreezeRecords"> 冻结记录 </common-button>
       </template>
     </crud-operation>
     <outbound-batch-handling-form
