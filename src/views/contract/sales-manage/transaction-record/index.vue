@@ -32,7 +32,7 @@
     </common-table>
     <!--分页组件-->
     <pagination />
-    <mDetail v-model:visible="detailVisible" :info="itemInfo" />
+    <mDetail v-model:visible="detailVisible" :info="itemInfo" :permission="permission"/>
   </div>
 </template>
 

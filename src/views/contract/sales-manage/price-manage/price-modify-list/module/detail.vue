@@ -9,7 +9,7 @@
     top="10vh"
   >
     <template #titleRight>
-      <span v-if="checkPermission(crud.permission.detail) && props.detailInfo.status === reviewStatusEnum.UNREVIEWED.V">
+      <span v-if="checkPermission(crud.permission.audit) && props.detailInfo.status === reviewStatusEnum.UNREVIEWED.V">
         <common-button size="mini" type="success" @click.stop="submit(reviewStatusEnum.PASS.V)">同 意</common-button>
         <common-button size="mini" type="danger" @click.stop="submit(reviewStatusEnum.REFUSE.V)">拒 绝</common-button>
       </span>

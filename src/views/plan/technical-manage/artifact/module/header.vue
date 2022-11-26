@@ -60,7 +60,7 @@
     </div>
     <crudOperation>
       <template #optLeft>
-        <export-button v-permission="permission.get" :params="query" :fn="downLoad">
+        <export-button v-permission="permission.download" :params="query" :fn="downLoad">
           构件清单（根据查询条件）
         </export-button>
       </template>

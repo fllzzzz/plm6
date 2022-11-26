@@ -21,7 +21,7 @@
       />
       <rrOperation/>
     </div>
-    <crudOperation>
+    <crudOperation :permission="crud.permission">
       <template #optLeft>
         <common-button type="warning" size="mini" @click="emit('handleUpload')" v-permission="crud.permission.import" class="filter-item">
           文件导入

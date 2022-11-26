@@ -256,6 +256,7 @@
         </el-table-column>
         <!--编辑与删除-->
         <el-table-column
+          v-if="checkPermission([...permission.editNum,...permission.productionStatus])"
           label="操作"
           width="160px"
           align="center"
@@ -264,7 +265,7 @@
           <template v-slot="scope">
             <template v-if="scope.row.dataType === 2">
               <common-button size="mini" @click="handleNum(scope.row)" icon="el-icon-edit" v-permission="permission.editNum" />
-              <common-button size="mini" @click="viewState(scope.row)"><svg-icon icon-class="document" v-permission="permission.productionStatus"/></common-button>
+              <common-button size="mini" @click="viewState(scope.row)" v-permission="permission.productionStatus"><svg-icon icon-class="document"/></common-button>
             </template>
           </template>
         </el-table-column>

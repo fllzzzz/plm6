@@ -50,7 +50,7 @@ import crudApi from '@/api/plan/technical-data-manage/technical-achievement'
 import { ref, watch, computed } from 'vue'
 import { mapGetters } from '@/store/lib'
 
-import { xmlFileListPM as permission } from '@/page-permission/plan'
+import { cncFileListPM as permission } from '@/page-permission/plan'
 import { deepenTypeEnum } from '@enum-ms/plan'
 
 import useMaxHeight from '@compos/use-max-height'

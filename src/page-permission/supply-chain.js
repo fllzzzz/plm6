@@ -93,7 +93,6 @@ export const supplierLogisticsPaymentPM = {
   get: ['supplier_logistics_payment:get'], // 付款明细列表
   add: ['supplier_logistics_payment:add'], // 新增申请
   detail: ['supplier_logistics_payment:detail'], // 收票记录
-  print: ['supplier_logistics_payment:print'], // 打印下载
   application: {
     get: ['supplier_logistics_payment_application:get'], // 申请记录列表
     edit: ['supplier_logistics_payment_application:edit'], // 编辑付款申请
@@ -110,9 +109,6 @@ export const supplierLogisticsPaymentPM = {
 // 物流订单
 export const logisticsOrderPM = {
   get: ['scm_logisticsOrder:get'], // 列表
-  add: ['scm_logisticsOrder:add'], // 添加
-  edit: ['scm_logisticsOrder:edit'], // 编辑
-  del: ['scm_logisticsOrder:del'], // 删除
   inboundReceiptDetail: wmsCommonPM.rawMatInboundReceiptDetail, // 入库详情
   purchaseOrderDetail: commonPM.purchaseOrderDetail // 采购合同
 }
