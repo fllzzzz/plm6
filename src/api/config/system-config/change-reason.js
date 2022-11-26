@@ -10,6 +10,16 @@ export function get(params) {
   })
 }
 
+export function getChangeReasonConfig(params) {
+  return request({
+    module: 'contract',
+    url: 'change/reason/all',
+    method: 'get',
+    params,
+    cancelKey: false
+  })
+}
+
 export function add(data) {
   return request({
     module: 'contract',

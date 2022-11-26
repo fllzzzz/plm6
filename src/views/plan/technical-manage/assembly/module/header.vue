@@ -26,12 +26,11 @@
     <crudOperation>
       <template #optLeft>
         <export-button
-          v-if="currentArea && currentArea.id"
+          v-permission="permission.download"
           :fn="downloadAssemble"
           :params="exportParam"
           class="filter-item"
           :disabled="crud.data.length === 0 || deleteLoading"
-          v-permission="crud.permission.get"
         >
           下载部件清单
         </export-button>

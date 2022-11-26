@@ -1,14 +1,5 @@
 <template>
   <div>
-    <!-- <project-radio-button size="small" v-model="query.projectId" class="filter-item" @change="crud.toQuery" /> -->
-
-    <!-- <el-input
-        v-model.trim="query.serialNumber"
-        placeholder="订单号"
-        style="width:120px"
-        class="filter-item"
-      /> -->
-
     <crudOperation>
       <template #optLeft>
         <div v-show="crud.searchToggle">

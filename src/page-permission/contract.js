@@ -203,8 +203,8 @@ export const contractSupplierPaymentLedgerPM = {
     print: ['contract_supplier_payment_ledger_payment:print'] // 付款打印下载
   },
   invoice: {
-    get: ['contract_supplier_payment_ledger_payment:get'], // 收票列表
-    print: ['contract_supplier_payment_ledger_payment:print'] // 收票打印下载
+    get: ['contract_supplier_payment_ledger_invoice:get'], // 收票列表
+    print: ['contract_supplier_payment_ledger_invoice:print'] // 收票打印下载
   }
 }
 // --------------------------- 销售管理 end --------------------------------
@@ -219,7 +219,7 @@ export const priceManagePM = {
   save: ['sale_price_manage:edit'], // 录入价格
   list: ['sale_price_manage:modify'], // 变更列表
   audit: ['sale_price_manage:audit'], // 变更审核
-  print: ['sale_price_manage:print'] // 打印
+  print: ['sale_price_manage:print'] // 结构围护配套件打印
 }
 
 // 销售管理/订单跟踪

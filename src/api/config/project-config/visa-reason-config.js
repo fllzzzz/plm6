@@ -9,6 +9,15 @@ export function get() {
   })
 }
 
+export function getVisaReason() {
+  return request({
+    module: 'project',
+    url: 'visa-reason/all',
+    method: 'get',
+    cancelKey: false
+  })
+}
+
 export function add(data) {
   return request({
     module: 'project',

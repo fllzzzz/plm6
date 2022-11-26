@@ -37,8 +37,7 @@ export const areaListPM = {
   add: ['plan_area_manage:add'], // 新增区域
   edit: ['plan_area_manage:edit'], // 修改区域
   del: ['plan_area_manage:del'], // 删除区域
-  planList: ['plan_area_manage:planList'], // 办理计划
-  print: ['plan_area_manage:print'] // 打印下载
+  planList: ['plan_area_manage:planList'] // 办理计划
 }
 
 // 计划管理/计划列表
@@ -88,12 +87,14 @@ export const machinePartPM = {
 
 // 技术管理/构件列表
 export const artifactPM = {
-  get: ['plan_artifact_list:get'] // 构件列表
+  get: ['plan_artifact_list:get'], // 构件列表
+  download: ['plan_artifact_list:download'] // 下载构件
 }
 
 // 技术管理/部件列表
 export const assemblyListPM = {
-  get: ['plan_assembly_list:get'] // 部件列表
+  get: ['plan_assembly_list:get'], // 部件列表
+  download: ['plan_assembly_list:download'] // 下载部件
 }
 
 // 技术管理/配套件汇总
@@ -168,7 +169,8 @@ export const xmlFileListPM = {
 
 // 技术管理/清单合计列表
 export const summaryListPM = {
-  get: ['summary_list:get'] // 清单合计列表
+  get: ['summary_list:get'], // 清单合计列表
+  detail: ['summary_list:detail']
 }
 
 // 技术管理/钢材使用量列表
