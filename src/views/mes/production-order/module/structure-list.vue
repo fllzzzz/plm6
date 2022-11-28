@@ -21,7 +21,11 @@
     <div style="display:flex;margin-top:15px;">
       <div style="width: 45%;padding-right:10px;" class="tree-list">
         <common-table :data="list" v-loading="tableLoading" @current-change="handleCurrentChange" :data-format="dataFormat" highlight-current-row :max-height="maxHeight-70">
-          <el-table-column key="classificationName" prop="classificationName" :label="`${componentTypeEnum.VL[productType]}分类`" align="center" :show-overflow-tooltip="true" />
+          <el-table-column key="classificationName" prop="classificationName" :label="`${componentTypeEnum.VL[productType]}分类`" align="center" :show-overflow-tooltip="true">
+            <template v-slot="scope">
+              <span :class="scope.row.classificationName && scope.row.classificationName!=='-'?'':'color-red'">{{ scope.row.classificationName && scope.row.classificationName!=='-'?scope.row.classificationName:'未知类型' }}</span>
+            </template>
+          </el-table-column>
           <el-table-column key="artifactType" prop="artifactType" label="构件类型" align="center" v-if="productType===componentTypeEnum.ARTIFACT.V" :show-overflow-tooltip="true" />
           <el-table-column key="material" prop="material" label="材质" align="center" :show-overflow-tooltip="true" />
           <el-table-column key="quantity" prop="quantity" label="数量" align="center" :show-overflow-tooltip="true" />
@@ -185,5 +189,8 @@ function handleCurrentChange(val) {
       }
     }
   }
+}
+.color-red{
+  color:red;
 }
 </style>

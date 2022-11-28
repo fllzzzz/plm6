@@ -11,17 +11,17 @@
       <el-form ref="projectFormRef" :model="form">
           <el-form-item label="是否在数据展示时显示项目全称(不勾选显示项目简称)" prop="showProjectFullName">
           <el-checkbox v-if="checkPermission(permission.edit)" v-model="form.showProjectFullName" />
-          <span v-else v-empty-text="whetherEnum?.[form.showProjectFullName]" />
+          <span v-else v-empty-text="whetherEnum?.VL[form.showProjectFullName]" />
         </el-form-item>
         <el-form-item label="是否在展示项目名称时显示合同编号" prop="showSerialNumber">
           <el-checkbox v-if="checkPermission(permission.edit)" v-model="form.showSerialNumber" />
-          <span v-else v-empty-text="whetherEnum?.[form.showSerialNumber]" />
+          <span v-else v-empty-text="whetherEnum?.VL[form.showSerialNumber]" />
         </el-form-item>
         <el-form-item label="项目名称展示方式" prop="arrangement">
           <template v-if="checkPermission(permission.edit)">
             <el-radio v-for="item in projectNameArrangementModeEnum.ENUM" :key="item.K" v-model="form.arrangement" :label="item.V">{{ item.L }}</el-radio>
           </template>
-          <span v-else v-empty-text="projectNameArrangementModeEnum?.[form.arrangement]?.V" />
+          <span v-else v-empty-text="projectNameArrangementModeEnum?.VL[form.arrangement]" />
         </el-form-item>
       </el-form>
     </div>
