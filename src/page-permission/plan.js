@@ -120,7 +120,8 @@ export const enclosureListPM = {
 // 技术管理/蓝图列表
 export const blueprintListPM = {
   get: ['plan_blueprint:get'], // 蓝图列表
-  edit: ['plan_blueprint:edit'], // 修改蓝图
+  edit: ['plan_blueprint:edit'], // 替换蓝图
+  del: ['plan_blueprint:del'], // 删除
   download: ['plan_blueprint:download'], // 下载
   import: ['plan_blueprint:import'] // 导入
 }
@@ -128,7 +129,8 @@ export const blueprintListPM = {
 // 技术管理/变更文件列表
 export const changeFileListPM = {
   get: ['plan_change_file:get'], // 变更文件列表
-  edit: ['plan_change_file:edit'], // 修改变更文件
+  edit: ['plan_change_file:edit'], // 替换变更文件
+  del: ['plan_change_file:del'], // 删除
   download: ['plan_change_file:download'], // 下载
   import: ['plan_change_file:import'] // 导入
 }

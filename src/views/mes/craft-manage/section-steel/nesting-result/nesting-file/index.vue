@@ -21,7 +21,7 @@
       >
         材料清单
       </export-button>
-      <common-button size="small" @click="handleClose">关闭</common-button>
+      <common-button size="small" @click="handleClose" v-permission="permission.closed">关闭</common-button>
     </template>
     <template #content>
       <common-table

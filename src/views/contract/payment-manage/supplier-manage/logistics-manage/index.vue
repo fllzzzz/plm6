@@ -205,4 +205,9 @@ $font-size: 1.5em;
   line-height:12px;
   height:14px;
 }
+.clickable {
+  width: 100%;
+  cursor: pointer;
+  color:#409eff;
+}
 </style>

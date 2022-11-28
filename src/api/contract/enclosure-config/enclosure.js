@@ -47,13 +47,21 @@ export function detailDict(params) {
   })
 }
 
-export function editStatus({ type, data }) {
+// export function editStatus({ type, data }) {
+//   return request({
+//     module: 'contract',
+//     url: `enclosure/dictionaries/dictDetailSave/type/${type}`,
+//     method: 'post',
+//     data: data
+//   })
+// }
+
+export function editStatus(params) {
   return request({
     module: 'contract',
-    url: `enclosure/dictionaries/dictDetailSave/type/${type}`,
-    method: 'post',
-    data: data
+    url: `enclosure/dictionaries/updateStatus/type/8`,
+    method: 'put',
+    params
   })
 }
-
 export default { get, add }

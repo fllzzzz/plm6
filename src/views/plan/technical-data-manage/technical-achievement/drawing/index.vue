@@ -17,6 +17,7 @@
     <el-table-column v-if="columns.visible('drawingQuantity')" key="drawingQuantity" prop="drawingQuantity" show-overflow-tooltip label="图纸匹配总数" align="center"/>
     <!--编辑与删除-->
     <el-table-column
+      v-if="checkPermission([...permission.import, ...permission.detail])"
       label="操作"
       width="170px"
       align="center"
@@ -52,6 +53,7 @@ import { mapGetters } from '@/store/lib'
 
 import { drawingFileListPM as permission } from '@/page-permission/plan'
 import { deepenTypeEnum } from '@enum-ms/plan'
+import checkPermission from '@/utils/system/check-permission'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'

@@ -19,7 +19,7 @@
             @click="openJournal(data.day)"
           >
             <span>{{ data.day.split('-').slice(1).join('-') }}</span>
-            <div v-if="isNotBlank(journal.map[data.day])" style="margin-top:10px;">
+            <div v-if="isNotBlank(journal.map[data.day])" style="margin-top:6px;">
               <div class="journal-info">{{ journal.map[data.day].morningWeather }} | {{ journal.map[data.day].afternoonWeather }}</div>
               <div class="journal-info">{{ journal.map[data.day].morningTemperature }} ℃ ~ {{ journal.map[data.day].afternoonTemperature }} ℃</div>
             </div>
@@ -140,10 +140,10 @@ function openJournal(day) {
 .calendar-item{
   height: 100%;
   padding: 8px;
-
+  padding-top:5px;
   .journal-info{
     font-size: 12px;
-    margin:5px auto;
+    margin:3px auto 5px;
   }
 
 }
