@@ -344,7 +344,8 @@ export const artifactSpecificationRevisePM = {
 // 工艺管理/型材套料
 export const mesExtrusionNestingPM = {
   get: ['mes_extrusion_nesting:get'], // 型材套料列表
-  detail: ['mes_extrusion_nesting:detail'] // 查看型材套料详情
+  detail: ['mes_extrusion_nesting:detail'], // 查看型材套料详情
+  import: ['mes_extrusion_nesting:detail'] // 导入NC1文件
 }
 
 // 工艺管理/套料设置
@@ -367,7 +368,8 @@ export const mesNestingResultPM = {
   issued: ['mes_nesting_result:issued'], // 下发
   downloadZip: ['mes_nesting_result:downloadZip'], // 下载压缩包
   del: ['mes_nesting_result:del'], // 删除
-  downloadList: ['mes_nesting_result:downloadList'] // 下载材料清单
+  downloadList: ['mes_nesting_result:downloadList'], // 下载材料清单
+  closed: ['mes_nesting_result:closed'] // 关闭
 }
 // --------------------------- 工艺管理 end --------------------------------
 // ########################################################################

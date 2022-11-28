@@ -100,6 +100,7 @@
                   productType: componentTypeEnum.ASSEMBLE.V,
                   dataType: technicalDataTypeEnum.NC_DRAWING.V,
                 }"
+                v-permission="permission.import"
                 :accept="`.nc1`"
                 tip=".nc1"
                 :upload-fun="upload"
@@ -134,6 +135,7 @@ import useVisible from '@compos/use-visible'
 import useMaxHeight from '@compos/use-max-height'
 import { getAssembleList, getNoFileList } from '@/api/mes/craft-manage/section-steel/nesting'
 import { artifactProductLineEnum, componentTypeEnum, fileNC1TypeEnum } from '@enum-ms/mes'
+import { mesExtrusionNestingPM as permission } from '@/page-permission/mes'
 import { technicalDataTypeEnum } from '@enum-ms/plan'
 import { ref, defineProps, defineEmits, watch, reactive } from 'vue'
 import usePagination from '@compos/use-pagination'
