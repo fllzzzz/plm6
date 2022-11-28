@@ -36,7 +36,7 @@
             :show-overflow-tooltip="true"
           >
             <template v-slot="scope">
-              <span v-if="scope.row.classificationId === null" style="color: red">其他</span>
+              <span v-if="scope.row.classificationId === null" style="color: red">未知类型</span>
               <span v-else>{{ scope.row.classificationName }}</span>
             </template>
           </el-table-column>
