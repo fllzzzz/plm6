@@ -1,5 +1,5 @@
 <template>
-  <div v-permission="permission" class="steel-requisitions-application-container">
+  <div class="steel-requisitions-application-container">
     <common-wrapper
       :basic-class="STEEL_ENUM"
       :current-basic-class="steelBasicClassKV?.[currentBasicClass]?.V"
@@ -54,7 +54,6 @@
 
 <script setup>
 import crudApi from '@/api/supply-chain/requisitions-manage/requisitions'
-import { steelInboundApplicationPM as permission } from '@/page-permission/wms'
 
 import { defineProps, defineEmits, ref, computed, watch, provide, nextTick, reactive } from 'vue'
 import { STEEL_ENUM } from '@/settings/config'
@@ -113,7 +112,6 @@ provide('matSpecRef', matSpecRef) // 供兄弟组件调用 删除
 const { form, FORM } = useForm(
   {
     title: '钢材申购',
-    permission: permission,
     defaultForm: defaultForm,
     clearDraftCallback: init,
     api: crudApi.add

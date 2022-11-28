@@ -19,6 +19,7 @@
         start-placeholder="开始时间"
         end-placeholder="结束时间"
         style="width: 240px"
+        value-format="x"
         @change="handleDateChange"
       />
       <el-input
@@ -42,16 +43,14 @@
       <rrOperation />
     </div>
     <crudOperation>
-      <template #viewLeft>
+      <!-- <template #viewLeft>
         <common-button size="small" class="filter-item" type="primary" @click="applicationVisible=true">提交记录</common-button>
-      </template>
+      </template> -->
     </crudOperation>
   </div>
 </template>
 
 <script setup>
-import moment from 'moment'
-
 import { regHeader } from '@compos/use-crud'
 import { settlementStatusEnum } from '@enum-ms/finance'
 import { supplierPayTypeEnum } from '@enum-ms/contract'
@@ -70,10 +69,10 @@ const defaultQuery = {
 const { crud, query } = regHeader(defaultQuery)
 
 // 时间变动
-function handleDateChange() {
-  if (query.date && query.date.length > 1) {
-    query.startDate = moment(query.date[0]).valueOf()
-    query.endDate = moment(query.date[1]).valueOf()
+function handleDateChange(val) {
+  if (val && val.length > 1) {
+    query.startDate = val[0]
+    query.endDate = val[1]
   } else {
     query.startDate = undefined
     query.endDate = undefined
