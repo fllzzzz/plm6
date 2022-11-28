@@ -415,6 +415,7 @@ function getLabelInfo(row, num) {
     areaName: row.area.name,
     name: row.name,
     serialNumber: row.serialNumber,
+    oneCode: row.boolOneCode ? `${num}/${curNumberList.value.length}` : '',
     quantity: row.quantity,
     specification: row.specification,
     drawingNumber: row.drawingNumber,
