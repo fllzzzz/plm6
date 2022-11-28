@@ -29,6 +29,7 @@
       </el-table-column>
       <!--编辑与删除-->
       <el-table-column
+        v-if="checkPermission([...permission.import, ...permission.detail])"
         label="操作"
         width="170px"
         align="center"
@@ -62,6 +63,7 @@
 <script setup>
 import { detail, del, update } from '@/api/plan/technical-data-manage/technical-achievement'
 import { ref, watch, defineProps, defineEmits } from 'vue'
+import checkPermission from '@/utils/system/check-permission'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
