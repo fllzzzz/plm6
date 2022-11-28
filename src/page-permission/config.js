@@ -387,7 +387,7 @@ export const configWmsScrapDefinitionPM = {
 // WMS-配置管理/入库质检物料
 export const configWmsInspectionRawMaterialPM = {
   get: ['config_wms_inspectionRawMaterial:get'], // 入库质检物料列表
-  edit: ['config_wms_inspectionRawMaterial:edit'], // 添加入库质检物料
+  add: ['config_wms_inspectionRawMaterial:add'], // 添加入库质检物料
   del: ['config_wms_inspectionRawMaterial:del'] // 删除入库质检物料
 }
 
@@ -428,6 +428,7 @@ export const memberConfigPM = {
 // 审批管理/公司审批流程
 export const companyProcessConfigPM = {
   get: ['company_process_config:get'], // 列表
+  add: ['company_process_config:add'], // 添加
   edit: ['company_process_config:edit'] // 修改
 }
 
