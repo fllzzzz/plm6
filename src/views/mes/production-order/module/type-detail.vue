@@ -2,7 +2,8 @@
   <div class="detail-container">
     <div style="margin-bottom:10px;min-height:28px;" class="tag-div">
       <div style="float:left;">
-        <el-tag>{{`${componentTypeEnum.VL[productType]}分类:${currentRow.classificationName}`}}</el-tag>
+        <el-tag v-if="props.currentRow.classificationId === null">{{`${componentTypeEnum.VL[productType]}分类:`}}其他</el-tag>
+        <el-tag v-else>{{`${componentTypeEnum.VL[productType]}分类:${currentRow.classificationName}`}}</el-tag>
         <template v-if="productType === componentTypeEnum.MACHINE_PART.V ">
           <template v-if="isNotBlank(currentRow.specifications)">
             <common-select

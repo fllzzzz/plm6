@@ -192,6 +192,7 @@ import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import { parseTime } from '@/utils/date'
 import pagination from '@crud/Pagination'
+import { processCategoryEnum } from '@enum-ms/mes'
 import { projectNameFormatter } from '@/utils/project'
 import monomerSelectAreaSelect from '@comp-base/monomer-select-area-select'
 import projectCascader from '@comp-base/project-cascader.vue'
@@ -293,7 +294,12 @@ function processDetailChange(val) {
   crud.query.processId = val?.process?.id
   crud.query.productType = val?.productType
   groupId.value = undefined
-  crud.query.productionLineId = val?.productionLine?.id
+  if (val?.process?.type === processCategoryEnum.DRILL_HOLE.V) {
+    crud.query.productionLineId = undefined
+  } else {
+    crud.query.productionLineId = val?.productionLine?.id
+  }
+
   groupData.value = val?.groupList
   crud.toQuery()
 }

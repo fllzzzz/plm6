@@ -255,7 +255,8 @@ function rowWatch(row) {
   watch([() => row.quantity], () => {
     calcMaxMete(row)
     headerRef.value && headerRef.value.calcAllQuantity()
-  })
+  },
+  { immediate: true })
   // 计算理论及单重
   watch([() => row.length, () => row.width, baseUnit], () => {
     calcTheoryWeight(row)

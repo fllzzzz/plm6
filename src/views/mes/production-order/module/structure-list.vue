@@ -2,49 +2,69 @@
   <div>
     <common-radio-button
       v-model="productType"
-      :options="[componentTypeEnum.ARTIFACT,componentTypeEnum.ASSEMBLE,componentTypeEnum.MACHINE_PART]"
+      :options="[componentTypeEnum.ARTIFACT, componentTypeEnum.ASSEMBLE, componentTypeEnum.MACHINE_PART]"
       type="enum"
-      style="margin-bottom:10px;"
+      style="margin-bottom: 10px"
       @change="fetchDetail"
     />
     <el-row v-loading="tableLoading" :gutter="30" class="panel-group">
       <el-col :span="8" class="card-panel-col">
-        <Panel name="构件总数" text-color="#626262" num-color="#1890ff" :num-arr="totalAmount.artifactQuantity" is-array/>
+        <Panel name="构件总数" text-color="#626262" num-color="#1890ff" :num-arr="totalAmount.artifactQuantity" is-array />
       </el-col>
       <el-col :span="8" class="card-panel-col">
-        <Panel name="部件总数" text-color="#626262" num-color="#1890ff" :num-arr="totalAmount.assembleQuantity" is-array/>
+        <Panel name="部件总数" text-color="#626262" num-color="#1890ff" :num-arr="totalAmount.assembleQuantity" is-array />
       </el-col>
       <el-col :span="8" class="card-panel-col">
-        <Panel name="零件总数" text-color="#626262" num-color="#1890ff" :num-arr="totalAmount.machinePartQuantity" is-array/>
+        <Panel name="零件总数" text-color="#626262" num-color="#1890ff" :num-arr="totalAmount.machinePartQuantity" is-array />
       </el-col>
     </el-row>
-    <div style="display:flex;margin-top:15px;">
-      <div style="width: 45%;padding-right:10px;" class="tree-list">
-        <common-table :data="list" v-loading="tableLoading" @current-change="handleCurrentChange" :data-format="dataFormat" highlight-current-row :max-height="maxHeight-70">
-          <el-table-column key="classificationName" prop="classificationName" :label="`${componentTypeEnum.VL[productType]}分类`" align="center" :show-overflow-tooltip="true">
+    <div style="display: flex; margin-top: 15px">
+      <div style="width: 45%; padding-right: 10px" class="tree-list">
+        <common-table
+          :data="list"
+          v-loading="tableLoading"
+          @current-change="handleCurrentChange"
+          :data-format="dataFormat"
+          highlight-current-row
+          :max-height="maxHeight - 70"
+        >
+          <el-table-column
+            key="classificationName"
+            prop="classificationName"
+            :label="`${componentTypeEnum.VL[productType]}分类`"
+            align="center"
+            :show-overflow-tooltip="true"
+          >
             <template v-slot="scope">
-              <span :class="scope.row.classificationName && scope.row.classificationName!=='-'?'':'color-red'">{{ scope.row.classificationName && scope.row.classificationName!=='-'?scope.row.classificationName:'未知类型' }}</span>
+              <span v-if="scope.row.classificationId === null" style="color: red">其他</span>
+              <span v-else>{{ scope.row.classificationName }}</span>
             </template>
           </el-table-column>
-          <el-table-column key="artifactType" prop="artifactType" label="构件类型" align="center" v-if="productType===componentTypeEnum.ARTIFACT.V" :show-overflow-tooltip="true" />
+          <el-table-column
+            key="artifactType"
+            prop="artifactType"
+            label="构件类型"
+            align="center"
+            v-if="productType === componentTypeEnum.ARTIFACT.V"
+            :show-overflow-tooltip="true"
+          />
           <el-table-column key="material" prop="material" label="材质" align="center" :show-overflow-tooltip="true" />
           <el-table-column key="quantity" prop="quantity" label="数量" align="center" :show-overflow-tooltip="true" />
           <el-table-column key="totalNetWeight" prop="totalNetWeight" label="重量（kg）" align="center" :show-overflow-tooltip="true">
             <template v-slot="scope">
-              <span v-if="scope.row.totalNetWeight">{{toThousand(scope.row.totalNetWeight,DP.COM_WT__KG)}}</span>
+              <span v-if="scope.row.totalNetWeight">{{ toThousand(scope.row.totalNetWeight, DP.COM_WT__KG) }}</span>
               <span v-else>-</span>
             </template>
           </el-table-column>
         </common-table>
       </div>
       <div style="border-right: 1px solid #ededed; height: calc(100vh - 260px)"></div>
-      <div style="width:54%;padding-left:10px;">
-        <type-detail :currentRow="currentRow" v-if="isNotBlank(currentRow)" :productType="productType"/>
+      <div style="width: 54%; padding-left: 10px">
+        <type-detail :currentRow="currentRow" v-if="isNotBlank(currentRow)" :productType="productType" />
         <div class="my-code" v-else>*点击左表操作查看明细</div>
       </div>
     </div>
   </div>
-
 </template>
 
 <script setup>
@@ -158,7 +178,7 @@ async function fetchDetail() {
   tableLoading.value = true
   try {
     const data = await artifactTreeData({ projectId: props.currentId, type: productType.value })
-    data.map(v => {
+    data.map((v) => {
       v.projectId = props.currentId
     })
     list.value = data || []
@@ -175,17 +195,17 @@ function handleCurrentChange(val) {
 </script>
 <style lang="scss" scoped>
 .panel-group {
-  margin-bottom:10px;
+  margin-bottom: 10px;
   ::v-deep(.card-panel) {
     .card-panel-description {
       .card-panel-text {
-        text-align:left;
+        text-align: left;
         margin-top: 2px;
       }
       .card-panel-num {
-        display:block;
+        display: block;
         font-size: 20px;
-        text-align:right;
+        text-align: right;
       }
     }
   }

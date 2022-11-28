@@ -22,7 +22,7 @@
     />
     <common-radio-button
       v-if="query.boolNestCutEnum === layOffWayTypeEnum.NESTING.V"
-      v-model="query.issueStatus"
+      v-model="query.issueStatusEnum"
       :options="issueStatusEnum.ENUM"
       :unshowVal="[issueStatusEnum.HAS_ISSUED.V, issueStatusEnum.NOT_NESTING.V]"
       showOptionAll
@@ -107,7 +107,7 @@ defineProps({
 const nestingTaskTableRef = ref()
 const month = ref(moment().startOf('month').valueOf().toString())
 const query = ref({
-  issueStatus: issueStatusEnum.IN_NESTING.V
+  issueStatusEnum: issueStatusEnum.IN_NESTING.V
 })
 const tableData = ref([])
 const loading = ref(false)

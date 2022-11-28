@@ -16,6 +16,7 @@
           <common-button type="success" size="mini" @click="setOutboundTime">设置</common-button>
         </span>
         <el-popconfirm
+          v-if="checkPermission(permission.outboundAudit)"
           confirm-button-text="确定"
           cancel-button-text="取消"
           icon="el-icon-info"
