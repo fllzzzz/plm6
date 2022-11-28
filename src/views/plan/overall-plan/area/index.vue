@@ -56,15 +56,13 @@
 
 <script setup>
 import crudApi from '@/api/plan/area'
-import { ref, watch, computed } from 'vue'
+import { ref, watch } from 'vue'
 
-import { bridgeAreaListPM } from '@/page-permission/bridge'
-import { areaListPM } from '@/page-permission/plan'
+import { areaListPM as permission } from '@/page-permission/plan'
 import checkPermission from '@/utils/system/check-permission'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import { mapGetters } from '@/store/lib'
-import { projectTypeEnum } from '@enum-ms/contract'
 import { manufactureTypeEnum } from '@enum-ms/plan'
 import { parseTime } from '@/utils/date'
 
@@ -81,10 +79,6 @@ const optShow = {
   del: false,
   download: false
 }
-
-const permission = computed(() => {
-  return globalProject.projectType === projectTypeEnum.STEEL.V ? areaListPM : bridgeAreaListPM
-})
 
 const tableRef = ref()
 const typeInfo = ref([])

@@ -100,19 +100,14 @@
 
 <script setup>
 import crudApi from '@/api/plan/plan-summary'
-import { ref, computed } from 'vue'
+import { ref } from 'vue'
 
-import { mapGetters } from '@/store/lib'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import { isNotBlank } from '@data-type/index'
-import { bridgePlanSummaryListPM } from '@/page-permission/bridge'
-import { planSummaryListPM } from '@/page-permission/plan'
-import { projectTypeEnum } from '@enum-ms/contract'
+import { planSummaryListPM as permission } from '@/page-permission/plan'
 
 import mHeader from './module/header'
-
-const { globalProject } = mapGetters(['globalProject'])
 
 const optShow = {
   add: false,
@@ -120,10 +115,6 @@ const optShow = {
   del: false,
   download: false
 }
-
-const permission = computed(() => {
-  return globalProject.projectType === projectTypeEnum.STEEL.V ? planSummaryListPM : bridgePlanSummaryListPM
-})
 
 const tableRef = ref()
 const { crud, columns, CRUD } = useCRUD(

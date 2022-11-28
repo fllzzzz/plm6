@@ -7,45 +7,45 @@ export const commonPM = {}
 
 // 桥梁-计划管理/单体列表
 export const bridgeMonomerListPM = {
-  get: ['bridge_monomer_manage:get'], // 单体列表
-  add: ['bridge_monomer_manage:add'], // 新增单体
-  edit: ['bridge_monomer_manage:edit'], // 修改单体
-  del: ['bridge_monomer_manage:del'], // 删除单体
-  productTypeEdit: ['bridge_monomer_manage:productTypeEdit'], // 项目内容修改
-  productTypeDel: ['bridge_monomer_manage:productTypeDel'] // 项目内容删除
+  get: ['plan_monomer_manage:get'], // 单体列表
+  add: ['plan_monomer_manage:add'], // 新增单体
+  edit: ['plan_monomer_manage:edit'], // 修改单体
+  del: ['plan_monomer_manage:del'], // 删除单体
+  productTypeEdit: ['plan_monomer_manage:productTypeEdit'], // 项目内容修改
+  productTypeDel: ['plan_monomer_manage:productTypeDel'] // 项目内容删除
 }
 
 // 桥梁-计划管理/区域列表
 export const bridgeAreaListPM = {
-  get: ['bridge_area_manage:get'], // 区域列表
-  add: ['bridge_area_manage:add'], // 新增区域
-  edit: ['bridge_area_manage:edit'], // 修改区域
-  del: ['bridge_area_manage:del'], // 删除区域
-  planList: ['bridge_area_manage:planList'], // 办理计划
-  print: ['bridge_area_manage:print'] // 打印下载
+  get: ['plan_area_manage:get'], // 区域列表
+  add: ['plan_area_manage:add'], // 新增区域
+  edit: ['plan_area_manage:edit'], // 修改区域
+  del: ['plan_area_manage:del'], // 删除区域
+  planList: ['plan_area_manage:planList'], // 办理计划
+  print: ['plan_area_manage:print'] // 打印下载
 }
 
 // 桥梁-计划管理/计划列表
 export const bridgePlanMakeListPM = {
-  get: ['bridge_make_manage:get'], // 计划列表
-  edit: ['bridge_make_manage:edit'], // 修改计划
-  print: ['bridge_make_manage:print'] // 打印下载
+  get: ['plan_make_manage:get'], // 计划列表
+  edit: ['plan_make_manage:edit'], // 修改计划
+  print: ['plan_make_manage:print'] // 打印下载
 }
 
 // 桥梁-计划管理/计划跟踪
 export const bridePlanProgressListPM = {
-  get: ['bridge_plan_progress:get'] // 计划跟踪列表
+  get: ['plan_progress:get'] // 计划跟踪列表
 }
 
 // 桥梁-计划管理/计划确认
 export const bridgePlanConfirmListPM = {
-  get: ['bridge_plan_confirm:get'], // 计划确认列表
-  edit: ['bridge_plan_confirm:edit'] // 计划确认
+  get: ['plan_confirm:get'], // 计划确认列表
+  edit: ['plan_confirm:edit'] // 计划确认
 }
 
 // 计划管理/工单汇总
 export const bridgePlanSummaryListPM = {
-  get: ['bridge_plan_summary:get']// 工单汇总列表
+  get: ['plan_summary:get']// 工单汇总列表
 }
 // --------------------------- 计划管理 end --------------------------------
 
@@ -84,52 +84,52 @@ export const partSummaryListPM = {
 
 // 桥梁-技术管理/技术成果/蓝图列表
 export const bridgeBlueprintListPM = {
-  get: ['bridge_blueprint:get'], // 蓝图列表
-  edit: ['bridge_blueprint:edit'], // 修改蓝图
-  download: ['bridge_blueprint:download'], // 下载
-  import: ['bridge_blueprint:import'] // 导入
+  get: ['plan_blueprint:get'], // 蓝图列表
+  edit: ['plan_blueprint:edit'], // 修改蓝图
+  download: ['plan_blueprint:download'], // 下载
+  import: ['plan_blueprint:import'] // 导入
 }
 
 // 桥梁-技术管理/技术成果/变更文件列表
 export const bridgeChangeFileListPM = {
-  get: ['bridge_change_file:get'], // 变更文件列表
-  edit: ['bridge_change_file:edit'], // 修改变更文件
-  download: ['bridge_change_file:download'], // 下载
-  import: ['bridge_change_file:import'] // 导入
+  get: ['plan_change_file:get'], // 变更文件列表
+  edit: ['plan_change_file:edit'], // 修改变更文件
+  download: ['plan_change_file:download'], // 下载
+  import: ['plan_change_file:import'] // 导入
 }
 
 // 桥梁-技术成果/技术成果/模型文件管理
 export const bridgeModelFileListPM = {
-  get: ['bridge_model_file:get'], // 列表
-  del: ['bridge_model_file:del'], // 删除
-  detail: ['bridge_model_file:detail'], // 详情
-  import: ['bridge_model_file:import'], // 导入
-  integration: ['bridge_model_file:integration'], // 模型集成
-  integrationDel: ['bridge_model_file:integrationDel'] // 删除模型集成
+  get: ['plan_model_file:get'], // 列表
+  del: ['plan_model_file:del'], // 删除
+  detail: ['plan_model_file:detail'], // 详情
+  import: ['plan_model_file:import'], // 导入
+  integration: ['plan_model_file:integration'], // 模型集成
+  integrationDel: ['plan_model_file:integrationDel'] // 删除模型集成
 }
 
 // 技术成果/图纸文件管理
 export const bridgeDrawingFileListPM = {
-  get: ['bridge_drawing_file:get'], // 列表
-  del: ['bridge_drawing_file:del'], // 删除
-  detail: ['bridge_drawing_file:detail'], // 详情
-  import: ['bridge_drawing_file:import'] // 导入
+  get: ['plan_drawing_file:get'], // 列表
+  del: ['plan_drawing_file:del'], // 删除
+  detail: ['plan_drawing_file:detail'], // 详情
+  import: ['plan_drawing_file:import'] // 导入
 }
 
 // 技术成果/数控文件管理
 export const bridgeCncFileListPM = {
-  get: ['bridge_cnc_file:get'], // 列表
-  del: ['bridge_cnc_file:del'], // 删除
-  detail: ['bridge_cnc_file:detail'], // 详情
-  import: ['bridge_cnc_file:import'] // 导入
+  get: ['plan_cnc_file:get'], // 列表
+  del: ['plan_cnc_file:del'], // 删除
+  detail: ['plan_cnc_file:detail'], // 详情
+  import: ['plan_cnc_file:import'] // 导入
 }
 
 // 技术成果/XML文件管理
 export const bridgeXmlFileListPM = {
-  get: ['bridge_xml_file:get'], // 列表
-  del: ['bridge_xml_file:del'], // 删除
-  detail: ['bridge_xml_file:detail'], // 详情
-  import: ['bridge_xml_file:import'] // 导入
+  get: ['plan_xml_file:get'], // 列表
+  del: ['plan_xml_file:del'], // 删除
+  detail: ['plan_xml_file:detail'], // 详情
+  import: ['plan_xml_file:import'] // 导入
 }
 
 // --------------------------- 技术管理 end --------------------------------

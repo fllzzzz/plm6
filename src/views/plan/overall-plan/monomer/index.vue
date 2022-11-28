@@ -222,12 +222,11 @@
 
 <script setup>
 import crudApi from '@/api/plan/monomer'
-import { ref, watch, computed } from 'vue'
+import { ref, watch } from 'vue'
 
-import { bridgeMonomerListPM } from '@/page-permission/bridge'
-import { monomerListPM } from '@/page-permission/plan'
+import { monomerListPM as permission } from '@/page-permission/plan'
 import checkPermission from '@/utils/system/check-permission'
-import { TechnologyTypeAllEnum, projectTypeEnum } from '@enum-ms/contract'
+import { TechnologyTypeAllEnum } from '@enum-ms/contract'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import { mapGetters } from '@/store/lib'
@@ -241,16 +240,13 @@ import udOperation from '@crud/UD.operation'
 import pagination from '@crud/Pagination'
 
 const { globalProject, globalProjectId } = mapGetters(['globalProject', 'globalProjectId'])
+
 const optShow = {
   add: true,
   edit: false,
   del: true,
   download: false
 }
-
-const permission = computed(() => {
-  return globalProject.value.projectType === projectTypeEnum.STEEL.V ? monomerListPM : bridgeMonomerListPM
-})
 
 const tableRef = ref()
 const originDetailRow = ref({})
