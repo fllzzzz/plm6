@@ -68,7 +68,7 @@
             <span>菜单分配</span>
           </div>
           <div class="tip">
-            <el-tag effect="plain">{{ currentRow.name }}</el-tag>
+            <el-tag effect="plain" size="medium">{{ currentRow.name }}</el-tag>
           </div>
           <div style="margin:10px 10px;">
             <el-input

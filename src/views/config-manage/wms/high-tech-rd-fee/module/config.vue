@@ -9,7 +9,7 @@
     :before-close="handleClose"
   >
     <template #titleRight>
-      <span v-permission="permission.edit">
+      <span v-permission="permission.set">
         <common-button v-show="isEditMode" size="mini" type="primary" @click="preview">保存预览</common-button>
         <common-button v-show="isEditMode" size="mini" type="danger" @click="handleCancelEdit">退出编辑</common-button>
         <common-button v-show="!isEditMode" size="mini" type="primary" @click="isEditMode = true">编辑</common-button>

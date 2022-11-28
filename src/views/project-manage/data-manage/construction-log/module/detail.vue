@@ -53,7 +53,7 @@
               <el-input
                 v-model.trim="scope.row.weather"
                 placeholder="天气情况"
-                maxlength="20"
+                maxlength="10"
                 size="small"
                 class="input-underline"
                 style="width:100%"
@@ -66,7 +66,7 @@
               <el-input
                 v-model.trim="scope.row.wind"
                 placeholder="风力"
-                maxlength="10"
+                maxlength="6"
                 size="small"
                 class="input-underline"
                 :disabled="!isEdit"

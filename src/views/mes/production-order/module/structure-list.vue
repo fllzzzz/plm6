@@ -210,4 +210,7 @@ function handleCurrentChange(val) {
     }
   }
 }
+.color-red{
+  color:red;
+}
 </style>
