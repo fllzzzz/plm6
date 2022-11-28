@@ -44,7 +44,7 @@
         </template>
       </el-table-column>
       <el-table-column key="successQuantity" prop="successQuantity" show-overflow-tooltip label="转换成功次数" align="center"/>
-      <el-table-column key="model" prop="model" :show-overflow-tooltip="true" label="操作" align="center" width="130">
+      <el-table-column v-if="checkPermission([...permission.import, ...permission.detail])" key="model" prop="model" :show-overflow-tooltip="true" label="操作" align="center" width="130">
         <template v-slot="scope">
           <common-button v-permission="permission.import" size="mini" type="warning" @click="configModel(scope.row)">配置</common-button>
           <common-button v-permission="permission.detail" :disabled="!scope.row.importMode || !scope.row.edition" type="primary" size="mini" icon="el-icon-document" @click="uploadModel(scope.row)" />
@@ -88,6 +88,7 @@ import { isNotBlank } from '@data-type/index'
 import { TechnologyTypeAllEnum } from '@enum-ms/contract'
 import { modelImportModeEnum, bimTeklaEditionEnum } from '@enum-ms/bim'
 import { modelFileListPM as permission } from '@/page-permission/plan'
+import checkPermission from '@/utils/system/check-permission'
 
 import modelConfigForm from './module/model-config-form'
 import modelMonomerMode from './module/model-monomer-mode'
