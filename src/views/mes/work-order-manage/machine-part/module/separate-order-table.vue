@@ -5,7 +5,7 @@
         <tr class="separate-thead">
           <td style="width: 120px">{{ item.serialNumber }}</td>
           <td v-for="(line, lineIndex) in item.productionLineList" :key="lineIndex">
-            <span v-if="isNotBlank(line)">{{ line.workShopName }}>{{ line.productionLineName }}</span>
+            <span v-if="isNotBlank(line)">{{ line.productionLineName }}>{{ line.groupName }}</span>
             <span v-else>\</span>
           </td>
         </tr>

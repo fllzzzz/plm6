@@ -31,6 +31,15 @@ export function getProject(params) {
   })
 }
 
+export function getTypeList(params) {
+  return request({
+    module: 'mes',
+    url: 'machine_part/scheduling/type/list',
+    method: 'get',
+    params
+  })
+}
+
 export function getMaterial(params) {
   return request({
     module: 'mes',

@@ -225,7 +225,7 @@ export async function printSeparateOrderLabel({ taskNumberOrder = '', separateOr
       const p = s.productionLineList[i]
       pHeadHtml += `
       <td>
-        ${isNotBlank(p) ? `<span>${p.workShopName}>${p.productionLineName}</span>` : '<span>\\</span>'}
+        ${isNotBlank(p) ? `<span>${p.productionLineName}>${p.groupName}</span>` : '<span>\\</span>'}
       </td>
       `
       pConHtml += `

@@ -504,7 +504,7 @@ export const mesProductionLineAssistancePM = {
 export const mesProcessAssistancePM = {
   get: ['mes_process_assistance:get'], // 列表
   save: ['mes_process_assistance:save'], // 协同保存
-  del: ['mes_process_assistance:del'] // 协同保存
+  del: ['mes_process_assistance:del'] // 协同删除
 }
 
 // --------------------------- 6.0 任务跟踪 end --------------------------------

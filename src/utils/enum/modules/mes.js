@@ -160,8 +160,8 @@ constantize(mesSchedulingStatusEnum)
 
 // 零件排产套料状态
 const machinePartNestingStatusEnum = {
-  NOT_NESTING: machinePartSchedulingIssueStatusEnum.NOT_NESTING,
-  HAS_NESTING: { L: '已套料', K: 'HAS_NESTING', V: machinePartSchedulingIssueStatusEnum.IN_NESTING.V | machinePartSchedulingIssueStatusEnum.OUT_NESTING.V | machinePartSchedulingIssueStatusEnum.HAS_ISSUED.V }
+  NOT_NESTING: { L: '未下发', K: 'NOT_NESTING', V: machinePartSchedulingIssueStatusEnum.NOT_NESTING.V },
+  HAS_NESTING: { L: '已下发', K: 'HAS_NESTING', V: machinePartSchedulingIssueStatusEnum.IN_NESTING.V | machinePartSchedulingIssueStatusEnum.OUT_NESTING.V | machinePartSchedulingIssueStatusEnum.HAS_ISSUED.V }
 }
 constantize(machinePartNestingStatusEnum)
 

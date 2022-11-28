@@ -3,6 +3,7 @@
     title="任务下发预览"
     customClass="nesting-task-issue-preview"
     v-model="dialogVisible"
+    :close-on-click-modal="false"
     width="1100px"
     :showClose="false"
     :before-close="handleClose"
@@ -18,8 +19,22 @@
     <common-table :data="list" :data-format="dataFormat" :max-height="maxHeight" style="width: 100%">
       <el-table-column label="序号" type="index" align="center" width="60" />
       <el-table-column prop="cutNumber" :show-overflow-tooltip="true" label="切割指令号" min-width="120" align="center" />
-      <el-table-column v-if="info.boolNestCutEnum" prop="spec" :show-overflow-tooltip="true" label="原材料规格" min-width="120" align="center" />
-      <el-table-column v-if="info.boolNestCutEnum" prop="num" :show-overflow-tooltip="true" label="板材数量(件)" width="120" align="center" />
+      <el-table-column
+        v-if="info.boolNestCutEnum"
+        prop="spec"
+        :show-overflow-tooltip="true"
+        label="原材料规格"
+        min-width="120"
+        align="center"
+      />
+      <el-table-column
+        v-if="info.boolNestCutEnum"
+        prop="num"
+        :show-overflow-tooltip="true"
+        label="板材数量(件)"
+        width="120"
+        align="center"
+      />
       <el-table-column prop="cutName" :show-overflow-tooltip="true" label="切割方式" width="100" align="center" />
       <el-table-column :show-overflow-tooltip="true" label="生产组" min-width="160" align="center">
         <template #default="{ row }">

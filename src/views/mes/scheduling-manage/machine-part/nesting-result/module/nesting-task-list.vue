@@ -18,7 +18,7 @@
       type="enum"
       size="small"
       class="filter-item"
-      @change="fetchTaskList"
+      @change="handleBoolNestingChange"
     />
     <common-radio-button
       v-if="query.boolNestCutEnum === layOffWayTypeEnum.NESTING.V"
@@ -142,6 +142,11 @@ async function fetchTaskList(nestingTaskInfo) {
   } finally {
     loading.value = false
   }
+}
+
+function handleBoolNestingChange() {
+  query.value.issueStatusEnum = undefined
+  fetchTaskList()
 }
 
 function handleClickChange(val) {

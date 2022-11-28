@@ -267,6 +267,7 @@ function handleNestingTaskClick(val, query) {
 }
 
 async function handleIssueSuccess() {
+  crud.data = []
   const _nestingTaskInfo = deepClone(currentNesting.value)
   await nestingTaskRef?.value?.refresh(_nestingTaskInfo)
 }
