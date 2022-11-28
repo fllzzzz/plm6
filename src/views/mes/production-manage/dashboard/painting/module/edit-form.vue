@@ -1,17 +1,11 @@
 <template>
   <common-dialog title="涂装计算" v-model="dialogVisible" width="450px" :before-close="handleClose">
     <template #titleRight>
-      <common-button :loading="saveLoading" :disabled="submitDisabled" type="primary" size="mini" @click="save"> 保 存 </common-button>
+      <common-button :loading="saveLoading" type="primary" size="mini" @click="save"> 保 存 </common-button>
     </template>
     <el-form ref="formRef" :model="form" size="small" label-width="120px">
-      <el-form-item label="名称" prop="name">
-        <span>{{ form.name }}</span>
-      </el-form-item>
-      <el-form-item label="材质" prop="material">
-        <span>{{ form.material }}</span>
-      </el-form-item>
-      <el-form-item label="油漆类别" prop="paintCategory">
-        <el-input v-model="form.paintCategory" size="small" placeholder="请输入油漆类别" />
+      <el-form-item label="油漆类别">
+        <span v-if="form.paintingType">{{ paintingTypeEnum.VL[form.paintingType] }}</span>
       </el-form-item>
       <el-form-item label="干膜厚度(μm)" prop="thickness">
         <common-input-number
@@ -49,23 +43,26 @@
           placeholder="请输入损耗"
         />
       </el-form-item>
-      <el-form-item label="实际用量(L)">
-        <span>{{ measure }}</span>
+      <el-form-item label="应用全部单体" prop="applyAll">
+        <el-checkbox v-model="form.applyAll" label="全部单体" />
       </el-form-item>
+      <!-- <el-form-item label="实际用量(L)">
+        <span>{{ measure }}</span>
+      </el-form-item> -->
     </el-form>
   </common-dialog>
 </template>
 
 <script setup>
 import { change } from '@/api/mes/production-manage/dashboard/painting'
-import { defineEmits, defineProps, watch, computed, reactive, ref } from 'vue'
+import { defineEmits, defineProps, watch, reactive, ref } from 'vue'
 import { ElNotification } from 'element-plus'
 import { deepClone } from '@data-type/index'
 
+import { paintingTypeEnum } from '@enum-ms/mes'
 import { DP } from '@/settings/config'
+// import { toFixed } from '@data-type/index'
 import { convertUnits } from '@/utils/convert/unit'
-import { toFixed } from '@data-type/index'
-import { isObjectValueEqual } from '@data-type/object'
 
 import useVisible from '@compos/use-visible'
 
@@ -85,20 +82,19 @@ const { visible: dialogVisible, handleClose } = useVisible({ emit, props, field:
 
 let form = reactive({})
 const saveLoading = ref(false)
-const submitDisabled = computed(() => isObjectValueEqual(form, props.info))
 
-const measure = computed(() => {
-  // 面积*干膜厚度/（10*体积固体份*100*（1-损耗））
-  return form.volumeSolids
-    ? toFixed((form.changeArea * form.thickness) / (10 * (form.volumeSolids / 100) * 100 * (1 - form.loss / 100)), DP.COM_VOLUME__L)
-    : 0
-})
+// const measure = computed(() => {
+//   // 面积*干膜厚度/（10*体积固体份*100*（1-损耗））
+//   return form.volumeSolids
+//     ? toFixed((form.surfaceArea * form.thickness) / (10 * (form.volumeSolids / 100) * 100 * (1 - form.loss / 100)), DP.COM_VOLUME__L)
+//     : 0
+// })
 
 watch(
   () => props.visible,
   (visible) => {
     if (visible) {
-      form = Object.assign(form, props.info?.sourceRow)
+      form = Object.assign(form, props.info)
     }
   },
   { immediate: true }
@@ -108,15 +104,18 @@ async function save() {
   try {
     saveLoading.value = true
     const _form = deepClone(form)
-    _form.changeArea = convertUnits(_form.changeArea, '㎡', 'mm²')
+    _form.surfaceArea = convertUnits(_form.surfaceArea, '㎡', 'mm²')
     _form.loss = _form.loss / 100
     _form.volumeSolids = _form.volumeSolids / 100
+    if (form.applyAll) {
+      delete _form.monomerId
+    }
     await change(_form)
-    ElNotification({ title: '修改成功', type: 'success' })
+    ElNotification({ title: '保存成功', type: 'success' })
     handleClose()
     emit('refresh')
   } catch (error) {
-    console.log('修改失败', error)
+    console.log('保存失败', error)
   } finally {
     saveLoading.value = false
   }
