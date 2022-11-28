@@ -26,7 +26,7 @@
     <crudOperation>
       <template #optLeft>
         <export-button
-          v-permission="permission.download"
+          v-permission="crud.permission.download"
           :fn="downloadAssemble"
           :params="exportParam"
           class="filter-item"
