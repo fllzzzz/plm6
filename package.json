@@ -28,6 +28,7 @@
     "path-to-regexp": "^6.2.0",
     "pdfjs-dist": "^2.5.207",
     "pinyin-pro": "^3.8.1",
+    "print-js": "^1.6.0",
     "qrcode.vue": "^3.3.3",
     "qs": "^6.10.1",
     "sass": "^1.42.1",

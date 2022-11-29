@@ -213,7 +213,7 @@ export async function printSeparateOrderLabel({ taskNumberOrder = '', separateOr
   `
   let listHtml = ``
   const piWidth = '25mm' // 零件信息宽度
-  const imgHeight = '23mm'// 零件图片-高度
+  const imgHeight = '20mm'// 零件图片-高度
   for (let o = 0; o < separateOrderInfo.length; o++) {
     const s = separateOrderInfo[o]
 
@@ -241,7 +241,7 @@ export async function printSeparateOrderLabel({ taskNumberOrder = '', separateOr
         </tr>
         <tr>
           <td class="separate-td-img">
-            ${s.picturePath ? `<img src='${s.picturePath}' />` : '<span>\\</span>'}
+            ${s.picturePath ? `<img style="width: 95%;height: 95%;vertical-align: middle;" src='${s.picturePath}' />` : '<span>\\</span>'}
           </td>
           ${pConHtml}
         </tr>
@@ -273,10 +273,7 @@ export async function printSeparateOrderLabel({ taskNumberOrder = '', separateOr
     }
     .separate-table .separate-td-img {
       height: ${imgHeight};
-    }
-    
-    .separate-table .separate-td-img img {
-      width: 95%;
+      text-align: center;
     }
   </style>`
   const strHtml = combineHtml(separate_style, bodyHtml)

@@ -168,7 +168,7 @@
           <template v-if="scope.row.status === packStatusTypeEnum.UNENTRUCK.V">
             <el-popconfirm title="确定要编辑此条打包记录吗？" @confirm="edit(scope.row.id, scope.row.project.id)">
               <template #reference>
-                <common-button v-permission="permission.edit" :disabled="!checkPermission(permission.pack)" type="primary" icon="el-icon-edit" size="mini" />
+                <common-button v-permission="permission.edit" type="primary" icon="el-icon-edit" size="mini" />
               </template>
             </el-popconfirm>
             <el-popconfirm title="确定要删除此条打包记录吗？" @confirm="del(scope.row.id)">
