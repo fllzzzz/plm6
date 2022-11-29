@@ -13,7 +13,10 @@
       <el-table-column label="序号" type="index" align="center" width="60" />
       <el-table-column prop="name" label="油漆类别" align="center" />
       <el-table-column prop="measureUnit" label="计量方式" align="center" />
-      <el-table-column prop="unitPrice" label="单价（元）" align="center" />
+      <el-table-column prop="thickness" label="标准涂装厚度（um）" align="center" />
+      <el-table-column prop="unitPrice" label="标准单价（元/㎡）" align="center" />
+      <el-table-column prop="outThickness" label="超标准设定（um）" align="center" />
+      <el-table-column prop="outUnitPrice" label="超标准单价（元/㎡）" align="center" />
       <!--编辑与删除-->
       <el-table-column v-permission="[...permission.edit]" label="操作" width="100px" align="center" fixed="right">
         <template v-slot="scope">

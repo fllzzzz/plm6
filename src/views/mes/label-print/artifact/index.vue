@@ -390,7 +390,7 @@ function previewLabel(row) {
   curRow.value = row
   if (row.boolOneCode) {
     curNumberList.value = row.numberStatusDTOS
-    previewCode.value = 1
+    previewCode.value = curNumberList.value.length ? curNumberList.value[0].number : null
     currentLabel.value = getLabelInfo(row, previewCode.value)
   } else {
     curNumberList.value = []
@@ -415,7 +415,7 @@ function getLabelInfo(row, num) {
     areaName: row.area.name,
     name: row.name,
     serialNumber: row.serialNumber,
-    oneCode: row.boolOneCode ? `${num}/${curNumberList.value.length}` : '',
+    oneCode: row.boolOneCode ? num ? `${num}/${curNumberList.value.length}` : '-' : '',
     quantity: row.quantity,
     specification: row.specification,
     drawingNumber: row.drawingNumber,
