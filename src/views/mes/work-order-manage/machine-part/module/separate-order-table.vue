@@ -37,7 +37,6 @@ defineProps({
 </script>
 
 <style lang="scss" scoped>
-
 .separate-table {
   width: 100%;
   table-layout: fixed;
@@ -54,9 +53,12 @@ defineProps({
 }
 .separate-table .separate-td-img {
   height: 80px;
+  text-align: center;
 }
 
 .separate-table .separate-td-img img {
   width: 95%;
+  height: 95%;
+  vertical-align: middle;
 }
 </style>
