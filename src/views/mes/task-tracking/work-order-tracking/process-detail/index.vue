@@ -26,125 +26,121 @@
           @change="handleWorkshopProductionLineChange"
         />
       </div>
-      <div style="margin-bottom: 20px">
-        <div
-          v-if="productType === componentTypeEnum.ARTIFACT.V && assembleProcessData[0]?.productType === componentTypeEnum.ASSEMBLE.V"
-          class="head-container"
-        >
-          <el-tag effect="dark" :type="componentTypeTag[componentTypeEnum.VK[assembleProcessData[0]?.productType]]">
-            {{ componentTypeEnum.VL[assembleProcessData[0]?.productType] }}
-          </el-tag>
-          <el-tag style="margin-left: 8px" effect="plain">
-            {{ assembleProcessData[0]?.productionLine?.name }}>{{ assembleProcessData[0]?.group?.name }}
-          </el-tag>
-          <span style="margin-left: 8px; font-size: 14px">工单号：{{ assembleProcessData[0]?.orderNumber }}</span>
-        </div>
-        <common-table
-          v-if="productType === componentTypeEnum.ARTIFACT.V && assembleProcessData[0]?.productType === componentTypeEnum.ASSEMBLE.V"
-          ref="tableRef"
-          :data="assembleProcessData"
-          :empty-text="'暂无数据'"
-          :max-height="maxHeight / 2"
-          highlight-current-row
-          style="width: 100%; cursor: pointer"
-          @row-click="handleRowChange"
-        >
-          <el-table-column align="center" key="name" prop="name" :show-overflow-tooltip="true" label="工序">
-            <template v-slot="scope">
-              <el-icon v-if="scope.row.status === workOrderTypeEnum.DELAY.V" :size="20" style="top: 5px; color: red">
-                <BellFilled />
-              </el-icon>
-              <span>{{ scope.row.name }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column align="center" key="rate" prop="rate" :show-overflow-tooltip="true" label="进度" width="160px">
-            <template v-slot="scope">
-              <el-progress
-                :text-inside="true"
-                stroke-linecap="square"
-                :stroke-width="22"
-                :percentage="((scope.row.completeQuantity / scope.row.quantity) * 100).toFixed(2)"
-                status="success"
-              />
-            </template>
-          </el-table-column>
-          <el-table-column align="center" key="quantity" prop="quantity" :show-overflow-tooltip="true" label="任务（件/kg）">
-            <template v-slot="scope">
-              <span>{{ scope.row.quantity }}/{{ scope.row.mete.toFixed(DP.COM_WT__KG) }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column
-            align="center"
-            key="completeQuantity"
-            prop="completeQuantity"
-            :show-overflow-tooltip="true"
-            label="完成（件/kg）"
+      <div :style="`height: ${maxHeight}px; overflow-y: auto;`">
+        <div style="margin-bottom: 20px" v-for="item in assembleProcessData" :key="item">
+          <div
+            v-if="productType === componentTypeEnum.ARTIFACT.V && item[0]?.productType === componentTypeEnum.ASSEMBLE.V"
+            class="head-container"
           >
-            <template v-slot="scope">
-              <span>{{ scope.row.completeQuantity }}/{{ scope.row.completeMete.toFixed(DP.COM_WT__KG) }}</span>
-            </template>
-          </el-table-column>
-        </common-table>
-      </div>
-      <div style="margin-bottom: 20px">
-        <div class="head-container" v-if="processData[0]?.productType === componentTypeEnum.ARTIFACT.V">
-          <el-tag effect="dark" :type="componentTypeTag[componentTypeEnum.VK[processData[0]?.productType]]">
-            {{ componentTypeEnum.VL[processData[0]?.productType] }}
-          </el-tag>
-          <el-tag style="margin-left: 8px" effect="plain">
-            {{ processData[0]?.productionLine?.name }}>{{ processData[0]?.group?.name }}
-          </el-tag>
-          <span style="margin-left: 8px; font-size: 14px">工单号：{{ processData[0]?.orderNumber }}</span>
-        </div>
-        <common-table
-          v-if="
-            (productType === componentTypeEnum.ARTIFACT.V && processData[0]?.productType === componentTypeEnum.ARTIFACT.V) ||
-            (productType === componentTypeEnum.MACHINE_PART.V && processData[0]?.productType === componentTypeEnum.MACHINE_PART.V)
-          "
-          ref="tableRef"
-          :data="processData"
-          :empty-text="'暂无数据'"
-          :max-height="maxHeight / 2"
-          highlight-current-row
-          style="width: 100%; cursor: pointer"
-          @row-click="handleRowChange"
-        >
-          <el-table-column align="center" key="name" prop="name" :show-overflow-tooltip="true" label="工序">
-            <template v-slot="scope">
-              <el-icon v-if="scope.row.status === workOrderTypeEnum.DELAY.V" :size="20" style="top: 5px; color: red">
-                <BellFilled />
-              </el-icon>
-              <span>{{ scope.row.name }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column align="center" key="rate" prop="rate" :show-overflow-tooltip="true" label="进度" width="160px">
-            <template v-slot="scope">
-              <el-progress
-                :text-inside="true"
-                stroke-linecap="square"
-                :stroke-width="22"
-                :percentage="((scope.row.completeQuantity / scope.row.quantity) * 100).toFixed(2)"
-                status="success"
-              />
-            </template>
-          </el-table-column>
-          <el-table-column align="center" key="quantity" prop="quantity" :show-overflow-tooltip="true" label="任务（件/kg）">
-            <template v-slot="scope">
-              <span>{{ scope.row.quantity }}/{{ scope.row.mete.toFixed(DP.COM_WT__KG) }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column
-            align="center"
-            key="completeQuantity"
-            prop="completeQuantity"
-            :show-overflow-tooltip="true"
-            label="完成（件/kg）"
+            <el-tag effect="dark" :type="componentTypeTag[componentTypeEnum.VK[item[0]?.productType]]">
+              {{ componentTypeEnum.VL[item[0]?.productType] }}
+            </el-tag>
+            <el-tag style="margin-left: 8px" effect="plain"> {{ item[0]?.productionLine?.name }}>{{ item[0]?.group?.name }} </el-tag>
+            <span style="margin-left: 8px; font-size: 14px">工单号：{{ item[0]?.orderNumber }}</span>
+          </div>
+          <common-table
+            v-if="productType === componentTypeEnum.ARTIFACT.V && item[0]?.productType === componentTypeEnum.ASSEMBLE.V"
+            ref="tableRef"
+            :data="item"
+            :empty-text="'暂无数据'"
+            highlight-current-row
+            style="width: 100%; cursor: pointer"
+            @row-click="handleRowChange"
           >
-            <template v-slot="scope">
-              <span>{{ scope.row.completeQuantity }}/{{ scope.row.completeMete.toFixed(DP.COM_WT__KG) }}</span>
-            </template>
-          </el-table-column>
-        </common-table>
+            <el-table-column align="center" key="name" prop="name" :show-overflow-tooltip="true" label="工序">
+              <template v-slot="scope">
+                <el-icon v-if="scope.row.status === workOrderTypeEnum.DELAY.V" :size="20" style="top: 5px; color: red">
+                  <BellFilled />
+                </el-icon>
+                <span>{{ scope.row.name }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column align="center" key="rate" prop="rate" :show-overflow-tooltip="true" label="进度" width="160px">
+              <template v-slot="scope">
+                <el-progress
+                  :text-inside="true"
+                  stroke-linecap="square"
+                  :stroke-width="22"
+                  :percentage="((scope.row.completeQuantity / scope.row.quantity) * 100).toFixed(2)"
+                  status="success"
+                />
+              </template>
+            </el-table-column>
+            <el-table-column align="center" key="quantity" prop="quantity" :show-overflow-tooltip="true" label="任务（件/kg）">
+              <template v-slot="scope">
+                <span>{{ scope.row.quantity }}/{{ scope.row.mete.toFixed(DP.COM_WT__KG) }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column
+              align="center"
+              key="completeQuantity"
+              prop="completeQuantity"
+              :show-overflow-tooltip="true"
+              label="完成（件/kg）"
+            >
+              <template v-slot="scope">
+                <span>{{ scope.row.completeQuantity }}/{{ scope.row.completeMete.toFixed(DP.COM_WT__KG) }}</span>
+              </template>
+            </el-table-column>
+          </common-table>
+        </div>
+        <div style="margin-bottom: 20px" v-for="item in processData" :key="item">
+          <div class="head-container" v-if="item[0]?.productType === componentTypeEnum.ARTIFACT.V">
+            <el-tag effect="dark" :type="componentTypeTag[componentTypeEnum.VK[item[0]?.productType]]">
+              {{ componentTypeEnum.VL[item[0]?.productType] }}
+            </el-tag>
+            <el-tag style="margin-left: 8px" effect="plain"> {{ item[0]?.productionLine?.name }}>{{ item[0]?.group?.name }} </el-tag>
+            <span style="margin-left: 8px; font-size: 14px">工单号：{{ item[0]?.orderNumber }}</span>
+          </div>
+          <common-table
+            v-if="
+              (productType === componentTypeEnum.ARTIFACT.V && item[0]?.productType === componentTypeEnum.ARTIFACT.V) ||
+              (productType === componentTypeEnum.MACHINE_PART.V && item[0]?.productType === componentTypeEnum.MACHINE_PART.V)
+            "
+            ref="tableRef"
+            :data="item"
+            :empty-text="'暂无数据'"
+            highlight-current-row
+            style="width: 100%; cursor: pointer"
+            @row-click="handleRowChange"
+          >
+            <el-table-column align="center" key="name" prop="name" :show-overflow-tooltip="true" label="工序">
+              <template v-slot="scope">
+                <el-icon v-if="scope.row.status === workOrderTypeEnum.DELAY.V" :size="20" style="top: 5px; color: red">
+                  <BellFilled />
+                </el-icon>
+                <span>{{ scope.row.name }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column align="center" key="rate" prop="rate" :show-overflow-tooltip="true" label="进度" width="160px">
+              <template v-slot="scope">
+                <el-progress
+                  :text-inside="true"
+                  stroke-linecap="square"
+                  :stroke-width="22"
+                  :percentage="((scope.row.completeQuantity / scope.row.quantity) * 100).toFixed(2)"
+                  status="success"
+                />
+              </template>
+            </el-table-column>
+            <el-table-column align="center" key="quantity" prop="quantity" :show-overflow-tooltip="true" label="任务（件/kg）">
+              <template v-slot="scope">
+                <span>{{ scope.row.quantity }}/{{ scope.row.mete.toFixed(DP.COM_WT__KG) }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column
+              align="center"
+              key="completeQuantity"
+              prop="completeQuantity"
+              :show-overflow-tooltip="true"
+              label="完成（件/kg）"
+            >
+              <template v-slot="scope">
+                <span>{{ scope.row.completeQuantity }}/{{ scope.row.completeMete.toFixed(DP.COM_WT__KG) }}</span>
+              </template>
+            </el-table-column>
+          </common-table>
+        </div>
       </div>
     </div>
     <production-line-detail :project-id="processList?.project?.id" v-model:visible="drawerVisible" :detail-data="detailData" />
@@ -225,7 +221,6 @@ async function processGet() {
       workshopId: workshopId.value,
       productionLineId: productionLineId.value
     })
-    // processData.value = data?.artifactList?.concat(data?.assembleList || [])
     processData.value = data?.artifactList || []
     assembleProcessData.value = data?.assembleList || []
   } catch (e) {
@@ -260,7 +255,7 @@ function handleWorkshopProductionLineChange() {
 
 const { maxHeight } = useMaxHeight({
   extraBox: ['.head-container'],
-  paginate: true
+  paginate: false
 })
 
 function handleRowChange(row) {
