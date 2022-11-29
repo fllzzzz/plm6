@@ -185,7 +185,7 @@ export default {
   mesStructureProcess, // 结构工序报表
   mesMachinePartDetail, // 零件生产详情
   mesMachinePartList, // 零部件生产清单详情
-  mesPaintingList, // 涂装列表
+  mesPaintingList, // 油漆用量明细
   mesStructureProjectSummary, // 结构项目汇总
   mesEnclosureProjectSummary, // 围护项目汇总
   mesQHSEProductionLineReport, // 生产线质检报表

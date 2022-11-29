@@ -167,6 +167,7 @@ const { crud, CRUD, columns } = useCRUD(
   {
     title: '零件工单',
     sort: [],
+    permission: { ...permission },
     optShow: { ...optShow },
     crudApi: { ...crudApi },
     hasPagination: true
