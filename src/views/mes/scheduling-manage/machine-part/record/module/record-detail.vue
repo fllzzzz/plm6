@@ -2,7 +2,7 @@
   <common-dialog title="套料明细" v-model="dialogVisible" width="1400px" :before-close="handleClose">
     <common-table v-loading="tableLoading" :data="list" :data-format="dataFormat" :max-height="maxHeight" style="width: 100%">
       <el-table-column label="序号" type="index" align="center" width="60" />
-      <el-table-column :show-overflow-tooltip="true" label="所属项目>单体>区域" min-width="280px" align="center">
+      <el-table-column :show-overflow-tooltip="true" label="所属项目>单体>区域" min-width="180px" align="left">
         <template #default="{ row }">
           <span>{{ row.project }}>{{ row.monomer.name }}>{{ row.area.name }}</span>
         </template>
@@ -33,7 +33,13 @@
         </template>
       </el-table-column>
       <el-table-column prop="quantity" :show-overflow-tooltip="true" label="任务数" width="80" align="center" />
-      <el-table-column :show-overflow-tooltip="true" label="图形" width="100" align="center" />
+      <el-table-column :show-overflow-tooltip="true" label="图形" width="100" align="center">
+        <template  #default="{ row }">
+          <div style="width: 100%; height: 80px">
+            <el-image style="width: 100%; height: 100%" :src="row.picturePath" fit="scale-down" />
+          </div>
+        </template>
+      </el-table-column>
       <!-- <el-table-column label="操作" width="80" align="center">
         <template #default="{ row }">
           <el-popconfirm confirm-button-text="确定" cancel-button-text="取消" title="确定删除吗?" @confirm="rowDelete(row)">
