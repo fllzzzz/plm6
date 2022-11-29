@@ -28,6 +28,7 @@
     <el-table-column v-if="columns.visible('fileName')" key="fileName" prop="fileName" :show-overflow-tooltip="true" label="文件" align="center"/>
     <!--编辑与删除-->
     <el-table-column
+      v-if="checkPermission([...permission.edit, ...permission.download])"
       label="操作"
       width="150px"
       align="center"
@@ -51,14 +52,15 @@ import crudApi from '@/api/plan/technical-data-manage/deepen'
 import { ref, watch } from 'vue'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
-import pagination from '@crud/Pagination'
 import { mapGetters } from '@/store/lib'
-import mHeader from './module/header'
-// import { ElNotification } from 'element-plus'
-import eOperation from '@crud/E.operation'
+import checkPermission from '@/utils/system/check-permission'
 import { parseTime } from '@/utils/date'
 import { changeFileListPM as permission } from '@/page-permission/plan'
+
 import uploadForm from './module/upload-form'
+import eOperation from '@crud/E.operation'
+import pagination from '@crud/Pagination'
+import mHeader from './module/header'
 
 const { globalProjectId, globalProject } = mapGetters(['globalProjectId', 'globalProject'])
 
