@@ -255,7 +255,7 @@ export const qualityInspectionReportPM = {
 export const qhseProductionLineReportPM = {
   get: ['mes_production_line_report:get'], // 生产线报表
   detail: ['mes_production_line_report:detail'], // 生产线报表详情
-  print: ['mes_production_line_report_detail:print'] // 生产线报表详情
+  print: ['mes_production_line_report:print'] // 生产线报表详情
 }
 
 // 质安管理/问题曝光
