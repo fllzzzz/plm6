@@ -97,7 +97,7 @@ const mesDrillProductionTaskOrder = {
     verticleAlign: verticleAlignEnum.CENTER.V,
     size: 10,
     bold: 'bold',
-    height: 6,
+    height: 12,
     width: 190,
     emptyVal: '',
     /**
@@ -112,10 +112,10 @@ const mesDrillProductionTaskOrder = {
          * @param {*} format 格式转换
          */
     fields: [ // 字段内容
-      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'serialNumber', title: '任务单：', width: 50, type: typeEnum.SERIAL_NUMBER.K },
-      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'process', title: '方式：', width: 50, type: typeEnum.OTHER.K },
-      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'workshopAndLine', title: '产线：', width: 50, type: typeEnum.OTHER.K },
-      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'scheduleUserName', title: '排产人：', width: 35, type: typeEnum.USER_NAME.K },
+      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'serialNumber', title: '任务单：', width: 150, type: typeEnum.SERIAL_NUMBER.K },
+      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'process', title: '方式：', width: 40, type: typeEnum.OTHER.K },
+      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'workshopAndLine', title: '产线：', width: 150, type: typeEnum.OTHER.K },
+      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'scheduleUserName', title: '排产人：', width: 40, type: typeEnum.USER_NAME.K },
       { show: false, source: dataSourceEnum.SYSTEM.V, key: 'year', title: '统计日期：', width: 100, type: typeEnum.OTHER.K },
       { show: false, source: dataSourceEnum.SYSTEM.V, key: 'printDate', title: '打印时间：', width: 55, type: typeEnum.DATE.K, format: 'YY/MM/DD kk:mm:ss' },
       { show: false, source: dataSourceEnum.SYSTEM.V, key: 'printer', title: '打印人：', width: 35, type: typeEnum.USER_NAME.K }
@@ -219,7 +219,7 @@ const mesDrillProductionTaskOrder = {
       { show: true, key: 'material', title: '材质', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 20, type: typeEnum.MATERIAL.K },
       { show: true, key: 'quantity', title: '数量', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 14, type: typeEnum.QUANTITY.K, format: { toThousand: false, precision: 0 }},
       { show: true, key: 'weight', title: '重量', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.WEIGHT.K, format: { toThousand: false, precision: 2, unit: weightUnitEnum.KG.V }, sum: true },
-      { show: true, key: 'picturePath', title: '图片', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 20, type: typeEnum.IMAGE.K }
+      { show: true, key: 'picturePath', title: '图片', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, width: 20, height: 20, type: typeEnum.IMAGE.K }
     ]
   }
 }
