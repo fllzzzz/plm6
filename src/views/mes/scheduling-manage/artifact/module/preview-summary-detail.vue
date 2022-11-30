@@ -320,15 +320,20 @@ async function fetchLineType() {
 
 function artifactTypeInit() {
   if (
-    artifactTypeList.value?.length &&
-    (artifactTypeList.value?.length === 1 || queryVO.value.productionLineTypeEnum === artifactProductLineEnum.INTELLECT.V)
+    !artifactTypeList.value?.length ||
+    (queryVO.value.structureClassId &&
+      artifactTypeList.value?.length &&
+      artifactTypeList.value.findIndex((v) => v.structureClassId === queryVO.value.structureClassId) === -1)
+  ) {
+    queryVO.value.structureClassId = undefined
+  }
+  if (
+      artifactTypeList.value?.length &&
+      (artifactTypeList.value?.length === 1 || queryVO.value.productionLineTypeEnum === artifactProductLineEnum.INTELLECT.V)
   ) {
     queryVO.value.structureClassId = artifactTypeList.value[0].structureClassId
-    fetch()
-  } else {
-    tableData.value = []
-    listObjIdsByGroup.value = {}
   }
+  fetch()
 }
 
 function handleModeChange() {
@@ -535,7 +540,6 @@ const batchDelVisible = ref(false)
 
 function handleDelSuccess() {
   fetchLineType()
-  fetch()
   closeRefreshOut.value = true // 删除会导致外层数据变更需刷新
 }
 
@@ -570,7 +574,6 @@ function toAssembleScheduling() {
 
 function handleTaskIssueSuccess() {
   fetchLineType()
-  fetch()
 }
 </script>
 
