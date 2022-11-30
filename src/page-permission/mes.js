@@ -281,7 +281,8 @@ export const enclosureLabelPM = {
 
 // 产品标签/配套件
 export const auxiliaryMaterialLabelPM = {
-  get: ['mes_label_auxiliary_material:get'] // 围护列表
+  get: ['mes_label_auxiliary_material:get'], // 围护列表
+  print: ['mes_label_auxiliary_material:print'] // 批量打印标签
 }
 
 // --------------------------- 产品标签 end --------------------------------

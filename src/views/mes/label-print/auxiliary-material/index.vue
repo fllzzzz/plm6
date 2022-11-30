@@ -204,6 +204,7 @@ function getLabelInfo(row) {
   }
 }
 
+provide('permission', permission)
 provide('headerObj', {
   getLabelInfo,
   printLabelFunc: printComponent
