@@ -102,6 +102,15 @@ const wageQuotaTypeEnum = {
 }
 constantize(wageQuotaTypeEnum)
 
+// 油漆计量单位
+const paintingMeasureUnitEnum = {
+  AREA: { L: '按面积（m²）', K: 'AREA', V: wageQuotaTypeEnum.AREA.V },
+  WEIGHT: { L: '按重量（kg）', K: 'WEIGHT', V: wageQuotaTypeEnum.WEIGHT.V },
+  LENGTH: { L: '按长度（m）', K: 'LENGTH', V: wageQuotaTypeEnum.LENGTH.V },
+  QUANTITY: { L: '按数量', K: 'QUANTITY', V: wageQuotaTypeEnum.QUANTITY.V }
+}
+constantize(paintingMeasureUnitEnum)
+
 // 楼承板子类型
 const floorPlateTypeEnum = {
   TRUSS_FLOOR_PLATE: { L: '桁架楼承板', K: 'TRUSS_FLOOR_PLATE', V: 1 << 3 },
@@ -280,14 +289,6 @@ const paintingTypeEnum = {
   TOPCOAT: { L: '面漆', K: 'TOPCOAT', V: 1 << 2 }
 }
 constantize(paintingTypeEnum)
-
-// 油漆计量单位
-const paintingMeasureUnitEnum = {
-  AREA: { L: '按面积（m²）', K: 'AREA', V: 1 << 0 },
-  WEIGHT: { L: '按重量（kg）', K: 'WEIGHT', V: 1 << 1 },
-  QUANTITY: { L: '按数量', K: 'QUANTITY', V: 1 << 2 }
-}
-constantize(paintingMeasureUnitEnum)
 
 // 标签类型
 const labelTypeEnum = {
