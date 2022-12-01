@@ -287,7 +287,7 @@ async function fetch() {
         tagObj.value[v.groupsId].assembleList = []
         tagObj.value[v.groupsId].unshowList = []
         tagObj.value[v.groupsId].otherList = []
-        for (let o = 0; o < v.assembleList.length; o++) {
+        for (let o = 0; o < v.assembleList?.length; o++) {
           const _o = v.assembleList[o]
           _o.boolStructuralEnum = false
           _o.attributeType = '部件'
@@ -332,7 +332,7 @@ async function fetch() {
           _o.boolStructuralEnum = true
           _o.boolTypesettinglEnum = true
           _o.needSchedulingQuantity = 1
-          if (x !== 0) {
+          if (x !== 0 || (v.assembleList?.length && x === 0)) {
             _o.groupsId = '同上'
             _o.askCompleteTime = '同上'
           }

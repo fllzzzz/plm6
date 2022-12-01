@@ -255,7 +255,7 @@ export const qualityInspectionReportPM = {
 export const qhseProductionLineReportPM = {
   get: ['mes_production_line_report:get'], // 生产线报表
   detail: ['mes_production_line_report:detail'], // 生产线报表详情
-  print: ['mes_production_line_report_detail:print'] // 生产线报表详情
+  print: ['mes_production_line_report:print'] // 生产线报表详情
 }
 
 // 质安管理/问题曝光
@@ -281,7 +281,8 @@ export const enclosureLabelPM = {
 
 // 产品标签/配套件
 export const auxiliaryMaterialLabelPM = {
-  get: ['mes_label_auxiliary_material:get'] // 围护列表
+  get: ['mes_label_auxiliary_material:get'], // 围护列表
+  print: ['mes_label_auxiliary_material:print'] // 批量打印标签
 }
 
 // --------------------------- 产品标签 end --------------------------------
@@ -417,8 +418,8 @@ export const enclosureManualPackPM = {
 export const mesPackPM = {
   get: ['mes_pack:get'], // 打包列表
   detail: ['mes_pack:detail'], // 查看打包清单
-  pack: manualPackPM.pack, // 手工打包
-  edit: ['mes_pack:edit'], // 编辑打包清单
+  // pack: manualPackPM.pack, // 手工打包
+  edit: manualPackPM.pack, // 编辑打包清单
   del: ['mes_pack:del'], // 删除打包清单
   print: ['mes_pack:print'], // 查看及打印标签
   printRecords: ['mes_pack:printRecords'], // 查看打印记录
@@ -506,7 +507,7 @@ export const mesProductionLineAssistancePM = {
 export const mesProcessAssistancePM = {
   get: ['mes_process_assistance:get'], // 列表
   save: ['mes_process_assistance:save'], // 协同保存
-  del: ['mes_process_assistance:del'] // 协同保存
+  del: ['mes_process_assistance:del'] // 协同删除
 }
 
 // --------------------------- 6.0 任务跟踪 end --------------------------------

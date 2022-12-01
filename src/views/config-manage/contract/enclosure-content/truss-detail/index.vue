@@ -124,7 +124,7 @@ watch(
 
 CRUD.HOOK.beforeRefresh = () => {
   crud.query.code = props.line.code
-  crud.query.type = 3
+  crud.query.type = props.line.type
   return !!crud.query.code
 }
 

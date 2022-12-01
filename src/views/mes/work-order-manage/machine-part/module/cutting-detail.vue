@@ -19,7 +19,14 @@
       />
     </template>
     <template #titleRight>
-      <common-button size="mini" v-permission="permission.print" icon="el-icon-printer" type="success" @click="printIt">打印【任务单、分拣单】</common-button>
+      <common-button
+size="mini"
+v-permission="permission.print"
+icon="el-icon-printer"
+type="success"
+@click="printIt"
+        >打印【任务单、分拣单】</common-button
+      >
     </template>
     <template #content>
       <!--任务单-->
@@ -28,7 +35,7 @@
       </div>
       <!-- 生产任务单 -->
       <div v-show="orderType === typeEnum.PRODUCTION_TASK_ORDER.V">
-        <production-task-order :tableData="productionData" :maxHeight="maxHeight" :tableLoading="taskLoading"/>
+        <production-task-order :tableData="productionData" :maxHeight="maxHeight" :tableLoading="taskLoading" />
       </div>
       <!--分拣单-->
       <div v-loading="separateLoading" v-show="orderType === typeEnum.SORTING_ORDER.V">
@@ -43,10 +50,10 @@ import fetchFn from '@/utils/print/api'
 import { showCuttingPdf, productionTaskDetail, printSign } from '@/api/mes/work-order-manage/machine-part.js'
 import { defineProps, defineEmits, ref, computed, inject } from 'vue'
 import { ElNotification, ElLoading } from 'element-plus'
+import printJS from 'print-js'
 
 import { sortingListEnum as typeEnum } from '@enum-ms/mes'
 
-import { printPDFJSCanvas } from '@/utils/print/pdf-print'
 import { printSeparateOrderLabel } from '@/utils/print/index'
 import printTemplate from '@/utils/print/default-template'
 import { printTable } from '@/utils/print/table'
@@ -182,14 +189,23 @@ async function printIt() {
   try {
     if (props.cuttingDetailData.boolNestCut) {
       // --------------------------- PDF 打印 start ------------------------------
-      const canvasELs = document.querySelectorAll('#viewerContainer .canvasWrapper canvas')
-      for (let i = 0; i < canvasELs.length; i++) {
-        const canvasBase64 = canvasELs[i].toDataURL()
-        printLoading.value.text = `正在加入打印队列：套料任务单 第${i + 1}页`
-        await codeWait(500)
-        await printPDFJSCanvas({ canvasBase64 })
-      }
-    // --------------------------- PDF 打印 end --------------------------------
+      // const canvasELs = document.querySelectorAll('#viewerContainer .canvasWrapper canvas')
+      // for (let i = 0; i < canvasELs.length; i++) {
+      //   const canvasBase64 = canvasELs[i].toDataURL()
+      //   printLoading.value.text = `正在加入打印队列：套料任务单 第${i + 1}页`
+      //   await codeWait(500)
+      //   await printPDFJSCanvas({ canvasBase64 })
+      // }
+      printJS({
+        printable: taskOrderPDF.value,
+        onPrintDialogClose: () => {
+          printSeparateOrder()
+        },
+        onError: () => {
+          throw new Error('PDF加载失败')
+        }
+      })
+      // --------------------------- PDF 打印 end --------------------------------
     } else {
       // ---------------------------生产任务单 打印 start ------------------------------
       printLoading.value.text = `正在加载数据：生产任务单`
@@ -206,26 +222,29 @@ async function printIt() {
         config
       })
       if (!result) {
-        throw new Error('导出失败')
+        throw new Error('生产任务单导出失败')
       }
-    // ---------------------------生产任务单 打印 end --------------------------------
+      // ---------------------------生产任务单 打印 end --------------------------------
+      printSeparateOrder()
     }
-
-    // --------------------------- 分拣单 打印 start ------------------------------
-    printLoading.value.text = `正在加入打印队列：分拣单`
-    await codeWait(500)
-    await printSeparateOrderLabel({ taskNumberOrder: props.cuttingDetailData.orderNumber, separateOrderInfo: separateOrderInfo.value })
-    // --------------------------- 分拣单 打印 end --------------------------------
-    printLoading.value.text = `已全部加入打印队列`
-    await codeWait(500)
+    return
   } catch (error) {
     ElNotification({ title: '加入打印队列失败，请重试', type: 'error', duration: 2500 })
     throw new Error(error)
-  } finally {
-    printLoading.value.close()
-    await printSign({ ...commonParams.value })
-    emit('refresh')
   }
+}
+
+async function printSeparateOrder() {
+  // --------------------------- 分拣单 打印 start ------------------------------
+  printLoading.value.text = `正在加入打印队列：分拣单`
+  await codeWait(500)
+  await printSeparateOrderLabel({ taskNumberOrder: props.cuttingDetailData.orderNumber, separateOrderInfo: separateOrderInfo.value })
+  // --------------------------- 分拣单 打印 end --------------------------------
+  printLoading.value.text = `已全部加入打印队列`
+  await codeWait(500)
+  printLoading.value.close()
+  await printSign({ ...commonParams.value })
+  emit('refresh')
 }
 
 // --------------------------- 打印 end --------------------------------

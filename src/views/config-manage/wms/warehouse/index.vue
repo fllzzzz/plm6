@@ -128,7 +128,9 @@ const optShow = {
 const tableRef = ref()
 const store = useStore()
 const columnsDataFormat = [...baseTimeColumns, ['type', ['parse-enum', warehouseTypeEnum]]]
-const { maxHeight } = useMaxHeight()
+const { maxHeight } = useMaxHeight({
+  paginate: true
+})
 
 const { CRUD, crud, columns } = useCRUD(
   {

@@ -22,6 +22,7 @@ export default function useGetSeparateOrder(params) {
         for (let o = 0; o < v.list.length; o++) {
           const p = v.list[o]
           productionLineList.push({
+            groupName: p.groupName,
             workShopName: p.workShopName,
             productionLineName: p.productionLineName,
             quantity: p.quantity

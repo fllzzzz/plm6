@@ -1,5 +1,5 @@
 <template>
-  <common-dialog title="零件排产预览" v-model="dialogVisible" width="1100px" :before-close="handleClose">
+  <common-dialog customClass="machine-part-scheduling-preview-dlg" title="零件排产预览" v-model="dialogVisible" width="1100px" :before-close="handleClose">
     <template #titleRight>
       <common-button @click="submitIt" :loading="submitLoading" size="mini" type="primary">保存</common-button>
     </template>
@@ -89,6 +89,7 @@ const crud = inject('crud')
 const { visible: dialogVisible, handleClose } = useVisible({ emit, props, field: 'visible' })
 const { maxHeight } = useMaxHeight(
   {
+    mainBox: '.machine-part-scheduling-preview-dlg',
     extraBox: ['.el-dialog__header'],
     wrapperBox: ['.el-dialog__body'],
     clientHRepMainH: true,

@@ -1,4 +1,4 @@
-import { Expand, Fold, Loading, View, Plus, ArrowDown, ArrowRight, ArrowLeft, UploadFilled, QuestionFilled } from '@element-plus/icons'
+import { Expand, Fold, Edit, Loading, View, Plus, ArrowDown, ArrowRight, ArrowLeft, UploadFilled, QuestionFilled } from '@element-plus/icons'
 
 const components = new Map([
   ['ElIconExpand', Expand],
@@ -9,6 +9,7 @@ const components = new Map([
   ['ElArrowDown', ArrowDown],
   ['ElArrowRight', ArrowRight],
   ['ElArrowLeft', ArrowLeft],
+  ['ElEdit', Edit],
   ['ElIconUploadFilled', UploadFilled],
   ['ElQuestionFilled', QuestionFilled]
 ])

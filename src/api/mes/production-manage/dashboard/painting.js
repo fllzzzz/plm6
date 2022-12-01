@@ -3,15 +3,37 @@ import request from '@/utils/request'
 /**
  *
  * 获取涂装列表
- * @export
- * @param {*} page|required 页码
- * @param {*} size|required 页大小
- * @returns
  */
 export function get(params) {
   return request({
     module: 'mes',
-    url: 'kanban/painting/list',
+    url: 'kanban/painting/setting/list',
+    method: 'get',
+    params
+  })
+}
+
+/**
+ *
+ * 获取单体下各个类型的构件油漆消耗
+ */
+export function getAllArtifact(params) {
+  return request({
+    module: 'mes',
+    url: 'kanban/painting/type',
+    method: 'get',
+    params
+  })
+}
+
+/**
+ *
+ * 获取构件
+ */
+export function artifactList(params) {
+  return request({
+    module: 'mes',
+    url: 'kanban/painting/artifact/page',
     method: 'get',
     params
   })
@@ -24,8 +46,8 @@ export function get(params) {
 export function change(data) {
   return request({
     module: 'mes',
-    url: 'kanban/painting/change',
-    method: 'put',
+    url: 'kanban/painting',
+    method: 'post',
     data
   })
 }
@@ -34,11 +56,11 @@ export function change(data) {
  *
  * 涂装面积修改
  */
-export function areaChange(data) {
+export function editArea(data) {
   return request({
     module: 'mes',
-    url: 'kanban/painting/area/change',
-    method: 'put',
+    url: 'kanban/painting/artifact',
+    method: 'post',
     data
   })
 }

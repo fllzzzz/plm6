@@ -91,7 +91,7 @@ const { CRUD, crud } = useCRUD(
   {
     title: '订单详情',
     sort: [],
-    permission: { ...permission },
+    permission: { get: permission.detail },
     crudApi: { get: detail },
     invisibleColumns: [],
     queryOnPresenterCreated: false,

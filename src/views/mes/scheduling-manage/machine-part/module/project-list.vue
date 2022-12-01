@@ -28,7 +28,7 @@
   </div>
   <common-table
     ref="projectTableRef"
-    v-loading="loading"
+    v-loading="projectLoading"
     :data-format="dataFormat"
     :data="tableData"
     :stripe="false"
@@ -68,11 +68,10 @@ const projectTableRef = ref()
 const date = ref()
 const month = ref(moment().startOf('month').valueOf().toString())
 const tableData = ref([])
-const loading = ref(false)
+const projectLoading = ref(false)
 const dataFormat = ref([['project', 'parse-project']])
 
 fetchTime()
-fetchProject()
 
 async function fetchTime(lastQuery) {
   if (!checkPermission(permission.get)) return
@@ -110,7 +109,7 @@ async function fetchTime(lastQuery) {
 async function fetchProject(lastQuery) {
   if (!checkPermission(permission.get)) return
   try {
-    loading.value = true
+    projectLoading.value = true
     tableData.value = []
     const { content } = await getProject({
       dateTime: date.value,
@@ -132,7 +131,7 @@ async function fetchProject(lastQuery) {
   } catch (error) {
     console.log('获取排程信息，项目树错误', error)
   } finally {
-    loading.value = false
+    projectLoading.value = false
   }
 }
 
