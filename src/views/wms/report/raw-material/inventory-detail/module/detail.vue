@@ -39,7 +39,7 @@
       >
         <el-table-column label="序号" type="index" align="center" width="60" />
         <el-table-column key="createTime" prop="createTime" label="日期" align="center" width="100" />
-        <el-table-column key="receipt" :show-overflow-tooltip="true" prop="receipt" label="凭号" align="center" min-width="120">
+        <el-table-column key="receipt" :show-overflow-tooltip="true" prop="receipt" label="单据编号" align="center" min-width="120">
           <template #default="{ row }">
             <receipt-sn-clickable v-if="row.receipt" :receipt-types="['INBOUND', 'OUTBOUND', 'TRANSFER', 'RETURN', 'REJECTED']" :receipt="row.receipt" />
           </template>
@@ -159,7 +159,7 @@ async function fetchList() {
     }, {
       mete: ['inboundMete', 'outboundMete', 'endMete'],
       quantity: ['inboundQuantity', 'outboundQuantity', 'endQuantity'],
-      amount: ['inboundUnitPriceExcludingVat', 'inboundAmountExcludingVat', 'outboundUnitPriceExcludingVat', 'outboundAmountExcludingVat', 'endUnitPriceExcludingVat', 'endAmountExcludingVat']
+      amount: ['inboundUnitPriceExcludingVat', 'outboundUnitPriceExcludingVat', 'endUnitPriceExcludingVat']
     })
   } catch (error) {
     console.log('获取存货明细账详情列表失败')
