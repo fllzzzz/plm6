@@ -33,7 +33,9 @@
       <common-button class="filter-item" size="mini" type="warning" icon="el-icon-refresh-left" @click.stop="resetQuery()">
         重置
       </common-button>
-      <el-tag size="medium" class="filter-item" style="float: right" type="success" effect="plain">总数：0件 | 总重：0kg</el-tag>
+      <el-tag size="medium" class="filter-item" style="float: right" type="success" effect="plain">
+        总数：{{ summaryInfo.quantity || 0 }}件 | 总面积：{{ summaryInfo.surfaceArea || 0 }}㎡</el-tag
+      >
     </div>
     <common-table
       v-loading="tableLoading"
@@ -80,7 +82,7 @@
 </template>
 
 <script setup>
-import { artifactList } from '@/api/mes/production-manage/dashboard/painting'
+import { artifactList, artifactSummary } from '@/api/mes/production-manage/dashboard/painting'
 import { defineProps, provide, ref, watch, inject } from 'vue'
 
 import { DP } from '@/settings/config'
@@ -117,6 +119,7 @@ const crud = inject('crud')
 const permission = inject('permission')
 const isEdit = ref(false)
 const previewVisible = ref(false)
+const summaryInfo = ref({})
 const query = ref({})
 const tableLoading = ref(false)
 const tableData = ref([])
@@ -138,9 +141,12 @@ watch(
 
 async function fetch() {
   tableData.value = []
+  summaryInfo.value = {}
   if (!props.configId) return
   try {
     tableLoading.value = true
+    summaryInfo.value = (await artifactSummary({ configId: props.configId, ...query.value })) || {}
+    summaryInfo.value.surfaceArea = convertUnits(summaryInfo.value.surfaceArea, 'mm²', '㎡', DP.COM_AREA__M2)
     const { content, totalElements } = await artifactList({ configId: props.configId, ...query.value, ...queryPage })
     tableData.value = content.map((v) => {
       const area = convertUnits(v.surfaceArea, 'mm²', '㎡', DP.COM_AREA__M2)

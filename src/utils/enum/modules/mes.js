@@ -281,14 +281,6 @@ const paintingTypeEnum = {
 }
 constantize(paintingTypeEnum)
 
-// 油漆计量单位
-const paintingMeasureUnitEnum = {
-  AREA: { L: '按面积（m²）', K: 'AREA', V: 1 << 0 },
-  WEIGHT: { L: '按重量（kg）', K: 'WEIGHT', V: 1 << 1 },
-  QUANTITY: { L: '按数量', K: 'QUANTITY', V: 1 << 2 }
-}
-constantize(paintingMeasureUnitEnum)
-
 // 标签类型
 const labelTypeEnum = {
   COMMON: { L: '常规型', K: 'COMMON', V: 1 << 0, size: {
@@ -583,7 +575,6 @@ export {
   projectComponentTypeEnum,
   artifactProcessEnum,
   paintingTypeEnum,
-  paintingMeasureUnitEnum,
   reportComponentTypeEnum,
   labelTypeEnum,
   printProductTypeEnum,
@@ -655,7 +646,6 @@ export default {
   projectComponentTypeEnum,
   artifactProcessEnum,
   paintingTypeEnum,
-  paintingMeasureUnitEnum,
   reportComponentTypeEnum,
   labelTypeEnum,
   printProductTypeEnum,

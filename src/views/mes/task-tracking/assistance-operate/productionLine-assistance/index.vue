@@ -77,7 +77,7 @@
         align="center"
         prop="quantity"
         :show-overflow-tooltip="true"
-        label="可协同量（件/kg）"
+        label="未完成量（件/kg）"
         width="135px"
       >
         <template #default="{ row }">

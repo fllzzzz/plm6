@@ -105,7 +105,7 @@ const mesPaintingList = {
      */
     fields: [ // 字段内容
       { show: true, source: dataSourceEnum.SYSTEM.V, key: 'project', title: '项目：', width: 190, type: typeEnum.PROJECT.K, format: { showProjectFullName: false, showSerialNumber: true, projectNameShowConfig: projectNameArrangementModeEnum.SERIAL_NUMBER_START.V }},
-      // { show: true, source: dataSourceEnum.SYSTEM.V, key: 'monomer.name', title: '单体：', width: 150, type: typeEnum.MONOMER_NAME.K },
+      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'monomer.name', title: '单体：', width: 150, type: typeEnum.MONOMER_NAME.K },
       { show: false, source: dataSourceEnum.SYSTEM.V, key: 'printDate', title: '打印日期：', width: 40, type: typeEnum.DATE.K, format: 'YY/MM/DD' },
       { show: false, source: dataSourceEnum.SYSTEM.V, key: 'printer', title: '打印人：', width: 40, type: typeEnum.USER_NAME.K }
     ]
@@ -201,7 +201,7 @@ const mesPaintingList = {
      * @param {boolean} sum 列需要合计
      */
     fields: [
-      { show: true, key: 'configName', title: '构件类型', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 18, type: typeEnum.STRUCTURE_NAME.K },
+      { show: true, key: 'config.name', title: '构件类型', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 18, type: typeEnum.STRUCTURE_NAME.K },
       { show: true, key: 'surfaceArea', title: '涂装表面积(㎡)', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.METE.K, format: { toThousand: false, unit: '㎡', precision: DP.COM_AREA__M2 }, sum: true },
       { show: true, key: 'primerMeasure', title: '底漆(L)', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.QUANTITY.K, format: { toThousand: false, precision: DP.COM_VOLUME__L }, sum: true },
       { show: true, key: 'intermediateMeasure', title: '中间漆(L)', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.QUANTITY.K, format: { toThousand: false, precision: DP.COM_VOLUME__L }, sum: true },
