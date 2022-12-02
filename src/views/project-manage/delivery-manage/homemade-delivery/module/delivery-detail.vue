@@ -13,6 +13,7 @@
       <el-tag :type="isNotBlank(detailInfo.boolProblemReceiving)?(detailInfo.boolProblemReceiving?'warning':'success'):''" size="medium">{{isNotBlank(detailInfo.boolProblemReceiving)?(detailInfo.boolProblemReceiving?'问题收货':'正常收货'):'未收货'}}</el-tag>
       <el-tag size="medium">{{`车牌号：${detailInfo.licensePlate}`}}</el-tag>
       <print-table
+        v-permission="permission.print"
         api-key="deliveryCargoList"
         :params="props.detailInfo?.id"
         size="mini"
