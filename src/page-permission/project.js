@@ -79,6 +79,7 @@ export const visaSettlePM = {
 export const homemadeDeliveryPM = {
   get: ['homemade_delivery:get'], // 列表
   detail: ['homemade_delivery:detail'], // 收货详情
+  print: ['homemade_delivery:print'], // 自制收货详情打印
   audit: ['homemade_delivery:audit'] // 收货确认
 }
 
