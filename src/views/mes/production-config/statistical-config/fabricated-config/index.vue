@@ -30,14 +30,11 @@ import { ref } from 'vue'
 
 import { isBlank } from '@data-type/index'
 import { configStatisticalFabricatedPM as permission } from '@/page-permission/config'
-import { paintingMeasureUnitEnum } from '@enum-ms/mes'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import udOperation from '@crud/UD.operation'
 import mForm from './module/form'
-
-const columnsDataFormat = [['measureUnit', ['parse-enum', paintingMeasureUnitEnum]]]
 
 const optShow = {
   add: false,

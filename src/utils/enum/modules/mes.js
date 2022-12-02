@@ -102,15 +102,6 @@ const wageQuotaTypeEnum = {
 }
 constantize(wageQuotaTypeEnum)
 
-// 油漆计量单位
-const paintingMeasureUnitEnum = {
-  AREA: { L: '按面积（m²）', K: 'AREA', V: wageQuotaTypeEnum.AREA.V },
-  WEIGHT: { L: '按重量（kg）', K: 'WEIGHT', V: wageQuotaTypeEnum.WEIGHT.V },
-  LENGTH: { L: '按长度（m）', K: 'LENGTH', V: wageQuotaTypeEnum.LENGTH.V },
-  QUANTITY: { L: '按数量', K: 'QUANTITY', V: wageQuotaTypeEnum.QUANTITY.V }
-}
-constantize(paintingMeasureUnitEnum)
-
 // 楼承板子类型
 const floorPlateTypeEnum = {
   TRUSS_FLOOR_PLATE: { L: '桁架楼承板', K: 'TRUSS_FLOOR_PLATE', V: 1 << 3 },
@@ -584,7 +575,6 @@ export {
   projectComponentTypeEnum,
   artifactProcessEnum,
   paintingTypeEnum,
-  paintingMeasureUnitEnum,
   reportComponentTypeEnum,
   labelTypeEnum,
   printProductTypeEnum,
@@ -656,7 +646,6 @@ export default {
   projectComponentTypeEnum,
   artifactProcessEnum,
   paintingTypeEnum,
-  paintingMeasureUnitEnum,
   reportComponentTypeEnum,
   labelTypeEnum,
   printProductTypeEnum,

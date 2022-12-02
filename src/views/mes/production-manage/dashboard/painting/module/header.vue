@@ -2,17 +2,15 @@
   <crudOperation>
     <template #optLeft>
       <div v-show="crud.searchToggle">
-        <monomer-select-area-select
-          v-model:monomerId="query.monomerId"
-          v-model:areaId="query.areaId"
+        <monomer-select
+          v-model="query.monomerId"
+          :project-id="query.projectId"
+          :default="false"
           clearable
-          areaClearable
-          :project-id="projectId"
-          :monomerDisabled="!projectId"
-          :areaDisabled="!projectId"
+          class="filter-item"
           @change="crud.toQuery"
         />
-        <rrOperation />
+        <!-- <rrOperation /> -->
       </div>
     </template>
   </crudOperation>
@@ -22,12 +20,13 @@
 import { regHeader } from '@compos/use-crud'
 import useGlobalProjectIdChangeToQuery from '@compos/use-global-project-id-change-to-query'
 import crudOperation from '@crud/CRUD.operation'
-import rrOperation from '@crud/RR.operation'
-import monomerSelectAreaSelect from '@comp-base/monomer-select-area-select'
+// import rrOperation from '@crud/RR.operation'
+import monomerSelect from '@/components-system/plan/monomer-select'
 
 const defaultQuery = {
+  projectId: { value: undefined, resetAble: false }
 }
 
 const { crud, query } = regHeader(defaultQuery)
-const projectId = useGlobalProjectIdChangeToQuery(crud)
+useGlobalProjectIdChangeToQuery(crud)
 </script>

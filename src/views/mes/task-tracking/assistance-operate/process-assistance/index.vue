@@ -33,6 +33,13 @@
           min-width="160px"
         />
         <el-table-column
+          v-if="columns.visible('monomerName')"
+          prop="monomerName"
+          :show-overflow-tooltip="true"
+          label="单体"
+          min-width="100px"
+        />
+        <el-table-column
           v-if="columns.visible('askCompleteTime')"
           align="center"
           prop="askCompleteTime"
@@ -70,7 +77,7 @@
           prop="completeRatio"
           :show-overflow-tooltip="true"
           label="完成率"
-          width="100px"
+          width="90px"
         >
           <template #default="{ row }">
             <span>{{ row.completeRatio }}%</span>
@@ -187,6 +194,7 @@ CRUD.HOOK.handleRefresh = (crud, res) => {
         v.totalCompleteMete?.netWeight &&
         ((v.totalCompleteMete?.netWeight / v.totalMete?.netWeight) * 100).toFixed(2)) ||
       0
+    v.monomerName = v.monomer?.name
     return v
   })
 }
