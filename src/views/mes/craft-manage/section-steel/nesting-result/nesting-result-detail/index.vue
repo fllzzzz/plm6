@@ -49,7 +49,7 @@
           key="assembleTotalQuantity"
           prop="assembleTotalQuantity"
           :show-overflow-tooltip="true"
-          label="部件总数"
+          label="清单部件总数"
           align="center"
         >
           <template #default="{ row }">
