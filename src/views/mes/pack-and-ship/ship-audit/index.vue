@@ -165,7 +165,7 @@
           >
             查看
           </common-button>
-          <common-button v-if="shipInfo.checkStatus === shipAuditStatusEnum.UNCHECKED.V && checkPermission(permission.audit)" type="primary" size="mini" @click.stop="showDetail(scope.row)"> 审核 </common-button>
+          <common-button v-if="scope.row.checkStatus === shipAuditStatusEnum.UNCHECKED.V && checkPermission(permission.audit)" type="primary" size="mini" @click.stop="showDetail(scope.row)"> 审核 </common-button>
           <!-- 下载 -->
           <export-button v-permission="permission.download" :params="{id: scope.row.id}" size="mini" :fn="crud.crudApi.download"/>
         </template>
