@@ -141,7 +141,8 @@ const { crud, columns, CRUD } = useCRUD(
     sort: [],
     permission: { ...permission },
     optShow: { ...optShow },
-    crudApi: { ...crudApi }
+    crudApi: { ...crudApi },
+    requiredQuery: ['productType']
   },
   tableRef
 )
