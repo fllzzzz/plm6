@@ -23,19 +23,16 @@
           class="input-underline"
         />
       </el-form-item>
-      <el-form-item label="下料方式" prop="name">
-        <common-select
-          v-model="form.name"
-          :options="layingList"
-          :dataStructure="{ key: 'name', label: 'name', value: 'name' }"
-          clearable
-          type="other"
+      <el-form-item label="下料方式" prop="cutConfigId">
+        <cut-config-select
           placeholder="下料方式"
+          v-model="form.cutConfigId"
+          clearable
           style="width: 100%"
           class="input-underline"
         />
       </el-form-item>
-      <el-form-item label="数值范围" prop="numerical">
+      <el-form-item label="板厚范围" prop="numerical">
         <common-input-number
           v-model="form.minNumerical"
           :step="1"
@@ -91,9 +88,10 @@
 </template>
 
 <script setup>
-import { ref, computed, inject } from 'vue'
+import { ref, computed } from 'vue'
 import { partKeyWordEnum, wageQuotaTypeEnum } from '@enum-ms/mes'
 import { regForm } from '@compos/use-crud'
+import cutConfigSelect from '@/components-system/base/cut-config-select.vue'
 
 const formRef = ref()
 const defaultForm = {
@@ -101,7 +99,6 @@ const defaultForm = {
 }
 
 const { crud, form } = regForm(defaultForm, formRef)
-const layingList = inject('layingList')
 
 // 是否是编辑状态
 const isEdit = computed(() => {
@@ -119,7 +116,7 @@ const validateNumerical = (rule, value, callback) => {
 
 const rules = {
   specPrefix: [{ required: true, message: '请选择截面类型', trigger: 'change' }],
-  name: [{ required: true, message: '请选择下料方式', trigger: 'change' }],
+  cutConfigId: [{ required: true, message: '请选择下料方式', trigger: 'change' }],
   wageQuotaType: [{ required: true, message: '请选择计量方式', trigger: 'change' }],
   unitPrice: [{ required: true, message: '请填写单价', trigger: 'blur' }],
   numerical: [{ required: true, validator: validateNumerical, message: '请填写数值', trigger: 'blur' }]

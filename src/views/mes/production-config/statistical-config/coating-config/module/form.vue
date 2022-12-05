@@ -5,73 +5,86 @@
     :before-close="crud.cancelCU"
     :visible="crud.status.cu > 0"
     :title="crud.status.title"
-    width="550px"
+    width="500px"
   >
     <template #titleRight>
       <common-button :loading="crud.status.cu === 2" type="primary" size="mini" @click="crud.submitCU">确认</common-button>
     </template>
-    <el-form ref="formRef" :model="form" :rules="rules" size="small" label-width="170px">
+    <el-form ref="formRef" :model="form" :rules="rules" size="small" label-width="130px">
       <el-form-item label="油漆类别">
         <span>{{ form.name }}</span>
       </el-form-item>
       <el-form-item label="计量方式" prop="measureUnit">
         <common-select
           v-model="form.measureUnit"
-          :options="paintingMeasureUnitEnum.ENUM"
+          :options="wageQuotaTypeEnum.ENUM"
           type="enum"
+          class="input-underline"
           size="small"
           placeholder="请选择计量方式"
           style="width: 200px"
         />
       </el-form-item>
-      <el-form-item label="标准涂装厚度（um）" prop="thickness">
-        <common-input-number
-          v-model="form.thickness"
-          :min="0"
-          :max="9999999"
-          :controls="false"
-          :step="5"
-          size="mini"
-          placeholder="标准涂装厚度"
-          style="width: 200px"
-        />
-      </el-form-item>
-      <el-form-item label="标准单价（元/㎡）" prop="unitPrice">
+      <template v-if="form.measureUnit & wageQuotaTypeEnum.AREA.V">
+        <el-form-item label="标准涂装厚度" prop="thickness">
+          <common-input-number
+            v-model="form.thickness"
+            :min="0"
+            class="input-underline"
+            :max="9999999"
+            :controls="false"
+            :step="5"
+            size="mini"
+            placeholder="标准涂装厚度"
+            style="width: 165px"
+          />
+          <span>um</span>
+        </el-form-item>
+      </template>
+      <el-form-item label="标准单价" prop="unitPrice">
         <common-input-number
           v-model="form.unitPrice"
           :min="0"
           :max="9999999"
           :controls="false"
+          class="input-underline"
           :step="1"
           size="mini"
           placeholder="标准单价"
-          style="width: 200px"
+          style="width: 165px"
         />
+        <span v-if="form.measureUnit">元/{{ wageQuotaTypeEnum.V[form.measureUnit].C_UNIT }}</span>
       </el-form-item>
-      <el-form-item label="超标准设定（um）" prop="outThickness">
-        <common-input-number
-          v-model="form.outThickness"
-          :min="0"
-          :max="9999999"
-          :controls="false"
-          :step="5"
-          size="mini"
-          placeholder="超标准设定"
-          style="width: 200px"
-        />
-      </el-form-item>
-      <el-form-item label="超标单价（元/㎡）" prop="outUnitPrice">
-        <common-input-number
-          v-model="form.outUnitPrice"
-          :min="0"
-          :max="9999999"
-          :controls="false"
-          :step="1"
-          size="mini"
-          placeholder="超标单价"
-          style="width: 200px"
-        />
-      </el-form-item>
+      <template v-if="form.measureUnit & wageQuotaTypeEnum.AREA.V">
+        <el-form-item label="超标准设定" prop="outThickness">
+          <common-input-number
+            v-model="form.outThickness"
+            :min="0"
+            :max="9999999"
+            :controls="false"
+            class="input-underline"
+            :step="5"
+            size="mini"
+            placeholder="超标准设定"
+            style="width: 165px"
+          />
+          <span>um</span>
+        </el-form-item>
+        <el-form-item label="超标单价" prop="outUnitPrice">
+          <common-input-number
+            v-model="form.outUnitPrice"
+            class="input-underline"
+            :min="0"
+            :max="9999999"
+            :controls="false"
+            :step="1"
+            size="mini"
+            placeholder="超标单价"
+            style="width: 165px"
+          />
+          <span v-if="form.measureUnit">元/{{ wageQuotaTypeEnum.V[form.measureUnit].C_UNIT }}</span>
+        </el-form-item>
+      </template>
     </el-form>
   </common-dialog>
 </template>
@@ -79,7 +92,7 @@
 <script setup>
 import { ref } from 'vue'
 
-import { paintingMeasureUnitEnum } from '@enum-ms/mes'
+import { wageQuotaTypeEnum } from '@enum-ms/mes'
 import { regForm } from '@compos/use-crud'
 
 const formRef = ref()

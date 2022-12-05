@@ -110,8 +110,8 @@
     </div>
     <el-divider direction="vertical" :style="`height: ${lineMaxHeight}px`"></el-divider>
     <div class="wrap-right">
-      <div v-if="!configId" class="my-code">*点击左侧油漆用量明细查看</div>
-      <artifact-list v-else :projectId="crud.query.projectId" :configId="configId" />
+      <div v-show="!configId" class="my-code">*点击左侧油漆用量明细查看</div>
+      <artifact-list v-show="configId" :projectId="crud.query.projectId" :configId="configId" />
     </div>
     <edit-form v-model:visible="editFormVisible" :info="itemInfo" @refresh="crud.toQuery"></edit-form>
   </div>

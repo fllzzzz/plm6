@@ -23,7 +23,7 @@ export const purchaseOrderPM = {
   add: ['scm_purchaseOrder:add'], // 添加
   edit: ['scm_purchaseOrder:edit'], // 编辑
   editPurchaseStatus: ['scm_purchaseOrder:editPurchaseStatus'], // 修改采购状态
-  download: ['scm_purchaseOrder:download'], // 下载
+  // download: ['scm_purchaseOrder:download'], // 下载
   del: ['scm_purchaseOrder:del'] // 删除
 }
 
@@ -149,6 +149,7 @@ export const subcontractOrderPM = {
   get: ['subcontract_order:get'], // 列表
   add: ['subcontract_order:add'], // 添加
   edit: ['subcontract_order:edit'], // 编辑
+  del: ['subcontract_order:del'], // 删除
   detail: ['subcontract_order:detail'] // 详情
 }
 

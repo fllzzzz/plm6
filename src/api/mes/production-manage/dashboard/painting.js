@@ -41,6 +41,19 @@ export function artifactList(params) {
 
 /**
  *
+ * 获取构件汇总
+ */
+export function artifactSummary(params) {
+  return request({
+    module: 'mes',
+    url: 'kanban/painting/artifact/page/summary',
+    method: 'get',
+    params
+  })
+}
+
+/**
+ *
  * 涂装修改
  */
 export function change(data) {

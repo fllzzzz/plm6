@@ -18,8 +18,12 @@
       <el-table-column type="selection" width="55" align="center" fixed="left" />
       <el-table-column label="序号" type="index" align="center" width="60" />
       <el-table-column prop="specPrefix" :show-overflow-tooltip="true" label="截面类型" align="center" min-width="160px" />
-      <el-table-column prop="name" :show-overflow-tooltip="true" label="下料方式" align="center" min-width="160px" />
-      <el-table-column :show-overflow-tooltip="true" label="数值范围" align="center" min-width="200px">
+      <el-table-column prop="name" :show-overflow-tooltip="true" label="下料方式" align="center" min-width="160px">
+        <template #default="{ row }">
+          <span>{{ row.name }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column :show-overflow-tooltip="true" label="板厚范围" align="center" min-width="200px">
         <template #default="{ row }">
           <span>{{ row.minNumerical }}</span>
           <span> ~ </span>
@@ -46,12 +50,11 @@
 </template>
 
 <script setup>
-import crudApi, { getLayingWay } from '@/api/mes/production-config/parts-laying-config'
-import { onMounted, provide, ref } from 'vue'
+import crudApi from '@/api/mes/production-config/parts-laying-config'
+import { ref } from 'vue'
 
 import { wageQuotaTypeEnum } from '@enum-ms/mes'
 import { configStatisticalPartsLayingPM as permission } from '@/page-permission/config'
-
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import udOperation from '@crud/UD.operation'
@@ -84,27 +87,6 @@ const { crud } = useCRUD(
   },
   tableRef
 )
-
-const layingList = ref([])
-provide('layingList', layingList)
-
-async function fetchLayingList() {
-  try {
-    const content = await getLayingWay()
-    layingList.value = content.map((v) => {
-      return {
-        name: v.name,
-        id: v.id
-      }
-    })
-  } catch (error) {
-    console.log('获取下料方式列表失败', error)
-  }
-}
-
-onMounted(() => {
-  fetchLayingList()
-})
 
 const { maxHeight } = useMaxHeight()
 </script>

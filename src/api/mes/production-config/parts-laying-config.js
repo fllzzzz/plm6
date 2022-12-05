@@ -12,7 +12,7 @@ export function get(params) {
 export function getLayingWay(params) {
   return request({
     module: 'mes',
-    url: 'cut/list/laying',
+    url: 'cut/list/cut',
     method: 'get',
     params
   })
