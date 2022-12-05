@@ -518,16 +518,16 @@ function addCrudBusinessMethod(crud) {
     }
     const now = Date.now()
     // TODO: 存在问题，待优化，当queryTime时间呗，第二次进入的参数传的不一样时，会被拦截的问题
-    // const flag =
-    //   (crud.firstQueryTime && now - crud.firstQueryTime > CRUD.QUERY_DEBOUNCE_TIME) || (!crud.firstQueryTime && crud.firstQueryTime !== 0)
-    // if (flag) {
-    if (!crud.firstQueryTime) {
-      _toQuery()
-      crud.firstQueryTime = now
-    } else {
-      _toQueryByDebounce()
+    const flag =
+      (crud.firstQueryTime && now - crud.firstQueryTime > CRUD.QUERY_DEBOUNCE_TIME) || (!crud.firstQueryTime && crud.firstQueryTime !== 0)
+    if (flag) {
+      if (!crud.firstQueryTime) {
+        _toQuery()
+        crud.firstQueryTime = now
+      } else {
+        _toQueryByDebounce()
+      }
     }
-    // }
   }
 
   // 刷新

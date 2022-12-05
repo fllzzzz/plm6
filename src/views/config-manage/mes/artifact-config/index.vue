@@ -41,13 +41,13 @@
       <el-table-column key="classificationName" prop="classificationName" align="center" :show-overflow-tooltip="true" label="子分类" min-width="120" v-if="productionLineTypeEnum!==artifactProductLineEnum.TRADITION.V">
         <template v-slot="scope">
           <template v-if="scope.row.productionLineTypeEnum === artifactProductLineEnum.INTELLECT.V">
-            <div v-for="(item,index) in scope.row.structureClassificationList" :key="item.id" :class="index === scope.row.structureClassificationList.length-1 ? 'sandwich-cell-bottom' : 'sandwich-cell-top'" :style="item.parentType === intellectParentType.BRIDGE.V?'line-height:22px;':''">
+            <div v-for="(item,index) in scope.row.structureClassificationList" :key="item.id" :class="index === scope.row.structureClassificationList.length-1 ? 'sandwich-cell-bottom' : 'sandwich-cell-top'">
                 <span style="margin-left:5px;">{{ item.classificationName }}</span>
-                <template  v-if="item.parentType === intellectParentType.BRIDGE.V">
+                <!-- <template  v-if="item.parentType === intellectParentType.BRIDGE.V">
                   <div v-if="item.minLength && item.maxLength">（{{item.minLength}}mm &lt; 长度 {{ '≤' }} {{ item.maxLength}}mm）</div>
                   <div v-else-if="item.minLength">（&gt;{{ item.minLength }}mm）</div>
                   <div v-else-if="item.maxLength">（{{ '≤' }}{{ item.maxLength}}mm）</div>
-                </template>
+                </template> -->
             </div>
           </template>
           <span v-else>-</span>
@@ -60,7 +60,7 @@
       </el-table-column>
       <el-table-column key="specPrefixList" prop="specPrefixList" label="构件规格前缀" align="center" min-width="120" :show-overflow-tooltip="true">
         <template v-slot="scope">
-          <div v-for="(item,index) in scope.row.structureClassificationList" :key="item.id" :class="index === scope.row.structureClassificationList.length-1 ? 'sandwich-cell-bottom div-ellipsis' : 'sandwich-cell-top div-ellipsis'" :style="item.parentType === intellectParentType.BRIDGE.V?'line-height:45px;height:55px;':''">
+          <div v-for="(item,index) in scope.row.structureClassificationList" :key="item.id" :class="index === scope.row.structureClassificationList.length-1 ? 'sandwich-cell-bottom div-ellipsis' : 'sandwich-cell-top div-ellipsis'">
             <template v-if="item.specPrefixList && item.specPrefixList.length > 0">
               <span v-for="k in item.specPrefixList" :key="k.id">{{`【${k.specPrefix}】`}}</span>
             </template>
@@ -69,7 +69,7 @@
       </el-table-column>
        <el-table-column key="serialNumberPrefixList" prop="serialNumberPrefixList" label="编号前缀" align="center" min-width="120" :show-overflow-tooltip="true" v-if="productionLineTypeEnum!==artifactProductLineEnum.INTELLECT.V">
         <template v-slot="scope">
-          <div v-for="(item,index) in scope.row.structureClassificationList" :key="item.id" :class="index === scope.row.structureClassificationList.length-1 ? 'sandwich-cell-bottom div-ellipsis' : 'sandwich-cell-top div-ellipsis'" :style="item.parentType === intellectParentType.BRIDGE.V?'line-height:45px;height:55px;':''">
+          <div v-for="(item,index) in scope.row.structureClassificationList" :key="item.id" :class="index === scope.row.structureClassificationList.length-1 ? 'sandwich-cell-bottom div-ellipsis' : 'sandwich-cell-top div-ellipsis'">
             <template v-if="scope.row.artifactType===artifactTypeEnum.SMALL.V && item.serialNumberPrefixList && item.serialNumberPrefixList.length > 0">
               <span v-for="k in item.serialNumberPrefixList" :key="k.id">{{`【${k.serialNumberPrefix}】`}}</span>
             </template>
@@ -84,7 +84,7 @@
       </el-table-column>
       <el-table-column key="definitionWord" prop="definitionWord" align="center" :show-overflow-tooltip="true" label="定义代码" v-if="productionLineTypeEnum!==artifactProductLineEnum.TRADITION.V">
         <template v-slot="scope">
-          <div v-for="(item,index) in scope.row.structureClassificationList" :key="item.id" :class="index === scope.row.structureClassificationList.length-1 ? 'sandwich-cell-bottom' : 'sandwich-cell-top'" :style="item.parentType === intellectParentType.BRIDGE.V?'line-height:45px;height:55px;':''">
+          <div v-for="(item,index) in scope.row.structureClassificationList" :key="item.id" :class="index === scope.row.structureClassificationList.length-1 ? 'sandwich-cell-bottom' : 'sandwich-cell-top'">
             {{ item.definitionWord || '-' }}
           </div>
         </template>
@@ -98,7 +98,7 @@
         align="center"
       >
         <template v-slot="scope">
-          <div v-for="(item,index) in scope.row.structureClassificationList" :key="item.id" :class="index === scope.row.structureClassificationList.length-1 ? 'sandwich-cell-bottom' : 'sandwich-cell-top'" :style="item.parentType === intellectParentType.BRIDGE.V?'line-height:45px;height:55px;':''">
+          <div v-for="(item,index) in scope.row.structureClassificationList" :key="item.id" :class="index === scope.row.structureClassificationList.length-1 ? 'sandwich-cell-bottom' : 'sandwich-cell-top'">
             <span>{{ item.sort }}</span>
           </div>
         </template>
@@ -112,7 +112,7 @@
         fixed="right"
       >
         <template v-slot="scope">
-          <div v-for="(item,index) in scope.row.structureClassificationList" :key="item.id" :class="index === scope.row.structureClassificationList.length-1 ? 'sandwich-cell-bottom' : 'sandwich-cell-top'" :style="item.parentType === intellectParentType.BRIDGE.V?'line-height:45px;height:55px;':''">
+          <div v-for="(item,index) in scope.row.structureClassificationList" :key="item.id" :class="index === scope.row.structureClassificationList.length-1 ? 'sandwich-cell-bottom' : 'sandwich-cell-top'">
             <common-button size="mini" @click="openForm(item,'edit')" icon="el-icon-edit" type="primary" v-permission="permission.edit"/>
             <el-popconfirm
                 confirm-button-text="确定"
