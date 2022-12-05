@@ -303,6 +303,9 @@ async function fetchLineType() {
   queryVO.value.productionLineTypeEnum = undefined
   unshowLineType.value = []
   lineTypeLoad.value = false
+  tableData.value = []
+  listObjIdsByGroup.value = {}
+  summaryInfo.value = {}
   if (!areaIdList?.length) return
   try {
     const { content } = await getLineRecordType({ areaIdList })
