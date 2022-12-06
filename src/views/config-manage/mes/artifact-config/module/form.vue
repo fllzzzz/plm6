@@ -53,8 +53,19 @@
             @change="parentTypeChange"
           />
         </el-form-item>
-        <el-form-item label="类型命名" prop="classificationName">
-          <el-input v-model="form.classificationName" type="text" placeholder="类型命名" style="width: 250px" maxlength="30" />
+        <el-form-item label="类型命名" prop="classificationName" v-if="form.productionLineTypeEnum">
+          <common-select
+            v-if="form.productionLineTypeEnum === artifactProductLineEnum.INTELLECT.V"
+            v-model="form.classificationName"
+            :options="classificationNameOptions"
+            type="other"
+            :dataStructure="{ key: 'key', label: 'value', value: 'value' }"
+            size="small"
+            class="filter-item"
+            placeholder="类型命名选择"
+            style="width: 250px"
+          />
+          <el-input v-model="form.classificationName" type="text" placeholder="类型命名" style="width: 250px" maxlength="30" v-else />
         </el-form-item>
         <!-- <el-form-item label="长度定义(mm)" prop="minLength" v-if="form.parentType === intellectParentType.BRIDGE.V">
           <div style="margin-bottom:5px;">类型为梁时,最小值和最大值至少填一项</div>
@@ -187,7 +198,6 @@ const drawerRef = ref()
 const loading = ref(false)
 const nameArr = ref([])
 const serialNumberArr = ref([])
-
 const defaultForm = {
   id: undefined,
   productionLineTypeEnum: undefined,
@@ -208,6 +218,14 @@ const defaultForm = {
 const form = ref(JSON.parse(JSON.stringify(defaultForm)))
 const plusShow = computed(() => {
   return form.value.productionLineTypeEnum === artifactProductLineEnum.TRADITION.V ? (form.value.specPrefixList?.length < 1 ? true : (form.value.artifactType === artifactTypeEnum.COMMON.V)) : true
+})
+
+const classificationNameOptions = computed(() => {
+  let options = []
+  if (form.value.productionLineTypeEnum === artifactProductLineEnum.INTELLECT.V && form.value.parentType) {
+    options = form.value.parentType === intellectParentType.PILLAR.V ? [{ key: 1, value: '钢柱' }] : [{ key: 2, value: '钢梁' }, { key: 3, value: '短梁' }, { key: 4, value: '长短梁' }]
+  }
+  return options
 })
 
 const validateLinks = (rule, value, callback) => {
@@ -296,7 +314,7 @@ const rules = {
   //   { required: true, validator: validateLength, trigger: 'change' }
   // ],
   classificationName: [
-    { required: true, message: '请填写类型命名', trigger: 'blur' },
+    { required: true, message: '请填写类型命名', trigger: ['blur', 'change'] },
     { min: 1, max: 30, message: '长度在 1 到 30 个字符', trigger: 'blur' }
   ],
   definitionWord: [
@@ -363,6 +381,7 @@ function resetForm(data) {
 }
 
 function lineTypeChange(val) {
+  form.value.classificationName = undefined
   if (val !== artifactProductLineEnum.INTELLECT.V) {
     // form.value.boolContainsMin = undefined
     // form.value.minLength = undefined
@@ -378,12 +397,7 @@ function lineTypeChange(val) {
 }
 
 function parentTypeChange(val) {
-  if (val !== intellectParentType.BRIDGE.V) {
-    // form.value.boolContainsMin = undefined
-    // form.value.minLength = undefined
-    // form.value.boolContainsMax = undefined
-    // form.value.maxLength = undefined
-  }
+  form.value.classificationName = undefined
 }
 
 function artifactTypeChange(val) {
