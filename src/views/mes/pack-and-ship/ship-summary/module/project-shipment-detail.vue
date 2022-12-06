@@ -30,7 +30,7 @@
         <print-table
           api-key="mesProjectShipDetail"
           v-permission="permission.print"
-          :params="{ projectId: props.currentRow.projectId, productionLineTypeEnum: props.productionLineTypeEnum, ...query.value }"
+          :params="{ projectId: props.currentRow.projectId, productionLineTypeEnum: props.productionLineTypeEnum, workshopId: props.workshopId, ...query.value }"
           size="mini"
           type="warning"
         />
@@ -89,6 +89,9 @@ const props = defineProps({
   },
   productionLineTypeEnum: {
     type: Number
+  },
+  workshopId: {
+    type: Number
   }
 })
 
@@ -124,7 +127,7 @@ async function fetchDetail() {
   }
   tableLoading.value = true
   try {
-    const { content = [], totalElements } = await inboundDetail({ projectId: props.currentRow.projectId, ...query.value, productionLineTypeEnum: props.productionLineTypeEnum, ...queryPage })
+    const { content = [], totalElements } = await inboundDetail({ projectId: props.currentRow.projectId, ...query.value, productionLineTypeEnum: props.productionLineTypeEnum, workshopId: props.workshopId, ...queryPage })
     list.value = content
     setTotalPage(totalElements)
     tableLoading.value = false

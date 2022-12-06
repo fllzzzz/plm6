@@ -11,14 +11,14 @@
         class="filter-item"
         @change="crud.toQuery"
       />
-      <common-radio-button
+      <!-- <common-radio-button
         v-model="query.productionLineTypeEnum"
         :options="artifactProductLineEnum.ENUM"
         showOptionAll
         type="enum"
         class="filter-item"
         @change="crud.toQuery"
-      />
+      /> -->
       <common-radio-button
         v-model="query.status"
         :options="shipStatusEnum.ENUM"
@@ -27,9 +27,23 @@
         class="filter-item"
         @change="statusChange"
       />
+      <workshop-select
+        v-model="query.workshopId"
+        placeholder="请选择车间"
+        clearable
+        style="width: 200px"
+        class="filter-item"
+        @change="crud.toQuery"
+      />
       <el-row v-loading="crud.loading" :gutter="20" class="panel-group">
         <el-col :span="12" class="card-panel-col">
-          <Panel name="累计发运量（t）" text-color="#626262" num-color="#1890ff" :end-val="(summaryInfo.mete/1000) || 0" :precision="DP.COM_WT__T" />
+          <Panel
+            name="累计发运量（t）"
+            text-color="#626262"
+            num-color="#1890ff"
+            :end-val="summaryInfo.mete / 1000 || 0"
+            :precision="DP.COM_WT__T"
+          />
         </el-col>
         <el-col :span="12" class="card-panel-col">
           <Panel name="累计车次" text-color="#626262" num-color="#1890ff" :end-val="summaryInfo.quantity || 0" :precision="0" />
@@ -42,7 +56,7 @@
 <script setup>
 import { ref, watch } from 'vue'
 import { shipmentSummary } from '@/api/mes/pack-and-ship/ship-summary'
-
+import workshopSelect from '@comp-mes/workshop-select'
 import { regHeader } from '@compos/use-crud'
 import { shipStatusEnum, artifactProductLineEnum } from '@enum-ms/mes'
 import moment from 'moment'
@@ -54,6 +68,7 @@ import Panel from '@/components/Panel'
 const defaultQuery = {
   dateTime: moment().valueOf(),
   productionLineTypeEnum: undefined,
+  workshopId: undefined,
   sendStatus: undefined,
   status: undefined,
   settled: undefined
@@ -95,7 +110,6 @@ async function getData() {
     summaryLoading.value = false
   }
 }
-
 </script>
 <style lang="scss" scoped>
 .panel-group {
