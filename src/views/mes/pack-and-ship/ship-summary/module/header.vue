@@ -12,6 +12,14 @@
         @change="crud.toQuery"
       />
       <common-radio-button
+        v-model="query.productionLineTypeEnum"
+        :options="artifactProductLineEnum.ENUM"
+        showOptionAll
+        type="enum"
+        class="filter-item"
+        @change="crud.toQuery"
+      />
+      <common-radio-button
         v-model="query.status"
         :options="shipStatusEnum.ENUM"
         showOptionAll
@@ -36,7 +44,7 @@ import { ref, watch } from 'vue'
 import { shipmentSummary } from '@/api/mes/pack-and-ship/ship-summary'
 
 import { regHeader } from '@compos/use-crud'
-import { shipStatusEnum } from '@enum-ms/mes'
+import { shipStatusEnum, artifactProductLineEnum } from '@enum-ms/mes'
 import moment from 'moment'
 import { DP } from '@/settings/config'
 // import checkPermission from '@/utils/system/check-permission'
@@ -45,6 +53,7 @@ import Panel from '@/components/Panel'
 
 const defaultQuery = {
   dateTime: moment().valueOf(),
+  productionLineTypeEnum: undefined,
   sendStatus: undefined,
   status: undefined,
   settled: undefined

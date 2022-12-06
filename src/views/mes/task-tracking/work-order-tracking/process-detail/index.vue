@@ -26,7 +26,7 @@
           @change="handleWorkshopProductionLineChange"
         />
       </div>
-      <div :style="`height: ${maxHeight}px; overflow-y: auto;`">
+      <div :style="`height: ${maxHeight + 40}px; overflow-y: auto;`">
         <div style="margin-bottom: 20px" v-for="item in assembleProcessData" :key="item">
           <div
             v-if="productType === componentTypeEnum.ARTIFACT.V && item[0]?.productType === componentTypeEnum.ASSEMBLE.V"
