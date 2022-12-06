@@ -5,6 +5,8 @@ for (const key in req) {
   requireAll.push(key)
 }
 const icons = requireAll.map(i => {
-  return i.replace(/(.*\/)*([^.]+).*/ig, '$2')
+  const dir = i.replace(/(.*\/)*([^.]+).*/ig, '$1').split('svg/')[1].replace(/\//g, '')
+  const svg = i.replace(/(.*\/)*([^.]+).*/ig, '$2')
+  return dir ? dir + '-' + svg : svg
 })
 export default icons
