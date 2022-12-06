@@ -135,7 +135,7 @@ async function fetchType(lastQuery) {
   if (isBlank(query.projectIds)) return
   try {
     const { content } = await getTypeList({
-      dateTime: query.dateTime,
+      monthList: query.monthList,
       projectIds: query.projectIds
     })
     typeList.value =
@@ -168,7 +168,7 @@ async function fetchMaterial(lastQuery) {
   if (isBlank(query.projectIds)) return
   try {
     const { content } = await getMaterial({
-      dateTime: query.dateTime,
+      monthList: query.monthList,
       projectIds: query.projectIds,
       taskTypeEnum: query.taskTypeEnum
     })
@@ -201,7 +201,7 @@ async function fetchTick(lastQuery) {
   try {
     thickList.value = []
     const { content } = await getThick({
-      dateTime: query.dateTime,
+      monthList: query.monthList,
       projectIds: query.projectIds,
       material: query.material,
       taskTypeEnum: query.taskTypeEnum

@@ -12,7 +12,7 @@
         <div class="time-list" ref="timeListRef" :style="scrollStyle">
           <div
             class="time-item"
-            :style="item.timeStamp === modelValue ? `background: rgb(64 158 255);color: #fff;` : ''"
+            :style="judgeIsSelected(item.timeStamp) ? `background: rgb(64 158 255);color: #fff;` : ''"
             v-for="(item, index) in data"
             :key="index"
             @click="handleTagClick(item.timeStamp)"
@@ -31,23 +31,32 @@
       </div>
     </div>
     <div v-else>
-      <el-tag type="warning" size="medium"> * 暂无构件排产信息</el-tag>
+      <el-tag type="warning" size="medium"> * {{ emptyText }}</el-tag>
     </div>
   </div>
 </template>
 
 <script setup>
 import { ref, defineProps, defineEmits, computed, watch, nextTick } from 'vue'
+import { isBlank } from '@data-type/index'
 
 const emit = defineEmits(['update:modelValue', 'change'])
 const props = defineProps({
   modelValue: {
-    type: [Number, String, undefined],
+    type: [Number, String, Array, undefined],
     default: undefined
   },
   data: {
     type: Array,
     default: () => []
+  },
+  multiple: {
+    type: Boolean,
+    default: false
+  },
+  emptyText: {
+    type: String,
+    default: '暂无数据'
   }
 })
 
@@ -77,6 +86,16 @@ watch(
   { immediate: true }
 )
 
+const copyValue = ref()
+
+watch(
+  () => props.modelValue,
+  (value) => {
+    copyValue.value = value
+  },
+  { immediate: true }
+)
+
 const scrollStyle = computed(() => {
   let _w = currentPage.value * scrollSingleWidth.value
   if (timeListRef.value?.clientWidth && (currentPage.value + 1) * scrollSingleWidth.value > timeListRef.value.clientWidth) {
@@ -96,19 +115,39 @@ function handleScroll(direction) {
   currentPage.value = _page >= 0 ? _page : 0
 }
 
-function handleTagClick(item) {
-  if (props.modelValue !== item) {
-    selectChange(item)
+function judgeIsSelected(item) {
+  if (props.multiple) {
+    if (isBlank(copyValue.value) || copyValue.value?.indexOf(item) === -1) {
+      return false
+    }
   } else {
-    if (props.unselectable) {
-      selectChange(undefined)
+    if (props.modelValue !== item) {
+      return false
+    }
+  }
+  return true
+}
+
+function handleTagClick(item) {
+  if (props.multiple) {
+    if (isBlank(copyValue.value)) copyValue.value = []
+    const index = copyValue.value.indexOf(item)
+    if (index === -1) {
+      copyValue.value.push(item)
+    } else {
+      copyValue.value.splice(index, 1)
+    }
+    selectChange(copyValue.value)
+  } else {
+    if (props.modelValue !== item) {
+      selectChange(item)
     }
   }
 }
 
 function selectChange(val) {
   emit('update:modelValue', val)
-  emit('change', val)
+  emit('change')
 }
 </script>
 

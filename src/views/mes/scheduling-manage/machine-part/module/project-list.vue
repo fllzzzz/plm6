@@ -1,6 +1,6 @@
 <template>
   <div class="head-container">
-    <el-date-picker
+    <!-- <el-date-picker
       v-model="month"
       type="month"
       size="small"
@@ -11,18 +11,21 @@
       style="width: 48%"
       class="filter-item"
       @change="fetchTime(null)"
-    />
+    /> -->
+    <project-header-time v-model="month" multiple :data="timeList" @change="fetchProject" empty-text="暂无零件排产信息" />
     <!-- <common-select
       v-loading="timeLoading"
-      v-model="date"
+      v-model="month"
       :options="timeList"
       :loading="timeLoading"
       loading-text="加载中"
       clearable
+      multiple
+      default
       style="width: 48%"
       class="filter-item"
-      :placeholder="timeLoading ? '加载中' : '选择日期'"
-      :dataStructure="{ key: 'dateTime', label: 'date', value: 'dateTime' }"
+      :placeholder="timeLoading ? '加载中' : '选择月份'"
+      :dataStructure="{ key: 'timeStamp', label: 'month', value: 'timeStamp' }"
       @change="fetchProject"
     /> -->
   </div>
@@ -47,12 +50,15 @@
 </template>
 
 <script setup>
-import { getProject, getDate } from '@/api/mes/scheduling-manage/machine-part'
+import { getProject, getMonth } from '@/api/mes/scheduling-manage/machine-part'
 import { ref, defineProps, defineEmits, defineExpose, nextTick } from 'vue'
+import { isBlank, isNotBlank } from '@/utils/data-type'
 import moment from 'moment'
 
 import checkPermission from '@/utils/system/check-permission'
 import { machinePartSchedulingPM as permission } from '@/page-permission/mes'
+
+import projectHeaderTime from '@/views/mes/scheduling-manage/common/project-header-time.vue'
 
 const emit = defineEmits(['project-click'])
 defineProps({
@@ -65,8 +71,8 @@ defineProps({
 const timeList = ref([])
 const timeLoading = ref(false)
 const projectTableRef = ref()
-const date = ref()
-const month = ref(moment().startOf('month').valueOf().toString())
+// const date = ref()
+const month = ref([])
 const tableData = ref([])
 const projectLoading = ref(false)
 const dataFormat = ref([['project', 'parse-project']])
@@ -78,23 +84,40 @@ async function fetchTime(lastQuery) {
   try {
     timeList.value = []
     tableData.value = []
-    date.value = undefined
+    month.value = []
     timeLoading.value = true
-    await fetchProject(lastQuery)
-    const { content } = await getDate({
-      dateTime: month.value
-    })
+    const { content } = await getMonth()
     timeList.value = content.map((v) => {
-      const _dateTime = moment(v, 'YYYY/MM/DD').valueOf()
+      const timeStamp = moment(v, 'YYYY-MM').valueOf()
+      const _arr = v.split('-')
       return {
-        dateTime: _dateTime,
-        date: moment(_dateTime).date() + '日'
+        timeStamp,
+        year: _arr[0],
+        month: _arr[1]
       }
     })
     // if (timeList.value?.length) {
     //   date.value = timeList.value[0].dateTime
     //   fetchProject()
     // }
+    if (lastQuery && isNotBlank(lastQuery.monthList) && timeList.value?.length) {
+      for (let i = 0; i < lastQuery.monthList.length; i++) {
+        const m = lastQuery.monthList[i]
+        if (timeList.value?.findIndex(v => v.timeStamp === m) !== -1) {
+          month.value.push(m)
+        }
+      }
+    }
+    if (isBlank(month.value) && timeList.value?.length) {
+      const curTime = moment().startOf('month').valueOf()
+      const curIndex = timeList.value?.findIndex(v => v.timeStamp === curTime)
+      if (curIndex !== -1) {
+        month.value.push(curTime)
+      } else {
+        month.value = [timeList.value[0].timeStamp]
+      }
+    }
+    await fetchProject(lastQuery)
   } catch (error) {
     console.log('获取排程信息时间错误', error)
   } finally {
@@ -107,13 +130,13 @@ async function fetchTime(lastQuery) {
 // }
 
 async function fetchProject(lastQuery) {
-  if (!checkPermission(permission.get)) return
+  tableData.value = []
+  if (!checkPermission(permission.get) || isBlank(month.value)) return
   try {
     projectLoading.value = true
-    tableData.value = []
     const { content } = await getProject({
-      dateTime: date.value,
-      month: month.value
+      // dateTime: date.value,
+      monthList: month.value
     })
     const needSelectIndex = []
     tableData.value = content.map((v, index) => {
@@ -136,12 +159,11 @@ async function fetchProject(lastQuery) {
 }
 
 function handleSelectionChange(val) {
-  emit('project-click', val, date.value, month.value)
+  emit('project-click', val, month.value)
 }
 
 defineExpose({
-  refresh: fetchTime,
-  artifactDateTime: date.value ? date : month
+  refresh: fetchTime
 })
 </script>
 
