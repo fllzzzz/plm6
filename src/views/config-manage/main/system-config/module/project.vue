@@ -82,6 +82,7 @@ async function submit() {
     sourceData.value = { ...form.value }
     ElMessage.success('修改成功')
     store.dispatch('settings/changeSetting', new Map([['projectNameShowConfig', form.value]]))
+    store.dispatch('project/fetchUserProjects')
   } catch (error) {
     console.log('设置基础信息：项目信息', error)
   } finally {
