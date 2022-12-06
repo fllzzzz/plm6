@@ -6,14 +6,37 @@
     :visible="crud.status.cu > 0"
     :title="crud.status.title"
     :wrapper-closable="false"
-    size="650px"
+    size="800px"
   >
     <template #titleRight>
       <common-button :loading="crud.status.cu === 2" type="primary" size="mini" @click="crud.submitCU">确认</common-button>
     </template>
     <template #content>
-      <span style="font-size:12px;color:red;">*配套件的编号不得与构件、部件、零件重名</span>
+      <span style="font-size: 12px; color: red">*配套件的编号不得与构件、部件、零件重名</span>
       <el-form ref="formRef" :model="form" :rules="rules" size="small" label-width="140px" style="margin">
+        <el-form-item label="零件科目匹配" prop="classifyIds">
+          <common-radio-button
+            v-model="form.basicClass"
+            :options="[matClsEnum.MATERIAL]"
+            type="enum"
+            size="small"
+            style="margin-bottom: 5px"
+          />
+          <br />
+          <material-cascader
+            v-model="form.classifyIds"
+            :basic-class="form.basicClass"
+            :disabled="!form.basicClass"
+            multiple
+            :collapse-tags="false"
+            separator=" > "
+            clearable
+            :disabledVal="disabledClassifyIds"
+            placeholder="请选择科目"
+            size="small"
+            style="width: 270px"
+          />
+        </el-form-item>
         <el-form-item label="类型命名" prop="name">
           <el-input v-model.trim="form.name" type="text" placeholder="类型命名" style="width: 270px" maxlength="30" />
         </el-form-item>
@@ -50,20 +73,29 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, nextTick, defineProps, watch } from 'vue'
 import { ElMessage } from 'element-plus'
-
+import { deepClone } from '@data-type/index'
+import { matClsEnum } from '@enum-ms/classification'
+import MaterialCascader from '@comp-cls/material-cascader/index.vue'
 import { regForm } from '@compos/use-crud'
 
+const props = defineProps({
+  boundAllClassifyIds: {
+    type: Array,
+    default: () => []
+  }
+})
+const disabledClassifyIds = ref([])
 const formRef = ref()
 const nameArr = ref([])
 const defaultForm = {
   id: undefined,
   name: '',
+  basicClass: matClsEnum.MATERIAL.V,
   sort: undefined,
   list: []
 }
-
 const { crud, form, CRUD } = regForm(defaultForm, formRef)
 
 const validateLinks = (rule, value, callback) => {
@@ -86,11 +118,29 @@ const rules = {
     { required: true, message: '请填写类型名称', trigger: 'blur' },
     { min: 1, max: 30, message: '长度在 1 到 30 个字符', trigger: 'blur' }
   ],
+  classifyIds: [{ required: true, message: '请选择科目', trigger: 'change' }],
   list: [
     { required: true, message: '请填写编号' },
     { validator: validateLinks, trigger: 'change' }
   ]
 }
+
+watch(
+  () => form.basicClass,
+  (val, oldVal) => {
+    if (oldVal === matClsEnum.STEEL_PLATE.V) {
+      nameArr.value = []
+      form.list = []
+    }
+    if (val === matClsEnum.STEEL_PLATE.V && oldVal && oldVal !== matClsEnum.STEEL_PLATE.V) {
+      nameArr.value = []
+      form.list = []
+    }
+    if (val && oldVal) {
+      form.classifyIds = []
+    }
+  }
+)
 
 function addProcess() {
   form.list.push({
@@ -140,7 +190,7 @@ function checkName(item, index) {
 
 CRUD.HOOK.beforeSubmit = () => {
   form.auxiliarySerialNumberList = []
-  form.list.map(v => {
+  form.list.map((v) => {
     form.auxiliarySerialNumberList.push(v.serialNumber)
   })
 }
@@ -156,6 +206,18 @@ CRUD.HOOK.beforeToEdit = () => {
       serialNumber: v.serialNumber,
       index: index
     })
+  })
+}
+CRUD.HOOK.beforeToCU = () => {
+  nextTick(() => {
+    disabledClassifyIds.value = deepClone(props.boundAllClassifyIds)
+    form.classifyIds &&
+      form.classifyIds.forEach((v) => {
+        const _index = disabledClassifyIds.value.indexOf(v)
+        if (_index !== -1) {
+          disabledClassifyIds.value.splice(_index, 1)
+        }
+      })
   })
 }
 </script>

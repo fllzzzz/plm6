@@ -27,6 +27,14 @@
         label="类型名称"
         min-width="150"
       />
+       <el-table-column
+        v-if="columns.visible('classifyNames')"
+        key="classifyNames"
+        prop="classifyNames"
+        :show-overflow-tooltip="true"
+        label="辅材科目"
+        min-width="260"
+      />
       <el-table-column
         v-if="columns.visible('auxiliarySerialNumberList')"
         key="auxiliarySerialNumberList"
@@ -68,14 +76,14 @@
     </common-table>
     <!--分页组件-->
     <pagination />
-    <mForm />
+    <mForm :boundAllClassifyIds="boundAllClassifyIds" />
   </div>
 </template>
 
 <script setup>
 import crudApi from '@/api/config/system-config/auxiliary-material-config'
 import { ref } from 'vue'
-
+import { matClsEnum } from '@enum-ms/classification'
 import { auxiliaryMaterialConfigPM as permission } from '@/page-permission/config'
 import checkPermission from '@/utils/system/check-permission'
 import useMaxHeight from '@compos/use-max-height'
@@ -110,10 +118,15 @@ const { maxHeight } = useMaxHeight({
   paginate: true,
   extraHeight: 40
 })
-
+const boundAllClassifyIds = ref([])
 CRUD.HOOK.handleRefresh = (crud, { data }) => {
+  boundAllClassifyIds.value = []
   data.content.forEach((v) => {
     v.list = v.auxiliarySerialNumberList
+    v.classifyIds = v.boundFinalClassifyIds
+    v.classifyNames = v.classifyLinks.map(v => v.classifyName).join('、')
+    v.basicClass = matClsEnum.MATERIAL.V
+    boundAllClassifyIds.value = boundAllClassifyIds.value.concat(v.boundFinalClassifyIds)
   })
 }
 </script>

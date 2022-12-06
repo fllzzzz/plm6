@@ -11,7 +11,7 @@
       style="width: 100%"
     >
       <el-table-column label="序号" type="index" align="center" width="60" />
-      <el-table-column prop="steelName" label="类别" align="center" />
+      <el-table-column prop="auxiliaryName" label="类别" align="center" />
       <el-table-column prop="unitPrice" label="单价（元）" align="center" />
       <!--编辑与删除-->
       <el-table-column v-permission="[...permission.edit, ...permission.del]" label="操作" width="130px" align="center" fixed="right">
@@ -60,7 +60,7 @@ const { maxHeight } = useMaxHeight()
 
 CRUD.HOOK.handleRefresh = (crud, res) => {
   res.data.content = res.data.content.map((v) => {
-    v.id = v.steelId
+    v.id = v.auxiliaryId
     return v
   })
 }

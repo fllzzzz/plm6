@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <div style="display: flex">
-      <div style="width: 60%">
+      <div style="width: 50%">
         <div class="head-container">
           <mHeader />
         </div>
@@ -72,6 +72,7 @@
             prop="completeQuantity"
             :show-overflow-tooltip="true"
             label="实际完成（件/kg）"
+            width="130px"
           >
             <template v-slot="scope">
               <span>{{ scope.row.completeQuantity }}/{{ scope.row.completeMete.toFixed(DP.COM_WT__KG) }}</span>
@@ -106,7 +107,7 @@
         <pagination />
       </div>
       <div style="border-right: 1px solid #ededed; margin: 0 20px; height: calc(100vh - 130px)"></div>
-      <div style="width: 38%">
+      <div style="width: 48%">
         <process-detail :process-list="processList" />
       </div>
     </div>
