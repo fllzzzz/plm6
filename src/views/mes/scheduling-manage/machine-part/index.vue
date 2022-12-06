@@ -4,8 +4,8 @@
       <project-list ref="projectListRef" :maxHeight="maxHeight" @project-click="handleProjectClick" />
     </div>
     <div class="wrap-right">
-      <el-tag v-if="!crud.query?.projectIds?.length" type="info" size="medium"> * 请先选择项目，进行零件排产 </el-tag>
-      <template v-else>
+      <el-tag v-show="!crud.query?.projectIds?.length" type="info" size="medium"> * 请先选择项目，进行零件排产 </el-tag>
+      <div v-show="crud.query?.projectIds?.length">
         <div class="head-container">
           <mHeader ref="headRef" @load="load">
             <template #optLeft>
@@ -105,11 +105,10 @@ class="ellipsis-text text"
         </div>
         <m-preview
           v-model:visible="previewVisible"
-          :artifactDateTime="artifactDateTime"
           :list="checkedNodes"
           @success="handleSaveSuccess"
         ></m-preview>
-      </template>
+      </div>
     </div>
   </div>
 </template>
@@ -149,7 +148,7 @@ const { crud, CRUD } = useCRUD(
     crudApi: { ...crudApi },
     queryOnPresenterCreated: false,
     hasPagination: false,
-    requiredQuery: ['month', 'material', 'projectIds', 'thick']
+    requiredQuery: ['monthList', 'material', 'projectIds', 'thick']
   },
   tableRef
 )
@@ -158,10 +157,6 @@ const { maxHeight } = useMaxHeight()
 
 const boardList = ref([])
 const summaryInfo = ref({ totalNetWeight: 0, quantity: 0 })
-
-const artifactDateTime = computed(() => {
-  return projectListRef?.value?.artifactDateTime
-})
 
 CRUD.HOOK.handleRefresh = (crud, res) => {
   clearCheck()
@@ -242,9 +237,8 @@ CRUD.HOOK.afterRefresh = () => {
 
 // --------------------------- end --------------------------------
 
-function handleProjectClick(val, time, month) {
-  crud.query.dateTime = time
-  crud.query.month = month
+function handleProjectClick(val, month) {
+  crud.query.monthList = month
   crud.query.projectIds = cleanArray(val).map((v) => v.projectId)
   nextTick(() => {
     headRef.value?.refreshConditions()

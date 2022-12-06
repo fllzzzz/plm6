@@ -1,5 +1,5 @@
 <template>
-  <common-dialog title="套料明细" v-model="dialogVisible" width="1400px" :before-close="handleClose">
+  <common-dialog title="套料明细" customClass="nesting-record-detail-dlg" v-model="dialogVisible" width="1400px" :before-close="handleClose">
     <common-table v-loading="tableLoading" :data="list" :data-format="dataFormat" :max-height="maxHeight" style="width: 100%">
       <el-table-column label="序号" type="index" align="center" width="60" />
       <el-table-column :show-overflow-tooltip="true" label="所属项目>单体>区域" min-width="180px" align="left">
@@ -76,6 +76,7 @@ const props = defineProps({
 const { visible: dialogVisible, handleClose } = useVisible({ emit, props, field: 'visible', showHook: fetch })
 const { maxHeight } = useMaxHeight(
   {
+    mainBox: '.nesting-record-detail-dlg',
     extraBox: ['.el-dialog__header'],
     wrapperBox: ['.el-dialog__body'],
     clientHRepMainH: true,
