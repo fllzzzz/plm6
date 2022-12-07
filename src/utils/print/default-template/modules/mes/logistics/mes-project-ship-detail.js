@@ -102,6 +102,7 @@ const mesProjectShipDetail = {
      * @param {*} format 格式转换
      */
     fields: [ // 字段内容
+      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'name', title: '项目名称：', align: alignEnum.LEFT.V, minWidth: 180, type: typeEnum.OTHER.K },
       { show: false, source: dataSourceEnum.SYSTEM.V, key: 'printDate', title: '打印时间：', width: 150, type: typeEnum.DATE.K, format: 'YY/MM/DD kk:mm:ss' },
       { show: false, source: dataSourceEnum.SYSTEM.V, key: 'printer', title: '打印人：', width: 40, type: typeEnum.USER_NAME.K }
     ]
@@ -198,6 +199,7 @@ const mesProjectShipDetail = {
      * @param {boolean} sum 列需要合计
      */
     fields: [
+      { show: true, key: 'workshopName', title: '车间', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 16, type: typeEnum.WORKSHOP.K },
       { show: true, key: 'monomerName', title: '单体', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 16, type: typeEnum.STRUCTURE_NAME.K },
       { show: true, key: 'areaName', title: '区域', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 16, type: typeEnum.STRUCTURE_NAME.K },
       { show: true, key: 'serialNumber', title: '编号', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 16, type: typeEnum.SERIAL_NUMBER.K },
