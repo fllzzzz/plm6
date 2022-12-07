@@ -408,6 +408,106 @@ export default {
       ]
     },
     {
+      path: '/bridge/production-config',
+      component: 'Layout',
+      hidden: false,
+      name: 'BridgeProductionConfig',
+      alwaysShow: false,
+      redirect: '/bridge/production-config/factory-and-workshop',
+      meta: { title: '桥梁-生产配置', icon: 'project', noCache: true },
+      children: [
+        {
+          path: 'bridge-characteristics-config',
+          component: '',
+          hidden: false,
+          name: 'BridgeCharacteristicsConfig',
+          alwaysShow: true,
+          redirect: '/bridge/production-config/bridge-characteristics-config/artifact-config',
+          meta: { title: '分段单元定义', icon: 'project', noCache: true },
+          children: [
+            {
+              name: 'BoxConfig',
+              path: 'box-config',
+              hidden: false,
+              component: '/bridge/bridge-production-config/bridge-characteristics-config/box-config/index',
+              meta: { title: '分段特征定义', icon: 'project', noCache: true }
+            },
+            {
+              name: 'CellConfig',
+              path: 'cell-config',
+              hidden: false,
+              component: '/bridge/bridge-production-config/bridge-characteristics-config/cell-config/index',
+              meta: { title: '单元特征定义', icon: 'project', noCache: true }
+            }
+          ]
+        },
+        {
+          path: 'bridge-process-config',
+          component: '',
+          hidden: false,
+          name: 'BridgeProcessConfig',
+          alwaysShow: true,
+          redirect: '/bridge/production-config/bridge-process-config/bridge-process',
+          meta: { title: '生产工序定义', icon: 'project', noCache: true },
+          children: [
+            {
+              name: 'BridgeConfigProcess',
+              path: 'bridge-process',
+              hidden: false,
+              component: '/bridge/bridge-production-config/process/index',
+              meta: { title: '工序配置', icon: 'project', noCache: true }
+            },
+            {
+              name: 'BridgeConfigBoxProductProcess',
+              path: 'box-product-process',
+              hidden: false,
+              component: '/bridge/bridge-production-config/product-process/box/index',
+              meta: { title: '箱体工序定义', icon: 'project', noCache: true }
+            },
+            {
+              name: 'BridgeConfigCellProductProcess',
+              path: 'cell-product-process',
+              hidden: false,
+              component: '/bridge/bridge-production-config/product-process/cell/index',
+              meta: { title: '单元工序定义', icon: 'project', noCache: true }
+            },
+            {
+              name: 'BridgeConfigPartProductProcess',
+              path: 'bridge-part-product-process',
+              hidden: false,
+              component: '/bridge/bridge-production-config/product-process/machine-part/index',
+              meta: { title: '零件工序定义', icon: 'project', noCache: true }
+            }
+          ]
+        },
+        {
+          path: 'bridge-production-line-config',
+          component: '',
+          hidden: false,
+          name: 'BridgeProductionLineConfig',
+          alwaysShow: true,
+          redirect: '/bridge/production-config/bridge-production-line-config/bridge-production-line',
+          meta: { title: '生产线配置', icon: 'project', noCache: true },
+          children: [
+            {
+              name: 'BridgeConfigProductionLine',
+              path: 'bridge-production-line',
+              hidden: false,
+              component: '/bridge/bridge-production-config/production-line/index',
+              meta: { title: '生产线管理', icon: 'project', noCache: true }
+            },
+            {
+              name: 'BridgeConfigInspectionMode',
+              path: 'bridge-inspection-mode',
+              hidden: false,
+              component: '/bridge/bridge-production-config/inspection-mode/index',
+              meta: { title: '报检方式', icon: 'project', noCache: true }
+            }
+          ]
+        }
+      ]
+    },
+    {
       path: '/contract/enclosure-config',
       component: 'Layout',
       hidden: false,

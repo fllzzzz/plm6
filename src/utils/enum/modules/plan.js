@@ -70,6 +70,14 @@ const deepenTypeEnum = {
 }
 constantize(deepenTypeEnum)
 
+// 桥梁深化图纸类型
+const bridgeDeepenTypeEnum = {
+  BOX: { L: '分段', K: 'BOX', V: 1 << 0 },
+  CELL: { L: '单元', K: 'CELL', V: 1 << 1 },
+  PART: { L: '零件', K: 'PART', V: 1 << 2 }
+}
+constantize(bridgeDeepenTypeEnum)
+
 // 技术资料类型
 const technicalDataTypeEnum = {
   DEEPEN: { L: '深化图', K: 'DEEPEN', V: 1 << 0 },
@@ -138,6 +146,7 @@ export {
   serialNumChangeTypeEnum,
   preparationRangeEnum, // 备料范围（类型）
   preparationStatusEnum, // 备料状态
+  bridgeDeepenTypeEnum,
   paintTypeEnum
 }
 
@@ -156,5 +165,6 @@ export default {
   serialNumChangeTypeEnum,
   preparationRangeEnum, // 备料范围（类型）
   preparationStatusEnum, // 备料状态
+  bridgeDeepenTypeEnum,
   paintTypeEnum
 }

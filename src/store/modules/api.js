@@ -30,7 +30,8 @@ const state = {
     mes: `/api/mes/building/`,
     system: `/api/`,
     cost: `/api/`,
-    scm: `/api/scm/`
+    scm: `/api/scm/`,
+    bridge: '/api/bridge/'
   }
 }
 
