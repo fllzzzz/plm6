@@ -19,7 +19,8 @@
           areaClearable
           areaMultiple
           :project-id="query.projectId"
-          @change="fetchOtherCondition"
+          @monomerChange="fetchOtherCondition"
+          @areaChange="crud.toQuery"
         />
       </el-form-item>
       <el-form-item label="生产模式" class="form-label-require">
@@ -213,7 +214,10 @@ watchEffect(() => {
   } else {
     assembleList.value =
       conditionInfo.value[artifactProductLineEnum.INTELLECT.V]?.map((v) => {
-        v.label = `【${v.definitionWord}】${v.classificationName}`
+        v.id = v.ids.join(',')
+        v.structureNameDTOS.map(k => {
+          v.label = v.label ? v.label + ` -【${k.definitionWord}】${k.classificationName}` : `【${k.definitionWord}】${k.classificationName}`
+        })
         return v
       }) || []
     assemblePropertyList.value = []
@@ -233,6 +237,7 @@ function handleProductionLineTypeChange(val) {
 }
 
 async function fetchOtherCondition() {
+  conditionInfo.value = {}
   if (!query.projectId || !query.monomerId) return
   try {
     conditionInfo.value = {}
