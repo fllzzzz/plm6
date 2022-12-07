@@ -4,7 +4,7 @@ import request from '@/utils/request'
 export function getRivetWeld(params) {
   return request({
     module: 'bridge',
-    url: 'rivetWeld/artifact/type',
+    url: 'rivetWeld/box/type',
     method: 'get',
     params
   })
@@ -24,7 +24,7 @@ export function getProcess(params) {
 export function getArtifactProcess(params) {
   return request({
     module: 'bridge',
-    url: 'productProcess/artifact/list',
+    url: 'productProcess/box/list',
     method: 'get',
     params
   })

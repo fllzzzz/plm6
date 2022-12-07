@@ -3,7 +3,7 @@ import request from '@/utils/request'
 export function get(params) {
   return request({
     module: 'bridge',
-    url: 'rivetWeld/artifact/type',
+    url: 'rivetWeld/box/type',
     method: 'get',
     params
   })
@@ -12,7 +12,7 @@ export function get(params) {
 export function add(data) {
   return request({
     module: 'bridge',
-    url: 'rivetWeld/artifact/type',
+    url: 'rivetWeld/box/type',
     method: 'post',
     data
   })
@@ -21,7 +21,7 @@ export function add(data) {
 export function edit(data) {
   return request({
     module: 'bridge',
-    url: 'rivetWeld/artifact/type',
+    url: 'rivetWeld/box/type',
     method: 'put',
     data
   })
@@ -30,7 +30,7 @@ export function edit(data) {
 export function del(ids) {
   return request({
     module: 'bridge',
-    url: 'rivetWeld/artifact/type',
+    url: 'rivetWeld/box/type',
     method: 'delete',
     data: ids
   })

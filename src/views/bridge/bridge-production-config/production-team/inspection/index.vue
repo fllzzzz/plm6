@@ -80,7 +80,7 @@
 </template>
 
 <script setup>
-import crudApi from '@/api/mes/production-config/production-line-inspection'
+import crudApi from '@/api/bridge/production-config/production-line-inspection'
 import { defineExpose, ref } from 'vue'
 import { useStore } from 'vuex'
 

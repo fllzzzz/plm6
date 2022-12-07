@@ -4,7 +4,7 @@ import request from '@/utils/request'
 
 export function get(params) {
   return request({
-    module: 'mes',
+    module: 'bridge',
     url: 'cut/list/laying',
     method: 'get',
     params
@@ -13,7 +13,7 @@ export function get(params) {
 
 export function add(data) {
   return request({
-    module: 'mes',
+    module: 'bridge',
     url: 'cut/list/laying',
     method: 'post',
     data
@@ -21,7 +21,7 @@ export function add(data) {
 }
 export function edit(data) {
   return request({
-    module: 'mes',
+    module: 'bridge',
     url: 'cut/list/laying',
     method: 'put',
     data
@@ -29,7 +29,7 @@ export function edit(data) {
 }
 export function del(ids) {
   return request({
-    module: 'mes',
+    module: 'bridge',
     url: 'cut/list/laying',
     method: 'delete',
     data: ids
@@ -37,7 +37,7 @@ export function del(ids) {
 }
 // export function batchUnloadingAdd(data) {
 //   return request({
-//     module: 'mes',
+//     module: 'bridge',
 //     url: 'cut/list/laying',
 //     method: 'post',
 //     data
@@ -45,7 +45,7 @@ export function del(ids) {
 // }
 // export function batchUnloading() {
 //   return request({
-//     module: 'mes',
+//     module: 'bridge',
 //     url: 'cut/list/laying',
 //     method: 'get'
 //   })
@@ -53,7 +53,7 @@ export function del(ids) {
 
 export function addCutConfigDetail(data) {
   return request({
-    module: 'mes',
+    module: 'bridge',
     url: 'cut/detail',
     method: 'post',
     data
@@ -62,7 +62,7 @@ export function addCutConfigDetail(data) {
 
 export function editCutConfigDetail(data) {
   return request({
-    module: 'mes',
+    module: 'bridge',
     url: 'cut/detail',
     method: 'put',
     data
@@ -71,7 +71,7 @@ export function editCutConfigDetail(data) {
 
 export function delCutConfigDetail(ids) {
   return request({
-    module: 'mes',
+    module: 'bridge',
     url: 'cut/detail',
     method: 'delete',
     data: ids
