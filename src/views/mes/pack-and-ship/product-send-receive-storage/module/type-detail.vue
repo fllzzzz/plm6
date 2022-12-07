@@ -92,6 +92,9 @@ const props = defineProps({
   detailQuery: {
     type: Object,
     default: () => {}
+  },
+  workshopId: {
+    type: Number
   }
 })
 
@@ -158,7 +161,7 @@ async function fetchList() {
   let _list = []
   tableLoading.value = true
   try {
-    const { content = [], totalElements } = await artifactProductDetail({ ...props.detailQuery, ...queryPage, ...query.value, type: productSearchTypeEnum[props.showType].V })
+    const { content = [], totalElements } = await artifactProductDetail({ ...props.detailQuery, workshopId: props.workshopId, ...queryPage, ...query.value, type: productSearchTypeEnum[props.showType].V })
     _list = content
     setTotalPage(totalElements)
   } catch (error) {

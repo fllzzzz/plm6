@@ -50,7 +50,7 @@
       </el-table-column>
     </common-table>
     <pagination />
-    <component :is="showComponent" :showType="showType" v-model="detailVisible" :detailQuery="detailQuery" :detailInfo="currentRow" :permission="permission"/>
+    <component :is="showComponent" :showType="showType" v-model="detailVisible" :detailQuery="detailQuery" :workshopId="crud.query.workshopId" :detailInfo="currentRow" :permission="permission"/>
   </div>
 </template>
 
