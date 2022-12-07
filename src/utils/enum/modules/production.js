@@ -23,14 +23,36 @@ const problemTypeEnum = {
 }
 constantize(problemTypeEnum)
 
+// 生产订单排期状态
+const scheduleStatusEnum = {
+  NOT: { L: '未排期', K: 'NOT', V: 1 << 0 },
+  PART: { L: '部分排期', K: 'PART', V: 1 << 1 },
+  COMPLETED: { L: '排期完毕', K: 'COMPLETED', V: 1 << 2 }
+}
+constantize(scheduleStatusEnum)
+
+// 生产订单 月份
+const monthNumEnum = {
+  ONE: { L: '最近一个月交货', K: 'ONE', V: 1 },
+  TWO: { L: '最近二个月交货', K: 'TWO', V: 2 },
+  THREE: { L: '最近三个月交货', K: 'THREE', V: 3 },
+  SIX: { L: '最近半年交货', K: 'SIX', V: 6 },
+  TWELVE: { L: '最近一年交货', K: 'TWELVE', V: 12 }
+}
+constantize(monthNumEnum)
+
 export {
   manufactureTypeEnum,
   processingColorsEnum,
+  scheduleStatusEnum,
+  monthNumEnum,
   problemTypeEnum
 }
 
 export default {
   manufactureTypeEnum,
   processingColorsEnum,
+  scheduleStatusEnum,
+  monthNumEnum,
   problemTypeEnum
 }

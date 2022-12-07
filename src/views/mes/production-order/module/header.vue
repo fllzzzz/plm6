@@ -55,7 +55,7 @@ import { regHeader } from '@compos/use-crud'
 import { productionOrderSummary } from '@/api/mes/production-order-manage/production-order'
 
 import checkPermission from '@/utils/system/check-permission'
-import { scheduleStatusEnum, monthNumEnum } from '@enum-ms/mes'
+import { scheduleStatusEnum, monthNumEnum } from '@enum-ms/production'
 import { DP } from '@/settings/config'
 
 import Panel from '@/components/Panel'
