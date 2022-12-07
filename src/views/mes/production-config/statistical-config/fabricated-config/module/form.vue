@@ -12,7 +12,7 @@
     </template>
     <el-form ref="formRef" :model="form" :rules="rules" size="small" label-width="110px">
       <el-form-item label="类别">
-        <span>{{ form.steelName }}</span>
+        <span>{{ form.auxiliaryName }}</span>
       </el-form-item>
       <el-form-item label="单价（元）" prop="unitPrice">
         <common-input-number
