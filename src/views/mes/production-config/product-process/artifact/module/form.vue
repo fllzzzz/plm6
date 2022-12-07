@@ -24,6 +24,7 @@
                 :size="'small'"
                 :multiple="false"
                 :clearable="true"
+                :productionLineTypeEnum="form.productionLineTypeEnum"
                 :product-type="processProType"
                 style="width: 180px"
                 class="input-underline"

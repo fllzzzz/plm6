@@ -46,7 +46,12 @@
                   :disabled="!currentGroup.name"
                   size="mini"
                   type="enum"
-                  :unshowVal="currentLine.productType & componentTypeEnum.MACHINE_PART.V ? [teamTypeEnum.INSPECTION.V] : []"
+                  :unshowVal="
+                    currentLine.productType & componentTypeEnum.MACHINE_PART.V ||
+                    currentLine.productionLineTypeEnum & artifactProductLineEnum.INTELLECT.V
+                      ? [teamTypeEnum.INSPECTION.V]
+                      : []
+                  "
                   :options="teamTypeEnum.ENUM"
                 />
                 <el-tooltip v-if="currentGroup.name" class="item" :content="`${currentGroup.name}`" placement="top">
@@ -105,7 +110,7 @@
 <script setup>
 import { provide, ref } from 'vue'
 
-import { teamTypeEnum, componentTypeEnum } from '@enum-ms/mes'
+import { teamTypeEnum, componentTypeEnum, artifactProductLineEnum } from '@enum-ms/mes'
 import checkPermission from '@/utils/system/check-permission'
 import { configProductionLineGroupPM as permission } from '@/page-permission/config'
 

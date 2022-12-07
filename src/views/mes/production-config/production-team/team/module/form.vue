@@ -20,16 +20,12 @@
           v-model="form.processId"
           containsMachinePart
           :disabled="isEdit"
+          :productionLineTypeEnum="crud.query.productionLineTypeEnum"
           :size="'small'"
           :multiple="false"
           style="width: 270px"
           @change="processChange"
         />
-      </el-form-item>
-      <el-form-item v-if="componentTypeEnum.ARTIFACT.V === productType" label="生产线类型" prop="productionLineTypeEnum">
-        <el-select v-model="form.productionLineTypeEnum" placeholder="请选择生产线类型" :size="'small'" style="width: 270px" :disabled="isEdit">
-          <el-option v-for="item in artifactProductLineEnum.ENUM" :key="item.V" :label="item.L" :value="item.V" />
-        </el-select>
       </el-form-item>
       <!-- <el-form-item label="班组属性" prop="organizationType">
         <el-select v-model="form.organizationType" placeholder="请选择班组属性" :size="'small'" style="width: 270px" :disabled="isEdit">
@@ -77,7 +73,7 @@ import processSelect from '@comp-mes/process-select'
 import userSelect from '@comp-common/user-select'
 // import { wageQuotaTypeMap } from '@/settings/config'
 // import { whetherEnum } from '@enum-ms/common'
-import { teamAttributeEnum, artifactProductLineEnum, componentTypeEnum } from '@enum-ms/mes'
+import { teamAttributeEnum } from '@enum-ms/mes'
 // import EO from '@enum'
 
 const formRef = ref()
@@ -91,7 +87,6 @@ const defaultForm = {
   processId: undefined,
   leaderId: undefined,
   organizationType: teamAttributeEnum.IN_STAFF.V,
-  productionLineTypeEnum: artifactProductLineEnum.TRADITION.V,
   // boolExtraCountEnum: false,
   memberIds: []
 }
@@ -103,7 +98,6 @@ const rules = {
   factoryId: [{ required: true, message: '请选择工厂', trigger: 'change' }],
   processId: [{ required: true, message: '请选择工序', trigger: 'change' }],
   // organizationType: [{ required: true, message: '请选择班组属性', trigger: 'change' }],
-  productionLineTypeEnum: [{ required: true, message: '请选择生产线类型', trigger: 'change' }],
   leaderId: [{ required: true, message: '请选择组长', trigger: 'change' }],
   memberIds: [{ required: true, message: '请选择组员', trigger: 'change' }]
   // boolExtraCountEnum: [{ required: true, message: '请选择工资是否单列', trigger: 'change', type: 'boolean' }],

@@ -70,14 +70,7 @@
           {{ artifactProductLineEnum.VL[scope.row.productionLineTypeEnum] }}
         </template>
       </el-table-column> -->
-      <el-table-column
-        v-if="columns.visible('productType')"
-        key="productType"
-        prop="productType"
-        label="类型"
-        align="center"
-        width="100px"
-      >
+      <el-table-column v-if="columns.visible('productType')" key="productType" prop="productType" label="类型" align="center" width="100px">
         <template v-slot="scope">
           <span>{{ componentTypeEnum.VL[scope.row.productType] }}</span>
         </template>
@@ -124,7 +117,7 @@
 
 <script setup>
 import crudApi from '@/api/mes/production-config/production-line-team'
-import { defineExpose, ref } from 'vue'
+import { defineExpose, defineProps, watch, ref } from 'vue'
 import { useStore } from 'vuex'
 import { componentTypeEnum, artifactProductLineEnum, wageQuotaTypeEnum } from '@enum-ms/mes'
 // import { whetherEnum } from '@enum-ms/common'
@@ -137,6 +130,13 @@ import udOperation from '@crud/UD.operation'
 import pagination from '@crud/Pagination'
 import mHeader from './module/header'
 import mForm from './module/form'
+
+const props = defineProps({
+  productionLineTypeEnum: {
+    type: Number,
+    default: undefined
+  }
+})
 
 const dataFormat = [['wageQuotaType', ['parse-enum', wageQuotaTypeEnum, { f: 'SL', extra: '计价' }]]]
 const store = useStore()
@@ -154,6 +154,15 @@ const { crud, columns, CRUD } = useCRUD(
 )
 
 const { maxHeight } = useMaxHeight({ paginate: true })
+
+watch(
+  () => props.productionLineTypeEnum,
+  (val) => {
+    crud.query.productionLineTypeEnum = val
+    crud.toQuery()
+  },
+  { immediate: true }
+)
 
 CRUD.HOOK.handleRefresh = (crud, res) => {
   res.data.content = res.data.content.map((v) => {
@@ -206,6 +215,7 @@ CRUD.HOOK.beforeSubmit = () => {
     }
   }
   crud.form.userLinks = userList
+  crud.form.productionLineTypeEnum = props.productionLineTypeEnum
 }
 
 // 编辑之后 取消缓存的已加载设置

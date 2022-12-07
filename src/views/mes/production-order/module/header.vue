@@ -64,7 +64,7 @@ import rrOperation from '@crud/RR.operation'
 
 const defaultQuery = {
   status: undefined,
-  year: new Date().getTime(),
+  year: new Date().getTime().toString(),
   month: undefined
 }
 const { crud, query } = regHeader(defaultQuery)
