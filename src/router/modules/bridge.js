@@ -160,6 +160,32 @@ export default {
       ]
     },
     {
+      path: '/bridge/production-order-manage',
+      component: 'Layout',
+      hidden: false,
+      name: 'BridgeProductionOrderManage',
+      alwaysShow: false,
+      redirect: '/bridge/production-order-manage/production-order',
+      meta: {
+        title: '生产排期管理',
+        icon: 'project',
+        noCache: true
+      },
+      children: [
+        {
+          name: 'BridgeProductionOrder',
+          path: 'production-order',
+          hidden: false,
+          component: '/bridge/production-order/index',
+          meta: {
+            title: '生产排期',
+            icon: 'project',
+            noCache: true
+          }
+        }
+      ]
+    },
+    {
       path: '/bridge/task-tracking',
       component: 'Layout',
       hidden: false,
