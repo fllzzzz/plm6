@@ -2,8 +2,7 @@ import request from '@/utils/request'
 
 export function get(params) {
   return request({
-    module: 'bridge',
-    url: 'tech-element',
+    url: '/api/bridge/tech-element',
     method: 'get',
     params
   })
@@ -25,8 +24,7 @@ export function get(params) {
 // 获取分段对应的单元
 export function cellPartDetail(params) {
   return request({
-    module: 'bridge',
-    url: 'tech-machinePart',
+    url: '/api/bridge/tech-machinePart',
     method: 'get',
     params
   })

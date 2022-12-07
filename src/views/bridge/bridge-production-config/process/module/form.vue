@@ -94,7 +94,7 @@
 
 <script setup>
 import { computed, ref } from 'vue'
-import { processMaterialListTypeEnum as typeEnum, processCategoryEnum } from '@enum-ms/mes'
+import { bridgeProcessTypeEnum as typeEnum, bridgeProcessCategoryEnum as processCategoryEnum } from '@enum-ms/bridge'
 
 import { regForm } from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
@@ -103,7 +103,7 @@ import useTableValidate from '@compos/form/use-table-validate'
 import SvgIcon from '@comp/SvgIcon/index.vue'
 
 const defaultForm = {
-  productType: typeEnum.ARTIFACT.V, // 工序类型
+  productType: typeEnum.BOX.V, // 工序类型
   list: [] // 具体工序列表
 }
 
@@ -113,9 +113,9 @@ const defaultRow = {
 }
 
 const pcByProductTypeEnum = computed(() => {
-  if (form.productType & typeEnum.ARTIFACT.V) {
+  if (form.productType & typeEnum.BOX.V) {
     return [processCategoryEnum.ASSEMBLY_RIVETING_WELDING, processCategoryEnum.PAINT]
-  } else if (form.productType & typeEnum.ASSEMBLE.V) {
+  } else if (form.productType & typeEnum.CELL.V) {
     return [processCategoryEnum.ASSEMBLY_RIVETING_WELDING]
   } else if (form.productType & typeEnum.MACHINE_PART.V) {
     return [processCategoryEnum.DRILL_HOLE, processCategoryEnum.MAKINGS]
