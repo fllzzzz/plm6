@@ -79,7 +79,7 @@ import crudApi from '@/api/mes/production-order-manage/production-order'
 import { ref } from 'vue'
 
 import { parseTime } from '@/utils/date'
-import { scheduleStatusEnum } from '@enum-ms/mes'
+import { scheduleStatusEnum } from '@enum-ms/production'
 import { DP } from '@/settings/config'
 import { mesProductionOrderPM as permission } from '@/page-permission/mes'
 import checkPermission from '@/utils/system/check-permission'
