@@ -150,7 +150,25 @@ export const showProjectSearch = [
   { component: '/bridge/bridge-plan/cell-part-list/index', type: pt.BRIDGE.V, required: true },
   { component: '/bridge/bridge-plan/list-summary/box-summary/index', type: pt.BRIDGE.V, required: true },
   { component: '/bridge/bridge-plan/list-summary/cell-summary/index', type: pt.BRIDGE.V, required: true },
-  { component: '/bridge/bridge-plan/list-summary/part-summary/index', type: pt.BRIDGE.V, required: true }
+  { component: '/bridge/bridge-plan/list-summary/part-summary/index', type: pt.BRIDGE.V, required: true },
+  { component: '/bridge/task-tracking/assistance-operate/productionLine-assistance/index', type: pt.BRIDGE.V, required: false },
+  { component: '/bridge/task-tracking/assistance-operate/process-assistance/index', type: pt.BRIDGE.V, required: false },
+  { component: '/bridge/production-manage/dashboard/project-dashboard/index', type: pt.BRIDGE.V, required: true },
+  { component: '/bridge/production-manage/dashboard/main-material-track/index', type: pt.BRIDGE.V, required: true },
+  { component: '/bridge/production-manage/dashboard/production-dashboard/index', type: pt.BRIDGE.V, required: true },
+  { component: '/bridge/production-manage/dashboard/assembly-match/index', type: pt.BRIDGE.V, required: true },
+  { component: '/bridge/production-manage/dashboard/painting/index', type: pt.BRIDGE.V, required: true },
+  { component: '/bridge/QHSE-manage/disclosure/index', type: pt.BRIDGE.V, required: false },
+  { component: '/bridge/QHSE-manage/quality-inspection-report/index', type: pt.BRIDGE.V, required: false },
+  { component: '/bridge/label-print/box/index', type: pt.BRIDGE.V, required: true },
+  { component: '/bridge/label-print/single-element/index', type: pt.BRIDGE.V, required: true },
+  { component: '/bridge/label-print/auxiliary-material/index', type: pt.BRIDGE.V, required: true },
+  { component: '/bridge/pack-and-ship/manual-pack/index', type: pt.BRIDGE.V, required: true },
+  { component: '/bridge/pack-and-ship/pack-list/index', type: pt.BRIDGE.V, required: false },
+  { component: '/bridge/pack-and-ship/ship-list/index', type: pt.BRIDGE.V, required: false },
+  { component: '/bridge/pack-and-ship/receipt-status/index', type: pt.BRIDGE.V, required: false },
+  { component: '/bridge/pack-and-ship/logistics-list/index', type: pt.BRIDGE.V, required: false },
+  { component: '/bridge/pack-and-ship/ship-audit/index', type: pt.BRIDGE.V, required: false }
   // { component: '/supply-chain/purchase-order/index', type: allPT, required: false },
   // { component: '/supply-chain/logistics-order/index', type: allPT, required: false }
 
