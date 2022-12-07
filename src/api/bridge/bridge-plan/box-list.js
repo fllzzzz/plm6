@@ -50,8 +50,7 @@ export function listUpload(data) {
  */
 export function downloadBoxCell(params) {
   return request({
-    module: 'bridge',
-    url: 'tech-box/export',
+    url: '/api/bridge/tech-box/export',
     responseType: 'blob',
     method: 'get',
     params
@@ -63,8 +62,7 @@ export function downloadBoxCell(params) {
  */
 export function downloadBoxCellTemplate() {
   return request({
-    module: 'bridge',
-    url: 'tech-box/template-export',
+    url: '/api/bridge/tech-box/template-export',
     responseType: 'blob',
     method: 'get'
   })
@@ -73,8 +71,7 @@ export function downloadBoxCellTemplate() {
 // 获取分段对应的单元
 export function boxCellDetail(params) {
   return request({
-    module: 'bridge',
-    url: 'tech-element/listByBoxId',
+    url: '/api/bridge/tech-element/listByBoxId',
     method: 'get',
     params
   })
@@ -83,8 +80,7 @@ export function boxCellDetail(params) {
 // 按区域一键清空
 export function delBoxCellByArea(params) {
   return request({
-    module: 'bridge',
-    url: 'tech-box/clear-by-areaId',
+    url: '/api/bridge/tech-box/clear-by-areaId',
     method: 'delete',
     params
   })
