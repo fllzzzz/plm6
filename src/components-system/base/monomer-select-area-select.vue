@@ -36,7 +36,7 @@ import { convertProductType } from '@/utils/mes/convert-product-type'
 
 import monomerSelect from '@/components-system/plan/monomer-select'
 
-const emit = defineEmits(['change', 'update:monomerId', 'update:areaId'])
+const emit = defineEmits(['change', 'update:monomerId', 'update:areaId', 'monomerChange', 'areaChange'])
 const props = defineProps({
   monomerId: {
     type: [Number, String, undefined]
@@ -118,6 +118,7 @@ watch(
 
 function handleChange(val) {
   emit('update:areaId', copyAreaId.value)
+  emit('areaChange')
   emit('change', { monomerId: copyMonomerId.value, areaId: copyAreaId.value })
 }
 
@@ -128,6 +129,7 @@ function getAreaInfo(val, monomerValue) {
   }
   areaList.value = val || []
   emit('update:monomerId', monomerValue)
+  emit('monomerChange')
   emit('change', { monomerId: copyMonomerId.value })
 }
 

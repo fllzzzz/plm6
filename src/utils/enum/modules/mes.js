@@ -14,13 +14,6 @@ const teamAttributeEnum = {
 }
 constantize(teamAttributeEnum)
 
-// 工序类型
-const processTypeEnum = {
-  ONCE: { L: '一次工序', SL: '部件', K: 'ONCE', V: false },
-  TWICE: { L: '二次工序', SL: '构件', K: 'TWICE', V: true }
-}
-constantize(processTypeEnum)
-
 // 工序类
 const processCategoryEnum = {
   ASSEMBLY_RIVETING_WELDING: { L: '组铆焊类', K: 'ASSEMBLY_RIVETING_WELDING', V: 1 << 0 },
@@ -402,30 +395,12 @@ const partKeyWordEnum = {
 }
 constantize(partKeyWordEnum)
 
-// 生产订单排期状态
-const scheduleStatusEnum = {
-  NOT: { L: '未排期', K: 'NOT', V: 1 << 0 },
-  PART: { L: '部分排期', K: 'PART', V: 1 << 1 },
-  COMPLETED: { L: '排期完毕', K: 'COMPLETED', V: 1 << 2 }
-}
-constantize(scheduleStatusEnum)
-
 // 生产订单 零件是否有孔
 const hasHoleEnum = {
   TRUE: { L: '有孔', K: 'TRUE', V: true },
   FALSE: { L: '无孔', K: 'FALSE', V: false }
 }
 constantize(hasHoleEnum)
-
-// 生产订单 月份
-const monthNumEnum = {
-  ONE: { L: '最近一个月交货', K: 'ONE', V: 1 },
-  TWO: { L: '最近二个月交货', K: 'TWO', V: 2 },
-  THREE: { L: '最近三个月交货', K: 'THREE', V: 3 },
-  SIX: { L: '最近半年交货', K: 'SIX', V: 6 },
-  TWELVE: { L: '最近一年交货', K: 'TWELVE', V: 12 }
-}
-constantize(monthNumEnum)
 
 // 构件规格是否修正
 const artifactSpecReviseEnum = {
@@ -551,7 +526,6 @@ export {
   teamAttributeEnum,
   componentTypeEnum,
   processMaterialListTypeEnum,
-  processTypeEnum,
   processCategoryEnum,
   processInspectTypeEnum,
   processReportTypeEnum,
@@ -594,9 +568,7 @@ export {
   artifactTypeEnum,
   codingTypeEnum,
   partKeyWordEnum,
-  scheduleStatusEnum,
   hasHoleEnum,
-  monthNumEnum,
   artifactSpecReviseEnum,
   taskTrackingSchedulingStatusEnum,
   projectNestingStatusEnum,
@@ -622,7 +594,6 @@ export default {
   teamAttributeEnum,
   componentTypeEnum,
   processMaterialListTypeEnum,
-  processTypeEnum,
   processCategoryEnum,
   processInspectTypeEnum,
   processReportTypeEnum,
@@ -665,9 +636,7 @@ export default {
   artifactTypeEnum,
   codingTypeEnum,
   partKeyWordEnum,
-  scheduleStatusEnum,
   hasHoleEnum,
-  monthNumEnum,
   artifactSpecReviseEnum,
   taskTrackingSchedulingStatusEnum,
   projectNestingStatusEnum,

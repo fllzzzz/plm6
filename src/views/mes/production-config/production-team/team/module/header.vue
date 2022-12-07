@@ -1,7 +1,15 @@
 <template>
   <div v-show="crud.searchToggle">
     <slot name="teamType"></slot>
-    <process-select class="filter-item" :multiple="false" clearable v-model="query.processId" style="width: 200px" @change="crud.toQuery" />
+    <process-select
+      class="filter-item"
+      :multiple="false"
+      clearable
+      v-model="query.processId"
+      :productionLineTypeEnum="crud.query.productionLineTypeEnum"
+      style="width: 200px"
+      @change="crud.toQuery"
+    />
     <!-- <el-input
       v-model="query.leaderName"
       placeholder="输入组长名称搜索"
