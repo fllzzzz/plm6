@@ -22,6 +22,7 @@
                 </el-tooltip>
               </span>
               <common-button
+                v-permission="permission.add"
                 size="mini"
                 style="float: right; padding: 6px 10px; margin-bottom: 0px"
                 type="primary"
