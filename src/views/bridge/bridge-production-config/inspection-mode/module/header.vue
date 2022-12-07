@@ -32,16 +32,16 @@
 
 <script setup>
 import {
-  processMaterialListTypeEnum as typeEnum
+  bridgeProcessTypeEnum as typeEnum
   // processInspectTypeEnum as inspectTypeEnum,
   // processReportTypeEnum as reportTypeEnum
-} from '@enum-ms/mes'
+} from '@enum-ms/bridge'
 
 import { regHeader } from '@compos/use-crud'
 // import rrOperation from '@crud/RR.operation'
 
 const defaultQuery = {
-  productType: typeEnum.ARTIFACT.V,
+  productType: typeEnum.BOX.V,
   inspectType: undefined,
   reportType: undefined,
   name: undefined

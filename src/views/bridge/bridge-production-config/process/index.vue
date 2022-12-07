@@ -30,7 +30,7 @@
       <!--编辑与删除-->
       <el-table-column v-if="checkPermission([...permission.edit])" label="操作" width="130px" align="center" fixed="right">
         <template #default="{ row: { sourceRow: row } }">
-          <udOperation :disabledEdit="row.productType === 1" :data="row" :showDel="false" />
+          <udOperation :disabledEdit="row.productType === typeEnum.MACHINE_PART.V" :data="row" :showDel="false" />
         </template>
       </el-table-column>
     </common-table>
@@ -39,12 +39,11 @@
 </template>
 
 <script setup>
-import crudApi from '@/api/mes/production-config/process'
+import crudApi from '@/api/bridge/production-config/process'
 import { ref } from 'vue'
 import { useStore } from 'vuex'
 
 import { bridgeProcessTypeEnum as typeEnum } from '@enum-ms/bridge'
-// import { processMaterialListTypeEnum as typeEnum } from '@enum-ms/mes'
 import checkPermission from '@/utils/system/check-permission'
 import { configProcessPM as permission } from '@/page-permission/config'
 
@@ -72,9 +71,9 @@ const { crud, columns, CRUD } = useCRUD(
 
 const { maxHeight } = useMaxHeight()
 const dataPath = {
-  // [typeEnum.ARTIFACT.K]: 'artifactProcessList',
-  // [typeEnum.ASSEMBLE.K]: 'assembleProcessList',
-  // [typeEnum.MACHINE_PART.K]: 'machinePartProcessList'
+  [typeEnum.BOX.K]: 'artifactProcessList',
+  [typeEnum.CELL.K]: 'assembleProcessList',
+  [typeEnum.MACHINE_PART.K]: 'machinePartProcessList'
 }
 
 CRUD.HOOK.handleRefresh = (crud, { data }) => {

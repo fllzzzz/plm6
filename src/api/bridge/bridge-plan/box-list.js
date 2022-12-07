@@ -2,8 +2,7 @@ import request from '@/utils/request'
 
 export function get(params) {
   return request({
-    module: 'bridge',
-    url: 'tech-box',
+    url: '/api/bridge/tech-box',
     method: 'get',
     params
   })
@@ -11,8 +10,7 @@ export function get(params) {
 
 export function edit(data) {
   return request({
-    module: 'bridge',
-    url: 'tech-box',
+    url: '/api/bridge/tech-box',
     method: 'put',
     data
   })
@@ -29,8 +27,7 @@ export function edit(data) {
 
 export function del(data) {
   return request({
-    module: 'bridge',
-    url: 'tech-box',
+    url: '/api/bridge/tech-box',
     method: 'delete',
     data
   })
@@ -38,8 +35,7 @@ export function del(data) {
 
 export function listUpload(data) {
   return request({
-    module: 'bridge',
-    url: 'tech-box/import',
+    url: '/api/bridge/tech-box/import',
     responseType: 'blob',
     method: 'post',
     headers: {

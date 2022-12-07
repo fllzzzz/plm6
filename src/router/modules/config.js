@@ -490,6 +490,13 @@ export default {
           meta: { title: '生产线配置', icon: 'project', noCache: true },
           children: [
             {
+              name: 'BridgeConfigProductionTeam',
+              path: 'bridge-production-team',
+              hidden: false,
+              component: '/bridge/bridge-production-config/production-team/index',
+              meta: { title: '班组管理', icon: 'project', noCache: true }
+            },
+            {
               name: 'BridgeConfigProductionLine',
               path: 'bridge-production-line',
               hidden: false,
@@ -504,6 +511,73 @@ export default {
               meta: { title: '报检方式', icon: 'project', noCache: true }
             }
           ]
+        },
+        {
+          path: 'bridge-statistical-config',
+          component: '',
+          hidden: false,
+          name: 'BridgeStatisticalConfig',
+          alwaysShow: true,
+          redirect: '/bridge/production-config/bridge-statistical-config/box/box-type-config',
+          meta: { title: '统计配置', icon: 'project', noCache: true },
+          children: [
+            {
+              name: 'BridgeConfigBoxTypeConfig',
+              path: 'box/box-type-config',
+              hidden: false,
+              component: '/bridge/bridge-production-config/statistical-config/box-type-config/index',
+              meta: { title: '单元-清单种类', icon: 'project', noCache: true }
+            },
+            {
+              name: 'BridgeConfigBoxRivetWeldConfig',
+              path: 'box/rivet-weld-config',
+              hidden: false,
+              component: '/bridge/bridge-production-config/statistical-config/box-rivet-weld-config/index',
+              meta: { title: '单元-组铆焊价格', icon: 'project', noCache: true }
+            },
+            {
+              name: 'BridgeConfigCoatingConfig',
+              path: 'box/coating-config',
+              hidden: false,
+              component: '/bridge/bridge-production-config/statistical-config/coating-config/index',
+              meta: { title: '单元-涂装', icon: 'project', noCache: true }
+            },
+            {
+              name: 'BridgeConfigCellRivetWeldConfig',
+              path: 'cell/rivet-weld-config',
+              hidden: false,
+              component: '/bridge/bridge-production-config/statistical-config/cell-rivet-weld-config/index',
+              meta: { title: '单元-组铆焊价格', icon: 'project', noCache: true }
+            },
+            {
+              name: 'BridgeConfigFabricatedConfig',
+              path: 'box/fabricated-config',
+              hidden: false,
+              component: '/bridge/bridge-production-config/statistical-config/fabricated-config/index',
+              meta: { title: '配套件-栓钉套筒', icon: 'project', noCache: true }
+            },
+            {
+              name: 'BridgeConfigDrillHoleConfig',
+              path: 'bridge-parts/drill-hole-config',
+              hidden: false,
+              component: '/bridge/bridge-production-config/statistical-config/drill-hole-config/index',
+              meta: { title: '零件-钻孔', icon: 'project', noCache: true }
+            },
+            {
+              name: 'BridgeConfigPartsLayingConfig',
+              path: 'bridge-parts/parts-laying-config',
+              hidden: false,
+              component: '/bridge/bridge-production-config/statistical-config/parts-laying-config/index',
+              meta: { title: '零件-下料', icon: 'project', noCache: true }
+            }
+          ]
+        },
+        {
+          name: 'BridgeConfigCutting',
+          path: 'bridge-cutting-config',
+          hidden: false,
+          component: '/bridge/bridge-production-config/cutting-config/index',
+          meta: { title: '零件下料配置', icon: 'project', noCache: true }
         }
       ]
     },

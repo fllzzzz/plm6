@@ -1,8 +1,8 @@
 <template>
   <div class="app-container">
-    <div class="head-container">
+    <!-- <div class="head-container">
       <mHeader />
-    </div>
+    </div> -->
     <!--表格渲染-->
     <common-table
       ref="tableRef"
@@ -126,7 +126,7 @@ import useCRUD from '@compos/use-crud'
 import pagination from '@crud/Pagination'
 import udOperation from '@crud/UD.operation'
 import mForm from './module/form'
-import mHeader from './module/header'
+// import mHeader from './module/header'
 
 const optShow = {
   add: false,
