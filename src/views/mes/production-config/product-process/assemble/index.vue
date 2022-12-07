@@ -1,5 +1,9 @@
 <template>
   <div class="app-container">
+    <!--工具栏-->
+    <div class="head-container">
+      <mHeader />
+    </div>
     <!--表格渲染-->
     <common-table
       ref="tableRef"
@@ -31,7 +35,7 @@
       <el-table-column prop="productProcessLinkList" label="工序" min-width="200">
         <template #default="{ row: { sourceRow: row } }">
           <el-tooltip :content="`${row.processSequence}`" placement="top-start">
-            <div style="display: flex; align-items: center;flex-wrap: wrap; white-space: nowrap">
+            <div style="display: flex; align-items: center; flex-wrap: wrap; white-space: nowrap">
               <div style="display: flex; align-items: center" v-for="(item, index) in row.productProcessLinkList" :key="item.id">
                 <span>【{{ item.name }}】</span>
                 <div
@@ -87,6 +91,7 @@ import useCRUD from '@compos/use-crud'
 import pagination from '@crud/Pagination'
 import udOperation from '@crud/UD.operation'
 import mForm from './module/form'
+import mHeader from './module/header'
 
 const optShow = {
   add: false,
@@ -109,7 +114,7 @@ const { crud, CRUD } = useCRUD(
   tableRef
 )
 
-const { maxHeight } = useMaxHeight({ paginate: true, extraBox: '' })
+const { maxHeight } = useMaxHeight({ paginate: true })
 
 // // 合并单元格
 // function spanMethod({ row, column, rowIndex, columnIndex }) {

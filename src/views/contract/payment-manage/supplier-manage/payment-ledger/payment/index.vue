@@ -70,7 +70,7 @@ import mHeader from './module/header'
 import showPdfAndImg from '@comp-base/show-pdf-and-img.vue'
 // import { projectNameFormatter } from '@/utils/project'
 
-const permission = contractSupplierPaymentLedgerPM.collection
+const permission = contractSupplierPaymentLedgerPM.payment
 
 const optShow = {
   add: false,

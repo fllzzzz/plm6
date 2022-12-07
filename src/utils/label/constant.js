@@ -9,6 +9,7 @@ const defComponent = {
   printTime: parseTime((new Date()).getTime(), '{y}/{m}/{d}'),
   monomerName: '单体名称',
   serialNumber: '编号',
+  oneCode: 'X/X',
   name: 'XX',
   quantity: 'XX',
   weight: 'XX',
@@ -37,7 +38,7 @@ const ARTIFACT_COMMON_L_HTML = function ({ component = defComponent, printConfig
 </div>
 <div class="row">
   <div class="col">名称：${emptyTextFormatter(component.name)}</div>
-  <div class="col">数量(件)：${emptyTextFormatter(component.quantity)}</div>
+  <div class="col">任务数(件)：${emptyTextFormatter(component.quantity)}</div>
   <div class="col" style="${printConfig?.weight !== printWeightTypeEnum.NONE.V ? '' : 'display:none;'}">单重(kg)：${emptyTextFormatter(component.weight)}</div>
 </div>
 <div class="contains-rows">
@@ -48,6 +49,7 @@ const ARTIFACT_COMMON_L_HTML = function ({ component = defComponent, printConfig
     </div>
     <div class="row">
       <div class="col" style="${printConfig?.showArea ? '' : 'display:none;'}">区域：${emptyTextFormatter(component.areaName)}</div>
+      <div class="col" style="${component?.oneCode ? '' : 'display:none;'}">编码：${component.oneCode}</div>
     </div>
     <div class="row">
       <div class="col">${emptyTextFormatter(manufacturerName)}</div>
@@ -74,9 +76,12 @@ const ARTIFACT_SIMPLE_L_HTML = function ({ component = defComponent, printConfig
   </div>
 </div>
 <div class="row">
-  <div class="col" style="flex:2;" style="font-size: 60px;">
+  <div class="col" style="flex:2;flex-direction:column;">
     <span style="${printConfig?.dateInProduced ? '' : 'display:none;'}">
       生产日期：${emptyTextFormatter(component.printTime)}
+    </span>
+    <span style="${component?.oneCode ? '' : 'display:none;'}">
+      编码：${component.oneCode}
     </span>
   </div>
   <div class="col qr-content" style="flex:1;">
@@ -111,9 +116,10 @@ const ARTIFACT_CUSTOM_L_HTML = function ({ component = defComponent, printConfig
     <div class="col" style="flex: 2">
       <div class="row">
         <div class="col" style="${printConfig?.showArea ? '' : 'display:none;'}">区域：${emptyTextFormatter(component.areaName)}</div>
+        <div class="col" style="${component?.oneCode ? '' : 'display:none;'}">编码：${component.oneCode}</div>
       </div>
       <div class="row">
-        <div class="col">数量(件)：${emptyTextFormatter(component.quantity)}</div>
+        <div class="col">任务数(件)：${emptyTextFormatter(component.quantity)}</div>
         <div class="col">长度(mm)：${emptyTextFormatter(component.length)}</div>
         <div class="col" style="${printConfig?.weight !== printWeightTypeEnum.NONE.V ? '' : 'display:none;'}">单重(kg)：${emptyTextFormatter(component.weight)}</div>
       </div>

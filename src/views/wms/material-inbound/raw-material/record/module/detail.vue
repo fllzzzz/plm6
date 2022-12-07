@@ -108,7 +108,7 @@ const { maxHeight } = useMaxHeight(
 const order = computed(() => detail.purchaseOrder || {})
 
 // 显示金额相关信息（（统一为入库填写，取消后台配置）
-const fillableAmount = ref(true)
+const fillableAmount = ref(false)
 // const fillableAmount = computed(() =>
 //   inboundFillWayCfg.value ? inboundFillWayCfg.value.amountFillWay === inboundFillWayEnum.APPLICATION.V : false
 // )

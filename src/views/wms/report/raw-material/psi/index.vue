@@ -17,7 +17,16 @@
       <!-- 基础信息 -->
       <material-base-info-columns :columns="columns" />
       <!-- 单位及其数量 -->
-      <material-unit-quantity-columns :columns="columns" :show-mete="false" />
+      <!-- <material-unit-quantity-columns :columns="columns" :show-mete="false" /> -->
+      <el-table-column
+        v-if="columns.visible('accountingUnit')"
+        key="accountingUnit"
+        prop="accountingUnit"
+        label="核算单位"
+        align="center"
+        width="70px"
+        show-overflow-tooltip
+      />
       <el-table-column v-if="columns.visible('inboundMete')" prop="inboundMete" key="inboundMete" label="入库量" align="right" min-width="120" show-overflow-tooltip>
         <template v-if="checkPermission(permission.detail)" #header>
           <el-tooltip
@@ -109,7 +118,7 @@ import pagination from '@crud/Pagination'
 import mHeader from './module/header'
 import detail from './module/detail'
 import ExportButton from '@comp-common/export-button/index.vue'
-import materialUnitQuantityColumns from '@/components-system/wms/table-columns/material-unit-quantity-columns/index.vue'
+// import materialUnitQuantityColumns from '@/components-system/wms/table-columns/material-unit-quantity-columns/index.vue'
 import materialBaseInfoColumns from '@/components-system/wms/table-columns/material-base-info-columns/index.vue'
 
 const optShow = {

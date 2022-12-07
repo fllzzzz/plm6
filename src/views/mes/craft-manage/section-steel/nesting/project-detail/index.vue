@@ -48,7 +48,7 @@
             <span>{{ scope.row.nestingQuantity  }}</span>
           </template>
         </el-table-column>
-        <el-table-column align="center" :show-overflow-tooltip="true" label="操作">
+        <el-table-column v-permission="permission.detail" align="center" :show-overflow-tooltip="true" label="操作">
           <template v-slot="scope">
             <common-button type="primary" size="mini" @click="views(scope.row)">查看</common-button>
           </template>
@@ -65,6 +65,7 @@ import { getProjectNesting } from '@/api/mes/craft-manage/section-steel/nesting'
 import useMaxHeight from '@compos/use-max-height'
 import { parseTime } from '@/utils/date'
 import { projectNestingStatusEnum } from '@enum-ms/mes'
+import { mesExtrusionNestingPM as permission } from '@/page-permission/mes'
 import tableCellTag from '@comp-common/table-cell-tag/index.vue'
 import listDetail from '../list-detail/index.vue'
 

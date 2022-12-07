@@ -1,9 +1,9 @@
 <template>
-  <div class="app-container">
-    <div class="head-container" style="display: flex; justify-content: flex-end">
-      <span style="font-size: 14px">单位：件|吨</span>
-    </div>
-    <div style="display: flex; flex-direction: column;">
+  <div class="head-container" style="display: flex; justify-content: flex-end">
+    <span style="font-size: 14px">单位：件|吨</span>
+  </div>
+  <div class="app-container" :style="`height: ${maxHeight - 40}px; overflow-y: auto`">
+    <div :style="`display: flex; flex-direction: column; `">
       <div class="item-side" v-for="item in processData" :key="item">
         <div v-if="item.productType === componentTypeEnum.MACHINE_PART.V">
           <span>{{ item.name }}</span>
@@ -66,6 +66,7 @@
 </template>
 
 <script setup>
+import useMaxHeight from '@compos/use-max-height'
 import { ref, defineEmits, defineProps, watch } from 'vue'
 import { getAllProcess } from '@/api/mes/task-tracking/process-sluggish.js'
 import { componentTypeEnum } from '@enum-ms/mes'
@@ -111,6 +112,11 @@ async function allProcessDetail() {
     console.log('获取车间的所有工序失败', e)
   }
 }
+
+const { maxHeight } = useMaxHeight({
+  extraBox: ['.head-container'],
+  paginate: true
+})
 function layOffDetail(val) {
   emit('change', val)
 }

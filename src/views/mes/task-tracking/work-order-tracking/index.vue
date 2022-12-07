@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <div style="display: flex">
-      <div style="width: 60%">
+      <div style="width: 50%">
         <div class="head-container">
           <mHeader />
         </div>
@@ -72,6 +72,7 @@
             prop="completeQuantity"
             :show-overflow-tooltip="true"
             label="实际完成（件/kg）"
+            width="130px"
           >
             <template v-slot="scope">
               <span>{{ scope.row.completeQuantity }}/{{ scope.row.completeMete.toFixed(DP.COM_WT__KG) }}</span>
@@ -106,7 +107,7 @@
         <pagination />
       </div>
       <div style="border-right: 1px solid #ededed; margin: 0 20px; height: calc(100vh - 130px)"></div>
-      <div style="width: 38%">
+      <div style="width: 48%">
         <process-detail :process-list="processList" />
       </div>
     </div>
@@ -118,6 +119,7 @@ import { ref, provide, computed, watch } from 'vue'
 import { get, machinePart } from '@/api/mes/task-tracking/work-order-tracking.js'
 import { parseTime } from '@/utils/date'
 import { projectNameFormatter } from '@/utils/project'
+import { mesWorkOrderTrackingPM as permission } from '@/page-permission/mes'
 import { componentTypeEnum } from '@enum-ms/mes'
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
@@ -141,19 +143,12 @@ const { crud, CRUD, columns } = useCRUD(
     title: '工单跟踪',
     sort: [],
     optShow: { ...optShow },
+    permission: { ...permission },
     requiredQuery: ['productType'],
     crudApi: { get },
     hasPagination: true
   },
   tableRef
-)
-watch(
-  () => crud.query.productType,
-  (val) => {
-    processList.value = {}
-    crud.query.workshopId = undefined
-    crud.query.productionLineId = undefined
-  }
 )
 const productType = computed(() => {
   return crud.query.productType
@@ -161,6 +156,17 @@ const productType = computed(() => {
 
 provide('productType', productType)
 
+watch(
+  () => productType.value,
+  (val) => {
+    if (val) {
+      processList.value = {}
+      crud.query.workshopId = undefined
+      crud.query.productionLineId = undefined
+    }
+  },
+  { immediate: true, deep: true }
+)
 const { maxHeight } = useMaxHeight({
   extraBox: ['.head-container'],
   paginate: true

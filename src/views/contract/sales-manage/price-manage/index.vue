@@ -38,7 +38,7 @@
               <i v-else class="el-icon-loading" />
             </el-tag>
           </template>
-          <el-badge v-if="checkPermission(permission.get)" :value="modifyCount" :hidden="modifyCount <= 0">
+          <el-badge v-if="checkPermission(permission.list)" :value="modifyCount" :hidden="modifyCount <= 0">
             <common-button class="filter-item" size="mini" type="info" @click="modifyVisible = true">变更记录</common-button>
           </el-badge>
         </div>

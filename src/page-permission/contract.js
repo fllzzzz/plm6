@@ -32,8 +32,8 @@ export const projectListPM = {
 // 合同管理/合同变更
 export const contractChangePM = {
   get: ['contract_change:get'], // 变更列表
-  detail: ['contract_project:detail'], // 变更详情
-  audit: ['contract_project:audit'] // 变更审核
+  detail: ['contract_change:detail'], // 变更详情
+  audit: ['contract_change:audit'] // 变更审核
 }
 
 // 合同管理/合同档案
@@ -107,12 +107,12 @@ export const contractSupplierMaterialPM = {
     print: ['contract_supplier_material_payment:print'] // 打印下载
   },
   invoice: {
-    get: ['contract_supplier_material_invoice:get'], // 开票列表
-    add: ['contract_supplier_material_invoice:add'], // 开票添加
-    edit: ['contract_supplier_material_invoice:edit'], // 开票修改
-    del: ['contract_supplier_material_invoice:del'], // 开票删除
-    audit: ['contract_supplier_material_invoice:audit'], // 开票审核
-    detail: ['contract_supplier_material_invoice:detail'], // 开票详情
+    get: ['contract_supplier_material_invoice:get'], // 收票列表
+    add: ['contract_supplier_material_invoice:add'], // 收票添加
+    edit: ['contract_supplier_material_invoice:edit'], // 收票修改
+    del: ['contract_supplier_material_invoice:del'], // 收票删除
+    audit: ['contract_supplier_material_invoice:audit'], // 收票审核
+    detail: ['contract_supplier_material_invoice:detail'], // 收票详情
     print: ['contract_supplier_material_invoice:print'] // 打印下载
   }
 }
@@ -134,13 +134,13 @@ export const contractSupplierProductPM = {
     print: ['contract_supplier_product_payment:print'] // 付款打印下载
   },
   invoice: {
-    get: ['contract_supplier_product_invoice:get'], // 开票列表
-    add: ['contract_supplier_product_invoice:add'], // 开票添加
-    edit: ['contract_supplier_product_invoice:edit'], // 开票修改
-    del: ['contract_supplier_product_invoice:del'], // 开票删除
-    audit: ['contract_supplier_product_invoice:audit'], // 开票审核
-    detail: ['contract_supplier_product_invoice:detail'], // 开票详情
-    print: ['contract_supplier_product_invoice:print'] // 开票打印下载
+    get: ['contract_supplier_product_invoice:get'], // 收票列表
+    add: ['contract_supplier_product_invoice:add'], // 收票添加
+    edit: ['contract_supplier_product_invoice:edit'], // 收票修改
+    del: ['contract_supplier_product_invoice:del'], // 收票删除
+    audit: ['contract_supplier_product_invoice:audit'], // 收票审核
+    detail: ['contract_supplier_product_invoice:detail'], // 收票详情
+    print: ['contract_supplier_product_invoice:print'] // 收票打印下载
   }
 }
 
@@ -159,13 +159,13 @@ export const contractSupplierLogisticsPM = {
     print: ['contract_supplier_logistics_payment:print'] // 付款打印下载
   },
   invoice: {
-    get: ['contract_supplier_logistics_invoice:get'], // 开票列表
-    add: ['contract_supplier_logistics_invoice:add'], // 开票添加
-    edit: ['contract_supplier_logistics_invoice:edit'], // 开票修改
-    del: ['contract_supplier_logistics_invoice:del'], // 开票删除
-    audit: ['contract_supplier_logistics_invoice:audit'], // 开票审核
-    detail: ['contract_supplier_logistics_invoice:detail'], // 开票详情
-    print: ['contract_supplier_logistics_invoice:print'] // 开票打印下载
+    get: ['contract_supplier_logistics_invoice:get'], // 收票列表
+    add: ['contract_supplier_logistics_invoice:add'], // 收票添加
+    edit: ['contract_supplier_logistics_invoice:edit'], // 收票修改
+    del: ['contract_supplier_logistics_invoice:del'], // 收票删除
+    audit: ['contract_supplier_logistics_invoice:audit'], // 收票审核
+    detail: ['contract_supplier_logistics_invoice:detail'], // 收票详情
+    print: ['contract_supplier_logistics_invoice:print'] // 收票打印下载
   }
 }
 
@@ -181,12 +181,12 @@ export const contractSupplierSubcontractPM = {
     print: ['contract_supplier_subcontract_payment:print'] // 付款打印下载
   },
   invoice: {
-    get: ['contract_supplier_subcontract_invoice:get'], // 开票列表
-    add: ['contract_supplier_subcontract_invoice:add'], // 开票添加
-    edit: ['contract_supplier_subcontract_invoice:edit'], // 开票修改
-    del: ['contract_supplier_subcontract_invoice:del'], // 开票删除
-    audit: ['contract_supplier_subcontract_invoice:audit'], // 开票审核
-    print: ['contract_supplier_subcontract_invoice:print'] // 开票打印下载
+    get: ['contract_supplier_subcontract_invoice:get'], // 收票列表
+    add: ['contract_supplier_subcontract_invoice:add'], // 收票添加
+    edit: ['contract_supplier_subcontract_invoice:edit'], // 收票修改
+    del: ['contract_supplier_subcontract_invoice:del'], // 收票删除
+    audit: ['contract_supplier_subcontract_invoice:audit'], // 收票审核
+    print: ['contract_supplier_subcontract_invoice:print'] // 收票打印下载
   }
 }
 
@@ -203,8 +203,8 @@ export const contractSupplierPaymentLedgerPM = {
     print: ['contract_supplier_payment_ledger_payment:print'] // 付款打印下载
   },
   invoice: {
-    get: ['contract_supplier_payment_ledger_payment:get'], // 开票列表
-    print: ['contract_supplier_payment_ledger_payment:print'] // 开票打印下载
+    get: ['contract_supplier_payment_ledger_invoice:get'], // 收票列表
+    print: ['contract_supplier_payment_ledger_invoice:print'] // 收票打印下载
   }
 }
 // --------------------------- 销售管理 end --------------------------------
@@ -219,7 +219,7 @@ export const priceManagePM = {
   save: ['sale_price_manage:edit'], // 录入价格
   list: ['sale_price_manage:modify'], // 变更列表
   audit: ['sale_price_manage:audit'], // 变更审核
-  print: ['sale_price_manage:print'] // 打印
+  print: ['sale_price_manage:print'] // 结构围护配套件打印
 }
 
 // 销售管理/订单跟踪

@@ -23,7 +23,7 @@ export const purchaseOrderPM = {
   add: ['scm_purchaseOrder:add'], // 添加
   edit: ['scm_purchaseOrder:edit'], // 编辑
   editPurchaseStatus: ['scm_purchaseOrder:editPurchaseStatus'], // 修改采购状态
-  download: ['scm_purchaseOrder:download'], // 下载
+  // download: ['scm_purchaseOrder:download'], // 下载
   del: ['scm_purchaseOrder:del'] // 删除
 }
 
@@ -66,22 +66,19 @@ export const supplierMaterialPaymentPM = {
     add: ['supplier_material_payment_application:add'], // 添加付款申请
     edit: ['supplier_material_payment_application:edit'], // 编辑付款申请
     del: ['supplier_material_payment_application:del'] // 删除付款申请
-  },
-  paymentLog: {
-    get: ['supplier_material_paymentLog:get'] // 付款记录
   }
 }
 
 // 采购对账管理/验收记录
 export const purchaseAcceptanceLogPM = {
-  get: ['purchaseAcceptanceLogPM:get'], // 查看
-  download: ['purchaseAcceptanceLogPM:download'] // 下载
+  get: ['purchase_acceptance_log:get'], // 查看
+  download: ['purchase_acceptance_log:download'] // 下载
 }
 
 // 采购对账管理/供应商对账
 export const supplierReconciliationLogPM = {
-  get: ['supplierReconciliationLogPM:get'], // 查看
-  download: ['supplierReconciliationLogPM:download'] // 下载
+  get: ['supplier_reconciliation_Log:get'], // 查看
+  download: ['supplier_reconciliation_Log:download'] // 下载
 }
 
 // 物流对账管理/物流记录
@@ -96,7 +93,6 @@ export const supplierLogisticsPaymentPM = {
   get: ['supplier_logistics_payment:get'], // 付款明细列表
   add: ['supplier_logistics_payment:add'], // 新增申请
   detail: ['supplier_logistics_payment:detail'], // 收票记录
-  print: ['supplier_logistics_payment:print'], // 打印下载
   application: {
     get: ['supplier_logistics_payment_application:get'], // 申请记录列表
     edit: ['supplier_logistics_payment_application:edit'], // 编辑付款申请
@@ -113,9 +109,6 @@ export const supplierLogisticsPaymentPM = {
 // 物流订单
 export const logisticsOrderPM = {
   get: ['scm_logisticsOrder:get'], // 列表
-  add: ['scm_logisticsOrder:add'], // 添加
-  edit: ['scm_logisticsOrder:edit'], // 编辑
-  del: ['scm_logisticsOrder:del'], // 删除
   inboundReceiptDetail: wmsCommonPM.rawMatInboundReceiptDetail, // 入库详情
   purchaseOrderDetail: commonPM.purchaseOrderDetail // 采购合同
 }
@@ -156,6 +149,7 @@ export const subcontractOrderPM = {
   get: ['subcontract_order:get'], // 列表
   add: ['subcontract_order:add'], // 添加
   edit: ['subcontract_order:edit'], // 编辑
+  del: ['subcontract_order:del'], // 删除
   detail: ['subcontract_order:detail'] // 详情
 }
 

@@ -53,7 +53,7 @@
               <el-input
                 v-model.trim="scope.row.weather"
                 placeholder="天气情况"
-                maxlength="20"
+                maxlength="10"
                 size="small"
                 class="input-underline"
                 style="width:100%"
@@ -66,7 +66,7 @@
               <el-input
                 v-model.trim="scope.row.wind"
                 placeholder="风力"
-                maxlength="20"
+                maxlength="6"
                 size="small"
                 class="input-underline"
                 :disabled="!isEdit"
@@ -81,7 +81,7 @@
               <el-input
                 v-model.trim="scope.row.temperature"
                 placeholder="温度"
-                maxlength="20"
+                maxlength="5"
                 size="small"
                 :disabled="!isEdit"
                 class="input-underline"
@@ -101,7 +101,7 @@
             placeholder="施工部分描述"
             style="width:90%"
             show-word-limit
-            maxlength="500"
+            maxlength="255"
           />
           <span v-else>{{ form.constructionDesc  }}</span>
         </el-form-item>
@@ -114,7 +114,7 @@
             placeholder="机械作业描述"
             style="width:90%"
             show-word-limit
-            maxlength="500"
+            maxlength="255"
           />
           <span v-else>{{ form.machineWorkDesc  }}</span>
         </el-form-item>
@@ -127,7 +127,7 @@
             placeholder="班组上岗情况"
             style="width:90%"
             show-word-limit
-            maxlength="500"
+            maxlength="255"
           />
           <span v-else>{{ form.groupWorkDesc  }}</span>
         </el-form-item>
@@ -140,7 +140,7 @@
             placeholder="质量检查情况"
             style="width:90%"
             show-word-limit
-            maxlength="500"
+            maxlength="255"
           />
           <span v-else>{{ form.qualityInspectionDesc  }}</span>
         </el-form-item>
@@ -153,7 +153,7 @@
             placeholder="安全检查情况"
             style="width:90%"
             show-word-limit
-            maxlength="500"
+            maxlength="255"
           />
           <span v-else>{{ form.safetyInspectionDesc  }}</span>
         </el-form-item>
@@ -166,7 +166,7 @@
             placeholder="工地重大事件"
             style="width:90%"
             show-word-limit
-            maxlength="500"
+            maxlength="255"
           />
           <span v-else>{{ form.siteImportantEvent  }}</span>
         </el-form-item>
@@ -179,7 +179,7 @@
             placeholder="存在问题描述"
             style="width:90%"
             show-word-limit
-            maxlength="500"
+            maxlength="255"
           />
           <span v-else>{{ form.existingProblemDesc  }}</span>
         </el-form-item>

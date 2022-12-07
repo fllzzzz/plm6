@@ -79,6 +79,7 @@ import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import pagination from '@crud/Pagination'
 import { mapGetters } from '@/store/lib'
+import { auxiliaryMaterialSummaryPM as permission } from '@/page-permission/plan'
 
 import mHeader from './module/header'
 
@@ -96,7 +97,7 @@ const { crud, columns } = useCRUD(
   {
     title: '配套件汇总',
     sort: ['id.asc'],
-    // permission: { ...permission },
+    permission: { ...permission },
     optShow: { ...optShow },
     requiredQuery: ['projectId'],
     crudApi: { ...crudApi },

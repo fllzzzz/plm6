@@ -160,8 +160,8 @@ constantize(mesSchedulingStatusEnum)
 
 // 零件排产套料状态
 const machinePartNestingStatusEnum = {
-  NOT_NESTING: machinePartSchedulingIssueStatusEnum.NOT_NESTING,
-  HAS_NESTING: { L: '已套料', K: 'HAS_NESTING', V: machinePartSchedulingIssueStatusEnum.IN_NESTING.V | machinePartSchedulingIssueStatusEnum.OUT_NESTING.V | machinePartSchedulingIssueStatusEnum.HAS_ISSUED.V }
+  NOT_NESTING: { L: '未下发', K: 'NOT_NESTING', V: machinePartSchedulingIssueStatusEnum.NOT_NESTING.V },
+  HAS_NESTING: { L: '已下发', K: 'HAS_NESTING', V: machinePartSchedulingIssueStatusEnum.IN_NESTING.V | machinePartSchedulingIssueStatusEnum.OUT_NESTING.V | machinePartSchedulingIssueStatusEnum.HAS_ISSUED.V }
 }
 constantize(machinePartNestingStatusEnum)
 
@@ -280,14 +280,6 @@ const paintingTypeEnum = {
   TOPCOAT: { L: '面漆', K: 'TOPCOAT', V: 1 << 2 }
 }
 constantize(paintingTypeEnum)
-
-// 油漆计量单位
-const paintingMeasureUnitEnum = {
-  AREA: { L: '按面积（m²）', K: 'AREA', V: 1 << 0 },
-  WEIGHT: { L: '按重量（kg）', K: 'WEIGHT', V: 1 << 1 },
-  QUANTITY: { L: '按数量', K: 'QUANTITY', V: 1 << 2 }
-}
-constantize(paintingMeasureUnitEnum)
 
 // 标签类型
 const labelTypeEnum = {
@@ -583,7 +575,6 @@ export {
   projectComponentTypeEnum,
   artifactProcessEnum,
   paintingTypeEnum,
-  paintingMeasureUnitEnum,
   reportComponentTypeEnum,
   labelTypeEnum,
   printProductTypeEnum,
@@ -655,7 +646,6 @@ export default {
   projectComponentTypeEnum,
   artifactProcessEnum,
   paintingTypeEnum,
-  paintingMeasureUnitEnum,
   reportComponentTypeEnum,
   labelTypeEnum,
   printProductTypeEnum,

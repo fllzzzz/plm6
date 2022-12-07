@@ -126,6 +126,7 @@
         @change="handleModeChange"
       />
       <common-button
+        v-permission="permission.extrusionNestingDetail"
         v-if="curMode === 'nesting'"
         class="filter-item"
         type="success"
@@ -137,6 +138,7 @@
         型材套排
       </common-button>
       <common-button
+        v-permission="permission.noNesting"
         v-if="curMode === 'edit'"
         class="filter-item"
         type="warning"
@@ -149,7 +151,7 @@
     </template>
     <template #viewLeft>
       <slot name="viewLeft" />
-      <common-button v-if="isTradition" class="filter-item" type="success" size="mini" icon="el-icon-view" @click="noNestingVisible = true">
+      <common-button v-if="isTradition" v-permission="permission.noNestingDetail" class="filter-item" type="success" size="mini" icon="el-icon-view" @click="noNestingVisible = true">
         查看【无需套料清单】
       </common-button>
     </template>
@@ -165,7 +167,7 @@ import { ref, computed, defineEmits, watchEffect } from 'vue'
 import { ElMessage, ElNotification, ElMessageBox } from 'element-plus'
 
 import { artifactProductLineEnum, assembleTypeEnum } from '@enum-ms/mes'
-
+import { mesNestingSettingPM as permission } from '@/page-permission/mes'
 import { regHeader } from '@compos/use-crud'
 import crudOperation from '@crud/CRUD.operation'
 import rrOperation from '@crud/RR.operation'

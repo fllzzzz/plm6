@@ -90,9 +90,6 @@
             </common-button>
           </template>
         </el-popconfirm>
-        <!-- <common-button type="danger" size="mini" :loading="deleteLoading" class="filter-item" @click="deleteVisible=true" :disabled="crud.selections.length === 0" v-if="currentArea && currentArea.id && checkPermission(crud.permission.del)">
-          部分删除
-        </common-button> -->
       </template>
       <template #viewLeft>
         <el-tooltip effect="light" :content="`${mismatchList.join(',')}`" placement="top">
@@ -122,7 +119,6 @@
         <structureTable :table-data="tableData[TechnologyTypeAllEnum.STRUCTURE.V]" :is-show="true" style="margin-top: 20px" />
       </template>
     </common-drawer>
-    <deleteForm v-model="deleteVisible" :list="crud.selections" @success="crud.toQuery"/>
   </div>
 </template>
 
@@ -149,7 +145,6 @@ import areaTabs from '@/components-system/plan/area-tabs'
 import uploadBtn from '@comp/file-upload/ExcelUploadBtn'
 import ExportButton from '@comp-common/export-button/index.vue'
 import structureTable from '@/views/contract/project-manage/module/enclosure-table/structure-table'
-import deleteForm from './delete-form'
 
 const defaultQuery = {
   artifactName: '',
@@ -167,7 +162,6 @@ const defaultTab = ref({})
 const tableData = ref({})
 const deleteLoading = ref(false)
 const techVisible = ref(false)
-const deleteVisible = ref(false)
 const { crud, query, CRUD } = regHeader(defaultQuery)
 const emit = defineEmits(['getAreaData'])
 const mismatchList = ref([])

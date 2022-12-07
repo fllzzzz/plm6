@@ -237,5 +237,6 @@ function openRecord(row, type) {
 .clickable {
   width: 100%;
   cursor: pointer;
+  color:#409eff;
 }
 </style>

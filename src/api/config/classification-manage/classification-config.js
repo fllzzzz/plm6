@@ -20,6 +20,14 @@ export function get() {
   })
 }
 
+export function getClassificationTree() {
+  return request({
+    module: 'config',
+    url: 'classification/tree/all',
+    method: 'get'
+  })
+}
+
 /**
  * 批量添加 data[]
  * @param {number} pid|required 一级：0

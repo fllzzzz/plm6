@@ -129,12 +129,23 @@ const routeParams = computed(() => {
 })
 
 watch(
+  () => globalProjectId.value,
+  (newVal, oldVal) => {
+    if (isNotBlank(newVal)) {
+      packData[packTypeEnum.STRUCTURE.K] = {}
+      packData[packTypeEnum.ENCLOSURE.K] = {}
+      packData[packTypeEnum.AUXILIARY_MATERIAL.K] = {}
+    }
+  }
+)
+
+watch(
   () => routeParams,
   (val) => {
     if (isNotBlank(val.value)) {
       // TODO:有项目后解开注释
-      //  const projectId = val.value.projectId
-      //  if (projectId !== globalProjectId) {
+      // const projectId = val.value.projectId
+      // if (projectId !== globalProjectId) {
       //   ElNotification({ title: '编辑失败（同一个项目才能编辑）', type: 'warning', duration: 3500 })
       //   return
       // }

@@ -17,6 +17,7 @@
     <el-table-column v-if="columns.visible('drawingQuantity')" key="drawingQuantity" prop="drawingQuantity" show-overflow-tooltip label="文件匹配总数" align="center"/>
     <!--编辑与删除-->
     <el-table-column
+      v-if="checkPermission([...permission.import, ...permission.detail])"
       label="操作"
       width="170px"
       align="center"
@@ -50,8 +51,9 @@ import crudApi from '@/api/plan/technical-data-manage/technical-achievement'
 import { ref, watch, computed } from 'vue'
 import { mapGetters } from '@/store/lib'
 
-import { xmlFileListPM as permission } from '@/page-permission/plan'
+import { cncFileListPM as permission } from '@/page-permission/plan'
 import { deepenTypeEnum } from '@enum-ms/plan'
+import checkPermission from '@/utils/system/check-permission'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'

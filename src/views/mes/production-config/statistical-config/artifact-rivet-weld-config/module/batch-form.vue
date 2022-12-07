@@ -5,7 +5,7 @@
     :close-on-click-modal="false"
     :before-close="crud.cancelBCU"
     :visible="dialogVisible"
-    :title="`${crud.bStatus.title}: ${currentType && rivetWeldListObj[currentType]?.typeName}`"
+    :title="`${crud.bStatus.title}${currentType ? `: ${rivetWeldListObj[currentType]?.typeName}` : ''}`"
     :show-close="false"
     custom-class="rivet-weld-config-batch-add"
     @opened="handleOpen"

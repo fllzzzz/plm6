@@ -14,7 +14,7 @@
     <template #content>
       <el-form ref="formRef" :model="form" :rules="rules" size="small" label-width="140px">
         <el-form-item label="模板名称" prop="templateName">
-          <el-input v-model="form.templateName" type="text" placeholder="模板名称" style="width: 250px" />
+          <el-input v-model="form.templateName" type="text" placeholder="模板名称" style="width: 250px" maxlength="10" />
         </el-form-item>
         <el-form-item label="描述信息" prop="remark">
           <el-input
@@ -71,7 +71,10 @@ const defaultForm = {
 
 const { CRUD, crud, form } = regForm(defaultForm, formRef)
 const rules = {
-  templateName: [{ required: true, message: '请输入模板名称', trigger: 'blur' }],
+  templateName: [
+    { required: true, message: '请输入模板名称', trigger: 'blur' },
+    { min: 2, max: 10, message: '长度在 2 到 10 个字符', trigger: 'blur' }
+  ],
   remark: [{ required: true, message: '请输入描述信息', trigger: 'change' }]
 }
 

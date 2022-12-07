@@ -35,19 +35,19 @@ export const configWorkshopPM = {
   editStatus: ['workshop:editStatus'] // 更改车间状态
 }
 
-// 基础配置/系统配置
+// 基础配置/公司配置
 export const systemConfigPM = {
   company: {
-    get: ['configCompany:get'], // 查看公司信息
-    edit: ['configCompany:edit'] // 编辑公司信息
+    get: ['config_company:get'], // 查看公司信息
+    edit: ['config_company:edit'] // 编辑公司信息
   },
   logo: {
-    get: ['configLogo:get'], // 查看公司logo
-    edit: ['configLogo:edit'] // 编辑公司logo
+    get: ['config_logo:get'], // 查看公司logo
+    edit: ['config_logo:edit'] // 编辑公司logo
   },
   project: {
-    get: ['configProject:get'], // 查看项目信息
-    edit: ['configProject:edit'] // 编辑项目信息
+    get: ['config_project:get'], // 查看项目信息
+    edit: ['config_project:edit'] // 编辑项目信息
   }
 }
 
@@ -142,8 +142,8 @@ export const configMesBasePM = {
   overweightSMSRecipientEdit: ['overweight_sms_recipient:edit'], // 编辑过磅短信接收人
   safeAmountFactorGet: ['safe_amount_factor:get'], // 查看安全余额系数
   safeAmountFactorEdit: ['safe_amount_factor:edit'], // 编辑安全余额系数
-  driverFillConfigGet: ['driver_fill_config:get'], // 查看物流信息填写配置
-  driverFillConfigEdit: ['driver_fill_config:edit'], // 编辑物流信息填写配置
+  // driverFillConfigGet: ['driver_fill_config:get'], // 查看物流信息填写配置
+  // driverFillConfigEdit: ['driver_fill_config:edit'], // 编辑物流信息填写配置
   drawingSNConfigGet: ['drawing_sn_config:get'], // 查看图纸识别规则配置
   drawingSNConfigEdit: ['drawing_sn_config:edit'], // 编辑图纸识别规则配置
   appPrintConfigGet: ['app_print_config:get'], // 查看移动端打印配置
@@ -167,7 +167,7 @@ export const changeReasonPM = {
 
 // --------------------------- 建钢-生产配置 start -------------------------
 
-// MES-公共配置/构件特征定义
+// 建钢-生产配置/构件特征定义
 export const artifactConfigPM = {
   get: ['artifact_config:get'], // 构件特征定义列表
   add: ['artifact_config:add'], // 添加构件特征定义
@@ -175,7 +175,7 @@ export const artifactConfigPM = {
   del: ['artifact_config:del'] // 删除构件特征定义
 }
 
-// MES-公共配置/部件特征定义
+// 建钢-生产配置/部件特征定义
 export const machinePartConfigPM = {
   get: ['machine_part_config:get'], // 部件特征定义列表
   add: ['machine_part_config:add'], // 添加部件特征定义
@@ -183,12 +183,20 @@ export const machinePartConfigPM = {
   del: ['machine_part_config:del'] // 删除部件特征定义
 }
 
-// MES-公共配置/零件特征定义
+// 建钢-生产配置/零件特征定义
 export const steelClassicPM = {
   get: ['steel_classic:get'], // 零件特征定义列表
   add: ['steel_classic:add'], // 新增零件特征定义
   edit: ['steel_classic:edit'], // 修改零件特征定义
   del: ['steel_classic:del'] // 删除零件特征定义
+}
+
+// 建钢-生产配置/配套件特征定义
+export const auxiliaryMaterialConfigPM = {
+  get: ['auxiliary-material-config:get'], // 配套件特征定义列表
+  add: ['auxiliary-material-config:add'], // 新增配套件特征定义
+  edit: ['auxiliary-material-config:edit'], // 修改配套件特征定义
+  del: ['auxiliary-material-config:del'] // 删除配套件特征定义
 }
 
 // 建钢-生产配置/生产线管理
@@ -275,6 +283,14 @@ export const configStatisticalPartsLayingPM = {
   add: ['statistical_parts_laying_config:add'], // 添加零件-下料配置
   del: ['statistical_parts_laying_config:del'], // 删除零件-下料配置
   edit: ['statistical_parts_laying_config:edit'] // 编辑零件-下料配置
+}
+
+// 建钢-生产配置/零件下料配置
+export const configMachinePartLayingPM = {
+  get: ['machine_part_laying_config:get'], // 零件下料配置列表
+  add: ['machine_part_laying_config:add'], // 添加零件下料配置
+  del: ['machine_part_laying_config:del'], // 删除零件下料配置
+  edit: ['machine_part_laying_config:edit'] // 编辑零件下料配置
 }
 
 // 建钢-生产配置/工序配置
@@ -371,7 +387,7 @@ export const configWmsScrapDefinitionPM = {
 // WMS-配置管理/入库质检物料
 export const configWmsInspectionRawMaterialPM = {
   get: ['config_wms_inspectionRawMaterial:get'], // 入库质检物料列表
-  edit: ['config_wms_inspectionRawMaterial:edit'], // 添加入库质检物料
+  add: ['config_wms_inspectionRawMaterial:add'], // 添加入库质检物料
   del: ['config_wms_inspectionRawMaterial:del'] // 删除入库质检物料
 }
 
@@ -390,7 +406,7 @@ export const enclosureInfoConfigPM = {
   detailInfo: {
     get: ['enclosure_info_detail:get'], // 围护详情列表
     add: ['enclosure_info_detail:add'], // 新增围护详情
-    edit: ['enclosure_info_detail:editStatus'], // 修改围护详情
+    edit: ['enclosure_info_detail:edit'], // 修改围护详情
     del: ['enclosure_info_detail:del'] // 删除围护详情
   }
 }
@@ -412,6 +428,7 @@ export const memberConfigPM = {
 // 审批管理/公司审批流程
 export const companyProcessConfigPM = {
   get: ['company_process_config:get'], // 列表
+  add: ['company_process_config:add'], // 添加
   edit: ['company_process_config:edit'] // 修改
 }
 

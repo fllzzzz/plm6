@@ -4,8 +4,8 @@
       <project-list ref="projectListRef" :maxHeight="maxHeight" @project-click="handleProjectClick" />
     </div>
     <div class="wrap-right">
-      <el-tag v-if="!crud.query?.projectIds?.length" type="info" size="medium"> * 请先选择项目，进行零件排产 </el-tag>
-      <template v-else>
+      <el-tag v-show="!crud.query?.projectIds?.length" type="info" size="medium"> * 请先选择项目，进行零件排产 </el-tag>
+      <div v-show="crud.query?.projectIds?.length">
         <div class="head-container">
           <mHeader ref="headRef" @load="load">
             <template #optLeft>
@@ -19,7 +19,14 @@
                   @change="handleCheckedAll"
                   >全选</el-checkbox
                 >
-                <common-button type="success" class="filter-item" size="mini" @click="previewIt">预览并保存</common-button>
+                <common-button
+v-permission="permission.save"
+type="success"
+class="filter-item"
+size="mini"
+@click="previewIt"
+                  >预览并保存</common-button
+                >
               </div>
             </template>
             <template #viewLeft>
@@ -63,9 +70,17 @@
                 :style="{ 'background-color': `${item.boxColor}`, ...boxStyle }"
                 @mouseleave="item.visibleTip = false"
               >
-                <span class="ellipsis-text text">
-                  {{ item.serialNumber }}
-                </span>
+                <div style="display: flex; justify-content: space-between; width: 100%; align-items: center; padding: 0 5px">
+                  <el-checkbox
+                    v-model="item.checked"
+                    :disabled="!item.imgLoad"
+                    @click.stop
+                    @change="handleCheckedChange($event, item)"
+                  ></el-checkbox>
+                  <span class="ellipsis-text text">
+                    {{ item.serialNumber }}
+                  </span>
+                </div>
                 <el-image style="flex: 1; width: 95%" :src="item.picturePath" @error="item.imgLoad = false">
                   <template #error>
                     <div class="error-slot">
@@ -79,13 +94,6 @@ class="ellipsis-text text"
 @click.stop="item.visibleTip = !item.visibleTip"
                   >{{ item.specification }}/{{ item.quantity }}</span
                 >
-                <el-checkbox
-                  style="position: absolute; left: 10px; top: 0px"
-                  v-model="item.checked"
-                  :disabled="!item.imgLoad"
-                  @click.stop
-                  @change="handleCheckedChange($event, item)"
-                ></el-checkbox>
               </div>
             </el-tooltip>
           </template>
@@ -97,11 +105,10 @@ class="ellipsis-text text"
         </div>
         <m-preview
           v-model:visible="previewVisible"
-          :artifactDateTime="artifactDateTime"
           :list="checkedNodes"
           @success="handleSaveSuccess"
         ></m-preview>
-      </template>
+      </div>
     </div>
   </div>
 </template>
@@ -141,7 +148,7 @@ const { crud, CRUD } = useCRUD(
     crudApi: { ...crudApi },
     queryOnPresenterCreated: false,
     hasPagination: false,
-    requiredQuery: ['month', 'material', 'projectIds', 'thick']
+    requiredQuery: ['monthList', 'material', 'projectIds', 'thick']
   },
   tableRef
 )
@@ -150,10 +157,6 @@ const { maxHeight } = useMaxHeight()
 
 const boardList = ref([])
 const summaryInfo = ref({ totalNetWeight: 0, quantity: 0 })
-
-const artifactDateTime = computed(() => {
-  return projectListRef?.value?.artifactDateTime
-})
 
 CRUD.HOOK.handleRefresh = (crud, res) => {
   clearCheck()
@@ -234,9 +237,8 @@ CRUD.HOOK.afterRefresh = () => {
 
 // --------------------------- end --------------------------------
 
-function handleProjectClick(val, time, month) {
-  crud.query.dateTime = time
-  crud.query.month = month
+function handleProjectClick(val, month) {
+  crud.query.monthList = month
   crud.query.projectIds = cleanArray(val).map((v) => v.projectId)
   nextTick(() => {
     headRef.value?.refreshConditions()

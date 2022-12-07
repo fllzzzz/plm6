@@ -64,7 +64,7 @@
         fixed="right"
       >
         <template v-slot="scope">
-          <common-button size="mini" type="primary" @click="openDetail(scope.row)" v-permission="permission.get">查看区域详情</common-button>
+          <common-button size="mini" type="primary" @click="openDetail(scope.row)" v-permission="permission.detail">查看区域详情</common-button>
         </template>
       </el-table-column>
     </common-table>

@@ -155,17 +155,17 @@
         </template>
       </el-table-column>
       <!--详情与下载-->
-      <el-table-column v-if="checkPermission([...permission.detail, ...permission.download])" label="操作" width="130px" align="center">
+      <el-table-column v-if="checkPermission([...permission.detail, ...permission.audit, ...permission.download])" label="操作" width="130px" align="center">
         <template v-slot="scope">
           <common-button
-            v-if="scope.row.checkStatus === shipAuditStatusEnum.CHECKED.V"
+            v-if="scope.row.checkStatus === shipAuditStatusEnum.CHECKED.V && checkPermission(permission.detail)"
             type="info"
             size="mini"
             @click.stop="showDetail(scope.row)"
           >
             查看
           </common-button>
-          <common-button v-else type="primary" size="mini" @click.stop="showDetail(scope.row)"> 审核 </common-button>
+          <common-button v-if="scope.row.checkStatus === shipAuditStatusEnum.UNCHECKED.V && checkPermission(permission.audit)" type="primary" size="mini" @click.stop="showDetail(scope.row)"> 审核 </common-button>
           <!-- 下载 -->
           <export-button v-permission="permission.download" :params="{id: scope.row.id}" size="mini" :fn="crud.crudApi.download"/>
         </template>

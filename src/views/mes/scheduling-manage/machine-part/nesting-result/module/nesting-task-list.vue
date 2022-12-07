@@ -18,13 +18,13 @@
       type="enum"
       size="small"
       class="filter-item"
-      @change="fetchTaskList"
+      @change="handleBoolNestingChange"
     />
     <common-radio-button
-      v-if="isBlank(query.boolNestCutEnum) || query.boolNestCutEnum === layOffWayTypeEnum.NESTING.V"
-      v-model="query.issueStatus"
+      v-if="query.boolNestCutEnum === layOffWayTypeEnum.NESTING.V"
+      v-model="query.issueStatusEnum"
       :options="issueStatusEnum.ENUM"
-      :unshowVal="[issueStatusEnum.HAS_ISSUED.V]"
+      :unshowVal="[issueStatusEnum.HAS_ISSUED.V, issueStatusEnum.NOT_NESTING.V]"
       showOptionAll
       type="enum"
       size="small"
@@ -87,10 +87,11 @@
 import { getNestingTask } from '@/api/mes/scheduling-manage/machine-part'
 import { ref, defineProps, defineEmits, defineExpose, nextTick } from 'vue'
 import { layOffWayTypeEnum } from '@enum-ms/uploading-form'
-import { isBlank } from '@data-type/index'
 import moment from 'moment'
 
 import { machinePartSchedulingIssueStatusEnum as issueStatusEnum, mesSchedulingStatusEnum } from '@enum-ms/mes'
+import checkPermission from '@/utils/system/check-permission'
+import { machinePartSchedulingNestingResultPM as permission } from '@/page-permission/mes'
 
 import usePagination from '@compos/use-pagination'
 import { isNotBlank } from '@/utils/data-type'
@@ -105,7 +106,9 @@ defineProps({
 
 const nestingTaskTableRef = ref()
 const month = ref(moment().startOf('month').valueOf().toString())
-const query = ref({})
+const query = ref({
+  issueStatusEnum: issueStatusEnum.IN_NESTING.V
+})
 const tableData = ref([])
 const loading = ref(false)
 const dataFormat = ref([['project', 'parse-project']])
@@ -115,6 +118,7 @@ const { handleSizeChange, handleCurrentChange, total, setTotalPage, queryPage } 
 fetchTaskList()
 
 async function fetchTaskList(nestingTaskInfo) {
+  if (!checkPermission(permission.get)) return
   try {
     loading.value = true
     tableData.value = []
@@ -138,6 +142,11 @@ async function fetchTaskList(nestingTaskInfo) {
   } finally {
     loading.value = false
   }
+}
+
+function handleBoolNestingChange() {
+  query.value.issueStatusEnum = undefined
+  fetchTaskList()
 }
 
 function handleClickChange(val) {

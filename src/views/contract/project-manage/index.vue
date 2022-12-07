@@ -157,10 +157,10 @@
           <el-tag v-else :type="scope.row.statusColor">{{ projectStatusEnum.VL[scope.row.status] }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="成员管理" width="80" align="center" fixed="right">
+      <el-table-column label="成员管理" v-if="checkPermission(permission.editMember)" width="80" align="center" fixed="right">
         <template v-slot="scope">
           <common-button
-            v-if="checkPermission(permission.editMembers)"
+            v-if="checkPermission(permission.editMember)"
             type="info"
             icon="el-icon-user"
             size="mini"

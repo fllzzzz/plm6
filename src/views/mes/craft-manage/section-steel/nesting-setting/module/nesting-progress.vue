@@ -11,8 +11,9 @@
     :before-close="handleClose"
   >
     <template #titleRight>
-      <common-button @click.stop="handleClose" class="filter-item" type="success" size="mini">确认</common-button>
-      <common-button @click.stop="delNesting" class="filter-item" type="danger" size="mini">删除</common-button>
+      <export-button v-permission="permission.downloadResult" type="warning" size="mini" :params="{ id: props.batchId }" :fn="downloadZipGet">下载套料成果</export-button>
+      <common-button v-permission="permission.saveNestingResult" @click.stop="handleClose" class="filter-item" type="success" size="mini">确认</common-button>
+      <common-button v-permission="permission.delNestingResult" @click.stop="delNesting" class="filter-item" type="danger" size="mini">删除</common-button>
     </template>
     <common-table
       v-loading="resultLoading"
@@ -23,7 +24,7 @@
       row-key="id"
     >
       <el-table-column label="序号" type="index" align="center" width="60" />
-      <el-table-column key="serialNumber" prop="serialNumber" :show-overflow-tooltip="true" label="套料编号" align="center" width="180px">
+      <el-table-column key="serialNumber" prop="serialNumber" :show-overflow-tooltip="true" label="套料编号" align="left" width="180px">
         <template v-slot="scope">
           <span>{{ scope.row.serialNumber }}</span>
         </template>
@@ -127,6 +128,7 @@
 <script setup>
 import { ref, defineProps, defineEmits } from 'vue'
 import { nestingProgress, delNestingResult } from '@/api/mes/craft-manage/section-steel/nesting-setting'
+import { downloadZipGet } from '@/api/mes/craft-manage/section-steel/nesting-result'
 import {
   mesBuildingTypeSettingAssembleTypeEnum as materialTypeEnum,
   nestingSettingTypeEnum,
@@ -134,8 +136,10 @@ import {
 } from '@enum-ms/mes'
 import { ElMessageBox, ElNotification } from 'element-plus'
 import { getLightColor } from '@/utils/color'
+import { mesNestingSettingPM as permission } from '@/page-permission/mes'
 import useVisible from '@compos/use-visible'
 import useMaxHeight from '@compos/use-max-height'
+import ExportButton from '@comp-common/export-button/index.vue'
 
 const emit = defineEmits(['update:visible', 'success'])
 const nestingProgressData = ref([])

@@ -170,8 +170,8 @@ async function changeStatus(data, val) {
       type: 'warning'
     })
     const submitData = {
-      type: crud.query.type,
-      data: { code: data.code, status: val ? 1 : 0 }
+      code: data.code,
+      status: val
     }
     await editStatus(submitData)
     crud.refresh()

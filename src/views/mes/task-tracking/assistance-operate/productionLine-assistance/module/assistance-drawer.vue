@@ -6,7 +6,7 @@
       </el-tag>
     </template>
     <template #titleRight>
-      <common-button size="mini" type="primary" @click="previewIt">预览并保存</common-button>
+      <common-button v-permission="permission.save" size="mini" type="primary" @click="previewIt">预览并保存</common-button>
     </template>
     <template #content>
       <div class="tip">
@@ -205,6 +205,7 @@ const { maxHeight } = useMaxHeight(
 const dataFormat = ref([['askCompleteTime', ['parse-time', '{y}-{m}-{d}']]])
 
 const crud = inject('crud')
+const permission = inject('permission')
 const query = ref({})
 const tableData = ref([])
 const tableLoading = ref(false)

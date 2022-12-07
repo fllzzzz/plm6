@@ -43,9 +43,9 @@
       <rrOperation />
     </div>
     <crudOperation>
-      <template #viewLeft>
+      <!-- <template #viewLeft>
         <common-button size="small" class="filter-item" type="primary" @click="applicationVisible=true">提交记录</common-button>
-      </template>
+      </template> -->
     </crudOperation>
   </div>
 </template>

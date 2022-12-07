@@ -381,6 +381,13 @@ export default {
           meta: { title: '收发存报表', icon: 'project', noCache: true }
         },
         {
+          name: 'WMSReportRawMaterialInventoryDetailReceipt',
+          path: 'report/raw-material/inventory-detail',
+          hidden: false,
+          component: '/wms/report/raw-material/inventory-detail/index',
+          meta: { title: '存货明细帐', icon: 'project', noCache: true }
+        },
+        {
           name: 'WMSReportRawMaterialPSIReceipt',
           path: 'report/raw-material/psi',
           hidden: false,

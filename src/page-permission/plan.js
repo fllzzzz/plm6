@@ -37,15 +37,13 @@ export const areaListPM = {
   add: ['plan_area_manage:add'], // 新增区域
   edit: ['plan_area_manage:edit'], // 修改区域
   del: ['plan_area_manage:del'], // 删除区域
-  planList: ['plan_area_manage:planList'], // 办理计划
-  print: ['plan_area_manage:print'] // 打印下载
+  planList: ['plan_area_manage:planList'] // 办理计划
 }
 
 // 计划管理/计划列表
 export const planMakeListPM = {
   get: ['plan_make_manage:get'], // 计划列表
-  edit: ['plan_make_manage:edit'], // 修改计划
-  print: ['plan_make_manage:print'] // 打印下载
+  edit: ['plan_make_manage:edit'] // 修改计划
 }
 
 // 计划管理/计划跟踪
@@ -72,9 +70,9 @@ export const planSummaryListPM = {
 // 技术管理/零构件列表
 export const artifactTreePM = {
   get: ['plan_artifact_tree_list:get'], // 零构件列表
+  edit: ['plan_artifact_tree_list:edit'], // 编辑零构件状态
   editNum: ['plan_artifact_tree_list:editNum'], // 修改构件数量
-  editInfo: ['plan_artifact_tree_list:editInfo'], // 修改零构件信息
-  editSerialNum: ['plan_artifact_tree_list:editSerialNum'], // 修改构件编号
+  productionStatus: ['plan_artifact_tree_list:productionStatus'], // 生产状态
   del: ['plan_artifact_tree_list:del'], // 删除零构件
   download: ['plan_artifact_tree_list:download'], // 下载零构件
   import: ['plan_artifact_tree_list:import'], // 导入零构件
@@ -89,26 +87,20 @@ export const machinePartPM = {
 
 // 技术管理/构件列表
 export const artifactPM = {
-  get: ['plan_artifact_list:get'] // 构件列表
+  get: ['plan_artifact_list:get'], // 构件列表
+  download: ['plan_artifact_list:download'] // 下载构件
 }
 
 // 技术管理/部件列表
 export const assemblyListPM = {
   get: ['plan_assembly_list:get'], // 部件列表
-  del: ['plan_assembly_list:del'], // 删除部件
-  download: ['plan_assembly_list:download'], // 下载部件
-  import: ['plan_assembly_list:import'], // 导入部件
-  artifactAdd: ['plan_assembly_list:artifactAdd'], // 添加构件
-  artifactDel: ['plan_assembly_list:artifactDel'], // 删除构件
-  templateDownLoad: ['plan_assembly_list:templateDownLoad'] // 下载部件模板
+  download: ['plan_assembly_list:download'] // 下载部件
 }
 
-// 技术管理/配套件
-export const auxiliaryMaterialPM = {
-  get: ['auxiliary-material:get'], // 配套件列表
-  add: ['auxiliary-material:add'], // 新增配套件
-  del: ['auxiliary-material:del'], // 删除配套件
-  edit: ['auxiliary-material:edit'] // 修改配套件
+// 技术管理/配套件汇总
+export const auxiliaryMaterialSummaryPM = {
+  get: ['auxiliary-material-summary:get'], // 配套件汇总列表
+  print: ['auxiliary-material-summary:print'] // 配套件下载
 }
 
 // 技术管理/围护列表
@@ -125,35 +117,11 @@ export const enclosureListPM = {
   techDetail: ['plan_enclosure_list:techDetail'] // 技术交底
 }
 
-// 技术管理/深化列表
-export const deepenListPM = {
-  model: {
-    import: ['plan_deepen_model:get'], // 模型导入
-    get: ['plan_deepen_model:get'], // 模型导入
-    del: ['plan_deepen_model:del'], // 模型删除
-    integration: ['plan_deepen_model_integration:edit'], // 模型集成
-    integrationDel: ['plan_deepen_model_integration:del'] // 删除模型集成
-  },
-  deepen: {
-    get: ['plan_deepen:get'], // 深化图纸列表
-    import: ['plan_deepen:import'], // 导入深化图纸
-    del: ['plan_deepen:del'], // 删除深化图纸
-    edit: ['plan_deepen:edit'], // 修改深化图纸
-    download: ['plan_deepen:download'] // 下载深化图纸
-  },
-  machinePart: {
-    get: ['plan_deepen_machine_part:get'], // 深化图纸列表
-    import: ['plan_deepen_machine_part:import'], // 导入深化图纸
-    del: ['plan_deepen_machine_part:del'], // 删除深化图纸
-    edit: ['plan_deepen_machine_part:edit'], // 修改深化图纸
-    download: ['plan_deepen_machine_part:download'] // 下载深化图纸
-  }
-}
-
 // 技术管理/蓝图列表
 export const blueprintListPM = {
   get: ['plan_blueprint:get'], // 蓝图列表
-  edit: ['plan_blueprint:edit'], // 修改蓝图
+  edit: ['plan_blueprint:edit'], // 替换蓝图
+  del: ['plan_blueprint:del'], // 删除
   download: ['plan_blueprint:download'], // 下载
   import: ['plan_blueprint:import'] // 导入
 }
@@ -161,7 +129,8 @@ export const blueprintListPM = {
 // 技术管理/变更文件列表
 export const changeFileListPM = {
   get: ['plan_change_file:get'], // 变更文件列表
-  edit: ['plan_change_file:edit'], // 修改变更文件
+  edit: ['plan_change_file:edit'], // 替换变更文件
+  del: ['plan_change_file:del'], // 删除
   download: ['plan_change_file:download'], // 下载
   import: ['plan_change_file:import'] // 导入
 }
@@ -202,7 +171,8 @@ export const xmlFileListPM = {
 
 // 技术管理/清单合计列表
 export const summaryListPM = {
-  get: ['summary_list:get'] // 清单合计列表
+  get: ['summary_list:get'], // 清单合计列表
+  detail: ['summary_list:detail']
 }
 
 // 技术管理/钢材使用量列表

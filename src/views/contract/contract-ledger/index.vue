@@ -62,7 +62,7 @@
     <el-table-column v-if="columns.visible('collectionAmount')" key="collectionAmount" prop="collectionAmount" label="累计收款" align="right">
       <template v-slot="scope">
         <div @click="openTab(scope.row,'collection')" style="cursor:pointer;">
-          <span v-if="scope.row.unCheckCollectionCount>0">
+          <span v-if="scope.row.unCheckCollectionCount>0 && checkPermission(permission.collection.audit)">
             <el-badge :value="scope.row.unCheckCollectionCount" :max="99" :hidden="scope.row.unCheckCollectionCount < 1">
               <svg-icon icon-class="notify"  style="color:#e6a23c;font-size:15px;"/>
             </el-badge>
@@ -79,7 +79,7 @@
     <el-table-column v-if="columns.visible('invoiceAmount')" key="invoiceAmount" prop="invoiceAmount" label="累计开票" align="right">
       <template v-slot="scope">
         <div @click="openTab(scope.row,'invoice')" style="cursor:pointer;">
-          <span v-if="scope.row.unCheckInvoiceCount>0">
+          <span v-if="scope.row.unCheckInvoiceCount>0 && checkPermission(permission.invoice.audit)">
             <el-badge :value="scope.row.unCheckInvoiceCount" :max="99" :hidden="scope.row.unCheckInvoiceCount < 1">
               <svg-icon icon-class="notify"  style="color:#e6a23c;font-size:15px;"/>
             </el-badge>
@@ -114,7 +114,7 @@
   <!-- 发生额 -->
   <occur-amount v-model="occurVisible" :projectId="currentProjectId"/>
   <!-- 收付款 -->
-  <collectionAndInvoice v-model="tabVisible" :projectId="currentProjectId" :tabName="activeName" @success="crud.toQuery" :current-row="currentRow"/>
+  <collectionAndInvoice v-model="tabVisible" :projectId="currentProjectId" :tabName="activeName" @success="crud.toQuery" :current-row="currentRow" :permission="permission"/>
   <!--分页组件-->
   <pagination />
   </div>
@@ -190,6 +190,9 @@ function openOccurAmount(row) {
 }
 
 function openTab(row, name) {
+  if (!checkPermission(permission[name].get)) {
+    return
+  }
   activeName.value = name
   currentProjectId.value = row.id
   currentRow.value = row

@@ -1,5 +1,5 @@
 <template>
-  <common-dialog title="零件排产预览" v-model="dialogVisible" width="1100px" :before-close="handleClose">
+  <common-dialog customClass="machine-part-scheduling-preview-dlg" title="零件排产预览" v-model="dialogVisible" width="1100px" :before-close="handleClose">
     <template #titleRight>
       <common-button @click="submitIt" :loading="submitLoading" size="mini" type="primary">保存</common-button>
     </template>
@@ -72,9 +72,6 @@ const props = defineProps({
   list: {
     type: Array,
     default: () => []
-  },
-  artifactDateTime: {
-    type: [Number, String]
   }
 })
 
@@ -89,6 +86,7 @@ const crud = inject('crud')
 const { visible: dialogVisible, handleClose } = useVisible({ emit, props, field: 'visible' })
 const { maxHeight } = useMaxHeight(
   {
+    mainBox: '.machine-part-scheduling-preview-dlg',
     extraBox: ['.el-dialog__header'],
     wrapperBox: ['.el-dialog__body'],
     clientHRepMainH: true,
@@ -124,18 +122,24 @@ async function submitIt() {
     //   return
     // }
     submitLoading.value = true
-    const _list = props.list.map((v) => {
-      return {
-        productId: v.id,
-        quantity: v.quantity
-      }
+    const _list = []
+    props.list.forEach((v) => {
+      v.needMachinePartLinkList.forEach(o => {
+        _list.push(
+          {
+            productId: v.id,
+            quantity: o.quantity,
+            id: o.id,
+            needSchedulingMonth: o.date
+          }
+        )
+      })
     })
     await save({
       // layWayConfigId: layWayConfigId.value,
       material: crud.query.material,
       thick: crud.query.thick,
-      linkList: _list,
-      artifactDateTime: props.artifactDateTime
+      linkList: _list
     })
     ElNotification({
       title: '零件排产保存成功',

@@ -76,60 +76,6 @@ export const inboundInspectionDetailPM = {
 
 // ########################################################################
 
-// --------------------------- 物料仓 start ------------------------------
-
-// 物料仓/标签打印
-export const materialLabelPrintPM = {
-  get: ['wms_mat_labelPrint:get'] // 查看 标签打印
-}
-
-// 物料仓/钢材仓库
-export const steelMaterialWarehousePM = {
-  get: ['wms_matWarehouse_steel:get'], // 查看 钢材仓库
-  outbound: ['wms_matWarehouse_steel:outbound'], // 钢材出库
-  transfer: ['wms_matWarehouse_steel:transfer'] // 钢材调拨
-}
-
-// 物料仓/辅材仓库
-export const auxMatMaterialWarehousePM = {
-  get: ['wms_matWarehouse_auxMaterial:get'], // 查看 辅材仓库
-  outbound: ['wms_matWarehouse_auxMaterial:outbound'], // 辅材出库
-  transfer: ['wms_matWarehouse_auxMaterial:transfer'] // 辅材调拨
-}
-
-// 物料仓/气体仓库
-export const gasMaterialWarehousePM = {
-  get: ['wms_matWarehouse_gas:get'], // 查看 气体仓库
-  outbound: ['wms_matWarehouse_gas:outbound'], // 气体出库
-  transfer: ['wms_matWarehouse_gas:transfer'] // 气体调拨
-}
-
-// 物料仓/出库记录
-export const rawMaterialOutboundRecordPM = {
-  get: ['wms_rawMat_outbound_record:get']
-}
-
-// 物料仓/出库审核
-export const rawMaterialOutboundReviewPM = {
-  get: ['wms_rawMat_outbound_review:get'],
-  review: ['wms_rawMat_outbound_review:review']
-}
-
-// --------------------------- 物料仓 end ----------------------------------
-
-// ########################################################################
-
-// --------------------------- 废料模块 start ------------------------------
-
-// 废料管理
-export const steelScrapPM = {
-  get: ['wms_steel_scrap:get']
-}
-
-// --------------------------- 废料模块 end --------------------------------
-
-// ########################################################################
-
 // --------------------------- 冻结模块 start ------------------------------
 
 // 冻结管理/冻结列表
@@ -147,6 +93,70 @@ export const rawMaterialUnFreezeListPM = {
 }
 
 // --------------------------- 冻结模块 end --------------------------------
+
+// ########################################################################
+
+// --------------------------- 物料仓 start ------------------------------
+
+// 物料仓/标签打印
+export const materialLabelPrintPM = {
+  get: ['wms_mat_labelPrint:get'] // 查看 标签打印
+}
+
+// 物料仓/出库记录
+export const rawMaterialOutboundRecordPM = {
+  get: ['wms_rawMat_outbound_record:get']
+}
+
+// 物料仓/钢材仓库
+export const steelMaterialWarehousePM = {
+  get: ['wms_matWarehouse_steel:get'], // 查看 钢材仓库
+  outbound: ['wms_matWarehouse_steel:outbound'], // 添加钢材出库单
+  outboundAudit: ['wms_matWarehouse_steel:outboundAudit'], // 钢材出库审核
+  transfer: ['wms_matWarehouse_steel:transfer'], // 钢材调拨
+  labelPrint: materialLabelPrintPM.get, // 标签打印
+  outboundRecord: rawMaterialOutboundRecordPM.get, // 出库记录
+  freezeRecord: rawMaterialFreezeListPM.get // 冻结记录
+}
+
+// 物料仓/辅材仓库
+export const auxMatMaterialWarehousePM = {
+  get: ['wms_matWarehouse_auxMaterial:get'], // 查看 辅材仓库
+  outbound: ['wms_matWarehouse_auxMaterial:outbound'], // 添加辅材出库单
+  outboundAudit: ['wms_matWarehouse_auxMaterial:outboundAudit'], // 辅材出库审核
+  transfer: ['wms_matWarehouse_auxMaterial:transfer'], // 辅材调拨
+  outboundRecord: rawMaterialOutboundRecordPM.get, // 出库记录
+  freezeRecord: rawMaterialFreezeListPM.get // 冻结记录
+}
+
+// 物料仓/气体仓库
+export const gasMaterialWarehousePM = {
+  get: ['wms_matWarehouse_gas:get'], // 查看 气体仓库
+  outbound: ['wms_matWarehouse_gas:outbound'], // 添加气体出库单
+  outboundAudit: ['wms_matWarehouse_gas:outboundAudit'], // 气体出库审核
+  transfer: ['wms_matWarehouse_gas:transfer'], // 气体调拨
+  outboundRecord: rawMaterialOutboundRecordPM.get, // 出库记录
+  freezeRecord: rawMaterialFreezeListPM.get // 冻结记录
+}
+
+// 物料仓/出库审核
+export const rawMaterialOutboundReviewPM = {
+  get: ['wms_rawMat_outbound_review:get'],
+  review: ['wms_rawMat_outbound_review:review']
+}
+
+// --------------------------- 物料仓 end ----------------------------------
+
+// ########################################################################
+
+// --------------------------- 废料模块 start ------------------------------
+
+// 废料管理/钢材列表
+export const steelScrapPM = {
+  get: ['wms_steel_scrap:get']
+}
+
+// --------------------------- 废料模块 end --------------------------------
 
 // ########################################################################
 
@@ -207,7 +217,7 @@ export const rawMaterialReturnRecordPM = {
   outboundReceiptDetail: commonPM.rawMatOutboundReceiptDetail // 出库详情
 }
 
-// crud交由presenter持有
+// 出入库办理/退库审核
 export const rawMaterialReturnReviewPM = {
   get: ['wms_rawMat_return_review:get'], // 查看
   review: ['wms_rawMat_return_review:review'], // 审核
@@ -270,7 +280,7 @@ export const reportRawMaterialInboundReceiptPM = {
   purchaseOrderDetail: commonPM.purchaseOrderDetail // 采购合同详情
 }
 
-// 报表中心/原材料/入库单表
+// 报表中心/原材料/入库明细
 export const reportRawMaterialInboundDetailsPM = {
   get: ['wms_report_rawMat_inbound_details:get'], // 查看
   showAmount: ['wms_report_rawMat_inbound_details:showAmount'], // 显示金额
@@ -313,7 +323,7 @@ export const reportRawMaterialPsiPM = {
   download: ['wms_report_rawMat_psi:download'] // 下载
 }
 
-// 报表中心/原材料/退货明细
+// 报表中心/原材料/退货单表
 export const reportRawMaterialRejectReceiptPM = {
   get: ['wms_report_rawMat_reject_details:get'], // 查看
   showAmount: ['wms_report_rawMat_reject_details:showAmount'], // 显示金额
@@ -336,6 +346,14 @@ export const reportRawMaterialInventoryPM = {
 export const reportRawMaterialSendAndReceiveStoragePM = {
   get: ['wms_report_rawMat_sendAndReceiveStorage:get'], // 查看
   showAmount: ['wms_report_rawMat_sendAndReceiveStorage:showAmount'] // 显示金额
+}
+
+// 报表中心/原材料/存货明细帐
+export const reportRawMaterialInventoryDetailPM = {
+  get: ['wms_report_rawMat_inventory_detail:get'], // 查看
+  showAmount: ['wms_report_rawMat_inventory_detail:showAmount'], // 显示金额
+  detail: ['wms_report_rawMat_inventory_detail:detail'], // 详情
+  download: ['wms_report_rawMat_inventory_detail:download'] // 下载
 }
 
 // 报表中心/原材料/高新研发费

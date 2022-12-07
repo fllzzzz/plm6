@@ -147,7 +147,7 @@ CRUD.HOOK.handleRefresh = (crud, { data }) => {
 }
 
 function openDetail(row, type) {
-  currentRow.value = row
+  currentRow.value = row.sourceRow
   detailVisible.value = true
 }
 </script>

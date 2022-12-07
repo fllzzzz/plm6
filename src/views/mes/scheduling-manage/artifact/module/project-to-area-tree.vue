@@ -1,6 +1,6 @@
 <template>
   <div class="head-container">
-    <project-header-time v-model="month" :data="timeList" @change="fetchTree" />
+    <project-header-time v-model="month" :data="timeList" @change="fetchTree" empty-text="暂无构件排产信息" />
     <!-- <el-date-picker
       v-model="month"
       type="month"
@@ -71,8 +71,10 @@ import { ref, defineProps, defineEmits, watch } from 'vue'
 import moment from 'moment'
 
 import { projectNameFormatter } from '@/utils/project'
+import checkPermission from '@/utils/system/check-permission'
+import { artifactSchedulingPM as permission } from '@/page-permission/mes'
 
-import projectHeaderTime from './project-header-time.vue'
+import projectHeaderTime from '@/views/mes/scheduling-manage/common/project-header-time.vue'
 
 const emit = defineEmits(['area-click'])
 defineProps({
@@ -98,6 +100,7 @@ const expandedKeys = ref([])
 fetchTime()
 
 async function fetchTime() {
+  if (!checkPermission(permission.get)) return
   try {
     const { content } = await getAreaTreeTime()
     const timeStamp = []

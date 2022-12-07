@@ -3,7 +3,7 @@
     <div class="head-container">
       <mHeader>
         <template #viewLeft>
-          <common-button size="mini" type="info" icon="el-icon-time" @click="recordVisible = true">协同记录</common-button>
+          <common-button v-permission="permission.record" size="mini" type="info" icon="el-icon-time" @click="recordVisible = true">协同记录</common-button>
         </template>
       </mHeader>
     </div>
@@ -77,11 +77,11 @@
         align="center"
         prop="quantity"
         :show-overflow-tooltip="true"
-        label="可协同量（件/kg）"
+        label="未完成量（件/kg）"
         width="135px"
       >
         <template #default="{ row }">
-          <span>{{ row.quantity }} / {{ row.totalNetWeight }}</span>
+          <span>{{ row.quantity || 0 }} / {{ row.totalNetWeight || 0 }}</span>
         </template>
       </el-table-column>
       <!-- <el-table-column
@@ -130,7 +130,7 @@
 </template>
 
 <script setup>
-import crudApi from '@/api/mes/task-tracking/assistance-operate/common'
+import crudApi from '@/api/mes/task-tracking/assistance-operate/productionLine-assistance'
 import { ref } from 'vue'
 
 import { taskTypeENUM } from '@enum-ms/mes'
@@ -140,7 +140,7 @@ import pagination from '@crud/Pagination'
 import mHeader from './module/header'
 import assistanceDrawer from './module/assistance-drawer.vue'
 import recordDrawer from './module/record-drawer.vue'
-// import { mesProductionOrderPM as permission } from '@/page-permission/mes'
+import { mesProductionLineAssistancePM as permission } from '@/page-permission/mes'
 
 const optShow = {
   add: false,
@@ -159,7 +159,7 @@ const { crud, columns, CRUD } = useCRUD(
   {
     title: '产线协同',
     sort: [],
-    // permission: { ...permission },
+    permission: { ...permission },
     optShow: { ...optShow },
     crudApi: { ...crudApi }
   },

@@ -2,6 +2,15 @@
   <div v-show="crud.searchToggle">
     <div style="display: flex">
       <common-radio-button
+        ref="typeListRef"
+        v-model="query.taskTypeEnum"
+        :options="typeList"
+        :dataStructure="{ key: 'value', label: 'name', value: 'value' }"
+        :showOptionAll="typeList?.length > 1"
+        class="filter-item"
+        @change="fetchMaterial"
+      />
+      <common-radio-button
         ref="materialRef"
         v-model="query.material"
         :options="materialList"
@@ -13,7 +22,7 @@
         v-if="thickList?.length"
         v-model="query.thick"
         class="filter-item"
-        :style="`width:calc(100% - ${materialRefWidth}px)`"
+        :style="`width:calc(100% - ${materialRefWidth + typeListRefWidth}px)`"
         itemKey="name"
         :data="thickList"
         @change="crud.toQuery"
@@ -79,13 +88,14 @@
 </template>
 
 <script setup>
-import { getMaterial, getThick } from '@/api/mes/scheduling-manage/machine-part'
+import { getTypeList, getMaterial, getThick } from '@/api/mes/scheduling-manage/machine-part'
 import { defineEmits, ref, defineExpose, nextTick } from 'vue'
 import { regHeader } from '@compos/use-crud'
 import tagTabs from '@comp-common/tag-tabs'
 import crudOperation from '@crud/CRUD.operation'
 import Scale from '@comp/Scale'
 import { isBlank } from '@/utils/data-type'
+import { componentTypeEnum } from '@enum-ms/mes'
 
 const defaultQuery = {}
 
@@ -95,7 +105,10 @@ const emit = defineEmits(['load'])
 
 const materialRef = ref()
 const materialRefWidth = ref()
+const typeListRef = ref()
+const typeListRefWidth = ref()
 const boxScale = ref(1)
+const typeList = ref([])
 const materialList = ref([])
 const thickList = ref([])
 
@@ -112,16 +125,52 @@ function boxZoomOut() {
   }
 }
 
+async function fetchType(lastQuery) {
+  materialList.value = []
+  thickList.value = []
+  typeList.value = []
+  query.taskTypeEnum = undefined
+  query.material = undefined
+  query.thick = undefined
+  if (isBlank(query.projectIds)) return
+  try {
+    const { content } = await getTypeList({
+      monthList: query.monthList,
+      projectIds: query.projectIds
+    })
+    typeList.value =
+      content?.map((v) => {
+        const _obj = {}
+        if (v & componentTypeEnum.ARTIFACT.V) {
+          _obj.name = '普通零件'
+        }
+        if (v & componentTypeEnum.ASSEMBLE.V) {
+          _obj.name = '翼腹板'
+        }
+        _obj.value = v
+        return _obj
+      }) || []
+    if (lastQuery && lastQuery?.taskTypeEnum && content?.length && content.indexOf(lastQuery.taskTypeEnum) !== -1) {
+      query.taskTypeEnum = lastQuery.taskTypeEnum
+    } else if (typeList.value.length === 1) {
+      query.taskTypeEnum = typeList.value[0].value
+    }
+    nextTick(() => {
+      typeListRefWidth.value = typeListRef.value.$el.clientWidth + 15
+      fetchMaterial(lastQuery)
+    })
+  } catch (error) {
+    console.log('获取厚度', error)
+  }
+}
+
 async function fetchMaterial(lastQuery) {
   if (isBlank(query.projectIds)) return
   try {
-    materialList.value = []
-    thickList.value = []
-    query.material = undefined
-    query.thick = undefined
     const { content } = await getMaterial({
-      dateTime: query.dateTime,
-      projectIds: query.projectIds
+      monthList: query.monthList,
+      projectIds: query.projectIds,
+      taskTypeEnum: query.taskTypeEnum
     })
     materialList.value =
       content?.map((v, i) => {
@@ -152,9 +201,10 @@ async function fetchTick(lastQuery) {
   try {
     thickList.value = []
     const { content } = await getThick({
-      dateTime: query.dateTime,
+      monthList: query.monthList,
       projectIds: query.projectIds,
-      material: query.material
+      material: query.material,
+      taskTypeEnum: query.taskTypeEnum
     })
     thickList.value =
       content?.map((v) => {
@@ -176,6 +226,6 @@ async function fetchTick(lastQuery) {
 
 defineExpose({
   boxScale,
-  refreshConditions: fetchMaterial
+  refreshConditions: fetchType
 })
 </script>

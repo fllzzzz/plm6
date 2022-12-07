@@ -15,6 +15,7 @@
     <template #titleRight>
       <print-table
         api-key="productSendReceiveStorageDetail"
+        v-permission="permission.detailPrint"
         :params="{ ...props.detailQuery,...query}"
         size="mini"
         type="warning"

@@ -10,7 +10,6 @@
       :data="crud.data"
       :empty-text="crud.emptyText"
       :max-height="maxHeight"
-      row-key="projectId"
       style="width: 100%"
     >
       <el-table-column prop="index" label="序号" align="center" width="60" type="index" />
@@ -28,11 +27,12 @@
       </el-table-column>
       <el-table-column
         v-if="columns.visible('cutNumber')"
-        align="center"
+        header-align="center"
         key="cutNumber"
         prop="cutNumber"
         :show-overflow-tooltip="true"
         label="切割指令号"
+        width="220px"
       >
         <template v-slot="scope">
           <table-cell-tag :show="scope.row.boolPrinted" color="#e64242" name="已打印" :offset="15" />
@@ -111,7 +111,7 @@
           <span>{{ scope.row.completeTime ? parseTime(scope.row.completeTime, '{y}-{m}-{d}') : '-' }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" :show-overflow-tooltip="true" label="操作" width="100">
+      <el-table-column v-permission="[...permission.detail]" align="center" :show-overflow-tooltip="true" label="操作" width="100">
         <template v-slot="scope">
           <common-button
             v-if="crud.query.processType === mesMachinePartOrderTypeEnum.DRILL_ORDER.V"
@@ -145,6 +145,7 @@ import useMaxHeight from '@compos/use-max-height'
 import pagination from '@crud/Pagination'
 import { parseTime } from '@/utils/date'
 import { mesMachinePartOrderTypeEnum } from '@enum-ms/mes'
+import { machinePartWorkOrderPM as permission } from '@/page-permission/mes'
 import mHeader from './module/header.vue'
 import detail from './module/detail.vue'
 import cuttingDetail from './module/cutting-detail.vue'
@@ -165,8 +166,10 @@ const { crud, CRUD, columns } = useCRUD(
   {
     title: '零件工单',
     sort: [],
+    permission: { ...permission },
     optShow: { ...optShow },
     crudApi: { ...crudApi },
+    requiredQuery: ['processType'],
     hasPagination: true
   },
   tableRef
@@ -197,6 +200,4 @@ CRUD.HOOK.handleRefresh = (crud, res) => {
   })
 }
 </script>
-<style lang="scss" scoped>
-</style>
-
+<style lang="scss" scoped></style>

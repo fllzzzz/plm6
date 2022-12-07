@@ -21,7 +21,7 @@
           <el-form-item label="零件科目匹配" prop="classifyIds">
             <common-radio-button
               v-model="form.basicClass"
-              :options="[matClsEnum.STEEL_PLATE, matClsEnum.MATERIAL]"
+              :options="[matClsEnum.STEEL_PLATE]"
               type="enum"
               size="small"
               style="margin-bottom:5px;"
@@ -146,6 +146,7 @@ const specIndexEnum = {
 const defaultForm = {
   id: undefined,
   name: '',
+  basicClass: matClsEnum.STEEL_PLATE.V,
   sort: undefined,
   links: []
 }

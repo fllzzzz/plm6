@@ -10,6 +10,7 @@
           <mHeader>
             <template #optRight>
               <common-button
+              v-permission="permission.save"
                 class="filter-item"
                 :disabled="!crud.selections?.length"
                 size="mini"
@@ -125,11 +126,11 @@
               <span v-else>{{ row.askCompleteTime }}</span>
             </template>
           </el-table-column>
-          <el-table-column v-permission="[...permission.del]" label="操作" width="100px" align="center" fixed="right">
+          <!-- <el-table-column v-permission="[...permission.del]" label="操作" width="100px" align="center" fixed="right">
             <template #default="{ row }">
               <udOperation :showEdit="false" :data="row" />
             </template>
-          </el-table-column>
+          </el-table-column> -->
         </common-table>
         <!--分页组件-->
         <!-- <pagination /> -->
@@ -146,30 +147,23 @@ import { ElMessage } from 'element-plus'
 import moment from 'moment'
 
 import { componentTypeEnum } from '@enum-ms/mes'
+import { machinePartSchedulingNestingResultPM as permission } from '@/page-permission/mes'
 
 import useTableValidate from '@compos/form/use-table-validate'
 import { manualFetchGroupsTree } from '@compos/mes/scheduling/use-scheduling-groups'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 // import pagination from '@crud/Pagination'
-import udOperation from '@crud/UD.operation'
+// import udOperation from '@crud/UD.operation'
 import mHeader from './module/header'
 import nestingTaskList from './module/nesting-task-list.vue'
 import previewDialog from './module/preview-dialog'
 import { deepClone } from '@/utils/data-type'
 
-// crud交由presenter持有
-const permission = {
-  get: [''],
-  edit: [''],
-  add: [''],
-  del: ['']
-}
-
 const optShow = {
   add: false,
   edit: false,
-  del: true,
+  del: false,
   download: false
 }
 
@@ -273,6 +267,7 @@ function handleNestingTaskClick(val, query) {
 }
 
 async function handleIssueSuccess() {
+  crud.data = []
   const _nestingTaskInfo = deepClone(currentNesting.value)
   await nestingTaskRef?.value?.refresh(_nestingTaskInfo)
 }

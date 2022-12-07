@@ -86,6 +86,7 @@
             type="textarea"
             style="width: 100%"
             maxlength="200"
+            show-word-limit
             :autosize="{ minRows: 2, maxRows: 4 }"
             placeholder="请输入备注"
           />

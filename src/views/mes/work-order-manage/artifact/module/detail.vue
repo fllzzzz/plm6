@@ -8,47 +8,51 @@
     </template>
     <template #content>
       <div class="head-container">
-        <div style="float: left">
-          <common-radio-button
-            v-model="processId"
-            :options="processList"
-            type="other"
-            :dataStructure="{ key: 'id', label: 'name', value: 'id' }"
-            size="small"
-            showOptionAll
-            class="filter-item"
-            @change="handleProcessChange"
-          />
-          <common-radio-button
-            v-if="props.detailData.productType === componentTypeEnum.ASSEMBLE.V"
-            v-model="listType"
-            :options="typeEnum.ENUM"
-            type="enum"
-            size="small"
-            class="filter-item"
-            @change="handleTypeChange"
-          />
-        </div>
-        <div style="float: right; width: 300px">
-          <print-table
-            :api-key="
-              props.detailData.productType === componentTypeEnum.ARTIFACT.V
-                ? 'mesProductionTaskOrder'
-                : listType === typeEnum.TASK_LIST.V
-                ? 'mesAssembleProductionTaskOrder'
-                : 'mesAssembleNestingOrder'
-            "
-            :params="
-              props.detailData.productType === componentTypeEnum.ARTIFACT.V ? { ...params } : { ...params, type: typeEnum.TASK_LIST.V }
-            "
+        <common-radio-button
+          v-model="processId"
+          :options="processList"
+          type="other"
+          :dataStructure="{ key: 'id', label: 'name', value: 'id' }"
+          size="small"
+          showOptionAll
+          class="filter-item"
+          @change="handleProcessChange"
+        />
+        <common-radio-button
+          v-if="props.detailData.productType === componentTypeEnum.ASSEMBLE.V"
+          v-model="listType"
+          :options="typeEnum.ENUM"
+          type="enum"
+          size="small"
+          class="filter-item"
+          @change="handleTypeChange"
+        />
+        <div style="float: right">
+          <!-- <print-table
+            v-permission="permission.print"
+            v-if="props.detailData.productType === componentTypeEnum.ARTIFACT.V"
+            api-key="mesProductionTaskOrder"
+            :params="{ ...params }"
             @print-success="addPrintRecord"
             size="mini"
             type="warning"
             class="filter-item"
-          />
+          /> -->
+          <!-- <print-table
+            v-permission="permission.print"
+            v-show="props.detailData.productType === componentTypeEnum.ASSEMBLE.V"
+            :api-key="listType === typeEnum.TASK_LIST.V ? 'mesAssembleProductionTaskOrder' : 'mesAssembleNestingOrder'"
+            :params="{ ...params, type: typeEnum.TASK_LIST.V }"
+            @print-success="addPrintRecord"
+            size="mini"
+            type="warning"
+            class="filter-item"
+          /> -->
+          <common-button v-permission="permission.print" icon="el-icon-printer" size="mini" type="success" @click="printIt">
+            打印{{ props.detailData.productType === componentTypeEnum.ARTIFACT.V ? '【任务清单】' : '【任务清单、套料清单】' }}
+          </common-button>
         </div>
       </div>
-
       <div>
         <common-table
           ref="table"
@@ -199,15 +203,26 @@
 </template>
 
 <script setup>
+import fetchFn from '@/utils/print/api'
 import { processInfo, getTaskList, getNestingList, printSign } from '@/api/mes/work-order-manage/artifact.js'
-import { defineProps, defineEmits, ref, computed, watch } from 'vue'
+import { defineProps, defineEmits, ref, computed, watch, inject } from 'vue'
+import { ElNotification, ElLoading } from 'element-plus'
+
 import { componentTypeEnum, structureOrderTypeEnum } from '@enum-ms/mes'
+import { printModeEnum } from '@/utils/print/enum'
+
 import { constantize } from '@/utils/enum/base'
 import { parseTime } from '@/utils/date'
+import { codeWait } from '@/utils'
+import formatFn from '@/utils/print/format/index'
+import printTemplate from '@/utils/print/default-template'
+import { printTable } from '@/utils/print/table'
+
 import useMaxHeight from '@compos/use-max-height'
 import usePagination from '@compos/use-pagination'
 import useVisible from '@compos/use-visible'
 
+const permission = inject('permission')
 const drawerRef = ref()
 const emit = defineEmits(['update:visible', 'refresh'])
 const props = defineProps({
@@ -225,8 +240,14 @@ const { visible: drawerVisible, handleClose } = useVisible({ emit, props, field:
 const { handleSizeChange, handleCurrentChange, total, setTotalPage, queryPage } = usePagination({ fetchHook: fetchHook })
 
 const typeEnum = {
-  TASK_LIST: { L: '任务清单', K: 'TASK_LIST', V: 1 },
-  NESTING_LIST: { L: '套料清单', K: 'NESTING_LIST', V: 2 }
+  TASK_LIST: {
+    L: '任务清单',
+    K: 'TASK_LIST',
+    V: 1,
+    [componentTypeEnum.ARTIFACT.K]: 'mesProductionTaskOrder',
+    [componentTypeEnum.ASSEMBLE.K]: 'mesAssembleProductionTaskOrder'
+  },
+  NESTING_LIST: { L: '套料清单', K: 'NESTING_LIST', V: 2, [componentTypeEnum.ASSEMBLE.K]: 'mesAssembleNestingOrder' }
 }
 constantize(typeEnum)
 // 高度
@@ -258,6 +279,7 @@ watch(
   () => drawerVisible.value,
   (val) => {
     if (val) {
+      listType.value = typeEnum.TASK_LIST.V
       processId.value = undefined
       processGet()
     }
@@ -283,7 +305,7 @@ async function fetch() {
   let _list = []
   try {
     const query =
-      props.detailData.productType === componentTypeEnum.ARTIFACT.V ? { ...params.value } : { ...params.value, type: listType.value }
+      props.detailData.productType === componentTypeEnum.ARTIFACT.V ? { ...params.value, productionLineTypeEnum: props.detailData.productionLine?.productionLineTypeEnum } : { ...params.value, type: listType.value }
     const { content = [], totalElements } = await getTaskList({
       ...query,
       ...queryPage
@@ -340,15 +362,67 @@ function fetchHook() {
   }
 }
 
-async function addPrintRecord() {
-  if (props.detailData.productType !== componentTypeEnum.ARTIFACT.V) return
+// async function addPrintRecord() {
+//   if (props.detailData.productType !== componentTypeEnum.ARTIFACT.V) return
+//   try {
+//     await printSign({ ...params.value })
+//     emit('refresh')
+//   } catch (error) {
+//     console.log('添加打印记录失败', error)
+//   }
+// }
+
+// --------------------------- 打印 start ------------------------------
+const printLoading = ref()
+
+async function printIt() {
+  printLoading.value = ElLoading.service({
+    lock: true,
+    text: '正在准备加入打印队列',
+    spinner: 'el-icon-loading',
+    fullscreen: true
+  })
   try {
+    for (const item in typeEnum.ENUM) {
+      const apiKey = typeEnum[item][componentTypeEnum.VK[props.detailData.productType]]
+      if (!apiKey) continue
+      printLoading.value.text = `正在加载数据：${typeEnum[item].L}`
+      const config = printTemplate[apiKey]
+      const _params =
+        props.detailData.productType === componentTypeEnum.ARTIFACT.V ? { ...params.value, productionLineTypeEnum: props.detailData.productionLine?.productionLineTypeEnum } : { ...params.value, type: listType.value }
+      let _resData = (await fetchFn[apiKey](_params)) || {}
+      if (formatFn[apiKey]) {
+        // 数据装换
+        _resData = await formatFn[apiKey](_resData)
+      }
+      const { header, footer, table, qrCode } = _resData
+      printLoading.value.text = `正在加入打印队列：${typeEnum[item].L}`
+      await codeWait(500)
+      const result = await printTable({
+        printMode: printModeEnum.QUEUE.V,
+        header,
+        footer,
+        table,
+        qrCode,
+        config
+      })
+      if (!result) {
+        throw new Error('导出失败')
+      }
+    }
+    printLoading.value.text = `已全部加入打印队列`
+    await codeWait(500)
+  } catch (error) {
+    ElNotification({ title: '加入打印队列失败，请重试', type: 'error', duration: 2500 })
+    throw new Error(error)
+  } finally {
+    printLoading.value.close()
     await printSign({ ...params.value })
     emit('refresh')
-  } catch (error) {
-    console.log('添加打印记录失败', error)
   }
 }
+
+// --------------------------- 打印 end --------------------------------
 </script>
 <style lang="scss" scoped>
 ::v-deep(.abnormal-row) {

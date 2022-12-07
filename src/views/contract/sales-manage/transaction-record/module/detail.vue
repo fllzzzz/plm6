@@ -26,7 +26,7 @@
     <template #titleRight>
       <div class="print-wrap">
         <print-table
-          v-permission="permission.printDetail"
+          v-permission="permission.print"
           api-key="transactionRecord"
           :params="info"
           size="mini"
@@ -70,6 +70,10 @@ const props = defineProps({
     default: false
   },
   info: {
+    type: Object,
+    default: () => {}
+  },
+  permission: {
     type: Object,
     default: () => {}
   }

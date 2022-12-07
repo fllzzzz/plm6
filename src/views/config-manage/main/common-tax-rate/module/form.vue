@@ -8,7 +8,7 @@
     width="500px"
   >
     <template #titleRight>
-      <common-button :loading="crud.status.cu === CRUD.STATUS.PROCESSING" size="mini" type="primary" @click="crud.submitCU">
+      <common-button :loading="crud.status.cu === CRUD.STATUS.PROCESSING" size="mini" type="primary" :disabled="form.taxRateList.length === 0" @click="crud.submitCU">
         确认
       </common-button>
     </template>
@@ -81,6 +81,10 @@ function init() {
 
 function handleClose(tag) {
   form.taxRateList.splice(form.taxRateList.indexOf(tag), 1)
+  if (form.taxRateList.length === 0) {
+    ElMessage.warning('至少保留一条税率数据')
+    return
+  }
 }
 
 function showInput() {

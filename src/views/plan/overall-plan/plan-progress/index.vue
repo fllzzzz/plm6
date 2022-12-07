@@ -173,6 +173,7 @@ const { crud, columns, CRUD } = useCRUD(
     sort: ['id.desc'],
     permission: { ...permission.value },
     optShow: { ...optShow },
+    requiredQuery: ['projectId'],
     crudApi: { ...crudApi },
     hasPagination: false
   },

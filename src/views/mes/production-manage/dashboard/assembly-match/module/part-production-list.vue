@@ -1,9 +1,16 @@
 <template>
   <div class="app-container">
-    <div style="width: 300px; float: right; margin-bottom: 8px">
-      <print-table api-key="mesMachinePartList" :params="{ ...props.query }" size="mini" type="warning" class="filter-item" />
+    <div class="head-container" style="width: 300px; float: right;">
+      <print-table
+        v-permission="permission.printDetail"
+        api-key="mesMachinePartList"
+        :params="{ ...props.query }"
+        size="mini"
+        type="warning"
+        class="filter-item"
+      />
     </div>
-    <common-table ref="tableRef" :data="machinePartData" :empty-text="'暂无数据'" :max-height="maxHeight" row-key="id" style="width: 100%">
+    <common-table ref="tableRef" :data="machinePartData" :empty-text="'暂无数据'" :max-height="maxHeight + 20" row-key="id" style="width: 100%">
       <el-table-column prop="index" label="序号" align="center" width="60" type="index" />
       <el-table-column align="center" key="serialNumber" prop="serialNumber" :show-overflow-tooltip="true" label="零部件编号">
         <template v-slot="scope">
@@ -26,6 +33,7 @@
 <script setup>
 import { ref, defineProps, watch } from 'vue'
 import { productionDetail } from '@/api/mes/production-manage/dashboard/assembly-match'
+import { assemblyMatchDashboardPM as permission } from '@/page-permission/mes'
 import useMaxHeight from '@compos/use-max-height'
 
 const tableRef = ref()
@@ -58,9 +66,18 @@ async function partDataGet() {
     console.log('获取区域下的零件生产数据失败', e)
   }
 }
-const { maxHeight } = useMaxHeight({
-  paginate: true
-})
+const { maxHeight } = useMaxHeight(
+  {
+    extraBox: ['.head-container'],
+    clientHRepMainH: true,
+    navbar: false,
+    paginate: false
+  },
+  tableRef
+)
 </script>
 <style lang="scss" scoped>
+.app-container {
+  padding-bottom: 0;
+}
 </style>

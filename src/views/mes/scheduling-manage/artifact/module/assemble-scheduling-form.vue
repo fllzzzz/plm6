@@ -1,8 +1,18 @@
 <template>
-  <common-drawer ref="assembleDrawerRef" modalClass="assemble-scheduling-drawer" title="部件排产" v-model="drawerVisible" direction="rtl" :before-close="handleClose" size="100%">
+  <common-drawer
+    ref="assembleDrawerRef"
+    modalClass="assemble-scheduling-drawer"
+    title="部件排产"
+    v-model="drawerVisible"
+    direction="rtl"
+    :before-close="handleClose"
+    size="100%"
+  >
     <template #titleRight>
       <common-button size="mini" type="success" @click="handleClose"> 上一步【构件排产预览】 </common-button>
-      <common-button size="mini" :loading="taskLoading" type="primary" @click="toTaskIssue"> 任务下发 </common-button>
+      <common-button v-permission="permission.assembleSave" size="mini" :loading="taskLoading" type="primary" @click="toTaskIssue">
+        任务下发
+      </common-button>
     </template>
     <template #content>
       <div class="head-container">
@@ -38,7 +48,9 @@
         </el-table-column>
         <el-table-column prop="typesettingAssembleTypeEnum" :show-overflow-tooltip="true" label="部件类型" min-width="100" align="center">
           <template #default="{ row: { sourceRow: row } }">
-            <span>{{ row.typesettingAssembleTypeEnum ? mesBuildingTypeSettingAssembleTypeEnum.VL[row.typesettingAssembleTypeEnum] : '-' }}</span>
+            <span>{{
+              row.typesettingAssembleTypeEnum ? mesBuildingTypeSettingAssembleTypeEnum.VL[row.typesettingAssembleTypeEnum] : '-'
+            }}</span>
           </template>
         </el-table-column>
         <el-table-column prop="serialNumber" :show-overflow-tooltip="true" label="编号" min-width="100" align="center">
@@ -147,6 +159,7 @@ import { artifactProductLineEnum, mesBuildingTypeSettingAssembleTypeEnum } from 
 import { componentTypeEnum } from '@enum-ms/mes'
 import { isBlank, deepClone } from '@/utils/data-type'
 import { obj2arr } from '@/utils/convert/type'
+import { artifactSchedulingPM as permission } from '@/page-permission/mes'
 
 import useTableValidate from '@compos/form/use-table-validate'
 import { manualFetchGroupsTree } from '@compos/mes/scheduling/use-scheduling-groups'
@@ -217,7 +230,9 @@ const showTagList = computed(() => {
 watch(
   () => hasOtherData.value,
   () => {
-    nextTick(() => { fixMaxHeight() })
+    nextTick(() => {
+      fixMaxHeight()
+    })
   }
 )
 
@@ -272,7 +287,7 @@ async function fetch() {
         tagObj.value[v.groupsId].assembleList = []
         tagObj.value[v.groupsId].unshowList = []
         tagObj.value[v.groupsId].otherList = []
-        for (let o = 0; o < v.assembleList.length; o++) {
+        for (let o = 0; o < v.assembleList?.length; o++) {
           const _o = v.assembleList[o]
           _o.boolStructuralEnum = false
           _o.attributeType = '部件'
@@ -317,7 +332,7 @@ async function fetch() {
           _o.boolStructuralEnum = true
           _o.boolTypesettinglEnum = true
           _o.needSchedulingQuantity = 1
-          if (x !== 0) {
+          if (x !== 0 || (v.assembleList?.length && x === 0)) {
             _o.groupsId = '同上'
             _o.askCompleteTime = '同上'
           }
@@ -330,8 +345,8 @@ async function fetch() {
           }
           if (
             (props.productionLineTypeEnum === artifactProductLineEnum.INTELLECT.V &&
-            _o.typesettingAssembleTypeEnum === mesBuildingTypeSettingAssembleTypeEnum.FINISHED.V) ||
-          (props.productionLineTypeEnum === artifactProductLineEnum.TRADITION.V && !_o.boolProcess)
+              _o.typesettingAssembleTypeEnum === mesBuildingTypeSettingAssembleTypeEnum.FINISHED.V) ||
+            (props.productionLineTypeEnum === artifactProductLineEnum.TRADITION.V && !_o.boolProcess)
           ) {
             tagObj.value[v.groupsId].unshowList.push({
               boolStructuralEnum: _o.boolStructuralEnum,
@@ -416,7 +431,9 @@ async function fetch() {
     console.log('获取部件排产列表失败', error)
   } finally {
     tableLoading.value = false
-    nextTick(() => { fixMaxHeight() })
+    nextTick(() => {
+      fixMaxHeight()
+    })
   }
 }
 

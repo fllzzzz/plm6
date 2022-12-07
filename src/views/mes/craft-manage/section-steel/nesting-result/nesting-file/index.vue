@@ -12,6 +12,7 @@
         @change="handleChange"
       />
       <export-button
+      v-permission="permission.downloadList"
         v-if="nestingFileType === nestingFileTypeEnum.MATERIAL_LIST.V"
         class="filter-item"
         :fn="getMaterialListExcelFn"
@@ -20,7 +21,7 @@
       >
         材料清单
       </export-button>
-      <common-button size="small" @click="handleClose">关闭</common-button>
+      <common-button size="small" @click="handleClose" v-permission="permission.closed">关闭</common-button>
     </template>
     <template #content>
       <common-table
@@ -44,7 +45,7 @@
           </template>
         </el-table-column>
         <el-table-column label="序号" type="index" align="center" width="60" />
-        <el-table-column key="serialNumber" prop="serialNumber" :show-overflow-tooltip="true" label="套料编号" align="center" width="120px">
+        <el-table-column key="serialNumber" prop="serialNumber" :show-overflow-tooltip="true" label="套料编号" align="left" width="240px">
           <template v-slot="scope">
             <span>{{ scope.row.serialNumber }}</span>
           </template>
@@ -106,7 +107,7 @@
           :show-overflow-tooltip="true"
           label="母材规格"
           align="center"
-          min-width="110px"
+          width="200px"
         >
           <template v-slot="scope">
             <span>{{ scope.row.specification }}</span>
@@ -123,7 +124,7 @@
             <span v-else>{{ scope.row.netWeight }}</span>
           </template>
         </el-table-column>
-        <el-table-column key="quantity" prop="quantity" :show-overflow-tooltip="true" label="数量" align="center" width="80px">
+        <el-table-column key="quantity" prop="quantity" :show-overflow-tooltip="true" label="数量" align="center" width="60px">
           <template v-slot="scope">
             <span>{{ scope.row.quantity }}</span>
           </template>
@@ -140,12 +141,12 @@
             <span>{{ scope.row.typesettingLength }}</span>
           </template>
         </el-table-column>
-        <el-table-column key="lossRate" prop="lossRate" :show-overflow-tooltip="true" label="损耗" align="center" width="80px">
+        <el-table-column key="lossRate" prop="lossRate" :show-overflow-tooltip="true" label="损耗" align="center" width="70px">
           <template v-slot="scope">
             <span>{{ scope.row.lossRate }}%</span>
           </template>
         </el-table-column>
-        <el-table-column  v-if="nestingFileType === nestingFileTypeEnum.NESTING_FILE.V" key="statusEnum" prop="statusEnum" :show-overflow-tooltip="true" label="状态" align="center">
+        <el-table-column  v-if="nestingFileType === nestingFileTypeEnum.NESTING_FILE.V" key="statusEnum" prop="statusEnum" :show-overflow-tooltip="true" label="状态" align="center" fixed="right" width="100px">
           <template v-slot="scope">
             <el-tag :type="typeEnum.V[scope.row.statusEnum].T">{{ typeEnum.VL[scope.row.statusEnum] }}</el-tag>
           </template>
@@ -162,6 +163,7 @@ import { getLightColor } from '@/utils/color'
 import { nestingProgress } from '@/api/mes/craft-manage/section-steel/nesting-setting'
 import { getMaterialList, getMaterialListExcelFn } from '@/api/mes/craft-manage/section-steel/nesting-result'
 import { ref, defineProps, defineEmits } from 'vue'
+import { mesNestingResultPM as permission } from '@/page-permission/mes'
 import { nestingFileTypeEnum, mesBuildingTypeSettingAssembleTypeEnum as materialTypeEnum, nestingSettingTypeEnum, MesBuildingTypesettingStatusEnum as typeEnum } from '@enum-ms/mes'
 import ExportButton from '@comp-common/export-button/index.vue'
 
@@ -179,8 +181,12 @@ const props = defineProps({
     default: () => {}
   }
 })
-const { visible: nestingFileVisible, handleClose } = useVisible({ emit, props, field: 'visible', showHook: nestingResultGet })
+const { visible: nestingFileVisible, handleClose } = useVisible({ emit, props, field: 'visible', showHook: showHook })
 
+function showHook() {
+  nestingFileType.value = nestingFileTypeEnum.NESTING_FILE.V
+  nestingResultGet()
+}
 const colorObj = ref({}) // serialNumber: color
 
 // 套料文件
@@ -213,7 +219,8 @@ async function nestingListGet() {
   try {
     resultLoading.value = true
     const { content } = await getMaterialList({ id: props.detailData.id })
-    console.log(content, 'content')
+    console.log(content)
+    nestingProgressData.value = content[0].typesettingDTOS
   } catch (error) {
     console.log('获取材料清单失败')
   } finally {

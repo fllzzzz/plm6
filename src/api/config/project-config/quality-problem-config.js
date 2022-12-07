@@ -9,6 +9,15 @@ export function get() {
   })
 }
 
+export function getQualityProblemType() {
+  return request({
+    module: 'project',
+    url: 'qhse-problem-type/all',
+    method: 'get',
+    cancelKey: false
+  })
+}
+
 export function add(data) {
   return request({
     module: 'project',

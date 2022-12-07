@@ -1,14 +1,14 @@
-import { dataSourceEnum, alignEnum, verticleAlignEnum, fieldTypeEnum as typeEnum, cssUnitEnum, cssUnitPrecisionEnum, pageFormatEnum, thicknessUnitEnum } from '@/utils/print/enum'
+import { dataSourceEnum, alignEnum, verticleAlignEnum, fieldTypeEnum as typeEnum, cssUnitEnum, cssUnitPrecisionEnum, pageFormatEnum } from '@/utils/print/enum'
 import { projectNameArrangementModeEnum } from '@/utils/enum/modules/contract'
 import { DP } from '@/settings/config'
 
-// 涂装列表
+// 油漆用量明细
 const mesPaintingList = {
   fontUnit: 'pt', // 字体单位
   unit: cssUnitEnum.MM.V, // 长度单位
   unitPrecision: cssUnitPrecisionEnum.ZERO.V, // 长度单位精度
   type: 'mesPaintingList', // 表格类型 KEY
-  name: '涂装列表（平台）', // 表格名称
+  name: '油漆用量明细（平台）', // 表格名称
   width: 210, // 打印纸的宽度
   height: 297, // 打印纸的高度
   paddingLR: 10, // 左右内边距
@@ -62,7 +62,7 @@ const mesPaintingList = {
   title: {
     show: true,
     allPage: false,
-    title: '涂装列表',
+    title: '油漆用量明细',
     align: alignEnum.CENTER.V,
     verticleAlign: verticleAlignEnum.CENTER.V,
     size: 17,
@@ -106,7 +106,6 @@ const mesPaintingList = {
     fields: [ // 字段内容
       { show: true, source: dataSourceEnum.SYSTEM.V, key: 'project', title: '项目：', width: 190, type: typeEnum.PROJECT.K, format: { showProjectFullName: false, showSerialNumber: true, projectNameShowConfig: projectNameArrangementModeEnum.SERIAL_NUMBER_START.V }},
       { show: true, source: dataSourceEnum.SYSTEM.V, key: 'monomer.name', title: '单体：', width: 150, type: typeEnum.MONOMER_NAME.K },
-      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'paintingType', title: '油漆类型：', width: 40, type: typeEnum.PRODUCT_TYPE.K },
       { show: false, source: dataSourceEnum.SYSTEM.V, key: 'printDate', title: '打印日期：', width: 40, type: typeEnum.DATE.K, format: 'YY/MM/DD' },
       { show: false, source: dataSourceEnum.SYSTEM.V, key: 'printer', title: '打印人：', width: 40, type: typeEnum.USER_NAME.K }
     ]
@@ -202,18 +201,15 @@ const mesPaintingList = {
      * @param {boolean} sum 列需要合计
      */
     fields: [
-      { show: true, key: 'name', title: '名称', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 18, type: typeEnum.STRUCTURE_NAME.K },
-      { show: true, key: 'material', title: '材质', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 18, type: typeEnum.MATERIAL.K },
-      { show: true, key: 'surfaceArea', title: '涂装表面积(㎡)', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.METE.K, format: { toThousand: false, unit: '㎡', precision: DP.COM_AREA__M2 }},
-      { show: true, key: 'paintCategory', title: '油漆类别', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.OTHER.K },
-      { show: true, key: 'thickness', title: '干膜厚度(μm)', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.THICKNESS.K, format: { toThousand: false, precision: 3, unit: thicknessUnitEnum.MM.V }},
-      { show: true, key: 'volumeSolids', title: '体积固体份(%)', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.QUANTITY.K, format: { precision: 0 }},
-      { show: true, key: 'loss', title: '损耗(%)', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 15, type: typeEnum.QUANTITY.K, format: { precision: 0 }},
-      { show: true, key: 'measure', title: '实际用量(L)', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.QUANTITY.K, format: { toThousand: false, precision: DP.COM_VOLUME__L }, sum: true }
+      { show: true, key: 'config.name', title: '构件类型', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 18, type: typeEnum.STRUCTURE_NAME.K },
+      { show: true, key: 'surfaceArea', title: '涂装表面积(㎡)', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.METE.K, format: { toThousand: false, unit: '㎡', precision: DP.COM_AREA__M2 }, sum: true },
+      { show: true, key: 'primerMeasure', title: '底漆(L)', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.QUANTITY.K, format: { toThousand: false, precision: DP.COM_VOLUME__L }, sum: true },
+      { show: true, key: 'intermediateMeasure', title: '中间漆(L)', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.QUANTITY.K, format: { toThousand: false, precision: DP.COM_VOLUME__L }, sum: true },
+      { show: true, key: 'topcoatMeasure', title: '面漆(L)', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.QUANTITY.K, format: { toThousand: false, precision: DP.COM_VOLUME__L }, sum: true }
     ]
   }
 }
 
 export default {
-  mesPaintingList //  涂装列表
+  mesPaintingList //  油漆用量明细
 }

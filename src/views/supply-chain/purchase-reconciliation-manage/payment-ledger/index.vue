@@ -92,7 +92,7 @@
       >
         <template #default="{ row }">
           <common-button type="primary" icon="el-icon-tickets" size="mini" @click="openApplication(row)" v-if="checkPermission(permission.application.get)"/>
-          <common-button type="success" icon="el-icon-money" size="mini" @click="openSettle(row)" v-if="(row.settlementStatus!==settlementStatusEnum.SETTLED.V && !row.unCheckSettlementCount) && checkPermission(permission.application.settle)"/>
+          <common-button type="success" icon="el-icon-money" size="mini" @click="openSettle(row)" v-if="(row.settlementStatus!==settlementStatusEnum.SETTLED.V && !row.unCheckSettlementCount) && checkPermission(permission.settle)"/>
         </template>
       </el-table-column>
     </common-table>

@@ -9,6 +9,15 @@ export function get() {
   })
 }
 
+export function getSubcontractType() {
+  return request({
+    module: '',
+    url: '/api/scm/SubcontractClass-config/all',
+    method: 'get',
+    cancelKey: false
+  })
+}
+
 export function add(data) {
   return request({
     module: '',

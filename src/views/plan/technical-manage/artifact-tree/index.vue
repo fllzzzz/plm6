@@ -256,6 +256,7 @@
         </el-table-column>
         <!--编辑与删除-->
         <el-table-column
+          v-if="checkPermission([...permission.editNum,...permission.productionStatus])"
           label="操作"
           width="160px"
           align="center"
@@ -264,8 +265,7 @@
           <template v-slot="scope">
             <template v-if="scope.row.dataType === 2">
               <common-button size="mini" @click="handleNum(scope.row)" icon="el-icon-edit" v-permission="permission.editNum" />
-              <common-button size="mini" @click="viewState(scope.row)" v-permission="permission.editNum"><svg-icon icon-class="document" /></common-button>
-              <!-- <common-button @click="configVisible=true">涂装</common-button> -->
+              <common-button size="mini" @click="viewState(scope.row)" v-permission="permission.productionStatus"><svg-icon icon-class="document"/></common-button>
             </template>
           </template>
         </el-table-column>
@@ -274,7 +274,6 @@
       <pagination />
       <changeForm v-model="numVisible" :detailInfo="currentRow" @success="handleSuccess" />
       <productionState v-model="stateVisible" :detailInfo="currentRow" @success="handleSuccess" />
-      <artifactPaintConfig v-model="configVisible" />
       <!-- pdf预览 -->
       <bim-preview-drawer
         v-model:visible="showBimDialog"
@@ -324,7 +323,6 @@ import changeForm from './module/change-form'
 import productionState from './module/production-state'
 import bimPreviewDrawer from '@/components-system/bim/bim-preview-drawer'
 import drawingPreviewFullscreenDialog from '@comp-base/drawing-preview/drawing-preview-fullscreen-dialog'
-import artifactPaintConfig from './module/artifact-paint-config'
 
 const { globalProject, globalProjectId } = mapGetters(['globalProject', 'globalProjectId'])
 const { showDrawing, drawingRow, drawingPreview } = useDrawing({ pidField: 'id', typeField: 'productType' })
@@ -381,7 +379,6 @@ const currentRow = ref({})
 const numVisible = ref(false)
 const stateVisible = ref(false)
 const allArea = ref([])
-const configVisible = ref(false)
 const { crud, columns, CRUD } = useCRUD(
   {
     title: '零构件清单',

@@ -36,11 +36,11 @@ import { regHeader } from '@compos/use-crud'
 import crudOperation from '@crud/CRUD.operation'
 import moment from 'moment'
 
-const defaultTime = moment().startOf('month').valueOf()
+const defaultTime = moment().startOf('month').valueOf().toString()
 
 const queryTaskTypeENUM = {
   ARTIFACT: taskTypeENUM.ARTIFACT,
-  ASSEMBLE: taskTypeENUM.ASSEMBLE,
+  ASSEMBLE: { L: '部件', K: 'ASSEMBLE', V: taskTypeENUM.ASSEMBLE.V | taskTypeENUM.PARENT_PART.V },
   MACHINE_PART: taskTypeENUM.MACHINE_PART
 }
 

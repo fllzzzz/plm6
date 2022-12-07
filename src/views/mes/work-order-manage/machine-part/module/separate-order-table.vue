@@ -5,7 +5,7 @@
         <tr class="separate-thead">
           <td style="width: 120px">{{ item.serialNumber }}</td>
           <td v-for="(line, lineIndex) in item.productionLineList" :key="lineIndex">
-            <span v-if="isNotBlank(line)">{{ line.workShopName }}>{{ line.productionLineName }}</span>
+            <span v-if="isNotBlank(line)">{{ line.productionLineName }}>{{ line.groupName }}</span>
             <span v-else>\</span>
           </td>
         </tr>
@@ -37,7 +37,6 @@ defineProps({
 </script>
 
 <style lang="scss" scoped>
-
 .separate-table {
   width: 100%;
   table-layout: fixed;
@@ -54,9 +53,12 @@ defineProps({
 }
 .separate-table .separate-td-img {
   height: 80px;
+  text-align: center;
 }
 
 .separate-table .separate-td-img img {
   width: 95%;
+  height: 95%;
+  vertical-align: middle;
 }
 </style>

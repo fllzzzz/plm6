@@ -5,8 +5,22 @@
       <div class="batch-operation head-container" style="display: flex; justify-content: space-between">
         <el-tag class="filter-item" size="medium" style="align-self: center">当前项目：{{ props.batchRow.projectName }}</el-tag>
         <div class="filter-item">
-          <common-button type="danger" size="mini" :disabled="handleSelectionData.length === 0" @click="batchDel">批量删除</common-button>
-          <common-button type="success" size="mini" :disabled="handleSelectionData.length === 0" @click="batchIssued">
+          <common-button
+            type="danger"
+            v-permission="permission.del"
+            size="mini"
+            :disabled="handleSelectionData.length === 0"
+            @click="batchDel"
+          >
+            批量删除
+          </common-button>
+          <common-button
+            type="success"
+            size="mini"
+            v-permission="permission.issued"
+            :disabled="handleSelectionData.length === 0"
+            @click="batchIssued"
+          >
             批量下发
           </common-button>
         </div>
@@ -21,14 +35,7 @@
         @selection-change="handleSelectionChange"
       >
         <el-table-column type="selection" align="center" width="60" class="selection" :selectable="selectable" />
-        <el-table-column
-          key="batchNumber"
-          prop="batchNumber"
-          :show-overflow-tooltip="true"
-          label="套料批次号"
-          min-width="120"
-          align="center"
-        >
+        <el-table-column key="batchNumber" prop="batchNumber" :show-overflow-tooltip="true" label="套料批次号" align="center">
           <template #default="{ row }">
             <span>{{ row.batchNumber }}</span>
           </template>
@@ -42,7 +49,7 @@
           key="assembleTotalQuantity"
           prop="assembleTotalQuantity"
           :show-overflow-tooltip="true"
-          label="部件总数"
+          label="清单部件总数"
           align="center"
         >
           <template #default="{ row }">
@@ -87,16 +94,30 @@
             <el-tag :type="typeEnum.V[row.statusIssueEnum].T">{{ typeEnum.VL[row.statusIssueEnum] }}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column :show-overflow-tooltip="true" label="操作" min-width="150px" align="center">
+        <el-table-column :show-overflow-tooltip="true" label="操作" min-width="200px" align="center">
           <template #default="{ row }">
-            <common-button type="primary" size="mini" @click="views(row)">查看</common-button>
+            <common-button v-permission="permission.detail" type="primary" size="mini" @click="views(row)">查看</common-button>
             <el-popconfirm confirm-button-text="确定" cancel-button-text="取消" title="确定下发吗?" @confirm="issued(row)">
               <template #reference>
-                <common-button size="mini" type="success" :disabled="row.statusIssueEnum === typeEnum.ISSUED.V">
+                <common-button
+                  size="mini"
+                  v-permission="permission.issued"
+                  type="success"
+                  :disabled="row.statusIssueEnum === typeEnum.ISSUED.V || row.statusIssueEnum === typeEnum.EXPIRED.V"
+                >
                   下发
                 </common-button>
               </template>
             </el-popconfirm>
+            <export-button
+              type="warning"
+              v-permission="permission.downloadZip"
+              size="mini"
+              :params="{ id: row.id }"
+              :fn="downloadZipGet"
+              :icon="''"
+              >下载</export-button
+            >
             <el-popconfirm
               confirm-button-text="确定"
               cancel-button-text="取消"
@@ -105,7 +126,12 @@
               @confirm="delNestingResult(row)"
             >
               <template #reference>
-                <common-button size="mini" type="danger" :disabled="row.statusIssueEnum === typeEnum.ISSUED.V && row.statusIssueEnum === typeEnum.PRODUCTION.V">
+                <common-button
+                  size="mini"
+                  v-permission="permission.del"
+                  type="danger"
+                  :disabled="row.statusIssueEnum === typeEnum.ISSUED.V || row.statusIssueEnum === typeEnum.PRODUCTION.V"
+                >
                   删除
                 </common-button>
               </template>
@@ -120,12 +146,14 @@
 
 <script setup>
 import { ref, defineProps, defineEmits, watch } from 'vue'
-import { nestingBatchList } from '@/api/mes/craft-manage/section-steel/nesting-result'
+import { nestingBatchList, downloadZipGet } from '@/api/mes/craft-manage/section-steel/nesting-result'
 
 import useMaxHeight from '@compos/use-max-height'
 import { ElMessageBox, ElNotification } from 'element-plus'
 import { MesBuildingTypesettingStatusEnum as typeEnum } from '@enum-ms/mes'
 import { nestingBatchIssued, nestingBatchDel } from '@/api/mes/craft-manage/section-steel/nesting-result'
+import { mesNestingResultPM as permission } from '@/page-permission/mes'
+import ExportButton from '@comp-common/export-button/index.vue'
 import nestingFile from '../nesting-file/index.vue'
 
 const emit = defineEmits(['success'])

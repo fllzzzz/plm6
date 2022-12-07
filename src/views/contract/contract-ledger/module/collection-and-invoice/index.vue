@@ -11,7 +11,7 @@
   >
     <template #content>
       <el-tabs v-model="activeName" class="tab-container">
-        <el-tab-pane label="收款列表" name="collection">
+        <el-tab-pane label="收款列表" name="collection" v-if="checkPermission(permission.collection?.get)">
           <template #label>
             <el-badge :value="currentRow?.unCheckCollectionCount" :hidden="!currentRow?.unCheckCollectionCount" class="badge-item">
               <span>收款列表</span>
@@ -19,7 +19,7 @@
           </template>
           <collection class="tab-content" :projectId="props.projectId" :visibleValue="modelValue" @success="emit('success')" :currentRow="currentRow"/>
         </el-tab-pane>
-        <el-tab-pane label="开票列表" name="invoice">
+        <el-tab-pane label="开票列表" name="invoice" v-if="checkPermission(permission.invoice?.get)">
           <template #label>
             <el-badge :value="currentRow?.unCheckInvoiceCount" :hidden="!currentRow?.unCheckInvoiceCount" class="badge-item">
               <span>开票列表</span>
@@ -36,6 +36,7 @@
 import { defineProps, defineEmits, watch, ref } from 'vue'
 import { ElTabs, ElTabPane } from 'element-plus'
 import useVisible from '@compos/use-visible'
+import checkPermission from '@/utils/system/check-permission'
 import Collection from './collection'
 import Invoice from './invoice'
 
@@ -56,6 +57,10 @@ const props = defineProps({
   tabName: {
     type: [String],
     default: 'collection'
+  },
+  permission: {
+    type: Object,
+    default: () => {}
   }
 })
 const emit = defineEmits(['success', 'update:modelValue'])

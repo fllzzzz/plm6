@@ -1,18 +1,21 @@
 <template>
   <div v-show="crud.searchToggle">
     <common-radio-button
+      v-if="lineTypeLoad && unshowLineType.length !== artifactProductLineEnum.KEYS.length"
       v-model="query.productionLineTypeEnum"
       :options="artifactProductLineEnum.ENUM"
       type="enum"
+      :unshowVal="unshowLineType"
       size="small"
       default
       class="filter-item"
     />
     <tag-tabs
+      v-if="artifactTypeList.length"
       v-model="query.structureClassId"
       class="filter-item"
       :style="'width:calc(100% - 205px)'"
-      style="display: inline-block;"
+      style="display: inline-block"
       :data="artifactTypeList"
       itemKey="structureClassId"
       @change="crud.toQuery"
@@ -39,8 +42,8 @@
 </template>
 
 <script setup>
-import { getArtifactType } from '@/api/mes/scheduling-manage/artifact'
-import { inject, watch, defineExpose } from 'vue'
+import { getArtifactType, getLineType } from '@/api/mes/scheduling-manage/artifact'
+import { inject, watch, defineExpose, ref } from 'vue'
 
 import { artifactProductLineEnum } from '@enum-ms/mes'
 
@@ -53,16 +56,25 @@ import productTypeQuery from '@comp-mes/header-query/product-type-query'
 const defaultQuery = {}
 
 const productType = inject('productType')
+const unshowLineType = ref([])
+const lineTypeLoad = ref(false)
 
 const { crud, query } = regHeader(defaultQuery)
 
-const { artifactTypeList, refreshArtifactType } = useGetArtifactTypeList({ getApi: getArtifactType, initHook: artifactTypeInit })
+const { artifactTypeList, refreshArtifactType } = useGetArtifactTypeList({ getApi: getArtifactType, initHook: artifactTypeInit }, true)
 
 watch(
   [() => query.productionLineTypeEnum, () => crud.query.areaIdList],
   () => {
-    console.log(crud.query.areaIdList, 'watch_areaIdList')
     refreshTypeList()
+  },
+  { deep: true, immediate: true }
+)
+
+watch(
+  [() => crud.query.areaIdList],
+  () => {
+    fetchLineType()
   },
   { deep: true, immediate: true }
 )
@@ -82,6 +94,26 @@ function resetQuery() {
 function artifactTypeInit() {
   query.structureClassId = artifactTypeList.value?.length ? artifactTypeList.value[0].structureClassId : undefined
   crud.toQuery()
+}
+
+async function fetchLineType() {
+  const areaIdList = crud.query.areaIdList
+  query.productionLineTypeEnum = undefined
+  unshowLineType.value = []
+  lineTypeLoad.value = false
+  if (!areaIdList?.length) return
+  try {
+    const { content } = await getLineType({ areaIdList })
+    for (const item in artifactProductLineEnum.ENUM) {
+      if (content.indexOf(artifactProductLineEnum[item].V) === -1) {
+        unshowLineType.value.push(artifactProductLineEnum[item].V)
+      }
+    }
+  } catch (er) {
+    console.log('获取产线类型失败')
+  } finally {
+    lineTypeLoad.value = true
+  }
 }
 
 function refreshTypeList() {

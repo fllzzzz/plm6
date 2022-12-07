@@ -104,7 +104,8 @@
             v-model="form.remark"
             type="textarea"
             style="width: 100%"
-            maxlength="500"
+            maxlength="200"
+            show-word-limit
             :autosize="{ minRows: 2, maxRows: 4 }"
             placeholder="请输入备注"
           />
@@ -213,7 +214,7 @@ CRUD.HOOK.beforeSubmit = () => {
   crud.form.applyAmount = 0
   crud.form.detailSaveParams = []
   freightDetails.value.map(v => {
-    if (v.applyAmount !== 0) {
+    if (v.applyAmount && v.applyAmount !== 0) {
       crud.form.applyAmount += v.applyAmount
       crud.form.detailSaveParams.push({
         projectId: v.projectId,
