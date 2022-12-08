@@ -80,6 +80,7 @@ export default ({ command }) => {
         { find: '@comp-wms', replacement: resolve(__dirname, 'src/components-system/wms') },
         { find: '@comp-cls', replacement: resolve(__dirname, 'src/components-system/classification') },
         { find: '@comp-mes', replacement: resolve(__dirname, 'src/components-system/mes') },
+        { find: '@comp-bridge', replacement: resolve(__dirname, 'src/components-system/bridge') },
         { find: '@comp-label', replacement: resolve(__dirname, 'src/components-system/label') },
         { find: '@compos', replacement: resolve(__dirname, 'src/composables') },
         { find: '@enum', replacement: resolve(__dirname, 'src/utils/enum') },

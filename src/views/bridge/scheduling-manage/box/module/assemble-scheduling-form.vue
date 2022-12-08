@@ -2,21 +2,21 @@
   <common-drawer
     ref="assembleDrawerRef"
     modalClass="assemble-scheduling-drawer"
-    title="部件排产"
+    title="单元件排产"
     v-model="drawerVisible"
     direction="rtl"
     :before-close="handleClose"
     size="100%"
   >
     <template #titleRight>
-      <common-button size="mini" type="success" @click="handleClose"> 上一步【构件排产预览】 </common-button>
+      <common-button size="mini" type="success" @click="handleClose"> 上一步【分段排产预览】 </common-button>
       <common-button v-permission="permission.assembleSave" size="mini" :loading="taskLoading" type="primary" @click="toTaskIssue">
         任务下发
       </common-button>
     </template>
     <template #content>
       <div class="head-container">
-        <!-- <span class="filter-item">构件排产信息：</span> -->
+        <!-- <span class="filter-item">分段排产信息：</span> -->
         <tag-tabs v-model="curGroupsId" class="filter-item" :style="'width:calc(100% - 125px)'" :data="showTagList" itemKey="groupsId">
           <template #default="{ item }">
             <span>{{ item.label }}</span>
@@ -30,7 +30,7 @@
       </div>
       <!-- <div class="tip">
         <span>* 提示：</span>
-        <span> 系统自动默认与构件相同的产线进行部件生产，也可在生产组列修改产线或生产组。</span>
+        <span> 系统自动默认与分段相同的产线进行单元件生产，也可在生产组列修改产线或生产组。</span>
       </div> -->
       <common-table
         v-loading="tableLoading"
@@ -43,10 +43,10 @@
         <el-table-column label="序号" type="index" align="center" width="60" />
         <el-table-column prop="attributeType" :show-overflow-tooltip="true" label="属性" width="90" align="center">
           <template #default="{ row }">
-            <el-tag :type="row.attributeType === '部件' ? 'warning' : 'success'">{{ row.attributeType }}</el-tag>
+            <el-tag :type="row.attributeType === '单元件' ? 'warning' : 'success'">{{ row.attributeType }}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="typesettingAssembleTypeEnum" :show-overflow-tooltip="true" label="部件类型" min-width="100" align="center">
+        <el-table-column prop="typesettingAssembleTypeEnum" :show-overflow-tooltip="true" label="单元件类型" min-width="100" align="center">
           <template #default="{ row: { sourceRow: row } }">
             <span>{{
               row.typesettingAssembleTypeEnum ? mesBuildingTypeSettingAssembleTypeEnum.VL[row.typesettingAssembleTypeEnum] : '-'
@@ -118,10 +118,10 @@
         <el-table-column label="序号" type="index" align="center" width="60" />
         <el-table-column prop="attributeType" :show-overflow-tooltip="true" label="属性" width="90" align="center">
           <template #default="{ row }">
-            <el-tag :type="row.attributeType === '部件' ? 'warning' : 'success'">{{ row.attributeType }}</el-tag>
+            <el-tag :type="row.attributeType === '单元件' ? 'warning' : 'success'">{{ row.attributeType }}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="typesettingAssembleTypeEnum" :show-overflow-tooltip="true" label="部件类型" min-width="100" align="center">
+        <el-table-column prop="typesettingAssembleTypeEnum" :show-overflow-tooltip="true" label="单元件类型" min-width="100" align="center">
           <template #default="{ row: { sourceRow: row } }">
             <span>{{
               row.typesettingAssembleTypeEnum ? mesBuildingTypeSettingAssembleTypeEnum.VL[row.typesettingAssembleTypeEnum] : '-'
@@ -149,26 +149,26 @@
 </template>
 
 <script setup>
-import { getAssemble } from '@/api/bridge/scheduling-manage/box'
-import { saveTask } from '@/api/mes/scheduling-manage/common'
+import { getElement } from '@/api/bridge/scheduling-manage/box'
+import { saveTask } from '@/api/bridge/scheduling-manage/common'
 import { defineProps, defineEmits, ref, inject, reactive, computed, nextTick, watch } from 'vue'
 import moment from 'moment'
 import { ElNotification } from 'element-plus'
 
 import { artifactProductLineEnum, mesBuildingTypeSettingAssembleTypeEnum } from '@enum-ms/mes'
-import { componentTypeEnum } from '@enum-ms/mes'
+import { componentTypeEnum } from '@enum-ms/bridge'
 import { isBlank, deepClone } from '@/utils/data-type'
 import { obj2arr } from '@/utils/convert/type'
 import { artifactSchedulingPM as permission } from '@/page-permission/bridge'
 
 import useTableValidate from '@compos/form/use-table-validate'
-import { manualFetchGroupsTree } from '@compos/mes/scheduling/use-scheduling-groups'
+import { manualFetchGroupsTree } from '@compos/bridge/scheduling/use-scheduling-groups'
 import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'
 import tagTabs from '@comp-common/tag-tabs'
 import handleSurplusAssembleDialog from './handle-surplus-assemble-dialog'
 
-const productType = componentTypeEnum.ASSEMBLE.V
+const productType = componentTypeEnum.CELL.V
 
 const assembleDrawerRef = ref()
 const emit = defineEmits(['update:visible', 'task-issue-success'])
@@ -189,7 +189,7 @@ const props = defineProps({
 const { visible: drawerVisible, handleClose } = useVisible({ emit, props, field: 'visible', showHook })
 
 const factoryIds = inject('curFactoryIds')
-const classIdGroupsObj = reactive({}) // {部件类型id：{list：groupsTree，obj：groupsObj}}
+const classIdGroupsObj = reactive({}) // {单元件类型id：{list：groupsTree，obj：groupsObj}}
 
 // 高度
 const { fixMaxHeight, maxHeight } = useMaxHeight(
@@ -276,10 +276,10 @@ async function fetch() {
         quantity: v.schedulingQuantity
       }
     })
-    const { assembleSchedulingList, assembleTypesetting, surplusAssemble } = await getAssemble(_ids)
+    const { assembleSchedulingList, assembleTypesetting, surplusAssemble } = await getElement(_ids)
     showTagGroupIds.value = []
     originAssembleSchedulingList.value = assembleSchedulingList
-    // 处理部件信息
+    // 处理单元件信息
     for (let i = 0; i < assembleSchedulingList?.length; i++) {
       const v = assembleSchedulingList[i]
       if (v?.groupsId && tagObj.value[v.groupsId]) {
@@ -290,7 +290,7 @@ async function fetch() {
         for (let o = 0; o < v.assembleList?.length; o++) {
           const _o = v.assembleList[o]
           _o.boolStructuralEnum = false
-          _o.attributeType = '部件'
+          _o.attributeType = '单元件'
           _o.weight = _o.netWeight
           _o.commonLength = _o.length
           _o.needSchedulingQuantity = _o.quantity
@@ -428,7 +428,7 @@ async function fetch() {
     }
     curGroupsId.value = showTagGroupIds.value[0]
   } catch (error) {
-    console.log('获取部件排产列表失败', error)
+    console.log('获取单元件排产列表失败', error)
   } finally {
     tableLoading.value = false
     nextTick(() => {
@@ -437,10 +437,10 @@ async function fetch() {
   }
 }
 
-// 构件按生产组分类
+// 分段按生产组分类
 function initArtifactData(list) {
   const _list = list
-  const _tagObj = {} // 构件信息对象{groupsId:{}}
+  const _tagObj = {} // 分段信息对象{groupsId:{}}
   for (let i = 0; i < _list.length; i++) {
     const groupsId = _list[i].groups?.id
     if (isBlank(_tagObj[groupsId])) {
@@ -489,7 +489,7 @@ async function toSaveHandleSurplus() {
     emit('task-issue-success')
     handleClose()
   } catch (er) {
-    console.log(er, '保存多余部件处理')
+    console.log(er, '保存多余单元件处理')
   } finally {
     saveSurplusLoading.value = false
   }
@@ -497,7 +497,7 @@ async function toSaveHandleSurplus() {
 
 async function toTaskIssue() {
   // if (props.productionLineTypeEnum === artifactProductLineEnum.INTELLECT.V && originAssembleSchedulingList.value.length > 0) {
-  //   ElMessage.warning('智能线下存在未套料的部件，请先进行套料！')
+  //   ElMessage.warning('智能线下存在未套料的单元件，请先进行套料！')
   //   return
   // }
   try {

@@ -17,7 +17,7 @@
         :project-id="props.projectId"
       />
       <el-input
-        v-if="props.detailData.productType === componentTypeEnum.ARTIFACT.V"
+        v-if="props.detailData.productType === componentTypeEnum.BOX.V"
         v-model.trim="name"
         size="small"
         placeholder="输入名称搜索"
@@ -69,7 +69,7 @@
         <el-table-column
           :show-overflow-tooltip="true"
           prop="name"
-          v-if="props.detailData.productType === componentTypeEnum.ARTIFACT.V"
+          v-if="props.detailData.productType === componentTypeEnum.BOX.V"
           label="名称"
           key="name"
           align="center"
@@ -126,7 +126,8 @@ import usePagination from '@compos/use-pagination'
 import { defineProps, defineEmits, ref, watch } from 'vue'
 import { bridgeWorkOrderTrackingPM as permission } from '@/page-permission/bridge'
 import { parseTime } from '@/utils/date'
-import { componentTypeEnum, workOrderTypeEnum } from '@enum-ms/mes'
+import { workOrderTypeEnum } from '@enum-ms/mes'
+import { componentTypeEnum } from '@enum-ms/bridge'
 import monomerSelectAreaSelect from '@comp-base/monomer-select-area-select'
 
 const emit = defineEmits(['update:visible'])

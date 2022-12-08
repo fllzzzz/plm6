@@ -2,108 +2,108 @@
 import request from '@/utils/request'
 
 /**
- * @description: 构件可排产列表
+ * @description: 分段可排产列表
  */
 export function get(params) {
   return request({
     module: 'bridge',
-    url: 'scheduling/artifact/page',
+    url: 'scheduling/box/page',
     method: 'get',
     params
   })
 }
 
 /**
- * @description: 构件可排产生产线类型
+ * @description: 分段可排产生产线类型
  */
 export function getLineType(params) {
   return request({
     module: 'bridge',
-    url: 'scheduling/artifact/line/type/list',
+    url: 'scheduling/box/line/type/list',
     method: 'get',
     params
   })
 }
 
 /**
- * @description: 获取构件排产汇总信息
+ * @description: 获取分段排产汇总信息
  */
 export function getSummary(params) {
   return request({
     module: 'bridge',
-    url: 'scheduling/artifact/summary',
+    url: 'scheduling/box/summary',
     method: 'get',
     params
   })
 }
 
 /**
- * @description: 保存构件排产
+ * @description: 保存分段排产
  */
 export function save(data) {
   return request({
     module: 'bridge',
-    url: 'scheduling/artifact',
+    url: 'scheduling/box',
     method: 'post',
     data
   })
 }
 
 /**
- * @description: 构件排产预览详情
+ * @description: 分段排产预览详情
  */
 export function record(params) {
   return request({
     module: 'bridge',
-    url: 'scheduling/artifact/record/page',
+    url: 'scheduling/box/record/page',
     method: 'get',
     params
   })
 }
 
 /**
- * @description: 获取构件预排产汇总信息
+ * @description: 获取分段预排产汇总信息
  */
 export function recordSummary(params) {
   return request({
     module: 'bridge',
-    url: 'scheduling/artifact/record/summary',
+    url: 'scheduling/box/record/summary',
     method: 'get',
     params
   })
 }
 
 /**
- * @description: 获取计算下发构件所需部件数量列表
+ * @description: 获取计算下发分段所需单元件数量列表
  */
-export function getAssemble(data) {
+export function getElement(data) {
   return request({
     module: 'bridge',
-    url: 'scheduling/artifact/assemble',
+    url: 'scheduling/box/element',
     method: 'post',
     data
   })
 }
 
 /**
- * @description: 编辑构件排产预览详情
+ * @description: 编辑分段排产预览详情
  */
 export function editRecord(data) {
   return request({
     module: 'bridge',
-    url: 'scheduling/artifact/record',
+    url: 'scheduling/box/record',
     method: 'put',
     data
   })
 }
 
 /**
- * @description: 删除构件排产预览详情
+ * @description: 删除分段排产预览详情
  */
 export function delRecord(ids) {
   return request({
     module: 'bridge',
-    url: 'scheduling/artifact/record',
+    url: 'scheduling/box/record',
     method: 'delete',
     data: ids
   })
@@ -138,14 +138,14 @@ export function getAreaTreeTime(params) {
 }
 
 /**
- * 根据生产线类型获取构件排产类型
+ * 根据生产线类型获取分段排产类型
  * @export
  * @returns
  */
-export function getArtifactRecordType(params) {
+export function getBoxRecordType(params) {
   return request({
     module: 'bridge',
-    url: 'scheduling/artifact/record/type/list',
+    url: 'scheduling/box/record/type/list',
     method: 'get',
     params
   })
@@ -159,21 +159,21 @@ export function getArtifactRecordType(params) {
 export function getLineRecordType(params) {
   return request({
     module: 'bridge',
-    url: 'scheduling/artifact/record/line/type/list',
+    url: 'scheduling/box/record/line/type/list',
     method: 'get',
     params
   })
 }
 
 /**
- * 根据生产线类型获取构件排产类型
+ * 根据生产线类型获取分段排产类型
  * @export
  * @returns
  */
-export function getArtifactType(params) {
+export function getBoxType(params) {
   return request({
     module: 'bridge',
-    url: 'scheduling/artifact/type/list',
+    url: 'scheduling/box/type/list',
     method: 'get',
     params
   })

@@ -42,16 +42,16 @@
 </template>
 
 <script setup>
-import { getArtifactType, getLineType } from '@/api/bridge/scheduling-manage/box'
+import { getBoxType, getLineType } from '@/api/bridge/scheduling-manage/box'
 import { inject, watch, defineExpose, ref } from 'vue'
 
 import { artifactProductLineEnum } from '@enum-ms/mes'
 
 import { regHeader } from '@compos/use-crud'
-import useGetArtifactTypeList from '@compos/mes/scheduling/use-get-artifact-type-list'
+import useGetBoxTypeList from '@compos/bridge/scheduling/use-get-box-type-list'
 import crudOperation from '@crud/CRUD.operation'
 import tagTabs from '@comp-common/tag-tabs'
-import productTypeQuery from '@comp-mes/header-query/product-type-query'
+import productTypeQuery from '@comp-bridge/header-query/product-type-query'
 
 const defaultQuery = {}
 
@@ -61,7 +61,7 @@ const lineTypeLoad = ref(false)
 
 const { crud, query } = regHeader(defaultQuery)
 
-const { artifactTypeList, refreshArtifactType } = useGetArtifactTypeList({ getApi: getArtifactType, initHook: artifactTypeInit }, true)
+const { artifactTypeList, refreshArtifactType } = useGetBoxTypeList({ getApi: getBoxType, initHook: artifactTypeInit }, true)
 
 watch(
   [() => query.productionLineTypeEnum, () => crud.query.areaIdList],

@@ -57,7 +57,7 @@
         align="center"
       >
         <template #default="{ row }">
-          <el-tag :type="row.productType & componentTypeEnum.ASSEMBLE.V ? '' : 'success'" effect="plain">
+          <el-tag :type="row.productType & componentTypeEnum.CELL.V ? '' : 'success'" effect="plain">
             {{ componentTypeEnum.VL[row.productType] }}
           </el-tag>
         </template>
@@ -118,7 +118,8 @@
 import crudApi from '@/api/bridge/work-order-manage/box.js'
 import { ref } from 'vue'
 
-import { componentTypeEnum, artifactProductLineEnum } from '@enum-ms/mes'
+import { artifactProductLineEnum } from '@enum-ms/mes'
+import { componentTypeEnum } from '@enum-ms/bridge'
 import { artifactWorkOrderPM as permission } from '@/page-permission/bridge'
 
 import useMaxHeight from '@compos/use-max-height'

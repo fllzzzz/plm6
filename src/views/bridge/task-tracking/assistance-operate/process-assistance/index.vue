@@ -146,7 +146,7 @@
 import crudApi, { getTask } from '@/api/bridge/bridge-task-tracking/assistance-operate/process-assistance'
 import { ref } from 'vue'
 
-import { componentTypeEnum } from '@enum-ms/mes'
+import { componentTypeEnum } from '@enum-ms/bridge'
 import { bridgeProcessAssistancePM as permission } from '@/page-permission/bridge'
 
 import useMaxHeight from '@compos/use-max-height'
@@ -163,8 +163,8 @@ const optShow = {
 }
 
 const componentTypeTag = {
-  [componentTypeEnum.ARTIFACT.K]: 'success',
-  [componentTypeEnum.ASSEMBLE.K]: 'warning',
+  [componentTypeEnum.BOX.K]: 'success',
+  [componentTypeEnum.CELL.K]: 'warning',
   [componentTypeEnum.MACHINE_PART.K]: ''
 }
 

@@ -84,7 +84,7 @@ import { ElNotification } from 'element-plus'
 import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'
 import useTableValidate from '@compos/form/use-table-validate'
-import useSchedulingGroups from '@compos/mes/scheduling/use-scheduling-groups'
+import useSchedulingGroups from '@compos/bridge/scheduling/use-scheduling-groups'
 
 const emit = defineEmits(['update:visible', 'refresh'])
 const props = defineProps({

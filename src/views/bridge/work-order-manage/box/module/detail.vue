@@ -19,7 +19,7 @@
           @change="handleProcessChange"
         />
         <common-radio-button
-          v-if="props.detailData.productType === componentTypeEnum.ASSEMBLE.V"
+          v-if="props.detailData.productType === componentTypeEnum.CELL.V"
           v-model="listType"
           :options="typeEnum.ENUM"
           type="enum"
@@ -30,7 +30,7 @@
         <div style="float: right">
           <!-- <print-table
             v-permission="permission.print"
-            v-if="props.detailData.productType === componentTypeEnum.ARTIFACT.V"
+            v-if="props.detailData.productType === componentTypeEnum.BOX.V"
             api-key="mesProductionTaskOrder"
             :params="{ ...params }"
             @print-success="addPrintRecord"
@@ -40,7 +40,7 @@
           /> -->
           <!-- <print-table
             v-permission="permission.print"
-            v-show="props.detailData.productType === componentTypeEnum.ASSEMBLE.V"
+            v-show="props.detailData.productType === componentTypeEnum.CELL.V"
             :api-key="listType === typeEnum.TASK_LIST.V ? 'mesAssembleProductionTaskOrder' : 'mesAssembleNestingOrder'"
             :params="{ ...params, type: typeEnum.TASK_LIST.V }"
             @print-success="addPrintRecord"
@@ -49,7 +49,7 @@
             class="filter-item"
           /> -->
           <common-button v-permission="permission.print" icon="el-icon-printer" size="mini" type="success" @click="printIt">
-            打印{{ props.detailData.productType === componentTypeEnum.ARTIFACT.V ? '【任务清单】' : '【任务清单、套料清单】' }}
+            打印{{ props.detailData.productType === componentTypeEnum.BOX.V ? '【任务清单】' : '【任务清单、套料清单】' }}
           </common-button>
         </div>
       </div>
@@ -60,7 +60,7 @@
           empty-text="暂无数据"
           :max-height="maxHeight"
           style="width: 100%"
-          v-if="props.detailData.productType === componentTypeEnum.ARTIFACT.V"
+          v-if="props.detailData.productType === componentTypeEnum.BOX.V"
         >
           <el-table-column label="序号" type="index" align="center" width="60" />
           <el-table-column :show-overflow-tooltip="true" label="单体" key="monomer.name" prop="monomer.name" align="center" />
@@ -84,7 +84,7 @@
           </el-table-column>
         </common-table>
         <common-table
-          v-if="props.detailData.productType === componentTypeEnum.ASSEMBLE.V && listType === typeEnum.TASK_LIST.V"
+          v-if="props.detailData.productType === componentTypeEnum.CELL.V && listType === typeEnum.TASK_LIST.V"
           ref="table"
           :data="tableData"
           empty-text="暂无数据"
@@ -117,7 +117,7 @@
           </el-table-column>
         </common-table>
         <common-table
-          v-if="props.detailData.productType === componentTypeEnum.ASSEMBLE.V && listType === typeEnum.NESTING_LIST.V"
+          v-if="props.detailData.productType === componentTypeEnum.CELL.V && listType === typeEnum.NESTING_LIST.V"
           ref="tableRef"
           :data="tableData"
           empty-text="暂无数据"
@@ -208,7 +208,8 @@ import { processInfo, getTaskList, getNestingList, printSign } from '@/api/bridg
 import { defineProps, defineEmits, ref, computed, watch, inject } from 'vue'
 import { ElNotification, ElLoading } from 'element-plus'
 
-import { componentTypeEnum, structureOrderTypeEnum } from '@enum-ms/mes'
+import { structureOrderTypeEnum } from '@enum-ms/mes'
+import { componentTypeEnum } from '@enum-ms/bridge'
 import { printModeEnum } from '@/utils/print/enum'
 
 import { constantize } from '@/utils/enum/base'
@@ -244,10 +245,10 @@ const typeEnum = {
     L: '任务清单',
     K: 'TASK_LIST',
     V: 1,
-    [componentTypeEnum.ARTIFACT.K]: 'bridgeProductionTaskOrder',
-    [componentTypeEnum.ASSEMBLE.K]: 'bridgeAssembleProductionTaskOrder'
+    [componentTypeEnum.BOX.K]: 'bridgeProductionTaskOrder',
+    [componentTypeEnum.CELL.K]: 'bridgeAssembleProductionTaskOrder'
   },
-  NESTING_LIST: { L: '套料清单', K: 'NESTING_LIST', V: 2, [componentTypeEnum.ASSEMBLE.K]: 'bridgeAssembleNestingOrder' }
+  NESTING_LIST: { L: '套料清单', K: 'NESTING_LIST', V: 2, [componentTypeEnum.CELL.K]: 'bridgeAssembleNestingOrder' }
 }
 constantize(typeEnum)
 // 高度
@@ -305,7 +306,7 @@ async function fetch() {
   let _list = []
   try {
     const query =
-      props.detailData.productType === componentTypeEnum.ARTIFACT.V ? { ...params.value, productionLineTypeEnum: props.detailData.productionLine?.productionLineTypeEnum } : { ...params.value, type: listType.value }
+      props.detailData.productType === componentTypeEnum.BOX.V ? { ...params.value, productionLineTypeEnum: props.detailData.productionLine?.productionLineTypeEnum } : { ...params.value, type: listType.value }
     const { content = [], totalElements } = await getTaskList({
       ...query,
       ...queryPage
@@ -363,7 +364,7 @@ function fetchHook() {
 }
 
 // async function addPrintRecord() {
-//   if (props.detailData.productType !== componentTypeEnum.ARTIFACT.V) return
+//   if (props.detailData.productType !== componentTypeEnum.BOX.V) return
 //   try {
 //     await printSign({ ...params.value })
 //     emit('refresh')
@@ -389,7 +390,7 @@ async function printIt() {
       printLoading.value.text = `正在加载数据：${typeEnum[item].L}`
       const config = printTemplate[apiKey]
       const _params =
-        props.detailData.productType === componentTypeEnum.ARTIFACT.V ? { ...params.value, productionLineTypeEnum: props.detailData.productionLine?.productionLineTypeEnum } : { ...params.value, type: listType.value }
+        props.detailData.productType === componentTypeEnum.BOX.V ? { ...params.value, productionLineTypeEnum: props.detailData.productionLine?.productionLineTypeEnum } : { ...params.value, type: listType.value }
       let _resData = (await fetchFn[apiKey](_params)) || {}
       if (formatFn[apiKey]) {
         // 数据装换

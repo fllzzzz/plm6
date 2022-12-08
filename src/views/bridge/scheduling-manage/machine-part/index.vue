@@ -119,7 +119,7 @@ import { computed, ref, onUnmounted, onMounted, nextTick } from 'vue'
 import { ElMessage } from 'element-plus'
 
 import RAF from '@/utils/raf'
-// import { componentTypeEnum } from '@enum-ms/mes'
+// import { componentTypeEnum } from '@enum-ms/bridge'
 import { machinePartSchedulingPM as permission } from '@/page-permission/bridge'
 
 import useMaxHeight from '@compos/use-max-height'

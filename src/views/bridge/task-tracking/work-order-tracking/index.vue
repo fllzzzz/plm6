@@ -120,7 +120,7 @@ import { get, machinePart } from '@/api/bridge/bridge-task-tracking/work-order-t
 import { parseTime } from '@/utils/date'
 import { projectNameFormatter } from '@/utils/project'
 import { bridgeWorkOrderTrackingPM as permission } from '@/page-permission/bridge'
-import { componentTypeEnum } from '@enum-ms/mes'
+import { componentTypeEnum } from '@enum-ms/bridge'
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
 import { DP } from '@/settings/config'
@@ -177,7 +177,7 @@ function currentChange(row) {
 }
 
 CRUD.HOOK.beforeToQuery = () => {
-  crud.crudApi.get = crud.query.productType === componentTypeEnum.ARTIFACT.V ? get : machinePart
+  crud.crudApi.get = crud.query.productType === componentTypeEnum.BOX.V ? get : machinePart
 }
 
 CRUD.HOOK.handleRefresh = (crud, data) => {

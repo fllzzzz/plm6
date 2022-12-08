@@ -1,5 +1,5 @@
 <template>
-  <common-drawer ref="drawerRef" :title="`构件排产预览`" v-model="drawerVisible" direction="rtl" :before-close="handleClose" size="100%">
+  <common-drawer ref="drawerRef" :title="`分段排产预览`" v-model="drawerVisible" direction="rtl" :before-close="handleClose" size="100%">
     <template #titleAfter>
       <el-tag size="small">
         <span>当前区域：</span>
@@ -14,7 +14,7 @@
         type="success"
         @click="toAssembleScheduling"
       >
-        下一步【部件排产】
+        下一步【单元件排产】
       </common-button>
     </template>
     <template #content>
@@ -84,7 +84,7 @@
         >
           批量删除
         </common-button>
-        <el-tooltip class="item" effect="light" :disabled="!!queryVO.structureClassId" content="请选择构件类型" placement="left">
+        <el-tooltip class="item" effect="light" :disabled="!!queryVO.structureClassId" content="请选择分段类型" placement="left">
           <span style="float: right; margin-right: 5px">
             <common-button
               v-permission="permission.recordEdit"
@@ -203,7 +203,7 @@
 </template>
 
 <script setup>
-import { record, getArtifactRecordType, getLineRecordType, recordSummary } from '@/api/bridge/scheduling-manage/box'
+import { record, getBoxRecordType, getLineRecordType, recordSummary } from '@/api/bridge/scheduling-manage/box'
 import { ElMessage } from 'element-plus'
 import { defineProps, defineEmits, ref, inject, computed, watch } from 'vue'
 
@@ -213,7 +213,7 @@ import { artifactSchedulingPM as permission } from '@/page-permission/bridge'
 import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'
 import usePagination from '@compos/use-pagination'
-import useGetArtifactTypeList from '@compos/mes/scheduling/use-get-artifact-type-list'
+import useGetBoxTypeList from '@compos/bridge/scheduling/use-get-box-type-list'
 import editForm from './edit-form'
 import batchEditForm from './batch-edit-form'
 import delForm from './del-form'
@@ -246,8 +246,8 @@ const selectionMode = ref(selectionModeEnum.SCHEDULING.V)
 
 const { visible: drawerVisible, handleClose } = useVisible({ emit, props, field: 'visible', showHook, closeHook })
 
-const { artifactTypeList, refreshArtifactType } = useGetArtifactTypeList(
-  { getApi: getArtifactRecordType, initHook: artifactTypeInit },
+const { artifactTypeList, refreshArtifactType } = useGetBoxTypeList(
+  { getApi: getBoxRecordType, initHook: artifactTypeInit },
   true
 )
 
@@ -431,7 +431,7 @@ async function fetch() {
     }
     tableData.value = _list
   } catch (error) {
-    console.log('获取构件排产预览记录失败', error)
+    console.log('获取分段排产预览记录失败', error)
   } finally {
     tableLoading.value = false
   }
@@ -561,7 +561,7 @@ function toBatchDel() {
 
 // --------------------------- 删除任务 end --------------------------------
 
-// --------------------------- 部件排产 start ------------------------------
+// --------------------------- 单元件排产 start ------------------------------
 
 const assembleVisible = ref(false)
 
@@ -573,7 +573,7 @@ function toAssembleScheduling() {
   assembleVisible.value = true
 }
 
-// --------------------------- 部件排产 end --------------------------------
+// --------------------------- 单元件排产 end --------------------------------
 
 function handleTaskIssueSuccess() {
   fetchLineType()

@@ -66,7 +66,7 @@
 
 <script setup>
 import { boolPrintedEnum } from '@enum-ms/common'
-import { componentTypeEnum } from '@enum-ms/mes'
+import { componentTypeEnum } from '@enum-ms/bridge'
 
 import { regHeader } from '@compos/use-crud'
 import crudOperation from '@crud/CRUD.operation'
@@ -77,12 +77,12 @@ import moment from 'moment'
 const defaultTime = moment().startOf('month').valueOf()
 
 const orderComponentTypeEnum = {
-  ARTIFACT: componentTypeEnum.ARTIFACT,
-  ASSEMBLE: componentTypeEnum.ASSEMBLE
+  BOX: componentTypeEnum.BOX,
+  CELL: componentTypeEnum.CELL
 }
 
 const defaultQuery = {
-  productType: componentTypeEnum.ARTIFACT.V,
+  productType: componentTypeEnum.BOX.V,
   localDateTime: defaultTime.toString()
 }
 

@@ -42,7 +42,7 @@
         </template>
       </el-table-column>
       <template v-for="item in process" :key="item.id">
-        <el-table-column v-if="item.productType & componentTypeEnum.ARTIFACT.V" :label="item.name" align="center" width="110px">
+        <el-table-column v-if="item.productType & componentTypeEnum.BOX.V" :label="item.name" align="center" width="110px">
           <template #default="{ row }">
             <el-tooltip v-if="row.processData[item.id]" content="不合格数 / 检验数" placement="top">
               <span>
@@ -84,7 +84,7 @@ import crudApi from '@/api/bridge/QHSE-manage/production-line-report'
 import { ref } from 'vue'
 
 import { bridgeQhseProductionLineReportPM as permission } from '@/page-permission/bridge'
-import { componentTypeEnum } from '@enum-ms/mes'
+import { componentTypeEnum } from '@enum-ms/bridge'
 
 import useProcess from '@compos/store/use-process'
 import useMaxHeight from '@compos/use-max-height'
