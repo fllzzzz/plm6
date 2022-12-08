@@ -35,6 +35,7 @@ import { getVisaReason } from '@/api/config/project-config/visa-reason-config'
 
 // 桥梁
 import { getBridgeProcessAllSimple } from '@/api/bridge/common'
+import { getBridgeAllCutConfigs } from '@/api/bridge/common'
 
 import moment from 'moment'
 
@@ -80,6 +81,8 @@ const state = {
   onlyProductLines: [], // 生产线
   cutConfigs: [], // 切割配置（所有）
   cutConfigKV: {}, // 切割配置 id:value 格式
+  bridgeCutConfigs: [], // 桥梁切割配置（所有）
+  bridgeCutConfigKV: {}, // 桥梁切割配置 id:value 格式
   process: [], // 工序
   bridgeProcess: [], // 桥梁工序
   users: [], // 人员列表
@@ -111,6 +114,7 @@ const state = {
     productLines: false,
     onlyProductLines: false,
     cutConfigs: false,
+    bridgeCutConfigs: false,
     process: false,
     bridgeProcess: false,
     users: false,
@@ -213,6 +217,10 @@ const mutations = {
     // cutConfigs.forEach((v) => {
     //   state.cutConfigKV[v.id] = v
     // })
+  },
+  SET_BRIDGE_CUT_CONFIGS(state, bridgeCutConfigs) {
+    state.bridgeCutConfigs = bridgeCutConfigs
+    state.bridgeCutConfigKV = {}
   },
   SET_PROCESS(state, process) {
     state.process = process
@@ -444,6 +452,13 @@ const actions = {
     const content = await getAllCutConfigs() || []
     commit('SET_CUT_CONFIGS', content)
     commit('SET_LOADED', { key: 'cutConfigs', loaded: true })
+    return content
+  },
+  // 桥梁切割配置
+  async fetchBridgeCutConfig({ commit }) {
+    const content = await getBridgeAllCutConfigs() || []
+    commit('SET_BRIDGE_CUT_CONFIGS', content)
+    commit('SET_LOADED', { key: 'bridgeCutConfigs', loaded: true })
     return content
   },
   // 工序

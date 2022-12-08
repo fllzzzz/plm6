@@ -1,9 +1,16 @@
 import request from '@/utils/request'
 
+// 获取钢材对应材料配置的简要信息
+export function getSteelClassifyConfBrief() {
+  return request({
+    url: '/api/bridge/steel-class/all/brief',
+    method: 'get'
+  })
+}
+
 export function get(params) {
   return request({
-    module: 'bridge',
-    url: 'rivetWeld/box/type',
+    url: '/api/bridge/steel-class',
     method: 'get',
     params
   })
@@ -11,8 +18,7 @@ export function get(params) {
 
 export function add(data) {
   return request({
-    module: 'bridge',
-    url: 'rivetWeld/box/type',
+    url: '/api/bridge/steel-class',
     method: 'post',
     data
   })
@@ -20,8 +26,7 @@ export function add(data) {
 
 export function edit(data) {
   return request({
-    module: 'bridge',
-    url: 'rivetWeld/box/type',
+    url: '/api/bridge/steel-class',
     method: 'put',
     data
   })
@@ -29,11 +34,10 @@ export function edit(data) {
 
 export function del(ids) {
   return request({
-    module: 'bridge',
-    url: 'rivetWeld/box/type',
+    url: '/api/bridge/steel-class',
     method: 'delete',
     data: ids
   })
 }
 
-export default { get, add, del, edit }
+export default { get, add, edit, del }

@@ -91,7 +91,7 @@
 import { ref, computed } from 'vue'
 import { partKeyWordEnum, wageQuotaTypeEnum } from '@enum-ms/mes'
 import { regForm } from '@compos/use-crud'
-import cutConfigSelect from '@/components-system/base/cut-config-select.vue'
+import cutConfigSelect from '@/components-system/base/bridge-cut-config-select.vue'
 
 const formRef = ref()
 const defaultForm = {

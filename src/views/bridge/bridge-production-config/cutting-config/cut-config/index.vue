@@ -69,7 +69,7 @@
 </template>
 
 <script setup>
-import crudApi from '@/api/mes/production-config/cutting-config'
+import crudApi from '@/api/bridge/production-config/cutting-config'
 import { defineExpose, ref, defineProps, defineEmits, watch, computed, inject, provide } from 'vue'
 import checkPermission from '@/utils/system/check-permission'
 import { configProductionLineGroupPM as permission } from '@/page-permission/config'

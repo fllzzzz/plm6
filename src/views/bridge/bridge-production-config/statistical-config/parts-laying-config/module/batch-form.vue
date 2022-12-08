@@ -142,7 +142,7 @@ import useTableOperate from '@compos/form/use-table-operate'
 import useTableValidate from '@compos/form/use-table-validate'
 import useMaxHeight from '@compos/use-max-height'
 import StoreOperation from '@crud/STORE.operation.vue'
-import cutConfigSelect from '@/components-system/base/cut-config-select.vue'
+import cutConfigSelect from '@/components-system/base/bridge-cut-config-select.vue'
 
 const validateNumerical = (value, row) => {
   if (!row.minNumerical || !row.maxNumerical || row.maxNumerical < row.minNumerical) return false

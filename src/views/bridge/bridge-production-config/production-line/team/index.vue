@@ -87,7 +87,7 @@
 </template>
 
 <script setup>
-import { productAddTeam } from '@/api/mes/production-config/production-line-group'
+import { productAddTeam } from '@/api/bridge/production-config/production-line-group'
 import { defineProps, defineExpose, ref, defineEmits, watch, computed, inject } from 'vue'
 // import { teamAttributeEnum, wageQuotaTypeEnum } from '@enum-ms/mes'
 import { wageQuotaTypeEnum } from '@enum-ms/mes'

@@ -438,6 +438,13 @@ export default {
               hidden: false,
               component: '/bridge/bridge-production-config/bridge-characteristics-config/cell-config/index',
               meta: { title: '单元特征定义', icon: 'project', noCache: true }
+            },
+            {
+              name: 'PartConfig',
+              path: 'part-config',
+              hidden: false,
+              component: '/bridge/bridge-production-config/bridge-characteristics-config/part-config/index',
+              meta: { title: '桥梁-零件特征定义', icon: 'project', noCache: true }
             }
           ]
         },

@@ -60,7 +60,7 @@
 
 <script setup>
 import { mesCuttingConfigPM as permission } from '@/page-permission/config'
-import crudApi from '@/api/mes/production-config/unloading-config'
+import crudApi from '@/api/bridge/production-config/unloading-config'
 import { ref, inject, defineEmits } from 'vue'
 import { baseTimeColumns } from '@/utils/columns-format/common'
 import { materialTypeEnum } from '@enum-ms/uploading-form'

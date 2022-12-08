@@ -67,7 +67,7 @@
 </template>
 
 <script setup>
-import crudApi, { getRivetWeld, getProcess, getArtifactProcess } from '@/api/bridge/production-config/artifact-rivet-weld-config'
+import crudApi, { getRivetWeld, getProcess, getBoxProcess } from '@/api/bridge/production-config/artifact-rivet-weld-config'
 import { onMounted, provide, ref } from 'vue'
 
 import { configArtifactRivetWeldConfigPM as permission } from '@/page-permission/config'
@@ -122,7 +122,7 @@ provide('processListObj', processListObj)
 
 async function fetchPreloadData() {
   try {
-    const content = await getArtifactProcess()
+    const content = await getBoxProcess()
     artifactTypeList.value = content.map((v) => {
       v.specPrefixStr = v.specPrefixList.map((o) => o.specPrefix).join(' / ')
       const _obj = {}
@@ -140,7 +140,9 @@ async function fetchPreloadData() {
       v.processIds = _processIds
       return v
     })
+    console.log(artifactTypeList.value)
     artifactTypeListObj.value = arr2obj(artifactTypeList.value, 'id')
+    console.log(artifactTypeListObj.value)
   } catch (error) {
     console.log(error, '获取单元类型失败')
   }

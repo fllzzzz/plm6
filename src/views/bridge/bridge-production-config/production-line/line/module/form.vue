@@ -29,43 +29,23 @@
       <el-form-item label="目标产量(吨/月)" prop="targetProductionShow">
         <el-input-number v-model.number="form.targetProductionShow" :min="0" :max="999999999" controls-position="right" style="width: 270px" />
       </el-form-item>
-      <el-form-item label="生产线类型" prop="productionLineTypeEnum">
-        <!-- <common-radio v-model="form.boolMachineEnum" :options="whetherEnum.ENUM" type="enum" /> -->
+      <!-- <el-form-item label="生产线类型" prop="productionLineTypeEnum">
         <el-select v-model="form.productionLineTypeEnum" placeholder="请选择生产线类型" :size="'small'" style="width: 270px">
           <el-option v-for="item in artifactProductLineEnum.ENUM" :key="item.V" :label="item.L" :value="item.V" />
         </el-select>
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item label="产品类型" prop="productType">
         <common-select
           :dataStructure="{ key: 'K', label: 'L', value: 'V' }"
           v-model="form.productType"
           :options="componentTypeEnum.ENUM"
-          :unshowOptions="
-            form.productionLineTypeEnum === artifactProductLineEnum.INTELLECT.V
-              ? [
-                  componentTypeEnum.AUXILIARY_MATERIAL.K,
-                  componentTypeEnum.MACHINE_PART.K,
-                  componentTypeEnum.ASSEMBLE.K,
-                  componentTypeEnum.ENCLOSURE.K,
-                ]
-              : [componentTypeEnum.AUXILIARY_MATERIAL.K]
-          "
           placeholder="请选择产品类型"
           style="width: 270px"
         />
       </el-form-item>
-      <!-- <el-form-item v-if="form.productType & componentTypeEnum.ARTIFACT.V" label="智能线" prop="boolMachineEnum">
-        <common-radio v-model="form.boolMachineEnum" :options="whetherEnum.ENUM" type="enum" />
-      </el-form-item> -->
-      <!-- <el-form-item label="生产线简称" prop="shortName">
-        <el-input v-model="form.shortName" type="text" placeholder="请填写生产线简称" style="width: 270px" />
-      </el-form-item> -->
       <el-form-item
-        v-if="
-          (form.productionLineTypeEnum === artifactProductLineEnum.INTELLECT.V && form.productType & componentTypeEnum.ARTIFACT.V) |
-            (form.productionLineTypeEnum === artifactProductLineEnum.TRADITION.V && form.productType & componentTypeEnum.ARTIFACT.V)
-        "
-        :label="form.productionLineTypeEnum === artifactProductLineEnum.INTELLECT.V && form.productType & componentTypeEnum.ARTIFACT.V ? '产品标识' : '可生产产品种类'"
+        v-if="form.productType & componentTypeEnum.BOX.V"
+        label="可生产产品种类"
         prop="linkIdList"
       >
         <common-select
@@ -74,7 +54,7 @@
           :options="configList"
           :loading="configLoading"
           multiple
-          :placeholder="`请选择${form.productionLineTypeEnum && form.productType & componentTypeEnum.ARTIFACT.V ? '产品标识' : '可生产产品种类'}`"
+          placeholder="请选择可生产产品种类"
           style="width: 270px"
         />
       </el-form-item>
@@ -98,7 +78,8 @@
 import { productConfigInfo } from '@/api/mes/production-config/production-line'
 import { ref, computed, watch, watchEffect } from 'vue'
 
-import { componentTypeEnum, artifactProductLineEnum } from '@enum-ms/mes'
+import { bridgeProcessTypeEnum as componentTypeEnum } from '@enum-ms/bridge'
+import { artifactProductLineEnum } from '@enum-ms/mes'
 // import { whetherEnum } from '@enum-ms/common'
 
 import { regForm } from '@compos/use-crud'
@@ -112,7 +93,7 @@ const defaultForm = {
   factoryId: undefined,
   workshopId: undefined,
   productType: undefined,
-  productionLineTypeEnum: undefined,
+  productionLineTypeEnum: artifactProductLineEnum.TRADITION.V,
   targetProductionShow: undefined,
   targetProduction: undefined,
   name: '',
@@ -150,9 +131,9 @@ watchEffect(() => {
 })
 
 watch(
-  () => [form.productType, form.productionLineTypeEnum],
+  () => [form.productType],
   () => {
-    if (form.productType && !(form.productType & componentTypeEnum.ENCLOSURE.V)) {
+    if (form.productType) {
       fetchConfigInfo()
     }
   },

@@ -18,17 +18,12 @@
         <process-select
           ref="processSelectRef"
           v-model="form.processId"
-          :disabledProductType="[componentTypeEnum.ENCLOSURE.V,componentTypeEnum.MACHINE_PART.V]"
+          :disabledProductType="[componentTypeEnum.MACHINE_PART.V]"
           :size="'small'"
           :multiple="false"
           style="width: 270px"
           @change="processChange"
         />
-      </el-form-item>
-      <el-form-item v-if="productType === componentTypeEnum.ARTIFACT.V" label="生产线类型" prop="productionLineTypeEnum">
-        <el-select v-model="form.productionLineTypeEnum" placeholder="请选择生产线类型" :size="'small'" style="width: 270px">
-          <el-option v-for="item in artifactProductLineEnum.ENUM" :key="item.V" :label="item.L" :value="item.V" />
-        </el-select>
       </el-form-item>
       <el-form-item label="质检" prop="inspectorIds">
         <user-select
@@ -48,9 +43,10 @@
 import { ref, computed } from 'vue'
 import { regForm } from '@compos/use-crud'
 import factorySelect from '@comp-base/factory-select.vue'
-import processSelect from '@comp-mes/process-select'
+import processSelect from '@/components-system/bridge/process-select'
 import userSelect from '@comp-common/user-select'
-import { artifactProductLineEnum, componentTypeEnum } from '@enum-ms/mes'
+import { artifactProductLineEnum } from '@enum-ms/mes'
+import { bridgeProcessTypeEnum as componentTypeEnum } from '@enum-ms/bridge'
 
 const formRef = ref()
 const processSelectRef = ref()
@@ -58,8 +54,8 @@ const inspectorSelectRef = ref()
 const productType = ref()
 const defaultForm = {
   id: undefined,
-  productionLineTypeEnum: artifactProductLineEnum.TRADITION.V,
   processId: undefined,
+  productionLineTypeEnum: artifactProductLineEnum.TRADITION.V,
   inspectorIds: []
 }
 
@@ -68,16 +64,12 @@ const isEdit = computed(() => crud.status.edit >= 1)
 
 const rules = {
   factoryId: [{ required: true, message: '请选择工厂', trigger: 'change' }],
-  productionLineTypeEnum: [{ required: true, message: '请选择生产线', trigger: 'change' }],
   processId: [{ required: true, message: '请选择工序', trigger: 'change' }],
   inspectorIds: [{ required: true, message: '请选择质检', trigger: 'change' }]
 }
 
 function processChange(val) {
   productType.value = processSelectRef.value?.getOption(val)?.productType
-  if (productType.value !== componentTypeEnum.ARTIFACT.V) {
-    form.productionLineTypeEnum = artifactProductLineEnum.TRADITION.V
-  }
 }
 
 function inspectorChange(userlist) {

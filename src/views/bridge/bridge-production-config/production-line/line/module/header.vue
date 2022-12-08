@@ -29,7 +29,6 @@
       :dataStructure="{ key: 'K', label: 'L', value: 'V' }"
       v-model="query.productType"
       :options="componentTypeEnum.ENUM"
-      :unshowOptions="[componentTypeEnum.AUXILIARY_MATERIAL.K]"
       placeholder="请选择产品类型"
       style="width: 190px"
       class="filter-item"
@@ -37,14 +36,6 @@
       @change="crud.toQuery"
     />
     <div v-show="crud.searchToggle">
-      <common-radio-button
-        v-model="query.productionLineTypeEnum"
-        :options="artifactProductLineEnum.ENUM"
-        type="enum"
-        showOptionAll
-        class="filter-item"
-        @change="crud.toQuery"
-      />
       <el-input
         v-model.trim="query.name"
         placeholder="输入生产线名称搜索"
@@ -62,7 +53,7 @@
 
 <script setup>
 import { enabledEnum } from '@enum-ms/common'
-import { componentTypeEnum, artifactProductLineEnum } from '@enum-ms/mes'
+import { bridgeProcessTypeEnum as componentTypeEnum } from '@enum-ms/bridge'
 import { regHeader } from '@compos/use-crud'
 import crudOperation from '@crud/CRUD.operation'
 import rrOperation from '@crud/RR.operation'
@@ -73,7 +64,6 @@ const defaultQuery = {
   factoryId: undefined,
   name: undefined,
   boolEnabledEnum: enabledEnum.TRUE.V,
-  productionLineTypeEnum: undefined,
   productType: undefined
 }
 

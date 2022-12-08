@@ -55,14 +55,14 @@
 import { ref } from 'vue'
 import { ElMessageBox } from 'element-plus'
 
-import { processMaterialListTypeEnum as typeEnum } from '@enum-ms/mes'
+import { bridgeProcessTypeEnum as typeEnum } from '@enum-ms/bridge'
 import { arrIsRepeat } from '@data-type/array'
 import { cleanArray } from '@/utils/data-type/array'
 import { arr2obj } from '@/utils/convert/type'
 
 import useProcess from '@compos/store/use-process'
 import { regForm } from '@compos/use-crud'
-import processSelect from '@comp-mes/process-select'
+import processSelect from '@/components-system/bridge/process-select'
 
 const { process } = useProcess()
 

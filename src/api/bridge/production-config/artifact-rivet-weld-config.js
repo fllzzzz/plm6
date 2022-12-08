@@ -4,7 +4,7 @@ import request from '@/utils/request'
 export function getRivetWeld(params) {
   return request({
     module: 'bridge',
-    url: 'rivetWeld/artifact/type',
+    url: 'rivetWeld/box/type',
     method: 'get',
     params
   })
@@ -20,11 +20,11 @@ export function getProcess(params) {
   })
 }
 
-// 获取构件类型与工序列表
-export function getArtifactProcess(params) {
+// 获取单元类型与工序列表
+export function getBoxProcess(params) {
   return request({
     module: 'bridge',
-    url: 'productProcess/artifact/list',
+    url: 'productProcess/box/list',
     method: 'get',
     params
   })

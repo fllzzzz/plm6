@@ -11,7 +11,7 @@
       <common-button :loading="crud.status.cu === 2" type="primary" size="mini" @click="crud.submitCU">确认</common-button>
     </template>
     <el-form ref="formRef" :model="form" size="small" label-width="90px">
-      <el-form-item label="部件类型">
+      <el-form-item label="分段类型">
         <span>{{ form.name }}</span>
       </el-form-item>
       <el-form-item label="工序" prop="processSequenceIds">
@@ -70,13 +70,13 @@
 import { ref } from 'vue'
 import { ElMessageBox } from 'element-plus'
 
-import { processMaterialListTypeEnum as typeEnum } from '@enum-ms/mes'
+import { bridgeProcessTypeEnum as typeEnum } from '@enum-ms/bridge'
 import { arrIsRepeat } from '@data-type/array'
 import { isBlank, isNotBlank } from '@data-type/index'
 import { arr2obj } from '@/utils/convert/type'
 
 import { regForm } from '@compos/use-crud'
-import processSelect from '@comp-mes/process-select'
+import processSelect from '@/components-system/bridge/process-select'
 
 const formRef = ref()
 const processSelectRef = ref([])
@@ -115,24 +115,7 @@ CRUD.HOOK.beforeToCU = () => {
   } else {
     processSequenceObj.value = {}
   }
-  form.productType = typeEnum.ASSEMBLE.V
-}
-
-// 验证前
-CRUD.HOOK.afterValidateCU = () => {
-  // const processFlag =
-  //   form.processSequenceIds &&
-  //   form.processSequenceIds.length > 0 &&
-  //   !form.processSequenceIds.some(
-  //     (v, index) => (!v && v !== 0) || (index !== form.processSequenceIds.length - 1 && !processSequenceObj.value[v])
-  //   )
-  // if (!processFlag) {
-  //   ElMessage({
-  //     message: `请正确填写${typeEnum.VL[form.productType]}工序信息`,
-  //     type: 'error'
-  //   })
-  // }
-  // return processFlag
+  form.productType = typeEnum.CELL.V
 }
 
 // 提交前

@@ -51,7 +51,7 @@
 </template>
 
 <script setup>
-import { delCutConfigDetail as delApi, editCutConfigDetail as edit } from '@/api/mes/production-config/unloading-config'
+import { delCutConfigDetail as delApi, editCutConfigDetail as edit } from '@/api/bridge/production-config/unloading-config'
 import { ElMessageBox, ElNotification } from 'element-plus'
 import { defineProps, defineExpose, ref, defineEmits, inject } from 'vue'
 import { whetherEnum } from '@enum-ms/common'

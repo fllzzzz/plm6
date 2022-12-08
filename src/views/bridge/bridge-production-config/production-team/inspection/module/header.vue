@@ -2,15 +2,6 @@
   <div v-show="crud.searchToggle">
     <slot name="teamType"></slot>
     <process-select class="filter-item" :multiple="false" clearable v-model="query.processId" style="width: 200px" @change="crud.toQuery" />
-    <!-- <el-input
-      v-model="query.leaderName"
-      placeholder="输入组长名称搜索"
-      class="filter-item"
-      style="width: 200px"
-      size="small"
-      clearable
-      @keyup.enter="crud.toQuery"
-    /> -->
     <rrOperation />
   </div>
   <crudOperation></crudOperation>
@@ -20,7 +11,7 @@
 import { regHeader } from '@compos/use-crud'
 import rrOperation from '@crud/RR.operation'
 import crudOperation from '@crud/CRUD.operation'
-import processSelect from '@comp-mes/process-select'
+import processSelect from '@/components-system/bridge/process-select'
 
 const defaultQuery = {
   processId: undefined,

@@ -47,7 +47,7 @@
 </template>
 
 <script setup>
-import crudApi from '@/api/mes/production-config/production-line-group'
+import crudApi from '@/api/bridge/production-config/production-line-group'
 import { defineExpose, ref, defineProps, defineEmits, watch, computed, inject } from 'vue'
 
 import checkPermission from '@/utils/system/check-permission'

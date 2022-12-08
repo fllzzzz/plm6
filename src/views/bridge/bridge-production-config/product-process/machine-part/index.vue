@@ -57,7 +57,7 @@
 </template>
 
 <script setup>
-import crudApi, { getMachinePart } from '@/api/mes/production-config/product-process'
+import crudApi, { getMachinePart } from '@/api/bridge/production-config/product-process'
 import { ref } from 'vue'
 import { configProductProcessMachinePartPM as permission } from '@/page-permission/config'
 
@@ -76,7 +76,7 @@ const optShow = {
 const tableRef = ref()
 const { crud, CRUD } = useCRUD(
   {
-    title: '零件工序定义',
+    title: '桥梁-零件工序定义',
     sort: [],
     hasPagination: false,
     permission: { ...permission },

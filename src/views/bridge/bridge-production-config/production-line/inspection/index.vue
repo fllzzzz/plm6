@@ -51,7 +51,7 @@
 </template>
 
 <script setup>
-import { productAddInspectionTeam } from '@/api/mes/production-config/production-line-group'
+import { productAddInspectionTeam } from '@/api/bridge/production-config/production-line-group'
 import { defineExpose, defineEmits, ref, defineProps, watch, computed, inject } from 'vue'
 import useInspectionTeam from '@compos/store/use-inspection-team'
 import { ElNotification } from 'element-plus'

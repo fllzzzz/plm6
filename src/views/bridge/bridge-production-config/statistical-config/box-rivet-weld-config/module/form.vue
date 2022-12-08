@@ -17,7 +17,7 @@
           :options="artifactTypeList"
           type="other"
           class="input-underline"
-          :dataStructure="{ key: 'id', label: 'classificationName', value: 'id' }"
+          :dataStructure="{ key: 'id', label: 'name', value: 'id' }"
           placeholder="构件类型"
           :disabled="isEdit"
           style="width: 100%"
@@ -132,7 +132,7 @@ const validateNumerical = (rule, value, callback) => {
 }
 
 const rules = {
-  classificationId: [{ required: true, message: '请选择构件类型', trigger: 'change' }],
+  classificationId: [{ required: true, message: '请选择单元类型', trigger: 'change' }],
   numerical: [{ required: true, validator: validateNumerical, message: '请填写数值', trigger: 'blur' }]
 }
 

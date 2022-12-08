@@ -3,8 +3,8 @@ import request from '@/utils/request'
 // 获取组铆焊工序列表
 export function getProcess(params) {
   return request({
-    module: 'mes',
-    url: 'process/rivetWeld/assemble',
+    module: 'bridge',
+    url: 'process/rivetWeld/element',
     method: 'get',
     params
   })
@@ -13,8 +13,8 @@ export function getProcess(params) {
 // 获取工序列表
 export function getAssembleProcess(params) {
   return request({
-    module: 'mes',
-    url: 'productProcess/assemble/list',
+    module: 'bridge',
+    url: 'productProcess/element/list',
     method: 'get',
     params
   })
@@ -22,8 +22,8 @@ export function getAssembleProcess(params) {
 
 export function get(params) {
   return request({
-    module: 'mes',
-    url: 'rivetWeld/assemble',
+    module: 'bridge',
+    url: 'rivetWeld/element',
     method: 'get',
     params
   })
@@ -31,8 +31,8 @@ export function get(params) {
 
 export function add(data) {
   return request({
-    module: 'mes',
-    url: 'rivetWeld/assemble',
+    module: 'bridge',
+    url: 'rivetWeld/element',
     method: 'post',
     data: [data]
   })
@@ -40,8 +40,8 @@ export function add(data) {
 
 export function batchAdd(data) {
   return request({
-    module: 'mes',
-    url: 'rivetWeld/assemble',
+    module: 'bridge',
+    url: 'rivetWeld/element',
     method: 'post',
     data
   })
@@ -49,8 +49,8 @@ export function batchAdd(data) {
 
 export function edit(data) {
   return request({
-    module: 'mes',
-    url: 'rivetWeld/assemble',
+    module: 'bridge',
+    url: 'rivetWeld/element',
     method: 'put',
     data
   })
@@ -58,8 +58,8 @@ export function edit(data) {
 
 export function del(ids) {
   return request({
-    module: 'mes',
-    url: 'rivetWeld/assemble',
+    module: 'bridge',
+    url: 'rivetWeld/element',
     method: 'delete',
     data: ids
   })

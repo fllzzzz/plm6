@@ -21,17 +21,6 @@
     >
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="序号" type="index" align="center" width="60" />
-       <el-table-column
-        v-if="columns.visible('productionLineTypeEnum')"
-        key="productionLineTypeEnum"
-        prop="productionLineTypeEnum"
-        label="生产线类型"
-        width="100px"
-      >
-        <template v-slot="scope">
-          {{ artifactProductLineEnum.VL[scope.row.productionLineTypeEnum] }}
-        </template>
-      </el-table-column>
       <el-table-column
         v-if="columns.visible('processName')"
         key="processName"
@@ -80,13 +69,13 @@
 </template>
 
 <script setup>
-import crudApi from '@/api/mes/production-config/production-line-inspection'
+import crudApi from '@/api/bridge/production-config/production-line-inspection'
 import { defineExpose, ref } from 'vue'
-import { useStore } from 'vuex'
+// import { useStore } from 'vuex'
 
 import checkPermission from '@/utils/system/check-permission'
 import { configProductionLineInspectPM as permission } from '@/page-permission/config'
-import { componentTypeEnum, artifactProductLineEnum } from '@enum-ms/mes'
+import { bridgeProcessTypeEnum as componentTypeEnum } from '@enum-ms/bridge'
 
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
@@ -95,7 +84,7 @@ import pagination from '@crud/Pagination'
 import mHeader from './module/header'
 import mForm from './module/form'
 
-const store = useStore()
+// const store = useStore()
 
 const tableRef = ref()
 const { crud, columns, CRUD } = useCRUD(
@@ -148,12 +137,12 @@ CRUD.HOOK.beforeSubmit = () => {
 }
 
 // 编辑之后 取消缓存的已加载设置
-CRUD.HOOK.afterSubmit = () => {
-  store.commit('config/SET_LOADED', { key: 'inspectionTeam', loaded: false })
-}
-CRUD.HOOK.afterDelete = () => {
-  store.commit('config/SET_LOADED', { key: 'inspectionTeam', loaded: false })
-}
+// CRUD.HOOK.afterSubmit = () => {
+//   store.commit('config/SET_LOADED', { key: 'inspectionTeam', loaded: false })
+// }
+// CRUD.HOOK.afterDelete = () => {
+//   store.commit('config/SET_LOADED', { key: 'inspectionTeam', loaded: false })
+// }
 
 defineExpose({
   permission,
