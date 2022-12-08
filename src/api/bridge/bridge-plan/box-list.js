@@ -2,8 +2,7 @@ import request from '@/utils/request'
 
 export function get(params) {
   return request({
-    module: 'bridge',
-    url: 'tech-box',
+    url: '/api/bridge/tech-box',
     method: 'get',
     params
   })
@@ -11,8 +10,7 @@ export function get(params) {
 
 export function edit(data) {
   return request({
-    module: 'bridge',
-    url: 'tech-box',
+    url: '/api/bridge/tech-box',
     method: 'put',
     data
   })
@@ -29,8 +27,7 @@ export function edit(data) {
 
 export function del(data) {
   return request({
-    module: 'bridge',
-    url: 'tech-box',
+    url: '/api/bridge/tech-box',
     method: 'delete',
     data
   })
@@ -38,8 +35,7 @@ export function del(data) {
 
 export function listUpload(data) {
   return request({
-    module: 'bridge',
-    url: 'tech-box/import',
+    url: '/api/bridge/tech-box/import',
     responseType: 'blob',
     method: 'post',
     headers: {
@@ -54,8 +50,7 @@ export function listUpload(data) {
  */
 export function downloadBoxCell(params) {
   return request({
-    module: 'bridge',
-    url: 'tech-box/export',
+    url: '/api/bridge/tech-box/export',
     responseType: 'blob',
     method: 'get',
     params
@@ -67,8 +62,7 @@ export function downloadBoxCell(params) {
  */
 export function downloadBoxCellTemplate() {
   return request({
-    module: 'bridge',
-    url: 'tech-box/template-export',
+    url: '/api/bridge/tech-box/template-export',
     responseType: 'blob',
     method: 'get'
   })
@@ -77,8 +71,7 @@ export function downloadBoxCellTemplate() {
 // 获取分段对应的单元
 export function boxCellDetail(params) {
   return request({
-    module: 'bridge',
-    url: 'tech-element/listByBoxId',
+    url: '/api/bridge/tech-element/listByBoxId',
     method: 'get',
     params
   })
@@ -87,8 +80,7 @@ export function boxCellDetail(params) {
 // 按区域一键清空
 export function delBoxCellByArea(params) {
   return request({
-    module: 'bridge',
-    url: 'tech-box/clear-by-areaId',
+    url: '/api/bridge/tech-box/clear-by-areaId',
     method: 'delete',
     params
   })

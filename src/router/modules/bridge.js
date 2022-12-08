@@ -160,6 +160,143 @@ export default {
       ]
     },
     {
+      path: '/bridge/production-order-manage',
+      component: 'Layout',
+      hidden: false,
+      name: 'BridgeProductionOrderManage',
+      alwaysShow: false,
+      redirect: '/bridge/production-order-manage/production-order',
+      meta: {
+        title: '生产排期管理',
+        icon: 'project',
+        noCache: true
+      },
+      children: [
+        {
+          name: 'BridgeProductionOrder',
+          path: 'production-order',
+          hidden: false,
+          component: '/bridge/production-order/index',
+          meta: {
+            title: '生产排期',
+            icon: 'project',
+            noCache: true
+          }
+        }
+      ]
+    },
+    {
+      path: '/bridge/scheduling-manage',
+      component: 'Layout',
+      hidden: false,
+      name: 'BridgeSchedulingManage',
+      alwaysShow: true,
+      redirect: '/bridge/scheduling-manage/scheduling/box',
+      meta: {
+        title: '生产排产',
+        icon: 'project',
+        noCache: true
+      },
+      children: [
+        {
+          name: 'BridgeSchedulingBox',
+          path: 'scheduling/box',
+          hidden: false,
+          component: '/bridge/scheduling-manage/box/index',
+          meta: {
+            title: '分段排产',
+            icon: 'project',
+            noCache: true
+          }
+        },
+        {
+          name: 'BridgeSchedulingMachinePart',
+          path: 'scheduling/machine-part',
+          component: '',
+          hidden: false,
+          alwaysShow: true,
+          redirect: '/bridge/scheduling-manage/scheduling/machine-part/index',
+          meta: {
+            title: '零件排产',
+            icon: 'project',
+            noCache: true
+          },
+          children: [
+            {
+              name: 'BridgeSchedulingMachinePartIndex',
+              path: 'index',
+              hidden: false,
+              component: '/bridge/scheduling-manage/machine-part/index',
+              meta: {
+                title: '零件排产',
+                icon: 'project',
+                noCache: true
+              }
+            },
+            {
+              name: 'BridgeSchedulingMachinePartRecord',
+              path: 'record',
+              hidden: false,
+              component: '/bridge/scheduling-manage/machine-part/record/index',
+              meta: {
+                title: '预览记录',
+                icon: 'project',
+                noCache: true
+              }
+            },
+            {
+              name: 'BridgeSchedulingMachinePartNestingResult',
+              path: 'nesting-result',
+              hidden: false,
+              component: '/bridge/scheduling-manage/machine-part/nesting-result/index',
+              meta: {
+                title: '套料成果',
+                icon: 'project',
+                noCache: true
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      path: '/bridge/work-order-manage',
+      component: 'Layout',
+      hidden: false,
+      name: 'BridgeWorkOrderManage',
+      alwaysShow: true,
+      redirect: '/bridge/work-order-manage/box',
+      meta: {
+        title: '工单管理',
+        icon: 'project',
+        noCache: true
+      },
+      children: [
+        {
+          name: 'BridgeWorkOrderBox',
+          path: 'box',
+          hidden: false,
+          component: '/bridge/work-order-manage/box/index',
+          meta: {
+            title: '分段工单',
+            icon: 'project',
+            noCache: true
+          }
+        },
+        {
+          name: 'BridgeMachinePartOrder',
+          path: 'machinePart',
+          hidden: false,
+          component: '/bridge/work-order-manage/machine-part/index',
+          meta: {
+            title: '零件工单',
+            icon: 'project',
+            noCache: true
+          }
+        }
+      ]
+    },
+    {
       path: '/bridge/task-tracking',
       component: 'Layout',
       hidden: false,

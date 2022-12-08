@@ -26,11 +26,10 @@ export function getWorkshopsAllSimple(params) {
   })
 }
 
-// 获取所有工序
-export function getProcessAllSimple(params) {
+// 获取桥梁所有工序
+export function getBridgeProcessAllSimple(params) {
   return request({
-    module: 'mes',
-    url: 'process',
+    url: '/api/mes/bridge/process',
     method: 'get',
     params
   })

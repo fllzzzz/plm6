@@ -151,6 +151,8 @@ export const showProjectSearch = [
   { component: '/bridge/bridge-plan/list-summary/box-summary/index', type: pt.BRIDGE.V, required: true },
   { component: '/bridge/bridge-plan/list-summary/cell-summary/index', type: pt.BRIDGE.V, required: true },
   { component: '/bridge/bridge-plan/list-summary/part-summary/index', type: pt.BRIDGE.V, required: true },
+  { component: '/bridge/work-order-manage/box/index', type: pt.BRIDGE.V, required: false },
+  { component: '/bridge/work-order-manage/machine-part/index', type: pt.BRIDGE.V, required: false },
   { component: '/bridge/task-tracking/assistance-operate/productionLine-assistance/index', type: pt.BRIDGE.V, required: false },
   { component: '/bridge/task-tracking/assistance-operate/process-assistance/index', type: pt.BRIDGE.V, required: false },
   { component: '/bridge/production-manage/dashboard/project-dashboard/index', type: pt.BRIDGE.V, required: true },

@@ -154,7 +154,7 @@
 </template>
 
 <script setup>
-import crudApi, { editStatus } from '@/api/mes/production-config/production-line'
+import crudApi, { editStatus } from '@/api/bridge/production-config/production-line'
 import { ref, defineEmits, inject } from 'vue'
 import { useStore } from 'vuex'
 import { enabledEnum } from '@enum-ms/common'

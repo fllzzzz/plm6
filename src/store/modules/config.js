@@ -32,6 +32,10 @@ import { getChangeReasonConfig } from '@/api/config/system-config/change-reason'
 import { getSubcontractType } from '@/api/config/project-config/subcontract-config'
 import { getQualityProblemType } from '@/api/config/project-config/quality-problem-config'
 import { getVisaReason } from '@/api/config/project-config/visa-reason-config'
+
+// 桥梁
+import { getBridgeProcessAllSimple } from '@/api/bridge/common'
+
 import moment from 'moment'
 
 /**
@@ -77,6 +81,7 @@ const state = {
   cutConfigs: [], // 切割配置（所有）
   cutConfigKV: {}, // 切割配置 id:value 格式
   process: [], // 工序
+  bridgeProcess: [], // 桥梁工序
   users: [], // 人员列表
   dept: [], // 部门列表
   userDeptTree: [], // 人员部门树
@@ -107,6 +112,7 @@ const state = {
     onlyProductLines: false,
     cutConfigs: false,
     process: false,
+    bridgeProcess: false,
     users: false,
     dept: false,
     unit: false,
@@ -210,6 +216,9 @@ const mutations = {
   },
   SET_PROCESS(state, process) {
     state.process = process
+  },
+  SET_BRIDGE_PROCESS(state, bridgeProcess) {
+    state.bridgeProcess = bridgeProcess
   },
   SET_USERS(state, users) {
     state.users = users
@@ -442,6 +451,13 @@ const actions = {
     const content = await getProcessAllSimple() || []
     commit('SET_PROCESS', content)
     commit('SET_LOADED', { key: 'process' })
+    return content
+  },
+  // 桥梁工序
+  async fetchBridgeProcess({ commit }) {
+    const content = await getBridgeProcessAllSimple() || []
+    commit('SET_BRIDGE_PROCESS', content)
+    commit('SET_LOADED', { key: 'bridgeProcess' })
     return content
   },
   // 用户

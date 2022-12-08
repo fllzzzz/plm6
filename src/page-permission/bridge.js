@@ -136,6 +136,20 @@ export const bridgeXmlFileListPM = {
 
 // ########################################################################
 
+// --------------------------- 生产订单 start --------------------------------
+
+// 生产订单/生产排期
+export const bridgeProductionOrderPM = {
+  get: ['bridge_production_order:get'], // 列表
+  detail: ['bridge_production_order:detail'], // 查看计划详情
+  edit: ['bridge_production_order:edit'], // 排产计划修改
+  detailList: ['bridge_production_order:detailList'] // 清单详情
+}
+
+// --------------------------- 生产订单 end --------------------------------
+
+// ########################################################################
+
 // --------------------------- 质安管理 start --------------------------------
 
 // 质安管理/质检报表

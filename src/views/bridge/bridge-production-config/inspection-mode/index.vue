@@ -121,12 +121,14 @@
 </template>
 
 <script setup>
-import { getByProductType, editInspection } from '@/api/mes/production-config/process'
+import { getByProductType, editInspection } from '@/api/bridge/production-config/process'
 import { ref } from 'vue'
 import { ElMessageBox } from 'element-plus'
 
 import {
-  processMaterialListTypeEnum as typeEnum,
+  bridgeProcessTypeEnum as typeEnum
+} from '@enum-ms/bridge'
+import {
   processInspectTypeEnum as inspectTypeEnum,
   processReportTypeEnum as reportTypeEnum
 } from '@enum-ms/mes'
