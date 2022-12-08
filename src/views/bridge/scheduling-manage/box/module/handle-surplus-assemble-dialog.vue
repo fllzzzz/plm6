@@ -1,5 +1,5 @@
 <template>
-  <common-dialog title="多余部件处理" v-model="dialogVisible" width="95%" fullscreen :before-close="handleClose">
+  <common-dialog title="多余单元件处理" v-model="dialogVisible" width="95%" fullscreen :before-close="handleClose">
     <template #titleRight>
       <slot name="saveBtn"></slot>
     </template>
@@ -18,10 +18,10 @@
           <el-table-column label="序号" type="index" align="center" width="60" />
           <!-- <el-table-column prop="attributeType" :show-overflow-tooltip="true" label="属性" width="90" align="center">
             <template #default>
-              <el-tag type="warning">部件</el-tag>
+              <el-tag type="warning">单元件</el-tag>
             </template>
           </el-table-column> -->
-          <!-- <el-table-column prop="assembleConfigName" :show-overflow-tooltip="true" label="部件类型" min-width="100" align="center" /> -->
+          <!-- <el-table-column prop="assembleConfigName" :show-overflow-tooltip="true" label="单元件类型" min-width="100" align="center" /> -->
           <el-table-column prop="serialNumber" :show-overflow-tooltip="true" label="编号" min-width="100" align="center" />
           <el-table-column prop="specification" :show-overflow-tooltip="true" label="规格" min-width="120" align="center" />
           <el-table-column prop="length" :show-overflow-tooltip="true" label="长度（mm）" min-width="90" align="center" />
@@ -47,8 +47,8 @@
           @selection-change="handleArtifactSelectionChange"
         >
           <el-table-column type="selection" width="55" align="center" />
-          <el-table-column prop="name" :show-overflow-tooltip="true" label="构件名称" min-width="100" align="center" />
-          <el-table-column prop="serialNumber" :show-overflow-tooltip="true" label="构件编号" min-width="100" align="center" />
+          <el-table-column prop="name" :show-overflow-tooltip="true" label="分段名称" min-width="100" align="center" />
+          <el-table-column prop="serialNumber" :show-overflow-tooltip="true" label="分段编号" min-width="100" align="center" />
           <el-table-column prop="specification" :show-overflow-tooltip="true" label="规格" min-width="120" align="center" />
           <el-table-column prop="length" :show-overflow-tooltip="true" label="长度（mm）" min-width="90" align="center" />
           <el-table-column prop="netWeight" :show-overflow-tooltip="true" label="重量（kg）" min-width="90" align="center" />

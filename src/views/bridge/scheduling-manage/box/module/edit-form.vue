@@ -46,7 +46,7 @@ import { ElNotification } from 'element-plus'
 import { defineEmits, defineProps, inject, ref, computed } from 'vue'
 
 import useVisible from '@compos/use-visible'
-import useSchedulingGroups from '@compos/mes/scheduling/use-scheduling-groups'
+import useSchedulingGroups from '@compos/bridge/scheduling/use-scheduling-groups'
 
 const emit = defineEmits(['update:visible', 'refresh'])
 const props = defineProps({

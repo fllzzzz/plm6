@@ -3,7 +3,8 @@ import { constantize } from '../base'
 const componentTypeEnum = {
   BOX: { L: '分段', K: 'BOX', V: 1 << 0, T: '' },
   CELL: { L: '单元件', K: 'CELL', V: 1 << 1, T: 'info' },
-  MACHINE_PART: { L: '零件', K: 'MACHINE_PART', V: 1 << 2, T: 'success' }
+  MACHINE_PART: { L: '零件', K: 'MACHINE_PART', V: 1 << 2, T: 'success' },
+  AUXILIARY_MATERIAL: { L: '配套件', K: 'AUXILIARY_MATERIAL', V: 1 << 3, T: 'warning' }
 }
 constantize(componentTypeEnum)
 

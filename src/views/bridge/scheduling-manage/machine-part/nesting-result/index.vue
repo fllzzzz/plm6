@@ -146,11 +146,11 @@ import { ref } from 'vue'
 import { ElMessage } from 'element-plus'
 import moment from 'moment'
 
-import { componentTypeEnum } from '@enum-ms/mes'
+import { componentTypeEnum } from '@enum-ms/bridge'
 import { machinePartSchedulingNestingResultPM as permission } from '@/page-permission/bridge'
 
 import useTableValidate from '@compos/form/use-table-validate'
-import { manualFetchGroupsTree } from '@compos/mes/scheduling/use-scheduling-groups'
+import { manualFetchGroupsTree } from '@compos/bridge/scheduling/use-scheduling-groups'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 // import pagination from '@crud/Pagination'

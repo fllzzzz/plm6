@@ -58,7 +58,7 @@ import moment from 'moment'
 import checkPermission from '@/utils/system/check-permission'
 import { machinePartSchedulingPM as permission } from '@/page-permission/bridge'
 
-import projectHeaderTime from '@/views/mes/scheduling-manage/common/project-header-time.vue'
+import projectHeaderTime from '@/views/bridge/scheduling-manage/common/project-header-time.vue'
 
 const emit = defineEmits(['project-click'])
 defineProps({

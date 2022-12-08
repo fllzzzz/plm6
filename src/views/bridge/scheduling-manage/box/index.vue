@@ -4,7 +4,7 @@
       <project-to-area-tree :heightStyle="heightStyle" @area-click="handleAreaClick" />
     </div>
     <div class="wrap-right">
-      <el-tag v-show="!crud.query?.areaIdList?.length" type="info" size="medium"> * 请先选择区域，进行构件区域排产 </el-tag>
+      <el-tag v-show="!crud.query?.areaIdList?.length" type="info" size="medium"> * 请先选择区域，进行分段区域排产 </el-tag>
       <div v-show="crud.query?.areaIdList?.length">
         <div class="head-container">
           <mHeader ref="mHeaderRef">
@@ -21,7 +21,7 @@ v-permission="permission.recordGet"
 type="primary"
 size="mini"
 @click="previewRecord"
-                >构件排产记录</common-button
+                >分段排产记录</common-button
               >
             </template>
           </mHeader>
@@ -158,11 +158,11 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import moment from 'moment'
 
 // import { deepClone } from '@data-type/index'
-import { componentTypeEnum } from '@enum-ms/mes'
+import { componentTypeEnum } from '@enum-ms/bridge'
 import { positiveNumPattern } from '@/utils/validate/pattern'
 import { artifactSchedulingPM as permission } from '@/page-permission/bridge'
 
-import useSchedulingGroups from '@compos/mes/scheduling/use-scheduling-groups'
+import useSchedulingGroups from '@compos/bridge/scheduling/use-scheduling-groups'
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
 import useTableValidate from '@compos/form/use-table-validate'
@@ -171,12 +171,12 @@ import mHeader from './module/header'
 import mPreview from './module/preview'
 import previewSummaryDetail from './module/preview-summary-detail'
 import projectToAreaTree from './module/project-to-area-tree'
-import productTypeBaseInfoColumns from '@comp-mes/table-columns/productType-base-info-columns'
+import productTypeBaseInfoColumns from '@comp-bridge/table-columns/productType-base-info-columns'
 import useDrawing from '@compos/use-drawing'
 import bimPreviewDrawer from '@/components-system/bim/bim-preview-drawer'
 import { debounce } from '@/utils'
 
-const productType = componentTypeEnum.ARTIFACT.V
+const productType = componentTypeEnum.BOX.V
 provide('productType', productType)
 
 const mHeaderRef = ref()
@@ -188,7 +188,7 @@ const submitList = ref([])
 const previewVisible = ref(false)
 const previewSummaryVisible = ref(false)
 
-const { showDrawing, drawingRow, drawingPreview } = useDrawing({ pidField: 'id', productTypeField: 'ARTIFACT' })
+const { showDrawing, drawingRow, drawingPreview } = useDrawing({ pidField: 'id', productTypeField: 'BOX' })
 
 const optShow = {
   add: false,
@@ -200,7 +200,7 @@ const optShow = {
 const tableRef = ref()
 const { crud, columns, CRUD } = useCRUD(
   {
-    title: '构件排产',
+    title: '分段排产',
     sort: [],
     permission: { get: permission.get },
     optShow: { ...optShow },

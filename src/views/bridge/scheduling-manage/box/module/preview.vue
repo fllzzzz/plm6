@@ -1,6 +1,6 @@
 <template>
   <common-dialog
-    title="构件排产预览"
+    title="分段排产预览"
     custom-class="artifact-scheduling-preview"
     v-model="dialogVisible"
     width="1100px"
@@ -40,7 +40,7 @@ import { defineEmits, defineProps, ref } from 'vue'
 
 import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'
-import productTypeBaseInfoColumns from '@comp-mes/table-columns/productType-base-info-columns'
+import productTypeBaseInfoColumns from '@comp-bridge/table-columns/productType-base-info-columns'
 
 const emit = defineEmits(['update:visible', 'success'])
 const props = defineProps({
@@ -90,14 +90,14 @@ async function submitIt() {
     })
     await save(_list)
     ElNotification({
-      title: '构件排产保存成功',
+      title: '分段排产保存成功',
       type: 'success',
       duration: 2500
     })
     handleClose()
     emit('success')
   } catch (error) {
-    console.log('保存构件排产报错', error)
+    console.log('保存分段排产报错', error)
   } finally {
     submitLoading.value = false
   }

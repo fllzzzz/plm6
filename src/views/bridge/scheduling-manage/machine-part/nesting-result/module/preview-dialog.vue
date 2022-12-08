@@ -47,7 +47,7 @@
 </template>
 
 <script setup>
-import { saveTask } from '@/api/mes/scheduling-manage/common'
+import { saveTask } from '@/api/bridge/scheduling-manage/common'
 import { defineEmits, defineProps, ref } from 'vue'
 import { ElNotification } from 'element-plus'
 
