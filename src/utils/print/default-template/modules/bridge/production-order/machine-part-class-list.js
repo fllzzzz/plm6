@@ -1,6 +1,6 @@
 import { dataSourceEnum, alignEnum, verticleAlignEnum, fieldTypeEnum as typeEnum, cssUnitEnum, cssUnitPrecisionEnum, pageFormatEnum, weightUnitEnum, DEF_UNIT } from '@/utils/print/enum'
 
-// 构件分类清单明细
+// 分段分类清单明细
 const bridgeMachinePartClassList = {
   fontUnit: 'pt', // 字体单位
   unit: cssUnitEnum.MM.V, // 长度单位
@@ -207,5 +207,5 @@ const bridgeMachinePartClassList = {
 }
 
 export default {
-  bridgeMachinePartClassList //  构件分类清单明细
+  bridgeMachinePartClassList //  分段分类清单明细
 }

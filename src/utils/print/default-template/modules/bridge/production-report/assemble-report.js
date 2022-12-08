@@ -1,13 +1,13 @@
 import { dataSourceEnum, alignEnum, verticleAlignEnum, fieldTypeEnum as typeEnum, cssUnitEnum, cssUnitPrecisionEnum, pageFormatEnum, weightUnitEnum, DEF_UNIT } from '@/utils/print/enum'
 import { projectNameArrangementModeEnum } from '@/utils/enum/modules/contract'
 
-// 部件生产报表
+// 单元件生产报表
 const bridgeAssemblePartProductionReport = {
   fontUnit: 'pt', // 字体单位
   unit: cssUnitEnum.MM.V, // 长度单位
   unitPrecision: cssUnitPrecisionEnum.ZERO.V, // 长度单位精度
   type: 'bridgeAssemblePartProductionReport', // 表格类型 KEY
-  name: '部件生产报表（平台）', // 表格名称
+  name: '单元件生产报表（平台）', // 表格名称
   width: 210, // 打印纸的宽度
   height: 297, // 打印纸的高度
   paddingLR: 10, // 左右内边距
@@ -61,7 +61,7 @@ const bridgeAssemblePartProductionReport = {
   title: {
     show: true,
     allPage: false,
-    title: '部件生产报表',
+    title: '单元件生产报表',
     align: alignEnum.CENTER.V,
     verticleAlign: verticleAlignEnum.CENTER.V,
     size: 17,
@@ -216,5 +216,5 @@ const bridgeAssemblePartProductionReport = {
 }
 
 export default {
-  bridgeAssemblePartProductionReport //  部件生产报表
+  bridgeAssemblePartProductionReport //  单元件生产报表
 }

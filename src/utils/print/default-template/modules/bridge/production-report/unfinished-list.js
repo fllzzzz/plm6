@@ -206,7 +206,7 @@ const bridgeUnfinishedList = {
       { show: true, key: 'areaDetail.name', title: '区域', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 18, type: typeEnum.AREA_NAME.K },
       { show: true, key: 'productionLine.name', title: '生产线', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 18, type: typeEnum.PRODUCTION_LINE.K },
       { show: false, key: 'name', title: '名称', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 18, type: typeEnum.STRUCTURE_NAME.K },
-      { show: true, key: 'serialNumber', title: '编号/部件', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 20, type: typeEnum.SERIAL_NUMBER.K },
+      { show: true, key: 'serialNumber', title: '编号/单元件', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 20, type: typeEnum.SERIAL_NUMBER.K },
       { show: false, key: 'specification', title: '规格', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 18, type: typeEnum.SPECIFICATION.K },
       { show: false, key: 'material', title: '材质', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 18, type: typeEnum.MATERIAL.K },
       { show: false, key: 'plate', title: '板型', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 18, type: typeEnum.PLATE_TYPE.K },

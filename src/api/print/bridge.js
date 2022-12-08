@@ -120,16 +120,6 @@ export function warehouseStateReport(params) {
 }
 
 // 班组报表
-/**
- * 围护生产线报表
- */
-export function enclosureProductionLine(params) {
-  return request({
-    url: `/api/mes/bridge/team_form/enclosure/details/print`,
-    method: 'get',
-    params
-  })
-}
 
 /**
  * 结构生产线报表
@@ -562,7 +552,6 @@ export default {
   qhseProductionLineReport, // 生产线质检报表
 
   // 班组报表
-  enclosureProductionLine, // 围护生产线报表
   structureProductionLine, // 结构生产线报表
   structureProcess, // 结构工序报表
 

@@ -1,12 +1,12 @@
 import { dataSourceEnum, alignEnum, verticleAlignEnum, fieldTypeEnum as typeEnum, cssUnitEnum, cssUnitPrecisionEnum, pageFormatEnum } from '@/utils/print/enum'
 
-// 零部件生产清单详情
+// 零单元件生产清单详情
 const bridgeMachinePartList = {
   fontUnit: 'pt', // 字体单位
   unit: cssUnitEnum.MM.V, // 长度单位
   unitPrecision: cssUnitPrecisionEnum.ZERO.V, // 长度单位精度
   type: 'bridgeMachinePartList', // 表格类型 KEY
-  name: '零部件生产清单详情（平台）', // 表格名称
+  name: '零单元件生产清单详情（平台）', // 表格名称
   width: 210, // 打印纸的宽度
   height: 297, // 打印纸的高度
   paddingLR: 10, // 左右内边距
@@ -60,7 +60,7 @@ const bridgeMachinePartList = {
   title: {
     show: true,
     allPage: false,
-    title: '零部件生产清单详情',
+    title: '零单元件生产清单详情',
     align: alignEnum.CENTER.V,
     verticleAlign: verticleAlignEnum.CENTER.V,
     size: 17,
@@ -198,7 +198,7 @@ const bridgeMachinePartList = {
      * @param {boolean} sum 列需要合计
      */
     fields: [
-      { show: true, key: 'serialNumber', title: '零部件编号', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 20, type: typeEnum.SERIAL_NUMBER.K },
+      { show: true, key: 'serialNumber', title: '零单元件编号', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 20, type: typeEnum.SERIAL_NUMBER.K },
       { show: true, key: 'quantity', title: '数量', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.QUANTITY.K, format: { toThousand: false, precision: 0 }},
       { show: true, key: 'producedQuantity', title: '已生产', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.QUANTITY.K, format: { toThousand: false, precision: 0 }}
     ]
@@ -206,5 +206,5 @@ const bridgeMachinePartList = {
 }
 
 export default {
-  bridgeMachinePartList //  零部件生产清单详情
+  bridgeMachinePartList //  零单元件生产清单详情
 }

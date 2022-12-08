@@ -128,7 +128,6 @@ const bridgeEnclosureProductionStatisticsIn = bridge.productionStatisticsIn
 const bridgeEnclosureProductionStatisticsUn = bridge.productionStatisticsUn
 const bridgeEnclosureProductionStatisticsComplete = bridge.productionStatisticsComplete
 const bridgeUnfinishedList = bridge.unfinishedList
-const bridgeEnclosureProductionLine = bridge.enclosureProductionLine
 const bridgeStructureProductionLine = bridge.structureProductionLine
 const bridgeStructureProcess = bridge.structureProcess
 const bridgeMachinePartDetail = bridge.machinePartDetail
@@ -312,7 +311,6 @@ export default {
   bridgeEnclosureProductionStatisticsUn, // 围护未生产统计明细
   bridgeEnclosureProductionStatisticsComplete, // 围护完成品统计明细
   bridgeUnfinishedList, // 未完成清单
-  bridgeEnclosureProductionLine, // 围护生产线报表
   bridgeStructureProductionLine, // 结构生产线报表
   bridgeStructureProcess, // 结构工序报表
   bridgeMachinePartDetail, // 零件生产详情

@@ -195,7 +195,6 @@ const tableType = {
   bridgeUnfinishedList: { L: '未完成清单', M: 'bridge_production', T: mt.bridge.L + ' / ' + bridge.bridge_production },
   bridgeStructureProductionLine: { L: '结构生产线报表', M: 'bridge_production', T: mt.bridge.L + ' / ' + bridge.bridge_production },
   bridgeStructureProcess: { L: '结构工序报表', M: 'bridge_production', T: mt.bridge.L + ' / ' + bridge.bridge_production },
-  bridgeEnclosureProductionLine: { L: '围护生产线报表', M: 'bridge_production', T: mt.bridge.L + ' / ' + bridge.bridge_production },
   bridgeStructureProjectSummary: { L: '结构项目汇总', M: 'bridge_production', T: mt.bridge.L + ' / ' + bridge.bridge_production },
   bridgeEnclosureProjectSummary: { L: '围护项目汇总', M: 'bridge_production', T: mt.bridge.L + ' / ' + bridge.bridge_production },
   bridgeMachinePartDetail: { L: '零件生产详情', M: 'bridge_production', T: mt.bridge.L + ' / ' + bridge.bridge_production },

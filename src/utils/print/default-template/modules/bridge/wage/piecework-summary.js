@@ -209,7 +209,7 @@ const bridgePieceworkSummary = {
       { show: true, key: 'processName', title: '工序', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 25, type: typeEnum.COMPONENT_PROCESS.K },
       { show: true, key: 'leaderName', title: '班组', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 25, type: typeEnum.TEAM_NAME.K },
       { show: true, key: 'name', title: '名称', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 18, type: typeEnum.STRUCTURE_NAME.K },
-      { show: true, key: 'serialNumber', title: '编号/部件', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 20, type: typeEnum.SERIAL_NUMBER.K },
+      { show: true, key: 'serialNumber', title: '编号/单元件', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 20, type: typeEnum.SERIAL_NUMBER.K },
       { show: false, key: 'plate', title: '板型', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 18, type: typeEnum.PLATE_TYPE.K },
       { show: true, key: 'quantity', title: '数量', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 14, type: typeEnum.QUANTITY.K, format: { toThousand: false, precision: 0 }, sum: true },
       { show: true, key: 'mete', title: '重量/长度', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 20, type: typeEnum.OTHER.K },
