@@ -24,7 +24,7 @@
         </div>
       </div>
       <div class="item-side" v-for="item in processData" :key="item">
-        <div v-if="item.productType === componentTypeEnum.ASSEMBLE.V">
+        <div v-if="item.productType === componentTypeEnum.CELL.V">
           <span>{{ item.name }}</span>
           <el-divider style="margin: 0 0 10px" />
           <div class="process-detail" style="display: flex; flex-wrap: wrap">
@@ -43,7 +43,7 @@
         </div>
       </div>
       <div class="item-side" v-for="item in processData" :key="item">
-        <div v-if="item.productType === componentTypeEnum.ARTIFACT.V">
+        <div v-if="item.productType === componentTypeEnum.BOX.V">
           <span>{{ item.name }}</span>
           <el-divider style="margin: 0 0 10px" />
           <div class="process-detail" style="display: flex; flex-wrap: wrap">
@@ -69,7 +69,7 @@
 import useMaxHeight from '@compos/use-max-height'
 import { ref, defineEmits, defineProps, watch } from 'vue'
 import { getAllProcess } from '@/api/bridge/bridge-task-tracking/process-sluggish.js'
-import { componentTypeEnum } from '@enum-ms/mes'
+import { componentTypeEnum } from '@enum-ms/bridge'
 import { DP } from '@/settings/config'
 import { convertUnits } from '@/utils/convert/unit'
 

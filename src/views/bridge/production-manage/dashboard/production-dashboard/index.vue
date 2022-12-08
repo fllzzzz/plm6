@@ -61,7 +61,8 @@ import { productDashboard as get, productSpec } from '@/api/bridge/bridge-produc
 import { artifactDetail, assembleDetail, baseAssembleDetail, machinePartDetail } from '@/api/bridge/bridge-production-manage/dashboard'
 import { ref } from 'vue'
 
-import { componentTypeEnum, structureOrderTypeEnum } from '@enum-ms/mes'
+import { structureOrderTypeEnum } from '@enum-ms/mes'
+import { componentTypeEnum } from '@enum-ms/bridge'
 import { DP } from '@/settings/config'
 import { bridgeArtifactProductionDashboardPM as permission } from '@/page-permission/bridge'
 
@@ -97,10 +98,10 @@ const { boxStyle, load, boardList } = useDashboardIndex({ headRef, scrollBoxRef,
 
 async function getDetail(item) {
   switch (crud.query.productType) {
-    case componentTypeEnum.ARTIFACT.V:
+    case componentTypeEnum.BOX.V:
       getArtifactDetail(item)
       break
-    case componentTypeEnum.ASSEMBLE.V:
+    case componentTypeEnum.CELL.V:
       getAssembleDetail(item)
       break
     case componentTypeEnum.MACHINE_PART.V:

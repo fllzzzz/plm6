@@ -40,7 +40,7 @@
 
 <script setup>
 import { regHeader } from '@compos/use-crud'
-import { componentTypeEnum } from '@enum-ms/mes'
+import { componentTypeEnum } from '@enum-ms/bridge'
 import rrOperation from '@crud/RR.operation'
 import workshopSelect from '@comp-mes/workshop-select'
 import productionLineSelect from '@comp-mes/production-line-select'
@@ -49,7 +49,7 @@ const defaultQuery = {
   dateTime: undefined,
   workShopId: undefined,
   productionLineId: undefined,
-  productType: componentTypeEnum.ARTIFACT.V
+  productType: componentTypeEnum.BOX.V
 }
 
 const { crud, query } = regHeader(defaultQuery)

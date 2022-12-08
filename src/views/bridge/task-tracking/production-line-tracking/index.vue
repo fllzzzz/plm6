@@ -111,7 +111,7 @@ import useCRUD from '@compos/use-crud'
 import { DP } from '@/settings/config'
 import { bridgeProductionLineTrackingPM as permission } from '@/page-permission/bridge'
 // import { parseTime } from '@/utils/date'
-import { componentTypeEnum } from '@enum-ms/mes'
+import { componentTypeEnum } from '@enum-ms/bridge'
 import useMaxHeight from '@compos/use-max-height'
 // import pagination from '@crud/Pagination'
 import mHeader from './module/header.vue'
@@ -119,8 +119,8 @@ import productionLineTrackingDetail from './production-line-tracking-detail/inde
 
 // 由于mes枚举构件、部件的type值相同，单独定义枚举type值
 const componentTypeTag = {
-  [componentTypeEnum.ARTIFACT.K]: 'success',
-  [componentTypeEnum.ASSEMBLE.K]: 'warning',
+  [componentTypeEnum.BOX.K]: 'success',
+  [componentTypeEnum.CELL.K]: 'warning',
   [componentTypeEnum.MACHINE_PART.K]: ''
 }
 
@@ -160,9 +160,9 @@ CRUD.HOOK.handleRefresh = (crud, { data }) => {
   for (const key in data) {
     const productType =
       key === 'artifactList'
-        ? componentTypeEnum.ARTIFACT.V
+        ? componentTypeEnum.BOX.V
         : key === 'assembleList'
-          ? componentTypeEnum.ASSEMBLE.V
+          ? componentTypeEnum.CELL.V
           : componentTypeEnum.MACHINE_PART.V
     data[key]?.map((v) => {
       v.productType = productType

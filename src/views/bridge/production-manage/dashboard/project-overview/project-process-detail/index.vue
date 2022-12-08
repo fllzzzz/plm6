@@ -15,7 +15,7 @@
         />
         <common-radio-button
           v-model="productType"
-          :options="[componentTypeEnum.ARTIFACT, componentTypeEnum.ASSEMBLE, componentTypeEnum.MACHINE_PART]"
+          :options="[componentTypeEnum.BOX, componentTypeEnum.CELL, componentTypeEnum.MACHINE_PART]"
           showOptionAll
           type="enum"
           size="small"
@@ -68,7 +68,7 @@
 <script setup>
 import { ref, defineProps, watch, provide } from 'vue'
 import { getProcessList } from '@/api/bridge/bridge-production-manage/project-overview'
-import { componentTypeEnum } from '@enum-ms/mes'
+import { componentTypeEnum } from '@enum-ms/bridge'
 import { bridgeProjectOverviewPM as permission } from '@/page-permission/bridge'
 import useMaxHeight from '@compos/use-max-height'
 import monomerSelectAreaSelect from '@comp-base/monomer-select-area-select'

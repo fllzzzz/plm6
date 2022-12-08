@@ -104,7 +104,8 @@ import { getForMaterial as getPrintRecord } from '@/api/bridge/label-print/print
 import crudApi from '@/api/bridge/label-print/auxiliary-material'
 import { ref, provide } from 'vue'
 
-import { componentTypeEnum, labelTypeEnum } from '@enum-ms/mes'
+import { labelTypeEnum } from '@enum-ms/mes'
+import { componentTypeEnum } from '@enum-ms/bridge'
 import { QR_SCAN_F_TYPE } from '@/settings/config'
 import { parseTime } from '@/utils/date'
 import { printAuxiliaryMaterial as printComponent } from '@/utils/print/index'
