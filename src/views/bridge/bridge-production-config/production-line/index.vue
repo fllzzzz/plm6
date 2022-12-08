@@ -105,7 +105,8 @@
 <script setup>
 import { provide, ref } from 'vue'
 
-import { teamTypeEnum, componentTypeEnum } from '@enum-ms/mes'
+import { teamTypeEnum } from '@enum-ms/mes'
+import { bridgeProcessTypeEnum as componentTypeEnum } from '@enum-ms/bridge'
 import checkPermission from '@/utils/system/check-permission'
 import { configProductionLineGroupPM as permission } from '@/page-permission/config'
 

@@ -80,7 +80,7 @@ const selectIds = ref([])
 const options = ref([])
 const sourceData = ref()
 
-const { loaded, bridgeProcess } = useBridgeProcess()
+const { loaded, process } = useBridgeProcess()
 
 const processOptions = computed(() => {
   let _productType = props.productType
@@ -108,7 +108,7 @@ watch(
 )
 
 watch(
-  bridgeProcess,
+  process,
   (list) => {
     dataFormat()
   },
@@ -122,7 +122,7 @@ function handleChange(val) {
 
 // 获取工序信息
 function getOption(val) {
-  return bridgeProcess.value.find((k) => k.id === val)
+  return process.value.find((k) => k.id === val)
 }
 
 async function getSourceData() {
@@ -147,15 +147,15 @@ function dataFormat() {
   options.value = []
   const _options = []
   try {
-    sourceData.value = JSON.parse(JSON.stringify(bridgeProcess.value))
+    sourceData.value = JSON.parse(JSON.stringify(process.value))
     typeEnum.KEYS.forEach((type) => {
       const _optionObj = {}
       _optionObj.type = typeEnum[type].V
       _optionObj.name = typeEnum[type].L + '工序'
-      _optionObj.options = bridgeProcess.value.filter((v) => {
+      _optionObj.options = process.value.filter((v) => {
         return v.productType === typeEnum[type].V
       })
-      _optionObj.originOptions = bridgeProcess.value.filter((v) => {
+      _optionObj.originOptions = process.value.filter((v) => {
         return v.productType === typeEnum[type].V
       })
       if (_optionObj.options && _optionObj.options.length) {

@@ -1,17 +1,17 @@
 import { constantize } from '../base'
 
 const componentTypeEnum = {
-  BOX: { L: '分段', K: 'BOX', V: 1 << 0, T: '' },
-  CELL: { L: '单元件', K: 'CELL', V: 1 << 1, T: 'info' },
-  MACHINE_PART: { L: '零件', K: 'MACHINE_PART', V: 1 << 2, T: 'success' }
+  BOX: { L: '分段', K: 'BOX', SL: '分段', V: 1 << 0, T: 'success', COLOR: '#00babd' },
+  CELL: { L: '单元件', K: 'CELL', SL: '单元件', V: 1 << 1, T: 'success', COLOR: '#40ed8d' },
+  MACHINE_PART: { L: '零件', K: 'MACHINE_PART', SL: '零件', V: 1 << 2, T: '', COLOR: '#fad400' }
 }
 constantize(componentTypeEnum)
 
 // 桥梁含有工序的材料类型
 const bridgeProcessTypeEnum = {
-  BOX: { L: '分段', K: 'BOX', V: componentTypeEnum.BOX.V, T: '' },
-  CELL: { L: '单元', K: 'CELL', V: componentTypeEnum.CELL.V, T: 'info' },
-  MACHINE_PART: { L: '零件', K: 'MACHINE_PART', V: componentTypeEnum.MACHINE_PART.V, T: 'success' }
+  BOX: { L: '分段', K: 'BOX', SL: '分段', V: componentTypeEnum.BOX.V, T: 'success', COLOR: '#00babd' },
+  CELL: { L: '单元件', K: 'CELL', SL: '单元件', V: componentTypeEnum.CELL.V, T: 'success', COLOR: '#40ed8d' },
+  MACHINE_PART: { L: '零件', K: 'MACHINE_PART', SL: '零件', V: componentTypeEnum.MACHINE_PART.V, T: '', COLOR: '#fad400' }
 }
 constantize(bridgeProcessTypeEnum)
 

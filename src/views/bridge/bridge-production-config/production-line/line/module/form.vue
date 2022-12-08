@@ -75,12 +75,11 @@
 </template>
 
 <script setup>
-import { productConfigInfo } from '@/api/mes/production-config/production-line'
+import { productConfigInfo } from '@/api/bridge/production-config/production-line'
 import { ref, computed, watch, watchEffect } from 'vue'
 
 import { bridgeProcessTypeEnum as componentTypeEnum } from '@enum-ms/bridge'
 import { artifactProductLineEnum } from '@enum-ms/mes'
-// import { whetherEnum } from '@enum-ms/common'
 
 import { regForm } from '@compos/use-crud'
 import factorySelect from '@comp-base/factory-select.vue'

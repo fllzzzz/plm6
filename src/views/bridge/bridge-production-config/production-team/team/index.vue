@@ -124,7 +124,7 @@
 <script setup>
 import crudApi from '@/api/bridge/production-config/production-line-team'
 import { defineExpose, ref } from 'vue'
-// import { useStore } from 'vuex'
+import { useStore } from 'vuex'
 import { bridgeProcessTypeEnum as componentTypeEnum } from '@enum-ms/bridge'
 import { wageQuotaTypeEnum } from '@enum-ms/mes'
 // import { whetherEnum } from '@enum-ms/common'
@@ -139,7 +139,7 @@ import mHeader from './module/header'
 import mForm from './module/form'
 
 const dataFormat = [['wageQuotaType', ['parse-enum', wageQuotaTypeEnum, { f: 'SL', extra: '计价' }]]]
-// const store = useStore()
+const store = useStore()
 
 const tableRef = ref()
 const { crud, columns, CRUD } = useCRUD(
@@ -209,12 +209,12 @@ CRUD.HOOK.beforeSubmit = () => {
 }
 
 // 编辑之后 取消缓存的已加载设置
-// CRUD.HOOK.afterSubmit = () => {
-//   store.commit('config/SET_LOADED', { key: 'productionTeam', loaded: false })
-// }
-// CRUD.HOOK.afterDelete = () => {
-//   store.commit('config/SET_LOADED', { key: 'productionTeam', loaded: false })
-// }
+CRUD.HOOK.afterSubmit = () => {
+  store.commit('config/SET_LOADED', { key: 'bridgeProductionTeam', loaded: false })
+}
+CRUD.HOOK.afterDelete = () => {
+  store.commit('config/SET_LOADED', { key: 'bridgeProductionTeam', loaded: false })
+}
 
 defineExpose({
   permission,

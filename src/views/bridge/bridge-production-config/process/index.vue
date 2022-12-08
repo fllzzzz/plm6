@@ -71,8 +71,8 @@ const { crud, columns, CRUD } = useCRUD(
 
 const { maxHeight } = useMaxHeight()
 const dataPath = {
-  [typeEnum.BOX.K]: 'artifactProcessList',
-  [typeEnum.CELL.K]: 'assembleProcessList',
+  [typeEnum.BOX.K]: 'boxProcessList',
+  [typeEnum.CELL.K]: 'elementProcessList',
   [typeEnum.MACHINE_PART.K]: 'machinePartProcessList'
 }
 
