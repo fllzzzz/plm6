@@ -260,6 +260,43 @@ export default {
       ]
     },
     {
+      path: '/bridge/work-order-manage',
+      component: 'Layout',
+      hidden: false,
+      name: 'BridgeWorkOrderManage',
+      alwaysShow: true,
+      redirect: '/bridge/work-order-manage/box',
+      meta: {
+        title: '工单管理',
+        icon: 'project',
+        noCache: true
+      },
+      children: [
+        {
+          name: 'BridgeWorkOrderBox',
+          path: 'box',
+          hidden: false,
+          component: '/bridge/work-order-manage/box/index',
+          meta: {
+            title: '分段工单',
+            icon: 'project',
+            noCache: true
+          }
+        },
+        {
+          name: 'BridgeMachinePartOrder',
+          path: 'machinePart',
+          hidden: false,
+          component: '/bridge/work-order-manage/machine-part/index',
+          meta: {
+            title: '零件工单',
+            icon: 'project',
+            noCache: true
+          }
+        }
+      ]
+    },
+    {
       path: '/bridge/task-tracking',
       component: 'Layout',
       hidden: false,
