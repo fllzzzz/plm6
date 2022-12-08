@@ -95,7 +95,7 @@
       <template #optLeft>
         <print-table
           v-permission="permission.print"
-          api-key="mesLogisticsSummary"
+          api-key="bridgeLogisticsSummary"
           :params="{ ...query }"
           size="mini"
           type="warning"

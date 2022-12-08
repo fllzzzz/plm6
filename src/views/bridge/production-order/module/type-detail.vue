@@ -89,7 +89,7 @@ const params = computed(() => {
 })
 
 const apiKey = computed(() => {
-  return props.productType === componentTypeEnum.MACHINE_PART.V ? 'mesMachinePartClassList' : (props.productType === componentTypeEnum.ARTIFACT.V) ? 'mesArtifactClassList' : 'mesAssembleClassList'
+  return props.productType === componentTypeEnum.MACHINE_PART.V ? 'bridgeMachinePartClassList' : (props.productType === componentTypeEnum.ARTIFACT.V) ? 'bridgeArtifactClassList' : 'bridgeAssembleClassList'
 })
 
 const { maxHeight } = useMaxHeight({ extraBox: '.tag-div', wrapperBox: ['.app-container', '.detail-container'] })

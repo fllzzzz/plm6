@@ -78,7 +78,7 @@
         <el-tag effect="plain" type="success" size="medium" class="filter-item">理论涂布率：9.8L/平方米</el-tag>
         <print-table
           v-permission="permission.print"
-          api-key="mesPaintingList"
+          api-key="bridgePaintingList"
           :params="{ ...crud.query }"
           size="mini"
           type="warning"

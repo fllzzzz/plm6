@@ -64,7 +64,7 @@
             </div>
             <print-table
               v-permission="permission.print"
-              api-key="mesProcessList"
+              api-key="bridgeProcessList"
               :params="{
                 productionLineId: crud.query.productionLineId,
                 productType: crud.query.productType,

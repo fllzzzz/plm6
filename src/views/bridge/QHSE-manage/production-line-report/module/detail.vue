@@ -8,7 +8,7 @@
     <template #titleRight>
       <print-table
         v-permission="permission.print"
-        api-key="mesQHSEProductionLineReport"
+        api-key="bridgeQHSEProductionLineReport"
         :params="{ ...queryParams }"
         size="mini"
         type="warning"

@@ -43,7 +43,7 @@
     <template #titleRight>
       <print-table
         v-permission="permission.print"
-        api-key="mesWorkOrderTrackingList"
+        api-key="bridgeWorkOrderTrackingList"
         :params="{
           processId: props.detailData.id,
           taskType: props.detailData.productType,

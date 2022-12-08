@@ -78,7 +78,7 @@
         <template #viewLeft>
           <print-table
           v-permission="permission.print"
-            api-key="mesFactoryWorkshopReport"
+            api-key="bridgeFactoryWorkshopReport"
             :params="{ startTime: query.startTime, endTime: query.endTime, projectId: query.projectId }"
             size="mini"
             type="warning"

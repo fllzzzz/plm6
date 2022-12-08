@@ -89,7 +89,7 @@
       }}</el-tag>
       <print-table
         v-permission="permission.printPackList"
-        api-key="mesPackingList"
+        api-key="bridgePackingList"
         :params="printParams"
         :before-print="handleBeforePrint"
         size="mini"

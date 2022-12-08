@@ -231,18 +231,18 @@ const apiKey = ref([])
 
 onMounted(() => {
   if (checkPermission(permission.print)) {
-    apiKey.value.push('mesReceiptStatusSummary')
+    apiKey.value.push('bridgeReceiptStatusSummary')
   }
   if (checkPermission(permission.detailPrint)) {
-    apiKey.value.push('mesShippingList')
+    apiKey.value.push('bridgeShippingList')
   }
 })
 
 const printParams = computed(() => {
-  if (currentKey.value === 'mesReceiptStatusSummary') {
+  if (currentKey.value === 'bridgeReceiptStatusSummary') {
     return { ...query }
   }
-  if (currentKey.value === 'mesShippingList' && isNotBlank(crud.selections)) {
+  if (currentKey.value === 'bridgeShippingList' && isNotBlank(crud.selections)) {
     return crud.selections.map((row) => {
       return row.id
     })
@@ -251,7 +251,7 @@ const printParams = computed(() => {
 })
 
 function handleBeforePrint() {
-  if (currentKey.value === 'mesShippingList' && !isNotBlank(printParams.value)) {
+  if (currentKey.value === 'bridgeShippingList' && !isNotBlank(printParams.value)) {
     ElMessage.warning('至少选择一条需要打印的发运信息')
     return false
   }

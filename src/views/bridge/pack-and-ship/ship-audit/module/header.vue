@@ -64,7 +64,7 @@
       <template v-slot:optLeft>
         <print-table
           v-permission="crud.permission.print"
-          api-key="mesShipmentAudit"
+          api-key="bridgeShipmentAudit"
           :params="{ ...query }"
           size="mini"
           type="warning"

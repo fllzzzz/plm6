@@ -244,10 +244,10 @@ const typeEnum = {
     L: '任务清单',
     K: 'TASK_LIST',
     V: 1,
-    [componentTypeEnum.ARTIFACT.K]: 'mesProductionTaskOrder',
-    [componentTypeEnum.ASSEMBLE.K]: 'mesAssembleProductionTaskOrder'
+    [componentTypeEnum.ARTIFACT.K]: 'bridgeProductionTaskOrder',
+    [componentTypeEnum.ASSEMBLE.K]: 'bridgeAssembleProductionTaskOrder'
   },
-  NESTING_LIST: { L: '套料清单', K: 'NESTING_LIST', V: 2, [componentTypeEnum.ASSEMBLE.K]: 'mesAssembleNestingOrder' }
+  NESTING_LIST: { L: '套料清单', K: 'NESTING_LIST', V: 2, [componentTypeEnum.ASSEMBLE.K]: 'bridgeAssembleNestingOrder' }
 }
 constantize(typeEnum)
 // 高度
