@@ -168,13 +168,13 @@
 </template>
 
 <script setup>
-import crudApi from '@/api/mes/QHSE-manage/disclosure'
+import crudApi from '@/api/bridge/QHSE-manage/disclosure'
 import { ref } from 'vue'
 
 import { projectNameFormatter } from '@/utils/project'
 import { problemTypeEnum } from '@enum-ms/production'
 import { improveStatusEnum } from '@enum-ms/mes'
-import { qhseDisclosurePM as permission } from '@/page-permission/mes'
+import { bridgeQhseDisclosurePM as permission } from '@/page-permission/bridge'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'

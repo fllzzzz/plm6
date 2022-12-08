@@ -80,10 +80,10 @@
 </template>
 
 <script setup>
-import crudApi from '@/api/mes/QHSE-manage/production-line-report'
+import crudApi from '@/api/bridge/QHSE-manage/production-line-report'
 import { ref } from 'vue'
 
-import { qhseProductionLineReportPM as permission } from '@/page-permission/mes'
+import { bridgeQhseProductionLineReportPM as permission } from '@/page-permission/bridge'
 import { componentTypeEnum } from '@enum-ms/mes'
 
 import useProcess from '@compos/store/use-process'

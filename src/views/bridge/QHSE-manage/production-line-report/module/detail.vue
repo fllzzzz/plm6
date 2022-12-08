@@ -71,7 +71,7 @@
 </template>
 
 <script setup>
-import { detail } from '@/api/mes/QHSE-manage/production-line-report'
+import { detail } from '@/api/bridge/QHSE-manage/production-line-report'
 import { defineProps, defineEmits, ref, inject, computed } from 'vue'
 
 import useMaxHeight from '@compos/use-max-height'
