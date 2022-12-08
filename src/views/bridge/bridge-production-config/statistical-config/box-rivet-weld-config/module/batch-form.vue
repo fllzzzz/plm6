@@ -41,7 +41,7 @@
               :show-extra="$index !== 0"
               type="other"
               class="input-underline"
-              :dataStructure="{ key: 'id', label: 'classificationName', value: 'id' }"
+              :dataStructure="{ key: 'id', label: 'name', value: 'id' }"
               placeholder="构件类型"
               style="width: 100%"
               @change="handleClassificationChange($event, $index)"

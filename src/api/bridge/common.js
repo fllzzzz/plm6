@@ -38,7 +38,7 @@ export function getBridgeProcessAllSimple(params) {
 // 所有生产班组
 export function getProductionTeamAllSimple(params) {
   return request({
-    module: 'mes',
+    module: 'bridge',
     url: 'team',
     method: 'get',
     params
@@ -48,7 +48,7 @@ export function getProductionTeamAllSimple(params) {
 // 所有质检班组
 export function getInspectionTeamAllSimple(params) {
   return request({
-    module: 'mes',
+    module: 'bridge',
     url: 'inspectionTeam',
     method: 'get',
     params
@@ -62,7 +62,7 @@ export function getInspectionTeamAllSimple(params) {
  */
 export function getLinesAllSimple(params) {
   return request({
-    module: 'mes',
+    module: 'bridge',
     url: 'productionLine',
     method: 'get',
     params: {
@@ -79,7 +79,7 @@ export function getLinesAllSimple(params) {
  */
 export function getAllFactoryWorkshopLines(params) {
   return request({
-    module: 'mes',
+    module: 'bridge',
     url: 'factory/production_line_group',
     method: 'get',
     params: {
@@ -92,9 +92,9 @@ export function getAllFactoryWorkshopLines(params) {
 /**
  * @description: 切割配置列表
  */
-export function getAllCutConfigs() {
+export function getBridgeAllCutConfigs() {
   return request({
-    module: 'mes',
+    module: 'bridge',
     url: `cut/list/cut`,
     method: 'get'
   })
@@ -107,7 +107,7 @@ export function getAllCutConfigs() {
  */
 export function getAllPackage(params) {
   return request({
-    module: 'mes',
+    module: 'bridge',
     url: 'package/list',
     method: 'get',
     params
@@ -127,7 +127,7 @@ export function getHasTaskLine({
   productType
 }) {
   return request({
-    module: 'mes',
+    module: 'bridge',
     url: 'task/productionLine/hasTask',
     method: 'get',
     params: {

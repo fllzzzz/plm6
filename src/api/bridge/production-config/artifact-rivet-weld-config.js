@@ -20,8 +20,8 @@ export function getProcess(params) {
   })
 }
 
-// 获取构件类型与工序列表
-export function getArtifactProcess(params) {
+// 获取单元类型与工序列表
+export function getBoxProcess(params) {
   return request({
     module: 'bridge',
     url: 'productProcess/box/list',

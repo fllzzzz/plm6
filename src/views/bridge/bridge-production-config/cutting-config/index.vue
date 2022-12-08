@@ -71,7 +71,7 @@
 import { ref } from 'vue'
 import { useStore } from 'vuex'
 import useMaxHeight from '@compos/use-max-height'
-import crudApi from '@/api/mes/production-config/cutting-config'
+import crudApi from '@/api/bridge/production-config/cutting-config'
 import checkPermission from '@/utils/system/check-permission'
 import { configMachinePartLayingPM as permission } from '@/page-permission/config'
 import { layOffWayTypeEnum } from '@enum-ms/uploading-form'
@@ -112,7 +112,7 @@ CRUD.HOOK.afterDelete = () => {
   changeStoreLoaded()
 }
 function changeStoreLoaded() {
-  store.commit('config/SET_LOADED', { key: 'cutConfigs', loaded: false })
+  store.commit('config/SET_LOADED', { key: 'bridgeCutConfigs', loaded: false })
 }
 </script>
 <style lang="scss" scoped>

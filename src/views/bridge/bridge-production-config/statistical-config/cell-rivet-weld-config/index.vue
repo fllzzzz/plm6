@@ -93,7 +93,7 @@ const optShow = {
 const tableRef = ref()
 const { crud, CRUD } = useCRUD(
   {
-    title: '部件-组铆焊价格配置',
+    title: '单元-组铆焊价格配置',
     sort: [],
     permission: { ...permission },
     optShow: { ...optShow },
