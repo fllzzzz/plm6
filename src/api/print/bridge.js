@@ -6,7 +6,7 @@ import request from '@/utils/request'
  */
 export function packingList(id) {
   return request({
-    url: `api/mes/building/package/${id}/print`,
+    url: `api/mes/bridge/package/${id}/print`,
     method: 'get'
   })
 }
@@ -16,7 +16,7 @@ export function packingList(id) {
  */
 export function shipmentSummary(params) {
   return request({
-    url: `api/mes/building/cargo/ship/print`,
+    url: `api/mes/bridge/cargo/ship/print`,
     method: 'get',
     params
   })
@@ -27,7 +27,7 @@ export function shipmentSummary(params) {
    */
 export function shipmentDetail(id) {
   return request({
-    url: `api/mes/building/cargo/ship/${id}/print`,
+    url: `api/mes/bridge/cargo/ship/${id}/print`,
     method: 'get'
   })
 }
@@ -37,7 +37,7 @@ export function shipmentDetail(id) {
  */
 export function receiptStatusSummary(params) {
   return request({
-    url: `api/mes/building/cargo/receipt/print`,
+    url: `api/mes/bridge/cargo/receipt/print`,
     method: 'get',
     params
   })
@@ -48,7 +48,7 @@ export function receiptStatusSummary(params) {
  */
 export function shippingList(id) {
   return request({
-    url: `api/mes/building/cargo/receipt/${id}/print`,
+    url: `api/mes/bridge/cargo/receipt/${id}/print`,
     method: 'get'
   })
 }
@@ -58,7 +58,7 @@ export function shippingList(id) {
  */
 export function shipmentAudit(params) {
   return request({
-    url: `api/mes/building/cargo/review/print`,
+    url: `api/mes/bridge/cargo/review/print`,
     method: 'get',
     params
   })
@@ -69,7 +69,7 @@ export function shipmentAudit(params) {
  */
 export function logisticsSummary(params) {
   return request({
-    url: `api/mes/building/cargo/logistics/print`,
+    url: `api/mes/bridge/cargo/logistics/print`,
     method: 'get',
     params
   })
@@ -86,7 +86,7 @@ export function logisticsSummary(params) {
  */
 export function warehouseStateStructure({ monomerId, areaId, factoryId }) {
   return request({
-    url: 'api/mes/building/warehouse/artifact/print',
+    url: 'api/mes/bridge/warehouse/artifact/print',
     method: 'get',
     params: { monomerId, areaId, factoryId }
   })
@@ -102,7 +102,7 @@ export function warehouseStateStructure({ monomerId, areaId, factoryId }) {
  */
 export function warehouseStateEnclosure({ monomerId, areaId, factoryId }) {
   return request({
-    url: 'api/mes/building/warehouse/enclosure/print',
+    url: 'api/mes/bridge/warehouse/enclosure/print',
     method: 'get',
     params: { monomerId, areaId, factoryId }
   })
@@ -113,7 +113,7 @@ export function warehouseStateEnclosure({ monomerId, areaId, factoryId }) {
  */
 export function warehouseStateReport(params) {
   return request({
-    url: `/api/mes/building/warehouse/report/print`,
+    url: `/api/mes/bridge/warehouse/report/print`,
     method: 'get',
     params
   })
@@ -125,7 +125,7 @@ export function warehouseStateReport(params) {
  */
 export function enclosureProductionLine(params) {
   return request({
-    url: `/api/mes/building/team_form/enclosure/details/print`,
+    url: `/api/mes/bridge/team_form/enclosure/details/print`,
     method: 'get',
     params
   })
@@ -136,7 +136,7 @@ export function enclosureProductionLine(params) {
  */
 export function structureProductionLine(params) {
   return request({
-    url: `/api/mes/building/team_form/artifact_assemble/process/print`,
+    url: `/api/mes/bridge/team_form/artifact_assemble/process/print`,
     method: 'get',
     params
   })
@@ -147,7 +147,7 @@ export function structureProductionLine(params) {
  */
 export function structureProcess(params) {
   return request({
-    url: `/api/mes/building/team_form/artifact_assemble/details/print`,
+    url: `/api/mes/bridge/team_form/artifact_assemble/details/print`,
     method: 'get',
     params
   })
@@ -158,7 +158,7 @@ export function structureProcess(params) {
 //  */
 // export function piecework(params) {
 //   return request({
-//     url: `/api/mes/building/wages/in_staff/reckon/print`,
+//     url: `/api/mes/bridge/wages/in_staff/reckon/print`,
 //     method: 'get',
 //     params
 //   })
@@ -169,7 +169,7 @@ export function structureProcess(params) {
 //  */
 // export function pieceworkSummary(params) {
 //   return request({
-//     url: `/api/mes/building/wages/in_staff/reckon/details/print`,
+//     url: `/api/mes/bridge/wages/in_staff/reckon/details/print`,
 //     method: 'get',
 //     params
 //   })
@@ -180,7 +180,7 @@ export function structureProcess(params) {
  */
 export function teamWage(params) {
   return request({
-    url: `/api/mes/building/wages/reckon/print`,
+    url: `/api/mes/bridge/wages/reckon/print`,
     method: 'get',
     params
   })
@@ -191,7 +191,7 @@ export function teamWage(params) {
  */
 export function teamWageDetail(params) {
   return request({
-    url: `/api/mes/building/wages/reckon/details/print`,
+    url: `/api/mes/bridge/wages/reckon/details/print`,
     method: 'get',
     params
   })
@@ -202,7 +202,7 @@ export function teamWageDetail(params) {
  */
 export function productionReport(params) {
   return request({
-    url: `/api/mes/building/production_statements/print`,
+    url: `/api/mes/bridge/production_statements/print`,
     method: 'get',
     params
   })
@@ -219,7 +219,7 @@ export function productionReport(params) {
  */
 export function productionStatistics(params) {
   return request({
-    url: `/api/mes/building/analysis/production_summary/group/print`,
+    url: `/api/mes/bridge/analysis/production_summary/group/print`,
     method: 'get',
     params
   })
@@ -236,7 +236,7 @@ export function productionStatistics(params) {
  */
 export function productionStatisticsIn(params) {
   return request({
-    url: `/api/mes/building/analysis/production_summary/in_production/details/print`,
+    url: `/api/mes/bridge/analysis/production_summary/in_production/details/print`,
     method: 'get',
     params
   })
@@ -253,7 +253,7 @@ export function productionStatisticsIn(params) {
  */
 export function productionStatisticsUn(params) {
   return request({
-    url: `/api/mes/building/analysis/production_summary/un_production/details/print`,
+    url: `/api/mes/bridge/analysis/production_summary/un_production/details/print`,
     method: 'get',
     params
   })
@@ -270,7 +270,7 @@ export function productionStatisticsUn(params) {
  */
 export function productionStatisticsComplete(params) {
   return request({
-    url: `/api/mes/building/analysis/production_summary/complete/details/print`,
+    url: `/api/mes/bridge/analysis/production_summary/complete/details/print`,
     method: 'get',
     params
   })
@@ -281,7 +281,7 @@ export function productionStatisticsComplete(params) {
  */
 export function unfinishedList(params) {
   return request({
-    url: `/api/mes/building/analysis/hysteresis/details/print`,
+    url: `/api/mes/bridge/analysis/hysteresis/details/print`,
     method: 'get',
     params
   })
@@ -292,40 +292,40 @@ export function unfinishedList(params) {
  */
 export function schedulingDetail(params) {
   return request({
-    url: `/api/mes/building/scheduling/print`,
+    url: `/api/mes/bridge/scheduling/print`,
     method: 'get',
     params
   })
 }
 
 /**
- * 工单管理：构件生产任务单
+ * 工单管理：分段生产任务单
  */
 export function productionTaskOrder(params) {
   return request({
-    url: `/api/mes/building/task/process/product/task/list/print`,
+    url: `/api/mes/bridge/task/process/product/task/list/print`,
     method: 'get',
     params
   })
 }
 
 /**
- * 工单管理：部件生产任务单
+ * 工单管理：单元件生产任务单
  */
 export function assembleProductionTaskOrder(params) {
   return request({
-    url: `/api/mes/building/task/process/product/task/list/print`,
+    url: `/api/mes/bridge/task/process/product/task/list/print`,
     method: 'get',
     params
   })
 }
 
 /**
- * 工单管理：部件套料清单
+ * 工单管理：单元件套料清单
  */
 export function assembleNestingOrder(params) {
   return request({
-    url: `/api/mes/building/task/process/nesting/task/list/print`,
+    url: `/api/mes/bridge/task/process/nesting/task/list/print`,
     method: 'get',
     params
   })
@@ -336,7 +336,7 @@ export function assembleNestingOrder(params) {
  */
 export function drillProductionTaskOrder(params) {
   return request({
-    url: `/api/mes/building/task/order/drilling/print`,
+    url: `/api/mes/bridge/task/order/drilling/print`,
     method: 'get',
     params
   })
@@ -347,7 +347,7 @@ export function drillProductionTaskOrder(params) {
 //  */
 // export function wageSummary(params) {
 //   return request({
-//     url: `/api/mes/building/wages/out_staff/summary/print`,
+//     url: `/api/mes/bridge/wages/out_staff/summary/print`,
 //     method: 'get',
 //     params
 //   })
@@ -358,7 +358,7 @@ export function drillProductionTaskOrder(params) {
 //  */
 // export function wageDetail(params) {
 //   return request({
-//     url: `/api/mes/building/wages/out_staff/details/print`,
+//     url: `/api/mes/bridge/wages/out_staff/details/print`,
 //     method: 'get',
 //     params
 //   })
@@ -369,18 +369,18 @@ export function drillProductionTaskOrder(params) {
  */
 export function machinePartDetail(params) {
   return request({
-    url: `/api/mes/building/kanban/assemble_matching/detail/print`,
+    url: `/api/mes/bridge/kanban/assemble_matching/detail/print`,
     method: 'get',
     params
   })
 }
 
 /**
- * 零部件生产清单详情
+ * 零单元件生产清单详情
  */
 export function machinePartList(params) {
   return request({
-    url: `/api/mes/building/kanban/assemble_matching/area/product/print`,
+    url: `/api/mes/bridge/kanban/assemble_matching/area/product/print`,
     method: 'get',
     params
   })
@@ -391,7 +391,7 @@ export function machinePartList(params) {
  */
 export function paintingList(params) {
   return request({
-    url: `/api/mes/building/kanban/painting/print`,
+    url: `/api/mes/bridge/kanban/painting/print`,
     method: 'get',
     params
   })
@@ -402,7 +402,7 @@ export function paintingList(params) {
  */
 export function structureProjectSummary(params) {
   return request({
-    url: `/api/mes/building/kanban/form/artifact/print`,
+    url: `/api/mes/bridge/kanban/form/artifact/print`,
     method: 'get',
     params
   })
@@ -413,7 +413,7 @@ export function structureProjectSummary(params) {
  */
 export function enclosureProjectSummary(params) {
   return request({
-    url: `/api/mes/building/kanban/form/enclosure/print`,
+    url: `/api/mes/bridge/kanban/form/enclosure/print`,
     method: 'get',
     params
   })
@@ -424,25 +424,25 @@ export function enclosureProjectSummary(params) {
  */
 export function qhseProductionLineReport(params) {
   return request({
-    url: `/api/mes/building/report/inspection/summary/review/print`,
+    url: `/api/mes/bridge/report/inspection/summary/review/print`,
     method: 'get',
     params
   })
 }
 
-// 构件分类清单明细
-export function artifactClassList(params) {
+// 分段分类清单明细
+export function boxClassList(params) {
   return request({
-    url: `/api/mes/building/scheduling/area/listArtifact/print`,
+    url: `/api/mes/bridge/scheduling/area/listBox/print`,
     method: 'get',
     params
   })
 }
 
-// 部件分类清单明细
-export function assembleClassList(params) {
+// 单元件分类清单明细
+export function elementClassList(params) {
   return request({
-    url: `/api/mes/building/scheduling/area/listAssemble/print`,
+    url: `/api/mes/bridge/scheduling/area/listElement/print`,
     method: 'get',
     params
   })
@@ -451,7 +451,7 @@ export function assembleClassList(params) {
 // 零件分类清单明细
 export function machinePartClassList(params) {
   return request({
-    url: `/api/mes/building/scheduling/area/listMachinePart/print`,
+    url: `/api/mes/bridge/scheduling/area/listMachinePart/print`,
     method: 'get',
     params
   })
@@ -460,7 +460,7 @@ export function machinePartClassList(params) {
 // 发运管理-项目发运详情
 export function mesProjectShipDetail(params) {
   return request({
-    url: `/api/mes/building/cargo/project/cargoList/details/print`,
+    url: `/api/mes/bridge/cargo/project/cargoList/details/print`,
     method: 'get',
     params
   })
@@ -469,7 +469,7 @@ export function mesProjectShipDetail(params) {
 // 工厂报表-车间报表详情
 export function factoryWorkshopReport(params) {
   return request({
-    url: `/api/mes/building/workshop/artifact/summary/print`,
+    url: `/api/mes/bridge/workshop/artifact/summary/print`,
     method: 'get',
     params
   })
@@ -478,7 +478,7 @@ export function factoryWorkshopReport(params) {
 // 任务跟踪-工单跟踪报表详情
 export function workOrderTrackingList(params) {
   return request({
-    url: `/api/mes/building/task/process/product/print`,
+    url: `/api/mes/bridge/task/process/product/print`,
     method: 'get',
     params
   })
@@ -487,7 +487,7 @@ export function workOrderTrackingList(params) {
 // 任务跟踪-月度任务跟踪报表详情
 export function monthlyTaskList(params) {
   return request({
-    url: `/api/mes/building/task/tracking/month/project/print`,
+    url: `/api/mes/bridge/task/tracking/month/project/print`,
     method: 'get',
     params
   })
@@ -495,7 +495,7 @@ export function monthlyTaskList(params) {
 // 任务跟踪-产线跟踪报表详情
 export function productionLineList(params) {
   return request({
-    url: `/api/mes/building/task/tracking/productionLine/detail/print`,
+    url: `/api/mes/bridge/task/tracking/productionLine/detail/print`,
     method: 'get',
     params
   })
@@ -503,7 +503,7 @@ export function productionLineList(params) {
 // 任务跟踪-工序呆滞报表详情
 export function processList(params) {
   return request({
-    url: `/api/mes/building/task/process/dull/process/detail/print`,
+    url: `/api/mes/bridge/task/process/dull/process/detail/print`,
     method: 'get',
     params
   })
@@ -512,7 +512,7 @@ export function processList(params) {
 // 项目制造：项目总览
 export function projectOverviewList(params) {
   return request({
-    url: `/api/mes/building/kanban/project/process/summary/detail/print`,
+    url: `/api/mes/bridge/kanban/project/process/summary/detail/print`,
     method: 'get',
     params
   })
@@ -521,7 +521,7 @@ export function projectOverviewList(params) {
 // 制成品入发存
 export function productSendReceiveStorage(params) {
   return request({
-    url: `/api/mes/building/warehouse/finish-product/print`,
+    url: `/api/mes/bridge/warehouse/finish-product/print`,
     method: 'get',
     params
   })
@@ -530,7 +530,7 @@ export function productSendReceiveStorage(params) {
 // 制成品入发存详情
 export function productSendReceiveStorageDetail(params) {
   return request({
-    url: `/api/mes/building/warehouse/finish-product/detail/print`,
+    url: `/api/mes/bridge/warehouse/finish-product/detail/print`,
     method: 'get',
     params
   })
@@ -539,7 +539,7 @@ export function productSendReceiveStorageDetail(params) {
 export default {
   // 项目制造
   machinePartDetail, // 零件生产详情
-  machinePartList, // 零部件生产清单
+  machinePartList, // 零单元件生产清单
   paintingList, // 涂装列表
   structureProjectSummary, // 结构项目汇总
   enclosureProjectSummary, // 围护项目汇总
@@ -547,9 +547,9 @@ export default {
 
   // 工单管理
   schedulingDetail, // 工单详情
-  productionTaskOrder, // 工单管理：构件生产任务单
-  assembleNestingOrder, // // 工单管理：部件套料清单
-  assembleProductionTaskOrder, // 工单管理：部件生产任务单
+  productionTaskOrder, // 工单管理：分段生产任务单
+  assembleNestingOrder, // // 工单管理：单元件套料清单
+  assembleProductionTaskOrder, // 工单管理：单元件生产任务单
   drillProductionTaskOrder, // 工单管理： 钻孔生产任务单
   // 生产报表
   productionReport, // 生产报表
@@ -584,8 +584,8 @@ export default {
   warehouseStateReport, // 入发存报表
 
   // 生产订单
-  artifactClassList, // 构件分类清单明细
-  assembleClassList, // 部件分类清单明细
+  boxClassList, // 分段分类清单明细
+  elementClassList, // 单元件分类清单明细
   machinePartClassList, // 零件分类清单明细
 
   // 发运管理

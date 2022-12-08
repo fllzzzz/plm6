@@ -221,8 +221,8 @@ const tableType = {
   bridgeShippingList: { L: '发货清单', M: 'bridge_logistics', T: mt.bridge.L + ' / ' + bridge.bridge_logistics },
   bridgeLogisticsSummary: { L: '物流汇总', M: 'bridge_logistics', T: mt.bridge.L + ' / ' + bridge.bridge_logistics },
 
-  bridgeArtifactClassList: { L: '构件分类清单明细', M: 'bridge_production_order', T: mt.bridge.L + ' / ' + bridge.bridge_production_order },
-  bridgeAssembleClassList: { L: '部件分类清单明细', M: 'bridge_production_order', T: mt.bridge.L + ' / ' + bridge.bridge_production_order },
+  bridgeBoxClassList: { L: '分段分类清单明细', M: 'bridge_production_order', T: mt.bridge.L + ' / ' + bridge.bridge_production_order },
+  bridgeElementClassList: { L: '单元件分类清单明细', M: 'bridge_production_order', T: mt.bridge.L + ' / ' + bridge.bridge_production_order },
   bridgeMachinePartClassList: { L: '零件分类清单明细', M: 'bridge_production_order', T: mt.bridge.L + ' / ' + bridge.bridge_production_order },
 
   bridgeWorkOrderTrackingList: { L: '工单跟踪清单详情', M: 'bridge_task_tracking', T: mt.bridge.L + ' / ' + bridge.bridge_task_tracking },

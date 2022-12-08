@@ -94,7 +94,7 @@
         size="90%"
       >
         <template #content>
-          <structure-list :drawerVisible="drawerVisible" :currentId="currentId"/>
+          <box-list :drawerVisible="drawerVisible" :currentId="currentId"/>
         </template>
       </common-drawer>
     </template>
@@ -119,7 +119,7 @@ import { judgeSameValue } from '@/views/contract/info/judgeSameValue'
 import checkPermission from '@/utils/system/check-permission'
 import useTableValidate from '@compos/form/use-table-validate'
 
-import structureList from './structure-list'
+import boxList from './box-list'
 
 const emit = defineEmits(['success', 'update:modelValue'])
 const { visible, handleClose } = useVisible({ emit, props })

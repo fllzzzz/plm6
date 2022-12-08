@@ -156,8 +156,8 @@ const bridgeWarehouseStateStructure = bridge.warehouseStateStructure
 const bridgeWarehouseStateEnclosure = bridge.warehouseStateEnclosure
 const bridgeWarehouseStateReport = bridge.warehouseStateReport
 
-const bridgeArtifactClassList = bridge.artifactClassList
-const bridgeAssembleClassList = bridge.assembleClassList
+const bridgeBoxClassList = bridge.boxClassList
+const bridgeElementClassList = bridge.elementClassList
 const bridgeMachinePartClassList = bridge.machinePartClassList
 
 const bridgeMonthlyTaskList = bridge.monthlyTaskList
@@ -340,8 +340,8 @@ export default {
   bridgeWarehouseStateEnclosure, // 围护出入库状态
   bridgeWarehouseStateReport, // 入发存报表
 
-  bridgeArtifactClassList, // 构件分类清单明细
-  bridgeAssembleClassList, // 部件分类清单明细
+  bridgeBoxClassList, // 分段分类清单明细
+  bridgeElementClassList, // 单元件分类清单明细
   bridgeMachinePartClassList, // 零件分类清单明细
 
   bridgeMonthlyTaskList, // 月度任务跟踪清单详情

@@ -1,12 +1,12 @@
 import { dataSourceEnum, alignEnum, verticleAlignEnum, fieldTypeEnum as typeEnum, cssUnitEnum, cssUnitPrecisionEnum, pageFormatEnum, weightUnitEnum, DEF_UNIT } from '@/utils/print/enum'
 
-// 构件分类清单明细
-const bridgeAssembleClassList = {
+// 单元件分类清单明细
+const bridgeElementClassList = {
   fontUnit: 'pt', // 字体单位
   unit: cssUnitEnum.MM.V, // 长度单位
   unitPrecision: cssUnitPrecisionEnum.ZERO.V, // 长度单位精度
-  type: 'bridgeAssembleClassList', // 表格类型 KEY
-  name: '部件分类清单明细（平台）', // 表格名称
+  type: 'bridgeElementClassList', // 表格类型 KEY
+  name: '单元件分类清单明细（平台）', // 表格名称
   width: 210, // 打印纸的宽度
   height: 297, // 打印纸的高度
   paddingLR: 10, // 左右内边距
@@ -60,7 +60,7 @@ const bridgeAssembleClassList = {
   title: {
     show: true,
     allPage: false,
-    title: '部件分类清单明细',
+    title: '单元件分类清单明细',
     align: alignEnum.CENTER.V,
     verticleAlign: verticleAlignEnum.CENTER.V,
     size: 17,
@@ -207,5 +207,5 @@ const bridgeAssembleClassList = {
 }
 
 export default {
-  bridgeAssembleClassList //  构件分类清单明细
+  bridgeElementClassList //  单元件分类清单明细
 }

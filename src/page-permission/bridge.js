@@ -150,6 +150,44 @@ export const bridgeProductionOrderPM = {
 
 // ########################################################################
 
+// --------------------------- 生产排产 start ------------------------------
+
+// 生产排产/分段排产
+export const artifactSchedulingPM = {
+  get: ['bridge_scheduling_box:get'], // 列表
+  save: ['bridge_scheduling_box:save'], // 分段排产保存
+  recordGet: ['bridge_scheduling_box_record:get'], // 获取分段排产记录
+  recordEdit: ['bridge_scheduling_box_record:edit'], // 分段排产记录编辑
+  recordDel: ['bridge_scheduling_box_record:del'], // 分段排产记录删除
+  assembleGet: ['bridge_scheduling_assemble:get'], // 获取单元件排产信息
+  assembleSave: ['bridge_scheduling_assemble:save'] // 单元件排产保存
+}
+
+// 生产排产/零件排产/零件排产
+export const machinePartSchedulingPM = {
+  get: ['bridge_scheduling_machine_part:get'], // 列表
+  save: ['bridge_scheduling_machine_part:save'] // 零件排产保存
+}
+
+// 生产排产/零件排产/预览记录
+export const machinePartSchedulingRecordPM = {
+  get: ['bridge_scheduling_machine_part_record:get'], // 列表
+  del: ['bridge_scheduling_machine_part_record:del'], // 零件排产记录删除
+  detail: ['bridge_scheduling_machine_part_record:detail'], // 套料明细
+  save: ['bridge_scheduling_machine_part_record:save'] // 套料下发
+}
+
+// 生产排产/零件排产/套料成果
+export const machinePartSchedulingNestingResultPM = {
+  get: ['bridge_scheduling_machine_part_nesting_result:get'], // 列表
+  del: ['bridge_scheduling_machine_part_nesting_result:del'], // 删除
+  save: ['bridge_scheduling_machine_part_nesting_result:save'] // 任务下发
+}
+
+// --------------------------- 生产排产 end --------------------------------
+
+// ########################################################################
+
 // --------------------------- 工单管理 start ------------------------------
 
 // 工单管理/结构工单
