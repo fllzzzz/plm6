@@ -160,7 +160,7 @@ import moment from 'moment'
 // import { deepClone } from '@data-type/index'
 import { componentTypeEnum } from '@enum-ms/bridge'
 import { positiveNumPattern } from '@/utils/validate/pattern'
-import { artifactSchedulingPM as permission } from '@/page-permission/bridge'
+import { boxSchedulingPM as permission } from '@/page-permission/bridge'
 
 import useSchedulingGroups from '@compos/bridge/scheduling/use-scheduling-groups'
 import useCRUD from '@compos/use-crud'

@@ -1,7 +1,7 @@
 <template>
   <common-dialog
     title="分段排产预览"
-    custom-class="artifact-scheduling-preview"
+    custom-class="box-scheduling-preview"
     v-model="dialogVisible"
     width="1100px"
     top="10vh"
@@ -64,7 +64,7 @@ const submitLoading = ref(false)
 const { visible: dialogVisible, handleClose } = useVisible({ emit, props, field: 'visible' })
 const { maxHeight } = useMaxHeight(
   {
-    mainBox: '.artifact-scheduling-preview',
+    mainBox: '.box-scheduling-preview',
     extraBox: ['.el-dialog__header'],
     wrapperBox: ['.el-dialog__body'],
     clientHRepMainH: true,

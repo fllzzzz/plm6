@@ -13,7 +13,7 @@
           style="width: 100%"
           :cell-class-name="wrongCellMask"
           highlight-current-row
-          @current-change="handleAssembleRowClick"
+          @current-change="handleElementRowClick"
         >
           <el-table-column label="序号" type="index" align="center" width="60" />
           <!-- <el-table-column prop="attributeType" :show-overflow-tooltip="true" label="属性" width="90" align="center">
@@ -21,7 +21,7 @@
               <el-tag type="warning">单元件</el-tag>
             </template>
           </el-table-column> -->
-          <!-- <el-table-column prop="assembleConfigName" :show-overflow-tooltip="true" label="单元件类型" min-width="100" align="center" /> -->
+          <!-- <el-table-column prop="elementConfigName" :show-overflow-tooltip="true" label="单元件类型" min-width="100" align="center" /> -->
           <el-table-column prop="serialNumber" :show-overflow-tooltip="true" label="编号" min-width="100" align="center" />
           <el-table-column prop="specification" :show-overflow-tooltip="true" label="规格" min-width="120" align="center" />
           <el-table-column prop="length" :show-overflow-tooltip="true" label="长度（mm）" min-width="90" align="center" />
@@ -36,15 +36,15 @@
       </div>
       <div class="wrap-item">
         <common-table
-          ref="artifactTableRef"
-          :data="artifactList"
+          ref="boxTableRef"
+          :data="boxList"
           :max-height="maxHeight"
           :stripe="false"
           style="width: 100%"
           return-source-data
           highlight-current-row
-          @current-change="handleArtifactClickRow"
-          @selection-change="handleArtifactSelectionChange"
+          @current-change="handleBoxClickRow"
+          @selection-change="handleBoxSelectionChange"
         >
           <el-table-column type="selection" width="55" align="center" />
           <el-table-column prop="name" :show-overflow-tooltip="true" label="分段名称" min-width="100" align="center" />
@@ -55,7 +55,7 @@
           <el-table-column :show-overflow-tooltip="true" label="可匹配数量" width="90" align="center">
             <template #default="{ row }">
               <el-tooltip content="未排产数量" placement="top">
-                <span>{{ row.artifactCanHandleQ }}</span>
+                <span>{{ row.boxCanHandleQ }}</span>
               </el-tooltip>
               <template v-if="row.schedulingCanHandleQ">
                 <span> | </span>
@@ -68,11 +68,11 @@
           <el-table-column prop="quantity" :show-overflow-tooltip="true" label="匹配数量" width="100" align="center">
             <template #default="{ row }">
               <el-input-number
-                v-if="row.artifactCanHandleQ"
+                v-if="row.boxCanHandleQ"
                 v-model="row.editQuantity"
                 :step="1"
                 :min="0"
-                :max="Math.min(curAssemble.unHandleQuantity + row.artifactCanHandleQ, row.artifactCanHandleQ)"
+                :max="Math.min(curElement.unHandleQuantity + row.boxCanHandleQ, row.boxCanHandleQ)"
                 :precision="0"
                 size="mini"
                 controls-position="right"
@@ -103,7 +103,7 @@
                 v-model="row.editQuantity"
                 :step="1"
                 :min="0"
-                :max="Math.min(curAssemble.unHandleQuantity + row.editQuantity, row.quantity)"
+                :max="Math.min(curElement.unHandleQuantity + row.editQuantity, row.quantity)"
                 :precision="0"
                 size="mini"
                 controls-position="right"
@@ -125,7 +125,7 @@ import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'
 import useTableValidate from '@compos/form/use-table-validate'
 
-const artifactTableRef = ref()
+const boxTableRef = ref()
 const schedulingTableRef = ref()
 const emit = defineEmits(['update:visible'])
 const props = defineProps({
@@ -165,84 +165,84 @@ const tableRules = {
 
 const { tableValidate, wrongCellMask } = useTableValidate({ rules: tableRules }) // 表格校验
 
-const curAssemble = ref({})
-const assembleList = ref([])
-const curArtifact = ref({})
-const artifactList = ref([])
+const curElement = ref({})
+const elementList = ref([])
+const curBox = ref({})
+const boxList = ref([])
 const schedulingList = ref([])
 
 function showHook() {
-  assembleList.value = props.surplusList.map((v) => {
+  elementList.value = props.surplusList.map((v) => {
     v.unHandleQuantity = v.quantity
-    v.selectArtifact = []
-    rowAssembleWatch(v)
+    v.selectBox = []
+    rowElementWatch(v)
     return v
   })
 }
 
-function rowAssembleWatch(row) {
+function rowElementWatch(row) {
   watch(
-    [() => row.selectArtifact],
+    [() => row.selectBox],
     () => {
-      calcAssembleHandleQuantity(row)
+      calcElementHandleQuantity(row)
     },
     { deep: true }
   )
 }
 
-function calcAssembleHandleQuantity(row) {
-  const _handleQuantity = row.selectArtifact.reduce((pre, cur) => {
+function calcElementHandleQuantity(row) {
+  const _handleQuantity = row.selectBox.reduce((pre, cur) => {
     return pre + (cur?.allHandledQ || 0)
   }, 0)
   row.unHandleQuantity = row.quantity - _handleQuantity
 }
 
-function handleAssembleRowClick(val) {
-  curAssemble.value = val
-  artifactTableRef.value?.setCurrentRow()
+function handleElementRowClick(val) {
+  curElement.value = val
+  boxTableRef.value?.setCurrentRow()
   schedulingList.value = []
-  console.log(val, 'handleAssembleRowClick')
-  const _selectArtifact = (val?.selectArtifact?.length && deepClone(val.selectArtifact)) || []
-  artifactList.value =
-    val?.artifactList.map((v) => {
-      const findObj = _selectArtifact.find((o) => o.id === v.id)
-      console.log(_selectArtifact, v, findObj)
+  console.log(val, 'handleElementRowClick')
+  const _selectBox = (val?.selectBox?.length && deepClone(val.selectBox)) || []
+  boxList.value =
+    val?.boxList.map((v) => {
+      const findObj = _selectBox.find((o) => o.id === v.id)
+      console.log(_selectBox, v, findObj)
       if (isNotBlank(findObj)) {
         v.editQuantity = findObj.editQuantity
         v.allHandledQ = findObj.allHandledQ
-        v.artifactCanHandleQ = findObj.artifactCanHandleQ
+        v.boxCanHandleQ = findObj.boxCanHandleQ
         v.schedulingCanHandleQ = findObj.schedulingCanHandleQ
         v.selectScheduling = findObj.selectScheduling
-        artifactTableRef.value?.toggleRowSelection(v)
+        boxTableRef.value?.toggleRowSelection(v)
       } else {
         v.editQuantity = 0
         v.selectScheduling = []
-        v.schedulingCanHandleQ = v.artifactSchedulingList.reduce((pre, cur) => {
+        v.schedulingCanHandleQ = v.boxSchedulingList.reduce((pre, cur) => {
           return pre + cur.quantity
         }, 0)
-        v.artifactCanHandleQ = v.quantity - v.schedulingCanHandleQ
+        v.boxCanHandleQ = v.quantity - v.schedulingCanHandleQ
       }
-      rowArtifactWatch(v)
+      rowBoxWatch(v)
       return v
     }) || []
 }
 
-function rowArtifactWatch(row) {
+function rowBoxWatch(row) {
   watch(
     [() => row.editQuantity, () => row.selectScheduling],
     () => {
-      calcArtifactHandledQuantity(row)
+      calcBoxHandledQuantity(row)
     },
     { deep: true }
   )
 }
 
-function handleArtifactClickRow(val) {
+function handleBoxClickRow(val) {
   if (isBlank(val)) return
-  curArtifact.value = val
-  console.log(val, 'handleArtifactClickRow')
+  curBox.value = val
+  console.log(val, 'handleBoxClickRow')
   const _selectScheduling = (val?.selectScheduling?.length && deepClone(val.selectScheduling)) || []
-  schedulingList.value = val.artifactSchedulingList.map((v) => {
+  schedulingList.value = val.boxSchedulingList.map((v) => {
     const findObj = _selectScheduling.find((o) => o.id === v.id)
     if (isNotBlank(findObj)) {
       v.editQuantity = findObj.editQuantity
@@ -259,41 +259,41 @@ function rowSchedulingWatch(row) {
   watch(
     () => row.editQuantity,
     () => {
-      calcArtifactHandledQuantity(curArtifact.value)
+      calcBoxHandledQuantity(curBox.value)
     }
   )
 }
 
-function calcArtifactHandledQuantity(row) {
+function calcBoxHandledQuantity(row) {
   const _schedulingHandledQ = row.selectScheduling.reduce((pre, cur) => {
     return pre + cur.editQuantity
   }, 0)
   row.allHandledQ = _schedulingHandledQ + row.editQuantity
 }
 
-function handleArtifactSelectionChange(selections) {
-  console.log(selections, 'handleArtifactSelectionChange')
-  curAssemble.value.selectArtifact = selections
+function handleBoxSelectionChange(selections) {
+  console.log(selections, 'handleBoxSelectionChange')
+  curElement.value.selectBox = selections
 }
 
 function handleSchedulingSelectionChange(selections) {
-  curArtifact.value.selectScheduling = selections
-  if (selections.length && curArtifact.value?.artifactSchedulingList?.length) {
-    artifactTableRef.value?.toggleRowSelection(curArtifact.value, true)
+  curBox.value.selectScheduling = selections
+  if (selections.length && curBox.value?.boxSchedulingList?.length) {
+    boxTableRef.value?.toggleRowSelection(curBox.value, true)
   } else {
-    artifactTableRef.value?.toggleRowSelection(curArtifact.value, false)
+    boxTableRef.value?.toggleRowSelection(curBox.value, false)
   }
 }
 
 // 校验
 function handleValidate() {
-  const { validResult, dealList } = tableValidate(assembleList.value)
+  const { validResult, dealList } = tableValidate(elementList.value)
   const _list = []
   if (!validResult) return
   for (let i = 0; i < dealList.length; i++) {
     const v = dealList[i]
-    for (let x = 0; x < v.selectArtifact.length; x++) {
-      const a = v.selectArtifact[x]
+    for (let x = 0; x < v.selectBox.length; x++) {
+      const a = v.selectBox[x]
       if (a.editQuantity) {
         _list.push({
           groupsId: props.groupsId,

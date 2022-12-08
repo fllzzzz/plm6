@@ -11,12 +11,12 @@
       class="filter-item"
     />
     <tag-tabs
-      v-if="artifactTypeList.length"
+      v-if="boxTypeList.length"
       v-model="query.structureClassId"
       class="filter-item"
       :style="'width:calc(100% - 205px)'"
       style="display: inline-block"
-      :data="artifactTypeList"
+      :data="boxTypeList"
       itemKey="structureClassId"
       @change="crud.toQuery"
     >
@@ -61,7 +61,7 @@ const lineTypeLoad = ref(false)
 
 const { crud, query } = regHeader(defaultQuery)
 
-const { artifactTypeList, refreshArtifactType } = useGetBoxTypeList({ getApi: getBoxType, initHook: artifactTypeInit }, true)
+const { boxTypeList, refreshBoxType } = useGetBoxTypeList({ getApi: getBoxType, initHook: boxTypeInit }, true)
 
 watch(
   [() => query.productionLineTypeEnum, () => crud.query.areaIdList],
@@ -91,8 +91,8 @@ function resetQuery() {
   crud.toQuery()
 }
 
-function artifactTypeInit() {
-  query.structureClassId = artifactTypeList.value?.length ? artifactTypeList.value[0].structureClassId : undefined
+function boxTypeInit() {
+  query.structureClassId = boxTypeList.value?.length ? boxTypeList.value[0].structureClassId : undefined
   crud.toQuery()
 }
 
@@ -118,7 +118,7 @@ async function fetchLineType() {
 
 function refreshTypeList() {
   query.structureClassId = undefined
-  refreshArtifactType({
+  refreshBoxType({
     productionLineTypeEnum: query.productionLineTypeEnum,
     areaIdList: crud.query.areaIdList
   })

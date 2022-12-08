@@ -9,10 +9,10 @@
     />
     <el-row v-loading="tableLoading" :gutter="30" class="panel-group">
       <el-col :span="8" class="card-panel-col">
-        <Panel name="分段总数" text-color="#626262" num-color="#1890ff" :num-arr="totalAmount.artifactQuantity" is-array />
+        <Panel name="分段总数" text-color="#626262" num-color="#1890ff" :num-arr="totalAmount.boxQuantity" is-array />
       </el-col>
       <el-col :span="8" class="card-panel-col">
-        <Panel name="单元件总数" text-color="#626262" num-color="#1890ff" :num-arr="totalAmount.assembleQuantity" is-array />
+        <Panel name="单元件总数" text-color="#626262" num-color="#1890ff" :num-arr="totalAmount.elementQuantity" is-array />
       </el-col>
       <el-col :span="8" class="card-panel-col">
         <Panel name="零件总数" text-color="#626262" num-color="#1890ff" :num-arr="totalAmount.machinePartQuantity" is-array />
@@ -119,38 +119,38 @@ async function getSummary() {
   try {
     const data = await boxTreeSummary({ projectId: props.currentId, productType: productType.value })
     totalAmount.value = {
-      artifactQuantity: [
+      boxQuantity: [
         {
-          quantity: data.artifactQuantity || 0,
+          quantity: data.boxQuantity || 0,
           unit: '件',
           precision: 0
         },
         {
-          quantity: data.artifactMete || 0,
+          quantity: data.boxMete || 0,
           unit: 'kg',
           precision: 2
         }
       ],
-      assembleQuantity: [
+      elementQuantity: [
         {
-          quantity: data.assembleQuantity,
+          quantity: data.elementQuantity || 0,
           unit: '件',
           precision: 0
         },
         {
-          quantity: data.assembleMete,
+          quantity: data.elementMete || 0,
           unit: 'kg',
           precision: 2
         }
       ],
       machinePartQuantity: [
         {
-          quantity: data.machinePartQuantity,
+          quantity: data.machinePartQuantity || 0,
           unit: '件',
           precision: 0
         },
         {
-          quantity: data.machinePartMete,
+          quantity: data.machinePartMete || 0,
           unit: 'kg',
           precision: 2
         }

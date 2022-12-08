@@ -107,7 +107,7 @@ import { scheduleDetail, updateSchedule } from '@/api/bridge/production-order-ma
 import { ElNotification, ElMessage, ElMessageBox } from 'element-plus'
 
 import useMaxHeight from '@compos/use-max-height'
-import useProductLines from '@compos/store/use-product-lines'
+import useBridgeProductLines from '@compos/store/use-bridge-product-lines'
 import { projectNameFormatter } from '@/utils/project'
 import useVisible from '@compos/use-visible'
 import { auditTypeEnum } from '@enum-ms/contract'
@@ -139,7 +139,7 @@ const props = defineProps({
   }
 })
 
-const { productLines } = useProductLines()
+const { productLines } = useBridgeProductLines()
 
 const submitLoading = ref(false)
 const list = ref([])

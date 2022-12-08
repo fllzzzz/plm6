@@ -1,14 +1,5 @@
 <template>
   <el-input
-    v-model.trim="queryVO.name"
-    size="small"
-    placeholder="输入名称搜索"
-    style="width: 170px"
-    class="filter-item"
-    clearable
-    @keyup.enter="toQuery"
-  />
-  <el-input
     v-model.trim="queryVO.serialNumber"
     size="small"
     placeholder="输入编号搜索"

@@ -1,7 +1,7 @@
 <template>
   <common-dialog
     title="批量重新分配"
-    customClass="artifact-scheduling-batch-edit"
+    customClass="box-scheduling-batch-edit"
     top="10vh"
     v-model="dialogVisible"
     width="1400px"
@@ -131,7 +131,7 @@ const { tableValidate, cleanUpData, wrongCellMask } = useTableValidate({ rules: 
 
 const { maxHeight } = useMaxHeight(
   {
-    mainBox: '.artifact-scheduling-batch-edit',
+    mainBox: '.box-scheduling-batch-edit',
     extraBox: ['.el-dialog__header'],
     wrapperBox: ['.el-dialog__body'],
     clientHRepMainH: true,

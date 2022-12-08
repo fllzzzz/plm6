@@ -1,7 +1,7 @@
 <template>
   <common-drawer
-    ref="assembleDrawerRef"
-    modalClass="assemble-scheduling-drawer"
+    ref="elementDrawerRef"
+    modalClass="element-scheduling-drawer"
     title="单元件排产"
     v-model="drawerVisible"
     direction="rtl"
@@ -10,7 +10,7 @@
   >
     <template #titleRight>
       <common-button size="mini" type="success" @click="handleClose"> 上一步【分段排产预览】 </common-button>
-      <common-button v-permission="permission.assembleSave" size="mini" :loading="taskLoading" type="primary" @click="toTaskIssue">
+      <common-button v-permission="permission.elementSave" size="mini" :loading="taskLoading" type="primary" @click="toTaskIssue">
         任务下发
       </common-button>
     </template>
@@ -80,7 +80,7 @@
           <template #default="{ row: { sourceRow: row }, $index }">
             <el-cascader
               v-model="row.groupsId"
-              :options="classIdGroupsObj[row.assembleConfigId]?.list"
+              :options="classIdGroupsObj[row.elementConfigId]?.list"
               :props="{ value: 'id', label: 'name', children: 'children', expandTrigger: 'hover', emitPath: false }"
               filterable
               clearable
@@ -105,7 +105,7 @@
           </template>
         </el-table-column>
       </common-table>
-      <el-divider v-if="otherData.length" class="assemble-scheduling-divider"><span class="title">型材</span></el-divider>
+      <el-divider v-if="otherData.length" class="element-scheduling-divider"><span class="title">型材</span></el-divider>
       <common-table
         v-if="otherData.length"
         v-loading="tableLoading"
@@ -134,16 +134,16 @@
         <el-table-column prop="weight" :show-overflow-tooltip="true" label="重量（kg）" min-width="90" align="center" />
         <el-table-column prop="quantity" :show-overflow-tooltip="true" label="数量" min-width="90" align="center" />
       </common-table>
-      <handle-surplus-assemble-dialog
+      <handle-surplus-element-dialog
         ref="handleSurplusRef"
-        v-model:visible="surplusAssembleVisible"
-        :surplusList="surplusAssembleList"
-        :groupsId="props.artifactList[0]?.groups?.id"
+        v-model:visible="surplusElementVisible"
+        :surplusList="surplusElementList"
+        :groupsId="props.boxList[0]?.groups?.id"
       >
         <template #saveBtn>
           <common-button size="mini" :loading="saveSurplusLoading" type="primary" @click="toSaveHandleSurplus"> 保存并下发 </common-button>
         </template>
-      </handle-surplus-assemble-dialog>
+      </handle-surplus-element-dialog>
     </template>
   </common-drawer>
 </template>
@@ -159,25 +159,25 @@ import { artifactProductLineEnum, mesBuildingTypeSettingAssembleTypeEnum } from 
 import { componentTypeEnum } from '@enum-ms/bridge'
 import { isBlank, deepClone } from '@/utils/data-type'
 import { obj2arr } from '@/utils/convert/type'
-import { artifactSchedulingPM as permission } from '@/page-permission/bridge'
+import { boxSchedulingPM as permission } from '@/page-permission/bridge'
 
 import useTableValidate from '@compos/form/use-table-validate'
 import { manualFetchGroupsTree } from '@compos/bridge/scheduling/use-scheduling-groups'
 import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'
 import tagTabs from '@comp-common/tag-tabs'
-import handleSurplusAssembleDialog from './handle-surplus-assemble-dialog'
+import handleSurplusElementDialog from './handle-surplus-element-dialog'
 
 const productType = componentTypeEnum.CELL.V
 
-const assembleDrawerRef = ref()
+const elementDrawerRef = ref()
 const emit = defineEmits(['update:visible', 'task-issue-success'])
 const props = defineProps({
   visible: {
     type: Boolean,
     default: false
   },
-  artifactList: {
+  boxList: {
     type: Array,
     default: () => []
   },
@@ -194,13 +194,13 @@ const classIdGroupsObj = reactive({}) // {单元件类型id：{list：groupsTree
 // 高度
 const { fixMaxHeight, maxHeight } = useMaxHeight(
   {
-    mainBox: '.assemble-scheduling-drawer',
-    extraBox: ['.el-drawer__header', '.head-container', '.assemble-scheduling-divider'],
+    mainBox: '.element-scheduling-drawer',
+    extraBox: ['.el-drawer__header', '.head-container', '.element-scheduling-divider'],
     wrapperBox: ['.el-drawer__body'],
     navbar: false,
     clientHRepMainH: true
   },
-  assembleDrawerRef
+  elementDrawerRef
 )
 
 const paGroupId = -1 // 母件 默认一组 组id为-1
@@ -209,11 +209,11 @@ const tagObj = ref({})
 const tagList = ref([])
 const showTagGroupIds = ref([])
 const curGroupsId = ref()
-const originAssembleSchedulingList = ref([])
-const surplusAssembleList = ref([])
-const surplusAssembleVisible = ref(false)
+const originElementSchedulingList = ref([])
+const surplusElementList = ref([])
+const surplusElementVisible = ref(false)
 
-const tableData = computed(() => tagObj.value[curGroupsId.value]?.assembleList || [])
+const tableData = computed(() => tagObj.value[curGroupsId.value]?.elementList || [])
 const otherData = computed(() => tagObj.value[curGroupsId.value]?.otherList || [])
 const hasOtherData = computed(() => Boolean(otherData.value?.length))
 const showTagList = computed(() => {
@@ -260,7 +260,7 @@ function handleAskCompleteTimeChange(val, row, index) {
 }
 
 function showHook() {
-  initArtifactData(props.artifactList)
+  initBoxData(props.boxList)
   fetch()
 }
 
@@ -269,26 +269,26 @@ async function fetch() {
   // if (!ids || !ids.length) return
   try {
     tableLoading.value = true
-    surplusAssembleList.value = []
-    const _ids = props.artifactList.map((v) => {
+    surplusElementList.value = []
+    const _ids = props.boxList.map((v) => {
       return {
         id: v.id,
         quantity: v.schedulingQuantity
       }
     })
-    const { assembleSchedulingList, assembleTypesetting, surplusAssemble } = await getElement(_ids)
+    const { elementSchedulingList, elementTypesetting, surplusElement } = await getElement(_ids)
     showTagGroupIds.value = []
-    originAssembleSchedulingList.value = assembleSchedulingList
+    originElementSchedulingList.value = elementSchedulingList
     // 处理单元件信息
-    for (let i = 0; i < assembleSchedulingList?.length; i++) {
-      const v = assembleSchedulingList[i]
+    for (let i = 0; i < elementSchedulingList?.length; i++) {
+      const v = elementSchedulingList[i]
       if (v?.groupsId && tagObj.value[v.groupsId]) {
         showTagGroupIds.value.push(v.groupsId)
-        tagObj.value[v.groupsId].assembleList = []
+        tagObj.value[v.groupsId].elementList = []
         tagObj.value[v.groupsId].unshowList = []
         tagObj.value[v.groupsId].otherList = []
-        for (let o = 0; o < v.assembleList?.length; o++) {
-          const _o = v.assembleList[o]
+        for (let o = 0; o < v.elementList?.length; o++) {
+          const _o = v.elementList[o]
           _o.boolStructuralEnum = false
           _o.attributeType = '单元件'
           _o.weight = _o.netWeight
@@ -311,20 +311,20 @@ async function fetch() {
             })
             tagObj.value[v.groupsId].otherList.push({ ..._o })
           } else {
-            tagObj.value[v.groupsId].assembleList.push({ ..._o })
+            tagObj.value[v.groupsId].elementList.push({ ..._o })
           }
 
-          if (isBlank(classIdGroupsObj[_o.assembleConfigId])) {
-            classIdGroupsObj[_o.assembleConfigId] = await manualFetchGroupsTree({
+          if (isBlank(classIdGroupsObj[_o.elementConfigId])) {
+            classIdGroupsObj[_o.elementConfigId] = await manualFetchGroupsTree({
               productType,
-              structureClassId: _o.assembleConfigId,
+              structureClassId: _o.elementConfigId,
               _factoryIds: factoryIds.value
             })
           }
         }
         // 处理母件
-        for (let x = 0; x < v.assembleTypesetting?.length; x++) {
-          const _o = assembleTypesetting[x]
+        for (let x = 0; x < v.elementTypesetting?.length; x++) {
+          const _o = elementTypesetting[x]
           _o.productId = _o.id
           _o.attributeType = '套料'
           _o.weight = _o.nestingNetWeight
@@ -332,14 +332,14 @@ async function fetch() {
           _o.boolStructuralEnum = true
           _o.boolTypesettinglEnum = true
           _o.needSchedulingQuantity = 1
-          if (x !== 0 || (v.assembleList?.length && x === 0)) {
+          if (x !== 0 || (v.elementList?.length && x === 0)) {
             _o.groupsId = '同上'
             _o.askCompleteTime = '同上'
           }
-          if (_o.assembleConfigId && isBlank(classIdGroupsObj[_o.assembleConfigId])) {
-            classIdGroupsObj[_o.assembleConfigId] = await manualFetchGroupsTree({
+          if (_o.elementConfigId && isBlank(classIdGroupsObj[_o.elementConfigId])) {
+            classIdGroupsObj[_o.elementConfigId] = await manualFetchGroupsTree({
               productType,
-              structureClassId: _o.assembleConfigId,
+              structureClassId: _o.elementConfigId,
               _factoryIds: factoryIds.value
             })
           }
@@ -359,18 +359,18 @@ async function fetch() {
             })
             tagObj.value[v.groupsId].otherList.push({ ..._o })
           } else {
-            tagObj.value[v.groupsId].assembleList.push({ ..._o })
+            tagObj.value[v.groupsId].elementList.push({ ..._o })
           }
         }
       }
     }
     // 处理母件信息
-    // if (assembleTypesetting?.length) {
+    // if (elementTypesetting?.length) {
     //   const _list = []
     //   const _unshowList = []
     //   const _otherList = []
-    //   for (let x = 0; x < assembleTypesetting.length; x++) {
-    //     const v = assembleTypesetting[x]
+    //   for (let x = 0; x < elementTypesetting.length; x++) {
+    //     const v = elementTypesetting[x]
     //     v.productId = v.id
     //     v.attributeType = '套料'
     //     v.boolStructuralEnum = true
@@ -382,10 +382,10 @@ async function fetch() {
     //       v.groupsId = '同上'
     //       v.askCompleteTime = '同上'
     //     }
-    //     if (v.assembleConfigId && isBlank(classIdGroupsObj[v.assembleConfigId])) {
-    //       classIdGroupsObj[v.assembleConfigId] = await manualFetchGroupsTree({
+    //     if (v.elementConfigId && isBlank(classIdGroupsObj[v.elementConfigId])) {
+    //       classIdGroupsObj[v.elementConfigId] = await manualFetchGroupsTree({
     //         productType,
-    //         structureClassId: v.assembleConfigId,
+    //         structureClassId: v.elementConfigId,
     //         _factoryIds: factoryIds.value
     //       })
     //     }
@@ -413,7 +413,7 @@ async function fetch() {
     //     label: '母件',
     //     mergeQuantity: 0,
     //     mergeWeight: 0,
-    //     assembleList: _list,
+    //     elementList: _list,
     //     unshowList: _unshowList,
     //     otherList: _otherList,
     //     ids: [],
@@ -424,7 +424,7 @@ async function fetch() {
     //   showTagGroupIds.value.push(paGroupId)
     // }
     if (props.productionLineTypeEnum & artifactProductLineEnum.INTELLECT.V) {
-      surplusAssembleList.value = surplusAssemble || []
+      surplusElementList.value = surplusElement || []
     }
     curGroupsId.value = showTagGroupIds.value[0]
   } catch (error) {
@@ -438,7 +438,7 @@ async function fetch() {
 }
 
 // 分段按生产组分类
-function initArtifactData(list) {
+function initBoxData(list) {
   const _list = list
   const _tagObj = {} // 分段信息对象{groupsId:{}}
   for (let i = 0; i < _list.length; i++) {
@@ -485,7 +485,7 @@ async function toSaveHandleSurplus() {
       type: 'success',
       duration: 2500
     })
-    surplusAssembleVisible.value = false
+    surplusElementVisible.value = false
     emit('task-issue-success')
     handleClose()
   } catch (er) {
@@ -496,19 +496,19 @@ async function toSaveHandleSurplus() {
 }
 
 async function toTaskIssue() {
-  // if (props.productionLineTypeEnum === artifactProductLineEnum.INTELLECT.V && originAssembleSchedulingList.value.length > 0) {
+  // if (props.productionLineTypeEnum === artifactProductLineEnum.INTELLECT.V && originElementSchedulingList.value.length > 0) {
   //   ElMessage.warning('智能线下存在未套料的单元件，请先进行套料！')
   //   return
   // }
   try {
     taskLoading.value = true
     saveTaskParams.value = {}
-    let _artifact = []
-    let _assemble = []
+    let _box = []
+    let _element = []
     let flag = true
     for (const item in tagObj.value) {
       // 显示的组才需要验证
-      const _curList = tagObj.value[item]?.assembleList
+      const _curList = tagObj.value[item]?.elementList
       if (showTagGroupIds.value.includes(Number(item)) && _curList?.length) {
         const { validResult, dealList } = tableValidate(_curList)
         if (validResult) {
@@ -528,31 +528,31 @@ async function toTaskIssue() {
               boolProcess: v.boolProcess
             }
           })
-          _artifact = _artifact.concat(tagObj.value[item].ids)
-          _assemble = _assemble.concat(_list)
+          _box = _box.concat(tagObj.value[item].ids)
+          _element = _element.concat(_list)
         } else {
           curGroupsId.value = tagObj.value[item].groupsId
           flag = false
           break
         }
       } else {
-        _artifact = _artifact.concat(tagObj.value[item].ids)
+        _box = _box.concat(tagObj.value[item].ids)
       }
       if (tagObj.value[item]?.unshowList && tagObj.value[item]?.unshowList?.length) {
-        _assemble = _assemble.concat(tagObj.value[item]?.unshowList)
+        _element = _element.concat(tagObj.value[item]?.unshowList)
       }
     }
     if (!flag) {
       return
     }
     saveTaskParams.value = {
-      artifactSchedulingList: _artifact,
-      assembleDetailList: _assemble,
+      boxSchedulingList: _box,
+      elementDetailList: _element,
       productionLineTypeEnum: props.productionLineTypeEnum
     }
     console.log(saveTaskParams.value, 'saveTaskParams.value')
-    if (surplusAssembleList.value.length && !surplusAssembleVisible.value) {
-      surplusAssembleVisible.value = true
+    if (surplusElementList.value.length && !surplusElementVisible.value) {
+      surplusElementVisible.value = true
       return
     }
     await saveTask(saveTaskParams.value)

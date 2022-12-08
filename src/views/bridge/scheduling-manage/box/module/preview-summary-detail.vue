@@ -8,11 +8,11 @@
     </template>
     <template #titleRight>
       <common-button
-        v-permission="permission.assembleGet"
+        v-permission="permission.elementGet"
         v-show="selectionMode === selectionModeEnum.SCHEDULING.V"
         size="mini"
         type="success"
-        @click="toAssembleScheduling"
+        @click="toElementScheduling"
       >
         下一步【单元件排产】
       </common-button>
@@ -31,14 +31,14 @@
           @change="fetch"
         />
         <tag-tabs
-          v-if="artifactTypeList.length"
+          v-if="boxTypeList.length"
           ref="tagTabsRef"
           v-model="queryVO.structureClassId"
           class="filter-item"
           :style="'width:calc(100% - 150px)'"
           style="display: inline-block"
-          :data="artifactTypeList"
-          :unselectable="artifactTypeList.length > 1"
+          :data="boxTypeList"
+          :unselectable="boxTypeList.length > 1"
           itemKey="structureClassId"
           @change="fetch"
         >
@@ -192,9 +192,9 @@
       />
       <del-form v-model:visible="delVisible" :itemInfo="itemInfo" @del-success="handleDelSuccess" />
       <batch-del-form v-model:visible="batchDelVisible" :selections="selections" @del-success="handleDelSuccess" />
-      <assemble-scheduling-form
-        v-model:visible="assembleVisible"
-        :artifact-list="selections"
+      <element-scheduling-form
+        v-model:visible="elementVisible"
+        :box-list="selections"
         :productionLineTypeEnum="listProductionLineTypeEnum"
         @task-issue-success="handleTaskIssueSuccess"
       />
@@ -208,7 +208,7 @@ import { ElMessage } from 'element-plus'
 import { defineProps, defineEmits, ref, inject, computed, watch } from 'vue'
 
 import { artifactProductLineEnum } from '@enum-ms/mes'
-import { artifactSchedulingPM as permission } from '@/page-permission/bridge'
+import { boxSchedulingPM as permission } from '@/page-permission/bridge'
 
 import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'
@@ -218,7 +218,7 @@ import editForm from './edit-form'
 import batchEditForm from './batch-edit-form'
 import delForm from './del-form'
 import batchDelForm from './batch-del-form'
-import assembleSchedulingForm from './assemble-scheduling-form'
+import elementSchedulingForm from './element-scheduling-form'
 import tagTabs from '@comp-common/tag-tabs'
 
 const { handleSizeChange, handleCurrentChange, total, setTotalPage, queryPage } = usePagination({ fetchHook: fetch })
@@ -246,8 +246,8 @@ const selectionMode = ref(selectionModeEnum.SCHEDULING.V)
 
 const { visible: drawerVisible, handleClose } = useVisible({ emit, props, field: 'visible', showHook, closeHook })
 
-const { artifactTypeList, refreshArtifactType } = useGetBoxTypeList(
-  { getApi: getBoxRecordType, initHook: artifactTypeInit },
+const { boxTypeList, refreshBoxType } = useGetBoxTypeList(
+  { getApi: getBoxRecordType, initHook: boxTypeInit },
   true
 )
 
@@ -266,7 +266,7 @@ const closeRefreshOut = ref(false)
 const unshowLineType = ref([])
 const lineTypeLoad = ref(false)
 
-const artifactTypeParams = computed(() => {
+const boxTypeParams = computed(() => {
   return {
     areaIdList: props.otherQuery.areaIdList,
     productionLineTypeEnum: queryVO.value.productionLineTypeEnum
@@ -293,7 +293,7 @@ const { maxHeight } = useMaxHeight(
 watch(
   [() => queryVO.value.productionLineTypeEnum],
   () => {
-    refreshArtifactType({ ...artifactTypeParams.value })
+    refreshBoxType({ ...boxTypeParams.value })
   },
   { deep: true }
 )
@@ -321,20 +321,20 @@ async function fetchLineType() {
   }
 }
 
-function artifactTypeInit() {
+function boxTypeInit() {
   if (
-    !artifactTypeList.value?.length ||
+    !boxTypeList.value?.length ||
     (queryVO.value.structureClassId &&
-      artifactTypeList.value?.length &&
-      artifactTypeList.value.findIndex((v) => v.structureClassId === queryVO.value.structureClassId) === -1)
+      boxTypeList.value?.length &&
+      boxTypeList.value.findIndex((v) => v.structureClassId === queryVO.value.structureClassId) === -1)
   ) {
     queryVO.value.structureClassId = undefined
   }
   if (
-      artifactTypeList.value?.length &&
-      (artifactTypeList.value?.length === 1 || queryVO.value.productionLineTypeEnum === artifactProductLineEnum.INTELLECT.V)
+      boxTypeList.value?.length &&
+      (boxTypeList.value?.length === 1 || queryVO.value.productionLineTypeEnum === artifactProductLineEnum.INTELLECT.V)
   ) {
-    queryVO.value.structureClassId = artifactTypeList.value[0].structureClassId
+    queryVO.value.structureClassId = boxTypeList.value[0].structureClassId
   }
   fetch()
 }
@@ -563,14 +563,14 @@ function toBatchDel() {
 
 // --------------------------- 单元件排产 start ------------------------------
 
-const assembleVisible = ref(false)
+const elementVisible = ref(false)
 
-function toAssembleScheduling() {
+function toElementScheduling() {
   if (!selections.value?.length) {
     ElMessage.warning('请至少选择一条数据')
     return
   }
-  assembleVisible.value = true
+  elementVisible.value = true
 }
 
 // --------------------------- 单元件排产 end --------------------------------
