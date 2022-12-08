@@ -12,7 +12,7 @@
       <div class="print-wrap">
         <print-table
           v-permission="permission.print"
-          api-key="mesMachinePartDetail"
+          api-key="bridgeMachinePartDetail"
           :params="{ ids: props.ids }"
           size="mini"
           type="warning"

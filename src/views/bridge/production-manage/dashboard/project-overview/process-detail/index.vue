@@ -14,7 +14,7 @@
       <div style="display: flex">
         <print-table
           v-permission="permission.print"
-          api-key="mesProjectOverviewList"
+          api-key="bridgeProjectOverviewList"
           :params="{ ...query, processId: props.detailData.id }"
           size="mini"
           type="warning"

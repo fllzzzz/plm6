@@ -86,7 +86,7 @@ const { maxHeight } = useMaxHeight(
   drawerRef
 )
 
-const taskOrderPrintKey = 'mesDrillProductionTaskOrder'
+const taskOrderPrintKey = 'bridgeDrillProductionTaskOrder'
 const commonParams = computed(() => {
   return { cutId: props.detailData.id, processType: props.processType }
 })

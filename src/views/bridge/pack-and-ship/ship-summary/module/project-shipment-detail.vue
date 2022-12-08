@@ -28,7 +28,7 @@
       </div>
       <div style="float:right;">
         <print-table
-          api-key="mesProjectShipDetail"
+          api-key="bridgeProjectShipDetail"
           v-permission="permission.print"
           :params="{ projectId: props.currentRow.projectId, productionLineTypeEnum: props.productionLineTypeEnum, workshopId: props.workshopId, ...query.value }"
           size="mini"

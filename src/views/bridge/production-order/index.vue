@@ -66,7 +66,7 @@
       size="90%"
     >
       <template #content>
-        <structure-list :drawerVisible="drawerVisible" :currentId="currentId"/>
+        <box-list :drawerVisible="drawerVisible" :currentId="currentId"/>
       </template>
     </common-drawer>
   <!--分页组件-->
@@ -89,7 +89,7 @@ import useCRUD from '@compos/use-crud'
 import pagination from '@crud/Pagination'
 import fDetail from './module/detail'
 import mHeader from './module/header'
-import structureList from './module/structure-list'
+import boxList from './module/box-list'
 
 const optShow = {
   add: false,

@@ -75,7 +75,7 @@
 </template>
 
 <script setup>
-import { materialAdd as addPrintRecord } from '@/api/mes/label-print/print-record'
+import { materialAdd as addPrintRecord } from '@/api/bridge/label-print/print-record'
 import { ref, reactive, inject, defineExpose } from 'vue'
 
 import { rawMatClsEnum } from '@enum-ms/classification'

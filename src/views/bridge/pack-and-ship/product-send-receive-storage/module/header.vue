@@ -29,7 +29,7 @@
        <template #viewLeft>
           <print-table
             v-permission="crud.permission.print"
-            api-key="mesProductSendReceiveStorage"
+            api-key="bridgeProductSendReceiveStorage"
             :params="{ ...query }"
             size="mini"
             type="warning"

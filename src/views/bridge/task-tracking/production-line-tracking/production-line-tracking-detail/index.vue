@@ -27,7 +27,7 @@
     <template #titleRight>
       <print-table
         v-permission="permission.print"
-        api-key="mesProductionLineList"
+        api-key="bridgeProductionLineList"
         :params="{
           productionLineId: props.detailData.id,
           taskType: props.detailData.productType,

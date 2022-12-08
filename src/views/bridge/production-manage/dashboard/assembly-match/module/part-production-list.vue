@@ -3,7 +3,7 @@
     <div class="head-container" style="width: 300px; float: right;">
       <print-table
         v-permission="permission.printDetail"
-        api-key="mesMachinePartList"
+        api-key="bridgeMachinePartList"
         :params="{ ...props.query }"
         size="mini"
         type="warning"

@@ -51,11 +51,11 @@ export function boxDetail(params) {
   })
 }
 
-// 获取部件清单明细
-export function assembleDetail(params) {
+// 获取单元件清单明细
+export function elementDetail(params) {
   return request({
     module: 'bridge',
-    url: 'scheduling/area/assemble/list',
+    url: 'scheduling/area/element/list',
     method: 'get',
     params
   })

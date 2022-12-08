@@ -39,7 +39,7 @@
         <div>
           <print-table
           v-permission="permission.print"
-            api-key="mesMonthlyTaskList"
+            api-key="bridgeMonthlyTaskList"
             :params="{
               projectId: props.detailData.project.id,
               monomerId: monomerId,

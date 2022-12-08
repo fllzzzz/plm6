@@ -2,7 +2,7 @@
   <div>
     <common-radio-button
       v-model="productType"
-      :options="componentTypeEnum.ENUM"
+      :options="[componentTypeEnum.BOX, componentTypeEnum.CELL, componentTypeEnum.MACHINE_PART]"
       type="enum"
       style="margin-bottom: 10px"
       @change="fetchDetail"
@@ -40,14 +40,6 @@
               <span v-else>{{ scope.row.classificationName }}</span>
             </template>
           </el-table-column>
-          <el-table-column
-            key="artifactType"
-            prop="artifactType"
-            :label="`${componentTypeEnum.BOX.L}类型`"
-            align="center"
-            v-if="productType === componentTypeEnum.BOX.V"
-            :show-overflow-tooltip="true"
-          />
           <el-table-column key="material" prop="material" label="材质" align="center" :show-overflow-tooltip="true" />
           <el-table-column key="quantity" prop="quantity" label="数量" align="center" :show-overflow-tooltip="true" />
           <el-table-column key="totalNetWeight" prop="totalNetWeight" label="重量（kg）" align="center" :show-overflow-tooltip="true">
@@ -102,7 +94,6 @@ const totalAmount = ref({})
 const { maxHeight } = useMaxHeight({ extraBox: '.tag-div', wrapperBox: ['.app-container', '.tree-list'] })
 
 const dataFormat = ref([
-  // ['artifactType', ['parse-enum', artifactTypeEnum]],
   ['auditReceiptTime', 'parse-time']
 ])
 
