@@ -129,7 +129,7 @@ import { bridgeProcessTypeEnum as componentTypeEnum } from '@enum-ms/bridge'
 import { wageQuotaTypeEnum } from '@enum-ms/mes'
 // import { whetherEnum } from '@enum-ms/common'
 import checkPermission from '@/utils/system/check-permission'
-import { configProductionLineTeamPM as permission } from '@/page-permission/config'
+import { bridgeConfigProductionLineTeamPM as permission } from '@/page-permission/config'
 
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'

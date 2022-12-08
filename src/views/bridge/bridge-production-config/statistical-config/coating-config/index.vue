@@ -40,7 +40,7 @@
 import crudApi from '@/api/bridge/production-config/coating-config'
 import { ref } from 'vue'
 
-import { configStatisticalCoatingPM as permission } from '@/page-permission/config'
+import { bridgeConfigStatisticalCoatingPM as permission } from '@/page-permission/config'
 import { wageQuotaTypeEnum } from '@enum-ms/mes'
 
 import useMaxHeight from '@compos/use-max-height'

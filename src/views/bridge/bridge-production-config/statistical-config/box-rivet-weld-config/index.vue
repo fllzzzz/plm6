@@ -70,7 +70,7 @@
 import crudApi, { getRivetWeld, getProcess, getBoxProcess } from '@/api/bridge/production-config/artifact-rivet-weld-config'
 import { onMounted, provide, ref } from 'vue'
 
-import { configArtifactRivetWeldConfigPM as permission } from '@/page-permission/config'
+import { configBoxRivetWeldConfigPM as permission } from '@/page-permission/config'
 import { wageQuotaTypeEnum } from '@enum-ms/mes'
 import { isNotBlank } from '@data-type/index'
 import { arr2obj } from '@/utils/convert/type'

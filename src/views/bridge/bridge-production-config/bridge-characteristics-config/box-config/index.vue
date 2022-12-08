@@ -76,7 +76,7 @@
 import crudApi from '@/api/config/bridge/box-config'
 import { ref } from 'vue'
 
-import { machinePartConfigPM as permission } from '@/page-permission/config'
+import { boxConfigPM as permission } from '@/page-permission/config'
 import checkPermission from '@/utils/system/check-permission'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'

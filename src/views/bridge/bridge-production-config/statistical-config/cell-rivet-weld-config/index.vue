@@ -70,7 +70,7 @@
 import crudApi, { getProcess, getAssembleProcess } from '@/api/bridge/production-config/assemble-rivet-weld-config'
 import { provide, ref } from 'vue'
 
-import { configAssembleRivetWeldConfigPM as permission } from '@/page-permission/config'
+import { configCellRivetWeldConfigPM as permission } from '@/page-permission/config'
 import { wageQuotaTypeEnum } from '@enum-ms/mes'
 import { isNotBlank } from '@data-type/index'
 import { arr2obj } from '@/utils/convert/type'

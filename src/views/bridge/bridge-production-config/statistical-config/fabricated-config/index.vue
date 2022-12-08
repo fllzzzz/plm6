@@ -29,7 +29,7 @@ import crudApi from '@/api/bridge/production-config/fabricated-config'
 import { ref } from 'vue'
 
 import { isBlank } from '@data-type/index'
-import { configStatisticalFabricatedPM as permission } from '@/page-permission/config'
+import { bridgeConfigStatisticalFabricatedPM as permission } from '@/page-permission/config'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'

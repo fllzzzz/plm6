@@ -131,7 +131,7 @@ import { useStore } from 'vuex'
 import { enabledEnum } from '@enum-ms/common'
 import { bridgeProcessTypeEnum as componentTypeEnum } from '@enum-ms/bridge'
 import checkPermission from '@/utils/system/check-permission'
-import { configProductionLinePM as permission } from '@/page-permission/config'
+import { bridgeConfigProductionLinePM as permission } from '@/page-permission/config'
 
 import useCRUD from '@compos/use-crud'
 import udOperation from '@crud/UD.operation'

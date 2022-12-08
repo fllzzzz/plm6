@@ -59,7 +59,7 @@
 </template>
 
 <script setup>
-import { mesCuttingConfigPM as permission } from '@/page-permission/config'
+import { bridgeCuttingConfigPM as permission } from '@/page-permission/config'
 import crudApi from '@/api/bridge/production-config/unloading-config'
 import { ref, inject, defineEmits } from 'vue'
 import { baseTimeColumns } from '@/utils/columns-format/common'

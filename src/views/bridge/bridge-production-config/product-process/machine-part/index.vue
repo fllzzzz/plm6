@@ -59,7 +59,7 @@
 <script setup>
 import crudApi, { getMachinePart } from '@/api/bridge/production-config/product-process'
 import { ref } from 'vue'
-import { configProductProcessMachinePartPM as permission } from '@/page-permission/config'
+import { bridgeConfigProductProcessMachinePartPM as permission } from '@/page-permission/config'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'

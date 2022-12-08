@@ -74,7 +74,7 @@ import { defineExpose, ref } from 'vue'
 import { useStore } from 'vuex'
 
 import checkPermission from '@/utils/system/check-permission'
-import { configProductionLineInspectPM as permission } from '@/page-permission/config'
+import { bridgeConfigProductionLineInspectPM as permission } from '@/page-permission/config'
 import { bridgeProcessTypeEnum as componentTypeEnum } from '@enum-ms/bridge'
 
 import useCRUD from '@compos/use-crud'

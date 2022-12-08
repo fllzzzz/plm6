@@ -66,7 +66,7 @@
 <script setup>
 import crudApi, { getBox } from '@/api/bridge/production-config/product-process'
 import { ref } from 'vue'
-import { configProductProcessAssemblePM as permission } from '@/page-permission/config'
+import { configProductProcessBoxPM as permission } from '@/page-permission/config'
 // import { isNotBlank, deepClone } from '@data-type/index'
 
 import useMaxHeight from '@compos/use-max-height'

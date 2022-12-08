@@ -45,7 +45,7 @@ import { useStore } from 'vuex'
 
 import { bridgeProcessTypeEnum as typeEnum } from '@enum-ms/bridge'
 import checkPermission from '@/utils/system/check-permission'
-import { configProcessPM as permission } from '@/page-permission/config'
+import { bridgeConfigProcessPM as permission } from '@/page-permission/config'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'

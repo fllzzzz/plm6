@@ -51,7 +51,7 @@ import crudApi from '@/api/bridge/production-config/production-line-group'
 import { defineExpose, ref, defineProps, defineEmits, watch, computed, inject } from 'vue'
 
 import checkPermission from '@/utils/system/check-permission'
-import { configProductionLineGroupPM as permission } from '@/page-permission/config'
+import { bridgeConfigProductionLineGroupPM as permission } from '@/page-permission/config'
 
 import useCRUD from '@compos/use-crud'
 import udOperation from '@crud/UD.operation'

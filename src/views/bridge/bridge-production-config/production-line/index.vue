@@ -108,7 +108,7 @@ import { provide, ref } from 'vue'
 import { teamTypeEnum } from '@enum-ms/mes'
 import { bridgeProcessTypeEnum as componentTypeEnum } from '@enum-ms/bridge'
 import checkPermission from '@/utils/system/check-permission'
-import { configProductionLineGroupPM as permission } from '@/page-permission/config'
+import { bridgeConfigProductionLineGroupPM as permission } from '@/page-permission/config'
 
 import useMaxHeight from '@compos/use-max-height'
 import lineConfig from './line'

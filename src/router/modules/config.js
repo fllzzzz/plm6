@@ -445,6 +445,13 @@ export default {
               hidden: false,
               component: '/bridge/bridge-production-config/bridge-characteristics-config/part-config/index',
               meta: { title: '桥梁-零件特征定义', icon: 'project', noCache: true }
+            },
+            {
+              name: 'BridgeAuxiliaryMaterialConfig',
+              path: 'bridge-auxiliary-material-config',
+              hidden: false,
+              component: '/bridge/bridge-production-config/bridge-characteristics-config/auxiliary-material-config/index',
+              meta: { title: '桥梁-配套件特征定义', icon: 'project', noCache: true }
             }
           ]
         },

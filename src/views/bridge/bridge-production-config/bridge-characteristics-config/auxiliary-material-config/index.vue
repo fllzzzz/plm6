@@ -24,22 +24,30 @@
         prop="name"
         align="center"
         :show-overflow-tooltip="true"
-        label="名称"
+        label="类型名称"
         min-width="150"
       />
+       <el-table-column
+        v-if="columns.visible('classifyNames')"
+        key="classifyNames"
+        prop="classifyNames"
+        :show-overflow-tooltip="true"
+        label="辅材科目"
+        min-width="260"
+      />
       <el-table-column
-        v-if="columns.visible('elementSpecList')"
-        key="elementSpecList"
-        prop="elementSpecList"
-        label="规格前缀"
+        v-if="columns.visible('auxiliarySerialNumberList')"
+        key="auxiliarySerialNumberList"
+        prop="auxiliarySerialNumberList"
+        label="编号"
         :show-overflow-tooltip="true"
         align="center"
         min-width="260"
       >
         <template v-slot="scope">
-          <template v-if="scope.row.elementSpecList && scope.row.elementSpecList.length > 0">
-            <span v-for="item in scope.row.elementSpecList" :key="item.id">
-              {{ `【${item.specPrefix}】`}}
+          <template v-if="scope.row.auxiliarySerialNumberList && scope.row.auxiliarySerialNumberList.length > 0">
+            <span v-for="item in scope.row.auxiliarySerialNumberList" :key="item.id">
+              {{ `【${item.serialNumber}】`}}
             </span>
           </template>
         </template>
@@ -68,15 +76,15 @@
     </common-table>
     <!--分页组件-->
     <pagination />
-    <mForm />
+    <mForm :boundAllClassifyIds="boundAllClassifyIds" />
   </div>
 </template>
 
 <script setup>
-import crudApi from '@/api/config/bridge/cell-config'
+import crudApi from '@/api/config/bridge/auxiliary-material-config'
 import { ref } from 'vue'
-
-import { cellConfigPM as permission } from '@/page-permission/config'
+import { matClsEnum } from '@enum-ms/classification'
+import { bridgeAuxiliaryMaterialConfigPM as permission } from '@/page-permission/config'
 import checkPermission from '@/utils/system/check-permission'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
@@ -95,7 +103,7 @@ const optShow = {
 const tableRef = ref()
 const { CRUD, crud, columns } = useCRUD(
   {
-    title: '单元特征定义',
+    title: '桥梁-配套件特征定义',
     sort: [],
     permission: { ...permission },
     optShow: { ...optShow },
@@ -106,14 +114,19 @@ const { CRUD, crud, columns } = useCRUD(
 )
 
 const { maxHeight } = useMaxHeight({
-  wrapperBox: '.cellConfig',
+  wrapperBox: '.bridgeAuxiliaryMaterialConfig',
   paginate: true,
   extraHeight: 40
 })
-
+const boundAllClassifyIds = ref([])
 CRUD.HOOK.handleRefresh = (crud, { data }) => {
+  boundAllClassifyIds.value = []
   data.content.forEach((v) => {
-    v.list = v.elementSpecList
+    v.list = v.auxiliarySerialNumberList
+    v.classifyIds = v.boundFinalClassifyIds
+    v.classifyNames = v.classifyLinks.map(v => v.classifyName).join('、')
+    v.basicClass = matClsEnum.MATERIAL.V
+    boundAllClassifyIds.value = boundAllClassifyIds.value.concat(v.boundFinalClassifyIds)
   })
 }
 </script>

@@ -54,7 +54,7 @@ import crudApi from '@/api/bridge/production-config/parts-laying-config'
 import { ref } from 'vue'
 
 import { wageQuotaTypeEnum } from '@enum-ms/mes'
-import { configStatisticalPartsLayingPM as permission } from '@/page-permission/config'
+import { bridgeConfigStatisticalPartsLayingPM as permission } from '@/page-permission/config'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import udOperation from '@crud/UD.operation'
@@ -75,7 +75,7 @@ const dataFormat = [['wageQuotaType', ['parse-enum', wageQuotaTypeEnum]]]
 const tableRef = ref()
 const { crud } = useCRUD(
   {
-    title: '零件-下料配置',
+    title: '零件-下料',
     sort: [],
     formStore: true,
     formStoreKey: 'MES_STATISTICAL_PARTS_LAYING_CONFIG',

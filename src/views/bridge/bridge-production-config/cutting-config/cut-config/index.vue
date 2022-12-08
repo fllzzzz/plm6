@@ -72,7 +72,7 @@
 import crudApi from '@/api/bridge/production-config/cutting-config'
 import { defineExpose, ref, defineProps, defineEmits, watch, computed, inject, provide } from 'vue'
 import checkPermission from '@/utils/system/check-permission'
-import { configProductionLineGroupPM as permission } from '@/page-permission/config'
+import { bridgeCuttingConfigPM as permission } from '@/page-permission/config'
 import useCRUD from '@compos/use-crud'
 import udOperation from '@crud/UD.operation'
 import mForm from './module/form'
