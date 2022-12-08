@@ -2,17 +2,17 @@
   <div>
     <common-radio-button
       v-model="productType"
-      :options="[componentTypeEnum.ARTIFACT, componentTypeEnum.ASSEMBLE, componentTypeEnum.MACHINE_PART]"
+      :options="componentTypeEnum.ENUM"
       type="enum"
       style="margin-bottom: 10px"
       @change="fetchDetail"
     />
     <el-row v-loading="tableLoading" :gutter="30" class="panel-group">
       <el-col :span="8" class="card-panel-col">
-        <Panel name="构件总数" text-color="#626262" num-color="#1890ff" :num-arr="totalAmount.artifactQuantity" is-array />
+        <Panel name="分段总数" text-color="#626262" num-color="#1890ff" :num-arr="totalAmount.artifactQuantity" is-array />
       </el-col>
       <el-col :span="8" class="card-panel-col">
-        <Panel name="部件总数" text-color="#626262" num-color="#1890ff" :num-arr="totalAmount.assembleQuantity" is-array />
+        <Panel name="单元件总数" text-color="#626262" num-color="#1890ff" :num-arr="totalAmount.assembleQuantity" is-array />
       </el-col>
       <el-col :span="8" class="card-panel-col">
         <Panel name="零件总数" text-color="#626262" num-color="#1890ff" :num-arr="totalAmount.machinePartQuantity" is-array />
@@ -43,9 +43,9 @@
           <el-table-column
             key="artifactType"
             prop="artifactType"
-            label="构件类型"
+            :label="`${componentTypeEnum.BOX.L}类型`"
             align="center"
-            v-if="productType === componentTypeEnum.ARTIFACT.V"
+            v-if="productType === componentTypeEnum.BOX.V"
             :show-overflow-tooltip="true"
           />
           <el-table-column key="material" prop="material" label="材质" align="center" :show-overflow-tooltip="true" />
@@ -73,7 +73,7 @@ import { boxTreeData, boxTreeSummary } from '@/api/bridge/production-order-manag
 
 import useMaxHeight from '@compos/use-max-height'
 import { isNotBlank } from '@data-type/index'
-import { componentTypeEnum, artifactTypeEnum } from '@enum-ms/mes'
+import { componentTypeEnum } from '@enum-ms/bridge'
 import { DP } from '@/settings/config'
 import { toThousand } from '@/utils/data-type/number'
 
@@ -95,14 +95,14 @@ const props = defineProps({
 // const submitLoading = ref(false)
 const list = ref([])
 const tableLoading = ref(false)
-const productType = ref(componentTypeEnum.ARTIFACT.V)
+const productType = ref(componentTypeEnum.BOX.V)
 const currentRow = ref({})
 const totalAmount = ref({})
 
 const { maxHeight } = useMaxHeight({ extraBox: '.tag-div', wrapperBox: ['.app-container', '.tree-list'] })
 
 const dataFormat = ref([
-  ['artifactType', ['parse-enum', artifactTypeEnum]],
+  // ['artifactType', ['parse-enum', artifactTypeEnum]],
   ['auditReceiptTime', 'parse-time']
 ])
 
@@ -110,7 +110,7 @@ watch(
   () => props.drawerVisible,
   (val) => {
     if (val) {
-      productType.value = componentTypeEnum.ARTIFACT.V
+      productType.value = componentTypeEnum.BOX.V
       currentRow.value = {}
       fetchDetail()
       getSummary()

@@ -186,6 +186,80 @@ export default {
       ]
     },
     {
+      path: '/bridge/scheduling-manage',
+      component: 'Layout',
+      hidden: false,
+      name: 'BridgeSchedulingManage',
+      alwaysShow: true,
+      redirect: '/bridge/scheduling-manage/scheduling/box',
+      meta: {
+        title: '生产排产',
+        icon: 'project',
+        noCache: true
+      },
+      children: [
+        {
+          name: 'BridgeSchedulingBox',
+          path: 'scheduling/box',
+          hidden: false,
+          component: '/bridge/scheduling-manage/box/index',
+          meta: {
+            title: '分段排产',
+            icon: 'project',
+            noCache: true
+          }
+        },
+        {
+          name: 'BridgeSchedulingMachinePart',
+          path: 'scheduling/machine-part',
+          component: '',
+          hidden: false,
+          alwaysShow: true,
+          redirect: '/bridge/scheduling-manage/scheduling/machine-part/index',
+          meta: {
+            title: '零件排产',
+            icon: 'project',
+            noCache: true
+          },
+          children: [
+            {
+              name: 'BridgeSchedulingMachinePartIndex',
+              path: 'index',
+              hidden: false,
+              component: '/bridge/scheduling-manage/machine-part/index',
+              meta: {
+                title: '零件排产',
+                icon: 'project',
+                noCache: true
+              }
+            },
+            {
+              name: 'BridgeSchedulingMachinePartRecord',
+              path: 'record',
+              hidden: false,
+              component: '/bridge/scheduling-manage/machine-part/record/index',
+              meta: {
+                title: '预览记录',
+                icon: 'project',
+                noCache: true
+              }
+            },
+            {
+              name: 'BridgeSchedulingMachinePartNestingResult',
+              path: 'nesting-result',
+              hidden: false,
+              component: '/bridge/scheduling-manage/machine-part/nesting-result/index',
+              meta: {
+                title: '套料成果',
+                icon: 'project',
+                noCache: true
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
       path: '/bridge/task-tracking',
       component: 'Layout',
       hidden: false,

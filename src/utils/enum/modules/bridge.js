@@ -1,10 +1,17 @@
 import { constantize } from '../base'
 
+const componentTypeEnum = {
+  BOX: { L: '分段', K: 'BOX', V: 1 << 0, T: '' },
+  CELL: { L: '单元件', K: 'CELL', V: 1 << 1, T: 'info' },
+  MACHINE_PART: { L: '零件', K: 'MACHINE_PART', V: 1 << 2, T: 'success' }
+}
+constantize(componentTypeEnum)
+
 // 桥梁含有工序的材料类型
 const bridgeProcessTypeEnum = {
-  BOX: { L: '分段', K: 'BOX', V: 1 << 0, T: '' },
-  CELL: { L: '单元', K: 'CELL', V: 1 << 1, T: 'info' },
-  MACHINE_PART: { L: '零件', K: 'MACHINE_PART', V: 1 << 2, T: 'success' }
+  BOX: { L: '分段', K: 'BOX', V: componentTypeEnum.BOX.V, T: '' },
+  CELL: { L: '单元', K: 'CELL', V: componentTypeEnum.CELL.V, T: 'info' },
+  MACHINE_PART: { L: '零件', K: 'MACHINE_PART', V: componentTypeEnum.MACHINE_PART.V, T: 'success' }
 }
 constantize(bridgeProcessTypeEnum)
 
@@ -19,11 +26,13 @@ const bridgeProcessCategoryEnum = {
 constantize(bridgeProcessCategoryEnum)
 
 export {
+  componentTypeEnum,
   bridgeProcessTypeEnum,
   bridgeProcessCategoryEnum
 }
 
 export default {
+  componentTypeEnum,
   bridgeProcessTypeEnum,
   bridgeProcessCategoryEnum
 }
