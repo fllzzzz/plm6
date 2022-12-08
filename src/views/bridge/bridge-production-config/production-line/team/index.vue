@@ -89,11 +89,10 @@
 <script setup>
 import { productAddTeam } from '@/api/bridge/production-config/production-line-group'
 import { defineProps, defineExpose, ref, defineEmits, watch, computed, inject } from 'vue'
-// import { teamAttributeEnum, wageQuotaTypeEnum } from '@enum-ms/mes'
 import { wageQuotaTypeEnum } from '@enum-ms/mes'
 import { cleanArray } from '@data-type/array'
 
-import useProductionTeam from '@compos/store/use-production-team'
+import useBridgeProductionTeam from '@compos/store/use-bridge-production-team'
 import elExpandTableColumn from '@comp-common/el-expand-table-column.vue'
 import { ElNotification } from 'element-plus'
 
@@ -103,7 +102,7 @@ const maxHeight = inject('maxHeight')
 // 展开keys
 const expandRowKeys = ref([])
 
-const { loaded, productionTeamKV, productionTeam } = useProductionTeam()
+const { loaded, productionTeamKV, productionTeam } = useBridgeProductionTeam()
 const selectValue = ref([])
 const dialogVisible = ref(false)
 const submitLoading = ref(false)
@@ -147,7 +146,7 @@ const groupId = computed(() => {
 
 const list = computed(() => cleanArray(props.modelValue.map((v) => productionTeamKV.value[v])))
 
-const productionTeamOptions = computed(() => productionTeam.value.filter((v) => props.line?.productType & v.productType && props.line?.productionLineTypeEnum & v.productionLineTypeEnum))
+const productionTeamOptions = computed(() => productionTeam.value.filter((v) => props.line?.productType & v.productType))
 
 async function submitIt() {
   try {

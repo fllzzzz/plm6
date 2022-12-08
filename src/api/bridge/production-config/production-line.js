@@ -44,7 +44,7 @@ export function editStatus({ id, boolEnabledEnum }) {
 
 export function productConfigInfo({ productType, productionLineTypeEnum }) {
   return request({
-    module: 'mes',
+    module: 'bridge',
     url: 'productionLine/type',
     method: 'get',
     params: { productType, productionLineTypeEnum }

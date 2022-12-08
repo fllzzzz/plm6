@@ -53,13 +53,14 @@
 <script setup>
 import { productAddInspectionTeam } from '@/api/bridge/production-config/production-line-group'
 import { defineExpose, defineEmits, ref, defineProps, watch, computed, inject } from 'vue'
-import useInspectionTeam from '@compos/store/use-inspection-team'
+import useBridgeInspectionTeam from '@compos/store/use-bridge-inspection-team'
 import { ElNotification } from 'element-plus'
 import { cleanArray } from '@data-type/array'
 
 const maxHeight = inject('maxHeight')
 
-const { loaded, inspectionTeamKV, inspectionTeam } = useInspectionTeam()
+const { loaded, inspectionTeamKV, inspectionTeam } = useBridgeInspectionTeam()
+
 const selectValue = ref([])
 const dialogVisible = ref(false)
 const submitLoading = ref(false)
@@ -106,7 +107,7 @@ const list = computed(() => cleanArray(props.modelValue.map((v) => inspectionTea
 const inspectionTeamOptions = computed(() =>
   inspectionTeam.value.filter((v) => {
     v.label = v.processName + ' - ' + v.inspectorNames
-    return props.line?.productType & v.productType && props.line?.productionLineTypeEnum === v.productionLineTypeEnum
+    return props.line?.productType & v.productType
   })
 )
 async function submitIt() {

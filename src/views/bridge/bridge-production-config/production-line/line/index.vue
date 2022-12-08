@@ -37,13 +37,8 @@
           <p>
             工厂：<span style="margin-right: 20px">{{ row.factoryName }}</span> 车间：<span>{{ row.workshopName }}</span>
           </p>
-          <template v-if="!(row.productType & (componentTypeEnum.ENCLOSURE.V | componentTypeEnum.MACHINE_PART.V))">
-            <p v-if="row.productionLineTypeEnum === artifactProductLineEnum.INTELLECT.V && row.productType & componentTypeEnum.ARTIFACT.V">
-              产品标识：<span>{{ row.typeSequence }}</span>
-            </p>
-            <p v-else>
-              可生产类型：<span>{{ row.typeSequence }}</span>
-            </p>
+          <template v-if="row.productType & componentTypeEnum.BOX.V">
+            可生产类型：<span>{{ row.typeSequence }}</span>
           </template>
           <p>
             备注：<span>{{ row.remark }}</span>
@@ -70,18 +65,6 @@
         </template>
       </el-table-column>
       <el-table-column
-        v-if="columns.visible('productionLineTypeEnum')"
-        prop="productionLineTypeEnum"
-        :show-overflow-tooltip="true"
-        label="生产线类型"
-        align="center"
-        width="100px"
-      >
-        <template v-slot="{ row }">
-          <span>{{ artifactProductLineEnum.VL[row.productionLineTypeEnum] }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column
         v-if="columns.visible('targetProductionShow')"
         key="targetProductionShow"
         prop="targetProductionShow"
@@ -94,18 +77,6 @@
           <span>{{ row.targetProductionShow }}</span>
         </template>
       </el-table-column>
-      <!-- <el-table-column
-        v-if="columns.visible('shortName')"
-        key="shortName"
-        prop="shortName"
-        :show-overflow-tooltip="true"
-        label="生产线简称"
-        min-width="140px"
-      >
-        <template #default="{ row }">
-          <span>{{ row.shortName }}</span>
-        </template>
-      </el-table-column> -->
       <el-table-column
         v-if="columns.visible('boolEnabledEnum')"
         key="boolEnabledEnum"
@@ -158,7 +129,7 @@ import crudApi, { editStatus } from '@/api/bridge/production-config/production-l
 import { ref, defineEmits, inject } from 'vue'
 import { useStore } from 'vuex'
 import { enabledEnum } from '@enum-ms/common'
-import { componentTypeEnum, artifactProductLineEnum } from '@enum-ms/mes'
+import { bridgeProcessTypeEnum as componentTypeEnum } from '@enum-ms/bridge'
 import checkPermission from '@/utils/system/check-permission'
 import { configProductionLinePM as permission } from '@/page-permission/config'
 
@@ -239,8 +210,8 @@ CRUD.HOOK.afterDelete = () => {
   changeStoreLoaded()
 }
 function changeStoreLoaded() {
-  store.commit('config/SET_LOADED', { key: 'productLines', loaded: false })
-  store.commit('config/SET_LOADED', { key: 'onlyProductLines', loaded: false })
+  store.commit('config/SET_LOADED', { key: 'bridgeProductLines', loaded: false })
+  store.commit('config/SET_LOADED', { key: 'bridgeOnlyProductLines', loaded: false })
 }
 </script>
 

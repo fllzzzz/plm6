@@ -1,13 +1,13 @@
 import { computed, watch } from 'vue'
 import { useStore } from 'vuex'
 
-// 获取桥梁工序
-const useBridgeProcess = (loadedCallBack) => {
+// 获取生产班组全部数据
+const useBridgeProductionTeam = (loadedCallBack) => {
   const store = useStore()
-  const loaded = computed(() => store.state.config.loaded.bridgeProcess)
+  const loaded = computed(() => store.state.config.loaded.bridgeProductionTeam)
   // 未加载则拉取
   if (!loaded.value) {
-    store.dispatch('config/fetchBridgeProcess')
+    store.dispatch('config/fetchBridgeProductionTeam')
   }
 
   // 加载成功回调
@@ -27,9 +27,10 @@ const useBridgeProcess = (loadedCallBack) => {
   }
 
   return {
-    process: computed(() => store.state.config.bridgeProcess),
+    productionTeam: computed(() => store.state.config.bridgeProductionTeam),
+    productionTeamKV: computed(() => store.state.config.bridgeProductionTeamKV),
     loaded
   }
 }
 
-export default useBridgeProcess
+export default useBridgeProductionTeam

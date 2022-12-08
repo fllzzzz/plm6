@@ -27,7 +27,7 @@ export function getWorkshopsAllSimple(params) {
 }
 
 // 获取桥梁所有工序
-export function getBridgeProcessAllSimple(params) {
+export function getProcessAllSimple(params) {
   return request({
     url: '/api/mes/bridge/process',
     method: 'get',
@@ -92,7 +92,7 @@ export function getAllFactoryWorkshopLines(params) {
 /**
  * @description: 切割配置列表
  */
-export function getBridgeAllCutConfigs() {
+export function getAllCutConfigs() {
   return request({
     module: 'bridge',
     url: `cut/list/cut`,

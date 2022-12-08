@@ -71,7 +71,7 @@
 <script setup>
 import crudApi from '@/api/bridge/production-config/production-line-inspection'
 import { defineExpose, ref } from 'vue'
-// import { useStore } from 'vuex'
+import { useStore } from 'vuex'
 
 import checkPermission from '@/utils/system/check-permission'
 import { configProductionLineInspectPM as permission } from '@/page-permission/config'
@@ -84,7 +84,7 @@ import pagination from '@crud/Pagination'
 import mHeader from './module/header'
 import mForm from './module/form'
 
-// const store = useStore()
+const store = useStore()
 
 const tableRef = ref()
 const { crud, columns, CRUD } = useCRUD(
@@ -137,12 +137,12 @@ CRUD.HOOK.beforeSubmit = () => {
 }
 
 // 编辑之后 取消缓存的已加载设置
-// CRUD.HOOK.afterSubmit = () => {
-//   store.commit('config/SET_LOADED', { key: 'inspectionTeam', loaded: false })
-// }
-// CRUD.HOOK.afterDelete = () => {
-//   store.commit('config/SET_LOADED', { key: 'inspectionTeam', loaded: false })
-// }
+CRUD.HOOK.afterSubmit = () => {
+  store.commit('config/SET_LOADED', { key: 'bridgeInspectionTeam', loaded: false })
+}
+CRUD.HOOK.afterDelete = () => {
+  store.commit('config/SET_LOADED', { key: 'bridgeInspectionTeam', loaded: false })
+}
 
 defineExpose({
   permission,
