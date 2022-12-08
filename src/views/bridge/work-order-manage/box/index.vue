@@ -119,7 +119,7 @@ import crudApi from '@/api/bridge/work-order-manage/box.js'
 import { ref } from 'vue'
 
 import { componentTypeEnum, artifactProductLineEnum } from '@enum-ms/mes'
-import { artifactWorkOrderPM as permission } from '@/page-permission/mes'
+import { artifactWorkOrderPM as permission } from '@/page-permission/bridge'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'

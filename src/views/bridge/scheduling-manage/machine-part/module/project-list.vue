@@ -56,7 +56,7 @@ import { isBlank, isNotBlank } from '@/utils/data-type'
 import moment from 'moment'
 
 import checkPermission from '@/utils/system/check-permission'
-import { machinePartSchedulingPM as permission } from '@/page-permission/mes'
+import { machinePartSchedulingPM as permission } from '@/page-permission/bridge'
 
 import projectHeaderTime from '@/views/mes/scheduling-manage/common/project-header-time.vue'
 

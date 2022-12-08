@@ -208,7 +208,7 @@ import { ElMessage } from 'element-plus'
 import { defineProps, defineEmits, ref, inject, computed, watch } from 'vue'
 
 import { artifactProductLineEnum } from '@enum-ms/mes'
-import { artifactSchedulingPM as permission } from '@/page-permission/mes'
+import { artifactSchedulingPM as permission } from '@/page-permission/bridge'
 
 import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'

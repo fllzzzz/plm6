@@ -1,4 +1,4 @@
-// 桥梁mes
+// 桥梁bridge
 // --------------------------- 公共权限 start ------------------------------
 
 export const commonPM = {}
@@ -147,6 +147,26 @@ export const bridgeProductionOrderPM = {
 }
 
 // --------------------------- 生产订单 end --------------------------------
+
+// ########################################################################
+
+// --------------------------- 工单管理 start ------------------------------
+
+// 工单管理/结构工单
+export const artifactWorkOrderPM = {
+  get: ['bridge_work_order_artifact:get'], // 列表
+  detail: ['bridge_work_order_artifact:detail'], // 查看
+  print: ['bridge_work_order_artifact:print'] // 打印
+}
+
+// 工单管理/零件工单
+export const machinePartWorkOrderPM = {
+  get: ['bridge_work_order_machine_part:get'], // 列表
+  detail: ['bridge_work_order_machine_part:detail'], // 查看
+  print: ['bridge_work_order_machine_part:print'] // 打印
+}
+
+// --------------------------- 工单管理 end --------------------------------
 
 // ########################################################################
 

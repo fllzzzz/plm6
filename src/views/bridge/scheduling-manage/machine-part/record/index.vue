@@ -139,7 +139,7 @@ import { ElNotification, ElMessage } from 'element-plus'
 
 import { machinePartSchedulingIssueStatusEnum as issueStatusEnum } from '@enum-ms/mes'
 import { layOffWayTypeEnum } from '@enum-ms/uploading-form'
-import { machinePartSchedulingRecordPM as permission } from '@/page-permission/mes'
+import { machinePartSchedulingRecordPM as permission } from '@/page-permission/bridge'
 
 import useTableValidate from '@compos/form/use-table-validate'
 import useMaxHeight from '@compos/use-max-height'

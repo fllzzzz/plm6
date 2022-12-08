@@ -91,7 +91,7 @@ import moment from 'moment'
 
 import { machinePartSchedulingIssueStatusEnum as issueStatusEnum, mesSchedulingStatusEnum } from '@enum-ms/mes'
 import checkPermission from '@/utils/system/check-permission'
-import { machinePartSchedulingNestingResultPM as permission } from '@/page-permission/mes'
+import { machinePartSchedulingNestingResultPM as permission } from '@/page-permission/bridge'
 
 import usePagination from '@compos/use-pagination'
 import { isNotBlank } from '@/utils/data-type'

@@ -159,7 +159,7 @@ import { artifactProductLineEnum, mesBuildingTypeSettingAssembleTypeEnum } from 
 import { componentTypeEnum } from '@enum-ms/mes'
 import { isBlank, deepClone } from '@/utils/data-type'
 import { obj2arr } from '@/utils/convert/type'
-import { artifactSchedulingPM as permission } from '@/page-permission/mes'
+import { artifactSchedulingPM as permission } from '@/page-permission/bridge'
 
 import useTableValidate from '@compos/form/use-table-validate'
 import { manualFetchGroupsTree } from '@compos/mes/scheduling/use-scheduling-groups'

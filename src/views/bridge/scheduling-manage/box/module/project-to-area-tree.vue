@@ -72,7 +72,7 @@ import moment from 'moment'
 
 import { projectNameFormatter } from '@/utils/project'
 import checkPermission from '@/utils/system/check-permission'
-import { artifactSchedulingPM as permission } from '@/page-permission/mes'
+import { artifactSchedulingPM as permission } from '@/page-permission/bridge'
 
 import projectHeaderTime from '@/views/mes/scheduling-manage/common/project-header-time.vue'
 

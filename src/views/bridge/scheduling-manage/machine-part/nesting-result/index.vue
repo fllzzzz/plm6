@@ -147,7 +147,7 @@ import { ElMessage } from 'element-plus'
 import moment from 'moment'
 
 import { componentTypeEnum } from '@enum-ms/mes'
-import { machinePartSchedulingNestingResultPM as permission } from '@/page-permission/mes'
+import { machinePartSchedulingNestingResultPM as permission } from '@/page-permission/bridge'
 
 import useTableValidate from '@compos/form/use-table-validate'
 import { manualFetchGroupsTree } from '@compos/mes/scheduling/use-scheduling-groups'
