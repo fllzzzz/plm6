@@ -23,12 +23,23 @@ export function machinePart(params) {
   })
 }
 /**
- * @description: 获取构件部件工序进度
+ * @description: 获取构件部件工序进度（传统线）
  */
 export function process(params) {
   return request({
     module: 'mes',
     url: 'task/process/artifact/process',
+    method: 'get',
+    params
+  })
+}
+/**
+ * @description: 获取构件部件工序进度（智能线 ）
+ */
+export function smartLineProcess(params) {
+  return request({
+    module: 'mes',
+    url: 'task/process/artifact/page',
     method: 'get',
     params
   })

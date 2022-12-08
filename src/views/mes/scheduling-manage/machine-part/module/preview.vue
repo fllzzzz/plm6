@@ -72,9 +72,6 @@ const props = defineProps({
   list: {
     type: Array,
     default: () => []
-  },
-  artifactDateTime: {
-    type: [Number, String]
   }
 })
 
@@ -125,18 +122,24 @@ async function submitIt() {
     //   return
     // }
     submitLoading.value = true
-    const _list = props.list.map((v) => {
-      return {
-        productId: v.id,
-        quantity: v.quantity
-      }
+    const _list = []
+    props.list.forEach((v) => {
+      v.needMachinePartLinkList.forEach(o => {
+        _list.push(
+          {
+            productId: v.id,
+            quantity: o.quantity,
+            id: o.id,
+            needSchedulingMonth: o.date
+          }
+        )
+      })
     })
     await save({
       // layWayConfigId: layWayConfigId.value,
       material: crud.query.material,
       thick: crud.query.thick,
-      linkList: _list,
-      artifactDateTime: props.artifactDateTime
+      linkList: _list
     })
     ElNotification({
       title: '零件排产保存成功',

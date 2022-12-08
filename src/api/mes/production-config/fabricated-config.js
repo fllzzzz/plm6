@@ -4,7 +4,7 @@ import request from '@/utils/request'
 export function get(params) {
   return request({
     module: 'mes',
-    url: 'productProcess/fabricated_par',
+    url: 'fabricated',
     method: 'get',
     params
   })
@@ -25,7 +25,7 @@ export function del(ids) {
     url: 'fabricated',
     method: 'delete',
     data: {
-      steelId: ids[0]
+      auxiliaryId: ids[0]
     }
   })
 }

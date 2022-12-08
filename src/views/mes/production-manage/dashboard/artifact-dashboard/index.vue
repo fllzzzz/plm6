@@ -58,10 +58,10 @@
 
 <script setup>
 import { productDashboard as get, productSpec } from '@/api/mes/production-manage/dashboard/common'
-import { artifactDetail, assembleDetail, machinePartDetail } from '@/api/mes/production-manage/dashboard/artifact'
+import { artifactDetail, assembleDetail, baseAssembleDetail, machinePartDetail } from '@/api/mes/production-manage/dashboard/artifact'
 import { ref } from 'vue'
 
-import { componentTypeEnum } from '@enum-ms/mes'
+import { componentTypeEnum, structureOrderTypeEnum } from '@enum-ms/mes'
 import { DP } from '@/settings/config'
 import { artifactProductionDashboardPM as permission } from '@/page-permission/mes'
 
@@ -180,19 +180,34 @@ async function getAssembleDetail(item) {
   if (item.hasDetail) return
   try {
     item.detailLoading = true
-    const _data = await assembleDetail({ id: item.id })
+    const _data =
+      item.productType === structureOrderTypeEnum.NESTING.V ? await baseAssembleDetail(item.id) : await assembleDetail({ id: item.id })
     item.hasDetail = true
-    _data.processInfo = `${_data.serialNumber}\n
+    if (item.productType === structureOrderTypeEnum.NESTING.V) {
+      _data.processInfo = `${_data.serialNumber}\n
+          长度（mm）：${_data.length}\n
+          材质：${_data.material}\n
+          规格：${_data.specification}\n`
+      _data.processInfo += '-----------------------\n\n编号       数量\n\n'
+      const processList = _data.assembleLinkDTOS || []
+      processList.forEach((process) => {
+        const _processInfo = process.quantity
+        _data.processInfo += `${process.serialNumber}：${_processInfo}\n\n`
+      })
+    } else {
+      _data.processInfo = `${_data.serialNumber}\n
           清单数量：${_data.quantity}\n
           已生产数量：${_data.producedQuantity}\n
           已使用数量：${_data.usedQuantity}\n`
-    _data.processInfo += '-----------------------\n\n生产上报 / 已质检\n\n'
-    const processList = _data.processSummaryDetailsList || []
-    processList.forEach((process) => {
-      const _completed = _data.quantity === process.completeQuantity && process.quantity === process.inspectionQuantity
-      const _processInfo = _completed ? `√` : `${process.completeQuantity} / ${process.inspectionQuantity}`
-      _data.processInfo += `${process.name}：${_processInfo}\n\n`
-    })
+      _data.processInfo += '-----------------------\n\n生产上报 / 已质检\n\n'
+      const processList = _data.processSummaryDetailsList || []
+      processList.forEach((process) => {
+        const _completed = _data.quantity === process.completeQuantity && process.quantity === process.inspectionQuantity
+        const _processInfo = _completed ? `√` : `${process.completeQuantity} / ${process.inspectionQuantity}`
+        _data.processInfo += `${process.name}：${_processInfo}\n\n`
+      })
+    }
+
     item = Object.assign(item, { processInfo: _data.processInfo })
   } catch (error) {
     console.log('获取详情失败', error)

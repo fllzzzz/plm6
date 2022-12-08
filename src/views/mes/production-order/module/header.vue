@@ -55,7 +55,7 @@ import { regHeader } from '@compos/use-crud'
 import { productionOrderSummary } from '@/api/mes/production-order-manage/production-order'
 
 import checkPermission from '@/utils/system/check-permission'
-import { scheduleStatusEnum, monthNumEnum } from '@enum-ms/mes'
+import { scheduleStatusEnum, monthNumEnum } from '@enum-ms/production'
 import { DP } from '@/settings/config'
 
 import Panel from '@/components/Panel'
@@ -64,7 +64,7 @@ import rrOperation from '@crud/RR.operation'
 
 const defaultQuery = {
   status: undefined,
-  year: new Date().getTime(),
+  year: new Date().getTime().toString(),
   month: undefined
 }
 const { crud, query } = regHeader(defaultQuery)

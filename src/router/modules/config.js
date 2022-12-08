@@ -373,7 +373,7 @@ export default {
               path: 'artifact/fabricated-config',
               hidden: false,
               component: '/mes/production-config/statistical-config/fabricated-config/index',
-              meta: { title: '零件-栓钉套筒', icon: 'project', noCache: true }
+              meta: { title: '配套件-栓钉套筒', icon: 'project', noCache: true }
             },
             {
               name: 'MesConfigDrillHoleConfig',

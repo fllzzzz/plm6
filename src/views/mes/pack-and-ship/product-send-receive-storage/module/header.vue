@@ -13,6 +13,14 @@
         style="width:120px;"
       />
       <project-radio-button size="small" :type="'all'" v-model="query.projectId" class="filter-item" @change="crud.toQuery" />
+      <workshop-select
+        v-model="query.workshopId"
+        placeholder="请选择车间"
+        clearable
+        style="width: 200px"
+        class="filter-item"
+        @change="crud.toQuery"
+      />
       <el-row v-loading="summaryLoading" v-if="checkPermission(crud.permission.get)" :gutter="20" class="panel-group">
         <el-col :span="8" class="card-panel-col">
           <Panel name="累计入库(t)" text-color="#626262" num-color="#1890ff" :endVal="(totalAmount.inboundMete)/1000 || 0"  :precision="DP.COM_WT__KG" />
@@ -46,7 +54,7 @@ import { ref, watch } from 'vue'
 
 import checkPermission from '@/utils/system/check-permission'
 import { DP } from '@/settings/config'
-
+import workshopSelect from '@comp-mes/workshop-select'
 import { regHeader } from '@compos/use-crud'
 import crudOperation from '@crud/CRUD.operation'
 import Panel from '@/components/Panel'

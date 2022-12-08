@@ -83,7 +83,7 @@
     <div v-else>
       <el-tag type="danger" size="medium" style="margin-bottom: 10px"> * 您好，请先选择业务类型为项目承包的项目，当前页面需要选择业务类型为项目承包方可查看 </el-tag>
     </div>
-    <deliveryDetail v-model="detailVisible" :showType="showType" :detailInfo="detailInfo" @success="crud.toQuery"/>
+    <deliveryDetail v-model="detailVisible" :showType="showType" :detailInfo="detailInfo" @success="crud.toQuery" :permission="permission"/>
   </div>
 </template>
 

@@ -138,7 +138,7 @@ const options = computed(() => {
 })
 
 function filterMethod(node, keyword) {
-  if (node.data.fullName.indexOf(keyword) > -1 || node.data.name.indexOf(keyword) > -1 || node.data.shortName.indexOf(keyword) > -1) {
+  if (node.data.label.indexOf(keyword) > -1 || node.data.name.indexOf(keyword) > -1 || node.data.shortName.indexOf(keyword) > -1) {
     return true
   }
 }
@@ -146,7 +146,7 @@ function filterMethod(node, keyword) {
 const cascaderProps = computed(() => {
   return {
     value: 'id',
-    label: 'name',
+    label: 'label',
     children: 'children',
     checkStrictly: props.checkStrictly,
     expandTrigger: props.expandTrigger,

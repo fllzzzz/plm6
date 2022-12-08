@@ -1,5 +1,8 @@
 <template>
   <div class="app-container">
+    <div class="head-container">
+      <mHeader />
+    </div>
     <!--表格渲染-->
     <common-table
       ref="tableRef"
@@ -30,7 +33,13 @@
       <!--编辑与删除-->
       <el-table-column v-if="checkPermission([...permission.edit])" label="操作" width="130px" align="center" fixed="right">
         <template #default="{ row: { sourceRow: row } }">
-          <udOperation :disabledEdit="row.productType === 1" :data="row" :showDel="false" />
+          <udOperation
+            :disabledEdit="
+              Boolean(row.productType & typeEnum.MACHINE_PART.V || crud.query.productionLineTypeEnum & artifactProductLineEnum.INTELLECT.V)
+            "
+            :data="row"
+            :showDel="false"
+          />
         </template>
       </el-table-column>
     </common-table>
@@ -43,6 +52,7 @@ import crudApi from '@/api/mes/production-config/process'
 import { ref } from 'vue'
 import { useStore } from 'vuex'
 
+import { artifactProductLineEnum } from '@enum-ms/mes'
 import { processMaterialListTypeEnum as typeEnum } from '@enum-ms/mes'
 import checkPermission from '@/utils/system/check-permission'
 import { configProcessPM as permission } from '@/page-permission/config'
@@ -51,6 +61,7 @@ import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import udOperation from '@crud/UD.operation'
 import mForm from './module/form'
+import mHeader from './module/header'
 import { deepClone } from '@/utils/data-type'
 
 const store = useStore()

@@ -53,10 +53,21 @@
             @change="parentTypeChange"
           />
         </el-form-item>
-        <el-form-item label="类型命名" prop="classificationName">
-          <el-input v-model="form.classificationName" type="text" placeholder="类型命名" style="width: 250px" maxlength="30" />
+        <el-form-item label="类型命名" prop="classificationName" v-if="form.productionLineTypeEnum">
+          <common-select
+            v-if="form.productionLineTypeEnum === artifactProductLineEnum.INTELLECT.V"
+            v-model="form.classificationName"
+            :options="classificationNameOptions"
+            type="other"
+            :dataStructure="{ key: 'key', label: 'value', value: 'value' }"
+            size="small"
+            class="filter-item"
+            placeholder="类型命名选择"
+            style="width: 250px"
+          />
+          <el-input v-model="form.classificationName" type="text" placeholder="类型命名" style="width: 250px" maxlength="30" v-else />
         </el-form-item>
-        <el-form-item label="长度定义(mm)" prop="minLength" v-if="form.parentType === intellectParentType.BRIDGE.V">
+        <!-- <el-form-item label="长度定义(mm)" prop="minLength" v-if="form.parentType === intellectParentType.BRIDGE.V">
           <div style="margin-bottom:5px;">类型为梁时,最小值和最大值至少填一项</div>
             <span style="margin-right:3px;">最小值:</span>
             <common-input-number
@@ -70,28 +81,8 @@
               placeholder="最小值"
               style="width:100px;margin-right:5px;line-height:32px !import;"
             />
-            <!-- <common-select
-              v-model="form.boolContainsMin"
-              :options="maxEqualTypeEnum.ENUM"
-              type="enum"
-              size="mini"
-              clearable
-              class="filter-item"
-              placeholder="符号"
-              style="width: 85px;"
-            /> -->
             <span style="padding:0 8px;">—</span>
             <span style="margin-right:3px;">最大值:</span>
-            <!-- <common-select
-              v-model="form.boolContainsMax"
-              :options="maxEqualTypeEnum.ENUM"
-              type="enum"
-              size="mini"
-              clearable
-              class="filter-item"
-              placeholder="符号"
-              style="width: 85px;margin-right:5px;"
-            /> -->
             <common-input-number
               v-model="form.maxLength"
               :min="0"
@@ -103,55 +94,7 @@
               placeholder="最大值"
               style="width:100px;line-height:32px;"
             />
-          <!-- <div style="margin-bottom:5px;">
-            <span style="margin-right:3px;">最小值：</span>
-            <common-input-number
-              v-model="form.minLength"
-              :min="0"
-              :max="999999999"
-              :controls="false"
-              :step="1"
-              :precision="0"
-              size="mini"
-              placeholder="最小值"
-              style="width:100px;margin-right:5px;line-height:32px;"
-            />
-            <common-select
-              v-model="form.boolContainsMin"
-              :options="maxEqualTypeEnum.ENUM"
-              type="enum"
-              size="small"
-              clearable
-              class="filter-item"
-              placeholder="符号"
-              style="width: 100px;"
-            />
-          </div>
-          <div>
-            <span style="margin-right:3px;">最大值：</span>
-            <common-select
-              v-model="form.boolContainsMax"
-              :options="maxEqualTypeEnum.ENUM"
-              type="enum"
-              size="small"
-              clearable
-              class="filter-item"
-              placeholder="符号"
-              style="width: 100px;margin-right:5px;"
-            />
-            <common-input-number
-              v-model="form.maxLength"
-              :min="0"
-              :max="999999999"
-              :controls="false"
-              :step="1"
-              :precision="0"
-              size="mini"
-              placeholder="最大值"
-              style="width:100px;line-height:32px;"
-            />
-          </div> -->
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item label="定义代码" prop="definitionWord" v-if="form.productionLineTypeEnum === artifactProductLineEnum.INTELLECT.V">
           <el-input v-model="form.definitionWord" type="text" placeholder="定义代码" style="width: 250px" maxlength="30" />
         </el-form-item>
@@ -255,7 +198,6 @@ const drawerRef = ref()
 const loading = ref(false)
 const nameArr = ref([])
 const serialNumberArr = ref([])
-
 const defaultForm = {
   id: undefined,
   productionLineTypeEnum: undefined,
@@ -263,9 +205,9 @@ const defaultForm = {
   artifactType: undefined, // 构件类型
   classificationName: '', // 类型命名
   // boolContainsMin: undefined, // 最小值是否包含等于
-  minLength: undefined, // 长度最小值
+  // minLength: undefined, // 长度最小值
   // boolContainsMax: undefined, // 最大值是否包含等于
-  maxLength: undefined, // 长度最大值
+  // maxLength: undefined, // 长度最大值
   definitionWord: undefined, // 定义代码
   sort: undefined,
   specPrefixList: [],
@@ -276,6 +218,14 @@ const defaultForm = {
 const form = ref(JSON.parse(JSON.stringify(defaultForm)))
 const plusShow = computed(() => {
   return form.value.productionLineTypeEnum === artifactProductLineEnum.TRADITION.V ? (form.value.specPrefixList?.length < 1 ? true : (form.value.artifactType === artifactTypeEnum.COMMON.V)) : true
+})
+
+const classificationNameOptions = computed(() => {
+  let options = []
+  if (form.value.productionLineTypeEnum === artifactProductLineEnum.INTELLECT.V && form.value.parentType) {
+    options = form.value.parentType === intellectParentType.PILLAR.V ? [{ key: 1, value: '钢柱' }] : [{ key: 2, value: '钢梁' }, { key: 3, value: '短梁' }, { key: 4, value: '长短梁' }]
+  }
+  return options
 })
 
 const validateLinks = (rule, value, callback) => {
@@ -315,37 +265,21 @@ const validateSerialNumberLinks = (rule, value, callback) => {
   }
 }
 
-const validateLength = (rule, value, callback) => {
-  if (form.value.parentType === intellectParentType.BRIDGE.V) {
-    if (!form.value.minLength && !form.value.maxLength) {
-      callback(new Error('最大值和最小值不能同时为空'))
-    } else {
-      if (form.value.minLength && form.value.maxLength) {
-        // if (!isNotBlank(form.value.boolContainsMin) || !isNotBlank(form.value.boolContainsMax)) {
-        //   callback(new Error('最大值和最小值符号必选'))
-        // }
-        if (form.value.maxLength < form.value.minLength) {
-          callback(new Error('最大值必须大于最小值'))
-        }
-        callback()
-      }
-      // else {
-      //   if (form.value.minLength) {
-      //     if (!isNotBlank(form.value.boolContainsMin)) {
-      //       callback(new Error('最小值符号必选'))
-      //     }
-      //     callback()
-      //   } else {
-      //     if (!isNotBlank(form.value.boolContainsMax)) {
-      //       callback(new Error('最大值符号必选'))
-      //     }
-      //     callback()
-      //   }
-      // }
-    }
-  }
-  callback()
-}
+// const validateLength = (rule, value, callback) => {
+//   if (form.value.parentType === intellectParentType.BRIDGE.V) {
+//     if (!form.value.minLength && !form.value.maxLength) {
+//       callback(new Error('最大值和最小值不能同时为空'))
+//     } else {
+//       if (form.value.minLength && form.value.maxLength) {
+//         if (form.value.maxLength < form.value.minLength) {
+//           callback(new Error('最大值必须大于最小值'))
+//         }
+//         callback()
+//       }
+//     }
+//   }
+//   callback()
+// }
 const validateParentType = (rule, value, callback) => {
   if (form.value.productionLineTypeEnum === artifactProductLineEnum.INTELLECT.V) {
     if (!value) {
@@ -376,11 +310,11 @@ const rules = {
   parentType: [
     { required: true, validator: validateParentType, message: '请选择类型', trigger: 'change' }
   ],
-  minLength: [
-    { required: true, validator: validateLength, trigger: 'change' }
-  ],
+  // minLength: [
+  //   { required: true, validator: validateLength, trigger: 'change' }
+  // ],
   classificationName: [
-    { required: true, message: '请填写类型命名', trigger: 'blur' },
+    { required: true, message: '请填写类型命名', trigger: ['blur', 'change'] },
     { min: 1, max: 30, message: '长度在 1 到 30 个字符', trigger: 'blur' }
   ],
   definitionWord: [
@@ -447,11 +381,12 @@ function resetForm(data) {
 }
 
 function lineTypeChange(val) {
+  form.value.classificationName = undefined
   if (val !== artifactProductLineEnum.INTELLECT.V) {
     // form.value.boolContainsMin = undefined
-    form.value.minLength = undefined
+    // form.value.minLength = undefined
     // form.value.boolContainsMax = undefined
-    form.value.maxLength = undefined
+    // form.value.maxLength = undefined
     form.value.parentType = undefined
     form.value.definitionWord = undefined
   } else {
@@ -462,12 +397,7 @@ function lineTypeChange(val) {
 }
 
 function parentTypeChange(val) {
-  if (val !== intellectParentType.BRIDGE.V) {
-    // form.value.boolContainsMin = undefined
-    form.value.minLength = undefined
-    // form.value.boolContainsMax = undefined
-    form.value.maxLength = undefined
-  }
+  form.value.classificationName = undefined
 }
 
 function artifactTypeChange(val) {

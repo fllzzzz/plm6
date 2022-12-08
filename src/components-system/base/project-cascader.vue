@@ -87,7 +87,7 @@ const showAll = ref(false)
 const cascaderProps = computed(() => {
   return {
     value: 'id',
-    label: 'name',
+    label: 'label',
     children: 'children',
     checkStrictly: props.checkStrictly,
     expandTrigger: props.expandTrigger,

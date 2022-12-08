@@ -91,7 +91,7 @@ export function projectsToCascade(projects, timeField = 'createTime') {
       // 设置级联第一级：项目年份
       cascade.push({
         id: -parseInt(pYear),
-        name: pYear,
+        label: pYear,
         children: []
       })
       // 更新数组下标
@@ -100,13 +100,12 @@ export function projectsToCascade(projects, timeField = 'createTime') {
       statusArr.forEach((item) => {
         cascade[yIndex].children.push({
           id: -Number(item.V),
-          name: item.L,
+          label: item.L,
           children: []
         })
       })
     }
-    project.fullName = project.name
-    project.name = projectNameFormatter(project)
+    project.label = projectNameFormatter(project)
     // 设置级联第三级：项目
     if (statusValArr.indexOf(project.status) > -1) {
       cascade[yIndex].children[statusValArr.indexOf(project.status)].children.push(project)

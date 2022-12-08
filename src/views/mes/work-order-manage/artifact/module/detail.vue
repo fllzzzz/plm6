@@ -305,7 +305,7 @@ async function fetch() {
   let _list = []
   try {
     const query =
-      props.detailData.productType === componentTypeEnum.ARTIFACT.V ? { ...params.value } : { ...params.value, type: listType.value }
+      props.detailData.productType === componentTypeEnum.ARTIFACT.V ? { ...params.value, productionLineTypeEnum: props.detailData.productionLine?.productionLineTypeEnum } : { ...params.value, type: listType.value }
     const { content = [], totalElements } = await getTaskList({
       ...query,
       ...queryPage
@@ -389,7 +389,7 @@ async function printIt() {
       printLoading.value.text = `正在加载数据：${typeEnum[item].L}`
       const config = printTemplate[apiKey]
       const _params =
-        props.detailData.productType === componentTypeEnum.ARTIFACT.V ? { ...params.value } : { ...params.value, type: listType.value }
+        props.detailData.productType === componentTypeEnum.ARTIFACT.V ? { ...params.value, productionLineTypeEnum: props.detailData.productionLine?.productionLineTypeEnum } : { ...params.value, type: listType.value }
       let _resData = (await fetchFn[apiKey](_params)) || {}
       if (formatFn[apiKey]) {
         // 数据装换

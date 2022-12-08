@@ -32,7 +32,7 @@
       </div>
       <div style="border-right: 1px solid #ededed; height: calc(100vh - 130px)"></div>
       <div style="width: 59%; padding-left: 10px">
-        <projectShipmentDetail :currentRow="currentRow" v-if="isNotBlank(currentRow)" :permission="permission"/>
+        <projectShipmentDetail :workshopId="crud.query.workshopId" :production-line-type-enum="crud.query.productionLineTypeEnum" :currentRow="currentRow" v-if="isNotBlank(currentRow)" :permission="permission"/>
         <div class="my-code" v-else>*点击左表操作查看明细</div>
       </div>
     </div>

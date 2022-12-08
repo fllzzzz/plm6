@@ -14,13 +14,6 @@ const teamAttributeEnum = {
 }
 constantize(teamAttributeEnum)
 
-// 工序类型
-const processTypeEnum = {
-  ONCE: { L: '一次工序', SL: '部件', K: 'ONCE', V: false },
-  TWICE: { L: '二次工序', SL: '构件', K: 'TWICE', V: true }
-}
-constantize(processTypeEnum)
-
 // 工序类
 const processCategoryEnum = {
   ASSEMBLY_RIVETING_WELDING: { L: '组铆焊类', K: 'ASSEMBLY_RIVETING_WELDING', V: 1 << 0 },
@@ -101,15 +94,6 @@ const wageQuotaTypeEnum = {
   AREA: { L: '按面积计价', SL: '面积', K: 'AREA', V: 1 << 2, F: 'areaPice', unit: '元/平方米', meteUnit: '平方米', C_UNIT: '㎡', DP: 'COM_AREA__M2' }
 }
 constantize(wageQuotaTypeEnum)
-
-// 油漆计量单位
-const paintingMeasureUnitEnum = {
-  AREA: { L: '按面积（m²）', K: 'AREA', V: wageQuotaTypeEnum.AREA.V },
-  WEIGHT: { L: '按重量（kg）', K: 'WEIGHT', V: wageQuotaTypeEnum.WEIGHT.V },
-  LENGTH: { L: '按长度（m）', K: 'LENGTH', V: wageQuotaTypeEnum.LENGTH.V },
-  QUANTITY: { L: '按数量', K: 'QUANTITY', V: wageQuotaTypeEnum.QUANTITY.V }
-}
-constantize(paintingMeasureUnitEnum)
 
 // 楼承板子类型
 const floorPlateTypeEnum = {
@@ -411,30 +395,12 @@ const partKeyWordEnum = {
 }
 constantize(partKeyWordEnum)
 
-// 生产订单排期状态
-const scheduleStatusEnum = {
-  NOT: { L: '未排期', K: 'NOT', V: 1 << 0 },
-  PART: { L: '部分排期', K: 'PART', V: 1 << 1 },
-  COMPLETED: { L: '排期完毕', K: 'COMPLETED', V: 1 << 2 }
-}
-constantize(scheduleStatusEnum)
-
 // 生产订单 零件是否有孔
 const hasHoleEnum = {
   TRUE: { L: '有孔', K: 'TRUE', V: true },
   FALSE: { L: '无孔', K: 'FALSE', V: false }
 }
 constantize(hasHoleEnum)
-
-// 生产订单 月份
-const monthNumEnum = {
-  ONE: { L: '最近一个月交货', K: 'ONE', V: 1 },
-  TWO: { L: '最近二个月交货', K: 'TWO', V: 2 },
-  THREE: { L: '最近三个月交货', K: 'THREE', V: 3 },
-  SIX: { L: '最近半年交货', K: 'SIX', V: 6 },
-  TWELVE: { L: '最近一年交货', K: 'TWELVE', V: 12 }
-}
-constantize(monthNumEnum)
 
 // 构件规格是否修正
 const artifactSpecReviseEnum = {
@@ -560,7 +526,6 @@ export {
   teamAttributeEnum,
   componentTypeEnum,
   processMaterialListTypeEnum,
-  processTypeEnum,
   processCategoryEnum,
   processInspectTypeEnum,
   processReportTypeEnum,
@@ -584,7 +549,6 @@ export {
   projectComponentTypeEnum,
   artifactProcessEnum,
   paintingTypeEnum,
-  paintingMeasureUnitEnum,
   reportComponentTypeEnum,
   labelTypeEnum,
   printProductTypeEnum,
@@ -604,9 +568,7 @@ export {
   artifactTypeEnum,
   codingTypeEnum,
   partKeyWordEnum,
-  scheduleStatusEnum,
   hasHoleEnum,
-  monthNumEnum,
   artifactSpecReviseEnum,
   taskTrackingSchedulingStatusEnum,
   projectNestingStatusEnum,
@@ -632,7 +594,6 @@ export default {
   teamAttributeEnum,
   componentTypeEnum,
   processMaterialListTypeEnum,
-  processTypeEnum,
   processCategoryEnum,
   processInspectTypeEnum,
   processReportTypeEnum,
@@ -656,7 +617,6 @@ export default {
   projectComponentTypeEnum,
   artifactProcessEnum,
   paintingTypeEnum,
-  paintingMeasureUnitEnum,
   reportComponentTypeEnum,
   labelTypeEnum,
   printProductTypeEnum,
@@ -676,9 +636,7 @@ export default {
   artifactTypeEnum,
   codingTypeEnum,
   partKeyWordEnum,
-  scheduleStatusEnum,
   hasHoleEnum,
-  monthNumEnum,
   artifactSpecReviseEnum,
   taskTrackingSchedulingStatusEnum,
   projectNestingStatusEnum,

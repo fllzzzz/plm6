@@ -32,6 +32,15 @@ export function assembleDetail(params) {
   })
 }
 
+// 获取生产看板-母件下的部件详情
+export function baseAssembleDetail(id) {
+  return request({
+    module: 'mes',
+    url: `section_steel/nesting/${id}/link`,
+    method: 'get'
+  })
+}
+
 /**
  *
  * 获取生产看板-零件详情

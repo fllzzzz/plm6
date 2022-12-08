@@ -13,6 +13,16 @@ export function get(params) {
   })
 }
 
+// 获取可排产的月份
+export function getMonth(params) {
+  return request({
+    module: 'mes',
+    url: 'machine_part/scheduling/month/list',
+    method: 'get',
+    params
+  })
+}
+
 export function getDate(params) {
   return request({
     module: 'mes',

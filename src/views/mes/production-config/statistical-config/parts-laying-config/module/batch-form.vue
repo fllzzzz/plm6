@@ -47,22 +47,19 @@
             />
           </template>
         </el-table-column>
-        <el-table-column prop="name" :show-overflow-tooltip="true" label="下料方式" width="160">
+        <el-table-column prop="cutConfigId" :show-overflow-tooltip="true" label="下料方式" width="160">
           <template #default="{ row, $index }">
-            <common-select
-              v-model="row.name"
-              :options="layingList"
-              clearable
-              :show-extra="$index !== 0"
-              type="other"
+            <cut-config-select
               placeholder="下料方式"
-              :dataStructure="{ key: 'name', label: 'name', value: 'name' }"
+              v-model="row.cutConfigId"
+              clearable
+              :show-extra="$index !== -1"
               style="width: 100%"
               class="input-underline"
             />
           </template>
         </el-table-column>
-        <el-table-column prop="numerical" :show-overflow-tooltip="true" label="数值范围" min-width="200" align="center">
+        <el-table-column prop="numerical" :show-overflow-tooltip="true" label="板厚范围" min-width="200" align="center">
           <template #default="{ row }">
             <common-input-number
               v-model="row.minNumerical"
@@ -137,7 +134,7 @@
 </template>
 
 <script setup>
-import { computed, ref, nextTick, inject } from 'vue'
+import { computed, ref, nextTick } from 'vue'
 import { partKeyWordEnum, wageQuotaTypeEnum } from '@enum-ms/mes'
 
 import { regBatchForm } from '@compos/use-crud'
@@ -145,6 +142,7 @@ import useTableOperate from '@compos/form/use-table-operate'
 import useTableValidate from '@compos/form/use-table-validate'
 import useMaxHeight from '@compos/use-max-height'
 import StoreOperation from '@crud/STORE.operation.vue'
+import cutConfigSelect from '@/components-system/base/cut-config-select.vue'
 
 const validateNumerical = (value, row) => {
   if (!row.minNumerical || !row.maxNumerical || row.maxNumerical < row.minNumerical) return false
@@ -153,13 +151,11 @@ const validateNumerical = (value, row) => {
 
 const tableRules = {
   specPrefix: [{ required: true, message: '请选择截面类型', trigger: 'change' }],
-  name: [{ required: true, message: '请选择下料方式', trigger: 'change' }],
+  cutConfigId: [{ required: true, message: '请选择下料方式', trigger: 'change' }],
   wageQuotaType: [{ required: true, message: '请选择计量方式', trigger: 'change' }],
   unitPrice: [{ required: true, message: '请填写单价', trigger: 'blur' }],
   numerical: [{ validator: validateNumerical, message: '请填写数值并且最大数值不得小于最小数值', trigger: 'blur' }]
 }
-
-const layingList = inject('layingList')
 
 const defaultForm = { list: [] }
 
@@ -170,7 +166,7 @@ const defaultRow = {
 // 同上的选项与值
 const ditto = new Map([
   ['specPrefix', -1],
-  ['name', -1],
+  ['cutConfigId', '同上'],
   ['wageQuotaType', -1]
 ])
 

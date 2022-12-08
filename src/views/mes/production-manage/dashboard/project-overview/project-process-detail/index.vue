@@ -13,6 +13,15 @@
           :project-id="props.processData.id"
           @change="handleMonomerAreaChange"
         />
+        <common-radio-button
+          v-model="productType"
+          :options="[componentTypeEnum.ARTIFACT, componentTypeEnum.ASSEMBLE, componentTypeEnum.MACHINE_PART]"
+          showOptionAll
+          type="enum"
+          size="small"
+          class="filter-item"
+          @change="handleProductTypeChange"
+        />
       </div>
       <common-table ref="tableRef" :data="processList" :empty-text="'暂无数据'" :max-height="maxHeight" row-key="id" style="width: 100%">
         <el-table-column prop="index" label="序号" align="center" width="60px" type="index" />
@@ -59,6 +68,7 @@
 <script setup>
 import { ref, defineProps, watch, provide } from 'vue'
 import { getProcessList } from '@/api/mes/production-manage/dashboard/project-overview'
+import { componentTypeEnum } from '@enum-ms/mes'
 import { mesProjectOverviewPM as permission } from '@/page-permission/mes'
 import useMaxHeight from '@compos/use-max-height'
 import monomerSelectAreaSelect from '@comp-base/monomer-select-area-select'
@@ -66,6 +76,7 @@ import processDetail from '../process-detail/index.vue'
 
 const tableRef = ref()
 const processList = ref([])
+const productType = ref()
 const monomerId = ref()
 const areaId = ref()
 const detailData = ref([])
@@ -98,6 +109,7 @@ const { maxHeight } = useMaxHeight({
 async function processListGet() {
   try {
     const data = await getProcessList({
+      productType: productType.value,
       monomerId: monomerId.value,
       areaId: areaId.value,
       projectId: props.processData.id
@@ -109,6 +121,10 @@ async function processListGet() {
 }
 
 function handleMonomerAreaChange() {
+  processListGet()
+}
+
+function handleProductTypeChange() {
   processListGet()
 }
 
