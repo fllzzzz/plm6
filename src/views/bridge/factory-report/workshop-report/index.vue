@@ -126,13 +126,13 @@
 </template>
 
 <script setup>
-import crudApi from '@/api/mes/factory-report/workshop-report.js'
+import crudApi from '@/api/bridge/bridge-workshop-report/workshop-report.js'
 import { ref } from 'vue'
 import useCRUD from '@compos/use-crud'
 import pagination from '@crud/Pagination'
 import { tableSummary } from '@/utils/el-extra'
 import { projectNameFormatter } from '@/utils/project'
-import { mesFactoryReportPM as permission } from '@/page-permission/mes'
+import { bridgeFactoryReportPM as permission } from '@/page-permission/bridge'
 import mHeader from './module/header'
 
 const tableRef = ref()

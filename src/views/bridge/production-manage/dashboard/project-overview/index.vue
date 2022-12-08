@@ -40,8 +40,8 @@
 </template>
 <script setup>
 import { ref, watch } from 'vue'
-import crudApi from '@/api/mes/production-manage/dashboard/project-overview'
-import { mesProjectOverviewPM as permission } from '@/page-permission/mes'
+import crudApi from '@/api/bridge/bridge-production-manage/project-overview'
+import { bridgeProjectOverviewPM as permission } from '@/page-permission/bridge'
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
 import pagination from '@crud/Pagination'

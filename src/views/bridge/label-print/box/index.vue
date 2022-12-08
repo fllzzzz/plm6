@@ -272,8 +272,8 @@
 </template>
 
 <script setup>
-import { getForTask as getPrintRecord } from '@/api/mes/label-print/print-record'
-import crudApi from '@/api/mes/label-print/artifact'
+import { getForTask as getPrintRecord } from '@/api/bridge/label-print/print-record'
+import crudApi from '@/api/bridge/label-print/artifact'
 import { ref, provide, computed, watch } from 'vue'
 import { ElMessage } from 'element-plus'
 
@@ -283,7 +283,7 @@ import { DP, QR_SCAN_F_TYPE } from '@/settings/config'
 import { toFixed } from '@data-type/index'
 import { parseTime } from '@/utils/date'
 import { printArtifact as printComponent } from '@/utils/print/index'
-import { artifactLabelPM as permission } from '@/page-permission/mes'
+import { bridgeArtifactLabelPM as permission } from '@/page-permission/bridge'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'

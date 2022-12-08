@@ -130,7 +130,7 @@
 </template>
 
 <script setup>
-import crudApi from '@/api/mes/task-tracking/assistance-operate/productionLine-assistance'
+import crudApi from '@/api/bridge/bridge-task-tracking/assistance-operate/productionLine-assistance'
 import { ref } from 'vue'
 
 import { taskTypeENUM } from '@enum-ms/mes'
@@ -140,7 +140,7 @@ import pagination from '@crud/Pagination'
 import mHeader from './module/header'
 import assistanceDrawer from './module/assistance-drawer.vue'
 import recordDrawer from './module/record-drawer.vue'
-import { mesProductionLineAssistancePM as permission } from '@/page-permission/mes'
+import { bridgeProductionLineAssistancePM as permission } from '@/page-permission/bridge'
 
 const optShow = {
   add: false,

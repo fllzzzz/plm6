@@ -69,7 +69,7 @@
 
 <script setup>
 import { ref, defineProps, watch } from 'vue'
-import { inboundDetail } from '@/api/mes/pack-and-ship/ship-summary'
+import { inboundDetail } from '@/api/bridge/bridge-pack-and-ship/ship-summary'
 
 import useMaxHeight from '@compos/use-max-height'
 import { DP } from '@/settings/config'

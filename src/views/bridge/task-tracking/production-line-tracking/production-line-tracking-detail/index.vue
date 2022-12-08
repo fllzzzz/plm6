@@ -26,7 +26,7 @@
     </template>
     <template #titleRight>
       <print-table
-      v-permission="permission.print"
+        v-permission="permission.print"
         api-key="mesProductionLineList"
         :params="{
           productionLineId: props.detailData.id,
@@ -93,14 +93,14 @@
 </template>
 
 <script setup>
-import { productionLineDetail } from '@/api/mes/task-tracking/production-line-tracking.js'
+import { productionLineDetail } from '@/api/bridge/bridge-task-tracking/production-line-tracking.js'
 import { workOrderTypeEnum } from '@enum-ms/mes'
 import useVisible from '@compos/use-visible'
 import usePagination from '@compos/use-pagination'
 import useMaxHeight from '@compos/use-max-height'
 import { defineProps, defineEmits, ref, watch } from 'vue'
 import { projectNameFormatter } from '@/utils/project'
-import { mesProductionLineTrackingPM as permission } from '@/page-permission/mes'
+import { bridgeProductionLineTrackingPM as permission } from '@/page-permission/bridge'
 import monomerSelectAreaSelect from '@comp-base/monomer-select-area-select'
 import projectCascader from '@comp-base/project-cascader.vue'
 

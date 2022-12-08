@@ -73,12 +73,12 @@
 </template>
 
 <script setup>
-import crudApi from '@/api/mes/production-manage/dashboard/assembly-match'
+import crudApi from '@/api/bridge/bridge-production-manage/assembly-match'
 import { ref } from 'vue'
 import { ElMessage } from 'element-plus'
 
 import { DP } from '@/settings/config'
-import { assemblyMatchDashboardPM as permission } from '@/page-permission/mes'
+import { bridgeAssemblyMatchDashboardPM as permission } from '@/page-permission/bridge'
 
 import useDashboardIndex from '@compos/mes/dashboard/use-dashboard-index'
 import useMaxHeight from '@compos/use-max-height'

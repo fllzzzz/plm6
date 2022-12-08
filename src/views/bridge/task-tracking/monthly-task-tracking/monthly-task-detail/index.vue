@@ -81,7 +81,7 @@
   </div>
 </template>
 <script setup>
-import { monthlyProject } from '@/api/mes/task-tracking/monthly-task-tracking.js'
+import { monthlyProject } from '@/api/bridge/bridge-task-tracking/monthly-task-tracking.js'
 import { ref, defineProps, watch } from 'vue'
 import useMaxHeight from '@compos/use-max-height'
 import usePagination from '@compos/use-pagination'

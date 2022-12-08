@@ -59,7 +59,7 @@
 import { ref, defineExpose, defineProps, defineEmits } from 'vue'
 
 import { componentTypeEnum } from '@enum-ms/mes'
-import { artifactInfo } from '@/api/mes/production-manage/dashboard/assembly-match'
+import { artifactInfo } from '@/api/bridge/bridge-production-manage/assembly-match'
 import useDashboardHeader from '@compos/mes/dashboard/use-dashboard-header'
 import { regHeader } from '@compos/use-crud'
 import useGlobalProjectIdChangeToQuery from '@compos/use-global-project-id-change-to-query'

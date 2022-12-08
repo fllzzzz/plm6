@@ -82,7 +82,7 @@
 </template>
 
 <script setup>
-import { artifactList, artifactSummary } from '@/api/mes/production-manage/dashboard/painting'
+import { artifactList, artifactSummary } from '@/api/bridge/bridge-production-manage/painting'
 import { defineProps, provide, ref, watch, inject } from 'vue'
 
 import { DP } from '@/settings/config'

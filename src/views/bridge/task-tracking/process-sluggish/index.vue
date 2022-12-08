@@ -185,9 +185,9 @@
 </template>
 
 <script setup>
-import { get } from '@/api/mes/task-tracking/process-sluggish.js'
+import { get } from '@/api/bridge/bridge-task-tracking/process-sluggish.js'
 import { ref, watch, provide, computed } from 'vue'
-import { mesProcessSluggishPM as permission } from '@/page-permission/mes'
+import { bridgeProcessSluggishPM as permission } from '@/page-permission/bridge'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import { parseTime } from '@/utils/date'

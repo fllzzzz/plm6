@@ -76,8 +76,8 @@
 </template>
 <script setup>
 import { ref, computed, watch } from 'vue'
-import crudApi from '@/api/mes/task-tracking/monthly-task-tracking.js'
-import { mesMonthlyTaskTrackingPM as permission } from '@/page-permission/mes'
+import crudApi from '@/api/bridge/bridge-task-tracking/monthly-task-tracking.js'
+import { bridgeMonthlyTaskTrackingPM as permission } from '@/page-permission/bridge'
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
 import { DP } from '@/settings/config'

@@ -68,7 +68,7 @@
 <script setup>
 import useMaxHeight from '@compos/use-max-height'
 import { ref, defineEmits, defineProps, watch } from 'vue'
-import { getAllProcess } from '@/api/mes/task-tracking/process-sluggish.js'
+import { getAllProcess } from '@/api/bridge/bridge-task-tracking/process-sluggish.js'
 import { componentTypeEnum } from '@enum-ms/mes'
 import { DP } from '@/settings/config'
 import { convertUnits } from '@/utils/convert/unit'

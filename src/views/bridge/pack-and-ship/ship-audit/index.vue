@@ -197,11 +197,11 @@
 </template>
 
 <script setup>
-import crudApi, { detail, audit } from '@/api/mes/pack-and-ship/ship-audit'
+import crudApi, { detail, audit } from '@/api/bridge/bridge-pack-and-ship/ship-audit'
 import { ref, reactive } from 'vue'
 import { ElNotification } from 'element-plus'
 
-import { shipAuditPM as permission } from '@/page-permission/mes'
+import { bridgeShipAuditPM as permission } from '@/page-permission/mes'
 import { packTypeEnum, shipAuditStatusEnum } from '@enum-ms/mes'
 import { weightMeasurementModeEnum as measureModeEnum } from '@enum-ms/finance'
 import { cleanArray } from '@/utils/data-type/array'

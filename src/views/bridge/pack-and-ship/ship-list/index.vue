@@ -190,10 +190,10 @@
 </template>
 
 <script setup>
-import crudApi, { detail } from '@/api/mes/pack-and-ship/ship-list'
+import crudApi, { detail } from '@/api/bridge/bridge-pack-and-ship/ship-list'
 import { ref } from 'vue'
 
-import { mesShipPM as permission } from '@/page-permission/mes'
+import { bridgeShipPM as permission } from '@/page-permission/bridge'
 import { manufactureTypeEnum } from '@enum-ms/production'
 import { packTypeEnum, deliveryStatusEnum } from '@enum-ms/mes'
 import { DP } from '@/settings/config'

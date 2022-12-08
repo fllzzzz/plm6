@@ -162,7 +162,7 @@
 </template>
 
 <script setup>
-import { detail } from '@/api/mes/task-tracking/assistance-operate/productionLine-assistance'
+import { detail } from '@/api/bridge/bridge-task-tracking/assistance-operate/productionLine-assistance'
 import { defineProps, defineEmits, ref, inject } from 'vue'
 import { ElMessage } from 'element-plus'
 

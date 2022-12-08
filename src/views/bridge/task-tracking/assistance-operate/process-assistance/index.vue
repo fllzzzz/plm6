@@ -143,11 +143,11 @@
 </template>
 
 <script setup>
-import crudApi, { getTask } from '@/api/mes/task-tracking/assistance-operate/process-assistance'
+import crudApi, { getTask } from '@/api/bridge/bridge-task-tracking/assistance-operate/process-assistance'
 import { ref } from 'vue'
 
 import { componentTypeEnum } from '@enum-ms/mes'
-import { mesProcessAssistancePM as permission } from '@/page-permission/mes'
+import { bridgeProcessAssistancePM as permission } from '@/page-permission/bridge'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'

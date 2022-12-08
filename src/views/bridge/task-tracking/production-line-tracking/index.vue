@@ -106,10 +106,10 @@
 </template>
 <script setup>
 import { ref } from 'vue'
-import crudApi from '@/api/mes/task-tracking/production-line-tracking.js'
+import crudApi from '@/api/bridge/bridge-task-tracking/production-line-tracking.js'
 import useCRUD from '@compos/use-crud'
 import { DP } from '@/settings/config'
-import { mesProductionLineTrackingPM as permission } from '@/page-permission/mes'
+import { bridgeProductionLineTrackingPM as permission } from '@/page-permission/bridge'
 // import { parseTime } from '@/utils/date'
 import { componentTypeEnum } from '@enum-ms/mes'
 import useMaxHeight from '@compos/use-max-height'

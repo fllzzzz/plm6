@@ -172,7 +172,7 @@
 </template>
 
 <script setup>
-import { getSummaryShipMete, getSummaryMonthMete } from '@/api/mes/pack-and-ship/ship-list'
+import { getSummaryShipMete, getSummaryMonthMete } from '@/api/bridge/bridge-pack-and-ship/ship-list'
 import { inject, onMounted, ref, computed } from 'vue'
 import moment from 'moment'
 

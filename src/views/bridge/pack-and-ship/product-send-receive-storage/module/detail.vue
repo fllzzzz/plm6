@@ -96,7 +96,7 @@
 </template>
 
 <script setup>
-import { detail } from '@/api/mes/pack-and-ship/product-receive-send-storage'
+import { detail } from '@/api/bridge/bridge-pack-and-ship/product-receive-send-storage'
 import { ref, defineEmits, defineProps, watch } from 'vue'
 
 import { tableSummary } from '@/utils/el-extra'

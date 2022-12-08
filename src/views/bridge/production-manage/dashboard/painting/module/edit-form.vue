@@ -54,7 +54,7 @@
 </template>
 
 <script setup>
-import { change } from '@/api/mes/production-manage/dashboard/painting'
+import { change } from '@/api/bridge/bridge-production-manage/painting'
 import { defineEmits, defineProps, watch, reactive, ref } from 'vue'
 import { ElNotification } from 'element-plus'
 import { deepClone } from '@data-type/index'

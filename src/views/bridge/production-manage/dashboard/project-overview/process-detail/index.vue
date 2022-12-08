@@ -62,10 +62,10 @@
 </template>
 
 <script setup>
-import { getProcessDetail } from '@/api/mes/production-manage/dashboard/project-overview'
+import { getProcessDetail } from '@/api/bridge/bridge-production-manage/project-overview'
 import { defineProps, defineEmits, ref, watch, computed, inject } from 'vue'
 import { tableSummary } from '@/utils/el-extra'
-import { mesProjectOverviewPM as permission } from '@/page-permission/mes'
+import { bridgeProjectOverviewPM as permission } from '@/page-permission/bridge'
 import useVisible from '@compos/use-visible'
 import usePagination from '@compos/use-pagination'
 import useMaxHeight from '@compos/use-max-height'

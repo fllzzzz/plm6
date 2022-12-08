@@ -196,7 +196,7 @@
   </div>
 </template>
 <script setup>
-import { smartLineProcess, process, machineProcess } from '@/api/mes/task-tracking/work-order-tracking.js'
+import { smartLineProcess, process, machineProcess } from '@/api/bridge/bridge-task-tracking/work-order-tracking.js'
 import { componentTypeEnum, workOrderTypeEnum, artifactProductLineEnum } from '@enum-ms/mes'
 import { ref, defineProps, watch, inject, computed } from 'vue'
 import { DP } from '@/settings/config'

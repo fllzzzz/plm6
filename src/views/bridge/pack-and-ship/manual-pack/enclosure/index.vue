@@ -200,10 +200,10 @@
 </template>
 
 <script setup>
-import { getEnclosure as get } from '@/api/mes/pack-and-ship/manual-pack'
+import { getEnclosure as get } from '@/api/bridge/bridge-pack-and-ship/manual-pack'
 import { computed, ref, watch, defineEmits, defineProps, defineExpose, inject } from 'vue'
 
-import { enclosureManualPackPM as permission } from '@/page-permission/mes'
+import { bridgeEnclosureManualPackPM as permission } from '@/page-permission/bridge'
 import { DP } from '@/settings/config'
 import { toFixed } from '@data-type'
 import { packTypeEnum } from '@enum-ms/mes'

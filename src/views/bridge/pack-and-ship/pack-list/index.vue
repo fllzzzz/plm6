@@ -194,7 +194,7 @@
 </template>
 
 <script setup>
-import crudApi, { detail } from '@/api/mes/pack-and-ship/pack-list'
+import crudApi, { detail } from '@/api/bridge/bridge-pack-and-ship/pack-list'
 import { ref, reactive, provide } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElNotification } from 'element-plus'
@@ -207,7 +207,7 @@ import { projectNameFormatter } from '@/utils/project'
 import { convertUnits } from '@/utils/convert/unit'
 import { parseTime } from '@/utils/date'
 import { debounce } from '@/utils'
-import { mesPackPM as permission } from '@/page-permission/mes'
+import { bridgePackPM as permission } from '@/page-permission/bridge'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'

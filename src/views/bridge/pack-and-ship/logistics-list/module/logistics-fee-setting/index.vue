@@ -135,9 +135,9 @@
 </template>
 
 <script setup>
-import { logisticsPrice as crudApi } from '@/api/mes/pack-and-ship/logistics-list'
+import { logisticsPrice as crudApi } from '@/api/bridge/bridge-pack-and-ship/logistics-list'
 import { getCarModelConfig } from '@/api/config/mes/base'
-import { getSupplierCarPrice } from '@/api/mes/pack-and-ship/logistics-list'
+import { getSupplierCarPrice } from '@/api/bridge/bridge-pack-and-ship/logistics-list'
 import { defineProps, defineEmits, ref, watch } from 'vue'
 
 import { logisticsPriceTypeEnum } from '@enum-ms/mes'

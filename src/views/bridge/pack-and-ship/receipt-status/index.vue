@@ -205,10 +205,10 @@
 </template>
 
 <script setup>
-import crudApi, { detail, deliverySign } from '@/api/mes/pack-and-ship/receipt-status'
+import crudApi, { detail, deliverySign } from '@/api/bridge/bridge-pack-and-ship/receipt-status'
 import { ref } from 'vue'
 
-import { receiptStatusPM as permission } from '@/page-permission/mes'
+import { bridgeReceiptStatusPM as permission } from '@/page-permission/bridge'
 import { manufactureTypeEnum } from '@enum-ms/production'
 import { businessTypeEnum } from '@enum-ms/contract'
 import { packTypeEnum, deliveryReceiptStatusEnum } from '@enum-ms/mes'

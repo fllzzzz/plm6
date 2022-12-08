@@ -27,7 +27,7 @@
 </template>
 
 <script setup>
-import { productionLineProcess } from '@/api/mes/task-tracking/process-sluggish.js'
+import { productionLineProcess } from '@/api/bridge/bridge-task-tracking/process-sluggish.js'
 import { ref, inject, defineEmits, onMounted, watch } from 'vue'
 import useMaxHeight from '@compos/use-max-height'
 import chart from './module/chart'

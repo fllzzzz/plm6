@@ -135,3 +135,216 @@ export const bridgeXmlFileListPM = {
 // --------------------------- 技术管理 end --------------------------------
 
 // ########################################################################
+
+// --------------------------- 质安管理 start --------------------------------
+
+// 质安管理/质检报表
+export const bridgeQualityInspectionReportPM = {
+  get: ['bridge_quality_inspection_report:get'], // 质检报表
+  detail: ['bridge_quality_inspection_report:detail'] // 质检报表详情
+}
+
+// 质安管理/生产线报表
+export const bridgeQhseProductionLineReportPM = {
+  get: ['bridge_production_line_report:get'], // 生产线报表
+  detail: ['bridge_production_line_report:detail'], // 生产线报表详情
+  print: ['bridge_production_line_report:print'] // 生产线报表详情
+}
+
+// 质安管理/问题曝光
+export const bridgeQhseDisclosurePM = {
+  get: ['bridge_qhse_disclosure:get'] // 问题曝光列表
+}
+
+// --------------------------- 质安管理 end --------------------------------
+
+// ########################################################################
+
+// --------------------------- 产品标签 start --------------------------------
+
+// 产品标签/构件
+export const bridgeArtifactLabelPM = {
+  get: ['bridge_label_artifact:get'] // 构件列表
+}
+
+// 产品标签/围护
+export const bridgeEnclosureLabelPM = {
+  get: ['bridge_label_enclosure:get'] // 围护列表
+}
+
+// 产品标签/配套件
+export const bridgeAuxiliaryMaterialLabelPM = {
+  get: ['bridge_label_auxiliary_material:get'], // 围护列表
+  print: ['bridge_label_auxiliary_material:print'] // 批量打印标签
+}
+
+// --------------------------- 产品标签 end --------------------------------
+
+// ########################################################################
+
+// --------------------------- 发运管理 start --------------------------------
+
+// 发运管理/发运管理列表
+export const bridgeShipSummaryPM = {
+  get: ['bridge_ship_summary:get'], // 列表
+  print: ['bridge_ship_summary:print'] // 发运详情打印
+}
+
+// 发运管理/手工打包:手工打包
+export const bridgeManualPackPM = {
+  pack: ['bridge_manual_pack:pack'] // 手工打包
+}
+
+// 发运管理/手工打包:结构
+export const bridgeArtifactManualPackPM = {
+  get: ['bridge_manual_pack_artifact:get'], // 结构打包列表
+  pack: bridgeManualPackPM.pack // 手工打包
+}
+
+// 发运管理/手工打包:围护
+export const bridgeEnclosureManualPackPM = {
+  get: ['bridge_manual_pack_enclosure:get'], // 围护打包列表
+  pack: bridgeManualPackPM.pack // 手工打包
+}
+
+// 发运管理/打包记录
+export const bridgePackPM = {
+  get: ['bridge_pack:get'], // 打包列表
+  detail: ['bridge_pack:detail'], // 查看打包清单
+  // pack: bridgeManualPackPM.pack, // 手工打包
+  edit: bridgeManualPackPM.pack, // 编辑打包清单
+  del: ['bridge_pack:del'], // 删除打包清单
+  print: ['bridge_pack:print'], // 查看及打印标签
+  printRecords: ['bridge_pack:printRecords'], // 查看打印记录
+  printPackList: ['bridge_pack:printPackList'] // 打印包单清单
+}
+
+// 发运管理/发运记录
+export const bridgeShipPM = {
+  get: ['bridge_ship:get'], // 发运列表
+  detail: ['bridge_ship:detail'], // 查看车次详情
+  print: ['bridge_ship:print'], // 打印车次汇总
+  detailPrint: ['bridge_ship:detailPrint'] // 打印车次详情
+}
+
+// 发运管理/收货状态
+export const bridgeReceiptStatusPM = {
+  get: ['bridge_receipt_status:get'], // 收货列表
+  detail: ['bridge_receipt_status:detail'], // 查看收货详情
+  print: ['bridge_receipt_status:print'], // 打印收货汇总
+  detailPrint: ['bridge_receipt_status:detailPrint'], // 打印收货详情
+  cancelDelivery: ['bridge_receipt_status:cancelDelivery'], // 取消发运
+  confirmDelivery: ['bridge_receipt_status:confirmDelivery'] // 确定签收
+}
+
+// 发运管理/物流记录
+export const bridgeLogisticsPM = {
+  get: ['bridge_logistics:get'], // 物流列表
+  edit: ['bridge_logistics:edit'], // 录入物流信息
+  print: ['bridge_logistics:print'] // 打印物流汇总
+}
+
+// 发运管理/发运审核
+export const bridgeShipAuditPM = {
+  get: ['bridge_ship_audit:get'], // 审核列表
+  detail: ['bridge_ship_audit:detail'], // 装车明细
+  print: ['bridge_ship_audit:print'], // 打印发运审核
+  download: ['bridge_ship_audit:download'], // 下载发运详情
+  audit: ['bridge_ship_audit:audit'] // 发运审核
+}
+
+// 发运管理/制成品入发存
+export const bridgeProductSendReceiveStoragePM = {
+  get: ['bridge_product-send-receive-storage:get'], // 列表
+  print: ['bridge_product-send-receive-storage:print'], // 制成品入发存打印
+  detail: ['bridge_product-send-receive-storage:detail'], // 制成品入发存详情
+  detailPrint: ['bridge_product-send-receive-storage:detailPrint'] // 制成品入发存详情打印
+}
+// --------------------------- 发运管理 end --------------------------------
+
+// ########################################################################
+
+// --------------------------- 任务跟踪 start --------------------------------
+
+// 任务跟踪/工单跟踪
+export const bridgeWorkOrderTrackingPM = {
+  get: ['bridge_work_order_tracking:get'], // 工单跟踪列表
+  print: ['bridge_work_order_tracking:print'] // 工单跟踪详情打印
+}
+
+// 任务跟踪/月度任务跟踪
+export const bridgeMonthlyTaskTrackingPM = {
+  get: ['bridge_monthly_task_tracking:get'], // 月度任务跟踪列表
+  print: ['bridge_monthly_task_tracking:print'] // 月度任务跟踪详情打印
+}
+
+// 任务跟踪/产线跟踪
+export const bridgeProductionLineTrackingPM = {
+  get: ['bridge_production_line_tracking:get'], // 产线跟踪列表
+  detail: ['bridge_production_line_tracking:detail'], // 查看产线跟踪详情
+  print: ['bridge_production_line_tracking:print'] // 产线跟踪详情打印
+}
+
+// 任务跟踪/工序呆滞
+export const bridgeProcessSluggishPM = {
+  get: ['bridge_process_sluggish:get'], // 工序呆滞列表
+  print: ['bridge_process_sluggish:print'] // 工序呆滞详情打印
+}
+
+// 任务跟踪/协同操作/产线协同
+export const bridgeProductionLineAssistancePM = {
+  get: ['bridge_production_line_assistance:get'], // 列表
+  save: ['bridge_production_line_assistance:save'], // 协同保存
+  record: ['bridge_production_line_assistance:record'] // 协同记录
+}
+
+// 任务跟踪/协同操作/工序协同
+export const bridgeProcessAssistancePM = {
+  get: ['bridge_process_assistance:get'], // 列表
+  save: ['bridge_process_assistance:save'], // 协同保存
+  del: ['bridge_process_assistance:del'] // 协同删除
+}
+
+// --------------------------- 任务跟踪 end --------------------------------
+
+// ########################################################################
+
+// --------------------------- 项目制造 start --------------------------------
+
+// 项目制造/项目总览
+export const bridgeProjectOverviewPM = {
+  get: ['bridge_project_overview:get'], // 项目总览列表
+  detail: ['bridge_project_overview:detail'], // 项目总览查看详情
+  print: ['bridge_project_overview:print'] // 项目总览详情打印
+}
+
+// 项目制造/结构看板
+export const bridgeArtifactProductionDashboardPM = {
+  get: ['bridge_artifact_production_dashboard:get'] // 结构看板列表
+}
+
+// 项目制造/零件齐套
+export const bridgeAssemblyMatchDashboardPM = {
+  get: ['bridge_assembly_match:get'], // 零件齐套列表
+  print: ['bridge_assembly_match:print'], // 零件齐套详情打印
+  printDetail: ['bridge_assembly_match:printDetail'] // 零部件生产清单详情打印
+}
+
+// 项目制造/涂装计算
+export const bridgePaintingDashboardPM = {
+  get: ['bridge_painting:get'], // 涂装计算列表
+  edit: ['bridge_painting:edit'], // 涂装计算编辑
+  editArea: ['bridge_painting:editArea'], // 涂装计算面积编辑
+  print: ['bridge_painting:print'] // 涂装计算列表打印
+}
+
+// --------------------------- 项目制造 end --------------------------------
+
+// ########################################################################
+
+// --------------------------- 车间报表 start --------------------------------
+export const bridgeFactoryReportPM = {
+  get: ['bridge_factory_report:get'], // 车间报表列表
+  print: ['bridge_factory_report:print'] // 车间报表详情打印
+}
+// --------------------------- 车间报表 end --------------------------------

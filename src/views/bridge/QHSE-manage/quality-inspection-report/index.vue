@@ -65,10 +65,10 @@
 </template>
 
 <script setup>
-import crudApi from '@/api/mes/QHSE-manage/quality-inspection-report'
+import crudApi from '@/api/bridge/QHSE-manage/quality-inspection-report'
 import { provide, ref } from 'vue'
 
-import { qualityInspectionReportPM as permission } from '@/page-permission/mes'
+import { bridgeQualityInspectionReportPM as permission } from '@/page-permission/bridge'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'

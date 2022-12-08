@@ -194,10 +194,10 @@
 </template>
 
 <script setup>
-import crudApi from '@/api/mes/pack-and-ship/logistics-list'
+import crudApi from '@/api/bridge/bridge-pack-and-ship/logistics-list'
 import { ref } from 'vue'
 
-import { logisticsPM as permission } from '@/page-permission/mes'
+import { bridgeLogisticsPM as permission } from '@/page-permission/bridge'
 import { manufactureTypeEnum } from '@enum-ms/production'
 import { packTypeEnum, logisticsPriceTypeEnum, deliveryStatusEnum, freightChangeTypeEnum } from '@enum-ms/mes'
 import { projectNameFormatter } from '@/utils/project'

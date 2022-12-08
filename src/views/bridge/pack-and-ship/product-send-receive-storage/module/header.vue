@@ -41,7 +41,7 @@
 </template>
 
 <script setup>
-import { summaryData } from '@/api/mes/pack-and-ship/product-receive-send-storage'
+import { summaryData } from '@/api/bridge/bridge-pack-and-ship/product-receive-send-storage'
 import { ref, watch } from 'vue'
 
 import checkPermission from '@/utils/system/check-permission'

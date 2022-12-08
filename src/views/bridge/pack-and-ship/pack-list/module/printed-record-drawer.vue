@@ -14,7 +14,7 @@
 </template>
 
 <script setup>
-import { getForPackage as getPrintRecord } from '@/api/mes/label-print/print-record'
+import { getForPackage as getPrintRecord } from '@/api/bridge/label-print/print-record'
 import { ref, defineEmits, defineProps, watch } from 'vue'
 import { parseTime } from '@/utils/date'
 

@@ -106,9 +106,9 @@
 </template>
 
 <script setup>
-import { getPrintConfig, setPrintConfig } from '@/api/mes/label-print/common'
-import { taskAdd as addPrintRecord } from '@/api/mes/label-print/print-record'
-import { getHasTaskLine } from '@/api/mes/common'
+import { getPrintConfig, setPrintConfig } from '@/api/bridge/label-print/common'
+import { taskAdd as addPrintRecord } from '@/api/bridge/label-print/print-record'
+import { getHasTaskLine } from '@/api/bridge/common'
 import { ref, watch, inject, reactive, defineExpose } from 'vue'
 
 import { weightTypeEnum as printWeightTypeEnum } from '@enum-ms/common'

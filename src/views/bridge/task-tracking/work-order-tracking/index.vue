@@ -116,10 +116,10 @@
 
 <script setup>
 import { ref, provide, computed, watch } from 'vue'
-import { get, machinePart } from '@/api/mes/task-tracking/work-order-tracking.js'
+import { get, machinePart } from '@/api/bridge/bridge-task-tracking/work-order-tracking.js'
 import { parseTime } from '@/utils/date'
 import { projectNameFormatter } from '@/utils/project'
-import { mesWorkOrderTrackingPM as permission } from '@/page-permission/mes'
+import { bridgeWorkOrderTrackingPM as permission } from '@/page-permission/bridge'
 import { componentTypeEnum } from '@enum-ms/mes'
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'

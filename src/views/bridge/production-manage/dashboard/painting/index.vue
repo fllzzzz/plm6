@@ -118,7 +118,7 @@
 </template>
 
 <script setup>
-import crudApi, { getAllArtifact } from '@/api/mes/production-manage/dashboard/painting'
+import crudApi, { getAllArtifact } from '@/api/bridge/bridge-production-manage/painting'
 import { ref } from 'vue'
 
 import { paintingTypeEnum } from '@enum-ms/mes'
@@ -126,7 +126,7 @@ import { DP } from '@/settings/config'
 import { convertUnits } from '@/utils/convert/unit'
 import { tableSummary } from '@/utils/el-extra'
 import checkPermission from '@/utils/system/check-permission'
-import { paintingDashboardPM as permission } from '@/page-permission/mes'
+import { bridgePaintingDashboardPM as permission } from '@/page-permission/bridge'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'

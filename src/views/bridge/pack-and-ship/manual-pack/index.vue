@@ -57,7 +57,14 @@
     />
     <pack-list-drawer v-model:visible="packVisible" :bagId="bagId" :edit-data="editData" @handleSuccess="handleSuccess" />
     <!-- 一物一码 选择弹窗 -->
-    <common-dialog title="选择一物一码编号" v-model="oneCodeVisible" :center="false" :close-on-click-modal="false" width="680px" custom-class="code-dialog">
+    <common-dialog
+      title="选择一物一码编号"
+      v-model="oneCodeVisible"
+      :center="false"
+      :close-on-click-modal="false"
+      width="680px"
+      custom-class="code-dialog"
+    >
       <template #titleRight>
         <common-button type="primary" size="mini" @click="oneCodeSave">确认</common-button>
       </template>
@@ -74,7 +81,7 @@ import { mapGetters } from '@/store/lib'
 
 import { isBlank, isNotBlank } from '@data-type/index'
 import { packTypeEnum, mesEnclosureTypeEnum } from '@enum-ms/mes'
-import { manualPackPM as permission } from '@/page-permission/mes'
+import { bridgeManualPackPM as permission } from '@/page-permission/bridge'
 
 import useMaxHeight from '@compos/use-max-height'
 // import factorySelect from '@comp-base/factory-select'

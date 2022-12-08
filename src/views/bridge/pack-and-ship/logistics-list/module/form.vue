@@ -143,7 +143,7 @@
 </template>
 
 <script setup>
-import crudApi, { getLog } from '@/api/mes/pack-and-ship/logistics-list'
+import crudApi, { getLog } from '@/api/bridge/bridge-pack-and-ship/logistics-list'
 import { defineProps, defineEmits, ref, watch, nextTick } from 'vue'
 import { ElNotification } from 'element-plus'
 

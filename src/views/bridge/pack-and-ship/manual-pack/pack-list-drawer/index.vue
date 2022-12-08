@@ -209,7 +209,7 @@
 </template>
 
 <script setup>
-import { pack, editPack, additionalPack } from '@/api/mes/pack-and-ship/manual-pack'
+import { pack, editPack, additionalPack } from '@/api/bridge/bridge-pack-and-ship/manual-pack'
 import { defineProps, defineEmits, ref, watch, inject, reactive, computed } from 'vue'
 import { ElMessage } from 'element-plus'
 

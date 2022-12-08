@@ -30,7 +30,7 @@
 import useVisible from '@compos/use-visible'
 import useMaxHeight from '@compos/use-max-height'
 import usePagination from '@compos/use-pagination'
-import { getTeamDetail } from '@/api/mes/production-manage/dashboard/project-overview'
+import { getTeamDetail } from '@/api/bridge/bridge-production-manage/project-overview'
 import { defineProps, defineEmits, ref } from 'vue'
 
 const teamDetailData = ref([])

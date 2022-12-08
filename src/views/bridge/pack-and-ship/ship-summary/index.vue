@@ -40,10 +40,10 @@
 </template>
 
 <script setup>
-import crudApi from '@/api/mes/pack-and-ship/ship-summary'
+import crudApi from '@/api/bridge/bridge-pack-and-ship/ship-summary'
 import { ref } from 'vue'
 
-import { mesShipSummaryPM as permission } from '@/page-permission/mes'
+import { bridgeShipSummaryPM as permission } from '@/page-permission/bridge'
 import { isNotBlank } from '@data-type/index'
 
 import useMaxHeight from '@compos/use-max-height'

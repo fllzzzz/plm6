@@ -153,7 +153,7 @@
 <script setup>
 import { ref, watch } from 'vue'
 import { getCarModelConfig } from '@/api/config/mes/base'
-import { getSupplierCarPrice } from '@/api/mes/pack-and-ship/logistics-list'
+import { getSupplierCarPrice } from '@/api/bridge/bridge-pack-and-ship/logistics-list'
 
 import { ElRadioGroup } from 'element-plus'
 import { logisticsPriceTypeEnum } from '@enum-ms/mes'

@@ -149,7 +149,7 @@
 </template>
 
 <script setup>
-import { detail, del } from '@/api/mes/task-tracking/assistance-operate/process-assistance'
+import { detail, del } from '@/api/bridge/bridge-task-tracking/assistance-operate/process-assistance'
 import { defineProps, defineEmits, ref, inject } from 'vue'
 import { ElMessage, ElNotification, ElMessageBox } from 'element-plus'
 

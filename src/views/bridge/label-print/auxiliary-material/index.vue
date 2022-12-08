@@ -100,15 +100,15 @@
 </template>
 
 <script setup>
-import { getForMaterial as getPrintRecord } from '@/api/mes/label-print/print-record'
-import crudApi from '@/api/mes/label-print/auxiliary-material'
+import { getForMaterial as getPrintRecord } from '@/api/bridge/label-print/print-record'
+import crudApi from '@/api/bridge/label-print/auxiliary-material'
 import { ref, provide } from 'vue'
 
 import { componentTypeEnum, labelTypeEnum } from '@enum-ms/mes'
 import { QR_SCAN_F_TYPE } from '@/settings/config'
 import { parseTime } from '@/utils/date'
 import { printAuxiliaryMaterial as printComponent } from '@/utils/print/index'
-import { auxiliaryMaterialLabelPM as permission } from '@/page-permission/mes'
+import { bridgeAuxiliaryMaterialLabelPM as permission } from '@/page-permission/bridge'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'

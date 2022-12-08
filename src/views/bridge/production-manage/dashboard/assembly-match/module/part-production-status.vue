@@ -55,7 +55,7 @@
 </template>
 
 <script setup>
-import { detail } from '@/api/mes/production-manage/dashboard/assembly-match'
+import { detail } from '@/api/bridge/bridge-production-manage/assembly-match'
 import { defineProps, defineEmits, ref, watch, inject } from 'vue'
 
 import useMaxHeight from '@compos/use-max-height'

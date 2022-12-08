@@ -94,12 +94,12 @@
 </template>
 
 <script setup>
-import { projectDetail } from '@/api/mes/task-tracking/monthly-task-tracking.js'
+import { projectDetail } from '@/api/bridge/bridge-task-tracking/monthly-task-tracking.js'
 import useVisible from '@compos/use-visible'
 import useMaxHeight from '@compos/use-max-height'
 import usePagination from '@compos/use-pagination'
 import { defineProps, defineEmits, ref } from 'vue'
-import { mesMonthlyTaskTrackingPM as permission } from '@/page-permission/mes'
+import { bridgeMonthlyTaskTrackingPM as permission } from '@/page-permission/bridge'
 import monomerSelectAreaSelect from '@comp-base/monomer-select-area-select'
 import { projectNameFormatter } from '@/utils/project'
 

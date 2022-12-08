@@ -190,13 +190,13 @@
 </template>
 
 <script setup>
-import { getArtifact as get } from '@/api/mes/pack-and-ship/manual-pack'
+import { getArtifact as get } from '@/api/bridge/bridge-pack-and-ship/manual-pack'
 import { computed, ref, watch, defineEmits, defineProps, defineExpose, inject } from 'vue'
 
 import { DP } from '@/settings/config'
 import { toFixed } from '@data-type'
 import { packTypeEnum } from '@enum-ms/mes'
-import { artifactManualPackPM as permission } from '@/page-permission/mes'
+import { bridgeArtifactManualPackPM as permission } from '@/page-permission/bridge'
 
 import useCRUD from '@compos/use-crud'
 import mHeader from './module/header'

@@ -134,7 +134,7 @@
 </template>
 
 <script setup>
-import { record, recordDetail } from '@/api/mes/task-tracking/assistance-operate/productionLine-assistance'
+import { record, recordDetail } from '@/api/bridge/bridge-task-tracking/assistance-operate/productionLine-assistance'
 import { defineProps, defineEmits, ref } from 'vue'
 
 import useMaxHeight from '@compos/use-max-height'

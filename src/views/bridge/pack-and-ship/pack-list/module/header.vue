@@ -112,8 +112,8 @@
 </template>
 
 <script setup>
-import { detail } from '@/api/mes/pack-and-ship/pack-list'
-import { packageRecordAdd } from '@/api/mes/label-print/print-record'
+import { detail } from '@/api/bridge/bridge-pack-and-ship/pack-list'
+import { packageRecordAdd } from '@/api/bridge/label-print/print-record'
 import { inject, reactive, defineExpose, computed, defineEmits } from 'vue'
 import { mapGetters } from '@/store/lib'
 import moment from 'moment'

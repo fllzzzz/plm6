@@ -57,13 +57,13 @@
 </template>
 
 <script setup>
-import { productDashboard as get, productSpec } from '@/api/mes/production-manage/dashboard/common'
-import { artifactDetail, assembleDetail, baseAssembleDetail, machinePartDetail } from '@/api/mes/production-manage/dashboard/artifact'
+import { productDashboard as get, productSpec } from '@/api/bridge/bridge-production-manage/common'
+import { artifactDetail, assembleDetail, baseAssembleDetail, machinePartDetail } from '@/api/bridge/bridge-production-manage/dashboard'
 import { ref } from 'vue'
 
 import { componentTypeEnum, structureOrderTypeEnum } from '@enum-ms/mes'
 import { DP } from '@/settings/config'
-import { artifactProductionDashboardPM as permission } from '@/page-permission/mes'
+import { bridgeArtifactProductionDashboardPM as permission } from '@/page-permission/bridge'
 
 import useDashboardIndex from '@compos/mes/dashboard/use-dashboard-index'
 import useMaxHeight from '@compos/use-max-height'

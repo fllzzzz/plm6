@@ -57,7 +57,7 @@
 </template>
 
 <script setup>
-import { artifactProductDetail } from '@/api/mes/pack-and-ship/product-receive-send-storage'
+import { artifactProductDetail } from '@/api/bridge/bridge-pack-and-ship/product-receive-send-storage'
 import { ref, defineEmits, defineProps, watch } from 'vue'
 
 import { tableSummary } from '@/utils/el-extra'
