@@ -8,7 +8,7 @@ import request from '@/utils/request'
  */
 export function get(params) {
   return request({
-    module: 'mes',
+    module: 'bridge',
     url: 'cargo/logistics',
     method: 'get',
     params
@@ -17,7 +17,7 @@ export function get(params) {
 
 export function edit(id, data) {
   return request({
-    module: 'mes',
+    module: 'bridge',
     url: `cargo/${id}/change`,
     method: 'put',
     data
@@ -27,7 +27,7 @@ export function edit(id, data) {
 // 获取装车修改详情
 export function getLog(id) {
   return request({
-    module: 'mes',
+    module: 'bridge',
     url: `cargo/${id}/change/log`,
     method: 'get'
   })
@@ -40,7 +40,7 @@ export default { get, edit }
  */
 export function getLogisticsPrice(params) {
   return request({
-    module: 'mes',
+    module: 'bridge',
     url: 'supper/price',
     method: 'get',
     params
@@ -52,7 +52,7 @@ export function getLogisticsPrice(params) {
  */
 export function addLogisticsPrice(data) {
   return request({
-    module: 'mes',
+    module: 'bridge',
     url: 'supper/price',
     method: 'post',
     data
@@ -64,7 +64,7 @@ export function addLogisticsPrice(data) {
  */
 export function editLogisticsPrice(data) {
   return request({
-    module: 'mes',
+    module: 'bridge',
     url: 'supper/price',
     method: 'put',
     data
@@ -76,7 +76,7 @@ export function editLogisticsPrice(data) {
  */
 export function delLogisticsPrice(id) {
   return request({
-    module: 'mes',
+    module: 'bridge',
     url: `supper/price/${id}`,
     method: 'delete'
   })
@@ -87,7 +87,7 @@ export function delLogisticsPrice(id) {
  */
 export function getSupplierCarPrice(id) {
   return request({
-    module: 'mes',
+    module: 'bridge',
     url: `supper/price/${id}/car`,
     method: 'get'
   })

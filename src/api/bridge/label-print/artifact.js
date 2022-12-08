@@ -1,12 +1,12 @@
 import request from '@/utils/request'
 
 /**
- * 构件标签列表
+ * 分段标签列表
  */
 export function get(params) {
   return request({
-    module: 'mes',
-    url: 'print/artifact',
+    module: 'bridge',
+    url: 'print/box',
     method: 'get',
     params
   })

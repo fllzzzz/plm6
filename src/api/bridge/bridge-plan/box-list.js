@@ -58,7 +58,7 @@ export function downloadBoxCell(params) {
 }
 
 /**
- * 下载零构件技术清单模板
+ * 下载零分段技术清单模板
  */
 export function downloadBoxCellTemplate() {
   return request({

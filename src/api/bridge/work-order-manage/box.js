@@ -7,7 +7,7 @@ import request from '@/utils/request'
 export function get(params) {
   return request({
     module: 'bridge',
-    url: 'task/order/artifact/page',
+    url: 'task/order/box/page',
     method: 'get',
     params
   })
@@ -50,7 +50,7 @@ export function getTaskList(params) {
 }
 
 /**
- * @description: 获取部件套料清单
+ * @description: 获取单元件套料清单
 */
 export function getNestingList(params) {
   return request({

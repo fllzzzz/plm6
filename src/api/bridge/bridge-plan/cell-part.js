@@ -9,7 +9,7 @@ export function get(params) {
 }
 
 /**
- * 下载零构件关联清单
+ * 下载零分段关联清单
  */
 // export function downloadArtifactTree(params) {
 //   return request({

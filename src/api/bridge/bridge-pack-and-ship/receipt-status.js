@@ -22,7 +22,7 @@ import request from '@/utils/request'
  */
 export function get(params) {
   return request({
-    module: 'mes',
+    module: 'bridge',
     url: 'cargo/receipt',
     method: 'get',
     params
@@ -58,7 +58,7 @@ export function downloadLogistics(params) {
  */
 export function detail(id) {
   return request({
-    module: 'mes',
+    module: 'bridge',
     url: `cargo/receipt/${id}`,
     method: 'get'
   })
@@ -67,7 +67,7 @@ export function detail(id) {
 // 取消送货
 export function deliveryCancel(data) {
   return request({
-    module: 'mes',
+    module: 'bridge',
     url: 'cargo/cancel',
     method: 'put',
     data
@@ -77,7 +77,7 @@ export function deliveryCancel(data) {
 // 到场签收
 export function deliverySign(id) {
   return request({
-    module: 'mes',
+    module: 'bridge',
     url: `cargo/sign/${id}`,
     method: 'put'
   })

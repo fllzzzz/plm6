@@ -1,6 +1,6 @@
 import request from '@/utils/request'
 
-// 查询构件种类配置列表
+// 查询分段种类配置列表
 export function getRivetWeld(params) {
   return request({
     module: 'bridge',

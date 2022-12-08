@@ -14,7 +14,7 @@ import request from '@/utils/request'
  */
 export function get(params) {
   return request({
-    module: 'mes',
+    module: 'bridge',
     url: 'package/page',
     method: 'get',
     params
@@ -27,7 +27,7 @@ export function get(params) {
  */
 export function detail(id) {
   return request({
-    module: 'mes',
+    module: 'bridge',
     url: `package/${id}`,
     method: 'get'
   })
@@ -39,7 +39,7 @@ export function detail(id) {
  */
 export function del(id) {
   return request({
-    module: 'mes',
+    module: 'bridge',
     url: 'package',
     method: 'delete',
     data: { ids: [id] }

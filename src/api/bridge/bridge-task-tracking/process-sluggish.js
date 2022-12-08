@@ -5,7 +5,7 @@ import request from '@/utils/request'
  */
 export function get(params) {
   return request({
-    module: 'mes',
+    module: 'bridge',
     url: 'task/process/dull/process/detail/page',
     method: 'get',
     params
@@ -16,7 +16,7 @@ export function get(params) {
  */
 export function productionLineProcess(params) {
   return request({
-    module: 'mes',
+    module: 'bridge',
     url: 'task/workShop/productionLine',
     method: 'get',
     params
@@ -27,7 +27,7 @@ export function productionLineProcess(params) {
  */
 export function processSluggish(params) {
   return request({
-    module: 'mes',
+    module: 'bridge',
     url: 'task/process/dull/process',
     method: 'get',
     params
@@ -38,7 +38,7 @@ export function processSluggish(params) {
  */
 export function getAllProcess(params) {
   return request({
-    module: 'mes',
+    module: 'bridge',
     url: 'task/process/dull/process',
     method: 'get',
     params

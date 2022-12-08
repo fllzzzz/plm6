@@ -5,7 +5,7 @@ import request from '@/utils/request'
  */
 export function get(params) {
   return request({
-    module: 'mes',
+    module: 'bridge',
     url: 'print/auxiliary-material',
     method: 'get',
     params

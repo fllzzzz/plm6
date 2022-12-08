@@ -27,7 +27,7 @@ export function summaryData(params) {
 // 清单 出库 入库 库存 详情
 export function artifactProductDetail(params) {
   return request({
-    url: '/api/mes/building/warehouse/report/finish-product/artifact',
+    url: '/api/mes/building/warehouse/report/finish-product/box',
     method: 'get',
     params
   })

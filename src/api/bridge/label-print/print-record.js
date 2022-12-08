@@ -9,7 +9,7 @@ import request from '@/utils/request'
  */
 export function getForTask(taskId) {
   return request({
-    module: 'mes',
+    module: 'bridge',
     url: `print/record/task/${taskId}`,
     method: 'get'
   })
@@ -23,7 +23,7 @@ export function getForTask(taskId) {
  */
 export function getForMaterial(materialId) {
   return request({
-    module: 'mes',
+    module: 'bridge',
     url: `print/record/material/${materialId}`,
     method: 'get'
   })
@@ -37,7 +37,7 @@ export function getForMaterial(materialId) {
  */
 export function getForPackage(id) {
   return request({
-    module: 'mes',
+    module: 'bridge',
     url: `print/record/package/${id}`,
     method: 'get'
   })
@@ -54,7 +54,7 @@ export function getForPackage(id) {
  */
 export function taskAdd({ id, quantity, startTime, endTime, numberList }) {
   return request({
-    module: 'mes',
+    module: 'bridge',
     url: 'print/record/task',
     method: 'post',
     data: { taskId: id, quantity, startTime, endTime, numberList }
@@ -73,7 +73,7 @@ export function taskAdd({ id, quantity, startTime, endTime, numberList }) {
  */
 export function materialAdd({ id, quantity, startTime, endTime }) {
   return request({
-    module: 'mes',
+    module: 'bridge',
     url: 'print/record/material',
     method: 'post',
     data: { materialId: id, quantity, startTime, endTime }
@@ -91,7 +91,7 @@ export function materialAdd({ id, quantity, startTime, endTime }) {
  */
 export function packageRecordAdd({ id, quantity, startTime, endTime }) {
   return request({
-    module: 'mes',
+    module: 'bridge',
     url: 'print/record/package',
     method: 'post',
     data: { packId: id, quantity, startTime, endTime }

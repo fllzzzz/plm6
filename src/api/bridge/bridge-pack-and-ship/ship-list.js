@@ -18,7 +18,7 @@ import request from '@/utils/request'
  */
 export function get(params) {
   return request({
-    module: 'mes',
+    module: 'bridge',
     url: 'cargo/ship',
     method: 'get',
     params
@@ -30,7 +30,7 @@ export function get(params) {
  */
 export function getSummaryShipMete(params) {
   return request({
-    module: 'mes',
+    module: 'bridge',
     url: 'cargo/ship/summary',
     method: 'get',
     params
@@ -41,7 +41,7 @@ export function getSummaryShipMete(params) {
  */
 export function getSummaryMonthMete(params) {
   return request({
-    module: 'mes',
+    module: 'bridge',
     url: 'cargo/yearAndMonth/summary',
     method: 'get',
     params
@@ -79,7 +79,7 @@ export function downloadLogistics(params) {
  */
 export function detail(id) {
   return request({
-    module: 'mes',
+    module: 'bridge',
     url: `cargo/ship/${id}`,
     method: 'get'
   })

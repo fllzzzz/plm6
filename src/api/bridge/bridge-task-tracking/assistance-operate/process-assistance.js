@@ -5,7 +5,7 @@ import request from '@/utils/request'
  */
 export function get(params) {
   return request({
-    module: 'mes',
+    module: 'bridge',
     url: 'assist/top_task_order/page',
     method: 'get',
     params
@@ -17,7 +17,7 @@ export function get(params) {
  */
 export function getTask({ topTaskOrderId }) {
   return request({
-    module: 'mes',
+    module: 'bridge',
     url: `assist/${topTaskOrderId}/task_order/list`,
     method: 'get'
   })
@@ -28,7 +28,7 @@ export function getTask({ topTaskOrderId }) {
  */
 export function detail(params) {
   return request({
-    module: 'mes',
+    module: 'bridge',
     url: `assist/task_order/product/list`,
     method: 'get',
     params
@@ -40,7 +40,7 @@ export function detail(params) {
  */
 export function save(data) {
   return request({
-    module: 'mes',
+    module: 'bridge',
     url: `assist`,
     method: 'post',
     data
@@ -52,7 +52,7 @@ export function save(data) {
  */
 export function del(data) {
   return request({
-    module: 'mes',
+    module: 'bridge',
     url: `assist`,
     method: 'delete',
     data

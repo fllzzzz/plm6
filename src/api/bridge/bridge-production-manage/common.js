@@ -10,7 +10,7 @@ import request from '@/utils/request'
  */
 export function productDashboard(params) {
   return request({
-    module: 'mes',
+    module: 'bridge',
     url: 'kanban/product/page',
     method: 'get',
     params
@@ -27,7 +27,7 @@ export function productDashboard(params) {
  */
 export function productSpec(params) {
   return request({
-    module: 'mes',
+    module: 'bridge',
     url: 'kanban/product/steelSpec',
     method: 'get',
     params

@@ -5,7 +5,7 @@ import request from '@/utils/request'
  */
 export function get(params) {
   return request({
-    module: 'mes',
+    module: 'bridge',
     url: 'task/change/task_order/page',
     method: 'get',
     params
@@ -17,7 +17,7 @@ export function get(params) {
  */
 export function detail(params) {
   return request({
-    module: 'mes',
+    module: 'bridge',
     url: `task/change/task_order/${params.taskOrderId}/list`,
     method: 'get',
     params
@@ -29,7 +29,7 @@ export function detail(params) {
  */
 export function save(data) {
   return request({
-    module: 'mes',
+    module: 'bridge',
     url: `task/change`,
     method: 'post',
     data
@@ -41,7 +41,7 @@ export function save(data) {
  */
 export function saveNest(data) {
   return request({
-    module: 'mes',
+    module: 'bridge',
     url: `task/change/nest`,
     method: 'post',
     data
@@ -53,7 +53,7 @@ export function saveNest(data) {
  */
 export function record(params) {
   return request({
-    module: 'mes',
+    module: 'bridge',
     url: `task/change/page`,
     method: 'get',
     params
@@ -65,7 +65,7 @@ export function record(params) {
  */
 export function recordDetail(params) {
   return request({
-    module: 'mes',
+    module: 'bridge',
     url: `task/change/${params.changeId}/details/list`,
     method: 'get',
     params

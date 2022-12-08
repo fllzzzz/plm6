@@ -8,7 +8,7 @@ import request from '@/utils/request'
  */
 export function get(params) {
   return request({
-    module: 'mes',
+    module: 'bridge',
     url: 'report/inspection/summary/passrate',
     method: 'get',
     params
@@ -23,7 +23,7 @@ export function get(params) {
  */
 export function detail(params) {
   return request({
-    module: 'mes',
+    module: 'bridge',
     url: 'report/inspection/summary/review',
     method: 'get',
     params

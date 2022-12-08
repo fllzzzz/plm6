@@ -10,7 +10,7 @@ import request from '@/utils/request'
  */
 export function get(params) {
   return request({
-    module: 'mes',
+    module: 'bridge',
     url: 'qhse/page',
     method: 'get',
     params

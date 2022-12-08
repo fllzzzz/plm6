@@ -5,7 +5,7 @@ import request from '@/utils/request'
  */
 export function get(params) {
   return request({
-    module: 'mes',
+    module: 'bridge',
     url: 'task/tracking/productionLine',
     method: 'get',
     params
@@ -16,7 +16,7 @@ export function get(params) {
  */
 export function productionLineDetail(params) {
   return request({
-    module: 'mes',
+    module: 'bridge',
     url: 'task/tracking/productionLine/detail/page',
     method: 'get',
     params

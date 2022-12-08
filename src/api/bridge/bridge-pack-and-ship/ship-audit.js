@@ -8,7 +8,7 @@ import request from '@/utils/request'
  */
 export function get(params) {
   return request({
-    module: 'mes',
+    module: 'bridge',
     url: 'cargo/review',
     method: 'get',
     params
@@ -21,7 +21,7 @@ export function get(params) {
  */
 export function detail(id) {
   return request({
-    module: 'mes',
+    module: 'bridge',
     url: `cargo/review/${id}`,
     method: 'get'
   })
@@ -34,7 +34,7 @@ export function detail(id) {
  */
 export function audit({ id, status }) {
   return request({
-    module: 'mes',
+    module: 'bridge',
     url: 'cargo/review',
     method: 'put',
     data: { id, status }
@@ -47,7 +47,7 @@ export function audit({ id, status }) {
  */
 export function download({ id }) {
   return request({
-    module: 'mes',
+    module: 'bridge',
     url: `cargo/review/${id}/download`,
     method: 'get',
     responseType: 'blob'

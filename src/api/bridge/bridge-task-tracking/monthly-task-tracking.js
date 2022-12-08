@@ -5,7 +5,7 @@ import request from '@/utils/request'
  */
 export function get(params) {
   return request({
-    module: 'mes',
+    module: 'bridge',
     url: 'task/tracking/month',
     method: 'get',
     params
@@ -16,7 +16,7 @@ export function get(params) {
  */
 export function monthlyProject(params) {
   return request({
-    module: 'mes',
+    module: 'bridge',
     url: 'task/tracking/month/page',
     method: 'get',
     params
@@ -27,7 +27,7 @@ export function monthlyProject(params) {
  */
 export function projectDetail(params) {
   return request({
-    module: 'mes',
+    module: 'bridge',
     url: 'task/tracking/month/project/page',
     method: 'get',
     params

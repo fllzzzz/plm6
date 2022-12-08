@@ -8,7 +8,7 @@ import request from '@/utils/request'
  */
 export function getPrintConfig(projectId, printType) {
   return request({
-    module: 'mes',
+    module: 'bridge',
     url: 'print/config',
     method: 'get',
     params: { projectId, printType }
@@ -27,7 +27,7 @@ export function getPrintConfig(projectId, printType) {
  */
 export function setPrintConfig({ printType, projectId, weight, copiesQuantity, printAll, type, showProductionLine, manufacturerName, showArea, showMonomer, dateInProduced }) {
   return request({
-    module: 'mes',
+    module: 'bridge',
     url: 'print/config',
     method: 'post',
     data: { printType, projectId, weight, copiesQuantity, printAll, type, showProductionLine, manufacturerName, showArea, showMonomer, dateInProduced }

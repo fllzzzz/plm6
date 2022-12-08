@@ -5,8 +5,8 @@ import request from '@/utils/request'
  */
 export function get(params) {
   return request({
-    module: 'mes',
-    url: 'workshop/artifact/summary/page',
+    module: 'bridge',
+    url: 'workshop/box/summary/page',
     method: 'get',
     params
   })
@@ -16,7 +16,7 @@ export function get(params) {
  */
 export function fullYearProduction(params) {
   return request({
-    module: 'mes',
+    module: 'bridge',
     url: 'workshop/year/mete/summary',
     method: 'get',
     params
@@ -27,7 +27,7 @@ export function fullYearProduction(params) {
  */
 export function workshopEcharts(params) {
   return request({
-    module: 'mes',
+    module: 'bridge',
     url: 'workshop/report',
     method: 'get',
     params
@@ -38,7 +38,7 @@ export function workshopEcharts(params) {
  */
 export function workshopProduction(params) {
   return request({
-    module: 'mes',
+    module: 'bridge',
     url: 'workshop/mete/summary',
     method: 'get',
     params
