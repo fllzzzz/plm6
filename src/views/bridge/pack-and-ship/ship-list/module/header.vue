@@ -21,16 +21,6 @@
         @change="crud.toQuery"
       />
       <common-radio-button
-        v-if="query.productType & packTypeEnum.ENCLOSURE.V"
-        v-model="query.category"
-        :options="mesEnclosureTypeEnum.ENUM"
-        showOptionAll
-        type="enum"
-        size="small"
-        class="filter-item"
-        @change="crud.toQuery"
-      />
-      <common-radio-button
         v-model="query.deliveryStatus"
         :options="deliveryStatusEnum.ENUM"
         showOptionAll
@@ -176,7 +166,8 @@ import { getSummaryShipMete, getSummaryMonthMete } from '@/api/bridge/bridge-pac
 import { inject, onMounted, ref, computed } from 'vue'
 import moment from 'moment'
 
-import { packTypeEnum, mesEnclosureTypeEnum, deliveryStatusEnum } from '@enum-ms/mes'
+import { bridgePackTypeEnum as packTypeEnum } from '@enum-ms/bridge'
+import { deliveryStatusEnum } from '@enum-ms/mes'
 import { manufactureTypeEnum } from '@enum-ms/production'
 import { DP } from '@/settings/config'
 import { convertUnits } from '@/utils/convert/unit'

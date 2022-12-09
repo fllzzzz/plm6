@@ -84,29 +84,16 @@
         min-width="60"
       />
       <el-table-column
-        v-if="columns.visible('totalGrossWeight') && crud.query.productType === packTypeEnum.STRUCTURE.V"
+        v-if="columns.visible('totalGrossWeight') && (crud.query.productType === packTypeEnum.BOX.V || crud.query.productType === packTypeEnum.CELL.V)"
         key="totalGrossWeight"
         prop="totalGrossWeight"
         :show-overflow-tooltip="true"
-        label="结构毛重(kg)"
+        label="毛重(kg)"
         align="right"
         min-width="120"
       >
         <template v-slot="scope">
           {{ toFixed(scope.row.totalGrossWeight, DP.COM_WT__KG) }}
-        </template>
-      </el-table-column>
-      <el-table-column
-        v-if="columns.visible('enclLength') && crud.query.productType === packTypeEnum.ENCLOSURE.V"
-        key="enclLength"
-        prop="enclLength"
-        :show-overflow-tooltip="true"
-        label="围护长度(m)"
-        align="right"
-        min-width="120"
-      >
-        <template v-slot="scope">
-          {{ convertUnits(scope.row.enclLength, 'mm', 'm', DP.MES_ENCLOSURE_L__M) }}
         </template>
       </el-table-column>
       <el-table-column v-if="columns.visible('status')" key="status" prop="status" label="状态" align="center" min-width="100">
@@ -199,7 +186,8 @@ import { ref, reactive, provide } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElNotification } from 'element-plus'
 
-import { packTypeEnum, packStatusTypeEnum } from '@enum-ms/mes'
+import { bridgePackTypeEnum as packTypeEnum } from '@enum-ms/bridge'
+import { packStatusTypeEnum } from '@enum-ms/mes'
 import checkPermission from '@/utils/system/check-permission'
 import { DP } from '@/settings/config'
 import { deepClone, toFixed } from '@data-type/index'

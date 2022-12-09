@@ -195,7 +195,7 @@ import { computed, ref, watch, defineEmits, defineProps, defineExpose, inject } 
 
 import { DP } from '@/settings/config'
 import { toFixed } from '@data-type'
-import { packTypeEnum } from '@enum-ms/mes'
+import { bridgePackTypeEnum as packTypeEnum } from '@enum-ms/bridge'
 import { bridgeBoxManualPackPM as permission } from '@/page-permission/bridge'
 
 import useCRUD from '@compos/use-crud'
@@ -213,7 +213,7 @@ const optShow = {
 const tableRef = ref()
 const { crud, columns, CRUD } = useCRUD(
   {
-    title: '手工打包（结构）',
+    title: '手工打包（分段）',
     sort: [],
     permission: { ...permission },
     optShow: { ...optShow },
@@ -225,7 +225,7 @@ const { crud, columns, CRUD } = useCRUD(
   tableRef
 )
 
-const packTypeK = packTypeEnum.STRUCTURE.K
+const packTypeK = packTypeEnum.BOX.K
 const emit = defineEmits(['add'])
 const props = defineProps({
   projectId: {

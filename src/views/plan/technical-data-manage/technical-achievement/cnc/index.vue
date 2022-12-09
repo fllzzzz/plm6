@@ -13,7 +13,7 @@
     >
     <el-table-column prop="index" label="序号" align="center" width="60" type="index" />
     <el-table-column v-if="columns.visible('monomerName')" key="monomerName" prop="monomerName" show-overflow-tooltip label="单体" align="center"/>
-    <el-table-column v-if="columns.visible('quantity')" key="quantity" prop="quantity" show-overflow-tooltip :label="`${deepenTypeEnum.V?.[crud.query.productType]?.L}总数`" align="center"/>
+    <el-table-column v-if="columns.visible('quantity')" key="quantity" prop="quantity" show-overflow-tooltip :label="`${globalProject.projectType === projectTypeEnum.STEEL.V?deepenTypeEnum.V?.[crud.query.productType]?.L:bridgeProcessTypeEnum.V?.[crud.query.productType]?.L}总数`" align="center"/>
     <el-table-column v-if="columns.visible('drawingQuantity')" key="drawingQuantity" prop="drawingQuantity" show-overflow-tooltip label="文件匹配总数" align="center"/>
     <!--编辑与删除-->
     <el-table-column
@@ -51,7 +51,9 @@ import crudApi from '@/api/plan/technical-data-manage/technical-achievement'
 import { ref, watch, computed } from 'vue'
 import { mapGetters } from '@/store/lib'
 
+import { projectTypeEnum } from '@enum-ms/contract'
 import { cncFileListPM as permission } from '@/page-permission/plan'
+import { bridgeProcessTypeEnum } from '@enum-ms/bridge'
 import { deepenTypeEnum } from '@enum-ms/plan'
 import checkPermission from '@/utils/system/check-permission'
 

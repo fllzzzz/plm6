@@ -198,7 +198,8 @@
 import { inject, onMounted, ref, computed } from 'vue'
 import moment from 'moment'
 
-import { packTypeEnum, receiptStatusEnum, deliveryReceiptStatusEnum, searchDateTypeEnum } from '@enum-ms/mes'
+import { bridgePackTypeEnum as packTypeEnum } from '@enum-ms/bridge'
+import { receiptStatusEnum, deliveryReceiptStatusEnum, searchDateTypeEnum } from '@enum-ms/mes'
 import { manufactureTypeEnum } from '@enum-ms/production'
 import { isNotBlank } from '@data-type/index'
 import { PICKER_OPTIONS_SHORTCUTS } from '@/settings/config'

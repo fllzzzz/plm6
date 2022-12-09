@@ -27,21 +27,23 @@ const bridgeProcessCategoryEnum = {
 constantize(bridgeProcessCategoryEnum)
 
 // 可打包类型
-// const bridgePackTypeEnum = {
-//   STRUCTURE: { L: '结构', SL: '结构', K: 'STRUCTURE', V: bridgeComponentTypeEnum.ARTIFACT.V, T: '' },
-//   ENCLOSURE: { L: '围护', SL: '围护', K: 'ENCLOSURE', V: bridgeComponentTypeEnum.ENCLOSURE.V, T: 'warning' },
-//   AUXILIARY_MATERIAL: { L: '辅材', SL: '配套件', K: 'AUXILIARY_MATERIAL', V: bridgeComponentTypeEnum.AUXILIARY_MATERIAL.V, T: 'success' }
-// }
-// constantize(bridgePackTypeEnum)
+const bridgePackTypeEnum = {
+  BOX: { L: '分段', SL: '分段', K: 'BOX', V: bridgeComponentTypeEnum.BOX.V, T: '' },
+  CELL: { L: '单元', SL: '单元', K: 'ENCLOSURE', V: bridgeComponentTypeEnum.CELL.V, T: 'warning' },
+  AUXILIARY_MATERIAL: { L: '辅材', SL: '配套件', K: 'AUXILIARY_MATERIAL', V: bridgeComponentTypeEnum.AUXILIARY_MATERIAL.V, T: 'success' }
+}
+constantize(bridgePackTypeEnum)
 
 export {
   bridgeComponentTypeEnum,
   bridgeProcessTypeEnum,
-  bridgeProcessCategoryEnum
+  bridgeProcessCategoryEnum,
+  bridgePackTypeEnum
 }
 
 export default {
   bridgeComponentTypeEnum,
   bridgeProcessTypeEnum,
-  bridgeProcessCategoryEnum
+  bridgeProcessCategoryEnum,
+  bridgePackTypeEnum
 }

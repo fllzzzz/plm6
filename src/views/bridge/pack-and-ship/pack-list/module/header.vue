@@ -9,16 +9,6 @@
       class="filter-item"
       @change="crud.toQuery"
     />
-    <common-radio-button
-      v-if="query.productType & packTypeEnum.ENCLOSURE.V"
-      v-model="query.category"
-      :options="mesEnclosureTypeEnum.ENUM"
-      showOptionAll
-      type="enum"
-      size="small"
-      class="filter-item"
-      @change="crud.toQuery"
-    />
     <el-date-picker
       v-model="query.date"
       type="daterange"
@@ -118,7 +108,7 @@ import { inject, reactive, defineExpose, computed, defineEmits } from 'vue'
 import { mapGetters } from '@/store/lib'
 import moment from 'moment'
 
-import { packTypeEnum, mesEnclosureTypeEnum } from '@enum-ms/mes'
+import { bridgePackTypeEnum as packTypeEnum } from '@enum-ms/bridge'
 import { PICKER_OPTIONS_SHORTCUTS } from '@/settings/config'
 import { printPackageLabel } from '@/utils/print/index'
 import { QR_SCAN_F_TYPE, QR_SCAN_TYPE } from '@/settings/config'
@@ -141,7 +131,7 @@ const defaultQuery = {
   endDate: undefined,
   remark: void 0,
   materialTypeArr: { value: undefined, resetAble: false },
-  productType: packTypeEnum.STRUCTURE.V,
+  productType: packTypeEnum.BOX.V,
   projectId: { value: undefined, resetAble: false }
 }
 const { crud, query } = regHeader(defaultQuery)
@@ -179,8 +169,8 @@ const { batchPrint, print } = usePrintLabel({
 
 const detailStore = inject('detailStore')
 const dataField = {
-  [packTypeEnum.STRUCTURE.V]: 'artifactList',
-  [packTypeEnum.ENCLOSURE.V]: 'enclosureList',
+  [packTypeEnum.BOX.V]: 'artifactList',
+  [packTypeEnum.CELL.V]: 'enclosureList',
   [packTypeEnum.AUXILIARY_MATERIAL.V]: 'materialList'
 }
 

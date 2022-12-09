@@ -1,9 +1,9 @@
 <template>
   <common-drawer ref="drawerRef" title="打包列表" v-model="drawerVisible" direction="rtl" :before-close="handleClose" size="75%" custom-class="drawer-detail">
     <template #titleRight>
-      <common-button v-permission="permission.pack" type="primary" :loading="packLoading" size="mini" @click="packClick">
+      <!-- <common-button v-permission="permission.pack" type="primary" :loading="packLoading" size="mini" @click="packClick">
         {{ packTypeEnum.VL[packType] }}打包({{ listObj['source' + packTypeEnum.VK[packType]].length }})
-      </common-button>
+      </common-button> -->
     </template>
     <template #content>
       <div class="head-container">
@@ -67,7 +67,7 @@
           </template>
         </el-table-column>
         <el-table-column label="序号" type="index" align="center" width="60" />
-        <template v-if="packType === packTypeEnum.STRUCTURE.V">
+        <template v-if="packType === packTypeEnum.BOX.V || packType === packTypeEnum.CELL.V">
           <el-table-column key="name" prop="name" :show-overflow-tooltip="true" label="名称" width="120px">
             <template v-slot="scope">
               <table-cell-tag v-if="scope.row.workshopInf" :name="scope.row.workshopInf.name" />
@@ -110,7 +110,7 @@
           </el-table-column>
         </template>
 
-        <template v-if="packType === packTypeEnum.ENCLOSURE.V">
+        <!-- <template v-if="packType === packTypeEnum.ENCLOSURE.V">
           <el-table-column key="name" prop="name" :show-overflow-tooltip="true" label="名称" width="120px">
             <template v-slot="scope">
               <table-cell-tag v-if="scope.row.workshopInf" :name="scope.row.workshopInf.name" />
@@ -154,7 +154,7 @@
               {{ toFixed(scope.row.totalArea, DP.COM_AREA__M2) }}
             </template>
           </el-table-column>
-        </template>
+        </template> -->
         <template v-if="packType === packTypeEnum.AUXILIARY_MATERIAL.V">
           <el-table-column key="serialNumber" prop="serialNumber" :show-overflow-tooltip="true" label="编号" min-width="120" />
           <el-table-column key="fullClassName" prop="fullClassName" :show-overflow-tooltip="true" label="辅材类别" min-width="250" />
@@ -214,7 +214,7 @@ import { defineProps, defineEmits, ref, watch, inject, reactive, computed } from
 import { ElMessage } from 'element-plus'
 
 import { DP } from '@/settings/config'
-import { packTypeEnum } from '@enum-ms/mes'
+import { bridgePackTypeEnum as packTypeEnum } from '@enum-ms/bridge'
 import { toFixed } from '@data-type/index'
 import { tableSummary } from '@/utils/el-extra'
 
@@ -230,7 +230,7 @@ const choseDialogRef = ref()
 const expandRowKeys = ref([])
 
 const packData = inject('packData')
-const permission = inject('permission')
+// const permission = inject('permission')
 const projectId = inject('projectId')
 const emit = defineEmits(['update:visible', 'handleSuccess'])
 const props = defineProps({
@@ -264,19 +264,13 @@ const { maxHeight } = useMaxHeight(
   drawerVisible
 )
 
-const packType = ref(packTypeEnum.STRUCTURE.V)
+const packType = ref(packTypeEnum.BOX.V)
 const packLoading = ref(false)
 const choseVisible = ref(false)
 // const factoryId = ref()
 const workshopId = ref()
 const remark = ref()
 const listObj = reactive({
-  // [packTypeEnum.STRUCTURE.K]: [],
-  // [packTypeEnum.ENCLOSURE.K]: [],
-  // [packTypeEnum.AUXILIARY_MATERIAL.K]: [],
-  // ['source' + packTypeEnum.STRUCTURE.K]: [],
-  // ['source' + packTypeEnum.ENCLOSURE.K]: [],
-  // ['source' + packTypeEnum.AUXILIARY_MATERIAL.K]: []
 })
 
 const disabledVal = computed(() => {
@@ -297,20 +291,20 @@ watch(workshopId, (val) => {
   }
 })
 
-watch(
-  packData,
-  () => {
-    let _type
-    for (const item in packTypeEnum.ENUM) {
-      if (packData[item] === null) packData[item] = {}
-      listObj[item] = Object.values(packData[item])
-      listObj['source' + item] = Object.values(packData[item])
-      if (listObj[item].length && !_type) _type = packTypeEnum.KV[item]
-    }
-    packType.value = _type || packType.value
-  },
-  { immediate: true, deep: true }
-)
+// watch(
+//   packData,
+//   () => {
+//     let _type
+//     for (const item in packTypeEnum.ENUM) {
+//       if (packData[item] === null) packData[item] = {}
+//       listObj[item] = Object.values(packData[item])
+//       listObj['source' + item] = Object.values(packData[item])
+//       if (listObj[item].length && !_type) _type = packTypeEnum.KV[item]
+//     }
+//     packType.value = _type || packType.value
+//   },
+//   { immediate: true, deep: true }
+// )
 
 watch(
   () => props.bagId,
@@ -322,18 +316,18 @@ watch(
   { immediate: true }
 )
 
-function packClick() {
-  if (props.bagId) {
-    handlePack({ bagId: props.bagId })
-    return
-  }
-  choseVisible.value = true
-}
+// function packClick() {
+//   if (props.bagId) {
+//     handlePack({ bagId: props.bagId })
+//     return
+//   }
+//   choseVisible.value = true
+// }
 
 function handleSuccess() {
   handleClose()
   remark.value = ''
-  packType.value = packTypeEnum.STRUCTURE.V
+  packType.value = packTypeEnum.BOX.V
   workshopId.value = undefined
   // factoryId.value = undefined
 }

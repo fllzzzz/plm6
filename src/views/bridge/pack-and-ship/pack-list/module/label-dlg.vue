@@ -16,32 +16,18 @@
         <td>包单号</td>
         <td colspan="2" style="font-weight: bold">{{ packageInfo.serialNumber }}</td>
       </tr>
-      <tr v-if="packageInfo.productType === packTypeEnum.STRUCTURE.V">
+      <tr v-if="packageInfo.productType === packTypeEnum.BOX.V || packageInfo.productType === packTypeEnum.CELL.V">
         <td>编号</td>
         <td>材质</td>
         <td>数量</td>
         <td>重量(kg)</td>
       </tr>
-      <tr v-if="packageInfo.productType === packTypeEnum.ENCLOSURE.V">
-        <td>编号</td>
-        <td>版型</td>
-        <td>长度</td>
-        <td>数量</td>
-      </tr>
-      <template v-if="packageInfo.productType === packTypeEnum.STRUCTURE.V">
+      <template v-if="packageInfo.productType === packTypeEnum.BOX.V || packageInfo.productType === packTypeEnum.CELL.V">
         <tr v-for="(item, index) in breakUpList[page - 1]" :key="index">
           <td class="col-1">{{ item.serialNumber }}</td>
           <td class="col-1">{{ item.material }}</td>
           <td class="col-1">{{ item.quantity }}</td>
           <td class="col-1">{{ item.totalWeight }}</td>
-        </tr>
-      </template>
-      <template v-if="packageInfo.productType === packTypeEnum.ENCLOSURE.V">
-        <tr v-for="(item, index) in breakUpList[page - 1]" :key="index">
-          <td class="col-1">{{ item.serialNumber }}</td>
-          <td class="col-1">{{ item.plate }}</td>
-          <td class="col-1">{{ item.length }}</td>
-          <td class="col-1">{{ item.quantity }}</td>
         </tr>
       </template>
     </table>
@@ -58,7 +44,7 @@
 <script setup>
 import QrcodeVue from 'qrcode.vue'
 import { computed, ref, defineEmits, defineProps } from 'vue'
-import { packTypeEnum } from '@enum-ms/mes'
+import { bridgePackTypeEnum as packTypeEnum } from '@enum-ms/bridge'
 
 import useVisible from '@compos/use-visible'
 

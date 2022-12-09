@@ -23,22 +23,32 @@
         label="名称"
         width="120px"
       >
-        <template v-slot="scope">
-          <table-cell-tag v-if="scope.row.workshopInf" :name="scope.row.workshopInf.name" />
-          <span>{{ scope.row.name }}</span>
+        <template #default="{ row }">
+          <table-cell-tag v-if="row.workshopInf" :name="row.workshopInf.name" />
+          <span>{{ row.name }}</span>
         </template>
       </el-table-column>
       <el-table-column
         v-if="columns.visible('monomer.name')"
         prop="monomer.name"
+        :show-overflow-tooltip="true"
         label="单体"
         sortable="custom"
         align="center"
         width="100px"
       />
-      <el-table-column v-if="columns.visible('area.name')" prop="area.name" label="区域" sortable="custom" align="center" width="100px" />
+      <el-table-column
+        v-if="columns.visible('area.name')"
+        :show-overflow-tooltip="true"
+        prop="area.name"
+        label="区域"
+        sortable="custom"
+        align="center"
+        width="100px"
+      />
       <el-table-column
         v-if="columns.visible('serialNumber')"
+        :show-overflow-tooltip="true"
         prop="serialNumber"
         label="编号"
         sortable="custom"
@@ -46,54 +56,19 @@
         width="120px"
       />
       <el-table-column
-        v-if="columns.visible('plate')"
-        key="plate"
-        prop="plate"
-        sortable="custom"
+        v-if="columns.visible('specification')"
         :show-overflow-tooltip="true"
-        label="板型"
-        min-width="100px"
-      />
-      <el-table-column
-        v-if="columns.visible('color')"
-        key="color"
-        prop="color"
+        prop="specification"
         sortable="custom"
-        :show-overflow-tooltip="true"
-        label="颜色"
-        min-width="100px"
-      />
-      <el-table-column
-        v-if="columns.visible('thickness')"
-        key="thickness"
-        prop="thickness"
-        sortable="custom"
-        :show-overflow-tooltip="true"
-        :label="`厚度\n(mm)`"
-        align="left"
-        min-width="85px"
+        label="规格"
+        min-width="140px"
       >
-        <template v-slot="scope">
-          {{ toFixed(scope.row.thickness, DP.MES_ENCLOSURE_T__MM) }}
-        </template>
-      </el-table-column>
-      <el-table-column
-        v-if="columns.visible('width')"
-        key="width"
-        prop="width"
-        sortable="custom"
-        :show-overflow-tooltip="true"
-        :label="`有效宽度\n(mm)`"
-        align="left"
-        min-width="85px"
-      >
-        <template v-slot="scope">
-          {{ toFixed(scope.row.width, DP.MES_ENCLOSURE_W__MM) }}
+        <template #default="{ row }">
+          <span>{{ row.specification }}</span>
         </template>
       </el-table-column>
       <el-table-column
         v-if="columns.visible('length')"
-        key="length"
         prop="length"
         sortable="custom"
         :show-overflow-tooltip="true"
@@ -101,27 +76,50 @@
         align="left"
         min-width="85px"
       >
-        <template v-slot="scope">
-          {{ toFixed(scope.row.length, DP.MES_ENCLOSURE_L__MM) }}
+        <template #default="{ row }">
+          {{ toFixed(row.length, DP.MES_ARTIFACT_L__MM) }}
         </template>
       </el-table-column>
       <el-table-column
-        v-if="columns.visible('totalArea')"
-        key="totalArea"
-        prop="totalArea"
+        v-if="columns.visible('material')"
+        prop="material"
         sortable="custom"
         :show-overflow-tooltip="true"
-        :label="`总面积\n(㎡)`"
-        align="left"
-        min-width="100px"
+        label="材质"
+        min-width="80px"
       >
-        <template v-slot="scope">
-          {{ toFixed(scope.row.totalArea, DP.COM_AREA__M2) }}
+        <template #default="{ row }">
+          <span>{{ row.material }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        v-if="columns.visible('netWeight')"
+        prop="netWeight"
+        sortable="custom"
+        :show-overflow-tooltip="true"
+        :label="`单净重\n(kg)`"
+        align="left"
+        min-width="80px"
+      >
+        <template #default="{ row }">
+          {{ toFixed(row.netWeight, DP.COM_WT__KG) }}
+        </template>
+      </el-table-column>
+      <el-table-column
+        v-if="columns.visible('grossWeight')"
+        prop="grossWeight"
+        sortable="custom"
+        :show-overflow-tooltip="true"
+        :label="`单毛重\n(kg)`"
+        align="left"
+        min-width="80px"
+      >
+        <template #default="{ row }">
+          {{ toFixed(row.grossWeight, DP.COM_WT__KG) }}
         </template>
       </el-table-column>
       <el-table-column
         v-if="columns.visible('drawingNumber')"
-        key="drawingNumber"
         prop="drawingNumber"
         sortable="custom"
         :show-overflow-tooltip="true"
@@ -130,7 +128,6 @@
       />
       <el-table-column
         v-if="columns.visible('quantity')"
-        key="quantity"
         prop="quantity"
         sortable="custom"
         label="清单数"
@@ -139,7 +136,6 @@
       />
       <el-table-column
         v-if="columns.visible('inQuantity')"
-        key="inQuantity"
         prop="inQuantity"
         sortable="custom"
         label="入库量"
@@ -180,19 +176,13 @@
             </div>
           </el-tooltip>
         </template>
-        <template v-slot="scope">
-          <el-tag :type="scope.row.status === processingEnum.PROCESS.V ? 'success' : 'primary'">{{ processingEnumV[scope.row.status].L }}</el-tag>
+        <template #default="{row}">
+          <el-tag :type="row.status === processingEnum.PROCESS.V ? 'success' : 'primary'">{{ processingEnumV[row.status].L }}</el-tag>
         </template>
       </el-table-column> -->
       <el-table-column v-permission="permission.pack" label="操作" width="70" align="center" fixed="right">
-        <template v-slot="scope">
-          <common-button
-            type="success"
-            icon="el-icon-plus"
-            :disabled="ids.includes(`${scope.row.id}`)"
-            size="mini"
-            @click="add(scope.row)"
-          />
+        <template #default="{ row: { sourceRow: row } }">
+          <common-button type="success" icon="el-icon-plus" :disabled="ids.includes(`${row.id}`)" size="mini" @click="add(row)" />
         </template>
       </el-table-column>
     </common-table>
@@ -200,16 +190,17 @@
 </template>
 
 <script setup>
-import { getEnclosure as get } from '@/api/bridge/bridge-pack-and-ship/manual-pack'
+import { getArtifact as get } from '@/api/bridge/bridge-pack-and-ship/manual-pack'
 import { computed, ref, watch, defineEmits, defineProps, defineExpose, inject } from 'vue'
 
-import { bridgeEnclosureManualPackPM as permission } from '@/page-permission/bridge'
 import { DP } from '@/settings/config'
 import { toFixed } from '@data-type'
-import { packTypeEnum } from '@enum-ms/mes'
+import { bridgePackTypeEnum as packTypeEnum } from '@enum-ms/bridge'
+import { bridgeBoxManualPackPM as permission } from '@/page-permission/bridge'
 
 import useCRUD from '@compos/use-crud'
 import mHeader from './module/header'
+import { deepClone } from '@/utils/data-type'
 import tableCellTag from '@comp-common/table-cell-tag/index.vue'
 
 const optShow = {
@@ -222,7 +213,7 @@ const optShow = {
 const tableRef = ref()
 const { crud, columns, CRUD } = useCRUD(
   {
-    title: '手工打包（围护）',
+    title: '手工打包（单元）',
     sort: [],
     permission: { ...permission },
     optShow: { ...optShow },
@@ -234,18 +225,14 @@ const { crud, columns, CRUD } = useCRUD(
   tableRef
 )
 
-const packTypeK = packTypeEnum.ENCLOSURE.K
+const packTypeK = packTypeEnum.CELL.K
 const emit = defineEmits(['add'])
 const props = defineProps({
   projectId: {
     type: [String, Number],
     default: undefined
   },
-  workShopId: {
-    type: [String, Number],
-    default: undefined
-  },
-  category: {
+  workshopId: {
     type: [String, Number],
     default: undefined
   },
@@ -269,28 +256,29 @@ const ids = computed(() => {
 })
 
 watch(
-  () => [props.projectId, props.workshopId, props.monomerId, props.areaId, props.category],
+  () => [props.projectId, props.workshopId, props.monomerId, props.areaId],
   () => {
     crud.toQuery()
   },
-  { immediate: true }
+  { immediate: true, deep: true }
 )
-
-CRUD.HOOK.beforeRefresh = () => {
-  crud.query.projectId = props.projectId
-  crud.query.workshopId = props.workshopId
-  crud.query.category = props.category
-  crud.query.monomerId = props.monomerId
-  crud.query.areaId = props.areaId
-}
 
 function add(row) {
   emit('add', row, packTypeK)
 }
 
+CRUD.HOOK.beforeRefresh = () => {
+  crud.query.projectId = props.projectId
+  crud.query.workshopId = props.workshopId
+  crud.query.monomerId = props.monomerId
+  crud.query.areaId = props.areaId
+}
+
 CRUD.HOOK.handleRefresh = (crud, res) => {
-  res.data.content = res.data.enclosureList.map((v) => {
+  res.data.content = res.data.artifactList.map((v, index) => {
+    v.rowKey = `${packTypeK}_${Math.random()}_${index}`
     v.productQuantity = v.unPackageQuantity
+    v.originNumberList = v.numberList && deepClone(v.numberList) || []
     return v
   })
 }

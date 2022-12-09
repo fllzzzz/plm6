@@ -11,15 +11,6 @@
             size="small"
             class="filter-item"
           />
-          <common-radio-button
-            v-if="packType === packTypeEnum.ENCLOSURE.V"
-            type="enum"
-            v-model="category"
-            :options="mesEnclosureTypeEnum.ENUM"
-            showOptionAll
-            placeholder="请选择围护类型"
-            class="filter-item"
-          />
           <workshop-select
             v-if="packType !== packTypeEnum.AUXILIARY_MATERIAL.V"
             v-model="workshopId"
@@ -80,7 +71,7 @@ import { useRoute } from 'vue-router'
 import { mapGetters } from '@/store/lib'
 
 import { isBlank, isNotBlank } from '@data-type/index'
-import { packTypeEnum, mesEnclosureTypeEnum } from '@enum-ms/mes'
+import { bridgePackTypeEnum as packTypeEnum } from '@enum-ms/bridge'
 import { bridgeManualPackPM as permission } from '@/page-permission/bridge'
 
 import useMaxHeight from '@compos/use-max-height'
@@ -96,7 +87,7 @@ import oneCodeNumberList from '@/components-system/mes/one-code-number-list'
 const route = useRoute()
 const mainRef = ref()
 const { globalProjectId } = mapGetters(['globalProjectId'])
-const packType = ref(packTypeEnum.STRUCTURE.V)
+const packType = ref(packTypeEnum.BOX.V)
 // const factoryId = ref()
 const workshopId = ref()
 const category = ref()
@@ -112,8 +103,8 @@ const editData = ref({})
 const bagId = ref()
 const packVisible = ref(false)
 const packData = reactive({
-  [packTypeEnum.STRUCTURE.K]: {},
-  [packTypeEnum.ENCLOSURE.K]: {},
+  [packTypeEnum.BOX.K]: {},
+  [packTypeEnum.CELL.K]: {},
   [packTypeEnum.AUXILIARY_MATERIAL.K]: {}
 })
 
@@ -139,8 +130,8 @@ watch(
   () => globalProjectId.value,
   (newVal, oldVal) => {
     if (isNotBlank(newVal)) {
-      packData[packTypeEnum.STRUCTURE.K] = {}
-      packData[packTypeEnum.ENCLOSURE.K] = {}
+      packData[packTypeEnum.BOX.K] = {}
+      packData[packTypeEnum.CELL.K] = {}
       packData[packTypeEnum.AUXILIARY_MATERIAL.K] = {}
     }
   }
@@ -162,8 +153,8 @@ watch(
       }
       bagId.value = val.value.id
       const _data = editData.value.data
-      packData[packTypeEnum.STRUCTURE.K] = _data.artifactList && _data.artifactList.reduce((obj, item) => ((obj[item.id] = item), obj), {})
-      packData[packTypeEnum.ENCLOSURE.K] =
+      packData[packTypeEnum.BOX.K] = _data.artifactList && _data.artifactList.reduce((obj, item) => ((obj[item.id] = item), obj), {})
+      packData[packTypeEnum.CELL.K] =
         (_data.enclosureList && _data.enclosureList.reduce((obj, item) => ((obj[item.id] = item), obj), {})) || {}
       packData[packTypeEnum.AUXILIARY_MATERIAL.K] =
         (_data.auxList && _data.auxList.reduce((obj, item) => ((obj[item.id] = item), obj), {})) || {}
@@ -178,9 +169,9 @@ watch(
 
 const currentView = computed(() => {
   switch (packType.value) {
-    case packTypeEnum.STRUCTURE.V:
+    case packTypeEnum.BOX.V:
       return structureTable
-    case packTypeEnum.ENCLOSURE.V:
+    case packTypeEnum.CELL.V:
       return enclosureTable
     case packTypeEnum.AUXILIARY_MATERIAL.V:
       return auxiliaryMaterialTable
@@ -191,15 +182,15 @@ const currentView = computed(() => {
 
 const isEmpty = computed(() => {
   return (
-    isBlank(packData[packTypeEnum.STRUCTURE.K]) &&
-    isBlank(packData[packTypeEnum.ENCLOSURE.K]) &&
+    isBlank(packData[packTypeEnum.BOX.K]) &&
+    isBlank(packData[packTypeEnum.CELL.K]) &&
     isBlank(packData[packTypeEnum.AUXILIARY_MATERIAL.K])
   )
 })
 
 function handleSuccess() {
-  packData[packTypeEnum.STRUCTURE.K] = {}
-  packData[packTypeEnum.ENCLOSURE.K] = {}
+  packData[packTypeEnum.BOX.K] = {}
+  packData[packTypeEnum.CELL.K] = {}
   packData[packTypeEnum.AUXILIARY_MATERIAL.K] = {}
   mainRef.value.refresh()
   bagId.value = undefined

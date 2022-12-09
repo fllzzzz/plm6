@@ -76,7 +76,8 @@
 </template>
 
 <script setup>
-import { packTypeEnum, shipAuditStatusEnum } from '@enum-ms/mes'
+import { bridgePackTypeEnum as packTypeEnum } from '@enum-ms/bridge'
+import { shipAuditStatusEnum } from '@enum-ms/mes'
 
 import { regHeader } from '@compos/use-crud'
 import crudOperation from '@crud/CRUD.operation'
