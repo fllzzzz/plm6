@@ -141,10 +141,10 @@ async function fetchType(lastQuery) {
     typeList.value =
       content?.map((v) => {
         const _obj = {}
-        if (v & bridgeComponentTypeEnum .BOX.V) {
+        if (v & bridgeComponentTypeEnum.BOX.V) {
           _obj.name = '普通零件'
         }
-        if (v & bridgeComponentTypeEnum .CELL.V) {
+        if (v & bridgeComponentTypeEnum.CELL.V) {
           _obj.name = '翼腹板'
         }
         _obj.value = v

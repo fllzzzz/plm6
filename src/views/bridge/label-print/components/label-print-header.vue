@@ -89,7 +89,7 @@
             <span v-show="productType & bridgeComponentTypeEnum.BOX.V">重量：{{printWeightTypeEnum.VL[sourcePrintConfig.weight]}}，</span>
             <span v-show="productType & bridgeComponentTypeEnum.BOX.V">区域：{{isShowText(sourcePrintConfig.showArea)}}，</span>
             <span v-show="productType & bridgeComponentTypeEnum.BOX.V">单体：{{isShowText(sourcePrintConfig.showMonomer)}}，</span>
-            <span v-show="productType & bridgeComponentTypeEnum.BOX.V || productType & bridgeComponentTypeEnum.ENCLOSURE.V">生产日期：{{isShowText(sourcePrintConfig.dateInProduced)}}，</span>
+            <!-- <span v-show="productType & bridgeComponentTypeEnum.BOX.V || productType & bridgeComponentTypeEnum.ENCLOSURE.V">生产日期：{{isShowText(sourcePrintConfig.dateInProduced)}}，</span> -->
             <span>制造商名称：{{sourcePrintConfig.manufacturerName || '-'}}，</span>
             <span>份数：{{sourcePrintConfig.copiesQuantity}}</span>
           </span>

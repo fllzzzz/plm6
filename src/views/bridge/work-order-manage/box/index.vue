@@ -57,8 +57,8 @@
         align="center"
       >
         <template #default="{ row }">
-          <el-tag :type="row.productType & bridgeComponentTypeEnum .CELL.V ? '' : 'success'" effect="plain">
-            {{ bridgeComponentTypeEnum .VL[row.productType] }}
+          <el-tag :type="row.productType & bridgeComponentTypeEnum.CELL.V ? '' : 'success'" effect="plain">
+            {{ bridgeComponentTypeEnum.VL[row.productType] }}
           </el-tag>
         </template>
       </el-table-column>

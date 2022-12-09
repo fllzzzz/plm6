@@ -211,7 +211,7 @@ const bridgeStructureProductionReport = {
       { show: true, key: 'quantity', title: '数量', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 14, type: typeEnum.QUANTITY.K, format: { toThousand: false, precision: 0 }},
       { show: false, key: 'netWeight', title: '单净重', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.WEIGHT.K, format: { toThousand: false, precision: DEF_UNIT.WEIGHT_DP, unit: weightUnitEnum.KG.V }},
       { show: true, key: 'totalNetWeight', title: '总净重', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.WEIGHT.K, format: { toThousand: false, precision: DEF_UNIT.WEIGHT_DP, unit: weightUnitEnum.KG.V }},
-      { show: true, key: 'date', title: '生产日期', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 22, type: typeEnum.OTHER.K }
+      { show: true, key: 'date', title: '生产日期', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 22, type: typeEnum.DATE.K }
     ]
   }
 }

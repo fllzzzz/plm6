@@ -168,7 +168,7 @@ import useVisible from '@compos/use-visible'
 import tagTabs from '@comp-common/tag-tabs'
 import handleSurplusElementDialog from './handle-surplus-element-dialog'
 
-const productType = bridgeComponentTypeEnum .CELL.V
+const productType = bridgeComponentTypeEnum.CELL.V
 
 const elementDrawerRef = ref()
 const emit = defineEmits(['update:visible', 'task-issue-success'])

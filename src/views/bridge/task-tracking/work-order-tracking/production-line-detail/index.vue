@@ -17,7 +17,7 @@
         :project-id="props.projectId"
       />
       <el-input
-        v-if="props.detailData.productType === bridgeComponentTypeEnum .BOX.V"
+        v-if="props.detailData.productType === bridgeComponentTypeEnum.BOX.V"
         v-model.trim="name"
         size="small"
         placeholder="输入名称搜索"
@@ -69,7 +69,7 @@
         <el-table-column
           :show-overflow-tooltip="true"
           prop="name"
-          v-if="props.detailData.productType === bridgeComponentTypeEnum .BOX.V"
+          v-if="props.detailData.productType === bridgeComponentTypeEnum.BOX.V"
           label="名称"
           key="name"
           align="center"

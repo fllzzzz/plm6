@@ -2,7 +2,7 @@
   <div class="head-container">
     <common-radio-button
       v-model="query.productType"
-      :options="[bridgeComponentTypeEnum .BOX, bridgeComponentTypeEnum .CELL, bridgeComponentTypeEnum .MACHINE_PART]"
+      :options="[bridgeComponentTypeEnum.BOX, bridgeComponentTypeEnum.CELL, bridgeComponentTypeEnum.MACHINE_PART]"
       showOptionAll
       class="filter-item"
       type="enum"

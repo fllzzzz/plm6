@@ -203,8 +203,8 @@ const bridgeWageSummary = {
       { show: true, key: 'productionLine.name', title: '生产线', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 25, type: typeEnum.PRODUCTION_LINE.K },
       { show: true, key: 'processName', title: '工序', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 25, type: typeEnum.COMPONENT_PROCESS.K },
       { show: true, key: 'leaderName', title: '班组', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 25, type: typeEnum.TEAM_NAME.K },
-      { show: true, key: 'taskMete', title: '任务量', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 22, type: typeEnum.OTHER.K },
-      { show: true, key: 'completeMete', title: '生产量', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 22, type: typeEnum.OTHER.K },
+      { show: true, key: 'taskMete', title: '任务量', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 22, type: typeEnum.METE.K },
+      { show: true, key: 'completeMete', title: '生产量', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 22, type: typeEnum.METE.K },
       { show: true, key: 'price', title: '工资总额', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 22, type: typeEnum.AMOUNT.K, format: { toThousand: true, precision: 2, unit: amountUnitEnum.YUAN.V }, sum: true }
     ]
   }

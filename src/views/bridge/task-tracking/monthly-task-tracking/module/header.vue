@@ -49,7 +49,7 @@ const defaultQuery = {
   dateTime: undefined,
   workShopId: undefined,
   productionLineId: undefined,
-  productType: bridgeComponentTypeEnum .BOX.V
+  productType: bridgeComponentTypeEnum.BOX.V
 }
 
 const { crud, query } = regHeader(defaultQuery)
