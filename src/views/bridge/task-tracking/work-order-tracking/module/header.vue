@@ -14,7 +14,7 @@
     />
     <common-radio-button
       v-model="query.productType"
-      :options="[componentTypeEnum.BOX, componentTypeEnum.MACHINE_PART]"
+      :options="[bridgeComponentTypeEnum .BOX, bridgeComponentTypeEnum .MACHINE_PART]"
       class="filter-item"
       type="enum"
       @change="crud.toQuery"
@@ -29,7 +29,7 @@
     />
     <div>
       <project-cascader
-        v-if="query.productType === componentTypeEnum.BOX.V"
+        v-if="query.productType === bridgeComponentTypeEnum .BOX.V"
         v-model="query.projectId"
         clearable
         class="filter-item"
@@ -85,7 +85,7 @@
 <script setup>
 import { regHeader } from '@compos/use-crud'
 import { taskTrackingSchedulingStatusEnum } from '@enum-ms/mes'
-import { componentTypeEnum } from '@enum-ms/bridge'
+import { bridgeComponentTypeEnum } from '@enum-ms/bridge'
 import projectCascader from '@comp-base/project-cascader.vue'
 // import monomerSelectAreaSelect from '@comp-base/monomer-select-area-select'
 // import workshopSelect from '@comp-mes/workshop-select'
@@ -96,7 +96,7 @@ const defaultQuery = {
   dateTime: undefined,
   // workshopId: undefined,
   // productionLineId: undefined,
-  productType: componentTypeEnum.BOX.V,
+  productType: bridgeComponentTypeEnum .BOX.V,
   projectId: undefined,
   status: undefined,
   orderNumber: undefined

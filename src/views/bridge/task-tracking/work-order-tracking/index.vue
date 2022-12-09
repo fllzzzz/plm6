@@ -30,7 +30,7 @@
             </template>
           </el-table-column>
           <el-table-column
-            v-if="columns.visible('project') && productType !== componentTypeEnum.MACHINE_PART.V"
+            v-if="columns.visible('project') && productType !== bridgeComponentTypeEnum .MACHINE_PART.V"
             key="project.name"
             prop="project"
             :show-overflow-tooltip="true"
@@ -91,7 +91,7 @@
             </template>
           </el-table-column>
           <el-table-column
-            v-if="columns.visible('userName') && productType === componentTypeEnum.MACHINE_PART.V"
+            v-if="columns.visible('userName') && productType === bridgeComponentTypeEnum .MACHINE_PART.V"
             align="center"
             key="userName"
             prop="userName"
@@ -120,7 +120,7 @@ import { get, machinePart } from '@/api/bridge/bridge-task-tracking/work-order-t
 import { parseTime } from '@/utils/date'
 import { projectNameFormatter } from '@/utils/project'
 import { bridgeWorkOrderTrackingPM as permission } from '@/page-permission/bridge'
-import { componentTypeEnum } from '@enum-ms/bridge'
+import { bridgeComponentTypeEnum } from '@enum-ms/bridge'
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
 import { DP } from '@/settings/config'
@@ -177,7 +177,7 @@ function currentChange(row) {
 }
 
 CRUD.HOOK.beforeToQuery = () => {
-  crud.crudApi.get = crud.query.productType === componentTypeEnum.BOX.V ? get : machinePart
+  crud.crudApi.get = crud.query.productType === bridgeComponentTypeEnum .BOX.V ? get : machinePart
 }
 
 CRUD.HOOK.handleRefresh = (crud, data) => {

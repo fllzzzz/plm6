@@ -158,7 +158,7 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import moment from 'moment'
 
 // import { deepClone } from '@data-type/index'
-import { componentTypeEnum } from '@enum-ms/bridge'
+import { bridgeComponentTypeEnum } from '@enum-ms/bridge'
 import { positiveNumPattern } from '@/utils/validate/pattern'
 import { boxSchedulingPM as permission } from '@/page-permission/bridge'
 
@@ -176,7 +176,7 @@ import useDrawing from '@compos/use-drawing'
 import bimPreviewDrawer from '@/components-system/bim/bim-preview-drawer'
 import { debounce } from '@/utils'
 
-const productType = componentTypeEnum.BOX.V
+const productType = bridgeComponentTypeEnum .BOX.V
 provide('productType', productType)
 
 const mHeaderRef = ref()

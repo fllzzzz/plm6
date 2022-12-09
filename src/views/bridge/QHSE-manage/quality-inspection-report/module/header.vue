@@ -36,7 +36,7 @@
 import moment from 'moment'
 import { PICKER_OPTIONS_SHORTCUTS } from '@/settings/config'
 
-import { componentTypeEnum } from '@enum-ms/mes'
+import { bridgeComponentTypeEnum  } from '@enum-ms/mes'
 
 import { regHeader } from '@compos/use-crud'
 import crudOperation from '@crud/CRUD.operation'
@@ -46,9 +46,9 @@ const typeEnum = {
   STRUCTURE: {
     L: '结构',
     K: 'STRUCTURE',
-    V: componentTypeEnum.MACHINE_PART.V | componentTypeEnum.ASSEMBLE.V | componentTypeEnum.ARTIFACT.V
+    V: bridgeComponentTypeEnum .MACHINE_PART.V | bridgeComponentTypeEnum .ASSEMBLE.V | bridgeComponentTypeEnum .ARTIFACT.V
   },
-  ENCLOSURE: { L: '围护', K: 'ENCLOSURE', V: componentTypeEnum.ENCLOSURE.V }
+  ENCLOSURE: { L: '围护', K: 'ENCLOSURE', V: bridgeComponentTypeEnum .ENCLOSURE.V }
 }
 
 const defaultQuery = {

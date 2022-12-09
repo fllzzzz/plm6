@@ -5,7 +5,7 @@
   <div class="app-container" :style="`height: ${maxHeight - 40}px; overflow-y: auto`">
     <div :style="`display: flex; flex-direction: column; `">
       <div class="item-side" v-for="item in processData" :key="item">
-        <div v-if="item.productType === componentTypeEnum.MACHINE_PART.V">
+        <div v-if="item.productType === bridgeComponentTypeEnum .MACHINE_PART.V">
           <span>{{ item.name }}</span>
           <el-divider style="margin: 0 0 10px" />
           <div class="process-detail" style="display: flex; flex-wrap: wrap">
@@ -24,7 +24,7 @@
         </div>
       </div>
       <div class="item-side" v-for="item in processData" :key="item">
-        <div v-if="item.productType === componentTypeEnum.CELL.V">
+        <div v-if="item.productType === bridgeComponentTypeEnum .CELL.V">
           <span>{{ item.name }}</span>
           <el-divider style="margin: 0 0 10px" />
           <div class="process-detail" style="display: flex; flex-wrap: wrap">
@@ -43,7 +43,7 @@
         </div>
       </div>
       <div class="item-side" v-for="item in processData" :key="item">
-        <div v-if="item.productType === componentTypeEnum.BOX.V">
+        <div v-if="item.productType === bridgeComponentTypeEnum .BOX.V">
           <span>{{ item.name }}</span>
           <el-divider style="margin: 0 0 10px" />
           <div class="process-detail" style="display: flex; flex-wrap: wrap">
@@ -69,7 +69,7 @@
 import useMaxHeight from '@compos/use-max-height'
 import { ref, defineEmits, defineProps, watch } from 'vue'
 import { getAllProcess } from '@/api/bridge/bridge-task-tracking/process-sluggish.js'
-import { componentTypeEnum } from '@enum-ms/bridge'
+import { bridgeComponentTypeEnum } from '@enum-ms/bridge'
 import { DP } from '@/settings/config'
 import { convertUnits } from '@/utils/convert/unit'
 
@@ -102,7 +102,7 @@ async function allProcessDetail() {
         processData.value.push({
           uuid: v.uuid,
           productType: v.productType,
-          name: componentTypeEnum.VL[v.productType] + '>' + v.productionLine?.name,
+          name: bridgeComponentTypeEnum .VL[v.productType] + '>' + v.productionLine?.name,
           arr: [v]
         })
       }

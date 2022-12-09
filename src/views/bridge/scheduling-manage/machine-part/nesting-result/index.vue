@@ -146,7 +146,7 @@ import { ref } from 'vue'
 import { ElMessage } from 'element-plus'
 import moment from 'moment'
 
-import { componentTypeEnum } from '@enum-ms/bridge'
+import { bridgeComponentTypeEnum } from '@enum-ms/bridge'
 import { machinePartSchedulingNestingResultPM as permission } from '@/page-permission/bridge'
 
 import useTableValidate from '@compos/form/use-table-validate'
@@ -193,7 +193,7 @@ const schedulingGroups = ref({ list: [], obj: {}})
 async function fetchGroups() {
   if (groupLoad.value) return
   try {
-    schedulingGroups.value = await manualFetchGroupsTree({ productType: componentTypeEnum.MACHINE_PART.V })
+    schedulingGroups.value = await manualFetchGroupsTree({ productType: bridgeComponentTypeEnum .MACHINE_PART.V })
     groupLoad.value = true
   } catch (e) {
     console.log('获取生产组的信息失败', e)

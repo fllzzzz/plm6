@@ -34,23 +34,14 @@ constantize(bridgeProcessCategoryEnum)
 // }
 // constantize(bridgePackTypeEnum)
 
-// 生产订单 零件是否有孔
-const hasHoleEnum = {
-  TRUE: { L: '有孔', K: 'TRUE', V: true },
-  FALSE: { L: '无孔', K: 'FALSE', V: false }
-}
-constantize(hasHoleEnum)
-
 export {
   bridgeComponentTypeEnum,
   bridgeProcessTypeEnum,
-  hasHoleEnum,
   bridgeProcessCategoryEnum
 }
 
 export default {
   bridgeComponentTypeEnum,
   bridgeProcessTypeEnum,
-  hasHoleEnum,
   bridgeProcessCategoryEnum
 }

@@ -1,5 +1,5 @@
 import { watch, ref, watchEffect } from 'vue'
-import { componentTypeEnum } from '@enum-ms/bridge'
+import { bridgeComponentTypeEnum } from '@enum-ms/bridge'
 import { getGroupsTree } from '@/api/bridge/scheduling-manage/box'
 
 // 获取排产使用的生产班组信息：工厂-车间-生产线-生产班组
@@ -75,7 +75,7 @@ const useSchedulingGroups = ({ queryParams, factoryIds, disabledIds }) => {
 // 手动获取
 export async function manualFetchGroupsTree({ productType, structureClassId, _factoryIds, disabledIds = [] }) {
   // 零件不必传structureClassId
-  if (!productType || (!structureClassId && productType !== componentTypeEnum.MACHINE_PART.V)) {
+  if (!productType || (!structureClassId && productType !== bridgeComponentTypeEnum .MACHINE_PART.V)) {
     return {
       list: [],
       obj: {}
@@ -83,7 +83,7 @@ export async function manualFetchGroupsTree({ productType, structureClassId, _fa
   }
   const content = await getGroupsTree({ productType, structureClassId })
   // 零件返回全部
-  const returnAll = Boolean(productType === componentTypeEnum.MACHINE_PART.V)
+  const returnAll = Boolean(productType === bridgeComponentTypeEnum .MACHINE_PART.V)
   return dataFormat(content, _factoryIds, disabledIds, returnAll)
 }
 

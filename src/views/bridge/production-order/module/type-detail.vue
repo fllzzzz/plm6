@@ -70,7 +70,8 @@ import useMaxHeight from '@compos/use-max-height'
 import { DP } from '@/settings/config'
 import { toThousand } from '@/utils/data-type/number'
 import { isNotBlank } from '@data-type/index'
-import { bridgeComponentTypeEnum, hasHoleEnum } from '@enum-ms/bridge'
+import { hasHoleEnum } from '@enum-ms/mes'
+import { bridgeComponentTypeEnum } from '@enum-ms/bridge'
 
 const props = defineProps({
   currentRow: {

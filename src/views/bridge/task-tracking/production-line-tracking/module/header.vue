@@ -2,7 +2,7 @@
   <div class="head-container">
     <common-radio-button
       v-model="query.productType"
-      :options="[componentTypeEnum.BOX, componentTypeEnum.CELL, componentTypeEnum.MACHINE_PART]"
+      :options="[bridgeComponentTypeEnum .BOX, bridgeComponentTypeEnum .CELL, bridgeComponentTypeEnum .MACHINE_PART]"
       showOptionAll
       class="filter-item"
       type="enum"
@@ -41,7 +41,7 @@
 <script setup>
 import { regHeader } from '@compos/use-crud'
 import moment from 'moment'
-import { componentTypeEnum } from '@enum-ms/bridge'
+import { bridgeComponentTypeEnum } from '@enum-ms/bridge'
 import { PICKER_OPTIONS_SHORTCUTS } from '@/settings/config'
 import workshopSelect from '@comp-mes/workshop-select'
 import rrOperation from '@crud/RR.operation'

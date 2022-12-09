@@ -11,7 +11,7 @@
 
 <script setup>
 import { defineProps, computed, defineEmits } from 'vue'
-import { componentTypeEnum } from '@enum-ms/bridge'
+import { bridgeComponentTypeEnum } from '@enum-ms/bridge'
 import box from './module/box'
 import machinePart from './module/machine-part'
 import element from './module/element'
@@ -50,13 +50,13 @@ const props = defineProps({
 
 const currentView = computed(() => {
   switch (props.productType) {
-    case componentTypeEnum.BOX.V:
+    case bridgeComponentTypeEnum .BOX.V:
       return box
-    case componentTypeEnum.MACHINE_PART.V:
+    case bridgeComponentTypeEnum .MACHINE_PART.V:
       return machinePart
-    case componentTypeEnum.AUXILIARY_MATERIAL.V:
+    case bridgeComponentTypeEnum .AUXILIARY_MATERIAL.V:
       return auxiliaryMaterial
-    case componentTypeEnum.CELL.V:
+    case bridgeComponentTypeEnum .CELL.V:
       return element
     default:
       return ''

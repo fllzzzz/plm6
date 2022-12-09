@@ -93,8 +93,8 @@
       <template v-else>
         <div v-for="item in taskList" :key="item.id" style="margin-bottom: 10px">
           <div class="head-container">
-            <el-tag effect="dark" :type="componentTypeTag[componentTypeEnum.VK[item?.taskTypeEnum]]">
-              {{ componentTypeEnum.VL[item?.taskTypeEnum] }}
+            <el-tag effect="dark" :type="componentTypeTag[bridgeComponentTypeEnum .VK[item?.taskTypeEnum]]">
+              {{ bridgeComponentTypeEnum .VL[item?.taskTypeEnum] }}
             </el-tag>
             <el-tag style="margin-left: 8px" effect="plain"> {{ item?.productionLine?.name }}>{{ item?.groups?.name }} </el-tag>
             <span style="margin-left: 8px; font-size: 14px">工单号：{{ item?.orderNumber }}</span>
@@ -146,7 +146,7 @@
 import crudApi, { getTask } from '@/api/bridge/bridge-task-tracking/assistance-operate/process-assistance'
 import { ref } from 'vue'
 
-import { componentTypeEnum } from '@enum-ms/bridge'
+import { bridgeComponentTypeEnum } from '@enum-ms/bridge'
 import { bridgeProcessAssistancePM as permission } from '@/page-permission/bridge'
 
 import useMaxHeight from '@compos/use-max-height'
@@ -163,9 +163,9 @@ const optShow = {
 }
 
 const componentTypeTag = {
-  [componentTypeEnum.BOX.K]: 'success',
-  [componentTypeEnum.CELL.K]: 'warning',
-  [componentTypeEnum.MACHINE_PART.K]: ''
+  [bridgeComponentTypeEnum .BOX.K]: 'success',
+  [bridgeComponentTypeEnum .CELL.K]: 'warning',
+  [bridgeComponentTypeEnum .MACHINE_PART.K]: ''
 }
 
 const dataFormat = ref([

@@ -28,8 +28,8 @@
         width="80px"
       >
         <template v-slot="scope">
-          <el-tag effect="plain" :type="componentTypeTag[componentTypeEnum.VK[scope.row.taskType]]">{{
-            componentTypeEnum.VL[scope.row.taskType]
+          <el-tag effect="plain" :type="componentTypeTag[bridgeComponentTypeEnum .VK[scope.row.taskType]]">{{
+            bridgeComponentTypeEnum .VL[scope.row.taskType]
           }}</el-tag>
         </template>
       </el-table-column>
@@ -111,7 +111,7 @@ import useCRUD from '@compos/use-crud'
 import { DP } from '@/settings/config'
 import { bridgeProductionLineTrackingPM as permission } from '@/page-permission/bridge'
 // import { parseTime } from '@/utils/date'
-import { componentTypeEnum } from '@enum-ms/bridge'
+import { bridgeComponentTypeEnum } from '@enum-ms/bridge'
 import useMaxHeight from '@compos/use-max-height'
 // import pagination from '@crud/Pagination'
 import mHeader from './module/header.vue'
@@ -119,9 +119,9 @@ import productionLineTrackingDetail from './production-line-tracking-detail/inde
 
 // 由于mes枚举构件、部件的type值相同，单独定义枚举type值
 const componentTypeTag = {
-  [componentTypeEnum.BOX.K]: 'success',
-  [componentTypeEnum.CELL.K]: 'warning',
-  [componentTypeEnum.MACHINE_PART.K]: ''
+  [bridgeComponentTypeEnum .BOX.K]: 'success',
+  [bridgeComponentTypeEnum .CELL.K]: 'warning',
+  [bridgeComponentTypeEnum .MACHINE_PART.K]: ''
 }
 
 const optShow = {
@@ -160,10 +160,10 @@ CRUD.HOOK.handleRefresh = (crud, { data }) => {
   for (const key in data) {
     const productType =
       key === 'artifactList'
-        ? componentTypeEnum.BOX.V
+        ? bridgeComponentTypeEnum .BOX.V
         : key === 'assembleList'
-          ? componentTypeEnum.CELL.V
-          : componentTypeEnum.MACHINE_PART.V
+          ? bridgeComponentTypeEnum .CELL.V
+          : bridgeComponentTypeEnum .MACHINE_PART.V
     data[key]?.map((v) => {
       v.productType = productType
       _content.push(v)

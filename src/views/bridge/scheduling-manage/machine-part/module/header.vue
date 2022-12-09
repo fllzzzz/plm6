@@ -95,7 +95,7 @@ import tagTabs from '@comp-common/tag-tabs'
 import crudOperation from '@crud/CRUD.operation'
 import Scale from '@comp/Scale'
 import { isBlank } from '@/utils/data-type'
-import { componentTypeEnum } from '@enum-ms/bridge'
+import { bridgeComponentTypeEnum } from '@enum-ms/bridge'
 
 const defaultQuery = {}
 
@@ -141,10 +141,10 @@ async function fetchType(lastQuery) {
     typeList.value =
       content?.map((v) => {
         const _obj = {}
-        if (v & componentTypeEnum.BOX.V) {
+        if (v & bridgeComponentTypeEnum .BOX.V) {
           _obj.name = '普通零件'
         }
-        if (v & componentTypeEnum.CELL.V) {
+        if (v & bridgeComponentTypeEnum .CELL.V) {
           _obj.name = '翼腹板'
         }
         _obj.value = v

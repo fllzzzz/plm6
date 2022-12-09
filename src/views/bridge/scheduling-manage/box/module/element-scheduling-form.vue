@@ -156,7 +156,7 @@ import moment from 'moment'
 import { ElNotification } from 'element-plus'
 
 import { artifactProductLineEnum, mesBuildingTypeSettingAssembleTypeEnum } from '@enum-ms/mes'
-import { componentTypeEnum } from '@enum-ms/bridge'
+import { bridgeComponentTypeEnum } from '@enum-ms/bridge'
 import { isBlank, deepClone } from '@/utils/data-type'
 import { obj2arr } from '@/utils/convert/type'
 import { boxSchedulingPM as permission } from '@/page-permission/bridge'
@@ -168,7 +168,7 @@ import useVisible from '@compos/use-visible'
 import tagTabs from '@comp-common/tag-tabs'
 import handleSurplusElementDialog from './handle-surplus-element-dialog'
 
-const productType = componentTypeEnum.CELL.V
+const productType = bridgeComponentTypeEnum .CELL.V
 
 const elementDrawerRef = ref()
 const emit = defineEmits(['update:visible', 'task-issue-success'])
