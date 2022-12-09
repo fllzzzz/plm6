@@ -27,7 +27,7 @@
 </template>
 
 <script setup>
-import { editArea } from '@/api/bridge/bridge-production-manage/painting'
+import { editArea } from '@/api/bridge/production-manage/dashboard/painting'
 import { computed, defineEmits, defineProps, inject, ref } from 'vue'
 import { isBlank } from '@data-type'
 import { judgeItemFieldChange } from '@/utils'

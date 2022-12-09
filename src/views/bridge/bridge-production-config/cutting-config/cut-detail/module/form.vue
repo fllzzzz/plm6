@@ -42,7 +42,7 @@
 
 <script setup>
 import useVisible from '@compos/use-visible'
-import { addCutConfigDetail as add, editCutConfigDetail as edit } from '@/api/mes/production-config/unloading-config'
+import { addCutConfigDetail as add, editCutConfigDetail as edit } from '@/api/bridge/production-config/unloading-config'
 import { ref, defineProps, defineEmits } from 'vue'
 import { whetherEnum } from '@enum-ms/common'
 import { ElNotification } from 'element-plus'
