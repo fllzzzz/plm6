@@ -63,14 +63,14 @@ const bridgePrintProductTypeEnum = {
 }
 constantize(bridgePrintProductTypeEnum)
 
-const bridgeTaskTypeENUM = {
+const bridgeTaskTypeEnum = {
   MACHINE_PART: bridgeComponentTypeEnum.MACHINE_PART,
   CELL: bridgeComponentTypeEnum.CELL,
   BOX: bridgeComponentTypeEnum.BOX,
   AUXILIARY_MATERIAL: bridgeComponentTypeEnum.AUXILIARY_MATERIAL,
   PARENT_PART: { L: '母件', SL: '母件', K: 'PARENT_PART', V: 1 << 5 }
 }
-constantize(bridgeTaskTypeENUM)
+constantize(bridgeTaskTypeEnum)
 
 export {
   bridgeComponentTypeEnum,
@@ -79,7 +79,7 @@ export {
   bridgePackTypeEnum,
   bridgeLabelTypeEnum,
   bridgePrintProductTypeEnum,
-  bridgeTaskTypeENUM
+  bridgeTaskTypeEnum
 }
 
 export default {
@@ -89,5 +89,5 @@ export default {
   bridgePackTypeEnum,
   bridgeLabelTypeEnum,
   bridgePrintProductTypeEnum,
-  bridgeTaskTypeENUM
+  bridgeTaskTypeEnum
 }

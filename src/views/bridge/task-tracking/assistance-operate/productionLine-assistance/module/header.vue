@@ -31,7 +31,7 @@
 </template>
 
 <script setup>
-import { bridgeTaskTypeENUM } from '@enum-ms/bridge'
+import { bridgeTaskTypeEnum } from '@enum-ms/bridge'
 import { regHeader } from '@compos/use-crud'
 import crudOperation from '@crud/CRUD.operation'
 import moment from 'moment'
@@ -39,9 +39,9 @@ import moment from 'moment'
 const defaultTime = moment().startOf('month').valueOf().toString()
 
 const queryTaskTypeENUM = {
-  BOX: bridgeTaskTypeENUM.BOX,
-  CELL: { L: '单元件', K: 'CELL', V: bridgeTaskTypeENUM.CELL.V | bridgeTaskTypeENUM.PARENT_PART.V },
-  MACHINE_PART: bridgeTaskTypeENUM.MACHINE_PART
+  BOX: bridgeTaskTypeEnum.BOX,
+  CELL: { L: '单元件', K: 'CELL', V: bridgeTaskTypeEnum.CELL.V | bridgeTaskTypeEnum.PARENT_PART.V },
+  MACHINE_PART: bridgeTaskTypeEnum.MACHINE_PART
 }
 
 const defaultQuery = {

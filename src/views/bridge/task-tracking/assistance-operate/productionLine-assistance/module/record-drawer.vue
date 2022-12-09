@@ -37,7 +37,7 @@
             <el-table-column prop="user.name" :show-overflow-tooltip="true" label="协同操作人" width="100px" align="center" />
             <!-- <el-table-column prop="taskTypeEnum" :show-overflow-tooltip="true" label="属性" width="90px" align="center" /> -->
             <el-table-column
-              v-if="query.taskTypeEnum !== bridgeTaskTypeEnum.MACHINE_PART.V"
+              v-if="bridgeTaskTypeEnum.MACHINE_PART.V"
               align="center"
               prop="monomer.name"
               :show-overflow-tooltip="true"
@@ -140,7 +140,7 @@ import { defineProps, defineEmits, ref } from 'vue'
 import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'
 import usePagination from '@compos/use-pagination'
-import { bridgeTaskTypeENUM } from '@enum-ms/bridge'
+import { bridgeTaskTypeEnum } from '@enum-ms/bridge'
 
 const drawerRef = ref()
 const emit = defineEmits(['update:visible'])
@@ -168,14 +168,14 @@ const { maxHeight } = useMaxHeight(
 )
 
 const queryTaskTypeENUM = {
-  BOX: bridgeTaskTypeENUM.BOX,
-  CELL: { L: '单元件', K: 'CELL', V: bridgeTaskTypeENUM.CELL.V | bridgeTaskTypeENUM.PARENT_PART.V },
-  MACHINE_PART: bridgeTaskTypeENUM.MACHINE_PART
+  BOX: bridgeTaskTypeEnum.BOX,
+  CELL: { L: '单元件', K: 'CELL', V: bridgeTaskTypeEnum.CELL.V | bridgeTaskTypeEnum.PARENT_PART.V },
+  MACHINE_PART: bridgeTaskTypeEnum.MACHINE_PART
 }
 
 const dataFormat = ref([
   ['createTime', ['parse-time', '{y}-{m}-{d}']],
-  ['taskTypeEnum', ['parse-enum', bridgeTaskTypeENUM]]
+  ['taskTypeEnum', ['parse-enum', bridgeTaskTypeEnum]]
 ])
 
 function showHook() {
