@@ -16,14 +16,14 @@ export function get(params) {
 /**
  * @description: 分段可排产生产线类型
  */
-export function getLineType(params) {
-  return request({
-    module: 'bridge',
-    url: 'scheduling/box/line/type/list',
-    method: 'get',
-    params
-  })
-}
+// export function getLineType(params) {
+//   return request({
+//     module: 'bridge',
+//     url: 'scheduling/box/line/type/list',
+//     method: 'get',
+//     params
+//   })
+// }
 
 /**
  * @description: 获取分段排产汇总信息
@@ -156,14 +156,14 @@ export function getBoxRecordType(params) {
  * @export
  * @returns
  */
-export function getLineRecordType(params) {
-  return request({
-    module: 'bridge',
-    url: 'scheduling/box/record/line/type/list',
-    method: 'get',
-    params
-  })
-}
+// export function getLineRecordType(params) {
+//   return request({
+//     module: 'bridge',
+//     url: 'scheduling/box/record/line/type/list',
+//     method: 'get',
+//     params
+//   })
+// }
 
 /**
  * 根据生产线类型获取分段排产类型

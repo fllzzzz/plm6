@@ -19,7 +19,7 @@
     </template>
     <template #content>
       <div class="head-container">
-        <common-radio-button
+        <!-- <common-radio-button
           v-if="lineTypeLoad && unshowLineType.length !== artifactProductLineEnum.KEYS.length"
           v-model="queryVO.productionLineTypeEnum"
           :options="artifactProductLineEnum.ENUM"
@@ -29,7 +29,7 @@
           default
           class="filter-item"
           @change="fetch"
-        />
+        /> -->
         <tag-tabs
           v-if="boxTypeList.length"
           ref="tagTabsRef"
@@ -203,9 +203,9 @@
 </template>
 
 <script setup>
-import { record, getBoxRecordType, getLineRecordType, recordSummary } from '@/api/bridge/scheduling-manage/box'
+import { record, getBoxRecordType, recordSummary } from '@/api/bridge/scheduling-manage/box'
 import { ElMessage } from 'element-plus'
-import { defineProps, defineEmits, ref, inject, computed, watch } from 'vue'
+import { defineProps, defineEmits, ref, inject, computed } from 'vue'
 
 import { artifactProductLineEnum } from '@enum-ms/mes'
 import { boxSchedulingPM as permission } from '@/page-permission/bridge'
@@ -261,10 +261,12 @@ const tableData = ref([])
 const tableLoading = ref(false)
 const listObjIdsByGroup = ref({})
 const summaryInfo = ref({})
-const queryVO = ref({})
+const queryVO = ref({
+  productionLineTypeEnum: artifactProductLineEnum.TRADITION.V
+})
 const closeRefreshOut = ref(false)
-const unshowLineType = ref([])
-const lineTypeLoad = ref(false)
+// const unshowLineType = ref([])
+// const lineTypeLoad = ref(false)
 
 const boxTypeParams = computed(() => {
   return {
@@ -290,36 +292,36 @@ const { maxHeight } = useMaxHeight(
   drawerRef
 )
 
-watch(
-  [() => queryVO.value.productionLineTypeEnum],
-  () => {
-    refreshBoxType({ ...boxTypeParams.value })
-  },
-  { deep: true }
-)
+// watch(
+//   [() => queryVO.value.productionLineTypeEnum],
+//   () => {
+//     refreshBoxType({ ...boxTypeParams.value })
+//   },
+//   { deep: true }
+// )
 
-async function fetchLineType() {
-  const areaIdList = props.otherQuery.areaIdList
-  queryVO.value.productionLineTypeEnum = undefined
-  unshowLineType.value = []
-  lineTypeLoad.value = false
-  tableData.value = []
-  listObjIdsByGroup.value = {}
-  summaryInfo.value = {}
-  if (!areaIdList?.length) return
-  try {
-    const { content } = await getLineRecordType({ areaIdList })
-    for (const item in artifactProductLineEnum.ENUM) {
-      if (content.indexOf(artifactProductLineEnum[item].V) === -1) {
-        unshowLineType.value.push(artifactProductLineEnum[item].V)
-      }
-    }
-  } catch (er) {
-    console.log('获取产线类型失败')
-  } finally {
-    lineTypeLoad.value = true
-  }
-}
+// async function fetchLineType() {
+//   const areaIdList = props.otherQuery.areaIdList
+//   queryVO.value.productionLineTypeEnum = undefined
+//   unshowLineType.value = []
+//   lineTypeLoad.value = false
+//   tableData.value = []
+//   listObjIdsByGroup.value = {}
+//   summaryInfo.value = {}
+//   if (!areaIdList?.length) return
+//   try {
+//     const { content } = await getLineRecordType({ areaIdList })
+//     for (const item in artifactProductLineEnum.ENUM) {
+//       if (content.indexOf(artifactProductLineEnum[item].V) === -1) {
+//         unshowLineType.value.push(artifactProductLineEnum[item].V)
+//       }
+//     }
+//   } catch (er) {
+//     console.log('获取产线类型失败')
+//   } finally {
+//     lineTypeLoad.value = true
+//   }
+// }
 
 function boxTypeInit() {
   if (
@@ -344,7 +346,7 @@ function handleModeChange() {
 }
 
 function showHook() {
-  fetchLineType()
+  refreshBoxType({ ...boxTypeParams.value })
   recordTableRef.value?.clearSelection()
   resetQuery()
 }
@@ -542,7 +544,7 @@ const delVisible = ref(false)
 const batchDelVisible = ref(false)
 
 function handleDelSuccess() {
-  fetchLineType()
+  refreshBoxType({ ...boxTypeParams.value })
   closeRefreshOut.value = true // 删除会导致外层数据变更需刷新
 }
 
@@ -576,7 +578,7 @@ function toElementScheduling() {
 // --------------------------- 单元件排产 end --------------------------------
 
 function handleTaskIssueSuccess() {
-  fetchLineType()
+  refreshBoxType({ ...boxTypeParams.value })
 }
 </script>
 

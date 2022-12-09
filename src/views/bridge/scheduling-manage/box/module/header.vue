@@ -1,6 +1,6 @@
 <template>
   <div v-show="crud.searchToggle">
-    <common-radio-button
+    <!-- <common-radio-button
       v-if="lineTypeLoad && unshowLineType.length !== artifactProductLineEnum.KEYS.length"
       v-model="query.productionLineTypeEnum"
       :options="artifactProductLineEnum.ENUM"
@@ -9,12 +9,12 @@
       size="small"
       default
       class="filter-item"
-    />
+    /> -->
     <tag-tabs
       v-if="boxTypeList.length"
       v-model="query.structureClassId"
       class="filter-item"
-      :style="'width:calc(100% - 205px)'"
+      :style="'width:100%;'"
       style="display: inline-block"
       :data="boxTypeList"
       itemKey="structureClassId"
@@ -42,8 +42,8 @@
 </template>
 
 <script setup>
-import { getBoxType, getLineType } from '@/api/bridge/scheduling-manage/box'
-import { inject, watch, defineExpose, ref } from 'vue'
+import { getBoxType } from '@/api/bridge/scheduling-manage/box'
+import { inject, watch, defineExpose } from 'vue'
 
 import { artifactProductLineEnum } from '@enum-ms/mes'
 
@@ -53,28 +53,30 @@ import crudOperation from '@crud/CRUD.operation'
 import tagTabs from '@comp-common/tag-tabs'
 import productTypeQuery from '@comp-bridge/header-query/product-type-query'
 
-const defaultQuery = {}
+const defaultQuery = {
+  productionLineTypeEnum: artifactProductLineEnum.TRADITION.V
+}
 
 const productType = inject('productType')
-const unshowLineType = ref([])
-const lineTypeLoad = ref(false)
+// const unshowLineType = ref([])
+// const lineTypeLoad = ref(false)
 
 const { crud, query } = regHeader(defaultQuery)
 
 const { boxTypeList, refreshBoxType } = useGetBoxTypeList({ getApi: getBoxType, initHook: boxTypeInit }, true)
 
-watch(
-  [() => query.productionLineTypeEnum, () => crud.query.areaIdList],
-  () => {
-    refreshTypeList()
-  },
-  { deep: true, immediate: true }
-)
+// watch(
+//   [() => query.productionLineTypeEnum, () => crud.query.areaIdList],
+//   () => {
+//     refreshTypeList()
+//   },
+//   { deep: true, immediate: true }
+// )
 
 watch(
   [() => crud.query.areaIdList],
   () => {
-    fetchLineType()
+    refreshTypeList()
   },
   { deep: true, immediate: true }
 )
@@ -96,25 +98,25 @@ function boxTypeInit() {
   crud.toQuery()
 }
 
-async function fetchLineType() {
-  const areaIdList = crud.query.areaIdList
-  query.productionLineTypeEnum = undefined
-  unshowLineType.value = []
-  lineTypeLoad.value = false
-  if (!areaIdList?.length) return
-  try {
-    const { content } = await getLineType({ areaIdList })
-    for (const item in artifactProductLineEnum.ENUM) {
-      if (content.indexOf(artifactProductLineEnum[item].V) === -1) {
-        unshowLineType.value.push(artifactProductLineEnum[item].V)
-      }
-    }
-  } catch (er) {
-    console.log('获取产线类型失败')
-  } finally {
-    lineTypeLoad.value = true
-  }
-}
+// async function fetchLineType() {
+//   const areaIdList = crud.query.areaIdList
+//   query.productionLineTypeEnum = undefined
+//   unshowLineType.value = []
+//   lineTypeLoad.value = false
+//   if (!areaIdList?.length) return
+//   try {
+//     const { content } = await getLineType({ areaIdList })
+//     for (const item in artifactProductLineEnum.ENUM) {
+//       if (content.indexOf(artifactProductLineEnum[item].V) === -1) {
+//         unshowLineType.value.push(artifactProductLineEnum[item].V)
+//       }
+//     }
+//   } catch (er) {
+//     console.log('获取产线类型失败')
+//   } finally {
+//     lineTypeLoad.value = true
+//   }
+// }
 
 function refreshTypeList() {
   query.structureClassId = undefined
