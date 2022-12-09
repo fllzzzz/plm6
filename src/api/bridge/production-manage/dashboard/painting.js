@@ -15,7 +15,7 @@ export function get(params) {
 
 /**
  *
- * 获取单体下各个类型的分段油漆消耗
+ * 获取单体下各个类型的构件油漆消耗
  */
 export function getAllArtifact(params) {
   return request({
@@ -28,12 +28,12 @@ export function getAllArtifact(params) {
 
 /**
  *
- * 获取分段
+ * 获取构件
  */
 export function artifactList(params) {
   return request({
     module: 'bridge',
-    url: 'kanban/painting/box/page',
+    url: 'kanban/painting/artifact/page',
     method: 'get',
     params
   })
@@ -41,12 +41,12 @@ export function artifactList(params) {
 
 /**
  *
- * 获取分段汇总
+ * 获取构件汇总
  */
 export function artifactSummary(params) {
   return request({
     module: 'bridge',
-    url: 'kanban/painting/box/page/summary',
+    url: 'kanban/painting/artifact/page/summary',
     method: 'get',
     params
   })
@@ -72,7 +72,7 @@ export function change(data) {
 export function editArea(data) {
   return request({
     module: 'bridge',
-    url: 'kanban/painting/box',
+    url: 'kanban/painting/artifact',
     method: 'post',
     data
   })

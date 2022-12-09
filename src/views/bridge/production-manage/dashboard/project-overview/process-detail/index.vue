@@ -62,7 +62,7 @@
 </template>
 
 <script setup>
-import { getProcessDetail } from '@/api/bridge/bridge-production-manage/project-overview'
+import { getProcessDetail } from '@/api/bridge/production-manage/dashboard/project-overview'
 import { defineProps, defineEmits, ref, watch, computed, inject } from 'vue'
 import { tableSummary } from '@/utils/el-extra'
 import { bridgeProjectOverviewPM as permission } from '@/page-permission/bridge'

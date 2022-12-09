@@ -118,7 +118,7 @@
 </template>
 
 <script setup>
-import crudApi, { getAllArtifact } from '@/api/bridge/bridge-production-manage/painting'
+import crudApi, { getAllArtifact } from '@/api/bridge/production-manage/dashboard/painting'
 import { ref } from 'vue'
 
 import { paintingTypeEnum } from '@enum-ms/mes'

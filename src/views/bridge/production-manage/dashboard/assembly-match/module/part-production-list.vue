@@ -32,7 +32,7 @@
 </template>
 <script setup>
 import { ref, defineProps, watch } from 'vue'
-import { productionDetail } from '@/api/bridge/bridge-production-manage/assembly-match'
+import { productionDetail } from '@/api/bridge/production-manage/dashboard/assembly-match'
 import { bridgeAssemblyMatchDashboardPM as permission } from '@/page-permission/bridge'
 import useMaxHeight from '@compos/use-max-height'
 

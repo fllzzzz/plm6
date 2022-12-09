@@ -11,7 +11,7 @@ import request from '@/utils/request'
 export function get(params) {
   return request({
     module: 'bridge',
-    url: 'kanban/element_matching/page',
+    url: 'kanban/assemble_matching/page',
     cancelKey: false,
     method: 'get',
     params
@@ -28,30 +28,30 @@ export function get(params) {
 export function detail(params) {
   return request({
     module: 'bridge',
-    url: 'kanban/element_matching/detail',
+    url: 'kanban/assemble_matching/detail',
     method: 'get',
     params
   })
 }
 
 /**
- * @description：获取区域下零单元件生产数据
+ * @description：获取区域下零部件生产数据
  */
 export function productionDetail(params) {
   return request({
     module: 'bridge',
-    url: 'kanban/element_matching/area/product',
+    url: 'kanban/assemble_matching/area/product',
     method: 'get',
     params
   })
 }
 /**
- * @description：获取区域下分段汇总
+ * @description：获取区域下构件汇总
  */
 export function artifactInfo(params) {
   return request({
     module: 'bridge',
-    url: 'kanban/element_matching/area/box',
+    url: 'kanban/assemble_matching/area/artifact',
     method: 'get',
     params
   })

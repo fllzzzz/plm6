@@ -73,7 +73,7 @@
 </template>
 
 <script setup>
-import crudApi from '@/api/bridge/bridge-production-manage/assembly-match'
+import crudApi from '@/api/bridge/production-manage/dashboard/assembly-match'
 import { ref } from 'vue'
 import { ElMessage } from 'element-plus'
 

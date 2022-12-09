@@ -57,7 +57,7 @@
 
 <script setup>
 import useVisible from '@compos/use-visible'
-import { add, editGet as edit } from '@/api/mes/production-config/drill-detail'
+import { add, editGet as edit } from '@/api/bridge/production-config/drill-detail'
 import { ref, defineProps, defineEmits } from 'vue'
 import { ElNotification } from 'element-plus'
 

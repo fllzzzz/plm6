@@ -67,7 +67,7 @@
 </template>
 <script setup>
 import { ref, defineProps, watch, provide } from 'vue'
-import { getProcessList } from '@/api/bridge/bridge-production-manage/project-overview'
+import { getProcessList } from '@/api/bridge/production-manage/dashboard/project-overview'
 import { componentTypeEnum } from '@enum-ms/bridge'
 import { bridgeProjectOverviewPM as permission } from '@/page-permission/bridge'
 import useMaxHeight from '@compos/use-max-height'

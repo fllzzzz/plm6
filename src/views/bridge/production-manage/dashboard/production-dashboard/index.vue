@@ -57,8 +57,8 @@
 </template>
 
 <script setup>
-import { productDashboard as get, productSpec } from '@/api/bridge/bridge-production-manage/common'
-import { artifactDetail, assembleDetail, baseAssembleDetail, machinePartDetail } from '@/api/bridge/bridge-production-manage/dashboard'
+import { productDashboard as get, productSpec } from '@/api/bridge/production-manage/dashboard/common'
+import { artifactDetail, assembleDetail, baseAssembleDetail, machinePartDetail } from '@/api/bridge/production-manage/dashboard/artifact'
 import { ref } from 'vue'
 
 import { structureOrderTypeEnum } from '@enum-ms/mes'
