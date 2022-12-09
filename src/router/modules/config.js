@@ -540,28 +540,28 @@ export default {
               path: 'box/box-type-config',
               hidden: false,
               component: '/bridge/bridge-production-config/statistical-config/box-type-config/index',
-              meta: { title: '单元-清单种类', icon: 'project', noCache: true }
+              meta: { title: '分段-清单种类', icon: 'project', noCache: true }
             },
             {
               name: 'BridgeConfigBoxRivetWeldConfig',
               path: 'box/rivet-weld-config',
               hidden: false,
               component: '/bridge/bridge-production-config/statistical-config/box-rivet-weld-config/index',
-              meta: { title: '单元-组铆焊价格', icon: 'project', noCache: true }
+              meta: { title: '分段-组铆焊价格', icon: 'project', noCache: true }
             },
             {
               name: 'BridgeConfigCoatingConfig',
               path: 'box/coating-config',
               hidden: false,
               component: '/bridge/bridge-production-config/statistical-config/coating-config/index',
-              meta: { title: '单元-涂装', icon: 'project', noCache: true }
+              meta: { title: '分段-涂装', icon: 'project', noCache: true }
             },
             {
               name: 'BridgeConfigCellRivetWeldConfig',
               path: 'cell/rivet-weld-config',
               hidden: false,
               component: '/bridge/bridge-production-config/statistical-config/cell-rivet-weld-config/index',
-              meta: { title: '单元-组铆焊价格', icon: 'project', noCache: true }
+              meta: { title: '分段-组铆焊价格', icon: 'project', noCache: true }
             },
             {
               name: 'BridgeConfigFabricatedConfig',

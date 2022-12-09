@@ -62,7 +62,7 @@ const { crud, form } = regForm(defaultForm, formRef)
 
 const rules = {
   typeName: [{ required: true, message: '请填写种类', trigger: 'blur' }],
-  inventoryNames: [{ required: true, message: '请填写包含单元编号', trigger: 'blur' }]
+  inventoryNames: [{ required: true, message: '请填写包含分段编号', trigger: 'blur' }]
 }
 
 const handleClose = (tag) => {

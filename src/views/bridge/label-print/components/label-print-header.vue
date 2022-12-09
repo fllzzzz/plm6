@@ -18,14 +18,14 @@
       <template v-slot:optRight>
         <el-popover v-model:visible="printConfigVisible" placement="bottom-start" width="400">
           <el-form ref="form" :model="printConfig" label-width="90px" size="mini">
-            <el-form-item label="重量" v-show="productType & componentTypeEnum.BOX.V">
+            <el-form-item label="重量" v-show="productType & bridgeComponentTypeEnum.BOX.V">
               <common-radio-button v-model="printConfig.weight" :options="printWeightTypeEnum.ENUM" type="enum" />
             </el-form-item>
             <el-form-item label="标签类型">
               <div style="display: flex; align-items: center">
                 <common-radio-button
                   v-model="printConfig.type"
-                  :unshowVal="productType & componentTypeEnum.ENCLOSURE.V ? [labelTypeEnum.SIMPLE.V] : []"
+                  :unshowVal="productType & bridgeComponentTypeEnum.ENCLOSURE.V ? [labelTypeEnum.SIMPLE.V] : []"
                   :options="labelTypeEnum.ENUM"
                   type="enum"
                 />
@@ -43,7 +43,7 @@
                 </el-popover>
               </div>
             </el-form-item>
-            <el-form-item label="显示" v-show="productType & componentTypeEnum.BOX.V">
+            <el-form-item label="显示" v-show="productType & bridgeComponentTypeEnum.BOX.V">
               <span style="display: flex; align-items: center">
                 <span style="margin-right: 3px">单体</span><el-checkbox v-model="printConfig.showMonomer" />
                 <span style="margin-right: 3px">区域</span><el-checkbox v-model="printConfig.showArea" />
@@ -51,7 +51,7 @@
                 <!-- <span style="margin-right: 3px">生产线</span><el-checkbox v-model="printConfig.showProductionLine" /> -->
               </span>
             </el-form-item>
-            <el-form-item label="显示" v-show="productType & componentTypeEnum.ENCLOSURE.V">
+            <el-form-item label="显示" v-show="productType & bridgeComponentTypeEnum.ENCLOSURE.V">
               <span style="display: flex; align-items: center">
                 <span style="margin-right: 3px">生产日期</span><el-checkbox v-model="printConfig.dateInProduced" />
               </span>
@@ -81,10 +81,10 @@
         <el-tag hit size="medium" style="margin-left: 5px" effect="plain">
           <span v-if="!configLoading">
             <span>标签类型：{{labelTypeEnum.VL[sourcePrintConfig.type]}}，</span>
-            <span v-show="productType & componentTypeEnum.BOX.V">重量：{{printWeightTypeEnum.VL[sourcePrintConfig.weight]}}，</span>
-            <span v-show="productType & componentTypeEnum.BOX.V">区域：{{isShowText(sourcePrintConfig.showArea)}}，</span>
-            <span v-show="productType & componentTypeEnum.BOX.V">单体：{{isShowText(sourcePrintConfig.showMonomer)}}，</span>
-            <span v-show="productType & componentTypeEnum.BOX.V || productType & componentTypeEnum.ENCLOSURE.V">生产日期：{{isShowText(sourcePrintConfig.dateInProduced)}}，</span>
+            <span v-show="productType & bridgeComponentTypeEnum.BOX.V">重量：{{printWeightTypeEnum.VL[sourcePrintConfig.weight]}}，</span>
+            <span v-show="productType & bridgeComponentTypeEnum.BOX.V">区域：{{isShowText(sourcePrintConfig.showArea)}}，</span>
+            <span v-show="productType & bridgeComponentTypeEnum.BOX.V">单体：{{isShowText(sourcePrintConfig.showMonomer)}}，</span>
+            <span v-show="productType & bridgeComponentTypeEnum.BOX.V || productType & bridgeComponentTypeEnum.ENCLOSURE.V">生产日期：{{isShowText(sourcePrintConfig.dateInProduced)}}，</span>
             <span>制造商名称：{{sourcePrintConfig.manufacturerName || '-'}}，</span>
             <span>份数：{{sourcePrintConfig.copiesQuantity}}</span>
           </span>
@@ -113,7 +113,7 @@ import { ref, watch, inject, reactive, defineExpose } from 'vue'
 
 import { weightTypeEnum as printWeightTypeEnum } from '@enum-ms/common'
 import { labelTypeEnum } from '@enum-ms/mes'
-import { componentTypeEnum } from '@enum-ms/bridge'
+import { bridgeComponentTypeEnum } from '@enum-ms/bridge'
 import { mapGetters } from '@/store/lib'
 import { deepClone } from '@data-type/index'
 import { spliceQrCodeUrl, QR_SCAN_PATH } from '@/utils/label'

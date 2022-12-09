@@ -12,7 +12,8 @@ export function get(params) {
 // 项目发运详情
 export function inboundDetail(params) {
   return request({
-    url: `/api/mes/building/cargo/project/cargoList/details/page`,
+    module: 'bridge',
+    url: `cargo/project/cargoList/details/page`,
     method: 'get',
     params
   })

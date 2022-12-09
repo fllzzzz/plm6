@@ -46,13 +46,6 @@ export default {
           hidden: false,
           component: '/plan/overall-plan/plan-progress/index',
           meta: { title: '计划跟踪', icon: 'project', noCache: true }
-        },
-        {
-          name: 'BridgeConfirm',
-          path: 'bridge-confirm',
-          hidden: false,
-          component: '/plan/overall-plan/plan-confirm/index',
-          meta: { title: '工作确认', icon: 'project', noCache: true }
         }
       ]
     },

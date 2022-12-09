@@ -14,6 +14,8 @@ import storage from '@/utils/storage'
 const globalProject = storage.get('curProject')
 const globalProContentBit = storage.get('curProContentBit')
 
+const bridgeRouteArr = ['BridgeMonomerManage', 'BridgeAreaManage', 'BridgeMakeManage', 'BridgePlanSummary', 'BridgeProgress', 'BridgeConfirm', 'BridgeModelFile', 'BridgeDrawingFile', 'BridgeCNCFile', 'BridgePlanChangeFile', 'BridgePlanBlueprint']
+
 const state = {
   routes: [], // 当前菜单
   allRoutes: [], // 所有菜单
@@ -148,7 +150,7 @@ export const filterAsyncRoutes = (commit, routes, moduleId, basePath, hasLayout 
           // TODO: 处理当菜单填写与setting不一致时 例如有无component最后的index
           if (item.component === component) {
             route.meta.needProject = item.required
-            route.meta.projectType = item.type
+            route.meta.projectType = bridgeRouteArr.indexOf(route.name) > -1 ? projectTypeEnum.BRIDGE.V : item.type
             route.meta.businessType = item.businessType
           }
         }

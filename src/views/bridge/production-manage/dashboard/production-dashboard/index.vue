@@ -4,7 +4,7 @@
     <mHeader ref="headRef" @load="load" />
     <div style="display: flex" class="artifact-dashboard">
       <common-table
-        v-if="crud.query.productType & componentTypeEnum.MACHINE_PART.V"
+        v-if="crud.query.productType & bridgeComponentTypeEnum.MACHINE_PART.V"
         :data="specList"
         highlight-current-row
         :stripe="false"
@@ -62,7 +62,7 @@ import { artifactDetail, assembleDetail, baseAssembleDetail, machinePartDetail }
 import { ref } from 'vue'
 
 import { structureOrderTypeEnum } from '@enum-ms/mes'
-import { componentTypeEnum } from '@enum-ms/bridge'
+import { bridgeComponentTypeEnum } from '@enum-ms/bridge'
 import { DP } from '@/settings/config'
 import { bridgeArtifactProductionDashboardPM as permission } from '@/page-permission/bridge'
 
@@ -98,13 +98,13 @@ const { boxStyle, load, boardList } = useDashboardIndex({ headRef, scrollBoxRef,
 
 async function getDetail(item) {
   switch (crud.query.productType) {
-    case componentTypeEnum.BOX.V:
+    case bridgeComponentTypeEnum.BOX.V:
       getArtifactDetail(item)
       break
-    case componentTypeEnum.CELL.V:
+    case bridgeComponentTypeEnum.CELL.V:
       getAssembleDetail(item)
       break
-    case componentTypeEnum.MACHINE_PART.V:
+    case bridgeComponentTypeEnum.MACHINE_PART.V:
       getMachinePartDetail(item)
       break
     default:
@@ -142,7 +142,7 @@ async function fetchSpec() {
 }
 
 function beforeRefreshHook() {
-  if (crud.query.productType & componentTypeEnum.MACHINE_PART.V && !isSpecQuery.value) {
+  if (crud.query.productType & bridgeComponentTypeEnum.MACHINE_PART.V && !isSpecQuery.value) {
     fetchSpec()
   }
   isSpecQuery.value = false

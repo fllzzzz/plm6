@@ -237,7 +237,7 @@ crud.submitBatchFormFormat = async (form) => {
   cleanUpData(form.list)
   const formList = form.list.map((row) => {
     return {
-      artifactTypeId: props.currentType,
+      boxTypeId: props.currentType,
       classificationId: row.classificationId,
       maxNumerical: row.maxNumerical,
       minNumerical: row.minNumerical,

@@ -2,7 +2,7 @@
   <div>
     <common-radio-button
       v-model="productType"
-      :options="[componentTypeEnum.BOX, componentTypeEnum.CELL, componentTypeEnum.MACHINE_PART]"
+      :options="[bridgeComponentTypeEnum.BOX, bridgeComponentTypeEnum.CELL, bridgeComponentTypeEnum.MACHINE_PART]"
       type="enum"
       style="margin-bottom: 10px"
       @change="fetchDetail"
@@ -31,7 +31,7 @@
           <el-table-column
             key="classificationName"
             prop="classificationName"
-            :label="`${componentTypeEnum.VL[productType]}分类`"
+            :label="`${bridgeComponentTypeEnum.VL[productType]}分类`"
             align="center"
             :show-overflow-tooltip="true"
           >
@@ -65,7 +65,7 @@ import { boxTreeData, boxTreeSummary } from '@/api/bridge/production-order-manag
 
 import useMaxHeight from '@compos/use-max-height'
 import { isNotBlank } from '@data-type/index'
-import { componentTypeEnum } from '@enum-ms/bridge'
+import { bridgeComponentTypeEnum } from '@enum-ms/bridge'
 import { DP } from '@/settings/config'
 import { toThousand } from '@/utils/data-type/number'
 
@@ -87,7 +87,7 @@ const props = defineProps({
 // const submitLoading = ref(false)
 const list = ref([])
 const tableLoading = ref(false)
-const productType = ref(componentTypeEnum.BOX.V)
+const productType = ref(bridgeComponentTypeEnum.BOX.V)
 const currentRow = ref({})
 const totalAmount = ref({})
 
@@ -101,7 +101,7 @@ watch(
   () => props.drawerVisible,
   (val) => {
     if (val) {
-      productType.value = componentTypeEnum.BOX.V
+      productType.value = bridgeComponentTypeEnum.BOX.V
       currentRow.value = {}
       fetchDetail()
       getSummary()

@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <!--工具栏-->
-    <mHeader class="head-container" />
+    <mHeader class="head-container" :globalProject="globalProject"/>
     <!--表格渲染-->
     <common-table
       ref="tableRef"
@@ -62,7 +62,7 @@ import mHeader from './module/header'
 import uploadBtn from '@/views/plan/technical-data-manage/technical-achievement/components/drawing-upload-btn.vue'
 import detail from '@/views/plan/technical-data-manage/technical-achievement/components/common-detail.vue'
 
-const { globalProjectId } = mapGetters(['globalProjectId'])
+const { globalProjectId, globalProject } = mapGetters(['globalProjectId', 'globalProject'])
 
 const optShow = {
   add: false,

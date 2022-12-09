@@ -5,10 +5,10 @@
         <el-tag
 size="medium"
 v-if="props.currentRow.classificationId === null"
-          >{{ `${componentTypeEnum.VL[productType]}分类：` }}未知类型</el-tag
+          >{{ `${bridgeComponentTypeEnum.VL[productType]}分类：` }}未知类型</el-tag
         >
-        <el-tag size="medium" v-else>{{ `${componentTypeEnum.VL[productType]}分类：${currentRow.classificationName}` }}</el-tag>
-        <template v-if="productType === componentTypeEnum.MACHINE_PART.V">
+        <el-tag size="medium" v-else>{{ `${bridgeComponentTypeEnum.VL[productType]}分类：${currentRow.classificationName}` }}</el-tag>
+        <template v-if="productType === bridgeComponentTypeEnum.MACHINE_PART.V">
           <template v-if="isNotBlank(currentRow.specifications)">
             <common-select
               v-model="specification"
@@ -70,7 +70,7 @@ import useMaxHeight from '@compos/use-max-height'
 import { DP } from '@/settings/config'
 import { toThousand } from '@/utils/data-type/number'
 import { isNotBlank } from '@data-type/index'
-import { componentTypeEnum, hasHoleEnum } from '@enum-ms/bridge'
+import { bridgeComponentTypeEnum, hasHoleEnum } from '@enum-ms/bridge'
 
 const props = defineProps({
   currentRow: {
@@ -97,9 +97,9 @@ const params = computed(() => {
 })
 
 const apiKey = computed(() => {
-  return props.productType === componentTypeEnum.MACHINE_PART.V
+  return props.productType === bridgeComponentTypeEnum.MACHINE_PART.V
     ? 'bridgeMachinePartClassList'
-    : props.productType === componentTypeEnum.BOX.V
+    : props.productType === bridgeComponentTypeEnum.BOX.V
       ? 'bridgeBoxClassList'
       : 'bridgeElementClassList'
 })
@@ -112,7 +112,7 @@ watch(
       specOption.value = []
       boolHaveHole.value = undefined
       specification.value = undefined
-      if (props.productType === componentTypeEnum.MACHINE_PART.V) {
+      if (props.productType === bridgeComponentTypeEnum.MACHINE_PART.V) {
         if (isNotBlank(props.currentRow.specifications)) {
           for (let i = 0; i < props.currentRow.specifications.length; i++) {
             specOption.value.push({
@@ -135,7 +135,7 @@ async function fetchDetail() {
   }
   tableLoading.value = true
   const query =
-    props.productType === componentTypeEnum.MACHINE_PART.V
+    props.productType === bridgeComponentTypeEnum.MACHINE_PART.V
       ? {
         ...params.value,
         boolHaveHole: boolHaveHole.value,
@@ -144,9 +144,9 @@ async function fetchDetail() {
       : { ...params.value }
   try {
     const api =
-      props.productType === componentTypeEnum.BOX.V
+      props.productType === bridgeComponentTypeEnum.BOX.V
         ? boxDetail
-        : props.productType === componentTypeEnum.CELL.V
+        : props.productType === bridgeComponentTypeEnum.CELL.V
           ? elementDetail
           : machinePartDetail
     const { content } = await api({ ...query })

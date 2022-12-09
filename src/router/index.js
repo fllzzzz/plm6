@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import { isNotBlank } from '@data-type/index'
 import Layout from '@/layout/index.vue'
 import { specialPath, MOBILE_MODEL_PATH } from '@/settings/config'
+import { allPT } from '@/settings/config'
 
 /**
  * constantRoutes
@@ -29,7 +30,7 @@ const constantRoutes = [
   {
     path: '/',
     component: () => import('@/views/login/index'),
-    meta: { projectType: 0 },
+    meta: { projectType: allPT },
     hidden: true
   },
   {

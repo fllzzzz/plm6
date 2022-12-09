@@ -108,7 +108,7 @@ const formRef = ref()
 const defaultForm = {
   id: undefined,
   processObj: {},
-  artifactTypeId: undefined,
+  boxTypeId: undefined,
   structureProcessPriceList: []
 }
 
@@ -143,7 +143,7 @@ function handleClassificationChange() {
 }
 
 CRUD.HOOK.beforeSubmit = (crud, form) => {
-  crud.form.artifactTypeId = crud.query.id
+  crud.form.boxTypeId = crud.query.id
   crud.form.structureProcessPriceList = obj2arr(crud.form.processObj)
 }
 </script>

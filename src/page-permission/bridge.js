@@ -267,9 +267,9 @@ export const bridgeManualPackPM = {
   pack: ['bridge_manual_pack:pack'] // 手工打包
 }
 
-// 发运管理/手工打包:结构
-export const bridgeArtifactManualPackPM = {
-  get: ['bridge_manual_pack_artifact:get'], // 结构打包列表
+// 发运管理/手工打包:分段
+export const bridgeBoxManualPackPM = {
+  get: ['bridge_manual_pack_box:get'], // 分段打包列表
   pack: bridgeManualPackPM.pack // 手工打包
 }
 

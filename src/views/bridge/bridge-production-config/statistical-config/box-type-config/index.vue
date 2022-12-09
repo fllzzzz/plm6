@@ -29,7 +29,7 @@
         v-if="columns.visible('inventoryNamesStr')"
         prop="inventoryNamesStr"
         :show-overflow-tooltip="true"
-        label="包含单元编号"
+        label="包含分段编号"
         min-width="200px"
       >
         <template #default="{ row }">
@@ -69,7 +69,7 @@ const optShow = {
 const tableRef = ref()
 const { crud, columns, CRUD } = useCRUD(
   {
-    title: '单元种类配置',
+    title: '分段种类配置',
     sort: [],
     permission: { ...permission },
     optShow: { ...optShow },

@@ -196,7 +196,7 @@ import { computed, ref, watch, defineEmits, defineProps, defineExpose, inject } 
 import { DP } from '@/settings/config'
 import { toFixed } from '@data-type'
 import { packTypeEnum } from '@enum-ms/mes'
-import { bridgeArtifactManualPackPM as permission } from '@/page-permission/bridge'
+import { bridgeBoxManualPackPM as permission } from '@/page-permission/bridge'
 
 import useCRUD from '@compos/use-crud'
 import mHeader from './module/header'

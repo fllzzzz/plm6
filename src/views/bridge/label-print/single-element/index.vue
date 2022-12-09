@@ -279,7 +279,7 @@ import { ElMessage } from 'element-plus'
 
 import { weightTypeEnum as printWeightTypeEnum } from '@enum-ms/common'
 import { printProductTypeEnum } from '@enum-ms/mes'
-import { componentTypeEnum } from '@enum-ms/bridge'
+import { bridgeComponentTypeEnum } from '@enum-ms/bridge'
 import { DP, QR_SCAN_F_TYPE } from '@/settings/config'
 import { toFixed } from '@data-type/index'
 import { parseTime } from '@/utils/date'
@@ -323,7 +323,7 @@ const labelVisible = ref(false)
 const currentLabel = ref({})
 const currentTaskId = ref()
 const recordVisible = ref(false)
-const productType = componentTypeEnum.BOX.V
+const productType = bridgeComponentTypeEnum.BOX.V
 provide('productType', productType)
 const printType = printProductTypeEnum.ARTIFACT.V
 provide('printType', printType)
