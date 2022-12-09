@@ -9,7 +9,7 @@
     :before-close="handleClose"
   >
     <template #titleAfter>
-      <el-tag effect="plain" v-if="crud.query.taskTypeEnum !== taskTypeENUM.MACHINE_PART.V">
+      <el-tag effect="plain" v-if="crud.query.taskTypeEnum !== bridgeTaskTypeENUM.MACHINE_PART.V">
         原生产组：{{ info.workshop?.name }}>{{ info.productionLine?.name }}>{{ info.groups?.name }}
       </el-tag>
     </template>
@@ -19,7 +19,7 @@
     <common-table :data="list" :data-format="dataFormat" :max-height="maxHeight" style="width: 100%">
       <el-table-column label="序号" type="index" align="center" width="60" />
       <el-table-column
-        v-if="crud.query.taskTypeEnum !== taskTypeENUM.MACHINE_PART.V"
+        v-if="crud.query.taskTypeEnum !== bridgeTaskTypeENUM.MACHINE_PART.V"
         prop="area.name"
         :show-overflow-tooltip="true"
         label="区域"
@@ -27,7 +27,7 @@
         align="center"
       />
       <el-table-column
-        v-if="crud.query.taskTypeEnum === taskTypeENUM.ASSEMBLE.V"
+        v-if="crud.query.taskTypeEnum === bridgeTaskTypeENUM.CELL.V"
         prop="attributeType"
         :show-overflow-tooltip="true"
         label="属性"
@@ -39,7 +39,7 @@
         </template>
       </el-table-column>
       <el-table-column
-        v-if="crud.query.taskTypeEnum === taskTypeENUM.MACHINE_PART.V"
+        v-if="crud.query.taskTypeEnum === bridgeTaskTypeENUM.MACHINE_PART.V"
         prop="cutNumber"
         :show-overflow-tooltip="true"
         label="切割指令号"
@@ -47,7 +47,7 @@
         align="center"
       />
       <el-table-column
-        v-if="crud.query.taskTypeEnum !== taskTypeENUM.MACHINE_PART.V"
+        v-if="crud.query.taskTypeEnum !== bridgeTaskTypeENUM.MACHINE_PART.V"
         prop="serialNumber"
         :show-overflow-tooltip="true"
         label="编号"
@@ -56,7 +56,7 @@
       />
       <el-table-column prop="specification" :show-overflow-tooltip="true" label="规格" min-width="100px" align="center" />
       <el-table-column
-        v-if="crud.query.taskTypeEnum !== taskTypeENUM.MACHINE_PART.V"
+        v-if="crud.query.taskTypeEnum !== bridgeTaskTypeENUM.MACHINE_PART.V"
         prop="length"
         :show-overflow-tooltip="true"
         label="长度(mm)"
@@ -65,7 +65,7 @@
       />
       <el-table-column prop="editQuantity" :show-overflow-tooltip="true" label="协同数量" width="80" align="center" />
       <el-table-column
-        v-if="crud.query.taskTypeEnum === taskTypeENUM.MACHINE_PART.V"
+        v-if="crud.query.taskTypeEnum === bridgeTaskTypeENUM.MACHINE_PART.V"
         align="center"
         prop="askCompleteTime"
         :show-overflow-tooltip="true"
@@ -73,7 +73,7 @@
         width="120px"
       />
       <el-table-column
-        v-if="crud.query.taskTypeEnum === taskTypeENUM.MACHINE_PART.V"
+        v-if="crud.query.taskTypeEnum === bridgeTaskTypeENUM.MACHINE_PART.V"
         prop="group.name"
         :show-overflow-tooltip="true"
         label="原生产组"
@@ -97,7 +97,7 @@ import { save, saveNest } from '@/api/bridge/bridge-task-tracking/assistance-ope
 import { defineEmits, defineProps, ref, inject } from 'vue'
 import { ElNotification } from 'element-plus'
 
-import { taskTypeENUM } from '@enum-ms/mes'
+import { bridgeTaskTypeENUM } from '@enum-ms/bridge'
 
 import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'
@@ -145,7 +145,7 @@ async function submitIt() {
         groupsId: v.groupsId
       }
     })
-    if (crud.query.taskTypeEnum === taskTypeENUM.MACHINE_PART.V) {
+    if (crud.query.taskTypeEnum === bridgeTaskTypeENUM.MACHINE_PART.V) {
       await saveNest(_list)
     } else {
       await save(_list)

@@ -37,7 +37,7 @@
             <el-table-column prop="user.name" :show-overflow-tooltip="true" label="协同操作人" width="100px" align="center" />
             <!-- <el-table-column prop="taskTypeEnum" :show-overflow-tooltip="true" label="属性" width="90px" align="center" /> -->
             <el-table-column
-              v-if="query.taskTypeEnum !== taskTypeENUM.MACHINE_PART.V"
+              v-if="query.taskTypeEnum !== bridgeTaskTypeEnum.MACHINE_PART.V"
               align="center"
               prop="monomer.name"
               :show-overflow-tooltip="true"
@@ -50,7 +50,7 @@
               </template>
             </el-table-column>
             <el-table-column
-              v-if="query.taskTypeEnum !== taskTypeENUM.MACHINE_PART.V"
+              v-if="query.taskTypeEnum !== bridgeTaskTypeEnum.MACHINE_PART.V"
               prop="group.name"
               :show-overflow-tooltip="true"
               label="原生产组"
@@ -79,7 +79,7 @@
             <common-table v-loading="detailLoading" :data="detailList" :max-height="maxHeight" style="width: 100%">
               <el-table-column label="序号" type="index" align="center" width="60" />
               <el-table-column
-                v-if="currentInfo.taskTypeEnum !== taskTypeENUM.MACHINE_PART.V"
+                v-if="currentInfo.taskTypeEnum !== bridgeTaskTypeEnum.MACHINE_PART.V"
                 align="center"
                 prop="orderNumber"
                 :show-overflow-tooltip="true"
@@ -87,7 +87,7 @@
                 min-width="120px"
               />
               <el-table-column
-                v-if="currentInfo.taskTypeEnum === taskTypeENUM.MACHINE_PART.V"
+                v-if="currentInfo.taskTypeEnum === bridgeTaskTypeEnum.MACHINE_PART.V"
                 align="center"
                 prop="cutNumber"
                 :show-overflow-tooltip="true"
@@ -95,7 +95,7 @@
                 min-width="120px"
               />
               <el-table-column
-                v-if="currentInfo.taskTypeEnum !== taskTypeENUM.MACHINE_PART.V"
+                v-if="currentInfo.taskTypeEnum !== bridgeTaskTypeEnum.MACHINE_PART.V"
                 prop="area.name"
                 :show-overflow-tooltip="true"
                 label="区域"
@@ -103,7 +103,7 @@
                 align="center"
               />
               <el-table-column
-                v-if="currentInfo.taskTypeEnum !== taskTypeENUM.MACHINE_PART.V"
+                v-if="currentInfo.taskTypeEnum !== bridgeTaskTypeEnum.MACHINE_PART.V"
                 prop="serialNumber"
                 :show-overflow-tooltip="true"
                 label="编号"
@@ -112,7 +112,7 @@
               />
               <el-table-column prop="specification" :show-overflow-tooltip="true" label="规格" min-width="100px" align="center" />
               <el-table-column
-                v-if="currentInfo.taskTypeEnum !== taskTypeENUM.MACHINE_PART.V"
+                v-if="currentInfo.taskTypeEnum !== bridgeTaskTypeEnum.MACHINE_PART.V"
                 prop="length"
                 :show-overflow-tooltip="true"
                 label="长度(mm)"
@@ -140,7 +140,7 @@ import { defineProps, defineEmits, ref } from 'vue'
 import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'
 import usePagination from '@compos/use-pagination'
-import { taskTypeENUM } from '@enum-ms/mes'
+import { bridgeTaskTypeENUM } from '@enum-ms/bridge'
 
 const drawerRef = ref()
 const emit = defineEmits(['update:visible'])
@@ -168,14 +168,14 @@ const { maxHeight } = useMaxHeight(
 )
 
 const queryTaskTypeENUM = {
-  ARTIFACT: taskTypeENUM.ARTIFACT,
-  ASSEMBLE: { L: '部件', K: 'ASSEMBLE', V: taskTypeENUM.ASSEMBLE.V | taskTypeENUM.PARENT_PART.V },
-  MACHINE_PART: taskTypeENUM.MACHINE_PART
+  BOX: bridgeTaskTypeENUM.BOX,
+  CELL: { L: '单元件', K: 'CELL', V: bridgeTaskTypeENUM.CELL.V | bridgeTaskTypeENUM.PARENT_PART.V },
+  MACHINE_PART: bridgeTaskTypeENUM.MACHINE_PART
 }
 
 const dataFormat = ref([
   ['createTime', ['parse-time', '{y}-{m}-{d}']],
-  ['taskTypeEnum', ['parse-enum', taskTypeENUM]]
+  ['taskTypeEnum', ['parse-enum', bridgeTaskTypeENUM]]
 ])
 
 function showHook() {

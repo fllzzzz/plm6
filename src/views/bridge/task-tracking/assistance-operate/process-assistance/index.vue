@@ -93,8 +93,8 @@
       <template v-else>
         <div v-for="item in taskList" :key="item.id" style="margin-bottom: 10px">
           <div class="head-container">
-            <el-tag effect="dark" :type="componentTypeTag[bridgeComponentTypeEnum .VK[item?.taskTypeEnum]]">
-              {{ bridgeComponentTypeEnum .VL[item?.taskTypeEnum] }}
+            <el-tag effect="dark" :type="componentTypeTag[bridgeComponentTypeEnum.VK[item?.taskTypeEnum]]">
+              {{ bridgeComponentTypeEnum.VL[item?.taskTypeEnum] }}
             </el-tag>
             <el-tag style="margin-left: 8px" effect="plain"> {{ item?.productionLine?.name }}>{{ item?.groups?.name }} </el-tag>
             <span style="margin-left: 8px; font-size: 14px">工单号：{{ item?.orderNumber }}</span>
@@ -163,9 +163,9 @@ const optShow = {
 }
 
 const componentTypeTag = {
-  [bridgeComponentTypeEnum .BOX.K]: 'success',
-  [bridgeComponentTypeEnum .CELL.K]: 'warning',
-  [bridgeComponentTypeEnum .MACHINE_PART.K]: ''
+  [bridgeComponentTypeEnum.BOX.K]: 'success',
+  [bridgeComponentTypeEnum.CELL.K]: 'warning',
+  [bridgeComponentTypeEnum.MACHINE_PART.K]: ''
 }
 
 const dataFormat = ref([

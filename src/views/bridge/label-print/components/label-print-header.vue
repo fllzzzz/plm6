@@ -23,13 +23,18 @@
             </el-form-item>
             <el-form-item label="标签类型">
               <div style="display: flex; align-items: center">
+                <!-- <common-radio-button
+                  v-model="printConfig.type"
+                  :unshowVal="productType & bridgeComponentTypeEnum.ENCLOSURE.V ? [bridgeLabelTypeEnum.SIMPLE.V] : []"
+                  :options="bridgeLabelTypeEnum.ENUM"
+                  type="enum"
+                /> -->
                 <common-radio-button
                   v-model="printConfig.type"
-                  :unshowVal="productType & bridgeComponentTypeEnum.ENCLOSURE.V ? [labelTypeEnum.SIMPLE.V] : []"
-                  :options="labelTypeEnum.ENUM"
+                  :options="bridgeLabelTypeEnum.ENUM"
                   type="enum"
                 />
-                <el-popover placement="right" :title="labelTypeEnum.VL[printConfig.type]" :width="400" trigger="hover">
+                <el-popover placement="right" :title="bridgeLabelTypeEnum.VL[printConfig.type]" :width="400" trigger="hover">
                   <div style="height: 350px; margin-top: -40px">
                     <span v-html="getMiniLabelHtml({ productType, labelType: printConfig.type, labelData: { printConfig } })"></span>
                   </div>
@@ -51,11 +56,11 @@
                 <!-- <span style="margin-right: 3px">生产线</span><el-checkbox v-model="printConfig.showProductionLine" /> -->
               </span>
             </el-form-item>
-            <el-form-item label="显示" v-show="productType & bridgeComponentTypeEnum.ENCLOSURE.V">
+            <!-- <el-form-item label="显示" v-show="productType & bridgeComponentTypeEnum.ENCLOSURE.V">
               <span style="display: flex; align-items: center">
                 <span style="margin-right: 3px">生产日期</span><el-checkbox v-model="printConfig.dateInProduced" />
               </span>
-            </el-form-item>
+            </el-form-item> -->
             <el-form-item label="制造商名称">
               <el-input v-model.trim="printConfig.manufacturerName" maxlength="30" clearable style="width: 250px" />
             </el-form-item>
@@ -80,7 +85,7 @@
         </el-popover>
         <el-tag hit size="medium" style="margin-left: 5px" effect="plain">
           <span v-if="!configLoading">
-            <span>标签类型：{{labelTypeEnum.VL[sourcePrintConfig.type]}}，</span>
+            <span>标签类型：{{bridgeLabelTypeEnum.VL[sourcePrintConfig.type]}}，</span>
             <span v-show="productType & bridgeComponentTypeEnum.BOX.V">重量：{{printWeightTypeEnum.VL[sourcePrintConfig.weight]}}，</span>
             <span v-show="productType & bridgeComponentTypeEnum.BOX.V">区域：{{isShowText(sourcePrintConfig.showArea)}}，</span>
             <span v-show="productType & bridgeComponentTypeEnum.BOX.V">单体：{{isShowText(sourcePrintConfig.showMonomer)}}，</span>
@@ -112,7 +117,7 @@ import { getHasTaskLine } from '@/api/bridge/common'
 import { ref, watch, inject, reactive, defineExpose } from 'vue'
 
 import { weightTypeEnum as printWeightTypeEnum } from '@enum-ms/common'
-import { labelTypeEnum } from '@enum-ms/mes'
+import { bridgeLabelTypeEnum } from '@enum-ms/bridge'
 import { bridgeComponentTypeEnum } from '@enum-ms/bridge'
 import { mapGetters } from '@/store/lib'
 import { deepClone } from '@data-type/index'
@@ -160,7 +165,7 @@ const saveLoading = ref(false)
 const configLoading = ref(false)
 let printConfig = reactive({
   weight: printWeightTypeEnum.NET.V,
-  type: labelTypeEnum.COMMON.V,
+  type: bridgeLabelTypeEnum.COMMON.V,
   showArea: true,
   showMonomer: true,
   dateInProduced: true,
@@ -171,7 +176,7 @@ let printConfig = reactive({
 const sourcePrintConfig = ref(deepClone(printConfig))
 const labelTypeVisible = reactive({})
 function initLabelTypeVisible() {
-  for (const item in labelTypeEnum.V) {
+  for (const item in bridgeLabelTypeEnum.V) {
     labelTypeVisible[item] = false
   }
 }

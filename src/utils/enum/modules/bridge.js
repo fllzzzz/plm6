@@ -34,16 +34,60 @@ const bridgePackTypeEnum = {
 }
 constantize(bridgePackTypeEnum)
 
+// 标签类型
+const bridgeLabelTypeEnum = {
+  COMMON: { L: '常规型', K: 'COMMON', V: 1 << 0, size: {
+    [bridgeComponentTypeEnum.BOX.V]: ' 100 * 75 ',
+    [bridgeComponentTypeEnum.CELL.V]: ' 100 * 75 '
+    // [bridgeComponentTypeEnum.ENCLOSURE.V]: ' 100 * 30 '
+  }},
+  SIMPLE: { L: '简约型', K: 'SIMPLE', V: 1 << 1, size: {
+    [bridgeComponentTypeEnum.BOX.V]: ' 100 * 75 ',
+    [bridgeComponentTypeEnum.CELL.V]: ' 100 * 75 '
+    // [bridgeComponentTypeEnum.ENCLOSURE.V]: ' 无 '
+  }},
+  CUSTOM: { L: '定制型', K: 'CUSTOM', V: 1 << 2, size: {
+    [bridgeComponentTypeEnum.BOX.V]: ' 100 * 75 ',
+    [bridgeComponentTypeEnum.CELL.V]: ' 100 * 75 '
+    // [bridgeComponentTypeEnum.ENCLOSURE.V]: ' 100 * 50 '
+  }}
+}
+constantize(bridgeLabelTypeEnum)
+
+// 打印的产品类型
+const bridgePrintProductTypeEnum = {
+  BOX: { L: '分段', K: 'BOX', V: 1 << 0 },
+  // ENCLOSURE: { L: '围护', K: 'ENCLOSURE', V: 1 << 1 },
+  CELL: { L: '单元件', K: 'CELL', V: 1 << 1 },
+  PACKAGE: { L: '包', K: 'PACKAGE', V: 1 << 2 }
+}
+constantize(bridgePrintProductTypeEnum)
+
+const bridgeTaskTypeENUM = {
+  MACHINE_PART: bridgeComponentTypeEnum.MACHINE_PART,
+  CELL: bridgeComponentTypeEnum.CELL,
+  BOX: bridgeComponentTypeEnum.BOX,
+  AUXILIARY_MATERIAL: bridgeComponentTypeEnum.AUXILIARY_MATERIAL,
+  PARENT_PART: { L: '母件', SL: '母件', K: 'PARENT_PART', V: 1 << 5 }
+}
+constantize(bridgeTaskTypeENUM)
+
 export {
   bridgeComponentTypeEnum,
   bridgeProcessTypeEnum,
   bridgeProcessCategoryEnum,
-  bridgePackTypeEnum
+  bridgePackTypeEnum,
+  bridgeLabelTypeEnum,
+  bridgePrintProductTypeEnum,
+  bridgeTaskTypeENUM
 }
 
 export default {
   bridgeComponentTypeEnum,
   bridgeProcessTypeEnum,
   bridgeProcessCategoryEnum,
-  bridgePackTypeEnum
+  bridgePackTypeEnum,
+  bridgeLabelTypeEnum,
+  bridgePrintProductTypeEnum,
+  bridgeTaskTypeENUM
 }

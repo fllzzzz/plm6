@@ -1,7 +1,7 @@
 <template>
   <common-drawer ref="drawerRef" title="产线协同" v-model="drawerVisible" direction="rtl" :before-close="handleClose" size="80%">
     <template #titleAfter>
-      <el-tag effect="plain" v-if="crud.query.taskTypeEnum !== taskTypeENUM.MACHINE_PART.V">
+      <el-tag effect="plain" v-if="crud.query.taskTypeEnum !== bridgeTaskTypeENUM.MACHINE_PART.V">
         原生产组：{{ info.workshop?.name }}>{{ info.productionLine?.name }}>{{ info.groups?.name }}
       </el-tag>
     </template>
@@ -49,7 +49,7 @@
         <el-table-column type="selection" width="55" align="center" />
         <el-table-column label="序号" type="index" align="center" width="60" />
         <el-table-column
-          v-if="crud.query.taskTypeEnum !== taskTypeENUM.MACHINE_PART.V"
+          v-if="crud.query.taskTypeEnum !== bridgeTaskTypeENUM.MACHINE_PART.V"
           prop="area.name"
           :show-overflow-tooltip="true"
           label="区域"
@@ -57,7 +57,7 @@
           align="center"
         />
         <el-table-column
-          v-if="crud.query.taskTypeEnum === taskTypeENUM.MACHINE_PART.V"
+          v-if="crud.query.taskTypeEnum === bridgeTaskTypeENUM.MACHINE_PART.V"
           prop="cutNumber"
           :show-overflow-tooltip="true"
           label="切割指令号"
@@ -65,7 +65,7 @@
           align="center"
         />
         <el-table-column
-          v-if="crud.query.taskTypeEnum === taskTypeENUM.ASSEMBLE.V"
+          v-if="crud.query.taskTypeEnum === bridgeTaskTypeENUM.CELL.V"
           prop="attributeType"
           :show-overflow-tooltip="true"
           label="属性"
@@ -73,11 +73,11 @@
           align="center"
         >
           <template #default="{ row }">
-            <el-tag :type="row.attributeType === '部件' ? 'warning' : 'success'">{{ row.attributeType }}</el-tag>
+            <el-tag :type="row.attributeType === '单元件' ? 'warning' : 'success'">{{ row.attributeType }}</el-tag>
           </template>
         </el-table-column>
         <el-table-column
-          v-if="crud.query.taskTypeEnum !== taskTypeENUM.MACHINE_PART.V"
+          v-if="crud.query.taskTypeEnum !== bridgeTaskTypeENUM.MACHINE_PART.V"
           prop="serialNumber"
           :show-overflow-tooltip="true"
           label="编号"
@@ -86,7 +86,7 @@
         />
         <el-table-column prop="specification" :show-overflow-tooltip="true" label="规格" min-width="100px" align="center" />
         <el-table-column
-          v-if="crud.query.taskTypeEnum !== taskTypeENUM.MACHINE_PART.V"
+          v-if="crud.query.taskTypeEnum !== bridgeTaskTypeENUM.MACHINE_PART.V"
           prop="length"
           :show-overflow-tooltip="true"
           label="长度(mm)"
@@ -122,7 +122,7 @@
           </template>
         </el-table-column> -->
         <el-table-column
-          v-if="crud.query.taskTypeEnum === taskTypeENUM.MACHINE_PART.V"
+          v-if="crud.query.taskTypeEnum === bridgeTaskTypeENUM.MACHINE_PART.V"
           align="center"
           prop="askCompleteTime"
           :show-overflow-tooltip="true"
@@ -130,7 +130,7 @@
           width="120px"
         />
         <el-table-column
-          v-if="crud.query.taskTypeEnum === taskTypeENUM.MACHINE_PART.V"
+          v-if="crud.query.taskTypeEnum === bridgeTaskTypeENUM.MACHINE_PART.V"
           prop="group.name"
           :show-overflow-tooltip="true"
           label="原生产组"
@@ -167,7 +167,7 @@ import { defineProps, defineEmits, ref, inject } from 'vue'
 import { ElMessage } from 'element-plus'
 
 import { positiveNumPattern } from '@/utils/validate/pattern'
-import { taskTypeENUM } from '@enum-ms/mes'
+import { bridgeTaskTypeENUM } from '@enum-ms/bridge'
 
 import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'
@@ -250,11 +250,11 @@ async function fetch() {
     const { content } = await detail({ taskOrderId: props.info?.id, ...query.value })
     for (let i = 0; i < content.length; i++) {
       const v = content[i]
-      v.attributeType = v.taskTypeEnum === taskTypeENUM.ASSEMBLE.V ? '部件' : '套料'
+      v.attributeType = v.taskTypeEnum === bridgeTaskTypeENUM.CELL.V ? '单元件' : '套料'
       v.editQuantity = v.quantity
       if (!classIdGroupsObj.value[v.configId]) {
         let res = {}
-        if (crud.query.taskTypeEnum === taskTypeENUM.MACHINE_PART.V) {
+        if (crud.query.taskTypeEnum === bridgeTaskTypeENUM.MACHINE_PART.V) {
           res = await manualFetchGroupsTree({
             productType: crud.query.taskTypeEnum,
             disabledIds: (v?.groups?.id && [v?.groups?.id]) || []

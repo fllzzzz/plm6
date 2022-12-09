@@ -26,7 +26,7 @@
         label="排产工单号"
         min-width="120px"
       />
-      <template v-if="!(crud.query.taskTypeEnum & taskTypeENUM.MACHINE_PART.V)">
+      <template v-if="!(crud.query.taskTypeEnum & bridgeTaskTypeENUM.MACHINE_PART.V)">
         <el-table-column
           v-if="columns.visible('project')"
           prop="project"
@@ -62,7 +62,7 @@
           width="120px"
         />
       </template>
-      <template v-if="crud.query.taskTypeEnum & taskTypeENUM.MACHINE_PART.V">
+      <template v-if="crud.query.taskTypeEnum & bridgeTaskTypeENUM.MACHINE_PART.V">
         <el-table-column
           v-if="columns.visible('cutConfig.name')"
           prop="cutConfig.name"
@@ -109,7 +109,7 @@
         </template>
       </el-table-column> -->
       <el-table-column
-        v-if="columns.visible('user.name') && !(crud.query.taskTypeEnum & taskTypeENUM.MACHINE_PART.V)"
+        v-if="columns.visible('user.name') && !(crud.query.taskTypeEnum & bridgeTaskTypeENUM.MACHINE_PART.V)"
         align="center"
         prop="user.name"
         :show-overflow-tooltip="true"
@@ -133,7 +133,7 @@
 import crudApi from '@/api/bridge/bridge-task-tracking/assistance-operate/productionLine-assistance'
 import { ref } from 'vue'
 
-import { taskTypeENUM } from '@enum-ms/mes'
+import { bridgeTaskTypeENUM } from '@enum-ms/bridge'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import pagination from '@crud/Pagination'

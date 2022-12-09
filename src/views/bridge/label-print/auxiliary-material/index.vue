@@ -104,7 +104,7 @@ import { getForMaterial as getPrintRecord } from '@/api/bridge/label-print/print
 import crudApi from '@/api/bridge/label-print/auxiliary-material'
 import { ref, provide } from 'vue'
 
-import { labelTypeEnum } from '@enum-ms/mes'
+import { bridgeLabelTypeEnum } from '@enum-ms/bridge'
 import { bridgeComponentTypeEnum } from '@enum-ms/bridge'
 import { QR_SCAN_F_TYPE } from '@/settings/config'
 import { parseTime } from '@/utils/date'
@@ -148,7 +148,7 @@ const currentMId = ref()
 const recordVisible = ref(false)
 const productType = bridgeComponentTypeEnum.AUXILIARY_MATERIAL.V
 provide('productType', productType)
-const labelType = labelTypeEnum.COMMON.V // 配套件默认一种
+const labelType = bridgeLabelTypeEnum.COMMON.V // 配套件默认一种
 
 async function printLabel(row) {
   try {

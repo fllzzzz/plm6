@@ -29,17 +29,17 @@
       <div :style="`height: ${maxHeight + 40}px; overflow-y: auto;`">
         <div style="margin-bottom: 20px" v-for="item in assembleProcessData" :key="item">
           <div
-            v-if="productType === bridgeComponentTypeEnum .BOX.V && item[0]?.productType === bridgeComponentTypeEnum .CELL.V"
+            v-if="productType === bridgeComponentTypeEnum.BOX.V && item[0]?.productType === bridgeComponentTypeEnum.CELL.V"
             class="head-container"
           >
-            <el-tag effect="dark" :type="componentTypeTag[bridgeComponentTypeEnum .VK[item[0]?.productType]]">
-              {{ bridgeComponentTypeEnum .VL[item[0]?.productType] }}
+            <el-tag effect="dark" :type="componentTypeTag[bridgeComponentTypeEnum.VK[item[0]?.productType]]">
+              {{ bridgeComponentTypeEnum.VL[item[0]?.productType] }}
             </el-tag>
             <el-tag style="margin-left: 8px" effect="plain"> {{ item[0]?.productionLine?.name }}>{{ item[0]?.group?.name }} </el-tag>
             <span style="margin-left: 8px; font-size: 14px">工单号：{{ item[0]?.orderNumber }}</span>
           </div>
           <common-table
-            v-if="productType === bridgeComponentTypeEnum .BOX.V && item[0]?.productType === bridgeComponentTypeEnum .CELL.V"
+            v-if="productType === bridgeComponentTypeEnum.BOX.V && item[0]?.productType === bridgeComponentTypeEnum.CELL.V"
             ref="tableRef"
             :data="item"
             :empty-text="'暂无数据'"
@@ -85,17 +85,17 @@
           </common-table>
         </div>
         <div style="margin-bottom: 20px" v-for="item in processData" :key="item">
-          <div class="head-container" v-if="item[0]?.productType === bridgeComponentTypeEnum .BOX.V">
-            <el-tag effect="dark" :type="componentTypeTag[bridgeComponentTypeEnum .VK[item[0]?.productType]]">
-              {{ bridgeComponentTypeEnum .VL[item[0]?.productType] }}
+          <div class="head-container" v-if="item[0]?.productType === bridgeComponentTypeEnum.BOX.V">
+            <el-tag effect="dark" :type="componentTypeTag[bridgeComponentTypeEnum.VK[item[0]?.productType]]">
+              {{ bridgeComponentTypeEnum.VL[item[0]?.productType] }}
             </el-tag>
             <el-tag style="margin-left: 8px" effect="plain"> {{ item[0]?.productionLine?.name }}>{{ item[0]?.group?.name }} </el-tag>
             <span style="margin-left: 8px; font-size: 14px">工单号：{{ item[0]?.orderNumber }}</span>
           </div>
           <common-table
             v-if="
-              (productType === bridgeComponentTypeEnum .BOX.V && item[0]?.productType === bridgeComponentTypeEnum .BOX.V) ||
-              (productType === bridgeComponentTypeEnum .MACHINE_PART.V && item[0]?.productType === bridgeComponentTypeEnum .MACHINE_PART.V)
+              (productType === bridgeComponentTypeEnum.BOX.V && item[0]?.productType === bridgeComponentTypeEnum.BOX.V) ||
+              (productType === bridgeComponentTypeEnum.MACHINE_PART.V && item[0]?.productType === bridgeComponentTypeEnum.MACHINE_PART.V)
             "
             ref="tableRef"
             :data="item"
@@ -143,10 +143,12 @@
         </div>
         <div style="margin-bottom: 20px" v-if="props.processList?.productionLineTypeEnum === artifactProductLineEnum.INTELLECT.V">
           <div class="head-container" v-if="processData[0]?.productionLine?.productionLineTypeEnum === artifactProductLineEnum.INTELLECT.V">
-            <el-tag effect="dark" :type="componentTypeTag[bridgeComponentTypeEnum .VK[processData[0]?.productType]]">
-              {{ bridgeComponentTypeEnum .VL[processData[0]?.productType] }}
+            <el-tag effect="dark" :type="componentTypeTag[bridgeComponentTypeEnum.VK[processData[0]?.productType]]">
+              {{ bridgeComponentTypeEnum.VL[processData[0]?.productType] }}
             </el-tag>
-            <el-tag style="margin-left: 8px" effect="plain"> {{ processData[0]?.productionLine?.name }}>{{ processData[0]?.groups?.name }} </el-tag>
+            <el-tag style="margin-left: 8px" effect="plain">
+              {{ processData[0]?.productionLine?.name }}>{{ processData[0]?.groups?.name }}
+            </el-tag>
             <span style="margin-left: 8px; font-size: 14px">工单号：{{ processData[0]?.order?.name }}</span>
           </div>
           <common-table
@@ -210,9 +212,9 @@ import productionLineDetail from '../production-line-detail/index.vue'
 
 // 由于mes枚举构件、部件的type值相同，单独定义枚举type值
 const componentTypeTag = {
-  [bridgeComponentTypeEnum .BOX.K]: 'success',
-  [bridgeComponentTypeEnum .CELL.K]: 'warning',
-  [bridgeComponentTypeEnum .MACHINE_PART.K]: ''
+  [bridgeComponentTypeEnum.BOX.K]: 'success',
+  [bridgeComponentTypeEnum.CELL.K]: 'warning',
+  [bridgeComponentTypeEnum.MACHINE_PART.K]: ''
 }
 
 const props = defineProps({
@@ -236,8 +238,8 @@ const productType = inject('productType')
 
 // 产线过滤
 const lineProductType = computed(() => {
-  if (productType.value === bridgeComponentTypeEnum .BOX.V) {
-    return productType.value | bridgeComponentTypeEnum .CELL.V
+  if (productType.value === bridgeComponentTypeEnum.BOX.V) {
+    return productType.value | bridgeComponentTypeEnum.CELL.V
   }
   return productType.value
 })
@@ -246,7 +248,7 @@ watch(
   () => props.processList,
   (val) => {
     if (val) {
-      if (productType.value === bridgeComponentTypeEnum .BOX.V) {
+      if (productType.value === bridgeComponentTypeEnum.BOX.V) {
         workshopId.value = undefined
         productionLineId.value = undefined
         processGet()
@@ -311,7 +313,7 @@ async function machineProcessGet() {
 }
 
 function handleWorkshopProductionLineChange() {
-  if (productType.value === bridgeComponentTypeEnum .BOX.V) {
+  if (productType.value === bridgeComponentTypeEnum.BOX.V) {
     processGet()
   } else {
     machineProcessGet()

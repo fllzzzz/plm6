@@ -30,7 +30,7 @@
             </template>
           </el-table-column>
           <el-table-column
-            v-if="columns.visible('project') && productType !== bridgeComponentTypeEnum .MACHINE_PART.V"
+            v-if="columns.visible('project') && productType !== bridgeComponentTypeEnum.MACHINE_PART.V"
             key="project.name"
             prop="project"
             :show-overflow-tooltip="true"
@@ -91,7 +91,7 @@
             </template>
           </el-table-column>
           <el-table-column
-            v-if="columns.visible('userName') && productType === bridgeComponentTypeEnum .MACHINE_PART.V"
+            v-if="columns.visible('userName') && productType === bridgeComponentTypeEnum.MACHINE_PART.V"
             align="center"
             key="userName"
             prop="userName"
@@ -177,7 +177,7 @@ function currentChange(row) {
 }
 
 CRUD.HOOK.beforeToQuery = () => {
-  crud.crudApi.get = crud.query.productType === bridgeComponentTypeEnum .BOX.V ? get : machinePart
+  crud.crudApi.get = crud.query.productType === bridgeComponentTypeEnum.BOX.V ? get : machinePart
 }
 
 CRUD.HOOK.handleRefresh = (crud, data) => {

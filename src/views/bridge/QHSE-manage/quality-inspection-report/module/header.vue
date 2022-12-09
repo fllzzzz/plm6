@@ -3,7 +3,7 @@
     <template #optLeft>
       <div v-show="crud.searchToggle">
         <project-radio-button size="small" v-model="query.projectId" class="filter-item" @change="crud.toQuery" />
-        <component-radio-button
+        <!-- <component-radio-button
           v-model="query.productType"
           :options="typeEnum"
           type="enum"
@@ -11,7 +11,7 @@
           class="filter-item"
           default
           @change="crud.toQuery"
-        />
+        /> -->
         <el-date-picker
           v-model="query.date"
           type="daterange"
@@ -36,20 +36,20 @@
 import moment from 'moment'
 import { PICKER_OPTIONS_SHORTCUTS } from '@/settings/config'
 
-import { bridgeComponentTypeEnum  } from '@enum-ms/mes'
+// import { bridgeComponentTypeEnum } from '@enum-ms/bridge'
 
 import { regHeader } from '@compos/use-crud'
 import crudOperation from '@crud/CRUD.operation'
 import rrOperation from '@crud/RR.operation'
 
-const typeEnum = {
-  STRUCTURE: {
-    L: '结构',
-    K: 'STRUCTURE',
-    V: bridgeComponentTypeEnum .MACHINE_PART.V | bridgeComponentTypeEnum .ASSEMBLE.V | bridgeComponentTypeEnum .ARTIFACT.V
-  },
-  ENCLOSURE: { L: '围护', K: 'ENCLOSURE', V: bridgeComponentTypeEnum .ENCLOSURE.V }
-}
+// const typeEnum = {
+//   STRUCTURE: {
+//     L: '结构',
+//     K: 'STRUCTURE',
+//     V: bridgeComponentTypeEnum.MACHINE_PART.V | bridgeComponentTypeEnum.CELL.V | bridgeComponentTypeEnum.BOX.V
+//   },
+//   ENCLOSURE: { L: '围护', K: 'ENCLOSURE', V: bridgeComponentTypeEnum.ENCLOSURE.V }
+// }
 
 const defaultQuery = {
   date: [moment().startOf('month').valueOf(), moment().valueOf()],

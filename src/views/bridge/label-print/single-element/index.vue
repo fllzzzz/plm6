@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <div class="head-container">
-      <mHeader ref="headRef" />
+      <!-- <mHeader ref="headRef" /> -->
     </div>
     <!--表格渲染-->
     <common-table
@@ -278,7 +278,7 @@ import { ref, provide, computed, watch } from 'vue'
 import { ElMessage } from 'element-plus'
 
 import { weightTypeEnum as printWeightTypeEnum } from '@enum-ms/common'
-import { printProductTypeEnum } from '@enum-ms/mes'
+import { bridgePrintProductTypeEnum } from '@enum-ms/bridge'
 import { bridgeComponentTypeEnum } from '@enum-ms/bridge'
 import { DP, QR_SCAN_F_TYPE } from '@/settings/config'
 import { toFixed } from '@data-type/index'
@@ -290,7 +290,7 @@ import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import pagination from '@crud/Pagination'
 import tableCellTag from '@comp-common/table-cell-tag/index'
-import mHeader from '../components/label-print-header.vue'
+// import mHeader from '../components/label-print-header.vue'
 import printedRecordDrawer from '../components/task-printed-record-drawer.vue'
 import labelDlg from '../components/label-dlg'
 import oneCodeNumberList from '@/components-system/mes/one-code-number-list'
@@ -306,7 +306,7 @@ const headRef = ref()
 const tableRef = ref()
 const { crud, columns } = useCRUD(
   {
-    title: '产品标签-构件',
+    title: '产品标签-单元件',
     permission: { ...permission },
     optShow: { ...optShow },
     crudApi: { ...crudApi },
@@ -325,7 +325,7 @@ const currentTaskId = ref()
 const recordVisible = ref(false)
 const productType = bridgeComponentTypeEnum.BOX.V
 provide('productType', productType)
-const printType = printProductTypeEnum.ARTIFACT.V
+const printType = bridgePrintProductTypeEnum.BOX.V
 provide('printType', printType)
 const labelType = computed(() => {
   return headRef.value?.printConfig?.type
