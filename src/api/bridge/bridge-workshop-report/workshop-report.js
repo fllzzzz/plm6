@@ -6,7 +6,7 @@ import request from '@/utils/request'
 export function get(params) {
   return request({
     module: 'bridge',
-    url: 'workshop/box/summary/page',
+    url: 'workshop/report/box/summary/page',
     method: 'get',
     params
   })
@@ -17,7 +17,7 @@ export function get(params) {
 export function fullYearProduction(params) {
   return request({
     module: 'bridge',
-    url: 'workshop/year/mete/summary',
+    url: 'workshop/report/year/mete/summary',
     method: 'get',
     params
   })
@@ -28,7 +28,7 @@ export function fullYearProduction(params) {
 export function workshopEcharts(params) {
   return request({
     module: 'bridge',
-    url: 'workshop/report',
+    url: 'workshop/report/report',
     method: 'get',
     params
   })
@@ -39,7 +39,7 @@ export function workshopEcharts(params) {
 export function workshopProduction(params) {
   return request({
     module: 'bridge',
-    url: 'workshop/mete/summary',
+    url: 'workshop/report/mete/summary',
     method: 'get',
     params
   })

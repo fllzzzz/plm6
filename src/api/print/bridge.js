@@ -459,7 +459,7 @@ export function mesProjectShipDetail(params) {
 // 工厂报表-车间报表详情
 export function factoryWorkshopReport(params) {
   return request({
-    url: `/api/mes/bridge/workshop/artifact/summary/print`,
+    url: `/api/mes/bridge/workshop/report/box/summary/print`,
     method: 'get',
     params
   })
