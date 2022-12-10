@@ -18,19 +18,17 @@
           <el-form-item label="名称" prop="name">
           <el-input v-model="form.name" type="text" placeholder="分类名称" style="width: 270px" maxlength="30" />
           </el-form-item>
-          <el-form-item label="零件科目匹配" prop="classifyIds">
-            <common-radio-button
-              v-model="form.basicClass"
-              :options="[matClsEnum.STEEL_PLATE]"
-              type="enum"
-              size="small"
-              style="margin-bottom:5px;"
+          <el-form-item label="是否型材" prop="classifyLinks">
+            <el-switch
+              v-model="form.boolSectionSteel"
+              :active-value="whetherEnum.TRUE.V"
+              :inactive-value="whetherEnum.FALSE.V"
+              class="drawer-switch"
             />
-            <br/>
+            <br />
             <material-cascader
-              v-model="form.classifyIds"
-              :basic-class="form.basicClass"
-              :disabled="!form.basicClass"
+              v-model="form.classifyLinks"
+              :basic-class="form.boolSectionSteel?matClsEnum.SECTION_STEEL.V:matClsEnum.STEEL_PLATE.V"
               multiple
               :collapse-tags="false"
               separator=" > "
@@ -74,7 +72,7 @@
               <el-input v-else v-model.trim="scope.row.keyword" type="text" placeholder="大写字母" maxlength="20" @blur="checkName(scope.row, scope.$index)"/>
             </template>
           </el-table-column>
-          <el-table-column key="specIndex" prop="specIndex" label="*索引" align="center">
+          <!-- <el-table-column key="specIndex" prop="specIndex" label="*索引" align="center">
             <template v-slot="scope">
               <common-select
                 v-model="scope.row.specIndex"
@@ -88,7 +86,7 @@
                 placeholder="索引"
               />
             </template>
-          </el-table-column>
+          </el-table-column> -->
           <!-- <el-table-column key="boolNestEnum" prop="boolNestEnum" label="*是否参与套料" align="center">
             <template v-slot="scope">
               <common-radio v-model="scope.row.boolNestEnum" :options="whetherEnum.ENUM" type="enum" />
@@ -117,9 +115,10 @@
 import { ref, defineProps, nextTick, watch } from 'vue'
 import { ElMessage } from 'element-plus'
 
-import { isNotBlank, deepClone } from '@data-type/index'
+import { deepClone } from '@data-type/index'
 import { matClsEnum } from '@enum-ms/classification'
 import { partKeyWordEnum } from '@enum-ms/mes'
+import { whetherEnum } from '@enum-ms/common'
 
 import { regForm } from '@compos/use-crud'
 import MaterialCascader from '@comp-cls/material-cascader/index.vue'
@@ -137,16 +136,16 @@ const formRef = ref()
 const nameArr = ref([])
 const drawerRef = ref()
 const disabledClassifyIds = ref([])
-const specIndexEnum = {
-  1: { L: '1', K: '1', V: 1 },
-  2: { L: '2', K: '2', V: 2 },
-  3: { L: '3', K: '3', V: 3 },
-  4: { L: '4', K: '4', V: 4 }
-}
+// const specIndexEnum = {
+//   1: { L: '1', K: '1', V: 1 },
+//   2: { L: '2', K: '2', V: 2 },
+//   3: { L: '3', K: '3', V: 3 },
+//   4: { L: '4', K: '4', V: 4 }
+// }
 const defaultForm = {
   id: undefined,
   name: '',
-  basicClass: matClsEnum.STEEL_PLATE.V,
+  boolSectionSteel: whetherEnum.FALSE.V,
   sort: undefined,
   links: []
 }
@@ -163,14 +162,14 @@ const { maxHeight } = useMaxHeight(
 )
 
 // 序号校验
-const validateEnum = (value, row) => {
-  if (!isNotBlank(value)) return false
-  return true
-}
+// const validateEnum = (value, row) => {
+//   if (!isNotBlank(value)) return false
+//   return true
+// }
 
 const tableRules = {
-  keyword: [{ required: true, message: '请输入大写字母', trigger: 'blur' }],
-  specIndex: [{ validator: validateEnum, message: '请选择索引', trigger: 'blur' }]
+  keyword: [{ required: true, message: '请输入大写字母', trigger: 'blur' }]
+  // specIndex: [{ validator: validateEnum, message: '请选择索引', trigger: 'blur' }]
   // boolNestEnum: [{ validator: validateEnum, message: '请选择是否参与套料', trigger: 'change' }],
   // boolSchedulingEnum: [{ validator: validateEnum, message: '请选择是否排产', trigger: 'change' }]
 }
@@ -183,7 +182,7 @@ const rules = {
     { min: 1, max: 30, message: '长度在 1 到 30 个字符', trigger: 'blur' }
   ],
   sort: [{ required: true, message: '请填写排序值', trigger: 'blur', type: 'number' }],
-  classifyIds: [{ required: true, message: '请选择科目', trigger: 'change' }]
+  classifyLinks: [{ required: true, message: '请选择科目', trigger: 'change' }]
 }
 
 watch(
@@ -198,7 +197,7 @@ watch(
       form.links = []
     }
     if (val && oldVal) {
-      form.classifyIds = []
+      form.classifyLinks = []
     }
   }
 )
@@ -229,7 +228,7 @@ function checkName(item, index) {
           val.keyword = undefined
         })
       } else {
-        if (form.basicClass !== matClsEnum.STEEL_PLATE.V && item.keyword.substring(0, 1) === 'P') {
+        if (form.boolSectionSteel && item.keyword.substring(0, 1) === 'P') {
           ElMessage({
             message: '关键字母不能以P或PL开头，请重新填写',
             type: 'error'
@@ -260,7 +259,7 @@ function checkName(item, index) {
           item.keyword = undefined
         })
       }
-      if (form.basicClass !== matClsEnum.STEEL_PLATE.V && item.keyword.substring(0, 1) === 'P') {
+      if (form.boolSectionSteel && item.keyword.substring(0, 1) === 'P') {
         ElMessage({
           message: '关键字母不能以P或PL开头，请重新填写',
           type: 'error'
@@ -290,6 +289,7 @@ CRUD.HOOK.beforeSubmit = (crud, form) => {
   } else {
     return validResult
   }
+  crud.form.specPrefixList = crud.form.links.map(v => v.keyword)
 }
 
 CRUD.HOOK.beforeToAdd = () => {
@@ -300,8 +300,7 @@ CRUD.HOOK.beforeToEdit = () => {
   nameArr.value = []
   form.links.map((v, index) => {
     nameArr.value.push({
-      keyword: v.keyword,
-      index: index
+      keyword: v.keyword
     })
   })
 }
@@ -309,8 +308,8 @@ CRUD.HOOK.beforeToEdit = () => {
 CRUD.HOOK.beforeToCU = () => {
   nextTick(() => {
     disabledClassifyIds.value = deepClone(props.boundAllClassifyIds)
-    form.classifyIds &&
-      form.classifyIds.forEach((v) => {
+    form.classifyLinks &&
+      form.classifyLinks.forEach((v) => {
         const _index = disabledClassifyIds.value.indexOf(v)
         if (_index !== -1) {
           disabledClassifyIds.value.splice(_index, 1)

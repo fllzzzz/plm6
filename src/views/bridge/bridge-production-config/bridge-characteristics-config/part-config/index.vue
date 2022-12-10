@@ -39,7 +39,7 @@
         <template v-slot="scope">
           <template v-if="scope.row.links && scope.row.links.length > 0">
             <span v-for="(item) in scope.row.links" :key="item.id">
-              {{`${item.keyword}【${item.specIndex ? item.specIndex : '全部'}】`}}
+              {{`${item.keyword}`}}
             </span>
           </template>
           <div v-else>-</div>
@@ -117,8 +117,14 @@ const boundAllClassifyIds = ref([])
 CRUD.HOOK.handleRefresh = (crud, { data }) => {
   boundAllClassifyIds.value = []
   data.content.forEach((v) => {
-    v.classifyNames = v.classifyLinks.map((v) => v.classifyName).join('、')
-    v.classifyIds = v.boundFinalClassifyIds
+    v.classifyNames = v.classifyLinks.map((v) => v.name).join('、')
+    v.classifyIds = v.classifyLinks.map((v) => v.id)
+    v.links = []
+    for (let i = 0; i < v['specPrefixList'].length; i++) {
+      v.links.push({
+        keyword: v['specPrefixList'][i]
+      })
+    }
     boundAllClassifyIds.value = boundAllClassifyIds.value.concat(v.boundFinalClassifyIds)
   })
 }
