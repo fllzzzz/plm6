@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <div class="head-container">
-      <!-- <mHeader ref="headRef" /> -->
+      <mHeader ref="headRef" />
     </div>
     <!--表格渲染-->
     <common-table
@@ -290,7 +290,7 @@ import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import pagination from '@crud/Pagination'
 import tableCellTag from '@comp-common/table-cell-tag/index'
-// import mHeader from '../components/label-print-header.vue'
+import mHeader from '../components/label-print-header.vue'
 import printedRecordDrawer from '../components/task-printed-record-drawer.vue'
 import labelDlg from '../components/label-dlg'
 import oneCodeNumberList from '@/components-system/mes/one-code-number-list'
@@ -447,7 +447,7 @@ function getLabelInfo(row, num) {
     component,
     printConfig,
     manufacturerName: printConfig.manufacturerName || companyName,
-    qrCode: spliceQrCodeUrl(`${baseUrl}${QR_SCAN_PATH.ARTIFACT_TASK}`, qrCodeObj)
+    qrCode: spliceQrCodeUrl(`${baseUrl}${QR_SCAN_PATH.BRIDGE_SINGLE_ELEMENT_TASK}`, qrCodeObj)
   }
 }
 

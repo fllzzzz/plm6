@@ -33,7 +33,7 @@
         row-key="uid"
       >
         <el-table-column label="序号" type="index" align="center" width="60" fixed="left" />
-        <el-table-column prop="sysAssembleId" :show-overflow-tooltip="true" label="部件类型" width="150" align="center" fixed="left">
+        <el-table-column prop="sysAssembleId" :show-overflow-tooltip="true" label="单元件类型" width="150" align="center" fixed="left">
           <template #default="{ row, $index }">
             <common-select
               v-model="row.sysAssembleId"
@@ -42,7 +42,7 @@
               type="other"
               class="input-underline"
               :dataStructure="{ key: 'id', label: 'name', value: 'id' }"
-              placeholder="部件类型"
+              placeholder="单元件类型"
               style="width: 100%"
               @change="handleClassificationChange($event, $index)"
             />
@@ -182,7 +182,7 @@ const validateNumerical = (value, row) => {
 }
 
 const rules = {
-  sysAssembleId: [{ required: true, message: '请选择部件类型', trigger: 'change' }],
+  sysAssembleId: [{ required: true, message: '请选择单元件类型', trigger: 'change' }],
   numerical: [{ validator: validateNumerical, message: '请填写数值并且最大数值不得小于最小数值', trigger: 'blur' }]
 }
 

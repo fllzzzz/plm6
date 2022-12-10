@@ -19,7 +19,7 @@
       <el-table-column
         prop="classificationName"
         :show-overflow-tooltip="true"
-        label="单元类型"
+        label="分段类型"
         align="center"
         min-width="200px"
         fixed="left"
@@ -93,7 +93,7 @@ const optShow = {
 const tableRef = ref()
 const { crud, CRUD } = useCRUD(
   {
-    title: '单元-组铆焊价格配置',
+    title: '分段-组铆焊价格配置',
     sort: [],
     permission: { ...permission },
     optShow: { ...optShow },
@@ -144,14 +144,14 @@ async function fetchPreloadData() {
     artifactTypeListObj.value = arr2obj(artifactTypeList.value, 'id')
     console.log(artifactTypeListObj.value)
   } catch (error) {
-    console.log(error, '获取单元类型失败')
+    console.log(error, '获取分段类型失败')
   }
   try {
     const { content } = await getRivetWeld()
     rivetWeldList.value = content
     rivetWeldListObj.value = arr2obj(content, 'id')
   } catch (error) {
-    console.log(error, '获取单元种类配置失败')
+    console.log(error, '获取分段种类配置失败')
   }
   try {
     const content = await getProcess()

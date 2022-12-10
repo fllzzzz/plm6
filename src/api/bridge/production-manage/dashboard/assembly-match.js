@@ -11,7 +11,7 @@ import request from '@/utils/request'
 export function get(params) {
   return request({
     module: 'bridge',
-    url: 'kanban/assemble_matching/page',
+    url: 'kanban/element_matching/page',
     cancelKey: false,
     method: 'get',
     params
@@ -28,7 +28,7 @@ export function get(params) {
 export function detail(params) {
   return request({
     module: 'bridge',
-    url: 'kanban/assemble_matching/detail',
+    url: 'kanban/element_matching/detail',
     method: 'get',
     params
   })
@@ -40,7 +40,7 @@ export function detail(params) {
 export function productionDetail(params) {
   return request({
     module: 'bridge',
-    url: 'kanban/assemble_matching/area/product',
+    url: 'kanban/element_matching/area/product',
     method: 'get',
     params
   })
@@ -51,7 +51,7 @@ export function productionDetail(params) {
 export function artifactInfo(params) {
   return request({
     module: 'bridge',
-    url: 'kanban/assemble_matching/area/artifact',
+    url: 'kanban/element_matching/area/artifact',
     method: 'get',
     params
   })

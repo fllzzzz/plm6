@@ -561,7 +561,7 @@ export default {
               path: 'cell/rivet-weld-config',
               hidden: false,
               component: '/bridge/bridge-production-config/statistical-config/cell-rivet-weld-config/index',
-              meta: { title: '分段-组铆焊价格', icon: 'project', noCache: true }
+              meta: { title: '单元件-组铆焊价格', icon: 'project', noCache: true }
             },
             {
               name: 'BridgeConfigFabricatedConfig',

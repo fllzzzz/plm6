@@ -33,7 +33,7 @@
         row-key="uid"
       >
         <el-table-column label="序号" type="index" align="center" width="60" fixed="left" />
-        <el-table-column prop="classificationId" :show-overflow-tooltip="true" label="构件类型" width="150" align="center" fixed="left">
+        <el-table-column prop="classificationId" :show-overflow-tooltip="true" label="分段类型" width="150" align="center" fixed="left">
           <template #default="{ row, $index }">
             <common-select
               v-model="row.classificationId"
@@ -42,7 +42,7 @@
               type="other"
               class="input-underline"
               :dataStructure="{ key: 'id', label: 'name', value: 'id' }"
-              placeholder="构件类型"
+              placeholder="分段类型"
               style="width: 100%"
               @change="handleClassificationChange($event, $index)"
             />
@@ -187,7 +187,7 @@ const validateNumerical = (value, row) => {
 }
 
 const rules = {
-  classificationId: [{ required: true, message: '请选择构件类型', trigger: 'change' }],
+  classificationId: [{ required: true, message: '请选择分段类型', trigger: 'change' }],
   numerical: [{ validator: validateNumerical, message: '请填写数值并且最大数值不得小于最小数值', trigger: 'blur' }]
 }
 

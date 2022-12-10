@@ -19,7 +19,7 @@
       <el-table-column
         prop="sysAssembleName"
         :show-overflow-tooltip="true"
-        label="部件类型"
+        label="单元件类型"
         align="center"
         min-width="200px"
         fixed="left"
@@ -138,7 +138,7 @@ async function fetchPreloadData() {
     })
     assembleTypeListObj.value = arr2obj(assembleTypeList.value, 'id')
   } catch (error) {
-    console.log(error, '获取部件类型失败')
+    console.log(error, '获取单元件类型失败')
   }
   try {
     const content = await getProcess()

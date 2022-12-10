@@ -23,12 +23,6 @@
             </el-form-item>
             <el-form-item label="标签类型">
               <div style="display: flex; align-items: center">
-                <!-- <common-radio-button
-                  v-model="printConfig.type"
-                  :unshowVal="productType & bridgeComponentTypeEnum.ENCLOSURE.V ? [bridgeLabelTypeEnum.SIMPLE.V] : []"
-                  :options="bridgeLabelTypeEnum.ENUM"
-                  type="enum"
-                /> -->
                 <common-radio-button
                   v-model="printConfig.type"
                   :options="bridgeLabelTypeEnum.ENUM"
@@ -53,7 +47,7 @@
                 <span style="margin-right: 3px">单体</span><el-checkbox v-model="printConfig.showMonomer" />
                 <span style="margin-right: 3px">区域</span><el-checkbox v-model="printConfig.showArea" />
                 <span style="margin-right: 3px">生产日期</span><el-checkbox v-model="printConfig.dateInProduced" />
-                <!-- <span style="margin-right: 3px">生产线</span><el-checkbox v-model="printConfig.showProductionLine" /> -->
+                <span style="margin-right: 3px">生产线</span><el-checkbox v-model="printConfig.showProductionLine" />
               </span>
             </el-form-item>
             <!-- <el-form-item label="显示" v-show="productType & bridgeComponentTypeEnum.ENCLOSURE.V">
@@ -121,7 +115,7 @@ import { bridgeLabelTypeEnum } from '@enum-ms/bridge'
 import { bridgeComponentTypeEnum } from '@enum-ms/bridge'
 import { mapGetters } from '@/store/lib'
 import { deepClone } from '@data-type/index'
-import { spliceQrCodeUrl, QR_SCAN_PATH } from '@/utils/label'
+import { spliceQrCodeUrl, QR_SCAN_PATH } from '@/utils/bridge-label'
 
 import usePrintLabel from '@compos/mes/label-print/use-label-print'
 import { regHeader } from '@compos/use-crud'
@@ -130,7 +124,7 @@ import rrOperation from '@crud/RR.operation'
 import productTypeQuery from '@comp-mes/header-query/product-type-query'
 import monomerSelectAreaTabs from '@comp-base/monomer-select-area-tabs'
 import productionLineBoxSelect from '@comp-mes/production-line-box-select'
-import { getMiniLabelHtml } from '@/utils/label/index.js'
+import { getMiniLabelHtml } from '@/utils/bridge-label/index.js'
 import { ElMessage } from 'element-plus'
 
 const defaultQuery = {
