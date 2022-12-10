@@ -60,7 +60,7 @@ import { arrIsRepeat } from '@data-type/array'
 import { cleanArray } from '@/utils/data-type/array'
 import { arr2obj } from '@/utils/convert/type'
 
-import useProcess from '@compos/store/use-process'
+import useProcess from '@compos/store/use-bridge-process'
 import { regForm } from '@compos/use-crud'
 import processSelect from '@/components-system/bridge/process-select'
 
