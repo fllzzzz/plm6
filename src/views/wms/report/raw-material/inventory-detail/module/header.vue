@@ -50,14 +50,20 @@ import { specFormat, specTip } from '@/utils/wms/spec-format'
 import { setSpecInfoToList } from '@/utils/wms/spec'
 import moment from 'moment'
 
-const month = ref([moment().startOf('month').valueOf().toString(), moment().format('x')])
+const defaultTime = [moment().startOf('month').valueOf().toString(), moment().format('x')]
+
+const month = ref(defaultTime)
 
 const defaultQuery = {
-  times: month.value, // [开始月份，结束月份]
+  times: defaultTime, // [开始月份，结束月份]
   classifyId: undefined
 }
 
 const { crud, query, CRUD } = regHeader(defaultQuery)
+
+CRUD.HOOK.beforeResetQuery = () => {
+  month.value = defaultTime
+}
 
 // el-date-picker type="monthrange"时， default-time 不生效
 // 转月末时间戳

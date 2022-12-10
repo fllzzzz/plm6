@@ -16,7 +16,7 @@
       <print-table
         api-key="productSendReceiveStorageDetail"
         v-permission="permission.detailPrint"
-        :params="{ ...props.detailQuery,...query}"
+        :params="{ ...props.detailQuery,...query, workshopId: props.workshopId,}"
         size="mini"
         type="warning"
         class="filter-item"
@@ -135,6 +135,9 @@ const props = defineProps({
   detailQuery: {
     type: Object,
     default: () => {}
+  },
+  workshopId: {
+    type: Number
   }
 })
 
@@ -192,7 +195,8 @@ async function fetchList() {
   let _list = []
   tableLoading.value = true
   try {
-    const { content = [], totalElements } = await detail({ ...props.detailQuery, ...queryPage, ...query.value })
+    console.log(props.detailQuery, 'props')
+    const { content = [], totalElements } = await detail({ ...props.detailQuery, ...queryPage, workshopId: props.workshopId, ...query.value })
     _list = content
     setTotalPage(totalElements)
   } catch (error) {

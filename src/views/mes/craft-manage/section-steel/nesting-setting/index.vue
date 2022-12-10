@@ -52,7 +52,7 @@
           <table-cell-tag
             v-if="row.productionLineTypeEnum === artifactProductLineEnum.INTELLECT.V"
             :name="row.classificationName"
-            color="#fad400"
+            :color="row.classificationName==='短梁' || row.classificationName==='长短梁'?'#40ed8d':'#fad400'"
             :offset="15"
           />
           <!-- <table-cell-tag

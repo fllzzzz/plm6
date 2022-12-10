@@ -17,7 +17,7 @@
         :key="item.id"
         :label="item.name"
         :value="item.id"
-        :disabled="disabledValue ? (disabledValue.indexOf(item.id) > -1 || disabledProductType.indexOf(item.productType) > -1) : false"
+        :disabled="disabledValue ? disabledValue.indexOf(item.id) > -1 || disabledProductType.indexOf(item.productType) > -1 : false"
       />
     </el-option-group>
   </el-select>
@@ -36,6 +36,12 @@ const emit = defineEmits(['change', 'update:modelValue'])
 const props = defineProps({
   // 查询指定工序次序，不传查所有
   productType: {
+    // Value
+    type: [Number, Boolean, Array],
+    default: undefined
+  },
+  // 生产线类型
+  productionLineTypeEnum: {
     // Value
     type: [Number, Boolean, Array],
     default: undefined
@@ -91,10 +97,17 @@ const processOptions = computed(() => {
   return options.value.filter((v) => {
     if (v.originOptions && v.originOptions.length) {
       v.options = v.originOptions.filter((o) => {
-        return isNotBlank(_productType) ? _productType & o.productType : true
+        let flag = true
+        if (isNotBlank(_productType) && !(_productType & o.productType)) {
+          flag = false
+        }
+        if (isNotBlank(props.productionLineTypeEnum) && !(props.productionLineTypeEnum & o.productionLineTypeEnum)) {
+          flag = false
+        }
+        return flag
       })
     }
-    return isNotBlank(_productType) ? _productType & v.type : true
+    return isNotBlank(_productType) ? _productType & v.type : v.options?.length
   })
 })
 
