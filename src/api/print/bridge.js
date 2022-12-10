@@ -359,7 +359,7 @@ export function drillProductionTaskOrder(params) {
  */
 export function machinePartDetail(params) {
   return request({
-    url: `/api/mes/bridge/kanban/assemble_matching/detail/print`,
+    url: `/api/mes/bridge/kanban/element_matching/detail/print`,
     method: 'get',
     params
   })
@@ -370,7 +370,7 @@ export function machinePartDetail(params) {
  */
 export function machinePartList(params) {
   return request({
-    url: `/api/mes/bridge/kanban/assemble_matching/area/product/print`,
+    url: `/api/mes/bridge/kanban/element_matching/area/product/print`,
     method: 'get',
     params
   })
