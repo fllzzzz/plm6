@@ -1,7 +1,7 @@
 // 路由：计划管理
 export default {
-  id: 1117,
-  name: '桥梁Mes',
+  id: 12,
+  name: '桥梁MES',
   children: [
     {
       path: '/bridge-project',
