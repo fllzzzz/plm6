@@ -115,7 +115,7 @@ const actions = {
     if (checkPermission(['admin'])) {
       // 如果是超级管理员【admin】加入系统管理模块
       menus.push({ name: '系统管理', id: -2, icon: 'module-system', redirect: '/system' })
-      menus.push({ name: '桥梁MES', id: 12, icon: 'module-bridge', redirect: '/bridge-project' })
+      // menus.push({ name: '桥梁MES', id: 12, icon: 'module-bridge', redirect: '/bridge-project' })
     }
     commit('SET_MENUS', menus)
     commit('SET_PRODUCT_MENU', productMenu)
