@@ -199,7 +199,7 @@ const bridgeWarehouseStateReport = {
      */
     fields: [
       { show: true, key: 'serialNumber', title: '合同编号', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.CONTRACT_NO.K },
-      { show: true, key: 'shortName', title: '项目名称', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.GUID.K },
+      { show: true, key: 'shortName', title: '项目名称', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.PROJECT.K },
       { show: true, key: 'productType', title: '类型', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.ENUM.K, format: { enum: 'componentTypeEnum', key: 'L' }},
       { show: true, key: 'unit', title: '单位', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.UNIT.K },
       { show: true, key: 'beginMete', title: '期初库存', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.METE.K, format: { toThousand: false, precision: DEF_UNIT.WEIGHT_DP, rowUnit: 'unit' }, sum: true },

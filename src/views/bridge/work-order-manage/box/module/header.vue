@@ -77,12 +77,12 @@ import moment from 'moment'
 const defaultTime = moment().startOf('month').valueOf()
 
 const orderComponentTypeEnum = {
-  BOX: bridgeComponentTypeEnum .BOX,
-  CELL: bridgeComponentTypeEnum .CELL
+  BOX: bridgeComponentTypeEnum.BOX,
+  CELL: bridgeComponentTypeEnum.CELL
 }
 
 const defaultQuery = {
-  productType: bridgeComponentTypeEnum .BOX.V,
+  productType: bridgeComponentTypeEnum.BOX.V,
   localDateTime: defaultTime.toString()
 }
 

@@ -3,6 +3,17 @@
 
 export const commonPM = {}
 
+// --------------------------- 桥梁-我的项目 start ------------------------------
+
+// 我的项目
+export const bridgeMyProjectPM = {
+  get: ['bridge_my_project:get'], // 我的项目
+  statistics: ['bridge_my_project:statistics'], // 项目统计
+  print: ['bridge_my_project:print'] // 打印
+}
+
+// --------------------------- 桥梁-我的项目 end --------------------------------
+
 // --------------------------- 桥梁-计划管理 start ------------------------------
 
 // 桥梁-计划管理/单体列表

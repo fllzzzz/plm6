@@ -5,12 +5,12 @@
       <common-radio-button
        v-if="showComponent"
         v-model="query.productType"
-        :options="componentTypeEnum.ENUM"
+        :options="bridgeComponentTypeEnum.ENUM"
         size="small"
         class="filter-item"
         type="enumSL"
         default
-        :unshowVal="[componentTypeEnum.ENCLOSURE.V,componentTypeEnum.AUXILIARY_MATERIAL.V]"
+        :unshowVal="[bridgeComponentTypeEnum.AUXILIARY_MATERIAL.V]"
         @change="crud.toQuery"
       />
       <factory-select v-model="query.factoryId" clearable class="filter-item" style="width: 200px" @change="crud.toQuery" />
@@ -31,10 +31,10 @@
 <script setup>
 import { ref, defineExpose, defineEmits } from 'vue'
 
-import { componentTypeEnum } from '@enum-ms/mes'
+import { bridgeComponentTypeEnum } from '@enum-ms/bridge'
 import { mapGetters } from '@/store/lib'
 
-import useUnshowProductTypeByMode from '@compos/use-unshow-productType-by-mode.js'
+import useUnshowProductTypeByMode from '@compos/use-bridge-unshow-productType-by-mode.js'
 import useDashboardHeader from '@compos/mes/dashboard/use-dashboard-header'
 import { regHeader } from '@compos/use-crud'
 import crudOperation from '@crud/CRUD.operation'

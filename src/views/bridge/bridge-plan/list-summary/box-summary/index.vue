@@ -238,7 +238,7 @@ import { mapGetters } from '@/store/lib'
 import { DP } from '@/settings/config'
 import { boxSummaryListPM as permission } from '@/page-permission/bridge'
 import { TechnologyTypeAllEnum, projectTypeEnum } from '@enum-ms/contract'
-import { bridgeDeepenTypeEnum } from '@enum-ms/plan'
+import { bridgeComponentTypeEnum } from '@enum-ms/bridge'
 
 import pagination from '@crud/Pagination'
 import mHeader from './module/header'
@@ -300,7 +300,7 @@ watch(
 
 CRUD.HOOK.handleRefresh = (crud, data) => {
   data.data.content = data.data.content.map((v) => {
-    v.productType = bridgeDeepenTypeEnum.BOX.V
+    v.productType = bridgeComponentTypeEnum.BOX.V
     v.projectType = projectTypeEnum.BRIDGE.V
     return v
   })

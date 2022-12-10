@@ -14,7 +14,7 @@
     />
     <common-radio-button
       v-model="query.productType"
-      :options="[bridgeComponentTypeEnum .BOX, bridgeComponentTypeEnum .MACHINE_PART]"
+      :options="[bridgeComponentTypeEnum.BOX, bridgeComponentTypeEnum.MACHINE_PART]"
       class="filter-item"
       type="enum"
       @change="crud.toQuery"
@@ -29,7 +29,7 @@
     />
     <div>
       <project-cascader
-        v-if="query.productType === bridgeComponentTypeEnum .BOX.V"
+        v-if="query.productType === bridgeComponentTypeEnum.BOX.V"
         v-model="query.projectId"
         clearable
         class="filter-item"
@@ -96,7 +96,7 @@ const defaultQuery = {
   dateTime: undefined,
   // workshopId: undefined,
   // productionLineId: undefined,
-  productType: bridgeComponentTypeEnum .BOX.V,
+  productType: bridgeComponentTypeEnum.BOX.V,
   projectId: undefined,
   status: undefined,
   orderNumber: undefined

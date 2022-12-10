@@ -10,7 +10,7 @@
           <mHeader>
             <template #optRight>
               <common-button
-              v-permission="permission.save"
+                v-permission="permission.save"
                 class="filter-item"
                 :disabled="!crud.selections?.length"
                 size="mini"
@@ -135,7 +135,7 @@
         <!--分页组件-->
         <!-- <pagination /> -->
       </template>
-      <preview-dialog v-model:visible="previewVisible" :list="submitList" :info="currentNesting" @success="handleIssueSuccess"/>
+      <preview-dialog v-model:visible="previewVisible" :list="submitList" :info="currentNesting" @success="handleIssueSuccess" />
     </div>
   </div>
 </template>
@@ -193,7 +193,7 @@ const schedulingGroups = ref({ list: [], obj: {}})
 async function fetchGroups() {
   if (groupLoad.value) return
   try {
-    schedulingGroups.value = await manualFetchGroupsTree({ productType: bridgeComponentTypeEnum .MACHINE_PART.V })
+    schedulingGroups.value = await manualFetchGroupsTree({ productType: bridgeComponentTypeEnum.MACHINE_PART.V })
     groupLoad.value = true
   } catch (e) {
     console.log('获取生产组的信息失败', e)
@@ -282,7 +282,7 @@ function toBatchIssue() {
   const { validResult, dealList } = tableValidate(_list)
   if (validResult) {
     cleanUpData(dealList)
-    submitList.value = dealList.map(v => {
+    submitList.value = dealList.map((v) => {
       return {
         ...v,
         ...schedulingGroups.value.obj[v.groupsId]

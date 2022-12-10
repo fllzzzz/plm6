@@ -26,7 +26,7 @@
 import { computed, defineEmits, defineProps } from 'vue'
 import QrcodeVue from 'qrcode.vue'
 
-import { getPreviewLabelHtml } from '@/utils/label/index.js'
+import { getPreviewLabelHtml } from '@/utils/bridge-label/index.js'
 
 import useVisible from '@compos/use-visible'
 

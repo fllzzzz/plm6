@@ -81,7 +81,7 @@ import { ref, reactive, inject, defineExpose } from 'vue'
 import { rawMatClsEnum } from '@enum-ms/classification'
 import { mapGetters } from '@/store/lib'
 import { deepClone } from '@data-type/index'
-import { spliceQrCodeUrl, QR_SCAN_PATH } from '@/utils/label'
+import { spliceQrCodeUrl, QR_SCAN_PATH } from '@/utils/bridge-label'
 
 import usePrintLabel from '@compos/mes/label-print/use-label-print'
 import { regHeader } from '@compos/use-crud'

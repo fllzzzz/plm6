@@ -11,14 +11,14 @@
       <common-button :loading="crud.status.cu === 2" type="primary" size="mini" @click="crud.submitCU">确认</common-button>
     </template>
     <el-form ref="formRef" :model="form" :rules="rules" size="small" label-width="110px" label-position="right">
-      <el-form-item label="构件类型" prop="classificationId">
+      <el-form-item label="分段类型" prop="classificationId">
         <common-select
           v-model="form.classificationId"
           :options="artifactTypeList"
           type="other"
           class="input-underline"
           :dataStructure="{ key: 'id', label: 'name', value: 'id' }"
-          placeholder="构件类型"
+          placeholder="分段类型"
           :disabled="isEdit"
           style="width: 100%"
           @change="handleClassificationChange"
@@ -26,7 +26,7 @@
       </el-form-item>
       <el-form-item label="截面前缀" prop="specPrefixStr">
         <el-tag v-if="form.classificationId">{{ artifactTypeListObj[form.classificationId]?.specPrefixStr }}</el-tag>
-        <el-tag v-else>请选择构件类型</el-tag>
+        <el-tag v-else>请选择分段类型</el-tag>
       </el-form-item>
       <el-form-item label="数值" prop="numerical">
         <common-input-number
@@ -132,7 +132,7 @@ const validateNumerical = (rule, value, callback) => {
 }
 
 const rules = {
-  classificationId: [{ required: true, message: '请选择单元类型', trigger: 'change' }],
+  classificationId: [{ required: true, message: '请选择分段类型', trigger: 'change' }],
   numerical: [{ required: true, validator: validateNumerical, message: '请填写数值', trigger: 'blur' }]
 }
 

@@ -241,7 +241,7 @@ import { DP } from '@/settings/config'
 import { boxCellPM as permission } from '@/page-permission/bridge'
 import useDrawing from '@compos/use-drawing'
 import { TechnologyTypeAllEnum, projectTypeEnum } from '@enum-ms/contract'
-import { bridgeDeepenTypeEnum } from '@enum-ms/plan'
+import { bridgeComponentTypeEnum } from '@enum-ms/bridge'
 
 import pagination from '@crud/Pagination'
 import mHeader from './module/header'
@@ -321,7 +321,7 @@ CRUD.HOOK.handleRefresh = (crud, data) => {
     index++
     v.rowKey = v.id
     v.hasChildren = true
-    v.productType = bridgeDeepenTypeEnum.BOX.V
+    v.productType = bridgeComponentTypeEnum.BOX.V
     v.projectType = projectTypeEnum.BRIDGE.V
     return v
   })
@@ -337,7 +337,7 @@ async function load({ row, treeNode, resolve }) {
         v.rowKey = `${row.id}__${v.id}`
         v.childIndex = childIndex
         childIndex++
-        v.productType = bridgeDeepenTypeEnum.CELL.V
+        v.productType = bridgeComponentTypeEnum.CELL.V
         v.projectType = projectTypeEnum.BRIDGE.V
         return v
       })

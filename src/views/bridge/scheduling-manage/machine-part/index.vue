@@ -103,11 +103,7 @@ class="ellipsis-text text"
             <i class="el-icon-loading" />
           </div>
         </div>
-        <m-preview
-          v-model:visible="previewVisible"
-          :list="checkedNodes"
-          @success="handleSaveSuccess"
-        ></m-preview>
+        <m-preview v-model:visible="previewVisible" :list="checkedNodes" @success="handleSaveSuccess"></m-preview>
       </div>
     </div>
   </div>

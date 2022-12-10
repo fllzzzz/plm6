@@ -176,7 +176,7 @@ import useDrawing from '@compos/use-drawing'
 import bimPreviewDrawer from '@/components-system/bim/bim-preview-drawer'
 import { debounce } from '@/utils'
 
-const productType = bridgeComponentTypeEnum .BOX.V
+const productType = bridgeComponentTypeEnum.BOX.V
 provide('productType', productType)
 
 const mHeaderRef = ref()
