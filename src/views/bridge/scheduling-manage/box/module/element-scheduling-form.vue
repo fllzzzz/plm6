@@ -46,13 +46,14 @@
             <el-tag :type="row.attributeType === '单元件' ? 'warning' : 'success'">{{ row.attributeType }}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="typesettingAssembleTypeEnum" :show-overflow-tooltip="true" label="单元件类型" min-width="100" align="center">
+        <!-- <el-table-column prop="typesettingAssembleTypeEnum" :show-overflow-tooltip="true" label="单元件类型" min-width="100" align="center">
           <template #default="{ row: { sourceRow: row } }">
             <span>{{
               row.typesettingAssembleTypeEnum ? mesBuildingTypeSettingAssembleTypeEnum.VL[row.typesettingAssembleTypeEnum] : '-'
             }}</span>
           </template>
-        </el-table-column>
+        </el-table-column> -->
+        <el-table-column prop="elementConfigName" :show-overflow-tooltip="true" label="单元件类型" min-width="100" align="center"/>
         <el-table-column prop="serialNumber" :show-overflow-tooltip="true" label="编号" min-width="100" align="center">
           <template #default="{ row }">
             <span>{{ row.serialNumber }}</span>
@@ -121,13 +122,14 @@
             <el-tag :type="row.attributeType === '单元件' ? 'warning' : 'success'">{{ row.attributeType }}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="typesettingAssembleTypeEnum" :show-overflow-tooltip="true" label="单元件类型" min-width="100" align="center">
+        <!-- <el-table-column prop="typesettingAssembleTypeEnum" :show-overflow-tooltip="true" label="单元件类型" min-width="100" align="center">
           <template #default="{ row: { sourceRow: row } }">
             <span>{{
               row.typesettingAssembleTypeEnum ? mesBuildingTypeSettingAssembleTypeEnum.VL[row.typesettingAssembleTypeEnum] : '-'
             }}</span>
           </template>
-        </el-table-column>
+        </el-table-column> -->
+        <el-table-column prop="elementConfigName" :show-overflow-tooltip="true" label="单元件类型" min-width="100" align="center"/>
         <el-table-column prop="serialNumber" :show-overflow-tooltip="true" label="编号" min-width="100" align="center" />
         <el-table-column prop="specification" :show-overflow-tooltip="true" label="规格" min-width="120" align="center" />
         <el-table-column prop="commonLength" :show-overflow-tooltip="true" label="长度（mm）" min-width="90" align="center" />
