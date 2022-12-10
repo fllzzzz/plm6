@@ -83,7 +83,7 @@ const headRef = ref()
 const tableRef = ref()
 const { crud, CRUD } = useCRUD(
   {
-    title: '构件看板',
+    title: '分段看板',
     permission: { ...permission },
     crudApi: { get },
     optShow: { ...optShow },

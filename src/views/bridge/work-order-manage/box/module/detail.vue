@@ -147,7 +147,7 @@
           <el-table-column :show-overflow-tooltip="true" label="规格" key="specification" prop="specification" align="center" />
           <el-table-column :show-overflow-tooltip="true" label="材质" key="material" prop="material" align="center" />
           <el-table-column :show-overflow-tooltip="true" label="母材长度" key="length" prop="length" align="center" />
-          <el-table-column :show-overflow-tooltip="true" label="部件" key="serialNumber" prop="serialNumber" align="center">
+          <el-table-column :show-overflow-tooltip="true" label="单元件" key="serialNumber" prop="serialNumber" align="center">
             <template v-slot="scope">
               <div
                 v-for="(item, index) in scope.row.assembleList"
@@ -301,7 +301,7 @@ async function processGet() {
   }
 }
 
-// 构件查看、部件任务清单接口
+// 分段查看、单元件任务清单接口
 async function fetch() {
   let _list = []
   try {
@@ -322,7 +322,7 @@ async function fetch() {
   }
 }
 
-// 部件套料清单
+// 单元件套料清单
 async function assembleListGet() {
   let _content = []
   try {
@@ -334,7 +334,7 @@ async function assembleListGet() {
     setTotalPage(totalElements)
     _content = content
   } catch (err) {
-    console.log('获取部件套料清单', err)
+    console.log('获取单元件套料清单', err)
   } finally {
     tableData.value = _content
   }

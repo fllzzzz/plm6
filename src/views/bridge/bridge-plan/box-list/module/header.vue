@@ -58,7 +58,7 @@
           分段单元清单模板
         </export-button>
         <el-popconfirm
-          :title="`确认清空【${currentArea.name}】下的【部件清单】么?`"
+          :title="`确认清空【${currentArea.name}】下的【单元件清单】么?`"
           @confirm="deleteByArea"
           v-if="currentArea && currentArea.id && checkPermission(crud.permission.del)"
         >

@@ -147,7 +147,7 @@ function showStatus(item) {
 
 function handleBatchMatch() {
   if (checkedNodes.value.length <= 0) {
-    ElMessage.warning('至少选择一个构件进行匹配查询')
+    ElMessage.warning('至少选择一个分段进行匹配查询')
     return
   }
   detailIds.value = checkedNodes.value.map((v) => v.id)

@@ -121,7 +121,7 @@ async function getTotalWeight() {
     const data = await cellTotalWeight({ ...query })
     amount.value = data || {}
   } catch (e) {
-    console.log('获取异常构件', e)
+    console.log('获取异常分段', e)
   }
 }
 </script>

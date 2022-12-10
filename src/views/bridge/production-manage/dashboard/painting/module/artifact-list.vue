@@ -156,7 +156,7 @@ async function fetch() {
     })
     setTotalPage(totalElements)
   } catch (er) {
-    console.log('获取构件清单', er)
+    console.log('获取分段清单', er)
   } finally {
     tableLoading.value = false
   }

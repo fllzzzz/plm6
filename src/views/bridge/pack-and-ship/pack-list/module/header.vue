@@ -200,7 +200,7 @@ async function getLabelInfo(row) {
     console.log('获取详情失败', error)
   }
 
-  // 标签构件信息
+  // 标签分段信息
   const packageInfo = {
     serialNumber: row.serialNumber,
     list: _list,

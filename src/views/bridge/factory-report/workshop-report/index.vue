@@ -48,7 +48,7 @@
         prop="serialNumber"
         align="center"
         :show-overflow-tooltip="true"
-        label="构件编号"
+        label="分段编号"
       >
         <template v-slot="scope">
           <span>{{ scope.row.serialNumber }}</span>

@@ -141,6 +141,7 @@ CRUD.HOOK.beforeSubmit = async () => {
         sequence: index
       })
     })
+    console.log(_processSequenceIds, '_processSequenceIds')
     form.processLinkList = processSequenceIds
     form.typeId = form.id
     return true

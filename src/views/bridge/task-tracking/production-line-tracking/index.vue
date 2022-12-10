@@ -117,7 +117,7 @@ import useMaxHeight from '@compos/use-max-height'
 import mHeader from './module/header.vue'
 import productionLineTrackingDetail from './production-line-tracking-detail/index.vue'
 
-// 由于mes枚举构件、部件的type值相同，单独定义枚举type值
+// 由于mes枚举分段、单元件的type值相同，单独定义枚举type值
 const componentTypeTag = {
   [bridgeComponentTypeEnum.BOX.K]: 'success',
   [bridgeComponentTypeEnum.CELL.K]: 'warning',

@@ -165,7 +165,7 @@
           <el-tooltip
             class="item"
             effect="light"
-            :content="`构件进行与暂停: \n
+            :content="`分段进行与暂停: \n
           1.无论有无生产均可以执行暂停；\n
           2.暂停后，无法打包。\n`"
             placement="top"

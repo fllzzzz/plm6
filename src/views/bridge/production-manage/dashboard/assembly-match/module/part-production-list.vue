@@ -12,7 +12,7 @@
     </div>
     <common-table ref="tableRef" :data="machinePartData" :empty-text="'暂无数据'" :max-height="maxHeight + 20" row-key="id" style="width: 100%">
       <el-table-column prop="index" label="序号" align="center" width="60" type="index" />
-      <el-table-column align="center" key="serialNumber" prop="serialNumber" :show-overflow-tooltip="true" label="零部件编号">
+      <el-table-column align="center" key="serialNumber" prop="serialNumber" :show-overflow-tooltip="true" label="零单元件编号">
         <template v-slot="scope">
           <span>{{ scope.row.serialNumber }}</span>
         </template>

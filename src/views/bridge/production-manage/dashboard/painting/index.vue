@@ -101,7 +101,7 @@
         style="width: 100%"
       >
         <el-table-column label="序号" type="index" align="center" width="60" />
-        <el-table-column prop="config.name" :show-overflow-tooltip="true" label="构件类型" align="center" min-width="120px" />
+        <el-table-column prop="config.name" :show-overflow-tooltip="true" label="分段类型" align="center" min-width="120px" />
         <el-table-column prop="surfaceArea" label="涂装面积(㎡)" align="center" min-width="80px" />
         <el-table-column prop="primerMeasure" label="底漆(L)" align="center" min-width="80px" />
         <el-table-column prop="intermediateMeasure" label="中间漆(L)" align="center" min-width="80px" />
@@ -216,7 +216,7 @@ async function fetchAllArtifact() {
       return v
     })
   } catch (er) {
-    console.log('获取全部构件信息失败', er)
+    console.log('获取全部分段信息失败', er)
   } finally {
     artifactLoading.value = false
   }

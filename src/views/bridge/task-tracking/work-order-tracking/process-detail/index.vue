@@ -210,7 +210,7 @@ import workshopSelect from '@comp-mes/workshop-select'
 import productionLineSelect from '@comp-mes/production-line-select'
 import productionLineDetail from '../production-line-detail/index.vue'
 
-// 由于mes枚举构件、部件的type值相同，单独定义枚举type值
+// 由于mes枚举分段、单元件的type值相同，单独定义枚举type值
 const componentTypeTag = {
   [bridgeComponentTypeEnum.BOX.K]: 'success',
   [bridgeComponentTypeEnum.CELL.K]: 'warning',
@@ -264,7 +264,7 @@ watch(
 
 const { handleSizeChange, handleCurrentChange, total, setTotalPage, queryPage } = usePagination({ fetchHook: processGet })
 
-// 传统线/智能线 构件
+// 传统线/智能线 分段
 async function processGet() {
   processData.value = []
   if (!props.processList?.taskOrderId) {
@@ -290,7 +290,7 @@ async function processGet() {
     }
     assembleProcessData.value = data?.assembleList || []
   } catch (e) {
-    console.log('获取构件部件工序进度', e)
+    console.log('获取分段单元件工序进度', e)
   }
 }
 

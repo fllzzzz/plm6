@@ -22,7 +22,7 @@
     </template>
     <template #content>
       <div class="nameViews">
-        <span>构件：</span>
+        <span>分段：</span>
         <span v-for="n in names" :key="n.name">
           <el-tag :type="n.tagType" effect="plain" style="margin-right:5px;margin-bottom:5px;">{{ n.name }}</el-tag>
         </span>

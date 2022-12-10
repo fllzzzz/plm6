@@ -408,7 +408,7 @@ function openRecordView(row) {
 function getLabelInfo(row, num) {
   // const { getLine, printConfig, spliceQrCodeUrl, QR_SCAN_PATH, requestUrl, companyName } = headRef.value
   const { printConfig, spliceQrCodeUrl, QR_SCAN_PATH, requestUrl, companyName } = headRef.value
-  // 标签构件信息
+  // 标签分段信息
   const component = {
     projectName: row.project.shortName,
     printTime: row.printTime ? parseTime(row.printTime, '{y}/{m}/{d}') : parseTime(new Date().getTime(), '{y}/{m}/{d}'),

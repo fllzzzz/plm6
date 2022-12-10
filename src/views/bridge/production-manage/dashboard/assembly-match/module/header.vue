@@ -114,7 +114,7 @@ async function artifactInfoGet() {
       query.structureClassId = summaryList.value[0].id
     }
   } catch (e) {
-    console.log('获取区域下的构件汇总信息', e)
+    console.log('获取区域下的分段汇总信息', e)
   }
 }
 

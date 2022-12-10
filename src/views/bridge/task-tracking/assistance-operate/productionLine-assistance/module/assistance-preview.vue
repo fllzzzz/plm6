@@ -35,7 +35,7 @@
         align="center"
       >
         <template #default="{ row }">
-          <el-tag :type="row.attributeType === '部件' ? 'warning' : 'success'">{{ row.attributeType }}</el-tag>
+          <el-tag :type="row.attributeType === '单元件' ? 'warning' : 'success'">{{ row.attributeType }}</el-tag>
         </template>
       </el-table-column>
       <el-table-column

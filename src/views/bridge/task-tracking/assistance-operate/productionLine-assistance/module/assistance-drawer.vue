@@ -11,7 +11,7 @@
     <template #content>
       <div class="tip">
         <span>* 提示：</span>
-        <span> 产线协同只能对未开始生产的构件或部件或零件进行协同，已经开始生产无法协同</span>
+        <span> 产线协同只能对未开始生产的分段或单元件或零件进行协同，已经开始生产无法协同</span>
       </div>
       <div class="head-container">
         <el-input
