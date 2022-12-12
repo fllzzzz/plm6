@@ -23,7 +23,8 @@ export default {
         meta: {
           title: '我的项目',
           icon: 'project',
-          noCache: true
+          noCache: true,
+          permissions: ['bridgeMyProjectPM']
         }
       }]
     },
@@ -78,35 +79,35 @@ export default {
           path: 'bridge-monomer',
           hidden: false,
           component: '/plan/overall-plan/monomer/index',
-          meta: { title: '项目单体', icon: 'project', noCache: true }
+          meta: { title: '项目单体', icon: 'project', noCache: true, permissions: ['bridgeMonomerListPM'] }
         },
         {
           name: 'BridgeAreaManage',
           path: 'bridge-area',
           hidden: false,
           component: '/plan/overall-plan/area/index',
-          meta: { title: '区域列表', icon: 'project', noCache: true }
+          meta: { title: '区域列表', icon: 'project', noCache: true, permissions: ['bridgeAreaListPM'] }
         },
         {
           name: 'BridgeMakeManage',
           path: 'bridge-make',
           hidden: false,
           component: '/plan/overall-plan/plan-make/index',
-          meta: { title: '工作计划', icon: 'project', noCache: true }
+          meta: { title: '工作计划', icon: 'project', noCache: true, permissions: ['bridgePlanMakeListPM'] }
         },
         {
           name: 'BridgePlanSummary',
           path: 'bridge-plan-summary',
           hidden: false,
           component: '/plan/overall-plan/plan-summary/index',
-          meta: { title: '工单汇总', icon: 'project', noCache: true }
+          meta: { title: '工单汇总', icon: 'project', noCache: true, permissions: ['bridgePlanSummaryListPM'] }
         },
         {
           name: 'BridgeProgress',
           path: 'bridge-progress',
           hidden: false,
           component: '/plan/overall-plan/plan-progress/index',
-          meta: { title: '计划跟踪', icon: 'project', noCache: true }
+          meta: { title: '计划跟踪', icon: 'project', noCache: true, permissions: ['bridePlanProgressListPM'] }
         }
       ]
     },
@@ -124,14 +125,14 @@ export default {
           path: 'box-list',
           hidden: false,
           component: '/bridge/bridge-plan/box-list/index',
-          meta: { title: '分段清单', icon: 'project', noCache: true }
+          meta: { title: '分段清单', icon: 'project', noCache: true, permissions: ['boxCellPM'] }
         },
         {
           name: 'PlanBridgeCellPartList',
           path: 'cell-part-list',
           hidden: false,
           component: '/bridge/bridge-plan/cell-part-list/index',
-          meta: { title: '单元清单', icon: 'project', noCache: true }
+          meta: { title: '单元清单', icon: 'project', noCache: true, permissions: ['cellListPM'] }
         },
         {
           path: 'bridge-summary',
@@ -147,21 +148,21 @@ export default {
               path: 'box-summary',
               hidden: false,
               component: '/bridge/bridge-plan/list-summary/box-summary/index',
-              meta: { title: '分段清单汇总', icon: 'project', noCache: true }
+              meta: { title: '分段清单汇总', icon: 'project', noCache: true, permissions: ['boxSummaryListPM'] }
             },
             {
               name: 'CellSummary',
               path: 'cell-summary',
               hidden: false,
               component: '/bridge/bridge-plan/list-summary/cell-summary/index',
-              meta: { title: '单元清单汇总', icon: 'project', noCache: true }
+              meta: { title: '单元清单汇总', icon: 'project', noCache: true, permissions: ['cellSummaryListPM'] }
             },
             {
               name: 'PartSummary',
               path: 'part-summary',
               hidden: false,
               component: '/bridge/bridge-plan/list-summary/part-summary/index',
-              meta: { title: '零件清单汇总', icon: 'project', noCache: true }
+              meta: { title: '零件清单汇总', icon: 'project', noCache: true, permissions: ['partSummaryListPM'] }
             }
           ]
         },
@@ -179,35 +180,35 @@ export default {
               path: 'bridge-model',
               hidden: false,
               component: '/plan/technical-data-manage/technical-achievement/model/index',
-              meta: { title: '模型文件管理', icon: 'project', noCache: true }
+              meta: { title: '模型文件管理', icon: 'project', noCache: true, permissions: ['bridgeModelFileListPM'] }
             },
             {
               name: 'BridgeDrawingFile',
               path: 'bridge-drawing',
               hidden: false,
               component: '/plan/technical-data-manage/technical-achievement/drawing/index',
-              meta: { title: '图纸文件管理', icon: 'project', noCache: true }
+              meta: { title: '图纸文件管理', icon: 'project', noCache: true, permissions: ['bridgeDrawingFileListPM'] }
             },
             {
               name: 'BridgeCNCFile',
               path: 'bridge-cnc',
               hidden: false,
               component: '/plan/technical-data-manage/technical-achievement/cnc/index',
-              meta: { title: '数控文件管理', icon: 'project', noCache: true }
+              meta: { title: '数控文件管理', icon: 'project', noCache: true, permissions: ['bridgeCncFileListPM'] }
             },
             {
               name: 'BridgePlanChangeFile',
               path: 'bridge-change-file',
               hidden: false,
               component: '/plan/technical-data-manage/change-file/index',
-              meta: { title: '变更文件', icon: 'project', noCache: true }
+              meta: { title: '变更文件', icon: 'project', noCache: true, permissions: ['bridgeChangeFileListPM'] }
             },
             {
               name: 'BridgePlanBlueprint',
               path: 'bridge-blueprint',
               hidden: false,
               component: '/plan/technical-data-manage/blueprint/index',
-              meta: { title: '施工蓝图', icon: 'project', noCache: true }
+              meta: { title: '施工蓝图', icon: 'project', noCache: true, permissions: ['bridgeBlueprintListPM'] }
             }
           ]
         }
@@ -234,7 +235,8 @@ export default {
           meta: {
             title: '生产排期',
             icon: 'project',
-            noCache: true
+            noCache: true,
+            permissions: ['bridgeProductionOrderPM']
           }
         }
       ]
@@ -260,7 +262,8 @@ export default {
           meta: {
             title: '分段排产',
             icon: 'project',
-            noCache: true
+            noCache: true,
+            permissions: ['boxSchedulingPM']
           }
         },
         {
@@ -284,7 +287,8 @@ export default {
               meta: {
                 title: '零件排产',
                 icon: 'project',
-                noCache: true
+                noCache: true,
+                permissions: ['machinePartSchedulingPM']
               }
             },
             {
@@ -295,7 +299,8 @@ export default {
               meta: {
                 title: '预览记录',
                 icon: 'project',
-                noCache: true
+                noCache: true,
+                permissions: ['machinePartSchedulingRecordPM']
               }
             },
             {
@@ -306,7 +311,8 @@ export default {
               meta: {
                 title: '套料成果',
                 icon: 'project',
-                noCache: true
+                noCache: true,
+                permissions: ['machinePartSchedulingNestingResultPM']
               }
             }
           ]
@@ -334,7 +340,8 @@ export default {
           meta: {
             title: '分段工单',
             icon: 'project',
-            noCache: true
+            noCache: true,
+            permissions: ['artifactWorkOrderPM']
           }
         },
         {
@@ -345,7 +352,8 @@ export default {
           meta: {
             title: '零件工单',
             icon: 'project',
-            noCache: true
+            noCache: true,
+            permissions: ['machinePartWorkOrderPM']
           }
         }
       ]
@@ -371,7 +379,8 @@ export default {
           meta: {
             title: '工单跟踪',
             icon: 'project',
-            noCache: true
+            noCache: true,
+            permissions: ['bridgeWorkOrderTrackingPM']
           }
         },
         {
@@ -382,7 +391,8 @@ export default {
           meta: {
             title: '月度任务跟踪',
             icon: 'project',
-            noCache: true
+            noCache: true,
+            permissions: ['bridgeMonthlyTaskTrackingPM']
           }
         },
         {
@@ -393,7 +403,8 @@ export default {
           meta: {
             title: '产线跟踪',
             icon: 'project',
-            noCache: true
+            noCache: true,
+            permissions: ['bridgeProductionLineTrackingPM']
           }
         },
         {
@@ -404,7 +415,8 @@ export default {
           meta: {
             title: '工序呆滞',
             icon: 'project',
-            noCache: true
+            noCache: true,
+            permissions: ['bridgeProcessSluggishPM']
           }
         },
         {
@@ -426,7 +438,8 @@ export default {
               meta: {
                 title: '产线协同',
                 icon: 'project',
-                noCache: true
+                noCache: true,
+                permissions: ['bridgeProductionLineAssistancePM']
               }
             },
             {
@@ -437,7 +450,8 @@ export default {
               meta: {
                 title: '工序协同',
                 icon: 'project',
-                noCache: true
+                noCache: true,
+                permissions: ['bridgeProcessAssistancePM']
               }
             }
           ]
@@ -462,7 +476,8 @@ export default {
         meta: {
           title: '项目总览',
           icon: 'project',
-          noCache: true
+          noCache: true,
+          permissions: ['bridgeProjectOverviewPM']
         }
       },
       {
@@ -484,7 +499,8 @@ export default {
         meta: {
           title: '项目齐套',
           icon: 'project',
-          noCache: true
+          noCache: true,
+          permissions: ['bridgeAssemblyMatchDashboardPM']
         }
       },
       {
@@ -495,7 +511,8 @@ export default {
         meta: {
           title: '涂装计算',
           icon: 'project',
-          noCache: true
+          noCache: true,
+          permissions: ['bridgePaintingDashboardPM']
         }
       }
       ]
@@ -521,7 +538,8 @@ export default {
           meta: {
             title: '质检报表',
             icon: 'project',
-            noCache: true
+            noCache: true,
+            permissions: ['bridgeQualityInspectionReportPM']
           }
         },
         {
@@ -532,7 +550,8 @@ export default {
           meta: {
             title: '产线报表',
             icon: 'project',
-            noCache: true
+            noCache: true,
+            permissions: ['bridgeQhseProductionLineReportPM']
           }
         },
         {
@@ -543,7 +562,8 @@ export default {
           meta: {
             title: '问题曝光',
             icon: 'project',
-            noCache: true
+            noCache: true,
+            permissions: ['bridgeQhseDisclosurePM']
           }
         }
       ]
@@ -568,7 +588,8 @@ export default {
         meta: {
           title: '分段',
           icon: 'project',
-          noCache: true
+          noCache: true,
+          permissions: ['bridgeArtifactLabelPM']
         }
       },
       {
@@ -590,7 +611,8 @@ export default {
         meta: {
           title: '配套件',
           icon: 'project',
-          noCache: true
+          noCache: true,
+          permissions: ['bridgeAuxiliaryMaterialLabelPM']
         }
       }
       ]
@@ -616,7 +638,8 @@ export default {
           meta: {
             title: '发运管理',
             icon: 'project',
-            noCache: true
+            noCache: true,
+            permissions: ['bridgeShipSummaryPM']
           }
         },
         {
@@ -640,7 +663,8 @@ export default {
               meta: {
                 title: '打包操作',
                 icon: 'project',
-                noCache: true
+                noCache: true,
+                permissions: ['bridgeManualPackPM']
               }
             },
             {
@@ -651,7 +675,8 @@ export default {
               meta: {
                 title: '打包记录',
                 icon: 'project',
-                noCache: true
+                noCache: true,
+                permissions: ['bridgePackPM']
               }
             }
           ]
@@ -664,7 +689,8 @@ export default {
           meta: {
             title: '发运记录',
             icon: 'project',
-            noCache: true
+            noCache: true,
+            permissions: ['bridgeShipPM']
           }
         },
         {
@@ -675,7 +701,8 @@ export default {
           meta: {
             title: '收货状态',
             icon: 'project',
-            noCache: true
+            noCache: true,
+            permissions: ['bridgeReceiptStatusPM']
           }
         },
         {
@@ -686,7 +713,8 @@ export default {
           meta: {
             title: '物流记录',
             icon: 'project',
-            noCache: true
+            noCache: true,
+            permissions: ['bridgeLogisticsPM']
           }
         },
         {
@@ -697,7 +725,8 @@ export default {
           meta: {
             title: '发运审核',
             icon: 'project',
-            noCache: true
+            noCache: true,
+            permissions: ['bridgeShipAuditPM']
           }
         },
         {
@@ -708,7 +737,8 @@ export default {
           meta: {
             title: '制品入发存',
             icon: 'project',
-            noCache: true
+            noCache: true,
+            permissions: ['bridgeProductSendReceiveStoragePM']
           }
         }
       ]
@@ -734,7 +764,8 @@ export default {
           meta: {
             title: '车间报表',
             icon: 'project',
-            noCache: true
+            noCache: true,
+            permissions: ['bridgeFactoryReportPM']
           }
         }
       ]
