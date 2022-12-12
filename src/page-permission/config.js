@@ -26,15 +26,6 @@ export const configFactoryPM = {
   editStatus: ['factory:editStatus'] // 更改工厂状态
 }
 
-// 基础配置/工厂管理：车间
-export const configWorkshopPM = {
-  get: ['workshop:get'], // 车间列表
-  add: ['workshop:add'], // 添加车间
-  edit: ['workshop:edit'], // 编辑车间
-  del: ['workshop:del'], // 删除车间
-  editStatus: ['workshop:editStatus'] // 更改车间状态
-}
-
 // 基础配置/公司配置
 export const systemConfigPM = {
   company: {
@@ -166,6 +157,16 @@ export const changeReasonPM = {
 // ########################################################################
 
 // --------------------------- 建钢-生产配置 start -------------------------
+
+// 建钢-生产配置/车间
+export const configWorkshopPM = {
+  get: ['workshop:get'], // 车间列表
+  add: ['workshop:add'], // 添加车间
+  edit: ['workshop:edit'], // 编辑车间
+  del: ['workshop:del'], // 删除车间
+  editStatus: ['workshop:editStatus'] // 更改车间状态
+}
+
 // 建钢-生产配置/构件特征定义
 export const artifactConfigPM = {
   get: ['artifact_config:get'], // 构件特征定义列表
@@ -340,6 +341,15 @@ export const mesCuttingConfigPM = {
 
 // ########################################################################
 // --------------------------- 桥梁-生产配置 start -------------------------
+
+// 桥梁-生产配置/车间
+export const bridgeWorkshopPM = {
+  get: ['bridge_workshop:get'], // 车间列表
+  add: ['bridge_workshop:add'], // 添加车间
+  edit: ['bridge_workshop:edit'], // 编辑车间
+  del: ['bridge_workshop:del'], // 删除车间
+  editStatus: ['bridge_workshop:editStatus'] // 更改车间状态
+}
 
 // 桥梁-生产配置/分段特征定义
 export const boxConfigPM = {

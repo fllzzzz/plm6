@@ -43,7 +43,7 @@ import { regHeader } from '@compos/use-crud'
 import moment from 'moment'
 import { bridgeComponentTypeEnum } from '@enum-ms/bridge'
 import { PICKER_OPTIONS_SHORTCUTS } from '@/settings/config'
-import workshopSelect from '@comp-mes/workshop-select'
+import workshopSelect from '@/components-system/bridge/workshop-select'
 import rrOperation from '@crud/RR.operation'
 
 const defaultQuery = {

@@ -71,7 +71,7 @@ import { bridgeComponentTypeEnum } from '@enum-ms/bridge'
 import { regHeader } from '@compos/use-crud'
 import crudOperation from '@crud/CRUD.operation'
 import rrOperation from '@crud/RR.operation'
-import workshopSelect from '@comp-mes/workshop-select'
+import workshopSelect from '@/components-system/bridge/workshop-select'
 import moment from 'moment'
 
 const defaultTime = moment().startOf('month').valueOf()

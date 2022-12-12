@@ -218,9 +218,16 @@ export default {
       hidden: false,
       name: 'MesProductionConfig',
       alwaysShow: false,
-      redirect: '/mes/production-config/factory-and-workshop',
+      redirect: '/mes/production-config/steel-workshop',
       meta: { title: '建钢-生产配置', icon: 'project', noCache: true },
       children: [
+        {
+          name: 'SteelWorkshop',
+          path: 'steel-workshop',
+          hidden: false,
+          component: '/mes/production-config/workshop/index',
+          meta: { title: '建钢-车间', icon: 'project', noCache: true }
+        },
         {
           path: 'characteristics-config',
           component: '',
@@ -417,6 +424,13 @@ export default {
       meta: { title: '桥梁-生产配置', icon: 'project', noCache: true },
       children: [
         {
+          name: 'BridgeWorkShop',
+          path: 'bridge-workshop',
+          hidden: false,
+          component: '/bridge/bridge-production-config/workshop/index',
+          meta: { title: '桥梁-车间', icon: 'project', noCache: true }
+        },
+        {
           path: 'bridge-characteristics-config',
           component: '',
           hidden: false,
@@ -444,14 +458,14 @@ export default {
               path: 'part-config',
               hidden: false,
               component: '/bridge/bridge-production-config/bridge-characteristics-config/part-config/index',
-              meta: { title: '桥梁-零件特征定义', icon: 'project', noCache: true }
+              meta: { title: '零件特征定义', icon: 'project', noCache: true }
             },
             {
               name: 'BridgeAuxiliaryMaterialConfig',
               path: 'bridge-auxiliary-material-config',
               hidden: false,
               component: '/bridge/bridge-production-config/bridge-characteristics-config/auxiliary-material-config/index',
-              meta: { title: '桥梁-配套件特征定义', icon: 'project', noCache: true }
+              meta: { title: '配套件特征定义', icon: 'project', noCache: true }
             }
           ]
         },

@@ -56,9 +56,9 @@
 <script setup>
 import { ref, watch } from 'vue'
 import { shipmentSummary } from '@/api/bridge/bridge-pack-and-ship/ship-summary'
-import workshopSelect from '@comp-mes/workshop-select'
+import workshopSelect from '@/components-system/bridge/workshop-select'
 import { regHeader } from '@compos/use-crud'
-import { shipStatusEnum, artifactProductLineEnum } from '@enum-ms/mes'
+import { shipStatusEnum } from '@enum-ms/mes'
 import moment from 'moment'
 import { DP } from '@/settings/config'
 // import checkPermission from '@/utils/system/check-permission'

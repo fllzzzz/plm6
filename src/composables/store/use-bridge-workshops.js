@@ -4,11 +4,11 @@ import { useStore } from 'vuex'
 // 获取车间
 const useWorkshop = (loadedCallBack) => {
   const store = useStore()
-  const loaded = computed(() => store.state.config.loaded.workshops)
+  const loaded = computed(() => store.state.config.loaded.bridgeWorkshops)
 
   // 未加载则拉取
-  if (!store.state.config.loaded.workshops) {
-    store.dispatch('config/fetchWorkshops')
+  if (!store.state.config.loaded.bridgeWorkshops) {
+    store.dispatch('config/fetchBridgeWorkshops')
   }
 
   // 加载成功回调
@@ -28,8 +28,8 @@ const useWorkshop = (loadedCallBack) => {
   }
 
   return {
-    workshops: computed(() => store.state.config.workshops),
-    loaded: computed(() => store.state.config.loaded.workshops)
+    workshops: computed(() => store.state.config.bridgeWorkshops),
+    loaded: computed(() => store.state.config.loaded.bridgeWorkshops)
   }
 }
 

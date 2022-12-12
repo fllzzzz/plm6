@@ -206,7 +206,7 @@ import { DP } from '@/settings/config'
 import { BellFilled } from '@element-plus/icons'
 import useMaxHeight from '@compos/use-max-height'
 import usePagination from '@compos/use-pagination'
-import workshopSelect from '@comp-mes/workshop-select'
+import workshopSelect from '@/components-system/bridge/workshop-select'
 import productionLineSelect from '@comp-mes/production-line-select'
 import productionLineDetail from '../production-line-detail/index.vue'
 

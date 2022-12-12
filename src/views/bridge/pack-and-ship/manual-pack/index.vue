@@ -76,9 +76,9 @@ import { bridgeManualPackPM as permission } from '@/page-permission/bridge'
 
 import useMaxHeight from '@compos/use-max-height'
 // import factorySelect from '@comp-base/factory-select'
-import workshopSelect from '@comp-mes/workshop-select'
-import structureTable from './structure'
-import enclosureTable from './enclosure'
+import workshopSelect from '@/components-system/bridge/workshop-select'
+import boxTable from './box'
+import cellTable from './cell'
 import auxiliaryMaterialTable from './auxiliary-material'
 import packListDrawer from './pack-list-drawer'
 import monomerSelect from '@/components-system/plan/monomer-select'
@@ -170,9 +170,9 @@ watch(
 const currentView = computed(() => {
   switch (packType.value) {
     case packTypeEnum.BOX.V:
-      return structureTable
+      return boxTable
     case packTypeEnum.CELL.V:
-      return enclosureTable
+      return cellTable
     case packTypeEnum.AUXILIARY_MATERIAL.V:
       return auxiliaryMaterialTable
     default:

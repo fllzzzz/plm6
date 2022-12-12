@@ -83,7 +83,7 @@ import { artifactProductLineEnum } from '@enum-ms/mes'
 
 import { regForm } from '@compos/use-crud'
 import factorySelect from '@comp-base/factory-select.vue'
-import workshopSelect from '@comp-mes/workshop-select'
+import workshopSelect from '@/components-system/bridge/workshop-select'
 
 const formRef = ref()
 

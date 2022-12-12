@@ -39,10 +39,23 @@
         <template v-slot="scope">
           <template v-if="scope.row.links && scope.row.links.length > 0">
             <span v-for="(item) in scope.row.links" :key="item.id">
-              {{`${item.keyword}`}}
+              {{`【${item.keyword}】`}}
             </span>
           </template>
           <div v-else>-</div>
+        </template>
+      </el-table-column>
+      <el-table-column
+        v-if="columns.visible('boolSectionSteel')"
+        key="boolSectionSteel"
+        prop="boolSectionSteel"
+        :show-overflow-tooltip="true"
+        label="是否型材"
+        width="100"
+        align="center"
+      >
+        <template v-slot="scope">
+          <span>{{isNotBlank(scope.row.boolSectionSteel)?extrusionClsEnum.VL[scope.row.boolSectionSteel]:'-' }}</span>
         </template>
       </el-table-column>
        <el-table-column
@@ -78,10 +91,14 @@
 <script setup>
 import crudApi from '@/api/config/bridge/part-config'
 import { ref } from 'vue'
+
+import { isNotBlank } from '@data-type/index'
+import { extrusionClsEnum } from '@enum-ms/classification'
 import { partConfigPM as permission } from '@/page-permission/config'
 import checkPermission from '@/utils/system/check-permission'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
+
 import udOperation from '@crud/UD.operation'
 import mHeader from './module/header'
 import mForm from './module/form'

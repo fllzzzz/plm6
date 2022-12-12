@@ -1,5 +1,18 @@
 import request from '@/utils/request'
 
+// 获取桥梁所有车间
+export function getWorkshopsAllSimple(params) {
+  return request({
+    module: 'bridge',
+    url: 'workshop',
+    method: 'get',
+    params: {
+      boolEnabledEnum: true,
+      ...params
+    }
+  })
+}
+
 // 获取桥梁所有工序
 export function getProcessAllSimple(params) {
   return request({

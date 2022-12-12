@@ -40,6 +40,7 @@ import { getInspectionTeamAllSimple as getBridgeInspectionTeamAllSimple } from '
 import { getLinesAllSimple as getBridgeLinesAllSimple } from '@/api/bridge/common'
 import { getAllFactoryWorkshopLines as getBridgeAllFactoryWorkshopLines } from '@/api/bridge/common'
 import { getProductionTeamAllSimple as getBridgeProductionTeamAllSimple } from '@/api/bridge/common'
+import { getWorkshopsAllSimple as getBridgeWorkshopsAllSimple } from '@/api/bridge/common'
 
 import moment from 'moment'
 
@@ -77,6 +78,7 @@ const state = {
   factoryKV: {}, // 工厂id:value 格式
   warehouse: [], // 存储仓库
   workshops: [], // 车间
+  bridgeWorkshops: [], // 桥梁-车间
   productLines: [], // 工厂-车间-生产线
   bridgeProductLines: [], // 桥梁工厂-车间-生产线
   productionTeam: [], // 生产班组
@@ -119,6 +121,7 @@ const state = {
     factories: false,
     warehouse: false,
     workshops: false,
+    bridgeWorkshops: false,
     productionTeam: false,
     bridgeProductionTeam: false,
     inspectionTeam: false,
@@ -200,6 +203,9 @@ const mutations = {
   SET_WORKSHOPS(state, workshops) {
     state.workshops = workshops
   },
+  SET_BRIDGE_WORKSHOPS(state, bridgeWorkshops) {
+    state.bridgeWorkshops = bridgeWorkshops
+  },
   SET_WAREHOUSE(state, warehouse) {
     state.warehouse = warehouse
   },
@@ -218,8 +224,6 @@ const mutations = {
     bridgeProductionTeam.forEach((v) => {
       state.bridgeProductionTeamKV[v.id] = v
     })
-    console.log(state.bridgeProductionTeam)
-    console.log(state.bridgeProductionTeamKV)
   },
   SET_INSPECTION_TEAM(state, inspectionTeam) {
     state.inspectionTeam = inspectionTeam
@@ -447,6 +451,12 @@ const actions = {
     const { content = [] } = await getWorkshopsAllSimple()
     commit('SET_WORKSHOPS', content)
     commit('SET_LOADED', { key: 'workshops' })
+    return content
+  },
+  async fetchBridgeWorkshops({ commit }) {
+    const { content = [] } = await getBridgeWorkshopsAllSimple()
+    commit('SET_BRIDGE_WORKSHOPS', content)
+    commit('SET_LOADED', { key: 'bridgeWorkshops' })
     return content
   },
   async fetchProductionTeam({ commit }) {
