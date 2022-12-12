@@ -3,7 +3,7 @@ import request from '@/utils/request'
 export function getArtifact(params) {
   return request({
     module: 'bridge',
-    url: 'package/box/use',
+    url: 'package/page',
     method: 'get',
     params
   })

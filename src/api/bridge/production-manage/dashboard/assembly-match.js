@@ -35,7 +35,7 @@ export function detail(params) {
 }
 
 /**
- * @description：获取区域下零部件生产数据
+ * @description：获取区域下零单元件生产数据
  */
 export function productionDetail(params) {
   return request({
@@ -46,12 +46,12 @@ export function productionDetail(params) {
   })
 }
 /**
- * @description：获取区域下构件汇总
+ * @description：获取区域下分段汇总
  */
 export function artifactInfo(params) {
   return request({
     module: 'bridge',
-    url: 'kanban/element_matching/area/artifact',
+    url: 'kanban/element_matching/area/box',
     method: 'get',
     params
   })

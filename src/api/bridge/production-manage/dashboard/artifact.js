@@ -10,7 +10,7 @@ import request from '@/utils/request'
 export function artifactDetail(params) {
   return request({
     module: 'bridge',
-    url: 'kanban/product/detail/artifact',
+    url: 'kanban/product/detail/box',
     method: 'get',
     params
   })
@@ -18,7 +18,7 @@ export function artifactDetail(params) {
 
 /**
  *
- * 获取生产看板-部件详情
+ * 获取生产看板-单元件详情
  * @export
  * @param {*} id|required 产品id
  * @returns
@@ -26,13 +26,13 @@ export function artifactDetail(params) {
 export function assembleDetail(params) {
   return request({
     module: 'bridge',
-    url: 'kanban/product/detail/assemble',
+    url: 'kanban/product/detail/element',
     method: 'get',
     params
   })
 }
 
-// 获取生产看板-母件下的部件详情
+// 获取生产看板-母件下的单元件详情
 export function baseAssembleDetail(id) {
   return request({
     module: 'bridge',

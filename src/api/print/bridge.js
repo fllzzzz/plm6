@@ -448,7 +448,7 @@ export function machinePartClassList(params) {
 }
 
 // 发运管理-项目发运详情
-export function mesProjectShipDetail(params) {
+export function bridgeProjectShipDetail(params) {
   return request({
     url: `/api/mes/bridge/cargo/project/cargoList/details/print`,
     method: 'get',
@@ -578,7 +578,7 @@ export default {
   machinePartClassList, // 零件分类清单明细
 
   // 发运管理
-  mesProjectShipDetail, // 项目发运详情
+  bridgeProjectShipDetail, // 项目发运详情
 
   // 工厂报表-车间报表
   factoryWorkshopReport, // 车间报表详情
