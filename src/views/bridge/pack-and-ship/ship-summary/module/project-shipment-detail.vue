@@ -30,7 +30,7 @@
         <print-table
           api-key="bridgeProjectShipDetail"
           v-permission="permission.print"
-          :params="{ projectId: props.currentRow.projectId, productionLineTypeEnum: props.productionLineTypeEnum, workshopId: props.workshopId, ...query.value }"
+          :params="{ projectId: props.currentRow.projectId, productionLineTypeEnum: props.productionLineTypeEnum, workshopId: props.workshopId, monomerId: query.monomerId, areaId: query.areaId }"
           size="mini"
           type="warning"
         />
