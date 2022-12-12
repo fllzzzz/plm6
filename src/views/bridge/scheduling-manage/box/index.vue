@@ -206,7 +206,7 @@ const { crud, columns, CRUD } = useCRUD(
     optShow: { ...optShow },
     crudApi: { ...crudApi },
     queryOnPresenterCreated: false,
-    requiredQuery: ['areaIdList', 'structureClassId']
+    requiredQuery: ['areaIdList', 'boxClassId']
   },
   tableRef
 )
@@ -218,7 +218,7 @@ const summaryInfo = ref({})
 const queryParams = computed(() => {
   return {
     productType: productType,
-    structureClassId: crud.query.structureClassId
+    boxClassId: crud.query.boxClassId
   }
 })
 const { groupsTree, groupsObj } = useSchedulingGroups({ queryParams, factoryIds: curFactoryIds })
@@ -327,7 +327,7 @@ const handleAreaClick = debounce(function (nodes = []) {
     curMainScheduleDate.value = curMainScheduleDate.value ? Math.min(nodes[x].endDate, curMainScheduleDate.value) : nodes[x].endDate
   }
   crud.query.areaIdList = _areaIds
-  crud.query.structureClassId = undefined
+  crud.query.boxClassId = undefined
   curAreaIdObj.value = _areaIdObj
   curFactoryIds.value = _factoryIds
   curWorkshopIds.value = _workshopIds

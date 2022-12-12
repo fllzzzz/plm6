@@ -9,7 +9,7 @@
       />
       <div>
         <tag-tabs
-          v-model="query.structureClassId"
+          v-model="query.boxClassId"
           class="filter-item"
           :style="'width:calc(100% - 0px)'"
           :data="summaryList"
@@ -73,7 +73,7 @@ import monomerSelectAreaTabs from '@comp-base/monomer-select-area-tabs'
 const summaryList = ref([])
 const defaultQuery = {
   serialNumber: '',
-  structureClassId: undefined,
+  boxClassId: undefined,
   monomerId: { value: undefined, resetAble: false },
   areaId: { value: undefined, resetAble: false },
   status: { value: undefined, resetAble: false }
@@ -111,7 +111,7 @@ async function artifactInfoGet() {
     })
     summaryList.value = data || []
     if (summaryList.value.length === 1) {
-      query.structureClassId = summaryList.value[0].id
+      query.boxClassId = summaryList.value[0].id
     }
   } catch (e) {
     console.log('获取区域下的分段汇总信息', e)
@@ -133,13 +133,13 @@ CRUD.HOOK.handleRefresh = (crud, res) => {
 function fetchMonomerAndArea({ monomerId, areaId }) {
   query.monomerId = monomerId
   query.areaId = areaId
-  query.structureClassId = undefined
+  query.boxClassId = undefined
   artifactInfoGet()
   crud.toQuery()
 }
 
 function tabChange(val) {
-  query.structureClassId = val
+  query.boxClassId = val
   crud.toQuery()
 }
 

@@ -67,7 +67,7 @@ const productType = inject('productType')
 const queryParams = computed(() => {
   return {
     productType: productType,
-    structureClassId: props.itemInfo.structureClassId
+    boxClassId: props.itemInfo.boxClassId
   }
 })
 const factoryIds = computed(() => [areaIdObj.value[props.itemInfo.area?.id]?.factoryId])

@@ -33,13 +33,13 @@
         <tag-tabs
           v-if="boxTypeList.length"
           ref="tagTabsRef"
-          v-model="queryVO.structureClassId"
+          v-model="queryVO.boxClassId"
           class="filter-item"
           :style="'width:calc(100% - 150px)'"
           style="display: inline-block"
           :data="boxTypeList"
           :unselectable="boxTypeList.length > 1"
-          itemKey="structureClassId"
+          itemKey="boxClassId"
           @change="fetch"
         >
           <template #default="{ item }">
@@ -84,12 +84,12 @@
         >
           批量删除
         </common-button>
-        <el-tooltip class="item" effect="light" :disabled="!!queryVO.structureClassId" content="请选择分段类型" placement="left">
+        <el-tooltip class="item" effect="light" :disabled="!!queryVO.boxClassId" content="请选择分段类型" placement="left">
           <span style="float: right; margin-right: 5px">
             <common-button
               v-permission="permission.recordEdit"
               v-if="selectionMode === selectionModeEnum.EDIT.V"
-              :disabled="!queryVO.structureClassId"
+              :disabled="!queryVO.boxClassId"
               size="mini"
               type="primary"
               @click="toBatchEdit"
@@ -187,7 +187,7 @@
       <batch-edit-form
         v-model:visible="batchEditVisible"
         :selections="selections"
-        :structureClassId="queryVO.structureClassId"
+        :boxClassId="queryVO.boxClassId"
         @refresh="fetch"
       />
       <del-form v-model:visible="delVisible" :itemInfo="itemInfo" @del-success="handleDelSuccess" />
@@ -276,7 +276,7 @@ const boxTypeParams = computed(() => {
 })
 
 const listProductionLineTypeEnum = computed(() => {
-  return tagTabsRef.value?.getOption(queryVO.value.structureClassId)?.productionLineTypeEnum || queryVO.value.productionLineTypeEnum
+  return tagTabsRef.value?.getOption(queryVO.value.boxClassId)?.productionLineTypeEnum || queryVO.value.productionLineTypeEnum
 })
 
 // 高度
@@ -326,17 +326,17 @@ const { maxHeight } = useMaxHeight(
 function boxTypeInit() {
   if (
     !boxTypeList.value?.length ||
-    (queryVO.value.structureClassId &&
+    (queryVO.value.boxClassId &&
       boxTypeList.value?.length &&
-      boxTypeList.value.findIndex((v) => v.structureClassId === queryVO.value.structureClassId) === -1)
+      boxTypeList.value.findIndex((v) => v.boxClassId === queryVO.value.boxClassId) === -1)
   ) {
-    queryVO.value.structureClassId = undefined
+    queryVO.value.boxClassId = undefined
   }
   if (
       boxTypeList.value?.length &&
       (boxTypeList.value?.length === 1 || queryVO.value.productionLineTypeEnum === artifactProductLineEnum.INTELLECT.V)
   ) {
-    queryVO.value.structureClassId = boxTypeList.value[0].structureClassId
+    queryVO.value.boxClassId = boxTypeList.value[0].boxClassId
   }
   fetch()
 }
@@ -361,7 +361,7 @@ function closeHook() {
 function resetQuery() {
   queryVO.value.serialNumber = undefined
   if (queryVO.value.productionLineTypeEnum !== artifactProductLineEnum.INTELLECT.V) {
-    queryVO.value.structureClassId = undefined
+    queryVO.value.boxClassId = undefined
   }
   fetch()
 }
@@ -371,7 +371,7 @@ async function fetch() {
   listObjIdsByGroup.value = {}
   summaryInfo.value = {}
   if (
-    (queryVO.value.productionLineTypeEnum === artifactProductLineEnum.INTELLECT.V && !queryVO.value.structureClassId) ||
+    (queryVO.value.productionLineTypeEnum === artifactProductLineEnum.INTELLECT.V && !queryVO.value.boxClassId) ||
     !queryVO.value.productionLineTypeEnum
   ) {
     return

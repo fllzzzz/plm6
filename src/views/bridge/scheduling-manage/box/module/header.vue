@@ -12,12 +12,12 @@
     /> -->
     <tag-tabs
       v-if="boxTypeList.length"
-      v-model="query.structureClassId"
+      v-model="query.boxClassId"
       class="filter-item"
       :style="'width:100%;'"
       style="display: inline-block"
       :data="boxTypeList"
-      itemKey="structureClassId"
+      itemKey="boxClassId"
       @change="crud.toQuery"
     >
       <template #default="{ item }">
@@ -81,7 +81,7 @@ watch(
   { deep: true, immediate: true }
 )
 
-// watch([() => query.structureClassId], () => {
+// watch([() => query.boxClassId], () => {
 //   crud.toQuery()
 // })
 
@@ -94,7 +94,7 @@ function resetQuery() {
 }
 
 function boxTypeInit() {
-  query.structureClassId = boxTypeList.value?.length ? boxTypeList.value[0].structureClassId : undefined
+  query.boxClassId = boxTypeList.value?.length ? boxTypeList.value[0].boxClassId : undefined
   crud.toQuery()
 }
 
@@ -119,7 +119,7 @@ function boxTypeInit() {
 // }
 
 function refreshTypeList() {
-  query.structureClassId = undefined
+  query.boxClassId = undefined
   refreshBoxType({
     productionLineTypeEnum: query.productionLineTypeEnum,
     areaIdList: crud.query.areaIdList

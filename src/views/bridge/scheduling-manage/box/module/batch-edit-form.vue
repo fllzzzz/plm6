@@ -96,7 +96,7 @@ const props = defineProps({
     type: Array,
     default: () => []
   },
-  structureClassId: {
+  boxClassId: {
     type: [Number, String, undefined]
   }
 })
@@ -109,7 +109,7 @@ const productType = inject('productType')
 const queryParams = computed(() => {
   return {
     productType: productType,
-    structureClassId: props.structureClassId
+    boxClassId: props.boxClassId
   }
 })
 const { groupsTree, groupsObj } = useSchedulingGroups({

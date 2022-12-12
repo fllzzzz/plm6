@@ -262,7 +262,7 @@ async function fetch() {
         } else {
           res = await manualFetchGroupsTree({
             productType: crud.query.taskTypeEnum,
-            structureClassId: v.configId,
+            boxClassId: v.configId,
             disabledIds: (props.info?.groups?.id && [props.info?.groups?.id]) || [],
             _factoryIds: (props.info?.factory?.id && [props.info?.factory?.id]) || []
           })

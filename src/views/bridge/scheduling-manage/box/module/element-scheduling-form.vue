@@ -319,7 +319,7 @@ async function fetch() {
           if (isBlank(classIdGroupsObj[_o.elementConfigId])) {
             classIdGroupsObj[_o.elementConfigId] = await manualFetchGroupsTree({
               productType,
-              structureClassId: _o.elementConfigId,
+              boxClassId: _o.elementConfigId,
               _factoryIds: factoryIds.value
             })
           }
@@ -341,7 +341,7 @@ async function fetch() {
           if (_o.elementConfigId && isBlank(classIdGroupsObj[_o.elementConfigId])) {
             classIdGroupsObj[_o.elementConfigId] = await manualFetchGroupsTree({
               productType,
-              structureClassId: _o.elementConfigId,
+              boxClassId: _o.elementConfigId,
               _factoryIds: factoryIds.value
             })
           }
@@ -387,7 +387,7 @@ async function fetch() {
     //     if (v.elementConfigId && isBlank(classIdGroupsObj[v.elementConfigId])) {
     //       classIdGroupsObj[v.elementConfigId] = await manualFetchGroupsTree({
     //         productType,
-    //         structureClassId: v.elementConfigId,
+    //         boxClassId: v.elementConfigId,
     //         _factoryIds: factoryIds.value
     //       })
     //     }

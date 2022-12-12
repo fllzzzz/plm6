@@ -28,7 +28,7 @@ const useSchedulingGroups = ({ queryParams, factoryIds, disabledIds }) => {
   )
 
   async function fetchGroupsTree() {
-    if (!queryParams.value?.productType || !queryParams.value?.structureClassId) return
+    if (!queryParams.value?.productType || !queryParams.value?.boxClassId) return
     const content = await getGroupsTree(queryParams.value)
     originOptions.value = content
     loaded.value = true
@@ -73,15 +73,15 @@ const useSchedulingGroups = ({ queryParams, factoryIds, disabledIds }) => {
 }
 
 // 手动获取
-export async function manualFetchGroupsTree({ productType, structureClassId, _factoryIds, disabledIds = [] }) {
+export async function manualFetchGroupsTree({ productType, boxClassId, _factoryIds, disabledIds = [] }) {
   // 零件不必传structureClassId
-  if (!productType || (!structureClassId && productType !== bridgeComponentTypeEnum .MACHINE_PART.V)) {
+  if (!productType || (!boxClassId && productType !== bridgeComponentTypeEnum .MACHINE_PART.V)) {
     return {
       list: [],
       obj: {}
     }
   }
-  const content = await getGroupsTree({ productType, structureClassId })
+  const content = await getGroupsTree({ productType, boxClassId })
   // 零件返回全部
   const returnAll = Boolean(productType === bridgeComponentTypeEnum .MACHINE_PART.V)
   return dataFormat(content, _factoryIds, disabledIds, returnAll)
