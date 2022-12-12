@@ -86,7 +86,7 @@ export function logisticsSummary(params) {
  */
 export function warehouseStateStructure({ monomerId, areaId, factoryId }) {
   return request({
-    url: 'api/mes/bridge/warehouse/artifact/print',
+    url: 'api/mes/bridge/warehouse/box/print',
     method: 'get',
     params: { monomerId, areaId, factoryId }
   })
@@ -126,7 +126,7 @@ export function warehouseStateReport(params) {
  */
 export function structureProductionLine(params) {
   return request({
-    url: `/api/mes/bridge/team_form/artifact_assemble/process/print`,
+    url: `/api/mes/bridge/team_form/box_element/process/print`,
     method: 'get',
     params
   })
@@ -137,7 +137,7 @@ export function structureProductionLine(params) {
  */
 export function structureProcess(params) {
   return request({
-    url: `/api/mes/bridge/team_form/artifact_assemble/details/print`,
+    url: `/api/mes/bridge/team_form/box_element/details/print`,
     method: 'get',
     params
   })
@@ -392,7 +392,7 @@ export function paintingList(params) {
  */
 export function structureProjectSummary(params) {
   return request({
-    url: `/api/mes/bridge/kanban/form/artifact/print`,
+    url: `/api/mes/bridge/kanban/form/box/print`,
     method: 'get',
     params
   })
