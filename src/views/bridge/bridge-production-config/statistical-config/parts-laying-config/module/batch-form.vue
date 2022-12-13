@@ -49,7 +49,7 @@
         </el-table-column>
         <el-table-column prop="cutConfigId" :show-overflow-tooltip="true" label="下料方式" width="160">
           <template #default="{ row, $index }">
-            <cut-config-select
+            <bridge-cut-config-select
               placeholder="下料方式"
               v-model="row.cutConfigId"
               clearable
@@ -142,7 +142,7 @@ import useTableOperate from '@compos/form/use-table-operate'
 import useTableValidate from '@compos/form/use-table-validate'
 import useMaxHeight from '@compos/use-max-height'
 import StoreOperation from '@crud/STORE.operation.vue'
-import cutConfigSelect from '@/components-system/base/bridge-cut-config-select.vue'
+import bridgeCutConfigSelect from '@/components-system/base/bridge-cut-config-select.vue'
 
 const validateNumerical = (value, row) => {
   if (!row.minNumerical || !row.maxNumerical || row.maxNumerical < row.minNumerical) return false

@@ -24,7 +24,7 @@ export default function useGetBoxTypeList({ getApi, initHook }, isRequireLineTyp
       boxTypeList.value = content
       if (typeof initHook === 'function') initHook()
     } catch (error) {
-      console.log('获取构件排产类型汇总错误', error)
+      console.log('获取分段排产类型汇总错误', error)
     }
   }
 

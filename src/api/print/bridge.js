@@ -77,7 +77,7 @@ export function logisticsSummary(params) {
 
 // 制成品管理
 /**
- * 结构出入库状态
+ * 分段出入库状态
  * @export
  * @param {*} monomerId|required 单体id
  * @param {*} monomerId|required 区域id
@@ -122,7 +122,7 @@ export function warehouseStateReport(params) {
 // 班组报表
 
 /**
- * 结构生产线报表
+ * 分段生产线报表
  */
 export function structureProductionLine(params) {
   return request({
@@ -133,7 +133,7 @@ export function structureProductionLine(params) {
 }
 
 /**
- * 结构生产线报表
+ * 分段生产线报表
  */
 export function structureProcess(params) {
   return request({
@@ -388,7 +388,7 @@ export function paintingList(params) {
 }
 
 /**
- * 结构项目汇总
+ * 分段项目汇总
  */
 export function structureProjectSummary(params) {
   return request({
@@ -531,7 +531,7 @@ export default {
   machinePartDetail, // 零件生产详情
   machinePartList, // 零单元件生产清单
   paintingList, // 涂装列表
-  structureProjectSummary, // 结构项目汇总
+  structureProjectSummary, // 分段项目汇总
   enclosureProjectSummary, // 围护项目汇总
   projectOverviewList, // 项目总览工序清单
 
@@ -552,8 +552,8 @@ export default {
   qhseProductionLineReport, // 生产线质检报表
 
   // 班组报表
-  structureProductionLine, // 结构生产线报表
-  structureProcess, // 结构工序报表
+  structureProductionLine, // 分段生产线报表
+  structureProcess, // 分段工序报表
 
   teamWage, // 班组工资
   teamWageDetail, // 班组工资详情
@@ -568,7 +568,7 @@ export default {
   logisticsSummary, // 物流汇总
 
   // 制成品管理
-  warehouseStateStructure, // 结构出入库状态
+  warehouseStateStructure, // 分段出入库状态
   warehouseStateEnclosure, // 围护出入库状态
   warehouseStateReport, // 入发存报表
 

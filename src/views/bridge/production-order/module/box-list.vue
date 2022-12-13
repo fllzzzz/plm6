@@ -157,7 +157,7 @@ async function getSummary() {
       ]
     }
   } catch (error) {
-    console.log('获取构零件清单汇总失败', error)
+    console.log('获取分段零件清单汇总失败', error)
   }
 }
 
@@ -175,7 +175,7 @@ async function fetchDetail() {
     list.value = data || []
     tableLoading.value = false
   } catch (error) {
-    console.log('获取构零件清单失败', error)
+    console.log('获取分段零件清单失败', error)
     tableLoading.value = false
   }
 }

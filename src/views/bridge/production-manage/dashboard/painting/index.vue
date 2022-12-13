@@ -74,7 +74,7 @@
         </el-table-column>
       </common-table>
       <el-divider class="painting-divider"><span class="title">油漆用量明细 </span></el-divider>
-      <div class="painting-artifact-head head-container">
+      <div class="painting-box-head head-container">
         <el-tag effect="plain" type="success" size="medium" class="filter-item">理论涂布率：9.8L/平方米</el-tag>
         <print-table
           v-permission="permission.print"
@@ -87,11 +87,11 @@
         />
       </div>
       <common-table
-        ref="artifactTableRef"
-        class="painting-artifact-table"
-        v-loading="artifactLoading"
-        :data="allArtifactList"
-        :max-height="artifactMaxHeight"
+        ref="boxTableRef"
+        class="painting-box-table"
+        v-loading="boxLoading"
+        :data="allBoxList"
+        :max-height="boxMaxHeight"
         :data-format="dataFormat"
         show-summary
         :summary-method="getSummaries"
@@ -111,14 +111,14 @@
     <el-divider direction="vertical" :style="`height: ${lineMaxHeight}px`"></el-divider>
     <div class="wrap-right">
       <div v-show="!configId" class="my-code">*点击左侧油漆用量明细查看</div>
-      <artifact-list v-show="configId" :projectId="crud.query.projectId" :configId="configId" />
+      <box-list v-show="configId" :projectId="crud.query.projectId" :configId="configId" />
     </div>
     <edit-form v-model:visible="editFormVisible" :info="itemInfo" @refresh="crud.toQuery"></edit-form>
   </div>
 </template>
 
 <script setup>
-import crudApi, { getAllArtifact } from '@/api/bridge/production-manage/dashboard/painting'
+import crudApi, { getAllBox } from '@/api/bridge/production-manage/dashboard/painting'
 import { ref } from 'vue'
 
 import { paintingTypeEnum } from '@enum-ms/mes'
@@ -131,7 +131,7 @@ import { bridgePaintingDashboardPM as permission } from '@/page-permission/bridg
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import mHeader from './module/header'
-import artifactList from './module/artifact-list.vue'
+import boxList from './module/box-list.vue'
 import editForm from './module/edit-form.vue'
 
 const optShow = {
@@ -142,7 +142,7 @@ const optShow = {
 }
 
 const tableRef = ref()
-const artifactTableRef = ref()
+const boxTableRef = ref()
 const { crud, columns, CRUD } = useCRUD(
   {
     title: '涂装计算',
@@ -155,7 +155,7 @@ const { crud, columns, CRUD } = useCRUD(
 )
 
 const { maxHeight } = useMaxHeight({
-  extraBox: ['.head-container', '.painting-divider', '.painting-artifact-head', '.painting-artifact-table'],
+  extraBox: ['.head-container', '.painting-divider', '.painting-box-head', '.painting-box-table'],
   minHeight: 200,
   paginate: false
 })
@@ -164,14 +164,14 @@ const { maxHeight: lineMaxHeight } = useMaxHeight({
   extraBox: '',
   paginate: false
 })
-const { maxHeight: artifactMaxHeight } = useMaxHeight({
-  extraBox: ['.head-container', '.painting-divider', '.painting-artifact-head', '.painting-crud-table'],
+const { maxHeight: boxMaxHeight } = useMaxHeight({
+  extraBox: ['.head-container', '.painting-divider', '.painting-box-head', '.painting-crud-table'],
   minHeight: 200,
   paginate: false
 })
 
 CRUD.HOOK.handleRefresh = (crud, res) => {
-  fetchAllArtifact()
+  fetchAllBox()
   res.data.content = res.data.content.map((v, i) => {
     v.id = i + '' + Math.random()
     v.surfaceArea = convertUnits(v.surfaceArea, 'mm²', '㎡', DP.COM_AREA__M2)
@@ -188,8 +188,8 @@ const dataFormat = ref([
 const editFormVisible = ref(false)
 const itemInfo = ref({})
 const configId = ref()
-const allArtifactList = ref([])
-const artifactLoading = ref(false)
+const allBoxList = ref([])
+const boxLoading = ref(false)
 
 function toEditForm(row, paintRow, type) {
   if (!checkPermission(permission.edit)) return
@@ -205,20 +205,20 @@ function toEditForm(row, paintRow, type) {
   editFormVisible.value = true
 }
 
-async function fetchAllArtifact() {
+async function fetchAllBox() {
   try {
-    allArtifactList.value = []
+    allBoxList.value = []
     configId.value = undefined
-    artifactLoading.value = true
-    const { content } = await getAllArtifact({ ...crud.query })
-    allArtifactList.value = content.map((v) => {
+    boxLoading.value = true
+    const { content } = await getAllBox({ ...crud.query })
+    allBoxList.value = content.map((v) => {
       v.surfaceArea = convertUnits(v.surfaceArea, 'mm²', '㎡', DP.COM_AREA__M2)
       return v
     })
   } catch (er) {
     console.log('获取全部分段信息失败', er)
   } finally {
-    artifactLoading.value = false
+    boxLoading.value = false
   }
 }
 

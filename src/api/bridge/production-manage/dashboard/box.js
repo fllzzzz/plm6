@@ -2,12 +2,12 @@ import request from '@/utils/request'
 
 /**
  *
- * 获取生产看板-结构详情
+ * 获取生产看板-分段详情
  * @export
  * @param {*} id|required 产品id
  * @returns
  */
-export function artifactDetail(params) {
+export function boxDetail(params) {
   return request({
     module: 'bridge',
     url: 'kanban/product/detail/box',
@@ -23,7 +23,7 @@ export function artifactDetail(params) {
  * @param {*} id|required 产品id
  * @returns
  */
-export function assembleDetail(params) {
+export function elementDetail(params) {
   return request({
     module: 'bridge',
     url: 'kanban/product/detail/element',
@@ -33,7 +33,7 @@ export function assembleDetail(params) {
 }
 
 // 获取生产看板-母件下的单元件详情
-export function baseAssembleDetail(id) {
+export function baseElementDetail(id) {
   return request({
     module: 'bridge',
     url: `section_steel/nesting/${id}/link`,

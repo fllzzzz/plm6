@@ -158,7 +158,7 @@ import { bridgeTaskTypeEnum } from '@enum-ms/bridge'
 import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'
 import useTableValidate from '@compos/form/use-table-validate'
-import { manualFetchGroupsTree } from '@compos/mes/scheduling/use-scheduling-groups'
+import { manualFetchGroupsTree } from '@compos/bridge/scheduling/use-scheduling-groups'
 
 import assistancePreview from './assistance-preview'
 

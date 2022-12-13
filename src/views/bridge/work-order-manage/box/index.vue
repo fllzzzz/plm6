@@ -138,7 +138,7 @@ const optShow = {
 const tableRef = ref()
 const { crud, columns, CRUD } = useCRUD(
   {
-    title: '结构工单',
+    title: '分段工单',
     sort: [],
     permission: { ...permission },
     optShow: { ...optShow },

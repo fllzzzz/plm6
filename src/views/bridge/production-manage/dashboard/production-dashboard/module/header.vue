@@ -35,7 +35,7 @@ import { bridgeComponentTypeEnum } from '@enum-ms/bridge'
 import { mapGetters } from '@/store/lib'
 
 import useUnshowProductTypeByMode from '@compos/use-bridge-unshow-productType-by-mode.js'
-import useDashboardHeader from '@compos/mes/dashboard/use-dashboard-header'
+import useDashboardHeader from '@compos/bridge/dashboard/use-dashboard-header'
 import { regHeader } from '@compos/use-crud'
 import crudOperation from '@crud/CRUD.operation'
 import rrOperation from '@crud/RR.operation'

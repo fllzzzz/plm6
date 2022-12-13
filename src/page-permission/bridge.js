@@ -245,9 +245,9 @@ export const bridgeQhseDisclosurePM = {
 
 // --------------------------- 产品标签 start --------------------------------
 
-// 产品标签/构件
+// 产品标签/分段
 export const bridgeArtifactLabelPM = {
-  get: ['bridge_label_artifact:get'] // 构件列表
+  get: ['bridge_label_artifact:get'] // 分段列表
 }
 
 // 产品标签/围护

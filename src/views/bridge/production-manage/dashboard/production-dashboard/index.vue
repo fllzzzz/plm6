@@ -2,7 +2,7 @@
   <div class="app-container">
     <!--工具栏-->
     <mHeader ref="headRef" @load="load" />
-    <div style="display: flex" class="artifact-dashboard">
+    <div style="display: flex" class="box-dashboard">
       <common-table
         v-if="crud.query.productType & bridgeComponentTypeEnum.MACHINE_PART.V"
         :data="specList"
@@ -58,7 +58,7 @@
 
 <script setup>
 import { productDashboard as get, productSpec } from '@/api/bridge/production-manage/dashboard/common'
-import { artifactDetail, assembleDetail, baseAssembleDetail, machinePartDetail } from '@/api/bridge/production-manage/dashboard/artifact'
+import { boxDetail, elementDetail, baseElementDetail, machinePartDetail } from '@/api/bridge/production-manage/dashboard/box'
 import { ref } from 'vue'
 
 import { structureOrderTypeEnum } from '@enum-ms/mes'
@@ -66,7 +66,7 @@ import { bridgeComponentTypeEnum } from '@enum-ms/bridge'
 import { DP } from '@/settings/config'
 import { bridgeArtifactProductionDashboardPM as permission } from '@/page-permission/bridge'
 
-import useDashboardIndex from '@compos/mes/dashboard/use-dashboard-index'
+import useDashboardIndex from '@compos/bridge/dashboard/use-dashboard-index'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import mHeader from './module/header'
@@ -99,10 +99,10 @@ const { boxStyle, load, boardList } = useDashboardIndex({ headRef, scrollBoxRef,
 async function getDetail(item) {
   switch (crud.query.productType) {
     case bridgeComponentTypeEnum.BOX.V:
-      getArtifactDetail(item)
+      getBoxDetail(item)
       break
     case bridgeComponentTypeEnum.CELL.V:
-      getAssembleDetail(item)
+      getElementDetail(item)
       break
     case bridgeComponentTypeEnum.MACHINE_PART.V:
       getMachinePartDetail(item)
@@ -148,11 +148,11 @@ function beforeRefreshHook() {
   isSpecQuery.value = false
 }
 
-async function getArtifactDetail(item) {
+async function getBoxDetail(item) {
   if (item.hasDetail) return
   try {
     item.detailLoading = true
-    const _data = await artifactDetail({ id: item.id })
+    const _data = await boxDetail({ id: item.id })
     item.hasDetail = true
     _data.processInfo = `${_data.name} ${_data.serialNumber}\n
           规格：${_data.specification}\n
@@ -177,12 +177,12 @@ async function getArtifactDetail(item) {
   }
 }
 
-async function getAssembleDetail(item) {
+async function getElementDetail(item) {
   if (item.hasDetail) return
   try {
     item.detailLoading = true
     const _data =
-      item.productType === structureOrderTypeEnum.NESTING.V ? await baseAssembleDetail(item.id) : await assembleDetail({ id: item.id })
+      item.productType === structureOrderTypeEnum.NESTING.V ? await baseElementDetail(item.id) : await elementDetail({ id: item.id })
     item.hasDetail = true
     if (item.productType === structureOrderTypeEnum.NESTING.V) {
       _data.processInfo = `${_data.serialNumber}\n
@@ -292,10 +292,10 @@ async function getMachinePartDetail(item) {
 </style>
 
 <style lang="scss">
-.artifact-dashboard .el-table__body tr:hover > td {
+.box-dashboard .el-table__body tr:hover > td {
   background-color: transparent !important;
 }
-.artifact-dashboard .el-table__body tr.current-row > td {
+.box-dashboard .el-table__body tr.current-row > td {
   background-color: #999 !important;
   color: #fff;
 }

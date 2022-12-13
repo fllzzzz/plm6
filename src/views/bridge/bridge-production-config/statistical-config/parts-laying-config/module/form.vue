@@ -24,7 +24,7 @@
         />
       </el-form-item>
       <el-form-item label="下料方式" prop="cutConfigId">
-        <cut-config-select
+        <bridge-cut-config-select
           placeholder="下料方式"
           v-model="form.cutConfigId"
           clearable
@@ -91,7 +91,7 @@
 import { ref, computed } from 'vue'
 import { partKeyWordEnum, wageQuotaTypeEnum } from '@enum-ms/mes'
 import { regForm } from '@compos/use-crud'
-import cutConfigSelect from '@/components-system/base/bridge-cut-config-select.vue'
+import bridgeCutConfigSelect from '@/components-system/base/bridge-cut-config-select.vue'
 
 const formRef = ref()
 const defaultForm = {

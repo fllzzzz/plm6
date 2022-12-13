@@ -87,7 +87,7 @@ const props = defineProps({
 })
 
 const permission = inject('permission')
-const taskOrderPrintKey = 'mesNestingProductionTaskOrder'
+const taskOrderPrintKey = 'bridgeNestingProductionTaskOrder'
 const taskOrderPDF = ref('')
 const taskLoading = ref(false)
 const productionData = ref([])

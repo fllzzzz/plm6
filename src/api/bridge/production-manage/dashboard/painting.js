@@ -17,7 +17,7 @@ export function get(params) {
  *
  * 获取单体下各个类型的分段油漆消耗
  */
-export function getAllArtifact(params) {
+export function getAllBox(params) {
   return request({
     module: 'bridge',
     url: 'kanban/painting/type',
@@ -30,7 +30,7 @@ export function getAllArtifact(params) {
  *
  * 获取分段
  */
-export function artifactList(params) {
+export function boxList(params) {
   return request({
     module: 'bridge',
     url: 'kanban/painting/box/page',
@@ -43,7 +43,7 @@ export function artifactList(params) {
  *
  * 获取分段汇总
  */
-export function artifactSummary(params) {
+export function boxSummary(params) {
   return request({
     module: 'bridge',
     url: 'kanban/painting/box/page/summary',

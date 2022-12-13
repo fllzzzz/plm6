@@ -1,6 +1,6 @@
 <template>
-  <div class="artifact-list">
-    <div class="head-container artifact-list-head">
+  <div class="box-list">
+    <div class="head-container box-list-head">
       <monomer-select-area-select
         v-model:monomerId="query.monomerId"
         v-model:areaId="query.areaId"
@@ -82,7 +82,7 @@
 </template>
 
 <script setup>
-import { artifactList, artifactSummary } from '@/api/bridge/production-manage/dashboard/painting'
+import { boxList, boxSummary } from '@/api/bridge/production-manage/dashboard/painting'
 import { defineProps, provide, ref, watch, inject } from 'vue'
 
 import { DP } from '@/settings/config'
@@ -108,7 +108,7 @@ const props = defineProps({
 const { handleSizeChange, handleCurrentChange, total, setTotalPage, queryPage } = usePagination({ fetchHook: fetch })
 
 const { maxHeight } = useMaxHeight({
-  extraBox: '.artifact-list-head',
+  extraBox: '.box-list-head',
   paginate: true
 })
 
@@ -145,9 +145,9 @@ async function fetch() {
   if (!props.configId) return
   try {
     tableLoading.value = true
-    summaryInfo.value = (await artifactSummary({ configId: props.configId, ...query.value })) || {}
+    summaryInfo.value = (await boxSummary({ configId: props.configId, ...query.value })) || {}
     summaryInfo.value.surfaceArea = convertUnits(summaryInfo.value.surfaceArea, 'mm²', '㎡', DP.COM_AREA__M2)
-    const { content, totalElements } = await artifactList({ configId: props.configId, ...query.value, ...queryPage })
+    const { content, totalElements } = await boxList({ configId: props.configId, ...query.value, ...queryPage })
     tableData.value = content.map((v) => {
       const area = convertUnits(v.surfaceArea, 'mm²', '㎡', DP.COM_AREA__M2)
       v.sourceSurfaceArea = area
