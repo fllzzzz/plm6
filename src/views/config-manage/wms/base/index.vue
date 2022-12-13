@@ -3,7 +3,7 @@
     <el-row :gutter="20">
       <el-col :xs="24" :sm="24" :md="12" :lg="8">
         <!-- 入库基础 -->
-        <!-- <basic-inbound v-if="checkPermission(permission.basicInboundGet)" class="card" /> -->
+        <!-- <basic-inbound v-if="checkPermission (permission.basicInboundGet)" class="card" /> -->
         <!-- 钢板入库 -->
         <steel-inbound v-if="checkPermission(permission.steelInboundGet)" class="card" />
         <!-- 报表中心 -->
@@ -12,6 +12,8 @@
       <el-col :xs="24" :sm="24" :md="12" :lg="8">
         <!-- 出库基础-->
         <basic-outbound v-if="checkPermission(permission.basicOutboundGet)" class="card" />
+        <!-- 物料加权 -->
+        <material-weighting v-if="checkPermission(permission.materialWeightingGet)" class="card" />
         <!-- 退货基础 -->
         <!-- <basic-reject v-if="checkPermission(permission.basicRejectGet)" class="card" /> -->
       </el-col>
@@ -34,6 +36,7 @@ import BasicOutbound from './module/basic-outbound.vue'
 import ReportCenter from './module/report-center.vue'
 // import BasicReject from './module/basic-reject.vue'
 import PartyABorrowReturn from './module/party-a-borrow-return.vue'
+import MaterialWeighting from './module/material-weighting.vue'
 
 provide('permission', permission)
 </script>

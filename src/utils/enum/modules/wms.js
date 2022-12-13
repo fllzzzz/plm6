@@ -7,6 +7,13 @@ const inboundFillWayEnum = {
 }
 constantize(inboundFillWayEnum)
 
+// 物料加权方式
+const materialWeightingWayEnum = {
+  WHOLE: { L: '全库加权', K: 'WHOLE', V: 1 << 0 },
+  SINGLE: { L: '单库加权', K: 'SINGLE', V: 1 << 1 }
+}
+constantize(materialWeightingWayEnum)
+
 // 计量配置
 const measureTypeEnum = {
   MEASURE: { L: '计量', K: 'MEASURE', V: 1 },
@@ -256,6 +263,7 @@ export {
   receiptRejectStatusEnum,
   inspectionStatusEnum,
   inspectionDetailStatusEnum,
+  materialWeightingWayEnum,
   materialLabelPrintTypeEnum
 }
 
@@ -287,5 +295,6 @@ export default {
   receiptRejectStatusEnum,
   inspectionStatusEnum,
   inspectionDetailStatusEnum,
+  materialWeightingWayEnum,
   materialLabelPrintTypeEnum
 }
