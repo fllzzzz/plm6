@@ -96,7 +96,7 @@
         align="center"
       >
         <template #default="{ row: { sourceRow: row } }">
-          <cut-config-select v-if="row.issueStatusEnum === issueStatusEnum.NOT_NESTING.V" v-model="row.cutConfigId" clearable />
+          <bridge-cut-config-select v-if="row.issueStatusEnum === issueStatusEnum.NOT_NESTING.V" v-model="row.cutConfigId" clearable />
           <span v-else>{{ row.cutConfigName }}</span>
         </template>
       </el-table-column>
@@ -148,7 +148,7 @@ import pagination from '@crud/Pagination'
 import udOperation from '@crud/UD.operation'
 import mHeader from './module/header'
 import recordDetail from './module/record-detail.vue'
-import cutConfigSelect from '@/components-system/base/cut-config-select.vue'
+import bridgeCutConfigSelect from '@/components-system/base/bridge-cut-config-select.vue'
 
 const optShow = {
   add: false,
