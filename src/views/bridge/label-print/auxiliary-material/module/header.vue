@@ -83,7 +83,7 @@ import { mapGetters } from '@/store/lib'
 import { deepClone } from '@data-type/index'
 import { spliceQrCodeUrl, QR_SCAN_PATH } from '@/utils/bridge-label'
 
-import usePrintLabel from '@compos/mes/label-print/use-label-print'
+import usePrintLabel from '@compos/bridge/label-print/use-label-print'
 import { regHeader } from '@compos/use-crud'
 import useGlobalProjectIdChangeToQuery from '@compos/use-global-project-id-change-to-query'
 import crudOperation from '@crud/CRUD.operation'

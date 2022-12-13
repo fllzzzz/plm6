@@ -61,7 +61,7 @@ import { printModeEnum } from '@/utils/print/enum'
 
 import useVisible from '@compos/use-visible'
 import useMaxHeight from '@compos/use-max-height'
-import useGetSeparateOrder from '@compos/mes/work-order-manage/use-get-separate-order'
+import useGetSeparateOrder from '@compos/bridge/work-order-manage/use-get-separate-order'
 import separateOrderTable from './separate-order-table'
 import productionTaskOrder from './production-task-order'
 import pdf from '@/components/PDF/pdf'
