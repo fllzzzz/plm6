@@ -80,7 +80,7 @@ import { ElMessage } from 'element-plus'
 import { DP } from '@/settings/config'
 import { bridgeAssemblyMatchDashboardPM as permission } from '@/page-permission/bridge'
 
-import useDashboardIndex from '@compos/mes/dashboard/use-dashboard-index'
+import useDashboardIndex from '@compos/bridge/dashboard/use-dashboard-index'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import mHeader from './module/header'

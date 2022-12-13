@@ -43,7 +43,7 @@ import { regHeader } from '@compos/use-crud'
 import { bridgeComponentTypeEnum } from '@enum-ms/bridge'
 import rrOperation from '@crud/RR.operation'
 import workshopSelect from '@/components-system/bridge/workshop-select'
-import productionLineSelect from '@comp-mes/production-line-select'
+import productionLineSelect from '@comp-bridge/production-line-select'
 
 const defaultQuery = {
   dateTime: undefined,

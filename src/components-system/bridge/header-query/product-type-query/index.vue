@@ -33,13 +33,13 @@ const props = defineProps({
 
 const currentView = computed(() => {
   switch (props.productType) {
-    case bridgeComponentTypeEnum .BOX.V:
+    case bridgeComponentTypeEnum.BOX.V:
       return box
-    case bridgeComponentTypeEnum .MACHINE_PART.V:
+    case bridgeComponentTypeEnum.MACHINE_PART.V:
       return machinePart
-    case bridgeComponentTypeEnum .AUXILIARY_MATERIAL.V:
+    case bridgeComponentTypeEnum.AUXILIARY_MATERIAL.V:
       return ''
-    case bridgeComponentTypeEnum .CELL.V:
+    case bridgeComponentTypeEnum.CELL.V:
       return element
     default:
       return ''

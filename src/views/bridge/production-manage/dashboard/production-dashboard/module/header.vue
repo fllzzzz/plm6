@@ -41,7 +41,7 @@ import crudOperation from '@crud/CRUD.operation'
 import rrOperation from '@crud/RR.operation'
 import ColorCard from '@comp/ColorCard'
 import Scale from '@comp/Scale'
-import productTypeQuery from '@comp-mes/header-query/product-type-query'
+import productTypeQuery from '@comp-bridge/header-query/product-type-query'
 import monomerSelectAreaTabs from '@comp-base/monomer-select-area-tabs'
 import factorySelect from '@comp-base/factory-select'
 

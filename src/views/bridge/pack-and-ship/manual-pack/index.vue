@@ -82,7 +82,7 @@ import cellTable from './cell'
 import auxiliaryMaterialTable from './auxiliary-material'
 import packListDrawer from './pack-list-drawer'
 import monomerSelect from '@/components-system/plan/monomer-select'
-import oneCodeNumberList from '@/components-system/mes/one-code-number-list'
+import oneCodeNumberList from '@/components-system/bridge/one-code-number-list'
 
 const route = useRoute()
 const mainRef = ref()

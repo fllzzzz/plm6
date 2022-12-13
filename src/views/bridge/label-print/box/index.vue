@@ -293,7 +293,7 @@ import tableCellTag from '@comp-common/table-cell-tag/index'
 import mHeader from '../components/label-print-header.vue'
 import printedRecordDrawer from '../components/task-printed-record-drawer.vue'
 import labelDlg from '../components/label-dlg'
-import oneCodeNumberList from '@/components-system/mes/one-code-number-list'
+import oneCodeNumberList from '@/components-system/bridge/one-code-number-list'
 
 const optShow = {
   add: false,

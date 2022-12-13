@@ -207,7 +207,7 @@ import { BellFilled } from '@element-plus/icons'
 import useMaxHeight from '@compos/use-max-height'
 import usePagination from '@compos/use-pagination'
 import workshopSelect from '@/components-system/bridge/workshop-select'
-import productionLineSelect from '@comp-mes/production-line-select'
+import productionLineSelect from '@comp-bridge/production-line-select'
 import productionLineDetail from '../production-line-detail/index.vue'
 
 // 由于mes枚举分段、单元件的type值相同，单独定义枚举type值

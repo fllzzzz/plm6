@@ -220,7 +220,7 @@ import { tableSummary } from '@/utils/el-extra'
 
 import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'
-import oneCodeNumberList from '@/components-system/mes/one-code-number-list'
+import oneCodeNumberList from '@/components-system/bridge/one-code-number-list'
 import workshopSelect from '@/components-system/bridge/workshop-select'
 import choseAddMethodDialog from '../chose-add-method-dialog'
 import tableCellTag from '@comp-common/table-cell-tag/index.vue'

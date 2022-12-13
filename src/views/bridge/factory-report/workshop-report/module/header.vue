@@ -101,7 +101,7 @@ import { PICKER_OPTIONS_SHORTCUTS } from '@/settings/config'
 import { fullYearProduction, workshopEcharts, workshopProduction } from '@/api/bridge/bridge-workshop-report/workshop-report'
 import { bridgeFactoryReportPM as permission } from '@/page-permission/bridge'
 import workshopSelect from '@/components-system/bridge/workshop-select'
-import productionLineSelect from '@comp-mes/production-line-select'
+import productionLineSelect from '@comp-bridge/production-line-select'
 import projectCascader from '@comp-base/project-cascader'
 import crudOperation from '@crud/CRUD.operation'
 

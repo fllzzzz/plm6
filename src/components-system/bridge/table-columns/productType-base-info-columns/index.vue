@@ -1,5 +1,14 @@
 <template>
-  <component :is="currentView" :columns="columns" :category="category" :fixed="fixed" :fixedWidth="fixedWidth" :unShowField="unShowField" :snClickable="snClickable" @drawingPreview="drawingPreview">
+  <component
+    :is="currentView"
+    :columns="columns"
+    :category="category"
+    :fixed="fixed"
+    :fixedWidth="fixedWidth"
+    :unShowField="unShowField"
+    :snClickable="snClickable"
+    @drawingPreview="drawingPreview"
+  >
     <template #snPrefix="{ row }">
       <slot name="snPrefix" :row="row"></slot>
     </template>
@@ -50,13 +59,13 @@ const props = defineProps({
 
 const currentView = computed(() => {
   switch (props.productType) {
-    case bridgeComponentTypeEnum .BOX.V:
+    case bridgeComponentTypeEnum.BOX.V:
       return box
-    case bridgeComponentTypeEnum .MACHINE_PART.V:
+    case bridgeComponentTypeEnum.MACHINE_PART.V:
       return machinePart
-    case bridgeComponentTypeEnum .AUXILIARY_MATERIAL.V:
+    case bridgeComponentTypeEnum.AUXILIARY_MATERIAL.V:
       return auxiliaryMaterial
-    case bridgeComponentTypeEnum .CELL.V:
+    case bridgeComponentTypeEnum.CELL.V:
       return element
     default:
       return ''

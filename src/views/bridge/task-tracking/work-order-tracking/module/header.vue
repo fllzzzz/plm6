@@ -89,7 +89,7 @@ import { bridgeComponentTypeEnum } from '@enum-ms/bridge'
 import projectCascader from '@comp-base/project-cascader.vue'
 // import monomerSelectAreaSelect from '@comp-base/monomer-select-area-select'
 // import workshopSelect from '@/components-system/bridge/workshop-select'
-// import productionLineSelect from '@comp-mes/production-line-select'
+// import productionLineSelect from '@comp-bridge/production-line-select'
 import rrOperation from '@crud/RR.operation'
 
 const defaultQuery = {
