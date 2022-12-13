@@ -257,7 +257,7 @@
       </el-table-column>
     </common-table>
     <!-- 分页组件 -->
-    <Pagination />
+    <!-- <Pagination /> -->
     <!-- 详情 -->
     <MDetail v-model:visible="detailVisible" :material-info="currentRow" :date="crud.query.createTime" />
   </div>
@@ -273,7 +273,7 @@ import { STEEL_ENUM } from '@/settings/config'
 
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
-import Pagination from '@crud/Pagination'
+// import Pagination from '@crud/Pagination'
 import MHeader from './module/header'
 import MDetail from './module/detail'
 
@@ -316,6 +316,7 @@ const { crud, columns } = useCRUD(
     invisibleColumns: ['classifySerialNumber'],
     permission: { ...permission },
     optShow: { ...optShow },
+    hasPagination: false,
     crudApi: { get: getSendAndReceiveStorage, detail: getSendAndReceiveStorageDetail }
   },
   tableRef
@@ -325,7 +326,11 @@ const { maxHeight } = useMaxHeight({ paginate: true })
 
 const showProject = computed(
   // 未选择项目 && 当前仓库不为公共仓 && 显示项目
-  () => !crud.query.projectId && crud.query.projectWarehouseType !== projectWarehouseTypeEnum.PUBLIC.V && columns.value.visible('project')
+  () =>
+    !crud.query.projectId &&
+    crud.query.projectWarehouseType &&
+    crud.query.projectWarehouseType !== projectWarehouseTypeEnum.PUBLIC.V &&
+    columns.value.visible('project')
 )
 
 // 是否有显示金额权限
