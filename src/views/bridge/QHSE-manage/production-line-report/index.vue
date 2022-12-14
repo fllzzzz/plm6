@@ -42,7 +42,7 @@
         </template>
       </el-table-column>
       <template v-for="item in process" :key="item.id">
-        <el-table-column v-if="item.productType & bridgeComponentTypeEnum .BOX.V" :label="item.name" align="center" width="110px">
+        <el-table-column v-if="item.productType & bridgeComponentTypeEnum.BOX.V" :label="item.name" align="center" width="110px">
           <template #default="{ row }">
             <el-tooltip v-if="row.processData[item.id]" content="不合格数 / 检验数" placement="top">
               <span>
@@ -86,7 +86,7 @@ import { ref } from 'vue'
 import { bridgeQhseProductionLineReportPM as permission } from '@/page-permission/bridge'
 import { bridgeComponentTypeEnum } from '@enum-ms/bridge'
 
-import useProcess from '@compos/store/use-process'
+import useBridgeProcess from '@compos/store/use-bridge-process'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 // import pagination from '@crud/Pagination'
@@ -149,7 +149,7 @@ function getRowsSpanLength(list, target) {
   return rowspanObj.value[target]
 }
 
-const { loaded, process } = useProcess()
+const { loaded, process } = useBridgeProcess()
 
 const detailVisible = ref(false)
 const itemInfo = ref({})

@@ -215,7 +215,7 @@ async function fetchTask(id) {
     taskLoading.value = true
     const { content } = await getTask({ topTaskOrderId: id })
     taskList.value = content.map((v) => {
-      v.processList.forEach((o) => {
+      v.processList?.forEach((o) => {
         o.completeRatio =
           (o.totalTaskMete?.netWeight &&
             o.totalCompleteMete?.netWeight &&

@@ -60,7 +60,7 @@ import { ref, defineExpose, defineProps, defineEmits } from 'vue'
 
 import { bridgeComponentTypeEnum } from '@enum-ms/bridge'
 import { artifactInfo } from '@/api/bridge/production-manage/dashboard/assembly-match'
-import useDashboardHeader from '@compos/mes/dashboard/use-dashboard-header'
+import useDashboardHeader from '@compos/bridge/dashboard/use-dashboard-header'
 import { regHeader } from '@compos/use-crud'
 import useGlobalProjectIdChangeToQuery from '@compos/use-global-project-id-change-to-query'
 import crudOperation from '@crud/CRUD.operation'

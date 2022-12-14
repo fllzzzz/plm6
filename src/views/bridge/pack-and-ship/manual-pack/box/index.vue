@@ -275,7 +275,7 @@ CRUD.HOOK.beforeRefresh = () => {
 }
 
 CRUD.HOOK.handleRefresh = (crud, res) => {
-  res.data.content = res.data.artifactList.map((v, index) => {
+  res.data.content = res.data.artifactList?.map((v, index) => {
     v.rowKey = `${packTypeK}_${Math.random()}_${index}`
     v.productQuantity = v.unPackageQuantity
     v.originNumberList = v.numberList && deepClone(v.numberList) || []
