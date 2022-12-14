@@ -27,7 +27,7 @@
         />
       </div>
       <div :style="`height: ${maxHeight + 40}px; overflow-y: auto;`">
-        <div style="margin-bottom: 20px" v-for="item in assembleProcessData" :key="item">
+        <div style="margin-bottom: 20px" v-for="item in elementProcessData" :key="item">
           <div
             v-if="productType === bridgeComponentTypeEnum.BOX.V && item[0]?.productType === bridgeComponentTypeEnum.CELL.V"
             class="head-container"
@@ -227,7 +227,7 @@ const props = defineProps({
 const tableRef = ref()
 const detailData = ref({})
 const processData = ref([])
-const assembleProcessData = ref([])
+const elementProcessData = ref([])
 const drawerVisible = ref(false)
 
 const workshopId = ref()
@@ -286,9 +286,9 @@ async function processGet() {
       processData.value = content || []
       setTotalPage(totalElements)
     } else {
-      processData.value = data?.artifactList
+      processData.value = data?.BoxList
     }
-    assembleProcessData.value = data?.assembleList || []
+    elementProcessData.value = data?.elementList || []
   } catch (e) {
     console.log('获取分段单元件工序进度', e)
   }

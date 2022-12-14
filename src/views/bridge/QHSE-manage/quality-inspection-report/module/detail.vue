@@ -82,7 +82,7 @@ import { defineProps, defineEmits, ref, watch, inject } from 'vue'
 import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'
 import usePagination from '@compos/use-pagination'
-import belongingInfoColumns from '@comp-mes/table-columns/belonging-info-columns'
+import belongingInfoColumns from '@comp-bridge/table-columns/belonging-info-columns'
 // import productTypeBaseInfoColumns from '@comp-bridge/table-columns/productType-base-info-columns'
 
 const drawerRef = ref()

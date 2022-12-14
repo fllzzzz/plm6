@@ -114,7 +114,7 @@ import { bridgeAuxiliaryMaterialLabelPM as permission } from '@/page-permission/
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import pagination from '@crud/Pagination'
-import belongingInfoColumns from '@comp-mes/table-columns/belonging-info-columns'
+import belongingInfoColumns from '@comp-bridge/table-columns/belonging-info-columns'
 import productTypeBaseInfoColumns from '@comp-bridge/table-columns/productType-base-info-columns'
 import mHeader from './module/header.vue'
 import labelDlg from '../components/label-dlg'
