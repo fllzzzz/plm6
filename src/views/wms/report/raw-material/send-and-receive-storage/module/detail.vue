@@ -170,7 +170,9 @@ const filterList = computed(() => {
 const printParams = computed(() => {
   return {
     id: props.materialInfo.id,
+    ids: props.materialInfo.ids,
     statId: props.materialInfo.statId,
+    statIds: props.materialInfo.statIds,
     date: props.date,
     formType: filter.value.formType
   }

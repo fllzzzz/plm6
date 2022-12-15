@@ -109,7 +109,7 @@
                 </common-button>
               </template>
             </el-popconfirm>
-            <export-button
+            <!-- <export-button
               type="warning"
               v-permission="permission.downloadZip"
               size="mini"
@@ -117,7 +117,7 @@
               :fn="downloadZipGet"
               :icon="''"
               >下载</export-button
-            >
+            > -->
             <el-popconfirm
               confirm-button-text="确定"
               cancel-button-text="取消"
@@ -146,14 +146,15 @@
 
 <script setup>
 import { ref, defineProps, defineEmits, watch } from 'vue'
-import { nestingBatchList, downloadZipGet } from '@/api/mes/craft-manage/section-steel/nesting-result'
+// import { nestingBatchList, downloadZipGet } from '@/api/mes/craft-manage/section-steel/nesting-result'
+import { nestingBatchList } from '@/api/mes/craft-manage/section-steel/nesting-result'
 
 import useMaxHeight from '@compos/use-max-height'
 import { ElMessageBox, ElNotification } from 'element-plus'
 import { MesBuildingTypesettingStatusEnum as typeEnum } from '@enum-ms/mes'
 import { nestingBatchIssued, nestingBatchDel } from '@/api/mes/craft-manage/section-steel/nesting-result'
 import { mesNestingResultPM as permission } from '@/page-permission/mes'
-import ExportButton from '@comp-common/export-button/index.vue'
+// import ExportButton from '@comp-common/export-button/index.vue'
 import nestingFile from '../nesting-file/index.vue'
 
 const emit = defineEmits(['success'])

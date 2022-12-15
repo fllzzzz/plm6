@@ -104,6 +104,25 @@ export function setPartyABorrowReturnConf(data) {
   })
 }
 
+// 获取物料加权配置
+export function getMaterialWeightingConf() {
+  return request({
+    module: 'wms',
+    url: 'config/weighted-price',
+    method: 'get'
+  })
+}
+
+// 保存物料加权配置
+export function setMaterialWeightingConf(data) {
+  return request({
+    module: 'wms',
+    url: 'config/weighted-price',
+    method: 'put',
+    data
+  })
+}
+
 // 获取退货基础配置
 export function getRejectBasicConf() {
   return request({

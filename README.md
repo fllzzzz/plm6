@@ -72,5 +72,12 @@ PS:
 2. `/public/assets/pdf` 内文件从 `/node_modules/pdfjs-dist/es5` 内拷贝过来
 3. `/public/assets/pdf/build/pdf.js`做过如下修改：
    1. 24698行 `xhr.open("GET", this.url);` => `xhr.open("GET", this.url,true);`
-4. PDF预览封装在`/src/components/PDF`      
+4. PDF预览封装在`/src/components/PDF` 
+
+## 打包内存溢出
+1. 安装increase-memory-limit：npm install -g increase-memory-limit
+2. package.json的同级目录下，执行：increase-memory-limit
+3. npm run build：
+  若报错`'"node --max-old-space-size=10240"' 不是内部或外部命令,也不是可运行的程序`,需要将`./node_modules/.bin/*.cmd`内所有 `"%_prog%"` 替换成 `%_prog%`后再打包
+
 
