@@ -2,8 +2,6 @@
   <div class="head-container">
     <div v-show="crud.searchToggle">
       <monomer-select-area-tabs
-        :productType="bridgeComponentTypeEnum.BOX.V"
-        needConvert
         :project-id="projectId"
         @change="fetchMonomerAndArea"
       />
@@ -58,7 +56,7 @@
 <script setup>
 import { ref, defineExpose, defineProps, defineEmits } from 'vue'
 
-import { bridgeComponentTypeEnum } from '@enum-ms/bridge'
+// import { bridgeComponentTypeEnum } from '@enum-ms/bridge'
 import { artifactInfo } from '@/api/bridge/production-manage/dashboard/assembly-match'
 import useDashboardHeader from '@compos/bridge/dashboard/use-dashboard-header'
 import { regHeader } from '@compos/use-crud'

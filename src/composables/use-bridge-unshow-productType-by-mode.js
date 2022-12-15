@@ -10,7 +10,7 @@ export default function useUnshowProductTypeByMode({ resetQuery }) {
   const showComponent = ref(false)
 
   watch(
-    () => globalProject.value.mode,
+    () => globalProject.value?.mode,
     () => {
       if (typeof resetQuery === 'function') {
         resetQuery()
