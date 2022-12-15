@@ -64,18 +64,18 @@
           :cell-class-name="wrongCellMask"
         >
           <el-table-column label="序号" type="index" align="center" width="50" />
-          <el-table-column key="specPrefix" prop="specPrefix" label="*部件规格前缀(大写)" align="center">
+          <el-table-column key="specPrefix" prop="specPrefix" label="部件规格前缀(大写字母或中文)" align="center">
             <template v-slot="scope">
               <el-input
                 v-model.trim="scope.row.specPrefix"
                 type="text"
-                placeholder="请填写大写字母"
+                placeholder="请填写大写字母或中文"
                 maxlength="10"
                 @blur="checkName(scope.row, scope.$index)"
               />
             </template>
           </el-table-column>
-          <el-table-column key="specIndex" prop="specIndex" label="*索引" align="center">
+          <el-table-column key="specIndex" prop="specIndex" label="索引" align="center">
             <template v-slot="scope">
               <common-select
                 v-model="scope.row.specIndex"
@@ -214,7 +214,7 @@ function checkName(item, index) {
         item.specPrefix = undefined
         val.specPrefix = undefined
       } else {
-        if (!/^[A-Z]+$/.test(item.specPrefix)) {
+        if (!/^[\u4e00-\u9fa5A-Z]+$/.test(item.specPrefix)) {
           form.assembleSpecList[index].specPrefix = undefined
           val.specPrefix = undefined
           return
@@ -226,7 +226,7 @@ function checkName(item, index) {
     }
   } else {
     if (item.specPrefix) {
-      if (!/^[A-Z]+$/.test(item.specPrefix)) {
+      if (!/^[\u4e00-\u9fa5A-Z]+$/.test(item.specPrefix)) {
         form.assembleSpecList[index].specPrefix = undefined
         return
       }
