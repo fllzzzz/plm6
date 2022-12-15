@@ -4,7 +4,7 @@
       <mHeader @change-mode="handleModeChange">
         <template #viewLeft>
           <el-tag size="medium" type="warning" effect="plain" style="margin-right: 5px">
-            清单量：{{ summaryInfo.totalQuantity || 0 }} 件 | {{ summaryInfo.totalNetWeight || 0 }} kg</el-tag
+            清单量：{{ summaryInfo.totalQuantity || 0 }} 件 | {{ summaryInfo.totalNetWeight || 0 }} t</el-tag
           >
         </template>
       </mHeader>
