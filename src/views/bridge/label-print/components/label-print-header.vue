@@ -1,7 +1,7 @@
 <template>
   <div class="hed-container">
     <div v-show="crud.searchToggle">
-      <monomer-select-area-tabs :project-id="globalProjectId" @change="fetchMonomerAndArea" :productType="productType" needConvert />
+      <monomer-select-area-tabs :project-id="globalProjectId" @change="fetchMonomerAndArea" />
       <product-type-query :productType="productType" :toQuery="crud.toQuery" :query="query" />
       <rrOperation />
     </div>
