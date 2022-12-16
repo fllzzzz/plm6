@@ -102,7 +102,7 @@
         min-width="100"
         show-overflow-tooltip
       />
-      <el-table-column
+      <!-- <el-table-column
         v-if="columns.visible('project')"
         prop="project"
         key="project"
@@ -110,7 +110,7 @@
         align="center"
         min-width="140"
         show-overflow-tooltip
-      />
+      /> -->
       <el-table-column
         v-if="columns.visible('factory.name')"
         prop="factory.name"
