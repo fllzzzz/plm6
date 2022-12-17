@@ -12,8 +12,7 @@
         @change="handleChange"
       />
       <export-button
-      v-permission="permission.downloadList"
-        v-if="nestingFileType === nestingFileTypeEnum.MATERIAL_LIST.V"
+        v-show="nestingFileType === nestingFileTypeEnum.MATERIAL_LIST.V && checkPermission(permission.downloadList)"
         class="filter-item"
         :fn="getMaterialListExcelFn"
         :params="{ id: props.detailData.id }"
@@ -164,6 +163,7 @@ import { nestingProgress } from '@/api/mes/craft-manage/section-steel/nesting-se
 import { getMaterialList, getMaterialListExcelFn } from '@/api/mes/craft-manage/section-steel/nesting-result'
 import { ref, defineProps, defineEmits } from 'vue'
 import { mesNestingResultPM as permission } from '@/page-permission/mes'
+import checkPermission from '@/utils/system/check-permission'
 import { nestingFileTypeEnum, mesBuildingTypeSettingAssembleTypeEnum as materialTypeEnum, nestingSettingTypeEnum, MesBuildingTypesettingStatusEnum as typeEnum } from '@enum-ms/mes'
 import ExportButton from '@comp-common/export-button/index.vue'
 
