@@ -40,7 +40,7 @@ const defaultTime = moment().startOf('month').valueOf().toString()
 
 const queryTaskTypeENUM = {
   BOX: bridgeTaskTypeEnum.BOX,
-  CELL: { L: '单元件', K: 'CELL', V: bridgeTaskTypeEnum.CELL.V | bridgeTaskTypeEnum.PARENT_PART.V },
+  CELL: bridgeTaskTypeEnum.CELL,
   MACHINE_PART: bridgeTaskTypeEnum.MACHINE_PART
 }
 
