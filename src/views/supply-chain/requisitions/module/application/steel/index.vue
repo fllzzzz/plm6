@@ -18,9 +18,17 @@
           </el-radio-group>
         </div>
         <div class="filter-right-box">
-          <common-button class="filter-item" type="success" @click="materialSelectVisible = true">
-            添加物料
-          </common-button>
+          <common-button class="filter-item" type="success" @click="materialSelectVisible = true"> 添加物料 </common-button>
+          <excel-resolve-button
+            icon="el-icon-upload2"
+            btn-name="清单导入"
+            btn-size="small"
+            class="filter-item"
+            btn-type="warning"
+            open-loading
+            :template="importTemp"
+            @success="handleExcelSuccess"
+          />
         </div>
       </div>
       <el-form ref="formRef" :model="form">
@@ -59,6 +67,9 @@ import { defineProps, defineEmits, ref, computed, watch, provide, nextTick, reac
 import { STEEL_ENUM } from '@/settings/config'
 import { matClsEnum } from '@/utils/enum/modules/classification'
 import { preparationTypeEnum } from '@enum-ms/wms'
+import steelPlateTemp from '@/utils/excel/import-template/supply-chain/requisition-temp/steel-plate'
+import sectionSteelTemp from '@/utils/excel/import-template/supply-chain/requisition-temp/section-steel'
+import steelCoilTemp from '@/utils/excel/import-template/supply-chain/requisition-temp/steel-coil'
 
 import useForm from '@/composables/form/use-form'
 import useMaxHeight from '@compos/use-max-height'
@@ -67,6 +78,7 @@ import materialTableSpecSelect from '@/components-system/classification/material
 import steelPlateTable from './module/steel-plate-table.vue'
 import sectionSteelTable from './module/section-steel-table.vue'
 import steelCoilTable from './module/steel-coil-table.vue'
+import excelResolveButton from '@/components-system/common/excel-resolve-button/index.vue'
 import { ElMessage, ElRadioGroup } from 'element-plus'
 import { isBlank, isNotBlank, toFixed } from '@/utils/data-type'
 
@@ -109,7 +121,7 @@ const steelRefList = reactive({
 
 provide('matSpecRef', matSpecRef) // 供兄弟组件调用 删除
 
-const { form, FORM } = useForm(
+const { cu, form, FORM } = useForm(
   {
     title: '钢材申购',
     defaultForm: defaultForm,
@@ -119,6 +131,20 @@ const { form, FORM } = useForm(
   formRef,
   props.detail
 )
+
+// 当前物料“批量导入模板”
+const importTemp = computed(() => {
+  switch (currentBasicClass.value) {
+    case steelBasicClassKV.steelPlateList.K:
+      return steelPlateTemp
+    case steelBasicClassKV.sectionSteelList.K:
+      return sectionSteelTemp
+    case steelBasicClassKV.steelCoilList.K:
+      return steelCoilTemp
+    default:
+      return steelPlateTemp
+  }
+})
 
 watch(
   () => props.detail,
@@ -160,7 +186,13 @@ const { maxHeight: specSelectMaxHeight } = useMaxHeight(
 
 const { maxHeight: tableMaxHeight, maxHeightStyle } = useMaxHeight({
   mainBox: '.requisitions-application-record-form',
-  extraBox: ['.el-drawer__header', '.filter-container', '.requisitions-application-header', '.requisitions-application-select', '.requisitions-application-footer'],
+  extraBox: [
+    '.el-drawer__header',
+    '.filter-container',
+    '.requisitions-application-header',
+    '.requisitions-application-select',
+    '.requisitions-application-footer'
+  ],
   wrapperBox: ['.el-drawer__body'],
   clientHRepMainH: true,
   navbar: false,
@@ -268,6 +300,49 @@ function init() {
       matSpecRef.value.clear()
     }
   })
+}
+
+// 解析导入表格
+function handleExcelSuccess(list) {
+  // 解析
+  // 根据物料种类获取
+  try {
+    console.log(list)
+    cu.props.import(list)
+  } catch (error) {
+    ElMessage.error({ message: error.message, duration: 5000 })
+  }
+}
+
+// 导入
+cu.props.import = (importList) => {
+  const key = currentBasicClass.value
+  // 先监听，后加入数组会导致监听失效
+  // importList.forEach((v) => steelRefList[key].rowWatch(v))
+  // 截取新旧数组长度，对导入数据进行rowWatch监听
+  const oldLen = form[key].length
+  form[key].push.apply(form[key], importList)
+  const newLen = form[key].length
+  for (let i = oldLen; i < newLen; i++) {
+    steelRefList[key].rowWatch(form[key][i])
+  }
+  // 初始化选中数据，执行一次后取消当前监听
+  const initSelectedTrigger = watch(
+    matSpecRef,
+    () => {
+      if (matSpecRef.value) {
+        matSpecRef.value.initSelected(
+          importList.map((v) => {
+            return { sn: v.sn, classifyId: v.classifyId }
+          })
+        )
+        nextTick(() => {
+          initSelectedTrigger()
+        })
+      }
+    },
+    { immediate: true }
+  )
 }
 </script>
 

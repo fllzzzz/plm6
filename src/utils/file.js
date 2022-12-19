@@ -193,9 +193,10 @@ export function resolveExcel(file) {
 export async function formatExcelData(data, template = {}) {
   const res = []
   const startRow = template.startRow || 0
+  const endIgnoreRow = template.endIgnoreRow || 0
   const fields = template.fields
   if (data.length >= startRow && fields) {
-    const _data = data.slice(startRow - 1, data.length)
+    const _data = data.slice(startRow - 1, data.length - endIgnoreRow)
     // 遍历数据
     _data.forEach((item) => {
       const obj = {}
