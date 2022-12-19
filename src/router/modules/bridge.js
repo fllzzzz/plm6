@@ -190,13 +190,6 @@ export default {
               meta: { title: '图纸文件管理', icon: 'project', noCache: true, permissions: ['bridgeDrawingFileListPM'] }
             },
             {
-              name: 'BridgeCNCFile',
-              path: 'bridge-cnc',
-              hidden: false,
-              component: '/plan/technical-data-manage/technical-achievement/cnc/index',
-              meta: { title: '数控文件管理', icon: 'project', noCache: true, permissions: ['bridgeCncFileListPM'] }
-            },
-            {
               name: 'BridgePlanChangeFile',
               path: 'bridge-change-file',
               hidden: false,

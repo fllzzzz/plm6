@@ -2,7 +2,7 @@
   <div class="app-container">
     <!--工具栏-->
     <div class="head-container">
-      <mHeader :currentProjectType="currentProjectType" @projectChange="handleChange"/>
+      <mHeader @projectChange="handleChange"/>
     </div>
     <!--表格渲染-->
     <common-table
@@ -226,7 +226,6 @@ import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import udOperation from '@crud/UD.operation'
 import pagination from '@crud/Pagination'
-import { mapGetters } from '@/store/lib'
 import mHeader from './module/header'
 import mForm from './module/form'
 import { projectTypeEnum, businessTypeEnum, projectStatusEnum, orderSourceTypeEnum } from '@enum-ms/contract'
@@ -241,7 +240,6 @@ import { ElSelect } from 'element-plus'
 import ExportButton from '@comp-common/export-button/index.vue'
 
 const store = useStore()
-const { currentProjectType } = mapGetters(['globalProjectId', 'currentProjectType'])
 
 const optShow = {
   add: true,

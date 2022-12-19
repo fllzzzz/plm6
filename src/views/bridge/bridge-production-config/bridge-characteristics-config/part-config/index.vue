@@ -55,7 +55,7 @@
         align="center"
       >
         <template v-slot="scope">
-          <span>{{isNotBlank(scope.row.boolSectionSteel)?extrusionClsEnum.VL[scope.row.boolSectionSteel]:'-' }}</span>
+          <span>{{isNotBlank(scope.row.boolSectionSteel)?partClsEnum.VL[scope.row.boolSectionSteel]:'-' }}</span>
         </template>
       </el-table-column>
        <el-table-column
@@ -93,7 +93,7 @@ import crudApi from '@/api/config/bridge/part-config'
 import { ref } from 'vue'
 
 import { isNotBlank } from '@data-type/index'
-import { extrusionClsEnum } from '@enum-ms/classification'
+import { partClsEnum } from '@enum-ms/bridge'
 import { partConfigPM as permission } from '@/page-permission/config'
 import checkPermission from '@/utils/system/check-permission'
 import useMaxHeight from '@compos/use-max-height'

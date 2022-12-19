@@ -158,7 +158,7 @@
 </template>
 
 <script setup>
-import { defineProps, ref, watch, defineEmits, computed } from 'vue'
+import { ref, defineEmits, computed } from 'vue'
 import { regHeader } from '@compos/use-crud'
 import checkPermission from '@/utils/system/check-permission'
 import rrOperation from '@crud/RR.operation'
@@ -198,15 +198,8 @@ const outFinishCount = ref()
 const totalAmount = ref({})
 const emit = defineEmits(['projectChange'])
 const { crud, query } = regHeader(defaultQuery)
-const props = defineProps({
-  currentProjectType: {
-    type: [Number, String],
-    default: undefined
-  }
-})
 const projectContentOption = computed(() => {
   if (query.businessType && query.projectType) {
-    console.log(machiningData)
     switch (query.projectType) {
       case projectTypeEnum.STEEL.V:
         return query.businessType === businessTypeEnum.MACHINING.V ? machiningData[projectTypeEnum.STEEL.V] : installData[projectTypeEnum.STEEL.V]
@@ -218,16 +211,6 @@ const projectContentOption = computed(() => {
     return []
   }
 })
-watch(
-  () => props.currentProjectType,
-  (val) => {
-    if (val) {
-      crud.query.projectType = val
-      crud.toQuery()
-    }
-  },
-  { immediate: true }
-)
 
 contentInfo()
 
