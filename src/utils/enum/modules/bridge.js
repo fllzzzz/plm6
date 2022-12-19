@@ -68,10 +68,16 @@ const bridgeTaskTypeEnum = {
   MACHINE_PART: bridgeComponentTypeEnum.MACHINE_PART,
   CELL: bridgeComponentTypeEnum.CELL,
   BOX: bridgeComponentTypeEnum.BOX,
-  AUXILIARY_MATERIAL: bridgeComponentTypeEnum.AUXILIARY_MATERIAL,
-  PARENT_PART: { L: '母件', SL: '母件', K: 'PARENT_PART', V: 1 << 5 }
+  AUXILIARY_MATERIAL: bridgeComponentTypeEnum.AUXILIARY_MATERIAL
 }
 constantize(bridgeTaskTypeEnum)
+
+// 型材、钢板筛选
+const partClsEnum = {
+  SECTION_STEEL: { L: '型材', K: 'SECTION_STEEL', V: true },
+  STEEL: { L: '钢板', K: 'STEEL', V: false }
+}
+constantize(partClsEnum)
 
 export {
   bridgeComponentTypeEnum,
@@ -80,7 +86,8 @@ export {
   bridgePackTypeEnum,
   bridgeLabelTypeEnum,
   bridgePrintProductTypeEnum,
-  bridgeTaskTypeEnum
+  bridgeTaskTypeEnum,
+  partClsEnum
 }
 
 export default {
@@ -90,5 +97,6 @@ export default {
   bridgePackTypeEnum,
   bridgeLabelTypeEnum,
   bridgePrintProductTypeEnum,
-  bridgeTaskTypeEnum
+  bridgeTaskTypeEnum,
+  partClsEnum
 }

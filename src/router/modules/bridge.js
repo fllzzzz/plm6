@@ -190,13 +190,6 @@ export default {
               meta: { title: '图纸文件管理', icon: 'project', noCache: true, permissions: ['bridgeDrawingFileListPM'] }
             },
             {
-              name: 'BridgeCNCFile',
-              path: 'bridge-cnc',
-              hidden: false,
-              component: '/plan/technical-data-manage/technical-achievement/cnc/index',
-              meta: { title: '数控文件管理', icon: 'project', noCache: true, permissions: ['bridgeCncFileListPM'] }
-            },
-            {
               name: 'BridgePlanChangeFile',
               path: 'bridge-change-file',
               hidden: false,
@@ -491,18 +484,18 @@ export default {
           noCache: true
         }
       },
-      {
-        name: 'BridgeProductionDashboardAssemblyMatch',
-        path: 'assembly-match',
-        hidden: false,
-        component: '/bridge/production-manage/dashboard/assembly-match/index',
-        meta: {
-          title: '项目齐套',
-          icon: 'project',
-          noCache: true,
-          permissions: ['bridgeAssemblyMatchDashboardPM']
-        }
-      },
+      // {
+      //   name: 'BridgeProductionDashboardAssemblyMatch',
+      //   path: 'assembly-match',
+      //   hidden: false,
+      //   component: '/bridge/production-manage/dashboard/assembly-match/index',
+      //   meta: {
+      //     title: '项目齐套',
+      //     icon: 'project',
+      //     noCache: true,
+      //     permissions: ['bridgeAssemblyMatchDashboardPM']
+      //   }
+      // },
       {
         name: 'BridgeProductionDashboardPainting',
         path: 'painting',

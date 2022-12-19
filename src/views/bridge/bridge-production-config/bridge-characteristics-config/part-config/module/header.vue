@@ -5,7 +5,7 @@
         <template #optRight>
           <common-radio-button
             v-model="query.boolSectionSteel"
-            :options="extrusionClsEnum.ENUM"
+            :options="partClsEnum.ENUM"
             showOptionAll
             type="enum"
             class="filter-item"
@@ -20,7 +20,7 @@
 <script setup>
 import { regHeader } from '@compos/use-crud'
 import crudOperation from '@crud/CRUD.operation'
-import { extrusionClsEnum } from '@enum-ms/classification'
+import { partClsEnum } from '@enum-ms/bridge'
 
 const defaultQuery = {
   boolSectionSteel: undefined

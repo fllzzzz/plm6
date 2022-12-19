@@ -3,8 +3,8 @@
     <template #optLeft>
       <common-radio-button
         v-model="query.productType"
-        :options="globalProject.projectType === projectTypeEnum.STEEL.V?deepenTypeEnum.ENUM:bridgeProcessTypeEnum.ENUM"
-        :unshowVal="globalProject.projectType === projectTypeEnum.STEEL.V?[deepenTypeEnum.ARTIFACT.V]:[bridgeProcessTypeEnum.BOX.V]"
+        :options="deepenTypeEnum.ENUM"
+        :unshowVal="[deepenTypeEnum.ARTIFACT.V]"
         type="enum"
         size="small"
         class="filter-item"
@@ -18,26 +18,17 @@
 </template>
 
 <script setup>
-import { computed, defineProps } from 'vue'
-import { projectTypeEnum } from '@enum-ms/contract'
+import { computed } from 'vue'
 import { deepenTypeEnum, technicalDataTypeEnum } from '@enum-ms/plan'
-import { bridgeProcessTypeEnum } from '@enum-ms/bridge'
 
 import { regHeader } from '@compos/use-crud'
 import crudOperation from '@crud/CRUD.operation'
 
-const uploadType = computed(() => query.productType === deepenTypeEnum.ASSEMBLY.V || query.productType === bridgeProcessTypeEnum.CELL.V ? 'NC1' : 'DXF')
-
-const props = defineProps({
-  globalProject: {
-    type: Object,
-    default: () => {}
-  }
-})
+const uploadType = computed(() => query.productType === deepenTypeEnum.ASSEMBLY.V ? 'NC1' : 'DXF')
 
 const defaultQuery = {
   dataType: technicalDataTypeEnum.NC_DRAWING.V,
-  productType: props.globalProject.projectType === projectTypeEnum.STEEL.V ? deepenTypeEnum.ASSEMBLY.V : bridgeProcessTypeEnum.CELL.V
+  productType: deepenTypeEnum.ASSEMBLY.V
 }
 
 const { crud, query } = regHeader(defaultQuery)

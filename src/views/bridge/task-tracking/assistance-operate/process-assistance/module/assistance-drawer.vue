@@ -232,10 +232,7 @@ async function fetch() {
     classIdGroupsObj.value = {}
     const { content } = await detail({
       taskOrderId: props.info?.taskOrderId,
-      taskTypeEnum:
-        props.info?.taskTypeEnum & bridgeTaskTypeEnum.CELL.V
-          ? props.info?.taskTypeEnum | bridgeTaskTypeEnum.PARENT_PART.V
-          : props.info?.taskTypeEnum,
+      taskTypeEnum: props.info?.taskTypeEnum,
       processId: props.info?.process.id,
       ...query.value
     })

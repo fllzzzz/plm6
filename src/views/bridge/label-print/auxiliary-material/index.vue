@@ -192,7 +192,7 @@ function getLabelInfo(row) {
     manufacturerName: printConfig.manufacturerName || companyName,
     qrCode: spliceQrCodeUrl(`${baseUrl}${QR_SCAN_PATH.AUXILIARY_MATERIAL}`, {
       id: row.id, // id
-      ftype: QR_SCAN_F_TYPE.MEW_PRODUCTION,
+      ftype: QR_SCAN_F_TYPE.BRIDGE_PRODUCTION,
       // factoryId: row.factoryId, // 工厂id
       // taskId: row.taskId, // 任务id
       type: productType // 类型

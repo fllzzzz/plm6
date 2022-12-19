@@ -214,7 +214,7 @@ async function getLabelInfo(row) {
     qrCode: JSON.stringify({
       id: row.id,
       type: QR_SCAN_TYPE.MES_PACKAGE,
-      ftype: QR_SCAN_F_TYPE.MES_PACKAGE_SHIP
+      ftype: QR_SCAN_F_TYPE.BRIDGE_PACKAGE_SHIP
     })
   }
 }
