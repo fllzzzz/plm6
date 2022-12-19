@@ -429,7 +429,7 @@ function getLabelInfo(row, num) {
   const baseUrl = requestUrl
   const qrCodeObj = {
     id: row.id, // id
-    ftype: QR_SCAN_F_TYPE.MEW_PRODUCTION,
+    ftype: QR_SCAN_F_TYPE.BRIDGE_PRODUCTION,
     factoryId: row.factoryId, // 工厂id
     taskId: row.taskId, // 任务id
     type: productType, // 类型

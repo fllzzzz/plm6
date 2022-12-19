@@ -18,7 +18,7 @@
           class="filter-item"
           @change="handleProcessChange"
         />
-        <common-radio-button
+        <!-- <common-radio-button
           v-if="props.detailData.productType === bridgeComponentTypeEnum.CELL.V"
           v-model="listType"
           :options="typeEnum.ENUM"
@@ -26,7 +26,7 @@
           size="small"
           class="filter-item"
           @change="handleTypeChange"
-        />
+        /> -->
         <div style="float: right">
           <!-- <print-table
             v-permission="permission.print"
@@ -48,8 +48,11 @@
             type="warning"
             class="filter-item"
           /> -->
-          <common-button v-permission="permission.print" icon="el-icon-printer" size="mini" type="success" @click="printIt">
+          <!-- <common-button v-permission="permission.print" icon="el-icon-printer" size="mini" type="success" @click="printIt">
             打印{{ props.detailData.productType === bridgeComponentTypeEnum.BOX.V ? '【任务清单】' : '【任务清单、套料清单】' }}
+          </common-button> -->
+          <common-button v-permission="permission.print" icon="el-icon-printer" size="mini" type="success" @click="printIt">
+            打印【任务清单】
           </common-button>
         </div>
       </div>
@@ -93,8 +96,8 @@
         >
           <el-table-column :show-overflow-tooltip="true" label="属性" key="taskType" prop="taskType" align="center">
             <template v-slot="scope">
-              <el-tag :type="scope.row.taskType === structureOrderTypeEnum.NESTING.V ? 'success' : 'warning'">{{
-                structureOrderTypeEnum.VL[scope.row.taskType]
+              <el-tag :type="scope.row.taskType & bridgeComponentTypeEnum.CELL.V ? '' : 'success'" effect="plain">{{
+                bridgeComponentTypeEnum.VL[scope.row.taskType]
               }}</el-tag>
             </template>
           </el-table-column>
@@ -116,7 +119,7 @@
             </template>
           </el-table-column>
         </common-table>
-        <common-table
+        <!-- <common-table
           v-if="props.detailData.productType === bridgeComponentTypeEnum.CELL.V && listType === typeEnum.NESTING_LIST.V"
           ref="tableRef"
           :data="tableData"
@@ -186,7 +189,7 @@
               <span>{{ scope.row.lossRate }}%</span>
             </template>
           </el-table-column>
-        </common-table>
+        </common-table> -->
         <!--分页组件-->
         <el-pagination
           :total="total"
@@ -208,7 +211,7 @@ import { processInfo, getTaskList, getNestingList, printSign } from '@/api/bridg
 import { defineProps, defineEmits, ref, computed, watch, inject } from 'vue'
 import { ElNotification, ElLoading } from 'element-plus'
 
-import { structureOrderTypeEnum } from '@enum-ms/mes'
+// import { structureOrderTypeEnum } from '@enum-ms/mes'
 import { bridgeComponentTypeEnum } from '@enum-ms/bridge'
 import { printModeEnum } from '@/utils/print/enum'
 
@@ -339,15 +342,15 @@ async function assembleListGet() {
     tableData.value = _content
   }
 }
-function handleTypeChange(val) {
-  listType.value = val
-  queryPage.pageNumber = 1
-  if (listType.value === typeEnum.TASK_LIST.V) {
-    fetch()
-  } else {
-    assembleListGet()
-  }
-}
+// function handleTypeChange(val) {
+//   listType.value = val
+//   queryPage.pageNumber = 1
+//   if (listType.value === typeEnum.TASK_LIST.V) {
+//     fetch()
+//   } else {
+//     assembleListGet()
+//   }
+// }
 
 function handleProcessChange(val) {
   if (listType.value === typeEnum.TASK_LIST.V) {

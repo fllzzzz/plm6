@@ -67,8 +67,7 @@ const bridgeTaskTypeEnum = {
   MACHINE_PART: bridgeComponentTypeEnum.MACHINE_PART,
   CELL: bridgeComponentTypeEnum.CELL,
   BOX: bridgeComponentTypeEnum.BOX,
-  AUXILIARY_MATERIAL: bridgeComponentTypeEnum.AUXILIARY_MATERIAL,
-  PARENT_PART: { L: '母件', SL: '母件', K: 'PARENT_PART', V: 1 << 5 }
+  AUXILIARY_MATERIAL: bridgeComponentTypeEnum.AUXILIARY_MATERIAL
 }
 constantize(bridgeTaskTypeEnum)
 

@@ -73,7 +73,7 @@ size="mini"
                 <div style="display: flex; justify-content: space-between; width: 100%; align-items: center; padding: 0 5px">
                   <el-checkbox
                     v-model="item.checked"
-                    :disabled="!item.imgLoad"
+                    :disabled="!item.imgLoad && crud.query.thick !== '其他'"
                     @click.stop
                     @change="handleCheckedChange($event, item)"
                   ></el-checkbox>

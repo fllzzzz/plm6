@@ -1,7 +1,7 @@
 <template>
   <div class="head-container">
     <div v-show="crud.searchToggle">
-      <monomer-select-area-tabs :productType="query.productType" needConvert :project-id="globalProjectId" @change="fetchMonomerAndArea" />
+      <monomer-select-area-tabs :project-id="globalProjectId" @change="fetchMonomerAndArea" />
       <common-radio-button
        v-if="showComponent"
         v-model="query.productType"

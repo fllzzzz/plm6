@@ -484,18 +484,18 @@ export default {
           noCache: true
         }
       },
-      {
-        name: 'BridgeProductionDashboardAssemblyMatch',
-        path: 'assembly-match',
-        hidden: false,
-        component: '/bridge/production-manage/dashboard/assembly-match/index',
-        meta: {
-          title: '项目齐套',
-          icon: 'project',
-          noCache: true,
-          permissions: ['bridgeAssemblyMatchDashboardPM']
-        }
-      },
+      // {
+      //   name: 'BridgeProductionDashboardAssemblyMatch',
+      //   path: 'assembly-match',
+      //   hidden: false,
+      //   component: '/bridge/production-manage/dashboard/assembly-match/index',
+      //   meta: {
+      //     title: '项目齐套',
+      //     icon: 'project',
+      //     noCache: true,
+      //     permissions: ['bridgeAssemblyMatchDashboardPM']
+      //   }
+      // },
       {
         name: 'BridgeProductionDashboardPainting',
         path: 'painting',
