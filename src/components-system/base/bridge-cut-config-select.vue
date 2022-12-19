@@ -12,12 +12,12 @@
     @change="handleChange"
   >
     <el-option-group v-for="(group, index) in bridgeCutConfigs" :key="index + 1" :label="layOffWayTypeEnum.VL[index]">
-      <el-option
+       <el-option
         v-for="item in group"
         :key="item.id"
         :label="item.name"
         :value="item.id"
-        :disabled="disabledValue ? disabledValue.indexOf(item.id) > -1 : false"
+        :disabled="isDisabled ? item.boolNestCutEnum : (disabledValue ? disabledValue.indexOf(item.id) > -1 : false)"
       />
     </el-option-group>
   </el-select>
@@ -53,6 +53,10 @@ const props = defineProps({
     default: false
   },
   disabled: {
+    type: Boolean,
+    default: false
+  },
+  isDisabled: {
     type: Boolean,
     default: false
   },

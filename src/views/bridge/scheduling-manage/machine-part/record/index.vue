@@ -96,7 +96,7 @@
         align="center"
       >
         <template #default="{ row: { sourceRow: row } }">
-          <bridge-cut-config-select v-if="row.issueStatusEnum === issueStatusEnum.NOT_NESTING.V" v-model="row.cutConfigId" clearable />
+          <bridge-cut-config-select v-if="row.issueStatusEnum === issueStatusEnum.NOT_NESTING.V" v-model="row.cutConfigId" clearable :isDisabled="row.thick==='其他'" />
           <span v-else>{{ row.cutConfigName }}</span>
         </template>
       </el-table-column>
@@ -221,4 +221,5 @@ async function toBatchIssue() {
     issueLoading.value = false
   }
 }
+
 </script>
