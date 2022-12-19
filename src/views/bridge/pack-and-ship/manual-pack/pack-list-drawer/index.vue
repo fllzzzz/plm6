@@ -387,7 +387,6 @@ function getSummaries(param) {
   return tableSummary(param, { props: ['inQuantity', 'productQuantity'] })
 }
 
-console.log(packTypeEnum.VK[packType], listObj[packTypeEnum.VK[packType]], 'listObj[packTypeEnum.VK[packType]]')
 </script>
 
 <style>

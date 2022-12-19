@@ -277,11 +277,11 @@ function openRecordView(row) {
   recordVisible.value = true
 }
 
-function handleDataFormat({ artifactList, enclosureList, auxList }) {
+function handleDataFormat({ boxList, partList, auxList }) {
   const data = {}
-  data.artifactList =
-    artifactList &&
-    artifactList.map((v) => {
+  data.boxList =
+    boxList &&
+    boxList.map((v) => {
       v.weight = v.netWeight || v.grossWeight
       v.totalWeight = convertUnits(v.weight * v.packageQuantity, 'kg', 't')
       v.productQuantity = v.packageQuantity
@@ -289,9 +289,9 @@ function handleDataFormat({ artifactList, enclosureList, auxList }) {
       v.numberList = v.numberList.filter(v => v.boolPackage).map(v => v.number)
       return v
     })
-  data.enclosureList =
-    enclosureList &&
-    enclosureList.map((v) => {
+  data.partList =
+    partList &&
+    partList.map((v) => {
       v.processingPrice = v.processingPrice || v.processingPrice === 0 ? v.processingPrice : undefined
       v.totalLength = convertUnits(v.length * v.packageQuantity, 'mm', 'm')
       v.productQuantity = v.packageQuantity

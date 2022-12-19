@@ -169,7 +169,7 @@ const { batchPrint, print } = usePrintLabel({
 
 const detailStore = inject('detailStore')
 const dataField = {
-  [packTypeEnum.BOX.V]: 'BoxList',
+  [packTypeEnum.BOX.V]: 'boxList',
   [packTypeEnum.MACHINE_PART.V]: 'partList',
   [packTypeEnum.AUXILIARY_MATERIAL.V]: 'materialList'
 }
