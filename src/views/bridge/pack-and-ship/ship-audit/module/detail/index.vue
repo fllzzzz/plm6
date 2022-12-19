@@ -57,22 +57,22 @@
       </el-descriptions>
       <el-radio-group v-model="curProductType" v-if="productTypeBits.length > 1" size="small" class="filter-item">
         <el-radio-button
-          v-if="packTypeEnum.STRUCTURE.V & productType"
-          :label="packTypeEnum.STRUCTURE.V"
-          :disabled="artifactList.length == 0"
-          >{{ packTypeEnum.STRUCTURE.L }}({{ artifactList.length }})</el-radio-button
+          v-if="packTypeEnum.BOX.V & productType"
+          :label="packTypeEnum.BOX.V"
+          :disabled="boxList.length == 0"
+          >{{ packTypeEnum.BOX.L }}({{ boxList.length }})</el-radio-button
         >
         <el-radio-button
-          v-if="packTypeEnum.ENCLOSURE.V & productType"
-          :label="packTypeEnum.ENCLOSURE.V"
-          :disabled="enclosureList.length == 0"
-          >{{ packTypeEnum.ENCLOSURE.L }}({{ enclosureList.length }})</el-radio-button
+          v-if="packTypeEnum.MACHINE_PART.V & productType"
+          :label="packTypeEnum.MACHINE_PART.V"
+          :disabled="partList.length == 0"
+          >{{ packTypeEnum.MACHINE_PART.L }}({{ partList.length }})</el-radio-button
         >
         <el-radio-button
           v-if="packTypeEnum.AUXILIARY_MATERIAL.V & productType"
           :label="packTypeEnum.AUXILIARY_MATERIAL.V"
-          :disabled="auxList.length == 0"
-          >{{ packTypeEnum.AUXILIARY_MATERIAL.L }}({{ auxList.length }})</el-radio-button
+          :disabled="auxiliaryMaterialList.length == 0"
+          >{{ packTypeEnum.AUXILIARY_MATERIAL.L }}({{ auxiliaryMaterialList.length }})</el-radio-button
         >
       </el-radio-group>
     </div>
@@ -90,7 +90,8 @@
 import { defineProps, ref, defineEmits, watch, computed } from 'vue'
 import { ElRadioGroup } from 'element-plus'
 
-import { packTypeEnum } from '@enum-ms/mes'
+// import { packTypeEnum } from '@enum-ms/mes'
+import { bridgePackTypeEnum as packTypeEnum } from '@enum-ms/bridge'
 import { weightMeasurementModeEnum, enclosureSettlementTypeEnum } from '@enum-ms/finance'
 import { pricingMannerEnum } from '@enum-ms/contract'
 import { weightTypeEnum } from '@enum-ms/common'
@@ -145,9 +146,9 @@ const { maxHeight } = useMaxHeight(
 )
 
 const tableLoading = ref(false)
-const artifactList = ref([])
-const enclosureList = ref([])
-const auxList = ref([])
+const boxList = ref([])
+const partList = ref([])
+const auxiliaryMaterialList = ref([])
 const contract = ref({})
 const curProductType = ref()
 
@@ -162,9 +163,9 @@ const detailId = computed(() => {
 })
 const currentView = computed(() => {
   switch (curProductType.value) {
-    case packTypeEnum.STRUCTURE.V:
+    case packTypeEnum.BOX.V:
       return structureTable
-    case packTypeEnum.ENCLOSURE.V:
+    case packTypeEnum.MACHINE_PART.V:
       return enclosureTable
     case packTypeEnum.AUXILIARY_MATERIAL.V:
       return auxiliaryMaterialTable
@@ -174,10 +175,10 @@ const currentView = computed(() => {
 })
 const list = computed(() => {
   switch (curProductType.value) {
-    case packTypeEnum.STRUCTURE.V:
+    case packTypeEnum.BOX.V:
       return (
-        artifactList.value &&
-        artifactList.value.map((v) => {
+        boxList.value &&
+        boxList.value.map((v) => {
           v.showQuantity = v[props.quantityFelid]
           v.weight = (props.weightType === weightTypeEnum.NET.V ? v.netWeight : v.grossWeight) || 0
           v.totalLength = convertUnits(v.length * v.showQuantity || 0, 'mm', 'm')
@@ -189,10 +190,10 @@ const list = computed(() => {
           return v
         })
       )
-    case packTypeEnum.ENCLOSURE.V:
+    case packTypeEnum.MACHINE_PART.V:
       return (
-        enclosureList.value &&
-        enclosureList.value.map((v) => {
+        partList.value &&
+        partList.value.map((v) => {
           v.showQuantity = v[props.quantityFelid]
           v.totalMete =
             contract.value.enclosureMeasureMode === enclosureSettlementTypeEnum.AREA.V
@@ -204,8 +205,8 @@ const list = computed(() => {
       )
     case packTypeEnum.AUXILIARY_MATERIAL.V:
       return (
-        auxList.value &&
-        auxList.value.map((v) => {
+        auxiliaryMaterialList.value &&
+        auxiliaryMaterialList.value.map((v) => {
           v.showQuantity = v[props.quantityFelid]
           v.fullClassName = `${v.firstName}/${v.secondName}/${v.thirdName}`
           v.totalPrice = v.unitPrice * v.showQuantity || 0
@@ -227,9 +228,9 @@ watch(
 )
 
 function init() {
-  artifactList.value = []
-  enclosureList.value = []
-  auxList.value = []
+  boxList.value = []
+  partList.value = []
+  auxiliaryMaterialList.value = []
   contract.value = {}
   curProductType.value = undefined
 }
@@ -240,9 +241,9 @@ async function fetchDetail() {
     tableLoading.value = true
     curProductType.value = productTypeBits.value[0]
     const data = await props.detailFunc(detailId.value)
-    artifactList.value = data.artifactList || []
-    enclosureList.value = data.enclosureList || []
-    auxList.value = data.auxList || []
+    boxList.value = data.boxList || []
+    partList.value = data.partList || []
+    auxiliaryMaterialList.value = data.auxiliaryMaterialList || []
     contract.value = data.review || {}
     contract.value.attachmentImgSrc = contract.value.attachmentDTOS && contract.value.attachmentDTOS.map((k) => k.imageUrl)
   } catch (error) {

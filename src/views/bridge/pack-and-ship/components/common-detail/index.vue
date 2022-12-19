@@ -30,8 +30,8 @@
         <el-radio-button
           v-if="packTypeEnum.AUXILIARY_MATERIAL.V & productType"
           :label="packTypeEnum.AUXILIARY_MATERIAL.V"
-          :disabled="auxList.length == 0"
-          >{{ packTypeEnum.AUXILIARY_MATERIAL.L }}({{ auxList.length }})</el-radio-button
+          :disabled="auxiliaryMaterialList.length == 0"
+          >{{ packTypeEnum.AUXILIARY_MATERIAL.L }}({{ auxiliaryMaterialList.length }})</el-radio-button
         >
       </el-radio-group>
       <common-radio-button
@@ -115,7 +115,7 @@ const monomerStatus = ref(SummaryStatusEnum.PROCESS.V)
 const tableLoading = ref(false)
 const boxList = ref([])
 const partList = ref([])
-const auxList = ref([])
+const auxiliaryMaterialList = ref([])
 const curProductType = ref()
 
 const productType = computed(() => {
@@ -162,8 +162,8 @@ const list = computed(() => {
       )
     case packTypeEnum.AUXILIARY_MATERIAL.V:
       return (
-        auxList.value &&
-        auxList.value.map((v) => {
+        auxiliaryMaterialList.value &&
+        auxiliaryMaterialList.value.map((v) => {
           v.showQuantity = v[props.quantityFelid]
           v.fullClassName = `${v.firstName}/${v.secondName}/${v.thirdName}`
           return v
@@ -191,7 +191,7 @@ async function fetchDetail() {
     emit('getDetail', detailId.value, data)
     boxList.value = data.boxList || []
     partList.value = data.partList || []
-    auxList.value = data.auxList || []
+    auxiliaryMaterialList.value = data.auxiliaryMaterialList || []
   } catch (error) {
     console.log('详情', error)
   } finally {

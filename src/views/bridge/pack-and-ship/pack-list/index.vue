@@ -84,7 +84,7 @@
         min-width="60"
       />
       <el-table-column
-        v-if="columns.visible('totalGrossWeight') && (crud.query.productType === packTypeEnum.BOX.V || crud.query.productType === packTypeEnum.partList.V)"
+        v-if="columns.visible('totalGrossWeight') && (crud.query.productType === packTypeEnum.BOX.V || crud.query.productType === packTypeEnum.MACHINE_PART.V)"
         key="totalGrossWeight"
         prop="totalGrossWeight"
         :show-overflow-tooltip="true"
@@ -277,12 +277,12 @@ function openRecordView(row) {
   recordVisible.value = true
 }
 
-function handleDataFormat({ boxList, partList, auxList }) {
+function handleDataFormat({ boxList, partList, auxiliaryMaterialList }) {
   const data = {}
   data.boxList =
     boxList &&
     boxList.map((v) => {
-      v.weight = v.netWeight || v.grossWeight
+      v.weight = v.netWeight
       v.totalWeight = convertUnits(v.weight * v.packageQuantity, 'kg', 't')
       v.productQuantity = v.packageQuantity
       v.originNumberList = deepClone(v.numberList)
@@ -299,9 +299,9 @@ function handleDataFormat({ boxList, partList, auxList }) {
       v.numberList = v.numberList.filter(v => v.boolPackage).map(v => v.number)
       return v
     })
-  data.auxList =
-    auxList &&
-    auxList.map((v) => {
+  data.auxiliaryMaterialList =
+    auxiliaryMaterialList &&
+    auxiliaryMaterialList.map((v) => {
       v.fullClassName = `${v.firstName}/${v.secondName}/${v.thirdName}`
       v.productQuantity = v.packageQuantity
       v.originNumberList = deepClone(v.numberList)
@@ -314,7 +314,6 @@ function handleDataFormat({ boxList, partList, auxList }) {
 async function edit(id, projectId) {
   try {
     const data = (await detail(id)) || {}
-    console.log(data, 'data')
     router.push({ name: 'BridgeManualPack', params: { id, projectId, remark: data.remark, data: handleDataFormat(data) }})
   } catch (error) {
     console.log('去编辑包', error)

@@ -157,7 +157,7 @@ watch(
       packData[packTypeEnum.MACHINE_PART.K] =
         (_data.partList && _data.partList.reduce((obj, item) => ((obj[item.id] = item), obj), {})) || {}
       packData[packTypeEnum.AUXILIARY_MATERIAL.K] =
-        (_data.auxList && _data.auxList.reduce((obj, item) => ((obj[item.id] = item), obj), {})) || {}
+        (_data.auxiliaryMaterialList && _data.auxiliaryMaterialList.reduce((obj, item) => ((obj[item.id] = item), obj), {})) || {}
       nextTick(() => {
         packVisible.value = true
       })
