@@ -84,7 +84,7 @@
         min-width="60"
       />
       <el-table-column
-        v-if="columns.visible('totalGrossWeight') && (crud.query.productType === packTypeEnum.BOX.V || crud.query.productType === packTypeEnum.CELL.V)"
+        v-if="columns.visible('totalGrossWeight') && (crud.query.productType === packTypeEnum.BOX.V || crud.query.productType === packTypeEnum.partList.V)"
         key="totalGrossWeight"
         prop="totalGrossWeight"
         :show-overflow-tooltip="true"
@@ -314,7 +314,7 @@ function handleDataFormat({ artifactList, enclosureList, auxList }) {
 async function edit(id, projectId) {
   try {
     const data = (await detail(id)) || {}
-    router.push({ name: 'MesManualPack', params: { id, projectId, remark: data.remark, data: handleDataFormat(data) }})
+    router.push({ name: 'BridgeManualPack', params: { id, projectId, remark: data.remark, data: handleDataFormat(data) }})
   } catch (error) {
     console.log('去编辑包', error)
   }

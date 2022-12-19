@@ -1,9 +1,9 @@
 <template>
   <common-drawer ref="drawerRef" title="打包列表" v-model="drawerVisible" direction="rtl" :before-close="handleClose" size="75%" custom-class="drawer-detail">
     <template #titleRight>
-      <!-- <common-button v-permission="permission.pack" type="primary" :loading="packLoading" size="mini" @click="packClick">
-        {{ packTypeEnum.VL[packType] }}打包({{ listObj['source' + packTypeEnum.VK[packType]].length }})
-      </common-button> -->
+      <common-button v-permission="permission.pack" type="primary" :loading="packLoading" size="mini" @click="packClick">
+        {{ packTypeEnum.VL[packType] }}打包({{ listObj['source' + packTypeEnum.VK[packType]]?.length }})
+      </common-button>
     </template>
     <template #content>
       <div class="head-container">
@@ -20,7 +20,7 @@
           type="enum"
           :disabledVal="disabledVal"
         >
-          <template #suffix="{ item }"> ({{ listObj['source' + item.K].length }})</template>
+          <template #suffix="{ item }"> ({{ listObj['source' + item.K]?.length }})</template>
         </component-radio-button>
         <workshop-select
           v-if="packType !== packTypeEnum.AUXILIARY_MATERIAL.V"
@@ -230,7 +230,7 @@ const choseDialogRef = ref()
 const expandRowKeys = ref([])
 
 const packData = inject('packData')
-// const permission = inject('permission')
+const permission = inject('permission')
 const projectId = inject('projectId')
 const emit = defineEmits(['update:visible', 'handleSuccess'])
 const props = defineProps({
@@ -276,7 +276,7 @@ const listObj = reactive({
 const disabledVal = computed(() => {
   const _arr = []
   for (const item in packTypeEnum.ENUM) {
-    if (!listObj['source' + item].length) {
+    if (!listObj['source' + item]?.length) {
       _arr.push(packTypeEnum.KV[item])
     }
   }
@@ -285,26 +285,26 @@ const disabledVal = computed(() => {
 
 watch(workshopId, (val) => {
   for (const item in packTypeEnum.ENUM) {
-    if (listObj['source' + item].length) {
+    if (listObj['source' + item]?.length) {
       listObj[item] = listObj['source' + item].filter((v) => val === v.workshopInf.id || !val)
     }
   }
 })
 
-// watch(
-//   packData,
-//   () => {
-//     let _type
-//     for (const item in packTypeEnum.ENUM) {
-//       if (packData[item] === null) packData[item] = {}
-//       listObj[item] = Object.values(packData[item])
-//       listObj['source' + item] = Object.values(packData[item])
-//       if (listObj[item].length && !_type) _type = packTypeEnum.KV[item]
-//     }
-//     packType.value = _type || packType.value
-//   },
-//   { immediate: true, deep: true }
-// )
+watch(
+  packData,
+  () => {
+    let _type
+    for (const item in packTypeEnum.ENUM) {
+      if (packData[item] === null) packData[item] = {}
+      listObj[item] = Object.values(packData[item])
+      listObj['source' + item] = Object.values(packData[item])
+      if (listObj[item]?.length && !_type) _type = packTypeEnum.KV[item]
+    }
+    packType.value = _type || packType.value
+  },
+  { immediate: true, deep: true }
+)
 
 watch(
   () => props.bagId,
@@ -316,13 +316,13 @@ watch(
   { immediate: true }
 )
 
-// function packClick() {
-//   if (props.bagId) {
-//     handlePack({ bagId: props.bagId })
-//     return
-//   }
-//   choseVisible.value = true
-// }
+function packClick() {
+  if (props.bagId) {
+    handlePack({ bagId: props.bagId })
+    return
+  }
+  choseVisible.value = true
+}
 
 function handleSuccess() {
   handleClose()
@@ -386,6 +386,8 @@ function del(id) {
 function getSummaries(param) {
   return tableSummary(param, { props: ['inQuantity', 'productQuantity'] })
 }
+
+console.log(packTypeEnum.VK[packType], listObj[packTypeEnum.VK[packType]], 'listObj[packTypeEnum.VK[packType]]')
 </script>
 
 <style>

@@ -598,7 +598,7 @@ export default {
         hidden: false,
         component: '/bridge/label-print/single-element/index',
         meta: {
-          title: '单元件',
+          title: '直发件',
           icon: 'project',
           noCache: true
         }

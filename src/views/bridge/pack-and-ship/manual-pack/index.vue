@@ -104,7 +104,7 @@ const bagId = ref()
 const packVisible = ref(false)
 const packData = reactive({
   [packTypeEnum.BOX.K]: {},
-  [packTypeEnum.CELL.K]: {},
+  [packTypeEnum.MACHINE_PART.K]: {},
   [packTypeEnum.AUXILIARY_MATERIAL.K]: {}
 })
 
@@ -131,7 +131,7 @@ watch(
   (newVal, oldVal) => {
     if (isNotBlank(newVal)) {
       packData[packTypeEnum.BOX.K] = {}
-      packData[packTypeEnum.CELL.K] = {}
+      packData[packTypeEnum.MACHINE_PART.K] = {}
       packData[packTypeEnum.AUXILIARY_MATERIAL.K] = {}
     }
   }
@@ -153,9 +153,9 @@ watch(
       }
       bagId.value = val.value.id
       const _data = editData.value.data
-      packData[packTypeEnum.BOX.K] = _data.artifactList && _data.artifactList.reduce((obj, item) => ((obj[item.id] = item), obj), {})
-      packData[packTypeEnum.CELL.K] =
-        (_data.enclosureList && _data.enclosureList.reduce((obj, item) => ((obj[item.id] = item), obj), {})) || {}
+      packData[packTypeEnum.BOX.K] = _data.boxList && _data.boxList.reduce((obj, item) => ((obj[item.id] = item), obj), {})
+      packData[packTypeEnum.MACHINE_PART.K] =
+        (_data.partList && _data.partList.reduce((obj, item) => ((obj[item.id] = item), obj), {})) || {}
       packData[packTypeEnum.AUXILIARY_MATERIAL.K] =
         (_data.auxList && _data.auxList.reduce((obj, item) => ((obj[item.id] = item), obj), {})) || {}
       nextTick(() => {
@@ -171,7 +171,7 @@ const currentView = computed(() => {
   switch (packType.value) {
     case packTypeEnum.BOX.V:
       return boxTable
-    case packTypeEnum.CELL.V:
+    case packTypeEnum.MACHINE_PART.V:
       return cellTable
     case packTypeEnum.AUXILIARY_MATERIAL.V:
       return auxiliaryMaterialTable
@@ -183,14 +183,14 @@ const currentView = computed(() => {
 const isEmpty = computed(() => {
   return (
     isBlank(packData[packTypeEnum.BOX.K]) &&
-    isBlank(packData[packTypeEnum.CELL.K]) &&
+    isBlank(packData[packTypeEnum.MACHINE_PART.K]) &&
     isBlank(packData[packTypeEnum.AUXILIARY_MATERIAL.K])
   )
 })
 
 function handleSuccess() {
   packData[packTypeEnum.BOX.K] = {}
-  packData[packTypeEnum.CELL.K] = {}
+  packData[packTypeEnum.MACHINE_PART.K] = {}
   packData[packTypeEnum.AUXILIARY_MATERIAL.K] = {}
   mainRef.value.refresh()
   bagId.value = undefined

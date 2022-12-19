@@ -16,16 +16,16 @@
       <div style="color:red;margin-bottom:8px;" v-if="(detailInfo.deliveryStatus===deliveryStatusEnum.RETURN.V || detailInfo.shipmentStatus===deliveryReceiptStatusEnum.RETURN.V) && detailInfo.cancelDeliveryReason">当前发运已取消，取消原因：{{detailInfo.cancelDeliveryReason}}</div>
       <el-radio-group v-model="curProductType" v-if="productTypeBits.length > 1" size="small" class="filter-item">
         <el-radio-button
-          v-if="packTypeEnum.STRUCTURE.V & productType"
-          :label="packTypeEnum.STRUCTURE.V"
-          :disabled="artifactList.length == 0"
-          >{{ packTypeEnum.STRUCTURE.L }}({{ artifactList.length }})</el-radio-button
+          v-if="packTypeEnum.BOX.V & productType"
+          :label="packTypeEnum.BOX.V"
+          :disabled="boxList.length == 0"
+          >{{ packTypeEnum.BOX.L }}({{ boxList.length }})</el-radio-button
         >
         <el-radio-button
-          v-if="packTypeEnum.ENCLOSURE.V & productType"
-          :label="packTypeEnum.ENCLOSURE.V"
-          :disabled="enclosureList.length == 0"
-          >{{ packTypeEnum.ENCLOSURE.L }}({{ enclosureList.length }})</el-radio-button
+          v-if="packTypeEnum.MACHINE_PART.V & productType"
+          :label="packTypeEnum.MACHINE_PART.V"
+          :disabled="partList.length == 0"
+          >{{ packTypeEnum.MACHINE_PART.L }}({{ partList.length }})</el-radio-button
         >
         <el-radio-button
           v-if="packTypeEnum.AUXILIARY_MATERIAL.V & productType"
@@ -56,7 +56,8 @@
 import { defineProps, ref, defineEmits, watch, computed } from 'vue'
 import { ElRadioGroup } from 'element-plus'
 
-import { packTypeEnum, deliveryStatusEnum, deliveryReceiptStatusEnum } from '@enum-ms/mes'
+import { deliveryStatusEnum, deliveryReceiptStatusEnum } from '@enum-ms/mes'
+import { bridgePackTypeEnum as packTypeEnum } from '@enum-ms/bridge'
 import { weightTypeEnum } from '@enum-ms/common'
 import { convertUnits } from '@/utils/convert/unit'
 import EO from '@enum'
@@ -112,8 +113,8 @@ const { maxHeight } = useMaxHeight(
 
 const monomerStatus = ref(SummaryStatusEnum.PROCESS.V)
 const tableLoading = ref(false)
-const artifactList = ref([])
-const enclosureList = ref([])
+const boxList = ref([])
+const partList = ref([])
 const auxList = ref([])
 const curProductType = ref()
 
@@ -128,9 +129,9 @@ const detailId = computed(() => {
 })
 const currentView = computed(() => {
   switch (curProductType.value) {
-    case packTypeEnum.STRUCTURE.V:
+    case packTypeEnum.BOX.V:
       return structureTable
-    case packTypeEnum.ENCLOSURE.V:
+    case packTypeEnum.MACHINE_PART.V:
       return enclosureTable
     case packTypeEnum.AUXILIARY_MATERIAL.V:
       return auxiliaryMaterialTable
@@ -140,20 +141,20 @@ const currentView = computed(() => {
 })
 const list = computed(() => {
   switch (curProductType.value) {
-    case packTypeEnum.STRUCTURE.V:
+    case packTypeEnum.BOX.V:
       return (
-        artifactList.value &&
-        artifactList.value.map((v) => {
+        boxList.value &&
+        boxList.value.map((v) => {
           v.showQuantity = v[props.quantityFelid]
           v.weight = (props.weightType === weightTypeEnum.NET.V ? v.netWeight : v.grossWeight) || 0
           v.totalWeight = convertUnits(v.weight * v.showQuantity, 'kg', 't')
           return v
         })
       )
-    case packTypeEnum.ENCLOSURE.V:
+    case packTypeEnum.MACHINE_PART.V:
       return (
-        enclosureList.value &&
-        enclosureList.value.map((v) => {
+        partList.value &&
+        partList.value.map((v) => {
           v.showQuantity = v[props.quantityFelid]
           v.totalLength = convertUnits(v.length * v.showQuantity, 'mm', 'm')
           return v
@@ -188,8 +189,8 @@ async function fetchDetail() {
     curProductType.value = productTypeBits.value[0]
     const data = await props.detailFunc(detailId.value)
     emit('getDetail', detailId.value, data)
-    artifactList.value = data.artifactList || []
-    enclosureList.value = data.enclosureList || []
+    boxList.value = data.boxList || []
+    partList.value = data.partList || []
     auxList.value = data.auxList || []
   } catch (error) {
     console.log('详情', error)

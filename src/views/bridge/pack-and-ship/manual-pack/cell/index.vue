@@ -190,7 +190,7 @@
 </template>
 
 <script setup>
-import { getArtifact as get } from '@/api/bridge/bridge-pack-and-ship/manual-pack'
+import { getMachinePart as get } from '@/api/bridge/bridge-pack-and-ship/manual-pack'
 import { computed, ref, watch, defineEmits, defineProps, defineExpose, inject } from 'vue'
 
 import { DP } from '@/settings/config'
@@ -225,7 +225,7 @@ const { crud, columns, CRUD } = useCRUD(
   tableRef
 )
 
-const packTypeK = packTypeEnum.CELL.K
+const packTypeK = packTypeEnum.MACHINE_PART.K
 const emit = defineEmits(['add'])
 const props = defineProps({
   projectId: {
@@ -275,7 +275,7 @@ CRUD.HOOK.beforeRefresh = () => {
 }
 
 CRUD.HOOK.handleRefresh = (crud, res) => {
-  res.data.content = res.data.artifactList?.map((v, index) => {
+  res.data.content = res.data.elementList?.map((v, index) => {
     v.rowKey = `${packTypeK}_${Math.random()}_${index}`
     v.productQuantity = v.unPackageQuantity
     v.originNumberList = v.numberList && deepClone(v.numberList) || []

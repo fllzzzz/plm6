@@ -16,13 +16,13 @@
         <td>包单号</td>
         <td colspan="2" style="font-weight: bold">{{ packageInfo.serialNumber }}</td>
       </tr>
-      <tr v-if="packageInfo.productType === packTypeEnum.BOX.V || packageInfo.productType === packTypeEnum.CELL.V">
+      <tr v-if="packageInfo.productType === packTypeEnum.BOX.V || packageInfo.productType === packTypeEnum.MACHINE_PART.V">
         <td>编号</td>
         <td>材质</td>
         <td>数量</td>
         <td>重量(kg)</td>
       </tr>
-      <template v-if="packageInfo.productType === packTypeEnum.BOX.V || packageInfo.productType === packTypeEnum.CELL.V">
+      <template v-if="packageInfo.productType === packTypeEnum.BOX.V || packageInfo.productType === packTypeEnum.MACHINE_PART.V">
         <tr v-for="(item, index) in breakUpList[page - 1]" :key="index">
           <td class="col-1">{{ item.serialNumber }}</td>
           <td class="col-1">{{ item.material }}</td>
@@ -69,7 +69,7 @@ const packageInfo = computed(() => {
 const page = ref(1)
 const breakUpList = computed(() => {
   const _list = []
-  for (var i = 0, len = packageInfo.value.list.length; i < len; i += 11) {
+  for (var i = 0, len = packageInfo.value.list?.length; i < len; i += 11) {
     _list.push(packageInfo.value.list.slice(i, Math.min(i + 11, len)))
   }
   return _list

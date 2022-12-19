@@ -3,7 +3,17 @@ import request from '@/utils/request'
 export function getArtifact(params) {
   return request({
     module: 'bridge',
-    url: 'package/page',
+    url: 'package/box/use',
+    method: 'get',
+    params
+  })
+}
+
+// 零件-直发件可打包列表
+export function getMachinePart(params) {
+  return request({
+    module: 'bridge',
+    url: 'package/part/use',
     method: 'get',
     params
   })

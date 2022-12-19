@@ -273,7 +273,7 @@
 
 <script setup>
 import { getForTask as getPrintRecord } from '@/api/bridge/label-print/print-record'
-import crudApi from '@/api/bridge/label-print/artifact'
+import crudApi from '@/api/bridge/label-print/straight-part'
 import { ref, provide, computed, watch } from 'vue'
 import { ElMessage } from 'element-plus'
 
@@ -306,7 +306,7 @@ const headRef = ref()
 const tableRef = ref()
 const { crud, columns } = useCRUD(
   {
-    title: '产品标签-单元件',
+    title: '产品标签-直发件',
     permission: { ...permission },
     optShow: { ...optShow },
     crudApi: { ...crudApi },

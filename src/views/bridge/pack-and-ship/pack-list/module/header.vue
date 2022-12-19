@@ -169,8 +169,8 @@ const { batchPrint, print } = usePrintLabel({
 
 const detailStore = inject('detailStore')
 const dataField = {
-  [packTypeEnum.BOX.V]: 'artifactList',
-  [packTypeEnum.CELL.V]: 'enclosureList',
+  [packTypeEnum.BOX.V]: 'BoxList',
+  [packTypeEnum.MACHINE_PART.V]: 'partList',
   [packTypeEnum.AUXILIARY_MATERIAL.V]: 'materialList'
 }
 
@@ -184,7 +184,7 @@ async function getLabelInfo(row) {
       _data = await detail(row.id)
       emit('getDetail', row.id, _data)
     }
-    _list = _data[dataField[row.productType]].map((v) => {
+    _list = _data[dataField[row.productType]]?.map((v) => {
       const { serialNumber, material, packageQuantity, grossWeight, plate, length } = v
       return {
         serialNumber,

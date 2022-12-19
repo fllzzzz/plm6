@@ -29,7 +29,8 @@ constantize(bridgeProcessCategoryEnum)
 // 可打包类型
 const bridgePackTypeEnum = {
   BOX: { L: '分段', SL: '分段', K: 'BOX', V: bridgeComponentTypeEnum.BOX.V, T: '' },
-  CELL: { L: '单元', SL: '单元', K: 'ENCLOSURE', V: bridgeComponentTypeEnum.CELL.V, T: 'warning' },
+  // CELL: { L: '单元', SL: '单元', K: 'ENCLOSURE', V: bridgeComponentTypeEnum.CELL.V, T: 'warning' },
+  MACHINE_PART: { L: '直发件', SL: '直发件', K: 'MACHINE_PART', V: bridgeComponentTypeEnum.MACHINE_PART.V, T: 'warning' },
   AUXILIARY_MATERIAL: { L: '辅材', SL: '配套件', K: 'AUXILIARY_MATERIAL', V: bridgeComponentTypeEnum.AUXILIARY_MATERIAL.V, T: 'success' }
 }
 constantize(bridgePackTypeEnum)
