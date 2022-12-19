@@ -314,6 +314,7 @@ function handleDataFormat({ boxList, partList, auxList }) {
 async function edit(id, projectId) {
   try {
     const data = (await detail(id)) || {}
+    console.log(data, 'data')
     router.push({ name: 'BridgeManualPack', params: { id, projectId, remark: data.remark, data: handleDataFormat(data) }})
   } catch (error) {
     console.log('去编辑包', error)
