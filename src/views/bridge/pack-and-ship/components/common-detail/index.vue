@@ -157,6 +157,7 @@ const list = computed(() => {
         partList.value.map((v) => {
           v.showQuantity = v[props.quantityFelid]
           v.totalLength = convertUnits(v.length * v.showQuantity, 'mm', 'm')
+          v.totalWeight = convertUnits(v.totalWeight, 'kg', 't')
           return v
         })
       )
