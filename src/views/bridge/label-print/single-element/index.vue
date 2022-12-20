@@ -284,7 +284,7 @@ import { DP, QR_SCAN_F_TYPE } from '@/settings/config'
 import { toFixed } from '@data-type/index'
 import { parseTime } from '@/utils/date'
 import { printArtifact as printComponent } from '@/utils/print/index'
-import { bridgeArtifactLabelPM as permission } from '@/page-permission/bridge'
+import { bridgePartLabelPM as permission } from '@/page-permission/bridge'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'

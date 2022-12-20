@@ -585,17 +585,17 @@ export default {
           permissions: ['bridgeArtifactLabelPM']
         }
       },
-      {
-        name: 'BridgeLabelPrintSingleElement',
-        path: 'single-element',
-        hidden: false,
-        component: '/bridge/label-print/single-element/index',
-        meta: {
-          title: '直发件',
-          icon: 'project',
-          noCache: true
-        }
-      },
+      // {
+      //   name: 'BridgeLabelPrintSingleElement',
+      //   path: 'single-element',
+      //   hidden: false,
+      //   component: '/bridge/label-print/single-element/index',
+      //   meta: {
+      //     title: '直发件',
+      //     icon: 'project',
+      //     noCache: true
+      //   }
+      // },
       {
         name: 'BridgeLabelPrintAuxiliaryMaterial',
         path: 'auxiliary-material',
