@@ -7,9 +7,9 @@ export const commonPM = {}
 
 // 我的项目
 export const bridgeMyProjectPM = {
-  get: ['mes_bridge_my_project:get'], // 我的项目
-  statistics: ['mes_bridge_my_project:statistics'], // 项目统计
-  print: ['mes_bridge_my_project:print'] // 打印
+  get: ['my_project:get'], // 我的项目
+  statistics: ['my_project:statistics'], // 项目统计
+  print: ['my_project:print'] // 打印
 }
 
 // --------------------------- 桥梁-我的项目 end --------------------------------
@@ -32,8 +32,8 @@ export const bridgeAreaListPM = {
   add: ['plan_area_manage:add'], // 新增区域
   edit: ['plan_area_manage:edit'], // 修改区域
   del: ['plan_area_manage:del'], // 删除区域
-  planList: ['plan_area_manage:planList'], // 办理计划
-  print: ['plan_area_manage:print'] // 打印下载
+  planList: ['plan_area_manage:planList'] // 办理计划
+  // print: ['plan_area_manage:print'] // 打印下载
 }
 
 // 桥梁-计划管理/计划列表
