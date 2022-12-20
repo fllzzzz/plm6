@@ -6,16 +6,22 @@
     <el-table-column :show-overflow-tooltip="true" prop="serialNumber" label="编号" />
     <!-- <el-table-column :show-overflow-tooltip="true" prop="plate" label="板型" /> -->
     <!-- <el-table-column :show-overflow-tooltip="true" prop="color" label="颜色" /> -->
-    <el-table-column :show-overflow-tooltip="true" prop="thickness" :label="`厚度\n(mm)`" align="center">
+    <!-- <el-table-column :show-overflow-tooltip="true" prop="thickness" :label="`厚度\n(mm)`" align="center">
       <template v-slot="scope">
         {{ toFixed(scope.row.thickness, DP.MES_ENCLOSURE_T__MM) }}
       </template>
+    </el-table-column> -->
+    <el-table-column :show-overflow-tooltip="true" prop="specification" label="规格" min-width="120" />
+      <el-table-column :show-overflow-tooltip="true" prop="netWeight" :label="`单重\n（kg）`" align="center">
+      <template v-slot="scope">
+        {{ toFixed(scope.row.netWeight, DP.COM_WT__KG) }}
+      </template>
     </el-table-column>
-    <el-table-column :show-overflow-tooltip="true" prop="width" :label="`有效宽度\n(mm)`" align="center">
+    <!-- <el-table-column :show-overflow-tooltip="true" prop="width" :label="`有效宽度\n(mm)`" align="center">
       <template v-slot="scope">
         {{ toFixed(scope.row.width, DP.MES_ENCLOSURE_W__MM) }}
       </template>
-    </el-table-column>
+    </el-table-column> -->
     <el-table-column :show-overflow-tooltip="true" prop="length" :label="`长度\n(mm)`" align="center">
       <template v-slot="scope">
         {{ toFixed(scope.row.length, DP.MES_ENCLOSURE_L__MM) }}

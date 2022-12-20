@@ -203,9 +203,9 @@ export const machinePartSchedulingNestingResultPM = {
 
 // 工单管理/结构工单
 export const artifactWorkOrderPM = {
-  get: ['mes_bridge_work_order_artifact:get'], // 列表
-  detail: ['mes_bridge_work_order_artifact:detail'], // 查看
-  print: ['mes_bridge_work_order_artifact:print'] // 打印
+  get: ['mes_bridge_work_order_box:get'], // 列表
+  detail: ['mes_bridge_work_order_box:detail'], // 查看
+  print: ['mes_bridge_work_order_box:print'] // 打印
 }
 
 // 工单管理/零件工单
@@ -247,7 +247,12 @@ export const bridgeQhseDisclosurePM = {
 
 // 产品标签/分段
 export const bridgeArtifactLabelPM = {
-  get: ['mes_bridge_label_artifact:get'] // 分段列表
+  get: ['mes_bridge_label_box:get'] // 分段列表
+}
+
+// 产品标签/直发件
+export const bridgePartLabelPM = {
+  get: ['mes_bridge_label_part:get'] // 直发件列表
 }
 
 // 产品标签/围护
@@ -281,6 +286,12 @@ export const bridgeManualPackPM = {
 // 发运管理/手工打包:分段
 export const bridgeBoxManualPackPM = {
   get: ['mes_bridge_manual_pack_box:get'], // 分段打包列表
+  pack: bridgeManualPackPM.pack // 手工打包
+}
+
+// 发运管理/手工打包:直发件
+export const bridgePartManualPackPM = {
+  get: ['mes_bridge_manual_pack_machine_part:get'], // 直发件打包列表
   pack: bridgeManualPackPM.pack // 手工打包
 }
 
@@ -403,7 +414,7 @@ export const bridgeProjectOverviewPM = {
 
 // 项目制造/结构看板
 export const bridgeArtifactProductionDashboardPM = {
-  get: ['bridge_artifact_production_dashboard:get'] // 结构看板列表
+  get: ['bridge_box_production_dashboard:get'] // 结构看板列表
 }
 
 // 项目制造/零件齐套

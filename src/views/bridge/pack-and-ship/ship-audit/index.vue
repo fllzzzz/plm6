@@ -114,7 +114,8 @@
         min-width="120"
       >
         <template v-slot="scope">
-          <span>{{ measureModeEnum.VL[scope.row.structureMeasureMode] }}</span>
+          <span v-if="scope.row.productType !== packTypeEnum.MACHINE_PART.V">{{ measureModeEnum.VL[scope.row.structureMeasureMode] }}</span>
+          <span v-else>-</span>
         </template>
       </el-table-column>
       <el-table-column v-if="columns.visible('productType')" key="productType" prop="productType" label="装载类型" width="165">

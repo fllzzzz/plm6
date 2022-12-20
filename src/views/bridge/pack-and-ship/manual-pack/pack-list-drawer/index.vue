@@ -67,7 +67,7 @@
           </template>
         </el-table-column>
         <el-table-column label="序号" type="index" align="center" width="60" />
-        <template v-if="packType === packTypeEnum.BOX.V || packType === packTypeEnum.CELL.V">
+        <template v-if="packType === packTypeEnum.BOX.V || packType === packTypeEnum.MACHINE_PART.V">
           <el-table-column key="name" prop="name" :show-overflow-tooltip="true" label="名称" width="120px">
             <template v-slot="scope">
               <table-cell-tag v-if="scope.row.workshopInf" :name="scope.row.workshopInf.name" />
