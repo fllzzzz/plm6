@@ -285,8 +285,8 @@ function handleDataFormat({ boxList, partList, auxiliaryMaterialList }) {
       v.weight = v.netWeight
       v.totalWeight = convertUnits(v.weight * v.packageQuantity, 'kg', 't')
       v.productQuantity = v.packageQuantity
-      v.originNumberList = deepClone(v.numberList)
-      v.numberList = v.numberList.filter(v => v.boolPackage).map(v => v.number)
+      // v.originNumberList = deepClone(v.numberList)
+      // v.numberList = v.numberList.filter(v => v.boolPackage).map(v => v.number)
       return v
     })
   data.partList =
@@ -295,8 +295,8 @@ function handleDataFormat({ boxList, partList, auxiliaryMaterialList }) {
       v.processingPrice = v.processingPrice || v.processingPrice === 0 ? v.processingPrice : undefined
       v.totalLength = convertUnits(v.length * v.packageQuantity, 'mm', 'm')
       v.productQuantity = v.packageQuantity
-      v.originNumberList = deepClone(v.numberList)
-      v.numberList = v.numberList.filter(v => v.boolPackage).map(v => v.number)
+      // v.originNumberList = deepClone(v.numberList)
+      // v.numberList = v.numberList.filter(v => v.boolPackage).map(v => v.number)
       return v
     })
   data.auxiliaryMaterialList =
@@ -304,8 +304,8 @@ function handleDataFormat({ boxList, partList, auxiliaryMaterialList }) {
     auxiliaryMaterialList.map((v) => {
       v.fullClassName = `${v.firstName}/${v.secondName}/${v.thirdName}`
       v.productQuantity = v.packageQuantity
-      v.originNumberList = deepClone(v.numberList)
-      v.numberList = v.numberList.filter(v => v.boolPackage).map(v => v.number)
+      // v.originNumberList = deepClone(v.numberList)
+      // v.numberList = v.numberList.filter(v => v.boolPackage).map(v => v.number)
       return v
     })
   return JSON.stringify(data)
