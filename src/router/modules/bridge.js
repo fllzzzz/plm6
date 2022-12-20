@@ -28,43 +28,6 @@ export default {
         }
       }]
     },
-    // {
-    //   path: '/bridge-kpi',
-    //   component: 'Layout',
-    //   hidden: false,
-    //   name: 'BridgeKpi',
-    //   alwaysShow: false,
-    //   redirect: '/bridge-kpi/production-kpi',
-    //   meta: {
-    //     title: 'KPI',
-    //     icon: 'project',
-    //     noCache: true
-    //   },
-    //   children: [
-    //     {
-    //       name: 'BridgeProductionKpi',
-    //       path: 'production-kpi',
-    //       hidden: false,
-    //       component: '/bridge/production-kpi/index',
-    //       meta: {
-    //         title: '生产KPI',
-    //         icon: 'project',
-    //         noCache: true
-    //       }
-    //     },
-    //     {
-    //       name: 'BridgeShipKpi',
-    //       path: 'ship-kpi',
-    //       hidden: false,
-    //       component: '/bridge/ship-kpi/index',
-    //       meta: {
-    //         title: '发运KPI',
-    //         icon: 'project',
-    //         noCache: true
-    //       }
-    //     }
-    //   ]
-    // },
     {
       path: '/bridge/overall-plan',
       component: 'Layout',
