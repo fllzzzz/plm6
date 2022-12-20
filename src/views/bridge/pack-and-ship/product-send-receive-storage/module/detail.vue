@@ -10,20 +10,28 @@
     size="90%"
   >
     <template #titleAfter>
-      <el-tag size="medium">{{`项目：${projectNameFormatter(detailInfo.project)}`}}</el-tag>
+      <el-tag size="medium">{{ `项目：${projectNameFormatter(detailInfo.project)}` }}</el-tag>
     </template>
     <template #titleRight>
       <print-table
         api-key="bridgeProductSendReceiveStorageDetail"
         v-permission="permission.detailPrint"
-        :params="{ ...props.detailQuery,...query}"
+        :params="{ ...props.detailQuery, ...query }"
         size="mini"
         type="warning"
         class="filter-item"
       />
     </template>
     <template #content>
-      <div class="header-div">
+      <div class="header-div" style="display: flex">
+        <common-radio-button
+          v-model="query.productType"
+          :options="[packTypeEnum.BOX]"
+          type="enum"
+          class="filter-item"
+          style="margin-bottom: 10px;"
+          @change="fetchList"
+        />
         <monomer-select
           ref="monomerSelectRef"
           v-model="query.monomerId"
@@ -31,6 +39,7 @@
           :default="false"
           clearable
           class="filter-item"
+          style="margin-left: 3px"
           @change="fetchList"
           @getAreaInfo="getAreaInfo"
         />
@@ -43,21 +52,39 @@
           clearable
           placeholder="请选择区域"
           class="filter-item"
-          style="width:200px;margin-left:3px;"
+          style="width: 200px; margin-left: 3px"
           @change="fetchList"
         />
         <el-input
           v-model.trim="query.serialNumber"
           size="small"
           placeholder="编号搜索"
-          style="width: 200px;margin-bottom:10px;margin-left:3px;"
+          style="width: 200px; margin-bottom: 10px; margin-left: 3px"
           class="filter-item"
           clearable
         />
-        <common-button class="filter-item" size="mini" type="success" icon="el-icon-search" @click="fetchList" style="margin-left:10px;">搜索</common-button>
-        <common-button class="filter-item" size="mini" type="warning" icon="el-icon-refresh-left" @click="query={};fetchList()">重置</common-button>
+        <common-button class="filter-item" size="mini" type="success" icon="el-icon-search" @click="fetchList" style="margin-left: 10px;width: 73px;height: 29px">
+          搜索
+        </common-button>
+        <common-button
+class="filter-item"
+size="mini"
+type="warning"
+style="width: 73px;height: 29px"
+icon="el-icon-refresh-left"
+@click="resetClick"
+          >重置</common-button
+        >
       </div>
-      <common-table :data="list" v-loading="tableLoading" :data-format="dataFormat" show-summary :summary-method="getSummaries" :max-height="maxHeight" v-if="visible">
+      <common-table
+        :data="list"
+        v-loading="tableLoading"
+        :data-format="dataFormat"
+        show-summary
+        :summary-method="getSummaries"
+        :max-height="maxHeight"
+        v-if="visible"
+      >
         <el-table-column label="序号" type="index" align="center" width="60" />
         <el-table-column key="monomerName" prop="monomerName" label="单体" align="center" show-overflow-tooltip />
         <el-table-column key="areaName" prop="areaName" label="区域" align="center" show-overflow-tooltip />
@@ -98,7 +125,7 @@
 <script setup>
 import { detail } from '@/api/bridge/bridge-pack-and-ship/product-receive-send-storage'
 import { ref, defineEmits, defineProps, watch } from 'vue'
-
+import { bridgePackTypeEnum as packTypeEnum } from '@enum-ms/bridge'
 import { tableSummary } from '@/utils/el-extra'
 import { DP } from '@/settings/config'
 import { projectNameFormatter } from '@/utils/project'
@@ -112,7 +139,8 @@ const emit = defineEmits(['update:modelValue', 'success'])
 const query = ref({
   monomerId: undefined,
   areaId: undefined,
-  serialNumber: undefined
+  serialNumber: undefined,
+  productType: packTypeEnum.BOX.V
 })
 
 const props = defineProps({
@@ -141,14 +169,11 @@ const props = defineProps({
 const { visible, handleClose } = useVisible({ emit, props })
 const { handleSizeChange, handleCurrentChange, total, setTotalPage, queryPage } = usePagination({ fetchHook: fetchList })
 
-watch(
-  visible,
-  (val) => {
-    if (val) {
-      fetchList()
-    }
+watch(visible, (val) => {
+  if (val) {
+    fetchList()
   }
-)
+})
 
 const list = ref([])
 const areaInfo = ref([])
@@ -186,6 +211,13 @@ function getSummaries(param) {
 function getAreaInfo(val) {
   areaInfo.value = val || []
 }
+function resetClick() {
+  query.value.monomerId = undefined
+  query.value.areaId = undefined
+  query.value.productType = packTypeEnum.BOX.V
+  query.value.serialNumber = undefined
+  fetchList()
+}
 
 // 获取明细
 async function fetchList() {
@@ -202,5 +234,4 @@ async function fetchList() {
     tableLoading.value = false
   }
 }
-
 </script>

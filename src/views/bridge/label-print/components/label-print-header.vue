@@ -18,7 +18,7 @@
       <template v-slot:optRight>
         <el-popover v-model:visible="printConfigVisible" placement="bottom-start" width="400">
           <el-form ref="form" :model="printConfig" label-width="90px" size="mini">
-            <el-form-item label="重量" v-show="productType & bridgeComponentTypeEnum.BOX.V">
+            <el-form-item label="重量">
               <common-radio-button v-model="printConfig.weight" :options="printWeightTypeEnum.ENUM" type="enum" />
             </el-form-item>
             <el-form-item label="标签类型">
@@ -42,7 +42,7 @@
                 </el-popover>
               </div>
             </el-form-item>
-            <el-form-item label="显示" v-show="productType & bridgeComponentTypeEnum.BOX.V">
+            <el-form-item label="显示">
               <span style="display: flex; align-items: center">
                 <span style="margin-right: 3px">单体</span><el-checkbox v-model="printConfig.showMonomer" />
                 <span style="margin-right: 3px">区域</span><el-checkbox v-model="printConfig.showArea" />
@@ -80,10 +80,10 @@
         <el-tag hit size="medium" style="margin-left: 5px" effect="plain">
           <span v-if="!configLoading">
             <span>标签类型：{{bridgeLabelTypeEnum.VL[sourcePrintConfig.type]}}，</span>
-            <span v-show="productType & bridgeComponentTypeEnum.BOX.V">重量：{{printWeightTypeEnum.VL[sourcePrintConfig.weight]}}，</span>
-            <span v-show="productType & bridgeComponentTypeEnum.BOX.V">区域：{{isShowText(sourcePrintConfig.showArea)}}，</span>
-            <span v-show="productType & bridgeComponentTypeEnum.BOX.V">单体：{{isShowText(sourcePrintConfig.showMonomer)}}，</span>
-            <!-- <span v-show="productType & bridgeComponentTypeEnum.BOX.V || productType & bridgeComponentTypeEnum.ENCLOSURE.V">生产日期：{{isShowText(sourcePrintConfig.dateInProduced)}}，</span> -->
+            <span>重量：{{printWeightTypeEnum.VL[sourcePrintConfig.weight]}}，</span>
+            <span>区域：{{isShowText(sourcePrintConfig.showArea)}}，</span>
+            <span>单体：{{isShowText(sourcePrintConfig.showMonomer)}}，</span>
+            <!-- <span v-show="productType & bridgeComponentTypeEnum.MACHINE_PART.V || productType & bridgeComponentTypeEnum.ENCLOSURE.V">生产日期：{{isShowText(sourcePrintConfig.dateInProduced)}}，</span> -->
             <span>制造商名称：{{sourcePrintConfig.manufacturerName || '-'}}，</span>
             <span>份数：{{sourcePrintConfig.copiesQuantity}}</span>
           </span>
@@ -259,12 +259,13 @@ const plBoxSelectRef = ref()
 const lines = ref([])
 
 async function fetchHasTaskLine() {
+  console.log(productType, 'productType')
   query.productionLineId = undefined
   selectedAbleLineIds.value = []
   if (!query.areaId) return
   try {
     selectedAbleLineLoading.value = true
-    const { ids } = await getHasTaskLine({ areaId: query.areaId, productType: productType })
+    const { ids } = await getHasTaskLine({ areaId: query.areaId, productType: bridgeComponentTypeEnum.MACHINE_PART.V })
     if (ids && ids.length > 0) {
       selectedAbleLineIds.value = ids
       query.productionLineId = selectedAbleLineIds.value[0]

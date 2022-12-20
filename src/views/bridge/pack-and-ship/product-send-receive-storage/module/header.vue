@@ -15,7 +15,7 @@
       <project-radio-button size="small" :type="'all'" v-model="query.projectId" class="filter-item" @change="crud.toQuery" />
       <common-radio-button
         v-model="query.productType"
-        :options="packTypeEnum.ENUM"
+        :options="[packTypeEnum.BOX]"
         type="enum"
         size="small"
         class="filter-item"
