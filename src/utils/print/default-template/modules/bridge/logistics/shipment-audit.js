@@ -215,8 +215,7 @@ const bridgeShipmentAudit = {
       { show: true, key: 'userName', title: '装车人', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 16, type: typeEnum.USER_NAME.K },
       { show: true, key: 'actualUserName', title: '过磅人', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 16, type: typeEnum.USER_NAME.K },
       { show: true, key: 'auditUserName', title: '审核人', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 16, type: typeEnum.USER_NAME.K },
-      { show: true, key: 'structureMeasureMode', title: '计量方式', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.ENUM.K, format: { enum: 'weightMeasurementModeEnum', key: 'L' }},
-      { show: true, key: 'productType', title: '装载类型', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.ENUM.K, format: { enum: 'packTypeEnum', key: 'L', bit: true }},
+      { show: true, key: 'productType', title: '装载类型', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.ENUM.K, format: { enum: 'bridgePackTypeEnum', key: 'L', bit: true }},
       { show: true, key: 'shipAmount', title: '货物价值', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.AMOUNT.K, format: { toThousand: true, precision: 2, unit: amountUnitEnum.YUAN.V }}
     ]
   }
