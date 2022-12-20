@@ -109,6 +109,7 @@ import { ElNotification, ElMessage, ElMessageBox } from 'element-plus'
 import useMaxHeight from '@compos/use-max-height'
 import useBridgeProductLines from '@compos/store/use-bridge-product-lines'
 import { projectNameFormatter } from '@/utils/project'
+import { bridgeComponentTypeEnum } from '@enum-ms/bridge'
 import useVisible from '@compos/use-visible'
 import { auditTypeEnum } from '@enum-ms/contract'
 import { isNotBlank } from '@data-type/index'
@@ -229,7 +230,7 @@ function setOptions(tree) {
       treeData.map(v => {
         v.disabled = true
         v.workshopList.map(k => {
-          k.children = k.productionLineList || []
+          k.children = k.productionLineList.filter(val => val.productType === bridgeComponentTypeEnum.BOX.V) || []
           workshopTree.push(k)
         })
         v.children = v.workshopList || []
