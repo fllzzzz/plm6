@@ -365,6 +365,11 @@ export const LABEL_HTML = {
     [bridgeLabelTypeEnum.SIMPLE.V]: BOX_SIMPLE_L_HTML,
     [bridgeLabelTypeEnum.CUSTOM.V]: BOX_CUSTOM_L_HTML
   },
+  [bridgeComponentTypeEnum.MACHINE_PART.V]: {
+    [bridgeLabelTypeEnum.COMMON.V]: BOX_COMMON_L_HTML,
+    [bridgeLabelTypeEnum.SIMPLE.V]: BOX_SIMPLE_L_HTML,
+    [bridgeLabelTypeEnum.CUSTOM.V]: BOX_CUSTOM_L_HTML
+  },
   [bridgeComponentTypeEnum.AUXILIARY_MATERIAL.V]: {
     [bridgeLabelTypeEnum.COMMON.V]: AUX_MAT_COMMON_L_HTML,
     [bridgeLabelTypeEnum.SIMPLE.V]: '',
@@ -375,6 +380,24 @@ export const LABEL_HTML = {
 // 产品标签预览样式
 export const PRE_LABEL_STYLE = {
   [bridgeComponentTypeEnum.BOX.V]: {
+    [bridgeLabelTypeEnum.COMMON.V]: BOX_STYLE({
+      fClass: 'pre-com-al',
+      qrPosition: { right: '18px', bottom: '8px', size: 160 },
+      rowHeight: 60
+    }),
+    [bridgeLabelTypeEnum.SIMPLE.V]: BOX_STYLE({
+      fClass: 'pre-sim-al',
+      qrPosition: { right: '18px', bottom: '8px', size: 160 },
+      rowHeight: 210,
+      colContent: 'center'
+    }),
+    [bridgeLabelTypeEnum.CUSTOM.V]: BOX_STYLE({
+      fClass: 'pre-cus-al',
+      qrPosition: { right: '18px', bottom: '8px', size: 160 },
+      rowHeight: 60
+    })
+  },
+  [bridgeComponentTypeEnum.MACHINE_PART.V]: {
     [bridgeLabelTypeEnum.COMMON.V]: BOX_STYLE({
       fClass: 'pre-com-al',
       qrPosition: { right: '18px', bottom: '8px', size: 160 },
@@ -417,12 +440,48 @@ export const MINI_LABEL_STYLE = {
       fClass: 'mini-cus-al',
       rowHeight: 40
     })
+  },
+  [bridgeComponentTypeEnum.MACHINE_PART.V]: {
+    [bridgeLabelTypeEnum.COMMON.V]: BOX_STYLE({
+      fClass: 'mini-com-al',
+      rowHeight: 40
+    }),
+    [bridgeLabelTypeEnum.SIMPLE.V]: BOX_STYLE({
+      fClass: 'mini-sim-al',
+      rowHeight: 140,
+      colContent: 'center'
+    }),
+    [bridgeLabelTypeEnum.CUSTOM.V]: BOX_STYLE({
+      fClass: 'mini-cus-al',
+      rowHeight: 40
+    })
   }
 }
 
 // 产品标签打印样式
 export const PRINT_LABEL_STYLE = {
   [bridgeComponentTypeEnum.BOX.V]: {
+    [bridgeLabelTypeEnum.COMMON.V]: BOX_STYLE({
+      fClass: 'print-com-al',
+      rowHeight: 9,
+      colPadding: 1,
+      unit: 'mm'
+    }),
+    [bridgeLabelTypeEnum.SIMPLE.V]: BOX_STYLE({
+      fClass: 'print-sim-al',
+      rowHeight: 32,
+      colPadding: 1,
+      colContent: 'center',
+      unit: 'mm'
+    }),
+    [bridgeLabelTypeEnum.CUSTOM.V]: BOX_STYLE({
+      fClass: 'print-cus-al',
+      rowHeight: 9,
+      colPadding: 1,
+      unit: 'mm'
+    })
+  },
+  [bridgeComponentTypeEnum.MACHINE_PART.V]: {
     [bridgeLabelTypeEnum.COMMON.V]: BOX_STYLE({
       fClass: 'print-com-al',
       rowHeight: 9,

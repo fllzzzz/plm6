@@ -323,9 +323,9 @@ const labelVisible = ref(false)
 const currentLabel = ref({})
 const currentTaskId = ref()
 const recordVisible = ref(false)
-const productType = bridgeComponentTypeEnum.BOX.V
+const productType = bridgeComponentTypeEnum.MACHINE_PART.V
 provide('productType', productType)
-const printType = bridgePrintProductTypeEnum.BOX.V
+const printType = bridgePrintProductTypeEnum.MACHINE_PART.V
 provide('printType', printType)
 const labelType = computed(() => {
   return headRef.value?.printConfig?.type

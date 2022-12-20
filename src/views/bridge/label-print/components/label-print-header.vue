@@ -112,7 +112,7 @@ import { ref, watch, inject, reactive, defineExpose } from 'vue'
 
 import { weightTypeEnum as printWeightTypeEnum } from '@enum-ms/common'
 import { bridgeLabelTypeEnum } from '@enum-ms/bridge'
-import { bridgeComponentTypeEnum } from '@enum-ms/bridge'
+// import { bridgeComponentTypeEnum } from '@enum-ms/bridge'
 import { mapGetters } from '@/store/lib'
 import { deepClone } from '@data-type/index'
 import { spliceQrCodeUrl, QR_SCAN_PATH } from '@/utils/bridge-label'
@@ -265,7 +265,8 @@ async function fetchHasTaskLine() {
   if (!query.areaId) return
   try {
     selectedAbleLineLoading.value = true
-    const { ids } = await getHasTaskLine({ areaId: query.areaId, productType: bridgeComponentTypeEnum.MACHINE_PART.V })
+    await getHasTaskLine({ areaId: query.areaId, productType: productType })
+    const { ids } = await getHasTaskLine({ areaId: query.areaId, productType: productType })
     if (ids && ids.length > 0) {
       selectedAbleLineIds.value = ids
       query.productionLineId = selectedAbleLineIds.value[0]
