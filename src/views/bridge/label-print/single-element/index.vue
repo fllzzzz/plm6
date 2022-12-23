@@ -283,7 +283,7 @@ import { bridgeComponentTypeEnum } from '@enum-ms/bridge'
 import { DP, QR_SCAN_F_TYPE } from '@/settings/config'
 import { toFixed } from '@data-type/index'
 import { parseTime } from '@/utils/date'
-import { printArtifact as printComponent } from '@/utils/print/index'
+import { printBox as printComponent } from '@/utils/print/index'
 import { bridgePartLabelPM as permission } from '@/page-permission/bridge'
 
 import useMaxHeight from '@compos/use-max-height'
