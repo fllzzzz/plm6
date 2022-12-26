@@ -3,6 +3,7 @@
     :title="`${component.name}-${component.serialNumber}`"
     v-model:visible="dialogVisible"
     width="640px"
+    top="4vh"
     :before-close="handleClose"
   >
     <slot name="oneCode"/>

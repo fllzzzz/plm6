@@ -19,9 +19,23 @@
         <el-popover v-model:visible="printConfigVisible" placement="bottom-start" width="400">
           <el-form ref="form" :model="printConfig" label-width="90px" size="mini">
             <el-form-item label="重量">
-              <common-radio-button v-model="printConfig.weight" :options="printWeightTypeEnum.ENUM" type="enum" />
+              <div style="display: flex; align-items: center">
+                <common-radio-button v-model="printConfig.weight" :options="printWeightTypeEnum.ENUM" type="enum" />
+                <el-popover placement="right" :title="bridgeLabelTypeEnum.VL[printConfig.type]" :width="400" trigger="hover">
+                  <div style="height: 540px; margin-top: -40px">
+                    <span v-html="getMiniLabelHtml({ productType, labelType: printConfig.type, labelData: { printConfig } })"></span>
+                  </div>
+                  <template #reference>
+                    <div style="margin-left: 5px">
+                      <common-button size="mini" type="info">
+                        <i class="el-icon-view"></i>
+                      </common-button>
+                    </div>
+                  </template>
+                </el-popover>
+              </div>
             </el-form-item>
-            <el-form-item label="标签类型">
+            <!-- <el-form-item label="标签类型">
               <div style="display: flex; align-items: center">
                 <common-radio-button
                   v-model="printConfig.type"
@@ -41,7 +55,7 @@
                   </template>
                 </el-popover>
               </div>
-            </el-form-item>
+            </el-form-item> -->
             <el-form-item label="显示">
               <span style="display: flex; align-items: center">
                 <span style="margin-right: 3px">单体</span><el-checkbox v-model="printConfig.showMonomer" />
@@ -79,7 +93,7 @@
         </el-popover>
         <el-tag hit size="medium" style="margin-left: 5px" effect="plain">
           <span v-if="!configLoading">
-            <span>标签类型：{{bridgeLabelTypeEnum.VL[sourcePrintConfig.type]}}，</span>
+            <!-- <span>标签类型：{{bridgeLabelTypeEnum.VL[sourcePrintConfig.type]}}，</span> -->
             <span>重量：{{printWeightTypeEnum.VL[sourcePrintConfig.weight]}}，</span>
             <span>区域：{{isShowText(sourcePrintConfig.showArea)}}，</span>
             <span>单体：{{isShowText(sourcePrintConfig.showMonomer)}}，</span>
@@ -116,6 +130,7 @@ import { bridgeLabelTypeEnum } from '@enum-ms/bridge'
 import { mapGetters } from '@/store/lib'
 import { deepClone } from '@data-type/index'
 import { spliceQrCodeUrl, QR_SCAN_PATH } from '@/utils/bridge-label'
+import useCompany from '@compos/store/use-company'
 
 import usePrintLabel from '@compos/bridge/label-print/use-label-print'
 import { regHeader } from '@compos/use-crud'
@@ -141,6 +156,8 @@ const permission = inject('permission')
 const productType = inject('productType')
 const printType = inject('printType')
 
+const { company } = useCompany()
+
 // // TODO
 // const currentArea = {
 //   name: ''
@@ -163,7 +180,7 @@ let printConfig = reactive({
   showArea: true,
   showMonomer: true,
   dateInProduced: true,
-  // showProductionLine: true,
+  showProductionLine: true,
   manufacturerName: '',
   copiesQuantity: 1
 })
@@ -194,10 +211,10 @@ async function fetchPrintConfig() {
     configLoading.value = true
     const _data = await getPrintConfig(globalProjectId.value, printType)
     if (_data) {
-      const { type, weight, showArea, showMonomer, dateInProduced, manufacturerName, copiesQuantity } = _data
+      const { type, weight, showArea, showProductionLine, showMonomer, dateInProduced, manufacturerName, copiesQuantity } = _data
       printConfig.weight = weight
       printConfig.type = type
-      // printConfig.showProductionLine = showProductionLine
+      printConfig.showProductionLine = showProductionLine
       printConfig.showArea = showArea
       printConfig.showMonomer = showMonomer
       printConfig.dateInProduced = dateInProduced
@@ -227,7 +244,7 @@ async function saveConfig() {
     await setPrintConfig({
       ...config,
       printType,
-      // showProductionLine: printConfig.showProductionLine,
+      showProductionLine: printConfig.showProductionLine,
       showArea: printConfig.showArea,
       showMonomer: printConfig.showMonomer,
       dateInProduced: printConfig.dateInProduced
@@ -344,6 +361,7 @@ defineExpose({
   spliceQrCodeUrl,
   QR_SCAN_PATH,
   requestUrl,
+  company,
   print
 })
 </script>

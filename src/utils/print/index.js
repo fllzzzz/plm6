@@ -18,14 +18,15 @@ let LODOP
    * @param printMode 打印模式
    * @author duhh
    */
-async function printBox({ productType, labelType, component, manufacturerName, printConfig, qrCode, printMode = PrintMode.QUEUE.V }) {
-  const strHtml = getBridgePrintLabelHtml({ productType, labelType, component, manufacturerName, printConfig })
+// component, manufacturerLogo, manufacturerName, manufacturerPhone, manufacturerURL, qrCode, printMode = PrintMode.QUEUE.V
+async function printBox({ productType, labelType, component, productionLineName, manufacturerPhone, manufacturerURL, manufacturerName, printConfig, qrCode, printMode = PrintMode.QUEUE.V }) {
+  const strHtml = getBridgePrintLabelHtml({ productType, labelType, component, productionLineName, manufacturerPhone, manufacturerURL, manufacturerName, printConfig })
   let result = false
   try {
     LODOP = await getLODOP()
-    LODOP.SET_PRINT_PAGESIZE(1, 1030, 680, '1') /* 纸张大小*/
-    LODOP.ADD_PRINT_HTM('2mm', '3mm', '98mm', '68mm', strHtml)
-    LODOP.ADD_PRINT_BARCODE('40mm', '72mm', '28mm', '28mm', 'QRCode', qrCode)
+    LODOP.SET_PRINT_PAGESIZE(1, 960, 2080, '1') /* 纸张大小*/
+    LODOP.ADD_PRINT_HTM('2mm', '3mm', '98mm', '203mm', strHtml)
+    LODOP.ADD_PRINT_BARCODE('4mm', '70mm', '32mm', '32mm', 'QRCode', qrCode)
     LODOP.SET_PRINT_STYLEA(0, 'QRCodeVersion', 7)
     LODOP.SET_PRINT_STYLEA(0, 'QRCodeErrorLevel', 'M')
     // LODOP.PRINT_DESIGN()/* 打印设计*/
@@ -76,8 +77,8 @@ async function printArtifact({ productType, labelType, component, manufacturerNa
    * @param printMode 打印模式
    * @author duhh
    */
-async function printEnclosure({ productType, labelType, component, manufacturerName, printConfig, qrCode, printMode = PrintMode.QUEUE.V }) {
-  const strHtml = getPrintLabelHtml({ productType, labelType, component, manufacturerName, printConfig })
+async function printEnclosure({ productType, labelType, component, productionLineName, manufacturerName, printConfig, qrCode, printMode = PrintMode.QUEUE.V }) {
+  const strHtml = getPrintLabelHtml({ productType, labelType, component, productionLineName, manufacturerName, printConfig })
   console.log(strHtml)
   let result = false
   try {
