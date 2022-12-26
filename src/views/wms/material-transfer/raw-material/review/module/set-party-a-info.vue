@@ -1,6 +1,6 @@
 <template>
   <template v-if="boolNotBorrowReturn">
-    <el-table-column v-if="!boolPublicTransferType && materialWeightingCfg?.weightedType & materialWeightingWayEnum.SINGLE.V" prop="partyATransferType" align="center" width="140px">
+    <el-table-column v-if="!boolPublicTransferType" prop="partyATransferType" align="center" width="140px">
       <template #header>
         <common-radio-button
           type="enum"
@@ -61,12 +61,8 @@
 <script setup>
 import { ref, defineProps, watchEffect, computed } from 'vue'
 import { isNotBlank, toPrecision } from '@/utils/data-type'
-import { partyAMatTransferEnum, transferTypeEnum, materialWeightingWayEnum } from '@/utils/enum/modules/wms'
+import { partyAMatTransferEnum, transferTypeEnum } from '@/utils/enum/modules/wms'
 import { getDP } from '@/utils/data-type/number'
-import useWmsConfig from '@/composables/store/use-wms-config'
-
-// 物料加权配置
-const { materialWeightingCfg } = useWmsConfig()
 
 const props = defineProps({
   form: {

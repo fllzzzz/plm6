@@ -1,15 +1,19 @@
 <template>
   <div class="aux-mat-requisitions-application-container">
-    <common-wrapper
-      :basic-class="currentBasicClass"
-      :validate="validate"
-      :show-total="false"
-    >
+    <common-wrapper :basic-class="currentBasicClass" :validate="validate" :show-total="false">
       <div class="filter-container">
         <div class="filter-right-box">
-          <common-button class="filter-item" type="success" @click="materialSelectVisible = true">
-            添加物料
-          </common-button>
+          <common-button class="filter-item" type="success" @click="materialSelectVisible = true"> 添加物料 </common-button>
+          <excel-resolve-button
+            icon="el-icon-upload2"
+            btn-name="清单导入"
+            btn-size="small"
+            class="filter-item"
+            btn-type="warning"
+            open-loading
+            :template="auxMaterialTemp"
+            @success="handleExcelSuccess"
+          />
         </div>
       </div>
       <el-form ref="formRef" :model="form">
@@ -44,16 +48,19 @@
 <script setup>
 import crudApi from '@/api/supply-chain/requisitions-manage/requisitions'
 
-import { defineProps, defineEmits, ref, provide, watch } from 'vue'
+import { defineProps, defineEmits, ref, provide, watch, nextTick } from 'vue'
 import { matClsEnum } from '@/utils/enum/modules/classification'
 import { isBlank } from '@/utils/data-type'
 import { preparationTypeEnum } from '@enum-ms/wms'
+import auxMaterialTemp from '@/utils/excel/import-template/supply-chain/requisition-temp/aux-material'
 
 import useForm from '@/composables/form/use-form'
 import useMaxHeight from '@compos/use-max-height'
 import commonWrapper from './../components/common-wrapper.vue'
 import MaterialTableSpecSelect from '@/components-system/classification/material-table-spec-select.vue'
 import AuxMatTable from './module/aux-mat-table.vue'
+import excelResolveButton from '@/components-system/common/excel-resolve-button/index.vue'
+
 import { ElMessage } from 'element-plus'
 
 const emit = defineEmits(['success'])
@@ -78,7 +85,7 @@ const currentBasicClass = matClsEnum.MATERIAL.V // 当前基础分类
 
 provide('matSpecRef', matSpecRef) // 供兄弟组件调用 删除
 
-const { form, FORM } = useForm(
+const { cu, form, FORM } = useForm(
   {
     title: '辅材申购',
     defaultForm: defaultForm,
@@ -129,7 +136,13 @@ const { maxHeight: specSelectMaxHeight } = useMaxHeight(
 
 const { maxHeight: tableMaxHeight } = useMaxHeight({
   mainBox: '.requisitions-application-record-form',
-  extraBox: ['.el-drawer__header', '.filter-container', '.requisitions-application-header', '.requisitions-application-select', '.requisitions-application-footer'],
+  extraBox: [
+    '.el-drawer__header',
+    '.filter-container',
+    '.requisitions-application-header',
+    '.requisitions-application-select',
+    '.requisitions-application-footer'
+  ],
   wrapperBox: ['.el-drawer__body'],
   clientHRepMainH: true,
   navbar: false,
@@ -166,6 +179,40 @@ function init() {
   if (matSpecRef.value) {
     matSpecRef.value.clear()
   }
+}
+
+// 解析导入表格
+function handleExcelSuccess(list) {
+  // 解析
+  // 根据物料种类获取
+  try {
+    cu.props.import(list)
+  } catch (error) {
+    ElMessage.error({ message: error.message, duration: 5000 })
+  }
+}
+
+// 批量导入
+cu.props.import = (importList) => {
+  // 截取新旧数组长度，对导入数据进行rowWatch监听
+  form.list.push.apply(form.list, importList)
+  // 初始化选中数据，执行一次后取消当前监听
+  const initSelectedTrigger = watch(
+    matSpecRef,
+    () => {
+      if (matSpecRef.value) {
+        matSpecRef.value.initSelected(
+          importList.map((v) => {
+            return { sn: v.sn, classifyId: v.classifyId }
+          })
+        )
+        nextTick(() => {
+          initSelectedTrigger()
+        })
+      }
+    },
+    { immediate: true }
+  )
 }
 </script>
 

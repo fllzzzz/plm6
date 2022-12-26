@@ -19,19 +19,14 @@
     </template>
     <el-form ref="formRef" v-loading="dataLoading" :disabled="formDisabled" :model="form" label-position="left" label-width="80px">
       <el-form-item label="加权方式">
-        <div style="display: flex">
-          <common-radio v-model="form.weightedType" :options="materialWeightingWayEnum.ENUM" type="enum" />
-          <span
-            style="color: red"
-            v-if="(form.weightedType !== curConfig?.weightedType && !submitDisabled && !curConfig?.boolUpdate) || (curConfig?.boolUpdate && submitDisabled)"
-          >
-            （次月修改为：{{ materialWeightingWayEnum.VL[form.weightedType] }}）
-          </span>
-        </div>
+        <common-radio v-model="form.weightedType" :options="materialWeightingWayEnum.ENUM" type="enum" />
+        <span style="color: red" v-if="dataSource?.boolUpdate">
+          （次月修改为：{{ materialWeightingWayEnum.VL[dataSource.weightedTipType] }}）
+        </span>
       </el-form-item>
       <el-form-item label-width="0">
         <span class="form-item-tip">加权方式变更，在未发生物料入库时，即时生效。反之，次月（月末加权后）生效。</span>
-        <span class="form-item-tip">全库加权：材料会以公司为维度进行加权平均计算，即相同材料在全库价格相同。</span>
+        <span class="form-item-tip">全库加权：材料会以公司为维度进行加权平均计算，即相同材料在全库价格相同。(甲供材料仍按照项目库单独计算)。</span>
         <span class="form-item-tip">单库加权：材料会以项目为维度进行加权平均的计算，即相同材料在公共库、不同项目库的价格不相同。</span>
         <span class="form-item-tip" style="margin-top: 25px">全库加权的影响（相对于单库加权）：</span>
         <span class="form-item-tip">1. 甲供材料调拨不提供“借用”与“买入”功能，与 "非甲供物料" 调拨处理方式相同。</span>
@@ -58,8 +53,6 @@ const dataSource = ref({
   weightedType: undefined // 加权方式
 })
 
-const curConfig = ref({})
-
 // from-dom
 const formRef = ref()
 
@@ -83,10 +76,12 @@ async function fetchData() {
   dataLoading.value = true
   try {
     const res = await getMaterialWeightingConf()
-    curConfig.value = res
     if (res.boolUpdate) {
-      res.weightedType =
+      res.weightedTipType =
         res.weightedType === materialWeightingWayEnum.WHOLE.V ? materialWeightingWayEnum.SINGLE.V : materialWeightingWayEnum.WHOLE.V
+      res.weightedType = res.weightedTipType
+    } else {
+      res.weightedTipType = null
     }
     dataSource.value = res
     form.value = deepClone(res)
@@ -112,10 +107,12 @@ async function submit() {
       duration: 2500
     })
     const res = await getMaterialWeightingConf()
-    curConfig.value = res
     if (res.boolUpdate) {
-      res.weightedType =
+      res.weightedTipType =
         res.weightedType === materialWeightingWayEnum.WHOLE.V ? materialWeightingWayEnum.SINGLE.V : materialWeightingWayEnum.WHOLE.V
+      res.weightedType = res.weightedTipType
+    } else {
+      res.weightedTipType = null
     }
     dataSource.value = res
     useRefreshStore('wmsConfig')

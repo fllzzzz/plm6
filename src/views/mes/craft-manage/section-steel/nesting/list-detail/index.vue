@@ -50,9 +50,27 @@
         >
           <template #default="{ row }">
             <table-cell-tag
-              v-if="row.productionLineTypeEnum === artifactProductLineEnum.INTELLECT.V"
+              v-if="row.productionLineTypeEnum === artifactProductLineEnum.INTELLECT.V && row.classificationName === '钢柱'"
               :name="row.classificationName"
               color="#fad400"
+              :offset="15"
+            />
+            <table-cell-tag
+              v-if="row.productionLineTypeEnum === artifactProductLineEnum.INTELLECT.V && row.classificationName === '钢梁'"
+              :name="row.classificationName"
+              color="#40ed8d"
+              :offset="15"
+            />
+            <table-cell-tag
+              v-if="row.productionLineTypeEnum === artifactProductLineEnum.INTELLECT.V && row.classificationName === '短梁'"
+              :name="row.classificationName"
+              color="#00babd"
+              :offset="15"
+            />
+            <table-cell-tag
+              v-if="row.productionLineTypeEnum === artifactProductLineEnum.INTELLECT.V && row.classificationName === '长短梁'"
+              :name="row.classificationName"
+              color="#ff7800"
               :offset="15"
             />
             <span>{{ row.artifactStr }}</span>

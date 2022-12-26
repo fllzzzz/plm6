@@ -1,7 +1,7 @@
 <template>
   <div class="app-container wrap">
     <div class="wrap-left">
-      <nesting-task-list ref="nestingTaskRef" :maxHeight="maxHeight" @nesting-task-click="handleNestingTaskClick" />
+      <nesting-task-list ref="nestingTaskRef" :maxHeight="maxHeight - 40" @nesting-task-click="handleNestingTaskClick" />
     </div>
     <div class="wrap-right">
       <el-tag v-if="!crud.query?.id" type="info" size="medium"> * 请先选择套料任务，进行零件任务下发 </el-tag>
@@ -10,7 +10,7 @@
           <mHeader>
             <template #optRight>
               <common-button
-              v-permission="permission.save"
+                v-permission="permission.save"
                 class="filter-item"
                 :disabled="!crud.selections?.length"
                 size="mini"
@@ -135,7 +135,7 @@
         <!--分页组件-->
         <!-- <pagination /> -->
       </template>
-      <preview-dialog v-model:visible="previewVisible" :list="submitList" :info="currentNesting" @success="handleIssueSuccess"/>
+      <preview-dialog v-model:visible="previewVisible" :list="submitList" :info="currentNesting" @success="handleIssueSuccess" />
     </div>
   </div>
 </template>
@@ -183,7 +183,10 @@ const { crud, columns, CRUD } = useCRUD(
   tableRef
 )
 
-const { maxHeight } = useMaxHeight({ paginate: false })
+const { maxHeight } = useMaxHeight({
+  extraBox: ['.head-container'],
+  paginate: false
+})
 const nestingTaskRef = ref()
 
 // --------------------------- 获取生产班组 start ------------------------------
@@ -282,7 +285,7 @@ function toBatchIssue() {
   const { validResult, dealList } = tableValidate(_list)
   if (validResult) {
     cleanUpData(dealList)
-    submitList.value = dealList.map(v => {
+    submitList.value = dealList.map((v) => {
       return {
         ...v,
         ...schedulingGroups.value.obj[v.groupsId]
