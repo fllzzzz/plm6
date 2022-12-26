@@ -108,7 +108,7 @@ import { bridgeLabelTypeEnum } from '@enum-ms/bridge'
 import { bridgeComponentTypeEnum } from '@enum-ms/bridge'
 import { QR_SCAN_F_TYPE } from '@/settings/config'
 import { parseTime } from '@/utils/date'
-import { printAuxiliaryMaterial as printComponent } from '@/utils/print/index'
+import { printBridgeAuxiliaryMaterial as printComponent } from '@/utils/print/index'
 import { bridgeAuxiliaryMaterialLabelPM as permission } from '@/page-permission/bridge'
 
 import useMaxHeight from '@compos/use-max-height'
