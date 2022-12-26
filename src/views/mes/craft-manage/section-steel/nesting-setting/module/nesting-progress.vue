@@ -11,9 +11,30 @@
     :before-close="handleClose"
   >
     <template #titleRight>
-      <export-button v-permission="permission.downloadResult" type="warning" size="mini" :params="{ id: props.batchId }" :fn="downloadZipGet">下载套料成果</export-button>
-      <common-button v-permission="permission.saveNestingResult" @click.stop="handleClose" class="filter-item" type="success" size="mini">确认</common-button>
-      <common-button v-permission="permission.delNestingResult" @click.stop="delNesting" class="filter-item" type="danger" size="mini">删除</common-button>
+      <export-button
+        v-permission="permission.downloadResult"
+        type="warning"
+        size="mini"
+        :params="{ id: props.batchId }"
+        :fn="downloadZipGet"
+        >下载套料成果</export-button
+      >
+      <common-button
+v-permission="permission.saveNestingResult"
+@click.stop="handleClose"
+class="filter-item"
+type="success"
+size="mini"
+        >确认</common-button
+      >
+      <common-button
+v-permission="permission.delNestingResult"
+@click.stop="delNesting"
+class="filter-item"
+type="danger"
+size="mini"
+        >删除</common-button
+      >
     </template>
     <common-table
       v-loading="resultLoading"
@@ -73,6 +94,11 @@
           <span>{{ scope.row.typesettingAssembleTypeEnum ? materialTypeEnum.VL[scope.row.typesettingAssembleTypeEnum] : '-' }}</span>
         </template>
       </el-table-column>
+      <el-table-column key="areaName" prop="areaName" :show-overflow-tooltip="true" label="区域" align="center" width="120px">
+        <template v-slot="scope">
+          <span>{{ scope.row.areaName }}</span>
+        </template>
+      </el-table-column>
       <el-table-column key="length" prop="length" :show-overflow-tooltip="true" label="母材长度（mm）" align="center" width="150px">
         <template v-slot="scope">
           <span v-if="scope.row.typesettingTypeEnum === nestingSettingTypeEnum.UN_LOSSY.V">-</span>
@@ -112,9 +138,21 @@
           <span>{{ scope.row.typesettingLength }}</span>
         </template>
       </el-table-column>
-      <el-table-column key="lossRate" prop="lossRate" :show-overflow-tooltip="true" label="损耗" align="center" width="80px">
+      <el-table-column key="lossRate" prop="lossRate" :show-overflow-tooltip="true" label="套料损耗" align="center" width="80px">
         <template v-slot="scope">
           <span>{{ scope.row.lossRate }}%</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        key="kerfLossRate"
+        prop="kerfLossRate"
+        :show-overflow-tooltip="true"
+        label="原材料损耗（mm）"
+        align="center"
+        width="140px"
+      >
+        <template v-slot="scope">
+          <span>{{ scope.row.kerfLossRate }}</span>
         </template>
       </el-table-column>
       <!-- <el-table-column key="statusEnum" prop="statusEnum" :show-overflow-tooltip="true" label="状态" align="center">
@@ -184,6 +222,7 @@ async function nestingResultGet() {
           v.assembleLength += m.length
         }
       })
+      v.areaName = v.areaName.join(',')
     })
     nestingProgressData.value = content[0].typesettingDTOS
   } catch (error) {
