@@ -33,10 +33,10 @@ const BOX_COMMON_L_HTML = function ({ component = defComponent, productionLineNa
   </div>
 </div>
 <div class="row">
-  <div class="col" style="font-size:10pt;">项目：${emptyTextFormatter(component.projectName)}</div>
+  <div class="col">项目：${emptyTextFormatter(component.projectName)}</div>
 </div>
 <div class="row">
-  <div class="col" style="font-size:10pt;${printConfig?.showMonomer ? '' : 'display:none;'}">区域：${emptyTextFormatter(component.monomerName)}-${emptyTextFormatter(component.areaName)}</div>
+  <div class="col" style="${printConfig?.showMonomer ? '' : 'display:none;'}">区域：${emptyTextFormatter(component.monomerName)}-${emptyTextFormatter(component.areaName)}</div>
 </div>
 <div class="row">
   <div class="col" style="font-size:16pt;">名称：${emptyTextFormatter(component.name)}</div>
@@ -45,16 +45,23 @@ const BOX_COMMON_L_HTML = function ({ component = defComponent, productionLineNa
   <div class="col" style="font-size:16pt;">编号：${emptyTextFormatter(component.serialNumber)}</div>
 </div>
 <div class="row" style="font-weight:bold;">
-  <div class="col">长度(mm)：${emptyTextFormatter(component.length)}</div>
-  <div class="col">宽度(mm)：${emptyTextFormatter(component.width)}</div>
-  <div class="col">高度(mm)：${emptyTextFormatter(component.height)}</div>
+  <div class="col">长度(mm)：</div>
+  <div class="col">宽度(mm)：</div>
+  <div class="col">高度(mm)：</div>
+</div>
+<div class="row" style="font-weight:bold;">
+  <div class="col">${emptyTextFormatter(component.length)}</div>
+  <div class="col">${emptyTextFormatter(component.width)}</div>
+  <div class="col">${emptyTextFormatter(component.height)}</div>
 </div>
 <div class="row" style="${(printConfig?.weight !== printWeightTypeEnum.NONE.V || component?.oneCode) ? '' : 'display:none;'}">
- <div class="col" style="${printConfig?.weight !== printWeightTypeEnum.NONE.V ? '' : 'display:none;'}">单重(kg)：${emptyTextFormatter(component.weight)}</div>
+ <div class="col" style="${printConfig?.weight !== printWeightTypeEnum.NONE.V ? '' : 'display:none;'};${component?.oneCode ? '' : 'border:none;'}">单重(kg)：${emptyTextFormatter(component.weight)}</div>
  <div class="col" style="${component?.oneCode ? '' : 'display:none;'}">编码：${component.oneCode}</div>
 </div>
-<div class="row" style="${(printConfig?.showProductionLine || printConfig?.dateInProduced) ? '' : 'display:none;'}">
+<div class="row" style="${printConfig?.dateInProduced ? '' : 'display:none;'}">
   <div class="col" style="${printConfig?.dateInProduced ? '' : 'display:none;'}">生产日期：${emptyTextFormatter(component.printTime)}</div>
+</div>
+<div class="row" style="${printConfig?.showProductionLine ? '' : 'display:none;'}">
   <div class="col" style="${printConfig?.showProductionLine ? '' : 'display:none;'}">生产线：${emptyTextFormatter(productionLineName)}</div>
 </div>
 <div class="row">
@@ -159,7 +166,7 @@ const BOX_STYLE = function ({
     <style>
     .${fClass} .box-label {
       font-family: "微软雅黑";
-      font-size: 9pt;
+      font-size: 14pt;
       color: black;
       box-sizing: border-box;
       display: flex;
@@ -467,7 +474,7 @@ export const PRINT_LABEL_STYLE = {
   [bridgeComponentTypeEnum.BOX.V]: {
     [bridgeLabelTypeEnum.COMMON.V]: BOX_STYLE({
       fClass: 'print-com-al',
-      rowHeight: 9,
+      rowHeight: 13,
       colPadding: 1,
       unit: 'mm'
     }),
