@@ -406,8 +406,8 @@ function openRecordView(row) {
 }
 
 function getLabelInfo(row, num) {
-  // const { getLine, printConfig, spliceQrCodeUrl, QR_SCAN_PATH, requestUrl, companyName } = headRef.value
-  const { printConfig, spliceQrCodeUrl, QR_SCAN_PATH, requestUrl, companyName } = headRef.value
+  const { getLine, printConfig, spliceQrCodeUrl, QR_SCAN_PATH, requestUrl, companyName, company } = headRef.value
+  const companyWebsite = company.website && company.website.includes('://') ? company.website.split('://')[1] : company.website
   // 标签分段信息
   const component = {
     projectName: row.project.shortName,
@@ -441,13 +441,17 @@ function getLabelInfo(row, num) {
   if (row.boolOneCode) {
     qrCodeObj.num = num
   }
+
   return {
     productType,
     labelType: labelType.value,
     component,
     printConfig,
+    productionLineName: getLine().name,
+    manufacturerPhone: company.telephone,
+    manufacturerURL: companyWebsite ? companyWebsite.split('/')[0] : '',
     manufacturerName: printConfig.manufacturerName || companyName,
-    qrCode: spliceQrCodeUrl(`${baseUrl}${QR_SCAN_PATH.BRIDGE_SINGLE_ELEMENT_TASK}`, qrCodeObj)
+    qrCode: spliceQrCodeUrl(`${baseUrl}${QR_SCAN_PATH.BRIDGE_BOX_TASK}`, qrCodeObj)
   }
 }
 

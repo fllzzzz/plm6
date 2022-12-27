@@ -22,45 +22,56 @@ const defComponent = {
 }
 
 // 分段-常规标签
-const BOX_COMMON_L_HTML = function ({ component = defComponent, printConfig, manufacturerName = '制造商名称' }) {
+const BOX_COMMON_L_HTML = function ({ component = defComponent, productionLineName, logo, manufacturerPhone, manufacturerURL, printConfig, manufacturerName = '制造商名称' }) {
   return `
 <div class="box-label">
-<div class="row">
-  <div class="col" style="font-size:10pt;${printConfig?.showMonomer ? '' : 'border:none;'}">${emptyTextFormatter(component.projectName)}</div>
-  <div class="col" style="font-size:10pt;${printConfig?.showMonomer ? '' : 'display:none;'}">${emptyTextFormatter(component.monomerName)}</div>
-</div>
-<div class="row row-2">
-  <div class="col amplify-content">
-    <span class="amplify-no">NO:</span>
-    <span class="amplify-text">${emptyTextFormatter(component.serialNumber)}</span>
-    <span class="amplify-date" style="${printConfig?.dateInProduced ? '' : 'display:none;'}">生产日期：${emptyTextFormatter(component.printTime)}</span>
+<div class="row row-3">
+  <div class="col" style="flex: 2;border:none;">
+    <img src="${logo}" style="height:70%;max-width: 96%;vertical-align: middle;">
+  </div>
+  <div class="col qr-content" style="flex: 1">
   </div>
 </div>
 <div class="row">
-  <div class="col">名称：${emptyTextFormatter(component.name)}</div>
-  <div class="col">任务数(件)：${emptyTextFormatter(component.quantity)}</div>
-  <div class="col" style="${printConfig?.weight !== printWeightTypeEnum.NONE.V ? '' : 'display:none;'}">单重(kg)：${emptyTextFormatter(component.weight)}</div>
+  <div class="col">项目：${emptyTextFormatter(component.projectName)}</div>
 </div>
-<div class="contains-rows">
-  <div class="col" style="flex: 2">
-    <div class="row">
-      <div class="col">长度(mm)：${emptyTextFormatter(component.length)}</div>
-      <div class="col">规格：${emptyTextFormatter(component.specification)}</div>
-    </div>
-    <div class="row">
-      <div class="col" style="${printConfig?.showArea ? '' : 'display:none;'}">区域：${emptyTextFormatter(component.areaName)}</div>
-      <div class="col" style="${component?.oneCode ? '' : 'display:none;'}">编码：${component.oneCode}</div>
-    </div>
-    <div class="row">
-      <div class="col">${emptyTextFormatter(manufacturerName)}</div>
-    </div>
-  </div>
-  <div class="col" style="flex: 1">
-    <div class="row row-3">
-      <div class="col qr-content">
-      </div>
-    </div>
-  </div>
+<div class="row">
+  <div class="col" style="${printConfig?.showMonomer ? '' : 'display:none;'}">区域：${emptyTextFormatter(component.monomerName)}-${emptyTextFormatter(component.areaName)}</div>
+</div>
+<div class="row">
+  <div class="col" style="font-size:16pt;">名称：${emptyTextFormatter(component.name)}</div>
+</div>
+<div class="row">
+  <div class="col" style="font-size:16pt;">编号：${emptyTextFormatter(component.serialNumber)}</div>
+</div>
+<div class="row" style="font-weight:bold;">
+  <div class="col">长度(mm)：</div>
+  <div class="col">宽度(mm)：</div>
+  <div class="col">高度(mm)：</div>
+</div>
+<div class="row" style="font-weight:bold;">
+  <div class="col">${emptyTextFormatter(component.length)}</div>
+  <div class="col">${emptyTextFormatter(component.width)}</div>
+  <div class="col">${emptyTextFormatter(component.height)}</div>
+</div>
+<div class="row" style="${(printConfig?.weight !== printWeightTypeEnum.NONE.V || component?.oneCode) ? '' : 'display:none;'}">
+ <div class="col" style="${printConfig?.weight !== printWeightTypeEnum.NONE.V ? '' : 'display:none;'};${component?.oneCode ? '' : 'border:none;'}">单重(kg)：${emptyTextFormatter(component.weight)}</div>
+ <div class="col" style="${component?.oneCode ? '' : 'display:none;'}">编码：${component.oneCode}</div>
+</div>
+<div class="row" style="${printConfig?.dateInProduced ? '' : 'display:none;'}">
+  <div class="col" style="${printConfig?.dateInProduced ? '' : 'display:none;'}">生产日期：${emptyTextFormatter(component.printTime)}</div>
+</div>
+<div class="row" style="${printConfig?.showProductionLine ? '' : 'display:none;'}">
+  <div class="col" style="${printConfig?.showProductionLine ? '' : 'display:none;'}">生产线：${emptyTextFormatter(productionLineName)}</div>
+</div>
+<div class="row">
+  <div class="col">制造商：${emptyTextFormatter(manufacturerName)}</div>
+</div>
+<div class="row">
+  <div class="col" style="display:flex;">
+    <span style="flex:1">${emptyTextFormatter(manufacturerURL)}</span>
+    <span style="flex:1">${emptyTextFormatter(manufacturerPhone)}</span>
+ </div>
 </div>
 </div>
 `
@@ -155,7 +166,7 @@ const BOX_STYLE = function ({
     <style>
     .${fClass} .box-label {
       font-family: "微软雅黑";
-      font-size: 9pt;
+      font-size: 14pt;
       color: black;
       box-sizing: border-box;
       display: flex;
@@ -207,7 +218,7 @@ const BOX_STYLE = function ({
     }
   
     .${fClass} .box-label .amplify-content .amplify-text{
-      font-size: 44px; 
+      font-size: 40px; 
       line-height: 36px;
       font-weight: 600; 
     }
@@ -382,7 +393,7 @@ export const PRE_LABEL_STYLE = {
   [bridgeComponentTypeEnum.BOX.V]: {
     [bridgeLabelTypeEnum.COMMON.V]: BOX_STYLE({
       fClass: 'pre-com-al',
-      qrPosition: { right: '18px', bottom: '8px', size: 160 },
+      qrPosition: { right: '18px', top: '6px', size: 160 },
       rowHeight: 60
     }),
     [bridgeLabelTypeEnum.SIMPLE.V]: BOX_STYLE({
@@ -463,7 +474,7 @@ export const PRINT_LABEL_STYLE = {
   [bridgeComponentTypeEnum.BOX.V]: {
     [bridgeLabelTypeEnum.COMMON.V]: BOX_STYLE({
       fClass: 'print-com-al',
-      rowHeight: 9,
+      rowHeight: 13,
       colPadding: 1,
       unit: 'mm'
     }),
