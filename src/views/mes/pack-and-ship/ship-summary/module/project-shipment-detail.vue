@@ -40,17 +40,22 @@
       <el-table-column key="monomerName" prop="monomerName" label="单体" align="center" :show-overflow-tooltip="true"/>
       <el-table-column key="areaName" prop="areaName" label="区域" align="center" :show-overflow-tooltip="true"/>
       <el-table-column key="serialNumber" prop="serialNumber" label="编号" align="center" :show-overflow-tooltip="true" />
-      <el-table-column key="weight" prop="weight" label="单重" align="right" :show-overflow-tooltip="true">
+      <el-table-column key="netWeight" prop="netWeight" label="单净重" align="right" :show-overflow-tooltip="true">
         <template v-slot="scope">
-          <span>{{toThousand(scope.row.weight,DP.COM_WT__KG)}}</span><span style="margin-left:3px;">kg</span>
+          <span>{{toThousand(scope.row.netWeight,DP.COM_WT__KG)}}</span><span style="margin-left:3px;">kg</span>
+        </template>
+      </el-table-column>
+      <el-table-column key="grossWeight" prop="grossWeight" label="单毛重" align="right" :show-overflow-tooltip="true">
+        <template v-slot="scope">
+          <span>{{toThousand(scope.row.grossWeight,DP.COM_WT__KG)}}</span><span style="margin-left:3px;">kg</span>
         </template>
       </el-table-column>
       <el-table-column key="quantity" prop="quantity" label="清单数" align="center" :show-overflow-tooltip="true" />
       <el-table-column key="inboundQuantity" prop="inboundQuantity" label="入库数" align="center" :show-overflow-tooltip="true" />
       <el-table-column key="cargoQuantity" prop="cargoQuantity" label="发运数" align="center" :show-overflow-tooltip="true" />
-      <el-table-column key="cargoMete" prop="cargoMete" label="发运量" align="right" :show-overflow-tooltip="true">
+      <el-table-column key="cargoNetWeight" prop="cargoNetWeight" label="发运量" align="right" :show-overflow-tooltip="true">
         <template v-slot="scope">
-         <span>{{toThousand(scope.row.cargoMete,DP.COM_WT__KG)}}</span><span style="margin-left:3px;">kg</span>
+         <span>{{toThousand(scope.row.cargoNetWeight,DP.COM_WT__KG)}}</span><span style="margin-left:3px;">kg</span>
         </template>
       </el-table-column>
     </common-table>

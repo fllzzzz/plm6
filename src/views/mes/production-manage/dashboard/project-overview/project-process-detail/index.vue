@@ -47,9 +47,9 @@
             <span>{{ scope.row.quantity }}</span>
           </template>
         </el-table-column>
-        <el-table-column align="center" key="mete" prop="mete" :show-overflow-tooltip="true" label="需生产量（kg）">
+        <el-table-column align="center" key="totalNetWeight" prop="totalNetWeight" :show-overflow-tooltip="true" label="需生产量（kg）">
           <template v-slot="scope">
-            <span>{{ scope.row.mete }}</span>
+            <span>{{ scope.row.totalNetWeight }}</span>
           </template>
         </el-table-column>
         <el-table-column align="center" key="completeQuantity" prop="completeQuantity" :show-overflow-tooltip="true" label="完成（件）">

@@ -23,13 +23,13 @@
       />
       <el-row v-loading="summaryLoading" v-if="checkPermission(crud.permission.get)" :gutter="20" class="panel-group">
         <el-col :span="8" class="card-panel-col">
-          <Panel name="累计入库(t)" text-color="#626262" num-color="#1890ff" :endVal="(totalAmount.inboundMete)/1000 || 0"  :precision="DP.COM_WT__KG" />
+          <Panel name="累计入库(t)" text-color="#626262" num-color="#1890ff" :endVal="(totalAmount.inboundNetWeight)/1000 || 0"  :precision="DP.COM_WT__KG" />
         </el-col>
         <el-col :span="8" class="card-panel-col">
-          <Panel name="累计出库(t)" text-color="#626262" num-color="#1890ff" :endVal="(totalAmount.outboundMete)/1000 || 0" :precision="DP.COM_WT__KG" />
+          <Panel name="累计出库(t)" text-color="#626262" num-color="#1890ff" :endVal="(totalAmount.outboundNetWeight)/1000 || 0" :precision="DP.COM_WT__KG" />
         </el-col>
         <el-col :span="8" class="card-panel-col">
-          <Panel name="实时库存(t)" text-color="#626262" num-color="#1890ff" :end-val="(totalAmount.stockMete)/1000 || 0" :precision="DP.COM_WT__KG" />
+          <Panel name="实时库存(t)" text-color="#626262" num-color="#1890ff" :end-val="(totalAmount.stockNetWeight)/1000 || 0" :precision="DP.COM_WT__KG" />
         </el-col>
       </el-row>
     </div>

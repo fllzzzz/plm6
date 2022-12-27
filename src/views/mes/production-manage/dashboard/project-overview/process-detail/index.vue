@@ -39,7 +39,8 @@
       <el-table-column :show-overflow-tooltip="true" prop="specification" label="规格" align="center"></el-table-column>
       <el-table-column :show-overflow-tooltip="true" prop="material" label="材质" align="center"></el-table-column>
       <el-table-column :show-overflow-tooltip="true" prop="length" label="长度" align="center"></el-table-column>
-      <el-table-column :show-overflow-tooltip="true" prop="netWeight" label="单重（kg）" align="center"></el-table-column>
+      <el-table-column :show-overflow-tooltip="true" prop="netWeight" label="单净重（kg）" align="center"></el-table-column>
+      <el-table-column v-if="props.detailData.productType !== componentTypeEnum.ASSEMBLE.V" :show-overflow-tooltip="true" prop="grossWeight" label="单毛重（kg）" align="center"></el-table-column>
       <el-table-column :show-overflow-tooltip="true" prop="quantity" label="需生产数" align="center"></el-table-column>
       <el-table-column :show-overflow-tooltip="true" prop="completeQuantity" label="完成数" align="center">
         <template #default="{ row }">
@@ -65,6 +66,7 @@
 import { getProcessDetail } from '@/api/mes/production-manage/dashboard/project-overview'
 import { defineProps, defineEmits, ref, watch, computed, inject } from 'vue'
 import { tableSummary } from '@/utils/el-extra'
+import { componentTypeEnum } from '@enum-ms/mes'
 import { mesProjectOverviewPM as permission } from '@/page-permission/mes'
 import useVisible from '@compos/use-visible'
 import usePagination from '@compos/use-pagination'

@@ -64,7 +64,8 @@
           align="center"
         ></el-table-column>
         <el-table-column :show-overflow-tooltip="true" prop="quantity" key="quantity" label="任务数" align="center"></el-table-column>
-        <el-table-column :show-overflow-tooltip="true" prop="weight" key="weight" label="单重" align="center"></el-table-column>
+        <el-table-column :show-overflow-tooltip="true" prop="netWeight" key="netWeight" label="单净重" align="center"></el-table-column>
+        <el-table-column v-if="props.detailData.productType !== componentTypeEnum.ASSEMBLE.V" :show-overflow-tooltip="true" prop="grossWeight" key="grossWeight" label="单毛重" align="center"></el-table-column>
         <el-table-column :show-overflow-tooltip="true" prop="completeQuantity" key="completeQuantity" label="完成数" align="center">
           <template #default="{ row }">
             <span v-if="row.status === workOrderTypeEnum.NORMAL.V">{{ row.completeQuantity }}</span>
@@ -98,6 +99,7 @@ import { workOrderTypeEnum } from '@enum-ms/mes'
 import useVisible from '@compos/use-visible'
 import usePagination from '@compos/use-pagination'
 import useMaxHeight from '@compos/use-max-height'
+import { componentTypeEnum } from '@enum-ms/mes'
 import { defineProps, defineEmits, ref, watch } from 'vue'
 import { projectNameFormatter } from '@/utils/project'
 import { mesProductionLineTrackingPM as permission } from '@/page-permission/mes'

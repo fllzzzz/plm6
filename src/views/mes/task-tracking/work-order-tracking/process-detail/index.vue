@@ -68,7 +68,7 @@
             </el-table-column>
             <el-table-column align="center" key="quantity" prop="quantity" :show-overflow-tooltip="true" label="任务（件/kg）">
               <template v-slot="scope">
-                <span>{{ scope.row.quantity }}/{{ scope.row.mete.toFixed(DP.COM_WT__KG) }}</span>
+                <span>{{ scope.row.quantity }}/{{ scope.row.totalNetWeight?.toFixed(DP.COM_WT__KG) }}</span>
               </template>
             </el-table-column>
             <el-table-column
@@ -79,7 +79,7 @@
               label="完成（件/kg）"
             >
               <template v-slot="scope">
-                <span>{{ scope.row.completeQuantity }}/{{ scope.row.completeMete.toFixed(DP.COM_WT__KG) }}</span>
+                <span>{{ scope.row.completeQuantity }}/{{ scope.row.completeNetWeight?.toFixed(DP.COM_WT__KG) }}</span>
               </template>
             </el-table-column>
           </common-table>
@@ -125,7 +125,7 @@
             </el-table-column>
             <el-table-column align="center" key="quantity" prop="quantity" :show-overflow-tooltip="true" label="任务（件/kg）">
               <template v-slot="scope">
-                <span>{{ scope.row.quantity }}/{{ scope.row.mete.toFixed(DP.COM_WT__KG) }}</span>
+                <span>{{ scope.row.quantity }}/{{ scope.row.totalNetWeight?.toFixed(DP.COM_WT__KG) }}</span>
               </template>
             </el-table-column>
             <el-table-column
@@ -136,7 +136,7 @@
               label="完成（件/kg）"
             >
               <template v-slot="scope">
-                <span>{{ scope.row.completeQuantity }}/{{ scope.row.completeMete.toFixed(DP.COM_WT__KG) }}</span>
+                <span>{{ scope.row.completeQuantity }}/{{ scope.row.completeNetWeight?.toFixed(DP.COM_WT__KG) }}</span>
               </template>
             </el-table-column>
           </common-table>
@@ -171,7 +171,8 @@
             />
             <el-table-column align="center" key="quantity" prop="quantity" :show-overflow-tooltip="true" label="数量" /> />
             <el-table-column align="center" key="completeQuantity" prop="completeQuantity" :show-overflow-tooltip="true" label="完成数" />
-            <el-table-column align="center" key="weight" prop="weight" :show-overflow-tooltip="true" label="单重" />
+            <el-table-column align="center" key="netWeight" prop="netWeight" :show-overflow-tooltip="true" label="单净重" />
+            <el-table-column align="center" key="grossWeight" prop="grossWeight" :show-overflow-tooltip="true" label="单毛重" />
             <el-table-column align="center" key="status" prop="status" :show-overflow-tooltip="true" label="状态">
               <template #default="{ row }">
                 <span style="color: red" v-if="row.status === workOrderTypeEnum.DELAY.V">{{ workOrderTypeEnum.VL[row.status] }}</span>

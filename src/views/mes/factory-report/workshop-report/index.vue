@@ -107,16 +107,16 @@
         </template>
       </el-table-column>
       <el-table-column
-        v-if="columns.visible('mete')"
+        v-if="columns.visible('totalNetWeight')"
         header-align="center"
-        key="mete"
-        prop="mete"
+        key="totalNetWeight"
+        prop="totalNetWeight"
         align="center"
         :show-overflow-tooltip="true"
         label="总重（kg）"
       >
         <template v-slot="scope">
-          <span>{{ (scope.row.mete).toFixed(2) }}</span>
+          <span>{{ scope.row.totalNetWeight?.toFixed(2) }}</span>
         </template>
       </el-table-column>
     </common-table>
@@ -162,7 +162,7 @@ CRUD.HOOK.handleRefresh = (crud, res) => {
 // 合计
 function getSummaries(param) {
   return tableSummary(param, {
-    props: ['length', 'quantity', ['mete', 2]]
+    props: ['length', 'quantity', ['totalNetWeight', 2]]
   })
 }
 </script>
