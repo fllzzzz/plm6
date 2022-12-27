@@ -85,6 +85,8 @@
           align="center"
         />
         <el-table-column prop="specification" :show-overflow-tooltip="true" label="规格" min-width="100px" align="center" />
+        <el-table-column prop="totalNetWeight" :show-overflow-tooltip="true" label="总净重" align="center" />
+        <el-table-column prop="totalGrossWeight" :show-overflow-tooltip="true" label="总毛重" align="center" />
         <el-table-column
           v-if="crud.query.taskTypeEnum !== taskTypeENUM.MACHINE_PART.V"
           prop="length"
@@ -93,12 +95,7 @@
           width="100px"
           align="center"
         />
-        <el-table-column
-          :show-overflow-tooltip="true"
-          label="协同数量"
-          min-width="100px"
-          align="center"
-        >
+        <el-table-column :show-overflow-tooltip="true" label="协同数量" min-width="100px" align="center">
           <template #default="{ row: { sourceRow: row } }">
             <el-input-number
               v-model="row.editQuantity"
@@ -181,12 +178,12 @@ const emit = defineEmits(['update:visible', 'success'])
 const props = defineProps({
   visible: {
     type: Boolean,
-    default: false
+    default: false,
   },
   info: {
     type: Object,
-    default: () => {}
-  }
+    default: () => {},
+  },
 })
 
 const { visible: drawerVisible, handleClose } = useVisible({ emit, props, field: 'visible', showHook: resetQuery })
@@ -197,7 +194,7 @@ const { maxHeight } = useMaxHeight(
     extraBox: ['.el-drawer__header', '.tip', '.head-container'],
     wrapperBox: ['.el-drawer__body'],
     navbar: false,
-    clientHRepMainH: true
+    clientHRepMainH: true,
   },
   drawerRef
 )
@@ -217,13 +214,13 @@ const previewVisible = ref(false)
 const tableRules = {
   editQuantity: [
     { required: true, message: '请填写数量', trigger: 'blur' },
-    { pattern: positiveNumPattern, message: '数量必须大于0', trigger: 'blur' }
+    { pattern: positiveNumPattern, message: '数量必须大于0', trigger: 'blur' },
   ],
-  groupsId: [{ required: true, message: '请选择生产组', trigger: 'change' }]
+  groupsId: [{ required: true, message: '请选择生产组', trigger: 'change' }],
 }
 const ditto = new Map([
   ['groupsId', '同上'],
-  ['askCompleteTime', '同上']
+  ['askCompleteTime', '同上'],
 ])
 const { tableValidate, cleanUpData, wrongCellMask } = useTableValidate({ rules: tableRules, ditto })
 
@@ -257,14 +254,14 @@ async function fetch() {
         if (crud.query.taskTypeEnum === taskTypeENUM.MACHINE_PART.V) {
           res = await manualFetchGroupsTree({
             productType: crud.query.taskTypeEnum,
-            disabledIds: (v?.groups?.id && [v?.groups?.id]) || []
+            disabledIds: (v?.groups?.id && [v?.groups?.id]) || [],
           })
         } else {
           res = await manualFetchGroupsTree({
             productType: crud.query.taskTypeEnum,
             structureClassId: v.configId,
             disabledIds: (props.info?.groups?.id && [props.info?.groups?.id]) || [],
-            _factoryIds: (props.info?.factory?.id && [props.info?.factory?.id]) || []
+            _factoryIds: (props.info?.factory?.id && [props.info?.factory?.id]) || [],
           })
         }
         classIdGroupsObj.value[v.configId] = res
@@ -294,8 +291,8 @@ function previewIt() {
       return {
         ...v,
         assistance: {
-          ...classIdGroupsObj.value[v.configId].obj[v.groupsId]
-        }
+          ...classIdGroupsObj.value[v.configId].obj[v.groupsId],
+        },
       }
     })
   } else {

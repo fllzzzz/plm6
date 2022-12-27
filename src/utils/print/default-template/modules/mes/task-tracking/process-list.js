@@ -206,7 +206,8 @@ const mesProcessList = {
       { show: true, key: 'serialNumber', title: '编号', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.SERIAL_NUMBER.K },
       { show: true, key: 'specification', title: '规格', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 28, type: typeEnum.SPECIFICATION.K },
       { show: true, key: 'unQuantity', title: '未完成数', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 10, type: typeEnum.QUANTITY.K },
-      { show: true, key: 'netWeight', title: '单净重', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.WEIGHT.K },
+      { show: true, key: 'netWeight', title: '单净重', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 12, type: typeEnum.WEIGHT.K },
+      { show: true, key: 'grossWeight', title: '单毛重', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 12, type: typeEnum.WEIGHT.K },
       { show: true, key: 'completeDate', title: '完成日期', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 28, type: typeEnum.DATE.K, format: 'YY/MM/DD' },
       { show: true, key: 'groupName', title: '负责班组', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 13, type: typeEnum.TEAM_NAME.K }
     ]
