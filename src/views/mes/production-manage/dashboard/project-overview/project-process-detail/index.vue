@@ -27,11 +27,14 @@
           type="daterange"
           range-separator=":"
           size="small"
-          class="date-item filter-item"
           value-format="x"
+          :clearable="false"
+          :shortcuts="PICKER_OPTIONS_SHORTCUTS"
+          unlink-panels
           start-placeholder="开始日期"
           end-placeholder="结束日期"
-          style="width: 240px"
+          style="width: 240px; margin-right: 10px"
+          class="filter-item date-item"
           @change="handleDateChange"
         />
       </div>
@@ -80,9 +83,11 @@
 <script setup>
 import { ref, defineProps, watch, provide } from 'vue'
 import { getProcessList } from '@/api/mes/production-manage/dashboard/project-overview'
+import { PICKER_OPTIONS_SHORTCUTS } from '@/settings/config'
 import { componentTypeEnum } from '@enum-ms/mes'
 import { mesProjectOverviewPM as permission } from '@/page-permission/mes'
 import useMaxHeight from '@compos/use-max-height'
+import moment from 'moment'
 import monomerSelectAreaSelect from '@comp-base/monomer-select-area-select'
 import processDetail from '../process-detail/index.vue'
 
@@ -93,15 +98,16 @@ const monomerId = ref()
 const areaId = ref()
 const detailData = ref([])
 const dialogVisible = ref(false)
-const date = ref([])
+const date = ref([moment().startOf('month').valueOf(), moment().valueOf()])
+
 const startDate = ref()
 const endDate = ref()
 
 const props = defineProps({
   processData: {
     type: Object,
-    default: () => {}
-  }
+    default: () => {},
+  },
 })
 
 watch(
@@ -115,10 +121,12 @@ watch(
 
 provide('monomerId', monomerId)
 provide('areaId', areaId)
+provide('startDate', startDate)
+provide('endDate', endDate)
 
 const { maxHeight } = useMaxHeight({
   extraBox: ['.head-container'],
-  paginate: true
+  paginate: true,
 })
 
 async function processListGet() {
@@ -129,7 +137,7 @@ async function processListGet() {
       areaId: areaId.value,
       projectId: props.processData.id,
       startDate: startDate.value,
-      endDate: endDate.value
+      endDate: endDate.value,
     })
     processList.value = data
   } catch (e) {
