@@ -22,6 +22,18 @@
           class="filter-item"
           @change="handleProductTypeChange"
         />
+        <el-date-picker
+          v-model="date"
+          type="daterange"
+          range-separator=":"
+          size="small"
+          class="date-item filter-item"
+          value-format="x"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
+          style="width: 240px"
+          @change="handleDateChange"
+        />
       </div>
       <common-table ref="tableRef" :data="processList" :empty-text="'暂无数据'" :max-height="maxHeight" row-key="id" style="width: 100%">
         <el-table-column prop="index" label="序号" align="center" width="60px" type="index" />
@@ -30,12 +42,12 @@
             <span>{{ scope.row.name }}</span>
           </template>
         </el-table-column>
-        <el-table-column align="center" key="quantity" prop="quantity" :show-overflow-tooltip="true" label="清单数（件）">
+        <el-table-column align="center" key="quantity" prop="quantity" :show-overflow-tooltip="true" label="需生产数（件）">
           <template v-slot="scope">
             <span>{{ scope.row.quantity }}</span>
           </template>
         </el-table-column>
-        <el-table-column align="center" key="mete" prop="mete" :show-overflow-tooltip="true" label="清单量（kg）">
+        <el-table-column align="center" key="mete" prop="mete" :show-overflow-tooltip="true" label="需生产量（kg）">
           <template v-slot="scope">
             <span>{{ scope.row.mete }}</span>
           </template>
@@ -81,6 +93,9 @@ const monomerId = ref()
 const areaId = ref()
 const detailData = ref([])
 const dialogVisible = ref(false)
+const date = ref([])
+const startDate = ref()
+const endDate = ref()
 
 const props = defineProps({
   processData: {
@@ -112,7 +127,9 @@ async function processListGet() {
       productType: productType.value,
       monomerId: monomerId.value,
       areaId: areaId.value,
-      projectId: props.processData.id
+      projectId: props.processData.id,
+      startDate: startDate.value,
+      endDate: endDate.value
     })
     processList.value = data
   } catch (e) {
@@ -125,6 +142,18 @@ function handleMonomerAreaChange() {
 }
 
 function handleProductTypeChange() {
+  processListGet()
+}
+
+// 时间变动
+function handleDateChange(val) {
+  if (val && val.length > 1) {
+    startDate.value = val[0]
+    endDate.value = val[1]
+  } else {
+    startDate.value = undefined
+    endDate.value = undefined
+  }
   processListGet()
 }
 

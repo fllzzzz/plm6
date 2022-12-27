@@ -40,7 +40,7 @@
       <el-table-column :show-overflow-tooltip="true" prop="material" label="材质" align="center"></el-table-column>
       <el-table-column :show-overflow-tooltip="true" prop="length" label="长度" align="center"></el-table-column>
       <el-table-column :show-overflow-tooltip="true" prop="netWeight" label="单重（kg）" align="center"></el-table-column>
-      <el-table-column :show-overflow-tooltip="true" prop="quantity" label="清单数" align="center"></el-table-column>
+      <el-table-column :show-overflow-tooltip="true" prop="quantity" label="需生产数" align="center"></el-table-column>
       <el-table-column :show-overflow-tooltip="true" prop="completeQuantity" label="完成数" align="center">
         <template #default="{ row }">
           <el-tag style="cursor: pointer" @click="showQuantity(row)">{{ row.completeQuantity }}</el-tag>
