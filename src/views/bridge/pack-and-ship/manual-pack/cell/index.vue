@@ -53,7 +53,7 @@
         label="编号"
         sortable="custom"
         align="center"
-        width="120px"
+        width="100px"
       />
       <el-table-column
         v-if="columns.visible('specification')"
