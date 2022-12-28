@@ -217,7 +217,7 @@ async function nestingResultGet() {
           v.assembleLength += m.length
         }
       })
-      v.areaName = v.areaName.join(',')
+      v.areaName = v.areaName?.join(',')
     })
     nestingProgressData.value = content[0].typesettingDTOS
   } catch (error) {

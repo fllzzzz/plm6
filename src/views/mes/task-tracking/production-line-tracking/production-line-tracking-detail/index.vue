@@ -45,7 +45,7 @@
     </template>
     <template #content>
       <!--表格渲染-->
-      <common-table ref="tableRef" :max-height="maxHeight" :data="productionLineData" return-source-data style="width: 100%">
+      <common-table ref="tableRef" :max-height="maxHeight - 100" :data="productionLineData" return-source-data style="width: 100%">
         <el-table-column :show-overflow-tooltip="true" prop="index" label="序号" align="center" width="60" type="index" />
         <el-table-column :show-overflow-tooltip="true" prop="project" key="project.shortName" label="项目" min-width="180">
           <template v-slot="scope">

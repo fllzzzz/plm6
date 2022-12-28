@@ -1,7 +1,7 @@
 <template>
   <!-- 套料文件弹窗 -->
-  <common-drawer :before-close="handleClose" size="90%" modal append-to-body v-model:visible="nestingFileVisible">
-    <template #title>
+  <common-drawer :before-close="handleClose" :show-close="true" size="90%" modal append-to-body v-model:visible="nestingFileVisible">
+  <template #titleAfter>
       <common-radio-button
         style="margin-right: 8px"
         class="filter-item"
@@ -11,9 +11,11 @@
         size="small"
         @change="handleChange"
       />
+    </template>
+    <template #titleRight>
       <export-button
         v-permission="permission.downloadList"
-        v-if="nestingFileType === nestingFileTypeEnum.MATERIAL_LIST.V"
+        v-show="nestingFileType === nestingFileTypeEnum.MATERIAL_LIST.V"
         class="filter-item"
         :fn="getMaterialListExcelFn"
         :params="{ id: props.detailData.id }"
@@ -21,7 +23,6 @@
       >
         材料清单
       </export-button>
-      <common-button size="small" @click="handleClose" v-permission="permission.closed">关闭</common-button>
     </template>
     <template #content>
       <common-table
@@ -241,7 +242,7 @@ async function nestingResultGet() {
           v.assembleLength += m.length
         }
       })
-      v.areaName = v.areaName.join(',')
+      v.areaName = v.areaName?.join(',')
     })
     nestingProgressData.value = content[0].typesettingDTOS
   } catch (error) {
@@ -257,9 +258,9 @@ async function nestingListGet() {
     resultLoading.value = true
     const { content } = await getMaterialList({ id: props.detailData.id })
     console.log(content)
-    content[0].typesettingDTOS.forEach((v) => {
-      v.areaName = v.areaName.join(',')
-    })
+    // content[0].typesettingDTOS.forEach((v) => {
+    //   v.areaName = v.areaName?.join(',')
+    // })
     nestingProgressData.value = content[0].typesettingDTOS
   } catch (error) {
     console.log('获取材料清单失败')

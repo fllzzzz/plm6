@@ -51,7 +51,7 @@ const dataFormat = ref([['project', 'parse-project']])
 // 合计
 function getSummaries(param) {
   return tableSummary(param, {
-    props: ['quantity', 'weight']
+    props: ['quantity', 'netWeight', 'grossWeight']
   })
 }
 </script>
