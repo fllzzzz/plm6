@@ -170,7 +170,7 @@
               label="规格"
               width="140px"
             />
-            <el-table-column align="center" key="quantity" prop="quantity" :show-overflow-tooltip="true" label="数量" /> />
+            <el-table-column align="center" key="quantity" prop="quantity" :show-overflow-tooltip="true" label="数量" />
             <el-table-column align="center" key="completeQuantity" prop="completeQuantity" :show-overflow-tooltip="true" label="完成数" />
             <el-table-column align="center" key="netWeight" prop="netWeight" :show-overflow-tooltip="true" label="单净重" />
             <el-table-column align="center" key="grossWeight" prop="grossWeight" :show-overflow-tooltip="true" label="单毛重" />
