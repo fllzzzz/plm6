@@ -3,7 +3,7 @@
     <template #optLeft>
       <div v-show="crud.searchToggle">
         <project-radio-button size="small" v-model="query.projectId" class="filter-item" @change="crud.toQuery" />
-        <common-radio-button
+        <!-- <common-radio-button
           v-model="query.productType"
           :options="typeEnum"
           type="enum"
@@ -11,7 +11,7 @@
           class="filter-item"
           default
           @change="crud.toQuery"
-        />
+        /> -->
         <el-date-picker
           v-model="query.date"
           type="daterange"
@@ -42,19 +42,20 @@ import { regHeader } from '@compos/use-crud'
 import crudOperation from '@crud/CRUD.operation'
 import rrOperation from '@crud/RR.operation'
 
-const typeEnum = {
-  STRUCTURE: {
-    L: '结构',
-    K: 'STRUCTURE',
-    V: bridgeComponentTypeEnum.MACHINE_PART.V | bridgeComponentTypeEnum.CELL.V | bridgeComponentTypeEnum.BOX.V
-  },
-  AUXILIARY_MATERIAL: { L: '配套件', K: 'AUXILIARY_MATERIAL', V: bridgeComponentTypeEnum.AUXILIARY_MATERIAL.V }
-}
+// const typeEnum = {
+//   STRUCTURE: {
+//     L: '结构',
+//     K: 'STRUCTURE',
+//     V: bridgeComponentTypeEnum.MACHINE_PART.V | bridgeComponentTypeEnum.CELL.V | bridgeComponentTypeEnum.BOX.V
+//   },
+//   AUXILIARY_MATERIAL: { L: '配套件', K: 'AUXILIARY_MATERIAL', V: bridgeComponentTypeEnum.AUXILIARY_MATERIAL.V }
+// }
 
 const defaultQuery = {
   date: [moment().startOf('month').valueOf(), moment().valueOf()],
   startDate: moment().startOf('month').valueOf(),
-  endDate: moment().valueOf()
+  endDate: moment().valueOf(),
+  productType: bridgeComponentTypeEnum.BOX.V
 }
 
 const { crud, query } = regHeader(defaultQuery)
