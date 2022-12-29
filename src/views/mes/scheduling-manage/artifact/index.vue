@@ -16,13 +16,11 @@
               <el-tag size="medium" effect="plain" style="margin-right: 10px">
                 重量(kg)：{{ summaryInfo.totalNetWeight?.toFixed(2) || 0 }}
               </el-tag>
-              <common-button
-v-permission="permission.recordGet"
-type="primary"
-size="mini"
-@click="previewRecord"
-                >构件排产记录</common-button
-              >
+              <el-badge :value="totalBadge" :max="99" :hidden="totalBadge < 1" style="margin-right: 10px">
+                <common-button v-permission="permission.recordGet" type="primary" size="mini" @click="previewRecord">
+                  构件排产记录
+                </common-button>
+              </el-badge>
             </template>
           </mHeader>
         </div>
@@ -152,7 +150,7 @@ size="mini"
 </template>
 
 <script setup>
-import crudApi, { getSummary } from '@/api/mes/scheduling-manage/artifact'
+import crudApi, { getSummary, getBadgeNum } from '@/api/mes/scheduling-manage/artifact'
 import { ref, provide, computed } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import moment from 'moment'
@@ -197,6 +195,7 @@ const optShow = {
   download: false
 }
 
+const totalBadge = ref()
 const tableRef = ref()
 const { crud, columns, CRUD } = useCRUD(
   {
@@ -269,6 +268,7 @@ const { tableValidate, cleanUpData, wrongCellMask } = useTableValidate({ rules: 
 
 CRUD.HOOK.beforeToQuery = () => {
   fetchSummary()
+  schedulingNumGet()
 }
 
 CRUD.HOOK.handleRefresh = (crud, res) => {
@@ -309,6 +309,15 @@ function refresh(isRefreshTypeList = false) {
     mHeaderRef.value?.refreshTypeList()
   }
   crud.toQuery()
+}
+
+async function schedulingNumGet() {
+  try {
+    const data = await getBadgeNum({productionLineTypeEnum: crud.query.productionLineTypeEnum, areaIdList: crud.query.areaIdList })
+    totalBadge.value = data
+  } catch (error) {
+    console.log('获取构件排产记录气泡条数失败', error)
+  }
 }
 
 const handleAreaClick = debounce(function (nodes = []) {
