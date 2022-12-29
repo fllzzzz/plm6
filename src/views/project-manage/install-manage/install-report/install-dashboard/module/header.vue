@@ -3,7 +3,7 @@
     <div v-show="crud.searchToggle">
       <common-radio-button
         v-model="query.productType"
-        :options="installProjectTypeEnum.ENUM"
+        :options="globalProject.projectType === projectTypeEnum.STEEL.V?installProjectTypeEnum.ENUM:[bridgeComponentTypeEnum.BOX,bridgeComponentTypeEnum.AUXILIARY_MATERIAL]"
         type="enum"
         class="filter-item"
         @change="productTypeChange"
@@ -12,14 +12,13 @@
         ref="monomerSelectRef"
         v-model="query.monomerId"
         :project-id="query.projectId"
-        :main-product-type="query.productType"
+        :main-product-type="(globalProject.projectType === projectTypeEnum.STEEL.V && query.productType!==installProjectTypeEnum.AUXILIARY.V)?query.productType:''"
         clearable
         class="filter-item"
         @change="crud.toQuery"
         @getAreaInfo="getAreaInfo"
       />
        <common-select
-        v-if="query.productType!==installProjectTypeEnum.AUXILIARY.V"
         v-model="query.areaId"
         :options="areaInfo"
         type="other"
@@ -46,6 +45,8 @@
 <script setup>
 import { ref, defineExpose, defineEmits, defineProps } from 'vue'
 
+import { projectTypeEnum } from '@enum-ms/contract'
+import { bridgeComponentTypeEnum } from '@enum-ms/bridge'
 import { businessTypeEnum } from '@enum-ms/contract'
 import { installProjectTypeEnum } from '@enum-ms/project'
 
@@ -57,7 +58,7 @@ import Scale from '@comp/Scale'
 import monomerSelect from '@/components-system/plan/monomer-select'
 
 const defaultQuery = {
-  productType: installProjectTypeEnum.ARTIFACT.V,
+  productType: props.globalProject.projectType === projectTypeEnum.STEEL.V ? installProjectTypeEnum.ARTIFACT.V : bridgeComponentTypeEnum.BOX.V,
   monomerId: { value: undefined, resetAble: false },
   areaId: { value: undefined, resetAble: false },
   installStatus: undefined

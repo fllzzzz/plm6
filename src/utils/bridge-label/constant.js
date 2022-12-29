@@ -393,8 +393,8 @@ export const PRE_LABEL_STYLE = {
   [bridgeComponentTypeEnum.BOX.V]: {
     [bridgeLabelTypeEnum.COMMON.V]: BOX_STYLE({
       fClass: 'pre-com-al',
-      qrPosition: { right: '18px', top: '6px', size: 160 },
-      rowHeight: 60
+      qrPosition: { right: '18px', top: '6px', size: 140 },
+      rowHeight: 50
     }),
     [bridgeLabelTypeEnum.SIMPLE.V]: BOX_STYLE({
       fClass: 'pre-sim-al',
@@ -440,7 +440,7 @@ export const MINI_LABEL_STYLE = {
   [bridgeComponentTypeEnum.BOX.V]: {
     [bridgeLabelTypeEnum.COMMON.V]: BOX_STYLE({
       fClass: 'mini-com-al',
-      rowHeight: 40
+      rowHeight: 30
     }),
     [bridgeLabelTypeEnum.SIMPLE.V]: BOX_STYLE({
       fClass: 'mini-sim-al',

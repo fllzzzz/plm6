@@ -16,13 +16,13 @@
     />
     <crudOperation>
       <template v-slot:optRight>
-        <el-popover v-model:visible="printConfigVisible" placement="bottom-start" width="400">
+        <el-popover v-model:visible="printConfigVisible" placement="bottom-start" width="430">
           <el-form ref="form" :model="printConfig" label-width="90px" size="mini">
             <el-form-item label="重量">
               <div style="display: flex; align-items: center">
                 <common-radio-button v-model="printConfig.weight" :options="printWeightTypeEnum.ENUM" type="enum" />
-                <el-popover placement="right" :title="bridgeLabelTypeEnum.VL[printConfig.type]" :width="400" trigger="hover">
-                  <div style="height: 540px; margin-top: -40px">
+                <el-popover placement="right" :title="bridgeLabelTypeEnum.VL[printConfig.type]" :width="430" trigger="hover">
+                  <div style="height: 480px; margin-top: -40px">
                     <span v-html="getMiniLabelHtml({ productType, labelType: printConfig.type, labelData: { printConfig } })"></span>
                   </div>
                   <template #reference>

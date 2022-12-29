@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <div v-if="globalProject?.businessType===businessTypeEnum.INSTALLATION.V">
-      <mHeader :projectId="globalProjectId" />
+      <mHeader :projectId="globalProjectId" :globalProject="globalProject"/>
       <!--表格渲染-->
       <common-table
         ref="tableRef"

@@ -14,22 +14,16 @@
       />
       <common-radio-button
         v-model="query.productType"
-        :options="installProjectTypeEnum.ENUM"
+        :options="globalProject.projectType === projectTypeEnum.STEEL.V?installProjectTypeEnum.ENUM:[bridgeComponentTypeEnum.BOX,bridgeComponentTypeEnum.AUXILIARY_MATERIAL]"
         type="enum"
         class="filter-item"
         @change="productTypeChange"
       />
-      <!-- <project-subcontract-select
-        v-model="query.projectId"
-        style="width: 200px;margin-right:5px;"
-        class="filter-item"
-        @change="crud.toQuery"
-      /> -->
       <monomer-select
         ref="monomerSelectRef"
         v-model="query.monomerId"
         :project-id="query.projectId"
-        :main-product-type="query.productType"
+        :main-product-type="(globalProject.projectType === projectTypeEnum.STEEL.V && query.productType!==installProjectTypeEnum.AUXILIARY.V)?query.productType:''"
         :default="false"
         clearable
         class="filter-item"
@@ -37,7 +31,6 @@
         @getAreaInfo="getAreaInfo"
       />
        <common-select
-        v-if="query.productType!==installProjectTypeEnum.AUXILIARY.V"
         v-model="query.areaId"
         :options="areaInfo"
         type="other"
@@ -111,6 +104,8 @@ import { ref, defineProps, watch } from 'vue'
 
 import moment from 'moment'
 import { regHeader } from '@compos/use-crud'
+import { projectTypeEnum } from '@enum-ms/contract'
+import { bridgeComponentTypeEnum } from '@enum-ms/bridge'
 import { installProjectTypeEnum } from '@enum-ms/project'
 import { manufactureTypeEnum } from '@enum-ms/plan'
 
@@ -123,7 +118,7 @@ const defaultQuery = {
   date: undefined,
   startDate: undefined,
   endDate: undefined,
-  productType: installProjectTypeEnum.ARTIFACT.V,
+  productType: props.globalProject.projectType === projectTypeEnum.STEEL.V ? installProjectTypeEnum.ARTIFACT.V : bridgeComponentTypeEnum.BOX.V,
   monomerId: undefined,
   areaId: undefined,
   name: undefined,
@@ -140,6 +135,10 @@ const props = defineProps({
   projectId: {
     type: [Number, String],
     default: undefined
+  },
+  globalProject: {
+    type: Object,
+    default: () => {}
   }
 })
 
