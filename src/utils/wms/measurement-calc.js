@@ -115,6 +115,7 @@ export async function calcSteelCoilLength({ name, weight, width, thickness, quan
   }
 
   const baseUnit = await getBaseUnit()
+  const widthUnit = baseUnit[STEEL_COIL].width.unit
   const lengthUnit = baseUnit[STEEL_COIL].length.unit
   const lengthPrecision = baseUnit[STEEL_COIL].length.precision
   const weightUnit = baseUnit[STEEL_COIL].weight.unit
@@ -122,7 +123,7 @@ export async function calcSteelCoilLength({ name, weight, width, thickness, quan
 
   let theoryLength
   const weg = convertUnits(weight, weightUnit, 'kg', weightPrecision)
-  const wth = convertUnits(width, lengthUnit, 'm', 3)
+  const wth = convertUnits(width, widthUnit, 'm', 3)
   // 计算结果为 m
   theoryLength = weg / (wth * thickness * density)
   theoryLength = convertUnits(theoryLength, 'm', lengthUnit)

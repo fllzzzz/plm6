@@ -34,7 +34,7 @@
         @change="toQuery"
       />
       <slot name="beforeWarehouse" />
-      <factory-select v-model="queryVO.factoryId" placeholder="工厂" class="filter-item" @change="toQuery" clearable />
+      <factory-select v-if="showFactory" v-model="queryVO.factoryId" placeholder="工厂" class="filter-item" @change="toQuery" clearable />
       <warehouse-select
         v-if="showWarehouse"
         v-model="queryVO.warehouseId"
@@ -110,6 +110,11 @@ const props = defineProps({
   },
   // 显示整料/余料
   showMaterialIsWhole: {
+    type: Boolean,
+    default: true
+  },
+  // 显示工厂
+  showFactory: {
     type: Boolean,
     default: true
   },
