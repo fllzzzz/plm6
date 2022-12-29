@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <!--工具栏-->
-    <m-header />
+    <m-header ref="headerRef" />
     <!--表格渲染-->
     <common-table
       :key="`return_to_party_a_${crud.query.basicClass}`"
@@ -259,7 +259,7 @@
     <!-- 分页组件 -->
     <!-- <Pagination /> -->
     <!-- 详情 -->
-    <MDetail v-model:visible="detailVisible" :material-info="currentRow" :date="crud.query.createTime" />
+    <MDetail v-model:visible="detailVisible" :material-info="currentRow" :date="crud.query.createTime" :showAmount="showAmount" />
   </div>
 </template>
 
@@ -268,7 +268,7 @@ import { getSendAndReceiveStorage, getSendAndReceiveStorageDetail } from '@/api/
 
 import { computed, ref, watch } from 'vue'
 import { reportRawMaterialSendAndReceiveStoragePM as permission } from '@/page-permission/wms'
-import { measureTypeEnum, projectWarehouseTypeEnum, unitTypeEnum } from '@/utils/enum/modules/wms'
+import { measureTypeEnum, materialWeightingWayEnum, unitTypeEnum, projectWarehouseTypeEnum } from '@/utils/enum/modules/wms'
 import { STEEL_ENUM } from '@/settings/config'
 
 import useCRUD from '@compos/use-crud'
@@ -308,6 +308,7 @@ const currentRow = ref({})
 // 详情显示
 const detailVisible = ref(false)
 // 表格ref
+const headerRef = ref()
 const tableRef = ref()
 const { crud, columns } = useCRUD(
   {
@@ -326,15 +327,25 @@ const { maxHeight } = useMaxHeight({ paginate: true })
 
 const showProject = computed(
   // 未选择项目 && 当前仓库不为公共仓 && 显示项目
-  () =>
-    !crud.query.projectId &&
-    crud.query.projectWarehouseType &&
-    crud.query.projectWarehouseType !== projectWarehouseTypeEnum.PUBLIC.V &&
-    columns.value.visible('project')
+  () => {
+    return (
+      !crud.query.projectId &&
+      crud.query.projectWarehouseType &&
+      crud.query.projectWarehouseType !== projectWarehouseTypeEnum.PUBLIC.V &&
+      headerRef.value?.weightedType !== materialWeightingWayEnum.WHOLE.V &&
+      columns.value.visible('project')
+    )
+  }
 )
 
 // 是否有显示金额权限
-const showAmount = computed(() => checkPermission(permission.showAmount))
+const showAmount = computed(() => {
+  if (headerRef.value?.weightedType === materialWeightingWayEnum.WHOLE.V) {
+    return (crud.query.projectId || crud.query.projectWarehouseType) && checkPermission(permission.showAmount)
+  } else {
+    return checkPermission(permission.showAmount)
+  }
+})
 
 // 显示单价
 const showUnitPrice = computed(() => crud.query.unitType === measureTypeEnum.ACCOUNTING.V)

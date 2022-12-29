@@ -4,6 +4,7 @@ import { codeWait } from '..'
 import { convertUnits } from '../convert/unit'
 import { deepClone, isBlank, isNotBlank, toFixed, toPrecision } from '../data-type'
 import { unitTypeEnum } from '../enum/modules/common'
+import { matClsEnum } from '@enum-ms/classification'
 import { patternNumerical } from '../validate/pattern'
 import { getFullNum } from '../data-type/number'
 
@@ -117,6 +118,10 @@ function steelFormat(
 ) {
   if (!basicClass || !unitCfg[basicClass]) {
     return data
+  }
+  // 钢卷需要转换quantity【按长度】
+  if (basicClass & matClsEnum.STEEL_COIL.V) {
+    length.push('quantity')
   }
   // 长
   if (length && length instanceof Array) {
