@@ -45,7 +45,7 @@
           <span>{{ scope.row.serialNumber }}</span>
         </template>
       </el-table-column>
-      <el-table-column key="nestingResult" prop="nestingResult" label="套料成果" header-align="center">
+      <el-table-column key="nestingResult" prop="nestingResult" label="套料成果" header-align="center" width="600px">
         <template v-slot="scope">
           <template v-if="scope.row.linkDOList.length > 0">
             <div style="width: 100%; display: flex">

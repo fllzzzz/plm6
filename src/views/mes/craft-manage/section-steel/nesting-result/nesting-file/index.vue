@@ -258,9 +258,9 @@ async function nestingListGet() {
     resultLoading.value = true
     const { content } = await getMaterialList({ id: props.detailData.id })
     console.log(content)
-    // content[0].typesettingDTOS.forEach((v) => {
-    //   v.areaName = v.areaName?.join(',')
-    // })
+    content[0].typesettingDTOS.forEach((v) => {
+      v.areaName = v.areaName?.join(',')
+    })
     nestingProgressData.value = content[0].typesettingDTOS
   } catch (error) {
     console.log('获取材料清单失败')
