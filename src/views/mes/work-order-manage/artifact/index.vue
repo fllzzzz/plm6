@@ -95,9 +95,9 @@
         align="center"
       />
       <el-table-column
-        v-if="columns.visible('taskMete')"
+        v-if="columns.visible('taskNetWeight')"
         :show-overflow-tooltip="true"
-        prop="taskMete"
+        prop="taskNetWeight"
         label="任务量（kg）"
         align="center"
       />

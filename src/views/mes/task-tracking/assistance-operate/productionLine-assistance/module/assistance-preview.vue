@@ -55,6 +55,8 @@
         align="center"
       />
       <el-table-column prop="specification" :show-overflow-tooltip="true" label="规格" min-width="100px" align="center" />
+      <el-table-column prop="totalNetWeight" :show-overflow-tooltip="true" label="总净重" align="center" />
+      <el-table-column prop="totalGrossWeight" :show-overflow-tooltip="true" label="总毛重" align="center" />
       <el-table-column
         v-if="crud.query.taskTypeEnum !== taskTypeENUM.MACHINE_PART.V"
         prop="length"
@@ -106,16 +108,16 @@ const emit = defineEmits(['update:visible', 'success'])
 const props = defineProps({
   visible: {
     type: Boolean,
-    default: false
+    default: false,
   },
   info: {
     type: Object,
-    default: () => {}
+    default: () => {},
   },
   list: {
     type: Array,
-    default: () => []
-  }
+    default: () => [],
+  },
 })
 
 const { visible: dialogVisible, handleClose } = useVisible({ emit, props, field: 'visible' })
@@ -126,7 +128,7 @@ const { maxHeight } = useMaxHeight(
     wrapperBox: ['.el-dialog__body'],
     clientHRepMainH: true,
     minHeight: 300,
-    navbar: false
+    navbar: false,
   },
   dialogVisible
 )
@@ -142,7 +144,7 @@ async function submitIt() {
       return {
         id: v.id,
         quantity: v.editQuantity,
-        groupsId: v.groupsId
+        groupsId: v.groupsId,
       }
     })
     if (crud.query.taskTypeEnum === taskTypeENUM.MACHINE_PART.V) {
@@ -153,7 +155,7 @@ async function submitIt() {
     ElNotification({
       title: '产线协同保存成功',
       type: 'success',
-      duration: 2500
+      duration: 2500,
     })
     handleClose()
     emit('success')
