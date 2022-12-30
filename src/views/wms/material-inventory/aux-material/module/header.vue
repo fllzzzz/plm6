@@ -2,7 +2,7 @@
   <div class="head-container">
     <div v-if="crud.searchToggle">
       <!-- 物料查询相关 -->
-      <mat-header-query :basic-class="query.basicClass" :query="query" :to-query="crud.toQuery" :show-factory="false" show-project-Warehouse-type>
+      <mat-header-query :basic-class="query.basicClass" :query="query" :to-query="crud.toQuery" show-project-Warehouse-type>
         <template #afterProjectWarehouseType>
           <monomer-select-area-select
             v-if="query.projectWarehouseType === projectWarehouseTypeEnum.PROJECT.V"
