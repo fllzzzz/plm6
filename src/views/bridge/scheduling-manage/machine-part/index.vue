@@ -271,7 +271,7 @@ function handleCheckedChange(value, item) {
 function handleCheckedAll(val) {
   checkAll.value = val
   boardList.value.forEach((v) => {
-    if (v.imgLoad) {
+    if (v.imgLoad || crud.query.thick === '其他') {
       v.checked = val
       handleCheckedChange(val, v)
     }
