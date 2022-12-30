@@ -44,12 +44,12 @@ const BOX_COMMON_L_HTML = function ({ component = defComponent, productionLineNa
 <div class="row" style="font-weight:bold;font-size:14pt;">
   <div class="col">长度(mm)：</div>
   <div class="col">宽度(mm)：</div>
-  <div class="col">高度(mm)：</div>
+  <div class="col">厚度(mm)：</div>
 </div>
 <div class="row" style="font-weight:bold;">
   <div class="col">${emptyTextFormatter(component.length)}</div>
   <div class="col">${emptyTextFormatter(component.width)}</div>
-  <div class="col">${emptyTextFormatter(component.height)}</div>
+  <div class="col">${emptyTextFormatter(component.thickness)}</div>
 </div>
 <div class="row" style="${(printConfig?.weight !== printWeightTypeEnum.NONE.V || component?.oneCode) ? '' : 'display:none;'}">
  <div class="col" style="${printConfig?.weight !== printWeightTypeEnum.NONE.V ? '' : 'display:none;'};${component?.oneCode ? '' : 'border:none;'}">单重(kg)：${emptyTextFormatter(component.weight)}</div>

@@ -422,7 +422,9 @@ function getLabelInfo(row, num) {
     drawingNumber: row.drawingNumber,
     weight:
       printConfig.weight === printWeightTypeEnum.NET.V ? row.netWeight.toFixed(DP.COM_WT__KG) : row.grossWeight.toFixed(DP.COM_WT__KG),
-    length: row.length
+    width: row.width,
+    length: row.length,
+    thickness: row.thickness
   }
   // 生产线信息
   // const productionLine = getLine()
