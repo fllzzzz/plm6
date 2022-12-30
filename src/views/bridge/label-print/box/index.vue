@@ -448,6 +448,7 @@ function getLabelInfo(row, num) {
     component,
     printConfig,
     productionLineName: getLine().name,
+    logo: company.logo,
     manufacturerPhone: company.telephone,
     manufacturerURL: companyWebsite ? companyWebsite.split('/')[0] : '',
     manufacturerName: printConfig.manufacturerName || companyName,
