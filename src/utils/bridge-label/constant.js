@@ -35,7 +35,7 @@ const BOX_COMMON_L_HTML = function ({ component = defComponent, productionLineNa
 <div class="row">
   <div class="col">项目：${emptyTextFormatter(component.projectName)}</div>
 </div>
-<div class="row">
+<div class="row" style="${printConfig?.showMonomer ? '' : 'display:none;'}">
   <div class="col" style="${printConfig?.showMonomer ? '' : 'display:none;'}">区域：${emptyTextFormatter(component.monomerName)}-${emptyTextFormatter(component.areaName)}</div>
 </div>
 <div class="row">
@@ -62,7 +62,7 @@ const BOX_COMMON_L_HTML = function ({ component = defComponent, productionLineNa
   <div class="col" style="${printConfig?.showProductionLine ? '' : 'display:none;'}">生产线：${emptyTextFormatter(productionLineName)}</div>
 </div>
 <div class="row">
-  <div class="col">制造商：${emptyTextFormatter(manufacturerName)}</div>
+  <div class="col">${emptyTextFormatter(manufacturerName)}</div>
 </div>
 <div class="row">
   <div class="col" style="display:flex;">
