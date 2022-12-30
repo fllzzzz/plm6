@@ -22,7 +22,7 @@ const defComponent = {
 }
 
 // 分段-常规标签
-const BOX_COMMON_L_HTML = function ({ component = defComponent, productionLineName, logo, manufacturerPhone, manufacturerURL, printConfig, manufacturerName = '制造商名称' }) {
+const BOX_COMMON_L_HTML = function ({ component = defComponent, productionLineName, logo = labelLogo, manufacturerPhone, manufacturerURL, printConfig, manufacturerName = '制造商名称' }) {
   return `
 <div class="box-label">
 <div class="row row-3">
@@ -39,12 +39,9 @@ const BOX_COMMON_L_HTML = function ({ component = defComponent, productionLineNa
   <div class="col" style="${printConfig?.showMonomer ? '' : 'display:none;'}">区域：${emptyTextFormatter(component.monomerName)}-${emptyTextFormatter(component.areaName)}</div>
 </div>
 <div class="row">
-  <div class="col" style="font-size:16pt;">名称：${emptyTextFormatter(component.name)}</div>
+  <div class="col" style="font-size:18pt;">编号：${emptyTextFormatter(component.serialNumber)}</div>
 </div>
-<div class="row">
-  <div class="col" style="font-size:16pt;">编号：${emptyTextFormatter(component.serialNumber)}</div>
-</div>
-<div class="row" style="font-weight:bold;">
+<div class="row" style="font-weight:bold;font-size:14pt;">
   <div class="col">长度(mm)：</div>
   <div class="col">宽度(mm)：</div>
   <div class="col">高度(mm)：</div>
@@ -166,7 +163,7 @@ const BOX_STYLE = function ({
     <style>
     .${fClass} .box-label {
       font-family: "微软雅黑";
-      font-size: 14pt;
+      font-size: 15pt;
       color: black;
       box-sizing: border-box;
       display: flex;
@@ -474,7 +471,7 @@ export const PRINT_LABEL_STYLE = {
   [bridgeComponentTypeEnum.BOX.V]: {
     [bridgeLabelTypeEnum.COMMON.V]: BOX_STYLE({
       fClass: 'print-com-al',
-      rowHeight: 13,
+      rowHeight: 14,
       colPadding: 1,
       unit: 'mm'
     }),

@@ -24,8 +24,8 @@ async function printBox({ productType, labelType, component, productionLineName,
   try {
     LODOP = await getLODOP()
     LODOP.SET_PRINT_PAGESIZE(1, 1030, 2080, '1') /* 纸张大小*/
-    LODOP.ADD_PRINT_HTM('7mm', '1.1mm', '98mm', '203mm', strHtml)
-    LODOP.ADD_PRINT_BARCODE('14mm', '70mm', '36mm', '36mm', 'QRCode', qrCode)
+    LODOP.ADD_PRINT_HTM('7mm', '2mm', '98mm', '203mm', strHtml)
+    LODOP.ADD_PRINT_BARCODE('15mm', '70mm', '36mm', '36mm', 'QRCode', qrCode)
     LODOP.SET_PRINT_STYLEA(0, 'QRCodeVersion', 7)
     LODOP.SET_PRINT_STYLEA(0, 'QRCodeErrorLevel', 'M')
     // LODOP.PRINT_DESIGN()/* 打印设计*/
