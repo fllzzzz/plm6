@@ -102,8 +102,8 @@ import productionDetail from './production-detail/index.vue'
 const tableRef = ref()
 const productionData = ref([])
 const detailRow = ref({})
-const date = ref([moment().subtract(1, 'month').valueOf(), moment().valueOf()])
-const startTime = ref(moment().subtract(1, 'month').valueOf())
+const date = ref([moment().startOf('month').valueOf(), moment().valueOf()])
+const startTime = ref(moment().startOf('month').valueOf().valueOf())
 const endTime = ref(moment().valueOf())
 const workshopId = ref()
 const { maxHeight } = useMaxHeight({
@@ -164,7 +164,7 @@ function handleDateChange(val) {
     startTime.value = val[0]
     endTime.value = val[1]
   } else {
-    startTime.value = moment().subtract(1, 'month').valueOf()
+    startTime.value = moment().startOf('month').valueOf()
     endTime.value = moment().valueOf()
   }
   fetchProcessData()
