@@ -13,6 +13,14 @@
         style="width:120px;"
       />
       <project-radio-button size="small" :type="'all'" v-model="query.projectId" class="filter-item" @change="crud.toQuery" />
+      <common-radio-button
+        v-model="query.productType"
+        :options="[packTypeEnum.STRUCTURE, packTypeEnum.MACHINE_PART]"
+        type="enum"
+        size="small"
+        class="filter-item"
+        @change="crud.toQuery"
+      />
       <workshop-select
         v-model="query.workshopId"
         placeholder="请选择车间"
@@ -51,7 +59,7 @@
 <script setup>
 import { summaryData } from '@/api/mes/pack-and-ship/product-receive-send-storage'
 import { ref, watch } from 'vue'
-
+import { packTypeEnum } from '@enum-ms/mes'
 import checkPermission from '@/utils/system/check-permission'
 import { DP } from '@/settings/config'
 import workshopSelect from '@comp-mes/workshop-select'
@@ -60,6 +68,7 @@ import crudOperation from '@crud/CRUD.operation'
 import Panel from '@/components/Panel'
 
 const defaultQuery = {
+  productType: packTypeEnum.STRUCTURE.V,
   dateTime: undefined,
   projectId: undefined
 }

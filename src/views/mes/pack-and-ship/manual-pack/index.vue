@@ -82,6 +82,7 @@ import workshopSelect from '@comp-mes/workshop-select'
 import structureTable from './structure'
 import enclosureTable from './enclosure'
 import auxiliaryMaterialTable from './auxiliary-material'
+import partTable from './part'
 import packListDrawer from './pack-list-drawer'
 import monomerSelect from '@/components-system/plan/monomer-select'
 import oneCodeNumberList from '@/components-system/mes/one-code-number-list'
@@ -107,6 +108,7 @@ const packVisible = ref(false)
 const packData = reactive({
   [packTypeEnum.STRUCTURE.K]: {},
   [packTypeEnum.ENCLOSURE.K]: {},
+  [packTypeEnum.MACHINE_PART.K]: {},
   [packTypeEnum.AUXILIARY_MATERIAL.K]: {}
 })
 
@@ -134,6 +136,7 @@ watch(
     if (isNotBlank(newVal)) {
       packData[packTypeEnum.STRUCTURE.K] = {}
       packData[packTypeEnum.ENCLOSURE.K] = {}
+      packData[packTypeEnum.MACHINE_PART.K] = {}
       packData[packTypeEnum.AUXILIARY_MATERIAL.K] = {}
     }
   }
@@ -158,6 +161,8 @@ watch(
       packData[packTypeEnum.STRUCTURE.K] = _data.artifactList && _data.artifactList.reduce((obj, item) => ((obj[item.id] = item), obj), {})
       packData[packTypeEnum.ENCLOSURE.K] =
         (_data.enclosureList && _data.enclosureList.reduce((obj, item) => ((obj[item.id] = item), obj), {})) || {}
+      packData[packTypeEnum.MACHINE_PART.K] =
+        (_data.partList && _data.partList.reduce((obj, item) => ((obj[item.id] = item), obj), {})) || {}
       packData[packTypeEnum.AUXILIARY_MATERIAL.K] =
         (_data.auxList && _data.auxList.reduce((obj, item) => ((obj[item.id] = item), obj), {})) || {}
       nextTick(() => {
@@ -175,6 +180,8 @@ const currentView = computed(() => {
       return structureTable
     case packTypeEnum.ENCLOSURE.V:
       return enclosureTable
+    case packTypeEnum.MACHINE_PART.V:
+      return partTable
     case packTypeEnum.AUXILIARY_MATERIAL.V:
       return auxiliaryMaterialTable
     default:
@@ -186,6 +193,7 @@ const isEmpty = computed(() => {
   return (
     isBlank(packData[packTypeEnum.STRUCTURE.K]) &&
     isBlank(packData[packTypeEnum.ENCLOSURE.K]) &&
+    isBlank(packData[packTypeEnum.MACHINE_PART.K]) &&
     isBlank(packData[packTypeEnum.AUXILIARY_MATERIAL.K])
   )
 })
@@ -193,6 +201,7 @@ const isEmpty = computed(() => {
 function handleSuccess() {
   packData[packTypeEnum.STRUCTURE.K] = {}
   packData[packTypeEnum.ENCLOSURE.K] = {}
+  packData[packTypeEnum.MACHINE_PART.K] = {}
   packData[packTypeEnum.AUXILIARY_MATERIAL.K] = {}
   mainRef.value.refresh()
   bagId.value = undefined
