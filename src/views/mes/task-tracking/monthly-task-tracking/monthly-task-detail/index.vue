@@ -88,7 +88,6 @@ import usePagination from '@compos/use-pagination'
 import projectDetail from '../project-detail/index.vue'
 import { projectNameFormatter } from '@/utils/project'
 import { DP } from '@/settings/config'
-import moment from 'moment'
 
 const props = defineProps({
   monthlyData: {
