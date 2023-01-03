@@ -123,11 +123,9 @@ const { handleSizeChange, handleCurrentChange, total, setTotalPage, queryPage } 
 async function fetchMonthly() {
   let _list = []
   try {
-    const time = moment().set('month', props.monthlyData.month - 1)._d
-    const current = new Date(time.getFullYear() + '-' + props.monthlyData.month).getTime()
     const { content = [], totalElements } = await monthlyProject({
       ...props.query,
-      dateTime: current,
+      dateTime: new Date(props.monthlyData.month).getTime(),
       ...queryPage
     })
     setTotalPage(totalElements)

@@ -313,7 +313,7 @@ function refresh(isRefreshTypeList = false) {
 
 async function schedulingNumGet() {
   try {
-    const data = await getBadgeNum({productionLineTypeEnum: crud.query.productionLineTypeEnum, areaIdList: crud.query.areaIdList })
+    const data = await getBadgeNum({ productionLineTypeEnum: crud.query.productionLineTypeEnum, areaIdList: crud.query.areaIdList })
     totalBadge.value = data
   } catch (error) {
     console.log('获取构件排产记录气泡条数失败', error)
