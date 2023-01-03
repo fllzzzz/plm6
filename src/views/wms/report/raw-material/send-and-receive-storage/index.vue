@@ -328,13 +328,14 @@ const { maxHeight } = useMaxHeight({ paginate: true })
 const showProject = computed(
   // 未选择项目 && 当前仓库不为公共仓 && 显示项目
   () => {
-    return (
-      !crud.query.projectId &&
+    if (headerRef.value?.weightedType === materialWeightingWayEnum.WHOLE.V) {
+      return (!crud.query.projectId &&
       crud.query.projectWarehouseType &&
       crud.query.projectWarehouseType !== projectWarehouseTypeEnum.PUBLIC.V &&
-      headerRef.value?.weightedType !== materialWeightingWayEnum.WHOLE.V &&
-      columns.value.visible('project')
-    )
+      columns.value.visible('project'))
+    } else {
+      return columns.value.visible('project')
+    }
   }
 )
 
