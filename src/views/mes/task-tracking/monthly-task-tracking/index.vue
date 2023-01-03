@@ -16,19 +16,19 @@
         style="width: 35%; cursor: pointer"
         show-summary
         :summary-method="getSummaries"
-        @current-change="monthlyTaskChange"
+        @row-click="monthlyTaskChange"
       >
         <el-table-column
-          v-if="columns.visible('month')"
+          v-if="columns.visible('months')"
           align="center"
-          key="month"
-          prop="month"
+          key="months"
+          prop="months"
           :show-overflow-tooltip="true"
           label="月份"
           width="80px"
         >
           <template v-slot="scope">
-            <span>{{ scope.row.month }}月</span>
+            <span>{{ scope.row.months }}月</span>
           </template>
         </el-table-column>
         <el-table-column
@@ -140,7 +140,10 @@ function monthlyTaskChange(row) {
 }
 
 CRUD.HOOK.handleRefresh = (crud, res) => {
-  res.data.content = res.data
+  res.data.content = res.data?.map(v => {
+    v.months = v.month?.split('-')[1]
+    return v
+  })
 }
 
 // 合计
