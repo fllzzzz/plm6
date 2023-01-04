@@ -37,7 +37,8 @@ const bridge = {
   bridge_task_tracking: '任务跟踪报表',
   bridge_factory_report: '工厂报表',
   bridge_production_line_wage_statistics: '产线工资统计',
-  bridge_pack_and_ship_manage: '发运管理'
+  bridge_pack_and_ship_manage: '发运管理',
+  bridge_list_summary: '清单汇总'
 }
 
 const supply = {
@@ -235,7 +236,9 @@ const tableType = {
   bridgeProjectShipDetail: { L: '项目发运详情报表', M: 'bridge_pack_and_ship_manage', T: mt.bridge.L + ' / ' + bridge.bridge_pack_and_ship_manage },
   bridgeProductSendReceiveStorage: { L: '制成品入发存', M: 'bridge_pack_and_ship_manage', T: mt.bridge.L + ' / ' + bridge.bridge_pack_and_ship_manage },
   bridgeProductSendReceiveStorageDetail: { L: '制成品入发存详情', M: 'bridge_pack_and_ship_manage', T: mt.bridge.L + ' / ' + bridge.bridge_pack_and_ship_manage },
-
+  boxSummary: { L: '分段清单汇总', M: 'bridge_list_summary', T: mt.bridge.L + ' / ' + bridge.bridge_list_summary },
+  cellSummary: { L: '单元清单汇总', M: 'bridge_list_summary', T: mt.bridge.L + ' / ' + bridge.bridge_list_summary },
+  partSummary: { L: '零件清单汇总', M: 'bridge_list_summary', T: mt.bridge.L + ' / ' + bridge.bridge_list_summary },
   // 项目管理
   deliveryCargoList: { L: '自制收货记录', M: 'delivery_manage', T: mt.project.L + ' / ' + project.delivery_manage },
   deliveryReportList: { L: '收货报表', M: 'delivery_manage', T: mt.project.L + ' / ' + project.delivery_manage },

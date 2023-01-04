@@ -170,6 +170,9 @@ const bridgeStudSleeveStatisticsList = bridge.studSleeveStatisticsList
 const bridgeProjectShipDetail = bridge.bridgeProjectShipDetail
 const bridgeProductSendReceiveStorage = bridge.productSendReceiveStorage
 const bridgeProductSendReceiveStorageDetail = bridge.productSendReceiveStorageDetail
+const boxSummary = bridge.boxSummary // 分段清单汇总
+const cellSummary = bridge.cellSummary // 单元清单汇总
+const partSummary = bridge.partSummary // 零件清单汇总
 
 // wms
 const wmsRmOutboundReceipt = wms.wmsRmOutboundReceipt // 出库
@@ -354,6 +357,9 @@ export default {
   bridgeProjectShipDetail, // 发运管理项目发运详情
   bridgeProductSendReceiveStorage, // 发运管理制成品入发存
   bridgeProductSendReceiveStorageDetail, // 发运管理制成品入发存详情
+  boxSummary, // 分段清单汇总
+  cellSummary, // 单元清单汇总
+  partSummary, // 零件清单汇总
 
   // wms
   wmsRmOutboundReceipt, // 出库（领料单）单
