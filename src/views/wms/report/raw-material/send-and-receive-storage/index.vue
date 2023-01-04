@@ -342,7 +342,7 @@ const showProject = computed(
 // 是否有显示金额权限
 const showAmount = computed(() => {
   if (headerRef.value?.weightedType === materialWeightingWayEnum.WHOLE.V) {
-    return (crud.query.projectId || crud.query.projectWarehouseType) && checkPermission(permission.showAmount)
+    return !(crud.query.projectId || crud.query.projectWarehouseType) && checkPermission(permission.showAmount)
   } else {
     return checkPermission(permission.showAmount)
   }
