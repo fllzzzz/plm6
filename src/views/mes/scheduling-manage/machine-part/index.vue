@@ -73,7 +73,7 @@ size="mini"
                 <div style="display: flex; justify-content: space-between; width: 100%; align-items: center; padding: 0 5px">
                   <el-checkbox
                     v-model="item.checked"
-                    :disabled="!item.imgLoad"
+                    :disabled="Boolean(!item.imgLoad && item.picturePath)"
                     @click.stop
                     @change="handleCheckedChange($event, item)"
                   ></el-checkbox>
@@ -275,7 +275,7 @@ function handleCheckedChange(value, item) {
 function handleCheckedAll(val) {
   checkAll.value = val
   boardList.value.forEach((v) => {
-    if (v.imgLoad) {
+    if (v.imgLoad || !v.picturePath) {
       v.checked = val
       handleCheckedChange(val, v)
     }

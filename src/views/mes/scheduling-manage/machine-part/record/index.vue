@@ -96,7 +96,12 @@
         align="center"
       >
         <template #default="{ row: { sourceRow: row } }">
-          <cut-config-select v-if="row.issueStatusEnum === issueStatusEnum.NOT_NESTING.V" v-model="row.cutConfigId" clearable />
+          <cut-config-select
+            v-if="row.issueStatusEnum === issueStatusEnum.NOT_NESTING.V"
+            v-model="row.cutConfigId"
+            :layOffWayType="row.boolDrawing ? undefined : false"
+            clearable
+          />
           <span v-else>{{ row.cutConfigName }}</span>
         </template>
       </el-table-column>
