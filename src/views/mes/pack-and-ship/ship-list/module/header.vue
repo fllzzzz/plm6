@@ -124,7 +124,7 @@
     <el-row v-loading="crud.loading" :gutter="20" class="panel-group">
       <el-col :span="6" class="card-panel-col">
         <Panel
-          name="全年发运量（t）"
+          name="今年发运量（t）"
           text-color="#626262"
           num-color="#1890ff"
           :end-val="convertUnits(totalAmount.yearMete, 'kg', 't', DP.COM_WT__T) || 0"
@@ -132,7 +132,7 @@
         />
       </el-col>
       <el-col :span="6" class="card-panel-col">
-        <Panel name="全年发运车次" text-color="#626262" num-color="#1890ff" :end-val="totalAmount.yearQuantity || 0" :precision="0" />
+        <Panel name="今年发运车次" text-color="#626262" num-color="#1890ff" :end-val="totalAmount.yearQuantity || 0" :precision="0" />
       </el-col>
       <el-col :span="6" class="card-panel-col">
         <Panel
