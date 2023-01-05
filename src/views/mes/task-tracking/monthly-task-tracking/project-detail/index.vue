@@ -43,6 +43,7 @@
             :params="{
               projectId: props.detailData.project.id,
               monomerId: monomerId,
+              dateTime: new Date(props.dateTime).getTime(),
               areaId: areaId,
               serialNumber: serialNumber,
             }"
@@ -118,6 +119,10 @@ const props = defineProps({
   detailData: {
     type: Object,
     default: () => {}
+  },
+  dateTime: {
+    type: String,
+    default: ''
   }
 })
 
@@ -136,6 +141,7 @@ async function showProjectDetail() {
       monomerId: monomerId.value,
       areaId: areaId.value,
       serialNumber: serialNumber.value,
+      dateTime: new Date(props.dateTime).getTime(),
       ...queryPage
     })
     setTotalPage(totalElements)

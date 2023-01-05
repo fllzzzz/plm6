@@ -77,7 +77,7 @@
         @current-change="handleCurrentChange"
       />
     </div>
-    <project-detail v-model:visible="drawerVisible" :detail-data="detailData" />
+    <project-detail v-model:visible="drawerVisible" :dateTime="props.monthlyData?.month" :detail-data="detailData" />
   </div>
 </template>
 <script setup>
