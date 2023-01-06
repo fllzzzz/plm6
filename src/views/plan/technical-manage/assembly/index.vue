@@ -42,6 +42,7 @@
             </el-tooltip>
           </template>
           <template v-slot="scope">
+            <table-cell-tag :show="scope.row.dataType===2 && scope.row.boolSendDirectly" name="直发件" />
             <span style="cursor: pointer" @dblclick="drawingPreview(scope.row)">{{ scope.row.serialNumber }}</span>
           </template>
         </el-table-column>
