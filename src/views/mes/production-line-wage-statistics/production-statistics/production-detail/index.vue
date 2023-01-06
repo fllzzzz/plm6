@@ -82,13 +82,13 @@
         </el-table-column>
         <el-table-column align="center" key="price" prop="price" :show-overflow-tooltip="true" label="总额" fixed="left" />
         <el-table-column prop="sum" align="center" :key="'_' + item" :show-overflow-tooltip="true" v-for="item in yearList" :label="item">
-          <template v-for="val in dayList" :key="val?.split('-')[2]">
+          <template v-for="val in dayList" :key="val?.split('/')[2]">
             <el-table-column
               v-if="new Date(val).getFullYear() == item"
               prop="sum"
               align="center"
               :show-overflow-tooltip="true"
-              :label="val?.split('-')[2]"
+              :label="val?.split('/')[2]"
               min-width="120"
             >
               <template v-slot="scope">
@@ -153,7 +153,7 @@ function getDateList(start, end, long) {
   const count = (end - start) / (24 * 60 * 60 * 1000)
   var dateData = []
   for (var i = 0; i <= count; i++) {
-    dateData.push(parseTime(startData, '{y}-{m}-{d}'))
+    dateData.push(parseTime(startData, '{y}/{m}/{d}'))
     startData += long
   }
   dayList.value = dateData
@@ -181,8 +181,8 @@ async function fetchDetail() {
     getDateList(Number(props.commonParams?.startTime), Number(props.commonParams?.endTime), 24 * 60 * 60 * 1000)
     yearList.value = []
     dayList.value.forEach((v) => {
-      if (yearList.value.indexOf(v.split('-')[0]) === -1) {
-        yearList.value.push(v.split('-')[0])
+      if (yearList.value.indexOf(v.split('/')[0]) === -1) {
+        yearList.value.push(v.split('/')[0])
       }
       yearList.value.sort(function (a, b) {
         return a - b
