@@ -14,13 +14,14 @@
         <template v-slot:header>
           <el-tooltip class="item" effect="light" :content="`双击编号可预览图纸`" placement="top">
             <div style="display: inline-block">
-              <span>编号</span>
+              <span style="margin-left:10px;">编号</span>
               <i class="el-icon-info" />
             </div>
           </el-tooltip>
         </template>
         <template v-slot="scope">
-          <span style="cursor: pointer" @dblclick="drawingPreview(scope.row)">{{ scope.row.serialNumber }}</span>
+          <table-cell-tag :show="scope.row.boolSendDirectly" name="直发件" />
+          <span style="cursor: pointer;margin-left:10px;" @dblclick="drawingPreview(scope.row)">{{ scope.row.serialNumber }}</span>
         </template>
       </el-table-column>
       <el-table-column key="specification" prop="specification" label="规格" align="center" :show-overflow-tooltip="true"/>
@@ -65,6 +66,7 @@ import { toThousand } from '@/utils/data-type/number'
 import usePagination from '@compos/use-pagination'
 
 import drawingPreviewFullscreenDialog from '@comp-base/drawing-preview/drawing-preview-fullscreen-dialog'
+import tableCellTag from '@comp-common/table-cell-tag/index.vue'
 
 const { showDrawing, drawingRow, drawingPreview } = useDrawing({ pidField: 'id', productTypeField: 'MACHINE_PART' })
 import { isNotBlank } from '@data-type/index'
