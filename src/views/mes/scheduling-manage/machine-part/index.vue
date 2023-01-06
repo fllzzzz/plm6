@@ -69,6 +69,7 @@ size="mini"
                 style="position: relative; cursor: pointer"
                 :style="{ 'background-color': `${item.boxColor}`, ...boxStyle }"
                 @mouseleave="item.visibleTip = false"
+                @click.stop="item.visibleTip = !item.visibleTip"
               >
                 <div style="display: flex; justify-content: space-between; width: 100%; align-items: center; padding: 0 5px">
                   <el-checkbox
@@ -89,11 +90,7 @@ size="mini"
                     </div>
                   </template>
                 </el-image>
-                <span
-class="ellipsis-text text"
-@click.stop="item.visibleTip = !item.visibleTip"
-                  >{{ item.specification }}/{{ item.quantity }}</span
-                >
+                <span class="ellipsis-text text"><span style="color:#409eff;">{{ item.specification }}</span>/<span style="color:#42b983;">{{ item.quantity }}</span></span>
               </div>
             </el-tooltip>
           </template>
@@ -103,11 +100,7 @@ class="ellipsis-text text"
             <i class="el-icon-loading" />
           </div>
         </div>
-        <m-preview
-          v-model:visible="previewVisible"
-          :list="checkedNodes"
-          @success="handleSaveSuccess"
-        ></m-preview>
+        <m-preview v-model:visible="previewVisible" :list="checkedNodes" @success="handleSaveSuccess"></m-preview>
       </div>
     </div>
   </div>
