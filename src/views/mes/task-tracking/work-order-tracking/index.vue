@@ -62,7 +62,7 @@
             label="总量（件/kg）"
           >
             <template v-slot="scope">
-              <span>{{ scope.row.totalQuantity }}/{{ scope.row.totalMete.toFixed(DP.COM_WT__KG) }}</span>
+              <span>{{ scope.row.totalQuantity }}/{{ scope.row.totalNetWeight?.toFixed(DP.COM_WT__KG) }}</span>
             </template>
           </el-table-column>
           <el-table-column
@@ -75,7 +75,7 @@
             width="130px"
           >
             <template v-slot="scope">
-              <span>{{ scope.row.completeQuantity }}/{{ scope.row.completeMete.toFixed(DP.COM_WT__KG) }}</span>
+              <span>{{ scope.row.completeQuantity }}/{{ scope.row.completeNetWeight?.toFixed(DP.COM_WT__KG) }}</span>
             </template>
           </el-table-column>
           <el-table-column

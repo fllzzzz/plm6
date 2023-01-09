@@ -4,81 +4,108 @@
       <mHeader />
     </div>
     <div style="display: flex">
-      <common-table
-        ref="tableRef"
-        v-loading="crud.loading"
-        :data="productionData"
-        highlight-current-row
-        :empty-text="crud.emptyText"
-        :max-height="maxHeight"
-        row-key="projectId"
-        style="width: 40%"
-        show-summary
-        :summary-method="getSummaries"
-        @current-change="handleCurrentChange"
-      >
-        <el-table-column prop="index" label="序号" align="center" width="60" type="index" />
-        <el-table-column align="center" key="process" prop="process" :show-overflow-tooltip="true" label="工序" min-width="80px">
-          <template v-slot="scope">
-            <span>{{ scope.row.process }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column
-          v-if="columns.visible('production')"
-          align="center"
-          key="production"
-          prop="production"
-          :show-overflow-tooltip="true"
-          label="产量（吨）"
-          min-width="60px"
+      <div style="width: 28%">
+        <div style="margin-bottom: 8px">
+          <el-date-picker
+            v-model="date"
+            type="daterange"
+            range-separator=":"
+            size="small"
+            value-format="x"
+            :shortcuts="PICKER_OPTIONS_SHORTCUTS"
+            unlink-panels
+            start-placeholder="开始日期"
+            end-placeholder="结束日期"
+            style="width: 240px; margin-right: 10px"
+            class="filter-item date-item"
+            @change="handleDateChange"
+          />
+          <workshop-select
+            v-model="workshopId"
+            placeholder="请选择车间"
+            clearable
+            style="width: 160px"
+            class="filter-item"
+            @change="fetchProcessData"
+          />
+        </div>
+        <common-table
+          ref="tableRef"
+          v-loading="crud.loading"
+          :data="productionData"
+          highlight-current-row
+          :empty-text="'暂无数据'"
+          :max-height="maxHeight"
+          row-key="projectId"
+          style="width: 100%"
+          @row-click="handleChange"
         >
-          <template v-slot="scope">
-            <span>{{ scope.row.production }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column
-          v-if="columns.visible('sum')"
-          align="center"
-          key="sum"
-          prop="sum"
-          :show-overflow-tooltip="true"
-          label="计件总额（元）"
-          min-width="60px"
-        >
-          <template v-slot="scope">
-            <span>{{ scope.row.sum }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column
-          v-if="columns.visible('average')"
-          align="center"
-          key="average"
-          prop="average"
-          :show-overflow-tooltip="true"
-          label="平均（元/吨）"
-          min-width="60px"
-        >
-          <template v-slot="scope">
-            <span>{{ scope.row.average }}</span>
-          </template>
-        </el-table-column>
-      </common-table>
-      <div style="border-right: 1px solid #ededed; margin: 0 20px; height: calc(100vh - 180px)"></div>
-      <production-detail :detail-row="detailRow" style="flex: 1" />
+          <el-table-column prop="index" label="序号" align="center" width="60" type="index" />
+          <el-table-column
+            align="center"
+            key="process.name"
+            prop="process.name"
+            :show-overflow-tooltip="true"
+            label="工序"
+            min-width="80px"
+          >
+            <template v-slot="scope">
+              <table-cell-tag
+                :name="componentTypeEnum.VL[scope.row.taskTypeEnum]"
+                :color="componentTypeEnum.V[scope.row.taskTypeEnum].COLOR"
+                :offset="10"
+              />
+              <span>{{ scope.row.process?.name }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column align="center" key="mete" prop="mete" :show-overflow-tooltip="true" label="产量（吨）" min-width="60px">
+            <template v-slot="scope">
+              <span>{{ scope.row.mete }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column align="center" key="price" prop="price" :show-overflow-tooltip="true" label="工资总额（元）" min-width="60px">
+            <template v-slot="scope">
+              <span>{{ scope.row.price }}</span>
+            </template>
+          </el-table-column>
+        </common-table>
+        <!-- 分页 -->
+        <el-pagination
+          :total="total"
+          :current-page="queryPage.pageNumber"
+          :page-size="queryPage.pageSize"
+          style="margin-top: 8px"
+          layout="total, prev, pager, next, sizes"
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+        />
+      </div>
+      <div style="border-right: 1px solid #ededed; margin: 0 20px; height: calc(100vh - 300px)"></div>
+      <production-detail :commonParams="commonParams" :detail-row="detailRow" style="flex: 1; overflow-x: hidden" />
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted, computed, watch } from 'vue'
+import { get } from '@/api/mes/production-line-wage-statistics/production-statistics'
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
-import { tableSummary } from '@/utils/el-extra'
+import usePagination from '@compos/use-pagination'
+import { componentTypeEnum } from '@enum-ms/mes'
+import { PICKER_OPTIONS_SHORTCUTS } from '@/settings/config'
+import workshopSelect from '@comp-mes/workshop-select'
+import moment from 'moment'
 import mHeader from './module/header'
 import productionDetail from './production-detail/index.vue'
 
 const tableRef = ref()
+const productionData = ref([])
 const detailRow = ref({})
+const date = ref([moment().startOf('month').valueOf(), moment().valueOf()])
+const startTime = ref(moment().startOf('month').valueOf().valueOf())
+const endTime = ref(moment().valueOf())
+const workshopId = ref()
 const { maxHeight } = useMaxHeight({
   extraBox: ['.head-container'],
   paginate: true
@@ -90,35 +117,65 @@ const optShow = {
   download: false
 }
 
-const productionData = [
-  { id: 1, process: '下料', production: 100, sum: 100, average: 1 },
-  { id: 2, process: '组立', production: 200, sum: 1000, average: 1 },
-  { id: 3, process: '埋弧', production: 300, sum: 200, average: 1 },
-  { id: 4, process: '焊接', production: 400, sum: 1000, average: 1 }
-]
+const { crud } = useCRUD({
+  title: '产量统计',
+  sort: [],
+  optShow: { ...optShow },
+  hasPagination: true
+})
+const commonParams = computed(() => {
+  return {
+    workshopId: workshopId.value,
+    startTime: startTime.value,
+    endTime: endTime.value
+  }
+})
 
-const { crud, columns } = useCRUD(
-  {
-    title: '产量统计',
-    sort: [],
-    optShow: { ...optShow },
-    //   crudApi: { ...crudApi },
-    // permission: { ...permission },
-    hasPagination: true
-  },
-  tableRef
+watch(
+  () => commonParams.value,
+  (val) => {
+    detailRow.value = {}
+  }
 )
 
-// 求和
-function getSummaries(param) {
-  return tableSummary(param, {
-    props: ['sum']
-  })
+const { handleSizeChange, handleCurrentChange, total, setTotalPage, queryPage } = usePagination({ fetchHook: fetchProcessData })
+
+onMounted(() => {
+  fetchProcessData()
+})
+
+async function fetchProcessData() {
+  try {
+    const { content = [], totalElements } = await get({
+      workshopId: workshopId.value,
+      startTime: startTime.value,
+      endTime: endTime.value
+    })
+    setTotalPage(totalElements)
+    productionData.value = content || []
+  } catch (error) {
+    console.log('获取工序汇总信息失败', error)
+  }
 }
-function handleCurrentChange(row) {
+
+function handleDateChange(val) {
+  console.log(val, 'val')
+  if (val) {
+    startTime.value = val[0]
+    endTime.value = val[1]
+  } else {
+    startTime.value = moment().startOf('month').valueOf()
+    endTime.value = moment().valueOf()
+  }
+  fetchProcessData()
+}
+
+function handleChange(row) {
   detailRow.value = row
 }
+
 </script>
 
 <style lang="scss" scoped>
+
 </style>

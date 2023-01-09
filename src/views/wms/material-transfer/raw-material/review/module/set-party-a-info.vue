@@ -63,6 +63,7 @@ import { ref, defineProps, watchEffect, computed } from 'vue'
 import { isNotBlank, toPrecision } from '@/utils/data-type'
 import { partyAMatTransferEnum, transferTypeEnum } from '@/utils/enum/modules/wms'
 import { getDP } from '@/utils/data-type/number'
+
 const props = defineProps({
   form: {
     type: Object,

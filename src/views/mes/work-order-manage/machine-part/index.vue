@@ -96,7 +96,7 @@
         label="任务量（件/kg）"
       >
         <template v-slot="scope">
-          <span>{{ scope.row.taskQuantity }}/{{ scope.row.taskMete }}</span>
+          <span>{{ scope.row.taskQuantity }}/{{ scope.row.taskNetWeight }}</span>
         </template>
       </el-table-column>
       <el-table-column

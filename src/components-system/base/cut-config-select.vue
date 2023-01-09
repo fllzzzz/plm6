@@ -11,15 +11,17 @@
     :placeholder="placeholder"
     @change="handleChange"
   >
-    <el-option-group v-for="(group, index) in cutConfigs" :key="index + 1" :label="layOffWayTypeEnum.VL[index]">
-      <el-option
-        v-for="item in group"
-        :key="item.id"
-        :label="item.name"
-        :value="item.id"
-        :disabled="disabledValue ? disabledValue.indexOf(item.id) > -1 : false"
-      />
-    </el-option-group>
+    <template v-for="(group, type) in cutConfigs" :key="type">
+      <el-option-group v-if="isBlank(layOffWayType) || Boolean(layOffWayTypeEnum.V[type].V) === Boolean(layOffWayType)" :label="layOffWayTypeEnum.VL[type]">
+        <el-option
+          v-for="item in group"
+          :key="item.id"
+          :label="item.name"
+          :value="item.id"
+          :disabled="disabledValue ? disabledValue.indexOf(item.id) > -1 : false"
+        />
+      </el-option-group>
+    </template>
   </el-select>
 </template>
 
@@ -34,6 +36,10 @@ const emit = defineEmits(['change', 'update:modelValue'])
 const props = defineProps({
   modelValue: {
     type: [Number, String],
+    default: undefined
+  },
+  layOffWayType: {
+    type: [Boolean, undefined],
     default: undefined
   },
   layWayConfigId: {

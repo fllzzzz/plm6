@@ -70,13 +70,14 @@
           <template #header>
             <el-tooltip class="item" effect="light" :content="`双击编号可预览图纸`" placement="top">
               <div style="display: inline-block">
-                <span>编号</span>
+                <span style="margin-left:10px;">编号</span>
                 <i class="el-icon-info" />
               </div>
             </el-tooltip>
           </template>
           <template v-slot="scope">
-            <span style="cursor: pointer" @dblclick="drawingPreview(scope.row)">{{ scope.row.serialNumber }}</span>
+            <table-cell-tag :show="scope.row.dataType !== 2 && scope.row.boolSendDirectly" name="直发件" />
+            <span style="cursor: pointer;margin-left:10px;" @dblclick="drawingPreview(scope.row)">{{ scope.row.serialNumber }}</span>
           </template>
         </el-table-column>
         <el-table-column
@@ -323,6 +324,7 @@ import changeForm from './module/change-form'
 import productionState from './module/production-state'
 import bimPreviewDrawer from '@/components-system/bim/bim-preview-drawer'
 import drawingPreviewFullscreenDialog from '@comp-base/drawing-preview/drawing-preview-fullscreen-dialog'
+import tableCellTag from '@comp-common/table-cell-tag/index.vue'
 
 const { globalProject, globalProjectId } = mapGetters(['globalProject', 'globalProjectId'])
 const { showDrawing, drawingRow, drawingPreview } = useDrawing({ pidField: 'id', typeField: 'productType' })

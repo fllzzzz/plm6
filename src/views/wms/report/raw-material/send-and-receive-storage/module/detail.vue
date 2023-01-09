@@ -75,7 +75,6 @@
 import { getSendAndReceiveStorageDetail, exportSendAndReceiveStorageDetailExcel } from '@/api/wms/report/raw-material/statistics'
 import { computed, inject, ref, defineEmits, defineProps } from 'vue'
 import { tableSummary } from '@/utils/el-extra'
-import checkPermission from '@/utils/system/check-permission'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { setSpecInfoToList } from '@/utils/wms/spec'
 import { materialHasAmountColumns } from '@/utils/columns-format/wms'
@@ -108,6 +107,9 @@ const props = defineProps({
   },
   materialInfo: {
     type: Object
+  },
+  showAmount: {
+    type: Boolean
   }
 })
 
@@ -143,8 +145,6 @@ const { maxHeight } = useMaxHeight(
   detailLoading
 )
 
-// 是否有显示金额权限
-const showAmount = computed(() => checkPermission(permission.showAmount))
 // 因为报表变动可能比较频繁,每次显示重新加载详情
 const { visible: dialogVisible, handleClose } = useVisible({ emit, props, field: 'visible', showHook: fetchDetail })
 
@@ -170,7 +170,9 @@ const filterList = computed(() => {
 const printParams = computed(() => {
   return {
     id: props.materialInfo.id,
+    ids: props.materialInfo.ids,
     statId: props.materialInfo.statId,
+    statIds: props.materialInfo.statIds,
     date: props.date,
     formType: filter.value.formType
   }

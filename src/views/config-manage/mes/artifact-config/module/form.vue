@@ -108,7 +108,7 @@
                 <el-input
                   v-model="item.specPrefix"
                   type="text"
-                  placeholder="大写字母"
+                  placeholder="大写字母或中文"
                   style="width: 270px; margin-right: 5px"
                   @blur="checkName(item, index)"
                 />
@@ -233,7 +233,7 @@ const validateLinks = (rule, value, callback) => {
     for (const i in value) {
       if (!value[i].add) {
         if (!value[i].specPrefix) {
-          callback(new Error('请填写大写关键字母'))
+          callback(new Error('请填写大写或中文规格前缀'))
         }
         // if (!isNotBlank(value[i].boolUseAssemble)) {
         //   callback(new Error('请选择是否匹配部件'))
@@ -244,7 +244,7 @@ const validateLinks = (rule, value, callback) => {
     }
     callback()
   } else {
-    callback(new Error('请填写大写规格前缀'))
+    callback(new Error('请填写大写或中文规格前缀'))
   }
 }
 
@@ -439,7 +439,7 @@ function checkName(item, index) {
         item.specPrefix = undefined
         val.specPrefix = undefined
       } else {
-        if (!/^[A-Z]+$/.test(item.specPrefix)) {
+        if (!/^[\u4e00-\u9fa5A-Z]+$/.test(item.specPrefix)) {
           form.value.specPrefixList[index].specPrefix = undefined
           val.specPrefix = undefined
           return
@@ -451,7 +451,7 @@ function checkName(item, index) {
     }
   } else {
     if (item.specPrefix) {
-      if (!/^[A-Z]+$/.test(item.specPrefix)) {
+      if (!/^[\u4e00-\u9fa5A-Z]+$/.test(item.specPrefix)) {
         form.value.specPrefixList[index].specPrefix = undefined
         return
       }

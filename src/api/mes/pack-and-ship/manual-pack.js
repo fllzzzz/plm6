@@ -17,6 +17,15 @@ export function getEnclosure(params) {
     params
   })
 }
+// 直发件
+export function getPart(params) {
+  return request({
+    module: 'mes',
+    url: 'package/part/use',
+    method: 'get',
+    params
+  })
+}
 
 // export function getAuxiliaryMaterial(params) {
 //   return request({

@@ -18,22 +18,22 @@
       <el-table-column key="project" prop="project" v-if="columns.visible('project')" :show-overflow-tooltip="true" label="项目" align="left" />
       <el-table-column key="list" prop="list" v-if="columns.visible('list')" :show-overflow-tooltip="true" label="清单数（件/kg）" align="center">
         <template v-slot="scope">
-          <span>{{ scope.row.quantity+' / '+scope.row.mete }}</span>
+          <span>{{ scope.row.quantity+' / '+scope.row.totalNetWeight }}</span>
         </template>
       </el-table-column>
       <el-table-column key="inbound" prop="inbound" v-if="columns.visible('inbound')" :show-overflow-tooltip="true" label="累计入库（件/kg）" align="center">
         <template v-slot="scope">
-          <span style="cursor:pointer;color:#0d84ff;" @click="openDetail(scope.row, 'INBOUND')">{{ scope.row.inboundQuantity+' / '+scope.row.inboundMete }}</span>
+          <span style="cursor:pointer;color:#0d84ff;" @click="openDetail(scope.row, 'INBOUND')">{{ scope.row.inboundQuantity+' / '+scope.row.inboundNetWeight }}</span>
         </template>
       </el-table-column>
       <el-table-column key="outbound" prop="outbound" v-if="columns.visible('outbound')" :show-overflow-tooltip="true" label="累计出库（件/kg）" align="center" >
         <template v-slot="scope">
-          <span style="cursor:pointer;color:#0d84ff;" @click="openDetail(scope.row, 'OUTBOUND')">{{ scope.row.outboundQuantity+' / '+scope.row.outboundMete }}</span>
+          <span style="cursor:pointer;color:#0d84ff;" @click="openDetail(scope.row, 'OUTBOUND')">{{ scope.row.outboundQuantity+' / '+scope.row.outboundNetWeight }}</span>
         </template>
       </el-table-column>
       <el-table-column key="stock" prop="stock" v-if="columns.visible('stock')" :show-overflow-tooltip="true" label="实时库存（件/kg）" align="center">
         <template v-slot="scope">
-          <span style="cursor:pointer;color:#0d84ff;" @click="openDetail(scope.row, 'STOCK')">{{ scope.row.stockQuantity+' / '+scope.row.stockMete }}</span>
+          <span style="cursor:pointer;color:#0d84ff;" @click="openDetail(scope.row, 'STOCK')">{{ scope.row.stockQuantity+' / '+scope.row.stockNetWeight }}</span>
         </template>
       </el-table-column>
       <!--编辑与删除-->
@@ -50,7 +50,7 @@
       </el-table-column>
     </common-table>
     <pagination />
-    <component :is="showComponent" :showType="showType" v-model="detailVisible" :detailQuery="detailQuery" :workshopId="crud.query.workshopId" :detailInfo="currentRow" :permission="permission"/>
+    <component :is="showComponent" :showType="showType" v-model="detailVisible" :detailQuery="detailQuery" :productType="crud.query.productType" :workshopId="crud.query.workshopId" :detailInfo="currentRow" :permission="permission"/>
   </div>
 </template>
 
@@ -131,7 +131,7 @@ function getSummaries(param) {
       const valueKeys = column.property === 'list' ? 'quantity' : column.property + 'Quantity'
       const values = data.map((item) => Number(item.sourceRow?.[valueKeys]))
       let valuesSum = 0
-      const valueWeightKeys = column.property === 'list' ? 'mete' : column.property + 'Mete'
+      const valueWeightKeys = column.property === 'list' ? 'totalNetWeight' : column.property + 'NetWeight'
       const valueWeight = data.map((item) => Number(item.sourceRow?.[valueWeightKeys]))
       let valueWeightSum = 0
       if (!values.every((value) => isNaN(value))) {

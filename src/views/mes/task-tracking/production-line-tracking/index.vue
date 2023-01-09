@@ -58,7 +58,7 @@
         label="任务量（件/kg）"
       >
         <template v-slot="scope">
-          <span>{{ scope.row.taskQuantity }}/{{ scope.row.taskMete.toFixed(DP.COM_WT__KG) }}</span>
+          <span>{{ scope.row.taskQuantity }}/{{ scope.row.taskNetWeight?.toFixed(DP.COM_WT__KG) }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -70,7 +70,7 @@
         label="完成量（件/kg）"
       >
         <template v-slot="scope">
-          <span>{{ scope.row.completeQuantity }}/{{ scope.row.completeMete.toFixed(DP.COM_WT__KG) }}</span>
+          <span>{{ scope.row.completeQuantity }}/{{ scope.row.completeNetWeight?.toFixed(DP.COM_WT__KG) }}</span>
         </template>
       </el-table-column>
       <el-table-column

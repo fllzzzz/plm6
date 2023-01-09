@@ -37,7 +37,7 @@
       v-model="query.serialNumber"
       placeholder="输入包单搜索"
       class="filter-item"
-      style="width: 200px"
+      style="width: 180px"
       size="small"
       clearable
       @keyup.enter="crud.toQuery"
@@ -46,7 +46,7 @@
       v-model="query.userName"
       placeholder="输入打包人名称搜索"
       class="filter-item"
-      style="width: 200px"
+      style="width: 180px"
       size="small"
       clearable
       @keyup.enter="crud.toQuery"
@@ -55,7 +55,16 @@
       v-model="query.remark"
       placeholder="输入备注搜索"
       class="filter-item"
-      style="width: 200px"
+      style="width: 140px"
+      size="small"
+      clearable
+      @keyup.enter="crud.toQuery"
+    />
+    <el-input
+      v-model="query.productSerialNumber"
+      placeholder="输入产品编号搜索"
+      class="filter-item"
+      style="width: 160px"
       size="small"
       clearable
       @keyup.enter="crud.toQuery"
@@ -140,6 +149,7 @@ const defaultQuery = {
   startDate: undefined,
   endDate: undefined,
   remark: void 0,
+  productSerialNumber: undefined,
   materialTypeArr: { value: undefined, resetAble: false },
   productType: packTypeEnum.STRUCTURE.V,
   projectId: { value: undefined, resetAble: false }

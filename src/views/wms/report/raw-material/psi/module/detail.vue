@@ -117,7 +117,7 @@ CRUD.HOOK.handleRefresh = async (crud, { data }) => {
   data.content.forEach(v => {
     if (v.basicClass & STEEL_ENUM) {
       // 此页面钢材默认显示吨，保留3位
-      v.accountingUnit = '吨'
+      v.accountingUnit = '千克'
       v.accountingPrecision = 3
     }
   })

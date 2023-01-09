@@ -297,8 +297,8 @@ function handleDataFormat({ artifactList, enclosureList, auxList }) {
       v.weight = v.netWeight || v.grossWeight
       v.totalWeight = convertUnits(v.weight * v.packageQuantity, 'kg', 't')
       v.productQuantity = v.packageQuantity
-      v.originNumberList = deepClone(v.numberList)
-      v.numberList = v.numberList.filter(v => v.boolPackage).map(v => v.number)
+      v.originNumberList = v.numberList ? deepClone(v.numberList) : []
+      v.numberList = v.numberList ? v.numberList.filter(v => v.boolPackage).map(v => v.number) : []
       return v
     })
   data.enclosureList =
@@ -307,8 +307,8 @@ function handleDataFormat({ artifactList, enclosureList, auxList }) {
       v.processingPrice = v.processingPrice || v.processingPrice === 0 ? v.processingPrice : undefined
       v.totalLength = convertUnits(v.length * v.packageQuantity, 'mm', 'm')
       v.productQuantity = v.packageQuantity
-      v.originNumberList = deepClone(v.numberList)
-      v.numberList = v.numberList.filter(v => v.boolPackage).map(v => v.number)
+      v.originNumberList = v.numberList ? deepClone(v.numberList) : []
+      v.numberList = v.numberList ? v.numberList.filter(v => v.boolPackage).map(v => v.number) : []
       return v
     })
   data.auxList =
@@ -316,8 +316,8 @@ function handleDataFormat({ artifactList, enclosureList, auxList }) {
     auxList.map((v) => {
       v.fullClassName = `${v.firstName}/${v.secondName}/${v.thirdName}`
       v.productQuantity = v.packageQuantity
-      v.originNumberList = deepClone(v.numberList)
-      v.numberList = v.numberList.filter(v => v.boolPackage).map(v => v.number)
+      v.originNumberList = v.numberList ? deepClone(v.numberList) : []
+      v.numberList = v.numberList ? v.numberList.filter(v => v.boolPackage).map(v => v.number) : []
       return v
     })
   return JSON.stringify(data)

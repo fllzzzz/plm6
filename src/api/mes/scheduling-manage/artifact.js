@@ -192,6 +192,19 @@ export function getGroupsTree(params) {
     params
   })
 }
+/**
+ * 获取 构件排产记录 气泡
+ * @export
+ * @returns
+ */
+export function getBadgeNum(params) {
+  return request({
+    module: 'mes',
+    url: 'scheduling/artifact/record/count',
+    method: 'get',
+    params
+  })
+}
 
 export default { get }
 

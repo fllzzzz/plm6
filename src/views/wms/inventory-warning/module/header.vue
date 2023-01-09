@@ -9,14 +9,14 @@
       class="filter-item"
       @change="crud.toQuery"
     />
-    <factory-select
+    <!-- <factory-select
       v-model="query.factoryId"
       class="filter-item"
       placeholder="可选择工厂"
       clearable
       style="width: 200px"
       @change="crud.toQuery"
-    />
+    /> -->
     <material-cascader
       check-strictly
       v-model="query.classifyId"
@@ -57,7 +57,7 @@ import materialCascader from '@comp-cls/material-cascader/index.vue'
 
 import crudOperation from '@crud/CRUD.operation.vue'
 import rrOperation from '@crud/RR.operation.vue'
-import factorySelect from '@comp-base/factory-select.vue'
+// import factorySelect from '@comp-base/factory-select.vue'
 import notifyOthers from './notify-others.vue'
 
 const defaultQuery = {

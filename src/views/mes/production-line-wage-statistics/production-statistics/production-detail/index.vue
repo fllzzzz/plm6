@@ -1,161 +1,214 @@
 <template>
-<div class="app-container">
-  <div v-show="!detailRow.id" class="my-code" style="width: 100%">*点击左侧表格行查看详情</div>
-  <div v-show="detailRow.id" class="production-detail" style="width: 100%">
-    <common-table
-      ref="tableRef"
-      :data="workshopList"
-      :empty-text="'暂无数据'"
-      :max-height="maxHeight"
-      row-key="id"
-      style="width: 100%"
-      :span-method="spanMethod"
-    >
-      <el-table-column align="center" key="workshop" prop="workshop" :show-overflow-tooltip="true" label="车间/产线">
-        <template v-slot="scope">
-          <span>{{ scope.row.workshop }}/{{ scope.row.productionLine }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column align="center" key="team" prop="team" :show-overflow-tooltip="true" label="班组">
-        <template v-slot="scope">
-          <span>{{ scope.row.team }}（{{scope.row.userName}}）</span>
-        </template>
-      </el-table-column>
-      <el-table-column align="center" key="production" prop="production" :show-overflow-tooltip="true" label="产量（件/吨）">
-        <template v-slot="scope">
-          <span>{{ scope.row.productionQuantity }}/{{ scope.row.productionWeight }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column align="center" key="wage" prop="wage" :show-overflow-tooltip="true" label="工资（元）">
-        <template v-slot="scope">
-          <span>{{ scope.row.wage }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column align="center" key="productionProportion" prop="productionProportion" :show-overflow-tooltip="true" label="产量占比">
-        <template v-slot="scope">
-          <el-progress :text-inside="true" stroke-linecap="square" :stroke-width="22" :percentage="scope.row.productionProportion" status="success" />
-        </template>
-      </el-table-column>
-      <el-table-column align="center" :show-overflow-tooltip="true" label="操作">
-        <template v-slot="scope">
-          <common-button type="primary" size="mini" @click="views(scope.row)">查看</common-button>
-        </template>
-      </el-table-column>
-    </common-table>
-    <common-drawer
-      append-to-body
-      v-model="visible"
-      top="10vh"
-      :before-close="() => (visible = false)"
-      :title="`工序: ${props.detailRow.process}`"
-      :wrapper-closable="false"
-      size="80%"
-    >
-      <template #titleAfter>
-        <el-tag style="font-weight: 700">班组：{{productionData.team}}>{{productionData.userName}}</el-tag>
-      </template>
-      <template #titleRight>
-        <print-table :api-key="apiKey" :params="{ ...query }" size="mini" type="warning" class="filter-item" />
-      </template>
-      <template #content>
-        <artifact v-if="props.detailRow.process === '下料'" :visible="visible" :production-data="productionData" />
-        <part v-else-if="props.detailRow.process === '组立'" v-model="visible" :production-data="productionData" />
-        <perforate v-else-if="props.detailRow.process === '埋弧'" v-model="visible" :production-data="productionData" />
-        <lively v-else-if="props.detailRow.process === '焊接'" v-model="visible" :production-data="productionData" />
-      </template>
-    </common-drawer>
-  </div>
+  <div class="app-container">
+    <div v-show="!detailRow.process?.id" class="my-code" style="width: 100%">*点击左侧表格行查看详情</div>
+    <div v-show="detailRow.process?.id" style="width: 100%">
+      <div class="production-detail">
+        <el-input
+          v-model.trim="userName"
+          placeholder="可输入姓名搜索"
+          class="filter-item"
+          style="width: 200px; margin-bottom: 8px"
+          size="small"
+          clearable
+          @keyup.enter="fetchDetail"
+        />
+        <common-button
+          class="filter-item"
+          size="mini"
+          type="success"
+          icon="el-icon-search"
+          style="margin-left: 8px"
+          @click.stop="searchQuery"
+        >
+          搜索
+        </common-button>
+        <common-button class="filter-item" size="mini" type="warning" icon="el-icon-refresh-left" @click.stop="resetQuery">
+          重置
+        </common-button>
+      </div>
+      <common-table
+        ref="tableRef"
+        :data="workshopList"
+        :empty-text="'暂无数据'"
+        :max-height="maxHeight"
+        row-key="id"
+        style="width: 100%"
+        :header-cell-style="headerStyle"
+      >
+        <el-table-column prop="index" label="序号" align="center" width="60" type="index" fixed="left" />
+        <el-table-column
+          align="center"
+          key="workshop.name"
+          prop="workshop.name"
+          :show-overflow-tooltip="true"
+          label="车间"
+          min-width="120px"
+          fixed="left"
+        >
+          <template #default="{ row }">
+            <span>{{ row.workshop?.name }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column
+          align="center"
+          key="productionLine.name"
+          prop="productionLine.name"
+          :show-overflow-tooltip="true"
+          label="产线"
+          min-width="120px"
+          fixed="left"
+        >
+          <template #default="{ row }">
+            <span>{{ row.productionLine?.name }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column
+          align="center"
+          key="groups.name"
+          prop="groups.name"
+          :show-overflow-tooltip="true"
+          label="班组"
+          min-width="120px"
+          fixed="left"
+        >
+          <template #default="{ row }">
+            <span>{{ row.groups?.name }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column align="center" key="team.name" prop="team.name" :show-overflow-tooltip="true" label="姓名" fixed="left">
+          <template #default="{ row }">
+            <span>{{ row.team?.name }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column align="center" key="price" prop="price" :show-overflow-tooltip="true" label="总额" fixed="left" />
+        <el-table-column prop="sum" align="center" :key="'_' + item" :show-overflow-tooltip="true" v-for="item in yearList" :label="item">
+          <template v-for="val in dayList" :key="val?.split('/')[2]">
+            <el-table-column
+              v-if="new Date(val).getFullYear() == item"
+              prop="sum"
+              align="center"
+              :show-overflow-tooltip="true"
+              :label="val?.split('/')[2]"
+              min-width="120"
+            >
+              <template v-slot="scope">
+                <div v-if="scope.row.priceList.findIndex((v) => v.dayTime == val) > -1">
+                  <template v-for="day in scope.row.priceList" :key="day">
+                    <template v-if="day.dayTime == val">
+                      <span>{{ day.mete }}</span>
+                    </template>
+                  </template>
+                </div>
+                <template v-else>
+                  <span>/</span>
+                </template>
+              </template>
+            </el-table-column>
+          </template>
+        </el-table-column>
+      </common-table>
+      <!-- 分页 -->
+      <el-pagination
+        :total="total"
+        :current-page="queryPage.pageNumber"
+        :page-size="queryPage.pageSize"
+        style="margin-top: 8px"
+        layout="total, prev, pager, next, sizes"
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+      />
+    </div>
   </div>
 </template>
 
 <script setup>
-import { ref, defineProps } from 'vue'
+import { ref, defineProps, watch } from 'vue'
+import { detail } from '@/api/mes/production-line-wage-statistics/production-statistics'
+import { parseTime } from '@/utils/date'
+import usePagination from '@compos/use-pagination'
 import useMaxHeight from '@compos/use-max-height'
-import artifact from '../module/artifact.vue'
-import part from '../module/part.vue'
-import perforate from '../module/perforate.vue'
-import lively from '../module/livery.vue'
 
 const props = defineProps({
   detailRow: {
     type: Object,
     default: () => {}
+  },
+  commonParams: {
+    type: Object
   }
 })
 const { maxHeight } = useMaxHeight({
-  wrapperBox: ['.production-detail'],
+  extraBox: ['.production-detail'],
   paginate: true
 })
+const userName = ref()
+const workshopList = ref([])
+const dayList = ref([])
+const yearList = ref([])
 
-const visible = ref(false)
-const productionData = ref({})
-const workshopList = [
-  {
-    workshop: '一车间',
-    productionLine: '一线',
-    team: '一组',
-    userName: '超级管理员',
-    productionQuantity: 60,
-    productionWeight: 1000,
-    wage: 100,
-    productionProportion: 60,
-    process: '组立'
-  },
-  {
-    workshop: '一车间',
-    productionLine: '一线',
-    team: '二组',
-    userName: '超级管理员',
-    productionQuantity: 60,
-    productionWeight: 1000,
-    wage: 100,
-    productionProportion: 45,
-    process: '下料'
-  },
+const { handleSizeChange, handleCurrentChange, total, setTotalPage, queryPage } = usePagination({ fetchHook: fetchDetail })
 
-  {
-    workshop: '一车间',
-    productionLine: '二线',
-    team: '一组',
-    userName: '超级管理员',
-    productionQuantity: 60,
-    productionWeight: 1000,
-    wage: 100,
-    productionProportion: 60,
-    process: '焊接'
-  },
-  {
-    workshop: '一车间',
-    productionLine: '二线',
-    team: '二组',
-    userName: '超级管理员',
-    productionQuantity: 60,
-    productionWeight: 1000,
-    wage: 100,
-    productionProportion: 45,
-    process: '涂装'
+function getDateList(start, end, long) {
+  let startData = start
+  const count = (end - start) / (24 * 60 * 60 * 1000)
+  var dateData = []
+  for (var i = 0; i <= count; i++) {
+    dateData.push(parseTime(startData, '{y}/{m}/{d}'))
+    startData += long
   }
-]
-// 查看
-function views(row) {
-  visible.value = true
-  productionData.value = row
+  dayList.value = dateData
+}
+watch(
+  () => props.detailRow.process?.id,
+  (val) => {
+    if (val) {
+      fetchDetail()
+    }
+  }
+)
+async function fetchDetail() {
+  try {
+    const { content = [], totalElements } = await detail({
+      processId: props.detailRow.process?.id,
+      userName: userName.value,
+      ...props.commonParams
+    })
+    setTotalPage(totalElements)
+    content?.forEach((v) => {
+      v.startTime = props.commonParams?.startTime
+      v.endTime = props.commonParams?.endTime
+    })
+    getDateList(Number(props.commonParams?.startTime), Number(props.commonParams?.endTime), 24 * 60 * 60 * 1000)
+    yearList.value = []
+    dayList.value.forEach((v) => {
+      if (yearList.value.indexOf(v.split('/')[0]) === -1) {
+        yearList.value.push(v.split('/')[0])
+      }
+      yearList.value.sort(function (a, b) {
+        return a - b
+      })
+    })
+    workshopList.value = content || []
+  } catch (error) {
+    console.log('获取对应工序下的详情失败', error)
+  }
 }
 
-// 合并的行
-function spanMethod({ row, rowIndex, column, columnIndex }) {
-  if (columnIndex === 0) {
-    if (rowIndex % 2 === 0) {
-      return {
-        rowspan: 2,
-        colspan: 1
-      }
-    } else {
-      return {
-        rowspan: 0,
-        colspan: 0
-      }
-    }
+// 搜索
+function searchQuery() {
+  fetchDetail()
+}
+
+// 重置
+function resetQuery() {
+  userName.value = undefined
+}
+
+function headerStyle({ row, column, rowIndex, columnIndex }) {
+  if (rowIndex === 0 && columnIndex >= 6 && (columnIndex - 4) % 2 === 0) {
+    return 'background: #e1f3d8'
+  } else if (rowIndex === 0 && columnIndex >= 7 && (columnIndex - 5) % 2 === 0) {
+    return 'background: #faecd8'
   }
 }
 </script>

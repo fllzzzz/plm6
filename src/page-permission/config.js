@@ -538,7 +538,9 @@ export const configWmsBasicForPM = {
   basicOutboundGet: ['config_wms_basicOutbound:get'], // 查看 基础出库配置信息
   basicOutboundEdit: ['config_wms_basicOutbound:edit'], // 编辑 基础出库配置信息
   partyABorrowReturnGet: ['config_wms_partyABorrowReturn:get'], // 查看 甲供借用归还配置信息
-  partyABorrowReturnEdit: ['config_wms_partyABorrowReturn:edit'] // 编辑 甲供借用归还配置信息
+  partyABorrowReturnEdit: ['config_wms_partyABorrowReturn:edit'], // 编辑 甲供借用归还配置信息
+  materialWeightingGet: ['config_wms_materialWeighting:get'], // 查看 物料加权配置信息
+  materialWeightingEdit: ['config_wms_materialWeighting:edit'] // 编辑 物料加权配置信息
   // basicRejectGet: ['config_wms_basicReject:get'], // 查看 基础退货信息
   // basicRejectEdit: ['config_wms_basicReject:edit'] // 编辑 基础退货信息
 }

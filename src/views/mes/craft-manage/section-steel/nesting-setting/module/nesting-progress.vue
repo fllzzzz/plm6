@@ -11,9 +11,25 @@
     :before-close="handleClose"
   >
     <template #titleRight>
-      <export-button v-permission="permission.downloadResult" type="warning" size="mini" :params="{ id: props.batchId }" :fn="downloadZipGet">下载套料成果</export-button>
-      <common-button v-permission="permission.saveNestingResult" @click.stop="handleClose" class="filter-item" type="success" size="mini">确认</common-button>
-      <common-button v-permission="permission.delNestingResult" @click.stop="delNesting" class="filter-item" type="danger" size="mini">删除</common-button>
+      <!-- <export-button
+        v-permission="permission.downloadResult"
+        type="warning"
+        size="mini"
+        :params="{ id: props.batchId }"
+        :fn="downloadZipGet"
+        >下载套料成果</export-button
+      > -->
+      <common-button
+      v-permission="permission.saveNestingResult"
+      @click.stop="handleClose"
+      class="filter-item"
+      type="success"
+      size="mini"
+        >确认</common-button
+      >
+      <common-button v-permission="permission.delNestingResult" @click.stop="delNesting" class="filter-item" type="danger" size="mini">
+        删除
+      </common-button>
     </template>
     <common-table
       v-loading="resultLoading"
@@ -29,7 +45,7 @@
           <span>{{ scope.row.serialNumber }}</span>
         </template>
       </el-table-column>
-      <el-table-column key="nestingResult" prop="nestingResult" label="套料成果" header-align="center">
+      <el-table-column key="nestingResult" prop="nestingResult" label="套料成果" header-align="center" width="600px">
         <template v-slot="scope">
           <template v-if="scope.row.linkDOList.length > 0">
             <div style="width: 100%; display: flex">
@@ -73,6 +89,11 @@
           <span>{{ scope.row.typesettingAssembleTypeEnum ? materialTypeEnum.VL[scope.row.typesettingAssembleTypeEnum] : '-' }}</span>
         </template>
       </el-table-column>
+      <el-table-column key="areaName" prop="areaName" :show-overflow-tooltip="true" label="区域" align="center" width="120px">
+        <template v-slot="scope">
+          <span>{{ scope.row.areaName }}</span>
+        </template>
+      </el-table-column>
       <el-table-column key="length" prop="length" :show-overflow-tooltip="true" label="母材长度（mm）" align="center" width="150px">
         <template v-slot="scope">
           <span v-if="scope.row.typesettingTypeEnum === nestingSettingTypeEnum.UN_LOSSY.V">-</span>
@@ -112,9 +133,21 @@
           <span>{{ scope.row.typesettingLength }}</span>
         </template>
       </el-table-column>
-      <el-table-column key="lossRate" prop="lossRate" :show-overflow-tooltip="true" label="损耗" align="center" width="80px">
+      <el-table-column key="lossRate" prop="lossRate" :show-overflow-tooltip="true" label="套料损耗" align="center" width="80px">
         <template v-slot="scope">
           <span>{{ scope.row.lossRate }}%</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        key="kerfLossRate"
+        prop="kerfLossRate"
+        :show-overflow-tooltip="true"
+        label="原材料损耗（mm）"
+        align="center"
+        width="140px"
+      >
+        <template v-slot="scope">
+          <span>{{ scope.row.kerfLossRate }}</span>
         </template>
       </el-table-column>
       <!-- <el-table-column key="statusEnum" prop="statusEnum" :show-overflow-tooltip="true" label="状态" align="center">
@@ -128,7 +161,7 @@
 <script setup>
 import { ref, defineProps, defineEmits } from 'vue'
 import { nestingProgress, delNestingResult } from '@/api/mes/craft-manage/section-steel/nesting-setting'
-import { downloadZipGet } from '@/api/mes/craft-manage/section-steel/nesting-result'
+// import { downloadZipGet } from '@/api/mes/craft-manage/section-steel/nesting-result'
 import {
   mesBuildingTypeSettingAssembleTypeEnum as materialTypeEnum,
   nestingSettingTypeEnum,
@@ -139,7 +172,7 @@ import { getLightColor } from '@/utils/color'
 import { mesNestingSettingPM as permission } from '@/page-permission/mes'
 import useVisible from '@compos/use-visible'
 import useMaxHeight from '@compos/use-max-height'
-import ExportButton from '@comp-common/export-button/index.vue'
+// import ExportButton from '@comp-common/export-button/index.vue'
 
 const emit = defineEmits(['update:visible', 'success'])
 const nestingProgressData = ref([])
@@ -184,6 +217,7 @@ async function nestingResultGet() {
           v.assembleLength += m.length
         }
       })
+      v.areaName = v.areaName?.join(',')
     })
     nestingProgressData.value = content[0].typesettingDTOS
   } catch (error) {

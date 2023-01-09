@@ -207,10 +207,11 @@ const mesMonthlyTaskList = {
       { show: true, key: 'specification', title: '规格', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 20, type: typeEnum.SPECIFICATION.K },
       { show: true, key: 'material', title: '材质', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 20, type: typeEnum.MATERIAL.K },
       { show: true, key: 'length', title: '长度', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 13, type: typeEnum.LENGTH.K },
-      { show: true, key: 'netWeight', title: '单重', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.WEIGHT.K },
-      { show: true, key: 'quantity', title: '排产数', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 8, type: typeEnum.OTHER.K },
+      { show: true, key: 'netWeight', title: '单净重', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.WEIGHT.K },
+      { show: true, key: 'grossWeight', title: '单毛重', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.WEIGHT.K },
+      { show: true, key: 'quantity', title: '排产数', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 8, type: typeEnum.QUANTITY.K },
       { show: true, key: 'completeQuantity', title: '完成数', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 5, type: typeEnum.QUANTITY.K },
-      { show: true, key: 'completeMete', title: '完成重', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 10, type: typeEnum.WEIGHT.K }
+      { show: true, key: 'completeNetWeight', title: '完成重', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 10, type: typeEnum.WEIGHT.K }
     ]
   }
 }

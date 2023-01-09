@@ -16,7 +16,8 @@
     <el-table-column :show-overflow-tooltip="true" prop="specification" key="specification" label="规格" align="center" />
     <el-table-column :show-overflow-tooltip="true" prop="material" key="material" label="材质" align="center" />
     <el-table-column :show-overflow-tooltip="true" prop="quantity" key="quantity" label="数量" align="center" />
-    <el-table-column :show-overflow-tooltip="true" prop="weight" key="weight" label="重量（kg）" align="center" />
+    <el-table-column :show-overflow-tooltip="true" prop="netWeight" key="netWeight" label="单净重（kg）" align="center" />
+    <el-table-column :show-overflow-tooltip="true" prop="grossWeight" key="grossWeight" label="单毛重（kg）" align="center" />
     <el-table-column :show-overflow-tooltip="true" prop="picturePath" key="picturePath" label="图形" align="center" width="150">
       <template v-slot="scope">
         <div style="width: 100%; height: 80px;">
@@ -50,7 +51,7 @@ const dataFormat = ref([['project', 'parse-project']])
 // 合计
 function getSummaries(param) {
   return tableSummary(param, {
-    props: ['quantity', 'weight']
+    props: ['quantity', 'netWeight', 'grossWeight']
   })
 }
 </script>

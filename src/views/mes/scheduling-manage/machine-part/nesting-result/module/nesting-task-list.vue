@@ -106,9 +106,7 @@ defineProps({
 
 const nestingTaskTableRef = ref()
 const month = ref(moment().startOf('month').valueOf().toString())
-const query = ref({
-  issueStatusEnum: issueStatusEnum.IN_NESTING.V
-})
+const query = ref({})
 const tableData = ref([])
 const loading = ref(false)
 const dataFormat = ref([['project', 'parse-project']])
