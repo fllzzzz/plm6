@@ -105,20 +105,6 @@
           </template>
         </el-table-column>
         <el-table-column
-          v-if="columns.visible('length')"
-          key="length"
-          prop="length"
-          sortable="custom"
-          :show-overflow-tooltip="true"
-          :label="`长度\n(mm)`"
-          align="left"
-          min-width="85px"
-        >
-          <template v-slot="scope">
-            {{ scope.row.length ? scope.row.length.toFixed(DP.MES_ARTIFACT_L__MM) : '-' }}
-          </template>
-        </el-table-column>
-        <el-table-column
           v-if="columns.visible('material')"
           key="material"
           prop="material"

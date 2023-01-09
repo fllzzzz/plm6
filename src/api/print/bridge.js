@@ -526,6 +526,33 @@ export function productSendReceiveStorageDetail(params) {
   })
 }
 
+// 分段清单汇总
+export function boxSummary(params) {
+  return request({
+    url: `/api/bridge/tech-box/list-summary/print`,
+    method: 'get',
+    params
+  })
+}
+
+// 单元清单汇总
+export function cellSummary(params) {
+  return request({
+    url: `/api/bridge/tech-element/list-summary/print`,
+    method: 'get',
+    params
+  })
+}
+
+// 零件清单汇总
+export function partSummary(params) {
+  return request({
+    url: `/api/bridge/tech-machinePart/list-summary/print`,
+    method: 'get',
+    params
+  })
+}
+
 export default {
   // 项目制造
   machinePartDetail, // 零件生产详情
@@ -591,6 +618,11 @@ export default {
 
   // 发运管理
   productSendReceiveStorage, // 制成品入发存
-  productSendReceiveStorageDetail // 制成品入发存详情
+  productSendReceiveStorageDetail, // 制成品入发存详情
+
+  // 清单汇总
+  boxSummary, // 分段清单汇总
+  cellSummary, // 单元清单汇总
+  partSummary // 零件清单汇总
 }
 
