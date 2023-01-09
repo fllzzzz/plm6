@@ -9,6 +9,7 @@
       placeholder="选择年"
       format="YYYY"
       value-format="x"
+      :disabled-date="disabledDate"
       @change="crud.toQuery"
     />
     <el-row v-loading="summaryLoading" :gutter="20" class="panel-group">
@@ -56,6 +57,9 @@ async function fetchSummary() {
   } catch (error) {
     console.log('根据时间获取全年价格汇总', error)
   }
+}
+function disabledDate(time) {
+  return time > new Date()
 }
 </script>
 
