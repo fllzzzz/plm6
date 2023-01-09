@@ -114,13 +114,13 @@ const wmsRmOutboundReceipt = {
      */
     fields: [
       // 字段内容
-      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'outboundSN', title: '出库单号：', width: 110, type: typeEnum.GUID.K },
+      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'outboundSN', title: '出库单号：', width: 105, type: typeEnum.GUID.K },
       {
         show: true,
         source: dataSourceEnum.SYSTEM.V,
         key: 'outboundTime',
         title: '出库日期：',
-        width: 80,
+        width: 85,
         type: typeEnum.DATES.K,
         format: 'YYYY年MM月DD日'
       },
@@ -130,7 +130,7 @@ const wmsRmOutboundReceipt = {
         source: dataSourceEnum.SYSTEM.V,
         key: 'printDate',
         title: '打印时间：',
-        width: 55,
+        width: 50,
         type: typeEnum.DATE.K,
         format: 'YY/MM/DD kk:mm'
       },
