@@ -522,6 +522,14 @@ const structureOrderTypeEnum = {
 }
 constantize(structureOrderTypeEnum)
 
+// 配套件配置类型
+const auxiliaryMaterialTypeEnum = {
+  PEG: { L: '栓钉', K: 'PEG', V: 1 << 0 },
+  SLEEVE: { L: '套筒', K: 'SLEEVE', V: 1 << 1 },
+  OTHER: { L: '其他', K: 'OTHER', V: 1 << 2 }
+}
+constantize(auxiliaryMaterialTypeEnum)
+
 export {
   teamTypeEnum,
   teamAttributeEnum,
@@ -587,7 +595,8 @@ export {
   sortingListEnum,
   productSearchTypeEnum,
   drillListEnum,
-  structureOrderTypeEnum
+  structureOrderTypeEnum,
+  auxiliaryMaterialTypeEnum
 }
 
 export default {
@@ -655,5 +664,6 @@ export default {
   sortingListEnum,
   productSearchTypeEnum,
   drillListEnum,
-  structureOrderTypeEnum
+  structureOrderTypeEnum,
+  auxiliaryMaterialTypeEnum
 }
