@@ -12,7 +12,7 @@
             range-separator=":"
             size="small"
             value-format="x"
-            :shortcuts="PICKER_OPTIONS_SHORTCUTS"
+            :shortcuts="PICKER_OPTIONS_DATE"
             unlink-panels
             start-placeholder="开始日期"
             end-placeholder="结束日期"
@@ -87,13 +87,13 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed, watch } from 'vue'
+import { ref, onMounted, computed, watch, nextTick } from 'vue'
 import { get } from '@/api/mes/production-line-wage-statistics/production-statistics'
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
 import usePagination from '@compos/use-pagination'
 import { componentTypeEnum } from '@enum-ms/mes'
-import { PICKER_OPTIONS_SHORTCUTS } from '@/settings/config'
+import { PICKER_OPTIONS_DATE } from '@/settings/config'
 import workshopSelect from '@comp-mes/workshop-select'
 import moment from 'moment'
 import mHeader from './module/header'
@@ -145,6 +145,8 @@ onMounted(() => {
 })
 
 async function fetchProcessData() {
+  startTime.value === date.value[0] ? startTime.value : undefined
+  endTime.value === date.value[1] ? endTime.value : undefined
   try {
     const { content = [], totalElements } = await get({
       workshopId: workshopId.value,
@@ -159,23 +161,26 @@ async function fetchProcessData() {
 }
 
 function handleDateChange(val) {
-  console.log(val, 'val')
   if (val) {
     startTime.value = val[0]
     endTime.value = val[1]
+    if (val[1] - val[0] > 24 * 60 * 60 * 1000 * 31) {
+      val = []
+      nextTick(() => {
+        date.value = []
+      })
+    } else {
+      fetchProcessData()
+    }
   } else {
-    startTime.value = moment().startOf('month').valueOf()
-    endTime.value = moment().valueOf()
+    fetchProcessData()
   }
-  fetchProcessData()
 }
 
 function handleChange(row) {
   detailRow.value = row
 }
-
 </script>
 
 <style lang="scss" scoped>
-
 </style>
