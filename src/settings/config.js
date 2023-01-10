@@ -237,3 +237,36 @@ export const PICKER_OPTIONS_SHORTCUTS = [
     }
   }
 ]
+
+export const PICKER_OPTIONS_DATE = [
+  {
+    text: '最近一周',
+    value: () => {
+      const end = new Date()
+      const start = new Date()
+      start.setTime(start.getTime() - 3600 * 1000 * 24 * 7)
+      return [start, end]
+    }
+  },
+  {
+    text: '当前月份',
+    value: () => {
+      const end = new Date()
+      const start = new Date()
+      start.setDate(1)
+      start.setHours(0)
+      start.setSeconds(0)
+      start.setMinutes(0)
+      return [start, end]
+    }
+  },
+  {
+    text: '最近一个月',
+    value: () => {
+      const end = new Date()
+      const start = new Date()
+      start.setTime(start.getTime() - 3600 * 1000 * 24 * 30)
+      return [start, end]
+    }
+  }
+]
