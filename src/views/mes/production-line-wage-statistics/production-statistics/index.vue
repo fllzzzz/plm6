@@ -92,6 +92,7 @@ import { get } from '@/api/mes/production-line-wage-statistics/production-statis
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
 import usePagination from '@compos/use-pagination'
+import { ElNotification } from 'element-plus'
 import { componentTypeEnum } from '@enum-ms/mes'
 import { PICKER_OPTIONS_DATE } from '@/settings/config'
 import workshopSelect from '@comp-mes/workshop-select'
@@ -169,6 +170,7 @@ function handleDateChange(val) {
       nextTick(() => {
         date.value = []
       })
+      ElNotification({ title: `选择日期间隔最大不能超过31天`, type: 'error', duration: 2000 })
     } else {
       fetchProcessData()
     }
