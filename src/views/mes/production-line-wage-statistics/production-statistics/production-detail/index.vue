@@ -122,7 +122,7 @@
                 <div v-if="scope.row.priceList.findIndex((v) => v.dayTime == val) > -1">
                   <template v-for="day in scope.row.priceList" :key="day">
                     <template v-if="day.dayTime == val">
-                      <span>{{ day.mete }}</span>
+                      <span>{{ day.price }}</span>
                     </template>
                   </template>
                 </div>
