@@ -14,7 +14,7 @@
     <template #content>
       <span style="font-size: 12px; color: red">*配套件的编号不得与构件、部件、零件重名</span>
       <el-form ref="formRef" :model="form" :rules="rules" size="small" label-width="140px" style="margin">
-        <el-form-item label="零件科目匹配" prop="classifyIds">
+        <el-form-item label="配套件科目匹配" prop="classifyIds">
           <common-radio-button
             v-model="form.basicClass"
             :options="[matClsEnum.MATERIAL]"
@@ -39,6 +39,17 @@
         </el-form-item>
         <el-form-item label="类型命名" prop="name">
           <el-input v-model.trim="form.name" type="text" placeholder="类型命名" style="width: 270px" maxlength="30" />
+        </el-form-item>
+        <el-form-item label="所属类型" prop="type">
+          <common-select
+            v-model="form.type"
+            :options="auxiliaryMaterialTypeEnum.ENUM"
+            type="enum"
+            size="small"
+            class="filter-item"
+            placeholder="所属类型选择"
+            style="width: 270px"
+          />
         </el-form-item>
         <el-form-item label="排序" prop="sort">
           <el-input-number v-model.number="form.sort" :min="1" :max="999" :step="1" controls-position="right" style="width: 270px" />
@@ -77,6 +88,7 @@ import { ref, nextTick, defineProps, watch } from 'vue'
 import { ElMessage } from 'element-plus'
 import { deepClone } from '@data-type/index'
 import { matClsEnum } from '@enum-ms/classification'
+import { auxiliaryMaterialTypeEnum } from '@enum-ms/mes'
 import MaterialCascader from '@comp-cls/material-cascader/index.vue'
 import { regForm } from '@compos/use-crud'
 
@@ -93,6 +105,7 @@ const defaultForm = {
   id: undefined,
   name: '',
   basicClass: matClsEnum.MATERIAL.V,
+  type: undefined,
   sort: undefined,
   list: []
 }
@@ -119,6 +132,7 @@ const rules = {
     { min: 1, max: 30, message: '长度在 1 到 30 个字符', trigger: 'blur' }
   ],
   classifyIds: [{ required: true, message: '请选择科目', trigger: 'change' }],
+  type: [{ required: true, message: '请选择所属类型', trigger: 'change' }],
   list: [
     { required: true, message: '请填写编号' },
     { validator: validateLinks, trigger: 'change' }
