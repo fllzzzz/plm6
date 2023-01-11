@@ -148,11 +148,19 @@
               align="center"
             />
             <el-table-column
-              v-if="columns.visible('weight')"
+              v-if="columns.visible('netWeight')"
               :show-overflow-tooltip="true"
-              key="weight"
-              prop="weight"
-              label="单重"
+              key="netWeight"
+              prop="netWeight"
+              label="单净重"
+              align="center"
+            />
+            <el-table-column
+              v-if="columns.visible('grossWeight')&&crud.query.productType !== componentTypeEnum.ASSEMBLE.V"
+              :show-overflow-tooltip="true"
+              key="grossWeight"
+              prop="grossWeight"
+              label="单毛重"
               align="center"
             />
             <el-table-column
@@ -190,6 +198,7 @@ import { ref, watch, provide, computed } from 'vue'
 import { mesProcessSluggishPM as permission } from '@/page-permission/mes'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
+import { componentTypeEnum } from '@enum-ms/mes'
 import { parseTime } from '@/utils/date'
 import pagination from '@crud/Pagination'
 import { processCategoryEnum } from '@enum-ms/mes'

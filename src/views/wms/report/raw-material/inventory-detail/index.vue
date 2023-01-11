@@ -85,6 +85,15 @@
         </template>
       </el-table-column>
       <el-table-column
+        v-if="columns.visible('weightedPriceType')"
+        prop="weightedPriceType"
+        key="weightedPriceType"
+        label="加权方式"
+        align="center"
+        min-width="100"
+        show-overflow-tooltip
+      />
+      <el-table-column
         v-if="columns.visible('heatNoAndBatchNo')"
         prop="heatNoAndBatchNo"
         key="heatNoAndBatchNo"
@@ -145,6 +154,7 @@ import crudApi from '@/api/wms/report/raw-material/inventory-detail'
 import { reportRawMaterialInventoryDetailPM as permission } from '@/page-permission/wms'
 
 import { ref } from 'vue'
+import { materialWeightingWayEnum } from '@/utils/enum/modules/wms'
 import checkPermission from '@/utils/system/check-permission'
 
 import useCRUD from '@compos/use-crud'
@@ -163,6 +173,7 @@ const optShow = {
 // 表格列数据格式转换
 const dataFormat = ref([
   ['project', ['parse-project', { onlyShortName: true }]],
+  ['weightedPriceType', ['parse-enum', materialWeightingWayEnum]],
   ['formatSpecArr', 'split']
 ])
 
@@ -175,7 +186,8 @@ const { crud, columns } = useCRUD(
     sort: ['id.desc'],
     permission: { ...permission },
     optShow: { ...optShow },
-    crudApi: { ...crudApi }
+    crudApi: { ...crudApi },
+    invisibleColumns: ['weightedPriceType']
   },
   tableRef
 )

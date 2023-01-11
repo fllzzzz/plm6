@@ -56,9 +56,9 @@ MAT_BASE_UNIT[matClsEnum.SECTION_STEEL.V] = {
   width: { unit: 'mm', precision: 0 }
 }
 MAT_BASE_UNIT[matClsEnum.STEEL_COIL.V] = {
-  measure: { unit: 'mm', precision: 0 },
+  measure: { unit: 'm', precision: 0 },
   weight: { unit: 'kg', precision: 0 },
-  length: { unit: 'mm', precision: 0 },
+  length: { unit: 'm', precision: 0 },
   width: { unit: 'mm', precision: 0 },
   thickness: { unit: 'mm', precision: 3 }
 }
@@ -233,6 +233,39 @@ export const PICKER_OPTIONS_SHORTCUTS = [
     value: () => {
       const end = new Date()
       const start = new Date(new Date().getFullYear(), 0)
+      return [start, end]
+    }
+  }
+]
+
+export const PICKER_OPTIONS_DATE = [
+  {
+    text: '最近一周',
+    value: () => {
+      const end = new Date()
+      const start = new Date()
+      start.setTime(start.getTime() - 3600 * 1000 * 24 * 7)
+      return [start, end]
+    }
+  },
+  {
+    text: '当前月份',
+    value: () => {
+      const end = new Date()
+      const start = new Date()
+      start.setDate(1)
+      start.setHours(0)
+      start.setSeconds(0)
+      start.setMinutes(0)
+      return [start, end]
+    }
+  },
+  {
+    text: '最近一个月',
+    value: () => {
+      const end = new Date()
+      const start = new Date()
+      start.setTime(start.getTime() - 3600 * 1000 * 24 * 30)
       return [start, end]
     }
   }

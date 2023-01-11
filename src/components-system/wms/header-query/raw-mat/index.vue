@@ -34,7 +34,7 @@
         @change="toQuery"
       />
       <slot name="beforeWarehouse" />
-      <factory-select v-model="queryVO.factoryId" placeholder="工厂" class="filter-item" @change="toQuery" clearable />
+      <!-- <factory-select v-model="queryVO.factoryId" placeholder="工厂" class="filter-item" @change="toQuery" clearable /> -->
       <warehouse-select
         v-if="showWarehouse"
         v-model="queryVO.warehouseId"
@@ -76,7 +76,7 @@ import { rawMatClsEnum } from '@/utils/enum/modules/classification'
 import { projectWarehouseTypeEnum, materialIsWholeEnum } from '@/utils/enum/modules/wms'
 
 import MaterialCascader from '@comp-cls/material-cascader/index.vue'
-import FactorySelect from '@/components-system/base/factory-select.vue'
+// import FactorySelect from '@/components-system/base/factory-select.vue'
 import WarehouseSelect from '@/components-system/wms/warehouse-select.vue'
 import SteelPlate from './module/steel-plate.vue'
 import SectionSteel from './module/section-steel.vue'

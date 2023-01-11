@@ -16,7 +16,7 @@
       <print-table
         api-key="productSendReceiveStorageDetail"
         v-permission="permission.detailPrint"
-        :params="{ ...props.detailQuery,...query, workshopId: props.workshopId,}"
+        :params="{ ...props.detailQuery,...query, workshopId: props.workshopId, productType: props.productType }"
         size="mini"
         type="warning"
         class="filter-item"
@@ -66,19 +66,19 @@
         <el-table-column key="length" prop="length" label="长度(mm)" align="center" show-overflow-tooltip />
         <el-table-column label="清单数(件/kg)" align="center">
           <el-table-column key="quantity" prop="quantity" label="清单数" align="center" show-overflow-tooltip />
-          <el-table-column key="mete" prop="mete" label="重量" align="center" show-overflow-tooltip />
+          <el-table-column key="totalNetWeight" prop="totalNetWeight" label="重量" align="center" show-overflow-tooltip />
         </el-table-column>
         <el-table-column label="入库(件/kg)" align="center">
           <el-table-column key="inboundQuantity" prop="inboundQuantity" label="入库数" align="center" show-overflow-tooltip />
-          <el-table-column key="inboundMete" prop="inboundMete" label="重量" align="center" show-overflow-tooltip />
+          <el-table-column key="inboundNetWeight" prop="inboundNetWeight" label="重量" align="center" show-overflow-tooltip />
         </el-table-column>
         <el-table-column label="出库(件/kg)" align="center">
           <el-table-column key="outboundQuantity" prop="outboundQuantity" label="出库数" align="center" show-overflow-tooltip />
-          <el-table-column key="outboundMete" prop="outboundMete" label="重量" align="center" show-overflow-tooltip />
+          <el-table-column key="outboundNetWeight" prop="outboundNetWeight" label="重量" align="center" show-overflow-tooltip />
         </el-table-column>
         <el-table-column label="库存(件/kg)" align="center">
           <el-table-column key="stockQuantity" prop="stockQuantity" label="库存数" align="center" show-overflow-tooltip />
-          <el-table-column key="stockMete" prop="stockMete" label="重量" align="center" show-overflow-tooltip />
+          <el-table-column key="stockNetWeight" prop="stockNetWeight" label="重量" align="center" show-overflow-tooltip />
         </el-table-column>
       </common-table>
       <!--分页组件-->
@@ -138,6 +138,9 @@ const props = defineProps({
   },
   workshopId: {
     type: Number
+  },
+  productType: {
+    type: Number
   }
 })
 
@@ -196,7 +199,7 @@ async function fetchList() {
   tableLoading.value = true
   try {
     console.log(props.detailQuery, 'props')
-    const { content = [], totalElements } = await detail({ ...props.detailQuery, ...queryPage, workshopId: props.workshopId, ...query.value })
+    const { content = [], totalElements } = await detail({ ...props.detailQuery, ...queryPage, workshopId: props.workshopId, productType: props.productType, ...query.value })
     _list = content
     setTotalPage(totalElements)
   } catch (error) {

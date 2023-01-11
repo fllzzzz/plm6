@@ -43,6 +43,7 @@
             :params="{
               projectId: props.detailData.project.id,
               monomerId: monomerId,
+              dateTime: new Date(props.dateTime).getTime(),
               areaId: areaId,
               serialNumber: serialNumber,
             }"
@@ -74,10 +75,11 @@
         <el-table-column :show-overflow-tooltip="true" prop="specification" label="规格" align="center" width="150px"></el-table-column>
         <el-table-column :show-overflow-tooltip="true" prop="material" label="材质" align="center"></el-table-column>
         <el-table-column :show-overflow-tooltip="true" prop="length" label="长度" align="center"></el-table-column>
-        <el-table-column :show-overflow-tooltip="true" prop="netWeight" label="单重" align="center"></el-table-column>
+        <el-table-column :show-overflow-tooltip="true" prop="netWeight" label="单净重" align="center"></el-table-column>
+        <el-table-column :show-overflow-tooltip="true" prop="grossWeight" label="单毛重" align="center"></el-table-column>
         <el-table-column :show-overflow-tooltip="true" prop="quantity" label="排产数" align="center"></el-table-column>
         <el-table-column :show-overflow-tooltip="true" prop="completeQuantity" label="完成数" align="center"></el-table-column>
-        <el-table-column :show-overflow-tooltip="true" prop="completeMete" label="完成量" align="center"></el-table-column>
+        <el-table-column :show-overflow-tooltip="true" prop="completeNetWeight" label="完成量" align="center"></el-table-column>
       </common-table>
       <!-- 分页 -->
       <el-pagination
@@ -117,6 +119,10 @@ const props = defineProps({
   detailData: {
     type: Object,
     default: () => {}
+  },
+  dateTime: {
+    type: String,
+    default: ''
   }
 })
 
@@ -135,6 +141,7 @@ async function showProjectDetail() {
       monomerId: monomerId.value,
       areaId: areaId.value,
       serialNumber: serialNumber.value,
+      dateTime: new Date(props.dateTime).getTime(),
       ...queryPage
     })
     setTotalPage(totalElements)

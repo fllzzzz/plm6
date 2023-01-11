@@ -46,7 +46,7 @@ import workshopSelect from '@comp-mes/workshop-select'
 import productionLineSelect from '@comp-mes/production-line-select'
 
 const defaultQuery = {
-  dateTime: undefined,
+  dateTime: new Date().getTime().toString(),
   workShopId: undefined,
   productionLineId: undefined,
   productType: componentTypeEnum.ARTIFACT.V

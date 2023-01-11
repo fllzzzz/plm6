@@ -120,6 +120,10 @@ import invoiceTypeSelect from '@/components-system/base/invoice-type-select.vue'
 import unfreezeInfo from '@/views/wms/material-freeze/raw-material/components/unfreeze-info.vue'
 import commonTitleInfo from './common-title-info.vue'
 import setPartyAInfo from './set-party-a-info.vue'
+// import useWmsConfig from '@/composables/store/use-wms-config'
+
+// 物料加权配置
+// const { materialWeightingCfg } = useWmsConfig()
 
 const emit = defineEmits(['refresh', 'update:visible'])
 
@@ -273,6 +277,7 @@ async function detailFormat(form) {
     form.list.forEach((v) => {
       if (v.boolPartyA) partyANum++
     })
+    // showAmount.value = partyANum > 0 && (materialWeightingCfg.value?.weightedType & materialWeightingWayEnum.SINGLE.V)
     showAmount.value = partyANum > 0
   } else {
     showAmount.value = false

@@ -18,7 +18,7 @@
             >
               <span class="process-way">{{ m.process?.name }}</span>
               <el-divider style="margin: 0" />
-              <span class="process-data">{{ m.quantity }}/{{ convertUnits(m.mete, 'kg', 't', DP.COM_WT__T) }}</span>
+              <span class="process-data">{{ m.quantity }}/{{ convertUnits(m.totalNetWeight, 'kg', 't', DP.COM_WT__T) }}</span>
             </div>
           </div>
         </div>
@@ -37,7 +37,7 @@
             >
               <span class="process-way">{{ m.process?.name }}</span>
               <el-divider style="margin: 0" />
-              <span class="process-data">{{ m.quantity }}/{{ convertUnits(m.mete, 'kg', 't', DP.COM_WT__T) }}</span>
+              <span class="process-data">{{ m.quantity }}/{{ convertUnits(m.totalNetWeight, 'kg', 't', DP.COM_WT__T) }}</span>
             </div>
           </div>
         </div>
@@ -56,7 +56,7 @@
             >
               <span class="process-way">{{ m.process?.name }}</span>
               <el-divider style="margin: 0" />
-              <span class="process-data">{{ m.quantity }}/{{ convertUnits(m.mete, 'kg', 't', DP.COM_WT__T) }}</span>
+              <span class="process-data">{{ m.quantity }}/{{ convertUnits(m.totalNetWeight, 'kg', 't', DP.COM_WT__T) }}</span>
             </div>
           </div>
         </div>

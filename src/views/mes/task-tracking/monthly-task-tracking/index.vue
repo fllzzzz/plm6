@@ -16,19 +16,19 @@
         style="width: 35%; cursor: pointer"
         show-summary
         :summary-method="getSummaries"
-        @current-change="monthlyTaskChange"
+        @row-click="monthlyTaskChange"
       >
         <el-table-column
-          v-if="columns.visible('month')"
+          v-if="columns.visible('months')"
           align="center"
-          key="month"
-          prop="month"
+          key="months"
+          prop="months"
           :show-overflow-tooltip="true"
           label="月份"
           width="80px"
         >
           <template v-slot="scope">
-            <span>{{ scope.row.month }}月</span>
+            <span>{{ scope.row.months }}月</span>
           </template>
         </el-table-column>
         <el-table-column
@@ -40,7 +40,7 @@
           label="排产量（件/吨）"
         >
           <template v-slot="scope">
-            <span>{{ scope.row.quantity }}/{{ (scope.row.mete / 1000).toFixed(DP.COM_WT__KG) }}</span>
+            <span>{{ scope.row.quantity }}/{{ (scope.row.totalNetWeight / 1000).toFixed(DP.COM_WT__KG) }}</span>
           </template>
         </el-table-column>
         <el-table-column v-if="columns.visible('rate')" align="center" key="rate" prop="rate" :show-overflow-tooltip="true" label="达成率" width="160px">
@@ -65,7 +65,7 @@
           label="实际完成（件/吨）"
         >
           <template v-slot="scope">
-            <span>{{ scope.row.completeQuantity }}/{{ (scope.row.completeMete / 1000).toFixed(DP.COM_WT__KG) }}</span>
+            <span>{{ scope.row.completeQuantity }}/{{ (scope.row.completeNetWeight / 1000).toFixed(DP.COM_WT__KG) }}</span>
           </template>
         </el-table-column>
       </common-table>
@@ -140,7 +140,10 @@ function monthlyTaskChange(row) {
 }
 
 CRUD.HOOK.handleRefresh = (crud, res) => {
-  res.data.content = res.data
+  res.data.content = res.data?.map(v => {
+    v.months = v.month?.split('-')[1]
+    return v
+  })
 }
 
 // 合计
@@ -166,7 +169,7 @@ function getSummaries(param) {
       const valueKeys = column.property === 'list' ? 'quantity' : column.property + 'Quantity'
       const values = data.map((item) => Number(item?.[valueKeys]))
       let valuesSum = 0
-      const valueWeightKeys = column.property === 'list' ? 'mete' : column.property + 'Mete'
+      const valueWeightKeys = column.property === 'list' ? 'totalNetWeight' : column.property + 'NetWeight'
       const valueWeight = data.map((item) => Number(item?.[valueWeightKeys] / 1000))
       let valueWeightSum = 0
       if (!values.every((value) => isNaN(value))) {
