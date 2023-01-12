@@ -78,7 +78,7 @@
           key="groups.name"
           prop="groups.name"
           :show-overflow-tooltip="true"
-          label="班组"
+          label="生产组"
           min-width="120px"
           fixed="left"
         >
@@ -91,7 +91,7 @@
           key="team.name"
           prop="team.name"
           :show-overflow-tooltip="true"
-          label="姓名"
+          label="班组"
           min-width="120px"
           fixed="left"
         >
@@ -115,14 +115,14 @@
               prop="sum"
               align="center"
               :show-overflow-tooltip="true"
-              :label="val?.split('/')[2]"
+              :label="new Date(val).getDate()"
               min-width="120"
             >
               <template v-slot="scope">
                 <div v-if="scope.row.priceList.findIndex((v) => v.dayTime == val) > -1">
                   <template v-for="day in scope.row.priceList" :key="day">
                     <template v-if="day.dayTime == val">
-                      <span>{{ day.mete }}</span>
+                      <span>{{ day.price }}</span>
                     </template>
                   </template>
                 </div>
