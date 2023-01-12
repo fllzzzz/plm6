@@ -79,7 +79,7 @@ export const showProjectSearch = [
   { component: '/mes/QHSE-manage/disclosure/index', type: pt.STEEL.V, required: false },
   { component: '/mes/QHSE-manage/quality-inspection-report/index', type: pt.STEEL.V, required: false },
   { component: '/mes/label-print/artifact/index', type: pt.STEEL.V, required: true },
-  { component: '/mes/label-print/enclosure/index', type: pt.STEEL.V, required: true },
+  { component: '/mes/label-print/part/index', type: pt.STEEL.V, required: true },
   { component: '/mes/label-print/auxiliary-material/index', type: pt.STEEL.V, required: true },
   { component: '/mes/manufactures-manage/inbound-state/artifact-dashboard/index', type: pt.STEEL.V, required: true },
   { component: '/mes/manufactures-manage/inbound-state/enclosure-dashboard/index', type: pt.STEEL.V, required: true },

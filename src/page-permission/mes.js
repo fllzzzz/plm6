@@ -274,6 +274,11 @@ export const artifactLabelPM = {
   get: ['mes_label_artifact:get'] // 构件列表
 }
 
+// 产品标签/直发件
+export const partLabelPM = {
+  get: ['mes_label_part:get'] // 直发件列表
+}
+
 // 产品标签/围护
 export const enclosureLabelPM = {
   get: ['mes_label_enclosure:get'] // 围护列表

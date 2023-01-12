@@ -1,11 +1,11 @@
 <template>
   <common-dialog
-    :title="`${component.name}-${component.serialNumber}`"
+    :title="`${component.name ? component.name + '-' + component.serialNumber : component.serialNumber}`"
     v-model:visible="dialogVisible"
     width="640px"
     :before-close="handleClose"
   >
-    <slot name="oneCode"/>
+    <slot name="oneCode" />
     <div style="position: relative">
       <span v-html="showInfo.showHtml"> </span>
       <qrcode-vue
