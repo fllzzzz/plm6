@@ -529,3 +529,13 @@ export const mesFactoryReportPM = {
   print: ['mes_factory_report:print'] // 车间报表详情打印
 }
 // --------------------------- 6.0 车间报表 end --------------------------------
+
+// --------------------------- 6.0 产线工资统计 start --------------------------------
+
+// 产线工资统计/工价调整
+export const mesWageAdjustPM = {
+  get: ['mes_wage_adjust:get'], // 工价调整列表
+  edit: ['mes_wage_adjust:edit'] // 工价调整编辑
+}
+
+// --------------------------- 6.0 车间报表 end --------------------------------
