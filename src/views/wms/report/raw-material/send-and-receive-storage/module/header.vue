@@ -87,7 +87,7 @@
 
 <script setup>
 import { exportSendAndReceiveStorageExcel } from '@/api/wms/report/raw-material/statistics'
-import { computed, inject, ref } from 'vue'
+import { computed, inject, ref, defineExpose } from 'vue'
 import { rawMatClsEnum } from '@/utils/enum/modules/classification'
 import { unitTypeEnum, orderSupplyTypeEnum } from '@/utils/enum/modules/wms'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
@@ -118,6 +118,7 @@ const defaultQuery = {
 
 const { CRUD, crud, query } = regHeader(defaultQuery)
 
+const weightedType = ref()
 const totalAmount = ref({})
 
 // 是否有显示金额权限
@@ -129,7 +130,8 @@ function disabledDate(time) {
 
 // 加载后数据处理
 CRUD.HOOK.handleRefresh = async (crud, { data }) => {
-  const { totalAmount: { beginPeriod = 0, endPeriod = 0, inbound = 0, outbound = 0 } = {}} = data
+  const { weightedType: _weightedType, totalAmount: { beginPeriod = 0, endPeriod = 0, inbound = 0, outbound = 0 } = {}} = data
+  weightedType.value = _weightedType
   totalAmount.value = {
     beginPeriod,
     endPeriod,
@@ -187,6 +189,10 @@ async function handleBasicClassChange(val) {
   crud.data = []
   crud.setColumns()
 }
+
+defineExpose({
+  weightedType
+})
 </script>
 
 <style lang="scss" scoped>

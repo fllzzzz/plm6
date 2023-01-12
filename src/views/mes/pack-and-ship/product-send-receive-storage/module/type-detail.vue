@@ -28,7 +28,7 @@
           v-if="showType==='INBOUND' || showType==='OUTBOUND'"
         />
       </div>
-      <common-table :data="list" v-loading="tableLoading" :data-format="dataFormat" show-summary :summary-method="getSummaries" :max-height="maxHeight">
+      <common-table :data="list" v-loading="tableLoading" :data-format="dataFormat" show-summary :summary-method="getSummaries" :max-height="maxHeight - 100">
         <el-table-column label="序号" type="index" align="center" width="60" />
         <el-table-column key="monomer.name" prop="monomer.name" label="单体" align="center" :show-overflow-tooltip="true" />
         <el-table-column key="area.name" prop="area.name" label="区域" align="center" :show-overflow-tooltip="true" />
@@ -94,6 +94,9 @@ const props = defineProps({
     default: () => {}
   },
   workshopId: {
+    type: Number
+  },
+  productType: {
     type: Number
   }
 })
@@ -161,7 +164,7 @@ async function fetchList() {
   let _list = []
   tableLoading.value = true
   try {
-    const { content = [], totalElements } = await artifactProductDetail({ ...props.detailQuery, workshopId: props.workshopId, ...queryPage, ...query.value, type: productSearchTypeEnum[props.showType].V })
+    const { content = [], totalElements } = await artifactProductDetail({ ...props.detailQuery, workshopId: props.workshopId, productType: props.productType, ...queryPage, ...query.value, type: productSearchTypeEnum[props.showType].V })
     _list = content
     setTotalPage(totalElements)
   } catch (error) {

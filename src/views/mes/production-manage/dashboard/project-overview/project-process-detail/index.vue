@@ -22,6 +22,21 @@
           class="filter-item"
           @change="handleProductTypeChange"
         />
+        <el-date-picker
+          v-model="date"
+          type="daterange"
+          range-separator=":"
+          size="small"
+          value-format="x"
+          :clearable="false"
+          :shortcuts="PICKER_OPTIONS_SHORTCUTS"
+          unlink-panels
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
+          style="width: 240px; margin-right: 10px"
+          class="filter-item date-item"
+          @change="handleDateChange"
+        />
       </div>
       <common-table ref="tableRef" :data="processList" :empty-text="'暂无数据'" :max-height="maxHeight" row-key="id" style="width: 100%">
         <el-table-column prop="index" label="序号" align="center" width="60px" type="index" />
@@ -30,14 +45,14 @@
             <span>{{ scope.row.name }}</span>
           </template>
         </el-table-column>
-        <el-table-column align="center" key="quantity" prop="quantity" :show-overflow-tooltip="true" label="清单数（件）">
+        <el-table-column align="center" key="quantity" prop="quantity" :show-overflow-tooltip="true" label="需生产数（件）">
           <template v-slot="scope">
             <span>{{ scope.row.quantity }}</span>
           </template>
         </el-table-column>
-        <el-table-column align="center" key="mete" prop="mete" :show-overflow-tooltip="true" label="清单量（kg）">
+        <el-table-column align="center" key="totalNetWeight" prop="totalNetWeight" :show-overflow-tooltip="true" label="需生产量（kg）">
           <template v-slot="scope">
-            <span>{{ scope.row.mete }}</span>
+            <span>{{ scope.row.totalNetWeight }}</span>
           </template>
         </el-table-column>
         <el-table-column align="center" key="completeQuantity" prop="completeQuantity" :show-overflow-tooltip="true" label="完成（件）">
@@ -68,9 +83,11 @@
 <script setup>
 import { ref, defineProps, watch, provide } from 'vue'
 import { getProcessList } from '@/api/mes/production-manage/dashboard/project-overview'
+import { PICKER_OPTIONS_SHORTCUTS } from '@/settings/config'
 import { componentTypeEnum } from '@enum-ms/mes'
 import { mesProjectOverviewPM as permission } from '@/page-permission/mes'
 import useMaxHeight from '@compos/use-max-height'
+import moment from 'moment'
 import monomerSelectAreaSelect from '@comp-base/monomer-select-area-select'
 import processDetail from '../process-detail/index.vue'
 
@@ -81,12 +98,16 @@ const monomerId = ref()
 const areaId = ref()
 const detailData = ref([])
 const dialogVisible = ref(false)
+const date = ref([moment().startOf('month').valueOf(), moment().valueOf()])
+
+const startDate = ref()
+const endDate = ref()
 
 const props = defineProps({
   processData: {
     type: Object,
-    default: () => {}
-  }
+    default: () => {},
+  },
 })
 
 watch(
@@ -100,10 +121,12 @@ watch(
 
 provide('monomerId', monomerId)
 provide('areaId', areaId)
+provide('startDate', startDate)
+provide('endDate', endDate)
 
 const { maxHeight } = useMaxHeight({
   extraBox: ['.head-container'],
-  paginate: true
+  paginate: true,
 })
 
 async function processListGet() {
@@ -112,7 +135,9 @@ async function processListGet() {
       productType: productType.value,
       monomerId: monomerId.value,
       areaId: areaId.value,
-      projectId: props.processData.id
+      projectId: props.processData.id,
+      startDate: startDate.value,
+      endDate: endDate.value,
     })
     processList.value = data
   } catch (e) {
@@ -125,6 +150,18 @@ function handleMonomerAreaChange() {
 }
 
 function handleProductTypeChange() {
+  processListGet()
+}
+
+// 时间变动
+function handleDateChange(val) {
+  if (val && val.length > 1) {
+    startDate.value = val[0]
+    endDate.value = val[1]
+  } else {
+    startDate.value = undefined
+    endDate.value = undefined
+  }
   processListGet()
 }
 

@@ -13,6 +13,14 @@
         style="width:120px;"
       />
       <project-radio-button size="small" :type="'all'" v-model="query.projectId" class="filter-item" @change="crud.toQuery" />
+      <common-radio-button
+        v-model="query.productType"
+        :options="[packTypeEnum.STRUCTURE, packTypeEnum.MACHINE_PART]"
+        type="enum"
+        size="small"
+        class="filter-item"
+        @change="crud.toQuery"
+      />
       <workshop-select
         v-model="query.workshopId"
         placeholder="请选择车间"
@@ -23,13 +31,13 @@
       />
       <el-row v-loading="summaryLoading" v-if="checkPermission(crud.permission.get)" :gutter="20" class="panel-group">
         <el-col :span="8" class="card-panel-col">
-          <Panel name="累计入库(t)" text-color="#626262" num-color="#1890ff" :endVal="(totalAmount.inboundMete)/1000 || 0"  :precision="DP.COM_WT__KG" />
+          <Panel name="累计入库(t)" text-color="#626262" num-color="#1890ff" :endVal="(totalAmount.inboundNetWeight)/1000 || 0"  :precision="DP.COM_WT__KG" />
         </el-col>
         <el-col :span="8" class="card-panel-col">
-          <Panel name="累计出库(t)" text-color="#626262" num-color="#1890ff" :endVal="(totalAmount.outboundMete)/1000 || 0" :precision="DP.COM_WT__KG" />
+          <Panel name="累计出库(t)" text-color="#626262" num-color="#1890ff" :endVal="(totalAmount.outboundNetWeight)/1000 || 0" :precision="DP.COM_WT__KG" />
         </el-col>
         <el-col :span="8" class="card-panel-col">
-          <Panel name="实时库存(t)" text-color="#626262" num-color="#1890ff" :end-val="(totalAmount.stockMete)/1000 || 0" :precision="DP.COM_WT__KG" />
+          <Panel name="实时库存(t)" text-color="#626262" num-color="#1890ff" :end-val="(totalAmount.stockNetWeight)/1000 || 0" :precision="DP.COM_WT__KG" />
         </el-col>
       </el-row>
     </div>
@@ -51,7 +59,7 @@
 <script setup>
 import { summaryData } from '@/api/mes/pack-and-ship/product-receive-send-storage'
 import { ref, watch } from 'vue'
-
+import { packTypeEnum } from '@enum-ms/mes'
 import checkPermission from '@/utils/system/check-permission'
 import { DP } from '@/settings/config'
 import workshopSelect from '@comp-mes/workshop-select'
@@ -60,6 +68,7 @@ import crudOperation from '@crud/CRUD.operation'
 import Panel from '@/components/Panel'
 
 const defaultQuery = {
+  productType: packTypeEnum.STRUCTURE.V,
   dateTime: undefined,
   projectId: undefined
 }

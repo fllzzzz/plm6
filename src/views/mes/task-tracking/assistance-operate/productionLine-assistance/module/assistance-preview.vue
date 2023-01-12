@@ -55,6 +55,8 @@
         align="center"
       />
       <el-table-column prop="specification" :show-overflow-tooltip="true" label="规格" min-width="100px" align="center" />
+      <el-table-column prop="totalNetWeight" :show-overflow-tooltip="true" label="总净重" align="center" />
+      <el-table-column prop="totalGrossWeight" :show-overflow-tooltip="true" label="总毛重" align="center" />
       <el-table-column
         v-if="crud.query.taskTypeEnum !== taskTypeENUM.MACHINE_PART.V"
         prop="length"

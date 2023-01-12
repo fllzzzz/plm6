@@ -3,7 +3,7 @@
     <template #titleAfter>
       <el-tag>项目：{{ props.detailData.project?.name }}</el-tag>
       <el-tag>产线：{{ props.detailData.workshop?.name }}>{{ props.detailData.productionLine?.name }}</el-tag>
-      <el-tag>总量：{{ props.detailData.taskQuantity }}/{{ props.detailData.taskMete }}</el-tag>
+      <el-tag>总量：{{ props.detailData.taskQuantity }}/{{ props.detailData.taskNetWeight }}</el-tag>
       <el-tag>任务单号：{{ props.detailData.scheduleOrder }}</el-tag>
     </template>
     <template #content>
@@ -75,7 +75,8 @@
             min-width="110px"
           />
           <el-table-column :show-overflow-tooltip="true" label="长度（mm）" key="length" prop="length" align="center" />
-          <el-table-column :show-overflow-tooltip="true" label="单重（kg）" key="netWeight" prop="netWeight" align="center" />
+          <el-table-column :show-overflow-tooltip="true" label="单净重（kg）" key="netWeight" prop="netWeight" align="center" />
+          <el-table-column :show-overflow-tooltip="true" label="单毛重（kg）" key="grossWeight" prop="grossWeight" align="center" />
           <el-table-column :show-overflow-tooltip="true" label="任务数" key="quantity" prop="quantity" align="center" />
           <el-table-column :show-overflow-tooltip="true" label="完成日期" key="complete" prop="completeTime" align="center">
             <template v-slot="scope">
@@ -109,7 +110,7 @@
           <el-table-column :show-overflow-tooltip="true" label="规格" key="specification" prop="specification" align="center" />
           <el-table-column :show-overflow-tooltip="true" label="长度（mm）" key="length" prop="length" align="center" />
           <el-table-column :show-overflow-tooltip="true" label="数量" key="quantity" prop="quantity" align="center" />
-          <el-table-column :show-overflow-tooltip="true" label="单重" key="netWeight" prop="netWeight" align="center" />
+          <el-table-column :show-overflow-tooltip="true" label="单净重" key="netWeight" prop="netWeight" align="center" />
           <el-table-column :show-overflow-tooltip="true" label="完成日期" key="complete" prop="completeTime" align="center">
             <template v-slot="scope">
               <span>{{ scope.row.completeTime ? parseTime(scope.row.completeTime, '{y}-{m}-{d}') : '-' }}</span>

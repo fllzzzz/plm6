@@ -142,7 +142,7 @@ async function fetchType(lastQuery) {
       content?.map((v) => {
         const _obj = {}
         if (v & componentTypeEnum.ARTIFACT.V) {
-          _obj.name = '普通零件'
+          _obj.name = '零件板'
         }
         if (v & componentTypeEnum.ASSEMBLE.V) {
           _obj.name = '翼腹板'

@@ -63,7 +63,7 @@
               <common-select
                 v-if="form.basicClass === matClsEnum.STEEL_PLATE.V"
                 v-model="scope.row.keyword"
-                :options="partKeyWordEnum.ENUM"
+                :options="[partKeyWordEnum.PL]"
                 type="enum"
                 size="small"
                 clearable

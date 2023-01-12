@@ -38,7 +38,7 @@
         </el-table-column>
         <el-table-column align="center" key="quantity" prop="quantity" :show-overflow-tooltip="true" label="排产量（件/吨）">
           <template v-slot="scope">
-            <span>{{ scope.row.quantity }}/{{ (scope.row.mete / 1000).toFixed(DP.COM_WT__KG) }}</span>
+            <span>{{ scope.row.quantity }}/{{ (scope.row.netWeight / 1000).toFixed(DP.COM_WT__KG) }}</span>
           </template>
         </el-table-column>
         <el-table-column align="center" key="rate" prop="rate" :show-overflow-tooltip="true" label="完成率" width="160px">
@@ -62,7 +62,7 @@
           label="实际完成（件/吨）"
         >
           <template v-slot="scope">
-            <span>{{ scope.row.completeQuantity }}/{{ (scope.row.completeMete / 1000).toFixed(DP.COM_WT__KG) }}</span>
+            <span>{{ scope.row.completeQuantity }}/{{ (scope.row.completeNetWeight / 1000).toFixed(DP.COM_WT__KG) }}</span>
           </template>
         </el-table-column>
       </common-table>
@@ -77,7 +77,7 @@
         @current-change="handleCurrentChange"
       />
     </div>
-    <project-detail v-model:visible="drawerVisible" :detail-data="detailData" />
+    <project-detail v-model:visible="drawerVisible" :dateTime="props.monthlyData?.month" :detail-data="detailData" />
   </div>
 </template>
 <script setup>
@@ -88,7 +88,6 @@ import usePagination from '@compos/use-pagination'
 import projectDetail from '../project-detail/index.vue'
 import { projectNameFormatter } from '@/utils/project'
 import { DP } from '@/settings/config'
-import moment from 'moment'
 
 const props = defineProps({
   monthlyData: {
@@ -123,11 +122,9 @@ const { handleSizeChange, handleCurrentChange, total, setTotalPage, queryPage } 
 async function fetchMonthly() {
   let _list = []
   try {
-    const time = moment().set('month', props.monthlyData.month - 1)._d
-    const current = new Date(time.getFullYear() + '-' + props.monthlyData.month).getTime()
     const { content = [], totalElements } = await monthlyProject({
       ...props.query,
-      dateTime: current,
+      dateTime: new Date(props.monthlyData.month).getTime(),
       ...queryPage
     })
     setTotalPage(totalElements)

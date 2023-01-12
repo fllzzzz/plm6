@@ -1,7 +1,7 @@
 <template>
   <!-- 套料文件弹窗 -->
-  <common-drawer :before-close="handleClose" size="90%" modal append-to-body v-model:visible="nestingFileVisible">
-    <template #title>
+  <common-drawer :before-close="handleClose" :show-close="true" size="90%" modal append-to-body v-model:visible="nestingFileVisible">
+  <template #titleAfter>
       <common-radio-button
         style="margin-right: 8px"
         class="filter-item"
@@ -11,8 +11,11 @@
         size="small"
         @change="handleChange"
       />
+    </template>
+    <template #titleRight>
       <export-button
-        v-show="nestingFileType === nestingFileTypeEnum.MATERIAL_LIST.V && checkPermission(permission.downloadList)"
+        v-permission="permission.downloadList"
+        v-show="nestingFileType === nestingFileTypeEnum.MATERIAL_LIST.V"
         class="filter-item"
         :fn="getMaterialListExcelFn"
         :params="{ id: props.detailData.id }"
@@ -20,7 +23,6 @@
       >
         材料清单
       </export-button>
-      <common-button size="small" @click="handleClose" v-permission="permission.closed">关闭</common-button>
     </template>
     <template #content>
       <common-table
@@ -75,7 +77,12 @@
                     </div>
                   </el-tooltip>
                 </template>
-                <el-tooltip v-if="scope.row.typesettingTypeEnum === nestingSettingTypeEnum.LOSSY.V" effect="dark" content="余料" placement="top-start">
+                <el-tooltip
+                  v-if="scope.row.typesettingTypeEnum === nestingSettingTypeEnum.LOSSY.V"
+                  effect="dark"
+                  content="余料"
+                  placement="top-start"
+                >
                   <div class="shadow" style="flex: 1"></div>
                 </el-tooltip>
               </div>
@@ -92,6 +99,11 @@
         >
           <template v-slot="scope">
             <span>{{ scope.row.typesettingAssembleTypeEnum ? materialTypeEnum.VL[scope.row.typesettingAssembleTypeEnum] : '-' }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column key="areaName" prop="areaName" :show-overflow-tooltip="true" label="区域" align="center" width="120px">
+          <template v-slot="scope">
+            <span>{{ scope.row.areaName }}</span>
           </template>
         </el-table-column>
         <el-table-column key="length" prop="length" :show-overflow-tooltip="true" label="母材长度（mm）" align="center" width="120px">
@@ -140,12 +152,33 @@
             <span>{{ scope.row.typesettingLength }}</span>
           </template>
         </el-table-column>
-        <el-table-column key="lossRate" prop="lossRate" :show-overflow-tooltip="true" label="损耗" align="center" width="70px">
+        <el-table-column key="lossRate" prop="lossRate" :show-overflow-tooltip="true" label="套料损耗" align="center" width="70px">
           <template v-slot="scope">
             <span>{{ scope.row.lossRate }}%</span>
           </template>
         </el-table-column>
-        <el-table-column  v-if="nestingFileType === nestingFileTypeEnum.NESTING_FILE.V" key="statusEnum" prop="statusEnum" :show-overflow-tooltip="true" label="状态" align="center" fixed="right" width="100px">
+        <el-table-column
+          key="kerfLossRate"
+          prop="kerfLossRate"
+          :show-overflow-tooltip="true"
+          label="原材料损耗（mm）"
+          align="center"
+          width="140px"
+        >
+          <template v-slot="scope">
+            <span>{{ scope.row.kerfLossRate }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column
+          v-if="nestingFileType === nestingFileTypeEnum.NESTING_FILE.V"
+          key="statusEnum"
+          prop="statusEnum"
+          :show-overflow-tooltip="true"
+          label="状态"
+          align="center"
+          fixed="right"
+          width="100px"
+        >
           <template v-slot="scope">
             <el-tag :type="typeEnum.V[scope.row.statusEnum].T">{{ typeEnum.VL[scope.row.statusEnum] }}</el-tag>
           </template>
@@ -163,8 +196,12 @@ import { nestingProgress } from '@/api/mes/craft-manage/section-steel/nesting-se
 import { getMaterialList, getMaterialListExcelFn } from '@/api/mes/craft-manage/section-steel/nesting-result'
 import { ref, defineProps, defineEmits } from 'vue'
 import { mesNestingResultPM as permission } from '@/page-permission/mes'
-import checkPermission from '@/utils/system/check-permission'
-import { nestingFileTypeEnum, mesBuildingTypeSettingAssembleTypeEnum as materialTypeEnum, nestingSettingTypeEnum, MesBuildingTypesettingStatusEnum as typeEnum } from '@enum-ms/mes'
+import {
+  nestingFileTypeEnum,
+  mesBuildingTypeSettingAssembleTypeEnum as materialTypeEnum,
+  nestingSettingTypeEnum,
+  MesBuildingTypesettingStatusEnum as typeEnum
+} from '@enum-ms/mes'
 import ExportButton from '@comp-common/export-button/index.vue'
 
 const nestingProgressData = ref([])
@@ -205,6 +242,7 @@ async function nestingResultGet() {
           v.assembleLength += m.length
         }
       })
+      v.areaName = v.areaName?.join(',')
     })
     nestingProgressData.value = content[0].typesettingDTOS
   } catch (error) {
@@ -220,6 +258,9 @@ async function nestingListGet() {
     resultLoading.value = true
     const { content } = await getMaterialList({ id: props.detailData.id })
     console.log(content)
+    content[0].typesettingDTOS.forEach((v) => {
+      v.areaName = v.areaName?.join(',')
+    })
     nestingProgressData.value = content[0].typesettingDTOS
   } catch (error) {
     console.log('获取材料清单失败')

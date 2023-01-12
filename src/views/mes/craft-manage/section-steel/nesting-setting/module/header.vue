@@ -20,7 +20,7 @@
           areaMultiple
           :project-id="query.projectId"
           @monomerChange="fetchOtherCondition"
-          @areaChange="crud.toQuery"
+          @areaChange="areaChange"
         />
       </el-form-item>
       <el-form-item label="生产模式" class="form-label-require">
@@ -152,7 +152,7 @@
     </template>
     <template #viewLeft>
       <slot name="viewLeft" />
-      <common-button v-if="isTradition" v-permission="permission.noNestingDetail" class="filter-item" type="success" size="mini" icon="el-icon-view" @click="noNestingVisible = true">
+      <common-button v-if="isTradition" v-permission="permission.noNestingDetail"  :disabled="!query.projectId" class="filter-item" type="success" size="mini" icon="el-icon-view" @click="noNestingVisible = true">
         查看【无需套料清单】
       </common-button>
     </template>
@@ -224,6 +224,12 @@ watchEffect(() => {
   }
 })
 
+function areaChange() {
+  query.areaIds = query.ids ? query.ids.join(',') : undefined
+  fetchOtherCondition()
+  crud.toQuery()
+}
+
 function handleProductionLineTypeChange(val) {
   query.structureClassId = undefined
   query.specPrefix = undefined
@@ -244,7 +250,7 @@ async function fetchOtherCondition() {
     const data = await getCondition({
       projectId: query.projectId,
       monomerId: query.monomerId,
-      ids: query.ids
+      areaIds: query.ids ? query.ids.join(',') : undefined
     })
     conditionInfo.value = data
     crud.toQuery()

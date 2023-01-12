@@ -181,7 +181,7 @@ defineExpose({
 
 <style lang="scss" scoped>
 .tree-container {
-    height: 60vh;
+    height: 76vh;
     overflow-y: auto;
     box-shadow: inset -5px 3px 20px 0px rgba(195, 191, 191, 0.08);
     .filter-tree {

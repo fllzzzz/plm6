@@ -21,7 +21,7 @@
       <el-form-item label="加权方式">
         <common-radio v-model="form.weightedType" :options="materialWeightingWayEnum.ENUM" type="enum" />
         <span style="color: red" v-if="dataSource?.boolUpdate">
-          （次月修改为：{{ materialWeightingWayEnum.VL[form.weightedTipType] }}）
+          （次月修改为：{{ materialWeightingWayEnum.VL[dataSource.weightedTipType] }}）
         </span>
       </el-form-item>
       <el-form-item label-width="0">

@@ -18,16 +18,16 @@ export default {
           hidden: false,
           name: 'bimModelShow',
           alwaysShow: false,
-          meta: { title: '单体模型展示', icon: 'project', noCache: true }
-        },
-        {
-          path: '/bim/integration-model-show',
-          component: '/bim/integration-model-show/index',
-          hidden: false,
-          name: 'bimIntegrationModelShow',
-          alwaysShow: false,
-          meta: { title: '集成模型展示', icon: 'project', noCache: true }
+          meta: { title: '模型展示', icon: 'project', noCache: true }
         }
+        // {
+        //   path: '/bim/integration-model-show',
+        //   component: '/bim/integration-model-show/index',
+        //   hidden: false,
+        //   name: 'bimIntegrationModelShow',
+        //   alwaysShow: false,
+        //   meta: { title: '集成模型展示', icon: 'project', noCache: true }
+        // }
       ]
     }
   ]

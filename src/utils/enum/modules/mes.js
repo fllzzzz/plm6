@@ -162,6 +162,7 @@ constantize(machinePartNestingStatusEnum)
 const packTypeEnum = {
   STRUCTURE: { L: '结构', SL: '结构', K: 'STRUCTURE', V: componentTypeEnum.ARTIFACT.V, T: '' },
   ENCLOSURE: { L: '围护', SL: '围护', K: 'ENCLOSURE', V: componentTypeEnum.ENCLOSURE.V, T: 'warning' },
+  MACHINE_PART: { L: '直发件', SL: '直发件', K: 'MACHINE_PART', V: componentTypeEnum.MACHINE_PART.V, T: 'danger' },
   AUXILIARY_MATERIAL: { L: '辅材', SL: '配套件', K: 'AUXILIARY_MATERIAL', V: componentTypeEnum.AUXILIARY_MATERIAL.V, T: 'success' }
 }
 constantize(packTypeEnum)
@@ -521,6 +522,14 @@ const structureOrderTypeEnum = {
 }
 constantize(structureOrderTypeEnum)
 
+// 配套件配置类型
+const auxiliaryMaterialTypeEnum = {
+  PEG: { L: '栓钉', K: 'PEG', V: 1 << 0 },
+  SLEEVE: { L: '套筒', K: 'SLEEVE', V: 1 << 1 },
+  OTHER: { L: '其他', K: 'OTHER', V: 1 << 2 }
+}
+constantize(auxiliaryMaterialTypeEnum)
+
 export {
   teamTypeEnum,
   teamAttributeEnum,
@@ -586,7 +595,8 @@ export {
   sortingListEnum,
   productSearchTypeEnum,
   drillListEnum,
-  structureOrderTypeEnum
+  structureOrderTypeEnum,
+  auxiliaryMaterialTypeEnum
 }
 
 export default {
@@ -654,5 +664,6 @@ export default {
   sortingListEnum,
   productSearchTypeEnum,
   drillListEnum,
-  structureOrderTypeEnum
+  structureOrderTypeEnum,
+  auxiliaryMaterialTypeEnum
 }
