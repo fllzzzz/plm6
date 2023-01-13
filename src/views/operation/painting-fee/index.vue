@@ -67,11 +67,9 @@ import ExcelExportButton from '@comp-common/excel-export-button/index.vue'
 
 const year = ref(parseTime(new Date(), '{y}'))
 const paintingList = ref([])
-// const paintingExcelList = ref([])
 
 onMounted(() => {
   fetchPaintingFee()
-  // fetchExcelList()
 })
 async function fetchPaintingFee() {
   try {
@@ -87,15 +85,6 @@ async function fetchPaintingFee() {
     console.log('获取涂装费列表失败', error)
   }
 }
-
-// async function fetchExcelList() {
-//   try {
-//     paintingExcelList.value = (await getPaintingFeeListFn({ year: year.value })) || []
-//     console.log(paintingExcelList.value, 'paintingExcelList.value')
-//   } catch (error) {
-//     console.log('获取国标', error)
-//   }
-// }
 
 function disabledDate(time) {
   return time > new Date()

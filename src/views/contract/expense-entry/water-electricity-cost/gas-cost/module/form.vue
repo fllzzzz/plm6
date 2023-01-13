@@ -109,16 +109,14 @@ const rules = {
   totalAmount: [{ required: true, message: '请输入费用总额', trigger: 'blur' }]
 }
 
-CRUD.HOOK.beforeToAdd = (crud, form) => {
+CRUD.HOOK.beforeToAdd = async (crud, form) => {
   form.year = crud.query.year
-  form.accountingUnit = prop.accountingUnit
+  form.accountingUnit = crud.data[0]?.accountingUnit
   if (!form.accountingUnit) {
-    ElMessage.error('请到科目管理里面配置该' + prop.gasType + '气体的计量单位')
+    ElMessage.error('请到科目管理里面配置对应新增的气体的计量单位')
     return false
   }
 }
-// 编辑之前
-CRUD.HOOK.beforeToEdit = (crud, form) => {}
 
 // 处理刷新数据
 CRUD.HOOK.beforeToQuery = async () => {}
