@@ -90,7 +90,7 @@
       </el-table-column>
       <el-table-column align="center" label="操作">
         <template v-slot="scope">
-          <udOperation :data="scope.row" />
+          <udOperation :data="scope.row" :disabledEdit="!scope.row.boolStatus" :disabledDel="!scope.row.boolStatus"/>
         </template>
       </el-table-column>
     </common-table>

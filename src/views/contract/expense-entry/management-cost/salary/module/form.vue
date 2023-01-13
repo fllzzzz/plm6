@@ -45,8 +45,8 @@
           />
         </el-form-item>
         <el-form-item label="附件：" prop="attachments">
-          <upload-btn ref="uploadRef" v-model:files="form.attachments" :file-classify="fileClassifyEnum.CONTRACT_ATT.V" :limit="1" />
-          <template v-if="form.attachments?.length > 0">
+          <upload-btn ref="uploadRef" v-model:files="form.attachmentFiles" :file-classify="fileClassifyEnum.CONTRACT_ATT.V" :limit="1"  :accept="'.pdf,.jpg,.jpeg,.png'"/>
+          <template v-if="form.attachments?.length > 0 && (!form.attachmentFiles || form.attachmentFiles.length===0)">
             <div v-for="item in form.attachments" :key="item.id">
               {{ item.name }}
               <export-button :params="{ id: item.id }" />
@@ -77,6 +77,7 @@ const defaultForm = {
   id: undefined,
   month: undefined,
   employeeQuantity: undefined,
+  attachmentFiles: [],
   totalWage: undefined
 }
 
@@ -104,7 +105,7 @@ CRUD.HOOK.beforeToEdit = () => {
 CRUD.HOOK.beforeSubmit = async () => {
   form.wageType = prop.query.wageType
   form.year = prop.query.year
-  crud.form.attachmentIds = crud.form.attachments ? crud.form.attachments.map((v) => v.id) : undefined
+  crud.form.attachmentIds = crud.form.attachmentFiles ? crud.form.attachmentFiles.map((v) => v.id) : crud.form.attachmentIds
 }
 </script>
 

@@ -20,7 +20,7 @@
     <div class="form">
       <el-form ref="formRef" :model="form" :rules="rules" size="small" label-width="140px" class="demo-form">
         <el-form-item label="名称：" prop="name">
-          <el-input ref="saveTagInput" v-model="form.name" placeholder="输入名称" style="width: 270px" />
+          <el-input ref="saveTagInput" v-model="form.name" placeholder="输入名称" style="width: 270px" maxlength="50" />
         </el-form-item>
         <el-form-item label="原值（元）：" prop="originalValue">
           <el-input-number
@@ -42,7 +42,7 @@
             :precision="1"
             :step="0.1"
             :min="0"
-            :max="9999999999"
+            :max="1000"
           />
         </el-form-item>
         <el-form-item label="净残值率（%）：" prop="residualValueRate">
