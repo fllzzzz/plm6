@@ -122,7 +122,7 @@ async function fetchMainFee() {
     detailData.value = content || []
     setTotalPage(totalElements)
   } catch (error) {
-    console.log('折旧费用', error)
+    console.log('主材费用', error)
   }
 }
 </script>
