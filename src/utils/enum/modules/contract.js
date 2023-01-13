@@ -307,6 +307,51 @@ const orderSourceTypeEnum = {
 }
 constantize(orderSourceTypeEnum)
 
+// 折旧类型
+const depreciationTypeEnum = {
+  PLANT: { L: '厂房折旧', K: 'PLANT', V: 1 << 0 },
+  DEVICE: { L: '设备折旧', K: 'DEVICE', V: 1 << 1 }
+}
+constantize(depreciationTypeEnum)
+
+// 费用类型
+const costTypeEnum = {
+  ELECTRIC_COST: { L: '电费', K: 'ELECTRIC_COST', V: 1 << 1 },
+  WATER_COST: { L: '水费', K: 'WATER_COST', V: 1 << 0 }
+  // GAS_COST: { L: '气体', K: 'GAS_COST', V: 1 << 2 }
+}
+constantize(costTypeEnum)
+
+// 用电类型
+const usedElectricityTypeEnum = {
+  INDUSTRY_ELECTRIC: { L: '工业用电', K: 'INDUSTRY_ELECTRIC', V: 1 << 0 },
+  CIVIL_ELECTRIC: { L: '民用用电', K: 'CIVIL_ELECTRIC', V: 1 << 1 }
+}
+constantize(usedElectricityTypeEnum)
+
+// 气体类型
+const gasTypeEnum = {
+  GAS_O2: { L: '氧气', K: 'GAS_O2', V: 1 << 0 },
+  GAS_C2H2: { L: '乙炔', K: 'GAS_C2H2', V: 1 << 1 },
+  GAS_C3H8: { L: '丙烷', K: 'GAS_C3H8', V: 1 << 2 }
+}
+constantize(gasTypeEnum)
+
+// 时间类型
+const timeTypeEnum = {
+  ALL_YEAR: { L: '全年', K: 'ALL_YEAR', V: 1 << 0 },
+  CURRENT_MONTH: { L: '当月', K: 'CURRENT_MONTH', V: 1 << 1 }
+}
+constantize(timeTypeEnum)
+
+// 不同人员类型工资
+const managementSalaryTypeEnum = {
+  MANAGEMENT_SALARY: { L: '管理人员工资', K: 'MANAGEMENT_SALARY', V: 1 << 0 },
+  PRODUCTION_SALARY: { L: '生产人员工资', K: 'PRODUCTION_SALARY', V: 1 << 1 }
+  // OTHER_SALARY: { L: '其他工资', K: 'OTHER_SALARY', V: 1 << 2 }
+}
+constantize(managementSalaryTypeEnum)
+
 export {
   projectStatusEnum, // 项目状态
   projectTypeEnum, // 项目类型
@@ -342,7 +387,13 @@ export {
   pricingMannerEnum,
   subOrderSettleEnum,
   subOrderStatusEnum,
-  orderSourceTypeEnum
+  orderSourceTypeEnum,
+  depreciationTypeEnum,
+  costTypeEnum,
+  usedElectricityTypeEnum,
+  gasTypeEnum,
+  timeTypeEnum,
+  managementSalaryTypeEnum
 }
 
 export default {
@@ -380,5 +431,11 @@ export default {
   pricingMannerEnum,
   subOrderSettleEnum,
   subOrderStatusEnum,
-  orderSourceTypeEnum
+  orderSourceTypeEnum,
+  depreciationTypeEnum, // 折旧类型
+  costTypeEnum, // 费用类型
+  usedElectricityTypeEnum, // 用电类型
+  gasTypeEnum, // 气体类型
+  timeTypeEnum, // 时间类型
+  managementSalaryTypeEnum // 不同人员类型工资
 }

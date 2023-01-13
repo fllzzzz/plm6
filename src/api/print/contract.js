@@ -238,6 +238,89 @@ export function warehouseRecord(params) {
   })
 }
 
+/**
+ * 电费
+ */
+export function electricRecord(params) {
+  return request({
+    url: '/api/contract/water-electricity/print',
+    method: 'get',
+    params
+  })
+}
+
+/**
+ * 水费
+ */
+export function waterRecord(params) {
+  return request({
+    url: '/api/contract/water-electricity/print',
+    method: 'get',
+    params
+  })
+}
+
+/**
+ * 气体统计
+ */
+export function gasRecord(params) {
+  return request({
+    url: '/api/contract/gas-summary/print',
+    method: 'get',
+    params
+  })
+}
+
+/**
+ * 费用报销
+ */
+export function expenseReimburseList(params) {
+  return request({
+    url: '/api/contract/expense-reimburse/print',
+    method: 'get',
+    params
+  })
+}
+
+/**
+ * 人员工资
+ */
+export function managementSalaryList(params) {
+  return request({
+    url: '/api/contract/wage-summary/print',
+    method: 'get',
+    params
+  })
+}
+
+/**
+ * 物业费用
+ */
+export function propertyFeeList(params) {
+  return request({
+    url: '/api/contract/property-fee/print',
+    method: 'get',
+    params
+  })
+}
+
+// 业财报表/主材费清单
+export function mainMaterialList(params) {
+  return request({
+    url: '',
+    method: 'get',
+    params
+  })
+}
+// 业财报表/人工费清单
+export function manualList(params) {
+  return request({
+    url: '',
+    method: 'get',
+    params
+  })
+}
+
 export default {
   contractLedger, // 合同台账（合同登记表）
   collectionLedger, // 收款记录
@@ -257,5 +340,14 @@ export default {
   happenedDetail, // 项目发运详情
   transactionRecord, // 客户交易记录
   saleOrderTracking, // 订单跟踪列表
-  warehouseRecord // 入库记录
+  warehouseRecord, // 入库记录
+  electricRecord, // 电费
+  waterRecord, // 水费
+  gasRecord, // 气体统计
+  expenseReimburseList, // 费用报销
+  managementSalaryList, // 人员工资清单
+  propertyFeeList, // 物业费用清单
+
+  mainMaterialList, // 主材费清单
+  manualList // 人工费
 }
