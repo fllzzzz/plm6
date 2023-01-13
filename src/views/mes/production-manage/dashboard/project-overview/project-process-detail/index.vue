@@ -11,7 +11,6 @@
           needConvert
           clearable
           :project-id="props.processData.id"
-          @change="handleMonomerAreaChange"
         />
         <common-radio-button
           v-model="productType"
@@ -20,7 +19,6 @@
           type="enum"
           size="small"
           class="filter-item"
-          @change="handleProductTypeChange"
         />
         <el-date-picker
           v-model="date"
@@ -38,7 +36,15 @@
           @change="handleDateChange"
         />
       </div>
-      <common-table ref="tableRef" :data="processList" :empty-text="'暂无数据'" :max-height="maxHeight" row-key="id" style="width: 100%">
+      <common-table
+        ref="tableRef"
+        v-loading="tableLoading"
+        :data="processList"
+        :empty-text="'暂无数据'"
+        :max-height="maxHeight"
+        row-key="id"
+        style="width: 100%"
+      >
         <el-table-column prop="index" label="序号" align="center" width="60px" type="index" />
         <el-table-column align="center" key="name" prop="name" :show-overflow-tooltip="true" label="涉及工序" width="100px">
           <template v-slot="scope">
@@ -65,7 +71,7 @@
             <el-progress
               :text-inside="true"
               :stroke-width="26"
-              :percentage="((scope.row.completeQuantity / scope.row.quantity) * 100).toFixed(2)"
+              :percentage="Number(((scope.row.completeQuantity / scope.row.quantity) * 100).toFixed(2))"
               status="success"
             />
           </template>
@@ -93,6 +99,7 @@ import processDetail from '../process-detail/index.vue'
 
 const tableRef = ref()
 const processList = ref([])
+const tableLoading = ref(false)
 const productType = ref()
 const monomerId = ref()
 const areaId = ref()
@@ -106,16 +113,14 @@ const endDate = ref()
 const props = defineProps({
   processData: {
     type: Object,
-    default: () => {},
-  },
+    default: () => {}
+  }
 })
 
 watch(
-  () => props.processData.id,
-  (val) => {
-    if (val) {
-      processListGet()
-    }
+  [() => props.processData?.id, () => monomerId.value, () => areaId.value, () => productType.value],
+  () => {
+    processListGet()
   }
 )
 
@@ -126,31 +131,28 @@ provide('endDate', endDate)
 
 const { maxHeight } = useMaxHeight({
   extraBox: ['.head-container'],
-  paginate: true,
+  paginate: true
 })
 
 async function processListGet() {
+  if (!props.processData?.id) return
+  processList.value = []
   try {
+    tableLoading.value = true
     const data = await getProcessList({
       productType: productType.value,
       monomerId: monomerId.value,
       areaId: areaId.value,
       projectId: props.processData.id,
       startDate: startDate.value,
-      endDate: endDate.value,
+      endDate: endDate.value
     })
     processList.value = data
   } catch (e) {
     console.log('获取项目下的工序清单', e)
+  } finally {
+    tableLoading.value = false
   }
-}
-
-function handleMonomerAreaChange() {
-  processListGet()
-}
-
-function handleProductTypeChange() {
-  processListGet()
 }
 
 // 时间变动
