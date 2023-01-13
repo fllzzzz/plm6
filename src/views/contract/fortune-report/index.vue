@@ -212,7 +212,7 @@ function showSettlementDetail(row) {
 // 成本页面详情
 function showCostDetail(row) {
   drawerVisible.value = true
-  detailRow.value = row
+  detailRow.value = row.sourceRow
 }
 
 CRUD.HOOK.handleRefresh = (crud, res) => {

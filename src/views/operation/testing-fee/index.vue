@@ -11,18 +11,19 @@
           class="filter-item"
           format="YYYY"
           value-format="YYYY"
-          clearable
+          :clearable="false"
           :disabled-date="disabledDate"
+          @change="fetchTestingFee"
         />
-        <project-cascader v-model="projectId" class="filter-item" />
+        <project-cascader v-model="projectId" class="filter-item" @change="fetchTestingFee" />
       </div>
       <div style="float: right">
-        <export-button class="filter-item"> 检测费清单 </export-button>
+        <export-button :fn="downloadTestingFee" :params="{ projectId: projectId, year: year }"> 检测费清单 </export-button>
       </div>
     </div>
     <common-table
       ref="tableRef"
-      :data="testingList"
+      :data="testingFeeList"
       :empty-text="'暂无数据'"
       :max-height="maxHeight"
       row-key="id"
@@ -31,55 +32,136 @@
       :summary-method="getSummaries"
     >
       <el-table-column type="index" label="序号" prop="indx" align="center" />
-      <el-table-column label="项目" prop="projectName" align="center" min-width="160px" />
-      <el-table-column label="产量（吨）" prop="production" align="center" />
-      <el-table-column label="原材料复检" prop="rawMaterialReinspection" align="center" />
-      <el-table-column label="焊接试板" prop="weldTestPlates" align="center" />
-      <el-table-column label="抗滑移试验" prop="antiSlipTest" align="center" />
-      <el-table-column label="试件加工" prop="specimenProcessing" align="center" />
-      <el-table-column label="焊缝探伤" prop="weldFlawDetection" align="center" />
-      <el-table-column label="合计" prop="totalAmount" align="center" />
-      <el-table-column label="平均检测费（元/吨）" prop="averageTestingFee" align="center" />
+      <el-table-column
+        key="project"
+        prop="project"
+        :show-overflow-tooltip="true"
+        label="项目"
+        min-width="120"
+      >
+        <template v-slot="scope">
+          <span>{{ projectNameFormatter(scope.row) }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="产量（吨）" prop="capacity" align="center">
+        <template v-slot="scope">
+          <span>{{ toThousand(scope.row.capacity) }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column v-for="item in itemKeyArr" :label="item.name" :prop="item.key" :key="item.key" align="center">
+        <template v-slot="scope">
+          <span>{{ toThousand(scope.row[item.key]) }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="合计" prop="totalAmount" align="center">
+        <template v-slot="scope">
+          <span>{{ toThousand(scope.row.totalAmount) }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="平均检测费（元/吨）" prop="averageTestingFee" align="center">
+      <template v-slot="scope">
+          <span>{{ toThousand(scope.row.averageTestingFee) }}</span>
+        </template>
+      </el-table-column>
     </common-table>
+    <!--分页组件-->
+    <el-pagination
+      :total="total"
+      :current-page="queryPage.pageNumber"
+      :page-size="queryPage.pageSize"
+      style="margin-top: 8px"
+      layout="total, prev, pager, next, sizes"
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
+    />
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
-// import crudApi from ''
+import { ref } from 'vue'
+import { getTestingFee, downloadTestingFee } from '@/api/operation/testing-fee'
+
 import useMaxHeight from '@compos/use-max-height'
 import { parseTime } from '@/utils/date'
-import { tableSummary } from '@/utils/el-extra'
+import useDict from '@compos/store/use-dict'
+import { projectNameFormatter } from '@/utils/project'
+import { toThousand } from '@data-type/number'
+
+import usePagination from '@compos/use-pagination'
 import projectCascader from '@comp-base/project-cascader'
 import ExportButton from '@comp-common/export-button/index.vue'
 
 const year = ref(parseTime(new Date(), '{y}'))
 const projectId = ref()
-// const testingFeeList = ref([])
+const testingFeeList = ref([])
+const dict = useDict(['testing_fee_type'])
+const itemKeyArr = ref([])
 
 const tableRef = ref()
 
-// onMounted(() => {
-//   fetchTestingFee()
-// })
-// async function fetchTestingFee() {
-//   const { content } = await getTestingFee({
-//     year: year.value,
-//     projectId: projectId.value
-//   })
-//   testingFeeList.value = content || []
-// }
+const { handleSizeChange, handleCurrentChange, total, setTotalPage, queryPage } = usePagination({ fetchHook: fetchTestingFee })
+
+fetchTestingFee()
+
+async function fetchTestingFee() {
+  try {
+    itemKeyArr.value = []
+    const { content, totalElements } = await getTestingFee({
+      year: year.value,
+      projectId: projectId.value,
+      ...queryPage
+    })
+    content.map(v => {
+      v.totalAmount = 0
+      for (const i in v.checkType) {
+        v['fee_' + i] = v.checkType[i]
+        v.totalAmount += v.checkType[i]
+        if (itemKeyArr.value.findIndex(val => v.key === ('fee_' + i)) < 0) {
+          itemKeyArr.value.push({
+            key: 'fee_' + i,
+            name: dict.value?.testing_fee_type.find(k => k.id === Number(i)).label
+          })
+        }
+      }
+      v.averageTestingFee = v.capacity ? v.totalAmount / v.capacity : v.totalAmount
+      return v
+    })
+    testingFeeList.value = content || []
+    setTotalPage(totalElements)
+  } catch (error) {
+    console.log('检测费用', error)
+  }
+}
 
 function disabledDate(time) {
   return time > new Date()
 }
 
-// 合计
+//  合计
 function getSummaries(param) {
-  return tableSummary(param, {
-    props: [''],
-    toThousandFields: ['']
+  const { columns, data } = param
+  const sums = []
+  columns.forEach((column, index) => {
+    if (index === 0) {
+      sums[index] = '合计'
+      return
+    }
+    if (column.property !== 'project') {
+      const values = data.map((item) => Number(item[column.property]))
+      if (!values.every((value) => isNaN(value))) {
+        sums[index] = values.reduce((prev, curr) => {
+          const value = Number(curr)
+          if (!isNaN(value)) {
+            return prev + curr
+          } else {
+            return prev
+          }
+        }, 0)
+        sums[index] = sums[index] ? toThousand(sums[index]) : 0
+      }
+    }
   })
+  return sums
 }
 
 const { maxHeight } = useMaxHeight({

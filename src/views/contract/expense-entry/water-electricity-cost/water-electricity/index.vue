@@ -185,7 +185,7 @@ function getSummaries(param) {
 CRUD.HOOK.beforeToQuery = () => {}
 CRUD.HOOK.handleRefresh = (crud, res) => {
   res.data.content = res.data.content.map((v) => {
-    v.averageValue = v.totalAmount / v.usedMete
+    v.averageValue = v.totalAmount && v.usedMete ? (v.totalAmount / v.usedMete).toFixed(2) : 0
     return v
   })
 }

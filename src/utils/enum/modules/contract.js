@@ -352,6 +352,13 @@ const managementSalaryTypeEnum = {
 }
 constantize(managementSalaryTypeEnum)
 
+// 主材辅材
+const mainAuxiliaryTypeEnum = {
+  MAIN: { L: '主材', K: 'MAIN', V: 7 },
+  AUXILIARY: { L: '辅材', K: 'AUXILIARY', V: 8 }
+}
+constantize(mainAuxiliaryTypeEnum)
+
 export {
   projectStatusEnum, // 项目状态
   projectTypeEnum, // 项目类型
@@ -393,7 +400,8 @@ export {
   usedElectricityTypeEnum,
   gasTypeEnum,
   timeTypeEnum,
-  managementSalaryTypeEnum
+  managementSalaryTypeEnum,
+  mainAuxiliaryTypeEnum
 }
 
 export default {
@@ -437,5 +445,6 @@ export default {
   usedElectricityTypeEnum, // 用电类型
   gasTypeEnum, // 气体类型
   timeTypeEnum, // 时间类型
-  managementSalaryTypeEnum // 不同人员类型工资
+  managementSalaryTypeEnum, // 不同人员类型工资
+  mainAuxiliaryTypeEnum
 }

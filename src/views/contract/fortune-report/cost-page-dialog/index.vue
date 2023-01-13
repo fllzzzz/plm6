@@ -11,27 +11,38 @@
       <div style="display: flex">
         <div style="width: 30%">
           <!--表格渲染-->
+          <el-divider><span class="title">直接费用</span></el-divider>
           <common-table
-            ref="tableRef"
-            :max-height="maxHeight"
+            ref="directRef"
             highlight-current-row
-            :data="productionLineData"
-            return-source-data
+            :data="directCostList"
             style="width: 100%"
             row-key="id"
+            :data-format="dataFormat"
             @row-click="handleRowChange"
           >
             <el-table-column prop="index" label="序号" align="center" width="60" type="index" />
-            <el-table-column prop="name" key="name" label="项目" align="center">
+            <el-table-column prop="name" key="name" label="项目" align="center" />
+            <el-table-column prop="amount" key="amount" label="金额（元）" align="center" />
+            <el-table-column prop="rate" key="rate" label="占比" align="center">
               <template v-slot="scope">
-                <span>{{ scope.row.name }}</span>
+                <span>{{ scope.row.rate }}%</span>
               </template>
             </el-table-column>
-            <el-table-column prop="amount" key="amount" label="金额（元）" align="center">
-              <template v-slot="scope">
-                <span>{{ toThousand(scope.row.amount) }}</span>
-              </template>
-            </el-table-column>
+          </common-table>
+          <el-divider><span class="title">间接费用</span></el-divider>
+          <common-table
+            ref="indirectRef"
+            highlight-current-row
+            :data="indirectCostList"
+            style="width: 100%"
+            row-key="id"
+            :data-format="dataFormat"
+            @row-click="handleRowChange"
+          >
+            <el-table-column prop="index" label="序号" align="center" width="60" type="index" />
+            <el-table-column prop="name" key="name" label="项目" align="center" />
+            <el-table-column prop="amount" key="amount" label="金额（元）" align="center" />
             <el-table-column prop="rate" key="rate" label="占比" align="center">
               <template v-slot="scope">
                 <span>{{ scope.row.rate }}%</span>
@@ -41,17 +52,9 @@
         </div>
         <div style="border-right: 1px solid #ededed; margin: 0 20px; height: calc(100vh - 180px)"></div>
         <div style="flex: 1">
-          <div v-if="!costTypeData.id" class="my-code" style="width: 100%">*点击左侧表格行查看详情</div>
-          <div v-if="costTypeData.id" style="width: 100%">
-            <main-material-fee v-if="costTypeData.name === '主材费'" :cost-type-data="costTypeData" />
-            <labor-fee v-else-if="costTypeData.name === '人工费'" :cost-type-data="costTypeData" />
-            <auxiliary-material-fee v-else-if="costTypeData.name === '辅材费'" :cost-type-data="costTypeData" />
-            <water-electric-fee v-else-if="costTypeData.name === '水电费'" :cost-type-data="costTypeData" />
-            <depreciation-fee v-else-if="costTypeData.name === '折旧费'" :cost-type-data="costTypeData" />
-            <management-fee v-else-if="costTypeData.name === '管理费'" :cost-type-data="costTypeData" />
-            <shipping-fee v-else-if="costTypeData.name === '运输费'" :cost-type-data="costTypeData" />
-            <testing-fee v-else-if="costTypeData.name === '检测费'" :cost-type-data="costTypeData" />
-            <subcontracting-fee v-else-if="costTypeData.name === '分包费'" :cost-type-data="costTypeData" />
+          <div v-if="!costTypeData.key" class="my-code">*点击左侧表格行查看详情</div>
+          <div v-if="costTypeData.key">
+            <component :is="currentView" ref="detailRef" :cost-type-data="costTypeData" />
           </div>
         </div>
       </div>
@@ -61,9 +64,7 @@
 
 <script setup>
 import useVisible from '@compos/use-visible'
-import useMaxHeight from '@compos/use-max-height'
-import { toThousand } from '@data-type/number'
-import { defineProps, defineEmits, ref } from 'vue'
+import { defineProps, defineEmits, ref, watch, computed } from 'vue'
 import mainMaterialFee from './module/main-material-fee.vue'
 import laborFee from './module/labor-fee.vue'
 import auxiliaryMaterialFee from './module/auxiliary-material-fee.vue'
@@ -75,7 +76,26 @@ import testingFee from './module/testing-fee.vue'
 import subcontractingFee from './module/subcontracting-fee.vue'
 
 const costTypeData = ref({})
+const detailRef = ref()
+const directRef = ref()
+const indirectRef = ref()
+const directCostList = ref([
+  { key: 'mainMaterialFee', name: '主材费', components: mainMaterialFee },
+  { key: 'laborFee', name: '人工费', components: laborFee },
+  { key: 'auxiliaryMaterialFee', name: '辅材费', components: auxiliaryMaterialFee },
+  { key: 'transportationFee', name: '运输费', components: shippingFee },
+  { key: 'testingFee', name: '检测费', components: testingFee },
+  { key: 'subFee', name: '分包费', components: subcontractingFee },
+  { key: 'projectManagementFee', name: '项目管理费', components: mainMaterialFee }
+])
+const indirectCostList = ref([
+  { key: 'waterElectricityGasFee', name: '水电费', components: waterElectricFee },
+  { key: 'depreciationFee', name: '折旧费', components: depreciationFee },
+  { key: 'managementFee', name: '管理费', components: managementFee }
+])
+
 const emit = defineEmits(['update:visible'])
+
 const props = defineProps({
   visible: {
     type: Boolean,
@@ -87,21 +107,33 @@ const props = defineProps({
   }
 })
 
-const productionLineData = [
-  { id: 1, name: '主材费', amount: '100000', rate: 18 },
-  { id: 2, name: '人工费', amount: '110000', rate: 18 },
-  { id: 3, name: '辅材费', amount: '120000', rate: 18 },
-  { id: 4, name: '水电费', amount: '130000', rate: 18 },
-  { id: 5, name: '折旧费', amount: '140000', rate: 18 },
-  { id: 6, name: '管理费', amount: '150000', rate: 18 },
-  { id: 7, name: '运输费', amount: '160000', rate: 18 },
-  { id: 8, name: '检测费', amount: '170000', rate: 18 },
-  { id: 9, name: '分包费', amount: '180000', rate: 18 },
-  { id: 10, name: '项目管理费', amount: '190000', rate: 18 }
-]
-const { maxHeight } = useMaxHeight({
-  extraBox: ['.head-container'],
-  paginate: true
+const dataFormat = ref([
+  ['rate', ['to-fixed', 2]],
+  ['amount', 'to-thousand']
+])
+
+watch(
+  () => props.detailRow.id,
+  (value) => {
+    directCostList.value.map(v => {
+      v.amount = props.detailRow.compositeCostDTO && props.detailRow.compositeCostDTO[v.key] ? props.detailRow.compositeCostDTO[v.key] : 0
+      v.rate = v.amount && props.detailRow.costAmount ? (v.amount / props.detailRow.costAmount) * 100 : 0
+      v.projectId = props.detailRow.id
+      return v
+    })
+    indirectCostList.value.map(v => {
+      v.amount = props.detailRow.compositeCostDTO && props.detailRow.compositeCostDTO[v.key] ? props.detailRow.compositeCostDTO[v.key] : 0
+      v.rate = v.amount && props.detailRow.costAmount ? (v.amount / props.detailRow.costAmount) * 100 : 0
+      v.projectId = props.detailRow.id
+      return v
+    })
+  },
+  { immediate: true }
+)
+
+// 当前显示组件
+const currentView = computed(() => {
+  return costTypeData.value.components
 })
 
 const { visible: drawerVisible, handleClose } = useVisible({ emit, props, field: 'visible', showHook: showHook })
@@ -111,7 +143,6 @@ function showHook() {
 }
 
 function handleRowChange(row) {
-  console.log(row, 'row')
   costTypeData.value = row
 }
 </script>

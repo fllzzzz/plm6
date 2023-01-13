@@ -315,9 +315,17 @@ export function mainMaterialList(params) {
 // 业财报表/人工费清单
 export function manualList(params) {
   return request({
-    url: '',
+    url: '/api/contract/project-finance/list-wage/print',
     method: 'get',
     params
+  })
+}
+
+// 业财报表/运输费
+export function shippingFeeList(id) {
+  return request({
+    url: `/api/mes/building/cargo/shipment/list/print/${id}`,
+    method: 'get'
   })
 }
 
@@ -349,5 +357,6 @@ export default {
   propertyFeeList, // 物业费用清单
 
   mainMaterialList, // 主材费清单
-  manualList // 人工费
+  manualList, // 人工费
+  shippingFeeList // 运输费
 }

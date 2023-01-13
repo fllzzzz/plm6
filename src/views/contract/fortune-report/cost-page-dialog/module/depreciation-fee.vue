@@ -13,6 +13,7 @@
       :max-height="maxHeight"
       row-key="id"
       style="width: 100%"
+      :data-format="dataFormat"
       show-summary
       :summary-method="getSummaries"
     >
@@ -22,27 +23,28 @@
           <span>{{ scope.row.type }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="totalAmount" key="totalAmount" label="摊销总额（元）" align="center">
+      <el-table-column prop="amount" key="amount" label="摊销总额（元）" align="center">
         <template v-slot="scope">
-          <span>{{ scope.row.totalAmount }}</span>
+          <span>{{ scope.row.amount }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="totalProduction" key="totalProduction" label="累计产量（吨）" align="center">
+      <el-table-column prop="mete" key="mete" label="累计产量（吨）" align="center">
         <template v-slot="scope">
-          <span>{{ scope.row.totalProduction }}</span>
+          <span>{{ scope.row.mete }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="averageUnitPrice" key="averageUnitPrice" label="平均单价（元/吨）" align="center">
+      <el-table-column prop="avgPrice" key="avgPrice" label="平均单价（元/吨）" align="center">
         <template v-slot="scope">
-          <span>{{ scope.row.averageUnitPrice }}</span>
+          <span>{{ scope.row.avgPrice }}</span>
         </template>
       </el-table-column>
     </common-table>
   </div>
 </template>
 <script setup>
-// import { workOrderTypeEnum } from '@enum-ms/mes'
-import { ref, defineProps } from 'vue'
+import { getDepreciationList } from '@/api/contract/fortune-report/detail-fee'
+import { ref, defineProps, watch } from 'vue'
+
 import { toThousand } from '@data-type/number'
 import { tableSummary } from '@/utils/el-extra'
 import useMaxHeight from '@compos/use-max-height'
@@ -61,12 +63,35 @@ const { maxHeight } = useMaxHeight({
   paginate: true
 })
 
+watch(
+  () => props.costTypeData.projectId,
+  (value) => {
+    fetchDepreciationFee()
+  },
+  { immediate: true, deep: true }
+)
+
+const dataFormat = ref([
+  ['amount', 'to-thousand'],
+  ['mete', 'to-thousand'],
+  ['avgPrice', 'to-thousand']
+])
+
 // 合计
 function getSummaries(param) {
   return tableSummary(param, {
     props: [''],
     toThousandFields: ['']
   })
+}
+
+async function fetchDepreciationFee() {
+  try {
+    const { content } = await getDepreciationList({ projectId: props.costTypeData.projectId })
+    detailData.value = content || []
+  } catch (error) {
+    console.log('折旧费用', error)
+  }
 }
 </script>
 <style lang="scss" scoped>

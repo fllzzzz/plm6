@@ -22,7 +22,7 @@
         type="enum"
         @change="crud.toQuery"
       />
-      <rrOperation />
+      <!-- <rrOperation /> -->
     </div>
     <crudOperation>
       <template #viewLeft>
@@ -36,7 +36,7 @@ import { parseTime } from '@/utils/date'
 import { regHeader } from '@compos/use-crud'
 import { costTypeEnum, usedElectricityTypeEnum } from '@enum-ms/contract'
 import crudOperation from '@crud/CRUD.operation'
-import rrOperation from '@crud/RR.operation'
+// import rrOperation from '@crud/RR.operation'
 
 const defaultQuery = {
   year: parseTime(new Date(), '{y}'),
