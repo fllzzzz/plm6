@@ -3,7 +3,7 @@
     <el-row :gutter="20">
       <el-col :xs="24" :sm="24" :md="12" :lg="8">
         <!-- 入库基础 -->
-        <!-- <basic-inbound v-if="checkPermission (permission.basicInboundGet)" class="card" /> -->
+        <basic-inbound v-if="checkPermission (permission.basicInboundGet)" class="card" />
         <!-- 钢板入库 -->
         <steel-inbound v-if="checkPermission(permission.steelInboundGet)" class="card" />
         <!-- 报表中心 -->
@@ -30,7 +30,7 @@ import { configWmsBasicForPM as permission } from '@/page-permission/config'
 import { provide } from 'vue'
 import checkPermission from '@/utils/system/check-permission'
 
-// import BasicInbound from './module/basic-inbound.vue'
+import BasicInbound from './module/basic-inbound.vue'
 import SteelInbound from './module/steel-inbound.vue'
 import BasicOutbound from './module/basic-outbound.vue'
 import ReportCenter from './module/report-center.vue'

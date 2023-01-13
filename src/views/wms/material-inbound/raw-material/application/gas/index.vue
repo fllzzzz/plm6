@@ -6,7 +6,7 @@
       :edit="props.edit"
       :show-total="false"
       :total-amount="totalAmount"
-      :show-total-amount="!boolPartyA"
+      :show-total-amount="!boolPartyA && fillableAmount"
       @purchase-order-change="handleOrderInfoChange"
     >
       <div class="filter-container">
@@ -21,7 +21,7 @@
         </div>
       </div>
       <el-form ref="formRef" :model="form">
-        <gas-table ref="tableRef" :max-height="tableMaxHeight" :bool-party-a="boolPartyA" />
+        <gas-table ref="tableRef" :max-height="tableMaxHeight" :bool-party-a="boolPartyA" :fillableAmount="fillableAmount" />
       </el-form>
     </common-wrapper>
     <common-drawer
@@ -57,11 +57,12 @@ import { gasInboundApplicationPM as permission } from '@/page-permission/wms'
 
 import { defineProps, defineEmits, ref, watch, provide, nextTick, reactive, computed } from 'vue'
 import { matClsEnum } from '@/utils/enum/modules/classification'
-import { orderSupplyTypeEnum } from '@/utils/enum/modules/wms'
+import { orderSupplyTypeEnum, inboundFillWayEnum } from '@/utils/enum/modules/wms'
 import { isNotBlank, toFixed } from '@/utils/data-type'
 
 import useForm from '@/composables/form/use-form'
 import useMaxHeight from '@compos/use-max-height'
+import useWmsConfig from '@/composables/store/use-wms-config'
 import commonWrapper from '@/views/wms/material-inbound/raw-material/application/components/common-wrapper.vue'
 import materialTableSpecSelect from '@/components-system/classification/material-table-spec-select.vue'
 import gasTable from './module/gas-table.vue'
@@ -97,6 +98,10 @@ const boolPartyA = ref(false) // 是否“甲供”
 
 const materialSelectVisible = ref(false) // 显示物料选择
 const currentBasicClass = matClsEnum.GAS.V // 当前基础分类
+
+const { inboundFillWayCfg } = useWmsConfig()
+// 显示金额相关信息（由采购填写的信息）
+const fillableAmount = computed(() => inboundFillWayCfg.value ? inboundFillWayCfg.value.amountFillWay === inboundFillWayEnum.APPLICATION.V : false)
 
 const addable = computed(() => !!(currentBasicClass && order.value)) // 可添加的状态（选择了采购合同编号）
 const totalAmount = computed(() => {
@@ -249,6 +254,12 @@ function init() {
 
 // 批量导入
 cu.props.import = (importList) => {
+  if (!fillableAmount.value) {
+    importList.forEach(v => {
+      v.amount = undefined
+      v.unitPrice = undefined
+    })
+  }
   // 截取新旧数组长度，对导入数据进行rowWatch监听
   form.list.push.apply(form.list, importList)
   // 初始化选中数据，执行一次后取消当前监听
