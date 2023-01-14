@@ -111,7 +111,7 @@ const rules = {
 
 CRUD.HOOK.beforeToAdd = async (crud, form) => {
   form.year = crud.query.year
-  form.accountingUnit = crud.data[0]?.accountingUnit
+  form.accountingUnit = prop.accountingUnit
   if (!form.accountingUnit) {
     ElMessage.error('请到科目管理里面配置对应新增的气体的计量单位')
     return false

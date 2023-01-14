@@ -38,8 +38,12 @@ const managementSalaryList = contract.managementSalaryList
 const propertyFeeList = contract.propertyFeeList
 
 const mainMaterialList = contract.mainMaterialList
+const auxiliaryMaterialList = contract.mainMaterialList
 const manualList = contract.manualList
 const shippingFeeList = contract.shippingFeeList
+const testingFee = contract.testingFee
+const subcontractFee = contract.subcontractFee
+const depreciationFee = contract.depreciationFee
 
 // 供应链
 const purchaseInvoiceRecord = supply.invoiceDetail
@@ -168,6 +172,10 @@ export default {
   mainMaterialList, // 主材费清单
   manualList, // 人工费
   shippingFeeList, // 运输费
+  testingFee, // 检测费
+  subcontractFee, // 分包费
+  depreciationFee, // 折旧费
+  auxiliaryMaterialList, // 辅材费用清单
 
   // 供应链
   purchaseInvoiceRecord, // 收票记录

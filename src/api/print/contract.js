@@ -307,7 +307,7 @@ export function propertyFeeList(params) {
 // 业财报表/主材费清单
 export function mainMaterialList(params) {
   return request({
-    url: '',
+    url: '/api/contract/project-finance/list-outbound/print',
     method: 'get',
     params
   })
@@ -326,6 +326,33 @@ export function shippingFeeList(id) {
   return request({
     url: `/api/mes/building/cargo/shipment/list/print/${id}`,
     method: 'get'
+  })
+}
+
+// 业财报表/检测费
+export function testingFee(params) {
+  return request({
+    url: '/api/contract/project-finance/list-testing/print',
+    method: 'get',
+    params
+  })
+}
+
+// 业财报表/分包费
+export function subcontractFee(params) {
+  return request({
+    url: '/api/contract/project-finance/list-sub/print',
+    method: 'get',
+    params
+  })
+}
+
+// 业财报表/折旧费
+export function depreciationFee(params) {
+  return request({
+    url: '/api/contract/project-finance/list-depreciation/print',
+    method: 'get',
+    params
   })
 }
 
@@ -358,5 +385,8 @@ export default {
 
   mainMaterialList, // 主材费清单
   manualList, // 人工费
-  shippingFeeList // 运输费
+  shippingFeeList, // 运输费
+  testingFee, // 检测费
+  subcontractFee, // 分包费
+  depreciationFee // 折旧费
 }

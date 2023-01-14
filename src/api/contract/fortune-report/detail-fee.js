@@ -43,3 +43,21 @@ export function getLaborFeeList(params) {
     params
   })
 }
+
+// 分包费
+export function getSubcontractList(params) {
+  return request({
+    url: `/api/contract/project-finance/list-sub`,
+    method: 'get',
+    params
+  })
+}
+
+// 检测费
+export function getTestingList(params) {
+  return request({
+    url: `/api/contract/project-finance/list-testing`,
+    method: 'get',
+    params
+  })
+}

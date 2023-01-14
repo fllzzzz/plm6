@@ -9,6 +9,7 @@
       :data="crud.data"
       :empty-text="crud.emptyText"
       :max-height="maxHeight"
+      :data-format="dataFormat"
       style="width: 100%"
     >
       <el-table-column type="index" prop="index" label="序号" align="center" width="60px" />
@@ -25,16 +26,16 @@
         </template>
       </el-table-column>
       <el-table-column
-        v-if="columns.visible('project.name')"
+        v-if="columns.visible('project')"
         align="center"
-        key="project.name"
-        prop="project.name"
+        key="project"
+        prop="project"
         :show-overflow-tooltip="true"
         label="项目"
         min-width="200px"
       />
       <el-table-column
-        v-if="columns.visible('testingFeeTypeName') && crud.query.testingFeeTypeId !== undefined"
+        v-if="columns.visible('testingFeeTypeName')"
         align="center"
         key="testingFeeTypeName"
         prop="testingFeeTypeName"
@@ -54,7 +55,7 @@
           <div v-if="scope.row.testingFeeList.findIndex((v) => v.month == item) > -1">
             <template v-for="value in scope.row.testingFeeList" :key="value">
               <template v-if="value.month == item">
-                <span>{{ value.feeAmount }}</span>
+                <span>{{ toThousand(value.feeAmount) }}</span>
               </template>
             </template>
           </div>
@@ -70,11 +71,7 @@
         prop="totalAmount"
         :show-overflow-tooltip="true"
         label="合计"
-      >
-        <template #default="{ row }">
-          <span>{{ row.totalAmount }}</span>
-        </template>
-      </el-table-column>
+      />
       <el-table-column align="center" label="操作" width="120px">
         <template v-slot="scope">
           <!-- <udOperation :data="scope.row" /> -->
@@ -91,12 +88,14 @@
 
 <script setup>
 import { ref, provide } from 'vue'
-import { parseTime } from '@/utils/date'
 import crudApi from '@/api/contract/expense-entry/testing-cost'
+
+import { parseTime } from '@/utils/date'
+import { toThousand } from '@data-type/number'
 import useCRUD from '@compos/use-crud'
 import useDict from '@compos/store/use-dict'
 import useMaxHeight from '@compos/use-max-height'
-// import udOperation from '@crud/UD.operation'
+
 import mHeader from './module/header.vue'
 import mForm from './module/form.vue'
 import mDetail from './module/detail.vue'
@@ -131,6 +130,11 @@ const { crud, CRUD, columns } = useCRUD(
 )
 
 provide('dict', dict)
+
+const dataFormat = ref([
+  ['project', 'parse-project'],
+  ['totalAmount', 'to-thousand']
+])
 
 const { maxHeight } = useMaxHeight({
   extraBox: ['.head-container'],

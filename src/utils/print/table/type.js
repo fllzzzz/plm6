@@ -88,8 +88,12 @@ const tableType = {
   propertyFeeList: { L: '物业费清单', M: 'expense_entry', T: mt.contract.L + ' / ' + contract.expense_entry },
 
   mainMaterialList: { L: '主材费清单', M: 'property_report', T: mt.contract.L + ' / ' + contract.property_report },
+  auxiliaryMaterialList: { L: '辅材费清单', M: 'property_report', T: mt.contract.L + ' / ' + contract.property_report },
   manualList: { L: '人工费清单', M: 'property_report', T: mt.contract.L + ' / ' + contract.property_report },
   shippingFeeList: { L: '运输费清单', M: 'property_report', T: mt.contract.L + ' / ' + contract.property_report },
+  testingFee: { L: '检测费清单', M: 'property_report', T: mt.contract.L + ' / ' + contract.property_report },
+  subcontractFee: { L: '分包费清单', M: 'property_report', T: mt.contract.L + ' / ' + contract.property_report },
+  depreciationFee: { L: '折旧费清单', M: 'property_report', T: mt.contract.L + ' / ' + contract.property_report },
 
   // 供应链
   scmRequisitionsDetail: { L: '申购详情', M: 'purchase_reconciliation', T: mt.supply.L + ' / ' + supply.purchase_reconciliation },

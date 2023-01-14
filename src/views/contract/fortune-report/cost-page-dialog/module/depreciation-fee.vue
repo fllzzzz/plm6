@@ -2,7 +2,7 @@
   <div class="app-container">
     <div class="head-container" style="display: flex; justify-content: space-between">
       <div style="width: 300px">
-        <print-table :api-key="apiKey" :params="{ ...query }" size="mini" type="warning" class="filter-item" />
+        <print-table api-key="depreciationFee" :params="{ projectId: props.costTypeData.projectId }" size="mini" type="warning" class="filter-item" />
       </div>
       <el-tag>合计（单位：元）：{{ toThousand(props.costTypeData?.amount) }}</el-tag>
     </div>
@@ -80,8 +80,8 @@ const dataFormat = ref([
 // 合计
 function getSummaries(param) {
   return tableSummary(param, {
-    props: [''],
-    toThousandFields: ['']
+    props: ['amount', 'mete'],
+    toThousandFields: ['amount', 'mete']
   })
 }
 
