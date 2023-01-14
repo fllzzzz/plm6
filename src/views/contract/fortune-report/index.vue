@@ -13,25 +13,29 @@
       style="width: 100%"
     >
       <el-table-column prop="index" label="序号" align="center" width="60" type="index" />
-      <el-table-column
-        v-if="columns.visible('name')"
+       <el-table-column
+        v-if="columns.visible('project')"
         align="center"
-        key="name"
-        prop="name"
+        key="project"
+        prop="project"
         :show-overflow-tooltip="true"
         label="项目"
-        min-width="140px"
-      />
+        min-width="140"
+      >
+        <template v-slot="scope">
+          <span>{{ projectNameFormatter(scope.row) }}</span>
+        </template>
+      </el-table-column>
       <el-table-column
-        v-if="columns.visible('projectType')"
+        v-if="columns.visible('businessType')"
         align="center"
-        key="projectType"
-        prop="projectType"
+        key="businessType"
+        prop="businessType"
         :show-overflow-tooltip="true"
         label="业务类型"
       >
         <template v-slot="scope">
-          <span>{{ businessTypeEnum.VL[scope.row.projectType] }}</span>
+          <span>{{ businessTypeEnum.VL[scope.row.businessType] }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -118,18 +122,18 @@
           <span>{{ (scope.row.grossProfitRate * 100).toFixed(2) }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" key="collectionAmount" prop="collectionAmount" :show-overflow-tooltip="true" label="收款">
-        <el-table-column align="center" key="collectionAmount" prop="collectionAmount" :show-overflow-tooltip="true" label="收款">
+      <el-table-column align="center" v-if="columns.visible('collectionAmount1')" key="collectionAmount1" prop="collectionAmount1" :show-overflow-tooltip="true" label="收款">
+        <el-table-column v-if="columns.visible('collectionAmount')" align="center" key="collectionAmount" prop="collectionAmount" :show-overflow-tooltip="true" label="收入">
           <template v-slot="scope">
             <span>{{ toThousand(scope.row.collectionAmount) }}</span>
           </template>
         </el-table-column>
-        <el-table-column align="center" key="receivableAmount" prop="receivableAmount" :show-overflow-tooltip="true" label="应收款">
+        <el-table-column v-if="columns.visible('receivableAmount')" align="center" key="receivableAmount" prop="receivableAmount" :show-overflow-tooltip="true" label="应收款">
           <template v-slot="scope">
             <span>{{ toThousand(scope.row.receivableAmount) }}</span>
           </template>
         </el-table-column>
-        <el-table-column align="center" key="availableBalance" prop="availableBalance" :show-overflow-tooltip="true" label="可用余额">
+        <el-table-column v-if="columns.visible('availableBalance')" align="center" key="availableBalance" prop="availableBalance" :show-overflow-tooltip="true" label="可用余额">
           <template v-slot="scope">
             <span>{{ toThousand(scope.row.availableBalance) }}</span>
           </template>
@@ -148,16 +152,18 @@
         </template>
       </el-table-column>
     </common-table>
-    <common-dialog title="结算详情" v-model="dialogVisible" width="400px" show-close custom-class="settlement-detail" top="10vh">
+    <common-dialog title="结算详情" v-model="dialogVisible" width="460px" show-close custom-class="settlement-detail" top="10vh">
       <el-descriptions :column="1" :data="list" border style="cursor: pointer">
         <el-descriptions-item label="结算额" label-align="center" align="center">
           <span> {{ toThousand(list.settlementAmount) }}</span>
         </el-descriptions-item>
         <el-descriptions-item label="附件" label-align="center" align="center">
-          <el-icon :size="20" color="#409EFC" style="vertical-align: middle">
-            <Link />
-          </el-icon>
-          <span>{{ list.cutInstructionId }} 结算单.png</span>
+          <template v-if="list.attachments?.length > 0">
+            <div v-for="item in list.attachments" :key="item.id">
+              {{ item.name }}
+              <export-button :params="{ id: item.id }" />
+            </div>
+          </template>
         </el-descriptions-item>
       </el-descriptions>
     </common-dialog>
@@ -166,12 +172,16 @@
 </template>
 <script setup>
 import { ref } from 'vue'
+import crudApi from '@/api/contract/fortune-report/fortune-report'
+
+import { projectNameFormatter } from '@/utils/project'
 import { businessTypeEnum, orderSourceTypeEnum, projectStatusEnum } from '@enum-ms/contract'
 import { toThousand } from '@data-type/number'
-import { Link } from '@element-plus/icons'
-import crudApi from '@/api/contract/fortune-report/fortune-report'
+// import { Link } from '@element-plus/icons'
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
+
+import ExportButton from '@comp-common/export-button/index.vue'
 import mHeader from './module/header.vue'
 import costPageDialog from './cost-page-dialog/index'
 

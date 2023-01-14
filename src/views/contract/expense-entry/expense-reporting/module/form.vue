@@ -131,7 +131,7 @@ CRUD.HOOK.beforeSubmit = async () => {
 
 // 如果时间选取的时间年份比当前的时间大就被禁用
 function disabledDate(time) {
-  return time < new Date()
+  return time > new Date()
 }
 </script>
 

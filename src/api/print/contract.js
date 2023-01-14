@@ -356,6 +356,15 @@ export function depreciationFee(params) {
   })
 }
 
+// 业财报表
+export function fortuneReportList(params) {
+  return request({
+    url: '/api/contract/project-finance/print',
+    method: 'get',
+    params
+  })
+}
+
 export default {
   contractLedger, // 合同台账（合同登记表）
   collectionLedger, // 收款记录
@@ -388,5 +397,6 @@ export default {
   shippingFeeList, // 运输费
   testingFee, // 检测费
   subcontractFee, // 分包费
-  depreciationFee // 折旧费
+  depreciationFee, // 折旧费
+  fortuneReportList // 业财报表
 }

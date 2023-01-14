@@ -11,6 +11,17 @@
       <div style="display: flex">
         <div style="width: 30%">
           <!--表格渲染-->
+          <el-row :gutter="20" class="panel-group">
+            <el-col :span="8" class="card-panel-col">
+              <Panel name="合同额/结算额" text-color="#626262" num-color="#1890ff" :end-val="detailRow.settlementAmount|| detailRow.contractAmount || 0" :precision="2" />
+            </el-col>
+            <el-col :span="8" class="card-panel-col">
+              <Panel name="综合成本" text-color="#626262" num-color="#F56C6C" :end-val="detailRow.costAmount || 0" :precision="2" />
+            </el-col>
+            <el-col :span="8" class="card-panel-col">
+              <Panel name="毛利润" text-color="#626262" num-color="#1890ff" :end-val="detailRow.grossProfit || 0" :precision="2" />
+            </el-col>
+          </el-row>
           <el-divider><span class="title">直接费用</span></el-divider>
           <common-table
             ref="directRef"
@@ -65,6 +76,7 @@
 <script setup>
 import useVisible from '@compos/use-visible'
 import { defineProps, defineEmits, ref, watch, computed } from 'vue'
+
 import mainMaterialFee from './module/main-material-fee.vue'
 import laborFee from './module/labor-fee.vue'
 import auxiliaryMaterialFee from './module/auxiliary-material-fee.vue'
@@ -74,6 +86,7 @@ import managementFee from './module/management-fee.vue'
 import shippingFee from './module/shipping-fee.vue'
 import testingFee from './module/testing-fee.vue'
 import subcontractingFee from './module/subcontracting-fee.vue'
+import Panel from '@/components/Panel'
 
 const costTypeData = ref({})
 const detailRef = ref()
@@ -147,5 +160,21 @@ function handleRowChange(row) {
 }
 </script>
 
-<style rel="stylesheet/scss" lang="scss" scoped>
+<style lang="scss" scoped>
+.panel-group {
+  margin-bottom:10px;
+  ::v-deep(.card-panel) {
+    .card-panel-description {
+      .card-panel-text {
+        text-align:center;
+        margin-top: 2px;
+      }
+      .card-panel-num {
+        display:block;
+        font-size: 18px;
+        text-align:center;
+      }
+    }
+  }
+}
 </style>

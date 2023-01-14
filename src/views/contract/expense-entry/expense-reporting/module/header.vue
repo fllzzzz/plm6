@@ -102,7 +102,6 @@ const defaultQuery = {
 const { crud, query } = regHeader(defaultQuery)
 
 function handleChange(val) {
-  console.log(val, 'val')
   if (val === timeTypeEnum.ALL_YEAR.V) {
     query.year = parseTime(new Date(), '{y}')
     query.month = undefined

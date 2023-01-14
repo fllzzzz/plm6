@@ -200,7 +200,6 @@ const shippingFeeList = {
      * @param {boolean} sum 列需要合计
      */
     fields: [
-      { show: true, key: 'supplier.name', title: '物流公司', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, width: 22, type: typeEnum.COMPANY_NAME.K },
       { show: false, key: 'manufactureType', title: '制造类型', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.ENUM.K, format: { enum: 'manufactureTypeEnum', key: 'L', bit: true }},
       { show: false, key: 'productType', title: '装载类型', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.ENUM.K, format: { enum: 'packTypeEnum', key: 'L', bit: true }},
       { show: true, key: 'auditTime', title: '承运日期', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.DATE.K, format: 'YY/MM/DD' },
@@ -210,7 +209,7 @@ const shippingFeeList = {
       { show: true, key: 'driverPhone', title: '司机电话', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 25, type: typeEnum.PHONE.K },
       { show: true, key: 'actualWeight', title: '装载重量', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.WEIGHT.K, format: { toThousand: false, precision: DEF_UNIT.WEIGHT_DP, unit: weightUnitEnum.KG.V }, sum: true },
       { show: true, key: 'priceType', title: '计价方式', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.ENUM.K, format: { enum: 'logisticsPriceTypeEnum', key: 'L', bit: true }},
-      { show: true, key: 'supplier.price', title: '运输单价', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.AMOUNT.K, format: { toThousand: true, precision: 2, unit: amountUnitEnum.YUAN.V }},
+      { show: true, key: 'price', title: '运输单价', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.AMOUNT.K, format: { toThousand: true, precision: 2, unit: amountUnitEnum.YUAN.V }},
       { show: true, key: 'totalPrice', title: '运输费', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 20, type: typeEnum.AMOUNT.K, format: { toThousand: true, precision: 2, unit: amountUnitEnum.YUAN.V }, sum: true }
     ]
   }

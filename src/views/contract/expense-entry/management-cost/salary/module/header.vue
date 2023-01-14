@@ -10,6 +10,7 @@
         placeholder="选择年"
         format="YYYY"
         value-format="YYYY"
+        :clearable="false"
         :disabled-date="disabledDate"
         @change="crud.toQuery"
       />

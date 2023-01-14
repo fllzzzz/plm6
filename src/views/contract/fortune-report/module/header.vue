@@ -5,8 +5,8 @@
       type="year"
       size="small"
       class="date-item filter-item"
-      style="width: 100px !important"
-      placeholder="选择年"
+      style="width: 120px !important"
+      placeholder="立项年份"
       format="YYYY"
       value-format="YYYY"
       @change="crud.toQuery"
@@ -38,11 +38,10 @@
       type="enum"
       @change="crud.toQuery"
     />
-    <rrOperation />
   </div>
   <crudOperation>
     <template #viewLeft>
-      <export-button class="filter-item" :fn="fn" :params="{ ...query }"> 导出清单 </export-button>
+      <print-table api-key="fortuneReportList" :params="{ ...query }" size="mini" type="warning" class="filter-item" />
     </template>
   </crudOperation>
 </template>
@@ -51,9 +50,8 @@ import { parseTime } from '@/utils/date'
 import { regHeader } from '@compos/use-crud'
 import { businessTypeEnum, orderSourceTypeEnum, projectStatusEnum } from '@enum-ms/contract'
 import crudOperation from '@crud/CRUD.operation'
-import rrOperation from '@crud/RR.operation'
 import projectCascader from '@comp-base/project-cascader.vue'
-import ExportButton from '@comp-common/export-button/index.vue'
+// import ExportButton from '@comp-common/export-button/index.vue'
 
 const defaultQuery = {
   year: parseTime(new Date(), '{y}'),

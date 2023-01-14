@@ -69,6 +69,7 @@
 
 <script setup>
 import { ref, defineProps, computed } from 'vue'
+import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { regForm } from '@compos/use-crud'
 import { ElMessage } from 'element-plus'
 
@@ -111,7 +112,7 @@ const rules = {
 
 CRUD.HOOK.beforeToAdd = async (crud, form) => {
   form.year = crud.query.year
-  form.accountingUnit = prop.accountingUnit
+  form.accountingUnit = crud.query.unit
   if (!form.accountingUnit) {
     ElMessage.error('请到科目管理里面配置对应新增的气体的计量单位')
     return false
@@ -129,7 +130,17 @@ CRUD.HOOK.beforeToEdit = () => {
 CRUD.HOOK.beforeSubmit = async () => {
   form.classifyId = crud.query.classifyId
   form.year = prop.query.year
-  form.accountingUnit = prop.accountingUnit
+  form.accountingUnit = crud.query.unit
+  crud.form = await numFmtByBasicClass(
+    form,
+    {
+      toSmallest: true,
+      toNum: true
+    },
+    {
+      mete: ['usedMete']
+    }
+  )
 }
 </script>
 

@@ -14,18 +14,6 @@
     >
       <el-table-column type="index" prop="index" label="序号" align="center" width="60px" />
       <el-table-column
-        v-if="columns.visible('payDate')"
-        align="center"
-        key="payDate"
-        prop="payDate"
-        :show-overflow-tooltip="true"
-        label="支付时间"
-      >
-        <template #default="{ row }">
-          <span>{{ parseTime(row.payDate, '{y}-{m}-{d}') }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column
         v-if="columns.visible('project')"
         align="center"
         key="project"
@@ -90,7 +78,6 @@
 import { ref, provide } from 'vue'
 import crudApi from '@/api/contract/expense-entry/testing-cost'
 
-import { parseTime } from '@/utils/date'
 import { toThousand } from '@data-type/number'
 import useCRUD from '@compos/use-crud'
 import useDict from '@compos/store/use-dict'
@@ -123,7 +110,6 @@ const { crud, CRUD, columns } = useCRUD(
     // permission: { ...permission },
     crudApi: { ...crudApi },
     requiredQuery: ['year'],
-    invisibleColumns: ['payDate'],
     hasPagination: false
   },
   tableRef
@@ -144,7 +130,7 @@ const { maxHeight } = useMaxHeight({
 // 详情
 function toDetail(row) {
   drawerVisible.value = true
-  detailData.value = row
+  detailData.value = row.sourceRow
 }
 
 CRUD.HOOK.handleRefresh = (crud, res) => {

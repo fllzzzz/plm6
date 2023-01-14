@@ -50,8 +50,8 @@
           <el-input ref="saveTagInput" v-model="form.feeAmount" placeholder="输入费用 单位（元）" style="width: 270px" />
         </el-form-item>
         <el-form-item label="附件：" prop="attachments">
-          <upload-btn ref="uploadRef" v-model:files="form.attachments" :file-classify="fileClassifyEnum.CONTRACT_ATT.V" :limit="1" />
-          <template v-if="form.attachments?.length > 0">
+          <upload-btn ref="uploadRef" v-model:files="form.attachmentFiles" :file-classify="fileClassifyEnum.CONTRACT_ATT.V" :limit="1"  :accept="'.pdf,.jpg,.jpeg,.png'" />
+          <template v-if="form.attachments?.length > 0 && (!form.attachmentFiles || form.attachmentFiles.length===0)">
             <div v-for="item in form.attachments" :key="item.id">
               {{ item.name }}
               <export-button :params="{ id: item.id }" />
@@ -81,7 +81,8 @@ const defaultForm = {
   projectId: undefined,
   testingFeeTypeId: undefined,
   feeAmount: undefined,
-  attachmentIds: undefined
+  attachmentIds: undefined,
+  attachmentFiles: []
 }
 
 const { crud, form, CRUD } = regForm(defaultForm, formRef)
@@ -112,7 +113,7 @@ CRUD.HOOK.afterToEdit = (crud, form) => {}
 
 // 提交前
 CRUD.HOOK.beforeSubmit = async () => {
-  crud.form.attachmentIds = crud.form.attachments ? crud.form.attachments.map((v) => v.id) : undefined
+  crud.form.attachmentIds = crud.form.attachmentFiles ? crud.form.attachmentFiles.map((v) => v.id) : crud.form.attachmentIds
 }
 </script>
 

@@ -99,13 +99,13 @@
       </el-table-column>
       <el-table-column
         :show-overflow-tooltip="true"
-        prop="supplier.price"
+        prop="price"
         label="运输单价"
         align="right"
         min-width="120"
       >
         <template v-slot="scope">
-          <span>{{ scope.row.supplier && toFixed(scope.row.supplier.price, DP.YUAN) }}</span>
+          <span>{{ toFixed(scope.row.price, DP.YUAN) }}</span>
           <span :class="scope.row.priceType === logisticsPriceTypeEnum.WEIGHT.V ? 'blue':'orange'" style="margin-left:3px;">{{ logisticsPriceTypeEnum.V[scope.row.priceType].unit }}</span>
         </template>
       </el-table-column>

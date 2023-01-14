@@ -15,7 +15,7 @@
           :disabled-date="disabledDate"
           @change="fetchTestingFee"
         />
-        <project-cascader v-model="projectId" class="filter-item" @change="fetchTestingFee" />
+        <project-cascader v-model="projectId" class="filter-item" @change="fetchTestingFee" clearable/>
       </div>
       <div style="float: right">
         <export-button :fn="downloadTestingFee" :params="{ projectId: projectId, year: year }"> 检测费清单 </export-button>
@@ -40,10 +40,10 @@
         min-width="120"
       >
         <template v-slot="scope">
-          <span>{{ projectNameFormatter(scope.row) }}</span>
+          <span>{{ projectNameFormatter(scope.row.project) }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="产量（吨）" prop="capacity" align="center">
+      <el-table-column label="产量（吨）" prop="capacity" key="capacity" align="center">
         <template v-slot="scope">
           <span>{{ toThousand(scope.row.capacity) }}</span>
         </template>
@@ -58,7 +58,7 @@
           <span>{{ toThousand(scope.row.totalAmount) }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="平均检测费（元/吨）" prop="averageTestingFee" align="center">
+      <el-table-column label="平均检测费（元/吨）" prop="averageTestingFee" key="averageTestingFee" align="center">
       <template v-slot="scope">
           <span>{{ toThousand(scope.row.averageTestingFee) }}</span>
         </template>
@@ -116,7 +116,7 @@ async function fetchTestingFee() {
       for (const i in v.checkType) {
         v['fee_' + i] = v.checkType[i]
         v.totalAmount += v.checkType[i]
-        if (itemKeyArr.value.findIndex(val => v.key === ('fee_' + i)) < 0) {
+        if (itemKeyArr.value.findIndex(val => val.key === ('fee_' + i)) < 0) {
           itemKeyArr.value.push({
             key: 'fee_' + i,
             name: dict.value?.testing_fee_type.find(k => k.id === Number(i)).label
@@ -146,7 +146,7 @@ function getSummaries(param) {
       sums[index] = '合计'
       return
     }
-    if (column.property !== 'project') {
+    if (column.property !== 'project' && column.property !== 'averageTestingFee') {
       const values = data.map((item) => Number(item[column.property]))
       if (!values.every((value) => isNaN(value))) {
         sums[index] = values.reduce((prev, curr) => {

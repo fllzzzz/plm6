@@ -44,6 +44,7 @@ const shippingFeeList = contract.shippingFeeList
 const testingFee = contract.testingFee
 const subcontractFee = contract.subcontractFee
 const depreciationFee = contract.depreciationFee
+const fortuneReportList = contract.fortuneReportList
 
 // 供应链
 const purchaseInvoiceRecord = supply.invoiceDetail
@@ -176,6 +177,7 @@ export default {
   subcontractFee, // 分包费
   depreciationFee, // 折旧费
   auxiliaryMaterialList, // 辅材费用清单
+  fortuneReportList, // 业财报表
 
   // 供应链
   purchaseInvoiceRecord, // 收票记录

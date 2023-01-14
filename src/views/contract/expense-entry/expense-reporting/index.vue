@@ -86,15 +86,15 @@
         </template>
       </el-table-column>
       <el-table-column
-        v-if="columns.visible('projectId')"
+        v-if="columns.visible('project')"
         align="center"
-        key="project.shortName"
-        prop="project.shortName"
+        key="project"
+        prop="project"
         :show-overflow-tooltip="true"
         label="项目"
       >
         <template v-slot="scope">
-          <span>{{ scope.row.project?.shortName }}</span>
+          <span>{{ projectNameFormatter(scope.row.project) }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -122,11 +122,14 @@
   </div>
 </template>
 <script setup>
-import { ref, reactive, provide } from 'vue'
-import { parseTime } from '@/utils/date'
 import crudApi, { getExpenseType } from '@/api/contract/expense-entry/expense-reporting'
+import { ref, reactive, provide } from 'vue'
+
+import { parseTime } from '@/utils/date'
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
+import { projectNameFormatter } from '@/utils/project'
+
 import pagination from '@crud/Pagination'
 import udOperation from '@crud/UD.operation'
 import mHeader from './module/header.vue'
