@@ -2,7 +2,7 @@
   <div class="app-container">
     <div class="head-container" style="display: flex; justify-content: space-between">
       <div style="width: 300px">
-        <print-table api-key="depreciationFee" :params="{ projectId: props.costTypeData.projectId }" size="mini" type="warning" class="filter-item" />
+        <print-table v-permission="permission.print" api-key="depreciationFee" :params="{ projectId: props.costTypeData.projectId }" size="mini" type="warning" class="filter-item" />
       </div>
       <el-tag>合计（单位：元）：{{ toThousand(props.costTypeData?.amount) }}</el-tag>
     </div>
@@ -51,6 +51,10 @@ import useMaxHeight from '@compos/use-max-height'
 
 const props = defineProps({
   costTypeData: {
+    type: Object,
+    default: () => {}
+  },
+  permission: {
     type: Object,
     default: () => {}
   }

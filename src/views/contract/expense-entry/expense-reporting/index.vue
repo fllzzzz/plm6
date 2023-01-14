@@ -111,7 +111,7 @@
       </el-table-column>
       <el-table-column align="center" label="操作">
         <template v-slot="scope">
-          <udOperation :data="scope.row" />
+          <udOperation :data="scope.row" :permission="permission"/>
         </template>
       </el-table-column>
     </common-table>
@@ -129,6 +129,7 @@ import { parseTime } from '@/utils/date'
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
 import { projectNameFormatter } from '@/utils/project'
+import { expenseReportingPM as permission } from '@/page-permission/contract'
 
 import pagination from '@crud/Pagination'
 import udOperation from '@crud/UD.operation'
@@ -152,7 +153,7 @@ const { crud, CRUD, columns } = useCRUD(
     title: '费用填报',
     sort: [],
     optShow: { ...optShow },
-    // permission: { ...permission },
+    permission: { ...permission },
     crudApi: { ...crudApi },
     hasPagination: true
   },

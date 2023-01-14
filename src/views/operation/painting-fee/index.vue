@@ -18,6 +18,7 @@
       </div>
       <div style="float: right">
         <excel-export-button
+          v-permission="permission.download"
           :btn-name="`涂装费清单`"
           :btn-type="'warning'"
           :template="paintingFeeListETmpl"
@@ -29,7 +30,7 @@
     <common-table
       ref="tableRef"
       :data="paintingList"
-      :empty-text="'暂无数据'"
+      :empty-text="checkPermission(permission.get)?'暂无数据':'暂无权限'"
       :max-height="maxHeight"
       row-key="id"
       style="width: 100%"
@@ -58,10 +59,14 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { getPaintingFee } from '@/api/operation/painting-fee'
+
+import checkPermission from '@/utils/system/check-permission'
+import { paintingFeeAnalysisPM as permission } from '@/page-permission/operation'
 import { parseTime } from '@/utils/date'
 import { DP } from '@/settings/config'
 import { convertUnits } from '@/utils/convert/unit'
 import useMaxHeight from '@compos/use-max-height'
+
 import paintingFeeListETmpl from '@/utils/excel/export-template/operation/painting-fee-list'
 import ExcelExportButton from '@comp-common/excel-export-button/index.vue'
 
@@ -72,6 +77,9 @@ onMounted(() => {
   fetchPaintingFee()
 })
 async function fetchPaintingFee() {
+  if (!checkPermission(permission.get)) {
+    return false
+  }
   try {
     const { content } = await getPaintingFee({
       year: year.value

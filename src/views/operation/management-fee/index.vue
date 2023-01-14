@@ -15,9 +15,9 @@
         @change="fetchManageFee"
       />
 
-      <export-button class="filter-item" :fn="getManageFeeListFn" :params="{ year: year }"> 管理费清单 </export-button>
+      <export-button v-permission="permission.download" class="filter-item" :fn="getManageFeeListFn" :params="{ year: year }"> 管理费清单 </export-button>
     </div>
-    <common-table ref="tableRef" :data="manageFeeList" :empty-text="'暂无数据'" :max-height="maxHeight" row-key="id" style="width: 100%">
+    <common-table ref="tableRef" :data="manageFeeList" :empty-text="checkPermission(permission.get)?'暂无数据':'暂无权限'" :max-height="maxHeight" row-key="id" style="width: 100%">
       <el-table-column label="月份" prop="month" align="center" width="60px" />
       <el-table-column label="月产（吨）" prop="monthCapacity" align="center">
         <template #default="{ row }">
@@ -37,10 +37,14 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { getManageFee, getManageFeeListFn } from '@/api/operation/management-fee'
+
+import checkPermission from '@/utils/system/check-permission'
+import { operationManagementPM as permission } from '@/page-permission/operation'
 import useMaxHeight from '@compos/use-max-height'
 import { parseTime } from '@/utils/date'
 import { DP } from '@/settings/config'
 import { convertUnits } from '@/utils/convert/unit'
+
 import ExportButton from '@comp-common/export-button/index.vue'
 
 const year = ref(parseTime(new Date(), '{y}'))
@@ -51,6 +55,9 @@ onMounted(() => {
   fetchManageFee()
 })
 async function fetchManageFee() {
+  if (!checkPermission(permission.get)) {
+    return false
+  }
   try {
     const { content } = await getManageFee({
       year: year.value

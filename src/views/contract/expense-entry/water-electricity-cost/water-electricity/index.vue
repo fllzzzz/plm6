@@ -53,7 +53,7 @@
       </el-table-column>
       <el-table-column align="center" label="操作" width="200px">
         <template #default="{ row }">
-          <udOperation :data="row" />
+          <udOperation :data="row" :permission="permission" />
         </template>
       </el-table-column>
     </common-table>
@@ -64,10 +64,13 @@
 
 <script setup>
 import { ref } from 'vue'
-import { costTypeEnum } from '@enum-ms/contract'
 import crudApi from '@/api/contract/expense-entry/water-electricity-cost'
+
+import { waterElectricityCostPM as permission } from '@/page-permission/contract'
+import { costTypeEnum } from '@enum-ms/contract'
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
+
 import udOperation from '@crud/UD.operation'
 import mHeader from './module/header.vue'
 import mForm from './module/form.vue'
@@ -86,7 +89,7 @@ const { crud, CRUD, columns } = useCRUD(
     title: '水电费',
     sort: [],
     optShow: { ...optShow },
-    // permission: { ...permission },
+    permission: { ...permission },
     crudApi: { ...crudApi },
     hasPagination: false
   },

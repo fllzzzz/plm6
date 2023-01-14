@@ -69,7 +69,7 @@
       </el-table-column>
       <el-table-column align="center" label="操作" width="200px">
         <template v-slot="scope">
-          <udOperation :data="scope.row" />
+          <udOperation :data="scope.row" :permission="permission" />
         </template>
       </el-table-column>
     </common-table>
@@ -80,10 +80,13 @@
 
 <script setup>
 import { ref } from 'vue'
-import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import crudApi, { getGasList } from '@/api/contract/expense-entry/gas-cost'
+
+import { gasCostPM as permission } from '@/page-permission/contract'
+import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
+
 import udOperation from '@crud/UD.operation'
 import mHeader from './module/header.vue'
 import mForm from './module/form.vue'
@@ -106,7 +109,7 @@ const { crud, CRUD, columns } = useCRUD(
     sort: [],
     optShow: { ...optShow },
     requiredQuery: ['classifyId'],
-    // permission: { ...permission },
+    permission: { ...permission },
     crudApi: { ...crudApi },
     hasPagination: false
   },

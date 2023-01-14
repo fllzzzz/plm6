@@ -3,7 +3,7 @@
   <div>
     <div class="head-container" style="display: flex; justify-content: space-between">
       <div style="width: 300px">
-        <print-table api-key="shippingFeeList" :params="costTypeData.projectId" size="mini" type="warning" class="filter-item" />
+        <print-table v-permission="permission.print" api-key="shippingFeeList" :params="costTypeData.projectId" size="mini" type="warning" class="filter-item" />
       </div>
       <div>
         <el-tag style="margin-left:8px;">装载重量合计（单位:t）： {{ convertUnits(totalAmount?.actualWeight, 'kg', 't', DP.COM_WT__T) }} </el-tag>
@@ -153,6 +153,10 @@ const { handleSizeChange, handleCurrentChange, total, setTotalPage, queryPage } 
 
 const props = defineProps({
   costTypeData: {
+    type: Object,
+    default: () => {}
+  },
+  permission: {
     type: Object,
     default: () => {}
   }

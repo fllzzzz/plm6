@@ -20,22 +20,22 @@ export default {
           alwaysShow: false,
           meta: { title: '生产成本分析', icon: 'config-2', noCache: true }
         },
-        {
-          path: '/operation/unloading-manual-analysis',
-          component: '/operation/unloading-manual-analysis/index',
-          hidden: false,
-          name: 'OperationUnloadingManualAnalysis',
-          alwaysShow: false,
-          meta: { title: '下料人工分析', icon: 'config-2', noCache: true }
-        },
-        {
-          path: '/operation/artifact-analysis',
-          component: '/operation/artifact-analysis/index',
-          hidden: false,
-          name: 'OperationArtifactAnalysis',
-          alwaysShow: false,
-          meta: { title: '构件分析', icon: 'config-2', noCache: true }
-        },
+        // {
+        //   path: '/operation/unloading-manual-analysis',
+        //   component: '/operation/unloading-manual-analysis/index',
+        //   hidden: false,
+        //   name: 'OperationUnloadingManualAnalysis',
+        //   alwaysShow: false,
+        //   meta: { title: '下料人工分析', icon: 'config-2', noCache: true }
+        // },
+        // {
+        //   path: '/operation/artifact-analysis',
+        //   component: '/operation/artifact-analysis/index',
+        //   hidden: false,
+        //   name: 'OperationArtifactAnalysis',
+        //   alwaysShow: false,
+        //   meta: { title: '构件分析', icon: 'config-2', noCache: true }
+        // },
         {
           path: '/operation/painting-fee',
           component: '/operation/painting-fee/index',
@@ -52,14 +52,14 @@ export default {
           alwaysShow: false,
           meta: { title: '辅材费', icon: 'config-2', noCache: true }
         },
-        {
-          path: '/operation/equipment-maintenance-cost',
-          component: '/operation/equipment-maintenance-cost/index',
-          hidden: false,
-          name: 'OperationEquipmentMaintenanceCost',
-          alwaysShow: false,
-          meta: { title: '设备维修费', icon: 'config-2', noCache: true }
-        },
+        // {
+        //   path: '/operation/equipment-maintenance-cost',
+        //   component: '/operation/equipment-maintenance-cost/index',
+        //   hidden: false,
+        //   name: 'OperationEquipmentMaintenanceCost',
+        //   alwaysShow: false,
+        //   meta: { title: '设备维修费', icon: 'config-2', noCache: true }
+        // },
         {
           path: '/operation/testing-fee',
           component: '/operation/testing-fee/index',
@@ -84,14 +84,14 @@ export default {
           alwaysShow: false,
           meta: { title: '管理费', icon: 'config-2', noCache: true }
         },
-        {
-          path: '/operation/auxiliary-material-consumption-analysis',
-          component: '/operation/auxiliary-material-consumption-analysis/index',
-          hidden: false,
-          name: 'OperationAuxiliaryMaterialConsumptionAnalysis',
-          alwaysShow: false,
-          meta: { title: '辅材消耗分析', icon: 'config-2', noCache: true }
-        },
+        // {
+        //   path: '/operation/auxiliary-material-consumption-analysis',
+        //   component: '/operation/auxiliary-material-consumption-analysis/index',
+        //   hidden: false,
+        //   name: 'OperationAuxiliaryMaterialConsumptionAnalysis',
+        //   alwaysShow: false,
+        //   meta: { title: '辅材消耗分析', icon: 'config-2', noCache: true }
+        // },
         // {
         //   path: '/operation/capacity-load-rate',
         //   component: '/operation/capacity-load-rate/index',

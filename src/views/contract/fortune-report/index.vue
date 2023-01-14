@@ -174,10 +174,11 @@
 import { ref } from 'vue'
 import crudApi from '@/api/contract/fortune-report/fortune-report'
 
+import checkPermission from '@/utils/system/check-permission'
+import { fortuneReportPM as permission } from '@/page-permission/contract'
 import { projectNameFormatter } from '@/utils/project'
 import { businessTypeEnum, orderSourceTypeEnum, projectStatusEnum } from '@enum-ms/contract'
 import { toThousand } from '@data-type/number'
-// import { Link } from '@element-plus/icons'
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
 
@@ -202,7 +203,7 @@ const { crud, CRUD, columns } = useCRUD(
     title: '业财报表',
     sort: [],
     optShow: { ...optShow },
-    // permission: { ...permission },
+    permission: { ...permission },
     crudApi: { ...crudApi },
     hasPagination: true
   },
@@ -215,12 +216,18 @@ const { maxHeight } = useMaxHeight({
 
 // 结算详情
 function showSettlementDetail(row) {
+  if (!checkPermission(permission.settleDetail)) {
+    return false
+  }
   dialogVisible.value = true
   list.value = row
 }
 
 // 成本页面详情
 function showCostDetail(row) {
+  if (!checkPermission(permission.cost.get)) {
+    return false
+  }
   drawerVisible.value = true
   detailRow.value = row.sourceRow
 }

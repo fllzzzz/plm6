@@ -274,12 +274,12 @@ export default {
       ]
     },
     {
-      path: '/contract/fortune-report',
+      path: '/contract/fortune-report-manage',
       component: 'Layout',
       hidden: false,
       name: 'FortuneReport',
       alwaysShow: false,
-      redirect: '/contract/fortune-report',
+      redirect: '/contract/fortune-report-manage/fortune-report',
       meta: { title: '业财报表', icon: 'contract2', noCache: true },
       children: [
         {

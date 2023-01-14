@@ -73,7 +73,7 @@
         <el-tag effect="plain" class="filter-item" size="medium">
           <span> 报销总额（元）：{{ summaryData.info }}</span>
         </el-tag>
-        <print-table api-key="expenseReimburseList" :params="{ ...query }" size="mini" type="warning" class="filter-item" />
+        <print-table api-key="expenseReimburseList" :params="{ ...query }" size="mini" type="warning" class="filter-item" v-permission="crud.permission.print" />
       </template>
     </crudOperation>
   </div>

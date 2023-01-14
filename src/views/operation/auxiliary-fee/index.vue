@@ -17,13 +17,13 @@
         />
       </div>
       <div>
-        <export-button class="filter-item"> 辅材费清单 </export-button>
+        <export-button class="filter-item" v-permission="permission.download"> 辅材费清单 </export-button>
       </div>
     </div>
     <common-table
       ref="tableRef"
       :data="list"
-      :empty-text="'暂无数据'"
+      :empty-text="checkPermission(permission.get)?'暂无数据':'暂无权限'"
       :max-height="maxHeight"
       row-key="id"
       style="width: 100%"
@@ -76,11 +76,15 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { getAuxAnalysis } from '@/api/operation/auxiliary-fee'
+
+import checkPermission from '@/utils/system/check-permission'
+import { auxiliaryFeeAnalysisPM as permission } from '@/page-permission/operation'
 import useMaxHeight from '@compos/use-max-height'
 import { DP } from '@/settings/config'
 import { convertUnits } from '@/utils/convert/unit'
 import { parseTime } from '@/utils/date'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
+
 import ExportButton from '@comp-common/export-button/index.vue'
 
 const year = ref(parseTime(new Date(), '{y}'))
@@ -98,6 +102,9 @@ async function fetchAuxiliary() {
   list.value = []
   summaryKeyArr.value = ['productionMete', 'gasAmount', 'gasWeight', 'auxSubtotal', 'totalAmount']
   gasWeightArr.value = ['gasWeight']
+  if (!checkPermission(permission.get)) {
+    return false
+  }
   try {
     const data = await getAuxAnalysis({
       year: year.value

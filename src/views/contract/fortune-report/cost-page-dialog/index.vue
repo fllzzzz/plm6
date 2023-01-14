@@ -65,7 +65,7 @@
         <div style="flex: 1">
           <div v-if="!costTypeData.key" class="my-code">*点击左侧表格行查看详情</div>
           <div v-if="costTypeData.key">
-            <component :is="currentView" ref="detailRef" :cost-type-data="costTypeData" />
+            <component :is="currentView" ref="detailRef" :cost-type-data="costTypeData" :permission="permission"/>
           </div>
         </div>
       </div>
@@ -76,6 +76,9 @@
 <script setup>
 import useVisible from '@compos/use-visible'
 import { defineProps, defineEmits, ref, watch, computed } from 'vue'
+
+import checkPermission from '@/utils/system/check-permission'
+import { fortuneReportPM } from '@/page-permission/contract'
 
 import mainMaterialFee from './module/main-material-fee.vue'
 import laborFee from './module/labor-fee.vue'
@@ -88,6 +91,7 @@ import testingFee from './module/testing-fee.vue'
 import subcontractingFee from './module/subcontracting-fee.vue'
 import Panel from '@/components/Panel'
 
+const permission = fortuneReportPM.cost
 const costTypeData = ref({})
 const detailRef = ref()
 const directRef = ref()
@@ -156,6 +160,9 @@ function showHook() {
 }
 
 function handleRowChange(row) {
+  if (!checkPermission(permission.detail)) {
+    return false
+  }
   costTypeData.value = row
 }
 </script>

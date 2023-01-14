@@ -63,7 +63,7 @@
       <el-table-column align="center" label="操作" width="120px">
         <template v-slot="scope">
           <!-- <udOperation :data="scope.row" /> -->
-          <common-button size="mini" type="primary" @click="toDetail(scope.row)">查看</common-button>
+          <common-button size="mini" type="primary" @click="toDetail(scope.row)" v-permission="permission.detail">查看</common-button>
         </template>
       </el-table-column>
     </common-table>
@@ -78,6 +78,7 @@
 import { ref, provide } from 'vue'
 import crudApi from '@/api/contract/expense-entry/testing-cost'
 
+import { expenseTestingCostPM as permission } from '@/page-permission/contract'
 import { toThousand } from '@data-type/number'
 import useCRUD from '@compos/use-crud'
 import useDict from '@compos/store/use-dict'
@@ -107,7 +108,7 @@ const { crud, CRUD, columns } = useCRUD(
     title: '检测费',
     sort: [],
     optShow: { ...optShow },
-    // permission: { ...permission },
+    permission: { ...permission },
     crudApi: { ...crudApi },
     requiredQuery: ['year'],
     hasPagination: false

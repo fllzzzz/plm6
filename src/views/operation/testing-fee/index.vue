@@ -18,13 +18,13 @@
         <project-cascader v-model="projectId" class="filter-item" @change="fetchTestingFee" clearable/>
       </div>
       <div style="float: right">
-        <export-button :fn="downloadTestingFee" :params="{ projectId: projectId, year: year }"> 检测费清单 </export-button>
+        <export-button v-permission="permission.download" :fn="downloadTestingFee" :params="{ projectId: projectId, year: year }"> 检测费清单 </export-button>
       </div>
     </div>
     <common-table
       ref="tableRef"
       :data="testingFeeList"
-      :empty-text="'暂无数据'"
+      :empty-text="checkPermission(permission.get)?'暂无数据':'暂无权限'"
       :max-height="maxHeight"
       row-key="id"
       style="width: 100%"
@@ -81,6 +81,8 @@
 import { ref } from 'vue'
 import { getTestingFee, downloadTestingFee } from '@/api/operation/testing-fee'
 
+import checkPermission from '@/utils/system/check-permission'
+import { testingFeeAnalysisPM as permission } from '@/page-permission/operation'
 import useMaxHeight from '@compos/use-max-height'
 import { parseTime } from '@/utils/date'
 import useDict from '@compos/store/use-dict'
@@ -104,6 +106,9 @@ const { handleSizeChange, handleCurrentChange, total, setTotalPage, queryPage } 
 fetchTestingFee()
 
 async function fetchTestingFee() {
+  if (!checkPermission(permission.get)) {
+    return false
+  }
   try {
     itemKeyArr.value = []
     const { content, totalElements } = await getTestingFee({

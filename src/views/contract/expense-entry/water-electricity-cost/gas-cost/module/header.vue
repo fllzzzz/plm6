@@ -25,7 +25,7 @@
     </div>
     <crudOperation>
       <template #viewLeft>
-        <print-table api-key="gasRecord" :params="{ ...query }" size="mini" type="warning" class="filter-item" />
+        <print-table v-permission="crud.permission.print" api-key="gasRecord" :params="{ ...query }" size="mini" type="warning" class="filter-item" />
       </template>
     </crudOperation>
   </div>

@@ -34,17 +34,20 @@
       </el-table-column>
     </common-table>
     <!-- 表单 -->
-    <m-form :query="crud.query" />
+    <m-form :query="crud.query" :permission="permission" />
   </div>
 </template>
 
 <script setup>
 import { ref } from 'vue'
+import crudApi from '@/api/contract/expense-entry/property-cost'
+
 import { toThousand } from '@data-type/number'
 import { tableSummary } from '@/utils/el-extra'
-import crudApi from '@/api/contract/expense-entry/property-cost'
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
+import { propertyCostPM as permission } from '@/page-permission/contract'
+
 import udOperation from '@crud/UD.operation'
 import mHeader from './module/header.vue'
 import mForm from './module/form.vue'
@@ -63,7 +66,7 @@ const { crud, CRUD, columns } = useCRUD(
     title: '物业费',
     sort: [],
     optShow: { ...optShow },
-    // permission: { ...permission },
+    permission: { ...permission },
     crudApi: { ...crudApi },
     hasPagination: false
   },

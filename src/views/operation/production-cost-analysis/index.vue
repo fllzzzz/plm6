@@ -14,12 +14,12 @@
         :disabled-date="disabledDate"
         @change="fetchProductAnalysis"
       />
-      <export-button class="filter-item"> 生产成本分析清单 </export-button>
+      <export-button class="filter-item" v-permission="permission.download"> 生产成本分析清单 </export-button>
     </div>
     <common-table
       ref="tableRef"
       :data="productionList"
-      :empty-text="'暂无数据'"
+      :empty-text="checkPermission(permission.get)?'暂无数据':'暂无权限'"
       :max-height="maxHeight"
       row-key="id"
       :showEmptySymbol="false"
@@ -50,10 +50,14 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { getProductAnalysis } from '@/api/operation/production-cost-analysis'
+
+import checkPermission from '@/utils/system/check-permission'
+import { productionCostAnalysisPM as permission } from '@/page-permission/operation'
 import useMaxHeight from '@compos/use-max-height'
 import { parseTime } from '@/utils/date'
 import { DP } from '@/settings/config'
 import { convertUnits } from '@/utils/convert/unit'
+
 import ExportButton from '@comp-common/export-button/index.vue'
 
 const year = ref(parseTime(new Date(), '{y}'))
@@ -65,11 +69,13 @@ onMounted(() => {
 })
 
 async function fetchProductAnalysis() {
+  if (!checkPermission(permission.get)) {
+    return false
+  }
   try {
     const { content } = await getProductAnalysis({
       year: year.value
     })
-
     const laborFeeList = content.map((v) => v.laborFee)
     const auxiliaryFeeList = content.map((v) => v.auxiliaryFee)
     const gasFeeList = content.map((v) => v.gasFee)

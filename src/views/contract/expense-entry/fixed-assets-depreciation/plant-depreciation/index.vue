@@ -84,13 +84,14 @@
             :active-value="enabledEnum.TRUE.V"
             :inactive-value="enabledEnum.FALSE.V"
             class="drawer-switch"
+            :disabled="!checkPermission(permission.changeStatus)"
             @change="changeStatus(row, row.boolStatus)"
           />
         </template>
       </el-table-column>
       <el-table-column align="center" label="操作">
         <template v-slot="scope">
-          <udOperation :data="scope.row" :disabledEdit="!scope.row.boolStatus" :disabledDel="!scope.row.boolStatus"/>
+          <udOperation :data="scope.row" :disabledEdit="!scope.row.boolStatus" :disabledDel="!scope.row.boolStatus" :permission="permission" />
         </template>
       </el-table-column>
     </common-table>
@@ -104,11 +105,15 @@
 import { ref } from 'vue'
 import { enabledEnum } from '@enum-ms/common'
 import crudApi, { editStatus } from '@/api/contract/expense-entry/fixed-assets-depreciation'
+
+import { plantDepreciationPM as permission } from '@/page-permission/contract'
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
+import { ElMessageBox, ElNotification } from 'element-plus'
+import checkPermission from '@/utils/system/check-permission'
+
 import pagination from '@crud/Pagination'
 import udOperation from '@crud/UD.operation'
-import { ElMessageBox, ElNotification } from 'element-plus'
 import mForm from './module/form.vue'
 import mHeader from './module/header.vue'
 
@@ -124,7 +129,7 @@ const { crud, CRUD, columns } = useCRUD(
     title: '厂房折旧',
     sort: [],
     optShow: { ...optShow },
-    // permission: { ...permission },
+    permission: { ...permission },
     crudApi: { ...crudApi },
     hasPagination: true,
     formStore: true

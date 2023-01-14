@@ -2,7 +2,7 @@
   <div class="app-container">
     <div class="head-container" style="display: flex; justify-content: space-between">
       <div style="width: 300px">
-        <print-table api-key="auxiliaryMaterialList" :params="{ basicClassEnum: mainAuxiliaryTypeEnum.AUXILIARY.V,projectId: props.costTypeData.projectId, }" size="mini" type="warning" class="filter-item" />
+        <print-table v-permission="permission.print" api-key="auxiliaryMaterialList" :params="{ basicClassEnum: mainAuxiliaryTypeEnum.AUXILIARY.V,projectId: props.costTypeData.projectId, }" size="mini" type="warning" class="filter-item" />
       </div>
       <el-tag>合计（单位：元）：{{ toThousand(props.costTypeData?.amount) }}</el-tag>
     </div>
@@ -74,6 +74,10 @@ const { handleSizeChange, handleCurrentChange, total, setTotalPage, queryPage } 
 
 const props = defineProps({
   costTypeData: {
+    type: Object,
+    default: () => {}
+  },
+  permission: {
     type: Object,
     default: () => {}
   }

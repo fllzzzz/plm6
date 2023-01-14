@@ -14,12 +14,12 @@
         :disabled-date="disabledDate"
         @change="fetchWaterElectric"
       />
-      <export-button class="filter-item" :fn="getWaterElectricListFn" :params="{ year: year }"> 水电费清单 </export-button>
+      <export-button v-permission="permission.download" class="filter-item" :fn="getWaterElectricListFn" :params="{ year: year }"> 水电费清单 </export-button>
     </div>
     <common-table
       ref="tableRef"
       :data="waterElectricList"
-      :empty-text="'暂无数据'"
+      :empty-text="checkPermission(permission.get)?'暂无数据':'暂无权限'"
       :max-height="maxHeight"
       row-key="id"
       style="width: 100%"
@@ -63,10 +63,14 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { getWaterElectric, getWaterElectricListFn } from '@/api/operation/water-electricity-fee'
+
+import checkPermission from '@/utils/system/check-permission'
+import { operationWaterElectricityPM as permission } from '@/page-permission/operation'
 import useMaxHeight from '@compos/use-max-height'
 import { DP } from '@/settings/config'
 import { convertUnits } from '@/utils/convert/unit'
 import { parseTime } from '@/utils/date'
+
 import ExportButton from '@comp-common/export-button/index.vue'
 
 const year = ref(parseTime(new Date(), '{y}'))
@@ -78,6 +82,9 @@ onMounted(() => {
 })
 
 async function fetchWaterElectric() {
+  if (!checkPermission(permission.get)) {
+    return false
+  }
   try {
     const { content } = await getWaterElectric({
       year: year.value
