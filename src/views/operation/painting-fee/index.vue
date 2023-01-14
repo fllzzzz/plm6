@@ -41,7 +41,7 @@
       <el-table-column label="项目名称" prop="project.name" align="center" min-width="160px" />
       <el-table-column label="累计产量（吨）" prop="mete" align="center">
         <template #default="{ row }">
-          <span>{{ row.mete ? convertUnits(row.mete, 'kg', 't', DP.COM_WT__T) : 0 }}</span>
+          <span>{{ row.mete ? convertUnits(row.mete, 'kg', 't', DP.COM_WT__KG) : 0 }}</span>
         </template>
       </el-table-column>
       <el-table-column label="油漆面积（㎡）" prop="area" align="center">
