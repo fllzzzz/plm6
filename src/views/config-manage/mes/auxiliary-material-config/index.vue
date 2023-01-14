@@ -52,6 +52,11 @@
           </template>
         </template>
       </el-table-column>
+      <el-table-column key="type" prop="type" align="center" :show-overflow-tooltip="true" label="所属类型" width="80">
+        <template v-slot="scope">
+          <span>{{ scope.row.type ? auxiliaryMaterialTypeEnum.VL[scope.row.type] : '-' }}</span>
+        </template>
+      </el-table-column>
       <el-table-column
         v-if="columns.visible('sort')"
         key="sort"
@@ -84,6 +89,7 @@
 import crudApi from '@/api/config/system-config/auxiliary-material-config'
 import { ref } from 'vue'
 import { matClsEnum } from '@enum-ms/classification'
+import { auxiliaryMaterialTypeEnum } from '@enum-ms/mes'
 import { auxiliaryMaterialConfigPM as permission } from '@/page-permission/config'
 import checkPermission from '@/utils/system/check-permission'
 import useMaxHeight from '@compos/use-max-height'

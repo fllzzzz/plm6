@@ -36,4 +36,17 @@ export function getSummary(params) {
   })
 }
 
+/**
+ * @description: 导出清单
+ */
+export function exportListFn(params) {
+  return request({
+    module: 'mes',
+    url: 'price/export',
+    method: 'get',
+    responseType: 'blob',
+    params
+  })
+}
+
 export default { get }

@@ -57,6 +57,7 @@ async function fetchSummary() {
     console.log('根据时间获取全年价格汇总', error)
   }
 }
+
 </script>
 
 <style>

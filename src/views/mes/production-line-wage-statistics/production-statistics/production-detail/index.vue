@@ -2,29 +2,40 @@
   <div class="app-container">
     <div v-show="!detailRow.process?.id" class="my-code" style="width: 100%">*点击左侧表格行查看详情</div>
     <div v-show="detailRow.process?.id" style="width: 100%">
-      <div class="production-detail">
-        <el-input
-          v-model.trim="userName"
-          placeholder="可输入姓名搜索"
-          class="filter-item"
-          style="width: 200px; margin-bottom: 8px"
-          size="small"
-          clearable
-          @keyup.enter="fetchDetail"
-        />
-        <common-button
-          class="filter-item"
-          size="mini"
-          type="success"
-          icon="el-icon-search"
-          style="margin-left: 8px"
-          @click.stop="searchQuery"
-        >
-          搜索
-        </common-button>
-        <common-button class="filter-item" size="mini" type="warning" icon="el-icon-refresh-left" @click.stop="resetQuery">
-          重置
-        </common-button>
+      <div class="production-detail" style="display: flex; justify-content: space-between">
+        <div>
+          <el-input
+            v-model.trim="userName"
+            placeholder="可输入姓名搜索"
+            class="filter-item"
+            style="width: 200px; margin-bottom: 8px"
+            size="small"
+            clearable
+            @keyup.enter="fetchDetail"
+          />
+          <common-button
+            class="filter-item"
+            size="mini"
+            type="success"
+            icon="el-icon-search"
+            style="margin-left: 8px"
+            @click.stop="searchQuery"
+          >
+            搜索
+          </common-button>
+          <common-button class="filter-item" size="mini" type="warning" icon="el-icon-refresh-left" @click.stop="resetQuery">
+            重置
+          </common-button>
+        </div>
+        <div>
+          <export-button
+            class="filter-item"
+            :fn="exportListFn"
+            :params="{ processId: detailRow.process?.id, userName: userName, ...props.commonParams }"
+          >
+            工资清单
+          </export-button>
+        </div>
       </div>
       <common-table
         ref="tableRef"
@@ -67,7 +78,7 @@
           key="groups.name"
           prop="groups.name"
           :show-overflow-tooltip="true"
-          label="班组"
+          label="生产组"
           min-width="120px"
           fixed="left"
         >
@@ -75,12 +86,28 @@
             <span>{{ row.groups?.name }}</span>
           </template>
         </el-table-column>
-        <el-table-column align="center" key="team.name" prop="team.name" :show-overflow-tooltip="true" label="姓名" fixed="left">
+        <el-table-column
+          align="center"
+          key="team.name"
+          prop="team.name"
+          :show-overflow-tooltip="true"
+          label="班组"
+          min-width="120px"
+          fixed="left"
+        >
           <template #default="{ row }">
             <span>{{ row.team?.name }}</span>
           </template>
         </el-table-column>
-        <el-table-column align="center" key="price" prop="price" :show-overflow-tooltip="true" label="总额" fixed="left" />
+        <el-table-column
+          align="center"
+          key="totalPrice"
+          prop="totalPrice"
+          :show-overflow-tooltip="true"
+          label="总额"
+          min-width="120px"
+          fixed="left"
+        />
         <el-table-column prop="sum" align="center" :key="'_' + item" :show-overflow-tooltip="true" v-for="item in yearList" :label="item">
           <template v-for="val in dayList" :key="val?.split('/')[2]">
             <el-table-column
@@ -88,14 +115,14 @@
               prop="sum"
               align="center"
               :show-overflow-tooltip="true"
-              :label="val?.split('/')[2]"
+              :label="new Date(val).getDate()"
               min-width="120"
             >
               <template v-slot="scope">
                 <div v-if="scope.row.priceList.findIndex((v) => v.dayTime == val) > -1">
                   <template v-for="day in scope.row.priceList" :key="day">
                     <template v-if="day.dayTime == val">
-                      <span>{{ day.mete }}</span>
+                      <span>{{ day.price }}</span>
                     </template>
                   </template>
                 </div>
@@ -123,10 +150,11 @@
 
 <script setup>
 import { ref, defineProps, watch } from 'vue'
-import { detail } from '@/api/mes/production-line-wage-statistics/production-statistics'
+import { detail, exportListFn } from '@/api/mes/production-line-wage-statistics/production-statistics'
 import { parseTime } from '@/utils/date'
 import usePagination from '@compos/use-pagination'
 import useMaxHeight from '@compos/use-max-height'
+import ExportButton from '@comp-common/export-button/index.vue'
 
 const props = defineProps({
   detailRow: {
