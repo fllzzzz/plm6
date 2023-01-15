@@ -1,8 +1,19 @@
 <template>
-  <common-drawer ref="drawerRef" title="打包列表" v-model="drawerVisible" direction="rtl" :before-close="handleClose" size="75%" custom-class="drawer-detail">
+  <common-drawer
+    ref="drawerRef"
+    title="打包列表"
+    v-model="drawerVisible"
+    direction="rtl"
+    :before-close="handleClose"
+    size="75%"
+    custom-class="drawer-detail"
+  >
     <template #titleRight>
-      <common-button v-permission="permission.pack" type="primary" :loading="packLoading" size="mini" @click="packClick">
+      <!-- <common-button v-permission="permission.pack" type="primary" :loading="packLoading" size="mini" @click="packClick">
         {{ packTypeEnum.VL[packType] }}打包({{ listObj['source' + packTypeEnum.VK[packType]].length }})
+      </common-button> -->
+      <common-button v-permission="permission.pack" type="primary" :loading="packLoading" size="mini" @click="packClick">
+        打包 ({{ totalBadge }})
       </common-button>
     </template>
     <template #content>
@@ -67,10 +78,10 @@
           </template>
         </el-table-column>
         <el-table-column label="序号" type="index" align="center" width="60" />
-        <template v-if="packType === packTypeEnum.STRUCTURE.V">
-          <el-table-column key="name" prop="name" :show-overflow-tooltip="true" label="名称" width="120px">
+        <template v-if="packType & (packTypeEnum.STRUCTURE.V | packTypeEnum.MACHINE_PART.V)">
+          <el-table-column v-if="packType & packTypeEnum.STRUCTURE.V" key="name" prop="name" :show-overflow-tooltip="true" label="名称" width="120px">
             <template v-slot="scope">
-              <table-cell-tag v-if="scope.row.workshopInf" :name="scope.row.workshopInf.name" />
+              <table-cell-tag v-if="scope.row.workshop" :name="scope.row.workshop?.name" />
               <span>{{ scope.row.name }}</span>
             </template>
           </el-table-column>
@@ -110,10 +121,10 @@
           </el-table-column>
         </template>
 
-        <template v-if="packType === packTypeEnum.ENCLOSURE.V">
+        <!-- <template v-if="packType === packTypeEnum.ENCLOSURE.V">
           <el-table-column key="name" prop="name" :show-overflow-tooltip="true" label="名称" width="120px">
             <template v-slot="scope">
-              <table-cell-tag v-if="scope.row.workshopInf" :name="scope.row.workshopInf.name" />
+              <table-cell-tag v-if="scope.row.workshop" :name="scope.row.workshop?.name" />
               <span>{{ scope.row.name }}</span>
             </template>
           </el-table-column>
@@ -154,7 +165,7 @@
               {{ toFixed(scope.row.totalArea, DP.COM_AREA__M2) }}
             </template>
           </el-table-column>
-        </template>
+        </template> -->
         <template v-if="packType === packTypeEnum.AUXILIARY_MATERIAL.V">
           <el-table-column key="serialNumber" prop="serialNumber" :show-overflow-tooltip="true" label="编号" min-width="120" />
           <el-table-column key="fullClassName" prop="fullClassName" :show-overflow-tooltip="true" label="辅材类别" min-width="250" />
@@ -289,10 +300,20 @@ const disabledVal = computed(() => {
   return _arr
 })
 
+const totalBadge = computed(() => {
+  let _total = 0
+  for (const item in packTypeEnum.ENUM) {
+    if (listObj[item]?.length) {
+      _total += listObj[item].length
+    }
+  }
+  return _total
+})
+
 watch(workshopId, (val) => {
   for (const item in packTypeEnum.ENUM) {
     if (listObj['source' + item].length) {
-      listObj[item] = listObj['source' + item].filter((v) => val === v.workshopInf.id || !val)
+      listObj[item] = listObj['source' + item].filter((v) => val === v.workshop?.id || !val)
     }
   }
 })
@@ -347,14 +368,28 @@ async function handlePack({ bagId, isNew, selectBagId }) {
       productType: packType.value,
       projectId: projectId.value
     }
-    const _list = listObj[packTypeEnum.VK[packType.value]]
-    params.packageLinks = _list.map((v) => {
-      return {
-        id: v.id,
-        numberList: v.numberList,
-        quantity: v.productQuantity
+    // 所有类型打包
+    for (const item in packTypeEnum.ENUM) {
+      const _list = listObj[item]
+      for (let i = 0; i < _list.length; i++) {
+        const v = _list[i]
+        params.packageLinks.push({
+          id: v.id,
+          numberList: v.numberList,
+          quantity: v.productQuantity,
+          productType: v.productType
+        })
       }
-    })
+    }
+    // 单独类型打包
+    // const _list = listObj[packTypeEnum.VK[packType.value]]
+    // params.packageLinks = _list.map((v) => {
+    //   return {
+    //     id: v.id,
+    //     numberList: v.numberList,
+    //     quantity: v.productQuantity
+    //   }
+    // })
     if (bagId) {
       params.id = bagId
       if (await editPack(params)) {

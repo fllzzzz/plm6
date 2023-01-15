@@ -481,6 +481,11 @@ export const LABEL_HTML = {
     [labelTypeEnum.SIMPLE.V]: ARTIFACT_SIMPLE_L_HTML,
     [labelTypeEnum.CUSTOM.V]: ARTIFACT_CUSTOM_L_HTML
   },
+  [(componentTypeEnum.MACHINE_PART.V | componentTypeEnum.ASSEMBLE.V)]: {
+    [labelTypeEnum.COMMON.V]: ARTIFACT_COMMON_L_HTML,
+    [labelTypeEnum.SIMPLE.V]: ARTIFACT_SIMPLE_L_HTML,
+    [labelTypeEnum.CUSTOM.V]: ARTIFACT_CUSTOM_L_HTML
+  },
   [componentTypeEnum.ENCLOSURE.V]: {
     [labelTypeEnum.COMMON.V]: ENCLOSURE_COMMON_L_HTML,
     [labelTypeEnum.SIMPLE.V]: '',
@@ -496,6 +501,24 @@ export const LABEL_HTML = {
 // 产品标签预览样式
 export const PRE_LABEL_STYLE = {
   [componentTypeEnum.ARTIFACT.V]: {
+    [labelTypeEnum.COMMON.V]: ARTIFACT_STYLE({
+      fClass: 'pre-com-al',
+      qrPosition: { right: '18px', bottom: '8px', size: 160 },
+      rowHeight: 60
+    }),
+    [labelTypeEnum.SIMPLE.V]: ARTIFACT_STYLE({
+      fClass: 'pre-sim-al',
+      qrPosition: { right: '18px', bottom: '8px', size: 160 },
+      rowHeight: 210,
+      colContent: 'center'
+    }),
+    [labelTypeEnum.CUSTOM.V]: ARTIFACT_STYLE({
+      fClass: 'pre-cus-al',
+      qrPosition: { right: '18px', bottom: '8px', size: 160 },
+      rowHeight: 60
+    })
+  },
+  [(componentTypeEnum.MACHINE_PART.V | componentTypeEnum.ASSEMBLE.V)]: {
     [labelTypeEnum.COMMON.V]: ARTIFACT_STYLE({
       fClass: 'pre-com-al',
       qrPosition: { right: '18px', bottom: '8px', size: 160 },
@@ -552,6 +575,21 @@ export const MINI_LABEL_STYLE = {
       rowHeight: 40
     })
   },
+  [(componentTypeEnum.MACHINE_PART.V | componentTypeEnum.ASSEMBLE.V)]: {
+    [labelTypeEnum.COMMON.V]: ARTIFACT_STYLE({
+      fClass: 'mini-com-al',
+      rowHeight: 40
+    }),
+    [labelTypeEnum.SIMPLE.V]: ARTIFACT_STYLE({
+      fClass: 'mini-sim-al',
+      rowHeight: 140,
+      colContent: 'center'
+    }),
+    [labelTypeEnum.CUSTOM.V]: ARTIFACT_STYLE({
+      fClass: 'mini-cus-al',
+      rowHeight: 40
+    })
+  },
   [componentTypeEnum.ENCLOSURE.V]: {
     [labelTypeEnum.COMMON.V]: ENCLOSURE_STYLE({
       fClass: 'mini-com-al',
@@ -569,6 +607,27 @@ export const MINI_LABEL_STYLE = {
 // 产品标签打印样式
 export const PRINT_LABEL_STYLE = {
   [componentTypeEnum.ARTIFACT.V]: {
+    [labelTypeEnum.COMMON.V]: ARTIFACT_STYLE({
+      fClass: 'print-com-al',
+      rowHeight: 9,
+      colPadding: 1,
+      unit: 'mm'
+    }),
+    [labelTypeEnum.SIMPLE.V]: ARTIFACT_STYLE({
+      fClass: 'print-sim-al',
+      rowHeight: 32,
+      colPadding: 1,
+      colContent: 'center',
+      unit: 'mm'
+    }),
+    [labelTypeEnum.CUSTOM.V]: ARTIFACT_STYLE({
+      fClass: 'print-cus-al',
+      rowHeight: 9,
+      colPadding: 1,
+      unit: 'mm'
+    })
+  },
+  [(componentTypeEnum.MACHINE_PART.V | componentTypeEnum.ASSEMBLE.V)]: {
     [labelTypeEnum.COMMON.V]: ARTIFACT_STYLE({
       fClass: 'print-com-al',
       rowHeight: 9,

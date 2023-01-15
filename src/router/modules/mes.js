@@ -954,16 +954,27 @@ export default {
       }
     },
     {
-      name: 'MesLabelPrintEnclosure',
-      path: 'enclosure',
+      name: 'MesLabelPrintPart',
+      path: 'part',
       hidden: false,
-      component: '/mes/label-print/enclosure/index',
+      component: '/mes/label-print/part/index',
       meta: {
-        title: '围护',
+        title: '直发件',
         icon: 'project',
         noCache: true
       }
     },
+    // {
+    //   name: 'MesLabelPrintEnclosure',
+    //   path: 'enclosure',
+    //   hidden: false,
+    //   component: '/mes/label-print/enclosure/index',
+    //   meta: {
+    //     title: '围护',
+    //     icon: 'project',
+    //     noCache: true
+    //   }
+    // },
     {
       name: 'MesLabelPrintAuxiliaryMaterial',
       path: 'auxiliary-material',

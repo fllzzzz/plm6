@@ -44,7 +44,7 @@
           <!-- 次要信息 -->
           <material-secondary-info-columns v-if="showTableColumnSecondary" :basic-class="props.basicClass" />
 
-          <template v-if="!boolPartyA">
+          <template v-if="fillableAmount && !boolPartyA">
               <el-table-column key="unitPrice" prop="unitPrice" align="right" width="120" label="含税单价">
                 <template #default="{ row: { sourceRow: row } }">
                   <span>{{ row.unitPrice }}</span>
@@ -91,7 +91,7 @@
 
 <script setup>
 import { computed, defineEmits, defineProps, provide, ref, watch } from 'vue'
-import { orderSupplyTypeEnum } from '@enum-ms/wms'
+import { orderSupplyTypeEnum, inboundFillWayEnum } from '@enum-ms/wms'
 import { STEEL_ENUM } from '@/settings/config'
 import { matClsEnum } from '@/utils/enum/modules/classification'
 import { logisticsPayerEnum } from '@/utils/enum/modules/logistics'
@@ -105,7 +105,7 @@ import { regExtra } from '@/composables/form/use-form'
 import useTableValidate from '@/composables/form/use-table-validate'
 import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'
-// import useWmsConfig from '@/composables/store/use-wms-config'
+import useWmsConfig from '@/composables/store/use-wms-config'
 import elExpandTableColumn from '@comp-common/el-expand-table-column.vue'
 import materialBaseInfoColumns from '@/components-system/wms/table-columns/material-base-info-columns/index.vue'
 import materialUnitQuantityColumns from '@/components-system/wms/table-columns/material-unit-quantity-columns/index.vue'
@@ -162,7 +162,7 @@ const projectRules = {
 const tableRules = computed(() => {
   const rules = { ...warehouseRules }
   // 甲供不填写金额方面的信息
-  if (!boolPartyA.value) {
+  if (fillableAmount.value && !boolPartyA.value) {
     Object.assign(rules, amountRules)
     if (isNotBlank(order.value.projects)) {
       Object.assign(rules, projectRules)
@@ -172,18 +172,19 @@ const tableRules = computed(() => {
 })
 
 const expandRowKeys = ref([]) // 展开行key
+// const amount = ref() // 金额
 
 const { visible: dialogVisible, handleClose } = useVisible({ emit, props, closeHook: closeHook })
 const { cu, form, FORM } = regExtra() // 表单
-// const { inboundFillWayCfg } = useWmsConfig()
+const { inboundFillWayCfg } = useWmsConfig()
 
 // 物流组件ref
 const logisticsRef = ref()
 // 订单信息
 const order = computed(() => cu.props.order || {})
 // 显示金额相关信息（由采购填写的信息）
-const fillableAmount = ref(true)
-// const fillableAmount = computed(() => inboundFillWayCfg.value ? inboundFillWayCfg.value.amountFillWay === inboundFillWayEnum.APPLICATION.V : false)
+// const fillableAmount = ref(true)
+const fillableAmount = computed(() => inboundFillWayCfg.value ? inboundFillWayCfg.value.amountFillWay === inboundFillWayEnum.APPLICATION.V : false)
 // 显示仓库（由仓库填写的信息）
 const fillableWarehouse = ref(true)
 // const fillableWarehouse = computed(() => inboundFillWayCfg.value ? inboundFillWayCfg.value.warehouseFillWay === inboundFillWayEnum.APPLICATION.V : false)

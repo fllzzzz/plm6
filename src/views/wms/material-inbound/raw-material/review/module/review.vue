@@ -74,13 +74,47 @@
           <material-secondary-info-columns v-if="showTableColumnSecondary" :basic-class="form.basicClass" />
           <!-- 金额设置 -->
           <template v-if="showAmount">
-            <price-set-columns
+            <!-- <price-set-columns
               v-if="fillableAmount"
               :form="form"
               :order="order"
               :requisitions="requisitions"
+              weightAttribute="mete"
               @amount-change="handleAmountChange"
-            />
+            /> -->
+            <template v-if="fillableAmount && !boolPartyA">
+              <el-table-column prop="unitPrice" align="center" width="135px" label="含税单价">
+                <template #default="{ row: { sourceRow: row } }">
+                  <common-input-number
+                    v-if="row"
+                    v-model="row.unitPrice"
+                    :min="0"
+                    :max="9999999999"
+                    :controls="false"
+                    :step="1"
+                    size="mini"
+                    placeholder="含税单价"
+                    @change="handleUnitPriceChange($event, row)"
+                  />
+                </template>
+              </el-table-column>
+              <el-table-column prop="amount" align="center" width="135px" label="金额">
+                <template #default="{ row: { sourceRow: row } }">
+                  <common-input-number
+                    v-if="row"
+                    v-model="row.amount"
+                    :min="0"
+                    :max="9999999999"
+                    :controls="false"
+                    :step="1"
+                    size="mini"
+                    :precision="2"
+                    placeholder="金额"
+                    @change="handleAmountChange($event, row)"
+                  />
+                </template>
+              </el-table-column>
+            </template>
             <template v-else>
               <el-table-column prop="unitPrice" label="含税单价" align="right" min-width="120px" show-overflow-tooltip />
               <el-table-column prop="amount" label="金额" align="right" min-width="120px" show-overflow-tooltip />
@@ -126,18 +160,20 @@
 <script setup>
 import { getPendingReviewIdList, detail, reviewPassed, reviewReturned } from '@/api/wms/material-inbound/raw-material/review'
 import { inject, computed, ref, defineEmits, defineProps, watch } from 'vue'
-import { orderSupplyTypeEnum, inspectionStatusEnum } from '@enum-ms/wms'
+import { orderSupplyTypeEnum, inspectionStatusEnum, inboundFillWayEnum } from '@enum-ms/wms'
 import { logisticsPayerEnum } from '@/utils/enum/modules/logistics'
 import { tableSummary } from '@/utils/el-extra'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { setSpecInfoToList } from '@/utils/wms/spec'
-import { deepClone, isBlank, isNotBlank, toFixed } from '@/utils/data-type'
+// import { deepClone, isBlank, isNotBlank, toFixed } from '@/utils/data-type'
+import { deepClone, isBlank, toPrecision, isNotBlank } from '@/utils/data-type'
+import { getDP } from '@/utils/data-type/number'
 import { materialHasAmountColumns } from '@/utils/columns-format/wms'
 
 import { regExtra } from '@compos/use-crud'
 import useTableValidate from '@/composables/form/use-table-validate'
 import useMaxHeight from '@compos/use-max-height'
-// import useWmsConfig from '@/composables/store/use-wms-config'
+import useWmsConfig from '@/composables/store/use-wms-config'
 import useVisible from '@compos/use-visible'
 import elExpandTableColumn from '@comp-common/el-expand-table-column.vue'
 import materialBaseInfoColumns from '@/components-system/wms/table-columns/material-base-info-columns/index.vue'
@@ -152,7 +188,7 @@ import ReviewConfirmButton from '@/components-system/common/review-confirm-butto
 
 import inspectionReturnInfo from '@/views/wms/material-inbound/raw-material/components/inspection-return-info.vue'
 import logisticsForm from '@/views/wms/material-inbound/raw-material/components/logistics-form.vue'
-import priceSetColumns from '@/views/wms/material-inbound/raw-material/components/price-set-columns.vue'
+// import priceSetColumns from '@/views/wms/material-inbound/raw-material/components/price-set-columns.vue'
 import warehouseSetColumns from '@/views/wms/material-inbound/raw-material/components/warehouse-set-columns.vue'
 import titleAfterInfo from '@/views/wms/material-inbound/raw-material/components/title-after-info.vue'
 import checkPermission from '@/utils/system/check-permission'
@@ -193,13 +229,13 @@ const pendingReviewIdList = ref([]) // 待审核列表
 // const currentReviewIndex = ref(0) // 当前审核下标
 const currentInboundId = ref() // 当前id
 
-// const { inboundFillWayCfg } = useWmsConfig()
+const { inboundFillWayCfg } = useWmsConfig()
 
 // 可填写金额（统一为入库填写，取消后台配置）
-const fillableAmount = ref(false)
-// const fillableAmount = computed(() =>
-//   inboundFillWayCfg.value ? inboundFillWayCfg.value.amountFillWay === inboundFillWayEnum.REVIEWING.V : false
-// )
+// const fillableAmount = ref(false)
+const fillableAmount = computed(() =>
+  inboundFillWayCfg.value ? inboundFillWayCfg.value.amountFillWay === inboundFillWayEnum.REVIEWING.V : false
+)
 
 // 显示金额相关信息（由采购填写的信息）
 const showAmount = computed(() => checkPermission(permission.showAmount) || fillableAmount.value)
@@ -217,7 +253,7 @@ const boolPartyA = computed(() => order.value.supplyType === orderSupplyTypeEnum
 // 采购合同信息
 const order = computed(() => form.value.purchaseOrder || {})
 // 申购单信息
-const requisitions = computed(() => form.value.requisitions || {})
+// const requisitions = computed(() => form.value.requisitions || {})
 // 表单禁止操作
 const formDisabled = computed(() => passedLoading.value || returnedLoading.value)
 // 标题
@@ -473,19 +509,33 @@ function setDitto(list) {
 }
 
 // 金额变化
-function handleAmountChange() {
-  if (!form.value.list) return
-  amount.value = toFixed(
-    form.value.list.reduce((sum, cur) => {
-      const value = Number(cur.amount)
-      if (!isNaN(value)) {
-        return sum + cur.amount
-      } else {
-        return sum
-      }
-    }, 0),
-    2
-  )
+// function handleAmountChange() {
+//   if (!form.value.list) return
+//   amount.value = toFixed(
+//     form.value.list.reduce((sum, cur) => {
+//       const value = Number(cur.amount)
+//       if (!isNaN(value)) {
+//         return sum + cur.amount
+//       } else {
+//         return sum
+//       }
+//     }, 0),
+//     2
+//   )
+// }
+
+function handleUnitPriceChange(val, row) {
+  const dp = getDP(val)
+  if (dp > 10) {
+    row.unitPrice = toPrecision(val, 10)
+    val = row.unitPrice
+  }
+  row.amount = isNotBlank(val) ? toPrecision(val * row.mete, 2) : undefined
+}
+
+// 处理金额变化
+function handleAmountChange(val, row) {
+  row.unitPrice = isNotBlank(val) ? toPrecision(val / row.mete, 10) : undefined
 }
 
 // 合计

@@ -5,7 +5,7 @@
       :current-basic-class="steelBasicClassKV[currentBasicClass]?.V"
       :total-value="totalWeight"
       :total-amount="totalAmount"
-      :show-total-amount="!boolPartyA"
+      :show-total-amount="!boolPartyA && fillableAmount"
       :validate="validate"
       :edit="props.edit"
       unit="kg"
@@ -40,7 +40,7 @@
         </div>
       </div>
       <el-form ref="formRef" :model="form">
-        <component ref="steelRef" :max-height="tableMaxHeight" :style="maxHeightStyle" :is="comp" :bool-party-a="boolPartyA" />
+        <component ref="steelRef" :max-height="tableMaxHeight" :style="maxHeightStyle" :is="comp" :bool-party-a="boolPartyA" :fillableAmount="fillableAmount" />
       </el-form>
     </common-wrapper>
     <common-drawer
@@ -78,10 +78,11 @@ import { defineProps, defineEmits, ref, computed, watch, provide, nextTick, reac
 import { STEEL_ENUM } from '@/settings/config'
 import { matClsEnum } from '@/utils/enum/modules/classification'
 import { weightMeasurementModeEnum } from '@/utils/enum/modules/finance'
-import { orderSupplyTypeEnum } from '@/utils/enum/modules/wms'
+import { orderSupplyTypeEnum, inboundFillWayEnum } from '@/utils/enum/modules/wms'
 
 import useForm from '@/composables/form/use-form'
 import useMaxHeight from '@compos/use-max-height'
+import useWmsConfig from '@/composables/store/use-wms-config'
 import commonWrapper from '@/views/wms/material-inbound/raw-material/application/components/common-wrapper.vue'
 import materialTableSpecSelect from '@/components-system/classification/material-table-spec-select.vue'
 import steelPlateTable from './module/steel-plate-table.vue'
@@ -141,6 +142,10 @@ const steelRefList = reactive({
   steelCoilList: null
 })
 
+const { inboundFillWayCfg } = useWmsConfig()
+// 显示金额相关信息（由采购填写的信息）
+const fillableAmount = computed(() => inboundFillWayCfg.value ? inboundFillWayCfg.value.amountFillWay === inboundFillWayEnum.APPLICATION.V : false)
+
 const addable = computed(() => !!(currentBasicClass.value && order.value)) // 可添加的状态（选择了采购合同编号）
 
 // 列表汇总数据
@@ -161,7 +166,7 @@ const formList = computed(() => {
 // 总价
 const totalAmount = computed(() => {
   let amount = 0
-  if (!boolPartyA.value) {
+  if (!boolPartyA.value && fillableAmount.value) {
     formList.value.forEach(v => {
       if (isNotBlank(v.amount)) {
         amount += +v.amount
@@ -513,6 +518,10 @@ cu.props.import = (importList) => {
   form[key].push.apply(form[key], importList)
   const newLen = form[key].length
   for (let i = oldLen; i < newLen; i++) {
+    if (!fillableAmount.value) {
+      form[key][i].amount = undefined
+      form[key][i].unitPrice = undefined
+    }
     steelRefList[key].rowWatch(form[key][i])
   }
   // 初始化选中数据，执行一次后取消当前监听

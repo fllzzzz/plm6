@@ -49,7 +49,7 @@ const currentView = computed(() => {
     case componentTypeEnum.ASSEMBLE.V:
       return assemble
     default:
-      return ''
+      return machinePart
   }
 })
 

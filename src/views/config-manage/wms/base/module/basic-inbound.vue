@@ -21,7 +21,7 @@
       <el-form-item label="金额填写场景">
         <common-radio v-model="form.amountFillWay" :options="inboundFillWayEnum.ENUM" type="enum" size="small" />
       </el-form-item>
-      <el-form-item label="存储位置填写场景">
+      <!-- <el-form-item label="存储位置填写场景">
         <common-radio v-model="form.warehouseFillWay" :options="inboundFillWayEnum.ENUM" type="enum" size="small" />
       </el-form-item>
       <el-form-item label="打印标签提示场景">
@@ -30,7 +30,7 @@
         <el-form-item>
           <span class="form-item-tip">勾选后，会在对应的场景弹窗提示用户打印此次入库物料的标签。</span>
         </el-form-item>
-      </el-form-item>
+      </el-form-item> -->
     </el-form>
   </el-card>
 </template>
@@ -50,14 +50,14 @@ const permission = inject('permission')
 // 数据源
 const dataSource = ref({
   // 金额填写方式
-  amountFillWay: undefined,
-  // 工厂填写方式
-  warehouseFillWay: undefined,
-  // 标签打印提示场景
-  printLabelTipWay: {
-    afterApplication: undefined,
-    afterReview: undefined
-  }
+  amountFillWay: undefined
+  // // 工厂填写方式
+  // warehouseFillWay: undefined,
+  // // 标签打印提示场景
+  // printLabelTipWay: {
+  //   afterApplication: undefined,
+  //   afterReview: undefined
+  // }
 })
 // 表单
 const form = ref(dataSource.value)

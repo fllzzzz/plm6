@@ -13,19 +13,10 @@
       style="width: 100%"
       @sort-change="crud.handleSortChange"
     >
-      <el-table-column label="序号" type="index" align="center" width="60" />
-      <el-table-column
-        v-if="columns.visible('name')"
-        key="name"
-        prop="name"
-        sortable="custom"
-        :show-overflow-tooltip="true"
-        label="名称"
-        width="120px"
-      >
-        <template #default="{ row }">
-          <table-cell-tag v-if="row.workshopInf" :name="row.workshopInf.name" />
-          <span>{{ row.name }}</span>
+      <el-table-column label="序号" type="index" align="center" width="60">
+        <template #default="{ row, $index }">
+          <table-cell-tag v-if="row.workshop" :name="row.workshop.name" />
+          <span>{{ $index + 1 }}</span>
         </template>
       </el-table-column>
       <el-table-column
