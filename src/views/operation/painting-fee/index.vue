@@ -30,7 +30,7 @@
     <common-table
       ref="tableRef"
       :data="paintingList"
-      :empty-text="checkPermission(permission.get)?'暂无数据':'暂无权限'"
+      :empty-text="checkPermission(permission.get) ? '暂无数据' : '暂无权限'"
       :max-height="maxHeight"
       row-key="id"
       style="width: 100%"
@@ -85,8 +85,8 @@ async function fetchPaintingFee() {
       year: year.value
     })
     content.forEach((v) => {
-      v.paintingUnitPrice = (v.price / v.area).toFixed(2)
-      v.averageUnitPrice = (v.price / v.mete).toFixed(2)
+      v.paintingUnitPrice = (v.price / convertUnits(v.area, 'mm2', 'm2', DP.COM_AREA__M2)).toFixed(2)
+      v.averageUnitPrice = (v.price / convertUnits(v.mete, 'kg', 't', DP.COM_WT__T)).toFixed(2)
     })
     paintingList.value = content || []
   } catch (error) {
@@ -159,4 +159,5 @@ function getSummaries(param) {
 }
 </script>
 <style lang="scss" scoped>
+
 </style>
