@@ -15,16 +15,22 @@
           :disabled-date="disabledDate"
           @change="fetchTestingFee"
         />
-        <project-cascader v-model="projectId" class="filter-item" @change="fetchTestingFee" clearable/>
+        <project-cascader v-model="projectId" class="filter-item" @change="fetchTestingFee" clearable />
       </div>
       <div style="float: right">
-        <export-button v-permission="permission.download" :fn="downloadTestingFee" :params="{ projectId: projectId, year: year }"> 检测费清单 </export-button>
+        <export-button
+          v-permission="permission.download"
+          :fn="downloadTestingFee"
+          :params="{ projectId: projectId, year: year }"
+        > 
+        检测费清单 
+        </export-button>
       </div>
     </div>
     <common-table
       ref="tableRef"
       :data="testingFeeList"
-      :empty-text="checkPermission(permission.get)?'暂无数据':'暂无权限'"
+      :empty-text="checkPermission(permission.get) ? '暂无数据' : '暂无权限'"
       :max-height="maxHeight"
       row-key="id"
       style="width: 100%"
@@ -32,13 +38,7 @@
       :summary-method="getSummaries"
     >
       <el-table-column type="index" label="序号" prop="indx" align="center" />
-      <el-table-column
-        key="project"
-        prop="project"
-        :show-overflow-tooltip="true"
-        label="项目"
-        min-width="120"
-      >
+      <el-table-column key="project" prop="project" :show-overflow-tooltip="true" label="项目" min-width="120">
         <template v-slot="scope">
           <span>{{ projectNameFormatter(scope.row.project) }}</span>
         </template>
@@ -59,13 +59,13 @@
         </template>
       </el-table-column>
       <el-table-column label="平均检测费（元/吨）" prop="averageTestingFee" key="averageTestingFee" align="center">
-      <template v-slot="scope">
+        <template v-slot="scope">
           <span>{{ toThousand(scope.row.averageTestingFee) }}</span>
         </template>
       </el-table-column>
     </common-table>
     <!--分页组件-->
-    <el-pagination
+    <!-- <el-pagination
       :total="total"
       :current-page="queryPage.pageNumber"
       :page-size="queryPage.pageSize"
@@ -73,7 +73,7 @@
       layout="total, prev, pager, next, sizes"
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
-    />
+    /> -->
   </div>
 </template>
 
@@ -89,7 +89,7 @@ import useDict from '@compos/store/use-dict'
 import { projectNameFormatter } from '@/utils/project'
 import { toThousand } from '@data-type/number'
 
-import usePagination from '@compos/use-pagination'
+// import usePagination from '@compos/use-pagination'
 import projectCascader from '@comp-base/project-cascader'
 import ExportButton from '@comp-common/export-button/index.vue'
 
@@ -101,7 +101,7 @@ const itemKeyArr = ref([])
 
 const tableRef = ref()
 
-const { handleSizeChange, handleCurrentChange, total, setTotalPage, queryPage } = usePagination({ fetchHook: fetchTestingFee })
+// const { handleSizeChange, handleCurrentChange, total, setTotalPage, queryPage } = usePagination({ fetchHook: fetchTestingFee })
 
 fetchTestingFee()
 
@@ -111,10 +111,11 @@ async function fetchTestingFee() {
   }
   try {
     itemKeyArr.value = []
-    const { content, totalElements } = await getTestingFee({
+    // const { content, totalElements } = await getTestingFee({
+    const { content } = await getTestingFee({
       year: year.value,
-      projectId: projectId.value,
-      ...queryPage
+      projectId: projectId.value
+      // ...queryPage
     })
     content.map(v => {
       v.totalAmount = 0
@@ -124,7 +125,7 @@ async function fetchTestingFee() {
         if (itemKeyArr.value.findIndex(val => val.key === ('fee_' + i)) < 0) {
           itemKeyArr.value.push({
             key: 'fee_' + i,
-            name: dict.value?.testing_fee_type.find(k => k.id === Number(i)).label
+            name: dict.value?.testing_fee_type?.find(k => k.id === Number(i)).label
           })
         }
       }
@@ -132,7 +133,7 @@ async function fetchTestingFee() {
       return v
     })
     testingFeeList.value = content || []
-    setTotalPage(totalElements)
+    // setTotalPage(totalElements)
   } catch (error) {
     console.log('检测费用', error)
   }
@@ -162,9 +163,17 @@ function getSummaries(param) {
             return prev
           }
         }, 0)
-        sums[index] = sums[index] ? toThousand(sums[index]) : 0
+        // sums[index] = sums[index] ? sums[index] : 0
       }
     }
+    if (column.property === 'averageTestingFee') {
+      sums[index] = sums[2] ? sums[6] / sums[2] : 0
+      // console.log('lll', +sums[6], +sums[2])
+    }
+  })
+  const tIndex = [2, 3, 4, 5, 6, 7]
+  tIndex.forEach(index => {
+    sums[index] = sums[index] ? toThousand(sums[index]) : 0
   })
   return sums
 }
@@ -175,4 +184,5 @@ const { maxHeight } = useMaxHeight({
 })
 </script>
 <style lang="scss" scoped>
+
 </style>
