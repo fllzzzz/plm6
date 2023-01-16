@@ -158,8 +158,8 @@
           <span> {{ toThousand(list.settlementAmount) }}</span>
         </el-descriptions-item>
         <el-descriptions-item label="附件" label-align="center" align="center">
-          <template v-if="list.attachments?.length > 0">
-            <div v-for="item in list.attachments" :key="item.id">
+          <template v-if="list.settlementAttachments?.length > 0">
+            <div v-for="item in list.settlementAttachments" :key="item.id" style="margin-bottom:3px;">
               {{ item.name }}
               <export-button :params="{ id: item.id }" />
             </div>

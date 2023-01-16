@@ -200,7 +200,7 @@ const gasRecord = {
     fields: [
       { show: true, key: 'month', title: '月份', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.OTHER.K },
       { show: true, key: 'classifyName', title: '气体种类', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.SUBJECT_NAME.K },
-      { show: true, key: 'unit', title: '单位', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.UNIT.K },
+      { show: true, key: 'accountingUnit', title: '核算单位', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.UNIT.K },
       { show: true, key: 'usedMete', title: '使用量', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.METE.K, format: { toThousand: true, precision: 2, UNIT: typeEnum.METE.K }, sum: true },
       { show: true, key: 'totalAmount', title: '总额', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.AMOUNT.K, format: { toThousand: true, precision: 2, UNIT: typeEnum.AMOUNT.K }, sum: true },
       { show: true, key: 'avgUnitPrice', title: '平均单价', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.AMOUNT.K, format: { toThousand: true, precision: 2, UNIT: typeEnum.AMOUNT.K }, sum: true }

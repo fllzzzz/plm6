@@ -44,7 +44,7 @@
         <template v-for="item in gasList" :key="item">
           <el-table-column :label="item.name" align="center">
             <el-table-column label="重量" :prop="'mete_' + item.id" :key="'mete_' + item.id" align="center" />
-            <el-table-column label="单位" prop="accountingUnit" align="center"> </el-table-column>
+            <el-table-column label="单位" :prop="'accountingUnit_'+ item.id" align="center"> </el-table-column>
             <el-table-column label="金额" :prop="'amountExcludingVAT_' + item.id" :key="'amountExcludingVAT_' + item.id" align="center" />
           </el-table-column>
         </template>
@@ -121,6 +121,7 @@ async function fetchAuxiliary() {
       v.gas.map((k) => {
         v['mete_' + k.classifyId] = k.mete
         v['amountExcludingVAT_' + k.classifyId] = k.amountExcludingVAT
+        v['accountingUnit_'+ k.classifyId]=k.accountingUnit
         summaryKeyArr.value.push('mete_' + k.classifyId)
         summaryKeyArr.value.push('amountExcludingVAT_' + k.classifyId)
         gasWeightArr.value.push('mete_' + k.classifyId)
@@ -128,6 +129,7 @@ async function fetchAuxiliary() {
       v.productWeightList.push(v.productionMete)
       v.auxiliary.map((k) => {
         v['amountExcludingVAT_' + k.classifyId] = k.amountExcludingVAT
+        v['accountingUnit_'+ k.classifyId]=k.accountingUnit
         summaryKeyArr.value.push('amountExcludingVAT_' + k.classifyId)
       })
       v.productMeteSum = v.productWeightList?.reduce((pre, cur) => {

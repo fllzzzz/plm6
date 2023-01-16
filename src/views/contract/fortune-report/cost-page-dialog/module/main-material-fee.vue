@@ -68,6 +68,7 @@ import { ref, defineProps, watch } from 'vue'
 
 import { matClsEnum } from '@enum-ms/classification'
 import { mainAuxiliaryTypeEnum } from '@enum-ms/contract'
+import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { toThousand } from '@data-type/number'
 import { tableSummary } from '@/utils/el-extra'
 import { parseTime } from '@/utils/date'
@@ -123,6 +124,21 @@ async function fetchMainFee() {
       projectId: props.costTypeData.projectId,
       ...queryPage
     })
+    content.map(v=>{
+      v.unitPrice= v.amount / v.mete
+    })
+    detailData.value = content || []
+    detailData.value = await numFmtByBasicClass(
+      detailData.value,
+      {
+        toSmallest: false,
+        toNum: true
+      },
+      {
+        mete: ['mete'],
+        amount: ['unitPrice']
+      }
+    )
     detailData.value = content || []
     setTotalPage(totalElements)
   } catch (error) {

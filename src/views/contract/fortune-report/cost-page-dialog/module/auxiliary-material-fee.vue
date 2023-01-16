@@ -62,6 +62,7 @@ import { getMainAuxiliaryList } from '@/api/contract/fortune-report/detail-fee'
 import { ref, defineProps, watch } from 'vue'
 
 import { matClsEnum } from '@enum-ms/classification'
+import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { mainAuxiliaryTypeEnum } from '@enum-ms/contract'
 import { toThousand } from '@data-type/number'
 import { tableSummary } from '@/utils/el-extra'
@@ -113,12 +114,26 @@ function getSummaries(param) {
 
 async function fetchMainFee() {
   try {
-    const { content, totalElements } = await getMainAuxiliaryList({
+    const { content=[], totalElements } = await getMainAuxiliaryList({
       basicClassEnum: mainAuxiliaryTypeEnum.AUXILIARY.V,
       projectId: props.costTypeData.projectId,
       ...queryPage
     })
+    content.map(v=>{
+      v.unitPrice= v.amount / v.mete
+    })
     detailData.value = content || []
+    detailData.value = await numFmtByBasicClass(
+      detailData.value,
+      {
+        toSmallest: false,
+        toNum: true
+      },
+      {
+        mete: ['mete'],
+        amount: ['unitPrice']
+      }
+    )
     setTotalPage(totalElements)
   } catch (error) {
     console.log('辅材费用', error)

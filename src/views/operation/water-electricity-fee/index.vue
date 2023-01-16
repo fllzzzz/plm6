@@ -41,7 +41,7 @@
       <el-table-column label="电费（元）" prop="electricityPrice" align="center" />
       <el-table-column label="折合电费（元/吨）" prop="equivalentElectricity" align="center">
         <template #default="{ row }">
-          <span>{{ row.monthOutput ? (row.electricityPrice / row.monthOutput).toFixed(2) : row.electricityPrice }}</span>
+          <span>{{ row.monthOutput ? (row.electricityPrice / convertUnits(row.monthOutput, 'kg', 't', DP.COM_WT__T)).toFixed(2) : row.electricityPrice }}</span>
         </template>
       </el-table-column>
       <el-table-column label="用水量（吨）" prop="usedWaterMete" align="center" />
@@ -53,7 +53,7 @@
       <el-table-column label="水费（元）" prop="waterPrice" align="center" />
       <el-table-column label="折合水费（元/吨）" prop="equivalentWater" align="center">
         <template #default="{ row }">
-          <span>{{ row.monthOutput ? (row.waterPrice / row.monthOutput).toFixed(2) : row.waterPrice }}</span>
+          <span>{{ row.monthOutput ? (row.waterPrice / convertUnits(row.monthOutput, 'kg', 't', DP.COM_WT__T)).toFixed(2) : row.waterPrice }}</span>
         </template>
       </el-table-column>
     </common-table>
