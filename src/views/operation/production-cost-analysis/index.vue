@@ -14,7 +14,7 @@
         :disabled-date="disabledDate"
         @change="fetchProductAnalysis"
       />
-      <export-button class="filter-item" v-permission="permission.download"> 生产成本分析清单 </export-button>
+      <!-- <export-button class="filter-item" v-permission="permission.download"> 生产成本分析清单 </export-button> -->
     </div>
     <common-table
       ref="tableRef"
