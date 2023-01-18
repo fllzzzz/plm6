@@ -114,13 +114,13 @@ function getSummaries(param) {
 
 async function fetchMainFee() {
   try {
-    const { content=[], totalElements } = await getMainAuxiliaryList({
+    const { content = [], totalElements } = await getMainAuxiliaryList({
       basicClassEnum: mainAuxiliaryTypeEnum.AUXILIARY.V,
       projectId: props.costTypeData.projectId,
       ...queryPage
     })
-    content.map(v=>{
-      v.unitPrice= v.amount / v.mete
+    content.map(v => {
+      v.unitPrice = v.amount / v.mete
     })
     detailData.value = content || []
     detailData.value = await numFmtByBasicClass(

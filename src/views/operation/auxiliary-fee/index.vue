@@ -85,7 +85,7 @@ import { convertUnits } from '@/utils/convert/unit'
 import { parseTime } from '@/utils/date'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 
-import ExportButton from '@comp-common/export-button/index.vue'
+// import ExportButton from '@comp-common/export-button/index.vue'
 
 const year = ref(parseTime(new Date(), '{y}'))
 const list = ref([])
@@ -101,7 +101,7 @@ onMounted(() => {
 async function fetchAuxiliary() {
   list.value = []
   summaryKeyArr.value = ['productionMete', 'gasAmount', 'gasWeight', 'auxSubtotal', 'totalAmount']
-  gasWeightArr.value = ['gasWeight']
+  //   gasWeightArr.value = ['mete']
   if (!checkPermission(permission.get)) {
     return false
   }
@@ -116,12 +116,24 @@ async function fetchAuxiliary() {
         list.value.push({ month: key, ...data[key] })
       }
     }
-    list.value.forEach((v) => {
+    list.value.forEach(async (v) => {
       v.productWeightList = []
+      await numFmtByBasicClass(
+        v.gas,
+        {
+          toNum: true
+        }
+      )
+      await numFmtByBasicClass(
+        v.auxiliary,
+        {
+          toNum: true
+        }
+      )
       v.gas.map((k) => {
         v['mete_' + k.classifyId] = k.mete
         v['amountExcludingVAT_' + k.classifyId] = k.amountExcludingVAT
-        v['accountingUnit_'+ k.classifyId]=k.accountingUnit
+        v['accountingUnit_' + k.classifyId] = k.accountingUnit
         summaryKeyArr.value.push('mete_' + k.classifyId)
         summaryKeyArr.value.push('amountExcludingVAT_' + k.classifyId)
         gasWeightArr.value.push('mete_' + k.classifyId)
@@ -129,7 +141,7 @@ async function fetchAuxiliary() {
       v.productWeightList.push(v.productionMete)
       v.auxiliary.map((k) => {
         v['amountExcludingVAT_' + k.classifyId] = k.amountExcludingVAT
-        v['accountingUnit_'+ k.classifyId]=k.accountingUnit
+        v['accountingUnit_' + k.classifyId] = k.accountingUnit
         summaryKeyArr.value.push('amountExcludingVAT_' + k.classifyId)
       })
       v.productMeteSum = v.productWeightList?.reduce((pre, cur) => {
@@ -163,15 +175,16 @@ async function fetchAuxiliary() {
       v.totalAmount = v.gasAmount + v.auxSubtotal
       v.aveUnitPrice = v.productionMete ? (v.totalAmount / v.productionMete).toFixed(2) : v.totalAmount
     })
+    console.log('list.value', list.value)
     list.value = await numFmtByBasicClass(
       list.value,
       {
         toSmallest: false,
         toNum: true
-      },
-      {
-        mete: gasWeightArr.value
       }
+    //   {
+    //     mete: gasWeightArr.value
+    //   }
     )
   } catch (error) {
     console.log('获取已出库辅材和气体科目ID失败', error)

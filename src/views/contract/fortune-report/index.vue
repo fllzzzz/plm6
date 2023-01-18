@@ -178,6 +178,7 @@ import checkPermission from '@/utils/system/check-permission'
 import { fortuneReportPM as permission } from '@/page-permission/contract'
 import { projectNameFormatter } from '@/utils/project'
 import { businessTypeEnum, orderSourceTypeEnum, projectStatusEnum } from '@enum-ms/contract'
+import { settlementStatusEnum } from '@/utils/enum/modules/finance'
 import { toThousand } from '@data-type/number'
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
@@ -234,6 +235,9 @@ function showCostDetail(row) {
 
 CRUD.HOOK.handleRefresh = (crud, res) => {
   res.data.content = res.data.content?.map(v => {
+    if (v.settlementStatus === settlementStatusEnum.SETTLED.V) {
+      v.status = projectStatusEnum.SETTLED.V
+    }
     return v
   })
 }

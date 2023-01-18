@@ -11,3 +11,11 @@ export function getProductAnalysis(params) {
   })
 }
 
+export function getProductAnalysisPrint(params) {
+  return request({
+    url: `/api/contract/finance/operationAnalysis/cost-analysis/print`,
+    method: 'get',
+    params
+  })
+}
+

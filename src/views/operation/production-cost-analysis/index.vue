@@ -14,18 +14,28 @@
         :disabled-date="disabledDate"
         @change="fetchProductAnalysis"
       />
-      <!-- <export-button class="filter-item" v-permission="permission.download"> 生产成本分析清单 </export-button> -->
+      <!-- <excel-export-button
+          class="filter-item"
+          v-permission="permission.download"
+          :btn-name="`生产成本分析清单`"
+          :btn-type="'warning'"
+          :template="paintingFeeListETmpl"
+          :filename="`生产成本分析清单`"
+          :params="{ year: year }"
+        /> -->
+      <!-- <export-button class="filter-item" v-permission="permission.download" :fn="getProductAnalysisPrint" :params="{ year: year }"> 生产成本分析清单 </export-button> -->
     </div>
     <common-table
       ref="tableRef"
       :data="productionList"
       :empty-text="checkPermission(permission.get)?'暂无数据':'暂无权限'"
+      :data-format="columnsDataFormat"
       :max-height="maxHeight"
       row-key="id"
       :showEmptySymbol="false"
       style="width: 100%"
     >
-      <el-table-column label="月份" prop="month" align="center" />
+      <el-table-column label="月份" prop="month" width="70" align="center" />
       <el-table-column label="月产（吨）" prop="productionMete" align="center">
         <template #default="{ row }">
           <span>{{ convertUnits(row.productionMete, 'kg', 't', DP.COM_WT__T) }}</span>
@@ -41,7 +51,7 @@
       <el-table-column label="管理费" prop="managementFee" align="center" />
       <el-table-column label="总额" prop="totalFee" align="center" />
       <el-table-column label="平均单价" prop="avgProductionFee" align="center" />
-      <el-table-column label="考勤人数" prop="attendanceQuantity" align="center" />
+      <el-table-column label="考勤人数" prop="attendanceQuantity" width="70" align="center" />
       <el-table-column label="人均产量" prop="avgWorkerProductionMete" align="center" />
     </common-table>
   </div>
@@ -58,7 +68,21 @@ import { parseTime } from '@/utils/date'
 import { DP } from '@/settings/config'
 import { convertUnits } from '@/utils/convert/unit'
 
-import ExportButton from '@comp-common/export-button/index.vue'
+const columnsDataFormat = [
+  ['laborFee', ['to-fixed', 2]],
+  ['auxiliaryFee', ['to-fixed', 2]],
+  ['gasFee', ['to-fixed', 2]],
+  ['waterElectricityFee', ['to-fixed', 2]],
+  ['plantDepreciationFee', ['to-fixed', 2]],
+  ['deviceDepreciationFee', ['to-fixed', 2]],
+  ['testingFee', ['to-fixed', 2]],
+  ['managementFee', ['to-fixed', 2]],
+  ['totalFee', ['to-fixed', 2]],
+  ['avgProductionFee', ['to-fixed', 2]]
+]
+
+// import ExportButton from '@comp-common/export-button/index.vue'
+// import ExcelExportButton from '@comp-common/excel-export-button/index.vue'
 
 const year = ref(parseTime(new Date(), '{y}'))
 const tableRef = ref()

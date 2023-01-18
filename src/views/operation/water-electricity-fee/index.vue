@@ -213,6 +213,10 @@ function getSummaries(param) {
       }
       sums[index] = valuesSum.toFixed(2)
     }
+
+    if (index === 1) {
+      sums[index] = convertUnits(sums[index], 'kg', 't', DP.COM_WT__T)
+    }
   })
   return sums
 }
