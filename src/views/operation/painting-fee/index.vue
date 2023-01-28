@@ -85,7 +85,7 @@ async function fetchPaintingFee() {
       year: year.value
     })
     content.forEach((v) => {
-      v.paintingUnitPrice = (v.price / convertUnits(v.area, 'mm2', 'm2', DP.COM_AREA__M2)).toFixed(2)
+      v.paintingUnitPrice = v.price && v.area ? (v.price / convertUnits(v.area, 'mm2', 'm2', DP.COM_AREA__M2)).toFixed(2) : 0
       v.averageUnitPrice = (v.price / convertUnits(v.mete, 'kg', 't', DP.COM_WT__T)).toFixed(2)
     })
     paintingList.value = content || []

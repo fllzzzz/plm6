@@ -25,7 +25,16 @@
     </div>
     <crudOperation>
       <template #viewLeft>
-        <print-table v-permission="crud.permission.print" api-key="managementSalaryList" :params="{ ...query }" size="mini" type="warning" class="filter-item" />
+        <print-table
+          v-permission="crud.permission.print"
+          :api-key="`${
+            crud.query.wageType === managementSalaryTypeEnum.MANAGEMENT_SALARY.V ? 'managementSalaryList' : 'productionSalaryList'
+          }`"
+          :params="{ ...query }"
+          size="mini"
+          type="warning"
+          class="filter-item"
+        />
       </template>
     </crudOperation>
   </div>

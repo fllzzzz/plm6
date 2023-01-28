@@ -2,7 +2,14 @@
   <div class="app-container">
     <div class="head-container" style="display: flex; justify-content: space-between">
       <div style="width: 300px">
-        <print-table v-permission="permission.print" api-key="mainMaterialList" :params="{ basicClassEnum: mainAuxiliaryTypeEnum.MAIN.V,projectId: props.costTypeData.projectId, }" size="mini" type="warning" class="filter-item" />
+        <print-table
+          v-permission="permission.print"
+          api-key="mainMaterialList"
+          :params="{ basicClassEnum: mainAuxiliaryTypeEnum.MAIN.V, projectId: props.costTypeData.projectId }"
+          size="mini"
+          type="warning"
+          class="filter-item"
+        />
       </div>
       <el-tag>合计（单位：元）：{{ toThousand(props.costTypeData?.amount) }}</el-tag>
     </div>
@@ -50,7 +57,7 @@
         </template>
       </el-table-column>
     </common-table>
-     <!--分页组件-->
+    <!--分页组件-->
     <el-pagination
       :total="total"
       :current-page="queryPage.pageNumber"
@@ -68,7 +75,7 @@ import { ref, defineProps, watch } from 'vue'
 
 import { matClsEnum } from '@enum-ms/classification'
 import { mainAuxiliaryTypeEnum } from '@enum-ms/contract'
-import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
+// import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { toThousand } from '@data-type/number'
 import { tableSummary } from '@/utils/el-extra'
 import { parseTime } from '@/utils/date'
@@ -124,22 +131,22 @@ async function fetchMainFee() {
       projectId: props.costTypeData.projectId,
       ...queryPage
     })
-    content.map(v=>{
-      v.unitPrice= v.amount / v.mete
+    content.map((v) => {
+      v.unitPrice = v.amount / v.mete
     })
     detailData.value = content || []
-    detailData.value = await numFmtByBasicClass(
-      detailData.value,
-      {
-        toSmallest: false,
-        toNum: true
-      },
-      {
-        mete: ['mete'],
-        amount: ['unitPrice']
-      }
-    )
-    detailData.value = content || []
+    // detailData.value = await numFmtByBasicClass(
+    //   detailData.value,
+    //   {
+    //     toSmallest: false,
+    //     toNum: true
+    //   },
+    //   {
+    //     mete: ['mete'],
+    //     amount: ['unitPrice']
+    //   }
+    // )
+    // detailData.value = content || []
     setTotalPage(totalElements)
   } catch (error) {
     console.log('主材费用', error)

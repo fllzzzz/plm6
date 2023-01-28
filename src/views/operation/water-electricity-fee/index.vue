@@ -14,12 +14,14 @@
         :disabled-date="disabledDate"
         @change="fetchWaterElectric"
       />
-      <export-button v-permission="permission.download" class="filter-item" :fn="getWaterElectricListFn" :params="{ year: year }"> 水电费清单 </export-button>
+      <export-button v-permission="permission.download" class="filter-item" :fn="getWaterElectricListFn" :params="{ year: year }">
+        水电费清单
+      </export-button>
     </div>
     <common-table
       ref="tableRef"
       :data="waterElectricList"
-      :empty-text="checkPermission(permission.get)?'暂无数据':'暂无权限'"
+      :empty-text="checkPermission(permission.get) ? '暂无数据' : '暂无权限'"
       :max-height="maxHeight"
       row-key="id"
       style="width: 100%"
@@ -28,7 +30,7 @@
     >
       <el-table-column label="月份" prop="month" align="center" />
       <el-table-column label="月产（吨）" prop="monthOutput" align="center">
-         <template #default="{ row }">
+        <template #default="{ row }">
           <span>{{ convertUnits(row.monthOutput, 'kg', 't', DP.COM_WT__T) }}</span>
         </template>
       </el-table-column>
@@ -41,7 +43,11 @@
       <el-table-column label="电费（元）" prop="electricityPrice" align="center" />
       <el-table-column label="折合电费（元/吨）" prop="equivalentElectricity" align="center">
         <template #default="{ row }">
-          <span>{{ row.monthOutput ? (row.electricityPrice / convertUnits(row.monthOutput, 'kg', 't', DP.COM_WT__T)).toFixed(2) : row.electricityPrice }}</span>
+          <span>{{
+            row.monthOutput
+              ? (row.electricityPrice / convertUnits(row.monthOutput, 'kg', 't', DP.COM_WT__T)).toFixed(2)
+              : row.electricityPrice
+          }}</span>
         </template>
       </el-table-column>
       <el-table-column label="用水量（吨）" prop="usedWaterMete" align="center" />
@@ -53,7 +59,9 @@
       <el-table-column label="水费（元）" prop="waterPrice" align="center" />
       <el-table-column label="折合水费（元/吨）" prop="equivalentWater" align="center">
         <template #default="{ row }">
-          <span>{{ row.monthOutput ? (row.waterPrice / convertUnits(row.monthOutput, 'kg', 't', DP.COM_WT__T)).toFixed(2) : row.waterPrice }}</span>
+          <span>{{
+            row.monthOutput ? (row.waterPrice / convertUnits(row.monthOutput, 'kg', 't', DP.COM_WT__T)).toFixed(2) : row.waterPrice
+          }}</span>
         </template>
       </el-table-column>
     </common-table>
@@ -147,7 +155,7 @@ function getSummaries(param) {
           return pre
         }
       }, 0)
-      sums[index] = monthOutputSum ? (electricityPriceSum / monthOutputSum).toFixed(2) : electricityPriceSum.toFixed(2)
+      sums[index] = monthOutputSum ? (electricityPriceSum / (monthOutputSum / 1000)).toFixed(2) : electricityPriceSum.toFixed(2)
       return
     }
     if (index === 7) {
@@ -189,7 +197,7 @@ function getSummaries(param) {
           return pre
         }
       }, 0)
-      sums[index] = monthOutputSum ? (waterPriceSum / monthOutputSum).toFixed(2) : waterPriceSum.toFixed(2)
+      sums[index] = monthOutputSum ? (waterPriceSum / (monthOutputSum / 1000)).toFixed(2) : waterPriceSum.toFixed(2)
       return
     }
     if (

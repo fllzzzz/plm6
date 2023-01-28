@@ -2,7 +2,14 @@
   <div class="app-container">
     <div class="head-container" style="display: flex; justify-content: space-between">
       <div style="width: 300px">
-        <print-table v-permission="permission.print" api-key="auxiliaryMaterialList" :params="{ basicClassEnum: mainAuxiliaryTypeEnum.AUXILIARY.V,projectId: props.costTypeData.projectId, }" size="mini" type="warning" class="filter-item" />
+        <print-table
+          v-permission="permission.print"
+          api-key="auxiliaryMaterialList"
+          :params="{ basicClassEnum: mainAuxiliaryTypeEnum.AUXILIARY.V, projectId: props.costTypeData.projectId }"
+          size="mini"
+          type="warning"
+          class="filter-item"
+        />
       </div>
       <el-tag>合计（单位：元）：{{ toThousand(props.costTypeData?.amount) }}</el-tag>
     </div>
@@ -18,10 +25,16 @@
       :summary-method="getSummaries"
     >
       <el-table-column prop="index" label="序号" align="center" width="60" type="index" />
-      <el-table-column prop="basicClass" key="basicClass" label="物料种类" align="center" />
+      <!-- <el-table-column prop="basicClass" key="basicClass" label="物料种类" align="center" /> -->
+      <el-table-column prop="classifyName" key="classifyName" label="物料种类" align="center" />
       <el-table-column prop="specification" key="specification" label="规格" align="center">
         <template v-slot="scope">
           <span>{{ scope.row.specification }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column prop="accountingUnit" key="accountingUnit" label="核算单位" align="center">
+        <template v-slot="scope">
+          <span>{{ scope.row.accountingUnit }}</span>
         </template>
       </el-table-column>
       <el-table-column prop="mete" key="mete" label="核算量" align="center">
@@ -45,7 +58,7 @@
         </template>
       </el-table-column>
     </common-table>
-     <!--分页组件-->
+    <!--分页组件-->
     <el-pagination
       :total="total"
       :current-page="queryPage.pageNumber"
@@ -107,8 +120,8 @@ watch(
 // 合计
 function getSummaries(param) {
   return tableSummary(param, {
-    props: [''],
-    toThousandFields: ['']
+    props: ['amount'],
+    toThousandFields: ['amount']
   })
 }
 
@@ -119,7 +132,7 @@ async function fetchMainFee() {
       projectId: props.costTypeData.projectId,
       ...queryPage
     })
-    content.map(v => {
+    content.map((v) => {
       v.unitPrice = v.amount / v.mete
     })
     detailData.value = content || []

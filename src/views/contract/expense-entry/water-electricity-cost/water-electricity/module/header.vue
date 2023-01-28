@@ -27,7 +27,7 @@
     </div>
     <crudOperation>
       <template #viewLeft>
-        <print-table v-permission="crud.permission.print" :api-key="`${crud.query.type === costTypeEnum.ELECTRIC_COST.V? 'electricRecord': 'waterRecord'}`" :params="{ ...query }" size="mini" type="warning" class="filter-item" />
+        <print-table v-permission="crud.permission.print" :api-key="`${crud.query.type === costTypeEnum.WATER_COST.V? 'waterRecord':crud.query.childType === usedElectricityTypeEnum.INDUSTRY_ELECTRIC.V? 'industryElectricRecord' : 'civilElectricRecord'}`" :params="{ ...query }" size="mini" type="warning" class="filter-item" />
       </template>
     </crudOperation>
   </div>

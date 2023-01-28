@@ -18,12 +18,8 @@
         <project-cascader v-model="projectId" class="filter-item" @change="fetchTestingFee" clearable />
       </div>
       <div style="float: right">
-        <export-button
-          v-permission="permission.download"
-          :fn="downloadTestingFee"
-          :params="{ projectId: projectId, year: year }"
-        > 
-        检测费清单 
+        <export-button v-permission="permission.download" :fn="downloadTestingFee" :params="{ projectId: projectId, year: year }">
+          检测费清单
         </export-button>
       </div>
     </div>
@@ -117,15 +113,15 @@ async function fetchTestingFee() {
       projectId: projectId.value
       // ...queryPage
     })
-    content.map(v => {
+    content.map((v) => {
       v.totalAmount = 0
       for (const i in v.checkType) {
         v['fee_' + i] = v.checkType[i]
         v.totalAmount += v.checkType[i]
-        if (itemKeyArr.value.findIndex(val => val.key === ('fee_' + i)) < 0) {
+        if (itemKeyArr.value.findIndex((val) => val.key === 'fee_' + i) < 0) {
           itemKeyArr.value.push({
             key: 'fee_' + i,
-            name: dict.value?.testing_fee_type?.find(k => k.id === Number(i)).label
+            name: dict.value?.testing_fee_type?.find((k) => k.id === Number(i)).label
           })
         }
       }
@@ -172,7 +168,7 @@ function getSummaries(param) {
     }
   })
   const tIndex = [2, 3, 4, 5, 6, 7]
-  tIndex.forEach(index => {
+  tIndex.forEach((index) => {
     sums[index] = sums[index] ? toThousand(sums[index]) : 0
   })
   return sums
@@ -184,5 +180,4 @@ const { maxHeight } = useMaxHeight({
 })
 </script>
 <style lang="scss" scoped>
-
 </style>

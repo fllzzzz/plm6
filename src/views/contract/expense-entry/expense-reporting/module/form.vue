@@ -57,12 +57,13 @@
             clearable
             style="width: 270px"
             placeholder="选择费用类别"
+            @change="handleChange"
           />
         </el-form-item>
         <el-form-item label="报销科目：" prop="expenseSubjectId">
           <common-select
             v-model="form.expenseSubjectId"
-            :options="dict.reimbursement_type"
+            :options="subjectList"
             type="other"
             :data-structure="{ key: 'id', label: 'label', value: 'id' }"
             size="small"
@@ -91,13 +92,15 @@
 <script setup>
 import { ref, inject } from 'vue'
 import { regForm } from '@compos/use-crud'
-import useDict from '@compos/store/use-dict'
+// import useDict from '@compos/store/use-dict'
 import userSelect from '@comp-common/user-select'
 import projectCascader from '@comp-base/project-cascader.vue'
 
 const expenseList = inject('expenseList')
+const subjectList = ref([])
+
 const formRef = ref()
-const dict = useDict(['reimbursement_type'])
+// const dict = useDict(['reimbursement_type'])
 const defaultForm = {}
 
 const { crud, form, CRUD } = regForm(defaultForm, formRef)
@@ -111,7 +114,8 @@ const rules = {
 }
 
 // 刷新数据
-CRUD.HOOK.beforeToQuery = (crud, form) => {}
+CRUD.HOOK.beforeToQuery = (crud, form) => {
+}
 // 新增之前
 CRUD.HOOK.beforeToAdd = (crud, form) => {}
 
@@ -132,6 +136,10 @@ CRUD.HOOK.beforeSubmit = async () => {
 // 如果时间选取的时间年份比当前的时间大就被禁用
 function disabledDate(time) {
   return time > new Date()
+}
+
+function handleChange(val) {
+  subjectList.value = expenseList.find(v => v.id === val)?.links
 }
 </script>
 

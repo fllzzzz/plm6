@@ -1,12 +1,12 @@
 import { dataSourceEnum, alignEnum, verticleAlignEnum, fieldTypeEnum as typeEnum, cssUnitEnum, cssUnitPrecisionEnum, pageFormatEnum } from '@/utils/print/enum'
 
-// 人员工资清单
+// 管理人员工资清单
 const managementSalaryList = {
   fontUnit: 'pt', // 字体单位
   unit: cssUnitEnum.MM.V, // 长度单位
   unitPrecision: cssUnitPrecisionEnum.ZERO.V, // 长度单位精度
   type: 'managementSalaryList', // 表格类型 KEY
-  name: '人员工资清单（平台）', // 表格名称
+  name: '管理人员工资清单（平台）', // 表格名称
   width: 210, // 打印纸的宽度
   height: 297, // 打印纸的高度
   paddingLR: 10, // 左右内边距
@@ -60,7 +60,7 @@ const managementSalaryList = {
   title: {
     show: true,
     allPage: false,
-    title: '人员工资清单',
+    title: '管理人员工资清单',
     align: alignEnum.CENTER.V,
     verticleAlign: verticleAlignEnum.CENTER.V,
     size: 17,
@@ -199,7 +199,7 @@ const managementSalaryList = {
      */
     fields: [
       { show: true, key: 'month', title: '月份', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.OTHER.K },
-      { show: true, key: 'employeeQuantity', title: '员工人数', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.AMOUNT.K, format: { toThousand: true, precision: 2, UNIT: typeEnum.QUANTITY.K }, sum: true },
+      { show: true, key: 'employeeQuantity', title: '员工人数', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.AMOUNT.K, sum: true },
       { show: true, key: 'totalWage', title: '工资总额', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.AMOUNT.K, format: { toThousand: true, precision: 2, UNIT: typeEnum.AMOUNT.K }, sum: true },
       { show: true, key: 'averageWage', title: '平均人员工资', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.AMOUNT.K, format: { toThousand: true, precision: 2, UNIT: typeEnum.AMOUNT.K }, sum: true }
       // { show: true, key: 'attachmentIds', title: '附件', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.IMAGE.K }
@@ -208,5 +208,5 @@ const managementSalaryList = {
 }
 
 export default {
-  managementSalaryList //  人员工资清单
+  managementSalaryList //  管理人员工资清单
 }

@@ -28,6 +28,7 @@
             placeholder="选择日期"
             format="YYYY-MM-DD"
             value-format="x"
+            :disabled-date="disabledDate"
             style="width: 270px"
           />
         </el-form-item>
@@ -114,6 +115,10 @@ CRUD.HOOK.afterToEdit = (crud, form) => {}
 // 提交前
 CRUD.HOOK.beforeSubmit = async () => {
   crud.form.attachmentIds = crud.form.attachmentFiles ? crud.form.attachmentFiles.map((v) => v.id) : crud.form.attachmentIds
+}
+
+function disabledDate(time) {
+  return time > new Date()
 }
 </script>
 

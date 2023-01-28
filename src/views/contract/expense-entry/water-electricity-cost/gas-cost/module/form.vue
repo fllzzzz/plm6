@@ -28,6 +28,7 @@
             value-format="YYYY"
             placeholder="选择日期"
             style="width: 270px"
+            :disabled-date="disabledDate"
           />
         </el-form-item>
         <el-form-item label="月份：" prop="month">
@@ -69,7 +70,7 @@
 
 <script setup>
 import { ref, defineProps, computed } from 'vue'
-import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
+// import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { regForm } from '@compos/use-crud'
 import { ElMessage } from 'element-plus'
 
@@ -131,16 +132,20 @@ CRUD.HOOK.beforeSubmit = async () => {
   form.classifyId = crud.query.classifyId
   form.year = prop.query.year
   form.accountingUnit = crud.query.unit
-  crud.form = await numFmtByBasicClass(
-    form,
-    {
-      toSmallest: true,
-      toNum: true
-    },
-    {
-      mete: ['usedMete']
-    }
-  )
+  // crud.form = await numFmtByBasicClass(
+  //   form,
+  //   {
+  //     toSmallest: false,
+  //     toNum: true
+  //   },
+  //   {
+  //     mete: ['usedMete']
+  //   }
+  // )
+}
+
+function disabledDate(time) {
+  return time > new Date()
 }
 </script>
 

@@ -3,10 +3,19 @@
   <div>
     <div class="head-container" style="display: flex; justify-content: space-between">
       <div style="width: 300px">
-        <print-table v-permission="permission.print" api-key="shippingFeeList" :params="costTypeData.projectId" size="mini" type="warning" class="filter-item" />
+        <print-table
+          v-permission="permission.print"
+          api-key="shippingFeeList"
+          :params="costTypeData.projectId"
+          size="mini"
+          type="warning"
+          class="filter-item"
+        />
       </div>
       <div>
-        <el-tag style="margin-left:8px;">装载重量合计（单位:t）： {{ convertUnits(totalAmount?.actualWeight, 'kg', 't', DP.COM_WT__T) }} </el-tag>
+        <el-tag style="margin-right: 8px">
+          装载重量合计（单位:t）： {{ convertUnits(totalAmount?.actualWeight, 'kg', 't', DP.COM_WT__T) }}
+        </el-tag>
         <el-tag type="danger">运输费合计（单位:元）：{{ toThousand(totalAmount?.totalPrice) }}</el-tag>
       </div>
     </div>
@@ -21,15 +30,9 @@
       :summary-method="getSummaries"
     >
       <el-table-column prop="index" label="序号" align="center" width="60" type="index" />
-      <el-table-column
-        key="serialNumber"
-        prop="serialNumber"
-        sortable="custom"
-        label="车次"
-        align="center"
-      >
+      <el-table-column key="serialNumber" prop="serialNumber" sortable="custom" label="车次" align="center">
         <template v-slot="scope">
-          <table-cell-tag :show="scope.row.deliveryStatus===deliveryStatusEnum.RETURN.V" name="已取消" color="#f56c6c"/>
+          <table-cell-tag :show="scope.row.deliveryStatus === deliveryStatusEnum.RETURN.V" name="已取消" color="#f56c6c" />
           <span>{{ scope.row.serialNumber }}</span>
         </template>
       </el-table-column>
@@ -59,21 +62,8 @@
         label="车牌号"
         align="center"
       />
-      <el-table-column
-        key="driverName"
-        prop="driverName"
-        sortable="custom"
-        :show-overflow-tooltip="true"
-        label="司机姓名"
-        align="center"
-      />
-      <el-table-column
-        key="driverPhone"
-        prop="driverPhone"
-        :show-overflow-tooltip="true"
-        label="司机电话"
-        align="center"
-      />
+      <el-table-column key="driverName" prop="driverName" sortable="custom" :show-overflow-tooltip="true" label="司机姓名" align="center" />
+      <el-table-column key="driverPhone" prop="driverPhone" :show-overflow-tooltip="true" label="司机电话" align="center" />
       <el-table-column
         key="auditUserName"
         prop="auditUserName"
@@ -82,12 +72,7 @@
         label="办理人"
         align="center"
       />
-      <el-table-column
-        :show-overflow-tooltip="true"
-        prop="actualWeight"
-        label="装载重量(t)"
-        align="center"
-      >
+      <el-table-column :show-overflow-tooltip="true" prop="actualWeight" label="装载重量(t)" align="center">
         <template v-slot="scope">
           <span>{{ convertUnits(scope.row.actualWeight, 'kg', 't', DP.COM_WT__T) }}</span>
         </template>
@@ -97,25 +82,15 @@
           <span>{{ logisticsPriceTypeEnum.VL[scope.row.priceType] }}</span>
         </template>
       </el-table-column>
-      <el-table-column
-        :show-overflow-tooltip="true"
-        prop="price"
-        label="运输单价"
-        align="right"
-        min-width="120"
-      >
+      <el-table-column :show-overflow-tooltip="true" prop="price" label="运输单价" align="right" min-width="120">
         <template v-slot="scope">
           <span>{{ toFixed(scope.row.price, DP.YUAN) }}</span>
-          <span :class="scope.row.priceType === logisticsPriceTypeEnum.WEIGHT.V ? 'blue':'orange'" style="margin-left:3px;">{{ logisticsPriceTypeEnum.V[scope.row.priceType].unit }}</span>
+          <span :class="scope.row.priceType === logisticsPriceTypeEnum.WEIGHT.V ? 'blue' : 'orange'" style="margin-left: 3px">{{
+            logisticsPriceTypeEnum.V[scope.row.priceType].unit
+          }}</span>
         </template>
       </el-table-column>
-      <el-table-column
-        :show-overflow-tooltip="true"
-        prop="totalPrice"
-        label="运输费(元)"
-        align="right"
-        min-width="120"
-      >
+      <el-table-column :show-overflow-tooltip="true" prop="totalPrice" label="运输费(元)" align="right" min-width="120">
         <template v-slot="scope">
           <span>{{ toFixed(scope.row.totalPrice, DP.YUAN) }}</span>
         </template>
@@ -139,7 +114,7 @@ import { ref, defineProps, watch } from 'vue'
 
 import { packTypeEnum, deliveryStatusEnum, logisticsPriceTypeEnum } from '@enum-ms/mes'
 import { toThousand } from '@data-type/number'
-import { tableSummary } from '@/utils/el-extra'
+// import { tableSummary } from '@/utils/el-extra'
 import useMaxHeight from '@compos/use-max-height'
 import { DP } from '@/settings/config'
 import { toFixed } from '@/utils/data-type'
@@ -180,11 +155,50 @@ watch(
 )
 
 // 合计
+// function getSummaries(param) {
+//   return tableSummary(param, {
+//     props: ['actualWeight', 'totalPrice'],
+//     toThousandFields: ['actualWeight', 'totalPrice']
+//   })
+// }
 function getSummaries(param) {
-  return tableSummary(param, {
-    props: ['actualWeight', 'totalPrice'],
-    toThousandFields: ['actualWeight', 'totalPrice']
+  const { columns, data } = param
+  const sums = []
+  columns.forEach((column, index) => {
+    if (index === 0) {
+      sums[index] = '合计'
+      return
+    }
+    if (column.property === 'actualWeight') {
+      const values = data.map((item) => convertUnits(item.actualWeight, 'kg', 't', DP.COM_WT__T))
+      if (!values.every((value) => isNaN(value))) {
+        sums[index] = values.reduce((prev, curr) => {
+          const value = Number(curr)
+          if (!isNaN(value)) {
+            return prev + curr
+          } else {
+            return prev
+          }
+        }, 0)
+      }
+      sums[index] = sums[index]?.toFixed(2)
+    }
+    if (column.property === 'totalPrice') {
+      const values = data.map((item) => item.totalPrice)
+      if (!values.every((value) => isNaN(value))) {
+        sums[index] = values.reduce((prev, curr) => {
+          const value = Number(curr)
+          if (!isNaN(value)) {
+            return prev + curr
+          } else {
+            return prev
+          }
+        }, 0)
+      }
+      sums[index] = sums[index]?.toFixed(2)
+    }
   })
+  return sums
 }
 
 async function fetchSummary() {
@@ -207,10 +221,10 @@ async function fetchShippingFee() {
 }
 </script>
 <style lang="scss" scoped>
-  .blue{
-    color:#409eff;
-  }
-  .orange{
-    color:#e6a23c;
-  }
+.blue {
+  color: #409eff;
+}
+.orange {
+  color: #e6a23c;
+}
 </style>

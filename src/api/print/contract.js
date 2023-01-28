@@ -239,9 +239,20 @@ export function warehouseRecord(params) {
 }
 
 /**
- * 电费
+ * 工业用电电费
  */
-export function electricRecord(params) {
+export function industryElectricRecord(params) {
+  return request({
+    url: '/api/contract/water-electricity/print',
+    method: 'get',
+    params
+  })
+}
+
+/**
+ * 民用用电电费
+ */
+export function civilElectricRecord(params) {
   return request({
     url: '/api/contract/water-electricity/print',
     method: 'get',
@@ -283,9 +294,20 @@ export function expenseReimburseList(params) {
 }
 
 /**
- * 人员工资
+ * 管理人员工资
  */
 export function managementSalaryList(params) {
+  return request({
+    url: '/api/contract/wage-summary/print',
+    method: 'get',
+    params
+  })
+}
+
+/**
+ * 生产人员工资
+ */
+export function productionSalaryList(params) {
   return request({
     url: '/api/contract/wage-summary/print',
     method: 'get',
@@ -385,11 +407,13 @@ export default {
   transactionRecord, // 客户交易记录
   saleOrderTracking, // 订单跟踪列表
   warehouseRecord, // 入库记录
-  electricRecord, // 电费
+  industryElectricRecord, // 工业用电电费
+  civilElectricRecord, // 民用用电电费
   waterRecord, // 水费
   gasRecord, // 气体统计
   expenseReimburseList, // 费用报销
-  managementSalaryList, // 人员工资清单
+  managementSalaryList, // 管理人员工资清单
+  productionSalaryList, // 生产人员工资
   propertyFeeList, // 物业费用清单
 
   mainMaterialList, // 主材费清单

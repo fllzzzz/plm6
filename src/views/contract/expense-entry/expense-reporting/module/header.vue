@@ -44,11 +44,11 @@
         clearable
         style="width: 200px"
         placeholder="费用类别"
-        @change="crud.toQuery"
+        @change="fetchChange"
       />
       <common-select
         v-model="query.expenseSubjectId"
-        :options="dict.reimbursement_type"
+        :options="subjectList"
         type="other"
         :data-structure="{ key: 'id', label: 'label', value: 'id' }"
         size="small"
@@ -79,18 +79,19 @@
   </div>
 </template>
 <script setup>
-import { inject } from 'vue'
+import { ref, inject } from 'vue'
 import { parseTime } from '@/utils/date'
 import { regHeader } from '@compos/use-crud'
 import { timeTypeEnum } from '@enum-ms/contract'
-import useDict from '@compos/store/use-dict'
+// import useDict from '@compos/store/use-dict'
 import rrOperation from '@crud/RR.operation'
 import crudOperation from '@crud/CRUD.operation'
 
-const dict = useDict(['reimbursement_type'])
-
+// const dict = useDict(['reimbursement_type'])
+const subjectList = ref([])
 const summaryData = inject('summaryData')
 const expenseList = inject('expenseList')
+
 const defaultQuery = {
   timeType: timeTypeEnum.ALL_YEAR.V,
   expenseTypeId: undefined,
@@ -109,6 +110,11 @@ function handleChange(val) {
     query.year = parseTime(new Date(), '{y}')
     query.month = parseTime(new Date(), '{m}')
   }
+  crud.toQuery()
+}
+
+function fetchChange(val) {
+  subjectList.value = expenseList.find(v => v.id === val)?.links
   crud.toQuery()
 }
 // 如果时间选取的时间年份比当前的时间大就被禁用

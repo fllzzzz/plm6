@@ -23,7 +23,7 @@
     <common-table
       ref="tableRef"
       :data="list"
-      :empty-text="checkPermission(permission.get)?'暂无数据':'暂无权限'"
+      :empty-text="checkPermission(permission.get) ? '暂无数据' : '暂无权限'"
       :max-height="maxHeight"
       row-key="id"
       style="width: 100%"
@@ -44,7 +44,7 @@
         <template v-for="item in gasList" :key="item">
           <el-table-column :label="item.name" align="center">
             <el-table-column label="重量" :prop="'mete_' + item.id" :key="'mete_' + item.id" align="center" />
-            <el-table-column label="单位" :prop="'accountingUnit_'+ item.id" align="center"> </el-table-column>
+            <el-table-column label="单位" :prop="'accountingUnit_' + item.id" align="center"> </el-table-column>
             <el-table-column label="金额" :prop="'amountExcludingVAT_' + item.id" :key="'amountExcludingVAT_' + item.id" align="center" />
           </el-table-column>
         </template>
@@ -100,7 +100,7 @@ onMounted(() => {
 
 async function fetchAuxiliary() {
   list.value = []
-  summaryKeyArr.value = ['productionMete', 'gasAmount', 'gasWeight', 'auxSubtotal', 'totalAmount']
+  summaryKeyArr.value = ['gasAmount', 'gasWeight', 'auxSubtotal', 'totalAmount']
   //   gasWeightArr.value = ['mete']
   if (!checkPermission(permission.get)) {
     return false
@@ -118,18 +118,12 @@ async function fetchAuxiliary() {
     }
     list.value.forEach(async (v) => {
       v.productWeightList = []
-      await numFmtByBasicClass(
-        v.gas,
-        {
-          toNum: true
-        }
-      )
-      await numFmtByBasicClass(
-        v.auxiliary,
-        {
-          toNum: true
-        }
-      )
+      await numFmtByBasicClass(v.gas, {
+        toNum: true
+      })
+      await numFmtByBasicClass(v.auxiliary, {
+        toNum: true
+      })
       v.gas.map((k) => {
         v['mete_' + k.classifyId] = k.mete
         v['amountExcludingVAT_' + k.classifyId] = k.amountExcludingVAT
@@ -138,19 +132,11 @@ async function fetchAuxiliary() {
         summaryKeyArr.value.push('amountExcludingVAT_' + k.classifyId)
         gasWeightArr.value.push('mete_' + k.classifyId)
       })
-      v.productWeightList.push(v.productionMete)
       v.auxiliary.map((k) => {
         v['amountExcludingVAT_' + k.classifyId] = k.amountExcludingVAT
         v['accountingUnit_' + k.classifyId] = k.accountingUnit
         summaryKeyArr.value.push('amountExcludingVAT_' + k.classifyId)
       })
-      v.productMeteSum = v.productWeightList?.reduce((pre, cur) => {
-        if (cur) {
-          return pre + Number(cur)
-        } else {
-          return pre
-        }
-      }, 0)
       v.gasWeight = v.gas?.reduce((pre, cur) => {
         if (cur) {
           return pre + Number(cur?.mete)
@@ -182,9 +168,9 @@ async function fetchAuxiliary() {
         toSmallest: false,
         toNum: true
       }
-    //   {
-    //     mete: gasWeightArr.value
-    //   }
+      //   {
+      //     mete: gasWeightArr.value
+      //   }
     )
   } catch (error) {
     console.log('获取已出库辅材和气体科目ID失败', error)
@@ -209,12 +195,20 @@ function getSummaries(param) {
       sums[index] = '合计'
       return
     }
-    // if (column.property === 'aveUnitPrice') {
-    //   data.forEach((v) => {
-    //     sums[index] = v.productMeteSum ? (v.totalAmount / v.productMeteSum).toFixed(2) : v.totalAmount
-    //   })
-    //   return
-    // }
+    if (column.property === 'productionMete') {
+      const productWeightList = data.map((item) => convertUnits(item.productionMete, 'kg', 't', DP.COM_WT__T))
+      if (!productWeightList.every((value) => isNaN(value))) {
+        sums[index] = productWeightList.reduce((prev, curr) => {
+          const value = Number(curr)
+          if (!isNaN(value)) {
+            return prev + curr
+          } else {
+            return prev
+          }
+        }, 0)
+        sums[index] = sums[index] ? sums[index] : 0
+      }
+    }
     if (summaryKeyArr.value.indexOf(column.property) > -1) {
       const values = data.map((item) => Number(item[column.property]))
       if (!values.every((value) => isNaN(value))) {

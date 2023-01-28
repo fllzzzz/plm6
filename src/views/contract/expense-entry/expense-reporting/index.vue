@@ -171,7 +171,8 @@ async function initExpenseType() {
     for (let i = 0; i < content.length; i++) {
       expenseList.value.push({
         id: content[i]?.id,
-        name: content[i]?.name
+        name: content[i]?.name,
+        links: content[i]?.links
       })
     }
   } catch (e) {

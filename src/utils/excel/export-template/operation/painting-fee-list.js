@@ -107,12 +107,12 @@ const paintingFeeListETmpl = {
      * @param {boolean} sum 列需要合计
      */
     fields: [
-      { show: true, key: 'project', title: '项目：', minWidth: 20, type: typeEnum.PROJECT.K, format: { showProjectFullName: false, showSerialNumber: true, projectNameShowConfig: projectNameArrangementModeEnum.SERIAL_NUMBER_START.V, lineBreak: false }},
-      { show: true, key: 'mete', title: '累计产量（吨）', align: alignEnum.CENTER.V, minWidth: 15, type: typeEnum.METE.K, format: { toThousand: false }, sum: true },
-      { show: true, key: 'area', title: '油漆面积（㎡）', align: alignEnum.CENTER.V, minWidth: 15, type: typeEnum.OTHER.K, format: { toThousand: false }, sum: true },
-      { show: true, key: 'paintingUnitPrice', title: '涂装单价', align: alignEnum.CENTER.V, minWidth: 15, type: typeEnum.AMOUNT.K },
-      { show: true, key: 'price', title: '应付工程款（元）', align: alignEnum.CENTER.V, minWidth: 20, type: typeEnum.AMOUNT.K, format: { toThousand: false }, sum: true },
-      { show: true, key: 'averageUnitPrice', title: '平均单价（元/吨）', align: alignEnum.CENTER.V, minWidth: 20, type: typeEnum.AMOUNT.K }
+      { show: true, key: 'project', title: '项目', minWidth: 50, type: typeEnum.PROJECT.K, format: { showProjectFullName: false, showSerialNumber: true, projectNameShowConfig: projectNameArrangementModeEnum.SERIAL_NUMBER_START.V, lineBreak: false }},
+      { show: true, key: 'mete', title: '累计产量（吨）', align: alignEnum.CENTER.V, minWidth: 30, type: typeEnum.METE.K, format: { toThousand: false }, sum: true },
+      { show: true, key: 'area', title: '油漆面积（㎡）', align: alignEnum.CENTER.V, minWidth: 30, type: typeEnum.OTHER.K, format: { toThousand: false }, sum: true },
+      { show: true, key: 'paintingUnitPrice', title: '涂装单价', align: alignEnum.CENTER.V, minWidth: 30, type: typeEnum.AMOUNT.K },
+      { show: true, key: 'price', title: '应付工程款（元）', align: alignEnum.CENTER.V, minWidth: 35, type: typeEnum.AMOUNT.K, format: { toThousand: false }, sum: true },
+      { show: true, key: 'averageUnitPrice', title: '平均单价（元/吨）', align: alignEnum.CENTER.V, minWidth: 35, type: typeEnum.AMOUNT.K }
     ]
   },
   /**
@@ -137,8 +137,8 @@ const paintingFeeListETmpl = {
     data.table?.forEach(v => {
       v.mete = convertUnits(v.mete, 'kg', 't', DP.COM_WT__T)
       v.area = convertUnits(v.area, 'mm2', 'm2', DP.COM_AREA__M2)
-      v.paintingUnitPrice = (v.price / v.area).toFixed(2)
-      v.averageUnitPrice = (v.price / v.mete).toFixed(2)
+      v.paintingUnitPrice = v.price && v.area ? (v.price / v.area).toFixed(2) : 0
+      v.averageUnitPrice = v.price && v.mete ? (v.price / v.mete).toFixed(2) : 0
     })
     return data
   }

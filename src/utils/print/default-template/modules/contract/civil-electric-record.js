@@ -1,12 +1,12 @@
 import { dataSourceEnum, alignEnum, verticleAlignEnum, fieldTypeEnum as typeEnum, cssUnitEnum, cssUnitPrecisionEnum, pageFormatEnum } from '@/utils/print/enum'
 
-// 电费清单
-const electricRecord = {
+// 民用电费清单
+const civilElectricRecord = {
   fontUnit: 'pt', // 字体单位
   unit: cssUnitEnum.MM.V, // 长度单位
   unitPrecision: cssUnitPrecisionEnum.ZERO.V, // 长度单位精度
-  type: 'electricRecord', // 表格类型 KEY
-  name: '电费清单（平台）', // 表格名称
+  type: 'civilElectricRecord', // 表格类型 KEY
+  name: '民用电费清单（平台）', // 表格名称
   width: 210, // 打印纸的宽度
   height: 297, // 打印纸的高度
   paddingLR: 10, // 左右内边距
@@ -60,7 +60,7 @@ const electricRecord = {
   title: {
     show: true,
     allPage: false,
-    title: '电费清单',
+    title: '民用电费清单',
     align: alignEnum.CENTER.V,
     verticleAlign: verticleAlignEnum.CENTER.V,
     size: 17,
@@ -207,5 +207,5 @@ const electricRecord = {
 }
 
 export default {
-  electricRecord //  电费
+  civilElectricRecord //  民用电费
 }
