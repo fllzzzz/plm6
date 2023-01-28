@@ -84,7 +84,7 @@
             :active-value="enabledEnum.TRUE.V"
             :inactive-value="enabledEnum.FALSE.V"
             class="drawer-switch"
-            :disabled="!checkPermission(permission.changeStatus)"
+            :disabled="!checkPermission(permission.changeStatus) || !row.boolStatus"
             @change="changeStatus(row, row.boolStatus)"
           />
         </template>
