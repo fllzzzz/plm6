@@ -19,6 +19,7 @@ const mes = {
   mes_production: '生产报表',
   mes_warehouse: '出入库报表',
   mes_logistics: '物流报表',
+  mes_project_report: '项目报表',
   mes_wage: '工资报表',
   mes_production_order: '生产订单',
   mes_task_tracking: '任务跟踪报表',
@@ -158,6 +159,11 @@ const tableType = {
   mesProjectShipDetail: { L: '项目发运详情报表', M: 'mes_pack_and_ship_manage', T: mt.mes.L + ' / ' + mes.mes_pack_and_ship_manage },
   mesProductSendReceiveStorage: { L: '制成品入发存', M: 'mes_pack_and_ship_manage', T: mt.mes.L + ' / ' + mes.mes_pack_and_ship_manage },
   productSendReceiveStorageDetail: { L: '制成品入发存详情', M: 'mes_pack_and_ship_manage', T: mt.mes.L + ' / ' + mes.mes_pack_and_ship_manage },
+
+  // 项目报表
+  mesMainMaterialTrack: { L: '主材跟踪汇总', M: 'mes_project_report', T: mt.mes.L + ' / ' + mes.mes_project_report },
+  mesMainMaterialTrackUseRecord: { L: '主材跟踪-钢材领用记录', M: 'mes_project_report', T: mt.mes.L + ' / ' + mes.mes_project_report },
+  mesMainMaterialTrackStock: { L: '主材跟踪-库存明细', M: 'mes_project_report', T: mt.mes.L + ' / ' + mes.mes_project_report },
 
   // 项目管理
   deliveryCargoList: { L: '自制收货记录', M: 'delivery_manage', T: mt.project.L + ' / ' + project.delivery_manage },

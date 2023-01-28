@@ -154,7 +154,12 @@ export const projectDashboardPM = {
 
 // 项目制造/主材跟踪
 export const mainMaterialTrackPM = {
-  get: ['mes_main_material_track:get'] // 主材跟踪
+  get: ['mes_main_material_track:get'], // 主材跟踪
+  print: ['mes_main_material_track:print'], // 主材跟踪打印
+  useRecordGet: ['mes_main_material_track_use_record:get'], // 主材跟踪-钢材使用记录
+  useRecordPrint: ['mes_main_material_track_use_record:print'], // 主材跟踪-钢材使用记录打印
+  stockGet: ['mes_main_material_track_stock:get'], // 主材跟踪-库存明细
+  stockPrint: ['mes_main_material_track_stock:print'] // 主材跟踪-库存明细打印
 }
 
 // 项目制造/结构看板

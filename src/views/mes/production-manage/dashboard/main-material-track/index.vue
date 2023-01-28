@@ -15,7 +15,18 @@
       </el-col>
     </el-row>
 
-    <common-table v-loading="compareLoading" :data="compareList" :maxHeight="maxHeight" style="width: 100%; margin-top: 20px">
+    <print-table
+      api-key="mesMainMaterialTrack"
+      v-permission="permission.print"
+      :params="{
+        projectId: globalProjectId,
+      }"
+      size="mini"
+      type="warning"
+      class="print-table"
+      style="margin-top: 10px; margin-bottom: 10px; float: right"
+    />
+    <common-table v-loading="compareLoading" :data="compareList" :maxHeight="maxHeight" style="width: 100%">
       <el-table-column label="序号" type="index" align="center" width="60" />
       <el-table-column prop="name" :show-overflow-tooltip="true" label="品名" align="center">
         <template #default="{ row }">
@@ -37,9 +48,14 @@
           <span>{{ row.listMete }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="useMete" :show-overflow-tooltip="true" label="使用量(kg)" align="center">
+      <el-table-column prop="stockMete" :show-overflow-tooltip="true" label="库存量(库存=公共库+项目库)" align="center">
         <template #default="{ row }">
-          <span>{{ row.useMete }}</span>
+          <span class="tc-primary pointer" @click="handleStockClick(row)">{{ row.stockMete }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column prop="useMete" :show-overflow-tooltip="true" label="实际领用量(kg)" align="center">
+        <template #default="{ row }">
+          <span class="tc-primary pointer" @click="handleUseClick(row)">{{ row.useMete }}</span>
         </template>
       </el-table-column>
       <el-table-column prop="diff" :show-overflow-tooltip="true" label="差异(kg)" align="center">
@@ -50,11 +66,21 @@
       </el-table-column>
       <el-table-column prop="diffRate" :show-overflow-tooltip="true" label="差异率(%)" align="center">
         <template #default="{ row }">
-          <span>{{ (row.diffRate * 100).toFixed(2) }}</span>
+          <span>{{ row.diffRate }}</span>
         </template>
       </el-table-column>
     </common-table>
-    <div style="margin-top: 20px; position: relative" v-loading="echartsLoading">
+    <!--分页组件-->
+    <el-pagination
+      :total="total"
+      :current-page="queryPage.pageNumber"
+      :page-size="queryPage.pageSize"
+      style="margin-top: 8px"
+      layout="total, prev, pager, next, sizes"
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
+    />
+    <!-- <div style="margin-top: 20px; position: relative" v-loading="echartsLoading">
       <el-date-picker
         v-model="year"
         type="year"
@@ -69,7 +95,9 @@
       <div v-loading="echartsLoading" id="recordMain" style="width: 100%; height: 350px"></div>
     </div>
     <production-record-detail v-model:visible="prDetailVisible" :projectId="globalProjectId" :month="month" />
-    <outbound-record-detail v-model:visible="orDetailVisible" :projectId="globalProjectId" :month="month" />
+    <outbound-record-detail v-model:visible="orDetailVisible" :projectId="globalProjectId" :month="month" /> -->
+    <plate-use-record v-model:visible="plateUseVisible" :projectId="globalProjectId" :info="currentRow" />
+    <stock-detail v-model:visible="stockVisible" :projectId="globalProjectId" :info="currentRow" />
   </div>
 </template>
 
@@ -80,35 +108,38 @@ import { reactive, ref, watch, onMounted } from 'vue'
 import { mainMaterialTrackPM as permission } from '@/page-permission/mes'
 import checkPermission from '@/utils/system/check-permission'
 import { mapGetters } from '@/store/lib'
-import moment from 'moment'
+// import moment from 'moment'
 import panel from '@/components/Panel'
-import { prefixZero } from '@data-type/number'
+// import { prefixZero } from '@data-type/number'
 
 import useMaxHeight from '@compos/use-max-height'
-import useBarRecordEcharts from '@compos/mes/production-manage/use-bar-record-echarts'
-import productionRecordDetail from './module/production-record-detail'
-import outboundRecordDetail from './module/outbound-record-detail'
+import usePagination from '@compos/use-pagination'
+// import useBarRecordEcharts from '@compos/mes/production-manage/use-bar-record-echarts'
+// import productionRecordDetail from './module/production-record-detail'
+// import outboundRecordDetail from './module/outbound-record-detail'
+import plateUseRecord from './module/plate-use-record'
+import stockDetail from './module/stock-detail'
 
-const { maxHeight } = useMaxHeight({ extraBox: null, wrapperBox: ['.app-container'], extraHeight: 460, minHeight: 100 })
+const { maxHeight } = useMaxHeight({ extraBox: ['.panel-group', '.print-table'] })
 
 const { globalProjectId } = mapGetters(['globalProjectId'])
 
-const year = ref(moment().year().toString())
-const month = ref()
-const prDetailVisible = ref(false)
-const orDetailVisible = ref(false)
+// const year = ref(moment().year().toString())
+// const month = ref()
+// const prDetailVisible = ref(false)
+// const orDetailVisible = ref(false)
 
-function showPRDetail(m) {
-  month.value = year.value + '-' + prefixZero(m)
-  prDetailVisible.value = true
-}
+// function showPRDetail(m) {
+//   month.value = year.value + '-' + prefixZero(m)
+//   prDetailVisible.value = true
+// }
 
-function showORDetail(m) {
-  month.value = year.value + '-' + prefixZero(m)
-  orDetailVisible.value = true
-}
+// function showORDetail(m) {
+//   month.value = year.value + '-' + prefixZero(m)
+//   orDetailVisible.value = true
+// }
 
-const { updateChart, echartsLoading } = useBarRecordEcharts({ elementId: 'recordMain', globalProjectId, year, showPRDetail, showORDetail })
+// const { updateChart, echartsLoading } = useBarRecordEcharts({ elementId: 'recordMain', globalProjectId, year, showPRDetail, showORDetail })
 
 const summaryInfo = reactive({
   plates: 0,
@@ -138,6 +169,7 @@ async function fetchSummary() {
 
 const compareLoading = ref(false)
 const compareList = ref([])
+const { handleSizeChange, handleCurrentChange, total, setTotalPage, queryPage } = usePagination({ fetchHook: fetchCompareList })
 
 async function fetchCompareList() {
   if (!checkPermission(permission.get)) {
@@ -145,10 +177,15 @@ async function fetchCompareList() {
   }
   try {
     compareLoading.value = true
-    const { content } = await getCompare({
-      projectId: globalProjectId.value
+    const { content, totalElements } = await getCompare({
+      projectId: globalProjectId.value,
+      ...queryPage
     })
-    compareList.value = content
+    setTotalPage(totalElements)
+    compareList.value = content.map((v) => {
+      v.diffRate = v.diffRate ? (v.diffRate * 100).toFixed(2) : 0
+      return v
+    })
   } catch (error) {
     console.log('用量对比列表信息', error)
   } finally {
@@ -164,11 +201,30 @@ onMounted(() => {
 watch(
   globalProjectId,
   (val) => {
-    console.log(val, 'summary')
     fetchSummary()
     fetchCompareList()
-    updateChart()
+    // updateChart()
   },
   { deep: true }
 )
+
+const plateUseVisible = ref(false)
+const stockVisible = ref(false)
+const currentRow = ref({})
+
+function handleUseClick(row) {
+  if (!checkPermission(permission.useRecordGet)) {
+    return
+  }
+  currentRow.value = row
+  plateUseVisible.value = true
+}
+
+function handleStockClick(row) {
+  if (!checkPermission(permission.stockGet)) {
+    return
+  }
+  currentRow.value = row
+  stockVisible.value = true
+}
 </script>

@@ -105,6 +105,9 @@ const mesStudSleeveStatisticsList = mes.studSleeveStatisticsList
 const mesProjectShipDetail = mes.mesProjectShipDetail
 const mesProductSendReceiveStorage = mes.productSendReceiveStorage
 const productSendReceiveStorageDetail = mes.productSendReceiveStorageDetail
+const mesMainMaterialTrack = mes.mainMaterialTrackSummary
+const mesMainMaterialTrackUseRecord = mes.mainMaterialTrackUseRecord
+const mesMainMaterialTrackStock = mes.mainMaterialTrackStock
 
 // wms
 const wmsRmOutboundReceipt = wms.wmsRmOutboundReceipt // 出库
@@ -190,6 +193,10 @@ export default {
   mesEnclosureProjectSummary, // 围护项目汇总
   mesQHSEProductionLineReport, // 生产线质检报表
   mesProjectOverviewList, // 工序生产明细清单
+
+  mesMainMaterialTrack, // 主材跟踪汇总
+  mesMainMaterialTrackUseRecord, // 主材跟踪-钢材领用记录
+  mesMainMaterialTrackStock, // 主材跟踪-库存明细
 
   mesStructureTeamWage, // 结构班组工资
   mesEnclosureTeamWage, // 围护班组工资
