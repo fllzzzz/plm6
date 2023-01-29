@@ -113,19 +113,23 @@ const rules = {
   reimburseAmount: [{ required: true, message: '请输入报销金额', trigger: 'blur' }]
 }
 
+function handleChange(val) {
+  subjectList.value = expenseList.find((v) => v.id === form.expenseTypeId)?.links
+}
 // 刷新数据
-CRUD.HOOK.beforeToQuery = (crud, form) => {
+CRUD.HOOK.beforeToQuery = async (crud, form) => {
 }
 // 新增之前
-CRUD.HOOK.beforeToAdd = (crud, form) => {}
+CRUD.HOOK.beforeToAdd = async (crud, form) => {
+}
 
 // 编辑之后
-CRUD.HOOK.afterToEdit = (crud, form) => {
-  console.log(form)
+CRUD.HOOK.afterToEdit = async (crud, form) => {
 }
 
 // 编辑之前
-CRUD.HOOK.beforeToEdit = () => {
+CRUD.HOOK.beforeToEdit = async () => {
+  handleChange()
   form.projectId = form.project?.id
 }
 
@@ -136,10 +140,6 @@ CRUD.HOOK.beforeSubmit = async () => {
 // 如果时间选取的时间年份比当前的时间大就被禁用
 function disabledDate(time) {
   return time > new Date()
-}
-
-function handleChange(val) {
-  subjectList.value = expenseList.find(v => v.id === val)?.links
 }
 </script>
 
