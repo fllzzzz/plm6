@@ -159,7 +159,7 @@ async function fetchAuxiliary() {
         }
       }, 0)
       v.totalAmount = v.gasAmount + v.auxSubtotal
-      v.aveUnitPrice = v.productionMete ? (v.totalAmount / v.productionMete).toFixed(2) : v.totalAmount
+      v.aveUnitPrice = v.productionMete ? (v.totalAmount / convertUnits(v.productionMete, 'kg', 't')).toFixed(2) : v.totalAmount
     })
     console.log('list.value', list.value)
     list.value = await numFmtByBasicClass(

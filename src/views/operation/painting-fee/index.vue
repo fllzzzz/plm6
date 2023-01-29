@@ -112,6 +112,25 @@ function getSummaries(param) {
       sums[index] = '合计'
       return
     }
+    if (index === 6) {
+      const meteList = data.map((item) => item.mete)
+      const priceList = data.map((item) => item.price)
+      const meteSum = meteList.reduce((prev, curr) => {
+        if (Number(curr)) {
+          return prev + curr
+        } else {
+          return prev
+        }
+      }, 0)
+      const priceSum = priceList.reduce((prev, curr) => {
+        if (Number(curr)) {
+          return prev + curr
+        } else {
+          return prev
+        }
+      }, 0)
+      sums[index] = meteSum ? (priceSum / convertUnits(meteSum, 'kg', 't', DP.COM_WT__T)).toFixed(2) : 0
+    }
     if (column.property === 'mete') {
       const values = data.map((item) => Number(item[column.property]))
       if (!values.every((value) => isNaN(value))) {
@@ -159,5 +178,4 @@ function getSummaries(param) {
 }
 </script>
 <style lang="scss" scoped>
-
 </style>

@@ -112,7 +112,7 @@ const paintingFeeListETmpl = {
       { show: true, key: 'area', title: '油漆面积（㎡）', align: alignEnum.CENTER.V, minWidth: 30, type: typeEnum.OTHER.K, format: { toThousand: false }, sum: true },
       { show: true, key: 'paintingUnitPrice', title: '涂装单价', align: alignEnum.CENTER.V, minWidth: 30, type: typeEnum.AMOUNT.K },
       { show: true, key: 'price', title: '应付工程款（元）', align: alignEnum.CENTER.V, minWidth: 35, type: typeEnum.AMOUNT.K, format: { toThousand: false }, sum: true },
-      { show: true, key: 'averageUnitPrice', title: '平均单价（元/吨）', align: alignEnum.CENTER.V, minWidth: 35, type: typeEnum.AMOUNT.K }
+      { show: true, key: 'averageUnitPrice', title: '平均单价（元/吨）', align: alignEnum.CENTER.V, minWidth: 35, type: typeEnum.AMOUNT.K, sum: true }
     ]
   },
   /**
