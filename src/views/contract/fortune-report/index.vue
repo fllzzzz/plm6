@@ -152,6 +152,8 @@
         </template>
       </el-table-column>
     </common-table>
+    <!-- 分页 -->
+    <pagination />
     <common-dialog title="结算详情" v-model="dialogVisible" width="460px" show-close custom-class="settlement-detail" top="10vh">
       <el-descriptions :column="1" :data="list" border style="cursor: pointer">
         <el-descriptions-item label="结算额" label-align="center" align="center">
@@ -173,7 +175,7 @@
 <script setup>
 import { ref } from 'vue'
 import crudApi from '@/api/contract/fortune-report/fortune-report'
-
+import pagination from '@crud/Pagination'
 import checkPermission from '@/utils/system/check-permission'
 import { fortuneReportPM as permission } from '@/page-permission/contract'
 import { projectNameFormatter } from '@/utils/project'

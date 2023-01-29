@@ -119,8 +119,8 @@ watch(
 // 合计
 function getSummaries(param) {
   return tableSummary(param, {
-    props: ['amount'],
-    toThousandFields: ['amount']
+    props: ['mete', 'amount'],
+    toThousandFields: ['mete', 'amount']
   })
 }
 

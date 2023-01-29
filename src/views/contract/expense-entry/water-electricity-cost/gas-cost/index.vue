@@ -83,7 +83,7 @@ import { ref } from 'vue'
 import crudApi, { getGasList } from '@/api/contract/expense-entry/gas-cost'
 
 import { gasCostPM as permission } from '@/page-permission/contract'
-import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
+// import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
 
@@ -139,27 +139,6 @@ function getSummaries(param) {
       sums[index] = '合计'
       return
     }
-    // if (index === 5) {
-    //   sums[index] = 0
-    //   const totalAmountList = data.map((v) => v.totalAmount)
-    //   const meteList = data.map((v) => v.usedMete)
-    //   const totalAmountSum = totalAmountList.reduce((pre, cur) => {
-    //     if (cur) {
-    //       return pre + Number(cur)
-    //     } else {
-    //       return pre
-    //     }
-    //   }, 0)
-    //   const meteSum = meteList.reduce((pre, cur) => {
-    //     if (cur) {
-    //       return pre + Number(cur)
-    //     } else {
-    //       return pre
-    //     }
-    //   }, 0)
-    //   console.log(totalAmountSum, meteSum)
-    //   sums[index] = meteSum ? (totalAmountSum / meteSum).toFixed(2) : totalAmountSum
-    // }
     if (column.property === 'usedMete' || column.property === 'totalAmount') {
       const values = data.map((item) => Number(item[column.property]))
       let valuesSum = 0
@@ -181,17 +160,17 @@ function getSummaries(param) {
 
 CRUD.HOOK.beforeToQuery = (crud) => {}
 CRUD.HOOK.handleRefresh = async (crud, res) => {
-  res.data.content = await numFmtByBasicClass(
-    res.data.content,
-    {
-      toSmallest: false,
-      toNum: true
-    },
-    {
-      mete: ['usedMete'],
-      amount: ['avgUnitPrice']
-    }
-  )
+  // res.data.content = await numFmtByBasicClass(
+  //   res.data.content,
+  //   {
+  //     toSmallest: false,
+  //     toNum: true
+  //   },
+  //   {
+  //     mete: ['usedMete'],
+  //     amount: ['avgUnitPrice']
+  //   }
+  // )
 }
 const { maxHeight } = useMaxHeight({
   extraBox: ['.head-container'],
