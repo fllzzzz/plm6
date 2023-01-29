@@ -37,7 +37,7 @@
           <template #default="{ row, $index }">
             <common-select
               v-model="row.specPrefix"
-              :options="partKeyWordEnum.ENUM"
+              :options="[partKeyWordEnum.PL]"
               clearable
               :show-extra="$index !== 0"
               type="enum"
