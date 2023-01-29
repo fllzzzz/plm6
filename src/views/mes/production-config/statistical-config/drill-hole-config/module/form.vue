@@ -23,7 +23,7 @@
         <el-form-item label="零件规格前缀" prop="specPrefix">
           <common-select
             v-model="form.specPrefix"
-            :options="partKeyWordEnum.ENUM"
+            :options="[partKeyWordEnum.PL]"
             clearable
             type="enum"
             :disabled="isEdit"
