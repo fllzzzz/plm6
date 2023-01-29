@@ -28,7 +28,7 @@
         <el-tag v-if="form.sysAssembleId">{{ assembleTypeListObj[form.sysAssembleId]?.specPrefixStr }}</el-tag>
         <el-tag v-else>请选择部件类型</el-tag>
       </el-form-item>
-      <el-form-item label="数值" prop="numerical">
+      <el-form-item label="部件截面" prop="numerical">
         <common-input-number
           v-model="form.minNumerical"
           :step="1"
@@ -133,7 +133,7 @@ const validateNumerical = (rule, value, callback) => {
 
 const rules = {
   sysAssembleId: [{ required: true, message: '请选择部件类型', trigger: 'change' }],
-  numerical: [{ required: true, validator: validateNumerical, message: '请填写数值', trigger: 'blur' }]
+  numerical: [{ required: true, validator: validateNumerical, message: '请填写部件截面', trigger: 'blur' }]
 }
 
 function handleClassificationChange() {

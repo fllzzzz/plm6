@@ -25,7 +25,7 @@
         fixed="left"
       />
       <el-table-column prop="specPrefixStr" :show-overflow-tooltip="true" label="截面前缀" align="center" min-width="200px" fixed="left" />
-      <el-table-column :show-overflow-tooltip="true" label="数值" align="center" min-width="200px" fixed="left">
+      <el-table-column :show-overflow-tooltip="true" label="构件截面" align="center" min-width="200px" fixed="left">
         <template #default="{ row }">
           <span>{{ row.minNumerical }}</span>
           <span> ~ </span>

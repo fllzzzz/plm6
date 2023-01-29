@@ -54,7 +54,7 @@
             <span v-else>{{ row.classificationId && artifactTypeListObj[row.classificationId]?.specPrefixStr }}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="numerical" :show-overflow-tooltip="true" label="数值" width="200" align="center" fixed="left">
+        <el-table-column prop="numerical" :show-overflow-tooltip="true" label="构件截面" width="200" align="center" fixed="left">
           <template #default="{ row }">
             <common-input-number
               v-model="row.minNumerical"
@@ -188,7 +188,7 @@ const validateNumerical = (value, row) => {
 
 const rules = {
   classificationId: [{ required: true, message: '请选择构件类型', trigger: 'change' }],
-  numerical: [{ validator: validateNumerical, message: '请填写数值并且最大数值不得小于最小数值', trigger: 'blur' }]
+  numerical: [{ validator: validateNumerical, message: '请填写构件截面并且最大数值不得小于最小数值', trigger: 'blur' }]
 }
 
 // 同上的选项与值
