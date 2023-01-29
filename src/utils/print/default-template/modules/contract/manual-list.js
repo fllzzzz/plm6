@@ -202,7 +202,7 @@ const manualList = {
     fields: [
       { show: true, key: 'name', title: '工序', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 22, type: typeEnum.GUID.K },
       { show: true, key: 'price', title: '人工费总额', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.AMOUNT.K, format: { toThousand: true, precision: 2, unit: amountUnitEnum.YUAN.V }, sum: true },
-      { show: true, key: 'mete', title: '累计产量（t）', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.WEIGHT.K, format: { toThousand: true, precision: 2 }, sum: true },
+      { show: true, key: 'mete', title: '累计产量（t）', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 30, type: typeEnum.WEIGHT.K, format: { toThousand: true, precision: 2 }, sum: true },
       { show: true, key: 'avgPrice', title: '平均单价', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.AMOUNT.K, format: { toThousand: true, precision: 2, unit: amountUnitEnum.YUAN.V }}
     ]
   }

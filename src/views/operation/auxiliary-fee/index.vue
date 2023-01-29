@@ -101,7 +101,7 @@ onMounted(() => {
 async function fetchAuxiliary() {
   list.value = []
   summaryKeyArr.value = ['gasAmount', 'gasWeight', 'auxSubtotal', 'totalAmount']
-  //   gasWeightArr.value = ['mete']
+  // gasWeightArr.value = ['mete']
   if (!checkPermission(permission.get)) {
     return false
   }
@@ -118,12 +118,12 @@ async function fetchAuxiliary() {
     }
     list.value.forEach(async (v) => {
       v.productWeightList = []
-      await numFmtByBasicClass(v.gas, {
-        toNum: true
-      })
-      await numFmtByBasicClass(v.auxiliary, {
-        toNum: true
-      })
+      // await numFmtByBasicClass(v.gas, {
+      //   toNum: true
+      // })
+      // await numFmtByBasicClass(v.auxiliary, {
+      //   toNum: true
+      // })
       v.gas.map((k) => {
         v['mete_' + k.classifyId] = k.mete
         v['amountExcludingVAT_' + k.classifyId] = k.amountExcludingVAT
@@ -168,9 +168,9 @@ async function fetchAuxiliary() {
         toSmallest: false,
         toNum: true
       }
-      //   {
-      //     mete: gasWeightArr.value
-      //   }
+      // {
+      //   mete: gasWeightArr.value
+      // }
     )
   } catch (error) {
     console.log('获取已出库辅材和气体科目ID失败', error)
