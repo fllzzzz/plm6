@@ -49,7 +49,6 @@
             placeholder="输入用量"
             controls-position="right"
             :min="0"
-            :max="9999999999"
           />
         </el-form-item>
         <el-form-item label="费用总额（元）：" prop="totalAmount">
@@ -70,7 +69,7 @@
 
 <script setup>
 import { ref, defineProps, computed } from 'vue'
-// import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
+import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { regForm } from '@compos/use-crud'
 import { ElMessage } from 'element-plus'
 
@@ -123,7 +122,7 @@ CRUD.HOOK.beforeToAdd = async (crud, form) => {
 // 处理刷新数据
 CRUD.HOOK.beforeToQuery = async () => {}
 // 编辑之前
-CRUD.HOOK.beforeToEdit = () => {
+CRUD.HOOK.beforeToEdit = async () => {
   form.year = prop.query.year
 }
 
@@ -132,16 +131,17 @@ CRUD.HOOK.beforeSubmit = async () => {
   form.classifyId = crud.query.classifyId
   form.year = prop.query.year
   form.accountingUnit = crud.query.unit
-  // crud.form = await numFmtByBasicClass(
-  //   form,
-  //   {
-  //     toSmallest: false,
-  //     toNum: true
-  //   },
-  //   {
-  //     mete: ['usedMete']
-  //   }
-  // )
+  crud.form = await numFmtByBasicClass(
+    form,
+    {
+      toSmallest: true,
+      toNum: true
+    },
+    {
+      mete: ['usedMete'],
+      amount: ['avgUnitPrice']
+    }
+  )
 }
 
 function disabledDate(time) {
