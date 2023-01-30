@@ -29,14 +29,14 @@
           type="warning"
           class="filter-item"
         />
-        <el-tag v-if="totalSum" type="warning" effect="plain" size="medium">{{ `累计收票：${toThousand(totalSum)}元` }}</el-tag>
+        <el-tag type="warning" effect="plain" size="medium">{{ `累计收票：${toThousand(totalSum)}元` }}</el-tag>
       </template>
     </crudOperation>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import { regHeader } from '@compos/use-crud'
 import rrOperation from '@crud/RR.operation'
 import { auditTypeEnum } from '@enum-ms/contract'
@@ -59,11 +59,24 @@ const defaultQuery = {
 const { crud, query } = regHeader(defaultQuery)
 
 const totalSum = ref(0)
+
+watch(
+  () => query,
+  (val) => {
+    if (val) {
+      getSum()
+    } else {
+      totalSum.value = 0
+    }
+  },
+  { deep: true, immediate: true }
+)
+
 getSum()
 
 async function getSum() {
   try {
-    const data = await invoiceSum()
+    const data = await invoiceSum({ startDate: query.startDate, endDate: query.endDate })
     totalSum.value = data || 0
   } catch (e) {
     console.log('获取累计收票金额', e)
