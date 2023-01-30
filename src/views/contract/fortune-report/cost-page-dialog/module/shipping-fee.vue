@@ -181,7 +181,7 @@ function getSummaries(param) {
           }
         }, 0)
       }
-      sums[index] = sums[index]?.toFixed(2)
+      // sums[index] = sums[index]?.toFixed(2)
     }
     if (column.property === 'totalPrice') {
       const values = data.map((item) => item.totalPrice)

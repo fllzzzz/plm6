@@ -118,12 +118,12 @@ async function fetchAuxiliary() {
     }
     list.value.forEach(async (v) => {
       v.productWeightList = []
-      // await numFmtByBasicClass(v.gas, {
-      //   toNum: true
-      // })
-      // await numFmtByBasicClass(v.auxiliary, {
-      //   toNum: true
-      // })
+      await numFmtByBasicClass(v.gas, {
+        toNum: true
+      })
+      await numFmtByBasicClass(v.auxiliary, {
+        toNum: true
+      })
       v.gas.map((k) => {
         v['mete_' + k.classifyId] = k.mete
         v['amountExcludingVAT_' + k.classifyId] = k.amountExcludingVAT
