@@ -26,7 +26,7 @@
           @change="handleWorkshopProductionLineChange"
         />
       </div>
-      <div :style="`height: ${maxHeight + 40}px;`">
+      <div :style="`height: ${maxHeight + 40}px; overflow-y: auto`">
         <div style="margin-bottom: 20px" v-for="item in assembleProcessData" :key="item">
           <div
             v-if="productType === componentTypeEnum.ARTIFACT.V && item[0]?.productType === componentTypeEnum.ASSEMBLE.V"
@@ -146,7 +146,9 @@
             <el-tag effect="dark" :type="componentTypeTag[componentTypeEnum.VK[processData[0]?.productType]]">
               {{ componentTypeEnum.VL[processData[0]?.productType] }}
             </el-tag>
-            <el-tag style="margin-left: 8px" effect="plain"> {{ processData[0]?.productionLine?.name }}>{{ processData[0]?.groups?.name }} </el-tag>
+            <el-tag style="margin-left: 8px" effect="plain">
+              {{ processData[0]?.productionLine?.name }}>{{ processData[0]?.groups?.name }}
+            </el-tag>
             <span style="margin-left: 8px; font-size: 14px">工单号：{{ processData[0]?.order?.name }}</span>
           </div>
           <common-table
@@ -157,11 +159,25 @@
             highlight-current-row
             style="width: 100%; cursor: pointer"
           >
-             <el-table-column prop="index" label="序号" align="center" width="60" type="index" />
-            <el-table-column align="center" key="monomer.name" prop="monomer.name" :show-overflow-tooltip="true" label="单体" width="140px" />
+            <el-table-column prop="index" label="序号" align="center" width="60" type="index" />
+            <el-table-column
+              align="center"
+              key="monomer.name"
+              prop="monomer.name"
+              :show-overflow-tooltip="true"
+              label="单体"
+              width="140px"
+            />
             <el-table-column align="center" key="area.name" prop="area.name" :show-overflow-tooltip="true" label="区域" width="140px" />
             <el-table-column align="center" key="name" prop="name" :show-overflow-tooltip="true" label="名称" />
-            <el-table-column align="center" key="serialNumber" prop="serialNumber" :show-overflow-tooltip="true" label="编号"  width="140px" />
+            <el-table-column
+              align="center"
+              key="serialNumber"
+              prop="serialNumber"
+              :show-overflow-tooltip="true"
+              label="编号"
+              width="140px"
+            />
             <el-table-column
               header-align="center"
               key="specification"

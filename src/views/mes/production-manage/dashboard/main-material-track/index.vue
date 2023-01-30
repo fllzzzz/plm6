@@ -183,7 +183,7 @@ async function fetchCompareList() {
     })
     setTotalPage(totalElements)
     compareList.value = content.map((v) => {
-      v.diffRate = v.diffRate ? (v.diffRate * 100).toFixed(2) : 0
+      v.diffRate = v.diffRate ? (v.diffRate).toFixed(2) : 0
       return v
     })
   } catch (error) {

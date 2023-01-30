@@ -105,6 +105,7 @@ const endDate = inject('endDate')
 const query = computed(() => {
   return {
     productType: props.detailData.productType,
+    processId: props.detailData.id,
     projectId: props.projectId,
     startDate: startDate.value,
     endDate: endDate.value
