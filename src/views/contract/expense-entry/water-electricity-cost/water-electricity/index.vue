@@ -123,7 +123,7 @@ function getSummaries(param) {
           return pre
         }
       }, 0)
-      sums[index] = (totalAmountSum / usedMeteSum).toFixed(2)
+      sums[index] = usedMeteSum ? (totalAmountSum / usedMeteSum).toFixed(2) : 0
       return
     }
     if (column.property === 'usedMete' || column.property === 'totalAmount') {

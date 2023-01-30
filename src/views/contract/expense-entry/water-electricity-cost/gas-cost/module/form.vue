@@ -48,7 +48,7 @@
             style="width: 270px"
             placeholder="输入用量"
             controls-position="right"
-            :min="0"
+            :min="0.000001"
           />
         </el-form-item>
         <el-form-item label="费用总额（元）：" prop="totalAmount">
@@ -58,7 +58,7 @@
             style="width: 270px"
             placeholder="输入费用总额"
             controls-position="right"
-            :min="0"
+            :min="1"
             :max="9999999999"
           />
         </el-form-item>
