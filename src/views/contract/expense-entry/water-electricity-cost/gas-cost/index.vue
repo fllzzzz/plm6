@@ -74,7 +74,7 @@
       </el-table-column>
     </common-table>
     <!-- 表单 -->
-    <m-form :query="crud.query" :accounting-unit="accountingUnit" :gas-type="gasType" />
+    <m-form :query="crud.query" :accounting-unit="accountingUnit" :gas-type="gasType" :detail-data="crud.data" />
   </div>
 </template>
 
@@ -158,7 +158,7 @@ function getSummaries(param) {
   return sums
 }
 
-CRUD.HOOK.beforeToQuery = (crud) => {}
+CRUD.HOOK.beforeToQuery = (crud) => { }
 CRUD.HOOK.handleRefresh = async (crud, res) => {
   res.data.content = await numFmtByBasicClass(
     res.data.content,

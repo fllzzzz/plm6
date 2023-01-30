@@ -37,7 +37,7 @@
       </el-table-column>
       <el-table-column label="完成量（吨）" prop="productionMete" align="center" width="100px">
         <template #default="{ row }">
-          <span>{{ row.productionMete !== null ? convertUnits(row.productionMete, 'kg', 't', DP.COM_WT__T) : 0 }}</span>
+          <span>{{ row.productionMete !== null ? convertUnits(row.productionMete, 'kg', 't', 2) : 0 }}</span>
         </template>
       </el-table-column>
       <el-table-column label="气体" prop="gas" align="center">
@@ -206,7 +206,7 @@ function getSummaries(param) {
             return prev
           }
         }, 0)
-        sums[index] = sums[index] ? sums[index] : 0
+        sums[index] = sums[index] ? sums[index].toFixed(2) : 0
       }
     }
     if (summaryKeyArr.value.indexOf(column.property) > -1) {

@@ -43,13 +43,7 @@
           />
         </el-form-item>
         <el-form-item :label="`用量（${form.accountingUnit ? form.accountingUnit : ''}）：`" prop="usedMete">
-          <el-input-number
-            v-model="form.usedMete"
-            style="width: 270px"
-            placeholder="输入用量"
-            controls-position="right"
-            :min="0.000001"
-          />
+          <el-input-number v-model="form.usedMete" style="width: 270px" placeholder="输入用量" controls-position="right" :min="0" />
         </el-form-item>
         <el-form-item label="费用总额（元）：" prop="totalAmount">
           <el-input-number
@@ -58,7 +52,7 @@
             style="width: 270px"
             placeholder="输入费用总额"
             controls-position="right"
-            :min="1"
+            :min="0"
             :max="9999999999"
           />
         </el-form-item>
@@ -84,6 +78,10 @@ const prop = defineProps({
   gasType: {
     type: String,
     default: ''
+  },
+  detailData: {
+    type: Array,
+    default: () => []
   }
 })
 
@@ -129,8 +127,60 @@ CRUD.HOOK.beforeToEdit = async () => {
 // 提交前
 CRUD.HOOK.beforeSubmit = async () => {
   form.classifyId = crud.query.classifyId
-  form.year = prop.query.year
+  form.year = form.year ? form.year : prop.query.year
   form.accountingUnit = crud.query.unit
+  crud.form = await numFmtByBasicClass(
+    form,
+    {
+      toSmallest: true,
+      toNum: true
+    },
+    {
+      mete: ['usedMete'],
+      amount: ['avgUnitPrice']
+    }
+  )
+  crud.data = await numFmtByBasicClass(
+    crud.data,
+    {
+      toSmallest: true,
+      toNum: true
+    },
+    {
+      mete: ['usedMete'],
+      amount: ['avgUnitPrice']
+    }
+  )
+  crud.query.year = form.year
+  crud.refresh()
+  crud.form = await numFmtByBasicClass(
+    form,
+    {
+      toSmallest: false,
+      toNum: true
+    },
+    {
+      mete: ['usedMete'],
+      amount: ['avgUnitPrice']
+    }
+  )
+
+  const monthList = prop.detailData.map((v) => v.month)
+  monthList.forEach(async (item) => {
+    if (item === form.month) {
+      crud.form = await numFmtByBasicClass(
+        form,
+        {
+          toSmallest: false,
+          toNum: true
+        },
+        {
+          mete: ['usedMete'],
+          amount: ['avgUnitPrice']
+        }
+      )
+    }
+  })
   crud.form = await numFmtByBasicClass(
     form,
     {

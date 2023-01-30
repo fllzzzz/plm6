@@ -38,7 +38,7 @@
       <el-table-column label="月份" prop="month" width="70" align="center" />
       <el-table-column label="月产（吨）" prop="productionMete" align="center">
         <template #default="{ row }">
-          <span>{{ convertUnits(row.productionMete, 'kg', 't', DP.COM_WT__T) }}</span>
+          <span>{{ convertUnits(row.productionMete, 'kg', 't', 2) }}</span>
         </template>
       </el-table-column>
       <el-table-column label="人工费" prop="laborFee" align="center" />
@@ -175,7 +175,7 @@ async function fetchProductAnalysis() {
     content.push(
       {
         month: '合计',
-        productionMete: (productSum * 1000).toFixed(DP.COM_WT__T),
+        productionMete: (productSum * 1000).toFixed(2),
         laborFee: laborFeeSum.toFixed(2),
         auxiliaryFee: auxiliaryFeeSum.toFixed(2),
         gasFee: gasFeeSum.toFixed(2),

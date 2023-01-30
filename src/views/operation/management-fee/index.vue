@@ -21,7 +21,7 @@
       <el-table-column label="月份" prop="month" align="center" width="60px" />
       <el-table-column label="月产（吨）" prop="monthCapacity" align="center">
         <template #default="{ row }">
-          <span>{{ convertUnits(row.monthCapacity, 'kg', 't', DP.COM_WT__T) }}</span>
+          <span>{{ convertUnits(row.monthCapacity, 'kg', 't', 2) }}</span>
         </template>
       </el-table-column>
       <el-table-column label="管理人员数量" prop="managementUserCount" align="center" />
@@ -42,7 +42,6 @@ import checkPermission from '@/utils/system/check-permission'
 import { operationManagementPM as permission } from '@/page-permission/operation'
 import useMaxHeight from '@compos/use-max-height'
 import { parseTime } from '@/utils/date'
-import { DP } from '@/settings/config'
 import { convertUnits } from '@/utils/convert/unit'
 
 import ExportButton from '@comp-common/export-button/index.vue'

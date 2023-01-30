@@ -31,7 +31,7 @@
       <el-table-column label="月份" prop="month" align="center" />
       <el-table-column label="月产（吨）" prop="monthOutput" align="center">
         <template #default="{ row }">
-          <span>{{ convertUnits(row.monthOutput, 'kg', 't', DP.COM_WT__T) }}</span>
+          <span>{{ convertUnits(row.monthOutput, 'kg', 't', 2) }}</span>
         </template>
       </el-table-column>
       <el-table-column label="用电度数" prop="usedElectricityMete" align="center" />
@@ -223,7 +223,7 @@ function getSummaries(param) {
     }
 
     if (index === 1) {
-      sums[index] = convertUnits(sums[index], 'kg', 't', DP.COM_WT__T)
+      sums[index] = convertUnits(sums[index], 'kg', 't', 2)
     }
   })
   return sums

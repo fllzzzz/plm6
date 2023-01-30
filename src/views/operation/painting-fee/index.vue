@@ -41,7 +41,7 @@
       <el-table-column label="项目名称" prop="project.name" align="center" min-width="160px" />
       <el-table-column label="累计产量（吨）" prop="mete" align="center">
         <template #default="{ row }">
-          <span>{{ row.mete ? convertUnits(row.mete, 'kg', 't', DP.COM_WT__KG) : 0 }}</span>
+          <span>{{ row.mete ? convertUnits(row.mete, 'kg', 't', 2) : 0 }}</span>
         </template>
       </el-table-column>
       <el-table-column label="油漆面积（㎡）" prop="area" align="center">
@@ -129,7 +129,7 @@ function getSummaries(param) {
           return prev
         }
       }, 0)
-      sums[index] = meteSum ? (priceSum / convertUnits(meteSum, 'kg', 't', DP.COM_WT__T)).toFixed(2) : 0
+      sums[index] = meteSum ? priceSum / convertUnits(meteSum, 'kg', 't', 2) : 0
     }
     if (column.property === 'mete') {
       const values = data.map((item) => Number(item[column.property]))
@@ -142,7 +142,7 @@ function getSummaries(param) {
             return prev
           }
         }, 0)
-        sums[index] = convertUnits(sums[index], 'kg', 't', DP.COM_WT__T)
+        sums[index] = convertUnits(sums[index], 'kg', 't', 2)
       }
     }
     if (column.property === 'area') {
