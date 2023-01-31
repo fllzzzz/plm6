@@ -21,7 +21,7 @@
       <el-table-column prop="name" key="name" label="工序" align="center" />
       <el-table-column prop="price" key="price" label="人工费总额（元）" align="center" />
       <el-table-column prop="mete" key="mete" label="累计产量（吨）" align="center" />
-      <el-table-column prop="averageUnitPrice" key="averageUnitPrice" label="平均单价（元/吨）" align="center" />
+      <el-table-column prop="avgPrice" key="avgPrice" label="平均单价（元/吨）" align="center" />
     </common-table>
   </div>
 </template>
@@ -54,7 +54,7 @@ const { maxHeight } = useMaxHeight({
 const dataFormat = ref([
   ['price', 'to-thousand'],
   ['mete', 'to-thousand'],
-  ['averageUnitPrice', 'to-thousand']
+  ['avgPrice', 'to-thousand']
 ])
 
 watch(
@@ -76,9 +76,6 @@ function getSummaries(param) {
 async function fetchLaborFee() {
   try {
     const { content } = await getLaborFeeList({ projectId: props.costTypeData.projectId })
-    content.map(v => {
-      v.averageUnitPrice = v.mete ? v.price / v.mete : 0
-    })
     detailData.value = content || []
   } catch (error) {
     console.log('人工费用', error)
