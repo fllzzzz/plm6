@@ -3,13 +3,13 @@
     <div>
       <el-form ref="formRef" :model="form" :rules="rules" size="small" label-position="right" inline label-width="80px">
         <el-form-item label="订单号" prop="purchaseId" label-width="70px">
-          <purchase-sn-select
+          <purchase-sn-supplier-cascader
             class="input-underline"
             v-model="form.purchaseId"
             :basic-class="props.basicClass"
             @change="handlePurchaseIdChange"
             @info-change="handleOrderInfoChange"
-            style="width: 300px"
+            style="width: 350px"
           />
         </el-form-item>
         <template v-if="isNotBlank(orderInfo)">
@@ -97,7 +97,7 @@ import { patternLicensePlate } from '@/utils/validate/pattern'
 import { regExtra } from '@/composables/form/use-form'
 import useWeightOverDiff from '@/composables/wms/use-trains-weight-over-diff'
 import excelResolveButton from '@/components-system/common/excel-resolve-button/index.vue'
-import purchaseSnSelect from '@/components-system/wms/purchase-sn-select/index.vue'
+import purchaseSnSupplierCascader from '@/components-system/wms/purchase-sn-supplier-cascader/index.vue'
 import { isNotBlank, isBlank } from '@/utils/data-type'
 import StoreOperation from '@crud/STORE.operation.vue'
 import steelPlateTemp from '@/utils/excel/import-template/wms/inbound-application-temp/steel-plate'

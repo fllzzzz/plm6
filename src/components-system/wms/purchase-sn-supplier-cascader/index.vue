@@ -1,0 +1,327 @@
+<!-- 采购合同:下拉选择框 -->
+<template>
+  <span class="purchase-sn-supplier-cascader-container" :class="{ 'show-detail-icon': props.detailable && checkPermission(permission) }">
+    <el-cascader
+      v-model="selectValue"
+      :size="size"
+      :disabled="disabled"
+      :props="cascaderProps"
+      :show-all-levels="showAllLevels"
+      :separator="separator"
+      :clearable="clearable"
+      filterable
+      :placeholder="placeholder"
+      :options="options"
+      class="purchase-sn-supplier-cascader"
+      @change="handleChange"
+    >
+      <template #default="{ node, data }">
+        <span v-if="!node.isLeaf">
+          {{ data.name }}
+        </span>
+        <span v-else class="customize-option-item">
+          <span class="flex-rsc label">
+            <el-tooltip content="点击可查看详情" placement="left" :show-after="1000">
+              <el-icon
+                v-if="props.detailable"
+                v-permission="permission"
+                @click.stop="handleOpenDetail(data.id)"
+                class="pointer"
+                color="#1881ef"
+              >
+                <el-icon-view />
+              </el-icon>
+            </el-tooltip>
+            <span>{{ data.serialNumber }}</span>
+          </span>
+          <span>
+            <span class="extra-label">
+              <span class="title">类型：</span>
+              <span v-parse-enum="{ e: rawMatClsEnum, v: data.basicClass, bit: true, split: ' | ' }"></span>
+            </span>
+            <!-- <span v-if="data.supplier" class="extra-label">
+              <span class="title">供应商：</span>
+              <span class="more-text-info ellipsis-text">{{ data.supplier.name }}</span>
+            </span> -->
+            <span v-if="data.projectNames" class="extra-label">
+              <span class="title">项目：</span>
+              <span class="more-text-info ellipsis-text">{{ data.projectNames }}</span>
+            </span>
+          </span>
+        </span>
+      </template>
+    </el-cascader>
+    <span
+      v-permission="permission"
+      v-if="props.detailable"
+      class="detail-icon pointer"
+      :class="{ 'not-allowed': !selectValue }"
+      @click.stop="handleOpenDetail(selectValue)"
+    >
+      <el-icon :color="selectValue ? '#1881ef' : '#c1c2c5'">
+        <el-icon-view />
+      </el-icon>
+    </span>
+    <!-- 采购合同详情 -->
+    <detail-wrapper ref="purchaseOrderRef" :api="getPurchaseOrderDetail">
+      <purchase-order-detail />
+    </detail-wrapper>
+  </span>
+</template>
+
+<script setup>
+import { detail as getPurchaseOrderDetail } from '@/api/supply-chain/purchase-order'
+import { purchaseOrderDetailCPM as permission } from '@/page-permission/supply-chain'
+
+import { defineProps, defineEmits, ref, watch, computed } from 'vue'
+import { rawMatClsEnum } from '@/utils/enum/modules/classification'
+import { obj2arr } from '@/utils/convert/type'
+import { isNotBlank, isBlank, judgeSameValue, deepClone } from '@data-type/index'
+import checkPermission from '@/utils/system/check-permission'
+
+import useUnclosedPurchaseOrder from '@compos/store/use-unclosed-purchase-order'
+import useOtherCrudDetail from '@/composables/use-other-crud-detail'
+import DetailWrapper from '@crud/detail-wrapper.vue'
+import PurchaseOrderDetail from '@/views/supply-chain/purchase-order/module/detail/raw-material.vue'
+
+const emit = defineEmits(['change', 'info-change', 'update:modelValue', 'update:info'])
+
+const props = defineProps({
+  modelValue: {
+    type: [Array, Number, String]
+  },
+  info: {
+    type: Object
+  },
+  reload: {
+    // 重新加载选项
+    type: Boolean,
+    default: true
+  },
+  detailable: {
+    // 可查看详情
+    type: Boolean,
+    default: true
+  },
+  basicClass: {
+    // 基础分类
+    type: Number
+  },
+  supplyType: {
+    // 基础分类
+    type: Number
+  },
+  size: {
+    type: String,
+    default: 'small'
+  },
+  multiple: {
+    type: Boolean,
+    default: false
+  },
+  separator: {
+    type: String,
+    default: '>'
+  },
+  checkStrictly: {
+    type: Boolean,
+    default: false
+  },
+  clearable: {
+    type: Boolean,
+    default: false
+  },
+  disabled: {
+    type: Boolean,
+    default: false
+  },
+  showAllLevels: {
+    type: Boolean,
+    default: true
+  },
+  default: {
+    type: Boolean,
+    default: false
+  },
+  onlyOneDefault: {
+    type: Boolean,
+    default: false
+  },
+  placeholder: {
+    type: String,
+    default: '选择供应商>采购合同编号'
+  }
+})
+
+const cascaderProps = computed(() => {
+  return {
+    value: 'id',
+    label: 'name',
+    children: 'snList',
+    expandTrigger: 'hover',
+    emitPath: props.emitPath,
+    multiple: props.multiple,
+    checkStrictly: props.checkStrictly
+  }
+})
+
+const selectValue = ref()
+const purchaseOrderKV = ref({})
+
+const { purchaseOrder } = useUnclosedPurchaseOrder(loadedCallBack, props.reload)
+
+const snOptions = computed(() => {
+  let list = deepClone(purchaseOrder.value)
+  list = list.filter((v) => {
+    let flag = true
+    if (props.basicClass && !(v.basicClass & props.basicClass)) {
+      flag = false
+    }
+    if (props.supplyType && !(v.supplyType & props.supplyType)) {
+      flag = false
+    }
+    return flag
+  })
+  list = list.map((v) => {
+    v.projectNames = v.projects ? v.projects.map((v) => v.shortName).join('、') : ''
+    return v
+  })
+  return list
+})
+
+const options = computed(() => {
+  const supplierObj = {}
+  for (let i = 0; i < snOptions.value.length; i++) {
+    const v = snOptions.value[i]
+    if (isBlank(supplierObj?.[v.supplier?.id])) {
+      supplierObj[v.supplier?.id] = {
+        supplierId: v.supplier?.id,
+        name: v.supplier?.name,
+        id: 'supplier' + v.supplier?.id,
+        snList: []
+      }
+    }
+    supplierObj[v.supplier?.id].snList.push({
+      name: v.serialNumber,
+      ...v
+    })
+  }
+  return obj2arr(supplierObj)
+})
+
+// 采购合同详情
+const { detailRef: purchaseOrderRef, openDetail } = useOtherCrudDetail()
+
+watch(
+  () => props.modelValue,
+  (value) => {
+    selectValue.value = value
+    // setDefault()
+  },
+  { immediate: true }
+)
+
+function handleOpenDetail(id) {
+  if (id) {
+    openDetail(id)
+  }
+}
+
+function handleChange(val) {
+  let data = val
+  if (isBlank(data)) data = undefined
+  // 发生变化
+  const isChange = !judgeSameValue(data, props.modelValue)
+  // 两个值都为空
+  const allBlank = isBlank(data) && isBlank(props.modelValue)
+
+  if (isChange && !allBlank) {
+    emit('update:modelValue', data)
+    emit('change', data, props.modelValue)
+    emitInfo(data, props.modelValue)
+  }
+}
+
+function emitInfo(val, oldVal) {
+  const res = val ? purchaseOrderKV.value[val] : null
+  const oldRes = oldVal ? purchaseOrderKV.value[oldVal] : null
+  emit('update:info', res)
+  emit('info-change', res, oldRes)
+}
+
+function loadedCallBack() {
+  purchaseOrderKV.value = {}
+  if (isNotBlank(snOptions.value)) {
+    snOptions.value.forEach((v) => {
+      purchaseOrderKV.value[v.id] = v
+    })
+  }
+  if (isNotBlank(selectValue.value)) {
+    emitInfo(selectValue.value)
+  }
+  // else {
+  //   setDefault()
+  // }
+}
+
+/**
+ * 设置默认值
+ * 有默认值的情况，并且value为空，则给value赋值
+ */
+// function setDefault() {
+//   if (isBlank(options.value) || selectValue.value) {
+//     return
+//   }
+//   if (props.onlyOneDefault && options.value.length === 1) {
+//     selectValue.value = options.value[0].value
+//     handleChange(selectValue.value)
+//     return
+//   }
+//   if (props.default) {
+//     selectValue.value = options.value[0].value
+//     handleChange(selectValue.value)
+//     return
+//   }
+//   // 未赋予默认值
+//   if (isBlank(selectValue.value) && isNotBlank(props.info)) {
+//     emitInfo()
+//   }
+// }
+</script>
+
+<style lang="scss" scoped>
+.purchase-sn-supplier-cascader-container {
+  display: inline-flex;
+  position: relative;
+
+  ::v-deep(.purchase-sn-supplier-cascader) {
+    width: 100%;
+  }
+}
+
+.show-detail-icon {
+  .detail-icon {
+    position: absolute;
+    right: 5px;
+    top: 55%;
+    transform: translate(0, -50%);
+    border: none;
+    user-select: none;
+    font-size: 14px;
+    margin: 0 5px;
+  }
+
+  ::v-deep(.el-input__inner) {
+    padding-right: 50px;
+  }
+  ::v-deep(.el-input__suffix) {
+    right: 35px;
+  }
+}
+
+.more-text-info {
+  display: inline-block;
+  line-height: 12px;
+  max-width: 250px;
+}
+</style>
