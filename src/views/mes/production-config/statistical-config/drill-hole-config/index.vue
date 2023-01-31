@@ -60,7 +60,7 @@
 <script setup>
 import drillDetail from './drill-detail'
 import useMaxHeight from '@compos/use-max-height'
-import { mesCuttingConfigPM as permission } from '@/page-permission/config'
+import { configStatisticalDrillHolePM as permission } from '@/page-permission/config'
 import crudApi from '@/api/mes/production-config/drill-hole-config'
 import { ref, provide } from 'vue'
 import { baseTimeColumns } from '@/utils/columns-format/common'
