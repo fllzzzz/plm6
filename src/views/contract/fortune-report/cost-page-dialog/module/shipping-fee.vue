@@ -41,7 +41,7 @@
           <span v-parse-time="{ val: scope.row.auditTime, fmt: '{y}-{m}-{d}' }" />
         </template>
       </el-table-column>
-      <el-table-column key="productType" prop="productType" label="装载类型" width="165">
+      <el-table-column key="productType" prop="productType" label="装载类型" width="100">
         <template v-slot="scope">
           <el-tag
             v-for="item in cleanArray(EO.getBits(packTypeEnum, scope.row.productType, 'V'))"
@@ -63,7 +63,7 @@
         align="center"
       />
       <el-table-column key="driverName" prop="driverName" sortable="custom" :show-overflow-tooltip="true" label="司机姓名" align="center" />
-      <el-table-column key="driverPhone" prop="driverPhone" :show-overflow-tooltip="true" label="司机电话" align="center" />
+      <el-table-column key="driverPhone" prop="driverPhone" :show-overflow-tooltip="true" label="司机电话" align="center" width="140" />
       <el-table-column
         key="auditUserName"
         prop="auditUserName"

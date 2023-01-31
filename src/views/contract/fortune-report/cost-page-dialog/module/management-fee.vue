@@ -2,7 +2,7 @@
   <div class="app-container">
     <div class="head-container" style="display: flex; justify-content: space-between">
       <div style="width: 300px">
-        <print-table v-permission="permission.print" :api-key="apiKey" :params="{ ...query }" size="mini" type="warning" class="filter-item" />
+        <print-table v-permission="permission.print" api-key="managementFee" :params="costTypeData.projectId" size="mini" type="warning" class="filter-item" />
       </div>
       <el-tag>合计（单位：元）：{{ toThousand(props.costTypeData?.amount) }}</el-tag>
     </div>
@@ -24,7 +24,7 @@
       </el-table-column>
       <el-table-column prop="totalAmount" key="totalAmount" label="总额（元）" align="center">
         <template v-slot="scope">
-          <span>{{ scope.row.totalAmount }}</span>
+          <span>{{ toThousand(scope.row.totalAmount) }}</span>
         </template>
       </el-table-column>
       <el-table-column prop="totalProduction" key="totalProduction" label="项目摊销比" align="center">
@@ -32,9 +32,9 @@
           <span>{{ scope.row.totalProduction }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="averageUnitPrice" key="averageUnitPrice" label="费用" align="center">
+      <el-table-column prop="avgPrice" key="avgPrice" label="费用" align="center">
         <template v-slot="scope">
-          <span>{{ scope.row.averageUnitPrice }}</span>
+          <span>{{ toThousand(scope.row.avgPrice) }}</span>
         </template>
       </el-table-column>
     </common-table>
@@ -68,8 +68,8 @@ const { maxHeight } = useMaxHeight({
 // 合计
 function getSummaries(param) {
   return tableSummary(param, {
-    props: [''],
-    toThousandFields: ['']
+    props: ['totalAmount'],
+    toThousandFields: ['totalAmount']
   })
 }
 </script>

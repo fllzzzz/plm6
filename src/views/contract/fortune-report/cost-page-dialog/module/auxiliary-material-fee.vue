@@ -39,7 +39,7 @@
       </el-table-column>
       <el-table-column prop="mete" key="mete" label="核算量" align="center">
         <template v-slot="scope">
-          <span>{{ scope.row.mete }}</span>
+          <span>{{ toThousand(scope.row.mete) }}</span>
         </template>
       </el-table-column>
       <el-table-column prop="unitPrice" key="unitPrice" label="单价" align="center">
