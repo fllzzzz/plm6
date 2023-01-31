@@ -204,21 +204,8 @@ const validateLine = (value, row) => {
   return true
 }
 
-// 交货日期
-const validateDate = (value, row) => {
-  if (isNotBlank(row.line)) {
-    if (value) {
-      return true
-    } else {
-      return false
-    }
-  }
-  return true
-}
-
 const tableRules = {
-  line: [{ validator: validateLine, message: '请选择车间', trigger: 'change' }],
-  endDate: [{ validator: validateDate, message: '请选择交货日期', trigger: 'change' }]
+  line: [{ validator: validateLine, message: '请选择车间', trigger: 'change' }]
 }
 
 const { tableValidate, wrongCellMask } = useTableValidate({ rules: tableRules })
