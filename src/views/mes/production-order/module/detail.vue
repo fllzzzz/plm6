@@ -61,7 +61,7 @@
               <span v-else>{{scope.row.workshop?.id?scope.row.workshop.name+(scope.row.productionLine?.id?'/'+scope.row.productionLine.name:''):'-'}}</span>
             </template>
           </el-table-column>
-          <el-table-column key="timeArr" prop="timeArr" label="交货日期" align="center" width="250">
+          <el-table-column key="endDate" prop="endDate" label="交货日期" align="center" width="250">
             <template v-slot="scope">
               <el-date-picker
                 v-if="isEdit"
@@ -194,7 +194,7 @@ watch(
 
 // 车间产线
 const validateLine = (value, row) => {
-  if (isNotBlank(row.timeArr)) {
+  if (row.endDate) {
     if (isNotBlank(value)) {
       return true
     } else {
@@ -204,8 +204,21 @@ const validateLine = (value, row) => {
   return true
 }
 
+// 交货日期
+const validateDate = (value, row) => {
+  if (isNotBlank(row.line)) {
+    if (value) {
+      return true
+    } else {
+      return false
+    }
+  }
+  return true
+}
+
 const tableRules = {
-  line: [{ validator: validateLine, message: '请选择车间', trigger: 'change' }]
+  line: [{ validator: validateLine, message: '请选择车间', trigger: 'change' }],
+  endDate: [{ validator: validateDate, message: '请选择交货日期', trigger: 'change' }]
 }
 
 const { tableValidate, wrongCellMask } = useTableValidate({ rules: tableRules })
