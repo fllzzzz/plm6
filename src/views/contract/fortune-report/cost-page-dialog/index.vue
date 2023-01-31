@@ -102,8 +102,8 @@ const directCostList = ref([
   { key: 'auxiliaryMaterialFee', name: '辅材费', components: auxiliaryMaterialFee },
   { key: 'transportationFee', name: '运输费', components: shippingFee },
   { key: 'testingFee', name: '检测费', components: testingFee },
-  { key: 'subFee', name: '分包费', components: subcontractingFee },
-  { key: 'projectManagementFee', name: '项目管理费', components: mainMaterialFee }
+  { key: 'subFee', name: '分包费', components: subcontractingFee }
+  // { key: 'projectManagementFee', name: '项目管理费', components: mainMaterialFee }
 ])
 const indirectCostList = ref([
   { key: 'waterElectricityGasFee', name: '水电费', components: waterElectricFee },

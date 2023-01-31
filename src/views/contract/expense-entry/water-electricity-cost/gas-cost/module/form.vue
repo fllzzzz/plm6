@@ -29,6 +29,7 @@
             placeholder="选择日期"
             style="width: 270px"
             :disabled-date="disabledDate"
+            @change="handleChange"
           />
         </el-form-item>
         <el-form-item label="月份：" prop="month">
@@ -129,34 +130,12 @@ CRUD.HOOK.beforeSubmit = async () => {
   form.classifyId = crud.query.classifyId
   form.year = form.year ? form.year : prop.query.year
   form.accountingUnit = crud.query.unit
-  crud.form = await numFmtByBasicClass(
-    form,
-    {
-      toSmallest: true,
-      toNum: true
-    },
-    {
-      mete: ['usedMete'],
-      amount: ['avgUnitPrice']
-    }
-  )
-  crud.data = await numFmtByBasicClass(
-    crud.data,
-    {
-      toSmallest: true,
-      toNum: true
-    },
-    {
-      mete: ['usedMete'],
-      amount: ['avgUnitPrice']
-    }
-  )
   crud.query.year = form.year
   crud.refresh()
   crud.form = await numFmtByBasicClass(
     form,
     {
-      toSmallest: false,
+      toSmallest: true,
       toNum: true
     },
     {
@@ -164,10 +143,8 @@ CRUD.HOOK.beforeSubmit = async () => {
       amount: ['avgUnitPrice']
     }
   )
-
-  const monthList = prop.detailData.map((v) => v.month)
-  monthList.forEach(async (item) => {
-    if (item === form.month) {
+  prop.detailData.forEach(async (v) => {
+    if ((v.year === crud.query.year && v.month !== form.month) || (v.year !== crud.query.year && v.month === form.month)) {
       crud.form = await numFmtByBasicClass(
         form,
         {
@@ -179,23 +156,28 @@ CRUD.HOOK.beforeSubmit = async () => {
           amount: ['avgUnitPrice']
         }
       )
+      crud.data = await numFmtByBasicClass(
+        crud.data,
+        {
+          toSmallest: false,
+          toNum: true
+        },
+        {
+          mete: ['usedMete'],
+          amount: ['avgUnitPrice']
+        }
+      )
     }
   })
-  crud.form = await numFmtByBasicClass(
-    form,
-    {
-      toSmallest: true,
-      toNum: true
-    },
-    {
-      mete: ['usedMete'],
-      amount: ['avgUnitPrice']
-    }
-  )
 }
 
 function disabledDate(time) {
   return time > new Date()
+}
+
+function handleChange() {
+  crud.query.year = form.year
+  crud.refresh()
 }
 </script>
 
