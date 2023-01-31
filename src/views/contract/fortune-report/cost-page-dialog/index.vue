@@ -83,9 +83,9 @@ import { fortuneReportPM } from '@/page-permission/contract'
 import mainMaterialFee from './module/main-material-fee.vue'
 import laborFee from './module/labor-fee.vue'
 import auxiliaryMaterialFee from './module/auxiliary-material-fee.vue'
-import waterElectricFee from './module/water-electric-fee.vue'
+// import waterElectricFee from './module/water-electric-fee.vue'
 import depreciationFee from './module/depreciation-fee.vue'
-import managementFee from './module/management-fee.vue'
+// import managementFee from './module/management-fee.vue'
 import shippingFee from './module/shipping-fee.vue'
 import testingFee from './module/testing-fee.vue'
 import subcontractingFee from './module/subcontracting-fee.vue'
@@ -106,9 +106,9 @@ const directCostList = ref([
   // { key: 'projectManagementFee', name: '项目管理费', components: mainMaterialFee }
 ])
 const indirectCostList = ref([
-  { key: 'waterElectricityGasFee', name: '水电费', components: waterElectricFee },
-  { key: 'depreciationFee', name: '折旧费', components: depreciationFee },
-  { key: 'managementFee', name: '管理费', components: managementFee }
+  // { key: 'waterElectricityGasFee', name: '水电费', components: waterElectricFee },
+  { key: 'depreciationFee', name: '折旧费', components: depreciationFee }
+  // { key: 'managementFee', name: '管理费', components: managementFee }
 ])
 
 const emit = defineEmits(['update:visible'])
