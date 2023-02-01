@@ -9,7 +9,7 @@
       class="filter-item"
       @change="crud.toQuery"
     />
-    <common-radio-button
+    <!-- <common-radio-button
       v-if="query.productType & packTypeEnum.ENCLOSURE.V"
       v-model="query.category"
       :options="mesEnclosureTypeEnum.ENUM"
@@ -18,7 +18,7 @@
       size="small"
       class="filter-item"
       @change="crud.toQuery"
-    />
+    /> -->
     <el-date-picker
       v-model="query.date"
       type="daterange"
@@ -127,7 +127,7 @@ import { inject, reactive, defineExpose, computed, defineEmits } from 'vue'
 import { mapGetters } from '@/store/lib'
 import moment from 'moment'
 
-import { packTypeEnum, mesEnclosureTypeEnum } from '@enum-ms/mes'
+import { packTypeEnum } from '@enum-ms/mes'
 import { PICKER_OPTIONS_SHORTCUTS } from '@/settings/config'
 import { printPackageLabel } from '@/utils/print/index'
 import { QR_SCAN_F_TYPE, QR_SCAN_TYPE } from '@/settings/config'
@@ -190,12 +190,13 @@ const { batchPrint, print } = usePrintLabel({
 const detailStore = inject('detailStore')
 const dataField = {
   [packTypeEnum.STRUCTURE.V]: 'artifactList',
-  [packTypeEnum.ENCLOSURE.V]: 'enclosureList',
+  [packTypeEnum.MACHINE_PART.V]: 'partList',
+  // [packTypeEnum.ENCLOSURE.V]: 'enclosureList',
   [packTypeEnum.AUXILIARY_MATERIAL.V]: 'materialList'
 }
 
 async function getLabelInfo(row) {
-  let _list = []
+  const _list = []
   let _data = {}
   try {
     if (detailStore[row.id]) {
@@ -204,18 +205,38 @@ async function getLabelInfo(row) {
       _data = await detail(row.id)
       emit('getDetail', row.id, _data)
     }
-    _list = _data[dataField[row.productType]].map((v) => {
-      const { serialNumber, material, packageQuantity, grossWeight, plate, length } = v
-      return {
-        serialNumber,
-        material,
-        quantity: packageQuantity,
-        totalWeight: (packageQuantity * grossWeight).toFixed(DP.COM_WT__KG),
-        // totalNetWeight: totalNetWeight ? totalNetWeight.toFixed(DP.COM_WT__KG) : 0,
-        plate,
-        length: length ? length.toFixed(DP.MES_ENCLOSURE_L__MM) : 0
+    // 多类型打包处理
+    for (const item in dataField) {
+      const _itemList = _data[dataField[item]]
+      if (_itemList?.length) {
+        for (let i = 0; i < _itemList.length; i++) {
+          const v = _itemList[i]
+          const { serialNumber, material, packageQuantity, grossWeight, plate, length } = v
+          _list.push({
+            serialNumber,
+            material,
+            quantity: packageQuantity,
+            totalWeight: (packageQuantity * grossWeight).toFixed(DP.COM_WT__KG),
+            // totalNetWeight: totalNetWeight ? totalNetWeight.toFixed(DP.COM_WT__KG) : 0,
+            plate,
+            length: length ? length.toFixed(DP.MES_ENCLOSURE_L__MM) : 0
+          })
+        }
       }
-    })
+    }
+    // 单类型打包处理
+    // _list = _data[dataField[row.productType]].map((v) => {
+    //   const { serialNumber, material, packageQuantity, grossWeight, plate, length } = v
+    //   return {
+    //     serialNumber,
+    //     material,
+    //     quantity: packageQuantity,
+    //     totalWeight: (packageQuantity * grossWeight).toFixed(DP.COM_WT__KG),
+    //     // totalNetWeight: totalNetWeight ? totalNetWeight.toFixed(DP.COM_WT__KG) : 0,
+    //     plate,
+    //     length: length ? length.toFixed(DP.MES_ENCLOSURE_L__MM) : 0,
+    //   }
+    // })
   } catch (error) {
     console.log('获取详情失败', error)
   }

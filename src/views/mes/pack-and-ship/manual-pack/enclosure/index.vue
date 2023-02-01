@@ -24,7 +24,7 @@
         width="120px"
       >
         <template v-slot="scope">
-          <table-cell-tag v-if="scope.row.workshopInf" :name="scope.row.workshopInf.name" />
+          <table-cell-tag v-if="scope.row.workshop" :name="scope.row.workshop.name" />
           <span>{{ scope.row.name }}</span>
         </template>
       </el-table-column>
@@ -206,7 +206,7 @@ import { computed, ref, watch, defineEmits, defineProps, defineExpose, inject } 
 import { enclosureManualPackPM as permission } from '@/page-permission/mes'
 import { DP } from '@/settings/config'
 import { toFixed } from '@data-type'
-import { packTypeEnum } from '@enum-ms/mes'
+// import { packTypeEnum } from '@enum-ms/mes'
 
 import useCRUD from '@compos/use-crud'
 import mHeader from './module/header'
@@ -234,7 +234,8 @@ const { crud, columns, CRUD } = useCRUD(
   tableRef
 )
 
-const packTypeK = packTypeEnum.ENCLOSURE.K
+// const packTypeK = packTypeEnum.ENCLOSURE.K
+const packTypeK = 0
 const emit = defineEmits(['add'])
 const props = defineProps({
   projectId: {

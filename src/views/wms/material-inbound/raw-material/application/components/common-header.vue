@@ -2,7 +2,21 @@
   <div class="inbound-application-header flex-rbc">
     <div>
       <el-form ref="formRef" :model="form" :rules="rules" size="small" label-position="right" inline label-width="80px">
-        <el-form-item label="订单号" prop="purchaseId" label-width="70px">
+        <el-form-item prop="supplyType" label-width="0px">
+          <common-radio-button
+            v-model="form.supplyType"
+            :options="orderSupplyTypeEnum.ENUM"
+            default
+            type="enumSL"
+            :style="!edit?'margin-left:10px':''"
+            style="vertical-align: middle"
+          >
+            <template #suffix>
+              <span>入库</span>
+            </template>
+          </common-radio-button>
+        </el-form-item>
+        <el-form-item v-if="form.supplyType === orderSupplyTypeEnum.SELF.V" prop="purchaseId" label-width="0px">
           <purchase-sn-supplier-cascader
             class="input-underline"
             v-model="form.purchaseId"
@@ -67,7 +81,12 @@
     <div class="child-mr-7">
       <store-operation v-if="!props.edit" type="cu" @clear="handleClear" />
       <common-button type="primary" size="mini" @click="openRequisitionsView">查看申购单</common-button>
-      <el-tooltip content="请先选择采购合同编号" :disabled="!!form.purchaseId" placement="bottom" effect="light">
+      <el-tooltip
+        content="请先选择采购合同编号"
+        :disabled="!!form.purchaseId && form.supplyType === orderSupplyTypeEnum.SELF.V"
+        placement="bottom"
+        effect="light"
+      >
         <excel-resolve-button
           icon="el-icon-upload2"
           btn-name="批量导入"
@@ -75,7 +94,7 @@
           btn-type="success"
           open-loading
           :template="importTemp"
-          :disabled="!form.purchaseId"
+          :disabled="!form.purchaseId && form.supplyType === orderSupplyTypeEnum.SELF.V"
           @success="handleExcelSuccess"
         />
       </el-tooltip>
@@ -86,14 +105,16 @@
 
 <script setup>
 import { getRequisitionsDetailBySN } from '@/api/wms/requisitions'
-import { defineProps, defineEmits, defineExpose, ref, computed, watchEffect, nextTick, inject } from 'vue'
+import { defineProps, defineEmits, defineExpose, ref, computed, watch, watchEffect, nextTick, inject } from 'vue'
 import { useRouter } from 'vue-router'
 import { STEEL_ENUM } from '@/settings/config'
+import { orderSupplyTypeEnum } from '@/utils/enum/modules/wms'
 import { matClsEnum } from '@/utils/enum/modules/classification'
 import { weightMeasurementModeEnum } from '@enum-ms/finance'
 import { logisticsPayerEnum, logisticsTransportTypeEnum } from '@/utils/enum/modules/logistics'
 import { patternLicensePlate } from '@/utils/validate/pattern'
 
+import useUserProjects from '@compos/store/use-user-projects'
 import { regExtra } from '@/composables/form/use-form'
 import useWeightOverDiff from '@/composables/wms/use-trains-weight-over-diff'
 import excelResolveButton from '@/components-system/common/excel-resolve-button/index.vue'
@@ -129,6 +150,8 @@ const props = defineProps({
 })
 
 const router = useRouter()
+
+const { projects } = useUserProjects()
 
 const matSpecRef = inject('matSpecRef') // 调用父组件matSpecRef
 const { cu, form, FORM } = regExtra() // 表单
@@ -245,6 +268,28 @@ function init() {
     }
   })
 }
+
+watch(
+  () => form.supplyType,
+  () => {
+    if (form.supplyType) {
+      if (form.supplyType === orderSupplyTypeEnum.PARTY_A.V) {
+        handlePurchaseIdChange(undefined)
+        const _order = {
+          supplyType: form.supplyType,
+          weightMeasurementMode: weightMeasurementModeEnum.THEORY.V,
+          basicClass: props.basicClass,
+          projects: projects.value
+        }
+        handleOrderInfoChange(_order)
+      } else {
+        handlePurchaseIdChange(undefined)
+        handleOrderInfoChange(undefined)
+      }
+    }
+  },
+  { immediate: true }
+)
 
 // 采购合同编号id变更
 function handlePurchaseIdChange(val) {

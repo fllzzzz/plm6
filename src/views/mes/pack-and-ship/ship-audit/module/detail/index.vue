@@ -63,11 +63,17 @@
           >{{ packTypeEnum.STRUCTURE.L }}({{ artifactList.length }})</el-radio-button
         >
         <el-radio-button
+          v-if="packTypeEnum.MACHINE_PART.V & productType"
+          :label="packTypeEnum.MACHINE_PART.V"
+          :disabled="partList.length == 0"
+          >{{ packTypeEnum.MACHINE_PART.L }}({{ partList.length }})</el-radio-button
+        >
+        <!-- <el-radio-button
           v-if="packTypeEnum.ENCLOSURE.V & productType"
           :label="packTypeEnum.ENCLOSURE.V"
           :disabled="enclosureList.length == 0"
           >{{ packTypeEnum.ENCLOSURE.L }}({{ enclosureList.length }})</el-radio-button
-        >
+        > -->
         <el-radio-button
           v-if="packTypeEnum.AUXILIARY_MATERIAL.V & productType"
           :label="packTypeEnum.AUXILIARY_MATERIAL.V"
@@ -102,7 +108,8 @@ import EO from '@enum'
 import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'
 import structureTable from './module/structure'
-import enclosureTable from './module/enclosure'
+import partTable from './module/part'
+// import enclosureTable from './module/enclosure'
 import auxiliaryMaterialTable from './module/auxiliary-material'
 
 const emit = defineEmits(['update:visible'])
@@ -146,6 +153,7 @@ const { maxHeight } = useMaxHeight(
 
 const tableLoading = ref(false)
 const artifactList = ref([])
+const partList = ref([])
 const enclosureList = ref([])
 const auxList = ref([])
 const contract = ref({})
@@ -164,8 +172,10 @@ const currentView = computed(() => {
   switch (curProductType.value) {
     case packTypeEnum.STRUCTURE.V:
       return structureTable
-    case packTypeEnum.ENCLOSURE.V:
-      return enclosureTable
+    case packTypeEnum.MACHINE_PART.V:
+      return partTable
+    // case packTypeEnum.ENCLOSURE.V:
+    //   return enclosureTable
     case packTypeEnum.AUXILIARY_MATERIAL.V:
       return auxiliaryMaterialTable
     default:
@@ -189,19 +199,34 @@ const list = computed(() => {
           return v
         })
       )
-    case packTypeEnum.ENCLOSURE.V:
+    case packTypeEnum.MACHINE_PART.V:
       return (
-        enclosureList.value &&
-        enclosureList.value.map((v) => {
+        partList.value &&
+        partList.value.map((v) => {
           v.showQuantity = v[props.quantityFelid]
+          v.weight = (props.weightType === weightTypeEnum.NET.V ? v.netWeight : v.grossWeight) || 0
+          v.totalLength = convertUnits(v.length * v.showQuantity || 0, 'mm', 'm')
           v.totalMete =
-            contract.value.enclosureMeasureMode === enclosureSettlementTypeEnum.AREA.V
-              ? toFixed(v.totalArea, DP.COM_AREA__M2)
-              : convertUnits(v.totalLength, 'mm', 'm', DP.MES_ENCLOSURE_L__M)
-          v.totalPrice = v.unitPrice * v.totalMete || 0
+            contract.value.structureMeasureMode === weightMeasurementModeEnum.OVERWEIGHT.V
+              ? convertUnits(v.totalWeight, 'kg', 't')
+              : convertUnits(v.weight * v.showQuantity, 'kg', 't')
+          v.totalPrice = v.pricingManner === pricingMannerEnum.WEIGHT.V ? v.totalMete * (v.unitPrice || 0) : v.totalLength * (v.unitPrice || 0)
           return v
         })
       )
+    // case packTypeEnum.ENCLOSURE.V:
+    //   return (
+    //     enclosureList.value &&
+    //     enclosureList.value.map((v) => {
+    //       v.showQuantity = v[props.quantityFelid]
+    //       v.totalMete =
+    //         contract.value.enclosureMeasureMode === enclosureSettlementTypeEnum.AREA.V
+    //           ? toFixed(v.totalArea, DP.COM_AREA__M2)
+    //           : convertUnits(v.totalLength, 'mm', 'm', DP.MES_ENCLOSURE_L__M)
+    //       v.totalPrice = v.unitPrice * v.totalMete || 0
+    //       return v
+    //     })
+    //   )
     case packTypeEnum.AUXILIARY_MATERIAL.V:
       return (
         auxList.value &&
@@ -228,6 +253,7 @@ watch(
 
 function init() {
   artifactList.value = []
+  partList.value = []
   enclosureList.value = []
   auxList.value = []
   contract.value = {}
@@ -241,6 +267,7 @@ async function fetchDetail() {
     curProductType.value = productTypeBits.value[0]
     const data = await props.detailFunc(detailId.value)
     artifactList.value = data.artifactList || []
+    partList.value = data.partList || []
     enclosureList.value = data.enclosureList || []
     auxList.value = data.auxList || []
     contract.value = data.review || {}

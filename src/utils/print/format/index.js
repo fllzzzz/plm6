@@ -47,6 +47,9 @@ const mesPaintingList = mes.surfaceArea
 
 const mesEnclosureProductionLine = mes.areaConvert
 
+const mesMainMaterialTrackUseRecord = wms.dataFormat
+const mesMainMaterialTrackStock = wms.dataFormat
+
 const wmsRmInboundReceipt = wms.dataFormat // 入库单
 const wmsRmOutboundReceipt = wms.dataFormat // 出库单
 const wmsRmReturnReceipt = wms.dataFormat // 退库单
@@ -88,6 +91,8 @@ export default {
   mesEnclosureProductionStatistics,
   mesEnclosureProductionStatisticsIn,
   mesEnclosureProductionLine,
+  mesMainMaterialTrackUseRecord, // 主材跟踪-钢材领用记录
+  mesMainMaterialTrackStock, // 主材跟踪-库存明细
 
   purchaseLogisticsRecord, // 供应链/物流记录
   scmRequisitionsDetail, // 供应商/申购详情

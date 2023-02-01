@@ -2,55 +2,46 @@
   <div class="app-container">
     <!--工具栏-->
     <div class="head-container">
-      <mHeader ref="headRef" />
+      <mHeader />
     </div>
     <!--表格渲染-->
     <common-table
       ref="tableRef"
       v-loading="crud.loading"
       :data="crud.data"
-      :data-format="enclosureTypeFormat"
       :empty-text="crud.emptyText"
       :max-height="maxHeight"
-      row-key="rowId"
       style="width: 100%"
     >
       <el-table-column label="序号" type="index" align="center" width="60" />
-      <productType-artifact-assemble-columns :productType="crud.query.productType" :columns="columns" :unitNewLine="false" />
       <el-table-column
-        v-if="
-          (checkPermission(permission.get) && !(crud.query.productType & componentTypeEnum.ASSEMBLE.V)) ||
-          (checkPermission(permission.edit) && crud.query.productType & componentTypeEnum.ASSEMBLE.V)
-        "
+        show-overflow-tooltip
+        :label="`${componentTypeEnum.VL[crud.query.taskTypeEnum]}类型`"
+        prop="productClass.name"
         align="center"
-        prop="prop"
-        label="操作"
-        width="100"
-      >
+      />
+      <el-table-column label="数量（件）" prop="quantity" width="110" align="center"></el-table-column>
+      <el-table-column label="重量（吨）" prop="netWeight" width="110" align="center"></el-table-column>
+      <el-table-column v-if="checkPermission(permission.edit)" align="center" prop="prop" label="操作" width="100">
         <template #default="{ row }">
-          <!-- <common-button type="primary" size="mini">全部修改</common-button> -->
-          <common-button type="warning" size="mini" @click="handleSeveralEdit(row)">修改</common-button>
+          <common-button type="warning" size="mini" @click="handleEdit(row)">修改</common-button>
         </template>
       </el-table-column>
     </common-table>
-    <!--分页组件-->
-    <pagination />
   </div>
 </template>
 
 <script setup>
-import crudApi from '@/api/mes/team-report/wages-adjust/summary'
-import detailApi from '@/api/mes/team-report/wages-adjust/detail'
-import { ref, provide, defineExpose, defineEmits, inject } from 'vue'
+import { typeGet } from '@/api/mes/production-line-wage-statistics/wage-adjust'
+import { ref, defineExpose, defineEmits, inject } from 'vue'
 
 import { componentTypeEnum } from '@enum-ms/mes'
 import checkPermission from '@/utils/system/check-permission'
+import { convertUnits } from '@/utils/convert/unit'
+import { DP } from '@/settings/config'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
-import { enclosureTypeFormat } from '@/utils/columns-format/mes'
-import productTypeArtifactAssembleColumns from '@comp-mes/table-columns/productType-artifact-assemble-columns'
-import pagination from '@crud/Pagination'
 import mHeader from './module/header'
 
 const optShow = {
@@ -60,42 +51,31 @@ const optShow = {
   download: false
 }
 
-const emit = defineEmits(['setInfo', 'setDetailInfo', 'refreshAuditNumber'])
+const emit = defineEmits(['setInfo'])
 
 const permission = inject('permission')
-const headRef = ref()
 const tableRef = ref()
-const { crud, columns, CRUD } = useCRUD(
+const { crud, CRUD } = useCRUD(
   {
     title: '工价调整汇总',
     permission: { ...permission },
     optShow: { ...optShow },
-    crudApi: { ...crudApi },
-    hasPagination: true
+    crudApi: { get: typeGet },
+    sort: [],
+    hasPagination: false
   },
   tableRef
 )
-const { maxHeight } = useMaxHeight({ paginate: true })
-provide('query', crud.query)
+const { maxHeight } = useMaxHeight({ paginate: false })
 
-CRUD.HOOK.beforeRefresh = () => {
-  crud.crudApi.get = crud.query.productType & componentTypeEnum.ASSEMBLE.V ? detailApi.get : crudApi.get
-  emit('refreshAuditNumber')
-}
-
-CRUD.HOOK.handleRefresh = (crud, res) => {
-  res.data.content = res.data.content.map((v, i) => {
-    v.rowId = i + '' + Math.random()
-    return v
+CRUD.HOOK.handleRefresh = (crud, { data }) => {
+  data.content.forEach((v) => {
+    v.netWeight = convertUnits(v.netWeight, 'kg', 't', DP.COM_WT__T)
   })
 }
 
-function handleSeveralEdit(row) {
-  if (crud.query.productType & componentTypeEnum.ASSEMBLE.V) {
-    emit('setDetailInfo', row)
-  } else {
-    emit('setInfo', row)
-  }
+function handleEdit(row) {
+  emit('setInfo', row)
 }
 
 defineExpose({

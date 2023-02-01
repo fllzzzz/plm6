@@ -50,8 +50,17 @@
           @keyup.enter="crud.toQuery"
         />
         <el-input
-          v-model="query.dutyName"
+          v-model="query.rectifyName"
           placeholder="输入整改人搜索"
+          class="filter-item"
+          style="width: 200px"
+          size="small"
+          clearable
+          @keyup.enter="crud.toQuery"
+        />
+        <el-input
+          v-model="query.dutyName"
+          placeholder="输入责任人搜索"
           class="filter-item"
           style="width: 200px"
           size="small"
@@ -77,6 +86,7 @@ import rrOperation from '@crud/RR.operation'
 const defaultQuery = {
   userName: void 0,
   dutyName: void 0,
+  rectifyName: undefined,
   startDate: void 0,
   endDate: void 0,
   type: void 0,

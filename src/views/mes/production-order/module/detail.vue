@@ -61,7 +61,7 @@
               <span v-else>{{scope.row.workshop?.id?scope.row.workshop.name+(scope.row.productionLine?.id?'/'+scope.row.productionLine.name:''):'-'}}</span>
             </template>
           </el-table-column>
-          <el-table-column key="timeArr" prop="timeArr" label="交货日期" align="center" width="250">
+          <el-table-column key="endDate" prop="endDate" label="交货日期" align="center" width="250">
             <template v-slot="scope">
               <el-date-picker
                 v-if="isEdit"
@@ -194,7 +194,7 @@ watch(
 
 // 车间产线
 const validateLine = (value, row) => {
-  if (isNotBlank(row.timeArr)) {
+  if (row.endDate) {
     if (isNotBlank(value)) {
       return true
     } else {

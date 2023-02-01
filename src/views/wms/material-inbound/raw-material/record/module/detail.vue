@@ -61,7 +61,7 @@
 
 <script setup>
 import { inject, computed, ref } from 'vue'
-import { orderSupplyTypeEnum } from '@enum-ms/wms'
+import { orderSupplyTypeEnum, inboundFillWayEnum } from '@enum-ms/wms'
 import { tableSummary } from '@/utils/el-extra'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { setSpecInfoToList } from '@/utils/wms/spec'
@@ -69,7 +69,7 @@ import { materialHasAmountColumns } from '@/utils/columns-format/wms'
 
 import { regDetail } from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
-// import useWmsConfig from '@/composables/store/use-wms-config'
+import useWmsConfig from '@/composables/store/use-wms-config'
 import elExpandTableColumn from '@comp-common/el-expand-table-column.vue'
 import materialBaseInfoColumns from '@/components-system/wms/table-columns/material-base-info-columns/index.vue'
 import materialUnitQuantityColumns from '@/components-system/wms/table-columns/material-unit-quantity-columns/index.vue'
@@ -89,7 +89,7 @@ const drawerRef = ref()
 const expandRowKeys = ref([])
 const { CRUD, crud, detail } = regDetail()
 
-// const { inboundFillWayCfg } = useWmsConfig()
+const { inboundFillWayCfg } = useWmsConfig()
 
 // 表格高度处理
 const { maxHeight } = useMaxHeight(
@@ -108,10 +108,10 @@ const { maxHeight } = useMaxHeight(
 const order = computed(() => detail.purchaseOrder || {})
 
 // 显示金额相关信息（（统一为入库填写，取消后台配置）
-const fillableAmount = ref(false)
-// const fillableAmount = computed(() =>
-//   inboundFillWayCfg.value ? inboundFillWayCfg.value.amountFillWay === inboundFillWayEnum.APPLICATION.V : false
-// )
+// const fillableAmount = ref(false)
+const fillableAmount = computed(() =>
+  inboundFillWayCfg.value ? inboundFillWayCfg.value.amountFillWay === inboundFillWayEnum.APPLICATION.V : false
+)
 
 // 显示金额
 const showAmount = computed(() => checkPermission(permission.showAmount) || fillableAmount.value)
@@ -119,7 +119,7 @@ const showAmount = computed(() => checkPermission(permission.showAmount) || fill
 const boolPartyA = computed(() => order.value.supplyType === orderSupplyTypeEnum.PARTY_A.V)
 // 标题
 const drawerTitle = computed(() =>
-  crud.detailLoading ? `入库单` : `入库单：${detail.serialNumber}（ ${order.value.supplier ? order.value.supplier.name : ''} ）`
+  crud.detailLoading ? `入库单` : `入库单：${detail.serialNumber}（ ${order.value.supplier ? order.value.supplier.name : '无供应商'} ）`
 )
 
 // 在列中显示次要信息

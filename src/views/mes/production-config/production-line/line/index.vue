@@ -10,7 +10,6 @@
         type="primary"
         icon="el-icon-plus"
         @click="crud.toAdd"
-        :disabled="crud.data.length === 1"
       >
         新增
       </common-button>

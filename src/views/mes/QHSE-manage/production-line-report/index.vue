@@ -51,6 +51,7 @@
                 <span>{{ row.processData[item.id]?.totalNumberInspection }}</span>
               </span>
             </el-tooltip>
+            <span v-else> \ </span>
           </template>
         </el-table-column>
       </template>

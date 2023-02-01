@@ -1,7 +1,7 @@
 import { printModeEnum as PrintMode } from './enum'
 import { getLODOP, printByMode, combineHtml } from './base'
 import { projectNameFormatter } from '@/utils/project'
-import { packTypeEnum, labelTypeEnum } from '@enum-ms/mes'
+import { labelTypeEnum } from '@enum-ms/mes'
 import { getPrintLabelHtml } from '@/utils/label/index'
 import { isNotBlank } from '@data-type/index'
 
@@ -111,21 +111,21 @@ async function printAuxiliaryMaterial({ productType, labelType, component, manuf
    */
 async function printPackageLabel({ packageInfo, qrCode, printMode = PrintMode.QUEUE.V }) {
   const pageHtml = `<div style="text-align:center;"><span tdata='pageNO'>##</span> / <span tdata='pageCount'>##</span></div>`
-  const theadHtml = {
-    [packTypeEnum.STRUCTURE.V]: `<div class="flex">
-        <div class="row-0 w-1 col border-r">编号</div>
-        <div class="row-0 w-1 col border-r">材质</div>
-        <div class="row-0 w-1 col border-r">数量</div>
-        <div class="row-0 w-1 col">重量(kg)</div>
-        </div>`,
-    [packTypeEnum.ENCLOSURE.V]: `<div class="flex">
-        <div class="row-0 w-1 col border-r">编号</div>
-        <div class="row-0 w-1 col border-r">版型</div>
-        <div class="row-0 w-1 col border-r">长度</div>
-        <div class="row-0 w-1 col">数量</div>
-      </div>`,
-    [packTypeEnum.AUXILIARY_MATERIAL.V]: ''
-  }
+  // const theadHtml = {
+  //   [packTypeEnum.STRUCTURE.V]: `<div class="flex">
+  //       <div class="row-0 w-1 col border-r">编号</div>
+  //       <div class="row-0 w-1 col border-r">材质</div>
+  //       <div class="row-0 w-1 col border-r">数量</div>
+  //       <div class="row-0 w-1 col">重量(kg)</div>
+  //       </div>`,
+  //   // [packTypeEnum.ENCLOSURE.V]: `<div class="flex">
+  //   //     <div class="row-0 w-1 col border-r">编号</div>
+  //   //     <div class="row-0 w-1 col border-r">版型</div>
+  //   //     <div class="row-0 w-1 col border-r">长度</div>
+  //   //     <div class="row-0 w-1 col">数量</div>
+  //   //   </div>`,
+  //   [packTypeEnum.AUXILIARY_MATERIAL.V]: ''
+  // }
   const headHtml = `
       <div style="font-weight: bold; font-size: 12pt;color: #333;padding-bottom: 2pt;">${packageInfo.project.shortName}</div>
       <div class="package-label">
@@ -141,36 +141,48 @@ async function printPackageLabel({ packageInfo, qrCode, printMode = PrintMode.QU
             </div>
           </div>
         </div>
-        ${theadHtml[packageInfo.productType]}
+        <div class="flex">
+          <div class="row-0 w-1 col border-r">编号</div>
+          <div class="row-0 w-1 col border-r">材质</div>
+          <div class="row-0 w-1 col border-r">数量</div>
+          <div class="row-0 w-1 col">重量(kg)</div>
+        </div>
       </div>
   `
   let bodyHtml = '<div class="package-label" style="border-top:none;border-bottom:none;">'
-  const tbodyHtml = {
-    [packTypeEnum.STRUCTURE.V]: function (item) {
-      return `
-        <div class="flex">
-          <div class="row-0 w-1 col border-b border-r">${item.serialNumber}</div>
-          <div class="row-0 w-1 col border-b border-r">${item.material}</div>
-          <div class="row-0 w-1 col border-b border-r">${item.quantity}</div>
-          <div class="row-0 w-1 col border-b">${item.totalWeight}</div>
-        </div>
-      `
-    },
-    [packTypeEnum.ENCLOSURE.V]: function (item) {
-      return `
-        <div class="flex">
-          <div class="row-0 w-1 col border-b border-r">${item.serialNumber}</div>
-          <div class="row-0 w-1 col border-b border-r">${item.plate}</div>
-          <div class="row-0 w-1 col border-b border-r">${item.length}</div>
-          <div class="row-0 w-1 col border-b">${item.quantity}</div>
-        </div>
-      `
-    },
-    [packTypeEnum.AUXILIARY_MATERIAL.V]: ''
-  }
+  // const tbodyHtml = {
+  //   [packTypeEnum.STRUCTURE.V]: function (item) {
+  //     return `
+  //       <div class="flex">
+  //         <div class="row-0 w-1 col border-b border-r">${item.serialNumber}</div>
+  //         <div class="row-0 w-1 col border-b border-r">${item.material}</div>
+  //         <div class="row-0 w-1 col border-b border-r">${item.quantity}</div>
+  //         <div class="row-0 w-1 col border-b">${item.totalWeight}</div>
+  //       </div>
+  //     `
+  //   },
+  //   // [packTypeEnum.ENCLOSURE.V]: function (item) {
+  //   //   return `
+  //   //     <div class="flex">
+  //   //       <div class="row-0 w-1 col border-b border-r">${item.serialNumber}</div>
+  //   //       <div class="row-0 w-1 col border-b border-r">${item.plate}</div>
+  //   //       <div class="row-0 w-1 col border-b border-r">${item.length}</div>
+  //   //       <div class="row-0 w-1 col border-b">${item.quantity}</div>
+  //   //     </div>
+  //   //   `
+  //   // },
+  //   [packTypeEnum.AUXILIARY_MATERIAL.V]: ''
+  // }
   for (let x = 0; x < packageInfo.list.length; x++) {
     const item = packageInfo.list[x]
-    bodyHtml += tbodyHtml[packageInfo.productType](item)
+    bodyHtml += `
+    <div class="flex">
+      <div class="row-0 w-1 col border-b border-r">${item.serialNumber}</div>
+      <div class="row-0 w-1 col border-b border-r">${item.material}</div>
+      <div class="row-0 w-1 col border-b border-r">${item.quantity}</div>
+      <div class="row-0 w-1 col border-b">${item.totalWeight}</div>
+    </div>
+  `
   }
   bodyHtml += '</div>'
   const strHtml = combineHtml(PACKAGE_STYLE, bodyHtml)

@@ -25,11 +25,11 @@
           </template>
         </el-table-column>
       </template>
-      <template v-if="props.params.type === packTypeEnum.ENCLOSURE.V">
+      <!-- <template v-if="props.params.type === packTypeEnum.ENCLOSURE.V">
         <el-table-column prop="name" label="名称" align="center" />
         <el-table-column prop="plate" label="板型" align="center" />
         <el-table-column prop="totalQuantity" label="数量" align="center" />
-      </template>
+      </template> -->
       <template v-if="props.params.type === packTypeEnum.AUXILIARY_MATERIAL.V">
         <el-table-column prop="classifyName" label="名称" align="center" />
         <el-table-column prop="specification" label="规格" align="center" />

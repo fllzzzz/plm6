@@ -577,6 +577,7 @@ function toAssembleScheduling() {
 
 function handleTaskIssueSuccess() {
   fetchLineType()
+  emit('refresh')
 }
 </script>
 

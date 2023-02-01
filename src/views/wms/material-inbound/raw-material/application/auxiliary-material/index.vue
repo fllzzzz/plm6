@@ -6,7 +6,7 @@
       :edit="props.edit"
       :show-total="false"
       :total-amount="totalAmount"
-      :show-total-amount="!boolPartyA"
+      :show-total-amount="!boolPartyA && fillableAmount"
       @purchase-order-change="handleOrderInfoChange"
     >
       <div class="filter-container">
@@ -21,7 +21,7 @@
         </div>
       </div>
       <el-form ref="formRef" :model="form">
-        <aux-mat-table ref="tableRef" :max-height="tableMaxHeight" :bool-party-a="boolPartyA" />
+        <aux-mat-table ref="tableRef" :max-height="tableMaxHeight" :bool-party-a="boolPartyA" :fillableAmount="fillableAmount"/>
       </el-form>
     </common-wrapper>
     <common-drawer
@@ -58,11 +58,12 @@ import { auxMatInboundApplicationPM as permission } from '@/page-permission/wms'
 
 import { defineProps, defineEmits, ref, watch, provide, nextTick, reactive, computed } from 'vue'
 import { matClsEnum } from '@/utils/enum/modules/classification'
-import { orderSupplyTypeEnum } from '@/utils/enum/modules/wms'
+import { orderSupplyTypeEnum, inboundFillWayEnum } from '@/utils/enum/modules/wms'
 import { isNotBlank, toFixed } from '@/utils/data-type'
 
 import useForm from '@/composables/form/use-form'
 import useMaxHeight from '@compos/use-max-height'
+import useWmsConfig from '@/composables/store/use-wms-config'
 import CommonWrapper from '@/views/wms/material-inbound/raw-material/application/components/common-wrapper.vue'
 import MaterialTableSpecSelect from '@/components-system/classification/material-table-spec-select.vue'
 import AuxMatTable from './module/aux-mat-table.vue'
@@ -98,6 +99,10 @@ const boolPartyA = ref(false) // 是否“甲供”
 
 const materialSelectVisible = ref(false) // 显示物料选择
 const currentBasicClass = matClsEnum.MATERIAL.V // 当前基础分类
+
+const { inboundFillWayCfg } = useWmsConfig()
+// 显示金额相关信息（由采购填写的信息）
+const fillableAmount = computed(() => inboundFillWayCfg.value ? inboundFillWayCfg.value.amountFillWay === inboundFillWayEnum.APPLICATION.V : false)
 
 const addable = computed(() => !!(currentBasicClass && order.value)) // 可添加的状态（选择了采购合同编号）
 const totalAmount = computed(() => {
@@ -208,7 +213,7 @@ init()
 FORM.HOOK.beforeToEdit = async (crud, form) => {
   if (!props.edit) return
   // 采购合同id
-  form.purchaseId = form.purchaseOrder.id
+  form.purchaseId = form.purchaseOrder?.id
   if (!form.logistics) form.logistics = {}
   // 设置监听等
   setFormCallback(form)
@@ -279,6 +284,12 @@ function init() {
 
 // 批量导入
 cu.props.import = (importList) => {
+  if (!fillableAmount.value) {
+    importList.forEach(v => {
+      v.amount = undefined
+      v.unitPrice = undefined
+    })
+  }
   let unexistNameArr = []
   // 0代表所有辅材
   if (!order.value.auxMaterialIds.includes(0)) {

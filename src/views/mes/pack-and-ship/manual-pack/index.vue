@@ -11,7 +11,7 @@
             size="small"
             class="filter-item"
           />
-          <common-radio-button
+          <!-- <common-radio-button
             v-if="packType === packTypeEnum.ENCLOSURE.V"
             type="enum"
             v-model="category"
@@ -19,7 +19,7 @@
             showOptionAll
             placeholder="请选择围护类型"
             class="filter-item"
-          />
+          /> -->
           <workshop-select
             v-if="packType !== packTypeEnum.AUXILIARY_MATERIAL.V"
             v-model="workshopId"
@@ -73,14 +73,14 @@ import { useRoute } from 'vue-router'
 import { mapGetters } from '@/store/lib'
 
 import { isBlank, isNotBlank } from '@data-type/index'
-import { packTypeEnum, mesEnclosureTypeEnum } from '@enum-ms/mes'
+import { packTypeEnum } from '@enum-ms/mes'
 import { manualPackPM as permission } from '@/page-permission/mes'
 
 import useMaxHeight from '@compos/use-max-height'
 // import factorySelect from '@comp-base/factory-select'
 import workshopSelect from '@comp-mes/workshop-select'
 import structureTable from './structure'
-import enclosureTable from './enclosure'
+// import enclosureTable from './enclosure'
 import auxiliaryMaterialTable from './auxiliary-material'
 import partTable from './part'
 import packListDrawer from './pack-list-drawer'
@@ -107,7 +107,7 @@ const bagId = ref()
 const packVisible = ref(false)
 const packData = reactive({
   [packTypeEnum.STRUCTURE.K]: {},
-  [packTypeEnum.ENCLOSURE.K]: {},
+  // [packTypeEnum.ENCLOSURE.K]: {},
   [packTypeEnum.MACHINE_PART.K]: {},
   [packTypeEnum.AUXILIARY_MATERIAL.K]: {}
 })
@@ -135,7 +135,7 @@ watch(
   (newVal, oldVal) => {
     if (isNotBlank(newVal)) {
       packData[packTypeEnum.STRUCTURE.K] = {}
-      packData[packTypeEnum.ENCLOSURE.K] = {}
+      // packData[packTypeEnum.ENCLOSURE.K] = {}
       packData[packTypeEnum.MACHINE_PART.K] = {}
       packData[packTypeEnum.AUXILIARY_MATERIAL.K] = {}
     }
@@ -159,16 +159,15 @@ watch(
       bagId.value = val.value.id
       const _data = editData.value.data
       packData[packTypeEnum.STRUCTURE.K] = _data.artifactList && _data.artifactList.reduce((obj, item) => ((obj[item.id] = item), obj), {})
-      packData[packTypeEnum.ENCLOSURE.K] =
-        (_data.enclosureList && _data.enclosureList.reduce((obj, item) => ((obj[item.id] = item), obj), {})) || {}
       packData[packTypeEnum.MACHINE_PART.K] =
         (_data.partList && _data.partList.reduce((obj, item) => ((obj[item.id] = item), obj), {})) || {}
+      // packData[packTypeEnum.ENCLOSURE.K] =
+      //   (_data.enclosureList && _data.enclosureList.reduce((obj, item) => ((obj[item.id] = item), obj), {})) || {}
       packData[packTypeEnum.AUXILIARY_MATERIAL.K] =
         (_data.auxList && _data.auxList.reduce((obj, item) => ((obj[item.id] = item), obj), {})) || {}
       nextTick(() => {
         packVisible.value = true
       })
-      console.log(val.value, editData.value, 'editData')
     }
   },
   { immediate: true, deep: true }
@@ -178,8 +177,8 @@ const currentView = computed(() => {
   switch (packType.value) {
     case packTypeEnum.STRUCTURE.V:
       return structureTable
-    case packTypeEnum.ENCLOSURE.V:
-      return enclosureTable
+    // case packTypeEnum.ENCLOSURE.V:
+    //   return enclosureTable
     case packTypeEnum.MACHINE_PART.V:
       return partTable
     case packTypeEnum.AUXILIARY_MATERIAL.V:
@@ -192,7 +191,7 @@ const currentView = computed(() => {
 const isEmpty = computed(() => {
   return (
     isBlank(packData[packTypeEnum.STRUCTURE.K]) &&
-    isBlank(packData[packTypeEnum.ENCLOSURE.K]) &&
+    // isBlank(packData[packTypeEnum.ENCLOSURE.K]) &&
     isBlank(packData[packTypeEnum.MACHINE_PART.K]) &&
     isBlank(packData[packTypeEnum.AUXILIARY_MATERIAL.K])
   )
@@ -200,7 +199,7 @@ const isEmpty = computed(() => {
 
 function handleSuccess() {
   packData[packTypeEnum.STRUCTURE.K] = {}
-  packData[packTypeEnum.ENCLOSURE.K] = {}
+  // packData[packTypeEnum.ENCLOSURE.K] = {}
   packData[packTypeEnum.MACHINE_PART.K] = {}
   packData[packTypeEnum.AUXILIARY_MATERIAL.K] = {}
   mainRef.value.refresh()
