@@ -39,9 +39,10 @@
         label="采购合同编号"
         min-width="155"
       >
-        <template #default="{ row }">
-          <table-cell-tag :show="!!row.boolPartyA" name="甲供" type="partyA" :offset="10" />
-          <span>{{ row.purchaseSN }}</span>
+        <template #default="{ row: { sourceRow: row } }">
+          <table-cell-tag :show="!!row.boolPartyA && !!row.purchaseSN" name="甲供" type="partyA" :offset="10" />
+          <span v-if="row.purchaseSN">{{ row.purchaseSN }}</span>
+          <el-tag v-else type="danger" effect="dark" size="small">甲供</el-tag>
         </template>
       </el-table-column>
       <el-table-column
@@ -288,7 +289,7 @@ const { maxHeight } = useMaxHeight({ paginate: true })
 
 CRUD.HOOK.handleRefresh = (crud, { data }) => {
   data.content.forEach((v) => {
-    v.imgUrls = v.attachments?.map(o => o.imageUrl) || []
+    v.imgUrls = v.attachments?.map((o) => o.imageUrl) || []
     v.reviewable =
       v.reviewStatus === reviewStatusEnum.UNREVIEWED.V &&
       checkPermission(permission.review) &&

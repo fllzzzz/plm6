@@ -119,7 +119,7 @@ const boolPartyA = computed(() => order.value.supplyType === orderSupplyTypeEnum
 
 // 标题
 const drawerTitle = computed(() =>
-  crud.detailLoading ? `入库单` : `入库单：${detail.serialNumber}（ ${order.value.supplier ? order.value.supplier.name : ''} ）`
+  crud.detailLoading ? `入库单` : `入库单：${detail.serialNumber}（ ${order.value.supplier ? order.value.supplier.name : '无供应商'} ）`
 )
 
 CRUD.HOOK.beforeDetailLoaded = async (crud, detail) => {

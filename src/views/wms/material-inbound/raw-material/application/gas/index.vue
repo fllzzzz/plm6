@@ -212,7 +212,7 @@ init()
 FORM.HOOK.beforeToEdit = async (crud, form) => {
   if (!props.edit) return
   // 采购合同id
-  form.purchaseId = form.purchaseOrder.id
+  form.purchaseId = form.purchaseOrder?.id
   if (!form.logistics) form.logistics = {}
   // 设置监听等
   setFormCallback(form)
