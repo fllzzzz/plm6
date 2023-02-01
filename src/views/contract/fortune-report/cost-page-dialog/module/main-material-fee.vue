@@ -1,5 +1,5 @@
 <template>
-  <div class="app-container">
+  <div>
     <div class="head-container" style="display: flex; justify-content: space-between">
       <div style="width: 300px">
         <print-table
@@ -17,7 +17,7 @@
       ref="tableRef"
       :data="detailData"
       :empty-text="'暂无数据'"
-      :max-height="maxHeight"
+      :max-height="maxHeight + 60"
       row-key="id"
       style="width: 100%"
       :data-format="dataFormat"
@@ -100,6 +100,7 @@ const tableRef = ref()
 const detailData = ref([])
 
 const { maxHeight } = useMaxHeight({
+  extraBox: ['.head-container'],
   paginate: true
 })
 
@@ -126,12 +127,12 @@ function getSummaries(param) {
 
 async function fetchMainFee() {
   try {
-    const { content, totalElements } = await getMainAuxiliaryList({
+    const { content = [], totalElements } = await getMainAuxiliaryList({
       basicClassEnum: mainAuxiliaryTypeEnum.MAIN.V,
       projectId: props.costTypeData.projectId,
       ...queryPage
     })
-    content.map((v) => {
+    content.forEach((v) => {
       v.unitPrice = v.amount / v.mete
     })
     detailData.value = content || []

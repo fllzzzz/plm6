@@ -129,7 +129,7 @@ function getSummaries(param) {
           return prev
         }
       }, 0)
-      sums[index] = meteSum ? priceSum / convertUnits(meteSum, 'kg', 't', 2) : 0
+      sums[index] = meteSum ? (priceSum / (meteSum / 1000)).toFixed(2) : 0
     }
     if (column.property === 'mete') {
       const values = data.map((item) => Number(item[column.property]))

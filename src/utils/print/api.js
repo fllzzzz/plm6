@@ -45,6 +45,7 @@ const manualList = contract.manualList
 const shippingFeeList = contract.shippingFeeList
 const testingFee = contract.testingFee
 const subcontractFee = contract.subcontractFee
+const projectManagementFee = contract.projectManagementFee
 const managementFee = contract.managementFee
 const waterElectricFee = contract.waterElectricFee
 const depreciationFee = contract.depreciationFee
@@ -181,6 +182,7 @@ export default {
   shippingFeeList, // 运输费
   testingFee, // 检测费
   subcontractFee, // 分包费
+  projectManagementFee, // 项目管理费
   managementFee, // 管理费
   waterElectricFee, // 水电费
   depreciationFee, // 折旧费

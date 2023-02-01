@@ -200,9 +200,9 @@ const managementFee = {
      * @param {boolean} sum 列需要合计
      */
     fields: [
-      { show: true, key: 'managementTypeName', title: '科目', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 22, type: typeEnum.OTHER.K },
+      { show: true, key: 'managementTypeName', title: '科目', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 22, type: typeEnum.SUBJECT_NAME.K },
       { show: true, key: 'amount', title: '总额', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.AMOUNT.K, format: { toThousand: true, precision: 2, unit: amountUnitEnum.YUAN.V }, sum: true },
-      { show: true, key: 'rate', title: '项目摊销比', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.WEIGHT.K },
+      { show: true, key: 'rate', title: '项目摊销比', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.RATE.K },
       { show: true, key: 'usedAmount', title: '费用', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.AMOUNT.K, format: { toThousand: true, precision: 2, unit: amountUnitEnum.YUAN.V }}
     ]
   }

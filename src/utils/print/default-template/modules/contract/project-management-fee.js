@@ -1,13 +1,13 @@
 import { dataSourceEnum, alignEnum, verticleAlignEnum, fieldTypeEnum as typeEnum, cssUnitEnum, cssUnitPrecisionEnum, pageFormatEnum, amountUnitEnum } from '@/utils/print/enum'
 import { projectNameArrangementModeEnum } from '@/utils/enum/modules/contract'
 
-// 折旧费清单
-const depreciationFee = {
+// 项目管理费清单
+const projectManagementFee = {
   fontUnit: 'pt', // 字体单位
   unit: cssUnitEnum.MM.V, // 长度单位
   unitPrecision: cssUnitPrecisionEnum.ZERO.V, // 长度单位精度
-  type: 'depreciationFee', // 表格类型 KEY
-  name: '折旧费清单（平台）', // 表格名称
+  type: 'projectManagementFee', // 表格类型 KEY
+  name: '项目管理费清单（平台）', // 表格名称
   width: 210, // 打印纸的宽度
   height: 297, // 打印纸的高度
   paddingLR: 10, // 左右内边距
@@ -61,7 +61,7 @@ const depreciationFee = {
   title: {
     show: true,
     allPage: false,
-    title: '折旧费清单',
+    title: '项目管理费清单',
     align: alignEnum.CENTER.V,
     verticleAlign: verticleAlignEnum.CENTER.V,
     size: 17,
@@ -200,14 +200,17 @@ const depreciationFee = {
      * @param {boolean} sum 列需要合计
      */
     fields: [
-      { show: true, key: 'type', title: '类别', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 22, type: typeEnum.OTHER.K },
-      { show: true, key: 'amount', title: '摊销总额', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.AMOUNT.K, format: { toThousand: true, precision: 2, unit: amountUnitEnum.YUAN.V }, sum: true },
-      { show: true, key: 'mete', title: '累计产量（t）', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 30, type: typeEnum.WEIGHT.K, sum: true },
-      { show: true, key: 'avgPrice', title: '平均单价（元/吨）', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.AMOUNT.K, format: { toThousand: true, precision: 2, unit: amountUnitEnum.YUAN.V }}
+      { show: true, key: 'basicClass', title: '物料种类', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.ENUM.K, format: { enum: 'matClsEnum', key: 'L' }},
+      { show: true, key: 'specification', title: '规格', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 22, type: typeEnum.SPECIFICATION.K },
+      { show: true, key: 'accountingUnit', title: '核算单位', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 22, type: typeEnum.ACCOUNTING_UNIT.K },
+      { show: true, key: 'mete', title: '核算量', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 25, type: typeEnum.WEIGHT.K, sum: true },
+      { show: true, key: 'unitPrice', title: '单价', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 25, type: typeEnum.AMOUNT.K, format: { toThousand: true, precision: 2, unit: amountUnitEnum.YUAN.V }},
+      { show: true, key: 'amount', title: '总价', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 25, type: typeEnum.AMOUNT.K, format: { toThousand: true, precision: 2, unit: amountUnitEnum.YUAN.V }, sum: true },
+      { show: true, key: 'outboundTime', title: '出库日期', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 30, type: typeEnum.DATE.K, format: 'YY/MM/DD kk:mm:ss' }
     ]
   }
 }
 
 export default {
-  depreciationFee //  折旧费清单
+  projectManagementFee //  项目管理费清单
 }

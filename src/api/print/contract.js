@@ -369,6 +369,15 @@ export function subcontractFee(params) {
   })
 }
 
+// 业财报表/项目管理费
+export function projectManagementFee(params) {
+  return request({
+    url: ``,
+    method: 'get',
+    params
+  })
+}
+
 // 业财报表/管理费
 export function managementFee(params) {
   return request({
@@ -439,6 +448,7 @@ export default {
   shippingFeeList, // 运输费
   testingFee, // 检测费
   subcontractFee, // 分包费
+  projectManagementFee, // 项目管理费
   managementFee, // 管理费
   waterElectricFee, // 水电费
   depreciationFee, // 折旧费

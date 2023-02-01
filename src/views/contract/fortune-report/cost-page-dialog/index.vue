@@ -13,7 +13,13 @@
           <!--表格渲染-->
           <el-row :gutter="20" class="panel-group">
             <el-col :span="8" class="card-panel-col">
-              <Panel name="合同额/结算额" text-color="#626262" num-color="#1890ff" :end-val="detailRow.settlementAmount|| detailRow.contractAmount || 0" :precision="2" />
+              <Panel
+                name="合同额/结算额"
+                text-color="#626262"
+                num-color="#1890ff"
+                :end-val="detailRow.settlementAmount || detailRow.contractAmount || 0"
+                :precision="2"
+              />
             </el-col>
             <el-col :span="8" class="card-panel-col">
               <Panel name="综合成本" text-color="#626262" num-color="#F56C6C" :end-val="detailRow.costAmount || 0" :precision="2" />
@@ -62,10 +68,10 @@
           </common-table>
         </div>
         <div style="border-right: 1px solid #ededed; margin: 0 20px; height: calc(100vh - 180px)"></div>
-        <div style="flex: 1">
+        <div style="width: 68%">
           <div v-if="!costTypeData.key" class="my-code">*点击左侧表格行查看详情</div>
           <div v-if="costTypeData.key">
-            <component :is="currentView" ref="detailRef" :cost-type-data="costTypeData" :permission="permission"/>
+            <component :is="currentView" ref="detailRef" :cost-type-data="costTypeData" :permission="permission" />
           </div>
         </div>
       </div>
@@ -132,13 +138,13 @@ const dataFormat = ref([
 watch(
   () => props.detailRow.id,
   (value) => {
-    directCostList.value.map(v => {
+    directCostList.value.map((v) => {
       v.amount = props.detailRow.compositeCostDTO && props.detailRow.compositeCostDTO[v.key] ? props.detailRow.compositeCostDTO[v.key] : 0
       v.rate = v.amount && props.detailRow.costAmount ? (v.amount / props.detailRow.costAmount) * 100 : 0
       v.projectId = props.detailRow.id
       return v
     })
-    indirectCostList.value.map(v => {
+    indirectCostList.value.map((v) => {
       v.amount = props.detailRow.compositeCostDTO && props.detailRow.compositeCostDTO[v.key] ? props.detailRow.compositeCostDTO[v.key] : 0
       v.rate = v.amount && props.detailRow.costAmount ? (v.amount / props.detailRow.costAmount) * 100 : 0
       v.projectId = props.detailRow.id
@@ -169,17 +175,17 @@ function handleRowChange(row) {
 
 <style lang="scss" scoped>
 .panel-group {
-  margin-bottom:10px;
+  margin-bottom: 10px;
   ::v-deep(.card-panel) {
     .card-panel-description {
       .card-panel-text {
-        text-align:center;
+        text-align: center;
         margin-top: 2px;
       }
       .card-panel-num {
-        display:block;
+        display: block;
         font-size: 18px;
-        text-align:center;
+        text-align: center;
       }
     }
   }

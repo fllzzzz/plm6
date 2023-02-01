@@ -198,7 +198,7 @@ const propertyFeeList = {
      * @param {boolean} sum 列需要合计
      */
     fields: [
-      { show: true, key: 'month', title: '月份', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.QUANTITY.K },
+      { show: true, key: 'month', title: '月份', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.DATE.K },
       { show: true, key: 'feeAmount', title: '费用', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.AMOUNT.K, format: { toThousand: true, precision: 2, UNIT: typeEnum.AMOUNT.K }, sum: true }
     ]
   }

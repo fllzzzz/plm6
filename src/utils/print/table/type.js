@@ -94,6 +94,7 @@ const tableType = {
   shippingFeeList: { L: '运输费清单', M: 'property_report', T: mt.contract.L + ' / ' + contract.property_report },
   testingFee: { L: '检测费清单', M: 'property_report', T: mt.contract.L + ' / ' + contract.property_report },
   subcontractFee: { L: '分包费清单', M: 'property_report', T: mt.contract.L + ' / ' + contract.property_report },
+  projectManagementFee: { L: '项目管理费清单', M: 'property_report', T: mt.contract.L + ' / ' + contract.property_report },
   managementFee: { L: '管理费清单', M: 'property_report', T: mt.contract.L + ' / ' + contract.property_report },
   waterElectricFee: { L: '水电费清单', M: 'property_report', T: mt.contract.L + ' / ' + contract.property_report },
   depreciationFee: { L: '折旧费清单', M: 'property_report', T: mt.contract.L + ' / ' + contract.property_report },
