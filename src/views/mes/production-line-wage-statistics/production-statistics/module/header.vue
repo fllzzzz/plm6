@@ -8,7 +8,9 @@
       style="width: 100px !important"
       placeholder="选择年"
       format="YYYY"
+      :clearable="false"
       value-format="x"
+      :disabled-date="disabledDate"
       @change="crud.toQuery"
     />
     <el-row v-loading="summaryLoading" v-permission="permission.statistics" :gutter="20" class="panel-group">
@@ -36,13 +38,15 @@ import { ref, inject } from 'vue'
 import { regHeader } from '@compos/use-crud'
 import { getSummary } from '@/api/mes/production-line-wage-statistics/production-statistics'
 import Panel from '@/components/Panel'
+import moment from 'moment'
 
+const defaultTime = moment().valueOf().toString()
 const permission = inject('permission')
 
 const summaryLoading = ref(false)
 const summaryInfo = ref({})
 const defaultQuery = {
-  dateTime: undefined
+  dateTime: defaultTime.toString()
 }
 
 const { crud, query, CRUD } = regHeader(defaultQuery)
@@ -58,6 +62,10 @@ async function fetchSummary() {
   } catch (error) {
     console.log('根据时间获取全年价格汇总', error)
   }
+}
+
+function disabledDate(time) {
+  return time > new Date()
 }
 
 </script>
