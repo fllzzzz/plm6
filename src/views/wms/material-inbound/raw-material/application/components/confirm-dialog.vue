@@ -1,7 +1,7 @@
 <template>
   <common-dialog
     custom-class="inbound-application-preview"
-    :title="`订单：${order.serialNumber}（${order.supplier ? order.supplier.name : ''}）`"
+    :title="order.serialNumber?`订单：${order.serialNumber}（${order.supplier ? order.supplier.name : ''}）`:'甲供入库'"
     append-to-body
     v-model="dialogVisible"
     width="1200px"
@@ -10,7 +10,7 @@
     fullscreen
   >
     <template #titleAfter>
-      <title-after-info :order="order" :detail="form" />
+      <title-after-info v-if="!boolPartyA" :order="order" :detail="form" />
     </template>
     <template #titleRight>
       <purchase-detail-button v-if="fillableAmount" :purchase-id="order.id" size="mini" />

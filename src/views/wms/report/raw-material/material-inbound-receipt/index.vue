@@ -42,9 +42,10 @@
         label="采购合同编号"
         min-width="155"
       >
-        <template #default="{ row }">
-          <table-cell-tag :show="!!row.boolPartyA" name="甲供" type="partyA" :offset="10" />
-          <receipt-sn-clickable :receipt-types="['PURCHASE']" :receipt="row.purchaseOrder" />
+        <template #default="{ row: { sourceRow: row } }">
+          <table-cell-tag :show="!!row.boolPartyA && !!row.purchaseOrder?.id" name="甲供" type="partyA" :offset="10" />
+          <receipt-sn-clickable v-if="row.purchaseOrder?.id" :receipt-types="['PURCHASE']" :receipt="row.purchaseOrder" />
+          <el-tag v-else type="danger" effect="dark" size="small">甲供</el-tag>
         </template>
       </el-table-column>
       <el-table-column

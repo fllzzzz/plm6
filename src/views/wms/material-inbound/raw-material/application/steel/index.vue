@@ -356,7 +356,7 @@ init()
 FORM.HOOK.beforeToEdit = async (crud, form) => {
   if (!props.edit) return
   // 采购合同id
-  form.purchaseId = form.purchaseOrder.id
+  form.purchaseId = form.purchaseOrder?.id
   if (!form.logistics) form.logistics = {}
   // 修改的情况下，数据预处理
   await steelInboundFormFormat(form)
