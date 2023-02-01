@@ -232,6 +232,7 @@ function searchQuery() {
 // 重置
 function resetQuery() {
   userName.value = undefined
+  fetchDetail()
 }
 
 function headerStyle({ row, column, rowIndex, columnIndex }) {
