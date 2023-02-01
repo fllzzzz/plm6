@@ -122,7 +122,7 @@
                 />
               </div>
             </div>
-            <common-button icon="el-icon-plus" size="mini" type="success" style="margin: 0 0 12px 6px" @click="addProcess" v-if="plusShow"/>
+            <common-button icon="el-icon-plus" size="mini" type="success" style="margin: 0 0 12px 6px" @click="addProcess"/>
           </div>
         </el-form-item>
         <el-form-item label="编号类型索引" prop="serialNumberPrefixList" v-if="form.artifactType===artifactTypeEnum.SMALL.V">
@@ -216,9 +216,9 @@ const defaultForm = {
 }
 
 const form = ref(JSON.parse(JSON.stringify(defaultForm)))
-const plusShow = computed(() => {
-  return form.value.productionLineTypeEnum === artifactProductLineEnum.TRADITION.V ? (form.value.specPrefixList?.length < 1 ? true : (form.value.artifactType === artifactTypeEnum.COMMON.V)) : true
-})
+// const plusShow = computed(() => {
+//   return form.value.productionLineTypeEnum === artifactProductLineEnum.TRADITION.V ? (form.value.specPrefixList?.length < 1 ? true : (form.value.artifactType === artifactTypeEnum.COMMON.V)) : true
+// })
 
 const classificationNameOptions = computed(() => {
   let options = []
