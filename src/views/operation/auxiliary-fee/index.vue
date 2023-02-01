@@ -30,12 +30,12 @@
       show-summary
       :summary-method="getSummaries"
     >
-      <el-table-column label="月份" prop="month" align="center" width="60px">
+      <el-table-column label="月份" prop="month" align="center" width="60px" fixed="left">
         <template #default="{ row }">
           <span>{{ row.month }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="完成量（吨）" prop="productionMete" align="center" width="100px">
+      <el-table-column label="完成量（吨）" prop="productionMete" align="center" width="100px" fixed="left">
         <template #default="{ row }">
           <span>{{ row.productionMete !== null ? convertUnits(row.productionMete, 'kg', 't', 2) : 0 }}</span>
         </template>
@@ -67,8 +67,8 @@
           </template>
         </el-table-column>
       </el-table-column>
-      <el-table-column label="合计" prop="totalAmount" align="center" width="140px" />
-      <el-table-column label="平均单价（元/吨）" prop="aveUnitPrice" align="center" width="140px" />
+      <el-table-column label="合计" prop="totalAmount" align="center" width="140px" fixed="right" />
+      <el-table-column label="平均单价（元/吨）" prop="aveUnitPrice" align="center" width="140px" fixed="right" />
     </common-table>
   </div>
 </template>
