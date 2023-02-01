@@ -87,8 +87,9 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed, watch, nextTick } from 'vue'
+import { ref, onMounted, computed, watch, nextTick, provide } from 'vue'
 import { get } from '@/api/mes/production-line-wage-statistics/production-statistics'
+import { mesProductionStatisticsPM as permission } from '@/page-permission/mes'
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
 import usePagination from '@compos/use-pagination'
@@ -99,6 +100,8 @@ import workshopSelect from '@comp-mes/workshop-select'
 import moment from 'moment'
 import mHeader from './module/header'
 import productionDetail from './production-detail/index.vue'
+
+provide('permission', permission)
 
 const tableRef = ref()
 const productionData = ref([])

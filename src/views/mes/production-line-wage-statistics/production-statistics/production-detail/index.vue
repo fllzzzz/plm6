@@ -31,6 +31,7 @@
           <export-button
             class="filter-item"
             :fn="exportListFn"
+            v-permission="permission.export"
             :params="{ processId: detailRow.process?.id, userName: userName, ...props.commonParams }"
           >
             工资清单
@@ -149,13 +150,14 @@
 </template>
 
 <script setup>
-import { ref, defineProps, watch } from 'vue'
+import { ref, defineProps, watch, inject } from 'vue'
 import { detail, exportListFn } from '@/api/mes/production-line-wage-statistics/production-statistics'
 import { parseTime } from '@/utils/date'
 import usePagination from '@compos/use-pagination'
 import useMaxHeight from '@compos/use-max-height'
 import ExportButton from '@comp-common/export-button/index.vue'
 
+const permission = inject('permission')
 const props = defineProps({
   detailRow: {
     type: Object,

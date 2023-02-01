@@ -542,6 +542,13 @@ export const mesFactoryReportPM = {
 
 // --------------------------- 6.0 产线工资统计 start --------------------------------
 
+// 产线工资统计/产量统计
+export const mesProductionStatisticsPM = {
+  get: ['mes_production_statistics:get'], // 产量统计列表
+  statistics: ['mes_production_statistics:statistics'], // 产量统计汇总数据
+  export: ['mes_production_statistics:export'] // 产量统计工资清单导出
+}
+
 // 产线工资统计/工价调整
 export const mesWageAdjustPM = {
   get: ['mes_wage_adjust:get'], // 工价调整列表

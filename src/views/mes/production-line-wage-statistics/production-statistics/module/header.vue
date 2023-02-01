@@ -11,7 +11,7 @@
       value-format="x"
       @change="crud.toQuery"
     />
-    <el-row v-loading="summaryLoading" :gutter="20" class="panel-group">
+    <el-row v-loading="summaryLoading" v-permission="permission.statistics" :gutter="20" class="panel-group">
       <el-col :span="8" class="card-panel-col">
         <Panel name="产量（吨）" text-color="#626262" num-color="#1890ff" :endVal="summaryInfo.mete / 1000 || 0" :precision="2" />
       </el-col>
@@ -32,10 +32,12 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, inject } from 'vue'
 import { regHeader } from '@compos/use-crud'
 import { getSummary } from '@/api/mes/production-line-wage-statistics/production-statistics'
 import Panel from '@/components/Panel'
+
+const permission = inject('permission')
 
 const summaryLoading = ref(false)
 const summaryInfo = ref({})
