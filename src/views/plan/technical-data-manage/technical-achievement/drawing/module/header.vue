@@ -23,7 +23,7 @@ import { deepenTypeEnum, technicalDataTypeEnum } from '@enum-ms/plan'
 import { regHeader } from '@compos/use-crud'
 import crudOperation from '@crud/CRUD.operation'
 
-const uploadType = ref('PDF格式、DWG格式')
+const uploadType = ref('PDF格式')
 
 const defaultQuery = {
   dataType: technicalDataTypeEnum.DEEPEN.V,
