@@ -108,7 +108,11 @@
           label="总额"
           min-width="120px"
           fixed="left"
-        />
+        >
+          <template #default="{ row }">
+            <span>{{ row.totalPrice.toFixed(2) }}</span>
+          </template>
+        </el-table-column>
         <el-table-column prop="sum" align="center" :key="'_' + item" :show-overflow-tooltip="true" v-for="item in yearList" :label="item">
           <template v-for="val in dayList" :key="val?.split('/')[2]">
             <el-table-column
@@ -123,7 +127,7 @@
                 <div v-if="scope.row.priceList.findIndex((v) => v.dayTime == val) > -1">
                   <template v-for="day in scope.row.priceList" :key="day">
                     <template v-if="day.dayTime == val">
-                      <span>{{ day.price }}</span>
+                      <span>{{ day.price?.toFixed(2) }}</span>
                     </template>
                   </template>
                 </div>
