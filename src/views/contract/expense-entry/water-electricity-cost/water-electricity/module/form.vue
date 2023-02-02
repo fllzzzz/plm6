@@ -4,7 +4,7 @@
     :close-on-click-modal="false"
     :before-close="crud.cancelCU"
     :visible="crud.status.cu > 0"
-    :title="crud.query.type === costTypeEnum.ELECTRIC_COST.V ? `${ isEdit ? '编辑' : '新增' }电费` : `${ isEdit ? '编辑' : '新增' }水费`"
+    :title="crud.query.type === costTypeEnum.ELECTRIC_COST.V ? `${isEdit ? '编辑' : '新增'}电费` : `${isEdit ? '编辑' : '新增'}水费`"
     :show-close="false"
     width="25%"
     top="10vh"
@@ -75,10 +75,16 @@ const defaultForm = {
 
 const { crud, form, CRUD } = regForm(defaultForm, formRef)
 
+const validateQuantity = (rule, value, callback) => {
+  if (!value) {
+    callback(new Error('填写数据必须大于0'))
+  }
+  callback()
+}
 const rules = {
   month: [{ required: true, message: '请输入月份', trigger: 'blur' }],
-  usedMete: [{ required: true, message: '请输入用量', trigger: 'blur' }],
-  totalAmount: [{ required: true, message: '请输入费用总额', trigger: 'blur' }]
+  usedMete: [{ required: true, validator: validateQuantity, trigger: 'blur' }],
+  totalAmount: [{ required: true, validator: validateQuantity, trigger: 'blur' }]
 }
 
 // 编辑之前
@@ -95,6 +101,8 @@ CRUD.HOOK.beforeToEdit = () => {
 
 // 提交前
 CRUD.HOOK.beforeSubmit = async () => {
+  const valid = await formRef.value.validate()
+  if (!valid) return false
   form.type = prop.query.type
   form.childType = prop.query.childType
   form.year = prop.query.year

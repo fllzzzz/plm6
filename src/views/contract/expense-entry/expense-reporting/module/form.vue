@@ -105,27 +105,31 @@ const defaultForm = {}
 
 const { crud, form, CRUD } = regForm(defaultForm, formRef)
 
+const validateQuantity = (rule, value, callback) => {
+  if (!value) {
+    callback(new Error('填写数据必须大于0'))
+  }
+  callback()
+}
+
 const rules = {
   reimburseDate: [{ required: true, message: '请选择报销日期', trigger: 'blur' }],
   reimburseUserId: [{ required: true, message: '请选择报销人', trigger: 'blur' }],
   expenseTypeId: [{ required: true, message: '请选择费用类别', trigger: 'blur' }],
   expenseSubjectId: [{ required: true, message: '请选择报销科目', trigger: 'blur' }],
-  reimburseAmount: [{ required: true, message: '请输入报销金额', trigger: 'blur' }]
+  reimburseAmount: [{ required: true, validator: validateQuantity, trigger: 'blur' }]
 }
 
 function handleChange(val) {
   subjectList.value = expenseList.find((v) => v.id === form.expenseTypeId)?.links
 }
 // 刷新数据
-CRUD.HOOK.beforeToQuery = async (crud, form) => {
-}
+CRUD.HOOK.beforeToQuery = async (crud, form) => {}
 // 新增之前
-CRUD.HOOK.beforeToAdd = async (crud, form) => {
-}
+CRUD.HOOK.beforeToAdd = async (crud, form) => {}
 
 // 编辑之后
-CRUD.HOOK.afterToEdit = async (crud, form) => {
-}
+CRUD.HOOK.afterToEdit = async (crud, form) => {}
 
 // 编辑之前
 CRUD.HOOK.beforeToEdit = async () => {
@@ -135,6 +139,8 @@ CRUD.HOOK.beforeToEdit = async () => {
 
 // 提交前
 CRUD.HOOK.beforeSubmit = async () => {
+  const valid = await formRef.value.validate()
+  if (!valid) return false
 }
 
 // 如果时间选取的时间年份比当前的时间大就被禁用

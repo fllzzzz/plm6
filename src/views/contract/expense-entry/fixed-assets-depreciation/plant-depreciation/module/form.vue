@@ -29,7 +29,7 @@
             style="width: 270px"
             placeholder="输入原值 单位：元"
             controls-position="right"
-            :min="1"
+            :min="0"
             :max="9999999999"
           />
         </el-form-item>
@@ -102,11 +102,18 @@ const defaultForm = {
 
 const { crud, form, CRUD } = regForm(defaultForm, formRef)
 
+const validateQuantity = (rule, value, callback) => {
+  if (!value) {
+    callback(new Error('填写数据必须大于0'))
+  }
+  callback()
+}
+
 const rules = {
   name: [{ required: true, message: '请输入名称', trigger: 'blur' }],
-  originalValue: [{ required: true, message: '请输入原值 单位：元', trigger: 'blur' }],
-  depreciationYear: [{ required: true, message: '请输入折旧年限', trigger: 'blur' }],
-  residualValueRate: [{ required: true, message: '请输入残值率', trigger: 'blur' }],
+  originalValue: [{ required: true, validator: validateQuantity, trigger: 'blur' }],
+  depreciationYear: [{ required: true, validator: validateQuantity, trigger: 'blur' }],
+  residualValueRate: [{ required: true, validator: validateQuantity, trigger: 'blur' }],
   startDate: [{ required: true, message: '请选择折旧日期', trigger: 'blur' }]
 }
 
@@ -149,6 +156,8 @@ CRUD.HOOK.afterToEdit = (crud, form) => {
 
 // 提交前
 CRUD.HOOK.beforeSubmit = async () => {
+  const valid = await formRef.value.validate()
+  if (!valid) return false
   form.residualValueRate = form.residualValueRate / 100
 }
 </script>

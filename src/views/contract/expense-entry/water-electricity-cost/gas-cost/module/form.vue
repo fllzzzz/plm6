@@ -102,11 +102,17 @@ const { crud, form, CRUD } = regForm(defaultForm, formRef)
 const isEdit = computed(() => {
   return crud.status.edit > 0
 })
+const validateQuantity = (rule, value, callback) => {
+  if (!value) {
+    callback(new Error('填写数据必须大于0'))
+  }
+  callback()
+}
 
 const rules = {
   month: [{ required: true, message: '请输入月份', trigger: 'blur' }],
-  usedMete: [{ required: true, message: '请输入用量', trigger: 'blur' }],
-  totalAmount: [{ required: true, message: '请输入费用总额', trigger: 'blur' }]
+  usedMete: [{ required: true, validator: validateQuantity, trigger: 'blur' }],
+  totalAmount: [{ required: true, validator: validateQuantity, trigger: 'blur' }]
 }
 
 CRUD.HOOK.beforeToAdd = async (crud, form) => {
@@ -127,6 +133,8 @@ CRUD.HOOK.beforeToEdit = async () => {
 
 // 提交前
 CRUD.HOOK.beforeSubmit = async () => {
+  const valid = await formRef.value.validate()
+  if (!valid) return false
   form.classifyId = crud.query.classifyId
   form.year = form.year ? form.year : prop.query.year
   form.accountingUnit = crud.query.unit
