@@ -120,7 +120,7 @@
               prop="sum"
               align="center"
               :show-overflow-tooltip="true"
-              :label="new Date(val).getDate()"
+              :label="parseTime(new Date(val).getTime(), '{m}/{d}')"
               min-width="120"
             >
               <template v-slot="scope">
@@ -140,7 +140,7 @@
         </el-table-column>
       </common-table>
       <!-- 分页 -->
-      <el-pagination
+      <!-- <el-pagination
         :total="total"
         :current-page="queryPage.pageNumber"
         :page-size="queryPage.pageSize"
@@ -148,7 +148,7 @@
         layout="total, prev, pager, next, sizes"
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
-      />
+      /> -->
     </div>
   </div>
 </template>
@@ -157,7 +157,7 @@
 import { ref, defineProps, watch, inject } from 'vue'
 import { detail, exportListFn } from '@/api/mes/production-line-wage-statistics/production-statistics'
 import { parseTime } from '@/utils/date'
-import usePagination from '@compos/use-pagination'
+// import usePagination from '@compos/use-pagination'
 import useMaxHeight from '@compos/use-max-height'
 import ExportButton from '@comp-common/export-button/index.vue'
 
@@ -180,7 +180,7 @@ const workshopList = ref([])
 const dayList = ref([])
 const yearList = ref([])
 
-const { handleSizeChange, handleCurrentChange, total, setTotalPage, queryPage } = usePagination({ fetchHook: fetchDetail })
+// const { handleSizeChange, handleCurrentChange, total, setTotalPage, queryPage } = usePagination({ fetchHook: fetchDetail })
 
 function getDateList(start, end, long) {
   let startData = start
@@ -202,12 +202,12 @@ watch(
 )
 async function fetchDetail() {
   try {
-    const { content = [], totalElements } = await detail({
+    const { content } = await detail({
       processId: props.detailRow.process?.id,
       userName: userName.value,
       ...props.commonParams
     })
-    setTotalPage(totalElements)
+    // setTotalPage(totalElements)
     content?.forEach((v) => {
       v.startTime = props.commonParams?.startTime
       v.endTime = props.commonParams?.endTime
