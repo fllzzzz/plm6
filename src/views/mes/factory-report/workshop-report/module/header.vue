@@ -8,8 +8,8 @@
         class="date-item filter-item"
         style="width: 120px !important"
         format="YYYY"
-        :clearable="true"
         value-format="x"
+        :clearable="false"
         placeholder="选择年"
         :disabled-date="disabledDate"
         @change="handleDateTimeChange"
@@ -133,7 +133,7 @@ workshopSummary()
 async function fetchSummary() {
   try {
     const data = await fullYearProduction({
-      dateTime: query.dateTime,
+      dateTime: query.dateTime === undefined ? moment().valueOf() : query.dateTime,
       workShopId: query.workShopId,
       productionLineId: query.productionLineId
     })
@@ -251,7 +251,7 @@ async function fetchChart() {
     const _myChart = getMyChart()
     const productionData = []
     const data = await workshopEcharts({
-      dateTime: query.dateTime,
+      dateTime: query.dateTime === undefined ? moment().valueOf() : query.dateTime,
       workShopId: query.workShopId,
       productionLineId: query.productionLineId
     })

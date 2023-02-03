@@ -50,6 +50,7 @@
                   type="enum"
                   placeholder="类型"
                   style="width: 100%"
+                  :disabled="row.id"
                 />
               </template>
             </el-table-column>

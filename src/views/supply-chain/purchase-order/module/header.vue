@@ -19,7 +19,7 @@
         class="filter-item"
         @change="crud.toQuery"
       />
-      <common-radio-button
+      <!-- <common-radio-button
         v-model="query.orderSupplyType"
         :options="orderSupplyTypeEnum.ENUM"
         show-option-all
@@ -27,7 +27,7 @@
         size="small"
         class="filter-item"
         @change="crud.toQuery"
-      />
+      /> -->
       <el-date-picker
         v-model="query.createTime"
         :default-time="defaultTime"
@@ -107,7 +107,7 @@
 <script setup>
 import { inject, ref } from 'vue'
 import { PICKER_OPTIONS_SHORTCUTS } from '@/settings/config'
-import { orderSupplyTypeEnum, purchaseStatusEnum } from '@enum-ms/wms'
+import { purchaseStatusEnum } from '@enum-ms/wms'
 import { settlementStatusEnum } from '@/utils/enum/modules/finance'
 
 import { regHeader } from '@compos/use-crud'

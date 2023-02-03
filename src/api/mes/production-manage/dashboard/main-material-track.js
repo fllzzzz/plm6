@@ -95,3 +95,29 @@ export function outboundDetail(params) {
     params
   })
 }
+
+/**
+ *
+ * 钢材库领用详情
+ */
+export function useDetail(params) {
+  return request({
+    module: 'mes',
+    url: 'kanban/tracking/use',
+    method: 'get',
+    params
+  })
+}
+
+/**
+ *
+ * 钢材库存量详情
+ */
+export function stockDetail(params) {
+  return request({
+    module: 'mes',
+    url: 'kanban/tracking/inventory',
+    method: 'get',
+    params
+  })
+}

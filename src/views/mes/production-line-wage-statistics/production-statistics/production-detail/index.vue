@@ -31,6 +31,7 @@
           <export-button
             class="filter-item"
             :fn="exportListFn"
+            v-permission="permission.export"
             :params="{ processId: detailRow.process?.id, userName: userName, ...props.commonParams }"
           >
             工资清单
@@ -107,7 +108,11 @@
           label="总额"
           min-width="120px"
           fixed="left"
-        />
+        >
+          <template #default="{ row }">
+            <span>{{ row.totalPrice.toFixed(2) }}</span>
+          </template>
+        </el-table-column>
         <el-table-column prop="sum" align="center" :key="'_' + item" :show-overflow-tooltip="true" v-for="item in yearList" :label="item">
           <template v-for="val in dayList" :key="val?.split('/')[2]">
             <el-table-column
@@ -115,14 +120,14 @@
               prop="sum"
               align="center"
               :show-overflow-tooltip="true"
-              :label="new Date(val).getDate()"
+              :label="parseTime(new Date(val).getTime(), '{m}/{d}')"
               min-width="120"
             >
               <template v-slot="scope">
                 <div v-if="scope.row.priceList.findIndex((v) => v.dayTime == val) > -1">
                   <template v-for="day in scope.row.priceList" :key="day">
                     <template v-if="day.dayTime == val">
-                      <span>{{ day.price }}</span>
+                      <span>{{ day.price?.toFixed(2) }}</span>
                     </template>
                   </template>
                 </div>
@@ -135,7 +140,7 @@
         </el-table-column>
       </common-table>
       <!-- 分页 -->
-      <el-pagination
+      <!-- <el-pagination
         :total="total"
         :current-page="queryPage.pageNumber"
         :page-size="queryPage.pageSize"
@@ -143,19 +148,20 @@
         layout="total, prev, pager, next, sizes"
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
-      />
+      /> -->
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, defineProps, watch } from 'vue'
+import { ref, defineProps, watch, inject } from 'vue'
 import { detail, exportListFn } from '@/api/mes/production-line-wage-statistics/production-statistics'
 import { parseTime } from '@/utils/date'
-import usePagination from '@compos/use-pagination'
+// import usePagination from '@compos/use-pagination'
 import useMaxHeight from '@compos/use-max-height'
 import ExportButton from '@comp-common/export-button/index.vue'
 
+const permission = inject('permission')
 const props = defineProps({
   detailRow: {
     type: Object,
@@ -174,7 +180,7 @@ const workshopList = ref([])
 const dayList = ref([])
 const yearList = ref([])
 
-const { handleSizeChange, handleCurrentChange, total, setTotalPage, queryPage } = usePagination({ fetchHook: fetchDetail })
+// const { handleSizeChange, handleCurrentChange, total, setTotalPage, queryPage } = usePagination({ fetchHook: fetchDetail })
 
 function getDateList(start, end, long) {
   let startData = start
@@ -196,12 +202,12 @@ watch(
 )
 async function fetchDetail() {
   try {
-    const { content = [], totalElements } = await detail({
+    const { content } = await detail({
       processId: props.detailRow.process?.id,
       userName: userName.value,
       ...props.commonParams
     })
-    setTotalPage(totalElements)
+    // setTotalPage(totalElements)
     content?.forEach((v) => {
       v.startTime = props.commonParams?.startTime
       v.endTime = props.commonParams?.endTime
@@ -230,6 +236,7 @@ function searchQuery() {
 // 重置
 function resetQuery() {
   userName.value = undefined
+  fetchDetail()
 }
 
 function headerStyle({ row, column, rowIndex, columnIndex }) {

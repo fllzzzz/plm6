@@ -70,7 +70,7 @@
           </el-table-column>
         </common-table>
         <!-- 分页 -->
-        <el-pagination
+        <!-- <el-pagination
           :total="total"
           :current-page="queryPage.pageNumber"
           :page-size="queryPage.pageSize"
@@ -78,7 +78,7 @@
           layout="total, prev, pager, next, sizes"
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
-        />
+        /> -->
       </div>
       <div style="border-right: 1px solid #ededed; margin: 0 20px; height: calc(100vh - 300px)"></div>
       <production-detail :commonParams="commonParams" :detail-row="detailRow" style="flex: 1; overflow-x: hidden" />
@@ -87,11 +87,12 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed, watch, nextTick } from 'vue'
+import { ref, onMounted, computed, watch, nextTick, provide } from 'vue'
 import { get } from '@/api/mes/production-line-wage-statistics/production-statistics'
+import { mesProductionStatisticsPM as permission } from '@/page-permission/mes'
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
-import usePagination from '@compos/use-pagination'
+// import usePagination from '@compos/use-pagination'
 import { ElNotification } from 'element-plus'
 import { componentTypeEnum } from '@enum-ms/mes'
 import { PICKER_OPTIONS_DATE } from '@/settings/config'
@@ -99,6 +100,8 @@ import workshopSelect from '@comp-mes/workshop-select'
 import moment from 'moment'
 import mHeader from './module/header'
 import productionDetail from './production-detail/index.vue'
+
+provide('permission', permission)
 
 const tableRef = ref()
 const productionData = ref([])
@@ -139,7 +142,7 @@ watch(
   }
 )
 
-const { handleSizeChange, handleCurrentChange, total, setTotalPage, queryPage } = usePagination({ fetchHook: fetchProcessData })
+// const { handleSizeChange, handleCurrentChange, total, setTotalPage, queryPage } = usePagination({ fetchHook: fetchProcessData })
 
 onMounted(() => {
   fetchProcessData()
@@ -149,12 +152,12 @@ async function fetchProcessData() {
   startTime.value === date.value[0] ? startTime.value : undefined
   endTime.value === date.value[1] ? endTime.value : undefined
   try {
-    const { content = [], totalElements } = await get({
+    const { content } = await get({
       workshopId: workshopId.value,
       startTime: startTime.value,
       endTime: endTime.value
     })
-    setTotalPage(totalElements)
+    // setTotalPage(totalElements)
     productionData.value = content || []
   } catch (error) {
     console.log('获取工序汇总信息失败', error)

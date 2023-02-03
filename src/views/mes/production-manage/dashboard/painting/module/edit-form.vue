@@ -3,7 +3,7 @@
     <template #titleRight>
       <common-button :loading="saveLoading" type="primary" size="mini" @click="save"> 保 存 </common-button>
     </template>
-    <el-form ref="formRef" :model="form" size="small" label-width="120px">
+    <el-form ref="formRef" :model="form" :rules="rules" size="small" label-width="120px">
       <el-form-item label="油漆类别">
         <span v-if="form.paintingType">{{ paintingTypeEnum.VL[form.paintingType] }}</span>
       </el-form-item>
@@ -11,7 +11,6 @@
         <common-input-number
           v-model="form.thickness"
           :step="1"
-          :min="0"
           :precision="DP.COM_T__MM"
           size="small"
           style="width: 100%"
@@ -23,7 +22,6 @@
         <common-input-number
           v-model="form.volumeSolids"
           :step="1"
-          :min="0"
           :precision="2"
           size="small"
           style="width: 100%"
@@ -81,8 +79,19 @@ const props = defineProps({
 const { visible: dialogVisible, handleClose } = useVisible({ emit, props, field: 'visible' })
 
 let form = reactive({})
+const formRef = ref()
 const saveLoading = ref(false)
 
+const validateData = (rule, value, callback) => {
+  if (!value) {
+    callback(new Error('填写数据必须大于0'))
+  }
+  callback()
+}
+const rules = ref({
+  thickness: [{ required: true, validator: validateData, trigger: 'blur' }],
+  volumeSolids: [{ required: true, validator: validateData, trigger: 'blur' }]
+})
 // const measure = computed(() => {
 //   // 面积*干膜厚度/（10*体积固体份*100*（1-损耗））
 //   return form.volumeSolids
@@ -103,6 +112,8 @@ watch(
 async function save() {
   try {
     saveLoading.value = true
+    const valid = await formRef.value.validate()
+    if (!valid) return false
     const _form = deepClone(form)
     _form.surfaceArea = convertUnits(_form.surfaceArea, '㎡', 'mm²')
     _form.loss = _form.loss / 100

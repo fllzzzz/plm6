@@ -258,7 +258,7 @@ const order = computed(() => form.value.purchaseOrder || {})
 const formDisabled = computed(() => passedLoading.value || returnedLoading.value)
 // 标题
 const drawerTitle = computed(() =>
-  detailLoading.value ? `入库单` : `入库单：${form.value.serialNumber}（ ${order.value.supplier ? order.value.supplier.name : ''} ）`
+  detailLoading.value ? `入库单` : `入库单：${form.value.serialNumber}（ ${order.value.supplier ? order.value.supplier.name : '无供应商'} ）`
 )
 // 在列中显示次要信息
 const showTableColumnSecondary = computed(() => {
@@ -380,7 +380,9 @@ async function fetchDetail(id) {
 
 // 详情格式转换
 async function detailFormat(form) {
-  form.purchaseOrder.projectIds = form.purchaseOrder.projects ? form.purchaseOrder.projects.filter((v) => v !== v.id) : []
+  if (form.purchaseOrder?.projects) {
+    form.purchaseOrder.projectIds = form.purchaseOrder.projects.filter((v) => v !== v.id)
+  }
   form.requisitions = {}
   if (isNotBlank(form.requisitionsList)) {
     form.requisitionsList.forEach((item) => {

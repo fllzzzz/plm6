@@ -154,7 +154,12 @@ export const projectDashboardPM = {
 
 // 项目制造/主材跟踪
 export const mainMaterialTrackPM = {
-  get: ['mes_main_material_track:get'] // 主材跟踪
+  get: ['mes_main_material_track:get'], // 主材跟踪
+  print: ['mes_main_material_track:print'], // 主材跟踪打印
+  useRecordGet: ['mes_main_material_track_use_record:get'], // 主材跟踪-钢材使用记录
+  useRecordPrint: ['mes_main_material_track_use_record:print'], // 主材跟踪-钢材使用记录打印
+  stockGet: ['mes_main_material_track_stock:get'], // 主材跟踪-库存明细
+  stockPrint: ['mes_main_material_track_stock:print'] // 主材跟踪-库存明细打印
 }
 
 // 项目制造/结构看板
@@ -536,6 +541,13 @@ export const mesFactoryReportPM = {
 // --------------------------- 6.0 车间报表 end --------------------------------
 
 // --------------------------- 6.0 产线工资统计 start --------------------------------
+
+// 产线工资统计/产量统计
+export const mesProductionStatisticsPM = {
+  get: ['mes_production_statistics:get'], // 产量统计列表
+  statistics: ['mes_production_statistics:statistics'], // 产量统计汇总数据
+  export: ['mes_production_statistics:export'] // 产量统计工资清单导出
+}
 
 // 产线工资统计/工价调整
 export const mesWageAdjustPM = {

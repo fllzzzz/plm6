@@ -606,17 +606,17 @@ export default {
     //     noCache: true
     //   }
     // },
-    // {
-    //   name: 'MesProductionDashboardMainMaterialTrack',
-    //   path: 'main-material-track',
-    //   hidden: false,
-    //   component: '/mes/production-manage/dashboard/main-material-track/index',
-    //   meta: {
-    //     title: '主材跟踪',
-    //     icon: 'project',
-    //     noCache: true
-    //   }
-    // },
+    {
+      name: 'MesProductionDashboardMainMaterialTrack',
+      path: 'main-material-track',
+      hidden: false,
+      component: '/mes/production-manage/dashboard/main-material-track/index',
+      meta: {
+        title: '主材跟踪',
+        icon: 'project',
+        noCache: true
+      }
+    },
     // {
     //   name: 'MesProductionDashboardProjectState',
     //   path: 'project-state',

@@ -36,7 +36,7 @@
           type="warning"
           class="filter-item"
         />
-        <el-tag v-if="totalSum" type="warning" size="medium" effect="plain">{{`累计付款：${toThousand(totalSum)} 元`}}</el-tag>
+        <el-tag type="warning" size="medium" effect="plain">{{`累计付款：${toThousand(totalSum)} 元`}}</el-tag>
       </template>
     </crudOperation>
   </div>
@@ -44,7 +44,7 @@
 
 <script setup>
 import { paymentSum } from '@/api/contract/supplier-manage/payment-ledger/payment'
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 
 import moment from 'moment'
 import { toThousand } from '@data-type/number'
@@ -68,11 +68,24 @@ const defaultQuery = {
 const { crud, query } = regHeader(defaultQuery)
 
 const totalSum = ref(0)
+
+watch(
+  () => query,
+  (val) => {
+    if (val) {
+      getSum()
+    } else {
+      totalSum.value = 0
+    }
+  },
+  { deep: true, immediate: true }
+)
+
 getSum()
 
 async function getSum() {
   try {
-    const data = await paymentSum()
+    const data = await paymentSum({ startDate: query.startDate, endDate: query.endDate })
     totalSum.value = data || 0
   } catch (e) {
     console.log('获取累计付款金额', e)

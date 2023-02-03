@@ -13,7 +13,8 @@ export function paymentSum(params) {
   return request({
     module: 'contract',
     url: `contract/payment/payment/ledger/summary`,
-    method: 'get'
+    method: 'get',
+    params
   })
 }
 export default { get }
