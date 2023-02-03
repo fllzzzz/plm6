@@ -113,7 +113,7 @@
             <span>{{ row.totalPrice.toFixed(2) }}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="sum" align="center" :key="'_' + item" :show-overflow-tooltip="true" v-for="item in yearList" :label="item">
+        <el-table-column prop="total" align="center" :key="'_' + item" :show-overflow-tooltip="true" v-for="item in yearList" :label="item">
           <template v-for="val in dayList" :key="val?.split('/')[2]">
             <el-table-column
               v-if="new Date(val).getFullYear() == item"
@@ -179,6 +179,7 @@ const userName = ref()
 const workshopList = ref([])
 const dayList = ref([])
 const yearList = ref([])
+const monthList = ref([])
 
 // const { handleSizeChange, handleCurrentChange, total, setTotalPage, queryPage } = usePagination({ fetchHook: fetchDetail })
 
@@ -222,6 +223,11 @@ async function fetchDetail() {
         return a - b
       })
     })
+    dayList.value.forEach((v) => {
+      if (monthList.value.indexOf(v.split('/')[1]) === -1) {
+        monthList.value.push(v.split('/')[1])
+      }
+    })
     workshopList.value = content || []
   } catch (error) {
     console.log('获取对应工序下的详情失败', error)
@@ -240,11 +246,26 @@ function resetQuery() {
 }
 
 function headerStyle({ row, column, rowIndex, columnIndex }) {
-  if (rowIndex === 0 && columnIndex >= 6 && (columnIndex - 4) % 2 === 0) {
-    return 'background: #e1f3d8'
-  } else if (rowIndex === 0 && columnIndex >= 7 && (columnIndex - 5) % 2 === 0) {
-    return 'background: #faecd8'
+  console.log(columnIndex, column, 'columnIndex')
+  // if (rowIndex === 0 && columnIndex >= 6 && (columnIndex - 4) % 2 === 0) {
+  //   return 'background: #e1f3d8'
+  // } else if (rowIndex === 0 && columnIndex >= 7 && (columnIndex - 5) % 2 === 0) {
+  //   return 'background: #faecd8'
+  // }
+  console.log(monthList.value, 'monthList.value')
+  if (column.property === 'total' && yearList.value.length === 1) {
+    if (rowIndex === 0 && monthList.value.length > 1 && column.property === 'sum') {
+      return 'background: #e1f3d5'
+    }
   }
+  if (column.property === 'total' && yearList.value.length > 1) {
+    if (rowIndex === 0 && columnIndex >= 6 && (columnIndex - 4) % 2 === 0) {
+      return 'background: #e1f3d8'
+    } else if (rowIndex === 0 && columnIndex >= 7 && (columnIndex - 5) % 2 === 0) {
+      return 'background: #faecd8'
+    }
+  }
+  // if (column.property === 'sum'&&dayList.value.length)
 }
 </script>
 

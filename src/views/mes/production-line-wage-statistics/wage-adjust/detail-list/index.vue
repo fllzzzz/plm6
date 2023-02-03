@@ -28,7 +28,7 @@
       :data="crud.data"
       :data-format="productFormat[taskTypeEnum]"
       :empty-text="crud.emptyText"
-      :max-height="maxHeight"
+      :max-height="maxHeight - 50"
       row-key="rowId"
       style="width: 100%"
       @selection-change="handleSelectionChange"

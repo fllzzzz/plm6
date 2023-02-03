@@ -105,11 +105,20 @@
           <el-input
             v-model.trim="form.techDesc"
             type="textarea"
-            maxlength="200"
+            maxlength="2000"
             show-word-limit
             rows="2"
             placeholder="技术要求描述"
             style="width: 420px;"
+          />
+        </el-form-item>
+        <div class="form-title" style="margin-bottom:10px;">附件</div>
+        <el-form-item prop="techDesc">
+          <upload-list
+            :file-classify="fileClassifyEnum.CONTRACT_ATT.V"
+            v-model:files="form.attachments"
+            empty-text="暂未上传附件"
+            style="width:50%;"
           />
         </el-form-item>
       </div>
@@ -147,10 +156,14 @@
 
 <script setup>
 import { ref, defineProps, watch, computed, defineExpose, nextTick } from 'vue'
-import { TechnologyTypeEnum } from '@enum-ms/contract'
 import { getEnclosureDictList } from '@/api/contract/project'
-import { isNotBlank } from '@data-type/index'
+
+import { fileClassifyEnum } from '@enum-ms/file'
+import { TechnologyTypeEnum } from '@enum-ms/contract'
 import { ElMessage, ElRadioGroup } from 'element-plus'
+import { isNotBlank } from '@data-type/index'
+
+import uploadList from '@comp/file-upload/UploadList.vue'
 import sandwichTable from './enclosure-table/sandwich-table'
 import pressedColorTable from './enclosure-table/pressed-color-table'
 import pressedSupportTable from './enclosure-table/pressed-support-table'
@@ -177,6 +190,10 @@ const props = defineProps({
   defaultType: {
     type: [String, Number],
     default: undefined
+  },
+  enclosureVisible: {
+    type: Boolean,
+    default: false
   }
 })
 const boardType = ref()
@@ -232,27 +249,58 @@ watch(
 )
 
 watch(
-  () => props.initForm,
+  () => props.enclosureVisible,
   (val) => {
-    if (isNotBlank(val)) {
-      tableData.value = JSON.parse(JSON.stringify(val))
-    } else {
-      tableData.value = {
-        [TechnologyTypeEnum.STRUCTURE.V]: [],
-        [TechnologyTypeEnum.PROFILED_PLATE.V]: [],
-        [TechnologyTypeEnum.TRUSS_FLOOR_PLATE.V]: [],
-        [TechnologyTypeEnum.PRESSURE_BEARING_PLATE.V]: [],
-        [TechnologyTypeEnum.SANDWICH_BOARD.V]: []
+    if (val) {
+      if (isNotBlank(props.initForm)) {
+        tableData.value = JSON.parse(JSON.stringify(props.initForm))
+      } else {
+        tableData.value = {
+          [TechnologyTypeEnum.STRUCTURE.V]: [],
+          [TechnologyTypeEnum.PROFILED_PLATE.V]: [],
+          [TechnologyTypeEnum.TRUSS_FLOOR_PLATE.V]: [],
+          [TechnologyTypeEnum.PRESSURE_BEARING_PLATE.V]: [],
+          [TechnologyTypeEnum.SANDWICH_BOARD.V]: []
+        }
       }
-    }
-    if (formRef.value) {
-      nextTick(() => {
-        formRef.value.clearValidate()
-      })
+      if (boardType.value) {
+        reset()
+      }
+      if (boardType.value && boardType.value !== TechnologyTypeEnum.STRUCTURE.V) {
+        fetchDict()
+      }
+      if (formRef.value) {
+        nextTick(() => {
+          formRef.value.clearValidate()
+        })
+      }
     }
   },
   { deep: true, immediate: true }
 )
+
+// watch(
+//   () => props.initForm,
+//   (val) => {
+//     if (isNotBlank(val)) {
+//       tableData.value = JSON.parse(JSON.stringify(val))
+//     } else {
+//       tableData.value = {
+//         [TechnologyTypeEnum.STRUCTURE.V]: [],
+//         [TechnologyTypeEnum.PROFILED_PLATE.V]: [],
+//         [TechnologyTypeEnum.TRUSS_FLOOR_PLATE.V]: [],
+//         [TechnologyTypeEnum.PRESSURE_BEARING_PLATE.V]: [],
+//         [TechnologyTypeEnum.SANDWICH_BOARD.V]: []
+//       }
+//     }
+//     if (formRef.value) {
+//       nextTick(() => {
+//         formRef.value.clearValidate()
+//       })
+//     }
+//   },
+//   { deep: true, immediate: true }
+// )
 
 const currentView = computed(() => {
   switch (boardType.value) {
@@ -458,8 +506,14 @@ function addRow() {
           })
         }
       }
+      if (boardType.value === TechnologyTypeEnum.STRUCTURE.V) {
+        const fileIds = form.value.attachments && form.value.attachments.map(v => v.id)
+        form.value.attachmentIds = fileIds ? fileIds.join(',') : undefined
+      }
+      console.log(form.value)
       const row = Object.assign({}, form.value)
       tableData.value[boardType.value].push(row)
+      console.log(tableData.value[boardType.value])
       reset()
     }
   })
@@ -500,6 +554,8 @@ async function fetchDict() {
 function reset() {
   form.value = {
     dict: {},
+    attachments: [],
+    attachmentIds: undefined,
     effectiveWidth: undefined,
     unfoldedWidth: undefined
   }

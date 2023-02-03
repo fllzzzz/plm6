@@ -4,7 +4,7 @@
       <mHeader />
     </div>
     <div style="display: flex">
-      <div style="width: 28%">
+      <div style="width: 35%">
         <div style="margin-bottom: 8px">
           <el-date-picker
             v-model="date"
@@ -38,6 +38,8 @@
           :max-height="maxHeight"
           row-key="projectId"
           style="width: 100%"
+          show-summary
+          :summary-method="getSummaries"
           @row-click="handleChange"
         >
           <el-table-column prop="index" label="序号" align="center" width="60" type="index" />
@@ -47,7 +49,7 @@
             prop="process.name"
             :show-overflow-tooltip="true"
             label="工序"
-            min-width="80px"
+            min-width="60px"
           >
             <template v-slot="scope">
               <table-cell-tag
@@ -60,12 +62,24 @@
           </el-table-column>
           <el-table-column align="center" key="mete" prop="mete" :show-overflow-tooltip="true" label="产量（吨）" min-width="60px">
             <template v-slot="scope">
-              <span>{{ scope.row.mete }}</span>
+              <span>{{ (scope.row.mete).toFixed(2) }}</span>
             </template>
           </el-table-column>
           <el-table-column align="center" key="price" prop="price" :show-overflow-tooltip="true" label="工资总额（元）" min-width="60px">
             <template v-slot="scope">
-              <span>{{ scope.row.price }}</span>
+              <span>{{ (scope.row.price).toFixed(2) }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column
+            align="center"
+            key="avgPrice"
+            prop="avgPrice"
+            :show-overflow-tooltip="true"
+            label="平均单价（元/吨）"
+            min-width="60px"
+          >
+            <template v-slot="scope">
+              <span>{{ scope.row.avgPrice }}</span>
             </template>
           </el-table-column>
         </common-table>
@@ -93,6 +107,7 @@ import { mesProductionStatisticsPM as permission } from '@/page-permission/mes'
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
 // import usePagination from '@compos/use-pagination'
+import { tableSummary } from '@/utils/el-extra'
 import { ElNotification } from 'element-plus'
 import { componentTypeEnum } from '@enum-ms/mes'
 import { PICKER_OPTIONS_DATE } from '@/settings/config'
@@ -158,6 +173,9 @@ async function fetchProcessData() {
       endTime: endTime.value
     })
     // setTotalPage(totalElements)
+    content?.forEach((v) => {
+      v.avgPrice = v.mete ? (v.price / v.mete)?.toFixed(2) : 0
+    })
     productionData.value = content || []
   } catch (error) {
     console.log('获取工序汇总信息失败', error)
@@ -184,6 +202,14 @@ function handleDateChange(val) {
 
 function handleChange(row) {
   detailRow.value = row
+}
+
+// 合计
+function getSummaries(param) {
+  return tableSummary(param, {
+    props: ['mete', 'price'],
+    toThousandFields: ['mete', 'price']
+  })
 }
 </script>
 
