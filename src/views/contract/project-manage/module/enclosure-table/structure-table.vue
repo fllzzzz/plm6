@@ -17,6 +17,14 @@
         <span>{{ scope.row.techDesc }}</span>
       </template>
     </el-table-column>
+    <el-table-column prop="attachments" :show-overflow-tooltip="true" align="center" label="附件">
+      <template v-slot="scope">
+        <div v-for="item in scope.row.attachments" :key="item.id" style="margin-bottom:2px;">
+          <span>{{ item.name }}</span>
+          <export-button :params="{id: item.id}" />
+        </div>
+      </template>
+    </el-table-column>
     <el-table-column v-if="!isShow" label="操作" align="center">
       <template v-slot="scope">
         <common-button size="small" class="el-icon-edit" type="primary" @click="editRow(scope.$index,scope.row)" />
@@ -28,6 +36,9 @@
 
 <script setup>
 import { ref, defineProps, defineEmits, watch } from 'vue'
+
+import ExportButton from '@comp-common/export-button/index.vue'
+
 const props = defineProps({
   tableData: {
     type: Array,
