@@ -46,7 +46,7 @@ export function processGet({ id, configId, taskTypeEnum }) {
 export function edit(data) {
   return request({
     module: 'mes',
-    url: 'price/change/product/page',
+    url: 'price/change/product',
     method: 'put',
     data
   })
