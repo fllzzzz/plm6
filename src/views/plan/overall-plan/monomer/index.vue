@@ -301,7 +301,6 @@ const { crud, columns, CRUD } = useCRUD(
     sort: ['sort.asc', 'id.desc'],
     permission: { ...permission.value },
     optShow: { ...optShow },
-    requiredQuery: ['projectId'],
     crudApi: { ...crudApi },
     hasPagination: true
   },
@@ -318,12 +317,16 @@ watch(
   () => globalProjectId.value,
   (val) => {
     if (val) {
-      crud.query.projectId = globalProjectId.value
       crud.toQuery()
     }
   },
   { immediate: true, deep: true }
 )
+
+CRUD.HOOK.beforeRefresh = () => {
+  crud.query.projectId = globalProjectId.value
+  return crud.query.projectId
+}
 
 CRUD.HOOK.handleRefresh = (crud, data) => {
   data.data.content.forEach((v) => {
