@@ -2,7 +2,14 @@
   <div class="app-container">
     <div class="head-container" style="display: flex; justify-content: space-between">
       <div style="width: 300px">
-        <print-table v-permission="permission.print" api-key="managementFee" :params="costTypeData.projectId" size="mini" type="warning" class="filter-item" />
+        <print-table
+          v-permission="permission.print"
+          api-key="managementFee"
+          :params="{ projectId: props.costTypeData.projectId }"
+          size="mini"
+          type="warning"
+          class="filter-item"
+        />
       </div>
       <el-tag>合计（单位：元）：{{ toThousand(props.costTypeData?.amount) }}</el-tag>
     </div>
@@ -22,9 +29,9 @@
           <span>{{ scope.row.subject }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="totalAmount" key="totalAmount" label="总额（元）" align="center">
+      <el-table-column prop="amount" key="amount" label="总额（元）" align="center">
         <template v-slot="scope">
-          <span>{{ toThousand(scope.row.totalAmount) }}</span>
+          <span>{{ toThousand(scope.row.amount) }}</span>
         </template>
       </el-table-column>
       <el-table-column prop="totalProduction" key="totalProduction" label="项目摊销比" align="center">
@@ -32,9 +39,9 @@
           <span>{{ scope.row.totalProduction }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="avgPrice" key="avgPrice" label="费用" align="center">
+      <el-table-column prop="fees" key="fees" label="费用" align="center">
         <template v-slot="scope">
-          <span>{{ toThousand(scope.row.avgPrice) }}</span>
+          <span>{{ toThousand(scope.row.fees) }}</span>
         </template>
       </el-table-column>
     </common-table>
@@ -42,7 +49,8 @@
 </template>
 <script setup>
 // import { workOrderTypeEnum } from '@enum-ms/mes'
-import { ref, defineProps } from 'vue'
+import { getManagementList } from '@/api/contract/fortune-report/detail-fee'
+import { ref, defineProps, watch } from 'vue'
 import { toThousand } from '@data-type/number'
 import { tableSummary } from '@/utils/el-extra'
 import useMaxHeight from '@compos/use-max-height'
@@ -65,11 +73,28 @@ const { maxHeight } = useMaxHeight({
   paginate: true
 })
 
+watch(
+  () => props.costTypeData?.projectId,
+  (val) => {
+    fetchWaterElectricFee()
+  },
+  { immediate: true, deep: true }
+)
+
+async function fetchWaterElectricFee() {
+  try {
+    const { content } = await getManagementList({ projectId: props.costTypeData?.projectId })
+    detailData.value = content || []
+  } catch (error) {
+    console.log('获取管理费失败', error)
+  }
+}
+
 // 合计
 function getSummaries(param) {
   return tableSummary(param, {
-    props: ['totalAmount'],
-    toThousandFields: ['totalAmount']
+    props: ['amount', 'fees'],
+    toThousandFields: ['amount', 'fees']
   })
 }
 </script>

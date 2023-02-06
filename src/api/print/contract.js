@@ -381,7 +381,7 @@ export function projectManagementFee(params) {
 // 业财报表/管理费
 export function managementFee(params) {
   return request({
-    url: ``,
+    url: `/api/contract/project-finance/list-manage/print`,
     method: 'get',
     params
   })
@@ -390,7 +390,7 @@ export function managementFee(params) {
 // 业财报表/水电费
 export function waterElectricFee(params) {
   return request({
-    url: ``,
+    url: `/api/contract/project-finance/list-water/print`,
     method: 'get',
     params
   })

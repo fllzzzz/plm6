@@ -61,3 +61,21 @@ export function getTestingList(params) {
     params
   })
 }
+
+// 水电费
+export function getWaterElectricList(params) {
+  return request({
+    url: `/api/contract/project-finance/list-water`,
+    method: 'get',
+    params
+  })
+}
+
+// 管理费
+export function getManagementList(params) {
+  return request({
+    url: `/api/contract/project-finance/list-manage`,
+    method: 'get',
+    params
+  })
+}
