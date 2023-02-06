@@ -154,6 +154,7 @@ const { crud, columns, CRUD } = useCRUD(
     optShow: { ...optShow },
     crudApi: { get: detailGet },
     sort: [],
+    requiredQuery: ['processId'],
     hasPagination: true,
     queryOnPresenterCreated: false
   },
@@ -215,8 +216,8 @@ async function fetchProcess(info) {
     processObj.value = arr2obj(content, 'id')
     if (processList.value?.length) {
       crud.query.processId = processList.value[0]?.id
-      crud.toQuery()
     }
+    crud.toQuery()
   } catch (error) {
     console.log(error, '获取工序失败')
   }

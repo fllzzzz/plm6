@@ -33,12 +33,9 @@ provide('projectId', globalProjectId)
 
 const fInfo = ref()
 
-watch(
-  [() => fQuery.value?.taskTypeEnum, () => globalProjectId.value],
-  () => {
-    fInfo.value = undefined
-  }
-)
+watch([() => fQuery.value?.taskTypeEnum, () => globalProjectId.value], (val) => {
+  fInfo.value = undefined
+})
 
 function setFInfo(info) {
   fInfo.value = info

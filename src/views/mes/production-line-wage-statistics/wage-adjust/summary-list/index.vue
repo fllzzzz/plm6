@@ -22,7 +22,11 @@
         align="center"
       />
       <el-table-column label="数量（件）" prop="quantity" width="110" align="center"></el-table-column>
-      <el-table-column label="重量（吨）" prop="netWeight" width="110" align="center"></el-table-column>
+      <el-table-column label="重量（吨）" prop="netWeight" width="110" align="center">
+        <template #default="{ row }">
+          <span>{{ row.netWeight?.toFixed(2) }}</span>
+        </template>
+      </el-table-column>
       <el-table-column v-if="checkPermission(permission.edit)" align="center" prop="prop" label="操作" width="100">
         <template #default="{ row }">
           <common-button type="warning" size="mini" @click="handleEdit(row)">修改</common-button>
