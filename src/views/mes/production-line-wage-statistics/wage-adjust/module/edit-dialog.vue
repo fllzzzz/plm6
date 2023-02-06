@@ -83,7 +83,7 @@
         <!-- <el-table-column align="center" prop="sourceWage" label="定额单价"> </el-table-column> -->
         <el-table-column align="center" prop="wage" label="定额单价" width="200">
           <template #default="{ row }">
-            <common-input-number v-model="row.wage" placeholder="请输入单价" :precision="2" :controls="false" style="width: 100%" />
+            <common-input-number v-model="row.wage" placeholder="请输入单价" :precision="2" :controls="false" :min="0" style="width: 100%" />
           </template>
         </el-table-column>
       </template>

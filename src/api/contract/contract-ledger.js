@@ -20,11 +20,12 @@ export function moneyChangeLog(params) {
 }
 
 // 获取项目金额累计
-export function ledgerSum() {
+export function ledgerSum(params) {
   return request({
     module: 'contract',
     url: 'project/getLedgerSum',
-    method: 'get'
+    method: 'get',
+    params
   })
 }
 

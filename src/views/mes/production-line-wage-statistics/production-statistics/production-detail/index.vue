@@ -110,7 +110,7 @@
           fixed="left"
         >
           <template #default="{ row }">
-            <span>{{ row.totalPrice.toFixed(2) }}</span>
+            <span>{{ row.totalPrice?.toFixed(2) }}</span>
           </template>
         </el-table-column>
         <el-table-column prop="total" align="center" :key="'_' + item" :show-overflow-tooltip="true" v-for="item in yearList" :label="item">
@@ -180,6 +180,7 @@ const workshopList = ref([])
 const dayList = ref([])
 const yearList = ref([])
 const monthList = ref([])
+const monthData = ref([])
 
 // const { handleSizeChange, handleCurrentChange, total, setTotalPage, queryPage } = usePagination({ fetchHook: fetchDetail })
 
@@ -246,26 +247,57 @@ function resetQuery() {
 }
 
 function headerStyle({ row, column, rowIndex, columnIndex }) {
-  console.log(columnIndex, column, 'columnIndex')
-  // if (rowIndex === 0 && columnIndex >= 6 && (columnIndex - 4) % 2 === 0) {
-  //   return 'background: #e1f3d8'
-  // } else if (rowIndex === 0 && columnIndex >= 7 && (columnIndex - 5) % 2 === 0) {
-  //   return 'background: #faecd8'
+  monthData.value = []
+  monthData.value.push(column.label?.split('/')[0])
+  if (column.property === 'sum') {
+    if (yearList.value.length === 1 && monthList.value.length === 1) {
+      return ''
+    } else if (yearList.value.length === 1 && monthList.value.length > 1) {
+      if (monthData.value[0] === monthList.value[0]) {
+        return 'background: #e1f3d8'
+      } else if (monthData.value[0] === monthList.value[1]) {
+        return 'background: #faecd8'
+      }
+    } else if (yearList.value.length > 1 && monthList.value.length > 1) {
+      if (monthData.value[0] === monthList.value[0]) {
+        return 'background: #e1f3d8'
+      } else {
+        return 'background: #faecd8'
+      }
+    }
+  }
+  if (column.property === 'total') {
+    if (yearList.value.length === 1 && (monthList.value.length === 1 || monthList.value.length > 1)) {
+      return ''
+    } else {
+      if (columnIndex >= 6 && (columnIndex - 4) % 2 === 0) {
+        return 'background: #d1edc4'
+      } else if (columnIndex >= 7 && (columnIndex - 5) % 2 === 0) {
+        return 'background: #f8e3c5'
+      }
+    }
+  }
+  // if (column.property === 'total' && yearList.value.length > 1 && monthList.value.length > 1) {
+  //   if (columnIndex >= 6 && (columnIndex - 4) % 2 === 0) {
+  //     return 'background: #d1edc4'
+  //   } else if (columnIndex >= 7 && (columnIndex - 5) % 2 === 0) {
+  //     return 'background: #f8e3c5'
+  //   }
   // }
-  console.log(monthList.value, 'monthList.value')
-  if (column.property === 'total' && yearList.value.length === 1) {
-    if (rowIndex === 0 && monthList.value.length > 1 && column.property === 'sum') {
-      return 'background: #e1f3d5'
-    }
-  }
-  if (column.property === 'total' && yearList.value.length > 1) {
-    if (rowIndex === 0 && columnIndex >= 6 && (columnIndex - 4) % 2 === 0) {
-      return 'background: #e1f3d8'
-    } else if (rowIndex === 0 && columnIndex >= 7 && (columnIndex - 5) % 2 === 0) {
-      return 'background: #faecd8'
-    }
-  }
-  // if (column.property === 'sum'&&dayList.value.length)
+  // if (column.property === 'sum' && yearList.value.length > 1 && monthList.value.length > 1) {
+  //   if (monthData.value[0] === monthList.value[0]) {
+  //     return 'background: #e1f3d8'
+  //   } else if (monthData.value[0] === monthList.value[1]) {
+  //     return 'background: #faecd8'
+  //   }
+  // }
+  // if (yearList.value.length === 1 && column.property === 'sum' && monthList.value.length > 1) {
+  //   if (monthData.value[0] === monthList.value[0]) {
+  //     return 'background: #e1f3d8'
+  //   } else if (monthData.value[0] === monthList.value[1]) {
+  //     return 'background: #faecd8'
+  //   }
+  // }
 }
 </script>
 
