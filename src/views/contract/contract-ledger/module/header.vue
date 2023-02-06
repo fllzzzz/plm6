@@ -64,7 +64,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import { regHeader } from '@compos/use-crud'
 import rrOperation from '@crud/RR.operation'
 import crudOperation from '@crud/CRUD.operation'
@@ -85,11 +85,17 @@ const { crud, query } = regHeader(defaultQuery)
 
 const totalSum = ref({})
 
-getSum()
+watch(
+  () => crud.query,
+  (value) => {
+    getSum()
+  },
+  { deep: true, immediate: true }
+)
 
 async function getSum() {
   try {
-    const data = await ledgerSum()
+    const data = await ledgerSum({ ...crud.query })
     totalSum.value = data || {}
   } catch (e) {
     console.log('获取累计金额', e)
