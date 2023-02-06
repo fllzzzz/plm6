@@ -113,7 +113,7 @@ import { dateDifference } from '@/utils/date'
 import { isNotBlank } from '@data-type/index'
 import checkPermission from '@/utils/system/check-permission'
 import { bridgeMyProjectPM as permission } from '@/page-permission/bridge'
-import { businessTypeEnum, projectStatusEnum } from '@enum-ms/contract'
+import { businessTypeEnum, projectStatusEnum, projectTypeEnum } from '@enum-ms/contract'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
@@ -196,7 +196,7 @@ async function fetchProjectInfo() {
   if (!checkPermission(permission.statistics)) return
   projectInfo.loading = true
   try {
-    const res = (await getProjectInfo({ year: year.value })) || {}
+    const res = (await getProjectInfo({ year: year.value, projectType: projectTypeEnum.BRIDGE.V })) || {}
     projectInfo.provinceList = res.provinceList
     delete res.provinceList
     projectInfo.summary = res

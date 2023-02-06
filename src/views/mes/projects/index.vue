@@ -113,8 +113,7 @@ import { dateDifference } from '@/utils/date'
 import { isNotBlank } from '@data-type/index'
 import checkPermission from '@/utils/system/check-permission'
 import { myProjectPM as permission } from '@/page-permission/mes'
-import { businessTypeEnum, projectStatusEnum } from '@enum-ms/contract'
-
+import { businessTypeEnum, projectStatusEnum, projectTypeEnum } from '@enum-ms/contract'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import pagination from '@crud/Pagination'
@@ -196,7 +195,7 @@ async function fetchProjectInfo() {
   if (!checkPermission(permission.statistics)) return
   projectInfo.loading = true
   try {
-    const res = (await getProjectInfo({ year: year.value })) || {}
+    const res = (await getProjectInfo({ year: year.value, projectType: projectTypeEnum.STEEL.V })) || {}
     projectInfo.provinceList = res.provinceList
     delete res.provinceList
     projectInfo.summary = res

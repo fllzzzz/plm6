@@ -84,9 +84,9 @@ const defaultQuery = {
   serialNumber: '',
   specification: '',
   material: '',
-  monomerId: { value: undefined, resetAble: false },
-  areaId: { value: undefined, resetAble: false },
-  status: { value: undefined, resetAble: false }
+  monomerId: undefined,
+  areaId: undefined,
+  status: undefined
 }
 
 const monomerSelectRef = ref()
