@@ -2,6 +2,7 @@
   <bim-model-view
     ref="mobileModelPreview"
     :monomer-id="monomerId"
+    :areaId="areaId"
     :serial-number="serialNumber"
     :productId="productId"
     :productType="productType"
@@ -27,6 +28,7 @@ const productType = route.query.productType && Number(route.query.productType)
 const showAll = (route.query.showAll && Number(route.query.showAll)) || 0 // 0:不显示全部，1：显示全部
 const serialNumber = route.query.serialNumber
 const monomerId = route.query.monomerId && Number(route.query.monomerId)
+const areaId = route.query.areaId && Number(route.query.areaId)
 
 const mobileModelPreview = ref()
 const showContent = ref(false)
