@@ -1,11 +1,11 @@
 <template>
   <div style="display: flex">
-    <summary-list style="width: 40%" ref="summaryListRef" @setInfo="setFInfo" />
+    <summary-list style="width: 32%" ref="summaryListRef" @setInfo="setFInfo" />
     <div style="border-right: 1px solid #ededed; height: calc(100vh - 100px)"></div>
     <div class="app-container" v-show="isBlank(fInfo)">
       <div class="my-code">点击左表操作</div>
     </div>
-    <detail-list v-show="!isBlank(fInfo)" ref="detailListRef" style="width: 59%" :fQuery="fQuery" :fInfo="fInfo" />
+    <detail-list v-show="!isBlank(fInfo)" ref="detailListRef" style="width: 67%" :fQuery="fQuery" :fInfo="fInfo" />
   </div>
 </template>
 

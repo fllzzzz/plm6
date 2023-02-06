@@ -12,6 +12,7 @@
       :empty-text="crud.emptyText"
       :max-height="maxHeight"
       style="width: 100%"
+      @row-click="handleRowChange"
     >
       <el-table-column label="序号" type="index" align="center" width="60" />
       <el-table-column
@@ -76,6 +77,10 @@ CRUD.HOOK.handleRefresh = (crud, { data }) => {
 
 function handleEdit(row) {
   emit('setInfo', row)
+}
+
+function handleRowChange(val) {
+  emit('setInfo', val)
 }
 
 defineExpose({

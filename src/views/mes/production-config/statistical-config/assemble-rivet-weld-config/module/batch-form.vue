@@ -93,7 +93,7 @@
           >
             <template #default="{ row, $index }">
               <template v-if="isNotBlank(row?.processObj[item.id])">
-                <common-select
+                <!-- <common-select
                   v-model="row.processObj[item.id].wageQuotaType"
                   :options="wageQuotaTypeEnum.ENUM"
                   type="enum"
@@ -103,6 +103,17 @@
                   placeholder="计量方式"
                   style="width: 45%; margin-right: 5px"
                   @change="wageQuotaTypeChange($event, $index, item.id)"
+                /> -->
+                <common-select
+                  v-model="row.processObj[item.id].wageQuotaType"
+                  :options="wageQuotaTypeEnum.ENUM"
+                  type="enum"
+                  clearable
+                  size="mini"
+                  class="input-underline"
+                  placeholder="计量方式"
+                  style="width: 45%; margin-right: 5px"
+                  @change="wageQuotaTypeChange($event, $index)"
                 />
                 <common-input-number
                   v-model="row.processObj[item.id].price"
@@ -264,10 +275,18 @@ function handleClassificationChange(val, index) {
   }
 }
 
-function wageQuotaTypeChange(val, index, processId) {
+// function wageQuotaTypeChange(val, index, processId) {
+//   for (const item in tableProcessObj.value) {
+//     if (tableProcessObj.value[item] === tableProcessObj.value[index]) {
+//       form.list[Number(item)].processObj[processId].wageQuotaType = val
+//     }
+//   }
+// }
+
+function wageQuotaTypeChange(val, index) {
   for (const item in tableProcessObj.value) {
     if (tableProcessObj.value[item] === tableProcessObj.value[index]) {
-      form.list[Number(item)].processObj[processId].wageQuotaType = val
+      form.list[Number(item)].wageQuotaType = val
     }
   }
 }

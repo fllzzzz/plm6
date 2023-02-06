@@ -28,7 +28,7 @@
       :data="crud.data"
       :data-format="productFormat[taskTypeEnum]"
       :empty-text="crud.emptyText"
-      :max-height="maxHeight"
+      :max-height="maxHeight - 50"
       row-key="rowId"
       style="width: 100%"
       @selection-change="handleSelectionChange"
@@ -83,6 +83,12 @@
         align="center"
         min-width="90px"
       />
+      <el-table-column v-if="columns.visible('wageQuotaType')" show-overflow-tooltip prop="wageQuotaType" label="核算单位" align="center">
+        <template #default="{ row }">
+          <span>{{ wageQuotaTypeEnum.V[row.wageQuotaType]?.meteUnit }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column v-if="columns.visible('wage')" show-overflow-tooltip prop="wage" label="定额单价" align="center" />
       <!-- <el-table-column v-permission="permission.edit" align="center" prop="prop" label="操作" width="110">
         <template #default="{ row }">
           <common-button type="warning" size="mini" @click="handleSingleEdit(row)">工价调整</common-button>
@@ -91,7 +97,12 @@
     </common-table>
     <!--分页组件-->
     <pagination />
-    <edit-dialog v-model:visible="editVisible" :selections="selections" :processInfo="processObj?.[crud.query.processId]" @refresh="crud.toQuery"></edit-dialog>
+    <edit-dialog
+      v-model:visible="editVisible"
+      :selections="selections"
+      :processInfo="processObj?.[crud.query.processId]"
+      @refresh="crud.toQuery"
+    ></edit-dialog>
   </div>
 </template>
 
@@ -100,7 +111,7 @@ import { detailGet, processGet } from '@/api/mes/production-line-wage-statistics
 import { ref, defineProps, defineExpose, inject, watch, computed } from 'vue'
 import { ElMessage } from 'element-plus'
 
-import { componentTypeEnum } from '@enum-ms/mes'
+import { componentTypeEnum, wageQuotaTypeEnum } from '@enum-ms/mes'
 import { arr2obj } from '@/utils/convert/type'
 
 import useMaxHeight from '@compos/use-max-height'
@@ -203,7 +214,7 @@ async function fetchProcess(info) {
     processList.value = content
     processObj.value = arr2obj(content, 'id')
     if (processList.value?.length) {
-      crud.query.processId = processList.value[0].id
+      crud.query.processId = processList.value[0]?.id
       crud.toQuery()
     }
   } catch (error) {
