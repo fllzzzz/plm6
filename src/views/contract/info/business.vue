@@ -290,7 +290,7 @@
             </span>
           </template>
           <template #content>
-            <enclosure-form ref="enclosureFormRef" :show-item="showItem" :show-category="showCategory" :init-form="form.enclosureInfo" :default-type="defaultType"/>
+            <enclosure-form ref="enclosureFormRef" :show-item="showItem" :show-category="showCategory" :init-form="form.enclosureInfo" :default-type="defaultType" :enclosureVisible="enclosureVisible"/>
           </template>
         </common-drawer>
       </div>

@@ -108,22 +108,26 @@
           label="总额"
           min-width="120px"
           fixed="left"
-        />
-        <el-table-column prop="sum" align="center" :key="'_' + item" :show-overflow-tooltip="true" v-for="item in yearList" :label="item">
+        >
+          <template #default="{ row }">
+            <span>{{ row.totalPrice.toFixed(2) }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="total" align="center" :key="'_' + item" :show-overflow-tooltip="true" v-for="item in yearList" :label="item">
           <template v-for="val in dayList" :key="val?.split('/')[2]">
             <el-table-column
               v-if="new Date(val).getFullYear() == item"
               prop="sum"
               align="center"
               :show-overflow-tooltip="true"
-              :label="new Date(val).getDate()"
+              :label="parseTime(new Date(val).getTime(), '{m}/{d}')"
               min-width="120"
             >
               <template v-slot="scope">
                 <div v-if="scope.row.priceList.findIndex((v) => v.dayTime == val) > -1">
                   <template v-for="day in scope.row.priceList" :key="day">
                     <template v-if="day.dayTime == val">
-                      <span>{{ day.price }}</span>
+                      <span>{{ day.price?.toFixed(2) }}</span>
                     </template>
                   </template>
                 </div>
@@ -136,7 +140,7 @@
         </el-table-column>
       </common-table>
       <!-- 分页 -->
-      <el-pagination
+      <!-- <el-pagination
         :total="total"
         :current-page="queryPage.pageNumber"
         :page-size="queryPage.pageSize"
@@ -144,7 +148,7 @@
         layout="total, prev, pager, next, sizes"
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
-      />
+      /> -->
     </div>
   </div>
 </template>
@@ -153,7 +157,7 @@
 import { ref, defineProps, watch, inject } from 'vue'
 import { detail, exportListFn } from '@/api/mes/production-line-wage-statistics/production-statistics'
 import { parseTime } from '@/utils/date'
-import usePagination from '@compos/use-pagination'
+// import usePagination from '@compos/use-pagination'
 import useMaxHeight from '@compos/use-max-height'
 import ExportButton from '@comp-common/export-button/index.vue'
 
@@ -175,8 +179,9 @@ const userName = ref()
 const workshopList = ref([])
 const dayList = ref([])
 const yearList = ref([])
+const monthList = ref([])
 
-const { handleSizeChange, handleCurrentChange, total, setTotalPage, queryPage } = usePagination({ fetchHook: fetchDetail })
+// const { handleSizeChange, handleCurrentChange, total, setTotalPage, queryPage } = usePagination({ fetchHook: fetchDetail })
 
 function getDateList(start, end, long) {
   let startData = start
@@ -198,12 +203,12 @@ watch(
 )
 async function fetchDetail() {
   try {
-    const { content = [], totalElements } = await detail({
+    const { content } = await detail({
       processId: props.detailRow.process?.id,
       userName: userName.value,
       ...props.commonParams
     })
-    setTotalPage(totalElements)
+    // setTotalPage(totalElements)
     content?.forEach((v) => {
       v.startTime = props.commonParams?.startTime
       v.endTime = props.commonParams?.endTime
@@ -217,6 +222,11 @@ async function fetchDetail() {
       yearList.value.sort(function (a, b) {
         return a - b
       })
+    })
+    dayList.value.forEach((v) => {
+      if (monthList.value.indexOf(v.split('/')[1]) === -1) {
+        monthList.value.push(v.split('/')[1])
+      }
     })
     workshopList.value = content || []
   } catch (error) {
@@ -236,11 +246,26 @@ function resetQuery() {
 }
 
 function headerStyle({ row, column, rowIndex, columnIndex }) {
-  if (rowIndex === 0 && columnIndex >= 6 && (columnIndex - 4) % 2 === 0) {
-    return 'background: #e1f3d8'
-  } else if (rowIndex === 0 && columnIndex >= 7 && (columnIndex - 5) % 2 === 0) {
-    return 'background: #faecd8'
+  console.log(columnIndex, column, 'columnIndex')
+  // if (rowIndex === 0 && columnIndex >= 6 && (columnIndex - 4) % 2 === 0) {
+  //   return 'background: #e1f3d8'
+  // } else if (rowIndex === 0 && columnIndex >= 7 && (columnIndex - 5) % 2 === 0) {
+  //   return 'background: #faecd8'
+  // }
+  console.log(monthList.value, 'monthList.value')
+  if (column.property === 'total' && yearList.value.length === 1) {
+    if (rowIndex === 0 && monthList.value.length > 1 && column.property === 'sum') {
+      return 'background: #e1f3d5'
+    }
   }
+  if (column.property === 'total' && yearList.value.length > 1) {
+    if (rowIndex === 0 && columnIndex >= 6 && (columnIndex - 4) % 2 === 0) {
+      return 'background: #e1f3d8'
+    } else if (rowIndex === 0 && columnIndex >= 7 && (columnIndex - 5) % 2 === 0) {
+      return 'background: #faecd8'
+    }
+  }
+  // if (column.property === 'sum'&&dayList.value.length)
 }
 </script>
 

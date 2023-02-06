@@ -30,19 +30,24 @@
 </template>
 
 <script setup>
-import { inject, ref } from 'vue'
+import { inject, defineProps, ref } from 'vue'
 import { integrationModel, integrationModelDel } from '@/api/bim/model'
 
 import { regHeader } from '@compos/use-crud'
 import crudOperation from '@crud/CRUD.operation'
 import { ElNotification, ElMessageBox } from 'element-plus'
 
+const props = defineProps({
+  info: {
+    type: Object
+  }
+})
+
 const defaultQuery = {}
 
 const { crud } = regHeader(defaultQuery)
 
 const areaIds = inject('areaIds')
-const info = inject('info')
 const hasIntegrationModel = inject('hasIntegrationModel')
 const hasProcessingIM = inject('hasProcessingIM')
 const integrationLoading = ref(false)
@@ -53,7 +58,7 @@ async function toIntegrationModel() {
   try {
     if (!areaIds.value?.length) return
     integrationLoading.value = true
-    await integrationModel({ areaIds: areaIds.value, monomerId: info.id })
+    await integrationModel({ areaIds: areaIds.value, monomerId: props.info.id })
     ElNotification({ title: '集成模型请求发送成功', type: 'success' })
     crud.refresh()
   } catch (error) {
@@ -65,14 +70,14 @@ async function toIntegrationModel() {
 
 // 重置集成模型
 async function toDelIntegrationModel() {
-  ElMessageBox.confirm(`是否确认重置 “${info.name}” 单体下的集成模型`, '提示', {
+  ElMessageBox.confirm(`是否确认重置 “${props.info.name}” 单体下的集成模型`, '提示', {
     confirmButtonText: '确认',
     cancelButtonText: '取消',
     type: 'warning'
   }).then(async () => {
     try {
       resetLoading.value = true
-      await integrationModelDel({ monomerId: info.id })
+      await integrationModelDel({ monomerId: props.info.id })
       ElNotification({ title: '重置集成模型成功', type: 'success' })
       crud.refresh()
     } catch (error) {
