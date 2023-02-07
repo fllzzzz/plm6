@@ -74,6 +74,18 @@ export function recordSummary(params) {
 }
 
 /**
+ * @description: 获取构件排产生产组信息
+ */
+export function groupSummary(params) {
+  return request({
+    module: 'mes',
+    url: 'scheduling/artifact/record/groups/summary',
+    method: 'get',
+    params
+  })
+}
+
+/**
  * @description: 获取计算下发构件所需部件数量列表
  */
 export function getAssemble(data) {
