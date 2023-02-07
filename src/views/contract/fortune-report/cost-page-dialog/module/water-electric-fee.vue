@@ -31,17 +31,17 @@
       </el-table-column>
       <el-table-column prop="amount" key="amount" label="摊销总额（元）" align="center">
         <template v-slot="scope">
-          <span>{{ toThousand(scope.row.amount) }}</span>
+          <span>{{ toThousand(scope.row.amount, 2) }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="totalProduction" key="totalProduction" label="累计产量（吨）" align="center">
+      <el-table-column prop="mete" key="mete" label="累计产量（吨）" align="center">
         <template v-slot="scope">
-          <span>{{ toThousand(scope.row.totalProduction) }}</span>
+          <span>{{ toThousand(scope.row.mete, 2) }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="averageUnitPrice" key="averageUnitPrice" label="平均单价（元/吨）" align="center">
+      <el-table-column prop="avgPrice" key="avgPrice" label="平均单价（元/吨）" align="center">
         <template v-slot="scope">
-          <span>{{ scope.row.averageUnitPrice }}</span>
+          <span>{{ scope.row.avgPrice?.toFixed(2) }}</span>
         </template>
       </el-table-column>
     </common-table>
@@ -93,8 +93,8 @@ async function fetchWaterElectricFee() {
 // 合计
 function getSummaries(param) {
   return tableSummary(param, {
-    props: ['amount'],
-    toThousandFields: ['amount']
+    props: ['amount', 'mete'],
+    toThousandFields: ['amount', 'mete']
   })
 }
 </script>

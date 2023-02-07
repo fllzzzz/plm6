@@ -34,7 +34,7 @@
           <span>{{ toThousand(scope.row.amount) }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="totalProduction" key="totalProduction" label="项目摊销比" align="center">
+      <!-- <el-table-column prop="totalProduction" key="totalProduction" label="项目摊销比" align="center">
         <template v-slot="scope">
           <span>{{ scope.row.totalProduction }}</span>
         </template>
@@ -43,7 +43,7 @@
         <template v-slot="scope">
           <span>{{ toThousand(scope.row.fees) }}</span>
         </template>
-      </el-table-column>
+      </el-table-column> -->
     </common-table>
   </div>
 </template>
@@ -93,8 +93,8 @@ async function fetchWaterElectricFee() {
 // 合计
 function getSummaries(param) {
   return tableSummary(param, {
-    props: ['amount', 'fees'],
-    toThousandFields: ['amount', 'fees']
+    props: ['amount'],
+    toThousandFields: ['amount']
   })
 }
 </script>
