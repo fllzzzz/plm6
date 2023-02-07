@@ -79,7 +79,7 @@ export default function useMyToolbar({
     (val, oldVal) => {
       if (isNotBlank(val)) {
         clearSelectedComponents()
-        const btnEls = document.querySelectorAll(`${isMobile ? 'bf-toolbar-my-mobile' : 'bf-toolbar-my'}>.bf-button`)
+        const btnEls = document.querySelectorAll(`${isMobile ? '.bf-toolbar-my-mobile' : '.bf-toolbar-my'}>.bf-button`)
         btnEls.forEach((el) => {
           if (el.innerText === modelMenuBarEnum.VL[val]) {
             el.className = 'bf-button bf-button-active'
