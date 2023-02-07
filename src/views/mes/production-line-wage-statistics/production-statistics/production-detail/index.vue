@@ -114,7 +114,7 @@
           </template>
         </el-table-column>
         <el-table-column prop="total" align="center" :key="'_' + item" :show-overflow-tooltip="true" v-for="item in yearList" :label="item">
-          <template v-for="val in dayList" :key="val?.split('/')[2]">
+          <template v-for="val in dayList" :key="val">
             <el-table-column
               v-if="new Date(val).getFullYear() == item"
               prop="sum"
@@ -216,6 +216,7 @@ async function fetchDetail() {
     })
     getDateList(Number(props.commonParams?.startTime), Number(props.commonParams?.endTime), 24 * 60 * 60 * 1000)
     yearList.value = []
+    monthList.value = []
     dayList.value.forEach((v) => {
       if (yearList.value.indexOf(v.split('/')[0]) === -1) {
         yearList.value.push(v.split('/')[0])
@@ -277,27 +278,6 @@ function headerStyle({ row, column, rowIndex, columnIndex }) {
       }
     }
   }
-  // if (column.property === 'total' && yearList.value.length > 1 && monthList.value.length > 1) {
-  //   if (columnIndex >= 6 && (columnIndex - 4) % 2 === 0) {
-  //     return 'background: #d1edc4'
-  //   } else if (columnIndex >= 7 && (columnIndex - 5) % 2 === 0) {
-  //     return 'background: #f8e3c5'
-  //   }
-  // }
-  // if (column.property === 'sum' && yearList.value.length > 1 && monthList.value.length > 1) {
-  //   if (monthData.value[0] === monthList.value[0]) {
-  //     return 'background: #e1f3d8'
-  //   } else if (monthData.value[0] === monthList.value[1]) {
-  //     return 'background: #faecd8'
-  //   }
-  // }
-  // if (yearList.value.length === 1 && column.property === 'sum' && monthList.value.length > 1) {
-  //   if (monthData.value[0] === monthList.value[0]) {
-  //     return 'background: #e1f3d8'
-  //   } else if (monthData.value[0] === monthList.value[1]) {
-  //     return 'background: #faecd8'
-  //   }
-  // }
 }
 </script>
 
