@@ -200,7 +200,7 @@ const waterElectricFee = {
     fields: [
       { show: true, key: 'type', title: '类别', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 22, type: typeEnum.OTHER.K },
       { show: true, key: 'amount', title: '摊销总额（元）', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.AMOUNT.K, sum: true },
-      { show: true, key: 'totalProduction', title: '累计产量（吨）', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.METE.K, format: { toThousand: true, precision: 2 }, sum: true },
+      { show: true, key: 'mete', title: '累计产量（吨）', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.METE.K, format: { toThousand: true, precision: 2 }, sum: true },
       { show: true, key: 'avgPrice', title: '平均单价（元/吨）', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.AMOUNT.K, format: { toThousand: true, precision: 2 }}
     ]
   }
