@@ -30,6 +30,27 @@ const supplierInvoiceLedger = contract.supplierInvoiceLedger
 const saleOrderTracking = contract.saleOrderTracking
 const projectWarehouseRecord = contract.warehouseRecord
 
+const industryElectricRecord = contract.industryElectricRecord
+const civilElectricRecord = contract.civilElectricRecord
+const waterRecord = contract.waterRecord
+const gasRecord = contract.gasRecord
+const expenseReimburseList = contract.expenseReimburseList
+const managementSalaryList = contract.managementSalaryList
+const productionSalaryList = contract.productionSalaryList
+const propertyFeeList = contract.propertyFeeList
+
+const mainMaterialList = contract.mainMaterialList
+const auxiliaryMaterialList = contract.mainMaterialList
+const manualList = contract.manualList
+const shippingFeeList = contract.shippingFeeList
+const testingFee = contract.testingFee
+const subcontractFee = contract.subcontractFee
+const projectManagementFee = contract.projectManagementFee
+const managementFee = contract.managementFee
+const waterElectricFee = contract.waterElectricFee
+const depreciationFee = contract.depreciationFee
+const fortuneReportList = contract.fortuneReportList
+
 // 供应链
 const purchaseInvoiceRecord = supply.invoiceDetail
 const purchaseInboundRecord = supply.inboundRecord
@@ -150,6 +171,26 @@ export default {
   transactionRecord, // 客户交易记录
   saleOrderTracking, // 订单跟踪
   projectWarehouseRecord, // 销售管理入库记录
+  industryElectricRecord, // 工业电费
+  civilElectricRecord, // 民用电费
+  waterRecord, // 水费
+  gasRecord, // 气体统计
+  expenseReimburseList, // 费用报销
+  managementSalaryList, // 管理人员工资清单
+  productionSalaryList, // 生产人员工资清单
+  propertyFeeList, // 物业费用清单
+
+  mainMaterialList, // 主材费清单
+  manualList, // 人工费
+  shippingFeeList, // 运输费
+  testingFee, // 检测费
+  subcontractFee, // 分包费
+  projectManagementFee, // 项目管理费
+  managementFee, // 管理费
+  waterElectricFee, // 水电费
+  depreciationFee, // 折旧费
+  auxiliaryMaterialList, // 辅材费用清单
+  fortuneReportList, // 业财报表
 
   // 供应链
   purchaseInvoiceRecord, // 收票记录

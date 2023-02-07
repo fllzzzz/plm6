@@ -41,6 +41,8 @@ import moment from 'moment'
 
 import { isBlank } from '@data-type/index'
 import { constantize } from '@/utils/enum/base'
+import checkPermission from '@/utils/system/check-permission'
+import { QHSEAnalysisPM as permission } from '@/page-permission/operation'
 
 import useMaxHeight from '@compos/use-max-height'
 import useChart from '@compos/use-chart'
@@ -110,6 +112,9 @@ function init() {
 async function fetchInfo() {
   try {
     init()
+    if (!checkPermission(permission.get)) {
+      return false
+    }
     loading.value = true
     const { content } = await getQHSEAnalysis({ dateTime: year.value })
     for (let i = 0; i < content.length; i++) {

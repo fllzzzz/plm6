@@ -56,6 +56,8 @@ const wmsRmReturnReceipt = wms.dataFormat // 退库单
 const wmsRmRejectReceipt = wms.dataFormat // 退货单
 const wmsRmSupplementReceipt = wms.supplementDataFormat // 红冲记录
 const wmsRmTransferReceipt = wms.transferDataFormat // 调拨单
+const auxiliaryMaterialList = wms.dataFormat // 业财报表辅材费清单
+const gasRecord = wms.dataFormat // 合同管理/费用录入/气体统计
 
 export default {
   invoiceLedger,
@@ -102,5 +104,8 @@ export default {
   wmsRmReturnReceipt, // 退库单
   wmsRmRejectReceipt, // 退货单
   wmsRmSupplementReceipt, // 红冲记录
-  wmsRmTransferReceipt // 调拨单
+  wmsRmTransferReceipt, // 调拨单
+
+  auxiliaryMaterialList, // 业财报表/辅材费清单
+  gasRecord // 合同管理/费用录入/气体统计
 }

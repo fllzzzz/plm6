@@ -62,12 +62,12 @@
           </el-table-column>
           <el-table-column align="center" key="mete" prop="mete" :show-overflow-tooltip="true" label="产量（吨）" min-width="60px">
             <template v-slot="scope">
-              <span>{{ (scope.row.mete).toFixed(2) }}</span>
+              <span>{{ scope.row.mete? (scope.row.mete / 1000)?.toFixed(2) : 0 }}</span>
             </template>
           </el-table-column>
           <el-table-column align="center" key="price" prop="price" :show-overflow-tooltip="true" label="工资总额（元）" min-width="60px">
             <template v-slot="scope">
-              <span>{{ (scope.row.price).toFixed(2) }}</span>
+              <span>{{ (scope.row.price)?.toFixed(2) }}</span>
             </template>
           </el-table-column>
           <el-table-column
@@ -107,7 +107,7 @@ import { mesProductionStatisticsPM as permission } from '@/page-permission/mes'
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
 // import usePagination from '@compos/use-pagination'
-import { tableSummary } from '@/utils/el-extra'
+// import { tableSummary } from '@/utils/el-extra'
 import { ElNotification } from 'element-plus'
 import { componentTypeEnum } from '@enum-ms/mes'
 import { PICKER_OPTIONS_DATE } from '@/settings/config'
@@ -206,10 +206,45 @@ function handleChange(row) {
 
 // 合计
 function getSummaries(param) {
-  return tableSummary(param, {
-    props: ['mete', 'price'],
-    toThousandFields: ['mete', 'price']
+  const { columns, data } = param
+  const sums = []
+  columns.forEach((column, index) => {
+    if (index === 0) {
+      sums[index] = '合计'
+      return
+    }
+    if (column.property === 'mete') {
+      const values = data.map((item) => Number(item[column.property]))
+      let valuesSum = 0
+      if (!values.every((value) => isNaN(value))) {
+        valuesSum = values.reduce((prev, curr) => {
+          const value = Number(curr)
+          if (!isNaN(value)) {
+            return prev + curr
+          } else {
+            return prev
+          }
+        }, 0)
+      }
+      sums[index] = valuesSum ? (valuesSum / 1000)?.toFixed(2) : 0
+    }
+    if (column.property === 'price') {
+      const values = data.map((item) => Number(item[column.property]))
+      let valuesSum = 0
+      if (!values.every((value) => isNaN(value))) {
+        valuesSum = values.reduce((prev, curr) => {
+          const value = Number(curr)
+          if (!isNaN(value)) {
+            return prev + curr
+          } else {
+            return prev
+          }
+        }, 0)
+      }
+      sums[index] = valuesSum?.toFixed(2)
+    }
   })
+  return sums
 }
 </script>
 

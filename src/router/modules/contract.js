@@ -172,6 +172,128 @@ export default {
           meta: { title: '客户交易记录', icon: 'contract2', noCache: true }
         }
       ]
+    },
+    {
+      path: '/contract/expense-entry',
+      component: 'Layout',
+      hidden: false,
+      name: 'ExpenseEntry',
+      alwaysShow: false,
+      redirect: '/contract/expense-entry',
+      meta: { title: '费用录入', icon: 'contract2', noCache: true },
+      children: [
+        {
+          path: 'fixed-assets-depreciation',
+          component: '',
+          hidden: false,
+          name: 'FixedAssetsDepreciation',
+          alwaysShow: false,
+          redirect: '/contract/expense-entry/fixed-assets-depreciation',
+          meta: { title: '固定资产折旧', icon: 'contract2', noCache: true },
+          children: [
+            {
+              name: 'PlantDepreciation',
+              path: 'plant-depreciation',
+              hidden: false,
+              component: '/contract/expense-entry/fixed-assets-depreciation/plant-depreciation/index',
+              meta: { title: '厂房折旧', icon: 'contract2', noCache: true }
+            },
+            {
+              name: 'DeviceDepreciation',
+              path: 'device-depreciation',
+              hidden: false,
+              component: '/contract/expense-entry/fixed-assets-depreciation/device-depreciation/index',
+              meta: { title: '设备折旧', icon: 'contract2', noCache: true }
+            }
+          ]
+        },
+        {
+          path: 'water-electricity-cost',
+          component: '',
+          hidden: false,
+          name: 'WaterElectricityCost',
+          alwaysShow: false,
+          redirect: '/contract/expense-entry/water-electricity-cost',
+          meta: { title: '水电费', icon: 'contract2', noCache: true },
+          children: [
+            {
+              name: 'WaterElectricity',
+              path: 'water-electricity',
+              hidden: false,
+              component: '/contract/expense-entry/water-electricity-cost/water-electricity/index',
+              meta: { title: '水电费', icon: 'contract2', noCache: true }
+            },
+            {
+              name: 'GasCost',
+              path: 'gas-cost',
+              hidden: false,
+              component: '/contract/expense-entry/water-electricity-cost/gas-cost/index',
+              meta: { title: '气体统计', icon: 'contract2', noCache: true }
+            }
+          ]
+        },
+        {
+          name: 'ExpenseReporting',
+          path: 'expense-reporting',
+          hidden: false,
+          component: '/contract/expense-entry/expense-reporting/index',
+          meta: { title: '费用填报', icon: 'contract2', noCache: true }
+        },
+        {
+          path: 'management-cost',
+          component: '',
+          hidden: false,
+          name: 'ManagementCost',
+          alwaysShow: false,
+          redirect: '/contract/expense-entry/management-cost',
+          meta: { title: '管理费', icon: 'contract2', noCache: true },
+          children: [
+            {
+              name: 'Salary',
+              path: 'salary',
+              hidden: false,
+              component: '/contract/expense-entry/management-cost/salary/index',
+              meta: { title: '人员工资', icon: 'contract2', noCache: true }
+            },
+            {
+              name: 'PropertyCost',
+              path: 'property-cost',
+              hidden: false,
+              component: '/contract/expense-entry/management-cost/property-cost/index',
+              meta: { title: '物业费', icon: 'contract2', noCache: true }
+            }
+          ]
+        },
+        {
+          name: 'TestingCost',
+          path: 'testing-cost',
+          hidden: false,
+          component: '/contract/expense-entry/testing-cost/index',
+          meta: { title: '检测费', icon: 'contract2', noCache: true }
+        }
+      ]
+    },
+    {
+      path: '/contract/fortune-report-manage',
+      component: 'Layout',
+      hidden: false,
+      name: 'FortuneReport',
+      alwaysShow: false,
+      redirect: '/contract/fortune-report-manage/fortune-report',
+      meta: { title: '业财报表', icon: 'contract2', noCache: true },
+      children: [
+        {
+          name: 'ContractFortuneReport',
+          path: 'fortune-report',
+          hidden: false,
+          component: '/contract/fortune-report/index',
+          meta: {
+            title: '业财报表',
+            icon: 'project',
+            noCache: true
+          }
+        }
+      ]
     }
   ]
 }

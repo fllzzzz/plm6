@@ -89,6 +89,8 @@ export const MIN_UNIT = {
 
 // 系统常用单位
 export const DEF_UNIT = {
+  T_WEIGHT: 't',
+  T_WEIGHT_DP: 2,
   WEIGHT: 'kg',
   WEIGHT_DP: 2,
   LENGTH: 'mm',
