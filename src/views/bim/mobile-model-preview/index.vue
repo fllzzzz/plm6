@@ -8,6 +8,7 @@
     :productType="productType"
     :preview-show-all="Boolean(showAll)"
     is-preview
+    is-mobile
     class="mobile-model-preview"
   ></bim-model-view>
   <el-radio-group class="mobile-model-preview-radio" v-if="!Boolean(showAll) && loaded" v-model="showContent" @change="contentChange">

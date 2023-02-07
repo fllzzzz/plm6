@@ -1,6 +1,10 @@
 <template>
   <div class="model-container" :style="{ height: `${maxHeight}px` }">
-    <el-tag v-if="tip !== commonTipStatusEnum.SUCCESS.V" :type="commonTipStatusEnum.V[tip]?.T" :style="isPreview || !showMonomerModel?'margin-left: 10px;margin-top: 10px;':''">
+    <el-tag
+      v-if="tip !== commonTipStatusEnum.SUCCESS.V"
+      :type="commonTipStatusEnum.V[tip]?.T"
+      :style="isPreview || !showMonomerModel ? 'margin-left: 10px;margin-top: 10px;' : ''"
+    >
       {{ commonTipStatusEnum.VL[tip] }} {{ modelStatus.reason }}
     </el-tag>
     <div v-if="tip === commonTipStatusEnum.SUCCESS.V" id="modelView"></div>
@@ -47,6 +51,10 @@ const props = defineProps({
     type: Number
   },
   isPreview: {
+    type: Boolean,
+    default: false
+  },
+  isMobile: {
     type: Boolean,
     default: false
   },
@@ -158,29 +166,92 @@ function getModelViewSize() {
 }
 
 const {
-  initModelColor, fetchArtifactStatus,
-  addBlinkByIds, removeBlink,
-  isolateComponentsById, clearIsolation,
-  hideComponentsById, showComponentsById,
+  initModelColor,
+  fetchArtifactStatus,
+  addBlinkByIds,
+  removeBlink,
+  isolateComponentsById,
+  clearIsolation,
+  hideComponentsById,
+  showComponentsById,
   overrideComponentsColorById,
   setSelectedComponentsByObjectData,
   clearSelectedComponents
 } = useArtifactColoring({ props, bimModel, modelStatus, viewer: _viewer, colors, objectIdGroup })
 const { createDrawing, fetchDrawing } = useDrawing()
-const { createArtifactInfoPanel, fetchArtifactInfo, clearArtifactInfoPanel } = useArtifactInfo({ props, menuBar, bimModel, viewer: _viewer, viewerPanel, modelStatus, fetchDrawing })
-const { createStatusInfoPanel, fetchStatusInfo, clearStatusInfoPanel } = useStatusInfo({ props, menuBar, bimModel, viewerPanel, modelStatus })
-const { createProTreePanel, clearProTreePanel, fetchProTree } = useProjectTreePanel({ props, bimModel, modelStatus, viewerPanel, viewProAreaTree, setSelectedComponentsByObjectData, clearSelectedComponents, addBlinkByIds, removeBlink, getModelViewSize })
-const { createLogisticsBtn, hideLogisticsBtn } = useLogisticsInfo({ props, modelStatus, bimModel, viewerPanel, monomerId: computed(() => props.monomerId), addBlinkByIds, removeBlink })
+const { createArtifactInfoPanel, fetchArtifactInfo, clearArtifactInfoPanel } = useArtifactInfo({
+  props,
+  menuBar,
+  bimModel,
+  viewer: _viewer,
+  viewerPanel,
+  modelStatus,
+  fetchDrawing
+})
+const { createStatusInfoPanel, fetchStatusInfo, clearStatusInfoPanel } = useStatusInfo({
+  props,
+  menuBar,
+  bimModel,
+  viewerPanel,
+  modelStatus
+})
+const { createProTreePanel, clearProTreePanel, fetchProTree } = useProjectTreePanel({
+  props,
+  bimModel,
+  modelStatus,
+  viewerPanel,
+  viewProAreaTree,
+  setSelectedComponentsByObjectData,
+  clearSelectedComponents,
+  addBlinkByIds,
+  removeBlink,
+  getModelViewSize
+})
+const { createLogisticsBtn, hideLogisticsBtn } = useLogisticsInfo({
+  props,
+  modelStatus,
+  bimModel,
+  viewerPanel,
+  monomerId: computed(() => props.monomerId),
+  addBlinkByIds,
+  removeBlink
+})
 const { createMyToolbar } = useMyToolbar({
-  menuBar, publicPath, bimModel, viewerPanel, viewProAreaTree, colors,
-  createLogisticsBtn, hideLogisticsBtn,
-  clearProTreePanel, fetchProTree,
-  clearArtifactInfoPanel, fetchArtifactInfo,
-  clearStatusInfoPanel, fetchStatusInfo,
+  menuBar,
+  publicPath,
+  bimModel,
+  viewerPanel,
+  viewProAreaTree,
+  colors,
+  isMobile: props.isMobile,
+  createLogisticsBtn,
+  hideLogisticsBtn,
+  clearProTreePanel,
+  fetchProTree,
+  clearArtifactInfoPanel,
+  fetchArtifactInfo,
+  clearStatusInfoPanel,
+  fetchStatusInfo,
   clearSelectedComponents
 })
 const { createSearchHtml, searchBySN } = useArtifactSearch({ props, modelStatus, addBlinkByIds, removeBlink })
-const { createColorCardHtml } = useColorCard({ props, menuBar, colors, objectIdGroup, bimModel, viewerPanel, modelStatus, searchBySN, fetchArtifactStatus, isolateComponentsById, clearIsolation, hideComponentsById, showComponentsById, overrideComponentsColorById })
+const { createColorCardHtml } = useColorCard({
+  props,
+  isMobile: props.isMobile,
+  menuBar,
+  colors,
+  objectIdGroup,
+  bimModel,
+  viewerPanel,
+  modelStatus,
+  searchBySN,
+  fetchArtifactStatus,
+  isolateComponentsById,
+  clearIsolation,
+  hideComponentsById,
+  showComponentsById,
+  overrideComponentsColorById
+})
 // const { addRightEventListener } = useRightClickEvent({ viewerPanel, fetchArtifactInfo })
 const previewSNElementIds = ref([])
 
@@ -275,7 +346,20 @@ async function loadModel(viewToken) {
           createSearchHtml()
           createColorCardHtml()
         } else {
-          const { serialNumberElementIds } = usePreview({ props, modelStatus, initModelColor, overrideComponentsColorById, isolateComponentsById })
+          if (props.isMobile) {
+            viewerPanel.panelPositions = bimModel.getPanelPositions()
+            createArtifactInfoPanel()
+            createMyToolbar()
+            createStatusInfoPanel()
+            createColorCardHtml()
+          }
+          const { serialNumberElementIds } = usePreview({
+            props,
+            modelStatus,
+            initModelColor,
+            overrideComponentsColorById,
+            isolateComponentsById
+          })
           previewSNElementIds.value = serialNumberElementIds
         }
         createDrawing()
@@ -295,17 +379,21 @@ async function loadModel(viewToken) {
     // 添加右键
     // addRightEventListener({ viewer: _viewer, viewer3DEvent: _viewer3DEvent })
     console.log(_viewer3DEvent, '_viewer3DEvent')
-    _viewer.value.addEventListener(_viewer3DEvent.value.ComponentsSelectionChanged, (component) => {
-      console.log(component, 'ComponentsSelectionChanged')
-      if (menuBar.value && menuBar.value !== modelMenuBarEnum.PROJECT_TREE.V) {
-        const selectedIds = _viewer.value.getSelectedComponents()
-        if (isBlank(selectedIds)) {
-          clearArtifactInfoPanel()
-        } else {
-          fetchArtifactInfo(selectedIds[0])
+    _viewer.value.addEventListener(
+      _viewer3DEvent.value.ComponentsSelectionChanged,
+      (component) => {
+        console.log(component, 'ComponentsSelectionChanged')
+        if (menuBar.value && menuBar.value !== modelMenuBarEnum.PROJECT_TREE.V) {
+          const selectedIds = _viewer.value.getSelectedComponents()
+          if (isBlank(selectedIds)) {
+            clearArtifactInfoPanel()
+          } else {
+            fetchArtifactInfo(selectedIds[0])
+          }
         }
-      }
-    }, { passive: false })
+      },
+      { passive: false }
+    )
   } catch (error) {
     console.log(error)
   }
@@ -339,19 +427,25 @@ defineExpose({
 
 <style lang="scss">
 .bf-container {
-  #bfColorCard{
+  #bfColorCard {
     position: absolute;
     top: 20px;
     right: 160px;
   }
 
-  #bfLogisticsBtn{
+  #bfColorCardMobile {
     position: absolute;
-    top:20px;
+    top: 20px;
+    left: 20px;
+  }
+
+  #bfLogisticsBtn {
+    position: absolute;
+    top: 20px;
     left: 807px;
   }
 
-  #bfDrawingView{
+  #bfDrawingView {
     width: 100%;
     height: 100%;
   }
@@ -370,6 +464,19 @@ defineExpose({
     height: 70px;
   }
 
+  .bf-toolbar-my-mobile {
+    display: flex;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 10px;
+    height: 70px;
+
+    .bf-button {
+      width: auto;
+    }
+  }
+
   .bf-button-active {
     opacity: 1;
   }
@@ -382,13 +489,16 @@ defineExpose({
     opacity: 0.3;
     cursor: no-drop;
   }
-  .bf-button.bf-button-disabled:hover{
+  .bf-button.bf-button-disabled:hover {
     opacity: 0.3;
   }
 
-  .bf-area-artifact-container,.bf-artifact-info-container,
-  .bf-machine-part-list-container,.bf-panel-color-card-container,
-  .bf-panel-logistics-info-container,.bf-panel-shipment-container {
+  .bf-area-artifact-container,
+  .bf-artifact-info-container,
+  .bf-machine-part-list-container,
+  .bf-panel-color-card-container,
+  .bf-panel-logistics-info-container,
+  .bf-panel-shipment-container {
     font-size: 12px;
     line-height: 25px;
 
@@ -403,19 +513,21 @@ defineExpose({
           border-right: 1px solid #666;
         }
 
-        &[id]{
+        &[id] {
           cursor: pointer;
         }
       }
     }
   }
 
-  .bf-panel-artifact-list-by-area{
+  .bf-panel-artifact-list-by-area {
     opacity: 0.8;
   }
 
-  .bf-artifact-info-container, .bf-panel-logistics-info-container,.bf-panel-shipment-container{
-    div>span:first-child{
+  .bf-artifact-info-container,
+  .bf-panel-logistics-info-container,
+  .bf-panel-shipment-container {
+    div > span:first-child {
       flex: 0.5;
     }
   }
