@@ -6,7 +6,7 @@
         v-if="processList?.length"
         v-model="crud.query.processId"
         class="filter-item"
-        style="'width:100%"
+        style="width: 100%"
         :data="processList"
         itemKey="id"
         @change="crud.toQuery"
@@ -33,7 +33,7 @@
       style="width: 100%"
       @selection-change="handleSelectionChange"
     >
-      <el-table-column type="selection" align="center" width="60" />
+      <el-table-column type="selection" :selectable="selectable" align="center" width="60" />
       <el-table-column label="序号" type="index" align="center" width="60" />
       <el-table-column
         v-if="columns.visible('monomer.name')"
@@ -83,12 +83,24 @@
         align="center"
         min-width="90px"
       />
-      <el-table-column v-if="columns.visible('wageQuotaType')" show-overflow-tooltip prop="wageQuotaType" label="核算单位" align="center">
+      <el-table-column
+        v-if="columns.visible('wageQuotaType') && processObj?.[crud.query.processId]?.type !== processCategoryEnum.PAINT.V"
+        show-overflow-tooltip
+        prop="wageQuotaType"
+        label="核算单位"
+        align="center"
+      >
         <template #default="{ row }">
           <span>{{ wageQuotaTypeEnum.V[row.wageQuotaType]?.meteUnit }}</span>
         </template>
       </el-table-column>
-      <el-table-column v-if="columns.visible('wage')" show-overflow-tooltip prop="wage" label="定额单价" align="center" />
+      <el-table-column
+        v-if="columns.visible('wage') && processObj?.[crud.query.processId]?.type !== processCategoryEnum.PAINT.V"
+        show-overflow-tooltip
+        prop="wage"
+        label="定额单价"
+        align="center"
+      />
       <!-- <el-table-column v-permission="permission.edit" align="center" prop="prop" label="操作" width="110">
         <template #default="{ row }">
           <common-button type="warning" size="mini" @click="handleSingleEdit(row)">工价调整</common-button>
@@ -111,7 +123,7 @@ import { detailGet, processGet } from '@/api/mes/production-line-wage-statistics
 import { ref, defineProps, defineExpose, inject, watch, computed } from 'vue'
 import { ElMessage } from 'element-plus'
 
-import { componentTypeEnum, wageQuotaTypeEnum } from '@enum-ms/mes'
+import { componentTypeEnum, wageQuotaTypeEnum, processCategoryEnum } from '@enum-ms/mes'
 import { arr2obj } from '@/utils/convert/type'
 
 import useMaxHeight from '@compos/use-max-height'
@@ -167,6 +179,7 @@ const processObj = ref({})
 const selections = ref([])
 const editVisible = ref(false)
 
+console.log(processObj?.[crud.query.processId], 'processInfo')
 CRUD.HOOK.beforeToQuery = async (crud) => {
   crud.query.monomerId = props.fQuery?.monomerId
   crud.query.areaId = props.fQuery?.areaId
@@ -197,6 +210,13 @@ watch(
   }
 )
 
+function selectable(row) {
+  if (row?.wageQuotaType === '-') {
+    return false
+  } else {
+    return true
+  }
+}
 function handleSelectionChange(val) {
   selections.value = val
 }
