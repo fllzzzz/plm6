@@ -3,7 +3,7 @@ import { modelMenuBarEnum } from '@enum-ms/bim'
 import { isNotBlank } from '@data-type/index'
 
 export default function useMyToolbar({
-  menuBar, bimModel, viewerPanel, colors, publicPath,
+  menuBar, bimModel, viewerPanel, colors, publicPath, isMobile,
   createLogisticsBtn, hideLogisticsBtn,
   clearProTreePanel, fetchProTree,
   clearArtifactInfoPanel, fetchArtifactInfo,
@@ -13,6 +13,7 @@ export default function useMyToolbar({
   // 自定义工具条
   const MY_TOOLBAR_INFO = [{
     ...modelMenuBarEnum.PROJECT_TREE,
+    hidden: isMobile,
     clickEvent: function (i) {
       menuBar.value = i
       fetchProTree()
@@ -23,6 +24,7 @@ export default function useMyToolbar({
   },
   {
     ...modelMenuBarEnum.COMPONENT_TREE,
+    hidden: isMobile,
     clickEvent: function (i) {
       menuBar.value = i
       // fetchArtifactInfo()
@@ -33,6 +35,7 @@ export default function useMyToolbar({
   },
   {
     ...modelMenuBarEnum.PRODUCTION_STATE,
+    hidden: false,
     clickEvent: function (i) {
       menuBar.value = i
       fetchStatusInfo()
@@ -43,18 +46,24 @@ export default function useMyToolbar({
   },
   {
     ...modelMenuBarEnum.SHIPMENT_STATUS,
+    hidden: false,
     clickEvent: function (i) {
       menuBar.value = i
-      createLogisticsBtn()
+      if (!isMobile) {
+        createLogisticsBtn()
+      }
       fetchStatusInfo()
     },
     unActiveEvent: function () {
-      hideLogisticsBtn()
+      if (!isMobile) {
+        hideLogisticsBtn()
+      }
       clearStatusInfoPanel()
     }
   },
   {
     ...modelMenuBarEnum.INSTALL_STATE,
+    hidden: isMobile,
     clickEvent: function (i) {
       menuBar.value = i
       fetchStatusInfo()
@@ -70,7 +79,7 @@ export default function useMyToolbar({
     (val, oldVal) => {
       if (isNotBlank(val)) {
         clearSelectedComponents()
-        const btnEls = document.querySelectorAll('.bf-toolbar-my>.bf-button')
+        const btnEls = document.querySelectorAll(`${isMobile ? 'bf-toolbar-my-mobile' : 'bf-toolbar-my'}>.bf-button`)
         btnEls.forEach((el) => {
           if (el.innerText === modelMenuBarEnum.VL[val]) {
             el.className = 'bf-button bf-button-active'
@@ -92,12 +101,13 @@ export default function useMyToolbar({
   function createMyToolbar() {
     const _toolbarConfig = bimModel.getToolbarConfig()
     _toolbarConfig.id = 'MyToolbar'
-    _toolbarConfig.className = 'bf-toolbar bf-toolbar-my'
+    _toolbarConfig.className = `bf-toolbar ${isMobile ? 'bf-toolbar-my-mobile' : 'bf-toolbar-my'}`
     _toolbarConfig.element = document.getElementsByClassName('bf-container')[0]
     const _toolbar = bimModel.createToolbar(_toolbarConfig)
 
     for (let i = 0; i < MY_TOOLBAR_INFO.length; i++) {
       const btn = MY_TOOLBAR_INFO[i]
+      if (btn.hidden) continue
       const _btnConfig = bimModel.getButtonConfig()
       _btnConfig.title = btn.L
       // if (btn.V === modelMenuBarEnum.INSTALL_STATE.V) {

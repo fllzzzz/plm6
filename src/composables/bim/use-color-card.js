@@ -3,7 +3,7 @@ import bfColorCard from '@/components-system/bim/bf-color-card.vue'
 import { createApp, watch, ref } from 'vue'
 import { modelMenuBarEnum } from '@enum-ms/bim'
 
-export default function useColorCard({ props, menuBar, colors, objectIdGroup, bimModel, viewerPanel, modelStatus, searchBySN, fetchArtifactStatus, isolateComponentsById, clearIsolation, hideComponentsById, showComponentsById, overrideComponentsColorById }) {
+export default function useColorCard({ props, isMobile, menuBar, colors, objectIdGroup, bimModel, viewerPanel, modelStatus, searchBySN, fetchArtifactStatus, isolateComponentsById, clearIsolation, hideComponentsById, showComponentsById, overrideComponentsColorById }) {
   const curElementIds = ref([])
   const ccApp = ref()
 
@@ -45,14 +45,15 @@ export default function useColorCard({ props, menuBar, colors, objectIdGroup, bi
       statusChange: statusChange,
       colors: []
     })
-    const colorCardDom = document.getElementById('bfColorCard')
+    const _elementId = isMobile ? 'bfColorCardMobile' : 'bfColorCard'
+    const colorCardDom = document.getElementById(_elementId)
     if (!colorCardDom) {
       const bfContainerDom = document.getElementsByClassName('bf-container')[0]
       const _dom = document.createElement('div')
-      _dom.id = 'bfColorCard'
+      _dom.id = _elementId
       bfContainerDom.appendChild(_dom)
     }
-    ccApp.value.mount('#bfColorCard')
+    ccApp.value.mount(`#${_elementId}`)
 
     createColorCardPanel()
   }
