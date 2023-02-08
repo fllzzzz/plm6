@@ -35,7 +35,7 @@ export function getDate(params) {
 export function getProject(params) {
   return request({
     module: 'mes',
-    url: 'machine_part/scheduling/project/list',
+    url: 'machine_part/scheduling/project/tree',
     method: 'get',
     params
   })

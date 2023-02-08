@@ -4,8 +4,8 @@
       <project-list ref="projectListRef" :maxHeight="maxHeight" @project-click="handleProjectClick" />
     </div>
     <div class="wrap-right">
-      <el-tag v-show="!crud.query?.projectIds?.length" type="info" size="medium"> * 请先选择项目，进行零件排产 </el-tag>
-      <div v-show="crud.query?.projectIds?.length">
+      <el-tag v-show="!crud.query?.areaIds?.length" type="info" size="medium"> * 请先选择区域，进行零件排产 </el-tag>
+      <div v-show="crud.query?.areaIds?.length">
         <div class="head-container">
           <mHeader ref="headRef" @load="load">
             <template #optLeft>
@@ -121,7 +121,6 @@ import mHeader from './module/header'
 import mPreview from './module/preview'
 import projectList from './module/project-list'
 import { deepClone } from '@/utils/data-type'
-import { cleanArray } from '@data-type/array'
 
 const optShow = {
   add: false,
@@ -141,7 +140,7 @@ const { crud, CRUD } = useCRUD(
     crudApi: { ...crudApi },
     queryOnPresenterCreated: false,
     hasPagination: false,
-    requiredQuery: ['monthList', 'material', 'projectIds', 'thickList']
+    requiredQuery: ['monthList', 'material', 'areaIds', 'thickList']
   },
   tableRef
 )
@@ -230,16 +229,15 @@ CRUD.HOOK.afterRefresh = () => {
 
 // --------------------------- end --------------------------------
 
-function handleProjectClick(val, month) {
+function handleProjectClick({ areaIds }, month) {
   crud.query.monthList = month
-  crud.query.projectIds = cleanArray(val).map((v) => v.projectId)
+  crud.query.areaIds = areaIds
   nextTick(() => {
     headRef.value?.refreshConditions()
   })
 }
 
 async function handleSaveSuccess() {
-  console.log(crud.query.projectIds)
   const lastQuery = deepClone(crud.query)
   checkAll.value = false
   boardList.value = []
@@ -306,8 +304,8 @@ function previewIt() {
 .wrap {
   display: flex;
   .wrap-left {
-    width: 380px;
-    margin-right: 20px;
+    width: 320px;
+    margin-right: 10px;
   }
   .wrap-right {
     flex: 1;
