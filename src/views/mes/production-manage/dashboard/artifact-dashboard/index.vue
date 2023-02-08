@@ -40,9 +40,24 @@
             placement="left-start"
           >
             <div class="board-box" :style="{ 'background-color': `${item.boxColor}`, ...boxStyle }" @mouseenter="getDetail(item)">
-              <span class="ellipsis-text" v-if="item.name">{{ item.name }}</span>
-              <span class="ellipsis-text">{{ item.serialNumber }}</span>
-              <span class="ellipsis-text">{{ item.completeQuantity }}/{{ item.compareQuantity }}</span>
+              <div>
+                <span class="ellipsis-text" v-if="item.name">{{ item.name }}</span>
+                <span class="ellipsis-text">{{ item.serialNumber }}</span>
+              </div>
+              <span v-if="crud.query.productType & componentTypeEnum.MACHINE_PART.V" class="ellipsis-text" style="display: flex">
+                <el-image class="ellipsis-text" style="flex: 1; width: 80%" :src="item.pictureUrl" @error="item.imgLoad = false">
+                  <template #error>
+                    <div class="error-slot">
+                      <span v-if="item.pictureUrl">加载失败</span>
+                      <span v-else>未导入DXF</span>
+                    </div>
+                  </template>
+                </el-image>
+              </span>
+              <div>
+                <span v-if="crud.query.productType & componentTypeEnum.MACHINE_PART.V" class="ellipsis-text">{{ item.specification }}</span>
+                <span class="ellipsis-text">{{ item.completeQuantity }}/{{ item.compareQuantity }}</span>
+              </div>
             </div>
           </el-tooltip>
         </template>
@@ -243,6 +258,16 @@ async function getMachinePartDetail(item) {
 </script>
 
 <style lang="scss" scoped>
+.error-slot {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  background: #f5f7fa;
+  color: #c0c4cc;
+  font-size: 14px;
+}
 .board-container {
   display: flex;
   flex-direction: row;
