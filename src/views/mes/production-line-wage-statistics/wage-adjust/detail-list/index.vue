@@ -15,6 +15,9 @@
           <span>{{ item.name }}</span>
         </template>
       </tag-tabs>
+      <div style="margin-bottom: 8px" v-if="unPaint">
+        <el-tag type="danger" size="medium"> * 请先配置该工序的核算单位</el-tag>
+      </div>
       <mHeader ref="headRef" :fInfo="fInfo">
         <template #btn>
           <common-button type="primary" size="mini" @click="batchHandle" :disabled="!selections?.length">批量调整</common-button>
@@ -174,12 +177,15 @@ const { crud, columns, CRUD } = useCRUD(
 )
 const { maxHeight } = useMaxHeight({ paginate: true })
 
+const unPaint = computed(() => {
+  return processObj?.[crud.query.processId]?.type !== processCategoryEnum.PAINT.V && !!crud.data[0]?.wageQuotaType
+})
+
 const processList = ref([])
 const processObj = ref({})
 const selections = ref([])
 const editVisible = ref(false)
 
-console.log(processObj?.[crud.query.processId], 'processInfo')
 CRUD.HOOK.beforeToQuery = async (crud) => {
   crud.query.monomerId = props.fQuery?.monomerId
   crud.query.areaId = props.fQuery?.areaId
@@ -210,13 +216,6 @@ watch(
   }
 )
 
-function selectable(row) {
-  if (row?.wageQuotaType === '-') {
-    return false
-  } else {
-    return true
-  }
-}
 function handleSelectionChange(val) {
   selections.value = val
 }
@@ -240,6 +239,23 @@ async function fetchProcess(info) {
     crud.toQuery()
   } catch (error) {
     console.log(error, '获取工序失败')
+  }
+}
+
+function selectable(row) {
+  console.log(row?.wageQuotaType, 'row')
+  if (processObj?.[crud.query.processId]?.type !== processCategoryEnum.PAINT.V) {
+    if (row?.wageQuotaType) {
+      return false
+    } else {
+      return true
+    }
+  } else if (processObj?.[crud.query.processId]?.type === processCategoryEnum.PAINT.V) {
+    if (!!row?.primerWageQuotaType === false || !!row?.intermediatePaintWageQuotaType === false || !!row?.topcoatWageQuotaType === false) {
+      return false
+    } else {
+      return true
+    }
   }
 }
 
