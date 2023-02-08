@@ -530,6 +530,13 @@ const auxiliaryMaterialTypeEnum = {
 }
 constantize(auxiliaryMaterialTypeEnum)
 
+// 零件排产/图纸导入
+const machinePartDxfTypeEnum = {
+  EXPORT: { L: '已导入图纸', K: 'EXPORT', V: 1 },
+  UN_EXPORT: { L: '未导入图纸', K: 'UN_EXPORT', V: 0 }
+}
+constantize(machinePartDxfTypeEnum)
+
 export {
   teamTypeEnum,
   teamAttributeEnum,
@@ -596,7 +603,8 @@ export {
   productSearchTypeEnum,
   drillListEnum,
   structureOrderTypeEnum,
-  auxiliaryMaterialTypeEnum
+  auxiliaryMaterialTypeEnum,
+  machinePartDxfTypeEnum
 }
 
 export default {
@@ -665,5 +673,6 @@ export default {
   productSearchTypeEnum,
   drillListEnum,
   structureOrderTypeEnum,
-  auxiliaryMaterialTypeEnum
+  auxiliaryMaterialTypeEnum,
+  machinePartDxfTypeEnum
 }

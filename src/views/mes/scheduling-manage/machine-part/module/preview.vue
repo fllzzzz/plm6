@@ -1,10 +1,16 @@
 <template>
-  <common-dialog customClass="machine-part-scheduling-preview-dlg" title="零件排产预览" v-model="dialogVisible" width="1100px" :before-close="handleClose">
+  <common-dialog
+    customClass="machine-part-scheduling-preview-dlg"
+    title="零件排产预览"
+    v-model="dialogVisible"
+    width="1100px"
+    :before-close="handleClose"
+  >
     <template #titleRight>
       <common-button @click="submitIt" :loading="submitLoading" size="mini" type="primary">保存</common-button>
     </template>
-    <!-- <div class="head-container">
-      <common-select
+    <div class="head-container">
+      <!-- <common-select
         v-model="layWayConfigId"
         :options="layingWayList"
         :loading="layingWayLoading"
@@ -24,8 +30,32 @@
             </span>
           </span>
         </template>
-      </common-select>
-    </div> -->
+      </common-select> -->
+      <common-select
+        v-model="material"
+        :options="materialList"
+        :dataStructure="{ key: 'name', label: 'name', value: 'name' }"
+        clearable
+        filterable
+        allow-create
+        type="other"
+        class="filter-item"
+        placeholder="请选择材质"
+        style="width: 200px"
+      />
+      <common-select
+        v-model="thick"
+        :options="thickList"
+        :dataStructure="{ key: 'name', label: 'name', value: 'name' }"
+        clearable
+        filterable
+        allow-create
+        type="other"
+        class="filter-item"
+        placeholder="请选择厚度"
+        style="width: 200px"
+      />
+    </div>
     <common-table :data="list" :data-format="dataFormat" :max-height="maxHeight" style="width: 100%">
       <el-table-column label="序号" type="index" align="center" width="60" />
       <el-table-column :show-overflow-tooltip="true" prop="project" label="所属项目" min-width="120px" align="center" />
@@ -70,6 +100,14 @@ const props = defineProps({
     default: false
   },
   list: {
+    type: Array,
+    default: () => []
+  },
+  materialList: {
+    type: Array,
+    default: () => []
+  },
+  thickList: {
     type: Array,
     default: () => []
   }
@@ -124,15 +162,13 @@ async function submitIt() {
     submitLoading.value = true
     const _list = []
     props.list.forEach((v) => {
-      v.needMachinePartLinkList.forEach(o => {
-        _list.push(
-          {
-            productId: v.id,
-            quantity: o.quantity,
-            id: o.id,
-            needSchedulingMonth: o.date
-          }
-        )
+      v.needMachinePartLinkList.forEach((o) => {
+        _list.push({
+          productId: v.id,
+          quantity: o.quantity,
+          id: o.id,
+          needSchedulingMonth: o.date
+        })
       })
     })
     await save({

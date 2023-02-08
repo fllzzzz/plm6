@@ -7,29 +7,38 @@
       <el-tag v-show="!crud.query?.areaIds?.length" type="info" size="medium"> * 请先选择区域，进行零件排产 </el-tag>
       <div v-show="crud.query?.areaIds?.length">
         <div class="head-container">
-          <mHeader ref="headRef" @load="load">
+          <mHeader ref="headRef" @load="load" @change="handleChange">
             <template #optLeft>
               <div style="display: flex">
                 <el-checkbox
                   v-model="checkAll"
-                  size="mini"
+                  size="small"
                   style="margin-right: 5px"
                   :indeterminate="checkedNodes.length > 0 && checkedNodes.length !== boardList && !checkAll"
                   border
                   @change="handleCheckedAll"
                   >全选</el-checkbox
                 >
-                <common-button
-v-permission="permission.save"
-type="success"
-class="filter-item"
-size="mini"
-@click="previewIt"
-                  >预览并保存</common-button
-                >
+                <common-radio-button
+                  v-model="boolDxfEnum"
+                  :options="machinePartDxfTypeEnum.ENUM"
+                  showOptionAll
+                  type="enum"
+                  class="filter-item"
+                  @change="crud.toQuery"
+                />
               </div>
             </template>
             <template #viewLeft>
+              <!-- <common-button v-permission="permission.save" type="success" class="filter-item" size="mini" @click="previewIt">
+                预览并保存
+              </common-button> -->
+              <common-button v-permission="permission.save" type="warning" class="filter-item" size="mini" @click="previewIt">
+                无需套料保存
+              </common-button>
+              <common-button v-permission="permission.save" type="success" class="filter-item" size="mini"  :disabled="crud.query.boolDxfEnum === machinePartDxfTypeEnum.UN_EXPORT.V" @click="previewIt">
+                套料保存
+              </common-button>
               <el-tag size="medium" effect="plain" style="margin-right: 5px"> 数量(件)：{{ summaryInfo.quantity || 0 }} </el-tag>
               <el-tag size="medium" effect="plain" style="margin-right: 10px">
                 重量(kg)：{{ summaryInfo.totalNetWeight?.toFixed(2) || 0 }}
@@ -90,7 +99,11 @@ size="mini"
                     </div>
                   </template>
                 </el-image>
-                <span class="ellipsis-text text"><span style="color:#409eff;">{{ item.specification }}</span>/<span style="color:#42b983;">{{ item.quantity }}</span></span>
+                <span
+class="ellipsis-text text"
+                  ><span style="color: #409eff">{{ item.specification }}</span
+                  >/<span style="color: #42b983">{{ item.quantity }}</span></span
+                >
               </div>
             </el-tooltip>
           </template>
@@ -100,7 +113,7 @@ size="mini"
             <i class="el-icon-loading" />
           </div>
         </div>
-        <m-preview v-model:visible="previewVisible" :list="checkedNodes" @success="handleSaveSuccess"></m-preview>
+        <m-preview v-model:visible="previewVisible" :list="checkedNodes" @success="handleSaveSuccess" :thick-list="thickList" :material-list="materialList"></m-preview>
       </div>
     </div>
   </div>
@@ -112,7 +125,7 @@ import { computed, ref, onUnmounted, onMounted, nextTick } from 'vue'
 import { ElMessage } from 'element-plus'
 
 import RAF from '@/utils/raf'
-// import { componentTypeEnum } from '@enum-ms/mes'
+import { machinePartDxfTypeEnum } from '@enum-ms/mes'
 import { machinePartSchedulingPM as permission } from '@/page-permission/mes'
 
 import useMaxHeight from '@compos/use-max-height'
@@ -128,7 +141,9 @@ const optShow = {
   del: false,
   download: false
 }
-
+const thickList = ref([])
+const materialList = ref([])
+const boolDxfEnum = ref()
 const projectListRef = ref()
 const tableRef = ref()
 const { crud, CRUD } = useCRUD(
@@ -216,7 +231,13 @@ async function load() {
   }
 }
 
+function handleChange(matVal, thickVal) {
+  materialList.value = matVal
+  thickList.value = thickVal
+}
+
 CRUD.HOOK.beforeRefresh = () => {
+  crud.query.boolDxfEnum = boolDxfEnum.value
   boardList.value = []
   summaryInfo.value = { totalNetWeight: 0, quantity: 0 }
 }

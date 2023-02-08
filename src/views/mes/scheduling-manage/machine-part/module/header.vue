@@ -103,7 +103,7 @@ const defaultQuery = {}
 
 const { crud, query } = regHeader(defaultQuery)
 
-const emit = defineEmits(['load'])
+const emit = defineEmits(['load', 'change'])
 
 const materialRef = ref()
 const materialRefWidth = ref()
@@ -214,7 +214,6 @@ async function fetchTick(lastQuery) {
           name: v
         }
       }) || []
-    console.log(thickData.value, 'thickData.value')
     if (lastQuery && lastQuery?.thickList && content?.length && content.indexOf(lastQuery.thickList) !== -1) {
       query.thickList = lastQuery.thickList
       crud.toQuery()
@@ -222,6 +221,7 @@ async function fetchTick(lastQuery) {
       query.thickList = [thickData.value[0].name]
       crud.toQuery()
     }
+    emit('change', materialList.value, thickData.value)
   } catch (error) {
     console.log('获取厚度', error)
   }
