@@ -186,7 +186,7 @@ const submitList = ref([])
 const previewVisible = ref(false)
 const previewSummaryVisible = ref(false)
 
-const { showDrawing, drawingRow, drawingPreview } = useDrawing({ pidField: 'id', productTypeField: 'ARTIFACT' })
+const { showDrawing, drawingRow, drawingPreview } = useDrawing({ pidField: 'productId', productTypeField: 'ARTIFACT' })
 
 const optShow = {
   add: false,
