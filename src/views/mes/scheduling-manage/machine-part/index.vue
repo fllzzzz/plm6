@@ -141,7 +141,7 @@ const { crud, CRUD } = useCRUD(
     crudApi: { ...crudApi },
     queryOnPresenterCreated: false,
     hasPagination: false,
-    requiredQuery: ['monthList', 'material', 'projectIds', 'thick']
+    requiredQuery: ['monthList', 'material', 'projectIds', 'thickList']
   },
   tableRef
 )

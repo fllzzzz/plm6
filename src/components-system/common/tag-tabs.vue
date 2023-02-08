@@ -9,8 +9,18 @@
           <span class="tag-item" v-for="(item, index) in data" :key="item[itemKey] || index">
             <el-tag
               :hit="hit"
-              :effect="item[itemKey] == modelValue ? 'light' : 'plain'"
-              :type="item[itemKey] == modelValue ? selectedTagType : unselectedTagType"
+              :effect="
+                multiple ? (modelValue.includes(item[itemKey]) ? 'light' : 'plain') : item[itemKey] == modelValue ? 'light' : 'plain'
+              "
+              :type="
+                multiple
+                  ? modelValue.includes(item[itemKey])
+                    ? selectedTagType
+                    : unselectedTagType
+                  : item[itemKey] == modelValue
+                  ? selectedTagType
+                  : unselectedTagType
+              "
               :disable-transitions="true"
               :size="size"
               :class="{ angle: item.hasAngle }"
@@ -29,12 +39,13 @@
 </template>
 
 <script setup>
+import { deepClone } from '@/utils/data-type'
 import { ref, defineProps, defineExpose, defineEmits, computed, watch, nextTick } from 'vue'
 
 const emit = defineEmits(['update:modelValue', 'change'])
 const props = defineProps({
   modelValue: {
-    type: [Number, String, undefined],
+    type: [Number, String, Array, undefined],
     default: undefined
   },
   data: {
@@ -52,6 +63,10 @@ const props = defineProps({
   size: {
     type: String,
     default: 'medium'
+  },
+  multiple: {
+    type: Boolean,
+    default: false
   },
   default: {
     type: Boolean,
@@ -121,11 +136,26 @@ function handleScroll(direction) {
 }
 
 function handleTagClick(item) {
-  if (props.modelValue !== item[props.itemKey]) {
-    selectChange(item[props.itemKey])
+  if (props.unselectable) {
+    selectChange(undefined)
+    return
+  }
+  const _itemVal = item[props.itemKey]
+  if (!props.multiple) {
+    if (props.modelValue !== _itemVal) {
+      selectChange(_itemVal)
+    }
   } else {
-    if (props.unselectable) {
-      selectChange(undefined)
+    const _modelVal = props.modelValue ? deepClone(props.modelValue) : []
+    if (!_modelVal.includes(_itemVal)) {
+      _modelVal.push(_itemVal)
+      selectChange(_modelVal)
+    } else {
+      // default为true 最后一个值不删 直接返回
+      if (props.default && _modelVal && _modelVal?.length === 1) return
+      const findIdx = _modelVal.findIndex(v => v === _itemVal)
+      if (findIdx !== -1) _modelVal.splice(findIdx, 1)
+      selectChange(_modelVal)
     }
   }
 }

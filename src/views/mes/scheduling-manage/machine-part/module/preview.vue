@@ -102,7 +102,7 @@ const { maxHeight } = useMaxHeight(
 //     layingWayLoading.value = true
 //     const content = await getLayingWay()
 //     layingWayList.value = content.filter((v) => {
-//       if (crud.query.thick === '其他') {
+//       if (crud.query.thickList === '其他') {
 //         return v.materialType === materialTypeEnum.MANMADE_BLANKING.V
 //       } else {
 //         return true
@@ -138,7 +138,7 @@ async function submitIt() {
     await save({
       // layWayConfigId: layWayConfigId.value,
       material: crud.query.material,
-      thick: crud.query.thick,
+      thickList: crud.query.thickList,
       linkList: _list
     })
     ElNotification({
