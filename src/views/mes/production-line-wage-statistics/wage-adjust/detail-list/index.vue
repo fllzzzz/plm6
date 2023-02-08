@@ -6,7 +6,7 @@
         v-if="processList?.length"
         v-model="crud.query.processId"
         class="filter-item"
-        style="'width:100%"
+        style="width: 100%"
         :data="processList"
         itemKey="id"
         @change="crud.toQuery"
@@ -15,6 +15,9 @@
           <span>{{ item.name }}</span>
         </template>
       </tag-tabs>
+      <div style="margin-bottom: 8px" v-if="unPaint">
+        <el-tag type="danger" size="medium"> * 请先配置该工序的核算单位</el-tag>
+      </div>
       <mHeader ref="headRef" :fInfo="fInfo">
         <template #btn>
           <common-button type="primary" size="mini" @click="batchHandle" :disabled="!selections?.length">批量调整</common-button>
@@ -33,7 +36,7 @@
       style="width: 100%"
       @selection-change="handleSelectionChange"
     >
-      <el-table-column type="selection" align="center" width="60" />
+      <el-table-column type="selection" :selectable="selectable" align="center" width="60" />
       <el-table-column label="序号" type="index" align="center" width="60" />
       <el-table-column
         v-if="columns.visible('monomer.name')"
@@ -83,12 +86,24 @@
         align="center"
         min-width="90px"
       />
-      <el-table-column v-if="columns.visible('wageQuotaType')" show-overflow-tooltip prop="wageQuotaType" label="核算单位" align="center">
+      <el-table-column
+        v-if="columns.visible('wageQuotaType') && processObj?.[crud.query.processId]?.type !== processCategoryEnum.PAINT.V"
+        show-overflow-tooltip
+        prop="wageQuotaType"
+        label="核算单位"
+        align="center"
+      >
         <template #default="{ row }">
           <span>{{ wageQuotaTypeEnum.V[row.wageQuotaType]?.meteUnit }}</span>
         </template>
       </el-table-column>
-      <el-table-column v-if="columns.visible('wage')" show-overflow-tooltip prop="wage" label="定额单价" align="center" />
+      <el-table-column
+        v-if="columns.visible('wage') && processObj?.[crud.query.processId]?.type !== processCategoryEnum.PAINT.V"
+        show-overflow-tooltip
+        prop="wage"
+        label="定额单价"
+        align="center"
+      />
       <!-- <el-table-column v-permission="permission.edit" align="center" prop="prop" label="操作" width="110">
         <template #default="{ row }">
           <common-button type="warning" size="mini" @click="handleSingleEdit(row)">工价调整</common-button>
@@ -111,7 +126,7 @@ import { detailGet, processGet } from '@/api/mes/production-line-wage-statistics
 import { ref, defineProps, defineExpose, inject, watch, computed } from 'vue'
 import { ElMessage } from 'element-plus'
 
-import { componentTypeEnum, wageQuotaTypeEnum } from '@enum-ms/mes'
+import { componentTypeEnum, wageQuotaTypeEnum, processCategoryEnum } from '@enum-ms/mes'
 import { arr2obj } from '@/utils/convert/type'
 
 import useMaxHeight from '@compos/use-max-height'
@@ -161,6 +176,10 @@ const { crud, columns, CRUD } = useCRUD(
   tableRef
 )
 const { maxHeight } = useMaxHeight({ paginate: true })
+
+const unPaint = computed(() => {
+  return processObj?.[crud.query.processId]?.type !== processCategoryEnum.PAINT.V && !!crud.data[0]?.wageQuotaType
+})
 
 const processList = ref([])
 const processObj = ref({})
@@ -220,6 +239,23 @@ async function fetchProcess(info) {
     crud.toQuery()
   } catch (error) {
     console.log(error, '获取工序失败')
+  }
+}
+
+function selectable(row) {
+  console.log(row?.wageQuotaType, 'row')
+  if (processObj?.[crud.query.processId]?.type !== processCategoryEnum.PAINT.V) {
+    if (row?.wageQuotaType) {
+      return false
+    } else {
+      return true
+    }
+  } else if (processObj?.[crud.query.processId]?.type === processCategoryEnum.PAINT.V) {
+    if (!!row?.primerWageQuotaType === false || !!row?.intermediatePaintWageQuotaType === false || !!row?.topcoatWageQuotaType === false) {
+      return false
+    } else {
+      return true
+    }
   }
 }
 

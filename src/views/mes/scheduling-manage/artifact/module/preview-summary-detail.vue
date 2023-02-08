@@ -19,6 +19,7 @@
     </template>
     <template #content>
       <div class="head-container">
+        <group-header v-model="queryVO.groupsId" :data="groupData" @change="fetch" />
         <common-radio-button
           v-if="lineTypeLoad && unshowLineType.length !== artifactProductLineEnum.KEYS.length"
           v-model="queryVO.productionLineTypeEnum"
@@ -203,7 +204,7 @@
 </template>
 
 <script setup>
-import { record, getArtifactRecordType, getLineRecordType, recordSummary } from '@/api/mes/scheduling-manage/artifact'
+import { record, getArtifactRecordType, getLineRecordType, recordSummary, groupSummary } from '@/api/mes/scheduling-manage/artifact'
 import { ElMessage } from 'element-plus'
 import { defineProps, defineEmits, ref, inject, computed, watch } from 'vue'
 
@@ -220,6 +221,8 @@ import delForm from './del-form'
 import batchDelForm from './batch-del-form'
 import assembleSchedulingForm from './assemble-scheduling-form'
 import tagTabs from '@comp-common/tag-tabs'
+
+import groupHeader from '@/views/mes/scheduling-manage/common/group-header.vue'
 
 const { handleSizeChange, handleCurrentChange, total, setTotalPage, queryPage } = usePagination({ fetchHook: fetch })
 
@@ -265,6 +268,7 @@ const queryVO = ref({})
 const closeRefreshOut = ref(false)
 const unshowLineType = ref([])
 const lineTypeLoad = ref(false)
+const groupData = ref([])
 
 const artifactTypeParams = computed(() => {
   return {
@@ -297,6 +301,20 @@ watch(
   },
   { deep: true }
 )
+
+// 获取生产组信息
+async function fetchGroup() {
+  const areaIdList = props.otherQuery.areaIdList
+  try {
+    const { content } = (await groupSummary({ areaIdList })) || {}
+    groupData.value = content || []
+    if (content?.length) {
+      queryVO.value.groupsId = content[0]?.groups?.id
+    }
+  } catch (error) {
+    console.log('获取生产组信息失败', error)
+  }
+}
 
 async function fetchLineType() {
   const areaIdList = props.otherQuery.areaIdList
@@ -331,8 +349,8 @@ function artifactTypeInit() {
     queryVO.value.structureClassId = undefined
   }
   if (
-      artifactTypeList.value?.length &&
-      (artifactTypeList.value?.length === 1 || queryVO.value.productionLineTypeEnum === artifactProductLineEnum.INTELLECT.V)
+    artifactTypeList.value?.length &&
+    (artifactTypeList.value?.length === 1 || queryVO.value.productionLineTypeEnum === artifactProductLineEnum.INTELLECT.V)
   ) {
     queryVO.value.structureClassId = artifactTypeList.value[0].structureClassId
   }
@@ -344,6 +362,7 @@ function handleModeChange() {
 }
 
 function showHook() {
+  fetchGroup()
   fetchLineType()
   recordTableRef.value?.clearSelection()
   resetQuery()
@@ -358,6 +377,7 @@ function closeHook() {
 
 function resetQuery() {
   queryVO.value.serialNumber = undefined
+  queryVO.value.groupsId = undefined
   if (queryVO.value.productionLineTypeEnum !== artifactProductLineEnum.INTELLECT.V) {
     queryVO.value.structureClassId = undefined
   }
