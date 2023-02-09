@@ -85,7 +85,7 @@ const emit = defineEmits(['load', 'checkedAll', 'batchMatch', 'clear'])
 
 const boxScale = ref(1)
 const { colors, boxZoomOut, getColorByValue, getTagByValue } = useDashboardHeader({
-  colorCardTitles: ['不具备', '部分具备', '完全具备'],
+  colorCardTitles: ['不齐套', '部分齐套', '完全齐套'],
   emit,
   crud
 })
