@@ -31,30 +31,71 @@
           </span>
         </template>
       </common-select> -->
-      <common-select
-        v-model="material"
-        :options="materialList"
-        :dataStructure="{ key: 'name', label: 'name', value: 'name' }"
-        clearable
-        filterable
-        allow-create
-        type="other"
-        class="filter-item"
-        placeholder="请选择材质"
-        style="width: 200px"
-      />
-      <common-select
-        v-model="thick"
-        :options="thickList"
-        :dataStructure="{ key: 'name', label: 'name', value: 'name' }"
-        clearable
-        filterable
-        allow-create
-        type="other"
-        class="filter-item"
-        placeholder="请选择厚度"
-        style="width: 200px"
-      />
+      <el-form style="display: flex; flex-wrap: wrap">
+        <el-form-item label="材质：" class="form-label-require">
+          <common-select
+            v-model="material"
+            :options="materialList"
+            :dataStructure="{ key: 'name', label: 'name', value: 'name' }"
+            clearable
+            filterable
+            allow-create
+            type="other"
+            class="filter-item"
+            placeholder="请选择材质"
+            style="width: 160px"
+          />
+        </el-form-item>
+        <el-form-item label="厚度：" class="form-label-require">
+          <common-select
+            v-model="thick"
+            :options="thickList"
+            :dataStructure="{ key: 'name', label: 'name', value: 'name' }"
+            clearable
+            filterable
+            allow-create
+            type="other"
+            class="filter-item"
+            placeholder="请选择厚度"
+            style="width: 160px"
+          />
+        </el-form-item>
+        <!-- <el-form-item label="生产组：" class="form-label-require">
+          <el-cascader
+            :ref="(el) => (cascaderRef[$index] = el)"
+            v-model="groupsId"
+            :options="groupsTree"
+            :props="{
+              value: 'id',
+              label: 'name',
+              children: 'children',
+              expandTrigger: 'hover',
+              emitPath: false,
+            }"
+            :show-all-levels="false"
+            filterable
+            clearable
+            :placeholder="$index === 0 ? '请选择生产组' : '同上'"
+            @expand-change="handleExpandChange($event, $index, cascaderRef[$index])"
+
+            @change="handleGroupsChange($event, $index)"
+          />
+        </el-form-item> -->
+        <el-form-item label="排产日期：" class="form-label-require">
+          <el-date-picker
+            v-model="dateTime"
+            type="date"
+            size="small"
+            class="date-item filter-item"
+            style="width: 160px !important"
+            placeholder="选择排产日期"
+            :clearable="false"
+            format="YYYY-MM-DD"
+            value-format="YYYY-MM-DD"
+            :disabled-date="disabledDate"
+          />
+        </el-form-item>
+      </el-form>
     </div>
     <common-table :data="list" :data-format="dataFormat" :max-height="maxHeight" style="width: 100%">
       <el-table-column label="序号" type="index" align="center" width="60" />
@@ -89,7 +130,7 @@ import { save } from '@/api/mes/scheduling-manage/machine-part'
 import { ElNotification } from 'element-plus'
 import { defineEmits, defineProps, ref, inject } from 'vue'
 // import { materialTypeEnum } from '@enum-ms/uploading-form'
-
+// import useSchedulingGroups from '@compos/mes/scheduling/use-scheduling-groups'
 import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'
 
@@ -119,13 +160,17 @@ const dataFormat = ref([['project', 'parse-project']])
 // const layingWayList = ref([])
 // const layingWayLoading = ref(false)
 const submitLoading = ref(false)
+const dateTime = ref()
+const groupsId = ref()
 const crud = inject('crud')
 
 const { visible: dialogVisible, handleClose } = useVisible({ emit, props, field: 'visible' })
+// const { groupsTree, groupsObj } = useSchedulingGroups({ queryParams, factoryIds: curFactoryIds })
+
 const { maxHeight } = useMaxHeight(
   {
     mainBox: '.machine-part-scheduling-preview-dlg',
-    extraBox: ['.el-dialog__header'],
+    extraBox: ['.el-dialog__header', 'head-container'],
     wrapperBox: ['.el-dialog__body'],
     clientHRepMainH: true,
     minHeight: 300,
@@ -133,6 +178,31 @@ const { maxHeight } = useMaxHeight(
   },
   dialogVisible
 )
+
+// 生产组级联
+// function handleFocusChange(expend, row, index, curCascaderRef) {
+//   if (!row.groupsId || row.groupsId === '同上') {
+//     const menus = curCascaderRef.panel.menuList[0]
+//     setCascaderExpandNode(menus, menus.nodes[0])
+//   }
+// }
+
+function setCascaderExpandNode(menus, node) {
+  if (!node.isLeaf) {
+    menus.panel.expandNode(node, true)
+    if (!node.children[0].isLeaf) {
+      setCascaderExpandNode(menus, node.children[0])
+    }
+  }
+}
+
+function handleExpandChange(expend, row, index, curCascaderRef) {
+  const menus = curCascaderRef.panel.menuList[0]
+  const curExpandingNode = menus.panel.expandingNode
+  if (!curExpandingNode.children[0].isLeaf) {
+    setCascaderExpandNode(menus, curExpandingNode.children[0])
+  }
+}
 
 // async function fetchLayingWay() {
 //   try {
@@ -153,6 +223,9 @@ const { maxHeight } = useMaxHeight(
 //   }
 // }
 
+function disabledDate(time) {
+  return time < new Date()
+}
 async function submitIt() {
   try {
     // if (!layWayConfigId.value) {
