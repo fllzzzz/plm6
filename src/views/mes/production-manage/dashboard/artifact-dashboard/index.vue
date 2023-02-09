@@ -45,9 +45,9 @@
                 <span class="ellipsis-text">{{ item.serialNumber }}</span>
               </div>
               <span v-if="crud.query.productType & componentTypeEnum.MACHINE_PART.V" class="ellipsis-text" style="display: flex">
-                <el-image class="ellipsis-text" style="flex: 1; width: 80%" :src="item.pictureUrl" @error="item.imgLoad = false">
+                <el-image class="ellipsis-text" style="flex: 1; width: 95%" :src="item.pictureUrl" @error="item.imgLoad = false">
                   <template #error>
-                    <div class="error-slot">
+                    <div>
                       <span v-if="item.pictureUrl">加载失败</span>
                       <span v-else>未导入DXF</span>
                     </div>
@@ -55,7 +55,7 @@
                 </el-image>
               </span>
               <div>
-                <span v-if="crud.query.productType & componentTypeEnum.MACHINE_PART.V" class="ellipsis-text">{{ item.specification }}</span>
+                <!-- <span v-if="crud.query.productType & componentTypeEnum.MACHINE_PART.V" class="ellipsis-text">{{ item.specification }}</span> -->
                 <span class="ellipsis-text">{{ item.completeQuantity }}/{{ item.compareQuantity }}</span>
               </div>
             </div>
