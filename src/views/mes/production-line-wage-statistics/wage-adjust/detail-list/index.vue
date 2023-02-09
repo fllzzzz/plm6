@@ -178,7 +178,12 @@ const { crud, columns, CRUD } = useCRUD(
 const { maxHeight } = useMaxHeight({ paginate: true })
 
 const unPaint = computed(() => {
-  return processObj?.[crud.query.processId]?.type !== processCategoryEnum.PAINT.V && !!crud.data[0]?.wageQuotaType
+  console.log(!!crud.data[0]?.primerWageQuotaType)
+  return (
+    !processCategoryEnum.PAINT.V & !!crud.data[0]?.wageQuotaType ||
+    processCategoryEnum.PAINT.V &
+      !(!!crud.data[0]?.primerWageQuotaType & !!crud.data[0]?.intermediatePaintWageQuotaType & !!crud.data[0]?.topcoatWageQuotaType)
+  )
 })
 
 const processList = ref([])
@@ -243,17 +248,17 @@ async function fetchProcess(info) {
 }
 
 function selectable(row) {
-  console.log(row?.wageQuotaType, 'row')
-  if (processObj?.[crud.query.processId]?.type !== processCategoryEnum.PAINT.V) {
+  console.log(row.processId, 'row')
+  if (processObj?.[row.processId]?.type !== processCategoryEnum.PAINT.V) {
     if (row?.wageQuotaType) {
-      return false
-    } else {
       return true
-    }
-  } else if (processObj?.[crud.query.processId]?.type === processCategoryEnum.PAINT.V) {
-    if (!!row?.primerWageQuotaType === false || !!row?.intermediatePaintWageQuotaType === false || !!row?.topcoatWageQuotaType === false) {
-      return false
     } else {
+      return false
+    }
+  }
+  if (processObj?.[row.processId]?.type === processCategoryEnum.PAINT.V) {
+    console.log(!!row?.primerWageQuotaType, '!!row?.primerWageQuotaType')
+    if (!!row?.primerWageQuotaType === true) {
       return true
     }
   }

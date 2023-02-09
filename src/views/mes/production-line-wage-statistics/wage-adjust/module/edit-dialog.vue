@@ -16,7 +16,7 @@
       :show-empty-symbol="false"
       :data-format="dataFormat"
       :data="list"
-      :max-height="maxHeight"
+      :max-height="maxHeight - 100"
       row-key="rowId"
       style="width: 100%"
       :cell-class-name="changedCellMask"
@@ -28,7 +28,7 @@
       <el-table-column prop="specification" label="规格" align="center" show-overflow-tooltip min-width="130px" />
       <el-table-column prop="quantity" label="数量" align="center" show-overflow-tooltip min-width="70px" />
       <el-table-column prop="netWeight" label="重量(kg)" align="center" show-overflow-tooltip min-width="90px" />
-      <!-- <el-table-column prop="wageQuotaTypeStr" align="center" show-overflow-tooltip label="核算单位" width="70px" /> -->
+      <el-table-column v-if="props.processInfo?.type !== processCategoryEnum.PAINT.V" prop="wageQuotaTypeStr" align="center" show-overflow-tooltip label="核算单位" width="70px" />
       <template v-if="showMoreColumn">
         <!-- <el-table-column align="center" prop="wage" label="定额单价" width="150">
           <template #default="{ row }">
@@ -178,7 +178,6 @@ const showMoreColumn = computed(() => {
 
 function showHook() {
   list.value = props.selections.map((v) => {
-    console.log(v, 'v')
     if (v.wageQuotaType & wageQuotaTypeEnum.AREA.V) {
       hasAreaQuota.value = true
     }
