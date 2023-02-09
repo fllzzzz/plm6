@@ -40,7 +40,7 @@
           label="排产量（件/吨）"
         >
           <template v-slot="scope">
-            <span>{{ scope.row.quantity }}/{{ (scope.row.totalNetWeight / 1000).toFixed(DP.COM_WT__KG) }}</span>
+            <span>{{ scope.row.quantity }}/{{ (scope.row.netWeight / 1000).toFixed(DP.COM_WT__KG) }}</span>
           </template>
         </el-table-column>
         <el-table-column
@@ -158,45 +158,26 @@ CRUD.HOOK.handleRefresh = (crud, res) => {
 function getSummaries(param) {
   const { columns, data } = param
   const sums = []
+  const ave = []
   columns.forEach((column, index) => {
     if (index === 0) {
       sums[index] = '合计'
       return
     }
     if (index === 2) {
-      const valueKeys = 'quantity'
-      const completeValuesKeys = 'completeQuantity'
-      const values = data.map((item) => Number(item?.[valueKeys]))
-      const completeValues = data.map((item) => Number(item?.[completeValuesKeys]))
-      let valuesSum = 0
-      let completeValuesSum = 0
-      if (!values.every((value) => isNaN(value))) {
-        valuesSum = values.reduce((prev, curr) => {
-          const value = Number(curr)
-          if (!isNaN(value)) {
-            return prev + curr
-          } else {
-            return prev
-          }
-        }, 0)
+      sums[index] = 0
+      data.map((v) => ave.push(v.completeQuantity / v.quantity))
+      for (let i = 0; i <= ave.length - 1; i++) {
+        sums[index] = sums[index] + ave[i]
       }
-      if (!values.every((value) => isNaN(value))) {
-        completeValuesSum = completeValues.reduce((prev, curr) => {
-          const value = Number(curr)
-          if (!isNaN(value)) {
-            return prev + curr
-          } else {
-            return prev
-          }
-        }, 0)
-      }
-      sums[index] = valuesSum ? ((completeValuesSum / valuesSum) * 100).toFixed(2) + '%' : 0 + '%'
+      sums[index] = ((sums[index] / ave.length) * 100).toFixed(2) + '%'
+      return
     }
     if (column.property === 'list' || column.property === 'complete') {
       const valueKeys = column.property === 'list' ? 'quantity' : column.property + 'Quantity'
       const values = data.map((item) => Number(item?.[valueKeys]))
       let valuesSum = 0
-      const valueWeightKeys = column.property === 'list' ? 'totalNetWeight' : column.property + 'NetWeight'
+      const valueWeightKeys = column.property === 'list' ? 'netWeight' : column.property + 'NetWeight'
       const valueWeight = data.map((item) => Number(item?.[valueWeightKeys] / 1000))
       let valueWeightSum = 0
       if (!values.every((value) => isNaN(value))) {
