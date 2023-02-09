@@ -25,7 +25,7 @@
                   showOptionAll
                   type="enum"
                   class="filter-item"
-                  @change="crud.toQuery"
+                  @change="boolDxfChange"
                 />
               </div>
             </template>
@@ -36,7 +36,14 @@
               <common-button v-permission="permission.save" type="warning" class="filter-item" size="mini" @click="previewIt">
                 无需套料保存
               </common-button>
-              <common-button v-permission="permission.save" type="success" class="filter-item" size="mini"  :disabled="crud.query.boolDxfEnum === machinePartDxfTypeEnum.UN_EXPORT.V" @click="previewIt">
+              <common-button
+                v-permission="permission.save"
+                type="success"
+                class="filter-item"
+                size="mini"
+                :disabled="crud.query.boolDxfEnum === machinePartDxfTypeEnum.UN_EXPORT.V || nestingLoading === true"
+                @click="previewIt"
+              >
                 套料保存
               </common-button>
               <el-tag size="medium" effect="plain" style="margin-right: 5px"> 数量(件)：{{ summaryInfo.quantity || 0 }} </el-tag>
@@ -113,7 +120,13 @@ class="ellipsis-text text"
             <i class="el-icon-loading" />
           </div>
         </div>
-        <m-preview v-model:visible="previewVisible" :list="checkedNodes" @success="handleSaveSuccess" :thick-list="thickList" :material-list="materialList"></m-preview>
+        <m-preview
+          v-model:visible="previewVisible"
+          :list="checkedNodes"
+          @success="handleSaveSuccess"
+          :thick-list="thickList"
+          :material-list="materialList"
+        ></m-preview>
       </div>
     </div>
   </div>
@@ -146,6 +159,7 @@ const materialList = ref([])
 const boolDxfEnum = ref()
 const projectListRef = ref()
 const tableRef = ref()
+const nestingLoading = ref(false)
 const { crud, CRUD } = useCRUD(
   {
     title: '零件排产',
@@ -272,6 +286,13 @@ async function handleSaveSuccess() {
 const checkAll = ref(false)
 const checkedNodes = ref([])
 
+// 切换dxf是否导入 清除全选
+function boolDxfChange() {
+  handleCheckedAll()
+  checkAll.value = false
+  crud.toQuery()
+}
+
 // 切换项目清除选择
 function clearCheck() {
   checkedNodes.value = []
@@ -283,6 +304,13 @@ function handleCheckedChange(value, item) {
   } else {
     if (_checkedIndex > -1) checkedNodes.value.splice(_checkedIndex, 1)
   }
+  if (value && !item.picturePath) {
+    item.checked = value
+    nestingLoading.value = true
+  } else {
+    item.checked = value
+    nestingLoading.value = false
+  }
 }
 function handleCheckedAll(val) {
   checkAll.value = val
@@ -290,8 +318,12 @@ function handleCheckedAll(val) {
     if (v.imgLoad || !v.picturePath) {
       v.checked = val
       handleCheckedChange(val, v)
+    } else if (v.imgLoad || v.picturePath) {
+      v.checked = val
+      handleCheckedChange(val, v)
     }
   })
+  nestingLoading.value = val
 }
 
 // --------------------------- 选择操作 end --------------------------------
