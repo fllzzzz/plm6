@@ -43,7 +43,15 @@
             <span>{{ scope.row.quantity }}/{{ (scope.row.totalNetWeight / 1000).toFixed(DP.COM_WT__KG) }}</span>
           </template>
         </el-table-column>
-        <el-table-column v-if="columns.visible('rate')" align="center" key="rate" prop="rate" :show-overflow-tooltip="true" label="达成率" width="160px">
+        <el-table-column
+          v-if="columns.visible('rate')"
+          align="center"
+          key="rate"
+          prop="rate"
+          :show-overflow-tooltip="true"
+          label="达成率"
+          width="160px"
+        >
           <template v-slot="scope">
             <span>
               <el-progress
@@ -140,7 +148,7 @@ function monthlyTaskChange(row) {
 }
 
 CRUD.HOOK.handleRefresh = (crud, res) => {
-  res.data.content = res.data?.map(v => {
+  res.data.content = res.data?.map((v) => {
     v.months = v.month?.split('-')[1]
     return v
   })
@@ -150,20 +158,39 @@ CRUD.HOOK.handleRefresh = (crud, res) => {
 function getSummaries(param) {
   const { columns, data } = param
   const sums = []
-  const ave = []
   columns.forEach((column, index) => {
     if (index === 0) {
       sums[index] = '合计'
       return
     }
     if (index === 2) {
-      sums[index] = 0
-      data.map((v) => ave.push(v.completeQuantity / v.quantity))
-      for (let i = 0; i <= ave.length - 1; i++) {
-        sums[index] = sums[index] + ave[i]
+      const valueKeys = 'quantity'
+      const completeValuesKeys = 'completeQuantity'
+      const values = data.map((item) => Number(item?.[valueKeys]))
+      const completeValues = data.map((item) => Number(item?.[completeValuesKeys]))
+      let valuesSum = 0
+      let completeValuesSum = 0
+      if (!values.every((value) => isNaN(value))) {
+        valuesSum = values.reduce((prev, curr) => {
+          const value = Number(curr)
+          if (!isNaN(value)) {
+            return prev + curr
+          } else {
+            return prev
+          }
+        }, 0)
       }
-      sums[index] = ((sums[index] / ave.length) * 100).toFixed(2) + '%'
-      return
+      if (!values.every((value) => isNaN(value))) {
+        completeValuesSum = completeValues.reduce((prev, curr) => {
+          const value = Number(curr)
+          if (!isNaN(value)) {
+            return prev + curr
+          } else {
+            return prev
+          }
+        }, 0)
+      }
+      sums[index] = valuesSum ? ((completeValuesSum / valuesSum) * 100).toFixed(2) + '%' : 0 + '%'
     }
     if (column.property === 'list' || column.property === 'complete') {
       const valueKeys = column.property === 'list' ? 'quantity' : column.property + 'Quantity'
