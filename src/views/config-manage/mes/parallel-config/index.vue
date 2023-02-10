@@ -222,7 +222,6 @@ import udOperation from '@crud/UD.operation'
 import mHeader from './module/header'
 import mForm from './module/form'
 import UploadBtn from '@comp/file-upload/SingleFileUploadBtn'
-// import uploadBtn from '@/views/plan/technical-data-manage/technical-achievement/components/drawing-upload-btn.vue'
 
 const optShow = {
   add: true,

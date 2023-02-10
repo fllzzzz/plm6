@@ -181,6 +181,21 @@
               />
             </template>
           </el-table-column>
+           <el-table-column align="center" prop="boolUpload" label="dxf上传">
+          <template v-slot="scope">
+            <upload-btn
+              :accept="`.dxf`"
+              :data="scope.row"
+              :tip="uploadType"
+              size="mini"
+              :uploadFun="shortTimeUploadFun"
+              :btn-name="scope.row.filePath?'覆盖上传':'上传'"
+              type="primary"
+              :limit="1"
+              @change="handleSuccess"
+            />
+          </template>
+        </el-table-column>
           <el-table-column label="操作" align="center" width="100" v-if="!form.id">
             <template v-slot="scope">
               <common-button size="small" class="el-icon-delete" type="danger" @click="deleteRow(scope.$index)" />
@@ -205,13 +220,15 @@
 
 <script setup>
 import { ref } from 'vue'
-import { ElMessage } from 'element-plus'
+import { shortTimeUploadFun } from '@/api/config/system-config/parallel-config'
+import { regForm } from '@compos/use-crud'
 
+import { ElMessage } from 'element-plus'
 import useMaxHeight from '@compos/use-max-height'
 import useTableValidate from '@compos/form/use-table-validate'
 import { DP } from '@/settings/config'
 
-import { regForm } from '@compos/use-crud'
+import UploadBtn from './uploadBtn'
 
 const formRef = ref()
 const drawerRef = ref()
@@ -260,6 +277,10 @@ function deleteRow(index) {
 function weightChange(row) {
   row.totalNetWeight = (row.quantity && row.netWeight) ? row.quantity * row.netWeight : undefined
   row.totalGrossWeight = (row.quantity && row.grossWeight) ? row.quantity * row.grossWeight : undefined
+}
+
+function handleSuccess(val, row) {
+  row.filePath = val
 }
 
 CRUD.HOOK.submit = (crud, form) => {
