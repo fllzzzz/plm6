@@ -74,7 +74,7 @@
         min-width="85px"
       >
         <template v-slot="scope">
-          {{ scope.row.thick ? scope.row.length.toFixed(DP.MES_ARTIFACT_T__MM) : '-' }}
+          {{ scope.row.thick ? scope.row.thick.toFixed(DP.MES_ARTIFACT_T__MM) : '-' }}
         </template>
       </el-table-column>
       <el-table-column
