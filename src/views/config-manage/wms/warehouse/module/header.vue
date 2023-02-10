@@ -1,8 +1,8 @@
 <template>
   <div class="head-container">
-    <factory-tabs v-model="query.factoryId" @tab-click="handleTabClick" />
-    <template v-if="query.factoryId">
-      <crud-operation :disabled="!query.factoryId">
+    <workshop-tabs v-model="query.workshopId" @tab-click="handleTabClick" />
+    <template v-if="query.workshopId">
+      <crud-operation :disabled="!query.workshopId">
         <template #viewLeft>
           <common-radio-button
             v-model="query.enabled"
@@ -22,17 +22,17 @@
 import { enabledEnum } from '@enum-ms/common'
 
 import { regHeader } from '@compos/use-crud'
-import FactoryTabs from '@comp-base/factory-tabs.vue'
+import WorkshopTabs from '@comp-base/workshop-tabs.vue'
 import CrudOperation from '@crud/CRUD.operation.vue'
 const defaultQuery = {
-  factoryId: undefined, // 工厂
+  workshopId: undefined, // 工厂
   enabled: undefined // 使用状态
 }
 
 const { crud, query } = regHeader(defaultQuery)
 
 function handleTabClick(data) {
-  crud.props.factory = data
+  crud.props.workshop = data
   crud.toQuery()
 }
 </script>

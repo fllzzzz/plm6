@@ -36,13 +36,6 @@ const unitTypeEnum = {
 }
 constantize(unitTypeEnum)
 
-// 仓库类型
-const warehouseTypeEnum = {
-  NORMAL: { L: '普通', K: 'NORMAL', V: 1 << 0 },
-  WORKSHOP: { L: '车间', K: 'WORKSHOP', V: 1 << 1 }
-}
-constantize(warehouseTypeEnum)
-
 // 项目仓库类型
 const projectWarehouseTypeEnum = {
   PUBLIC: { L: '公共库', K: 'COMMON', V: 1 << 0 },
@@ -241,7 +234,6 @@ export {
   inboundFillWayEnum,
   measureTypeEnum,
   unitTypeEnum,
-  warehouseTypeEnum,
   projectWarehouseTypeEnum,
   materialIsWholeEnum,
   materialOutboundModeEnum,
@@ -273,7 +265,6 @@ export default {
   inboundFillWayEnum,
   measureTypeEnum,
   unitTypeEnum,
-  warehouseTypeEnum,
   projectWarehouseTypeEnum,
   materialIsWholeEnum,
   materialOutboundModeEnum,

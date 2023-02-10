@@ -21,10 +21,6 @@
             <span class="title">存储类型：</span>
             <span v-parse-enum="{ e: rawMatClsEnum, v: data.materialType, bit: true, split: ' | ' }"></span>
           </span>
-          <span class="extra-label">
-            <span class="title">类型：</span>
-            <span v-parse-enum="{ e: warehouseTypeEnum, v: data.type }"></span>
-          </span>
         </span>
       </span>
     </template>
@@ -33,7 +29,6 @@
 
 <script setup>
 import { defineProps, defineEmits, ref, watch, computed } from 'vue'
-import { warehouseTypeEnum } from '@/utils/enum/modules/wms'
 import { rawMatClsEnum } from '@/utils/enum/modules/classification'
 import { isBlank, judgeSameValue } from '@data-type/index'
 import useWarehouse from '@compos/store/use-warehouse'
