@@ -3,7 +3,7 @@ import request from '@/utils/request'
 export function get(params) {
   return request({
     module: 'mes',
-    url: 'spacer/parallel',
+    url: 'spacer/parallel/page',
     method: 'get',
     params
   })
@@ -60,6 +60,15 @@ export function shortTimeUploadFun(data) {
       'Content-Type': 'multipart/form-data'
     },
     data
+  })
+}
+
+// 获取厚度材质筛选
+export function getParallelParams() {
+  return request({
+    module: 'mes',
+    url: 'spacer/parallel/wait/condition',
+    method: 'get'
   })
 }
 export default { get, add, edit, del }

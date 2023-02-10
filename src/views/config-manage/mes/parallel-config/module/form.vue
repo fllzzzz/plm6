@@ -26,7 +26,7 @@
           :cell-class-name="wrongCellMask"
         >
           <el-table-column label="序号" type="index" align="center" width="50" />
-          <el-table-column key="name" prop="name" label="名称" align="center">
+          <!-- <el-table-column key="name" prop="name" label="名称" align="center">
             <template v-slot="scope">
               <el-input
                 v-model.trim="scope.row.name"
@@ -35,7 +35,7 @@
                 maxlength="10"
               />
             </template>
-          </el-table-column>
+          </el-table-column> -->
           <el-table-column key="serialNumber" prop="serialNumber" label="编号" align="center">
             <template v-slot="scope">
               <el-input
@@ -93,7 +93,7 @@
               />
             </template>
           </el-table-column>
-          <el-table-column key="quantity" prop="quantity" label="数量" align="center">
+          <!-- <el-table-column key="quantity" prop="quantity" label="数量" align="center">
             <template v-slot="scope">
               <el-input-number
                 v-model.number="scope.row.quantity"
@@ -106,7 +106,7 @@
                 @blur="weightChange(scope.row)"
               />
             </template>
-          </el-table-column>
+          </el-table-column> -->
           <el-table-column key="netWeight" prop="netWeight" :label="`单净重\n(kg)`" align="left">
             <template v-slot="scope">
               <el-input-number
@@ -137,7 +137,7 @@
               />
             </template>
           </el-table-column>
-          <el-table-column
+          <!-- <el-table-column
             key="totalNetWeight"
             prop="totalNetWeight"
             :label="`总净重\n(kg)`"
@@ -158,8 +158,8 @@
             <template v-slot="scope">
               {{ scope.row.totalGrossWeight ? scope.row.totalGrossWeight.toFixed(DP.COM_WT__KG) : '-' }}
             </template>
-          </el-table-column>
-          <el-table-column key="surfaceArea" prop="surfaceArea" :label="`面积\n(㎡)`" align="left" min-width="80px">
+          </el-table-column> -->
+          <el-table-column key="surfaceArea" prop="surfaceArea" :label="`单面积\n(㎡)`" align="left" min-width="80px">
             <template v-slot="scope">
              <el-input-number
                 v-model.number="scope.row.surfaceArea"
@@ -181,7 +181,7 @@
               />
             </template>
           </el-table-column>
-           <el-table-column align="center" prop="boolUpload" label="dxf上传">
+          <el-table-column align="center" prop="filePath" label="dxf上传">
           <template v-slot="scope">
             <upload-btn
               :accept="`.dxf`"
@@ -268,7 +268,8 @@ const tableRules = {
   totalGrossWeight: [{ required: true, message: '请输入总毛重', trigger: 'blur' }],
   netWeight: [{ required: true, message: '请输入单净重', trigger: 'blur' }],
   totalNetWeight: [{ required: true, message: '请输入总净重', trigger: 'blur' }],
-  surfaceArea: [{ required: true, message: '请输入面积', trigger: 'blur' }]
+  surfaceArea: [{ required: true, message: '请输入面积', trigger: 'blur' }],
+  filePath: [{ required: true, message: '请上传图片', trigger: 'change' }]
 }
 
 const { tableValidate, wrongCellMask } = useTableValidate({ rules: tableRules }) // 表格校验
