@@ -1,7 +1,7 @@
 <template>
   <common-drawer
     ref="drawerRef"
-    :title="`${detailRow.name} 成本页面详情`"
+    :title="`${detailRow.serialNumber} ${detailRow.name} 成本明细`"
     v-model="drawerVisible"
     direction="rtl"
     :before-close="handleClose"
