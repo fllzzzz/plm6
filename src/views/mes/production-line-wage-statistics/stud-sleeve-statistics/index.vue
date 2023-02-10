@@ -123,7 +123,7 @@
         label="类型"
       >
         <template v-slot="scope">
-          <span>{{ scope.row.auxiliaryTypeName }}</span>
+          <span>{{ auxiliaryMaterialTypeEnum.VL[scope.row.auxiliaryTypeName] }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -187,6 +187,7 @@ import crudApi from '@/api/mes/production-line-wage-statistics/stud-sleeve-stati
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
 import pagination from '@crud/Pagination'
+import { auxiliaryMaterialTypeEnum } from '@enum-ms/mes'
 import { projectNameFormatter } from '@/utils/project'
 import { parseTime } from '@/utils/date'
 import { tableSummary } from '@/utils/el-extra'
