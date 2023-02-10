@@ -18,7 +18,7 @@
       style="width: 100%"
     >
       <el-table-column prop="index" label="序号" align="center" width="60" type="index" />
-      <el-table-column
+      <!-- <el-table-column
         v-if="columns.visible('name')"
         key="name"
         prop="name"
@@ -26,7 +26,7 @@
         :show-overflow-tooltip="true"
         label="名称"
         min-width="100px"
-      />
+      /> -->
       <el-table-column
         v-if="columns.visible('serialNumber')"
         key="serialNumber"
@@ -91,7 +91,7 @@
           {{ scope.row.material ? scope.row.material : '-' }}
         </template>
       </el-table-column>
-      <el-table-column
+      <!-- <el-table-column
         v-if="columns.visible('quantity')"
         key="quantity"
         prop="quantity"
@@ -103,7 +103,7 @@
         <template v-slot="scope">
           {{ scope.row.quantity ? scope.row.quantity : '-' }}
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column
         v-if="columns.visible('netWeight')"
         key="netWeight"
@@ -132,7 +132,7 @@
           {{ scope.row.grossWeight ? scope.row.grossWeight.toFixed(DP.COM_WT__KG) : '-' }}
         </template>
       </el-table-column>
-      <el-table-column
+      <!-- <el-table-column
         v-if="columns.visible('totalNetWeight')"
         key="totalNetWeight"
         prop="totalNetWeight"
@@ -157,13 +157,13 @@
         <template v-slot="scope">
           {{ scope.row.totalGrossWeight ? scope.row.totalGrossWeight.toFixed(DP.COM_WT__KG) : '-' }}
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column
         v-if="columns.visible('surfaceArea')"
         key="surfaceArea"
         prop="surfaceArea"
         sortable="custom"
-        :label="`面积\n(㎡)`"
+        :label="`单面积\n(㎡)`"
         align="left"
         min-width="80px"
       >
@@ -187,16 +187,37 @@
           />
         </template>
       </el-table-column>
+      <el-table-column
+        v-if="columns.visible('picturePath')"
+        key="picturePath"
+        prop="picturePath"
+        label="图片"
+        align="left"
+        min-width="80px"
+      >
+        <template v-slot="scope">
+          <div class="board-box">
+            <el-image :src="scope.row.picturePath" @error="item.imgLoad = false">
+              <template #error>
+                <div class="error-slot">
+                  <span v-if="scope.row.picturePath">加载失败</span>
+                  <span v-else>未导入DXF</span>
+                </div>
+              </template>
+            </el-image>
+          </div>
+        </template>
+      </el-table-column>
       <!--编辑与删除-->
       <el-table-column
         v-if="checkPermission([...permission.del, ...permission.edit])"
         label="操作"
-        width="130px"
+        width="100px"
         align="center"
         fixed="right"
       >
         <template v-slot="scope">
-          <ud-operation :data="scope.row" />
+          <ud-operation :data="scope.row" :show-edit="false"/>
         </template>
       </el-table-column>
     </common-table>
@@ -231,7 +252,7 @@ const optShow = {
 }
 
 const tableRef = ref()
-const { crud, columns } = useCRUD(
+const { CRUD, crud, columns } = useCRUD(
   {
     title: '垫片配置',
     sort: [],
@@ -253,4 +274,23 @@ function handleSuccess() {
   ElMessage.success('上传成功')
   crud.toQuery()
 }
+
+CRUD.HOOK.handleRefresh = (crud, res) => {
+  res.data.content = res.data.content.map((v) => {
+    v.imgLoad = true
+    return v
+  })
+}
 </script>
+<style lang="scss" scoped>
+ .board-box {
+    width: 80px;
+    height: 80px;
+    line-height:80px;
+    text-align:center;
+    box-sizing: border-box;
+    padding: 2px;
+    border: 1px solid #dfe4ed;
+    border-radius: 6px;
+  }
+</style>
