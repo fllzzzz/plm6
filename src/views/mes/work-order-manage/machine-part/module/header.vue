@@ -59,7 +59,7 @@
 import { regHeader } from '@compos/use-crud'
 import { mesMachinePartOrderTypeEnum } from '@enum-ms/mes'
 import { boolPrintedEnum } from '@enum-ms/common'
-import workshopSelect from '@comp-mes/workshop-select'
+import workshopSelect from '@/components-system/base/workshop-select.vue'
 import crudOperation from '@crud/CRUD.operation'
 import rrOperation from '@crud/RR.operation'
 import moment from 'moment'

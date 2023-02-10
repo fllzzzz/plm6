@@ -39,9 +39,9 @@ const getSteelPlateList = {
               id: 1,
               serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
             },
-            factory: {
+            workshop: {
               id: 1,
-              name: '一号工厂'
+              name: '一号车间'
             },
             warehouse: {
               id: 1,
@@ -76,9 +76,9 @@ const getSteelPlateList = {
               id: 1,
               serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
             },
-            factory: {
+            workshop: {
               id: 1,
-              name: '一号工厂'
+              name: '一号车间'
             },
             warehouse: {
               id: 1,
@@ -132,9 +132,9 @@ const getSectionSteelList = {
               id: 1,
               serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
             },
-            factory: {
+            workshop: {
               id: 1,
-              name: '一号工厂'
+              name: '一号车间'
             },
             warehouse: {
               id: 1,
@@ -170,9 +170,9 @@ const getSectionSteelList = {
               id: 1,
               serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
             },
-            factory: {
+            workshop: {
               id: 1,
-              name: '一号工厂'
+              name: '一号车间'
             },
             warehouse: {
               id: 1,
@@ -227,9 +227,9 @@ const getSteelCoilList = {
               id: 1,
               serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
             },
-            factory: {
+            workshop: {
               id: 1,
-              name: '一号工厂'
+              name: '一号车间'
             },
             warehouse: {
               id: 1,
@@ -266,9 +266,9 @@ const getSteelCoilList = {
               id: 1,
               serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
             },
-            factory: {
+            workshop: {
               id: 1,
-              name: '一号工厂'
+              name: '一号车间'
             },
             warehouse: {
               id: 1,
@@ -321,9 +321,9 @@ const getAuxMaterialList = {
               id: 1,
               serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
             },
-            factory: {
+            workshop: {
               id: 1,
-              name: '一号工厂'
+              name: '一号车间'
             },
             warehouse: {
               id: 1,
@@ -357,9 +357,9 @@ const getAuxMaterialList = {
               id: 1,
               serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
             },
-            factory: {
+            workshop: {
               id: 1,
-              name: '一号工厂'
+              name: '一号车间'
             },
             warehouse: {
               id: 1,
@@ -410,9 +410,9 @@ const getGasList = {
               id: 1,
               serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
             },
-            factory: {
+            workshop: {
               id: 1,
-              name: '一号工厂'
+              name: '一号车间'
             },
             warehouse: {
               id: 1,
@@ -445,9 +445,9 @@ const getGasList = {
               id: 1,
               serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
             },
-            factory: {
+            workshop: {
               id: 1,
-              name: '一号工厂'
+              name: '一号车间'
             },
             warehouse: {
               id: 1,

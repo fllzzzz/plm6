@@ -191,7 +191,7 @@ const tableRules = {
     { required: true, message: '请填写数量', trigger: 'blur' },
     { pattern: positiveNumPattern, message: '数量必须大于0', trigger: 'blur' }
   ],
-  factoryId: [{ required: true, message: '请选择工厂', trigger: 'change' }],
+  workshopId: [{ required: true, message: '请选择车间', trigger: 'change' }],
   warehouseId: [{ required: true, message: '请选择存储位置', trigger: 'change' }]
 }
 
@@ -281,7 +281,7 @@ function setRow(row, sourceRow) {
   row.width = row.width || sourceRow.width
   row.length = row.length || sourceRow.length
   row.quantity = row.quantity || sourceRow.quantity
-  row.factoryId = row.factoryId || sourceRow.factory?.id
+  row.workshopId = row.workshopId || sourceRow.workshop?.id
   row.warehouseId = row.warehouseId || sourceRow.warehouse?.id
   calcTheoryWeight(row)
   setTimeout(() => {

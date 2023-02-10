@@ -51,7 +51,7 @@ const permission = inject('permission')
 const dataSource = ref({
   // 金额填写方式
   amountFillWay: undefined
-  // // 工厂填写方式
+  // // 车间填写方式
   // warehouseFillWay: undefined,
   // // 标签打印提示场景
   // printLabelTipWay: {

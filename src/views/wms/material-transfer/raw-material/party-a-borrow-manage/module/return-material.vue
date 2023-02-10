@@ -18,13 +18,13 @@
         <el-form-item label="归还项目" prop="projectId">
           <span v-parse-project="{ project: detail.project }" v-empty-text />
         </el-form-item>
-        <el-form-item label="工厂" prop="factoryId">
-          <factory-select v-model="form.factoryId" placeholder="工厂" class="input-underline" style="width: 200px" />
+        <el-form-item label="车间" prop="workshopId">
+          <workshop-select v-model="form.workshopId" placeholder="车间" class="input-underline" style="width: 200px" />
         </el-form-item>
         <el-form-item label="仓库" prop="warehouseId">
           <warehouse-select
             v-model="form.warehouseId"
-            :factory-id="form.factoryId"
+            :workshop-id="form.workshopId"
             :basic-class="basicClass"
             placeholder="存储位置"
             class="input-underline"
@@ -123,7 +123,7 @@ import { materialColumns } from '@/utils/columns-format/wms'
 import useVisible from '@compos/use-visible'
 import useMaxHeight from '@compos/use-max-height'
 import useWmsConfig from '@/composables/store/use-wms-config'
-import FactorySelect from '@/components-system/base/factory-select.vue'
+import WorkshopSelect from '@/components-system/base/workshop-select.vue'
 import WarehouseSelect from '@/components-system/wms/warehouse-select.vue'
 import elExpandTableColumn from '@comp-common/el-expand-table-column.vue'
 import expandSecondaryInfo from '@/components-system/wms/table-columns/expand-secondary-info/index.vue'
@@ -163,7 +163,7 @@ const projectWareTypeEnum = {
 
 // 校验
 const rules = {
-  factoryId: [{ required: true, message: '请选择归还工厂', trigger: 'change' }],
+  workshopId: [{ required: true, message: '请选择归还车间', trigger: 'change' }],
   warehouseId: [{ required: true, message: '请选择归还仓库', trigger: 'change' }]
 }
 
@@ -352,7 +352,7 @@ async function submit() {
     // 数据格式装换
     const data = {
       id: props.detail.id, // 当前归还id
-      factoryId: form.value.factoryId, // 工厂id
+      workshopId: form.value.workshopId, // 车间id
       warehouseId: form.value.warehouseId, // 仓库id
       list: returnList.value.map((row) => {
         return {

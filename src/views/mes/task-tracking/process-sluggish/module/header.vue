@@ -14,7 +14,7 @@
 
 <script setup>
 import { regHeader } from '@compos/use-crud'
-import workshopSelect from '@comp-mes/workshop-select'
+import workshopSelect from '@/components-system/base/workshop-select.vue'
 
 const defaultQuery = {
   workShopId: undefined

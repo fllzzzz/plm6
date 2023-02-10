@@ -10,7 +10,7 @@ const getWarehouseBrief = {
       message: '成功',
       'data|30': [
         {
-          factoryId: 1,
+          workshopId: 1,
           'id|+1': 1,
           name: '@increment()' + '号仓库',
           'materialType|1-64': 1,
@@ -33,7 +33,7 @@ const getWarehouse = {
         'content|10': [
           {
             createTime: 1621315424103,
-            factoryId: 1,
+            workshopId: 1,
             'id|+1': 1,
             name: '@increment()' + '号仓库',
             'materialType|1-64': 1,

@@ -92,7 +92,7 @@ const detail_id1 = {
               shortName: '长安街',
               serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
             },
-            factoryId: 1,
+            workshopId: 1,
             warehouse: {
               id: 1,
               name: '666号仓库'
@@ -123,7 +123,7 @@ const detail_id1 = {
               shortName: '长安街',
               serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
             },
-            factoryId: 1,
+            workshopId: 1,
             warehouse: {
               id: 1,
               name: '666号仓库'
@@ -153,7 +153,7 @@ const detail_id1 = {
               shortName: '长安街',
               serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
             },
-            factoryId: 1,
+            workshopId: 1,
             warehouse: {
               id: 1,
               name: '666号仓库'
@@ -181,7 +181,7 @@ const detail_id1 = {
               shortName: '长安街',
               serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
             },
-            factoryId: 1,
+            workshopId: 1,
             warehouse: {
               id: 4,
               name: '668号仓库'
@@ -241,7 +241,7 @@ const detail_id2 = {
               shortName: '长安街',
               serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
             },
-            factoryId: 1,
+            workshopId: 1,
             warehouse: {
               id: 1,
               name: '666号仓库'
@@ -271,7 +271,7 @@ const detail_id2 = {
               shortName: '长安街',
               serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
             },
-            factoryId: 1,
+            workshopId: 1,
             warehouse: {
               id: 1,
               name: '666号仓库'
@@ -302,7 +302,7 @@ const detail_id2 = {
               shortName: '长安街',
               serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
             },
-            factoryId: 1,
+            workshopId: 1,
             warehouse: {
               id: 4,
               name: '668号仓库'
@@ -328,7 +328,7 @@ const detail_id2 = {
               shortName: '泡泡茶壶',
               serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
             },
-            factoryId: 1,
+            workshopId: 1,
             warehouse: {
               id: 1,
               name: '666号仓库'
@@ -354,7 +354,7 @@ const detail_id2 = {
               shortName: '泡泡茶壶',
               serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
             },
-            factoryId: 1,
+            workshopId: 1,
             warehouse: {
               id: 1,
               name: '660号仓库'

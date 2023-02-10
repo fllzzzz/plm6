@@ -142,9 +142,9 @@ const columnsDataFormat = ref([
   ['remark', 'empty-text']
 ])
 
-// 仓管填写的信息（工厂及仓库）
+// 仓管填写的信息（车间及仓库）
 const warehouseRules = {
-  factoryId: [{ required: true, message: '请选择工厂', trigger: 'change' }],
+  workshopId: [{ required: true, message: '请选择车间', trigger: 'change' }],
   warehouseId: [{ required: true, message: '请选择仓库', trigger: 'change' }]
 }
 
@@ -220,7 +220,7 @@ const ditto = new Map([
   ['projectId', -1],
   ['monomerId', -1],
   ['areaId', -1],
-  ['factoryId', -1],
+  ['workshopId', -1],
   ['warehouseId', -1]
 ])
 provide('ditto', ditto)
@@ -292,7 +292,7 @@ function setDitto(list) {
   const dittoWithNotWare = new Map([
     ['requisitionsSN', -1],
     ['projectId', -1],
-    ['factoryId', -1]
+    ['workshopId', -1]
   ])
   let basicClass = list[0].basicClass // 首个不一样的物料类型，仓库位置不设置同上
   const warehouseDittoableIdex = [0]

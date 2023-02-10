@@ -25,7 +25,7 @@
         <template #afterWarehouse>
           <workshop-select
             v-model="query.workshopId"
-            :factory-id="query.factoryId"
+            :workshop-id="query.workshopId"
             placeholder="车间"
             class="filter-item"
             style="width: 200px"
@@ -115,7 +115,7 @@ import MatHeaderQuery from '@/components-system/wms/header-query/raw-mat/index.v
 import ExportButton from '@comp-common/export-button/index.vue'
 import warehouseProjectCascader from '@comp-wms/warehouse-project-cascader'
 import monomerSelectAreaSelect from '@comp-base/monomer-select-area-select'
-import workshopSelect from '@comp-mes/workshop-select'
+import workshopSelect from '@/components-system/base/workshop-select.vue'
 
 const defaultTime = ref([new Date(2000, 1, 1, 0, 0, 0), new Date(2000, 2, 1, 23, 59, 59)])
 
@@ -127,7 +127,7 @@ const defaultQuery = {
   monomerId: undefined, // 单体id
   areaId: undefined, // 区域id
   workshopId: undefined, // 仓库id
-  factoryId: undefined, // 工厂id
+  workshopId: undefined, // 车间id
   projectWarehouseType: undefined, // 仓库类型
   outboundSN: undefined, // 出库单号
   operatorName: undefined // 申请/审核/领用人

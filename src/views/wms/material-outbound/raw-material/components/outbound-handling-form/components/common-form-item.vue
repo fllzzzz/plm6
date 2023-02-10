@@ -71,7 +71,7 @@
 import { defineProps, inject, computed, watchEffect, ref } from 'vue'
 import userDeptCascader from '@comp-base/user-dept-cascader.vue'
 import projectCascader from '@comp-base/project-cascader.vue'
-import workshopSelect from '@comp-mes/workshop-select'
+import workshopSelect from '@/components-system/base/workshop-select.vue'
 
 import useProjectTree from '@compos/store/use-project-tree'
 

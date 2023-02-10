@@ -82,7 +82,7 @@ const validateQuantity = (rule, value, callback) => {
 const rules = {
   transferType: [{ required: true, message: '请选择调拨类型', trigger: 'change' }],
   projectId: [{ required: true, message: '请选择调拨项目', trigger: 'change' }],
-  factoryId: [{ required: true, message: '请选择调拨工厂', trigger: 'change' }],
+  workshopId: [{ required: true, message: '请选择调拨车间', trigger: 'change' }],
   warehouseId: [{ required: true, message: '请选择调拨仓库', trigger: 'change' }],
   quantity: [
     { required: true, validator: validateQuantity, trigger: 'blur' }
@@ -115,7 +115,7 @@ watch(
       clearValidate('projectId')
     }
     if (form.value.transferType === transferNormalTypeEnum.RETURN_PARTY_A.V) {
-      clearValidate('factoryId')
+      clearValidate('workshopId')
       clearValidate('warehouseId')
     }
   }
@@ -128,7 +128,7 @@ function formInit(data) {
     outboundUnit: data.outboundUnit, // 出库单位
     outboundUnitPrecision: data.outboundUnitPrecision, // 出库单位精度
     transferType: transferNormalTypeEnum.PROJECT_WARE.V, // 默认项目调拨
-    factoryId: data.factory ? data.factory.id : undefined, // 工厂
+    workshopId: data.workshop ? data.workshop.id : undefined, // 车间
     warehouseId: data.warehouse ? data.warehouse.id : undefined, // 仓库
     quantity: undefined, // 数量
     remark: undefined // 备注

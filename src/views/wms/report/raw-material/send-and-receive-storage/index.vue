@@ -120,11 +120,11 @@
       />
       <el-table-column v-if="showProject" prop="project" label="项目" align="left" min-width="120px" show-overflow-tooltip />
       <el-table-column
-        v-if="!crud.query.factoryId && columns.visible('factory.name')"
-        key="factory.name"
-        prop="factory.name"
+        v-if="!crud.query.workshopId && columns.visible('workshop.name')"
+        key="workshop.name"
+        prop="workshop.name"
         show-overflow-tooltip
-        label="工厂"
+        label="车间"
         min-width="100px"
       />
       <!-- ############################ 期初数据 ############################ -->

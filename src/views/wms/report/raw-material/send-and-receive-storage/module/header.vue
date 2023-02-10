@@ -109,7 +109,7 @@ const defaultTime = ref([new Date(2000, 1, 1, 0, 0, 0)])
 const defaultQuery = {
   createTime: { value: `${new Date().getTime()}`, resetAble: false }, // 时间
   projectId: { value: undefined, resetAble: false }, // 原项目id
-  factoryId: { value: undefined, resetAble: false }, // 工厂id
+  workshopId: { value: undefined, resetAble: false }, // 车间id
   projectWarehouseType: undefined, // 仓库类型
   basicClass: { value: undefined, resetAble: false }, // 基础类型
   orderSupplyType: { value: undefined, resetAble: false }, // 订单供应类型

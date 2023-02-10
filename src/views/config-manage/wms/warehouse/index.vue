@@ -82,7 +82,7 @@
 
 <script setup>
 import crudApi, { editEnabled } from '@/api/config/wms/warehouse'
-import { configWmsFactoryWarehousePM as permission } from '@/page-permission/config'
+import { configWmsWorkshopWarehousePM as permission } from '@/page-permission/config'
 
 import { ref } from 'vue'
 import { useStore } from 'vuex'

@@ -84,7 +84,7 @@
 </template>
 
 <script setup>
-// TODO: 考虑根据工厂id存为草稿
+// TODO: 考虑根据车间id存为草稿
 import { computed, ref } from 'vue'
 import { matClsEnum } from '@enum-ms/classification'
 

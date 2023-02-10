@@ -87,7 +87,7 @@ import { regHeader } from '@compos/use-crud'
 import { componentTypeEnum, taskTrackingSchedulingStatusEnum } from '@enum-ms/mes'
 import projectCascader from '@comp-base/project-cascader.vue'
 // import monomerSelectAreaSelect from '@comp-base/monomer-select-area-select'
-// import workshopSelect from '@comp-mes/workshop-select'
+// import workshopSelect from '@/components-system/base/workshop-select.vue'
 // import productionLineSelect from '@comp-mes/production-line-select'
 import rrOperation from '@crud/RR.operation'
 

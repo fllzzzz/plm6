@@ -28,6 +28,7 @@ const useWorkshop = (loadedCallBack) => {
   }
 
   return {
+    workshopKV: computed(() => store.state.config.workshopKV),
     workshops: computed(() => store.state.config.workshops),
     loaded: computed(() => store.state.config.loaded.workshops)
   }

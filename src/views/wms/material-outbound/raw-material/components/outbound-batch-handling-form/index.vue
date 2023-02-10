@@ -173,7 +173,7 @@ import materialBaseInfoColumns from '@/components-system/wms/table-columns/mater
 import materialUnitOperateQuantityColumns from '@/components-system/wms/table-columns/material-unit-operate-quantity-columns/index.vue'
 import materialSecondaryInfoColumns from '@/components-system/wms/table-columns/material-secondary-info-columns/index.vue'
 import warehouseInfoColumns from '@/components-system/wms/table-columns/warehouse-info-columns/index.vue'
-import workshopSelect from '@comp-mes/workshop-select'
+import workshopSelect from '@/components-system/base/workshop-select.vue'
 import { ElMessage } from 'element-plus'
 
 const emit = defineEmits(['success', 'update:visible'])

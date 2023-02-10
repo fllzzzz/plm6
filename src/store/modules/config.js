@@ -68,6 +68,7 @@ const state = {
   factoryKV: {}, // 工厂id:value 格式
   warehouse: [], // 存储仓库
   workshops: [], // 车间
+  workshopKV: {}, // 车间id:value 格式
   productLines: [], // 工厂-车间-生产线
   productionTeam: [], // 生产班组
   productionTeamKV: {}, // 生产班组id:value 格式
@@ -175,6 +176,10 @@ const mutations = {
   },
   SET_WORKSHOPS(state, workshops) {
     state.workshops = workshops
+    state.workshopKV = {}
+    workshops.forEach((v) => {
+      state.workshopKV[v.id] = v
+    })
   },
   SET_WAREHOUSE(state, warehouse) {
     state.warehouse = warehouse

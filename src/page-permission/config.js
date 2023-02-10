@@ -373,7 +373,7 @@ export const configWmsBasicForPM = {
 }
 
 // WMS-配置管理/仓库设置
-export const configWmsFactoryWarehousePM = {
+export const configWmsWorkshopWarehousePM = {
   get: ['config_wms_factory_warehouse:get'], // 查看 工厂仓库设置
   add: ['config_wms_factory_warehouse:add'], // 添加 工厂仓库设置
   edit: ['config_wms_factory_warehouse:edit'], // 编辑 工厂仓库设置

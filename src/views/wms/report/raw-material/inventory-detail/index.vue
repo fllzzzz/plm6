@@ -121,10 +121,10 @@
         show-overflow-tooltip
       />
       <el-table-column
-        v-if="columns.visible('factory.name')"
-        prop="factory.name"
-        key="factory.name"
-        label="工厂"
+        v-if="columns.visible('workshop.name')"
+        prop="workshop.name"
+        key="workshop.name"
+        label="车间"
         align="center"
         min-width="140"
         show-overflow-tooltip

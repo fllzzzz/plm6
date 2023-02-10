@@ -139,7 +139,7 @@ const tableRules = {
     { required: true, message: '请填写重量', trigger: 'blur' },
     { pattern: positiveNumPattern, message: '重量必须大于0', trigger: 'blur' }
   ],
-  factoryId: [{ required: true, message: '请选择工厂', trigger: 'change' }],
+  workshopId: [{ required: true, message: '请选择车间', trigger: 'change' }],
   warehouseId: [{ required: true, message: '请选择存储位置', trigger: 'change' }]
 }
 
@@ -222,7 +222,7 @@ function rowWatch(row) {
 function setRow(row, sourceRow) {
   row.mete = row.mete || sourceRow.mete
   row.quantity = row.quantity || sourceRow.quantity
-  row.factoryId = row.factoryId || sourceRow.factory?.id
+  row.workshopId = row.workshopId || sourceRow.workshop?.id
   row.warehouseId = row.warehouseId || sourceRow.warehouse?.id
 }
 

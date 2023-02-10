@@ -58,13 +58,13 @@
               />
             </el-form-item>
           </template>
-        <el-form-item v-if="showFactoryAndWare" label="工厂" prop="factoryId" label-width="55px">
-          <factory-select v-model="form.factoryId" placeholder="工厂" class="input-underline" style="width: 200px" />
+        <el-form-item v-if="showWorkshopAndWare" label="车间" prop="workshopId" label-width="55px">
+          <workshop-select v-model="form.workshopId" placeholder="车间" class="input-underline" style="width: 200px" />
         </el-form-item>
-        <el-form-item v-if="showFactoryAndWare" label="仓库" prop="warehouseId" label-width="55px">
+        <el-form-item v-if="showWorkshopAndWare" label="仓库" prop="warehouseId" label-width="55px">
           <warehouse-select
             v-model="form.warehouseId"
-            :factory-id="form.factoryId"
+            :workshop-id="form.workshopId"
             :basic-class="basicClass"
             placeholder="存储位置"
             class="input-underline"
@@ -146,7 +146,7 @@ import useVisible from '@compos/use-visible'
 import useMaxHeight from '@compos/use-max-height'
 import ProjectCascader from '@comp-base/project-cascader.vue'
 import useProjectTree from '@compos/store/use-project-tree'
-import FactorySelect from '@/components-system/base/factory-select.vue'
+import WorkshopSelect from '@/components-system/base/workshop-select.vue'
 import WarehouseSelect from '@/components-system/wms/warehouse-select.vue'
 import elExpandTableColumn from '@comp-common/el-expand-table-column.vue'
 import expandSecondaryInfo from '@/components-system/wms/table-columns/expand-secondary-info/index.vue'
@@ -182,7 +182,7 @@ const { projectMap, monomerMap } = useProjectTree()
 const rules = {
   transferType: [{ required: true, message: '请选择调拨类型', trigger: 'change' }],
   projectId: [{ required: true, message: '请选择调拨项目', trigger: 'change' }],
-  factoryId: [{ required: true, message: '请选择调拨工厂', trigger: 'change' }],
+  workshopId: [{ required: true, message: '请选择调拨车间', trigger: 'change' }],
   warehouseId: [{ required: true, message: '请选择调拨仓库', trigger: 'change' }]
 }
 
@@ -224,7 +224,7 @@ const showProjectSelect = computed(() => {
 })
 
 // 显示仓库位置选择：归还甲方的情况下无需选择
-const showFactoryAndWare = computed(() => {
+const showWorkshopAndWare = computed(() => {
   return form.value.transferType !== transferNormalTypeEnum.RETURN_PARTY_A.V
 })
 
@@ -293,7 +293,7 @@ async function submit() {
       projectId: form.value.projectId, // 项目id
       monomerId: form.value.monomerId, // 单体id
       areaId: form.value.areaId, // 区域id
-      factoryId: form.value.factoryId, // 工厂id
+      workshopId: form.value.workshopId, // 车间id
       warehouseId: form.value.warehouseId, // 仓库id
       list: []
     }

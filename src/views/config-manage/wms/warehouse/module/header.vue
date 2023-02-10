@@ -25,7 +25,7 @@ import { regHeader } from '@compos/use-crud'
 import WorkshopTabs from '@comp-base/workshop-tabs.vue'
 import CrudOperation from '@crud/CRUD.operation.vue'
 const defaultQuery = {
-  workshopId: undefined, // 工厂
+  workshopId: undefined, // 车间
   enabled: undefined // 使用状态
 }
 

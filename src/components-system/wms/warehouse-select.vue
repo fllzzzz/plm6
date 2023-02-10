@@ -38,11 +38,11 @@ const props = defineProps({
   modelValue: {
     type: [Array, Number, String]
   },
-  factoryId: {
-    // 工厂id
+  workshopId: {
+    // 车间id
     type: [Array, Number]
   },
-  // 在不传入工厂的时候查所有，不包含被禁用的
+  // 在不传入车间的时候查所有，不包含被禁用的
   showAll: {
     type: Boolean,
     default: false
@@ -105,12 +105,12 @@ const options = computed(() => {
   if (!props.showForbidden) {
     list = list.filter((v) => v.enabled)
   }
-  // 筛选工厂
-  if (props.factoryId) {
-    if (Array.isArray(props.factoryId)) {
-      list = list.filter((v) => props.factoryId.includes(v.factoryId))
+  // 筛选车间
+  if (props.workshopId) {
+    if (Array.isArray(props.workshopId)) {
+      list = list.filter((v) => props.workshopId.includes(v.workshopId))
     } else {
-      list = list.filter((v) => props.factoryId === v.factoryId)
+      list = list.filter((v) => props.workshopId === v.workshopId)
     }
   } else {
     list = props.showAll ? list : []

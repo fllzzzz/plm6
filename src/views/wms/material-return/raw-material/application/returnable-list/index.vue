@@ -261,7 +261,7 @@ function handleAddReturn(row) {
     measurePrecision: row.measurePrecision // 计量单位小数精度
   })
   if (selectList.length > 0) {
-    newData.factoryId = -1 // 工厂 同上
+    newData.workshopId = -1 // 车间 同上
     newData.warehouseId = -1 // 仓库 同上
   }
   // setBasicInfoForData(row, newData)

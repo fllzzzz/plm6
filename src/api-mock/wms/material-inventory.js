@@ -39,9 +39,9 @@ const getSteelPlate = {
               shortName: '长安街',
               serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
             },
-            factory: {
+            workshop: {
               id: 1,
-              name: '一号工厂',
+              name: '一号车间',
               shortName: '一工'
             },
             warehouse: {
@@ -70,9 +70,9 @@ const getSteelPlate = {
               shortName: '长安街',
               serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
             },
-            factory: {
+            workshop: {
               id: 1,
-              name: '一号工厂',
+              name: '一号车间',
               shortName: '一工'
             },
             warehouse: {
@@ -118,9 +118,9 @@ const getSectionSteel = {
               shortName: '长安街',
               serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
             },
-            factory: {
+            workshop: {
               id: 1,
-              name: '一号工厂',
+              name: '一号车间',
               shortName: '一工'
             },
             warehouse: {
@@ -168,9 +168,9 @@ const getSteelCoil = {
               shortName: '你脸红个泡泡茶壶',
               serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
             },
-            factory: {
+            workshop: {
               id: 1,
-              name: '一号工厂',
+              name: '一号车间',
               shortName: '一工'
             },
             warehouse: {
@@ -207,9 +207,9 @@ const getAuxMatInventory = {
             brand: '嘻嘻',
             remark: '66666',
             mete: 10,
-            factory: {
+            workshop: {
               id: 1,
-              name: '一号工厂',
+              name: '一号车间',
               shortName: '一工'
             },
             warehouse: {
@@ -234,9 +234,9 @@ const getAuxMatInventory = {
               shortName: '你脸红个泡泡茶壶',
               serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
             },
-            factory: {
+            workshop: {
               id: 1,
-              name: '一号工厂',
+              name: '一号车间',
               shortName: '一工'
             },
             warehouse: {
@@ -273,9 +273,9 @@ const getGasInventory = {
             mete: 250000,
             frozenMete: 25000, // 冻结量
             frozenQuantity: 1, // 冻结数量
-            factory: {
+            workshop: {
               id: 1,
-              name: '一号工厂',
+              name: '一号车间',
               shortName: '一工'
             },
             warehouse: {

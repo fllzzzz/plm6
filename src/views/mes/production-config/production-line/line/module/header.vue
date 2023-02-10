@@ -67,7 +67,7 @@ import { regHeader } from '@compos/use-crud'
 import crudOperation from '@crud/CRUD.operation'
 import rrOperation from '@crud/RR.operation'
 import factorySelect from '@comp-base/factory-select.vue'
-import workshopSelect from '@comp-mes/workshop-select'
+import workshopSelect from '@/components-system/base/workshop-select.vue'
 
 const defaultQuery = {
   factoryId: undefined,
