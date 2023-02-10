@@ -20,7 +20,17 @@
     <div class="form">
       <el-form ref="formRef" :model="form" :rules="rules" size="small" label-width="140px" class="demo-form">
         <el-form-item label="月份：" prop="month">
-          <el-input-number v-model="form.month" style="width: 270px" placeholder="输入月份" controls-position="right" :min="1" :max="12" />
+          <common-select
+            v-model="form.month"
+            :options="monthArr"
+            type="other"
+            placeholder="请选择月份"
+            :data-structure="{ key: 'id', label: 'name', value: 'id' }"
+            class="filter-item"
+            clearable
+            style="width: 270px"
+            :disabled="isEdit"
+          />
         </el-form-item>
         <el-form-item label="员工人数：" prop="employeeQuantity">
           <el-input-number
@@ -59,7 +69,7 @@
 </template>
 
 <script setup>
-import { ref, defineProps } from 'vue'
+import { ref, defineProps, computed } from 'vue'
 import { regForm } from '@compos/use-crud'
 import { fileClassifyEnum } from '@enum-ms/file'
 import UploadBtn from '@comp/file-upload/UploadBtn'
@@ -81,10 +91,21 @@ const defaultForm = {
   totalWage: undefined
 }
 
+const monthArr = ref([])
+for (let i = 1; i <= 12; i++) {
+  monthArr.value.push({
+    id: i,
+    name: i
+  })
+}
+// 是否是编辑状态
+const isEdit = computed(() => {
+  return crud.status.edit > 0
+})
 const { crud, form, CRUD } = regForm(defaultForm, formRef)
 
 const rules = {
-  month: [{ required: true, message: '请输入月份', trigger: 'blur' }],
+  month: [{ required: true, message: '请选择月份', trigger: 'blur' }],
   employeeQuantity: [{ required: true, message: '请输入员工总额', trigger: 'blur' }],
   totalWage: [{ required: true, message: '请输入工资总额', trigger: 'blur' }]
 }
