@@ -49,4 +49,17 @@ export function uploadFun(data) {
   })
 }
 
+// 临时上传dxf文件
+export function shortTimeUploadFun(data) {
+  return request({
+    module: 'mes',
+    url: `spacer/parallel/upload/temporary/files`,
+    method: 'post',
+    timeout: 6000000,
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    },
+    data
+  })
+}
 export default { get, add, edit, del }
