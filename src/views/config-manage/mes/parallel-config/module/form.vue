@@ -250,13 +250,19 @@ const { maxHeight } = useMaxHeight(
   () => drawerRef.value.loaded
 )
 
+const validateThick = (value, row) => {
+  if (!value) {
+    return false
+  }
+  return true
+}
 const tableRules = {
   name: [{ required: true, message: '请输入名称', trigger: 'blur' }],
   serialNumber: [{ required: true, message: '请输入编号', trigger: 'blur' }],
   specification: [{ required: true, message: '请输入规格', trigger: 'blur' }],
   material: [{ required: true, message: '请输入材质', trigger: 'blur' }],
   length: [{ required: true, message: '请输入长度', trigger: 'blur' }],
-  thick: [{ required: true, message: '请输入厚度', trigger: 'blur' }],
+  thick: [{ validator: validateThick, message: '请输入厚度', trigger: 'blur' }],
   quantity: [{ required: true, message: '请输入数量', trigger: 'blur' }],
   grossWeight: [{ required: true, message: '请输入单毛重', trigger: 'blur' }],
   totalGrossWeight: [{ required: true, message: '请输入总毛重', trigger: 'blur' }],
@@ -283,7 +289,7 @@ function handleSuccess(val, row) {
   row.filePath = val
 }
 
-CRUD.HOOK.submit = (crud, form) => {
+CRUD.HOOK.beforeSubmit = (crud, form) => {
   if (crud.form.list && crud.form.list.length === 0) {
     ElMessage.error('请填写明细')
     return false
