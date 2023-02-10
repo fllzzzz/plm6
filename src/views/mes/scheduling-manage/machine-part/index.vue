@@ -30,10 +30,13 @@
               </div>
             </template>
             <template #viewLeft>
-              <!-- <common-button v-permission="permission.save" type="success" class="filter-item" size="mini" @click="previewIt">
-                预览并保存
-              </common-button> -->
-              <common-button v-permission="permission.save" type="warning" class="filter-item" size="mini" @click="previewIt">
+              <common-button type="primary" :loading="tableLoading" size="mini" @click="padBlockClick" @add="add">
+                垫块列表
+              </common-button>
+              <common-button v-permission="permission.save" type="primary" class="filter-item" size="mini" @click="addPadBlock">
+                添加垫块
+              </common-button>
+              <common-button v-permission="permission.save" type="warning" class="filter-item" size="mini" @click="unPreviewIt">
                 无需套料保存
               </common-button>
               <common-button
@@ -123,10 +126,13 @@ class="ellipsis-text text"
         <m-preview
           v-model:visible="previewVisible"
           :list="checkedNodes"
+          :type="type"
           @success="handleSaveSuccess"
           :thick-list="thickList"
           :material-list="materialList"
         ></m-preview>
+        <pad-block-dialog v-model:visible="dialogVisible" />
+        <pad-block v-model:visible="drawerVisible" :pad-block-data="padBlockData" />
       </div>
     </div>
   </div>
@@ -145,6 +151,8 @@ import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import mHeader from './module/header'
 import mPreview from './module/preview'
+import padBlockDialog from './module/pad-block-dialog'
+import padBlock from './module/pad-block'
 import projectList from './module/project-list'
 import { deepClone } from '@/utils/data-type'
 
@@ -160,6 +168,8 @@ const boolDxfEnum = ref()
 const projectListRef = ref()
 const tableRef = ref()
 const nestingLoading = ref(false)
+const type = ref()
+
 const { crud, CRUD } = useCRUD(
   {
     title: '零件排产',
@@ -333,6 +343,16 @@ function handleCheckedAll(val) {
 const previewVisible = ref(false)
 
 function previewIt() {
+  type.value = 1
+  if (!checkedNodes.value?.length) {
+    ElMessage.warning('请至少选择一条数据')
+    return
+  }
+
+  previewVisible.value = true
+}
+function unPreviewIt() {
+  type.value = 0
   if (!checkedNodes.value?.length) {
     ElMessage.warning('请至少选择一条数据')
     return
@@ -341,6 +361,27 @@ function previewIt() {
   previewVisible.value = true
 }
 // --------------------------- 预览并保存 end --------------------------------
+
+//  添加垫块弹窗
+const dialogVisible = ref(false)
+
+function addPadBlock() {
+  dialogVisible.value = true
+}
+
+// 垫块列表
+const drawerVisible = ref(false)
+const tableLoading = ref(false)
+const padBlockData = ref([])
+function padBlockClick() {
+  drawerVisible.value = true
+}
+
+function add(val) {
+  console.log(val, 'val')
+  padBlockData.value = val
+}
+
 </script>
 
 <style lang="scss" scoped>

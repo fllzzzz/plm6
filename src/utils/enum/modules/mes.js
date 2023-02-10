@@ -537,6 +537,14 @@ const machinePartDxfTypeEnum = {
 }
 constantize(machinePartDxfTypeEnum)
 
+// 零件排产/下发方式
+const machinePartIssuedWayEnum = {
+  UN_NESTING_ISSUED: { L: '不套料下发', K: 'UN_NESTING_ISSUED', V: 1 << 0 },
+  NESTING_ISSUED: { L: '套料下发', K: 'NESTING_ISSUED', V: 1 << 1 },
+  ADD_NEW_TICKET: { L: '追加新工单', K: 'ADD_NEW_TICKET', V: 1 << 2 }
+}
+constantize(machinePartIssuedWayEnum)
+
 export {
   teamTypeEnum,
   teamAttributeEnum,
@@ -604,7 +612,8 @@ export {
   drillListEnum,
   structureOrderTypeEnum,
   auxiliaryMaterialTypeEnum,
-  machinePartDxfTypeEnum
+  machinePartDxfTypeEnum,
+  machinePartIssuedWayEnum
 }
 
 export default {
@@ -674,5 +683,6 @@ export default {
   drillListEnum,
   structureOrderTypeEnum,
   auxiliaryMaterialTypeEnum,
-  machinePartDxfTypeEnum
+  machinePartDxfTypeEnum,
+  machinePartIssuedWayEnum
 }

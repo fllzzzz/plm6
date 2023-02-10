@@ -3,36 +3,24 @@
     customClass="machine-part-scheduling-preview-dlg"
     title="零件排产预览"
     v-model="dialogVisible"
-    width="1100px"
+    width="1500px"
     :before-close="handleClose"
   >
+    <template #titleAfter>
+      <el-radio-group v-if="type === 1" v-model="isNew">
+        <el-radio :label="true">使用新工单</el-radio>
+        <el-radio :label="false">使用原有工单</el-radio>
+      </el-radio-group>
+      <div v-if="type === 1 && saveType === machinePartIssuedWayEnum.ADD_NEW_TICKET.V" style="margin-top: 15px">
+        <!-- <pack-select v-model="selectBagId" :project-id="projectId" :packType="packType" style="width: 100%" /> -->
+      </div>
+    </template>
     <template #titleRight>
       <common-button @click="submitIt" :loading="submitLoading" size="mini" type="primary">保存</common-button>
     </template>
     <div class="head-container">
-      <!-- <common-select
-        v-model="layWayConfigId"
-        :options="layingWayList"
-        :loading="layingWayLoading"
-        :dataStructure="{ key: 'id', label: 'layingOffWayName', value: 'id' }"
-        clearable
-        class="filter-item"
-        placeholder="请选择下料方式"
-        style="width: 200px"
-      >
-        <template #view="{ data }">
-          <span class="customize-option-item">
-            <span class="label">{{ data.layingOffWayName }}</span>
-            <span>
-              <span class="extra-label">
-                <span v-parse-enum="{ e: materialTypeEnum, v: data.materialType }"></span>
-              </span>
-            </span>
-          </span>
-        </template>
-      </common-select> -->
       <el-form style="display: flex; flex-wrap: wrap">
-        <el-form-item label="材质：" class="form-label-require">
+        <el-form-item label="材质:" class="form-label-require">
           <common-select
             v-model="material"
             :options="materialList"
@@ -46,7 +34,7 @@
             style="width: 160px"
           />
         </el-form-item>
-        <el-form-item label="厚度：" class="form-label-require">
+        <el-form-item label="厚度:" class="form-label-require">
           <common-select
             v-model="thick"
             :options="thickList"
@@ -60,30 +48,24 @@
             style="width: 160px"
           />
         </el-form-item>
-        <!-- <el-form-item label="生产组：" class="form-label-require">
+        <el-form-item v-if="!type" label="生产组:" class="form-label-require">
           <el-cascader
-            :ref="(el) => (cascaderRef[$index] = el)"
             v-model="groupsId"
-            :options="groupsTree"
-            :props="{
-              value: 'id',
-              label: 'name',
-              children: 'children',
-              expandTrigger: 'hover',
-              emitPath: false,
-            }"
+            :options="schedulingGroups.list"
+            :props="{ value: 'id', label: 'name', children: 'children', expandTrigger: 'hover', emitPath: false }"
             :show-all-levels="false"
+            style="width: 160px"
             filterable
             clearable
-            :placeholder="$index === 0 ? '请选择生产组' : '同上'"
-            @expand-change="handleExpandChange($event, $index, cascaderRef[$index])"
-
-            @change="handleGroupsChange($event, $index)"
+            placeholder="请选择生产组"
           />
-        </el-form-item> -->
-        <el-form-item label="排产日期：" class="form-label-require">
+        </el-form-item>
+        <el-form-item label="切割方式:" class="form-label-require">
+          <cut-config-select v-model="cutConfigId" style="width: 160px" :layOffWayType="Boolean(type) ? true : false" clearable />
+        </el-form-item>
+        <el-form-item label="排产日期:" class="form-label-require">
           <el-date-picker
-            v-model="dateTime"
+            v-model="askCompleteTime"
             type="date"
             size="small"
             class="date-item filter-item"
@@ -127,12 +109,14 @@
 
 <script setup>
 import { save } from '@/api/mes/scheduling-manage/machine-part'
-import { ElNotification } from 'element-plus'
-import { defineEmits, defineProps, ref, inject } from 'vue'
+import { ElNotification, ElRadioGroup } from 'element-plus'
+import { defineEmits, defineProps, ref } from 'vue'
 // import { materialTypeEnum } from '@enum-ms/uploading-form'
-// import useSchedulingGroups from '@compos/mes/scheduling/use-scheduling-groups'
+import { componentTypeEnum, machinePartIssuedWayEnum } from '@enum-ms/mes'
+import { manualFetchGroupsTree } from '@compos/mes/scheduling/use-scheduling-groups'
 import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'
+import cutConfigSelect from '@/components-system/base/cut-config-select.vue'
 
 const emit = defineEmits(['update:visible', 'success'])
 const props = defineProps({
@@ -151,6 +135,9 @@ const props = defineProps({
   thickList: {
     type: Array,
     default: () => []
+  },
+  type: {
+    type: Number
   }
 })
 
@@ -160,12 +147,16 @@ const dataFormat = ref([['project', 'parse-project']])
 // const layingWayList = ref([])
 // const layingWayLoading = ref(false)
 const submitLoading = ref(false)
-const dateTime = ref()
+const askCompleteTime = ref()
+const cutConfigId = ref()
 const groupsId = ref()
-const crud = inject('crud')
+const thick = ref()
+const material = ref()
+const isNew = ref(true)
+const saveType = ref(machinePartIssuedWayEnum.NESTING_ISSUED.V)
+// const crud = inject('crud')
 
-const { visible: dialogVisible, handleClose } = useVisible({ emit, props, field: 'visible' })
-// const { groupsTree, groupsObj } = useSchedulingGroups({ queryParams, factoryIds: curFactoryIds })
+const { visible: dialogVisible, handleClose } = useVisible({ emit, props, field: 'visible', showHook: showHook })
 
 const { maxHeight } = useMaxHeight(
   {
@@ -179,59 +170,30 @@ const { maxHeight } = useMaxHeight(
   dialogVisible
 )
 
-// 生产组级联
-// function handleFocusChange(expend, row, index, curCascaderRef) {
-//   if (!row.groupsId || row.groupsId === '同上') {
-//     const menus = curCascaderRef.panel.menuList[0]
-//     setCascaderExpandNode(menus, menus.nodes[0])
-//   }
-// }
+function showHook() {
+  saveType.value = machinePartIssuedWayEnum.NESTING_ISSUED.V
+  fetchGroups()
+}
+// --------------------------- 获取生产班组 start ------------------------------
+const groupLoad = ref(false)
+const schedulingGroups = ref({ list: [], obj: {}})
 
-function setCascaderExpandNode(menus, node) {
-  if (!node.isLeaf) {
-    menus.panel.expandNode(node, true)
-    if (!node.children[0].isLeaf) {
-      setCascaderExpandNode(menus, node.children[0])
-    }
+async function fetchGroups() {
+  if (groupLoad.value) return
+  try {
+    schedulingGroups.value = await manualFetchGroupsTree({ productType: componentTypeEnum.MACHINE_PART.V })
+    groupLoad.value = true
+  } catch (e) {
+    console.log('获取生产组的信息失败', e)
   }
 }
-
-function handleExpandChange(expend, row, index, curCascaderRef) {
-  const menus = curCascaderRef.panel.menuList[0]
-  const curExpandingNode = menus.panel.expandingNode
-  if (!curExpandingNode.children[0].isLeaf) {
-    setCascaderExpandNode(menus, curExpandingNode.children[0])
-  }
-}
-
-// async function fetchLayingWay() {
-//   try {
-//     layWayConfigId.value = undefined
-//     layingWayLoading.value = true
-//     const content = await getLayingWay()
-//     layingWayList.value = content.filter((v) => {
-//       if (crud.query.thickList === '其他') {
-//         return v.materialType === materialTypeEnum.MANMADE_BLANKING.V
-//       } else {
-//         return true
-//       }
-//     })
-//   } catch (error) {
-//     console.log('获取下料方式列表', error)
-//   } finally {
-//     layingWayLoading.value = false
-//   }
-// }
+// --------------------------- 获取生产班组 end --------------------------------
 
 function disabledDate(time) {
   return time < new Date()
 }
 async function submitIt() {
   try {
-    // if (!layWayConfigId.value) {
-    //   ElMessage.warning('请选择下料方式')
-    //   return
-    // }
     submitLoading.value = true
     const _list = []
     props.list.forEach((v) => {
@@ -245,10 +207,18 @@ async function submitIt() {
       })
     })
     await save({
-      // layWayConfigId: layWayConfigId.value,
-      material: crud.query.material,
-      thickList: crud.query.thickList,
-      linkList: _list
+      ...schedulingGroups.value.obj[groupsId.value],
+      material: material.value,
+      thick: thick.value,
+      linkList: _list,
+      askCompleteTime: askCompleteTime.value,
+      cutConfigId: cutConfigId.value,
+      saveType:
+        props.type === 0
+          ? machinePartIssuedWayEnum.UN_NESTING_ISSUED.V
+          : isNew.value === true
+            ? machinePartIssuedWayEnum.NESTING_ISSUED.V
+            : machinePartIssuedWayEnum.ADD_NEW_TICKET.V
     })
     ElNotification({
       title: '零件排产保存成功',
@@ -257,6 +227,11 @@ async function submitIt() {
     })
     handleClose()
     emit('success')
+    askCompleteTime.value = undefined
+    cutConfigId.value = undefined
+    groupsId.value = undefined
+    thick.value = undefined
+    material.value = undefined
   } catch (error) {
     console.log('保存零件排产报错', error)
   } finally {
