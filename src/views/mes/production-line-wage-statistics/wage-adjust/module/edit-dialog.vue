@@ -1,5 +1,5 @@
 <template>
-  <common-dialog title="批量调整工价" v-model="dialogVisible" width="1200px" top="5vh" :before-close="handleClose">
+  <common-dialog title="批量调整工价" v-model="dialogVisible" width="1500px" top="5vh" :before-close="handleClose">
     <template #titleRight>
       <common-button
         v-permission="permission.edit"
@@ -16,7 +16,7 @@
       :show-empty-symbol="false"
       :data-format="dataFormat"
       :data="list"
-      :max-height="maxHeight"
+      :max-height="maxHeight - 100"
       row-key="rowId"
       style="width: 100%"
       :cell-class-name="changedCellMask"
@@ -25,12 +25,12 @@
       <el-table-column prop="monomer.name" label="单体" align="center" show-overflow-tooltip min-width="100px" />
       <el-table-column prop="area.name" label="区域" align="center" show-overflow-tooltip min-width="100px" />
       <el-table-column prop="serialNumber" label="编号" align="center" show-overflow-tooltip min-width="100px" />
-      <el-table-column prop="specification" label="规格" align="center" show-overflow-tooltip min-width="110px" />
+      <el-table-column prop="specification" label="规格" align="center" show-overflow-tooltip min-width="130px" />
       <el-table-column prop="quantity" label="数量" align="center" show-overflow-tooltip min-width="70px" />
       <el-table-column prop="netWeight" label="重量(kg)" align="center" show-overflow-tooltip min-width="90px" />
-      <el-table-column prop="wageQuotaTypeStr" align="center" show-overflow-tooltip label="核算单位" width="70px" />
+      <el-table-column v-if="props.processInfo?.type !== processCategoryEnum.PAINT.V" prop="wageQuotaTypeStr" align="center" show-overflow-tooltip label="核算单位" width="70px" />
       <template v-if="showMoreColumn">
-        <el-table-column align="center" prop="wage" label="定额单价" width="150">
+        <!-- <el-table-column align="center" prop="wage" label="定额单价" width="150">
           <template #default="{ row }">
             <common-input-number
               v-model="row.wage"
@@ -41,49 +41,68 @@
               style="width: 100%"
             />
           </template>
+        </el-table-column> -->
+        <el-table-column align="center" prop="primer" label="底漆" width="150">
+          <el-table-column prop="primerWageQuotaType" align="center" show-overflow-tooltip label="核算单位" width="70px">
+            <template #default="{ row }">
+              <span>{{ wageQuotaTypeEnum.V[row.primerWageQuotaType]?.C_UNIT }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column align="center" prop="primerWage" label="定额单价" width="150">
+            <template #default="{ row }">
+              <common-input-number v-model="row.primerWage" placeholder="请输入单价" :precision="2" :controls="false" style="width: 100%" />
+            </template>
+          </el-table-column>
         </el-table-column>
-        <el-table-column align="center" prop="primerWage" label="底漆" width="150">
-          <template #default="{ row }">
-            <common-input-number
-              v-model="row.primerWage"
-              :disabled="!(row.wageQuotaType & wageQuotaTypeEnum.AREA.V)"
-              placeholder="请输入单价"
-              :precision="2"
-              :controls="false"
-              style="width: 100%"
-            />
-          </template>
+        <el-table-column align="center" prop="intermediatePaint" label="中间漆" width="150">
+          <el-table-column prop="intermediatePaintWageQuotaType" align="center" show-overflow-tooltip label="核算单位" width="70px">
+            <template #default="{ row }">
+              <span>{{ wageQuotaTypeEnum.V[row.intermediatePaintWageQuotaType]?.C_UNIT }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column align="center" prop="intermediatePaintWage" label="定额单价" width="150">
+            <template #default="{ row }">
+              <common-input-number
+                v-model="row.intermediatePaintWage"
+                placeholder="请输入单价"
+                :precision="2"
+                :controls="false"
+                style="width: 100%"
+              />
+            </template>
+          </el-table-column>
         </el-table-column>
-        <el-table-column align="center" prop="intermediatePaintWage" label="中间漆" width="150">
-          <template #default="{ row }">
-            <common-input-number
-              v-model="row.intermediatePaintWage"
-              :disabled="!(row.wageQuotaType & wageQuotaTypeEnum.AREA.V)"
-              placeholder="请输入单价"
-              :precision="2"
-              :controls="false"
-              style="width: 100%"
-            />
-          </template>
-        </el-table-column>
-        <el-table-column align="center" prop="topcoatWage" label="面漆" width="150">
-          <template #default="{ row }">
-            <common-input-number
-              v-model="row.topcoatWage"
-              :disabled="!(row.wageQuotaType & wageQuotaTypeEnum.AREA.V)"
-              placeholder="请输入单价"
-              :precision="2"
-              :controls="false"
-              style="width: 100%"
-            />
-          </template>
+        <el-table-column align="center" prop="topcoat" label="面漆" width="150">
+          <el-table-column prop="topcoatWageQuotaType" align="center" show-overflow-tooltip label="核算单位" width="70px">
+            <template #default="{ row }">
+              <span>{{ wageQuotaTypeEnum.V[row.topcoatWageQuotaType]?.C_UNIT }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column align="center" prop="topcoatWage" label="定额单价" width="150">
+            <template #default="{ row }">
+              <common-input-number
+                v-model="row.topcoatWage"
+                placeholder="请输入单价"
+                :precision="2"
+                :controls="false"
+                style="width: 100%"
+              />
+            </template>
+          </el-table-column>
         </el-table-column>
       </template>
       <template v-else>
         <!-- <el-table-column align="center" prop="sourceWage" label="定额单价"> </el-table-column> -->
         <el-table-column align="center" prop="wage" label="定额单价" width="200">
           <template #default="{ row }">
-            <common-input-number v-model="row.wage" placeholder="请输入单价" :precision="2" :controls="false" :min="0" style="width: 100%" />
+            <common-input-number
+              v-model="row.wage"
+              placeholder="请输入单价"
+              :precision="2"
+              :controls="false"
+              :min="0"
+              style="width: 100%"
+            />
           </template>
         </el-table-column>
       </template>
@@ -154,12 +173,12 @@ const hasAreaQuota = ref(false)
 
 // 油漆类 且计价方式为面积 需要显示底漆、中间漆、面漆的单价
 const showMoreColumn = computed(() => {
-  return !!(props.processInfo && props.processInfo?.type & processCategoryEnum.PAINT.V && hasAreaQuota.value)
+  return !!(props.processInfo && props.processInfo?.type & processCategoryEnum.PAINT.V && true)
 })
 
 function showHook() {
   list.value = props.selections.map((v) => {
-    if (v.wageQuotaType & wageQuotaTypeEnum.AREA.v) {
+    if (v.wageQuotaType & wageQuotaTypeEnum.AREA.V) {
       hasAreaQuota.value = true
     }
     return v

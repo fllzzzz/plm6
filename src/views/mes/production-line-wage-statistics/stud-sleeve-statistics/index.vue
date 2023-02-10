@@ -176,6 +176,8 @@
         </template>
       </el-table-column>
     </common-table>
+    <!-- 分页 -->
+    <pagination />
   </div>
 </template>
 
@@ -184,6 +186,7 @@ import { ref } from 'vue'
 import crudApi from '@/api/mes/production-line-wage-statistics/stud-sleeve-statistics'
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
+import pagination from '@crud/Pagination'
 import { projectNameFormatter } from '@/utils/project'
 import { parseTime } from '@/utils/date'
 import { tableSummary } from '@/utils/el-extra'

@@ -404,6 +404,13 @@ export default {
           hidden: false,
           component: '/mes/production-config/cutting-config/index',
           meta: { title: '零件下料配置', icon: 'project', noCache: true }
+        },
+        {
+          name: 'MesParallelConfig',
+          path: 'parallel-config',
+          hidden: false,
+          component: '/config-manage/mes/parallel-config/index',
+          meta: { title: '垫块配置', icon: 'project', noCache: true }
         }
       ]
     },

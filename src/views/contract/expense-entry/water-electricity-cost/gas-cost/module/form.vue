@@ -32,7 +32,7 @@
             @change="handleChange"
           />
         </el-form-item>
-        <el-form-item label="月份：" prop="month">
+        <!-- <el-form-item label="月份：" prop="month">
           <el-input-number
             v-model="form.month"
             style="width: 270px"
@@ -41,6 +41,19 @@
             :step="1"
             :min="1"
             :max="12"
+          />
+        </el-form-item> -->
+        <el-form-item label="月份：" prop="month">
+          <common-select
+            v-model="form.month"
+            :options="monthArr"
+            type="other"
+            placeholder="请选择月份"
+            :data-structure="{ key: 'id', label: 'name', value: 'id' }"
+            class="filter-item"
+            clearable
+            style="width: 270px"
+            :disabled="isEdit"
           />
         </el-form-item>
         <el-form-item :label="`用量（${form.accountingUnit ? form.accountingUnit : ''}）：`" prop="usedMete">
@@ -88,6 +101,13 @@ const prop = defineProps({
 
 const formRef = ref()
 
+const monthArr = ref([])
+for (let i = 1; i <= 12; i++) {
+  monthArr.value.push({
+    id: i,
+    name: i
+  })
+}
 const defaultForm = {
   id: undefined,
   year: undefined,

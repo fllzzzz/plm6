@@ -36,7 +36,7 @@
         :key="item"
         prop="feeAmount"
         :show-overflow-tooltip="true"
-        :label="item.toString()"
+        :label="item.toString() + '月'"
         v-for="item in monthArr"
       >
         <template v-slot="scope">

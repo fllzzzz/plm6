@@ -39,7 +39,7 @@ const managementSalaryList = contract.managementSalaryList
 const productionSalaryList = contract.productionSalaryList
 const propertyFeeList = contract.propertyFeeList
 
-const mainMaterialList = contract.mainMaterialList
+const conMainMaterialList = contract.mainMaterialList
 const auxiliaryMaterialList = contract.mainMaterialList
 const manualList = contract.manualList
 const shippingFeeList = contract.shippingFeeList
@@ -180,7 +180,7 @@ export default {
   productionSalaryList, // 生产人员工资清单
   propertyFeeList, // 物业费用清单
 
-  mainMaterialList, // 主材费清单
+  conMainMaterialList, // 主材费清单
   manualList, // 人工费
   shippingFeeList, // 运输费
   testingFee, // 检测费
