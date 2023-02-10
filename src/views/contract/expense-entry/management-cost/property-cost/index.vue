@@ -14,7 +14,11 @@
       show-summary
       :summary-method="getSummaries"
     >
-      <el-table-column v-if="columns.visible('month')" prop="month" label="月份" align="center" width="140px" />
+      <el-table-column v-if="columns.visible('month')" prop="month" label="月份" align="center" width="140px">
+        <template #default="{ row }">
+          <span>{{ row.month }}月</span>
+        </template>
+      </el-table-column>
       <el-table-column
         v-if="columns.visible('feeAmount')"
         align="center"

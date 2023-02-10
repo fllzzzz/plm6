@@ -14,14 +14,18 @@
       show-summary
       :summary-method="getSummaries"
     >
-      <el-table-column v-if="columns.visible('month')" prop="month" label="月份" align="center" width="100" />
+      <el-table-column v-if="columns.visible('month')" prop="month" label="月份" align="center" width="100">
+        <template #default="{ row }">
+          <span>{{ row.month }}月</span>
+        </template>
+      </el-table-column>
       <el-table-column
         v-if="columns.visible('usedMete')"
         align="center"
         key="usedMete"
         prop="usedMete"
         :show-overflow-tooltip="true"
-        :label="crud.query.type === costTypeEnum.ELECTRIC_COST.V?'用电度数（kw/h）':'用水量（吨）'"
+        :label="crud.query.type === costTypeEnum.ELECTRIC_COST.V ? '用电度数（kw/h）' : '用水量（吨）'"
       >
         <template #default="{ row }">
           <span>{{ row.usedMete }}</span>
@@ -33,7 +37,7 @@
         key="totalAmount"
         prop="totalAmount"
         :show-overflow-tooltip="true"
-        :label="crud.query.type === costTypeEnum.ELECTRIC_COST.V?'电费总额（元）':'水费总额（元）'"
+        :label="crud.query.type === costTypeEnum.ELECTRIC_COST.V ? '电费总额（元）' : '水费总额（元）'"
       >
         <template #default="{ row }">
           <span>{{ row.totalAmount }}</span>
@@ -45,7 +49,7 @@
         key="averageValue"
         prop="averageValue"
         :show-overflow-tooltip="true"
-        :label="crud.query.type === costTypeEnum.ELECTRIC_COST.V?'平均电费（元/kw/h）':'平均水费（元/吨）'"
+        :label="crud.query.type === costTypeEnum.ELECTRIC_COST.V ? '平均电费（元/kw/h）' : '平均水费（元/吨）'"
       >
         <template #default="{ row }">
           <span>{{ row.averageValue }}</span>

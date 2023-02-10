@@ -14,7 +14,11 @@
       show-summary
       :summary-method="getSummaries"
     >
-      <el-table-column v-if="columns.visible('month')" prop="month" label="月份" align="center" width="100" />
+      <el-table-column v-if="columns.visible('month')" prop="month" label="月份" align="center" width="100">
+        <template #default="{ row }">
+          <span>{{ row.month }}月</span>
+        </template>
+      </el-table-column>
       <el-table-column
         v-if="columns.visible('classifyName')"
         align="center"
@@ -158,7 +162,7 @@ function getSummaries(param) {
   return sums
 }
 
-CRUD.HOOK.beforeToQuery = (crud) => { }
+CRUD.HOOK.beforeToQuery = (crud) => {}
 CRUD.HOOK.handleRefresh = async (crud, res) => {
   res.data.content = await numFmtByBasicClass(
     res.data.content,
