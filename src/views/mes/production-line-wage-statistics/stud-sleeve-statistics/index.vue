@@ -111,7 +111,7 @@
         min-width="100"
       >
         <template v-slot="scope">
-          <span>{{ parseTime(scope.row.completeTime, '{y}-{m}-{d}') }}</span>
+          <span>{{ scope.row.completeTime }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -189,7 +189,6 @@ import useMaxHeight from '@compos/use-max-height'
 import pagination from '@crud/Pagination'
 import { auxiliaryMaterialTypeEnum } from '@enum-ms/mes'
 import { projectNameFormatter } from '@/utils/project'
-import { parseTime } from '@/utils/date'
 import { tableSummary } from '@/utils/el-extra'
 import mHeader from './module/header'
 
