@@ -36,11 +36,11 @@
           <span>{{ scope.row.specMerge }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="specification" key="specification" label="材质" align="center">
+      <!-- <el-table-column prop="specification" key="specification" label="材质" align="center">
         <template v-slot="scope">
           <span>{{ scope.row.specification }}</span>
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column prop="accountingUnit" key="accountingUnit" label="核算单位" align="center">
         <template v-slot="scope">
           <span>{{ scope.row.accountingUnit }}</span>
@@ -53,7 +53,7 @@
       </el-table-column>
       <el-table-column prop="unitPrice" key="unitPrice" label="单价" align="center">
         <template v-slot="scope">
-          <span>{{ scope.row.unitPrice }}</span>
+          <span>{{ scope.row.unitPrice?.toFixed(2) }}</span>
         </template>
       </el-table-column>
       <el-table-column prop="amount" key="amount" label="总价" align="center">
