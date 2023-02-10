@@ -77,7 +77,7 @@
         </template>
         <template #viewLeft>
           <print-table
-          v-permission="permission.print"
+            v-permission="permission.print"
             api-key="mesFactoryWorkshopReport"
             :params="{ startTime: query.startTime, endTime: query.endTime, projectId: query.projectId }"
             size="mini"
@@ -96,6 +96,7 @@ import { regHeader } from '@compos/use-crud'
 import useChart from '@compos/use-chart'
 import moment from 'moment'
 import { DP } from '@/settings/config'
+import { parseTime } from '@/utils/date'
 import { PICKER_OPTIONS_SHORTCUTS } from '@/settings/config'
 // import { getOrderDeliveryRate } from '@/api/operation/order-delivery-rate'
 import { fullYearProduction, workshopEcharts, workshopProduction } from '@/api/mes/factory-report/workshop-report.js'
@@ -111,6 +112,10 @@ const yearProductionData = reactive({
 const summaryList = reactive({
   mete: 0
 })
+const chartDateTime = ref()
+const chartYearTime = ref()
+const chartVal = ref([])
+
 const defaultQuery = {
   dateTime: undefined,
   date: [moment().startOf('month').valueOf(), moment().valueOf()],
@@ -155,14 +160,10 @@ async function workshopSummary() {
     console.log('获取车间产量失败', e)
   }
 }
-function handleDateChange() {
-  if (query.date && query.date.length > 1) {
-    query.startTime = query.date[0]
-    query.endTime = query.date[1]
-  } else {
-    query.startTime = undefined
-    query.endTime = undefined
-  }
+function handleDateChange(val) {
+  crud.query.date = val
+  query.startTime = val[0]
+  query.endTime = val[1]
   workshopSummary()
   crud.toQuery()
 }
@@ -246,10 +247,23 @@ const { getMyChart } = useChart({
 })
 
 async function fetchChart() {
+  chartVal.value = []
   try {
     chartLoading.value = true
     const _myChart = getMyChart()
     const productionData = []
+    _myChart.on('click', function (params) {
+      chartYearTime.value = crud.query.dateTime === undefined ? moment().valueOf() : query.dateTime
+      chartDateTime.value = params.name?.split('')[0]
+      chartDateTime.value = Number(chartDateTime.value) < 10 ? '0' + chartDateTime.value : chartDateTime.value
+      chartVal.value = [
+        moment(parseTime(chartYearTime.value, '{y}') + '-' + chartDateTime.value)
+          .startOf('month')
+          .valueOf(),
+        moment(parseTime(chartYearTime.value, '{y}') + '-' + chartDateTime.value).endOf('month').valueOf()
+      ]
+      handleDateChange(chartVal.value)
+    })
     const data = await workshopEcharts({
       dateTime: query.dateTime === undefined ? moment().valueOf() : query.dateTime,
       workShopId: query.workShopId,
