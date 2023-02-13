@@ -197,7 +197,7 @@
       >
         <template v-slot="scope">
           <div class="board-box">
-            <el-image :src="scope.row.picturePath" @error="item.imgLoad = false">
+            <el-image :src="scope.row.picturePath" @error="scope.row.imgLoad = false">
               <template #error>
                 <div class="error-slot">
                   <span v-if="scope.row.picturePath">加载失败</span>
@@ -276,7 +276,7 @@ function handleSuccess() {
 }
 
 CRUD.HOOK.handleRefresh = (crud, res) => {
-  res.data.content = res.data.content.map((v) => {
+  res.data.content = res.data.content?.map((v) => {
     v.imgLoad = true
     return v
   })

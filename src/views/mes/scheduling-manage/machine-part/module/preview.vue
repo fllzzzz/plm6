@@ -7,12 +7,23 @@
     :before-close="handleClose"
   >
     <template #titleAfter>
-      <el-radio-group v-if="type === 1" v-model="isNew">
-        <el-radio :label="true">使用新工单</el-radio>
-        <el-radio :label="false">使用原有工单</el-radio>
-      </el-radio-group>
-      <div v-if="type === 1 && saveType === machinePartIssuedWayEnum.ADD_NEW_TICKET.V" style="margin-top: 15px">
-        <!-- <pack-select v-model="selectBagId" :project-id="projectId" :packType="packType" style="width: 100%" /> -->
+      <div style="display: flex">
+        <el-radio-group v-if="type === 1" v-model="isNew">
+          <el-radio :label="true">使用新工单</el-radio>
+          <el-radio :label="false">使用原有工单</el-radio>
+        </el-radio-group>
+        <div v-if="!isNew" style="margin-left: 15px">
+          <common-select
+            v-model="saveType"
+            :options="orderList"
+            :dataStructure="{ key: 'value', label: 'value', value: 'value' }"
+            clearable
+            type="other"
+            class="filter-item"
+            placeholder="请选择原有工单"
+            style="width: 240px"
+          />
+        </div>
       </div>
     </template>
     <template #titleRight>
@@ -108,7 +119,7 @@
 </template>
 
 <script setup>
-import { save } from '@/api/mes/scheduling-manage/machine-part'
+import { save, getCutTaskDetail } from '@/api/mes/scheduling-manage/machine-part'
 import { ElNotification, ElRadioGroup } from 'element-plus'
 import { defineEmits, defineProps, ref } from 'vue'
 // import { materialTypeEnum } from '@enum-ms/uploading-form'
@@ -117,6 +128,7 @@ import { manualFetchGroupsTree } from '@compos/mes/scheduling/use-scheduling-gro
 import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'
 import cutConfigSelect from '@/components-system/base/cut-config-select.vue'
+// import packSelect from '@comp-mes/pack-select'
 
 const emit = defineEmits(['update:visible', 'success'])
 const props = defineProps({
@@ -138,6 +150,14 @@ const props = defineProps({
   },
   type: {
     type: Number
+  },
+  packLoading: {
+    type: Boolean,
+    default: false
+  },
+  packType: {
+    type: Number,
+    default: undefined
   }
 })
 
@@ -154,6 +174,8 @@ const thick = ref()
 const material = ref()
 const isNew = ref(true)
 const saveType = ref(machinePartIssuedWayEnum.NESTING_ISSUED.V)
+// const orderDialogVisible = ref(false)
+const orderList = ref([])
 // const crud = inject('crud')
 
 const { visible: dialogVisible, handleClose } = useVisible({ emit, props, field: 'visible', showHook: showHook })
@@ -173,6 +195,22 @@ const { maxHeight } = useMaxHeight(
 function showHook() {
   saveType.value = machinePartIssuedWayEnum.NESTING_ISSUED.V
   fetchGroups()
+  if (props.type === 1) {
+    fetchOrder()
+  }
+}
+
+async function fetchOrder() {
+  try {
+    const data = await getCutTaskDetail({})
+    data?.forEach(v => {
+      orderList.value.push({
+        value: v.orderNumber
+      })
+    })
+  } catch (error) {
+    console.log('获取工单失败', error)
+  }
 }
 // --------------------------- 获取生产班组 start ------------------------------
 const groupLoad = ref(false)
@@ -232,6 +270,7 @@ async function submitIt() {
     groupsId.value = undefined
     thick.value = undefined
     material.value = undefined
+    saveType.value = undefined
   } catch (error) {
     console.log('保存零件排产报错', error)
   } finally {

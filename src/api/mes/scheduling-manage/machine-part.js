@@ -170,5 +170,17 @@ export function getNestingTaskDetail({ id }) {
   })
 }
 
+/**
+ * @description:获取可排产的切割任务单详情
+ */
+export function getCutTaskDetail(params) {
+  return request({
+    module: 'mes',
+    url: `machine_part/scheduling/task/list`,
+    method: 'get',
+    params
+  })
+}
+
 export default { get }
 

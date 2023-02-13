@@ -30,10 +30,10 @@
               </div>
             </template>
             <template #viewLeft>
-              <common-button type="primary" :loading="tableLoading" size="mini" @click="padBlockClick" @add="add">
+              <common-button type="primary" :loading="tableLoading" size="mini" class="filter-item" @click="padBlockClick">
                 垫块列表
               </common-button>
-              <common-button v-permission="permission.save" type="primary" class="filter-item" size="mini" @click="addPadBlock">
+              <common-button v-permission="permission.save" type="success" class="filter-item" size="mini" @click="addPadBlock">
                 添加垫块
               </common-button>
               <common-button v-permission="permission.save" type="warning" class="filter-item" size="mini" @click="unPreviewIt">
@@ -131,7 +131,7 @@ class="ellipsis-text text"
           :thick-list="thickList"
           :material-list="materialList"
         ></m-preview>
-        <pad-block-dialog v-model:visible="dialogVisible" />
+        <pad-block-dialog v-model:visible="dialogVisible" @addBlock="addBlock" />
         <pad-block v-model:visible="drawerVisible" :pad-block-data="padBlockData" />
       </div>
     </div>
@@ -142,7 +142,7 @@ class="ellipsis-text text"
 import crudApi from '@/api/mes/scheduling-manage/machine-part'
 import { computed, ref, onUnmounted, onMounted, nextTick } from 'vue'
 import { ElMessage } from 'element-plus'
-
+import { isNotBlank } from '@/utils/data-type'
 import RAF from '@/utils/raf'
 import { machinePartDxfTypeEnum } from '@enum-ms/mes'
 import { machinePartSchedulingPM as permission } from '@/page-permission/mes'
@@ -344,7 +344,7 @@ const previewVisible = ref(false)
 
 function previewIt() {
   type.value = 1
-  if (!checkedNodes.value?.length) {
+  if (padBlockData.value.length === 0 && !checkedNodes.value?.length) {
     ElMessage.warning('请至少选择一条数据')
     return
   }
@@ -353,11 +353,10 @@ function previewIt() {
 }
 function unPreviewIt() {
   type.value = 0
-  if (!checkedNodes.value?.length) {
+  if (padBlockData.value.length === 0 && !checkedNodes.value?.length) {
     ElMessage.warning('请至少选择一条数据')
     return
   }
-
   previewVisible.value = true
 }
 // --------------------------- 预览并保存 end --------------------------------
@@ -377,11 +376,17 @@ function padBlockClick() {
   drawerVisible.value = true
 }
 
-function add(val) {
+function addBlock(val) {
   console.log(val, 'val')
-  padBlockData.value = val
+  const findVal = padBlockData.value.find((v) => v.id === val.id)
+  console.log(findVal, 'findVal')
+  if (isNotBlank(findVal)) {
+    findVal.quantity += val.quantity
+  } else {
+    padBlockData.value.push(JSON.parse(JSON.stringify(val)))
+  }
+  console.log(padBlockData.value)
 }
-
 </script>
 
 <style lang="scss" scoped>
