@@ -20,7 +20,17 @@
     <div class="form">
       <el-form ref="formRef" :model="form" :rules="rules" size="small" label-width="140px" class="demo-form">
         <el-form-item label="月份：" prop="month">
-          <el-input-number v-model="form.month" style="width: 270px" placeholder="输入月份" controls-position="right" :min="1" :max="12" />
+          <common-select
+            v-model="form.month"
+            :options="monthArr"
+            type="other"
+            placeholder="请选择月份"
+            :data-structure="{ key: 'id', label: 'name', value: 'id' }"
+            class="filter-item"
+            clearable
+            style="width: 270px"
+            :disabled="isEdit"
+          />
         </el-form-item>
         <el-form-item label="用量：" prop="usedMete">
           <el-input-number
@@ -60,6 +70,13 @@ const prop = defineProps({
   }
 })
 
+const monthArr = ref([])
+for (let i = 1; i <= 12; i++) {
+  monthArr.value.push({
+    id: i,
+    name: i
+  })
+}
 // 是否是编辑状态
 const isEdit = computed(() => {
   return crud.status.edit > 0
@@ -82,7 +99,7 @@ const validateQuantity = (rule, value, callback) => {
   callback()
 }
 const rules = {
-  month: [{ required: true, message: '请输入月份', trigger: 'blur' }],
+  month: [{ required: true, message: '请选择月份', trigger: 'blur' }],
   usedMete: [{ required: true, validator: validateQuantity, trigger: 'blur' }],
   totalAmount: [{ required: true, validator: validateQuantity, trigger: 'blur' }]
 }

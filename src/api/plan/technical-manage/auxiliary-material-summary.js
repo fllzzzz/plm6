@@ -3,7 +3,7 @@ import request from '@/utils/request'
 export function get(params) {
   return request({
     module: 'plan',
-    url: `auxiliaryPart/summary`,
+    url: `auxiliaryPart`,
     method: 'get',
     params
   })
