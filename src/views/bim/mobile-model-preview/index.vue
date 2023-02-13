@@ -2,11 +2,13 @@
   <bim-model-view
     ref="mobileModelPreview"
     :monomer-id="monomerId"
+    :areaId="areaId"
     :serial-number="serialNumber"
     :productId="productId"
     :productType="productType"
     :preview-show-all="Boolean(showAll)"
     is-preview
+    is-mobile
     class="mobile-model-preview"
   ></bim-model-view>
   <el-radio-group class="mobile-model-preview-radio" v-if="!Boolean(showAll) && loaded" v-model="showContent" @change="contentChange">
@@ -27,6 +29,7 @@ const productType = route.query.productType && Number(route.query.productType)
 const showAll = (route.query.showAll && Number(route.query.showAll)) || 0 // 0:不显示全部，1：显示全部
 const serialNumber = route.query.serialNumber
 const monomerId = route.query.monomerId && Number(route.query.monomerId)
+const areaId = route.query.areaId && Number(route.query.areaId)
 
 const mobileModelPreview = ref()
 const showContent = ref(false)

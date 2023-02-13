@@ -82,7 +82,7 @@ const { crud, columns, CRUD } = useCRUD(
     sort: ['id.desc'],
     permission: { ...permission },
     optShow: { ...optShow },
-    requiredQuery: ['projectId', 'dataType'],
+    requiredQuery: ['dataType'],
     crudApi: { ...crudApi },
     hasPagination: true
   },
@@ -99,7 +99,6 @@ watch(
   () => globalProjectId.value,
   (val) => {
     if (val) {
-      crud.query.projectId = globalProjectId.value
       crud.toQuery()
     }
   },
@@ -145,6 +144,11 @@ function currentChange(val) {
 function handleUpload() {
   currentRow.value = {}
   uploadVisible.value = true
+}
+
+CRUD.HOOK.beforeRefresh = () => {
+  crud.query.projectId = globalProjectId.value
+  return crud.query.projectId
 }
 
 CRUD.HOOK.handleRefresh = (crud, data) => {

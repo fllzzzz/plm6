@@ -2,7 +2,6 @@
   <common-dialog
     ref="drawerRef"
     v-model="dialogVisible"
-    direction="rtl"
     fullscreen
     :title="`${props.detailData.name}工序生产明细`"
     :before-close="handleClose"
@@ -40,7 +39,13 @@
       <el-table-column :show-overflow-tooltip="true" prop="material" label="材质" align="center"></el-table-column>
       <el-table-column :show-overflow-tooltip="true" prop="length" label="长度" align="center"></el-table-column>
       <el-table-column :show-overflow-tooltip="true" prop="netWeight" label="单净重（kg）" align="center"></el-table-column>
-      <el-table-column v-if="props.detailData.productType !== componentTypeEnum.ASSEMBLE.V" :show-overflow-tooltip="true" prop="grossWeight" label="单毛重（kg）" align="center"></el-table-column>
+      <el-table-column
+        v-if="props.detailData.productType !== componentTypeEnum.ASSEMBLE.V"
+        :show-overflow-tooltip="true"
+        prop="grossWeight"
+        label="单毛重（kg）"
+        align="center"
+      ></el-table-column>
       <el-table-column :show-overflow-tooltip="true" prop="quantity" label="需生产数" align="center"></el-table-column>
       <el-table-column :show-overflow-tooltip="true" prop="completeQuantity" label="完成数" align="center">
         <template #default="{ row }">
@@ -94,12 +99,13 @@ const props = defineProps({
 
 const monomerId = inject('monomerId')
 const areaId = inject('areaId')
-const startDate = inject('startDate')  
-const endDate = inject('endDate')  
+const startDate = inject('startDate')
+const endDate = inject('endDate')
 
 const query = computed(() => {
   return {
     productType: props.detailData.productType,
+    processId: props.detailData.id,
     projectId: props.projectId,
     startDate: startDate.value,
     endDate: endDate.value
@@ -156,6 +162,4 @@ function getSummaries(param) {
 }
 </script>
 
-<style rel="stylesheet/scss" lang="scss" scoped>
-</style>
-
+<style rel="stylesheet/scss" lang="scss" scoped></style>

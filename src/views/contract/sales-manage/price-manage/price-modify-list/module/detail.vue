@@ -26,10 +26,10 @@
           </template>
         </el-table-column>
       </template>
-      <template v-if="props.detailInfo.type === packTypeEnum.ENCLOSURE.V">
+      <!-- <template v-if="props.detailInfo.type === packTypeEnum.ENCLOSURE.V">
         <el-table-column prop="name" label="围护名称" align="center" />
         <el-table-column prop="plate" label="板型" width="100px" />
-      </template>
+      </template> -->
       <template v-if="props.detailInfo.type === packTypeEnum.AUXILIARY_MATERIAL.V">
         <el-table-column prop="classifyName" label="配套件名称" align="center" />
         <el-table-column prop="specification" label="规格" />

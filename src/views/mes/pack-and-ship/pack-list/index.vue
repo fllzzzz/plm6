@@ -2,7 +2,7 @@
   <div class="app-container">
     <!--工具栏-->
     <div class="head-container">
-      <mHeader ref="headerRef" @getDetail="handleDetail"/>
+      <mHeader ref="headerRef" @getDetail="handleDetail" />
     </div>
     <!--表格渲染-->
     <common-table
@@ -48,16 +48,18 @@
         prop="productType"
         label="产品类型"
         align="center"
-        width="100px"
+        min-width="140px"
       >
         <template v-slot="scope">
-          <el-tag
-            style="margin-right: 5px"
-            v-if="scope.row.productType"
-            :type="packTypeEnum[packTypeEnum.VK[scope.row.productType]].T"
-            effect="light"
-            >{{ packTypeEnum.VL[scope.row.productType] }}</el-tag
-          >
+          <template v-for="item in packTypeEnum.ENUM" :key="item">
+            <el-tag
+              style="margin-right: 5px"
+              v-if="scope.row.productType & item.V"
+              :type="item.T"
+              effect="light"
+              >{{ item.L }}</el-tag
+            >
+          </template>
         </template>
       </el-table-column>
       <el-table-column
@@ -96,7 +98,7 @@
           {{ toFixed(scope.row.totalGrossWeight, DP.COM_WT__KG) }}
         </template>
       </el-table-column>
-      <el-table-column
+      <!-- <el-table-column
         v-if="columns.visible('enclLength') && crud.query.productType === packTypeEnum.ENCLOSURE.V"
         key="enclLength"
         prop="enclLength"
@@ -108,7 +110,7 @@
         <template v-slot="scope">
           {{ convertUnits(scope.row.enclLength, 'mm', 'm', DP.MES_ENCLOSURE_L__M) }}
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column v-if="columns.visible('status')" key="status" prop="status" label="状态" align="center" min-width="100">
         <template v-slot="scope">
           <el-tag :type="packStatusTypeEnum[packStatusTypeEnum.VK[scope.row.status]].T" effect="plain">{{
@@ -125,13 +127,7 @@
         min-width="140"
       />
       <!--包单操作-->
-      <el-table-column
-        v-if="checkPermission([...permission.detail])"
-        label="包单"
-        width="70px"
-        align="center"
-        fixed="right"
-      >
+      <el-table-column v-if="checkPermission([...permission.detail])" label="包单" width="70px" align="center" fixed="right">
         <template v-slot="scope">
           <common-button type="primary" icon="el-icon-document" size="mini" @click.stop="showDetail(scope.row)" />
         </template>
@@ -184,7 +180,14 @@
     <!--分页组件-->
     <pagination />
     <label-dlg v-model:visible="labelVisible" :label-data="currentLabel" />
-    <m-detail v-model:visible="detailVisible" :detail-info="packageInfo" title="打包清单" quantityFelid="packageQuantity" :detailFunc="detail" @getDetail="handleDetail">
+    <m-detail
+      v-model:visible="detailVisible"
+      :detail-info="packageInfo"
+      title="打包清单"
+      quantityFelid="packageQuantity"
+      :detailFunc="detail"
+      @getDetail="handleDetail"
+    >
       <template #tip>
         <el-tag effect="plain" style="margin-left: 5px" size="medium">{{ packageInfo.serialNumber }}</el-tag>
       </template>
@@ -289,7 +292,7 @@ function openRecordView(row) {
   recordVisible.value = true
 }
 
-function handleDataFormat({ artifactList, enclosureList, auxList }) {
+function handleDataFormat({ artifactList, partList, enclosureList, auxList }) {
   const data = {}
   data.artifactList =
     artifactList &&
@@ -298,9 +301,19 @@ function handleDataFormat({ artifactList, enclosureList, auxList }) {
       v.totalWeight = convertUnits(v.weight * v.packageQuantity, 'kg', 't')
       v.productQuantity = v.packageQuantity
       v.originNumberList = v.numberList ? deepClone(v.numberList) : []
-      v.numberList = v.numberList ? v.numberList.filter(v => v.boolPackage).map(v => v.number) : []
+      v.numberList = v.numberList ? v.numberList.filter((v) => v.boolPackage).map((v) => v.number) : []
       return v
     })
+  data.partList =
+  partList &&
+  partList.map((v) => {
+    v.weight = v.netWeight || v.grossWeight
+    v.totalWeight = convertUnits(v.weight * v.packageQuantity, 'kg', 't')
+    v.productQuantity = v.packageQuantity
+    v.originNumberList = v.numberList ? deepClone(v.numberList) : []
+    v.numberList = v.numberList ? v.numberList.filter((v) => v.boolPackage).map((v) => v.number) : []
+    return v
+  })
   data.enclosureList =
     enclosureList &&
     enclosureList.map((v) => {
@@ -308,7 +321,7 @@ function handleDataFormat({ artifactList, enclosureList, auxList }) {
       v.totalLength = convertUnits(v.length * v.packageQuantity, 'mm', 'm')
       v.productQuantity = v.packageQuantity
       v.originNumberList = v.numberList ? deepClone(v.numberList) : []
-      v.numberList = v.numberList ? v.numberList.filter(v => v.boolPackage).map(v => v.number) : []
+      v.numberList = v.numberList ? v.numberList.filter((v) => v.boolPackage).map((v) => v.number) : []
       return v
     })
   data.auxList =
@@ -317,7 +330,7 @@ function handleDataFormat({ artifactList, enclosureList, auxList }) {
       v.fullClassName = `${v.firstName}/${v.secondName}/${v.thirdName}`
       v.productQuantity = v.packageQuantity
       v.originNumberList = v.numberList ? deepClone(v.numberList) : []
-      v.numberList = v.numberList ? v.numberList.filter(v => v.boolPackage).map(v => v.number) : []
+      v.numberList = v.numberList ? v.numberList.filter((v) => v.boolPackage).map((v) => v.number) : []
       return v
     })
   return JSON.stringify(data)

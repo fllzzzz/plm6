@@ -20,7 +20,7 @@
         class="filter-item"
         @change="crud.toQuery"
       />
-      <common-radio-button
+      <!-- <common-radio-button
         v-if="query.productType & packTypeEnum.ENCLOSURE.V"
         v-model="query.category"
         :options="mesEnclosureTypeEnum.ENUM"
@@ -29,7 +29,7 @@
         size="small"
         class="filter-item"
         @change="crud.toQuery"
-      />
+      /> -->
       <common-radio-button
         v-model="query.priceType"
         :options="logisticsPriceTypeEnum.ENUM"
@@ -114,7 +114,7 @@
 import { inject, ref } from 'vue'
 import moment from 'moment'
 
-import { packTypeEnum, mesEnclosureTypeEnum, logisticsPriceTypeEnum } from '@enum-ms/mes'
+import { packTypeEnum, logisticsPriceTypeEnum } from '@enum-ms/mes'
 import { manufactureTypeEnum } from '@enum-ms/production'
 import { PICKER_OPTIONS_SHORTCUTS } from '@/settings/config'
 

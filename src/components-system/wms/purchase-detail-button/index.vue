@@ -1,5 +1,5 @@
 <template>
-  <span v-if="checkPermission(permission)" class="purchase-detail-button">
+  <span v-if="checkPermission(permission) && purchaseId" class="purchase-detail-button">
     <common-button v-bind="$attrs" @click="openDetail(props.purchaseId)" type="info">{{ props.btnName }}</common-button>
     <!-- 采购合同详情 -->
     <detail-wrapper ref="purchaseOrderRef" :api="getPurchaseOrderDetail">

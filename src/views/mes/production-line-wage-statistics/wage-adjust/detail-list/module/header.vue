@@ -13,7 +13,7 @@
       <rrOperation />
     </div>
     <div>
-      <slot name="auditBox"></slot>
+      <slot name="btn"></slot>
     </div>
   </div>
 </template>

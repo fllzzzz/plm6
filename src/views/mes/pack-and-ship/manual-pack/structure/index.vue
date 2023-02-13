@@ -24,7 +24,7 @@
         width="120px"
       >
         <template #default="{ row }">
-          <table-cell-tag v-if="row.workshopInf" :name="row.workshopInf.name" />
+          <table-cell-tag v-if="row.workshop" :name="row.workshop.name" />
           <span>{{ row.name }}</span>
         </template>
       </el-table-column>

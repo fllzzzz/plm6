@@ -14,7 +14,7 @@
       <el-form-item label="截面类型" prop="specPrefix">
         <common-select
           v-model="form.specPrefix"
-          :options="partKeyWordEnum.ENUM"
+          :options="[partKeyWordEnum.PL]"
           clearable
           type="enum"
           :disabled="isEdit"

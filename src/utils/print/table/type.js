@@ -5,7 +5,9 @@ import { constantize } from '../../enum/base'
 const contract = {
   contract_report: '合同报表',
   supplier_payment: '供应商付款',
-  sales_manage: '销售管理'
+  sales_manage: '销售管理',
+  expense_entry: '费用录入',
+  property_report: '业财报表'
 }
 
 const wms = {
@@ -19,6 +21,7 @@ const mes = {
   mes_production: '生产报表',
   mes_warehouse: '出入库报表',
   mes_logistics: '物流报表',
+  mes_project_report: '项目报表',
   mes_wage: '工资报表',
   mes_production_order: '生产订单',
   mes_task_tracking: '任务跟踪报表',
@@ -77,6 +80,26 @@ const tableType = {
   transactionRecord: { L: '客户交易记录', M: 'sales_manage', T: mt.contract.L + ' / ' + contract.sales_manage },
   saleOrderTracking: { L: '订单跟踪', M: 'sales_manage', T: mt.contract.L + ' / ' + contract.sales_manage },
   projectWarehouseRecord: { L: '入库记录', M: 'sales_manage', T: mt.contract.L + ' / ' + contract.sales_manage },
+
+  industryElectricRecord: { L: '工业用电电费清单', M: 'expense_entry', T: mt.contract.L + ' / ' + contract.expense_entry },
+  civilElectricRecord: { L: '民用用电电费清单', M: 'expense_entry', T: mt.contract.L + ' / ' + contract.expense_entry },
+  waterRecord: { L: '水费清单', M: 'expense_entry', T: mt.contract.L + ' / ' + contract.expense_entry },
+  gasRecord: { L: '气体费用清单', M: 'expense_entry', T: mt.contract.L + ' / ' + contract.expense_entry },
+  expenseReimburseList: { L: '费用报销清单', M: 'expense_entry', T: mt.contract.L + ' / ' + contract.expense_entry },
+  managementSalaryList: { L: '人员工资清单', M: 'expense_entry', T: mt.contract.L + ' / ' + contract.expense_entry },
+  propertyFeeList: { L: '物业费清单', M: 'expense_entry', T: mt.contract.L + ' / ' + contract.expense_entry },
+
+  conMainMaterialList: { L: '主材费清单', M: 'property_report', T: mt.contract.L + ' / ' + contract.property_report },
+  auxiliaryMaterialList: { L: '辅材费清单', M: 'property_report', T: mt.contract.L + ' / ' + contract.property_report },
+  manualList: { L: '人工费清单', M: 'property_report', T: mt.contract.L + ' / ' + contract.property_report },
+  shippingFeeList: { L: '运输费清单', M: 'property_report', T: mt.contract.L + ' / ' + contract.property_report },
+  testingFee: { L: '检测费清单', M: 'property_report', T: mt.contract.L + ' / ' + contract.property_report },
+  subcontractFee: { L: '分包费清单', M: 'property_report', T: mt.contract.L + ' / ' + contract.property_report },
+  projectManagementFee: { L: '项目管理费清单', M: 'property_report', T: mt.contract.L + ' / ' + contract.property_report },
+  managementFee: { L: '管理费清单', M: 'property_report', T: mt.contract.L + ' / ' + contract.property_report },
+  waterElectricFee: { L: '水电费清单', M: 'property_report', T: mt.contract.L + ' / ' + contract.property_report },
+  depreciationFee: { L: '折旧费清单', M: 'property_report', T: mt.contract.L + ' / ' + contract.property_report },
+  fortuneReportList: { L: '业财报表', M: 'property_report', T: mt.contract.L + ' / ' + contract.property_report },
 
   // 供应链
   scmRequisitionsDetail: { L: '申购详情', M: 'purchase_reconciliation', T: mt.supply.L + ' / ' + supply.purchase_reconciliation },
@@ -158,6 +181,11 @@ const tableType = {
   mesProjectShipDetail: { L: '项目发运详情报表', M: 'mes_pack_and_ship_manage', T: mt.mes.L + ' / ' + mes.mes_pack_and_ship_manage },
   mesProductSendReceiveStorage: { L: '制成品入发存', M: 'mes_pack_and_ship_manage', T: mt.mes.L + ' / ' + mes.mes_pack_and_ship_manage },
   productSendReceiveStorageDetail: { L: '制成品入发存详情', M: 'mes_pack_and_ship_manage', T: mt.mes.L + ' / ' + mes.mes_pack_and_ship_manage },
+
+  // 项目报表
+  mesMainMaterialTrack: { L: '主材跟踪汇总', M: 'mes_project_report', T: mt.mes.L + ' / ' + mes.mes_project_report },
+  mesMainMaterialTrackUseRecord: { L: '主材跟踪-钢材领用记录', M: 'mes_project_report', T: mt.mes.L + ' / ' + mes.mes_project_report },
+  mesMainMaterialTrackStock: { L: '主材跟踪-库存明细', M: 'mes_project_report', T: mt.mes.L + ' / ' + mes.mes_project_report },
 
   // 项目管理
   deliveryCargoList: { L: '自制收货记录', M: 'delivery_manage', T: mt.project.L + ' / ' + project.delivery_manage },

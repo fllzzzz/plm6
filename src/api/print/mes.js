@@ -536,6 +536,53 @@ export function productSendReceiveStorageDetail(params) {
   })
 }
 
+// 主材跟踪汇总
+export function mainMaterialTrackSummary(params) {
+  return request({
+    module: 'mes',
+    url: 'kanban/tracking/print',
+    method: 'get',
+    params
+  })
+}
+
+/**
+ *
+ * 主材跟踪-钢材库领用详情
+ */
+export function mainMaterialTrackUseRecord(params) {
+  return request({
+    module: 'mes',
+    url: 'kanban/tracking/use/print',
+    method: 'get',
+    params
+  })
+}
+
+/**
+ *
+ * 主材跟踪-钢材库存量详情
+ */
+export function mainMaterialTrackStock(params) {
+  return request({
+    module: 'mes',
+    url: 'kanban/tracking/inventory/print',
+    method: 'get',
+    params
+  })
+}
+/**
+ *
+ * 栓钉套筒统计打印
+ */
+export function studSleeveStatisticsList(params) {
+  return request({
+    url: `/api/mes/building/price/stud/sleeve/print`,
+    method: 'get',
+    params
+  })
+}
+
 export default {
   // 项目制造
   machinePartDetail, // 零件生产详情
@@ -602,6 +649,14 @@ export default {
 
   // 发运管理
   productSendReceiveStorage, // 制成品入发存
-  productSendReceiveStorageDetail // 制成品入发存详情
+  productSendReceiveStorageDetail, // 制成品入发存详情
+
+  // 项目报表
+  mainMaterialTrackSummary, // 主材跟踪汇总
+  mainMaterialTrackUseRecord, // 主材跟踪-钢材领用记录
+  mainMaterialTrackStock, // 主材跟踪-库存明细
+
+  // 产线工资统计
+  studSleeveStatisticsList // 栓钉套筒统计
 }
 

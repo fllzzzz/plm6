@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="head-container">
-      <mHeader :queryMonomerId="info.id" :projectId="projectId" />
+      <mHeader :info="info" :queryMonomerId="info.id" :projectId="projectId" />
     </div>
     <!--表格渲染-->
     <common-table
@@ -135,11 +135,12 @@ const areaIds = ref([])
 const hasIntegrationModel = ref(false)
 const hasProcessingIM = ref(false)
 provide('areaIds', areaIds)
-provide('info', props.info)
 provide('hasProcessingIM', hasProcessingIM)
 provide('hasIntegrationModel', hasIntegrationModel)
 
 CRUD.HOOK.handleRefresh = (crud, res) => {
+  hasIntegrationModel.value = false
+  hasProcessingIM.value = false
   res.data.content = res.data.content.map((v) => {
     v.hasModelImport = Boolean(v.id)
     if (v.integrationStatus === integrationStatusEnum.SUCCESS.V || v.integrationStatus === integrationStatusEnum.PROCESSING.V) {

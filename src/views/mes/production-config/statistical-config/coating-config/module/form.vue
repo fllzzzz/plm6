@@ -100,7 +100,7 @@ const defaultForm = {
   id: undefined
 }
 
-const { crud, form } = regForm(defaultForm, formRef)
+const { crud, CRUD, form } = regForm(defaultForm, formRef)
 
 const validateThickness = (rule, value, callback) => {
   if (value % 5 !== 0 || value === 0) {
@@ -133,5 +133,13 @@ const rules = {
     { required: true, message: '请填写超准单价', trigger: 'blur' }
     // { validator: validateOutUnitPrice, trigger: 'blur' }
   ]
+}
+
+CRUD.HOOK.beforeSubmit = async (crud) => {
+  if (form.measureUnit !== wageQuotaTypeEnum.AREA.V) {
+    crud.form.thickness = undefined
+    crud.form.outThickness = undefined
+    crud.form.outUnitPrice = undefined
+  }
 }
 </script>

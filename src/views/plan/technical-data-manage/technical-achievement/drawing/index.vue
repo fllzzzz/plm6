@@ -42,7 +42,7 @@
   </common-table>
   <!--分页组件-->
   <pagination />
-  <detail v-model="detailVisible" :currentRow="currentRow" :permission="permission" :upload-type="uploadType" tip="覆盖导入仅支持PDF格式、DWG格式" @success="crud.toQuery"/>
+  <detail v-model="detailVisible" :currentRow="currentRow" :permission="permission" :upload-type="uploadType" tip="覆盖导入仅支持PDF格式" @success="crud.toQuery"/>
   </div>
 </template>
 

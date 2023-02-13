@@ -83,7 +83,7 @@
     </el-table-column>
 
     <!-- 金额设置 -->
-    <price-set-columns v-if="!props.boolPartyA" weight-attribute="mete" />
+    <price-set-columns v-if="!props.boolPartyA && fillableAmount" weight-attribute="mete" />
 
     <el-table-column prop="color" label="颜色" align="center" min-width="120px">
       <template #default="{ row }">
@@ -117,6 +117,10 @@ import priceSetColumns from '@/views/wms/material-inbound/raw-material/component
 
 const props = defineProps({
   boolPartyA: {
+    type: Boolean,
+    default: false
+  },
+  fillableAmount: {
     type: Boolean,
     default: false
   }
@@ -161,7 +165,7 @@ const amountRules = {
 
 const tableRules = computed(() => {
   let _rules = Object.assign({}, rules)
-  if (!props.boolPartyA) {
+  if (!props.boolPartyA && props.fillableAmount) {
     _rules = Object.assign(_rules, amountRules)
   }
   return _rules
@@ -193,7 +197,7 @@ function rowInit(row) {
   })
 
   // 非甲供
-  if (!props.boolPartyA) {
+  if (!props.boolPartyA && props.fillableAmount) {
     _row.unitPrice = undefined // 含税单价
     _row.amount = undefined // 金额
   }

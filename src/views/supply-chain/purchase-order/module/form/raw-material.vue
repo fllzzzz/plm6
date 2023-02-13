@@ -45,7 +45,7 @@
                       style="flex: auto"
                     />
                     <!-- 原材料才有是否甲供的概念 -->
-                    <el-checkbox
+                    <!-- <el-checkbox
                       v-model="form.boolPartyA"
                       :disabled="form.boolUsed"
                       label="甲供"
@@ -53,7 +53,7 @@
                       border
                       style="margin-top: 3px"
                       @change="boolPartyAChange"
-                    />
+                    /> -->
                   </div>
                 </el-form-item>
                 <el-form-item v-if="form.basicClass & matClsEnum.MATERIAL.V" class="el-form-item-5" label="辅材明细" prop="auxMaterialIds">
@@ -582,9 +582,9 @@ function saveSortingInfo() {
 }
 
 // “是否甲供”状态变更
-function boolPartyAChange(val) {
-  form.supplyType = val ? orderSupplyTypeEnum.PARTY_A.V : orderSupplyTypeEnum.SELF.V
-}
+// function boolPartyAChange(val) {
+//   form.supplyType = val ? orderSupplyTypeEnum.PARTY_A.V : orderSupplyTypeEnum.SELF.V
+// }
 
 </script>
 

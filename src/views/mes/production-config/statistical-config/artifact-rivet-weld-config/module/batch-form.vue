@@ -54,7 +54,7 @@
             <span v-else>{{ row.classificationId && artifactTypeListObj[row.classificationId]?.specPrefixStr }}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="numerical" :show-overflow-tooltip="true" label="数值" width="200" align="center" fixed="left">
+        <el-table-column prop="numerical" :show-overflow-tooltip="true" label="构件截面" width="200" align="center" fixed="left">
           <template #default="{ row }">
             <common-input-number
               v-model="row.minNumerical"
@@ -93,7 +93,7 @@
           >
             <template #default="{ row, $index }">
               <template v-if="isNotBlank(row?.processObj[item.id])">
-                <common-select
+                <!-- <common-select
                   v-model="row.processObj[item.id].wageQuotaType"
                   :options="wageQuotaTypeEnum.ENUM"
                   type="enum"
@@ -103,6 +103,17 @@
                   placeholder="计量方式"
                   style="width: 45%; margin-right: 5px"
                   @change="wageQuotaTypeChange($event, $index, item.id)"
+                /> -->
+                <common-select
+                  v-model="row.processObj[item.id].wageQuotaType"
+                  :options="wageQuotaTypeEnum.ENUM"
+                  type="enum"
+                  clearable
+                  size="mini"
+                  class="input-underline"
+                  placeholder="计量方式"
+                  style="width: 45%; margin-right: 5px"
+                  @change="wageQuotaTypeChange($event, $index)"
                 />
                 <common-input-number
                   v-model="row.processObj[item.id].price"
@@ -188,7 +199,7 @@ const validateNumerical = (value, row) => {
 
 const rules = {
   classificationId: [{ required: true, message: '请选择构件类型', trigger: 'change' }],
-  numerical: [{ validator: validateNumerical, message: '请填写数值并且最大数值不得小于最小数值', trigger: 'blur' }]
+  numerical: [{ validator: validateNumerical, message: '请填写构件截面并且最大数值不得小于最小数值', trigger: 'blur' }]
 }
 
 // 同上的选项与值
@@ -270,10 +281,18 @@ function handleClassificationChange(val, index) {
   }
 }
 
-function wageQuotaTypeChange(val, index, processId) {
+// function wageQuotaTypeChange(val, index, processId) {
+//   for (const item in tableProcessObj.value) {
+//     if (tableProcessObj.value[item] === tableProcessObj.value[index]) {
+//       form.list[Number(item)].processObj[processId].wageQuotaType = val
+//     }
+//   }
+// }
+
+function wageQuotaTypeChange(val, index) {
   for (const item in tableProcessObj.value) {
     if (tableProcessObj.value[item] === tableProcessObj.value[index]) {
-      form.list[Number(item)].processObj[processId].wageQuotaType = val
+      form.list[Number(item)].wageQuotaType = val
     }
   }
 }

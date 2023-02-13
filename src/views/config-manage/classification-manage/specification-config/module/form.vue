@@ -32,11 +32,12 @@
             </el-radio-group>
           </el-form-item> -->
           <el-form-item label="加权平均" prop="boolWeightedAverage">
-            <common-radio-button
+            <common-radio
               v-model="form.boolWeightedAverage"
               :disabled="!checkPermission(permission.weightedAverage)"
               :options="boolWeightedAverageEnum.ENUM"
               type="enum"
+              @change="validateField('boolWeightedAverage')"
             />
           </el-form-item>
           <common-table
@@ -114,7 +115,7 @@ const permission = inject('permission')
 const defaultForm = {
   name: '', // 规格名称
   classificationId: undefined, // 科目id
-  boolWeightedAverage: boolWeightedAverageEnum.TRUE.V, // 是否参加加权平均
+  boolWeightedAverage: undefined, // 是否参加加权平均
   list: [] // 具体规格列表
 }
 
@@ -172,6 +173,10 @@ crud.submitFormFormat = (form) => {
   form.classificationId = currentNode.value.id
   cleanUpData(form.list)
   return form
+}
+
+function validateField(prop) {
+  formRef.value.validateField(prop)
 }
 </script>
 
