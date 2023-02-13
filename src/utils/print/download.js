@@ -136,7 +136,7 @@ async function download({ filename, title, header = {}, table = [], footer = {},
   // Image Settings are related to column width and row height, so they are set after merging cells
   setLogo({ baseCfg, config: logoCfg, ws })
 
-  if (isNotBlank(qrCodeCfg)) {
+  if (isNotBlank(qrCodeCfg) && qrCodeCfg.show) {
     setQRCode({ baseCfg, qrCode, config: qrCodeCfg, ws })
   }
 
