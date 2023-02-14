@@ -54,12 +54,22 @@ export function add(data) {
   })
 }
 
+// 新增
+export function edit(data) {
+  return request({
+    module: 'scm',
+    url: `apply-purchase`,
+    method: 'put',
+    data
+  })
+}
+
 // 撤销
 export function del(ids) {
   return request({
     module: 'scm',
     url: `apply-purchase`,
-    method: 'put',
+    method: 'delete',
     params: {
       id: ids[0]
     }
@@ -76,4 +86,50 @@ export function editStatus({ id, enabled }) {
   })
 }
 
-export default { add, del, detail, get }
+/**
+ * 查询构件类型
+ *
+ * @param {Number} page 页码
+ * @param {Number} size 每页数量
+ * @returns
+ */
+export function manufClassListGet(params) {
+  return request({
+    module: 'scm',
+    url: 'purchase-order/finished-product/purchasing/structure-class',
+    method: 'get',
+    params
+  })
+}
+
+/**
+ * 成品列表
+ *
+ * @param {Number} page 页码
+ * @param {Number} size 每页数量
+ * @returns
+ */
+export function manufListGet(params) {
+  return request({
+    module: 'scm',
+    url: 'purchase-order/finished-product/purchasing/artifact-enclosure-detail',
+    method: 'get',
+    params
+  })
+}
+
+/**
+ * 可申购库存查询
+ *
+ * @returns
+ */
+export function inventoryGet(params) {
+  return request({
+    module: 'wms',
+    url: 'material-inventory/apply-purchase-steel',
+    method: 'get',
+    params
+  })
+}
+
+export default { add, edit, del, detail, get }

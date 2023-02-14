@@ -67,9 +67,9 @@ constantize(extrusionClsEnum)
 
 // 材料申购物料分类
 const materialPurchaseClsEnum = {
-  STEEL: { L: '钢材', K: 'STEEL', V: matClsEnum.STEEL_PLATE.V | matClsEnum.SECTION_STEEL.V | matClsEnum.STEEL_COIL.V },
-  MATERIAL: matClsEnum.MATERIAL
-  // MANUFACTURED: { L: '制成品', K: 'MANUFACTURED', V: matClsEnum.STRUC_MANUFACTURED.V | matClsEnum.ENCL_MANUFACTURED.V }
+  STEEL: { L: '钢材', K: 'STEEL', V: matClsEnum.STEEL_PLATE.V | matClsEnum.SECTION_STEEL.V | matClsEnum.STEEL_COIL.V, T: 'success' },
+  MATERIAL: { L: '辅材', K: 'MATERIAL', V: matClsEnum.MATERIAL.V, T: '' },
+  MANUFACTURED: { L: '制成品', K: 'MANUFACTURED', V: matClsEnum.STRUC_MANUFACTURED.V | matClsEnum.ENCL_MANUFACTURED.V, T: 'warning' }
 }
 constantize(materialPurchaseClsEnum)
 

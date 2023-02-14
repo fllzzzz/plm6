@@ -4,6 +4,7 @@
       <slot />
     </div>
     <common-footer
+      v-if="props.showFooter"
       class="footer"
       :unit="props.unit"
       :total-name="props.totalName"
@@ -17,16 +18,13 @@
 </template>
 
 <script setup>
-import { defineProps, ref } from 'vue'
+import { defineProps, defineExpose, ref } from 'vue'
 
 import useMaxHeight from '@/composables/use-max-height'
 import commonFooter from './common-footer.vue'
 import confirmDialog from './confirm-dialog.vue'
 
 const props = defineProps({
-  currentBasicClass: {
-    type: Number
-  },
   validate: {
     type: Function
   },
@@ -47,6 +45,10 @@ const props = defineProps({
     default: '下一步'
   },
   showTotal: {
+    type: Boolean,
+    default: true
+  },
+  showFooter: {
     type: Boolean,
     default: true
   },
@@ -74,6 +76,10 @@ async function submit() {
   }
   previewVisible.value = formValidate
 }
+
+defineExpose({
+  submit
+})
 </script>
 
 <style lang="scss" scoped>

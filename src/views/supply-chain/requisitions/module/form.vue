@@ -9,58 +9,62 @@
     size="100%"
     custom-class="requisitions-application-record-form"
   >
+    <template #titleRight>
+      <!-- <store-operation v-if="crud.status.add > CRUD.STATUS.NORMAL" type="crud" /> -->
+    </template>
     <template #content>
       <div class="requisitions-application-select">
+        <common-radio-button v-model="form.materialType" :options="materialPurchaseClsEnum.ENUM" type="enum" size="small" />
         <common-radio-button
-          v-model="form.materialType"
-          :options="materialPurchaseClsEnum.ENUM"
+          v-if="isManufactured"
+          v-model="form.finishedProductType"
+          :disabledVal="[manufClsEnum.ENCL_MANUFACTURED.V]"
+          :options="manufClsEnum.ENUM"
           type="enum"
           size="small"
         />
-        <common-radio-button
-          v-model="form.type"
-          :options="preparationTypeEnum.ENUM"
-          type="enum"
-          size="small"
-        />
+        <common-radio-button v-if="!isManufactured" v-model="form.type" :options="preparationTypeEnum.ENUM" type="enum" size="small"/>
         <project-cascader
-          v-if="form.type === preparationTypeEnum.PROJECT.V"
+          v-if="!isManufactured"
           v-model="form.projectId"
           clearable
           multiple
           collapse-tags
-          style="width: 400px;height: 32px;"
+          :disabled="form.type === preparationTypeEnum.PUBLIC.V"
+          style="width: 400px; height: 32px"
         />
         <project-cascader
           v-else
           v-model="form.projectId"
           clearable
-          :disabled="form.type === preparationTypeEnum.PUBLIC.V"
-          style="width: 400px;"
+          style="width: 400px"
         />
       </div>
-      <component :is="comp" :detail="form" @success="handleSuccess" />
+      <component v-if="crud.status.cu > CRUD.STATUS.NORMAL" :is="comp" :detail="form" @success="handleSuccess" :isEdit="isEdit" />
     </template>
   </common-drawer>
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, watch } from 'vue'
 import { regForm } from '@compos/use-crud'
-import { STEEL_ENUM } from '@/settings/config'
-import { matClsEnum } from '@/utils/enum/modules/classification'
+// import { STEEL_ENUM } from '@/settings/config'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { setSpecInfoToList } from '@/utils/wms/spec'
-import { materialPurchaseClsEnum } from '@enum-ms/classification'
-import { preparationTypeEnum } from '@enum-ms/wms'
+import { isNotBlank } from '@data-type/index'
+import { materialPurchaseClsEnum, manufClsEnum } from '@enum-ms/classification'
+import { preparationTypeEnum, requisitionModeEnum } from '@enum-ms/wms'
 
 import ProjectCascader from '@comp-base/project-cascader.vue'
 import SteelApplication from './application/steel/index'
 import AuxMatApplication from './application/auxiliary-material/index'
+import ManufApplication from './application/manufactured/index'
+// import StoreOperation from '@crud/STORE.operation.vue'
 
 const defaultForm = {
   materialType: materialPurchaseClsEnum.STEEL.V, // 申购类型
   type: preparationTypeEnum.PROJECT.V, // 备料类型
+  finishedProductType: manufClsEnum.STRUC_MANUFACTURED.V, // 制成品类型
   projectId: [], // 项目id （项目备料可以多选）
   arrivalTime: '', // 到厂时间
   serialNumber: '', // 申购单号
@@ -73,21 +77,47 @@ const defaultForm = {
 
 const { CRUD, crud, form } = regForm(defaultForm)
 
+// 是否是编辑状态
+const isEdit = computed(() => {
+  return crud.status.edit > 0
+})
+
+const isManufactured = computed(() => Boolean(form.materialType & materialPurchaseClsEnum.MANUFACTURED.V))
+
+watch(
+  () => form.type,
+  (val) => {
+    if (val & preparationTypeEnum.PUBLIC.V) {
+      form.projectId = []
+    }
+  }
+)
+
 const comp = computed(() => {
   switch (form.materialType) {
-    case matClsEnum.STEEL_PLATE.V:
-    case matClsEnum.SECTION_STEEL.V:
-    case matClsEnum.STEEL_COIL.V:
+    case materialPurchaseClsEnum.STEEL.V:
       return SteelApplication
-    case matClsEnum.MATERIAL.V:
+    case materialPurchaseClsEnum.MATERIAL.V:
       return AuxMatApplication
+    case materialPurchaseClsEnum.MANUFACTURED.V:
+      return ManufApplication
     default:
-      if (form.materialType & STEEL_ENUM) return SteelApplication
       return undefined
   }
 })
 
 CRUD.HOOK.beforeEditDetailLoaded = async (crud, detail) => {
+  if (isNotBlank(detail.projects)) {
+    detail.projectId = detail.projects.map((v) => v.id)
+  }
+  detail.list = detail.detailList.map(v => {
+    if (v.materialInventoryId) {
+      v.requisitionMode = requisitionModeEnum.USE_INVENTORY.V
+    } else {
+      v.requisitionMode = requisitionModeEnum.PURCHASE.V
+    }
+    return v
+  })
   await setSpecInfoToList(detail.list)
   detail.list = await numFmtByBasicClass(detail.list, {
     toSmallest: false,

@@ -17,7 +17,7 @@
           :params="{ id: detail?.id }"
           size="mini"
           type="warning"
-          />
+        />
       </div>
     </template>
     <template #content>
@@ -35,8 +35,18 @@
         show-summary
         :summary-method="getSummaries"
       >
+        <el-table-column label="序号" type="index" align="center" width="55" fixed="left">
+          <template #default="{ row, $index }">
+            <table-cell-tag
+              :show="row.requisitionMode === requisitionModeEnum.USE_INVENTORY.V"
+              :name="requisitionModeEnum.USE_INVENTORY.L"
+              color="#e6a23c"
+            />
+            <span>{{ $index + 1 }}</span>
+          </template>
+        </el-table-column>
         <!-- 基础信息 -->
-        <material-base-info-columns fixed="left" />
+        <material-base-info-columns :showIndex="false" fixed="left" />
         <!-- 单位及其数量 -->
         <material-unit-quantity-columns />
         <!-- 次要信息 -->
@@ -66,7 +76,7 @@ import { setSpecInfoToList } from '@/utils/wms/spec'
 import { materialColumns } from '@/utils/columns-format/wms'
 import { matClsEnum } from '@/utils/enum/modules/classification'
 import { parseTime } from '@/utils/date'
-import { preparationTypeEnum } from '@enum-ms/wms'
+import { preparationTypeEnum, requisitionModeEnum } from '@enum-ms/wms'
 
 import { regDetail } from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
@@ -96,16 +106,21 @@ const { maxHeight } = useMaxHeight(
 
 // 项目名称
 const projectName = computed(() => {
-  return (detail.projects || [])?.map(v => `${v.serialNumber} ${v.shortName}`)?.join('、')
+  return (detail.projects || [])?.map((v) => `${v.serialNumber} ${v.shortName}`)?.join('、')
 })
 
 CRUD.HOOK.beforeDetailLoaded = async (crud, detail) => {
   await setSpecInfoToList(detail.detailList)
-  detail.detailList.forEach(v => {
+  detail.detailList.forEach((v) => {
     // 钢卷按米显示
     if (v.basicClass === matClsEnum.STEEL_COIL.V) {
       v.measureUnit = '米'
       v.measurePrecision = 3
+    }
+    if (v.materialInventoryId) {
+      v.requisitionMode = requisitionModeEnum.USE_INVENTORY.V
+    } else {
+      v.requisitionMode = requisitionModeEnum.PURCHASE.V
     }
   })
   detail.detailList = await numFmtByBasicClass(detail.detailList)
@@ -140,13 +155,13 @@ function getSummaries(param) {
     border-top-width: 0;
     font-size: 12px;
     color: #606266;
-    >span:first-child {
+    > span:first-child {
       width: 55px;
       line-height: 44px;
       text-align: center;
       border-right: 1px solid #ebeef5;
     }
-    >span:last-child {
+    > span:last-child {
       flex: 1;
       height: 40px;
       padding: 6px 10px;

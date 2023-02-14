@@ -102,20 +102,10 @@ watch(
     form.type = val.type
     form.materialType = val.materialType
     // 项目id
-    if (val.type === preparationTypeEnum.PROJECT.V) {
+    if (Array.isArray(val.projectId)) {
       form.projectId = val.projectId
-    } else if (val.type === preparationTypeEnum.PUBLIC.V) {
-      form.projectId = []
     } else {
-      if (Array.isArray(val.projectId)) {
-        if (val.projectId.length === 1) {
-          form.projectId = val.projectId
-        } else {
-          form.projectId = []
-        }
-      } else {
-        form.projectId = val.projectId ? [val.projectId] : []
-      }
+      form.projectId = val.projectId ? [val.projectId] : []
     }
   },
   { deep: true, immediate: true }

@@ -123,10 +123,17 @@ constantize(borrowReturnStatusEnum)
 const preparationTypeEnum = {
   PROJECT: { L: '项目备料', K: 'PROJECT', V: 1 << 0 },
   // PARTY_A: { L: '项目甲供备料', K: 'PARTY_A', V: 1 << 1 },
-  PUBLIC: { L: '公共备料', K: 'PROJECT', V: 1 << 2 },
-  MANUFACTURED: { L: '外协加工', K: 'PROJECT', V: 1 << 3 }
+  PUBLIC: { L: '公共备料', K: 'PROJECT', V: 1 << 2 }
+  // MANUFACTURED: { L: '外协加工', K: 'PROJECT', V: 1 << 3 }
 }
 constantize(preparationTypeEnum)
+
+// 材料申购方式
+const requisitionModeEnum = {
+  PURCHASE: { L: '采购', K: 'PURCHASE', V: 1 << 0 },
+  USE_INVENTORY: { L: '利用库存', K: 'USE_INVENTORY', V: 1 << 1 }
+}
+constantize(requisitionModeEnum)
 
 // 基础材料类型/采购类型
 const baseMaterialTypeEnum = {
@@ -243,6 +250,7 @@ export {
   borrowReturnStatusEnum,
   outboundRelationTypeEnum,
   preparationTypeEnum,
+  requisitionModeEnum,
   baseMaterialTypeEnum,
   purchaseStatusEnum,
   purchaseOrderPaymentModeEnum,
@@ -274,6 +282,7 @@ export default {
   borrowReturnStatusEnum,
   outboundRelationTypeEnum,
   preparationTypeEnum,
+  requisitionModeEnum,
   baseMaterialTypeEnum,
   purchaseStatusEnum,
   purchaseOrderPaymentModeEnum,

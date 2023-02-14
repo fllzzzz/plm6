@@ -8,7 +8,16 @@
     row-key="uid"
   >
     <el-table-column label="序号" type="index" align="center" width="60" fixed="left" />
-    <el-table-column prop="serialNumber" label="编号" align="center" fixed="left" />
+    <el-table-column prop="serialNumber" label="编号" align="center" fixed="left">
+      <template #default="{ row }">
+        <table-cell-tag
+          :show="row.requisitionMode === requisitionModeEnum.USE_INVENTORY.V"
+          :name="requisitionModeEnum.USE_INVENTORY.L"
+          color="#e6a23c"
+        />
+        <span>{{ row.serialNumber }}</span>
+      </template>
+    </el-table-column>
     <el-table-column prop="classifyName" label="物料种类" align="center" fixed="left" show-overflow-tooltip>
       <template #default="{ row }">
         <el-tooltip :content="row.classifyParentFullName" :disabled="!row.classifyParentFullName" :show-after="500" placement="top">
@@ -69,7 +78,7 @@
         <common-input-number
           v-model="row.quantity"
           :min="1"
-          :max="999999999"
+          :max="row.requisitionMode === requisitionModeEnum.USE_INVENTORY.V ? row.canUseQuantity : 999999999"
           controls-position="right"
           :controls="false"
           :step="1"
@@ -79,12 +88,7 @@
         />
       </template>
     </el-table-column>
-    <el-table-column
-      key="weighingTotalWeight"
-      prop="weighingTotalWeight"
-      align="center"
-      :label="`总重 (${baseUnit.weight.unit})`"
-    >
+    <el-table-column key="weighingTotalWeight" prop="weighingTotalWeight" align="center" :label="`总重 (${baseUnit.weight.unit})`">
       <template #default="{ row }">
         <el-tooltip
           class="item"
@@ -113,8 +117,9 @@
         <el-input v-model.trim="row.brand" maxlength="60" size="mini" placeholder="品牌" />
       </template>
     </el-table-column>
-    <el-table-column label="操作" width="70" align="center" fixed="right">
+    <el-table-column label="操作" width="140" align="center" fixed="right">
       <template #default="{ row, $index }">
+        <common-button type="primary" size="mini" @click="search(row, $index)">查询</common-button>
         <common-button icon="el-icon-delete" type="danger" size="mini" @click="delRow(row.sn, $index)" />
       </template>
     </el-table-column>
@@ -122,8 +127,9 @@
 </template>
 
 <script setup>
-import { defineExpose, inject, watchEffect, reactive, watch } from 'vue'
+import { defineExpose, defineEmits, inject, watchEffect, reactive, watch } from 'vue'
 import { matClsEnum } from '@/utils/enum/modules/classification'
+import { requisitionModeEnum } from '@/utils/enum/modules/wms'
 import { isBlank, isNotBlank, toPrecision } from '@/utils/data-type'
 
 import { regExtra } from '@/composables/form/use-form'
@@ -133,6 +139,9 @@ import useWeightOverDiff from '@/composables/wms/use-steel-weight-over-diff'
 import { createUniqueString } from '@/utils/data-type/string'
 import { calcSteelPlateWeight } from '@/utils/wms/measurement-calc'
 import { positiveNumPattern } from '@/utils/validate/pattern'
+import { ElMessage } from 'element-plus'
+
+const emit = defineEmits(['search-inventory'])
 
 // 当前物料基础类型
 const basicClass = matClsEnum.STEEL_PLATE.V
@@ -175,6 +184,7 @@ function rowInit(row) {
   const _row = reactive({
     uid: createUniqueString(),
     sn: row.sn, // 该科目规格唯一编号
+    requisitionMode: requisitionModeEnum.PURCHASE.V,
     specificationLabels: row.specificationLabels, // 规格中文
     serialNumber: row.serialNumber, // 科目编号 - 规格
     classifyId: row.classify.id, // 科目id
@@ -213,14 +223,12 @@ function rowWatch(row) {
 // 总重计算与单位重量计算分开，避免修改数量时需要重新计算单件重量
 // 计算单件重量
 async function calcTheoryWeight(row) {
-  row.theoryWeight = await calcSteelPlateWeight(
-    {
-      name: row.classifyFullName, // 名称，用于判断是否为不锈钢，不锈钢与普通钢板密度不同
-      length: row.length,
-      width: row.width,
-      thickness: row.thickness
-    }
-  )
+  row.theoryWeight = await calcSteelPlateWeight({
+    name: row.classifyFullName, // 名称，用于判断是否为不锈钢，不锈钢与普通钢板密度不同
+    length: row.length,
+    width: row.width,
+    thickness: row.thickness
+  })
 }
 
 // 计算总重
@@ -232,6 +240,14 @@ function calcTotalWeight(row) {
     row.theoryTotalWeight = undefined
     row.weighingTotalWeight = undefined
   }
+}
+
+function search(row, index) {
+  if (isBlank(row.thickness)) {
+    ElMessage.warning('请填写厚度')
+    return
+  }
+  emit('search-inventory', row, index)
 }
 
 // 删除行

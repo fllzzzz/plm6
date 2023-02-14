@@ -54,7 +54,7 @@
       />
       <rrOperation />
     </div>
-    <crudOperation />
+    <crudOperation addText="申购创建"/>
   </div>
 </template>
 

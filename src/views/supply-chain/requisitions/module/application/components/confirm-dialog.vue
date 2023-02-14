@@ -10,8 +10,18 @@
     fullscreen
   >
     <template #titleAfter>
-      <el-tag effect="plain" size="medium">申购编号：{{ form.serialNumber }}</el-tag>
-      <el-tag type="success" effect="plain" size="medium">申购人：{{ user.name }}</el-tag>
+      <span class="child-mr-6" style="display: flex; align-items: center">
+        <el-tag effect="plain" size="medium">申购编号：{{ form.serialNumber }}</el-tag>
+        <el-tag type="success" effect="plain" size="medium">申购人：{{ user.name }}</el-tag>
+        <common-radio-button
+          type="enum"
+          v-model="requisitionMode"
+          :options="requisitionModeEnum.ENUM"
+          show-option-all
+          clearable
+          @change="filterMode"
+        />
+      </span>
     </template>
     <template #titleRight>
       <el-date-picker
@@ -20,11 +30,11 @@
         size="small"
         value-format="x"
         :disabled="cu.status.edit === FORM.STATUS.PROCESSING"
-          :disabledDate="(v) => moment(v).valueOf() < moment().subtract(1, 'days').valueOf()"
+        :disabledDate="(v) => moment(v).valueOf() < moment().subtract(1, 'days').valueOf()"
         placeholder="选择到厂日期"
         style="width: 140px"
       />
-      <common-select
+      <!-- <common-select
         v-model="form.approveProcessId"
         :options="approvalProcessOptions"
         type="other"
@@ -32,21 +42,25 @@
         size="small"
         placeholder="选择审批流程"
         :disabled="cu.status.edit === FORM.STATUS.PROCESSING"
-        style="width:220px"
-      />
+        style="width: 220px"
+      /> -->
     </template>
     <!-- 不刷新组件无法正常更新 -->
     <template v-if="dialogVisible">
       <el-form ref="formRef" :model="form" :disabled="cu.status.edit === FORM.STATUS.PROCESSING">
-        <common-table
-          :data="form.list"
-          :data-format="columnsDataFormat"
-          :max-height="maxHeight"
-          show-summary
-          :summary-method="getSummaries"
-        >
+        <common-table :data="showList" :data-format="columnsDataFormat" :max-height="maxHeight" show-summary :summary-method="getSummaries">
+          <el-table-column label="序号" type="index" align="center" width="55" fixed="left">
+            <template #default="{ row, $index }">
+              <table-cell-tag
+                :show="row.requisitionMode === requisitionModeEnum.USE_INVENTORY.V"
+                :name="requisitionModeEnum.USE_INVENTORY.L"
+                color="#e6a23c"
+              />
+              <span>{{ $index + 1 }}</span>
+            </template>
+          </el-table-column>
           <!-- 基础信息 -->
-          <material-base-info-columns fixed="left" />
+          <material-base-info-columns :showIndex="false" fixed="left" />
           <!-- 单位及其数量 -->
           <material-unit-quantity-columns />
           <!-- 次要信息 -->
@@ -82,6 +96,7 @@ import { mapGetters } from '@/store/lib'
 import { tableSummary } from '@/utils/el-extra'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { materialColumns } from '@/utils/columns-format/wms'
+import { requisitionModeEnum } from '@enum-ms/wms'
 import moment from 'moment'
 
 import { regExtra } from '@/composables/form/use-form'
@@ -110,11 +125,9 @@ const { projectMap } = mapGetters('projectMap')
 const approvalProcessOptions = ref([])
 
 // 表格列数据格式转换
-const columnsDataFormat = ref([
-  ...materialColumns
-])
+const columnsDataFormat = ref([...materialColumns])
 
-const { visible: dialogVisible, handleClose } = useVisible({ emit, props })
+const { visible: dialogVisible, handleClose } = useVisible({ emit, props, showHook })
 const { cu, form, FORM } = regExtra() // 表单
 
 // 表格高度处理
@@ -132,10 +145,12 @@ const { maxHeight } = useMaxHeight(
 
 // 项目名称
 const projectName = computed(() => {
-  return form.projectId?.map(id => {
-    const data = projectMap.value?.[id] || {}
-    return `${data.serialNumber} ${data.shortName}`
-  })?.join('、')
+  return form.projectId
+    ?.map((id) => {
+      const data = projectMap.value?.[id] || {}
+      return `${data.serialNumber} ${data.shortName}`
+    })
+    ?.join('、')
 })
 
 watch(
@@ -168,10 +183,10 @@ FORM.HOOK.beforeSubmit = async () => {
     ElMessage.warning('请选择到厂时间')
     return false
   }
-  if (!form.approveProcessId) {
-    ElMessage.warning('请选择审批流程')
-    return false
-  }
+  // if (!form.approveProcessId) {
+  //   ElMessage.warning('请选择审批流程')
+  //   return false
+  // }
 }
 
 // 表单提交后：关闭预览窗口
@@ -181,12 +196,12 @@ FORM.HOOK.afterSubmit = () => {
 
 // 获取申购单号
 async function getNO() {
-  const data = await getSerialNumber() || ''
+  const data = (await getSerialNumber()) || ''
   form.serialNumber = data
 }
 
 async function fetchApprovalProcess() {
-  const data = await getApprovalProcess() || []
+  const data = (await getApprovalProcess()) || []
   approvalProcessOptions.value = data
 }
 
@@ -194,6 +209,23 @@ async function fetchApprovalProcess() {
 function getSummaries(param) {
   return tableSummary(param, { props: [['quantity', 3], 'mete'] })
 }
+
+// --------------------------- 申购分类 start ------------------------------
+const requisitionMode = ref()
+const showList = ref([])
+
+function filterMode(val) {
+  if (val) {
+    showList.value = form.list.filter((v) => v.requisitionMode === val)
+  } else {
+    showList.value = form.list
+  }
+}
+
+function showHook() {
+  showList.value = form.list
+}
+// --------------------------- 申购分类 end --------------------------------
 </script>
 
 <style lang="scss" scoped>
@@ -209,13 +241,13 @@ function getSummaries(param) {
     border-top-width: 0;
     font-size: 12px;
     color: #606266;
-    >span:first-child {
+    > span:first-child {
       width: 55px;
       line-height: 44px;
       text-align: center;
       border-right: 1px solid #ebeef5;
     }
-    >span:last-child {
+    > span:last-child {
       flex: 1;
       height: 40px;
       padding: 6px 10px;

@@ -8,7 +8,16 @@
     row-key="uid"
   >
     <el-table-column label="序号" type="index" align="center" width="60" fixed="left" />
-    <el-table-column prop="serialNumber" label="编号" align="center" fixed="left" />
+    <el-table-column prop="serialNumber" label="编号" align="center" fixed="left">
+      <template #default="{ row }">
+        <table-cell-tag
+          :show="row.requisitionMode === requisitionModeEnum.USE_INVENTORY.V"
+          :name="requisitionModeEnum.USE_INVENTORY.L"
+          color="#e6a23c"
+        />
+        <span>{{ row.serialNumber }}</span>
+      </template>
+    </el-table-column>
     <el-table-column prop="classifyName" label="物料种类" align="center" fixed="left" show-overflow-tooltip>
       <template #default="{ row }">
         <el-tooltip :content="row.classifyParentFullName" :disabled="!row.classifyParentFullName" :show-after="500" placement="top">
@@ -93,8 +102,9 @@
         <el-input v-model.trim="row.brand" maxlength="60" size="mini" placeholder="品牌" />
       </template>
     </el-table-column>
-    <el-table-column label="操作" width="70" align="center" fixed="right">
+    <el-table-column label="操作" width="140" align="center" fixed="right">
       <template #default="{ row, $index }">
+        <common-button type="primary" size="mini" @click="search(row, $index)">查询</common-button>
         <common-button icon="el-icon-delete" type="danger" size="mini" @click="delRow(row.sn, $index)" />
       </template>
     </el-table-column>
@@ -102,7 +112,7 @@
 </template>
 
 <script setup>
-import { defineExpose, inject, reactive, watch } from 'vue'
+import { defineExpose, defineEmits, inject, reactive, watch } from 'vue'
 import { matClsEnum } from '@/utils/enum/modules/classification'
 import { isBlank, isNotBlank } from '@/utils/data-type'
 
@@ -112,6 +122,9 @@ import useMatBaseUnit from '@/composables/store/use-mat-base-unit'
 import { createUniqueString } from '@/utils/data-type/string'
 import { calcSteelCoilLength } from '@/utils/wms/measurement-calc'
 import { positiveNumPattern } from '@/utils/validate/pattern'
+import { ElMessage } from 'element-plus'
+
+const emit = defineEmits(['search-inventory'])
 
 // 当前物料基础类型
 const basicClass = matClsEnum.STEEL_COIL.V
@@ -204,6 +217,14 @@ function calcTotalLength(row) {
   } else {
     row.length = undefined
   }
+}
+
+function search(row, index) {
+  if (isBlank(row.thickness)) {
+    ElMessage.warning('请填写厚度')
+    return
+  }
+  emit('search-inventory', row, index)
 }
 
 // 删除行

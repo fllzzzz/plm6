@@ -8,7 +8,16 @@
     row-key="uid"
   >
     <el-table-column label="序号" type="index" align="center" width="60" fixed="left" />
-    <el-table-column prop="serialNumber" label="编号" align="center" fixed="left" />
+    <el-table-column prop="serialNumber" label="编号" align="center" fixed="left">
+      <template #default="{ row }">
+        <table-cell-tag
+          :show="row.requisitionMode === requisitionModeEnum.USE_INVENTORY.V"
+          :name="requisitionModeEnum.USE_INVENTORY.L"
+          color="#e6a23c"
+        />
+        <span>{{ row.serialNumber }}</span>
+      </template>
+    </el-table-column>
     <el-table-column prop="classifyName" label="物料种类" align="center" fixed="left" show-overflow-tooltip>
       <template #default="{ row }">
         <el-tooltip :content="row.classifyParentFullName" :disabled="!row.classifyParentFullName" :show-after="500" placement="top">
@@ -41,7 +50,7 @@
         <common-input-number
           v-model="row.quantity"
           :min="1"
-          :max="999999999"
+          :max="row.requisitionMode === requisitionModeEnum.USE_INVENTORY.V ? row.canUseQuantity : 999999999"
           controls-position="right"
           :controls="false"
           :step="5"
@@ -85,8 +94,9 @@
         <el-input v-model.trim="row.brand" maxlength="60" size="mini" placeholder="品牌" />
       </template>
     </el-table-column>
-    <el-table-column label="操作" width="70" align="center" fixed="right">
+    <el-table-column label="操作" width="140" align="center" fixed="right">
       <template #default="{ row, $index }">
+        <common-button type="primary" size="mini" @click="search(row, $index)">查询</common-button>
         <common-button icon="el-icon-delete" type="danger" size="mini" @click="delRow(row.sn, $index)" />
       </template>
     </el-table-column>
@@ -94,8 +104,9 @@
 </template>
 
 <script setup>
-import { defineExpose, inject, watchEffect, reactive, watch } from 'vue'
+import { defineExpose, defineEmits, inject, watchEffect, reactive, watch } from 'vue'
 import { matClsEnum } from '@/utils/enum/modules/classification'
+import { requisitionModeEnum } from '@/utils/enum/modules/wms'
 import { isBlank, isNotBlank, toPrecision } from '@/utils/data-type'
 
 import { regExtra } from '@/composables/form/use-form'
@@ -105,6 +116,9 @@ import useWeightOverDiff from '@/composables/wms/use-steel-weight-over-diff'
 import { createUniqueString } from '@/utils/data-type/string'
 import { calcSectionSteelTotalLength, calcSectionSteelWeight } from '@/utils/wms/measurement-calc'
 import { positiveNumPattern } from '@/utils/validate/pattern'
+import { ElMessage } from 'element-plus'
+
+const emit = defineEmits(['search-inventory'])
 
 // 当前物料基础类型
 const basicClass = matClsEnum.SECTION_STEEL.V
@@ -214,6 +228,14 @@ function calcTotalWeight(row) {
     row.theoryTotalWeight = undefined
     row.weighingTotalWeight = undefined
   }
+}
+
+function search(row, index) {
+  // if (isBlank(row.length)) {
+  //   ElMessage.warning('请填写定尺长度')
+  //   return
+  // }
+  emit('search-inventory', row, index)
 }
 
 // 删除行
