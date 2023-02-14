@@ -90,6 +90,18 @@ export function save(data) {
 }
 
 /**
+ * @description: 保存零件排产-新版
+ */
+export function newSave(data) {
+  return request({
+    module: 'mes',
+    url: 'machine_part/scheduling/nest_cut',
+    method: 'post',
+    data
+  })
+}
+
+/**
  * @description: 删除零件排产
  */
 export function del(ids) {
@@ -177,6 +189,18 @@ export function getCutTaskDetail(params) {
   return request({
     module: 'mes',
     url: `machine_part/scheduling/task/list`,
+    method: 'get',
+    params
+  })
+}
+
+/**
+ * @description:无需套料保存前判断是否需要钻孔
+ */
+export function getHoleTaskDetail(params) {
+  return request({
+    module: 'mes',
+    url: `machine_part/scheduling/check/drill`,
     method: 'get',
     params
   })

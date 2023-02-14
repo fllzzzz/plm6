@@ -204,6 +204,20 @@ export function getGroupsTree(params) {
     params
   })
 }
+
+/**
+ * 获取钻孔 车间-产线-生产组
+ * @export
+ * @returns
+ */
+export function getDrillGroupsTree(params) {
+  return request({
+    module: 'mes',
+    url: 'groups/drill/tree',
+    method: 'get',
+    params
+  })
+}
 /**
  * 获取 构件排产记录 气泡
  * @export

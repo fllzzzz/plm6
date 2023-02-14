@@ -86,7 +86,7 @@
         min-width="85px"
       >
         <template v-slot="scope">
-          {{ scope.row.thick ? scope.row.thick.toFixed(DP.MES_ARTIFACT_T__MM) : '-' }}
+          {{ scope.row.thick ? scope.row.thick : '-' }}
         </template>
       </el-table-column>
       <el-table-column
@@ -112,7 +112,7 @@
         min-width="80px"
       >
         <template v-slot="scope">
-          {{ scope.row.netWeight ? scope.row.netWeight.toFixed(DP.COM_WT__KG) : '-' }}
+          {{ scope.row.netWeight ? scope.row.netWeight : '-' }}
         </template>
       </el-table-column>
       <el-table-column
@@ -125,7 +125,7 @@
         min-width="80px"
       >
         <template v-slot="scope">
-          {{ scope.row.grossWeight ? scope.row.grossWeight.toFixed(DP.COM_WT__KG) : '-' }}
+          {{ scope.row.grossWeight ? scope.row.grossWeight : '-' }}
         </template>
       </el-table-column>
       <!-- <el-table-column
@@ -154,7 +154,7 @@
       </el-table-column> -->
       <el-table-column key="surfaceArea" prop="surfaceArea" sortable="custom" :label="`单面积\n(㎡)`" align="left" min-width="80px">
         <template v-slot="scope">
-          {{ scope.row.surfaceArea ? scope.row.surfaceArea.toFixed(DP.COM_AREA__M2) : '-' }}
+          {{ scope.row.surfaceArea ? scope.row.surfaceArea : '-' }}
         </template>
       </el-table-column>
       <el-table-column key="picturePath" prop="picturePath" label="图片" align="left" min-width="80px">
@@ -173,7 +173,6 @@
       </el-table-column>
       <el-table-column prop="quantity" label="数量" align="left" width="120px" fixed="right">
         <template #default="{ row }">
-          <template v-if="!row.boolOneCode">
             <el-input-number
               v-model="row.quantity"
               :step="1"
@@ -183,10 +182,6 @@
               style="width: 100%"
               controls-position="right"
             />
-          </template>
-          <template v-else>
-            <span>{{ row.quantity }}</span>
-          </template>
         </template>
       </el-table-column>
       <el-table-column label="操作" width="70" align="center" fixed="right">
@@ -199,9 +194,9 @@
 </template>
 
 <script setup>
-import { get, getParallelParams } from '@/api/config/system-config/parallel-config'
+import { getParallel, getParallelParams } from '@/api/config/system-config/parallel-config'
 import { defineEmits, defineProps, ref } from 'vue'
-import { DP } from '@/settings/config'
+// import { DP } from '@/settings/config'
 import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'
 // import padBlock from './pad-block'
@@ -221,8 +216,6 @@ const serialNumber = ref()
 const specification = ref()
 const thickList = ref([])
 const materialList = ref([])
-// const blockData = ref([])
-// const drawerVisible = ref(false)
 
 const { visible: dialogVisible, handleClose } = useVisible({ emit, props, field: 'visible', showHook: showHook })
 
@@ -237,10 +230,6 @@ const { maxHeight } = useMaxHeight(
   },
   dialogVisible
 )
-
-// const ids = computed(() => {
-
-// })
 
 function showHook() {
   fetchPadBlock()
@@ -268,7 +257,7 @@ async function getParams() {
 // 垫块弹窗
 async function fetchPadBlock() {
   try {
-    const { content } = await get({
+    const { content } = await getParallel({
       serialNumber: serialNumber.value,
       specification: specification.value,
       material: material.value,
@@ -284,8 +273,6 @@ async function fetchPadBlock() {
 }
 
 function add(row) {
-//   blockData.value = []
-//   blockData.value.push(row)
   emit('addBlock', row)
 }
 

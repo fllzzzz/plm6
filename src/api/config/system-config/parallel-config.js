@@ -9,6 +9,16 @@ export function get(params) {
   })
 }
 
+// 不分页
+export function getParallel(params) {
+  return request({
+    module: 'mes',
+    url: 'spacer/parallel',
+    method: 'get',
+    params
+  })
+}
+
 export function add(data) {
   return request({
     module: 'mes',
