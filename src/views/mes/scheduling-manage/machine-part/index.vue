@@ -350,12 +350,6 @@ function previewIt() {
     ElMessage.warning('请至少选择一条数据')
     return
   }
-  // if (padBlockData.value?.length > 0 && !checkedNodes.value?.length) {
-  //   checkedNodes.value = padBlockData.value
-  // }
-  // if (padBlockData.value?.length > 0 && checkedNodes.value?.length > 0) {
-  //   checkedNodes.value = checkedNodes.value.concat(padBlockData.value)
-  // }
   previewList.value = [...checkedNodes.value, ...padBlockData.value]
   previewVisible.value = true
 }
@@ -366,12 +360,6 @@ function unPreviewIt() {
     return
   }
   previewList.value = [...checkedNodes.value, ...padBlockData.value]
-  // if (padBlockData.value?.length && checkedNodes.value?.length) {
-  //   checkedNodes.value = checkedNodes.value.concat(padBlockData.value)
-  // }
-  // if (padBlockData.value?.length && !checkedNodes.value?.length) {
-  //   checkedNodes.value = padBlockData.value
-  // }
   previewVisible.value = true
 }
 // --------------------------- 预览并保存 end --------------------------------

@@ -14,7 +14,7 @@
         </el-radio-group>
         <div style="margin-left: 15px" v-if="!isNew && type">
           <common-select
-            v-model="saveType"
+            v-model="schedulingIds"
             :options="orderList"
             :dataStructure="{ key: 'value', label: 'value', value: 'value' }"
             clearable
@@ -135,8 +135,9 @@
 import { newSave, getCutTaskDetail, getHoleTaskDetail } from '@/api/mes/scheduling-manage/machine-part'
 import { ElNotification, ElRadioGroup } from 'element-plus'
 import { defineEmits, defineProps, ref, computed } from 'vue'
+import { layOffWayTypeEnum } from '@enum-ms/uploading-form'
 // import { materialTypeEnum } from '@enum-ms/uploading-form'
-import { componentTypeEnum, machinePartIssuedWayEnum } from '@enum-ms/mes'
+import { componentTypeEnum, machinePartIssuedWayEnum, machinePartSchedulingIssueStatusEnum as issueStatusEnum } from '@enum-ms/mes'
 import { manualFetchGroupsTree } from '@compos/mes/scheduling/use-scheduling-groups'
 import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'
@@ -188,6 +189,7 @@ const groupsId = ref()
 const thick = ref()
 const material = ref()
 const isNew = ref(true)
+const schedulingIds = ref()
 const saveType = ref(machinePartIssuedWayEnum.NESTING_ISSUED.V)
 const drillDialogVisible = ref(false)
 const orderList = ref([])
@@ -253,7 +255,10 @@ function success() {
 
 async function fetchOrder() {
   try {
-    const { content } = await getCutTaskDetail({})
+    const { content } = await getCutTaskDetail({
+      boolNestCutEnum: layOffWayTypeEnum.NESTING.V,
+      issueStatusEnum: issueStatusEnum.IN_NESTING.V
+    })
     content?.forEach((v) => {
       orderList.value.push({
         value: v.orderNumber
