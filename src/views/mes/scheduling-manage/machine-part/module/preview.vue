@@ -7,15 +7,13 @@
     :before-close="handleClose"
   >
     <template #titleAfter>
-      <common-button @click="drillClick" size="mini" type="primary">钻孔排产</common-button>
       <div style="display: flex">
         <el-radio-group v-if="type === 1" v-model="isNew">
-          <el-radio :label="true">使用新工单</el-radio>
+          <el-radio :label="true" :disabled="props.padBlockData?.length && !props.checkedNodes?.length">使用新工单</el-radio>
           <el-radio :label="false">使用原有工单</el-radio>
         </el-radio-group>
-        <div style="margin-left: 15px">
+        <div style="margin-left: 15px" v-if="!isNew && type">
           <common-select
-            v-if="!isNew && type === 2"
             v-model="saveType"
             :options="orderList"
             :dataStructure="{ key: 'value', label: 'value', value: 'value' }"
@@ -96,7 +94,7 @@
       <el-table-column label="序号" type="index" align="center" width="60" />
       <el-table-column :show-overflow-tooltip="true" prop="project" label="所属项目" min-width="120px" align="center">
         <template #default="{ row }">
-          <table-cell-tag v-if="!row.project" :show="row.isDefault" name="垫块" />
+          <table-cell-tag v-if="!row.needMachinePartLinkList" color="#1890ff" name="垫块" />
           <span>{{ row.project }}</span>
         </template>
       </el-table-column>
@@ -124,7 +122,13 @@
     </common-table>
   </common-dialog>
   <!-- 钻孔排产弹窗 -->
-  <drill-scheduling-dialog v-model:visible="drillDialogVisible" :queryParams="queryParams" :total-list="totalList" />
+  <drill-scheduling-dialog
+    v-model:visible="drillDialogVisible"
+    :queryParams="queryParams"
+    :total-list="totalList"
+    :drill-data="drillData"
+    @success="success"
+  />
 </template>
 
 <script setup>
@@ -160,18 +164,19 @@ const props = defineProps({
   type: {
     type: Number
   },
-  packLoading: {
-    type: Boolean,
-    default: false
+  padBlockData: {
+    type: Array,
+    default: () => []
   },
-  packType: {
-    type: Number,
-    default: undefined
+  checkedNodes: {
+    type: Array,
+    default: () => {}
   }
 })
 
 const dataFormat = ref([['project', 'parse-project']])
 const totalList = ref([])
+const drillData = ref({})
 
 // const layWayConfigId = ref()
 // const layingWayList = ref([])
@@ -217,21 +222,39 @@ const { maxHeight } = useMaxHeight(
 )
 
 function showHook() {
-  saveType.value = machinePartIssuedWayEnum.NESTING_ISSUED.V
   fetchGroups()
-  if (props.type === 1) {
-    fetchOrder()
+  // props.padBlockData?.forEach((v) => {
+  //   if (v?.needMachinePartLinkList) {
+  //     if (props.type === 1) {
+  //       fetchOrder()
+  //       saveType.value = machinePartIssuedWayEnum.NESTING_ISSUED.V
+  //     }
+  //   } else {
+  //     if (props.type === 1 && props.padBlockData?.length > 0) {
+  //       isNew.value = false
+  //       saveType.value = machinePartIssuedWayEnum.ADD_NEW_TICKET.V
+  //       fetchOrder()
+  //     }
+  //   }
+  // })
+  if (props.type === 1 && props.padBlockData?.length && !props.checkedNodes?.length) {
+    isNew.value = false
+    saveType.value = machinePartIssuedWayEnum.ADD_NEW_TICKET.V
   }
+  if (props.type === 1) {
+    saveType.value = machinePartIssuedWayEnum.NESTING_ISSUED.V
+  }
+  fetchOrder()
 }
 
-function drillClick() {
-  drillDialogVisible.value = true
+function success() {
+  emit('success')
 }
 
 async function fetchOrder() {
   try {
-    const data = await getCutTaskDetail({})
-    data?.forEach((v) => {
+    const { content } = await getCutTaskDetail({})
+    content?.forEach((v) => {
       orderList.value.push({
         value: v.orderNumber
       })
@@ -267,17 +290,27 @@ async function submitIt() {
     console.log(props.list, 'props.list')
     props.list.forEach((v) => {
       totalList.value.push(v)
-      v.needMachinePartLinkList?.forEach((o) => {
+      if (v.needMachinePartLinkList) {
+        v.needMachinePartLinkList?.forEach((o) => {
+          _list.push({
+            productId: v.id,
+            quantity: v.quantity,
+            id: o.id,
+            needSchedulingMonth: o.date
+          })
+        })
+      } else {
         _list.push({
           productId: v.id,
-          quantity: o.quantity,
-          id: o.id,
-          needSchedulingMonth: o.date
+          quantity: v.quantity
         })
-      })
+      }
     })
     totalList.value.forEach((v) => {
-      _partIds.push(v.id)
+      _partIds.push({
+        id: v.id,
+        quantity: v.quantity
+      })
     })
     console.log(totalList.value, 'totalList.value')
     const data =
@@ -299,10 +332,11 @@ async function submitIt() {
         : await getHoleTaskDetail({
           thick: thick.value,
           cutConfigId: cutConfigId.value,
-          partIds: _partIds
+          partList: _partIds
         })
     if (data) {
       drillDialogVisible.value = true
+      drillData.value = data || {}
     } else {
       await newSave({
         groupsId: groupsId.value,
@@ -326,12 +360,6 @@ async function submitIt() {
     })
     handleClose()
     emit('success')
-    askCompleteTime.value = undefined
-    cutConfigId.value = undefined
-    groupsId.value = undefined
-    thick.value = undefined
-    material.value = undefined
-    saveType.value = undefined
   } catch (error) {
     console.log('保存零件排产报错', error)
   } finally {

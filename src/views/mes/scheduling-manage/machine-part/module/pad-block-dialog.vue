@@ -57,7 +57,7 @@
           重置
         </common-button>
       </div>
-      <common-button type="primary" size="mini" class="filter-item" @click="padBlockClick"> 垫块列表 </common-button>
+      <common-button type="primary" size="mini" class="filter-item" @click="padBlockClick"> 垫块列表 ({{ props.padBlockData.length }})</common-button>
     </div>
     <common-table :data="padBlockList" :data-format="dataFormat" :show-empty-symbol="false" :max-height="maxHeight" style="width: 100%">
       <el-table-column label="序号" type="index" align="center" width="60" />
@@ -160,7 +160,7 @@
       <el-table-column key="picturePath" prop="picturePath" label="图片" align="left" min-width="80px">
         <template v-slot="scope">
           <div class="board-box">
-            <el-image :src="scope.row.picturePath">
+            <el-image :src="scope.row.picturePath" @error="scope.row.imgLoad = false">
               <template #error>
                 <div class="error-slot">
                   <span v-if="scope.row.picturePath">加载失败</span>
@@ -191,6 +191,7 @@
       </el-table-column>
     </common-table>
   </common-dialog>
+  <pad-block v-model:visible="drawerVisible" :pad-block-data="props.padBlockData" />
 </template>
 
 <script setup>
@@ -199,13 +200,17 @@ import { defineEmits, defineProps, ref } from 'vue'
 // import { DP } from '@/settings/config'
 import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'
-// import padBlock from './pad-block'
+import padBlock from './pad-block'
 
 const emit = defineEmits(['update:visible', 'success', 'addBlock'])
 const props = defineProps({
   visible: {
     type: Boolean,
     default: false
+  },
+  padBlockData: {
+    type: Array,
+    default: () => []
   }
 })
 const padBlockList = ref([])
@@ -216,6 +221,7 @@ const serialNumber = ref()
 const specification = ref()
 const thickList = ref([])
 const materialList = ref([])
+const drawerVisible = ref(false)
 
 const { visible: dialogVisible, handleClose } = useVisible({ emit, props, field: 'visible', showHook: showHook })
 
@@ -232,6 +238,7 @@ const { maxHeight } = useMaxHeight(
 )
 
 function showHook() {
+  // padBlockList.value = props.padBlockData
   fetchPadBlock()
 }
 
@@ -263,12 +270,12 @@ async function fetchPadBlock() {
       material: material.value,
       thick: thick.value
     })
-    // content?.forEach((v) => {
-    //   v.imgLoad = true
-    // })
+    content?.forEach((v) => {
+      v.imgLoad = true
+    })
     padBlockList.value = content || []
   } catch (e) {
-    console.log('获取生产组的信息失败', e)
+    console.log('获取垫块列表信息失败', e)
   }
 }
 
@@ -277,7 +284,9 @@ function add(row) {
 }
 
 // 垫块列表
-function padBlockClick() {}
+function padBlockClick() {
+  drawerVisible.value = true
+}
 
 // 重置
 function resetQuery() {

@@ -31,7 +31,7 @@
             </template>
             <template #viewLeft>
               <common-button type="primary" :loading="tableLoading" size="mini" class="filter-item" @click="padBlockClick">
-                垫块列表
+                垫块列表 ({{ padBlockData.length }})
               </common-button>
               <common-button v-permission="permission.save" type="success" class="filter-item" size="mini" @click="addPadBlock">
                 添加垫块
@@ -125,13 +125,15 @@ class="ellipsis-text text"
         </div>
         <m-preview
           v-model:visible="previewVisible"
-          :list="checkedNodes"
+          :list="previewList"
           :type="type"
+          :checked-nodes="checkedNodes"
+          :pad-block-data="padBlockData"
           @success="handleSaveSuccess"
           :thick-list="thickList"
           :material-list="materialList"
         ></m-preview>
-        <pad-block-dialog v-model:visible="dialogVisible" @addBlock="addBlock" />
+        <pad-block-dialog v-model:visible="dialogVisible" :pad-block-data="padBlockData" @addBlock="addBlock" />
         <pad-block v-model:visible="drawerVisible" :pad-block-data="padBlockData" />
       </div>
     </div>
@@ -169,7 +171,7 @@ const projectListRef = ref()
 const tableRef = ref()
 const nestingLoading = ref(false)
 const type = ref()
-
+const previewList = ref([])
 const { crud, CRUD } = useCRUD(
   {
     title: '零件排产',
@@ -344,32 +346,32 @@ const previewVisible = ref(false)
 
 function previewIt() {
   type.value = 1
-  if (padBlockData.value.length === 0 && !checkedNodes.value?.length) {
+  if (padBlockData.value?.length === 0 && !checkedNodes.value?.length) {
     ElMessage.warning('请至少选择一条数据')
     return
   }
-  if (padBlockData.value.length > 0 && !checkedNodes.value?.length) {
-    checkedNodes.value = padBlockData.value
-  }
-  if (padBlockData.value.length > 0 && checkedNodes.value?.length > 0) {
-    checkedNodes.value = checkedNodes.value.concat(padBlockData.value)
-    padBlockData.value = []
-  }
+  // if (padBlockData.value?.length > 0 && !checkedNodes.value?.length) {
+  //   checkedNodes.value = padBlockData.value
+  // }
+  // if (padBlockData.value?.length > 0 && checkedNodes.value?.length > 0) {
+  //   checkedNodes.value = checkedNodes.value.concat(padBlockData.value)
+  // }
+  previewList.value = [...checkedNodes.value, ...padBlockData.value]
   previewVisible.value = true
 }
 function unPreviewIt() {
   type.value = 0
-  if (padBlockData.value.length === 0 && !checkedNodes.value?.length) {
+  if (padBlockData.value?.length === 0 && !checkedNodes.value?.length) {
     ElMessage.warning('请至少选择一条数据')
     return
   }
-  if (padBlockData.value.length > 0 && !checkedNodes.value?.length) {
-    checkedNodes.value = padBlockData.value
-  }
-  if (padBlockData.value.length > 0 && checkedNodes.value?.length > 0) {
-    checkedNodes.value = checkedNodes.value.concat(padBlockData.value)
-    padBlockData.value = []
-  }
+  previewList.value = [...checkedNodes.value, ...padBlockData.value]
+  // if (padBlockData.value?.length && checkedNodes.value?.length) {
+  //   checkedNodes.value = checkedNodes.value.concat(padBlockData.value)
+  // }
+  // if (padBlockData.value?.length && !checkedNodes.value?.length) {
+  //   checkedNodes.value = padBlockData.value
+  // }
   previewVisible.value = true
 }
 // --------------------------- 预览并保存 end --------------------------------
@@ -390,7 +392,6 @@ function padBlockClick() {
 }
 
 function addBlock(val) {
-  console.log(val, 'val')
   const findVal = padBlockData.value.find((v) => v.id === val.id)
   console.log(findVal, 'findVal')
   if (isNotBlank(findVal)) {
@@ -398,7 +399,6 @@ function addBlock(val) {
   } else {
     padBlockData.value.push(JSON.parse(JSON.stringify(val)))
   }
-  console.log(padBlockData.value)
 }
 </script>
 

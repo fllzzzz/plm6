@@ -111,7 +111,7 @@
         <el-table-column key="picturePath" prop="picturePath" label="图片" align="left" min-width="80px">
           <template v-slot="scope">
             <div class="board-box">
-              <el-image :src="scope.row.picturePath">
+              <el-image :src="scope.row.picturePath" @error="scope.row.imgLoad = false">
                 <template #error>
                   <div class="error-slot">
                     <span v-if="scope.row.picturePath">加载失败</span>
@@ -124,20 +124,15 @@
         </el-table-column>
         <el-table-column prop="quantity" label="数量" align="left" width="120px" fixed="right">
           <template #default="{ row }">
-            <template v-if="!row.boolOneCode">
               <el-input-number
                 v-model="row.quantity"
                 :step="1"
                 :min="1"
-                :max="row.quantity"
+                :max="99999999"
                 size="mini"
                 style="width: 100%"
                 controls-position="right"
               />
-            </template>
-            <template v-else>
-              <span>{{ row.quantity }}</span>
-            </template>
           </template>
         </el-table-column>
         <el-table-column label="操作" width="70" align="center" fixed="right">
@@ -158,7 +153,7 @@ import useVisible from '@compos/use-visible'
 
 const drawerRef = ref()
 const padBlockList = ref([])
-const emit = defineEmits(['update:visible', 'handleSuccess'])
+const emit = defineEmits(['update:visible'])
 const props = defineProps({
   visible: {
     type: Boolean,
@@ -174,6 +169,11 @@ const { visible: drawerVisible, handleClose } = useVisible({ emit, props, field:
 
 function showHook() {
   padBlockList.value = props.padBlockData
+}
+
+function del(id) {
+  const delIndex = padBlockList.value.findIndex(v => v.id === id)
+  padBlockList.value.splice(delIndex, 1)
 }
 // 高度
 const { maxHeight } = useMaxHeight(

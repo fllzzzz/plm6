@@ -4,13 +4,13 @@
       <common-button type="primary" size="mini" @click="submitForm(formRef)"> 确定 </common-button>
     </template>
     <el-form ref="formRef" :model="form" :rules="rules" size="small" label-width="120px" class="demo-form">
-      <el-form-item label="零件数" prop="machinePartQuantity">
-        <span>{{ form.machinePartQuantity }}</span>
+      <el-form-item label="零件数:" prop="quantity">
+        <span>{{ drillData.quantity }}</span>
       </el-form-item>
-      <el-form-item label="钻孔数" prop="holeQuantity">
-        <span>{{ form.holeQuantity }}</span>
+      <el-form-item label="钻孔数:" prop="drillQuantity">
+        <span>{{ drillData.drillQuantity }}</span>
       </el-form-item>
-      <el-form-item label="钻孔生产组" prop="drillGroupsId">
+      <el-form-item label="钻孔生产组:" prop="drillGroupsId">
         <el-cascader
           v-model="form.drillGroupsId"
           :options="schedulingGroups.list"
@@ -22,7 +22,7 @@
           placeholder="请选择钻孔生产组"
         />
       </el-form-item>
-      <el-form-item label="钻孔日期" prop="drillAskCompleteTime">
+      <el-form-item label="钻孔日期:" prop="drillAskCompleteTime">
         <el-date-picker
           v-model="form.drillAskCompleteTime"
           type="date"
@@ -60,16 +60,22 @@ const props = defineProps({
   },
   queryParams: {
     type: Object
+  },
+  drillData: {
+    type: Object,
+    default: () => {}
   }
 })
-const emit = defineEmits(['update:visible'])
+const emit = defineEmits(['update:visible', 'success'])
 const { visible: drillDialogVisible, handleClose } = useVisible({ emit, props, field: 'visible', showHook: showHook })
 
 function showHook() {
   fetchDrillGroups()
-  console.log(props.queryParams, 'params')
 }
 
+function disabledDate(time) {
+  return time < new Date()
+}
 const form = reactive({
   drillGroupsId: undefined,
   drillAskCompleteTime: undefined
@@ -97,14 +103,21 @@ async function submitForm(formRef) {
   try {
     const _list = []
     props.totalList.forEach((v) => {
-      v.needMachinePartLinkList?.forEach((o) => {
+      if (v.needMachinePartLinkList) {
+        v.needMachinePartLinkList?.forEach((o) => {
+          _list.push({
+            productId: v.id,
+            quantity: v.quantity,
+            id: o.id,
+            needSchedulingMonth: o.date
+          })
+        })
+      } else {
         _list.push({
           productId: v.id,
-          quantity: o.quantity,
-          id: o.id,
-          needSchedulingMonth: o.date
+          quantity: v.quantity
         })
-      })
+      }
     })
     await newSave({
       ...props.queryParams,
@@ -112,26 +125,8 @@ async function submitForm(formRef) {
       drillGroupsId: form.drillGroupsId,
       drillAskCompleteTime: form.drillAskCompleteTime
     })
-    // const _data = []
-    // const _content = []
-    // props.detailData.map((v) => {
-    //   _data.push({
-    //     id: v.assembleDetailId,
-    //     quantity: v.quantity
-    //   })
-    //   _content.push(v.productionLineTypeEnum)
-    // })
-    // const _list = {
-    //   assembleSettingList: _data,
-    //   projectId: props.projectId,
-    //   monomerId: props.monomerId,
-    //   length: form.length,
-    //   kerfLength: form.kerfLength,
-    //   productionLineTypeEnum: _content[0],
-    //   typesettingTypeEnum: form.typesettingTypeEnum
-    // }
-    // batchId.value = await extrusionNesting(_list)
     handleClose()
+    emit('success')
   } catch (err) {
     console.log('无需套料排产失败', err)
   }

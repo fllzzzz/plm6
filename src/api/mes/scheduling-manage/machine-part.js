@@ -197,12 +197,12 @@ export function getCutTaskDetail(params) {
 /**
  * @description:无需套料保存前判断是否需要钻孔
  */
-export function getHoleTaskDetail(params) {
+export function getHoleTaskDetail(data) {
   return request({
     module: 'mes',
     url: `machine_part/scheduling/check/drill`,
-    method: 'get',
-    params
+    method: 'post',
+    data
   })
 }
 
