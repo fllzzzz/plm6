@@ -36,7 +36,14 @@
               <common-button v-permission="permission.save" type="success" class="filter-item" size="mini" @click="addPadBlock">
                 添加垫块
               </common-button>
-              <common-button v-permission="permission.save" type="warning" class="filter-item" size="mini" @click="unPreviewIt">
+              <common-button
+                v-permission="permission.save"
+                type="warning"
+                class="filter-item"
+                :disabled="Boolean(!checkedNodes?.length && padBlockData?.length)"
+                size="mini"
+                @click="unPreviewIt"
+              >
                 无需套料保存
               </common-button>
               <common-button
