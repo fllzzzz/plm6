@@ -180,7 +180,6 @@ const workshopList = ref([])
 const dayList = ref([])
 const yearList = ref([])
 const monthList = ref([])
-const monthData = ref([])
 
 // const { handleSizeChange, handleCurrentChange, total, setTotalPage, queryPage } = usePagination({ fetchHook: fetchDetail })
 
@@ -248,19 +247,19 @@ function resetQuery() {
 }
 
 function headerStyle({ row, column, rowIndex, columnIndex }) {
-  monthData.value = []
-  monthData.value.push(column.label?.split('/')[0])
+  const monthData = []
+  monthData.push(column.label?.split('/')[0])
   if (column.property === 'sum') {
     if (yearList.value.length === 1 && monthList.value.length === 1) {
       return ''
     } else if (yearList.value.length === 1 && monthList.value.length > 1) {
-      if (monthData.value[0] === monthList.value[0]) {
+      if (monthData[0] === monthList.value[0]) {
         return 'background: #e1f3d8'
-      } else if (monthData.value[0] === monthList.value[1]) {
+      } else if (monthData[0] === monthList.value[1]) {
         return 'background: #faecd8'
       }
     } else if (yearList.value.length > 1 && monthList.value.length > 1) {
-      if (monthData.value[0] === monthList.value[0]) {
+      if (monthData[0] === monthList.value[0]) {
         return 'background: #e1f3d8'
       } else {
         return 'background: #faecd8'
