@@ -206,5 +206,17 @@ export function getHoleTaskDetail(data) {
   })
 }
 
+/**
+ * @description: 获取套料排产的项目列表
+ */
+export function getProjectTaskDetail(params) {
+  return request({
+    module: 'mes',
+    url: `machine_part/scheduling/nest_cut/project/list`,
+    method: 'get',
+    params
+  })
+}
+
 export default { get }
 

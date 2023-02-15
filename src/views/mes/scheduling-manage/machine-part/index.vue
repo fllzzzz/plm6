@@ -31,10 +31,10 @@
             </template>
             <template #viewLeft>
               <common-button type="primary" :loading="tableLoading" size="mini" class="filter-item" @click="padBlockClick">
-                垫块列表 ({{ padBlockData.length }})
+                标准零件列表 ({{ padBlockData.length }})
               </common-button>
               <common-button v-permission="permission.save" type="success" class="filter-item" size="mini" @click="addPadBlock">
-                添加垫块
+                添加标准零件
               </common-button>
               <common-button
                 v-permission="permission.save"
@@ -296,6 +296,7 @@ async function handleSaveSuccess() {
   checkAll.value = false
   boardList.value = []
   crud.page.page = 1
+  padBlockData.value = []
   await projectListRef?.value?.refresh(lastQuery)
   await headRef.value?.refreshConditions(lastQuery)
 }
@@ -371,14 +372,14 @@ function unPreviewIt() {
 }
 // --------------------------- 预览并保存 end --------------------------------
 
-//  添加垫块弹窗
+//  添加标准零件弹窗
 const dialogVisible = ref(false)
 
 function addPadBlock() {
   dialogVisible.value = true
 }
 
-// 垫块列表
+// 标准零件列表
 const drawerVisible = ref(false)
 const tableLoading = ref(false)
 const padBlockData = ref([])
@@ -388,7 +389,6 @@ function padBlockClick() {
 
 function addBlock(val) {
   const findVal = padBlockData.value.find((v) => v.id === val.id)
-  console.log(findVal, 'findVal')
   if (isNotBlank(findVal)) {
     findVal.quantity += val.quantity
   } else {

@@ -1,7 +1,7 @@
 <template>
   <common-dialog
     customClass="pad-block-scheduling-preview-dlg"
-    title="垫块排产预览"
+    title="标准零件排产预览"
     v-model="dialogVisible"
     width="1500px"
     :before-close="handleClose"
@@ -57,7 +57,9 @@
           重置
         </common-button>
       </div>
-      <common-button type="primary" size="mini" class="filter-item" @click="padBlockClick"> 垫块列表 ({{ props.padBlockData.length }})</common-button>
+      <common-button type="primary" size="mini" class="filter-item" @click="padBlockClick">
+        标准零件列表 ({{ props.padBlockData.length }})</common-button
+      >
     </div>
     <common-table :data="padBlockList" :data-format="dataFormat" :show-empty-symbol="false" :max-height="maxHeight" style="width: 100%">
       <el-table-column label="序号" type="index" align="center" width="60" />
@@ -173,15 +175,15 @@
       </el-table-column>
       <el-table-column prop="quantity" label="数量" align="left" width="120px" fixed="right">
         <template #default="{ row }">
-            <el-input-number
-              v-model="row.quantity"
-              :step="1"
-              :min="1"
-              :max="99999999"
-              size="mini"
-              style="width: 100%"
-              controls-position="right"
-            />
+          <el-input-number
+            v-model="row.quantity"
+            :step="1"
+            :min="1"
+            :max="99999999"
+            size="mini"
+            style="width: 100%"
+            controls-position="right"
+          />
         </template>
       </el-table-column>
       <el-table-column label="操作" width="70" align="center" fixed="right">
@@ -261,8 +263,9 @@ async function getParams() {
   }
 }
 
-// 垫块弹窗
+// 标准零件弹窗
 async function fetchPadBlock() {
+  console.log(material.value, thick.value)
   try {
     const { content } = await getParallel({
       serialNumber: serialNumber.value,
@@ -275,7 +278,7 @@ async function fetchPadBlock() {
     })
     padBlockList.value = content || []
   } catch (e) {
-    console.log('获取垫块列表信息失败', e)
+    console.log('获取标准零件列表信息失败', e)
   }
 }
 
@@ -283,7 +286,7 @@ function add(row) {
   emit('addBlock', row)
 }
 
-// 垫块列表
+// 标准零件列表
 function padBlockClick() {
   drawerVisible.value = true
 }

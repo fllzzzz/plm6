@@ -45,6 +45,7 @@ import { defineProps, ref, defineEmits, reactive } from 'vue'
 import { newSave } from '@/api/mes/scheduling-manage/machine-part'
 import { manualFetchGroupsTree } from '@compos/mes/scheduling/use-drill-scheduling-groups'
 import { componentTypeEnum } from '@enum-ms/mes'
+import { ElNotification } from 'element-plus'
 import useVisible from '@compos/use-visible'
 
 const formRef = ref()
@@ -124,6 +125,11 @@ async function submitForm(formRef) {
       linkList: _list,
       drillGroupsId: form.drillGroupsId,
       drillAskCompleteTime: form.drillAskCompleteTime
+    })
+    ElNotification({
+      title: '钻孔排产保存成功',
+      type: 'success',
+      duration: 2500
     })
     handleClose()
     emit('success')

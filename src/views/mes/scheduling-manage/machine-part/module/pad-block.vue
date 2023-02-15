@@ -1,7 +1,7 @@
 <template>
   <common-drawer
     ref="drawerRef"
-    title="垫块列表"
+    title="标准零件列表"
     v-model="drawerVisible"
     direction="rtl"
     :before-close="handleClose"

@@ -19,22 +19,8 @@
     <common-table :data="list" :data-format="dataFormat" :max-height="maxHeight" style="width: 100%">
       <el-table-column label="序号" type="index" align="center" width="60" />
       <el-table-column prop="cutNumber" :show-overflow-tooltip="true" label="切割指令号" min-width="120" align="center" />
-      <el-table-column
-        v-if="info.boolNestCutEnum"
-        prop="spec"
-        :show-overflow-tooltip="true"
-        label="原材料规格"
-        min-width="120"
-        align="center"
-      />
-      <el-table-column
-        v-if="info.boolNestCutEnum"
-        prop="num"
-        :show-overflow-tooltip="true"
-        label="板材数量(件)"
-        width="120"
-        align="center"
-      />
+      <el-table-column prop="spec" :show-overflow-tooltip="true" label="原材料规格" min-width="120" align="center" />
+      <el-table-column prop="num" :show-overflow-tooltip="true" label="板材数量(件)" width="120" align="center" />
       <el-table-column prop="cutName" :show-overflow-tooltip="true" label="切割方式" width="100" align="center" />
       <el-table-column :show-overflow-tooltip="true" label="生产组" min-width="160" align="center">
         <template #default="{ row }">
@@ -47,7 +33,7 @@
 </template>
 
 <script setup>
-import { saveTask } from '@/api/mes/scheduling-manage/common'
+import { saveNestingTask } from '@/api/mes/scheduling-manage/common'
 import { defineEmits, defineProps, ref } from 'vue'
 import { ElNotification } from 'element-plus'
 
@@ -89,17 +75,14 @@ const issueLoading = ref(false)
 async function submitIt() {
   try {
     issueLoading.value = true
-    const _resList = props.list.map((v) => {
-      return {
-        askCompleteTime: v.askCompleteTime,
-        groupsId: v.groupsId,
-        id: v.id,
-        nestCutPlateId: v.nestCutPlateId
-      }
-    })
-    await saveTask({
-      machinePartDetailList: _resList
-    })
+    const data = {
+      askCompleteTime: props.info?.askCompleteTime,
+      drillAskCompleteTime: props.info?.drillAskCompleteTime,
+      drillGroupsId: props.info?.drillGroupsId,
+      groupsId: props.info?.groupsId,
+      schedulingId: props.info?.id
+    }
+    await saveNestingTask(data)
     handleClose()
     ElNotification({ title: '任务下发成功', type: 'success', duration: 3000 })
     emit('success')

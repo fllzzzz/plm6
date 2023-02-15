@@ -14,9 +14,9 @@
         </el-radio-group>
         <div style="margin-left: 15px" v-if="!isNew && type">
           <common-select
-            v-model="schedulingIds"
+            v-model="schedulingId"
             :options="orderList"
-            :dataStructure="{ key: 'value', label: 'value', value: 'value' }"
+            :dataStructure="{ key: 'id', label: 'value', value: 'id' }"
             clearable
             type="other"
             class="filter-item"
@@ -58,6 +58,15 @@
             placeholder="请选择厚度"
             style="width: 160px"
           />
+          <!-- <el-select
+          v-model="thick"
+          filterable
+          allow-create
+          :reserve-keyword="false"
+          placeholder="选择厚度"
+        >
+          <el-option v-for="item in thickList" :key="item.value" :label="item.value" :value="item.value" />
+        </el-select> -->
         </el-form-item>
         <el-form-item v-if="!type" label="生产组:" class="form-label-require">
           <el-cascader
@@ -94,7 +103,7 @@
       <el-table-column label="序号" type="index" align="center" width="60" />
       <el-table-column :show-overflow-tooltip="true" prop="project" label="所属项目" min-width="120px" align="center">
         <template #default="{ row }">
-          <table-cell-tag v-if="!row.needMachinePartLinkList" color="#1890ff" name="垫块" />
+          <table-cell-tag v-if="!row.needMachinePartLinkList" color="#1890ff" name="标准零件" />
           <span>{{ row.project }}</span>
         </template>
       </el-table-column>
@@ -189,7 +198,7 @@ const groupsId = ref()
 const thick = ref()
 const material = ref()
 const isNew = ref(true)
-const schedulingIds = ref()
+const schedulingId = ref()
 const saveType = ref(machinePartIssuedWayEnum.NESTING_ISSUED.V)
 const drillDialogVisible = ref(false)
 const orderList = ref([])
@@ -225,20 +234,6 @@ const { maxHeight } = useMaxHeight(
 
 function showHook() {
   fetchGroups()
-  // props.padBlockData?.forEach((v) => {
-  //   if (v?.needMachinePartLinkList) {
-  //     if (props.type === 1) {
-  //       fetchOrder()
-  //       saveType.value = machinePartIssuedWayEnum.NESTING_ISSUED.V
-  //     }
-  //   } else {
-  //     if (props.type === 1 && props.padBlockData?.length > 0) {
-  //       isNew.value = false
-  //       saveType.value = machinePartIssuedWayEnum.ADD_NEW_TICKET.V
-  //       fetchOrder()
-  //     }
-  //   }
-  // })
   if (props.type === 1 && props.padBlockData?.length && !props.checkedNodes?.length) {
     isNew.value = false
     saveType.value = machinePartIssuedWayEnum.ADD_NEW_TICKET.V
@@ -261,6 +256,7 @@ async function fetchOrder() {
     })
     content?.forEach((v) => {
       orderList.value.push({
+        id: v.id,
         value: v.orderNumber
       })
     })
@@ -292,7 +288,6 @@ async function submitIt() {
     const _list = []
     const _partIds = []
     totalList.value = []
-    console.log(props.list, 'props.list')
     props.list.forEach((v) => {
       totalList.value.push(v)
       if (v.needMachinePartLinkList) {
@@ -317,13 +312,14 @@ async function submitIt() {
         quantity: v.quantity
       })
     })
-    console.log(totalList.value, 'totalList.value')
+    console.log(totalList.value, schedulingId.value, 'totalList.value')
     const data =
       props.type === 1
         ? await newSave({
           groupsId: groupsId.value,
           material: material.value,
           thick: thick.value,
+          schedulingId: schedulingId.value,
           linkList: _list,
           askCompleteTime: askCompleteTime.value,
           cutConfigId: cutConfigId.value,
@@ -339,7 +335,7 @@ async function submitIt() {
           cutConfigId: cutConfigId.value,
           partList: _partIds
         })
-    if (data) {
+    if (data?.boolDrillEnum) {
       drillDialogVisible.value = true
       drillData.value = data || {}
     } else {
@@ -347,6 +343,7 @@ async function submitIt() {
         groupsId: groupsId.value,
         material: material.value,
         thick: thick.value,
+        schedulingId: schedulingId.value,
         linkList: _list,
         askCompleteTime: askCompleteTime.value,
         cutConfigId: cutConfigId.value,
