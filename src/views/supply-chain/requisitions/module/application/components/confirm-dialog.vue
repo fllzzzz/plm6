@@ -11,15 +11,16 @@
   >
     <template #titleAfter>
       <span class="child-mr-6" style="display: flex; align-items: center">
+        <el-tag effect="plain" size="medium" v-if="form.projectId">申购项目：{{ projectName }}</el-tag>
         <el-tag effect="plain" size="medium">申购编号：{{ form.serialNumber }}</el-tag>
         <el-tag type="success" effect="plain" size="medium">申购人：{{ user.name }}</el-tag>
         <common-radio-button
+          v-if="!props.isManufactured"
           type="enum"
           v-model="requisitionMode"
           :options="requisitionModeEnum.ENUM"
           show-option-all
           clearable
-          @change="filterMode"
         />
       </span>
     </template>
@@ -48,7 +49,14 @@
     <!-- 不刷新组件无法正常更新 -->
     <template v-if="dialogVisible">
       <el-form ref="formRef" :model="form" :disabled="cu.status.edit === FORM.STATUS.PROCESSING">
-        <common-table :data="showList" :data-format="columnsDataFormat" :max-height="maxHeight" show-summary :summary-method="getSummaries">
+        <common-table
+          v-if="!isManufactured"
+          :data="showList"
+          :data-format="columnsDataFormat"
+          :max-height="maxHeight"
+          show-summary
+          :summary-method="getSummaries"
+        >
           <el-table-column label="序号" type="index" align="center" width="55" fixed="left">
             <template #default="{ row, $index }">
               <table-cell-tag
@@ -66,10 +74,38 @@
           <!-- 次要信息 -->
           <material-secondary-info-columns :showBatchNo="false" />
         </common-table>
-        <div class="table-remark">
-          <span>项目</span>
-          <span>{{ projectName }}</span>
-        </div>
+        <!-- 制成品 -->
+        <common-table v-else :data="showList" :max-height="maxHeight" show-summary>
+          <el-table-column label="序号" type="index" align="center" width="55" fixed="left" />
+          <el-table-column prop="monomer.name" label="单体" align="center" show-overflow-tooltip min-width="120px" />
+          <el-table-column prop="area.name" label="区域" align="center" show-overflow-tooltip min-width="120px" />
+          <el-table-column prop="name" label="名称" align="center" show-overflow-tooltip min-width="100px" />
+          <el-table-column prop="serialNumber" label="编号" align="center" show-overflow-tooltip min-width="100px" />
+          <el-table-column prop="specification" label="规格" align="center" show-overflow-tooltip min-width="140px" />
+          <el-table-column prop="length" label="长度（mm）" align="center" show-overflow-tooltip />
+          <el-table-column prop="material" label="材质" align="center" show-overflow-tooltip />
+          <el-table-column prop="curPurchaseQuantity" label="申购数量" align="center" show-overflow-tooltip />
+          <el-table-column prop="curPurchaseWeight" label="申购重量(kg)" align="center" show-overflow-tooltip />
+          <el-table-column label="删除数量" align="center" show-overflow-tooltip min-width="100px">
+            <template #default="{ row: { sourceRow: row } }">
+              <common-input-number
+                v-model="row.delPurchaseQuantity"
+                :min="1"
+                :max="row.curPurchaseQuantity"
+                controls-position="right"
+                :controls="false"
+                :step="5"
+                size="mini"
+                placeholder="数量"
+              />
+            </template>
+          </el-table-column>
+          <el-table-column label="操作" width="80" align="center">
+            <template #default="{ row: { sourceRow: row } }">
+              <common-button type="danger" size="mini" icon="el-icon-delete" @click="handleDel(row)" />
+            </template>
+          </el-table-column>
+        </common-table>
         <div class="table-remark">
           <span>备注</span>
           <el-input
@@ -111,10 +147,14 @@ import commonFooter from './common-footer.vue'
 // TODO:处理申购单与项目之间的关联
 // TODO: 标签打印提示
 
-const emit = defineEmits(['saveSuccess', 'update:modelValue'])
+const emit = defineEmits(['saveSuccess', 'update:modelValue', 'manuf-del'])
 
 const props = defineProps({
   modelValue: {
+    type: Boolean,
+    default: false
+  },
+  isManufactured: {
     type: Boolean,
     default: false
   }
@@ -127,7 +167,7 @@ const approvalProcessOptions = ref([])
 // 表格列数据格式转换
 const columnsDataFormat = ref([...materialColumns])
 
-const { visible: dialogVisible, handleClose } = useVisible({ emit, props, showHook })
+const { visible: dialogVisible, handleClose } = useVisible({ emit, props })
 const { cu, form, FORM } = regExtra() // 表单
 
 // 表格高度处理
@@ -145,12 +185,8 @@ const { maxHeight } = useMaxHeight(
 
 // 项目名称
 const projectName = computed(() => {
-  return form.projectId
-    ?.map((id) => {
-      const data = projectMap.value?.[id] || {}
-      return `${data.serialNumber} ${data.shortName}`
-    })
-    ?.join('、')
+  const data = projectMap.value?.[form.projectId] || {}
+  return `${data.serialNumber} ${data.shortName}`
 })
 
 watch(
@@ -169,7 +205,16 @@ watch(
 
 // 表单提交数据清理
 cu.submitFormFormat = async (form) => {
-  form.list = await numFmtByBasicClass(form.list, { toSmallest: true, toNum: true })
+  if (!props.isManufactured) {
+    form.list = await numFmtByBasicClass(form.list, { toSmallest: true, toNum: true })
+  } else {
+    form.list = form.list.map((v) => {
+      return {
+        artifactEnclosureId: v.id,
+        quantity: v.curPurchaseQuantity
+      }
+    })
+  }
   return form
 }
 
@@ -212,20 +257,32 @@ function getSummaries(param) {
 
 // --------------------------- 申购分类 start ------------------------------
 const requisitionMode = ref()
-const showList = ref([])
 
-function filterMode(val) {
-  if (val) {
-    showList.value = form.list.filter((v) => v.requisitionMode === val)
+const showList = computed(() => {
+  if (props.isManufactured) {
+    return form.list.map((v) => {
+      v.delPurchaseQuantity = v.curPurchaseQuantity
+      return v
+    })
   } else {
-    showList.value = form.list
+    return form.list.filter((v) => {
+      let flag = true
+      if (requisitionMode.value && v.requisitionMode !== requisitionMode.value) {
+        flag = false
+      }
+      return flag
+    })
   }
+})
+// --------------------------- 申购分类 end --------------------------------
+
+// --------------------------- 制成品 start ------------------------------
+
+function handleDel(row) {
+  emit('manuf-del', { id: row.id, quantity: row.delPurchaseQuantity }, row)
 }
 
-function showHook() {
-  showList.value = form.list
-}
-// --------------------------- 申购分类 end --------------------------------
+// --------------------------- 制成品 end --------------------------------
 </script>
 
 <style lang="scss" scoped>

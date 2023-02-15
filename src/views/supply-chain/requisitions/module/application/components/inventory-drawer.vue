@@ -59,7 +59,10 @@
       <el-form-item label="规格">
         <span>{{ operateInfo.specMerge }}</span>
       </el-form-item>
-      <el-form-item :label="`利用数量(${baseUnit[basicClass]?.measure?.unit})`" required>
+      <el-form-item
+        :label="`利用数量(${basicClass & rawMatClsEnum.MATERIAL.V ? operateInfo?.outboundUnit : baseUnit[basicClass]?.measure?.unit})`"
+        required
+      >
         <common-input-number
           v-model="quantity"
           :min="1"
@@ -67,7 +70,7 @@
           controls-position="right"
           :controls="false"
           :step="1"
-          :precision="baseUnit[basicClass]?.measure?.precision"
+          :precision="basicClass & rawMatClsEnum.MATERIAL.V ? operateInfo?.outboundUnitPrecision : baseUnit[basicClass]?.measure?.precision"
           size="mini"
           placeholder="数量"
         />

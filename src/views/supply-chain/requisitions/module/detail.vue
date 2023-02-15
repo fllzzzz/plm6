@@ -23,12 +23,14 @@
     <template #content>
       <div class="table-header">
         <el-tag effect="plain" size="medium">申购编号：{{ detail?.serialNumber }}</el-tag>
+        <el-tag effect="plain" size="medium" v-if="isNotBlank(detail.project)">申购项目：{{ projectNameFormatter(detail.project) }}</el-tag>
         <el-tag effect="plain" size="medium">备料类型：{{ preparationTypeEnum.VL?.[detail?.type] }}</el-tag>
         <el-tag type="success" effect="plain" size="medium">申购人：{{ detail?.applicantName }}</el-tag>
         <el-tag type="success" effect="plain" size="medium">到厂日期：{{ parseTime(detail?.arrivalTime, '{y}-{m}-{d}') }}</el-tag>
-        <el-tag type="success" effect="plain" size="medium">审批流程：{{ detail?.approveInfoName || '-' }}</el-tag>
+        <!-- <el-tag type="success" effect="plain" size="medium">审批流程：{{ detail?.approveInfoName || '-' }}</el-tag> -->
       </div>
       <common-table
+        v-if="!isManufactured"
         :data="detail.detailList"
         :data-format="columnsDataFormat"
         :max-height="maxHeight"
@@ -52,12 +54,19 @@
         <!-- 次要信息 -->
         <material-secondary-info-columns />
       </common-table>
-      <div class="table-remark">
-        <span>项目</span>
-        <span>
-          <span>{{ projectName }}</span>
-        </span>
-      </div>
+      <!-- 制成品 -->
+      <common-table v-else :data="detail.detailList" :max-height="maxHeight" show-summary>
+        <el-table-column label="序号" type="index" align="center" width="55" fixed="left" />
+        <el-table-column prop="monomer.name" label="单体" align="center" show-overflow-tooltip min-width="120px" />
+        <el-table-column prop="area.name" label="区域" align="center" show-overflow-tooltip min-width="120px" />
+        <el-table-column prop="name" label="名称" align="center" show-overflow-tooltip min-width="100px" />
+        <el-table-column prop="serialNumber" label="编号" align="center" show-overflow-tooltip min-width="100px" />
+        <el-table-column prop="specification" label="规格" align="center" show-overflow-tooltip min-width="140px" />
+        <el-table-column prop="length" label="长度（mm）" align="center" show-overflow-tooltip />
+        <el-table-column prop="material" label="材质" align="center" show-overflow-tooltip />
+        <el-table-column prop="quantity" label="数量" align="center" show-overflow-tooltip />
+        <el-table-column prop="mete" label="重量(kg)" align="center" show-overflow-tooltip />
+      </common-table>
       <div class="table-remark">
         <span>备注</span>
         <span>
@@ -74,7 +83,9 @@ import { tableSummary } from '@/utils/el-extra'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { setSpecInfoToList } from '@/utils/wms/spec'
 import { materialColumns } from '@/utils/columns-format/wms'
-import { matClsEnum } from '@/utils/enum/modules/classification'
+import { matClsEnum, materialPurchaseClsEnum } from '@/utils/enum/modules/classification'
+import { isNotBlank, toPrecision } from '@data-type/index'
+import { projectNameFormatter } from '@/utils/project'
 import { parseTime } from '@/utils/date'
 import { preparationTypeEnum, requisitionModeEnum } from '@enum-ms/wms'
 
@@ -104,26 +115,29 @@ const { maxHeight } = useMaxHeight(
   () => computed(() => !crud.detailLoading)
 )
 
-// 项目名称
-const projectName = computed(() => {
-  return (detail.projects || [])?.map((v) => `${v.serialNumber} ${v.shortName}`)?.join('、')
-})
+const isManufactured = computed(() => Boolean(detail.materialType & materialPurchaseClsEnum.MANUFACTURED.V))
 
 CRUD.HOOK.beforeDetailLoaded = async (crud, detail) => {
-  await setSpecInfoToList(detail.detailList)
-  detail.detailList.forEach((v) => {
-    // 钢卷按米显示
-    if (v.basicClass === matClsEnum.STEEL_COIL.V) {
-      v.measureUnit = '米'
-      v.measurePrecision = 3
-    }
-    if (v.materialInventoryId) {
-      v.requisitionMode = requisitionModeEnum.USE_INVENTORY.V
-    } else {
-      v.requisitionMode = requisitionModeEnum.PURCHASE.V
-    }
-  })
-  detail.detailList = await numFmtByBasicClass(detail.detailList)
+  if (!isManufactured.value) {
+    await setSpecInfoToList(detail.detailList)
+    detail.detailList.forEach((v) => {
+      // 钢卷按米显示
+      if (v.basicClass === matClsEnum.STEEL_COIL.V) {
+        v.measureUnit = '米'
+        v.measurePrecision = 3
+      }
+      if (v.materialInventoryId) {
+        v.requisitionMode = requisitionModeEnum.USE_INVENTORY.V
+      } else {
+        v.requisitionMode = requisitionModeEnum.PURCHASE.V
+      }
+    })
+    detail.detailList = await numFmtByBasicClass(detail.detailList)
+  } else {
+    detail.detailList.forEach((v) => {
+      v.mete = toPrecision(v.quantity * v.netWeight, 2)
+    })
+  }
 }
 
 // 合计

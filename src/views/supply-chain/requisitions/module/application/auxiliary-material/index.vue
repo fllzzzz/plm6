@@ -17,7 +17,7 @@
         </div>
       </div>
       <el-form ref="formRef" :model="form">
-        <aux-mat-table ref="tableRef" :max-height="tableMaxHeight" />
+        <aux-mat-table ref="tableRef" :max-height="tableMaxHeight" @search-inventory="searchInventory" />
       </el-form>
     </common-wrapper>
     <common-drawer
@@ -42,6 +42,7 @@
         />
       </template>
     </common-drawer>
+    <inventory-drawer v-model:visible="inventoryVisible" :params="searchInfo" @use-inventory="useInventory" />
   </div>
 </template>
 
@@ -51,7 +52,7 @@ import crudApi from '@/api/supply-chain/requisitions-manage/requisitions'
 import { defineProps, defineEmits, ref, provide, watch, nextTick } from 'vue'
 import { matClsEnum } from '@/utils/enum/modules/classification'
 import { isBlank } from '@/utils/data-type'
-import { preparationTypeEnum } from '@enum-ms/wms'
+import { preparationTypeEnum, requisitionModeEnum } from '@enum-ms/wms'
 import auxMaterialTemp from '@/utils/excel/import-template/supply-chain/requisition-temp/aux-material'
 
 import useForm from '@/composables/form/use-form'
@@ -59,6 +60,7 @@ import useMaxHeight from '@compos/use-max-height'
 import commonWrapper from './../components/common-wrapper.vue'
 import MaterialTableSpecSelect from '@/components-system/classification/material-table-spec-select.vue'
 import AuxMatTable from './module/aux-mat-table.vue'
+import inventoryDrawer from '../components/inventory-drawer'
 import excelResolveButton from '@/components-system/common/excel-resolve-button/index.vue'
 
 import { ElMessage } from 'element-plus'
@@ -68,6 +70,10 @@ const emit = defineEmits(['success'])
 const props = defineProps({
   detail: {
     type: Object
+  },
+  isEdit: {
+    type: Boolean,
+    default: false
   }
 })
 
@@ -80,6 +86,9 @@ const matSpecRef = ref() // 规格列表ref
 const formRef = ref() // form表单ref
 const drawerRef = ref()
 
+const inventoryVisible = ref(false)
+const searchInfo = ref({})
+const searchIdx = ref()
 const materialSelectVisible = ref(false) // 显示物料选择
 const currentBasicClass = matClsEnum.MATERIAL.V // 当前基础分类
 
@@ -90,7 +99,7 @@ const { cu, form, FORM } = useForm(
     title: '辅材申购',
     defaultForm: defaultForm,
     clearDraftCallback: init,
-    api: crudApi.add
+    api: props.isEdit ? crudApi.edit : crudApi.add
   },
   formRef,
   props.detail
@@ -101,12 +110,7 @@ watch(
   (val = {}) => {
     form.type = val.type
     form.materialType = val.materialType
-    // 项目id
-    if (Array.isArray(val.projectId)) {
-      form.projectId = val.projectId
-    } else {
-      form.projectId = val.projectId ? [val.projectId] : []
-    }
+    form.projectId = val.projectId
   },
   { deep: true, immediate: true }
 )
@@ -147,6 +151,21 @@ init()
 FORM.HOOK.afterSubmit = () => {
   emit('success')
   init()
+}
+
+function searchInventory(row, index) {
+  searchInfo.value = row
+  searchIdx.value = index
+  inventoryVisible.value = true
+}
+
+function useInventory(quantity, data) {
+  form.list[searchIdx.value].quantity = quantity
+  form.list[searchIdx.value].canUseQuantity = data.quantity
+  form.list[searchIdx.value].color = data.color
+  form.list[searchIdx.value].brand = data.brand
+  form.list[searchIdx.value].requisitionMode = requisitionModeEnum.USE_INVENTORY.V
+  form.list[searchIdx.value].materialInventoryId = data.id
 }
 
 // 表单校验

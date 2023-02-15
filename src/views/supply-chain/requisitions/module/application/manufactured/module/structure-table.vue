@@ -63,7 +63,7 @@
 
 <script setup>
 import { manufClassListGet, manufListGet } from '@/api/supply-chain/requisitions-manage/requisitions'
-import { defineProps, defineEmits, ref, defineExpose, inject } from 'vue'
+import { ref, defineExpose, inject } from 'vue'
 import { deepClone, isNotBlank, isBlank } from '@/utils/data-type'
 
 import { regExtra } from '@/composables/form/use-form'
@@ -76,8 +76,6 @@ const tableLoading = ref(false)
 const tableData = ref([])
 const { form } = regExtra() // 表单
 const query = inject('customQuery')
-
-// const totalBadge = computed(() => Object.keys(form.purchaseMergeObj).length)
 
 const { handleSizeChange, handleCurrentChange, total, setTotalPage, queryPage } = usePagination({ fetchHook: fetchClassList })
 
@@ -133,6 +131,7 @@ function handleSelectionChange(val) {
 
 defineExpose({
   refresh: fetchClassList,
+  refreshList: fetchList,
   selectList: selectList
 })
 </script>

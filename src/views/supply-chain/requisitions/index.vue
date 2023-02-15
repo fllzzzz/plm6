@@ -51,7 +51,7 @@
           <el-tag size="medium" :type="row.materialTypeTag" effect="plain">{{ row.materialType }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column
+      <!-- <el-table-column
         v-if="checkPermission(permission.detail) && columns.visible('mete')"
         prop="mete"
         key="mete"
@@ -63,12 +63,12 @@
         <template #default="{ row }">
           <udOperation show-detail :show-del="false" :show-edit="false" :data="{ id: row.id }" />
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column
-        v-if="columns.visible('projects')"
+        v-if="columns.visible('project')"
         show-overflow-tooltip
-        key="projects"
-        prop="projects"
+        key="project"
+        prop="project"
         label="所属项目"
         min-width="170"
       />
@@ -93,7 +93,7 @@
         align="center"
         label="审批流程"
       /> -->
-      <el-table-column
+      <!-- <el-table-column
         v-if="columns.visible('reviewStatus')"
         key="reviewStatus"
         prop="reviewStatus"
@@ -107,7 +107,7 @@
             row.reviewStatus
           }}</el-tag>
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column v-if="columns.visible('enabled')" key="enabled" prop="enabled" label="状态" align="center" width="100">
         <template #default="{ row: { sourceRow: row } }">
           <el-switch
@@ -122,7 +122,7 @@
         </template>
       </el-table-column>
       <!--详情与审核-->
-      <el-table-column v-permission="[...permission.detail, ...permission.del]" align="center" label="操作" width="120">
+      <el-table-column v-permission="[...permission.detail, ...permission.del]" align="center" label="操作" width="170">
         <template #default="{ row: { sourceRow: row } }">
           <!-- <udOperation
             :data="{ id: row.id }"
@@ -130,11 +130,7 @@
             :disabled-del="row.reviewStatus !== ddReviewStatusEnum.UNREVIEWED.V"
             delPrompt="确定撤销本条数据吗？"
           /> -->
-          <udOperation
-            :data="{ id: row.id }"
-            :permission="permission"
-            delPrompt="确定撤销本条数据吗？"
-          />
+          <udOperation show-detail :data="{ id: row.id }" :permission="permission" delPrompt="确定撤销本条数据吗？" />
         </template>
       </el-table-column>
     </common-table>
@@ -174,7 +170,7 @@ const optShow = {
 const tableRef = ref()
 
 const dataFormat = ref([
-  ['projects', ['parse-project', { onlyShortName: true }]],
+  ['project', ['parse-project', { onlyShortName: true }]],
   ['reviewStatus', ['parse-enum', ddReviewStatusEnum, { f: 'L' }]],
   ['materialTypeTag', ['parse-enum', materialPurchaseClsEnum, { f: 'T' }], { source: 'materialType' }],
   ['materialType', ['parse-enum', materialPurchaseClsEnum, { f: 'L' }]],

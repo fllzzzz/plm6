@@ -5,13 +5,13 @@
         <div class="filter-left-box">
           <div class="head-container" style="margin-bottom: 0px">
             <monomer-select-area-select
-              v-if="isNotBlank(form.projectId?.[0])"
+              v-if="isNotBlank(form.projectId)"
               v-model:monomerId="query.monomerId"
               v-model:areaId="query.areaId"
               :areaType="manufactureTypeEnum.OUTSOURCE.V"
               clearable
               areaClearable
-              :project-id="form.projectId?.[0]"
+              :project-id="form.projectId"
             />
             <el-input
               v-model.trim="query.serialNumber"
@@ -43,31 +43,37 @@
         <component ref="tableRef" :max-height="tableMaxHeight" :is="comp" />
       </el-form>
     </common-wrapper>
+    <confirm-dialog v-model="previewVisible" is-manufactured @manuf-del="handleDel" />
   </div>
 </template>
 
 <script setup>
 import crudApi from '@/api/supply-chain/requisitions-manage/requisitions'
 
-import { defineProps, defineEmits, ref, computed, watch, provide, nextTick } from 'vue'
+import { defineProps, defineEmits, ref, computed, watch, provide, watchEffect, nextTick } from 'vue'
 import { manufClsEnum } from '@/utils/enum/modules/classification'
 import { manufactureTypeEnum } from '@enum-ms/plan'
+import { isBlank, deepClone, toPrecision, isNotBlank } from '@/utils/data-type'
+import { obj2arr } from '@/utils/convert/type'
 
 import useForm from '@/composables/form/use-form'
 import useMaxHeight from '@compos/use-max-height'
 import commonWrapper from './../components/common-wrapper.vue'
 import enclosureTable from './module/enclosure-table.vue'
 import structureTable from './module/structure-table.vue'
-import { ElMessage } from 'element-plus'
-import { isBlank, isNotBlank } from '@/utils/data-type'
-
+import confirmDialog from '../components/confirm-dialog.vue'
 import monomerSelectAreaSelect from '@comp-base/monomer-select-area-select'
+import { ElMessage } from 'element-plus'
 
 const emit = defineEmits(['success'])
 
 const props = defineProps({
   detail: {
     type: Object
+  },
+  isEdit: {
+    type: Boolean,
+    default: false
   }
 })
 
@@ -79,6 +85,7 @@ const commonWrapperRef = ref()
 const tableRef = ref() // 表格ref
 const formRef = ref() // form表单ref
 const query = ref({})
+const previewVisible = ref(false)
 provide(
   'customQuery',
   computed(() => query.value)
@@ -88,7 +95,7 @@ const { form, FORM } = useForm(
   {
     title: '制成品申购',
     defaultForm: defaultForm,
-    api: crudApi.add
+    api: props.isEdit ? crudApi.edit : crudApi.add
   },
   formRef,
   props.detail
@@ -101,12 +108,7 @@ watch(
     form.type = val.type
     form.materialType = val.materialType
     form.finishedProductType = val.finishedProductType
-    // 项目id
-    if (Array.isArray(val.projectId)) {
-      form.projectId = val.projectId
-    } else {
-      form.projectId = val.projectId ? [val.projectId] : []
-    }
+    form.projectId = val.projectId
   },
   { deep: true, immediate: true }
 )
@@ -128,6 +130,10 @@ const { maxHeight: tableMaxHeight } = useMaxHeight({
   extraHeight: 40
 })
 
+watchEffect(() => {
+  form.list = obj2arr(form.purchaseListObj)
+})
+
 // 当前使用的组件
 const comp = computed(() => {
   switch (form.finishedProductType) {
@@ -140,30 +146,55 @@ const comp = computed(() => {
   }
 })
 
-// // 总重
-// const totalWeight = computed(() => {
-//   let weight = 0
-//   form.list.forEach((v) => {
-//     weight += v.weighingTotalWeight ? v.weighingTotalWeight : 0
-//   })
-//   return toFixed(weight, 2)
-// })
+const totalBadge = computed(() => (isNotBlank(form.purchaseListObj) ? Object.keys(form.purchaseListObj).length : 0))
 
-const totalBadge = computed(() => 0)
+function handleAdd() {
+  if (tableRef.value) {
+    const list = tableRef.value.selectList
+    if (!list?.length) {
+      ElMessage.warning('请选择数据')
+      return
+    }
+    for (let i = 0; i < list.length; i++) {
+      const v = deepClone(list[i])
+      const _purchaseWeight = v.curPurchaseQuantity * v.netWeight || 0
+      if (isBlank(form.purchaseListObj[v.id])) {
+        form.purchaseListObj[v.id] = {
+          ...v,
+          curPurchaseWeight: _purchaseWeight
+        }
+      } else {
+        form.purchaseListObj[v.id].curPurchaseQuantity += v.curPurchaseQuantity
+        form.purchaseListObj[v.id].curPurchaseWeight = toPrecision(form.purchaseListObj[v.id].curPurchaseWeight + _purchaseWeight, 2)
+      }
+    }
+    refreshList()
+  }
+}
 
-function handleAdd() {}
+function handleDel({ id, quantity }, row) {
+  const _purchaseWeight = quantity * row.netWeight || 0
+  form.purchaseListObj[id].curPurchaseQuantity -= quantity
+  form.purchaseListObj[id].curPurchaseWeight = toPrecision(form.purchaseListObj[id].curPurchaseWeight - _purchaseWeight, 2)
+  if (form.purchaseListObj[id].curPurchaseQuantity === 0) {
+    delete form.purchaseListObj[id]
+  }
+  refreshList()
+}
 
 function refreshList() {
-  nextTick(() => {
-    tableRef.value.refresh()
-  })
+  tableRef.value?.refreshList()
+}
+
+function refresh() {
+  tableRef.value?.refresh()
 }
 
 watch(
   [() => form.projectId, () => query.value.monomerId, () => query.value.areaId],
   () => {
     query.value.projectId = form.projectId
-    refreshList()
+    refresh()
   },
   { immediate: true }
 )
@@ -172,20 +203,48 @@ function resetQuery() {
   query.value.monomerId = undefined
   query.value.areaId = undefined
   query.value.serialNumber = undefined
-  refreshList()
+  refresh()
 }
 
-function showPurchase() {}
+async function showPurchase() {
+  let formValidate = true
+  formValidate = await validate()
+  previewVisible.value = formValidate
+}
 
 // 监听切换制成品类型，为list赋值
 watch(
   () => form.finishedProductType,
-  (k) => {
-    form.list = []
-    form.purchaseListObj = {}
+  (val, oldVal) => {
+    if (val && oldVal) {
+      form.list = []
+      form.purchaseListObj = {}
+    }
   },
   { immediate: true }
 )
+
+FORM.HOOK.beforeToEdit = async (crud, form) => {
+  form.purchaseListObj = {}
+  const list = form.list
+  for (let i = 0; i < list.length; i++) {
+    const v = deepClone(list[i])
+    const _purchaseWeight = v.quantity * v.netWeight || 0
+    if (isBlank(form.purchaseListObj[v.id])) {
+      form.purchaseListObj[v.id] = {
+        ...v,
+        curPurchaseQuantity: v.quantity,
+        curPurchaseWeight: _purchaseWeight
+      }
+    } else {
+      form.purchaseListObj[v.id].curPurchaseQuantity += v.quantity
+      form.purchaseListObj[v.id].curPurchaseWeight = toPrecision(form.purchaseListObj[v.id].curPurchaseWeight + _purchaseWeight, 2)
+    }
+  }
+  nextTick(() => {
+    refresh()
+  })
+}
 
 // 提交后清除校验结果
 FORM.HOOK.afterSubmit = () => {
@@ -202,15 +261,7 @@ function validate() {
     ElMessage.warning('请选择数据')
     return false
   }
-  const tableValidateRes = tableRef.value.validate()
-  if (tableValidateRes) {
-    form.list.forEach((v) => {
-      v.mete = v.weighingTotalWeight
-      v.weight = v.weighingTotalWeight
-    })
-  }
-  // 进入汇总页面
-  return tableValidateRes
+  return true
 }
 </script>
 

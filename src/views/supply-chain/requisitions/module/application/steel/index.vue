@@ -224,12 +224,7 @@ watch(
   (val = {}) => {
     form.type = val.type
     form.materialType = val.materialType
-    // 项目id
-    if (Array.isArray(val.projectId)) {
-      form.projectId = val.projectId
-    } else {
-      form.projectId = val.projectId ? [val.projectId] : []
-    }
+    form.projectId = val.projectId
   },
   { deep: true, immediate: true }
 )
@@ -320,7 +315,6 @@ function searchInventory(row, index) {
 }
 
 function useInventory(quantity, data) {
-  console.log(quantity, data, currentBasicClass.value, searchIdx.value, searchInfo.value, 'quantity, data')
   const _curBasicClass = steelBasicClassKV?.[currentBasicClass.value]?.V
   if (_curBasicClass & matClsEnum.STEEL_PLATE.V) {
     // 钢板冻结钢卷
@@ -421,7 +415,6 @@ function handleExcelSuccess(list) {
   // 解析
   // 根据物料种类获取
   try {
-    console.log(list)
     cu.props.import(list)
   } catch (error) {
     ElMessage.error({ message: error.message, duration: 5000 })
