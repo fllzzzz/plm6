@@ -104,7 +104,8 @@
       <el-table-column :show-overflow-tooltip="true" prop="project" label="所属项目" min-width="120px" align="center">
         <template #default="{ row }">
           <table-cell-tag v-if="!row.needMachinePartLinkList" color="#1890ff" name="标准零件" />
-          <span>{{ row.project }}</span>
+          <span v-if="row.project && row.needMachinePartLinkList">{{ row.project }}</span>
+          <span v-if="!row.needMachinePartLinkList">/</span>
         </template>
       </el-table-column>
       <el-table-column :show-overflow-tooltip="true" prop="serialNumber" label="编号" min-width="80px" align="center">
@@ -142,7 +143,7 @@
 
 <script setup>
 import { newSave, getCutTaskDetail, getHoleTaskDetail } from '@/api/mes/scheduling-manage/machine-part'
-import { ElNotification, ElRadioGroup } from 'element-plus'
+import { ElMessage, ElNotification, ElRadioGroup } from 'element-plus'
 import { defineEmits, defineProps, ref, computed } from 'vue'
 import { layOffWayTypeEnum } from '@enum-ms/uploading-form'
 // import { materialTypeEnum } from '@enum-ms/uploading-form'
@@ -254,6 +255,9 @@ function showHook() {
       isNew.value = false
       saveType.value = machinePartIssuedWayEnum.ADD_NEW_TICKET.V
     }
+  } else {
+    isNew.value = true
+    saveType.value = machinePartIssuedWayEnum.NESTING_ISSUED.V
   }
   fetchOrder()
 }
@@ -297,6 +301,25 @@ function disabledDate(time) {
   return time < new Date()
 }
 async function submitIt() {
+  if (props.type === 0) {
+    if (!thick.value || !material.value || !groupsId.value || !askCompleteTime.value || !cutConfigId.value) {
+      ElMessage.warning('必选项不能为空')
+      return false
+    }
+  }
+  if (props.type === 1 && isNew.value) {
+    if (!thick.value || !material.value || !askCompleteTime.value || !cutConfigId.value) {
+      ElMessage.warning('必选项不能为空')
+      return false
+    }
+  }
+  if (props.type === 1 && !isNew.value) {
+    if (!schedulingId.value) {
+      ElMessage.warning('必选项不能为空')
+      return false
+    }
+  }
+
   try {
     submitLoading.value = true
     const _list = []
