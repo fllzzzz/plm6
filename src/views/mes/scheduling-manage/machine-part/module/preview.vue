@@ -241,13 +241,19 @@ const { maxHeight } = useMaxHeight(
 )
 
 function showHook() {
+  groupsId.value = undefined
+  material.value = undefined
+  thick.value = undefined
+  askCompleteTime.value = undefined
+  cutConfigId.value = undefined
   fetchGroups()
-  if (props.type === 1 && props.padBlockData?.length && !props.checkedNodes?.length) {
-    isNew.value = false
-    saveType.value = machinePartIssuedWayEnum.ADD_NEW_TICKET.V
-  }
   if (props.type === 1) {
+    isNew.value = true
     saveType.value = machinePartIssuedWayEnum.NESTING_ISSUED.V
+    if (props.padBlockData?.length && !props.checkedNodes?.length) {
+      isNew.value = false
+      saveType.value = machinePartIssuedWayEnum.ADD_NEW_TICKET.V
+    }
   }
   fetchOrder()
 }
@@ -321,9 +327,17 @@ async function submitIt() {
       })
     })
     console.log(totalList.value, schedulingId.value, 'totalList.value')
-    const data =
-      props.type === 1
-        ? await newSave({
+    if (props.type === 0) {
+      const data = await getHoleTaskDetail({
+        thick: thick.value,
+        cutConfigId: cutConfigId.value,
+        partList: _partIds
+      })
+      if (data?.boolDrillEnum) {
+        drillDialogVisible.value = true
+        drillData.value = data || {}
+      } else {
+        await newSave({
           groupsId: groupsId.value,
           material: material.value,
           thick: thick.value,
@@ -332,20 +346,13 @@ async function submitIt() {
           askCompleteTime: askCompleteTime.value,
           cutConfigId: cutConfigId.value,
           saveType:
-              props.type === 0
-                ? machinePartIssuedWayEnum.UN_NESTING_ISSUED.V
-                : isNew.value === true
-                  ? machinePartIssuedWayEnum.NESTING_ISSUED.V
-                  : machinePartIssuedWayEnum.ADD_NEW_TICKET.V
+            props.type === 0
+              ? machinePartIssuedWayEnum.UN_NESTING_ISSUED.V
+              : isNew.value === true
+                ? machinePartIssuedWayEnum.NESTING_ISSUED.V
+                : machinePartIssuedWayEnum.ADD_NEW_TICKET.V
         })
-        : await getHoleTaskDetail({
-          thick: thick.value,
-          cutConfigId: cutConfigId.value,
-          partList: _partIds
-        })
-    if (data?.boolDrillEnum) {
-      drillDialogVisible.value = true
-      drillData.value = data || {}
+      }
     } else {
       await newSave({
         groupsId: groupsId.value,

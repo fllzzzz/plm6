@@ -57,9 +57,11 @@
           重置
         </common-button>
       </div>
-      <common-button type="primary" size="mini" class="filter-item" @click="padBlockClick">
-        标准零件列表 ({{ props.padBlockData.length }})</common-button
-      >
+      <el-badge :value="padBlockData.length" class="item">
+        <common-button type="primary" size="mini" class="filter-item" @click="padBlockClick">
+          标准零件列表</common-button
+        >
+      </el-badge>
     </div>
     <common-table :data="padBlockList" :data-format="dataFormat" :show-empty-symbol="false" :max-height="maxHeight" style="width: 100%">
       <el-table-column label="序号" type="index" align="center" width="60" />

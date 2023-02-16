@@ -30,9 +30,11 @@
               </div>
             </template>
             <template #viewLeft>
-              <common-button type="primary" :loading="tableLoading" size="mini" class="filter-item" @click="padBlockClick">
-                标准零件列表 ({{ padBlockData.length }})
-              </common-button>
+              <el-badge :value="padBlockData.length" class="item">
+                <common-button type="primary" :loading="tableLoading" size="mini" class="filter-item" @click="padBlockClick">
+                  标准零件列表
+                </common-button>
+              </el-badge>
               <common-button v-permission="permission.save" type="success" class="filter-item" size="mini" @click="addPadBlock">
                 添加标准零件
               </common-button>
@@ -419,6 +421,9 @@ function addBlock(val) {
     min-width: 0;
     overflow: hidden;
   }
+}
+.item {
+  margin-right: 10px;
 }
 ::-webkit-scrollbar {
   width: 6px;

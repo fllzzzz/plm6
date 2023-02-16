@@ -111,6 +111,9 @@
           </el-table-column>
           <el-table-column label="操作" align="center">
             <template #default="{ row }">
+              <common-button class="filter-item" size="mini" type="primary" @click="toViews(row)">
+                套料文档
+              </common-button>
               <common-button class="filter-item" size="mini" type="success" v-if="row.issueStatusEnum === issueStatusEnum.OUT_NESTING.V" @click="toBatchIssue(row)">
                 排产
               </common-button>
@@ -122,6 +125,7 @@
       </template>
       <!-- <preview-dialog v-model:visible="previewVisible" :list="submitList" :info="info" @success="handleIssueSuccess" /> -->
       <part-dialog v-model:visible="partDialogVisible" :part-list="partList" @success="crud.toQuery" />
+      <nesting-document-dialog v-model:visible="nestingDialogVisible" :nesting-list="nestingList" />
     </div>
   </div>
 </template>
@@ -140,8 +144,11 @@ import mHeader from './module/header'
 import nestingTaskList from './module/nesting-task-list.vue'
 // import previewDialog from './module/preview-dialog'
 import partDialog from './module/part-dialog.vue'
+import nestingDocumentDialog from './module/nesting-document-dialog.vue'
 
 const partDialogVisible = ref(false)
+const nestingDialogVisible = ref(false)
+const nestingList = ref({})
 const partList = ref([])
 const optShow = {
   add: false,
@@ -186,6 +193,12 @@ CRUD.HOOK.handleRefresh = (crud, res) => {
 function toBatchIssue(row) {
   partDialogVisible.value = true
   partList.value = row
+}
+
+// 套料文档弹窗
+function toViews(row) {
+  nestingDialogVisible.value = true
+  nestingList.value = row
 }
 
 function handleNestingTaskClick(val, query) {

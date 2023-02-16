@@ -54,16 +54,19 @@ const props = defineProps({
 const emit = defineEmits(['update:visible', 'success'])
 const { visible: partDialogVisible, handleClose } = useVisible({ emit, props, field: 'visible', showHook: showHook })
 
-function showHook() {
-  fetchPartGroups()
-}
-
 function success() {
   emit('success')
 }
+
 const form = reactive({
   groupsId: undefined
 })
+
+function showHook() {
+  form.groupsId = undefined
+  fetchPartGroups()
+}
+
 const rules = {
   groupsId: [{ required: true, message: '请选择生产班组', trigger: 'blur' }]
 }
@@ -95,10 +98,10 @@ async function submitForm(formRef) {
       groupsId: form.groupsId,
       schedulingId: props.partList?.id
     }
-    const data = await await getHoleTaskDetail({
+    const data = await getHoleTaskDetail({
       thick: props.partList?.thick,
       cutConfigId: props.partList?.cutConfigId,
-      partList: _partIds
+      schedulingId: props.partList?.id
     })
     if (data?.boolDrillEnum) {
       drillDialogVisible.value = true
