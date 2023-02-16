@@ -1,6 +1,6 @@
 <template>
   <div v-show="crud.searchToggle">
-    <project-radio-button size="small" v-model="query.projectId" class="filter-item" @change="crud.toQuery" />
+    <!-- <project-radio-button size="small" v-model="query.projectId" class="filter-item" @change="crud.toQuery" /> -->
     <common-radio-button
       v-model="query.printType"
       :options="boolPrintedEnum.ENUM"
@@ -28,7 +28,7 @@
   <crudOperation>
     <template #optLeft>
       <div v-show="crud.searchToggle">
-        <el-date-picker
+        <!-- <el-date-picker
           v-model="query.localDateTime"
           type="month"
           range-separator=":"
@@ -40,7 +40,7 @@
           style="width: 160px"
           class="filter-item"
           @change="crud.toQuery"
-        />
+        /> -->
         <workshop-select
           v-model="query.workshopId"
           placeholder="请选择车间"
@@ -72,9 +72,9 @@ import { regHeader } from '@compos/use-crud'
 import crudOperation from '@crud/CRUD.operation'
 import rrOperation from '@crud/RR.operation'
 import workshopSelect from '@comp-mes/workshop-select'
-import moment from 'moment'
+// import moment from 'moment'
 
-const defaultTime = moment().startOf('month').valueOf()
+// const defaultTime = moment().startOf('month').valueOf()
 
 const orderComponentTypeEnum = {
   ARTIFACT: componentTypeEnum.ARTIFACT,
@@ -82,8 +82,8 @@ const orderComponentTypeEnum = {
 }
 
 const defaultQuery = {
-  productType: componentTypeEnum.ARTIFACT.V,
-  localDateTime: defaultTime.toString()
+  productType: componentTypeEnum.ARTIFACT.V
+  // localDateTime: defaultTime.toString()
 }
 
 const { crud, query } = regHeader(defaultQuery)
