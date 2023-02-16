@@ -34,12 +34,16 @@
           style="width: 100%"
         >
           <el-table-column
-            prop="askCompleteTime"
-            v-if="columns.visible('askCompleteTime')"
+            prop="createTime"
+            v-if="columns.visible('createTime')"
             :show-overflow-tooltip="true"
-            label="投料日期"
+            label="排产日期"
             align="center"
-          />
+          >
+          <template #default="{row}">
+            <span>{{parseTime(row.createTime, '{y}-{m}-{d}')}}</span>
+          </template>
+          </el-table-column>
           <el-table-column
             prop="orderNumber"
             v-if="columns.visible('orderNumber')"
@@ -74,7 +78,7 @@
               <span>{{ row.usedWeight }}</span>
             </template>
           </el-table-column>
-          <el-table-column
+          <!-- <el-table-column
             v-if="columns.visible('boolNestCutEnum')"
             :show-overflow-tooltip="true"
             label="套料状态"
@@ -91,23 +95,23 @@
                 <el-tag effect="plain" type="danger">{{ layOffWayTypeEnum.VL[row.boolNestCutEnum] }}</el-tag>
               </template>
             </template>
-          </el-table-column>
+          </el-table-column> -->
           <el-table-column
-            v-if="columns.visible('taskStatusEnum')"
+            v-if="columns.visible('issueStatusEnum')"
             :show-overflow-tooltip="true"
-            label="排产状态"
+            label="状态"
             align="center"
             width="100"
           >
             <template #default="{ row }">
-              <el-tag v-if="row.taskStatusEnum" effect="plain" :type="mesSchedulingStatusEnum.V[row.taskStatusEnum].T">{{
-                mesSchedulingStatusEnum.VL[row.taskStatusEnum]
+              <el-tag v-if="row.issueStatusEnum" effect="plain" :type="issueStatusEnum.V[row.issueStatusEnum].T">{{
+                issueStatusEnum.VL[row.issueStatusEnum]
               }}</el-tag>
             </template>
           </el-table-column>
           <el-table-column label="操作" align="center">
             <template #default="{ row }">
-              <common-button class="filter-item" size="mini" type="success" v-if="row.boolNestCutEnum === issueStatusEnum.OUT_NESTING.V && row.taskStatusEnum === mesSchedulingStatusEnum.NOT.V" @click="toBatchIssue(row)">
+              <common-button class="filter-item" size="mini" type="success" v-if="row.issueStatusEnum === issueStatusEnum.OUT_NESTING.V" @click="toBatchIssue(row)">
                 排产
               </common-button>
             </template>
@@ -117,17 +121,18 @@
         <pagination />
       </template>
       <!-- <preview-dialog v-model:visible="previewVisible" :list="submitList" :info="info" @success="handleIssueSuccess" /> -->
-      <part-dialog v-model:visible="partDialogVisible" :part-list="partList" />
+      <part-dialog v-model:visible="partDialogVisible" :part-list="partList" @success="crud.toQuery" />
     </div>
   </div>
 </template>
 
 <script setup>
 import { getNestingTask } from '@/api/mes/scheduling-manage/machine-part'
-import { ref } from 'vue'
+import { ref, provide } from 'vue'
 import { machinePartSchedulingNestingResultPM as permission } from '@/page-permission/mes'
 import { layOffWayTypeEnum } from '@enum-ms/uploading-form'
-import { machinePartSchedulingIssueStatusEnum as issueStatusEnum, mesSchedulingStatusEnum } from '@enum-ms/mes'
+import { machinePartSchedulingIssueStatusEnum as issueStatusEnum } from '@enum-ms/mes'
+import { parseTime } from '@/utils/date'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import pagination from '@crud/Pagination'
@@ -153,12 +158,14 @@ const { crud, columns, CRUD } = useCRUD(
     permission: { ...permission },
     optShow: { ...optShow },
     crudApi: { get: getNestingTask },
+    invisibleColumns: [''],
     hasPagination: true,
     requiredQuery: ['projectId']
   },
   tableRef
 )
 
+provide('crud', crud)
 const { maxHeight } = useMaxHeight({
   extraBox: ['.head-container'],
   paginate: false
@@ -175,7 +182,7 @@ CRUD.HOOK.handleRefresh = (crud, res) => {
   })
 }
 
-// 任务下发
+// 排产
 function toBatchIssue(row) {
   partDialogVisible.value = true
   partList.value = row
@@ -183,7 +190,7 @@ function toBatchIssue(row) {
 
 function handleNestingTaskClick(val, query) {
   crud.query.projectId = val?.id
-  if (val?.id) {
+  if (crud.query.projectId) {
     crud.toQuery()
   }
 }

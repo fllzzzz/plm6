@@ -36,12 +36,13 @@
 
 <script setup>
 import { getProjectTaskDetail } from '@/api/mes/scheduling-manage/machine-part'
-import { ref, defineProps, defineEmits, defineExpose } from 'vue'
+import { ref, defineProps, defineEmits, defineExpose, watch, inject } from 'vue'
 import moment from 'moment'
 import checkPermission from '@/utils/system/check-permission'
 import { machinePartSchedulingNestingResultPM as permission } from '@/page-permission/mes'
 
 const emit = defineEmits(['nesting-task-click'])
+const crud = inject('crud')
 defineProps({
   maxHeight: {
     type: [Number, String],
@@ -55,6 +56,14 @@ const query = ref({})
 const tableData = ref([])
 const loading = ref(false)
 const dataFormat = ref([['project', 'parse-project']])
+
+watch(
+  () => month.value,
+  (val) => {
+    crud.data = []
+    crud.query.projectId = undefined
+  }
+)
 
 fetchTaskList()
 

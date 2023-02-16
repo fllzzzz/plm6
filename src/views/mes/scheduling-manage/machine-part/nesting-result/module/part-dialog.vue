@@ -25,26 +25,22 @@
     </el-form>
   </common-dialog>
   <!-- 是否需要钻孔 -->
-   <!-- <drill-scheduling-dialog
-    v-model:visible="drillDialogVisible"
-    :queryParams="queryParams"
-    :total-list="totalList"
-    :drill-data="drillData"
-    @success="success"
-  /> -->
+  <drill-scheduling-dialog v-model:visible="drillDialogVisible" :drill-data="props.partList" :groupsId="form.groupsId" @success="success" />
 </template>
 
 <script setup>
 import { defineProps, ref, defineEmits, reactive } from 'vue'
 import { saveNestingTask } from '@/api/mes/scheduling-manage/common'
+import { getHoleTaskDetail } from '@/api/mes/scheduling-manage/machine-part'
 import { manualFetchGroupsTree } from '@compos/mes/scheduling/use-scheduling-groups'
 import { componentTypeEnum } from '@enum-ms/mes'
 import { ElNotification } from 'element-plus'
 import useVisible from '@compos/use-visible'
-// import drillSchedulingDialog from '../../module/drill-scheduling-dialog.vue'
+import drillSchedulingDialog from './drill-scheduling-dialog.vue'
 
 const formRef = ref()
 const dialogRef = ref()
+const drillDialogVisible = ref(false)
 const props = defineProps({
   visible: {
     type: Boolean,
@@ -62,6 +58,9 @@ function showHook() {
   fetchPartGroups()
 }
 
+function success() {
+  emit('success')
+}
 const form = reactive({
   groupsId: undefined
 })
@@ -85,16 +84,27 @@ async function fetchPartGroups() {
 // --------------------------- 获取生产班组 end --------------------------------
 async function submitForm(formRef) {
   try {
+    const _partIds = []
+    _partIds.push({
+      id: props.partList?.id,
+      quantity: props.partList?.quantity
+    })
     const _list = {
-      // askCompleteTime: props.partList?.askCompleteTime,
-      drillAskCompleteTime: props.partList?.drillAskCompleteTime,
-      drillGroupsId: props.partList?.drillGroupsId,
+      // drillAskCompleteTime: form.drillAskCompleteTime,
+      // drillGroupsId: form.drillGroupsId,
       groupsId: form.groupsId,
       schedulingId: props.partList?.id
     }
-
-    const data = await saveNestingTask(_list)
-    console.log(data, 'data')
+    const data = await await getHoleTaskDetail({
+      thick: props.partList?.thick,
+      cutConfigId: props.partList?.cutConfigId,
+      partList: _partIds
+    })
+    if (data?.boolDrillEnum) {
+      drillDialogVisible.value = true
+    } else {
+      await saveNestingTask(_list)
+    }
     ElNotification({
       title: '零件下发保存成功',
       type: 'success',

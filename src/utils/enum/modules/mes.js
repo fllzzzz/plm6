@@ -138,7 +138,7 @@ constantize(taskIssueTypeEnum)
 const machinePartSchedulingIssueStatusEnum = {
   NOT_NESTING: { L: '未套料', K: 'NOT_NESTING', V: 1 << 0, T: 'info' },
   IN_NESTING: { L: '套料中', K: 'IN_NESTING', V: 1 << 1, T: 'warning' },
-  OUT_NESTING: { L: '套料完成', K: 'OUT_NESTING', V: 1 << 2, T: '' },
+  OUT_NESTING: { L: '未下发', K: 'OUT_NESTING', V: 1 << 2, T: '' },
   HAS_ISSUED: { L: '已下发', K: 'HAS_ISSUED', V: 1 << 3, T: 'success' }
 }
 constantize(machinePartSchedulingIssueStatusEnum)

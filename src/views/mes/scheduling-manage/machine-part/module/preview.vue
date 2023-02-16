@@ -30,7 +30,7 @@
       <common-button @click="submitIt" :loading="submitLoading" size="mini" type="primary">保存</common-button>
     </template>
     <div class="head-container">
-      <el-form style="display: flex; flex-wrap: wrap">
+      <el-form style="display: flex; flex-wrap: wrap" v-if="isNew" :rules="rules">
         <el-form-item label="材质:" class="form-label-require">
           <common-select
             v-model="material"
@@ -180,7 +180,7 @@ const props = defineProps({
   },
   checkedNodes: {
     type: Array,
-    default: () => {}
+    default: () => []
   }
 })
 
@@ -202,6 +202,14 @@ const schedulingId = ref()
 const saveType = ref(machinePartIssuedWayEnum.NESTING_ISSUED.V)
 const drillDialogVisible = ref(false)
 const orderList = ref([])
+
+const rules = {
+  material: [{ required: true, message: '请选择材质', trigger: 'blur' }],
+  thick: [{ required: true, message: '请选择厚度', trigger: 'blur' }],
+  groupsId: [{ required: true, message: '请选择生产班组', trigger: 'blur' }],
+  cutConfigId: [{ required: true, message: '请选择切割方式', trigger: 'blur' }],
+  askCompleteTime: [{ required: true, message: '请选择排产日期', trigger: 'blur' }]
+}
 
 const queryParams = computed(() => {
   return {
