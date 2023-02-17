@@ -403,8 +403,9 @@ function padBlockClick() {
 
 function addBlock(val) {
   const findVal = padBlockData.value.find((v) => v.id === val.id)
+  console.log(val, findVal, 'val')
   if (isNotBlank(findVal)) {
-    findVal.quantity += val.quantity
+    findVal.usedQuantity += val.usedQuantity
   } else {
     padBlockData.value.push(JSON.parse(JSON.stringify(val)))
   }

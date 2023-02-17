@@ -139,7 +139,12 @@
           <span>{{ row.netWeight }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="quantity" :show-overflow-tooltip="true" label="数量" width="80" align="center" />
+      <el-table-column prop="quantity" :show-overflow-tooltip="true" label="数量" width="80" align="center">
+        <template #default="{ row }">
+          <span v-if="!row.needMachinePartLinkList">{{ row.usedQuantity }}</span>
+          <span v-else>{{ row.quantity }}</span>
+        </template>
+      </el-table-column>
     </common-table>
   </common-dialog>
   <!-- 钻孔排产弹窗 -->
@@ -281,17 +286,6 @@ function showHook() {
   thick.value = undefined
   askCompleteTime.value = undefined
   cutConfigId.value = undefined
-  // thickData.value = []
-  // materialData.value = []
-  // props.list.forEach((v) => {
-  //   thickData.value.push({
-  //     name: v.thick
-  //   })
-  //   materialData.value.push({
-  //     name: v.material
-  //   })
-  // })
-  console.log(props.thickData, props.materialData, 'thickData.value')
   fetchGroups()
   if (props.type === 1) {
     isNew.value = true
@@ -376,7 +370,7 @@ async function submitIt() {
         v.needMachinePartLinkList?.forEach((o) => {
           _list.push({
             productId: v.id,
-            quantity: v.quantity,
+            quantity: o.quantity,
             id: o.id,
             needSchedulingMonth: o.date
           })

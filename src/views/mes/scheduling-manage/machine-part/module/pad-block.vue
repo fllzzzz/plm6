@@ -122,10 +122,10 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="quantity" label="数量" align="left" width="120px" fixed="right">
+        <el-table-column prop="usedQuantity" label="数量" align="left" width="120px" fixed="right">
           <template #default="{ row }">
               <el-input-number
-                v-model="row.quantity"
+                v-model="row.usedQuantity"
                 :step="1"
                 :min="1"
                 :max="99999999"
