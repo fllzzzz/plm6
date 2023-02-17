@@ -40,9 +40,9 @@
             label="排产日期"
             align="center"
           >
-          <template #default="{row}">
-            <span>{{parseTime(row.createTime, '{y}-{m}-{d}')}}</span>
-          </template>
+            <template #default="{ row }">
+              <span>{{ parseTime(row.createTime, '{y}-{m}-{d}') }}</span>
+            </template>
           </el-table-column>
           <el-table-column
             prop="orderNumber"
@@ -51,7 +51,11 @@
             label="任务单号"
             min-width="100"
             align="center"
-          />
+          >
+            <template #default="{ row }">
+              <span @click="toDetail(row)" style="color: #409EFF; cursor: pointer">{{ row.orderNumber }}</span>
+            </template>
+          </el-table-column>
           <el-table-column prop="thick" v-if="columns.visible('thick')" :show-overflow-tooltip="true" label="厚度" align="center" />
           <el-table-column prop="material" v-if="columns.visible('material')" :show-overflow-tooltip="true" label="材质" align="center" />
           <el-table-column
@@ -63,7 +67,7 @@
             width="140"
           >
             <template #default="{ row }">
-              <span>{{row.quantity}} / {{ row.totalNetWeight }}</span>
+              <span>{{ row.quantity }} / {{ row.totalNetWeight }}</span>
             </template>
           </el-table-column>
           <el-table-column
@@ -96,13 +100,7 @@
               </template>
             </template>
           </el-table-column> -->
-          <el-table-column
-            v-if="columns.visible('issueStatusEnum')"
-            :show-overflow-tooltip="true"
-            label="状态"
-            align="center"
-            width="100"
-          >
+          <el-table-column v-if="columns.visible('issueStatusEnum')" :show-overflow-tooltip="true" label="状态" align="center" width="100">
             <template #default="{ row }">
               <el-tag v-if="row.issueStatusEnum" effect="plain" :type="issueStatusEnum.V[row.issueStatusEnum].T">{{
                 issueStatusEnum.VL[row.issueStatusEnum]
@@ -111,10 +109,14 @@
           </el-table-column>
           <el-table-column label="操作" align="center">
             <template #default="{ row }">
-              <common-button class="filter-item" size="mini" type="primary" @click="toViews(row)">
-                套料文档
-              </common-button>
-              <common-button class="filter-item" size="mini" type="success" v-if="row.issueStatusEnum === issueStatusEnum.OUT_NESTING.V" @click="toBatchIssue(row)">
+              <common-button class="filter-item" size="mini" type="primary" @click="toViews(row)"> 套料文档 </common-button>
+              <common-button
+                class="filter-item"
+                size="mini"
+                type="success"
+                v-if="row.issueStatusEnum === issueStatusEnum.OUT_NESTING.V"
+                @click="toBatchIssue(row)"
+              >
                 排产
               </common-button>
             </template>
@@ -126,6 +128,7 @@
       <!-- <preview-dialog v-model:visible="previewVisible" :list="submitList" :info="info" @success="handleIssueSuccess" /> -->
       <part-dialog v-model:visible="partDialogVisible" :part-list="partList" @success="crud.toQuery" />
       <nesting-document-dialog v-model:visible="nestingDialogVisible" :nesting-list="nestingList" />
+      <nesting-detail v-model:visible="detailDialogVisible" :detail-list="detailList" />
     </div>
   </div>
 </template>
@@ -145,10 +148,13 @@ import nestingTaskList from './module/nesting-task-list.vue'
 // import previewDialog from './module/preview-dialog'
 import partDialog from './module/part-dialog.vue'
 import nestingDocumentDialog from './module/nesting-document-dialog.vue'
+import nestingDetail from './module/nesting-detail.vue'
 
 const partDialogVisible = ref(false)
 const nestingDialogVisible = ref(false)
 const nestingList = ref({})
+const detailDialogVisible = ref(false)
+const detailList = ref([])
 const partList = ref([])
 const optShow = {
   add: false,
@@ -199,6 +205,12 @@ function toBatchIssue(row) {
 function toViews(row) {
   nestingDialogVisible.value = true
   nestingList.value = row
+}
+
+// 点击任务工单查看详情
+function toDetail(row) {
+  detailDialogVisible.value = true
+  detailList.value = row
 }
 
 function handleNestingTaskClick(val, query) {
