@@ -4,6 +4,7 @@
     title="零件排产预览"
     v-model="dialogVisible"
     width="1500px"
+    top="5vh"
     :before-close="handleClose"
   >
     <template #titleAfter>
@@ -99,7 +100,7 @@
         </el-form-item>
       </el-form>
     </div>
-    <common-table :data="list" :data-format="dataFormat" :max-height="maxHeight" style="width: 100%">
+    <common-table :data="list" :data-format="dataFormat" :max-height="maxHeight - 100" style="width: 100%">
       <el-table-column label="序号" type="index" align="center" width="60" />
       <el-table-column :show-overflow-tooltip="true" prop="project" label="所属项目" min-width="120px" align="center">
         <template #default="{ row }">
@@ -143,7 +144,7 @@
 
 <script setup>
 import { newSave, getCutTaskDetail, getHoleTaskDetail } from '@/api/mes/scheduling-manage/machine-part'
-import { ElMessage, ElNotification, ElRadioGroup } from 'element-plus'
+import { ElMessage, ElNotification, ElRadioGroup, ElMessageBox } from 'element-plus'
 import { defineEmits, defineProps, ref, computed } from 'vue'
 import { layOffWayTypeEnum } from '@enum-ms/uploading-form'
 // import { materialTypeEnum } from '@enum-ms/uploading-form'
@@ -180,6 +181,10 @@ const props = defineProps({
     default: () => []
   },
   checkedNodes: {
+    type: Array,
+    default: () => []
+  },
+  queryThickList: {
     type: Array,
     default: () => []
   }
@@ -350,6 +355,13 @@ async function submitIt() {
       })
     })
     console.log(totalList.value, schedulingId.value, 'totalList.value')
+    if (props.queryThickList.length > 1) {
+      await ElMessageBox.confirm('您将不同板厚或材质的零件进行了套料，是否确定？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      })
+    }
     if (props.type === 0) {
       const data = await getHoleTaskDetail({
         thick: thick.value,
@@ -375,6 +387,11 @@ async function submitIt() {
                 ? machinePartIssuedWayEnum.NESTING_ISSUED.V
                 : machinePartIssuedWayEnum.ADD_NEW_TICKET.V
         })
+        ElNotification({
+          title: '零件排产保存成功',
+          type: 'success',
+          duration: 2500
+        })
       }
     } else {
       await newSave({
@@ -392,12 +409,12 @@ async function submitIt() {
               ? machinePartIssuedWayEnum.NESTING_ISSUED.V
               : machinePartIssuedWayEnum.ADD_NEW_TICKET.V
       })
+      ElNotification({
+        title: '零件排产保存成功',
+        type: 'success',
+        duration: 2500
+      })
     }
-    ElNotification({
-      title: '零件排产保存成功',
-      type: 'success',
-      duration: 2500
-    })
     handleClose()
     emit('success')
   } catch (error) {

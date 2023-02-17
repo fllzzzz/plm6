@@ -1,7 +1,15 @@
 <template>
-  <common-dialog ref="dialogRef" title="钻孔排产" v-model:visible="drillDialogVisible" :before-close="handleClose" width="400px">
+  <common-dialog
+    ref="dialogRef"
+    title="钻孔排产"
+    v-model:visible="drillDialogVisible"
+    :show-close="false"
+    :before-close="handleClose"
+    width="400px"
+  >
     <template #titleRight>
-      <common-button type="primary" size="mini" @click="submitForm(formRef)"> 确定 </common-button>
+      <common-button type="primary" size="mini" @click.stop="submitForm(formRef)"> 确定 </common-button>
+      <common-button size="mini" @click.stop="closed"> 关闭 </common-button>
     </template>
     <el-form ref="formRef" :model="form" :rules="rules" size="small" label-width="120px" class="demo-form">
       <el-form-item label="零件数:" prop="quantity">
@@ -84,6 +92,15 @@ const form = reactive({
 const rules = {
   drillGroupsId: [{ required: true, message: '请选择钻孔生产班组', trigger: 'blur' }],
   drillAskCompleteTime: [{ required: true, message: '请选择钻孔日期', trigger: 'blur' }]
+}
+
+function closed() {
+  ElNotification({
+    title: '本次套料作废',
+    type: 'info',
+    duration: 2500
+  })
+  handleClose()
 }
 
 // --------------------------- 获取钻孔生产班组 start ------------------------------

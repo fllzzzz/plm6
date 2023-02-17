@@ -53,7 +53,7 @@
                 type="success"
                 class="filter-item"
                 size="mini"
-                :disabled="crud.query.boolDxfEnum === machinePartDxfTypeEnum.UN_EXPORT.V || nestingLoading === true"
+                :disabled="crud.query.boolDxfEnum !== machinePartDxfTypeEnum.EXPORT.V && nestingLoading || crud.query.boolDxfEnum === machinePartDxfTypeEnum.UN_EXPORT.V"
                 @click="previewIt"
               >
                 套料保存
@@ -141,6 +141,7 @@ class="ellipsis-text text"
           @success="handleSaveSuccess"
           :thick-list="thickList"
           :material-list="materialList"
+          :query-thick-list="crud.query.thickList"
         ></m-preview>
         <pad-block-dialog v-model:visible="dialogVisible" :pad-block-data="padBlockData" @addBlock="addBlock" />
         <pad-block v-model:visible="drawerVisible" :pad-block-data="padBlockData" />
@@ -326,13 +327,14 @@ function handleCheckedChange(value, item) {
   } else {
     if (_checkedIndex > -1) checkedNodes.value.splice(_checkedIndex, 1)
   }
-  if (value && !item.picturePath) {
-    item.checked = value
-    nestingLoading.value = true
-  } else {
-    item.checked = value
-    nestingLoading.value = false
-  }
+  console.log(checkedNodes.value, 'checkedNodes.value')
+  checkedNodes.value.forEach(v => {
+    if (!v.imgLoad || !v.picturePath) {
+      nestingLoading.value = true
+    } else {
+      nestingLoading.value = false
+    }
+  })
 }
 function handleCheckedAll(val) {
   checkAll.value = val
