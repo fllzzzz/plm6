@@ -49,7 +49,7 @@
         <el-form-item label="厚度:" class="form-label-require">
           <common-select
             v-model="thick"
-            :options="thickList"
+            :options="thickDataOption"
             :dataStructure="{ key: 'name', label: 'name', value: 'name' }"
             clearable
             filterable
@@ -121,7 +121,7 @@
       </el-table-column>
       <el-table-column :show-overflow-tooltip="true" prop="thick" label="厚度" min-width="80px" align="center">
         <template #default="{ row }">
-          <span  style="color: red">{{ row.thick }}</span>
+          <span style="color: red">{{ row.thick }}</span>
         </template>
       </el-table-column>
       <el-table-column :show-overflow-tooltip="true" prop="specification" label="材质" min-width="80px" align="center">
@@ -183,6 +183,14 @@ const props = defineProps({
     type: Array,
     default: () => []
   },
+  // materialData: {
+  //   type: Array,
+  //   default: () => []
+  // },
+  thickData: {
+    type: Array,
+    default: () => []
+  },
   type: {
     type: Number
   },
@@ -199,10 +207,21 @@ const props = defineProps({
     default: () => []
   }
 })
-
 const dataFormat = ref([['project', 'parse-project']])
 const totalList = ref([])
 const drillData = ref({})
+const thickDataOption = computed(() => {
+  const arr = []
+  for (let i = 0; i < props.list.length; i++) {
+    if (arr.findIndex((k) => k.name === props.list[i].thick) < 0) {
+      arr.push({ name: props.list[i].thick })
+    }
+  }
+  return arr
+})
+
+// const thickData = ref([])
+// const materialData = ref([])
 
 // const layWayConfigId = ref()
 // const layingWayList = ref([])
@@ -262,6 +281,17 @@ function showHook() {
   thick.value = undefined
   askCompleteTime.value = undefined
   cutConfigId.value = undefined
+  // thickData.value = []
+  // materialData.value = []
+  // props.list.forEach((v) => {
+  //   thickData.value.push({
+  //     name: v.thick
+  //   })
+  //   materialData.value.push({
+  //     name: v.material
+  //   })
+  // })
+  console.log(props.thickData, props.materialData, 'thickData.value')
   fetchGroups()
   if (props.type === 1) {
     isNew.value = true

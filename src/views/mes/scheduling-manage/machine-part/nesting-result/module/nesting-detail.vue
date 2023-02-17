@@ -14,8 +14,16 @@
       <el-table-column prop="monomer" :show-overflow-tooltip="true" label="单体" align="center" />
       <el-table-column prop="serialNumber" :show-overflow-tooltip="true" label="编号" align="center" />
       <el-table-column prop="specification" :show-overflow-tooltip="true" label="规格" align="center" />
-      <el-table-column prop="thick" :show-overflow-tooltip="true" label="零件厚度" align="center" />
-      <el-table-column prop="material" :show-overflow-tooltip="true" label="材质" align="center" />
+      <el-table-column prop="thick" :show-overflow-tooltip="true" label="厚度" align="center">
+        <template #default="{ row }">
+          <span style="color: red">{{ row.thick }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column prop="material" :show-overflow-tooltip="true" label="材质" align="center">
+        <template #default="{ row }">
+          <span style="color: red">{{ row.material }}</span>
+        </template>
+      </el-table-column>
       <el-table-column prop="quantity" :show-overflow-tooltip="true" label="数量" align="center" />
       <el-table-column prop="netWeight" :show-overflow-tooltip="true" label="单重" align="center" />
       <el-table-column prop="totalNetWeight" :show-overflow-tooltip="true" label="总重" align="center" />

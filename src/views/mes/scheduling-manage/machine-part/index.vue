@@ -141,6 +141,8 @@ class="ellipsis-text text"
           @success="handleSaveSuccess"
           :thick-list="thickList"
           :material-list="materialList"
+          :thick-data="crud.query.thickList"
+          :material-data="crud.query.material"
           :query-thick-list="crud.query.thickList"
         ></m-preview>
         <pad-block-dialog v-model:visible="dialogVisible" :pad-block-data="padBlockData" @addBlock="addBlock" />
@@ -202,15 +204,22 @@ const boardList = ref([])
 const summaryInfo = ref({ totalNetWeight: 0, quantity: 0 })
 
 CRUD.HOOK.handleRefresh = (crud, res) => {
-  clearCheck()
+  const arr = []
   summaryInfo.value.totalNetWeight = res.data?.totalNetWeight || 0
   summaryInfo.value.quantity = res.data?.quantity || 0
   res.data.content = res.data.collect.map((v) => {
-    v.checked = false
+    if (checkedNodes.value.findIndex(k => k.id === v.id) > -1) {
+      arr.push(v)
+      v.checked = true
+    } else {
+      v.checked = false
+    }
     v.visibleTip = false
     v.imgLoad = true
     return v
   })
+  checkedNodes.value = arr
+  nestingLoading.value = false
 }
 
 // --------------------------- start ------------------------------
@@ -317,9 +326,9 @@ function boolDxfChange() {
 }
 
 // 切换项目清除选择
-function clearCheck() {
-  checkedNodes.value = []
-}
+// function clearCheck() {
+//   checkedNodes.value = []
+// }
 function handleCheckedChange(value, item) {
   const _checkedIndex = checkedNodes.value.findIndex((v) => v.id === item.id)
   if (value) {
@@ -328,13 +337,14 @@ function handleCheckedChange(value, item) {
     if (_checkedIndex > -1) checkedNodes.value.splice(_checkedIndex, 1)
   }
   console.log(checkedNodes.value, 'checkedNodes.value')
+  let isNext = false
   checkedNodes.value.forEach(v => {
     if (!v.imgLoad || !v.picturePath) {
-      nestingLoading.value = true
-    } else {
-      nestingLoading.value = false
+      isNext = true
+      return false
     }
   })
+  nestingLoading.value = isNext
 }
 function handleCheckedAll(val) {
   checkAll.value = val
