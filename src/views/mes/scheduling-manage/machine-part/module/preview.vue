@@ -378,7 +378,7 @@ async function submitIt() {
       } else {
         _list.push({
           productId: v.id,
-          quantity: v.quantity
+          quantity: !v.needMachinePartLinkList ? v.usedQuantity : v.quantity
         })
       }
     })

@@ -10,7 +10,7 @@
   >
     <template #content>
       <div class="head-container"></div>
-      <common-table :data="padBlockList" :max-height="maxHeight" style="width: 100%">
+      <common-table :data="padBlockList" return-source-data :max-height="maxHeight" style="width: 100%">
         <el-table-column label="序号" type="index" align="center" width="60" />
         <el-table-column :show-overflow-tooltip="true" prop="serialNumber" label="编号" min-width="80px" align="left">
           <template #default="{ row }">

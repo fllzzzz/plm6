@@ -146,7 +146,7 @@ class="ellipsis-text text"
           :query-thick-list="crud.query.thickList"
         ></m-preview>
         <pad-block-dialog v-model:visible="dialogVisible" :pad-block-data="padBlockData" @addBlock="addBlock" />
-        <pad-block v-model:visible="drawerVisible" :pad-block-data="padBlockData" />
+        <pad-block ref="padBlockRef" v-model:visible="drawerVisible" :pad-block-data="padBlockData" />
       </div>
     </div>
   </div>
@@ -178,6 +178,7 @@ const optShow = {
 }
 const thickList = ref([])
 const materialList = ref([])
+const padBlockRef = ref()
 const boolDxfEnum = ref()
 const projectListRef = ref()
 const tableRef = ref()

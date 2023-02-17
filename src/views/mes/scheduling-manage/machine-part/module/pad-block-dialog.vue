@@ -61,7 +61,7 @@
         <common-button type="primary" size="mini" class="filter-item" @click="padBlockClick"> 标准零件列表</common-button>
       </el-badge>
     </div>
-    <common-table :data="padBlockList" :data-format="dataFormat" :show-empty-symbol="false" :max-height="maxHeight" style="width: 100%">
+    <common-table :data="padBlockList" return-source-data :show-empty-symbol="false" :max-height="maxHeight" style="width: 100%">
       <el-table-column label="序号" type="index" align="center" width="60" />
       <el-table-column :show-overflow-tooltip="true" prop="serialNumber" label="编号" min-width="80px" align="left">
         <template #default="{ row }">
@@ -221,7 +221,6 @@ const props = defineProps({
   }
 })
 const padBlockList = ref([])
-const dataFormat = ref([['project', 'parse-project']])
 const thick = ref()
 const material = ref()
 const serialNumber = ref()
@@ -279,6 +278,7 @@ async function fetchPadBlock() {
     })
     content?.forEach((v) => {
       v.imgLoad = true
+      v.usedQuantity = 1
     })
     padBlockList.value = content || []
   } catch (e) {
