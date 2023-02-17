@@ -77,6 +77,8 @@
           </template>
           <template v-slot="scope">
             <table-cell-tag :show="scope.row.dataType !== 2 && scope.row.boolSendDirectly" name="直发件" />
+            <!-- relationType=8 显示配套件标记 -->
+            <table-cell-tag :show="scope.row.dataType !== 2 && scope.row.relationType===8" name="配套件" />
             <span style="cursor: pointer;margin-left:10px;" @dblclick="drawingPreview(scope.row)">{{ scope.row.serialNumber }}</span>
           </template>
         </el-table-column>
@@ -90,8 +92,6 @@
           min-width="120"
         >
           <template v-slot="scope">
-            <!-- relationType=8 显示配套件标记 -->
-            <table-cell-tag :show="scope.row.dataType !== 2 && scope.row.relationType===8" name="配套件" />
             {{ scope.row.specification ? scope.row.specification : '-' }}
           </template>
         </el-table-column>
