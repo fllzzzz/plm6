@@ -119,6 +119,16 @@
           <span>{{ row.specification }}</span>
         </template>
       </el-table-column>
+      <el-table-column :show-overflow-tooltip="true" prop="thick" label="厚度" min-width="80px" align="center">
+        <template #default="{ row }">
+          <span  style="color: red">{{ row.thick }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column :show-overflow-tooltip="true" prop="specification" label="材质" min-width="80px" align="center">
+        <template #default="{ row }">
+          <span style="color: red">{{ row.material }}</span>
+        </template>
+      </el-table-column>
       <el-table-column :show-overflow-tooltip="true" prop="length" :label="`长度(mm)`" min-width="80px" align="center">
         <template #default="{ row }">
           <span>{{ row.length }}</span>
