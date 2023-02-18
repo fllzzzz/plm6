@@ -280,8 +280,8 @@ const rules = {
 const queryParams = computed(() => {
   return {
     groupsId: groupsId.value,
-    material: material.value,
-    thick: thick.value,
+    material: materialDataOption.value.length > 1 ? material.value : materialDataOption.value[0]?.name,
+    thick: thickDataOption.value.length > 1 ? thick.value : thickDataOption.value[0]?.name,
     askCompleteTime: askCompleteTime.value,
     cutConfigId: cutConfigId.value,
     saveType:
@@ -311,8 +311,6 @@ function toDelete(id) {
   props?.list.splice(delIndex, 1)
 }
 function showHook() {
-  console.log(thickDataOption.value, 'thickDataOption')
-  console.log(props.list, 'props.list')
   groupsId.value = undefined
   material.value = undefined
   thick.value = undefined
@@ -444,7 +442,7 @@ async function submitIt() {
     }
     if (props.type === 0) {
       const data = await getHoleTaskDetail({
-        thick: thick.value,
+        thick: thickDataOption.value.length > 1 ? thick.value : thickDataOption.value[0]?.name,
         cutConfigId: cutConfigId.value,
         partList: _partIds
       })
@@ -454,8 +452,8 @@ async function submitIt() {
       } else {
         await newSave({
           groupsId: groupsId.value,
-          material: materialDataOption.value.length > 1 ? material.value : materialDataOption.value[0].name,
-          thick: thickDataOption.value.length > 1 ? thick.value : thickDataOption.value[0].name,
+          material: materialDataOption.value.length > 1 ? material.value : materialDataOption.value[0]?.name,
+          thick: thickDataOption.value.length > 1 ? thick.value : thickDataOption.value[0]?.name,
           schedulingId: schedulingId.value,
           linkList: _list,
           askCompleteTime: askCompleteTime.value,
@@ -476,8 +474,8 @@ async function submitIt() {
     } else {
       await newSave({
         groupsId: groupsId.value,
-        material: materialDataOption.value.length > 1 ? material.value : materialDataOption.value[0].name,
-        thick: thickDataOption.value.length > 1 ? thick.value : thickDataOption.value[0].name,
+        material: materialDataOption.value.length > 1 ? material.value : materialDataOption.value[0]?.name,
+        thick: thickDataOption.value.length > 1 ? thick.value : thickDataOption.value[0]?.name,
         schedulingId: schedulingId.value,
         linkList: _list,
         askCompleteTime: askCompleteTime.value,

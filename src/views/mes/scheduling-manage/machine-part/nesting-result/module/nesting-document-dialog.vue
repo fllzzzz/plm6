@@ -9,16 +9,19 @@
     :showClose="true"
     :before-close="handleClose"
   >
-    <el-descriptions :column="2" :data="nestingDocumentList" border class="nesting-document">
-      <el-descriptions-item align="center" label="项目" span="2">
+    <el-descriptions :column="3" :data="nestingDocumentList" border class="nesting-document">
+      <el-descriptions-item align="center" label="项目" span="3">
         {{ nestingDocumentList.projectName }} ( {{ nestingDocumentList.monomerList }} )
       </el-descriptions-item>
-      <el-descriptions-item align="center" label="任务单号">{{ nestingDocumentList.orderNumber }}</el-descriptions-item>
-      <el-descriptions-item align="center" label="套料日期">{{
+      <el-descriptions-item align="center" label="任务单号" span="2">{{ nestingDocumentList.orderNumber }}</el-descriptions-item>
+      <el-descriptions-item align="center" label="套料日期" span="1">{{
         parseTime(nestingDocumentList.createTime, '{y}-{m}-{d}')
       }}</el-descriptions-item>
-      <el-descriptions-item align="center" label="零件数量（件/kg）">
+      <el-descriptions-item align="center" label="零件总量（件/kg）">
         {{ nestingDocumentList.quantity }} / {{ nestingDocumentList.totalNetWeight }}
+      </el-descriptions-item>
+      <el-descriptions-item align="center" label="钢板总数（张）">
+        {{ nestingDocumentList.cutQuantity }}
       </el-descriptions-item>
       <el-descriptions-item align="center" label="操作">
         <export-button v-if="nestingList.issueStatusEnum !== issueStatusEnum.IN_NESTING.V" :params="{ id: nestingList.id }" :fn="getInfoZip">下载</export-button>

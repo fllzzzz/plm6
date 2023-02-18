@@ -25,6 +25,16 @@
       class="filter-item"
       @change="handleDateChange"
     />
+    <common-radio-button
+      v-model="issueStatusEnum"
+      :options="machinePartSchedulingIssueStatusEnum.ENUM"
+      :unshowVal="[machinePartSchedulingIssueStatusEnum.NOT_NESTING.V, machinePartSchedulingIssueStatusEnum.IN_NESTING.V]"
+      showOptionAll
+      type="enum"
+      size="small"
+      class="filter-item"
+      @change="fetchTaskList"
+    />
     <el-input
       v-model="name"
       placeholder="项目搜索"
@@ -65,6 +75,7 @@
 import { getProjectTaskDetail } from '@/api/mes/scheduling-manage/machine-part'
 import { ref, defineProps, defineEmits, defineExpose, watch, inject } from 'vue'
 import moment from 'moment'
+import { machinePartSchedulingIssueStatusEnum } from '@enum-ms/mes'
 import checkPermission from '@/utils/system/check-permission'
 import { PICKER_OPTIONS_SHORTCUTS } from '@/settings/config'
 import { machinePartSchedulingNestingResultPM as permission } from '@/page-permission/mes'
@@ -74,6 +85,7 @@ const startDate = ref(moment().startOf('year').valueOf())
 const endDate = ref(moment().valueOf())
 const date = ref([moment().startOf('year').valueOf(), moment().valueOf()])
 const name = ref()
+const issueStatusEnum = ref()
 
 const crud = inject('crud')
 defineProps({
@@ -90,7 +102,7 @@ const tableData = ref([])
 const loading = ref(false)
 const dataFormat = ref([['project', 'parse-project']])
 
-watch([() => month.value, () => name.value], () => {
+watch([() => month.value, () => name.value, () => issueStatusEnum.value], () => {
   crud.data = []
   crud.query.projectId = undefined
 })
@@ -105,7 +117,8 @@ async function fetchTaskList() {
     const { content } = await getProjectTaskDetail({
       startDate: startDate.value,
       endDate: endDate.value,
-      name: name.value
+      name: name.value,
+      issueStatusEnum: issueStatusEnum.value
     })
     tableData.value = content || []
   } catch (error) {
@@ -139,6 +152,7 @@ function resetQuery() {
   date.value = []
   startDate.value = undefined
   endDate.value = undefined
+  issueStatusEnum.value = undefined
   fetchTaskList()
 }
 

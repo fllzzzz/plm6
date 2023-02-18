@@ -187,7 +187,6 @@ const tableRef = ref()
 const nestingLoading = ref(false)
 const type = ref()
 const previewList = ref([])
-const checkedList = ref([])
 
 const { crud, CRUD } = useCRUD(
   {
@@ -331,12 +330,11 @@ function boolDxfChange() {
 }
 
 // 切换项目清除选择
-function saveCheck() {
-  checkedList.value = checkedNodes.value
-}
+// function saveCheck() {
+// }
 function handleCheckedChange(value, item) {
   console.log(value, item, 'item')
-  saveCheck()
+  // saveCheck()
   const _checkedIndex = checkedNodes.value.findIndex((v) => v.id === item.id)
   if (value) {
     if (_checkedIndex === -1) checkedNodes.value.push(item)
@@ -379,7 +377,7 @@ function previewIt() {
     ElMessage.warning('请至少选择一条数据')
     return
   }
-  previewList.value = [...checkedList.value, ...padBlockData.value]
+  previewList.value = [...checkedNodes.value, ...padBlockData.value]
   previewVisible.value = true
 }
 function unPreviewIt() {
@@ -388,7 +386,7 @@ function unPreviewIt() {
     ElMessage.warning('请至少选择一条数据')
     return
   }
-  previewList.value = [...checkedList.value, ...padBlockData.value]
+  previewList.value = [...checkedNodes.value, ...padBlockData.value]
   previewVisible.value = true
 }
 // --------------------------- 预览并保存 end --------------------------------

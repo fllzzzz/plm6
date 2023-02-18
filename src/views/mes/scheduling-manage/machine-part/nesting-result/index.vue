@@ -56,7 +56,7 @@
               <span @click="toDetail(row)" style="color: #409eff; cursor: pointer">{{ row.orderNumber }}</span>
             </template>
           </el-table-column>
-          <el-table-column prop="thick" v-if="columns.visible('thick')" :show-overflow-tooltip="true" label="厚度" align="center" />
+          <el-table-column prop="thick" v-if="columns.visible('thick')" :show-overflow-tooltip="true" label="厚度" align="center" width="80" />
           <el-table-column prop="material" v-if="columns.visible('material')" :show-overflow-tooltip="true" label="材质" align="center" />
           <el-table-column
             prop="totalNetWeight"
@@ -225,7 +225,7 @@ function handleNestingTaskClick(val, query) {
 .wrap {
   display: flex;
   .wrap-left {
-    width: 380px;
+    width: 445px;
     margin-right: 20px;
   }
   .wrap-right {
