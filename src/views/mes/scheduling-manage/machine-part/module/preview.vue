@@ -32,28 +32,26 @@
     </template>
     <div class="head-container">
       <el-form style="display: flex; flex-wrap: wrap" v-if="isNew" :rules="rules">
-        <el-form-item label="材质:" class="form-label-require">
+        <el-form-item label="材质:" class="form-label-require" v-show="materialDataOption.length > 1">
           <common-select
             v-model="material"
-            :options="materialList"
+            :options="materialDataOption"
             :dataStructure="{ key: 'name', label: 'name', value: 'name' }"
             clearable
             filterable
-            allow-create
             type="other"
             class="filter-item"
             placeholder="请选择材质"
             style="width: 160px"
           />
         </el-form-item>
-        <el-form-item label="厚度:" class="form-label-require">
+        <el-form-item label="厚度:" class="form-label-require" v-show="thickDataOption.length > 1">
           <common-select
             v-model="thick"
             :options="thickDataOption"
             :dataStructure="{ key: 'name', label: 'name', value: 'name' }"
             clearable
             filterable
-            allow-create
             type="other"
             class="filter-item"
             placeholder="请选择厚度"
@@ -84,14 +82,14 @@
         <el-form-item label="切割方式:" class="form-label-require">
           <cut-config-select v-model="cutConfigId" style="width: 160px" :layOffWayType="Boolean(type) ? true : false" clearable />
         </el-form-item>
-        <el-form-item label="排产日期:" class="form-label-require">
+        <el-form-item label="完成日期:" class="form-label-require">
           <el-date-picker
             v-model="askCompleteTime"
             type="date"
             size="small"
             class="date-item filter-item"
             style="width: 160px !important"
-            placeholder="选择排产日期"
+            placeholder="选择完成日期"
             :clearable="false"
             format="YYYY-MM-DD"
             value-format="x"
@@ -100,12 +98,12 @@
         </el-form-item>
       </el-form>
     </div>
-    <common-table :data="list" :data-format="dataFormat" :max-height="maxHeight - 100" style="width: 100%">
+    <common-table :data="list" return-source-data :max-height="maxHeight - 100" style="width: 100%">
       <el-table-column label="序号" type="index" align="center" width="60" />
       <el-table-column :show-overflow-tooltip="true" prop="project" label="所属项目" min-width="120px" align="center">
         <template #default="{ row }">
           <table-cell-tag v-if="!row.needMachinePartLinkList" color="#1890ff" name="标准零件" />
-          <span v-if="row.project && row.needMachinePartLinkList">{{ row.project }}</span>
+          <span v-if="row.project && row.needMachinePartLinkList">{{ projectNameFormatter(row.project) }}</span>
           <span v-if="!row.needMachinePartLinkList">/</span>
         </template>
       </el-table-column>
@@ -121,12 +119,12 @@
       </el-table-column>
       <el-table-column :show-overflow-tooltip="true" prop="thick" label="厚度" min-width="80px" align="center">
         <template #default="{ row }">
-          <span style="color: red">{{ row.thick }}</span>
+          <span>{{ row.thick }}</span>
         </template>
       </el-table-column>
       <el-table-column :show-overflow-tooltip="true" prop="specification" label="材质" min-width="80px" align="center">
         <template #default="{ row }">
-          <span style="color: red">{{ row.material }}</span>
+          <span>{{ row.material }}</span>
         </template>
       </el-table-column>
       <el-table-column :show-overflow-tooltip="true" prop="length" :label="`长度(mm)`" min-width="80px" align="center">
@@ -139,10 +137,24 @@
           <span>{{ row.netWeight }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="quantity" :show-overflow-tooltip="true" label="数量" width="80" align="center">
+      <el-table-column prop="usedQuantity" :show-overflow-tooltip="true" label="数量" min-width="80px" align="center">
         <template #default="{ row }">
-          <span v-if="!row.needMachinePartLinkList">{{ row.usedQuantity }}</span>
+          <el-input-number
+            v-if="!row.needMachinePartLinkList"
+            v-model="row.usedQuantity"
+            :step="1"
+            :min="1"
+            :max="99999999"
+            size="mini"
+            style="width: 100%"
+            controls-position="right"
+          />
           <span v-else>{{ row.quantity }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column :show-overflow-tooltip="true" label="操作" width="80" align="center">
+        <template #default="{ row }">
+          <common-button type="danger" icon="el-icon-delete" size="mini" @click.stop="toDelete(row.id)"></common-button>
         </template>
       </el-table-column>
     </common-table>
@@ -162,6 +174,7 @@ import { newSave, getCutTaskDetail, getHoleTaskDetail } from '@/api/mes/scheduli
 import { ElMessage, ElNotification, ElRadioGroup, ElMessageBox } from 'element-plus'
 import { defineEmits, defineProps, ref, computed } from 'vue'
 import { layOffWayTypeEnum } from '@enum-ms/uploading-form'
+import { projectNameFormatter } from '@/utils/project'
 // import { materialTypeEnum } from '@enum-ms/uploading-form'
 import { componentTypeEnum, machinePartIssuedWayEnum, machinePartSchedulingIssueStatusEnum as issueStatusEnum } from '@enum-ms/mes'
 import { manualFetchGroupsTree } from '@compos/mes/scheduling/use-scheduling-groups'
@@ -212,14 +225,27 @@ const props = defineProps({
     default: () => []
   }
 })
-const dataFormat = ref([['project', 'parse-project']])
 const totalList = ref([])
 const drillData = ref({})
 const thickDataOption = computed(() => {
   const arr = []
   for (let i = 0; i < props.list.length; i++) {
-    if (arr.findIndex((k) => k.name === props.list[i].thick) < 0) {
-      arr.push({ name: props.list[i].thick })
+    if (props.list[i]?.needMachinePartLinkList) {
+      if (arr.findIndex((k) => k.name === props.list[i].thick) < 0) {
+        arr.push({ name: props.list[i].thick })
+      }
+    }
+  }
+  return arr
+})
+
+const materialDataOption = computed(() => {
+  const arr = []
+  for (let i = 0; i < props.list.length; i++) {
+    if (props.list[i]?.needMachinePartLinkList) {
+      if (arr.findIndex((k) => k.name === props.list[i].material) < 0) {
+        arr.push({ name: props.list[i].material })
+      }
     }
   }
   return arr
@@ -280,7 +306,13 @@ const { maxHeight } = useMaxHeight(
   dialogVisible
 )
 
+function toDelete(id) {
+  const delIndex = props.list.findIndex((v) => v.id === id)
+  props?.list.splice(delIndex, 1)
+}
 function showHook() {
+  console.log(thickDataOption.value, 'thickDataOption')
+  console.log(props.list, 'props.list')
   groupsId.value = undefined
   material.value = undefined
   thick.value = undefined
@@ -341,15 +373,29 @@ function disabledDate(time) {
 }
 async function submitIt() {
   if (props.type === 0) {
-    if (!thick.value || !material.value || !groupsId.value || !askCompleteTime.value || !cutConfigId.value) {
-      ElMessage.warning('必选项不能为空')
-      return false
+    if (thickDataOption.value.length > 1 || materialDataOption.value.length > 1) {
+      if (!thick.value || !material.value || !groupsId.value || !askCompleteTime.value || !cutConfigId.value) {
+        ElMessage.warning('必选项不能为空')
+        return false
+      }
+    } else if (thickDataOption.value.length === 1 || materialDataOption.value.length === 1) {
+      if (!groupsId.value || !askCompleteTime.value || !cutConfigId.value) {
+        ElMessage.warning('必选项不能为空')
+        return false
+      }
     }
   }
   if (props.type === 1 && isNew.value) {
-    if (!thick.value || !material.value || !askCompleteTime.value || !cutConfigId.value) {
-      ElMessage.warning('必选项不能为空')
-      return false
+    if (thickDataOption.value.length > 1 || materialDataOption.value.length > 1) {
+      if (!thick.value || !material.value || !askCompleteTime.value || !cutConfigId.value) {
+        ElMessage.warning('必选项不能为空')
+        return false
+      }
+    } else if (thickDataOption.value.length === 1 || materialDataOption.value.length === 1) {
+      if (!askCompleteTime.value || !cutConfigId.value) {
+        ElMessage.warning('必选项不能为空')
+        return false
+      }
     }
   }
   if (props.type === 1 && !isNew.value) {
@@ -408,8 +454,8 @@ async function submitIt() {
       } else {
         await newSave({
           groupsId: groupsId.value,
-          material: material.value,
-          thick: thick.value,
+          material: materialDataOption.value.length > 1 ? material.value : materialDataOption.value[0].name,
+          thick: thickDataOption.value.length > 1 ? thick.value : thickDataOption.value[0].name,
           schedulingId: schedulingId.value,
           linkList: _list,
           askCompleteTime: askCompleteTime.value,
@@ -430,8 +476,8 @@ async function submitIt() {
     } else {
       await newSave({
         groupsId: groupsId.value,
-        material: material.value,
-        thick: thick.value,
+        material: materialDataOption.value.length > 1 ? material.value : materialDataOption.value[0].name,
+        thick: thickDataOption.value.length > 1 ? thick.value : thickDataOption.value[0].name,
         schedulingId: schedulingId.value,
         linkList: _list,
         askCompleteTime: askCompleteTime.value,

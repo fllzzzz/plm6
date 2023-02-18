@@ -4,10 +4,8 @@
       <nesting-task-list ref="nestingTaskRef" :maxHeight="maxHeight - 40" @nesting-task-click="handleNestingTaskClick" />
     </div>
     <div class="wrap-right">
-      <el-tag v-if="!crud.query?.projectId" type="info" size="medium"> * 请先选择套料任务，进行零件任务下发 </el-tag>
-      <template v-else>
-        <div class="head-container">
-          <!-- <mHeader>
+      <div class="head-container">
+        <!-- <mHeader>
             <template #optRight>
               <common-button
                 class="filter-item"
@@ -21,8 +19,10 @@
               </common-button>
             </template>
           </mHeader> -->
-          <mHeader />
-        </div>
+        <mHeader />
+      </div>
+      <el-tag v-if="!crud.query?.projectId" type="info" size="medium"> * 请先选择套料任务，进行零件任务下发 </el-tag>
+      <div v-else>
         <!--表格渲染-->
         <common-table
           ref="tableRef"
@@ -53,7 +53,7 @@
             align="center"
           >
             <template #default="{ row }">
-              <span @click="toDetail(row)" style="color: #409EFF; cursor: pointer">{{ row.orderNumber }}</span>
+              <span @click="toDetail(row)" style="color: #409eff; cursor: pointer">{{ row.orderNumber }}</span>
             </template>
           </el-table-column>
           <el-table-column prop="thick" v-if="columns.visible('thick')" :show-overflow-tooltip="true" label="厚度" align="center" />
@@ -67,7 +67,7 @@
             width="140"
           >
             <template #default="{ row }">
-              <span>{{ row.quantity }} / {{ row.totalNetWeight }}</span>
+              <span @click="toDetail(row)" style="color: #409eff; cursor: pointer">{{ row.quantity }} / {{ row.totalNetWeight }}</span>
             </template>
           </el-table-column>
           <el-table-column
@@ -124,7 +124,7 @@
         </common-table>
         <!--分页组件-->
         <pagination />
-      </template>
+      </div>
       <!-- <preview-dialog v-model:visible="previewVisible" :list="submitList" :info="info" @success="handleIssueSuccess" /> -->
       <part-dialog v-model:visible="partDialogVisible" :part-list="partList" @success="crud.toQuery" />
       <nesting-document-dialog v-model:visible="nestingDialogVisible" :nesting-list="nestingList" />

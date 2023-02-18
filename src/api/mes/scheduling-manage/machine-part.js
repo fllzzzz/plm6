@@ -218,5 +218,39 @@ export function getProjectTaskDetail(params) {
   })
 }
 
+/**
+ * @description: 任务单下零件的详细信息(任务单零件列表)
+ */
+export function getMachinePartListDetail(id) {
+  return request({
+    module: 'mes',
+    url: `machine_part/scheduling/record/${id}`,
+    method: 'get'
+  })
+}
+/**
+ * @description: 任务下零件详情(项目,单体数据查询)
+ */
+export function getProjectDetail(params) {
+  return request({
+    module: 'mes',
+    url: `machine_part/scheduling/project/distribution`,
+    method: 'get',
+    params
+  })
+}
+/**
+ * @description: 获取任务单pdf
+ */
+export function getShowPdf(params) {
+  return request({
+    module: 'mes',
+    url: `machine_part/scheduling/pdf`,
+    method: 'get',
+    responseType: 'blob',
+    params
+  })
+}
+
 export default { get }
 

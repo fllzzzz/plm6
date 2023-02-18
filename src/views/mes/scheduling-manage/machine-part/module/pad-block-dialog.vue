@@ -57,9 +57,9 @@
           重置
         </common-button>
       </div>
-      <el-badge :value="padBlockData.length" class="item">
+      <!-- <el-badge :value="padBlockData.length" class="item">
         <common-button type="primary" size="mini" class="filter-item" @click="padBlockClick"> 标准零件列表</common-button>
-      </el-badge>
+      </el-badge> -->
     </div>
     <common-table :data="padBlockList" return-source-data :show-empty-symbol="false" :max-height="maxHeight" style="width: 100%">
       <el-table-column label="序号" type="index" align="center" width="60" />
@@ -78,7 +78,7 @@
           <span>{{ row.length }}</span>
         </template>
       </el-table-column>
-      <el-table-column
+      <!-- <el-table-column
         key="thick"
         prop="thick"
         sortable="custom"
@@ -103,7 +103,7 @@
         <template v-slot="scope">
           {{ scope.row.material ? scope.row.material : '-' }}
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column
         key="netWeight"
         prop="netWeight"
@@ -198,7 +198,7 @@
       </el-table-column>
     </common-table>
   </common-dialog>
-  <pad-block v-model:visible="drawerVisible" :pad-block-data="props.padBlockData" />
+  <!-- <pad-block v-model:visible="drawerVisible" :pad-block-data="props.padBlockData" /> -->
 </template>
 
 <script setup>
@@ -207,7 +207,7 @@ import { defineEmits, defineProps, ref } from 'vue'
 // import { DP } from '@/settings/config'
 import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'
-import padBlock from './pad-block'
+// import padBlock from './pad-block'
 
 const emit = defineEmits(['update:visible', 'success', 'addBlock'])
 const props = defineProps({
@@ -227,7 +227,7 @@ const serialNumber = ref()
 const specification = ref()
 const thickList = ref([])
 const materialList = ref([])
-const drawerVisible = ref(false)
+// const drawerVisible = ref(false)
 const { visible: dialogVisible, handleClose } = useVisible({ emit, props, field: 'visible', showHook: showHook })
 
 const { maxHeight } = useMaxHeight(
@@ -291,9 +291,9 @@ function add(row) {
 }
 
 // 标准零件列表
-function padBlockClick() {
-  drawerVisible.value = true
-}
+// function padBlockClick() {
+//   drawerVisible.value = true
+// }
 
 // 重置
 function resetQuery() {

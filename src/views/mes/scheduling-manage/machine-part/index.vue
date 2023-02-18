@@ -30,11 +30,11 @@
               </div>
             </template>
             <template #viewLeft>
-              <el-badge :value="padBlockData.length" class="item">
+              <!-- <el-badge :value="padBlockData.length" class="item">
                 <common-button type="primary" :loading="tableLoading" size="mini" class="filter-item" @click="padBlockClick">
                   标准零件列表
                 </common-button>
-              </el-badge>
+              </el-badge> -->
               <common-button v-permission="permission.save" type="success" class="filter-item" size="mini" @click="addPadBlock">
                 添加标准零件
               </common-button>
@@ -53,7 +53,10 @@
                 type="success"
                 class="filter-item"
                 size="mini"
-                :disabled="crud.query.boolDxfEnum !== machinePartDxfTypeEnum.EXPORT.V && nestingLoading || crud.query.boolDxfEnum === machinePartDxfTypeEnum.UN_EXPORT.V"
+                :disabled="
+                  (crud.query.boolDxfEnum !== machinePartDxfTypeEnum.EXPORT.V && nestingLoading) ||
+                  crud.query.boolDxfEnum === machinePartDxfTypeEnum.UN_EXPORT.V
+                "
                 @click="previewIt"
               >
                 套料保存
@@ -142,11 +145,10 @@ class="ellipsis-text text"
           :thick-list="thickList"
           :material-list="materialList"
           :thick-data="crud.query.thickList"
-          :material-data="crud.query.material"
           :query-thick-list="crud.query.thickList"
         ></m-preview>
         <pad-block-dialog v-model:visible="dialogVisible" :pad-block-data="padBlockData" @addBlock="addBlock" />
-        <pad-block ref="padBlockRef" v-model:visible="drawerVisible" :pad-block-data="padBlockData" />
+        <!-- <pad-block ref="padBlockRef" v-model:visible="drawerVisible" :pad-block-data="padBlockData" /> -->
       </div>
     </div>
   </div>
@@ -166,7 +168,7 @@ import useCRUD from '@compos/use-crud'
 import mHeader from './module/header'
 import mPreview from './module/preview'
 import padBlockDialog from './module/pad-block-dialog'
-import padBlock from './module/pad-block'
+// import padBlock from './module/pad-block'
 import projectList from './module/project-list'
 import { deepClone } from '@/utils/data-type'
 
@@ -178,13 +180,15 @@ const optShow = {
 }
 const thickList = ref([])
 const materialList = ref([])
-const padBlockRef = ref()
+// const padBlockRef = ref()
 const boolDxfEnum = ref()
 const projectListRef = ref()
 const tableRef = ref()
 const nestingLoading = ref(false)
 const type = ref()
 const previewList = ref([])
+const checkedList = ref([])
+
 const { crud, CRUD } = useCRUD(
   {
     title: '零件排产',
@@ -194,7 +198,7 @@ const { crud, CRUD } = useCRUD(
     crudApi: { ...crudApi },
     queryOnPresenterCreated: false,
     hasPagination: false,
-    requiredQuery: ['monthList', 'material', 'areaIds', 'thickList']
+    requiredQuery: ['monthList', 'material', 'areaIds', 'thick']
   },
   tableRef
 )
@@ -209,7 +213,7 @@ CRUD.HOOK.handleRefresh = (crud, res) => {
   summaryInfo.value.totalNetWeight = res.data?.totalNetWeight || 0
   summaryInfo.value.quantity = res.data?.quantity || 0
   res.data.content = res.data.collect.map((v) => {
-    if (checkedNodes.value.findIndex(k => k.id === v.id) > -1) {
+    if (checkedNodes.value.findIndex((k) => k.id === v.id) > -1) {
       arr.push(v)
       v.checked = true
     } else {
@@ -327,10 +331,12 @@ function boolDxfChange() {
 }
 
 // 切换项目清除选择
-// function clearCheck() {
-//   checkedNodes.value = []
-// }
+function saveCheck() {
+  checkedList.value = checkedNodes.value
+}
 function handleCheckedChange(value, item) {
+  console.log(value, item, 'item')
+  saveCheck()
   const _checkedIndex = checkedNodes.value.findIndex((v) => v.id === item.id)
   if (value) {
     if (_checkedIndex === -1) checkedNodes.value.push(item)
@@ -339,7 +345,7 @@ function handleCheckedChange(value, item) {
   }
   console.log(checkedNodes.value, 'checkedNodes.value')
   let isNext = false
-  checkedNodes.value.forEach(v => {
+  checkedNodes.value.forEach((v) => {
     if (!v.imgLoad || !v.picturePath) {
       isNext = true
       return false
@@ -373,7 +379,7 @@ function previewIt() {
     ElMessage.warning('请至少选择一条数据')
     return
   }
-  previewList.value = [...checkedNodes.value, ...padBlockData.value]
+  previewList.value = [...checkedList.value, ...padBlockData.value]
   previewVisible.value = true
 }
 function unPreviewIt() {
@@ -382,7 +388,7 @@ function unPreviewIt() {
     ElMessage.warning('请至少选择一条数据')
     return
   }
-  previewList.value = [...checkedNodes.value, ...padBlockData.value]
+  previewList.value = [...checkedList.value, ...padBlockData.value]
   previewVisible.value = true
 }
 // --------------------------- 预览并保存 end --------------------------------
@@ -395,12 +401,12 @@ function addPadBlock() {
 }
 
 // 标准零件列表
-const drawerVisible = ref(false)
-const tableLoading = ref(false)
+// const drawerVisible = ref(false)
+// const tableLoading = ref(false)
 const padBlockData = ref([])
-function padBlockClick() {
-  drawerVisible.value = true
-}
+// function padBlockClick() {
+//   drawerVisible.value = true
+// }
 
 function addBlock(val) {
   const findVal = padBlockData.value.find((v) => v.id === val.id)

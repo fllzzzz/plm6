@@ -20,13 +20,11 @@
       />
       <tag-tabs
         v-if="thickData?.length"
-        v-model="query.thickList"
+        v-model="query.thick"
         class="filter-item"
         :style="`width:calc(100% - ${materialRefWidth + typeListRefWidth}px)`"
         itemKey="name"
         :data="thickData"
-        multiple
-        default
         @change="crud.toQuery"
       >
         <template #default="{ item }">
@@ -133,7 +131,7 @@ async function fetchType(lastQuery) {
   typeList.value = []
   query.taskTypeEnum = undefined
   query.material = undefined
-  query.thickList = []
+  query.thick = []
   if (isBlank(query.areaIds)) return
   try {
     const { content } = await getTypeList({
@@ -214,11 +212,11 @@ async function fetchTick(lastQuery) {
           name: v
         }
       }) || []
-    if (lastQuery && lastQuery?.thickList && content?.length && content.indexOf(lastQuery.thickList) !== -1) {
-      query.thickList = lastQuery.thickList
+    if (lastQuery && lastQuery?.thick && content?.length && content.indexOf(lastQuery.thick) !== -1) {
+      query.thick = lastQuery.thick
       crud.toQuery()
     } else if (thickData.value?.length) {
-      query.thickList = [thickData.value[0].name]
+      query.thick = thickData.value[0].name
       crud.toQuery()
     }
     emit('change', materialList.value, thickData.value)
