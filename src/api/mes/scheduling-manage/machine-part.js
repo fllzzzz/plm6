@@ -251,6 +251,18 @@ export function getShowPdf(params) {
     params
   })
 }
+/**
+ * @description: 下载排产信息压缩包
+ */
+export function getInfoZip(params) {
+  return request({
+    module: 'mes',
+    url: `machine_part/scheduling/download/file`,
+    method: 'get',
+    responseType: 'blob',
+    params
+  })
+}
 
 export default { get }
 

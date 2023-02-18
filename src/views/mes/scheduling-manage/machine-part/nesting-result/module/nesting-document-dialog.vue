@@ -21,15 +21,8 @@
         {{ nestingDocumentList.quantity }} / {{ nestingDocumentList.totalNetWeight }}
       </el-descriptions-item>
       <el-descriptions-item align="center" label="操作">
-        <common-button
-          class="filter-item"
-          size="mini"
-          type="primary"
-          v-if="nestingList.issueStatusEnum !== issueStatusEnum.IN_NESTING.V"
-          @click="download"
-        >
-          下载
-        </common-button>
+        <export-button :params="{ id: nestingList.id }" :fn="getInfoZip">下载</export-button>
+        <pdf :url="taskOrderZIP" :type="'canvas'" :pdfjsDistPath="pdfjsDistPath" />
       </el-descriptions-item>
     </el-descriptions>
     <!--任务单-->
@@ -45,14 +38,14 @@
 
 <script setup>
 // import { saveNestingTask } from '@/api/mes/scheduling-manage/common'
-import { getProjectDetail, getShowPdf } from '@/api/mes/scheduling-manage/machine-part'
+import { getProjectDetail, getShowPdf, getInfoZip } from '@/api/mes/scheduling-manage/machine-part'
 import { machinePartSchedulingIssueStatusEnum as issueStatusEnum } from '@enum-ms/mes'
 import { defineEmits, defineProps, ref } from 'vue'
 import { parseTime } from '@/utils/date'
-import { ElNotification } from 'element-plus'
 import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'
 import pdf from '@/components/PDF/pdf'
+import ExportButton from '@comp-common/export-button/index.vue'
 
 const pdfjsDistPath = import.meta.env.BASE_URL + 'assets'
 const nestingDocumentList = ref([])
@@ -69,6 +62,7 @@ const props = defineProps({
 })
 const taskLoading = ref(false)
 const taskOrderPDF = ref('')
+const taskOrderZIP = ref('')
 
 const { visible: nestingDialogVisible, handleClose } = useVisible({ emit, props, field: 'visible', showHook: showHook })
 const { maxHeight } = useMaxHeight(
@@ -140,14 +134,6 @@ function getUrlByFileReader(res) {
       reject()
     }
   })
-}
-// 下载钢板图形
-function download() {
-  if (props.nestingList.dwgReportUrl !== null) {
-    window.location.href = props.nestingList.dwgReportUrl
-  } else {
-    ElNotification({ title: '下载失败', message: '暂无钢板图形 ', type: 'error' })
-  }
 }
 </script>
 
