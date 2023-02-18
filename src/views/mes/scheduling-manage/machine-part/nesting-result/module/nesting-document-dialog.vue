@@ -11,7 +11,7 @@
   >
     <el-descriptions :column="3" :data="nestingDocumentList" border class="nesting-document">
       <el-descriptions-item align="center" label="项目" span="3">
-        {{ nestingDocumentList.projectName }} ( {{ nestingDocumentList.monomerList }} )
+        {{ nestingDocumentList.projectList }}
       </el-descriptions-item>
       <el-descriptions-item align="center" label="任务单号" span="2">{{ nestingDocumentList.orderNumber }}</el-descriptions-item>
       <el-descriptions-item align="center" label="套料日期" span="1">{{
@@ -24,7 +24,12 @@
         {{ nestingDocumentList.cutQuantity }}
       </el-descriptions-item>
       <el-descriptions-item align="center" label="操作">
-        <export-button v-if="nestingList.issueStatusEnum !== issueStatusEnum.IN_NESTING.V" :params="{ id: nestingList.id }" :fn="getInfoZip">下载</export-button>
+        <export-button
+v-if="nestingList.issueStatusEnum !== issueStatusEnum.IN_NESTING.V"
+:params="{ id: nestingList.id }"
+:fn="getInfoZip"
+          >下载</export-button
+        >
       </el-descriptions-item>
     </el-descriptions>
     <!--任务单-->
@@ -86,12 +91,11 @@ function showHook() {
 async function fetchDocument() {
   try {
     const data = await getProjectDetail({ id: props.nestingList.id })
-    data.projectName = data?.projectInfoList?.map((v) => v.name).join('')
-    data?.projectInfoList?.forEach((v) => {
-      data.monomerList = v.monomers.map((o) => o.name).join(', ')
-      return v
+    data?.projectInfoList.forEach((v) => {
+      v.monomerList = v.monomers.map((o) => o.name)?.join(', ')
+      v.projectName = v.name + '(' + v.monomerList + ')'
     })
-    console.log(data, 'data')
+    data.projectList = data?.projectInfoList.map((v) => v.projectName)?.join(' /')
     nestingDocumentList.value = data || []
   } catch (err) {
     console.log('获取当前的项目下的信息失败', err)
