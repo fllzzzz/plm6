@@ -410,7 +410,7 @@ export default {
           path: 'parallel-config',
           hidden: false,
           component: '/config-manage/mes/parallel-config/index',
-          meta: { title: '垫块配置', icon: 'project', noCache: true }
+          meta: { title: '标准零件配置', icon: 'project', noCache: true }
         }
       ]
     },
