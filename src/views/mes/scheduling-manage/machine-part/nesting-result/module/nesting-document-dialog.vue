@@ -21,8 +21,7 @@
         {{ nestingDocumentList.quantity }} / {{ nestingDocumentList.totalNetWeight }}
       </el-descriptions-item>
       <el-descriptions-item align="center" label="操作">
-        <export-button :params="{ id: nestingList.id }" :fn="getInfoZip">下载</export-button>
-        <pdf :url="taskOrderZIP" :type="'canvas'" :pdfjsDistPath="pdfjsDistPath" />
+        <export-button v-if="nestingList.issueStatusEnum !== issueStatusEnum.IN_NESTING.V" :params="{ id: nestingList.id }" :fn="getInfoZip">下载</export-button>
       </el-descriptions-item>
     </el-descriptions>
     <!--任务单-->
@@ -62,7 +61,6 @@ const props = defineProps({
 })
 const taskLoading = ref(false)
 const taskOrderPDF = ref('')
-const taskOrderZIP = ref('')
 
 const { visible: nestingDialogVisible, handleClose } = useVisible({ emit, props, field: 'visible', showHook: showHook })
 const { maxHeight } = useMaxHeight(
