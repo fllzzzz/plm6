@@ -54,8 +54,7 @@
                 class="filter-item"
                 size="mini"
                 :disabled="
-                  (crud.query.boolDxfEnum !== machinePartDxfTypeEnum.EXPORT.V && nestingLoading) ||
-                  crud.query.boolDxfEnum === machinePartDxfTypeEnum.UN_EXPORT.V
+                  crud.query.boolDxfEnum !== machinePartDxfTypeEnum.EXPORT.V && nestingLoading
                 "
                 @click="previewIt"
               >
@@ -300,12 +299,18 @@ CRUD.HOOK.afterRefresh = () => {
 
 // --------------------------- end --------------------------------
 
-function handleProjectClick({ areaIds }, month) {
+function handleProjectClick({ areaIds, projectIds }, month) {
+  console.log(projectIds, month, areaIds, 'projectId')
   crud.query.monthList = month
   crud.query.areaIds = areaIds
   const arr = []
+  // checkedNodes.value.forEach(v => {
+  //   if (areaIds.indexOf(String(v.areaId)) > -1 || areaIds.indexOf(v.areaId) > -1) {
+  //     arr.push(v)
+  //   }
+  // })
   checkedNodes.value.forEach(v => {
-    if (areaIds.indexOf(String(v.areaId)) > -1 || areaIds.indexOf(v.areaId) > -1) {
+    if (projectIds.indexOf(String(v.projectId)) > -1 || projectIds.indexOf(v.projectId) > -1) {
       arr.push(v)
     }
   })
@@ -319,11 +324,14 @@ async function handleSaveSuccess(val) {
   checkedNodes.value = checkedNodes.value.filter((item) => {
     return item.id !== val
   })
+  padBlockData.value = padBlockData.value.filter((item) => {
+    return item.id !== val
+  })
   const lastQuery = deepClone(crud.query)
   checkAll.value = false
   boardList.value = []
   crud.page.page = 1
-  padBlockData.value = []
+  // padBlockData.value = []
   await projectListRef?.value?.refresh(lastQuery)
   await headRef.value?.refreshConditions(lastQuery)
 }

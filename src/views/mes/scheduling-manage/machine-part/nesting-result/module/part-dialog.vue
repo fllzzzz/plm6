@@ -25,7 +25,7 @@
     </el-form>
   </common-dialog>
   <!-- 是否需要钻孔 -->
-  <drill-scheduling-dialog v-model:visible="drillDialogVisible" :drill-data="props.partList" :groupsId="form.groupsId" @success="success" />
+  <drill-scheduling-dialog v-model:visible="drillDialogVisible" :drill-data="drillData" :groupsId="form.groupsId" @success="success" :schedulingId="props.partList?.id" />
 </template>
 
 <script setup>
@@ -41,6 +41,7 @@ import drillSchedulingDialog from './drill-scheduling-dialog.vue'
 const formRef = ref()
 const dialogRef = ref()
 const drillDialogVisible = ref(false)
+const drillData = ref({})
 const props = defineProps({
   visible: {
     type: Boolean,
@@ -105,6 +106,7 @@ async function submitForm(formRef) {
     })
     if (data?.boolDrillEnum) {
       drillDialogVisible.value = true
+      drillData.value = data || {}
     } else {
       await saveNestingTask(_list)
     }

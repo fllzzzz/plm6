@@ -309,6 +309,10 @@ const { maxHeight } = useMaxHeight(
 function toDelete(id) {
   const delIndex = props.list.findIndex((v) => v.id === id)
   props.list.splice(delIndex, 1)
+  if (props.list.findIndex((v) => v.needMachinePartLinkList?.length > 0) < 0) {
+    isNew.value = false
+    saveType.value = machinePartIssuedWayEnum.ADD_NEW_TICKET.V
+  }
   emit('success', id)
 }
 
@@ -319,6 +323,7 @@ function showHook() {
   askCompleteTime.value = undefined
   cutConfigId.value = undefined
   fetchGroups()
+  fetchOrder()
   if (props.type === 1) {
     isNew.value = true
     saveType.value = machinePartIssuedWayEnum.NESTING_ISSUED.V
@@ -330,7 +335,6 @@ function showHook() {
     isNew.value = true
     saveType.value = machinePartIssuedWayEnum.NESTING_ISSUED.V
   }
-  fetchOrder()
 }
 
 function success() {
@@ -431,7 +435,7 @@ async function submitIt() {
     totalList.value.forEach((v) => {
       _partIds.push({
         id: v.id,
-        quantity: v.quantity
+        quantity: !v.needMachinePartLinkList ? v.usedQuantity : v.quantity
       })
     })
     console.log(totalList.value, schedulingId.value, 'totalList.value')

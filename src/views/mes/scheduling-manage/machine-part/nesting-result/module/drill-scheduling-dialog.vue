@@ -1,7 +1,15 @@
 <template>
-  <common-dialog ref="dialogRef" title="钻孔排产" v-model:visible="drillDialogVisible" :before-close="handleClose" width="400px">
+  <common-dialog
+    ref="dialogRef"
+    title="钻孔排产"
+    :show-close="false"
+    v-model:visible="drillDialogVisible"
+    :before-close="handleClose"
+    width="400px"
+  >
     <template #titleRight>
       <common-button type="primary" size="mini" @click="submitForm(formRef)"> 确定 </common-button>
+      <common-button size="mini" @click.stop="closed"> 关闭 </common-button>
     </template>
     <el-form ref="formRef" :model="form" :rules="rules" size="small" label-width="120px" class="demo-form">
       <el-form-item label="零件数:" prop="quantity">
@@ -68,13 +76,17 @@ const props = defineProps({
   },
   groupsId: {
     type: Number
+  },
+  schedulingId: {
+    Type: Number
   }
 })
 const emit = defineEmits(['update:visible', 'success'])
 const { visible: drillDialogVisible, handleClose } = useVisible({ emit, props, field: 'visible', showHook: showHook })
 
 function showHook() {
-  console.log(props.drillData, 'drillData')
+  form.drillGroupsId = undefined
+  form.drillAskCompleteTime = undefined
   fetchDrillGroups()
 }
 
@@ -90,6 +102,14 @@ const rules = {
   drillAskCompleteTime: [{ required: true, message: '请选择钻孔日期', trigger: 'blur' }]
 }
 
+function closed() {
+  ElNotification({
+    title: '本次套料作废',
+    type: 'info',
+    duration: 2500
+  })
+  handleClose()
+}
 // --------------------------- 获取钻孔生产班组 start ------------------------------
 const groupLoad = ref(false)
 const schedulingGroups = ref({ list: [], obj: {}})
@@ -110,7 +130,7 @@ async function submitForm(formRef) {
       drillAskCompleteTime: form.drillAskCompleteTime,
       drillGroupsId: form.drillGroupsId,
       groupsId: props.groupsId,
-      schedulingId: props.drillData?.id
+      schedulingId: props.schedulingId
     }
     await saveNestingTask(_list)
     ElNotification({

@@ -125,7 +125,7 @@ async function submitForm(formRef) {
         v.needMachinePartLinkList?.forEach((o) => {
           _list.push({
             productId: v.id,
-            quantity: o.quantity,
+            quantity: v.quantity,
             id: o.id,
             needSchedulingMonth: o.date
           })
