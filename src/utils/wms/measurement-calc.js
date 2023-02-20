@@ -138,6 +138,7 @@ export async function steelInboundFormFormat(form) {
   form.steelCoilList = []
   const promiseList = []
   let p
+  console.log(form, 'fff')
   for (const row of form.list) {
     row.uid = row.id
     row.weighingTotalWeight = row.mete // 过磅重量

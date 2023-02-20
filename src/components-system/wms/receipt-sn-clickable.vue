@@ -66,6 +66,8 @@ function openReceiptDetail(detailId, type) {
 // 查看详情权限
 function openDetailPermission(type) {
   switch (type) {
+    case receiptTypeEnum.REQUISITIONS.V:
+      return permission.requisitionsDetail
     case receiptTypeEnum.PURCHASE.V:
       return permission.purchaseOrderDetail
     case receiptTypeEnum.INBOUND.V:

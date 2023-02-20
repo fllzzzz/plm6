@@ -196,8 +196,6 @@
             :disabled-edit="row.purchaseStatus == purchaseStatusEnum.FINISHED.V"
             :data="row"
             show-detail
-            :before-to-detail="beforeToDetail"
-            :before-to-edit="beforeToEdit"
           />
         </template>
       </el-table-column>
@@ -205,8 +203,8 @@
     <!--分页组件-->
     <pagination />
     <!-- 表单 -->
-    <m-raw-material-form />
-    <m-raw-material-detail />
+    <mForm />
+    <mDetail />
   </div>
 </template>
 
@@ -230,8 +228,8 @@ import useCrudEnabledChange from '@compos/use-crud-enabled-change'
 import pagination from '@crud/Pagination'
 import udOperation from '@crud/UD.operation.vue'
 import mHeader from './module/header'
-import mRawMaterialForm from './module/form/raw-material.vue'
-import mRawMaterialDetail from './module/detail/raw-material.vue'
+import mForm from './module/form/index.vue'
+import mDetail from './module/detail/index.vue'
 import tableCellTag from '@comp-common/table-cell-tag/index.vue'
 import elExpandTableColumn from '@comp-common/el-expand-table-column.vue'
 import useMatClsList from '@/composables/store/use-mat-class-list'
@@ -286,7 +284,7 @@ CRUD.HOOK.handleRefresh = (crud, { data }) => {
     const basicClassArr = EO.getBits(matClsEnum.ENUM, v.basicClass, 'L')
     v.typeText = baseMaterialTypeEnum.VL[v.purchaseType] + ' - ' + basicClassArr.join(' | ')
     v.branchCompanyId = v.branchCompany ? v.branchCompany.id : undefined
-    v.requisitionsSNStr = v.requisitionsSN ? v.requisitionsSN.join('　、　') : ''
+    v.requisitionsSNStr = v.applyPurchaseSN ? v.applyPurchaseSN.join('　、　') : ''
     v.projectIds = v.projects ? v.projects.map((p) => p.id) : []
     v.boolPartyA = v.supplyType === orderSupplyTypeEnum.PARTY_A.V
     v.supplierId = v.supplier ? v.supplier.id : undefined

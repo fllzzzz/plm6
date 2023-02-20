@@ -164,6 +164,8 @@ function useInventory(quantity, data) {
   form.list[searchIdx.value].canUseQuantity = data.quantity
   form.list[searchIdx.value].color = data.color
   form.list[searchIdx.value].brand = data.brand
+  form.list[searchIdx.value].unitNet = data.unitNet
+  form.list[searchIdx.value].mete = data.quantity * data.unitNet
   form.list[searchIdx.value].requisitionMode = requisitionModeEnum.USE_INVENTORY.V
   form.list[searchIdx.value].materialInventoryId = data.id
 }

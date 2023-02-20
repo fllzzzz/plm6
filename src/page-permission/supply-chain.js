@@ -2,7 +2,8 @@
 
 export const commonPM = {
   // 采购合同详情
-  purchaseOrderDetail: ['scm_purchaseOrder:detail']
+  purchaseOrderDetail: ['scm_purchaseOrder:detail'],
+  requisitionsDetail: ['scm_requisitions:detail']
 }
 
 // wms

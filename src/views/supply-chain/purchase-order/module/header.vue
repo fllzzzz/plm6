@@ -97,7 +97,7 @@
           icon="el-icon-plus"
           @click.stop="crud.toAdd"
         >
-          原材料订单
+          采购订单
         </common-button>
       </template>
     </crudOperation>

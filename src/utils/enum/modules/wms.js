@@ -199,6 +199,13 @@ const purchaseStatusEnum = {
 }
 constantize(purchaseStatusEnum)
 
+// (申购单采购状态)
+const requisitionStatusEnum = {
+  NOT_STARTED: { L: '未开始', K: 'NOT_STARTED', V: 1 << 0, T: '' },
+  PARTIALLY_COMPLETED: { L: '已创建', K: 'PARTIALLY_COMPLETED', V: 1 << 1, T: 'warning' }
+}
+constantize(requisitionStatusEnum)
+
 // 物料退货状态
 const materialRejectStatusEnum = {
   ALL: { L: '全部退货', K: 'ALL', V: 1 << 3, COLOR: '#f56c6c' },
@@ -253,6 +260,7 @@ export {
   requisitionModeEnum,
   baseMaterialTypeEnum,
   purchaseStatusEnum,
+  requisitionStatusEnum,
   purchaseOrderPaymentModeEnum,
   materialFreezeTypeEnum,
   pickUpModeEnum,
@@ -285,6 +293,7 @@ export default {
   requisitionModeEnum,
   baseMaterialTypeEnum,
   purchaseStatusEnum,
+  requisitionStatusEnum,
   purchaseOrderPaymentModeEnum,
   materialFreezeTypeEnum,
   pickUpModeEnum,

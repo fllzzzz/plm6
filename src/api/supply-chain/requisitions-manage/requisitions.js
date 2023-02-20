@@ -86,6 +86,26 @@ export function editStatus({ id, enabled }) {
   })
 }
 
+// 申购单（简要）
+export function getRequisitionBrief(params) {
+  return request({
+    module: 'scm',
+    url: `apply-purchase/brief`,
+    method: 'get',
+    params
+  })
+}
+
+// 查询可采购物料详情
+export function canPurchaseDetail(params) {
+  return request({
+    module: 'scm',
+    url: `apply-purchase/can-purchase-detail`,
+    method: 'get',
+    params
+  })
+}
+
 /**
  * 查询构件类型
  *
