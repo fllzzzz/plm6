@@ -93,7 +93,7 @@ async function fetchDocument() {
     const data = await getProjectDetail({ id: props.nestingList.id })
     data?.projectInfoList.forEach((v) => {
       v.monomerList = v.monomers.map((o) => o.name)?.join(', ')
-      v.projectName = v.name + '(' + v.monomerList + ')'
+      v.projectName = v.serialNumber + '-' + v.shortName + '(' + v.monomerList + ')'
     })
     data.projectList = data?.projectInfoList.map((v) => v.projectName)?.join(' /')
     nestingDocumentList.value = data || []

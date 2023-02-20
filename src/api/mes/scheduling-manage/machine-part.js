@@ -263,6 +263,18 @@ export function getInfoZip(params) {
     params
   })
 }
+/**
+ * @description: 线下套料下载压缩包
+ */
+export function getOffLineZip(params) {
+  return request({
+    module: 'mes',
+    url: `machine_part/scheduling/download/off_line/file`,
+    method: 'get',
+    responseType: 'blob',
+    params
+  })
+}
 
 export default { get }
 

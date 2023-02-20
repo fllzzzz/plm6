@@ -3,6 +3,7 @@
     customClass="pad-block-scheduling-preview-dlg"
     title="标准零件排产预览"
     v-model="dialogVisible"
+    top="5vh"
     width="1500px"
     :before-close="handleClose"
   >
@@ -59,7 +60,7 @@
         <common-button type="primary" size="mini" class="filter-item" @click="padBlockClick"> 标准零件列表</common-button>
       </el-badge> -->
     </div>
-    <common-table :data="padBlockList" return-source-data :show-empty-symbol="false" :max-height="maxHeight" style="width: 100%">
+    <common-table :data="padBlockList" return-source-data :show-empty-symbol="false" :max-height="maxHeight - 160" style="width: 100%">
       <el-table-column label="序号" type="index" align="center" width="60" />
       <el-table-column :show-overflow-tooltip="true" prop="serialNumber" label="编号" min-width="80px" align="left">
         <template #default="{ row }">
@@ -232,7 +233,7 @@ const { visible: dialogVisible, handleClose } = useVisible({ emit, props, field:
 const { maxHeight } = useMaxHeight(
   {
     mainBox: '.machine-part-scheduling-preview-dlg',
-    extraBox: ['.el-dialog__header', 'head-container'],
+    extraBox: ['.el-dialog__header', '.head-container'],
     wrapperBox: ['.el-dialog__body'],
     clientHRepMainH: true,
     minHeight: 300,

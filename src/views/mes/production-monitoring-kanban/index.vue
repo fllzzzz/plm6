@@ -13,7 +13,14 @@
       style="width: 100%"
     >
       <el-table-column prop="index" label="序号" align="center" width="60" type="index" />
-      <el-table-column v-if="columns.visible('project')" key="project" prop="project" :show-overflow-tooltip="true" label="项目" width="200px">
+      <el-table-column
+        v-if="columns.visible('project')"
+        key="project"
+        prop="project"
+        :show-overflow-tooltip="true"
+        label="项目"
+        width="200px"
+      >
         <template v-slot="scope">
           <span>{{ scope.row.project?.contractNo }}-{{ scope.row.project?.name }}</span>
         </template>
@@ -65,10 +72,10 @@
         key="taskQuantity"
         prop="taskQuantity"
         :show-overflow-tooltip="true"
-        label="排产量（件/kg）"
+        label="排产量（件/吨）"
       >
         <template v-slot="scope">
-          <span>{{ scope.row.taskQuantity }}/{{ scope.row.taskNetWeight?.toFixed(DP.COM_WT__KG) }}</span>
+          <span>{{ scope.row.taskQuantity }}/{{ (scope.row.taskNetWeight / 1000)?.toFixed(2) }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -77,10 +84,10 @@
         key="completeQuantity"
         prop="completeQuantity"
         :show-overflow-tooltip="true"
-        label="实际完成量（件/kg）"
+        label="实际完成量（件/吨）"
       >
         <template v-slot="scope">
-          <span>{{ scope.row.completeQuantity }}/{{ scope.row.completeNetWeight?.toFixed(DP.COM_WT__KG) }}</span>
+          <span style="color: #409EFF; cursor: pointer">{{ scope.row.completeQuantity }}/{{ (scope.row.completeNetWeight / 1000)?.toFixed(2) }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -112,14 +119,14 @@
         width="80px"
       >
         <template v-slot="scope">
-          <el-tag effect="plain" :type="componentTypeTag[componentTypeEnum.VK[scope.row.taskType]]">{{
-            componentTypeEnum.VL[scope.row.taskType]
+          <el-tag effect="plain" :type="productionKanbanTypeEnum.V[scope.row.status].T">{{
+            productionKanbanTypeEnum.VL[scope.row.status]
           }}</el-tag>
         </template>
       </el-table-column>
     </common-table>
     <!-- 分页 -->
-    <!-- <pagination /> -->
+    <pagination />
     <!-- 产线跟踪详情 -->
     <!-- <production-line-tracking-detail v-model:visible="drawerVisible" :detail-data="detailData" /> -->
   </div>
@@ -128,20 +135,11 @@
 import { ref, reactive, provide, watch } from 'vue'
 import crudApi, { getSummary } from '@/api/mes/production-monitoring-kanban/kanban.js'
 import useCRUD from '@compos/use-crud'
-import { DP } from '@/settings/config'
-// import { parseTime } from '@/utils/date'
-import { componentTypeEnum } from '@enum-ms/mes'
+import { productionKanbanTypeEnum } from '@enum-ms/mes'
 import useMaxHeight from '@compos/use-max-height'
-// import pagination from '@crud/Pagination'
+import pagination from '@crud/Pagination'
 import mHeader from './module/header.vue'
 // import productionLineTrackingDetail from './production-line-tracking-detail/index.vue'
-
-// 由于mes枚举构件、部件的type值相同，单独定义枚举type值
-const componentTypeTag = {
-  [componentTypeEnum.ARTIFACT.K]: 'success',
-  [componentTypeEnum.ASSEMBLE.K]: 'warning',
-  [componentTypeEnum.MACHINE_PART.K]: ''
-}
 
 const optShow = {
   add: false,
@@ -151,8 +149,8 @@ const optShow = {
 }
 
 const tableRef = ref()
-const drawerVisible = ref(false)
-const detailData = ref({})
+// const drawerVisible = ref(false)
+// const detailData = ref({})
 const { crud, CRUD, columns } = useCRUD(
   {
     title: '生产监控看板',
@@ -169,10 +167,10 @@ const { maxHeight } = useMaxHeight({
   paginate: true
 })
 
-function views(row) {
-  drawerVisible.value = true
-  detailData.value = row
-}
+// function views(row) {
+//   drawerVisible.value = true
+//   detailData.value = row
+// }
 
 // 项目汇总数据（子页面使用）
 const projectInfo = reactive({
@@ -195,7 +193,7 @@ watch(
 async function fetchProjectInfo() {
   projectInfo.loading = true
   try {
-    const res = (await getSummary(crud.query.workshopId)) || {}
+    const res = (await getSummary({ workshopId: crud.query.workshopId })) || {}
     projectInfo.summary = res
   } catch (error) {
     console.log('获取项目汇总图表数据', error)

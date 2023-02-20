@@ -545,6 +545,21 @@ const machinePartIssuedWayEnum = {
 }
 constantize(machinePartIssuedWayEnum)
 
+// 零件排产/下发
+const nestingTypeEnum = {
+  NORMAL: { L: '正常套料', K: 'NORMAL', V: 0 },
+  OFFLINE: { L: '线下套料', K: 'OFFLINE', V: 1 }
+}
+constantize(nestingTypeEnum)
+
+// 生产监控看板
+const productionKanbanTypeEnum = {
+  IN_PRODUCTION: { L: '生产中', K: 'IN_PRODUCTION', V: 1 << 0, T: 'warning' },
+  FINISHED_PRODUCTION: { L: '已完成', K: 'FINISHED_PRODUCTION', V: 1 << 1, T: 'success' },
+  PAUSED: { L: '暂停', K: 'PAUSED', V: 1 << 2, T: 'danger' }
+}
+constantize(productionKanbanTypeEnum)
+
 export {
   teamTypeEnum,
   teamAttributeEnum,
@@ -613,7 +628,9 @@ export {
   structureOrderTypeEnum,
   auxiliaryMaterialTypeEnum,
   machinePartDxfTypeEnum,
-  machinePartIssuedWayEnum
+  machinePartIssuedWayEnum,
+  nestingTypeEnum,
+  productionKanbanTypeEnum
 }
 
 export default {
@@ -684,5 +701,7 @@ export default {
   structureOrderTypeEnum,
   auxiliaryMaterialTypeEnum,
   machinePartDxfTypeEnum,
-  machinePartIssuedWayEnum
+  machinePartIssuedWayEnum,
+  nestingTypeEnum,
+  productionKanbanTypeEnum
 }

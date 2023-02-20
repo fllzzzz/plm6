@@ -25,5 +25,17 @@ export function getSummary(params) {
   })
 }
 
+/**
+ * @description: 生产监控看板详情
+ */
+export function getDetail(params) {
+  return request({
+    module: 'mes',
+    url: 'scheduling/artifact/product/monitor/kanban/detail',
+    method: 'get',
+    params
+  })
+}
+
 export default { get }
 

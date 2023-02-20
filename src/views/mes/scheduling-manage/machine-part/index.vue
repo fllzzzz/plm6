@@ -42,7 +42,7 @@
                 v-permission="permission.save"
                 type="warning"
                 class="filter-item"
-                :disabled="Boolean(!checkedNodes?.length && padBlockData?.length)"
+               :disabled="Boolean(!checkedNodes?.length && padBlockData?.length)"
                 size="mini"
                 @click="unPreviewIt"
               >
@@ -141,10 +141,10 @@ class="ellipsis-text text"
           :checked-nodes="checkedNodes"
           :pad-block-data="padBlockData"
           @success="handleSaveSuccess"
+          @handleDel="handleDel"
           :thick-list="thickList"
           :material-list="materialList"
           :thick-data="crud.query.thickList"
-          :query-thick-list="crud.query.thickList"
         ></m-preview>
         <pad-block-dialog v-model:visible="dialogVisible" :pad-block-data="padBlockData" @addBlock="addBlock" />
         <!-- <pad-block ref="padBlockRef" v-model:visible="drawerVisible" :pad-block-data="padBlockData" /> -->
@@ -186,7 +186,6 @@ const tableRef = ref()
 const nestingLoading = ref(false)
 const type = ref()
 const previewList = ref([])
-const thickObj = ref({})
 
 const { crud, CRUD } = useCRUD(
   {
@@ -212,7 +211,6 @@ CRUD.HOOK.handleRefresh = (crud, res) => {
   summaryInfo.value.totalNetWeight = res.data?.totalNetWeight || 0
   summaryInfo.value.quantity = res.data?.quantity || 0
   res.data.content = res.data.collect.map((v) => {
-    console.log(thickObj.value[v.thick], 'thickObj.value[v.thick]')
     if (checkedNodes.value.findIndex((k) => k.id === v.id) > -1) {
       // arr.push(v)
       v.checked = true
@@ -299,18 +297,12 @@ CRUD.HOOK.afterRefresh = () => {
 
 // --------------------------- end --------------------------------
 
-function handleProjectClick({ areaIds, projectIds }, month) {
-  console.log(projectIds, month, areaIds, 'projectId')
+function handleProjectClick({ areaIds }, month) {
   crud.query.monthList = month
   crud.query.areaIds = areaIds
   const arr = []
-  // checkedNodes.value.forEach(v => {
-  //   if (areaIds.indexOf(String(v.areaId)) > -1 || areaIds.indexOf(v.areaId) > -1) {
-  //     arr.push(v)
-  //   }
-  // })
-  checkedNodes.value.forEach(v => {
-    if (projectIds.indexOf(String(v.projectId)) > -1 || projectIds.indexOf(v.projectId) > -1) {
+  checkedNodes.value.forEach((v) => {
+    if (areaIds.indexOf(String(v.areaId)) > -1 || areaIds.indexOf(v.areaId) > -1) {
       arr.push(v)
     }
   })
@@ -320,21 +312,20 @@ function handleProjectClick({ areaIds, projectIds }, month) {
   })
 }
 
-async function handleSaveSuccess(val) {
-  checkedNodes.value = checkedNodes.value.filter((item) => {
-    return item.id !== val
-  })
-  padBlockData.value = padBlockData.value.filter((item) => {
-    return item.id !== val
-  })
+async function handleSaveSuccess() {
+  checkedNodes.value = []
+  padBlockData.value = []
   const lastQuery = deepClone(crud.query)
   checkAll.value = false
   boardList.value = []
   crud.page.page = 1
-  // padBlockData.value = []
-  // checkedNodes.value = []
-  await projectListRef?.value?.refresh(lastQuery)
+  // await projectListRef?.value?.refresh(lastQuery)
   await headRef.value?.refreshConditions(lastQuery)
+}
+
+function handleDel(val) {
+  const delIndex = previewList.value.findIndex((v) => v.id === val)
+  previewList.value.splice(delIndex, 1)
 }
 
 // --------------------------- 选择操作 start ------------------------------
