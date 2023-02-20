@@ -14,7 +14,6 @@
           :dataStructure="{ key: 'value', label: 'value', value: 'value' }"
           clearable
           filterable
-          allow-create
           type="other"
           class="filter-item"
           placeholder="请选择材质"
@@ -27,7 +26,6 @@
           :dataStructure="{ key: 'value', label: 'value', value: 'value' }"
           clearable
           filterable
-          allow-create
           type="other"
           class="filter-item"
           placeholder="请选择厚度"
@@ -78,7 +76,7 @@
           <span>{{ row.length }}</span>
         </template>
       </el-table-column>
-      <!-- <el-table-column
+      <el-table-column
         key="thick"
         prop="thick"
         sortable="custom"
@@ -103,7 +101,7 @@
         <template v-slot="scope">
           {{ scope.row.material ? scope.row.material : '-' }}
         </template>
-      </el-table-column> -->
+      </el-table-column>
       <el-table-column
         key="netWeight"
         prop="netWeight"
@@ -204,6 +202,7 @@
 <script setup>
 import { getParallel, getParallelParams } from '@/api/config/system-config/parallel-config'
 import { defineEmits, defineProps, ref } from 'vue'
+import { ElMessage } from 'element-plus'
 // import { DP } from '@/settings/config'
 import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'
@@ -243,7 +242,6 @@ const { maxHeight } = useMaxHeight(
 )
 
 function showHook() {
-  // padBlockList.value = props.padBlockData
   fetchPadBlock()
 }
 
@@ -288,6 +286,7 @@ async function fetchPadBlock() {
 
 function add(row) {
   emit('addBlock', row)
+  ElMessage.success('您添加了 ' + row.usedQuantity + ' 件' + row.serialNumber + '标准零件')
 }
 
 // 标准零件列表
