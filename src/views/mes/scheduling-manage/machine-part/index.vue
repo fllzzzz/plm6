@@ -332,6 +332,7 @@ async function handleSaveSuccess(val) {
   boardList.value = []
   crud.page.page = 1
   // padBlockData.value = []
+  // checkedNodes.value = []
   await projectListRef?.value?.refresh(lastQuery)
   await headRef.value?.refreshConditions(lastQuery)
 }

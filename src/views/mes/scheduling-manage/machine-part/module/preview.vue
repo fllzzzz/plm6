@@ -10,7 +10,7 @@
     <template #titleAfter>
       <div style="display: flex">
         <el-radio-group v-if="type === 1" v-model="isNew">
-          <el-radio :label="true" :disabled="props.padBlockData?.length && !props.checkedNodes?.length">使用新工单</el-radio>
+          <el-radio :label="true" :disabled="Boolean(props.padBlockData?.length && !props.checkedNodes?.length)">使用新工单</el-radio>
           <el-radio :label="false">使用原有工单</el-radio>
         </el-radio-group>
         <div style="margin-left: 15px" v-if="!isNew && type">
@@ -335,6 +335,7 @@ function showHook() {
     isNew.value = true
     saveType.value = machinePartIssuedWayEnum.NESTING_ISSUED.V
   }
+  success()
 }
 
 function success() {
