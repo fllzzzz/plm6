@@ -209,13 +209,13 @@ const boardList = ref([])
 const summaryInfo = ref({ totalNetWeight: 0, quantity: 0 })
 
 CRUD.HOOK.handleRefresh = (crud, res) => {
-  // const arr = []
+  const arr = []
   summaryInfo.value.totalNetWeight = res.data?.totalNetWeight || 0
   summaryInfo.value.quantity = res.data?.quantity || 0
   res.data.content = res.data.collect.map((v) => {
     console.log(thickObj.value[v.thick], 'thickObj.value[v.thick]')
     if (checkedNodes.value.findIndex((k) => k.id === v.id) > -1) {
-      // arr.push(v)
+      arr.push(v)
       v.checked = true
     } else {
       v.checked = false
@@ -224,6 +224,7 @@ CRUD.HOOK.handleRefresh = (crud, res) => {
     v.imgLoad = true
     return v
   })
+  checkedNodes.value = arr
   nestingLoading.value = false
 }
 
@@ -303,13 +304,6 @@ CRUD.HOOK.afterRefresh = () => {
 function handleProjectClick({ areaIds }, month) {
   crud.query.monthList = month
   crud.query.areaIds = areaIds
-  const arr = []
-  checkedNodes.value.forEach(v => {
-    if (areaIds.indexOf(String(v.areaId)) > -1 || areaIds.indexOf(v.areaId) > -1) {
-      arr.push(v)
-    }
-  })
-  checkedNodes.value = arr
   nextTick(() => {
     headRef.value?.refreshConditions()
   })
@@ -344,6 +338,7 @@ function boolDxfChange() {
 // function saveCheck() {
 // }
 function handleCheckedChange(value, item) {
+  console.log(value, item, 'item')
   // saveCheck()
   const _checkedIndex = checkedNodes.value.findIndex((v) => v.id === item.id)
   if (value) {
@@ -351,6 +346,7 @@ function handleCheckedChange(value, item) {
   } else {
     if (_checkedIndex > -1) checkedNodes.value.splice(_checkedIndex, 1)
   }
+  console.log(checkedNodes.value, 'checkedNodes.value')
   let isNext = false
   checkedNodes.value.forEach((v) => {
     if (!v.imgLoad || !v.picturePath) {

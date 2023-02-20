@@ -258,17 +258,17 @@ export default {
               noCache: true
             }
           },
-          {
-            name: 'MesSchedulingMachinePartRecord',
-            path: 'record',
-            hidden: false,
-            component: '/mes/scheduling-manage/machine-part/record/index',
-            meta: {
-              title: '预览记录',
-              icon: 'project',
-              noCache: true
-            }
-          },
+          // {
+          //   name: 'MesSchedulingMachinePartRecord',
+          //   path: 'record',
+          //   hidden: false,
+          //   component: '/mes/scheduling-manage/machine-part/record/index',
+          //   meta: {
+          //     title: '预览记录',
+          //     icon: 'project',
+          //     noCache: true
+          //   }
+          // },
           {
             name: 'MesSchedulingMachinePartNestingResult',
             path: 'nesting-result',
@@ -281,6 +281,32 @@ export default {
             }
           }
         ]
+      }
+    ]
+  },
+  {
+    path: '/mes/production-monitoring-kanban',
+    component: 'Layout',
+    hidden: false,
+    name: 'MesProductionMonitoringKanban',
+    alwaysShow: false,
+    redirect: '/mes/production-monitoring-kanban',
+    meta: {
+      title: '生产监控看板',
+      icon: 'project',
+      noCache: true
+    },
+    children: [
+      {
+        name: 'MesMonitoringKanban',
+        path: 'monitoring-kanban',
+        hidden: false,
+        component: '/mes/production-monitoring-kanban/index',
+        meta: {
+          title: '生产监控看板',
+          icon: 'project',
+          noCache: true
+        }
       }
     ]
   },
@@ -986,17 +1012,17 @@ export default {
         noCache: true
       }
     }
-    // {
-    //   name: 'MesLabelPrintFoldingPiece',
-    //   path: 'enclosure',
-    //   hidden: false,
-    //   component: '/mes/label-print/folding-piece/index',
-    //   meta: {
-    //     title: '折边件',
-    //     icon: 'project',
-    //     noCache: true
-    //   }
-    // }
+      // {
+      //   name: 'MesLabelPrintFoldingPiece',
+      //   path: 'enclosure',
+      //   hidden: false,
+      //   component: '/mes/label-print/folding-piece/index',
+      //   meta: {
+      //     title: '折边件',
+      //     icon: 'project',
+      //     noCache: true
+      //   }
+      // }
       //     {
       //       name: 'MesLabelPrintingAuxiliaryMaterial',
       //       path: 'auxiliary-material',
