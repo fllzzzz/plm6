@@ -10,14 +10,32 @@
     fullscreen
   >
     <template #titleRight>
-      <common-button :loading="crud.status.cu === CRUD.STATUS.PROCESSING" size="mini" type="primary" @click="crud.submitCU">提 交</common-button>
+      <common-button
+:loading="crud.status.cu === CRUD.STATUS.PROCESSING"
+size="mini"
+type="primary"
+@click="crud.submitCU"
+        >提 交</common-button
+      >
       <store-operation v-if="crud.status.add > CRUD.STATUS.NORMAL" type="crud" />
     </template>
     <div class="form">
-      <el-form v-loading="crud.editDetailLoading" :disabled="crud.status.cu === CRUD.STATUS.PROCESSING" ref="formRef" :model="form" :rules="rules" size="small" label-width="100px" class="demo-form">
+      <el-form
+        v-loading="crud.editDetailLoading"
+        :disabled="crud.status.cu === CRUD.STATUS.PROCESSING"
+        ref="formRef"
+        :model="form"
+        :rules="rules"
+        size="small"
+        label-width="100px"
+        class="demo-form"
+      >
         <div class="rule-row">
           <el-form-item label="供应商名称" prop="name">
-            <el-input  v-model="form.name" maxlength="32" show-word-limit placeholder="请输入供应商名称" />
+            <el-input v-model="form.name" maxlength="32" show-word-limit placeholder="请输入供应商名称" />
+          </el-form-item>
+          <el-form-item label="供应商简称" prop="shortName">
+            <el-input v-model="form.shortName" maxlength="12" show-word-limit placeholder="请输入供应商简称" />
           </el-form-item>
           <el-form-item label="供应商分类" prop="supplierClass">
             <common-select
@@ -27,43 +45,29 @@
               clearable
               multiple
               placeholder="请选择供应商分类"
-              style="width:100%;"
+              style="width: 100%"
               size="medium"
               @change="handleSupplierClass"
             />
           </el-form-item>
-          <el-form-item label="主营业务" prop="mainBusiness">
-            <el-input  v-model="form.mainBusiness" placeholder="请输入主营业务" maxlength="32" />
-          </el-form-item>
         </div>
         <div class="rule-row">
-            <el-form-item label="选择地区" prop="area">
-              <region-cascader
-                ref="region"
-                style="width:100%;"
-                v-model="form.area"
-                clearable
-                filterable
-                @change="handleRegionChange"
-              />
-            </el-form-item>
-            <el-form-item label="详细地址" prop="address">
-              <el-input v-model="form.address" placeholder="请您输入详细地址" maxlength="250" />
-            </el-form-item>
-            <el-form-item/>
+          <el-form-item label="主营业务" prop="mainBusiness">
+            <el-input v-model="form.mainBusiness" placeholder="请输入主营业务" maxlength="32" />
+          </el-form-item>
+          <el-form-item label="选择地区" prop="area">
+            <region-cascader ref="region" style="width: 100%" v-model="form.area" clearable filterable @change="handleRegionChange" />
+          </el-form-item>
+          <el-form-item label="详细地址" prop="address">
+            <el-input v-model="form.address" placeholder="请您输入详细地址" maxlength="250" />
+          </el-form-item>
         </div>
         <div class="rule-row">
           <el-form-item label="社会统一代码" prop="socialCode">
-            <el-input  v-model="form.socialCode" placeholder="请输入社会统一代码" maxlength="18" />
+            <el-input v-model="form.socialCode" placeholder="请输入社会统一代码" maxlength="18" />
           </el-form-item>
           <el-form-item label="成立日期" prop="registrationDate">
-            <el-date-picker
-              v-model="form.registrationDate"
-              type="date"
-              style="width:100%;"
-              value-format="x"
-              placeholder="选择日期"
-            />
+            <el-date-picker v-model="form.registrationDate" type="date" style="width: 100%" value-format="x" placeholder="选择日期" />
           </el-form-item>
           <el-form-item label="营业期限" prop="businessTerm">
             <el-input v-model="form.businessTerm" placeholder="请输入营业期限" maxlength="32" />
@@ -83,19 +87,19 @@
               type="dict"
               clearable
               placeholder="请选择企业类型"
-              style="width:100%;"
+              style="width: 100%"
               size="medium"
             />
           </el-form-item>
         </div>
         <div class="rule-row">
           <el-form-item label="开户行名称" prop="bankName">
-            <el-input v-model="form.bankName" placeholder="请输入开户行名称"  maxlength="32"/>
+            <el-input v-model="form.bankName" placeholder="请输入开户行名称" maxlength="32" />
           </el-form-item>
           <el-form-item label="银行账户" prop="bankAccount">
-            <el-input v-model="form.bankAccount" placeholder="请输入银行账户" maxlength="32"/>
+            <el-input v-model="form.bankAccount" placeholder="请输入银行账户" maxlength="32" />
           </el-form-item>
-          <el-form-item/>
+          <el-form-item />
         </div>
         <div class="rule-row">
           <el-form-item label="公司官网" prop="website">
@@ -108,18 +112,25 @@
             <el-input v-model="form.companyPhone" placeholder="请输入公司电话" maxlength="32" />
           </el-form-item>
         </div>
-        <div v-for="(item,index) in form.contacts" :key="index" class="rule-row">
+        <div v-for="(item, index) in form.contacts" :key="index" class="rule-row">
           <el-form-item label="联系人">
-            <el-input v-model="item.name" placeholder="请输入联系人"  maxlength="32" />
+            <el-input v-model="item.name" placeholder="请输入联系人" maxlength="32" />
           </el-form-item>
           <el-form-item label="联系电话" :prop="`contacts[${index}].phone`" :rules="contactsRules.phone">
-            <el-input v-model="item.phone" placeholder="请输入联系电话"  maxlength="32" />
+            <el-input v-model="item.phone" placeholder="请输入联系电话" maxlength="32" />
           </el-form-item>
           <el-form-item label="个人邮箱" :prop="`contacts[${index}].email`" :rules="contactsRules.email">
-            <el-input v-model="item.email" placeholder="请输入个人邮箱"  maxlength="64" />
+            <el-input v-model="item.email" placeholder="请输入个人邮箱" maxlength="64" />
           </el-form-item>
-          <div style="line-height: 32px;margin-left:-26px;">
-            <common-button v-if="index === form.contacts.length-1" type="primary" size="mini" circle icon="el-icon-plus" @click="form.contacts.push({...contact})" />
+          <div style="line-height: 32px; margin-left: -26px">
+            <common-button
+              v-if="index === form.contacts.length - 1"
+              type="primary"
+              size="mini"
+              circle
+              icon="el-icon-plus"
+              @click="form.contacts.push({ ...contact })"
+            />
             <common-button v-else type="danger" size="mini" circle icon="el-icon-minus" @click="form.contacts.splice(index, 1)" />
           </div>
         </div>
@@ -156,6 +167,7 @@ const contact = ref({ name: '', phone: '', email: '' })
 
 const defaultForm = {
   name: '',
+  shortName: '',
   area: [],
   address: '',
   socialCode: '',
@@ -186,6 +198,10 @@ const rules = {
     { required: true, message: '请输入供应商名称', trigger: 'blur' },
     { min: 2, max: 32, message: '长度在 2 到 32 个字符', trigger: 'blur' }
   ],
+  shortName: [
+    { required: true, message: '请输入供应商简称', trigger: 'blur' },
+    { min: 2, max: 12, message: '长度在 2 到 12 个字符', trigger: 'blur' }
+  ],
   supplierClass: [{ required: true, message: '请选择供应商分类', trigger: 'change' }],
   website: [{ pattern: validatorWebsite, message: '请填写正确的公司官网网址', trigger: 'blur' }],
   companyEmail: [{ pattern: validatorEmail, message: '请填写正确的公司邮箱', trigger: 'blur' }],
@@ -202,7 +218,7 @@ CRUD.HOOK.beforeEditDetailLoaded = async (crud, form) => {
   try {
     const supplierDetail = { ...form }
     const list = [supplierDetail.countryId, supplierDetail.provinceId, supplierDetail.cityId, supplierDetail.regionId]
-    supplierDetail.area = list.filter(val => {
+    supplierDetail.area = list.filter((val) => {
       return !(!val || val === '')
     })
     supplierDetail.files = supplierDetail.attachments || []
@@ -215,15 +231,15 @@ CRUD.HOOK.beforeEditDetailLoaded = async (crud, form) => {
 
 // 提交前
 CRUD.HOOK.beforeSubmit = async () => {
-  crud.form.attachments = crud.form.files.map(f => f.id)
-  crud.form.contacts = crud.form.contacts.filter(v => v.name || v.phone || v.email)
+  crud.form.attachments = crud.form.files.map((f) => f.id)
+  crud.form.contacts = crud.form.contacts.filter((v) => v.name || v.phone || v.email)
 }
 
 // 地区选择
 function handleRegionChange(val = []) {
   const keys = ['countryId', 'provinceId', 'cityId', 'regionId']
   keys.forEach((key, index) => {
-    crud.form[key] = val && val[index] || undefined
+    crud.form[key] = (val && val[index]) || undefined
   })
 }
 
@@ -231,7 +247,7 @@ function handleRegionChange(val = []) {
 function handleSupplierClass(val) {
   let supplierClass
   if (val) {
-    val.forEach(v => {
+    val.forEach((v) => {
       supplierClass |= v
     })
   }
@@ -241,7 +257,7 @@ function handleSupplierClass(val) {
 
 <style rel="stylesheet/scss" lang="scss" scoped>
 .form {
-  padding:  0px 60px 35px 35px;
+  padding: 0px 60px 35px 35px;
 }
 .demo-form .rule-row {
   display: flex;
