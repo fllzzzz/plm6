@@ -313,6 +313,8 @@ function handleProjectClick({ areaIds }, month) {
 async function handleSaveSuccess() {
   const lastQuery = deepClone(crud.query)
   checkAll.value = false
+  checkedNodes.value = []
+  padBlockData.value = []
   boardList.value = []
   crud.page.page = 1
   // await projectListRef?.value?.refresh(lastQuery)
