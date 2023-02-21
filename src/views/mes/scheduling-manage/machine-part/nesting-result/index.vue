@@ -4,25 +4,11 @@
       <nesting-task-list ref="nestingTaskRef" :maxHeight="maxHeight - 40" @nesting-task-click="handleNestingTaskClick" />
     </div>
     <div class="wrap-right">
-      <div class="head-container">
-        <!-- <mHeader>
-            <template #optRight>
-              <common-button
-                class="filter-item"
-                :disabled="!crud.selections?.length"
-                size="mini"
-                icon="el-icon-edit"
-                type="primary"
-                @click="toBatchIssue"
-              >
-                任务下发
-              </common-button>
-            </template>
-          </mHeader> -->
-        <mHeader />
-      </div>
       <el-tag v-if="!crud.query?.projectId" type="info" size="medium"> * 请先选择套料任务，进行零件任务下发 </el-tag>
       <div v-else>
+        <div class="head-container">
+          <mHeader />
+        </div>
         <!--表格渲染-->
         <common-table
           ref="tableRef"
@@ -56,7 +42,14 @@
               <span @click="toDetail(row)" style="color: #409eff; cursor: pointer">{{ row.orderNumber }}</span>
             </template>
           </el-table-column>
-          <el-table-column prop="thick" v-if="columns.visible('thick')" :show-overflow-tooltip="true" label="厚度" align="center" width="80" />
+          <el-table-column
+            prop="thick"
+            v-if="columns.visible('thick')"
+            :show-overflow-tooltip="true"
+            label="厚度"
+            align="center"
+            width="80"
+          />
           <el-table-column prop="material" v-if="columns.visible('material')" :show-overflow-tooltip="true" label="材质" align="center" />
           <el-table-column
             prop="totalNetWeight"
