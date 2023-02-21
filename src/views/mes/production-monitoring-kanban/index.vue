@@ -3,54 +3,56 @@
     <div class="head-container">
       <mHeader />
     </div>
-    <common-table
-      ref="tableRef"
-      v-loading="crud.loading"
-      :data="crud.data"
-      :empty-text="crud.emptyText"
-      :max-height="maxHeight"
-      row-key="projectId"
-      style="width: 100%"
-    >
-      <el-table-column prop="index" label="序号" align="center" width="60" type="index" />
-      <el-table-column
-        v-if="columns.visible('project')"
-        key="project"
-        prop="project"
-        :show-overflow-tooltip="true"
-        label="项目"
-        width="200px"
+    <div>
+      <common-button class="btn" size="mini" type="warning" style="float: right; margin-bottom: 8px"> 班组状态 </common-button>
+      <common-table
+        ref="tableRef"
+        v-loading="crud.loading"
+        :data="crud.data"
+        :empty-text="crud.emptyText"
+        :max-height="maxHeight"
+        row-key="projectId"
+        style="width: 100%"
       >
-        <template v-slot="scope">
-          <span>{{ scope.row.project?.contractNo }}-{{ scope.row.project?.name }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column
-        v-if="columns.visible('monomer.name')"
-        key="monomer.name"
-        prop="monomer.name"
-        align="center"
-        :show-overflow-tooltip="true"
-        label="单体"
-      >
-        <template v-slot="scope">
-          <span>{{ scope.row.monomer?.name }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column
-        v-if="columns.visible('area.name')"
-        key="area.name"
-        prop="area.name"
-        align="center"
-        :show-overflow-tooltip="true"
-        label="区域"
-      >
-        <template v-slot="scope">
-          <span>{{ scope.row.area?.name }}</span>
-        </template>
-      </el-table-column>
+        <el-table-column prop="index" label="序号" align="center" width="60" type="index" />
+        <el-table-column
+          v-if="columns.visible('project')"
+          key="project"
+          prop="project"
+          :show-overflow-tooltip="true"
+          label="项目"
+          width="200px"
+        >
+          <template v-slot="scope">
+            <span>{{ scope.row.project?.contractNo }}-{{ scope.row.project?.name }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column
+          v-if="columns.visible('monomer.name')"
+          key="monomer.name"
+          prop="monomer.name"
+          align="center"
+          :show-overflow-tooltip="true"
+          label="单体"
+        >
+          <template v-slot="scope">
+            <span>{{ scope.row.monomer?.name }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column
+          v-if="columns.visible('area.name')"
+          key="area.name"
+          prop="area.name"
+          align="center"
+          :show-overflow-tooltip="true"
+          label="区域"
+        >
+          <template v-slot="scope">
+            <span>{{ scope.row.area?.name }}</span>
+          </template>
+        </el-table-column>
 
-      <!-- <el-table-column
+        <!-- <el-table-column
         v-if="columns.visible('startDate')"
         align="center"
         key="startDate"
@@ -66,69 +68,74 @@
           </span>
         </template>
       </el-table-column> -->
-      <el-table-column
-        v-if="columns.visible('taskQuantity')"
-        align="center"
-        key="taskQuantity"
-        prop="taskQuantity"
-        :show-overflow-tooltip="true"
-        label="排产量（件/吨）"
-      >
-        <template v-slot="scope">
-          <span>{{ scope.row.taskQuantity }}/{{ (scope.row.taskNetWeight / 1000)?.toFixed(2) }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column
-        v-if="columns.visible('completeQuantity')"
-        align="center"
-        key="completeQuantity"
-        prop="completeQuantity"
-        :show-overflow-tooltip="true"
-        label="实际完成量（件/吨）"
-      >
-        <template v-slot="scope">
-          <span style="color: #409EFF; cursor: pointer">{{ scope.row.completeQuantity }}/{{ (scope.row.completeNetWeight / 1000)?.toFixed(2) }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column
-        v-if="columns.visible('rate')"
-        align="center"
-        key="rate"
-        prop="rate"
-        :show-overflow-tooltip="true"
-        label="达成率"
-        min-width="180px"
-      >
-        <template v-slot="scope">
-          <el-progress
-            :text-inside="true"
-            stroke-linecap="square"
-            :stroke-width="22"
-            :percentage="((scope.row.completeQuantity / scope.row.taskQuantity) * 100).toFixed(2)"
-            status="success"
-          />
-        </template>
-      </el-table-column>
-      <el-table-column
-        v-if="columns.visible('status')"
-        align="center"
-        key="status"
-        prop="status"
-        :show-overflow-tooltip="true"
-        label="状态"
-        width="80px"
-      >
-        <template v-slot="scope">
-          <el-tag effect="plain" :type="productionKanbanTypeEnum.V[scope.row.status].T">{{
-            productionKanbanTypeEnum.VL[scope.row.status]
-          }}</el-tag>
-        </template>
-      </el-table-column>
-    </common-table>
-    <!-- 分页 -->
-    <pagination />
-    <!-- 产线跟踪详情 -->
-    <!-- <production-line-tracking-detail v-model:visible="drawerVisible" :detail-data="detailData" /> -->
+        <el-table-column
+          v-if="columns.visible('taskQuantity')"
+          align="center"
+          key="taskQuantity"
+          prop="taskQuantity"
+          :show-overflow-tooltip="true"
+          label="排产量（件/吨）"
+        >
+          <template v-slot="scope">
+            <span>{{ scope.row.taskQuantity }}/{{ (scope.row.taskNetWeight / 1000)?.toFixed(2) }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column
+          v-if="columns.visible('completeQuantity')"
+          align="center"
+          key="completeQuantity"
+          prop="completeQuantity"
+          :show-overflow-tooltip="true"
+          label="实际完成量（件/吨）"
+        >
+          <template v-slot="scope">
+            <span
+@click.stop="views(scope.row)"
+style="color: #409eff; cursor: pointer"
+              >{{ scope.row.completeQuantity }}/{{ (scope.row.completeNetWeight / 1000)?.toFixed(2) }}</span
+            >
+          </template>
+        </el-table-column>
+        <el-table-column
+          v-if="columns.visible('rate')"
+          align="center"
+          key="rate"
+          prop="rate"
+          :show-overflow-tooltip="true"
+          label="达成率"
+          min-width="180px"
+        >
+          <template v-slot="scope">
+            <el-progress
+              :text-inside="true"
+              stroke-linecap="square"
+              :stroke-width="22"
+              :percentage="((scope.row.completeQuantity / scope.row.taskQuantity) * 100).toFixed(2)"
+              status="success"
+            />
+          </template>
+        </el-table-column>
+        <el-table-column
+          v-if="columns.visible('status')"
+          align="center"
+          key="status"
+          prop="status"
+          :show-overflow-tooltip="true"
+          label="状态"
+          width="80px"
+        >
+          <template v-slot="scope">
+            <el-tag effect="plain" :type="productionKanbanTypeEnum.V[scope.row.status].T">{{
+              productionKanbanTypeEnum.VL[scope.row.status]
+            }}</el-tag>
+          </template>
+        </el-table-column>
+      </common-table>
+      <!-- 分页 -->
+      <pagination />
+    </div>
+    <!-- 生产监控看板详情 -->
+    <kanban-detail v-model:visible="detailDialogVisible" :detail-list="detailList" :workshopId="crud.query.workshopId" />
   </div>
 </template>
 <script setup>
@@ -139,7 +146,7 @@ import { productionKanbanTypeEnum } from '@enum-ms/mes'
 import useMaxHeight from '@compos/use-max-height'
 import pagination from '@crud/Pagination'
 import mHeader from './module/header.vue'
-// import productionLineTrackingDetail from './production-line-tracking-detail/index.vue'
+import kanbanDetail from './module/kanban-detail.vue'
 
 const optShow = {
   add: false,
@@ -149,8 +156,8 @@ const optShow = {
 }
 
 const tableRef = ref()
-// const drawerVisible = ref(false)
-// const detailData = ref({})
+const detailDialogVisible = ref(false)
+const detailList = ref({})
 const { crud, CRUD, columns } = useCRUD(
   {
     title: '生产监控看板',
@@ -163,14 +170,14 @@ const { crud, CRUD, columns } = useCRUD(
   tableRef
 )
 const { maxHeight } = useMaxHeight({
-  extraBox: ['.head-container'],
+  extraBox: ['.head-container', '.btn'],
   paginate: true
 })
 
-// function views(row) {
-//   drawerVisible.value = true
-//   detailData.value = row
-// }
+function views(row) {
+  detailDialogVisible.value = true
+  detailList.value = row
+}
 
 // 项目汇总数据（子页面使用）
 const projectInfo = reactive({
