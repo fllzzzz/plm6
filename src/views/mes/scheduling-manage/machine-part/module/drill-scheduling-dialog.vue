@@ -52,7 +52,7 @@
 import { defineProps, ref, defineEmits, reactive } from 'vue'
 import { newSave } from '@/api/mes/scheduling-manage/machine-part'
 import { manualFetchGroupsTree } from '@compos/mes/scheduling/use-drill-scheduling-groups'
-import { componentTypeEnum } from '@enum-ms/mes'
+import { componentTypeEnum, nestingTypeEnum } from '@enum-ms/mes'
 import { ElNotification } from 'element-plus'
 import useVisible from '@compos/use-visible'
 
@@ -140,6 +140,7 @@ async function submitForm(formRef) {
     await newSave({
       ...props.queryParams,
       linkList: _list,
+      boolOffLine: nestingTypeEnum.NORMAL.V,
       drillGroupsId: form.drillGroupsId,
       drillAskCompleteTime: form.drillAskCompleteTime
     })

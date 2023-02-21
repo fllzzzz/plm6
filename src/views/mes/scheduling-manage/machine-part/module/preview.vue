@@ -169,7 +169,7 @@
       </el-table-column>
       <el-table-column :show-overflow-tooltip="true" label="操作" width="80" align="center">
         <template #default="{ row }">
-          <common-button type="danger" icon="el-icon-delete" size="mini" @click.stop="toDelete(row.id)"></common-button>
+          <common-button type="danger" icon="el-icon-delete" size="mini" @click.stop="toDelete(row, row.id)"></common-button>
         </template>
       </el-table-column>
     </common-table>
@@ -190,6 +190,7 @@ import { ElMessage, ElNotification, ElRadioGroup, ElMessageBox } from 'element-p
 import { defineEmits, defineProps, ref, computed } from 'vue'
 import { layOffWayTypeEnum } from '@enum-ms/uploading-form'
 import { projectNameFormatter } from '@/utils/project'
+import { fileDownload } from '@/utils/file'
 // import { materialTypeEnum } from '@enum-ms/uploading-form'
 import {
   componentTypeEnum,
@@ -326,12 +327,12 @@ const { maxHeight } = useMaxHeight(
   dialogVisible
 )
 
-function toDelete(id) {
+function toDelete(row, id) {
+  emit('handleDel', row, id)
   if (props.list.findIndex((v) => v.needMachinePartLinkList?.length > 0) < 0) {
     isNew.value = false
     saveType.value = machinePartIssuedWayEnum.ADD_NEW_TICKET.V
   }
-  emit('handleDel', id)
   emit('success')
 }
 
@@ -357,7 +358,6 @@ function showHook() {
 function success() {
   emit('success')
 }
-
 async function fetchOrder() {
   try {
     const { content } = await getCutTaskDetail({
@@ -502,6 +502,7 @@ async function submitIt() {
           groupsId: groupsId.value,
           material: materialDataOption.value.length > 1 ? material.value : materialDataOption.value[0]?.name,
           thick: thickDataOption.value.length > 1 ? thick.value : thickDataOption.value[0]?.name,
+          boolOffLine: nestingTypeEnum.NORMAL.V,
           schedulingId: schedulingId.value,
           linkList: _list,
           askCompleteTime: askCompleteTime.value,
@@ -526,7 +527,7 @@ async function submitIt() {
         thick: thickDataOption.value.length > 1 ? thick.value : thickDataOption.value[0]?.name,
         boolOffLine:
           isNew.value === false
-            ? undefined
+            ? nestingTypeEnum.NORMAL.V
             : underLine.value === nestingTypeEnum.OFFLINE.V
               ? nestingTypeEnum.OFFLINE.V
               : nestingTypeEnum.NORMAL.V,
@@ -543,9 +544,7 @@ async function submitIt() {
               : machinePartIssuedWayEnum.ADD_NEW_TICKET.V
       })
       if (underLine.value === nestingTypeEnum.OFFLINE.V) {
-        // if (_data) {
-        const downloadZip = await getOffLineZip({ id: _data })
-        console.log(downloadZip, 'downloadZip')
+        await fileDownload(getOffLineZip, { id: _data })
       }
       ElNotification({
         title: '零件排产保存成功',

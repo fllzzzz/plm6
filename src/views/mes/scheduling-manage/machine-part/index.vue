@@ -42,7 +42,7 @@
                 v-permission="permission.save"
                 type="warning"
                 class="filter-item"
-               :disabled="Boolean(!checkedNodes?.length && padBlockData?.length)"
+                :disabled="Boolean(!checkedNodes?.length && padBlockData?.length)"
                 size="mini"
                 @click="unPreviewIt"
               >
@@ -53,9 +53,7 @@
                 type="success"
                 class="filter-item"
                 size="mini"
-                :disabled="
-                  crud.query.boolDxfEnum !== machinePartDxfTypeEnum.EXPORT.V && nestingLoading
-                "
+                :disabled="crud.query.boolDxfEnum !== machinePartDxfTypeEnum.EXPORT.V && nestingLoading"
                 @click="previewIt"
               >
                 套料保存
@@ -313,8 +311,6 @@ function handleProjectClick({ areaIds }, month) {
 }
 
 async function handleSaveSuccess() {
-  checkedNodes.value = []
-  padBlockData.value = []
   const lastQuery = deepClone(crud.query)
   checkAll.value = false
   boardList.value = []
@@ -323,9 +319,15 @@ async function handleSaveSuccess() {
   await headRef.value?.refreshConditions(lastQuery)
 }
 
-function handleDel(val) {
+function handleDel(row, val) {
   const delIndex = previewList.value.findIndex((v) => v.id === val)
   previewList.value.splice(delIndex, 1)
+  if (row.needMachinePartLinkList?.length) {
+    checkedNodes.value.splice(delIndex, 1)
+  } else {
+    padBlockData.value.splice(delIndex, 1)
+  }
+  previewList.value = [...checkedNodes.value, ...padBlockData.value]
 }
 
 // --------------------------- 选择操作 start ------------------------------
