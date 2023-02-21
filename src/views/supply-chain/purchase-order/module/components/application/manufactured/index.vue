@@ -1,13 +1,268 @@
 <template>
-  <div>
-
-  </div>
+  <common-table
+    :data="purchaseMergeList"
+    return-source-data
+    :show-empty-symbol="false"
+    :max-height="maxHeight"
+    :cell-class-name="wrongCellMask"
+    style="width: 100%"
+  >
+    <el-table-column label="序号" type="index" align="center" width="60" />
+    <el-table-column prop="name" label="名称" align="center" show-overflow-tooltip min-width="100px" />
+    <el-table-column prop="specification" label="规格" align="center" show-overflow-tooltip min-width="140px" />
+    <el-table-column prop="material" label="材质" align="center" show-overflow-tooltip />
+    <el-table-column prop="measureUnit" label="计量单位" align="center" show-overflow-tooltip />
+    <el-table-column prop="curPurchaseQuantity" label="数量" align="center" show-overflow-tooltip />
+    <el-table-column prop="accountingUnit" label="核算单位" align="center" show-overflow-tooltip />
+    <el-table-column prop="curPurchaseWeight" label="重量" align="center" show-overflow-tooltip />
+    <el-table-column label="明细" align="center" show-overflow-tooltip min-width="100px">
+      <template #default="{ row }">
+        <common-button type="primary" size="mini" @click="showDetail(row)">查看</common-button>
+      </template>
+    </el-table-column>
+    <el-table-column prop="unitPrice" align="center" width="135px" label="单价（元/吨）">
+      <template #default="{ row }">
+        <common-input-number
+          v-model="row.unitPrice"
+          :min="0"
+          :max="9999999999"
+          :controls="false"
+          :step="1"
+          size="mini"
+          placeholder="单价"
+          @change="handleUnitPriceChange($event, row)"
+        />
+      </template>
+    </el-table-column>
+    <el-table-column prop="amount" align="center" width="135px" label="金额（元）" />
+    <!-- <template #default="{ row }">
+      <common-input-number
+      v-model="row.amount"
+      :min="0"
+      :max="9999999999"
+      :controls="false"
+      :step="1"
+      size="mini"
+      :precision="2"
+      placeholder="金额"
+      @change="handleAmountChange($event, row)"
+      />
+    </template>
+  </el-table-column> -->
+    <el-table-column prop="destination" align="center" width="135px" label="目的地">
+      <template #default="{ row, $index }">
+        <common-select
+          v-model="row.destination"
+          :options="destinationTypeEnum.ENUM"
+          type="enum"
+          size="mini"
+          clearable
+          :showExtra="$index !== 0"
+          placeholder="目的地"
+          style="width: 100%"
+        />
+      </template>
+    </el-table-column>
+  </common-table>
+  <common-dialog
+    title="清单明细"
+    v-model="detailVisible"
+    width="1200px"
+    :show-close="true"
+    custom-class="manufactured-order-purchase-detail-list-dialog"
+    top="10vh"
+  >
+    <common-table :data="detailList" :max-height="dialogMaxHeight" style="width: 100%">
+      <el-table-column label="序号" type="index" align="center" width="60" />
+      <el-table-column prop="monomer.name" label="单体" align="center" show-overflow-tooltip min-width="120px" />
+      <el-table-column prop="area.name" label="区域" align="center" show-overflow-tooltip min-width="120px" />
+      <el-table-column prop="name" label="名称" align="center" show-overflow-tooltip min-width="100px" />
+      <el-table-column prop="serialNumber" label="编号" align="center" show-overflow-tooltip min-width="100px" />
+      <el-table-column prop="specification" label="规格" align="center" show-overflow-tooltip min-width="140px" />
+      <el-table-column label="采购数量" align="center" show-overflow-tooltip min-width="100px">
+        <template #default="{ row: { sourceRow: row } }">
+          <common-input-number
+            v-if="row.isEdit"
+            v-model="row.curPurchaseQuantity"
+            :min="0"
+            :max="row.canPurchaseQuantity"
+            controls-position="right"
+            :controls="false"
+            :step="5"
+            size="mini"
+            placeholder="数量"
+          />
+          <span v-else>{{ row.sourceCurPurchaseQuantity }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="总重（kg）" align="center" show-overflow-tooltip>
+        <template #default="{ row: { sourceRow: row } }">
+          <span v-if="row.isEdit">{{ row.curPurchaseWeight }}</span>
+          <span v-else>{{ row.sourceCurPurchaseWeight }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="操作" align="center" width="170px">
+        <template #default="{ row: { sourceRow: row }, $index }">
+          <common-button v-if="!row.isEdit" type="primary" icon="el-icon-edit" size="mini" @click.stop="row.isEdit = true" />
+          <template v-else>
+            <common-button type="success" icon="el-icon-check" size="mini" @click.stop="edit(row)" />
+            <common-button type="info" icon="el-icon-close" size="mini" @click.stop="row.isEdit = false" />
+          </template>
+          <common-button type="danger" icon="el-icon-delete" size="mini" @click.stop="del(row, $index)" />
+        </template>
+      </el-table-column>
+    </common-table>
+  </common-dialog>
 </template>
 
 <script setup>
+import { defineExpose, defineProps, computed, inject, ref, watch } from 'vue'
 
+import { ElMessage } from 'element-plus'
+import { destinationTypeEnum } from '@enum-ms/production'
+import { manufClsEnum } from '@enum-ms/classification'
+import { isNotBlank, toPrecision } from '@/utils/data-type'
+import { getDP } from '@/utils/data-type/number'
+import useTableValidate from '@/composables/form/use-table-validate'
+import useMaxHeight from '@compos/use-max-height'
+
+defineProps({
+  maxHeight: {
+    type: Number
+  }
+})
+
+// 同上的选项与值
+const ditto = new Map([['destination', -1]])
+
+const tableRules = {
+  unitPrice: [{ required: true, message: '请填写单价', trigger: 'blur' }],
+  destination: [{ required: true, message: '请选择目的地', trigger: 'change' }]
+}
+
+// 表格校验
+const { tableValidate, cleanUpData, wrongCellMask } = useTableValidate({ rules: tableRules, ditto })
+
+const detailVisible = ref(false)
+const detailList = ref([])
+const detailRow = ref()
+const form = inject('crud').form
+
+const { maxHeight: dialogMaxHeight } = useMaxHeight(
+  {
+    mainBox: '.manufactured-order-purchase-detail-list-dialog',
+    extraBox: ['.el-dialog__header'],
+    wrapperBox: ['.el-dialog__body'],
+    clientHRepMainH: true,
+    navbar: false
+  },
+  detailVisible
+)
+
+const purchaseMergeList = computed(() => {
+  const list = []
+  for (const item in form.manufMergeObj) {
+    const _v = form.manufMergeObj[item]
+    if (list.length > 0 && !_v?.destination) {
+      _v.destination = -1
+    }
+    list.push(_v)
+    rowWatch(_v)
+  }
+  return list
+})
+
+function rowWatch(row) {
+  watch([() => row.unitPrice, () => row.mergeIds, () => row.destination], () => {
+    form.manufMergeObj[row.rowKey] = row
+  })
+  watch([() => row.curPurchaseWeight], () => {
+    row.amount = isNotBlank(row.unitPrice) ? toPrecision(row.unitPrice * (row.curPurchaseWeight / 1000), 2) : undefined
+  })
+}
+
+// 处理含税单价变化
+function handleUnitPriceChange(val, row) {
+  const dp = getDP(val)
+  if (dp > 10) {
+    row.unitPrice = toPrecision(val, 10)
+    val = row.unitPrice
+  }
+  row.amount = isNotBlank(val) ? toPrecision(val * (row.curPurchaseWeight / 1000), 2) : undefined
+}
+
+// 处理金额变化
+// function handleAmountChange(val, row) {
+//   row.unitPrice = isNotBlank(val) ? toPrecision(val / (row.curPurchaseWeight / 1000), 10) : undefined
+// }
+
+function showDetail(row) {
+  detailList.value = []
+  detailRow.value = row
+  for (let i = 0; i < row.mergeIds.length; i++) {
+    const id = row.mergeIds[i]
+    if (form.manufListObj?.[id]) {
+      const _v = form.manufListObj[id]
+      _v.isEdit = false
+      _v.sourceCurPurchaseQuantity = _v.curPurchaseQuantity
+      _v.sourceCurPurchaseWeight = _v.curPurchaseWeight
+      detailList.value.push(_v)
+      detailRowWatch(_v)
+    }
+  }
+  detailVisible.value = true
+}
+
+function detailRowWatch(row) {
+  watch(
+    () => row.curPurchaseQuantity,
+    () => {
+      row.curPurchaseWeight = toPrecision(row.curPurchaseQuantity * row.netWeight, 2) || 0
+    }
+  )
+}
+
+function del(row, index) {
+  detailList.value.splice(index, 1)
+  const _idx = detailRow.value.mergeIds.indexOf(row.id)
+  if (_idx !== -1) {
+    detailRow.value.mergeIds.splice(_idx, 1)
+    detailRow.value.curPurchaseQuantity -= row.curPurchaseQuantity
+    detailRow.value.curPurchaseWeight = toPrecision(detailRow.value.curPurchaseWeight - row.curPurchaseWeight, 2)
+  }
+  if (detailRow.value.mergeIds.length === 0) {
+    delete form.manufMergeObj?.[detailRow.value.rowKey]
+  }
+  delete form.manufListObj?.[row.id]
+}
+
+function edit(row, index) {
+  if (!row.curPurchaseQuantity) {
+    ElMessage.warning('采购数量不可修改为0')
+  }
+  detailRow.value.curPurchaseQuantity = detailRow.value.curPurchaseQuantity - row.sourceCurPurchaseQuantity + row.curPurchaseQuantity
+  detailRow.value.curPurchaseWeight = toPrecision(detailRow.value.curPurchaseWeight - row.sourceCurPurchaseWeight + row.curPurchaseWeight, 2)
+  row.sourceCurPurchaseQuantity = row.curPurchaseQuantity
+  row.sourceCurPurchaseWeight = row.curPurchaseWeight
+  form.manufListObj[row.id].curPurchaseQuantity = row.curPurchaseQuantity
+  form.manufListObj[row.id].curPurchaseWeight = row.curPurchaseWeight
+  row.isEdit = false
+}
+
+function validate() {
+  const { validResult } = tableValidate(purchaseMergeList.value)
+  form.basicClass = manufClsEnum.STRUC_MANUFACTURED.V
+  return validResult
+}
+
+function fetchResList() {
+  return cleanUpData(purchaseMergeList.value)
+}
+
+defineExpose({
+  validate,
+  fetchResList
+})
 </script>
 
-<style lang="scss" scoped>
-
-</style>
+<style lang="scss" scoped></style>

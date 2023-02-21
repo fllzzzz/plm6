@@ -7,7 +7,10 @@
     :show-empty-symbol="false"
     return-source-data
     row-key="uid"
+    @select="selectTableChange"
+    @select-all="selectAllTableChange"
   >
+    <el-table-column v-if="!props.boolPartyA" type="selection" width="55" align="center" :selectable="selectable" />
     <el-expand-table-column :data="form.list" v-model:expand-row-keys="expandRowKeys" row-key="uid" fixed="left">
       <template #default="{ row }">
         <div class="mtb-10">
@@ -40,47 +43,51 @@
         </el-tooltip>
       </template>
     </el-table-column>
-    <el-table-column prop="measureUnit" label="计量单位" align="center" min-width="70px">
-      <template #default="{ row }">
-        <span v-empty-text>{{ row.measureUnit }}</span>
-      </template>
-    </el-table-column>
-    <el-table-column prop="quantity" label="数量" align="center" min-width="120px">
-      <template #default="{ row }">
-        <common-input-number
-          v-if="row.measureUnit"
-          v-model="row.quantity"
-          :min="0"
-          :max="999999999"
-          :controls="false"
-          :step="1"
-          :precision="row.measurePrecision"
-          size="mini"
-          placeholder="数量"
-        />
-        <span v-else v-empty-text />
-      </template>
-    </el-table-column>
-    <el-table-column prop="accountingUnit" label="核算单位" align="center" min-width="70px">
-      <template #default="{ row }">
-        <span v-empty-text>{{ row.accountingUnit }}</span>
-      </template>
-    </el-table-column>
-    <el-table-column prop="mete" label="核算量" align="center" min-width="120px">
-      <template #default="{ row }">
-        <common-input-number
-          v-model="row.mete"
-          :min="0.000001"
-          :max="999999999"
-          :controls="false"
-          :step="1"
-          :precision="row.accountingPrecision"
-          size="mini"
-          placeholder="核算量"
-          @change="handleWeightChange($event, row)"
-        />
-      </template>
-    </el-table-column>
+    <template v-if="props.boolPartyA">
+      <el-table-column prop="measureUnit" label="计量单位" align="center" min-width="70px">
+        <template #default="{ row }">
+          <span v-empty-text>{{ row.measureUnit }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column prop="quantity" label="数量" align="center" min-width="120px">
+        <template #default="{ row }">
+          <common-input-number
+            v-if="row.measureUnit"
+            v-model="row.quantity"
+            :min="0"
+            :max="999999999"
+            :controls="false"
+            :step="1"
+            :precision="row.measurePrecision"
+            size="mini"
+            placeholder="数量"
+          />
+          <span v-else v-empty-text />
+        </template>
+      </el-table-column>
+      <el-table-column prop="accountingUnit" label="核算单位" align="center" min-width="70px">
+        <template #default="{ row }">
+          <span v-empty-text>{{ row.accountingUnit }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column prop="mete" label="核算量" align="center" min-width="120px">
+        <template #default="{ row }">
+          <common-input-number
+            v-model="row.mete"
+            :min="0.000001"
+            :max="999999999"
+            :controls="false"
+            :step="1"
+            :precision="row.accountingPrecision"
+            size="mini"
+            placeholder="核算量"
+            @change="handleWeightChange($event, row)"
+          />
+        </template>
+      </el-table-column>
+    </template>
+    <!-- 单位及其数量 -->
+    <material-unit-quantity-columns v-else quantityField="purchaseQuantity" meteField="purchaseMete"/>
 
     <!-- 金额设置 -->
     <price-set-columns v-if="!props.boolPartyA && fillableAmount" weight-attribute="mete" />
@@ -95,7 +102,40 @@
         <el-input v-model.trim="row.brand" maxlength="60" size="mini" placeholder="品牌" />
       </template>
     </el-table-column>
-    <el-table-column label="操作" width="70" align="center" fixed="right">
+    <template v-if="!props.boolPartyA">
+      <el-table-column prop="quantity" label="本次实收数" align="center" min-width="120px">
+        <template #default="{ row }">
+          <common-input-number
+            v-if="row.measureUnit"
+            v-model="row.quantity"
+            :min="0"
+            :max="999999999"
+            :controls="false"
+            :step="1"
+            :precision="row.measurePrecision"
+            size="mini"
+            placeholder="本次实收数"
+          />
+          <span v-else v-empty-text />
+        </template>
+      </el-table-column>
+      <el-table-column prop="mete" label="实收量" align="center" min-width="120px">
+        <template #default="{ row }">
+          <common-input-number
+            v-model="row.mete"
+            :min="0.000001"
+            :max="999999999"
+            :controls="false"
+            :step="1"
+            :precision="row.accountingPrecision"
+            size="mini"
+            placeholder="实收量"
+            @change="handleWeightChange($event, row)"
+          />
+        </template>
+      </el-table-column>
+    </template>
+    <el-table-column v-if="props.boolPartyA" label="操作" width="70" align="center" fixed="right">
       <template #default="{ row, $index }">
         <common-button icon="el-icon-delete" type="danger" size="mini" @click="delRow(row.sn, $index)" />
       </template>
@@ -113,6 +153,7 @@ import { regExtra } from '@/composables/form/use-form'
 import useTableValidate from '@compos/form/use-table-validate'
 import elExpandTableColumn from '@comp-common/el-expand-table-column.vue'
 
+import materialUnitQuantityColumns from '@/components-system/wms/table-columns/material-unit-quantity-columns/index.vue'
 import priceSetColumns from '@/views/wms/material-inbound/raw-material/components/price-set-columns.vue'
 
 const props = defineProps({
@@ -173,6 +214,22 @@ const tableRules = computed(() => {
 
 const { tableValidate, wrongCellMask } = useTableValidate({ rules: tableRules }) // 表格校验
 
+function selectable(row, rowIndex) {
+  return !!row.canPurchaseQuantity
+}
+
+function selectTableChange(select, row) {
+  const boolSelect = Boolean(select.findIndex((v) => v.id === row.id) !== -1)
+  form.selectObj[row.id] = boolSelect
+}
+
+function selectAllTableChange(select) {
+  const boolSelect = Boolean(select?.length)
+  form.list.forEach((v) => {
+    form.selectObj[v.id] = boolSelect
+  })
+}
+
 // 行初始化
 function rowInit(row) {
   const _row = reactive({
@@ -222,8 +279,15 @@ function delRow(sn, $index) {
 
 // 校验
 function validate() {
-  const { validResult, dealList } = tableValidate(form.list)
-  form.list = dealList
+  const _list = form.list.filter((v) => {
+    if (props.boolPartyA || form.selectObj[v.id]) {
+      return true
+    } else {
+      return false
+    }
+  })
+  const { validResult } = tableValidate(_list)
+  // form.list = dealList
   return validResult
 }
 

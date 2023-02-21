@@ -2,6 +2,15 @@
   <div class="head-container">
     <div v-if="crud.searchToggle">
       <common-radio-button
+        v-model="query.materialType"
+        :options="materialPurchaseClsEnum.ENUM"
+        show-option-all
+        type="enum"
+        size="small"
+        class="filter-item"
+        @change="crud.toQuery"
+      />
+      <common-radio-button
         v-model="query.purchaseStatus"
         :options="purchaseStatusEnum.ENUM"
         show-option-all
@@ -53,10 +62,18 @@
         @keyup.enter="crud.toQuery"
       />
       <br />
-      <warehouse-project-cascader
+      <!-- <warehouse-project-cascader
         v-model:projectId="query.projectId"
         v-model:projectWarehouseType="query.projectWarehouseType"
         class="filter-item"
+        @change="crud.toQuery"
+      /> -->
+      <project-cascader
+        v-model="query.projectId"
+        placeholder="所属项目"
+        clearable
+        class="filter-item"
+        style="width: 250px"
         @change="crud.toQuery"
       />
       <branch-company-select
@@ -108,6 +125,7 @@
 import { inject, ref } from 'vue'
 import { PICKER_OPTIONS_SHORTCUTS } from '@/settings/config'
 import { purchaseStatusEnum } from '@enum-ms/wms'
+import { materialPurchaseClsEnum } from '@enum-ms/classification'
 import { settlementStatusEnum } from '@/utils/enum/modules/finance'
 
 import { regHeader } from '@compos/use-crud'
@@ -115,16 +133,17 @@ import RrOperation from '@crud/RR.operation'
 import CrudOperation from '@crud/CRUD.operation'
 import SupplierSelect from '@comp-base/supplier-select/index.vue'
 import BranchCompanySelect from '@comp-base/branch-company-select.vue'
-import warehouseProjectCascader from '@comp-wms/warehouse-project-cascader'
+// import warehouseProjectCascader from '@comp-wms/warehouse-project-cascader'
 const defaultTime = ref([new Date(2000, 1, 1, 0, 0, 0), new Date(2000, 2, 1, 23, 59, 59)])
 
 const defaultQuery = {
   createTime: [], // [开始日期，结束日期]
   orderSupplyType: undefined, // 订单供货类型
+  materialType: undefined, // 采购材料类型
   purchaseType: undefined, // 采购材料类型
   settlementStatus: undefined, // 结算状态
   purchaseStatus: purchaseStatusEnum.UNFINISHED.V, // 采购状态
-  projectWarehouseType: undefined, // 仓库类型
+  // projectWarehouseType: undefined, // 仓库类型
   projectId: undefined, // 项目id
   serialNumber: undefined, // 采购合同编号搜索
   branchCompanyId: undefined, // 签订主体
@@ -134,5 +153,4 @@ const defaultQuery = {
 
 const permission = inject('permission')
 const { crud, query } = regHeader(defaultQuery)
-
 </script>

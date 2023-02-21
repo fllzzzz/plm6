@@ -1,7 +1,7 @@
 <template>
   <common-dialog
     custom-class="inbound-application-preview"
-    :title="order.serialNumber?`订单：${order.serialNumber}（${order.supplier ? order.supplier.name : ''}）`:'甲供入库'"
+    :title="order.serialNumber ? `订单：${order.serialNumber}（${order.supplier ? order.supplier.name : ''}）` : '甲供入库'"
     append-to-body
     v-model="dialogVisible"
     width="1200px"
@@ -19,7 +19,7 @@
     <template v-if="dialogVisible">
       <el-form ref="formRef" :model="form" :disabled="cu.status.edit === FORM.STATUS.PROCESSING">
         <common-table
-          :data="form.list"
+          :data="formList"
           :data-format="columnsDataFormat"
           :max-height="maxHeight"
           show-summary
@@ -29,7 +29,7 @@
           row-key="uid"
         >
           <!-- 次要信息：当列过多的时候，在展开处显示次要信息 -->
-          <el-expand-table-column :data="form.list" v-model:expand-row-keys="expandRowKeys" row-key="uid" fixed="left">
+          <el-expand-table-column :data="formList" v-model:expand-row-keys="expandRowKeys" row-key="uid" fixed="left">
             <template #default="{ row }">
               <expand-secondary-info v-if="!showTableColumnSecondary" :basic-class="row.basicClass" :row="row" show-brand />
               <p>
@@ -45,14 +45,14 @@
           <material-secondary-info-columns v-if="showTableColumnSecondary" :basic-class="props.basicClass" />
 
           <template v-if="fillableAmount && !boolPartyA">
-              <el-table-column key="unitPrice" prop="unitPrice" align="right" width="120" label="含税单价">
-                <template #default="{ row: { sourceRow: row } }">
-                  <span>{{ row.unitPrice }}</span>
-                </template>
-              </el-table-column>
-              <el-table-column key="amount" prop="amount" align="right" width="120" label="金额">
-                <template #default="{ row }">
-                  <span>{{ row.amount }}</span>
+            <el-table-column key="unitPrice" prop="unitPrice" align="right" width="120" label="含税单价">
+              <template #default="{ row: { sourceRow: row } }">
+                <span>{{ row.unitPrice }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column key="amount" prop="amount" align="right" width="120" label="金额">
+              <template #default="{ row }">
+                <span>{{ row.amount }}</span>
               </template>
             </el-table-column>
           </template>
@@ -67,11 +67,7 @@
             @amount-change="handleAmountChange"
           /> -->
           <!-- 项目设置 -->
-          <project-set-columns
-            :form="form"
-            :order="order"
-            :requisitions="cu.props.requisitions"
-          />
+          <project-set-columns :form="form" :order="order" :requisitions="cu.props.requisitions" />
           <!-- 仓库设置 -->
           <warehouse-set-columns :form="form" v-if="fillableWarehouse" />
         </common-table>
@@ -91,7 +87,7 @@
 
 <script setup>
 import { computed, defineEmits, defineProps, provide, ref, watch } from 'vue'
-import { orderSupplyTypeEnum, inboundFillWayEnum } from '@enum-ms/wms'
+import { orderSupplyTypeEnum } from '@enum-ms/wms'
 import { STEEL_ENUM } from '@/settings/config'
 import { matClsEnum } from '@/utils/enum/modules/classification'
 import { logisticsPayerEnum } from '@/utils/enum/modules/logistics'
@@ -105,7 +101,7 @@ import { regExtra } from '@/composables/form/use-form'
 import useTableValidate from '@/composables/form/use-table-validate'
 import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'
-import useWmsConfig from '@/composables/store/use-wms-config'
+// import useWmsConfig from '@/composables/store/use-wms-config'
 import elExpandTableColumn from '@comp-common/el-expand-table-column.vue'
 import materialBaseInfoColumns from '@/components-system/wms/table-columns/material-base-info-columns/index.vue'
 import materialUnitQuantityColumns from '@/components-system/wms/table-columns/material-unit-quantity-columns/index.vue'
@@ -171,12 +167,13 @@ const tableRules = computed(() => {
   return rules
 })
 
+const formList = ref([])
 const expandRowKeys = ref([]) // 展开行key
 // const amount = ref() // 金额
 
-const { visible: dialogVisible, handleClose } = useVisible({ emit, props, closeHook: closeHook })
+const { visible: dialogVisible, handleClose } = useVisible({ emit, props, showHook, closeHook })
 const { cu, form, FORM } = regExtra() // 表单
-const { inboundFillWayCfg } = useWmsConfig()
+// const { inboundFillWayCfg } = useWmsConfig()
 
 // 物流组件ref
 const logisticsRef = ref()
@@ -184,7 +181,8 @@ const logisticsRef = ref()
 const order = computed(() => cu.props.order || {})
 // 显示金额相关信息（由采购填写的信息）
 // const fillableAmount = ref(true)
-const fillableAmount = computed(() => inboundFillWayCfg.value ? inboundFillWayCfg.value.amountFillWay === inboundFillWayEnum.APPLICATION.V : false)
+// const fillableAmount = computed(() => inboundFillWayCfg.value ? inboundFillWayCfg.value.amountFillWay === inboundFillWayEnum.APPLICATION.V : false)
+const fillableAmount = computed(() => false)
 // 显示仓库（由仓库填写的信息）
 const fillableWarehouse = ref(true)
 // const fillableWarehouse = computed(() => inboundFillWayCfg.value ? inboundFillWayCfg.value.warehouseFillWay === inboundFillWayEnum.APPLICATION.V : false)
@@ -195,7 +193,8 @@ const boolPartyA = computed(() => order.value.supplyType === orderSupplyTypeEnum
 // 在列中显示次要信息
 const showTableColumnSecondary = computed(() => {
   // 非甲供订单，显示项目和申购单 或者仓库时
-  const unshow1 = fillableAmount.value && !boolPartyA.value && ((order.value.projects && order.value.requisitionsSN) || fillableWarehouse.value)
+  const unshow1 =
+    fillableAmount.value && !boolPartyA.value && ((order.value.projects && order.value.requisitionsSN) || fillableWarehouse.value)
   // 甲供订单，显示项目和申购单以及仓库时
   const unshow2 = fillableAmount.value && boolPartyA.value && order.value.projects && order.value.requisitionsSN && fillableWarehouse.value
   return !(unshow1 || unshow2)
@@ -227,47 +226,29 @@ provide('ditto', ditto)
 // 表格校验
 const { tableValidate, cleanUpData, wrongCellMask } = useTableValidate({ rules: tableRules, ditto })
 
-watch(
-  () => props.modelValue,
-  (visible) => {
-    if (visible) {
-      setDitto(form.list) // 在list变化时设置同上
+function showHook() {
+  formList.value = form.list.filter((v) => {
+    if (boolPartyA.value || form.selectObj(v.id)) {
+      return true
+    } else {
+      return false
     }
-  },
-  { immediate: true }
-)
+  })
+  setDitto(formList.value) // 在list变化时设置同上
+}
 
 // 表单提交数据清理
 cu.submitFormFormat = async (form) => {
-  cleanUpData(form.list)
-  form.list = await numFmtByBasicClass(form.list, { toSmallest: true, toNum: true })
-  if (props.basicClass <= STEEL_ENUM) {
-    // 钢材拆分为三个数组传递给服务端
-    form.steelPlateList = []
-    form.sectionSteelList = []
-    form.steelCoilList = []
-    form.list.forEach((v) => {
-      switch (v.basicClass) {
-        case matClsEnum.STEEL_PLATE.V:
-          form.steelPlateList.push(v)
-          break
-        case matClsEnum.SECTION_STEEL.V:
-          form.sectionSteelList.push(v)
-          break
-        case matClsEnum.STEEL_COIL.V:
-          form.steelCoilList.push(v)
-          break
-      }
-    })
-  }
+  cleanUpData(formList.value)
+  form.list = await numFmtByBasicClass(formList.value, { toSmallest: true, toNum: true })
   return form
 }
 
 // 表单提交前校验
 FORM.HOOK.beforeSubmit = async () => {
-  const { validResult, dealList } = tableValidate(form.list)
+  const { validResult, dealList } = tableValidate(formList.value)
   if (validResult) {
-    form.list = dealList
+    formList.value = dealList
   }
   let logisticsValidResult = true
   if (fillableLogistics.value && logisticsRef.value) {

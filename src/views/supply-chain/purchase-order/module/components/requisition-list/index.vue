@@ -22,7 +22,7 @@
 <script setup>
 import { canPurchaseDetail } from '@/api/supply-chain/requisitions-manage/requisitions'
 import requisitionOrder from './module/requisition-order'
-import { defineExpose, computed, ref, watch, inject, nextTick } from 'vue'
+import { defineExpose, defineEmits, computed, ref, watch, inject, nextTick } from 'vue'
 import { isBlank } from '@/utils/data-type'
 
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
@@ -33,6 +33,7 @@ import Steel from './module/steel/index.vue'
 import AuxMat from './module/auxiliary-material/index.vue'
 import Manufactured from './module/manufactured/index.vue'
 
+const emit = defineEmits('add-purchase')
 const form = inject('crud')?.form
 
 const requisitionOrderRef = ref()
@@ -87,6 +88,7 @@ function addPurchase(row, index) {
   if (isBlank(form.requisitionListKV?.[row.id])) {
     form.requisitionListKV[row.id] = row
   }
+  emit('add-purchase', row)
 }
 
 // 打开申购单列表

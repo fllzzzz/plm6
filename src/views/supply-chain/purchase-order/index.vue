@@ -192,11 +192,7 @@
       <el-table-column label="操作" width="180px" align="center" fixed="right">
         <template #default="{ row }">
           <!-- <e-operation :data="row.id" :permission="permission.download" /> -->
-          <udOperation
-            :disabled-edit="row.purchaseStatus == purchaseStatusEnum.FINISHED.V"
-            :data="row"
-            show-detail
-          />
+          <udOperation :disabled-edit="row.purchaseStatus == purchaseStatusEnum.FINISHED.V" :data="row" show-detail />
         </template>
       </el-table-column>
     </common-table>
@@ -216,8 +212,8 @@ import { ref, computed } from 'vue'
 import { useStore } from 'vuex'
 import EO from '@enum'
 import { invoiceTypeEnum, settlementStatusEnum } from '@enum-ms/finance'
-import { orderSupplyTypeEnum, purchaseStatusEnum, baseMaterialTypeEnum } from '@enum-ms/wms'
-import { matClsEnum } from '@/utils/enum/modules/classification'
+import { orderSupplyTypeEnum, purchaseStatusEnum } from '@enum-ms/wms'
+import { matClsEnum, materialPurchaseClsEnum } from '@/utils/enum/modules/classification'
 import { wmsReceiptColumns } from '@/utils/columns-format/wms'
 import { isNotBlank } from '@/utils/data-type'
 import checkPermission from '@/utils/system/check-permission'
@@ -282,10 +278,14 @@ const tableLoading = computed(() => !clsLoaded.value || crud.loading)
 CRUD.HOOK.handleRefresh = (crud, { data }) => {
   data.content = data.content.map((v) => {
     const basicClassArr = EO.getBits(matClsEnum.ENUM, v.basicClass, 'L')
-    v.typeText = baseMaterialTypeEnum.VL[v.purchaseType] + ' - ' + basicClassArr.join(' | ')
+    v.typeText =
+      v.materialType & materialPurchaseClsEnum.MATERIAL.V
+        ? basicClassArr.join(' | ')
+        : materialPurchaseClsEnum.VL[v.materialType] + ' - ' + basicClassArr.join(' | ')
     v.branchCompanyId = v.branchCompany ? v.branchCompany.id : undefined
     v.requisitionsSNStr = v.applyPurchaseSN ? v.applyPurchaseSN.join('　、　') : ''
-    v.projectIds = v.projects ? v.projects.map((p) => p.id) : []
+    v.projects = v.project?.id ? [v.project] : v.projects
+    v.projectIds = v.projects ? v.projects.map((p) => p.id) : v.project?.id ? [v.project?.id] : []
     v.boolPartyA = v.supplyType === orderSupplyTypeEnum.PARTY_A.V
     v.supplierId = v.supplier ? v.supplier.id : undefined
     if (v.auxMaterialIds) {

@@ -27,6 +27,13 @@ export default {
           meta: { title: '辅材入库', icon: 'project', noCache: true }
         },
         {
+          name: 'ManufInboundApplication',
+          path: 'manufactured',
+          hidden: false,
+          component: '/wms/material-inbound/manufactured/index',
+          meta: { title: '制成品入库', icon: 'project', noCache: true }
+        },
+        {
           name: 'RawMatInboundApplicationRecord',
           path: 'material-inbound/raw-material/record',
           hidden: false,

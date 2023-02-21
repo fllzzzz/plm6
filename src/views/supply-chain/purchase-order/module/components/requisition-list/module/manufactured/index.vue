@@ -47,6 +47,7 @@ function selectable(row) {
 function initList(_list) {
   list.value = _list.map((v) => {
     v.totalNetWeight = toPrecision(v.quantity * v.netWeight, 2)
+    v.basicClass = manufClsEnum.STRUC_MANUFACTURED.V
     return v
   })
 }

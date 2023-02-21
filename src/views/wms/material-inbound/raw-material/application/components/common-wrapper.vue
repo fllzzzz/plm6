@@ -3,6 +3,7 @@
     <common-header
       :basic-class="props.basicClass"
       :current-basic-class="props.currentBasicClass??props.basicClass"
+      :isManuf="isManuf"
       :edit="props.edit"
       :validate="validate"
       class="header"
@@ -70,6 +71,10 @@ const props = defineProps({
   showTotalAmount: {
     type: Boolean,
     default: true
+  },
+  isManuf: {
+    type: Boolean,
+    default: false
   },
   totalAmount: {
     type: [Number, String],

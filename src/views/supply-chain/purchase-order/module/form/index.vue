@@ -44,6 +44,9 @@
                     @change="handleMaterialTypeChange"
                   />
                 </el-form-item>
+                <el-form-item v-if="!form.useRequisitions && isManuf" label="选择项目" class="el-form-item-4" prop="projectId">
+                  <project-cascader v-model="form.projectId" clearable :disabled="Boolean(form.boolUsed)" class="input-underline" />
+                </el-form-item>
                 <el-form-item class="el-form-item-7" label="供应商" prop="supplierId">
                   <supplier-select
                     v-model="form.supplierId"
@@ -149,7 +152,13 @@
                     size="small"
                   />
                 </el-form-item>
-                <el-form-item v-if="!form.useRequisitions" label="选择项目" class="el-form-item-4" prop="projectIds" label-width="80px">
+                <el-form-item
+                  v-if="!form.useRequisitions && !isManuf"
+                  label="选择项目"
+                  class="el-form-item-4"
+                  prop="projectIds"
+                  label-width="80px"
+                >
                   <project-cascader
                     v-model="form.projectIds"
                     clearable
@@ -184,7 +193,7 @@
                   <common-button type="success" size="mini" @click="addRequisition"> 添加物料 </common-button>
                 </span>
               </div>
-              <div class="right-head flex-rbs" v-else>
+              <div class="right-head flex-rbs" v-if="!form.useRequisitions">
                 <!-- 自建采购清单 -->
                 <span class="right-head-content">
                   <span class="label">采购清单</span>
@@ -203,7 +212,24 @@
                   </common-radio-button>
                 </span>
                 <span class="opt-content">
-                  <common-button type="success" size="mini" @click="materialSelectVisible = true"> 添加物料 </common-button>
+                  <common-button v-if="!isManuf" type="success" size="mini" @click="materialSelectVisible = true">
+                    添加物料
+                  </common-button>
+                  <el-tooltip :disabled="!!form.projectId" effect="light" content="请先选择项目" placement="left-start">
+                    <span>
+                      <common-button
+                        v-if="isManuf"
+                        class="filter-item"
+                        size="mini"
+                        type="success"
+                        icon="el-icon-plus"
+                        @click="purchaseManufVisible = true"
+                        :disabled="!form.projectId"
+                      >
+                        添加制成品
+                      </common-button>
+                    </span>
+                  </el-tooltip>
                 </span>
               </div>
               <!-- 清单列表 -->
@@ -212,21 +238,12 @@
           </div>
         </el-form>
       </div>
-      <common-drawer
-        v-model="requisitionVisible"
-        title="选择申购单"
-        :show-close="false"
-        size="100%"
-        custom-class="material-requisition-select"
-      >
+      <common-drawer v-model="requisitionVisible" title="申购选择" direction="btt" size="70%" custom-class="material-requisition-select">
         <template #titleRight>
-          <el-badge v-if="requisitionBadge" :value="requisitionBadge" :max="99" style="margin-right: 10px">
-            <common-button class="filter-item" size="mini" type="success" icon="el-icon-shopping-cart-2"> 已添加采购 </common-button>
-          </el-badge>
-          <common-button @click="requisitionVisible = false" size="mini" plain>返 回</common-button>
+          <el-tag v-if="requisitionBadge" type="success" effect="plain">已加入（{{ requisitionBadge }}）</el-tag>
         </template>
         <template #content>
-          <requisition-list-application ref="requisitionListRef" />
+          <requisition-list-application ref="requisitionListRef" @add-purchase="handleAddPurchase" />
         </template>
       </common-drawer>
       <common-drawer
@@ -251,6 +268,19 @@
           />
         </template>
       </common-drawer>
+      <common-drawer
+        ref="manufSelectDrawerRef"
+        show-close
+        size="80%"
+        title="制成品选择"
+        append-to-body
+        v-model="purchaseManufVisible"
+        custom-class="manufactured-select-drawer"
+      >
+        <template #content>
+          <manuf-list :project-id="form.projectId" :maxHeight="manufSelectMaxHeight" @add="handleAddManuf" />
+        </template>
+      </common-drawer>
     </template>
   </common-drawer>
 </template>
@@ -264,7 +294,7 @@ import { weightMeasurementModeEnum, invoiceTypeEnum } from '@enum-ms/finance'
 import { fileClassifyEnum } from '@enum-ms/file'
 import { whetherEnum } from '@enum-ms/common'
 import { steelInboundFormFormat } from '@/utils/wms/measurement-calc'
-import { isNotBlank, isBlank } from '@/utils/data-type'
+import { isNotBlank, isBlank, toPrecision, deepClone } from '@/utils/data-type'
 import { clearObject } from '@/utils/data-type/object'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { setSpecInfoToList } from '@/utils/wms/spec'
@@ -281,6 +311,7 @@ import StoreOperation from '@crud/STORE.operation.vue'
 import useMaxHeight from '@/composables/use-max-height'
 
 import RequisitionListApplication from '../components/requisition-list/index.vue'
+import ManufList from '../components/manuf-list.vue'
 import SteelApplication from '../components/application/steel/index'
 import AuxMatApplication from '../components/application/auxiliary-material/index'
 import ManufApplication from '../components/application/manufactured/index'
@@ -296,6 +327,7 @@ const defaultForm = {
   isAllMaterial: false, // 是否选择全部辅材
   auxMaterialIds: undefined, // 辅材明细ids
   projectIds: undefined, // 项目ids
+  projectId: undefined,
   requisitionsSN: undefined, // 申购单编号
   supplierId: undefined, // 供应商id
   branchCompanyId: undefined, // 公司签订主体
@@ -316,7 +348,9 @@ const defaultForm = {
   steelCoilList: [],
   requisitions: [],
   requisitionsKV: {},
-  requisitionListKV: {}
+  requisitionListKV: {},
+  manufListObj: {},
+  manufMergeObj: {}
 }
 
 const formRef = ref() // 表单
@@ -357,6 +391,7 @@ const rules = ref({})
 const baseRules = {
   serialNumber: [{ max: 30, message: '订单编号长度不可超过30位', trigger: 'blur' }],
   materialType: [{ required: true, message: '请选择材料类型', trigger: 'change' }],
+  projectId: [{ required: true, message: '请选择项目', trigger: 'change' }],
   supplyType: [{ required: true, message: '请选择供货类型', trigger: 'change' }],
   supplierId: [{ required: true, message: '请选择供应商', trigger: 'change' }],
   branchCompanyId: [{ required: true, message: '请选择签订主体', trigger: 'change' }]
@@ -388,6 +423,9 @@ watchEffect(() => {
 })
 // ------------------------- rules end -------------------------------------
 
+// 是否制成品
+const isManuf = computed(() => Boolean(form.materialType & materialPurchaseClsEnum.MANUFACTURED.V))
+
 function handleMaterialTypeChange(val) {
   if (val & materialPurchaseClsEnum.MATERIAL.V) {
     form.currentBasicClass = matClsEnum.MATERIAL.V
@@ -407,6 +445,8 @@ function handleMaterialTypeChange(val) {
   form.steelCoilList = []
   form.requisitionsKV = {}
   form.requisitionListKV = {}
+  form.manufListObj = {}
+  form.manufMergeObj = {}
   if (matSpecRef.value) {
     matSpecRef.value.clear()
   }
@@ -438,8 +478,10 @@ const compListVK = {
 
 const compRef = ref()
 const materialSpecSelectDrawer = ref()
+const manufSelectDrawerRef = ref()
 const matSpecRef = ref()
 const materialSelectVisible = ref(false)
+const purchaseManufVisible = ref(false)
 
 provide('matSpecRef', matSpecRef) // 供兄弟组件调用 删除
 
@@ -456,28 +498,76 @@ const { maxHeight: specSelectMaxHeight } = useMaxHeight(
   () => materialSpecSelectDrawer.value?.loaded
 )
 
+// 制成品选择组件高度
+const { maxHeight: manufSelectMaxHeight } = useMaxHeight(
+  {
+    mainBox: '.manufactured-select-drawer',
+    extraBox: ['.el-drawer__header', '.head-container'],
+    wrapperBox: ['.el-drawer__body'],
+    navbar: false,
+    paginate: true,
+    clientHRepMainH: true,
+    extraHeight: 50,
+    minHeight: 300
+  },
+  () => manufSelectDrawerRef.value?.loaded
+)
+
 // 行数据添加时初始化
 function rowInit(row) {
   return compRef.value.rowInit(row)
 }
+
 // --------------------------- 自选采购 end --------------------------------
+// 添加制成品
+function handleAddManuf(list) {
+  for (let i = 0; i < list.length; i++) {
+    const v = deepClone(list[i])
+    const _purchaseWeight = v.curPurchaseQuantity * v.netWeight || 0
+    if (isBlank(form.manufListObj[v.id])) {
+      form.manufListObj[v.id] = {
+        ...v,
+        curPurchaseWeight: _purchaseWeight
+      }
+    } else {
+      form.manufListObj[v.id].curPurchaseQuantity += v.curPurchaseQuantity
+      form.manufListObj[v.id].curPurchaseWeight = toPrecision(form.manufListObj[v.id].curPurchaseWeight + _purchaseWeight, 2)
+    }
+    const _mergeStr = v.name ? v.name + '_' + v.specification + '_' + v.material : v.specification + '_' + v.material
+    if (isBlank(form.manufMergeObj[_mergeStr])) {
+      form.manufMergeObj[_mergeStr] = {
+        ...v,
+        rowKey: _mergeStr,
+        mergeIds: [v.id],
+        curPurchaseQuantity: v.curPurchaseQuantity,
+        curPurchaseWeight: _purchaseWeight
+      }
+    } else {
+      form.manufMergeObj[_mergeStr].mergeIds.push(v.id)
+      form.manufMergeObj[_mergeStr].curPurchaseQuantity += v.curPurchaseQuantity
+      form.manufMergeObj[_mergeStr].curPurchaseWeight = toPrecision(form.manufMergeObj[_mergeStr].curPurchaseWeight + _purchaseWeight, 2)
+    }
+  }
+}
 
 // --------------------------- 申购 start ------------------------------
 
 const requisitionListRef = ref()
-const requisitionList = ref([])
 const requisitionVisible = ref(false)
 
 const requisitionBadge = computed(() => (form.requisitionListKV ? Object.keys(form.requisitionListKV)?.length : 0))
 
 watchEffect(() => {
   form.requisitions = obj2arr(form.requisitionsKV)
-  requisitionList.value = obj2arr(form.requisitionListKV)
 })
 
 function addRequisition() {
   requisitionVisible.value = true
   nextTick(() => requisitionListRef.value?.openInit())
+}
+
+function handleAddPurchase(row) {
+  form[compListVK[row.basicClass]].push(row)
 }
 
 // --------------------------- 申购 end --------------------------------
@@ -504,8 +594,17 @@ CRUD.HOOK.beforeEditDetailLoaded = async (crud, form) => {
   // 供应商id
   form.supplierId = form.supplier ? form.supplier.id : undefined
   if (form.materialType & materialPurchaseClsEnum.MANUFACTURED.V) {
-    requisitionList.value = form.details
-    form.requisitionListKV = arr2obj(requisitionList.value)
+    form.manufListObj = {}
+    form.manufMergeObj = {}
+    const _list = form.details.map((v) => {
+      v.curPurchaseQuantity = v.quantity
+      v.detailId = v.id
+      v.id = v.artifactEnclosureId
+      v.measureUnit = '件' // 计量单位
+      v.accountingUnit = '千克' // 核算单位
+      return v
+    })
+    handleAddManuf(_list)
   } else {
     await setSpecInfoToList(form.details)
     form.list = await numFmtByBasicClass(form.details, {
@@ -536,10 +635,27 @@ crud.submitFormFormat = async (form) => {
   if (form.useRequisitions) {
     form.applyPurchaseIds = form.requisitions.map((v) => v.id)
   }
-  if (form.materialType & materialPurchaseClsEnum.MANUFACTURED.V) {
-    form.list = requisitionList.value
-  } else {
+  if (!isManuf.value) {
     form.list = await numFmtByBasicClass(form.list, { toSmallest: true, toNum: true })
+  } else {
+    form.projectIds = [form.projectId]
+    form.list = []
+    if (compRef?.value) {
+      const _list = compRef?.value.fetchResList()
+      _list.forEach((v) => {
+        v.mergeIds.forEach((id) => {
+          const { curPurchaseQuantity: quantity, basicClass } = form.manufListObj[id]
+          form.list.push({
+            artifactEnclosureId: id,
+            quantity,
+            basicClass,
+            unitPrice: v.unitPrice,
+            amount: v.amount,
+            destination: v.destination
+          })
+        })
+      })
+    }
   }
   return form
 }

@@ -56,7 +56,7 @@ import { detail as getSupplementDetail } from '@/api/wms/report/raw-material/sup
 import useOtherCrudDetail from '@compos/use-other-crud-detail'
 import DetailWrapper from '@crud/detail-wrapper.vue'
 import requisitionDetail from '@/views/supply-chain/requisitions/module/detail.vue'
-import purchaseOrderDetail from '@/views/supply-chain/purchase-order/module/detail/raw-material.vue'
+import purchaseOrderDetail from '@/views/supply-chain/purchase-order/module/detail/index.vue'
 import InboundDetail from '@/views/wms/material-inbound/raw-material/review/module/detail.vue'
 import OutboundDetail from '@/views/wms/material-outbound/raw-material/record/module/detail.vue'
 import TransferDetail from '@/views/wms/material-transfer/raw-material/review/module/detail.vue'

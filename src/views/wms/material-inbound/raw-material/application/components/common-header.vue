@@ -2,13 +2,13 @@
   <div class="inbound-application-header flex-rbc">
     <div>
       <el-form ref="formRef" :model="form" :rules="rules" size="small" label-position="right" inline label-width="80px">
-        <el-form-item prop="supplyType" label-width="0px">
+        <el-form-item v-if="!props.isManuf" prop="supplyType" label-width="0px">
           <common-radio-button
             v-model="form.supplyType"
             :options="orderSupplyTypeEnum.ENUM"
             default
             type="enumSL"
-            :style="!edit?'margin-left:10px':''"
+            :style="!edit ? 'margin-left:10px' : ''"
             style="vertical-align: middle"
           >
             <template #suffix>
@@ -16,7 +16,12 @@
             </template>
           </common-radio-button>
         </el-form-item>
-        <el-form-item v-if="form.supplyType === orderSupplyTypeEnum.SELF.V" prop="purchaseId" label-width="0px">
+        <el-form-item
+          v-if="!boolPartyA"
+          prop="purchaseId"
+          :label="props.isManuf ? '订单号' : ''"
+          :label-width="props.isManuf ? '70px' : '0px'"
+        >
           <purchase-sn-select
             class="input-underline"
             v-model="form.purchaseId"
@@ -80,12 +85,13 @@
     </div>
     <div class="child-mr-7">
       <store-operation v-if="!props.edit" type="cu" @clear="handleClear" />
-      <common-button type="primary" size="mini" @click="openRequisitionsView">查看申购单</common-button>
+      <!-- <common-button type="primary" size="mini" @click="openRequisitionsView">查看申购单</common-button> -->
       <el-tooltip
         content="请先选择采购合同编号"
         :disabled="!!form.purchaseId && form.supplyType === orderSupplyTypeEnum.SELF.V"
         placement="bottom"
         effect="light"
+        v-if="boolPartyA"
       >
         <excel-resolve-button
           icon="el-icon-upload2"
@@ -105,6 +111,7 @@
 
 <script setup>
 import { getRequisitionsDetailBySN } from '@/api/wms/requisitions'
+import { detail as getPurchaseOrderDetail } from '@/api/supply-chain/purchase-order'
 import { defineProps, defineEmits, defineExpose, ref, computed, watch, watchEffect, nextTick, inject } from 'vue'
 import { useRouter } from 'vue-router'
 import { STEEL_ENUM } from '@/settings/config'
@@ -113,6 +120,8 @@ import { matClsEnum } from '@/utils/enum/modules/classification'
 import { weightMeasurementModeEnum } from '@enum-ms/finance'
 import { logisticsPayerEnum, logisticsTransportTypeEnum } from '@/utils/enum/modules/logistics'
 import { patternLicensePlate } from '@/utils/validate/pattern'
+import { setSpecInfoToList } from '@/utils/wms/spec'
+import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 
 import useUserProjects from '@compos/store/use-user-projects'
 import { regExtra } from '@/composables/form/use-form'
@@ -142,6 +151,10 @@ const props = defineProps({
   },
   currentBasicClass: {
     type: Number
+  },
+  isManuf: {
+    type: Boolean,
+    default: false
   },
   edit: {
     type: Boolean,
@@ -233,6 +246,8 @@ const formRef = ref()
 const trainsDiff = ref({})
 const orderInfo = ref({})
 
+const boolPartyA = computed(() => form.supplyType === orderSupplyTypeEnum.PARTY_A.V)
+
 watchEffect(() => {
   trainsDiff.value = weightOverDiff(form.loadingWeight, cu.props.totalWeight)
   // 在入库列表重量发生变化时，触发校验
@@ -301,8 +316,9 @@ function handlePurchaseIdChange(val) {
 }
 
 // 订单详情变更
-function handleOrderInfoChange(order, oldOrder) {
+async function handleOrderInfoChange(order, oldOrder) {
   cu.props.requisitions = {} // 初始化申购单
+  form.selectObj = {}
   if (order) {
     // 获取申购单详情
     if (order.requisitionsSN) {
@@ -318,6 +334,22 @@ function handleOrderInfoChange(order, oldOrder) {
     // 当订单切换时，若订单计量方式发生变化，则重置车次过磅重量
     if (orderInfo.value && orderInfo.value.weightMeasurementMode !== order.weightMeasurementMode) {
       form.loadingWeight = undefined
+    }
+    if (order.id) {
+      const { details = [] } = await getPurchaseOrderDetail(order.id)
+      await setSpecInfoToList(details)
+      await numFmtByBasicClass(details, {
+        toNum: true
+      })
+      order.details = details.map((v) => {
+        form.selectObj[v.id] = false
+        v.purchaseQuantity = v.quantity
+        v.purchaseMete = v.mete
+        v.canPurchaseQuantity = v.purchaseQuantity - (v.inboundQuantity || 0)
+        v.quantity = v.canPurchaseQuantity
+        v.mete = v.purchaseMete - v.inboundMete
+        return v
+      })
     }
   }
   // 订单信息对象重新赋值
@@ -356,7 +388,7 @@ function toInboundRecord() {
 }
 
 // 查看申购单
-function openRequisitionsView() {}
+// function openRequisitionsView() {}
 
 // 表单校验
 async function validate() {

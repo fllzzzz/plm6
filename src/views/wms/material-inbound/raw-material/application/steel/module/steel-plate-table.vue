@@ -7,7 +7,10 @@
     :show-empty-symbol="false"
     return-source-data
     row-key="uid"
+    @select="selectTableChange"
+    @select-all="selectAllTableChange"
   >
+    <el-table-column v-if="!props.boolPartyA" type="selection" width="55" align="center" :selectable="selectable" />
     <el-expand-table-column :data="form.steelPlateList" v-model:expand-row-keys="expandRowKeys" row-key="uid" fixed="left">
       <template #default="{ row }">
         <div class="mtb-10">
@@ -43,6 +46,7 @@
     <el-table-column prop="thickness" align="center" width="100px" :label="`厚 (${baseUnit.thickness.unit})`">
       <template #default="{ row }">
         <common-input-number
+          v-if="props.boolPartyA"
           v-model="row.thickness"
           :min="0"
           :max="999999"
@@ -52,6 +56,7 @@
           size="mini"
           placeholder="厚"
         />
+        <span v-else>{{ row.thickness }}</span>
       </template>
     </el-table-column>
     <el-table-column prop="width" align="center" width="135px" :label="`宽 (${baseUnit.width.unit})`">
@@ -81,51 +86,57 @@
         />
       </template>
     </el-table-column>
-    <el-table-column prop="quantity" align="center" width="135px" :label="`数量 (${baseUnit.measure.unit})`">
-      <template #default="{ row }">
-        <common-input-number
-          v-model="row.quantity"
-          :min="1"
-          :max="999999999"
-          controls-position="right"
-          :controls="false"
-          :step="1"
-          :precision="baseUnit.measure.precision"
-          size="mini"
-          placeholder="数量"
-        />
-      </template>
-    </el-table-column>
-    <el-table-column
-      key="weighingTotalWeight"
-      prop="weighingTotalWeight"
-      align="center"
-      :label="`总重 (${baseUnit.weight.unit})`"
-      width="135px"
-    >
-      <template #default="{ row }">
-        <el-tooltip
-          class="item"
-          effect="dark"
-          :content="`理论重量：${row.theoryTotalWeight} kg， ${overDiffTip}`"
-          :disabled="!row.hasOver"
-          placement="top"
-        >
+    <template v-if="props.boolPartyA">
+      <el-table-column prop="quantity" align="center" width="135px" :label="`数量 (${baseUnit.measure.unit})`">
+        <template #default="{ row }">
           <common-input-number
-            v-model="row.weighingTotalWeight"
-            :min="0"
+            v-model="row.quantity"
+            :min="1"
             :max="999999999"
             controls-position="right"
             :controls="false"
-            :precision="baseUnit.weight.precision"
+            :step="1"
+            :precision="baseUnit.measure.precision"
             size="mini"
-            placeholder="重量"
-            :class="{ 'over-weight-tip': row.hasOver }"
-            @change="handleWeightChange(row)"
+            placeholder="数量"
           />
-        </el-tooltip>
-      </template>
-    </el-table-column>
+        </template>
+      </el-table-column>
+      <el-table-column
+        key="weighingTotalWeight"
+        prop="weighingTotalWeight"
+        align="center"
+        :label="`总重 (${baseUnit.weight.unit})`"
+        width="135px"
+      >
+        <template #default="{ row }">
+          <el-tooltip
+            class="item"
+            effect="dark"
+            :content="`理论重量：${row.theoryTotalWeight} kg， ${overDiffTip}`"
+            :disabled="!row.hasOver"
+            placement="top"
+          >
+            <common-input-number
+              v-model="row.weighingTotalWeight"
+              :min="0"
+              :max="999999999"
+              controls-position="right"
+              :controls="false"
+              :precision="baseUnit.weight.precision"
+              size="mini"
+              placeholder="重量"
+              :class="{ 'over-weight-tip': row.hasOver }"
+              @change="handleWeightChange(row)"
+            />
+          </el-tooltip>
+        </template>
+      </el-table-column>
+    </template>
+    <template v-else>
+      <el-table-column prop="purchaseQuantity" :label="`采购数量 (${baseUnit.measure.unit})`" align="center" width="100px" />
+      <el-table-column prop="purchaseMete" :label="`采购重量 (${baseUnit.weight.unit})`" align="center" width="100px" />
+    </template>
 
     <!-- 金额设置 -->
     <price-set-columns v-if="!props.boolPartyA && fillableAmount" />
@@ -140,7 +151,54 @@
         <el-input v-model.trim="row.heatNoAndBatchNo" size="mini" placeholder="炉批号" maxlength="200" />
       </template>
     </el-table-column>
-    <el-table-column label="操作" width="70" align="center" fixed="right">
+    <template v-if="!props.boolPartyA">
+      <el-table-column prop="quantity" align="center" width="135px" :label="`本次实收数 (${baseUnit.measure.unit})`">
+        <template #default="{ row }">
+          <common-input-number
+            v-model="row.quantity"
+            :min="1"
+            :max="999999999"
+            controls-position="right"
+            :controls="false"
+            :step="1"
+            :precision="baseUnit.measure.precision"
+            size="mini"
+            placeholder="实收数"
+          />
+        </template>
+      </el-table-column>
+      <el-table-column
+        key="weighingTotalWeight"
+        prop="weighingTotalWeight"
+        align="center"
+        :label="`实收量 (${baseUnit.weight.unit})`"
+        width="135px"
+      >
+        <template #default="{ row }">
+          <el-tooltip
+            class="item"
+            effect="dark"
+            :content="`理论重量：${row.theoryTotalWeight} kg， ${overDiffTip}`"
+            :disabled="!row.hasOver"
+            placement="top"
+          >
+            <common-input-number
+              v-model="row.weighingTotalWeight"
+              :min="0"
+              :max="999999999"
+              controls-position="right"
+              :controls="false"
+              :precision="baseUnit.weight.precision"
+              size="mini"
+              placeholder="实收量"
+              :class="{ 'over-weight-tip': row.hasOver }"
+              @change="handleWeightChange(row)"
+            />
+          </el-tooltip>
+        </template>
+      </el-table-column>
+    </template>
+    <el-table-column v-if="props.boolPartyA" label="操作" width="70" align="center" fixed="right">
       <template #default="{ row, $index }">
         <common-button icon="el-icon-delete" type="danger" size="mini" @click="delRow(row.sn, $index)" />
       </template>
@@ -237,6 +295,22 @@ const tableRules = computed(() => {
 
 const { tableValidate, wrongCellMask } = useTableValidate({ rules: tableRules, errorMsg: '请修正【钢板清单】中标红的信息' }) // 表格校验
 
+function selectable(row, rowIndex) {
+  return !!row.canPurchaseQuantity
+}
+
+function selectTableChange(select, row) {
+  const boolSelect = Boolean(select.findIndex((v) => v.id === row.id) !== -1)
+  form.selectObj[row.id] = boolSelect
+}
+
+function selectAllTableChange(select) {
+  const boolSelect = Boolean(select?.length)
+  form.steelPlateList.forEach((v) => {
+    form.selectObj[v.id] = boolSelect
+  })
+}
+
 // 行初始化
 function rowInit(row) {
   const _row = reactive({
@@ -295,14 +369,12 @@ function rowWatch(row) {
 // 总重计算与单位重量计算分开，避免修改数量时需要重新计算单件重量
 // 计算单件重量
 async function calcTheoryWeight(row) {
-  row.theoryWeight = await calcSteelPlateWeight(
-    {
-      name: row.classifyFullName, // 名称，用于判断是否为不锈钢，不锈钢与普通钢板密度不同
-      length: row.length,
-      width: row.width,
-      thickness: row.thickness
-    }
-  )
+  row.theoryWeight = await calcSteelPlateWeight({
+    name: row.classifyFullName, // 名称，用于判断是否为不锈钢，不锈钢与普通钢板密度不同
+    length: row.length,
+    width: row.width,
+    thickness: row.thickness
+  })
 }
 
 // 计算总重
@@ -334,9 +406,16 @@ function delRow(sn, $index) {
 
 // 校验
 function validate() {
-  if (isBlank(form.steelPlateList)) return true
-  const { validResult, dealList } = tableValidate(form.steelPlateList)
-  form.steelPlateList = dealList
+  const _list = form.steelPlateList.filter((v) => {
+    if (props.boolPartyA || form.selectObj[v.id]) {
+      return true
+    } else {
+      return false
+    }
+  })
+  if (isBlank(_list)) return true
+  const { validResult } = tableValidate(_list)
+  // form.steelPlateList = dealList
   return validResult
 }
 

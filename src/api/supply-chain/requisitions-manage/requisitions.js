@@ -116,7 +116,7 @@ export function canPurchaseDetail(params) {
 export function manufClassListGet(params) {
   return request({
     module: 'scm',
-    url: 'purchase-order/finished-product/purchasing/structure-class',
+    url: 'purchase-order/purchasing/structure-class',
     method: 'get',
     params
   })
@@ -132,7 +132,7 @@ export function manufClassListGet(params) {
 export function manufListGet(params) {
   return request({
     module: 'scm',
-    url: 'purchase-order/finished-product/purchasing/artifact-enclosure-detail',
+    url: 'purchase-order/purchasing/artifact-enclosure-detail',
     method: 'get',
     params
   })

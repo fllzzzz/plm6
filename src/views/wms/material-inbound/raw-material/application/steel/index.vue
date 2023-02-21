@@ -16,7 +16,7 @@
         <div class="filter-left-box">
           <el-radio-group v-model="currentBasicClass" size="small" class="filter-item">
             <el-radio-button v-for="item in steelBasicClassKV" :key="item.K" :label="item.K" :disabled="disabledBasicClass[item.K]">
-              {{ item.L }}{{ form[item.K] && form[item.K].length ? `(${form[item.K].length})` : '' }}
+              {{ item.L }}{{ getNum(item.K) ? `(${getNum(item.K)})` : '' }}
             </el-radio-button>
           </el-radio-group>
         </div>
@@ -32,7 +32,13 @@
           </common-button>
           <el-tooltip :disabled="addable" effect="light" content="请先选择采购合同编号" placement="left-start">
             <span>
-              <common-button class="filter-item" type="success" @click="materialSelectVisible = true" :disabled="!addable">
+              <common-button
+                v-if="boolPartyA"
+                class="filter-item"
+                type="success"
+                @click="materialSelectVisible = true"
+                :disabled="!addable"
+              >
                 添加物料
               </common-button>
             </span>
@@ -40,7 +46,14 @@
         </div>
       </div>
       <el-form ref="formRef" :model="form">
-        <component ref="steelRef" :max-height="tableMaxHeight" :style="maxHeightStyle" :is="comp" :bool-party-a="boolPartyA" :fillableAmount="fillableAmount" />
+        <component
+          ref="steelRef"
+          :max-height="tableMaxHeight"
+          :style="maxHeightStyle"
+          :is="comp"
+          :bool-party-a="boolPartyA"
+          :fillableAmount="fillableAmount"
+        />
       </el-form>
     </common-wrapper>
     <common-drawer
@@ -78,11 +91,11 @@ import { defineProps, defineEmits, ref, computed, watch, provide, nextTick, reac
 import { STEEL_ENUM } from '@/settings/config'
 import { matClsEnum } from '@/utils/enum/modules/classification'
 import { weightMeasurementModeEnum } from '@/utils/enum/modules/finance'
-import { orderSupplyTypeEnum, inboundFillWayEnum } from '@/utils/enum/modules/wms'
+import { orderSupplyTypeEnum } from '@/utils/enum/modules/wms'
 
 import useForm from '@/composables/form/use-form'
 import useMaxHeight from '@compos/use-max-height'
-import useWmsConfig from '@/composables/store/use-wms-config'
+// import useWmsConfig from '@/composables/store/use-wms-config'
 import commonWrapper from '@/views/wms/material-inbound/raw-material/application/components/common-wrapper.vue'
 import materialTableSpecSelect from '@/components-system/classification/material-table-spec-select.vue'
 import steelPlateTable from './module/steel-plate-table.vue'
@@ -142,23 +155,46 @@ const steelRefList = reactive({
   steelCoilList: null
 })
 
-const { inboundFillWayCfg } = useWmsConfig()
+// const { inboundFillWayCfg } = useWmsConfig()
 // 显示金额相关信息（由采购填写的信息）
-const fillableAmount = computed(() => inboundFillWayCfg.value ? inboundFillWayCfg.value.amountFillWay === inboundFillWayEnum.APPLICATION.V : false)
+const fillableAmount = computed(
+  () => false
+  // inboundFillWayCfg.value ? inboundFillWayCfg.value.amountFillWay === inboundFillWayEnum.APPLICATION.V : false
+)
 
 const addable = computed(() => !!(currentBasicClass.value && order.value)) // 可添加的状态（选择了采购合同编号）
+
+function getNum(key) {
+  if (boolPartyA.value) {
+    return form[key].length
+  } else {
+    return form[key].filter((v) => form.selectObj[v.id])?.length
+  }
+}
 
 // 列表汇总数据
 const formList = computed(() => {
   const list = []
   if (isNotBlank(form.steelPlateList)) {
-    list.push(...form.steelPlateList)
+    form.steelPlateList.forEach((v) => {
+      if (boolPartyA.value || form.selectObj[v.id]) {
+        list.push(v)
+      }
+    })
   }
   if (isNotBlank(form.sectionSteelList)) {
-    list.push(...form.sectionSteelList)
+    form.sectionSteelList.forEach((v) => {
+      if (boolPartyA.value || form.selectObj[v.id]) {
+        list.push(v)
+      }
+    })
   }
   if (isNotBlank(form.steelCoilList)) {
-    list.push(...form.steelCoilList)
+    form.steelCoilList.forEach((v) => {
+      if (boolPartyA.value || form.selectObj[v.id]) {
+        list.push(v)
+      }
+    })
   }
   return list
 })
@@ -167,7 +203,7 @@ const formList = computed(() => {
 const totalAmount = computed(() => {
   let amount = 0
   if (!boolPartyA.value && fillableAmount.value) {
-    formList.value.forEach(v => {
+    formList.value.forEach((v) => {
       if (isNotBlank(v.amount)) {
         amount += +v.amount
       }
@@ -179,7 +215,7 @@ const totalAmount = computed(() => {
 // 总重
 const totalWeight = computed(() => {
   let weight = 0
-  formList.value.forEach(v => {
+  formList.value.forEach((v) => {
     if (isNotBlank(v.weighingTotalWeight)) {
       weight += +v.weighingTotalWeight
     }
@@ -374,13 +410,17 @@ FORM.HOOK.afterSubmit = () => {
 
 // 表单校验
 function validate() {
-  if (isBlank(form.steelPlateList) && isBlank(form.sectionSteelList) && isBlank(form.steelCoilList)) {
+  if (boolPartyA.value && isBlank(form.steelPlateList) && isBlank(form.sectionSteelList) && isBlank(form.steelCoilList)) {
     ElMessage.warning('请填写数据')
+    return false
+  }
+  if (!boolPartyA.value && isBlank(formList.value)) {
+    ElMessage.warning('请选择数据')
     return false
   }
   const tableValidateRes = validateTable()
   if (tableValidateRes) {
-    form.list = [...form.steelPlateList, ...form.sectionSteelList, ...form.steelCoilList]
+    form.list = formList.value
     form.list.forEach((v) => {
       v.mete = v.weighingTotalWeight
       v.weight = v.weighingTotalWeight
@@ -454,7 +494,7 @@ function automaticAssignWeight() {
 }
 
 // 订单变化
-function handleOrderInfoChange(orderInfo) {
+async function handleOrderInfoChange(orderInfo) {
   init()
   order.value = orderInfo
   cu.props.order = orderInfo
@@ -464,7 +504,8 @@ function handleOrderInfoChange(orderInfo) {
       if (steelBasicClassKV[k].V & orderInfo.basicClass) {
         if (!currentBasicClass.value) currentBasicClass.value = steelBasicClassKV[k].K // 为空则赋值
         disabledBasicClass.value[k] = false
-      } else {
+      }
+      if (boolPartyA.value || !(steelBasicClassKV[k].V & orderInfo.basicClass)) {
         form[k] = []
         const trigger = watch(
           matSpecRef,
@@ -484,6 +525,13 @@ function handleOrderInfoChange(orderInfo) {
     nextTick(() => {
       steelRefList[currentBasicClass.value] = steelRef.value
     })
+    if (orderInfo?.details?.length) {
+      form.list = orderInfo.details
+      // 修改的情况下，数据预处理
+      await steelInboundFormFormat(form)
+      // 设置监听等
+      setFormCallback(form)
+    }
   } else {
     nextTick(() => {
       steelRefList.steelPlateList = null

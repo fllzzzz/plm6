@@ -17,7 +17,7 @@ export default {
           path: 'purchase-order',
           hidden: false,
           component: '/supply-chain/purchase-order/index',
-          meta: { title: '原材料-采购合同', icon: 'project', noCache: true }
+          meta: { title: '采购合同', icon: 'project', noCache: true }
         }
       ]
     },

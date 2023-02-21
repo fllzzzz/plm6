@@ -7,6 +7,13 @@ const manufactureTypeEnum = {
 }
 constantize(manufactureTypeEnum)
 
+// 目的地类型
+const destinationTypeEnum = {
+  CONSTRUCTION_SITE: { L: '发工地', K: 'CONSTRUCTION_SITE', V: 1 },
+  FACTORY: { L: '发工厂', K: 'FACTORY', V: 2 }
+}
+constantize(destinationTypeEnum)
+
 const processingColorsEnum = {
   UNSTART: { L: '未开始', K: 'NORMAL', V: 1 << 0, T: 'info', COLOR: '#f5f7fa' },
   PROCESS: { L: '进行中', K: 'PROCESS', V: 1 << 1, T: 'warning', COLOR: '#ffba00' },
@@ -46,6 +53,7 @@ export {
   processingColorsEnum,
   scheduleStatusEnum,
   monthNumEnum,
+  destinationTypeEnum,
   problemTypeEnum
 }
 
@@ -54,5 +62,6 @@ export default {
   processingColorsEnum,
   scheduleStatusEnum,
   monthNumEnum,
+  destinationTypeEnum,
   problemTypeEnum
 }
