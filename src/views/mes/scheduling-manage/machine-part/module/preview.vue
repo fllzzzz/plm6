@@ -372,6 +372,7 @@ function showHook() {
   thick.value = undefined
   askCompleteTime.value = undefined
   cutConfigId.value = undefined
+  workShopId.value = undefined
   fetchGroups()
   fetchOrder()
   isNew.value = true
