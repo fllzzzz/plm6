@@ -233,7 +233,7 @@ const validateLinks = (rule, value, callback) => {
     for (const i in value) {
       if (!value[i].add) {
         if (!value[i].specPrefix) {
-          callback(new Error('请填写大写或中文规格前缀'))
+          callback(new Error('请填写“大写字母”或“中文”格式的规格前缀'))
         }
         // if (!isNotBlank(value[i].boolUseAssemble)) {
         //   callback(new Error('请选择是否匹配部件'))
@@ -244,7 +244,7 @@ const validateLinks = (rule, value, callback) => {
     }
     callback()
   } else {
-    callback(new Error('请填写大写或中文规格前缀'))
+    callback(new Error('请填写“大写字母”或“中文”格式的规格前缀'))
   }
 }
 
