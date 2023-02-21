@@ -322,13 +322,14 @@ async function handleSaveSuccess() {
 }
 
 function handleDel(row, val) {
+  if (row.needMachinePartLinkList?.length) {
+    handleCheckedChange(false, { id: val })
+  } else {
+    const padIdx = padBlockData.value.findIndex((v) => v.id === val)
+    padBlockData.value.splice(padIdx, 1)
+  }
   const delIndex = previewList.value.findIndex((v) => v.id === val)
   previewList.value.splice(delIndex, 1)
-  if (row.needMachinePartLinkList?.length) {
-    checkedNodes.value.splice(delIndex, 1)
-  } else {
-    padBlockData.value.splice(delIndex, 1)
-  }
   previewList.value = [...checkedNodes.value, ...padBlockData.value]
 }
 
@@ -355,6 +356,12 @@ function handleCheckedChange(value, item) {
   } else {
     if (_checkedIndex > -1) checkedNodes.value.splice(_checkedIndex, 1)
   }
+  console.log(item, 'handleCheckedChange')
+  boardList.value.forEach((v) => {
+    if (v.id === item.id) {
+      v.checked = value
+    }
+  })
   let isNext = false
   checkedNodes.value.forEach((v) => {
     if (!v.imgLoad || !v.picturePath) {

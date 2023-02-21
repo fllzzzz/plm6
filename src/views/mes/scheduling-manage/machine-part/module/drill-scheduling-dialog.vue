@@ -79,6 +79,8 @@ const emit = defineEmits(['update:visible', 'success'])
 const { visible: drillDialogVisible, handleClose } = useVisible({ emit, props, field: 'visible', showHook: showHook })
 
 function showHook() {
+  form.drillAskCompleteTime = undefined
+  form.drillAskCompleteTime = undefined
   fetchDrillGroups()
 }
 
@@ -133,7 +135,7 @@ async function submitForm(formRef) {
       } else {
         _list.push({
           productId: v.id,
-          quantity: v.quantity
+          quantity: v.usedQuantity
         })
       }
     })

@@ -34,7 +34,21 @@
       </div>
     </template>
     <template #titleRight>
-      <common-button @click="submitIt" :loading="submitLoading" size="mini" type="primary">保存</common-button>
+      <common-button
+        @click="submitIt"
+        :loading="submitLoading"
+        :disabled="
+          (!type && Boolean(props.padBlockData?.length) && Boolean(!props.checkedNodes?.length)) ||
+          (!props.padBlockData?.length && !props.checkedNodes?.length) ||
+          (Boolean(type) &&
+            underLine === nestingTypeEnum.OFFLINE.V &&
+            Boolean(props.padBlockData?.length) &&
+            Boolean(props.checkedNodes?.length))
+        "
+        size="mini"
+        type="primary"
+        >保存</common-button
+      >
     </template>
     <div class="head-container">
       <el-form style="display: flex; flex-wrap: wrap" v-if="isNew" :rules="rules">
@@ -81,6 +95,20 @@
             class="filter-item"
             :factory-id="factoryId"
           />
+          <!-- <el-cascader
+            v-model="workShopId"
+            :options="subList"
+            check-strictly
+            :show-all-levels="false"
+            :props="cascaderProps"
+            separator=" > "
+            clearable
+            size="small"
+            class="filter-item"
+            style="width: 200px"
+            placeholder="选择生产线"
+            @change="handleProductionLine"
+          /> -->
         </el-form-item>
         <el-form-item v-if="!type" label="生产组:" class="form-label-require">
           <el-cascader
@@ -186,8 +214,9 @@
 
 <script setup>
 import { newSave, getCutTaskDetail, getHoleTaskDetail, getOffLineZip } from '@/api/mes/scheduling-manage/machine-part'
+// import { getAllFactoryWorkshopLines } from '@/api/mes/common'
 import { ElMessage, ElNotification, ElRadioGroup, ElMessageBox } from 'element-plus'
-import { defineEmits, defineProps, ref, computed } from 'vue'
+import { defineEmits, defineProps, ref, computed, onMounted, watch } from 'vue'
 import { layOffWayTypeEnum } from '@enum-ms/uploading-form'
 import { projectNameFormatter } from '@/utils/project'
 import { fileDownload } from '@/utils/file'
@@ -288,6 +317,7 @@ const drillDialogVisible = ref(false)
 const orderList = ref([])
 const underLine = ref(0)
 const workShopId = ref()
+// const workShopId = ref()
 const factoryId = ref()
 
 const rules = {
@@ -333,7 +363,7 @@ function toDelete(row, id) {
     isNew.value = false
     saveType.value = machinePartIssuedWayEnum.ADD_NEW_TICKET.V
   }
-  emit('success')
+  // emit('success')
 }
 
 function showHook() {
@@ -352,7 +382,7 @@ function showHook() {
       saveType.value = machinePartIssuedWayEnum.ADD_NEW_TICKET.V
     }
   }
-  success()
+  // success()
 }
 
 function success() {
@@ -374,6 +404,58 @@ async function fetchOrder() {
     console.log('获取工单失败', error)
   }
 }
+// --------------------------- 获取生产线 start ------------------------------
+
+// const subList = ref([])
+
+// const cascaderProps = computed(() => {
+//   return {
+//     value: 'id',
+//     label: 'name',
+//     children: 'children',
+//     checkStrictly: props.checkStrictly,
+//     expandTrigger: props.expandTrigger,
+//     emitPath: props.emitPath,
+//     multiple: props.multiple
+//   }
+// })
+// watch(
+//   () => props.modelValue,
+//   (value) => {
+//     if (value instanceof Array) {
+//       workShopId.value = [...value]
+//     } else {
+//       workShopId.value = value
+//     }
+//     handleChange(value)
+//   },
+//   { immediate: true }
+// )
+// onMounted(() => allFactoryWorkshopLines())
+
+// async function allFactoryWorkshopLines() {
+//   try {
+//     const { content } = await getAllFactoryWorkshopLines({})
+//     content.forEach((v) => {
+//       v.children = v.workshopList
+//       v.workshopList.forEach((p) => {
+//         p.children = p.productionLineList
+//       })
+//     })
+//     subList.value = content
+//   } catch (error) {
+//     console.log('请求工厂-车间-生产线的层级接口失败')
+//   }
+// }
+// function handleProductionLine(val) {
+//   console.log(val, 'val')
+// }
+// function handleChange(val) {
+//   emit('update:modelValue', val)
+//   emit('change', val)
+// }
+// --------------------------- 获取生产线 end ------------------------------
+
 // --------------------------- 获取生产班组 start ------------------------------
 const groupLoad = ref(false)
 const schedulingGroups = ref({ list: [], obj: {}})
@@ -458,7 +540,8 @@ async function submitIt() {
     totalList.value = []
     props.list.forEach((v) => {
       totalList.value.push(v)
-      if (v.needMachinePartLinkList) {
+      if (v.needMachinePartLinkList?.length > 0) {
+        console.log(v, 'v')
         v.needMachinePartLinkList?.forEach((o) => {
           _list.push({
             productId: v.id,
@@ -467,10 +550,11 @@ async function submitIt() {
             needSchedulingMonth: o.date
           })
         })
-      } else {
+      }
+      if (!v.needMachinePartLinkList) {
         _list.push({
           productId: v.id,
-          quantity: !v.needMachinePartLinkList ? v.usedQuantity : v.quantity
+          quantity: v.usedQuantity
         })
       }
     })
