@@ -1,14 +1,5 @@
 <template>
   <div v-show="crud.searchToggle">
-    <!-- <common-radio-button
-      v-model="query.boolNestCutEnum"
-      :options="layOffWayTypeEnum.ENUM"
-      showOptionAll
-      type="enum"
-      size="small"
-      class="filter-item"
-      @change="crud.toQuery"
-    /> -->
     <common-radio-button
       v-model="query.issueStatusEnum"
       :options="issueStatusEnum.ENUM"
@@ -20,14 +11,14 @@
       @change="crud.toQuery"
     />
     <div>
-      <el-input
+      <monomer-select
+        ref="monomerRef"
         v-model="query.monomerId"
-        placeholder="单体搜索"
-        class="filter-item"
-        style="width: 160px"
-        size="small"
         clearable
-        @keyup.enter="crud.toQuery"
+        :default="false"
+        :project-id="crud.query.projectId"
+        class="filter-item"
+        @change="crud.toQuery"
       />
       <el-input
         v-model="query.orderNumber"
@@ -56,25 +47,32 @@
         clearable
         @keyup.enter="crud.toQuery"
       />
-      <rrOperation />
+      <common-button class="filter-item" size="mini" type="success" icon="el-icon-search" @click.stop="searchQuery">搜索</common-button>
+      <common-button class="filter-item" size="mini" type="warning" icon="el-icon-refresh-left" @click.stop="resetQuery">
+        重置
+      </common-button>
     </div>
   </div>
-  <!-- <crudOperation>
-    <template #optRight>
-      <slot name="optRight" />
-    </template>
-  </crudOperation> -->
 </template>
 
 <script setup>
 import { regHeader } from '@compos/use-crud'
-// import { layOffWayTypeEnum } from '@enum-ms/uploading-form'
 import { machinePartSchedulingIssueStatusEnum as issueStatusEnum } from '@enum-ms/mes'
-// import crudOperation from '@crud/CRUD.operation'
-import rrOperation from '@crud/RR.operation'
+import monomerSelect from '@/components-system/plan/monomer-select'
 
 const defaultQuery = {}
 
-// const { crud } = regHeader(defaultQuery)
+function searchQuery() {
+  crud.toQuery()
+}
+function resetQuery() {
+  query.issueStatusEnum = undefined
+  query.monomerId = undefined
+  query.orderNumber = undefined
+  query.thick = undefined
+  query.material = undefined
+  crud.toQuery()
+}
+
 const { crud, query } = regHeader(defaultQuery)
 </script>

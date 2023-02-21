@@ -60,7 +60,7 @@
     :stripe="false"
     :max-height="maxHeight - 45"
     style="width: 100%"
-    @current-change="handleClickChange"
+    @row-click="handleClickChange"
   >
     <el-table-column label="序号" type="index" align="center" width="60" />
     <el-table-column prop="projectName" :show-overflow-tooltip="true" label="项目列表" min-width="100" align="center">
