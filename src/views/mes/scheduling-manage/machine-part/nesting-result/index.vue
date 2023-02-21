@@ -39,6 +39,7 @@
             align="center"
           >
             <template #default="{ row }">
+              <table-cell-tag :show="row.boolOffLine === !!nestingTypeEnum.OFFLINE.V" name="线下套料" color="#E6A23C" />
               <span @click="toDetail(row)" style="color: #409eff; cursor: pointer">{{ row.orderNumber }}</span>
             </template>
           </el-table-column>
@@ -131,7 +132,7 @@ import { getNestingTask } from '@/api/mes/scheduling-manage/machine-part'
 import { ref, provide } from 'vue'
 import { machinePartSchedulingNestingResultPM as permission } from '@/page-permission/mes'
 import { layOffWayTypeEnum } from '@enum-ms/uploading-form'
-import { machinePartSchedulingIssueStatusEnum as issueStatusEnum } from '@enum-ms/mes'
+import { machinePartSchedulingIssueStatusEnum as issueStatusEnum, nestingTypeEnum } from '@enum-ms/mes'
 import { parseTime } from '@/utils/date'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
