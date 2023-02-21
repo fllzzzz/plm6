@@ -374,9 +374,9 @@ function showHook() {
   cutConfigId.value = undefined
   fetchGroups()
   fetchOrder()
+  isNew.value = true
+  saveType.value = machinePartIssuedWayEnum.NESTING_ISSUED.V
   if (props.type === 1) {
-    isNew.value = true
-    saveType.value = machinePartIssuedWayEnum.NESTING_ISSUED.V
     if (Boolean(props.padBlockData?.length) && !props.checkedNodes?.length) {
       isNew.value = false
       saveType.value = machinePartIssuedWayEnum.ADD_NEW_TICKET.V
