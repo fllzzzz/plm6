@@ -65,7 +65,10 @@ const currentView = computed(() => {
 
 async function fetchList() {
   list.value = []
-  if (!form.requisitions?.length) return
+  if (!form.requisitions?.length) {
+    nextTick(() => compRef.value?.initList([]))
+    return
+  }
   try {
     const ids = form.requisitions?.map((v) => v.id) || []
     const content = (await canPurchaseDetail({ ids })) || []
@@ -85,9 +88,6 @@ async function fetchList() {
 }
 
 function addPurchase(row, index) {
-  if (isBlank(form.requisitionListKV?.[row.id])) {
-    form.requisitionListKV[row.id] = row
-  }
   emit('add-purchase', row)
 }
 

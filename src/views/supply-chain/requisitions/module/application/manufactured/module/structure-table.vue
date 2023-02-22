@@ -15,13 +15,7 @@
       </template>
     </tag-tabs>
   </div>
-  <common-table
-    v-bind="$attrs"
-    v-loading="tableLoading"
-    :data="tableData"
-    style="width: 100%"
-    @selection-change="handleSelectionChange"
-  >
+  <common-table v-bind="$attrs" v-loading="tableLoading" :data="tableData" style="width: 100%" @selection-change="handleSelectionChange">
     <el-table-column type="selection" width="55" align="center" :selectable="selectable" />
     <el-table-column label="序号" type="index" align="center" width="60" />
     <el-table-column prop="monomer.name" label="单体" align="center" show-overflow-tooltip min-width="120px" />
@@ -47,7 +41,11 @@
         />
       </template>
     </el-table-column>
-    <el-table-column prop="totalNetWeight" label="总重（kg）" align="center" show-overflow-tooltip />
+    <el-table-column label="总重（kg）" align="center" show-overflow-tooltip>
+      <template #default="{ row: { sourceRow: row } }">
+        <span>{{ toPrecision(row.curPurchaseQuantity * row.netWeight, 2) }}</span>
+      </template>
+    </el-table-column>
   </common-table>
   <!--分页组件-->
   <el-pagination
@@ -64,7 +62,7 @@
 <script setup>
 import { manufClassListGet, manufListGet } from '@/api/supply-chain/requisitions-manage/requisitions'
 import { ref, defineExpose, inject } from 'vue'
-import { deepClone, isNotBlank, isBlank } from '@/utils/data-type'
+import { deepClone, isNotBlank, isBlank, toPrecision } from '@/utils/data-type'
 
 import { regExtra } from '@/composables/form/use-form'
 import usePagination from '@compos/use-pagination'

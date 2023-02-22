@@ -71,7 +71,7 @@
       <template #default="{ row, $index }">
         <common-button
           icon="el-icon-plus"
-          :disabled="isNotBlank(form.requisitionListKV?.[row.id])"
+          :disabled="isExist(row.id)"
           type="warning"
           size="mini"
           @click="addRow(row, $index)"
@@ -86,7 +86,7 @@ import { defineExpose, defineEmits, inject, ref } from 'vue'
 import { positiveNumPattern } from '@/utils/validate/pattern'
 
 import useTableValidate from '@compos/form/use-table-validate'
-import { deepClone, isNotBlank } from '@/utils/data-type'
+import { deepClone } from '@/utils/data-type'
 
 const emit = defineEmits(['add-purchase'])
 const form = inject('crud')?.form
@@ -108,6 +108,10 @@ const rules = {
 }
 
 const { tableValidate, wrongCellMask } = useTableValidate({ rules: rules }) // 表格校验
+
+function isExist(id) {
+  return form.list?.findIndex((v) => v.id === id) !== -1
+}
 
 function addRow(row, index) {
   emit('add-purchase', row, index)

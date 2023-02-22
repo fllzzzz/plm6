@@ -5,20 +5,25 @@
         v-if="row"
         v-model="row.workshopId"
         placeholder="请选择车间"
-        only-one-default
+        :only-one-default="props.boolManuf ? row.destination === destinationTypeEnum.FACTORY.V : true"
+        :disabled="props.boolManuf ? row.destination === destinationTypeEnum.CONSTRUCTION_SITE.V : false"
         :show-extra="$index !== 0"
         @change="handleWorkshopChange($event, $index, row)"
       />
     </template>
   </el-table-column>
-  <el-table-column prop="warehouseId" label="存储位置" min-width="140px" align="center">
+  <el-table-column v-if="showWarehouse" prop="warehouseId" label="存储位置" min-width="140px" align="center">
     <template #default="{ row: { sourceRow: row }, $index }">
       <warehouse-select
         v-if="row"
         v-model="row.warehouseId"
         :workshop-id="getWorkshopVal($index)"
         :basic-class="row.basicClass"
-        :show-extra="(formList[$index - 1] && formList[$index]?.basicClass ===  formList[$index - 1]?.basicClass) && !warehouseDittoableIndex.includes($index)"
+        :show-extra="
+          formList[$index - 1] &&
+          formList[$index]?.basicClass === formList[$index - 1]?.basicClass &&
+          !warehouseDittoableIndex.includes($index)
+        "
         placeholder="存储位置"
       />
     </template>
@@ -27,6 +32,7 @@
 
 <script setup>
 import { defineProps, computed, watchEffect, ref, nextTick } from 'vue'
+import { destinationTypeEnum } from '@enum-ms/production'
 
 import workshopSelect from '@/components-system/base/workshop-select.vue'
 import warehouseSelect from '@/components-system/wms/warehouse-select.vue'
@@ -39,6 +45,14 @@ const props = defineProps({
     default: () => {
       return {}
     }
+  },
+  boolManuf: {
+    type: Boolean,
+    default: false
+  },
+  showWarehouse: {
+    type: Boolean,
+    default: true
   }
 })
 const currentForm = ref({ list: [] })

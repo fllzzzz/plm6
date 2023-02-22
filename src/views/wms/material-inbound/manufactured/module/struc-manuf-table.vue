@@ -49,12 +49,12 @@
         />
       </template>
     </el-table-column>
-    <el-table-column prop="mete" label="实收量" align="center" min-width="120px" />
+    <el-table-column prop="mete" label="实收量(kg)" align="center" min-width="120px" />
   </common-table>
 </template>
 
 <script setup>
-import { defineExpose, defineProps, computed, ref } from 'vue'
+import { defineExpose, defineProps, computed, ref, watch } from 'vue'
 import { positiveNumPattern } from '@/utils/validate/pattern'
 import { isNotBlank, toPrecision } from '@/utils/data-type'
 
@@ -106,10 +106,17 @@ function selectAllTableChange(select) {
   })
 }
 
-// 处理重量变化
-function handleWeightChange(val, row) {
-  if (isNotBlank(row.unitPrice) && isNotBlank(val)) {
-    row.amount = toPrecision(val * row.unitPrice, 2)
+function rowWatch(row) {
+  // 计算总重
+  watch([() => row.quantity, () => row.netWeight], () => calcTotalWeight(row), { immediate: true })
+}
+
+// 计算总重
+function calcTotalWeight(row) {
+  if (isNotBlank(row.netWeight) && row.quantity) {
+    row.mete = toPrecision(row.netWeight * row.quantity)
+  } else {
+    row.mete = undefined
   }
 }
 
@@ -128,6 +135,7 @@ function validate() {
 }
 
 defineExpose({
-  validate
+  validate,
+  rowWatch
 })
 </script>

@@ -215,7 +215,7 @@ function rowInit(row) {
 function rowWatch(row) {
   watchEffect(() => weightOverDiff(row))
   // 计算单件理论重量
-  watch([() => row.length, () => row.width, () => row.thickness, baseUnit], () => calcTheoryWeight(row))
+  watch([() => row.length, () => row.width, () => row.thickness, baseUnit], () => calcTheoryWeight(row), { immediate: true })
   // 计算总重
   watch([() => row.theoryWeight, () => row.quantity], () => calcTotalWeight(row))
 }

@@ -92,7 +92,7 @@
       <template #default="{ row, $index }">
         <common-button
           icon="el-icon-plus"
-          :disabled="isNotBlank(form.requisitionListKV?.[row.id])"
+          :disabled="isExist(row.id)"
           type="warning"
           size="mini"
           @click="addRow(row, $index)"
@@ -111,7 +111,6 @@ import useTableValidate from '@compos/form/use-table-validate'
 import useMatBaseUnit from '@/composables/store/use-mat-base-unit'
 import { calcSteelCoilLength } from '@/utils/wms/measurement-calc'
 import { positiveNumPattern } from '@/utils/validate/pattern'
-import { ElMessage } from 'element-plus'
 
 const emit = defineEmits(['add-purchase'])
 
@@ -143,13 +142,17 @@ const rules = {
 
 const { tableValidate, wrongCellMask } = useTableValidate({ rules: rules, errorMsg: '请修正【钢卷清单】中标红的信息' }) // 表格校验
 
+function isExist(id) {
+  return form.steelCoilList?.findIndex((v) => v.id === id) !== -1
+}
+
 // 行监听
 // 使用watch 监听方法，优点：初始化时表单数据时，可以不立即执行（惰性），可以避免“草稿/修改”状态下重量被自动修改；缺点：初始化时需要指定监听参数
 function rowWatch(row) {
   // 计算理论长度
-  watch([() => row.weighingTotalWeight, () => row.width, () => row.thickness, baseUnit], () => calcTheoryLength(row), { immediate: true })
+  watch([() => row.weighingTotalWeight, () => row.width, () => row.thickness, baseUnit], () => calcTheoryLength(row))
   // 计算总长度
-  watch([() => row.theoryLength], () => calcTotalLength(row), { immediate: true })
+  watch([() => row.theoryLength], () => calcTotalLength(row))
 }
 
 // 总重计算与单位重量计算分开，避免修改数量时需要重新计算单件重量

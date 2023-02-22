@@ -157,7 +157,7 @@ function handleAdd() {
     }
     for (let i = 0; i < list.length; i++) {
       const v = deepClone(list[i])
-      const _purchaseWeight = v.curPurchaseQuantity * v.netWeight || 0
+      const _purchaseWeight = toPrecision(v.curPurchaseQuantity * v.netWeight, 2) || 0
       if (isBlank(form.purchaseListObj[v.id])) {
         form.purchaseListObj[v.id] = {
           ...v,
@@ -229,7 +229,7 @@ FORM.HOOK.beforeToEdit = async (crud, form) => {
   const list = form.list
   for (let i = 0; i < list.length; i++) {
     const v = deepClone(list[i])
-    const _purchaseWeight = v.quantity * v.netWeight || 0
+    const _purchaseWeight = toPrecision(v.quantity * v.netWeight, 2) || 0
     if (isBlank(form.purchaseListObj[v.id])) {
       form.purchaseListObj[v.id] = {
         ...v,

@@ -116,7 +116,6 @@ import useWeightOverDiff from '@/composables/wms/use-steel-weight-over-diff'
 import { createUniqueString } from '@/utils/data-type/string'
 import { calcSectionSteelTotalLength, calcSectionSteelWeight } from '@/utils/wms/measurement-calc'
 import { positiveNumPattern } from '@/utils/validate/pattern'
-import { ElMessage } from 'element-plus'
 
 const emit = defineEmits(['search-inventory'])
 
@@ -154,6 +153,7 @@ function rowInit(row) {
   const _row = reactive({
     uid: createUniqueString(),
     sn: row.sn, // 该科目规格唯一编号
+    requisitionMode: requisitionModeEnum.PURCHASE.V,
     specificationLabels: row.specificationLabels, // 规格中文
     serialNumber: row.serialNumber, // 科目编号 - 规格
     classifyId: row.classify.id, // 科目id

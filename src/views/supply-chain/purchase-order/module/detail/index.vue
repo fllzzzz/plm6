@@ -33,7 +33,10 @@
             <div class="form-left">
               <el-form-item label="物料种类" prop="basicClass">
                 <div class="flex-rss child-mr-10">
-                  <span v-parse-enum="{ e: baseMaterialTypeEnum, v: detail.purchaseType, extra: '：' }" />
+                  <span
+                    v-if="!(detail.materialType & materialPurchaseClsEnum.MATERIAL.V)"
+                    v-parse-enum="{ e: materialPurchaseClsEnum, v: detail.materialType, extra: '：' }"
+                  />
                   <span v-parse-enum="{ e: matClsEnum, v: detail.basicClass, bit: true, split: ' | ' }" />
                 </div>
               </el-form-item>
@@ -99,7 +102,7 @@
               <span class="pre-wrap">{{ detail.requisitionsSN ? detail.requisitionsSN.join(`\n`) : '' }}</span>
             </el-form-item> -->
               <el-form-item label="关联项目" class="el-form-item-4" prop="projectIds" style="width: 100%">
-                <span v-if="baseMaterialTypeEnum.RAW_MATERIAL.V === detail.purchaseType" class="pre-wrap">
+                <span class="pre-wrap">
                   {{ detail.projects ? detail.projects.map((v) => projectNameFormatter(v, null, false)).join(`\n`) : '' }}
                 </span>
               </el-form-item>
@@ -117,7 +120,10 @@
             <div class="form-right">
               <div class="right-head flex-rbs">
                 <span class="right-head-content">
-                  <span class="label">采购清单</span>
+                  <span class="label">{{ boolUseRequisitions ? '关联申购单号' : '采购清单' }}</span>
+                  <el-tag v-for="item in detail.applyPurchase" :key="item.id" effect="plain" class="preparation-sn-tag">
+                    {{ item.serialNumber }}
+                  </el-tag>
                 </span>
               </div>
               <!-- 清单列表 -->
@@ -131,14 +137,14 @@
 </template>
 
 <script setup>
-import { watch, nextTick, computed, ref } from 'vue'
-import { matClsEnum } from '@enum-ms/classification'
-import { orderSupplyTypeEnum, baseMaterialTypeEnum, purchaseOrderPaymentModeEnum, purchaseStatusEnum } from '@enum-ms/wms'
+import { computed } from 'vue'
+import { matClsEnum, materialPurchaseClsEnum } from '@enum-ms/classification'
+import { orderSupplyTypeEnum, purchaseOrderPaymentModeEnum, purchaseStatusEnum } from '@enum-ms/wms'
 import { weightMeasurementModeEnum, invoiceTypeEnum, settlementStatusEnum } from '@enum-ms/finance'
 import { logisticsPayerEnum, logisticsTransportTypeEnum } from '@/utils/enum/modules/logistics'
 import { fileClassifyEnum } from '@enum-ms/file'
 import { projectNameFormatter } from '@/utils/project'
-import { deepClone, isNotBlank } from '@/utils/data-type'
+import { isNotBlank, toPrecision } from '@/utils/data-type'
 import { setSpecInfoToList } from '@/utils/wms/spec'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 
@@ -174,12 +180,16 @@ const detailTitle = computed(() => {
 const boolPurchaseCompleted = computed(() => detail.purchaseStatus === purchaseStatusEnum.FINISHED.V)
 const boolSettled = computed(() => detail.settlementStatus === settlementStatusEnum.SETTLED.V)
 
+const boolUseRequisitions = computed(() => Boolean(detail.applyPurchase?.length))
+
 // 详情加载
 CRUD.HOOK.beforeDetailLoaded = async (crud, detail) => {
-  await setSpecInfoToList(detail.details)
-  await numFmtByBasicClass(detail.details, {
-    toNum: true
-  })
+  if (!(detail.materialType & materialPurchaseClsEnum.MATERIAL.V)) {
+    await setSpecInfoToList(detail.details)
+    await numFmtByBasicClass(detail.details, {
+      toNum: true
+    })
+  }
 }
 </script>
 
@@ -197,7 +207,7 @@ CRUD.HOOK.beforeDetailLoaded = async (crud, detail) => {
 
   .form-left {
     width: 450px;
-    height:100%;
+    height: 100%;
     flex: none;
     padding-left: 4px;
     padding-right: 20px;
@@ -224,6 +234,13 @@ CRUD.HOOK.beforeDetailLoaded = async (crud, detail) => {
           font-size: 15px;
           margin-right: 10px;
           color: var(--el-text-color-regular);
+        }
+        .preparation-sn-tag {
+          user-select: none;
+          min-width: 150px;
+          margin-right: 10px;
+          text-align: center;
+          cursor: pointer;
         }
       }
     }

@@ -78,6 +78,7 @@ function initList(list) {
     basicClass.value = steelClsEnum.STEEL_PLATE.V
   } else {
     list.forEach((v) => {
+      v.weighingTotalWeight = v.mete
       bcListObj[bcListKV[steelClsEnum.VK[v.basicClass]]].push(deepClone(v))
     })
     for (const item in steelClsEnum.ENUM) {

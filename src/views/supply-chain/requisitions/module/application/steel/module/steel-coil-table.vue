@@ -114,6 +114,7 @@
 <script setup>
 import { defineExpose, defineEmits, inject, reactive, watch } from 'vue'
 import { matClsEnum } from '@/utils/enum/modules/classification'
+import { requisitionModeEnum } from '@enum-ms/wms'
 import { isBlank, isNotBlank } from '@/utils/data-type'
 
 import { regExtra } from '@/composables/form/use-form'
@@ -160,6 +161,7 @@ function rowInit(row) {
   const _row = reactive({
     uid: createUniqueString(),
     sn: row.sn, // 该科目规格唯一编号
+    requisitionMode: requisitionModeEnum.PURCHASE.V,
     specificationLabels: row.specificationLabels, // 规格中文
     serialNumber: row.serialNumber, // 科目编号 - 规格
     classifyId: row.classify.id, // 科目id

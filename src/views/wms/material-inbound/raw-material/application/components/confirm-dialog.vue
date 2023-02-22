@@ -37,24 +37,29 @@
               </p>
             </template>
           </el-expand-table-column>
-          <!-- 基础信息 -->
-          <material-base-info-columns :basic-class="props.basicClass" fixed="left" />
-          <!-- 单位及其数量 -->
-          <material-unit-quantity-columns :basic-class="props.basicClass" />
-          <!-- 次要信息 -->
-          <material-secondary-info-columns v-if="showTableColumnSecondary" :basic-class="props.basicClass" />
+          <template v-if="!boolManuf">
+            <!-- 基础信息 -->
+            <material-base-info-columns :basic-class="props.basicClass" fixed="left" />
+            <!-- 单位及其数量 -->
+            <material-unit-quantity-columns :basic-class="props.basicClass" />
+            <!-- 次要信息 -->
+            <material-secondary-info-columns v-if="showTableColumnSecondary" :basic-class="props.basicClass" />
 
-          <template v-if="fillableAmount && !boolPartyA">
-            <el-table-column key="unitPrice" prop="unitPrice" align="right" width="120" label="含税单价">
-              <template #default="{ row: { sourceRow: row } }">
-                <span>{{ row.unitPrice }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column key="amount" prop="amount" align="right" width="120" label="金额">
-              <template #default="{ row }">
-                <span>{{ row.amount }}</span>
-              </template>
-            </el-table-column>
+            <template v-if="fillableAmount && !boolPartyA">
+              <el-table-column key="unitPrice" prop="unitPrice" align="right" width="120" label="含税单价">
+                <template #default="{ row: { sourceRow: row } }">
+                  <span>{{ row.unitPrice }}</span>
+                </template>
+              </el-table-column>
+              <el-table-column key="amount" prop="amount" align="right" width="120" label="金额">
+                <template #default="{ row }">
+                  <span>{{ row.amount }}</span>
+                </template>
+              </el-table-column>
+            </template>
+          </template>
+          <template v-else>
+            <manufactured-info-columns :basic-class="props.basicClass" />
           </template>
 
           <!-- 金额设置 -->
@@ -67,9 +72,9 @@
             @amount-change="handleAmountChange"
           /> -->
           <!-- 项目设置 -->
-          <project-set-columns :form="form" :order="order" :requisitions="cu.props.requisitions" />
+          <project-set-columns v-if="!boolManuf" :form="form" :order="order" :requisitions="cu.props.requisitions" />
           <!-- 仓库设置 -->
-          <warehouse-set-columns :form="form" v-if="fillableWarehouse" />
+          <warehouse-set-columns :form="form" v-if="fillableWarehouse" :boolManuf="boolManuf" :showWarehouse="!boolManuf" />
         </common-table>
         <!-- 物流信息设置 -->
         <logistics-form
@@ -89,10 +94,11 @@
 import { computed, defineEmits, defineProps, provide, ref, watch } from 'vue'
 import { orderSupplyTypeEnum } from '@enum-ms/wms'
 import { STEEL_ENUM } from '@/settings/config'
-import { matClsEnum } from '@/utils/enum/modules/classification'
+import { matClsEnum, materialPurchaseClsEnum } from '@/utils/enum/modules/classification'
 import { logisticsPayerEnum } from '@/utils/enum/modules/logistics'
 import { tableSummary } from '@/utils/el-extra'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
+import { destinationTypeEnum } from '@enum-ms/production'
 // import { isBlank, isNotBlank, toFixed } from '@/utils/data-type'
 import { isBlank, isNotBlank } from '@/utils/data-type'
 import { materialHasAmountColumns } from '@/utils/columns-format/wms'
@@ -103,6 +109,7 @@ import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'
 // import useWmsConfig from '@/composables/store/use-wms-config'
 import elExpandTableColumn from '@comp-common/el-expand-table-column.vue'
+import manufacturedInfoColumns from '@/components-system/wms/table-columns/manufactured-info-columns/index.vue'
 import materialBaseInfoColumns from '@/components-system/wms/table-columns/material-base-info-columns/index.vue'
 import materialUnitQuantityColumns from '@/components-system/wms/table-columns/material-unit-quantity-columns/index.vue'
 import materialSecondaryInfoColumns from '@/components-system/wms/table-columns/material-secondary-info-columns/index.vue'
@@ -138,35 +145,6 @@ const columnsDataFormat = ref([
   ['remark', 'empty-text']
 ])
 
-// 仓管填写的信息（车间及仓库）
-const warehouseRules = {
-  workshopId: [{ required: true, message: '请选择车间', trigger: 'change' }],
-  warehouseId: [{ required: true, message: '请选择仓库', trigger: 'change' }]
-}
-
-// 采购填写的信息（金额、申购单及项目）
-const amountRules = {
-  unitPrice: [{ required: true, message: '请填写单价', trigger: 'blur' }],
-  amount: [{ required: true, message: '请填写金额', trigger: 'blur' }]
-}
-
-// 项目
-const projectRules = {
-  projectId: [{ required: true, message: '请选择项目', trigger: 'change' }]
-}
-
-const tableRules = computed(() => {
-  const rules = { ...warehouseRules }
-  // 甲供不填写金额方面的信息
-  if (fillableAmount.value && !boolPartyA.value) {
-    Object.assign(rules, amountRules)
-    if (isNotBlank(order.value.projects)) {
-      Object.assign(rules, projectRules)
-    }
-  }
-  return rules
-})
-
 const formList = ref([])
 const expandRowKeys = ref([]) // 展开行key
 // const amount = ref() // 金额
@@ -190,6 +168,8 @@ const fillableWarehouse = ref(true)
 const fillableLogistics = computed(() => order.value.logisticsPayerType === logisticsPayerEnum.DEMAND.V && fillableAmount.value)
 // 是否“甲供”
 const boolPartyA = computed(() => order.value.supplyType === orderSupplyTypeEnum.PARTY_A.V)
+// 是否制成品
+const boolManuf = computed(() => order.value.materialType === materialPurchaseClsEnum.MANUFACTURED.V)
 // 在列中显示次要信息
 const showTableColumnSecondary = computed(() => {
   // 非甲供订单，显示项目和申购单 或者仓库时
@@ -198,6 +178,65 @@ const showTableColumnSecondary = computed(() => {
   // 甲供订单，显示项目和申购单以及仓库时
   const unshow2 = fillableAmount.value && boolPartyA.value && order.value.projects && order.value.requisitionsSN && fillableWarehouse.value
   return !(unshow1 || unshow2)
+})
+
+// 车间
+const validateWorkshop = (value, row) => {
+  if (!boolManuf.value || (boolManuf.value && row.destination === destinationTypeEnum.FACTORY.V)) {
+    if (isNotBlank(value)) {
+      return true
+    } else {
+      return false
+    }
+  }
+  return true
+}
+
+// 车间
+const validateWarehouse = (value, row) => {
+  if (!boolManuf.value) {
+    if (isNotBlank(value)) {
+      return true
+    } else {
+      return false
+    }
+  }
+  return true
+}
+
+// 仓管填写的信息（车间及仓库）
+const warehouseRules = {
+  workshopId: [
+    // { required: true, message: '请选择车间', trigger: 'change' },
+    { validator: validateWorkshop, message: '请选择车间', trigger: 'change' }
+  ],
+  warehouseId: [
+    // { required: true, message: '请选择仓库', trigger: 'change' },
+    { validator: validateWarehouse, message: '请选择仓库', trigger: 'change' }
+  ]
+}
+
+// 采购填写的信息（金额、申购单及项目）
+const amountRules = {
+  unitPrice: [{ required: true, message: '请填写单价', trigger: 'blur' }],
+  amount: [{ required: true, message: '请填写金额', trigger: 'blur' }]
+}
+
+// 项目
+const projectRules = {
+  projectId: [{ required: true, message: '请选择项目', trigger: 'change' }]
+}
+
+const tableRules = computed(() => {
+  const rules = { ...warehouseRules }
+  // 甲供不填写金额方面的信息
+  if (fillableAmount.value && !boolPartyA.value) {
+    Object.assign(rules, amountRules)
+    if (isNotBlank(order.value.projects)) {
+      Object.assign(rules, projectRules)
+    }
+  }
+  return rules
 })
 
 // 表格高度处理
@@ -228,7 +267,7 @@ const { tableValidate, cleanUpData, wrongCellMask } = useTableValidate({ rules: 
 
 function showHook() {
   formList.value = form.list.filter((v) => {
-    if (boolPartyA.value || form.selectObj(v.id)) {
+    if (boolPartyA.value || form.selectObj[v.id]) {
       return true
     } else {
       return false
@@ -241,6 +280,9 @@ function showHook() {
 cu.submitFormFormat = async (form) => {
   cleanUpData(formList.value)
   form.list = await numFmtByBasicClass(formList.value, { toSmallest: true, toNum: true })
+  form.list.forEach((v) => {
+    v.purchaseOrderDetailId = v.id
+  })
   return form
 }
 

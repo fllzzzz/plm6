@@ -149,8 +149,8 @@ const totalAmount = computed(() => {
 const totalWeight = computed(() => {
   let weight = 0
   formList.value.forEach((v) => {
-    if (isNotBlank(v.weighingTotalWeight)) {
-      weight += +v.weighingTotalWeight
+    if (isNotBlank(v.mete)) {
+      weight += +v.mete
     }
   })
   return toFixed(weight, 2)
@@ -160,6 +160,10 @@ provide('matSpecRef', matSpecRef) // 供兄弟组件调用 删除
 
 // 使用草稿时，为数据设置监听
 const setFormCallback = (form) => {
+  const trigger = {
+    strucManufList: null,
+    enclManufList: null
+  }
   const list = ['strucManufList', 'enclManufList']
   let hasDefaultSelect = false // 是否有默认选中，优先选中有数据的类型
   list.forEach((key) => {
@@ -182,6 +186,19 @@ const setFormCallback = (form) => {
       }
 
       form[key] = form[key].map((v) => reactive(v))
+      trigger[key] = watch(
+        manufRefList,
+        (ref) => {
+          if (ref[key]) {
+            // 初始化数据监听，执行一次后取消当前监听
+            form[key].forEach((v) => ref[key].rowWatch(v))
+            nextTick(() => {
+              trigger[key]()
+            })
+          }
+        },
+        { immediate: true, deep: true }
+      )
     }
   })
   fixMaxHeight()
@@ -292,10 +309,6 @@ function validate() {
   const tableValidateRes = validateTable()
   if (tableValidateRes) {
     form.list = formList.value
-    form.list.forEach((v) => {
-      v.mete = v.weighingTotalWeight
-      v.weight = v.weighingTotalWeight
-    })
   }
   // 进入仓库级价格填写页面
   return tableValidateRes
@@ -331,6 +344,7 @@ async function handleOrderInfoChange(orderInfo) {
       form.strucManufList = []
       form.enclManufList = []
       for (const row of form.list) {
+        row.projectId = orderInfo?.project?.id
         switch (row.basicClass) {
           case matClsEnum.STRUC_MANUFACTURED.V:
             form.strucManufList.push(row)

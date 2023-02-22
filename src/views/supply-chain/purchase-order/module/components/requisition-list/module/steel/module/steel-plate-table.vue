@@ -100,13 +100,7 @@
     </el-table-column>
     <el-table-column label="操作" width="90" align="center" fixed="right">
       <template #default="{ row, $index }">
-        <common-button
-          icon="el-icon-plus"
-          :disabled="isNotBlank(form.requisitionListKV?.[row.id])"
-          type="warning"
-          size="mini"
-          @click="addRow(row, $index)"
-        />
+        <common-button icon="el-icon-plus" :disabled="isExist(row.id)" type="warning" size="mini" @click="addRow(row, $index)" />
       </template>
     </el-table-column>
   </common-table>
@@ -122,7 +116,6 @@ import useMatBaseUnit from '@/composables/store/use-mat-base-unit'
 import useWeightOverDiff from '@/composables/wms/use-steel-weight-over-diff'
 import { calcSteelPlateWeight } from '@/utils/wms/measurement-calc'
 import { positiveNumPattern } from '@/utils/validate/pattern'
-import { ElMessage } from 'element-plus'
 
 const emit = defineEmits(['add-purchase'])
 
@@ -157,14 +150,18 @@ const rules = {
 
 const { tableValidate, wrongCellMask } = useTableValidate({ rules: rules, errorMsg: '请修正【钢板清单】中标红的信息' }) // 表格校验
 
+function isExist(id) {
+  return form.steelPlateList?.findIndex((v) => v.id === id) !== -1
+}
+
 // 行监听
 // 使用watch 监听方法，优点：初始化时表单数据时，可以不立即执行（惰性），可以避免“草稿/修改”状态下重量被自动修改；缺点：初始化时需要指定监听参数
 function rowWatch(row) {
   watchEffect(() => weightOverDiff(row))
   // 计算单件理论重量
-  watch([() => row.length, () => row.width, () => row.thickness, baseUnit], () => calcTheoryWeight(row), { immediate: true })
+  watch([() => row.length, () => row.width, () => row.thickness, baseUnit], () => calcTheoryWeight(row))
   // 计算总重
-  watch([() => row.theoryWeight, () => row.quantity], () => calcTotalWeight(row), { immediate: true })
+  watch([() => row.theoryWeight, () => row.quantity], () => calcTotalWeight(row))
 }
 
 // 总重计算与单位重量计算分开，避免修改数量时需要重新计算单件重量

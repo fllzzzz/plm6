@@ -31,7 +31,7 @@
 import { defineExpose, defineEmits, inject, ref } from 'vue'
 
 import { manufClsEnum } from '@enum-ms/classification'
-import { isBlank, toPrecision } from '@/utils/data-type'
+import { toPrecision, isBlank } from '@/utils/data-type'
 import { ElMessage } from 'element-plus'
 
 const emit = defineEmits(['add-purchase'])
@@ -41,13 +41,14 @@ const list = ref([])
 const selectList = ref([])
 
 function selectable(row) {
-  return isBlank(form.requisitionListKV?.[row.id])
+  return isBlank(form.manufListObj?.[row.id])
 }
 
 function initList(_list) {
   list.value = _list.map((v) => {
     v.totalNetWeight = toPrecision(v.quantity * v.netWeight, 2)
     v.basicClass = manufClsEnum.STRUC_MANUFACTURED.V
+    v.curPurchaseQuantity = v.quantity
     return v
   })
 }
@@ -61,9 +62,7 @@ function add() {
     ElMessage.warning('请选择数据')
     return
   }
-  selectList.value.forEach((v) => {
-    emit('add-purchase', v)
-  })
+  emit('add-purchase', selectList.value)
 }
 
 defineExpose({

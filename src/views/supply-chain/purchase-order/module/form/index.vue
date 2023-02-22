@@ -41,7 +41,6 @@
                     :disabled="Boolean(form.boolUsed)"
                     :options="materialPurchaseClsEnum.ENUM"
                     type="enum"
-                    @change="handleMaterialTypeChange"
                   />
                 </el-form-item>
                 <el-form-item v-if="!form.useRequisitions && isManuf" label="选择项目" class="el-form-item-4" prop="projectId">
@@ -185,6 +184,19 @@
                 <!-- 关联申购单-->
                 <span class="right-head-content">
                   <span class="label">关联申购单号</span>
+                  <common-radio-button
+                    v-if="form.materialType & materialPurchaseClsEnum.STEEL.V"
+                    type="enum"
+                    v-model="form.currentBasicClass"
+                    :options="steelClsEnum.ENUM"
+                    :disabledVal="[]"
+                    clearable
+                    style="vertical-align: middle; margin-right: 6px"
+                  >
+                    <template #suffix="{ item }">
+                      <span v-if="form[compListVK[item.V]]?.length">({{ form[compListVK[item.V]]?.length }})</span>
+                    </template>
+                  </common-radio-button>
                   <el-tag v-for="item in form.requisitions" :key="item.id" effect="plain" class="preparation-sn-tag">
                     {{ item.serialNumber }}
                   </el-tag>
@@ -212,9 +224,7 @@
                   </common-radio-button>
                 </span>
                 <span class="opt-content">
-                  <common-button v-if="!isManuf" type="success" size="mini" @click="materialSelectVisible = true">
-                    添加物料
-                  </common-button>
+                  <common-button v-if="!isManuf" type="success" size="mini" @click="materialSelectVisible = true"> 添加物料 </common-button>
                   <el-tooltip :disabled="!!form.projectId" effect="light" content="请先选择项目" placement="left-start">
                     <span>
                       <common-button
@@ -240,7 +250,7 @@
       </div>
       <common-drawer v-model="requisitionVisible" title="申购选择" direction="btt" size="70%" custom-class="material-requisition-select">
         <template #titleRight>
-          <el-tag v-if="requisitionBadge" type="success" effect="plain">已加入（{{ requisitionBadge }}）</el-tag>
+          <!-- <el-tag v-if="requisitionBadge" type="success" effect="plain">已加入（{{ requisitionBadge }}）</el-tag> -->
         </template>
         <template #content>
           <requisition-list-application ref="requisitionListRef" @add-purchase="handleAddPurchase" />
@@ -281,12 +291,13 @@
           <manuf-list :project-id="form.projectId" :maxHeight="manufSelectMaxHeight" @add="handleAddManuf" />
         </template>
       </common-drawer>
+      <!-- <submit-preview v-model:visible="previewVisible" :loading="crud.status.cu === CRUD.STATUS.PROCESSING" @submit="crud.submitCU" /> -->
     </template>
   </common-drawer>
 </template>
 
 <script setup>
-import { ref, computed, provide, nextTick, watchEffect } from 'vue'
+import { ref, computed, provide, nextTick, watchEffect, watch } from 'vue'
 import { matClsEnum, steelClsEnum, materialPurchaseClsEnum } from '@enum-ms/classification'
 import { orderSupplyTypeEnum, baseMaterialTypeEnum, purchaseOrderPaymentModeEnum } from '@enum-ms/wms'
 import { logisticsPayerEnum, logisticsTransportTypeEnum } from '@/utils/enum/modules/logistics'
@@ -312,6 +323,7 @@ import useMaxHeight from '@/composables/use-max-height'
 
 import RequisitionListApplication from '../components/requisition-list/index.vue'
 import ManufList from '../components/manuf-list.vue'
+// import SubmitPreview from '../components/submit-preview.vue'
 import SteelApplication from '../components/application/steel/index'
 import AuxMatApplication from '../components/application/auxiliary-material/index'
 import ManufApplication from '../components/application/manufactured/index'
@@ -348,7 +360,6 @@ const defaultForm = {
   steelCoilList: [],
   requisitions: [],
   requisitionsKV: {},
-  requisitionListKV: {},
   manufListObj: {},
   manufMergeObj: {}
 }
@@ -357,6 +368,7 @@ const formRef = ref() // 表单
 
 const { CRUD, crud, form } = regForm(defaultForm, formRef)
 const dialogVisible = computed(() => crud.status.cu > CRUD.STATUS.NORMAL)
+// const previewVisible = ref(false)
 
 // 表格高度处理
 const { maxHeight, heightStyle } = useMaxHeight(
@@ -426,31 +438,33 @@ watchEffect(() => {
 // 是否制成品
 const isManuf = computed(() => Boolean(form.materialType & materialPurchaseClsEnum.MANUFACTURED.V))
 
-function handleMaterialTypeChange(val) {
-  if (val & materialPurchaseClsEnum.MATERIAL.V) {
-    form.currentBasicClass = matClsEnum.MATERIAL.V
+watch(
+  () => form.materialType,
+  (val) => {
+    if (val & materialPurchaseClsEnum.MATERIAL.V) {
+      form.currentBasicClass = matClsEnum.MATERIAL.V
+    }
+    if (val & materialPurchaseClsEnum.STEEL.V) {
+      form.currentBasicClass = matClsEnum.STEEL_PLATE.V
+    }
+    if (val & materialPurchaseClsEnum.MANUFACTURED.V) {
+      form.currentBasicClass = matClsEnum.STRUC_MANUFACTURED.V
+      form.purchaseType = baseMaterialTypeEnum.MANUFACTURED.V
+    } else {
+      form.purchaseType = baseMaterialTypeEnum.RAW_MATERIAL.V
+    }
+    form.list = []
+    form.sectionSteelList = []
+    form.steelPlateList = []
+    form.steelCoilList = []
+    form.requisitionsKV = {}
+    form.manufListObj = {}
+    // form.manufMergeObj = {}
+    if (matSpecRef.value) {
+      matSpecRef.value.clear()
+    }
   }
-  if (val & materialPurchaseClsEnum.STEEL.V) {
-    form.currentBasicClass = matClsEnum.STEEL_PLATE.V
-  }
-  if (val & materialPurchaseClsEnum.MANUFACTURED.V) {
-    form.currentBasicClass = matClsEnum.STRUC_MANUFACTURED.V
-    form.purchaseType = baseMaterialTypeEnum.MANUFACTURED.V
-  } else {
-    form.purchaseType = baseMaterialTypeEnum.RAW_MATERIAL.V
-  }
-  form.list = []
-  form.sectionSteelList = []
-  form.steelPlateList = []
-  form.steelCoilList = []
-  form.requisitionsKV = {}
-  form.requisitionListKV = {}
-  form.manufListObj = {}
-  form.manufMergeObj = {}
-  if (matSpecRef.value) {
-    matSpecRef.value.clear()
-  }
-}
+)
 
 const currentView = computed(() => {
   switch (form.materialType) {
@@ -523,30 +537,33 @@ function rowInit(row) {
 function handleAddManuf(list) {
   for (let i = 0; i < list.length; i++) {
     const v = deepClone(list[i])
+    v.measureUnit = '件' // 计量单位
+    v.accountingUnit = '千克' // 核算单位
     const _purchaseWeight = v.curPurchaseQuantity * v.netWeight || 0
     if (isBlank(form.manufListObj[v.id])) {
       form.manufListObj[v.id] = {
         ...v,
+        rowKey: v.id,
         curPurchaseWeight: _purchaseWeight
       }
     } else {
       form.manufListObj[v.id].curPurchaseQuantity += v.curPurchaseQuantity
       form.manufListObj[v.id].curPurchaseWeight = toPrecision(form.manufListObj[v.id].curPurchaseWeight + _purchaseWeight, 2)
     }
-    const _mergeStr = v.name ? v.name + '_' + v.specification + '_' + v.material : v.specification + '_' + v.material
-    if (isBlank(form.manufMergeObj[_mergeStr])) {
-      form.manufMergeObj[_mergeStr] = {
-        ...v,
-        rowKey: _mergeStr,
-        mergeIds: [v.id],
-        curPurchaseQuantity: v.curPurchaseQuantity,
-        curPurchaseWeight: _purchaseWeight
-      }
-    } else {
-      form.manufMergeObj[_mergeStr].mergeIds.push(v.id)
-      form.manufMergeObj[_mergeStr].curPurchaseQuantity += v.curPurchaseQuantity
-      form.manufMergeObj[_mergeStr].curPurchaseWeight = toPrecision(form.manufMergeObj[_mergeStr].curPurchaseWeight + _purchaseWeight, 2)
-    }
+    // const _mergeStr = v.name ? v.name + '_' + v.specification + '_' + v.material : v.specification + '_' + v.material
+    // if (isBlank(form.manufMergeObj[_mergeStr])) {
+    //   form.manufMergeObj[_mergeStr] = {
+    //     ...v,
+    //     rowKey: _mergeStr,
+    //     mergeIds: [v.id],
+    //     curPurchaseQuantity: v.curPurchaseQuantity,
+    //     curPurchaseWeight: _purchaseWeight
+    //   }
+    // } else {
+    //   form.manufMergeObj[_mergeStr].mergeIds.push(v.id)
+    //   form.manufMergeObj[_mergeStr].curPurchaseQuantity += v.curPurchaseQuantity
+    //   form.manufMergeObj[_mergeStr].curPurchaseWeight = toPrecision(form.manufMergeObj[_mergeStr].curPurchaseWeight + _purchaseWeight, 2)
+    // }
   }
 }
 
@@ -555,7 +572,7 @@ function handleAddManuf(list) {
 const requisitionListRef = ref()
 const requisitionVisible = ref(false)
 
-const requisitionBadge = computed(() => (form.requisitionListKV ? Object.keys(form.requisitionListKV)?.length : 0))
+// const requisitionBadge = computed(() => (form.requisitionListKV ? Object.keys(form.requisitionListKV)?.length : 0))
 
 watchEffect(() => {
   form.requisitions = obj2arr(form.requisitionsKV)
@@ -567,7 +584,15 @@ function addRequisition() {
 }
 
 function handleAddPurchase(row) {
-  form[compListVK[row.basicClass]].push(row)
+  // 制成品 row 为数组
+  if (form.materialType & materialPurchaseClsEnum.MANUFACTURED.V) {
+    handleAddManuf(row)
+  } else {
+    form[compListVK[row.basicClass]].push(row)
+    if (row.basicClass & form.currentBasicClass) {
+      compRef.value?.rowWatch(row)
+    }
+  }
 }
 
 // --------------------------- 申购 end --------------------------------
@@ -586,7 +611,10 @@ CRUD.HOOK.beforeEditDetailLoaded = async (crud, form) => {
     form.attachments = []
   }
   // 是否绑定申购
-  form.useRequisitions = isNotBlank(form.applyPurchaseSN)
+  form.useRequisitions = isNotBlank(form.applyPurchase)
+  if (form.useRequisitions) {
+    form.requisitionsKV = arr2obj(form.applyPurchase)
+  }
   // 是否选中所有辅材，0表示所有
   form.isAllMaterial = form.auxMaterialIds?.includes(0)
   // 签订主体id
@@ -595,13 +623,11 @@ CRUD.HOOK.beforeEditDetailLoaded = async (crud, form) => {
   form.supplierId = form.supplier ? form.supplier.id : undefined
   if (form.materialType & materialPurchaseClsEnum.MANUFACTURED.V) {
     form.manufListObj = {}
-    form.manufMergeObj = {}
+    // form.manufMergeObj = {}
     const _list = form.details.map((v) => {
       v.curPurchaseQuantity = v.quantity
       v.detailId = v.id
       v.id = v.artifactEnclosureId
-      v.measureUnit = '件' // 计量单位
-      v.accountingUnit = '千克' // 核算单位
       return v
     })
     handleAddManuf(_list)
@@ -614,6 +640,7 @@ CRUD.HOOK.beforeEditDetailLoaded = async (crud, form) => {
       // 修改的情况下，数据预处理
       await steelInboundFormFormat(form)
     }
+    compRef.value?.setFormCallback(form)
   }
   // form.currentBasicClass设置初始值
   for (const item in matClsEnum.ENUM) {
@@ -626,7 +653,15 @@ CRUD.HOOK.beforeEditDetailLoaded = async (crud, form) => {
 
 CRUD.HOOK.beforeSubmit = (crud, form) => {
   if (!compRef.value?.validate()) return false
+  // if (!previewVisible.value) {
+  //   previewVisible.value = true
+  //   return false
+  // }
 }
+
+// CRUD.HOOK.afterSubmit = (crud, form) => {
+//   previewVisible.value = false
+// }
 
 // 表单提交数据清理
 crud.submitFormFormat = async (form) => {
@@ -643,17 +678,18 @@ crud.submitFormFormat = async (form) => {
     if (compRef?.value) {
       const _list = compRef?.value.fetchResList()
       _list.forEach((v) => {
-        v.mergeIds.forEach((id) => {
-          const { curPurchaseQuantity: quantity, basicClass } = form.manufListObj[id]
-          form.list.push({
-            artifactEnclosureId: id,
-            quantity,
-            basicClass,
-            unitPrice: v.unitPrice,
-            amount: v.amount,
-            destination: v.destination
-          })
+        // v.mergeIds.forEach((id) => {
+        const { curPurchaseQuantity: quantity, basicClass } = form.manufListObj[v.rowKey]
+        form.list.push({
+          artifactEnclosureId: v.id,
+          quantity,
+          basicClass,
+          pricingMethod: v.pricingMethod,
+          unitPrice: v.unitPrice,
+          amount: v.amount,
+          destination: v.destination
         })
+        // })
       })
     }
   }

@@ -44,8 +44,6 @@ const setFormCallback = (form) => {
         steelRefList,
         (ref) => {
           if (ref[key]) {
-            // 初始化数据监听，执行一次后取消当前监听
-            form[key].forEach((v) => ref[key].rowWatch(v))
             // 初始化选中数据，执行一次后取消当前监听
             initSelectedTrigger[key] = watch(
               matSpecRef,
@@ -77,11 +75,27 @@ const setFormCallback = (form) => {
 // 监听切换钢材类型，为list赋值
 watch(
   () => form.currentBasicClass,
-  (k) => {
-    if (k) {
+  (v) => {
+    if (v) {
       nextTick(() => {
         // nextTick 后 steelRef.value 才会发生变化
+        let k = ''
+        switch (v) {
+          case steelClsEnum.STEEL_PLATE.V:
+            k = 'steelPlateList'
+            break
+          case steelClsEnum.SECTION_STEEL.V:
+            k = 'sectionSteelList'
+            break
+          case steelClsEnum.STEEL_COIL.V:
+            k = 'steelCoilList'
+            break
+          default:
+            break
+        }
         if (!steelRefList[k]) steelRefList[k] = steelRef.value
+        // 初始化数据监听，执行一次后取消当前监听
+        form[k].forEach((v) => ref[k].rowWatch(v))
       })
     }
   },
@@ -130,9 +144,14 @@ function validateTable() {
   return Object.keys(steelRefList).every((k) => (steelRefList[k] ? steelRefList[k].validate() : true))
 }
 
+function rowWatch(row) {
+  steelRef.value?.rowWatch(row)
+}
+
 defineExpose({
   rowInit,
   validate,
+  rowWatch,
   setFormCallback
 })
 </script>

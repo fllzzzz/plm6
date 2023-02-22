@@ -2,11 +2,8 @@
   <common-dialog
     custom-class="requisitions-application-preview"
     title="材料申购汇总"
-    append-to-body
     v-model="dialogVisible"
-    width="1200px"
     :before-close="handleClose"
-    :top="'5vh'"
     fullscreen
   >
     <template #titleAfter>
@@ -75,7 +72,7 @@
           <material-secondary-info-columns :showBatchNo="false" />
         </common-table>
         <!-- 制成品 -->
-        <common-table v-else :data="showList" :max-height="maxHeight" show-summary>
+        <common-table v-else :data="showList" :max-height="maxHeight - 170" show-summary>
           <el-table-column label="序号" type="index" align="center" width="55" fixed="left" />
           <el-table-column prop="monomer.name" label="单体" align="center" show-overflow-tooltip min-width="120px" />
           <el-table-column prop="area.name" label="区域" align="center" show-overflow-tooltip min-width="120px" />
@@ -176,6 +173,7 @@ const { maxHeight } = useMaxHeight(
     mainBox: '.requisitions-application-preview',
     extraBox: ['.el-dialog__header', '.footer', '.table-remark'],
     wrapperBox: ['.el-dialog__body'],
+    navbar: false,
     clientHRepMainH: true,
     minHeight: 300,
     extraHeight: 10
