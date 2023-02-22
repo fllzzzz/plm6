@@ -87,16 +87,16 @@
           <el-option v-for="item in thickList" :key="item.value" :label="item.value" :value="item.value" />
         </el-select> -->
         </el-form-item>
-        <el-form-item v-if="type && underLine" label="车间:" class="form-label-require">
-          <workshop-select
-            v-model="workShopId"
+        <el-form-item v-if="type && underLine" label="产线:" class="form-label-require">
+          <!-- <workshop-select
+            v-model="productionLineId"
             placeholder="请先选择车间"
             style="width: 160px"
             class="filter-item"
             :factory-id="factoryId"
-          />
-          <!-- <el-cascader
-            v-model="workShopId"
+          /> -->
+          <el-cascader
+            v-model="productionLineId"
             :options="subList"
             check-strictly
             :show-all-levels="false"
@@ -106,9 +106,8 @@
             size="small"
             class="filter-item"
             style="width: 200px"
-            placeholder="选择生产线"
-            @change="handleProductionLine"
-          /> -->
+            placeholder="请选择生产线"
+          />
         </el-form-item>
         <el-form-item v-if="!type" label="生产组:" class="form-label-require">
           <el-cascader
@@ -214,7 +213,7 @@
 
 <script setup>
 import { newSave, getCutTaskDetail, getHoleTaskDetail, getOffLineZip } from '@/api/mes/scheduling-manage/machine-part'
-// import { getAllFactoryWorkshopLines } from '@/api/mes/common'
+import { getAllFactoryWorkshopLines } from '@/api/mes/common'
 import { ElMessage, ElNotification, ElRadioGroup, ElMessageBox } from 'element-plus'
 import { defineEmits, defineProps, ref, computed, onMounted, watch } from 'vue'
 import { layOffWayTypeEnum } from '@enum-ms/uploading-form'
@@ -232,7 +231,7 @@ import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'
 import cutConfigSelect from '@/components-system/base/cut-config-select.vue'
 import drillSchedulingDialog from './drill-scheduling-dialog.vue'
-import workshopSelect from '@comp-mes/workshop-select'
+// import workshopSelect from '@comp-mes/workshop-select'
 
 const emit = defineEmits(['update:visible', 'success', 'handleDel'])
 const props = defineProps({
@@ -316,9 +315,9 @@ const saveType = ref(machinePartIssuedWayEnum.NESTING_ISSUED.V)
 const drillDialogVisible = ref(false)
 const orderList = ref([])
 const underLine = ref(0)
-const workShopId = ref()
-// const workShopId = ref()
-const factoryId = ref()
+const productionLineId = ref()
+// const productionLineId = ref()
+// const factoryId = ref()
 
 const rules = {
   material: [{ required: true, message: '请选择材质', trigger: 'blur' }],
@@ -372,7 +371,7 @@ function showHook() {
   thick.value = undefined
   askCompleteTime.value = undefined
   cutConfigId.value = undefined
-  workShopId.value = undefined
+  productionLineId.value = undefined
   fetchGroups()
   fetchOrder()
   isNew.value = true
@@ -407,54 +406,54 @@ async function fetchOrder() {
 }
 // --------------------------- 获取生产线 start ------------------------------
 
-// const subList = ref([])
+const subList = ref([])
 
-// const cascaderProps = computed(() => {
-//   return {
-//     value: 'id',
-//     label: 'name',
-//     children: 'children',
-//     checkStrictly: props.checkStrictly,
-//     expandTrigger: props.expandTrigger,
-//     emitPath: props.emitPath,
-//     multiple: props.multiple
-//   }
-// })
-// watch(
-//   () => props.modelValue,
-//   (value) => {
-//     if (value instanceof Array) {
-//       workShopId.value = [...value]
-//     } else {
-//       workShopId.value = value
-//     }
-//     handleChange(value)
-//   },
-//   { immediate: true }
-// )
-// onMounted(() => allFactoryWorkshopLines())
+const cascaderProps = computed(() => {
+  return {
+    value: 'id',
+    label: 'name',
+    children: 'children',
+    checkStrictly: props.checkStrictly,
+    expandTrigger: 'hover',
+    emitPath: props.emitPath,
+    multiple: props.multiple
+  }
+})
+watch(
+  () => props.modelValue,
+  (value) => {
+    if (value instanceof Array) {
+      productionLineId.value = [...value]
+    } else {
+      productionLineId.value = value
+    }
+    handleChange(value)
+  },
+  { immediate: true }
+)
+onMounted(() => allFactoryWorkshopLines())
 
-// async function allFactoryWorkshopLines() {
-//   try {
-//     const { content } = await getAllFactoryWorkshopLines({})
-//     content.forEach((v) => {
-//       v.children = v.workshopList
-//       v.workshopList.forEach((p) => {
-//         p.children = p.productionLineList
-//       })
-//     })
-//     subList.value = content
-//   } catch (error) {
-//     console.log('请求工厂-车间-生产线的层级接口失败')
-//   }
-// }
+async function allFactoryWorkshopLines() {
+  try {
+    const { content } = await getAllFactoryWorkshopLines({})
+    content.forEach((v) => {
+      v.children = v.workshopList
+      v.workshopList.forEach((p) => {
+        p.children = p.productionLineList
+      })
+    })
+    subList.value = content
+  } catch (error) {
+    console.log('请求工厂-车间-生产线的层级接口失败')
+  }
+}
 // function handleProductionLine(val) {
 //   console.log(val, 'val')
 // }
-// function handleChange(val) {
-//   emit('update:modelValue', val)
-//   emit('change', val)
-// }
+function handleChange(val) {
+  emit('update:modelValue', val)
+  emit('change', val)
+}
 // --------------------------- 获取生产线 end ------------------------------
 
 // --------------------------- 获取生产班组 start ------------------------------
@@ -503,25 +502,25 @@ async function submitIt() {
   }
   if (props.type === 1 && isNew.value) {
     if (thickDataOption.value.length > 1 && materialDataOption.value.length > 1 && underLine.value) {
-      if (!workShopId.value || !thick.value || !material.value || !askCompleteTime.value || !cutConfigId.value) {
+      if (!productionLineId.value || !thick.value || !material.value || !askCompleteTime.value || !cutConfigId.value) {
         ElMessage.warning('必选项不能为空')
         return false
       }
     }
     if (thickDataOption.value.length === 1 && materialDataOption.value.length > 1 && underLine.value) {
-      if (!workShopId.value || !material.value || !askCompleteTime.value || !cutConfigId.value) {
+      if (!productionLineId.value || !material.value || !askCompleteTime.value || !cutConfigId.value) {
         ElMessage.warning('必选项不能为空')
         return false
       }
     }
     if (thickDataOption.value.length > 1 && materialDataOption.value.length === 1 && underLine.value) {
-      if (!workShopId.value || !thick.value || !askCompleteTime.value || !cutConfigId.value) {
+      if (!productionLineId.value || !thick.value || !askCompleteTime.value || !cutConfigId.value) {
         ElMessage.warning('必选项不能为空')
         return false
       }
     }
     if (thickDataOption.value.length === 1 && materialDataOption.value.length === 1 && underLine.value) {
-      if (!workShopId.value || !askCompleteTime.value || !cutConfigId.value) {
+      if (!productionLineId.value || !askCompleteTime.value || !cutConfigId.value) {
         ElMessage.warning('必选项不能为空')
         return false
       }
@@ -616,7 +615,7 @@ async function submitIt() {
             : underLine.value === nestingTypeEnum.OFFLINE.V
               ? nestingTypeEnum.OFFLINE.V
               : nestingTypeEnum.NORMAL.V,
-        workShopId: underLine.value ? workShopId.value : undefined,
+        productionLineId: underLine.value ? productionLineId.value : undefined,
         schedulingId: schedulingId.value,
         linkList: _list,
         askCompleteTime: askCompleteTime.value,
