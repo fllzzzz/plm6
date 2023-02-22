@@ -12,9 +12,9 @@
       <el-tag size="small">项目：{{ detailList.project?.contractNo }}-{{ detailList.project?.name }}</el-tag>
       <el-tag size="small" style="margin-left: 8px">排产总量（件/kg）：{{ detailList.taskQuantity }}/{{ detailList.taskNetWeight }}</el-tag>
     </template>
-    <div class="head-dialog" style="width: 270px; margin-bottom: 8px; float: right">
+    <div class="head-dialog" style="width: 300px; margin-bottom: 8px; float: right">
       <print-table
-        api-key="mesFactoryWorkshopReport"
+        api-key="mesProductionKanbanList"
         :params="{
           projectId: props.detailList?.project?.id,
           monomerId: props.detailList?.monomer?.id,

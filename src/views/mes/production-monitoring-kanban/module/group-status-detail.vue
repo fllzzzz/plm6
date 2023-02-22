@@ -6,8 +6,14 @@
         <el-tag>班组：{{ props.detailData?.groups?.name }}</el-tag>
         <div style="width: 300px">
           <print-table
-            :api-key="apiKey"
-            :params="{ projectId: props.detailData.projectId }"
+            api-key="mesProductionKanbanGroupList"
+            :params="{
+              groupId: props.detailData.groups?.id,
+              productionLineId: props.detailData.productionLine?.id,
+              taskTypeEnum: props.detailData.taskTypeEnum,
+              teamId: props.detailData.team?.id,
+              workshopId: props.workshopId,
+            }"
             size="mini"
             type="warning"
             class="filter-item"

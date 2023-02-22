@@ -466,6 +466,15 @@ export function productionKanbanList(params) {
   })
 }
 
+// 生产监控看板班组详情
+export function productionKanbanGroupList(params) {
+  return request({
+    url: `/api/mes/building/scheduling/artifact/product/monitor/group/detail/print`,
+    method: 'get',
+    params
+  })
+}
+
 // 发运管理-项目发运详情
 export function mesProjectShipDetail(params) {
   return request({
@@ -646,6 +655,7 @@ export default {
 
   // 生产监控弄看板
   productionKanbanList, // 生产监控看板
+  productionKanbanGroupList, // 生产看板班组详情
 
   // 发运管理
   mesProjectShipDetail, // 项目发运详情

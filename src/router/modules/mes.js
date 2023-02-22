@@ -344,6 +344,17 @@ export default {
           icon: 'project',
           noCache: true
         }
+      },
+      {
+        name: 'MesDrillOrder',
+        path: 'drill',
+        hidden: false,
+        component: '/mes/work-order-manage/drill/index',
+        meta: {
+          title: '钻孔工单',
+          icon: 'project',
+          noCache: true
+        }
       }
       // {
       //   name: 'MesSchedulingMachinePart',
@@ -449,6 +460,17 @@ export default {
             }
           }
         ]
+      },
+      {
+        name: 'MesWipStatistics',
+        path: 'wip-statistics',
+        hidden: false,
+        component: '/mes/task-tracking/wip-statistics/index',
+        meta: {
+          title: '在制品统计',
+          icon: 'project',
+          noCache: true
+        }
       }
     ]
   },
@@ -1260,11 +1282,22 @@ export default {
     alwaysShow: false,
     redirect: '/mes/factory-report',
     meta: {
-      title: '工厂报表',
+      title: '生产报表',
       icon: 'project',
       noCache: true
     },
     children: [
+      {
+        name: 'MesGroupReport',
+        path: 'group-report',
+        hidden: false,
+        component: '/mes/factory-report/group-report/index',
+        meta: {
+          title: '班组报表',
+          icon: 'project',
+          noCache: true
+        }
+      },
       {
         name: 'MesWorkshopReport',
         path: 'workshop-report',

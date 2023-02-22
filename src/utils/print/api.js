@@ -116,6 +116,7 @@ const mesAssembleClassList = mes.assembleClassList
 const mesMachinePartClassList = mes.machinePartClassList
 
 const mesProductionKanbanList = mes.productionKanbanList
+const mesProductionKanbanGroupList = mes.productionKanbanGroupList
 
 const mesMonthlyTaskList = mes.monthlyTaskList
 const mesProcessList = mes.processList
@@ -263,6 +264,7 @@ export default {
   mesMachinePartClassList, // 零件分类清单明细
 
   mesProductionKanbanList, // 生产监控看板明细
+  mesProductionKanbanGroupList, // 生产看板班组详情
 
   mesMonthlyTaskList, // 月度任务跟踪清单详情
   mesProductionLineList, //  产线跟踪清单详情
