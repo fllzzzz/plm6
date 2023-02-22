@@ -13,7 +13,7 @@
           <el-radio-group v-model="nestingType">
             <el-radio :label="1" :disabled="Boolean(props.padBlockData?.length) && !props.checkedNodes?.length"> 使用新工单 </el-radio>
             <el-radio :label="0">使用原有工单</el-radio>
-            <el-radio :label="2">线下套料</el-radio>
+            <el-radio :label="2" :disabled="Boolean(props.padBlockData?.length) && !props.checkedNodes?.length">线下套料</el-radio>
           </el-radio-group>
           <div style="margin-left: 15px" v-if="nestingType === 0">
             <common-select
@@ -43,10 +43,9 @@
         :disabled="
           (!type && Boolean(props.padBlockData?.length) && Boolean(!props.checkedNodes?.length)) ||
           (!props.padBlockData?.length && !props.checkedNodes?.length) ||
-          (Boolean(type) &&
-            underLine === nestingTypeEnum.OFFLINE.V &&
+            nestingType === 2 &&
             Boolean(props.padBlockData?.length) &&
-            Boolean(props.checkedNodes?.length))
+            Boolean(props.checkedNodes?.length)
         "
         size="mini"
         type="primary"
@@ -54,7 +53,7 @@
       >
     </template>
     <div class="head-container">
-      <el-form style="display: flex; flex-wrap: wrap" v-if="isNew || nestingType === 2" :rules="rules">
+      <el-form style="display: flex; flex-wrap: wrap" v-if="nestingType === 1 || nestingType === 2" :rules="rules">
         <el-form-item label="材质:" class="form-label-require" v-show="materialDataOption.length > 1">
           <common-select
             v-model="material"
@@ -374,7 +373,7 @@ const { maxHeight } = useMaxHeight(
 function toDelete(row, id) {
   emit('handleDel', row, id)
   if (props.list.findIndex((v) => v.needMachinePartLinkList?.length > 0) < 0) {
-    isNew.value = false
+    nestingType.value = 0
     saveType.value = machinePartIssuedWayEnum.ADD_NEW_TICKET.V
   }
   // emit('success')
@@ -390,11 +389,11 @@ function showHook() {
   schedulingId.value = undefined
   fetchGroups()
   fetchOrder()
-  isNew.value = true
+  nestingType.value = 1
   saveType.value = machinePartIssuedWayEnum.NESTING_ISSUED.V
   if (props.type === 1) {
     if (Boolean(props.padBlockData?.length) && !props.checkedNodes?.length) {
-      isNew.value = false
+      nestingType.value = 0
       saveType.value = machinePartIssuedWayEnum.ADD_NEW_TICKET.V
     }
   }
@@ -516,33 +515,33 @@ async function submitIt() {
       }
     }
   }
-  if (props.type === 1 && isNew.value === 1) {
-    if (thickDataOption.value.length > 1 && materialDataOption.value.length > 1 && underLine.value === 2) {
+  if (props.type === 1 && nestingType.value === 1) {
+    if (thickDataOption.value.length > 1 && materialDataOption.value.length > 1 && nestingType.value === 2) {
       if (!productionLineId.value || !thick.value || !material.value || !askCompleteTime.value || !cutConfigId.value) {
         ElMessage.warning('必选项不能为空')
         return false
       }
     }
-    if (thickDataOption.value.length === 1 && materialDataOption.value.length > 1 && underLine.value === 2) {
+    if (thickDataOption.value.length === 1 && materialDataOption.value.length > 1 && nestingType.value === 2) {
       if (!productionLineId.value || !material.value || !askCompleteTime.value || !cutConfigId.value) {
         ElMessage.warning('必选项不能为空')
         return false
       }
     }
-    if (thickDataOption.value.length > 1 && materialDataOption.value.length === 1 && underLine.value === 2) {
+    if (thickDataOption.value.length > 1 && materialDataOption.value.length === 1 && nestingType.value === 2) {
       if (!productionLineId.value || !thick.value || !askCompleteTime.value || !cutConfigId.value) {
         ElMessage.warning('必选项不能为空')
         return false
       }
     }
-    if (thickDataOption.value.length === 1 && materialDataOption.value.length === 1 && underLine.value === 2) {
+    if (thickDataOption.value.length === 1 && materialDataOption.value.length === 1 && nestingType.value === 2) {
       if (!productionLineId.value || !askCompleteTime.value || !cutConfigId.value) {
         ElMessage.warning('必选项不能为空')
         return false
       }
     }
   }
-  if (props.type === 1 && isNew.value === 0) {
+  if (props.type === 1 && nestingType.value === 0) {
     if (!schedulingId.value) {
       ElMessage.warning('必选项不能为空')
       return false
@@ -610,7 +609,7 @@ async function submitIt() {
           saveType:
             props.type === 0
               ? machinePartIssuedWayEnum.UN_NESTING_ISSUED.V
-              : isNew.value === true
+              : nestingType.value === 1
                 ? machinePartIssuedWayEnum.NESTING_ISSUED.V
                 : machinePartIssuedWayEnum.ADD_NEW_TICKET.V
         })
@@ -626,12 +625,12 @@ async function submitIt() {
         material: materialDataOption.value.length > 1 ? material.value : materialDataOption.value[0]?.name,
         thick: thickDataOption.value.length > 1 ? thick.value : thickDataOption.value[0]?.name,
         boolOffLine:
-          isNew.value === false
+          nestingType.value === 0
             ? nestingTypeEnum.NORMAL.V
-            : underLine.value === nestingTypeEnum.OFFLINE.V
-              ? Boolean(nestingTypeEnum.OFFLINE.V)
-              : Boolean(nestingTypeEnum.NORMAL.V),
-        productionLineId: underLine.value === 2 ? productionLineId.value : undefined,
+            : nestingType.value === 2
+              ? nestingTypeEnum.OFFLINE.V
+              : nestingTypeEnum.NORMAL.V,
+        productionLineId: nestingType.value === 2 ? productionLineId.value : undefined,
         schedulingId: schedulingId.value,
         linkList: _list,
         askCompleteTime: askCompleteTime.value,
@@ -641,7 +640,7 @@ async function submitIt() {
               ? machinePartIssuedWayEnum.NESTING_ISSUED.V
               : machinePartIssuedWayEnum.ADD_NEW_TICKET.V
       })
-      if (nestingType.value === nestingTypeEnum.OFFLINE.V) {
+      if (nestingType.value === 2) {
         await fileDownload(getOffLineZip, { id: _data })
       }
       ElNotification({
