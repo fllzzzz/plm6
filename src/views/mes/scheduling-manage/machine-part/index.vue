@@ -53,7 +53,7 @@
                 type="success"
                 class="filter-item"
                 size="mini"
-                :disabled="crud.query.boolDxfEnum !== machinePartDxfTypeEnum.EXPORT.V && nestingLoading"
+                :disabled="crud.query.boolDxfEnum !== machinePartDxfTypeEnum.EXPORT.V && nestingLoading && isIncludeDxf"
                 @click="previewIt"
               >
                 套料保存
@@ -338,6 +338,17 @@ function handleDel(row, val) {
 const checkAll = ref(false)
 const checkedNodes = ref([])
 
+// 全选只要含有未导入dxf 只能进行无需套料
+const isIncludeDxf = computed(() => {
+  let flag = false
+  checkedNodes.value.forEach(v => {
+    if (!v.picturePath) {
+      flag = true
+    }
+  })
+  return flag
+})
+
 // 切换dxf是否导入 清除全选
 function boolDxfChange() {
   handleCheckedAll()
@@ -373,6 +384,7 @@ function handleCheckedChange(value, item) {
 }
 function handleCheckedAll(val) {
   checkAll.value = val
+  console.log(isIncludeDxf.value, 'isIncludeDxf')
   boardList.value.forEach((v) => {
     if (v.imgLoad || !v.picturePath) {
       v.checked = val
