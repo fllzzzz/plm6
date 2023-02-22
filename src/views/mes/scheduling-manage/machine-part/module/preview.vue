@@ -9,12 +9,13 @@
   >
     <template #titleAfter>
       <div style="display: flex">
-        <div v-if="type === 1" style="display: flex; background: #e6a23c;border: 1px solid #e6a23c; padding: 5px 10px; border-radius: 5px">
-          <el-radio-group v-model="isNew">
-            <el-radio style="color: #fff" :label="true" :disabled="Boolean(props.padBlockData?.length) && !props.checkedNodes?.length">使用新工单</el-radio>
-            <el-radio style="color: #fff" :label="false">使用原有工单</el-radio>
+        <div v-if="type === 1" style="display: flex">
+          <el-radio-group v-model="nestingType">
+            <el-radio :label="1" :disabled="Boolean(props.padBlockData?.length) && !props.checkedNodes?.length"> 使用新工单 </el-radio>
+            <el-radio :label="0">使用原有工单</el-radio>
+            <el-radio :label="2">线下套料</el-radio>
           </el-radio-group>
-          <div style="margin-left: 15px" v-if="!isNew && type">
+          <div style="margin-left: 15px" v-if="nestingType === 0">
             <common-select
               v-model="schedulingId"
               :options="orderList"
@@ -27,12 +28,12 @@
             />
           </div>
         </div>
-        <div v-if="type === 1 && isNew" style="margin-left: 30px; background: #67c23a; border: 1px solid #67c23a; padding: 5px 10px; border-radius: 5px">
+        <!-- <div v-if="type === 1 && isNew" style="margin-left: 30px; background: #67c23a; border: 1px solid #67c23a; padding: 5px 10px; border-radius: 5px">
           <el-radio-group v-model="underLine">
             <el-radio :label="0" style="color: #fff">正常套料</el-radio>
             <el-radio :label="1" style="color: #fff">线下套料</el-radio>
           </el-radio-group>
-        </div>
+        </div> -->
       </div>
     </template>
     <template #titleRight>
@@ -53,7 +54,7 @@
       >
     </template>
     <div class="head-container">
-      <el-form style="display: flex; flex-wrap: wrap" v-if="isNew" :rules="rules">
+      <el-form style="display: flex; flex-wrap: wrap" v-if="isNew || nestingType === 2" :rules="rules">
         <el-form-item label="材质:" class="form-label-require" v-show="materialDataOption.length > 1">
           <common-select
             v-model="material"
@@ -89,7 +90,7 @@
           <el-option v-for="item in thickList" :key="item.value" :label="item.value" :value="item.value" />
         </el-select> -->
         </el-form-item>
-        <el-form-item v-if="type && underLine" label="产线:" class="form-label-require">
+        <el-form-item v-if="type && nestingType === 2" label="产线:" class="form-label-require">
           <!-- <workshop-select
             v-model="productionLineId"
             placeholder="请先选择车间"
@@ -311,16 +312,28 @@ const cutConfigId = ref()
 const groupsId = ref()
 const thick = ref()
 const material = ref()
-const isNew = ref(true)
 const schedulingId = ref()
 const saveType = ref(machinePartIssuedWayEnum.NESTING_ISSUED.V)
 const drillDialogVisible = ref(false)
 const orderList = ref([])
+const nestingType = ref(1)
+const isNew = ref(true)
 const underLine = ref(0)
 const productionLineId = ref()
 // const productionLineId = ref()
 // const factoryId = ref()
-
+watch(
+  () => nestingType.value,
+  (val) => {
+    if (val === 1) {
+      isNew.value = 1
+    } else if (val === 0) {
+      isNew.value = 0
+    } else if (val === 2) {
+      underLine.value = 2
+    }
+  }
+)
 const rules = {
   material: [{ required: true, message: '请选择材质', trigger: 'blur' }],
   thick: [{ required: true, message: '请选择厚度', trigger: 'blur' }],
@@ -339,7 +352,7 @@ const queryParams = computed(() => {
     saveType:
       props.type === 0
         ? machinePartIssuedWayEnum.UN_NESTING_ISSUED.V
-        : isNew.value === true
+        : nestingType.value === 1 || nestingType.value === 2
           ? machinePartIssuedWayEnum.NESTING_ISSUED.V
           : machinePartIssuedWayEnum.ADD_NEW_TICKET.V
   }
@@ -374,6 +387,7 @@ function showHook() {
   askCompleteTime.value = undefined
   cutConfigId.value = undefined
   productionLineId.value = undefined
+  schedulingId.value = undefined
   fetchGroups()
   fetchOrder()
   isNew.value = true
@@ -444,7 +458,7 @@ async function allFactoryWorkshopLines() {
         p.children = p.productionLineList
       })
     })
-    subList.value = content
+    subList.value = content[0].children
   } catch (error) {
     console.log('请求工厂-车间-生产线的层级接口失败')
   }
@@ -502,33 +516,33 @@ async function submitIt() {
       }
     }
   }
-  if (props.type === 1 && isNew.value) {
-    if (thickDataOption.value.length > 1 && materialDataOption.value.length > 1 && underLine.value) {
+  if (props.type === 1 && isNew.value === 1) {
+    if (thickDataOption.value.length > 1 && materialDataOption.value.length > 1 && underLine.value === 2) {
       if (!productionLineId.value || !thick.value || !material.value || !askCompleteTime.value || !cutConfigId.value) {
         ElMessage.warning('必选项不能为空')
         return false
       }
     }
-    if (thickDataOption.value.length === 1 && materialDataOption.value.length > 1 && underLine.value) {
+    if (thickDataOption.value.length === 1 && materialDataOption.value.length > 1 && underLine.value === 2) {
       if (!productionLineId.value || !material.value || !askCompleteTime.value || !cutConfigId.value) {
         ElMessage.warning('必选项不能为空')
         return false
       }
     }
-    if (thickDataOption.value.length > 1 && materialDataOption.value.length === 1 && underLine.value) {
+    if (thickDataOption.value.length > 1 && materialDataOption.value.length === 1 && underLine.value === 2) {
       if (!productionLineId.value || !thick.value || !askCompleteTime.value || !cutConfigId.value) {
         ElMessage.warning('必选项不能为空')
         return false
       }
     }
-    if (thickDataOption.value.length === 1 && materialDataOption.value.length === 1 && underLine.value) {
+    if (thickDataOption.value.length === 1 && materialDataOption.value.length === 1 && underLine.value === 2) {
       if (!productionLineId.value || !askCompleteTime.value || !cutConfigId.value) {
         ElMessage.warning('必选项不能为空')
         return false
       }
     }
   }
-  if (props.type === 1 && !isNew.value) {
+  if (props.type === 1 && isNew.value === 0) {
     if (!schedulingId.value) {
       ElMessage.warning('必选项不能为空')
       return false
@@ -615,21 +629,19 @@ async function submitIt() {
           isNew.value === false
             ? nestingTypeEnum.NORMAL.V
             : underLine.value === nestingTypeEnum.OFFLINE.V
-              ? nestingTypeEnum.OFFLINE.V
-              : nestingTypeEnum.NORMAL.V,
-        productionLineId: underLine.value ? productionLineId.value : undefined,
+              ? Boolean(nestingTypeEnum.OFFLINE.V)
+              : Boolean(nestingTypeEnum.NORMAL.V),
+        productionLineId: underLine.value === 2 ? productionLineId.value : undefined,
         schedulingId: schedulingId.value,
         linkList: _list,
         askCompleteTime: askCompleteTime.value,
         cutConfigId: cutConfigId.value,
         saveType:
-          props.type === 0
-            ? machinePartIssuedWayEnum.UN_NESTING_ISSUED.V
-            : isNew.value === true
+            nestingType.value === 1 || nestingType.value === 2
               ? machinePartIssuedWayEnum.NESTING_ISSUED.V
               : machinePartIssuedWayEnum.ADD_NEW_TICKET.V
       })
-      if (underLine.value === nestingTypeEnum.OFFLINE.V) {
+      if (nestingType.value === nestingTypeEnum.OFFLINE.V) {
         await fileDownload(getOffLineZip, { id: _data })
       }
       ElNotification({
