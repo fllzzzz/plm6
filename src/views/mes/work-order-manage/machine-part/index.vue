@@ -22,6 +22,7 @@
         label="排产日期"
       >
         <template v-slot="scope">
+          <table-cell-tag :show="scope.row.boolOffLine" name="线下套料" color="#E6A23C" />
           <span>{{ scope.row.scheduleTime ? parseTime(scope.row.scheduleTime, '{y}-{m}-{d}') : '-' }}</span>
         </template>
       </el-table-column>

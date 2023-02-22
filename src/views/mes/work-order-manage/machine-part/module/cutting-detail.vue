@@ -12,8 +12,15 @@
       <common-radio-button
         v-model="orderType"
         :options="typeEnum.ENUM"
-        :unshowVal="cuttingDetailData.boolNestCut ? [typeEnum.PRODUCTION_TASK_ORDER.V] : [typeEnum.NESTING_TASK_ORDER.V]"
+        :unshowVal="
+          !cuttingDetailData.boolNestCut
+            ? [typeEnum.NESTING_TASK_ORDER.V]
+            : cuttingDetailData.boolNestCut && cuttingDetailData.boolOffLine
+            ? [typeEnum.NESTING_TASK_ORDER.V]
+            : [typeEnum.PRODUCTION_TASK_ORDER.V]
+        "
         type="enum"
+        :disabledVal="!separateOrderInfo.length ? [typeEnum.SORTING_ORDER.V] : []"
         size="mini"
         class="filter-item"
       />
@@ -109,7 +116,7 @@ const { separateLoading, separateOrderInfo, fetchSeparateOrder } = useGetSeparat
 const { visible: cuttingDrawerVisible, handleClose } = useVisible({ emit, props, field: 'visible', showHook: showHook })
 
 async function showHook() {
-  if (props.cuttingDetailData.boolNestCut) {
+  if (props.cuttingDetailData.boolNestCut && !props.cuttingDetailData.boolOffLine) {
     orderType.value = typeEnum.NESTING_TASK_ORDER.V
     await nestingDetailGet()
   } else {
@@ -187,7 +194,7 @@ async function printIt() {
     fullscreen: true
   })
   try {
-    if (props.cuttingDetailData.boolNestCut) {
+    if (props.cuttingDetailData.boolNestCut && !props.cuttingDetailData.boolOffLine) {
       // --------------------------- PDF 打印 start ------------------------------
       // const canvasELs = document.querySelectorAll('#viewerContainer .canvasWrapper canvas')
       // for (let i = 0; i < canvasELs.length; i++) {
@@ -225,7 +232,16 @@ async function printIt() {
         throw new Error('生产任务单导出失败')
       }
       // ---------------------------生产任务单 打印 end --------------------------------
-      printSeparateOrder()
+
+      if (separateOrderInfo.value.length) {
+        printSeparateOrder()
+      } else {
+        printLoading.value.text = `已全部加入打印队列`
+        await codeWait(500)
+        printLoading.value.close()
+        await printSign({ ...commonParams.value })
+        emit('refresh')
+      }
     }
     return
   } catch (error) {
