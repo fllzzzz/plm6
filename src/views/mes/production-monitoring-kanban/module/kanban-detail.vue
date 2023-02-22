@@ -14,7 +14,7 @@
     </template>
     <div class="head-dialog" style="width: 270px; margin-bottom: 8px; float: right">
       <print-table
-        :api-key="apiKey"
+        api-key="mesFactoryWorkshopReport"
         :params="{
           projectId: props.detailList?.project?.id,
           monomerId: props.detailList?.monomer?.id,

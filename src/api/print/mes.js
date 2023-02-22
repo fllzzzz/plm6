@@ -457,6 +457,15 @@ export function machinePartClassList(params) {
   })
 }
 
+// 生产监控看板详情
+export function productionKanbanList(params) {
+  return request({
+    url: `/api/mes/building/scheduling/artifact/product/monitor/kanban/detail/print`,
+    method: 'get',
+    params
+  })
+}
+
 // 发运管理-项目发运详情
 export function mesProjectShipDetail(params) {
   return request({
@@ -634,6 +643,9 @@ export default {
   artifactClassList, // 构件分类清单明细
   assembleClassList, // 部件分类清单明细
   machinePartClassList, // 零件分类清单明细
+
+  // 生产监控弄看板
+  productionKanbanList, // 生产监控看板
 
   // 发运管理
   mesProjectShipDetail, // 项目发运详情
