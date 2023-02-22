@@ -4,7 +4,9 @@
       <mHeader />
     </div>
     <div>
-      <common-button class="btn" size="mini" type="warning" style="float: right; margin-bottom: 8px"> 班组状态 </common-button>
+      <common-button class="btn" size="mini" type="warning" style="float: right; margin-bottom: 8px" @click.stop="groupsDetail">
+        班组状态
+      </common-button>
       <common-table
         ref="tableRef"
         v-loading="crud.loading"
@@ -136,6 +138,8 @@ style="color: #409eff; cursor: pointer"
     </div>
     <!-- 生产监控看板详情 -->
     <kanban-detail v-model:visible="detailDialogVisible" :detail-list="detailList" :workshopId="crud.query.workshopId" />
+    <!-- 班组状态详情 -->
+    <group-status-drawer v-model:visible="drawerVisible" :workshopId="crud.query.workshopId" :group-detail-data="crud.data[0]" />
   </div>
 </template>
 <script setup>
@@ -147,6 +151,7 @@ import useMaxHeight from '@compos/use-max-height'
 import pagination from '@crud/Pagination'
 import mHeader from './module/header.vue'
 import kanbanDetail from './module/kanban-detail.vue'
+import groupStatusDrawer from './module/group-status-drawer.vue'
 
 const optShow = {
   add: false,
@@ -157,7 +162,9 @@ const optShow = {
 
 const tableRef = ref()
 const detailDialogVisible = ref(false)
+const drawerVisible = ref(false)
 const detailList = ref({})
+// const groupDetailData = ref([])
 const { crud, CRUD, columns } = useCRUD(
   {
     title: '生产监控看板',
@@ -165,6 +172,7 @@ const { crud, CRUD, columns } = useCRUD(
     optShow: { ...optShow },
     // permission: { ... permission },
     crudApi: { ...crudApi },
+    requiredQuery: ['workshopId'],
     hasPagination: true
   },
   tableRef
@@ -190,11 +198,18 @@ provide('projectInfo', projectInfo)
 watch(
   () => crud.query.workshopId,
   (val) => {
-    fetchProjectInfo()
-    crud.toQuery()
+    if (val) {
+      fetchProjectInfo()
+      crud.toQuery()
+    }
   },
-  { deep: true }
+  { immediate: true }
 )
+
+// 班组详情
+function groupsDetail() {
+  drawerVisible.value = true
+}
 
 // 获取项目汇总数据
 async function fetchProjectInfo() {

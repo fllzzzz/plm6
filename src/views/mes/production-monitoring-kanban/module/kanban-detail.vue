@@ -1,6 +1,6 @@
 <template>
   <common-dialog
-    title="生产看板详情"
+    title="生产监控看板详情"
     customClass="production-detail-dialog"
     v-model="detailDialogVisible"
     :close-on-click-modal="false"
@@ -15,7 +15,12 @@
     <div class="head-dialog" style="width: 270px; margin-bottom: 8px; float: right">
       <print-table
         :api-key="apiKey"
-        :params="{ projectId: props.detailList?.project?.id, workshopId: props.workshopId }"
+        :params="{
+          projectId: props.detailList?.project?.id,
+          monomerId: props.detailList?.monomer?.id,
+          areaId: props.detailList?.area?.id,
+          workshopId: props.workshopId,
+        }"
         size="mini"
         type="warning"
         class="filter-item"
@@ -34,7 +39,7 @@
           <span>{{ row.material }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="schedulingNetWeight" :show-overflow-tooltip="true" label="排产量" align="center" />
+      <el-table-column prop="netWeight" :show-overflow-tooltip="true" label="排产量" align="center" />
       <el-table-column prop="totalNetWeight" :show-overflow-tooltip="true" label="总重（kg）" align="center" />
       <el-table-column prop="completeQuantity" :show-overflow-tooltip="true" label="实际完成数" align="center" />
     </common-table>
@@ -64,7 +69,7 @@ const props = defineProps({
   }
 })
 
-const { visible: detailDialogVisible, handleClose } = useVisible({ emit, props, field: 'visible', showHook: showHook })
+const { visible: detailDialogVisible, handleClose } = useVisible({ emit, props, field: 'visible', showHook: fetchMachinePartList })
 const { maxHeight } = useMaxHeight(
   {
     mainBox: '.production-detail-dialog',
@@ -76,13 +81,15 @@ const { maxHeight } = useMaxHeight(
   },
   detailDialogVisible
 )
-function showHook() {
-  fetchMachinePartList()
-}
 
 async function fetchMachinePartList() {
   try {
-    const { content } = await getDetail({ projectId: props.detailList?.project?.id, workshopId: props.workshopId })
+    const { content } = await getDetail({
+      projectId: props.detailList?.project?.id,
+      monomerId: props.detailList?.monomer?.id,
+      areaId: props.detailList?.area?.id,
+      workshopId: props.workshopId
+    })
     detailData.value = content || []
   } catch (err) {
     console.log('获取零件清单明细失败', err)

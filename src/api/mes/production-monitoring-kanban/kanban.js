@@ -37,5 +37,28 @@ export function getDetail(params) {
   })
 }
 
+/**
+ * @description: 生产监控班组弹窗
+ */
+export function getGroupDialog(params) {
+  return request({
+    module: 'mes',
+    url: 'scheduling/artifact/product/monitor/group',
+    method: 'get',
+    params
+  })
+}
+/**
+ * @description: 生产监控班组详情
+ */
+export function getGroupDetail(params) {
+  return request({
+    module: 'mes',
+    url: 'scheduling/artifact/product/monitor/group/detail',
+    method: 'get',
+    params
+  })
+}
+
 export default { get }
 

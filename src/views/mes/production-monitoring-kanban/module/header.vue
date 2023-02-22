@@ -8,6 +8,7 @@
       style="width: 200px"
       class="filter-item"
       clearable
+      default
       defaultValue
       @change="crud.toQuery"
     />

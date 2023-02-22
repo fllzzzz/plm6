@@ -548,7 +548,7 @@ constantize(machinePartIssuedWayEnum)
 // 零件排产/下发
 const nestingTypeEnum = {
   NORMAL: { L: '正常套料', K: 'NORMAL', V: 0 },
-  OFFLINE: { L: '线下套料', K: 'OFFLINE', V: 1 }
+  OFFLINE: { L: '线下套料', K: 'OFFLINE', V: 2 }
 }
 constantize(nestingTypeEnum)
 
