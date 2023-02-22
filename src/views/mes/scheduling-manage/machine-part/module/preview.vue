@@ -9,8 +9,8 @@
   >
     <template #titleAfter>
       <div style="display: flex">
-        <div style="display: flex; border: 1px solid #e6a23c; padding: 5px 10px">
-          <el-radio-group v-if="type === 1" v-model="isNew">
+        <div v-if="type === 1" style="display: flex; border: 1px solid #e6a23c; padding: 5px 10px">
+          <el-radio-group v-model="isNew">
             <el-radio :label="true" :disabled="Boolean(props.padBlockData?.length) && !props.checkedNodes?.length">使用新工单</el-radio>
             <el-radio :label="false">使用原有工单</el-radio>
           </el-radio-group>

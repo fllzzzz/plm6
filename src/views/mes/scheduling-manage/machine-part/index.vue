@@ -53,7 +53,7 @@
                 type="success"
                 class="filter-item"
                 size="mini"
-                :disabled="crud.query.boolDxfEnum !== machinePartDxfTypeEnum.EXPORT.V && nestingLoading && isIncludeDxf"
+                :disabled="isIncludeDxf"
                 @click="previewIt"
               >
                 套料保存
