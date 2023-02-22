@@ -9,24 +9,26 @@
   >
     <template #titleAfter>
       <div style="display: flex">
-        <el-radio-group v-if="type === 1" v-model="isNew">
-          <el-radio :label="true" :disabled="Boolean(props.padBlockData?.length) && !props.checkedNodes?.length">使用新工单</el-radio>
-          <el-radio :label="false">使用原有工单</el-radio>
-        </el-radio-group>
-        <div style="margin-left: 15px" v-if="!isNew && type">
-          <common-select
-            v-model="schedulingId"
-            :options="orderList"
-            :dataStructure="{ key: 'id', label: 'value', value: 'id' }"
-            clearable
-            type="other"
-            class="filter-item"
-            placeholder="请选择原有工单"
-            style="width: 240px"
-          />
+        <div style="display: flex; border: 1px solid #e6a23c; padding: 5px 10px">
+          <el-radio-group v-if="type === 1" v-model="isNew">
+            <el-radio :label="true" :disabled="Boolean(props.padBlockData?.length) && !props.checkedNodes?.length">使用新工单</el-radio>
+            <el-radio :label="false">使用原有工单</el-radio>
+          </el-radio-group>
+          <div style="margin-left: 15px" v-if="!isNew && type">
+            <common-select
+              v-model="schedulingId"
+              :options="orderList"
+              :dataStructure="{ key: 'id', label: 'value', value: 'id' }"
+              clearable
+              type="other"
+              class="filter-item"
+              placeholder="请选择原有工单"
+              style="width: 240px"
+            />
+          </div>
         </div>
-        <div style="margin-left: 15px">
-          <el-radio-group v-if="type === 1 && isNew" v-model="underLine">
+        <div v-if="type === 1 && isNew" style="margin-left: 30px; border: 1px solid #67c23a; padding: 5px 10px">
+          <el-radio-group v-model="underLine">
             <el-radio :label="0">正常套料</el-radio>
             <el-radio :label="1">线下套料</el-radio>
           </el-radio-group>
