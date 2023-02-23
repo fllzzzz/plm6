@@ -1,6 +1,7 @@
 <!-- 车间:下拉选择框 -->
 <template>
-  <el-select
+  <common-select
+    v-bind="$attrs"
     v-model="selectValue"
     :size="size"
     :disabled="disabled"
@@ -8,12 +9,14 @@
     :collapse-tags="collapseTags"
     :loading="!loaded"
     :clearable="clearable"
+    :showOptionAll="showOptionAll"
+    :showExtra="showExtra"
+    :allLabelText="'全部车间'"
     filterable
     :placeholder="placeholder"
+    :options="options"
     @change="handleChange"
-  >
-    <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
-  </el-select>
+  />
 </template>
 
 <script setup>
@@ -25,11 +28,11 @@ const emit = defineEmits(['change', 'update:modelValue'])
 
 const props = defineProps({
   modelValue: {
-    type: [Number, String],
+    type: [Number, String, undefined],
     default: undefined
   },
   factoryId: {
-    type: [Number, String],
+    type: [Number, String, undefined],
     default: undefined
   },
   size: {
@@ -63,6 +66,14 @@ const props = defineProps({
   defaultValue: {
     type: Boolean,
     default: false
+  },
+  showOptionAll: {
+    type: Boolean,
+    default: false
+  },
+  showExtra: {
+    type: Boolean,
+    default: false
   }
 })
 
@@ -76,7 +87,7 @@ watch(
   (value) => {
     selectValue.value = value
     if (props.default && isBlank(value) && isNotBlank(options.value)) {
-      selectValue.value = options.value[0].value
+      selectValue.value = options.value[0].id
       handleChange(selectValue.value)
     }
   },
@@ -115,8 +126,8 @@ function dataFormat() {
       if (props.factoryId) list = list.filter((v) => props.factoryId === v.factoryId)
       _options = list.map((o) => {
         return {
-          value: o.id,
-          label: o.name
+          id: o.id,
+          name: o.name
         }
       })
     }
@@ -125,11 +136,7 @@ function dataFormat() {
   } finally {
     options.value = _options
     if (isNotBlank(options.value) && props.default && !selectValue.value) {
-      selectValue.value = options.value[0].value
-    }
-    const isExit = options.value.some((v) => v.value === selectValue.value)
-    if (!isExit && !props.defaultValue) {
-      selectValue.value = undefined
+      selectValue.value = options.value[0].id
     }
     handleChange(selectValue.value)
   }

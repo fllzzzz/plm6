@@ -41,7 +41,7 @@
         <common-input-number
           v-model="row.quantity"
           :min="0"
-          :max="999999999"
+          :max="row.canPurchaseQuantity"
           :controls="false"
           :step="1"
           size="mini"
@@ -116,7 +116,7 @@ function calcTotalWeight(row) {
   if (isNotBlank(row.netWeight) && row.quantity) {
     row.mete = toPrecision(row.netWeight * row.quantity)
   } else {
-    row.mete = undefined
+    row.mete = 0
   }
 }
 

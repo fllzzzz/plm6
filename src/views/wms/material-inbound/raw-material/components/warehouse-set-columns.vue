@@ -5,7 +5,6 @@
         v-if="row"
         v-model="row.workshopId"
         placeholder="请选择车间"
-        :only-one-default="props.boolManuf ? row.destination === destinationTypeEnum.FACTORY.V : true"
         :disabled="props.boolManuf ? row.destination === destinationTypeEnum.CONSTRUCTION_SITE.V : false"
         :show-extra="$index !== 0"
         @change="handleWorkshopChange($event, $index, row)"

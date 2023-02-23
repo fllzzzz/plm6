@@ -34,7 +34,7 @@
           <common-button class="filter-item" size="mini" type="warning" icon="el-icon-plus" @click="handleAdd"> 选择加入 </common-button>
           <el-badge :value="totalBadge" :max="99" :hidden="totalBadge < 1" style="margin-right: 10px">
             <common-button class="filter-item" size="mini" type="success" icon="el-icon-shopping-cart-2" @click="showPurchase">
-              采购车
+              申购车
             </common-button>
           </el-badge>
         </div>
@@ -176,6 +176,7 @@ function handleDel({ id, quantity }, row) {
   const _purchaseWeight = quantity * row.netWeight || 0
   form.purchaseListObj[id].curPurchaseQuantity -= quantity
   form.purchaseListObj[id].curPurchaseWeight = toPrecision(form.purchaseListObj[id].curPurchaseWeight - _purchaseWeight, 2)
+  console.log(form.purchaseListObj[id])
   if (form.purchaseListObj[id].curPurchaseQuantity === 0) {
     delete form.purchaseListObj[id]
   }
@@ -226,9 +227,11 @@ watch(
 
 FORM.HOOK.beforeToEdit = async (crud, form) => {
   form.purchaseListObj = {}
+  form.originListObj = {} // 编辑时存储原始list对象
   const list = form.list
   for (let i = 0; i < list.length; i++) {
     const v = deepClone(list[i])
+    form.originListObj[v.id] = v
     const _purchaseWeight = toPrecision(v.quantity * v.netWeight, 2) || 0
     if (isBlank(form.purchaseListObj[v.id])) {
       form.purchaseListObj[v.id] = {

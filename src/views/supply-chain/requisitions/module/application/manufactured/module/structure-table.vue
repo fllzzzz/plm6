@@ -103,11 +103,16 @@ async function fetchList() {
     tableLoading.value = true
     const { content, totalElements } = await manufListGet({ ...query.value, ...queryPage })
     tableData.value = content.map((v) => {
+      let _purchaseQuantity = v.purchaseQuantity
+      // 编辑时 已申购数量需要减去当前订单的申购数量
+      if (isNotBlank(form.originListObj?.[v.id])) {
+        _purchaseQuantity = _purchaseQuantity - form.originListObj?.[v.id]?.quantity
+      }
       if (isNotBlank(form.purchaseListObj[v.id])) {
         const _pv = deepClone(form.purchaseListObj[v.id])
-        v.canPurchaseQuantity = v.quantity - v.purchaseQuantity - _pv.curPurchaseQuantity
+        v.canPurchaseQuantity = v.quantity - _purchaseQuantity - _pv.curPurchaseQuantity
       } else {
-        v.canPurchaseQuantity = v.quantity - v.purchaseQuantity
+        v.canPurchaseQuantity = v.quantity - _purchaseQuantity
       }
       v.canPurchaseQuantity = v.canPurchaseQuantity > 0 ? v.canPurchaseQuantity : 0
       v.curPurchaseQuantity = v.canPurchaseQuantity

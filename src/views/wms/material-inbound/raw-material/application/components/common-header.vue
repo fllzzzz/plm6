@@ -128,7 +128,7 @@ import { regExtra } from '@/composables/form/use-form'
 import useWeightOverDiff from '@/composables/wms/use-trains-weight-over-diff'
 import excelResolveButton from '@/components-system/common/excel-resolve-button/index.vue'
 import purchaseSnSelect from '@/components-system/wms/purchase-sn-select/index.vue'
-import { isNotBlank, isBlank } from '@/utils/data-type'
+import { isNotBlank, isBlank, toPrecision } from '@/utils/data-type'
 import StoreOperation from '@crud/STORE.operation.vue'
 import steelPlateTemp from '@/utils/excel/import-template/wms/inbound-application-temp/steel-plate'
 import sectionSteelTemp from '@/utils/excel/import-template/wms/inbound-application-temp/section-steel'
@@ -347,7 +347,9 @@ async function handleOrderInfoChange(order, oldOrder) {
         v.purchaseMete = v.mete
         v.canPurchaseQuantity = v.purchaseQuantity - (v.inboundQuantity || 0)
         v.quantity = v.canPurchaseQuantity
-        v.mete = v.purchaseMete - v.inboundMete
+        v.originQuantity = v.quantity
+        v.mete = toPrecision(v.purchaseMete - v.inboundMete)
+        v.originMete = v.mete
         return v
       })
     }

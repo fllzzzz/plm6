@@ -177,6 +177,9 @@ const purchaseMergeList = computed(() => {
     if (list.length > 0 && !_v?.destination) {
       _v.destination = -1
     }
+    if (list.length === 0 && _v?.destination === -1) {
+      _v.destination = undefined
+    }
     list.push(_v)
     rowWatch(_v)
   }

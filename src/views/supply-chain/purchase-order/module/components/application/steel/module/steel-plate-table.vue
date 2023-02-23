@@ -26,6 +26,7 @@
     <el-table-column prop="thickness" align="center" :label="`厚 (${baseUnit.thickness.unit})`">
       <template #default="{ row }">
         <common-input-number
+          v-if="!form.useRequisitions"
           v-model="row.thickness"
           :min="0"
           :max="999999"
@@ -35,6 +36,7 @@
           size="mini"
           placeholder="厚"
         />
+        <span v-else>{{ row.thickness }}</span>
       </template>
     </el-table-column>
     <el-table-column prop="width" align="center" :label="`宽 (${baseUnit.width.unit})`">

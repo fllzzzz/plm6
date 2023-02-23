@@ -66,12 +66,17 @@
               </p>
             </template>
           </el-expand-table-column>
-          <!-- 基础信息 -->
-          <material-base-info-columns :basic-class="form.basicClass" fixed="left" />
-          <!-- 单位及其数量 -->
-          <material-unit-quantity-columns :basic-class="form.basicClass" />
-          <!-- 次要信息 -->
-          <material-secondary-info-columns v-if="showTableColumnSecondary" :basic-class="form.basicClass" />
+          <template v-if="!boolManuf">
+            <!-- 基础信息 -->
+            <material-base-info-columns :basic-class="form.basicClass" fixed="left" />
+            <!-- 单位及其数量 -->
+            <material-unit-quantity-columns :basic-class="form.basicClass" />
+            <!-- 次要信息 -->
+            <material-secondary-info-columns v-if="showTableColumnSecondary" :basic-class="form.basicClass" />
+          </template>
+          <template v-else>
+            <manufactured-info-columns :basic-class="form.basicClass" :showMonomer="false" :showArea="false" />
+          </template>
           <!-- 金额设置 -->
           <template v-if="showAmount">
             <!-- <price-set-columns
@@ -118,21 +123,24 @@
             <template v-else>
               <el-table-column prop="unitPrice" label="含税单价" align="right" min-width="120px" show-overflow-tooltip />
               <el-table-column prop="amount" label="金额" align="right" min-width="120px" show-overflow-tooltip />
-              <el-table-column prop="sourceRequisitionsSN" label="申购单" align="left" min-width="120px" show-overflow-tooltip />
+              <!-- <el-table-column prop="sourceRequisitionsSN" label="申购单" align="left" min-width="120px" show-overflow-tooltip /> -->
               <el-table-column prop="project" label="项目" align="left" min-width="120px" show-overflow-tooltip />
               <el-table-column prop="monomerName" label="单体" align="left" min-width="120px" show-overflow-tooltip />
               <el-table-column prop="areaName" label="区域" align="left" min-width="120px" show-overflow-tooltip />
             </template>
           </template>
           <template v-else>
-            <el-table-column prop="sourceRequisitionsSN" label="申购单" align="left" min-width="120px" show-overflow-tooltip />
+            <!-- <el-table-column prop="sourceRequisitionsSN" label="申购单" align="left" min-width="120px" show-overflow-tooltip /> -->
             <el-table-column prop="project" label="项目" align="left" min-width="120px" show-overflow-tooltip />
             <el-table-column prop="monomerName" label="单体" align="left" min-width="120px" show-overflow-tooltip />
             <el-table-column prop="areaName" label="区域" align="left" min-width="120px" show-overflow-tooltip />
           </template>
           <!-- 仓库设置 -->
+          <template v-if="!boolManuf">
           <warehouse-set-columns v-if="fillableWarehouse" :form="form" />
           <warehouse-info-columns v-else />
+          </template>
+          <el-table-column v-else prop="workshop.name" label="车间" align="left" min-width="120px" show-overflow-tooltip />
         </common-table>
         <el-input
           class="approval-comments"
@@ -160,7 +168,8 @@
 <script setup>
 import { getPendingReviewIdList, detail, reviewPassed, reviewReturned } from '@/api/wms/material-inbound/raw-material/review'
 import { inject, computed, ref, defineEmits, defineProps, watch } from 'vue'
-import { orderSupplyTypeEnum, inspectionStatusEnum, inboundFillWayEnum } from '@enum-ms/wms'
+import { orderSupplyTypeEnum, inspectionStatusEnum } from '@enum-ms/wms'
+import { materialPurchaseClsEnum } from '@/utils/enum/modules/classification'
 import { logisticsPayerEnum } from '@/utils/enum/modules/logistics'
 import { tableSummary } from '@/utils/el-extra'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
@@ -173,9 +182,10 @@ import { materialHasAmountColumns } from '@/utils/columns-format/wms'
 import { regExtra } from '@compos/use-crud'
 import useTableValidate from '@/composables/form/use-table-validate'
 import useMaxHeight from '@compos/use-max-height'
-import useWmsConfig from '@/composables/store/use-wms-config'
+// import useWmsConfig from '@/composables/store/use-wms-config'
 import useVisible from '@compos/use-visible'
 import elExpandTableColumn from '@comp-common/el-expand-table-column.vue'
+import manufacturedInfoColumns from '@/components-system/wms/table-columns/manufactured-info-columns/index.vue'
 import materialBaseInfoColumns from '@/components-system/wms/table-columns/material-base-info-columns/index.vue'
 import materialUnitQuantityColumns from '@/components-system/wms/table-columns/material-unit-quantity-columns/index.vue'
 import materialSecondaryInfoColumns from '@/components-system/wms/table-columns/material-secondary-info-columns/index.vue'
@@ -229,13 +239,13 @@ const pendingReviewIdList = ref([]) // 待审核列表
 // const currentReviewIndex = ref(0) // 当前审核下标
 const currentInboundId = ref() // 当前id
 
-const { inboundFillWayCfg } = useWmsConfig()
+// const { inboundFillWayCfg } = useWmsConfig()
 
 // 可填写金额（统一为入库填写，取消后台配置）
-// const fillableAmount = ref(false)
-const fillableAmount = computed(() =>
-  inboundFillWayCfg.value ? inboundFillWayCfg.value.amountFillWay === inboundFillWayEnum.REVIEWING.V : false
-)
+const fillableAmount = ref(false)
+// const fillableAmount = computed(() =>
+//   inboundFillWayCfg.value ? inboundFillWayCfg.value.amountFillWay === inboundFillWayEnum.REVIEWING.V : false
+// )
 
 // 显示金额相关信息（由采购填写的信息）
 const showAmount = computed(() => checkPermission(permission.showAmount) || fillableAmount.value)
@@ -250,6 +260,7 @@ const fillableWarehouse = ref(false)
 const fillableLogistics = computed(() => order.value.logisticsPayerType === logisticsPayerEnum.DEMAND.V && fillableAmount.value)
 // 是否“甲供”
 const boolPartyA = computed(() => order.value.supplyType === orderSupplyTypeEnum.PARTY_A.V)
+const boolManuf = computed(() => form.value.basicClass & materialPurchaseClsEnum.MANUFACTURED.V)
 // 采购合同信息
 const order = computed(() => form.value.purchaseOrder || {})
 // 申购单信息
@@ -258,7 +269,9 @@ const order = computed(() => form.value.purchaseOrder || {})
 const formDisabled = computed(() => passedLoading.value || returnedLoading.value)
 // 标题
 const drawerTitle = computed(() =>
-  detailLoading.value ? `入库单` : `入库单：${form.value.serialNumber}（ ${order.value.supplier ? order.value.supplier.name : '无供应商'} ）`
+  detailLoading.value
+    ? `入库单`
+    : `入库单：${form.value.serialNumber}（ ${order.value.supplier ? order.value.supplier.name : '无供应商'} ）`
 )
 // 在列中显示次要信息
 const showTableColumnSecondary = computed(() => {

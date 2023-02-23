@@ -288,7 +288,7 @@
         custom-class="manufactured-select-drawer"
       >
         <template #content>
-          <manuf-list :project-id="form.projectId" :maxHeight="manufSelectMaxHeight" @add="handleAddManuf" />
+          <manuf-list :project-id="form.projectId" :visible="purchaseManufVisible" :maxHeight="manufSelectMaxHeight" @add="handleAddManuf" />
         </template>
       </common-drawer>
       <!-- <submit-preview v-model:visible="previewVisible" :loading="crud.status.cu === CRUD.STATUS.PROCESSING" @submit="crud.submitCU" /> -->
@@ -460,6 +460,7 @@ watch(
     form.requisitionsKV = {}
     form.manufListObj = {}
     // form.manufMergeObj = {}
+    console.log(matSpecRef.value, 'materialType_change')
     if (matSpecRef.value) {
       matSpecRef.value.clear()
     }
@@ -537,8 +538,8 @@ function rowInit(row) {
 function handleAddManuf(list) {
   for (let i = 0; i < list.length; i++) {
     const v = deepClone(list[i])
-    v.measureUnit = '件' // 计量单位
-    v.accountingUnit = '千克' // 核算单位
+    // v.measureUnit = '件' // 计量单位
+    // v.accountingUnit = '千克' // 核算单位
     const _purchaseWeight = v.curPurchaseQuantity * v.netWeight || 0
     if (isBlank(form.manufListObj[v.id])) {
       form.manufListObj[v.id] = {
@@ -565,6 +566,7 @@ function handleAddManuf(list) {
     //   form.manufMergeObj[_mergeStr].curPurchaseWeight = toPrecision(form.manufMergeObj[_mergeStr].curPurchaseWeight + _purchaseWeight, 2)
     // }
   }
+  purchaseManufVisible.value = false
 }
 
 // --------------------------- 申购 start ------------------------------
@@ -597,10 +599,21 @@ function handleAddPurchase(row) {
 
 // --------------------------- 申购 end --------------------------------
 
-// 初始化表单
-CRUD.HOOK.afterToAdd = () => {}
-
-CRUD.HOOK.beforeToCU = () => {}
+CRUD.HOOK.beforeToCU = () => {
+  let _trigger
+  if (!(form.materialType & materialPurchaseClsEnum.MANUFACTURED.V)) {
+    _trigger = watch(
+      compRef,
+      () => {
+        if (compRef.value && _trigger) {
+          nextTick(() => compRef.value?.setFormCallback(form))
+          _trigger()
+        }
+      },
+      { immediate: true }
+    )
+  }
+}
 
 // 加载处理
 CRUD.HOOK.beforeEditDetailLoaded = async (crud, form) => {
@@ -622,6 +635,7 @@ CRUD.HOOK.beforeEditDetailLoaded = async (crud, form) => {
   // 供应商id
   form.supplierId = form.supplier ? form.supplier.id : undefined
   if (form.materialType & materialPurchaseClsEnum.MANUFACTURED.V) {
+    form.projectId = form.projects?.length ? form.projects?.[0]?.id : undefined
     form.manufListObj = {}
     // form.manufMergeObj = {}
     const _list = form.details.map((v) => {
@@ -640,7 +654,6 @@ CRUD.HOOK.beforeEditDetailLoaded = async (crud, form) => {
       // 修改的情况下，数据预处理
       await steelInboundFormFormat(form)
     }
-    compRef.value?.setFormCallback(form)
   }
   // form.currentBasicClass设置初始值
   for (const item in matClsEnum.ENUM) {

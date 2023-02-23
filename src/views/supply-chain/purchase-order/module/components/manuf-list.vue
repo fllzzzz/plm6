@@ -104,6 +104,10 @@ import { ElMessage } from 'element-plus'
 
 const emit = defineEmits(['add'])
 const props = defineProps({
+  visible: {
+    type: Boolean,
+    default: false
+  },
   projectId: {
     type: Number
   },
@@ -128,6 +132,16 @@ watch(
   () => {
     query.value.projectId = props.projectId
     fetchClassList()
+  },
+  { immediate: true }
+)
+
+watch(
+  () => props.visible,
+  (val) => {
+    if (val) {
+      fetchList()
+    }
   },
   { immediate: true }
 )
@@ -161,6 +175,7 @@ async function fetchClassList() {
 }
 
 async function fetchList() {
+  if (!query.value.structureClassId) return
   try {
     tableLoading.value = true
     const { content, totalElements } = await manufListGet({ ...query.value, ...queryPage })
@@ -173,8 +188,8 @@ async function fetchList() {
       }
       v.canPurchaseQuantity = v.canPurchaseQuantity > 0 ? v.canPurchaseQuantity : 0
       v.curPurchaseQuantity = v.canPurchaseQuantity
-      v.measureUnit = '件' // 计量单位
-      v.accountingUnit = '千克' // 核算单位
+      // v.measureUnit = '件' // 计量单位
+      // v.accountingUnit = '千克' // 核算单位
       v.basicClass = manufClsEnum.STRUC_MANUFACTURED.V
       return v
     })
@@ -196,7 +211,6 @@ function handleAdd() {
     return
   }
   emit('add', selectList.value)
-  fetchList()
 }
 </script>
 

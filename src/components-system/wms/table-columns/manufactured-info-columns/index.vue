@@ -1,6 +1,6 @@
 <template>
   <el-table-column v-if="showIndex" label="序号" type="index" align="center" width="55" :fixed="fixed" />
-  <component :is="comp" :basicClass="basicClass" :columns="columns" :fixed="fixed" />
+  <component :is="comp" :basicClass="basicClass" :columns="columns" :fixed="fixed" :showMonomer="showMonomer" :showArea="showArea"/>
 </template>
 
 <script setup>
@@ -22,6 +22,14 @@ const props = defineProps({
   },
   showIndex: {
     // 显示 “序号”
+    type: Boolean,
+    default: true
+  },
+  showMonomer: {
+    type: Boolean,
+    default: true
+  },
+  showArea: {
     type: Boolean,
     default: true
   }

@@ -164,6 +164,7 @@
             :precision="baseUnit.measure.precision"
             size="mini"
             placeholder="实收数"
+            @blur="handleOverQuantity(row)"
           />
         </template>
       </el-table-column>
@@ -193,6 +194,7 @@
               placeholder="实收量"
               :class="{ 'over-weight-tip': row.hasOver }"
               @change="handleWeightChange(row)"
+              @blur="handleOverMete(row)"
             />
           </el-tooltip>
         </template>
@@ -215,6 +217,7 @@ import { regExtra } from '@/composables/form/use-form'
 import useTableValidate from '@compos/form/use-table-validate'
 import useMatBaseUnit from '@/composables/store/use-mat-base-unit'
 import useWeightOverDiff from '@/composables/wms/use-steel-weight-over-diff'
+import useOverReceive from '@/views/wms/material-inbound/raw-material/application/composables/use-over-receive.js'
 import elExpandTableColumn from '@comp-common/el-expand-table-column.vue'
 import { createUniqueString } from '@/utils/data-type/string'
 import { calcSteelPlateWeight } from '@/utils/wms/measurement-calc'
@@ -242,6 +245,7 @@ const { form } = regExtra() // 表单
 const expandRowKeys = ref([]) // 展开行key
 
 const { overDiffTip, weightOverDiff, diffSubmitValidate } = useWeightOverDiff(baseUnit) // 过磅重量超出理论重量处理
+const { handleOverQuantity, handleOverMete } = useOverReceive({ meteField: 'weighingTotalWeight' })
 
 const rules = {
   classifyId: [{ required: true, message: '请选择物料种类', trigger: 'change' }],

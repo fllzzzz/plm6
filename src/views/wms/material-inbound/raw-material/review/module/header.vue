@@ -13,7 +13,8 @@
       <common-radio-button
         type="enum"
         v-model="query.basicClass"
-        :options="rawMatClsEnum.ENUM"
+        :options="matClsEnum.ENUM"
+        :unshowVal="[matClsEnum.GAS.V]"
         show-option-all
         clearable
         class="filter-item"
@@ -139,7 +140,7 @@ import { ref, computed, inject } from 'vue'
 import { PICKER_OPTIONS_SHORTCUTS } from '@/settings/config'
 import { supplierTypeEnum } from '@enum-ms/supplier'
 import { reviewStatusEnum } from '@enum-ms/common'
-import { rawMatClsEnum } from '@enum-ms/classification'
+import { matClsEnum } from '@enum-ms/classification'
 import { orderSupplyTypeEnum, inspectionStatusEnum } from '@/utils/enum/modules/wms'
 
 import { regHeader } from '@compos/use-crud'

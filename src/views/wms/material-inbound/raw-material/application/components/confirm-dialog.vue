@@ -91,10 +91,9 @@
 </template>
 
 <script setup>
-import { computed, defineEmits, defineProps, provide, ref, watch } from 'vue'
+import { computed, defineEmits, defineProps, provide, ref } from 'vue'
 import { orderSupplyTypeEnum } from '@enum-ms/wms'
-import { STEEL_ENUM } from '@/settings/config'
-import { matClsEnum, materialPurchaseClsEnum } from '@/utils/enum/modules/classification'
+import { materialPurchaseClsEnum } from '@/utils/enum/modules/classification'
 import { logisticsPayerEnum } from '@/utils/enum/modules/logistics'
 import { tableSummary } from '@/utils/el-extra'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
@@ -282,6 +281,9 @@ cu.submitFormFormat = async (form) => {
   form.list = await numFmtByBasicClass(formList.value, { toSmallest: true, toNum: true })
   form.list.forEach((v) => {
     v.purchaseOrderDetailId = v.id
+    if (boolManuf.value) {
+      v.projectId = order.value.projects?.length ? order.value.projects[0].id : undefined
+    }
   })
   return form
 }

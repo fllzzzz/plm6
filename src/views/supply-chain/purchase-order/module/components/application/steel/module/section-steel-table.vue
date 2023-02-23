@@ -26,6 +26,7 @@
     <el-table-column prop="length" align="center" :label="`定尺长度 (${baseUnit.length.unit})`">
       <template #default="{ row }">
         <common-input-number
+          v-if="form.useRequisitions"
           v-model="row.length"
           :max="999999"
           :controls="false"
@@ -34,6 +35,7 @@
           size="mini"
           placeholder="长"
         />
+        <span v-else>{{ row.length }}</span>
       </template>
     </el-table-column>
     <el-table-column prop="quantity" align="center" :label="`数量 (${baseUnit.measure.unit})`">

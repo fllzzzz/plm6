@@ -13,7 +13,8 @@
       <common-radio-button
         type="enum"
         v-model="query.basicClass"
-        :options="rawMatClsEnum.ENUM"
+        :options="matClsEnum.ENUM"
+        :unshowVal="[matClsEnum.GAS.V]"
         show-option-all
         clearable
         class="filter-item"
@@ -52,6 +53,7 @@
         class="filter-item"
         @change="crud.toQuery"
       />
+      <br />
       <warehouse-project-cascader
         v-model:projectId="query.projectId"
         v-model:projectWarehouseType="query.projectWarehouseType"
@@ -127,10 +129,10 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
-import { PICKER_OPTIONS_SHORTCUTS, STEEL_ENUM } from '@/settings/config'
+import { PICKER_OPTIONS_SHORTCUTS, STEEL_ENUM, MANUF_ENUM } from '@/settings/config'
 import { supplierTypeEnum } from '@enum-ms/supplier'
 import { reviewStatusEnum } from '@enum-ms/common'
-import { rawMatClsEnum } from '@enum-ms/classification'
+import { matClsEnum } from '@enum-ms/classification'
 import { orderSupplyTypeEnum, inspectionStatusEnum } from '@/utils/enum/modules/wms'
 
 import { regHeader } from '@compos/use-crud'
@@ -161,7 +163,9 @@ const route = useRoute()
 const { crud, query } = regHeader(defaultQuery)
 onMounted(() => {
   if (+route.params.basicClass === STEEL_ENUM) {
-    query.basicClass = rawMatClsEnum.STEEL_PLATE.V
+    query.basicClass = matClsEnum.STEEL_PLATE.V
+  } else if (+route.params.basicClass === MANUF_ENUM) {
+    query.basicClass = matClsEnum.STRUC_MANUFACTURED.V
   } else {
     query.basicClass = route.params.basicClass
   }

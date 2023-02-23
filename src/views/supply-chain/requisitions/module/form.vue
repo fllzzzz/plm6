@@ -124,6 +124,7 @@ CRUD.HOOK.beforeEditDetailLoaded = async (crud, detail) => {
       return v
     })
   }
+  console.log(detail.projectId, 'projectId')
 }
 
 function handleSuccess() {

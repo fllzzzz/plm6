@@ -48,11 +48,19 @@ const props = defineProps({
   fixed: {
     // 定位
     type: String
+  },
+  showMonomer: {
+    type: Boolean,
+    default: true
+  },
+  showArea: {
+    type: Boolean,
+    default: true
   }
 })
 
-const showMonomer = computed(() => isBlank(props.columns) || props.columns.visible('monomer.name'))
-const showArea = computed(() => isBlank(props.columns) || props.columns.visible('area.name'))
+const showMonomer = computed(() => props.showMonomer && (isBlank(props.columns) || props.columns.visible('monomer.name')))
+const showArea = computed(() => props.showArea && (isBlank(props.columns) || props.columns.visible('area.name')))
 const showName = computed(() => isBlank(props.columns) || props.columns.visible('name'))
 const showSerialNumber = computed(() => isBlank(props.columns) || props.columns.visible('serialNumber'))
 const showSpecification = computed(() => isBlank(props.columns) || props.columns.visible('specification'))

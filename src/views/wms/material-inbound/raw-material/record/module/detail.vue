@@ -39,21 +39,27 @@
             </p>
           </template>
         </el-expand-table-column>
-        <!-- 基础信息 -->
-        <material-base-info-columns :basic-class="detail.basicClass" fixed="left" />
-        <!-- 单位及其数量 -->
-        <material-unit-quantity-columns :basic-class="detail.basicClass" />
-        <!-- 次要信息 -->
-        <material-secondary-info-columns v-if="showTableColumnSecondary" :basic-class="detail.basicClass" />
+        <template v-if="!boolManuf">
+          <!-- 基础信息 -->
+          <material-base-info-columns :basic-class="detail.basicClass" fixed="left" />
+          <!-- 单位及其数量 -->
+          <material-unit-quantity-columns :basic-class="detail.basicClass" />
+          <!-- 次要信息 -->
+          <material-secondary-info-columns v-if="showTableColumnSecondary" :basic-class="detail.basicClass" />
+        </template>
+        <template v-else>
+          <manufactured-info-columns :basic-class="detail.basicClass" :showMonomer="false" :showArea="false" />
+        </template>
         <!-- 价格信息 -->
         <template v-if="showAmount">
           <amount-info-columns v-if="!boolPartyA" />
         </template>
-        <el-table-column prop="requisitionsSN" label="申购单" align="left" min-width="120px" show-overflow-tooltip />
+        <!-- <el-table-column prop="requisitionsSN" label="申购单" align="left" min-width="120px" show-overflow-tooltip /> -->
         <el-table-column prop="project" label="项目" align="left" min-width="120px" show-overflow-tooltip />
         <el-table-column prop="monomerName" label="单体" align="left" min-width="120px" show-overflow-tooltip />
         <el-table-column prop="areaName" label="区域" align="left" min-width="120px" show-overflow-tooltip />
-        <warehouse-info-columns />
+        <warehouse-info-columns v-if="!boolManuf"/>
+        <el-table-column v-else prop="workshop.name" label="车间" align="left" min-width="120px" show-overflow-tooltip />
       </common-table>
     </template>
   </common-drawer>
@@ -61,7 +67,8 @@
 
 <script setup>
 import { inject, computed, ref } from 'vue'
-import { orderSupplyTypeEnum, inboundFillWayEnum } from '@enum-ms/wms'
+import { orderSupplyTypeEnum } from '@enum-ms/wms'
+import { materialPurchaseClsEnum } from '@/utils/enum/modules/classification'
 import { tableSummary } from '@/utils/el-extra'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { setSpecInfoToList } from '@/utils/wms/spec'
@@ -69,8 +76,9 @@ import { materialHasAmountColumns } from '@/utils/columns-format/wms'
 
 import { regDetail } from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
-import useWmsConfig from '@/composables/store/use-wms-config'
+// import useWmsConfig from '@/composables/store/use-wms-config'
 import elExpandTableColumn from '@comp-common/el-expand-table-column.vue'
+import manufacturedInfoColumns from '@/components-system/wms/table-columns/manufactured-info-columns/index.vue'
 import materialBaseInfoColumns from '@/components-system/wms/table-columns/material-base-info-columns/index.vue'
 import materialUnitQuantityColumns from '@/components-system/wms/table-columns/material-unit-quantity-columns/index.vue'
 import materialSecondaryInfoColumns from '@/components-system/wms/table-columns/material-secondary-info-columns/index.vue'
@@ -83,13 +91,18 @@ import checkPermission from '@/utils/system/check-permission'
 
 const permission = inject('permission')
 // 表格列数据格式转换
-const columnsDataFormat = ref([...materialHasAmountColumns, ['remark', 'empty-text'], ['monomerName', 'empty-text'], ['areaName', 'empty-text']])
+const columnsDataFormat = ref([
+  ...materialHasAmountColumns,
+  ['remark', 'empty-text'],
+  ['monomerName', 'empty-text'],
+  ['areaName', 'empty-text']
+])
 
 const drawerRef = ref()
 const expandRowKeys = ref([])
 const { CRUD, crud, detail } = regDetail()
 
-const { inboundFillWayCfg } = useWmsConfig()
+// const { inboundFillWayCfg } = useWmsConfig()
 
 // 表格高度处理
 const { maxHeight } = useMaxHeight(
@@ -108,15 +121,16 @@ const { maxHeight } = useMaxHeight(
 const order = computed(() => detail.purchaseOrder || {})
 
 // 显示金额相关信息（（统一为入库填写，取消后台配置）
-// const fillableAmount = ref(false)
-const fillableAmount = computed(() =>
-  inboundFillWayCfg.value ? inboundFillWayCfg.value.amountFillWay === inboundFillWayEnum.APPLICATION.V : false
-)
+const fillableAmount = ref(false)
+// const fillableAmount = computed(() =>
+//   inboundFillWayCfg.value ? inboundFillWayCfg.value.amountFillWay === inboundFillWayEnum.APPLICATION.V : false
+// )
 
 // 显示金额
-const showAmount = computed(() => checkPermission(permission.showAmount) || fillableAmount.value)
+const showAmount = computed(() => checkPermission(permission.showAmount) && fillableAmount.value)
 // 是否甲供订单
 const boolPartyA = computed(() => order.value.supplyType === orderSupplyTypeEnum.PARTY_A.V)
+const boolManuf = computed(() => detail.basicClass & materialPurchaseClsEnum.MANUFACTURED.V)
 // 标题
 const drawerTitle = computed(() =>
   crud.detailLoading ? `入库单` : `入库单：${detail.serialNumber}（ ${order.value.supplier ? order.value.supplier.name : '无供应商'} ）`

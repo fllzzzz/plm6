@@ -1,5 +1,5 @@
 <template>
-  <div v-permission="permission" class="steel-inbound-application-container">
+  <div v-permission="permission" class="manuf-inbound-application-container">
     <common-wrapper
       :basicClass="manufEnum"
       :current-basic-class="manufBasicClassKV[currentBasicClass]?.V"
@@ -109,7 +109,7 @@ const fillableAmount = computed(
 )
 
 function getNum(key) {
-  return form[key].filter((v) => form.selectObj[v.id])?.length
+  return form[key]?.filter((v) => form.selectObj?.[v.id])?.length
 }
 
 // 列表汇总数据
@@ -206,9 +206,9 @@ const setFormCallback = (form) => {
 
 const { cu, form, FORM } = useForm(
   {
-    title: '钢材入库',
+    title: '制成品入库',
     formStore: !props.edit,
-    formStoreKey: 'WMS_INBOUND_APPLICATION_STEEL',
+    formStoreKey: 'WMS_INBOUND_APPLICATION_MANUF',
     permission: permission,
     defaultForm: defaultForm,
     useDraftCallback: setFormCallback,
@@ -234,7 +234,7 @@ if (props.edit) {
 } else {
   // 非修改时
   tableHeightConfig = {
-    mainBox: '.steel-inbound-application-container',
+    mainBox: '.manuf-inbound-application-container',
     extraBox: ['.filter-container', '.inbound-application-header', '.inbound-application-footer'],
     navbar: true,
     minHeight: 300,
@@ -344,7 +344,6 @@ async function handleOrderInfoChange(orderInfo) {
       form.strucManufList = []
       form.enclManufList = []
       for (const row of form.list) {
-        row.projectId = orderInfo?.project?.id
         switch (row.basicClass) {
           case matClsEnum.STRUC_MANUFACTURED.V:
             form.strucManufList.push(row)
@@ -381,7 +380,7 @@ function init() {
 </script>
 
 <style lang="scss" scoped>
-.steel-inbound-application-container {
+.manuf-inbound-application-container {
   position: relative;
   .header {
     padding: 20px 20px 10px 20px;

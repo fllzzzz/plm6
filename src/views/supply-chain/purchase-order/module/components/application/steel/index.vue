@@ -48,6 +48,8 @@ const setFormCallback = (form) => {
             initSelectedTrigger[key] = watch(
               matSpecRef,
               () => {
+                // 初始化数据监听，执行一次后取消当前监听
+                form[key].forEach((v) => ref[key]?.rowWatch(v))
                 if (matSpecRef.value) {
                   matSpecRef.value.initSelected(
                     form[key].map((v) => {
@@ -95,7 +97,7 @@ watch(
         }
         if (!steelRefList[k]) steelRefList[k] = steelRef.value
         // 初始化数据监听，执行一次后取消当前监听
-        form[k].forEach((v) => ref[k].rowWatch(v))
+        form[k]?.forEach((v) => ref[k]?.rowWatch(v))
       })
     }
   },
