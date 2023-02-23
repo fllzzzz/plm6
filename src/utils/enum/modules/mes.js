@@ -277,18 +277,24 @@ constantize(paintingTypeEnum)
 
 // 标签类型
 const labelTypeEnum = {
-  COMMON: { L: '常规型', K: 'COMMON', V: 1 << 0, size: {
-    [componentTypeEnum.ARTIFACT.V]: ' 100 * 75 ',
-    [componentTypeEnum.ENCLOSURE.V]: ' 100 * 30 '
-  }},
-  SIMPLE: { L: '简约型', K: 'SIMPLE', V: 1 << 1, size: {
-    [componentTypeEnum.ARTIFACT.V]: ' 100 * 75 ',
-    [componentTypeEnum.ENCLOSURE.V]: ' 无 '
-  }},
-  CUSTOM: { L: '定制型', K: 'CUSTOM', V: 1 << 2, size: {
-    [componentTypeEnum.ARTIFACT.V]: ' 100 * 75 ',
-    [componentTypeEnum.ENCLOSURE.V]: ' 100 * 50 '
-  }}
+  COMMON: {
+    L: '常规型', K: 'COMMON', V: 1 << 0, size: {
+      [componentTypeEnum.ARTIFACT.V]: ' 100 * 75 ',
+      [componentTypeEnum.ENCLOSURE.V]: ' 100 * 30 '
+    }
+  },
+  SIMPLE: {
+    L: '简约型', K: 'SIMPLE', V: 1 << 1, size: {
+      [componentTypeEnum.ARTIFACT.V]: ' 100 * 75 ',
+      [componentTypeEnum.ENCLOSURE.V]: ' 无 '
+    }
+  },
+  CUSTOM: {
+    L: '定制型', K: 'CUSTOM', V: 1 << 2, size: {
+      [componentTypeEnum.ARTIFACT.V]: ' 100 * 75 ',
+      [componentTypeEnum.ENCLOSURE.V]: ' 100 * 50 '
+    }
+  }
 }
 constantize(labelTypeEnum)
 
@@ -560,6 +566,13 @@ const productionKanbanTypeEnum = {
 }
 constantize(productionKanbanTypeEnum)
 
+// 任务跟踪/在制品统计 钢材出库记录
+const steelOutBoundRecordTypeEnum = {
+  OUTBOUND: { L: '出库', K: 'OUTBOUND', V: 1 },
+  BACK_BOUND: { L: '退库', K: 'BACK_BOUND', V: 2 }
+}
+constantize(steelOutBoundRecordTypeEnum)
+
 export {
   teamTypeEnum,
   teamAttributeEnum,
@@ -630,7 +643,8 @@ export {
   machinePartDxfTypeEnum,
   machinePartIssuedWayEnum,
   nestingTypeEnum,
-  productionKanbanTypeEnum
+  productionKanbanTypeEnum,
+  steelOutBoundRecordTypeEnum
 }
 
 export default {
@@ -703,5 +717,6 @@ export default {
   machinePartDxfTypeEnum,
   machinePartIssuedWayEnum,
   nestingTypeEnum,
-  productionKanbanTypeEnum
+  productionKanbanTypeEnum,
+  steelOutBoundRecordTypeEnum
 }

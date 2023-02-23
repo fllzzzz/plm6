@@ -1,15 +1,15 @@
 <template>
   <common-drawer
     ref="drawerRef"
-    :title="`${processInfo.process?.name}工序在制品统计`"
+    :title="`${processInfo.name}工序在制品统计`"
     v-model="processDrawerVisible"
     direction="rtl"
     :before-close="handleClose"
     size="70%"
   >
     <template #titleAfter>
-      <el-tag size="mini" effect="plain">
-        项目：<span>{{ processInfo.project?.serialNumber }}-{{ processInfo.project?.name }}</span>
+      <el-tag size="small" effect="plain">
+        项目：<span>{{ processData.project?.serialNumber }}-{{ processData.project?.name }}</span>
       </el-tag>
     </template>
     <template #titleRight>
@@ -48,6 +48,9 @@ const props = defineProps({
   },
   processInfo: {
     type: Object
+  },
+  processData: {
+    type: Object
   }
 })
 
@@ -68,8 +71,9 @@ const tableLoading = ref(false)
 const list = ref([])
 const queryParams = computed(() => {
   return {
-    projectId: props.processInfo.project?.id,
-    type: props.processInfo.project?.type
+    projectId: props.processData.project?.id,
+    processId: props.processInfo?.id,
+    taskTypeEnum: props.processInfo?.productType
   }
 })
 
@@ -77,7 +81,7 @@ async function fetchList() {
   try {
     list.value = []
     tableLoading.value = true
-    const content = await getProcess({
+    const { content } = await getProcess({
       ...queryParams.value
     })
     list.value = content.map((v, i) => {

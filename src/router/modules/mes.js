@@ -687,6 +687,17 @@ export default {
         noCache: true
       }
     },
+    {
+      name: 'MesProductionTracking',
+      path: 'production-tracking',
+      hidden: false,
+      component: '/mes/production-manage/dashboard/production-tracking/index',
+      meta: {
+        title: '生产跟踪',
+        icon: 'project',
+        noCache: true
+      }
+    },
     // {
     //   name: 'MesProductionDashboardEnclosureDashboard',
     //   path: 'enclosure-dashboard',

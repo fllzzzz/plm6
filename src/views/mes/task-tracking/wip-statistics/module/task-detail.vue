@@ -1,7 +1,7 @@
 <template>
   <common-drawer ref="drawerRef" title="排产记录" v-model="taskDrawerVisible" direction="rtl" :before-close="handleClose" size="70%">
     <template #titleAfter>
-      <el-tag size="mini" effect="plain">
+      <el-tag size="small" effect="plain">
         项目：<span>{{ taskInfo.project?.serialNumber }}-{{ taskInfo.project?.name }}</span>
       </el-tag>
     </template>
@@ -9,7 +9,15 @@
       <print-table :api-key="apiKey" :params="{ ...queryParams }" size="mini" type="warning" class="filter-item" />
     </template>
     <template #content>
-      <common-table v-loading="tableLoading" :data="list" :max-height="maxHeight" row-key="rowId" style="width: 100%">
+      <common-table
+        v-loading="tableLoading"
+        :data="list"
+        :max-height="maxHeight"
+        row-key="rowId"
+        style="width: 100%"
+        show-summary
+        :summary-method="getSummaries"
+      >
         <el-table-column label="序号" type="index" align="center" width="60" />
         <el-table-column prop="monomer.name" :show-overflow-tooltip="true" label="单体" />
         <el-table-column prop="area.name" :show-overflow-tooltip="true" label="区域" />
@@ -20,9 +28,9 @@
         <el-table-column :show-overflow-tooltip="true" align="center" prop="quantity" label="数量" />
         <el-table-column :show-overflow-tooltip="true" align="center" prop="netWeight" label="单重（kg）" />
         <el-table-column :show-overflow-tooltip="true" align="center" prop="totalNetWeight" label="总重（kg）" />
-        <el-table-column :show-overflow-tooltip="true" align="center" prop="schedulingTime" label="排产日期" width="120">
+        <el-table-column :show-overflow-tooltip="true" align="center" prop="completeTime" label="排产日期" width="120">
           <template #default="{ row }">
-            <span>{{ row.schedulingTime }}</span>
+            <span>{{ parseTime(row.completeTime, '{y}-{m}-{d}') }}</span>
           </template>
         </el-table-column>
       </common-table>
@@ -33,7 +41,8 @@
 <script setup>
 import { getTask } from '@/api/mes/task-tracking/wip-statistics.js'
 import { defineProps, defineEmits, ref, computed } from 'vue'
-
+import { parseTime } from '@/utils/date'
+import { tableSummary } from '@/utils/el-extra'
 import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'
 
@@ -66,16 +75,22 @@ const tableLoading = ref(false)
 const list = ref([])
 const queryParams = computed(() => {
   return {
-    projectId: props.taskInfo.project?.id,
-    type: props.taskInfo.project?.type
+    projectId: props.taskInfo.project?.id
   }
 })
+
+// 合计
+function getSummaries(param) {
+  return tableSummary(param, {
+    props: ['quantity', 'totalNetWeight']
+  })
+}
 
 async function fetchList() {
   try {
     list.value = []
     tableLoading.value = true
-    const content = await getTask({
+    const { content } = await getTask({
       ...queryParams.value
     })
     list.value = content.map((v, i) => {

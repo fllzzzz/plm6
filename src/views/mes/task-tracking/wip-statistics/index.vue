@@ -47,7 +47,7 @@
           <template #default="{ row }">
             <!-- <el-tooltip v-if="row.processDTOList[item.id]" content="不合格数 / 检验数" placement="top"> -->
             <!-- <span> -->
-            <span @click.stop="getProcessDetail(row)" v-if="row.processDTOList[item.id]" style="cursor: pointer" class="tc-danger">{{
+            <span @click.stop="getProcessDetail(row, item)" v-if="row.processDTOList[item.id]" style="cursor: pointer" class="tc-danger">{{
               row.processDTOList[item.id]?.unQuantity
             }}</span>
             <!-- <span> / </span>
@@ -67,7 +67,7 @@
     <!-- 排产记录 -->
     <task-detail v-model:visible="taskDrawerVisible" :task-info="taskInfo" />
     <!-- 工序在制品统计 -->
-    <process-detail v-model:visible="processDrawerVisible" :process-info="processInfo" />
+    <process-detail v-model:visible="processDrawerVisible" :process-info="processInfo" :process-data="processData" />
   </div>
 </template>
 <script setup>
@@ -98,6 +98,7 @@ const taskDrawerVisible = ref(false)
 const taskInfo = ref({})
 const processDrawerVisible = ref(false)
 const processInfo = ref({})
+const processData = ref({})
 const { crud, CRUD, columns } = useCRUD(
   {
     title: '在制品统计',
@@ -129,9 +130,11 @@ function getTaskDetail(row) {
 }
 
 // 工序在制品统计
-function getProcessDetail(row) {
+function getProcessDetail(row, item) {
+  console.log(row, item, 'item')
   processDrawerVisible.value = true
-  processInfo.value = row
+  processInfo.value = item
+  processData.value = row
 }
 CRUD.HOOK.handleRefresh = (crud, res) => {
   res.data.content = res.data.content?.map((v) => {

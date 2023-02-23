@@ -50,7 +50,10 @@
           clearable
           @keyup.enter="crud.toQuery"
         />
-        <rrOperation />
+        <common-button class="filter-item" size="mini" type="success" icon="el-icon-search" @click.stop="searchQuery">搜索</common-button>
+        <common-button class="filter-item" size="mini" type="warning" icon="el-icon-refresh-left" @click.stop="resetQuery">
+          重置
+        </common-button>
       </template>
     </crudOperation>
   </div>
@@ -61,7 +64,7 @@ import { regHeader } from '@compos/use-crud'
 import { boolPrintedEnum } from '@enum-ms/common'
 import workshopSelect from '@comp-mes/workshop-select'
 import crudOperation from '@crud/CRUD.operation'
-import rrOperation from '@crud/RR.operation'
+// import rrOperation from '@crud/RR.operation'
 // import moment from 'moment'
 
 // const defaultTime = moment().startOf('month').valueOf()
@@ -82,4 +85,15 @@ const defaultQuery = {
 // }
 
 const { crud, query } = regHeader(defaultQuery)
+
+function searchQuery() {
+  crud.toQuery()
+}
+function resetQuery() {
+  query.factoryId = undefined
+  query.workshopId = undefined
+  query.printType = undefined
+  query.cutNumber = undefined
+  crud.toQuery()
+}
 </script>

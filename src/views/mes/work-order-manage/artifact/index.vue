@@ -178,7 +178,8 @@ function showDetail(row) {
   itemInfo.value = Object.assign({}, row)
 }
 
-function handleNestingTaskClick(val, query) {
+function handleNestingTaskClick(val, query, year) {
+  crud.query.localDateTime = year
   crud.query.projectId = val?.id
   if (crud.query.projectId) {
     crud.toQuery()

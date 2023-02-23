@@ -527,6 +527,15 @@ export function processList(params) {
   })
 }
 
+// 任务跟踪-在制品统计报表详情
+export function wipStatisticsLis(params) {
+  return request({
+    url: `/api/mes/building/task/process/project/progressing/print`,
+    method: 'get',
+    params
+  })
+}
+
 // 项目制造：项目总览
 export function projectOverviewList(params) {
   return request({
@@ -668,6 +677,7 @@ export default {
   monthlyTaskList, // 月度任务跟踪清单详情
   productionLineList, // 产线跟踪清单详情
   processList, // 工序呆滞清单详情
+  wipStatisticsLis, // 在制品统计
 
   // 发运管理
   productSendReceiveStorage, // 制成品入发存

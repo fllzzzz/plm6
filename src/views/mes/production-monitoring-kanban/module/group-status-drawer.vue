@@ -19,7 +19,6 @@
             style="width: 100%; cursor: pointer"
             row-key="id"
             :max-height="maxHeight / 3 - 40"
-            @row-click="handleRowChange"
           >
             <el-table-column prop="index" label="序号" align="center" width="60" type="index" />
             <el-table-column prop="groups.name" key="groups.name" label="班组" align="center">
@@ -39,7 +38,7 @@
             </el-table-column>
             <el-table-column prop="unQuantity" key="unQuantity" label="未完成任务（件/吨）" align="center" width="150px">
               <template #default="{ row }">
-                <span style="color: red">{{ row.unQuantity }}/{{ (row.unNetWeight / 1000)?.toFixed(2)}}</span>
+                <span @click.stop="unComplete(row)" style="color: red">{{ row.unQuantity }}/{{ (row.unNetWeight / 1000)?.toFixed(2)}}</span>
               </template>
             </el-table-column>
           </common-table>
@@ -51,7 +50,6 @@
             style="width: 100%; cursor: pointer"
             row-key="id"
             :max-height="maxHeight / 3 - 40"
-            @row-click="handleRowChange"
           >
             <el-table-column prop="index" label="序号" align="center" width="60" type="index" />
             <el-table-column prop="groups.name" key="groups.name" label="班组" align="center">
@@ -71,7 +69,7 @@
             </el-table-column>
             <el-table-column prop="unQuantity" key="unQuantity" label="未完成任务（件/吨）" align="center" width="150px">
               <template #default="{ row }">
-                <span style="color: red">{{ row.unQuantity }}/{{ (row.unNetWeight / 1000)?.toFixed(2)}}</span>
+                <span @click.stop="unComplete(row)" style="color: red">{{ row.unQuantity }}/{{ (row.unNetWeight / 1000)?.toFixed(2)}}</span>
               </template>
             </el-table-column>
           </common-table>
@@ -83,7 +81,6 @@
             style="width: 100%; cursor: pointer"
             row-key="id"
             :max-height="maxHeight / 3 - 40"
-            @row-click="handleRowChange"
           >
             <el-table-column prop="index" label="序号" align="center" width="60" type="index" />
             <el-table-column prop="groups.name" key="groups.name" label="班组" align="center">
@@ -103,7 +100,7 @@
             </el-table-column>
             <el-table-column prop="unQuantity" key="unQuantity" label="未完成任务（件/吨）" align="center" width="150px">
               <template #default="{ row }">
-                <span style="color: red">{{ row.unQuantity }}/{{ (row.unNetWeight / 1000)?.toFixed(2)}}</span>
+                <span @click.stop="unComplete(row)" style="color: red">{{ row.unQuantity }}/{{ (row.unNetWeight / 1000)?.toFixed(2)}}</span>
               </template>
             </el-table-column>
           </common-table>
@@ -162,9 +159,9 @@ onMounted(() => {
   fetchGroupDetailGet()
 })
 async function fetchGroupDetailGet() {
-  // artifactGroupList.value = []
-  // assembleGroupList.value = []
-  // partGroupList.value = []
+  artifactGroupList.value = []
+  assembleGroupList.value = []
+  partGroupList.value = []
   try {
     const data = await getGroupDialog({
       workshopId: props.workshopId
@@ -184,7 +181,7 @@ async function fetchGroupDetailGet() {
   }
 }
 
-function handleRowChange(row) {
+function unComplete(row) {
   detailData.value = row
 }
 </script>

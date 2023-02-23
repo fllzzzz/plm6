@@ -36,105 +36,22 @@
           :max-height="maxHeight"
           style="width: 100%"
         >
-          <el-table-column label="序号" type="index" align="center" width="70">
-            <template #default="{ row, $index }">
-              <table-cell-tag :show="row.boolPrinted" color="#e64242" name="已打印" type="printed" />
-              <span>{{ $index + 1 }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column
-            v-if="columns.visible('scheduleTime')"
-            :show-overflow-tooltip="true"
-            prop="scheduleTime"
-            label="排产日期"
-            width="110px"
-            align="center"
-          />
-          <el-table-column
-            v-if="columns.visible('scheduleOrder')"
-            :show-overflow-tooltip="true"
-            prop="scheduleOrder"
-            label="任务工单号"
-            min-width="110px"
-            align="center"
-          >
+          <el-table-column label="序号" type="index" align="center" width="70" />
+          <el-table-column label="项目" type="project" align="center" min-width="120">
             <template #default="{ row }">
-              <table-cell-tag :show="row.boolIntellect" name="智" />
-              <span>{{ row.scheduleOrder }}</span>
+              <span>{{ row.project?.serialNumber }}-{{ row.project?.name }}</span>
             </template>
           </el-table-column>
-          <el-table-column
-            v-if="columns.visible('userName')"
-            :show-overflow-tooltip="true"
-            prop="userName"
-            label="排产人"
-            min-width="110px"
-            align="center"
-          />
-          <el-table-column
-            v-if="columns.visible('productType')"
-            :show-overflow-tooltip="true"
-            prop="productType"
-            label="类型"
-            width="100px"
-            align="center"
-          >
-            <template #default="{ row }">
-              <el-tag :type="row.productType & componentTypeEnum.ASSEMBLE.V ? '' : 'success'" effect="plain">
-                {{ componentTypeEnum.VL[row.productType] }}
-              </el-tag>
-            </template>
-          </el-table-column>
-          <el-table-column
-            v-if="columns.visible('workshop.name')"
-            :show-overflow-tooltip="true"
-            prop="workshop.name"
-            label="车间"
-            min-width="110px"
-            align="center"
-          />
-          <el-table-column
-            v-if="columns.visible('productionLine.name')"
-            :show-overflow-tooltip="true"
-            prop="productionLine.name"
-            label="生产线"
-            min-width="110px"
-            align="center"
-          />
-          <el-table-column
-            v-if="columns.visible('group.name')"
-            :show-overflow-tooltip="true"
-            prop="group.name"
-            label="生产组"
-            min-width="80px"
-            align="center"
-          />
-          <el-table-column
-            v-if="columns.visible('taskQuantity')"
-            :show-overflow-tooltip="true"
-            prop="taskQuantity"
-            label="任务数（件）"
-            min-width="80px"
-            align="center"
-          />
-          <el-table-column
-            v-if="columns.visible('taskNetWeight')"
-            :show-overflow-tooltip="true"
-            prop="taskNetWeight"
-            label="任务量（kg）"
-            align="center"
-          />
-          <el-table-column v-permission="[...permission.detail]" label="操作" width="80px" align="center">
-            <template #default="{ row }">
-              <common-button v-permission="permission.detail" type="primary" size="mini" @click="showDetail(row)">查看</common-button>
-            </template>
-          </el-table-column>
+          <el-table-column :show-overflow-tooltip="true" prop="area.name" label="单体" align="center" />
+          <el-table-column :show-overflow-tooltip="true" prop="area.name" label="区域" align="center" />
+          <el-table-column :show-overflow-tooltip="true" prop="serialNumber" label="编号" min-width="80px" align="center" />
+          <el-table-column :show-overflow-tooltip="true" prop="specification" label="规格" min-width="80px" align="center" />
+          <el-table-column :show-overflow-tooltip="true" prop="length" label="长度" align="center" />
+          <el-table-column :show-overflow-tooltip="true" prop="netWeight" label="单重（kg）" align="center" />
         </common-table>
         <!--分页组件-->
         <pagination />
       </template>
-      <!-- 查看 -->
-      <!-- <detail v-model:visible="drawerVisible" :detail-data="detailData" @refresh="crud.toQuery" /> -->
     </div>
   </div>
 </template>
@@ -143,7 +60,6 @@
 import crudApi from '@/api/mes/factory-report/group-report.js'
 import { ref, provide } from 'vue'
 
-import { componentTypeEnum, artifactProductLineEnum } from '@enum-ms/mes'
 import { artifactWorkOrderPM as permission } from '@/page-permission/mes'
 
 import useMaxHeight from '@compos/use-max-height'
@@ -162,7 +78,7 @@ const optShow = {
 
 const tableRef = ref()
 const info = ref({})
-const { crud, columns, CRUD } = useCRUD(
+const { crud, CRUD } = useCRUD(
   {
     title: '班组报表',
     sort: [],
@@ -180,28 +96,19 @@ const { maxHeight } = useMaxHeight({ paginate: true })
 
 CRUD.HOOK.handleRefresh = (crud, res) => {
   res.data.content = res.data.content.map((v) => {
-    v.boolPrinted = Boolean(v.printQuantity)
-    v.boolIntellect = v.productionLineTypeEnum === artifactProductLineEnum.INTELLECT.V
     return v
   })
 }
 
-const itemInfo = ref()
-const detailData = ref({})
-const drawerVisible = ref(false)
-
-function showDetail(row) {
-  drawerVisible.value = true
-  detailData.value = row
-  itemInfo.value = Object.assign({}, row)
-}
-
 function handleNestingTaskClick(val, query) {
   crud.query.processId = val?.process?.id
+  crud.query.groupsId = val?.groups?.id
+  crud.query.teamId = val?.team?.id
+  crud.query.taskTypeEnum = val?.taskTypeEnum
   info.value = val
-  if (crud.query.processId) {
-    crud.toQuery()
-  }
+  //   if (crud.query.processId) {
+  crud.toQuery()
+  //   }
 }
 </script>
 <style lang="scss" scoped>
@@ -210,9 +117,10 @@ function handleNestingTaskClick(val, query) {
   .wrap-left {
     width: 500px;
     margin-right: 20px;
+    overflow-x: auto;
   }
   .wrap-right {
-    flex: 1;
+    flex: 31;
     min-width: 0;
     overflow: hidden;
   }

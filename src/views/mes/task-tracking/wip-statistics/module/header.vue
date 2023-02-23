@@ -15,9 +15,8 @@
       />
       <project-radio-button size="small" v-model="query.projectId" class="filter-item" @change="crud.toQuery" />
     </div>
-
     <div style="width: 300px">
-      <print-table :api-key="apiKey" :params="{ ...query }" size="mini" type="warning" class="filter-item" />
+      <print-table api-key="mesWipStatisticsList" :params="{ ...query }" size="mini" type="warning" class="filter-item" />
     </div>
   </div>
 </template>

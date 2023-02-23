@@ -22,5 +22,16 @@ export function getProcessList(params) {
     params
   })
 }
+/**
+ * @description: 班组报表/获取工序
+ */
+export function getProcess(params) {
+  return request({
+    module: 'mes',
+    url: 'report/workshop/process/list',
+    method: 'get',
+    params
+  })
+}
 
 export default { get }

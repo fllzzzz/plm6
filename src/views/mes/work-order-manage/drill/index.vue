@@ -4,8 +4,8 @@
       <drill-project-list :maxHeight="maxHeight - 40" @nesting-task-click="handleNestingTaskClick" />
     </div>
     <div class="wrap-right">
-      <el-tag v-if="!crud.query?.projectId" type="info" size="medium"> * 请点击左侧项目列表查看详情 </el-tag>
-      <template v-else>
+      <el-tag v-if="!crud.query?.processType" type="info" size="medium"> * 请点击左侧项目列表查看详情 </el-tag>
+      <div v-else>
         <div class="head-container">
           <mHeader />
         </div>
@@ -127,22 +127,22 @@
                 @click="showDrill(scope.row)"
                 >查看</common-button
               >
-              <common-button v-else type="primary" size="mini" @click="showCuttingDetail(scope.row)">查看</common-button>
+              <!-- <common-button v-else type="primary" size="mini" @click="showCuttingDetail(scope.row)">查看</common-button> -->
             </template>
           </el-table-column>
         </common-table>
         <!-- 分页 -->
         <pagination />
-      </template>
+      </div>
       <!-- 钻孔工单详情 -->
       <detail v-model:visible="drawerVisible" :process-type="crud.query.processType" :detail-data="detailData" />
       <!-- 切割工单详情 -->
-      <cutting-detail
+      <!-- <cutting-detail
         :process-type="crud.query.processType"
         v-model:visible="cuttingDrawerVisible"
         :cutting-detail-data="cuttingDetailData"
         @refresh="crud.toQuery"
-      />
+      /> -->
     </div>
   </div>
 </template>
@@ -157,7 +157,7 @@ import { mesMachinePartOrderTypeEnum } from '@enum-ms/mes'
 import { machinePartWorkOrderPM as permission } from '@/page-permission/mes'
 import mHeader from './module/header.vue'
 import detail from './module/detail.vue'
-import cuttingDetail from './module/cutting-detail.vue'
+// import cuttingDetail from './module/cutting-detail.vue'
 import drillProjectList from './module/drill-project-list.vue'
 
 const optShow = {
@@ -169,17 +169,17 @@ const optShow = {
 const tableRef = ref()
 const detailData = ref({}) // 钻孔
 const drawerVisible = ref(false)
-const cuttingDetailData = ref({})
-const cuttingDrawerVisible = ref(false)
+// const cuttingDetailData = ref({})
+// const cuttingDrawerVisible = ref(false)
 
 const { crud, CRUD, columns } = useCRUD(
   {
-    title: '零件工单',
+    title: '钻孔工单',
     sort: [],
     permission: { ...permission },
     optShow: { ...optShow },
     crudApi: { ...crudApi },
-    // requiredQuery: ['processType'],
+    requiredQuery: ['processType'],
     hasPagination: true
   },
   tableRef
@@ -192,11 +192,11 @@ const { maxHeight } = useMaxHeight({
 })
 
 // 预览切割工单 pdf
-function showCuttingDetail(row) {
-  console.log(row, 'row')
-  cuttingDrawerVisible.value = true
-  cuttingDetailData.value = row
-}
+// function showCuttingDetail(row) {
+//   console.log(row, 'row')
+//   cuttingDrawerVisible.value = true
+//   cuttingDetailData.value = row
+// }
 
 // 查看钻孔工单详情
 function showDrill(row) {
@@ -204,11 +204,14 @@ function showDrill(row) {
   detailData.value = row
 }
 
-function handleNestingTaskClick(val, query) {
+function handleNestingTaskClick(val, query, year) {
   crud.query.projectId = val?.id
-  if (crud.query.projectId) {
-    crud.toQuery()
-  }
+  crud.query.localDateTime = year
+  crud.query.processType = mesMachinePartOrderTypeEnum.DRILL_ORDER.V
+  // if (crud.query.projectId) {
+  //   crud.toQuery()
+  // }
+  crud.toQuery()
 }
 
 CRUD.HOOK.handleRefresh = (crud, res) => {

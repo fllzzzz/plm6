@@ -122,6 +122,7 @@ const mesMonthlyTaskList = mes.monthlyTaskList
 const mesProcessList = mes.processList
 const mesProductionLineList = mes.productionLineList
 const mesWorkOrderTrackingList = mes.workOrderTrackingList
+const mesWipStatisticsList = mes.wipStatisticsLis
 
 const mesFactoryWorkshopReport = mes.factoryWorkshopReport
 
@@ -270,6 +271,7 @@ export default {
   mesProductionLineList, //  产线跟踪清单详情
   mesWorkOrderTrackingList, // 工单跟踪清单详情
   mesProcessList, // 工序呆滞清单详情
+  mesWipStatisticsList, // 在制品统计打印
 
   mesFactoryWorkshopReport, // 车间报表清单详情
 

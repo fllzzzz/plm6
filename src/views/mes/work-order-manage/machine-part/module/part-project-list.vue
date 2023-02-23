@@ -48,10 +48,11 @@
 </template>
 
 <script setup>
-import { getProjectInfo } from '@/api/mes/work-order-manage/artifact.js'
+import { getProjectInfo } from '@/api/mes/work-order-manage/machine-part.js'
 import { ref, defineProps, defineEmits, watch, inject } from 'vue'
 import moment from 'moment'
 import checkPermission from '@/utils/system/check-permission'
+import { mesMachinePartOrderTypeEnum } from '@enum-ms/mes'
 import { machinePartSchedulingNestingResultPM as permission } from '@/page-permission/mes'
 
 const emit = defineEmits(['nesting-task-click'])
@@ -83,7 +84,8 @@ async function fetchProjectList() {
     tableData.value = []
     const data = await getProjectInfo({
       localDateTime: year.value ? year.value : moment().valueOf().toString(),
-      serialNumber: serialNumber.value
+      serialNumber: serialNumber.value,
+      processType: mesMachinePartOrderTypeEnum.CUTTING_ORDER.V
     })
     tableData.value = data || []
   } catch (error) {
