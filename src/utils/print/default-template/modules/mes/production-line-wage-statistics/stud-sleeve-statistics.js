@@ -1,11 +1,11 @@
 import { dataSourceEnum, alignEnum, verticleAlignEnum, fieldTypeEnum as typeEnum, cssUnitEnum, cssUnitPrecisionEnum, pageFormatEnum } from '@/utils/print/enum'
 
 // 栓钉套筒统计
-const studSleeveStatisticsList = {
+const mesStudSleeveStatisticsList = {
   fontUnit: 'pt', // 字体单位
   unit: cssUnitEnum.MM.V, // 长度单位
   unitPrecision: cssUnitPrecisionEnum.ZERO.V, // 长度单位精度
-  type: 'studSleeveStatisticsList', // 表格类型 KEY
+  type: 'mesStudSleeveStatisticsList', // 表格类型 KEY
   name: '栓钉套筒统计清单（平台）', // 表格名称
   width: 210, // 打印纸的宽度
   height: 297, // 打印纸的高度
@@ -199,18 +199,23 @@ const studSleeveStatisticsList = {
      * @param {boolean} sum 列需要合计
      */
     fields: [
-      { show: true, key: 'name', title: '项目', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 28, type: typeEnum.OTHER.K },
-      { show: true, key: 'monomer', title: '单体', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.OTHER.K },
-      { show: true, key: 'area', title: '区域', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.OTHER.K },
-      { show: true, key: 'serialNumber', title: '编号', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.OTHER.K },
-      { show: true, key: 'specification', title: '规格', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 28, type: typeEnum.OTHER.K },
-      { show: true, key: 'weight', title: '重量(kg)', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.OTHER.K },
-      { show: true, key: 'productionLine', title: '产线', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.OTHER.K },
-      { show: true, key: 'productionDate', title: '生产日期', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 28, type: typeEnum.DATE.K, format: 'YY/MM/DD' }
+      { show: true, key: 'project', title: '项目', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 18, type: typeEnum.PROJECT.K },
+      { show: true, key: 'monomer.name', title: '单体', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 13, type: typeEnum.MONOMER_NAME.K },
+      { show: true, key: 'area.name', title: '区域', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 13, type: typeEnum.AREA_NAME.K },
+      { show: true, key: 'serialNumber', title: '编号', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.SERIAL_NUMBER.K },
+      { show: true, key: 'specification', title: '规格', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.SPECIFICATION.K },
+      { show: true, key: 'netWeight', title: '重量(kg)', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 16, type: typeEnum.WEIGHT.K },
+      { show: true, key: 'productionLine.name', title: '产线', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 10, type: typeEnum.PRODUCTION_LINE.K },
+      { show: true, key: 'completeTime', title: '生产日期', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 20 },
+      { show: true, key: 'auxiliaryTypeName', title: '类型', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 10, type: typeEnum.ENUM.K, format: { enum: 'auxiliaryMaterialTypeEnum', key: 'L' }},
+      { show: true, key: 'auxiliarySpecification', title: '规格', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.SPECIFICATION.K },
+      { show: true, key: 'auxiliaryQuantity', title: '数量', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 10, type: typeEnum.QUANTITY.K, sum: true },
+      { show: true, key: 'price', title: '单价', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 10, type: typeEnum.AMOUNT.K },
+      { show: true, key: 'wages', title: '总价', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 10, type: typeEnum.AMOUNT.K, sum: true }
     ]
   }
 }
 
 export default {
-  studSleeveStatisticsList // 栓钉套筒统计
+  mesStudSleeveStatisticsList // 栓钉套筒统计
 }

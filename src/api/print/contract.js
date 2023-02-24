@@ -238,6 +238,182 @@ export function warehouseRecord(params) {
   })
 }
 
+/**
+ * 工业用电电费
+ */
+export function industryElectricRecord(params) {
+  return request({
+    url: '/api/contract/water-electricity/print',
+    method: 'get',
+    params
+  })
+}
+
+/**
+ * 民用用电电费
+ */
+export function civilElectricRecord(params) {
+  return request({
+    url: '/api/contract/water-electricity/print',
+    method: 'get',
+    params
+  })
+}
+
+/**
+ * 水费
+ */
+export function waterRecord(params) {
+  return request({
+    url: '/api/contract/water-electricity/print',
+    method: 'get',
+    params
+  })
+}
+
+/**
+ * 气体统计
+ */
+export function gasRecord(params) {
+  return request({
+    url: '/api/contract/gas-summary/print',
+    method: 'get',
+    params
+  })
+}
+
+/**
+ * 费用报销
+ */
+export function expenseReimburseList(params) {
+  return request({
+    url: '/api/contract/expense-reimburse/print',
+    method: 'get',
+    params
+  })
+}
+
+/**
+ * 管理人员工资
+ */
+export function managementSalaryList(params) {
+  return request({
+    url: '/api/contract/wage-summary/print',
+    method: 'get',
+    params
+  })
+}
+
+/**
+ * 生产人员工资
+ */
+export function productionSalaryList(params) {
+  return request({
+    url: '/api/contract/wage-summary/print',
+    method: 'get',
+    params
+  })
+}
+
+/**
+ * 物业费用
+ */
+export function propertyFeeList(params) {
+  return request({
+    url: '/api/contract/property-fee/print',
+    method: 'get',
+    params
+  })
+}
+
+// 业财报表/主材费清单
+export function mainMaterialList(params) {
+  return request({
+    url: '/api/contract/project-finance/list-outbound/print',
+    method: 'get',
+    params
+  })
+}
+// 业财报表/人工费清单
+export function manualList(params) {
+  return request({
+    url: '/api/contract/project-finance/list-wage/print',
+    method: 'get',
+    params
+  })
+}
+
+// 业财报表/运输费
+export function shippingFeeList(id) {
+  return request({
+    url: `/api/mes/building/cargo/shipment/list/print/${id}`,
+    method: 'get'
+  })
+}
+
+// 业财报表/检测费
+export function testingFee(params) {
+  return request({
+    url: '/api/contract/project-finance/list-testing/print',
+    method: 'get',
+    params
+  })
+}
+
+// 业财报表/分包费
+export function subcontractFee(params) {
+  return request({
+    url: '/api/contract/project-finance/list-sub/print',
+    method: 'get',
+    params
+  })
+}
+
+// 业财报表/项目管理费
+export function projectManagementFee(params) {
+  return request({
+    url: ``,
+    method: 'get',
+    params
+  })
+}
+
+// 业财报表/管理费
+export function managementFee(params) {
+  return request({
+    url: `/api/contract/project-finance/list-manage/print`,
+    method: 'get',
+    params
+  })
+}
+
+// 业财报表/水电费
+export function waterElectricFee(params) {
+  return request({
+    url: `/api/contract/project-finance/list-water/print`,
+    method: 'get',
+    params
+  })
+}
+
+// 业财报表/折旧费
+export function depreciationFee(params) {
+  return request({
+    url: '/api/contract/project-finance/list-depreciation/print',
+    method: 'get',
+    params
+  })
+}
+
+// 业财报表
+export function fortuneReportList(params) {
+  return request({
+    url: '/api/contract/project-finance/print',
+    method: 'get',
+    params
+  })
+}
+
 export default {
   contractLedger, // 合同台账（合同登记表）
   collectionLedger, // 收款记录
@@ -257,5 +433,24 @@ export default {
   happenedDetail, // 项目发运详情
   transactionRecord, // 客户交易记录
   saleOrderTracking, // 订单跟踪列表
-  warehouseRecord // 入库记录
+  warehouseRecord, // 入库记录
+  industryElectricRecord, // 工业用电电费
+  civilElectricRecord, // 民用用电电费
+  waterRecord, // 水费
+  gasRecord, // 气体统计
+  expenseReimburseList, // 费用报销
+  managementSalaryList, // 管理人员工资清单
+  productionSalaryList, // 生产人员工资
+  propertyFeeList, // 物业费用清单
+
+  mainMaterialList, // 主材费清单
+  manualList, // 人工费
+  shippingFeeList, // 运输费
+  testingFee, // 检测费
+  subcontractFee, // 分包费
+  projectManagementFee, // 项目管理费
+  managementFee, // 管理费
+  waterElectricFee, // 水电费
+  depreciationFee, // 折旧费
+  fortuneReportList // 业财报表
 }

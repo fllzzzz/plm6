@@ -144,6 +144,8 @@ import { provide, ref } from 'vue'
 import moment from 'moment'
 
 import { matClsEnum } from '@enum-ms/classification'
+import checkPermission from '@/utils/system/check-permission'
+import { purchasingAnalysisPM as permission } from '@/page-permission/operation'
 
 import useChart from '@compos/use-chart'
 import steelQuery from './module/steel-query.vue'
@@ -307,6 +309,9 @@ const { getMyChart: getSectionPurchasingProportionChart } = useChart({
 })
 
 async function refreshSteelPurchasingTrend() {
+  if (!checkPermission(permission.get)) {
+    return false
+  }
   try {
     const { content } = await getPurchaseTrend({
       dateTime: steelTrendQuery.value.year,
@@ -343,6 +348,9 @@ async function refreshSteelPurchasingTrend() {
 }
 
 async function refreshSectionPurchasingTrend() {
+  if (!checkPermission(permission.get)) {
+    return false
+  }
   try {
     const { content } = await getPurchaseTrend({
       dateTime: sectionTrendQuery.value.year,
@@ -379,6 +387,9 @@ async function refreshSectionPurchasingTrend() {
 }
 
 async function refreshSteelPurchasingProportion() {
+  if (!checkPermission(permission.get)) {
+    return false
+  }
   try {
     steelProportionList.value = []
     const _myChart = getSteelPurchasingProportionChart()
@@ -407,6 +418,9 @@ async function refreshSteelPurchasingProportion() {
 }
 
 async function refreshSectionPurchasingProportion() {
+  if (!checkPermission(permission.get)) {
+    return false
+  }
   try {
     sectionProportionList.value = []
     const _myChart = getSectionPurchasingProportionChart()

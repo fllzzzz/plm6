@@ -571,6 +571,17 @@ export function mainMaterialTrackStock(params) {
     params
   })
 }
+/**
+ *
+ * 栓钉套筒统计打印
+ */
+export function studSleeveStatisticsList(params) {
+  return request({
+    url: `/api/mes/building/price/stud/sleeve/print`,
+    method: 'get',
+    params
+  })
+}
 
 export default {
   // 项目制造
@@ -643,6 +654,9 @@ export default {
   // 项目报表
   mainMaterialTrackSummary, // 主材跟踪汇总
   mainMaterialTrackUseRecord, // 主材跟踪-钢材领用记录
-  mainMaterialTrackStock // 主材跟踪-库存明细
+  mainMaterialTrackStock, // 主材跟踪-库存明细
+
+  // 产线工资统计
+  studSleeveStatisticsList // 栓钉套筒统计
 }
 

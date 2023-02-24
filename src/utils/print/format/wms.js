@@ -26,8 +26,9 @@ function preparesCustomSummary({ header, table = [], footer, qrCode }) {
 async function dataFormat({ header, table = [], footer, qrCode }) {
   await setSpecInfoToList(table)
   await numFmtByBasicClass(table, undefined, {
-    mete: ['mete', 'rejectMete'],
-    quantity: ['quantity', 'rejectQuantity']
+    mete: ['mete', 'rejectMete', 'usedMete'],
+    quantity: ['quantity', 'rejectQuantity'],
+    amount: ['avgUnitPrice']
   })
   return {
     header,

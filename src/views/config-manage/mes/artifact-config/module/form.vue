@@ -122,7 +122,7 @@
                 />
               </div>
             </div>
-            <common-button icon="el-icon-plus" size="mini" type="success" style="margin: 0 0 12px 6px" @click="addProcess" v-if="plusShow"/>
+            <common-button icon="el-icon-plus" size="mini" type="success" style="margin: 0 0 12px 6px" @click="addProcess"/>
           </div>
         </el-form-item>
         <el-form-item label="编号类型索引" prop="serialNumberPrefixList" v-if="form.artifactType===artifactTypeEnum.SMALL.V">
@@ -216,9 +216,9 @@ const defaultForm = {
 }
 
 const form = ref(JSON.parse(JSON.stringify(defaultForm)))
-const plusShow = computed(() => {
-  return form.value.productionLineTypeEnum === artifactProductLineEnum.TRADITION.V ? (form.value.specPrefixList?.length < 1 ? true : (form.value.artifactType === artifactTypeEnum.COMMON.V)) : true
-})
+// const plusShow = computed(() => {
+//   return form.value.productionLineTypeEnum === artifactProductLineEnum.TRADITION.V ? (form.value.specPrefixList?.length < 1 ? true : (form.value.artifactType === artifactTypeEnum.COMMON.V)) : true
+// })
 
 const classificationNameOptions = computed(() => {
   let options = []
@@ -233,7 +233,7 @@ const validateLinks = (rule, value, callback) => {
     for (const i in value) {
       if (!value[i].add) {
         if (!value[i].specPrefix) {
-          callback(new Error('请填写大写或中文规格前缀'))
+          callback(new Error('请填写“大写字母”或“中文”格式的规格前缀'))
         }
         // if (!isNotBlank(value[i].boolUseAssemble)) {
         //   callback(new Error('请选择是否匹配部件'))
@@ -244,7 +244,7 @@ const validateLinks = (rule, value, callback) => {
     }
     callback()
   } else {
-    callback(new Error('请填写大写或中文规格前缀'))
+    callback(new Error('请填写“大写字母”或“中文”格式的规格前缀'))
   }
 }
 

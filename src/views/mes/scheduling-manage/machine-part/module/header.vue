@@ -19,12 +19,12 @@
         @change="fetchTick"
       />
       <tag-tabs
-        v-if="thickList?.length"
+        v-if="thickData?.length"
         v-model="query.thick"
         class="filter-item"
         :style="`width:calc(100% - ${materialRefWidth + typeListRefWidth}px)`"
         itemKey="name"
-        :data="thickList"
+        :data="thickData"
         @change="crud.toQuery"
       >
         <template #default="{ item }">
@@ -110,7 +110,7 @@ const typeListRefWidth = ref()
 const boxScale = ref(1)
 const typeList = ref([])
 const materialList = ref([])
-const thickList = ref([])
+const thickData = ref([])
 
 function resetQuery() {
   query.serialNumber = undefined
@@ -127,7 +127,7 @@ function boxZoomOut() {
 
 async function fetchType(lastQuery) {
   materialList.value = []
-  thickList.value = []
+  thickData.value = []
   typeList.value = []
   query.taskTypeEnum = undefined
   query.material = undefined
@@ -199,24 +199,25 @@ async function fetchMaterial(lastQuery) {
 async function fetchTick(lastQuery) {
   if (isBlank(query.projectIds)) return
   try {
-    thickList.value = []
+    thickData.value = []
     const { content } = await getThick({
       monthList: query.monthList,
       projectIds: query.projectIds,
       material: query.material,
       taskTypeEnum: query.taskTypeEnum
     })
-    thickList.value =
+    thickData.value =
       content?.map((v) => {
         return {
           name: v
         }
       }) || []
+    console.log(thickData.value, 'thickData.value')
     if (lastQuery && lastQuery?.thick && content?.length && content.indexOf(lastQuery.thick) !== -1) {
       query.thick = lastQuery.thick
       crud.toQuery()
-    } else if (thickList.value?.length) {
-      query.thick = thickList.value[0].name
+    } else if (thickData.value?.length) {
+      query.thick = thickData.value[0].name
       crud.toQuery()
     }
   } catch (error) {

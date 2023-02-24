@@ -257,3 +257,84 @@ export const settlementManagePM = {
 }
 
 // --------------------------- 销售管理 end --------------------------------
+
+// --------------------------- 费用录入 start ------------------------------
+
+// 费用录入/费用填报
+export const expenseReportingPM = {
+  get: ['expense_reporting:get'], // 列表
+  add: ['expense_reporting:add'], // 新增
+  edit: ['expense_reporting:edit'], // 修改
+  del: ['expense_reporting:del'], // 删除
+  print: ['expense_reporting:print'] // 打印
+}
+
+// 费用录入/厂房折旧
+export const plantDepreciationPM = {
+  get: ['plant_depreciation:get'], // 列表
+  add: ['plant_depreciation:add'], // 新增
+  edit: ['plant_depreciation:edit'], // 修改
+  del: ['plant_depreciation:del'], // 删除
+  changeStatus: ['plant_depreciation:change_status'] // 更改状态
+}
+
+// 费用录入/水电费
+export const waterElectricityCostPM = {
+  get: ['water_electricity_cost:get'], // 列表
+  add: ['water_electricity_cost:add'], // 新增
+  edit: ['water_electricity_cost:edit'], // 修改
+  del: ['water_electricity_cost:del'], // 删除
+  print: ['water_electricity_cost:print'] // 打印
+}
+
+// 费用录入/气体
+export const gasCostPM = {
+  get: ['gas_cost:get'], // 列表
+  add: ['gas_cost:add'], // 新增
+  edit: ['gas_cost:edit'], // 修改
+  del: ['gas_cost:del'], // 删除
+  print: ['gas_cost:print'] // 打印
+}
+
+// 费用录入/管理费/员工工资
+export const salaryCostPM = {
+  get: ['salary_cost:get'], // 列表
+  add: ['salary_cost:add'], // 新增
+  edit: ['salary_cost:edit'], // 修改
+  del: ['salary_cost:del'], // 删除
+  print: ['salary_cost:print'] // 打印
+}
+
+// 费用录入/管理费/物业费
+export const propertyCostPM = {
+  get: ['property_cost:get'], // 列表
+  add: ['property_cost:add'], // 新增
+  edit: ['property_cost:edit'], // 修改
+  del: ['property_cost:del'], // 删除
+  print: ['property_cost:print'] // 打印
+}
+
+// 费用录入/检测费
+export const expenseTestingCostPM = {
+  get: ['expense_testing_cost:get'], // 列表
+  add: ['expense_testing_cost:add'], // 新增
+  detail: ['expense_testing_cost:detail'] // 详情
+}
+
+// --------------------------- 费用录入 end --------------------------------
+
+// --------------------------- 业财报表 start ------------------------------
+
+// 业财报表
+export const fortuneReportPM = {
+  get: ['fortune_report_cost:get'], // 列表
+  print: ['fortune_report_cost:print'], // 打印
+  settleDetail: ['fortune_report_cost:settle_detail'], // 结算详情
+  cost: {
+    get: ['fortune_report_cost_detail:get'], // 综合成本查看
+    detail: ['fortune_report_cost_detail:detail'], // 成本详情列表
+    print: ['fortune_report_cost_detail:print'] // 成本详情打印
+  }
+}
+
+// --------------------------- 业财报表 end --------------------------------

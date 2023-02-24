@@ -1,5 +1,5 @@
 <template>
-  <common-dialog title="工价修改预览" v-model="dialogVisible" top="5vh" append-to-body :before-close="handleClose" width="1200px">
+  <common-dialog title="工价修改预览" v-model="dialogVisible" top="5vh" append-to-body :before-close="handleClose" width="1500px">
     <template #titleRight>
       <common-button :loading="loading" size="mini" :disabled="!modifiedData || modifiedData.length == 0" type="primary" @click="submit">
         保 存
@@ -10,28 +10,49 @@
       <el-table-column prop="monomer.name" label="单体" align="center" show-overflow-tooltip min-width="100px" />
       <el-table-column prop="area.name" label="区域" align="center" show-overflow-tooltip min-width="100px" />
       <el-table-column prop="serialNumber" label="编号" align="center" show-overflow-tooltip min-width="100px" />
-      <el-table-column prop="specification" label="规格" align="center" show-overflow-tooltip min-width="110px" />
-      <el-table-column prop="wageQuotaTypeStr" align="center" show-overflow-tooltip label="核算单位" width="70px" />
-      <el-table-column align="center" prop="wage" label="定额单价" min-width="100px">
+      <el-table-column prop="specification" label="规格" align="center" show-overflow-tooltip min-width="130px" />
+      <!-- <el-table-column prop="wageQuotaTypeStr" align="center" show-overflow-tooltip label="核算单位" width="70px" /> -->
+      <!-- <el-table-column align="center" prop="wage" label="定额单价" min-width="100px">
         <template #default="{ row }">
           <cell-change-preview :old="row.sourceWage" :new="row.wage" />
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <template v-if="showMoreColumn">
-        <el-table-column align="center" prop="primerWage" label="底漆" min-width="100px">
-          <template #default="{ row }">
-            <cell-change-preview :old="row.sourcePrimerWage" :new="row.primerWage" />
-          </template>
+        <el-table-column align="center" prop="primer" label="底漆" min-width="100px">
+          <el-table-column prop="primerWageQuotaType" align="center" show-overflow-tooltip label="核算单位" width="70px">
+            <template #default="{ row }">
+              <span>{{ wageQuotaTypeEnum.V[row.primerWageQuotaType]?.C_UNIT }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column align="center" prop="primerWage" label="定额单价" width="150">
+            <template #default="{ row }">
+              <cell-change-preview :old="row.sourcePrimerWage" :new="row.primerWage" />
+            </template>
+          </el-table-column>
         </el-table-column>
-        <el-table-column align="center" prop="intermediatePaintWage" label="中间漆" min-width="100px">
-          <template #default="{ row }">
-            <cell-change-preview :old="row.sourceIntermediatePaintWage" :new="row.intermediatePaintWage" />
-          </template>
+        <el-table-column align="center" prop="intermediatePaint" label="中间漆" min-width="100px">
+          <el-table-column prop="intermediatePaintWageQuotaType" align="center" show-overflow-tooltip label="核算单位" width="70px">
+            <template #default="{ row }">
+              <span>{{ wageQuotaTypeEnum.V[row.intermediatePaintWageQuotaType]?.C_UNIT }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column align="center" prop="intermediatePaintWage" label="定额单价" width="150">
+            <template #default="{ row }">
+              <cell-change-preview :old="row.sourceIntermediatePaintWage" :new="row.intermediatePaintWage" />
+            </template>
+          </el-table-column>
         </el-table-column>
-        <el-table-column align="center" prop="topcoatWage" label="面漆" min-width="100px">
-          <template #default="{ row }">
-            <cell-change-preview :old="row.sourceTopcoatWage" :new="row.topcoatWage" />
-          </template>
+        <el-table-column align="center" prop="topcoat" label="面漆" min-width="100px">
+          <el-table-column prop="topcoatWageQuotaType" align="center" show-overflow-tooltip label="核算单位" width="70px">
+            <template #default="{ row }">
+              <span>{{ wageQuotaTypeEnum.V[row.topcoatWageQuotaType]?.C_UNIT }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column align="center" prop="topcoatWage" label="定额单价" width="150">
+            <template #default="{ row }">
+              <cell-change-preview :old="row.sourceTopcoatWage" :new="row.topcoatWage" />
+            </template>
+          </el-table-column>
         </el-table-column>
       </template>
     </common-table>
@@ -40,7 +61,7 @@
 
 <script setup>
 import { edit } from '@/api/mes/production-line-wage-statistics/wage-adjust'
-
+import { wageQuotaTypeEnum } from '@enum-ms/mes'
 import { defineEmits, defineProps, ref } from 'vue'
 import { ElNotification } from 'element-plus'
 
@@ -83,6 +104,7 @@ async function submit() {
   try {
     loading.value = true
     const _list = props.modifiedData.map((v) => {
+      console.log(v, 'v')
       return {
         id: v.id,
         intermediatePaintWage: v.intermediatePaintWage,

@@ -73,6 +73,8 @@ import moment from 'moment'
 
 import { mapGetters } from '@/store/lib'
 import { componentTypeEnum } from '@enum-ms/mes'
+import checkPermission from '@/utils/system/check-permission'
+import { productionTypeAnalysisPM as permission } from '@/page-permission/operation'
 
 import useMaxHeight from '@compos/use-max-height'
 import useChart from '@compos/use-chart'
@@ -163,6 +165,9 @@ function init() {
 async function fetchInfo(myChart) {
   try {
     init()
+    if (!checkPermission(permission.get)) {
+      return false
+    }
     loading.value = true
     await refreshStructureInfo()
     if (showEncl.value) {
@@ -176,6 +181,9 @@ async function fetchInfo(myChart) {
 }
 
 async function refreshStructureInfo(myChart) {
+  if (!checkPermission(permission.get)) {
+      return false
+    }
   try {
     const { content } = await getApi({
       dateTime: year.value,
@@ -202,6 +210,9 @@ async function refreshStructureInfo(myChart) {
 }
 
 async function refreshEnclosureInfo(myChart) {
+  if (!checkPermission(permission.get)) {
+      return false
+    }
   try {
     const { content } = await getApi({
       dateTime: year.value,

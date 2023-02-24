@@ -57,6 +57,8 @@ import { getDiffAnalysis, getDiffAverageAnalysis } from '@/api/operation/differe
 import { onMounted, ref } from 'vue'
 import moment from 'moment'
 
+import checkPermission from '@/utils/system/check-permission'
+import { operationDifferenceAnalysisPM as permission } from '@/page-permission/operation'
 import useMaxHeight from '@compos/use-max-height'
 import useChart from '@compos/use-chart'
 import belongingInfoColumns from '@comp-mes/table-columns/belonging-info-columns'
@@ -111,6 +113,9 @@ onMounted(() => {
 })
 
 async function fetchList() {
+  if (!checkPermission(permission.get)) {
+    return false
+  }
   try {
     loading.value = true
     const { content } = await getDiffAnalysis({ dateTime: year.value })
@@ -138,6 +143,9 @@ async function fetchList() {
 }
 
 async function fetchChart(myChart) {
+  if (!checkPermission(permission.get)) {
+    return false
+  }
   try {
     chartLoading.value = true
     const _myChart = myChart || getMyChart()

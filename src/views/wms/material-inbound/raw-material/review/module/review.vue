@@ -114,6 +114,7 @@
                   />
                 </template>
               </el-table-column>
+              <el-table-column prop="project" label="项目" align="left" min-width="120px" show-overflow-tooltip />
             </template>
             <template v-else>
               <el-table-column prop="unitPrice" label="含税单价" align="right" min-width="120px" show-overflow-tooltip />
@@ -258,7 +259,9 @@ const order = computed(() => form.value.purchaseOrder || {})
 const formDisabled = computed(() => passedLoading.value || returnedLoading.value)
 // 标题
 const drawerTitle = computed(() =>
-  detailLoading.value ? `入库单` : `入库单：${form.value.serialNumber}（ ${order.value.supplier ? order.value.supplier.name : '无供应商'} ）`
+  detailLoading.value
+    ? `入库单`
+    : `入库单：${form.value.serialNumber}（ ${order.value.supplier ? order.value.supplier.name : '无供应商'} ）`
 )
 // 在列中显示次要信息
 const showTableColumnSecondary = computed(() => {
@@ -282,18 +285,18 @@ const amountRules = {
 }
 
 // 项目
-const projectRules = {
-  projectId: [{ required: true, message: '请选择项目', trigger: 'change' }]
-}
+// const projectRules = {
+//   projectId: [{ required: true, message: '请选择项目', trigger: 'change' }]
+// }
 
 const tableRules = computed(() => {
   const rules = {}
   // 甲供不填写金额方面的信息
   if (fillableAmount.value && !boolPartyA.value) {
     Object.assign(rules, amountRules)
-    if (isNotBlank(order.value.projects)) {
-      Object.assign(rules, projectRules)
-    }
+    // if (isNotBlank(order.value.projects)) {
+    //   Object.assign(rules, projectRules)
+    // }
   }
   if (fillableWarehouse.value) Object.assign(rules, warehouseRules)
   return rules

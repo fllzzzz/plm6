@@ -16,52 +16,49 @@
     >
       <el-table-column prop="index" label="序号" align="center" width="60" type="index" />
       <el-table-column
-        v-if="columns.visible('projectName')"
+        v-if="columns.visible('project')"
         header-align="center"
-        key="projectName"
-        prop="projectName"
+        key="project"
+        prop="project"
         :show-overflow-tooltip="true"
         label="项目"
-        min-width="60"
+        min-width="140"
       >
         <template v-slot="scope">
-          <span>{{ scope.row.projectName }}</span>
+          <span>{{ projectNameFormatter(scope.row.project) }}</span>
         </template>
       </el-table-column>
       <el-table-column
-        v-if="columns.visible('monomerName')"
-        header-align="center"
-        key="monomerName"
-        prop="monomerName"
+        v-if="columns.visible('monomer.name')"
+        align="center"
+        key="monomer.name"
+        prop="monomer.name"
         :show-overflow-tooltip="true"
         label="单体"
-        min-width="60"
       >
         <template v-slot="scope">
-          <span>{{ scope.row.monomerName }}</span>
+          <span>{{ scope.row.monomer?.name }}</span>
         </template>
       </el-table-column>
       <el-table-column
-        v-if="columns.visible('areaName')"
-        header-align="center"
-        key="areaName"
-        prop="areaName"
+        v-if="columns.visible('area.name')"
+        align="center"
+        key="area.name"
+        prop="area.name"
         :show-overflow-tooltip="true"
         label="区域"
-        min-width="60"
       >
         <template v-slot="scope">
-          <span>{{ scope.row.areaName }}</span>
+          <span>{{ scope.row.area?.name }}</span>
         </template>
       </el-table-column>
       <el-table-column
         v-if="columns.visible('serialNumber')"
-        header-align="center"
+        align="center"
         key="serialNumber"
         prop="serialNumber"
         :show-overflow-tooltip="true"
         label="编号"
-        min-width="60"
       >
         <template v-slot="scope">
           <span>{{ scope.row.serialNumber }}</span>
@@ -69,136 +66,129 @@
       </el-table-column>
       <el-table-column
         v-if="columns.visible('specification')"
-        header-align="center"
+        align="center"
         key="specification"
         prop="specification"
         :show-overflow-tooltip="true"
         label="规格"
-        min-width="60"
+        min-width="140"
       >
         <template v-slot="scope">
           <span>{{ scope.row.specification }}</span>
         </template>
       </el-table-column>
       <el-table-column
-        v-if="columns.visible('weight')"
-        header-align="center"
-        key="weight"
-        prop="weight"
+        v-if="columns.visible('netWeight')"
+        align="center"
+        key="netWeight"
+        prop="netWeight"
         :show-overflow-tooltip="true"
         label="重量（kg）"
-        min-width="60"
       >
         <template v-slot="scope">
-          <span>{{ scope.row.weight }}</span>
+          <span>{{ scope.row.netWeight }}</span>
         </template>
       </el-table-column>
       <el-table-column
-        v-if="columns.visible('productionLine')"
-        header-align="center"
-        key="productionLine"
-        prop="productionLine"
+        v-if="columns.visible('productionLine.name')"
+        align="center"
+        key="productionLine.name"
+        prop="productionLine.name"
         :show-overflow-tooltip="true"
         label="产线"
-        min-width="60"
       >
         <template v-slot="scope">
-          <span>{{ scope.row.productionLine }}</span>
+          <span>{{ scope.row.productionLine?.name }}</span>
         </template>
       </el-table-column>
       <el-table-column
-        v-if="columns.visible('productionDate')"
-        header-align="center"
-        key="productionDate"
-        prop="productionDate"
+        v-if="columns.visible('completeTime')"
+        align="center"
+        key="completeTime"
+        prop="completeTime"
         :show-overflow-tooltip="true"
         label="生产日期"
-        min-width="60"
+        min-width="100"
       >
         <template v-slot="scope">
-          <span>{{ scope.row.productionDate }}</span>
+          <span>{{ scope.row.completeTime }}</span>
         </template>
       </el-table-column>
       <el-table-column
-        v-if="columns.visible('stud')"
-        header-align="center"
-        key="stud"
-        prop="stud"
+        v-if="columns.visible('auxiliaryTypeName')"
+        align="center"
+        key="auxiliaryTypeName"
+        prop="auxiliaryTypeName"
         :show-overflow-tooltip="true"
-        label="栓钉"
-        min-width="60"
+        label="类型"
       >
-        <el-table-column
-          v-if="columns.visible('specification')"
-          header-align="center"
-          key="specification"
-          prop="specification"
-          :show-overflow-tooltip="true"
-          label="规格"
-          min-width="60"
-        >
-          <template v-slot="scope">
-            <span>{{ scope.row.specification }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column
-          v-if="columns.visible('studQuantity')"
-          header-align="center"
-          key="studQuantity"
-          prop="studQuantity"
-          :show-overflow-tooltip="true"
-          label="数量"
-          min-width="60"
-        >
-          <template v-slot="scope">
-            <span>{{ scope.row.studQuantity }}</span>
-          </template>
-        </el-table-column>
+        <template v-slot="scope">
+          <span>{{ auxiliaryMaterialTypeEnum.VL[scope.row.auxiliaryTypeName] }}</span>
+        </template>
       </el-table-column>
       <el-table-column
-        v-if="columns.visible('sleeve')"
-        header-align="center"
-        key="sleeve"
-        prop="sleeve"
+        v-if="columns.visible('auxiliarySpecification')"
+        align="center"
+        key="auxiliarySpecification"
+        prop="auxiliarySpecification"
         :show-overflow-tooltip="true"
-        label="套筒"
-        min-width="60"
+        label="规格"
+        min-width="80"
       >
-        <el-table-column
-          v-if="columns.visible('specification')"
-          header-align="center"
-          key="specification"
-          prop="specification"
-          :show-overflow-tooltip="true"
-          label="规格"
-          min-width="60"
-        >
-          <template v-slot="scope">
-            <span>{{ scope.row.specification }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column
-          v-if="columns.visible('sleeveQuantity')"
-          header-align="center"
-          key="sleeveQuantity"
-          prop="sleeveQuantity"
-          :show-overflow-tooltip="true"
-          label="数量"
-          min-width="60"
-        >
-          <template v-slot="scope">
-            <span>{{ scope.row.sleeveQuantity }}</span>
-          </template>
-        </el-table-column>
+        <template v-slot="scope">
+          <span>{{ scope.row.auxiliarySpecification }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        v-if="columns.visible('auxiliaryQuantity')"
+        align="center"
+        key="auxiliaryQuantity"
+        prop="auxiliaryQuantity"
+        :show-overflow-tooltip="true"
+        label="数量"
+      >
+        <template v-slot="scope">
+          <span>{{ scope.row.auxiliaryQuantity }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        v-if="columns.visible('price')"
+        align="center"
+        key="price"
+        prop="price"
+        :show-overflow-tooltip="true"
+        label="单价"
+      >
+        <template v-slot="scope">
+          <span>{{ scope.row.price }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        v-if="columns.visible('wages')"
+        align="center"
+        key="wages"
+        prop="wages"
+        :show-overflow-tooltip="true"
+        label="总价"
+      >
+        <template v-slot="scope">
+          <span>{{ scope.row.wages }}</span>
+        </template>
       </el-table-column>
     </common-table>
+    <!-- 分页 -->
+    <pagination />
   </div>
 </template>
 
 <script setup>
 import { ref } from 'vue'
+import crudApi from '@/api/mes/production-line-wage-statistics/stud-sleeve-statistics'
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
+import pagination from '@crud/Pagination'
+import { auxiliaryMaterialTypeEnum } from '@enum-ms/mes'
+import { projectNameFormatter } from '@/utils/project'
 import { tableSummary } from '@/utils/el-extra'
 import mHeader from './module/header'
 
@@ -219,7 +209,7 @@ const { crud, columns } = useCRUD(
     title: '栓钉套筒统计',
     sort: [],
     optShow: { ...optShow },
-    //   crudApi: { ...crudApi },
+    crudApi: { ...crudApi },
     // permission: { ...permission },
     hasPagination: true
   },
@@ -229,7 +219,7 @@ const { crud, columns } = useCRUD(
 // 合计
 function getSummaries(param) {
   return tableSummary(param, {
-    props: ['studQuantity', 'sleeveQuantity']
+    props: ['auxiliaryQuantity', 'wages']
   })
 }
 </script>
