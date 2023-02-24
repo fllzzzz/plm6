@@ -13,7 +13,7 @@
       <span>规格：{{ component.specification }}</span>
       <span>长度：{{ component.length }}{{ component.length ? ' mm' : '' }}</span>
       <span v-if="printWeightTypeEnum.NONE.V !== weightType">重量：{{ component.weight }}{{ component.weight ? ' kg' : '' }}</span>
-      <span>面积：{{ component.area }}{{ component.area ? ' ㎡' : '' }}</span>
+      <span>面积：{{ component.surfaceArea }}{{ component.surfaceArea ? ' ㎡' : '' }}</span>
     </div>
     <span class="subtitle"> 使用部位 </span>
     <div class="info">
@@ -40,6 +40,8 @@ import { fetchArtifact as fetchInfo } from '@/api/qr-scan-info'
 import { ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { ElLoading } from 'element-plus'
+import { convertUnits } from '@/utils/convert/unit'
+import { DP } from '@/settings/config'
 
 import { specialPath } from '@/settings/config'
 import { weightTypeEnum as printWeightTypeEnum } from '@/utils/print/enum'
@@ -87,6 +89,7 @@ async function fetch(url, params) {
   })
   try {
     const res = await fetchInfo(url, params)
+    res.surfaceArea = convertUnits(res.surfaceArea, 'mm²', '㎡', DP.COM_AREA__M2)
     component.value = res
     switch (weightType.value) {
       case printWeightTypeEnum.NET.V:
