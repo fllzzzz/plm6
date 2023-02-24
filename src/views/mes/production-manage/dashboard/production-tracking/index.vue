@@ -36,16 +36,16 @@
         >
           <template #default="{ row }">
             <div
-              v-if="row.process[item.id] && row.process[item.id]?.inspectionQuantity === row.process[item.id]?.quantity"
+              v-if="row.processMap[item.id] && row.processMap[item.id]?.inspectionQuantity === row.processMap[item.id]?.quantity"
               style="color: #13ce66"
             >
               √
             </div>
             <div v-else>
-              <div v-if="row.process[item.id]">
-                <span style="cursor: pointer" class="tc-danger">{{ row.process[item.id]?.inspectionQuantity }}</span>
+              <div v-if="row.processMap[item.id]">
+                <span style="cursor: pointer" class="tc-danger">{{ row.processMap[item.id]?.inspectionQuantity }}</span>
                 <span> / </span>
-                <span>{{ row.process[item.id]?.quantity }}</span>
+                <span>{{ row.processMap[item.id]?.quantity }}</span>
               </div>
               <span v-else> \ </span>
             </div>
@@ -134,6 +134,10 @@ onMounted(() => {
 })
 CRUD.HOOK.handleRefresh = (crud, res) => {
   res.data.content = res.data.content.map((v) => {
+    v.processMap = {}
+    v.process?.forEach((p) => {
+      v.processMap[p.id] = p
+    })
     v.specPrefixStr = v.crossSectionPrefix?.join(' / ')
     v.needProcessIds = artifactTypeListObj.value[v.classificationId]?.processIds
     v.processObj =

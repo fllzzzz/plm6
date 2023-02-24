@@ -6,13 +6,13 @@
       </el-tag>
     </template>
     <template #titleRight>
-      <print-table :api-key="apiKey" :params="{ ...queryParams }" size="mini" type="warning" class="filter-item" />
+      <print-table api-key="mesTaskStatisticsList" :params="{ ...queryParams }" size="mini" type="warning" class="filter-item" />
     </template>
     <template #content>
       <common-table
         v-loading="tableLoading"
         :data="list"
-        :max-height="maxHeight"
+        :max-height="maxHeight - 100"
         row-key="rowId"
         style="width: 100%"
         show-summary
@@ -34,6 +34,16 @@
           </template>
         </el-table-column>
       </common-table>
+      <!-- 分页 -->
+      <el-pagination
+        :total="total"
+        :current-page="queryPage.pageNumber"
+        :page-size="queryPage.pageSize"
+        style="margin-top: 8px"
+        layout="total, prev, pager, next, sizes"
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+      />
     </template>
   </common-drawer>
 </template>
@@ -43,6 +53,7 @@ import { getTask } from '@/api/mes/task-tracking/wip-statistics.js'
 import { defineProps, defineEmits, ref, computed } from 'vue'
 import { parseTime } from '@/utils/date'
 import { tableSummary } from '@/utils/el-extra'
+import usePagination from '@compos/use-pagination'
 import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'
 
@@ -59,6 +70,8 @@ const props = defineProps({
 })
 
 const { visible: taskDrawerVisible, handleClose } = useVisible({ emit, props, field: 'visible', showHook: fetchList })
+
+const { handleSizeChange, handleCurrentChange, total, setTotalPage, queryPage } = usePagination({ fetchHook: fetchList })
 
 // 高度
 const { maxHeight } = useMaxHeight(
@@ -90,13 +103,15 @@ async function fetchList() {
   try {
     list.value = []
     tableLoading.value = true
-    const { content } = await getTask({
-      ...queryParams.value
+    const { content = [], totalElements } = await getTask({
+      ...queryParams.value,
+      ...queryPage
     })
     list.value = content.map((v, i) => {
       v.rowId = i + '' + Math.random()
       return v
     })
+    setTotalPage(totalElements)
   } catch (error) {
     console.log('获取排产记录记录详情失败', error)
   } finally {

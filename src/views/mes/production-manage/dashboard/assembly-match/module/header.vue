@@ -45,7 +45,7 @@
             @change="handleCheckAllChange"
             >全选</el-checkbox
           >
-          <color-card class="filter-item" v-model:value="query.status" :colors="colors" color-border @change="crud.toQuery" />
+          <color-card class="filter-item" v-model:value="query.status" :colors="colors" color-border select-able @change="crud.toQuery" />
         </div>
       </template>
       <template #viewLeft>

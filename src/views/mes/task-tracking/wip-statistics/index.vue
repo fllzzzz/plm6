@@ -26,10 +26,10 @@
           <span>{{ scope.row.project?.serialNumber }}-{{ scope.row.project?.name }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="accountingUnit" key="accountingUnit" label="单位" align="center" fixed="left" />
+      <el-table-column prop="unit" key="unit" label="单位" align="center" fixed="left" />
       <el-table-column prop="rawNetWeight" key="rawNetWeight" label="原材料出库量" align="center" fixed="left" width="140">
         <template #default="{ row }">
-          <span @click.stop="getOutBound(row)" style="cursor: pointer" class="tc-danger">{{ row.rawNetWeight }}</span>
+          <span @click.stop="getOutBound(row)" style="cursor: pointer" class="tc-danger">{{ row.rawNetWeight?.toFixed(2) }}</span>
         </template>
       </el-table-column>
       <el-table-column prop="taskNetWeight" key="taskNetWeight" label="任务量" align="center" fixed="left" width="140">
@@ -45,20 +45,18 @@
           width="110px"
         >
           <template #default="{ row }">
-            <!-- <el-tooltip v-if="row.processDTOList[item.id]" content="不合格数 / 检验数" placement="top"> -->
-            <!-- <span> -->
-            <span @click.stop="getProcessDetail(row, item)" v-if="row.processDTOList[item.id]" style="cursor: pointer" class="tc-danger">{{
-              row.processDTOList[item.id]?.unQuantity
-            }}</span>
-            <!-- <span> / </span>
-                <span>{{ row.processDTOList[item.id]?.unNetWeight }}</span> -->
-            <!-- </span> -->
+            <!-- <el-tooltip v-if="row.processMap[item.id]" content="不合格数 / 检验数" placement="top"> -->
+            <span style="cursor: pointer" @click.stop="getProcessDetail(row, item)" v-if="row.processMap[item.id]">
+              <span class="tc-danger">{{ row.processMap[item.id]?.unQuantity }}</span>
+              <span> / </span>
+              <span class="tc-danger">{{ row.processMap[item.id]?.unNetWeight }}</span>
+            </span>
             <!-- </el-tooltip> -->
             <span v-else> \ </span>
           </template>
         </el-table-column>
       </template>
-      <el-table-column prop="total" key="total" label="合计" align="center" width="140" fixed="right" />
+      <el-table-column prop="totalNetWeight" key="totalNetWeight" label="合计" align="center" width="140" fixed="right" />
     </common-table>
     <!-- 分页 -->
     <pagination />
@@ -99,6 +97,7 @@ const taskInfo = ref({})
 const processDrawerVisible = ref(false)
 const processInfo = ref({})
 const processData = ref({})
+
 const { crud, CRUD, columns } = useCRUD(
   {
     title: '在制品统计',
@@ -131,13 +130,16 @@ function getTaskDetail(row) {
 
 // 工序在制品统计
 function getProcessDetail(row, item) {
-  console.log(row, item, 'item')
   processDrawerVisible.value = true
   processInfo.value = item
   processData.value = row
 }
 CRUD.HOOK.handleRefresh = (crud, res) => {
   res.data.content = res.data.content?.map((v) => {
+    v.processMap = {}
+    v.processDTOList.forEach((p) => {
+      v.processMap[p.id] = p
+    })
     return v
   })
 }

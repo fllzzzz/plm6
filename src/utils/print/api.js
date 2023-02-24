@@ -123,8 +123,12 @@ const mesProcessList = mes.processList
 const mesProductionLineList = mes.productionLineList
 const mesWorkOrderTrackingList = mes.workOrderTrackingList
 const mesWipStatisticsList = mes.wipStatisticsLis
+const mesProcessStatisticsList = mes.processStatisticsList
+const mesTaskStatisticsList = mes.taskStatisticsList
+const mesOutBoundStatisticsList = mes.outBoundStatisticsList
 
 const mesFactoryWorkshopReport = mes.factoryWorkshopReport
+const mesGroupsReport = mes.groupsReport
 
 const mesStudSleeveStatisticsList = mes.studSleeveStatisticsList
 const mesProjectShipDetail = mes.mesProjectShipDetail
@@ -272,8 +276,12 @@ export default {
   mesWorkOrderTrackingList, // 工单跟踪清单详情
   mesProcessList, // 工序呆滞清单详情
   mesWipStatisticsList, // 在制品统计打印
+  mesProcessStatisticsList, // 在制品统计工序详情打印
+  mesTaskStatisticsList, // 在制品排产记录详情
+  mesOutBoundStatisticsList, // 在制品出库记录详情
 
   mesFactoryWorkshopReport, // 车间报表清单详情
+  mesGroupsReport, // 班组报表清单详情
 
   mesStudSleeveStatisticsList, // 栓钉套筒统计清单详情
 

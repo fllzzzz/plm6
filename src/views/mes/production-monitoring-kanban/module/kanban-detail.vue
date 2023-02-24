@@ -39,7 +39,7 @@
           <span>{{ row.material }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="netWeight" :show-overflow-tooltip="true" label="排产量" align="center" />
+      <el-table-column prop="quantity" :show-overflow-tooltip="true" label="排产量" align="center" />
       <el-table-column prop="totalNetWeight" :show-overflow-tooltip="true" label="总重（kg）" align="center" />
       <el-table-column prop="completeQuantity" :show-overflow-tooltip="true" label="实际完成数" align="center" />
     </common-table>

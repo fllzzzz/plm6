@@ -15,17 +15,17 @@
           @change="fetchList"
         />
         <div style="width: 300px">
-          <print-table :api-key="apiKey" :params="{ ...queryParams }" size="mini" type="warning" class="filter-item" />
+          <print-table api-key="mesOutBoundStatisticsList" :params="{ ...queryParams }" size="mini" type="warning" class="filter-item" />
         </div>
       </div>
-      <common-table v-loading="tableLoading" :data="list" :max-height="maxHeight" row-key="rowId" style="width: 100%">
+      <common-table v-loading="tableLoading" returnSourceData :data="list" :max-height="maxHeight" row-key="rowId" style="width: 100%">
         <el-table-column label="序号" type="index" align="center" width="60" />
         <el-table-column prop="classifyName" :show-overflow-tooltip="true" label="物料种类" min-width="150">
           <template #default="{ row }">
             <span>{{ row.classifyName }}</span>
           </template>
         </el-table-column>
-        <el-table-column :show-overflow-tooltip="true" prop="specMerge" label="规格" align="center">
+        <el-table-column :show-overflow-tooltip="true" key="specMerge" prop="specMerge" label="规格" align="center">
           <template #default="{ row }">
             <span>{{ row.specMerge }}</span>
           </template>

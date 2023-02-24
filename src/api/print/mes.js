@@ -493,6 +493,15 @@ export function factoryWorkshopReport(params) {
   })
 }
 
+// 工厂报表-班组报表详情
+export function groupsReport(params) {
+  return request({
+    url: `/api/mes/building/report/product/team/summary/review/print`,
+    method: 'get',
+    params
+  })
+}
+
 // 任务跟踪-工单跟踪报表详情
 export function workOrderTrackingList(params) {
   return request({
@@ -531,6 +540,33 @@ export function processList(params) {
 export function wipStatisticsLis(params) {
   return request({
     url: `/api/mes/building/task/process/project/progressing/print`,
+    method: 'get',
+    params
+  })
+}
+
+// 任务跟踪-工序详情报表详情
+export function processStatisticsList(params) {
+  return request({
+    url: `/api/mes/building/task/process/project/progressing/process/print`,
+    method: 'get',
+    params
+  })
+}
+
+// 任务跟踪-排产记录详情报表详情
+export function taskStatisticsList(params) {
+  return request({
+    url: `/api/mes/building/task/process/project/progressing/task/print`,
+    method: 'get',
+    params
+  })
+}
+
+// 任务跟踪-在制品出库记录报表详情
+export function outBoundStatisticsList(params) {
+  return request({
+    url: `/api/mes/building/task/process/project/progressing/outBound/print`,
     method: 'get',
     params
   })
@@ -671,6 +707,7 @@ export default {
 
   // 工厂报表-车间报表
   factoryWorkshopReport, // 车间报表详情
+  groupsReport, // 班组报表详情
 
   // 任务跟踪
   workOrderTrackingList, // 工单跟踪报表详情
@@ -678,6 +715,9 @@ export default {
   productionLineList, // 产线跟踪清单详情
   processList, // 工序呆滞清单详情
   wipStatisticsLis, // 在制品统计
+  processStatisticsList, // 在制品工序详情统计
+  taskStatisticsList, // 在制品排产记录详情
+  outBoundStatisticsList, // 在制品出库统计详情
 
   // 发运管理
   productSendReceiveStorage, // 制成品入发存
