@@ -37,29 +37,24 @@
               </p>
             </template>
           </el-expand-table-column>
-          <template v-if="!boolManuf">
-            <!-- 基础信息 -->
-            <material-base-info-columns :basic-class="props.basicClass" fixed="left" />
-            <!-- 单位及其数量 -->
-            <material-unit-quantity-columns :basic-class="props.basicClass" />
-            <!-- 次要信息 -->
-            <material-secondary-info-columns v-if="showTableColumnSecondary" :basic-class="props.basicClass" />
+          <!-- 基础信息 -->
+          <material-base-info-columns :basic-class="props.basicClass" fixed="left" />
+          <!-- 次要信息 -->
+          <material-secondary-info-columns v-if="showTableColumnSecondary" :basic-class="props.basicClass" />
+          <!-- 单位及其数量 -->
+          <material-unit-quantity-columns :basic-class="props.basicClass" />
 
-            <template v-if="fillableAmount && !boolPartyA">
-              <el-table-column key="unitPrice" prop="unitPrice" align="right" width="120" label="含税单价">
-                <template #default="{ row: { sourceRow: row } }">
-                  <span>{{ row.unitPrice }}</span>
-                </template>
-              </el-table-column>
-              <el-table-column key="amount" prop="amount" align="right" width="120" label="金额">
-                <template #default="{ row }">
-                  <span>{{ row.amount }}</span>
-                </template>
-              </el-table-column>
-            </template>
-          </template>
-          <template v-else>
-            <manufactured-info-columns :basic-class="props.basicClass" />
+          <template v-if="fillableAmount && !boolPartyA">
+            <el-table-column key="unitPrice" prop="unitPrice" align="right" width="120" label="含税单价">
+              <template #default="{ row: { sourceRow: row } }">
+                <span>{{ row.unitPrice }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column key="amount" prop="amount" align="right" width="120" label="金额">
+              <template #default="{ row }">
+                <span>{{ row.amount }}</span>
+              </template>
+            </el-table-column>
           </template>
 
           <!-- 金额设置 -->
@@ -108,7 +103,6 @@ import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'
 // import useWmsConfig from '@/composables/store/use-wms-config'
 import elExpandTableColumn from '@comp-common/el-expand-table-column.vue'
-import manufacturedInfoColumns from '@/components-system/wms/table-columns/manufactured-info-columns/index.vue'
 import materialBaseInfoColumns from '@/components-system/wms/table-columns/material-base-info-columns/index.vue'
 import materialUnitQuantityColumns from '@/components-system/wms/table-columns/material-unit-quantity-columns/index.vue'
 import materialSecondaryInfoColumns from '@/components-system/wms/table-columns/material-secondary-info-columns/index.vue'
@@ -266,7 +260,7 @@ const { tableValidate, cleanUpData, wrongCellMask } = useTableValidate({ rules: 
 
 function showHook() {
   formList.value = form.list.filter((v) => {
-    if (boolPartyA.value || form.selectObj[v.id]) {
+    if (boolPartyA.value || form.selectObj[v.purchaseOrderDetailId]?.isSelected) {
       return true
     } else {
       return false
@@ -280,7 +274,6 @@ cu.submitFormFormat = async (form) => {
   cleanUpData(formList.value)
   form.list = await numFmtByBasicClass(formList.value, { toSmallest: true, toNum: true })
   form.list.forEach((v) => {
-    v.purchaseOrderDetailId = v.id
     if (boolManuf.value) {
       v.projectId = order.value.projects?.length ? order.value.projects[0].id : undefined
     }
@@ -303,6 +296,7 @@ FORM.HOOK.beforeSubmit = async () => {
 
 // 表单提交后：关闭预览窗口
 FORM.HOOK.afterSubmit = () => {
+  form.selectObj = {}
   handleClose()
 }
 

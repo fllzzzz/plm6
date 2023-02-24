@@ -318,7 +318,7 @@ function handlePurchaseIdChange(val) {
 // 订单详情变更
 async function handleOrderInfoChange(order, oldOrder) {
   cu.props.requisitions = {} // 初始化申购单
-  form.selectObj = {}
+  if (!form.selectObj) form.selectObj = {}
   if (order) {
     // 获取申购单详情
     if (order.requisitionsSN) {
@@ -340,17 +340,29 @@ async function handleOrderInfoChange(order, oldOrder) {
       await setSpecInfoToList(details)
       await numFmtByBasicClass(details, {
         toNum: true
-      })
+      }, { mete: ['mete', 'inboundMete'] })
       order.details = details.map((v) => {
-        form.selectObj[v.id] = false
+        v.purchaseOrderDetailId = v.id
         v.purchaseQuantity = v.quantity
         v.purchaseMete = v.mete
         v.canPurchaseQuantity = v.purchaseQuantity - (v.inboundQuantity || 0)
+        const _isSelected = form.selectObj?.[v.purchaseOrderDetailId] ? form.selectObj[v.purchaseOrderDetailId]?.isSelected : false
         v.quantity = v.canPurchaseQuantity
-        v.originQuantity = v.quantity
         v.mete = toPrecision(v.purchaseMete - v.inboundMete)
-        v.originMete = v.mete
-        return v
+        let _v = v
+        if (_isSelected) {
+          _v = {
+            ..._v,
+            ...form.selectObj?.[v.purchaseOrderDetailId]
+          }
+        }
+        _v.originQuantity = _v.quantity
+        _v.originMete = _v.mete
+        form.selectObj[v.purchaseOrderDetailId] = {
+          ..._v,
+          isSelected: _isSelected
+        }
+        return _v
       })
     }
   }

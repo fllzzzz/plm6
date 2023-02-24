@@ -39,17 +39,12 @@
             </p>
           </template>
         </el-expand-table-column>
-        <template v-if="!boolManuf">
-          <!-- 基础信息 -->
-          <material-base-info-columns :basic-class="detail.basicClass" fixed="left" />
-          <!-- 单位及其数量 -->
-          <material-unit-quantity-columns :basic-class="detail.basicClass" />
-          <!-- 次要信息 -->
-          <material-secondary-info-columns v-if="showTableColumnSecondary" :basic-class="detail.basicClass" />
-        </template>
-        <template v-else>
-          <manufactured-info-columns :basic-class="detail.basicClass" :showMonomer="false" :showArea="false" />
-        </template>
+        <!-- 基础信息 -->
+        <material-base-info-columns :basic-class="detail.basicClass" fixed="left" />
+        <!-- 单位及其数量 -->
+        <material-unit-quantity-columns :basic-class="detail.basicClass" />
+        <!-- 次要信息 -->
+        <material-secondary-info-columns v-if="showTableColumnSecondary" :basic-class="detail.basicClass" />
         <!-- 价格信息 -->
         <template v-if="showAmount">
           <amount-info-columns v-if="!boolPartyA" />
@@ -58,7 +53,7 @@
         <el-table-column prop="project" label="项目" align="left" min-width="120px" show-overflow-tooltip />
         <el-table-column prop="monomerName" label="单体" align="left" min-width="120px" show-overflow-tooltip />
         <el-table-column prop="areaName" label="区域" align="left" min-width="120px" show-overflow-tooltip />
-        <warehouse-info-columns v-if="!boolManuf"/>
+        <warehouse-info-columns v-if="!boolManuf" />
         <el-table-column v-else prop="workshop.name" label="车间" align="left" min-width="120px" show-overflow-tooltip />
       </common-table>
     </template>
@@ -78,7 +73,6 @@ import { regDetail } from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
 // import useWmsConfig from '@/composables/store/use-wms-config'
 import elExpandTableColumn from '@comp-common/el-expand-table-column.vue'
-import manufacturedInfoColumns from '@/components-system/wms/table-columns/manufactured-info-columns/index.vue'
 import materialBaseInfoColumns from '@/components-system/wms/table-columns/material-base-info-columns/index.vue'
 import materialUnitQuantityColumns from '@/components-system/wms/table-columns/material-unit-quantity-columns/index.vue'
 import materialSecondaryInfoColumns from '@/components-system/wms/table-columns/material-secondary-info-columns/index.vue'

@@ -13,7 +13,13 @@
         <div class="filter-right-box">
           <el-tooltip :disabled="addable" effect="light" content="请先选择采购合同编号" placement="left-start">
             <span>
-              <common-button v-if="boolPartyA" class="filter-item" type="success" @click="materialSelectVisible = true" :disabled="!addable">
+              <common-button
+                v-if="boolPartyA"
+                class="filter-item"
+                type="success"
+                @click="materialSelectVisible = true"
+                :disabled="!addable"
+              >
                 添加物料
               </common-button>
             </span>
@@ -129,6 +135,14 @@ const setFormCallback = (form) => {
     tableRef,
     (ref) => {
       if (ref) {
+        if (!boolPartyA.value) {
+          form.list.forEach((v) => {
+            tableRef.value.rowWatch(v)
+            if (!boolPartyA.value && form.selectObj?.[v.purchaseOrderDetailId]?.isSelected) {
+              tableRef.value.toggleRowSelection(v, true)
+            }
+          })
+        }
         // 初始化选中数据，执行一次后取消当前监听
         const initSelectedTrigger = watch(
           matSpecRef,

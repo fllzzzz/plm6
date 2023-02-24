@@ -105,6 +105,9 @@ const props = defineProps({
     type: [Number, String],
     required: true
   },
+  formType: {
+    type: [Number, undefined]
+  },
   materialInfo: {
     type: Object
   },
@@ -146,14 +149,14 @@ const { maxHeight } = useMaxHeight(
 )
 
 // 因为报表变动可能比较频繁,每次显示重新加载详情
-const { visible: dialogVisible, handleClose } = useVisible({ emit, props, field: 'visible', showHook: fetchDetail })
+const { visible: dialogVisible, handleClose } = useVisible({ emit, props, field: 'visible', showHook })
 
 // 标题
 const drawerTitle = computed(() => {
   if (detail.value && detail.value.serialNumber) {
     return `收发存详情：${detail.value.serialNumber}`
   } else {
-    return '收发存详情'
+    return '收发存汇总详情'
   }
 })
 
@@ -169,10 +172,10 @@ const filterList = computed(() => {
 // 查询参数
 const printParams = computed(() => {
   return {
-    id: props.materialInfo.id,
-    ids: props.materialInfo.ids,
-    statId: props.materialInfo.statId,
-    statIds: props.materialInfo.statIds,
+    id: props.materialInfo?.id,
+    ids: props.materialInfo?.ids,
+    statId: props.materialInfo?.statId,
+    statIds: props.materialInfo?.statIds,
     date: props.date,
     formType: filter.value.formType
   }
@@ -191,11 +194,16 @@ function resetQuery() {
   filter.value.specification = undefined
 }
 
+function showHook() {
+  filter.value.formType = props.formType
+  fetchDetail()
+}
+
 // 加载详情
 async function fetchDetail() {
   init()
   // TODO:查询条件可能变更，目前使用id。若id不存在，不加载
-  if (!props.materialInfo.id) return
+  // if (!props.materialInfo.id) return
   // 查询参数
   const params = {
     ...printParams.value

@@ -1,5 +1,6 @@
 <template>
   <common-table
+    ref="tableRef"
     v-bind="$attrs"
     :data="form.list"
     :cell-class-name="wrongCellMask"
@@ -87,7 +88,7 @@
       </el-table-column>
     </template>
     <!-- 单位及其数量 -->
-    <material-unit-quantity-columns v-else quantityField="purchaseQuantity" meteField="purchaseMete"/>
+    <material-unit-quantity-columns v-else quantityField="purchaseQuantity" meteField="purchaseMete" />
 
     <!-- 金额设置 -->
     <price-set-columns v-if="!props.boolPartyA && fillableAmount" weight-attribute="mete" />
@@ -144,7 +145,7 @@
 </template>
 
 <script setup>
-import { defineExpose, defineProps, computed, ref, inject, reactive } from 'vue'
+import { defineExpose, defineProps, watchEffect, computed, ref, inject, reactive } from 'vue'
 import { createUniqueString } from '@/utils/data-type/string'
 import { positiveNumPattern } from '@/utils/validate/pattern'
 import { isNotBlank, toPrecision } from '@/utils/data-type'
@@ -167,6 +168,7 @@ const props = defineProps({
   }
 })
 
+const tableRef = ref()
 const matSpecRef = inject('matSpecRef') // 调用父组件matSpecRef
 const { form } = regExtra() // 表单
 const expandRowKeys = ref([]) // 展开行key
@@ -220,13 +222,13 @@ function selectable(row, rowIndex) {
 
 function selectTableChange(select, row) {
   const boolSelect = Boolean(select.findIndex((v) => v.id === row.id) !== -1)
-  form.selectObj[row.id] = boolSelect
+  form.selectObj[row.id].isSelected = boolSelect
 }
 
 function selectAllTableChange(select) {
   const boolSelect = Boolean(select?.length)
   form.list.forEach((v) => {
-    form.selectObj[v.id] = boolSelect
+    form.selectObj[v.purchaseOrderDetailId].isSelected = boolSelect
   })
 }
 
@@ -261,6 +263,19 @@ function rowInit(row) {
   return _row
 }
 
+function rowWatch(row) {
+  watchEffect(() => {
+    if (!props.boolPartyA && isNotBlank(form.selectObj?.[row.id])) {
+      const _isSelected = form.selectObj[row.id]?.isSelected
+      form.selectObj[row.id] = {
+        ...form.selectObj[row.id],
+        ...row,
+        isSelected: _isSelected
+      }
+    }
+  })
+}
+
 // 处理重量变化
 function handleWeightChange(val, row) {
   if (isNotBlank(row.unitPrice) && isNotBlank(val)) {
@@ -280,7 +295,7 @@ function delRow(sn, $index) {
 // 校验
 function validate() {
   const _list = form.list.filter((v) => {
-    if (props.boolPartyA || form.selectObj[v.id]) {
+    if (props.boolPartyA || form.selectObj[v.purchaseOrderDetailId]?.isSelected) {
       return true
     } else {
       return false
@@ -291,8 +306,14 @@ function validate() {
   return validResult
 }
 
+function toggleRowSelection(row, selected) {
+  tableRef?.value?.toggleRowSelection(row, selected)
+}
+
 defineExpose({
   rowInit,
+  toggleRowSelection,
+  rowWatch,
   validate
 })
 </script>

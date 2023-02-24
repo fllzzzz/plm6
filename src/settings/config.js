@@ -73,6 +73,16 @@ MAT_BASE_UNIT[STEEL_ENUM] = {
   width: { unit: 'mm', precision: 0 }
 }
 
+MAT_BASE_UNIT[matClsEnum.STRUC_MANUFACTURED.V] = {
+  measure: { unit: '件', precision: 0 },
+  accounting: { unit: 'kg', precision: 3 }
+}
+
+MAT_BASE_UNIT[matClsEnum.ENCL_MANUFACTURED.V] = {
+  measure: { unit: '张', precision: 0 },
+  accounting: { unit: 'm', precision: 3 }
+}
+
 // 钢材单位
 export const STEEL_BASE_UNIT = MAT_BASE_UNIT[STEEL_ENUM]
 

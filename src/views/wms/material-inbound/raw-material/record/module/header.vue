@@ -2,21 +2,22 @@
   <div class="head-container">
     <div v-if="crud.searchToggle">
       <common-radio-button
-        v-model="query.orderSupplyType"
-        :options="orderSupplyTypeEnum.ENUM"
-        show-option-all
-        type="enumSL"
-        size="small"
-        class="filter-item"
-        @change="crud.toQuery"
-      />
-      <common-radio-button
         type="enum"
         v-model="query.basicClass"
         :options="matClsEnum.ENUM"
         :unshowVal="[matClsEnum.GAS.V]"
         show-option-all
         clearable
+        class="filter-item"
+        @change="crud.toQuery"
+      />
+      <common-radio-button
+        v-if="!(query.basicClass & MANUF_ENUM)"
+        v-model="query.orderSupplyType"
+        :options="orderSupplyTypeEnum.ENUM"
+        show-option-all
+        type="enumSL"
+        size="small"
         class="filter-item"
         @change="crud.toQuery"
       />
@@ -127,7 +128,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watchEffect } from 'vue'
 import { useRoute } from 'vue-router'
 import { PICKER_OPTIONS_SHORTCUTS, STEEL_ENUM, MANUF_ENUM } from '@/settings/config'
 import { supplierTypeEnum } from '@enum-ms/supplier'
@@ -161,6 +162,13 @@ const defaultQuery = {
 
 const route = useRoute()
 const { crud, query } = regHeader(defaultQuery)
+
+watchEffect(() => {
+  if (query.basicClass & MANUF_ENUM) {
+    query.orderSupplyType = undefined
+  }
+})
+
 onMounted(() => {
   if (+route.params.basicClass === STEEL_ENUM) {
     query.basicClass = matClsEnum.STEEL_PLATE.V

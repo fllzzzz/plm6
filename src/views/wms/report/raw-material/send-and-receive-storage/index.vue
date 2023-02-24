@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <!--工具栏-->
-    <m-header ref="headerRef" />
+    <m-header ref="headerRef" @show-detail="showDetail"/>
     <!--表格渲染-->
     <common-table
       :key="`return_to_party_a_${crud.query.basicClass}`"
@@ -259,7 +259,7 @@
     <!-- 分页组件 -->
     <!-- <Pagination /> -->
     <!-- 详情 -->
-    <MDetail v-model:visible="detailVisible" :material-info="currentRow" :date="crud.query.createTime" :showAmount="showAmount" />
+    <MDetail v-model:visible="detailVisible" :material-info="currentRow" :formType="formType" :date="crud.query.createTime" :showAmount="showAmount" />
   </div>
 </template>
 
@@ -305,6 +305,8 @@ const dataFormat = ref([
 const expandRowKeys = ref([])
 // 当前行
 const currentRow = ref({})
+// 当前类型
+const formType = ref()
 // 详情显示
 const detailVisible = ref(false)
 // 表格ref
@@ -420,6 +422,11 @@ function handleCellStyle({ row, column, rowIndex, columnIndex }) {
 // 表格行点击
 function handleRowClick(row, column, event) {
   currentRow.value = row
+  detailVisible.value = true
+}
+
+function showDetail(_formType) {
+  formType.value = _formType
   detailVisible.value = true
 }
 </script>

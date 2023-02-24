@@ -1,5 +1,6 @@
 <template>
   <common-table
+    ref="tableRef"
     v-bind="$attrs"
     :data="form.sectionSteelList"
     :cell-class-name="wrongCellMask"
@@ -210,6 +211,7 @@ const props = defineProps({
 // 当前物料基础类型
 const basicClass = matClsEnum.SECTION_STEEL.V
 
+const tableRef = ref()
 const matSpecRef = inject('matSpecRef') // 调用父组件matSpecRef
 const { baseUnit } = useMatBaseUnit(basicClass) // 当前分类基础单位
 const { form } = regExtra() // 表单
@@ -268,13 +270,13 @@ function selectable(row, rowIndex) {
 
 function selectTableChange(select, row) {
   const boolSelect = Boolean(select.findIndex((v) => v.id === row.id) !== -1)
-  form.selectObj[row.id] = boolSelect
+  form.selectObj[row.id].isSelected = boolSelect
 }
 
 function selectAllTableChange(select) {
   const boolSelect = Boolean(select?.length)
   form.sectionSteelList.forEach((v) => {
-    form.selectObj[v.id] = boolSelect
+    form.selectObj[v.purchaseOrderDetailId].isSelected = boolSelect
   })
 }
 
@@ -321,7 +323,17 @@ function rowWatch(row) {
   // watchEffect(() => calcTheoryWeight(_row))
   // watchEffect(() => calcTotalWeight(_row))
   // watchEffect(() => calcTotalLength(_row))
-  watchEffect(() => weightOverDiff(row))
+  watchEffect(() => {
+    weightOverDiff(row)
+    if (!props.boolPartyA && isNotBlank(form.selectObj?.[row.id])) {
+      const _isSelected = form.selectObj[row.id]?.isSelected
+      form.selectObj[row.id] = {
+        ...form.selectObj[row.id],
+        ...row,
+        isSelected: _isSelected
+      }
+    }
+  })
   // 计算单件理论重量
   watch([() => row.length, () => row.unitWeight, baseUnit], () => calcTheoryWeight(row))
   // 计算总重
@@ -386,7 +398,7 @@ function delRow(sn, $index) {
 // 校验
 function validate() {
   const _list = form.sectionSteelList.filter((v) => {
-    if (props.boolPartyA || form.selectObj[v.id]) {
+    if (props.boolPartyA || form.selectObj[v.purchaseOrderDetailId]?.isSelected) {
       return true
     } else {
       return false
@@ -398,9 +410,14 @@ function validate() {
   return validResult
 }
 
+function toggleRowSelection(row, selected) {
+  tableRef?.value?.toggleRowSelection(row, selected)
+}
+
 defineExpose({
   rowInit,
   rowWatch,
+  toggleRowSelection,
   validate
 })
 </script>

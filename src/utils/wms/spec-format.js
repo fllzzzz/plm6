@@ -1,18 +1,22 @@
-import { rawMatClsEnum } from '@/utils/enum/modules/classification'
+import { matClsEnum } from '@/utils/enum/modules/classification'
 import { isNotBlank } from '@/utils/data-type'
 // 规格格式化
 export function specFormat(row) {
   switch (row.basicClass) {
-    case rawMatClsEnum.STEEL_PLATE.V:
+    case matClsEnum.STEEL_PLATE.V:
       return steelPlateSpec(row)
-    case rawMatClsEnum.SECTION_STEEL.V:
+    case matClsEnum.SECTION_STEEL.V:
       return sectionSteelSpec(row)
-    case rawMatClsEnum.STEEL_COIL.V:
+    case matClsEnum.STEEL_COIL.V:
       return steelCoilSpec(row)
-    case rawMatClsEnum.MATERIAL.V:
+    case matClsEnum.MATERIAL.V:
       return auxMatSpec(row)
-    case rawMatClsEnum.GAS.V:
+    case matClsEnum.GAS.V:
       return gasSpec(row)
+    case matClsEnum.STRUC_MANUFACTURED.V:
+      return strucSpec(row)
+    case matClsEnum.ENCL_MANUFACTURED.V:
+      return enclSpec(row)
     default:
       return row.spec
   }
@@ -22,20 +26,26 @@ export function specFormat(row) {
 export function specTip(row) {
   let tip = ''
   switch (row.basicClass) {
-    case rawMatClsEnum.STEEL_PLATE.V:
+    case matClsEnum.STEEL_PLATE.V:
       tip = steelPlateSpecTip(row)
       break
-    case rawMatClsEnum.SECTION_STEEL.V:
+    case matClsEnum.SECTION_STEEL.V:
       tip = sectionSteelSpecTip(row)
       break
-    case rawMatClsEnum.STEEL_COIL.V:
+    case matClsEnum.STEEL_COIL.V:
       tip = steelCoilSpecTip(row)
       break
-    case rawMatClsEnum.MATERIAL.V:
+    case matClsEnum.MATERIAL.V:
       tip = auxMatSpecTip(row)
       break
-    case rawMatClsEnum.GAS.V:
+    case matClsEnum.GAS.V:
       tip = gasSpecTip(row)
+      break
+    case matClsEnum.STRUC_MANUFACTURED.V:
+      tip = strucSpecTip(row)
+      break
+    case matClsEnum.ENCL_MANUFACTURED.V:
+      tip = enclSpecTip(row)
       break
     default:
       tip = row.specificationLabels
@@ -97,6 +107,28 @@ function auxMatSpec(row) {
 // 气体规格
 function gasSpec(row) {
   return row.specification
+}
+
+// 成品构件规格
+function strucSpec(row) {
+  return row.specification
+}
+
+// 成品围护规格
+function enclSpec(row) {
+  const spec = []
+  const twl = []
+  if (isNotBlank(row.plateId)) {
+    twl.push(row.plateId)
+  }
+  if (isNotBlank(row.thickness)) {
+    twl.push(row.thickness)
+  }
+  if (isNotBlank(row.color)) {
+    twl.push(row.color)
+  }
+  if (isNotBlank(twl)) spec.push(twl.join('*'))
+  return spec.join(' * ')
 }
 
 // -------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -161,6 +193,30 @@ function gasSpecTip(row) {
   return tip.join(' * ')
 }
 
+// 成品构件规格
+function strucSpecTip(row) {
+  const tip = []
+  tip.push('规格')
+  return tip.join(' * ')
+}
+
+// 成品围护规格
+function enclSpecTip(row) {
+  const tip = []
+  const twl = []
+  if (isNotBlank(row.plateId)) {
+    twl.push('板型')
+  }
+  if (isNotBlank(row.thickness)) {
+    twl.push('厚(mm)')
+  }
+  if (isNotBlank(row.color)) {
+    twl.push('颜色')
+  }
+  if (isNotBlank(twl)) tip.push(twl.join('*'))
+  return tip.join(' * ')
+}
+
 // -------------------------------------------------------------------------------------------------------------------------------------------------------
 // 拼接 自定义规格（如：材质）
 export function spliceMaterialSpec(material) {
@@ -170,7 +226,7 @@ export function spliceMaterialSpec(material) {
   if (keys) {
     keys.forEach((key) => {
       // 排除型材的国标
-      if (material.basicClass !== rawMatClsEnum.SECTION_STEEL.V || key !== material.nationalStandard) {
+      if (material.basicClass !== matClsEnum.SECTION_STEEL.V || key !== material.nationalStandard) {
         specArr.push(`${key}: ${specNameKV[key]}`)
       }
     })
@@ -182,12 +238,12 @@ export function spliceMaterialSpec(material) {
 export function spliceSteelSize(material) {
   if (!material) return ''
   switch (material.basicClass) {
-    case rawMatClsEnum.STEEL_PLATE.V:
+    case matClsEnum.STEEL_PLATE.V:
       // 厚度mm
       return `${Number(material.thickness)} * ${material.width} * ${material.length}`
-    case rawMatClsEnum.SECTION_STEEL.V:
+    case matClsEnum.SECTION_STEEL.V:
       return `${material.specNameKV[material.nationalStandard] || ''}`
-    case rawMatClsEnum.STEEL_COIL.V:
+    case matClsEnum.STEEL_COIL.V:
       return `${Number(material.thickness)} * ${material.width}`
     default:
       return ''

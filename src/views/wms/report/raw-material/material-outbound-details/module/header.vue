@@ -4,8 +4,28 @@
       <mat-header-query :basic-class="query.basicClass" :query="query" :to-query="crud.toQuery">
         <template #afterProjectWarehouseType>
           <common-radio-button
+            v-model="query.purchaseType"
+            :options="baseMaterialTypeEnum.ENUM"
+            type="enum"
+            size="small"
+            class="filter-item"
+            @change="crud.toQuery"
+          />
+          <common-radio-button
+            v-if="query.purchaseType & baseMaterialTypeEnum.RAW_MATERIAL.V"
             v-model="query.basicClass"
             :options="rawMatClsEnum.ENUM"
+            show-option-all
+            :unshowVal="[rawMatClsEnum.GAS.V]"
+            type="enum"
+            size="small"
+            class="filter-item"
+            @change="handleBasicClassChange"
+          />
+          <common-radio-button
+            v-if="query.purchaseType & baseMaterialTypeEnum.MANUFACTURED.V"
+            v-model="query.basicClass"
+            :options="manufClsEnum.ENUM"
             show-option-all
             type="enum"
             size="small"
@@ -13,6 +33,7 @@
             @change="handleBasicClassChange"
           />
           <common-radio-button
+            v-if="query.purchaseType & baseMaterialTypeEnum.RAW_MATERIAL.V"
             v-model="query.orderSupplyType"
             :options="orderSupplyTypeEnum.ENUM"
             show-option-all
@@ -103,10 +124,10 @@
 
 <script setup>
 import { exportDetailsExcel } from '@/api/wms/report/raw-material/outbound'
-import { ref, inject } from 'vue'
+import { ref, inject, watchEffect } from 'vue'
 import { PICKER_OPTIONS_SHORTCUTS } from '@/settings/config'
-import { rawMatClsEnum } from '@enum-ms/classification'
-import { orderSupplyTypeEnum } from '@/utils/enum/modules/wms'
+import { rawMatClsEnum, manufClsEnum } from '@enum-ms/classification'
+import { orderSupplyTypeEnum, baseMaterialTypeEnum } from '@/utils/enum/modules/wms'
 
 import { regHeader } from '@compos/use-crud'
 import RrOperation from '@crud/RR.operation'
@@ -121,12 +142,12 @@ const defaultTime = ref([new Date(2000, 1, 1, 0, 0, 0), new Date(2000, 2, 1, 23,
 
 const defaultQuery = {
   outboundTime: [], // [开始时间，结束时间]
+  purchaseType: { value: baseMaterialTypeEnum.RAW_MATERIAL.V, resetAble: false },
   basicClass: undefined, // 物料类型
   orderSupplyType: undefined, // 供货类型
   projectId: undefined, // 项目id
   monomerId: undefined, // 单体id
   areaId: undefined, // 区域id
-  workshopId: undefined, // 仓库id
   workshopId: undefined, // 车间id
   projectWarehouseType: undefined, // 仓库类型
   outboundSN: undefined, // 出库单号
@@ -135,6 +156,16 @@ const defaultQuery = {
 
 const permission = inject('permission')
 const { crud, query } = regHeader(defaultQuery)
+
+watchEffect(() => {
+  if (query.purchaseType & baseMaterialTypeEnum.MANUFACTURED.V) {
+    query.orderSupplyType = undefined
+    query.basicClass = undefined
+  }
+  if (query.purchaseType & baseMaterialTypeEnum.RAW_MATERIAL.V) {
+    query.basicClass = undefined
+  }
+})
 
 // 基础类型发生变化
 async function handleBasicClassChange(val) {

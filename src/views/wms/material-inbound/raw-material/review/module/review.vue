@@ -66,17 +66,12 @@
               </p>
             </template>
           </el-expand-table-column>
-          <template v-if="!boolManuf">
-            <!-- 基础信息 -->
-            <material-base-info-columns :basic-class="form.basicClass" fixed="left" />
-            <!-- 单位及其数量 -->
-            <material-unit-quantity-columns :basic-class="form.basicClass" />
-            <!-- 次要信息 -->
-            <material-secondary-info-columns v-if="showTableColumnSecondary" :basic-class="form.basicClass" />
-          </template>
-          <template v-else>
-            <manufactured-info-columns :basic-class="form.basicClass" :showMonomer="false" :showArea="false" />
-          </template>
+          <!-- 基础信息 -->
+          <material-base-info-columns :basic-class="form.basicClass" fixed="left" />
+          <!-- 单位及其数量 -->
+          <material-unit-quantity-columns :basic-class="form.basicClass" />
+          <!-- 次要信息 -->
+          <material-secondary-info-columns v-if="showTableColumnSecondary" :basic-class="form.basicClass" />
           <!-- 金额设置 -->
           <template v-if="showAmount">
             <!-- <price-set-columns
@@ -137,8 +132,8 @@
           </template>
           <!-- 仓库设置 -->
           <template v-if="!boolManuf">
-          <warehouse-set-columns v-if="fillableWarehouse" :form="form" />
-          <warehouse-info-columns v-else />
+            <warehouse-set-columns v-if="fillableWarehouse" :form="form" />
+            <warehouse-info-columns v-else />
           </template>
           <el-table-column v-else prop="workshop.name" label="车间" align="left" min-width="120px" show-overflow-tooltip />
         </common-table>
@@ -185,7 +180,6 @@ import useMaxHeight from '@compos/use-max-height'
 // import useWmsConfig from '@/composables/store/use-wms-config'
 import useVisible from '@compos/use-visible'
 import elExpandTableColumn from '@comp-common/el-expand-table-column.vue'
-import manufacturedInfoColumns from '@/components-system/wms/table-columns/manufactured-info-columns/index.vue'
 import materialBaseInfoColumns from '@/components-system/wms/table-columns/material-base-info-columns/index.vue'
 import materialUnitQuantityColumns from '@/components-system/wms/table-columns/material-unit-quantity-columns/index.vue'
 import materialSecondaryInfoColumns from '@/components-system/wms/table-columns/material-secondary-info-columns/index.vue'

@@ -53,6 +53,7 @@
   </div>
   <slot name="secondLineFirstItem" class="child-mr-6" />
   <material-cascader
+    v-if="!(props.basicClass & MANUF_ENUM)"
     v-model="queryVO.classifyId"
     :basic-class="props.basicClass"
     separator=" > "
@@ -71,6 +72,7 @@
 
 <script setup>
 import { defineEmits, defineProps, computed, watchEffect, ref } from 'vue'
+import { MANUF_ENUM } from '@/settings/config'
 import { rawMatClsEnum } from '@/utils/enum/modules/classification'
 import { projectWarehouseTypeEnum, materialIsWholeEnum } from '@/utils/enum/modules/wms'
 
@@ -82,6 +84,7 @@ import SteelCoil from './module/steel-coil.vue'
 import AuxMat from './module/aux-mat.vue'
 import Gas from './module/gas.vue'
 import RawMat from './module/raw-mat.vue'
+import ManufMat from './module/manuf-mat.vue'
 const emit = defineEmits(['to-query'])
 
 const props = defineProps({
@@ -119,6 +122,9 @@ const props = defineProps({
 })
 
 const comp = computed(() => {
+  if (props.basicClass & MANUF_ENUM) {
+    return ManufMat
+  }
   if (!props.showBasicClassQuery) {
     return RawMat
   }

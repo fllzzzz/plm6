@@ -42,8 +42,18 @@
       <table-cell-tag
         v-if="showOddmentByHalfOut"
         :show="!!row.boolOddmentByHalfOut"
-        :color="(row.outboundRelationType === outboundRelationTypeEnum.CUT.V || row.outboundRelationType === outboundRelationTypeEnum.CUT_TRANSFER.V) ? '#214283' : '#e6a23c'"
-        :name="(row.outboundRelationType === outboundRelationTypeEnum.CUT.V || row.outboundRelationType === outboundRelationTypeEnum.CUT_TRANSFER.V) ? '切割半出' : '半出余料'"
+        :color="
+          row.outboundRelationType === outboundRelationTypeEnum.CUT.V ||
+          row.outboundRelationType === outboundRelationTypeEnum.CUT_TRANSFER.V
+            ? '#214283'
+            : '#e6a23c'
+        "
+        :name="
+          row.outboundRelationType === outboundRelationTypeEnum.CUT.V ||
+          row.outboundRelationType === outboundRelationTypeEnum.CUT_TRANSFER.V
+            ? '切割半出'
+            : '半出余料'
+        "
       />
 
       <!-- 出库方式 -->
@@ -68,7 +78,7 @@
     </template>
   </el-table-column>
   <el-table-column
-    v-if="showClassification"
+    v-if="showClassification && !boolManuf"
     prop="classification"
     label="分类"
     align="center"
@@ -78,7 +88,7 @@
     :sortable="sortable"
   />
   <el-table-column
-    v-if="showClassifyName"
+    v-if="showClassifyName && !boolManuf"
     prop="classifyName"
     :label="classifyNameAlias"
     align="center"
@@ -104,7 +114,15 @@
       </el-tooltip>
     </template>
   </el-table-column>
-  <component v-bind="$attrs" :is="comp" :columns="columns" :basic-class="basicClass" :spec-merge="specMerge" :fixed="fixed" :sortable="sortable" />
+  <component
+    v-bind="$attrs"
+    :is="comp"
+    :columns="columns"
+    :basic-class="basicClass"
+    :spec-merge="specMerge"
+    :fixed="fixed"
+    :sortable="sortable"
+  />
 
   <!-- 冻结记录 -->
   <common-dialog
@@ -142,9 +160,15 @@
 import { materialBaseInfoCPM as permission } from '@/page-permission/wms'
 
 import { defineEmits, defineProps, computed, ref } from 'vue'
-import { STEEL_ENUM } from '@/settings/config'
-import { rawMatClsEnum } from '@/utils/enum/modules/classification'
-import { materialRejectStatusEnum, materialIsWholeEnum, materialOutboundModeEnum, partyAMatTransferEnum, outboundRelationTypeEnum } from '@/utils/enum/modules/wms'
+import { STEEL_ENUM, MANUF_ENUM } from '@/settings/config'
+import { matClsEnum } from '@/utils/enum/modules/classification'
+import {
+  materialRejectStatusEnum,
+  materialIsWholeEnum,
+  materialOutboundModeEnum,
+  partyAMatTransferEnum,
+  outboundRelationTypeEnum
+} from '@/utils/enum/modules/wms'
 import { isNotBlank, isBlank } from '@/utils/data-type'
 import checkPermission from '@/utils/system/check-permission'
 
@@ -154,6 +178,8 @@ import sectionSteel from './module/section-steel.vue'
 import steelCoil from './module/steel-coil.vue'
 import auxMat from './module/aux-mat.vue'
 import gas from './module/gas.vue'
+import structure from './module/structure.vue'
+import enclosure from './module/enclosure.vue'
 import rawMat from './module/raw-mat.vue'
 
 import RejectInfoTable from '@/views/wms/material-reject/raw-material/components/reject-info-table.vue'
@@ -264,6 +290,9 @@ const rejectMaterialDialogVisible = ref(false)
 // 操作次数(列如冻结)
 const operateNumber = ref(0)
 
+// 是否制成品
+const boolManuf = computed(() => Boolean(props.basicClass & MANUF_ENUM))
+
 // 物料全名宽度
 const classifyNameWidth = computed(() => {
   // 基础分类不存在，或基础分类不为钢材，则宽度为100
@@ -321,16 +350,20 @@ function handleFreezeClose(done) {
 
 const comp = computed(() => {
   switch (props.basicClass) {
-    case rawMatClsEnum.STEEL_PLATE.V:
+    case matClsEnum.STEEL_PLATE.V:
       return steelPlate
-    case rawMatClsEnum.SECTION_STEEL.V:
+    case matClsEnum.SECTION_STEEL.V:
       return sectionSteel
-    case rawMatClsEnum.STEEL_COIL.V:
+    case matClsEnum.STEEL_COIL.V:
       return steelCoil
-    case rawMatClsEnum.MATERIAL.V:
+    case matClsEnum.MATERIAL.V:
       return auxMat
-    case rawMatClsEnum.GAS.V:
+    case matClsEnum.GAS.V:
       return gas
+    case matClsEnum.STRUC_MANUFACTURED.V:
+      return enclosure
+    case matClsEnum.ENCL_MANUFACTURED.V:
+      return structure
     default:
       return rawMat
   }

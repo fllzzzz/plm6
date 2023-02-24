@@ -19,6 +19,7 @@
 import { computed } from 'vue'
 import { regForm } from '@compos/use-crud'
 import { STEEL_ENUM } from '@/settings/config'
+import { orderSupplyTypeEnum } from '@enum-ms/wms'
 import { matClsEnum } from '@/utils/enum/modules/classification'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { setSpecInfoToList } from '@/utils/wms/spec'
@@ -55,6 +56,15 @@ CRUD.HOOK.beforeEditDetailLoaded = async (crud, detail) => {
     toSmallest: false,
     toNum: true
   })
+  if (detail.supplyType !== orderSupplyTypeEnum.PARTY_A.V) {
+    detail.selectObj = {}
+    detail.list.forEach(v => {
+      detail.selectObj[v.purchaseOrderDetailId] = {
+        ...v,
+        isSelected: true
+      }
+    })
+  }
 }
 
 function handleSuccess() {

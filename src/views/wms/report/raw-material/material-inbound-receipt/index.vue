@@ -201,7 +201,7 @@ import { getReceiptList as get, getReceiptDetail as detail } from '@/api/wms/rep
 import { reportRawMaterialInboundReceiptPM as permission } from '@/page-permission/wms'
 
 import { computed, ref } from 'vue'
-import { rawMatClsEnum } from '@enum-ms/classification'
+import { matClsEnum } from '@enum-ms/classification'
 import { receiptRejectStatusEnum } from '@enum-ms/wms'
 import { isNotBlank } from '@/utils/data-type'
 import { reviewTimeColumns } from '@/utils/columns-format/wms'
@@ -233,7 +233,7 @@ const columnsDataFormat = ref([
   ['inboundAmountExcludingVAT', 'to-thousand'],
   ['projects', ['parse-project', { onlyShortName: true }]],
   ['projectsFullName', 'parse-project', { source: 'projects' }],
-  ['basicClass', ['parse-enum', rawMatClsEnum, { bit: true, split: ' | ' }]]
+  ['basicClass', ['parse-enum', matClsEnum, { bit: true, split: ' | ' }]]
 ])
 
 const expandRowKeys = ref([])

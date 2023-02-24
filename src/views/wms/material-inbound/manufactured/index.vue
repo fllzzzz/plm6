@@ -109,7 +109,7 @@ const fillableAmount = computed(
 )
 
 function getNum(key) {
-  return form[key]?.filter((v) => form.selectObj?.[v.id])?.length
+  return form[key]?.filter((v) => form.selectObj?.[v.purchaseOrderDetailId]?.isSelected)?.length
 }
 
 // 列表汇总数据
@@ -117,14 +117,14 @@ const formList = computed(() => {
   const list = []
   if (isNotBlank(form.strucManufList)) {
     form.strucManufList.forEach((v) => {
-      if (boolPartyA.value || form.selectObj[v.id]) {
+      if (boolPartyA.value || form.selectObj?.[v.purchaseOrderDetailId]?.isSelected) {
         list.push(v)
       }
     })
   }
   if (isNotBlank(form.enclManufList)) {
     form.enclManufList.forEach((v) => {
-      if (boolPartyA.value || form.selectObj[v.id]) {
+      if (boolPartyA.value || form.selectObj?.[v.purchaseOrderDetailId]?.isSelected) {
         list.push(v)
       }
     })
@@ -191,7 +191,12 @@ const setFormCallback = (form) => {
         (ref) => {
           if (ref[key]) {
             // 初始化数据监听，执行一次后取消当前监听
-            form[key].forEach((v) => ref[key].rowWatch(v))
+            form[key].forEach((v) => {
+              ref[key].rowWatch(v)
+              if (!boolPartyA.value && form.selectObj?.[v.purchaseOrderDetailId]?.isSelected) {
+                ref[key].toggleRowSelection(v, true)
+              }
+            })
             nextTick(() => {
               trigger[key]()
             })
