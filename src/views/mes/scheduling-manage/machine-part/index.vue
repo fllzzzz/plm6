@@ -153,7 +153,7 @@ class="ellipsis-text text"
 
 <script setup>
 import crudApi from '@/api/mes/scheduling-manage/machine-part'
-import { computed, ref, onUnmounted, onMounted, nextTick } from 'vue'
+import { computed, ref, onUnmounted, onMounted, nextTick, watch } from 'vue'
 import { ElMessage } from 'element-plus'
 import { isNotBlank } from '@/utils/data-type'
 import RAF from '@/utils/raf'
@@ -199,6 +199,13 @@ const { crud, CRUD } = useCRUD(
   tableRef
 )
 
+// 监听厚度 重置全选按钮
+watch(
+  () => crud.query.thick,
+  (val) => {
+    checkAll.value = false
+  }
+)
 const { maxHeight } = useMaxHeight()
 
 const boardList = ref([])
@@ -317,6 +324,7 @@ async function handleSaveSuccess() {
   padBlockData.value = []
   boardList.value = []
   crud.page.page = 1
+  summaryInfo.value = { totalNetWeight: 0, quantity: 0 }
   // await projectListRef?.value?.refresh(lastQuery)
   await headRef.value?.refreshConditions(lastQuery)
 }
@@ -341,7 +349,7 @@ const checkedNodes = ref([])
 // 全选只要含有未导入dxf 只能进行无需套料
 const isIncludeDxf = computed(() => {
   let flag = false
-  checkedNodes.value.forEach(v => {
+  checkedNodes.value.forEach((v) => {
     if (!v.picturePath) {
       flag = true
     }
