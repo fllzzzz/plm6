@@ -25,7 +25,8 @@ export default function useGetSeparateOrder(params) {
             groupName: p.groupName,
             workShopName: p.workShopName,
             productionLineName: p.productionLineName,
-            quantity: p.quantity
+            quantity: p.quantity,
+            boolDrillEnum: p.boolDrillEnum
           })
           remainCol--
           if (remainCol === 0) {

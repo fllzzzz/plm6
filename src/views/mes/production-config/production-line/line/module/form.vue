@@ -24,10 +24,29 @@
         />
       </el-form-item>
       <el-form-item label="生产线名称" prop="name">
-        <el-input v-model="form.name" type="text" placeholder="请填写生产线名称" style="width: 270px" />
+        <!-- <el-input v-model="form.name" type="text" placeholder="请填写生产线名称" style="width: 270px" /> -->
+        <common-select
+          :disabled="isEdit"
+          v-model="form.name"
+          :options="productionLineList"
+          type="other"
+          placeholder="请选择或填写生产线"
+          :data-structure="{ key: 'name', label: 'name', value: 'name' }"
+          class="filter-item"
+          filterable
+          allow-create
+          clearable
+          style="width: 270px"
+        />
       </el-form-item>
       <el-form-item label="目标产量(吨/月)" prop="targetProductionShow">
-        <el-input-number v-model.number="form.targetProductionShow" :min="0" :max="999999999" controls-position="right" style="width: 270px" />
+        <el-input-number
+          v-model.number="form.targetProductionShow"
+          :min="0"
+          :max="999999999"
+          controls-position="right"
+          style="width: 270px"
+        />
       </el-form-item>
       <el-form-item label="生产线类型" prop="productionLineTypeEnum">
         <!-- <common-radio v-model="form.boolMachineEnum" :options="whetherEnum.ENUM" type="enum" /> -->
@@ -65,7 +84,11 @@
           (form.productionLineTypeEnum === artifactProductLineEnum.INTELLECT.V && form.productType & componentTypeEnum.ARTIFACT.V) |
             (form.productionLineTypeEnum === artifactProductLineEnum.TRADITION.V && form.productType & componentTypeEnum.ARTIFACT.V)
         "
-        :label="form.productionLineTypeEnum === artifactProductLineEnum.INTELLECT.V && form.productType & componentTypeEnum.ARTIFACT.V ? '产品标识' : '可生产产品种类'"
+        :label="
+          form.productionLineTypeEnum === artifactProductLineEnum.INTELLECT.V && form.productType & componentTypeEnum.ARTIFACT.V
+            ? '产品标识'
+            : '可生产产品种类'
+        "
         prop="linkIdList"
       >
         <common-select
@@ -74,7 +97,9 @@
           :options="configList"
           :loading="configLoading"
           multiple
-          :placeholder="`请选择${form.productionLineTypeEnum && form.productType & componentTypeEnum.ARTIFACT.V ? '产品标识' : '可生产产品种类'}`"
+          :placeholder="`请选择${
+            form.productionLineTypeEnum && form.productType & componentTypeEnum.ARTIFACT.V ? '产品标识' : '可生产产品种类'
+          }`"
           style="width: 270px"
         />
       </el-form-item>
@@ -95,8 +120,8 @@
 </template>
 
 <script setup>
-import { productConfigInfo } from '@/api/mes/production-config/production-line'
-import { ref, computed, watch, watchEffect } from 'vue'
+import { productConfigInfo, getProductionLineName } from '@/api/mes/production-config/production-line'
+import { ref, computed, watch, onMounted, watchEffect } from 'vue'
 
 import { componentTypeEnum, artifactProductLineEnum } from '@enum-ms/mes'
 // import { whetherEnum } from '@enum-ms/common'
@@ -115,15 +140,17 @@ const defaultForm = {
   productionLineTypeEnum: undefined,
   targetProductionShow: undefined,
   targetProduction: undefined,
-  name: '',
+  name: undefined,
   // shortName: '',
   sort: 1,
   remark: ''
 }
+
+const productionLineList = ref([])
 const configList = ref([])
 const configLoading = ref(false)
 
-const { crud, form } = regForm(defaultForm, formRef)
+const { crud, CRUD, form } = regForm(defaultForm, formRef)
 const isEdit = computed(() => crud.status.edit >= 1)
 
 const rules = {
@@ -134,7 +161,7 @@ const rules = {
   linkIdList: [{ required: true, message: '请选择', trigger: 'change' }],
   sort: [{ required: true, message: '请填写排序值', trigger: 'blur', type: 'number' }],
   name: [
-    { required: true, message: '请填写生产线名称', trigger: 'blur' },
+    { required: true, message: '请填写或选择生产线名称', trigger: 'blur' },
     { min: 1, max: 32, message: '长度在 1 到 32 个字符', trigger: 'blur' }
   ],
   targetProductionShow: [{ required: true, message: '请填写目标产量', trigger: 'blur', type: 'number' }],
@@ -158,7 +185,9 @@ watch(
   },
   { immediate: true }
 )
-
+onMounted(() => {
+  fetchProductionLine()
+})
 async function fetchConfigInfo() {
   try {
     configLoading.value = true
@@ -170,6 +199,26 @@ async function fetchConfigInfo() {
   } finally {
     configLoading.value = false
   }
+}
+
+async function fetchProductionLine() {
+  productionLineList.value = []
+  try {
+    const data = await getProductionLineName({})
+    data?.forEach((v) => {
+      productionLineList.value.push({
+        name: v
+      })
+    })
+  } catch (error) {
+    console.log('获取所有生产线失败', error)
+  }
+}
+
+CRUD.HOOK.beforeSubmit = async () => {}
+
+CRUD.HOOK.afterSubmit = async () => {
+  fetchProductionLine()
 }
 </script>
 

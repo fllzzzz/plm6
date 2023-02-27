@@ -12,3 +12,14 @@ export function saveTask(data) {
     data
   })
 }
+/**
+ * @description: 保存套料完成进行下发任务
+ */
+export function saveNestingTask(data) {
+  return request({
+    module: 'mes',
+    url: 'machine_part/scheduling/nest_cut/task',
+    method: 'post',
+    data
+  })
+}

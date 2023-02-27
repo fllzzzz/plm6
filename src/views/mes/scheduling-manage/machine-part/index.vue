@@ -4,32 +4,60 @@
       <project-list ref="projectListRef" :maxHeight="maxHeight" @project-click="handleProjectClick" />
     </div>
     <div class="wrap-right">
-      <el-tag v-show="!crud.query?.projectIds?.length" type="info" size="medium"> * 请先选择项目，进行零件排产 </el-tag>
-      <div v-show="crud.query?.projectIds?.length">
+      <el-tag v-show="!crud.query?.areaIds?.length" type="info" size="medium"> * 请先选择区域，进行零件排产 </el-tag>
+      <div v-show="crud.query?.areaIds?.length">
         <div class="head-container">
-          <mHeader ref="headRef" @load="load">
+          <mHeader ref="headRef" @load="load" @change="handleChange">
             <template #optLeft>
               <div style="display: flex">
                 <el-checkbox
                   v-model="checkAll"
-                  size="mini"
+                  size="small"
                   style="margin-right: 5px"
                   :indeterminate="checkedNodes.length > 0 && checkedNodes.length !== boardList && !checkAll"
                   border
                   @change="handleCheckedAll"
                   >全选</el-checkbox
                 >
-                <common-button
-v-permission="permission.save"
-type="success"
-class="filter-item"
-size="mini"
-@click="previewIt"
-                  >预览并保存</common-button
-                >
+                <common-radio-button
+                  v-model="boolDxfEnum"
+                  :options="machinePartDxfTypeEnum.ENUM"
+                  showOptionAll
+                  type="enum"
+                  class="filter-item"
+                  @change="boolDxfChange"
+                />
               </div>
             </template>
             <template #viewLeft>
+              <!-- <el-badge :value="padBlockData.length" class="item">
+                <common-button type="primary" :loading="tableLoading" size="mini" class="filter-item" @click="padBlockClick">
+                  标准零件列表
+                </common-button>
+              </el-badge> -->
+              <common-button v-permission="permission.save" type="success" class="filter-item" size="mini" @click="addPadBlock">
+                添加标准零件
+              </common-button>
+              <common-button
+                v-permission="permission.save"
+                type="warning"
+                class="filter-item"
+                :disabled="Boolean(!checkedNodes?.length && padBlockData?.length)"
+                size="mini"
+                @click="unPreviewIt"
+              >
+                无需套料保存
+              </common-button>
+              <common-button
+                v-permission="permission.save"
+                type="success"
+                class="filter-item"
+                size="mini"
+                :disabled="isIncludeDxf"
+                @click="previewIt"
+              >
+                套料保存
+              </common-button>
               <el-tag size="medium" effect="plain" style="margin-right: 5px"> 数量(件)：{{ summaryInfo.quantity || 0 }} </el-tag>
               <el-tag size="medium" effect="plain" style="margin-right: 10px">
                 重量(kg)：{{ summaryInfo.totalNetWeight?.toFixed(2) || 0 }}
@@ -90,7 +118,11 @@ size="mini"
                     </div>
                   </template>
                 </el-image>
-                <span class="ellipsis-text text"><span style="color:#409eff;">{{ item.specification }}</span>/<span style="color:#42b983;">{{ item.quantity }}</span></span>
+                <span
+class="ellipsis-text text"
+                  ><span style="color: #409eff">{{ item.specification }}</span
+                  >/<span style="color: #42b983">{{ item.quantity }}</span></span
+                >
               </div>
             </el-tooltip>
           </template>
@@ -100,7 +132,20 @@ size="mini"
             <i class="el-icon-loading" />
           </div>
         </div>
-        <m-preview v-model:visible="previewVisible" :list="checkedNodes" @success="handleSaveSuccess"></m-preview>
+        <m-preview
+          v-model:visible="previewVisible"
+          :list="previewList"
+          :type="type"
+          :checked-nodes="checkedNodes"
+          :pad-block-data="padBlockData"
+          @success="handleSaveSuccess"
+          @handleDel="handleDel"
+          :thick-list="thickList"
+          :material-list="materialList"
+          :thick-data="crud.query.thickList"
+        ></m-preview>
+        <pad-block-dialog v-model:visible="dialogVisible" :pad-block-data="padBlockData" @addBlock="addBlock" />
+        <!-- <pad-block ref="padBlockRef" v-model:visible="drawerVisible" :pad-block-data="padBlockData" /> -->
       </div>
     </div>
   </div>
@@ -108,20 +153,21 @@ size="mini"
 
 <script setup>
 import crudApi from '@/api/mes/scheduling-manage/machine-part'
-import { computed, ref, onUnmounted, onMounted, nextTick } from 'vue'
+import { computed, ref, onUnmounted, onMounted, nextTick, watch } from 'vue'
 import { ElMessage } from 'element-plus'
-
+import { isNotBlank } from '@/utils/data-type'
 import RAF from '@/utils/raf'
-// import { componentTypeEnum } from '@enum-ms/mes'
+import { machinePartDxfTypeEnum } from '@enum-ms/mes'
 import { machinePartSchedulingPM as permission } from '@/page-permission/mes'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import mHeader from './module/header'
 import mPreview from './module/preview'
+import padBlockDialog from './module/pad-block-dialog'
+// import padBlock from './module/pad-block'
 import projectList from './module/project-list'
 import { deepClone } from '@/utils/data-type'
-import { cleanArray } from '@data-type/array'
 
 const optShow = {
   add: false,
@@ -129,9 +175,16 @@ const optShow = {
   del: false,
   download: false
 }
-
+const thickList = ref([])
+const materialList = ref([])
+// const padBlockRef = ref()
+const boolDxfEnum = ref()
 const projectListRef = ref()
 const tableRef = ref()
+const nestingLoading = ref(false)
+const type = ref()
+const previewList = ref([])
+
 const { crud, CRUD } = useCRUD(
   {
     title: '零件排产',
@@ -141,26 +194,39 @@ const { crud, CRUD } = useCRUD(
     crudApi: { ...crudApi },
     queryOnPresenterCreated: false,
     hasPagination: false,
-    requiredQuery: ['monthList', 'material', 'projectIds', 'thick']
+    requiredQuery: ['monthList', 'material', 'areaIds', 'thick']
   },
   tableRef
 )
 
+// 监听厚度 重置全选按钮
+watch(
+  () => crud.query.thick,
+  (val) => {
+    checkAll.value = false
+  }
+)
 const { maxHeight } = useMaxHeight()
 
 const boardList = ref([])
 const summaryInfo = ref({ totalNetWeight: 0, quantity: 0 })
 
 CRUD.HOOK.handleRefresh = (crud, res) => {
-  clearCheck()
+  // const arr = []
   summaryInfo.value.totalNetWeight = res.data?.totalNetWeight || 0
   summaryInfo.value.quantity = res.data?.quantity || 0
   res.data.content = res.data.collect.map((v) => {
-    v.checked = false
+    if (checkedNodes.value.findIndex((k) => k.id === v.id) > -1) {
+      // arr.push(v)
+      v.checked = true
+    } else {
+      v.checked = false
+    }
     v.visibleTip = false
     v.imgLoad = true
     return v
   })
+  nestingLoading.value = false
 }
 
 // --------------------------- start ------------------------------
@@ -217,7 +283,13 @@ async function load() {
   }
 }
 
+function handleChange(matVal, thickVal) {
+  materialList.value = matVal
+  thickList.value = thickVal
+}
+
 CRUD.HOOK.beforeRefresh = () => {
+  crud.query.boolDxfEnum = boolDxfEnum.value
   boardList.value = []
   summaryInfo.value = { totalNetWeight: 0, quantity: 0 }
 }
@@ -230,22 +302,43 @@ CRUD.HOOK.afterRefresh = () => {
 
 // --------------------------- end --------------------------------
 
-function handleProjectClick(val, month) {
+function handleProjectClick({ areaIds }, month) {
   crud.query.monthList = month
-  crud.query.projectIds = cleanArray(val).map((v) => v.projectId)
+  crud.query.areaIds = areaIds
+  const arr = []
+  checkedNodes.value.forEach((v) => {
+    if (areaIds.indexOf(String(v.areaId)) > -1 || areaIds.indexOf(v.areaId) > -1) {
+      arr.push(v)
+    }
+  })
+  checkedNodes.value = arr
   nextTick(() => {
     headRef.value?.refreshConditions()
   })
 }
 
 async function handleSaveSuccess() {
-  console.log(crud.query.projectIds)
   const lastQuery = deepClone(crud.query)
   checkAll.value = false
+  checkedNodes.value = []
+  padBlockData.value = []
   boardList.value = []
   crud.page.page = 1
-  await projectListRef?.value?.refresh(lastQuery)
+  summaryInfo.value = { totalNetWeight: 0, quantity: 0 }
+  // await projectListRef?.value?.refresh(lastQuery)
   await headRef.value?.refreshConditions(lastQuery)
+}
+
+function handleDel(row, val) {
+  if (row.needMachinePartLinkList?.length) {
+    handleCheckedChange(false, { id: val })
+  } else {
+    const padIdx = padBlockData.value.findIndex((v) => v.id === val)
+    padBlockData.value.splice(padIdx, 1)
+  }
+  const delIndex = previewList.value.findIndex((v) => v.id === val)
+  previewList.value.splice(delIndex, 1)
+  previewList.value = [...checkedNodes.value, ...padBlockData.value]
 }
 
 // --------------------------- 选择操作 start ------------------------------
@@ -253,26 +346,63 @@ async function handleSaveSuccess() {
 const checkAll = ref(false)
 const checkedNodes = ref([])
 
-// 切换项目清除选择
-function clearCheck() {
-  checkedNodes.value = []
+// 全选只要含有未导入dxf 只能进行无需套料
+const isIncludeDxf = computed(() => {
+  let flag = false
+  checkedNodes.value.forEach((v) => {
+    if (!v.picturePath) {
+      flag = true
+    }
+  })
+  return flag
+})
+
+// 切换dxf是否导入 清除全选
+function boolDxfChange() {
+  handleCheckedAll()
+  checkAll.value = false
+  crud.toQuery()
 }
+
+// 切换项目清除选择
+// function saveCheck() {
+// }
 function handleCheckedChange(value, item) {
+  // saveCheck()
   const _checkedIndex = checkedNodes.value.findIndex((v) => v.id === item.id)
   if (value) {
     if (_checkedIndex === -1) checkedNodes.value.push(item)
   } else {
     if (_checkedIndex > -1) checkedNodes.value.splice(_checkedIndex, 1)
   }
+  console.log(item, 'handleCheckedChange')
+  boardList.value.forEach((v) => {
+    if (v.id === item.id) {
+      v.checked = value
+    }
+  })
+  let isNext = false
+  checkedNodes.value.forEach((v) => {
+    if (!v.imgLoad || !v.picturePath) {
+      isNext = true
+      return false
+    }
+  })
+  nestingLoading.value = isNext
 }
 function handleCheckedAll(val) {
   checkAll.value = val
+  console.log(isIncludeDxf.value, 'isIncludeDxf')
   boardList.value.forEach((v) => {
     if (v.imgLoad || !v.picturePath) {
       v.checked = val
       handleCheckedChange(val, v)
+    } else if (v.imgLoad || v.picturePath) {
+      v.checked = val
+      handleCheckedChange(val, v)
     }
   })
+  nestingLoading.value = val
 }
 
 // --------------------------- 选择操作 end --------------------------------
@@ -282,14 +412,49 @@ function handleCheckedAll(val) {
 const previewVisible = ref(false)
 
 function previewIt() {
-  if (!checkedNodes.value?.length) {
+  type.value = 1
+  if (padBlockData.value?.length === 0 && !checkedNodes.value?.length) {
     ElMessage.warning('请至少选择一条数据')
     return
   }
-
+  previewList.value = [...checkedNodes.value, ...padBlockData.value]
+  previewVisible.value = true
+}
+function unPreviewIt() {
+  type.value = 0
+  if (padBlockData.value?.length === 0 && !checkedNodes.value?.length) {
+    ElMessage.warning('请至少选择一条数据')
+    return
+  }
+  previewList.value = [...checkedNodes.value, ...padBlockData.value]
   previewVisible.value = true
 }
 // --------------------------- 预览并保存 end --------------------------------
+
+//  添加标准零件弹窗
+const dialogVisible = ref(false)
+
+function addPadBlock() {
+  dialogVisible.value = true
+}
+
+// 标准零件列表
+// const drawerVisible = ref(false)
+// const tableLoading = ref(false)
+const padBlockData = ref([])
+// function padBlockClick() {
+//   drawerVisible.value = true
+// }
+
+function addBlock(val) {
+  const findVal = padBlockData.value.find((v) => v.id === val.id)
+  console.log(val, findVal, 'val')
+  if (isNotBlank(findVal)) {
+    findVal.usedQuantity += val.usedQuantity
+  } else {
+    padBlockData.value.push(JSON.parse(JSON.stringify(val)))
+  }
+}
 </script>
 
 <style lang="scss" scoped>
@@ -306,14 +471,17 @@ function previewIt() {
 .wrap {
   display: flex;
   .wrap-left {
-    width: 380px;
-    margin-right: 20px;
+    width: 320px;
+    margin-right: 10px;
   }
   .wrap-right {
     flex: 1;
     min-width: 0;
     overflow: hidden;
   }
+}
+.item {
+  margin-right: 10px;
 }
 ::-webkit-scrollbar {
   width: 6px;

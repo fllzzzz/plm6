@@ -195,3 +195,26 @@ export function setTechnicalType(data) {
     data
   })
 }
+
+/**
+ * 获取绑定钢板配置的状态
+ */
+export function getSteelType() {
+  return request({
+    module: 'config',
+    url: 'getSteelPlate',
+    method: 'get'
+  })
+}
+
+/**
+ * 设置绑定钢板配置的状态
+ */
+export function setSteelType(data) {
+  return request({
+    module: 'config',
+    url: 'setSteelPlate',
+    method: 'put',
+    data
+  })
+}

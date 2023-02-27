@@ -56,4 +56,13 @@ export function productConfigInfo({ productType, productionLineTypeEnum }) {
   })
 }
 
+export function getProductionLineName(params) {
+  return request({
+    module: 'mes',
+    url: 'productionLine/name',
+    method: 'get',
+    params
+  })
+}
+
 export default { get, add, edit, del }

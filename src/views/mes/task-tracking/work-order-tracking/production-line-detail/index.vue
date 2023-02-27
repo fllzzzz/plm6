@@ -5,16 +5,17 @@
     v-model="drawerVisible"
     direction="rtl"
     :before-close="handleClose"
-    size="80%"
+    size="100%"
   >
     <template #titleAfter>
+      <project-cascader v-model="projectId" clearable class="filter-item" style="width: 300px" />
       <monomer-select-area-select
         v-model:monomerId="monomerId"
         v-model:areaId="areaId"
         needConvert
         clearable
         areaClearable
-        :project-id="props.projectId"
+        :project-id="projectId"
       />
       <el-input
         v-if="props.detailData.productType === componentTypeEnum.ARTIFACT.V"
@@ -49,6 +50,7 @@
           taskType: props.detailData.productType,
           orderId: props.detailData.taskOrderId,
           name: name,
+          projectId: projectId,
           groupId: props.detailData.group?.id,
           monomerId: monomerId,
           areaId: areaId,
@@ -64,8 +66,21 @@
       <!--表格渲染-->
       <common-table ref="tableRef" :data="processDetailData" :max-height="maxHeight + 50" style="width: 100%">
         <el-table-column prop="index" label="序号" align="center" width="60" type="index" />
-        <el-table-column :show-overflow-tooltip="true" prop="monomer.name" key="monomer.name" label="单体" align="center"></el-table-column>
-        <el-table-column :show-overflow-tooltip="true" prop="area.name" key="area.name" label="区域" align="center"></el-table-column>
+        <el-table-column :show-overflow-tooltip="true" prop="project.shortName" key="project.shortName" label="项目" align="center">
+          <template #default="{ row }">
+            <span>{{ row.project ? row.project?.serialNumber + '-' + row.project?.name : '/' }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column :show-overflow-tooltip="true" prop="monomer.name" key="monomer.name" label="单体" align="center">
+          <template #default="{ row }">
+            <span>{{ row.monomer ? row.monomer?.name : '/' }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column :show-overflow-tooltip="true" prop="area.name" key="area.name" label="区域" align="center">
+          <template #default="{ row }">
+            <span>{{ row.area ? row.area?.name : '/' }}</span>
+          </template>
+        </el-table-column>
         <el-table-column
           :show-overflow-tooltip="true"
           prop="name"
@@ -86,7 +101,14 @@
         ></el-table-column>
         <el-table-column :show-overflow-tooltip="true" prop="quantity" key="quantity" label="数量" align="center"></el-table-column>
         <el-table-column :show-overflow-tooltip="true" prop="netWeight" key="netWeight" label="单净重" align="center"></el-table-column>
-        <el-table-column v-if="props.detailData.productType === componentTypeEnum.ARTIFACT.V" :show-overflow-tooltip="true" prop="grossWeight" key="grossWeight" label="单毛重" align="center"></el-table-column>
+        <el-table-column
+          v-if="props.detailData.productType === componentTypeEnum.ARTIFACT.V"
+          :show-overflow-tooltip="true"
+          prop="grossWeight"
+          key="grossWeight"
+          label="单毛重"
+          align="center"
+        ></el-table-column>
         <el-table-column :show-overflow-tooltip="true" prop="completeQuantity" key="completeQuantity" label="完成数" align="center">
           <template #default="{ row }">
             <span v-if="row.status === workOrderTypeEnum.NORMAL.V">{{ row.completeQuantity }}</span>
@@ -128,6 +150,7 @@ import { defineProps, defineEmits, ref, watch } from 'vue'
 import { mesWorkOrderTrackingPM as permission } from '@/page-permission/mes'
 import { parseTime } from '@/utils/date'
 import { componentTypeEnum, workOrderTypeEnum } from '@enum-ms/mes'
+import projectCascader from '@comp-base/project-cascader.vue'
 import monomerSelectAreaSelect from '@comp-base/monomer-select-area-select'
 
 const emit = defineEmits(['update:visible'])
@@ -136,6 +159,7 @@ const monomerId = ref()
 const areaId = ref()
 const name = ref()
 const serialNumber = ref()
+const projectId = ref()
 
 const props = defineProps({
   visible: {
@@ -146,25 +170,18 @@ const props = defineProps({
     type: Object,
     default: () => {}
   },
-  projectId: {
+  projectIds: {
     type: Number
   }
 })
-watch(
-  () => monomerId.value,
-  (val) => {
-    processDetailGet()
-  }
-)
-watch(
-  () => areaId.value,
-  (val) => {
-    processDetailGet()
-  }
-)
+watch([() => monomerId.value, () => areaId.value, () => projectId.value], (val) => {
+  processDetailGet()
+})
+
 watch(
   () => props.detailData.id,
   (val) => {
+    projectId.value = undefined
     monomerId.value = undefined
     areaId.value = undefined
     name.value = undefined
@@ -197,6 +214,7 @@ async function processDetailGet() {
       orderId: props.detailData.taskOrderId,
       groupId: props.detailData.group?.id,
       name: name.value,
+      projectId: projectId.value,
       monomerId: monomerId.value,
       areaId: areaId.value,
       serialNumber: serialNumber.value,
@@ -217,6 +235,7 @@ function searchQuery() {
 }
 // 重置
 function resetQuery() {
+  projectId.value = undefined
   monomerId.value = undefined
   areaId.value = undefined
   name.value = undefined
