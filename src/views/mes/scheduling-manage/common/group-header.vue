@@ -8,7 +8,7 @@
       >
         <el-icon><el-arrow-left /></el-icon>
       </div>
-      <div class="time-scroll" ref="timeScrollRef" style="margin-bottom: 8px">
+      <div class="time-scroll" ref="timeScrollRef" style="margin-bottom: 8px; margin-right: 8px">
         <div class="time-list" ref="timeListRef" :style="scrollStyle">
           <div
             class="time-item"
@@ -203,14 +203,13 @@ function selectChange(val) {
 
     div {
       padding: 3px 5px;
-
-      //   &:not(:last-child) {
-      //     border-bottom: 1px solid #ebebeb;
-      //   }
+        // &:not(:last-child) {
+        //   border-bottom: 1px solid #ebebeb;
+        // }
     }
-    // &:not(:last-child) {
-    //   border-right: 1px solid #ebebeb;
-    // }
+    &:not(:last-child) {
+      border-right: 1px solid #ebebeb;
+    }
   }
 
   .angle {

@@ -74,7 +74,7 @@
         min-width="85px"
       >
         <template v-slot="scope">
-          {{ scope.row.thick ? scope.row.thick.toFixed(DP.MES_ARTIFACT_T__MM) : '-' }}
+          {{ scope.row.thick ? Number(scope.row.thick)?.toFixed(DP.MES_ARTIFACT_T__MM) : '-' }}
         </template>
       </el-table-column>
       <el-table-column
@@ -197,7 +197,7 @@
       >
         <template v-slot="scope">
           <div class="board-box">
-            <el-image :src="scope.row.picturePath" @error="item.imgLoad = false">
+            <el-image :src="scope.row.picturePath" @error="scope.row.imgLoad = false">
               <template #error>
                 <div class="error-slot">
                   <span v-if="scope.row.picturePath">加载失败</span>
@@ -254,7 +254,7 @@ const optShow = {
 const tableRef = ref()
 const { CRUD, crud, columns } = useCRUD(
   {
-    title: '垫片配置',
+    title: '标准零件配置',
     sort: [],
     permission: { ...permission },
     optShow: { ...optShow },
@@ -276,7 +276,7 @@ function handleSuccess() {
 }
 
 CRUD.HOOK.handleRefresh = (crud, res) => {
-  res.data.content = res.data.content.map((v) => {
+  res.data.content = res.data.content?.map((v) => {
     v.imgLoad = true
     return v
   })

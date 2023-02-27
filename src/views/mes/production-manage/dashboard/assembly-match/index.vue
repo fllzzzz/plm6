@@ -1,8 +1,8 @@
 <template>
   <div class="app-container">
     <!--工具栏-->
-    <div style="display: flex">
-      <div style="width: 70%">
+    <div>
+      <div>
         <mHeader
           ref="headRef"
           @load="load"
@@ -64,9 +64,9 @@
         </div>
       </div>
       <!-- <div style="border-right: 1px solid #ededed; margin: 0 20px; height: calc(100vh - 130px)"></div> -->
-      <div style="flex: 1">
+      <!-- <div style="flex: 1">
         <part-production-list :query="crud.query" />
-      </div>
+      </div> -->
     </div>
     <partProductionStatus v-model:visible="statusVisible" :ids="detailIds" :names="detailNames"></partProductionStatus>
   </div>
@@ -85,7 +85,7 @@ import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import mHeader from './module/header'
 import partProductionStatus from './module/part-production-status.vue'
-import partProductionList from './module/part-production-list.vue'
+// import partProductionList from './module/part-production-list.vue'
 
 const optShow = {
   add: false,

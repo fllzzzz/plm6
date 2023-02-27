@@ -73,5 +73,17 @@ export function printSign(params) {
   })
 }
 
+/**
+ * @description: 获取结构工单项目信息
+*/
+export function getProjectInfo(params) {
+  return request({
+    module: 'mes',
+    url: `task/order/artifact/project/list`,
+    method: 'get',
+    params
+  })
+}
+
 export default { get }
 

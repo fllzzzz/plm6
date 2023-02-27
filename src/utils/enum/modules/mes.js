@@ -138,7 +138,7 @@ constantize(taskIssueTypeEnum)
 const machinePartSchedulingIssueStatusEnum = {
   NOT_NESTING: { L: '未套料', K: 'NOT_NESTING', V: 1 << 0, T: 'info' },
   IN_NESTING: { L: '套料中', K: 'IN_NESTING', V: 1 << 1, T: 'warning' },
-  OUT_NESTING: { L: '套料完成', K: 'OUT_NESTING', V: 1 << 2, T: '' },
+  OUT_NESTING: { L: '未下发', K: 'OUT_NESTING', V: 1 << 2, T: '' },
   HAS_ISSUED: { L: '已下发', K: 'HAS_ISSUED', V: 1 << 3, T: 'success' }
 }
 constantize(machinePartSchedulingIssueStatusEnum)
@@ -277,18 +277,24 @@ constantize(paintingTypeEnum)
 
 // 标签类型
 const labelTypeEnum = {
-  COMMON: { L: '常规型', K: 'COMMON', V: 1 << 0, size: {
-    [componentTypeEnum.ARTIFACT.V]: ' 100 * 75 ',
-    [componentTypeEnum.ENCLOSURE.V]: ' 100 * 30 '
-  }},
-  SIMPLE: { L: '简约型', K: 'SIMPLE', V: 1 << 1, size: {
-    [componentTypeEnum.ARTIFACT.V]: ' 100 * 75 ',
-    [componentTypeEnum.ENCLOSURE.V]: ' 无 '
-  }},
-  CUSTOM: { L: '定制型', K: 'CUSTOM', V: 1 << 2, size: {
-    [componentTypeEnum.ARTIFACT.V]: ' 100 * 75 ',
-    [componentTypeEnum.ENCLOSURE.V]: ' 100 * 50 '
-  }}
+  COMMON: {
+    L: '常规型', K: 'COMMON', V: 1 << 0, size: {
+      [componentTypeEnum.ARTIFACT.V]: ' 100 * 75 ',
+      [componentTypeEnum.ENCLOSURE.V]: ' 100 * 30 '
+    }
+  },
+  SIMPLE: {
+    L: '简约型', K: 'SIMPLE', V: 1 << 1, size: {
+      [componentTypeEnum.ARTIFACT.V]: ' 100 * 75 ',
+      [componentTypeEnum.ENCLOSURE.V]: ' 无 '
+    }
+  },
+  CUSTOM: {
+    L: '定制型', K: 'CUSTOM', V: 1 << 2, size: {
+      [componentTypeEnum.ARTIFACT.V]: ' 100 * 75 ',
+      [componentTypeEnum.ENCLOSURE.V]: ' 100 * 50 '
+    }
+  }
 }
 constantize(labelTypeEnum)
 
@@ -530,6 +536,43 @@ const auxiliaryMaterialTypeEnum = {
 }
 constantize(auxiliaryMaterialTypeEnum)
 
+// 零件排产/图纸导入
+const machinePartDxfTypeEnum = {
+  EXPORT: { L: '已导入图纸', K: 'EXPORT', V: 1 },
+  UN_EXPORT: { L: '未导入图纸', K: 'UN_EXPORT', V: 0 }
+}
+constantize(machinePartDxfTypeEnum)
+
+// 零件排产/下发方式
+const machinePartIssuedWayEnum = {
+  UN_NESTING_ISSUED: { L: '不套料下发', K: 'UN_NESTING_ISSUED', V: 1 << 0 },
+  NESTING_ISSUED: { L: '套料下发', K: 'NESTING_ISSUED', V: 1 << 1 },
+  ADD_NEW_TICKET: { L: '追加新工单', K: 'ADD_NEW_TICKET', V: 1 << 2 }
+}
+constantize(machinePartIssuedWayEnum)
+
+// 零件排产/下发
+const nestingTypeEnum = {
+  NORMAL: { L: '正常套料', K: 'NORMAL', V: false },
+  OFFLINE: { L: '线下套料', K: 'OFFLINE', V: true }
+}
+constantize(nestingTypeEnum)
+
+// 生产监控看板
+const productionKanbanTypeEnum = {
+  IN_PRODUCTION: { L: '生产中', K: 'IN_PRODUCTION', V: 1 << 0, T: 'warning' },
+  FINISHED_PRODUCTION: { L: '已完成', K: 'FINISHED_PRODUCTION', V: 1 << 1, T: 'success' },
+  PAUSED: { L: '暂停', K: 'PAUSED', V: 1 << 2, T: 'danger' }
+}
+constantize(productionKanbanTypeEnum)
+
+// 任务跟踪/在制品统计 钢材出库记录
+const steelOutBoundRecordTypeEnum = {
+  OUTBOUND: { L: '出库', K: 'OUTBOUND', V: 1 },
+  BACK_BOUND: { L: '退库', K: 'BACK_BOUND', V: 2 }
+}
+constantize(steelOutBoundRecordTypeEnum)
+
 export {
   teamTypeEnum,
   teamAttributeEnum,
@@ -596,7 +639,12 @@ export {
   productSearchTypeEnum,
   drillListEnum,
   structureOrderTypeEnum,
-  auxiliaryMaterialTypeEnum
+  auxiliaryMaterialTypeEnum,
+  machinePartDxfTypeEnum,
+  machinePartIssuedWayEnum,
+  nestingTypeEnum,
+  productionKanbanTypeEnum,
+  steelOutBoundRecordTypeEnum
 }
 
 export default {
@@ -665,5 +713,10 @@ export default {
   productSearchTypeEnum,
   drillListEnum,
   structureOrderTypeEnum,
-  auxiliaryMaterialTypeEnum
+  auxiliaryMaterialTypeEnum,
+  machinePartDxfTypeEnum,
+  machinePartIssuedWayEnum,
+  nestingTypeEnum,
+  productionKanbanTypeEnum,
+  steelOutBoundRecordTypeEnum
 }

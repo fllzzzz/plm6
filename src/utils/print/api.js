@@ -115,12 +115,20 @@ const mesArtifactClassList = mes.artifactClassList
 const mesAssembleClassList = mes.assembleClassList
 const mesMachinePartClassList = mes.machinePartClassList
 
+const mesProductionKanbanList = mes.productionKanbanList
+const mesProductionKanbanGroupList = mes.productionKanbanGroupList
+
 const mesMonthlyTaskList = mes.monthlyTaskList
 const mesProcessList = mes.processList
 const mesProductionLineList = mes.productionLineList
 const mesWorkOrderTrackingList = mes.workOrderTrackingList
+const mesWipStatisticsList = mes.wipStatisticsLis
+const mesProcessStatisticsList = mes.processStatisticsList
+const mesTaskStatisticsList = mes.taskStatisticsList
+const mesOutBoundStatisticsList = mes.outBoundStatisticsList
 
 const mesFactoryWorkshopReport = mes.factoryWorkshopReport
+const mesGroupsReport = mes.groupsReport
 
 const mesStudSleeveStatisticsList = mes.studSleeveStatisticsList
 const mesProjectShipDetail = mes.mesProjectShipDetail
@@ -260,12 +268,20 @@ export default {
   mesAssembleClassList, // 部件分类清单明细
   mesMachinePartClassList, // 零件分类清单明细
 
+  mesProductionKanbanList, // 生产监控看板明细
+  mesProductionKanbanGroupList, // 生产看板班组详情
+
   mesMonthlyTaskList, // 月度任务跟踪清单详情
   mesProductionLineList, //  产线跟踪清单详情
   mesWorkOrderTrackingList, // 工单跟踪清单详情
   mesProcessList, // 工序呆滞清单详情
+  mesWipStatisticsList, // 在制品统计打印
+  mesProcessStatisticsList, // 在制品统计工序详情打印
+  mesTaskStatisticsList, // 在制品排产记录详情
+  mesOutBoundStatisticsList, // 在制品出库记录详情
 
   mesFactoryWorkshopReport, // 车间报表清单详情
+  mesGroupsReport, // 班组报表清单详情
 
   mesStudSleeveStatisticsList, // 栓钉套筒统计清单详情
 
