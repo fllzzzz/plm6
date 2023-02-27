@@ -217,12 +217,12 @@ const tableRules = computed(() => {
 const { tableValidate, wrongCellMask } = useTableValidate({ rules: tableRules }) // 表格校验
 
 function selectable(row, rowIndex) {
-  return !!row.canPurchaseQuantity
+  return !!row.canPurchaseQuantity || true
 }
 
 function selectTableChange(select, row) {
   const boolSelect = Boolean(select.findIndex((v) => v.id === row.id) !== -1)
-  form.selectObj[row.id].isSelected = boolSelect
+  form.selectObj[row.purchaseOrderDetailId].isSelected = boolSelect
 }
 
 function selectAllTableChange(select) {
@@ -265,10 +265,10 @@ function rowInit(row) {
 
 function rowWatch(row) {
   watchEffect(() => {
-    if (!props.boolPartyA && isNotBlank(form.selectObj?.[row.id])) {
-      const _isSelected = form.selectObj[row.id]?.isSelected
-      form.selectObj[row.id] = {
-        ...form.selectObj[row.id],
+    if (!props.boolPartyA && isNotBlank(form.selectObj?.[row.purchaseOrderDetailId])) {
+      const _isSelected = form.selectObj[row.purchaseOrderDetailId]?.isSelected
+      form.selectObj[row.purchaseOrderDetailId] = {
+        ...form.selectObj[row.purchaseOrderDetailId],
         ...row,
         isSelected: _isSelected
       }

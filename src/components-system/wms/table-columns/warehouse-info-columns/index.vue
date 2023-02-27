@@ -29,7 +29,7 @@ const props = defineProps({
   },
   showWorkshop: { // 显示车间
     type: Boolean,
-    default: false
+    default: true
   },
   columns: { // 用于crud组件的列显隐
     type: Object

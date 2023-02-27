@@ -51,23 +51,21 @@
                 <span v-else v-split="detail.auxMaterialNames" />
               </el-form-item> -->
 
-              <template v-if="detail.supplyType === orderSupplyTypeEnum.SELF.V">
-                <el-form-item label="合同量" prop="mete">
-                  <span>{{ detail.mete }} {{ detail.meteUnit }}</span>
-                  <!-- 【<span v-parse-enum="{ e: weightMeasurementModeEnum, v: detail.weightMeasurementMode }" />】 -->
-                </el-form-item>
+              <el-form-item label="合同量" prop="mete">
+                <span>{{ detail.mete }} {{ detail.meteUnit }}</span>
+                <!-- 【<span v-parse-enum="{ e: weightMeasurementModeEnum, v: detail.weightMeasurementMode }" />】 -->
+              </el-form-item>
 
-                <el-form-item label="合同额" prop="amount">
-                  <span>{{ detail.amount }} 元</span>
-                  【<span v-parse-enum="{ e: invoiceTypeEnum, v: detail.invoiceType }" />
-                  <span v-if="detail.invoiceType !== invoiceTypeEnum.RECEIPT.V">（{{ detail.taxRate }}%）</span>】
-                </el-form-item>
+              <el-form-item label="合同额" prop="amount">
+                <span>{{ detail.amount }} 元</span>
+                【<span v-parse-enum="{ e: invoiceTypeEnum, v: detail.invoiceType }" />
+                <span v-if="detail.invoiceType !== invoiceTypeEnum.RECEIPT.V">（{{ detail.taxRate }}%）</span>】
+              </el-form-item>
 
-                <!-- <el-form-item label="发票及税率" prop="invoiceType"> </el-form-item> -->
-                <el-form-item label="订单类型" prop="purchaseOrderPaymentMode">
-                  <span v-parse-enum="{ e: purchaseOrderPaymentModeEnum, v: detail.purchaseOrderPaymentMode }" />
-                </el-form-item>
-              </template>
+              <!-- <el-form-item label="发票及税率" prop="invoiceType"> </el-form-item> -->
+              <el-form-item label="订单类型" prop="purchaseOrderPaymentMode">
+                <span v-parse-enum="{ e: purchaseOrderPaymentModeEnum, v: detail.purchaseOrderPaymentMode }" />
+              </el-form-item>
 
               <el-form-item prop="weightMeasurementMode" label="计量方式">
                 <span v-parse-enum="{ e: weightMeasurementModeEnum, v: detail.weightMeasurementMode }" />
@@ -144,7 +142,7 @@ import { weightMeasurementModeEnum, invoiceTypeEnum, settlementStatusEnum } from
 import { logisticsPayerEnum, logisticsTransportTypeEnum } from '@/utils/enum/modules/logistics'
 import { fileClassifyEnum } from '@enum-ms/file'
 import { projectNameFormatter } from '@/utils/project'
-import { isNotBlank, toPrecision } from '@/utils/data-type'
+import { isNotBlank } from '@/utils/data-type'
 import { setSpecInfoToList } from '@/utils/wms/spec'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 
@@ -162,7 +160,7 @@ const { maxHeight, heightStyle } = useMaxHeight(
     mainBox: '.purchase-order-raw-mat-detail',
     extraBox: ['.el-drawer__header'],
     wrapperBox: ['.el-drawer__body'],
-    clientHRepMainH: true
+    clientHRepMainH: true,
   },
   () => crud.detailVisible
 )
@@ -184,12 +182,10 @@ const boolUseRequisitions = computed(() => Boolean(detail.applyPurchase?.length)
 
 // 详情加载
 CRUD.HOOK.beforeDetailLoaded = async (crud, detail) => {
-  if (!(detail.materialType & materialPurchaseClsEnum.MATERIAL.V)) {
-    await setSpecInfoToList(detail.details)
-    await numFmtByBasicClass(detail.details, {
-      toNum: true
-    })
-  }
+  await setSpecInfoToList(detail.details)
+  await numFmtByBasicClass(detail.details, {
+    toNum: true,
+  })
 }
 </script>
 

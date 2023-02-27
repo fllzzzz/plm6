@@ -14,7 +14,7 @@
       <common-button :loading="crud.status.cu === CRUD.STATUS.PROCESSING" size="mini" type="primary" @click="crud.submitCU">
         提 交
       </common-button>
-      <store-operation v-if="crud.status.add > CRUD.STATUS.NORMAL" type="crud" />
+      <store-operation v-if="crud.status.add > CRUD.STATUS.NORMAL" type="crud" @clear="handleClear" />
     </template>
     <template #content>
       <div class="main-content">
@@ -43,6 +43,38 @@
                     type="enum"
                   />
                 </el-form-item>
+                <el-form-item
+                  v-if="form.materialType & materialPurchaseClsEnum.MATERIAL.V && !form.useRequisitions"
+                  class="el-form-item-5"
+                  label="辅材明细"
+                  prop="auxMaterialIds"
+                >
+                  <div class="flex-rss child-mr-10">
+                    <!-- 是否选择所有辅材 -->
+                    <el-checkbox
+                      v-model="form.isAllMaterial"
+                      :disabled="form.boolUsed"
+                      label="所有辅材"
+                      size="mini"
+                      border
+                      style="margin-top: 3px; margin-right: 5px"
+                    />
+                    <material-cascader
+                      v-model="form.auxMaterialIds"
+                      :basic-class="matClsEnum.MATERIAL.V"
+                      :deep="2"
+                      :disabled="form.boolUsed || form.isAllMaterial"
+                      multiple
+                      :collapse-tags="false"
+                      separator=" > "
+                      clearable
+                      placeholder="请选择辅材"
+                      class="input-underline"
+                      size="small"
+                      style="width: 100%"
+                    />
+                  </div>
+                </el-form-item>
                 <el-form-item v-if="!form.useRequisitions && isManuf" label="选择项目" class="el-form-item-4" prop="projectId">
                   <project-cascader v-model="form.projectId" clearable :disabled="Boolean(form.boolUsed)" class="input-underline" />
                 </el-form-item>
@@ -68,7 +100,7 @@
                     style="width: 100%"
                   />
                 </el-form-item>
-                <el-form-item class="el-form-item-8" label="合同量" prop="mete">
+                <!-- <el-form-item class="el-form-item-8" label="合同量" prop="mete">
                   <div class="input-underline flex-rss child-mr-10">
                     <common-input-number
                       v-model="form.mete"
@@ -104,14 +136,14 @@
                     />
                     <span>元</span>
                   </div>
-                </el-form-item>
+                </el-form-item> -->
                 <el-form-item class="el-form-item-10" label="发票及税率" prop="invoiceType">
                   <invoice-type-select
                     class="input-underline"
                     v-model:invoiceType="form.invoiceType"
                     v-model:taxRate="form.taxRate"
                     :disabled="Boolean(form.boolUsed)"
-                    :classification="form.basicClass"
+                    :classification="form.materialType"
                   />
                 </el-form-item>
                 <el-form-item class="el-form-item-11" prop="weightMeasurementMode" label="计量方式">
@@ -202,7 +234,7 @@
                   </el-tag>
                 </span>
                 <span class="opt-content">
-                  <common-button type="success" size="mini" @click="addRequisition"> 添加物料 </common-button>
+                  <common-button type="success" size="mini" @click="addRequisition"> 选择申购物料 </common-button>
                 </span>
               </div>
               <div class="right-head flex-rbs" v-if="!form.useRequisitions">
@@ -243,7 +275,26 @@
                 </span>
               </div>
               <!-- 清单列表 -->
-              <component ref="compRef" :is="currentView" />
+              <component ref="compRef" :is="currentView" :maxHeight="maxHeight - 150" />
+              <div class="table-remark">
+                <span class="title">合同量</span>
+                <span class="con"
+                  >{{ form.mete }}
+                  <span v-if="form.materialType & materialPurchaseClsEnum.MATERIAL.V">
+                    <unit-select
+                      v-model="form.meteUnit"
+                      size="small"
+                      :disabled="Boolean(form.boolUsed)"
+                      clearable
+                      filterable
+                      style="width: 80px; flex: none"
+                    />
+                  </span>
+                  <span v-else>{{ form.meteUnit }}</span>
+                </span>
+                <span class="title">合同额</span>
+                <span class="con">{{ form.amount }} 元</span>
+              </div>
             </div>
           </div>
         </el-form>
@@ -272,6 +323,7 @@
             :row-init-fn="rowInit"
             :max-height="specSelectMaxHeight"
             :basic-class="form.currentBasicClass"
+            :classify-ids="form.materialType & materialPurchaseClsEnum.MATERIAL.V ? form.auxMaterialIds : []"
             :table-width="350"
             auto-selected
             expand-query
@@ -288,7 +340,12 @@
         custom-class="manufactured-select-drawer"
       >
         <template #content>
-          <manuf-list :project-id="form.projectId" :visible="purchaseManufVisible" :maxHeight="manufSelectMaxHeight" @add="handleAddManuf" />
+          <manuf-list
+            :project-id="form.projectId"
+            :visible="purchaseManufVisible"
+            :maxHeight="manufSelectMaxHeight"
+            @add="handleAddManuf"
+          />
         </template>
       </common-drawer>
       <!-- <submit-preview v-model:visible="previewVisible" :loading="crud.status.cu === CRUD.STATUS.PROCESSING" @submit="crud.submitCU" /> -->
@@ -316,6 +373,7 @@ import UnitSelect from '@comp-common/unit-select/index.vue'
 import ProjectCascader from '@comp-base/project-cascader.vue'
 import SupplierSelect from '@comp-base/supplier-select/index.vue'
 import BranchCompanySelect from '@comp-base/branch-company-select.vue'
+import MaterialCascader from '@comp-cls/material-cascader/index.vue'
 import InvoiceTypeSelect from '@/components-system/base/invoice-type-select.vue'
 import UploadList from '@comp/file-upload/UploadList.vue'
 import StoreOperation from '@crud/STORE.operation.vue'
@@ -361,7 +419,7 @@ const defaultForm = {
   requisitions: [],
   requisitionsKV: {},
   manufListObj: {},
-  manufMergeObj: {}
+  manufMergeObj: {},
 }
 
 const formRef = ref() // 表单
@@ -376,7 +434,7 @@ const { maxHeight, heightStyle } = useMaxHeight(
     mainBox: '.purchase-order-raw-mat-form',
     extraBox: ['.el-drawer__header'],
     wrapperBox: ['.el-drawer__body'],
-    clientHRepMainH: true
+    clientHRepMainH: true,
   },
   dialogVisible
 )
@@ -406,7 +464,7 @@ const baseRules = {
   projectId: [{ required: true, message: '请选择项目', trigger: 'change' }],
   supplyType: [{ required: true, message: '请选择供货类型', trigger: 'change' }],
   supplierId: [{ required: true, message: '请选择供应商', trigger: 'change' }],
-  branchCompanyId: [{ required: true, message: '请选择签订主体', trigger: 'change' }]
+  branchCompanyId: [{ required: true, message: '请选择签订主体', trigger: 'change' }],
 }
 
 // 自采物料校验
@@ -418,7 +476,25 @@ const selfRules = {
   invoiceType: [{ required: true, validator: validateInvoiceType, trigger: 'change' }],
   taxRate: [{ max: 2, message: '请输入税率', trigger: 'blur' }],
   mete: [{ required: true, message: '请填写合同量', trigger: 'blur' }],
-  amount: [{ required: true, message: '请填写合同额', trigger: 'blur' }]
+  amount: [{ required: true, message: '请填写合同额', trigger: 'blur' }],
+}
+
+const validateAuxMat = (rule, value, callback) => {
+  if (!form.isAllMaterial) {
+    if (!value) {
+      callback(new Error('请选择辅材'))
+      return
+    } else {
+      callback()
+    }
+  } else {
+    callback()
+  }
+}
+
+// 辅材校验
+const auxMatRules = {
+  auxMaterialIds: [{ required: true, validator: validateAuxMat, trigger: 'change' }],
 }
 
 // rules变更
@@ -428,6 +504,9 @@ watchEffect(() => {
     clearObject(r)
     Object.assign(r, baseRules)
     Object.assign(r, selfRules)
+    if (form.materialType & materialPurchaseClsEnum.MATERIAL.V && !form.useRequisitions) {
+      Object.assign(r, auxMatRules)
+    }
     nextTick(() => {
       formRef.value && formRef.value.clearValidate()
     })
@@ -488,7 +567,7 @@ const compListVK = {
   [matClsEnum.STEEL_COIL.V]: 'steelCoilList',
   [matClsEnum.MATERIAL.V]: 'list',
   [matClsEnum.STRUC_MANUFACTURED.V]: 'list',
-  [matClsEnum.ENCL_MANUFACTURED.V]: 'list'
+  [matClsEnum.ENCL_MANUFACTURED.V]: 'list',
 }
 
 const compRef = ref()
@@ -508,7 +587,7 @@ const { maxHeight: specSelectMaxHeight } = useMaxHeight(
     wrapperBox: ['.el-drawer__body'],
     navbar: false,
     clientHRepMainH: true,
-    minHeight: 300
+    minHeight: 300,
   },
   () => materialSpecSelectDrawer.value?.loaded
 )
@@ -523,7 +602,7 @@ const { maxHeight: manufSelectMaxHeight } = useMaxHeight(
     paginate: true,
     clientHRepMainH: true,
     extraHeight: 50,
-    minHeight: 300
+    minHeight: 300,
   },
   () => manufSelectDrawerRef.value?.loaded
 )
@@ -545,7 +624,7 @@ function handleAddManuf(list) {
       form.manufListObj[v.id] = {
         ...v,
         rowKey: v.id,
-        curPurchaseWeight: _purchaseWeight
+        curPurchaseWeight: _purchaseWeight,
       }
     } else {
       form.manufListObj[v.id].curPurchaseQuantity += v.curPurchaseQuantity
@@ -599,6 +678,12 @@ function handleAddPurchase(row) {
 
 // --------------------------- 申购 end --------------------------------
 
+function handleClear() {
+  if (matSpecRef.value) {
+    matSpecRef.value.clear()
+  }
+}
+
 CRUD.HOOK.beforeToCU = () => {
   let _trigger
   if (!(form.materialType & materialPurchaseClsEnum.MANUFACTURED.V)) {
@@ -648,7 +733,7 @@ CRUD.HOOK.beforeEditDetailLoaded = async (crud, form) => {
   } else {
     await setSpecInfoToList(form.details)
     form.list = await numFmtByBasicClass(form.details, {
-      toNum: true
+      toNum: true,
     })
     if (form.materialType & materialPurchaseClsEnum.STEEL.V) {
       // 修改的情况下，数据预处理
@@ -700,7 +785,7 @@ crud.submitFormFormat = async (form) => {
           pricingMethod: v.pricingMethod,
           unitPrice: v.unitPrice,
           amount: v.amount,
-          destination: v.destination
+          destination: v.destination,
         })
         // })
       })
@@ -775,6 +860,29 @@ crud.submitFormFormat = async (form) => {
     }
     .opt-content {
       flex: none;
+    }
+  }
+
+  .table-remark {
+    height: 45px;
+    line-height: 45px;
+    display: flex;
+    border: 1px solid #ebeef5;
+    border-top-width: 0;
+    font-size: 12px;
+    color: #606266;
+    .title {
+      width: 60px;
+      text-align: center;
+    }
+    .con {
+      width: 200px;
+      padding: 0px 10px;
+      display: -webkit-box;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
     }
   }
 }

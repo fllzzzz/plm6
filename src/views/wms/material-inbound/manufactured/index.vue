@@ -6,6 +6,9 @@
       :total-value="totalWeight"
       :total-amount="totalAmount"
       :show-total-amount="!boolPartyA && fillableAmount"
+      :contract-unit="order?.unit"
+      :contract-value="order?.mete"
+      :showContractTotal="!boolPartyA && form.purchaseId"
       :validate="validate"
       :edit="props.edit"
       is-manuf

@@ -2,7 +2,7 @@ import { ElMessageBox } from 'element-plus'
 
 export default function useOverReceive({ quantityField = 'quantity', meteField = 'mete' }) {
   const handleOverQuantity = (row) => {
-    if (row[quantityField] > row.purchaseQuantity && row[quantityField] !== row.originQuantity) {
+    if (row[quantityField] > row.purchaseQuantity && row[quantityField] !== row.originQuantity && row.purchaseOrderDetailId) {
       ElMessageBox.confirm('本次实收数大于采购数，请确认', '提示', {
         confirmButtonText: '是',
         cancelButtonText: '否',
@@ -18,7 +18,7 @@ export default function useOverReceive({ quantityField = 'quantity', meteField =
   }
 
   const handleOverMete = (row) => {
-    if (row[meteField] > row.purchaseMete && row[meteField] !== row.originMete) {
+    if (row[meteField] > row.purchaseMete && row[meteField] !== row.originMete && row.purchaseOrderDetailId) {
       ElMessageBox.confirm('本次实收量大于采购量，请确认', '提示', {
         confirmButtonText: '是',
         cancelButtonText: '否',

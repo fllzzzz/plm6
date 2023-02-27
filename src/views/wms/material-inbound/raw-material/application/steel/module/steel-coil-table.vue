@@ -7,7 +7,10 @@
     :show-empty-symbol="false"
     return-source-data
     row-key="uid"
+    @select="selectTableChange"
+    @select-all="selectAllTableChange"
   >
+    <el-table-column v-if="!props.boolPartyA" type="selection" width="55" align="center" :selectable="selectable" />
     <el-expand-table-column :data="form.steelCoilList" v-model:expand-row-keys="expandRowKeys" row-key="uid" fixed="left">
       <template #default="{ row }">
         <div class="mtb-10">
@@ -145,7 +148,7 @@
 </template>
 
 <script setup>
-import { defineProps, computed, defineExpose, ref, inject, reactive, watch } from 'vue'
+import { defineProps, computed, defineExpose, watchEffect, ref, inject, reactive, watch } from 'vue'
 import { matClsEnum } from '@/utils/enum/modules/classification'
 import { isBlank, isNotBlank, toPrecision } from '@/utils/data-type'
 
@@ -162,12 +165,12 @@ import priceSetColumns from '@/views/wms/material-inbound/raw-material/component
 const props = defineProps({
   boolPartyA: {
     type: Boolean,
-    default: false
+    default: false,
   },
   fillableAmount: {
     type: Boolean,
-    default: false
-  }
+    default: false,
+  },
 })
 
 // 当前物料基础类型
@@ -177,20 +180,20 @@ const rules = {
   classifyId: [{ required: true, message: '请选择物料种类', trigger: 'change' }],
   width: [
     { required: true, message: '请填写宽度', trigger: 'blur' },
-    { pattern: positiveNumPattern, message: '宽度必须大于0', trigger: 'blur' }
+    { pattern: positiveNumPattern, message: '宽度必须大于0', trigger: 'blur' },
   ],
   thickness: [
     { required: true, message: '请填写厚度', trigger: 'blur' },
-    { pattern: positiveNumPattern, message: '厚度必须大于0', trigger: 'blur' }
+    { pattern: positiveNumPattern, message: '厚度必须大于0', trigger: 'blur' },
   ],
   weighingTotalWeight: [
     { required: true, message: '请填写重量', trigger: 'blur' },
-    { pattern: positiveNumPattern, message: '重量必须大于0', trigger: 'blur' }
+    { pattern: positiveNumPattern, message: '重量必须大于0', trigger: 'blur' },
   ],
   length: [
     { required: true, message: '请填写长度', trigger: 'blur' },
-    { pattern: positiveNumPattern, message: '长度必须大于0', trigger: 'blur' }
-  ]
+    { pattern: positiveNumPattern, message: '长度必须大于0', trigger: 'blur' },
+  ],
   // quantity: [{ required: true, message: '请填写数量', trigger: 'blur' }]
 }
 
@@ -207,8 +210,8 @@ const amountRules = {
   unitPrice: [{ required: true, message: '请填写单价', trigger: 'blur' }],
   amount: [
     { required: true, message: '请填写金额', trigger: 'blur' },
-    { validator: validateAmount, message: '金额有误，请手动修改', trigger: 'blur' }
-  ]
+    { validator: validateAmount, message: '金额有误，请手动修改', trigger: 'blur' },
+  ],
 }
 
 const tableRules = computed(() => {
@@ -225,6 +228,22 @@ const { form } = regExtra() // 表单
 const expandRowKeys = ref([]) // 展开行key
 
 const { tableValidate, wrongCellMask } = useTableValidate({ rules: tableRules, errorMsg: '请修正【钢卷清单】中标红的信息' }) // 表格校验
+
+function selectable(row, rowIndex) {
+  return !!row.canPurchaseQuantity || true
+}
+
+function selectTableChange(select, row) {
+  const boolSelect = Boolean(select.findIndex((v) => v.id === row.id) !== -1)
+  form.selectObj[row.purchaseOrderDetailId].isSelected = boolSelect
+}
+
+function selectAllTableChange(select) {
+  const boolSelect = Boolean(select?.length)
+  form.sectionSteelList.forEach((v) => {
+    form.selectObj[v.purchaseOrderDetailId].isSelected = boolSelect
+  })
+}
 
 // 行初始化
 function rowInit(row) {
@@ -252,7 +271,7 @@ function rowInit(row) {
     length: undefined, // 长度
     width: undefined, // 宽度
     theoryLength: undefined, // 理论单件重量
-    weighingTotalWeight: undefined // 过磅重量
+    weighingTotalWeight: undefined, // 过磅重量
   })
 
   // 非甲供
@@ -269,6 +288,16 @@ function rowInit(row) {
 function rowWatch(row) {
   // watchEffect(() => calcTheoryLength(_row))
   // watchEffect(() => calcTotalLength(_row))
+  watchEffect(() => {
+    if (!props.boolPartyA && isNotBlank(form.selectObj?.[row.purchaseOrderDetailId])) {
+      const _isSelected = form.selectObj[row.purchaseOrderDetailId]?.isSelected
+      form.selectObj[row.purchaseOrderDetailId] = {
+        ...form.selectObj[row.purchaseOrderDetailId],
+        ...row,
+        isSelected: _isSelected,
+      }
+    }
+  })
   // 计算理论长度
   watch([() => row.weighingTotalWeight, () => row.width, () => row.thickness, baseUnit], () => calcTheoryLength(row))
   // 计算总长度
@@ -282,7 +311,7 @@ async function calcTheoryLength(row) {
     name: row.classifyFullName,
     weight: row.weighingTotalWeight,
     width: row.width,
-    thickness: row.thickness
+    thickness: row.thickness,
   })
 }
 
@@ -323,9 +352,14 @@ function validate() {
   return validResult
 }
 
+function toggleRowSelection(row, selected) {
+  tableRef?.value?.toggleRowSelection(row, selected)
+}
+
 defineExpose({
   rowInit,
   rowWatch,
-  validate
+  toggleRowSelection,
+  validate,
 })
 </script>

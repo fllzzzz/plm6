@@ -18,6 +18,9 @@
       :unit="props.unit"
       :total-name="props.totalName"
       :total-value="props.totalValue"
+      :showContractTotal="showContractTotal"
+      :contract-value="props.contractValue"
+      :contract-unit="props.contractUnit"
       :show-total="props.showTotal"
       :show-total-amount="props.showTotalAmount"
       :total-amount="props.totalAmount"
@@ -56,6 +59,14 @@ const props = defineProps({
     type: [Number, String],
     default: 0
   },
+  contractUnit: {
+    type: String,
+    default: ''
+  },
+  contractValue: {
+    type: [Number, String],
+    default: 0
+  },
   totalName: {
     type: String,
     default: '合计'
@@ -63,6 +74,10 @@ const props = defineProps({
   btnName: {
     type: String,
     default: '下一步'
+  },
+  showContractTotal: {
+    type: Boolean,
+    default: false
   },
   showTotal: {
     type: Boolean,

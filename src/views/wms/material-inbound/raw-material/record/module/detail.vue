@@ -89,7 +89,7 @@ const columnsDataFormat = ref([
   ...materialHasAmountColumns,
   ['remark', 'empty-text'],
   ['monomerName', 'empty-text'],
-  ['areaName', 'empty-text']
+  ['areaName', 'empty-text'],
 ])
 
 const drawerRef = ref()
@@ -106,7 +106,7 @@ const { maxHeight } = useMaxHeight(
     wrapperBox: ['.el-drawer__body'],
     clientHRepMainH: true,
     minHeight: 300,
-    extraHeight: 10
+    extraHeight: 10,
   },
   () => computed(() => !crud.detailLoading)
 )
@@ -143,7 +143,7 @@ CRUD.HOOK.beforeDetailLoaded = async (crud, detail) => {
   await setSpecInfoToList(detail.list)
   detail.list = await numFmtByBasicClass(detail.list, {
     toSmallest: false,
-    toNum: false
+    toNum: false,
   })
 }
 
@@ -151,7 +151,7 @@ CRUD.HOOK.beforeDetailLoaded = async (crud, detail) => {
 function getSummaries(param) {
   return tableSummary(param, {
     props: ['quantity', 'mete', 'amount', 'amountExcludingVAT', 'inputVAT'],
-    toThousandFields: ['amount', 'amountExcludingVAT', 'inputVAT']
+    toThousandFields: ['amount', 'amountExcludingVAT', 'inputVAT'],
   })
 }
 </script>

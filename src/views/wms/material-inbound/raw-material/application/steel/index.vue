@@ -6,10 +6,13 @@
       :total-value="totalWeight"
       :total-amount="totalAmount"
       :show-total-amount="!boolPartyA && fillableAmount"
+      :contract-unit="order?.meteUnit"
+      :contract-value="order?.mete"
+      :showContractTotal="!boolPartyA && !!form.purchaseId"
       :validate="validate"
       :edit="props.edit"
       unit="kg"
-      total-name="总量合计"
+      :total-name="!boolPartyA ? '本次实收' : '总量合计'"
       @purchase-order-change="handleOrderInfoChange"
     >
       <div class="filter-container">
@@ -530,8 +533,8 @@ async function handleOrderInfoChange(orderInfo) {
     nextTick(() => {
       steelRefList[currentBasicClass.value] = steelRef.value
     })
-    if (orderInfo?.details?.length) {
-      form.list = orderInfo.details
+    if (!boolPartyA.value) {
+      form.list = orderInfo.details || []
       // 修改的情况下，数据预处理
       await steelInboundFormFormat(form)
       // 设置监听等

@@ -338,17 +338,22 @@ async function handleOrderInfoChange(order, oldOrder) {
     if (order.id) {
       const { details = [] } = await getPurchaseOrderDetail(order.id)
       await setSpecInfoToList(details)
-      await numFmtByBasicClass(details, {
-        toNum: true
-      }, { mete: ['mete', 'inboundMete'] })
-      order.details = details.map((v) => {
+      await numFmtByBasicClass(
+        details,
+        {
+          toNum: true
+        },
+        { mete: ['mete', 'inboundMete'] }
+      )
+      order.details = details?.map((v) => {
         v.purchaseOrderDetailId = v.id
         v.purchaseQuantity = v.quantity
         v.purchaseMete = v.mete
-        v.canPurchaseQuantity = v.purchaseQuantity - (v.inboundQuantity || 0)
+        v.canPurchaseQuantity = v.purchaseQuantity - v.inboundQuantity > 0 ? v.purchaseQuantity - v.inboundQuantity : 0
+        const _canMete = toPrecision(v.purchaseMete - v.inboundMete)
         const _isSelected = form.selectObj?.[v.purchaseOrderDetailId] ? form.selectObj[v.purchaseOrderDetailId]?.isSelected : false
         v.quantity = v.canPurchaseQuantity
-        v.mete = toPrecision(v.purchaseMete - v.inboundMete)
+        v.mete = _canMete > 0 ? _canMete : 0
         let _v = v
         if (_isSelected) {
           _v = {

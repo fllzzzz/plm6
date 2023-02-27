@@ -3,7 +3,7 @@
 </template>
 
 <script setup>
-import { ref, computed, reactive, inject, nextTick, watch, defineExpose } from 'vue'
+import { ref, computed, reactive, inject, nextTick, watch, defineExpose, watchEffect } from 'vue'
 import { steelClsEnum } from '@enum-ms/classification'
 
 import { isNotBlank, isBlank } from '@/utils/data-type'
@@ -17,11 +17,28 @@ const form = inject('crud')?.form
 const matSpecRef = inject('matSpecRef') // 调用父组件matSpecRef
 const steelRef = ref()
 
+watchEffect(() => {
+  let _mete = 0
+  let _amount = 0
+  const list = ['steelPlateList', 'sectionSteelList', 'steelCoilList']
+  list.forEach((key) => {
+    if (isNotBlank(form[key])) {
+      form[key].forEach((v) => {
+        _mete += v.weighingTotalWeight || 0
+        _amount += v.amount || 0
+      })
+    }
+  })
+  form.amount = _amount
+  form.mete = _mete
+  form.meteUnit = 'kg'
+})
+
 // 钢材三个组件的ref列表
 const steelRefList = reactive({
   steelPlateList: null,
   sectionSteelList: null,
-  steelCoilList: null
+  steelCoilList: null,
 })
 
 // 使用草稿时，为数据设置监听
@@ -29,12 +46,12 @@ const setFormCallback = (form) => {
   const trigger = {
     steelPlateList: null,
     sectionSteelList: null,
-    steelCoilList: null
+    steelCoilList: null,
   }
   const initSelectedTrigger = {
     steelPlateList: null,
     sectionSteelList: null,
-    steelCoilList: null
+    steelCoilList: null,
   }
   const list = ['steelPlateList', 'sectionSteelList', 'steelCoilList']
   list.forEach((key) => {
@@ -154,7 +171,7 @@ defineExpose({
   rowInit,
   validate,
   rowWatch,
-  setFormCallback
+  setFormCallback,
 })
 </script>
 

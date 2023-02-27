@@ -195,7 +195,9 @@ function resetQuery() {
 }
 
 function showHook() {
-  filter.value.formType = props.formType
+  if(props.formType){
+    filter.value.formType = props.formType
+  }
   fetchDetail()
 }
 

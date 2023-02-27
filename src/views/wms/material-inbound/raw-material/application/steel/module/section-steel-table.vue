@@ -130,14 +130,15 @@
         <template #default="{ row }">
           <common-input-number
             v-model="row.quantity"
-            :min="1"
+            :min="0"
             :max="999999999"
             controls-position="right"
             :controls="false"
             :step="5"
             :precision="baseUnit.measure.precision"
             size="mini"
-            placeholder="数量"
+            placeholder="实收数"
+            @blur="handleOverQuantity(row)"
           />
         </template>
       </el-table-column>
@@ -165,9 +166,10 @@
               :controls="false"
               :precision="baseUnit.weight.precision"
               size="mini"
-              placeholder="重量"
+              placeholder="实收量"
               :class="{ 'over-weight-tip': row.hasOver }"
               @change="handleWeightChange(row)"
+              @blur="handleOverMete(row)"
             />
           </el-tooltip>
         </template>
@@ -190,6 +192,7 @@ import { regExtra } from '@/composables/form/use-form'
 import useTableValidate from '@compos/form/use-table-validate'
 import useMatBaseUnit from '@/composables/store/use-mat-base-unit'
 import useWeightOverDiff from '@/composables/wms/use-steel-weight-over-diff'
+import useOverReceive from '@/views/wms/material-inbound/raw-material/application/composables/use-over-receive.js'
 import elExpandTableColumn from '@comp-common/el-expand-table-column.vue'
 import { createUniqueString } from '@/utils/data-type/string'
 import { calcSectionSteelTotalLength, calcSectionSteelWeight } from '@/utils/wms/measurement-calc'
@@ -218,6 +221,7 @@ const { form } = regExtra() // 表单
 const expandRowKeys = ref([]) // 展开行key
 
 const { overDiffTip, weightOverDiff, diffSubmitValidate } = useWeightOverDiff(baseUnit) // 过磅重量超出理论重量处理
+const { handleOverQuantity, handleOverMete } = useOverReceive({ meteField: 'weighingTotalWeight' })
 
 // 校验规则
 const rules = {
@@ -265,12 +269,12 @@ const tableRules = computed(() => {
 const { tableValidate, wrongCellMask } = useTableValidate({ rules: tableRules, errorMsg: '请修正【型材清单】中标红的信息' }) // 表格校验
 
 function selectable(row, rowIndex) {
-  return !!row.canPurchaseQuantity
+  return !!row.canPurchaseQuantity || true
 }
 
 function selectTableChange(select, row) {
   const boolSelect = Boolean(select.findIndex((v) => v.id === row.id) !== -1)
-  form.selectObj[row.id].isSelected = boolSelect
+  form.selectObj[row.purchaseOrderDetailId].isSelected = boolSelect
 }
 
 function selectAllTableChange(select) {
@@ -325,10 +329,10 @@ function rowWatch(row) {
   // watchEffect(() => calcTotalLength(_row))
   watchEffect(() => {
     weightOverDiff(row)
-    if (!props.boolPartyA && isNotBlank(form.selectObj?.[row.id])) {
-      const _isSelected = form.selectObj[row.id]?.isSelected
-      form.selectObj[row.id] = {
-        ...form.selectObj[row.id],
+    if (!props.boolPartyA && isNotBlank(form.selectObj?.[row.purchaseOrderDetailId])) {
+      const _isSelected = form.selectObj[row.purchaseOrderDetailId]?.isSelected
+      form.selectObj[row.purchaseOrderDetailId] = {
+        ...form.selectObj[row.purchaseOrderDetailId],
         ...row,
         isSelected: _isSelected
       }
