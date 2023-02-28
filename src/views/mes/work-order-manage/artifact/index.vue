@@ -158,7 +158,12 @@ const { crud, columns, CRUD } = useCRUD(
 
 const dataFormat = ref([['scheduleTime', ['parse-time', '{y}-{m}-{d}']]])
 provide('crud', crud)
-const { maxHeight } = useMaxHeight({ paginate: true })
+
+const { maxHeight } = useMaxHeight({
+  extraBox: ['.head-container'],
+  extraHeight: 15,
+  paginate: true
+})
 
 CRUD.HOOK.handleRefresh = (crud, res) => {
   res.data.content = res.data.content.map((v) => {
