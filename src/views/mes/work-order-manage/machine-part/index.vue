@@ -5,7 +5,7 @@
     </div>
     <div class="wrap-right">
       <el-tag v-if="!crud.query?.processType" type="info" size="medium"> * 请点击左侧项目列表查看详情 </el-tag>
-      <template v-else>
+      <div v-else>
         <div class="head-container">
           <mHeader />
         </div>
@@ -133,7 +133,7 @@
         </common-table>
         <!-- 分页 -->
         <pagination />
-      </template>
+      </div>
       <!-- 钻孔工单详情 -->
       <!-- <detail v-model:visible="drawerVisible" :process-type="crud.query.processType" :detail-data="detailData" /> -->
       <!-- 切割工单详情 -->
@@ -187,6 +187,7 @@ const { crud, CRUD, columns } = useCRUD(
 
 const { maxHeight } = useMaxHeight({
   extraBox: ['.head-container'],
+  extraHeight: 15,
   paginate: true
 })
 
