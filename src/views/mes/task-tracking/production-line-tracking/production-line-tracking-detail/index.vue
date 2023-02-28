@@ -66,6 +66,8 @@
         <el-table-column :show-overflow-tooltip="true" prop="quantity" key="quantity" label="任务数" align="center"></el-table-column>
         <el-table-column :show-overflow-tooltip="true" prop="netWeight" key="netWeight" label="单净重" align="center"></el-table-column>
         <el-table-column v-if="props.detailData.productType !== componentTypeEnum.ASSEMBLE.V" :show-overflow-tooltip="true" prop="grossWeight" key="grossWeight" label="单毛重" align="center"></el-table-column>
+        <!-- <el-table-column v-if="props.detailData.productType !== componentTypeEnum.ASSEMBLE.V" :show-overflow-tooltip="true" prop="totalNetWeight" key="totalNetWeight" label="总净重" align="center"></el-table-column>
+        <el-table-column v-if="props.detailData.productType !== componentTypeEnum.ASSEMBLE.V" :show-overflow-tooltip="true" prop="totalGrossWeight" key="totalGrossWeight" label="总毛重" align="center"></el-table-column> -->
         <el-table-column :show-overflow-tooltip="true" prop="completeQuantity" key="completeQuantity" label="完成数" align="center">
           <template #default="{ row }">
             <span v-if="row.status === workOrderTypeEnum.NORMAL.V">{{ row.completeQuantity }}</span>

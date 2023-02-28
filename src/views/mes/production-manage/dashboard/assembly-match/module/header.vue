@@ -45,14 +45,16 @@
             @change="handleCheckAllChange"
             >全选</el-checkbox
           >
-          <color-card class="filter-item" v-model:value="query.status" :colors="colors" color-border @change="crud.toQuery" />
+          <color-card class="filter-item" v-model:value="query.status" :colors="colors" color-border select-able @change="crud.toQuery" />
         </div>
       </template>
       <template #viewLeft>
+        <common-button class="filter-item" size="mini" type="info" @click.stop="toDetail">查看</common-button>
         <scale class="filter-item" v-model:value="boxScale" :intervals="400" @zoom-out="boxZoomOut" />
       </template>
     </crudOperation>
   </div>
+  <not-complete-list v-model:visible="unCompleteDrawerVisible" />
 </template>
 
 <script setup>
@@ -69,7 +71,9 @@ import ColorCard from '@comp/ColorCard'
 import Scale from '@comp/Scale'
 import tagTabs from '@comp-common/tag-tabs'
 import monomerSelectAreaTabs from '@comp-base/monomer-select-area-tabs'
+import notCompleteList from './not-complete-list.vue'
 
+const unCompleteDrawerVisible = ref(false)
 const summaryList = ref([])
 const defaultQuery = {
   serialNumber: '',
@@ -85,7 +89,7 @@ const emit = defineEmits(['load', 'checkedAll', 'batchMatch', 'clear'])
 
 const boxScale = ref(1)
 const { colors, boxZoomOut, getColorByValue, getTagByValue } = useDashboardHeader({
-  colorCardTitles: ['不具备', '部分具备', '完全具备'],
+  colorCardTitles: ['不齐套', '部分齐套', '完全齐套'],
   emit,
   crud
 })
@@ -141,6 +145,11 @@ function fetchMonomerAndArea({ monomerId, areaId }) {
 function tabChange(val) {
   query.structureClassId = val
   crud.toQuery()
+}
+
+// 查看未齐套详情
+function toDetail() {
+  unCompleteDrawerVisible.value = true
 }
 
 defineProps({

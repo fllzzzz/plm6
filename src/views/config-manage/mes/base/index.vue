@@ -4,6 +4,7 @@
       <el-col :xs="24" :sm="24" :md="12" :lg="8">
         <overweightSMSRecipient v-permission="permission.overweightSMSRecipientGet" style="margin-bottom: 20px" />
         <safeAmount v-permission="permission.safeAmountFactorGet" style="margin-bottom: 20px" />
+        <steelBindConfig v-permission="permission.safeAmountFactorGet" style="margin-bottom: 20px" />
         <!-- <installationAudit v-permission="permission.installationAuditGet" style="margin-top: 20px" /> -->
         <!-- <driverFillConfig v-permission="permission.driverFillConfigGet" style="margin-bottom: 20px" /> -->
       </el-col>
@@ -37,6 +38,7 @@ import drawingSNConfig from './component/drawing-sn-config'
 import appPrintConfig from './component/app-print-config'
 import carModelConfig from './component/car-model-config'
 import foldingPriceMethod from './component/folding-price-method'
+import steelBindConfig from './component/steel-bind-config.vue'
 
 provide('permission', permission)
 

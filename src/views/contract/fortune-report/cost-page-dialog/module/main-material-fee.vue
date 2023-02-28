@@ -151,6 +151,7 @@ async function fetchMainFee() {
       v.rowId = i + '' + Math.random()
       return v
     })
+    console.log(detailData.value, 'value')
     await setSpecInfoToList(detailData.value)
   } catch (error) {
     console.log('主材费用', error)
