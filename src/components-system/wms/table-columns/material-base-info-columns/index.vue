@@ -42,8 +42,18 @@
       <table-cell-tag
         v-if="showOddmentByHalfOut"
         :show="!!row.boolOddmentByHalfOut"
-        :color="(row.outboundRelationType === outboundRelationTypeEnum.CUT.V || row.outboundRelationType === outboundRelationTypeEnum.CUT_TRANSFER.V) ? '#214283' : '#e6a23c'"
-        :name="(row.outboundRelationType === outboundRelationTypeEnum.CUT.V || row.outboundRelationType === outboundRelationTypeEnum.CUT_TRANSFER.V) ? '切割半出' : '半出余料'"
+        :color="
+          row.outboundRelationType === outboundRelationTypeEnum.CUT.V ||
+          row.outboundRelationType === outboundRelationTypeEnum.CUT_TRANSFER.V
+            ? '#214283'
+            : '#e6a23c'
+        "
+        :name="
+          row.outboundRelationType === outboundRelationTypeEnum.CUT.V ||
+          row.outboundRelationType === outboundRelationTypeEnum.CUT_TRANSFER.V
+            ? '切割半出'
+            : '半出余料'
+        "
       />
 
       <!-- 出库方式 -->
@@ -51,6 +61,14 @@
         v-if="showOutboundMode && row.materialOutboundMode === materialOutboundModeEnum.HALF.V"
         :name="materialOutboundModeEnum.VL[row.materialOutboundMode]"
         :color="materialOutboundModeEnum.V[row.materialOutboundMode].COLOR"
+        :offset="15"
+      />
+
+      <!-- 钢卷条板显示 -->
+      <table-cell-tag
+        v-if="showOutboundMode && row.basicClass & rawMatClsEnum.STEEL_COIL.V && row.length"
+        name="条板出库"
+        color="#e6a23c"
         :offset="15"
       />
 
@@ -104,7 +122,15 @@
       </el-tooltip>
     </template>
   </el-table-column>
-  <component v-bind="$attrs" :is="comp" :columns="columns" :basic-class="basicClass" :spec-merge="specMerge" :fixed="fixed" :sortable="sortable" />
+  <component
+    v-bind="$attrs"
+    :is="comp"
+    :columns="columns"
+    :basic-class="basicClass"
+    :spec-merge="specMerge"
+    :fixed="fixed"
+    :sortable="sortable"
+  />
 
   <!-- 冻结记录 -->
   <common-dialog
@@ -144,7 +170,13 @@ import { materialBaseInfoCPM as permission } from '@/page-permission/wms'
 import { defineEmits, defineProps, computed, ref } from 'vue'
 import { STEEL_ENUM } from '@/settings/config'
 import { rawMatClsEnum } from '@/utils/enum/modules/classification'
-import { materialRejectStatusEnum, materialIsWholeEnum, materialOutboundModeEnum, partyAMatTransferEnum, outboundRelationTypeEnum } from '@/utils/enum/modules/wms'
+import {
+  materialRejectStatusEnum,
+  materialIsWholeEnum,
+  materialOutboundModeEnum,
+  partyAMatTransferEnum,
+  outboundRelationTypeEnum
+} from '@/utils/enum/modules/wms'
 import { isNotBlank, isBlank } from '@/utils/data-type'
 import checkPermission from '@/utils/system/check-permission'
 

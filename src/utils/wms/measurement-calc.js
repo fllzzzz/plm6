@@ -95,7 +95,7 @@ export async function calcSectionSteelWeight({ length, quantity = 1, unitWeight 
 }
 
 /**
- * 钢卷计算重量的公式
+ * 钢卷计算长度的公式
  * @param {Number} weight 重量
  * @param {Number} width 宽度
  * @param {Number} thickness 厚
@@ -128,6 +128,42 @@ export async function calcSteelCoilLength({ name, weight, width, thickness, quan
   theoryLength = weg / (wth * thickness * density)
   theoryLength = convertUnits(theoryLength, 'm', lengthUnit)
   return Number((theoryLength * quantity).toFixed(lengthPrecision))
+}
+
+/**
+ * 钢卷计算重量的公式
+ * @param {Number} length 长度
+ * @param {Number} width 宽度
+ * @param {Number} thickness 厚
+ * @param {Number} quantity 数量
+ * @param {Number} weightUnit 重量单位
+ * @param {Number} lengthUnit 长度单位
+ * @param {Number} precision 保留小数位
+ */
+export async function calcSteelCoilWeight({ name, length, width, thickness, quantity = 1 }) {
+  if (!length || !quantity || !width || !thickness) {
+    return null
+  }
+
+  let density = STEEL_DENSITY // 密度 t/m³
+  if (name && name.indexOf('不锈钢') > -1) {
+    density = STAINLESS_STEEL_DENSITY
+  }
+
+  const baseUnit = await getBaseUnit()
+  const widthUnit = baseUnit[STEEL_COIL].width.unit
+  const lengthUnit = baseUnit[STEEL_COIL].length.unit
+  // const lengthPrecision = baseUnit[STEEL_COIL].length.precision
+  const weightUnit = baseUnit[STEEL_COIL].weight.unit
+  const weightPrecision = baseUnit[STEEL_COIL].weight.precision
+
+  let theoryWeight
+  const len = convertUnits(length, lengthUnit, 'm')
+  const wth = convertUnits(width, widthUnit, 'm')
+  // 计算结果为 kg
+  theoryWeight = len * wth * thickness * density
+  theoryWeight = convertUnits(theoryWeight, 'kg', weightUnit, weightPrecision)
+  return toPrecision(theoryWeight * quantity, weightPrecision)
 }
 
 // 钢材入库表单格式转换
