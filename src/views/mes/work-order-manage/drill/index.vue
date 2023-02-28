@@ -188,6 +188,7 @@ const { crud, CRUD, columns } = useCRUD(
 provide('crud', crud)
 const { maxHeight } = useMaxHeight({
   extraBox: ['.head-container'],
+  extraHeight: 15,
   paginate: true
 })
 
