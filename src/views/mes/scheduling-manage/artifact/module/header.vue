@@ -25,11 +25,16 @@
         <span>{{ item.quantity }}件</span>
       </template>
     </tag-tabs>
-    <product-type-query :productType="productType" :toQuery="crud.toQuery" :query="query" />
-    <common-button class="filter-item" size="mini" type="success" icon="el-icon-search" @click.stop="crud.toQuery">搜索</common-button>
-    <common-button class="filter-item" size="mini" type="warning" icon="el-icon-refresh-left" @click.stop="resetQuery">
-      重置
-    </common-button>
+    <div style="display: flex; justify-content: space-between">
+      <div>
+        <product-type-query :productType="productType" :toQuery="crud.toQuery" :query="query" />
+        <common-button class="filter-item" size="mini" type="success" icon="el-icon-search" @click.stop="crud.toQuery">搜索</common-button>
+        <common-button class="filter-item" size="mini" type="warning" icon="el-icon-refresh-left" @click.stop="resetQuery">
+          重置
+        </common-button>
+      </div>
+      <!-- <common-button class="filter-item" size="mini" type="primary" @click.stop="productionLineStatus">产线状态</common-button> -->
+    </div>
   </div>
   <crudOperation>
     <template #optLeft>
@@ -44,7 +49,7 @@
 <script setup>
 import { getArtifactType, getLineType } from '@/api/mes/scheduling-manage/artifact'
 import { inject, watch, defineExpose, ref } from 'vue'
-
+import { useRouter } from 'vue-router'
 import { artifactProductLineEnum } from '@enum-ms/mes'
 
 import { regHeader } from '@compos/use-crud'
@@ -53,6 +58,7 @@ import crudOperation from '@crud/CRUD.operation'
 import tagTabs from '@comp-common/tag-tabs'
 import productTypeQuery from '@comp-mes/header-query/product-type-query'
 
+const router = useRouter()
 const defaultQuery = {}
 
 const productType = inject('productType')
@@ -122,6 +128,10 @@ function refreshTypeList() {
     productionLineTypeEnum: query.productionLineTypeEnum,
     areaIdList: crud.query.areaIdList
   })
+}
+
+function productionLineStatus() {
+  router.push({ name: 'MesMonitoringKanban', params: { areaId: crud.query.areaIdList[0] }})
 }
 
 defineExpose({

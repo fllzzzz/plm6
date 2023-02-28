@@ -1,5 +1,5 @@
 import { dataSourceEnum, alignEnum, verticleAlignEnum, fieldTypeEnum as typeEnum, cssUnitEnum, cssUnitPrecisionEnum, pageFormatEnum } from '@/utils/print/enum'
-import { projectNameArrangementModeEnum } from '@/utils/enum/modules/contract'
+// import { projectNameArrangementModeEnum } from '@/utils/enum/modules/contract'
 
 // 在制品出库统计清单
 const mesOutBoundStatisticsList = {
@@ -103,8 +103,8 @@ const mesOutBoundStatisticsList = {
      * @param {*} format 格式转换
      */
     fields: [ // 字段内容
-      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'project', title: '项目：', width: 190, type: typeEnum.PROJECT.K, format: { showProjectFullName: false, showSerialNumber: true, projectNameShowConfig: projectNameArrangementModeEnum.SERIAL_NUMBER_START.V, lineBreak: false }},
-      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'year', title: '统计日期：', width: 100, type: typeEnum.OTHER.K },
+      // { show: true, source: dataSourceEnum.SYSTEM.V, key: 'project', title: '项目：', width: 190, type: typeEnum.PROJECT.K, format: { showProjectFullName: false, showSerialNumber: true, projectNameShowConfig: projectNameArrangementModeEnum.SERIAL_NUMBER_START.V, lineBreak: false }},
+      // { show: true, source: dataSourceEnum.SYSTEM.V, key: 'year', title: '统计日期：', width: 100, type: typeEnum.OTHER.K },
       { show: true, source: dataSourceEnum.SYSTEM.V, key: 'printDate', title: '打印时间：', width: 55, type: typeEnum.DATE.K, format: 'YY/MM/DD kk:mm:ss' },
       { show: true, source: dataSourceEnum.SYSTEM.V, key: 'printer', title: '打印人：', width: 35, type: typeEnum.USER_NAME.K }
     ]
@@ -185,7 +185,7 @@ const mesOutBoundStatisticsList = {
      * @param {boolean} show 是否显示
      * @param {string} title 合计名称
      */
-    summary: { show: true, title: '合计' },
+    summary: { show: false, title: '合计' },
     /**
      * 表格列
      * @param {boolean} show 是否显示
@@ -201,7 +201,7 @@ const mesOutBoundStatisticsList = {
      */
     fields: [
       { show: true, key: 'basicClass', title: '物料种类', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.ENUM.K, format: { enum: 'matClsEnum', key: 'L' }},
-      { show: true, key: 'specMerge', title: '规格', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 40, type: typeEnum.SPECIFICATION.K },
+      { show: true, key: 'specMerge', title: '规格', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 40, type: typeEnum.OTHER.K },
       { show: true, key: 'measureUnit', title: '计量单位', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.UNIT.K },
       { show: true, key: 'quantity', title: '数量', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.QUANTITY.K },
       { show: true, key: 'accountingUnit', title: '核算单位', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.ACCOUNTING_UNIT.K },
