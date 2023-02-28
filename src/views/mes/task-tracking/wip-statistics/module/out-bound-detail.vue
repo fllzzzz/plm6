@@ -18,16 +18,12 @@
           <print-table api-key="mesOutBoundStatisticsList" :params="{ ...queryParams }" size="mini" type="warning" class="filter-item" />
         </div>
       </div>
-      <common-table v-loading="tableLoading" returnSourceData :data="list" :max-height="maxHeight" row-key="rowId" style="width: 100%">
+      <common-table v-loading="tableLoading" :data="list" :data-format="dataFormat" :max-height="maxHeight" style="width: 100%">
         <el-table-column label="序号" type="index" align="center" width="60" />
-        <el-table-column prop="classifyName" :show-overflow-tooltip="true" label="物料种类" min-width="150">
-          <template #default="{ row }">
-            <span>{{ row.classifyName }}</span>
-          </template>
-        </el-table-column>
+        <el-table-column prop="basicClass" :show-overflow-tooltip="true" label="物料种类" width="150" />
         <el-table-column :show-overflow-tooltip="true" key="specMerge" prop="specMerge" label="规格" align="center">
-          <template #default="{ row }">
-            <span>{{ row.specMerge }}</span>
+          <template v-slot="scope">
+            <span>{{scope.row.specMerge }}</span>
           </template>
         </el-table-column>
         <!-- <el-table-column :show-overflow-tooltip="true" prop="material" label="材质" align="center">
@@ -70,6 +66,8 @@ import { getOutbound } from '@/api/mes/task-tracking/wip-statistics.js'
 import { defineProps, defineEmits, ref, computed } from 'vue'
 import { steelOutBoundRecordTypeEnum } from '@enum-ms/mes'
 import { setSpecInfoToList } from '@/utils/wms/spec'
+// import { specFormat } from '@/utils/wms/spec-format'
+import { matClsEnum } from '@enum-ms/classification'
 import { parseTime } from '@/utils/date'
 import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'
@@ -89,6 +87,9 @@ const props = defineProps({
 
 const { visible: drawerVisible, handleClose } = useVisible({ emit, props, field: 'visible', showHook: fetchList })
 
+const dataFormat = ref([
+  ['basicClass', ['parse-enum', matClsEnum, { bit: true }]]
+])
 // 高度
 const { maxHeight } = useMaxHeight(
   {
@@ -116,8 +117,7 @@ async function fetchList() {
     const { content } = await getOutbound({
       ...queryParams.value
     })
-    list.value = content.map((v, i) => {
-      v.rowId = i + '' + Math.random()
+    list.value = content.map(v => {
       return v
     })
     await setSpecInfoToList(list.value)
