@@ -6,7 +6,7 @@
       </el-tag>
     </template>
     <template #titleRight>
-      <print-table api-key="mesTaskStatisticsList" :params="{ ...queryParams }" size="mini" type="warning" class="filter-item" />
+      <print-table v-permission="permission.print" api-key="mesTaskStatisticsList" :params="{ ...queryParams }" size="mini" type="warning" class="filter-item" />
     </template>
     <template #content>
       <common-table
@@ -50,7 +50,7 @@
 
 <script setup>
 import { getTask } from '@/api/mes/task-tracking/wip-statistics.js'
-import { defineProps, defineEmits, ref, computed } from 'vue'
+import { defineProps, defineEmits, ref, inject, computed } from 'vue'
 import { parseTime } from '@/utils/date'
 import { tableSummary } from '@/utils/el-extra'
 import usePagination from '@compos/use-pagination'
@@ -69,6 +69,7 @@ const props = defineProps({
   }
 })
 
+const permission = inject('permission')
 const { visible: taskDrawerVisible, handleClose } = useVisible({ emit, props, field: 'visible', showHook: fetchList })
 
 const { handleSizeChange, handleCurrentChange, total, setTotalPage, queryPage } = usePagination({ fetchHook: fetchList })

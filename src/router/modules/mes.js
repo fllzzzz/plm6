@@ -190,7 +190,7 @@ export default {
     hidden: false,
     name: 'MesProductionOrderManage',
     alwaysShow: false,
-    redirect: '/mes/production-order-manage/production-order',
+    redirect: '/mes/production-order-manage',
     meta: {
       title: '生产排期管理',
       icon: 'project',
@@ -201,9 +201,20 @@ export default {
         name: 'ProductionOrder',
         path: 'production-order',
         hidden: false,
-        component: '/mes/production-order/index',
+        component: '/mes/production-order-manage/production-order/index',
         meta: {
           title: '生产排期',
+          icon: 'project',
+          noCache: true
+        }
+      },
+      {
+        name: 'ScheduleDetail',
+        path: 'schedule-detail',
+        hidden: false,
+        component: '/mes/production-order-manage/schedule-detail/index',
+        meta: {
+          title: '排期详情',
           icon: 'project',
           noCache: true
         }

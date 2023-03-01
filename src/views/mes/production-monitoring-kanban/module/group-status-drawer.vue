@@ -154,10 +154,16 @@ const { maxHeight } = useMaxHeight({
   paginate: true
 })
 
-const { visible: drawerVisible, handleClose } = useVisible({ emit, props, field: 'visible', showHook: fetchGroupDetailGet })
+const { visible: drawerVisible, handleClose } = useVisible({ emit, props, field: 'visible', showHook: showHook })
+
+function showHook() {
+  detailData.value = {}
+}
+
 onMounted(() => {
   fetchGroupDetailGet()
 })
+
 async function fetchGroupDetailGet() {
   artifactGroupList.value = []
   assembleGroupList.value = []

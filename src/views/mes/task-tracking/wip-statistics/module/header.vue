@@ -16,17 +16,19 @@
       <project-radio-button size="small" v-model="query.projectId" class="filter-item" @change="crud.toQuery" />
     </div>
     <div style="width: 300px">
-      <print-table api-key="mesWipStatisticsList" :params="{ ...query }" size="mini" type="warning" class="filter-item" />
+      <print-table v-permission="permission.print" api-key="mesWipStatisticsList" :params="{ ...query }" size="mini" type="warning" class="filter-item" />
     </div>
   </div>
 </template>
 
 <script setup>
+import { inject } from 'vue'
 import { regHeader } from '@compos/use-crud'
 import moment from 'moment'
 
 const defaultTime = moment().startOf('month').valueOf()
 
+const permission = inject('permission')
 const defaultQuery = {
   projectId: undefined,
   dateTime: defaultTime.toString()
