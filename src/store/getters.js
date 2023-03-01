@@ -16,6 +16,7 @@ const getters = {
   logo: state => state.settings.logo,
   // sidebarLogo
   sidebarLogo: state => state.settings.sidebarLogo,
+  collapseSidebarLogo: state => state.settings.collapseSidebarLogo,
   // 项目名称显示方式
   projectNameShowConfig: state => state.settings.projectNameShowConfig,
   // 显示用户风格设置窗口

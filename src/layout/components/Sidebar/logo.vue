@@ -2,12 +2,12 @@
   <div class="sidebar-logo-container" :class="{'collapse':collapse}">
     <transition name="sidebarLogoFade">
       <router-link v-if="props.collapse" key="collapse" class="sidebar-logo-link" to="/">
-        <img v-if="sidebarLogo" :src="sidebarLogo" class="sidebar-logo">
-        <h1 v-else class="sidebar-title">{{ title }} </h1>
+        <img v-if="collapseSidebarLogo" :src="collapseSidebarLogo" class="sidebar-logo">
+        <!-- <h1 v-else class="sidebar-title">{{ title }} </h1> -->
       </router-link>
       <router-link v-else key="expand" class="sidebar-logo-link" to="/">
         <img v-if="sidebarLogo" :src="sidebarLogo" class="sidebar-logo">
-        <h1 class="sidebar-title">{{ title }} </h1>
+        <!-- <h1 class="sidebar-title">{{ title }} </h1> -->
       </router-link>
     </transition>
   </div>
@@ -25,7 +25,7 @@ const props = defineProps({
 })
 
 // logo，标题
-const { sidebarLogo, title } = mapGetters(['sidebarLogo', 'title'])
+const { sidebarLogo, collapseSidebarLogo } = mapGetters(['sidebarLogo', 'collapseSidebarLogo'])
 
 </script>
 
@@ -55,7 +55,7 @@ const { sidebarLogo, title } = mapGetters(['sidebarLogo', 'title'])
 
     & .sidebar-logo {
       // width: 32px;
-      height: 15px;
+      height: 27px;
       vertical-align: middle;
       margin-right: 12px;
     }

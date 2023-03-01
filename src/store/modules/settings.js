@@ -1,6 +1,6 @@
 import storage from '@/utils/storage'
 import { showSettings, tagsView, fixedHeader, showSidebarLogo, theme, tableBorder, tableStripe, tablePageSize } from '@/settings/user'
-import { title, logo, sidebarLogo, projectNameShowConfig } from '@/settings/system'
+import { title, logo, sidebarLogo, collapseSidebarLogo, projectNameShowConfig } from '@/settings/system'
 
 // 获取缓存的配置信息
 const stateStorage = storage.get('setting') || {}
@@ -9,6 +9,7 @@ const state = {
   logo: logo,
   // 菜单栏顶部logo
   sidebarLogo: sidebarLogo,
+  collapseSidebarLogo: collapseSidebarLogo,
   // 项目标题
   title: stateStorage.title || title,
   // 显示个人风格设置

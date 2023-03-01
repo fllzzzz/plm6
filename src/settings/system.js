@@ -7,7 +7,8 @@ import {
 } from '@/utils/enum/modules/contract'
 import { allPT } from './config'
 import assetsLogo from '@/assets/logo/logo-colorful-title.png'
-import assetsSidebarLogo from '@/assets/logo/logo-white.png'
+import assetsSidebarLogo from '@/assets/logo/logo-colorful-title.png'
+import assetsCollapseSidebarLogo from '@/assets/logo/logo-white.png'
 
 // 标题
 export const title = '初鸣智造'
@@ -15,6 +16,7 @@ export const title = '初鸣智造'
 export const logo = assetsLogo
 // 菜单栏顶部logo
 export const sidebarLogo = assetsSidebarLogo
+export const collapseSidebarLogo = assetsCollapseSidebarLogo
 // 项目名称显示方式
 export const projectNameShowConfig = {
   // 名称合同编号排列方式（默认，合同编号在前）
