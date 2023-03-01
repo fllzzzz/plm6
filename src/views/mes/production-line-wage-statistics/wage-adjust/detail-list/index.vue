@@ -15,9 +15,9 @@
           <span>{{ item.name }}</span>
         </template>
       </tag-tabs>
-      <div style="margin-bottom: 8px" v-if="unPaint">
-        <el-tag type="danger" size="medium"> * 请先配置该工序的核算单位</el-tag>
-      </div>
+      <!-- <div style="margin-bottom: 8px" v-if="processObj?.[crud.query.processId]?.type === processCategoryEnum.PAINT.V ? !paint : !unPaint">
+        <el-tag v-show="processList?.length" type="danger" size="medium"> * 请先配置该工序的核算单位</el-tag>
+      </div> -->
       <mHeader ref="headRef" :fInfo="fInfo">
         <template #btn>
           <common-button type="primary" size="mini" @click="batchHandle" :disabled="!selections?.length">批量调整</common-button>
@@ -31,6 +31,7 @@
       :data="crud.data"
       :data-format="productFormat[taskTypeEnum]"
       :empty-text="crud.emptyText"
+      :show-empty-symbol="false"
       :max-height="maxHeight - 50"
       row-key="rowId"
       style="width: 100%"
@@ -177,14 +178,13 @@ const { crud, columns, CRUD } = useCRUD(
 )
 const { maxHeight } = useMaxHeight({ paginate: true })
 
-const unPaint = computed(() => {
-  console.log(!!crud.data[0]?.primerWageQuotaType)
-  return (
-    !processCategoryEnum.PAINT.V & !!crud.data[0]?.wageQuotaType ||
-    processCategoryEnum.PAINT.V &
-      !(!!crud.data[0]?.primerWageQuotaType & !!crud.data[0]?.intermediatePaintWageQuotaType & !!crud.data[0]?.topcoatWageQuotaType)
-  )
-})
+// const unPaint = computed(() => {
+//   return crud.data[0]?.wageQuotaType
+// })
+
+// const paint = computed(() => {
+//   return crud.data[0]?.primerWageQuotaType && crud.data[0]?.intermediatePaintWageQuotaType && crud.data[0]?.topcoatWageQuotaType
+// })
 
 const processList = ref([])
 const processObj = ref({})
@@ -248,17 +248,17 @@ async function fetchProcess(info) {
 }
 
 function selectable(row) {
-  console.log(row.processId, 'row')
-  if (processObj?.[row.processId]?.type !== processCategoryEnum.PAINT.V) {
-    if (row?.wageQuotaType) {
-      return true
-    } else {
+  if (processObj.value?.[row.processId]?.type !== processCategoryEnum.PAINT.V) {
+    if (row.wageQuotaType === null) {
       return false
+    } else {
+      return true
     }
   }
-  if (processObj?.[row.processId]?.type === processCategoryEnum.PAINT.V) {
-    console.log(!!row?.primerWageQuotaType, '!!row?.primerWageQuotaType')
-    if (!!row?.primerWageQuotaType === true) {
+  if (processObj.value?.[row.processId]?.type === processCategoryEnum.PAINT.V) {
+    if (!row.primerWageQuotaType && !row.topcoatWageQuotaType && !row.intermediatePaintWageQuotaType) {
+      return false
+    } else {
       return true
     }
   }
