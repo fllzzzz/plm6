@@ -105,7 +105,7 @@
         v-loading="tableLoading"
         :data="tableData"
         :span-method="spanMethod"
-        :max-height="maxHeight"
+        :max-height="maxHeight - 50"
         :stripe="false"
         :data-format="dataFormat"
         row-key="id"
