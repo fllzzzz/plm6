@@ -204,9 +204,9 @@ function showCuttingDetail(row) {
 //   detailData.value = row
 // }
 
-function handleNestingTaskClick(val, query, year) {
+function handleNestingTaskClick(val, query) {
   crud.query.projectId = val?.id
-  crud.query.localDateTime = year
+  // crud.query.localDateTime = year
   crud.query.processType = mesMachinePartOrderTypeEnum.CUTTING_ORDER.V
   // if (crud.query.projectId) {
   //   crud.toQuery()

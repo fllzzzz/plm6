@@ -50,7 +50,8 @@
             label="计划完成日期"
           >
             <template v-slot="scope">
-              <span>{{ scope.row.completeTime ? parseTime(scope.row.completeTime, '{y}-{m}-{d}') : '-' }}</span>
+              <span v-if="scope.row.productionLineTypeEnum === artifactProductLineEnum.TRADITION.V">{{ scope.row.completeTime ? parseTime(scope.row.completeTime, '{y}-{m}-{d}') : '-' }}</span>
+              <span v-else>-</span>
             </template>
           </el-table-column>
           <el-table-column
@@ -120,7 +121,7 @@ import { get, machinePart } from '@/api/mes/task-tracking/work-order-tracking.js
 import { parseTime } from '@/utils/date'
 import { projectNameFormatter } from '@/utils/project'
 import { mesWorkOrderTrackingPM as permission } from '@/page-permission/mes'
-import { componentTypeEnum } from '@enum-ms/mes'
+import { componentTypeEnum, artifactProductLineEnum } from '@enum-ms/mes'
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
 import { DP } from '@/settings/config'
