@@ -19,7 +19,7 @@
     </template>
     <template #content>
       <div class="head-container">
-        <group-header v-model="queryVO.groupsId" :data="groupData" @change="fetch" />
+        <group-header v-model="queryVO.groupsId" :data="groupData" @change="fetch" @task-issue-success="handleTaskIssueSuccess" />
         <common-radio-button
           v-if="lineTypeLoad && unshowLineType.length !== artifactProductLineEnum.KEYS.length"
           v-model="queryVO.productionLineTypeEnum"
@@ -597,6 +597,7 @@ function toAssembleScheduling() {
 
 function handleTaskIssueSuccess() {
   fetchLineType()
+  fetchGroup()
   emit('refresh')
 }
 </script>
