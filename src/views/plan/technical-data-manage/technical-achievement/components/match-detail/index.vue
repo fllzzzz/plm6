@@ -19,8 +19,9 @@
       <el-table-column v-if="columns.visible('serialNumber')" key="serialNumber" prop="serialNumber" show-overflow-tooltip label="编号" align="center"/>
       <el-table-column v-if="columns.visible('specification')" key="specification" prop="specification" show-overflow-tooltip label="规格" align="center"/>
       <el-table-column v-if="columns.visible('quantity')" key="quantity" prop="quantity" show-overflow-tooltip label="清单数量" align="center"/>
-      <el-table-column v-if="columns.visible('createUser')" key="createUser" prop="createUser" show-overflow-tooltip label="创建者" align="center"/>
+      <el-table-column v-if="columns.visible('userName')" key="userName" prop="userName" show-overflow-tooltip label="创建者" align="center"/>
       <el-table-column v-if="columns.visible('createTime')" key="createTime" prop="createTime" show-overflow-tooltip label="创建时间" align="center"/>
+      <el-table-column v-if="columns.visible('updateTime')" key="updateTime" prop="updateTime" show-overflow-tooltip label="编辑时间" align="center"/>
       <el-table-column v-if="columns.visible('selectable')" key="selectable" prop="selectable" show-overflow-tooltip label="匹配状态" align="center" width="100">
         <template v-slot="scope">
           <el-tag v-if="scope.row.selectable" type="success" size="medium">匹配成功</el-tag>
@@ -103,7 +104,8 @@ const optShow = {
 const tableRef = ref()
 // 表格列数据格式转换
 const columnsDataFormat = ref([
-  ['createTime', 'parse-time']
+  ['createTime', 'parse-time'],
+  ['updateTime', 'parse-time']
 ])
 
 const { CRUD, crud, columns } = useCRUD(
