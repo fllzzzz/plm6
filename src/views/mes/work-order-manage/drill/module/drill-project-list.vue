@@ -108,6 +108,6 @@ function resetClick() {
 }
 
 function handleClickChange(val) {
-  emit('nesting-task-click', val, query, year.value)
+  emit('nesting-task-click', val, query)
 }
 </script>
