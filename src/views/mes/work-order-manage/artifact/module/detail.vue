@@ -216,12 +216,12 @@ import { constantize } from '@/utils/enum/base'
 import { parseTime } from '@/utils/date'
 import { codeWait } from '@/utils'
 import formatFn from '@/utils/print/format/index'
-import printTemplate from '@/utils/print/default-template'
 import { printTable } from '@/utils/print/table'
 
 import useMaxHeight from '@compos/use-max-height'
 import usePagination from '@compos/use-pagination'
 import useVisible from '@compos/use-visible'
+import useDefaultTableTemplate from '@compos/use-default-table-template'
 
 const permission = inject('permission')
 const drawerRef = ref()
@@ -388,7 +388,7 @@ async function printIt() {
       const apiKey = typeEnum[item][componentTypeEnum.VK[props.detailData.productType]]
       if (!apiKey) continue
       printLoading.value.text = `正在加载数据：${typeEnum[item].L}`
-      const config = printTemplate[apiKey]
+      const config = await useDefaultTableTemplate(apiKey)
       const _params =
         props.detailData.productType === componentTypeEnum.ARTIFACT.V ? { ...params.value, productionLineTypeEnum: props.detailData.productionLine?.productionLineTypeEnum } : { ...params.value, type: listType.value }
       let _resData = (await fetchFn[apiKey](_params)) || {}
