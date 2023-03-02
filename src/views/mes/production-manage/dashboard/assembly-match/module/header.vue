@@ -49,7 +49,7 @@
         </div>
       </template>
       <template #viewLeft>
-        <common-button class="filter-item" size="mini" type="info" @click.stop="toDetail">查看</common-button>
+        <!-- <common-button class="filter-item" size="mini" type="info" @click.stop="toDetail">查看</common-button> -->
         <scale class="filter-item" v-model:value="boxScale" :intervals="400" @zoom-out="boxZoomOut" />
       </template>
     </crudOperation>
@@ -148,9 +148,9 @@ function tabChange(val) {
 }
 
 // 查看未齐套详情
-function toDetail() {
-  unCompleteDrawerVisible.value = true
-}
+// function toDetail() {
+//   unCompleteDrawerVisible.value = true
+// }
 
 defineProps({
   isIndeterminate: {
