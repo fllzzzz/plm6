@@ -388,6 +388,12 @@ export function combineHtml(style, body) {
   return html
 }
 
+export function getPageSize(w, h) {
+  let _pageSize = ''
+  if (w === 210 && h === 297) _pageSize = 'A4'
+  return _pageSize
+}
+
 export default {
   getLODOP,
   printByMode,
