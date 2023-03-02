@@ -76,7 +76,6 @@
             filterable
             :collapse-tags="false"
             clearable
-            show-all-levels
             class="input-underline"
             style="width: 220px"
             placeholder="项目经理"
