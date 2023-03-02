@@ -73,7 +73,20 @@
         <el-tag effect="plain" class="filter-item" size="medium">
           <span> 报销总额（元）：{{ summaryData.info }}</span>
         </el-tag>
-        <print-table api-key="expenseReimburseList" :params="{ ...query }" size="mini" type="warning" class="filter-item" v-permission="crud.permission.print" />
+        <print-table
+          api-key="expenseReimburseList"
+          :params="{
+            reimburseUserName: query.reimbursementPerson,
+            expenseSubjectId: query.expenseSubjectId,
+            month: query.month,
+            year: query.year,
+            expenseTypeId: query.expenseTypeId,
+          }"
+          size="mini"
+          type="warning"
+          class="filter-item"
+          v-permission="crud.permission.print"
+        />
       </template>
     </crudOperation>
   </div>
@@ -97,7 +110,8 @@ const defaultQuery = {
   expenseTypeId: undefined,
   expenseSubjectId: undefined,
   year: parseTime(new Date(), '{y}'),
-  month: undefined
+  month: undefined,
+  reimbursementPerson: undefined
 }
 
 const { crud, query } = regHeader(defaultQuery)
@@ -114,7 +128,7 @@ function handleChange(val) {
 }
 
 function fetchChange(val) {
-  subjectList.value = expenseList.find(v => v.id === val)?.links
+  subjectList.value = expenseList.find((v) => v.id === val)?.links
   crud.toQuery()
 }
 // 如果时间选取的时间年份比当前的时间大就被禁用
