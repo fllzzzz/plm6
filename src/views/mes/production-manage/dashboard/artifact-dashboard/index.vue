@@ -40,9 +40,18 @@
             placement="left-start"
           >
             <div class="board-box" :style="{ 'background-color': `${item.boxColor}`, ...boxStyle }" @mouseenter="getDetail(item)">
-              <div>
+              <div style="width: 120px">
                 <span class="ellipsis-text" v-if="item.name">{{ item.name }}</span>
-                <span class="ellipsis-text">{{ item.serialNumber }}</span>
+                <el-tooltip
+                  class="item"
+                  effect="dark"
+                  :content="`${item.serialNumber}`"
+                  placement="top"
+                >
+                  <span class="ellipsis-text" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{
+                    item.serialNumber
+                  }}</span>
+                </el-tooltip>
               </div>
               <span v-if="crud.query.productType & componentTypeEnum.MACHINE_PART.V" class="ellipsis-text" style="display: flex">
                 <el-image class="ellipsis-text" style="flex: 1; width: 95%" :src="item.pictureUrl" @error="item.imgLoad = false">
