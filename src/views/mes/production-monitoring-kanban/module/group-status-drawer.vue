@@ -19,6 +19,7 @@
             style="width: 100%; cursor: pointer"
             row-key="id"
             :max-height="maxHeight / 3 - 40"
+            @row-click="handleRowClick"
           >
             <el-table-column prop="index" label="序号" align="center" width="60" type="index" />
             <el-table-column prop="groups.name" key="groups.name" label="班组" align="center">
@@ -27,18 +28,20 @@
               </template>
             </el-table-column>
             <el-table-column prop="lastMonthNetWeight" key="lastMonthNetWeight" label="上月产量（吨）" align="center" width="120px">
-              <template #default="{row}">
-                <span>{{(row.lastMonthNetWeight / 1000)?.toFixed(2)}}</span>
+              <template #default="{ row }">
+                <span>{{ (row.lastMonthNetWeight / 1000)?.toFixed(2) }}</span>
               </template>
             </el-table-column>
             <el-table-column prop="yearNetWeight" key="yearNetWeight" label="年度平均产量（吨）" align="center" width="150px">
-            <template #default="{row}">
-                <span>{{(row.yearNetWeight / 1000)?.toFixed(2)}}</span>
+              <template #default="{ row }">
+                <span>{{ (row.yearNetWeight / 1000)?.toFixed(2) }}</span>
               </template>
             </el-table-column>
             <el-table-column prop="unQuantity" key="unQuantity" label="未完成任务（件/吨）" align="center" width="150px">
               <template #default="{ row }">
-                <span @click.stop="unComplete(row)" style="color: red">{{ row.unQuantity }}/{{ (row.unNetWeight / 1000)?.toFixed(2)}}</span>
+                <span @click.stop="unComplete(row)" style="color: red">
+                  {{ row.unQuantity }}/{{ (row.unNetWeight / 1000)?.toFixed(2) }}
+                </span>
               </template>
             </el-table-column>
           </common-table>
@@ -50,6 +53,7 @@
             style="width: 100%; cursor: pointer"
             row-key="id"
             :max-height="maxHeight / 3 - 40"
+            @row-click="handleRowClick"
           >
             <el-table-column prop="index" label="序号" align="center" width="60" type="index" />
             <el-table-column prop="groups.name" key="groups.name" label="班组" align="center">
@@ -58,18 +62,20 @@
               </template>
             </el-table-column>
             <el-table-column prop="lastMonthNetWeight" key="lastMonthNetWeight" label="上月产量（吨）" align="center" width="120px">
-              <template #default="{row}">
-                <span>{{(row.lastMonthNetWeight / 1000)?.toFixed(2)}}</span>
+              <template #default="{ row }">
+                <span>{{ (row.lastMonthNetWeight / 1000)?.toFixed(2) }}</span>
               </template>
             </el-table-column>
             <el-table-column prop="yearNetWeight" key="yearNetWeight" label="年度平均产量（吨）" align="center" width="150px">
-            <template #default="{row}">
-                <span>{{(row.yearNetWeight / 1000)?.toFixed(2)}}</span>
+              <template #default="{ row }">
+                <span>{{ (row.yearNetWeight / 1000)?.toFixed(2) }}</span>
               </template>
             </el-table-column>
             <el-table-column prop="unQuantity" key="unQuantity" label="未完成任务（件/吨）" align="center" width="150px">
               <template #default="{ row }">
-                <span @click.stop="unComplete(row)" style="color: red">{{ row.unQuantity }}/{{ (row.unNetWeight / 1000)?.toFixed(2)}}</span>
+                <span @click.stop="unComplete(row)" style="color: red">
+                  {{ row.unQuantity }}/{{ (row.unNetWeight / 1000)?.toFixed(2) }}
+                </span>
               </template>
             </el-table-column>
           </common-table>
@@ -81,6 +87,7 @@
             style="width: 100%; cursor: pointer"
             row-key="id"
             :max-height="maxHeight / 3 - 40"
+            @row-click="handleRowClick"
           >
             <el-table-column prop="index" label="序号" align="center" width="60" type="index" />
             <el-table-column prop="groups.name" key="groups.name" label="班组" align="center">
@@ -89,18 +96,20 @@
               </template>
             </el-table-column>
             <el-table-column prop="lastMonthNetWeight" key="lastMonthNetWeight" label="上月产量（吨）" align="center" width="120px">
-              <template #default="{row}">
-                <span>{{(row.lastMonthNetWeight / 1000)?.toFixed(2)}}</span>
+              <template #default="{ row }">
+                <span>{{ (row.lastMonthNetWeight / 1000)?.toFixed(2) }}</span>
               </template>
             </el-table-column>
             <el-table-column prop="yearNetWeight" key="yearNetWeight" label="年度平均产量（吨）" align="center" width="150px">
-            <template #default="{row}">
-                <span>{{(row.yearNetWeight / 1000)?.toFixed(2)}}</span>
+              <template #default="{ row }">
+                <span>{{ (row.yearNetWeight / 1000)?.toFixed(2) }}</span>
               </template>
             </el-table-column>
             <el-table-column prop="unQuantity" key="unQuantity" label="未完成任务（件/吨）" align="center" width="150px">
               <template #default="{ row }">
-                <span @click.stop="unComplete(row)" style="color: red">{{ row.unQuantity }}/{{ (row.unNetWeight / 1000)?.toFixed(2)}}</span>
+                <span @click.stop="unComplete(row)" style="color: red">
+                  {{ row.unQuantity }}/{{ (row.unNetWeight / 1000)?.toFixed(2) }}
+                </span>
               </template>
             </el-table-column>
           </common-table>
@@ -189,6 +198,10 @@ async function fetchGroupDetailGet() {
 
 function unComplete(row) {
   detailData.value = row
+}
+
+function handleRowClick(val) {
+  detailData.value = val
 }
 </script>
 
