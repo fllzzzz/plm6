@@ -19,7 +19,6 @@
     </template>
     <template #content>
       <div class="head-container">
-        <group-header v-model="queryVO.groupsId" :data="groupData" @change="fetch" @task-issue-success="handleTaskIssueSuccess" />
         <common-radio-button
           v-if="lineTypeLoad && unshowLineType.length !== artifactProductLineEnum.KEYS.length"
           v-model="queryVO.productionLineTypeEnum"
@@ -39,15 +38,20 @@
           :style="'width:calc(100% - 150px)'"
           style="display: inline-block"
           :data="artifactTypeList"
-          :unselectable="artifactTypeList.length > 1"
           itemKey="structureClassId"
-          @change="fetch"
+          @change="handleStructureChange"
         >
           <template #default="{ item }">
             <span>{{ item.name }}：</span>
             <span>{{ item.quantity }}件</span>
           </template>
         </tag-tabs>
+        <group-header
+          v-model="queryVO.groupsId"
+          :data="groupData"
+          @change="fetch"
+          @task-issue-success="handleTaskIssueSuccess"
+        />
         <el-input
           v-model.trim="queryVO.serialNumber"
           size="small"
@@ -306,7 +310,7 @@ watch(
 async function fetchGroup() {
   const areaIdList = props.otherQuery.areaIdList
   try {
-    const { content } = (await groupSummary({ areaIdList })) || {}
+    const { content } = (await groupSummary({ areaIdList, structureClassId: queryVO.value.structureClassId })) || {}
     groupData.value = content || []
     if (content?.length) {
       queryVO.value.groupsId = content[0]?.groups?.id
@@ -394,6 +398,7 @@ async function fetch() {
   ) {
     return
   }
+  console.log(props.otherQuery, queryVO.value, 'value')
   try {
     tableLoading.value = true
     summaryInfo.value = (await recordSummary({ ...props.otherQuery, ...queryVO.value })) || {}
@@ -599,6 +604,11 @@ function handleTaskIssueSuccess() {
   fetchLineType()
   fetchGroup()
   emit('refresh')
+}
+
+function handleStructureChange() {
+  fetchGroup()
+  fetch()
 }
 </script>
 
