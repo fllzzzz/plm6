@@ -260,6 +260,9 @@ cu.submitFormFormat = async (form) => {
       }
     })
   }
+  if (form.supplyType & orderSupplyTypeEnum.PARTY_A.V) {
+    form.purchaseId = undefined
+  }
   return form
 }
 

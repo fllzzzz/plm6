@@ -17,13 +17,6 @@
       />
     </template>
     <template #titleRight>
-      <!-- <print-table
-        api-key="mesDrillProductionTaskOrder"
-        :params="{ ...commonParams }"
-        size="mini"
-        type="warning"
-        class="filter-item"
-      /> -->
       <common-button v-permission="permission.print" size="mini" icon="el-icon-printer" type="success" @click="printIt">打印【任务单、分拣单】</common-button>
     </template>
     <template #content>
@@ -48,14 +41,14 @@ import { printModeEnum } from '@/utils/print/enum'
 
 import { printSeparateOrderLabel } from '@/utils/print/index'
 import { codeWait } from '@/utils'
-import printTemplate from '@/utils/print/default-template'
 import { printTable } from '@/utils/print/table'
 
 import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'
+import useDefaultTableTemplate from '@compos/use-default-table-template'
 import useGetSeparateOrder from '@compos/mes/work-order-manage/use-get-separate-order'
-import separateOrderTable from './separate-order-table'
-import productionTaskOrder from './production-task-order'
+import separateOrderTable from '../../components/separate-order-table'
+import productionTaskOrder from '../../components/production-task-order.vue'
 
 const permission = inject('permission')
 const emit = defineEmits(['update:visible'])
@@ -123,7 +116,7 @@ async function printIt() {
   try {
     // ---------------------------生产任务单 打印 start ------------------------------
     printLoading.value.text = `正在加载数据：生产任务单`
-    const config = printTemplate[taskOrderPrintKey]
+    const config = await useDefaultTableTemplate(taskOrderPrintKey)
     const { header, footer, table, qrCode } = (await fetchFn[taskOrderPrintKey]({ ...commonParams.value })) || {}
     printLoading.value.text = `正在加入打印队列：生产任务单`
     await codeWait(500)

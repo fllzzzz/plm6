@@ -96,10 +96,12 @@
                 class="board-box"
                 style="position: relative; cursor: pointer"
                 :style="{ 'background-color': `${item.boxColor}`, ...boxStyle }"
-                @mouseleave="item.visibleTip = false"
-                @click.stop="item.visibleTip = !item.visibleTip"
               >
-                <div style="display: flex; justify-content: space-between; width: 100%; align-items: center; padding: 0 5px">
+                <div
+                  style="display: flex; justify-content: space-between; width: 100%; align-items: center; padding: 0 5px"
+                  @click.stop="item.visibleTip = !item.visibleTip"
+                  @mouseleave="item.visibleTip = false"
+                >
                   <el-checkbox
                     v-model="item.checked"
                     :disabled="Boolean(!item.imgLoad && item.picturePath)"
@@ -110,7 +112,13 @@
                     {{ item.serialNumber }}
                   </span>
                 </div>
-                <el-image style="flex: 1; width: 95%" :src="item.picturePath" @error="item.imgLoad = false">
+                <el-image
+                  style="flex: 1; width: 95%"
+                  :src="item.picturePath"
+                  z-index="999999"
+                  :preview-src-list="[item.picturePath]"
+                  @error="item.imgLoad = false"
+                >
                   <template #error>
                     <div class="error-slot">
                       <span v-if="item.picturePath">加载失败</span>
@@ -118,11 +126,10 @@
                     </div>
                   </template>
                 </el-image>
-                <span
-class="ellipsis-text text"
-                  ><span style="color: #409eff">{{ item.specification }}</span
-                  >/<span style="color: #42b983">{{ item.quantity }}</span></span
-                >
+                <span class="ellipsis-text text" @click.stop="item.visibleTip = !item.visibleTip" @mouseleave="item.visibleTip = false">
+                  <span style="color: #409eff">{{ item.specification }}</span
+                  >/<span style="color: #42b983">{{ item.quantity }}</span>
+                </span>
               </div>
             </el-tooltip>
           </template>
