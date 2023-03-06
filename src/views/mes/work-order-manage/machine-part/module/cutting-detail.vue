@@ -27,13 +27,37 @@
     </template>
     <template #titleRight>
       <common-button
-size="mini"
-v-permission="permission.print"
-icon="el-icon-printer"
-type="success"
-@click="printIt"
-        >打印【任务单、分拣单】</common-button
+        size="mini"
+        v-show="orderType === typeEnum.PRODUCTION_TASK_ORDER.V"
+        v-permission="permission.print"
+        icon="el-icon-printer"
+        type="success"
+        @click="printIt"
       >
+        <!-- 打印【任务单、分拣单】 -->
+        打印【生产任务单】
+      </common-button>
+      <common-button
+        size="mini"
+        v-show="orderType === typeEnum.NESTING_TASK_ORDER.V"
+        v-permission="permission.print"
+        icon="el-icon-printer"
+        type="success"
+        @click="printIt"
+      >
+        <!-- 打印【任务单、分拣单】 -->
+        打印【套料任务单】
+      </common-button>
+      <common-button
+        size="mini"
+        v-show="orderType === typeEnum.SORTING_ORDER.V"
+        v-permission="permission.print"
+        icon="el-icon-printer"
+        type="success"
+        @click="printIt"
+      >
+        打印【分拣单】
+      </common-button>
     </template>
     <template #content>
       <!--任务单-->
@@ -133,6 +157,10 @@ async function productionDetailGet() {
   try {
     taskLoading.value = true
     const data = await productionTaskDetail({ ...commonParams.value })
+    data?.map((v) => {
+      v.imgLoad = true
+      return v
+    })
     productionData.value = data
   } catch (error) {
     console.log('获取生产任务单详情失败', error)
@@ -184,6 +212,89 @@ function getUrlByFileReader(res) {
 // --------------------------- 获取任务单 end --------------------------------
 
 // --------------------------- 打印 start ------------------------------
+// const printLoading = ref()
+
+// async function printIt() {
+//   printLoading.value = ElLoading.service({
+//     lock: true,
+//     text: '正在准备加入打印队列',
+//     spinner: 'el-icon-loading',
+//     fullscreen: true
+//   })
+//   try {
+//     if (props.cuttingDetailData.boolNestCut && !props.cuttingDetailData.boolOffLine) {
+//       // --------------------------- PDF 打印 start ------------------------------
+//       // const canvasELs = document.querySelectorAll('#viewerContainer .canvasWrapper canvas')
+//       // for (let i = 0; i < canvasELs.length; i++) {
+//       //   const canvasBase64 = canvasELs[i].toDataURL()
+//       //   printLoading.value.text = `正在加入打印队列：套料任务单 第${i + 1}页`
+//       //   await codeWait(500)
+//       //   await printPDFJSCanvas({ canvasBase64 })
+//       // }
+//       printJS({
+//         printable: taskOrderPDF.value,
+//         onPrintDialogClose: () => {
+//           printSeparateOrder()
+//         },
+//         onError: () => {
+//           throw new Error('PDF加载失败')
+//         }
+//       })
+//       // --------------------------- PDF 打印 end --------------------------------
+//     } else {
+//       // ---------------------------生产任务单 打印 start ------------------------------
+//       printLoading.value.text = `正在加载数据：生产任务单`
+//       const config = await useDefaultTableTemplate(taskOrderPrintKey)
+//       const { header, footer, table, qrCode } = (await fetchFn[taskOrderPrintKey]({ ...commonParams.value })) || {}
+//       printLoading.value.text = `正在加入打印队列：生产任务单`
+//       await codeWait(500)
+//       const result = await printTable({
+//         printMode: printModeEnum.QUEUE.V,
+//         header,
+//         footer,
+//         table,
+//         qrCode,
+//         config
+//       })
+//       if (!result) {
+//         throw new Error('生产任务单导出失败')
+//       }
+//       // ---------------------------生产任务单 打印 end --------------------------------
+
+//       if (separateOrderInfo.value.length) {
+//         printSeparateOrder()
+//       } else {
+//         printLoading.value.text = `已全部加入打印队列`
+//         await codeWait(500)
+//         printLoading.value.close()
+//         await printSign({ ...commonParams.value })
+//         emit('refresh')
+//       }
+//     }
+//     return
+//   } catch (error) {
+//     ElNotification({ title: '加入打印队列失败，请重试', type: 'error', duration: 2500 })
+//     throw new Error(error)
+//   }
+// }
+
+// async function printSeparateOrder() {
+//   // --------------------------- 分拣单 打印 start ------------------------------
+//   printLoading.value.text = `正在加入打印队列：分拣单`
+//   await codeWait(500)
+//   await printSeparateOrderLabel({ taskNumberOrder: props.cuttingDetailData.orderNumber, separateOrderInfo: separateOrderInfo.value })
+//   // --------------------------- 分拣单 打印 end --------------------------------
+//   printLoading.value.text = `已全部加入打印队列`
+//   await codeWait(500)
+//   printLoading.value.close()
+//   await printSign({ ...commonParams.value })
+//   emit('refresh')
+// }
+
+// --------------------------- 打印 end --------------------------------
+
+// --------------------------- 分开打印 start --------------------------------
+
 const printLoading = ref()
 
 async function printIt() {
@@ -194,7 +305,7 @@ async function printIt() {
     fullscreen: true
   })
   try {
-    if (props.cuttingDetailData.boolNestCut && !props.cuttingDetailData.boolOffLine) {
+    if (orderType.value === typeEnum.NESTING_TASK_ORDER.V) {
       // --------------------------- PDF 打印 start ------------------------------
       // const canvasELs = document.querySelectorAll('#viewerContainer .canvasWrapper canvas')
       // for (let i = 0; i < canvasELs.length; i++) {
@@ -206,14 +317,14 @@ async function printIt() {
       printJS({
         printable: taskOrderPDF.value,
         onPrintDialogClose: () => {
-          printSeparateOrder()
+          ElNotification({ title: '打印PDF成功', type: 'success', duration: 2500 })
         },
         onError: () => {
           throw new Error('PDF加载失败')
         }
       })
       // --------------------------- PDF 打印 end --------------------------------
-    } else {
+    } else if (orderType.value === typeEnum.PRODUCTION_TASK_ORDER.V) {
       // ---------------------------生产任务单 打印 start ------------------------------
       printLoading.value.text = `正在加载数据：生产任务单`
       const config = await useDefaultTableTemplate(taskOrderPrintKey)
@@ -231,18 +342,18 @@ async function printIt() {
       if (!result) {
         throw new Error('生产任务单导出失败')
       }
+      ElNotification({ title: '打印生产任务单成功', type: 'success', duration: 2500 })
       // ---------------------------生产任务单 打印 end --------------------------------
-
+    } else {
       if (separateOrderInfo.value.length) {
         printSeparateOrder()
-      } else {
-        printLoading.value.text = `已全部加入打印队列`
-        await codeWait(500)
-        printLoading.value.close()
-        await printSign({ ...commonParams.value })
-        emit('refresh')
       }
     }
+    printLoading.value.text = `已全部加入打印队列`
+    await codeWait(500)
+    printLoading.value.close()
+    await printSign({ ...commonParams.value })
+    emit('refresh')
     return
   } catch (error) {
     ElNotification({ title: '加入打印队列失败，请重试', type: 'error', duration: 2500 })
@@ -258,6 +369,7 @@ async function printSeparateOrder() {
   // --------------------------- 分拣单 打印 end --------------------------------
   printLoading.value.text = `已全部加入打印队列`
   await codeWait(500)
+  ElNotification({ title: '打印分拣单成功', type: 'success', duration: 2500 })
   printLoading.value.close()
   await printSign({ ...commonParams.value })
   emit('refresh')

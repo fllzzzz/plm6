@@ -6,6 +6,7 @@
         <el-tag>班组：{{ props.detailData?.groups?.name }}</el-tag>
         <div style="width: 300px">
           <print-table
+            v-permission="permission.print"
             api-key="mesProductionKanbanGroupList"
             :params="{
               groupId: props.detailData.groups?.id,
@@ -49,7 +50,7 @@
 </template>
 <script setup>
 import { getGroupDetail } from '@/api/mes/production-monitoring-kanban/kanban.js'
-import { ref, defineProps, watch } from 'vue'
+import { ref, defineProps, watch, inject } from 'vue'
 import { projectNameFormatter } from '@/utils/project'
 import usePagination from '@compos/use-pagination'
 import useMaxHeight from '@compos/use-max-height'
@@ -71,10 +72,13 @@ const { maxHeight } = useMaxHeight({
   paginate: true
 })
 
+const permission = inject('permission')
 watch(
   () => props.detailData?.groups?.id,
   (value) => {
-    fetchGroupDetail()
+    if (value) {
+      fetchGroupDetail()
+    }
   }
 )
 const { handleSizeChange, handleCurrentChange, total, setTotalPage, queryPage } = usePagination({ fetchHook: fetchGroupDetail })

@@ -22,6 +22,7 @@
     </el-table-column>
     <el-table-column key="createUserName" prop="createUserName" show-overflow-tooltip label="创建者" align="center"/>
     <el-table-column key="createTime" prop="createTime" show-overflow-tooltip label="创建时间" align="center"/>
+    <el-table-column key="updateTime" prop="updateTime" show-overflow-tooltip label="编辑时间" align="center"/>
     <el-table-column key="successQuantity" prop="successQuantity" show-overflow-tooltip label="转换成功次数" align="center"/>
     <el-table-column label="操作" align="center" width="170">
       <template #default="{ row }">
@@ -66,7 +67,8 @@ const tableLoading = ref(false)
 const tableData = ref([])
 // 表格列数据格式转换
 const columnsDataFormat = ref([
-  ['createTime', 'parse-time']
+  ['createTime', 'parse-time'],
+  ['updateTime', 'parse-time']
 ])
 
 function handleSuccess() {

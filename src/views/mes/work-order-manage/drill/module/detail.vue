@@ -12,16 +12,34 @@
         v-model="orderType"
         :options="typeEnum.ENUM"
         type="enum"
+        :disabledVal="!separateOrderInfo.length ? [typeEnum.SORTING_ORDER.V] : []"
         size="mini"
         class="filter-item"
       />
     </template>
     <template #titleRight>
-      <common-button v-permission="permission.print" size="mini" icon="el-icon-printer" type="success" @click="printIt">打印【任务单、分拣单】</common-button>
+      <common-button
+        v-show="orderType === typeEnum.PRODUCTION_TASK_ORDER.V"
+        v-permission="permission.print"
+        size="mini"
+        icon="el-icon-printer"
+        type="success"
+        @click="printIt"
+        >打印【钻孔任务单】</common-button
+      >
+      <common-button
+        v-show="orderType === typeEnum.SORTING_ORDER.V"
+        v-permission="permission.print"
+        size="mini"
+        icon="el-icon-printer"
+        type="success"
+        @click="printIt"
+        >打印【分拣单】</common-button
+      >
     </template>
     <template #content>
       <div v-if="orderType === typeEnum.PRODUCTION_TASK_ORDER.V">
-        <production-task-order :tableData="drillData" :maxHeight="maxHeight" :tableLoading="taskLoading"/>
+        <production-task-order :tableData="drillData" :maxHeight="maxHeight" :tableLoading="taskLoading" />
       </div>
       <div v-loading="separateLoading" v-if="orderType === typeEnum.SORTING_ORDER.V">
         <separate-order-table :separateOrderInfo="separateOrderInfo" />
@@ -51,7 +69,7 @@ import separateOrderTable from '../../components/separate-order-table'
 import productionTaskOrder from '../../components/production-task-order.vue'
 
 const permission = inject('permission')
-const emit = defineEmits(['update:visible'])
+const emit = defineEmits(['update:visible', 'refresh'])
 const drawerRef = ref()
 const drillData = ref([]) // 钻孔工单详情数据
 const taskLoading = ref(false)
@@ -87,6 +105,7 @@ const { separateLoading, separateOrderInfo, fetchSeparateOrder } = useGetSeparat
 const { visible: drawerVisible, handleClose } = useVisible({ emit, props, field: 'visible', showHook })
 
 async function showHook() {
+  orderType.value = typeEnum.PRODUCTION_TASK_ORDER.V
   await drillDetailGet()
   await fetchSeparateOrder()
 }
@@ -114,43 +133,48 @@ async function printIt() {
     fullscreen: true
   })
   try {
-    // ---------------------------生产任务单 打印 start ------------------------------
-    printLoading.value.text = `正在加载数据：生产任务单`
-    const config = await useDefaultTableTemplate(taskOrderPrintKey)
-    const { header, footer, table, qrCode } = (await fetchFn[taskOrderPrintKey]({ ...commonParams.value })) || {}
-    printLoading.value.text = `正在加入打印队列：生产任务单`
-    await codeWait(500)
-    const result = await printTable({
-      printMode: printModeEnum.QUEUE.V,
-      header,
-      footer,
-      table,
-      qrCode,
-      config
-    })
-    if (!result) {
-      throw new Error('导出失败')
+    // ---------------------------钻孔任务单 打印 start ------------------------------
+    if (orderType.value === typeEnum.PRODUCTION_TASK_ORDER.V) {
+      printLoading.value.text = `正在加入打印队列：钻孔生产任务单`
+      const config = await useDefaultTableTemplate(taskOrderPrintKey)
+      const { header, footer, table, qrCode } = (await fetchFn[taskOrderPrintKey]({ ...commonParams.value })) || {}
+      await codeWait(500)
+      printLoading.value.text = `已全部加入打印队列`
+      await codeWait(500)
+      const result = await printTable({
+        printMode: printModeEnum.QUEUE.V,
+        header,
+        footer,
+        table,
+        qrCode,
+        config
+      })
+      if (!result) {
+        throw new Error('导出失败')
+      }
+      ElNotification({ title: '打印钻孔生产任务单成功', type: 'success', duration: 2500 })
+    } else {
+      // ---------------------------生产任务单 打印 end --------------------------------
+      // --------------------------- 分拣单 打印 start ------------------------------
+      printLoading.value.text = `正在加入打印队列：分拣单`
+      await codeWait(500)
+      await printSeparateOrderLabel({ taskNumberOrder: props.detailData.orderNumber, separateOrderInfo: separateOrderInfo.value })
+      // --------------------------- 分拣单 打印 end --------------------------------
+      printLoading.value.text = `已全部加入打印队列`
+      await codeWait(500)
+      ElNotification({ title: '打印分拣单成功', type: 'success', duration: 2500 })
     }
-    // ---------------------------生产任务单 打印 end --------------------------------
-    // --------------------------- 分拣单 打印 start ------------------------------
-    printLoading.value.text = `正在加入打印队列：分拣单`
-    await codeWait(500)
-    await printSeparateOrderLabel({ taskNumberOrder: props.detailData.orderNumber, separateOrderInfo: separateOrderInfo.value })
-    // --------------------------- 分拣单 打印 end --------------------------------
-    printLoading.value.text = `已全部加入打印队列`
-    await codeWait(500)
-  } catch (error) {
-    ElNotification({ title: '加入打印队列失败，请重试', type: 'error', duration: 2500 })
-    throw new Error(error)
-  } finally {
     printLoading.value.close()
     await printSign({ ...commonParams.value })
     emit('refresh')
+    return
+  } catch (error) {
+    ElNotification({ title: '加入打印队列失败，请重试', type: 'error', duration: 2500 })
+    throw new Error(error)
   }
 }
 
 // --------------------------- 打印 end --------------------------------
-
 </script>
 
 <style lang="scss" scoped></style>

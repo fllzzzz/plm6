@@ -27,12 +27,13 @@
         @change="handleWorkshopChange"
       />
       <common-radio-button
+        v-if="workshopId"
         v-model="processType"
         :options="processData"
         type="other"
         class="filter-item"
         :dataStructure="{ key: 'id', label: 'name', value: 'id' }"
-        default
+        showOptionAll
         size="small"
         @change="fetchProcessList"
       />
@@ -51,6 +52,7 @@
             </div>
             <div style="width: 300px">
               <print-table
+                v-permission="permission.print"
                 api-key="mesGroupsReport"
                 :params="{
                   processId: crud.query.processId,
@@ -114,7 +116,7 @@ import { ref, watch, provide, onMounted } from 'vue'
 import moment from 'moment'
 import { PICKER_OPTIONS_SHORTCUTS } from '@/settings/config'
 import workshopSelect from '@comp-mes/workshop-select'
-import { artifactWorkOrderPM as permission } from '@/page-permission/mes'
+import { mesGroupReportPM as permission } from '@/page-permission/mes'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
@@ -199,6 +201,7 @@ async function fetchProcessList() {
 }
 
 function handleWorkshopChange() {
+  processType.value = undefined
   fetchProcess()
   fetchProcessList()
 }
@@ -212,6 +215,7 @@ async function handleDateChange(val) {
     startDate.value = undefined
     endDate.value = undefined
   }
+  fetchProcess()
   fetchProcessList()
 }
 

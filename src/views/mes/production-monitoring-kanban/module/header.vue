@@ -13,7 +13,7 @@
       @change="crud.toQuery"
     />
     <div>
-      <el-row v-loading="projectInfo.loading" :gutter="24" class="panel-group">
+      <el-row v-permission="permission.statistics" v-loading="projectInfo.loading" :gutter="24" class="panel-group">
         <el-col :span="5" class="card-panel-col">
           <panel name="设计产能（吨）:" :decimals="2" num-color="#1890ff" :end-val="projectInfo.summary.capacityNetWeight / 1000 || 0" />
         </el-col>
@@ -41,6 +41,7 @@ import workshopSelect from '@comp-mes/workshop-select'
 import Panel from '@/components/Panel'
 
 const projectInfo = inject('projectInfo')
+const permission = inject('permission')
 const defaultQuery = {
   workshopId: undefined
 }

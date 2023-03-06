@@ -69,10 +69,11 @@
   </div>
 </template>
 <script setup>
-import { ref } from 'vue'
+import { ref, provide } from 'vue'
 import crudApi from '@/api/mes/task-tracking/wip-statistics.js'
 import useCRUD from '@compos/use-crud'
 // import { parseTime } from '@/utils/date'
+import { mesWipStatisticsPM as permission } from '@/page-permission/mes'
 import { componentTypeEnum } from '@enum-ms/mes'
 import useProcess from '@compos/store/use-process'
 import useMaxHeight from '@compos/use-max-height'
@@ -103,7 +104,7 @@ const { crud, CRUD, columns } = useCRUD(
     title: '在制品统计',
     sort: [],
     optShow: { ...optShow },
-    // permission: { ...permission },
+    permission: { ...permission },
     crudApi: { ...crudApi },
     hasPagination: true
   },
@@ -114,6 +115,7 @@ const { maxHeight } = useMaxHeight({
   paginate: true
 })
 
+provide('permission', permission)
 const { loaded, process } = useProcess()
 
 // 出库记录

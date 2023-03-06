@@ -13,7 +13,7 @@
       </el-tag>
     </template>
     <template #titleRight>
-      <print-table api-key="mesProcessStatisticsList" :params="{ ...queryParams }" size="mini" type="warning" class="filter-item" />
+      <print-table v-permission="permission.print" api-key="mesProcessStatisticsList" :params="{ ...queryParams }" size="mini" type="warning" class="filter-item" />
     </template>
     <template #content>
       <common-table v-loading="tableLoading" :data="list" :max-height="maxHeight - 100" row-key="rowId" style="width: 100%">
@@ -44,7 +44,7 @@
 
 <script setup>
 import { getProcess } from '@/api/mes/task-tracking/wip-statistics.js'
-import { defineProps, defineEmits, ref, computed } from 'vue'
+import { defineProps, defineEmits, ref, inject, computed } from 'vue'
 import usePagination from '@compos/use-pagination'
 import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'
@@ -64,6 +64,7 @@ const props = defineProps({
   }
 })
 
+const permission = inject('permission')
 const { visible: processDrawerVisible, handleClose } = useVisible({ emit, props, field: 'visible', showHook: fetchList })
 
 const { handleSizeChange, handleCurrentChange, total, setTotalPage, queryPage } = usePagination({ fetchHook: fetchList })
