@@ -1,5 +1,5 @@
 <template>
-  <div :class="classObj" class="app-wrapper">
+  <div :class="classObj" class="app-wrapper" :style="switchBackgroundColor?'background: #ebebeb':''">
     <div v-if="device === 'mobile' && sidebar.opened" class="drawer-bg" @click="handleClickOutside" />
     <sidebar class="sidebar-container" />
     <div :class="{ hasTagsView: needTagsView }" class="main-container">
@@ -39,7 +39,8 @@ export default {
       device: (state) => state.app.device, // 设备类型
       showSettings: (state) => state.settings.showSettings, // 配置
       needTagsView: (state) => state.settings.tagsView, // 标签页
-      fixedHeader: (state) => state.settings.fixedHeader // 吸顶
+      fixedHeader: (state) => state.settings.fixedHeader, // 吸顶
+      switchBackgroundColor: (state) => state.settings.switchBackgroundColor // 切换灰色背景
     }),
     classObj() {
       return {
