@@ -58,7 +58,7 @@
                 class="item"
                 effect="dark"
                 content="宽度不可大于物料本身宽度"
-                :disabled="!(row.width > material.width)"
+                :disabled="!row.overWidth"
                 placement="top"
               >
                 <common-input-number
@@ -67,7 +67,7 @@
                   :max="999999999"
                   controls-position="right"
                   :controls="false"
-                  :class="{ 'over-weight-tip': !!(row.width > material.width) }"
+                  :class="{ 'over-weight-tip': row.overWidth }"
                   :precision="baseUnit.width.precision"
                   size="mini"
                   placeholder="宽"
@@ -81,7 +81,7 @@
                 class="item"
                 effect="dark"
                 content="长度不可大于出库总长度"
-                :disabled="!(row.length > form.quantity)"
+                :disabled="!row.overLength"
                 placement="top"
               >
                 <common-input-number
@@ -90,7 +90,7 @@
                   :max="999999999"
                   :controls="false"
                   :precision="baseUnit.length.precision"
-                  :class="{ 'over-weight-tip': !!(row.length > form.quantity) }"
+                  :class="{ 'over-weight-tip': row.overLength }"
                   size="mini"
                   placeholder="长"
                 />
@@ -140,28 +140,30 @@
             </template>
           </el-table-column>
         </common-table>
-        <el-form-item label="领用人" prop="recipientId">
-          <user-dept-cascader
-            v-model="form.recipientId"
-            :collapse-tags="false"
-            clearable
-            filterable
-            show-all-levels
-            placeholder="领用人"
-            style="width: 100%"
-          />
-        </el-form-item>
-        <el-form-item label="备注" prop="remark">
-          <el-input
-            v-model.trim="form.remark"
-            type="textarea"
-            :autosize="{ minRows: 3, maxRows: 3 }"
-            maxlength="200"
-            show-word-limit
-            placeholder="备注"
-            style="width: 100%"
-          />
-        </el-form-item>
+        <div class="other-info">
+          <el-form-item label="领用人" prop="recipientId">
+            <user-dept-cascader
+              v-model="form.recipientId"
+              :collapse-tags="false"
+              clearable
+              filterable
+              show-all-levels
+              placeholder="领用人"
+              style="width: 100%"
+            />
+          </el-form-item>
+          <el-form-item label="备注" prop="remark">
+            <el-input
+              v-model.trim="form.remark"
+              type="textarea"
+              :autosize="{ minRows: 3, maxRows: 3 }"
+              maxlength="200"
+              show-word-limit
+              placeholder="备注"
+              style="width: 100%"
+            />
+          </el-form-item>
+        </div>
       </template>
     </div>
   </el-form>
@@ -331,14 +333,19 @@ function rowInit() {
     projectId: material.value.project ? material.value.project.id : undefined, // 项目id,
     monomerId: material.value?.monomerId,
     areaId: material.value?.areaId,
-    workshopId: material.value?.workshop?.id
+    workshopId: material.value?.workshop?.id,
+    overWidth: false,
+    overLength: false
   })
   rowWatch(_row)
   return _row
 }
 
 function rowWatch(row) {
-  console.log(row, 'row')
+  watchEffect(() => {
+    row.overWidth = Boolean(row.width > material.value.width)
+    row.overLength = Boolean(row.length > form.value.quantity)
+  })
   // 计算单件理论重量
   watch([() => row.length, () => row.width, () => row.quantity], () => calcMete(row))
 }

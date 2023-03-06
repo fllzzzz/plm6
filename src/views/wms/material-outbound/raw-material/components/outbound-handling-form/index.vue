@@ -11,7 +11,7 @@
     <template #titleRight>
       <common-button :loading="submitLoading" size="mini" type="primary" @click="submit"> 提 交 </common-button>
     </template>
-    <component ref="outboundFormRef" :is="comp" :basic-class="props.basicClass" :material="props.material" :max-height="maxHeight"/>
+    <component ref="outboundFormRef" :is="comp" :basic-class="props.basicClass" :material="props.material" :max-height="maxHeight" />
   </common-dialog>
 </template>
 
@@ -75,11 +75,18 @@ const enlargeWth = computed(() => outboundFormRef.value?.enlargeWth)
 const { maxHeight } = useMaxHeight(
   {
     mainBox: '.wms-outbound-handling',
-    extraBox: ['.el-dialog__header', '.form-header', '.plate-out-material-info', '.material-outbound-mode-info'],
+    extraBox: [
+      '.el-dialog__header',
+      '.plate-out-material-info',
+      '.material-outbound-mode-info',
+      '.form-info',
+      '.other-info'
+    ],
     wrapperBox: ['.el-dialog__body'],
     clientHRepMainH: true,
     navbar: false,
-    minHeight: 350
+    minHeight: 300,
+    extraHeight: 200
   },
   enlargeWth
 )
