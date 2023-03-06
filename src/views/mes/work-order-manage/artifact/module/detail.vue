@@ -49,7 +49,13 @@
             class="filter-item"
           /> -->
           <common-button v-permission="permission.print" icon="el-icon-printer" size="mini" type="success" @click="printIt">
-            打印{{ props.detailData.productType === componentTypeEnum.ARTIFACT.V ? '【任务清单】' : '【任务清单、套料清单】' }}
+            打印{{
+              props.detailData.productType === componentTypeEnum.ARTIFACT.V
+                ? '【任务清单】'
+                : listType === typeEnum.TASK_LIST.V
+                ? '【任务清单】'
+                : '【套料清单】'
+            }}
           </common-button>
         </div>
       </div>
@@ -215,7 +221,7 @@ import { printModeEnum } from '@/utils/print/enum'
 import { constantize } from '@/utils/enum/base'
 import { parseTime } from '@/utils/date'
 import { codeWait } from '@/utils'
-import formatFn from '@/utils/print/format/index'
+// import formatFn from '@/utils/print/format/index'
 import { printTable } from '@/utils/print/table'
 
 import useMaxHeight from '@compos/use-max-height'
@@ -275,6 +281,12 @@ const params = computed(() => {
     projectId: props.detailData.projectId
   }
 })
+// const apiKey =
+//   props.detailData.productType === componentTypeEnum.ARTIFACT.V
+//     ? 'mesProductionTaskOrder'
+//     : listType.value === typeEnum.TASK_LIST.V
+//       ? 'mesAssembleProductionTaskOrder'
+//       : 'mesAssembleNestingOrder'
 
 watch(
   () => drawerVisible.value,
@@ -306,7 +318,9 @@ async function fetch() {
   let _list = []
   try {
     const query =
-      props.detailData.productType === componentTypeEnum.ARTIFACT.V ? { ...params.value, productionLineTypeEnum: props.detailData.productionLine?.productionLineTypeEnum } : { ...params.value, type: listType.value }
+      props.detailData.productType === componentTypeEnum.ARTIFACT.V
+        ? { ...params.value, productionLineTypeEnum: props.detailData.productionLine?.productionLineTypeEnum }
+        : { ...params.value, type: listType.value }
     const { content = [], totalElements } = await getTaskList({
       ...query,
       ...queryPage
@@ -384,33 +398,64 @@ async function printIt() {
     fullscreen: true
   })
   try {
-    for (const item in typeEnum.ENUM) {
-      const apiKey = typeEnum[item][componentTypeEnum.VK[props.detailData.productType]]
-      if (!apiKey) continue
-      printLoading.value.text = `正在加载数据：${typeEnum[item].L}`
-      const config = await useDefaultTableTemplate(apiKey)
-      const _params =
-        props.detailData.productType === componentTypeEnum.ARTIFACT.V ? { ...params.value, productionLineTypeEnum: props.detailData.productionLine?.productionLineTypeEnum } : { ...params.value, type: listType.value }
-      let _resData = (await fetchFn[apiKey](_params)) || {}
-      if (formatFn[apiKey]) {
-        // 数据装换
-        _resData = await formatFn[apiKey](_resData)
-      }
-      const { header, footer, table, qrCode } = _resData
-      printLoading.value.text = `正在加入打印队列：${typeEnum[item].L}`
-      await codeWait(500)
-      const result = await printTable({
-        printMode: printModeEnum.QUEUE.V,
-        header,
-        footer,
-        table,
-        qrCode,
-        config
-      })
-      if (!result) {
-        throw new Error('导出失败')
-      }
+    const apiKey =
+  props.detailData.productType === componentTypeEnum.ARTIFACT.V
+    ? 'mesProductionTaskOrder'
+    : listType.value === typeEnum.TASK_LIST.V
+      ? 'mesAssembleProductionTaskOrder'
+      : 'mesAssembleNestingOrder'
+    // for (const item in typeEnum.ENUM) {
+    //   console.log(typeEnum[item].V, 'item')
+    //   const apiKey = typeEnum[item][componentTypeEnum.VK[props.detailData.productType]]
+    //   console.log(apiKey, 'apiKey')
+    //   if (!apiKey) continue
+    //   printLoading.value.text = `正在加载数据：${typeEnum[item].L}`
+    //   const config = await useDefaultTableTemplate(apiKey)
+    //   const _params =
+    //     props.detailData.productType === componentTypeEnum.ARTIFACT.V ? { ...params.value, productionLineTypeEnum: props.detailData.productionLine?.productionLineTypeEnum } : { ...params.value, type: listType.value }
+    //   let _resData = (await fetchFn[apiKey](_params)) || {}
+    //   if (formatFn[apiKey]) {
+    //     // 数据装换
+    //     _resData = await formatFn[apiKey](_resData)
+    //   }
+    //   const { header, footer, table, qrCode } = _resData
+    //   printLoading.value.text = `正在加入打印队列：${typeEnum[item].L}`
+    //   await codeWait(500)
+    //   const result = await printTable({
+    //     printMode: printModeEnum.QUEUE.V,
+    //     header,
+    //     footer,
+    //     table,
+    //     qrCode,
+    //     config
+    //   })
+    //   if (!result) {
+    //     throw new Error('导出失败')
+    //   }
+    // }
+    printLoading.value.text = `正在加入打印队列：任务单`
+    const config = await useDefaultTableTemplate(apiKey)
+    const _params =
+      props.detailData.productType === componentTypeEnum.ARTIFACT.V
+        ? { ...params.value, productionLineTypeEnum: props.detailData.productionLine?.productionLineTypeEnum }
+        : { ...params.value, type: listType.value }
+    const { header, footer, table, qrCode } = (await fetchFn[apiKey](_params)) || {}
+    await codeWait(500)
+    printLoading.value.text = `已全部加入打印队列`
+    await codeWait(500)
+    const result = await printTable({
+      printMode: printModeEnum.QUEUE.V,
+      header,
+      footer,
+      table,
+      qrCode,
+      config
+    })
+    if (!result) {
+      throw new Error('导出失败')
     }
+    ElNotification({ title: `打印成功`, type: 'success', duration: 2500 })
+
     printLoading.value.text = `已全部加入打印队列`
     await codeWait(500)
   } catch (error) {
