@@ -1,6 +1,6 @@
 <template>
   <!-- 只有 Firefox 中支持 contextmenu 属性 -->
-  <div ref="rootRef" id="tags-view-container" class="tags-view-container">
+  <div :style="switchBackgroundColor?'background: #e3e3e3':''" ref="rootRef" id="tags-view-container" class="tags-view-container">
     <scroll-pane ref="scrollPaneRef" class="tags-view-wrapper">
       <router-link
         v-for="tag in visitedViews"
@@ -64,7 +64,7 @@ const tag = reactive({
 
 let affixTags = []
 
-const { currentMenu, routes, visitedViews } = mapGetters(['currentMenu', 'routes', 'visitedViews'])
+const { currentMenu, routes, visitedViews, switchBackgroundColor } = mapGetters(['currentMenu', 'routes', 'visitedViews', 'switchBackgroundColor'])
 
 watch(route, () => {
   addTags()
