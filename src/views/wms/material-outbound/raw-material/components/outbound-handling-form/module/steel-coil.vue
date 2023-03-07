@@ -1,7 +1,7 @@
 <template>
   <el-form v-if="unitLoaded" ref="formRef" :model="form" :rules="formRules" size="small" label-position="left" label-width="120px">
     <el-form-item label="出库方式" class="material-outbound-mode-info">
-      <common-radio v-model="form.materialOutboundMode" :options="steelCoilOutboundModeEnum" type="enum" size="small" />
+      <common-radio v-model="form.materialOutboundMode" :options="steelCoilOutboundModeEnum" type="enum" size="small" @change="materialOutboundModeChange"/>
     </el-form-item>
     <div :class="isPlateOut ? 'plate-out-form' : 'form'">
       <div :class="isPlateOut ? 'plate-out-material-info' : 'material-info'">
@@ -321,6 +321,10 @@ watch(
   },
   { immediate: true }
 )
+
+function materialOutboundModeChange() {
+  form.value.quantity = undefined
+}
 
 function rowInit() {
   const _row = reactive({

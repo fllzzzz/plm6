@@ -139,12 +139,16 @@ function clearValidate(field) {
 async function submit() {
   try {
     submitLoading.value = true
+    // 条板默认全部解冻
+    if (props.record?.boolBatten) {
+      form.value.quantity = maxQuantity.value
+    }
     const valid = await formRef.value.validate()
     if (!valid) return false
     const formData = deepClone(form.value)
     await numFmtByUnit(formData, {
-      unit: formData.outboundUnit,
-      precision: formData.outboundUnitPrecision,
+      unit: props.material.outboundUnit,
+      precision: props.material.outboundUnitPrecision,
       fields: ['quantity'],
       toSmallest: true,
       toNum: true
