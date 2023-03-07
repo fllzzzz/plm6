@@ -39,7 +39,7 @@
       </el-table-column>
       <template v-for="item in process" :key="item.id">
         <el-table-column
-          v-if="(item.productType & componentTypeEnum.ARTIFACT.V) | (item.productType & componentTypeEnum.ASSEMBLE.V)"
+          v-if="(item.productType & componentTypeEnum.ARTIFACT.V) | (item.productType & componentTypeEnum.ASSEMBLE.V) && (item.productionLineTypeEnum & artifactProductLineEnum.TRADITION.V)"
           :label="item.name"
           align="center"
           width="110px"
@@ -52,7 +52,7 @@
               <span class="tc-danger">{{ row.processMap[item.id]?.unNetWeight }}</span>
             </span>
             <!-- </el-tooltip> -->
-            <span v-else> \ </span>
+            <span v-else> / </span>
           </template>
         </el-table-column>
       </template>
@@ -74,7 +74,7 @@ import crudApi from '@/api/mes/task-tracking/wip-statistics.js'
 import useCRUD from '@compos/use-crud'
 // import { parseTime } from '@/utils/date'
 import { mesWipStatisticsPM as permission } from '@/page-permission/mes'
-import { componentTypeEnum } from '@enum-ms/mes'
+import { componentTypeEnum, artifactProductLineEnum } from '@enum-ms/mes'
 import useProcess from '@compos/store/use-process'
 import useMaxHeight from '@compos/use-max-height'
 import pagination from '@crud/Pagination'
