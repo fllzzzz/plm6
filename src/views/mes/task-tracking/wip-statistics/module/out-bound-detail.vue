@@ -15,7 +15,7 @@
           @change="fetchList"
         />
         <div style="width: 300px">
-          <print-table api-key="mesOutBoundStatisticsList" :params="{ ...queryParams }" size="mini" type="warning" class="filter-item" />
+          <print-table v-permission="permission.print" api-key="mesOutBoundStatisticsList" :params="{ ...queryParams }" size="mini" type="warning" class="filter-item" />
         </div>
       </div>
       <common-table v-loading="tableLoading" :data="list" :data-format="dataFormat" :max-height="maxHeight" style="width: 100%">
@@ -63,7 +63,7 @@
 
 <script setup>
 import { getOutbound } from '@/api/mes/task-tracking/wip-statistics.js'
-import { defineProps, defineEmits, ref, computed } from 'vue'
+import { defineProps, defineEmits, ref, inject, computed } from 'vue'
 import { steelOutBoundRecordTypeEnum } from '@enum-ms/mes'
 import { setSpecInfoToList } from '@/utils/wms/spec'
 // import { specFormat } from '@/utils/wms/spec-format'
@@ -85,6 +85,7 @@ const props = defineProps({
   }
 })
 
+const permission = inject('permission')
 const { visible: drawerVisible, handleClose } = useVisible({ emit, props, field: 'visible', showHook: fetchList })
 
 const dataFormat = ref([

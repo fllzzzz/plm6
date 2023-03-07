@@ -4,6 +4,7 @@
     ref="table"
     :data="tableData"
     empty-text="暂无数据"
+    :show-empty-symbol="false"
     :data-format="dataFormat"
     :max-height="maxHeight"
     style="width: 100%"
@@ -20,9 +21,18 @@
     <el-table-column :show-overflow-tooltip="true" prop="grossWeight" key="grossWeight" label="单毛重（kg）" align="center" />
     <el-table-column :show-overflow-tooltip="true" prop="picturePath" key="picturePath" label="图形" align="center" width="150">
       <template v-slot="scope">
-        <div style="width: 100%; height: 80px;">
-          <el-image style="width: 100%; height: 100%;" :src="scope.row.picturePath" fit="scale-down" />
+        <!-- <div v-if="scope.row.picturePath" style="width: 100%; height: 80px">
+          <el-image style="width: 100%; height: 100%" :src="scope.row.picturePath" fit="scale-down"></el-image>
         </div>
+        <div v-else>未导入DXF</div> -->
+        <el-image style="width: 100%; height: 100%" :src="scope.row.picturePath" fit="scale-down" @error="scope.row.imgLoad = false">
+          <template #error>
+            <div class="error-slot">
+              <span v-if="scope.row.picturePath">加载失败</span>
+              <span v-else>未导入DXF</span>
+            </div>
+          </template>
+        </el-image>
       </template>
     </el-table-column>
   </common-table>
@@ -56,4 +66,15 @@ function getSummaries(param) {
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.error-slot {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  background: #f5f7fa;
+  color: #c0c4cc;
+  font-size: 14px;
+}
+</style>

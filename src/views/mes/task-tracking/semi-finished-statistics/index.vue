@@ -59,12 +59,10 @@
   </div>
 </template>
 <script setup>
-import { ref } from 'vue'
+import { ref, provide } from 'vue'
 import crudApi from '@/api/mes/task-tracking/wip-statistics.js'
 import useCRUD from '@compos/use-crud'
-// import { parseTime } from '@/utils/date'
-// import { componentTypeEnum } from '@enum-ms/mes'
-// import useProcess from '@compos/store/use-process'
+import { mesSemiFinishedPM as permission } from '@/page-permission/mes'
 import useMaxHeight from '@compos/use-max-height'
 import pagination from '@crud/Pagination'
 import mHeader from './module/header.vue'
@@ -89,21 +87,21 @@ const pickingInfo = ref({})
 
 const { crud, CRUD, columns } = useCRUD(
   {
-    title: '半制品统计',
+    title: '半成品统计',
     sort: [],
     optShow: { ...optShow },
-    // permission: { ...permission },
+    permission: { ...permission },
     crudApi: { ...crudApi },
     hasPagination: true
   },
   tableRef
 )
+
+provide('permission', permission)
 const { maxHeight } = useMaxHeight({
   extraBox: ['.head-container'],
   paginate: true
 })
-
-// const { loaded, process } = useProcess()
 
 // 任务量详情
 function getTaskDetail(row) {

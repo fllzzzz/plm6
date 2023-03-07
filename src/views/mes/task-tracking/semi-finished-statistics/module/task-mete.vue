@@ -38,7 +38,7 @@
     </template>
     <template #titleRight>
       <div style="width: 300px">
-        <print-table :api-key="apiKey" :params="{ ...queryParams }" size="mini" type="warning" class="filter-item" />
+        <print-table v-permission="permission.print" :api-key="apiKey" :params="{ ...queryParams }" size="mini" type="warning" class="filter-item" />
       </div>
     </template>
     <template #content>
@@ -63,7 +63,7 @@
 
 <script setup>
 import { getOutbound } from '@/api/mes/task-tracking/wip-statistics.js'
-import { defineProps, defineEmits, ref, computed } from 'vue'
+import { defineProps, defineEmits, ref, computed, inject } from 'vue'
 // import { steelOutBoundRecordTypeEnum } from '@enum-ms/mes'
 // import { setSpecInfoToList } from '@/utils/wms/spec'
 // import { parseTime } from '@/utils/date'
@@ -85,6 +85,7 @@ const props = defineProps({
   }
 })
 
+const permission = inject('permission')
 const { visible: drawerVisible, handleClose } = useVisible({ emit, props, field: 'visible', showHook: fetchList })
 
 // 高度

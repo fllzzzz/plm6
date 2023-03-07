@@ -38,7 +38,7 @@
     </template>
     <template #titleRight>
       <div style="width: 300px">
-        <print-table :api-key="apiKey" :params="{ ...queryParams }" size="mini" type="warning" class="filter-item" />
+        <print-table v-permission="permission.print" :api-key="apiKey" :params="{ ...queryParams }" size="mini" type="warning" class="filter-item" />
       </div>
     </template>
     <template #content>
@@ -91,7 +91,7 @@
 
 <script setup>
 import { getTask } from '@/api/mes/task-tracking/wip-statistics.js'
-import { defineProps, defineEmits, ref, computed } from 'vue'
+import { defineProps, defineEmits, ref, computed, inject } from 'vue'
 import { parseTime } from '@/utils/date'
 import { tableSummary } from '@/utils/el-extra'
 import usePagination from '@compos/use-pagination'
@@ -110,6 +110,7 @@ const props = defineProps({
   }
 })
 
+const permission = inject('permission')
 const { visible: pickingDrawerVisible, handleClose } = useVisible({ emit, props, field: 'visible', showHook: fetchList })
 
 const { handleSizeChange, handleCurrentChange, total, setTotalPage, queryPage } = usePagination({ fetchHook: fetchList })
