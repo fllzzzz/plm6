@@ -1,5 +1,5 @@
 import storage from '@/utils/storage'
-import { showSettings, tagsView, fixedHeader, showSidebarLogo, theme, tableBorder, tableStripe, tablePageSize } from '@/settings/user'
+import { showSettings, tagsView, fixedHeader, showSidebarLogo, switchBackgroundColor, theme, tableBorder, tableStripe, tablePageSize } from '@/settings/user'
 import { title, logo, sidebarLogo, collapseSidebarLogo, projectNameShowConfig } from '@/settings/system'
 
 // 获取缓存的配置信息
@@ -28,6 +28,8 @@ const state = {
   fixedHeader: stateStorage.fixedHeader || fixedHeader,
   // 显示菜单栏顶部logo
   showSidebarLogo: stateStorage.showSidebarLogo || showSidebarLogo,
+  // 切换灰色背景
+  switchBackgroundColor: stateStorage.switchBackgroundColor || switchBackgroundColor,
   // 项目名称显示配置
   projectNameShowConfig: stateStorage.projectNameShowConfig || projectNameShowConfig
 }

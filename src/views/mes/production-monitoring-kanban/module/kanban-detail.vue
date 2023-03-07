@@ -5,27 +5,33 @@
     v-model="detailDialogVisible"
     :close-on-click-modal="false"
     width="1500px"
-    :showClose="true"
+    :showClose="false"
     :before-close="handleClose"
   >
     <template #titleAfter>
       <el-tag size="small">项目：{{ detailList.project?.contractNo }}-{{ detailList.project?.name }}</el-tag>
       <el-tag size="small" style="margin-left: 8px">排产总量（件/kg）：{{ detailList.taskQuantity }}/{{ detailList.taskNetWeight }}</el-tag>
     </template>
-    <div class="head-dialog" style="width: 300px; margin-bottom: 8px; float: right">
-      <print-table
-        api-key="mesProductionKanbanList"
-        :params="{
-          projectId: props.detailList?.project?.id,
-          monomerId: props.detailList?.monomer?.id,
-          areaId: props.detailList?.area?.id,
-          workshopId: props.workshopId,
-        }"
-        size="mini"
-        type="warning"
-        class="filter-item"
-      />
-    </div>
+    <template #titleRight>
+      <div style="display: flex">
+        <div style="width: 300px">
+          <print-table
+            v-permission="permission.print"
+            api-key="mesProductionKanbanList"
+            :params="{
+              projectId: props.detailList?.project?.id,
+              monomerId: props.detailList?.monomer?.id,
+              areaId: props.detailList?.area?.id,
+              workshopId: props.workshopId,
+            }"
+            size="mini"
+            type="warning"
+            class="filter-item"
+          />
+        </div>
+        <common-button size="mini" type="plain" class="filter-item" style="margin-left: 8px" @click.stop="handleClose"> 关闭 </common-button>
+      </div>
+    </template>
     <common-table :data="detailData" :max-height="maxHeight" style="width: 100%">
       <el-table-column label="序号" type="index" align="center" width="60" />
       <el-table-column prop="monomer.name" :show-overflow-tooltip="true" label="单体" align="center" />
@@ -48,7 +54,7 @@
 
 <script setup>
 import { getDetail } from '@/api/mes/production-monitoring-kanban/kanban.js'
-import { defineEmits, defineProps, ref } from 'vue'
+import { defineEmits, defineProps, ref, inject } from 'vue'
 
 import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'
@@ -69,6 +75,7 @@ const props = defineProps({
   }
 })
 
+const permission = inject('permission')
 const { visible: detailDialogVisible, handleClose } = useVisible({ emit, props, field: 'visible', showHook: fetchMachinePartList })
 const { maxHeight } = useMaxHeight(
   {

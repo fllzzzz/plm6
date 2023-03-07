@@ -23,6 +23,10 @@
         <el-switch v-model="showSidebarLogo" class="drawer-switch" />
       </div>
 
+      <div class="drawer-item">
+        <span>灰色背景</span>
+        <el-switch v-model="switchBackgroundColor" class="drawer-switch" />
+      </div>
     </div>
   </div>
 </template>
@@ -59,6 +63,15 @@ const showSidebarLogo = computed({
   }
 })
 
+const switchBackgroundColor = computed({
+  get() {
+    return store.getters.switchBackgroundColor
+  },
+  set(val) {
+    store.dispatch('settings/changeSetting', new Map([['switchBackgroundColor', val]]))
+  }
+})
+
 // TODO:主题功能未实现
 // eslint-disable-next-line no-unused-vars
 function themeChange(val) {
@@ -76,19 +89,19 @@ function themeChange(val) {
 
   .drawer-title {
     margin-bottom: 12px;
-    color: rgba(0, 0, 0, .85);
+    color: rgba(0, 0, 0, 0.85);
     font-size: 14px;
     line-height: 22px;
   }
 
   .drawer-item {
-    color: rgba(0, 0, 0, .65);
+    color: rgba(0, 0, 0, 0.65);
     font-size: 14px;
     padding: 12px 0;
   }
 
   .drawer-switch {
-    float: right
+    float: right;
   }
 }
 </style>

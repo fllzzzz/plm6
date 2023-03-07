@@ -81,8 +81,8 @@ import { PICKER_OPTIONS_SHORTCUTS } from '@/settings/config'
 import { machinePartSchedulingNestingResultPM as permission } from '@/page-permission/mes'
 
 const emit = defineEmits(['nesting-task-click'])
-const startDate = ref(moment().startOf('year').valueOf())
-const endDate = ref(moment().valueOf())
+const startDate = ref()
+const endDate = ref()
 const date = ref([moment().startOf('year').valueOf(), moment().valueOf()])
 const name = ref()
 const issueStatusEnum = ref()
@@ -96,13 +96,13 @@ defineProps({
 })
 
 const nestingTaskTableRef = ref()
-const month = ref(moment().startOf('month').valueOf().toString())
+// const month = ref(moment().startOf('month').valueOf().toString())
 const query = ref({})
 const tableData = ref([])
 const loading = ref(false)
 const dataFormat = ref([['project', 'parse-project']])
 
-watch([() => month.value, () => name.value, () => issueStatusEnum.value], () => {
+watch([() => date.value, () => name.value, () => issueStatusEnum.value], () => {
   crud.data = []
   crud.query.projectId = undefined
 })
@@ -137,8 +137,8 @@ function handleDateChange(val) {
     startDate.value = val[0]
     endDate.value = val[1]
   } else {
-    startDate.value = moment().startOf('year').valueOf()
-    endDate.value = moment().valueOf()
+    startDate.value = undefined
+    endDate.value = undefined
   }
   fetchTaskList()
 }

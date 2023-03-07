@@ -29,6 +29,8 @@ const getters = {
   showSidebarLogo: state => state.settings.showSidebarLogo,
   // 公司名称/标题(可在浏览器标签中展示)
   title: state => state.settings.title,
+  // 背景颜色切换
+  switchBackgroundColor: state => state.settings.switchBackgroundColor,
 
   // 表格边框显示
   tableBorder: state => state.settings.tableBorder,

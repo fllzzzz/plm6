@@ -127,7 +127,6 @@
                 @click="showDrill(scope.row)"
                 >查看</common-button
               >
-              <!-- <common-button v-else type="primary" size="mini" @click="showCuttingDetail(scope.row)">查看</common-button> -->
             </template>
           </el-table-column>
         </common-table>
@@ -135,14 +134,7 @@
         <pagination />
       </div>
       <!-- 钻孔工单详情 -->
-      <detail v-model:visible="drawerVisible" :process-type="crud.query.processType" :detail-data="detailData" />
-      <!-- 切割工单详情 -->
-      <!-- <cutting-detail
-        :process-type="crud.query.processType"
-        v-model:visible="cuttingDrawerVisible"
-        :cutting-detail-data="cuttingDetailData"
-        @refresh="crud.toQuery"
-      /> -->
+      <detail v-model:visible="drawerVisible" :process-type="crud.query.processType" :detail-data="detailData" @refresh="crud.toQuery" />
     </div>
   </div>
 </template>
@@ -155,9 +147,8 @@ import pagination from '@crud/Pagination'
 import { parseTime } from '@/utils/date'
 import { mesMachinePartOrderTypeEnum } from '@enum-ms/mes'
 import { machinePartWorkOrderPM as permission } from '@/page-permission/mes'
-import mHeader from './module/header.vue'
+import mHeader from '../components/header.vue'
 import detail from './module/detail.vue'
-// import cuttingDetail from './module/cutting-detail.vue'
 import drillProjectList from './module/drill-project-list.vue'
 
 const optShow = {
@@ -169,8 +160,6 @@ const optShow = {
 const tableRef = ref()
 const detailData = ref({}) // 钻孔
 const drawerVisible = ref(false)
-// const cuttingDetailData = ref({})
-// const cuttingDrawerVisible = ref(false)
 
 const { crud, CRUD, columns } = useCRUD(
   {
@@ -192,22 +181,15 @@ const { maxHeight } = useMaxHeight({
   paginate: true
 })
 
-// 预览切割工单 pdf
-// function showCuttingDetail(row) {
-//   console.log(row, 'row')
-//   cuttingDrawerVisible.value = true
-//   cuttingDetailData.value = row
-// }
-
 // 查看钻孔工单详情
 function showDrill(row) {
   drawerVisible.value = true
   detailData.value = row
 }
 
-function handleNestingTaskClick(val, query, year) {
+function handleNestingTaskClick(val, query) {
   crud.query.projectId = val?.id
-  crud.query.localDateTime = year
+  // crud.query.localDateTime = year
   crud.query.processType = mesMachinePartOrderTypeEnum.DRILL_ORDER.V
   // if (crud.query.projectId) {
   //   crud.toQuery()
