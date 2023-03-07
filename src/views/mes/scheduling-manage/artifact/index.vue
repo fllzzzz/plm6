@@ -285,6 +285,8 @@ CRUD.HOOK.handleRefresh = (crud, res) => {
 }
 
 async function fetchSummary() {
+  summaryInfo.value = { totalNetWeight: 0, quantity: 0 }
+  if (!crud.query.structureClassId) return
   try {
     summaryInfo.value = (await getSummary(crud.query)) || {}
   } catch (error) {
