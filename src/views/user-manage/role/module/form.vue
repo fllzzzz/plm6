@@ -17,6 +17,18 @@
       <el-form-item label="描述信息" prop="remark">
         <el-input v-model="form.remark" style="width: 450px;" rows="5" type="textarea" />
       </el-form-item>
+      <el-form-item
+        label="排序"
+        prop="sort"
+      >
+        <el-input-number
+          v-model.number="form.sort"
+          :min="0"
+          :max="999999"
+          controls-position="right"
+          style="width: 450px;"
+        />
+      </el-form-item>
     </el-form>
   </common-dialog>
 </template>
@@ -28,13 +40,17 @@ const formRef = ref()
 const defaultForm = {
   id: undefined,
   name: undefined,
-  remark: undefined
+  remark: undefined,
+  sort: 1
 }
 const { crud, form } = regForm(defaultForm, formRef)
 
 const rules = {
   name: [
     { required: true, message: '请填写名称', trigger: 'blur' }
+  ],
+  sort: [
+    { required: true, message: '请填写序号', trigger: 'blur', type: 'number' }
   ]
 }
 

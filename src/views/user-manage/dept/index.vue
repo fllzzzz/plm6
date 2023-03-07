@@ -15,9 +15,14 @@
       row-key="id"
       @selection-change="crud.selectionChangeHandler"
     >
-      <el-table-column :selectable="checkboxT" type="selection" width="55" />
+      <el-table-column :selectable="checkboxT" type="selection" width="55" align="center"/>
       <el-table-column label="序号" type="index" align="center" width="60" />
       <el-table-column v-if="columns.visible('name')" key="name" prop="name" label="名称" />
+      <el-table-column v-if="columns.visible('sort')" key="sort" prop="sort" label="排序" align="center" width="100">
+        <template v-slot="scope">
+          {{ scope.row.sort }}
+        </template>
+      </el-table-column>
       <!--编辑与删除-->
       <el-table-column
         v-if="checkPermission([...permission.edit, ...permission.del])"

@@ -24,57 +24,44 @@
       <el-form-item label="邮箱" prop="email">
         <el-input v-model="form.email" />
       </el-form-item>
+      <el-form-item label="排序" prop="sort">
+        <el-input-number v-model.number="form.sort" :min="0" :max="999999999" controls-position="right" style="width: 460px" />
+      </el-form-item>
       <el-form-item label="部门" prop="deptId">
-        <el-popover
-          placement="bottom-start"
-          width="460"
-          trigger="click"
-          v-model:visible="menuVisible"
-          ref="menuPopover"
-        >
-          <menuSelect ref="menuSelectRef" @selected="menuSelected" style="width:400px;" :pid="form.deptId" :treeMenu="props.deptTree" :defaultProps="{ children: 'children', label: 'name' }"/>
+        <el-popover placement="bottom-start" width="460" trigger="click" v-model:visible="menuVisible" ref="menuPopover">
+          <menuSelect
+            ref="menuSelectRef"
+            @selected="menuSelected"
+            style="width: 400px"
+            :pid="form.deptId"
+            :treeMenu="props.deptTree"
+            :defaultProps="{ children: 'children', label: 'name' }"
+          />
           <template #reference>
-            <el-input v-model="form.deptName" style="width: 460px;" placeholder="点击选择所属部门" readonly />
+            <el-input v-model="form.deptName" style="width: 460px" placeholder="点击选择所属部门" readonly />
           </template>
         </el-popover>
       </el-form-item>
       <el-form-item label="岗位" prop="jobId">
         <el-select v-model="form.jobId" :loading="jobLoading" clearable style="width: 185px" placeholder="请先选择部门">
-          <el-option
-            v-for="item in jobs"
-            :key="item.id"
-            :label="item.name"
-            :value="item.id"
-          />
+          <el-option v-for="item in jobs" :key="item.id" :label="item.name" :value="item.id" />
         </el-select>
       </el-form-item>
       <el-form-item label="性别">
-         <common-radio
-          v-model="form.sex"
-          :options="userSexEnum.ENUM"
-          type="enum"
-        />
+        <common-radio v-model="form.sex" :options="userSexEnum.ENUM" type="enum" />
       </el-form-item>
       <el-form-item label="状态">
-         <el-radio-group v-model="form.enabled" style="width: 178px" :disabled="!checkPermission(crud.permission.edit) || form.id === user.id">
+        <el-radio-group
+          v-model="form.enabled"
+          style="width: 178px"
+          :disabled="!checkPermission(crud.permission.edit) || form.id === user.id"
+        >
           <el-radio v-for="item in enabledEnum.ENUM" :key="item.V" :label="item.V">{{ item.L }}</el-radio>
         </el-radio-group>
       </el-form-item>
-      <el-form-item style="margin-bottom: 0;" label="角色" prop="roles">
-        <el-select
-          v-model="form.roleIds"
-          style="width: 460px"
-          multiple
-          placeholder="请选择"
-          :loading="rolesLoading.value"
-        >
-          <el-option
-            v-for="(item,index) in roles"
-            :key="`${index}`"
-            :label="item.name"
-            :value="item.id"
-            :disabled="item.id===1"
-          />
+      <el-form-item style="margin-bottom: 0" label="角色" prop="roles">
+        <el-select v-model="form.roleIds" style="width: 460px" multiple placeholder="请选择" :loading="rolesLoading.value">
+          <el-option v-for="(item, index) in roles" :key="`${index}`" :label="item.name" :value="item.id" :disabled="item.id === 1" />
         </el-select>
       </el-form-item>
     </el-form>
@@ -128,6 +115,7 @@ const defaultForm = {
   deptId: undefined,
   deptName: undefined,
   phone: undefined,
+  sort: 1,
   enabled: enabledEnum.TRUE.V
 }
 const { CRUD, crud, form } = regForm(defaultForm, formRef)
@@ -141,13 +129,12 @@ const rules = {
     { required: true, message: '请填写用户姓名', trigger: 'blur' },
     { min: 2, max: 20, message: '长度在 2 到 20 个字符', trigger: 'blur' }
   ],
-  email: [
-    { type: 'email', message: '请填写正确的邮箱地址', trigger: 'blur' }
-  ],
+  email: [{ type: 'email', message: '请填写正确的邮箱地址', trigger: 'blur' }],
   phone: [
     { required: true, message: '请填写手机号', trigger: 'blur' },
     { pattern: validatorPhone, message: '请填写正确的手机号', trigger: 'blur' }
-  ]
+  ],
+  sort: [{ required: true, message: '请填写序号', trigger: 'blur', type: 'number' }]
 }
 
 function menuSelected(value) {
@@ -177,7 +164,7 @@ async function getJobAll(id) {
     const submitData = { deptId: id }
     const { content } = await jobAll(submitData)
     // 岗位可能不在当前选择的部门下面
-    const index = content.findIndex(row => row.id === form.jobId)
+    const index = content.findIndex((row) => row.id === form.jobId)
     if (index === -1) {
       form.jobId = undefined
     }
@@ -189,21 +176,21 @@ async function getJobAll(id) {
 
 let allMenu = []
 function arrFn(source) {
-  source.forEach(el => {
+  source.forEach((el) => {
     allMenu.push(el)
     el.children && el.children.length > 0 ? arrFn(el.children) : ''
   })
 }
 // 打开编辑弹窗前做的操作
 CRUD.HOOK.afterToEdit = (crud, form) => {
-  form.roleIds = form.roles.map(r => r.id)
+  form.roleIds = form.roles.map((r) => r.id)
   form.jobId = form.job && form.job.id
   form.deptId = form.dept && form.dept.id
   if (isNotBlank(form.deptId)) {
     getJobAll(form.deptId)
     allMenu = []
     arrFn(props.deptTree)
-    const value = allMenu.find(v => v.id === form.deptId)
+    const value = allMenu.find((v) => v.id === form.deptId)
     form.deptName = value.name
   }
 }
@@ -221,7 +208,7 @@ CRUD.HOOK.afterSubmit = () => {
 }
 </script>
 <style lang="scss" scoped>
-  ::v-deep(.el-input-number .el-input__inner) {
-    text-align: left;
-  }
+::v-deep(.el-input-number .el-input__inner) {
+  text-align: center;
+}
 </style>
