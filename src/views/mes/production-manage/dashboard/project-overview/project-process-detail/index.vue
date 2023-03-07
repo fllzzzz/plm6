@@ -12,6 +12,13 @@
           clearable
           :project-id="props.processData.id"
         />
+        <production-line-select
+          v-model="productionLineId"
+          :factory-id="factoryId"
+          :workshop-id="workshopId"
+          class="filter-item"
+          style="width: 200px"
+        />
         <common-radio-button
           v-model="productType"
           :options="[componentTypeEnum.ARTIFACT, componentTypeEnum.ASSEMBLE, componentTypeEnum.MACHINE_PART]"
@@ -19,21 +26,6 @@
           type="enum"
           size="small"
           class="filter-item"
-        />
-        <el-date-picker
-          v-model="date"
-          type="daterange"
-          range-separator=":"
-          size="small"
-          value-format="x"
-          :clearable="false"
-          :shortcuts="PICKER_OPTIONS_SHORTCUTS"
-          unlink-panels
-          start-placeholder="开始日期"
-          end-placeholder="结束日期"
-          style="width: 240px; margin-right: 10px"
-          class="filter-item date-item"
-          @change="handleDateChange"
         />
       </div>
       <common-table
@@ -89,12 +81,11 @@
 <script setup>
 import { ref, defineProps, watch, provide } from 'vue'
 import { getProcessList } from '@/api/mes/production-manage/dashboard/project-overview'
-import { PICKER_OPTIONS_SHORTCUTS } from '@/settings/config'
 import { componentTypeEnum } from '@enum-ms/mes'
 import { mesProjectOverviewPM as permission } from '@/page-permission/mes'
 import useMaxHeight from '@compos/use-max-height'
-import moment from 'moment'
 import monomerSelectAreaSelect from '@comp-base/monomer-select-area-select'
+import productionLineSelect from '@comp-mes/production-line-select'
 import processDetail from '../process-detail/index.vue'
 
 const tableRef = ref()
@@ -103,12 +94,11 @@ const tableLoading = ref(false)
 const productType = ref()
 const monomerId = ref()
 const areaId = ref()
+const productionLineId = ref()
+const factoryId = ref()
+const workshopId = ref()
 const detailData = ref([])
 const dialogVisible = ref(false)
-const date = ref([moment().startOf('month').valueOf(), moment().valueOf()])
-
-const startDate = ref()
-const endDate = ref()
 
 const props = defineProps({
   processData: {
@@ -117,17 +107,13 @@ const props = defineProps({
   }
 })
 
-watch(
-  [() => props.processData?.id, () => monomerId.value, () => areaId.value, () => productType.value],
-  () => {
-    processListGet()
-  }
-)
+watch([() => props.processData?.id, () => monomerId.value, () => areaId.value, () => productType.value, () => productionLineId.value], () => {
+  processListGet()
+})
 
 provide('monomerId', monomerId)
 provide('areaId', areaId)
-provide('startDate', startDate)
-provide('endDate', endDate)
+provide('productionLineId', productionLineId)
 
 const { maxHeight } = useMaxHeight({
   extraBox: ['.head-container'],
@@ -144,8 +130,7 @@ async function processListGet() {
       monomerId: monomerId.value,
       areaId: areaId.value,
       projectId: props.processData.id,
-      startDate: startDate.value,
-      endDate: endDate.value
+      productionLineId: productionLineId.value
     })
     processList.value = data
   } catch (e) {
@@ -153,18 +138,6 @@ async function processListGet() {
   } finally {
     tableLoading.value = false
   }
-}
-
-// 时间变动
-function handleDateChange(val) {
-  if (val && val.length > 1) {
-    startDate.value = val[0]
-    endDate.value = val[1]
-  } else {
-    startDate.value = undefined
-    endDate.value = undefined
-  }
-  processListGet()
 }
 
 function showDetail(row) {
