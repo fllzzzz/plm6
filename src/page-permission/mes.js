@@ -74,6 +74,14 @@ export const machinePartSchedulingNestingResultPM = {
   save: ['mes_scheduling_machine_part_nesting_result:save'] // 任务下发
 }
 
+// 生产监控看板
+export const productionMonitoringKanbanPM = {
+  get: ['mes_production-monitoring-kanban:get'], // 列表
+  statistics: ['mes_production-monitoring-kanban:statistics'], // 汇总项目
+  status: ['mes_production-monitoring-kanban:status'], // 班组状态
+  print: ['mes_production-monitoring-kanban:print'] // 打印
+}
+
 // --------------------------- 生产排产 end --------------------------------
 
 // ########################################################################
@@ -395,6 +403,12 @@ export const mesProductionOrderPM = {
   detailList: ['mes_production_order:detailList'] // 清单详情
 }
 
+// 生产订单/排期详情
+export const mesScheduleDetailPM = {
+  get: ['mes_schedule_detail:get'], // 列表
+  print: ['mes_schedule_detail:print'] // 打印
+}
+
 // --------------------------- 生产订单 end --------------------------------
 
 // ########################################################################
@@ -520,6 +534,18 @@ export const mesProcessAssistancePM = {
   del: ['mes_process_assistance:del'] // 协同删除
 }
 
+// 任务跟踪/在制品统计
+export const mesWipStatisticsPM = {
+  get: ['mes_wip_statistics:get'], // 列表
+  print: ['mes_wip_statistics:print'] // 打印
+}
+
+// 任务跟踪/半成品统计
+export const mesSemiFinishedPM = {
+  get: ['mes_semi_finished:get'], // 列表
+  print: ['mes_semi_finished:print'] // 打印
+}
+
 // --------------------------- 6.0 任务跟踪 end --------------------------------
 
 // --------------------------- 6.0 项目总览 start --------------------------------
@@ -531,12 +557,23 @@ export const mesProjectOverviewPM = {
   print: ['mes_project_overview:print'] // 项目总览详情打印
 }
 
+// 项目制造/生产跟踪
+export const mesProductionTrackingPM = {
+  get: ['mes_production_tracking:get'] // 列表
+}
+
 // --------------------------- 6.0 项目总览 end --------------------------------
 
 // --------------------------- 6.0 车间报表 start --------------------------------
 export const mesFactoryReportPM = {
   get: ['mes_factory_report:get'], // 车间报表列表
   print: ['mes_factory_report:print'] // 车间报表详情打印
+}
+
+// 班组报表
+export const mesGroupReportPM = {
+  get: ['mes_group_report:get'], // 列表
+  print: ['mes_group_report:print'] // 打印
 }
 // --------------------------- 6.0 车间报表 end --------------------------------
 

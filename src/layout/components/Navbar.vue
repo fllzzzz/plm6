@@ -1,6 +1,6 @@
 <template>
-  <div class="navbar">
-    <hamburger  style="padding: 0 15px;" :is-active="sidebar.opened" class="hamburger-container" @toggleClick="toggleSideBar" />
+  <div :style="switchBackgroundColor?'background: #e3e3e3':''" class="navbar">
+    <hamburger style="padding: 0 15px;" :is-active="sidebar.opened" class="hamburger-container" @toggleClick="toggleSideBar" />
 
     <breadcrumb class="breadcrumb-container" />
     <head-switch-project />
@@ -34,7 +34,7 @@ import inventoryNotify from '@/components-system/wms/inventory-notify/index.vue'
 
 const store = useStore()
 
-const { sidebar, device, inventoryNotifyPerm } = mapGetters(['sidebar', 'device', 'inventoryNotifyPerm'])
+const { sidebar, device, inventoryNotifyPerm, switchBackgroundColor } = mapGetters(['sidebar', 'device', 'inventoryNotifyPerm', 'switchBackgroundColor'])
 /**
  * 切换SideBar
  */

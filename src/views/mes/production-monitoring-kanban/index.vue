@@ -4,7 +4,7 @@
       <mHeader />
     </div>
     <div>
-      <common-button class="btn" size="mini" type="warning" style="float: right; margin-bottom: 8px" @click.stop="groupsDetail">
+      <common-button v-permission="permission.status" class="btn" size="mini" type="warning" style="float: right; margin-bottom: 8px" @click.stop="groupsDetail">
         班组状态
       </common-button>
       <common-table
@@ -148,6 +148,7 @@ import crudApi, { getSummary } from '@/api/mes/production-monitoring-kanban/kanb
 import useCRUD from '@compos/use-crud'
 import { productionKanbanTypeEnum } from '@enum-ms/mes'
 import useMaxHeight from '@compos/use-max-height'
+import { productionMonitoringKanbanPM as permission } from '@/page-permission/mes'
 import pagination from '@crud/Pagination'
 import mHeader from './module/header.vue'
 import kanbanDetail from './module/kanban-detail.vue'
@@ -170,7 +171,7 @@ const { crud, CRUD, columns } = useCRUD(
     title: '生产监控看板',
     sort: [],
     optShow: { ...optShow },
-    // permission: { ... permission },
+    permission: { ... permission },
     crudApi: { ...crudApi },
     requiredQuery: ['workshopId'],
     hasPagination: true
@@ -194,6 +195,7 @@ const projectInfo = reactive({
 })
 
 provide('projectInfo', projectInfo)
+provide('permission', permission)
 
 watch(
   () => crud.query.workshopId,

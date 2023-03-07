@@ -278,7 +278,7 @@
           </el-table-column>
           <el-table-column prop="invoiceNo" label="发票号码" align="center" min-width="150">
             <template v-slot="scope">
-              <el-input v-if="isModify" v-model="scope.row.invoiceNo" type="text" placeholder="发票号码" style="width: 120px" />
+              <el-input v-if="isModify" v-model="scope.row.invoiceNo" type="text" placeholder="发票号码" style="width: 100%;" />
               <span v-else>{{ scope.row.invoiceNo }}</span>
             </template>
           </el-table-column>
