@@ -72,7 +72,7 @@ CRUD.HOOK.handleRefresh = (crud, res) => {
     v.detailLoading = false
     v.hasDetail = false
     v.compareQuantity = v.quantity
-    v.isProcess = v.inProductionQuantity > 0
+    v.isProcess = v.completeQuantity > 0
     v.boxColor = getColor(v, { quantity: 'completeQuantity', compare: 'compareQuantity' })
     return v
   })

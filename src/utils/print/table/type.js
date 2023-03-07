@@ -89,7 +89,7 @@ const tableType = {
   managementSalaryList: { L: '人员工资清单', M: 'expense_entry', T: mt.contract.L + ' / ' + contract.expense_entry },
   propertyFeeList: { L: '物业费清单', M: 'expense_entry', T: mt.contract.L + ' / ' + contract.expense_entry },
 
-  mainMaterialList: { L: '主材费清单', M: 'property_report', T: mt.contract.L + ' / ' + contract.property_report },
+  conMainMaterialList: { L: '主材费清单', M: 'property_report', T: mt.contract.L + ' / ' + contract.property_report },
   auxiliaryMaterialList: { L: '辅材费清单', M: 'property_report', T: mt.contract.L + ' / ' + contract.property_report },
   manualList: { L: '人工费清单', M: 'property_report', T: mt.contract.L + ' / ' + contract.property_report },
   shippingFeeList: { L: '运输费清单', M: 'property_report', T: mt.contract.L + ' / ' + contract.property_report },
@@ -123,7 +123,8 @@ const tableType = {
   mesProductionTaskOrder: { L: '构件生产任务单', M: 'mes_task', T: mt.mes.L + ' / ' + mes.mes_task },
   mesAssembleProductionTaskOrder: { L: '部件生产任务单', M: 'mes_task', T: mt.mes.L + ' / ' + mes.mes_task },
   mesAssembleNestingOrder: { L: '部件套料清单', M: 'mes_task', T: mt.mes.L + ' / ' + mes.mes_task },
-  // mesDrillProductionTaskOrder: { L: '钻孔生产任务单', M: 'mes_task', T: mt.mes.L + ' / ' + mes.mes_task },
+  mesDrillProductionTaskOrder: { L: '钻孔生产任务单', M: 'mes_task', T: mt.mes.L + ' / ' + mes.mes_task },
+  mesNestingProductionTaskOrder: { L: '零件生产任务单', M: 'mes_task', T: mt.mes.L + ' / ' + mes.mes_task },
 
   mesAssemblePartProductionReport: { L: '部件生产报表', M: 'mes_production', T: mt.mes.L + ' / ' + mes.mes_production },
   mesMachinePartProductionReport: { L: '零件生产报表', M: 'mes_production', T: mt.mes.L + ' / ' + mes.mes_production },
@@ -170,12 +171,20 @@ const tableType = {
   mesAssembleClassList: { L: '部件分类清单明细', M: 'mes_production_order', T: mt.mes.L + ' / ' + mes.mes_production_order },
   mesMachinePartClassList: { L: '零件分类清单明细', M: 'mes_production_order', T: mt.mes.L + ' / ' + mes.mes_production_order },
 
+  mesProductionKanbanList: { L: '生产监控看板明细', M: 'mes_production_order', T: mt.mes.L + ' / ' + mes.mes_production_order },
+  mesProductionKanbanGroupList: { L: '生产监控看板班组明细', M: 'mes_production_order', T: mt.mes.L + ' / ' + mes.mes_production_order },
+
   mesWorkOrderTrackingList: { L: '工单跟踪清单详情', M: 'mes_task_tracking', T: mt.mes.L + ' / ' + mes.mes_task_tracking },
   mesMonthlyTaskList: { L: '月度任务清单详情', M: 'mes_task_tracking', T: mt.mes.L + ' / ' + mes.mes_task_tracking },
   mesProductionLineList: { L: '产线跟踪清单详情', M: 'mes_task_tracking', T: mt.mes.L + ' / ' + mes.mes_task_tracking },
   mesProcessList: { L: '工序呆滞清单详情', M: 'mes_task_tracking', T: mt.mes.L + ' / ' + mes.mes_task_tracking },
+  mesWipStatisticsList: { L: '在制品统计清单详情', M: 'mes_task_tracking', T: mt.mes.L + ' / ' + mes.mes_task_tracking },
+  mesProcessStatisticsList: { L: '在制品工序清单详情', M: 'mes_task_tracking', T: mt.mes.L + ' / ' + mes.mes_task_tracking },
+  mesTaskStatisticsList: { L: '在制品排产记录清单详情', M: 'mes_task_tracking', T: mt.mes.L + ' / ' + mes.mes_task_tracking },
+  mesOutBoundStatisticsList: { L: '在制品出库记录清单详情', M: 'mes_task_tracking', T: mt.mes.L + ' / ' + mes.mes_task_tracking },
 
   mesFactoryWorkshopReport: { L: '车间报表清单（平台）', M: 'mes_factory_report', T: mt.mes.L + ' / ' + mes.mes_factory_report },
+  mesGroupsReport: { L: '班组报表清单（平台）', M: 'mes_factory_report', T: mt.mes.L + ' / ' + mes.mes_factory_report },
 
   mesStudSleeveStatisticsList: { L: '栓钉套筒统计清单详情', M: 'mes_production_line_wage_statistics', T: mt.mes.L + ' / ' + mes.mes_production_line_wage_statistics },
   mesProjectShipDetail: { L: '项目发运详情报表', M: 'mes_pack_and_ship_manage', T: mt.mes.L + ' / ' + mes.mes_pack_and_ship_manage },

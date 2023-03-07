@@ -16,7 +16,7 @@
               <el-tag size="medium" effect="plain" style="margin-right: 10px">
                 重量(kg)：{{ summaryInfo.totalNetWeight?.toFixed(2) || 0 }}
               </el-tag>
-              <el-badge :value="totalBadge" :max="99" :hidden="totalBadge < 1" style="margin-right: 10px">
+              <el-badge :value="totalBadge" :max="99" :hidden="totalBadge < 1" style="margin-right: 20px">
                 <common-button v-permission="permission.recordGet" type="primary" size="mini" @click="previewRecord">
                   构件排产记录
                 </common-button>
@@ -151,7 +151,7 @@
 
 <script setup>
 import crudApi, { getSummary, getBadgeNum } from '@/api/mes/scheduling-manage/artifact'
-import { ref, provide, computed } from 'vue'
+import { ref, provide, computed, watch } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import moment from 'moment'
 
@@ -285,6 +285,8 @@ CRUD.HOOK.handleRefresh = (crud, res) => {
 }
 
 async function fetchSummary() {
+  summaryInfo.value = { totalNetWeight: 0, quantity: 0 }
+  if (!crud.query.structureClassId) return
   try {
     summaryInfo.value = (await getSummary(crud.query)) || {}
   } catch (error) {
@@ -309,12 +311,22 @@ function refresh(isRefreshTypeList = false) {
     mHeaderRef.value?.refreshTypeList()
   }
   crud.toQuery()
+  fetchSummary()
+  schedulingNumGet()
 }
+
+watch(
+  () => crud.query.areaIdList,
+  (val) => {
+    schedulingNumGet()
+  }
+)
 
 async function schedulingNumGet() {
   try {
     const data = await getBadgeNum({ productionLineTypeEnum: crud.query.productionLineTypeEnum, areaIdList: crud.query.areaIdList })
     totalBadge.value = data
+    console.log(totalBadge.value, 'totalBadge.value')
   } catch (error) {
     console.log('获取构件排产记录气泡条数失败', error)
   }

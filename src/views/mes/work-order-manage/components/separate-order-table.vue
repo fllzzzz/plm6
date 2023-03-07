@@ -5,7 +5,9 @@
         <tr class="separate-thead">
           <td style="width: 120px">{{ item.serialNumber }}</td>
           <td v-for="(line, lineIndex) in item.productionLineList" :key="lineIndex">
-            <span v-if="isNotBlank(line)">{{ line.productionLineName }}>{{ line.groupName }}</span>
+            <div v-if="isNotBlank(line)">
+              <span>{{ line.productionLineName }}>{{ line.groupName }}</span>
+            </div>
             <span v-else>\</span>
           </td>
         </tr>
@@ -15,7 +17,13 @@
             <span v-else>\</span>
           </td>
           <td v-for="(line, lineIndex) in item.productionLineList" :key="lineIndex">
-            <span v-if="isNotBlank(line)">{{ line.quantity }}</span>
+            <div v-if="isNotBlank(line)" style="position: relative">
+              <span>{{ line.quantity }}</span>
+              <div class="filter-class" :style="!line.boolDrillEnum ? 'background: #f56c6c' : 'background: #40ed8d'">
+                <span v-if="!line.boolDrillEnum">总装</span>
+                <span v-else>钻孔</span>
+              </div>
+            </div>
             <span v-else>\</span>
           </td>
         </tr>
@@ -28,12 +36,14 @@
 import { defineProps } from 'vue'
 import { isNotBlank } from '@data-type/index'
 
-defineProps({
+const props = defineProps({
   separateOrderInfo: {
     type: Array,
     default: () => []
   }
 })
+
+console.log(props.separateOrderInfo, 'separateOrderInfo')
 </script>
 
 <style lang="scss" scoped>
@@ -60,5 +70,19 @@ defineProps({
   width: 95%;
   height: 95%;
   vertical-align: middle;
+}
+.filter-class {
+  color: white;
+  font-weight: 100;
+  position: absolute;
+  top: -29px;
+  left: 0px;
+  right: 0;
+  width: 50px;
+  height: 20px;
+  font-size: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 </style>

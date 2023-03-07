@@ -25,6 +25,12 @@ export const fixedHeader = true
 export const showSidebarLogo = true
 
 /**
+ * @type {boolean} true | false
+ * @description 是否切换灰色背景
+ */
+export const switchBackgroundColor = false
+
+/**
  * @type {string | array} 'production' | ['production', 'development']
  * @description 显示错误日志组件。
  * 默认仅在生产环境中使用

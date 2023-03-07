@@ -4,7 +4,7 @@
       <div style="width: 300px">
         <print-table
           v-permission="permission.print"
-          api-key="mainMaterialList"
+          api-key="conMainMaterialList"
           :params="{ basicClassEnum: mainAuxiliaryTypeEnum.MAIN.V, projectId: props.costTypeData.projectId }"
           size="mini"
           type="warning"
@@ -26,11 +26,21 @@
     >
       <el-table-column prop="index" label="序号" align="center" width="60" type="index" />
       <el-table-column prop="basicClass" key="basicClass" label="物料种类" align="center" />
-      <el-table-column prop="specification" key="specification" label="规格" align="center">
+      <el-table-column prop="thickness" key="thickness" label="厚度" align="center">
+        <template v-slot="scope">
+          <span>{{ scope.row.thickness }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column prop="specMerge" key="specMerge" label="规格" align="center" width="160">
+        <template v-slot="scope">
+          <span>{{ scope.row.specMerge }}</span>
+        </template>
+      </el-table-column>
+      <!-- <el-table-column prop="specification" key="specification" label="材质" align="center">
         <template v-slot="scope">
           <span>{{ scope.row.specification }}</span>
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column prop="accountingUnit" key="accountingUnit" label="核算单位" align="center">
         <template v-slot="scope">
           <span>{{ scope.row.accountingUnit }}</span>
@@ -43,15 +53,15 @@
       </el-table-column>
       <el-table-column prop="unitPrice" key="unitPrice" label="单价" align="center">
         <template v-slot="scope">
-          <span>{{ scope.row.unitPrice }}</span>
+          <span>{{ scope.row.unitPrice?.toFixed(2) }}</span>
         </template>
       </el-table-column>
       <el-table-column prop="amount" key="amount" label="总价" align="center">
         <template v-slot="scope">
-          <span>{{ toThousand(scope.row.amount) || '月末未加权' }}</span>
+          <span>{{ scope.row.amount ? toThousand(scope.row.amount) : 0 || '月末未加权' }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="outboundTime" key="outboundTime" label="出库日期" align="center">
+      <el-table-column prop="outboundTime" key="outboundTime" label="出库日期" align="center" width="140">
         <template v-slot="scope">
           <span>{{ scope.row.outboundTime ? parseTime(scope.row.outboundTime) : '-' }}</span>
         </template>
@@ -76,6 +86,7 @@ import { ref, defineProps, watch } from 'vue'
 import { matClsEnum } from '@enum-ms/classification'
 import { mainAuxiliaryTypeEnum } from '@enum-ms/contract'
 // import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
+import { setSpecInfoToList } from '@/utils/wms/spec'
 import { toThousand } from '@data-type/number'
 import { tableSummary } from '@/utils/el-extra'
 import { parseTime } from '@/utils/date'
@@ -132,23 +143,16 @@ async function fetchMainFee() {
       projectId: props.costTypeData.projectId,
       ...queryPage
     })
-    content.forEach((v) => {
-      v.unitPrice = v.amount / v.mete
-    })
-    detailData.value = content || []
-    // detailData.value = await numFmtByBasicClass(
-    //   detailData.value,
-    //   {
-    //     toSmallest: false,
-    //     toNum: true
-    //   },
-    //   {
-    //     mete: ['mete'],
-    //     amount: ['unitPrice']
-    //   }
-    // )
-    // detailData.value = content || []
     setTotalPage(totalElements)
+    content.forEach((v) => {
+      v.unitPrice = v.mete ? v.amount / v.mete : 0
+    })
+    detailData.value = content.map((v, i) => {
+      v.rowId = i + '' + Math.random()
+      return v
+    })
+    console.log(detailData.value, 'value')
+    await setSpecInfoToList(detailData.value)
   } catch (error) {
     console.log('主材费用', error)
   }

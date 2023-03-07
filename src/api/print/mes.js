@@ -457,6 +457,24 @@ export function machinePartClassList(params) {
   })
 }
 
+// 生产监控看板详情
+export function productionKanbanList(params) {
+  return request({
+    url: `/api/mes/building/scheduling/artifact/product/monitor/kanban/detail/print`,
+    method: 'get',
+    params
+  })
+}
+
+// 生产监控看板班组详情
+export function productionKanbanGroupList(params) {
+  return request({
+    url: `/api/mes/building/scheduling/artifact/product/monitor/group/detail/print`,
+    method: 'get',
+    params
+  })
+}
+
 // 发运管理-项目发运详情
 export function mesProjectShipDetail(params) {
   return request({
@@ -470,6 +488,15 @@ export function mesProjectShipDetail(params) {
 export function factoryWorkshopReport(params) {
   return request({
     url: `/api/mes/building/workshop/artifact/summary/print`,
+    method: 'get',
+    params
+  })
+}
+
+// 工厂报表-班组报表详情
+export function groupsReport(params) {
+  return request({
+    url: `/api/mes/building/report/product/team/summary/review/print`,
     method: 'get',
     params
   })
@@ -504,6 +531,42 @@ export function productionLineList(params) {
 export function processList(params) {
   return request({
     url: `/api/mes/building/task/process/dull/process/detail/print`,
+    method: 'get',
+    params
+  })
+}
+
+// 任务跟踪-在制品统计报表详情
+export function wipStatisticsLis(params) {
+  return request({
+    url: `/api/mes/building/task/process/project/progressing/print`,
+    method: 'get',
+    params
+  })
+}
+
+// 任务跟踪-工序详情报表详情
+export function processStatisticsList(params) {
+  return request({
+    url: `/api/mes/building/task/process/project/progressing/process/print`,
+    method: 'get',
+    params
+  })
+}
+
+// 任务跟踪-排产记录详情报表详情
+export function taskStatisticsList(params) {
+  return request({
+    url: `/api/mes/building/task/process/project/progressing/task/print`,
+    method: 'get',
+    params
+  })
+}
+
+// 任务跟踪-在制品出库记录报表详情
+export function outBoundStatisticsList(params) {
+  return request({
+    url: `/api/mes/building/task/process/project/progressing/outBound/print`,
     method: 'get',
     params
   })
@@ -635,17 +698,26 @@ export default {
   assembleClassList, // 部件分类清单明细
   machinePartClassList, // 零件分类清单明细
 
+  // 生产监控弄看板
+  productionKanbanList, // 生产监控看板
+  productionKanbanGroupList, // 生产看板班组详情
+
   // 发运管理
   mesProjectShipDetail, // 项目发运详情
 
   // 工厂报表-车间报表
   factoryWorkshopReport, // 车间报表详情
+  groupsReport, // 班组报表详情
 
   // 任务跟踪
   workOrderTrackingList, // 工单跟踪报表详情
   monthlyTaskList, // 月度任务跟踪清单详情
   productionLineList, // 产线跟踪清单详情
   processList, // 工序呆滞清单详情
+  wipStatisticsLis, // 在制品统计
+  processStatisticsList, // 在制品工序详情统计
+  taskStatisticsList, // 在制品排产记录详情
+  outBoundStatisticsList, // 在制品出库统计详情
 
   // 发运管理
   productSendReceiveStorage, // 制成品入发存

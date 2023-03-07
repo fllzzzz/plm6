@@ -116,7 +116,7 @@
           </el-table-column>
           <el-table-column key="invoiceSerialNumber" prop="invoiceSerialNumber" label="*发票号码" align="center" width="120">
             <template v-slot="scope">
-              <el-input v-if="scope.row.isModify" v-model.trim="scope.row.invoiceSerialNumber" type="text" placeholder="发票号码" @blur="checkInvoiceNo(scope.row,scope.$index)" maxlength="8"/>
+              <el-input v-if="scope.row.isModify" v-model.trim="scope.row.invoiceSerialNumber" type="text" placeholder="发票号码" @blur="checkInvoiceNo(scope.row,scope.$index)" maxlength="20"/>
               <span v-else>{{ scope.row.invoiceSerialNumber }}</span>
             </template>
           </el-table-column>

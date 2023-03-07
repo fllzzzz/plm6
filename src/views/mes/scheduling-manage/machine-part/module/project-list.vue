@@ -29,32 +29,41 @@
       @change="fetchProject"
     /> -->
   </div>
-  <common-table
-    ref="projectTableRef"
-    v-loading="projectLoading"
-    :data-format="dataFormat"
-    :data="tableData"
-    :stripe="false"
-    :max-height="maxHeight"
-    style="width: 100%"
-    @selection-change="handleSelectionChange"
-  >
-    <el-table-column type="selection" width="45" align="center" />
-    <el-table-column prop="project" :show-overflow-tooltip="true" label="项目" min-width="100" />
-    <el-table-column :show-overflow-tooltip="true" label="零件量（件|kg）" min-width="60" align="center">
-      <template #default="{ row }">
-        <span>{{ row.quantity }} | {{ row.totalNetWeight }}</span>
+  <div :style="`height:${maxHeight}px`">
+    <el-tree
+      ref="treeMenuRef"
+      v-loading="projectLoading"
+      :data="treeData"
+      :props="{ children: 'children', label: 'label' }"
+      :filter-node-method="filterNode"
+      style="height: 100%"
+      :indent="20"
+      show-checkbox
+      expand-on-click-node
+      node-key="rowKey"
+      :auto-expand-parent="false"
+      :default-expanded-keys="expandedKeys"
+      @check-change="handleCheckClick"
+    >
+      <template #default="{ node, data }">
+        <div style="padding: 3px; border-radius: 3px; width: 100%; position: relative">
+          <div style="width: 100%; overflow: hidden; text-overflow: ellipsis">
+            <svg-icon style="margin-right: 5px" :icon-class="data.icon" />
+            <span :style="`font-size:${data.fontSize}px;${node.isLeaf ? '' : `font-weight: bold;`}`">{{ node.label }}</span>
+          </div>
+        </div>
       </template>
-    </el-table-column>
-  </common-table>
+    </el-tree>
+  </div>
 </template>
 
 <script setup>
 import { getProject, getMonth } from '@/api/mes/scheduling-manage/machine-part'
-import { ref, defineProps, defineEmits, defineExpose, nextTick } from 'vue'
+import { ref, defineProps, defineEmits, defineExpose } from 'vue'
 import { isBlank, isNotBlank } from '@/utils/data-type'
 import moment from 'moment'
 
+import { projectNameFormatter } from '@/utils/project'
 import checkPermission from '@/utils/system/check-permission'
 import { machinePartSchedulingPM as permission } from '@/page-permission/mes'
 
@@ -70,12 +79,12 @@ defineProps({
 
 const timeList = ref([])
 const timeLoading = ref(false)
-const projectTableRef = ref()
-// const date = ref()
+const treeMenuRef = ref()
 const month = ref([])
-const tableData = ref([])
+const treeData = ref([])
 const projectLoading = ref(false)
-const dataFormat = ref([['project', 'parse-project']])
+const filterIds = ref([])
+const expandedKeys = ref([])
 
 fetchTime()
 
@@ -83,7 +92,7 @@ async function fetchTime(lastQuery) {
   if (!checkPermission(permission.get)) return
   try {
     timeList.value = []
-    tableData.value = []
+    treeData.value = []
     month.value = []
     timeLoading.value = true
     const { content } = await getMonth()
@@ -103,14 +112,14 @@ async function fetchTime(lastQuery) {
     if (lastQuery && isNotBlank(lastQuery.monthList) && timeList.value?.length) {
       for (let i = 0; i < lastQuery.monthList.length; i++) {
         const m = lastQuery.monthList[i]
-        if (timeList.value?.findIndex(v => v.timeStamp === m) !== -1) {
+        if (timeList.value?.findIndex((v) => v.timeStamp === m) !== -1) {
           month.value.push(m)
         }
       }
     }
     if (isBlank(month.value) && timeList.value?.length) {
       const curTime = moment().startOf('month').valueOf()
-      const curIndex = timeList.value?.findIndex(v => v.timeStamp === curTime)
+      const curIndex = timeList.value?.findIndex((v) => v.timeStamp === curTime)
       if (curIndex !== -1) {
         month.value.push(curTime)
       } else {
@@ -130,7 +139,7 @@ async function fetchTime(lastQuery) {
 // }
 
 async function fetchProject(lastQuery) {
-  tableData.value = []
+  treeData.value = []
   if (!checkPermission(permission.get) || isBlank(month.value)) return
   try {
     projectLoading.value = true
@@ -138,19 +147,7 @@ async function fetchProject(lastQuery) {
       // dateTime: date.value,
       monthList: month.value
     })
-    const needSelectIndex = []
-    tableData.value = content.map((v, index) => {
-      v.projectId = v.project?.id
-      if (lastQuery && lastQuery?.projectIds.indexOf(v.projectId) !== -1) {
-        needSelectIndex.push(index)
-      }
-      return v
-    })
-    needSelectIndex.forEach(i => {
-      nextTick(() => {
-        projectTableRef.value?.toggleRowSelection(tableData.value[i], true)
-      })
-    })
+    treeData.value = await dataFormat(content)
   } catch (error) {
     console.log('获取排程信息，项目树错误', error)
   } finally {
@@ -158,8 +155,109 @@ async function fetchProject(lastQuery) {
   }
 }
 
-function handleSelectionChange(val) {
-  emit('project-click', val, month.value)
+function dataFormat(content) {
+  const _tree = []
+  for (let i = 0; i < content.length; i++) {
+    const monomers = content[i].monomerList
+    const _monomer = []
+    for (let x = 0; x < monomers.length; x++) {
+      const areas = monomers[x].areaList
+      const _area = []
+      for (let y = 0; y < areas.length; y++) {
+        const rowKey = 'area_' + areas[y].id
+        _area.push({
+          id: areas[y].id,
+          isLast: y === areas.length - 1,
+          rowKey: rowKey,
+          label: areas[y].name,
+          name: areas[y].name,
+          parentIds: [monomers[x].id, content[i].id],
+          monomerId: monomers[x].id,
+          isLeaf: true,
+          fontSize: 14,
+          type: '',
+          icon: 'config-2'
+        })
+        expandedKeys.value.push(rowKey)
+      }
+      const rowKey = 'monomer_' + monomers[x].id
+      _monomer.push({
+        id: monomers[x].id,
+        isLast: x === monomers.length - 1,
+        rowKey: rowKey,
+        parentIds: [content[i].id],
+        label: monomers[x].name,
+        children: _area,
+        isLeaf: false,
+        fontSize: 15,
+        type: '单体',
+        icon: 'document'
+      })
+      expandedKeys.value.push(rowKey)
+    }
+    _tree.push({
+      id: content[i].id,
+      isLast: i === content.length - 1,
+      rowKey: 'project_' + content[i].id,
+      parentIds: [],
+      label: projectNameFormatter(
+        {
+          serialNumber: content[i].serialNumber,
+          name: content[i].name,
+          shortName: content[i].shortName
+        },
+        { showProjectFullName: false, showSerialNumber: true },
+        false
+      ),
+      children: _monomer,
+      isLeaf: false,
+      fontSize: 16,
+      type: '项目',
+      icon: 'project'
+    })
+  }
+  return _tree
+}
+
+// 过滤数据
+function filterNode(value, data, node) {
+  if (!value) return true
+  if (data.label.includes(value) || judgeFilterIds(data.parentIds)) {
+    filterIds.value.push(data.id)
+    return true
+  }
+}
+
+// 返回所有子节点
+function judgeFilterIds(ids) {
+  let flag = false
+  for (let i = 0; i < ids.length; i++) {
+    if (filterIds.value.includes(ids[i])) {
+      flag = true
+    }
+  }
+  return flag
+}
+
+// 切换区域
+function handleCheckClick(data, node) {
+  const _keys = treeMenuRef.value.getCheckedKeys()
+  const areaIds = []
+  const monomerIds = []
+  const projectIds = []
+  _keys.forEach(v => {
+    const _id = v.split('_')[1]
+    if (v.indexOf('project') !== -1) {
+      projectIds.push(_id)
+    }
+    if (v.indexOf('monomer') !== -1) {
+      monomerIds.push(_id)
+    }
+    if (v.indexOf('area') !== -1) {
+      areaIds.push(_id)
+    }
+  })
+  emit('project-click', { areaIds, monomerIds, projectIds }, month.value)
 }
 
 defineExpose({
@@ -168,6 +266,31 @@ defineExpose({
 </script>
 
 <style lang="scss" scoped>
+.el-tree {
+  // width: 360px;
+  overflow-y: auto;
+  padding-right: 5px;
+  font-size: 15px;
+
+  // ::v-deep(.el-tree-node.is-checked > .el-tree-node__content .tree-custom-content) {
+  //   background-color: #ffe48d !important;
+  // }
+  ::v-deep(.el-tree-node__content > label.el-checkbox) {
+    margin-right: 3px;
+  }
+  ::v-deep(.el-tree-node__content:hover) {
+    background-color: transparent !important;
+  }
+
+  ::v-deep(.el-tree-node:focus > .el-tree-node__content) {
+    background-color: transparent !important;
+  }
+
+  ::v-deep(.el-tree-node__content > .el-tree-node__expand-icon) {
+    display: none;
+  }
+}
+
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;

@@ -15,7 +15,7 @@
       row-key="id"
       @selection-change="crud.selectionChangeHandler"
     >
-      <el-table-column type="selection" width="55" />
+      <el-table-column type="selection" width="55" align="center"/>
       <el-table-column label="序号" type="index" align="center" width="60" />
       <el-table-column v-if="columns.visible('name')" key="name" prop="name" label="名称" />
       <el-table-column v-if="columns.visible('dept')" key="dept" prop="dept" label="所属部门">

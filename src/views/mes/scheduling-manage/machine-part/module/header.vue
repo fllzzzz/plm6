@@ -101,7 +101,7 @@ const defaultQuery = {}
 
 const { crud, query } = regHeader(defaultQuery)
 
-const emit = defineEmits(['load'])
+const emit = defineEmits(['load', 'change'])
 
 const materialRef = ref()
 const materialRefWidth = ref()
@@ -131,12 +131,12 @@ async function fetchType(lastQuery) {
   typeList.value = []
   query.taskTypeEnum = undefined
   query.material = undefined
-  query.thick = undefined
-  if (isBlank(query.projectIds)) return
+  query.thick = []
+  if (isBlank(query.areaIds)) return
   try {
     const { content } = await getTypeList({
       monthList: query.monthList,
-      projectIds: query.projectIds
+      areaIds: query.areaIds
     })
     typeList.value =
       content?.map((v) => {
@@ -165,11 +165,11 @@ async function fetchType(lastQuery) {
 }
 
 async function fetchMaterial(lastQuery) {
-  if (isBlank(query.projectIds)) return
+  if (isBlank(query.areaIds)) return
   try {
     const { content } = await getMaterial({
       monthList: query.monthList,
-      projectIds: query.projectIds,
+      areaIds: query.areaIds,
       taskTypeEnum: query.taskTypeEnum
     })
     materialList.value =
@@ -197,12 +197,12 @@ async function fetchMaterial(lastQuery) {
 }
 
 async function fetchTick(lastQuery) {
-  if (isBlank(query.projectIds)) return
+  if (isBlank(query.areaIds)) return
   try {
     thickData.value = []
     const { content } = await getThick({
       monthList: query.monthList,
-      projectIds: query.projectIds,
+      areaIds: query.areaIds,
       material: query.material,
       taskTypeEnum: query.taskTypeEnum
     })
@@ -212,7 +212,6 @@ async function fetchTick(lastQuery) {
           name: v
         }
       }) || []
-    console.log(thickData.value, 'thickData.value')
     if (lastQuery && lastQuery?.thick && content?.length && content.indexOf(lastQuery.thick) !== -1) {
       query.thick = lastQuery.thick
       crud.toQuery()
@@ -220,6 +219,7 @@ async function fetchTick(lastQuery) {
       query.thick = thickData.value[0].name
       crud.toQuery()
     }
+    emit('change', materialList.value, thickData.value)
   } catch (error) {
     console.log('获取厚度', error)
   }

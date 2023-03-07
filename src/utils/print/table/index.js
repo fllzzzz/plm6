@@ -30,7 +30,7 @@ import EO from '@/utils/enum'
 import enumAll from '@/utils/enum/all'
 import { MIN_UNIT, DEF_UNIT } from '@/settings/config'
 import moment from 'moment'
-import { getLODOP, printByMode } from '../base'
+import { getLODOP, printByMode, getPageSize } from '../base'
 import * as lodash from 'lodash'
 
 let LODOP
@@ -72,8 +72,13 @@ async function printTable({ header, table, footer, qrCode, config, printMode = P
       const loadHandler = async () => {
       // 打印方向
         const orient = config.orient || orientEnum.LONGITUDINAL.V
-        // 设置纸张大小
-        LODOP.SET_PRINT_PAGESIZE(orient, config.width + config.unit, config.height + config.unit, 'CreateCustomPage')
+        const pageSize = getPageSize(config.width, config.height)
+        if (pageSize) {
+          LODOP.SET_PRINT_PAGESIZE(orient, 0, 0, config.pageSize)
+        } else {
+          // 设置纸张大小
+          LODOP.SET_PRINT_PAGESIZE(orient, config.width + config.unit, config.height + config.unit, 'CreateCustomPage')
+        }
         // 标题
         LODOP.ADD_PRINT_HTM(`${prevHeight}${config.unit}`, 0, '100%', `${config.title.height}${config.unit}`, headHtml)
         LODOP.SET_PRINT_STYLEA(0, 'ItemType', 1) // 设置标题每页显示

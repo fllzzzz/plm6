@@ -294,7 +294,7 @@ export async function printSeparateOrderLabel({ taskNumberOrder = '', separateOr
     const headHeight = 25
     const bodyHeight = 255
     LODOP = await getLODOP()
-    LODOP.SET_PRINT_PAGESIZE(1, 2100, 2970, '1') /* 纸张大小*/ // 100mm* 75mm
+    LODOP.SET_PRINT_PAGESIZE(3, 0, 0, 'A4') /* 纸张大小*/ // 100mm* 75mm
     LODOP.ADD_PRINT_HTM('5mm', '0mm', '100%', `${headHeight}mm`, headHtml)
     LODOP.SET_PRINT_STYLEA(0, 'ItemType', 1)
     LODOP.ADD_PRINT_TABLE(`${headHeight}mm`, '5mm', '200mm', `${bodyHeight}mm`, strHtml)

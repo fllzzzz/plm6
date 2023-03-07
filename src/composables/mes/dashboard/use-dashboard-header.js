@@ -30,14 +30,14 @@ export default function useDashboardHeader({ colorCardTitles = ['未入库', '�
     { immediate: true }
   )
 
-  function getColor(row, { quantity = 'inboundQuantity', compare = 'compareQuantity' }) {
-    if (row[quantity] === 0 && !row.isProcess) {
+  function getColor(row, { quantity = 'completeQuantity', compare = 'compareQuantity' }) {
+    if (row[quantity] === 0) {
       return processingColorsEnum.UNSTART.COLOR
     }
     if (row[quantity] === row[compare]) {
       return processingColorsEnum.COMPLETE.COLOR
     }
-    if (row.isProcess || row[quantity] > 0 && row[quantity] < row[compare]) {
+    if (row[quantity] > 0 && row[quantity] < row[compare]) {
       return processingColorsEnum.PROCESS.COLOR
     }
     return processingColorsEnum.ABNORMAL.COLOR

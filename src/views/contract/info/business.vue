@@ -104,7 +104,6 @@
                     filterable
                     :collapse-tags="false"
                     clearable
-                    show-all-levels
                     class="input-underline"
                     style="width: 200px"
                     placeholder="签约人"

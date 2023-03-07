@@ -190,7 +190,7 @@
             <el-table-column align="center" key="completeQuantity" prop="completeQuantity" :show-overflow-tooltip="true" label="完成数" />
             <el-table-column align="center" key="netWeight" prop="netWeight" :show-overflow-tooltip="true" label="单净重" />
             <el-table-column align="center" key="grossWeight" prop="grossWeight" :show-overflow-tooltip="true" label="单毛重" />
-            <el-table-column align="center" key="status" prop="status" :show-overflow-tooltip="true" label="状态" fixed="right">
+            <el-table-column v-if="props.processList.productionLineTypeEnum === artifactProductLineEnum.TRADITION.V" align="center" key="status" prop="status" :show-overflow-tooltip="true" label="状态" fixed="right">
               <template #default="{ row }">
                 <span style="color: red" v-if="row.status === workOrderTypeEnum.DELAY.V">{{ workOrderTypeEnum.VL[row.status] }}</span>
                 <span v-else>{{ workOrderTypeEnum.VL[row.status] }}</span>

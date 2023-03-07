@@ -348,6 +348,14 @@ export const mesCuttingConfigPM = {
   del: ['mes_cutting_config:del'] // 删除切割配置
 }
 
+// 建钢-生产配置/垫块配置
+export const mesParallelConfigPM = {
+  get: ['mes_parallel_config:get'], // 垫块配置列表
+  add: ['mes_parallel_config:add'], // 添加垫块配置
+  edit: ['mes_parallel_config:edit'], // 编辑垫块配置
+  del: ['mes_parallel_config:del'], // 删除垫块配置
+  import: ['mes_parallel_config:import'] // 导入dxf
+}
 // ---------------------------- 基础配置 end -------------------------------
 
 // ########################################################################

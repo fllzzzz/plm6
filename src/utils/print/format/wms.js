@@ -28,7 +28,7 @@ async function dataFormat({ header, table = [], footer, qrCode }) {
   await numFmtByBasicClass(table, undefined, {
     mete: ['mete', 'rejectMete', 'usedMete'],
     quantity: ['quantity', 'rejectQuantity'],
-    amount: ['avgUnitPrice']
+    amount: ['avgUnitPrice', 'unitPrice', 'unitPriceExcludingVAT']
   })
   return {
     header,

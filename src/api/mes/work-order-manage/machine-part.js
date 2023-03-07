@@ -71,4 +71,16 @@ export function printSign(params) {
   })
 }
 
+/**
+ * @description: 获取零件工单项目信息
+*/
+export function getProjectInfo(params) {
+  return request({
+    module: 'mes',
+    url: `task/order/machinePart/project/list`,
+    method: 'get',
+    params
+  })
+}
+
 export default { get }

@@ -278,6 +278,9 @@ cu.submitFormFormat = async (form) => {
       v.projectId = order.value.projects?.length ? order.value.projects[0].id : undefined
     }
   })
+  if (form.supplyType & orderSupplyTypeEnum.PARTY_A.V) {
+    form.purchaseId = undefined
+  }
   return form
 }
 

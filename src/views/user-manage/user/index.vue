@@ -45,6 +45,7 @@
         <el-table-column
           type="selection"
           width="55"
+          align="center"
         />
         <el-table-column
           label="序号"
@@ -68,6 +69,11 @@
           width="100"
           label="姓名"
         />
+        <el-table-column v-if="columns.visible('sort')" key="sort" prop="sort" label="排序" align="center" width="100">
+          <template v-slot="scope">
+            {{ scope.row.sort }}
+          </template>
+        </el-table-column>
         <el-table-column
           v-if="columns.visible('sex')"
           key="sex"

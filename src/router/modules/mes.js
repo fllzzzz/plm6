@@ -184,6 +184,43 @@ export default {
   //     }
   //   ]
   // },
+  // {
+  //   path: '/mes/production-order-manage',
+  //   component: 'Layout',
+  //   hidden: false,
+  //   name: 'MesProductionOrderManage',
+  //   alwaysShow: false,
+  //   redirect: '/mes/production-order-manage',
+  //   meta: {
+  //     title: '生产排期管理',
+  //     icon: 'project',
+  //     noCache: true
+  //   },
+  //   children: [
+  //     {
+  //       name: 'ProductionOrder',
+  //       path: 'production-order',
+  //       hidden: false,
+  //       component: '/mes/production-order-manage/production-order/index',
+  //       meta: {
+  //         title: '生产排期',
+  //         icon: 'project',
+  //         noCache: true
+  //       }
+  //     },
+  //     {
+  //       name: 'ScheduleDetail',
+  //       path: 'schedule-detail',
+  //       hidden: false,
+  //       component: '/mes/production-order-manage/schedule-detail/index',
+  //       meta: {
+  //         title: '排期详情',
+  //         icon: 'project',
+  //         noCache: true
+  //       }
+  //     }
+  //   ]
+  // },
   {
     path: '/mes/production-order-manage',
     component: 'Layout',
@@ -258,17 +295,17 @@ export default {
               noCache: true
             }
           },
-          {
-            name: 'MesSchedulingMachinePartRecord',
-            path: 'record',
-            hidden: false,
-            component: '/mes/scheduling-manage/machine-part/record/index',
-            meta: {
-              title: '预览记录',
-              icon: 'project',
-              noCache: true
-            }
-          },
+          // {
+          //   name: 'MesSchedulingMachinePartRecord',
+          //   path: 'record',
+          //   hidden: false,
+          //   component: '/mes/scheduling-manage/machine-part/record/index',
+          //   meta: {
+          //     title: '预览记录',
+          //     icon: 'project',
+          //     noCache: true
+          //   }
+          // },
           {
             name: 'MesSchedulingMachinePartNestingResult',
             path: 'nesting-result',
@@ -281,6 +318,32 @@ export default {
             }
           }
         ]
+      }
+    ]
+  },
+  {
+    path: '/mes/production-monitoring-kanban',
+    component: 'Layout',
+    hidden: false,
+    name: 'MesProductionMonitoringKanban',
+    alwaysShow: false,
+    redirect: '/mes/production-monitoring-kanban',
+    meta: {
+      title: '生产监控看板',
+      icon: 'project',
+      noCache: true
+    },
+    children: [
+      {
+        name: 'MesMonitoringKanban',
+        path: 'monitoring-kanban',
+        hidden: false,
+        component: '/mes/production-monitoring-kanban/index',
+        meta: {
+          title: '生产监控看板',
+          icon: 'project',
+          noCache: true
+        }
       }
     ]
   },
@@ -315,6 +378,17 @@ export default {
         component: '/mes/work-order-manage/machine-part/index',
         meta: {
           title: '零件工单',
+          icon: 'project',
+          noCache: true
+        }
+      },
+      {
+        name: 'MesDrillOrder',
+        path: 'drill',
+        hidden: false,
+        component: '/mes/work-order-manage/drill/index',
+        meta: {
+          title: '钻孔工单',
           icon: 'project',
           noCache: true
         }
@@ -423,6 +497,28 @@ export default {
             }
           }
         ]
+      },
+      {
+        name: 'MesWipStatistics',
+        path: 'wip-statistics',
+        hidden: false,
+        component: '/mes/task-tracking/wip-statistics/index',
+        meta: {
+          title: '在制品统计',
+          icon: 'project',
+          noCache: true
+        }
+      },
+      {
+        name: 'MesSemiFinishedStatistics',
+        path: 'semi-finished-statistics',
+        hidden: false,
+        component: '/mes/task-tracking/semi-finished-statistics/index',
+        meta: {
+          title: '半成品统计',
+          icon: 'project',
+          noCache: true
+        }
       }
     ]
   },
@@ -635,6 +731,17 @@ export default {
       component: '/mes/production-manage/dashboard/artifact-dashboard/index',
       meta: {
         title: '生产看板',
+        icon: 'project',
+        noCache: true
+      }
+    },
+    {
+      name: 'MesProductionTracking',
+      path: 'production-tracking',
+      hidden: false,
+      component: '/mes/production-manage/dashboard/production-tracking/index',
+      meta: {
+        title: '生产跟踪',
         icon: 'project',
         noCache: true
       }
@@ -986,17 +1093,17 @@ export default {
         noCache: true
       }
     }
-    // {
-    //   name: 'MesLabelPrintFoldingPiece',
-    //   path: 'enclosure',
-    //   hidden: false,
-    //   component: '/mes/label-print/folding-piece/index',
-    //   meta: {
-    //     title: '折边件',
-    //     icon: 'project',
-    //     noCache: true
-    //   }
-    // }
+      // {
+      //   name: 'MesLabelPrintFoldingPiece',
+      //   path: 'enclosure',
+      //   hidden: false,
+      //   component: '/mes/label-print/folding-piece/index',
+      //   meta: {
+      //     title: '折边件',
+      //     icon: 'project',
+      //     noCache: true
+      //   }
+      // }
       //     {
       //       name: 'MesLabelPrintingAuxiliaryMaterial',
       //       path: 'auxiliary-material',
@@ -1234,11 +1341,22 @@ export default {
     alwaysShow: false,
     redirect: '/mes/factory-report',
     meta: {
-      title: '工厂报表',
+      title: '生产报表',
       icon: 'project',
       noCache: true
     },
     children: [
+      {
+        name: 'MesGroupReport',
+        path: 'group-report',
+        hidden: false,
+        component: '/mes/factory-report/group-report/index',
+        meta: {
+          title: '班组报表',
+          icon: 'project',
+          noCache: true
+        }
+      },
       {
         name: 'MesWorkshopReport',
         path: 'workshop-report',

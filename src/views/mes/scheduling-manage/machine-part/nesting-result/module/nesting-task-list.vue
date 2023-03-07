@@ -1,6 +1,6 @@
 <template>
   <div class="head-container">
-    <el-date-picker
+    <!-- <el-date-picker
       v-model="month"
       type="month"
       size="small"
@@ -10,27 +10,44 @@
       style="width: 120px"
       class="filter-item"
       @change="fetchTaskList"
-    />
-    <common-radio-button
-      v-model="query.boolNestCutEnum"
-      :options="layOffWayTypeEnum.ENUM"
-      showOptionAll
-      type="enum"
+    /> -->
+    <el-date-picker
+      v-model="date"
+      type="daterange"
+      range-separator=":"
       size="small"
+      value-format="x"
+      :shortcuts="PICKER_OPTIONS_SHORTCUTS"
+      unlink-panels
+      start-placeholder="开始日期"
+      end-placeholder="结束日期"
+      style="width: 240px"
       class="filter-item"
-      @change="handleBoolNestingChange"
+      @change="handleDateChange"
     />
     <common-radio-button
-      v-if="query.boolNestCutEnum === layOffWayTypeEnum.NESTING.V"
-      v-model="query.issueStatusEnum"
-      :options="issueStatusEnum.ENUM"
-      :unshowVal="[issueStatusEnum.HAS_ISSUED.V, issueStatusEnum.NOT_NESTING.V]"
+      v-model="issueStatusEnum"
+      :options="machinePartSchedulingIssueStatusEnum.ENUM"
+      :unshowVal="[machinePartSchedulingIssueStatusEnum.NOT_NESTING.V, machinePartSchedulingIssueStatusEnum.IN_NESTING.V]"
       showOptionAll
       type="enum"
       size="small"
       class="filter-item"
       @change="fetchTaskList"
     />
+    <el-input
+      v-model="name"
+      placeholder="项目搜索"
+      class="filter-item"
+      style="width: 160px"
+      size="small"
+      clearable
+      @keyup.enter="fetchTaskList"
+    />
+    <common-button class="filter-item" size="mini" type="success" icon="el-icon-search" @click.stop="searchQuery">搜索</common-button>
+    <common-button class="filter-item" size="mini" type="warning" icon="el-icon-refresh-left" @click.stop="resetQuery">
+      重置
+    </common-button>
   </div>
   <common-table
     ref="nestingTaskTableRef"
@@ -43,60 +60,34 @@
     :stripe="false"
     :max-height="maxHeight - 45"
     style="width: 100%"
-    @current-change="handleClickChange"
+    @row-click="handleClickChange"
   >
-    <el-table-column prop="orderNumber" :show-overflow-tooltip="true" label="任务单号" min-width="100" align="center" />
-    <el-table-column :show-overflow-tooltip="true" label="数量（件）" min-width="60" align="center">
+    <el-table-column label="序号" type="index" align="center" width="60" />
+    <el-table-column prop="projectName" :show-overflow-tooltip="true" label="项目列表" min-width="100" align="center">
       <template #default="{ row }">
-        <span>{{ row.quantity }}</span>
-      </template>
-    </el-table-column>
-    <el-table-column :show-overflow-tooltip="true" label="套料状态" min-width="60" align="center">
-      <template #default="{ row }">
-        <template v-if="row.boolNestCutEnum">
-          <el-tag v-if="row.issueStatusEnum" effect="plain" :type="issueStatusEnum.V[row.issueStatusEnum].T">{{
-            issueStatusEnum.VL[row.issueStatusEnum]
-          }}</el-tag>
-        </template>
-        <template v-else>
-          <el-tag effect="plain" type="danger">{{ layOffWayTypeEnum.VL[row.boolNestCutEnum] }}</el-tag>
-        </template>
-      </template>
-    </el-table-column>
-    <el-table-column :show-overflow-tooltip="true" label="排产状态" min-width="60" align="center">
-      <template #default="{ row }">
-        <el-tag v-if="row.taskStatusEnum" effect="plain" :type="mesSchedulingStatusEnum.V[row.taskStatusEnum].T">{{
-          mesSchedulingStatusEnum.VL[row.taskStatusEnum]
-        }}</el-tag>
+        <span>{{ row.serialNumber }}-{{ row.name }}</span>
       </template>
     </el-table-column>
   </common-table>
-  <!--分页组件-->
-  <el-pagination
-    :total="total"
-    :current-page="queryPage.pageNumber"
-    :page-size="queryPage.pageSize"
-    style="margin-top: 8px"
-    layout="total, prev, pager, next, sizes"
-    @size-change="handleSizeChange"
-    @current-change="handleCurrentChange"
-  />
 </template>
 
 <script setup>
-import { getNestingTask } from '@/api/mes/scheduling-manage/machine-part'
-import { ref, defineProps, defineEmits, defineExpose, nextTick } from 'vue'
-import { layOffWayTypeEnum } from '@enum-ms/uploading-form'
+import { getProjectTaskDetail } from '@/api/mes/scheduling-manage/machine-part'
+import { ref, defineProps, defineEmits, defineExpose, watch, inject } from 'vue'
 import moment from 'moment'
-
-import { machinePartSchedulingIssueStatusEnum as issueStatusEnum, mesSchedulingStatusEnum } from '@enum-ms/mes'
+import { machinePartSchedulingIssueStatusEnum } from '@enum-ms/mes'
 import checkPermission from '@/utils/system/check-permission'
+import { PICKER_OPTIONS_SHORTCUTS } from '@/settings/config'
 import { machinePartSchedulingNestingResultPM as permission } from '@/page-permission/mes'
 
-import usePagination from '@compos/use-pagination'
-import { isNotBlank } from '@/utils/data-type'
-
 const emit = defineEmits(['nesting-task-click'])
+const startDate = ref()
+const endDate = ref()
+const date = ref([moment().startOf('year').valueOf(), moment().valueOf()])
+const name = ref()
+const issueStatusEnum = ref()
+
+const crud = inject('crud')
 defineProps({
   maxHeight: {
     type: [Number, String],
@@ -105,50 +96,64 @@ defineProps({
 })
 
 const nestingTaskTableRef = ref()
-const month = ref(moment().startOf('month').valueOf().toString())
+// const month = ref(moment().startOf('month').valueOf().toString())
 const query = ref({})
 const tableData = ref([])
 const loading = ref(false)
 const dataFormat = ref([['project', 'parse-project']])
 
-const { handleSizeChange, handleCurrentChange, total, setTotalPage, queryPage } = usePagination({ fetchHook: fetchTaskList })
+watch([() => date.value, () => name.value, () => issueStatusEnum.value], () => {
+  crud.data = []
+  crud.query.projectId = undefined
+})
 
 fetchTaskList()
 
-async function fetchTaskList(nestingTaskInfo) {
+async function fetchTaskList() {
   if (!checkPermission(permission.get)) return
   try {
     loading.value = true
     tableData.value = []
-    const { content, totalElements } = await getNestingTask({
-      date: month.value,
-      ...query.value,
-      ...queryPage
+    const { content } = await getProjectTaskDetail({
+      startDate: startDate.value,
+      endDate: endDate.value,
+      name: name.value,
+      issueStatusEnum: issueStatusEnum.value
     })
-    setTotalPage(totalElements)
-    tableData.value = content.map((v) => {
-      // v.projectId = v.project?.id
-      if (nestingTaskInfo && isNotBlank(nestingTaskInfo) && v.id === nestingTaskInfo.id) {
-        nextTick(() => {
-          nestingTaskTableRef.value?.setCurrentRow(v)
-        })
-      }
-      return v
-    })
+    tableData.value = content || []
   } catch (error) {
-    console.log('获取可排产的切割任务单错误', error)
+    console.log('获取排产项目列表错误', error)
   } finally {
     loading.value = false
   }
 }
 
-function handleBoolNestingChange() {
-  query.value.issueStatusEnum = undefined
+function handleClickChange(val) {
+  emit('nesting-task-click', val, query)
+}
+
+function handleDateChange(val) {
+  if (val && val.length > 1) {
+    startDate.value = val[0]
+    endDate.value = val[1]
+  } else {
+    startDate.value = undefined
+    endDate.value = undefined
+  }
   fetchTaskList()
 }
 
-function handleClickChange(val) {
-  emit('nesting-task-click', val, query)
+function searchQuery() {
+  fetchTaskList()
+}
+
+function resetQuery() {
+  name.value = undefined
+  date.value = []
+  startDate.value = undefined
+  endDate.value = undefined
+  issueStatusEnum.value = undefined
+  fetchTaskList()
 }
 
 defineExpose({
