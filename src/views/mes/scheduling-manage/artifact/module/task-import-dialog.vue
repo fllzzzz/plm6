@@ -5,7 +5,7 @@
     </template>
     <div class="red-tip" style="margin-bottom: 20px">
       <span>* 注意：</span>
-      <span>此操作将可将任务直接下发至生产线，请仔细核对表格数据！</span>
+      <span>此操作可将任务直接下发至生产组，请仔细核对表格数据！</span>
     </div>
     <el-form label-width="110px" label-position="left">
       <!-- <el-form-item label="要求完成时间">
@@ -23,6 +23,7 @@
           ref="uploadRef"
           action=""
           :accept="'.xls,.xlsx'"
+          :file-list="fileList"
           :http-request="handleRequest"
           :on-exceed="handleExceed"
           :auto-upload="false"
@@ -37,7 +38,7 @@
 
 <script setup>
 import { taskImport } from '@/api/mes/scheduling-manage/common'
-import { defineEmits, defineProps, ref } from 'vue'
+import { defineEmits, defineProps, ref, nextTick } from 'vue'
 // import moment from 'moment'
 
 import useVisible from '@compos/use-visible'
@@ -63,12 +64,17 @@ const { visible: dialogVisible, handleClose } = useVisible({ emit, props, field:
 const uploadRef = ref()
 const uploadLoading = ref(false)
 const form = ref({})
+const fileList = ref([])
 
 function showHook() {
   form.value = {
     areaId: props.query?.areaIdList?.[0],
     productType: props.productType
   }
+  nextTick(() => {
+    fileList.value = []
+    uploadRef.value.clearFiles()
+  })
 }
 
 function handleExceed(files, fileList) {
@@ -77,7 +83,6 @@ function handleExceed(files, fileList) {
 
 async function handleRequest(file) {
   try {
-    console.log(file)
     uploadLoading.value = true
     const fileObj = file.file
     const formData = new FormData()
@@ -86,8 +91,7 @@ async function handleRequest(file) {
       formData.append(key, props.data[key])
     }
 
-    const res = await taskImport(formData, form.value)
-    console.log(res)
+    await taskImport(formData, form.value)
     emit('success')
     handleClose()
   } catch (error) {
