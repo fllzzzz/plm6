@@ -299,9 +299,10 @@ const { maxHeight } = useMaxHeight(
 )
 
 watch(
-  [() => queryVO.value.productionLineTypeEnum],
+  [() => queryVO.value.productionLineTypeEnum, () => queryVO.value.structureClassId],
   () => {
     refreshArtifactType({ ...artifactTypeParams.value })
+    fetchGroup()
   },
   { deep: true }
 )
@@ -568,6 +569,7 @@ const batchDelVisible = ref(false)
 
 function handleDelSuccess() {
   fetchLineType()
+  fetchGroup()
   closeRefreshOut.value = true // 删除会导致外层数据变更需刷新
 }
 

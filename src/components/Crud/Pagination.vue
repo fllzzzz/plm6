@@ -16,3 +16,13 @@ import { regPagination } from '@compos/use-crud'
 
 const { crud, page } = regPagination()
 </script>
+<style lang="scss" scoped>
+.el-pagination ::v-deep(.btn-prev),
+.el-pagination ::v-deep(.btn-next) {
+  margin: 1px !important;
+}
+::v-deep.el-pager li {
+  margin: 1px !important;
+}
+
+</style>

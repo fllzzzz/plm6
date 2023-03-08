@@ -28,6 +28,18 @@
           </template>
         </el-popover>
       </el-form-item>
+      <el-form-item
+        label="排序"
+        prop="sort"
+      >
+        <el-input-number
+          v-model.number="form.sort"
+          :min="0"
+          :max="999999"
+          controls-position="right"
+          style="width: 450px;"
+        />
+      </el-form-item>
     </el-form>
   </common-dialog>
 </template>
@@ -49,13 +61,17 @@ const deptTreeData = ref([])
 const defaultForm = {
   id: undefined,
   name: undefined,
+  sort: 1,
   pid: 1,
   pName: undefined
 }
 const { CRUD, crud, form } = regForm(defaultForm, formRef)
 
 const rules = {
-  name: [{ required: true, message: '请填写部门称', trigger: 'blur' }]
+  name: [{ required: true, message: '请填写部门称', trigger: 'blur' }],
+  sort: [
+    { required: true, message: '请填写序号', trigger: 'blur', type: 'number' }
+  ]
 }
 
 function menuSelected(value) {
