@@ -7,6 +7,7 @@
             v-model="productType"
             :options="packTypeEnum.ENUM"
             default
+            :unshowVal="[packTypeEnum.MACHINE_PART.V]"
             type="enumSL"
             size="small"
             class="filter-item"
