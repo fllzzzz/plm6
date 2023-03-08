@@ -1,6 +1,6 @@
 <template>
   <div class="project-header-time-query">
-    <div v-if="data.length" class="project-header-time-query-content" ref="timeQueryContentRef">
+    <div v-if="data.length" style="margin-bottom: 8px" class="project-header-time-query-content" ref="timeQueryContentRef">
       <div
         v-if="isScroll"
         style="padding: 0 2px; cursor: pointer; border-right: 1px solid #ebebeb; height: 51px; line-height: 51px"
@@ -8,7 +8,7 @@
       >
         <el-icon><el-arrow-left /></el-icon>
       </div>
-      <div class="time-scroll" ref="timeScrollRef" style="margin-bottom: 8px; margin-right: 8px">
+      <div class="time-scroll" ref="timeScrollRef">
         <div class="time-list" ref="timeListRef" :style="scrollStyle">
           <div
             class="time-item"
