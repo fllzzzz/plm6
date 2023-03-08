@@ -52,10 +52,11 @@ const useSchedulingGroups = ({ queryParams, factoryIds, disabledIds }) => {
 
   function setData(list, disabledIds = []) {
     for (let i = 0; i < list.length; i++) {
-      // console.log(disabledIds, 'disabledIds')
-      list[i].disabled = disabledIds && disabledIds?.includes(list[i].id) || false
+      // console.log(list[i], disabledIds, 'disabledIds')
       if (list[i]?.children?.length) {
         setData(list[i].children, disabledIds)
+      } else {
+        list[i].disabled = disabledIds && disabledIds?.includes(list[i].id) || false
       }
     }
   }

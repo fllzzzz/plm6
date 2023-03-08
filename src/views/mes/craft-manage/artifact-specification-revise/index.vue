@@ -17,7 +17,7 @@
         @selection-change="crud.selectionChangeHandler"
         @sort-change="crud.handleSortChange"
       >
-        <el-table-column key="selection" type="selection" width="55" :selectable="selectable"/>
+        <el-table-column key="selection" type="selection" width="55"/>
         <el-table-column prop="index" label="序号" align="center" width="60" type="index" />
         <el-table-column
           v-if="columns.visible('monomer.name')"
@@ -185,9 +185,9 @@ getSpecConfig()
 
 provide('specList', specList.value)
 
-function selectable(row, rowIndex) {
-  return !row.newSpecPrefix
-}
+// function selectable(row, rowIndex) {
+//   return !row.newSpecPrefix
+// }
 
 async function getSpecConfig() {
   specList.value = []
