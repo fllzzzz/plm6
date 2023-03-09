@@ -1,7 +1,13 @@
 <template>
   <el-form v-if="unitLoaded" ref="formRef" :model="form" :rules="formRules" size="small" label-position="left" label-width="120px">
     <el-form-item label="出库方式" class="material-outbound-mode-info">
-      <common-radio v-model="form.materialOutboundMode" :options="steelCoilOutboundModeEnum" type="enum" size="small" @change="materialOutboundModeChange"/>
+      <common-radio
+        v-model="form.materialOutboundMode"
+        :options="steelCoilOutboundModeEnum"
+        type="enum"
+        size="small"
+        @change="materialOutboundModeChange"
+      />
     </el-form-item>
     <div :class="isPlateOut ? 'plate-out-form' : 'form'">
       <div :class="isPlateOut ? 'plate-out-material-info' : 'material-info'">
@@ -54,13 +60,7 @@
           <el-table-column label="序号" type="index" align="center" width="60" />
           <el-table-column prop="width" align="center" width="135px" :label="`宽 (${baseUnit.width.unit})`">
             <template #default="{ row }">
-              <el-tooltip
-                class="item"
-                effect="dark"
-                content="宽度不可大于物料本身宽度"
-                :disabled="!row.overWidth"
-                placement="top"
-              >
+              <el-tooltip class="item" effect="dark" content="宽度不可大于物料本身宽度" :disabled="!row.overWidth" placement="top">
                 <common-input-number
                   v-model="row.width"
                   :min="0"
@@ -77,13 +77,7 @@
           </el-table-column>
           <el-table-column prop="length" align="center" width="135px" :label="`长 (${baseUnit.length.unit})`">
             <template #default="{ row }">
-              <el-tooltip
-                class="item"
-                effect="dark"
-                content="长度不可大于出库总长度"
-                :disabled="!row.overLength"
-                placement="top"
-              >
+              <el-tooltip class="item" effect="dark" content="长度不可大于出库总长度" :disabled="!row.overLength" placement="top">
                 <common-input-number
                   v-model="row.length"
                   :min="0"
@@ -173,7 +167,7 @@
 import { steelCoilOutboundHandling } from '@/api/wms/material-outbound/raw-material/outbound-handling'
 import { defineProps, reactive, defineExpose, provide, computed, ref, watch, watchEffect } from 'vue'
 import { mapGetters } from '@/store/lib'
-import { deepClone, isBlank, toPrecision } from '@/utils/data-type'
+import { deepClone, isBlank, isNotBlank, toPrecision } from '@/utils/data-type'
 import { calcSteelCoilWeight } from '@/utils/wms/measurement-calc'
 import { positiveNumPattern } from '@/utils/validate/pattern'
 
@@ -299,7 +293,9 @@ const surplusQuantity = computed(() => {
 })
 
 const surplusWeight = computed(() => {
-  return toPrecision(material.value.mete - form.value.totalWeight, baseUnit.value?.weight?.precision)
+  return form.value.quantity === maxQuantity.value
+    ? 0
+    : toPrecision(material.value.mete - form.value.totalWeight, baseUnit.value?.weight?.precision)
 })
 
 watch(
@@ -356,12 +352,14 @@ function rowWatch(row) {
 
 watchEffect(async () => {
   form.value.totalWeight =
-    (await calcSteelCoilWeight({
-      name: material.value.classifyFullName,
-      length: form.value.quantity,
-      width: material.value.width,
-      thickness: material.value.thickness
-    })) || 0
+    form.value.quantity === maxQuantity.value
+      ? material.value.mete
+      : (await calcSteelCoilWeight({
+        name: material.value.classifyFullName,
+        length: form.value.quantity,
+        width: material.value.width,
+        thickness: material.value.thickness
+      })) || 0
 })
 
 function addRow() {
@@ -375,13 +373,17 @@ function delRow(index) {
 }
 
 async function calcMete(row) {
-  row.mete = await calcSteelCoilWeight({
-    name: row.name,
-    length: row.length,
-    width: row.width,
-    thickness: row.thickness,
-    quantity: row.quantity
-  })
+  if (isNotBlank(row.quantity) && isNotBlank(row.length) && isNotBlank(row.width)) {
+    row.mete = await calcSteelCoilWeight({
+      name: row.name,
+      length: row.length,
+      width: row.width,
+      thickness: row.thickness,
+      quantity: row.quantity
+    })
+  } else {
+    row.mete = 0
+  }
 }
 
 // 表单初始化
