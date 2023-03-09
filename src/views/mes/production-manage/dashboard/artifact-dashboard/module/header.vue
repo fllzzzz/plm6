@@ -35,7 +35,7 @@ import { componentTypeEnum } from '@enum-ms/mes'
 import { mapGetters } from '@/store/lib'
 
 import useUnshowProductTypeByMode from '@compos/use-unshow-productType-by-mode.js'
-import useDashboardHeader from '@compos/mes/dashboard/use-dashboard-header'
+import useStructureDashboardHeader from '@compos/mes/dashboard/use-structure-dashboard-header'
 import { regHeader } from '@compos/use-crud'
 import crudOperation from '@crud/CRUD.operation'
 import rrOperation from '@crud/RR.operation'
@@ -65,15 +65,16 @@ const { globalProjectId } = mapGetters(['globalProjectId'])
 const emit = defineEmits('load')
 
 const boxScale = ref(1)
-const { colors, boxZoomOut, getColor } = useDashboardHeader({ colorCardTitles: ['未生产', '生产中', '已完成'], emit, crud })
+const { colors, boxZoomOut, getColor } = useStructureDashboardHeader({ colorCardTitles: ['未生产', '生产中', '已完成'], emit, crud })
 
 CRUD.HOOK.handleRefresh = (crud, res) => {
   res.data.content = res.data.content.map((v) => {
+    console.log(v, 'v')
     v.detailLoading = false
     v.hasDetail = false
     v.compareQuantity = v.quantity
     v.isProcess = v.completeQuantity > 0
-    v.boxColor = getColor(v, { quantity: 'completeQuantity', compare: 'compareQuantity' })
+    v.boxColor = getColor(v, { complete: 'completeQuantity', listQuantity: 'quantity', inProduction: 'inProductionQuantity' })
     return v
   })
 }
