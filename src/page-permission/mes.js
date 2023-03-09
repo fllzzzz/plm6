@@ -46,7 +46,7 @@ export const surplusListPM = {
 export const artifactSchedulingPM = {
   get: ['mes_scheduling_artifact:get'], // 列表
   save: ['mes_scheduling_artifact:save'], // 构件排产保存
-  import: ['mes_scheduling_artifact:import'], // 构件排产导入
+  import: ['mes_scheduling_artifact:import'], // 任务导入
   recordGet: ['mes_scheduling_artifact_record:get'], // 获取构件排产记录
   recordEdit: ['mes_scheduling_artifact_record:edit'], // 构件排产记录编辑
   recordDel: ['mes_scheduling_artifact_record:del'], // 构件排产记录删除
