@@ -16,6 +16,7 @@
           v-model="productionLineId"
           :factory-id="factoryId"
           :workshop-id="workshopId"
+          :clearable="true"
           class="filter-item"
           style="width: 200px"
         />
