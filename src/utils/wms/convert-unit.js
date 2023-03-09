@@ -131,9 +131,9 @@ function steelFormat(
   }
   // 宽
   if (width && width instanceof Array) {
-    const curUnit = toSmallest ? unitCfg[basicClass].length.unit : MIN_UNIT.LENGTH
-    const fmtUnit = toSmallest ? MIN_UNIT.LENGTH : unitCfg[basicClass].length.unit
-    const precision = toSmallest ? MIN_UNIT.LENGTH_DP : unitCfg[basicClass].length.precision
+    const curUnit = toSmallest ? unitCfg[basicClass].width.unit : MIN_UNIT.LENGTH
+    const fmtUnit = toSmallest ? MIN_UNIT.LENGTH : unitCfg[basicClass].width.unit
+    const precision = toSmallest ? MIN_UNIT.LENGTH_DP : unitCfg[basicClass].width.precision
     width.forEach((wd) => {
       if (patternNumerical.test(data[wd])) {
         data[wd] = convertUnits(data[wd], curUnit, fmtUnit, precision, { showUnit, toNum })

@@ -21,7 +21,7 @@
         </template>
       </el-expand-table-column>
       <!-- 基础信息 -->
-      <material-base-info-columns :columns="columns" :basic-class="basicClass" show-classification classify-name-alias="名称" fixed="left">
+      <material-base-info-columns :columns="columns" :basic-class="basicClass" show-outbound-mode show-classification classify-name-alias="名称" fixed="left">
         <template #afterIndex>
           <el-table-column
             v-if="columns.visible('outboundReceipt.outboundTime')"

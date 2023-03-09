@@ -157,7 +157,9 @@ const { crud, columns, CRUD } = useCRUD(
 )
 
 const dataFormat = ref([['scheduleTime', ['parse-time', '{y}-{m}-{d}']]])
+
 provide('crud', crud)
+provide('permission', permission)
 
 const { maxHeight } = useMaxHeight({
   extraBox: ['.head-container'],

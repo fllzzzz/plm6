@@ -52,7 +52,7 @@ import { getProjectInfo } from '@/api/mes/work-order-manage/artifact.js'
 import { ref, defineProps, defineEmits, watch, inject } from 'vue'
 import moment from 'moment'
 import checkPermission from '@/utils/system/check-permission'
-import { machinePartSchedulingNestingResultPM as permission } from '@/page-permission/mes'
+import { artifactWorkOrderPM as permission } from '@/page-permission/mes'
 
 const emit = defineEmits(['nesting-task-click'])
 const crud = inject('crud')

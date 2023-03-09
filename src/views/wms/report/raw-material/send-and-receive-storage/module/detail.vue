@@ -25,7 +25,12 @@
         </common-button>
       </div>
       <div class="filter-right-box">
-        <export-button v-permission="permission.get" :params="printParams" :fn="exportSendAndReceiveStorageDetailExcel" response-header-result>
+        <export-button
+          v-permission="permission.get"
+          :params="printParams"
+          :fn="exportSendAndReceiveStorageDetailExcel"
+          response-header-result
+        >
           下载材料报表（根据查询条件）
         </export-button>
       </div>
@@ -45,16 +50,27 @@
       <el-table-column label="序号" type="index" align="center" width="55" fixed="left">
         <template #default="{ row, $index }">
           <!-- 是否红冲单 -->
-          <table-cell-tag :show="row.sourceRow?.receipt?.receiptType === receiptTypeEnum.SUPPLEMENT.V" :name="receiptTypeEnum.SUPPLEMENT.L" type="supplement" />
+          <table-cell-tag
+            :show="row.sourceRow?.receipt?.receiptType === receiptTypeEnum.SUPPLEMENT.V"
+            :name="receiptTypeEnum.SUPPLEMENT.L"
+            type="supplement"
+          />
           <span>{{ $index + 1 }}</span>
         </template>
       </el-table-column>
       <!-- 基础信息 -->
-      <material-base-info-columns :basic-class="materialInfo.basicClass" :show-index="false" spec-merge fixed="left" show-oddment-by-half-out />
+      <material-base-info-columns
+        :basic-class="materialInfo.basicClass"
+        :show-index="false"
+        spec-merge
+        :show-outbound-mode="Boolean(filter.formType === formTypeEnum.INBOUND.V)"
+        fixed="left"
+        show-oddment-by-half-out
+      />
       <!-- 次要信息 -->
       <material-secondary-info-columns :basic-class="materialInfo.basicClass" />
       <!-- 单位及其数量 -->
-      <material-unit-quantity-columns :basic-class="materialInfo.basicClass" />
+      <material-unit-quantity-columns :basic-class="materialInfo.basicClass & rawMatClsEnum.STEEL_COIL.V ? '' : materialInfo.basicClass" />
       <!-- 价格信息 -->
       <template v-if="showAmount">
         <amount-info-columns />
@@ -64,7 +80,10 @@
       <el-table-column key="receipt.receiptType" prop="receipt.receiptType" show-overflow-tooltip label="类型" align="center" width="70" />
       <el-table-column key="receipt" prop="receipt" show-overflow-tooltip label="单据编号" align="center" min-width="120">
         <template #default="{ row: { sourceRow: row } }">
-          <receipt-sn-clickable :receipt-types="['INBOUND', 'OUTBOUND', 'TRANSFER', 'RETURN', 'REJECTED', 'SUPPLEMENT']" :receipt="row?.receipt" />
+          <receipt-sn-clickable
+            :receipt-types="['INBOUND', 'OUTBOUND', 'TRANSFER', 'RETURN', 'REJECTED', 'SUPPLEMENT']"
+            :receipt="row?.receipt"
+          />
         </template>
       </el-table-column>
     </common-table>
@@ -81,6 +100,7 @@ import { materialHasAmountColumns } from '@/utils/columns-format/wms'
 import { specFormat } from '@/utils/wms/spec-format'
 import { isNotBlank } from '@/utils/data-type'
 import { formTypeEnum } from '../enum'
+import { rawMatClsEnum } from '@/utils/enum/modules/classification'
 
 import useMaxHeight from '@compos/use-max-height'
 import useMatBaseUnit from '@/composables/store/use-mat-base-unit'

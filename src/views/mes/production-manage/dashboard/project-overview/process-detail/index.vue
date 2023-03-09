@@ -99,16 +99,14 @@ const props = defineProps({
 
 const monomerId = inject('monomerId')
 const areaId = inject('areaId')
-const startDate = inject('startDate')
-const endDate = inject('endDate')
+const productionLineId = inject('productionLineId')
 
 const query = computed(() => {
   return {
     productType: props.detailData.productType,
     processId: props.detailData.id,
     projectId: props.projectId,
-    startDate: startDate.value,
-    endDate: endDate.value
+    productionLineId: productionLineId.value
   }
 })
 
