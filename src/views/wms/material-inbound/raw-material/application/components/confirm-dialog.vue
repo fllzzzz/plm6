@@ -168,6 +168,10 @@ const tableRules = computed(() => {
       Object.assign(rules, projectRules)
     }
   }
+  // 甲供项目必填
+  if (boolPartyA.value) {
+    Object.assign(rules, projectRules)
+  }
   return rules
 })
 
