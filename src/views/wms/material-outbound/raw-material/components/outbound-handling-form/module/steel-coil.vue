@@ -295,7 +295,7 @@ const surplusQuantity = computed(() => {
 const surplusWeight = computed(() => {
   return form.value.quantity === maxQuantity.value
     ? 0
-    : toPrecision(material.value.mete - form.value.totalWeight, baseUnit.value?.weight?.precision)
+    : toPrecision(material.value.operableMete - form.value.totalWeight, baseUnit.value?.weight?.precision)
 })
 
 watch(
@@ -353,7 +353,7 @@ function rowWatch(row) {
 watchEffect(async () => {
   form.value.totalWeight =
     form.value.quantity === maxQuantity.value
-      ? material.value.mete
+      ? material.value.operableMete
       : (await calcSteelCoilWeight({
         name: material.value.classifyFullName,
         length: form.value.quantity,
