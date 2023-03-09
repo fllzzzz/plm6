@@ -53,7 +53,7 @@ import { ref, defineProps, defineEmits, watch, inject } from 'vue'
 import moment from 'moment'
 import checkPermission from '@/utils/system/check-permission'
 import { mesMachinePartOrderTypeEnum } from '@enum-ms/mes'
-import { machinePartSchedulingNestingResultPM as permission } from '@/page-permission/mes'
+import { machinePartWorkOrderPM as permission } from '@/page-permission/mes'
 
 const emit = defineEmits(['nesting-task-click'])
 const crud = inject('crud')
