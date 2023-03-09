@@ -175,6 +175,7 @@ const { crud, CRUD, columns } = useCRUD(
 )
 
 provide('crud', crud)
+provide('permission', permission)
 const { maxHeight } = useMaxHeight({
   extraBox: ['.head-container'],
   extraHeight: 15,
