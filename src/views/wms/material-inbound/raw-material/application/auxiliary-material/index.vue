@@ -245,7 +245,7 @@ function handleOrderInfoChange(orderInfo) {
   cu.props.order = orderInfo
   boolPartyA.value = orderInfo?.supplyType === orderSupplyTypeEnum.PARTY_A.V
   // 筛除当前订单未指定的辅材科目
-  if (orderInfo && isNotBlank(orderInfo.auxMaterialIds)) {
+  if (orderInfo && isNotBlank(orderInfo.auxMaterialIds) && !orderInfo.auxMaterialIds.includes(0)) {
     const filterList = form.list.filter((v) => {
       for (const cid of orderInfo.auxMaterialIds) {
         if (v.classifyFullPathId.includes(cid)) {

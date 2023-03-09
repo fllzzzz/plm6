@@ -1,5 +1,8 @@
 import { rawMatClsEnum } from '@/utils/enum/modules/classification'
 import { isNotBlank } from '@/utils/data-type'
+
+import { MAT_BASE_UNIT } from '@/settings/config'
+
 // 规格格式化
 export function specFormat(row) {
   switch (row.basicClass) {
@@ -80,6 +83,9 @@ function steelCoilSpec(row) {
   if (isNotBlank(row.width)) {
     twl.push(row.width)
   }
+  if (isNotBlank(row.length)) {
+    twl.push(row.length)
+  }
   if (isNotBlank(twl)) spec.push(twl.join('*'))
   if (isNotBlank(row.specification) && row.specificationLabels !== '无规格') spec.push(row.specification)
   if (isNotBlank(row.color)) spec.push(row.color)
@@ -132,6 +138,7 @@ function sectionSteelSpecTip(row) {
 
 // 钢卷规格提示
 function steelCoilSpecTip(row) {
+  const baseUnit = MAT_BASE_UNIT[rawMatClsEnum.STEEL_COIL.V]
   const tip = []
   const twl = []
   if (isNotBlank(row.thickness)) {
@@ -139,6 +146,9 @@ function steelCoilSpecTip(row) {
   }
   if (isNotBlank(row.width)) {
     twl.push('宽(mm)')
+  }
+  if (isNotBlank(row.length)) {
+    twl.push(`长(${baseUnit.length.unit})`)
   }
   if (isNotBlank(twl)) tip.push(twl.join('*'))
   if (isNotBlank(row.specificationLabels) && row.specificationLabels !== '无规格') tip.push(row.specificationLabels)
