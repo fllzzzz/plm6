@@ -79,7 +79,7 @@
             min-width="60px"
           >
             <template v-slot="scope">
-              <span>{{ scope.row.avgPrice }}</span>
+              <span>{{ scope.row.mete? ((scope.row.price)?.toFixed(2) / (scope.row.mete / 1000)?.toFixed(2)).toFixed(2) : 0 }}</span>
             </template>
           </el-table-column>
         </common-table>
@@ -173,9 +173,6 @@ async function fetchProcessData() {
       endTime: endTime.value
     })
     // setTotalPage(totalElements)
-    content?.forEach((v) => {
-      v.avgPrice = v.mete ? (v.price / v.mete)?.toFixed(2) : 0
-    })
     productionData.value = content || []
   } catch (error) {
     console.log('获取工序汇总信息失败', error)
