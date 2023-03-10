@@ -103,6 +103,13 @@ export const machinePartWorkOrderPM = {
   print: ['mes_work_order_machine_part:print'] // 打印
 }
 
+// 工单管理/钻孔工单
+export const drillWorkOrderPM = {
+  get: ['mes_work_order_drill:get'], // 列表
+  detail: ['mes_work_order_drill:detail'], // 查看
+  print: ['mes_work_order_drill:print'] // 打印
+}
+
 // --------------------------- 工单管理 end --------------------------------
 
 // ########################################################################

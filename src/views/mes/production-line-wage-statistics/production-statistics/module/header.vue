@@ -25,7 +25,7 @@
           name="平均单价（元/吨）"
           text-color="#626262"
           num-color="#1890ff"
-          :end-val="summaryInfo.price / (summaryInfo.mete / 1000) || 0"
+          :end-val="summaryInfo.mete? summaryInfo.price?.toFixed(2) / ((summaryInfo.mete / 1000)?.toFixed(2)) : 0 || 0"
           :precision="2"
         />
       </el-col>

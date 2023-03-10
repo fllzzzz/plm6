@@ -4,7 +4,7 @@ import {
   processingColorsEnum
 } from '@enum-ms/production'
 
-export default function useDashboardHeader({ colorCardTitles = ['未入库', '部分入库', '全部入库'], emit, crud, fetchSummaryInfo }) {
+export default function useStructureDashboardHeader({ colorCardTitles = ['未入库', '部分入库', '全部入库'], emit, crud, fetchSummaryInfo }) {
   const colors = [{
     title: colorCardTitles[0],
     color: processingColorsEnum.UNSTART.COLOR,
@@ -30,14 +30,14 @@ export default function useDashboardHeader({ colorCardTitles = ['未入库', '�
     { immediate: true }
   )
 
-  function getColor(row, { quantity = 'inboundQuantity', compare = 'compareQuantity' }) {
-    if (row[quantity] === 0 && !row.isProcess) {
+  function getColor(row, { complete = 'completeQuantity', listQuantity = 'quantity', inProduction = 'inProductionQuantity' }) {
+    if (row[complete] === 0 && row[inProduction] === 0) {
       return processingColorsEnum.UNSTART.COLOR
     }
-    if (row[quantity] === row[compare]) {
+    if (row[complete] === row[listQuantity]) {
       return processingColorsEnum.COMPLETE.COLOR
     }
-    if (row.isProcess || row[quantity] > 0 && row[quantity] < row[compare]) {
+    if (row[complete] < row[listQuantity] && (row[complete] > 0 || row[inProduction] > 0)) {
       return processingColorsEnum.PROCESS.COLOR
     }
     return processingColorsEnum.ABNORMAL.COLOR

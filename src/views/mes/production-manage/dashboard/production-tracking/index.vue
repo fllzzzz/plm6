@@ -28,7 +28,7 @@
         <el-table-column
           v-if="
             (crud.query.processType?.includes(item.productType) && componentTypeEnum.ARTIFACT.V) |
-              (crud.query.processType?.includes(item.productType) && componentTypeEnum.ASSEMBLE.V)
+              (crud.query.processType?.includes(item.productType) && componentTypeEnum.ASSEMBLE.V) && (item.productionLineTypeEnum & artifactProductLineEnum.TRADITION.V)
           "
           :label="item.name"
           align="center"
@@ -47,7 +47,7 @@
                 <span> / </span>
                 <span>{{ row.processMap[item.id]?.quantity }}</span>
               </div>
-              <span v-else> \ </span>
+              <span v-else> / </span>
             </div>
           </template>
         </el-table-column>
@@ -64,7 +64,7 @@ import { getArtifactProcess } from '@/api/mes/production-config/artifact-rivet-w
 import useCRUD from '@compos/use-crud'
 // import { parseTime } from '@/utils/date'
 import { arr2obj } from '@/utils/convert/type'
-import { componentTypeEnum } from '@enum-ms/mes'
+import { componentTypeEnum, artifactProductLineEnum } from '@enum-ms/mes'
 import useProcess from '@compos/store/use-process'
 import useMaxHeight from '@compos/use-max-height'
 import pagination from '@crud/Pagination'

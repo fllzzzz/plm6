@@ -32,6 +32,8 @@
           class="filter-item"
           @change="handleProductionLineTypeChange"
         />
+      </el-form-item>
+      <el-form-item class="form-label-require">
         <common-radio-button
           v-if="!isTradition"
           v-model="query.boolMainAssemble"
@@ -152,14 +154,28 @@
     </template>
     <template #viewLeft>
       <slot name="viewLeft" />
-      <common-button v-if="isTradition" v-permission="permission.noNestingDetail"  :disabled="!query.projectId" class="filter-item" type="success" size="mini" icon="el-icon-view" @click="noNestingVisible = true">
+      <common-button
+        v-if="isTradition"
+        v-permission="permission.noNestingDetail"
+        :disabled="!query.projectId"
+        class="filter-item"
+        type="success"
+        size="mini"
+        icon="el-icon-view"
+        @click="noNestingVisible = true"
+      >
         查看【无需套料清单】
       </common-button>
     </template>
   </crudOperation>
   <!-- <filter-drawer v-model:visible="filterVisible" :list="filterList"></filter-drawer> -->
   <no-nesting-drawer v-model:visible="noNestingVisible" @refresh="crud.toQuery" />
-  <extrusion-nesting-setting v-model:visible="dialogVisible" :detail-data="crud.selections" :monomerId="query.monomerId" :projectId="query.projectId" />
+  <extrusion-nesting-setting
+    v-model:visible="dialogVisible"
+    :detail-data="crud.selections"
+    :monomerId="query.monomerId"
+    :projectId="query.projectId"
+  />
 </template>
 
 <script setup>
@@ -215,8 +231,10 @@ watchEffect(() => {
     assembleList.value =
       conditionInfo.value[artifactProductLineEnum.INTELLECT.V]?.map((v) => {
         v.id = v.ids.join(',')
-        v.structureNameDTOS.map(k => {
-          v.label = v.label ? v.label + ` -【${k.definitionWord}】${k.classificationName}` : `【${k.definitionWord}】${k.classificationName}`
+        v.structureNameDTOS.map((k) => {
+          v.label = v.label
+            ? v.label + ` -【${k.definitionWord}】${k.classificationName}`
+            : `【${k.definitionWord}】${k.classificationName}`
         })
         return v
       }) || []
@@ -227,6 +245,7 @@ watchEffect(() => {
 function areaChange() {
   query.areaIds = query.ids ? query.ids.join(',') : undefined
   fetchOtherCondition()
+  query.productionLineTypeEnum = artifactProductLineEnum.TRADITION.V
   crud.toQuery()
 }
 
@@ -235,6 +254,7 @@ function handleProductionLineTypeChange(val) {
   query.specPrefix = undefined
   query.specification = undefined
   query.material = undefined
+  query.boolMainAssemble = assembleTypeEnum.MAIN_ASSEMBLE.V
   if (!isTradition.value) {
     curMode.value = 'nesting'
     handleModeChange(curMode.value)
