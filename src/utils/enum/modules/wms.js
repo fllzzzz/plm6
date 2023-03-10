@@ -161,6 +161,7 @@ constantize(receiptTypeEnum)
 // 冻结类型
 const materialFreezeTypeEnum = {
   PREPARATION: receiptTypeEnum.PREPARATION,
+  REQUISITIONS: receiptTypeEnum.REQUISITIONS,
   OUTBOUND_APPLY: { L: '出库', K: 'OUTBOUND_APPLY', V: receiptTypeEnum.OUTBOUND_APPLY.V, DOC: '出库申请单' },
   TRANSFER: receiptTypeEnum.TRANSFER,
   REJECTED: receiptTypeEnum.REJECTED,

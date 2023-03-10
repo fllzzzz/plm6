@@ -149,7 +149,7 @@ import {
   sectionSteelBatchOutboundHandling,
   steelCoilBatchOutboundHandling,
   auxMatBatchOutboundHandling,
-  gasBatchOutboundHandling,
+  gasBatchOutboundHandling
 } from '@/api/wms/material-outbound/raw-material/outbound-handling'
 import { defineEmits, defineProps, watch, ref, computed, nextTick } from 'vue'
 import { mapGetters } from '@/store/lib'
@@ -182,33 +182,33 @@ const emit = defineEmits(['success', 'update:visible'])
 const props = defineProps({
   visible: {
     type: Boolean,
-    require: true,
+    require: true
   },
   projectWarehouseType: {
-    type: Number,
+    type: Number
   },
   projectId: {
-    type: Number,
+    type: Number
   },
   basicClass: {
     // 基础分类
-    type: Number,
+    type: Number
   },
   materialList: {
     // 物料出库信息
     type: Array,
-    default: () => [],
-  },
+    default: () => []
+  }
 })
 
 const { projectMap, monomerMap } = useProjectTree()
 
 // 钢板校验规则
 const steelRules = {
-  projectId: [{ required: true, message: '请选择出库项目', trigger: 'change' }],
+  projectId: [{ required: true, message: '请选择出库项目', trigger: 'change' }]
 }
 const tableRules = {
-  workshopId: [{ required: true, message: '请选择出库车间', trigger: 'change' }],
+  workshopId: [{ required: true, message: '请选择出库车间', trigger: 'change' }]
 }
 const { tableValidate, wrongCellMask } = useTableValidate({ rules: tableRules, errorMsg: '请选择出库车间' }) // 表格校验
 
@@ -231,7 +231,7 @@ const currentProject = ref()
 // 提交表单
 const form = ref({
   list: [],
-  recipientId: undefined, // 领用人id
+  recipientId: undefined // 领用人id
 })
 // 提交loading
 const submitLoading = ref(false)
@@ -239,7 +239,7 @@ const submitLoading = ref(false)
 const columnsDataFormat = ref([
   ...materialOperateColumns,
   ['projectOperableQuantity', ['to-fixed-field', 'measurePrecision']],
-  ['projectOperableMete', ['to-fixed-field', 'accountingPrecision']],
+  ['projectOperableMete', ['to-fixed-field', 'accountingPrecision']]
 ])
 // 显示
 const { visible: dialogVisible, handleClose } = useVisible({ emit, props, field: 'visible', showHook: clearValidate })
@@ -251,7 +251,7 @@ const { maxHeight } = useMaxHeight(
     wrapperBox: ['.el-dialog__body'],
     clientHRepMainH: true,
     navbar: false,
-    minHeight: 350,
+    minHeight: 350
   },
   dialogVisible
 )
@@ -314,7 +314,7 @@ const setRecipientId = watch(
     }
   },
   {
-    immediate: true,
+    immediate: true
   }
 )
 
@@ -368,7 +368,7 @@ async function submit() {
       monomerId: form.value.monomerId,
       areaId: form.value.areaId,
       recipientId: form.value.recipientId,
-      list: [],
+      list: []
     }
     // 无需进行对列表进行数量是否填写校验，提交时过滤数量为空或为0的数据
     form.value.list.forEach((v) => {
@@ -380,7 +380,7 @@ async function submit() {
           outboundUnit: v.outboundUnit, // 出库单位
           outboundUnitPrecision: v.outboundUnitPrecision, // 单位精度
           outboundUnitType: v.outboundUnitType, // 出库单位类型
-          remark: v.remark, // 备注
+          remark: v.remark // 备注
         })
       }
     })
@@ -389,7 +389,7 @@ async function submit() {
       unitPrecisionField: 'outboundUnitPrecision',
       fields: ['quantity'],
       toSmallest: true,
-      toNum: true,
+      toNum: true
     })
     const { validResult, dealList } = tableValidate(data.list)
     if (validResult) {
