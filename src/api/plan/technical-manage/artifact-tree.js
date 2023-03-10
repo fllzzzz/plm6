@@ -49,6 +49,19 @@ export function listUpload(data) {
   })
 }
 
+export function changeListUpload(data) {
+  return request({
+    module: 'mes',
+    url: 'tech/change/analyzing',
+    responseType: 'blob',
+    method: 'post',
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    },
+    data
+  })
+}
+
 /**
  * 下载零构件关联清单
  */
