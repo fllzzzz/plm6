@@ -125,7 +125,7 @@ import usePagination from '@compos/use-pagination'
 import plateUseRecord from './module/plate-use-record'
 import stockDetail from './module/stock-detail'
 
-const { maxHeight } = useMaxHeight({ extraBox: ['.panel-group', '.print-table'] })
+const { maxHeight } = useMaxHeight({ extraBox: ['.panel-group', '.print-table'], paginate: true })
 
 const { globalProjectId } = mapGetters(['globalProjectId'])
 
