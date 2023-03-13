@@ -87,7 +87,7 @@ import { ref } from 'vue'
 import crudApi, { getGasList } from '@/api/contract/expense-entry/gas-cost'
 
 import { gasCostPM as permission } from '@/page-permission/contract'
-import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
+// import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
 
@@ -164,17 +164,17 @@ function getSummaries(param) {
 
 CRUD.HOOK.beforeToQuery = (crud) => {}
 CRUD.HOOK.handleRefresh = async (crud, res) => {
-  res.data.content = await numFmtByBasicClass(
-    res.data.content,
-    {
-      toSmallest: false,
-      toNum: true
-    },
-    {
-      mete: ['usedMete'],
-      amount: ['avgUnitPrice']
-    }
-  )
+  // res.data.content = await numFmtByBasicClass(
+  //   res.data.content,
+  //   {
+  //     toSmallest: false,
+  //     toNum: true
+  //   },
+  //   {
+  //     mete: ['usedMete'],
+  //     amount: ['avgUnitPrice']
+  //   }
+  // )
 }
 const { maxHeight } = useMaxHeight({
   extraBox: ['.head-container'],
