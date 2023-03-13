@@ -39,14 +39,13 @@
           style="display: inline-block"
           :data="artifactTypeList"
           itemKey="structureClassId"
-          @change="handleStructureChange"
         >
           <template #default="{ item }">
             <span>{{ item.name }}：</span>
             <span>{{ item.quantity }}件</span>
           </template>
         </tag-tabs>
-        <group-header v-model="queryVO.groupsId" :data="groupData" @change="fetch" @task-issue-success="handleTaskIssueSuccess" />
+        <group-header v-show="queryVO.structureClassId" v-model="queryVO.groupsId" :data="groupData" @task-issue-success="handleTaskIssueSuccess" />
         <el-input
           v-model.trim="queryVO.serialNumber"
           size="small"
@@ -297,14 +296,24 @@ watch(
   [() => queryVO.value.productionLineTypeEnum],
   () => {
     refreshArtifactType({ ...artifactTypeParams.value })
-    fetchGroup()
+    // fetchGroup()
   },
   { deep: true }
 )
 watch(
   [() => queryVO.value.structureClassId],
-  () => {
+  (val) => {
     fetchGroup()
+    // fetch()
+  },
+  { deep: true }
+)
+watch(
+  [() => queryVO.value.groupsId],
+  (val) => {
+    if (val) {
+      fetch()
+    }
   },
   { deep: true }
 )
@@ -312,6 +321,7 @@ watch(
 // 获取生产组信息
 async function fetchGroup() {
   const areaIdList = props.otherQuery.areaIdList
+  if (!queryVO.value.structureClassId) return
   try {
     const { content } = (await groupSummary({ areaIdList, structureClassId: queryVO.value.structureClassId })) || {}
     groupData.value = content || []
@@ -387,7 +397,7 @@ function resetQuery() {
   queryVO.value.serialNumber = undefined
   queryVO.value.groupsId = undefined
   // if (queryVO.value.productionLineTypeEnum !== artifactProductLineEnum.INTELLECT.V) {
-  //   queryVO.value.structureClassId = undefined
+  queryVO.value.structureClassId = undefined
   // }
   fetch()
 }
@@ -397,7 +407,7 @@ async function fetch() {
   listObjIdsByGroup.value = {}
   summaryInfo.value = {}
   if (
-    (queryVO.value.productionLineTypeEnum === artifactProductLineEnum.INTELLECT.V && !queryVO.value.structureClassId) ||
+    !queryVO.value.structureClassId ||
     !queryVO.value.productionLineTypeEnum
   ) {
     return
@@ -610,10 +620,10 @@ function handleTaskIssueSuccess() {
   emit('refresh')
 }
 
-function handleStructureChange() {
-  fetchGroup()
-  fetch()
-}
+// function handleStructureChange() {
+//   fetchGroup()
+//   fetch()
+// }
 </script>
 
 <style lang="scss" scoped>
