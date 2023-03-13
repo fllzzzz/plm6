@@ -352,6 +352,7 @@ async function schedulingNumGet() {
 const handleAreaClick = debounce(function (nodes = []) {
   console.log(nodes, 'handleAreaClick')
   summaryInfo.value = {}
+  totalBadge.value = 0
   const _areaIds = []
   const _areaIdObj = {}
   const _factoryIds = []

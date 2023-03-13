@@ -46,12 +46,7 @@
             <span>{{ item.quantity }}件</span>
           </template>
         </tag-tabs>
-        <group-header
-          v-model="queryVO.groupsId"
-          :data="groupData"
-          @change="fetch"
-          @task-issue-success="handleTaskIssueSuccess"
-        />
+        <group-header v-model="queryVO.groupsId" :data="groupData" @change="fetch" @task-issue-success="handleTaskIssueSuccess" />
         <el-input
           v-model.trim="queryVO.serialNumber"
           size="small"
@@ -299,9 +294,16 @@ const { maxHeight } = useMaxHeight(
 )
 
 watch(
-  [() => queryVO.value.productionLineTypeEnum, () => queryVO.value.structureClassId],
+  [() => queryVO.value.productionLineTypeEnum],
   () => {
     refreshArtifactType({ ...artifactTypeParams.value })
+    fetchGroup()
+  },
+  { deep: true }
+)
+watch(
+  [() => queryVO.value.structureClassId],
+  () => {
     fetchGroup()
   },
   { deep: true }
@@ -355,9 +357,10 @@ function artifactTypeInit() {
   }
   if (
     artifactTypeList.value?.length &&
-    (artifactTypeList.value?.length === 1 || queryVO.value.productionLineTypeEnum === artifactProductLineEnum.INTELLECT.V)
+    (artifactTypeList.value?.length > 0 || queryVO.value.productionLineTypeEnum === artifactProductLineEnum.INTELLECT.V)
   ) {
-    queryVO.value.structureClassId = artifactTypeList.value[0].structureClassId
+    // queryVO.value.structureClassId = artifactTypeList.value[0].structureClassId
+    queryVO.value.structureClassId = artifactTypeList.value?.length ? artifactTypeList.value[0]?.structureClassId : undefined
   }
   fetch()
 }
@@ -383,9 +386,9 @@ function closeHook() {
 function resetQuery() {
   queryVO.value.serialNumber = undefined
   queryVO.value.groupsId = undefined
-  if (queryVO.value.productionLineTypeEnum !== artifactProductLineEnum.INTELLECT.V) {
-    queryVO.value.structureClassId = undefined
-  }
+  // if (queryVO.value.productionLineTypeEnum !== artifactProductLineEnum.INTELLECT.V) {
+  //   queryVO.value.structureClassId = undefined
+  // }
   fetch()
 }
 
@@ -399,7 +402,6 @@ async function fetch() {
   ) {
     return
   }
-  console.log(props.otherQuery, queryVO.value, 'value')
   try {
     tableLoading.value = true
     summaryInfo.value = (await recordSummary({ ...props.otherQuery, ...queryVO.value })) || {}
