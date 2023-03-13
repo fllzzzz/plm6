@@ -49,7 +49,7 @@
 <script setup>
 import { getArtifactType, getLineType } from '@/api/mes/scheduling-manage/artifact'
 import { inject, watch, defineExpose, ref } from 'vue'
-import { useRouter } from 'vue-router'
+// import { useRouter } from 'vue-router'
 import { artifactProductLineEnum } from '@enum-ms/mes'
 
 import { regHeader } from '@compos/use-crud'
@@ -58,7 +58,7 @@ import crudOperation from '@crud/CRUD.operation'
 import tagTabs from '@comp-common/tag-tabs'
 import productTypeQuery from '@comp-mes/header-query/product-type-query'
 
-const router = useRouter()
+// const router = useRouter()
 const defaultQuery = {}
 
 const productType = inject('productType')
@@ -130,9 +130,9 @@ function refreshTypeList() {
   })
 }
 
-function productionLineStatus() {
-  router.push({ name: 'MesMonitoringKanban', params: { areaId: crud.query.areaIdList[0] }})
-}
+// function productionLineStatus() {
+//   router.push({ name: 'MesMonitoringKanban', params: { areaId: crud.query.areaIdList[0] }})
+// }
 
 defineExpose({
   refreshTypeList
