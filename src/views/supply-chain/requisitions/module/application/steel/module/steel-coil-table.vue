@@ -32,12 +32,7 @@
         </el-tooltip>
       </template>
     </el-table-column>
-    <el-table-column
-      key="weighingTotalWeight"
-      prop="weighingTotalWeight"
-      align="center"
-      :label="`总重 (${baseUnit.weight.unit})`"
-    >
+    <el-table-column key="weighingTotalWeight" prop="weighingTotalWeight" align="center" :label="`总重 (${baseUnit.weight.unit})`">
       <template #default="{ row }">
         <common-input-number
           v-model="row.weighingTotalWeight"
@@ -104,7 +99,9 @@
     </el-table-column>
     <el-table-column label="操作" width="140" align="center" fixed="right">
       <template #default="{ row, $index }">
-        <common-button type="primary" size="mini" @click="search(row, $index)">查询</common-button>
+        <common-button type="primary" size="mini" v-if="form.type !== preparationTypeEnum.PUBLIC.V" @click="search(row, $index)">
+          查询
+        </common-button>
         <common-button icon="el-icon-delete" type="danger" size="mini" @click="delRow(row.sn, $index)" />
       </template>
     </el-table-column>
@@ -114,7 +111,7 @@
 <script setup>
 import { defineExpose, defineEmits, inject, reactive, watch } from 'vue'
 import { matClsEnum } from '@/utils/enum/modules/classification'
-import { requisitionModeEnum } from '@enum-ms/wms'
+import { requisitionModeEnum, preparationTypeEnum } from '@enum-ms/wms'
 import { isBlank, isNotBlank } from '@/utils/data-type'
 
 import { regExtra } from '@/composables/form/use-form'

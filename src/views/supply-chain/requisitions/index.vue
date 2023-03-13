@@ -72,7 +72,7 @@
         label="所属项目"
         min-width="170"
       />
-      <el-table-column
+      <!-- <el-table-column
         v-if="checkPermission(permission.detail) && columns.visible('mete')"
         prop="mete"
         key="mete"
@@ -84,7 +84,7 @@
         <template #default="{ row }">
           <common-button icon="el-icon-view" size="mini" type="success"></common-button>
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <!-- <el-table-column
         v-if="columns.visible('approveInfoName')"
         key="approveInfoName"

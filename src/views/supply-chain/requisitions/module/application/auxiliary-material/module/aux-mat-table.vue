@@ -85,7 +85,9 @@
     </el-table-column>
     <el-table-column label="操作" width="140" align="center" fixed="right">
       <template #default="{ row, $index }">
-        <common-button type="primary" size="mini" @click="search(row, $index)">查询</common-button>
+        <common-button type="primary" size="mini" v-if="form.type !== preparationTypeEnum.PUBLIC.V" @click="search(row, $index)">
+          查询
+        </common-button>
         <common-button icon="el-icon-delete" type="danger" size="mini" @click="delRow(row.sn, $index)" />
       </template>
     </el-table-column>
@@ -95,7 +97,7 @@
 <script setup>
 import { defineExpose, defineEmits, inject, reactive } from 'vue'
 import { createUniqueString } from '@/utils/data-type/string'
-import { requisitionModeEnum } from '@/utils/enum/modules/wms'
+import { requisitionModeEnum, preparationTypeEnum } from '@/utils/enum/modules/wms'
 import { positiveNumPattern } from '@/utils/validate/pattern'
 
 import { regExtra } from '@/composables/form/use-form'

@@ -23,7 +23,7 @@
         </el-tooltip>
       </template>
     </el-table-column>
-    <el-table-column prop="thickness" align="center" :label="`厚 (${baseUnit.thickness.unit})`">
+    <el-table-column prop="thickness" align="center" :label="`厚 (${baseUnit.thickness.unit})`" min-width="120">
       <template #default="{ row }">
         <common-input-number
           v-if="!form.useRequisitions"
@@ -39,7 +39,7 @@
         <span v-else>{{ row.thickness }}</span>
       </template>
     </el-table-column>
-    <el-table-column prop="width" align="center" :label="`宽 (${baseUnit.width.unit})`">
+    <el-table-column prop="width" align="center" :label="`宽 (${baseUnit.width.unit})`" min-width="120">
       <template #default="{ row }">
         <common-input-number
           v-model="row.width"
@@ -53,7 +53,7 @@
         />
       </template>
     </el-table-column>
-    <el-table-column prop="length" align="center" :label="`长 (${baseUnit.length.unit})`">
+    <el-table-column prop="length" align="center" :label="`长 (${baseUnit.length.unit})`" min-width="120">
       <template #default="{ row }">
         <common-input-number
           v-model="row.length"
@@ -66,7 +66,7 @@
         />
       </template>
     </el-table-column>
-    <el-table-column prop="quantity" align="center" :label="`数量 (${baseUnit.measure.unit})`">
+    <el-table-column prop="quantity" align="center" :label="`数量 (${baseUnit.measure.unit})`"  min-width="120">
       <template #default="{ row }">
         <common-input-number
           v-model="row.quantity"
@@ -81,7 +81,7 @@
         />
       </template>
     </el-table-column>
-    <el-table-column key="weighingTotalWeight" prop="weighingTotalWeight" align="center" :label="`总重 (${baseUnit.weight.unit})`">
+    <el-table-column key="weighingTotalWeight" prop="weighingTotalWeight" align="center" :label="`总重 (${baseUnit.weight.unit})`" min-width="135">
       <template #default="{ row }">
         <el-tooltip
           class="item"
