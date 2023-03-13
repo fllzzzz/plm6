@@ -395,10 +395,8 @@ function closeHook() {
 
 function resetQuery() {
   queryVO.value.serialNumber = undefined
-  queryVO.value.groupsId = undefined
-  // if (queryVO.value.productionLineTypeEnum !== artifactProductLineEnum.INTELLECT.V) {
-  queryVO.value.structureClassId = undefined
-  // }
+  queryVO.value.groupsId = groupData.value[0]?.groups?.id
+  queryVO.value.structureClassId = artifactTypeList.value[0]?.structureClassId
   fetch()
 }
 
@@ -480,7 +478,7 @@ function handleCheckAllChange(val, row, index) {
   console.log(row, _groupId, val, listObjIdsByGroup.value[_groupId], 'handleCheckAllChange')
   if (_groupId && listObjIdsByGroup.value[_groupId]) {
     tableData.value.forEach((v) => {
-      if (listObjIdsByGroup.value[_groupId].includes(v.id)) {
+      if (Array.from(new Set(listObjIdsByGroup.value[_groupId])).includes(v.id)) {
         recordTableRef?.value?.toggleRowSelection(v, val)
       }
     })
@@ -533,7 +531,7 @@ function selectionChangeHandler(val) {
   if (val.length) {
     for (const item in listObjIdsByGroup.value) {
       const _groupsId = Number(item)
-      const compareLength = listObjIdsByGroup.value[item].length
+      const compareLength = Array.from(new Set(listObjIdsByGroup.value[item])).length
       const _list = val.filter((v) => v.groups.id === _groupsId)
       if (_list.length) {
         const _index = _list[0].mergeIndex
