@@ -12,14 +12,34 @@
             <div class="circle-button" style="border-color: #da0000; color: #da0000"><ElClose style="width: 85%" /></div>
           </span>
         </template>
-        <div>
+        <div class="box-content">
           <div class="handle-title">
             <span># 基本信息</span>
           </div>
           <div style="display: flex">
-            <artifact-change-table :newArtifact="item.newArtifact" :oldArtifact="item.oldArtifact" style="width: 750px;" />
+            <artifact-change-table :newArtifact="item.newArtifact" :oldArtifact="item.oldArtifact" style="width: 750px" />
             <artifact-area-change-table :areaList="item.areaList" style="flex: 1; margin-left: 15px" />
           </div>
+        </div>
+        <div class="box-content">
+          <div class="handle-title">
+            <span># 部件变更设置（单构件）</span>
+          </div>
+          <assemble-change-set
+            :new-assemble-list="item.newArtifact?.assembleList || []"
+            :old-assemble-list="item.oldArtifact?.assembleList || []"
+          />
+        </div>
+        <div class="box-content">
+          <div class="handle-title">
+            <span># 部件变更信息</span>
+          </div>
+        </div>
+        <div class="box-content" v-if="item.partCompareResList?.length">
+          <div class="handle-title">
+            <span># 零件变更信息</span>
+          </div>
+          <machine-part-change-table :partCompareList="item.partCompareResList" />
         </div>
       </el-card>
     </div>
@@ -32,6 +52,8 @@ import { inject, defineProps } from 'vue'
 import artifactChangeTable from '../components/artifact-change-table'
 import artifactAreaChangeTable from '../components/artifact-area-change-table'
 import artifactRightInfo from '../components/artifact-right-info'
+import assembleChangeSet from '../components/assemble-change-set'
+import machinePartChangeTable from '../components/machine-part-change-table'
 
 const props = defineProps({
   heightStyle: {
@@ -114,6 +136,10 @@ const changeInfo = inject('changeInfo')
       font-size: 16px;
     }
   }
+}
+
+.box-content {
+  margin-bottom: 20px;
 }
 .handle-title {
   font-size: 18px;

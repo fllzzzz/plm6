@@ -1,16 +1,21 @@
 <template>
-  <common-table v-if="props.areaList?.length" :data="tableData" :max-height="maxHeight" style="width: 100%">
+  <common-table
+    v-if="props.areaList?.length"
+    :header-cell-style="() => `font-weight: bold;color: #333333;`"
+    :data="tableData"
+    style="width: 100%"
+  >
     <el-table-column align="center" width="80">
       <template #header>
-        <span>共{{ props.areaList?.length }}个区域</span>
+        <span style="color: #0078fc">共{{ props.areaList?.length }}个区域</span>
       </template>
       <template #default="{ row }">
-        <span>{{ row.title }}</span>
+        <span style="font-weight: bold">{{ row.title }}</span>
       </template>
     </el-table-column>
     <el-table-column v-for="item in props.areaList" :key="item.id" :label="item.name" align="center" width="120">
       <template #default="{ row }">
-        <span v-if="row.field">{{ areaObj?.[item.id]?.[row.field] || '-' }}</span>
+        <cell-compare-preview :value="areaObj?.[item.id]?.[row.field]" v-if="row.isDiff" />
         <span v-else>{{ areaObj?.[item.id]?.[row.field] || '-' }}</span>
       </template>
     </el-table-column>
@@ -19,6 +24,7 @@
 
 <script setup>
 import { computed, defineProps } from 'vue'
+import cellComparePreview from '@comp-common/cell-compare-preview'
 
 const props = defineProps({
   areaList: {
@@ -40,9 +46,9 @@ const areaObj = computed(() => {
 
 const tableData = computed(() => {
   return [
-    { title: '原数量', field: 'oldQuantity' },
-    { title: '现数量', field: 'newQuantity' },
-    { title: '差异', field: 'diff' }
+    { title: '原数量', isDiff: false, field: 'oldQuantity' },
+    { title: '现数量', isDiff: false, field: 'newQuantity' },
+    { title: '差异', isDiff: true, field: 'diff' }
   ]
 })
 </script>

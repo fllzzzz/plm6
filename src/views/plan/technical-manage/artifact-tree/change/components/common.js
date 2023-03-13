@@ -1,3 +1,5 @@
+import { constantize } from '@/utils/enum/base'
+
 // 处理构件变更状态
 export const artifactHandleStatus = {
   UN_HANDLE: {
@@ -26,3 +28,31 @@ export const artifactHandleStatus = {
     style: `background: #da0000; color: #fff;`
   }
 }
+
+// 变更类型枚举
+const changeTypeEnum = {
+  NEW: { L: '新', K: 'NEW', V: 1, C: '#0063d0' },
+  ADD: { L: '加', K: 'ADD', V: 2, C: '#00ae11' },
+  MINUS: { L: '减', K: 'MINUS', V: 3, C: '#e28a18' },
+  EDIT: { L: '改', K: 'EDIT', V: 4, C: '#ae4e00' },
+  DEL: { L: '删', K: 'DEL', V: 5, C: '#ff0000' }
+}
+constantize(changeTypeEnum)
+
+// 部件变更操作类型
+const assembleOperateTypeEnum = {
+  EDIT: { L: '变更', K: 'EDIT', V: 1 },
+  NEW: { L: '新增', K: 'NEW', V: 2 }
+}
+constantize(assembleOperateTypeEnum)
+
+// 部件变更处理方式
+const assembleHandleMethodEnum = {
+  ADD_LENGTH: { L: '加长', K: 'ADD_LENGTH', V: 1 << 0 },
+  TRUNCATE: { L: '截短', K: 'TRUNCATE', V: 1 << 1 },
+  PUNCH_HOLE: { L: '打孔', K: 'PUNCH_HOLE', V: 1 << 2 },
+  OTHER: { L: '其他', K: 'OTHER', V: 1 << 3 }
+}
+constantize(assembleHandleMethodEnum)
+
+export { changeTypeEnum, assembleHandleMethodEnum, assembleOperateTypeEnum }
