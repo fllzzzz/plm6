@@ -102,7 +102,7 @@ watchEffect(() => {
   if (isNotBlank(form.list)) {
     form.list.forEach((v) => {
       _mete += v.mete || 0
-      _amount += v.amount || 0
+      _amount += Number(v.amount) || 0
     })
   }
   form.amount = _amount
@@ -129,13 +129,13 @@ const rules = {
   quantity: [{ validator: validateQuantity, message: '请填写数量', trigger: 'blur' }],
   mete: [
     { required: true, message: '请填写核算量', trigger: 'blur' },
-    { pattern: positiveNumPattern, message: '核算量必须大于0', trigger: 'blur' },
+    { pattern: positiveNumPattern, message: '核算量必须大于0', trigger: 'blur' }
   ],
   unitPrice: [{ required: true, message: '请填写单价', trigger: 'blur' }],
   amount: [
     { required: true, message: '请填写金额', trigger: 'blur' },
-    { validator: validateAmount, message: '金额有误，请手动修改', trigger: 'blur' },
-  ],
+    { validator: validateAmount, message: '金额有误，请手动修改', trigger: 'blur' }
+  ]
 }
 
 const { tableValidate, wrongCellMask } = useTableValidate({ rules: rules }) // 表格校验
@@ -160,7 +160,7 @@ function rowInit(row) {
     accountingPrecision: row.classify.accountingPrecision, // 核算单位小数精度
     measurePrecision: row.classify.measurePrecision, // 计量单位小数精度
     mete: undefined, // 核算量
-    quantity: undefined, // 数量
+    quantity: undefined // 数量
   })
   return _row
 }
@@ -184,6 +184,6 @@ function validate() {
 
 defineExpose({
   rowInit,
-  validate,
+  validate
 })
 </script>

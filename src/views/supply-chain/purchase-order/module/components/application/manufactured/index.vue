@@ -130,8 +130,8 @@ import useTableValidate from '@/composables/form/use-table-validate'
 
 defineProps({
   maxHeight: {
-    type: Number,
-  },
+    type: Number
+  }
 })
 
 // 同上的选项与值
@@ -140,7 +140,7 @@ const ditto = new Map([['destination', -1]])
 const tableRules = {
   unitPrice: [{ required: true, message: '请填写单价', trigger: 'blur' }],
   pricingMethod: [{ required: true, message: '请选择计价方式', trigger: 'change' }],
-  destination: [{ required: true, message: '请选择目的地', trigger: 'change' }],
+  destination: [{ required: true, message: '请选择目的地', trigger: 'change' }]
 }
 
 // 表格校验
@@ -192,7 +192,7 @@ watchEffect(() => {
   if (isNotBlank(purchaseMergeList.value)) {
     purchaseMergeList.value.forEach((v) => {
       _mete += v.curPurchaseWeight || 0
-      _amount += v.amount || 0
+      _amount += Number(v.amount) || 0
     })
   }
   form.amount = _amount
@@ -304,7 +304,7 @@ function fetchResList() {
 
 defineExpose({
   validate,
-  fetchResList,
+  fetchResList
 })
 </script>
 

@@ -256,7 +256,21 @@
                   </common-radio-button>
                 </span>
                 <span class="opt-content">
-                  <common-button v-if="!isManuf" type="success" size="mini" @click="materialSelectVisible = true"> 添加物料 </common-button>
+                  <common-button v-if="!isManuf" class="filter-item" type="success" size="mini" @click="materialSelectVisible = true">
+                    添加物料
+                  </common-button>
+                  <excel-resolve-button
+                    v-if="!isManuf"
+                    icon="el-icon-upload2"
+                    btn-name="清单导入"
+                    btn-size="mini"
+                    class="filter-item"
+                    btn-type="warning"
+                    open-loading
+                    style="margin-left: 10px"
+                    :template="importTemp"
+                    @success="handleExcelSuccess"
+                  />
                   <el-tooltip :disabled="!!form.projectId" effect="light" content="请先选择项目" placement="left-start">
                     <span>
                       <common-button
@@ -278,7 +292,8 @@
               <component ref="compRef" :is="currentView" :maxHeight="maxHeight - 150" />
               <div class="table-remark">
                 <span class="title">合同量</span>
-                <span class="con"
+                <span
+class="con"
                   >{{ form.mete }}
                   <span v-if="form.materialType & materialPurchaseClsEnum.MATERIAL.V">
                     <unit-select
@@ -367,6 +382,10 @@ import { clearObject } from '@/utils/data-type/object'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { setSpecInfoToList } from '@/utils/wms/spec'
 import { arr2obj, obj2arr } from '@/utils/convert/type'
+import steelPlateTemp from '@/utils/excel/import-template/supply-chain/purchase-temp/steel-plate'
+import sectionSteelTemp from '@/utils/excel/import-template/supply-chain/purchase-temp/section-steel'
+import steelCoilTemp from '@/utils/excel/import-template/supply-chain/purchase-temp/steel-coil'
+import auxMaterialTemp from '@/utils/excel/import-template/supply-chain/purchase-temp/aux-material'
 
 import { regForm } from '@compos/use-crud'
 import UnitSelect from '@comp-common/unit-select/index.vue'
@@ -386,6 +405,8 @@ import SteelApplication from '../components/application/steel/index'
 import AuxMatApplication from '../components/application/auxiliary-material/index'
 import ManufApplication from '../components/application/manufactured/index'
 import materialTableSpecSelect from '@/components-system/classification/material-table-spec-select.vue'
+import excelResolveButton from '@/components-system/common/excel-resolve-button/index.vue'
+import { ElMessage } from 'element-plus'
 
 const defaultForm = {
   useRequisitions: false, // 是否绑定申购单
@@ -419,7 +440,7 @@ const defaultForm = {
   requisitions: [],
   requisitionsKV: {},
   manufListObj: {},
-  manufMergeObj: {},
+  manufMergeObj: {}
 }
 
 const formRef = ref() // 表单
@@ -434,7 +455,7 @@ const { maxHeight, heightStyle } = useMaxHeight(
     mainBox: '.purchase-order-raw-mat-form',
     extraBox: ['.el-drawer__header'],
     wrapperBox: ['.el-drawer__body'],
-    clientHRepMainH: true,
+    clientHRepMainH: true
   },
   dialogVisible
 )
@@ -464,7 +485,7 @@ const baseRules = {
   projectId: [{ required: true, message: '请选择项目', trigger: 'change' }],
   supplyType: [{ required: true, message: '请选择供货类型', trigger: 'change' }],
   supplierId: [{ required: true, message: '请选择供应商', trigger: 'change' }],
-  branchCompanyId: [{ required: true, message: '请选择签订主体', trigger: 'change' }],
+  branchCompanyId: [{ required: true, message: '请选择签订主体', trigger: 'change' }]
 }
 
 // 自采物料校验
@@ -476,7 +497,7 @@ const selfRules = {
   invoiceType: [{ required: true, validator: validateInvoiceType, trigger: 'change' }],
   taxRate: [{ max: 2, message: '请输入税率', trigger: 'blur' }],
   mete: [{ required: true, message: '请填写合同量', trigger: 'blur' }],
-  amount: [{ required: true, message: '请填写合同额', trigger: 'blur' }],
+  amount: [{ required: true, message: '请填写合同额', trigger: 'blur' }]
 }
 
 const validateAuxMat = (rule, value, callback) => {
@@ -494,7 +515,7 @@ const validateAuxMat = (rule, value, callback) => {
 
 // 辅材校验
 const auxMatRules = {
-  auxMaterialIds: [{ required: true, validator: validateAuxMat, trigger: 'change' }],
+  auxMaterialIds: [{ required: true, validator: validateAuxMat, trigger: 'change' }]
 }
 
 // rules变更
@@ -567,8 +588,24 @@ const compListVK = {
   [matClsEnum.STEEL_COIL.V]: 'steelCoilList',
   [matClsEnum.MATERIAL.V]: 'list',
   [matClsEnum.STRUC_MANUFACTURED.V]: 'list',
-  [matClsEnum.ENCL_MANUFACTURED.V]: 'list',
+  [matClsEnum.ENCL_MANUFACTURED.V]: 'list'
 }
+
+// 当前物料“批量导入模板”
+const importTemp = computed(() => {
+  switch (form.currentBasicClass) {
+    case matClsEnum.STEEL_PLATE.V:
+      return steelPlateTemp
+    case matClsEnum.SECTION_STEEL.V:
+      return sectionSteelTemp
+    case matClsEnum.STEEL_COIL.V:
+      return steelCoilTemp
+    case matClsEnum.MATERIAL.V:
+      return auxMaterialTemp
+    default:
+      return steelPlateTemp
+  }
+})
 
 const compRef = ref()
 const materialSpecSelectDrawer = ref()
@@ -587,7 +624,7 @@ const { maxHeight: specSelectMaxHeight } = useMaxHeight(
     wrapperBox: ['.el-drawer__body'],
     navbar: false,
     clientHRepMainH: true,
-    minHeight: 300,
+    minHeight: 300
   },
   () => materialSpecSelectDrawer.value?.loaded
 )
@@ -602,7 +639,7 @@ const { maxHeight: manufSelectMaxHeight } = useMaxHeight(
     paginate: true,
     clientHRepMainH: true,
     extraHeight: 50,
-    minHeight: 300,
+    minHeight: 300
   },
   () => manufSelectDrawerRef.value?.loaded
 )
@@ -624,7 +661,7 @@ function handleAddManuf(list) {
       form.manufListObj[v.id] = {
         ...v,
         rowKey: v.id,
-        curPurchaseWeight: _purchaseWeight,
+        curPurchaseWeight: _purchaseWeight
       }
     } else {
       form.manufListObj[v.id].curPurchaseQuantity += v.curPurchaseQuantity
@@ -646,6 +683,43 @@ function handleAddManuf(list) {
     // }
   }
   purchaseManufVisible.value = false
+}
+
+// 解析导入表格
+function handleExcelSuccess(importList) {
+  // 解析
+  // 根据物料种类获取
+  try {
+    const key = compListVK[form.currentBasicClass]
+    // 截取新旧数组长度，对导入数据进行rowWatch监听
+    const oldLen = form[key].length
+    form[key].push.apply(form[key], importList)
+    const newLen = form[key].length
+    if (compRef.value?.rowWatch) {
+      for (let i = oldLen; i < newLen; i++) {
+        compRef.value?.rowWatch(form[key][i])
+      }
+    }
+    // 初始化选中数据，执行一次后取消当前监听
+    const initSelectedTrigger = watch(
+      matSpecRef,
+      () => {
+        if (matSpecRef.value) {
+          matSpecRef.value.initSelected(
+            importList.map((v) => {
+              return { sn: v.sn, classifyId: v.classifyId }
+            })
+          )
+          nextTick(() => {
+            initSelectedTrigger()
+          })
+        }
+      },
+      { immediate: true }
+    )
+  } catch (error) {
+    ElMessage.error({ message: error.message, duration: 5000 })
+  }
 }
 
 // --------------------------- 申购 start ------------------------------
@@ -733,7 +807,7 @@ CRUD.HOOK.beforeEditDetailLoaded = async (crud, form) => {
   } else {
     await setSpecInfoToList(form.details)
     form.list = await numFmtByBasicClass(form.details, {
-      toNum: true,
+      toNum: true
     })
     if (form.materialType & materialPurchaseClsEnum.STEEL.V) {
       // 修改的情况下，数据预处理
@@ -785,7 +859,7 @@ crud.submitFormFormat = async (form) => {
           pricingMethod: v.pricingMethod,
           unitPrice: v.unitPrice,
           amount: v.amount,
-          destination: v.destination,
+          destination: v.destination
         })
         // })
       })

@@ -25,7 +25,7 @@ watchEffect(() => {
     if (isNotBlank(form[key])) {
       form[key].forEach((v) => {
         _mete += v.weighingTotalWeight || 0
-        _amount += v.amount || 0
+        _amount += Number(v.amount) || 0
       })
     }
   })
@@ -38,7 +38,7 @@ watchEffect(() => {
 const steelRefList = reactive({
   steelPlateList: null,
   sectionSteelList: null,
-  steelCoilList: null,
+  steelCoilList: null
 })
 
 // 使用草稿时，为数据设置监听
@@ -46,12 +46,12 @@ const setFormCallback = (form) => {
   const trigger = {
     steelPlateList: null,
     sectionSteelList: null,
-    steelCoilList: null,
+    steelCoilList: null
   }
   const initSelectedTrigger = {
     steelPlateList: null,
     sectionSteelList: null,
-    steelCoilList: null,
+    steelCoilList: null
   }
   const list = ['steelPlateList', 'sectionSteelList', 'steelCoilList']
   list.forEach((key) => {
@@ -171,7 +171,7 @@ defineExpose({
   rowInit,
   validate,
   rowWatch,
-  setFormCallback,
+  setFormCallback
 })
 </script>
 
