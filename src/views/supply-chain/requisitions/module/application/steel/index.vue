@@ -29,6 +29,16 @@
             :template="importTemp"
             @success="handleExcelSuccess"
           />
+          <export-button
+            v-if="currentBasicClass"
+            class="filter-item"
+            size="small"
+            type="info"
+            :params="{ basicClass: steelBasicClassKV[currentBasicClass].V, receiptType: receiptTypeEnum.REQUISITIONS.V }"
+            :fn="downloadExcelTemplate"
+          >
+            {{ steelBasicClassKV[currentBasicClass].L }}清单模板下载
+          </export-button>
         </div>
       </div>
       <el-form ref="formRef" :model="form">
@@ -63,13 +73,14 @@
 
 <script setup>
 import crudApi from '@/api/supply-chain/requisitions-manage/requisitions'
+import { downloadExcelTemplate } from '@/api/wms/common'
 
 import { defineProps, defineEmits, ref, computed, watch, provide, nextTick, reactive } from 'vue'
 import { STEEL_ENUM } from '@/settings/config'
 import { convertUnits } from '@/utils/convert/unit'
 import { matClsEnum } from '@/utils/enum/modules/classification'
 import { steelInboundFormFormat } from '@/utils/wms/measurement-calc'
-import { preparationTypeEnum, requisitionModeEnum } from '@enum-ms/wms'
+import { preparationTypeEnum, requisitionModeEnum, receiptTypeEnum } from '@enum-ms/wms'
 import steelPlateTemp from '@/utils/excel/import-template/supply-chain/requisition-temp/steel-plate'
 import sectionSteelTemp from '@/utils/excel/import-template/supply-chain/requisition-temp/section-steel'
 import steelCoilTemp from '@/utils/excel/import-template/supply-chain/requisition-temp/steel-coil'
@@ -84,6 +95,7 @@ import sectionSteelTable from './module/section-steel-table.vue'
 import steelCoilTable from './module/steel-coil-table.vue'
 import inventoryDrawer from '../components/inventory-drawer'
 import excelResolveButton from '@/components-system/common/excel-resolve-button/index.vue'
+import ExportButton from '@comp-common/export-button/index.vue'
 import { ElMessage, ElRadioGroup } from 'element-plus'
 import { isBlank, isNotBlank, toFixed } from '@/utils/data-type'
 

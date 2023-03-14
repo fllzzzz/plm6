@@ -21,3 +21,14 @@ export function getInboundThicknessById(classifyId) {
     cancelKey: false
   })
 }
+
+// 导入表格模板下载
+export function downloadExcelTemplate(params) {
+  return request({
+    module: 'wms',
+    url: `report/raw-materials/template/excel`,
+    method: 'get',
+    params,
+    responseType: 'blob'
+  })
+}

@@ -271,6 +271,16 @@
                     :template="importTemp"
                     @success="handleExcelSuccess"
                   />
+                  <export-button
+                    v-if="!isManuf"
+                    class="filter-item"
+                    style="margin-left: 10px"
+                    type="info"
+                    :params="{ basicClass: form.currentBasicClass, receiptType: receiptTypeEnum.PURCHASE.V }"
+                    :fn="downloadExcelTemplate"
+                  >
+                    {{ matClsEnum.VL[form.currentBasicClass] }}清单模板下载
+                  </export-button>
                   <el-tooltip :disabled="!!form.projectId" effect="light" content="请先选择项目" placement="left-start">
                     <span>
                       <common-button
@@ -369,9 +379,10 @@ class="con"
 </template>
 
 <script setup>
+import { downloadExcelTemplate } from '@/api/wms/common'
 import { ref, computed, provide, nextTick, watchEffect, watch } from 'vue'
 import { matClsEnum, steelClsEnum, materialPurchaseClsEnum } from '@enum-ms/classification'
-import { orderSupplyTypeEnum, baseMaterialTypeEnum, purchaseOrderPaymentModeEnum } from '@enum-ms/wms'
+import { orderSupplyTypeEnum, baseMaterialTypeEnum, purchaseOrderPaymentModeEnum, receiptTypeEnum } from '@enum-ms/wms'
 import { logisticsPayerEnum, logisticsTransportTypeEnum } from '@/utils/enum/modules/logistics'
 import { weightMeasurementModeEnum, invoiceTypeEnum } from '@enum-ms/finance'
 import { fileClassifyEnum } from '@enum-ms/file'
@@ -406,6 +417,7 @@ import AuxMatApplication from '../components/application/auxiliary-material/inde
 import ManufApplication from '../components/application/manufactured/index'
 import materialTableSpecSelect from '@/components-system/classification/material-table-spec-select.vue'
 import excelResolveButton from '@/components-system/common/excel-resolve-button/index.vue'
+import ExportButton from '@comp-common/export-button/index.vue'
 import { ElMessage } from 'element-plus'
 
 const defaultForm = {

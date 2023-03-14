@@ -14,6 +14,15 @@
             :template="auxMaterialTemp"
             @success="handleExcelSuccess"
           />
+          <export-button
+            class="filter-item"
+            size="small"
+            type="info"
+            :params="{ basicClass: currentBasicClass, receiptType: receiptTypeEnum.REQUISITIONS.V }"
+            :fn="downloadExcelTemplate"
+          >
+            辅材清单模板下载
+          </export-button>
         </div>
       </div>
       <el-form ref="formRef" :model="form">
@@ -48,11 +57,12 @@
 
 <script setup>
 import crudApi from '@/api/supply-chain/requisitions-manage/requisitions'
+import { downloadExcelTemplate } from '@/api/wms/common'
 
 import { defineProps, defineEmits, ref, provide, watch, nextTick } from 'vue'
 import { matClsEnum } from '@/utils/enum/modules/classification'
 import { isBlank } from '@/utils/data-type'
-import { preparationTypeEnum, requisitionModeEnum } from '@enum-ms/wms'
+import { preparationTypeEnum, requisitionModeEnum, receiptTypeEnum } from '@enum-ms/wms'
 import auxMaterialTemp from '@/utils/excel/import-template/supply-chain/requisition-temp/aux-material'
 
 import useForm from '@/composables/form/use-form'
@@ -62,6 +72,7 @@ import MaterialTableSpecSelect from '@/components-system/classification/material
 import AuxMatTable from './module/aux-mat-table.vue'
 import inventoryDrawer from '../components/inventory-drawer'
 import excelResolveButton from '@/components-system/common/excel-resolve-button/index.vue'
+import ExportButton from '@comp-common/export-button/index.vue'
 
 import { ElMessage } from 'element-plus'
 
