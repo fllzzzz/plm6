@@ -26,11 +26,11 @@
 </template>
 
 <script setup>
-import { defineProps, defineEmits, computed, ref, reactive, provide } from 'vue'
+import { defineProps, defineEmits, computed, ref, reactive, provide, watchEffect } from 'vue'
 
 import { arr2obj, obj2arr } from '@/utils/convert/type'
-import { toPrecision } from '@/utils/data-type'
-import { changeTypeEnum } from './components/common.js'
+import { toPrecision, isNotBlank, isBlank } from '@/utils/data-type'
+import { changeTypeEnum, artifactHandleStatusEnum, assembleOperateTypeEnum } from './components/common.js'
 
 import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'
@@ -80,7 +80,11 @@ function showHook() {
   for (let i = 0; i < props.originChangeInfo.length; i++) {
     const v = props.originChangeInfo[i]
     v.partCompareResList = handleComparePartList(v.oldArtifact.partList || [], v.newArtifact.partList || [])
-    v.assembleCompareResObj = {}
+    v.assembleInfo = handleAssembleList(v.oldArtifact.assembleList || [], v.newArtifact.assembleList || [])
+    v.artifactHandleStatus = getArtifactInitStatus(v)
+    v.boolTag = false
+    v.boolDel = false
+    artifactWatch(v)
     _list.push(v)
     changeInfoMap.value.set(v.newArtifact.serialNumber, v)
   }
@@ -88,9 +92,136 @@ function showHook() {
   changeInfo.value = _list
 }
 
-// 处理部件列表
-function handleAssembleList() {
+function artifactWatch(item) {
+  watchEffect(() => {
+    let isAssembleHandled = true
+    const assembleChangeList = []
+    const oldHandledSNs = []
+    const assembleDelList = []
+    for (let i = 0; i < item.assembleInfo.needHandleNewList.length; i++) {
+      const v = item.assembleInfo.needHandleNewList[i]
+      if (!v.operateType || (v.operateType !== assembleOperateTypeEnum.NEW.V && !v.oldSerialNumbers?.length)) isAssembleHandled = false
 
+      if (v.operateType === assembleOperateTypeEnum.NEW.V) {
+        const changeType = changeTypeEnum.NEW.V
+        const diffQuantity = -v.quantity
+        const diffTotalWeight = -v.totalNetWeight
+        assembleChangeList.push({ newSN: v.serialNumber, oldSN: null, changeType, diffQuantity, diffTotalWeight })
+      }
+
+      if (v.operateType !== assembleOperateTypeEnum.NEW.V && v.oldSerialNumbers?.length) {
+        for (let o = 0; o < v.oldSerialNumbers.length; o++) {
+          const oldSN = v.oldSerialNumbers[o]
+          oldHandledSNs.push(oldSN)
+          if (!v.handleObj[oldSN] || !v.handleObj[oldSN]?.handleType || !v.handleObj[oldSN]?.quantity) {
+            isAssembleHandled = false
+            continue
+          }
+
+          const changeType = changeTypeEnum.EDIT.V
+          const diffQuantity = v.handleObj[oldSN]?.quantity - v.quantity
+          const diffTotalWeight = toPrecision(v.handleObj[oldSN]?.quantity * v.handleObj[oldSN]?.netWeight - v.totalNetWeight, 2)
+          assembleChangeList.push({
+            newSN: v.serialNumber,
+            oldSN: oldSN,
+            oldQuantity: v.handleObj[oldSN]?.quantity,
+            handleType: v.handleObj[oldSN]?.handleType,
+            changeType,
+            diffQuantity,
+            diffTotalWeight
+          })
+        }
+      }
+    }
+    if (isAssembleHandled && oldHandledSNs.length !== item.assembleInfo.needHandleOldList.length) {
+      for (let i = 0; i < item.assembleInfo.needHandleOldList.length; i++) {
+        const o = item.assembleInfo.needHandleOldList[i]
+        if (!oldHandledSNs.includes(o.serialNumber)) {
+          const changeType = changeTypeEnum.DEL.V
+          const diffQuantity = o.quantity
+          const diffTotalWeight = o.totalNetWeight
+          assembleDelList.push({ newSN: null, oldSN: o.serialNumber, changeType, diffQuantity, diffTotalWeight })
+        }
+      }
+    }
+    item.assembleCompareList = [...assembleChangeList, ...item.assembleInfo?.amList, ...assembleDelList]
+    if (isAssembleHandled) {
+      item.artifactHandleStatus = artifactHandleStatusEnum.HANDLED.V
+    } else if (item.artifactHandleStatus === artifactHandleStatusEnum.HANDLED.V) {
+      item.artifactHandleStatus = artifactHandleStatusEnum.UN_HANDLE.V
+    }
+    if (item.boolDel) {
+      item.artifactHandleStatus = artifactHandleStatusEnum.CANCEL_HANDLE.V
+    }
+    if (item.boolTag) {
+      item.artifactHandleStatus |= artifactHandleStatusEnum.TAG.V
+    }
+  })
+}
+
+// 获取构件初始状态
+function getArtifactInitStatus(item) {
+  let artifactHandleStatus
+  if (
+    isBlank(item.assembleInfo?.needHandleOldList) &&
+    isBlank(item.assembleInfo?.needHandleNewList) &&
+    isBlank(item.assembleInfo?.amList)
+  ) {
+    artifactHandleStatus = artifactHandleStatusEnum.NOT_HANDLE.V
+  } else {
+    artifactHandleStatus = artifactHandleStatusEnum.UN_HANDLE.V
+  }
+  return artifactHandleStatus
+}
+
+// 处理部件列表
+function handleAssembleList(oldList, newList) {
+  // 需要处理的列表，过滤完全相同的
+  const needHandleOldList = []
+  const needHandleOldObj = {}
+  const needHandleNewList = []
+  const needHandleNewObj = {}
+  const amList = [] // 单纯加减数量的列表
+  const sameKeys = [] // 编号、规格、长度相同的列表
+  const oldObj = arr2obj(oldList, 'serialNumber')
+
+  for (let i = 0; i < newList.length; i++) {
+    const n = newList[i]
+    const _o = oldObj[n.serialNumber]
+    if (isNotBlank(_o) && _o.specification === n.specification && _o.length === n.length) {
+      sameKeys.push(`${n.serialNumber}_${n.specification}_${n.length}`)
+      if (_o.quantity === n.quantity) {
+        continue
+      } else {
+        const diffQuantity = _o.quantity - n.quantity
+        const changeType = n.diffQuantity > 0 ? changeTypeEnum.REDUCE.V : changeTypeEnum.ADD.V
+        const diffTotalWeight = toPrecision(_o.totalNetWeight - n.totalNetWeight, 2)
+        amList.push({ newSN: n.serialNumber, oldSN: _o.serialNumber, changeType, diffQuantity, diffTotalWeight })
+      }
+    } else {
+      needHandleNewList.push(n)
+      needHandleNewObj[n.serialNumber] = n
+    }
+  }
+
+  for (let i = 0; i < oldList.length; i++) {
+    const o = oldList[i]
+    const _key = `${o.serialNumber}_${o.specification}_${o.length}`
+    if (sameKeys.includes(_key)) {
+      continue
+    } else {
+      needHandleOldList.push(o)
+      needHandleOldObj[o.serialNumber] = o
+    }
+  }
+
+  return {
+    needHandleOldList,
+    needHandleNewList,
+    needHandleOldObj,
+    needHandleNewObj,
+    amList
+  }
 }
 
 // 处理比较零件变更
@@ -116,7 +247,7 @@ function handleComparePartList(oldList, newList) {
       oldQuantity = _o.quantity
       diffQuantity = _o.quantity - newQuantity
       diffTotalWeight = toPrecision(_o.totalNetWeight - n.totalNetWeight, 2)
-      changeType = n.diffQuantity > 0 ? changeTypeEnum.MINUS.V : changeTypeEnum.ADD.V
+      changeType = n.diffQuantity > 0 ? changeTypeEnum.REDUCE.V : changeTypeEnum.ADD.V
     }
     resObj[n.serialNumber] = { ...n, changeType, diffQuantity, diffTotalWeight, oldQuantity, newQuantity }
   }

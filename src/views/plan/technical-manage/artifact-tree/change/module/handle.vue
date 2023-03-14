@@ -26,14 +26,16 @@
             <span># 部件变更设置（单构件）</span>
           </div>
           <assemble-change-set
-            :new-assemble-list="item.newArtifact?.assembleList || []"
-            :old-assemble-list="item.oldArtifact?.assembleList || []"
+            :new-assemble-list="item.assembleInfo?.needHandleNewList || []"
+            :old-assemble-list="item.assembleInfo?.needHandleOldList || []"
+            :assembleInfo="item.assembleInfo"
           />
         </div>
         <div class="box-content">
           <div class="handle-title">
             <span># 部件变更信息</span>
           </div>
+          <assemble-change-table :assembleCompareList="item.assembleCompareList" :assembleInfo="item.assembleInfo" />
         </div>
         <div class="box-content" v-if="item.partCompareResList?.length">
           <div class="handle-title">
@@ -53,9 +55,10 @@ import artifactChangeTable from '../components/artifact-change-table'
 import artifactAreaChangeTable from '../components/artifact-area-change-table'
 import artifactRightInfo from '../components/artifact-right-info'
 import assembleChangeSet from '../components/assemble-change-set'
+import assembleChangeTable from '../components/assemble-change-table'
 import machinePartChangeTable from '../components/machine-part-change-table'
 
-const props = defineProps({
+defineProps({
   heightStyle: {
     type: String
   }

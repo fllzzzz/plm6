@@ -1,16 +1,21 @@
 <template>
-  <el-card v-if="changeInfo?.length > 1" class="artifact-right-info">
+  <el-card class="artifact-right-info">
     <div class="head-tip">
-      <span>变更构件共 {{ changeInfo?.length }} 种，已处理 2 种 </span>
+      <span>变更构件共 {{ changeInfo?.length }} 种，已处理 {{ handleQuantity }} 种 </span>
     </div>
     <div class="sn-list">
-      <div class="sn" v-for="(item, index) in changeInfo" :key="index" :style="artifactHandleStatus['UN_HANDLE'].style">
+      <div
+        class="sn"
+        v-for="(item, index) in changeInfo"
+        :key="index"
+        :style="artifactHandleStatusEnum.V[item.artifactHandleStatus]?.style"
+      >
         {{ item.newArtifact?.serialNumber }}
       </div>
     </div>
     <el-divider />
     <div class="foot-tip">
-      <div v-for="(item, index) in artifactHandleStatus" :key="index" class="tip-status">
+      <div v-for="(item, index) in artifactHandleStatusEnum.ENUM" :key="index" class="tip-status">
         <div class="illustration" :style="item.style"></div>
         <div class="label">{{ item.L }}</div>
       </div>
@@ -19,10 +24,23 @@
 </template>
 
 <script setup>
-import { artifactHandleStatus } from './common'
-import { inject } from 'vue'
+import { artifactHandleStatusEnum } from './common'
+import { computed, inject } from 'vue'
 
 const changeInfo = inject('changeInfo')
+
+const handleQuantity = computed(() => {
+  let num = 0
+  changeInfo.value.forEach((v) => {
+    if (
+      v.artifactHandleStatus &
+      (artifactHandleStatusEnum.HANDLED.V | artifactHandleStatusEnum.NOT_HANDLE.V | artifactHandleStatusEnum.CANCEL_HANDLE.V)
+    ) {
+      num++
+    }
+  })
+  return num
+})
 </script>
 
 <style lang="scss" scoped>

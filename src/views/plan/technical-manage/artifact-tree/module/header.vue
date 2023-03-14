@@ -296,14 +296,14 @@ const originChangeInfo = ref({})
 
 function changeListUploadSuccess(res) {
   if (typeof res === 'object') {
-    originChangeInfo.value = res.data
+    originChangeInfo.value = res.data?.content || []
     changeVisible.value = true
   }
 }
 
 function changeListTest() {
   console.log(changeRes)
-  originChangeInfo.value = changeRes.data
+  originChangeInfo.value = changeRes.data.content || []
   changeVisible.value = true
 }
 // --------------------------- 变更清单导入 end --------------------------------
