@@ -182,11 +182,12 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, provide } from 'vue'
 import crudApi from '@/api/mes/production-line-wage-statistics/stud-sleeve-statistics'
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
 import pagination from '@crud/Pagination'
+import { mesStudSleeveStatisticsPM as permission } from '@/page-permission/mes'
 import { auxiliaryMaterialTypeEnum } from '@enum-ms/mes'
 import { projectNameFormatter } from '@/utils/project'
 import { tableSummary } from '@/utils/el-extra'
@@ -210,12 +211,13 @@ const { crud, columns } = useCRUD(
     sort: [],
     optShow: { ...optShow },
     crudApi: { ...crudApi },
-    // permission: { ...permission },
+    permission: { ...permission },
     hasPagination: true
   },
   tableRef
 )
 
+provide('permission', permission)
 // 合计
 function getSummaries(param) {
   return tableSummary(param, {

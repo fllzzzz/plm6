@@ -62,6 +62,7 @@ import { ref, provide, onMounted } from 'vue'
 import crudApi from '@/api/mes/production-manage/dashboard/production-tracking'
 import { getArtifactProcess } from '@/api/mes/production-config/artifact-rivet-weld-config'
 import useCRUD from '@compos/use-crud'
+import { mesProductionTrackingPM as permission } from '@/page-permission/mes'
 // import { parseTime } from '@/utils/date'
 import { arr2obj } from '@/utils/convert/type'
 import { componentTypeEnum, artifactProductLineEnum } from '@enum-ms/mes'
@@ -83,7 +84,7 @@ const { crud, CRUD, columns } = useCRUD(
     title: '生产跟踪',
     sort: [],
     optShow: { ...optShow },
-    // permission: { ...permission },
+    permission: { ...permission },
     crudApi: { ...crudApi },
     requiredQuery: ['areaId'],
     hasPagination: true
