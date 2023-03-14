@@ -76,8 +76,11 @@ export const machinePartSchedulingRecordPM = {
 // 生产排产/零件排产/套料成果
 export const machinePartSchedulingNestingResultPM = {
   get: ['mes_scheduling_machine_part_nesting_result:get'], // 列表
-  del: ['mes_scheduling_machine_part_nesting_result:del'], // 删除
-  save: ['mes_scheduling_machine_part_nesting_result:save'] // 任务下发
+  // del: ['mes_scheduling_machine_part_nesting_result:del'], // 删除
+  // save: ['mes_scheduling_machine_part_nesting_result:save'], // 任务下发
+  document: ['mes_scheduling_machine_part_nesting_result:document'], // 套料文档详情
+  downloadZip: ['mes_scheduling_machine_part_nesting_result:downloadZip'], // 下载压缩包
+  scheduling: ['mes_scheduling_machine_part_nesting_result:scheduling'] // 排产
 }
 
 // 生产监控看板

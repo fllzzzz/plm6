@@ -103,8 +103,11 @@
           </el-table-column>
           <el-table-column label="操作" align="center">
             <template #default="{ row }">
-              <common-button class="filter-item" size="mini" type="primary" @click="toViews(row)"> 套料文档 </common-button>
+              <common-button v-permission="permission.document" class="filter-item" size="mini" type="primary" @click="toViews(row)">
+                套料文档
+              </common-button>
               <common-button
+                v-permission="permission.scheduling"
                 class="filter-item"
                 size="mini"
                 type="success"
@@ -173,6 +176,7 @@ const { crud, columns, CRUD } = useCRUD(
 )
 
 provide('crud', crud)
+provide('permission', permission)
 const { maxHeight } = useMaxHeight({
   extraBox: ['.head-container'],
   paginate: false
