@@ -198,7 +198,7 @@ const managementSalaryList = {
      * @param {boolean} sum 列需要合计
      */
     fields: [
-      { show: true, key: 'month', title: '月份', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.DATE.K },
+      { show: true, key: 'yearMonthValue', title: '月份', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.OTHER.K },
       { show: true, key: 'employeeQuantity', title: '员工人数', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.QUANTITY.K, sum: true },
       { show: true, key: 'totalWage', title: '工资总额', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 30, type: typeEnum.AMOUNT.K, format: { toThousand: true, precision: 2, UNIT: typeEnum.AMOUNT.K }, sum: true },
       { show: true, key: 'averageWage', title: '平均人员工资', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.AMOUNT.K, format: { toThousand: true, precision: 2, UNIT: typeEnum.AMOUNT.K }}
