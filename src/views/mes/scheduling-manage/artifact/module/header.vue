@@ -33,7 +33,7 @@
           重置
         </common-button>
       </div>
-      <!-- <common-button class="filter-item" size="mini" type="primary" @click.stop="productionLineStatus">产线状态</common-button> -->
+      <!-- <common-button class="filter-item" size="mini" type="info" @click.stop="productionLineStatus">产线状态</common-button> -->
     </div>
   </div>
   <crudOperation>

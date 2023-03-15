@@ -5,6 +5,7 @@
     v-model="detailDialogVisible"
     :close-on-click-modal="false"
     width="1500px"
+    top="5vh"
     :showClose="false"
     :before-close="handleClose"
   >
@@ -29,13 +30,23 @@
             class="filter-item"
           />
         </div>
-        <common-button size="mini" type="plain" class="filter-item" style="margin-left: 8px" @click.stop="handleClose"> 关闭 </common-button>
+        <common-button size="mini" type="plain" class="filter-item" style="margin-left: 8px" @click.stop="handleClose">
+          关闭
+        </common-button>
       </div>
     </template>
-    <common-table :data="detailData" :max-height="maxHeight" style="width: 100%">
+    <common-table :data="detailData" :max-height="maxHeight" :show-empty-symbol="false" style="width: 100%">
       <el-table-column label="序号" type="index" align="center" width="60" />
-      <el-table-column prop="monomer.name" :show-overflow-tooltip="true" label="单体" align="center" />
-      <el-table-column prop="area.name" :show-overflow-tooltip="true" label="区域" align="center" />
+      <el-table-column prop="monomer.name" :show-overflow-tooltip="true" label="单体" align="center">
+        <template #default="{ row }">
+          <span>{{ row.monomer ? row.monomer?.name : '/' }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column prop="area.name" :show-overflow-tooltip="true" label="区域" align="center">
+        <template #default="{ row }">
+          <span>{{ row.area ? row.area?.name : '/' }}</span>
+        </template>
+      </el-table-column>
       <el-table-column prop="name" :show-overflow-tooltip="true" label="名称" align="center" />
       <el-table-column prop="serialNumber" :show-overflow-tooltip="true" label="编号" align="center" />
       <el-table-column prop="specification" :show-overflow-tooltip="true" label="规格" align="center" />

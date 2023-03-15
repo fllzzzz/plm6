@@ -6,21 +6,37 @@
       </el-tag>
     </template>
     <template #titleRight>
-      <print-table v-permission="permission.print" api-key="mesTaskStatisticsList" :params="{ ...queryParams }" size="mini" type="warning" class="filter-item" />
+      <print-table
+        v-permission="permission.print"
+        api-key="mesTaskStatisticsList"
+        :params="{ ...queryParams }"
+        size="mini"
+        type="warning"
+        class="filter-item"
+      />
     </template>
     <template #content>
       <common-table
         v-loading="tableLoading"
         :data="list"
         :max-height="maxHeight - 100"
+        :show-empty-symbol="false"
         row-key="rowId"
         style="width: 100%"
         show-summary
         :summary-method="getSummaries"
       >
         <el-table-column label="序号" type="index" align="center" width="60" />
-        <el-table-column prop="monomer.name" :show-overflow-tooltip="true" label="单体" />
-        <el-table-column prop="area.name" :show-overflow-tooltip="true" label="区域" />
+        <el-table-column prop="monomer.name" :show-overflow-tooltip="true" label="单体">
+          <template #default="{ row }">
+            <span>{{ row.monomer ? row.monomer?.name : '/' }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="area.name" :show-overflow-tooltip="true" label="区域">
+          <template #default="{ row }">
+            <span>{{ row.area ? row.area?.name : '/' }}</span>
+          </template>
+        </el-table-column>
         <el-table-column prop="name" :show-overflow-tooltip="true" label="名称" />
         <el-table-column prop="serialNumber" :show-overflow-tooltip="true" label="编号" />
         <el-table-column :show-overflow-tooltip="true" prop="specification" label="规格" align="center" />
