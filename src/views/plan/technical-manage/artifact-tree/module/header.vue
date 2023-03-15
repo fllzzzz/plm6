@@ -129,7 +129,12 @@
         <structureTable :table-data="tableData[TechnologyTypeAllEnum.STRUCTURE.V]" :is-show="true" style="margin-top: 20px" />
       </template>
     </common-drawer>
-    <change-drawer v-model:visible="changeVisible" :origin-changeInfo="originChangeInfo" />
+    <change-drawer
+      v-model:visible="changeVisible"
+      :origin-changeInfo="originChangeInfo"
+      :monomerId="crud.query.monomerId"
+      :projectId="crud.query.projectId"
+    />
   </div>
 </template>
 

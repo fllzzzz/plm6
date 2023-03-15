@@ -13,7 +13,7 @@
         <span style="font-weight: bold">{{ row.title }}</span>
       </template>
     </el-table-column>
-    <el-table-column v-for="item in props.areaList" :key="item.id" :label="item.name" align="center" width="120">
+    <el-table-column v-for="item in props.areaList" :key="item.id" :label="item.name" align="center" min-width="120">
       <template #default="{ row }">
         <cell-compare-preview :value="areaObj?.[item.id]?.[row.field]" v-if="row.isDiff" />
         <span v-else>{{ areaObj?.[item.id]?.[row.field] || '-' }}</span>

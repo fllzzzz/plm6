@@ -1,7 +1,7 @@
 <template>
   <el-card class="artifact-right-info">
     <div class="head-tip">
-      <span>变更构件共 {{ changeInfo?.length }} 种，已处理 {{ handleQuantity }} 种 </span>
+      <span>变更构件共 {{ changeInfo?.length }} 种，已处理 {{ handledQuantity }} 种 </span>
     </div>
     <div class="sn-list">
       <div
@@ -25,22 +25,10 @@
 
 <script setup>
 import { artifactHandleStatusEnum } from './common'
-import { computed, inject } from 'vue'
+import { inject } from 'vue'
 
 const changeInfo = inject('changeInfo')
-
-const handleQuantity = computed(() => {
-  let num = 0
-  changeInfo.value.forEach((v) => {
-    if (
-      v.artifactHandleStatus &
-      (artifactHandleStatusEnum.HANDLED.V | artifactHandleStatusEnum.NOT_HANDLE.V | artifactHandleStatusEnum.CANCEL_HANDLE.V)
-    ) {
-      num++
-    }
-  })
-  return num
-})
+const handledQuantity = inject('handledQuantity')
 </script>
 
 <style lang="scss" scoped>

@@ -1,5 +1,5 @@
 <template>
-  <el-table-column key="invoiceType" prop="invoiceType" label="类型" align="center" width="70px">
+  <el-table-column key="invoiceType" prop="invoiceType" label="类型" align="center" width="60px">
     <template #default="{ row }">
       <div v-if="row.changeType" class="change-type-con" :style="{ backgroundColor: changeTypeEnum.V[row.changeType].C }">
         {{ changeTypeEnum.VL[row.changeType] }}

@@ -16,7 +16,18 @@
               <div class="diff-item">
                 <span style="flex: 0.5; text-align: left">{{ item }} -> {{ row.serialNumber }}</span>
                 <span style="flex: 0.25">{{ needHandleOldObj[item]?.length }}</span>
-                <span style="width: 90px">{{ needHandleOldObj[item]?.quantity }}</span>
+                <span style="width: 90px">
+                  <span v-if="row?.oldSerialNumbers?.length === 1">{{ needHandleOldObj[item]?.quantity }}</span>
+                  <el-input-number
+                    v-else
+                    v-model.number="row.handleObj[item].quantity"
+                    :min="1"
+                    :max="needHandleOldObj.value[oldSN].quantity"
+                    :step="1"
+                    placeholder="数量"
+                    style="width: 100%"
+                  />
+                </span>
                 <span style="flex: 0.25">{{ needHandleOldObj[item]?.netWeight }}</span>
               </div>
               <div class="diff-item">
@@ -125,7 +136,13 @@ function getDisabledList(index) {
     if (index === i) continue
     const row = props.newAssembleList[i]
     if (typeof row.oldSerialNumbers !== 'object') row.oldSerialNumbers = []
-    _list = [..._list, ...row.oldSerialNumbers]
+    const _rowDisabledSNs = []
+    for (const oldSN of row.oldSerialNumbers) {
+      if (row.handleObj[oldSN].quantity === needHandleOldObj[oldSN].quantity) {
+        _rowDisabledSNs.push(oldSN)
+      }
+    }
+    _list = [..._list, ..._rowDisabledSNs]
   }
   return _list
 }

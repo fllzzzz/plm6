@@ -16,8 +16,10 @@
         <common-step v-model="step" :options="stepOptions" space="33%" finish-status="success" />
         <span class="step-btn">
           <common-button size="mini" plain :disabled="step === 0" @click="step--">上一步</common-button>
-          <common-button size="mini" plain :disabled="step === stepOptions.length - 1 || true" @click="step++">下一步</common-button>
-          <common-button size="mini" type="warning" :disabled="step !== stepOptions.length - 1">确认提交</common-button>
+          <common-button size="mini" plain :disabled="step === stepOptions.length - 1" @click="handleNextStep">下一步</common-button>
+          <common-button :loading="submitLoading" size="mini" type="warning" :disabled="step !== stepOptions.length - 1" @click="submit">
+            确认提交
+          </common-button>
         </span>
       </el-card>
       <component :is="currentView" :height-style="heightStyle" />
@@ -26,7 +28,9 @@
 </template>
 
 <script setup>
+import { changeList } from '@/api/plan/technical-manage/artifact-tree'
 import { defineProps, defineEmits, computed, ref, reactive, provide, watchEffect } from 'vue'
+import { ElMessage, ElNotification } from 'element-plus'
 
 import { arr2obj, obj2arr } from '@/utils/convert/type'
 import { toPrecision, isNotBlank, isBlank } from '@/utils/data-type'
@@ -36,6 +40,7 @@ import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'
 import commonStep from '@comp-common/common-step/index'
 import mHandle from './module/handle'
+import mSummary from './module/summary'
 
 const drawerRef = ref()
 const emit = defineEmits(['update:visible'])
@@ -47,6 +52,14 @@ const props = defineProps({
   originChangeInfo: {
     type: Object,
     default: () => {}
+  },
+  monomerId: {
+    type: [Number, undefined],
+    default: undefined
+  },
+  projectId: {
+    type: [Number, undefined],
+    default: undefined
   }
 })
 
@@ -65,15 +78,31 @@ const { maxHeight, heightStyle } = useMaxHeight(
 )
 
 const stepOptions = reactive([{ title: '变更处理' }, { title: '变更汇总' }, { title: '技术成果上传' }, { title: '变更原因填写' }])
-const stepComponent = [mHandle]
+const stepComponent = [mHandle, mSummary]
 const step = ref(0)
+const submitLoading = ref(false)
 const changeInfo = ref([])
 const changeInfoMap = ref(new Map())
+const summaryInfo = ref({})
 provide('changeInfo', changeInfo)
 provide('changeInfoMap', changeInfoMap)
 provide('originChangeInfo', props.originChangeInfo)
+provide('summaryInfo', summaryInfo)
 
 const currentView = computed(() => stepComponent[step.value])
+const handledQuantity = computed(() => {
+  let num = 0
+  changeInfo.value.forEach((v) => {
+    if (
+      v.artifactHandleStatus &
+      (artifactHandleStatusEnum.HANDLED.V | artifactHandleStatusEnum.NOT_HANDLE.V | artifactHandleStatusEnum.CANCEL_HANDLE.V)
+    ) {
+      num++
+    }
+  })
+  return num
+})
+provide('handledQuantity', handledQuantity)
 
 function showHook() {
   const _list = []
@@ -106,7 +135,7 @@ function artifactWatch(item) {
         const changeType = changeTypeEnum.NEW.V
         const diffQuantity = -v.quantity
         const diffTotalWeight = -v.totalNetWeight
-        assembleChangeList.push({ newSN: v.serialNumber, oldSN: null, changeType, diffQuantity, diffTotalWeight })
+        assembleChangeList.push({ newAssemble: v, oldAssemble: null, changeType, diffQuantity, diffTotalWeight })
       }
 
       if (v.operateType !== assembleOperateTypeEnum.NEW.V && v.oldSerialNumbers?.length) {
@@ -122,8 +151,8 @@ function artifactWatch(item) {
           const diffQuantity = v.handleObj[oldSN]?.quantity - v.quantity
           const diffTotalWeight = toPrecision(v.handleObj[oldSN]?.quantity * v.handleObj[oldSN]?.netWeight - v.totalNetWeight, 2)
           assembleChangeList.push({
-            newSN: v.serialNumber,
-            oldSN: oldSN,
+            newAssemble: v,
+            oldAssemble: item.assembleInfo?.needHandleOldObj?.[oldSN],
             oldQuantity: v.handleObj[oldSN]?.quantity,
             handleType: v.handleObj[oldSN]?.handleType,
             changeType,
@@ -140,7 +169,7 @@ function artifactWatch(item) {
           const changeType = changeTypeEnum.DEL.V
           const diffQuantity = o.quantity
           const diffTotalWeight = o.totalNetWeight
-          assembleDelList.push({ newSN: null, oldSN: o.serialNumber, changeType, diffQuantity, diffTotalWeight })
+          assembleDelList.push({ newAssemble: null, oldAssemble: o, changeType, diffQuantity, diffTotalWeight })
         }
       }
     }
@@ -196,7 +225,7 @@ function handleAssembleList(oldList, newList) {
         const diffQuantity = _o.quantity - n.quantity
         const changeType = n.diffQuantity > 0 ? changeTypeEnum.REDUCE.V : changeTypeEnum.ADD.V
         const diffTotalWeight = toPrecision(_o.totalNetWeight - n.totalNetWeight, 2)
-        amList.push({ newSN: n.serialNumber, oldSN: _o.serialNumber, changeType, diffQuantity, diffTotalWeight })
+        amList.push({ newAssemble: n, oldAssemble: _o, changeType, diffQuantity, diffTotalWeight })
       }
     } else {
       needHandleNewList.push(n)
@@ -266,6 +295,146 @@ function handleComparePartList(oldList, newList) {
     resObj[o.serialNumber] = { ...o, oldQuantity, changeType, diffQuantity, diffTotalWeight, newQuantity }
   }
   return obj2arr(resObj)
+}
+
+// 处理汇总数据
+function handleSummaryData() {
+  const artifactObj = {}
+  const assembleObj = {}
+  const partObj = {}
+  for (const artifact of changeInfo.value) {
+    const _old = artifact.oldArtifact
+    const _new = artifact.newArtifact
+    const _key = `${_old.serialNumber}_${_old.specification}_${_old.length}_${_old.netWeight}__${_new.serialNumber}_${_new.specification}_${_new.length}_${_new.netWeight}`
+    const diffQuantity = _old.quantity - _new.quantity || 0
+    const diffTotalWeight = toPrecision(_old.totalNetWeight - _new.totalNetWeight || 0, 2)
+    if (!artifactObj[_key]) {
+      artifactObj[_key] = {
+        oldArtifact: _old,
+        newArtifact: _new,
+        processSummary: arr2obj(_old.processSummaryList, 'name'),
+        diffLength: _old.length - _new.length || 0,
+        diffQuantity,
+        diffTotalWeight
+      }
+    } else {
+      artifactObj[_key].oldArtifact.quantity += _old.quantity
+      artifactObj[_key].newArtifact.quantity += _new.quantity
+      artifactObj[_key].diffQuantity += diffQuantity
+      artifactObj[_key].diffTotalWeight += diffTotalWeight
+      mergeProcessSummary(artifactObj[_key].processSummary, _old.processSummaryList)
+    }
+
+    for (const assemble of artifact.assembleCompareList) {
+      const _old = assemble.oldAssemble
+      const _new = assemble.newAssemble
+      const _key = `${_old.serialNumber}_${_old.specification}_${_old.length}_${_old.netWeight}__${_new.serialNumber}_${_new.specification}_${_new.length}_${_new.netWeight}`
+      if (!assembleObj[_key]) {
+        assembleObj[_key] = { ...assemble, processSummary: arr2obj(_old.processSummaryList, 'name') }
+      } else {
+        assembleObj[_key].oldAssemble.quantity += _old.quantity
+        assembleObj[_key].newAssemble.quantity += _new.quantity
+        assembleObj[_key].diffQuantity += assemble.diffQuantity
+        assembleObj[_key].diffTotalWeight += assemble.diffTotalWeight
+        mergeProcessSummary(assembleObj[_key].processSummary, _old.processSummaryList)
+      }
+    }
+
+    for (const part of artifact.partCompareResList) {
+      const _key = `${part.serialNumber}_${part.specification}_${part.length}_${part.netWeight}_${part.changeType}`
+      if (!partObj[_key]) {
+        partObj[_key] = { ...part, processSummary: arr2obj(part.processSummaryList, 'name') }
+      } else {
+        partObj[_key].oldQuantity += part.oldQuantity
+        partObj[_key].newQuantity += part.newQuantity
+        partObj[_key].diffQuantity += part.diffQuantity
+        partObj[_key].diffTotalWeight += part.diffTotalWeight
+        mergeProcessSummary(partObj[_key].processSummary, part.processSummaryList)
+      }
+    }
+  }
+
+  summaryInfo.value = {
+    artifactList: obj2arr(artifactObj),
+    assembleList: obj2arr(assembleObj),
+    partList: obj2arr(partObj)
+  }
+}
+
+function mergeProcessSummary(obj, needList) {
+  for (const item of needList) {
+    if (!obj[item.name]) {
+      obj[item.name] = item
+    } else {
+      obj[item.name].quantity += item.quantity
+    }
+  }
+}
+
+function handleNextStep() {
+  if (step.value === 0) {
+    const _unHandleQuantity = changeInfo.value.length - handledQuantity.value
+    if (_unHandleQuantity) {
+      ElMessage.warning(`变更构件还有${_unHandleQuantity}种未处理`)
+      return
+    }
+    handleSummaryData()
+  }
+  step.value++
+}
+
+async function submit() {
+  try {
+    submitLoading.value = true
+    const _artifactList = []
+    for (const item of changeInfo.value) {
+      // 过滤取消变更的构件
+      if (item.artifactHandleStatus & artifactHandleStatusEnum.CANCEL_HANDLE.V) continue
+      const assembleList = []
+      for (const assemble of item.assembleInfo.needHandleNewList) {
+        const changeLinkList = []
+        for (const oldSN of assemble.oldSerialNumbers) {
+          changeLinkList.push({
+            assembleChangeTypeEnum: assemble.handleObj[oldSN].handleType,
+            oldAssembleSerialNumber: oldSN,
+            quantity: assemble.handleObj[oldSN].quantity
+          })
+        }
+        assembleList.push({
+          ...assemble,
+          changeLinkList
+        })
+      }
+      const partList = []
+      for (const part of item.partCompareResList) {
+        partList.push({
+          ...part,
+          changeTypeEnum: part.changeType
+        })
+      }
+      const _artifact = {
+        ...item.newArtifact,
+        areaList: item.areaList.map((v) => {
+          return { id: v.id, quantity: v.newQuantity }
+        }),
+        assembleList,
+        partList
+      }
+      _artifactList.push(_artifact)
+    }
+    const submitInfo = {
+      monomerId: props.monomerId,
+      projectId: props.projectId,
+      newArtifactList: _artifactList
+    }
+    await changeList(submitInfo)
+    ElNotification.success(`提交成功`)
+    handleClose()
+  } catch (error) {
+    console.log(error)
+  } finally {
+    submitLoading.value = false
+  }
 }
 </script>
 

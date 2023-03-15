@@ -49,6 +49,7 @@ export function listUpload(data) {
   })
 }
 
+// 解析变更清单
 export function changeListUpload(data) {
   return request({
     module: 'mes',
@@ -58,6 +59,16 @@ export function changeListUpload(data) {
     headers: {
       'Content-Type': 'multipart/form-data'
     },
+    data
+  })
+}
+
+// 提交变更清单
+export function changeList(data) {
+  return request({
+    module: 'mes',
+    url: 'tech/change',
+    method: 'post',
     data
   })
 }
