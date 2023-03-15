@@ -190,7 +190,7 @@
           />
         </template>
       </el-table-column>
-      <el-table-column label="操作" width="70" align="center" fixed="right">
+      <el-table-column v-permission="permission.detailAdd" label="操作" width="70" align="center" fixed="right">
         <template v-slot="scope">
           <common-button type="success" icon="el-icon-plus" size="mini" @click="add(scope.row)" />
         </template>
@@ -202,13 +202,14 @@
 
 <script setup>
 import { getParallel, getParallelParams } from '@/api/config/system-config/parallel-config'
-import { defineEmits, defineProps, ref } from 'vue'
+import { defineEmits, defineProps, ref, inject } from 'vue'
 import { ElMessage } from 'element-plus'
 // import { DP } from '@/settings/config'
 import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'
 // import padBlock from './pad-block'
 
+const permission = inject('permission')
 const emit = defineEmits(['update:visible', 'success', 'addBlock'])
 const props = defineProps({
   visible: {
