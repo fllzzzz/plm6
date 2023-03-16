@@ -1,0 +1,96 @@
+<template>
+  <div class="app-container">
+    <div class="head-container">
+      <mHeader />
+    </div>
+    <!--表格渲染-->
+    <common-table
+      ref="tableRef"
+      v-loading="crud.loading"
+      :data="crud.data"
+      :empty-text="crud.emptyText"
+      :data-format="dataFormat"
+      :max-height="maxHeight"
+      style="width: 100%"
+    >
+      <el-table-column label="序号" type="index" align="center" width="60" />
+      <el-table-column v-if="columns.visible('createTime')" show-overflow-tooltip label="变更编号" prop="" align="center" min-width="100" />
+      <el-table-column v-if="columns.visible('project')" show-overflow-tooltip label="变更项目" prop="project" min-width="150" />
+      <el-table-column v-if="columns.visible('createTime')" show-overflow-tooltip label="变更原因" prop="" align="center" min-width="100" />
+      <el-table-column v-if="columns.visible('createTime')" show-overflow-tooltip label="变更提交人" prop="" align="center" width="120" />
+      <el-table-column v-if="columns.visible('createTime')" show-overflow-tooltip label="变更时间" prop="" align="center" width="170" />
+      <el-table-column v-if="columns.visible('createTime')" show-overflow-tooltip label="生产确认人" prop="" align="center" width="120" />
+      <el-table-column v-if="columns.visible('createTime')" show-overflow-tooltip label="确认时间" prop="" align="center" width="170" />
+      <el-table-column v-if="columns.visible('statusEnum')" show-overflow-tooltip label="状态" prop="statusEnum" align="center" width="100">
+        <template #default="{ row }">
+          <el-tag v-if="row.statusEnum" effect="plain" :type="changeRecordStatusEnum.V[row.statusEnum].T">
+            {{ changeRecordStatusEnum.VL[row.statusEnum] }}
+          </el-tag>
+        </template>
+      </el-table-column>
+      <!--编辑与删除-->
+      <el-table-column v-permission="[...permission.edit, ...permission.del]" label="操作" width="100px" align="center" fixed="right">
+        <template #default="{ row }">
+          <udOperation :data="row" show-detail :show-del="false" :show-edit="false" />
+        </template>
+      </el-table-column>
+    </common-table>
+    <!--分页组件-->
+    <pagination />
+    <mDetail />
+  </div>
+</template>
+
+<script setup>
+import crudApi from '@/api/mes/changed-manage/change-record'
+import { ref } from 'vue'
+
+import { changeRecordStatusEnum } from '@enum-ms/production'
+
+import useMaxHeight from '@compos/use-max-height'
+import useCRUD from '@compos/use-crud'
+import pagination from '@crud/Pagination'
+import udOperation from '@crud/UD.operation'
+import mHeader from './module/header'
+import mDetail from './module/detail'
+
+// crud交由presenter持有
+const permission = {
+  get: [''],
+  edit: [''],
+  add: [''],
+  del: ['']
+}
+
+const optShow = {
+  add: false,
+  edit: false,
+  del: false,
+  download: false
+}
+
+const dataFormat = ref([
+  ['createTime', ['parse-time', '{y}-{m}-{d}']],
+  ['project', 'parse-project']
+])
+
+const tableRef = ref()
+const { crud, columns, CRUD } = useCRUD(
+  {
+    title: '',
+    sort: [],
+    permission: { ...permission },
+    optShow: { ...optShow },
+    crudApi: { ...crudApi }
+  },
+  tableRef
+)
+
+const { maxHeight } = useMaxHeight({ paginate: true })
+
+CRUD.HOOK.handleRefresh = (crud, res) => {
+  res.data.content = res.data.content.map((v) => {
+    return v
+  })
+}
+</script>

@@ -41,6 +41,8 @@ import useVisible from '@compos/use-visible'
 import commonStep from '@comp-common/common-step/index'
 import mHandle from './module/handle'
 import mSummary from './module/summary'
+import mTechnicalUpload from './module/technical-upload'
+import mReason from './module/reason'
 
 const drawerRef = ref()
 const emit = defineEmits(['update:visible'])
@@ -78,12 +80,14 @@ const { maxHeight, heightStyle } = useMaxHeight(
 )
 
 const stepOptions = reactive([{ title: '变更处理' }, { title: '变更汇总' }, { title: '技术成果上传' }, { title: '变更原因填写' }])
-const stepComponent = [mHandle, mSummary]
+const stepComponent = [mHandle, mSummary, mTechnicalUpload, mReason]
 const step = ref(0)
 const submitLoading = ref(false)
+const form = ref({})
 const changeInfo = ref([])
 const changeInfoMap = ref(new Map())
 const summaryInfo = ref({})
+provide('form', form)
 provide('changeInfo', changeInfo)
 provide('changeInfoMap', changeInfoMap)
 provide('originChangeInfo', props.originChangeInfo)
@@ -312,7 +316,7 @@ function handleSummaryData() {
       artifactObj[_key] = {
         oldArtifact: _old,
         newArtifact: _new,
-        processSummary: arr2obj(_old.processSummaryList, 'name'),
+        processSummary: arr2obj(_old.processSummaryList || [], 'name'),
         diffLength: _old.length - _new.length || 0,
         diffQuantity,
         diffTotalWeight
@@ -326,11 +330,11 @@ function handleSummaryData() {
     }
 
     for (const assemble of artifact.assembleCompareList) {
-      const _old = assemble.oldAssemble
-      const _new = assemble.newAssemble
+      const _old = assemble.oldAssemble || {}
+      const _new = assemble.newAssemble || {}
       const _key = `${_old.serialNumber}_${_old.specification}_${_old.length}_${_old.netWeight}__${_new.serialNumber}_${_new.specification}_${_new.length}_${_new.netWeight}`
       if (!assembleObj[_key]) {
-        assembleObj[_key] = { ...assemble, processSummary: arr2obj(_old.processSummaryList, 'name') }
+        assembleObj[_key] = { ...assemble, processSummary: arr2obj(_old.processSummaryList || [], 'name') }
       } else {
         assembleObj[_key].oldAssemble.quantity += _old.quantity
         assembleObj[_key].newAssemble.quantity += _new.quantity
@@ -343,7 +347,7 @@ function handleSummaryData() {
     for (const part of artifact.partCompareResList) {
       const _key = `${part.serialNumber}_${part.specification}_${part.length}_${part.netWeight}_${part.changeType}`
       if (!partObj[_key]) {
-        partObj[_key] = { ...part, processSummary: arr2obj(part.processSummaryList, 'name') }
+        partObj[_key] = { ...part, processSummary: arr2obj(part.processSummaryList || [], 'name') }
       } else {
         partObj[_key].oldQuantity += part.oldQuantity
         partObj[_key].newQuantity += part.newQuantity

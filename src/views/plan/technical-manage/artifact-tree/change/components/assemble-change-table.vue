@@ -129,7 +129,7 @@ function spanMethod({ row, column, rowIndex, columnIndex }) {
     if (columnIndex === 8) {
       return {
         rowspan: 1,
-        colspan: 5
+        colspan: !props.showProcess ? 5 : 4
       }
     } else if (columnIndex > 8 && columnIndex <= 12 && !props.showProcess) {
       return {
