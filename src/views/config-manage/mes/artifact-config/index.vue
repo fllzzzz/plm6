@@ -58,6 +58,11 @@
           <span>{{ scope.row.artifactType? artifactTypeEnum.VL[scope.row.artifactType] : '-' }}</span>
         </template>
       </el-table-column>
+      <el-table-column key="smallArtifactClassEnum" prop="smallArtifactClassEnum" align="center" :show-overflow-tooltip="true" label="次构件类型" v-if="productionLineTypeEnum!==artifactProductLineEnum.INTELLECT.V">
+        <template v-slot="scope">
+          <span>{{ smallArtifactClassEnum.VL[scope.row.smallArtifactClassEnum] || '-' }}</span>
+        </template>
+      </el-table-column>
       <el-table-column key="specPrefixList" prop="specPrefixList" label="构件规格前缀" align="center" min-width="120" :show-overflow-tooltip="true">
         <template v-slot="scope">
           <div v-for="(item,index) in scope.row.structureClassificationList" :key="item.id" :class="index === scope.row.structureClassificationList.length-1 ? 'sandwich-cell-bottom div-ellipsis' : 'sandwich-cell-top div-ellipsis'">
@@ -140,7 +145,7 @@ import { ref } from 'vue'
 import { ElNotification } from 'element-plus'
 
 import { artifactConfigPM as permission } from '@/page-permission/config'
-import { artifactProductLineEnum, intellectParentType, artifactTypeEnum, codingTypeEnum } from '@enum-ms/mes'
+import { artifactProductLineEnum, intellectParentType, artifactTypeEnum, smallArtifactClassEnum, codingTypeEnum } from '@enum-ms/mes'
 
 import checkPermission from '@/utils/system/check-permission'
 import useMaxHeight from '@compos/use-max-height'
@@ -224,6 +229,7 @@ async function fetchList() {
       if (v.structureClassificationList?.length) {
         v.mainClassificationName = v.productionLineTypeEnum === artifactProductLineEnum.INTELLECT.V ? (v.parentType ? intellectParentType.VL[v.parentType] : '-') : v.structureClassificationList[0].classificationName
         v.artifactType = v.structureClassificationList[0].artifactType
+        v.smallArtifactClassEnum = v.structureClassificationList[0].smallArtifactClassEnum
         v.codingType = v.structureClassificationList[0].codingType
       }
     })
