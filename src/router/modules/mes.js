@@ -1367,6 +1367,17 @@ export default {
           icon: 'project',
           noCache: true
         }
+      },
+      {
+        name: 'MesProductStatistics',
+        path: 'product-statistics',
+        hidden: false,
+        component: '/mes/factory-report/product-statistics/index',
+        meta: {
+          title: '生产统计',
+          icon: 'project',
+          noCache: true
+        }
       }
     ]
   },
