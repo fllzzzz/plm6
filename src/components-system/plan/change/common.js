@@ -47,8 +47,8 @@ constantize(changeTypeEnum)
 
 // 部件变更操作类型
 const assembleOperateTypeEnum = {
-  EDIT: { L: '变更', K: 'EDIT', V: 1 },
-  NEW: { L: '新增', K: 'NEW', V: 2 }
+  EDIT: { L: '变更', K: 'EDIT', V: 1, T: 'warning' },
+  NEW: { L: '新增', K: 'NEW', V: 2, T: 'primary' }
 }
 constantize(assembleOperateTypeEnum)
 

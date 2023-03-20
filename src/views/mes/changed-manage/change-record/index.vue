@@ -28,16 +28,15 @@
           </el-tag>
         </template>
       </el-table-column>
-      <!--编辑与删除-->
-      <el-table-column v-permission="[...permission.edit, ...permission.del]" label="操作" width="100px" align="center" fixed="right">
+      <el-table-column label="操作" width="100px" align="center" fixed="right">
         <template #default="{ row }">
-          <udOperation :data="row" show-detail :show-del="false" :show-edit="false" />
+          <common-button v-permission="permission.get" size="mini" type="primary" icon="el-icon-view" @click.stop="toDetail(row)" />
         </template>
       </el-table-column>
     </common-table>
     <!--分页组件-->
     <pagination />
-    <mDetail />
+    <mDetail v-model:visible="detailVisible" :info="itemInfo" />
   </div>
 </template>
 
@@ -50,7 +49,6 @@ import { changeRecordStatusEnum } from '@enum-ms/production'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import pagination from '@crud/Pagination'
-import udOperation from '@crud/UD.operation'
 import mHeader from './module/header'
 import mDetail from './module/detail'
 
@@ -59,19 +57,19 @@ const permission = {
   get: [''],
   edit: [''],
   add: [''],
-  del: ['']
+  del: [''],
 }
 
 const optShow = {
   add: false,
   edit: false,
   del: false,
-  download: false
+  download: false,
 }
 
 const dataFormat = ref([
   ['createTime', ['parse-time', '{y}-{m}-{d}']],
-  ['project', 'parse-project']
+  ['project', 'parse-project'],
 ])
 
 const tableRef = ref()
@@ -81,16 +79,24 @@ const { crud, columns, CRUD } = useCRUD(
     sort: [],
     permission: { ...permission },
     optShow: { ...optShow },
-    crudApi: { ...crudApi }
+    crudApi: { ...crudApi },
   },
   tableRef
 )
 
 const { maxHeight } = useMaxHeight({ paginate: true })
 
+const itemInfo = ref({})
+const detailVisible = ref(false)
+
 CRUD.HOOK.handleRefresh = (crud, res) => {
   res.data.content = res.data.content.map((v) => {
     return v
   })
+}
+
+function toDetail(row) {
+  itemInfo.value = row
+  detailVisible.value = true
 }
 </script>

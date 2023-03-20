@@ -162,7 +162,7 @@ import uploadBtn from '@comp/file-upload/ExcelUploadBtn'
 import ExportButton from '@comp-common/export-button/index.vue'
 import structureTable from '@/views/contract/project-manage/module/enclosure-table/structure-table'
 import changeDrawer from '../change/change-drawer.vue'
-import { changeRes } from '../change/components/mock'
+import { changeRes } from '@/components-system/plan/change/mock'
 
 const defaultQuery = {
   artifactName: '',

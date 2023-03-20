@@ -17,7 +17,7 @@
                 <span style="flex: 0.5; text-align: left">{{ item }} -> {{ row.serialNumber }}</span>
                 <span style="flex: 0.25">{{ needHandleOldObj[item]?.length }}</span>
                 <span style="width: 90px">
-                  <span v-if="row?.oldSerialNumbers?.length === 1">{{ needHandleOldObj[item]?.quantity }}</span>
+                  <span v-if="row?.oldSerialNumbers?.length === 1 || props.onlyShow">{{ row.handleObj[item].quantity }}</span>
                   <el-input-number
                     v-else
                     v-model.number="row.handleObj[item].quantity"
@@ -38,7 +38,7 @@
                 />
                 <cell-compare-preview
                   style="width: 90px"
-                  :value="toPrecision((needHandleOldObj[item]?.quantity || 0) - (needHandleNewObj[row.serialNumber]?.quantity || 0))"
+                  :value="toPrecision((row.handleObj[item].quantity || 0) - (needHandleNewObj[row.serialNumber]?.quantity || 0))"
                 />
                 <cell-compare-preview
                   style="flex: 0.25"
@@ -73,17 +73,22 @@
     <el-table-column label="操作" align="center" width="160">
       <template #default="{ row }">
         <common-radio
+          v-if="!props.onlyShow"
           v-model="row.operateType"
           :options="assembleOperateTypeEnum.ENUM"
           type="enum"
           @change="handleOperateTypeChange($event, row)"
         />
+        <el-tag v-else :type="assembleOperateTypeEnum.V[row.operateType].T" effect="plain">
+          {{ assembleOperateTypeEnum.VL[row.operateType] }}
+        </el-tag>
       </template>
     </el-table-column>
     <el-table-column label="旧部件编号" align="center" width="180">
       <template #default="{ row, $index }">
+        <span v-if="row.operateType === assembleOperateTypeEnum.NEW.V">/</span>
         <common-select
-          v-if="row.operateType !== assembleOperateTypeEnum.NEW.V"
+          v-else-if="!props.onlyShow"
           v-model="row.oldSerialNumbers"
           :options="oldAssembleList"
           type="other"
@@ -96,7 +101,7 @@
           style="width: 100%"
           @change="handleSerialNumberChange($event, row)"
         />
-        <span v-else>/</span>
+        <span v-else>{{ row.oldSerialNumbers.join('、') }}</span>
       </template>
     </el-table-column>
   </common-table>
@@ -123,6 +128,10 @@ const props = defineProps({
   assembleInfo: {
     type: Object,
     default: () => {}
+  },
+  onlyShow: {
+    type: Boolean,
+    default: false
   }
 })
 
@@ -171,6 +180,7 @@ function handleSerialNumberChange(val, row) {
 }
 
 function handleTypeChange(row, oldSn, val) {
+  if (props.onlyShow) return
   if (!(row.handleObj[oldSn]?.handleType & val)) {
     row.handleObj[oldSn].handleType |= val
   } else {

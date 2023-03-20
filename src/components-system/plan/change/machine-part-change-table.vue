@@ -2,7 +2,7 @@
   <common-table
     :header-cell-style="() => `background:#fff;font-weight: bold;color: #333333;`"
     :data="partCompareList"
-    style="max-width: 1200px"
+    :style="!showProcess ? 'max-width: 1200px' : 'width:100%'"
   >
     <el-table-column label="序号" type="index" align="center" width="60" />
     <change-type-table-column />
@@ -14,16 +14,12 @@
     <el-table-column width="10px" v-if="!showProcess" />
     <el-table-column v-else label="零件状态" align="center" min-width="400">
       <template #default="{ row: { sourceRow: row } }">
-        <production-status-box
-          v-if="row.oldQuantity"
-          :processList="row.processSummaryList || []"
-          :processObj="row.processSummary"
-        />
+        <production-status-box v-if="row.oldQuantity" :processList="row.processSummaryList || []" :processObj="row.processSummary" />
         <span v-else>/</span>
       </template>
     </el-table-column>
     <el-table-column label="变更后清单数量" prop="newQuantity" show-overflow-tooltip align="center" min-width="120" />
-    <el-table-column width="10px" v-if="!showProcess"/>
+    <el-table-column width="10px" v-if="!showProcess" />
     <el-table-column label="差异" align="center">
       <el-table-column label="数量" show-overflow-tooltip align="center" min-width="120">
         <template #default="{ row }">

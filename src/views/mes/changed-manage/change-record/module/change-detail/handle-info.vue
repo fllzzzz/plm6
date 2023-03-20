@@ -29,6 +29,7 @@
             :new-assemble-list="item.assembleInfo?.needHandleNewList || []"
             :old-assemble-list="item.assembleInfo?.needHandleOldList || []"
             :assembleInfo="item.assembleInfo"
+            only-show
           />
         </div>
         <div class="box-content">
