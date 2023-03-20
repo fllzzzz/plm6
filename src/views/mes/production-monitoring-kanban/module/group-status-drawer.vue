@@ -39,9 +39,11 @@
             </el-table-column>
             <el-table-column prop="unQuantity" key="unQuantity" label="未完成任务（件/吨）" align="center" width="150px">
               <template #default="{ row }">
-                <span @click.stop="unComplete(row)" style="color: red">
-                  {{ row.unQuantity }}/{{ (row.unNetWeight / 1000)?.toFixed(2) }}
-                </span>
+                <div @click.stop="unComplete(row)">
+                  <span class="tc-danger">{{ row.unQuantity }}</span>
+                  <span> / </span>
+                  <span class="tc-danger">{{ (row.unNetWeight / 1000)?.toFixed(2) }}</span>
+                </div>
               </template>
             </el-table-column>
           </common-table>
@@ -73,9 +75,11 @@
             </el-table-column>
             <el-table-column prop="unQuantity" key="unQuantity" label="未完成任务（件/吨）" align="center" width="150px">
               <template #default="{ row }">
-                <span @click.stop="unComplete(row)" style="color: red">
-                  {{ row.unQuantity }}/{{ (row.unNetWeight / 1000)?.toFixed(2) }}
-                </span>
+                <div @click.stop="unComplete(row)">
+                  <span class="tc-danger">{{ row.unQuantity }}</span>
+                  <span> / </span>
+                  <span class="tc-danger">{{ (row.unNetWeight / 1000)?.toFixed(2) }}</span>
+                </div>
               </template>
             </el-table-column>
           </common-table>
@@ -107,16 +111,18 @@
             </el-table-column>
             <el-table-column prop="unQuantity" key="unQuantity" label="未完成任务（件/吨）" align="center" width="150px">
               <template #default="{ row }">
-                <span @click.stop="unComplete(row)" style="color: red">
-                  {{ row.unQuantity }}/{{ (row.unNetWeight / 1000)?.toFixed(2) }}
-                </span>
+                <div @click.stop="unComplete(row)">
+                  <span class="tc-danger">{{ row.unQuantity }}</span>
+                  <span> / </span>
+                  <span class="tc-danger">{{ (row.unNetWeight / 1000)?.toFixed(2) }}</span>
+                </div>
               </template>
             </el-table-column>
           </common-table>
         </div>
         <div style="border-right: 1px solid #ededed; margin: 0 20px; height: calc(100vh - 180px)"></div>
         <div style="width: 58%">
-          <group-status-detail :detail-data="detailData" :workshopId="groupDetailData.workshop?.id" />
+          <group-status-detail :detail-data="detailData" :workshopId="props.workshopId" :areaId="props.areaId" />
         </div>
       </div>
     </template>
@@ -129,7 +135,7 @@ import useVisible from '@compos/use-visible'
 // import usePagination from '@compos/use-pagination'
 import useMaxHeight from '@compos/use-max-height'
 import { componentTypeEnum } from '@enum-ms/mes'
-import { defineProps, defineEmits, ref, onMounted } from 'vue'
+import { defineProps, defineEmits, ref, watch } from 'vue'
 import groupStatusDetail from './group-status-detail.vue'
 
 const emit = defineEmits(['update:visible'])
@@ -150,6 +156,9 @@ const props = defineProps({
   },
   workshopId: {
     type: Number
+  },
+  areaId: {
+    type: Number
   }
 })
 
@@ -169,9 +178,13 @@ function showHook() {
   detailData.value = {}
 }
 
-onMounted(() => {
-  fetchGroupDetailGet()
-})
+watch(
+  [() => props.workshopId, () => props.areaId],
+  (val) => {
+    fetchGroupDetailGet()
+  },
+  { immediate: true }
+)
 
 async function fetchGroupDetailGet() {
   artifactGroupList.value = []
@@ -179,7 +192,8 @@ async function fetchGroupDetailGet() {
   partGroupList.value = []
   try {
     const data = await getGroupDialog({
-      workshopId: props.workshopId
+      workshopId: props.workshopId,
+      areaId: props.areaId
     })
     groupList.value = data || []
     groupList.value?.forEach((v) => {

@@ -14,6 +14,7 @@
               taskTypeEnum: props.detailData.taskTypeEnum,
               teamId: props.detailData.team?.id,
               workshopId: props.workshopId,
+              areaId: props.areaId
             }"
             size="mini"
             type="warning"
@@ -21,19 +22,35 @@
           />
         </div>
       </div>
-      <common-table ref="tableRef" :data="list" :empty-text="'暂无数据'" :max-height="maxHeight + 120" row-key="id" style="width: 100%">
+      <common-table
+        ref="tableRef"
+        :data="list"
+        :empty-text="'暂无数据'"
+        :show-empty-symbol="false"
+        :max-height="maxHeight + 120"
+        row-key="id"
+        style="width: 100%"
+      >
         <el-table-column prop="index" label="序号" align="center" width="60" type="index" />
-        <el-table-column prop="project" key="project" label="项目" align="center">
+        <el-table-column :show-overflow-tooltip="true" prop="project" key="project" label="项目" align="center">
           <template #default="{ row }">
-            <span>{{ projectNameFormatter(row.project) }}</span>
+            <span>{{ row.project ? projectNameFormatter(row.project) : '/' }}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="monomer.name" key="monomer.name" label="单体" align="center" />
-        <el-table-column prop="area.name" key="area.name" label="区域" align="center" />
-        <el-table-column prop="serialNumber" key="serialNumber" label="编号" align="center" />
-        <el-table-column prop="specification" key="specification" label="规格" align="center" />
-        <el-table-column prop="quantity" key="quantity" label="数量" align="center" />
-        <el-table-column prop="netWeight" key="netWeight" label="重量（kg）" align="center" />
+        <el-table-column :show-overflow-tooltip="true" prop="monomer.name" key="monomer.name" label="单体" align="center">
+          <template #default="{ row }">
+            <span>{{ row.monomer ? row.monomer?.name : '/' }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column :show-overflow-tooltip="true" prop="area.name" key="area.name" label="区域" align="center">
+          <template #default="{ row }">
+            <span>{{ row.area ? row.area?.name : '/' }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column :show-overflow-tooltip="true" prop="serialNumber" key="serialNumber" label="编号" align="center" />
+        <el-table-column :show-overflow-tooltip="true" prop="specification" key="specification" label="规格" align="center" />
+        <el-table-column :show-overflow-tooltip="true" prop="quantity" key="quantity" label="数量" align="center" />
+        <el-table-column :show-overflow-tooltip="true" prop="netWeight" key="netWeight" label="重量（kg）" align="center" />
       </common-table>
       <!--分页组件-->
       <el-pagination
@@ -61,6 +78,9 @@ const props = defineProps({
     default: () => {}
   },
   workshopId: {
+    type: Number
+  },
+  areaId: {
     type: Number
   }
 })
@@ -91,6 +111,7 @@ async function fetchGroupDetail() {
       taskTypeEnum: props.detailData.taskTypeEnum,
       teamId: props.detailData.team?.id,
       workshopId: props.workshopId,
+      areaId: props.areaId,
       ...queryPage
     })
     list.value = content || []

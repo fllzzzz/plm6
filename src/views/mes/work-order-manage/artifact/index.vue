@@ -6,7 +6,7 @@
     <div class="wrap-right">
       <el-tag v-if="!crud.query?.projectId" type="info" size="medium"> * 请点击左侧项目列表查看详情 </el-tag>
       <template v-else>
-        <div class="head-container">
+        <div class="wrap-head">
           <mHeader />
         </div>
         <!--表格渲染-->
@@ -162,7 +162,7 @@ provide('crud', crud)
 provide('permission', permission)
 
 const { maxHeight } = useMaxHeight({
-  extraBox: ['.head-container'],
+  extraBox: ['.wrap-head'],
   extraHeight: 15,
   paginate: true
 })

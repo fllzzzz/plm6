@@ -138,6 +138,7 @@ CRUD.HOOK.handleRefresh = (crud, res) => {
     v.processMap = {}
     v.process?.forEach((p) => {
       v.processMap[p.id] = p
+      console.log(v.processMap[p.id], p, 'v')
     })
     v.specPrefixStr = v.crossSectionPrefix?.join(' / ')
     v.needProcessIds = artifactTypeListObj.value[v.classificationId]?.processIds
