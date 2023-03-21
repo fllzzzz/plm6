@@ -57,6 +57,11 @@ const fileId = computed(() => {
   return undefined
 })
 
+// 基础请求路径
+const requestUrl = computed(() => {
+  return window.location.href.split('/external/model')[0]
+})
+
 watch(
   () => fileId.value,
   (id) => {
@@ -92,7 +97,7 @@ async function fetchModelInfo(fileId) {
   // 获取加载model所需的访问令牌
   try {
     if (fileId) {
-      modelInfo.value = (await getModel({ fileId })) || {}
+      modelInfo.value = (await getModel(requestUrl.value, { fileId })) || {}
       modelStatus.value = {
         fileId: modelInfo.value.fileId,
         viewToken: modelInfo.value.viewToken,
