@@ -1,28 +1,30 @@
 <template>
   <div class="summary-content" :style="heightStyle">
-    <div class="left-con">
+    <div class="left-con anchor-container">
       <el-card>
         <div class="box-content">
-          <div class="summary-title">
+          <div class="summary-title anchor-title">
             <span># 构件汇总</span>
           </div>
           <artifact-change-summary-table :artifactCompareList="summaryInfo.artifactList || []" />
         </div>
         <div class="box-content" v-if="summaryInfo?.assembleList?.length">
-          <div class="summary-title">
+          <div class="summary-title anchor-title">
             <span># 部件汇总</span>
           </div>
           <assemble-change-table :assembleCompareList="summaryInfo.assembleList || []" showProcess />
         </div>
         <div class="box-content" v-if="summaryInfo?.partList?.length">
-          <div class="summary-title">
+          <div class="summary-title anchor-title">
             <span># 零件汇总</span>
           </div>
-          <machine-part-change-table :partCompareList="summaryInfo.partList || []" showProcess/>
+          <machine-part-change-table :partCompareList="summaryInfo.partList || []" showProcess />
         </div>
       </el-card>
     </div>
-    <!-- <div class="right-con"></div> -->
+    <el-card class="right-con">
+      <anchor-nav />
+    </el-card>
   </div>
 </template>
 
@@ -31,6 +33,7 @@ import { inject, defineProps } from 'vue'
 import artifactChangeSummaryTable from '@/components-system/plan/change/artifact-change-summary-table'
 import assembleChangeTable from '@/components-system/plan/change/assemble-change-table'
 import machinePartChangeTable from '@/components-system/plan/change/machine-part-change-table'
+import anchorNav from '@/components-system/common/anchor-nav.vue'
 
 defineProps({
   heightStyle: {
@@ -60,6 +63,10 @@ const summaryInfo = inject('summaryInfo')
     margin-left: 15px;
     width: 100px;
     height: 100%;
+
+    ::v-deep(.el-card__body) {
+      padding: 0px 10px;
+    }
   }
 }
 
