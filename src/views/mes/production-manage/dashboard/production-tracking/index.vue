@@ -26,10 +26,7 @@
       <el-table-column v-if="columns.visible('quantity')" prop="quantity" key="quantity" label="清单数量" align="center" fixed="left" />
       <template v-for="item in process" :key="item.id">
         <el-table-column
-          v-if="
-            (crud.query.processType?.includes(item.productType) && componentTypeEnum.ARTIFACT.V) |
-              (crud.query.processType?.includes(item.productType) && componentTypeEnum.ASSEMBLE.V) && (item.productionLineTypeEnum & artifactProductLineEnum.TRADITION.V)
-          "
+          v-if="crud.query.processType === item.productType && item.productionLineTypeEnum & artifactProductLineEnum.TRADITION.V"
           :label="item.name"
           align="center"
           width="110px"
@@ -59,7 +56,7 @@
 </template>
 <script setup>
 import { ref, provide, onMounted } from 'vue'
-import crudApi from '@/api/mes/production-manage/dashboard/production-tracking'
+import { get as artifactTrack, assembleTrack } from '@/api/mes/production-manage/dashboard/production-tracking'
 import { getArtifactProcess } from '@/api/mes/production-config/artifact-rivet-weld-config'
 import useCRUD from '@compos/use-crud'
 import { mesProductionTrackingPM as permission } from '@/page-permission/mes'
@@ -85,7 +82,7 @@ const { crud, CRUD, columns } = useCRUD(
     sort: [],
     optShow: { ...optShow },
     permission: { ...permission },
-    crudApi: { ...crudApi },
+    crudApi: { artifactTrack },
     requiredQuery: ['areaId'],
     hasPagination: true
   },
@@ -133,6 +130,10 @@ async function fetchPreloadData() {
 onMounted(() => {
   fetchPreloadData()
 })
+
+CRUD.HOOK.beforeToQuery = async (crud) => {
+  crud.crudApi.get = crud.query.processType === componentTypeEnum.ARTIFACT.V ? artifactTrack : assembleTrack
+}
 CRUD.HOOK.handleRefresh = (crud, res) => {
   res.data.content = res.data.content.map((v) => {
     v.processMap = {}

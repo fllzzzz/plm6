@@ -48,13 +48,13 @@
         <common-select
           v-model="query.processType"
           :options="[processMaterialListTypeEnum.ARTIFACT, processMaterialListTypeEnum.ASSEMBLE]"
-          multiple
           type="enum"
           size="small"
           clearable
           placeholder="请选择工序类型"
           class="filter-item"
           style="width: 200px"
+          @change="crud.toQuery"
         />
       </template>
       <template #viewLeft>
@@ -88,7 +88,7 @@ const defaultQuery = {
   serialNumber: undefined,
   specification: undefined,
   material: undefined,
-  processType: [processMaterialListTypeEnum.ARTIFACT.V, processMaterialListTypeEnum.ASSEMBLE.V]
+  processType: processMaterialListTypeEnum.ARTIFACT.V
 }
 const { crud, query } = regHeader(defaultQuery)
 
