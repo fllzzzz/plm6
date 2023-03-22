@@ -31,7 +31,7 @@
         v-show="nestingFileType === nestingFileTypeEnum.MATERIAL_LIST.V"
         class="filter-item"
         :fn="getMaterialListExcelFn"
-        :params="{ id: props.detailData.id, serialNumber: serialNumber }"
+        :params="{ id: props.detailData.id, serialNumber: serialNumber, monomerId: props.monomerId, areaId: props.areaId }"
         :disabled="nestingProgressData.length === 0"
       >
         材料清单
@@ -231,6 +231,12 @@ const props = defineProps({
   detailData: {
     type: Object,
     default: () => {}
+  },
+  monomerId: {
+    type: Number
+  },
+  areaId: {
+    type: Number
   }
 })
 const { visible: nestingFileVisible, handleClose } = useVisible({ emit, props, field: 'visible', showHook: showHook })
@@ -245,7 +251,12 @@ const colorObj = ref({}) // serialNumber: color
 async function nestingResultGet() {
   try {
     resultLoading.value = true
-    const { content } = await nestingProgress({ batchId: props.detailData.id, serialNumber: serialNumber.value })
+    const { content } = await nestingProgress({
+      batchId: props.detailData.id,
+      serialNumber: serialNumber.value,
+      monomerId: props.monomerId,
+      areaId: props.areaId
+    })
     content[0].typesettingDTOS.forEach((v) => {
       v.assembleLength = v.typesettingTypeEnum === nestingSettingTypeEnum.UN_LOSSY.V ? 0 : v.length
       v.linkDOList.map((m) => {
@@ -271,7 +282,12 @@ async function nestingResultGet() {
 async function nestingListGet() {
   try {
     resultLoading.value = true
-    const { content } = await getMaterialList({ id: props.detailData.id, serialNumber: serialNumber.value })
+    const { content } = await getMaterialList({
+      id: props.detailData.id,
+      serialNumber: serialNumber.value,
+      monomerId: props.monomerId,
+      areaId: props.areaId
+    })
     console.log(content)
     content[0].typesettingDTOS.forEach((v) => {
       v.areaName = v.areaName?.join(',')
