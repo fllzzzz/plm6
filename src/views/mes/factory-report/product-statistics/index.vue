@@ -106,18 +106,18 @@
         width="140px"
         fixed="right"
       />
-      <el-table-column label="损耗" align="center" fixed="right">
-        <el-table-column v-if="columns.visible('lossMete')" prop="lossMete" label="损耗量" align="center">
+      <!-- <el-table-column label="损耗" align="center" fixed="right"> -->
+        <el-table-column v-if="columns.visible('lossMete')" prop="lossMete" label="损耗量" align="center" fixed="right">
           <template #default="{ row }">
             <span>{{ row.lossMete }}</span>
           </template>
         </el-table-column>
-        <el-table-column v-if="columns.visible('lossRate')" prop="lossRate" label="损耗率" align="center">
+        <el-table-column v-if="columns.visible('lossRate')" prop="lossRate" label="损耗率" align="center" fixed="right">
           <template #default="{ row }">
             <span>{{ row.lossRate }}%</span>
           </template>
         </el-table-column>
-      </el-table-column>
+      <!-- </el-table-column> -->
     </common-table>
     <!-- 分页 -->
     <pagination />
