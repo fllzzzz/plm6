@@ -1,7 +1,7 @@
 <template>
   <!-- 套料文件弹窗 -->
   <common-drawer :before-close="handleClose" :show-close="true" size="90%" modal append-to-body v-model:visible="nestingFileVisible">
-  <template #titleAfter>
+    <template #titleAfter>
       <common-radio-button
         style="margin-right: 8px"
         class="filter-item"
@@ -11,6 +11,19 @@
         size="small"
         @change="handleChange"
       />
+      <el-input
+        v-model.trim="serialNumber"
+        placeholder="输入构件编号搜索"
+        class="filter-item"
+        style="width: 200px"
+        size="small"
+        clearable
+        @keyup.enter="handleSerialNumberChange"
+      />
+      <common-button class="filter-item" size="mini" type="success" icon="el-icon-search" @click.stop="searchQuery">搜索</common-button>
+      <common-button class="filter-item" size="mini" type="warning" icon="el-icon-refresh-left" @click.stop="resetQuery">
+        重置
+      </common-button>
     </template>
     <template #titleRight>
       <export-button
@@ -18,7 +31,7 @@
         v-show="nestingFileType === nestingFileTypeEnum.MATERIAL_LIST.V"
         class="filter-item"
         :fn="getMaterialListExcelFn"
-        :params="{ id: props.detailData.id }"
+        :params="{ id: props.detailData.id, serialNumber: serialNumber }"
         :disabled="nestingProgressData.length === 0"
       >
         材料清单
@@ -39,6 +52,7 @@
               <el-table-column label="单体" prop="monomerName" align="center" />
               <el-table-column label="区域" prop="areaName" align="center" />
               <el-table-column label="包含部件" prop="serialNumber" align="center" />
+              <el-table-column label="构件编号" prop="artifactSerialNumber" align="center" />
               <el-table-column label="长度（mm）" prop="length" align="center" />
               <el-table-column label="重量（kg）" prop="netWeight" align="center" />
               <el-table-column label="数量" prop="quantity" align="center" />
@@ -207,6 +221,7 @@ import ExportButton from '@comp-common/export-button/index.vue'
 const nestingProgressData = ref([])
 const resultLoading = ref(false)
 const nestingFileType = ref(nestingFileTypeEnum.NESTING_FILE.V)
+const serialNumber = ref()
 const emit = defineEmits(['success'])
 const props = defineProps({
   visible: {
@@ -230,7 +245,7 @@ const colorObj = ref({}) // serialNumber: color
 async function nestingResultGet() {
   try {
     resultLoading.value = true
-    const { content } = await nestingProgress({ batchId: props.detailData.id })
+    const { content } = await nestingProgress({ batchId: props.detailData.id, serialNumber: serialNumber.value })
     content[0].typesettingDTOS.forEach((v) => {
       v.assembleLength = v.typesettingTypeEnum === nestingSettingTypeEnum.UN_LOSSY.V ? 0 : v.length
       v.linkDOList.map((m) => {
@@ -256,7 +271,7 @@ async function nestingResultGet() {
 async function nestingListGet() {
   try {
     resultLoading.value = true
-    const { content } = await getMaterialList({ id: props.detailData.id })
+    const { content } = await getMaterialList({ id: props.detailData.id, serialNumber: serialNumber.value })
     console.log(content)
     content[0].typesettingDTOS.forEach((v) => {
       v.areaName = v.areaName?.join(',')
@@ -270,11 +285,29 @@ async function nestingListGet() {
 }
 
 function handleChange(val) {
+  serialNumber.value = undefined
   if (val === nestingFileTypeEnum.MATERIAL_LIST.V) {
     nestingListGet()
   } else {
     nestingResultGet()
   }
+}
+function handleSerialNumberChange() {
+  if (nestingFileType.value === nestingFileTypeEnum.MATERIAL_LIST.V) {
+    nestingListGet()
+  } else {
+    nestingResultGet()
+  }
+}
+
+function searchQuery() {
+  nestingResultGet()
+}
+
+function resetQuery() {
+  nestingFileType.value = nestingFileTypeEnum.NESTING_FILE.V
+  serialNumber.value = undefined
+  nestingResultGet()
 }
 
 // 高度
