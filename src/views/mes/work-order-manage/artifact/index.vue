@@ -73,7 +73,7 @@
             :show-overflow-tooltip="true"
             prop="workshop.name"
             label="车间"
-            min-width="110px"
+            min-width="100px"
             align="center"
           />
           <el-table-column
@@ -81,7 +81,7 @@
             :show-overflow-tooltip="true"
             prop="productionLine.name"
             label="生产线"
-            min-width="110px"
+            min-width="100px"
             align="center"
           />
           <el-table-column
@@ -104,7 +104,14 @@
             v-if="columns.visible('taskNetWeight')"
             :show-overflow-tooltip="true"
             prop="taskNetWeight"
-            label="任务量（kg）"
+            label="总净重（kg）"
+            align="center"
+          />
+          <el-table-column
+            v-if="columns.visible('taskGrossWeight')"
+            :show-overflow-tooltip="true"
+            prop="taskGrossWeight"
+            label="总毛重（kg）"
             align="center"
           />
           <el-table-column v-permission="[...permission.detail]" label="操作" width="80px" align="center">
@@ -151,6 +158,7 @@ const { crud, columns, CRUD } = useCRUD(
     permission: { ...permission },
     optShow: { ...optShow },
     crudApi: { ...crudApi },
+    invisibleColumns: ['taskGrossWeight'],
     requiredQuery: ['productType']
   },
   tableRef

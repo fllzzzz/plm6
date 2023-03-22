@@ -13,7 +13,7 @@
         highlight-current-row
         returnSourceData
         row-key="id"
-        style="width: 35%; cursor: pointer"
+        style="width: 47%; cursor: pointer"
         show-summary
         :summary-method="getSummaries"
         @row-click="monthlyTaskChange"
@@ -32,15 +32,39 @@
           </template>
         </el-table-column>
         <el-table-column
-          v-if="columns.visible('list')"
+          v-if="columns.visible('quantity')"
           align="center"
-          key="list"
-          prop="list"
+          key="quantity"
+          prop="quantity"
           :show-overflow-tooltip="true"
-          label="排产量（件/吨）"
+          label="排产数（件）"
         >
           <template v-slot="scope">
-            <span>{{ scope.row.quantity }}/{{ (scope.row.netWeight / 1000).toFixed(DP.COM_WT__KG) }}</span>
+            <span>{{ scope.row.quantity }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column
+          v-if="columns.visible('netWeight')"
+          align="center"
+          key="netWeight"
+          prop="netWeight"
+          :show-overflow-tooltip="true"
+          label="排产总净重（吨）"
+        >
+          <template v-slot="scope">
+            <span>{{ (scope.row.netWeight / 1000).toFixed(DP.COM_WT__KG) }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column
+          v-if="columns.visible('grossWeight')"
+          align="center"
+          key="grossWeight"
+          prop="grossWeight"
+          :show-overflow-tooltip="true"
+          label="排产总毛重（吨）"
+        >
+          <template v-slot="scope">
+            <span>{{ (scope.row.grossWeight / 1000).toFixed(DP.COM_WT__KG) }}</span>
           </template>
         </el-table-column>
         <el-table-column
@@ -65,15 +89,39 @@
           </template>
         </el-table-column>
         <el-table-column
-          v-if="columns.visible('complete')"
+          v-if="columns.visible('completeQuantity')"
           align="center"
-          key="complete"
-          prop="complete"
+          key="completeQuantity"
+          prop="completeQuantity"
           :show-overflow-tooltip="true"
-          label="实际完成（件/吨）"
+          label="实际完成数（件）"
         >
           <template v-slot="scope">
-            <span>{{ scope.row.completeQuantity }}/{{ (scope.row.completeNetWeight / 1000).toFixed(DP.COM_WT__KG) }}</span>
+            <span>{{ scope.row.completeQuantity }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column
+          v-if="columns.visible('completeNetWeight')"
+          align="center"
+          key="completeNetWeight"
+          prop="completeNetWeight"
+          :show-overflow-tooltip="true"
+          label="实际完成总净重（吨）"
+        >
+          <template v-slot="scope">
+            <span>{{ (scope.row.completeNetWeight / 1000).toFixed(DP.COM_WT__KG) }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column
+          v-if="columns.visible('completeGrossWeight')"
+          align="center"
+          key="completeGrossWeight"
+          prop="completeGrossWeight"
+          :show-overflow-tooltip="true"
+          label="实际完成总毛重（吨）"
+        >
+          <template v-slot="scope">
+            <span>{{ (scope.row.completeGrossWeight / 1000).toFixed(DP.COM_WT__KG) }}</span>
           </template>
         </el-table-column>
       </common-table>
@@ -164,7 +212,7 @@ function getSummaries(param) {
       sums[index] = '合计'
       return
     }
-    if (index === 2) {
+    if (index === 4) {
       sums[index] = 0
       data.map((v) => ave.push(v.completeQuantity / v.quantity))
       for (let i = 0; i <= ave.length - 1; i++) {
@@ -173,15 +221,24 @@ function getSummaries(param) {
       sums[index] = ((sums[index] / ave.length) * 100).toFixed(2) + '%'
       return
     }
-    if (column.property === 'list' || column.property === 'complete') {
-      const valueKeys = column.property === 'list' ? 'quantity' : column.property + 'Quantity'
-      const values = data.map((item) => Number(item?.[valueKeys]))
-      let valuesSum = 0
-      const valueWeightKeys = column.property === 'list' ? 'netWeight' : column.property + 'NetWeight'
-      const valueWeight = data.map((item) => Number(item?.[valueWeightKeys] / 1000))
-      let valueWeightSum = 0
+    if (index !== 0 && index !== 4 && index !== 1 && index !== 5) {
+      const values = data.map((item) => Number(item[column.property]))
       if (!values.every((value) => isNaN(value))) {
-        valuesSum = values.reduce((prev, curr) => {
+        sums[index] = values.reduce((prev, curr) => {
+          const value = Number(curr)
+          if (!isNaN(value)) {
+            return prev + curr / 1000
+          } else {
+            return prev
+          }
+        }, 0)
+      }
+      sums[index] = sums[index]?.toFixed(2)
+    }
+    if (index === 1 || index === 5) {
+      const values = data.map((item) => Number(item[column.property]))
+      if (!values.every((value) => isNaN(value))) {
+        sums[index] = values.reduce((prev, curr) => {
           const value = Number(curr)
           if (!isNaN(value)) {
             return prev + curr
@@ -190,17 +247,6 @@ function getSummaries(param) {
           }
         }, 0)
       }
-      if (!valueWeight.every((value) => isNaN(value))) {
-        valueWeightSum = valueWeight.reduce((prev, curr) => {
-          const value = Number(curr)
-          if (!isNaN(value)) {
-            return prev + curr
-          } else {
-            return prev
-          }
-        }, 0)
-      }
-      sums[index] = valuesSum + '/' + valueWeightSum.toFixed(DP.COM_WT__KG)
     }
   })
   return sums

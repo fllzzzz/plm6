@@ -27,16 +27,17 @@
       type="enum"
       @change="crud.toQuery"
     />
-    <div>
-      <project-cascader
-        v-if="query.productType === componentTypeEnum.ARTIFACT.V"
-        v-model="query.projectId"
-        clearable
-        class="filter-item"
-        style="width: 300px"
-        @change="crud.toQuery"
-      />
-      <!-- <monomer-select-area-select
+    <crudOperation>
+      <template #optLeft>
+        <project-cascader
+          v-if="query.productType === componentTypeEnum.ARTIFACT.V"
+          v-model="query.projectId"
+          clearable
+          class="filter-item"
+          style="width: 300px"
+          @change="crud.toQuery"
+        />
+        <!-- <monomer-select-area-select
       v-model:monomerId="query.monomerId"
       v-model:areaId="query.areaId"
       needConvert
@@ -44,7 +45,7 @@
       :project-id="query.projectId"
       @change="crud.toQuery"
     /> -->
-      <!-- <workshop-select
+        <!-- <workshop-select
         ref="workshopInfRef"
         v-model="query.workshopId"
         placeholder="请选择车间"
@@ -68,17 +69,18 @@
         defaultValue
         @change="crud.toQuery"
       /> -->
-      <el-input
-        v-model="query.orderNumber"
-        placeholder="输入工单号搜索"
-        class="filter-item"
-        style="width: 200px"
-        size="small"
-        clearable
-        @keyup.enter="crud.toQuery"
-      />
-      <rrOperation />
-    </div>
+        <el-input
+          v-model="query.orderNumber"
+          placeholder="输入工单号搜索"
+          class="filter-item"
+          style="width: 200px"
+          size="small"
+          clearable
+          @keyup.enter="crud.toQuery"
+        />
+        <rrOperation />
+      </template>
+    </crudOperation>
   </div>
 </template>
 
@@ -90,6 +92,7 @@ import projectCascader from '@comp-base/project-cascader.vue'
 // import workshopSelect from '@comp-mes/workshop-select'
 // import productionLineSelect from '@comp-mes/production-line-select'
 import rrOperation from '@crud/RR.operation'
+import crudOperation from '@crud/CRUD.operation'
 
 const defaultQuery = {
   dateTime: undefined,

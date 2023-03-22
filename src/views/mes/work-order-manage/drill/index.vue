@@ -100,10 +100,34 @@
             key="taskQuantity"
             prop="taskQuantity"
             :show-overflow-tooltip="true"
-            label="任务量（件/kg）"
+            label="任务数（件）"
           >
             <template v-slot="scope">
-              <span>{{ scope.row.taskQuantity }}/{{ scope.row.taskNetWeight }}</span>
+              <span>{{ scope.row.taskQuantity }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column
+            v-if="columns.visible('taskNetWeight')"
+            align="center"
+            key="taskNetWeight"
+            prop="taskNetWeight"
+            :show-overflow-tooltip="true"
+            label="总净重（kg）"
+          >
+            <template v-slot="scope">
+              <span>{{ scope.row.taskNetWeight }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column
+            v-if="columns.visible('taskGrossWeight')"
+            align="center"
+            key="taskGrossWeight"
+            prop="taskGrossWeight"
+            :show-overflow-tooltip="true"
+            label="总毛重（kg）"
+          >
+            <template v-slot="scope">
+              <span>{{ scope.row.taskGrossWeight }}</span>
             </template>
           </el-table-column>
           <el-table-column
@@ -168,6 +192,7 @@ const { crud, CRUD, columns } = useCRUD(
     permission: { ...permission },
     optShow: { ...optShow },
     crudApi: { ...crudApi },
+    invisibleColumns: ['taskGrossWeight'],
     requiredQuery: ['processType'],
     hasPagination: true
   },

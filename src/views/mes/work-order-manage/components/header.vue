@@ -1,4 +1,5 @@
 <template>
+ <div class="head-container">
   <div v-show="crud.searchToggle">
     <common-radio-button
       v-model="query.printType"
@@ -36,6 +37,7 @@
       </template>
     </crudOperation>
   </div>
+ </div>
 </template>
 <script setup>
 import { regHeader } from '@compos/use-crud'
