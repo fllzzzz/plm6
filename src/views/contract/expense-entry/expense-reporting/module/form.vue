@@ -84,6 +84,17 @@
             :max="9999999999"
           />
         </el-form-item>
+        <el-form-item label="备注：" prop="remark">
+          <el-input
+            v-model.trim="form.remark"
+            type="textarea"
+            :autosize="{ minRows: 2, maxRows: 8 }"
+            placeholder="输入备注"
+            style="width: 270px"
+            :maxlength="300"
+            show-word-limit
+          />
+        </el-form-item>
       </el-form>
     </div>
   </common-dialog>

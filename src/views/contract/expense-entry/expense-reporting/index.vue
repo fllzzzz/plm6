@@ -109,6 +109,18 @@
           <span>{{ scope.row.writtenByName }}</span>
         </template>
       </el-table-column>
+      <el-table-column
+        v-if="columns.visible('remark')"
+        align="center"
+        key="remark"
+        prop="remark"
+        :show-overflow-tooltip="true"
+        label="备注"
+      >
+        <template v-slot="scope">
+          <span>{{ scope.row.remark }}</span>
+        </template>
+      </el-table-column>
       <el-table-column align="center" label="操作">
         <template v-slot="scope">
           <udOperation :data="scope.row" :permission="permission"/>
