@@ -591,6 +591,13 @@ export const mesGroupReportPM = {
   get: ['mes_group_report:get'], // 列表
   print: ['mes_group_report:print'] // 打印
 }
+
+// 生产统计
+export const mesProductStatisticsPM = {
+  get: ['mes_product_statistics:get'] // 列表
+  // print: ['mes_product_statistics:print'] // 打印
+}
+
 // --------------------------- 6.0 车间报表 end --------------------------------
 
 // --------------------------- 6.0 产线工资统计 start --------------------------------
