@@ -146,7 +146,6 @@
             prop="rate"
             :show-overflow-tooltip="true"
             label="完成率"
-             fixed="right"
           >
             <template v-slot="scope">
               <span>{{ ((scope.row.completeQuantity / scope.row.totalQuantity) * 100).toFixed(2) }}%</span>
@@ -159,7 +158,6 @@
             prop="userName"
             :show-overflow-tooltip="true"
             label="排产人"
-            fixed="right"
             width="100px"
           >
             <template v-slot="scope">

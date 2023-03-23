@@ -20,7 +20,7 @@
     </template>
     <template #content>
       <div style="display: flex; height: 100%">
-        <div style="width: 45%">
+        <div style="width: 50%">
           <common-table
             v-loading="recordLoading"
             highlight-current-row
@@ -44,9 +44,19 @@
               label="单体"
               width="100px"
             />
-            <el-table-column prop="quantity" :show-overflow-tooltip="true" label="协同数（件/kg）" width="120px" align="center">
+            <el-table-column prop="quantity" :show-overflow-tooltip="true" label="协同数（件）" width="100px" align="center">
               <template #default="{ row }">
-                <span>{{ row.quantity }} / {{ row.totalNetWeight }}</span>
+                <span>{{ row.quantity }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column prop="totalNetWeight" :show-overflow-tooltip="true" label="总净重（kg）" width="100px" align="center">
+              <template #default="{ row }">
+                <span>{{ row.totalNetWeight }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column prop="totalGrossWeight" :show-overflow-tooltip="true" label="总毛重（kg）" width="100px" align="center">
+              <template #default="{ row }">
+                <span>{{ row.totalGrossWeight }}</span>
               </template>
             </el-table-column>
             <el-table-column

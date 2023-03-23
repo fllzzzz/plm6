@@ -77,11 +77,35 @@
         align="center"
         prop="quantity"
         :show-overflow-tooltip="true"
-        label="未完成量（件/kg）"
+        label="未完成数（件）"
         width="135px"
       >
         <template #default="{ row }">
-          <span>{{ row.quantity || 0 }} / {{ row.totalNetWeight || 0 }}</span>
+          <span>{{ row.quantity || 0 }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        v-if="columns.visible('totalNetWeight')"
+        align="center"
+        prop="totalNetWeight"
+        :show-overflow-tooltip="true"
+        label="总净重（kg）"
+        width="135px"
+      >
+        <template #default="{ row }">
+          <span>{{ row.totalNetWeight || 0 }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        v-if="columns.visible('totalGrossWeight')"
+        align="center"
+        prop="totalGrossWeight"
+        :show-overflow-tooltip="true"
+        label="总毛重（kg）"
+        width="135px"
+      >
+        <template #default="{ row }">
+          <span>{{ row.totalGrossWeight || 0 }}</span>
         </template>
       </el-table-column>
       <!-- <el-table-column
@@ -161,7 +185,8 @@ const { crud, columns, CRUD } = useCRUD(
     sort: [],
     permission: { ...permission },
     optShow: { ...optShow },
-    crudApi: { ...crudApi }
+    crudApi: { ...crudApi },
+    invisibleColumns: ['totalGrossWeight']
   },
   tableRef
 )

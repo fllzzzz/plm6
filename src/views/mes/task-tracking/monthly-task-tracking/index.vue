@@ -1,132 +1,136 @@
 <template>
   <div class="app-container">
-    <div class="head-container">
-      <mHeader />
-    </div>
     <div style="display: flex">
-      <common-table
-        ref="tableRef"
-        v-loading="crud.loading"
-        :data="crud.data"
-        :empty-text="crud.emptyText"
-        :max-height="maxHeight"
-        highlight-current-row
-        returnSourceData
-        row-key="id"
-        style="width: 47%; cursor: pointer"
-        show-summary
-        :summary-method="getSummaries"
-        @row-click="monthlyTaskChange"
-      >
-        <el-table-column
-          v-if="columns.visible('months')"
-          align="center"
-          key="months"
-          prop="months"
-          :show-overflow-tooltip="true"
-          label="月份"
-          width="80px"
+      <div style="width: 52%;">
+        <div class="head-container">
+          <mHeader />
+        </div>
+        <common-table
+          ref="tableRef"
+          v-loading="crud.loading"
+          :data="crud.data"
+          :empty-text="crud.emptyText"
+          :max-height="maxHeight"
+          highlight-current-row
+          returnSourceData
+          row-key="id"
+          style="cursor: pointer"
+          show-summary
+          :summary-method="getSummaries"
+          @row-click="monthlyTaskChange"
         >
-          <template v-slot="scope">
-            <span>{{ scope.row.months }}月</span>
-          </template>
-        </el-table-column>
-        <el-table-column
-          v-if="columns.visible('quantity')"
-          align="center"
-          key="quantity"
-          prop="quantity"
-          :show-overflow-tooltip="true"
-          label="排产数（件）"
-        >
-          <template v-slot="scope">
-            <span>{{ scope.row.quantity }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column
-          v-if="columns.visible('netWeight')"
-          align="center"
-          key="netWeight"
-          prop="netWeight"
-          :show-overflow-tooltip="true"
-          label="排产总净重（吨）"
-        >
-          <template v-slot="scope">
-            <span>{{ (scope.row.netWeight / 1000).toFixed(DP.COM_WT__KG) }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column
-          v-if="columns.visible('grossWeight')"
-          align="center"
-          key="grossWeight"
-          prop="grossWeight"
-          :show-overflow-tooltip="true"
-          label="排产总毛重（吨）"
-        >
-          <template v-slot="scope">
-            <span>{{ (scope.row.grossWeight / 1000).toFixed(DP.COM_WT__KG) }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column
-          v-if="columns.visible('rate')"
-          align="center"
-          key="rate"
-          prop="rate"
-          :show-overflow-tooltip="true"
-          label="达成率"
-          width="160px"
-        >
-          <template v-slot="scope">
-            <span>
-              <el-progress
-                :text-inside="true"
-                stroke-linecap="square"
-                :stroke-width="22"
-                :percentage="((scope.row.completeQuantity / scope.row.quantity) * 100).toFixed(2)"
-                status="success"
-              />
-            </span>
-          </template>
-        </el-table-column>
-        <el-table-column
-          v-if="columns.visible('completeQuantity')"
-          align="center"
-          key="completeQuantity"
-          prop="completeQuantity"
-          :show-overflow-tooltip="true"
-          label="实际完成数（件）"
-        >
-          <template v-slot="scope">
-            <span>{{ scope.row.completeQuantity }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column
-          v-if="columns.visible('completeNetWeight')"
-          align="center"
-          key="completeNetWeight"
-          prop="completeNetWeight"
-          :show-overflow-tooltip="true"
-          label="实际完成总净重（吨）"
-        >
-          <template v-slot="scope">
-            <span>{{ (scope.row.completeNetWeight / 1000).toFixed(DP.COM_WT__KG) }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column
-          v-if="columns.visible('completeGrossWeight')"
-          align="center"
-          key="completeGrossWeight"
-          prop="completeGrossWeight"
-          :show-overflow-tooltip="true"
-          label="实际完成总毛重（吨）"
-        >
-          <template v-slot="scope">
-            <span>{{ (scope.row.completeGrossWeight / 1000).toFixed(DP.COM_WT__KG) }}</span>
-          </template>
-        </el-table-column>
-      </common-table>
+          <el-table-column
+            v-if="columns.visible('months')"
+            align="center"
+            key="months"
+            prop="months"
+            :show-overflow-tooltip="true"
+            label="月份"
+            width="80px"
+          >
+            <template v-slot="scope">
+              <span>{{ scope.row.months }}月</span>
+            </template>
+          </el-table-column>
+          <el-table-column
+            v-if="columns.visible('quantity')"
+            align="center"
+            key="quantity"
+            prop="quantity"
+            :show-overflow-tooltip="true"
+            :label="`排产数\n（件）`"
+          >
+            <template v-slot="scope">
+              <span>{{ scope.row.quantity }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column
+            v-if="columns.visible('netWeight')"
+            align="center"
+            key="netWeight"
+            prop="netWeight"
+            :show-overflow-tooltip="true"
+            :label="`排产总净重\n（吨）`"
+          >
+            <template v-slot="scope">
+              <span>{{ (scope.row.netWeight / 1000).toFixed(DP.COM_WT__KG) }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column
+            v-if="columns.visible('grossWeight')"
+            align="center"
+            key="grossWeight"
+            prop="grossWeight"
+            :show-overflow-tooltip="true"
+            :label="`排产总毛重\n（吨）`"
+          >
+            <template v-slot="scope">
+              <span>{{ (scope.row.grossWeight / 1000).toFixed(DP.COM_WT__KG) }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column
+            v-if="columns.visible('rate')"
+            align="center"
+            key="rate"
+            prop="rate"
+            :show-overflow-tooltip="true"
+            label="达成率"
+            width="160px"
+          >
+            <template v-slot="scope">
+              <span>
+                <el-progress
+                  :text-inside="true"
+                  stroke-linecap="square"
+                  :stroke-width="22"
+                  :percentage="((scope.row.completeQuantity / scope.row.quantity) * 100).toFixed(2)"
+                  status="success"
+                />
+              </span>
+            </template>
+          </el-table-column>
+          <el-table-column
+            v-if="columns.visible('completeQuantity')"
+            align="center"
+            key="completeQuantity"
+            prop="completeQuantity"
+            :show-overflow-tooltip="true"
+            :label="`实际完成数\n（件）`"
+          >
+            <template v-slot="scope">
+              <span>{{ scope.row.completeQuantity }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column
+            v-if="columns.visible('completeNetWeight')"
+            align="center"
+            key="completeNetWeight"
+            prop="completeNetWeight"
+            :show-overflow-tooltip="true"
+            :label="`实际完成总净重\n（吨）`"
+            width="130px"
+          >
+            <template v-slot="scope">
+              <span>{{ (scope.row.completeNetWeight / 1000).toFixed(DP.COM_WT__KG) }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column
+            v-if="columns.visible('completeGrossWeight')"
+            align="center"
+            key="completeGrossWeight"
+            prop="completeGrossWeight"
+            :show-overflow-tooltip="true"
+            :label="`实际完成总毛重\n（吨）`"
+            width="130px"
+          >
+            <template v-slot="scope">
+              <span>{{ (scope.row.completeGrossWeight / 1000).toFixed(DP.COM_WT__KG) }}</span>
+            </template>
+          </el-table-column>
+        </common-table>
+      </div>
       <div style="border-right: 1px solid #ededed; margin: 0 20px; height: calc(100vh - 180px)"></div>
-      <monthly-task-detail :query="query" :monthly-data="monthlyData" style="flex: 1" />
+      <monthly-task-detail :query="query" :monthly-data="monthlyData" style="width: 46%" />
     </div>
   </div>
 </template>
@@ -163,6 +167,7 @@ const { crud, CRUD, columns } = useCRUD(
     sort: [],
     optShow: { ...optShow },
     permission: { ...permission },
+    invisibleColumns: ['grossWeight', 'completeGrossWeight'],
     crudApi: { ...crudApi },
     hasPagination: false
   },
@@ -212,7 +217,7 @@ function getSummaries(param) {
       sums[index] = '合计'
       return
     }
-    if (index === 4) {
+    if (column.property === 'rate') {
       sums[index] = 0
       data.map((v) => ave.push(v.completeQuantity / v.quantity))
       for (let i = 0; i <= ave.length - 1; i++) {
@@ -221,7 +226,7 @@ function getSummaries(param) {
       sums[index] = ((sums[index] / ave.length) * 100).toFixed(2) + '%'
       return
     }
-    if (index !== 0 && index !== 4 && index !== 1 && index !== 5) {
+    if (column.property !== 'rate' && column.property !== 'months' && column.property !== 'quantity' || column.property !== 'completeQuantity') {
       const values = data.map((item) => Number(item[column.property]))
       if (!values.every((value) => isNaN(value))) {
         sums[index] = values.reduce((prev, curr) => {
@@ -235,7 +240,7 @@ function getSummaries(param) {
       }
       sums[index] = sums[index]?.toFixed(2)
     }
-    if (index === 1 || index === 5) {
+    if (column.property === 'quantity' || column.property === 'completeQuantity') {
       const values = data.map((item) => Number(item[column.property]))
       if (!values.every((value) => isNaN(value))) {
         sums[index] = values.reduce((prev, curr) => {

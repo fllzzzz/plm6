@@ -1,40 +1,44 @@
 <template>
   <div class="head-container">
-    <common-radio-button
-      v-model="query.productType"
-      :options="[componentTypeEnum.ARTIFACT, componentTypeEnum.ASSEMBLE, componentTypeEnum.MACHINE_PART]"
-      showOptionAll
-      class="filter-item"
-      type="enum"
-      @change="crud.toQuery"
-    />
-    <el-date-picker
-      v-model="query.date"
-      type="daterange"
-      range-separator=":"
-      size="small"
-      value-format="x"
-      :clearable="false"
-      :shortcuts="PICKER_OPTIONS_SHORTCUTS"
-      unlink-panels
-      start-placeholder="开始日期"
-      end-placeholder="结束日期"
-      style="width: 240px; margin-right: 10px"
-      class="filter-item date-item"
-      @change="handleDateChange"
-    />
-    <workshop-select
-      ref="workshopInfRef"
-      v-model="query.workShopId"
-      placeholder="请选择车间"
-      :factory-id="query.factoryId"
-      style="width: 200px"
-      class="filter-item"
-      clearable
-      defaultValue
-      @change="crud.toQuery"
-    />
-    <rrOperation />
+    <crudOperation>
+      <template #optLeft>
+        <common-radio-button
+          v-model="query.productType"
+          :options="[componentTypeEnum.ARTIFACT, componentTypeEnum.ASSEMBLE, componentTypeEnum.MACHINE_PART]"
+          showOptionAll
+          class="filter-item"
+          type="enum"
+          @change="crud.toQuery"
+        />
+        <el-date-picker
+          v-model="query.date"
+          type="daterange"
+          range-separator=":"
+          size="small"
+          value-format="x"
+          :clearable="false"
+          :shortcuts="PICKER_OPTIONS_SHORTCUTS"
+          unlink-panels
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
+          style="width: 240px; margin-right: 10px"
+          class="filter-item date-item"
+          @change="handleDateChange"
+        />
+        <workshop-select
+          ref="workshopInfRef"
+          v-model="query.workShopId"
+          placeholder="请选择车间"
+          :factory-id="query.factoryId"
+          style="width: 200px"
+          class="filter-item"
+          clearable
+          defaultValue
+          @change="crud.toQuery"
+        />
+        <rrOperation />
+      </template>
+    </crudOperation>
   </div>
 </template>
 
@@ -45,6 +49,7 @@ import { componentTypeEnum } from '@enum-ms/mes'
 import { PICKER_OPTIONS_SHORTCUTS } from '@/settings/config'
 import workshopSelect from '@comp-mes/workshop-select'
 import rrOperation from '@crud/RR.operation'
+import crudOperation from '@crud/CRUD.operation'
 
 const defaultQuery = {
   workShopId: undefined,

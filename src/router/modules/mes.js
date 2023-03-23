@@ -508,18 +508,18 @@ export default {
           icon: 'project',
           noCache: true
         }
-      },
-      {
-        name: 'MesSemiFinishedStatistics',
-        path: 'semi-finished-statistics',
-        hidden: false,
-        component: '/mes/task-tracking/semi-finished-statistics/index',
-        meta: {
-          title: '半成品统计',
-          icon: 'project',
-          noCache: true
-        }
       }
+      // {
+      //   name: 'MesSemiFinishedStatistics',
+      //   path: 'semi-finished-statistics',
+      //   hidden: false,
+      //   component: '/mes/task-tracking/semi-finished-statistics/index',
+      //   meta: {
+      //     title: '半成品统计',
+      //     icon: 'project',
+      //     noCache: true
+      //   }
+      // }
     ]
   },
   {

@@ -12,13 +12,21 @@
         style="width: 100%; cursor: pointer"
         @row-click="handleProjectDetail"
       >
-        <el-table-column type="index" label="序号" key="index" align="center" width="60px" />
-        <el-table-column key="project.shortName" prop="project" :show-overflow-tooltip="true" label="项目" min-width="150px">
+        <el-table-column type="index" label="序号" key="index" align="center" width="60px" fixed="left" />
+        <el-table-column key="project.shortName" prop="project" :show-overflow-tooltip="true" label="项目" min-width="150px" fixed="left">
           <template v-slot="scope">
             <span>{{ projectNameFormatter(scope.row.project) }}</span>
           </template>
         </el-table-column>
-        <el-table-column align="left" key="monomer" prop="monomer" :show-overflow-tooltip="true" label="包含单体">
+        <el-table-column
+          align="left"
+          key="monomer"
+          prop="monomer"
+          :show-overflow-tooltip="true"
+          label="包含单体"
+          width="120px"
+          fixed="left"
+        >
           <template v-slot="scope">
             <template v-for="item in scope.row.monomerDO" :key="item">
               <span v-if="scope.row.monomerDO.length > 1">{{ item.name }}/</span>
@@ -27,7 +35,7 @@
             </template>
           </template>
         </el-table-column>
-        <el-table-column align="left" key="area" prop="area" :show-overflow-tooltip="true" label="包含区域">
+        <el-table-column align="left" key="area" prop="area" :show-overflow-tooltip="true" label="包含区域" width="120px" fixed="left">
           <template v-slot="scope">
             <template v-for="item in scope.row.areaDO" :key="item">
               <span v-if="scope.row.areaDO.length > 1">{{ item.name }}/</span>
@@ -36,9 +44,33 @@
             </template>
           </template>
         </el-table-column>
-        <el-table-column align="center" key="quantity" prop="quantity" :show-overflow-tooltip="true" label="排产量（件/吨）">
+        <el-table-column align="center" key="quantity" prop="quantity" :show-overflow-tooltip="true" :label="`排产数\n（件）`">
           <template v-slot="scope">
-            <span>{{ scope.row.quantity }}/{{ (scope.row.netWeight / 1000).toFixed(DP.COM_WT__KG) }}</span>
+            <span>{{ scope.row.quantity }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column
+          align="center"
+          key="netWeight"
+          prop="netWeight"
+          :show-overflow-tooltip="true"
+          :label="`排产总净重\n（吨）`"
+          width="120px"
+        >
+          <template v-slot="scope">
+            <span>{{ (scope.row.netWeight / 1000).toFixed(DP.COM_WT__KG) }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column
+          align="center"
+          key="grossWeight"
+          prop="grossWeight"
+          :show-overflow-tooltip="true"
+          :label="`排产总毛重\n（吨）`"
+          width="120px"
+        >
+          <template v-slot="scope">
+            <span>{{ (scope.row.grossWeight / 1000).toFixed(DP.COM_WT__KG) }}</span>
           </template>
         </el-table-column>
         <el-table-column align="center" key="rate" prop="rate" :show-overflow-tooltip="true" label="完成率" width="160px">
@@ -59,10 +91,35 @@
           key="completeQuantity"
           prop="completeQuantity"
           :show-overflow-tooltip="true"
-          label="实际完成（件/吨）"
+          :label="`实际完成数\n（件）`"
+          width="120px"
         >
           <template v-slot="scope">
-            <span>{{ scope.row.completeQuantity }}/{{ (scope.row.completeNetWeight / 1000).toFixed(DP.COM_WT__KG) }}</span>
+            <span>{{ scope.row.completeQuantity }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column
+          align="center"
+          key="completeNetWeight"
+          prop="completeNetWeight"
+          :show-overflow-tooltip="true"
+          :label="`实际完成总净重\n（吨）`"
+          width="120px"
+        >
+          <template v-slot="scope">
+            <span>{{ (scope.row.completeNetWeight / 1000).toFixed(DP.COM_WT__KG) }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column
+          align="center"
+          key="completeGrossWeight"
+          prop="completeGrossWeight"
+          :show-overflow-tooltip="true"
+          :label="`实际完成总毛重\n（吨）`"
+          width="120px"
+        >
+          <template v-slot="scope">
+            <span>{{ (scope.row.completeGrossWeight / 1000).toFixed(DP.COM_WT__KG) }}</span>
           </template>
         </el-table-column>
       </common-table>

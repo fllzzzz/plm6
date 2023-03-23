@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <div class="head-container">
-        <mHeader />
+      <mHeader />
     </div>
     <common-table
       ref="tableRef"
@@ -113,10 +113,23 @@
         prop="totalNetWeight"
         align="center"
         :show-overflow-tooltip="true"
-        label="总重（kg）"
+        label="总净重（kg）"
       >
         <template v-slot="scope">
           <span>{{ scope.row.totalNetWeight?.toFixed(2) }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        v-if="columns.visible('totalGrossWeight')"
+        header-align="center"
+        key="totalGrossWeight"
+        prop="totalGrossWeight"
+        align="center"
+        :show-overflow-tooltip="true"
+        label="总毛重（kg）"
+      >
+        <template v-slot="scope">
+          <span>{{ scope.row.totalGrossWeight?.toFixed(2) }}</span>
         </template>
       </el-table-column>
     </common-table>
@@ -143,15 +156,17 @@ const optShow = {
   download: false
 }
 
-const { crud, CRUD, columns } = useCRUD({
-  title: '车间报表',
-  sort: [],
-  optShow: { ...optShow },
-  permission: { ...permission },
-  crudApi: { ...crudApi },
-  hasPagination: true
-},
-tableRef
+const { crud, CRUD, columns } = useCRUD(
+  {
+    title: '车间报表',
+    sort: [],
+    optShow: { ...optShow },
+    permission: { ...permission },
+    crudApi: { ...crudApi },
+    invisibleColumns: ['totalGrossWeight'],
+    hasPagination: true
+  },
+  tableRef
 )
 
 CRUD.HOOK.handleRefresh = (crud, res) => {
@@ -162,7 +177,7 @@ CRUD.HOOK.handleRefresh = (crud, res) => {
 // 合计
 function getSummaries(param) {
   return tableSummary(param, {
-    props: ['length', 'quantity', ['totalNetWeight', 2]]
+    props: ['length', 'quantity', ['totalNetWeight', 2], ['totalGrossWeight', 2]]
   })
 }
 </script>
