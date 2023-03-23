@@ -1,10 +1,10 @@
 <template>
   <div class="app-container wrap">
     <div class="wrap-left">
-      <artifact-project-list :maxHeight="maxHeight - 40" @nesting-task-click="handleNestingTaskClick" />
+      <artifact-project-list :heightStyle="heightStyle" :maxHeight="maxHeight - 40" @nesting-task-click="handleNestingTaskClick" />
     </div>
     <div class="wrap-right">
-      <el-tag v-if="!crud.query?.projectId" type="info" size="medium"> * 请点击左侧项目列表查看详情 </el-tag>
+      <el-tag v-if="!crud.query?.areaId" type="info" size="medium"> * 请点击左侧项目列表查看详情 </el-tag>
       <template v-else>
         <div class="wrap-head">
           <mHeader />
@@ -135,7 +135,7 @@ import { ref, provide } from 'vue'
 
 import { componentTypeEnum, artifactProductLineEnum } from '@enum-ms/mes'
 import { artifactWorkOrderPM as permission } from '@/page-permission/mes'
-
+import { debounce } from '@/utils'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import pagination from '@crud/Pagination'
@@ -151,6 +151,8 @@ const optShow = {
 }
 
 const tableRef = ref()
+const areaId = ref()
+const projectId = ref()
 const { crud, columns, CRUD } = useCRUD(
   {
     title: '结构工单',
@@ -159,7 +161,7 @@ const { crud, columns, CRUD } = useCRUD(
     optShow: { ...optShow },
     crudApi: { ...crudApi },
     invisibleColumns: ['taskGrossWeight'],
-    requiredQuery: ['productType']
+    requiredQuery: ['productType', 'areaId']
   },
   tableRef
 )
@@ -169,11 +171,25 @@ const dataFormat = ref([['scheduleTime', ['parse-time', '{y}-{m}-{d}']]])
 provide('crud', crud)
 provide('permission', permission)
 
-const { maxHeight } = useMaxHeight({
-  extraBox: ['.wrap-head'],
+const { maxHeight, heightStyle } = useMaxHeight({
+  extraBox: ['.wrap-head', '.head-container'],
   extraHeight: 15,
   paginate: true
 })
+
+const handleNestingTaskClick = debounce(function (nodes = []) {
+  projectId.value = undefined
+  areaId.value = undefined
+  for (let x = 0; x < nodes.length; x++) {
+    console.log(nodes[x], nodes[x].parentIds, 'x')
+    areaId.value = nodes[x].id
+    projectId.value = nodes[x].parentIds[1]
+    console.log(projectId.value, 'projectId.value')
+  }
+  crud.query.areaId = areaId.value
+  crud.query.projectId = projectId.value
+  crud.toQuery()
+}, 500)
 
 CRUD.HOOK.handleRefresh = (crud, res) => {
   res.data.content = res.data.content.map((v) => {
@@ -193,13 +209,6 @@ function showDetail(row) {
   itemInfo.value = Object.assign({}, row)
 }
 
-function handleNestingTaskClick(val, query) {
-  // crud.query.localDateTime = year
-  crud.query.projectId = val?.id
-  if (crud.query.projectId) {
-    crud.toQuery()
-  }
-}
 </script>
 <style lang="scss" scoped>
 .wrap {
