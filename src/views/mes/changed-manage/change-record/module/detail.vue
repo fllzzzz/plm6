@@ -25,13 +25,13 @@
           </common-button>
         </span>
       </el-card>
-      <component :is="currentView" :height-style="heightStyle" />
+      <component v-loading="contentLoading" :is="currentView" :height-style="heightStyle" />
     </template>
   </common-drawer>
 </template>
 
 <script setup>
-import { detail } from '@/api/mes/changed-manage/change-record'
+import { changeDetail, taskDetail } from '@/api/mes/changed-manage/change-record'
 import { defineProps, defineEmits, computed, reactive, ref, provide } from 'vue'
 import { ElMessage, ElNotification } from 'element-plus'
 
@@ -45,6 +45,7 @@ import commonStep from '@comp-common/common-step/index'
 import mReason from './change-detail/reason'
 import mHandleInfo from './change-detail/handle-info'
 import mChangeSummary from './change-detail/change-summary'
+import mTaskChangeInfo from './change-detail/task-change-info'
 
 const drawerRef = ref()
 const emit = defineEmits(['update:visible'])
@@ -67,8 +68,7 @@ const { maxHeight, heightStyle } = useMaxHeight(
     mainBox: '.change-record-detail',
     extraBox: ['.el-drawer__header', '.step-content'],
     wrapperBox: ['.el-drawer__body'],
-    clientHRepMainH: true,
-    extraHeight: 50
+    clientHRepMainH: true
   },
   () => computed(() => !drawerVisible.value)
 )
@@ -84,25 +84,28 @@ const stepOptions = reactive([
   { title: '变更文件总览' },
   { title: '变更任务重新排产' }
 ])
-const stepComponent = [mReason, mHandleInfo, mChangeSummary, null]
+const stepComponent = [mReason, mHandleInfo, mChangeSummary, mTaskChangeInfo]
 const step = ref(0)
 const detailLoading = ref(false)
 const submitLoading = ref(false)
-const rowDetail = ref()
-provide('changeInfo', rowDetail)
+const contentLoading = ref(false)
+const changeInfo = ref()
+const taskInfo = ref({})
+provide('changeInfo', changeInfo)
+provide('taskInfo', taskInfo)
 
 const currentView = computed(() => stepComponent[step.value])
 
 function showHook() {
   step.value = 0
-  fetchDetail()
+  fetchChangeDetail()
 }
 
-async function fetchDetail() {
+async function fetchChangeDetail() {
   try {
     detailLoading.value = true
-    const content = await detail(props.info.id)
-    rowDetail.value = content.map((v) => {
+    const content = await changeDetail(props.info.id)
+    changeInfo.value = content.map((v) => {
       if (v?.changePartList?.length) {
         v.partCompareList = handleComparePartList(v.changePartList)
       }
@@ -115,6 +118,19 @@ async function fetchDetail() {
     console.log(error, '获取详情失败')
   } finally {
     detailLoading.value = false
+  }
+}
+
+async function fetchTaskDetail() {
+  taskInfo.value = {}
+  try {
+    contentLoading.value = true
+    const data = await taskDetail(props.info.id)
+    taskInfo.value = data
+  } catch (error) {
+    console.log(error, '获取详情失败')
+  } finally {
+    contentLoading.value = false
   }
 }
 
@@ -139,7 +155,10 @@ function handleComparePartList(list) {
 
 function handleNextStep() {
   if (step.value === 1) {
-    handleSummaryData(rowDetail.value)
+    handleSummaryData(changeInfo.value)
+  }
+  if (step.value === 2) {
+    fetchTaskDetail()
   }
   step.value++
 }

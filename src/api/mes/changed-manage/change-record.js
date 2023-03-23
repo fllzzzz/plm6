@@ -9,7 +9,7 @@ export function get(params) {
   })
 }
 
-export function detail(id) {
+export function changeDetail(id) {
   return request({
     module: 'mes',
     url: `tech/change/${id}`,
@@ -17,4 +17,12 @@ export function detail(id) {
   })
 }
 
-export default { get, detail }
+export function taskDetail(id) {
+  return request({
+    module: 'mes',
+    url: `tech/change/${id}/task`,
+    method: 'get'
+  })
+}
+
+export default { get }

@@ -13,7 +13,7 @@
 </template>
 
 <script setup>
-import { ref, defineProps, onUnmounted, onMounted } from 'vue'
+import { ref, defineProps, defineExpose, onUnmounted, onMounted } from 'vue'
 
 import { debounce } from '@/utils'
 
@@ -33,8 +33,17 @@ const containerRef = ref()
 const scrollDOM = ref()
 const anchorList = ref([])
 const activeAnchor = ref(0)
+const isListenerScroll = ref(false)
 
 const getAnchorList = () => {
+  activeAnchor.value = 0
+  // 清空锚点列表
+  anchorList.value = []
+
+  if (isListenerScroll.value) {
+    scrollDOM.value.removeEventListener('scroll', handleDebounceScroll)
+  }
+
   // 获取需要滚动实例中的章节 DOM 列表
   scrollDOM.value = document.querySelector(props.scrollContainerClass)
 
@@ -44,14 +53,22 @@ const getAnchorList = () => {
   // 遍历章节 DOM 列表，填充锚点列表
   titleList.forEach((item, index) => {
     // console.log('当前遍历的 章节 DOM item ===', item.innerText.replace(/[#\s]/g, ''))
+    let label = ''
+    if (item.dataset?.anchorLabel) {
+      label = item.dataset.anchorLabel
+    } else {
+      label = item.innerText.replace(/[#\s]/g, '')
+    }
+    console.log(label)
     anchorList.value.push({
       index, // 章节索引
-      label: item.innerText.replace(/[#\s]/g, '') || '--', // 章节内容，去除#符号
+      label: label || '--', // 章节内容，去除#符号
       titleDOM: item // 章节完整 DOM 信息
     })
   })
 
   scrollDOM.value.addEventListener('scroll', handleDebounceScroll)
+  isListenerScroll.value = true
 }
 
 const handleAnchorClick = (node) => {
@@ -112,9 +129,6 @@ const handleScroll = (e) => {
 const handleDebounceScroll = debounce(handleScroll, 200)
 
 onMounted(() => {
-  activeAnchor.value = 0
-  // 清空锚点列表
-  anchorList.value = []
   // 从滚动实例中，获取章节列表，并填充锚点列表，并添加滚动监听
   getAnchorList()
 })
@@ -122,6 +136,11 @@ onMounted(() => {
 onUnmounted(() => {
   // 移除滚动监听
   scrollDOM.value.removeEventListener('scroll', handleDebounceScroll)
+  isListenerScroll.value = false
+})
+
+defineExpose({
+  refreshAnchorList: getAnchorList
 })
 </script>
 
