@@ -47,18 +47,33 @@
         >
           <template #default="{ row }">
             <div
-              v-if="row.processMap[item.id] && row.processMap[item.id]?.inspectionQuantity === row.processMap[item.id]?.quantity"
+              v-if="
+                row.processMap[item.id] &&
+                row.processMap[item.id]?.inspectionQuantity !== 0 &&
+                row.processMap[item.id]?.inspectionQuantity === row.processMap[item.id]?.quantity
+              "
               style="color: #13ce66"
             >
               √
             </div>
-            <div v-else>
-              <div v-if="row.processMap[item.id]">
-                <span style="cursor: pointer" class="tc-danger">{{ row.processMap[item.id]?.quantity }}</span>
-                <span> / </span>
-                <span>{{ row.processMap[item.id]?.inspectionQuantity }}</span>
-              </div>
-              <span v-else> / </span>
+            <div
+              v-else-if="
+                row.processMap[item.id] &&
+                row.processMap[item.id]?.inspectionQuantity === 0 &&
+                row.processMap[item.id]?.inspectionQuantity === row.processMap[item.id]?.quantity
+              "
+            >
+              <span style="color: #303133">0</span>
+              <span> / </span>
+              <span style="color: #1682e6">0</span>
+            </div>
+            <div v-else-if="row.processMap[item.id] && row.processMap[item.id]?.inspectionQuantity !== row.processMap[item.id]?.quantity">
+              <span style="cursor: pointer" class="tc-danger">{{ row.processMap[item.id]?.quantity }}</span>
+              <span> / </span>
+              <span>{{ row.processMap[item.id]?.inspectionQuantity }}</span>
+            </div>
+            <div v-else-if="!row.processMap[item.id]">
+              <span> / </span>
             </div>
           </template>
         </el-table-column>
