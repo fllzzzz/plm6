@@ -9,8 +9,8 @@
         type="other"
         class="filter-item"
         :clearable="true"
-        :dataStructure="{ key: 'id', label: 'classificationName', value: 'id' }"
-        placeholder="选择构件类型"
+        :dataStructure="{ key: 'structureClassId', label: 'name', value: 'structureClassId' }"
+        :placeholder="query.processType === processMaterialListTypeEnum.ARTIFACT.V ? '选择构件类型' : '选择部件类型'"
         style="width: 170px"
         @change="crud.toQuery"
       />
@@ -99,5 +99,4 @@ function fetchMonomerAndArea({ monomerId, areaId }) {
   query.areaId = areaId
   crud.toQuery()
 }
-
 </script>
