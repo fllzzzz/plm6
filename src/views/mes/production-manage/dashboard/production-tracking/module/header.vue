@@ -50,7 +50,6 @@
           :options="[processMaterialListTypeEnum.ARTIFACT, processMaterialListTypeEnum.ASSEMBLE]"
           type="enum"
           size="small"
-          clearable
           placeholder="请选择工序类型"
           class="filter-item"
           style="width: 200px"
