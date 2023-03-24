@@ -1,7 +1,7 @@
 <template>
   <div class="app-container wrap">
     <div class="wrap-left">
-      <artifact-project-list :heightStyle="heightStyle" :maxHeight="maxHeight - 40" @nesting-task-click="handleNestingTaskClick" />
+      <artifact-project-list :maxHeight="maxHeight - 40" @nesting-task-click="handleNestingTaskClick" />
     </div>
     <div class="wrap-right">
       <el-tag v-if="!crud.query?.areaId" type="info" size="medium"> * 请点击左侧项目列表查看详情 </el-tag>
@@ -16,7 +16,7 @@
           :data="crud.data"
           :empty-text="crud.emptyText"
           :dataFormat="dataFormat"
-          :max-height="maxHeight"
+          :max-height="maxHeight - 130"
           style="width: 100%"
         >
           <el-table-column label="序号" type="index" align="center" width="70">
@@ -151,8 +151,6 @@ const optShow = {
 }
 
 const tableRef = ref()
-const areaId = ref()
-const projectId = ref()
 const { crud, columns, CRUD } = useCRUD(
   {
     title: '结构工单',
@@ -171,23 +169,16 @@ const dataFormat = ref([['scheduleTime', ['parse-time', '{y}-{m}-{d}']]])
 provide('crud', crud)
 provide('permission', permission)
 
-const { maxHeight, heightStyle } = useMaxHeight({
-  extraBox: ['.wrap-head', '.head-container'],
-  extraHeight: 15,
-  paginate: true
-})
+const { maxHeight } = useMaxHeight()
 
 const handleNestingTaskClick = debounce(function (nodes = []) {
-  projectId.value = undefined
-  areaId.value = undefined
-  for (let x = 0; x < nodes.length; x++) {
-    console.log(nodes[x], nodes[x].parentIds, 'x')
-    areaId.value = nodes[x].id
-    projectId.value = nodes[x].parentIds[1]
-    console.log(projectId.value, 'projectId.value')
+  if (nodes?.length) {
+    crud.query.areaId = nodes[0].id
+    crud.query.projectId = nodes[0].projectId
+  } else {
+    crud.query.areaId = undefined
+    crud.query.projectId = undefined
   }
-  crud.query.areaId = areaId.value
-  crud.query.projectId = projectId.value
   crud.toQuery()
 }, 500)
 
