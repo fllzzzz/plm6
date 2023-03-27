@@ -437,7 +437,8 @@ const MesBuildingTypesettingStatusEnum = {
   COMPLETE: { L: '套料完成', K: 'COMPLETE', V: 1 << 1, T: 'success' },
   EXPIRED: { L: '已过期', K: 'EXPIRED', V: 1 << 2, T: 'info' },
   ISSUED: { L: '已下发', K: 'ISSUED', V: 1 << 3, T: 'warning' },
-  PRODUCTION: { L: '生产中', K: 'PRODUCTION', V: 1 << 4, T: 'danger' }
+  PRODUCTION: { L: '生产中', K: 'PRODUCTION', V: 1 << 4, T: 'danger' },
+  FINISHED: { L: '已完成', K: 'FINISHED', V: 1 << 5, T: 'success' }
 }
 constantize(MesBuildingTypesettingStatusEnum)
 
