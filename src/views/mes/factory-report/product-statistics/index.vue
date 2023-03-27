@@ -21,6 +21,7 @@
       :data="crud.data"
       :empty-text="crud.emptyText"
       :max-height="maxHeight"
+      :data-format="dataFormat"
       :show-empty-symbol="false"
       row-key="id"
       style="width: 100%"
@@ -107,16 +108,16 @@
         fixed="right"
       />
       <!-- <el-table-column label="损耗" align="center" fixed="right"> -->
-        <el-table-column v-if="columns.visible('lossMete')" prop="lossMete" label="损耗量" align="center" fixed="right">
-          <template #default="{ row }">
-            <span>{{ row.lossMete }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column v-if="columns.visible('lossRate')" prop="lossRate" label="损耗率" align="center" fixed="right">
-          <template #default="{ row }">
-            <span>{{ row.lossRate }}%</span>
-          </template>
-        </el-table-column>
+      <el-table-column v-if="columns.visible('lossMete')" prop="lossMete" label="损耗量" align="center" fixed="right">
+        <template #default="{ row }">
+          <span>{{ row.lossMete }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column v-if="columns.visible('lossRate')" prop="lossRate" label="损耗率" align="center" fixed="right">
+        <template #default="{ row }">
+          <span>{{ row.lossRate }}%</span>
+        </template>
+      </el-table-column>
       <!-- </el-table-column> -->
     </common-table>
     <!-- 分页 -->
@@ -134,6 +135,13 @@ import pagination from '@crud/Pagination'
 import { componentTypeEnum, artifactProductLineEnum } from '@enum-ms/mes'
 // import { propertyCostPM as permission } from '@/page-permission/contract'
 import mHeader from './module/header.vue'
+
+const dataFormat = ref([
+  ['rawTotalNetWeight', ['to-fixed', 2]],
+  ['rawNetWeight', ['to-fixed', 2]],
+  ['taskNetWeight', ['to-fixed', 2]],
+  ['finishNetWeight', ['to-fixed', 2]]
+])
 
 const tableRef = ref()
 

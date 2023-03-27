@@ -17,7 +17,7 @@
         <common-radio-button
           type="enum"
           v-model="query.status"
-          :options="[projectStatusEnum.PROCESS, projectStatusEnum.COMPLETE]"
+          :options="[projectStatusEnum.PROCESS, projectStatusEnum.COMPLETE, projectStatusEnum.SUSPEND]"
           show-option-all
           class="filter-item"
           @change="crud.toQuery"
@@ -32,10 +32,12 @@
 <script setup>
 import { regHeader } from '@compos/use-crud'
 import { projectStatusEnum } from '@enum-ms/contract'
+import moment from 'moment'
 
 const defaultQuery = {
-  startDate: undefined,
-  endDate: undefined,
+  date: [moment().startOf('month').valueOf(), moment().valueOf()],
+  startDate: moment().startOf('month').valueOf(),
+  endDate: moment().valueOf(),
   status: projectStatusEnum.PROCESS.V
 }
 
@@ -47,8 +49,8 @@ function handleDateChange(val) {
     query.startDate = val[0]
     query.endDate = val[1]
   } else {
-    query.startDate = undefined
-    query.endDate = undefined
+    query.startDate = moment().startOf('month').valueOf()
+    query.endDate = moment().valueOf()
   }
   crud.toQuery()
 }
