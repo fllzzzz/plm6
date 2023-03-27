@@ -123,7 +123,7 @@ const fillableAmount = computed(() =>
 // 显示金额
 const showAmount = computed(() => checkPermission(permission.showAmount) || fillableAmount.value)
 // 是否甲供订单
-const boolPartyA = computed(() => detail.value.supplyType === orderSupplyTypeEnum.PARTY_A.V)
+const boolPartyA = computed(() => detail.value?.supplyType === orderSupplyTypeEnum.PARTY_A.V)
 // 标题
 const drawerTitle = computed(() =>
   crud.detailLoading ? `入库单` : `入库单：${detail.serialNumber}（ ${order.value.supplier ? order.value.supplier.name : '无供应商'} ）`
