@@ -22,6 +22,13 @@
           class="filter-item"
           @change="crud.toQuery"
         />
+        <common-radio-button
+          type="enum"
+          v-model="query.weightStatus"
+          :options="[weightTypeEnum.NET, weightTypeEnum.GROSS]"
+          class="filter-item"
+          @change="crud.toQuery"
+        />
       </div>
       <div>
         <slot name="viewLeft"></slot>
@@ -32,13 +39,15 @@
 <script setup>
 import { regHeader } from '@compos/use-crud'
 import { projectStatusEnum } from '@enum-ms/contract'
+import { weightTypeEnum } from '@enum-ms/common'
 import moment from 'moment'
 
 const defaultQuery = {
   date: [moment().startOf('month').valueOf(), moment().valueOf()],
   startDate: moment().startOf('month').valueOf(),
   endDate: moment().valueOf(),
-  status: projectStatusEnum.PROCESS.V
+  status: projectStatusEnum.PROCESS.V,
+  weightStatus: weightTypeEnum.NET.V
 }
 
 const { crud, query } = regHeader(defaultQuery)
