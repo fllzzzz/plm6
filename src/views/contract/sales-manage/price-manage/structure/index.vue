@@ -1,7 +1,7 @@
 <template>
   <div>
     <!--工具栏-->
-    <mHeader ref="headerRef" v-bind="$attrs" @checkSubmit="checkModifyData" :showAble="showAble"/>
+    <mHeader ref="headerRef" v-bind="$attrs" @checkSubmit="checkModifyData" :showAble="showAble" />
     <!--表格渲染-->
     <common-table
       ref="tableRef"
@@ -15,15 +15,71 @@
       :cell-class-name="wrongCellMask"
     >
       <el-table-column label="序号" type="index" align="center" width="60" />
-      <el-table-column v-if="columns.visible('name')" key="name" prop="name" show-overflow-tooltip label="名称" align="center" min-width="140" />
-      <el-table-column v-if="columns.visible('specification')" key="specification" prop="specification" show-overflow-tooltip label="规格" align="center" min-width="140" />
-      <el-table-column v-if="columns.visible('material')" key="material" prop="material" show-overflow-tooltip label="材质" align="center" min-width="120" />
-      <el-table-column v-if="columns.visible('totalQuantity')" key="totalQuantity" prop="totalQuantity" label="数量" align="center" min-width="70" show-overflow-tooltip />
-      <el-table-column v-if="columns.visible('totalLength')" key="totalLength" prop="totalLength" label="总长度(米)" align="center" min-width="70" show-overflow-tooltip />
-      <el-table-column v-if="columns.visible('totalWeight')" key="totalWeight" prop="totalWeight" show-overflow-tooltip label="总量(t)" align="center" min-width="120" />
-       <el-table-column v-if="columns.visible('pricingManner')" key="pricingManner" prop="pricingManner" show-overflow-tooltip label="计价方式" align="center" min-width="120">
+      <el-table-column
+        v-if="columns.visible('name')"
+        key="name"
+        prop="name"
+        show-overflow-tooltip
+        label="名称"
+        align="center"
+        min-width="140"
+      />
+      <el-table-column
+        v-if="columns.visible('specification')"
+        key="specification"
+        prop="specification"
+        show-overflow-tooltip
+        label="规格"
+        align="center"
+        min-width="140"
+      />
+      <el-table-column
+        v-if="columns.visible('material')"
+        key="material"
+        prop="material"
+        show-overflow-tooltip
+        label="材质"
+        align="center"
+        min-width="120"
+      />
+      <el-table-column
+        v-if="columns.visible('totalQuantity')"
+        key="totalQuantity"
+        prop="totalQuantity"
+        label="数量"
+        align="center"
+        min-width="70"
+        show-overflow-tooltip
+      />
+      <el-table-column
+        v-if="columns.visible('totalLength')"
+        key="totalLength"
+        prop="totalLength"
+        label="总长度(米)"
+        align="center"
+        min-width="70"
+        show-overflow-tooltip
+      />
+      <el-table-column
+        v-if="columns.visible('totalWeight')"
+        key="totalWeight"
+        prop="totalWeight"
+        show-overflow-tooltip
+        label="总量(t)"
+        align="center"
+        min-width="120"
+      />
+      <el-table-column
+        v-if="columns.visible('pricingManner')"
+        key="pricingManner"
+        prop="pricingManner"
+        show-overflow-tooltip
+        label="计价方式"
+        align="center"
+        min-width="120"
+      >
         <template #default="{ row }">
-           <common-select
+          <common-select
             v-if="headerRef && headerRef.modifying"
             v-model="row.pricingManner"
             :options="pricingMannerEnum.ENUM"
@@ -33,11 +89,19 @@
             class="filter-item"
           />
           <template v-else>
-            <span>{{ pricingMannerEnum.VL[row.pricingManner]}}</span>
+            <span :class="row.status === 1 ? 'tc-danger' : ''">{{ pricingMannerEnum.VL[row.pricingManner] }}</span>
           </template>
         </template>
       </el-table-column>
-      <el-table-column v-if="columns.visible('unitPrice')" key="unitPrice" prop="unitPrice" show-overflow-tooltip label="综合单价" align="center" min-width="120">
+      <el-table-column
+        v-if="columns.visible('unitPrice')"
+        key="unitPrice"
+        prop="unitPrice"
+        show-overflow-tooltip
+        label="综合单价"
+        align="center"
+        min-width="120"
+      >
         <template #default="{ row }">
           <common-input-number
             v-if="headerRef && headerRef.modifying"
@@ -51,11 +115,15 @@
             @change="handlePrice(row)"
           />
           <template v-else>
-          <span>{{ row.unitPrice }}</span>
+            <span :class="row.status === 1 ? 'tc-danger' : ''">{{ row.unitPrice }}</span>
           </template>
         </template>
       </el-table-column>
-      <el-table-column v-if="columns.visible('totalPrice')" key="totalPrice" prop="totalPrice" align="center" min-width="120" label="金额" />
+      <el-table-column v-if="columns.visible('totalPrice')" key="totalPrice" prop="totalPrice" align="center" min-width="120" label="金额">
+        <template #default="{ row }">
+          <span :class="row.status === 1 ? 'tc-danger' : ''">{{ row.totalPrice }}</span>
+        </template>
+      </el-table-column>
       <!--详情-->
       <el-table-column v-if="checkPermission([...permission.detail])" label="操作" width="100px" align="center" fixed="right">
         <template #default="{ row }">
@@ -125,7 +193,7 @@ const { maxHeight } = useMaxHeight({
 })
 
 const validatePrice = (value, row) => {
-  if (row.pricingManner !== row.originPricingManner || row.unitPrice !== row.originUnitPrice) {
+  if (row.pricingManner !== row.originPricingManner || row.unitPrice !== row.originUnitPrice && row.unitPrice > 0) {
     return !!row.newUnitPrice
   }
   return true
@@ -164,7 +232,7 @@ function wrongCellMask({ row, column }) {
 async function checkModifyData(val) {
   const rules = tableRules
   let flag = true
-  crud.data.map(row => {
+  crud.data.map((row) => {
     row.verify = {}
     for (const rule in rules) {
       row.verify[rule] = validate(rule, rules[rule], row)
@@ -192,7 +260,8 @@ function openDetail(row) {
 // 价格变动
 function handlePrice(row) {
   row.unitPrice = row.newUnitPrice
-  row.totalPrice = row.pricingManner === pricingMannerEnum.WEIGHT.V ? row.totalWeight * (row.unitPrice || 0) : row.totalLength * (row.unitPrice || 0)
+  row.totalPrice =
+    row.pricingManner === pricingMannerEnum.WEIGHT.V ? row.totalWeight * (row.unitPrice || 0) : row.totalLength * (row.unitPrice || 0)
 }
 
 defineExpose({
