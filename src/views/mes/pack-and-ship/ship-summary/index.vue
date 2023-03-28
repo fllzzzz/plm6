@@ -18,12 +18,14 @@
           :showEmptySymbol="false"
         >
           <el-table-column prop="index" label="序号" align="center" width="45" type="index" />
-          <el-table-column key="project" prop="project" label="项目" align="left" show-overflow-tooltip min-width="120"/>
-          <el-table-column key="rate" prop="rate" label="发运数据(kg)" align="center" min-width="160" show-overflow-tooltip>
+          <el-table-column key="project" prop="project" label="项目" align="left" show-overflow-tooltip min-width="120" />
+          <el-table-column key="rate" prop="rate" label="发运数据(吨)" align="center" min-width="160" show-overflow-tooltip>
             <template v-slot="scope">
-              <div style="position:relative;">
-                <el-progress :stroke-width="16" :percentage="scope.row.rate"/>
-                <span style="position:absolute;top:-2px;left:0;width:100%;text-align:right;padding-right:60px;">{{ scope.row.sendMete.toFixed(2) +' | ' + scope.row.mete.toFixed(2) }}</span>
+              <div style="position: relative">
+                <el-progress :stroke-width="16" :percentage="scope.row.rate" />
+                <span style="position: absolute; top: -2px; left: 0; width: 100%; text-align: right; padding-right: 60px">{{
+                  (scope.row.sendMete / 1000).toFixed(2) + ' | ' + (scope.row.mete / 1000).toFixed(2)
+                }}</span>
               </div>
             </template>
           </el-table-column>
@@ -32,7 +34,13 @@
       </div>
       <div style="border-right: 1px solid #ededed; height: calc(100vh - 130px)"></div>
       <div style="width: 59%; padding-left: 10px">
-        <projectShipmentDetail :workshopId="crud.query.workshopId" :production-line-type-enum="crud.query.productionLineTypeEnum" :currentRow="currentRow" v-if="isNotBlank(currentRow)" :permission="permission"/>
+        <projectShipmentDetail
+          :workshopId="crud.query.workshopId"
+          :production-line-type-enum="crud.query.productionLineTypeEnum"
+          :currentRow="currentRow"
+          v-if="isNotBlank(currentRow)"
+          :permission="permission"
+        />
         <div class="my-code" v-else>*点击左表操作查看明细</div>
       </div>
     </div>

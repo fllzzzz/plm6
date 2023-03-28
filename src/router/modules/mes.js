@@ -1227,7 +1227,7 @@ export default {
         hidden: false,
         component: '/mes/pack-and-ship/ship-summary/index',
         meta: {
-          title: '发运管理',
+          title: '发运统计',
           icon: 'project',
           noCache: true
         }
