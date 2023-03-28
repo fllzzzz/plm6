@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <div style="display: flex">
-      <div style="width: 60%">
+      <div style="width: 55%">
         <div class="head-container">
           <mHeader />
         </div>
@@ -18,41 +18,13 @@
         >
           <el-table-column prop="index" label="序号" align="center" width="60" type="index" fixed="left" />
           <el-table-column
-            v-if="columns.visible('orderNumber')"
-            align="center"
-            key="orderNumber"
-            prop="orderNumber"
-            :show-overflow-tooltip="true"
-            label="排产工单号"
-            min-width="140px"
-            fixed="left"
-          >
-            <template v-slot="scope">
-              <span>{{ scope.row.orderNumber }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column
-            v-if="columns.visible('project') && productType !== componentTypeEnum.MACHINE_PART.V"
-            key="project.name"
-            prop="project"
-            :show-overflow-tooltip="true"
-            label="所属项目"
-            min-width="120px"
-            fixed="left"
-          >
-            <template v-slot="scope">
-              <span>{{ projectNameFormatter(scope.row.project) }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column
             v-if="columns.visible('completeTime')"
             align="center"
             key="completeTime"
             prop="completeTime"
             :show-overflow-tooltip="true"
-            label="计划完成日期"
-            fixed="left"
-            width="130px"
+            label="排产日期"
+            width="100px"
           >
             <template v-slot="scope">
               <span v-if="scope.row.productionLineTypeEnum === artifactProductLineEnum.TRADITION.V">{{
@@ -62,42 +34,45 @@
             </template>
           </el-table-column>
           <el-table-column
+            v-if="columns.visible('orderNumber')"
+            align="center"
+            key="orderNumber"
+            prop="orderNumber"
+            :show-overflow-tooltip="true"
+            label="排产工单号"
+            min-width="120px"
+          >
+            <template v-slot="scope">
+              <span>{{ scope.row.orderNumber }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column
+            v-if="columns.visible('groups')"
+            align="center"
+            key="groups"
+            prop="groups"
+            :show-overflow-tooltip="true"
+            label="生产组"
+            min-width="120px"
+          >
+            <template v-slot="scope">
+              <span>{{ scope.row.orderNumber }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column
             v-if="columns.visible('totalQuantity')"
             align="center"
             key="totalQuantity"
             prop="totalQuantity"
             :show-overflow-tooltip="true"
-            label="总数量（件）"
-            width="120px"
+            label="任务数（件/吨）"
           >
             <template v-slot="scope">
-              <span>{{ scope.row.totalQuantity }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column
-            v-if="columns.visible('totalNetWeight')"
-            align="center"
-            key="totalNetWeight"
-            prop="totalNetWeight"
-            :show-overflow-tooltip="true"
-            label="总净重（kg）"
-            width="120px"
-          >
-            <template v-slot="scope">
-              <span>{{ scope.row.totalNetWeight?.toFixed(DP.COM_WT__KG) }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column
-            v-if="columns.visible('totalGrossWeight')"
-            align="center"
-            key="totalGrossWeight"
-            prop="totalGrossWeight"
-            :show-overflow-tooltip="true"
-            label="总毛重（kg）"
-            width="120px"
-          >
-            <template v-slot="scope">
-              <span>{{ scope.row.totalGrossWeight?.toFixed(DP.COM_WT__KG) }}</span>
+              <span>{{
+                crud.query.weightStatus === weightTypeEnum.NET.V
+                  ? scope.row.totalQuantity + '/' + (scope.row.totalNetWeight / 1000)?.toFixed(DP.COM_WT__KG)
+                  : scope.row.totalQuantity + '/' + (scope.row.totalGrossWeight / 1000)?.toFixed(DP.COM_WT__KG)
+              }}</span>
             </template>
           </el-table-column>
           <el-table-column
@@ -106,37 +81,14 @@
             key="completeQuantity"
             prop="completeQuantity"
             :show-overflow-tooltip="true"
-            label="完成数量（件）"
-            width="110px"
+            label="实际完成（件/吨）"
           >
             <template v-slot="scope">
-              <span>{{ scope.row.completeQuantity }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column
-            v-if="columns.visible('completeNetWeight')"
-            align="center"
-            key="completeNetWeight"
-            prop="completeNetWeight"
-            :show-overflow-tooltip="true"
-            label="完成总净重（kg）"
-            width="120px"
-          >
-            <template v-slot="scope">
-              <span>{{ scope.row.completeNetWeight?.toFixed(DP.COM_WT__KG) }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column
-            v-if="columns.visible('completeGrossWeight')"
-            align="center"
-            key="completeGrossWeight"
-            prop="completeGrossWeight"
-            :show-overflow-tooltip="true"
-            label="完成总毛重（kg）"
-            width="120px"
-          >
-            <template v-slot="scope">
-              <span>{{ scope.row.completeGrossWeight?.toFixed(DP.COM_WT__KG) }}</span>
+              <span>{{
+                crud.query.weightStatus === weightTypeEnum.NET.V
+                  ? scope.row.completeQuantity + '/' + (scope.row.completeNetWeight / 1000)?.toFixed(DP.COM_WT__KG)
+                  : scope.row.completeQuantity + '/' + (scope.row.completeGrossWeight / 1000)?.toFixed(DP.COM_WT__KG)
+              }}</span>
             </template>
           </el-table-column>
           <el-table-column
@@ -151,25 +103,12 @@
               <span>{{ ((scope.row.completeQuantity / scope.row.totalQuantity) * 100).toFixed(2) }}%</span>
             </template>
           </el-table-column>
-          <el-table-column
-            v-if="columns.visible('userName') && productType === componentTypeEnum.MACHINE_PART.V"
-            align="center"
-            key="userName"
-            prop="userName"
-            :show-overflow-tooltip="true"
-            label="排产人"
-            width="100px"
-          >
-            <template v-slot="scope">
-              <span>{{ scope.row.userName }}</span>
-            </template>
-          </el-table-column>
         </common-table>
         <!-- 分页 -->
         <pagination />
       </div>
       <div style="border-right: 1px solid #ededed; margin: 0 20px; height: calc(100vh - 130px)"></div>
-      <div style="width: 38%">
+      <div style="width: 43%">
         <process-detail :process-list="processList" />
       </div>
     </div>
@@ -180,9 +119,10 @@
 import { ref, provide, computed, watch } from 'vue'
 import { get, machinePart } from '@/api/mes/task-tracking/work-order-tracking.js'
 import { parseTime } from '@/utils/date'
-import { projectNameFormatter } from '@/utils/project'
+// import { projectNameFormatter } from '@/utils/project'
 import { mesWorkOrderTrackingPM as permission } from '@/page-permission/mes'
 import { componentTypeEnum, artifactProductLineEnum } from '@enum-ms/mes'
+import { weightTypeEnum } from '@enum-ms/common'
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
 import { DP } from '@/settings/config'
@@ -206,8 +146,8 @@ const { crud, CRUD, columns } = useCRUD(
     sort: [],
     optShow: { ...optShow },
     permission: { ...permission },
-    invisibleColumns: ['totalGrossWeight', 'completeGrossWeight'],
-    requiredQuery: ['productType'],
+    // invisibleColumns: ['totalGrossWeight', 'completeGrossWeight'],
+    requiredQuery: ['projectId'],
     crudApi: { get },
     hasPagination: true
   },

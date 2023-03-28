@@ -2,73 +2,34 @@
   <div class="head-container">
     <el-date-picker
       v-model="query.dateTime"
-      type="month"
+      type="year"
       size="small"
       class="date-item filter-item"
       style="width: 120px !important"
-      format="YYYY-MM"
+      format="YYYY"
       value-format="x"
-      placeholder="选择月"
+      placeholder="选择年"
       :disabled-date="disabledDate"
       @change="crud.toQuery"
     />
-    <common-radio-button
-      v-model="query.productType"
-      :options="[componentTypeEnum.ARTIFACT, componentTypeEnum.MACHINE_PART]"
-      class="filter-item"
-      type="enum"
-      @change="crud.toQuery"
-    />
-    <common-radio-button
-      v-model="query.status"
-      :options="taskTrackingSchedulingStatusEnum.ENUM"
-      showOptionAll
-      class="filter-item"
-      type="enum"
-      @change="crud.toQuery"
-    />
-    <crudOperation>
-      <template #optLeft>
-        <project-cascader
-          v-if="query.productType === componentTypeEnum.ARTIFACT.V"
-          v-model="query.projectId"
-          clearable
-          class="filter-item"
-          style="width: 300px"
-          @change="crud.toQuery"
-        />
-        <!-- <monomer-select-area-select
+    <project-cascader v-model="query.projectId" clearable class="filter-item" style="width: 300px" @change="crud.toQuery" />
+    <monomer-select-area-select
       v-model:monomerId="query.monomerId"
       v-model:areaId="query.areaId"
       needConvert
       clearable
       :project-id="query.projectId"
       @change="crud.toQuery"
-    /> -->
-        <!-- <workshop-select
-        ref="workshopInfRef"
-        v-model="query.workshopId"
-        placeholder="请选择车间"
-        :factory-id="query.factoryId"
-        style="width: 200px"
-        class="filter-item"
-        clearable
-        defaultValue
-        @change="crud.toQuery"
-      />
-      <production-line-select
-        ref="productionLineRef"
-        class="filter-item"
-        v-model="query.productionLineId"
-        :factory-id="query.factoryId"
-        :workshop-id="query.workshopId"
-        :productType="query.productType"
-        placeholder="请选择生产线"
-        style="width: 200px"
-        clearable
-        defaultValue
-        @change="crud.toQuery"
-      /> -->
+    />
+    <crudOperation>
+      <template #optLeft>
+         <common-radio-button
+          type="enum"
+          v-model="query.weightStatus"
+          :options="[weightTypeEnum.NET, weightTypeEnum.GROSS]"
+          class="filter-item"
+          @change="crud.toQuery"
+        />
         <el-input
           v-model="query.orderNumber"
           placeholder="输入工单号搜索"
@@ -86,22 +47,20 @@
 
 <script setup>
 import { regHeader } from '@compos/use-crud'
-import { componentTypeEnum, taskTrackingSchedulingStatusEnum } from '@enum-ms/mes'
 import projectCascader from '@comp-base/project-cascader.vue'
-// import monomerSelectAreaSelect from '@comp-base/monomer-select-area-select'
-// import workshopSelect from '@comp-mes/workshop-select'
-// import productionLineSelect from '@comp-mes/production-line-select'
+import { weightTypeEnum } from '@enum-ms/common'
+import monomerSelectAreaSelect from '@comp-base/monomer-select-area-select'
 import rrOperation from '@crud/RR.operation'
 import crudOperation from '@crud/CRUD.operation'
 
 const defaultQuery = {
   dateTime: undefined,
-  // workshopId: undefined,
-  // productionLineId: undefined,
-  productType: componentTypeEnum.ARTIFACT.V,
+  areaId: undefined,
+  monomerId: undefined,
   projectId: undefined,
   status: undefined,
-  orderNumber: undefined
+  orderNumber: undefined,
+  weightStatus: weightTypeEnum.NET.V
 }
 
 const { crud, query } = regHeader(defaultQuery)

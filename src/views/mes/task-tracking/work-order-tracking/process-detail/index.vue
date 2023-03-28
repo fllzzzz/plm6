@@ -3,7 +3,7 @@
     <div v-show="!props.processList?.taskOrderId" class="my-code">*点击左侧表格行查看详情</div>
     <div v-show="props.processList?.taskOrderId">
       <div class="head-container">
-        <workshop-select
+        <!-- <workshop-select
           ref="workshopInfRef"
           v-model="workshopId"
           placeholder="请选择车间"
@@ -24,7 +24,7 @@
           style="width: 200px"
           clearable
           @change="handleWorkshopProductionLineChange"
-        />
+        /> -->
       </div>
       <div :style="`height: ${maxHeight + 40}px; overflow-y: auto`">
         <div style="margin-bottom: 20px" v-for="item in assembleProcessData" :key="item">
@@ -324,12 +324,12 @@
 <script setup>
 import { smartLineProcess, process, machineProcess } from '@/api/mes/task-tracking/work-order-tracking.js'
 import { componentTypeEnum, workOrderTypeEnum, artifactProductLineEnum } from '@enum-ms/mes'
-import { ref, defineProps, watch, inject, computed } from 'vue'
+import { ref, defineProps, watch, inject } from 'vue'
 import { BellFilled } from '@element-plus/icons'
 import useMaxHeight from '@compos/use-max-height'
 import usePagination from '@compos/use-pagination'
-import workshopSelect from '@comp-mes/workshop-select'
-import productionLineSelect from '@comp-mes/production-line-select'
+// import workshopSelect from '@comp-mes/workshop-select'
+// import productionLineSelect from '@comp-mes/production-line-select'
 import productionLineDetail from '../production-line-detail/index.vue'
 
 const dataFormat = ref([
@@ -361,17 +361,17 @@ const drawerVisible = ref(false)
 
 const workshopId = ref()
 const productionLineId = ref()
-const factoryId = ref()
+// const factoryId = ref()
 
 const productType = inject('productType')
 
 // 产线过滤
-const lineProductType = computed(() => {
-  if (productType.value === componentTypeEnum.ARTIFACT.V) {
-    return productType.value | componentTypeEnum.ASSEMBLE.V
-  }
-  return productType.value
-})
+// const lineProductType = computed(() => {
+//   if (productType.value === componentTypeEnum.ARTIFACT.V) {
+//     return productType.value | componentTypeEnum.ASSEMBLE.V
+//   }
+//   return productType.value
+// })
 
 watch(
   () => props.processList,
@@ -441,13 +441,13 @@ async function machineProcessGet() {
   }
 }
 
-function handleWorkshopProductionLineChange() {
-  if (productType.value === componentTypeEnum.ARTIFACT.V) {
-    processGet()
-  } else {
-    machineProcessGet()
-  }
-}
+// function handleWorkshopProductionLineChange() {
+//   if (productType.value === componentTypeEnum.ARTIFACT.V) {
+//     processGet()
+//   } else {
+//     machineProcessGet()
+//   }
+// }
 
 const { maxHeight } = useMaxHeight({
   extraBox: ['.head-container'],
