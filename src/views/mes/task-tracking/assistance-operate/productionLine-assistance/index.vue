@@ -46,7 +46,7 @@
           v-if="columns.visible('group.name')"
           prop="group.name"
           :show-overflow-tooltip="true"
-          label="原生产组"
+          label="当前生产组"
           min-width="160px"
         >
           <template #default="{ row }">
