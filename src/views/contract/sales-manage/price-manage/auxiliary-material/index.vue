@@ -26,7 +26,11 @@
       <el-table-column v-if="columns.visible('specification')" key="specification" prop="specification" show-overflow-tooltip label="规格" align="center" min-width="120" />
       <el-table-column v-if="columns.visible('color')" key="color" prop="color" show-overflow-tooltip label="颜色" align="center" width="100" />
       <el-table-column v-if="columns.visible('accountingUnit')" key="accountingUnit" prop="accountingUnit" show-overflow-tooltip label="核算单位" align="center" width="100" />
-      <el-table-column v-if="columns.visible('mete')" key="mete" prop="mete" show-overflow-tooltip label="核算量" align="center" min-width="100" />
+      <el-table-column v-if="columns.visible('mete')" key="mete" prop="mete" show-overflow-tooltip label="核算量" align="center" min-width="100">
+         <template #default="{ row }">
+          <span :class="row.status === 1 ? 'tc-danger' : ''">{{ row.mete }}</span>
+        </template>
+      </el-table-column>
       <el-table-column v-if="columns.visible('unitPrice')" key="unitPrice" prop="unitPrice" :show-overflow-tooltip="true" label="综合单价" align="center" min-width="120">
         <template #default="{ row }">
           <common-input-number
@@ -41,11 +45,15 @@
             @change="handlePrice(row)"
           />
           <template v-else>
-            <span>{{ row.unitPrice }}</span>
+            <span :class="row.status === 1 ? 'tc-danger' : ''">{{ row.unitPrice }}</span>
           </template>
         </template>
       </el-table-column>
-      <el-table-column v-if="columns.visible('totalPrice')" key="totalPrice" prop="totalPrice" align="center" min-width="120" label="金额" />
+      <el-table-column v-if="columns.visible('totalPrice')" key="totalPrice" prop="totalPrice" align="center" min-width="120" label="金额">
+       <template #default="{ row }">
+          <span :class="row.status === 1 ? 'tc-danger' : ''">{{ row.totalPrice }}</span>
+        </template>
+      </el-table-column>
     </common-table>
     <!--分页组件-->
     <pagination />

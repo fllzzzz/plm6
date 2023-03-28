@@ -91,7 +91,7 @@ const props = defineProps({
 })
 // 有变动的数据
 const modifiedData = computed(() => {
-  return crud.data.filter((v) => (v.pricingManner !== v.originPricingManner && v.unitPrice !== '-') || (v.unitPrice !== v.originUnitPrice && v.newUnitPrice))
+  return crud.data.filter((v) => (v.pricingManner !== v.originPricingManner && v.unitPrice !== '-') || (v.unitPrice !== v.originUnitPrice))
 })
 
 // 预览参数
