@@ -68,6 +68,10 @@
           <el-table-column key="quantity" prop="quantity" label="清单数" align="center" show-overflow-tooltip />
           <el-table-column key="totalNetWeight" prop="totalNetWeight" label="重量" align="center" show-overflow-tooltip />
         </el-table-column>
+         <el-table-column label="期初库存(件/kg)" align="center">
+          <el-table-column key="beginningQuantity" prop="beginningQuantity" label="库存数" align="center" show-overflow-tooltip />
+          <el-table-column key="beginningNetWeight" prop="beginningNetWeight" label="重量" align="center" show-overflow-tooltip />
+        </el-table-column>
         <el-table-column label="入库(件/kg)" align="center">
           <el-table-column key="inboundQuantity" prop="inboundQuantity" label="入库数" align="center" show-overflow-tooltip />
           <el-table-column key="inboundNetWeight" prop="inboundNetWeight" label="重量" align="center" show-overflow-tooltip />
@@ -76,7 +80,7 @@
           <el-table-column key="outboundQuantity" prop="outboundQuantity" label="出库数" align="center" show-overflow-tooltip />
           <el-table-column key="outboundNetWeight" prop="outboundNetWeight" label="重量" align="center" show-overflow-tooltip />
         </el-table-column>
-        <el-table-column label="库存(件/kg)" align="center">
+        <el-table-column label="期末库存(件/kg)" align="center">
           <el-table-column key="stockQuantity" prop="stockQuantity" label="库存数" align="center" show-overflow-tooltip />
           <el-table-column key="stockNetWeight" prop="stockNetWeight" label="重量" align="center" show-overflow-tooltip />
         </el-table-column>
@@ -178,13 +182,14 @@ const dataFormat = ref([
   ['mete', ['to-fixed', DP.COM_WT__KG]],
   ['inboundMete', ['to-fixed', DP.COM_WT__KG]],
   ['outboundMete', ['to-fixed', DP.COM_WT__KG]],
-  ['stockMete', ['to-fixed', DP.COM_WT__KG]]
+  ['stockMete', ['to-fixed', DP.COM_WT__KG]],
+  ['beginningMete', ['to-fixed', DP.COM_WT__KG]]
 ])
 
 // 合计
 function getSummaries(param) {
   const summary = tableSummary(param, {
-    props: ['inboundQuantity', 'inboundMete', 'outboundQuantity', 'outboundMete', 'quantity', 'mete', 'stockMete', 'stockQuantity']
+    props: ['inboundQuantity', 'inboundMete', 'outboundQuantity', 'outboundMete', 'quantity', 'mete', 'stockMete', 'stockQuantity', 'beginningQuantity', 'beginningMete']
   })
   return summary
 }

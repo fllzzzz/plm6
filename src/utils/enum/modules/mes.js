@@ -509,10 +509,10 @@ constantize(sortingListEnum)
 
 // 制成品出入库详情查询类型
 const productSearchTypeEnum = {
-  LIST: { L: '清单', K: 'LIST', V: 1 },
+  BEGINNING: { L: '期初库存', K: 'BEGINNING', V: 1 },
   INBOUND: { L: '入库', K: 'INBOUND', V: 2 },
   OUTBOUND: { L: '出库', K: 'OUTBOUND', V: 3 },
-  STOCK: { L: '库存', K: 'STOCK', V: 4 }
+  STOCK: { L: '期末库存', K: 'STOCK', V: 4 }
 }
 constantize(productSearchTypeEnum)
 // 钻孔工单

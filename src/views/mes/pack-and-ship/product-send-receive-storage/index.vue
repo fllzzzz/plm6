@@ -15,25 +15,86 @@
       style="width: 100%"
     >
       <el-table-column type="index" prop="index" label="序号" align="center" width="60" />
-      <el-table-column key="project" prop="project" v-if="columns.visible('project')" :show-overflow-tooltip="true" label="项目" align="left" />
-      <el-table-column key="list" prop="list" v-if="columns.visible('list')" :show-overflow-tooltip="true" label="清单数（件/kg）" align="center">
+      <el-table-column
+        key="project"
+        prop="project"
+        v-if="columns.visible('project')"
+        :show-overflow-tooltip="true"
+        label="项目"
+        align="left"
+      />
+      <el-table-column
+        key="list"
+        prop="list"
+        v-if="columns.visible('list')"
+        :show-overflow-tooltip="true"
+        label="清单数（件/kg）"
+        align="center"
+      >
         <template v-slot="scope">
-          <span>{{ scope.row.quantity+' / '+scope.row.totalNetWeight }}</span>
+          <span>{{ scope.row.quantity + ' / ' + scope.row.totalNetWeight }}</span>
         </template>
       </el-table-column>
-      <el-table-column key="inbound" prop="inbound" v-if="columns.visible('inbound')" :show-overflow-tooltip="true" label="累计入库（件/kg）" align="center">
+      <el-table-column
+        key="beginning"
+        prop="beginning"
+        v-if="columns.visible('beginning')"
+        :show-overflow-tooltip="true"
+        label="期初库存（件/kg）"
+        align="center"
+      >
         <template v-slot="scope">
-          <span style="cursor:pointer;color:#0d84ff;" @click="openDetail(scope.row, 'INBOUND')">{{ scope.row.inboundQuantity+' / '+scope.row.inboundNetWeight }}</span>
+          <span style="cursor: pointer; color: #0d84ff" @click="openDetail(scope.row, 'BEGINNING')">{{
+            scope.row.beginningQuantity + ' / ' + scope.row.beginningNetWeight
+          }}</span>
         </template>
       </el-table-column>
-      <el-table-column key="outbound" prop="outbound" v-if="columns.visible('outbound')" :show-overflow-tooltip="true" label="累计出库（件/kg）" align="center" >
+      <el-table-column
+        key="inbound"
+        prop="inbound"
+        v-if="columns.visible('inbound')"
+        :show-overflow-tooltip="true"
+        label="入库量（件/kg）"
+        align="center"
+      >
         <template v-slot="scope">
-          <span style="cursor:pointer;color:#0d84ff;" @click="openDetail(scope.row, 'OUTBOUND')">{{ scope.row.outboundQuantity+' / '+scope.row.outboundNetWeight }}</span>
+          <span style="cursor: pointer; color: #0d84ff" @click="openDetail(scope.row, 'INBOUND')">{{
+            crud.query.weightStatus === weightTypeEnum.NET.V
+              ? scope.row.inboundQuantity + ' / ' + scope.row.inboundNetWeight
+              : scope.row.inboundQuantity + ' / ' + scope.row.inboundGrossWeight
+          }}</span>
         </template>
       </el-table-column>
-      <el-table-column key="stock" prop="stock" v-if="columns.visible('stock')" :show-overflow-tooltip="true" label="实时库存（件/kg）" align="center">
+      <el-table-column
+        key="outbound"
+        prop="outbound"
+        v-if="columns.visible('outbound')"
+        :show-overflow-tooltip="true"
+        label="出库量（件/kg）"
+        align="center"
+      >
         <template v-slot="scope">
-          <span style="cursor:pointer;color:#0d84ff;" @click="openDetail(scope.row, 'STOCK')">{{ scope.row.stockQuantity+' / '+scope.row.stockNetWeight }}</span>
+          <span style="cursor: pointer; color: #0d84ff" @click="openDetail(scope.row, 'OUTBOUND')">{{
+            crud.query.weightStatus === weightTypeEnum.NET.V
+              ? scope.row.outboundQuantity + ' / ' + scope.row.outboundNetWeight
+              : scope.row.outboundQuantity + ' / ' + scope.row.outboundGrossWeight
+          }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        key="stock"
+        prop="stock"
+        v-if="columns.visible('stock')"
+        :show-overflow-tooltip="true"
+        label="期末库存（件/kg）"
+        align="center"
+      >
+        <template v-slot="scope">
+          <span style="cursor: pointer; color: #0d84ff" @click="openDetail(scope.row, 'STOCK')">{{
+            crud.query.weightStatus === weightTypeEnum.NET.V
+              ? scope.row.stockQuantity + ' / ' + scope.row.stockNetWeight
+              : scope.row.stockQuantity + ' / ' + scope.row.stockGrossWeight
+          }}</span>
         </template>
       </el-table-column>
       <!--编辑与删除-->
@@ -50,7 +111,16 @@
       </el-table-column>
     </common-table>
     <pagination />
-    <component :is="showComponent" :showType="showType" v-model="detailVisible" :detailQuery="detailQuery" :productType="crud.query.productType" :workshopId="crud.query.workshopId" :detailInfo="currentRow" :permission="permission"/>
+    <component
+      :is="showComponent"
+      :showType="showType"
+      v-model="detailVisible"
+      :detailQuery="detailQuery"
+      :productType="crud.query.productType"
+      :workshopId="crud.query.workshopId"
+      :detailInfo="currentRow"
+      :permission="permission"
+    />
   </div>
 </template>
 
@@ -63,7 +133,7 @@ import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import { DP } from '@/settings/config'
 import checkPermission from '@/utils/system/check-permission'
-
+import { weightTypeEnum } from '@enum-ms/common'
 import mHeader from './module/header'
 import pagination from '@crud/Pagination'
 import mDetail from './module/detail'
@@ -104,15 +174,14 @@ const { maxHeight } = useMaxHeight({
   extraHeight: 40
 })
 
-const dataFormat = ref([
-  ['project', 'parse-project']
-])
+const dataFormat = ref([['project', 'parse-project']])
 
 function openDetail(row, show) {
   showType.value = show
   currentRow.value = row.sourceRow
   detailQuery.value = {
-    projectId: row.sourceRow.project.id
+    projectId: row.sourceRow.project.id,
+    dateTime: crud.query.dateTime
   }
   nextTick(() => {
     detailVisible.value = true
@@ -127,11 +196,27 @@ function getSummaries(param) {
       sums[index] = '合计'
       return
     }
-    if (column.property === 'list' || column.property === 'inbound' || column.property === 'outbound' || column.property === 'stock') {
+    if (
+      column.property === 'list' ||
+      column.property === 'inbound' ||
+      column.property === 'outbound' ||
+      column.property === 'stock' ||
+      column.property === 'beginning'
+    ) {
       const valueKeys = column.property === 'list' ? 'quantity' : column.property + 'Quantity'
       const values = data.map((item) => Number(item.sourceRow?.[valueKeys]))
       let valuesSum = 0
-      const valueWeightKeys = column.property === 'list' ? 'totalNetWeight' : column.property + 'NetWeight'
+      // const valueWeightKeys = column.property === 'list' ? 'totalNetWeight' : column.property + 'NetWeight'
+      let valueWeightKeys = ''
+      if (column.property === 'list' && crud.query.weightStatus === weightTypeEnum.NET.V) {
+        valueWeightKeys = 'totalNetWeight'
+      } else if (column.property === 'list' && crud.query.weightStatus === weightTypeEnum.GROSS.V) {
+        valueWeightKeys = 'totalGrossWeight'
+      } else if (column.property !== 'list' && crud.query.weightStatus === weightTypeEnum.NET.V) {
+        valueWeightKeys = column.property + 'NetWeight'
+      } else if (column.property !== 'list' && crud.query.weightStatus === weightTypeEnum.GROSS.V) {
+        valueWeightKeys = column.property + 'GrossWeight'
+      }
       const valueWeight = data.map((item) => Number(item.sourceRow?.[valueWeightKeys]))
       let valueWeightSum = 0
       if (!values.every((value) => isNaN(value))) {
@@ -178,7 +263,7 @@ function getSummaries(param) {
     width: 0;
   }
 }
-::v-deep(.el-progress-bar__inner){
+::v-deep(.el-progress-bar__inner) {
   text-align: center;
   max-width: 100%;
 }

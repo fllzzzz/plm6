@@ -119,6 +119,47 @@ export function warehouseStateReport(params) {
   })
 }
 
+/**
+ * 入发存报表/期初库存
+ */
+export function mesBeginningInventoryDetail(params) {
+  return request({
+    url: `/api/mes/building/warehouse/print/finish-product/artifact`,
+    method: 'get',
+    params
+  })
+}
+/**
+ * 入发存报表/期末库存
+ */
+export function mesEndInventoryDetail(params) {
+  return request({
+    url: `/api/mes/building/warehouse/print/finish-product/artifact`,
+    method: 'get',
+    params
+  })
+}
+/**
+ * 入发存报表/入库量
+ */
+export function mesInboundInventoryDetail(params) {
+  return request({
+    url: `/api/mes/building/warehouse/print/finish-product/artifact`,
+    method: 'get',
+    params
+  })
+}
+/**
+ * 入发存报表/出库量
+ */
+export function mesOutboundInventoryDetail(params) {
+  return request({
+    url: `/api/mes/building/warehouse/print/finish-product/artifact`,
+    method: 'get',
+    params
+  })
+}
+
 // 班组报表
 /**
  * 围护生产线报表
@@ -692,6 +733,10 @@ export default {
   warehouseStateStructure, // 结构出入库状态
   warehouseStateEnclosure, // 围护出入库状态
   warehouseStateReport, // 入发存报表
+  mesBeginningInventoryDetail, // 期初库存
+  mesEndInventoryDetail, // 期末库存
+  mesInboundInventoryDetail, // 入库量
+  mesOutboundInventoryDetail, // 出库量
 
   // 生产订单
   artifactClassList, // 构件分类清单明细

@@ -134,6 +134,10 @@ const mesStudSleeveStatisticsList = mes.studSleeveStatisticsList
 const mesProjectShipDetail = mes.mesProjectShipDetail
 const mesProductSendReceiveStorage = mes.productSendReceiveStorage
 const productSendReceiveStorageDetail = mes.productSendReceiveStorageDetail
+const mesBeginningInventoryDetail = mes.mesBeginningInventoryDetail
+const mesEndInventoryDetail = mes.mesEndInventoryDetail
+const mesInboundInventoryDetail = mes.mesInboundInventoryDetail
+const mesOutboundInventoryDetail = mes.mesOutboundInventoryDetail
 const mesMainMaterialTrack = mes.mainMaterialTrackSummary
 const mesMainMaterialTrackUseRecord = mes.mainMaterialTrackUseRecord
 const mesMainMaterialTrackStock = mes.mainMaterialTrackStock
@@ -288,6 +292,10 @@ export default {
   mesProjectShipDetail, // 发运管理项目发运详情
   mesProductSendReceiveStorage, // 发运管理制成品入发存
   productSendReceiveStorageDetail, // 发运管理制成品入发存详情
+  mesBeginningInventoryDetail, // 期初库存
+  mesEndInventoryDetail, // 期末库存
+  mesInboundInventoryDetail, // 入库量
+  mesOutboundInventoryDetail, // 出库量
 
   // wms
   wmsRmOutboundReceipt, // 出库（领料单）单
