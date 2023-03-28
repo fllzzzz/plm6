@@ -55,7 +55,7 @@ export function save(data) {
 export function record(params) {
   return request({
     module: 'mes',
-    url: 'scheduling/artifact/record/page',
+    url: 'scheduling/artifact/record',
     method: 'get',
     params
   })
