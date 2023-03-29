@@ -272,6 +272,17 @@ export default {
         }
       },
       {
+        name: 'MesSchedulingData',
+        path: 'scheduling/scheduling-data',
+        hidden: false,
+        component: '/mes/scheduling-manage/scheduling-data/index',
+        meta: {
+          title: '排产数据',
+          icon: 'project',
+          noCache: true
+        }
+      },
+      {
         name: 'MesSchedulingMachinePart',
         path: 'scheduling/machine-part',
         component: '',
@@ -497,18 +508,18 @@ export default {
             }
           }
         ]
-      },
-      {
-        name: 'MesWipStatistics',
-        path: 'wip-statistics',
-        hidden: false,
-        component: '/mes/task-tracking/wip-statistics/index',
-        meta: {
-          title: '在制品统计',
-          icon: 'project',
-          noCache: true
-        }
       }
+      // {
+      //   name: 'MesWipStatistics',
+      //   path: 'wip-statistics',
+      //   hidden: false,
+      //   component: '/mes/task-tracking/wip-statistics/index',
+      //   meta: {
+      //     title: '在制品统计',
+      //     icon: 'project',
+      //     noCache: true
+      //   }
+      // }
       // {
       //   name: 'MesSemiFinishedStatistics',
       //   path: 'semi-finished-statistics',
@@ -676,7 +687,7 @@ export default {
     hidden: false,
     redirect: '/mes/production-manage/dashboard/project-state',
     meta: {
-      title: '项目制造',
+      title: '项目跟踪',
       icon: 'project',
       noCache: true
     },

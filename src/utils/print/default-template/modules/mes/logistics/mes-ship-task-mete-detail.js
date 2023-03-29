@@ -1,13 +1,12 @@
-import { dataSourceEnum, alignEnum, verticleAlignEnum, fieldTypeEnum as typeEnum, cssUnitEnum, cssUnitPrecisionEnum, pageFormatEnum } from '@/utils/print/enum'
-import { projectNameArrangementModeEnum } from '@/utils/enum/modules/contract'
+import { dataSourceEnum, alignEnum, verticleAlignEnum, fieldTypeEnum as typeEnum, cssUnitEnum, cssUnitPrecisionEnum, pageFormatEnum, weightUnitEnum, DEF_UNIT } from '@/utils/print/enum'
 
-// 月度任务跟踪
-const mesMonthlyTaskList = {
+// 任务总量详情
+const mesShipTaskMeteDetail = {
   fontUnit: 'pt', // 字体单位
   unit: cssUnitEnum.MM.V, // 长度单位
   unitPrecision: cssUnitPrecisionEnum.ZERO.V, // 长度单位精度
-  type: 'mesMonthlyTaskList', // 表格类型 KEY
-  name: '月度任务跟踪清单详情（平台）', // 表格名称
+  type: 'mesShipTaskMeteDetail', // 表格类型 KEY
+  name: '任务总量详情（平台）', // 表格名称
   width: 210, // 打印纸的宽度
   height: 297, // 打印纸的高度
   paddingLR: 10, // 左右内边距
@@ -29,6 +28,14 @@ const mesMonthlyTaskList = {
     top: 10,
     left: 10,
     url: ''
+  },
+  qrCode: {
+    show: true,
+    allPage: false,
+    height: 20.5,
+    width: 20.5,
+    top: 10,
+    left: 180
   },
   /**
     * 页码
@@ -61,7 +68,7 @@ const mesMonthlyTaskList = {
   title: {
     show: true,
     allPage: false,
-    title: '月度任务跟踪清单',
+    title: '任务总量详情',
     align: alignEnum.CENTER.V,
     verticleAlign: verticleAlignEnum.CENTER.V,
     size: 17,
@@ -88,7 +95,7 @@ const mesMonthlyTaskList = {
     verticleAlign: verticleAlignEnum.CENTER.V,
     size: 10,
     bold: 'bold',
-    height: 6,
+    height: 36,
     width: 190,
     emptyVal: '',
     /**
@@ -97,7 +104,7 @@ const mesMonthlyTaskList = {
      * @param {string} key 字段名
      * @param {string} title 列名
      * @param {enum} source 数据来源 系统/自定义
-     * @param {number} maxWidth 最大列宽
+     * @param {number} minWidth 最小列宽
      * @param {number} width 列宽
      * @param {enum} type 数据类型
      * @param {*} format 格式转换
@@ -129,7 +136,7 @@ const mesMonthlyTaskList = {
     verticleAlign: verticleAlignEnum.CENTER.V,
     size: 10,
     bold: 'bold',
-    height: 0,
+    height: 24,
     width: 190,
     emptyVal: '',
     /**
@@ -148,12 +155,15 @@ const mesMonthlyTaskList = {
      * @param {string} key 字段名
      * @param {string} title 列名
      * @param {enum} source 数据来源 系统/自定义
-     * @param {number} maxWidth 最大列宽
+     * @param {number} minWidth 最小列宽
      * @param {number} width 列宽
      * @param {enum} type 数据类型
      * @param {*} format 格式转换
      */
     fields: [
+      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'userName', title: '发货人：', width: 63, type: typeEnum.USER_NAME.K },
+      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'auditUserName', title: '审核：', width: 63, type: typeEnum.USER_NAME.K },
+      { show: true, source: dataSourceEnum.CUSTOMIZE.V, key: 'approver', title: '签收：', width: 63 }
     ]
   },
   table: {
@@ -170,7 +180,7 @@ const mesMonthlyTaskList = {
      * @param {string} bold 是否加粗 'unset' || 'bold'
      * @param {number} lineHeight 行高
      */
-    td: { size: 9, bold: 'unset', lineHeight: 13, paddingTB: 1 },
+    td: { size: 9, bold: 'unset', lineHeight: 13, paddingTB: 2 },
     emptyVal: '/', // string 空值显示
     /**
      * 表格序号
@@ -185,7 +195,7 @@ const mesMonthlyTaskList = {
      * @param {boolean} show 是否显示
      * @param {string} title 合计名称
      */
-    summary: { show: false, title: '合计' },
+    summary: { show: true, title: '合计' },
     /**
      * 表格列
      * @param {boolean} show 是否显示
@@ -200,23 +210,17 @@ const mesMonthlyTaskList = {
      * @param {boolean} sum 列需要合计
      */
     fields: [
-      { show: true, key: 'project', title: '项目名称', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 28, type: typeEnum.PROJECT.K, format: { showProjectFullName: false, showSerialNumber: true, projectNameShowConfig: projectNameArrangementModeEnum.SERIAL_NUMBER_START.V }},
-      { show: true, key: 'monomer.name', title: '单体', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 10, type: typeEnum.MONOMER_NAME.K },
-      { show: true, key: 'area.name', title: '区域', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 10, type: typeEnum.AREA_NAME.K },
-      { show: true, key: 'serialNumber', title: '编号', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 10, type: typeEnum.SERIAL_NUMBER.K },
-      { show: true, key: 'specification', title: '规格', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 20, type: typeEnum.SPECIFICATION.K },
-      { show: true, key: 'material', title: '材质', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 20, type: typeEnum.MATERIAL.K },
-      { show: true, key: 'length', title: '长度', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 13, type: typeEnum.LENGTH.K },
-      { show: true, key: 'netWeight', title: '单净重', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.WEIGHT.K },
-      { show: true, key: 'grossWeight', title: '单毛重', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.WEIGHT.K },
-      { show: true, key: 'quantity', title: '排产数', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 8, type: typeEnum.QUANTITY.K },
-      { show: true, key: 'completeQuantity', title: '完成数', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 5, type: typeEnum.QUANTITY.K },
-      { show: true, key: 'completeNetWeight', title: '完成净重', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 10, type: typeEnum.WEIGHT.K },
-      { show: true, key: 'completeGrossWeight', title: '完成毛重', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 10, type: typeEnum.WEIGHT.K }
+      { show: true, key: 'monomer.name', title: '单体', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 18, type: typeEnum.MONOMER_NAME.K },
+      { show: true, key: 'area.name', title: '区域', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 18, type: typeEnum.AREA_NAME.K },
+      { show: true, key: 'serialNumber', title: '编号', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 19, type: typeEnum.SERIAL_NUMBER.K },
+      { show: true, key: 'specification', title: '规格', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 18, type: typeEnum.SPECIFICATION.K },
+      { show: true, key: 'material', title: '材质', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.MATERIAL.K },
+      { show: true, key: 'shipQuantity', title: '数量', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 14, type: typeEnum.QUANTITY.K, format: { toThousand: false, precision: 0 }},
+      { show: true, key: 'totalNetWeight', title: '总重（kg）', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.WEIGHT.K, format: { toThousand: false, precision: DEF_UNIT.WEIGHT_DP, unit: weightUnitEnum.KG.V }}
     ]
   }
 }
 
 export default {
-  mesMonthlyTaskList // 月度任务跟踪
+  mesShipTaskMeteDetail //  任务总量详情
 }

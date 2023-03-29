@@ -525,6 +525,69 @@ export function mesProjectShipDetail(params) {
   })
 }
 
+// 发运管理-发运统计-清单总量详情
+export function mesShipMeteDetail(params) {
+  return request({
+    url: ``,
+    method: 'get',
+    params
+  })
+}
+
+// 发运管理-发运统计-任务总量详情
+export function mesShipTaskMeteDetail(params) {
+  return request({
+    url: ``,
+    method: 'get',
+    params
+  })
+}
+
+// 发运管理-发运统计-入库量详情
+export function mesShipInboundMeteDetail(params) {
+  return request({
+    url: ``,
+    method: 'get',
+    params
+  })
+}
+
+// 发运管理-发运统计-累计发运详情
+export function mesShipTotalMeteDetail(params) {
+  return request({
+    url: ``,
+    method: 'get',
+    params
+  })
+}
+
+// 发运管理-发运统计-本月发运发运详情
+export function mesShipMonthMeteDetail(params) {
+  return request({
+    url: ``,
+    method: 'get',
+    params
+  })
+}
+
+// 发运管理-发运统计-库存详情
+export function mesShipStockMeteDetail(params) {
+  return request({
+    url: ``,
+    method: 'get',
+    params
+  })
+}
+
+// 发运管理-发运统计-累计车次详情
+export function mesShipTrainMeteDetail(params) {
+  return request({
+    url: ``,
+    method: 'get',
+    params
+  })
+}
+
 // 工厂报表-车间报表详情
 export function factoryWorkshopReport(params) {
   return request({
@@ -749,6 +812,13 @@ export default {
 
   // 发运管理
   mesProjectShipDetail, // 项目发运详情
+  mesShipMeteDetail, // 清单总量详情
+  mesShipTaskMeteDetail, // 任务总量详情
+  mesShipInboundMeteDetail, // 入库量详情
+  mesShipTotalMeteDetail, // 累计发运详情
+  mesShipMonthMeteDetail, // 本月发运详情
+  mesShipStockMeteDetail, // 库存
+  mesShipTrainMeteDetail, // 累计车次
 
   // 工厂报表-车间报表
   factoryWorkshopReport, // 车间报表详情

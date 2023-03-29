@@ -12,21 +12,13 @@
         style="width: 100%; cursor: pointer"
         @row-click="handleProjectDetail"
       >
-        <el-table-column type="index" label="序号" key="index" align="center" width="60px" fixed="left" />
-        <el-table-column key="project.shortName" prop="project" :show-overflow-tooltip="true" label="项目" min-width="150px" fixed="left">
+        <el-table-column type="index" label="序号" key="index" align="center" width="60px" />
+        <el-table-column key="project.shortName" prop="project" :show-overflow-tooltip="true" label="项目" min-width="150px">
           <template v-slot="scope">
             <span>{{ projectNameFormatter(scope.row.project) }}</span>
           </template>
         </el-table-column>
-        <el-table-column
-          align="left"
-          key="monomer"
-          prop="monomer"
-          :show-overflow-tooltip="true"
-          label="包含单体"
-          width="120px"
-          fixed="left"
-        >
+        <el-table-column align="left" key="monomer" prop="monomer" :show-overflow-tooltip="true" label="包含单体">
           <template v-slot="scope">
             <template v-for="item in scope.row.monomerDO" :key="item">
               <span v-if="scope.row.monomerDO.length > 1">{{ item.name }}/</span>
@@ -35,7 +27,7 @@
             </template>
           </template>
         </el-table-column>
-        <el-table-column align="left" key="area" prop="area" :show-overflow-tooltip="true" label="包含区域" width="120px" fixed="left">
+        <el-table-column align="left" key="area" prop="area" :show-overflow-tooltip="true" label="包含区域">
           <template v-slot="scope">
             <template v-for="item in scope.row.areaDO" :key="item">
               <span v-if="scope.row.areaDO.length > 1">{{ item.name }}/</span>
@@ -44,33 +36,13 @@
             </template>
           </template>
         </el-table-column>
-        <el-table-column align="center" key="quantity" prop="quantity" :show-overflow-tooltip="true" :label="`排产数\n（件）`">
+        <el-table-column align="center" key="list" prop="list" :show-overflow-tooltip="true" label="排产量（件/吨）">
           <template v-slot="scope">
-            <span>{{ scope.row.quantity }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column
-          align="center"
-          key="netWeight"
-          prop="netWeight"
-          :show-overflow-tooltip="true"
-          :label="`排产总净重\n（吨）`"
-          width="120px"
-        >
-          <template v-slot="scope">
-            <span>{{ (scope.row.netWeight / 1000).toFixed(DP.COM_WT__KG) }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column
-          align="center"
-          key="grossWeight"
-          prop="grossWeight"
-          :show-overflow-tooltip="true"
-          :label="`排产总毛重\n（吨）`"
-          width="120px"
-        >
-          <template v-slot="scope">
-            <span>{{ (scope.row.grossWeight / 1000).toFixed(DP.COM_WT__KG) }}</span>
+            <span>{{
+              props.weightStatus === weightTypeEnum.NET.V
+                ? scope.row.quantity + '/' + (scope.row.netWeight / 1000).toFixed(DP.COM_WT__KG)
+                : scope.row.quantity + '/' + (scope.row.grossWeight / 1000).toFixed(DP.COM_WT__KG)
+            }}</span>
           </template>
         </el-table-column>
         <el-table-column align="center" key="rate" prop="rate" :show-overflow-tooltip="true" label="完成率" width="160px">
@@ -88,38 +60,17 @@
         </el-table-column>
         <el-table-column
           align="center"
-          key="completeQuantity"
-          prop="completeQuantity"
+          key="complete"
+          prop="complete"
           :show-overflow-tooltip="true"
-          :label="`实际完成数\n（件）`"
-          width="120px"
+          label="实际完成（件/吨）"
         >
           <template v-slot="scope">
-            <span>{{ scope.row.completeQuantity }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column
-          align="center"
-          key="completeNetWeight"
-          prop="completeNetWeight"
-          :show-overflow-tooltip="true"
-          :label="`实际完成总净重\n（吨）`"
-          width="120px"
-        >
-          <template v-slot="scope">
-            <span>{{ (scope.row.completeNetWeight / 1000).toFixed(DP.COM_WT__KG) }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column
-          align="center"
-          key="completeGrossWeight"
-          prop="completeGrossWeight"
-          :show-overflow-tooltip="true"
-          :label="`实际完成总毛重\n（吨）`"
-          width="120px"
-        >
-          <template v-slot="scope">
-            <span>{{ (scope.row.completeGrossWeight / 1000).toFixed(DP.COM_WT__KG) }}</span>
+            <span>{{
+              props.weightStatus === weightTypeEnum.NET.V
+                ? scope.row.completeQuantity + '/' + (scope.row.completeNetWeight / 1000).toFixed(DP.COM_WT__KG)
+                : scope.row.completeQuantity + '/' + (scope.row.completeGrossWeight / 1000).toFixed(DP.COM_WT__KG)
+            }}</span>
           </template>
         </el-table-column>
       </common-table>
@@ -140,6 +91,7 @@
 <script setup>
 import { monthlyProject } from '@/api/mes/task-tracking/monthly-task-tracking.js'
 import { ref, defineProps, watch } from 'vue'
+import { weightTypeEnum } from '@enum-ms/common'
 import useMaxHeight from '@compos/use-max-height'
 import usePagination from '@compos/use-pagination'
 import projectDetail from '../project-detail/index.vue'
@@ -153,6 +105,9 @@ const props = defineProps({
   },
   query: {
     type: Object
+  },
+  weightStatus: {
+    type: Number
   }
 })
 

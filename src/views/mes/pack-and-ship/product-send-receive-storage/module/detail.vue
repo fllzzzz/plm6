@@ -10,13 +10,13 @@
     size="90%"
   >
     <template #titleAfter>
-      <el-tag size="medium">{{`项目：${projectNameFormatter(detailInfo.project)}`}}</el-tag>
+      <el-tag size="medium">{{ `项目：${projectNameFormatter(detailInfo.project)}` }}</el-tag>
     </template>
     <template #titleRight>
       <print-table
         api-key="productSendReceiveStorageDetail"
         v-permission="permission.detailPrint"
-        :params="{ ...props.detailQuery,...query, workshopId: props.workshopId, productType: props.productType }"
+        :params="{ ...props.detailQuery, ...query, workshopId: props.workshopId, productType: props.productType }"
         size="mini"
         type="warning"
         class="filter-item"
@@ -43,21 +43,47 @@
           clearable
           placeholder="请选择区域"
           class="filter-item"
-          style="width:200px;margin-left:3px;"
+          style="width: 200px; margin-left: 3px"
           @change="fetchList"
         />
         <el-input
           v-model.trim="query.serialNumber"
           size="small"
           placeholder="编号搜索"
-          style="width: 200px;margin-bottom:10px;margin-left:3px;"
+          style="width: 200px; margin-bottom: 10px; margin-left: 3px"
           class="filter-item"
           clearable
         />
-        <common-button class="filter-item" size="mini" type="success" icon="el-icon-search" @click="fetchList" style="margin-left:10px;">搜索</common-button>
-        <common-button class="filter-item" size="mini" type="warning" icon="el-icon-refresh-left" @click="query={};fetchList()">重置</common-button>
+        <common-button
+class="filter-item"
+size="mini"
+type="success"
+icon="el-icon-search"
+@click="fetchList"
+style="margin-left: 10px"
+          >搜索</common-button
+        >
+        <common-button
+          class="filter-item"
+          size="mini"
+          type="warning"
+          icon="el-icon-refresh-left"
+          @click="
+            query = {},
+            fetchList()
+          "
+          >重置</common-button
+        >
       </div>
-      <common-table :data="list" v-loading="tableLoading" :data-format="dataFormat" show-summary :summary-method="getSummaries" :max-height="maxHeight" v-if="visible">
+      <common-table
+        :data="list"
+        v-loading="tableLoading"
+        :data-format="dataFormat"
+        show-summary
+        :summary-method="getSummaries"
+        :max-height="maxHeight"
+        v-if="visible"
+      >
         <el-table-column label="序号" type="index" align="center" width="60" />
         <el-table-column key="monomerName" prop="monomerName" label="单体" align="center" show-overflow-tooltip />
         <el-table-column key="areaName" prop="areaName" label="区域" align="center" show-overflow-tooltip />
@@ -66,23 +92,43 @@
         <el-table-column key="length" prop="length" label="长度(mm)" align="center" show-overflow-tooltip />
         <el-table-column label="清单数(件/kg)" align="center">
           <el-table-column key="quantity" prop="quantity" label="清单数" align="center" show-overflow-tooltip />
-          <el-table-column key="totalNetWeight" prop="totalNetWeight" label="重量" align="center" show-overflow-tooltip />
+          <el-table-column key="totalNetWeight" prop="totalNetWeight" label="重量" align="center" show-overflow-tooltip>
+            <template #default="{ row }">
+              <span>{{ props.weightStatus === weightTypeEnum.NET.V ? row.totalNetWeight : row.totalGrossWeight }}</span>
+            </template>
+          </el-table-column>
         </el-table-column>
-         <el-table-column label="期初库存(件/kg)" align="center">
+        <el-table-column label="期初库存(件/kg)" align="center">
           <el-table-column key="beginningQuantity" prop="beginningQuantity" label="库存数" align="center" show-overflow-tooltip />
-          <el-table-column key="beginningNetWeight" prop="beginningNetWeight" label="重量" align="center" show-overflow-tooltip />
+          <el-table-column key="beginningNetWeight" prop="beginningNetWeight" label="重量" align="center" show-overflow-tooltip>
+            <template #default="{ row }">
+              <span>{{ props.weightStatus === weightTypeEnum.NET.V ? row.beginningNetWeight : row.beginningGrossWeight }}</span>
+            </template>
+          </el-table-column>
         </el-table-column>
         <el-table-column label="入库(件/kg)" align="center">
           <el-table-column key="inboundQuantity" prop="inboundQuantity" label="入库数" align="center" show-overflow-tooltip />
-          <el-table-column key="inboundNetWeight" prop="inboundNetWeight" label="重量" align="center" show-overflow-tooltip />
+          <el-table-column key="inboundNetWeight" prop="inboundNetWeight" label="重量" align="center" show-overflow-tooltip>
+            <template #default="{ row }">
+              <span>{{ props.weightStatus === weightTypeEnum.NET.V ? row.inboundNetWeight : row.inboundGrossWeight }}</span>
+            </template>
+          </el-table-column>
         </el-table-column>
         <el-table-column label="出库(件/kg)" align="center">
           <el-table-column key="outboundQuantity" prop="outboundQuantity" label="出库数" align="center" show-overflow-tooltip />
-          <el-table-column key="outboundNetWeight" prop="outboundNetWeight" label="重量" align="center" show-overflow-tooltip />
+          <el-table-column key="outboundNetWeight" prop="outboundNetWeight" label="重量" align="center" show-overflow-tooltip>
+            <template #default="{ row }">
+              <span>{{ props.weightStatus === weightTypeEnum.NET.V ? row.outboundNetWeight : row.outboundGrossWeight }}</span>
+            </template>
+          </el-table-column>
         </el-table-column>
         <el-table-column label="期末库存(件/kg)" align="center">
           <el-table-column key="stockQuantity" prop="stockQuantity" label="库存数" align="center" show-overflow-tooltip />
-          <el-table-column key="stockNetWeight" prop="stockNetWeight" label="重量" align="center" show-overflow-tooltip />
+          <el-table-column key="stockNetWeight" prop="stockNetWeight" label="重量" align="center" show-overflow-tooltip>
+            <template #default="{ row }">
+              <span>{{ props.weightStatus === weightTypeEnum.NET.V ? row.stockNetWeight : row.stockGrossWeight }}</span>
+            </template>
+          </el-table-column>
         </el-table-column>
       </common-table>
       <!--分页组件-->
@@ -102,7 +148,7 @@
 <script setup>
 import { detail } from '@/api/mes/pack-and-ship/product-receive-send-storage'
 import { ref, defineEmits, defineProps, watch } from 'vue'
-
+import { weightTypeEnum } from '@enum-ms/common'
 import { tableSummary } from '@/utils/el-extra'
 import { DP } from '@/settings/config'
 import { projectNameFormatter } from '@/utils/project'
@@ -145,20 +191,20 @@ const props = defineProps({
   },
   productType: {
     type: Number
+  },
+  weightStatus: {
+    type: Number
   }
 })
 
 const { visible, handleClose } = useVisible({ emit, props })
 const { handleSizeChange, handleCurrentChange, total, setTotalPage, queryPage } = usePagination({ fetchHook: fetchList })
 
-watch(
-  visible,
-  (val) => {
-    if (val) {
-      fetchList()
-    }
+watch(visible, (val) => {
+  if (val) {
+    fetchList()
   }
-)
+})
 
 const list = ref([])
 const areaInfo = ref([])
@@ -189,7 +235,18 @@ const dataFormat = ref([
 // 合计
 function getSummaries(param) {
   const summary = tableSummary(param, {
-    props: ['inboundQuantity', 'inboundMete', 'outboundQuantity', 'outboundMete', 'quantity', 'mete', 'stockMete', 'stockQuantity', 'beginningQuantity', 'beginningMete']
+    props: [
+      'inboundQuantity',
+      'inboundMete',
+      'outboundQuantity',
+      'outboundMete',
+      'quantity',
+      'mete',
+      'stockMete',
+      'stockQuantity',
+      'beginningQuantity',
+      'beginningMete'
+    ]
   })
   return summary
 }
@@ -204,7 +261,13 @@ async function fetchList() {
   tableLoading.value = true
   try {
     console.log(props.detailQuery, 'props')
-    const { content = [], totalElements } = await detail({ ...props.detailQuery, ...queryPage, workshopId: props.workshopId, productType: props.productType, ...query.value })
+    const { content = [], totalElements } = await detail({
+      ...props.detailQuery,
+      ...queryPage,
+      workshopId: props.workshopId,
+      productType: props.productType,
+      ...query.value
+    })
     _list = content
     setTotalPage(totalElements)
   } catch (error) {
@@ -214,5 +277,4 @@ async function fetchList() {
     tableLoading.value = false
   }
 }
-
 </script>

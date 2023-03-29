@@ -515,6 +515,19 @@ const productSearchTypeEnum = {
   STOCK: { L: '期末库存', K: 'STOCK', V: 4 }
 }
 constantize(productSearchTypeEnum)
+
+// 发运管理/项目发运汇总类型查询
+const projectSearchTypeEnum = {
+  INVENTORY: { L: '清单总量', K: 'INVENTORY', V: 1 },
+  ASSIGNMENT: { L: '任务量', K: 'ASSIGNMENT', V: 2 },
+  STORAGE: { L: '入库量', K: 'STORAGE', V: 3 },
+  CUMULATIVE_SHIPMENT: { L: '累计发运', K: 'CUMULATIVE_SHIPMENT', V: 4 },
+  SHIPMENT_MONTH: { L: '本月发运', K: 'SHIPMENT_MONTH', V: 5 },
+  IN_STOCK: { L: '库存', K: 'IN_STOCK', V: 6 },
+  ACCUMULATED_NUMBER: { L: '累计车次', K: 'ACCUMULATED_NUMBER', V: 7 }
+}
+constantize(projectSearchTypeEnum)
+
 // 钻孔工单
 const drillListEnum = {
   PRODUCTION_TASK_ORDER: { L: '钻孔任务单', K: 'PRODUCTION_TASK_ORDER', V: 1 },
@@ -638,6 +651,7 @@ export {
   fileNC1TypeEnum,
   sortingListEnum,
   productSearchTypeEnum,
+  projectSearchTypeEnum,
   drillListEnum,
   structureOrderTypeEnum,
   auxiliaryMaterialTypeEnum,
@@ -712,6 +726,7 @@ export default {
   fileNC1TypeEnum,
   sortingListEnum,
   productSearchTypeEnum,
+  projectSearchTypeEnum,
   drillListEnum,
   structureOrderTypeEnum,
   auxiliaryMaterialTypeEnum,

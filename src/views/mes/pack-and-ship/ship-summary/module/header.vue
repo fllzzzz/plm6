@@ -21,7 +21,7 @@
       /> -->
       <common-radio-button
         v-model="query.status"
-        :options="shipStatusEnum.ENUM"
+        :options="[shipStatusEnum.SHIPPING, shipStatusEnum.SHIPPED]"
         showOptionAll
         type="enum"
         class="filter-item"
@@ -57,7 +57,7 @@
         @change="crud.toQuery"
       />
       <el-input
-        v-model="query.projectId"
+        v-model="query.projectName"
         placeholder="项目搜索"
         class="filter-item"
         style="width: 200px"
@@ -91,7 +91,7 @@ const defaultQuery = {
   sendStatus: undefined,
   status: undefined,
   settled: undefined,
-  projectId: undefined,
+  projectName: undefined,
   weightStatus: weightTypeEnum.NET.V
 }
 const { crud, query } = regHeader(defaultQuery)

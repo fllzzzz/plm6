@@ -86,6 +86,7 @@
         <el-table-column key="quantity" prop="quantity" label="数量" align="center" :show-overflow-tooltip="true" />
         <el-table-column key="netWeight" prop="netWeight" label="单净重（kg）" align="center" :show-overflow-tooltip="true" />
         <el-table-column key="grossWeight" prop="grossWeight" label="单毛重（kg）" align="center" :show-overflow-tooltip="true" />
+        <el-table-column key="totalNetWeight" prop="totalNetWeight" label="总净重（kg）" align="center" :show-overflow-tooltip="true" />
         <el-table-column key="totalGrossWeight" prop="totalGrossWeight" label="总毛重（kg）" align="center" :show-overflow-tooltip="true" />
         <el-table-column
           key="createTime"

@@ -24,7 +24,9 @@
               <div style="position: relative">
                 <el-progress :stroke-width="16" :percentage="scope.row.rate" />
                 <span style="position: absolute; top: -2px; left: 0; width: 100%; text-align: right; padding-right: 60px">{{
-                  (scope.row.sendMete / 1000).toFixed(2) + ' | ' + (scope.row.mete / 1000).toFixed(2)
+                  crud.query.weightStatus === weightTypeEnum.NET.V
+                    ? (scope.row.sendMete / 1000).toFixed(2) + ' | ' + (scope.row.mete / 1000).toFixed(2)
+                    : (scope.row.sendGrossMete / 1000).toFixed(2) + ' | ' + (scope.row.grossMete / 1000).toFixed(2)
                 }}</span>
               </div>
             </template>
@@ -36,6 +38,7 @@
       <div style="width: 59%; padding-left: 10px">
         <projectShipmentDetail
           :workshopId="crud.query.workshopId"
+          :weightStatus="crud.query.weightStatus"
           :production-line-type-enum="crud.query.productionLineTypeEnum"
           :currentRow="currentRow"
           v-if="isNotBlank(currentRow)"
@@ -53,7 +56,7 @@ import { ref } from 'vue'
 
 import { mesShipSummaryPM as permission } from '@/page-permission/mes'
 import { isNotBlank } from '@data-type/index'
-
+import { weightTypeEnum } from '@enum-ms/common'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import mHeader from './module/header'

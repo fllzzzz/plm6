@@ -32,7 +32,11 @@
         align="center"
       >
         <template v-slot="scope">
-          <span>{{ scope.row.quantity + ' / ' + scope.row.totalNetWeight }}</span>
+          <span>{{
+            crud.query.weightStatus === weightTypeEnum.NET.V
+              ? scope.row.quantity + ' / ' + scope.row.totalNetWeight
+              : scope.row.quantity + ' / ' + scope.row.totalGrossWeight
+          }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -45,7 +49,9 @@
       >
         <template v-slot="scope">
           <span style="cursor: pointer; color: #0d84ff" @click="openDetail(scope.row, 'BEGINNING')">{{
-            scope.row.beginningQuantity + ' / ' + scope.row.beginningNetWeight
+            crud.query.weightStatus === weightTypeEnum.NET.V
+              ? scope.row.beginningQuantity + ' / ' + scope.row.beginningNetWeight
+              : scope.row.beginningQuantity + ' / ' + scope.row.beginningGrossWeight
           }}</span>
         </template>
       </el-table-column>
@@ -118,6 +124,7 @@
       :detailQuery="detailQuery"
       :productType="crud.query.productType"
       :workshopId="crud.query.workshopId"
+      :weightStatus="crud.query.weightStatus"
       :detailInfo="currentRow"
       :permission="permission"
     />

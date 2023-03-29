@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <div style="display: flex">
-      <div style="width: 52%;">
+      <div style="width: 38%">
         <div class="head-container">
           <mHeader />
         </div>
@@ -33,39 +33,19 @@
             </template>
           </el-table-column>
           <el-table-column
-            v-if="columns.visible('quantity')"
+            v-if="columns.visible('list')"
             align="center"
-            key="quantity"
-            prop="quantity"
+            key="list"
+            prop="list"
             :show-overflow-tooltip="true"
-            :label="`排产数\n（件）`"
+            label="排产量（件/吨）"
           >
             <template v-slot="scope">
-              <span>{{ scope.row.quantity }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column
-            v-if="columns.visible('netWeight')"
-            align="center"
-            key="netWeight"
-            prop="netWeight"
-            :show-overflow-tooltip="true"
-            :label="`排产总净重\n（吨）`"
-          >
-            <template v-slot="scope">
-              <span>{{ (scope.row.netWeight / 1000).toFixed(DP.COM_WT__KG) }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column
-            v-if="columns.visible('grossWeight')"
-            align="center"
-            key="grossWeight"
-            prop="grossWeight"
-            :show-overflow-tooltip="true"
-            :label="`排产总毛重\n（吨）`"
-          >
-            <template v-slot="scope">
-              <span>{{ (scope.row.grossWeight / 1000).toFixed(DP.COM_WT__KG) }}</span>
+              <span>{{
+                crud.query.weightStatus === weightTypeEnum.NET.V
+                  ? scope.row.quantity + '/' + (scope.row.netWeight / 1000).toFixed(DP.COM_WT__KG)
+                  : scope.row.quantity + '/' + (scope.row.grossWeight / 1000).toFixed(DP.COM_WT__KG)
+              }}</span>
             </template>
           </el-table-column>
           <el-table-column
@@ -90,47 +70,25 @@
             </template>
           </el-table-column>
           <el-table-column
-            v-if="columns.visible('completeQuantity')"
+            v-if="columns.visible('complete')"
             align="center"
-            key="completeQuantity"
-            prop="completeQuantity"
+            key="complete"
+            prop="complete"
             :show-overflow-tooltip="true"
-            :label="`实际完成数\n（件）`"
+            label="实际完成量（件/吨）"
           >
             <template v-slot="scope">
-              <span>{{ scope.row.completeQuantity }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column
-            v-if="columns.visible('completeNetWeight')"
-            align="center"
-            key="completeNetWeight"
-            prop="completeNetWeight"
-            :show-overflow-tooltip="true"
-            :label="`实际完成总净重\n（吨）`"
-            width="130px"
-          >
-            <template v-slot="scope">
-              <span>{{ (scope.row.completeNetWeight / 1000).toFixed(DP.COM_WT__KG) }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column
-            v-if="columns.visible('completeGrossWeight')"
-            align="center"
-            key="completeGrossWeight"
-            prop="completeGrossWeight"
-            :show-overflow-tooltip="true"
-            :label="`实际完成总毛重\n（吨）`"
-            width="130px"
-          >
-            <template v-slot="scope">
-              <span>{{ (scope.row.completeGrossWeight / 1000).toFixed(DP.COM_WT__KG) }}</span>
+              <span>{{
+                crud.query.weightStatus === weightTypeEnum.NET.V
+                  ? scope.row.completeQuantity + '/' + (scope.row.completeNetWeight / 1000).toFixed(DP.COM_WT__KG)
+                  : scope.row.completeQuantity + '/' + (scope.row.completeGrossWeight / 1000).toFixed(DP.COM_WT__KG)
+              }}</span>
             </template>
           </el-table-column>
         </common-table>
       </div>
       <div style="border-right: 1px solid #ededed; margin: 0 20px; height: calc(100vh - 180px)"></div>
-      <monthly-task-detail :query="query" :monthly-data="monthlyData" style="width: 46%" />
+      <monthly-task-detail :query="query" :weightStatus="crud.query.weightStatus" :monthly-data="monthlyData" style="width: 60%" />
     </div>
   </div>
 </template>
@@ -138,6 +96,7 @@
 import { ref, computed, watch } from 'vue'
 import crudApi from '@/api/mes/task-tracking/monthly-task-tracking.js'
 import { mesMonthlyTaskTrackingPM as permission } from '@/page-permission/mes'
+import { weightTypeEnum } from '@enum-ms/common'
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
 import { DP } from '@/settings/config'
@@ -175,7 +134,7 @@ const { crud, CRUD, columns } = useCRUD(
 )
 
 watch(
-  () => crud.query.dateTime,
+  [() => crud.query.dateTime, () => crud.query.weightStatus],
   (val) => {
     if (val) {
       monthlyData.value = {}
@@ -214,7 +173,7 @@ function getSummaries(param) {
   const ave = []
   columns.forEach((column, index) => {
     if (index === 0) {
-      sums[index] = '合计'
+      sums[index] = '全年平均'
       return
     }
     if (column.property === 'rate') {
@@ -226,24 +185,25 @@ function getSummaries(param) {
       sums[index] = ((sums[index] / ave.length) * 100).toFixed(2) + '%'
       return
     }
-    if (column.property !== 'rate' && column.property !== 'months' && column.property !== 'quantity' || column.property !== 'completeQuantity') {
-      const values = data.map((item) => Number(item[column.property]))
-      if (!values.every((value) => isNaN(value))) {
-        sums[index] = values.reduce((prev, curr) => {
-          const value = Number(curr)
-          if (!isNaN(value)) {
-            return prev + curr / 1000
-          } else {
-            return prev
-          }
-        }, 0)
+    if (column.property === 'list' || column.property === 'complete') {
+      const valueKeys = column.property === 'list' ? 'quantity' : column.property + 'Quantity'
+      const values = data.map((item) => Number(item?.[valueKeys]))
+      let valuesSum = 0
+      // const valueWeightKeys = column.property === 'list' ? 'netWeight' : column.property + 'NetWeight'
+      let valueWeightKeys = ''
+      if (column.property === 'list' && crud.query.weightStatus === weightTypeEnum.NET.V) {
+        valueWeightKeys = 'netWeight'
+      } else if (column.property === 'list' && crud.query.weightStatus === weightTypeEnum.GROSS.V) {
+        valueWeightKeys = 'grossWeight'
+      } else if (column.property !== 'list' && crud.query.weightStatus === weightTypeEnum.NET.V) {
+        valueWeightKeys = column.property + 'NetWeight'
+      } else if (column.property !== 'list' && crud.query.weightStatus === weightTypeEnum.GROSS.V) {
+        valueWeightKeys = column.property + 'GrossWeight'
       }
-      sums[index] = sums[index]?.toFixed(2)
-    }
-    if (column.property === 'quantity' || column.property === 'completeQuantity') {
-      const values = data.map((item) => Number(item[column.property]))
+      const valueWeight = data.map((item) => Number(item?.[valueWeightKeys] / 1000))
+      let valueWeightSum = 0
       if (!values.every((value) => isNaN(value))) {
-        sums[index] = values.reduce((prev, curr) => {
+        valuesSum = values.reduce((prev, curr) => {
           const value = Number(curr)
           if (!isNaN(value)) {
             return prev + curr
@@ -252,6 +212,17 @@ function getSummaries(param) {
           }
         }, 0)
       }
+      if (!valueWeight.every((value) => isNaN(value))) {
+        valueWeightSum = valueWeight.reduce((prev, curr) => {
+          const value = Number(curr)
+          if (!isNaN(value)) {
+            return prev + curr
+          } else {
+            return prev
+          }
+        }, 0)
+      }
+      sums[index] = valuesSum + '/' + valueWeightSum.toFixed(DP.COM_WT__KG)
     }
   })
   return sums
