@@ -46,7 +46,7 @@ export default {
       name: 'PurchaseReconciliationManage',
       alwaysShow: false,
       redirect: '/supply-chain/payment-ledger',
-      meta: { title: '采购对账管理', icon: 'contract', noCache: true },
+      meta: { title: '采购台账', icon: 'contract', noCache: true },
       children: [
         {
           name: 'InboundLog',
@@ -54,13 +54,6 @@ export default {
           hidden: false,
           component: '/supply-chain/purchase-reconciliation-manage/inbound-log/index',
           meta: { title: '入库记录', icon: 'project', noCache: true }
-        },
-        {
-          name: 'PurchasePaymentLedger',
-          path: 'payment-ledger',
-          hidden: false,
-          component: '/supply-chain/purchase-reconciliation-manage/payment-ledger/index',
-          meta: { title: '付款台账', icon: 'project', noCache: true }
         },
         {
           name: 'AcceptanceLog',
@@ -75,6 +68,20 @@ export default {
           hidden: false,
           component: '/supply-chain/purchase-reconciliation-manage/reconciliation-log/index',
           meta: { title: '供应商对账', icon: 'project', noCache: true }
+        },
+        {
+          name: 'PurchasePaymentLedger',
+          path: 'payment-ledger',
+          hidden: false,
+          component: '/supply-chain/purchase-reconciliation-manage/payment-ledger/index',
+          meta: { title: '采购台账', icon: 'project', noCache: true }
+        },
+        {
+          name: 'PurchaseOrderLedger',
+          path: 'order-ledger',
+          hidden: false,
+          component: '/supply-chain/purchase-reconciliation-manage/order-ledger/index',
+          meta: { title: '订单查询', icon: 'project', noCache: true }
         }
       ]
     },

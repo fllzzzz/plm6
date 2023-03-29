@@ -73,6 +73,13 @@ const materialPurchaseClsEnum = {
 }
 constantize(materialPurchaseClsEnum)
 
+// 原材料台账物料分类
+const materialLedgerClsEnum = {
+  STEEL: { L: '钢材类', K: 'STEEL', V: matClsEnum.STEEL_PLATE.V | matClsEnum.SECTION_STEEL.V | matClsEnum.STEEL_COIL.V },
+  MATERIAL: { L: '辅材类', K: 'MATERIAL', V: matClsEnum.MATERIAL.V | matClsEnum.GAS.V },
+  MANUFACTURED: { L: '制成品类', K: 'MANUFACTURED', V: matClsEnum.STRUC_MANUFACTURED.V | matClsEnum.ENCL_MANUFACTURED.V }
+}
+constantize(materialLedgerClsEnum)
 export {
   classificationEnum,
   matClsEnum,
@@ -81,7 +88,8 @@ export {
   steelClsEnum,
   materialPurchaseClsEnum,
   projectPreparationMatClsEnum,
-  extrusionClsEnum
+  extrusionClsEnum,
+  materialLedgerClsEnum
 }
 
 export default {
@@ -92,5 +100,6 @@ export default {
   steelClsEnum,
   materialPurchaseClsEnum,
   projectPreparationMatClsEnum,
-  extrusionClsEnum
+  extrusionClsEnum,
+  materialLedgerClsEnum
 }
