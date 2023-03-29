@@ -435,6 +435,12 @@ export const memberConfigPM = {
 
 // --------------------------- 审批管理 start --------------------------
 
+// 审批管理/基础配置
+export const configProcessBasicPM = {
+  approvalConfigGet: ['company_process_approval_config:get'], // 查看 审批配置
+  approvalConfigEdit: ['company_process_approval_config:edit'] // 编辑 审批配置
+}
+
 // 审批管理/公司审批流程
 export const companyProcessConfigPM = {
   get: ['company_process_config:get'], // 列表

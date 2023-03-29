@@ -15,6 +15,7 @@ import { getUserAllSimple } from '@/api/common'
 import { getDeptAllSimple } from '@/api/common'
 import { getSuppliersBrief } from '@/api/common'
 import { getTaxRateBrief } from '@/api/config/wms/tax-rate'
+import { getApprovalConf } from '@/api/config/approval-config/base'
 import { getCompanyConfig, getLogoConfig } from '@/api/config/main/system-config'
 import { getUnclosedRequisitionsBrief } from '@/api/wms/requisitions'
 import { getPurchasingPurchaseOrderBrief, getPurchaseOrder } from '@/api/supply-chain/purchase-order'
@@ -63,6 +64,7 @@ const state = {
     website: '', // 网址
     logo: '' // logo
   },
+  approvalCfg: {}, // 审批配置
   unit: { ALL: [], GROUP: [], MAP: new Map(), KS: new Map() }, // 单位列表 ALL，WEIGHT...
   factories: [], // 工厂
   factoryKV: {}, // 工厂id:value 格式
@@ -116,6 +118,7 @@ const state = {
     clsTree: false,
     suppliers: false,
     taxRate: false,
+    approvalCfg: false,
     unclosedRequisitions: false,
     unclosedPurchaseOrder: false,
     purchaseOrders: false,
@@ -159,6 +162,9 @@ const mutations = {
     state.manufClsLeafList = leafList.filter((t) =>
       [matClsEnum.STRUC_MANUFACTURED.V, matClsEnum.ENCL_MANUFACTURED.V].includes(t.basicClass)
     )
+  },
+  SET_APPROVAL_CFG(state, cfg) {
+    state.approvalCfg = cfg
   },
   SET_CLS_TREE(state, tree = []) {
     state.clsTree = tree
@@ -299,6 +305,13 @@ const actions = {
     commit('SET_TAX_RATE', content)
     commit('SET_LOADED', { key: 'taxRate' })
     return content
+  },
+  // 加载审批配置
+  async fetchApprovalCfg({ commit }) {
+    const res = await getApprovalConf()
+    commit('SET_APPROVAL_CFG', { requisition: res })
+    commit('SET_LOADED', { key: 'approvalCfg' })
+    return { requisition: res }
   },
   // 物料分类树
   async fetchMatClsTree({ commit }) {

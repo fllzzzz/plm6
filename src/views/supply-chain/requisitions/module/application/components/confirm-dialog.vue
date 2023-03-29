@@ -32,7 +32,8 @@
         placeholder="选择到厂日期"
         style="width: 140px"
       />
-      <!-- <common-select
+      <common-select
+        v-if="approvalCfg?.requisition"
         v-model="form.approveProcessId"
         :options="approvalProcessOptions"
         type="other"
@@ -41,7 +42,7 @@
         placeholder="选择审批流程"
         :disabled="cu.status.edit === FORM.STATUS.PROCESSING"
         style="width: 220px"
-      /> -->
+      />
     </template>
     <!-- 不刷新组件无法正常更新 -->
     <template v-if="dialogVisible">
@@ -135,6 +136,7 @@ import moment from 'moment'
 import { regExtra } from '@/composables/form/use-form'
 import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'
+import useApprovalCfg from '@compos/store/use-approval-cfg'
 import { ElMessage } from 'element-plus'
 import materialBaseInfoColumns from '@/components-system/wms/table-columns/material-base-info-columns/index.vue'
 import materialUnitQuantityColumns from '@/components-system/wms/table-columns/material-unit-quantity-columns/index.vue'
@@ -157,6 +159,7 @@ const props = defineProps({
   }
 })
 
+const { approvalCfg } = useApprovalCfg()
 const { user } = mapGetters('user')
 const { projectMap } = mapGetters('projectMap')
 const approvalProcessOptions = ref([])
@@ -226,10 +229,10 @@ FORM.HOOK.beforeSubmit = async () => {
     ElMessage.warning('请选择到厂时间')
     return false
   }
-  // if (!form.approveProcessId) {
-  //   ElMessage.warning('请选择审批流程')
-  //   return false
-  // }
+  if (!form.approveProcessId && approvalCfg.value?.requisition) {
+    ElMessage.warning('请选择审批流程')
+    return false
+  }
 }
 
 // 表单提交后：关闭预览窗口
