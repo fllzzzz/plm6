@@ -1,166 +1,136 @@
 <template>
   <div class="app-container">
     <!--工具栏-->
-    <div class="head-container">
-      <mHeader/>
-    </div>
-    <!--表格渲染-->
+    <mHeader ref="headerRef" />
+    <!-- 汇总列表 -->
     <common-table
-    ref="tableRef"
-    v-loading="crud.loading"
-    :data="crud.data"
-    :empty-text="crud.emptyText"
-    :max-height="maxHeight"
-    return-source-data
-    :showEmptySymbol="false"
-    style="width: 100%"
-  >
-    <el-table-column label="序号" type="index" align="center" width="60">
-      <template v-slot="scope">
-        <table-cell-tag :show="scope.row.settlementStatus===settlementStatusEnum.SETTLED.V" name="已结算" color="#f56c6c"/>
-        <span>{{ scope.$index + 1 }}</span>
-      </template>
-    </el-table-column>
-    <el-table-column v-if="columns.visible('serialNumber')" key="serialNumber" prop="serialNumber" :show-overflow-tooltip="true" label="采购合同编号" align="center">
-      <template v-slot="scope">
-        <span>{{ scope.row.serialNumber }}</span>
-      </template>
-    </el-table-column>
-    <el-table-column v-if="columns.visible('createTime')" key="createTime" prop="createTime" :show-overflow-tooltip="true" label="签订日期" align="center" width="80">
-      <template v-slot="scope">
-        <div>{{ scope.row.createTime? parseTime(scope.row.createTime,'{y}-{m}-{d}'):'-' }}</div>
-      </template>
-    </el-table-column>
-    <el-table-column v-if="columns.visible('supplierName')" key="supplierName" prop="supplierName" label="供应商" align="center">
-      <template v-slot="scope">
-        <div>{{ scope.row.supplierName? scope.row.supplierName: '-' }}</div>
-      </template>
-    </el-table-column>
-    <el-table-column v-if="columns.visible('basicClass')" key="basicClass" prop="basicClass" :show-overflow-tooltip="true" label="种类" align="center">
-      <template v-slot="scope">
-        <div>{{ scope.row.basicClass?EO.getBits(matClsEnum.ENUM, scope.row.basicClass, 'L').join('|'):'' }}</div>
-      </template>
-    </el-table-column>
-    <el-table-column v-if="columns.visible('amount')" key="amount" prop="amount" label="合同额" align="center">
-      <template v-slot="scope">
-        <span>{{ scope.row.amount? toThousand(scope.row.amount): '-' }}</span>
-      </template>
-    </el-table-column>
-    <el-table-column v-if="columns.visible('settlementAmount')" key="settlementAmount" prop="settlementAmount"  :show-overflow-tooltip="true" label="结算额" align="center">
-      <template v-slot="scope">
-        <span style="margin-right:10px;" @click="openSettleAudit(scope.row,'detail')">{{ scope.row.settlementAmount? toThousand(scope.row.settlementAmount): '-' }}</span>
-        <span @click="openSettleAudit(scope.row,'audit')" style="cursor:pointer;" v-if="checkPermission(crud.permission.settleAudit) && scope.row.unCheckSettlementCount>0">
-          <el-badge :value="1" :max="99" :hidden="scope.row.unCheckSettlementCount < 1">
-            <svg-icon icon-class="notify"  style="color:#e6a23c;font-size:15px;"/>
-          </el-badge>
-        </span>
-      </template>
-    </el-table-column>
-    <el-table-column v-if="columns.visible('inboundAmount')" key="inboundAmount" prop="inboundAmount" label="入库额" align="center">
-      <template v-slot="scope">
-        <span @click="openStockAmount(scope.row)">{{ scope.row.inboundAmount? toThousand(scope.row.inboundAmount): '-' }}</span>
-      </template>
-    </el-table-column>
-    <el-table-column v-if="columns.visible('paymentAmount')" key="paymentAmount" prop="paymentAmount" label="付款额" align="center">
-      <template v-if="checkPermission(crud.permission.payment.get)" #header>
+      ref="tableRef"
+      v-loading="crud.loading"
+      :data-format="dataFormat"
+      :data="crud.data"
+      style="width: 100%"
+      :max-height="maxHeight"
+    >
+      <el-table-column label="序号" type="index" align="center" width="60" />
+      <el-table-column prop="supplierName" label="供应商" align="center" show-overflow-tooltip min-width="140" />
+      <el-table-column prop="typeText" label="类型" align="center" show-overflow-tooltip min-width="120" />
+      <el-table-column prop="date" label="筛选日期" align="center" show-overflow-tooltip width="180">
+        <template #default>
+          <span>{{parseTime(crud.query.startDate,'{y}-{m}-{d}')}}~{{parseTime(crud.query.endDate,'{y}-{m}-{d}')}}</span>
+        </template>
+      </el-table-column>
+      <el-table-column prop="inboundAmount" key="inboundAmount" label="累计入库额" align="right" min-width="120" show-overflow-tooltip>
+        <template v-if="checkPermission(permission.detail)" #header>
           <el-tooltip
             effect="light"
             placement="top"
             content="点击行可以查看详情"
           >
             <div style="display: inline-block">
-              <span>付款额 </span>
+              <span>累计入库额 </span>
               <i class="el-icon-info" />
             </div>
           </el-tooltip>
         </template>
-      <template v-slot="scope">
-        <span style="cursor:pointer;margin-right:10px;" @click="openTab(scope.row,'payment')">{{ scope.row.paymentAmount? toThousand(scope.row.paymentAmount): '-' }}</span>
-        <span @click="openPaymentAudit(scope.row)" style="cursor:pointer;" v-if="checkPermission(crud.permission.payment.audit) && scope.row.unCheckPaymentCount>0">
-          <el-badge :value="scope.row.unCheckPaymentCount" :max="99" :hidden="scope.row.unCheckPaymentCount < 1">
-            <svg-icon icon-class="notify"  style="color:#e6a23c;font-size:15px;"/>
-          </el-badge>
-        </span>
+        <template #default="{ row }">
+          <div type="warning" class="clickable" @click.stop="openRecord(row, 'inbound')">{{ row.inboundAmount }}</div>
+        </template>
+      </el-table-column>
+       <el-table-column prop="paymentAmount" key="paymentAmount" label="累计已付款" align="right" min-width="120" show-overflow-tooltip>
+        <template v-if="checkPermission(permission.detail)" #header>
+          <el-tooltip
+            effect="light"
+            placement="top"
+            content="点击行可以查看详情"
+          >
+            <div style="display: inline-block">
+              <span>累计已付款 </span>
+              <i class="el-icon-info" />
+            </div>
+          </el-tooltip>
+        </template>
+        <template #default="{ row }">
+          <div type="warning" class="clickable" @click.stop="openRecord(row, 'payment')">{{ row.paymentAmount }}</div>
+        </template>
+      </el-table-column>
+      <el-table-column prop="paymentRate" label="付款比例" align="center" show-overflow-tooltip min-width="80">
+        <template #default="{ row }">
+          <span>{{ row.paymentRate }}%</span>
+        </template>
+      </el-table-column>
+      <el-table-column prop="invoiceAmount" key="invoiceAmount" label="累计已收票" align="right" min-width="120" show-overflow-tooltip>
+        <template v-if="checkPermission(permission.detail)" #header>
+          <el-tooltip
+            effect="light"
+            placement="top"
+            content="点击行可以查看详情"
+          >
+            <div style="display: inline-block">
+              <span>累计已收票 </span>
+              <i class="el-icon-info" />
+            </div>
+          </el-tooltip>
+        </template>
+        <template #default="{ row }">
+          <div type="warning" class="clickable" @click.stop="openRecord(row, 'invoice')">{{ row.invoiceAmount }}</div>
+        </template>
+      </el-table-column>
+      <el-table-column prop="invoiceRate" label="收票比例" align="center" show-overflow-tooltip min-width="80">
+        <template #default="{ row }">
+          <span>{{ row.invoiceRate }}%</span>
+        </template>
+      </el-table-column>
+      <!--付款和收票-->
+      <el-table-column
+        label="操作"
+        width="120px"
+        align="center"
+      >
+        <template #default="{ row }">
+          <common-button type="success" icon="el-icon-money" size="mini" @click="openApplication(row)" />
+          <common-button type="primary" icon="el-icon-tickets" size="mini" @click="openSettle(row)" />
+        </template>
+      </el-table-column>
+    </common-table>
+    <!--分页组件-->
+    <pagination />
+    <!-- 记录 -->
+    <component :is="currentView" v-model="recordVisible" :permission="permission" :detail-info="detailInfo" :query-date="{startDate:crud.query.startDate,endDate:crud.query.endDate}" />
+    <common-drawer
+      ref="drawerRef"
+      :show-close="true"
+      size="80%"
+      title="付款申请登记"
+      append-to-body
+      v-model="applicationVisible"
+      :close-on-click-modal="false"
+    >
+      <template #content>
+        <paymentApplication :visibleValue="applicationVisible" :detail-info="detailInfo"/>
       </template>
-    </el-table-column>
-    <el-table-column v-if="columns.visible('paymentAmountRate')" key="paymentAmountRate" prop="paymentAmountRate" label="付款比例" align="center">
-      <template v-slot="scope">
-        <div>{{ scope.row.inboundAmount? ((scope.row.paymentAmount/scope.row.inboundAmount)*100).toFixed(2)+'%': '0.00%' }}</div>
-      </template>
-    </el-table-column>
-    <el-table-column v-if="columns.visible('invoiceAmount')" key="invoiceAmount" prop="invoiceAmount" label="收票额" align="center">
-      <template v-if="checkPermission(crud.permission.invoice.get)" #header>
-        <el-tooltip
-          effect="light"
-          placement="top"
-          content="点击行可以查看详情"
-        >
-          <div style="display: inline-block">
-            <span>收票额 </span>
-            <i class="el-icon-info" />
-          </div>
-        </el-tooltip>
-      </template>
-      <template v-slot="scope">
-        <div @click="openTab(scope.row,'invoice')" style="cursor:pointer;">
-          <span style="cursor:pointer;margin-right:10px;">{{ scope.row.invoiceAmount? toThousand(scope.row.invoiceAmount): '-' }}</span>
-          <template v-if="checkPermission(crud.permission.invoice.audit) && scope.row.unCheckInvoiceCount>0">
-            <el-badge :value="scope.row.unCheckInvoiceCount" :max="99" :hidden="scope.row.unCheckInvoiceCount < 1">
-              <svg-icon icon-class="notify"  style="color:#e6a23c;font-size:15px;"/>
-            </el-badge>
-          </template>
-        </div>
-      </template>
-    </el-table-column>
-    <el-table-column v-if="columns.visible('invoiceRate')" key="invoiceRate" prop="invoiceRate" label="收票比例" align="center">
-      <template v-slot="scope">
-        <div>{{ scope.row.inboundAmount? ((scope.row.invoiceAmount/scope.row.inboundAmount)*100).toFixed(2)+'%': '0.00%'  }}</div>
-      </template>
-    </el-table-column>
-    <!-- <el-table-column v-if="columns.visible('purchaseStatus')" key="purchaseStatus" prop="purchaseStatus" label="订单状态" align="center" width="80px">
-      <template v-slot="scope">
-        <el-tag :type="scope.row.purchaseStatus===purchaseOrderStatusEnum.COMPLETE.V?'success':'warning'" effect="plain">{{ isNotBlank(scope.row.purchaseStatus)? purchaseOrderStatusEnum.VL[scope.row.purchaseStatus]:'-' }}</el-tag>
-      </template>
-    </el-table-column> -->
-    <el-table-column v-if="columns.visible('settlementStatus')" key="settlementStatus" prop="settlementStatus" label="结算状态" align="center" width="80px">
-      <template v-slot="scope">
-        <el-tag v-if="isNotBlank(scope.row.settlementStatus)" :type="scope.row.settlementStatus===settlementStatusEnum.SETTLED.V?'success':'warning'" effect="plain">{{ settlementStatusEnum.VL[scope.row.settlementStatus] }}</el-tag>
-        <span v-else>-</span>
-      </template>
-    </el-table-column>
-  </common-table>
-  <!-- 入库记录 -->
-  <inboundRecord v-model="stockVisible" :detail-info="currentRow" :permission="permission.inbound"/>
-  <paymentAudit v-model="auditVisible" :currentRow="currentRow" :propertyType="crud.query.propertyType" @success="crud.toQuery"/>
-  <!-- 收付款 -->
-  <paymentAndInvoice v-model="tabVisible" :currentRow="currentRow" :tabName="activeName" :propertyType="crud.query.propertyType" @success="crud.toQuery" :permission="permission"/>
-  <!-- 结算审核 -->
-  <settleForm v-model="settleVisible" :detail-info="currentRow" :showType="showType" @success="crud.toQuery"/>
-  <!--分页组件-->
-  <pagination />
+    </common-drawer>
   </div>
 </template>
 
 <script setup>
-import crudApi from '@/api/contract/supplier-manage/material-manage'
-import { ref } from 'vue'
-import { contractSupplierMaterialPM as permission } from '@/page-permission/contract'
+import crudApi from '@/api/contract/supplier-manage/jd-material-manage'
+import { ref, provide, computed, nextTick } from 'vue'
+
+import { parseTime } from '@/utils/date'
+import { supplierMaterialPaymentPM as permission } from '@/page-permission/supply-chain'
 import checkPermission from '@/utils/system/check-permission'
+import { matClsEnum } from '@/utils/enum/modules/classification'
+import EO from '@enum'
+
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import pagination from '@crud/Pagination'
 import mHeader from './module/header'
-import { settlementStatusEnum } from '@enum-ms/finance'
-import inboundRecord from '@/views/supply-chain/purchase-reconciliation-manage/payment-ledger/module/inbound-record'
-import paymentAndInvoice from './module/payment-and-invoice'
-import { parseTime } from '@/utils/date'
-import { toThousand } from '@data-type/number'
-import { isNotBlank } from '@data-type/index'
-import { matClsEnum } from '@/utils/enum/modules/classification'
-import EO from '@enum'
-import paymentAudit from './module/payment-audit/index'
-import settleForm from '@/views/supply-chain/purchase-reconciliation-manage/payment-ledger/module/settle-form'
-import tableCellTag from '@comp-common/table-cell-tag/index.vue'
+import inboundRecord from './module/inbound-record'
+import invoiceRecord from './module/invoice-record'
+import paymentRecord from './module/payment-record'
+import paymentApplication from './module/payment-application/index'
+// import tableCellTag from '@comp-common/table-cell-tag/index.vue'
 
 const optShow = {
   add: false,
@@ -169,114 +139,82 @@ const optShow = {
   download: false
 }
 
-const tableRef = ref()
-const stockVisible = ref(false)
-const tabVisible = ref(false)
-const auditVisible = ref(false)
-const settleVisible = ref(false)
-const currentRow = ref({})
-const activeName = ref('payment')
-const showType = ref('audit')
+const currentView = computed(() => {
+  if (recordType.value === 'inbound') {
+    return inboundRecord
+  } else if (recordType.value === 'invoice') {
+    return invoiceRecord
+  }
+  return paymentRecord
+})
 
-const { CRUD, crud, columns } = useCRUD(
+const tableRef = ref()
+const headerRef = ref()
+const applicationVisible = ref(false)
+
+const dataFormat = ref([
+  ['createTime', 'parse-time'],
+  ['paymentRate', ['to-fixed', 2]],
+  ['invoiceRate', ['to-fixed', 2]],
+  ['amount', 'to-thousand'],
+  ['inboundAmount', 'to-thousand'],
+  ['paymentAmount', 'to-thousand'],
+  ['invoiceAmount', 'to-thousand']
+])
+
+const { crud, CRUD } = useCRUD(
   {
-    title: '原材料',
+    title: '付款台账',
     sort: [],
     permission: { ...permission },
-    optShow: { ...optShow },
     crudApi: { ...crudApi },
-    hasPagination: true
+    invisibleColumns: [],
+    optShow: { ...optShow }
   },
   tableRef
 )
-const { maxHeight } = useMaxHeight({
-  wrapperBox: '.materialManage',
-  paginate: true,
-  extraHeight: 40
-})
 
-function openStockAmount(row) {
-  if (!checkPermission(permission.inbound.get)) {
-    return
-  }
-  currentRow.value = row
-  stockVisible.value = true
+const { maxHeight } = useMaxHeight({ paginate: true })
+
+const detailInfo = ref({})
+const supplierId = ref(undefined)
+const recordType = ref('')
+const recordVisible = ref(false)
+
+provide('supplierId', supplierId)
+
+// 刷新数据后
+CRUD.HOOK.handleRefresh = (crud, { data }) => {
+  data.content.forEach(v => {
+    const basicClassArr = EO.getBits(matClsEnum.ENUM, v.supplierClassification, 'L')
+    v.typeText = basicClassArr.join(' | ')
+    // 付款比例
+    v.paymentRate = v.inboundAmount ? (v.paymentAmount || 0) / (v.amount || 0) * 100 : 0
+    // 收票比例
+    v.invoiceRate = v.inboundAmount ? (v.invoiceAmount || 0) / (v.amount || 0) * 100 : 0
+  })
 }
 
-function openTab(row, name) {
-  if (!checkPermission(permission[name].get)) {
-    return
-  }
-  activeName.value = name
-  currentRow.value = row
-  tabVisible.value = true
+function openApplication(row) {
+  detailInfo.value = row.sourceRow
+  supplierId.value = row.supplierId
+  applicationVisible.value = true
 }
 
-function openPaymentAudit(row) {
-  if (!checkPermission(permission.payment.get)) {
-    return
-  }
-  currentRow.value = row
-  auditVisible.value = true
-}
-
-function openSettleAudit(row, type) {
-  if (type === 'detail') {
-    if (!row.settlementAmount || !checkPermission(permission.settleDetail)) {
-      return
-    }
-  } else {
-    if (!checkPermission(permission.settleAudit)) {
-      return
-    }
-  }
-  showType.value = type
-  currentRow.value = row
-  settleVisible.value = true
-}
-
-CRUD.HOOK.beforeRefresh = () => {
-  if (crud.query.createTime?.length > 0) {
-    crud.query.startDate = crud.query.createTime[0]
-    crud.query.endDate = crud.query.createTime[1]
-  } else {
-    crud.query.startDate = undefined
-    crud.query.endDate = undefined
-  }
+// 打开记录
+function openRecord(row, type) {
+  if (!checkPermission(permission.detail)) return
+  detailInfo.value = row
+  recordType.value = type
+  supplierId.value = row.supplierId
+  nextTick(() => {
+    recordVisible.value = true
+  })
 }
 </script>
-
 <style lang="scss" scoped>
-::v-deep(.abnormal-row) {
-  background: #e8f4ff;
-}
-::v-deep(.hidden-select) {
-  td:nth-child(1){
-    .cell{
-      opacity:0;
-    }
-  }
-}
-$font-size: 1.5em;
-.child {
-  width: $font-size;
-  height: $font-size;
-  display: inline-block;
-  border: 1px solid;
-  border-radius: 50%;
-  line-height: $font-size;
-}
-::v-deep(.el-table .cell){
-  padding-left:2px;
-  padding-right:2px;
-}
-::v-deep(.el-tag--small){
-  padding:0 3px;
-}
-::v-deep(.el-badge__content.is-fixed){
-  top:5px;
-  padding:0 3px;
-  line-height:12px;
-  height:14px;
+.clickable {
+  cursor: pointer;
+  color:#409eff;
 }
 </style>

@@ -21,7 +21,7 @@
 import { ref, defineProps, defineEmits, watch } from 'vue'
 import { getBranchCompanyAllSimple as getAll } from '@/api/contract/project'
 
-const emit = defineEmits(['update:modelValue', 'change'])
+const emit = defineEmits(['update:modelValue', 'change', 'companyChange'])
 const props = defineProps({
   modelValue: {
     type: [Number, String],
@@ -80,6 +80,8 @@ watch(
 function selectChange(val) {
   emit('update:modelValue', val)
   emit('change', val)
+  const filterVal = options.value.find(v => v.id === val) || {}
+  emit('companyChange', filterVal)
 }
 
 fetch()
@@ -99,6 +101,9 @@ async function fetch() {
   } finally {
     options.value = _options
     loading.value = false
+    if (selectValue.value) {
+      selectChange(selectValue.value)
+    }
   }
 }
 </script>

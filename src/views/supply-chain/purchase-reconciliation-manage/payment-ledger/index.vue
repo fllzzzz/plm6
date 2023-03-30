@@ -138,7 +138,7 @@ const dataFormat = ref([
 
 const { crud, CRUD } = useCRUD(
   {
-    title: '付款台账',
+    title: '采购台账',
     sort: [],
     permission: { ...permission },
     crudApi: { ...crudApi },

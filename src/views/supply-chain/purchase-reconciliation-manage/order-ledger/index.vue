@@ -77,7 +77,7 @@ const dataFormat = ref([
 
 const { crud, columns } = useCRUD(
   {
-    title: '付款台账',
+    title: '订单查询',
     sort: [],
     permission: { ...permission },
     crudApi: { ...crudApi },

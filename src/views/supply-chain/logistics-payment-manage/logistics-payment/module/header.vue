@@ -4,15 +4,15 @@
       <template #optLeft>
         <div v-show="crud.searchToggle">
           <el-date-picker
-            v-model="query.year"
-            type="year"
+            v-model="query.date"
+            type="daterange"
+            range-separator=":"
             size="small"
-            class="date-item filter-item"
-            style="width:100px!important"
-            placeholder="选择年"
-            format="YYYY"
-            value-format="YYYY"
-            @change="crud.toQuery"
+            class="filter-item date-item"
+            start-placeholder="开始时间"
+            end-placeholder="结束时间"
+            style="width: 240px"
+            @change="handleDateChange"
           />
           <el-input
             v-model="query.supplierName"
@@ -36,9 +36,23 @@ import crudOperation from '@crud/CRUD.operation'
 import rrOperation from '@crud/RR.operation'
 
 const defaultQuery = {
-  year: String(new Date().getFullYear()),
+  date: [],
+  startDate: undefined,
+  endDate: undefined,
   supplierName: undefined
 }
 const { crud, query } = regHeader(defaultQuery)
+
+// 时间变动
+function handleDateChange(val) {
+  if (query.value.date && query.value.date.length > 1) {
+    query.value.startDate = val[0]
+    query.value.endDate = val[1]
+  } else {
+    query.value.startDate = undefined
+    query.value.endDate = undefined
+  }
+  crud.toQuery()
+}
 
 </script>

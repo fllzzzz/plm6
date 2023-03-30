@@ -92,7 +92,7 @@ export default {
       name: 'SupplyChainLogisticsPayment',
       alwaysShow: false,
       redirect: '/supply-chain/logistics-record',
-      meta: { title: '物流对账管理', icon: 'contract', noCache: true },
+      meta: { title: '物流台账', icon: 'contract', noCache: true },
       children: [
         {
           name: 'logisticsRecord',
@@ -106,7 +106,7 @@ export default {
           path: 'logistics-payment',
           hidden: false,
           component: '/supply-chain/logistics-payment-manage/logistics-payment/index',
-          meta: { title: '付款明细', icon: 'project', noCache: true }
+          meta: { title: '原材料物流', icon: 'project', noCache: true }
         }
       ]
     },
