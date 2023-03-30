@@ -195,7 +195,7 @@ const fillableWarehouse = ref(true)
 // 显示物流信息
 const fillableLogistics = computed(() => order.value.logisticsPayerType === logisticsPayerEnum.DEMAND.V && fillableAmount.value)
 // 是否“甲供”
-const boolPartyA = computed(() => order.value.supplyType === orderSupplyTypeEnum.PARTY_A.V)
+const boolPartyA = computed(() => order.value?.supplyType === orderSupplyTypeEnum.PARTY_A.V)
 // 在列中显示次要信息
 const showTableColumnSecondary = computed(() => {
   // 非甲供订单，显示项目和申购单 或者仓库时

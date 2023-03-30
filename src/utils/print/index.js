@@ -142,9 +142,9 @@ async function printPackageLabel({ packageInfo, qrCode, printMode = PrintMode.QU
           </div>
         </div>
         <div class="flex">
-          <div class="row-0 w-1 col border-r">编号</div>
+          <div class="row-0 col border-r" style="flex:1;" >编号</div>
           <div class="row-0 w-1 col border-r">材质</div>
-          <div class="row-0 w-1 col border-r">数量</div>
+          <div class="row-0 col border-r" style="width:10mm;">数量</div>
           <div class="row-0 w-1 col">重量(kg)</div>
         </div>
       </div>
@@ -177,10 +177,10 @@ async function printPackageLabel({ packageInfo, qrCode, printMode = PrintMode.QU
     const item = packageInfo.list[x]
     bodyHtml += `
     <div class="flex">
-      <div class="row-0 w-1 col border-b border-r">${item.serialNumber}</div>
-      <div class="row-0 w-1 col border-b border-r">${item.material}</div>
-      <div class="row-0 w-1 col border-b border-r">${item.quantity}</div>
-      <div class="row-0 w-1 col border-b">${item.totalWeight}</div>
+      <div class="row-0 col border-b border-r" style="flex:1;">${item.serialNumber}</div>
+      <div class="row-0 col w-1 border-b border-r">${item.material}</div>
+      <div class="row-0 col border-b border-r" style="width:10mm;">${item.quantity}</div>
+      <div class="row-0 col w-1 border-b">${item.totalWeight}</div>
     </div>
   `
   }
