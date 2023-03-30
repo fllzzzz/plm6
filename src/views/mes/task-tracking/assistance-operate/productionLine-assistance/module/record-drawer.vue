@@ -44,19 +44,13 @@
               label="单体"
               width="100px"
             />
-            <el-table-column prop="quantity" :show-overflow-tooltip="true" label="协同数（件）" width="100px" align="center">
+            <el-table-column prop="quantity" :show-overflow-tooltip="true" label="协同数（件/kg）" width="120px" align="center">
               <template #default="{ row }">
-                <span>{{ row.quantity }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column prop="totalNetWeight" :show-overflow-tooltip="true" label="总净重（kg）" width="100px" align="center">
-              <template #default="{ row }">
-                <span>{{ row.totalNetWeight }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column prop="totalGrossWeight" :show-overflow-tooltip="true" label="总毛重（kg）" width="100px" align="center">
-              <template #default="{ row }">
-                <span>{{ row.totalGrossWeight }}</span>
+                <span>{{
+                  weightStatus === weightTypeEnum.NET.V
+                    ? row.quantity + '/' + row.totalNetWeight
+                    : row.quantity + '/' + row.totalGrossWeight
+                }}</span>
               </template>
             </el-table-column>
             <el-table-column
@@ -146,7 +140,7 @@
 <script setup>
 import { record, recordDetail } from '@/api/mes/task-tracking/assistance-operate/productionLine-assistance'
 import { defineProps, defineEmits, ref } from 'vue'
-
+import { weightTypeEnum } from '@enum-ms/common'
 import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'
 import usePagination from '@compos/use-pagination'
@@ -158,6 +152,9 @@ const props = defineProps({
   visible: {
     type: Boolean,
     default: false
+  },
+  weightStatus: {
+    type: Number
   }
 })
 

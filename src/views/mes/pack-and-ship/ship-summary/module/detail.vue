@@ -35,22 +35,55 @@
               : 'mesShipTrainMeteDetail'
           "
           :params="{
-            ...query,
+            projectId: props.projectId,
+            ...props.query,
+            workshopId: props.workshopId,
+            shipEnumType:
+              showType === 'INVENTORY'
+                ? projectSearchTypeEnum.INVENTORY.V
+                : showType === 'ASSIGNMENT'
+                ? projectSearchTypeEnum.ASSIGNMENT.V
+                : showType === 'STORAGE'
+                ? projectSearchTypeEnum.STORAGE.V
+                : showType === 'CUMULATIVE_SHIPMENT'
+                ? projectSearchTypeEnum.CUMULATIVE_SHIPMENT.V
+                : showType === 'SHIPMENT_MONTH'
+                ? projectSearchTypeEnum.SHIPMENT_MONTH.V
+                : showType === 'IN_STOCK'
+                ? projectSearchTypeEnum.IN_STOCK.V
+                : projectSearchTypeEnum.ACCUMULATED_NUMBER.V,
           }"
           size="mini"
           type="warning"
         />
       </div>
     </div>
-    <common-table :data="list" v-loading="tableLoading" :max-height="props.maxHeight">
+    <common-table :data="list" v-loading="tableLoading" :show-empty-symbol="false" :max-height="maxHeight - 30">
       <el-table-column prop="index" label="序号" align="center" width="45" type="index" />
-      <el-table-column key="monomerName" prop="monomerName" label="单体" align="center" :show-overflow-tooltip="true" />
-      <el-table-column key="areaName" prop="areaName" label="区域" align="center" :show-overflow-tooltip="true" />
+      <el-table-column
+        v-if="showType !== 'INVENTORY'"
+        key="workshop.name"
+        prop="workshop.name"
+        label="车间"
+        align="center"
+        :show-overflow-tooltip="true"
+      />
+      <el-table-column key="monomer.name" prop="monomer.name" label="单体" align="center" :show-overflow-tooltip="true" min-width="100px" />
+      <el-table-column key="area.name" prop="area.name" label="区域" align="center" :show-overflow-tooltip="true" min-width="100px" />
       <el-table-column key="serialNumber" prop="serialNumber" label="编号" align="center" :show-overflow-tooltip="true" />
-      <el-table-column key="specification" prop="specification" label="规格" align="center" :show-overflow-tooltip="true" />
+      <el-table-column key="specification" prop="specification" label="规格" align="center" :show-overflow-tooltip="true" min-width="120px" />
       <el-table-column key="material" prop="material" label="材质" align="center" :show-overflow-tooltip="true" />
-      <el-table-column key="quantity" prop="quantity" label="数量" align="center" :show-overflow-tooltip="true" />
-      <el-table-column key="totalNetWeight" prop="totalNetWeight" label="总重（kg）" align="center" :show-overflow-tooltip="true" />
+      <el-table-column key="quantity" prop="quantity" label="数量" align="center" :show-overflow-tooltip="true" width="80px" />
+      <el-table-column key="netWeight" prop="netWeight" label="单重（kg）" align="center" :show-overflow-tooltip="true">
+        <template #default="{ row }">
+          <span>{{ weightStatus === weightTypeEnum.NET.V ? row.netWeight || '-' : row.grossWeight || '-' }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column key="totalNetWeight" prop="totalNetWeight" label="总重（kg）" align="center" :show-overflow-tooltip="true">
+        <template #default="{ row }">
+          <span>{{ weightStatus === weightTypeEnum.NET.V ? row.totalNetWeight || '-' : row.totalGrossNetWeight || '-' }}</span>
+        </template>
+      </el-table-column>
     </common-table>
     <!--分页组件-->
     <el-pagination
@@ -68,11 +101,14 @@
 import { ref, defineProps, watch } from 'vue'
 import { summaryDetail } from '@/api/mes/pack-and-ship/ship-summary'
 import { projectSearchTypeEnum } from '@enum-ms/mes'
+import { weightTypeEnum } from '@enum-ms/common'
+import useMaxHeight from '@compos/use-max-height'
 import usePagination from '@compos/use-pagination'
 
 const props = defineProps({
-  maxHeight: {
-    type: String
+  modelValue: {
+    type: Boolean,
+    default: false
   },
   showType: {
     type: String
@@ -85,12 +121,16 @@ const props = defineProps({
   },
   projectId: {
     type: Number
+  },
+  weightStatus: {
+    type: Number
   }
 })
 
 const list = ref([])
 const tableLoading = ref(false)
 
+const { maxHeight } = useMaxHeight({ extraBox: ['.head-container'], wrapperBox: ['.detail-container'], paginate: true })
 const { handleSizeChange, handleCurrentChange, total, setTotalPage, queryPage } = usePagination({ fetchHook: fetchDetail })
 
 watch(
@@ -99,8 +139,10 @@ watch(
     if (val) {
       fetchDetail()
     }
-  }, { immediate: true }
+  },
+  { immediate: true, deep: true }
 )
+
 async function fetchDetail() {
   list.value = []
   if (!props.showType) {

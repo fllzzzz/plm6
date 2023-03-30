@@ -95,7 +95,7 @@ const mesShipMeteDetail = {
     verticleAlign: verticleAlignEnum.CENTER.V,
     size: 10,
     bold: 'bold',
-    height: 36,
+    height: 12,
     width: 190,
     emptyVal: '',
     /**
@@ -110,9 +110,10 @@ const mesShipMeteDetail = {
      * @param {*} format 格式转换
      */
     fields: [ // 字段内容
+      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'projectName', title: '项目名称：', align: alignEnum.LEFT.V, width: 190, type: typeEnum.OTHER.K },
       { show: true, source: dataSourceEnum.SYSTEM.V, key: 'year', title: '统计日期：', width: 100, type: typeEnum.OTHER.K },
-      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'printDate', title: '打印时间：', width: 55, type: typeEnum.DATE.K, format: 'YY/MM/DD kk:mm:ss' },
-      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'printer', title: '打印人：', width: 35, type: typeEnum.USER_NAME.K }
+      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'printDate', title: '打印时间：', width: 40, type: typeEnum.DATE.K, format: 'YY/MM/DD kk:mm:ss' },
+      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'printer', title: '打印人：', align: alignEnum.RIGHT.V, width: 40, type: typeEnum.USER_NAME.K }
     ]
   },
   /**
@@ -161,9 +162,7 @@ const mesShipMeteDetail = {
      * @param {*} format 格式转换
      */
     fields: [
-      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'userName', title: '发货人：', width: 63, type: typeEnum.USER_NAME.K },
-      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'auditUserName', title: '审核：', width: 63, type: typeEnum.USER_NAME.K },
-      { show: true, source: dataSourceEnum.CUSTOMIZE.V, key: 'approver', title: '签收：', width: 63 }
+
     ]
   },
   table: {
@@ -195,7 +194,7 @@ const mesShipMeteDetail = {
      * @param {boolean} show 是否显示
      * @param {string} title 合计名称
      */
-    summary: { show: true, title: '合计' },
+    summary: { show: false, title: '合计' },
     /**
      * 表格列
      * @param {boolean} show 是否显示
@@ -215,8 +214,11 @@ const mesShipMeteDetail = {
       { show: true, key: 'serialNumber', title: '编号', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 19, type: typeEnum.SERIAL_NUMBER.K },
       { show: true, key: 'specification', title: '规格', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 18, type: typeEnum.SPECIFICATION.K },
       { show: true, key: 'material', title: '材质', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.MATERIAL.K },
-      { show: true, key: 'shipQuantity', title: '数量', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 14, type: typeEnum.QUANTITY.K, format: { toThousand: false, precision: 0 }},
-      { show: true, key: 'totalNetWeight', title: '总重（kg）', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.WEIGHT.K, format: { toThousand: false, precision: DEF_UNIT.WEIGHT_DP, unit: weightUnitEnum.KG.V }}
+      { show: true, key: 'quantity', title: '数量', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 14, type: typeEnum.QUANTITY.K, format: { toThousand: false, precision: 0 }},
+      { show: true, key: 'netWeight', title: '单净重（kg）', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 14, type: typeEnum.WEIGHT.K, format: { toThousand: false, precision: DEF_UNIT.WEIGHT_DP, unit: weightUnitEnum.KG.V }},
+      { show: true, key: 'grossWeight', title: '单毛重（kg）', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 14, type: typeEnum.WEIGHT.K, format: { toThousand: false, precision: DEF_UNIT.WEIGHT_DP, unit: weightUnitEnum.KG.V }},
+      { show: true, key: 'totalNetWeight', title: '总净重（kg）', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 14, type: typeEnum.WEIGHT.K, format: { toThousand: false, precision: DEF_UNIT.WEIGHT_DP, unit: weightUnitEnum.KG.V }},
+      { show: true, key: 'totalGrossNetWeight', title: '总毛重（kg）', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 14, type: typeEnum.WEIGHT.K, format: { toThousand: false, precision: DEF_UNIT.WEIGHT_DP, unit: weightUnitEnum.KG.V }}
     ]
   }
 }

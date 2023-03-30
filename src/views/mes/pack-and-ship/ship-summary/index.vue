@@ -3,7 +3,9 @@
     <!--表格渲染-->
     <div style="display: flex">
       <div style="width: 40%; padding-right: 10px">
-        <mHeader />
+        <div class="head-container">
+          <mHeader />
+        </div>
         <common-table
           ref="tableRef"
           v-loading="crud.loading"
@@ -13,7 +15,7 @@
           @current-change="handleCurrentChange"
           highlight-current-row
           :max-height="maxHeight"
-          style="width: 100%; margin-top: 10px"
+          style="width: 100%;"
           :stripe="false"
           :showEmptySymbol="false"
         >
@@ -88,7 +90,7 @@ const { crud, CRUD } = useCRUD(
   tableRef
 )
 
-const { maxHeight } = useMaxHeight()
+const { maxHeight } = useMaxHeight({ extraBox: ['.head-container'], wrapperBox: ['.app-container'], paginate: false })
 
 CRUD.HOOK.handleRefresh = (crud, { data }) => {
   data.forEach((v) => {

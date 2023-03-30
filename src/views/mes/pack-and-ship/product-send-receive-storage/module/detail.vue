@@ -64,14 +64,11 @@ style="margin-left: 10px"
           >搜索</common-button
         >
         <common-button
-          class="filter-item"
-          size="mini"
-          type="warning"
-          icon="el-icon-refresh-left"
-          @click="
-            query = {},
-            fetchList()
-          "
+class="filter-item"
+size="mini"
+type="warning"
+icon="el-icon-refresh-left"
+@click=";(query = {}), fetchList()"
           >重置</common-button
         >
       </div>
@@ -85,7 +82,12 @@ style="margin-left: 10px"
         v-if="visible"
       >
         <el-table-column label="序号" type="index" align="center" width="60" />
-        <el-table-column key="monomerName" prop="monomerName" label="单体" align="center" show-overflow-tooltip />
+        <el-table-column key="monomerName" prop="monomerName" label="单体" align="center" show-overflow-tooltip>
+          <template #default="{ row }">
+            <table-cell-tag :show="!!row.typeName" :name="row.typeName" :color="row.typeName === '构件' ? '#67C23A' : '#409EFF'" />
+            <span>{{ row.monomer ? row.monomer?.name : '-' }}</span>
+          </template>
+        </el-table-column>
         <el-table-column key="areaName" prop="areaName" label="区域" align="center" show-overflow-tooltip />
         <el-table-column key="serialNumber" prop="serialNumber" label="编号" align="center" show-overflow-tooltip />
         <el-table-column key="specification" prop="specification" label="规格" align="center" show-overflow-tooltip />

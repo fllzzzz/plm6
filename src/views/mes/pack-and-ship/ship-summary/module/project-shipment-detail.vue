@@ -1,6 +1,6 @@
 <template>
   <div class="detail-container">
-    <div style="margin-bottom: 10px; min-height: 28px" class="head-container">
+    <div style="margin-bottom: 10px" class="head-container">
       <div style="float: left">
         <el-tag class="filter-item" style="margin-right: 3px">{{
           `项目:${props.currentRow.project.serialNumber + ' ' + props.currentRow.project.shortName}`
@@ -26,9 +26,15 @@
           style="width: 200px; margin-left: 3px"
         />
       </div>
-    </div>
-    <div>
-      <el-descriptions v-loading="summaryLoading" :data="summaryData" direction="vertical" :column="7" border class="project-summary">
+      <el-descriptions
+        v-loading="summaryLoading"
+        :data="summaryData"
+        direction="vertical"
+        :column="8"
+        size="large"
+        border
+        class="project-summary"
+      >
         <el-descriptions-item align="center" label="清单总量（吨）">
           <span class="tc-primary" style="cursor: pointer" @click="openDetail('INVENTORY')">{{
             props.weightStatus === weightTypeEnum.NET.V ? (summaryData.mete / 1000).toFixed(2) : (summaryData.grossMete / 1000).toFixed(2)
@@ -72,20 +78,29 @@
           }}</span>
         </el-descriptions-item>
         <el-descriptions-item align="center" label="累计车次">
-          <span class="tc-primary" style="cursor: pointer" @click="openDetail('ACCUMULATED_NUMBER')">{{ summaryData.trainNumber }}</span>
+          <!-- <span class="tc-primary" style="cursor: pointer" @click="openDetail('ACCUMULATED_NUMBER')">{{
+            summaryData.trainNumber || 0
+          }}</span> -->
+          <span>{{ summaryData.trainNumber || 0 }}</span>
+        </el-descriptions-item>
+        <el-descriptions-item align="center" label="操作">
+          <!-- <span class="tc-primary" style="cursor: pointer" @click="openDetail('ACCUMULATED_NUMBER')">{{
+            summaryData.trainNumber || 0
+          }}</span> -->
+          <common-button type="primary" icon="el-icon-view" size="mini" @click.stop="showDetail" />
         </el-descriptions-item>
       </el-descriptions>
-      <component
-        :is="showComponent"
-        :showType="showType"
-        v-model="detailVisible"
-        :query="query"
-        :style="`height:${maxHeight}`"
-        :workshopId="props.workshopId"
-        :projectId="props.currentRow.projectId"
-        :weightStatus="props.weightStatus"
-      />
     </div>
+    <component
+      :is="showComponent"
+      :showType="showType"
+      v-model="detailVisible"
+      :query="query"
+      :workshopId="props.workshopId"
+      :projectId="props.currentRow.projectId"
+      :weightStatus="props.weightStatus"
+    />
+    <detail-drawer v-model:visible="drawerVisible" :query="query" :workshopId="props.workshopId" :projectId="props.currentRow.projectId" :detail-data="props.currentRow" />
   </div>
 </template>
 
@@ -93,9 +108,9 @@
 import { ref, defineProps, watch, nextTick, computed } from 'vue'
 import { projectSummary } from '@/api/mes/pack-and-ship/ship-summary'
 import { weightTypeEnum } from '@enum-ms/common'
-import useMaxHeight from '@compos/use-max-height'
 import monomerSelect from '@/components-system/plan/monomer-select'
 import mDetail from './detail.vue'
+import detailDrawer from './detail-drawer.vue'
 
 const props = defineProps({
   currentRow: {
@@ -126,12 +141,11 @@ const summaryLoading = ref(false)
 const summaryData = ref({})
 const showType = ref()
 const detailVisible = ref(false)
+const drawerVisible = ref(false)
 
 const showComponent = computed(() => {
   return mDetail
 })
-
-const { maxHeight } = useMaxHeight({ extraBox: '.head-container', wrapperBox: ['.app-container'] })
 
 watch(
   () => props.currentRow.projectId,
@@ -148,7 +162,8 @@ watch(
   (val) => {
     showType.value = undefined
     fetchSummary()
-  }, { immediate: true, deep: true }
+  },
+  { immediate: true, deep: true }
 )
 
 function getAreaInfo(val) {
@@ -188,4 +203,7 @@ function openDetail(show) {
   })
 }
 
+function showDetail() {
+  drawerVisible.value = true
+}
 </script>

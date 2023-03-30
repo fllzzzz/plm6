@@ -528,7 +528,7 @@ export function mesProjectShipDetail(params) {
 // 发运管理-发运统计-清单总量详情
 export function mesShipMeteDetail(params) {
   return request({
-    url: ``,
+    url: `api/mes/building/cargo/project/detail/type/print`,
     method: 'get',
     params
   })
@@ -537,7 +537,7 @@ export function mesShipMeteDetail(params) {
 // 发运管理-发运统计-任务总量详情
 export function mesShipTaskMeteDetail(params) {
   return request({
-    url: ``,
+    url: `api/mes/building/cargo/project/detail/type/print`,
     method: 'get',
     params
   })
@@ -546,7 +546,7 @@ export function mesShipTaskMeteDetail(params) {
 // 发运管理-发运统计-入库量详情
 export function mesShipInboundMeteDetail(params) {
   return request({
-    url: ``,
+    url: `api/mes/building/cargo/project/detail/type/print`,
     method: 'get',
     params
   })
@@ -555,7 +555,7 @@ export function mesShipInboundMeteDetail(params) {
 // 发运管理-发运统计-累计发运详情
 export function mesShipTotalMeteDetail(params) {
   return request({
-    url: ``,
+    url: `api/mes/building/cargo/project/detail/type/print`,
     method: 'get',
     params
   })
@@ -564,7 +564,7 @@ export function mesShipTotalMeteDetail(params) {
 // 发运管理-发运统计-本月发运发运详情
 export function mesShipMonthMeteDetail(params) {
   return request({
-    url: ``,
+    url: `api/mes/building/cargo/project/detail/type/print`,
     method: 'get',
     params
   })
@@ -573,7 +573,7 @@ export function mesShipMonthMeteDetail(params) {
 // 发运管理-发运统计-库存详情
 export function mesShipStockMeteDetail(params) {
   return request({
-    url: ``,
+    url: `api/mes/building/cargo/project/detail/type/print`,
     method: 'get',
     params
   })
@@ -582,7 +582,7 @@ export function mesShipStockMeteDetail(params) {
 // 发运管理-发运统计-累计车次详情
 export function mesShipTrainMeteDetail(params) {
   return request({
-    url: ``,
+    url: `api/mes/building/cargo/project/detail/type/print`,
     method: 'get',
     params
   })

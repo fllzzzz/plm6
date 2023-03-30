@@ -87,7 +87,7 @@ const mesEndInventoryDetail = {
     verticleAlign: verticleAlignEnum.CENTER.V,
     size: 10,
     bold: 'bold',
-    height: 6,
+    height: 12,
     width: 190,
     emptyVal: '',
     /**
@@ -102,8 +102,10 @@ const mesEndInventoryDetail = {
      * @param {*} format 格式转换
      */
     fields: [ // 字段内容
-      { show: false, source: dataSourceEnum.SYSTEM.V, key: 'printDate', title: '打印时间：', width: 150, type: typeEnum.DATE.K, format: 'YY/MM/DD kk:mm:ss' },
-      { show: false, source: dataSourceEnum.SYSTEM.V, key: 'printer', title: '打印人：', width: 40, type: typeEnum.USER_NAME.K }
+      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'projectName', title: '项目名称：', align: alignEnum.LEFT.V, width: 190, type: typeEnum.OTHER.K },
+      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'dateTime', title: '统计日期：', width: 100, type: typeEnum.OTHER.K },
+      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'printDate', title: '打印时间：', width: 40, type: typeEnum.DATE.K, format: 'YY/MM/DD kk:mm:ss' },
+      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'printer', title: '打印人：', align: alignEnum.RIGHT.V, width: 40, type: typeEnum.USER_NAME.K }
     ]
   },
   /**
@@ -198,6 +200,7 @@ const mesEndInventoryDetail = {
      * @param {boolean} sum 列需要合计
      */
     fields: [
+      { show: true, key: 'typeName', title: '类型', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 10, type: typeEnum.OTHER.K },
       { show: true, key: 'monomer.name', title: '单体', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.MONOMER_NAME.K },
       { show: true, key: 'area.name', title: '区域', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.AREA_NAME.K },
       { show: true, key: 'serialNumber', title: '编号', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 16, type: typeEnum.SERIAL_NUMBER.K },

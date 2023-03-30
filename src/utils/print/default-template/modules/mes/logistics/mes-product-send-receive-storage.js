@@ -103,8 +103,9 @@ const mesProductSendReceiveStorage = {
      * @param {*} format 格式转换
      */
     fields: [ // 字段内容
-      { show: false, source: dataSourceEnum.SYSTEM.V, key: 'printDate', title: '打印时间：', width: 150, type: typeEnum.DATE.K, format: 'YY/MM/DD kk:mm:ss' },
-      { show: false, source: dataSourceEnum.SYSTEM.V, key: 'printer', title: '打印人：', width: 40, type: typeEnum.USER_NAME.K }
+      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'dateTime', title: '统计日期：', width: 100, type: typeEnum.DATE.K, format: 'YY/MM' },
+      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'printDate', title: '打印时间：', width: 50, type: typeEnum.DATE.K, format: 'YY/MM/DD kk:mm:ss' },
+      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'printer', title: '打印人：', width: 40, type: typeEnum.USER_NAME.K }
     ]
   },
   /**

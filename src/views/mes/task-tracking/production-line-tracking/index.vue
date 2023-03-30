@@ -56,34 +56,14 @@
         key="taskQuantity"
         prop="taskQuantity"
         :show-overflow-tooltip="true"
-        label="任务数（件）"
+        label="任务量（件/吨）"
       >
         <template v-slot="scope">
-          <span>{{ scope.row.taskQuantity }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column
-        v-if="columns.visible('taskNetWeight')"
-        align="center"
-        key="taskNetWeight"
-        prop="taskNetWeight"
-        :show-overflow-tooltip="true"
-        label="任务总净重（kg）"
-      >
-        <template v-slot="scope">
-          <span>{{ scope.row.taskNetWeight }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column
-        v-if="columns.visible('taskGrossWeight')"
-        align="center"
-        key="taskGrossWeight"
-        prop="taskGrossWeight"
-        :show-overflow-tooltip="true"
-        label="任务总毛重（kg）"
-      >
-        <template v-slot="scope">
-          <span>{{ scope.row.taskGrossWeight }}</span>
+          <span>{{
+            crud.query.weightStatus === weightTypeEnum.NET.V
+              ? scope.row.taskQuantity + '/' + (scope.row.taskNetWeight / 1000).toFixed(2)
+              : scope.row.taskQuantity + '/' + (scope.row.taskGrossWeight / 1000).toFixed(2)
+          }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -92,34 +72,14 @@
         key="completeQuantity"
         prop="completeQuantity"
         :show-overflow-tooltip="true"
-        label="完成数（件）"
+        label="完成量（件/吨）"
       >
         <template v-slot="scope">
-          <span>{{ scope.row.completeQuantity }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column
-        v-if="columns.visible('completeNetWeight')"
-        align="center"
-        key="completeNetWeight"
-        prop="completeNetWeight"
-        :show-overflow-tooltip="true"
-        label="完成总净重（kg）"
-      >
-        <template v-slot="scope">
-          <span>{{ scope.row.completeNetWeight }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column
-        v-if="columns.visible('completeGrossWeight')"
-        align="center"
-        key="completeGrossWeight"
-        prop="completeGrossWeight"
-        :show-overflow-tooltip="true"
-        label="完成总毛重（kg）"
-      >
-        <template v-slot="scope">
-          <span>{{ scope.row.completeGrossWeight }}</span>
+          <span>{{
+            crud.query.weightStatus === weightTypeEnum.NET.V
+              ? scope.row.completeQuantity + '/' + (scope.row.completeNetWeight / 1000).toFixed(2)
+              : scope.row.completeQuantity + '/' + (scope.row.completeGrossWeight / 1000).toFixed(2)
+          }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -160,6 +120,7 @@ import useCRUD from '@compos/use-crud'
 import { mesProductionLineTrackingPM as permission } from '@/page-permission/mes'
 // import { parseTime } from '@/utils/date'
 import { componentTypeEnum } from '@enum-ms/mes'
+import { weightTypeEnum } from '@enum-ms/common'
 import useMaxHeight from '@compos/use-max-height'
 // import pagination from '@crud/Pagination'
 import mHeader from './module/header.vue'
@@ -197,7 +158,6 @@ const { crud, CRUD, columns } = useCRUD(
     optShow: { ...optShow },
     permission: { ...permission },
     crudApi: { ...crudApi },
-    invisibleColumns: ['taskGrossWeight', 'completeGrossWeight'],
     hasPagination: true
   },
   tableRef

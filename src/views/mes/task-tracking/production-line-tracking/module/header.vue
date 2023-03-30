@@ -10,6 +10,13 @@
           type="enum"
           @change="crud.toQuery"
         />
+         <common-radio-button
+          type="enum"
+          v-model="query.weightStatus"
+          :options="[weightTypeEnum.NET, weightTypeEnum.GROSS]"
+          class="filter-item"
+          @change="crud.toQuery"
+        />
         <el-date-picker
           v-model="query.date"
           type="daterange"
@@ -46,6 +53,7 @@
 import { regHeader } from '@compos/use-crud'
 import moment from 'moment'
 import { componentTypeEnum } from '@enum-ms/mes'
+import { weightTypeEnum } from '@enum-ms/common'
 import { PICKER_OPTIONS_SHORTCUTS } from '@/settings/config'
 import workshopSelect from '@comp-mes/workshop-select'
 import rrOperation from '@crud/RR.operation'
@@ -54,6 +62,7 @@ import crudOperation from '@crud/CRUD.operation'
 const defaultQuery = {
   workShopId: undefined,
   productType: undefined,
+  weightStatus: weightTypeEnum.NET.V,
   date: undefined,
   startTime: moment().subtract(1, 'month').valueOf(),
   endTime: moment().valueOf()

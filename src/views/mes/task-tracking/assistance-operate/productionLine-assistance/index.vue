@@ -3,7 +3,9 @@
     <div class="head-container">
       <mHeader>
         <template #viewLeft>
-          <common-button v-permission="permission.record" size="mini" type="info" icon="el-icon-time" @click="recordVisible = true">协同记录</common-button>
+          <common-button v-permission="permission.record" size="mini" type="info" icon="el-icon-time" @click="recordVisible = true">
+            协同记录
+          </common-button>
         </template>
       </mHeader>
     </div>
@@ -77,35 +79,15 @@
         align="center"
         prop="quantity"
         :show-overflow-tooltip="true"
-        label="未完成数（件）"
+        label="未完成量（件/kg）"
         width="135px"
       >
         <template #default="{ row }">
-          <span>{{ row.quantity || 0 }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column
-        v-if="columns.visible('totalNetWeight')"
-        align="center"
-        prop="totalNetWeight"
-        :show-overflow-tooltip="true"
-        label="总净重（kg）"
-        width="135px"
-      >
-        <template #default="{ row }">
-          <span>{{ row.totalNetWeight || 0 }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column
-        v-if="columns.visible('totalGrossWeight')"
-        align="center"
-        prop="totalGrossWeight"
-        :show-overflow-tooltip="true"
-        label="总毛重（kg）"
-        width="135px"
-      >
-        <template #default="{ row }">
-          <span>{{ row.totalGrossWeight || 0 }}</span>
+          <span>{{
+            crud.query.weightStatus === weightTypeEnum.NET.V
+              ? row.quantity + '/' + row.totalNetWeight
+              : row.quantity + '/' + row.totalGrossWeight
+          }}</span>
         </template>
       </el-table-column>
       <!-- <el-table-column
@@ -149,14 +131,14 @@
     <!--分页组件-->
     <pagination />
     <assistance-drawer v-model:visible="assistanceVisible" :info="itemInfo" @success="crud.toQuery" />
-    <record-drawer v-model:visible="recordVisible"></record-drawer>
+    <record-drawer v-model:visible="recordVisible" :weightStatus="crud.query.weightStatus"></record-drawer>
   </div>
 </template>
 
 <script setup>
 import crudApi from '@/api/mes/task-tracking/assistance-operate/productionLine-assistance'
 import { ref } from 'vue'
-
+import { weightTypeEnum } from '@enum-ms/common'
 import { taskTypeENUM } from '@enum-ms/mes'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
@@ -185,8 +167,7 @@ const { crud, columns, CRUD } = useCRUD(
     sort: [],
     permission: { ...permission },
     optShow: { ...optShow },
-    crudApi: { ...crudApi },
-    invisibleColumns: ['totalGrossWeight']
+    crudApi: { ...crudApi }
   },
   tableRef
 )
