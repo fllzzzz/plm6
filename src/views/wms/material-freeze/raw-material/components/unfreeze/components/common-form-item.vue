@@ -18,7 +18,7 @@
     <span style="margin-left: 10px">{{ material.outboundUnit }}</span>
   </el-form-item>
   <el-form-item :label="`数量(${material.outboundUnit})`" prop="quantity">
-    <div class="flex-rsc" style="width: 100%">
+    <div class="flex-rsc" style="width: 100%" v-if="!record.boolBatten">
       <common-input-number
         v-model="currentForm.quantity"
         :min="0"
@@ -29,6 +29,7 @@
       />
       <span class="text-clickable set-max-text" style="flex: none" @click="setMaxQuantity">全部解冻</span>
     </div>
+    <span v-else>{{ maxQuantity }}</span>
   </el-form-item>
   <el-form-item label="备注" prop="remark">
     <el-input

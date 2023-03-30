@@ -43,14 +43,14 @@
           label="车间名称"
           min-width="140px"
         />
-        <!-- <el-table-column
+        <el-table-column
           v-if="columns.visible('shortName')"
           key="shortName"
           prop="shortName"
           :show-overflow-tooltip="true"
           label="车间简称"
-          min-width="140px"
-        /> -->
+          min-width="100px"
+        />
         <el-table-column
           v-if="columns.visible('boolEnabledEnum')"
           key="boolEnabledEnum"
