@@ -359,6 +359,15 @@ const mainAuxiliaryTypeEnum = {
 }
 constantize(mainAuxiliaryTypeEnum)
 
+// 制成品物流项目类型查询
+const productLProjectStatusEnum = {
+  PROCESS: { L: '进行中', K: 'PROCESS', V: 1 << 0, TAG: '' },
+  SUSPEND: { L: '已暂停', K: 'SUSPEND', V: 1 << 1, TAG: 'danger' },
+  COMPLETE: { L: '已完工未结算', K: 'COMPLETE', V: 1 << 2, TAG: 'warning' },
+  SETTLED: { L: '已结算', K: 'COMPLETE', V: 1 << 3, TAG: 'success' }
+}
+constantize(productLProjectStatusEnum)
+
 export {
   projectStatusEnum, // 项目状态
   projectTypeEnum, // 项目类型
@@ -401,7 +410,8 @@ export {
   gasTypeEnum,
   timeTypeEnum,
   managementSalaryTypeEnum,
-  mainAuxiliaryTypeEnum
+  mainAuxiliaryTypeEnum,
+  productLProjectStatusEnum
 }
 
 export default {
@@ -446,5 +456,6 @@ export default {
   gasTypeEnum, // 气体类型
   timeTypeEnum, // 时间类型
   managementSalaryTypeEnum, // 不同人员类型工资
-  mainAuxiliaryTypeEnum
+  mainAuxiliaryTypeEnum,
+  productLProjectStatusEnum
 }

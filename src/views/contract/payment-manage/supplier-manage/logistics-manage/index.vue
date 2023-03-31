@@ -1,121 +1,147 @@
 <template>
   <div class="app-container">
     <!--工具栏-->
-    <div class="head-container">
-      <mHeader/>
-    </div>
-    <!--表格渲染-->
+    <mHeader ref="headerRef" />
+    <!-- 汇总列表 -->
     <common-table
-    ref="tableRef"
-    v-loading="crud.loading"
-    :data="crud.data"
-    :empty-text="crud.emptyText"
-    :max-height="maxHeight"
-    return-source-data
-    :showEmptySymbol="false"
-    style="width: 100%"
-  >
-    <el-table-column prop="index" label="序号" align="center" width="50" type="index" fixed="left"/>
-    <el-table-column v-if="columns.visible('supplierName')" key="supplierName" prop="supplierName" :show-overflow-tooltip="true" label="物流单位" align="center" min-width="140">
-      <template v-slot="scope">
-        <span @click="openStockAmount(scope.row)" style="cursor:pointer;">{{ scope.row.supplierName }}</span>
-      </template>
-    </el-table-column>
-    <el-table-column v-if="columns.visible('branchCompanyName')" key="branchCompanyName" prop="branchCompanyName" :show-overflow-tooltip="true" label="签约主体" align="center" min-width="140">
-      <template v-slot="scope">
-        <span>{{ scope.row.branchCompanyName }}</span>
-      </template>
-    </el-table-column>
-    <el-table-column v-if="columns.visible('freight')" key="freight" prop="freight" label="运输额" align="center" min-width="100">
-      <template v-slot="scope">
-        <span @click="openStockAmount(scope.row)" style="cursor:pointer;">{{ isNotBlank(scope.row.freight)? toThousand(scope.row.freight): 0 }}</span>
-      </template>
-    </el-table-column>
-    <el-table-column v-if="columns.visible('paymentAmount')" key="paymentAmount" prop="paymentAmount" label="付款额" align="center" min-width="100">
-      <template v-if="checkPermission(permission.invoice.get)" #header>
-        <el-tooltip
-          effect="light"
-          placement="top"
-          content="点击行可以查看详情"
-        >
-          <div style="display: inline-block">
-            <span>付款额 </span>
-            <i class="el-icon-info" />
-          </div>
-        </el-tooltip>
-      </template>
-      <template v-slot="scope">
-        <span style="cursor:pointer;margin-right:10px;" @click="openTab(scope.row,'payment')">{{ isNotBlank(scope.row.paymentAmount)? toThousand(scope.row.paymentAmount): 0 }}</span>
-        <span @click="openPaymentAudit(scope.row)" style="cursor:pointer;" v-if="checkPermission(permission.payment.audit) && scope.row.unCheckPaymentCount>0">
-          <el-badge :value="scope.row.unCheckPaymentCount" :max="99" :hidden="scope.row.unCheckPaymentCount < 1">
-            <svg-icon icon-class="notify"  style="color:#e6a23c;font-size:15px;"/>
-          </el-badge>
-        </span>
-      </template>
-    </el-table-column>
-    <el-table-column v-if="columns.visible('paymentAmountRate')" key="paymentAmountRate" prop="paymentAmountRate" label="付款比例" align="center" min-width="80">
-      <template v-slot="scope">
-        <div>{{ scope.row.paymentAmount? ((scope.row.paymentAmount/scope.row.freight)*100).toFixed(2)+'%': 0 }}</div>
-      </template>
-    </el-table-column>
-    <el-table-column v-if="columns.visible('invoiceAmount')" key="invoiceAmount" prop="invoiceAmount" label="收票额" align="center" min-width="100">
-      <template v-if="checkPermission(crud.permission.get)" #header>
-        <el-tooltip
-          effect="light"
-          placement="top"
-          content="点击行可以查看详情"
-        >
-          <div style="display: inline-block">
-            <span>收票额 </span>
-            <i class="el-icon-info" />
-          </div>
-        </el-tooltip>
-      </template>
-      <template v-slot="scope">
-        <div @click="openTab(scope.row,'invoice')" style="cursor:pointer;">
-          <span style="margin-right:10px;">{{ isNotBlank(scope.row.invoiceAmount)? toThousand(scope.row.invoiceAmount): 0 }}</span>
-          <template v-if="checkPermission(permission.invoice.audit) && scope.row.unCheckInvoiceCount>0">
-            <el-badge :value="scope.row.unCheckInvoiceCount" :max="99" :hidden="scope.row.unCheckInvoiceCount < 1">
-              <svg-icon icon-class="notify"  style="color:#e6a23c;font-size:15px;"/>
+      ref="tableRef"
+      v-loading="crud.loading"
+      :data-format="dataFormat"
+      :data="crud.data"
+      style="width: 100%"
+      :max-height="maxHeight"
+    >
+      <el-table-column label="序号" type="index" align="center" width="60" />
+      <el-table-column v-if="columns.visible('supplierName')" key="supplierName" prop="supplierName" :show-overflow-tooltip="true" label="物流公司" align="center" min-width="180">
+        <template v-slot="scope">
+          <span>{{ scope.row.supplierName }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column v-if="columns.visible('trainNumber')" key="trainNumber" prop="trainNumber" :show-overflow-tooltip="true" label="车次" align="center" />
+      <el-table-column v-if="columns.visible('loadingWeight')" key="loadingWeight" prop="loadingWeight" :show-overflow-tooltip="true" label="过磅重量(吨)" align="center" min-width="180">
+        <template v-slot="scope">
+          <span>{{ scope.row.loadingWeight }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column v-if="columns.visible('other')" key="other" prop="other" :show-overflow-tooltip="true" label="关联入库及供方" align="center" min-width="180">
+        <template v-slot="scope">
+          <common-button icon="el-icon-view" type="info" size="mini" @click="openDetail(scope.row, 'detail')"/>
+        </template>
+      </el-table-column>
+      <el-table-column v-if="columns.visible('freight')" prop="freight" key="freight" label="运输费" align="right" min-width="120" show-overflow-tooltip />
+      <el-table-column prop="paymentAmount" key="paymentAmount" label="累计已付款" align="right" min-width="120" show-overflow-tooltip>
+        <template v-if="checkPermission(permission.detail)" #header>
+          <el-tooltip
+            effect="light"
+            placement="top"
+            content="点击行可以查看详情"
+          >
+            <div style="display: inline-block">
+              <span>累计已付款 </span>
+              <i class="el-icon-info" />
+            </div>
+          </el-tooltip>
+        </template>
+        <template #default="{ row }">
+          <div type="warning" class="clickable" @click.stop="openRecord(row, 'payment')">{{ row.paymentAmount }}</div>
+        </template>
+      </el-table-column>
+      <el-table-column prop="paymentRate" label="付款比例" align="center" show-overflow-tooltip min-width="80">
+        <template #default="{ row }">
+          <span>{{ row.paymentRate }}%</span>
+        </template>
+      </el-table-column>
+      <el-table-column prop="invoiceAmount" key="invoiceAmount" label="累计已收票" align="right" min-width="120" show-overflow-tooltip>
+        <template v-if="checkPermission(permission.detail)" #header>
+          <el-tooltip
+            effect="light"
+            placement="top"
+            content="点击行可以查看详情"
+          >
+            <div style="display: inline-block">
+              <span>累计已收票 </span>
+              <i class="el-icon-info" />
+            </div>
+          </el-tooltip>
+        </template>
+        <template #default="{ row }">
+          <div type="warning" class="clickable" @click.stop="openRecord(row, 'invoice')">{{ row.invoiceAmount }}</div>
+        </template>
+      </el-table-column>
+      <el-table-column prop="invoiceRate" label="收票比例" align="center" show-overflow-tooltip min-width="80">
+        <template #default="{ row }">
+          <span>{{ row.invoiceRate }}%</span>
+        </template>
+      </el-table-column>
+      <!--付款和收票-->
+      <el-table-column
+        label="操作"
+        width="120px"
+        align="center"
+      >
+        <template #default="{ row }">
+          <span style="margin-right:5px;display:inline-block;position:relative;padding:10px 0;">
+            <common-button type="success" icon="el-icon-money" size="mini" @click="openApplication(row)" />
+            <el-badge :value="row.sourceRow.unCheckPaymentCount" :max="99" :hidden="row.sourceRow.unCheckPaymentCount < 1" style="position:absolute;top:-2px;right:-5px;">
             </el-badge>
-          </template>
-        </div>
+          </span>
+          <span style="margin-right:5px;display:inline-block;position:relative;padding:10px 0;">
+            <common-button type="primary" icon="el-icon-tickets" size="mini" @click="openInvoice(row)" />
+            <el-badge :value="row.sourceRow.unCheckInvoiceCount" :max="99" :hidden="row.sourceRow.unCheckInvoiceCount < 1" style="position:absolute;top:-2px;right:-5px;">
+            </el-badge>
+          </span>
+        </template>
+      </el-table-column>
+    </common-table>
+    <!--分页组件-->
+    <pagination />
+    <!-- 记录 -->
+    <component :is="currentView" v-model="recordVisible" :permission="permission" :detail-info="detailInfo" :query-date="{startDate:crud.query.startDate,endDate:crud.query.endDate}" />
+    <common-drawer
+      ref="drawerRef"
+      :show-close="true"
+      size="85%"
+      title="付款申请登记"
+      append-to-body
+      v-model="applicationVisible"
+      :close-on-click-modal="false"
+    >
+      <template #content>
+        <paymentApplication :visibleValue="applicationVisible" :detail-info="detailInfo" @success="crud.toQuery"/>
       </template>
-    </el-table-column>
-    <el-table-column v-if="columns.visible('invoiceRate')" key="invoiceRate" prop="invoiceRate" label="收票比例" align="center" min-width="80">
-      <template v-slot="scope">
-        <div>{{ scope.row.invoiceAmount? ((scope.row.invoiceAmount/scope.row.freight)*100).toFixed(2)+'%': 0  }}</div>
+    </common-drawer>
+    <common-drawer
+      ref="invoiceRef"
+      :show-close="true"
+      size="85%"
+      title="收票款申请登记"
+      append-to-body
+      v-model="invoiceVisible"
+      :close-on-click-modal="false"
+    >
+      <template #content>
+        <invoice :visibleValue="invoiceVisible" :detail-info="detailInfo" @success="crud.toQuery"/>
       </template>
-    </el-table-column>
-  </common-table>
-  <!--分页组件-->
-  <pagination />
-  <!-- 物流记录 -->
-  <recordDetail v-model="stockVisible" :detailInfo="currentRow" :type="logisticsSearchTypeEnum.COMPANY.V" :permission="permission.logisticsLog"/>
-  <!-- 收付款 -->
-  <paymentAndInvoice v-model="tabVisible" :currentRow="currentRow" :tabName="activeName" :propertyType="supplierPayTypeEnum.TRANSPORT.V" @success="crud.toQuery" :permission="permission"/>
-  <!-- 审核 -->
-  <paymentAudit v-model="auditVisible" :currentRow="currentRow" :propertyType="supplierPayTypeEnum.TRANSPORT.V" @success="crud.toQuery"/>
+    </common-drawer>
   </div>
 </template>
 
 <script setup>
-import { logisticsPaymentList as get } from '@/api/supply-chain/logistics-payment-manage/logistics-record-ledger'
-import { ref } from 'vue'
+import crudApi from '@/api/contract/supplier-manage/jd-logistics-manage'
+import { ref, provide, computed, nextTick } from 'vue'
 
 import { contractSupplierLogisticsPM as permission } from '@/page-permission/contract'
-import { logisticsSearchTypeEnum, supplierPayTypeEnum } from '@enum-ms/contract'
 import checkPermission from '@/utils/system/check-permission'
-import { toThousand } from '@data-type/number'
-import { isNotBlank } from '@data-type/index'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import pagination from '@crud/Pagination'
 import mHeader from './module/header'
-import paymentAndInvoice from './module/payment-and-invoice'
-import recordDetail from '@/views/supply-chain/logistics-payment-manage/logistics-record/module/record-detail'
-import paymentAudit from './module/payment-audit/index'
+import inboundRecord from './module/inbound-record'
+import invoiceRecord from './module/invoice-record'
+import paymentRecord from './module/payment-record'
+import paymentApplication from './module/payment-application/index'
+import invoice from './module/invoice/index'
 
 const optShow = {
   add: false,
@@ -124,89 +150,86 @@ const optShow = {
   download: false
 }
 
+const currentView = computed(() => {
+  if (recordType.value === 'inbound') {
+    return inboundRecord
+  } else if (recordType.value === 'invoice') {
+    return invoiceRecord
+  }
+  return paymentRecord
+})
+
 const tableRef = ref()
-const stockVisible = ref(false)
-const tabVisible = ref(false)
-const auditVisible = ref(false)
-const currentRow = ref({})
-const activeName = ref('payment')
-const { crud, columns } = useCRUD(
+const headerRef = ref()
+const applicationVisible = ref(false)
+const invoiceVisible = ref(false)
+
+const dataFormat = ref([
+  ['createTime', 'parse-time'],
+  ['paymentRate', ['to-fixed', 2]],
+  ['invoiceRate', ['to-fixed', 2]],
+  ['amount', 'to-thousand'],
+  ['inboundAmount', 'to-thousand'],
+  ['paymentAmount', 'to-thousand'],
+  ['invoiceAmount', 'to-thousand']
+])
+
+const { crud, columns, CRUD } = useCRUD(
   {
-    title: '物流付款',
+    title: '原材料物流',
     sort: [],
     permission: { ...permission },
-    optShow: { ...optShow },
-    crudApi: { get },
-    hasPagination: true
+    crudApi: { ...crudApi },
+    invisibleColumns: [],
+    optShow: { ...optShow }
   },
   tableRef
 )
 
-const { maxHeight } = useMaxHeight({
-  wrapperBox: '.logisticsAuditManage',
-  paginate: true,
-  extraHeight: 40
-})
+const { maxHeight } = useMaxHeight({ paginate: true })
 
-function openStockAmount(row) {
-  if (!checkPermission(permission.logisticsLog.get)) {
-    return
-  }
-  currentRow.value = row
-  stockVisible.value = true
+const detailInfo = ref({})
+const supplierId = ref(undefined)
+const recordType = ref('')
+const recordVisible = ref(false)
+
+provide('supplierId', supplierId)
+
+// 刷新数据后
+CRUD.HOOK.handleRefresh = (crud, { data }) => {
+  data.content.forEach(v => {
+    // 付款比例
+    v.paymentRate = v.inboundAmount ? (v.paymentAmount || 0) / (v.amount || 0) * 100 : 0
+    // 收票比例
+    v.invoiceRate = v.inboundAmount ? (v.invoiceAmount || 0) / (v.amount || 0) * 100 : 0
+  })
 }
 
-function openTab(row, name) {
-  if (!checkPermission(permission[name].get)) {
-    return
-  }
-  activeName.value = name
-  currentRow.value = row
-  tabVisible.value = true
+function openApplication(row) {
+  detailInfo.value = row.sourceRow
+  supplierId.value = row.supplierId
+  applicationVisible.value = true
 }
 
-function openPaymentAudit(row) {
-  if (!checkPermission(permission.payment.get)) {
-    return
-  }
-  currentRow.value = row
-  auditVisible.value = true
+function openInvoice(row) {
+  detailInfo.value = row.sourceRow
+  supplierId.value = row.supplierId
+  invoiceVisible.value = true
 }
 
+// 打开记录
+function openRecord(row, type) {
+  if (!checkPermission(permission.detail)) return
+  detailInfo.value = row
+  recordType.value = type
+  supplierId.value = row.supplierId
+  nextTick(() => {
+    recordVisible.value = true
+  })
+}
 </script>
-
 <style lang="scss" scoped>
-::v-deep(.hidden-select) {
-  td:nth-child(1){
-    .cell{
-      opacity:0;
-    }
-  }
-}
-$font-size: 1.5em;
-.child {
-  width: $font-size;
-  height: $font-size;
-  display: inline-block;
-  border: 1px solid;
-  border-radius: 50%;
-  line-height: $font-size;
-}
-::v-deep(.el-table .cell){
-  padding-left:2px;
-  padding-right:2px;
-}
-::v-deep(.el-tag--small){
-  padding:0 3px;
-}
-::v-deep(.el-badge__content.is-fixed){
-  top:5px;
-  padding:0 3px;
-  line-height:12px;
-  height:14px;
-}
 .clickable {
-  width: 100%;
   cursor: pointer;
   color:#409eff;
 }

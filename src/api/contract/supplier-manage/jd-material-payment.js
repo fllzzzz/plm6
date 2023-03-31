@@ -28,6 +28,15 @@ export function edit(data) {
   })
 }
 
+export function del(data) {
+  return request({
+    module: 'contract',
+    url: 'contract/purchaseLedger',
+    method: 'delete',
+    data
+  })
+}
+
 export function audit(id, auditStatus) {
   return request({
     module: 'contract',
@@ -35,4 +44,4 @@ export function audit(id, auditStatus) {
     method: 'put'
   })
 }
-export default { get, add, edit }
+export default { get, add, edit, del }

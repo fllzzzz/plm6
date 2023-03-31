@@ -11,19 +11,13 @@
       style="width: 100%"
       :max-height="maxHeight"
     >
-      <el-table-column label="序号" type="index" align="center" width="60">
-        <template #default="{ row, $index }">
-           <table-cell-tag :show="row.boolSettlementStatus===!!settlementStatusEnum.SETTLED.V" name="已结算" color="#f56c6c"/>
-          <span>{{ $index + 1 }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column v-if="columns.visible('serialNumber')" show-overflow-tooltip key="serialNumber" prop="serialNumber" label="订单编号" align="center"/>
+      <el-table-column label="序号" type="index" align="center" width="60"/>
       <el-table-column v-if="columns.visible('signDate')" show-overflow-tooltip key="signDate" prop="signDate" label="签订日期" align="center" width="100" />
       <el-table-column v-if="columns.visible('project')" show-overflow-tooltip key="project" prop="project" label="所属项目" min-width="130" />
       <el-table-column v-if="columns.visible('supplierName')" show-overflow-tooltip key="supplierName" prop="supplierName" label="分包单位" min-width="110"/>
+      <el-table-column v-if="columns.visible('subcontractClassName')" show-overflow-tooltip key="subcontractClassName" prop="subcontractClassName" label="分包类别" />
       <el-table-column v-if="columns.visible('amount')" prop="amount" key="amount" label="合同额" align="right" show-overflow-tooltip />
       <el-table-column v-if="columns.visible('settlementAmount')" prop="settlementAmount" key="settlementAmount" label="结算额" align="right"  show-overflow-tooltip />
-      <el-table-column v-if="columns.visible('subcontractClassName')" show-overflow-tooltip key="subcontractClassName" prop="subcontractClassName" label="分类" />
       <el-table-column v-if="columns.visible('paymentAmount')" prop="paymentAmount" key="paymentAmount" label="付款额" align="right" show-overflow-tooltip>
         <template v-if="checkPermission(permission.payment.get)" #header>
           <el-tooltip
@@ -77,7 +71,7 @@
 </template>
 
 <script setup>
-import crudApi from '@/api/project-manage/subcontract-payment/payment-list'
+import crudApi from '@/api/supply-chain/subcontract-manage/jd-subcontract-payment'
 import { ref, provide, computed, nextTick } from 'vue'
 
 import { supplyChainSubcontractPaymentPM as permission } from '@/page-permission/supply-chain'

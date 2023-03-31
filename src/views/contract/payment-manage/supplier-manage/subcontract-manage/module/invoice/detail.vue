@@ -1,0 +1,173 @@
+<template>
+   <common-drawer
+    append-to-body
+    :close-on-click-modal="false"
+    :before-close="handleClose"
+    v-model="visible"
+    title="收票申请详情"
+    :wrapper-closable="false"
+    size="40%"
+  >
+    <template #titleAfter>
+      <el-tag v-if="currentRow.auditStatus" size="medium" :type="currentRow.auditStatus===auditTypeEnum.REJECT.V?'info':(currentRow.auditStatus===auditTypeEnum.PASS.V?'success':'warning')">
+        {{ currentRow.auditStatus===auditTypeEnum.REJECT.V?'已驳回':(currentRow.auditStatus===auditTypeEnum.PASS.V?'已通过':'审核中') }}
+      </el-tag>
+      <!--  -->
+    </template>
+    <template #titleRight>
+      <template v-if="showType==='audit' && currentRow.auditStatus===auditTypeEnum.AUDITING.V">
+        <common-button size="small" type="info" @click="passConfirm(auditTypeEnum.ENUM.REJECT.V)">驳回</common-button>
+        <common-button size="small" type="success" @click="passConfirm(auditTypeEnum.ENUM.PASS.V)">通过</common-button>
+      </template>
+    </template>
+    <template #content>
+      <el-form ref="formRef" size="small" label-width="130px">
+         <el-row>
+          <el-col :span="12">
+            <el-form-item label="购买方" prop="paymentUnitId">
+              <span>{{currentRow.branchCompanyName}}</span>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="销售方" prop="supplierName">
+              <span>{{ currentRow.supplierName }}</span>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="发票及税率" prop="invoiceTypeEnum" class="form-label-require">
+              <span>{{}}</span>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="实际开票单位" prop="actualReceivingUnitId">
+              <span>{{currentRow.actualInvoiceUnit}}</span>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="发票面额" prop="invoiceAmount">
+              <span>{{toThousand(currentRow.invoiceAmount)}}</span>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="发票号" prop="invoiceSerialNumber">
+              <span>{{currentRow.invoiceSerialNumber}}</span>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="收票日期" prop="receiveInvoiceDate">
+              <span>{{currentRow.receiveInvoiceDate}}</span>
+            </el-form-item>
+             <el-form-item label="备注" prop="remark">
+              <span>{{currentRow.remark}}</span>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="操作人">
+              <span>{{currentRow.applyUserName}}{{parseTime(currentRow.createTime,'{y}-{m}-{d}')}}</span>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="审核人">
+              <span>{{currentRow.auditUserName}}{{currentRow.auditTime?parseTime(currentRow.auditTime,'{y}-{m}-{d}'):''}}</span>
+             </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="发票凭证">
+              <template #label>
+                发票凭证
+                <el-tooltip
+                  effect="light"
+                  :content="`双击可预览附件`"
+                  placement="top"
+                  v-if="currentRow.attachments?.length"
+                >
+                  <i class="el-icon-info" />
+                </el-tooltip>
+              </template>
+              <template v-if="props.currentRow.attachments?.length">
+                <div v-for="item in currentRow.attachments" :key="item.id">
+                  <div style="cursor:pointer;" @dblclick="attachmentView(item)">{{item.name}}</div>
+                </div>
+              </template>
+            </el-form-item>
+          </el-col>
+        </el-row>
+      </el-form>
+      <showPdfAndImg v-if="pdfShow" :isVisible="pdfShow" :showType="'attachment'" :id="currentId" @close="pdfShow=false"/>
+    </template>
+  </common-drawer>
+</template>
+
+<script setup>
+import { audit } from '@/api/contract/supplier-manage/jd-material-payment'
+import { ref, defineProps, defineEmits } from 'vue'
+import { ElMessageBox, ElNotification } from 'element-plus'
+
+import { toThousand } from '@data-type/number'
+import { parseTime } from '@/utils/date'
+import useVisible from '@compos/use-visible'
+import { auditTypeEnum } from '@enum-ms/contract'
+import showPdfAndImg from '@comp-base/show-pdf-and-img.vue'
+
+const emit = defineEmits(['success', 'update:modelValue'])
+const { visible, handleClose } = useVisible({ emit, props })
+
+const formRef = ref()
+const props = defineProps({
+  detailInfo: {
+    type: Object,
+    default: () => {}
+  },
+  currentRow: {
+    type: Object,
+    default: () => {}
+  },
+  showType: {
+    type: String,
+    default: 'detail'
+  }
+})
+
+const pdfShow = ref(false)
+const currentId = ref()
+
+// 预览附件
+function attachmentView(item) {
+  currentId.value = item.id
+  pdfShow.value = true
+}
+
+async function passConfirm(val) {
+  try {
+    const title = val === auditTypeEnum.PASS.V ? '通过' : '驳回'
+    await ElMessageBox.confirm('该操作为最终审核,确认后将无法撤回', title, {
+      confirmButtonText: '是',
+      cancelButtonText: '否',
+      type: 'warning'
+    })
+    await audit(props.currentRow.id, val)
+    ElNotification({ title: title + '成功', type: 'success' })
+    handleClose()
+    emit('success')
+  } catch (e) {
+    console.log('审核失败', e)
+  }
+}
+
+</script>
+<style lang="scss" scoped>
+.add-row-box {
+  text-align: center;
+  margin-top: 20px;
+}
+</style>

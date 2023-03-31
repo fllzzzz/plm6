@@ -98,11 +98,29 @@ export default {
           meta: { title: '制成品', icon: 'contract2', noCache: true }
         },
         {
-          name: 'supplierLogistics',
           path: 'supplier-logistics',
+          component: '',
           hidden: false,
-          component: '/contract/payment-manage/supplier-manage/logistics-manage/index',
-          meta: { title: '物流', icon: 'contract2', noCache: true }
+          name: 'supplierLogistics',
+          alwaysShow: false,
+          redirect: '/supplier-payment-manage/material/supplier-logistics/material-logistics',
+          meta: { title: '物流台账', icon: 'contract2', noCache: true },
+          children: [
+            {
+              name: 'materialLogistics',
+              path: 'material-logistics',
+              hidden: false,
+              component: '/contract/payment-manage/supplier-manage/logistics-manage/index',
+              meta: { title: '原材料物流', icon: 'contract2', noCache: true }
+            },
+            {
+              name: 'productLogistics',
+              path: 'product-logistics',
+              hidden: false,
+              component: '/contract/payment-manage/supplier-manage/product-logistics-manage/index',
+              meta: { title: '制成品物流', icon: 'contract2', noCache: true }
+            }
+          ]
         },
         {
           name: 'subcontractPaymentManage',

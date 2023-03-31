@@ -107,6 +107,13 @@ export default {
           hidden: false,
           component: '/supply-chain/logistics-payment-manage/logistics-payment/index',
           meta: { title: '原材料物流', icon: 'project', noCache: true }
+        },
+        {
+          name: 'productLogisticsPayment',
+          path: 'product-logistics-payment',
+          hidden: false,
+          component: '/supply-chain/logistics-payment-manage/product-logistics-payment/index',
+          meta: { title: '制成品物流', icon: 'project', noCache: true }
         }
       ]
     },

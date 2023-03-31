@@ -11,8 +11,7 @@
     size="100%"
   >
     <template #titleAfter>
-      <el-tag v-if="detailInfo.serialNumber" type="success" effect="plain" size="medium">采购合同编号：{{detailInfo.serialNumber}}</el-tag>
-      <el-tag v-else type="warning" effect="plain" size="medium">供应商：{{detailInfo.supplierName}}</el-tag>
+      <el-tag type="warning" effect="plain" size="medium">供应商：{{detailInfo.supplierName}}</el-tag>
       <el-tag>累计支付：</el-tag>
     </template>
     <template #titleRight>
@@ -107,10 +106,10 @@
 </template>
 
 <script setup>
-import { paymentRecord } from '@/api/supply-chain/purchase-reconciliation-manage/payment-ledger'
+import { paymentRecord } from '@/api/supply-chain/purchase-reconciliation-manage/jd-payment-ledger'
 import { defineEmits, defineProps, ref, computed, watch } from 'vue'
 
-import { auditTypeEnum, supplierPayTypeEnum } from '@enum-ms/contract'
+import { auditTypeEnum } from '@enum-ms/contract'
 import { digitUppercase, getDP, toThousand } from '@/utils/data-type/number'
 import { paymentFineModeEnum } from '@enum-ms/finance'
 import { tableSummary } from '@/utils/el-extra'
@@ -151,15 +150,9 @@ const props = defineProps({
 // 请求参数
 const params = computed(() => {
   const data = {
-    propertyType: supplierPayTypeEnum.PURCHASE.V,
+    supplierId: props.detailInfo.supplierId,
+    auditStatus: auditTypeEnum.PASS.V,
     ...query.value
-  }
-  if (props.detailInfo.id) {
-    // 订单列表
-    data.orderId = props.detailInfo.id
-  } else {
-    // 汇总列表
-    data.supplierId = props.detailInfo.supplierId
   }
   return data
 })

@@ -20,7 +20,7 @@ export function logisticsRecordDetail(params) {
 }
 
 // 物流付款汇总
-export function logisticsPaymentList(params) {
+export function paymentRecord(params) {
   return request({
     url: '/api/scm/logisticsLedger',
     method: 'get',
@@ -31,8 +31,7 @@ export function logisticsPaymentList(params) {
 // 获取开票明细
 export function invoiceRecord(params) {
   return request({
-    module: 'contract',
-    url: 'contract/receive-invoice/logistics',
+    url: '/api/scm/logisticsLedger/listInvoice',
     method: 'get',
     params
   })

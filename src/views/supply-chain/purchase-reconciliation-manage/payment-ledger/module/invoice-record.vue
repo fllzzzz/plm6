@@ -10,8 +10,7 @@
     size="80%"
   >
     <template #titleAfter>
-      <el-tag v-if="detailInfo.serialNumber" type="success" effect="plain" size="medium">采购合同编号：{{detailInfo.serialNumber}}</el-tag>
-      <el-tag v-else type="warning" effect="plain" size="medium">供应商：{{detailInfo.supplierName}}</el-tag>
+      <el-tag type="warning" effect="plain" size="medium">供应商：{{detailInfo.supplierName}}</el-tag>
       <el-tag>累计收票：</el-tag>
     </template>
     <template #titleRight>
@@ -86,7 +85,7 @@
 </template>
 
 <script setup>
-import { invoiceRecord } from '@/api/supply-chain/purchase-reconciliation-manage/payment-ledger'
+import { invoiceRecord } from '@/api/supply-chain/purchase-reconciliation-manage/jd-payment-ledger'
 import { ref, defineEmits, defineProps, watch, computed } from 'vue'
 
 import { auditTypeEnum } from '@enum-ms/contract'

@@ -83,12 +83,20 @@
       <!--付款和收票-->
       <el-table-column
         label="操作"
-        width="120px"
+        width="180px"
         align="center"
       >
         <template #default="{ row }">
-          <common-button type="success" icon="el-icon-money" size="mini" @click="openApplication(row)" />
-          <common-button type="primary" icon="el-icon-tickets" size="mini" @click="openSettle(row)" />
+          <span style="margin-right:5px;display:inline-block;position:relative;padding:10px 0;">
+            <common-button type="success" icon="el-icon-money" size="mini" @click="openApplication(row)" />
+            <el-badge :value="row.sourceRow.unCheckPaymentCount" :max="99" :hidden="row.sourceRow.unCheckPaymentCount < 1" style="position:absolute;top:-2px;right:-5px;">
+            </el-badge>
+          </span>
+          <span style="margin-right:5px;display:inline-block;position:relative;padding:10px 0;">
+            <common-button type="primary" icon="el-icon-tickets" size="mini" @click="openInvoice(row)" />
+            <el-badge :value="row.sourceRow.unCheckInvoiceCount" :max="99" :hidden="row.sourceRow.unCheckInvoiceCount < 1" style="position:absolute;top:-2px;right:-5px;">
+            </el-badge>
+          </span>
         </template>
       </el-table-column>
     </common-table>
@@ -99,14 +107,27 @@
     <common-drawer
       ref="drawerRef"
       :show-close="true"
-      size="80%"
+      size="85%"
       title="付款申请登记"
       append-to-body
       v-model="applicationVisible"
       :close-on-click-modal="false"
     >
       <template #content>
-        <paymentApplication :visibleValue="applicationVisible" :detail-info="detailInfo"/>
+        <paymentApplication :visibleValue="applicationVisible" :detail-info="detailInfo" @success="crud.toQuery"/>
+      </template>
+    </common-drawer>
+    <common-drawer
+      ref="invoiceRef"
+      :show-close="true"
+      size="85%"
+      title="收票款申请登记"
+      append-to-body
+      v-model="invoiceVisible"
+      :close-on-click-modal="false"
+    >
+      <template #content>
+        <invoice :visibleValue="invoiceVisible" :detail-info="detailInfo" @success="crud.toQuery"/>
       </template>
     </common-drawer>
   </div>
@@ -130,6 +151,7 @@ import inboundRecord from './module/inbound-record'
 import invoiceRecord from './module/invoice-record'
 import paymentRecord from './module/payment-record'
 import paymentApplication from './module/payment-application/index'
+import invoice from './module/invoice/index'
 // import tableCellTag from '@comp-common/table-cell-tag/index.vue'
 
 const optShow = {
@@ -151,6 +173,7 @@ const currentView = computed(() => {
 const tableRef = ref()
 const headerRef = ref()
 const applicationVisible = ref(false)
+const invoiceVisible = ref(false)
 
 const dataFormat = ref([
   ['createTime', 'parse-time'],
@@ -199,6 +222,12 @@ function openApplication(row) {
   detailInfo.value = row.sourceRow
   supplierId.value = row.supplierId
   applicationVisible.value = true
+}
+
+function openInvoice(row) {
+  detailInfo.value = row.sourceRow
+  supplierId.value = row.supplierId
+  invoiceVisible.value = true
 }
 
 // 打开记录

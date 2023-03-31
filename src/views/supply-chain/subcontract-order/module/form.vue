@@ -17,7 +17,7 @@
           type="text"
           maxlength="20"
           placeholder="请输入订单编号"
-          style="width:200px;"
+          style="width:320px;"
         />
       </el-form-item>
       <el-form-item label="签订日期" prop="signDate">
@@ -25,7 +25,7 @@
           v-model="form.signDate"
           type="date"
           value-format="x"
-          style="width: 200px;"
+          style="width:320px;"
           placeholder="签订日期"
         />
       </el-form-item>
@@ -34,10 +34,12 @@
           v-model="form.projectId"
           :defaultId="form.id?form.projectId:undefined"
           @change="projectChange"
+          style="width:320px;"
         />
       </el-form-item>
       <el-form-item label="包含单体" prop="monomerIds">
         <monomer-select
+          style="width:320px;"
           ref="monomerSelectRef"
           v-model="form.monomerIds"
           :project-id="form.projectId"
@@ -49,6 +51,7 @@
       </el-form-item>
       <el-form-item label="分包单位" prop="supplierId">
         <supplier-select
+          style="width:320px;"
           v-model="form.supplierId"
           :type="supplierTypeEnum.SUBCONTRACTING.V"
           clearable
@@ -56,7 +59,7 @@
         />
       </el-form-item>
       <el-form-item label="分包类别" prop="subcontractClassId">
-        <subcontractType v-model="form.subcontractClassId" />
+        <subcontractType style="width:320px;" v-model="form.subcontractClassId" />
       </el-form-item>
       <el-form-item label="合同额" prop="amount">
         <el-input-number
@@ -68,13 +71,14 @@
           :precision="DP.YUAN"
           controls-position="right"
           placeholder="合同额(元)"
-          style="width:200px;"
+          style="width:320px;"
         />
       </el-form-item>
       <el-form-item label="发票类型" prop="invoiceType">
         <common-select
           type="enum"
           size="small"
+          style="width:320px;"
           v-model="form.invoiceType"
           :options="invoiceTypeEnum.ENUM"
           placeholder="选择发票类型"
@@ -83,6 +87,7 @@
       </el-form-item>
       <el-form-item label="税率" prop="taxRate" v-if="form.invoiceType !== invoiceTypeEnum.RECEIPT.V">
         <el-input-number
+          style="width:320px;"
           v-model="form.taxRate"
           :step="1"
           :min="0"

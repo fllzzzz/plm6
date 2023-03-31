@@ -95,7 +95,7 @@
 </template>
 
 <script setup>
-import { paymentRecord } from '@/api/supply-chain/purchase-reconciliation-manage/payment-ledger'
+import { get as paymentRecord } from '@/api/contract/supplier-manage/jd-material-payment'
 import { defineEmits, defineProps, ref, computed, watch } from 'vue'
 
 import { auditTypeEnum, supplierPayTypeEnum } from '@enum-ms/contract'
