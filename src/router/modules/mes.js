@@ -332,32 +332,32 @@ export default {
       }
     ]
   },
-  {
-    path: '/mes/production-monitoring-kanban',
-    component: 'Layout',
-    hidden: false,
-    name: 'MesProductionMonitoringKanban',
-    alwaysShow: false,
-    redirect: '/mes/production-monitoring-kanban',
-    meta: {
-      title: '生产监控看板',
-      icon: 'project',
-      noCache: true
-    },
-    children: [
-      {
-        name: 'MesMonitoringKanban',
-        path: 'monitoring-kanban',
-        hidden: false,
-        component: '/mes/production-monitoring-kanban/index',
-        meta: {
-          title: '生产监控看板',
-          icon: 'project',
-          noCache: true
-        }
-      }
-    ]
-  },
+  // {
+  //   path: '/mes/production-monitoring-kanban',
+  //   component: 'Layout',
+  //   hidden: false,
+  //   name: 'MesProductionMonitoringKanban',
+  //   alwaysShow: false,
+  //   redirect: '/mes/production-monitoring-kanban',
+  //   meta: {
+  //     title: '生产监控看板',
+  //     icon: 'project',
+  //     noCache: true
+  //   },
+  //   children: [
+  //     {
+  //       name: 'MesMonitoringKanban',
+  //       path: 'monitoring-kanban',
+  //       hidden: false,
+  //       component: '/mes/production-monitoring-kanban/index',
+  //       meta: {
+  //         title: '生产监控看板',
+  //         icon: 'project',
+  //         noCache: true
+  //       }
+  //     }
+  //   ]
+  // },
   {
     path: '/mes/work-order-manage',
     component: 'Layout',
@@ -442,12 +442,23 @@ export default {
         }
       },
       {
+        name: 'MesMonitoringKanban',
+        path: 'monitoring-kanban',
+        hidden: false,
+        component: '/mes/task-tracking/production-monitoring-kanban/index',
+        meta: {
+          title: '车间任务状态',
+          icon: 'project',
+          noCache: true
+        }
+      },
+      {
         name: 'MesMonthlyTaskTracking',
         path: 'monthly-task-tracking',
         hidden: false,
         component: '/mes/task-tracking/monthly-task-tracking/index',
         meta: {
-          title: '月度任务跟踪',
+          title: '产量达成',
           icon: 'project',
           noCache: true
         }

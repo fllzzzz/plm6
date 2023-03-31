@@ -23,6 +23,17 @@ export function getScheduleSummary(params) {
     params
   })
 }
+/**
+ * @description: 排产数据详情
+ */
+export function getScheduleDetail(params) {
+  return request({
+    module: 'mes',
+    url: 'scheduling/artifact/artifact/scheduling/detail/page',
+    method: 'get',
+    params
+  })
+}
 
 export default { get }
 

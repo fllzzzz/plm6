@@ -76,7 +76,7 @@
           </template>
         </el-table-column>
       </common-table>
-      <process-detail v-model:visible="dialogVisible" :project-id="props.processData.id" :detail-data="detailData" />
+      <process-detail v-model:visible="dialogVisible" :project-id="props.processData.id" :detail-data="detailData" :weightStatus="weightStatus" />
     </div>
   </div>
 </template>
