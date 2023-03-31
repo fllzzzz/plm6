@@ -116,6 +116,7 @@
             :precision="row.measurePrecision"
             size="mini"
             placeholder="本次实收数"
+            @blur="handleOverQuantity(row)"
           />
           <span v-else v-empty-text />
         </template>
@@ -132,6 +133,7 @@
             size="mini"
             placeholder="实收量"
             @change="handleWeightChange($event, row)"
+            @blur="handleOverMete(row)"
           />
         </template>
       </el-table-column>
@@ -152,6 +154,7 @@ import { isNotBlank, toPrecision } from '@/utils/data-type'
 
 import { regExtra } from '@/composables/form/use-form'
 import useTableValidate from '@compos/form/use-table-validate'
+import useOverReceive from '@/views/wms/material-inbound/raw-material/application/composables/use-over-receive.js'
 import elExpandTableColumn from '@comp-common/el-expand-table-column.vue'
 
 import materialUnitQuantityColumns from '@/components-system/wms/table-columns/material-unit-quantity-columns/index.vue'
@@ -215,6 +218,7 @@ const tableRules = computed(() => {
 })
 
 const { tableValidate, wrongCellMask } = useTableValidate({ rules: tableRules }) // 表格校验
+const { handleOverQuantity, handleOverMete } = useOverReceive({ meteField: 'mete' })
 
 function selectable(row, rowIndex) {
   return !!row.canPurchaseQuantity || true

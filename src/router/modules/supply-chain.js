@@ -4,24 +4,6 @@ export default {
   name: '供应链',
   children: [
     {
-      path: '/supply-chain/purchase-manage',
-      component: 'Layout',
-      hidden: false,
-      name: 'SupplyChainPurchaseOrder',
-      alwaysShow: false,
-      redirect: '/supply-chain/purchase-order',
-      meta: { title: '采购合同管理', icon: 'contract', noCache: true },
-      children: [
-        {
-          name: 'PurchaseOrder',
-          path: 'purchase-order',
-          hidden: false,
-          component: '/supply-chain/purchase-order/index',
-          meta: { title: '采购合同', icon: 'project', noCache: true }
-        }
-      ]
-    },
-    {
       path: '/supply-chain/requisitions-manage',
       component: 'Layout',
       hidden: false,
@@ -36,6 +18,24 @@ export default {
           hidden: false,
           component: '/supply-chain/requisitions/index',
           meta: { title: '材料申购', icon: 'project', noCache: true }
+        }
+      ]
+    },
+    {
+      path: '/supply-chain/purchase-manage',
+      component: 'Layout',
+      hidden: false,
+      name: 'SupplyChainPurchaseOrder',
+      alwaysShow: false,
+      redirect: '/supply-chain/purchase-order',
+      meta: { title: '采购合同管理', icon: 'contract', noCache: true },
+      children: [
+        {
+          name: 'PurchaseOrder',
+          path: 'purchase-order',
+          hidden: false,
+          component: '/supply-chain/purchase-order/index',
+          meta: { title: '采购合同', icon: 'project', noCache: true }
         }
       ]
     },

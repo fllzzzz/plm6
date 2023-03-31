@@ -5,6 +5,7 @@
     :contentLoading="crud.editDetailLoading"
     :before-close="crud.cancelCU"
     :title="crud.status.title"
+    destroy-on-close
     :show-close="true"
     size="100%"
     :close-on-click-modal="false"
@@ -221,7 +222,7 @@
                     type="enum"
                     v-model="form.currentBasicClass"
                     :options="steelClsEnum.ENUM"
-                    :disabledVal="[]"
+                    :disabledVal="[steelClsEnum.STEEL_COIL.V]"
                     clearable
                     style="vertical-align: middle; margin-right: 6px"
                   >
@@ -233,7 +234,7 @@
                     {{ item.serialNumber }}
                   </el-tag>
                 </span>
-                <span class="opt-content">
+                <span class="opt-content" v-if="!form.boolUsed">
                   <common-button type="success" size="mini" @click="addRequisition"> 选择申购物料 </common-button>
                 </span>
               </div>
@@ -255,8 +256,14 @@
                     </template>
                   </common-radio-button>
                 </span>
-                <span class="opt-content">
-                  <common-button v-if="!isManuf" class="filter-item" type="success" size="mini" @click="materialSelectVisible = true">
+                <span class="opt-content" v-if="!form.boolUsed">
+                  <common-button
+                    v-if="!isManuf && !form.boolUsed"
+                    class="filter-item"
+                    type="success"
+                    size="mini"
+                    @click="materialSelectVisible = true"
+                  >
                     添加物料
                   </common-button>
                   <excel-resolve-button
@@ -299,13 +306,14 @@
                 </span>
               </div>
               <!-- 清单列表 -->
-              <component ref="compRef" :is="currentView" :maxHeight="maxHeight - 150" />
+              <component v-if="!form.boolUsed" ref="compRef" :is="currentView" :maxHeight="maxHeight - 150" />
+              <detail-table v-else :material-type="form.materialType" :list="form.details" :max-height="maxHeight - 150" />
               <div class="table-remark">
                 <span class="title">合同量</span>
                 <span
 class="con"
                   >{{ form.mete }}
-                  <span v-if="form.materialType & materialPurchaseClsEnum.MATERIAL.V">
+                  <span v-if="form.materialType & materialPurchaseClsEnum.MATERIAL.V && !form.boolUsed">
                     <unit-select
                       v-model="form.meteUnit"
                       size="small"
@@ -360,7 +368,6 @@ class="con"
         show-close
         size="80%"
         title="制成品选择"
-        append-to-body
         v-model="purchaseManufVisible"
         custom-class="manufactured-select-drawer"
       >
@@ -409,6 +416,7 @@ import UploadList from '@comp/file-upload/UploadList.vue'
 import StoreOperation from '@crud/STORE.operation.vue'
 import useMaxHeight from '@/composables/use-max-height'
 
+import detailTable from '../components/detail-table/index.vue'
 import RequisitionListApplication from '../components/requisition-list/index.vue'
 import ManufList from '../components/manuf-list.vue'
 // import SubmitPreview from '../components/submit-preview.vue'
@@ -565,17 +573,18 @@ watch(
     } else {
       form.purchaseType = baseMaterialTypeEnum.RAW_MATERIAL.V
     }
-    form.list = []
-    form.sectionSteelList = []
-    form.steelPlateList = []
-    form.steelCoilList = []
-    form.requisitionsKV = {}
-    form.manufListObj = {}
-    // form.manufMergeObj = {}
-    console.log(matSpecRef.value, 'materialType_change')
+    clearList()
     if (matSpecRef.value) {
       matSpecRef.value.clear()
     }
+  }
+)
+
+// 监听useRequisitions变化，清空列表
+watch(
+  () => form.useRequisitions,
+  (val) => {
+    clearList()
   }
 )
 
@@ -591,6 +600,17 @@ const currentView = computed(() => {
       return SteelApplication
   }
 })
+
+// 清空列表
+const clearList = () => {
+  form.list = []
+  form.sectionSteelList = []
+  form.steelPlateList = []
+  form.steelCoilList = []
+  form.requisitionsKV = {}
+  form.manufListObj = {}
+  // form.manufMergeObj = {}
+}
 
 // --------------------------- 自选采购 start ------------------------------
 
@@ -776,8 +796,8 @@ CRUD.HOOK.beforeToCU = () => {
     _trigger = watch(
       compRef,
       () => {
-        if (compRef.value && _trigger) {
-          nextTick(() => compRef.value?.setFormCallback(form))
+        if (compRef.value && _trigger && compRef.value.setFormCallback) {
+          compRef.value?.setFormCallback(form)
           _trigger()
         }
       },
@@ -826,6 +846,7 @@ CRUD.HOOK.beforeEditDetailLoaded = async (crud, form) => {
       await steelInboundFormFormat(form)
     }
   }
+
   // form.currentBasicClass设置初始值
   for (const item in matClsEnum.ENUM) {
     if (matClsEnum[item].V & form.basicClass) {

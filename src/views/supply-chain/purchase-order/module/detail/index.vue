@@ -126,6 +126,12 @@
               </div>
               <!-- 清单列表 -->
               <detail-table :material-type="detail.materialType" :list="detail.details" :max-height="maxHeight - 150" />
+              <div class="table-remark">
+                <span class="title">合同量</span>
+                <span class="con">{{ detail.mete }} {{ detail.meteUnit }}</span>
+                <span class="title">合同额</span>
+                <span class="con">{{ detail.amount }} 元</span>
+              </div>
             </div>
           </div>
         </el-form>
@@ -137,7 +143,7 @@
 <script setup>
 import { computed } from 'vue'
 import { matClsEnum, materialPurchaseClsEnum } from '@enum-ms/classification'
-import { orderSupplyTypeEnum, purchaseOrderPaymentModeEnum, purchaseStatusEnum } from '@enum-ms/wms'
+import { purchaseOrderPaymentModeEnum, purchaseStatusEnum } from '@enum-ms/wms'
 import { weightMeasurementModeEnum, invoiceTypeEnum, settlementStatusEnum } from '@enum-ms/finance'
 import { logisticsPayerEnum, logisticsTransportTypeEnum } from '@/utils/enum/modules/logistics'
 import { fileClassifyEnum } from '@enum-ms/file'
@@ -160,7 +166,7 @@ const { maxHeight, heightStyle } = useMaxHeight(
     mainBox: '.purchase-order-raw-mat-detail',
     extraBox: ['.el-drawer__header'],
     wrapperBox: ['.el-drawer__body'],
-    clientHRepMainH: true,
+    clientHRepMainH: true
   },
   () => crud.detailVisible
 )
@@ -184,7 +190,7 @@ const boolUseRequisitions = computed(() => Boolean(detail.applyPurchase?.length)
 CRUD.HOOK.beforeDetailLoaded = async (crud, detail) => {
   await setSpecInfoToList(detail.details)
   await numFmtByBasicClass(detail.details, {
-    toNum: true,
+    toNum: true
   })
 }
 </script>
@@ -238,6 +244,29 @@ CRUD.HOOK.beforeDetailLoaded = async (crud, detail) => {
           text-align: center;
           cursor: pointer;
         }
+      }
+    }
+
+    .table-remark {
+      height: 45px;
+      line-height: 45px;
+      display: flex;
+      border: 1px solid #ebeef5;
+      border-top-width: 0;
+      font-size: 12px;
+      color: #606266;
+      .title {
+        width: 60px;
+        text-align: center;
+      }
+      .con {
+        width: 200px;
+        padding: 0px 10px;
+        display: -webkit-box;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
       }
     }
   }

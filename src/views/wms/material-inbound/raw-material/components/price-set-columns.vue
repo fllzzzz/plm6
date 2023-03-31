@@ -34,9 +34,7 @@
 
 <script setup>
 import { defineProps } from 'vue'
-
-import { isNotBlank, toPrecision } from '@/utils/data-type'
-import { getDP } from '@/utils/data-type/number'
+import usePriceSet from '@/composables/wms/use-price-set'
 
 const props = defineProps({
   weightAttribute: { // 重量属性
@@ -45,18 +43,5 @@ const props = defineProps({
   }
 })
 
-// 处理含税单价变化
-function handleUnitPriceChange(val, row) {
-  const dp = getDP(val)
-  if (dp > 10) {
-    row.unitPrice = toPrecision(val, 10)
-    val = row.unitPrice
-  }
-  row.amount = isNotBlank(val) ? toPrecision(val * row[props.weightAttribute], 2) : undefined
-}
-
-// 处理金额变化
-function handleAmountChange(val, row) {
-  row.unitPrice = isNotBlank(val) ? toPrecision(val / row[props.weightAttribute], 10) : undefined
-}
+const { handleUnitPriceChange, handleAmountChange } = usePriceSet(props.weightAttribute)
 </script>

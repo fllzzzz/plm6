@@ -51,19 +51,6 @@
           <el-tag size="medium" :type="row.materialTypeTag" effect="plain">{{ row.materialType }}</el-tag>
         </template>
       </el-table-column>
-      <!-- <el-table-column
-        v-if="checkPermission(permission.detail) && columns.visible('mete')"
-        prop="mete"
-        key="mete"
-        label="申购清单"
-        align="center"
-        width="90"
-        show-overflow-tooltip
-      >
-        <template #default="{ row }">
-          <udOperation show-detail :show-del="false" :show-edit="false" :data="{ id: row.id }" />
-        </template>
-      </el-table-column> -->
       <el-table-column
         v-if="columns.visible('project')"
         show-overflow-tooltip
@@ -85,16 +72,16 @@
           <common-button icon="el-icon-view" size="mini" type="success"></common-button>
         </template>
       </el-table-column> -->
-      <!-- <el-table-column
-        v-if="columns.visible('approveInfoName')"
+      <el-table-column
+        v-if="columns.visible('approveInfoName') && isOpenApproval"
         key="approveInfoName"
         prop="approveInfoName"
         show-overflow-tooltip
         align="center"
         label="审批流程"
-      /> -->
-      <!-- <el-table-column
-        v-if="columns.visible('reviewStatus')"
+      />
+      <el-table-column
+        v-if="columns.visible('reviewStatus') && isOpenApproval"
         key="reviewStatus"
         prop="reviewStatus"
         show-overflow-tooltip
@@ -107,7 +94,7 @@
             row.reviewStatus
           }}</el-tag>
         </template>
-      </el-table-column> -->
+      </el-table-column>
       <el-table-column v-if="columns.visible('enabled')" key="enabled" prop="enabled" label="状态" align="center" width="100">
         <template #default="{ row: { sourceRow: row } }">
           <el-switch
@@ -124,13 +111,25 @@
       <!--详情与审核-->
       <el-table-column v-permission="[...permission.detail, ...permission.del]" align="center" label="操作" width="170">
         <template #default="{ row: { sourceRow: row } }">
-          <!-- <udOperation
+          <udOperation
+            show-detail
             :data="{ id: row.id }"
+            :disabled-edit="
+              row.purchaseCreationState === requisitionStatusEnum.PARTIALLY_COMPLETED.V ||
+              Boolean(
+                row.reviewStatus & (ddReviewStatusEnum.UNREVIEWED.V | ddReviewStatusEnum.AUDITING.V | ddReviewStatusEnum.PASS.V) &&
+                  isOpenApproval
+              )
+            "
+            :disabled-del="
+              row.purchaseCreationState === requisitionStatusEnum.PARTIALLY_COMPLETED.V ||
+              (isOpenApproval && row.reviewStatus !== ddReviewStatusEnum.UNREVIEWED.V)
+            "
+            :del-type="isOpenApproval ? 'warning' : 'danger'"
+            :del-icon="isOpenApproval ? 'el-icon-document-delete' : 'el-icon-delete'"
             :permission="permission"
-            :disabled-del="row.reviewStatus !== ddReviewStatusEnum.UNREVIEWED.V"
-            delPrompt="确定撤销本条数据吗？"
-          /> -->
-          <udOperation show-detail :data="{ id: row.id }" :permission="permission" delPrompt="确定撤销本条数据吗？" />
+            :delPrompt="`确定${isOpenApproval ? '撤销' : '删除'}本条数据吗？`"
+          />
         </template>
       </el-table-column>
     </common-table>
@@ -143,10 +142,11 @@
 
 <script setup>
 import crudApi, { editStatus } from '@/api/supply-chain/requisitions-manage/requisitions'
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 
 import { scmRequisitionsPM as permission } from '@/page-permission/supply-chain'
 import { ddReviewStatusEnum } from '@enum-ms/dd'
+import { requisitionStatusEnum } from '@enum-ms/wms'
 import { materialPurchaseClsEnum } from '@enum-ms/classification'
 import checkPermission from '@/utils/system/check-permission'
 import { enabledEnum } from '@enum-ms/common'
@@ -176,6 +176,7 @@ const dataFormat = ref([
   ['materialType', ['parse-enum', materialPurchaseClsEnum, { f: 'L' }]],
   ['createTime', 'parse-time']
 ])
+
 const { CRUD, crud, columns } = useCRUD(
   {
     title: '材料申购',
@@ -189,6 +190,9 @@ const { CRUD, crud, columns } = useCRUD(
 )
 
 const { maxHeight } = useMaxHeight({ paginate: true })
+
+// 是否开启申购审批
+const isOpenApproval = computed(() => crud.query.boolInitiateApprove)
 
 async function changeStatus(data, val) {
   try {

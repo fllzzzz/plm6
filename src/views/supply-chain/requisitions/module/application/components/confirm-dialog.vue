@@ -33,7 +33,7 @@
         style="width: 140px"
       />
       <common-select
-        v-if="approvalCfg?.requisition"
+        v-if="isOpenApproval"
         v-model="form.approveProcessId"
         :options="approvalProcessOptions"
         type="other"
@@ -170,6 +170,9 @@ const columnsDataFormat = ref([...materialColumns])
 const { visible: dialogVisible, handleClose } = useVisible({ emit, props })
 const { cu, form, FORM } = regExtra() // 表单
 
+// 是否开启审批
+const isOpenApproval = computed(() => approvalCfg.value?.requisition || form.boolInitiateApprove)
+
 // 表格高度处理
 const { maxHeight } = useMaxHeight(
   {
@@ -229,7 +232,7 @@ FORM.HOOK.beforeSubmit = async () => {
     ElMessage.warning('请选择到厂时间')
     return false
   }
-  if (!form.approveProcessId && approvalCfg.value?.requisition) {
+  if (!form.approveProcessId && isOpenApproval.value) {
     ElMessage.warning('请选择审批流程')
     return false
   }

@@ -7,7 +7,11 @@
       :disabledVal="disabledVal"
       clearable
       class="filter-item"
-    />
+    >
+      <template #suffix="{ item }">
+        <span v-if="bcListObj[bcListKV[item.K]]?.length">({{ bcListObj[bcListKV[item.K]].length }})</span>
+      </template>
+    </common-radio-button>
   </div>
   <component ref="compRef" v-if="basicClass" :is="comp" v-bind="$attrs" />
 </template>
@@ -74,20 +78,15 @@ function initList(list) {
   bcListObj.sectionSteelList = []
   bcListObj.steelPlateList = []
   bcListObj.steelCoilList = []
-  if (!list?.length) {
-    basicClass.value = steelClsEnum.STEEL_PLATE.V
-  } else {
-    list.forEach((v) => {
-      v.weighingTotalWeight = v.mete
-      bcListObj[bcListKV[steelClsEnum.VK[v.basicClass]]].push(deepClone(v))
-    })
-    for (const item in steelClsEnum.ENUM) {
-      if (bcListObj[bcListKV[item]]?.length) {
-        basicClass.value = steelClsEnum[item].V
-        break
-      }
-    }
-  }
+  basicClass.value = steelClsEnum.STEEL_PLATE.V
+  if (!list?.length) return
+  let _basicClass = steelClsEnum.STEEL_PLATE.V
+  list.forEach((v, i) => {
+    v.weighingTotalWeight = v.mete
+    bcListObj[bcListKV[steelClsEnum.VK[v.basicClass]]].push(deepClone(v))
+    _basicClass = v.basicClass < _basicClass || i === 0 ? v.basicClass : _basicClass
+  })
+  basicClass.value = _basicClass
 }
 
 defineExpose({

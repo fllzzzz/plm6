@@ -2,7 +2,7 @@
   <common-table
     ref="tableRef"
     :data="list"
-    show-summary
+    :show-summary="false"
     :summary-method="getSummaries"
     :data-format="columnsDataFormat"
     :max-height="maxHeight"

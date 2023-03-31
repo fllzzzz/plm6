@@ -14,7 +14,7 @@
           </el-tag>
         </span>
       </div>
-      <component ref="compRef" :is="currentView" @add-purchase="addPurchase" />
+      <component v-loading="loading" ref="compRef" :is="currentView" @add-purchase="addPurchase" />
     </div>
   </div>
 </template>
@@ -23,7 +23,6 @@
 import { canPurchaseDetail } from '@/api/supply-chain/requisitions-manage/requisitions'
 import requisitionOrder from './module/requisition-order'
 import { defineExpose, defineEmits, computed, ref, watch, inject, nextTick } from 'vue'
-import { isBlank } from '@/utils/data-type'
 
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { setSpecInfoToList } from '@/utils/wms/spec'
@@ -38,6 +37,7 @@ const form = inject('crud')?.form
 
 const requisitionOrderRef = ref()
 const compRef = ref()
+const loading = ref(false)
 const list = ref([])
 
 watch(
@@ -70,6 +70,7 @@ async function fetchList() {
     return
   }
   try {
+    loading.value = true
     const ids = form.requisitions?.map((v) => v.id) || []
     const content = (await canPurchaseDetail({ ids })) || []
     if (materialType.value & materialPurchaseClsEnum.MANUFACTURED.V) {
@@ -81,8 +82,12 @@ async function fetchList() {
         toNum: true
       })
     }
-    nextTick(() => compRef.value?.initList(list.value))
+    nextTick(() => {
+      compRef.value?.initList(list.value)
+      loading.value = false
+    })
   } catch (er) {
+    loading.value = false
     console.log(er, '获取可采购列表失败')
   }
 }

@@ -125,6 +125,7 @@ import { defineExpose, inject, watchEffect, reactive, watch } from 'vue'
 import { matClsEnum } from '@/utils/enum/modules/classification'
 import { isBlank, isNotBlank, toPrecision } from '@/utils/data-type'
 
+import usePriceSet from '@/composables/wms/use-price-set'
 import useTableValidate from '@compos/form/use-table-validate'
 import useMatBaseUnit from '@/composables/store/use-mat-base-unit'
 import useWeightOverDiff from '@/composables/wms/use-steel-weight-over-diff'
@@ -140,6 +141,7 @@ const matSpecRef = inject('matSpecRef') // 调用父组件matSpecRef
 const form = inject('crud')?.form
 const { baseUnit } = useMatBaseUnit(basicClass) // 当前分类基础单位
 
+const { handleMeteChangeCalcPrice } = usePriceSet('weighingTotalWeight')
 const { overDiffTip, weightOverDiff, diffSubmitValidate } = useWeightOverDiff(baseUnit) // 过磅重量超出理论重量处理
 
 // 金额校验
@@ -219,7 +221,11 @@ function rowWatch(row) {
   // 计算单件理论重量
   watch([() => row.length, () => row.width, () => row.thickness, baseUnit], () => calcTheoryWeight(row), { immediate: true })
   // 计算总重
-  watch([() => row.theoryWeight, () => row.quantity], () => calcTotalWeight(row))
+  watch([() => row.theoryWeight, () => row.quantity], () => {
+    calcTotalWeight(row)
+  })
+  // 计算价格
+  watch([() => row.weighingTotalWeight], () => handleMeteChangeCalcPrice(row))
 }
 
 // 总重计算与单位重量计算分开，避免修改数量时需要重新计算单件重量

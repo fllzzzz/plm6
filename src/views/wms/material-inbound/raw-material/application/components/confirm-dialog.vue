@@ -44,7 +44,7 @@
           <!-- 单位及其数量 -->
           <material-unit-quantity-columns :basic-class="props.basicClass" />
 
-          <template v-if="fillableAmount && !boolPartyA">
+          <!-- <template v-if="fillableAmount && !boolPartyA">
             <el-table-column key="unitPrice" prop="unitPrice" align="right" width="120" label="含税单价">
               <template #default="{ row: { sourceRow: row } }">
                 <span>{{ row.unitPrice }}</span>
@@ -55,7 +55,7 @@
                 <span>{{ row.amount }}</span>
               </template>
             </el-table-column>
-          </template>
+          </template> -->
 
           <!-- 金额设置 -->
           <!-- <price-set-columns
@@ -151,9 +151,8 @@ const logisticsRef = ref()
 // 订单信息
 const order = computed(() => cu.props.order || {})
 // 显示金额相关信息（由采购填写的信息）
-// const fillableAmount = ref(true)
+const fillableAmount = ref(true)
 // const fillableAmount = computed(() => inboundFillWayCfg.value ? inboundFillWayCfg.value.amountFillWay === inboundFillWayEnum.APPLICATION.V : false)
-const fillableAmount = computed(() => false)
 // 显示仓库（由仓库填写的信息）
 const fillableWarehouse = ref(true)
 // const fillableWarehouse = computed(() => inboundFillWayCfg.value ? inboundFillWayCfg.value.warehouseFillWay === inboundFillWayEnum.APPLICATION.V : false)

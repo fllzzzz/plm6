@@ -3,7 +3,7 @@
     ref="tableRef"
     :data="list"
     :max-height="maxHeight"
-    show-summary
+    :show-summary="false"
     :summary-method="getSummaries"
     :default-expand-all="false"
     highlight-current-row

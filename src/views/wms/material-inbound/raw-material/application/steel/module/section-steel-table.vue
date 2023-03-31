@@ -284,6 +284,15 @@ function selectAllTableChange(select) {
   })
 }
 
+// 设置选择的回显
+function setSelect() {
+  form.sectionSteelList.forEach((v) => {
+    if (form.selectObj[v.purchaseOrderDetailId].isSelected) {
+      tableRef.value.toggleRowSelection(v, true)
+    }
+  })
+}
+
 // 行初始化
 function rowInit(row) {
   const _row = reactive({
@@ -422,6 +431,7 @@ defineExpose({
   rowInit,
   rowWatch,
   toggleRowSelection,
-  validate
+  validate,
+  setSelect
 })
 </script>

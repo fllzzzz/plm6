@@ -104,6 +104,7 @@ import { defineExpose, inject, watchEffect, reactive, watch } from 'vue'
 import { matClsEnum } from '@/utils/enum/modules/classification'
 import { isBlank, isNotBlank, toPrecision } from '@/utils/data-type'
 
+import usePriceSet from '@/composables/wms/use-price-set'
 import useTableValidate from '@compos/form/use-table-validate'
 import useMatBaseUnit from '@/composables/store/use-mat-base-unit'
 import useWeightOverDiff from '@/composables/wms/use-steel-weight-over-diff'
@@ -152,6 +153,7 @@ const rules = {
   ]
 }
 
+const { handleMeteChangeCalcPrice } = usePriceSet('weighingTotalWeight')
 const { tableValidate, wrongCellMask } = useTableValidate({ rules: rules, errorMsg: '请修正【型材清单】中标红的信息' }) // 表格校验
 
 // 行初始化
@@ -199,6 +201,8 @@ function rowWatch(row) {
   watch([() => row.length, () => row.quantity], () => {
     calcTotalLength(row)
   })
+  // 计算价格
+  watch([() => row.weighingTotalWeight], () => handleMeteChangeCalcPrice(row))
 }
 
 // 总重计算与单位重量计算分开，避免修改数量时需要重新计算单件重量

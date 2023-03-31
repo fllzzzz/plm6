@@ -110,6 +110,7 @@ import { defineExpose, inject, reactive, watch } from 'vue'
 import { matClsEnum } from '@/utils/enum/modules/classification'
 import { isBlank, isNotBlank } from '@/utils/data-type'
 
+import usePriceSet from '@/composables/wms/use-price-set'
 import useTableValidate from '@compos/form/use-table-validate'
 import useMatBaseUnit from '@/composables/store/use-mat-base-unit'
 import { createUniqueString } from '@/utils/data-type/string'
@@ -157,6 +158,7 @@ const matSpecRef = inject('matSpecRef') // 调用父组件matSpecRef
 const form = inject('crud')?.form
 const { baseUnit } = useMatBaseUnit(basicClass) // 当前分类基础单位
 
+const { handleMeteChangeCalcPrice } = usePriceSet('weighingTotalWeight')
 const { tableValidate, wrongCellMask } = useTableValidate({ rules: rules, errorMsg: '请修正【钢卷清单】中标红的信息' }) // 表格校验
 
 // 行初始化
@@ -198,6 +200,8 @@ function rowInit(row) {
 function rowWatch(row) {
   // 计算理论长度
   watch([() => row.weighingTotalWeight, () => row.width, () => row.thickness, baseUnit], () => calcTheoryLength(row))
+  // 计算价格
+  watch([() => row.weighingTotalWeight], () => handleMeteChangeCalcPrice(row))
   // 计算总长度
   watch([() => row.theoryLength], () => calcTotalLength(row))
 }

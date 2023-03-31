@@ -80,6 +80,15 @@ watch(
 )
 
 watch(
+  () => form.materialType,
+  (val, oldVal) => {
+    if (val && oldVal && val !== oldVal) {
+      form.list = []
+    }
+  }
+)
+
+watch(
   () => isManufactured,
   (val) => {
     if (isManufactured.value) {

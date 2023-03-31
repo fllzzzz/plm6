@@ -375,6 +375,7 @@ watch(
       nextTick(() => {
         // nextTick 后 steelRef.value 才会发生变化
         if (!steelRefList[k]) steelRefList[k] = steelRef.value
+        steelRef.value?.setSelect()
       })
     }
   },

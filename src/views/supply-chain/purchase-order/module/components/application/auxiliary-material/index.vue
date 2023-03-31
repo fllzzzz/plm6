@@ -85,11 +85,12 @@
 </template>
 
 <script setup>
-import { defineExpose, inject, reactive, watchEffect } from 'vue'
+import { defineExpose, inject, reactive, watch, watchEffect } from 'vue'
 import { createUniqueString } from '@/utils/data-type/string'
 import { positiveNumPattern } from '@/utils/validate/pattern'
 import { isNotBlank } from '@/utils/data-type'
 
+import usePriceSet from '@compos/wms/use-price-set'
 import useTableValidate from '@compos/form/use-table-validate'
 import priceSetColumns from '@/views/wms/material-inbound/raw-material/components/price-set-columns.vue'
 
@@ -138,6 +139,7 @@ const rules = {
   ]
 }
 
+const { handleMeteChangeCalcPrice } = usePriceSet('mete')
 const { tableValidate, wrongCellMask } = useTableValidate({ rules: rules }) // 表格校验
 
 // 行初始化
@@ -162,7 +164,14 @@ function rowInit(row) {
     mete: undefined, // 核算量
     quantity: undefined // 数量
   })
+  rowWatch(_row)
   return _row
+}
+
+// 行监听
+function rowWatch(row) {
+  // 计算价格
+  watch([() => row.mete], () => handleMeteChangeCalcPrice(row))
 }
 
 // 删除行
