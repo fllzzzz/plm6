@@ -68,7 +68,7 @@ const actions = {
   async fetchWmsConfig({ commit }) {
     const { inbound = {}, purchaseSpec = {}, outbound = {}, reject = {}, report = {}, partyABorrowReturn = {}, weightedPrice = {}} = await getWmsConfig()
     commit('SET_PURCHASE_CFG', purchaseSpec)
-    commit('SET_INBOUND_STEEL_CFG', inbound.steel)
+    commit('SET_INBOUND_STEEL_CFG', inbound.fillWay)
     commit('SET_INBOUND_FILL_WAY_CFG', inbound.fillWay)
     commit('SET_OUTBOUND_CFG', outbound)
     commit('SET_REJECT_CFG', reject)
