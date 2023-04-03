@@ -98,25 +98,27 @@
             </el-table-column>
           </template>
         </el-table-column>
-        <template v-for="(week, index) in weekList" :key="week">
-          <el-table-column
-            :label="`第${index + 1}周\n${week.date}`"
-            align="center"
-            :show-overflow-tooltip="true"
-            width="180px"
-            v-if="crud.query.type === timeTypeEnum.CURRENT_MONTH.V"
-          >
-            <template #default="{ row }">
-              <div v-if="row.mete?.findIndex((v) => v.date == week.date) > -1">
-                <template v-for="w in row.mete" :key="w">
-                  <template v-if="w.date == week.date">
-                    <span>{{ (w.totalNetWeight / 1000).toFixed(2) }}</span>
+        <template v-if="crud.data.length > 0">
+          <template v-for="(week, index) in weekList" :key="week">
+            <el-table-column
+              :label="`第${index + 1}周\n${week?.date}`"
+              align="center"
+              :show-overflow-tooltip="true"
+              width="180px"
+              v-if="crud.query.type === timeTypeEnum.CURRENT_MONTH.V"
+            >
+              <template #default="{ row }">
+                <div v-if="row.mete?.findIndex((v) => v.date == week.date) > -1">
+                  <template v-for="w in row.mete" :key="w">
+                    <template v-if="w.date == week.date">
+                      <span>{{ (w.totalNetWeight / 1000).toFixed(2) }}</span>
+                    </template>
                   </template>
-                </template>
-              </div>
-              <div v-else>-</div>
-            </template>
-          </el-table-column>
+                </div>
+                <div v-else>-</div>
+              </template>
+            </el-table-column>
+          </template>
         </template>
       </common-table>
       <!-- 排产详情 -->
@@ -188,7 +190,7 @@ CRUD.HOOK.handleRefresh = (crud, { data }) => {
         v.mete.map((k) => {
           v[k.date] = k
         })
-        weekList.value = [...v.mete]
+        weekList.value = v.mete
       }
     }
 
@@ -228,6 +230,20 @@ function getSummaries(param) {
         const values = data.map((item) => item[column.property] || 0)
         sums[index] = values.reduce((prev, curr) => {
           const value = Number(curr)
+          if (!isNaN(value)) {
+            return prev + Number(curr)
+          } else {
+            return prev
+          }
+        }, 0)
+        sums[index] = (Number(sums[index]) / 1000).toFixed(2)
+      }
+      if (index > 5) {
+        const values = data.map((item) => item[column.label?.split('周\n')[1]]?.totalNetWeight)
+        console.log(values, 'values')
+        sums[index] = values.reduce((prev, curr) => {
+          const value = Number(curr)
+          console.log(value, 'value')
           if (!isNaN(value)) {
             return prev + Number(curr)
           } else {

@@ -2,34 +2,41 @@
   <common-drawer
     ref="drawerRef"
     customClass="group-detail-drawer"
-    :title="`车间：${groupDetailData?.workshop?.name}`"
+    :title="`班组状态`"
     v-model="drawerVisible"
     direction="rtl"
     :before-close="handleClose"
     size="100%"
   >
+    <template #titleAfter>
+      <common-radio-button
+        v-if="workshopId"
+        v-model="processId"
+        :options="processData"
+        type="other"
+        class="filter-item"
+        :dataStructure="{ key: 'id', label: 'name', value: 'id' }"
+        showOptionAll
+        size="small"
+        @change="fetchGroupDetailGet"
+      />
+    </template>
     <template #content>
       <div style="display: flex">
         <div style="width: 40%">
-          <el-divider class="title"><el-tag type="success" size="medium"> 构件 </el-tag></el-divider>
           <common-table
             ref="directRef"
             highlight-current-row
             :data="artifactGroupList"
             style="width: 100%; cursor: pointer"
             row-key="id"
-            :max-height="maxHeight / 3 - 40"
+            :max-height="maxHeight"
             @row-click="handleRowClick"
           >
             <el-table-column prop="index" label="序号" align="center" width="60" type="index" />
-            <el-table-column prop="groups.name" key="groups.name" label="班组" align="center">
+            <el-table-column prop="groups.name" key="groups.name" label="车间/产线/班组" align="center">
               <template #default="{ row }">
-                <span>{{ row.groups?.name }}>{{ row.team?.name }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column prop="lastMonthNetWeight" key="lastMonthNetWeight" label="上月产量（吨）" align="center" width="120px">
-              <template #default="{ row }">
-                <span>{{ (row.lastMonthNetWeight / 1000)?.toFixed(2) }}</span>
+                <span>{{ row.workshop?.name }}>{{ row.productionLine?.name }}>{{ row.groups?.name }}>{{row.team?.name}}</span>
               </template>
             </el-table-column>
             <el-table-column prop="yearNetWeight" key="yearNetWeight" label="年度平均产量（吨）" align="center" width="150px">
@@ -37,79 +44,17 @@
                 <span>{{ (row.yearNetWeight / 1000)?.toFixed(2) }}</span>
               </template>
             </el-table-column>
-            <el-table-column prop="unQuantity" key="unQuantity" label="未完成任务（件/吨）" align="center" width="150px">
-              <template #default="{ row }">
-                <div @click.stop="unComplete(row)">
-                  <span class="tc-danger">{{ row.unQuantity }}</span>
-                  <span> / </span>
-                  <span class="tc-danger">{{ (row.unNetWeight / 1000)?.toFixed(2) }}</span>
-                </div>
-              </template>
-            </el-table-column>
-          </common-table>
-          <el-divider class="title"><el-tag type="warning" size="medium"> 部件 </el-tag></el-divider>
-          <common-table
-            ref="indirectRef"
-            highlight-current-row
-            :data="assembleGroupList"
-            style="width: 100%; cursor: pointer"
-            row-key="id"
-            :max-height="maxHeight / 3 - 40"
-            @row-click="handleRowClick"
-          >
-            <el-table-column prop="index" label="序号" align="center" width="60" type="index" />
-            <el-table-column prop="groups.name" key="groups.name" label="班组" align="center">
-              <template #default="{ row }">
-                <span>{{ row.groups?.name }}>{{ row.team?.name }}</span>
-              </template>
-            </el-table-column>
             <el-table-column prop="lastMonthNetWeight" key="lastMonthNetWeight" label="上月产量（吨）" align="center" width="120px">
               <template #default="{ row }">
                 <span>{{ (row.lastMonthNetWeight / 1000)?.toFixed(2) }}</span>
               </template>
             </el-table-column>
-            <el-table-column prop="yearNetWeight" key="yearNetWeight" label="年度平均产量（吨）" align="center" width="150px">
+            <el-table-column prop="unNetWeight" key="unNetWeight" label="在手任务（吨）" align="center" width="120px">
               <template #default="{ row }">
-                <span>{{ (row.yearNetWeight / 1000)?.toFixed(2) }}</span>
+                <span>{{ (row.unNetWeight / 1000)?.toFixed(2) }}</span>
               </template>
             </el-table-column>
-            <el-table-column prop="unQuantity" key="unQuantity" label="未完成任务（件/吨）" align="center" width="150px">
-              <template #default="{ row }">
-                <div @click.stop="unComplete(row)">
-                  <span class="tc-danger">{{ row.unQuantity }}</span>
-                  <span> / </span>
-                  <span class="tc-danger">{{ (row.unNetWeight / 1000)?.toFixed(2) }}</span>
-                </div>
-              </template>
-            </el-table-column>
-          </common-table>
-          <el-divider class="title"><el-tag size="medium"> 零件 </el-tag></el-divider>
-          <common-table
-            ref="indirectRef"
-            highlight-current-row
-            :data="partGroupList"
-            style="width: 100%; cursor: pointer"
-            row-key="id"
-            :max-height="maxHeight / 3 - 40"
-            @row-click="handleRowClick"
-          >
-            <el-table-column prop="index" label="序号" align="center" width="60" type="index" />
-            <el-table-column prop="groups.name" key="groups.name" label="班组" align="center">
-              <template #default="{ row }">
-                <span>{{ row.groups?.name }}>{{ row.team?.name }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column prop="lastMonthNetWeight" key="lastMonthNetWeight" label="上月产量（吨）" align="center" width="120px">
-              <template #default="{ row }">
-                <span>{{ (row.lastMonthNetWeight / 1000)?.toFixed(2) }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column prop="yearNetWeight" key="yearNetWeight" label="年度平均产量（吨）" align="center" width="150px">
-              <template #default="{ row }">
-                <span>{{ (row.yearNetWeight / 1000)?.toFixed(2) }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column prop="unQuantity" key="unQuantity" label="未完成任务（件/吨）" align="center" width="150px">
+            <!-- <el-table-column prop="unQuantity" key="unQuantity" label="未完成任务（件/吨）" align="center" width="150px">
               <template #default="{ row }">
                 <div @click.stop="unComplete(row)">
                   <span class="tc-danger">{{ row.unQuantity }}</span>
@@ -117,7 +62,7 @@
                   <span class="tc-danger">{{ (row.unNetWeight / 1000)?.toFixed(2) }}</span>
                 </div>
               </template>
-            </el-table-column>
+            </el-table-column> -->
           </common-table>
         </div>
         <div style="border-right: 1px solid #ededed; margin: 0 20px; height: calc(100vh - 180px)"></div>
@@ -131,6 +76,7 @@
 
 <script setup>
 import { getGroupDialog } from '@/api/mes/production-monitoring-kanban/kanban.js'
+import { getProcess } from '@/api/mes/factory-report/group-report.js'
 import useVisible from '@compos/use-visible'
 // import usePagination from '@compos/use-pagination'
 import useMaxHeight from '@compos/use-max-height'
@@ -144,6 +90,8 @@ const groupList = ref([])
 const artifactGroupList = ref([])
 const assembleGroupList = ref([])
 const partGroupList = ref([])
+const processData = ref([])
+const processId = ref()
 
 const props = defineProps({
   visible: {
@@ -176,6 +124,7 @@ const { visible: drawerVisible, handleClose } = useVisible({ emit, props, field:
 
 function showHook() {
   detailData.value = {}
+  fetchProcess()
 }
 
 watch(
@@ -186,6 +135,32 @@ watch(
   { immediate: true }
 )
 
+watch(
+  () => props.workshopId,
+  (val) => {
+    fetchProcess()
+  }
+)
+
+watch(
+  () => processId.value,
+  (val) => {
+    fetchGroupDetailGet()
+  }
+)
+
+// 获取工序
+async function fetchProcess() {
+  try {
+    const data = await getProcess({
+      workshopId: props.workshopId
+    })
+    processData.value = data || []
+  } catch (error) {
+    console.log('获取班组的工序失败')
+  }
+}
+
 async function fetchGroupDetailGet() {
   artifactGroupList.value = []
   assembleGroupList.value = []
@@ -193,7 +168,8 @@ async function fetchGroupDetailGet() {
   try {
     const data = await getGroupDialog({
       workshopId: props.workshopId,
-      areaId: props.areaId
+      areaId: props.areaId,
+      processId: processId.value
     })
     groupList.value = data || []
     groupList.value?.forEach((v) => {
@@ -210,9 +186,9 @@ async function fetchGroupDetailGet() {
   }
 }
 
-function unComplete(row) {
-  detailData.value = row
-}
+// function unComplete(row) {
+//   detailData.value = row
+// }
 
 function handleRowClick(val) {
   detailData.value = val

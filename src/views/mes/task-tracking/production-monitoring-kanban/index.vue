@@ -1,19 +1,22 @@
 <template>
   <div class="app-container">
     <div class="head-container">
-      <mHeader />
+      <mHeader ref="headerRef">
+        <template #btn>
+          <common-button
+            v-permission="permission.status"
+            class="filter-item"
+            size="mini"
+            type="warning"
+            style="float: right"
+            @click.stop="groupsDetail"
+          >
+            班组状态
+          </common-button>
+        </template>
+      </mHeader>
     </div>
     <div>
-      <common-button
-        v-permission="permission.status"
-        class="btn"
-        size="mini"
-        type="warning"
-        style="float: right; margin-bottom: 8px"
-        @click.stop="groupsDetail"
-      >
-        班组状态
-      </common-button>
       <common-table
         ref="tableRef"
         v-loading="crud.loading"
@@ -158,6 +161,7 @@ import { ref, reactive, provide, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import crudApi, { getSummary } from '@/api/mes/production-monitoring-kanban/kanban.js'
 import useCRUD from '@compos/use-crud'
+
 import { productionKanbanTypeEnum } from '@enum-ms/mes'
 import useMaxHeight from '@compos/use-max-height'
 import { productionMonitoringKanbanPM as permission } from '@/page-permission/mes'
@@ -178,6 +182,7 @@ const tableRef = ref()
 const detailDialogVisible = ref(false)
 const drawerVisible = ref(false)
 const detailList = ref({})
+
 // const groupDetailData = ref([])
 const { crud, CRUD, columns } = useCRUD(
   {
@@ -192,7 +197,7 @@ const { crud, CRUD, columns } = useCRUD(
   tableRef
 )
 const { maxHeight } = useMaxHeight({
-  extraBox: ['.head-container', '.btn'],
+  extraBox: ['.head-container', '.head-content'],
   paginate: true
 })
 

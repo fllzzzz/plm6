@@ -3,7 +3,49 @@
   <div v-else>
     <div class="app-container">
       <div class="head-container" style="display: flex; justify-content: space-between">
-        <el-tag>班组：{{ props.detailData?.groups?.name }}</el-tag>
+        <!-- <el-tag>班组：{{ props.detailData?.groups?.name }}</el-tag> -->
+        <div>
+          <el-input
+            v-model.trim="projectName"
+            size="small"
+            placeholder="项目搜索"
+            style="width: 170px"
+            class="filter-item"
+            clearable
+            @keyup.enter="fetchGroupDetail"
+          />
+          <el-input
+            v-model.trim="monomerName"
+            size="small"
+            placeholder="单体搜索"
+            style="width: 170px"
+            class="filter-item"
+            clearable
+            @keyup.enter="fetchGroupDetail"
+          />
+          <el-input
+            v-model.trim="areaName"
+            size="small"
+            placeholder="区域搜索"
+            style="width: 170px"
+            class="filter-item"
+            clearable
+            @keyup.enter="fetchGroupDetail"
+          />
+          <el-input
+            v-model.trim="serialNumber"
+            size="small"
+            placeholder="编号搜索"
+            style="width: 170px"
+            class="filter-item"
+            clearable
+            @keyup.enter="fetchGroupDetail"
+          />
+          <common-button class="filter-item" size="mini" type="success" icon="el-icon-search" @click.stop="searchQuery">搜索</common-button>
+          <common-button class="filter-item" size="mini" type="warning" icon="el-icon-refresh-left" @click.stop="resetQuery">
+            重置
+          </common-button>
+        </div>
         <div style="width: 300px">
           <print-table
             v-permission="permission.print"
@@ -14,7 +56,7 @@
               taskTypeEnum: props.detailData.taskTypeEnum,
               teamId: props.detailData.team?.id,
               workshopId: props.workshopId,
-              areaId: props.areaId
+              areaId: props.areaId,
             }"
             size="mini"
             type="warning"
@@ -49,8 +91,19 @@
         </el-table-column>
         <el-table-column :show-overflow-tooltip="true" prop="serialNumber" key="serialNumber" label="编号" align="center" />
         <el-table-column :show-overflow-tooltip="true" prop="specification" key="specification" label="规格" align="center" />
-        <el-table-column :show-overflow-tooltip="true" prop="quantity" key="quantity" label="数量" align="center" />
-        <el-table-column :show-overflow-tooltip="true" prop="netWeight" key="netWeight" label="重量（kg）" align="center" />
+        <el-table-column :show-overflow-tooltip="true" prop="material" key="material" label="材质" align="center" />
+        <el-table-column :show-overflow-tooltip="true" prop="quantity" key="quantity" label="pa排产数" align="center" />
+        <el-table-column :show-overflow-tooltip="true" prop="netWeight" key="netWeight" label="排产量（kg）" align="center" />
+        <el-table-column :show-overflow-tooltip="true" prop="completeQuantity" key="completeQuantity" label="完成数" align="center">
+          <template #default="{ row }">
+            <span :class="row.quantity === row.completeQuantity ? '' : 'tc-danger'">{{ row.completeQuantity }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column :show-overflow-tooltip="true" prop="completeNetWeight" key="completeNetWeight" label="完成量（kg）" align="center">
+          <template #default="{ row }">
+            <span :class="row.quantity === row.completeQuantity ? '' : 'tc-danger'">{{ row.completeNetWeight }}</span>
+          </template>
+        </el-table-column>
       </common-table>
       <!--分页组件-->
       <el-pagination
@@ -87,6 +140,10 @@ const props = defineProps({
 
 const tableRef = ref()
 const list = ref([])
+const projectName = ref()
+const monomerName = ref()
+const areaName = ref()
+const serialNumber = ref()
 
 const { maxHeight } = useMaxHeight({
   paginate: true
@@ -119,6 +176,18 @@ async function fetchGroupDetail() {
   } catch (error) {
     console.log('获取班组详情信息失败', error)
   }
+}
+
+function searchQuery() {
+  fetchGroupDetail()
+}
+
+function resetQuery() {
+  projectName.value = undefined
+  monomerName.value = undefined
+  areaName.value = undefined
+  serialNumber.value = undefined
+  fetchGroupDetail()
 }
 </script>
 <style lang="scss" scoped>

@@ -12,56 +12,66 @@
       defaultValue
       @change="crud.toQuery"
     />
-    <div>
-      <el-row v-permission="permission.statistics" v-loading="projectInfo.loading" :gutter="24" class="panel-group">
-        <el-col :span="5" class="card-panel-col">
-          <panel
-            name="设计产能（吨）:"
-            :precision="2"
-            :decimals="2"
-            num-color="#1890ff"
-            :end-val="projectInfo.summary.capacityNetWeight / 1000 || 0"
-          />
-        </el-col>
-        <el-col :span="5" class="card-panel-col">
-          <panel
-            name="年度累计和平均（吨）:"
-            :precision="2"
-            num-color="#1890ff"
-            :end-val="projectInfo.summary?.taskNetWeight / 1000 + '/' + projectInfo.summary?.yearAvgNetWeight / 1000"
-          />
-        </el-col>
-        <el-col :span="4" class="card-panel-col">
-          <panel name="当前在手订单（个）:" :decimals="2" num-color="#1890ff" :end-val="projectInfo.summary.orderQuantity || 0" />
-        </el-col>
-        <el-col :span="5" class="card-panel-col">
-          <panel
-            name="在手未完成量（吨）:"
-            :precision="2"
-            :decimals="2"
-            num-color="#1890ff"
-            :end-val="projectInfo.summary.unNetWeight / 1000 || 0"
-          />
-        </el-col>
-        <el-col :span="5" class="card-panel-col">
-          <panel
-            name="产能空余率（%）:"
-            :precision="2"
-            :decimals="2"
-            num-color="#1890ff"
-            :end-val="projectInfo.summary.capacityRatio || 0"
-          />
-        </el-col>
-      </el-row>
-    </div>
+    <el-row v-permission="permission.statistics" v-loading="projectInfo.loading" :gutter="24" class="panel-group">
+      <el-col :span="5" class="card-panel-col">
+        <panel name="设计产能（吨）:" :precision="2" num-color="#1890ff" :end-val="projectInfo.summary.capacityNetWeight / 1000 || 0" />
+      </el-col>
+      <el-col :span="5" class="card-panel-col">
+        <panel name="年度累计和平均（吨）:" :precision="2" num-color="#1890ff" :end-val="projectInfo.summary?.taskNetWeight / 1000" />
+      </el-col>
+      <!-- <el-col :span="5">
+          <el-statistic :value="`${projectInfo.summary?.taskNetWeight}`">
+            <template #title>
+              <div style="display: inline-flex; align-items: center">年度累计和平均（吨）:</div>
+            </template>
+            <template #suffix>/{{ projectInfo.summary?.yearAvgNetWeight }}</template>
+          </el-statistic>
+        </el-col> -->
+      <el-col :span="4" class="card-panel-col">
+        <panel name="当前在手订单（个）:" num-color="#1890ff" :end-val="projectInfo.summary?.orderQuantity || 0" />
+      </el-col>
+      <el-col :span="5" class="card-panel-col">
+        <panel name="在手未完成量（吨）:" :precision="2" num-color="#1890ff" :end-val="projectInfo.summary.unNetWeight / 1000 || 0" />
+      </el-col>
+      <el-col :span="5" class="card-panel-col">
+        <panel name="产能空余率（%）:" :precision="2" num-color="#1890ff" :end-val="projectInfo.summary.capacityRatio || 0" />
+      </el-col>
+    </el-row>
+    <crudOperation>
+      <template #optLeft>
+        <common-radio-button
+          v-model="query.status"
+          :options="purchaseOrderStatusEnum.ENUM"
+          class="filter-item"
+          showOptionAll
+          type="enum"
+          @change="crud.toQuery"
+        />
+        <el-input
+          v-model.trim="query.name"
+          placeholder="输入项目搜索"
+          class="filter-item"
+          style="width: 200px"
+          size="small"
+          clearable
+          @keyup.enter="crud.toQuery"
+        />
+      </template>
+      <template #viewLeft>
+        <slot name="btn"></slot>
+      </template>
+    </crudOperation>
   </div>
 </template>
 
 <script setup>
 import { inject } from 'vue'
 import { regHeader } from '@compos/use-crud'
+import { purchaseOrderStatusEnum } from '@enum-ms/contract'
 import workshopSelect from '@comp-mes/workshop-select'
 import Panel from '@/components/Panel'
+import crudOperation from '@crud/CRUD.operation'
+// import { ElStatistic } from 'element-plus'
 
 const projectInfo = inject('projectInfo')
 const permission = inject('permission')
