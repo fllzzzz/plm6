@@ -364,8 +364,10 @@ export const mesParallelConfigPM = {
 
 // WMS-配置管理/基础配置
 export const configWmsBasicForPM = {
-  // basicInboundGet: ['config_wms_basicInbound:get'], // 查看 基础入库配置信息
-  // basicInboundEdit: ['config_wms_basicInbound:edit'], // 编辑 基础入库配置信息
+  basicInboundGet: ['config_wms_basicInbound:get'], // 查看 基础入库配置信息
+  basicInboundEdit: ['config_wms_basicInbound:edit'], // 编辑 基础入库配置信息
+  basicPurchaseGet: ['config_wms_basicPurchase:get'], // 查看 基础采购配置信息
+  basicPurchaseEdit: ['config_wms_basicPurchase:edit'], // 编辑 基础采购配置信息
   reportCenterGet: ['config_wms_reportCenter:get'], // 查看 报表中心下载配置信息
   reportCenterEdit: ['config_wms_reportCenter:edit'], // 编辑 报表中心下载配置信息
   steelInboundGet: ['config_wms_steelInbound:get'], // 查看 钢材入库配置信息

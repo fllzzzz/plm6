@@ -73,64 +73,14 @@
           <!-- 次要信息 -->
           <material-secondary-info-columns v-if="showTableColumnSecondary" :basic-class="form.basicClass" />
           <!-- 金额设置 -->
-          <template v-if="showAmount">
-            <!-- <price-set-columns
-              v-if="fillableAmount"
-              :form="form"
-              :order="order"
-              :requisitions="requisitions"
-              weightAttribute="mete"
-              @amount-change="handleAmountChange"
-            /> -->
-            <template v-if="fillableAmount && !boolPartyA">
-              <el-table-column prop="unitPrice" align="center" width="135px" label="含税单价">
-                <template #default="{ row: { sourceRow: row } }">
-                  <common-input-number
-                    v-if="row"
-                    v-model="row.unitPrice"
-                    :min="0"
-                    :max="9999999999"
-                    :controls="false"
-                    :step="1"
-                    size="mini"
-                    placeholder="含税单价"
-                    @change="handleUnitPriceChange($event, row)"
-                  />
-                </template>
-              </el-table-column>
-              <el-table-column prop="amount" align="center" width="135px" label="金额">
-                <template #default="{ row: { sourceRow: row } }">
-                  <common-input-number
-                    v-if="row"
-                    v-model="row.amount"
-                    :min="0"
-                    :max="9999999999"
-                    :controls="false"
-                    :step="1"
-                    size="mini"
-                    :precision="2"
-                    placeholder="金额"
-                    @change="handleAmountChange($event, row)"
-                  />
-                </template>
-              </el-table-column>
-              <el-table-column prop="project" label="项目" align="left" min-width="120px" show-overflow-tooltip />
-            </template>
-            <template v-else>
-              <el-table-column prop="unitPrice" label="含税单价" align="right" min-width="120px" show-overflow-tooltip />
-              <el-table-column prop="amount" label="金额" align="right" min-width="120px" show-overflow-tooltip />
-              <!-- <el-table-column prop="sourceRequisitionsSN" label="申购单" align="left" min-width="120px" show-overflow-tooltip /> -->
-              <el-table-column prop="project" label="项目" align="left" min-width="120px" show-overflow-tooltip />
-              <el-table-column prop="monomerName" label="单体" align="left" min-width="120px" show-overflow-tooltip />
-              <el-table-column prop="areaName" label="区域" align="left" min-width="120px" show-overflow-tooltip />
-            </template>
+          <template v-if="showAmount && !boolPartyA">
+            <el-table-column prop="unitPrice" label="含税单价" align="right" min-width="120px" show-overflow-tooltip />
+            <el-table-column prop="amount" label="金额" align="right" min-width="120px" show-overflow-tooltip />
           </template>
-          <template v-else>
-            <!-- <el-table-column prop="sourceRequisitionsSN" label="申购单" align="left" min-width="120px" show-overflow-tooltip /> -->
-            <el-table-column prop="project" label="项目" align="left" min-width="120px" show-overflow-tooltip />
-            <el-table-column prop="monomerName" label="单体" align="left" min-width="120px" show-overflow-tooltip />
-            <el-table-column prop="areaName" label="区域" align="left" min-width="120px" show-overflow-tooltip />
-          </template>
+          <!-- <el-table-column prop="sourceRequisitionsSN" label="申购单" align="left" min-width="120px" show-overflow-tooltip /> -->
+          <el-table-column prop="project" label="项目" align="left" min-width="120px" show-overflow-tooltip />
+          <el-table-column prop="monomerName" label="单体" align="left" min-width="120px" show-overflow-tooltip />
+          <el-table-column prop="areaName" label="区域" align="left" min-width="120px" show-overflow-tooltip />
           <!-- 仓库设置 -->
           <template v-if="!boolManuf">
             <warehouse-set-columns v-if="fillableWarehouse" :form="form" />
@@ -164,7 +114,7 @@
 <script setup>
 import { getPendingReviewIdList, detail, reviewPassed, reviewReturned } from '@/api/wms/material-inbound/raw-material/review'
 import { inject, computed, ref, defineEmits, defineProps, watch } from 'vue'
-import { orderSupplyTypeEnum, inspectionStatusEnum } from '@enum-ms/wms'
+import { orderSupplyTypeEnum, inspectionStatusEnum, inboundFillWayEnum } from '@enum-ms/wms'
 import { materialPurchaseClsEnum } from '@/utils/enum/modules/classification'
 import { logisticsPayerEnum } from '@/utils/enum/modules/logistics'
 import { tableSummary } from '@/utils/el-extra'
@@ -178,7 +128,7 @@ import { materialHasAmountColumns } from '@/utils/columns-format/wms'
 import { regExtra } from '@compos/use-crud'
 import useTableValidate from '@/composables/form/use-table-validate'
 import useMaxHeight from '@compos/use-max-height'
-// import useWmsConfig from '@/composables/store/use-wms-config'
+import useWmsConfig from '@/composables/store/use-wms-config'
 import useVisible from '@compos/use-visible'
 import elExpandTableColumn from '@comp-common/el-expand-table-column.vue'
 import materialBaseInfoColumns from '@/components-system/wms/table-columns/material-base-info-columns/index.vue'
@@ -234,13 +184,12 @@ const pendingReviewIdList = ref([]) // 待审核列表
 // const currentReviewIndex = ref(0) // 当前审核下标
 const currentInboundId = ref() // 当前id
 
-// const { inboundFillWayCfg } = useWmsConfig()
+const { inboundFillWayCfg } = useWmsConfig()
 
 // 可填写金额（统一为入库填写，取消后台配置）
-const fillableAmount = ref(false)
-// const fillableAmount = computed(() =>
-//   inboundFillWayCfg.value ? inboundFillWayCfg.value.amountFillWay === inboundFillWayEnum.REVIEWING.V : false
-// )
+const fillableAmount = computed(() =>
+  inboundFillWayCfg.value ? inboundFillWayCfg.value.amountFillWay === inboundFillWayEnum.REVIEWING.V : false
+)
 
 // 显示金额相关信息（由采购填写的信息）
 const showAmount = computed(() => checkPermission(permission.showAmount) || fillableAmount.value)

@@ -71,7 +71,7 @@
 
 <script setup>
 import { computed, ref, inject } from 'vue'
-import { orderSupplyTypeEnum, inspectionStatusEnum } from '@enum-ms/wms'
+import { orderSupplyTypeEnum, inspectionStatusEnum, inboundFillWayEnum } from '@enum-ms/wms'
 import { materialPurchaseClsEnum } from '@/utils/enum/modules/classification'
 import { tableSummary } from '@/utils/el-extra'
 import { deepClone } from '@data-type/index'
@@ -81,7 +81,7 @@ import { materialHasAmountColumns } from '@/utils/columns-format/wms'
 
 import { regDetail } from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
-// import useWmsConfig from '@/composables/store/use-wms-config'
+import useWmsConfig from '@/composables/store/use-wms-config'
 import elExpandTableColumn from '@comp-common/el-expand-table-column.vue'
 import materialBaseInfoColumns from '@/components-system/wms/table-columns/material-base-info-columns/index.vue'
 import materialUnitQuantityColumns from '@/components-system/wms/table-columns/material-unit-quantity-columns/index.vue'
@@ -101,7 +101,7 @@ const columnsDataFormat = ref([...materialHasAmountColumns, ['remark', 'empty-te
 const drawerRef = ref()
 const expandRowKeys = ref([])
 const { CRUD, crud, detail } = regDetail()
-// const { inboundFillWayCfg } = useWmsConfig()
+const { inboundFillWayCfg } = useWmsConfig()
 
 // 表格高度处理
 const { maxHeight } = useMaxHeight(
@@ -120,10 +120,9 @@ const { maxHeight } = useMaxHeight(
 const order = computed(() => detail.purchaseOrder || {})
 
 // 可填写金额（统一为入库填写，取消后台配置）
-const fillableAmount = ref(true)
-// const fillableAmount = computed(() =>
-//   inboundFillWayCfg.value ? inboundFillWayCfg.value.amountFillWay === inboundFillWayEnum.REVIEWING.V : false
-// )
+const fillableAmount = computed(() =>
+  inboundFillWayCfg.value ? inboundFillWayCfg.value.amountFillWay === inboundFillWayEnum.REVIEWING.V : false
+)
 
 // 显示金额
 const showAmount = computed(() => checkPermission(permission.showAmount) || fillableAmount.value)

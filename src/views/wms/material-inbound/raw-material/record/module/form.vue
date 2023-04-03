@@ -56,6 +56,8 @@ CRUD.HOOK.beforeEditDetailLoaded = async (crud, detail) => {
     toSmallest: false,
     toNum: true
   })
+  // 物流信息
+  detail.logistics = detail.logisticsOrder
   if (detail.supplyType !== orderSupplyTypeEnum.PARTY_A.V) {
     detail.selectObj = {}
     detail.list.forEach(v => {

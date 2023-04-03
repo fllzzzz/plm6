@@ -2,9 +2,9 @@
   <el-card shadow="always">
     <template #header>
       <div class="clearfix">
-        <span class="card-title">入库基础配置</span>
+        <span class="card-title">采购基础配置</span>
         <common-tip-button
-          v-permission="permission.basicInboundEdit"
+          v-permission="permission.basicPurchaseEdit"
           :loading="submitLoading"
           :disabled="submitDisabled"
           show-tip
@@ -26,10 +26,7 @@
       label-position="left"
       label-width="130px"
     >
-      <el-form-item label="金额显示场景">
-        <common-radio v-model="form.amountFillWay" :options="inboundFillWayEnum.ENUM" type="enum" size="small" />
-      </el-form-item>
-      <el-form-item label="入库信息是否可修改配置：" label-width="200px"></el-form-item>
+      <el-form-item label="采购信息是否可修改配置：" label-width="200px"></el-form-item>
       <el-form-item v-for="(item, key) in basicFillConfig" :key="key" :label="`【${rawMatClsEnum.VL[key]}】`" label-width="70px">
         <el-checkbox v-for="(spec, i) in item" :key="i" v-model="spec.V" :label="spec.L"></el-checkbox>
       </el-form-item>
@@ -52,31 +49,20 @@
       </el-form-item>
       <el-form-item>
         <span class="form-item-tip">
-          可配置单件钢材的最大误差。【钢材的入库重量】与【钢材的理论重量】的差值（绝对值）超过该误差，办理时将发出预警（可提交入库申请）。
+          可配置单件钢材的最大误差。【钢材的采购重量】与【钢材的申购重量】的差值（绝对值）超过该误差，办理时将发出预警（可提交采购申请）。
         </span>
         <span class="form-item-tip">固定重量({{ STEEL_DIFF_UNIT }})：误差不可超过 固定重量；</span>
-        <span class="form-item-tip">百分比(%)：误差不可超过 入库钢材的理论重量*百分比。</span>
+        <span class="form-item-tip">百分比(%)：误差不可超过 采购钢材的理论重量*百分比。</span>
       </el-form-item>
-      <!-- <el-form-item label="存储位置填写场景">
-        <common-radio v-model="form.warehouseFillWay" :options="inboundFillWayEnum.ENUM" type="enum" size="small" />
-      </el-form-item>
-      <el-form-item label="打印标签提示场景">
-        <el-checkbox v-model="form.printLabelTipWay.afterApplication" label="入库申请提交后" size="mini"></el-checkbox>
-        <el-checkbox v-model="form.printLabelTipWay.afterReview" label="入库单审核后" size="mini"></el-checkbox>
-        <el-form-item>
-          <span class="form-item-tip">勾选后，会在对应的场景弹窗提示用户打印此次入库物料的标签。</span>
-        </el-form-item>
-      </el-form-item> -->
     </el-form>
   </el-card>
 </template>
 
 <script setup>
-import { getInboundBasicConf, setInboundBasicConf } from '@/api/config/wms/base'
+import { getPurchaseBasicConf, setPurchaseBasicConf } from '@/api/config/wms/base'
 import { reactive, ref, onMounted, inject, computed, watchEffect } from 'vue'
 import { STEEL_DIFF_UNIT } from '@/settings/config'
 import { numOrPctEnum } from '@enum-ms/common'
-import { inboundFillWayEnum } from '@enum-ms/wms'
 import { rawMatClsEnum } from '@enum-ms/classification'
 import { isObjectValueEqual } from '@data-type/object'
 import { deepClone } from '@/utils/data-type'
@@ -106,15 +92,6 @@ const basicFillConfig = ref()
 
 // 数据源
 const dataSource = ref({
-  // 金额填写方式
-  amountFillWay: undefined,
-  // // 车间填写方式
-  // warehouseFillWay: undefined,
-  // // 标签打印提示场景
-  // printLabelTipWay: {
-  //   afterApplication: undefined,
-  //   afterReview: undefined
-  // }
   // 单件钢材差值
   steelDiff: undefined,
   // 差值类型（g 或 %）
@@ -159,7 +136,7 @@ onMounted(() => {
 async function fetchData() {
   dataLoading.value = true
   try {
-    const res = await getInboundBasicConf()
+    const res = await getPurchaseBasicConf()
     form.value = deepClone(res)
     dataSource.value = res
     basicFillConfig.value = defaultConfig
@@ -183,9 +160,9 @@ async function submit() {
     const passed = await formRef.value.validate()
     if (!passed) return
     submitLoading.value = true
-    await setInboundBasicConf(form.value)
+    await setPurchaseBasicConf(form.value)
     ElNotification({
-      title: '入库基础配置设置成功',
+      title: '采购基础配置设置成功',
       type: 'success',
       duration: 2500
     })
@@ -194,7 +171,7 @@ async function submit() {
     useRefreshStore('wmsConfig')
   } catch (error) {
     ElNotification({
-      title: '入库基础配置设置失败',
+      title: '采购基础配置设置失败',
       type: 'error',
       duration: 2500
     })
