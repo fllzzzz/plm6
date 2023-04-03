@@ -181,6 +181,7 @@ const props = defineProps({
   }
 })
 
+const requisitionMode = ref()
 const { approvalCfg } = useApprovalCfg()
 const { user } = mapGetters('user')
 const { projectMap } = mapGetters('projectMap')
@@ -310,7 +311,6 @@ function getSummaries(param) {
 }
 
 // --------------------------- 申购分类 start ------------------------------
-const requisitionMode = ref()
 
 const showList = computed(() => {
   if (props.isManufactured) {
