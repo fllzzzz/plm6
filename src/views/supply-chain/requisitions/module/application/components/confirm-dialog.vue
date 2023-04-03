@@ -22,16 +22,6 @@
       </span>
     </template>
     <template #titleRight>
-      <el-date-picker
-        v-model="form.arrivalTime"
-        type="date"
-        size="small"
-        value-format="x"
-        :disabled="cu.status.edit === FORM.STATUS.PROCESSING"
-        :disabledDate="(v) => moment(v).valueOf() < moment().subtract(1, 'days').valueOf()"
-        placeholder="选择到厂日期"
-        style="width: 140px"
-      />
       <common-select
         v-if="isOpenApproval"
         v-model="form.approveProcessId"
@@ -52,6 +42,7 @@
           :data="showList"
           :data-format="columnsDataFormat"
           :max-height="maxHeight"
+          :cell-class-name="wrongCellMask"
           show-summary
           :summary-method="getSummaries"
         >
@@ -71,9 +62,24 @@
           <material-unit-quantity-columns />
           <!-- 次要信息 -->
           <material-secondary-info-columns :showBatchNo="false" />
+          <el-table-column label="到厂日期" prop="arrivalTime" width="160px" align="center">
+            <template #default="{ row: { sourceRow: row }, $index }">
+              <el-date-picker
+                v-model="row.arrivalTime"
+                type="date"
+                size="small"
+                value-format="x"
+                :disabled="cu.status.edit === FORM.STATUS.PROCESSING"
+                :disabledDate="(v) => moment(v).valueOf() < moment().subtract(1, 'days').valueOf()"
+                :placeholder="row.arrivalTime !== '同上' ? '选择到厂日期' : '同上'"
+                @change="handleArrivalTimeChange($event, row, $index)"
+                style="width: 100%"
+              />
+            </template>
+          </el-table-column>
         </common-table>
         <!-- 制成品 -->
-        <common-table v-else :data="showList" :max-height="maxHeight - 170" show-summary>
+        <common-table v-else :data="showList" :max-height="maxHeight - 170" :cell-class-name="wrongCellMask" show-summary>
           <el-table-column label="序号" type="index" align="center" width="55" fixed="left" />
           <el-table-column prop="monomer.name" label="单体" align="center" show-overflow-tooltip min-width="120px" />
           <el-table-column prop="area.name" label="区域" align="center" show-overflow-tooltip min-width="120px" />
@@ -95,6 +101,21 @@
                 :step="5"
                 size="mini"
                 placeholder="数量"
+              />
+            </template>
+          </el-table-column>
+          <el-table-column label="到厂日期" prop="arrivalTime" width="160px" align="center">
+            <template #default="{ row: { sourceRow: row }, $index }">
+              <el-date-picker
+                v-model="row.arrivalTime"
+                type="date"
+                size="small"
+                value-format="x"
+                :disabled="cu.status.edit === FORM.STATUS.PROCESSING"
+                :disabledDate="(v) => moment(v).valueOf() < moment().subtract(1, 'days').valueOf()"
+                :placeholder="row.arrivalTime !== '同上' ? '选择到厂日期' : '同上'"
+                @change="handleArrivalTimeChange($event, row, $index)"
+                style="width: 100%"
               />
             </template>
           </el-table-column>
@@ -134,6 +155,7 @@ import { requisitionModeEnum } from '@enum-ms/wms'
 import moment from 'moment'
 
 import { regExtra } from '@/composables/form/use-form'
+import useTableValidate from '@compos/form/use-table-validate'
 import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'
 import useApprovalCfg from '@compos/store/use-approval-cfg'
@@ -170,6 +192,13 @@ const columnsDataFormat = ref([...materialColumns])
 const { visible: dialogVisible, handleClose } = useVisible({ emit, props })
 const { cu, form, FORM } = regExtra() // 表单
 
+const tableRules = {
+  arrivalTime: [{ required: true, message: '请选择需求完成日期', trigger: 'change' }]
+}
+
+const ditto = new Map([['arrivalTime', '同上']])
+const { tableValidate, cleanUpData, wrongCellMask } = useTableValidate({ rules: tableRules, ditto })
+
 // 是否开启审批
 const isOpenApproval = computed(() => approvalCfg.value?.requisition || form.boolInitiateApprove)
 
@@ -197,18 +226,25 @@ watch(
   () => props.modelValue,
   (val) => {
     approvalProcessOptions.value = []
+    requisitionMode.value = undefined
     if (val && !form.serialNumber) {
       getNO()
     }
     if (val) {
       fetchApprovalProcess()
     }
+    form.list.forEach((v, i) => {
+      if (i !== 0) {
+        v.arrivalTime = '同上'
+      }
+    })
   },
   { immediate: true }
 )
 
 // 表单提交数据清理
 cu.submitFormFormat = async (form) => {
+  form.list = cleanUpData(form.list)
   if (!props.isManufactured) {
     form.list = await numFmtByBasicClass(form.list, { toSmallest: true, toNum: true })
   } else {
@@ -228,10 +264,18 @@ FORM.HOOK.beforeSubmit = async () => {
     ElMessage.error('获取申购单号失败，无法提交')
     return false
   }
-  if (!form.arrivalTime) {
-    ElMessage.warning('请选择到厂时间')
+  // if (!form.arrivalTime) {
+  //   ElMessage.warning('请选择到厂时间')
+  //   return false
+  // }
+  const { validResult } = tableValidate(form.list)
+  if (!validResult) {
+    if (!props.isManufactured && requisitionMode.value) {
+      requisitionMode.value = undefined
+    }
     return false
   }
+
   if (!form.approveProcessId && isOpenApproval.value) {
     ElMessage.warning('请选择审批流程')
     return false
@@ -241,6 +285,12 @@ FORM.HOOK.beforeSubmit = async () => {
 // 表单提交后：关闭预览窗口
 FORM.HOOK.afterSubmit = () => {
   handleClose()
+}
+
+function handleArrivalTimeChange(val, row, index) {
+  if (index !== 0 && !val) {
+    row.arrivalTime = '同上'
+  }
 }
 
 // 获取申购单号

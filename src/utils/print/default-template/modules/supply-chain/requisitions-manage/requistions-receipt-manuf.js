@@ -9,12 +9,12 @@ import {
 } from '@/utils/print/enum'
 
 // 申购详情
-const scmRequisitionsDetail = {
+const scmManufRequisitionsDetail = {
   fontUnit: 'pt', // 字体单位
   unit: cssUnitEnum.MM.V, // 长度单位
   unitPrecision: cssUnitPrecisionEnum.ZERO.V, // 长度单位精度
-  type: 'scmRequisitionsDetail', // 表格类型 KEY
-  name: '申购详情（平台）', // 表格名称
+  type: 'scmManufRequisitionsDetail', // 表格类型 KEY
+  name: '制成品申购详情（平台）', // 表格名称
   width: 210, // 打印纸的宽度
   height: 297, // 打印纸的高度
   paddingLR: 10, // 左右内边距
@@ -296,102 +296,29 @@ const scmRequisitionsDetail = {
      * @param {*} format 格式转换
      * @param {boolean} sum 列需要合计
      */
-    fields: [{
-      show: true,
-      key: 'serialNumber',
-      title: '编号',
-      source: dataSourceEnum.SYSTEM.V,
-      align: alignEnum.LEFT.V,
-      minWidth: 18,
-      type: typeEnum.SERIAL_NUMBER.K
-    },
-    {
-      show: true,
-      key: 'classifyName',
-      title: '物料类别',
-      source: dataSourceEnum.SYSTEM.V,
-      align: alignEnum.LEFT.V,
-      minWidth: 18,
-      type: typeEnum.MATERIAL_CLASS_NAME.K
-    },
-    {
-      show: true,
-      key: 'specMerge',
-      title: '规格',
-      source: dataSourceEnum.SYSTEM.V,
-      align: alignEnum.LEFT.V,
-      minWidth: 18,
-      type: typeEnum.SPECIFICATION.K
-    },
-    {
-      show: true,
-      key: 'brand',
-      title: '品牌',
-      source: dataSourceEnum.SYSTEM.V,
-      align: alignEnum.LEFT.V,
-      minWidth: 18,
-      type: typeEnum.BRAND.K
-    },
-    {
-      show: true,
-      key: 'measureUnit',
-      title: '计量单位',
-      source: dataSourceEnum.SYSTEM.V,
-      align: alignEnum.CENTER.V,
-      minWidth: 18,
-      type: typeEnum.MEASUREMENT_UNIT.K
-    },
-    {
-      show: true,
-      key: 'quantity',
-      title: '申购数',
-      source: dataSourceEnum.SYSTEM.V,
-      align: alignEnum.RIGHT.V,
-      minWidth: 18,
-      type: typeEnum.QUANTITY.K,
-      format: {
-        toThousand: false,
-        rowUnit: 'measureUnit'
-      },
-      sum: true
-    },
-    {
-      show: true,
-      key: 'accountingUnit',
-      title: '核算单位',
-      source: dataSourceEnum.SYSTEM.V,
-      align: alignEnum.CENTER.V,
-      width: 10,
-      type: typeEnum.ACCOUNTING_UNIT.K
-    },
-    {
-      show: true,
-      key: 'mete',
-      title: '申购量',
-      source: dataSourceEnum.SYSTEM.V,
-      align: alignEnum.RIGHT.V,
-      minWidth: 18,
-      type: typeEnum.METE.K,
-      format: {
-        toThousand: false,
-        rowUnit: 'accountingUnit'
-      },
-      sum: true
-    },
-    {
-      show: true,
-      key: 'arrivalTime',
-      title: '到厂日期',
-      source: dataSourceEnum.SYSTEM.V,
-      align: alignEnum.CENTER.V,
-      minWidth: 18,
-      type: typeEnum.DATE.K,
-      format: 'YY/MM/DD'
-    }
+    fields: [{ show: true, key: 'monomer.name', title: '单体', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 10, type: typeEnum.MONOMER_NAME.K },
+      { show: true, key: 'area.name', title: '区域', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 10, type: typeEnum.AREA_NAME.K },
+      { show: true, key: 'name', title: '名称', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 10, type: typeEnum.STRUCTURE_NAME.K },
+      { show: true, key: 'serialNumber', title: '编号', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 10, type: typeEnum.SERIAL_NUMBER.K },
+      { show: true, key: 'specification', title: '规格', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 20, type: typeEnum.SPECIFICATION.K },
+      { show: true, key: 'length', title: '长度', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 13, type: typeEnum.LENGTH.K },
+      { show: true, key: 'material', title: '材质', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 20, type: typeEnum.MATERIAL.K },
+      { show: true, key: 'quantity', title: '数量', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 5, type: typeEnum.QUANTITY.K },
+      { show: true, key: 'netWeight', title: '重量(kg)', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.WEIGHT.K },
+      {
+        show: true,
+        key: 'arrivalTime',
+        title: '到厂日期',
+        source: dataSourceEnum.SYSTEM.V,
+        align: alignEnum.CENTER.V,
+        minWidth: 18,
+        type: typeEnum.DATE.K,
+        format: 'YY/MM/DD'
+      }
     ]
   }
 }
 
 export default {
-  scmRequisitionsDetail // 申购详情
+  scmManufRequisitionsDetail // 申购详情
 }

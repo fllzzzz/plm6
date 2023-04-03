@@ -13,7 +13,7 @@
       <div class="print-wrap">
         <print-table
           v-permission="permission?.print"
-          api-key="scmRequisitionsDetail"
+          :api-key="isManufactured ? 'scmManufRequisitionsDetail' : 'scmRequisitionsDetail'"
           :params="{ id: detail?.id }"
           size="mini"
           type="warning"
@@ -26,8 +26,10 @@
         <el-tag effect="plain" size="medium" v-if="isNotBlank(detail.project)">申购项目：{{ projectNameFormatter(detail.project) }}</el-tag>
         <el-tag effect="plain" size="medium">备料类型：{{ preparationTypeEnum.VL?.[detail?.type] }}</el-tag>
         <el-tag type="success" effect="plain" size="medium">申购人：{{ detail?.applicantName }}</el-tag>
-        <el-tag type="success" effect="plain" size="medium">到厂日期：{{ parseTime(detail?.arrivalTime, '{y}-{m}-{d}') }}</el-tag>
-        <!-- <el-tag type="success" effect="plain" size="medium">审批流程：{{ detail?.approveInfoName || '-' }}</el-tag> -->
+        <!-- <el-tag type="success" effect="plain" size="medium">到厂日期：{{ parseTime(detail?.arrivalTime, '{y}-{m}-{d}') }}</el-tag> -->
+        <el-tag v-if="detail.boolInitiateApprove" type="success" effect="plain" size="medium">
+          审批流程：{{ detail?.approveInfoName || '-' }}
+        </el-tag>
       </div>
       <common-table
         v-if="!isManufactured"
@@ -53,9 +55,10 @@
         <material-unit-quantity-columns />
         <!-- 次要信息 -->
         <material-secondary-info-columns />
+        <el-table-column prop="arrivalTime" label="到厂日期" align="center" show-overflow-tooltip width="120px" />
       </common-table>
       <!-- 制成品 -->
-      <common-table v-else :data="detail.detailList" :max-height="maxHeight" show-summary>
+      <common-table v-else :data="detail.detailList" :data-format="timeFormat" :max-height="maxHeight" show-summary>
         <el-table-column label="序号" type="index" align="center" width="55" fixed="left" />
         <el-table-column prop="monomer.name" label="单体" align="center" show-overflow-tooltip min-width="120px" />
         <el-table-column prop="area.name" label="区域" align="center" show-overflow-tooltip min-width="120px" />
@@ -66,6 +69,7 @@
         <el-table-column prop="material" label="材质" align="center" show-overflow-tooltip />
         <el-table-column prop="quantity" label="数量" align="center" show-overflow-tooltip />
         <el-table-column prop="mete" label="重量(kg)" align="center" show-overflow-tooltip />
+        <el-table-column prop="arrivalTime" label="到厂日期" align="center" show-overflow-tooltip width="120px" />
       </common-table>
       <div class="table-remark">
         <span>备注</span>
@@ -86,7 +90,7 @@ import { materialColumns } from '@/utils/columns-format/wms'
 import { matClsEnum, materialPurchaseClsEnum } from '@/utils/enum/modules/classification'
 import { isNotBlank, toPrecision } from '@data-type/index'
 import { projectNameFormatter } from '@/utils/project'
-import { parseTime } from '@/utils/date'
+// import { parseTime } from '@/utils/date'
 import { preparationTypeEnum, requisitionModeEnum } from '@enum-ms/wms'
 
 import { regDetail } from '@compos/use-crud'
@@ -97,7 +101,10 @@ import materialSecondaryInfoColumns from '@/components-system/wms/table-columns/
 
 const permission = inject('permission')
 // 表格列数据格式转换
-const columnsDataFormat = ref([...materialColumns])
+const timeFormat = ref([
+  ['arrivalTime', ['parse-time', '{y}-{m}-{d}']] // 用户修改时间
+])
+const columnsDataFormat = ref([...materialColumns, ...timeFormat.value])
 
 const drawerRef = ref()
 const { CRUD, crud, detail } = regDetail()

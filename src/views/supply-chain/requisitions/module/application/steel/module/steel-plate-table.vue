@@ -93,8 +93,8 @@
         <el-tooltip
           class="item"
           effect="dark"
-          :content="`理论重量：${row.theoryTotalWeight} kg， ${overDiffTip}`"
-          :disabled="!row.hasOver"
+          :content="`理论重量：${row.theoryTotalWeight} kg`"
+          :disabled="row.weighingTotalWeight === row.theoryTotalWeight"
           placement="top"
         >
           <common-input-number
@@ -106,7 +106,6 @@
             :precision="baseUnit.weight.precision"
             size="mini"
             placeholder="重量"
-            :class="{ 'over-weight-tip': row.hasOver }"
           />
         </el-tooltip>
       </template>
@@ -129,7 +128,7 @@
 </template>
 
 <script setup>
-import { defineExpose, defineEmits, inject, watchEffect, reactive, watch } from 'vue'
+import { defineExpose, defineEmits, inject, reactive, watch } from 'vue'
 import { matClsEnum } from '@/utils/enum/modules/classification'
 import { requisitionModeEnum, preparationTypeEnum } from '@/utils/enum/modules/wms'
 import { isBlank, isNotBlank, toPrecision } from '@/utils/data-type'
@@ -137,7 +136,7 @@ import { isBlank, isNotBlank, toPrecision } from '@/utils/data-type'
 import { regExtra } from '@/composables/form/use-form'
 import useTableValidate from '@compos/form/use-table-validate'
 import useMatBaseUnit from '@/composables/store/use-mat-base-unit'
-import useWeightOverDiff from '@/composables/wms/use-steel-weight-over-diff'
+// import useWeightOverDiff from '@/composables/wms/use-steel-weight-over-diff'
 import { createUniqueString } from '@/utils/data-type/string'
 import { calcSteelPlateWeight } from '@/utils/wms/measurement-calc'
 import { positiveNumPattern } from '@/utils/validate/pattern'
@@ -152,7 +151,7 @@ const matSpecRef = inject('matSpecRef') // 调用父组件matSpecRef
 const { baseUnit } = useMatBaseUnit(basicClass) // 当前分类基础单位
 const { form } = regExtra() // 表单
 
-const { overDiffTip, weightOverDiff, diffSubmitValidate } = useWeightOverDiff(baseUnit) // 过磅重量超出理论重量处理
+// const { overDiffTip, weightOverDiff, diffSubmitValidate } = useWeightOverDiff(baseUnit) // 过磅重量超出理论重量处理
 
 const rules = {
   classifyId: [{ required: true, message: '请选择物料种类', trigger: 'change' }],
@@ -166,7 +165,7 @@ const rules = {
   ],
   weighingTotalWeight: [
     { required: true, message: '请填写重量', trigger: 'blur' },
-    { validator: diffSubmitValidate, message: '超出误差允许范围,不可提交', trigger: 'blur' },
+    // { validator: diffSubmitValidate, message: '超出误差允许范围,不可提交', trigger: 'blur' },
     { pattern: positiveNumPattern, message: '重量必须大于0', trigger: 'blur' }
   ],
   length: [
@@ -215,7 +214,7 @@ function rowInit(row) {
 // 行监听
 // 使用watch 监听方法，优点：初始化时表单数据时，可以不立即执行（惰性），可以避免“草稿/修改”状态下重量被自动修改；缺点：初始化时需要指定监听参数
 function rowWatch(row) {
-  watchEffect(() => weightOverDiff(row))
+  // watchEffect(() => weightOverDiff(row))
   // 计算单件理论重量
   watch([() => row.length, () => row.width, () => row.thickness, baseUnit], () => calcTheoryWeight(row))
   // 计算总重

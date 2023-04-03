@@ -36,7 +36,7 @@
         show-overflow-tooltip
         align="center"
         label="申购编号"
-        min-width="140"
+        width="170"
       />
       <el-table-column
         v-if="columns.visible('materialType')"
@@ -59,6 +59,13 @@
         label="所属项目"
         min-width="170"
       />
+      <el-table-column label="采购状态" prop="purchaseCreationState" align="center" width="90">
+        <template #default="{ row }">
+          <el-tag v-if="row.purchaseCreationState" effect="plain" :type="requisitionStatusEnum.V[row.purchaseCreationState].T">{{
+            requisitionStatusEnum.VL[row.purchaseCreationState]
+          }}</el-tag>
+        </template>
+      </el-table-column>
       <!-- <el-table-column
         v-if="checkPermission(permission.detail) && columns.visible('mete')"
         prop="mete"
