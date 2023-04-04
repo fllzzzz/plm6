@@ -79,7 +79,7 @@
             min-width="60px"
           >
             <template v-slot="scope">
-              <span>{{ scope.row.avgPrice }}</span>
+              <span>{{ scope.row.mete? ((scope.row.price)?.toFixed(2) / (scope.row.mete / 1000)?.toFixed(2)).toFixed(2) : 0 }}</span>
             </template>
           </el-table-column>
         </common-table>
@@ -103,6 +103,7 @@
 <script setup>
 import { ref, onMounted, computed, watch, nextTick, provide } from 'vue'
 import { get } from '@/api/mes/production-line-wage-statistics/production-statistics'
+import checkPermission from '@/utils/system/check-permission'
 import { mesProductionStatisticsPM as permission } from '@/page-permission/mes'
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
@@ -115,8 +116,6 @@ import workshopSelect from '@/components-system/base/workshop-select.vue'
 import moment from 'moment'
 import mHeader from './module/header'
 import productionDetail from './production-detail/index.vue'
-
-provide('permission', permission)
 
 const tableRef = ref()
 const productionData = ref([])
@@ -139,9 +138,12 @@ const optShow = {
 const { crud } = useCRUD({
   title: '产量统计',
   sort: [],
+  permission: { ...permission },
   optShow: { ...optShow },
   hasPagination: true
 })
+
+provide('permission', permission)
 const commonParams = computed(() => {
   return {
     workshopId: workshopId.value,
@@ -166,6 +168,7 @@ onMounted(() => {
 async function fetchProcessData() {
   startTime.value === date.value[0] ? startTime.value : undefined
   endTime.value === date.value[1] ? endTime.value : undefined
+  if (!checkPermission(permission.get)) return
   try {
     const { content } = await get({
       workshopId: workshopId.value,
@@ -173,9 +176,6 @@ async function fetchProcessData() {
       endTime: endTime.value
     })
     // setTotalPage(totalElements)
-    content?.forEach((v) => {
-      v.avgPrice = v.mete ? (v.price / v.mete)?.toFixed(2) : 0
-    })
     productionData.value = content || []
   } catch (error) {
     console.log('获取工序汇总信息失败', error)

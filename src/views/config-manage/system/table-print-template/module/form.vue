@@ -1210,7 +1210,7 @@ style="margin-bottom: 15px"
 </template>
 
 <script setup>
-import { getLogoConfig } from '@/api/config/main/system-config'
+import { getLogoConfigAll } from '@/api/config/main/system-config'
 import { ref, reactive, computed, watch, nextTick } from 'vue'
 
 import {
@@ -1720,7 +1720,7 @@ async function fetchCompanyLogos() {
   logoLoading.value = true
   let _logos = []
   try {
-    const { content = [] } = await getLogoConfig() || {}
+    const { content = [] } = await getLogoConfigAll() || {}
     _logos = content
   } catch (error) {
     console.log('error 获取公司logos', error)

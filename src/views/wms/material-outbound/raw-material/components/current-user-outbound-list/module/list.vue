@@ -42,7 +42,7 @@
         </el-popconfirm>
       </template>
       <template v-if="form.reviewStatus === reviewStatusEnum.PASS.V">
-        <print-table api-key="wmsRmOutboundReceipt" :params="form.id" size="mini" type="warning" class="filter-item"/>
+        <print-table api-key="wmsRmOutboundReceipt" :params="form.id" size="mini" type="warning" class="filter-item" />
       </template>
     </template>
     <template #content>
@@ -113,7 +113,13 @@
                 @confirm="delItem(row, $index)"
               >
                 <template #reference>
-                  <common-button :loading="submitOptLoading" type="danger" icon="el-icon-delete" size="mini" />
+                  <common-button
+                    :loading="submitOptLoading"
+                    :disabled="Boolean(row.basicClass & rawMatClsEnum.STEEL_COIL.V && row.length)"
+                    type="danger"
+                    icon="el-icon-delete"
+                    size="mini"
+                  />
                 </template>
               </el-popconfirm>
             </template>
@@ -128,6 +134,7 @@
 import { getDetailByCurrentUser, reviewPassed, reviewReturned, delMaterial } from '@/api/wms/material-outbound/raw-material/review'
 import { inject, computed, ref, defineEmits, defineProps } from 'vue'
 import { reviewStatusEnum } from '@/utils/enum/modules/common'
+import { rawMatClsEnum } from '@enum-ms/classification'
 import { tableSummary } from '@/utils/el-extra'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { setSpecInfoToList } from '@/utils/wms/spec'

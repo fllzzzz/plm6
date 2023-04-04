@@ -10,6 +10,24 @@
           <mHeader ref="mHeaderRef">
             <template #optLeft>
               <common-button v-permission="permission.save" type="success" size="mini" @click="previewIt">预览并保存</common-button>
+              <common-button
+                :disabled="crud.query?.areaIdList?.length !== 1"
+                v-if="checkPermission(permission.import)"
+                type="primary"
+                size="mini"
+                @click="taskImportVisible = true"
+              >
+                任务导入
+              </common-button>
+              <export-button
+                v-if="checkPermission(permission.import)"
+                :fn="downloadTemplate"
+                :disabled="crud.query?.areaIdList?.length !== 1"
+                style="margin-left: 10px"
+                :params="{ areaId: crud.query?.areaIdList?.[0], ...queryParams }"
+              >
+                任务导入模板下载
+              </export-button>
             </template>
             <template #viewLeft>
               <el-tag size="medium" effect="plain" style="margin-right: 5px"> 数量(件)：{{ summaryInfo.quantity || 0 }} </el-tag>
@@ -145,19 +163,22 @@
         }"
         @refresh="refresh(true)"
       />
+      <task-import-dialog v-model:visible="taskImportVisible" :query="crud.query" :productType="productType" @success="refresh(true)" />
     </div>
   </div>
 </template>
 
 <script setup>
 import crudApi, { getSummary, getBadgeNum } from '@/api/mes/scheduling-manage/artifact'
-import { ref, provide, computed, watch } from 'vue'
+import { downloadTemplate } from '@/api/mes/scheduling-manage/common'
+import { ref, provide, computed } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import moment from 'moment'
 
 // import { deepClone } from '@data-type/index'
 import { componentTypeEnum } from '@enum-ms/mes'
 import { positiveNumPattern } from '@/utils/validate/pattern'
+import checkPermission from '@/utils/system/check-permission'
 import { artifactSchedulingPM as permission } from '@/page-permission/mes'
 
 import useSchedulingGroups from '@compos/mes/scheduling/use-scheduling-groups'
@@ -165,8 +186,10 @@ import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
 import useTableValidate from '@compos/form/use-table-validate'
 import pagination from '@crud/Pagination'
+import ExportButton from '@comp-common/export-button/index.vue'
 import mHeader from './module/header'
 import mPreview from './module/preview'
+import taskImportDialog from './module/task-import-dialog'
 import previewSummaryDetail from './module/preview-summary-detail'
 import projectToAreaTree from './module/project-to-area-tree'
 import productTypeBaseInfoColumns from '@comp-mes/table-columns/productType-base-info-columns'
@@ -213,6 +236,7 @@ const { crud, columns, CRUD } = useCRUD(
 const { maxHeight, heightStyle } = useMaxHeight({ paginate: true })
 
 const cascaderRef = ref([])
+const taskImportVisible = ref(false)
 const summaryInfo = ref({})
 const queryParams = computed(() => {
   return {
@@ -315,13 +339,6 @@ function refresh(isRefreshTypeList = false) {
   schedulingNumGet()
 }
 
-watch(
-  () => crud.query.areaIdList,
-  (val) => {
-    schedulingNumGet()
-  }
-)
-
 async function schedulingNumGet() {
   try {
     const data = await getBadgeNum({ productionLineTypeEnum: crud.query.productionLineTypeEnum, areaIdList: crud.query.areaIdList })
@@ -335,6 +352,7 @@ async function schedulingNumGet() {
 const handleAreaClick = debounce(function (nodes = []) {
   console.log(nodes, 'handleAreaClick')
   summaryInfo.value = {}
+  totalBadge.value = 0
   const _areaIds = []
   const _areaIdObj = {}
   const _factoryIds = []

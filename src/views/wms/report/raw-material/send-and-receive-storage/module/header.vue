@@ -58,7 +58,7 @@
     <crudOperation>
       <!-- TODO:打印 -->
       <template #optLeft>
-        <common-radio-button v-model="query.unitType" :options="unitTypeEnum.ENUM" default text-align="center" type="enum" size="mini" />
+        <!-- <common-radio-button v-model="query.unitType" :options="unitTypeEnum.ENUM" default text-align="center" type="enum" size="mini" /> -->
       </template>
       <template #viewLeft>
         <export-button v-permission="permission.get" :params="query" :fn="exportSendAndReceiveStorageExcel" response-header-result>

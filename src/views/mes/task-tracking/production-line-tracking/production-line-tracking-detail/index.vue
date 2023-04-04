@@ -1,6 +1,7 @@
 <template>
   <common-drawer
     ref="drawerRef"
+    custom-class="production-line-tracking-drawer"
     :title="`产线：${detailData.workShopName}>${detailData.name}`"
     v-model="drawerVisible"
     direction="rtl"
@@ -45,7 +46,7 @@
     </template>
     <template #content>
       <!--表格渲染-->
-      <common-table ref="tableRef" :max-height="maxHeight - 100" :data="productionLineData" return-source-data style="width: 100%">
+      <common-table ref="tableRef" :max-height="maxHeight" :data="productionLineData" return-source-data style="width: 100%">
         <el-table-column :show-overflow-tooltip="true" prop="index" label="序号" align="center" width="60" type="index" />
         <el-table-column :show-overflow-tooltip="true" prop="project" key="project.shortName" label="项目" min-width="180">
           <template v-slot="scope">
@@ -144,17 +145,21 @@ watch(
     productionLineDetailGet()
   }
 )
+
+const { visible: drawerVisible, handleClose } = useVisible({ emit, props, field: 'visible', showHook: productionLineDetailGet })
+const { handleSizeChange, handleCurrentChange, total, setTotalPage, queryPage } = usePagination({ fetchHook: productionLineDetailGet })
+
 // 高度
 const { maxHeight } = useMaxHeight({
+  mainBox: '.production-line-tracking-drawer',
   extraBox: ['.el-drawer__header'],
   wrapperBox: ['.el-drawer__body'],
   navbar: false,
   clientHRepMainH: true,
   paginate: true
-})
-
-const { visible: drawerVisible, handleClose } = useVisible({ emit, props, field: 'visible', showHook: productionLineDetailGet })
-const { handleSizeChange, handleCurrentChange, total, setTotalPage, queryPage } = usePagination({ fetchHook: productionLineDetailGet })
+},
+drawerVisible
+)
 
 async function productionLineDetailGet() {
   let _list = []

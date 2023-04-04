@@ -25,11 +25,13 @@
       </el-descriptions-item>
       <el-descriptions-item align="center" label="操作">
         <export-button
-v-if="nestingList.issueStatusEnum !== issueStatusEnum.IN_NESTING.V"
-:params="{ id: nestingList.id }"
-:fn="getInfoZip"
-          >下载</export-button
+          v-permission="permission.downloadZip"
+          v-if="nestingList.issueStatusEnum !== issueStatusEnum.IN_NESTING.V"
+          :params="{ id: nestingList.id }"
+          :fn="getInfoZip"
         >
+          下载
+        </export-button>
       </el-descriptions-item>
     </el-descriptions>
     <!--任务单-->
@@ -47,7 +49,7 @@ v-if="nestingList.issueStatusEnum !== issueStatusEnum.IN_NESTING.V"
 // import { saveNestingTask } from '@/api/mes/scheduling-manage/common'
 import { getProjectDetail, getShowPdf, getInfoZip } from '@/api/mes/scheduling-manage/machine-part'
 import { machinePartSchedulingIssueStatusEnum as issueStatusEnum } from '@enum-ms/mes'
-import { defineEmits, defineProps, ref } from 'vue'
+import { defineEmits, defineProps, ref, inject } from 'vue'
 import { parseTime } from '@/utils/date'
 import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'
@@ -56,6 +58,7 @@ import ExportButton from '@comp-common/export-button/index.vue'
 
 const pdfjsDistPath = import.meta.env.BASE_URL + 'assets'
 const nestingDocumentList = ref([])
+const permission = inject('permission')
 const emit = defineEmits(['update:visible', 'success'])
 const props = defineProps({
   visible: {

@@ -98,10 +98,10 @@ export function setSpecInfoForData(data, info, multipleSpec = false) {
     data.classification = data.basicClass < STEEL_ENUM ? '钢材' : info.classify.fullPathName[0]
     data.classifyName = info.classify.name // 当前科目名称
     data.classifyParentFullName = info.classify.parentFullName // 父级路径名称
-    data.measureUnit = info.classify.measureUnit // 计量单位
-    data.measurePrecision = info.classify.measurePrecision // 计量单位小数精度
-    data.accountingUnit = info.classify.accountingUnit // 核算单位
-    data.accountingPrecision = info.classify.accountingPrecision // 核算单位小数精度
+    data.measureUnit = isBlank(data.measureUnit) ? info.classify.measureUnit : data.measureUnit // 计量单位
+    data.measurePrecision = isBlank(data.measurePrecision) ? info.classify.measurePrecision : data.measurePrecision // 计量单位小数精度
+    data.accountingUnit = isBlank(data.accountingUnit) ? info.classify.accountingUnit : data.accountingUnit // 核算单位
+    data.accountingPrecision = isBlank(data.accountingPrecision) ? info.classify.accountingPrecision : data.accountingPrecision // 核算单位小数精度
     data.outboundUnitType = info.classify.outboundUnitType // 出库方式
     data.outboundUnit = data.outboundUnitType === measureTypeEnum.MEASURE.V ? data.measureUnit : data.accountingUnit // 出库单位
     data.outboundUnitPrecision = data.outboundUnitType === measureTypeEnum.MEASURE.V ? data.measurePrecision : data.accountingPrecision // 出库单位精度

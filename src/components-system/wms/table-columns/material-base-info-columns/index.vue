@@ -65,6 +65,14 @@
         :offset="15"
       />
 
+      <!-- 钢卷条板显示 -->
+      <table-cell-tag
+        v-if="showOutboundMode && row.basicClass & rawMatClsEnum.STEEL_COIL.V && row.length"
+        name="条板出库"
+        color="#e6a23c"
+        :offset="15"
+      />
+
       <!-- 显示退货状态 -->
       <template v-if="showRejectStatus">
         <table-cell-tag
@@ -162,7 +170,7 @@ import { materialBaseInfoCPM as permission } from '@/page-permission/wms'
 
 import { defineEmits, defineProps, computed, ref } from 'vue'
 import { STEEL_ENUM, MANUF_ENUM } from '@/settings/config'
-import { matClsEnum } from '@/utils/enum/modules/classification'
+import { rawMatClsEnum } from '@/utils/enum/modules/classification'
 import {
   materialRejectStatusEnum,
   materialIsWholeEnum,

@@ -127,7 +127,7 @@ const fillableAmount = computed(() =>
 // 显示金额
 const showAmount = computed(() => checkPermission(permission.showAmount) || fillableAmount.value)
 // 是否甲供订单
-const boolPartyA = computed(() => order.value.supplyType === orderSupplyTypeEnum.PARTY_A.V)
+const boolPartyA = computed(() => detail?.supplyType === orderSupplyTypeEnum.PARTY_A.V)
 const boolManuf = computed(() => detail.basicClass & materialPurchaseClsEnum.MANUFACTURED.V)
 // 标题
 const drawerTitle = computed(() =>

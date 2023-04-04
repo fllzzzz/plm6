@@ -144,7 +144,7 @@
   </div>
 </template>
 <script setup>
-import { ref } from 'vue'
+import { ref, provide } from 'vue'
 import crudApi from '@/api/mes/work-order-manage/machine-part.js'
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
@@ -162,6 +162,7 @@ const optShow = {
   del: false,
   download: false
 }
+
 const tableRef = ref()
 const cuttingDetailData = ref({})
 const cuttingDrawerVisible = ref(false)
@@ -179,6 +180,7 @@ const { crud, CRUD, columns } = useCRUD(
   tableRef
 )
 
+provide('permission', permission)
 const { maxHeight } = useMaxHeight({
   extraBox: ['.head-container'],
   extraHeight: 15,

@@ -203,7 +203,7 @@ const fillableWarehouse = ref(false)
 // 显示物流信息
 const fillableLogistics = computed(() => order.value.logisticsPayerType === logisticsPayerEnum.DEMAND.V && fillableAmount.value)
 // 是否“甲供”
-const boolPartyA = computed(() => order.value.supplyType === orderSupplyTypeEnum.PARTY_A.V)
+const boolPartyA = computed(() => form.value?.supplyType === orderSupplyTypeEnum.PARTY_A.V)
 const boolManuf = computed(() => form.value.basicClass & materialPurchaseClsEnum.MANUFACTURED.V)
 // 采购合同信息
 const order = computed(() => form.value.purchaseOrder || {})

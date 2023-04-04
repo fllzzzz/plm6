@@ -196,7 +196,7 @@
           <span v-else>{{ row.quantity }}</span>
         </template>
       </el-table-column>
-      <el-table-column :show-overflow-tooltip="true" label="操作" width="80" align="center">
+      <el-table-column v-permission="permission.del" :show-overflow-tooltip="true" label="操作" width="80" align="center">
         <template #default="{ row }">
           <common-button type="danger" icon="el-icon-delete" size="mini" @click.stop="toDelete(row, row.id)"></common-button>
         </template>
@@ -217,7 +217,7 @@
 import { newSave, getCutTaskDetail, getHoleTaskDetail, getOffLineZip } from '@/api/mes/scheduling-manage/machine-part'
 import { getAllFactoryWorkshopLines } from '@/api/mes/common'
 import { ElMessage, ElNotification, ElRadioGroup, ElMessageBox } from 'element-plus'
-import { defineEmits, defineProps, ref, computed, onMounted, watch } from 'vue'
+import { defineEmits, defineProps, ref, computed, onMounted, watch, inject } from 'vue'
 import { layOffWayTypeEnum } from '@enum-ms/uploading-form'
 import { projectNameFormatter } from '@/utils/project'
 import { fileDownload } from '@/utils/file'
@@ -235,6 +235,7 @@ import cutConfigSelect from '@/components-system/base/cut-config-select.vue'
 import drillSchedulingDialog from './drill-scheduling-dialog.vue'
 // import workshopSelect from '@comp-mes/workshop-select'
 
+const permission = inject('permission')
 const emit = defineEmits(['update:visible', 'success', 'handleDel'])
 const props = defineProps({
   visible: {
