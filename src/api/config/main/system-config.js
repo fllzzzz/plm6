@@ -61,6 +61,18 @@ export function getLogoConfig(params) {
 }
 
 /**
+ * 获取公司logo列表（公共的，无需权限）
+ */
+export function getLogoConfigAll(params) {
+  return request({
+    module: 'config',
+    url: 'company/logo/all',
+    method: 'get',
+    params
+  })
+}
+
+/**
  * 设置公司默认logo
  */
 export function setLogoConfig(id) {

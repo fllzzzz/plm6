@@ -280,6 +280,30 @@ const tableStyle = computed(() => {
   return _style
 })
 
+const footerStyle = computed(() => {
+  const _style = {}
+  if (footerCfg.value) {
+    const _config = config.value
+    const itemConfig = footerCfg.value
+    if (isNotBlank(itemConfig.width)) {
+      _style['width'] = `${itemConfig.width}${_config.unit}`
+    }
+    if (isNotBlank(itemConfig.height)) {
+      _style['height'] = `${itemConfig.height}${_config.unit}`
+    }
+    if (isNotBlank(itemConfig.size)) {
+      _style['font-size'] = `${itemConfig.size}${_config.fontUnit}`
+    }
+    if (isNotBlank(itemConfig.align)) {
+      _style['justify-content'] = setting.flexAlign(itemConfig.align)
+    }
+    if (isNotBlank(itemConfig.verticleAlign)) {
+      _style['align-items'] = setting.verticleAlign(itemConfig.verticleAlign)
+    }
+  }
+  return _style
+})
+
 const filterExampleTableData = computed(() => {
   let _tableData = []
   if (isNotBlank(tableData.value)) {
