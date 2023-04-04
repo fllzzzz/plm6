@@ -1,5 +1,5 @@
 <template>
-  <component :is="comp" :list="list" :maxHeight="maxHeight"/>
+  <component :is="comp" :list="list" :maxHeight="maxHeight" :materialType="materialType"/>
 </template>
 
 <script setup>
