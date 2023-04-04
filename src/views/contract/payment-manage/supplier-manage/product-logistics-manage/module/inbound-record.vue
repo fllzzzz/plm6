@@ -150,13 +150,14 @@ watch(
   (val) => {
     if (val) {
       query.value = {
-        date: [props.queryDate.startDate, props.queryDate.endDate],
-        startDate: props.queryDate.startDate,
-        endDate: props.queryDate.endDate
+        date: props.queryDate?.startDate && props.queryDate?.endDate ? [props.queryDate.startDate, props.queryDate.endDate] : [],
+        startDate: props.queryDate?.startDate,
+        endDate: props.queryDate?.endDate
       }
       fetchList()
     }
-  }
+  },
+  { immediate: true }
 )
 
 const list = ref([])
