@@ -80,6 +80,9 @@ const tableType = {
   transactionRecord: { L: '客户交易记录', M: 'sales_manage', T: mt.contract.L + ' / ' + contract.sales_manage },
   saleOrderTracking: { L: '订单跟踪', M: 'sales_manage', T: mt.contract.L + ' / ' + contract.sales_manage },
   projectWarehouseRecord: { L: '入库记录', M: 'sales_manage', T: mt.contract.L + ' / ' + contract.sales_manage },
+  contractStructureProduct: { L: '结构制品', M: 'sales_manage', T: mt.contract.L + ' / ' + contract.sales_manage },
+  contractEnclosureProduct: { L: '围护制品', M: 'sales_manage', T: mt.contract.L + ' / ' + contract.sales_manage },
+  contractAuxiliaryMaterialProduct: { L: '配套制品', M: 'sales_manage', T: mt.contract.L + ' / ' + contract.sales_manage },
 
   industryElectricRecord: { L: '工业用电电费清单', M: 'expense_entry', T: mt.contract.L + ' / ' + contract.expense_entry },
   civilElectricRecord: { L: '民用用电电费清单', M: 'expense_entry', T: mt.contract.L + ' / ' + contract.expense_entry },

@@ -21,6 +21,9 @@ const projectCollectionDetail = contract.collectionDetail
 const projectInvoiceDetail = contract.invoiceDetail
 const projectHappenedDetail = contract.happenedDetail
 const transactionRecord = contract.transactionRecord
+const contractStructureProduct = contract.structurePrice
+const contractEnclosureProduct = contract.structurePrice
+const contractAuxiliaryMaterialProduct = contract.structurePrice
 
 const logisticsPaymentLedger = contract.logisticsLedger
 const supplierPayableSummary = contract.payableSummary
@@ -178,6 +181,9 @@ export default {
   projectHappenedDetail, // 项目发运详情
   transactionRecord, // 客户交易记录
   saleOrderTracking, // 订单跟踪
+  contractStructureProduct, // 结构制品
+  contractEnclosureProduct, // 围护制品
+  contractAuxiliaryMaterialProduct, // 配套制品
   projectWarehouseRecord, // 销售管理入库记录
   industryElectricRecord, // 工业电费
   civilElectricRecord, // 民用电费

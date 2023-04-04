@@ -1,7 +1,7 @@
 <template>
   <div>
     <!--工具栏-->
-    <mHeader ref="headerRef" />
+    <mHeader ref="headerRef" class="structure-container" />
     <!--表格渲染-->
     <common-table
       ref="tableRef"
@@ -15,6 +15,24 @@
     >
       <el-table-column label="序号" type="index" align="center" width="60" />
       <el-table-column
+        v-if="columns.visible('monomer.name')"
+        key="monomer.name"
+        prop="monomer.name"
+        show-overflow-tooltip
+        label="单体"
+        align="center"
+        min-width="160"
+      />
+      <el-table-column
+        v-if="columns.visible('area.name')"
+        key="area.name"
+        prop="area.name"
+        show-overflow-tooltip
+        label="区域"
+        align="center"
+        min-width="160"
+      />
+      <el-table-column
         v-if="columns.visible('name')"
         key="name"
         prop="name"
@@ -22,6 +40,15 @@
         label="名称"
         align="center"
         min-width="140"
+      />
+      <el-table-column
+        v-if="columns.visible('serialNumber')"
+        key="serialNumber"
+        prop="serialNumber"
+        show-overflow-tooltip
+        label="编号"
+        align="center"
+        min-width="130"
       />
       <el-table-column
         v-if="columns.visible('specification')"
@@ -51,30 +78,38 @@
         show-overflow-tooltip
       />
       <el-table-column
-        v-if="columns.visible('totalLength')"
-        key="totalLength"
-        prop="totalLength"
-        label="总长度(米)"
-        align="center"
-        min-width="70"
-        show-overflow-tooltip
-      />
-      <el-table-column
         v-if="columns.visible('totalWeight')"
         key="totalWeight"
         prop="totalWeight"
         show-overflow-tooltip
-        label="总量(t)"
+        label="总量(kg)"
         align="center"
         min-width="120"
+      />
+      <el-table-column
+        v-if="columns.visible('unitPrice')"
+        key="unitPrice"
+        prop="unitPrice"
+        align="right"
+        min-width="120"
+        label="单价"
       />
       <el-table-column
         v-if="columns.visible('totalPrice')"
         key="totalPrice"
         prop="totalPrice"
-        align="center"
+        align="right"
         min-width="120"
         label="金额"
+      />
+      <el-table-column
+        v-if="columns.visible('shipmentTime')"
+        key="shipmentTime"
+        prop="shipmentTime"
+        align="center"
+        sortable="custom"
+        label="发运日期"
+        width="120"
       />
     </common-table>
     <!--分页组件-->
@@ -102,6 +137,7 @@ const optShow = {
 const tableRef = ref()
 const headerRef = ref()
 const dataFormat = ref([
+  ['shipmentTime', 'parse-time'],
   ['unitPrice', 'to-thousand'],
   ['totalPrice', 'to-thousand']
 ])
@@ -119,7 +155,8 @@ const { crud, columns } = useCRUD(
 )
 
 const { maxHeight } = useMaxHeight({
-  paginate: true,
-  extraHeight: 100
+  extraBox: ['.common-container', '.structure-container'],
+  minHeight: 300,
+  paginate: true
 })
 </script>

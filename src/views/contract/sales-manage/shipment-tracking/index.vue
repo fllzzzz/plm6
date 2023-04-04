@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <div class="head-container">
+    <div class="head-container common-container">
       <common-radio-button
         v-model="productType"
         :options="installProjectTypeEnum.ENUM"

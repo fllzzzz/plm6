@@ -2,8 +2,35 @@
   <div class="head-container">
     <div v-show="crud.searchToggle">
       <el-input
-        v-model="query.name"
-        placeholder="可输入名称搜索"
+        v-model="query.monomerName"
+        placeholder="可输入单体名称搜索"
+        class="filter-item"
+        style="width: 200px"
+        size="small"
+        clearable
+        @keyup.enter="crud.toQuery"
+      />
+      <el-input
+        v-model="query.areaName"
+        placeholder="可输入区域名称搜索"
+        class="filter-item"
+        style="width: 200px"
+        size="small"
+        clearable
+        @keyup.enter="crud.toQuery"
+      />
+      <el-input
+        v-model="query.serialNumber"
+        placeholder="可输入编号搜索"
+        class="filter-item"
+        style="width: 200px"
+        size="small"
+        clearable
+        @keyup.enter="crud.toQuery"
+      />
+      <el-input
+        v-model="query.specification"
+        placeholder="可输入规格搜索"
         class="filter-item"
         style="width: 200px"
         size="small"
@@ -33,7 +60,7 @@
       <template #viewLeft>
         <print-table
           v-permission="crud.permission.print"
-          api-key="contractStructurePrice"
+          api-key="contractStructureProduct"
           :params="{ projectId: query.projectId }"
           size="mini"
           type="warning"
@@ -48,9 +75,6 @@
 import { watch, nextTick, inject } from 'vue'
 
 import { convertUnits } from '@/utils/convert/unit'
-import { toThousand } from '@/utils/data-type/number'
-import { emptyTextFormatter } from '@/utils/data-type'
-import { pricingMannerEnum } from '@enum-ms/contract'
 import { DP } from '@/settings/config'
 
 import { regHeader } from '@compos/use-crud'
@@ -72,7 +96,10 @@ watch(
 )
 
 const defaultQuery = {
-  name: undefined,
+  areaName: undefined,
+  monomerName: undefined,
+  serialNumber: undefined,
+  specification: undefined,
   material: undefined,
   projectId: { value: undefined, resetAble: false }
 }
@@ -82,11 +109,6 @@ const { crud, query, CRUD } = regHeader(defaultQuery)
 CRUD.HOOK.handleRefresh = (crud, { data }) => {
   data.content.forEach((v) => {
     v.totalWeight = convertUnits(v.totalWeight, 'kg', 't', DP.COM_WT__T)
-    v.newUnitPrice = v.unitPrice // number类型的单价（unitPrice可能会有千位符）
-    v.originNewUnitPrice = v.newUnitPrice
-    v.originUnitPrice = emptyTextFormatter(toThousand(v.unitPrice))
-    v.totalPrice = v.pricingManner === pricingMannerEnum.WEIGHT.V ? v.totalWeight * (v.unitPrice || 0) : v.totalLength * (v.unitPrice || 0)
-    v.originPricingManner = v.pricingManner
   })
 }
 </script>
