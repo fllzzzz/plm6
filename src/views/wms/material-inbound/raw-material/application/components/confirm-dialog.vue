@@ -158,7 +158,7 @@ const fillableWarehouse = ref(true)
 // 显示物流信息
 const fillableLogistics = computed(() => order.value.logisticsPayerType === logisticsPayerEnum.DEMAND.V)
 // 是否“甲供”
-const boolPartyA = computed(() => order.value.supplyType === orderSupplyTypeEnum.PARTY_A.V)
+const boolPartyA = computed(() => order.value?.supplyType === orderSupplyTypeEnum.PARTY_A.V)
 // 是否制成品
 const boolManuf = computed(() => order.value.materialType === materialPurchaseClsEnum.MANUFACTURED.V)
 // 在列中显示次要信息
