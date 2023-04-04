@@ -139,7 +139,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, defineEmits } from 'vue'
+import { ref, watch, reactive, defineEmits } from 'vue'
 import { regHeader } from '@compos/use-crud'
 import useChart from '@compos/use-chart'
 import moment from 'moment'
@@ -164,7 +164,7 @@ const yearProductionData = reactive({
 //   mete: 0
 // })
 // const chartDateTime = ref()
-// const chartYearTime = ref()
+const chartYearTime = ref()
 const chartVal = ref([])
 const flag = ref(true)
 
@@ -264,6 +264,17 @@ const monthArr = ref([])
 for (let i = 1; i <= 12; i++) {
   monthArr.value.push(i + '月')
 }
+const day = ref()
+const dayArr = ref([])
+watch([() => query.type, () => query.dateTime], (val) => {
+  if (query.type === timeTypeEnum.CURRENT_MONTH.V) {
+    day.value = moment(parseTime(query.dateTime, '{y}-{m}'), 'YYYY-MM').daysInMonth()
+    dayArr.value = []
+    for (let k = 1; k <= day.value; k++) {
+      dayArr.value.push(k)
+    }
+  }
+})
 
 const loading = ref(false)
 const chartLoading = ref(false)
@@ -306,38 +317,50 @@ const { getMyChart } = useChart({
 async function fetchChart() {
   chartVal.value = []
   try {
+    const productionData = []
     chartLoading.value = true
     const _myChart = getMyChart()
-    const productionData = []
-    // _myChart.on('click', function (params) {
-    //   chartYearTime.value = crud.query.dateTime === undefined ? moment().valueOf() : query.dateTime
-    //   chartDateTime.value = params.name?.split('')[0]
-    //   chartDateTime.value = Number(chartDateTime.value) < 10 ? '0' + chartDateTime.value : chartDateTime.value
-    //   chartVal.value = [
-    //     moment(parseTime(chartYearTime.value, '{y}') + '-' + chartDateTime.value)
-    //       .startOf('month')
-    //       .valueOf(),
-    //     moment(parseTime(chartYearTime.value, '{y}') + '-' + chartDateTime.value)
-    //       .endOf('month')
-    //       .valueOf()
-    //   ]
-    //   handleDateChange(chartVal.value)
-    // })
+    _myChart.on('click', function (params) {
+      chartYearTime.value = crud.query.dateTime === undefined ? moment().valueOf() : query.dateTime
+      // chartDateTime.value = params.name?.split('')[0]
+      // chartDateTime.value = Number(chartDateTime.value) < 10 ? '0' + chartDateTime.value : chartDateTime.value
+      // chartVal.value = [
+      //   moment(parseTime(chartYearTime.value, '{y}') + '-' + chartDateTime.value)
+      //     .startOf('month')
+      //     .valueOf(),
+      //   moment(parseTime(chartYearTime.value, '{y}') + '-' + chartDateTime.value)
+      //     .endOf('month')
+      //     .valueOf()
+      // ]
+      // handleDateChange(chartVal.value)
+    })
     const data = await workshopEcharts({
       type: query.type,
       dateTime: query.dateTime ? query.dateTime : moment().startOf('year').valueOf(),
       workShopId: query.workShopId
-      // productionLineId: query.productionLineId
     })
     const option = _myChart.getOption()
-    for (const i in data) {
-      productionData.push(data[i])
+    if (crud.query.type === timeTypeEnum.CURRENT_MONTH.V) {
+      option.xAxis[0].data = dayArr.value
+    } else {
+      option.xAxis[0].data = monthArr.value
     }
+    for (let i = 0; i < option.xAxis[0].data?.length; i++) {
+      if (data.findIndex((k) => Number(k.date) === i + 1) > -1) {
+        productionData.push({
+          date: i.toString(),
+          totalNetWeight: data[i]?.totalNetWeight || 0,
+          totalGrossWeight: data[i]?.totalGrossWeight || 0
+        })
+      }
+    }
+    console.log(productionData, 'productionData')
     option.series[0].data = productionData.map((v) =>
       crud.query.weightStatus === weightTypeEnum.NET.V
-        ? (v.totalNetWeight && Number((v.totalNetWeight / 1000).toFixed(DP.COM_WT__KG))) || 0
-        : (v.totalNetWeight && Number((v.totalGrossWeight / 1000).toFixed(DP.COM_WT__KG))) || 0
+        ? Number((v?.totalNetWeight / 1000).toFixed(DP.COM_WT__KG))
+        : Number((v.totalGrossWeight / 1000).toFixed(DP.COM_WT__KG))
     )
+    console.log(option.series[0].data, 'option.series[0].data')
     _myChart.setOption(option)
   } catch (error) {
     console.log(error, '获取车间报表信息失败')

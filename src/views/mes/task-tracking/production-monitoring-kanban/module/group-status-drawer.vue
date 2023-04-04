@@ -15,43 +15,70 @@
         :options="processData"
         type="other"
         class="filter-item"
+        default
         :dataStructure="{ key: 'id', label: 'name', value: 'id' }"
-        showOptionAll
         size="small"
-        @change="fetchGroupDetailGet"
       />
     </template>
     <template #content>
       <div style="display: flex">
-        <div style="width: 40%">
+        <div style="width: 35%">
           <common-table
             ref="directRef"
             highlight-current-row
-            :data="artifactGroupList"
+            :data="list"
             style="width: 100%; cursor: pointer"
             row-key="id"
             :max-height="maxHeight"
             @row-click="handleRowClick"
           >
             <el-table-column prop="index" label="序号" align="center" width="60" type="index" />
-            <el-table-column prop="groups.name" key="groups.name" label="车间/产线/班组" align="center">
+            <el-table-column
+              :show-overflow-tooltip="true"
+              prop="groups.name"
+              key="groups.name"
+              label="产线/班组"
+              align="center"
+              min-width="140"
+            >
               <template #default="{ row }">
-                <span>{{ row.workshop?.name }}>{{ row.productionLine?.name }}>{{ row.groups?.name }}>{{row.team?.name}}</span>
+                <span>{{ row.productionLine?.name }}>{{ row.groups?.name }}>{{ row.team?.name }}</span>
               </template>
             </el-table-column>
-            <el-table-column prop="yearNetWeight" key="yearNetWeight" label="年度平均产量（吨）" align="center" width="150px">
+            <el-table-column
+              :show-overflow-tooltip="true"
+              prop="yearNetWeight"
+              key="yearNetWeight"
+              label="年度平均产量（吨）"
+              align="center"
+              width="150px"
+            >
               <template #default="{ row }">
                 <span>{{ (row.yearNetWeight / 1000)?.toFixed(2) }}</span>
               </template>
             </el-table-column>
-            <el-table-column prop="lastMonthNetWeight" key="lastMonthNetWeight" label="上月产量（吨）" align="center" width="120px">
+            <el-table-column
+              :show-overflow-tooltip="true"
+              prop="lastMonthNetWeight"
+              key="lastMonthNetWeight"
+              label="上月产量（吨）"
+              align="center"
+              width="120px"
+            >
               <template #default="{ row }">
                 <span>{{ (row.lastMonthNetWeight / 1000)?.toFixed(2) }}</span>
               </template>
             </el-table-column>
-            <el-table-column prop="unNetWeight" key="unNetWeight" label="在手任务（吨）" align="center" width="120px">
+            <el-table-column
+              :show-overflow-tooltip="true"
+              prop="unNetWeight"
+              key="unNetWeight"
+              label="在手任务（吨）"
+              align="center"
+              width="120px"
+            >
               <template #default="{ row }">
-                <span>{{ (row.unNetWeight / 1000)?.toFixed(2) }}</span>
+                <span class="tc-danger">{{ (row.unNetWeight / 1000)?.toFixed(2) }}</span>
               </template>
             </el-table-column>
             <!-- <el-table-column prop="unQuantity" key="unQuantity" label="未完成任务（件/吨）" align="center" width="150px">
@@ -66,8 +93,8 @@
           </common-table>
         </div>
         <div style="border-right: 1px solid #ededed; margin: 0 20px; height: calc(100vh - 180px)"></div>
-        <div style="width: 58%">
-          <group-status-detail :detail-data="detailData" :workshopId="props.workshopId" :areaId="props.areaId" />
+        <div style="width: 63%">
+          <group-status-detail :detail-data="detailData" :workshopId="props.workshopId" :processId="processId" />
         </div>
       </div>
     </template>
@@ -80,18 +107,15 @@ import { getProcess } from '@/api/mes/factory-report/group-report.js'
 import useVisible from '@compos/use-visible'
 // import usePagination from '@compos/use-pagination'
 import useMaxHeight from '@compos/use-max-height'
-import { componentTypeEnum } from '@enum-ms/mes'
 import { defineProps, defineEmits, ref, watch } from 'vue'
 import groupStatusDetail from './group-status-detail.vue'
 
 const emit = defineEmits(['update:visible'])
 const detailData = ref([])
-const groupList = ref([])
-const artifactGroupList = ref([])
-const assembleGroupList = ref([])
-const partGroupList = ref([])
+const list = ref([])
 const processData = ref([])
 const processId = ref()
+const processMap = ref({})
 
 const props = defineProps({
   visible: {
@@ -103,9 +127,6 @@ const props = defineProps({
     default: () => {}
   },
   workshopId: {
-    type: Number
-  },
-  areaId: {
     type: Number
   }
 })
@@ -124,11 +145,13 @@ const { visible: drawerVisible, handleClose } = useVisible({ emit, props, field:
 
 function showHook() {
   detailData.value = {}
+  processId.value = undefined
   fetchProcess()
+  fetchGroupDetailGet()
 }
 
 watch(
-  [() => props.workshopId, () => props.areaId],
+  () => props.workshopId,
   (val) => {
     fetchGroupDetailGet()
   },
@@ -145,7 +168,9 @@ watch(
 watch(
   () => processId.value,
   (val) => {
-    fetchGroupDetailGet()
+    if (val) {
+      fetchGroupDetailGet()
+    }
   }
 )
 
@@ -155,32 +180,26 @@ async function fetchProcess() {
     const data = await getProcess({
       workshopId: props.workshopId
     })
+    console.log(data, 'data')
     processData.value = data || []
+    data?.forEach((v) => {
+      processMap[v.id] = v
+    })
+    console.log(processMap, 'processMap')
   } catch (error) {
     console.log('获取班组的工序失败')
   }
 }
 
 async function fetchGroupDetailGet() {
-  artifactGroupList.value = []
-  assembleGroupList.value = []
-  partGroupList.value = []
+  list.value = []
   try {
     const data = await getGroupDialog({
       workshopId: props.workshopId,
-      areaId: props.areaId,
-      processId: processId.value
+      processId: processId.value,
+      taskTypeEnum: processMap[processId.value]?.productType
     })
-    groupList.value = data || []
-    groupList.value?.forEach((v) => {
-      if (v.taskTypeEnum === componentTypeEnum.ARTIFACT.V) {
-        artifactGroupList.value.push(v)
-      } else if (v.taskTypeEnum === componentTypeEnum.ASSEMBLE.V) {
-        assembleGroupList.value.push(v)
-      } else if (v.taskTypeEnum === componentTypeEnum.MACHINE_PART.V) {
-        partGroupList.value.push(v)
-      }
-    })
+    list.value = data || []
   } catch (e) {
     console.log('获取班组状态失败', e)
   }

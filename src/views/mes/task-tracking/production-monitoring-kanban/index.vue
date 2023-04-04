@@ -150,7 +150,6 @@
     <!-- 班组状态详情 -->
     <group-status-drawer
       v-model:visible="drawerVisible"
-      :areaId="crud.query.areaId"
       :workshopId="crud.query.workshopId"
       :group-detail-data="crud.data[0]"
     />
@@ -158,7 +157,6 @@
 </template>
 <script setup>
 import { ref, reactive, provide, watch } from 'vue'
-import { useRoute } from 'vue-router'
 import crudApi, { getSummary } from '@/api/mes/production-monitoring-kanban/kanban.js'
 import useCRUD from '@compos/use-crud'
 
@@ -177,7 +175,6 @@ const optShow = {
   download: false
 }
 
-const route = useRoute()
 const tableRef = ref()
 const detailDialogVisible = ref(false)
 const drawerVisible = ref(false)
@@ -215,16 +212,15 @@ const projectInfo = reactive({
 provide('projectInfo', projectInfo)
 provide('permission', permission)
 
-CRUD.HOOK.beforeToQuery = () => {
-  crud.query.areaId = route.params?.areaId
-}
-
-watch([() => crud.query.workshopId, () => crud.query.areaId], (val) => {
-  if (val) {
-    fetchProjectInfo()
-    crud.toQuery()
+watch(
+  () => crud.query.workshopId,
+  (val) => {
+    if (val) {
+      fetchProjectInfo()
+      crud.toQuery()
+    }
   }
-})
+)
 
 // 班组详情
 function groupsDetail() {
@@ -235,7 +231,7 @@ function groupsDetail() {
 async function fetchProjectInfo() {
   projectInfo.loading = true
   try {
-    const res = (await getSummary({ workshopId: crud.query.workshopId, areaId: crud.query.areaId ? crud.query.areaId : undefined })) || {}
+    const res = (await getSummary({ workshopId: crud.query.workshopId })) || {}
     projectInfo.summary = res
   } catch (error) {
     console.log('获取项目汇总图表数据', error)

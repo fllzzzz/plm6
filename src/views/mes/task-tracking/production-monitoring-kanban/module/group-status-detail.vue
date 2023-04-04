@@ -56,7 +56,7 @@
               taskTypeEnum: props.detailData.taskTypeEnum,
               teamId: props.detailData.team?.id,
               workshopId: props.workshopId,
-              areaId: props.areaId,
+              processId: props.processId
             }"
             size="mini"
             type="warning"
@@ -92,16 +92,16 @@
         <el-table-column :show-overflow-tooltip="true" prop="serialNumber" key="serialNumber" label="编号" align="center" />
         <el-table-column :show-overflow-tooltip="true" prop="specification" key="specification" label="规格" align="center" />
         <el-table-column :show-overflow-tooltip="true" prop="material" key="material" label="材质" align="center" />
-        <el-table-column :show-overflow-tooltip="true" prop="quantity" key="quantity" label="pa排产数" align="center" />
-        <el-table-column :show-overflow-tooltip="true" prop="netWeight" key="netWeight" label="排产量（kg）" align="center" />
+        <el-table-column :show-overflow-tooltip="true" prop="scheduleQuantity" key="scheduleQuantity" label="排产数" align="center" />
+        <el-table-column :show-overflow-tooltip="true" prop="scheduleNetWeight" key="scheduleNetWeight" label="排产量（kg）" align="center" />
         <el-table-column :show-overflow-tooltip="true" prop="completeQuantity" key="completeQuantity" label="完成数" align="center">
           <template #default="{ row }">
-            <span :class="row.quantity === row.completeQuantity ? '' : 'tc-danger'">{{ row.completeQuantity }}</span>
+            <span :class="row.scheduleQuantity === row.completeQuantity ? '' : 'tc-danger'">{{ row.completeQuantity }}</span>
           </template>
         </el-table-column>
         <el-table-column :show-overflow-tooltip="true" prop="completeNetWeight" key="completeNetWeight" label="完成量（kg）" align="center">
           <template #default="{ row }">
-            <span :class="row.quantity === row.completeQuantity ? '' : 'tc-danger'">{{ row.completeNetWeight }}</span>
+            <span :class="row.scheduleQuantity === row.completeQuantity ? '' : 'tc-danger'">{{ row.completeNetWeight }}</span>
           </template>
         </el-table-column>
       </common-table>
@@ -133,7 +133,7 @@ const props = defineProps({
   workshopId: {
     type: Number
   },
-  areaId: {
+  processId: {
     type: Number
   }
 })
@@ -168,7 +168,7 @@ async function fetchGroupDetail() {
       taskTypeEnum: props.detailData.taskTypeEnum,
       teamId: props.detailData.team?.id,
       workshopId: props.workshopId,
-      areaId: props.areaId,
+      processId: props.processId,
       ...queryPage
     })
     list.value = content || []

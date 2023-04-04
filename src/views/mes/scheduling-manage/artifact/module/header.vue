@@ -33,7 +33,7 @@
           重置
         </common-button>
       </div>
-      <common-button class="filter-item" size="mini" type="info" @click.stop="productionLineStatus">产线状态</common-button>
+      <common-button class="filter-item" size="mini" type="info" @click.stop="productionLineStatus">车间在产数据</common-button>
     </div>
   </div>
   <crudOperation>
@@ -131,7 +131,7 @@ function refreshTypeList() {
 }
 
 function productionLineStatus() {
-  router.push({ name: 'MesMonitoringKanban', params: { areaId: crud.query.areaIdList[0] }})
+  router.push({ name: 'MesMonitoringKanban' })
 }
 
 defineExpose({

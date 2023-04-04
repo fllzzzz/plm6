@@ -10,11 +10,11 @@
   >
     <template #content>
       <!--表格渲染-->
-      <common-table ref="tableRef" :max-height="maxHeight" :data="list" return-source-data style="width: 100%">
+      <common-table ref="tableRef" :show-empty-symbol="false" :max-height="maxHeight" :data="list" return-source-data style="width: 100%">
         <el-table-column :show-overflow-tooltip="true" prop="index" label="序号" align="center" width="60" type="index" />
         <el-table-column :show-overflow-tooltip="true" prop="project" key="project.shortName" label="项目" min-width="180">
           <template v-slot="scope">
-            <span>{{ projectNameFormatter(scope.row.project) }}</span>
+            <span>{{ scope.row.project ? projectNameFormatter(scope.row.project) : '-' }}</span>
           </template>
         </el-table-column>
         <el-table-column :show-overflow-tooltip="true" prop="monomer.name" key="monomer.name" label="单体" align="center" />
@@ -32,19 +32,25 @@
         <el-table-column :show-overflow-tooltip="true" prop="schedulingQuantity" key="schedulingQuantity" label="排产数" align="center" />
         <el-table-column
           :show-overflow-tooltip="true"
-          prop="schedulingNetWeight"
-          key="schedulingNetWeight"
+          prop="schedulingTotalNetWeight"
+          key="schedulingTotalNetWeight"
           label="排产量（kg）"
           align="center"
         />
         <el-table-column :show-overflow-tooltip="true" prop="completeQuantity" key="completeQuantity" label="完成数" align="center">
           <template #default="{ row }">
-            <span :class="row.schedulingQuantity === row.completeQuantity ? 'tc-success' : 'tc-danger'">{{ row.completeQuantity }}</span>
+            <span :class="row.schedulingQuantity === row.completeQuantity ? '' : 'tc-danger'">{{ row.completeQuantity }}</span>
           </template>
         </el-table-column>
-        <el-table-column :show-overflow-tooltip="true" prop="completeNetWeight" key="completeNetWeight" label="完成量（kg）" align="center">
+        <el-table-column
+          :show-overflow-tooltip="true"
+          prop="completeTotalNetWeight"
+          key="completeTotalNetWeight"
+          label="完成量（kg）"
+          align="center"
+        >
           <template #default="{ row }">
-            <span :class="row.schedulingQuantity === row.completeQuantity ? 'tc-success' : 'tc-danger'">{{ row.completeNetWeight }}</span>
+            <span :class="row.schedulingQuantity === row.completeQuantity ? '' : 'tc-danger'">{{ row.completeTotalNetWeight }}</span>
           </template>
         </el-table-column>
       </common-table>

@@ -156,8 +156,8 @@ const { maxHeight } = useMaxHeight({ paginate: true })
 
 const processListRef = ref()
 const date = ref([moment().startOf('month').valueOf(), moment().valueOf()])
-const startDate = ref()
-const endDate = ref()
+const startDate = ref(moment().startOf('month').valueOf())
+const endDate = ref(moment().valueOf())
 const workshopId = ref()
 const factoryId = ref()
 const processType = ref()
@@ -219,8 +219,8 @@ async function handleDateChange(val) {
     startDate.value = val[0]
     endDate.value = val[1]
   } else {
-    startDate.value = undefined
-    endDate.value = undefined
+    startDate.value = moment().startOf('month').valueOf()
+    endDate.value = moment().valueOf()
   }
   fetchProcess()
   fetchProcessList()
@@ -238,6 +238,8 @@ function handleNestingTaskClick(val) {
   crud.query.groupsId = val?.groups?.id
   crud.query.teamId = val?.team?.id
   crud.query.taskTypeEnum = val?.taskTypeEnum
+  crud.query.startDate = startDate.value
+  crud.query.endDate = endDate.value
   info.value = val
   crud.toQuery()
 }

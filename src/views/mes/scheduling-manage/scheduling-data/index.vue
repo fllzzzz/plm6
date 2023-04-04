@@ -272,7 +272,7 @@ function getSummaries(param) {
     padding-left: 2px;
     padding-right: 2px;
   }
-  ::v-deep(td.el-table_1_column_19.is-center.is-leaf.el-table__cell .cell) {
+  ::v-deep(td.el-table_4_column_42.is-center.is-leaf.el-table__cell .cell) {
     color: #409eff;
     cursor: pointer;
   }
