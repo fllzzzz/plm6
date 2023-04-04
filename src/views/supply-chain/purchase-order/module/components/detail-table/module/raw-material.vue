@@ -11,6 +11,7 @@
     row-key="id"
   >
     <el-table-column label="序号" type="index" align="center" width="60" fixed="left" />
+    <el-table-column v-if="boolUseRequisitions" label="申购单号" prop="purchaseSN" fixed="left" width="140" align="center" />
     <!-- 基础信息 -->
     <material-base-info-columns spec-merge fixed="left" :show-index="false" />
     <!-- 次要信息 -->
@@ -50,6 +51,10 @@ defineProps({
   },
   materialType: {
     type: Number
+  },
+  boolUseRequisitions: {
+    type: Boolean,
+    default: false
   }
 })
 

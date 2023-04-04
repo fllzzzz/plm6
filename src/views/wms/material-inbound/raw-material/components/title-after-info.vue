@@ -46,7 +46,7 @@ const props = defineProps({
 const showLoadingWeight = computed(
   () =>
     props.detail.basicClass & STEEL_ENUM &&
-    props.order.weightMeasurementMode !== weightMeasurementModeEnum.THEORY.V &&
+    props.order.weightMeasurementMode === weightMeasurementModeEnum.OVERWEIGHT.V &&
     props.detail.loadingWeight !== null &&
     props.detail.loadingWeight !== undefined
 )

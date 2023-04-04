@@ -125,7 +125,7 @@
                 </span>
               </div>
               <!-- 清单列表 -->
-              <detail-table :material-type="detail.materialType" :list="detail.details" :max-height="maxHeight - 150" />
+              <detail-table :material-type="detail.materialType" :list="detail.details" :max-height="maxHeight - 150" :bool-use-requisitions="boolUseRequisitions"/>
               <div class="table-remark">
                 <span class="title">合同量</span>
                 <span class="con">{{ detail.mete }} {{ detail.meteUnit }}</span>
@@ -191,6 +191,15 @@ CRUD.HOOK.beforeDetailLoaded = async (crud, detail) => {
   await setSpecInfoToList(detail.details)
   await numFmtByBasicClass(detail.details, {
     toNum: true
+  })
+  const applyPurchaseObj = {}
+  if (detail.applyPurchase?.length) {
+    for (const item of detail.applyPurchase) {
+      applyPurchaseObj[item.id] = item
+    }
+  }
+  detail.details.forEach((item) => {
+    item.purchaseSN = applyPurchaseObj?.[item.applyPurchaseId]?.serialNumber
   })
 }
 </script>

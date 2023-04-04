@@ -1,5 +1,5 @@
 <template>
-  <component :is="comp" :list="list" :maxHeight="maxHeight" :materialType="materialType"/>
+  <component :is="comp" :list="list" :maxHeight="maxHeight" :materialType="materialType" :bool-use-requisitions="boolUseRequisitions" />
 </template>
 
 <script setup>
@@ -19,6 +19,10 @@ const props = defineProps({
   },
   maxHeight: {
     type: Number
+  },
+  boolUseRequisitions: {
+    type: Boolean,
+    default: false
   }
 })
 

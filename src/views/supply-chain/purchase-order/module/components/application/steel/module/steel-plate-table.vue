@@ -8,6 +8,7 @@
     row-key="uid"
   >
     <el-table-column label="序号" type="index" align="center" width="60" fixed="left" />
+    <el-table-column v-if="form.useRequisitions" label="申购单号" prop="purchaseSN" fixed="left" width="140" align="center" />
     <el-table-column prop="serialNumber" label="编号" align="center" fixed="left" />
     <el-table-column prop="classifyName" label="物料种类" align="center" fixed="left" show-overflow-tooltip>
       <template #default="{ row }">
@@ -26,7 +27,7 @@
     <el-table-column prop="thickness" align="center" :label="`厚 (${baseUnit.thickness.unit})`" min-width="120">
       <template #default="{ row }">
         <common-input-number
-          v-if="!form.useRequisitions"
+          v-if="!form.useRequisitions || (form.useRequisitions && Boolean(currentCfg?.thickness & basicClass))"
           v-model="row.thickness"
           :min="0"
           :max="999999"
@@ -42,6 +43,7 @@
     <el-table-column prop="width" align="center" :label="`宽 (${baseUnit.width.unit})`" min-width="120">
       <template #default="{ row }">
         <common-input-number
+          v-if="!form.useRequisitions || (form.useRequisitions && Boolean(currentCfg?.width & basicClass))"
           v-model="row.width"
           :min="0"
           :max="999999"
@@ -51,11 +53,13 @@
           size="mini"
           placeholder="宽"
         />
+        <span v-else>{{ row.width }}</span>
       </template>
     </el-table-column>
     <el-table-column prop="length" align="center" :label="`长 (${baseUnit.length.unit})`" min-width="120">
       <template #default="{ row }">
         <common-input-number
+          v-if="!form.useRequisitions || (form.useRequisitions && Boolean(currentCfg?.length & basicClass))"
           v-model="row.length"
           :max="999999"
           :controls="false"
@@ -64,11 +68,13 @@
           size="mini"
           placeholder="长"
         />
+        <span v-else>{{ row.length }}</span>
       </template>
     </el-table-column>
     <el-table-column prop="quantity" align="center" :label="`数量 (${baseUnit.measure.unit})`" min-width="120">
       <template #default="{ row }">
         <common-input-number
+          v-if="!form.useRequisitions || (form.useRequisitions && Boolean(currentCfg?.quantity & basicClass))"
           v-model="row.quantity"
           :min="1"
           :max="999999999"
@@ -79,6 +85,7 @@
           size="mini"
           placeholder="数量"
         />
+        <span v-else>{{ row.quantity }}</span>
       </template>
     </el-table-column>
     <el-table-column
@@ -92,7 +99,7 @@
         <el-tooltip
           class="item"
           effect="dark"
-          :content="`理论重量：${row.theoryTotalWeight} kg， ${overDiffTip}`"
+          :content="`申购重量：${row.purchaseTotalWeight} kg， ${overDiffTip}`"
           :disabled="!row.hasOver"
           placement="top"
         >
@@ -162,7 +169,12 @@ const form = inject('crud')?.form
 const { baseUnit } = useMatBaseUnit(basicClass) // 当前分类基础单位
 
 const { handleMeteChangeCalcPrice } = usePriceSet('weighingTotalWeight')
-const { overDiffTip, weightOverDiff, diffSubmitValidate } = useWeightOverDiff(baseUnit) // 过磅重量超出理论重量处理
+const { overDiffTip, weightOverDiff, diffSubmitValidate, currentCfg } = useWeightOverDiff(
+  baseUnit,
+  'purchase',
+  'purchaseTotalWeight',
+  '申购重量'
+) // 过磅重量超出理论重量处理
 
 // 金额校验
 const validateAmount = (value, row) => {
@@ -240,7 +252,7 @@ function rowInit(row) {
 function rowWatch(row) {
   watchEffect(() => weightOverDiff(row))
   // 计算单件理论重量
-  watch([() => row.length, () => row.width, () => row.thickness, baseUnit], () => calcTheoryWeight(row), { immediate: true })
+  watch([() => row.length, () => row.width, () => row.thickness, baseUnit], () => calcTheoryWeight(row))
   // 计算总重
   watch([() => row.theoryWeight, () => row.quantity], () => {
     calcTotalWeight(row)
@@ -262,6 +274,11 @@ async function calcTheoryWeight(row) {
 
 // 计算总重
 function calcTotalWeight(row) {
+  if (row.purchaseNetMete && row.quantity) {
+    row.purchaseTotalWeight = toPrecision(row.purchaseNetMete * row.quantity, baseUnit.weight.precision)
+  } else {
+    row.purchaseTotalWeight = undefined
+  }
   if (isNotBlank(row.theoryWeight) && row.quantity) {
     row.theoryTotalWeight = row.theoryWeight * row.quantity
     row.weighingTotalWeight = toPrecision(row.theoryWeight * row.quantity)

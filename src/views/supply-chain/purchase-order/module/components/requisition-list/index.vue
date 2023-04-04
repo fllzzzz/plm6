@@ -24,16 +24,22 @@ import { canPurchaseDetail } from '@/api/supply-chain/requisitions-manage/requis
 import requisitionOrder from './module/requisition-order'
 import { defineExpose, defineEmits, computed, ref, watch, inject, nextTick } from 'vue'
 
+import { toPrecision } from '@/utils/data-type'
+import { matClsEnum } from '@/utils/enum/modules/classification'
+import { STEEL_ENUM } from '@/settings/config'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { setSpecInfoToList } from '@/utils/wms/spec'
+import { calcSteelPlateWeight, calcSectionSteelWeight } from '@/utils/wms/measurement-calc'
 import { materialPurchaseClsEnum } from '@enum-ms/classification'
 
+import useMatBaseUnit from '@/composables/store/use-mat-base-unit'
 import Steel from './module/steel/index.vue'
 import AuxMat from './module/auxiliary-material/index.vue'
 import Manufactured from './module/manufactured/index.vue'
 
 const emit = defineEmits('add-purchase')
 const form = inject('crud')?.form
+const { baseUnit } = useMatBaseUnit()
 
 const requisitionOrderRef = ref()
 const compRef = ref()
@@ -81,6 +87,31 @@ async function fetchList() {
         toSmallest: false,
         toNum: true
       })
+      // 计算理论重量、申购单量
+      for (let i = 0; i < list.value.length; i++) {
+        const v = list.value[i]
+        v.purchaseSN = form.requisitionsKV[v.applyPurchaseId]?.serialNumber
+        if (v.basicClass & STEEL_ENUM) {
+          v.purchaseNetMete = toPrecision(v.mete / v.quantity)
+          v.purchaseTotalWeight = v.mete
+          if (v.basicClass & matClsEnum.STEEL_PLATE.V) {
+            v.theoryWeight = await calcSteelPlateWeight({
+              name: v.classifyFullName, // 名称，用于判断是否为不锈钢，不锈钢与普通钢板密度不同
+              length: v.length,
+              width: v.width,
+              thickness: v.thickness
+            })
+            v.theoryTotalWeight = v.theoryWeight * v.quantity
+          }
+          if (v.basicClass & matClsEnum.SECTION_STEEL.V) {
+            v.theoryWeight = await calcSectionSteelWeight({
+              length: v.length, // 长度
+              unitWeight: v.unitWeight // 单位重量
+            })
+            v.theoryTotalWeight = v.theoryWeight * v.quantity
+          }
+        }
+      }
     }
     nextTick(() => {
       compRef.value?.initList(list.value)

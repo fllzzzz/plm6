@@ -6,48 +6,58 @@ import { convertUnits } from '@/utils/convert/unit'
 
 import useWmsConfig from '../store/use-wms-config'
 // 计算重量是否在正常范围内
-export default function useWeightOverDiff(baseUnit) {
-  const { loaded, inboundSteelCfg } = useWmsConfig()
+export default function useWeightOverDiff(baseUnit, cfgType = 'inbound', compareWeightField = 'theoryTotalWeight', weightTip = '理论重量') {
+  const { loaded, inboundSteelCfg, purchaseCfg } = useWmsConfig()
+
+  const weightCfg = computed(() => {
+    if (cfgType === 'inbound') {
+      return inboundSteelCfg.value
+    }
+    if (cfgType === 'purchase') {
+      return purchaseCfg.value
+    }
+    return null
+  })
 
   // 超出提示
   const overDiffTip = computed(() => {
     if (!loaded) {
-      return '请等待wms钢材入库重量配置信息加载后再试'
+      return `请等待${cfgType === 'inbound' ? 'wms钢材入库' : '采购钢材'}重量配置信息加载后再试`
     }
-    if (inboundSteelCfg.value.steelDiffType === numOrPctEnum.PERCENTAGE.V) {
-      return `实际重量与理论重量的误差不可超过理论重量的${inboundSteelCfg.value.steelDiff || 0}%`
+    if (weightCfg.value.steelDiffType === numOrPctEnum.PERCENTAGE.V) {
+      return `实际重量与${weightTip}的误差不可超过${weightTip}的${weightCfg.value.steelDiff || 0}%`
     }
-    return `实际重量与理论重量的误差不可超过${inboundSteelCfg.value.steelDiff || 0} ${STEEL_DIFF_UNIT}`
+    return `实际重量与${weightTip}的误差不可超过${weightCfg.value.steelDiff || 0} ${STEEL_DIFF_UNIT}`
   })
 
   // 提交校验
   function diffSubmitValidate(row, overDiffSubmittable) {
-    if (overDiffSubmittable || !row.hasOver) {
+    // if (overDiffSubmittable || !row.hasOver) {
+    if (!row.hasOver) {
       return true
     }
     return false
   }
 
   // 超出校验
-  function weightOverDiff(row, { inboundSteelCfg, baseUnit }) {
+  function weightOverDiff(row, { weightCfg, baseUnit }) {
     if (!loaded) {
-      return '请等待wms钢材入库重量配置信息加载后再试'
+      return `请等待${cfgType === 'inbound' ? 'wms钢材入库' : '采购钢材'}重量配置信息加载后再试`
     }
-    if (isBlank(row.weighingTotalWeight) && isBlank(row.theoryTotalWeight)) return
-
+    if (isBlank(row.weighingTotalWeight) && isBlank(row[compareWeightField])) return
     let hasOver = false
-    const overNum = row.weighingTotalWeight - row.theoryTotalWeight
-    const steelDiff = inboundSteelCfg.value.steelDiff
-    const steelDiffType = inboundSteelCfg.value.steelDiffType
+    const overNum = row.weighingTotalWeight - row[compareWeightField]
+    const steelDiff = weightCfg.value.steelDiff
+    const steelDiffType = weightCfg.value.steelDiffType
     if (steelDiffType === numOrPctEnum.PERCENTAGE.V) {
       hasOver =
-      (Math.abs((row.weighingTotalWeight / row.theoryTotalWeight) * Math.pow(10, 5) - 1 * Math.pow(10, 5)) / Math.pow(10, 5)) * 100 >
+      (Math.abs((row.weighingTotalWeight / row[compareWeightField]) * Math.pow(10, 5) - 1 * Math.pow(10, 5)) / Math.pow(10, 5)) * 100 >
       steelDiff
     }
     if (steelDiffType === numOrPctEnum.NUMBER.V) {
       hasOver =
       convertUnits(
-        Math.abs(row.weighingTotalWeight - row.theoryTotalWeight),
+        Math.abs(row.weighingTotalWeight - row[compareWeightField]),
         baseUnit.value.weight.unit,
         STEEL_DIFF_UNIT,
         baseUnit.value.weight.precision
@@ -59,7 +69,8 @@ export default function useWeightOverDiff(baseUnit) {
 
   return {
     overDiffTip,
-    weightOverDiff: (row) => weightOverDiff(row, { inboundSteelCfg, baseUnit }),
-    diffSubmitValidate: (value, row) => diffSubmitValidate(row, inboundSteelCfg.value.overDiffSubmittable)
+    currentCfg: weightCfg,
+    weightOverDiff: (row) => weightOverDiff(row, { weightCfg, baseUnit }),
+    diffSubmitValidate: (value, row) => diffSubmitValidate(row, weightCfg.value.overDiffSubmittable)
   }
 }

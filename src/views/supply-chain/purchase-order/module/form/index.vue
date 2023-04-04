@@ -308,7 +308,7 @@
               </div>
               <!-- 清单列表 -->
               <component v-if="!form.boolUsed" ref="compRef" :is="currentView" :maxHeight="maxHeight - 150" />
-              <detail-table v-else :material-type="form.materialType" :list="form.details" :max-height="maxHeight - 150" />
+              <detail-table v-else :material-type="form.materialType" :list="form.details" :max-height="maxHeight - 150" :bool-use-requisitions="form.useRequisitions"/>
               <div class="table-remark">
                 <template v-if="!Boolean(form.materialType & materialPurchaseClsEnum.MATERIAL.V)">
                   <span class="title">合同量</span>
@@ -834,8 +834,12 @@ CRUD.HOOK.beforeEditDetailLoaded = async (crud, form) => {
     handleAddManuf(_list)
   } else {
     await setSpecInfoToList(form.details)
-    form.list = await numFmtByBasicClass(form.details, {
+    await numFmtByBasicClass(form.details, {
       toNum: true
+    })
+    form.list = form.details.map((v) => {
+      v.purchaseSN = form.requisitionsKV[v.applyPurchaseId]?.serialNumber
+      return v
     })
     if (form.materialType & materialPurchaseClsEnum.STEEL.V) {
       // 修改的情况下，数据预处理

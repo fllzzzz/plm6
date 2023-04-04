@@ -1,6 +1,7 @@
 <template>
   <common-table v-bind="$attrs" :data="list" :cell-class-name="wrongCellMask" :show-empty-symbol="false" return-source-data row-key="uid">
     <el-table-column label="序号" type="index" align="center" width="60" fixed="left" />
+    <el-table-column label="申购单号" prop="purchaseSN" fixed="left" width="140" align="center" />
     <el-table-column prop="serialNumber" show-overflow-tooltip label="编号" align="center" fixed="left" />
     <el-table-column prop="classifyName" label="物料种类" align="center" fixed="left" show-overflow-tooltip>
       <template #default="{ row }">
@@ -24,7 +25,7 @@
     <el-table-column prop="quantity" label="数量" align="center">
       <template #default="{ row }">
         <common-input-number
-          v-if="row.measureUnit"
+          v-if="row.measureUnit && Boolean(currentCfg?.quantity & basicClass)"
           v-model="row.quantity"
           :min="0"
           :max="999999999"
@@ -34,7 +35,7 @@
           size="mini"
           placeholder="数量"
         />
-        <span v-else v-empty-text />
+        <span v-else v-empty-text>{{ row.quantity }}</span>
       </template>
     </el-table-column>
     <el-table-column prop="accountingUnit" label="核算单位" align="center">
@@ -45,6 +46,7 @@
     <el-table-column prop="mete" label="核算量" align="center">
       <template #default="{ row }">
         <common-input-number
+          v-if="Boolean(currentCfg?.mete & basicClass)"
           v-model="row.mete"
           :min="0.000001"
           :max="999999999"
@@ -54,6 +56,7 @@
           size="mini"
           placeholder="核算量"
         />
+        <span v-else>{{ row.mete }}</span>
       </template>
     </el-table-column>
 
@@ -69,13 +72,7 @@
     </el-table-column>
     <el-table-column label="操作" width="90" align="center" fixed="right">
       <template #default="{ row, $index }">
-        <common-button
-          icon="el-icon-plus"
-          :disabled="isExist(row.id)"
-          type="warning"
-          size="mini"
-          @click="addRow(row, $index)"
-        />
+        <common-button icon="el-icon-plus" :disabled="isExist(row.id)" type="warning" size="mini" @click="addRow(row, $index)" />
       </template>
     </el-table-column>
   </common-table>
@@ -83,10 +80,17 @@
 
 <script setup>
 import { defineExpose, defineEmits, inject, ref } from 'vue'
+import { matClsEnum } from '@/utils/enum/modules/classification'
 import { positiveNumPattern } from '@/utils/validate/pattern'
 
+import useWmsConfig from '@/composables/store/use-wms-config'
 import useTableValidate from '@compos/form/use-table-validate'
 import { deepClone } from '@/utils/data-type'
+
+// 当前物料基础类型
+const basicClass = matClsEnum.MATERIAL.V
+
+const { purchaseCfg: currentCfg } = useWmsConfig()
 
 const emit = defineEmits(['add-purchase'])
 const form = inject('crud')?.form

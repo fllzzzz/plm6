@@ -95,19 +95,33 @@
 
     <el-table-column prop="color" label="颜色" align="center" min-width="120px">
       <template #default="{ row }">
-        <el-input v-model.trim="row.color" maxlength="20" size="mini" placeholder="颜色" />
+        <el-input
+          v-if="props.boolPartyA || (!props.boolPartyA && form.selectObj[row.purchaseOrderDetailId].isSelected)"
+          v-model.trim="row.color"
+          maxlength="20"
+          size="mini"
+          placeholder="颜色"
+        />
+        <span v-else v-empty-text>{{ row.color }}</span>
       </template>
     </el-table-column>
     <el-table-column prop="brand" label="品牌" align="center" min-width="120px">
       <template #default="{ row }">
-        <el-input v-model.trim="row.brand" maxlength="60" size="mini" placeholder="品牌" />
+        <el-input
+          v-if="props.boolPartyA || (!props.boolPartyA && form.selectObj[row.purchaseOrderDetailId].isSelected)"
+          v-model.trim="row.brand"
+          maxlength="60"
+          size="mini"
+          placeholder="品牌"
+        />
+        <span v-else v-empty-text>{{ row.brand }}</span>
       </template>
     </el-table-column>
     <template v-if="!props.boolPartyA">
       <el-table-column prop="quantity" label="本次实收数" align="center" min-width="120px">
         <template #default="{ row }">
           <common-input-number
-            v-if="row.measureUnit"
+            v-if="row.measureUnit && Boolean(currentCfg?.quantity & basicClass) && form.selectObj[row.purchaseOrderDetailId].isSelected"
             v-model="row.quantity"
             :min="0"
             :max="999999999"
@@ -118,12 +132,13 @@
             placeholder="本次实收数"
             @blur="handleOverQuantity(row)"
           />
-          <span v-else v-empty-text />
+          <span v-else v-empty-text>{{ row.quantity }}</span>
         </template>
       </el-table-column>
       <el-table-column prop="mete" label="实收量" align="center" min-width="120px">
         <template #default="{ row }">
           <common-input-number
+            v-if="Boolean(currentCfg?.mete & basicClass) && form.selectObj[row.purchaseOrderDetailId].isSelected"
             v-model="row.mete"
             :min="0.000001"
             :max="999999999"
@@ -135,6 +150,7 @@
             @change="handleWeightChange($event, row)"
             @blur="handleOverMete(row)"
           />
+          <span v-else>{{ row.mete }}</span>
         </template>
       </el-table-column>
     </template>
@@ -148,10 +164,12 @@
 
 <script setup>
 import { defineExpose, defineProps, watchEffect, computed, ref, inject, reactive } from 'vue'
+import { matClsEnum } from '@/utils/enum/modules/classification'
 import { createUniqueString } from '@/utils/data-type/string'
 import { positiveNumPattern } from '@/utils/validate/pattern'
 import { isNotBlank, toPrecision } from '@/utils/data-type'
 
+import useWmsConfig from '@/composables/store/use-wms-config'
 import { regExtra } from '@/composables/form/use-form'
 import useTableValidate from '@compos/form/use-table-validate'
 import useOverReceive from '@/views/wms/material-inbound/raw-material/application/composables/use-over-receive.js'
@@ -170,6 +188,11 @@ const props = defineProps({
     default: false
   }
 })
+
+// 当前物料基础类型
+const basicClass = matClsEnum.MATERIAL.V
+
+const { purchaseCfg: currentCfg } = useWmsConfig()
 
 const tableRef = ref()
 const matSpecRef = inject('matSpecRef') // 调用父组件matSpecRef

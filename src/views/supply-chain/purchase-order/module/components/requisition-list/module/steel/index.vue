@@ -20,7 +20,6 @@
 import { ref, reactive, computed, provide, watch, defineExpose } from 'vue'
 import { steelClsEnum } from '@enum-ms/classification'
 
-import { deepClone } from '@data-type/index'
 import SteelPlateTable from './module/steel-plate-table'
 import SectionSteelTable from './module/section-steel-table'
 import SteelCoilTable from './module/steel-coil-table'
@@ -66,13 +65,17 @@ watch(
   () => compRef,
   () => {
     if (compRef.value) {
-      bcListObj[bcListKV[steelClsEnum.VK[basicClass.value]]].forEach((v) => {
-        compRef.value.rowWatch(v)
-      })
+      addRowWatch()
     }
   },
   { immediate: true, deep: true }
 )
+
+function addRowWatch() {
+  bcListObj[bcListKV[steelClsEnum.VK[basicClass.value]]].forEach((v) => {
+    compRef.value.rowWatch(v)
+  })
+}
 
 function initList(list) {
   bcListObj.sectionSteelList = []
@@ -83,10 +86,11 @@ function initList(list) {
   let _basicClass = steelClsEnum.STEEL_PLATE.V
   list.forEach((v, i) => {
     v.weighingTotalWeight = v.mete
-    bcListObj[bcListKV[steelClsEnum.VK[v.basicClass]]].push(deepClone(v))
+    bcListObj[bcListKV[steelClsEnum.VK[v.basicClass]]].push(reactive(v))
     _basicClass = v.basicClass < _basicClass || i === 0 ? v.basicClass : _basicClass
   })
   basicClass.value = _basicClass
+  addRowWatch()
 }
 
 defineExpose({

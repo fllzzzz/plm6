@@ -47,7 +47,7 @@
     <el-table-column prop="length" align="center" width="135px" :label="`定尺长度 (${baseUnit.length.unit})`">
       <template #default="{ row }">
         <common-input-number
-          v-if="props.boolPartyA"
+          v-if="props.boolPartyA || (form.selectObj[row.purchaseOrderDetailId].isSelected && Boolean(currentCfg?.length & basicClass))"
           v-model="row.length"
           :max="999999"
           :controls="false"
@@ -117,18 +117,33 @@
 
     <el-table-column prop="brand" label="品牌" align="center" min-width="100px">
       <template #default="{ row }">
-        <el-input v-model.trim="row.brand" maxlength="60" size="mini" placeholder="品牌" />
+        <el-input
+          v-if="props.boolPartyA || (!props.boolPartyA && form.selectObj[row.purchaseOrderDetailId].isSelected)"
+          v-model.trim="row.brand"
+          maxlength="60"
+          size="mini"
+          placeholder="品牌"
+        />
+        <span v-else v-empty-text>{{ row.brand }}</span>
       </template>
     </el-table-column>
     <el-table-column prop="heatNoAndBatchNo" label="炉批号" align="center" min-width="150px">
       <template #default="{ row }">
-        <el-input v-model.trim="row.heatNoAndBatchNo" size="mini" placeholder="炉批号" maxlength="200" />
+        <el-input
+          v-if="props.boolPartyA || (!props.boolPartyA && form.selectObj[row.purchaseOrderDetailId].isSelected)"
+          v-model.trim="row.heatNoAndBatchNo"
+          size="mini"
+          placeholder="炉批号"
+          maxlength="200"
+        />
+        <span v-else v-empty-text>{{ row.heatNoAndBatchNo }}</span>
       </template>
     </el-table-column>
     <template v-if="!props.boolPartyA">
       <el-table-column prop="quantity" align="center" width="135px" :label="`本次实收数 (${baseUnit.measure.unit})`">
         <template #default="{ row }">
           <common-input-number
+            v-if="Boolean(currentCfg?.quantity & basicClass) && form.selectObj[row.purchaseOrderDetailId].isSelected"
             v-model="row.quantity"
             :min="0"
             :max="999999999"
@@ -140,6 +155,7 @@
             placeholder="实收数"
             @blur="handleOverQuantity(row)"
           />
+          <span v-else>{{ row.quantity }}</span>
         </template>
       </el-table-column>
       <el-table-column prop="totalLength" align="center" width="135px" :label="`实收总长度 (m)`" />
@@ -159,6 +175,7 @@
             placement="top"
           >
             <common-input-number
+              v-if="form.selectObj[row.purchaseOrderDetailId].isSelected"
               v-model="row.weighingTotalWeight"
               :min="0"
               :max="999999999"
@@ -171,6 +188,7 @@
               @change="handleWeightChange(row)"
               @blur="handleOverMete(row)"
             />
+            <span v-else>{{ row.weighingTotalWeight }}</span>
           </el-tooltip>
         </template>
       </el-table-column>
@@ -220,7 +238,7 @@ const { baseUnit } = useMatBaseUnit(basicClass) // 当前分类基础单位
 const { form } = regExtra() // 表单
 const expandRowKeys = ref([]) // 展开行key
 
-const { overDiffTip, weightOverDiff, diffSubmitValidate } = useWeightOverDiff(baseUnit) // 过磅重量超出理论重量处理
+const { overDiffTip, weightOverDiff, diffSubmitValidate, currentCfg } = useWeightOverDiff(baseUnit) // 过磅重量超出理论重量处理
 const { handleOverQuantity, handleOverMete } = useOverReceive({ meteField: 'weighingTotalWeight' })
 
 // 校验规则

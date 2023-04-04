@@ -361,7 +361,7 @@ const comp = computed(() => {
 
 // 可自动分配重量
 const weightAssignable = computed(() => {
-  const modeFlag = order.value && order.value.weightMeasurementMode !== weightMeasurementModeEnum.THEORY.V
+  const modeFlag = order.value && order.value.weightMeasurementMode === weightMeasurementModeEnum.OVERWEIGHT.V
   const isSpOrSs = !disabledBasicClass.value.steelPlateList || !disabledBasicClass.value.sectionSteelList
   return modeFlag && isSpOrSs
 })

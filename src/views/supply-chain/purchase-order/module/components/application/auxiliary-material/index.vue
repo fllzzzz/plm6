@@ -8,6 +8,7 @@
     row-key="uid"
   >
     <el-table-column label="序号" type="index" align="center" width="60" fixed="left" />
+    <el-table-column v-if="form.useRequisitions" label="申购单号" prop="purchaseSN" fixed="left" width="140" align="center" />
     <el-table-column prop="serialNumber" show-overflow-tooltip label="编号" align="center" fixed="left" />
     <el-table-column prop="classifyName" label="物料种类" align="center" fixed="left" show-overflow-tooltip>
       <template #default="{ row }">
@@ -31,7 +32,7 @@
     <el-table-column prop="quantity" label="数量" align="center">
       <template #default="{ row }">
         <common-input-number
-          v-if="row.measureUnit"
+          v-if="row.measureUnit && (!form.useRequisitions || (form.useRequisitions && Boolean(currentCfg?.quantity & basicClass)))"
           v-model="row.quantity"
           :min="0"
           :max="999999999"
@@ -41,7 +42,7 @@
           size="mini"
           placeholder="数量"
         />
-        <span v-else v-empty-text />
+        <span v-else v-empty-text>{{ row.quantity }}</span>
       </template>
     </el-table-column>
     <el-table-column prop="accountingUnit" label="核算单位" align="center">
@@ -52,6 +53,7 @@
     <el-table-column prop="mete" label="核算量" align="center">
       <template #default="{ row }">
         <common-input-number
+          v-if="!form.useRequisitions || (form.useRequisitions && Boolean(currentCfg?.mete & basicClass))"
           v-model="row.mete"
           :min="0.000001"
           :max="999999999"
@@ -61,6 +63,7 @@
           size="mini"
           placeholder="核算量"
         />
+        <span v-else>{{ row.mete }}</span>
       </template>
     </el-table-column>
 
@@ -86,14 +89,20 @@
 
 <script setup>
 import { defineExpose, inject, reactive, watch, watchEffect } from 'vue'
+import { matClsEnum } from '@/utils/enum/modules/classification'
 import { createUniqueString } from '@/utils/data-type/string'
 import { positiveNumPattern } from '@/utils/validate/pattern'
 import { isNotBlank } from '@/utils/data-type'
 
+import useWmsConfig from '@/composables/store/use-wms-config'
 import usePriceSet from '@compos/wms/use-price-set'
 import useTableValidate from '@compos/form/use-table-validate'
 import priceSetColumns from '@/views/wms/material-inbound/raw-material/components/price-set-columns.vue'
 
+// 当前物料基础类型
+const basicClass = matClsEnum.MATERIAL.V
+
+const { purchaseCfg: currentCfg } = useWmsConfig()
 const matSpecRef = inject('matSpecRef') // 调用父组件matSpecRef
 const form = inject('crud')?.form
 
