@@ -108,6 +108,12 @@ defineExpose({
 </script>
 
 <style lang="scss" scoped>
+::-webkit-scrollbar {
+  /*滚动条整体样式*/
+  width: 4px; /*高宽分别对应横竖滚动条的尺寸*/
+  height: 4px;
+}
+
 .requisition-main-content {
   display: flex;
   flex-direction: row;
@@ -116,7 +122,7 @@ defineExpose({
   height: 100%;
 
   .content-left {
-    width: 400px;
+    width: 405px;
     flex: none;
     height: 100%;
     overflow: auto;

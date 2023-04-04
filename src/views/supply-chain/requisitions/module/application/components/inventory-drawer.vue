@@ -24,7 +24,20 @@
         </el-form-item>
       </el-form>
       <common-table v-loading="tableLoading" :data="tableData" :cell-style="handleCellStyle" :max-height="maxHeight" style="width: 100%">
-        <material-base-info-columns :basic-class="basicClass" specMerge />
+        <material-base-info-columns :basic-class="basicClass" specMerge>
+          <template #snTag="{ row }">
+            <table-cell-tag
+              v-if="!row?.project?.id && query.warehouseType === projectWarehouseTypeEnum.PROJECT.V"
+              name="公共库"
+              :offset="15"
+            />
+          </template>
+        </material-base-info-columns>
+        <el-table-column label="可利用数量" prop="canUseQuantity" align="right" width="100">
+          <template #default="{ row }">
+            <span>{{ row.canUseQuantity }}</span>
+          </template>
+        </el-table-column>
         <!-- 单位及其数量 -->
         <material-unit-quantity-columns :basic-class="basicClass" />
         <!-- 次要信息 -->
@@ -38,19 +51,19 @@
         />
         <el-table-column label="操作" width="70" align="center" fixed="right">
           <template #default="{ row: { sourceRow: row } }">
-            <common-button icon="el-icon-plus" type="success" size="mini" @click="add(row)" />
+            <common-button icon="el-icon-plus" :disabled="!row.canUseQuantity" type="success" size="mini" @click="add(row)" />
           </template>
         </el-table-column>
       </common-table>
     </template>
   </common-drawer>
-  <common-dialog v-model="quantityVisible" title="选择数量" :width="430">
+  <common-dialog v-model="quantityVisible" title="选择数量" :width="460">
     <template #titleRight>
       <common-button size="mini" type="primary" @click="confirmIt">确定</common-button>
     </template>
     <div class="tip">
       <span>* 提示：</span>
-      <span> 若选择此材料，对应物料库存将被冻结！</span>
+      <span> 若选择此材料，对应物料库存在申购提交之后将被冻结！</span>
     </div>
     <el-form label-width="110px">
       <el-form-item label="物料种类">
@@ -59,6 +72,9 @@
       <el-form-item label="规格">
         <span>{{ operateInfo.specMerge }}</span>
       </el-form-item>
+      <el-form-item label="可利用数量">
+        <span>{{ operateInfo.canUseQuantity }}</span>
+      </el-form-item>
       <el-form-item
         :label="`利用数量(${basicClass & rawMatClsEnum.MATERIAL.V ? operateInfo?.outboundUnit : baseUnit[basicClass]?.measure?.unit})`"
         required
@@ -66,7 +82,7 @@
         <common-input-number
           v-model="quantity"
           :min="1"
-          :max="operateInfo.quantity"
+          :max="operateInfo.canUseQuantity"
           controls-position="right"
           :controls="false"
           :step="1"
@@ -81,7 +97,7 @@
 
 <script setup>
 import { inventoryGet } from '@/api/supply-chain/requisitions-manage/requisitions'
-import { defineProps, defineEmits, ref, computed } from 'vue'
+import { defineProps, defineEmits, ref, computed, inject } from 'vue'
 
 import { steelClsEnum, rawMatClsEnum } from '@enum-ms/classification'
 import { projectWarehouseTypeEnum } from '@enum-ms/wms'
@@ -134,6 +150,8 @@ const operateInfo = ref({})
 const tableLoading = ref(false)
 const tableData = ref([])
 
+const useInventoryInfo = inject('useInventoryInfo')
+
 // 当前物料种类
 const basicClass = computed(() => query.value.basicClass)
 
@@ -148,13 +166,19 @@ function showHook() {
 async function fetchList() {
   try {
     tableLoading.value = true
-    const { classifyId, specification, basicClass, thickness, width, length } = props.params
+    const { classifyId, specification, basicClass, thickness, width, length, materialInventoryId, quantity } = props.params
     const _query = { spec: specification, classifyId, thickness, width, length, ...query.value }
     // 钢板查询钢卷时 去掉classifyId
     if (basicClass !== query.value.basicClass) {
       _query.classifyId = undefined
     }
     const { content } = await inventoryGet(_query)
+    content.forEach((v) => {
+      let _frozenQuantity = v.frozenQuantity || 0
+      if (useInventoryInfo.value?.[v.id]) _frozenQuantity += useInventoryInfo.value[v.id]
+      if (materialInventoryId && materialInventoryId === v.id) _frozenQuantity -= quantity || 0
+      v.canUseQuantity = v.quantity - _frozenQuantity
+    })
     await setSpecInfoToList(content)
     tableData.value = await numFmtByBasicClass(content, {
       toSmallest: false,
@@ -174,6 +198,7 @@ const showProjectInfo = computed(() => {
 
 function add(row) {
   operateInfo.value = row
+  quantity.value = undefined
   quantityVisible.value = true
 }
 

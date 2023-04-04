@@ -98,16 +98,18 @@ const matSpecRef = inject('matSpecRef') // 调用父组件matSpecRef
 const form = inject('crud')?.form
 
 watchEffect(() => {
-  let _mete = 0
+  // 辅材不进行核算量合计
+  // let _mete = 0
   let _amount = 0
   if (isNotBlank(form.list)) {
     form.list.forEach((v) => {
-      _mete += v.mete || 0
+      // _mete += v.mete || 0
       _amount += Number(v.amount) || 0
     })
   }
   form.amount = _amount
-  form.mete = _mete
+  form.mete = undefined
+  form.meteUnit = ''
 })
 
 // 数量校验方式

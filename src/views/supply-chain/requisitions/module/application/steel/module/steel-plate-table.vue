@@ -78,7 +78,7 @@
         <common-input-number
           v-model="row.quantity"
           :min="1"
-          :max="row.requisitionMode === requisitionModeEnum.USE_INVENTORY.V ? row.canUseQuantity : 999999999"
+          :max="getCanUseQuantity(row)"
           controls-position="right"
           :controls="false"
           :step="1"
@@ -147,6 +147,7 @@ const emit = defineEmits(['search-inventory'])
 // 当前物料基础类型
 const basicClass = matClsEnum.STEEL_PLATE.V
 
+const useInventoryInfo = inject('useInventoryInfo') // 调用父组件useInventoryInfo
 const matSpecRef = inject('matSpecRef') // 调用父组件matSpecRef
 const { baseUnit } = useMatBaseUnit(basicClass) // 当前分类基础单位
 const { form } = regExtra() // 表单
@@ -209,6 +210,19 @@ function rowInit(row) {
   })
   rowWatch(_row)
   return _row
+}
+
+// 获取可使用数量
+function getCanUseQuantity(row) {
+  if (row.materialInventoryId && form.originInventoryInfo[row.materialInventoryId]) {
+    return (
+      form.originInventoryInfo[row.materialInventoryId].quantity -
+      form.originInventoryInfo[row.materialInventoryId].frozenQuantity -
+      useInventoryInfo.value[row.materialInventoryId] +
+      row.quantity
+    )
+  }
+  return 999999999
 }
 
 // 行监听

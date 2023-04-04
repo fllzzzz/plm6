@@ -66,7 +66,7 @@
         />
       </template>
     </el-table-column>
-    <el-table-column prop="quantity" align="center" :label="`数量 (${baseUnit.measure.unit})`"  min-width="120">
+    <el-table-column prop="quantity" align="center" :label="`数量 (${baseUnit.measure.unit})`" min-width="120">
       <template #default="{ row }">
         <common-input-number
           v-model="row.quantity"
@@ -81,7 +81,13 @@
         />
       </template>
     </el-table-column>
-    <el-table-column key="weighingTotalWeight" prop="weighingTotalWeight" align="center" :label="`总重 (${baseUnit.weight.unit})`" min-width="135">
+    <el-table-column
+      key="weighingTotalWeight"
+      prop="weighingTotalWeight"
+      align="center"
+      :label="`总重 (${baseUnit.weight.unit})`"
+      min-width="135"
+    >
       <template #default="{ row }">
         <el-tooltip
           class="item"
@@ -112,6 +118,19 @@
         <el-input v-model.trim="row.brand" maxlength="60" size="mini" placeholder="品牌" />
       </template>
     </el-table-column>
+    <el-table-column prop="weightMeasurementMode" label="计量方式" align="center" width="140px">
+      <template #default="{ row }">
+        <common-radio-button
+          v-model="row.weightMeasurementMode"
+          :options="weightMeasurementModeEnum.ENUM"
+          type="enum"
+          :unshow-val="[weightMeasurementModeEnum.MIXTURE.V]"
+          default
+          :props="{ key: 'K', label: 'SL', value: 'V' }"
+          size="mini"
+        />
+      </template>
+    </el-table-column>
     <el-table-column label="操作" width="70" align="center" fixed="right">
       <template #default="{ row, $index }">
         <common-button icon="el-icon-delete" type="danger" size="mini" @click="delRow(row.sn, $index)" />
@@ -123,6 +142,7 @@
 <script setup>
 import { defineExpose, inject, watchEffect, reactive, watch } from 'vue'
 import { matClsEnum } from '@/utils/enum/modules/classification'
+import { weightMeasurementModeEnum } from '@enum-ms/finance'
 import { isBlank, isNotBlank, toPrecision } from '@/utils/data-type'
 
 import usePriceSet from '@/composables/wms/use-price-set'
@@ -154,6 +174,7 @@ const validateAmount = (value, row) => {
 
 const rules = {
   classifyId: [{ required: true, message: '请选择物料种类', trigger: 'change' }],
+  weightMeasurementMode: [{ required: true, message: '请选择计量方式', trigger: 'change' }],
   width: [
     { required: true, message: '请填写宽度', trigger: 'blur' },
     { pattern: positiveNumPattern, message: '宽度必须大于0', trigger: 'blur' }

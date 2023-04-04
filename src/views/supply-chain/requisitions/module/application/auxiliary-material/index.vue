@@ -59,7 +59,7 @@
 import crudApi from '@/api/supply-chain/requisitions-manage/requisitions'
 import { downloadExcelTemplate } from '@/api/wms/common'
 
-import { defineProps, defineEmits, ref, provide, watch, nextTick } from 'vue'
+import { defineProps, defineEmits, watchEffect, ref, provide, watch, nextTick } from 'vue'
 import { matClsEnum } from '@/utils/enum/modules/classification'
 import { isBlank } from '@/utils/data-type'
 import { preparationTypeEnum, requisitionModeEnum, receiptTypeEnum } from '@enum-ms/wms'
@@ -89,7 +89,8 @@ const props = defineProps({
 })
 
 const defaultForm = {
-  list: [] // 入库清单
+  list: [], // 入库清单
+  originInventoryInfo: {} // 使用库存
 }
 
 const tableRef = ref() // 表格ref
@@ -102,7 +103,9 @@ const searchInfo = ref({})
 const searchIdx = ref()
 const materialSelectVisible = ref(false) // 显示物料选择
 const currentBasicClass = matClsEnum.MATERIAL.V // 当前基础分类
+const useInventoryInfo = ref({})
 
+provide('useInventoryInfo', useInventoryInfo) // 供兄弟组件调用
 provide('matSpecRef', matSpecRef) // 供兄弟组件调用 删除
 
 const { cu, form, FORM } = useForm(
@@ -158,6 +161,23 @@ const { maxHeight: tableMaxHeight } = useMaxHeight({
 // 初始化
 init()
 
+watchEffect(() => {
+  if (form.list?.length) {
+    const _obj = {}
+    for (let i = 0; i < form.list.length; i++) {
+      const item = form.list[i]
+      if (item.requisitionMode === requisitionModeEnum.USE_INVENTORY.V) {
+        if (!_obj[item.materialInventoryId]) {
+          _obj[item.materialInventoryId] = item.quantity
+        } else {
+          _obj[item.materialInventoryId] += item.quantity
+        }
+      }
+    }
+    useInventoryInfo.value = _obj
+  }
+})
+
 // 提交后清除校验结果
 FORM.HOOK.afterSubmit = () => {
   emit('success')
@@ -171,6 +191,12 @@ function searchInventory(row, index) {
 }
 
 function useInventory(quantity, data) {
+  const materialInventoryId = data.id
+  if (!form.originInventoryInfo) form.originInventoryInfo = {}
+  form.originInventoryInfo[materialInventoryId] = {
+    quantity: data.quantity,
+    frozenQuantity: data.frozenQuantity
+  }
   form.list[searchIdx.value].quantity = quantity
   form.list[searchIdx.value].canUseQuantity = data.quantity
   form.list[searchIdx.value].color = data.color
@@ -178,7 +204,7 @@ function useInventory(quantity, data) {
   form.list[searchIdx.value].unitNet = data.unitNet
   form.list[searchIdx.value].mete = data.quantity * data.unitNet
   form.list[searchIdx.value].requisitionMode = requisitionModeEnum.USE_INVENTORY.V
-  form.list[searchIdx.value].materialInventoryId = data.id
+  form.list[searchIdx.value].materialInventoryId = materialInventoryId
 }
 
 // 表单校验

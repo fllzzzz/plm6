@@ -49,8 +49,8 @@
         <el-tooltip
           class="item"
           effect="dark"
-          :content="`单位重量：${row.unitWeight} kg/m， 理论重量：${row.theoryTotalWeight} kg， ${overDiffTip}`"
-          :disabled="!row.hasOver"
+          :content="`单位重量：${row.unitWeight} kg/m， 理论重量：${row.theoryTotalWeight} kg`"
+          :disabled="row.weighingTotalWeight === row.theoryTotalWeight"
           placement="top"
         >
           <common-input-number
@@ -62,7 +62,6 @@
             :precision="baseUnit.weight.precision"
             size="mini"
             placeholder="重量"
-            :class="{ 'over-weight-tip': row.hasOver }"
           />
         </el-tooltip>
       </template>
@@ -87,13 +86,13 @@
 </template>
 
 <script setup>
-import { defineExpose, defineEmits, inject, watchEffect, watch } from 'vue'
+import { defineExpose, defineEmits, inject, watch } from 'vue'
 import { matClsEnum } from '@/utils/enum/modules/classification'
 import { isNotBlank, toPrecision } from '@/utils/data-type'
 
 import useTableValidate from '@compos/form/use-table-validate'
 import useMatBaseUnit from '@/composables/store/use-mat-base-unit'
-import useWeightOverDiff from '@/composables/wms/use-steel-weight-over-diff'
+// import useWeightOverDiff from '@/composables/wms/use-steel-weight-over-diff'
 import { calcSectionSteelTotalLength, calcSectionSteelWeight } from '@/utils/wms/measurement-calc'
 import { positiveNumPattern } from '@/utils/validate/pattern'
 
@@ -106,7 +105,7 @@ const form = inject('crud')?.form
 
 const { baseUnit } = useMatBaseUnit(basicClass) // 当前分类基础单位
 
-const { overDiffTip, weightOverDiff } = useWeightOverDiff(baseUnit) // 过磅重量超出理论重量处理
+// const { overDiffTip, weightOverDiff } = useWeightOverDiff(baseUnit) // 过磅重量超出理论重量处理
 
 // 校验规则
 const rules = {
@@ -125,7 +124,7 @@ function isExist(id) {
 // 行监听
 // 使用watch 监听方法，优点：初始化时表单数据时，可以不立即执行（惰性），可以避免“草稿/修改”状态下重量被自动修改；缺点：初始化时需要指定监听参数
 function rowWatch(row) {
-  watchEffect(() => weightOverDiff(row))
+  // watchEffect(() => weightOverDiff(row))
   // 计算单件理论重量
   watch([() => row.length, () => row.unitWeight, baseUnit], () => calcTheoryWeight(row), { immediate: true })
   // 计算总重

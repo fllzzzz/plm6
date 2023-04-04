@@ -21,7 +21,7 @@
       <div class="main-content">
         <el-form ref="formRef" :model="form" :rules="rules" size="small" label-position="right" label-width="110px">
           <div class="form-content" :style="heightStyle">
-            <div class="form-left">
+            <div class="form-left" :style="isFold ? 'width:0px;padding:0;' : ''">
               <div class="order-details">
                 <el-form-item label="是否绑定申购" prop="useRequisitions" required>
                   <common-radio v-model="form.useRequisitions" :disabled="Boolean(form.boolUsed)" :options="whetherEnum.ENUM" type="enum" />
@@ -147,7 +147,7 @@
                     :classification="form.materialType"
                   />
                 </el-form-item>
-                <el-form-item class="el-form-item-11" prop="weightMeasurementMode" label="计量方式">
+                <!-- <el-form-item class="el-form-item-11" prop="weightMeasurementMode" label="计量方式">
                   <common-radio
                     v-model="form.weightMeasurementMode"
                     :options="weightMeasurementModeEnum.ENUM"
@@ -156,7 +156,7 @@
                     :disabled="Boolean(form.boolUsed)"
                     :size="'small'"
                   />
-                </el-form-item>
+                </el-form-item> -->
                 <el-form-item class="el-form-item-13" label="订单类型" prop="purchaseOrderPaymentMode">
                   <common-radio
                     v-model="form.purchaseOrderPaymentMode"
@@ -211,8 +211,9 @@
                 />
               </div>
             </div>
-            <div class="vertical-dashed-divider" />
+            <div class="vertical-dashed-divider" :style="isFold ? 'display:none;' : ''" />
             <div class="form-right">
+              <hamburger :is-active="isFold" class="hamburger-container" @toggleClick="isFold = !isFold" />
               <div class="right-head flex-rbs" v-if="form.useRequisitions">
                 <!-- 关联申购单-->
                 <span class="right-head-content">
@@ -309,22 +310,13 @@
               <component v-if="!form.boolUsed" ref="compRef" :is="currentView" :maxHeight="maxHeight - 150" />
               <detail-table v-else :material-type="form.materialType" :list="form.details" :max-height="maxHeight - 150" />
               <div class="table-remark">
-                <span class="title">合同量</span>
-                <span
-class="con"
-                  >{{ form.mete }}
-                  <span v-if="form.materialType & materialPurchaseClsEnum.MATERIAL.V && !form.boolUsed">
-                    <unit-select
-                      v-model="form.meteUnit"
-                      size="small"
-                      :disabled="Boolean(form.boolUsed)"
-                      clearable
-                      filterable
-                      style="width: 80px; flex: none"
-                    />
+                <template v-if="!Boolean(form.materialType & materialPurchaseClsEnum.MATERIAL.V)">
+                  <span class="title">合同量</span>
+                  <span class="con">
+                    <span>{{ form.mete }}</span>
+                    <span>{{ form.meteUnit }}</span>
                   </span>
-                  <span v-else>{{ form.meteUnit }}</span>
-                </span>
+                </template>
                 <span class="title">合同额</span>
                 <span class="con">{{ form.amount }} 元</span>
               </div>
@@ -391,7 +383,7 @@ import { ref, computed, provide, nextTick, watchEffect, watch } from 'vue'
 import { matClsEnum, steelClsEnum, materialPurchaseClsEnum } from '@enum-ms/classification'
 import { orderSupplyTypeEnum, baseMaterialTypeEnum, purchaseOrderPaymentModeEnum, receiptTypeEnum } from '@enum-ms/wms'
 import { logisticsPayerEnum, logisticsTransportTypeEnum } from '@/utils/enum/modules/logistics'
-import { weightMeasurementModeEnum, invoiceTypeEnum } from '@enum-ms/finance'
+import { invoiceTypeEnum } from '@enum-ms/finance'
 import { fileClassifyEnum } from '@enum-ms/file'
 import { whetherEnum } from '@enum-ms/common'
 import { steelInboundFormFormat } from '@/utils/wms/measurement-calc'
@@ -406,7 +398,7 @@ import steelCoilTemp from '@/utils/excel/import-template/supply-chain/purchase-t
 import auxMaterialTemp from '@/utils/excel/import-template/supply-chain/purchase-temp/aux-material'
 
 import { regForm } from '@compos/use-crud'
-import UnitSelect from '@comp-common/unit-select/index.vue'
+// import UnitSelect from '@comp-common/unit-select/index.vue'
 import ProjectCascader from '@comp-base/project-cascader.vue'
 import SupplierSelect from '@comp-base/supplier-select/index.vue'
 import BranchCompanySelect from '@comp-base/branch-company-select.vue'
@@ -426,10 +418,11 @@ import ManufApplication from '../components/application/manufactured/index'
 import materialTableSpecSelect from '@/components-system/classification/material-table-spec-select.vue'
 import excelResolveButton from '@/components-system/common/excel-resolve-button/index.vue'
 import ExportButton from '@comp-common/export-button/index.vue'
+import Hamburger from '@comp/Hamburger/index.vue'
 import { ElMessage } from 'element-plus'
 
 const defaultForm = {
-  useRequisitions: false, // 是否绑定申购单
+  useRequisitions: true, // 是否绑定申购单
   serialNumber: undefined, // 采购合同编号编号
   supplyType: orderSupplyTypeEnum.SELF.V, // 供货类型
   materialType: materialPurchaseClsEnum.STEEL.V, // 材料类型
@@ -439,14 +432,14 @@ const defaultForm = {
   auxMaterialIds: undefined, // 辅材明细ids
   projectIds: undefined, // 项目ids
   projectId: undefined,
-  requisitionsSN: undefined, // 申购单编号
   supplierId: undefined, // 供应商id
   branchCompanyId: undefined, // 公司签订主体
   mete: undefined, // 合同量
+  meteUnit: 'kg', // 合同量单位
   amount: undefined, // 合同金额
   invoiceType: invoiceTypeEnum.SPECIAL.V, // 发票类型
   taxRate: undefined, // 税率
-  weightMeasurementMode: weightMeasurementModeEnum.THEORY.V, // 重量计量方式
+  // weightMeasurementMode: weightMeasurementModeEnum.THEORY.V, // 重量计量方式
   logisticsTransportType: logisticsTransportTypeEnum.FREIGHT.V, // 物流运输方式
   logisticsPayerType: logisticsPayerEnum.SUPPLIER.V, // 物流运输方式 90%由供方承担运费
   purchaseOrderPaymentMode: purchaseOrderPaymentModeEnum.ARRIVAL.V, // 订单类型
@@ -462,6 +455,9 @@ const defaultForm = {
   manufListObj: {},
   manufMergeObj: {}
 }
+
+// 是否展开
+const isFold = ref(false)
 
 const formRef = ref() // 表单
 
@@ -510,7 +506,7 @@ const baseRules = {
 
 // 自采物料校验
 const selfRules = {
-  weightMeasurementMode: [{ required: true, message: '请选择计量方式', trigger: 'change' }],
+  // weightMeasurementMode: [{ required: true, message: '请选择计量方式', trigger: 'change' }],
   logisticsTransportType: [{ required: true, message: '请选择物流运输方式', trigger: 'change' }],
   logisticsPayerType: [{ required: true, message: '请选择物流费用承担方', trigger: 'change' }],
   purchaseOrderPaymentMode: [{ required: true, message: '请选择订单类型', trigger: 'change' }],
@@ -856,6 +852,10 @@ CRUD.HOOK.beforeEditDetailLoaded = async (crud, form) => {
   }
 }
 
+CRUD.HOOK.beforeValidateCU = () => {
+  isFold.value = false
+}
+
 CRUD.HOOK.beforeSubmit = (crud, form) => {
   if (!compRef.value?.validate()) return false
   // if (!previewVisible.value) {
@@ -928,9 +928,12 @@ crud.submitFormFormat = async (form) => {
   overflow: auto;
   padding-right: 20px;
   box-sizing: border-box;
+  transition: all 0.3s;
 }
 .vertical-dashed-divider {
+  display: block;
   margin: 0 16px 0 1px;
+  transition: all 0.3s;
 }
 
 .form-right {
@@ -938,6 +941,17 @@ crud.submitFormFormat = async (form) => {
   height: 100%;
   overflow-y: auto;
   overflow-x: hidden;
+  position: relative;
+
+  .hamburger-container {
+    position: absolute;
+    padding: 0;
+    left: 0px;
+    top: 12px;
+    cursor: pointer;
+    transform: scale(1.2);
+    opacity: 0.6;
+  }
 
   .el-table {
     ::v-deep(td > .cell) {
@@ -948,6 +962,7 @@ crud.submitFormFormat = async (form) => {
 
   .right-head {
     height: 45px;
+    padding-left: 32px;
     margin-top: 10px;
     .right-head-content {
       display: block;

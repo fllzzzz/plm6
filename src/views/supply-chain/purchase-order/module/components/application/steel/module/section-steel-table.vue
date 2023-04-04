@@ -91,6 +91,19 @@
         <el-input v-model.trim="row.brand" maxlength="60" size="mini" placeholder="品牌" />
       </template>
     </el-table-column>
+    <el-table-column prop="weightMeasurementMode" label="计量方式" align="center" width="140px">
+      <template #default="{ row }">
+        <common-radio-button
+          v-model="row.weightMeasurementMode"
+          :options="weightMeasurementModeEnum.ENUM"
+          type="enum"
+          :unshow-val="[weightMeasurementModeEnum.MIXTURE.V]"
+          default
+          :props="{ key: 'K', label: 'SL', value: 'V' }"
+          size="mini"
+        />
+      </template>
+    </el-table-column>
     <el-table-column label="操作" width="70" align="center" fixed="right">
       <template #default="{ row, $index }">
         <common-button icon="el-icon-delete" type="danger" size="mini" @click="delRow(row.sn, $index)" />
@@ -102,6 +115,7 @@
 <script setup>
 import { defineExpose, inject, watchEffect, reactive, watch } from 'vue'
 import { matClsEnum } from '@/utils/enum/modules/classification'
+import { weightMeasurementModeEnum } from '@enum-ms/finance'
 import { isBlank, isNotBlank, toPrecision } from '@/utils/data-type'
 
 import usePriceSet from '@/composables/wms/use-price-set'
@@ -133,6 +147,7 @@ const validateAmount = (value, row) => {
 // 校验规则
 const rules = {
   classifyId: [{ required: true, message: '请选择物料种类', trigger: 'change' }],
+  weightMeasurementMode: [{ required: true, message: '请选择计量方式', trigger: 'change' }],
   length: [
     { required: true, message: '请填写定尺长度', trigger: 'blur' },
     { pattern: positiveNumPattern, message: '定尺长度必须大于0', trigger: 'blur' }

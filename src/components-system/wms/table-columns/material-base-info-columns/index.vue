@@ -24,6 +24,7 @@
     :sortable="sortable"
   >
     <template #default="{ row }">
+      <slot name="snTag" :row="row"/>
       <!-- 甲供调拨方式 -->
       <table-cell-tag
         v-if="showPartyATransfer && row.partyATransferType"

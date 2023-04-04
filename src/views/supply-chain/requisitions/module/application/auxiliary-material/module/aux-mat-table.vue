@@ -43,7 +43,7 @@
           v-if="row.measureUnit"
           v-model="row.quantity"
           :min="0"
-          :max="row.requisitionMode === requisitionModeEnum.USE_INVENTORY.V ? row.canUseQuantity : 999999999"
+          :max="getCanUseQuantity(row)"
           :controls="false"
           :step="1"
           :precision="row.measurePrecision"
@@ -105,6 +105,7 @@ import useTableValidate from '@compos/form/use-table-validate'
 
 const emit = defineEmits(['search-inventory'])
 
+const useInventoryInfo = inject('useInventoryInfo') // 调用父组件useInventoryInfo
 const matSpecRef = inject('matSpecRef') // 调用父组件matSpecRef
 const { form } = regExtra() // 表单
 
@@ -150,6 +151,19 @@ function rowInit(row) {
     quantity: undefined // 数量
   })
   return _row
+}
+
+// 获取可使用数量
+function getCanUseQuantity(row) {
+  if (row.materialInventoryId && form.originInventoryInfo[row.materialInventoryId]) {
+    return (
+      form.originInventoryInfo[row.materialInventoryId].quantity -
+      form.originInventoryInfo[row.materialInventoryId].frozenQuantity -
+      useInventoryInfo.value[row.materialInventoryId] +
+      row.quantity
+    )
+  }
+  return 999999999
 }
 
 function search(row, index) {

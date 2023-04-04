@@ -75,7 +75,7 @@
 import crudApi from '@/api/supply-chain/requisitions-manage/requisitions'
 import { downloadExcelTemplate } from '@/api/wms/common'
 
-import { defineProps, defineEmits, ref, computed, watch, provide, nextTick, reactive } from 'vue'
+import { defineProps, defineEmits, ref, computed, watch, provide, nextTick, reactive, watchEffect } from 'vue'
 import { STEEL_ENUM } from '@/settings/config'
 import { convertUnits } from '@/utils/convert/unit'
 import { matClsEnum } from '@/utils/enum/modules/classification'
@@ -124,7 +124,8 @@ const defaultForm = {
   list: [], // 钢材列表，提交时合并
   steelPlateList: [], // 钢板列表
   sectionSteelList: [], // 型材列表
-  steelCoilList: [] // 钢卷列表
+  steelCoilList: [], // 钢卷列表
+  originInventoryInfo: {} // 使用库存
 }
 
 const steelRef = ref() // 表格ref
@@ -137,6 +138,9 @@ const searchInfo = ref({})
 const searchIdx = ref()
 const currentBasicClass = ref() // 当前基础分类
 const list = ref([]) // 当前操作的表格list
+const useInventoryInfo = ref({}) // 使用库存信息
+
+provide('useInventoryInfo', useInventoryInfo) // 供子组件调用
 
 // 钢材三个组件的ref列表
 const steelRefList = reactive({
@@ -216,6 +220,23 @@ const { cu, form, FORM } = useForm(
   formRef,
   props.detail
 )
+
+watchEffect(() => {
+  if (list.value?.length) {
+    const _obj = {}
+    for (let i = 0; i < list.value.length; i++) {
+      const item = list.value[i]
+      if (item.requisitionMode === requisitionModeEnum.USE_INVENTORY.V) {
+        if (!_obj[item.materialInventoryId]) {
+          _obj[item.materialInventoryId] = item.quantity
+        } else {
+          _obj[item.materialInventoryId] += item.quantity
+        }
+      }
+    }
+    useInventoryInfo.value = _obj
+  }
+})
 
 // 当前物料“批量导入模板”
 const importTemp = computed(() => {
@@ -327,6 +348,12 @@ function searchInventory(row, index) {
 }
 
 function useInventory(quantity, data) {
+  const materialInventoryId = data.id
+  if (!form.originInventoryInfo) form.originInventoryInfo = {}
+  form.originInventoryInfo[materialInventoryId] = {
+    quantity: data.quantity,
+    frozenQuantity: data.frozenQuantity
+  }
   const _curBasicClass = steelBasicClassKV?.[currentBasicClass.value]?.V
   if (_curBasicClass & matClsEnum.STEEL_PLATE.V) {
     // 钢板冻结钢卷
@@ -358,7 +385,7 @@ function useInventory(quantity, data) {
   form[currentBasicClass.value][searchIdx.value].color = data.color
   form[currentBasicClass.value][searchIdx.value].brand = data.brand
   form[currentBasicClass.value][searchIdx.value].requisitionMode = requisitionModeEnum.USE_INVENTORY.V
-  form[currentBasicClass.value][searchIdx.value].materialInventoryId = data.id
+  form[currentBasicClass.value][searchIdx.value].materialInventoryId = materialInventoryId
 }
 
 // 初始化
