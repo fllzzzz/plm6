@@ -170,7 +170,7 @@ function sectionSteelSpecTip(row) {
 
 // 钢卷规格提示
 function steelCoilSpecTip(row) {
-  const baseUnit = MAT_BASE_UNIT[rawMatClsEnum.STEEL_COIL.V]
+  const baseUnit = MAT_BASE_UNIT[matClsEnum.STEEL_COIL.V]
   const tip = []
   const twl = []
   if (isNotBlank(row.thickness)) {

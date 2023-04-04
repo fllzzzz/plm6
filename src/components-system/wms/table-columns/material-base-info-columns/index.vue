@@ -170,7 +170,7 @@ import { materialBaseInfoCPM as permission } from '@/page-permission/wms'
 
 import { defineEmits, defineProps, computed, ref } from 'vue'
 import { STEEL_ENUM, MANUF_ENUM } from '@/settings/config'
-import { rawMatClsEnum } from '@/utils/enum/modules/classification'
+import { rawMatClsEnum, matClsEnum } from '@/utils/enum/modules/classification'
 import {
   materialRejectStatusEnum,
   materialIsWholeEnum,
