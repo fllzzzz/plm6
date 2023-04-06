@@ -29,7 +29,7 @@ import { matClsEnum } from '@/utils/enum/modules/classification'
 import { STEEL_ENUM } from '@/settings/config'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { setSpecInfoToList } from '@/utils/wms/spec'
-import { calcSteelPlateWeight, calcSectionSteelWeight } from '@/utils/wms/measurement-calc'
+import { calcSteelPlateWeight, calcSectionSteelWeight, calcSectionSteelTotalLength } from '@/utils/wms/measurement-calc'
 import { materialPurchaseClsEnum } from '@enum-ms/classification'
 
 import Steel from './module/steel/index.vue'
@@ -107,6 +107,10 @@ async function fetchList() {
               unitWeight: v.unitWeight // 单位重量
             })
             v.theoryTotalWeight = v.theoryWeight * v.quantity
+            v.totalLength = calcSectionSteelTotalLength({
+              length: v.length, // 长度
+              quantity: v.quantity // 数量
+            })
           }
         }
       }

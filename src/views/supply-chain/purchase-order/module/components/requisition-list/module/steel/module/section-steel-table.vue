@@ -17,7 +17,7 @@
         </el-tooltip>
       </template>
     </el-table-column>
-    <el-table-column prop="specification" label="规格" align="center" fixed="left" show-overflow-tooltip>
+    <el-table-column prop="specification" label="规格" align="center" fixed="left" show-overflow-tooltip  min-width="140">
       <template #default="{ row }">
         <el-tooltip :content="row.specificationLabels" placement="top">
           <span>{{ row.specification }}</span>
@@ -27,7 +27,7 @@
     <el-table-column prop="length" align="center" :label="`定尺长度 (${baseUnit.length.unit})`" min-width="120">
       <template #default="{ row }">
         <common-input-number
-          v-if="Boolean(currentCfg?.width & basicClass)"
+          v-if="Boolean(currentCfg?.length & basicClass)"
           v-model="row.length"
           :max="999999"
           :controls="false"
