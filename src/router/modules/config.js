@@ -415,6 +415,38 @@ export default {
       ]
     },
     {
+      path: '/enclosure/production-config',
+      component: 'Layout',
+      hidden: false,
+      name: 'EnclosureProductionConfig',
+      alwaysShow: true,
+      redirect: '/enclosure/production-config/team',
+      meta: { title: '围护-生产配置', icon: 'project', noCache: true },
+      children: [
+        {
+          name: 'EnclosureConfigProductionTeam',
+          path: 'team',
+          hidden: false,
+          component: '/config-manage/enclosure/production-config/team/index',
+          meta: { title: '班组管理', icon: 'project', noCache: true }
+        },
+        {
+          name: 'EnclosureConfigProductionLine',
+          path: 'production-line',
+          hidden: false,
+          component: '/config-manage/enclosure/production-config/production-line/index',
+          meta: { title: '生产线管理', icon: 'project', noCache: true }
+        },
+        {
+          name: 'EnclosureConfigInspectionMode',
+          path: 'inspection-mode',
+          hidden: false,
+          component: '/config-manage/enclosure/production-config/inspection-mode/index',
+          meta: { title: '报检方式', icon: 'project', noCache: true }
+        }
+      ]
+    },
+    {
       path: '/contract/enclosure-config',
       component: 'Layout',
       hidden: false,
