@@ -179,7 +179,7 @@ function calcTotalLength(row) {
 // 计算总重
 function calcTotalWeight(row) {
   if (row.purchaseNetMete && row.quantity) {
-    row.purchaseTotalWeight = toPrecision(row.purchaseNetMete * row.quantity, baseUnit.weight.precision)
+    row.purchaseTotalWeight = toPrecision(row.purchaseNetMete * row.quantity, baseUnit.value.weight.precision)
   } else {
     row.purchaseTotalWeight = undefined
   }

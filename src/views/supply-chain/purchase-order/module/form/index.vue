@@ -219,7 +219,7 @@
                 <span class="right-head-content">
                   <span class="label">关联申购单号</span>
                   <common-radio-button
-                    v-if="form.materialType & materialPurchaseClsEnum.STEEL.V"
+                    v-if="form.materialType & materialPurchaseClsEnum.STEEL.V && !form.boolUsed"
                     type="enum"
                     v-model="form.currentBasicClass"
                     :options="steelClsEnum.ENUM"
@@ -244,7 +244,7 @@
                 <span class="right-head-content">
                   <span class="label">采购清单</span>
                   <common-radio-button
-                    v-if="form.materialType & materialPurchaseClsEnum.STEEL.V"
+                    v-if="form.materialType & materialPurchaseClsEnum.STEEL.V && !form.boolUsed"
                     type="enum"
                     v-model="form.currentBasicClass"
                     :options="steelClsEnum.ENUM"
@@ -860,8 +860,8 @@ CRUD.HOOK.beforeValidateCU = () => {
   isFold.value = false
 }
 
-CRUD.HOOK.beforeSubmit = (crud, form) => {
-  if (!compRef.value?.validate()) return false
+CRUD.HOOK.beforeSubmit = () => {
+  if (!compRef.value?.validate() && !form.boolUsed) return false
   // if (!previewVisible.value) {
   //   previewVisible.value = true
   //   return false

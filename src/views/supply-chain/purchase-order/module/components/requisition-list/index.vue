@@ -32,14 +32,12 @@ import { setSpecInfoToList } from '@/utils/wms/spec'
 import { calcSteelPlateWeight, calcSectionSteelWeight } from '@/utils/wms/measurement-calc'
 import { materialPurchaseClsEnum } from '@enum-ms/classification'
 
-import useMatBaseUnit from '@/composables/store/use-mat-base-unit'
 import Steel from './module/steel/index.vue'
 import AuxMat from './module/auxiliary-material/index.vue'
 import Manufactured from './module/manufactured/index.vue'
 
 const emit = defineEmits('add-purchase')
 const form = inject('crud')?.form
-const { baseUnit } = useMatBaseUnit()
 
 const requisitionOrderRef = ref()
 const compRef = ref()

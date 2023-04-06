@@ -180,7 +180,6 @@ function isExist(id) {
 // 行监听
 // 使用watch 监听方法，优点：初始化时表单数据时，可以不立即执行（惰性），可以避免“草稿/修改”状态下重量被自动修改；缺点：初始化时需要指定监听参数
 function rowWatch(row) {
-  console.log('rowWatch', row)
   watchEffect(() => weightOverDiff(row))
   // 计算单件理论重量
   watch([() => row.length, () => row.width, () => row.thickness, baseUnit], () => calcTheoryWeight(row))
@@ -202,7 +201,7 @@ async function calcTheoryWeight(row) {
 // 计算总重
 function calcTotalWeight(row) {
   if (row.purchaseNetMete && row.quantity) {
-    row.purchaseTotalWeight = toPrecision(row.purchaseNetMete * row.quantity, baseUnit.weight.precision)
+    row.purchaseTotalWeight = toPrecision(row.purchaseNetMete * row.quantity, baseUnit.value.weight.precision)
   } else {
     row.purchaseTotalWeight = undefined
   }
