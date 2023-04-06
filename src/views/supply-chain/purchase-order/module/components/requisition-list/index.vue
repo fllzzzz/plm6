@@ -90,7 +90,7 @@ async function fetchList() {
         const v = list.value[i]
         v.purchaseSN = form.requisitionsKV[v.applyPurchaseId]?.serialNumber
         if (v.basicClass & STEEL_ENUM) {
-          v.purchaseNetMete = toPrecision(v.mete / v.quantity)
+          v.purchaseNetMete = v.mete / v.quantity
           v.purchaseTotalWeight = v.mete
           if (v.basicClass & matClsEnum.STEEL_PLATE.V) {
             v.theoryWeight = await calcSteelPlateWeight({
