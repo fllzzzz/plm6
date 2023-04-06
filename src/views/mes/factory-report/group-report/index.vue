@@ -77,6 +77,7 @@
             :empty-text="crud.emptyText"
             :dataFormat="dataFormat"
             :max-height="maxHeight - 50"
+            :show-empty-symbol="false"
             style="width: 100%"
           >
             <el-table-column label="序号" type="index" align="center" width="70" />
@@ -87,12 +88,12 @@
             </el-table-column>
             <el-table-column :show-overflow-tooltip="true" prop="monomer.name" label="单体" align="center">
               <template #default="{ row }">
-                <span>{{ row.monomer ? row.monomer?.name : '-' }}</span>
+                <span>{{ row.monomer ? row.monomer?.name : '/' }}</span>
               </template>
             </el-table-column>
             <el-table-column :show-overflow-tooltip="true" prop="area.name" label="区域" align="center">
               <template #default="{ row }">
-                <span>{{ row.area ? row.area?.name : '-' }}</span>
+                <span>{{ row.area ? row.area?.name : '/' }}</span>
               </template>
             </el-table-column>
             <el-table-column :show-overflow-tooltip="true" prop="serialNumber" label="编号" min-width="80px" align="center" />

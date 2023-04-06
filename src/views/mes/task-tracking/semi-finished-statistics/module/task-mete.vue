@@ -42,11 +42,11 @@
       </div>
     </template>
     <template #content>
-      <common-table v-loading="tableLoading" returnSourceData :data="list" :max-height="maxHeight" row-key="rowId" style="width: 100%">
+      <common-table v-loading="tableLoading" returnSourceData :data="list" :max-height="maxHeight" :show-empty-symbol="false" row-key="rowId" style="width: 100%">
         <el-table-column label="序号" type="index" align="center" width="60" />
         <el-table-column prop="monomer.name" :show-overflow-tooltip="true" label="单体">
           <template #default="{ row }">
-            <span>{{ row.monomer?.name }}</span>
+            <span>{{ row.monomer? row.monomer?.name : '/' }}</span>
           </template>
         </el-table-column>
         <el-table-column :show-overflow-tooltip="true" prop="serialNumber" label="编号" align="center" />
@@ -91,7 +91,7 @@ const { visible: drawerVisible, handleClose } = useVisible({ emit, props, field:
 // 高度
 const { maxHeight } = useMaxHeight(
   {
-    extraBox: ['.el-drawer__header', '.head-drawer'],
+    extraBox: ['.el-drawer__header'],
     wrapperBox: ['.el-drawer__body'],
     navbar: false,
     clientHRepMainH: true

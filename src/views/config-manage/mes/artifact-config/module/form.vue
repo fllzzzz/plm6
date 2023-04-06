@@ -41,6 +41,17 @@
             :disabled="!!form.id"
           />
         </el-form-item>
+        <el-form-item label="次构件类型" prop="smallArtifactClassEnum" v-if="form.artifactType === artifactTypeEnum.SMALL.V">
+          <common-select
+            v-model="form.smallArtifactClassEnum"
+            :options="smallArtifactClassEnum.ENUM"
+            type="enum"
+            size="small"
+            class="filter-item"
+            placeholder="次构件类型"
+            style="width: 250px"
+          />
+        </el-form-item>
         <el-form-item label="类型" prop="parentType" v-if="form.productionLineTypeEnum === artifactProductLineEnum.INTELLECT.V">
           <common-select
             v-model="form.parentType"
@@ -172,7 +183,7 @@ import { ElMessage, ElNotification } from 'element-plus'
 
 // import { isNotBlank } from '@data-type/index'
 // import { whetherEnum } from '@enum-ms/common'
-import { artifactProductLineEnum, intellectParentType, artifactTypeEnum, codingTypeEnum } from '@enum-ms/mes'
+import { artifactProductLineEnum, intellectParentType, artifactTypeEnum, smallArtifactClassEnum, codingTypeEnum } from '@enum-ms/mes'
 
 import useVisible from '@compos/use-visible'
 import useWatchFormValidate from '@compos/form/use-watch-form-validate'
@@ -203,6 +214,7 @@ const defaultForm = {
   productionLineTypeEnum: undefined,
   parentType: undefined, // 类型选择
   artifactType: undefined, // 构件类型
+  smallArtifactClassEnum: undefined, // 次构件类型
   classificationName: '', // 类型命名
   // boolContainsMin: undefined, // 最小值是否包含等于
   // minLength: undefined, // 长度最小值
@@ -307,6 +319,9 @@ const rules = {
   artifactType: [
     { required: true, message: '请选择构件类型', trigger: 'change' }
   ],
+  smallArtifactClassEnum: [
+    { required: true, message: '请选择次构件类型', trigger: 'change' }
+  ],
   parentType: [
     { required: true, validator: validateParentType, message: '请选择类型', trigger: 'change' }
   ],
@@ -321,7 +336,7 @@ const rules = {
     { required: true, validator: validateDefinitionWord, message: '请填写定义代码', trigger: 'blur' },
     { min: 1, max: 30, message: '长度在 1 到 30 个字符', trigger: 'blur' }
   ],
-  sort: [{ required: true, message: '请填写排序值', trigger: 'blur', type: 'number' }],
+  sort: [{ required: true, message: '请填写排序值', trigger: ['blur', 'change'], type: 'number' }],
   specPrefixList: [
     { required: true, message: '请填写规格前缀' },
     { validator: validateLinks, trigger: 'change' }
@@ -392,6 +407,7 @@ function lineTypeChange(val) {
   } else {
     form.value.serialNumberPrefixList = []
     form.value.artifactType = undefined
+    form.value.smallArtifactClassEnum = undefined
     form.value.codingType = undefined
   }
 }
@@ -403,6 +419,7 @@ function parentTypeChange(val) {
 function artifactTypeChange(val) {
   if (val !== artifactTypeEnum.SMALL.V) {
     form.value.serialNumberPrefixList = []
+    form.value.smallArtifactClassEnum = undefined
   }
 }
 function addProcess() {

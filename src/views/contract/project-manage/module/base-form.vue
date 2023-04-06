@@ -29,7 +29,6 @@
             value-format="x"
             placeholder="选择约定开工日期"
             style="width: 260px"
-            :disabledDate="(date) => { if (form.endDate) { return date.getTime() > form.endDate- 1 * 24 * 60 * 60 * 1000||  date.getTime() < new Date().getTime() - 1 * 24 * 60 * 60 * 1000 } else { return date.getTime() < new Date().getTime() - 1 * 24 * 60 * 60 * 1000 } }"
           />
         </el-form-item>
         <el-form-item label="项目简称" prop="shortName">

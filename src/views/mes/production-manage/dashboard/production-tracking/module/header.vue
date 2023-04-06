@@ -8,6 +8,7 @@
         :options="artifactTypeList"
         type="other"
         class="filter-item"
+        :clearable="true"
         :dataStructure="{ key: 'id', label: 'classificationName', value: 'id' }"
         placeholder="选择构件类型"
         style="width: 170px"
@@ -83,6 +84,7 @@ const defaultQuery = {
   monomerId: { value: undefined, resetAble: false },
   areaId: { value: undefined, resetAble: false },
   factoryId: { value: undefined, resetAble: false },
+  classificationId: undefined,
   serialNumber: undefined,
   specification: undefined,
   material: undefined,

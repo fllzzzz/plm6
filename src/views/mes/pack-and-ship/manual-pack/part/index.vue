@@ -183,6 +183,8 @@
         </template>
       </el-table-column>
     </common-table>
+    <!--分页组件-->
+    <pagination />
   </div>
 </template>
 
@@ -198,6 +200,7 @@ import { packTypeEnum } from '@enum-ms/mes'
 import useCRUD from '@compos/use-crud'
 import mHeader from './module/header'
 import tableCellTag from '@comp-common/table-cell-tag/index.vue'
+import pagination from '@crud/Pagination'
 
 const optShow = {
   add: false,
@@ -215,8 +218,7 @@ const { crud, columns, CRUD } = useCRUD(
     optShow: { ...optShow },
     crudApi: { get },
     invisibleColumns: ['drawingNumber', 'packageQuantity'],
-    queryOnPresenterCreated: false,
-    hasPagination: false
+    queryOnPresenterCreated: false
   },
   tableRef
 )
@@ -276,7 +278,7 @@ function add(row) {
 }
 
 CRUD.HOOK.handleRefresh = (crud, res) => {
-  res.data.content = res.data.partList?.map((v) => {
+  res.data.content = res.data.content?.map((v) => {
     v.productQuantity = v.unPackageQuantity
     return v
   })
