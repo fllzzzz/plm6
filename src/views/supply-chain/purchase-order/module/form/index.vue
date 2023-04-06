@@ -85,7 +85,7 @@
                     :basic-class="form.basicClass"
                     :type="form.purchaseType"
                     :disabled="Boolean(form.boolUsed)"
-                    mode="contain"
+                    mode="cross"
                     clearable
                     filterable
                     class="input-underline"
@@ -308,7 +308,13 @@
               </div>
               <!-- 清单列表 -->
               <component v-if="!form.boolUsed" ref="compRef" :is="currentView" :maxHeight="maxHeight - 150" />
-              <detail-table v-else :material-type="form.materialType" :list="form.details" :max-height="maxHeight - 150" :bool-use-requisitions="form.useRequisitions"/>
+              <detail-table
+                v-else
+                :material-type="form.materialType"
+                :list="form.details"
+                :max-height="maxHeight - 150"
+                :bool-use-requisitions="form.useRequisitions"
+              />
               <div class="table-remark">
                 <template v-if="!Boolean(form.materialType & materialPurchaseClsEnum.MATERIAL.V)">
                   <span class="title">合同量</span>
@@ -558,13 +564,14 @@ watch(
   () => form.materialType,
   (val) => {
     if (val & materialPurchaseClsEnum.MATERIAL.V) {
-      form.currentBasicClass = matClsEnum.MATERIAL.V
+      form.basicClass = form.currentBasicClass = matClsEnum.MATERIAL.V
     }
     if (val & materialPurchaseClsEnum.STEEL.V) {
+      form.basicClass = matClsEnum.STEEL_PLATE.V | matClsEnum.STEEL_COIL.V | matClsEnum.SECTION_STEEL.V
       form.currentBasicClass = matClsEnum.STEEL_PLATE.V
     }
     if (val & materialPurchaseClsEnum.MANUFACTURED.V) {
-      form.currentBasicClass = matClsEnum.STRUC_MANUFACTURED.V
+      form.basicClass = form.currentBasicClass = matClsEnum.STRUC_MANUFACTURED.V
       form.purchaseType = baseMaterialTypeEnum.MANUFACTURED.V
     } else {
       form.purchaseType = baseMaterialTypeEnum.RAW_MATERIAL.V
