@@ -91,7 +91,7 @@ const order = computed(() => detail.purchaseOrder || {})
 // 是否有显示金额权限
 const showAmount = computed(() => checkPermission(permission.showAmount))
 // 是否甲供订单
-const boolPartyA = computed(() => order.value.supplyType === orderSupplyTypeEnum.PARTY_A.V)
+const boolPartyA = computed(() => order.value?.supplyType === orderSupplyTypeEnum.PARTY_A.V)
 // 标题
 const drawerTitle = computed(() =>
   crud.detailLoading ? `退货单` : `退货单：${detail.serialNumber}（ ${order.value.supplier ? order.value.supplier.name : ''} ）`
