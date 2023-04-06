@@ -24,7 +24,6 @@ import { canPurchaseDetail } from '@/api/supply-chain/requisitions-manage/requis
 import requisitionOrder from './module/requisition-order'
 import { defineExpose, defineEmits, computed, ref, watch, inject, nextTick } from 'vue'
 
-import { toPrecision } from '@/utils/data-type'
 import { matClsEnum } from '@/utils/enum/modules/classification'
 import { STEEL_ENUM } from '@/settings/config'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
