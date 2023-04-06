@@ -134,7 +134,7 @@ async function save() {
     const valid = await formRef.value.validate()
     if (!valid) return false
     const _form = deepClone(form.value)
-    _form.attachmentIds = _form.attachmentIds ? [Number(_form.attachmentIds)] : _form.attachmentFiles.map((v) => v.id)
+    _form.attachmentIds = _form.attachmentIds ? [Number(_form.attachmentIds)] : _form.attachmentFiles?.map((v) => v.id)
     _form.attachments = _form.attachmentFiles
     props.showType === 'addBtn' ? await add(_form) : await edit(_form)
     ElNotification({ title: props.showType === 'addBtn' ? '新增成功' : '编辑成功', type: 'success' })
