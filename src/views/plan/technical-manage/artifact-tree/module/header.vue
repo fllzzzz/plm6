@@ -133,16 +133,29 @@
       :title="importType===1 ? '清单增量导入' : '清单覆盖导入'"
       width="400px"
     >
-       <div class="parent-div">
-          <span class="parent-span"><span style="color:red;">*</span><span class="title-span">模式:</span></span>
-          <common-select
-            v-model="JDImportType"
-            :options="importTypeEnum.ENUM"
-            type="enum"
-            size="small"
-            placeholder="模式"
-            style="width:200px"
-          />
+      <div class="parent-div">
+        <span class="parent-span"><span class="title-span">项目模式:</span></span>
+        <common-select
+          v-model="modeType"
+          :options="[projectModeEnum.STRUCTURE,projectModeEnum.STRUCTURE_ASSEMBLE]"
+          type="enum"
+          size="small"
+          placeholder="项目模式"
+          style="flex:1;"
+          :disabled="!changAble"
+          @change="projectModeChange"
+        />
+     </div>
+      <div class="parent-div">
+        <span class="parent-span"><span style="color:red;">*</span><span class="title-span">清单模式:</span></span>
+        <common-select
+          v-model="JDImportType"
+          :options="importTypeEnum.ENUM"
+          type="enum"
+          size="small"
+          placeholder="清单模式"
+           style="flex:1;"
+        />
      </div>
       <div class="parent-div">
         <span class="parent-span title-span">上传清单:</span>
@@ -163,8 +176,9 @@
 
 <script setup>
 import { defineProps, ref, computed, watch, defineEmits } from 'vue'
-import { listUpload } from '@/api/plan/technical-manage/artifact-tree'
+import { listUpload, changAbleProjectMode, changeProjectMode } from '@/api/plan/technical-manage/artifact-tree'
 
+import { projectModeEnum } from '@enum-ms/contract'
 import { regHeader } from '@compos/use-crud'
 import { TechnologyTypeAllEnum } from '@enum-ms/contract'
 import { importTypeEnum } from '@enum-ms/plan'
@@ -177,6 +191,7 @@ import {
 import { getContractTechInfo } from '@/api/contract/project'
 import { isNotBlank } from '@data-type/index'
 import checkPermission from '@/utils/system/check-permission'
+import { useStore } from 'vuex'
 
 import rrOperation from '@crud/RR.operation'
 import crudOperation from '@crud/CRUD.operation'
@@ -195,6 +210,8 @@ const defaultQuery = {
   projectId: { value: undefined, resetAble: false }
 }
 
+const store = useStore()
+
 const monomerSelectRef = ref()
 const currentArea = ref({})
 const areaInfo = ref([])
@@ -208,10 +225,16 @@ const JDImportType = ref()
 const { crud, query, CRUD } = regHeader(defaultQuery)
 const emit = defineEmits(['getAreaData'])
 const mismatchList = ref([])
+const changAble = ref(false)
+const modeType = ref()
 const props = defineProps({
   projectId: {
     type: [Number, String],
     default: undefined
+  },
+  globalProject: {
+    type: Object,
+    default: () => {}
   }
 })
 
@@ -222,6 +245,16 @@ watch(
       crud.query.projectId = props.projectId
       crud.toQuery()
       getTechInfo()
+    }
+  },
+  { immediate: true, deep: true }
+)
+
+watch(
+  () => props.globalProject,
+  (val) => {
+    if (val) {
+      modeType.value = props.globalProject.mode
     }
   },
   { immediate: true, deep: true }
@@ -281,6 +314,32 @@ function getAreaInfo(val) {
   }
 }
 
+checkProjectModeChangAble()
+
+async function checkProjectModeChangAble() {
+  changAble.value = false
+  if (!props.projectId) {
+    return
+  }
+  try {
+    changAble.value = await changAbleProjectMode(props.projectId) || undefined
+  } catch (e) {
+    console.log('获取异常构件', e)
+  }
+}
+
+async function projectModeChange(val) {
+  try {
+    await changeProjectMode(props.projectId, val)
+    crud.notify('项目模式更改成功', CRUD.NOTIFICATION_TYPE.SUCCESS)
+    store.dispatch('project/fetchUserProjects')
+    store.dispatch('project/fetchProjectTree')
+  } catch (e) {
+    modeType.value = props.globalProject.mode
+    console.log('项目模式修改', e)
+  }
+}
+
 async function getErrorArtifactData() {
   mismatchList.value = []
   try {
@@ -329,13 +388,14 @@ function openUpload(type) {
 </script>
 <style lang="scss" scoped>
 .parent-div{
+  display:flex;
   margin-bottom:20px;
   height:28px;
 }
 .parent-span{
-  float:left;
+  // float:left;
   margin-right:8px;
-  width:60px;
+  width:80px;
   text-align:right;
 }
 .title-span{

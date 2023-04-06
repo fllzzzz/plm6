@@ -11,14 +11,8 @@
       <common-button :loading="crud.status.cu === 2" type="primary" size="mini" @click="crud.submitCU">提交</common-button>
     </template>
     <el-form ref="formRef" :model="form" :rules="rules" size="small" label-width="120px" label-position="right">
-      <el-form-item label="订单编号" prop="serialNumber">
-        <el-input
-          v-model="form.serialNumber"
-          type="text"
-          maxlength="20"
-          placeholder="请输入订单编号"
-          style="width:320px;"
-        />
+      <el-form-item label="订单编号" v-if="form.id">
+        <span>{{form.serialNumber}}</span>
       </el-form-item>
       <el-form-item label="签订日期" prop="signDate">
         <el-date-picker
@@ -97,6 +91,25 @@
           placeholder="0-100"
         />%
       </el-form-item>
+      <el-form-item label="附件">
+        <template #label>
+          附件
+          <el-tooltip
+            effect="light"
+            :content="`双击可预览附件`"
+            placement="top"
+            v-if="form.id && form.attachments?.length && !form.files?.length"
+          >
+            <i class="el-icon-info" />
+          </el-tooltip>
+        </template>
+        <template v-if="form.id && form.attachments?.length && !form.files?.length">
+          <div v-for="item in form.attachments" :key="item.id">
+            <div style="cursor:pointer;" @dblclick="attachmentView(item)">{{item.name}}</div>
+          </div>
+        </template>
+        <upload-btn ref="uploadRef" v-model:files="form.files" :file-classify="fileClassifyEnum.CONTRACT_ATT.V" :limit="1" :accept="'.jpg,.png,.pdf,.jpeg'"/>
+      </el-form-item>
       <el-form-item label="备注" prop="remark">
         <el-input
           v-model="form.remark"
@@ -109,6 +122,7 @@
         />
       </el-form-item>
     </el-form>
+    <showPdfAndImg v-if="pdfShow" :isVisible="pdfShow" :showType="'attachment'" :id="currentId" @close="pdfShow=false"/>
   </common-dialog>
 </template>
 
@@ -119,15 +133,19 @@ import { regForm } from '@compos/use-crud'
 import { supplierTypeEnum } from '@enum-ms/supplier'
 import { invoiceTypeEnum } from '@enum-ms/finance'
 import { DP } from '@/settings/config'
+import { fileClassifyEnum } from '@enum-ms/file'
 
+import UploadBtn from '@comp/file-upload/UploadBtn'
 import supplierSelect from '@comp-base/supplier-select/index.vue'
 import projectSubcontractSelect from '@/components-system/project/project-subcontract-select.vue'
 import monomerSelect from '@/components-system/plan/monomer-select'
 import subcontractType from '@/components-system/project/subcontract-type-select'
+import showPdfAndImg from '@comp-base/show-pdf-and-img.vue'
 
 const formRef = ref()
+const pdfShow = ref(false)
+const currentId = ref()
 const defaultForm = {
-  serialNumber: undefined,
   projectId: undefined,
   monomerIds: undefined,
   subcontractClassId: undefined,
@@ -136,10 +154,11 @@ const defaultForm = {
   invoiceType: undefined,
   taxRate: undefined,
   remark: undefined,
-  signDate: undefined
+  signDate: undefined,
+  files: []
 }
 
-const { crud, form } = regForm(defaultForm, formRef)
+const { crud, form, CRUD } = regForm(defaultForm, formRef)
 
 const validateTaxRate = (rule, value, callback) => {
   if (form.invoiceType !== invoiceTypeEnum.RECEIPT.V) {
@@ -172,6 +191,15 @@ function projectChange() {
   form.monomerIds = []
 }
 
+// 预览附件
+function attachmentView(item) {
+  currentId.value = item.id
+  pdfShow.value = true
+}
+
+CRUD.HOOK.beforeSubmit = () => {
+  crud.form.attachmentIds = crud.form.files ? crud.form.files.map((v) => v.id) : (crud.form.attachments ? crud.form.attachments.map((v) => v.id) : undefined)
+}
 </script>
 <style lang="scss" scoped>
 .add-row-box {

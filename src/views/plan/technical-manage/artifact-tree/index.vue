@@ -3,7 +3,7 @@
     <template v-if="pageShow">
       <!--工具栏-->
       <div class="head-container">
-        <mHeader :project-id="globalProjectId" @getAreaData="getAreaData" />
+        <mHeader :project-id="globalProjectId" @getAreaData="getAreaData" :globalProject="globalProject"/>
       </div>
       <!--表格渲染-->
       <common-table

@@ -129,6 +129,7 @@
       </el-form>
     </template>
   </common-drawer>
+  <showPdfAndImg v-if="pdfShow" :isVisible="pdfShow" :showType="'attachment'" :id="currentId" @close="pdfShow=false"/>
 </template>
 
 <script setup>
@@ -143,6 +144,7 @@ import UploadBtn from '@comp/file-upload/UploadBtn'
 import branchCompanySelect from '@comp-base/branch-company-select.vue'
 import invoiceTypeSelect from '@comp-base/invoice-type-select.vue'
 import supplierSelect from '@comp-base/supplier-select/index.vue'
+import showPdfAndImg from '@comp-base/show-pdf-and-img.vue'
 
 const formRef = ref()
 const defaultForm = {
@@ -161,6 +163,8 @@ const defaultForm = {
 }
 
 const { CRUD, crud, form } = regForm(defaultForm, formRef)
+const pdfShow = ref(false)
+const currentId = ref()
 
 const props = defineProps({
   detailInfo: {
@@ -190,6 +194,12 @@ const rules = {
 }
 
 const classification = supplierClassEnum.LOGISTICS.V
+
+// 预览附件
+function attachmentView(item) {
+  currentId.value = item.id
+  pdfShow.value = true
+}
 
 CRUD.HOOK.beforeSubmit = () => {
   crud.form.attachmentIds = crud.form.files ? crud.form.files.map((v) => v.id) : (crud.form.attachments ? crud.form.attachments.map((v) => v.id) : undefined)

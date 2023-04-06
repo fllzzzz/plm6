@@ -143,4 +143,21 @@ export function serialChange(data) {
     data
   })
 }
+
+// 查询是否可以更改项目模式
+export function changAbleProjectMode(projectId) {
+  return request({
+    url: `/api/project/bool-allow-update-mode/${projectId}`,
+    method: 'get'
+  })
+}
+
+// 经典单个项目更改项目模式
+export function changeProjectMode(projectId, mode) {
+  return request({
+    url: `/api/project/updateProjectMode/${projectId}/${mode}`,
+    method: 'put'
+  })
+}
+
 export default { edit, del, get }
