@@ -3,23 +3,13 @@ import { STEEL_DENSITY, STAINLESS_STEEL_DENSITY } from '@/settings/config'
 import { matClsEnum } from '../enum/modules/classification'
 import { rawMatClsEnum } from '@/utils/enum/modules/classification'
 import { convertUnits } from '@/utils/convert/unit'
-import store from '@/store'
-import { isNotBlank, toPrecision } from '../data-type'
+import { toPrecision } from '../data-type'
 import { materialIsWholeEnum } from '../enum/modules/wms'
+import { getBaseUnit } from '@/utils/wms/convert-unit'
 
 const STEEL_PLATE = matClsEnum.STEEL_PLATE.V
 const SECTION_STEEL = matClsEnum.SECTION_STEEL.V
 const STEEL_COIL = matClsEnum.STEEL_COIL.V
-
-async function getBaseUnit() {
-  const _unit = store.getters.baseUnit
-  if (isNotBlank(_unit)) {
-    return _unit
-  } else {
-    await store.dispatch('wms/fetchWmsConfig') // 目前该信息未走接口，此处无用
-  }
-  return store.getters.baseUnit
-}
 
 /**
  * 钢板计算重量的公式
@@ -40,7 +30,7 @@ export async function calcSteelPlateWeight({ name, length, width, thickness, qua
   const baseUnit = await getBaseUnit()
   const lengthUnit = baseUnit[STEEL_PLATE].length.unit
   const weightUnit = baseUnit[STEEL_PLATE].weight.unit
-  const dp = boolPrecise ? baseUnit[STEEL_PLATE].weight.precision : 2
+  const dp = boolPrecise ? baseUnit[STEEL_PLATE].weight.precision : 10
 
   let density = STEEL_DENSITY // 密度 t/m³
   if (name && name.indexOf('不锈钢') > -1) {
@@ -84,7 +74,7 @@ export async function calcSectionSteelWeight({ length, quantity = 1, unitWeight 
   const baseUnit = await getBaseUnit()
   const lengthUnit = baseUnit[SECTION_STEEL].length.unit
   const weightUnit = baseUnit[SECTION_STEEL].weight.unit
-  const dp = boolPrecise ? baseUnit[SECTION_STEEL].weight.precision : 2
+  const dp = boolPrecise ? baseUnit[SECTION_STEEL].weight.precision : 10
 
   let theoryWeight
   const _length = convertUnits(length, lengthUnit, 'm', 3)
@@ -168,6 +158,8 @@ export async function calcSteelCoilWeight({ name, length, width, thickness, quan
 
 // 钢材入库表单格式转换
 export async function steelInboundFormFormat(form) {
+  // 获取基础单位
+  const baseUnit = await getBaseUnit()
   // 生成三种钢材的列表
   form.steelPlateList = []
   form.sectionSteelList = []
@@ -189,7 +181,7 @@ export async function steelInboundFormFormat(form) {
           thickness: row.thickness
         }).then((val) => {
           row.theoryWeight = val
-          row.theoryTotalWeight = row.theoryWeight * row.quantity // 理论总重量
+          row.theoryTotalWeight = toPrecision(row.theoryWeight * row.quantity, baseUnit[matClsEnum.STEEL_PLATE.V].weight.precision) // 理论总重量
           form.steelPlateList.push(row)
         })
         break
@@ -199,7 +191,7 @@ export async function steelInboundFormFormat(form) {
           unitWeight: row.unitWeight // 单位重量
         }).then((val) => {
           row.theoryWeight = val
-          row.theoryTotalWeight = row.theoryWeight * row.quantity // 理论总重量
+          row.theoryTotalWeight = toPrecision(row.theoryWeight * row.quantity, baseUnit[matClsEnum.SECTION_STEEL.V].weight.precision) // 理论总重量
           row.totalLength = calcSectionSteelTotalLength({
             length: row.length, // 长度
             quantity: row.quantity // 数量

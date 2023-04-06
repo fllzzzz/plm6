@@ -206,8 +206,8 @@ function calcTotalWeight(row) {
     row.purchaseTotalWeight = undefined
   }
   if (isNotBlank(row.theoryWeight) && row.quantity) {
-    row.theoryTotalWeight = row.theoryWeight * row.quantity
-    row.weighingTotalWeight = toPrecision(row.theoryWeight * row.quantity)
+    row.theoryTotalWeight = toPrecision(row.theoryWeight * row.quantity, baseUnit.value.weight.precision)
+    row.weighingTotalWeight = toPrecision(row.theoryWeight * row.quantity, baseUnit.value.weight.precision)
   } else {
     row.theoryTotalWeight = undefined
     row.weighingTotalWeight = undefined
