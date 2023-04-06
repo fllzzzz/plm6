@@ -75,26 +75,21 @@
     <el-divider :style="flag ? 'display: block' : 'display: none'" class="divider" />
     <crudOperation>
       <template #optLeft>
-        <!-- <el-date-picker
-            v-model="query.date"
-            type="daterange"
-            range-separator=":"
-            size="small"
-            value-format="x"
-            :shortcuts="PICKER_OPTIONS_SHORTCUTS"
-            unlink-panels
-            start-placeholder="开始日期"
-            end-placeholder="结束日期"
-            style="width: 240px; margin-right: 10px"
-            class="filter-item date-item"
-            @change="handleDateChange"
-          /> -->
+        <el-date-picker
+          v-model="query.date"
+          type="daterange"
+          range-separator=":"
+          size="small"
+          value-format="x"
+          :shortcuts="PICKER_OPTIONS_SHORTCUTS"
+          unlink-panels
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
+          style="width: 240px; margin-right: 10px"
+          class="filter-item date-item"
+          @change="handleDateChange"
+        />
         <!-- <project-cascader v-model="query.projectId" class="filter-item" @change="handleProjectIdChange" clearable style="width: 300px" /> -->
-        <el-tag size="medium" class="filter-item">{{
-          crud.query.type === timeTypeEnum.ALL_YEAR.V
-            ? '当前年份：' + parseTime(query.dateTime ? query.dateTime : moment().startOf('year').valueOf(), '{y}') + '年'
-            : '当前月份：' + parseTime(query.dateTime ? query.dateTime : moment().startOf('month').valueOf(), '{m}') + '月'
-        }}</el-tag>
         <div class="icon-box" v-show="flag" style="vertical-align: middle" @click.stop="changeSize">
           <svg-icon class="icon" icon-class="comp-zoom" />
         </div>
@@ -128,7 +123,7 @@
         <print-table
           v-permission="permission.print"
           api-key="mesFactoryWorkshopReport"
-          :params="{ dateTime: query.dateTime ? query.dateTime : moment().startOf('year').valueOf(), projectName: query.projectName }"
+          :params="{ startTime: query.startTime, endTime: query.endTime, projectName: query.projectName }"
           size="mini"
           type="warning"
           class="filter-item"
@@ -145,7 +140,7 @@ import useChart from '@compos/use-chart'
 import moment from 'moment'
 import { DP } from '@/settings/config'
 import { parseTime } from '@/utils/date'
-// import { PICKER_OPTIONS_SHORTCUTS } from '@/settings/config'
+import { PICKER_OPTIONS_SHORTCUTS } from '@/settings/config'
 // import { getOrderDeliveryRate } from '@/api/operation/order-delivery-rate'
 import { fullYearProduction, workshopEcharts } from '@/api/mes/factory-report/workshop-report.js'
 import { weightTypeEnum } from '@enum-ms/common'
@@ -163,12 +158,15 @@ const yearProductionData = reactive({
 // const summaryList = reactive({
 //   mete: 0
 // })
-// const chartDateTime = ref()
+const chartDateTime = ref()
 const chartYearTime = ref()
 const chartVal = ref([])
 const flag = ref(true)
 
 const defaultQuery = {
+  date: [moment().startOf('month').valueOf(), moment().valueOf()],
+  startTime: moment().startOf('month').valueOf(),
+  endTime: moment().valueOf(),
   type: timeTypeEnum.ALL_YEAR.V,
   dateTime: moment().startOf('year').valueOf(),
   projectId: undefined,
@@ -212,18 +210,6 @@ async function fetchSummary() {
   }
 }
 
-// async function workshopSummary() {
-//   try {
-//     const data = await workshopProduction({
-//       dateTime: query.dateTime ? query.dateTime : moment().startOf('year').valueOf(),
-//       projectId: query.projectId
-//     })
-//     summaryList.mete = data
-//   } catch (e) {
-//     console.log('获取车间产量失败', e)
-//   }
-// }
-
 function handleWorkshopChange() {
   fetchSummary()
   fetchChart()
@@ -241,6 +227,12 @@ function handleMonthChange() {
   crud.toQuery()
 }
 
+function handleDateChange(val) {
+  crud.query.date = val
+  query.startTime = val[0]
+  query.endTime = val[1]
+  crud.toQuery()
+}
 // 搜索
 function searchQuery() {
   fetchSummary()
@@ -322,17 +314,33 @@ async function fetchChart() {
     const _myChart = getMyChart()
     _myChart.on('click', function (params) {
       chartYearTime.value = crud.query.dateTime === undefined ? moment().valueOf() : query.dateTime
-      // chartDateTime.value = params.name?.split('')[0]
-      // chartDateTime.value = Number(chartDateTime.value) < 10 ? '0' + chartDateTime.value : chartDateTime.value
-      // chartVal.value = [
-      //   moment(parseTime(chartYearTime.value, '{y}') + '-' + chartDateTime.value)
-      //     .startOf('month')
-      //     .valueOf(),
-      //   moment(parseTime(chartYearTime.value, '{y}') + '-' + chartDateTime.value)
-      //     .endOf('month')
-      //     .valueOf()
-      // ]
-      // handleDateChange(chartVal.value)
+      if (crud.query.type === timeTypeEnum.ALL_YEAR.V) {
+        chartDateTime.value = params.name?.split('')[0]
+      } else {
+        chartDateTime.value = params.name
+      }
+      chartDateTime.value = Number(chartDateTime.value) < 10 ? '0' + chartDateTime.value : chartDateTime.value
+      if (crud.query.type === timeTypeEnum.ALL_YEAR.V) {
+        chartYearTime.value = crud.query.dateTime === undefined ? moment().valueOf() : query.dateTime
+        chartVal.value = [
+          moment(parseTime(chartYearTime.value, '{y}') + '-' + chartDateTime.value)
+            .startOf('month')
+            .valueOf(),
+          moment(parseTime(chartYearTime.value, '{y}') + '-' + chartDateTime.value)
+            .endOf('month')
+            .valueOf()
+        ]
+      } else {
+        chartVal.value = [
+          moment(parseTime(chartYearTime.value, '{y}-{m}') + '-' + chartDateTime.value)
+            .startOf('date')
+            .valueOf(),
+          moment(parseTime(chartYearTime.value, '{y}-{m}') + '-' + chartDateTime.value)
+            .endOf('date')
+            .valueOf()
+        ]
+      }
+      handleDateChange(chartVal.value)
     })
     const data = await workshopEcharts({
       type: query.type,
@@ -348,19 +356,23 @@ async function fetchChart() {
     for (let i = 0; i < option.xAxis[0].data?.length; i++) {
       if (data.findIndex((k) => Number(k.date) === i + 1) > -1) {
         productionData.push({
-          date: i.toString(),
-          totalNetWeight: data[i]?.totalNetWeight || 0,
-          totalGrossWeight: data[i]?.totalGrossWeight || 0
+          date: option.xAxis[0].data[i],
+          totalNetWeight: data[data.findIndex((k) => Number(k.date) === i + 1)]?.totalNetWeight,
+          totalGrossWeight: data[data.findIndex((k) => Number(k.date) === i + 1)]?.totalGrossWeight
+        })
+      } else {
+        productionData.push({
+          date: option.xAxis[0].data[i],
+          totalNetWeight: 0,
+          totalGrossWeight: 0
         })
       }
     }
-    console.log(productionData, 'productionData')
     option.series[0].data = productionData.map((v) =>
       crud.query.weightStatus === weightTypeEnum.NET.V
         ? Number((v?.totalNetWeight / 1000).toFixed(DP.COM_WT__KG))
         : Number((v.totalGrossWeight / 1000).toFixed(DP.COM_WT__KG))
     )
-    console.log(option.series[0].data, 'option.series[0].data')
     _myChart.setOption(option)
   } catch (error) {
     console.log(error, '获取车间报表信息失败')

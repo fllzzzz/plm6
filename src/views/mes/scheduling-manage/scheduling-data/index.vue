@@ -21,10 +21,12 @@
         :show-empty-symbol="false"
         :stripe="false"
         return-source-data
-        show-summary
-        :summary-method="getSummaries"
       >
-        <el-table-column prop="index" label="序号" align="center" width="50" type="index" />
+        <el-table-column prop="index" label="序号" align="center" width="50" type="index">
+          <template #default="{ row, $index }">
+            <span>{{ row.type === 1 ? $index + 1 : '' }}</span>
+          </template>
+        </el-table-column>
         <el-table-column
           v-if="columns.visible('projectName')"
           key="projectName"
@@ -79,6 +81,7 @@
         </el-table-column>
         <el-table-column
           align="center"
+          prop="yearTotal"
           label="排产计划及执行（单位：吨）"
           :show-overflow-tooltip="true"
           v-if="crud.query.type === timeTypeEnum.ALL_YEAR.V"
@@ -103,6 +106,7 @@
             <el-table-column
               :label="`第${index + 1}周\n${week?.date}`"
               align="center"
+              prop="monthTotal"
               :show-overflow-tooltip="true"
               width="180px"
               v-if="crud.query.type === timeTypeEnum.CURRENT_MONTH.V"
@@ -145,7 +149,7 @@ const optShow = {
   del: false,
   download: false
 }
-
+const monthData = ref([])
 const monthArr = ref([])
 for (let i = 1; i <= 12; i++) {
   monthArr.value.push(i)
@@ -177,6 +181,7 @@ const { maxHeight } = useMaxHeight({
 
 CRUD.HOOK.handleRefresh = (crud, { data }) => {
   data.content = data?.map((v) => {
+    v.type = 1
     v.projectName = v.project && v.project.shortName ? v.project.serialNumber + ' ' + v.project.shortName : '-'
     v.monomerName = v.monomer && v.monomer.name ? v.monomer.name : '-'
     if (crud.query.type === timeTypeEnum.ALL_YEAR.V) {
@@ -193,8 +198,20 @@ CRUD.HOOK.handleRefresh = (crud, { data }) => {
         weekList.value = v.mete
       }
     }
-
+    for (let m = 1; m <= monthArr.value.length; m++) {
+      monthData.value = v.mete.filter((o) => Number(o.date) === m)
+      console.log(monthData.value, 'monthData.value')
+      // monthData.value.push()
+      // const total = monthData.value?.map((p) => (p.totalNetWeight / 1000)?.toFixed(2))
+    }
     return v
+  })
+  data.content.push({
+    type: 2,
+    index: '',
+    projectName: '合计',
+    monomerName: ''
+    // yearTotal: yearTotal
   })
 }
 
@@ -203,59 +220,59 @@ function openDetail() {
 }
 
 // 合计
-function getSummaries(param) {
-  const { columns, data } = param
-  const sums = []
-  columns.forEach((column, index) => {
-    if (index === 1) {
-      sums[index] = '合计'
-      return
-    }
-    if (crud.query.type === timeTypeEnum.ALL_YEAR.V) {
-      if (Number(column.label > 0)) {
-        const values = data.map((item) => (item.project ? item[column.label] : 0))
-        sums[index] = values.reduce((prev, curr) => {
-          const value = Number(curr)
-          if (!isNaN(value)) {
-            return prev + Number(curr)
-          } else {
-            return prev
-          }
-        }, 0)
-        sums[index] = Number(sums[index]).toFixed(2)
-      }
-    }
-    if (crud.query.type === timeTypeEnum.CURRENT_MONTH.V) {
-      if (index === 3 || index === 4) {
-        const values = data.map((item) => item[column.property] || 0)
-        sums[index] = values.reduce((prev, curr) => {
-          const value = Number(curr)
-          if (!isNaN(value)) {
-            return prev + Number(curr)
-          } else {
-            return prev
-          }
-        }, 0)
-        sums[index] = (Number(sums[index]) / 1000).toFixed(2)
-      }
-      if (index > 5) {
-        const values = data.map((item) => item[column.label?.split('周\n')[1]]?.totalNetWeight)
-        console.log(values, 'values')
-        sums[index] = values.reduce((prev, curr) => {
-          const value = Number(curr)
-          console.log(value, 'value')
-          if (!isNaN(value)) {
-            return prev + Number(curr)
-          } else {
-            return prev
-          }
-        }, 0)
-        sums[index] = (Number(sums[index]) / 1000).toFixed(2)
-      }
-    }
-  })
-  return sums
-}
+// function getSummaries(param) {
+//   const { columns, data } = param
+//   const sums = []
+//   columns.forEach((column, index) => {
+//     if (index === 1) {
+//       sums[index] = '合计'
+//       return
+//     }
+//     if (crud.query.type === timeTypeEnum.ALL_YEAR.V) {
+//       if (Number(column.label > 0)) {
+//         const values = data.map((item) => (item.project ? item[column.label] : 0))
+//         sums[index] = values.reduce((prev, curr) => {
+//           const value = Number(curr)
+//           if (!isNaN(value)) {
+//             return prev + Number(curr)
+//           } else {
+//             return prev
+//           }
+//         }, 0)
+//         sums[index] = Number(sums[index]).toFixed(2)
+//       }
+//     }
+//     if (crud.query.type === timeTypeEnum.CURRENT_MONTH.V) {
+//       if (index === 3 || index === 4) {
+//         const values = data.map((item) => item[column.property] || 0)
+//         sums[index] = values.reduce((prev, curr) => {
+//           const value = Number(curr)
+//           if (!isNaN(value)) {
+//             return prev + Number(curr)
+//           } else {
+//             return prev
+//           }
+//         }, 0)
+//         sums[index] = (Number(sums[index]) / 1000).toFixed(2)
+//       }
+//       if (index > 5) {
+//         const values = data.map((item) => item[column.label?.split('周\n')[1]]?.totalNetWeight)
+//         console.log(values, 'values')
+//         sums[index] = values.reduce((prev, curr) => {
+//           const value = Number(curr)
+//           console.log(value, 'value')
+//           if (!isNaN(value)) {
+//             return prev + Number(curr)
+//           } else {
+//             return prev
+//           }
+//         }, 0)
+//         sums[index] = (Number(sums[index]) / 1000).toFixed(2)
+//       }
+//     }
+//   })
+//   return sums
+// }
 </script>
 
 <style lang="scss" scoped>

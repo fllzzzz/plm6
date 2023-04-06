@@ -69,7 +69,7 @@
         :data="list"
         :empty-text="'暂无数据'"
         :show-empty-symbol="false"
-        :max-height="maxHeight + 120"
+        :max-height="maxHeight + 180"
         row-key="id"
         style="width: 100%"
       >
@@ -146,6 +146,7 @@ const areaName = ref()
 const serialNumber = ref()
 
 const { maxHeight } = useMaxHeight({
+  extraBox: ['.head-container'],
   paginate: true
 })
 
