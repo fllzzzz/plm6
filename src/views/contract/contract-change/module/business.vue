@@ -38,11 +38,11 @@
             </el-form-item>
           </div>
           <div class="form-row">
-              <el-form-item label="签约人" prop="signerId">
+              <!-- <el-form-item label="签约人" prop="signerId">
               <div style="width: 200px">
                 <span>{{ detail.signerName }}</span>
               </div>
-            </el-form-item>
+            </el-form-item> -->
             <el-form-item label="签订日期" prop="signingDate">
               <div style="width: 200px">
                 <span v-if="detail.signingDate">{{ parseTime(detail.signingDate,'{y}-{m}-{d}') }}</span>
@@ -122,6 +122,7 @@ import {
   transportModeEnum,
   TechnologyTypeEnum,
   TechnologyTypeAllEnum
+  // structureTypeEnum
 } from '@enum-ms/contract'
 import { invoiceTypeEnum, paymentModeEnum } from '@enum-ms/finance'
 import { isNotBlank } from '@data-type/index'
