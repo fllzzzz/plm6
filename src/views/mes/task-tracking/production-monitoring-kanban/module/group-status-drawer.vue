@@ -22,7 +22,7 @@
     </template>
     <template #content>
       <div style="display: flex">
-        <div style="width: 35%">
+        <div style="width: 32%">
           <common-table
             ref="directRef"
             highlight-current-row
@@ -39,7 +39,7 @@
               key="groups.name"
               label="产线/班组"
               align="center"
-              min-width="140"
+              min-width="120"
             >
               <template #default="{ row }">
                 <span>{{ row.productionLine?.name }}>{{ row.groups?.name }}>{{ row.team?.name }}</span>
@@ -93,7 +93,7 @@
           </common-table>
         </div>
         <div style="border-right: 1px solid #ededed; margin: 0 20px; height: calc(100vh - 180px)"></div>
-        <div style="width: 63%">
+        <div style="width: 67%">
           <group-status-detail :detail-data="detailData" :workshopId="props.workshopId" :processId="processId" />
         </div>
       </div>

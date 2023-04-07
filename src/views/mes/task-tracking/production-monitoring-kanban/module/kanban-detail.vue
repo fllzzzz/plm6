@@ -1,6 +1,6 @@
 <template>
   <common-dialog
-    title="生产监控看板详情"
+    title="车间任务状态详情"
     customClass="production-detail-dialog"
     v-model="detailDialogVisible"
     :close-on-click-modal="false"
@@ -34,14 +34,14 @@
         </common-button>
       </div>
     </template>
-    <common-table :data="detailData" :max-height="maxHeight" :show-empty-symbol="false" style="width: 100%">
+    <common-table :data="detailData" :max-height="maxHeight - 50" :show-empty-symbol="false" style="width: 100%">
       <el-table-column label="序号" type="index" align="center" width="60" />
-      <el-table-column prop="monomer.name" :show-overflow-tooltip="true" label="单体" align="center">
+      <el-table-column prop="monomer.name" :show-overflow-tooltip="true" label="单体" align="center" min-width="120px">
         <template #default="{ row }">
           <span>{{ row.monomer ? row.monomer?.name : '/' }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="area.name" :show-overflow-tooltip="true" label="区域" align="center">
+      <el-table-column prop="area.name" :show-overflow-tooltip="true" label="区域" align="center" min-width="120px">
         <template #default="{ row }">
           <span>{{ row.area ? row.area?.name : '/' }}</span>
         </template>
@@ -56,16 +56,27 @@
         </template>
       </el-table-column>
       <el-table-column prop="quantity" :show-overflow-tooltip="true" label="排产量" align="center" />
-      <el-table-column prop="totalNetWeight" :show-overflow-tooltip="true" label="总重（kg）" align="center" />
+      <el-table-column prop="totalNetWeight" :show-overflow-tooltip="true" label="总净重（kg）" align="center" />
+      <el-table-column prop="totalGrossWeight" :show-overflow-tooltip="true" label="总毛重（kg）" align="center" />
       <el-table-column prop="completeQuantity" :show-overflow-tooltip="true" label="实际完成数" align="center" />
     </common-table>
+    <!-- 分页 -->
+    <el-pagination
+      :total="total"
+      :current-page="queryPage.pageNumber"
+      :page-size="queryPage.pageSize"
+      style="margin-top: 8px"
+      layout="total, prev, pager, next, sizes"
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
+    />
   </common-dialog>
 </template>
 
 <script setup>
 import { getDetail } from '@/api/mes/production-monitoring-kanban/kanban.js'
 import { defineEmits, defineProps, ref, inject } from 'vue'
-
+import usePagination from '@compos/use-pagination'
 import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'
 
@@ -87,6 +98,8 @@ const props = defineProps({
 
 const permission = inject('permission')
 const { visible: detailDialogVisible, handleClose } = useVisible({ emit, props, field: 'visible', showHook: fetchMachinePartList })
+const { handleSizeChange, handleCurrentChange, total, setTotalPage, queryPage } = usePagination({ fetchHook: fetchMachinePartList })
+
 const { maxHeight } = useMaxHeight(
   {
     mainBox: '.production-detail-dialog',
@@ -101,11 +114,13 @@ const { maxHeight } = useMaxHeight(
 
 async function fetchMachinePartList() {
   try {
-    const { content } = await getDetail({
+    const { content = [], totalElements } = await getDetail({
       projectId: props.detailList?.project?.id,
       monomerId: props.detailList?.monomer?.id,
-      workshopId: props.workshopId
+      workshopId: props.workshopId,
+      ...queryPage
     })
+    setTotalPage(totalElements)
     detailData.value = content || []
   } catch (err) {
     console.log('获取零件清单明细失败', err)

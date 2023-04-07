@@ -148,11 +148,7 @@
     <!-- 生产监控看板详情 -->
     <kanban-detail v-model:visible="detailDialogVisible" :detail-list="detailList" :workshopId="crud.query.workshopId" />
     <!-- 班组状态详情 -->
-    <group-status-drawer
-      v-model:visible="drawerVisible"
-      :workshopId="crud.query.workshopId"
-      :group-detail-data="crud.data[0]"
-    />
+    <group-status-drawer v-model:visible="drawerVisible" :workshopId="crud.query.workshopId" :group-detail-data="crud.data[0]" />
   </div>
 </template>
 <script setup>
@@ -210,7 +206,6 @@ const projectInfo = reactive({
 })
 
 provide('projectInfo', projectInfo)
-provide('permission', permission)
 
 watch(
   () => crud.query.workshopId,
@@ -233,6 +228,19 @@ async function fetchProjectInfo() {
   try {
     const res = (await getSummary({ workshopId: crud.query.workshopId })) || {}
     projectInfo.summary = res
+    projectInfo.summary = {
+      ...res,
+      totalWeight: [
+        {
+          taskNetWeight: res.taskNetWeight / 1000,
+          precision: 2
+        },
+        {
+          taskNetWeight: res.yearAvgNetWeight / 1000,
+          precision: 2
+        }
+      ]
+    }
   } catch (error) {
     console.log('获取项目汇总图表数据', error)
   } finally {

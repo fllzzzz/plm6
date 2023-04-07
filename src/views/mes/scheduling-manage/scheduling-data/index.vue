@@ -81,7 +81,6 @@
         </el-table-column>
         <el-table-column
           align="center"
-          prop="yearTotal"
           label="排产计划及执行（单位：吨）"
           :show-overflow-tooltip="true"
           v-if="crud.query.type === timeTypeEnum.ALL_YEAR.V"
@@ -137,7 +136,7 @@ import { ref, provide } from 'vue'
 import { timeTypeEnum } from '@enum-ms/contract'
 import { parseTime } from '@/utils/date'
 import { mesScheduleDetailPM as permission } from '@/page-permission/mes'
-// import { convertUnits } from '@/utils/convert/unit'
+import { convertUnits } from '@/utils/convert/unit'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import mHeader from './module/header'
@@ -180,6 +179,8 @@ const { maxHeight } = useMaxHeight({
 })
 
 CRUD.HOOK.handleRefresh = (crud, { data }) => {
+  let yearTotal = 0
+  const meteArr = []
   data.content = data?.map((v) => {
     v.type = 1
     v.projectName = v.project && v.project.shortName ? v.project.serialNumber + ' ' + v.project.shortName : '-'
@@ -199,20 +200,37 @@ CRUD.HOOK.handleRefresh = (crud, { data }) => {
       }
     }
     for (let m = 1; m <= monthArr.value.length; m++) {
-      monthData.value = v.mete.filter((o) => Number(o.date) === m)
-      console.log(monthData.value, 'monthData.value')
-      // monthData.value.push()
-      // const total = monthData.value?.map((p) => (p.totalNetWeight / 1000)?.toFixed(2))
+      if (v.mete.findIndex((o) => Number(o.date) === m) > -1 && v.project) {
+        monthData.value.push(v.mete[v.mete.findIndex((o) => Number(o.date) === m)])
+      }
+      const monthList = monthData.value.filter((v) => Number(v.date) === m)
+      const totalArr = monthList.map((k) => convertUnits(k.totalNetWeight, 'kg', 't', 2))
+      console.log(totalArr, 'totalArr')
+      yearTotal = totalArr.reduce((pre, cur) => {
+        if (cur) {
+          return pre + cur
+        } else {
+          return pre
+        }
+      }, 0)
+      meteArr.push({
+        date: monthArr.value[m - 1].toString(),
+        totalNetWeight: yearTotal.toFixed(2)
+      })
     }
+
     return v
   })
+
   data.content.push({
     type: 2,
     index: '',
     projectName: '合计',
-    monomerName: ''
-    // yearTotal: yearTotal
+    monomerName: '',
+    mete: meteArr
+    // yearTotal: yearTotal.toFixed(2)
   })
+  console.log(data.content, 'data.content')
 }
 
 function openDetail() {

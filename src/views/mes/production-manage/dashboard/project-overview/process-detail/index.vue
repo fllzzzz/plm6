@@ -11,7 +11,6 @@
     <template #titleAfter>
       <el-input
         v-model.trim="workshopName"
-        size="small"
         placeholder="车间搜索"
         style="width: 170px"
         class="filter-item"
@@ -20,7 +19,6 @@
       />
       <el-input
         v-model.trim="productionLineName"
-        size="small"
         placeholder="产线搜索"
         style="width: 170px"
         class="filter-item"
@@ -29,7 +27,6 @@
       />
       <el-input
         v-model.trim="monomerName"
-        size="small"
         placeholder="单体搜索"
         style="width: 170px"
         class="filter-item"
@@ -38,7 +35,6 @@
       />
       <el-input
         v-model.trim="areaName"
-        size="small"
         placeholder="区域搜索"
         style="width: 170px"
         class="filter-item"
@@ -47,12 +43,19 @@
       />
       <el-input
         v-model.trim="serialNumber"
-        size="small"
         placeholder="编号搜索"
         style="width: 170px"
         class="filter-item"
         clearable
         @keyup.enter="processDetailGet"
+      />
+      <common-radio-button
+        type="enum"
+        style="vertical-align: middle"
+        v-model="status"
+        showOptionAll
+        :options="taskTrackingSchedulingStatusEnum.ENUM"
+        @change="processDetailGet"
       />
       <common-button class="filter-item" size="mini" type="success" icon="el-icon-search" @click.stop="searchQuery">搜索</common-button>
       <common-button class="filter-item" size="mini" type="warning" icon="el-icon-refresh-left" @click.stop="resetQuery">
@@ -76,7 +79,7 @@
     <common-table
       ref="tableRef"
       :data="processDetailData"
-      :max-height="maxHeight + 115"
+      :max-height="maxHeight + 110"
       :show-empty-symbol="false"
       show-summary
       :summary-method="getSummaries"
@@ -85,7 +88,7 @@
       <el-table-column :show-overflow-tooltip="true" prop="index" label="序号" align="center" width="60" type="index" />
       <el-table-column :show-overflow-tooltip="true" prop="workshop" label="车间/产线/班组" align="center" min-width="140px">
         <template #default="{ row }">
-          <span>{{ row.workshop?.name + '/' + row.productionLine?.name  }}</span>
+          <span>{{ row.workshop?.name + '/' + row.productionLine?.name }}</span>
         </template>
       </el-table-column>
       <el-table-column :show-overflow-tooltip="true" prop="monomer.name" label="单体" align="center" min-width="100px">
@@ -154,7 +157,7 @@ import { getProcessDetail } from '@/api/mes/production-manage/dashboard/project-
 import { defineProps, defineEmits, ref, watch, computed, inject } from 'vue'
 import { tableSummary } from '@/utils/el-extra'
 import { weightTypeEnum } from '@enum-ms/common'
-// import { componentTypeEnum } from '@enum-ms/mes'
+import { taskTrackingSchedulingStatusEnum } from '@enum-ms/mes'
 import { mesProjectOverviewPM as permission } from '@/page-permission/mes'
 import useVisible from '@compos/use-visible'
 import usePagination from '@compos/use-pagination'
@@ -170,6 +173,7 @@ const productionLineName = ref()
 const monomerName = ref()
 const areaName = ref()
 const serialNumber = ref()
+const status = ref()
 
 const props = defineProps({
   visible: {
@@ -207,7 +211,8 @@ const commonQuery = computed(() => {
     productionLineName: productionLineName.value,
     monomerName: monomerName.value,
     areaName: areaName.value,
-    serialNumber: serialNumber.value
+    serialNumber: serialNumber.value,
+    status: status.value
   }
 })
 
@@ -267,6 +272,7 @@ function resetQuery() {
   monomerName.value = undefined
   areaName.value = undefined
   serialNumber.value = undefined
+  status.value = undefined
   processDetailGet()
 }
 

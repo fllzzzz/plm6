@@ -16,8 +16,13 @@
       <el-col :span="5" class="card-panel-col">
         <panel name="设计产能（吨）:" :precision="2" num-color="#1890ff" :end-val="projectInfo.summary.capacityNetWeight / 1000 || 0" />
       </el-col>
-      <el-col :span="5" class="card-panel-col">
-        <panel name="年度累计和平均（吨）:" :precision="2" num-color="#1890ff" :end-val="projectInfo.summary?.taskNetWeight / 1000" />
+      <el-col :span="6" class="card-panel-col">
+        <panel
+          name="年度累计和平均（吨）:"
+          num-color="#1890ff"
+          :num-arr="projectInfo.summary?.totalWeight"
+          is-array
+        />
       </el-col>
       <!-- <el-col :span="5">
           <el-statistic :value="`${projectInfo.summary?.taskNetWeight}`">
@@ -33,7 +38,7 @@
       <el-col :span="5" class="card-panel-col">
         <panel name="在手未完成量（吨）:" :precision="2" num-color="#1890ff" :end-val="projectInfo.summary.unNetWeight / 1000 || 0" />
       </el-col>
-      <el-col :span="5" class="card-panel-col">
+      <el-col :span="4" class="card-panel-col">
         <panel name="产能空余率（%）:" :precision="2" num-color="#1890ff" :end-val="projectInfo.summary.capacityRatio || 0" />
       </el-col>
     </el-row>
@@ -56,6 +61,10 @@
           clearable
           @keyup.enter="crud.toQuery"
         />
+        <common-button class="filter-item" size="mini" type="success" icon="el-icon-search" @click.stop="searchQuery">搜索</common-button>
+        <common-button class="filter-item" size="mini" type="warning" icon="el-icon-refresh-left" @click.stop="resetQuery">
+          重置
+        </common-button>
       </template>
       <template #viewLeft>
         <slot name="btn"></slot>
@@ -69,7 +78,7 @@ import { inject } from 'vue'
 import { regHeader } from '@compos/use-crud'
 import { purchaseOrderStatusEnum } from '@enum-ms/contract'
 import workshopSelect from '@comp-mes/workshop-select'
-import Panel from '@/components/Panel'
+import Panel from './panel.vue'
 import crudOperation from '@crud/CRUD.operation'
 // import { ElStatistic } from 'element-plus'
 
@@ -80,6 +89,16 @@ const defaultQuery = {
 }
 
 const { crud, query } = regHeader(defaultQuery)
+
+function searchQuery() {
+  crud.toQuery()
+}
+
+function resetQuery() {
+  query.status = undefined
+  query.name = undefined
+  crud.toQuery()
+}
 </script>
 
 <style>

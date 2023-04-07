@@ -5,38 +5,21 @@
       <div class="head-container" style="display: flex; justify-content: space-between">
         <!-- <el-tag>班组：{{ props.detailData?.groups?.name }}</el-tag> -->
         <div>
-          <el-input
-            v-model.trim="projectName"
-            size="small"
-            placeholder="项目搜索"
-            style="width: 170px"
-            class="filter-item"
+          <project-cascader v-model="projectId" class="filter-item" clearable style="width: 220px" />
+          <monomer-select-area-select
+            v-model:monomerId="monomerId"
+            v-model:areaId="areaId"
+            needConvert
             clearable
-            @keyup.enter="fetchGroupDetail"
-          />
-          <el-input
-            v-model.trim="monomerName"
-            size="small"
-            placeholder="单体搜索"
-            style="width: 170px"
-            class="filter-item"
-            clearable
-            @keyup.enter="fetchGroupDetail"
-          />
-          <el-input
-            v-model.trim="areaName"
-            size="small"
-            placeholder="区域搜索"
-            style="width: 170px"
-            class="filter-item"
-            clearable
-            @keyup.enter="fetchGroupDetail"
+            areaClearable
+            :project-id="projectId"
+            @change="fetchGroupDetail"
           />
           <el-input
             v-model.trim="serialNumber"
             size="small"
             placeholder="编号搜索"
-            style="width: 170px"
+            style="width: 130px"
             class="filter-item"
             clearable
             @keyup.enter="fetchGroupDetail"
@@ -56,7 +39,8 @@
               taskTypeEnum: props.detailData.taskTypeEnum,
               teamId: props.detailData.team?.id,
               workshopId: props.workshopId,
-              processId: props.processId
+              processId: props.processId,
+              ...commonQuery,
             }"
             size="mini"
             type="warning"
@@ -93,7 +77,13 @@
         <el-table-column :show-overflow-tooltip="true" prop="specification" key="specification" label="规格" align="center" />
         <el-table-column :show-overflow-tooltip="true" prop="material" key="material" label="材质" align="center" />
         <el-table-column :show-overflow-tooltip="true" prop="scheduleQuantity" key="scheduleQuantity" label="排产数" align="center" />
-        <el-table-column :show-overflow-tooltip="true" prop="scheduleNetWeight" key="scheduleNetWeight" label="排产量（kg）" align="center" />
+        <el-table-column
+          :show-overflow-tooltip="true"
+          prop="scheduleNetWeight"
+          key="scheduleNetWeight"
+          label="排产量（kg）"
+          align="center"
+        />
         <el-table-column :show-overflow-tooltip="true" prop="completeQuantity" key="completeQuantity" label="完成数" align="center">
           <template #default="{ row }">
             <span :class="row.scheduleQuantity === row.completeQuantity ? '' : 'tc-danger'">{{ row.completeQuantity }}</span>
@@ -120,11 +110,15 @@
 </template>
 <script setup>
 import { getGroupDetail } from '@/api/mes/production-monitoring-kanban/kanban.js'
-import { ref, defineProps, watch, inject } from 'vue'
+import { ref, defineProps, watch, inject, computed } from 'vue'
 import { projectNameFormatter } from '@/utils/project'
+import { mapGetters } from '@/store/lib'
+import projectCascader from '@comp-base/project-cascader'
+import monomerSelectAreaSelect from '@comp-base/monomer-select-area-select'
 import usePagination from '@compos/use-pagination'
 import useMaxHeight from '@compos/use-max-height'
 
+const { globalProjectId } = mapGetters(['globalProjectId'])
 const props = defineProps({
   detailData: {
     type: Object,
@@ -140,9 +134,9 @@ const props = defineProps({
 
 const tableRef = ref()
 const list = ref([])
-const projectName = ref()
-const monomerName = ref()
-const areaName = ref()
+const projectId = ref()
+const monomerId = ref()
+const areaId = ref()
 const serialNumber = ref()
 
 const { maxHeight } = useMaxHeight({
@@ -159,6 +153,24 @@ watch(
     }
   }
 )
+watch(
+  () => globalProjectId.value,
+  (val) => {
+    if (val) {
+      projectId.value = globalProjectId.value
+      fetchGroupDetail()
+    }
+  },
+  { immediate: true, deep: true }
+)
+const commonQuery = computed(() => {
+  return {
+    projectId: projectId.value,
+    monomerId: monomerId.value,
+    areaId: areaId.value,
+    serialNumber: serialNumber.value
+  }
+})
 const { handleSizeChange, handleCurrentChange, total, setTotalPage, queryPage } = usePagination({ fetchHook: fetchGroupDetail })
 
 async function fetchGroupDetail() {
@@ -170,6 +182,7 @@ async function fetchGroupDetail() {
       teamId: props.detailData.team?.id,
       workshopId: props.workshopId,
       processId: props.processId,
+      ...commonQuery.value,
       ...queryPage
     })
     list.value = content || []
@@ -184,9 +197,9 @@ function searchQuery() {
 }
 
 function resetQuery() {
-  projectName.value = undefined
-  monomerName.value = undefined
-  areaName.value = undefined
+  projectId.value = undefined
+  monomerId.value = undefined
+  areaId.value = undefined
   serialNumber.value = undefined
   fetchGroupDetail()
 }

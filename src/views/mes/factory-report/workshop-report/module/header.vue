@@ -241,6 +241,7 @@ function searchQuery() {
 }
 // 重置
 function resetQuery() {
+  query.type = timeTypeEnum.ALL_YEAR.V
   query.dateTime = undefined
   query.workShopId = undefined
   query.productionLineId = undefined
