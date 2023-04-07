@@ -1,9 +1,6 @@
 <template>
   <div class="app-container">
     <!--工具栏-->
-    <div class="head-container">
-      <mHeader />
-    </div>
     <!--表格渲染-->
     <common-table
       ref="tableRef"
@@ -121,7 +118,7 @@
 </template>
 
 <script setup>
-import { getByProductType, editInspection } from '@/api/mes/production-config/process'
+import crudApi from '@/api/config/enclosure/production-config/inspection-mode'
 import { ref } from 'vue'
 import { ElMessageBox } from 'element-plus'
 
@@ -131,11 +128,10 @@ import {
   processReportTypeEnum as reportTypeEnum
 } from '@enum-ms/mes'
 import checkPermission from '@/utils/system/check-permission'
-import { configInspectionModePM as permission } from '@/page-permission/config'
+import { enclosureConfigInspectionModePM as permission } from '@/page-permission/config'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
-import mHeader from './module/header'
 
 const optShow = {
   batchAdd: false,
@@ -153,7 +149,7 @@ const { crud, columns, CRUD } = useCRUD(
     hasPagination: false,
     permission: { ...permission },
     optShow: { ...optShow },
-    crudApi: { get: getByProductType }
+    crudApi: { ...crudApi }
   },
   tableRef
 )
@@ -173,7 +169,7 @@ async function changeInspectType(data, val) {
         type: 'warning'
       }
     )
-    await editInspection({ id: data.id, inspectType: val })
+    await crudApi.edit({ id: data.id, inspectType: val })
     crud.notify(`“${data.name}” 工序,检验方式变更为 “${inspectTypeEnum.VL[val]}” 成功`, CRUD.NOTIFICATION_TYPE.SUCCESS)
     crud.refresh()
   } catch (error) {
@@ -195,7 +191,7 @@ async function changeReportType(data, val) {
         type: 'warning'
       }
     )
-    await editInspection({ id: data.id, reportType: val })
+    await crudApi.edit({ id: data.id, reportType: val })
     crud.notify(`“${data.name}” 工序,上报方式变更为 “${reportTypeEnum.VL[val]}” 成功`, CRUD.NOTIFICATION_TYPE.SUCCESS)
     crud.refresh()
   } catch (error) {

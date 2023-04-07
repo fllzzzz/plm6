@@ -379,6 +379,12 @@ export const enclosureConfigProductionLineInspectPM = {
   del: ['enclosure_productionLine_inspect:del'] // 删除质检
 }
 
+// 围护-生产配置/报检方式
+export const enclosureConfigInspectionModePM = {
+  get: ['enclosure_inspection_mode:get'], // 报检方式列表
+  edit: ['enclosure_inspection_mode:edit'] // 编辑报检方式
+}
+
 // ---------------------------- 围护-生产配置 end -------------------------------
 
 // ---------------------------- 基础配置 end -------------------------------

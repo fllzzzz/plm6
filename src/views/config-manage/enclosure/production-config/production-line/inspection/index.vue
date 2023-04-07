@@ -1,17 +1,17 @@
 <template>
   <div>
-    <div v-show="!groupId">
-      <div class="my-code">点击生产组查看详情</div>
+    <div v-show="!lineId">
+      <div class="my-code">点击生产线查看详情</div>
     </div>
-    <div v-show="groupId">
+    <div v-show="lineId">
       <!--表格渲染-->
-      <common-table ref="tableRef" v-loading="!loaded" returnSourceData :data="list" :max-height="maxHeight + 42 + 55" style="width: 100%">
-        <!-- <el-table-column label="序号" type="index" align="center" width="60" /> -->
-        <el-table-column key="processName" prop="processName" :show-overflow-tooltip="true" label="工序名称" align="center" width="120px" />
-        <el-table-column key="inspectorNames" prop="inspectorNames" :show-overflow-tooltip="true" label="质检" min-width="160px" />
+      <common-table ref="tableRef" :data="list" :max-height="maxHeight + 93">
+        <el-table-column label="序号" type="index" align="center" width="60" />
+        <el-table-column key="processName" prop="processName" label="工序名称" min-width="80px" show-overflow-tooltip />
+        <el-table-column key="memberNames" prop="memberNames" label="质检人员" min-width="160px" show-overflow-tooltip />
       </common-table>
       <common-dialog
-        title="选择质检班组"
+        title="选择班组"
         v-model="dialogVisible"
         :before-close="
           () => {
@@ -26,13 +26,14 @@
         </template>
         <common-select
           v-model="selectValue"
+          v-loading="productionTeamLoading"
           :options="inspectionTeamOptions"
           :type="'other'"
           multiple
           filterable
           clearable
           :dataStructure="{ key: 'id', label: 'label', value: 'id' }"
-          placeholder="请选择质检班组"
+          placeholder="请选择质检人员"
           style="width: 100%"
         >
           <template #empty>
@@ -41,9 +42,6 @@
               <span style="margin-top: 5px; color: #f56c6c">*请到班组管理进行配置</span>
             </div>
           </template>
-          <!-- <template #view="{ data: item }">
-            <span>{{ item.leaderName }} | {{ item.processName }} | {{ teamAttributeEnum.VL[item.organizationType] }}</span>
-          </template> -->
         </common-select>
       </common-dialog>
     </div>
@@ -51,69 +49,97 @@
 </template>
 
 <script setup>
-import { productAddInspectionTeam } from '@/api/mes/production-config/production-line-group'
-import { defineExpose, defineEmits, ref, defineProps, watch, computed, inject } from 'vue'
-import useInspectionTeam from '@compos/store/use-inspection-team'
+import { get, inspectionTeam, saveInspectionTeam } from '@/api/config/enclosure/production-config/production-line-team'
+import { defineProps, defineExpose, ref, watch, computed, inject, nextTick } from 'vue'
+
 import { ElNotification } from 'element-plus'
-import { cleanArray } from '@data-type/array'
 
 const maxHeight = inject('maxHeight')
 
-const { loaded, inspectionTeamKV, inspectionTeam } = useInspectionTeam()
 const selectValue = ref([])
 const dialogVisible = ref(false)
 const submitLoading = ref(false)
+const listLoading = ref(false)
+const productionTeamLoading = ref(false)
+const inspectionTeamOptions = ref([])
+const list = ref([])
 
-const emit = defineEmits(['update:modelValue', 'change'])
 const props = defineProps({
-  modelValue: {
-    type: Array,
-    default: () => []
-  },
   line: {
-    type: Object,
-    default: () => {}
-  },
-  group: {
     type: Object,
     default: () => {}
   }
 })
-
-watch(
-  () => props.modelValue,
-  (val) => {
-    selectValue.value = val
-  },
-  { immediate: true }
-)
 
 watch(
   () => dialogVisible.value,
   (val) => {
     if (val) {
-      selectValue.value = props.modelValue
+      nextTick(() => {
+        fetchProductionTeam()
+      })
     }
   }
 )
 
-const groupId = computed(() => {
-  return props.group && props.group.id
+const lineId = computed(() => {
+  return props.line && props.line.id
 })
 
-const list = computed(() => cleanArray(props.modelValue.map((v) => inspectionTeamKV.value[v])))
-
-const inspectionTeamOptions = computed(() =>
-  inspectionTeam.value.filter((v) => {
-    v.label = v.processName + ' - ' + v.inspectorNames
-    return props.line?.productType & v.productType && props.line?.productionLineTypeEnum === v.productionLineTypeEnum
-  })
+watch(
+  () => lineId.value,
+  (id) => {
+    if (id) {
+      fetchList()
+    }
+  },
+  { immediate: true }
 )
+
+// 获取质检组列表
+async function fetchList() {
+  try {
+    list.value = []
+    listLoading.value = true
+    const data = await get({ id: lineId.value })
+    list.value = (data.inspectionTeams || []).map((row) => {
+      row.memberNames = row.userLinkList.map(m => {
+        row.teamId = m.teamId
+        return m.userName
+      }).join(', ')
+      return row
+    })
+  } catch (error) {
+    console.log('获取质检班组列表', error)
+  } finally {
+    listLoading.value = false
+  }
+}
+
+// 获取生产线下所有质检组
+async function fetchProductionTeam() {
+  try {
+    inspectionTeamOptions.value = []
+    productionTeamLoading.value = true
+    const { content } = await inspectionTeam({ factoryId: props.line?.factoryId })
+    inspectionTeamOptions.value = content.map(row => {
+      row.label = row.processName + ' - ' + row.userLinkList.map(v => v.userName).join(', ')
+      return row
+    })
+    selectValue.value = list.value.map(v => v.teamId)
+  } catch (error) {
+    console.log('获取生产线下所有质检组', error)
+  } finally {
+    productionTeamLoading.value = false
+  }
+}
+
+// 保存质检组人员
 async function submitIt() {
   try {
     submitLoading.value = true
-    await productAddInspectionTeam({
-      groupId: groupId.value,
+    await saveInspectionTeam({
+      id: lineId.value,
       teamIds: selectValue.value
     })
     ElNotification({
@@ -122,8 +148,7 @@ async function submitIt() {
       duration: 2500
     })
     dialogVisible.value = false
-    emit('update:modelValue', selectValue.value)
-    emit('change', selectValue.value)
+    fetchList()
   } catch (error) {
     console.log(error, '绑定班组')
   } finally {

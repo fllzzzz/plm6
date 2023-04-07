@@ -1,33 +1,15 @@
 <template>
   <div>
-    <div v-show="!groupId">
-      <div class="my-code">点击生产组查看详情</div>
+    <div v-show="!lineId">
+      <div class="my-code">点击生产线查看详情</div>
     </div>
-    <div v-show="groupId">
+    <div v-show="lineId">
       <!--表格渲染-->
-      <common-table
-        ref="tableRef"
-        :data="list"
-        :data-format="dataFormat"
-        :max-height="maxHeight + 135"
-        :default-expand-all="false"
-        :expand-row-keys="expandRowKeys"
-        row-key="id"
-        style="width: 100%"
-      >
-        <el-expand-table-column :data="list" v-model:expand-row-keys="expandRowKeys" row-key="id" fixed="left">
-          <template #default="{ row }">
-            <p>
-              组员：<span>{{ row.memberNames }}</span>
-            </p>
-          </template>
-        </el-expand-table-column>
-        <el-table-column key="processName" prop="processName" :show-overflow-tooltip="true" label="工序名称" min-width="100px" align="center">
-          <template #default="{ row }">
-            <span>{{ row.processName }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column key="leaderName" prop="leaderName" label="组长" min-width="100px" />
+      <common-table ref="tableRef" :data="list" :max-height="maxHeight + 93">
+        <el-table-column label="序号" type="index" align="center" width="60" />
+        <el-table-column key="processName" prop="processName" label="工序名称" min-width="80px" show-overflow-tooltip />
+        <el-table-column key="leaderName" prop="leaderName" label="组长" min-width="80px" show-overflow-tooltip />
+        <el-table-column key="memberNames" prop="memberNames" label="组员" min-width="160px" show-overflow-tooltip />
       </common-table>
       <common-dialog
         title="选择班组"
@@ -41,12 +23,11 @@
         width="500px"
       >
         <template #titleRight>
-          <common-button :loading="submitLoading" size="mini" type="primary" @click="submitIt">
-            保存
-          </common-button>
+          <common-button :loading="submitLoading" size="mini" type="primary" @click="submitIt"> 保存 </common-button>
         </template>
         <common-select
           v-model="selectValue"
+          v-loading="productionTeamLoading"
           :options="productionTeamOptions"
           :type="'other'"
           multiple
@@ -56,12 +37,12 @@
           placeholder="请选择班组"
           style="width: 100%"
         >
-        <template #empty>
-          <div style="text-align: center;display: flex;flex-direction: column;padding: 10px;color: #c0c4cc;">
-            <span>暂无数据</span>
-            <span style="margin-top: 5px;color: #f56c6c;">*请到班组管理进行配置</span>
-          </div>
-        </template>
+          <template #empty>
+            <div style="text-align: center; display: flex; flex-direction: column; padding: 10px; color: #c0c4cc">
+              <span>暂无数据</span>
+              <span style="margin-top: 5px; color: #f56c6c">*请到班组管理进行配置</span>
+            </div>
+          </template>
         </common-select>
       </common-dialog>
     </div>
@@ -69,83 +50,125 @@
 </template>
 
 <script setup>
-import { productAddTeam } from '@/api/mes/production-config/production-line-group'
-import { defineProps, defineExpose, ref, defineEmits, watch, computed, inject } from 'vue'
-import { wageQuotaTypeEnum } from '@enum-ms/mes'
+import { get, productionTeam, saveProductionTeam } from '@/api/config/enclosure/production-config/production-line-team'
+import { defineProps, defineExpose, ref, watch, computed, inject, nextTick } from 'vue'
 
-import elExpandTableColumn from '@comp-common/el-expand-table-column.vue'
 import { ElNotification } from 'element-plus'
 
-const dataFormat = [['wageQuotaType', ['parse-enum', wageQuotaTypeEnum, { f: 'SL', extra: '计价' }]]]
-
 const maxHeight = inject('maxHeight')
-// 展开keys
-const expandRowKeys = ref([])
 
 const selectValue = ref([])
 const dialogVisible = ref(false)
 const submitLoading = ref(false)
+const listLoading = ref(false)
 const productionTeamLoading = ref(false)
 const productionTeamOptions = ref([])
 const list = ref([])
 
-const emit = defineEmits(['update:modelValue', 'change'])
 const props = defineProps({
-  modelValue: {
-    type: Array,
-    default: () => []
-  },
   line: {
-    type: Object,
-    default: () => {}
-  },
-  group: {
     type: Object,
     default: () => {}
   }
 })
-
-watch(
-  () => props.modelValue,
-  (val) => {
-    selectValue.value = val
-    fetchProductionTeam()
-  },
-  { immediate: true }
-)
 
 watch(
   () => dialogVisible.value,
   (val) => {
     if (val) {
-      selectValue.value = props.modelValue
+      nextTick(() => {
+        fetchProductionTeam()
+      })
     }
   }
 )
 
-const groupId = computed(() => {
-  return props.group && props.group.id
+const lineId = computed(() => {
+  return props.line && props.line.id
 })
 
-// 获取生产组
+watch(
+  () => lineId.value,
+  (id) => {
+    if (id) {
+      fetchList()
+    }
+  },
+  { immediate: true }
+)
+
+// 获取生产组列表
+async function fetchList() {
+  try {
+    list.value = []
+    listLoading.value = true
+    const data = await get({ id: lineId.value })
+    list.value = (data.teams || []).map((row) => {
+      const members = []
+      row.userLinkList.forEach((m) => {
+        if (m.boolLeaderEnum) {
+          row.leaderName = m.userName
+          row.leaderId = m.userId
+          row.teamId = m.teamId
+          row.leader = {
+            id: m.userId,
+            name: m.userName
+          }
+        } else {
+          members.push({
+            teamId: m.teamId,
+            id: m.userId,
+            name: m.userName
+          })
+        }
+      })
+      row.members = members
+      if (row.members.length > 0) {
+        row.memberNames = row.members.map((row) => row.name).join(', ')
+        row.memberIds = row.members.map((row) => row.id)
+      } else {
+        row.memberNames = ''
+        row.memberIds = []
+      }
+      return row
+    })
+  } catch (error) {
+    console.log('获取生产班组列表', error)
+  } finally {
+    listLoading.value = false
+  }
+}
+
+// 获取生产线下所有生产组
 async function fetchProductionTeam() {
   try {
     productionTeamOptions.value = []
     productionTeamLoading.value = true
-    // const { content } = await getAllArtifact({ ...crud.query })
-    productionTeamOptions.value = []
-  } catch (er) {
-    console.log('获取生产组', er)
+    const { content } = await productionTeam({ factoryId: props.line?.factoryId })
+    productionTeamOptions.value = content.map(row => {
+      row.leaderName = ''
+      row.userLinkList.forEach(m => {
+        if (m.boolLeaderEnum) {
+          row.leaderName = m.userName
+        }
+      })
+      row.label = row.leaderName + ' - ' + row.processName
+      return row
+    })
+    selectValue.value = list.value.map(v => v.teamId)
+  } catch (error) {
+    console.log('获取生产线下所有生产组', error)
   } finally {
     productionTeamLoading.value = false
   }
 }
 
+// 保存生产组人员
 async function submitIt() {
   try {
     submitLoading.value = true
-    await productAddTeam({
-      groupId: groupId.value,
+    await saveProductionTeam({
+      id: lineId.value,
       teamIds: selectValue.value
     })
     ElNotification({
@@ -154,8 +177,7 @@ async function submitIt() {
       duration: 2500
     })
     dialogVisible.value = false
-    emit('update:modelValue', selectValue.value)
-    emit('change', selectValue.value)
+    fetchList()
   } catch (error) {
     console.log(error, '绑定班组')
   } finally {

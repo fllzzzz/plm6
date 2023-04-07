@@ -1,7 +1,7 @@
 import request from '@/utils/request'
 
 /**
- * 质检班组列表
+ * 质检班组列表（分页）
  */
 export function get(params) {
   return request({
