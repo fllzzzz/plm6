@@ -38,7 +38,7 @@
         </el-table-column>
         <el-table-column align="center" key="list" prop="list" :show-overflow-tooltip="true" label="排产量（件/吨）">
           <template v-slot="scope">
-            <span>{{
+            <span class="tc-primary">{{
               props.weightStatus === weightTypeEnum.NET.V
                 ? scope.row.quantity + '/' + (scope.row.netWeight / 1000).toFixed(DP.COM_WT__KG)
                 : scope.row.quantity + '/' + (scope.row.grossWeight / 1000).toFixed(DP.COM_WT__KG)
@@ -66,7 +66,7 @@
           label="实际完成（件/吨）"
         >
           <template v-slot="scope">
-            <span>{{
+            <span class="tc-primary">{{
               props.weightStatus === weightTypeEnum.NET.V
                 ? scope.row.completeQuantity + '/' + (scope.row.completeNetWeight / 1000).toFixed(DP.COM_WT__KG)
                 : scope.row.completeQuantity + '/' + (scope.row.completeGrossWeight / 1000).toFixed(DP.COM_WT__KG)
@@ -85,7 +85,7 @@
         @current-change="handleCurrentChange"
       />
     </div>
-    <project-detail v-model:visible="drawerVisible" :dateTime="props.monthlyData?.month" :detail-data="detailData" />
+    <project-detail v-model:visible="drawerVisible" :dateTime="props.monthlyData?.month" :detail-data="detailData" :params-query="props.query" />
   </div>
 </template>
 <script setup>

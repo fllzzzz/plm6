@@ -10,6 +10,7 @@
           v-model:areaId="areaId"
           needConvert
           clearable
+          areaClearable
           :project-id="props.processData.id"
         />
         <production-line-select

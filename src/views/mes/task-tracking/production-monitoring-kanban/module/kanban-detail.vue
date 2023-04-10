@@ -22,6 +22,7 @@
             :params="{
               projectId: props.detailList?.project?.id,
               monomerId: props.detailList?.monomer?.id,
+              areaId: props.detailList?.area?.id,
               workshopId: props.workshopId,
             }"
             size="mini"
@@ -117,6 +118,7 @@ async function fetchMachinePartList() {
     const { content = [], totalElements } = await getDetail({
       projectId: props.detailList?.project?.id,
       monomerId: props.detailList?.monomer?.id,
+      areaId: props.detailList?.area?.id,
       workshopId: props.workshopId,
       ...queryPage
     })

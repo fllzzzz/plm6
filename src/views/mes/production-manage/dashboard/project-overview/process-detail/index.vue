@@ -9,37 +9,33 @@
     :show-close="false"
   >
     <template #titleAfter>
-      <el-input
-        v-model.trim="workshopName"
-        placeholder="车间搜索"
+      <workshop-select
+        v-model="workshopId"
+        placeholder="请选择车间"
+        :factory-id="factoryId"
         style="width: 170px"
         class="filter-item"
-        clearable
-        @keyup.enter="processDetailGet"
+        :clearable="true"
+        @change="processDetailGet"
       />
-      <el-input
-        v-model.trim="productionLineName"
-        placeholder="产线搜索"
-        style="width: 170px"
+      <production-line-select
+        v-model="productionLineId"
+        :factory-id="factoryId"
+        :workshop-id="workshopId"
+        :clearable="true"
         class="filter-item"
-        clearable
-        @keyup.enter="processDetailGet"
+        style="width: 170px"
+        @change="processDetailGet"
       />
-      <el-input
-        v-model.trim="monomerName"
-        placeholder="单体搜索"
-        style="width: 170px"
-        class="filter-item"
+      <monomer-select-area-select
+        v-model:monomerId="monomerId"
+        v-model:areaId="areaId"
+        needConvert
         clearable
-        @keyup.enter="processDetailGet"
-      />
-      <el-input
-        v-model.trim="areaName"
-        placeholder="区域搜索"
+        areaClearable
+        :project-id="projectId"
         style="width: 170px"
-        class="filter-item"
-        clearable
-        @keyup.enter="processDetailGet"
+        @change="processDetailGet"
       />
       <el-input
         v-model.trim="serialNumber"
@@ -86,7 +82,7 @@
       style="width: 100%"
     >
       <el-table-column :show-overflow-tooltip="true" prop="index" label="序号" align="center" width="60" type="index" />
-      <el-table-column :show-overflow-tooltip="true" prop="workshop" label="车间/产线/班组" align="center" min-width="140px">
+      <el-table-column :show-overflow-tooltip="true" prop="workshop" label="车间/产线" align="center" min-width="140px">
         <template #default="{ row }">
           <span>{{ row.workshop?.name + '/' + row.productionLine?.name }}</span>
         </template>
@@ -154,7 +150,7 @@
 
 <script setup>
 import { getProcessDetail } from '@/api/mes/production-manage/dashboard/project-overview'
-import { defineProps, defineEmits, ref, watch, computed, inject } from 'vue'
+import { defineProps, defineEmits, ref, watch, computed } from 'vue'
 import { tableSummary } from '@/utils/el-extra'
 import { weightTypeEnum } from '@enum-ms/common'
 import { taskTrackingSchedulingStatusEnum } from '@enum-ms/mes'
@@ -162,16 +158,19 @@ import { mesProjectOverviewPM as permission } from '@/page-permission/mes'
 import useVisible from '@compos/use-visible'
 import usePagination from '@compos/use-pagination'
 import useMaxHeight from '@compos/use-max-height'
+import monomerSelectAreaSelect from '@comp-base/monomer-select-area-select'
+import productionLineSelect from '@comp-mes/production-line-select'
+import workshopSelect from '@comp-mes/workshop-select'
 // import detailDrawer from './detail-drawer.vue'
 
 const emit = defineEmits(['update:visible'])
 const processDetailData = ref([])
 // const drawerVisible = ref(false)
 // const teamData = ref({})
-const workshopName = ref()
-const productionLineName = ref()
-const monomerName = ref()
-const areaName = ref()
+const workshopId = ref()
+const productionLineId = ref()
+const monomerId = ref()
+const areaId = ref()
 const serialNumber = ref()
 const status = ref()
 
@@ -192,9 +191,9 @@ const props = defineProps({
   }
 })
 
-const monomerId = inject('monomerId')
-const areaId = inject('areaId')
-const productionLineId = inject('productionLineId')
+// const lastMonomerId = inject('monomerId')
+// const lastAeaId = inject('areaId')
+// const lastProductionLineId = inject('productionLineId')
 
 const query = computed(() => {
   return {
@@ -207,10 +206,10 @@ const query = computed(() => {
 
 const commonQuery = computed(() => {
   return {
-    workshopName: workshopName.value,
-    productionLineName: productionLineName.value,
-    monomerName: monomerName.value,
-    areaName: areaName.value,
+    workshopId: workshopId.value,
+    productionLineId: productionLineId.value,
+    monomerId: monomerId.value,
+    areaId: areaId.value,
     serialNumber: serialNumber.value,
     status: status.value
   }
@@ -267,10 +266,10 @@ function searchQuery() {
 }
 // 重置
 function resetQuery() {
-  workshopName.value = undefined
-  productionLineName.value = undefined
-  monomerName.value = undefined
-  areaName.value = undefined
+  workshopId.value = undefined
+  productionLineId.value = undefined
+  monomerId.value = undefined
+  areaId.value = undefined
   serialNumber.value = undefined
   status.value = undefined
   processDetailGet()

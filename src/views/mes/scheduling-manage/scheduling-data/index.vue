@@ -18,9 +18,8 @@
         :max-height="maxHeight"
         style="width: 100%"
         class="collection-table"
-        :show-empty-symbol="false"
         :stripe="false"
-        return-source-data
+        :row-class-name="handleRowClassName"
       >
         <el-table-column prop="index" label="序号" align="center" width="50" type="index">
           <template #default="{ row, $index }">
@@ -52,7 +51,10 @@
           :show-overflow-tooltip="true"
         >
           <template #default="{ row }">
-            <span @click.stop="openDetail">{{ (row.schedulingTotalNetWeight / 1000).toFixed(2) }}</span>
+            <span style="color: #409eff; cursor: pointer" v-if="row.projectName === '合计'" @click.stop="openDetail">{{
+              (row.schedulingTotalNetWeight / 1000).toFixed(2)
+            }}</span>
+            <span v-else>{{ (row.schedulingTotalNetWeight / 1000).toFixed(2) }}</span>
           </template>
         </el-table-column>
         <el-table-column
@@ -91,7 +93,7 @@
                 <div v-if="row.mete?.findIndex((v) => v.date == item) > -1">
                   <template v-for="m in row.mete" :key="m">
                     <template v-if="m.date == item">
-                      <span>{{ (m.totalNetWeight / 1000).toFixed(2) }}</span>
+                      <span>{{ m.totalNetWeight }}</span>
                     </template>
                   </template>
                 </div>
@@ -114,7 +116,7 @@
                 <div v-if="row.mete?.findIndex((v) => v.date == week.date) > -1">
                   <template v-for="w in row.mete" :key="w">
                     <template v-if="w.date == week.date">
-                      <span>{{ (w.totalNetWeight / 1000).toFixed(2) }}</span>
+                      <span>{{ w.totalNetWeight }}</span>
                     </template>
                   </template>
                 </div>
@@ -136,7 +138,7 @@ import { ref, provide } from 'vue'
 import { timeTypeEnum } from '@enum-ms/contract'
 import { parseTime } from '@/utils/date'
 import { mesScheduleDetailPM as permission } from '@/page-permission/mes'
-import { convertUnits } from '@/utils/convert/unit'
+// import { convertUnits } from '@/utils/convert/unit'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import mHeader from './module/header'
@@ -148,7 +150,8 @@ const optShow = {
   del: false,
   download: false
 }
-const monthData = ref([])
+const monthProject1 = ref([])
+const monthProject2 = ref([])
 const monthArr = ref([])
 for (let i = 1; i <= 12; i++) {
   monthArr.value.push(i)
@@ -180,8 +183,27 @@ const { maxHeight } = useMaxHeight({
 
 CRUD.HOOK.handleRefresh = (crud, { data }) => {
   let yearTotal = 0
-  const meteArr = []
+  let actualYearTotal = 0
+  let meteArr = []
+  let actualMeteArr = []
+  let actualRateArr = []
+  let actualRateTotal = 0
+  let currentMonthTotal = 0
+  const monthData = []
+  const currentMonthData = []
+  const actualMonthData = []
+  const schedulingTotal = []
+  const completeTotal = []
+  let schedulingTotalArr = []
+  let completeTotalArr = []
+  let currentMonthArr = []
   data.content = data?.map((v) => {
+    meteArr = []
+    actualMeteArr = []
+    actualRateArr = []
+    schedulingTotalArr = []
+    completeTotalArr = []
+    currentMonthArr = []
     v.type = 1
     v.projectName = v.project && v.project.shortName ? v.project.serialNumber + ' ' + v.project.shortName : '-'
     v.monomerName = v.monomer && v.monomer.name ? v.monomer.name : '-'
@@ -189,53 +211,151 @@ CRUD.HOOK.handleRefresh = (crud, { data }) => {
       if (v.mete && v.mete.length > 0) {
         v.mete.map((k) => {
           v[Number(k.date)] = k.totalNetWeight ? (k.totalNetWeight / 1000).toFixed(2) : 0
+          k.totalNetWeight = (k.totalNetWeight / 1000).toFixed(2)
         })
       }
     } else {
       if (v.mete && v.mete.length > 0) {
         v.mete.map((k) => {
           v[k.date] = k
+          k.totalNetWeight = (k.totalNetWeight / 1000).toFixed(2)
         })
         weekList.value = v.mete
       }
     }
+    if (v.projectName !== '-') {
+      monthProject1.value = v.mete
+    } else if (v.projectName === '-') {
+      monthProject2.value = v.mete
+    }
     for (let m = 1; m <= monthArr.value.length; m++) {
-      if (v.mete.findIndex((o) => Number(o.date) === m) > -1 && v.project) {
-        monthData.value.push(v.mete[v.mete.findIndex((o) => Number(o.date) === m)])
+      if (monthProject1.value.findIndex((o) => Number(o.date) === m) > -1 && v.projectName !== '-') {
+        monthData.push(monthProject1.value[monthProject1.value.findIndex((o) => Number(o.date) === m)])
+      } else if (monthProject2.value.findIndex((o) => Number(o.date) === m) > -1 && v.projectName === '-') {
+        actualMonthData.push(monthProject2.value[monthProject2.value.findIndex((o) => Number(o.date) === m)])
       }
-      const monthList = monthData.value.filter((v) => Number(v.date) === m)
-      const totalArr = monthList.map((k) => convertUnits(k.totalNetWeight, 'kg', 't', 2))
-      console.log(totalArr, 'totalArr')
+      const monthList = monthData.filter((n) => Number(n?.date) === m)
+      const actualMonthList = actualMonthData.filter((n) => Number(n?.date) === m)
+      const totalArr = monthList.map((k) => k.totalNetWeight)
+      const actualTotalArr = actualMonthList.map((k) => k.totalNetWeight)
       yearTotal = totalArr.reduce((pre, cur) => {
         if (cur) {
-          return pre + cur
+          return pre + Number(cur)
         } else {
           return pre
         }
       }, 0)
+      actualYearTotal = actualTotalArr.reduce((pre, cur) => {
+        if (cur) {
+          return pre + Number(cur)
+        } else {
+          return pre
+        }
+      }, 0)
+      actualRateTotal = yearTotal && actualYearTotal ? Number(((actualYearTotal / yearTotal) * 100).toFixed(2)) + '%' : 0 + '%'
       meteArr.push({
         date: monthArr.value[m - 1].toString(),
         totalNetWeight: yearTotal.toFixed(2)
+      })
+      actualMeteArr.push({
+        date: monthArr.value[m - 1].toString(),
+        totalNetWeight: actualYearTotal.toFixed(2)
+      })
+      actualRateArr.push({
+        date: monthArr.value[m - 1].toString(),
+        totalNetWeight: actualRateTotal
+      })
+    }
+
+    if (crud.query.type === timeTypeEnum.CURRENT_MONTH.V) {
+      schedulingTotal.push(v.schedulingTotalNetWeight)
+      completeTotal.push(v.completeTotalNetWeight)
+      schedulingTotalArr = schedulingTotal.reduce((pre, cur) => {
+        if (cur) {
+          return pre + Number(cur)
+        } else {
+          return pre
+        }
+      }, 0)
+      completeTotalArr = completeTotal.reduce((pre, cur) => {
+        if (cur) {
+          return pre + Number(cur)
+        } else {
+          return pre
+        }
+      }, 0)
+      weekList.value.forEach((p) => {
+        console.log(v.mete, p.date)
+        if (v.mete.findIndex((e) => e.date === p.date) > -1) {
+          currentMonthData.push(v.mete[v.mete.findIndex((e) => e.date === p.date)])
+          const currentMonthList = currentMonthData.filter((n) => n.date === p.date)
+          const currentTotalArr = currentMonthList.map((k) => k.totalNetWeight)
+          currentMonthTotal = currentTotalArr.reduce((pre, cur) => {
+            if (cur) {
+              return pre + Number(cur)
+            } else {
+              return pre
+            }
+          }, 0)
+          currentMonthArr.push({
+            date: p.date,
+            totalNetWeight: currentMonthTotal.toFixed(2)
+          })
+        }
       })
     }
 
     return v
   })
 
-  data.content.push({
-    type: 2,
-    index: '',
-    projectName: '合计',
-    monomerName: '',
-    mete: meteArr
-    // yearTotal: yearTotal.toFixed(2)
-  })
-  console.log(data.content, 'data.content')
+  if (crud.query.type === timeTypeEnum.ALL_YEAR.V) {
+    data.content.push(
+      {
+        type: 2,
+        index: '',
+        projectName: '合计',
+        monomerName: '',
+        mete: meteArr
+      },
+      {
+        type: 2,
+        index: '',
+        projectName: '实际完成',
+        monomerName: '',
+        mete: actualMeteArr
+      },
+      {
+        type: 2,
+        index: '',
+        projectName: '完成率',
+        monomerName: '',
+        mete: actualRateArr
+      }
+    )
+  } else {
+    data.content.push({
+      type: 2,
+      index: '',
+      projectName: '合计',
+      monomerName: '',
+      schedulingTotalNetWeight: schedulingTotalArr,
+      completeTotalNetWeight: completeTotalArr,
+      mete: currentMonthArr
+    })
+  }
 }
 
 function openDetail() {
   drawerVisible.value = true
 }
+
+// function handleRowClassName({ row, rowIndex }) {
+//   if (row.projectName === '合计' || row.projectName === '实际完成' || row.projectName === '完成率') {
+//     return 'success-row'
+//   } else {
+//     return ''
+//   }
+// }
 
 // 合计
 // function getSummaries(param) {
@@ -294,22 +414,12 @@ function openDetail() {
 </script>
 
 <style lang="scss" scoped>
-.collection-table {
-  ::v-deep(.el-select .el-input__inner) {
-    padding-left: 2px;
-    padding-right: 5px;
-  }
-  ::v-deep(.el-input-number .el-input__inner, .el-input__inner) {
-    text-align: left;
-    padding: 0 5px;
-  }
-  ::v-deep(.el-table .cell) {
-    padding-left: 2px;
-    padding-right: 2px;
-  }
-  ::v-deep(td.el-table_4_column_42.is-center.is-leaf.el-table__cell .cell) {
-    color: #409eff;
-    cursor: pointer;
-  }
+::v-deep(.success-row) {
+  display: table-row;
+  position: sticky;
+  bottom: 0 !important;
+  width: 100%;
+  z-index: 2;
+  font-weight: 600;
 }
 </style>

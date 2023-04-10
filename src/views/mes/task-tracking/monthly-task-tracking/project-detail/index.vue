@@ -46,6 +46,7 @@
               dateTime: new Date(props.dateTime).getTime(),
               areaId: areaId,
               serialNumber: serialNumber,
+              ...props.paramsQuery
             }"
             size="mini"
             type="warning"
@@ -124,6 +125,9 @@ const props = defineProps({
   dateTime: {
     type: String,
     default: ''
+  },
+  paramsQuery: {
+    type: Object
   }
 })
 
@@ -143,6 +147,7 @@ async function showProjectDetail() {
       areaId: areaId.value,
       serialNumber: serialNumber.value,
       dateTime: new Date(props.dateTime).getTime(),
+      ...props.paramsQuery,
       ...queryPage
     })
     setTotalPage(totalElements)
