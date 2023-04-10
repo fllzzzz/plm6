@@ -10,11 +10,7 @@
     <el-table-column label="序号" type="index" align="center" width="60" fixed="left" />
     <el-table-column label="申购单号" prop="purchaseSN" fixed="left" width="140" align="center">
       <template #default="{ row }">
-        <table-cell-tag
-          :show="row.boolPurchase"
-          name="已采购"
-          color="#e6a23c"
-        />
+        <table-cell-tag :show="row.boolPurchase" name="已采购" color="#e6a23c" />
         <span>{{ row.purchaseSN }}</span>
       </template>
     </el-table-column>
@@ -26,11 +22,17 @@
         </el-tooltip>
       </template>
     </el-table-column>
-    <el-table-column prop="specification" label="规格" align="center" fixed="left" show-overflow-tooltip  min-width="140">
+    <el-table-column prop="specification" label="规格" align="center" fixed="left" show-overflow-tooltip min-width="140">
       <template #default="{ row }">
         <el-tooltip :content="row.specificationLabels" placement="top">
-          <span>{{ row.specification }}</span>
+          <span>{{ row.specification }} </span>
         </el-tooltip>
+        <el-edit
+          v-if="Boolean(currentCfg?.spec & basicClass)"
+          class="el-icon"
+          style="color: #1881ef; vertical-align: middle; margin-left: 5px; cursor: pointer"
+          @click="handleClickEditSpec(row)"
+        />
       </template>
     </el-table-column>
     <el-table-column prop="length" align="center" :label="`定尺长度 (${baseUnit.length.unit})`" min-width="120">
@@ -96,10 +98,38 @@
     </el-table-column>
     <el-table-column label="操作" width="90" align="center" fixed="right">
       <template #default="{ row, $index }">
-        <common-button icon="el-icon-plus" :disabled="isExist(row.id) || row.boolPurchase" type="warning" size="mini" @click="addRow(row, $index)" />
+        <common-button
+          icon="el-icon-plus"
+          :disabled="isExist(row.id) || row.boolPurchase"
+          type="warning"
+          size="mini"
+          @click="addRow(row, $index)"
+        />
       </template>
     </el-table-column>
   </common-table>
+  <common-drawer
+    ref="drawerRef"
+    v-model="materialSelectVisible"
+    title="型材规格选择"
+    :show-close="true"
+    :size="900"
+    custom-class="material-spec-select"
+  >
+    <template #content>
+      <material-spec-select
+        ref="specRef"
+        v-model="editList"
+        :visible="materialSelectVisible"
+        :classifyId="editRow.classifyId"
+        :show-classify="false"
+        mode="selector"
+        :max-height="specSelectMaxHeight"
+        expand-query
+        @change="handleSpecChange"
+      />
+    </template>
+  </common-drawer>
 </template>
 
 <script setup>
@@ -107,11 +137,13 @@ import { defineExpose, defineEmits, inject, watchEffect, watch } from 'vue'
 import { matClsEnum } from '@/utils/enum/modules/classification'
 import { isNotBlank } from '@/utils/data-type'
 
+import useEditSectionSpec from '@compos/wms/use-edit-section-spec'
 import useTableValidate from '@compos/form/use-table-validate'
 import useMatBaseUnit from '@/composables/store/use-mat-base-unit'
 import useWeightOverDiff from '@/composables/wms/use-steel-weight-over-diff'
 import { calcSectionSteelTotalLength } from '@/utils/wms/measurement-calc'
 import { positiveNumPattern } from '@/utils/validate/pattern'
+import materialSpecSelect from '@comp-cls/material-spec-select/index.vue'
 
 const emit = defineEmits(['add-purchase'])
 
@@ -122,10 +154,15 @@ const form = inject('crud')?.form
 
 const { baseUnit } = useMatBaseUnit(basicClass) // 当前分类基础单位
 
-const { overDiffTip, weightOverDiff, diffSubmitValidate, currentCfg } = useWeightOverDiff(
-  baseUnit,
-  { cfgType: 'purchase', weightField: 'weighingTotalWeight', compareWeightField: 'purchaseTotalWeight', weightTip: '申购重量' }
-) // 超出重量处理
+const { overDiffTip, weightOverDiff, diffSubmitValidate, currentCfg } = useWeightOverDiff(baseUnit, {
+  cfgType: 'purchase',
+  weightField: 'weighingTotalWeight',
+  compareWeightField: 'purchaseTotalWeight',
+  weightTip: '申购重量'
+}) // 超出重量处理
+
+const { specSelectMaxHeight, specRef, drawerRef, editRow, editList, materialSelectVisible, handleClickEditSpec, handleSpecChange } =
+  useEditSectionSpec()
 
 // 校验规则
 const rules = {

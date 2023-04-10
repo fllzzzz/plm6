@@ -508,33 +508,33 @@ async function handleOrderInfoChange(orderInfo) {
   order.value = orderInfo
   cu.props.order = orderInfo
   boolPartyA.value = orderInfo?.supplyType === orderSupplyTypeEnum.PARTY_A.V
+  Object.keys(steelBasicClassKV).forEach((k) => {
+    if (steelBasicClassKV[k].V & orderInfo?.basicClass) {
+      if (!currentBasicClass.value) currentBasicClass.value = steelBasicClassKV[k].K // 为空则赋值
+      disabledBasicClass.value[k] = false
+    }
+    // if (boolPartyA.value || !(steelBasicClassKV[k].V & orderInfo.basicClass)) {
+    form[k] = []
+    const trigger = watch(
+      matSpecRef,
+      () => {
+        if (matSpecRef.value) {
+          matSpecRef.value.clearByBasicClass(steelBasicClassKV[k].V)
+          nextTick(() => {
+            trigger()
+          })
+        }
+      },
+      { immediate: true }
+    )
+    // }
+  })
   if (orderInfo) {
-    Object.keys(steelBasicClassKV).forEach((k) => {
-      if (steelBasicClassKV[k].V & orderInfo.basicClass) {
-        if (!currentBasicClass.value) currentBasicClass.value = steelBasicClassKV[k].K // 为空则赋值
-        disabledBasicClass.value[k] = false
-      }
-      // if (boolPartyA.value || !(steelBasicClassKV[k].V & orderInfo.basicClass)) {
-      form[k] = []
-      const trigger = watch(
-        matSpecRef,
-        () => {
-          if (matSpecRef.value) {
-            matSpecRef.value.clearByBasicClass(steelBasicClassKV[k].V)
-            nextTick(() => {
-              trigger()
-            })
-          }
-        },
-        { immediate: true }
-      )
-      // }
-    })
-    // 默认赋值
+  // 默认赋值
     nextTick(() => {
       steelRefList[currentBasicClass.value] = steelRef.value
     })
-    if (!boolPartyA.value) {
+    if (!boolPartyA.value && orderInfo?.details?.length) {
       form.list = orderInfo.details || []
       // 修改的情况下，数据预处理
       await steelInboundFormFormat(form)

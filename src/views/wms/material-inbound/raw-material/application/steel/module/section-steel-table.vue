@@ -42,12 +42,18 @@
         <el-tooltip :content="row.specificationLabels" placement="top">
           <span>{{ row.specification }}</span>
         </el-tooltip>
+        <el-edit
+          v-if="form.selectObj?.[row.purchaseOrderDetailId]?.isSelected && Boolean(currentCfg?.spec & basicClass)"
+          class="el-icon"
+          style="color: #1881ef; vertical-align: middle; margin-left: 5px; cursor: pointer"
+          @click="handleClickEditSpec(row)"
+        />
       </template>
     </el-table-column>
     <el-table-column prop="length" align="center" width="135px" :label="`定尺长度 (${baseUnit.length.unit})`">
       <template #default="{ row }">
         <common-input-number
-          v-if="props.boolPartyA || (form.selectObj[row.purchaseOrderDetailId].isSelected && Boolean(currentCfg?.length & basicClass))"
+          v-if="props.boolPartyA || (form.selectObj?.[row.purchaseOrderDetailId]?.isSelected && Boolean(currentCfg?.length & basicClass))"
           v-model="row.length"
           :max="999999"
           :controls="false"
@@ -118,7 +124,7 @@
     <el-table-column prop="brand" label="品牌" align="center" min-width="100px">
       <template #default="{ row }">
         <el-input
-          v-if="props.boolPartyA || (!props.boolPartyA && form.selectObj[row.purchaseOrderDetailId].isSelected)"
+          v-if="props.boolPartyA || (!props.boolPartyA && form.selectObj?.[row.purchaseOrderDetailId]?.isSelected)"
           v-model.trim="row.brand"
           maxlength="60"
           size="mini"
@@ -130,7 +136,7 @@
     <el-table-column prop="heatNoAndBatchNo" label="炉批号" align="center" min-width="150px">
       <template #default="{ row }">
         <el-input
-          v-if="props.boolPartyA || (!props.boolPartyA && form.selectObj[row.purchaseOrderDetailId].isSelected)"
+          v-if="props.boolPartyA || (!props.boolPartyA && form.selectObj?.[row.purchaseOrderDetailId]?.isSelected)"
           v-model.trim="row.heatNoAndBatchNo"
           size="mini"
           placeholder="炉批号"
@@ -143,7 +149,7 @@
       <el-table-column prop="quantity" align="center" width="135px" :label="`本次实收数 (${baseUnit.measure.unit})`">
         <template #default="{ row }">
           <common-input-number
-            v-if="Boolean(currentCfg?.quantity & basicClass) && form.selectObj[row.purchaseOrderDetailId].isSelected"
+            v-if="Boolean(currentCfg?.quantity & basicClass) && form.selectObj?.[row.purchaseOrderDetailId]?.isSelected"
             v-model="row.quantity"
             :min="0"
             :max="999999999"
@@ -175,7 +181,7 @@
             placement="top"
           >
             <common-input-number
-              v-if="form.selectObj[row.purchaseOrderDetailId].isSelected"
+              v-if="form.selectObj?.[row.purchaseOrderDetailId]?.isSelected"
               v-model="row.weighingTotalWeight"
               :min="0"
               :max="999999999"
@@ -199,6 +205,28 @@
       </template>
     </el-table-column>
   </common-table>
+  <common-drawer
+    ref="drawerRef"
+    v-model="materialSelectVisible"
+    title="型材规格选择"
+    :show-close="true"
+    :size="900"
+    custom-class="material-spec-select"
+  >
+    <template #content>
+      <material-spec-select
+        ref="specRef"
+        v-model="editList"
+        :visible="materialSelectVisible"
+        :classifyId="editRow.classifyId"
+        :show-classify="false"
+        mode="selector"
+        :max-height="specSelectMaxHeight"
+        expand-query
+        @change="handleSpecChange"
+      />
+    </template>
+  </common-drawer>
 </template>
 
 <script setup>
@@ -207,6 +235,7 @@ import { matClsEnum } from '@/utils/enum/modules/classification'
 import { isBlank, isNotBlank, toPrecision } from '@/utils/data-type'
 
 import { regExtra } from '@/composables/form/use-form'
+import useEditSectionSpec from '@compos/wms/use-edit-section-spec'
 import useTableValidate from '@compos/form/use-table-validate'
 import useMatBaseUnit from '@/composables/store/use-mat-base-unit'
 import useWeightOverDiff from '@/composables/wms/use-steel-weight-over-diff'
@@ -217,6 +246,7 @@ import { calcSectionSteelTotalLength, calcSectionSteelWeight } from '@/utils/wms
 import { positiveNumPattern } from '@/utils/validate/pattern'
 
 import priceSetColumns from '@/views/wms/material-inbound/raw-material/components/price-set-columns.vue'
+import materialSpecSelect from '@comp-cls/material-spec-select/index.vue'
 
 const props = defineProps({
   boolPartyA: {
@@ -240,6 +270,9 @@ const expandRowKeys = ref([]) // 展开行key
 
 const { overDiffTip, weightOverDiff, diffSubmitValidate, currentCfg } = useWeightOverDiff(baseUnit) // 过磅重量超出理论重量处理
 const { handleOverQuantity, handleOverMete } = useOverReceive({ meteField: 'weighingTotalWeight' })
+
+const { specSelectMaxHeight, specRef, drawerRef, editRow, editList, materialSelectVisible, handleClickEditSpec, handleSpecChange } =
+  useEditSectionSpec()
 
 // 校验规则
 const rules = {
@@ -305,7 +338,7 @@ function selectAllTableChange(select) {
 // 设置选择的回显
 function setSelect() {
   form.sectionSteelList.forEach((v) => {
-    if (form.selectObj[v.purchaseOrderDetailId].isSelected) {
+    if (form.selectObj?.[v.purchaseOrderDetailId]?.isSelected) {
       tableRef.value.toggleRowSelection(v, true)
     }
   })

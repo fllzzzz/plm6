@@ -250,7 +250,7 @@ function selectAllTableChange(select) {
 // 设置选择的回显
 function setSelect() {
   form.steelCoilList.forEach((v) => {
-    if (form.selectObj[v.purchaseOrderDetailId].isSelected) {
+    if (form.selectObj?.[v.purchaseOrderDetailId]?.isSelected) {
       tableRef.value.toggleRowSelection(v, true)
     }
   })

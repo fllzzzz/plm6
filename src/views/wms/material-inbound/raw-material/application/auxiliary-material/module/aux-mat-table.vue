@@ -96,7 +96,7 @@
     <el-table-column prop="color" label="颜色" align="center" min-width="120px">
       <template #default="{ row }">
         <el-input
-          v-if="props.boolPartyA || (!props.boolPartyA && form.selectObj[row.purchaseOrderDetailId].isSelected)"
+          v-if="props.boolPartyA || (!props.boolPartyA && form.selectObj?.[row.purchaseOrderDetailId]?.isSelected)"
           v-model.trim="row.color"
           maxlength="20"
           size="mini"
@@ -108,7 +108,7 @@
     <el-table-column prop="brand" label="品牌" align="center" min-width="120px">
       <template #default="{ row }">
         <el-input
-          v-if="props.boolPartyA || (!props.boolPartyA && form.selectObj[row.purchaseOrderDetailId].isSelected)"
+          v-if="props.boolPartyA || (!props.boolPartyA && form.selectObj?.[row.purchaseOrderDetailId]?.isSelected)"
           v-model.trim="row.brand"
           maxlength="60"
           size="mini"
@@ -121,7 +121,7 @@
       <el-table-column prop="quantity" label="本次实收数" align="center" min-width="120px">
         <template #default="{ row }">
           <common-input-number
-            v-if="row.measureUnit && Boolean(currentCfg?.quantity & basicClass) && form.selectObj[row.purchaseOrderDetailId].isSelected"
+            v-if="row.measureUnit && Boolean(currentCfg?.quantity & basicClass) && form.selectObj?.[row.purchaseOrderDetailId]?.isSelected"
             v-model="row.quantity"
             :min="0"
             :max="999999999"
@@ -138,7 +138,7 @@
       <el-table-column prop="mete" label="实收量" align="center" min-width="120px">
         <template #default="{ row }">
           <common-input-number
-            v-if="Boolean(currentCfg?.mete & basicClass) && form.selectObj[row.purchaseOrderDetailId].isSelected"
+            v-if="Boolean(currentCfg?.mete & basicClass) && form.selectObj?.[row.purchaseOrderDetailId]?.isSelected"
             v-model="row.mete"
             :min="0.000001"
             :max="999999999"

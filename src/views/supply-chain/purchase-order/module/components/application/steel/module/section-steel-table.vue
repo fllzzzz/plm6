@@ -22,6 +22,12 @@
         <el-tooltip :content="row.specificationLabels" placement="top">
           <span>{{ row.specification }}</span>
         </el-tooltip>
+        <el-edit
+          v-if="!form.useRequisitions || (form.useRequisitions && Boolean(currentCfg?.spec & basicClass))"
+          class="el-icon"
+          style="color: #1881ef; vertical-align: middle; margin-left: 5px; cursor: pointer"
+          @click="handleClickEditSpec(row)"
+        />
       </template>
     </el-table-column>
     <el-table-column prop="length" align="center" :label="`定尺长度 (${baseUnit.length.unit})`" min-width="120">
@@ -68,7 +74,11 @@
         <el-tooltip
           class="item"
           effect="dark"
-          :content="`单位重量：${row.unitWeight} kg/m， 申购重量：${row.purchaseTotalWeight} kg， ${overDiffTip}`"
+          :content="`单位重量：${row.unitWeight} kg/m， ${
+            form.useRequisitions
+              ? `申购重量：${row.purchaseTotalWeight} kg， ${overDiffTip}`
+              : `理论重量：${row.theoryTotalWeight} kg， ${inboundOverDiffTip}`
+          }`"
           :disabled="!row.hasOver"
           placement="top"
         >
@@ -113,22 +123,46 @@
       </template>
     </el-table-column>
   </common-table>
+  <common-drawer
+    ref="drawerRef"
+    v-model="materialSelectVisible"
+    title="型材规格选择"
+    :show-close="true"
+    :size="900"
+    custom-class="material-spec-select"
+  >
+    <template #content>
+      <material-spec-select
+        ref="specRef"
+        v-model="editList"
+        :visible="materialSelectVisible"
+        :classifyId="editRow.classifyId"
+        :show-classify="false"
+        mode="selector"
+        :max-height="specSelectMaxHeight"
+        expand-query
+        @change="handleSpecChange"
+      />
+    </template>
+  </common-drawer>
 </template>
 
 <script setup>
-import { defineExpose, inject, watchEffect, reactive, watch } from 'vue'
+import { defineExpose, inject, watchEffect, reactive, watch, computed } from 'vue'
 import { matClsEnum } from '@/utils/enum/modules/classification'
 import { weightMeasurementModeEnum } from '@enum-ms/finance'
-import { isBlank, isNotBlank } from '@/utils/data-type'
+import { isBlank, isNotBlank, toPrecision } from '@/utils/data-type'
 
+import useEditSectionSpec from '@compos/wms/use-edit-section-spec'
 import usePriceSet from '@/composables/wms/use-price-set'
 import useTableValidate from '@compos/form/use-table-validate'
 import useMatBaseUnit from '@/composables/store/use-mat-base-unit'
 import useWeightOverDiff from '@/composables/wms/use-steel-weight-over-diff'
 import { createUniqueString } from '@/utils/data-type/string'
-import { calcSectionSteelTotalLength } from '@/utils/wms/measurement-calc'
+import { calcSectionSteelTotalLength, calcSectionSteelWeight } from '@/utils/wms/measurement-calc'
 import { positiveNumPattern } from '@/utils/validate/pattern'
 import priceSetColumns from '@/views/wms/material-inbound/raw-material/components/price-set-columns.vue'
+import materialSpecSelect from '@comp-cls/material-spec-select/index.vue'
 
 // 当前物料基础类型
 const basicClass = matClsEnum.SECTION_STEEL.V
@@ -137,10 +171,22 @@ const matSpecRef = inject('matSpecRef') // 调用父组件matSpecRef
 const form = inject('crud')?.form
 const { baseUnit } = useMatBaseUnit(basicClass) // 当前分类基础单位
 
-const { overDiffTip, weightOverDiff, diffSubmitValidate, currentCfg } = useWeightOverDiff(
-  baseUnit,
-  { cfgType: 'purchase', weightField: 'weighingTotalWeight', compareWeightField: 'purchaseTotalWeight', weightTip: '申购重量' }
-) // 超出重量处理
+const { overDiffTip, weightOverDiff, diffSubmitValidate, currentCfg } = useWeightOverDiff(baseUnit, {
+  cfgType: 'purchase',
+  weightField: 'weighingTotalWeight',
+  compareWeightField: 'purchaseTotalWeight',
+  weightTip: '申购重量'
+}) // 超出重量处理
+
+// 不绑定申购时，重量校验
+const {
+  overDiffTip: inboundOverDiffTip,
+  weightOverDiff: inboundWeightOverDiff,
+  diffSubmitValidate: inboundDiffSubmitValidate
+} = useWeightOverDiff(baseUnit) // 超出重量处理
+
+const { specSelectMaxHeight, specRef, drawerRef, editRow, editList, materialSelectVisible, handleClickEditSpec, handleSpecChange } =
+  useEditSectionSpec()
 
 // 金额校验
 const validateAmount = (value, row) => {
@@ -151,28 +197,30 @@ const validateAmount = (value, row) => {
 }
 
 // 校验规则
-const rules = {
-  classifyId: [{ required: true, message: '请选择物料种类', trigger: 'change' }],
-  weightMeasurementMode: [{ required: true, message: '请选择计量方式', trigger: 'change' }],
-  length: [
-    { required: true, message: '请填写定尺长度', trigger: 'blur' },
-    { pattern: positiveNumPattern, message: '定尺长度必须大于0', trigger: 'blur' }
-  ],
-  quantity: [
-    { required: true, message: '请填写数量', trigger: 'blur' },
-    { pattern: positiveNumPattern, message: '数量必须大于0', trigger: 'blur' }
-  ],
-  weighingTotalWeight: [
-    { required: true, message: '请填写重量', trigger: 'blur' },
-    { validator: diffSubmitValidate, message: '超出误差允许范围,不可提交', trigger: 'blur' },
-    { pattern: positiveNumPattern, message: '重量必须大于0', trigger: 'blur' }
-  ],
-  unitPrice: [{ required: true, message: '请填写单价', trigger: 'blur' }],
-  amount: [
-    { required: true, message: '请填写金额', trigger: 'blur' },
-    { validator: validateAmount, message: '金额有误，请手动修改', trigger: 'blur' }
-  ]
-}
+const rules = computed(() => {
+  return {
+    classifyId: [{ required: true, message: '请选择物料种类', trigger: 'change' }],
+    weightMeasurementMode: [{ required: true, message: '请选择计量方式', trigger: 'change' }],
+    length: [
+      { required: true, message: '请填写定尺长度', trigger: 'blur' },
+      { pattern: positiveNumPattern, message: '定尺长度必须大于0', trigger: 'blur' }
+    ],
+    quantity: [
+      { required: true, message: '请填写数量', trigger: 'blur' },
+      { pattern: positiveNumPattern, message: '数量必须大于0', trigger: 'blur' }
+    ],
+    weighingTotalWeight: [
+      { required: true, message: '请填写重量', trigger: 'blur' },
+      { validator: form.useRequisitions ? diffSubmitValidate : inboundDiffSubmitValidate, message: '超出误差允许范围,不可提交', trigger: 'blur' },
+      { pattern: positiveNumPattern, message: '重量必须大于0', trigger: 'blur' }
+    ],
+    unitPrice: [{ required: true, message: '请填写单价', trigger: 'blur' }],
+    amount: [
+      { required: true, message: '请填写金额', trigger: 'blur' },
+      { validator: validateAmount, message: '金额有误，请手动修改', trigger: 'blur' }
+    ]
+  }
+})
 
 const { handleMeteChangeCalcPrice } = usePriceSet('weighingTotalWeight')
 const { tableValidate, wrongCellMask } = useTableValidate({ rules: rules, errorMsg: '请修正【型材清单】中标红的信息' }) // 表格校验
@@ -211,13 +259,19 @@ function rowInit(row) {
 // 行监听
 // 使用watch 监听方法，优点：初始化时表单数据时，可以不立即执行（惰性），可以避免“草稿/修改”状态下重量被自动修改；缺点：初始化时需要指定监听参数
 function rowWatch(row) {
-  watchEffect(() => weightOverDiff(row))
+  watchEffect(() => {
+    if (form.useRequisitions) {
+      weightOverDiff(row)
+    } else {
+      inboundWeightOverDiff(row)
+    }
+  })
   // 计算单件理论重量
-  // watch([() => row.length, () => row.unitWeight, baseUnit], () => calcTheoryWeight(row))
+  watch([() => row.length, () => row.unitWeight, baseUnit], () => calcTheoryWeight(row))
   // 计算总重
-  // watch([() => row.theoryWeight, () => row.quantity], () => {
-  //   calcTotalWeight(row)
-  // })
+  watch([() => row.theoryWeight, () => row.quantity], () => {
+    calcTotalWeight(row)
+  })
   // 计算总长度
   watch([() => row.length, () => row.quantity], () => {
     calcTotalLength(row)
@@ -228,12 +282,12 @@ function rowWatch(row) {
 
 // 总重计算与单位重量计算分开，避免修改数量时需要重新计算单件重量
 // 计算单件重量
-// async function calcTheoryWeight(row) {
-//   row.theoryWeight = await calcSectionSteelWeight({
-//     length: row.length, // 长度
-//     unitWeight: row.unitWeight // 单位重量
-//   })
-// }
+async function calcTheoryWeight(row) {
+  row.theoryWeight = await calcSectionSteelWeight({
+    length: row.length, // 长度
+    unitWeight: row.unitWeight // 单位重量
+  })
+}
 
 // 计算总长
 function calcTotalLength(row) {
@@ -248,20 +302,20 @@ function calcTotalLength(row) {
 }
 
 // 计算总重
-// function calcTotalWeight(row) {
-//   // if (row.purchaseNetMete && row.quantity) {
-//   //   row.purchaseTotalWeight = toPrecision(row.purchaseNetMete * row.quantity, baseUnit.value.weight.precision)
-//   // } else {
-//   //   row.purchaseTotalWeight = undefined
-//   // }
-//   if (isNotBlank(row.theoryWeight) && row.quantity) {
-//     row.theoryTotalWeight = toPrecision(row.theoryWeight * row.quantity, baseUnit.value.weight.precision)
-//     row.weighingTotalWeight = toPrecision(row.theoryWeight * row.quantity, baseUnit.value.weight.precision)
-//   } else {
-//     row.theoryTotalWeight = undefined
-//     row.weighingTotalWeight = undefined
-//   }
-// }
+function calcTotalWeight(row) {
+  // if (row.purchaseNetMete && row.quantity) {
+  //   row.purchaseTotalWeight = toPrecision(row.purchaseNetMete * row.quantity, baseUnit.value.weight.precision)
+  // } else {
+  //   row.purchaseTotalWeight = undefined
+  // }
+  if (isNotBlank(row.theoryWeight) && row.quantity) {
+    row.theoryTotalWeight = toPrecision(row.theoryWeight * row.quantity, baseUnit.value.weight.precision)
+    row.weighingTotalWeight = toPrecision(row.theoryWeight * row.quantity, baseUnit.value.weight.precision)
+  } else {
+    row.theoryTotalWeight = undefined
+    row.weighingTotalWeight = undefined
+  }
+}
 
 // 删除行
 function delRow(sn, $index) {

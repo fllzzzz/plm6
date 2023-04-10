@@ -99,7 +99,11 @@
         <el-tooltip
           class="item"
           effect="dark"
-          :content="`申购重量：${row.purchaseTotalWeight} kg， ${overDiffTip}`"
+          :content="
+            form.useRequisitions
+              ? `申购重量：${row.purchaseTotalWeight} kg， ${overDiffTip}`
+              : `理论重量：${row.theoryTotalWeight} kg， ${inboundOverDiffTip}`
+          "
           :disabled="!row.hasOver"
           placement="top"
         >
@@ -147,17 +151,17 @@
 </template>
 
 <script setup>
-import { defineExpose, inject, watchEffect, reactive, watch } from 'vue'
+import { defineExpose, inject, watchEffect, reactive, watch, computed } from 'vue'
 import { matClsEnum } from '@/utils/enum/modules/classification'
 import { weightMeasurementModeEnum } from '@enum-ms/finance'
-import { isBlank, isNotBlank } from '@/utils/data-type'
+import { isBlank, isNotBlank, toPrecision } from '@/utils/data-type'
 
 import usePriceSet from '@/composables/wms/use-price-set'
 import useTableValidate from '@compos/form/use-table-validate'
 import useMatBaseUnit from '@/composables/store/use-mat-base-unit'
 import useWeightOverDiff from '@/composables/wms/use-steel-weight-over-diff'
 import { createUniqueString } from '@/utils/data-type/string'
-// import { calcSteelPlateWeight } from '@/utils/wms/measurement-calc'
+import { calcSteelPlateWeight } from '@/utils/wms/measurement-calc'
 import { positiveNumPattern } from '@/utils/validate/pattern'
 import priceSetColumns from '@/views/wms/material-inbound/raw-material/components/price-set-columns.vue'
 
@@ -169,10 +173,20 @@ const form = inject('crud')?.form
 const { baseUnit } = useMatBaseUnit(basicClass) // 当前分类基础单位
 
 const { handleMeteChangeCalcPrice } = usePriceSet('weighingTotalWeight')
-const { overDiffTip, weightOverDiff, diffSubmitValidate, currentCfg } = useWeightOverDiff(
-  baseUnit,
-  { cfgType: 'purchase', weightField: 'weighingTotalWeight', compareWeightField: 'purchaseTotalWeight', weightTip: '申购重量' }
-) // 超出重量处理
+
+const { overDiffTip, weightOverDiff, diffSubmitValidate, currentCfg } = useWeightOverDiff(baseUnit, {
+  cfgType: 'purchase',
+  weightField: 'weighingTotalWeight',
+  compareWeightField: 'purchaseTotalWeight',
+  weightTip: '申购重量'
+}) // 超出重量处理
+
+// 不绑定申购时，重量校验
+const {
+  overDiffTip: inboundOverDiffTip,
+  weightOverDiff: inboundWeightOverDiff,
+  diffSubmitValidate: inboundDiffSubmitValidate
+} = useWeightOverDiff(baseUnit) // 超出重量处理
 
 // 金额校验
 const validateAmount = (value, row) => {
@@ -182,36 +196,38 @@ const validateAmount = (value, row) => {
   return false
 }
 
-const rules = {
-  classifyId: [{ required: true, message: '请选择物料种类', trigger: 'change' }],
-  weightMeasurementMode: [{ required: true, message: '请选择计量方式', trigger: 'change' }],
-  width: [
-    { required: true, message: '请填写宽度', trigger: 'blur' },
-    { pattern: positiveNumPattern, message: '宽度必须大于0', trigger: 'blur' }
-  ],
-  thickness: [
-    { required: true, message: '请填写厚度', trigger: 'blur' },
-    { pattern: positiveNumPattern, message: '厚度必须大于0', trigger: 'blur' }
-  ],
-  weighingTotalWeight: [
-    { required: true, message: '请填写重量', trigger: 'blur' },
-    { validator: diffSubmitValidate, message: '超出误差允许范围,不可提交', trigger: 'blur' },
-    { pattern: positiveNumPattern, message: '重量必须大于0', trigger: 'blur' }
-  ],
-  length: [
-    { required: true, message: '请填写长度', trigger: 'blur' },
-    { pattern: positiveNumPattern, message: '长度必须大于0', trigger: 'blur' }
-  ],
-  quantity: [
-    { required: true, message: '请填写数量', trigger: 'blur' },
-    { pattern: positiveNumPattern, message: '数量必须大于0', trigger: 'blur' }
-  ],
-  unitPrice: [{ required: true, message: '请填写单价', trigger: 'blur' }],
-  amount: [
-    { required: true, message: '请填写金额', trigger: 'blur' },
-    { validator: validateAmount, message: '金额有误，请手动修改', trigger: 'blur' }
-  ]
-}
+const rules = computed(() => {
+  return {
+    classifyId: [{ required: true, message: '请选择物料种类', trigger: 'change' }],
+    weightMeasurementMode: [{ required: true, message: '请选择计量方式', trigger: 'change' }],
+    width: [
+      { required: true, message: '请填写宽度', trigger: 'blur' },
+      { pattern: positiveNumPattern, message: '宽度必须大于0', trigger: 'blur' }
+    ],
+    thickness: [
+      { required: true, message: '请填写厚度', trigger: 'blur' },
+      { pattern: positiveNumPattern, message: '厚度必须大于0', trigger: 'blur' }
+    ],
+    weighingTotalWeight: [
+      { required: true, message: '请填写重量', trigger: 'blur' },
+      { validator: form.useRequisitions ? diffSubmitValidate : inboundDiffSubmitValidate, message: '超出误差允许范围,不可提交', trigger: 'blur' },
+      { pattern: positiveNumPattern, message: '重量必须大于0', trigger: 'blur' }
+    ],
+    length: [
+      { required: true, message: '请填写长度', trigger: 'blur' },
+      { pattern: positiveNumPattern, message: '长度必须大于0', trigger: 'blur' }
+    ],
+    quantity: [
+      { required: true, message: '请填写数量', trigger: 'blur' },
+      { pattern: positiveNumPattern, message: '数量必须大于0', trigger: 'blur' }
+    ],
+    unitPrice: [{ required: true, message: '请填写单价', trigger: 'blur' }],
+    amount: [
+      { required: true, message: '请填写金额', trigger: 'blur' },
+      { validator: validateAmount, message: '金额有误，请手动修改', trigger: 'blur' }
+    ]
+  }
+})
 
 const { tableValidate, wrongCellMask } = useTableValidate({ rules: rules, errorMsg: '请修正【钢板清单】中标红的信息' }) // 表格校验
 
@@ -248,43 +264,49 @@ function rowInit(row) {
 // 行监听
 // 使用watch 监听方法，优点：初始化时表单数据时，可以不立即执行（惰性），可以避免“草稿/修改”状态下重量被自动修改；缺点：初始化时需要指定监听参数
 function rowWatch(row) {
-  watchEffect(() => weightOverDiff(row))
-  // 计算单件理论重量
-  // watch([() => row.length, () => row.width, () => row.thickness, baseUnit], () => calcTheoryWeight(row))
-  // 计算总重
-  // watch([() => row.theoryWeight, () => row.quantity], () => {
-  //   calcTotalWeight(row)
-  // })
+  watchEffect(() => {
+    if (form.useRequisitions) {
+      weightOverDiff(row)
+    } else {
+      inboundWeightOverDiff(row)
+    }
+  })
   // 计算价格
   watch([() => row.weighingTotalWeight], () => handleMeteChangeCalcPrice(row))
+  // 计算单件理论重量
+  watch([() => row.length, () => row.width, () => row.thickness, baseUnit], () => calcTheoryWeight(row))
+  // 计算总重
+  watch([() => row.theoryWeight, () => row.quantity], () => {
+    calcTotalWeight(row)
+  })
 }
 
 // 总重计算与单位重量计算分开，避免修改数量时需要重新计算单件重量
 // 计算单件重量
-// async function calcTheoryWeight(row) {
-//   row.theoryWeight = await calcSteelPlateWeight({
-//     name: row.classifyFullName, // 名称，用于判断是否为不锈钢，不锈钢与普通钢板密度不同
-//     length: row.length,
-//     width: row.width,
-//     thickness: row.thickness
-//   })
-// }
+async function calcTheoryWeight(row) {
+  row.theoryWeight = await calcSteelPlateWeight({
+    name: row.classifyFullName, // 名称，用于判断是否为不锈钢，不锈钢与普通钢板密度不同
+    length: row.length,
+    width: row.width,
+    thickness: row.thickness
+  })
+}
 
 // 计算总重
-// function calcTotalWeight(row) {
-//   // if (row.purchaseNetMete && row.quantity) {
-//   //   row.purchaseTotalWeight = toPrecision(row.purchaseNetMete * row.quantity, baseUnit.value.weight.precision)
-//   // } else {
-//   //   row.purchaseTotalWeight = undefined
-//   // }
-//   if (isNotBlank(row.theoryWeight) && row.quantity) {
-//     row.theoryTotalWeight = toPrecision(row.theoryWeight * row.quantity, baseUnit.value.weight.precision)
-//     row.weighingTotalWeight = toPrecision(row.theoryWeight * row.quantity, baseUnit.value.weight.precision)
-//   } else {
-//     row.theoryTotalWeight = undefined
-//     row.weighingTotalWeight = undefined
-//   }
-// }
+function calcTotalWeight(row) {
+  // if (row.purchaseNetMete && row.quantity) {
+  //   row.purchaseTotalWeight = toPrecision(row.purchaseNetMete * row.quantity, baseUnit.value.weight.precision)
+  // } else {
+  //   row.purchaseTotalWeight = undefined
+  // }
+  if (isNotBlank(row.theoryWeight) && row.quantity) {
+    row.theoryTotalWeight = toPrecision(row.theoryWeight * row.quantity, baseUnit.value.weight.precision)
+    row.weighingTotalWeight = toPrecision(row.theoryWeight * row.quantity, baseUnit.value.weight.precision)
+  } else {
+    row.theoryTotalWeight = undefined
+    row.weighingTotalWeight = undefined
+  }
+}
 
 // 删除行
 function delRow(sn, $index) {

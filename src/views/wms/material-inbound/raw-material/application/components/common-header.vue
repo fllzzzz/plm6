@@ -111,7 +111,7 @@
 
 <script setup>
 import { getRequisitionsDetailBySN } from '@/api/wms/requisitions'
-import { detail as getPurchaseOrderDetail } from '@/api/supply-chain/purchase-order'
+import { inboundDetail as getPurchaseOrderDetail } from '@/api/supply-chain/purchase-order'
 import { defineProps, defineEmits, defineExpose, ref, computed, watch, watchEffect, nextTick, inject } from 'vue'
 import { useRouter } from 'vue-router'
 import { STEEL_ENUM } from '@/settings/config'
@@ -287,20 +287,18 @@ function init() {
 watch(
   () => form.supplyType,
   () => {
-    if (form.supplyType) {
-      if (form.supplyType === orderSupplyTypeEnum.PARTY_A.V) {
-        handlePurchaseIdChange(undefined)
-        const _order = {
-          supplyType: form.supplyType,
-          weightMeasurementMode: weightMeasurementModeEnum.THEORY.V,
-          basicClass: props.basicClass,
-          projects: projects.value
-        }
-        handleOrderInfoChange(_order)
-      } else {
-        handlePurchaseIdChange(undefined)
-        handleOrderInfoChange(undefined)
+    if (form.supplyType && form.supplyType === orderSupplyTypeEnum.PARTY_A.V) {
+      handlePurchaseIdChange(undefined)
+      const _order = {
+        supplyType: form.supplyType,
+        weightMeasurementMode: weightMeasurementModeEnum.THEORY.V,
+        basicClass: props.basicClass,
+        projects: projects.value
       }
+      handleOrderInfoChange(_order)
+    } else {
+      handlePurchaseIdChange(undefined)
+      handleOrderInfoChange(undefined)
     }
   },
   { immediate: true }
@@ -310,7 +308,7 @@ watch(
 function handlePurchaseIdChange(val) {
   nextTick(() => {
     trainsDiff.value = {}
-    formRef.value.clearValidate()
+    formRef?.value?.clearValidate()
   })
   emit('update:purchaseId', val)
 }
@@ -336,16 +334,16 @@ async function handleOrderInfoChange(order, oldOrder) {
       form.loadingWeight = undefined
     }
     if (order.id) {
-      const { details = [] } = await getPurchaseOrderDetail(order.id)
-      await setSpecInfoToList(details)
+      const { content = [] } = await getPurchaseOrderDetail(order.id)
+      await setSpecInfoToList(content)
       await numFmtByBasicClass(
-        details,
+        content,
         {
           toNum: true
         },
         { mete: ['mete', 'inboundMete'] }
       )
-      order.details = details?.map((v) => {
+      order.details = content?.map((v) => {
         v.purchaseOrderDetailId = v.id
         v.purchaseQuantity = v.quantity
         v.purchaseMete = v.mete
@@ -366,6 +364,17 @@ async function handleOrderInfoChange(order, oldOrder) {
         form.selectObj[v.purchaseOrderDetailId] = {
           ..._v,
           isSelected: _isSelected
+        }
+        if (v.applyPurchase?.length) {
+          v.applyPurchase = v.applyPurchase.map((item) => {
+            item.purchaseQuantity = item.quantity
+            item.originQuantity = item.quantity
+            item.purchaseMete = item.mete
+            item.quantity = undefined
+            return item
+          })
+          v.quantity = 0
+          v.mete = undefined
         }
         return _v
       })

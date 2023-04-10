@@ -47,7 +47,9 @@
     <el-table-column prop="thickness" align="center" width="100px" :label="`厚 (${baseUnit.thickness.unit})`">
       <template #default="{ row }">
         <common-input-number
-          v-if="props.boolPartyA || (form.selectObj[row.purchaseOrderDetailId].isSelected && Boolean(currentCfg?.thickness & basicClass))"
+          v-if="
+            props.boolPartyA || (form.selectObj?.[row.purchaseOrderDetailId]?.isSelected && Boolean(currentCfg?.thickness & basicClass))
+          "
           v-model="row.thickness"
           :min="0"
           :max="999999"
@@ -63,7 +65,7 @@
     <el-table-column prop="width" align="center" width="135px" :label="`宽 (${baseUnit.width.unit})`">
       <template #default="{ row }">
         <common-input-number
-          v-if="props.boolPartyA || (form.selectObj[row.purchaseOrderDetailId].isSelected && Boolean(currentCfg?.width & basicClass))"
+          v-if="props.boolPartyA || (form.selectObj?.[row.purchaseOrderDetailId]?.isSelected && Boolean(currentCfg?.width & basicClass))"
           v-model="row.width"
           :min="0"
           :max="999999"
@@ -80,7 +82,7 @@
     <el-table-column prop="length" align="center" width="135px" :label="`长 (${baseUnit.length.unit})`">
       <template #default="{ row }">
         <common-input-number
-          v-if="props.boolPartyA || (form.selectObj[row.purchaseOrderDetailId].isSelected&&Boolean(currentCfg?.length & basicClass))"
+          v-if="props.boolPartyA || (form.selectObj?.[row.purchaseOrderDetailId]?.isSelected && Boolean(currentCfg?.length & basicClass))"
           v-model="row.length"
           :max="999999"
           :controls="false"
@@ -151,7 +153,7 @@
     <el-table-column prop="brand" label="品牌" align="center" min-width="100px">
       <template #default="{ row }">
         <el-input
-          v-if="props.boolPartyA || (!props.boolPartyA && form.selectObj[row.purchaseOrderDetailId].isSelected)"
+          v-if="props.boolPartyA || (!props.boolPartyA && form.selectObj?.[row.purchaseOrderDetailId]?.isSelected)"
           v-model.trim="row.brand"
           maxlength="60"
           size="mini"
@@ -163,7 +165,7 @@
     <el-table-column prop="heatNoAndBatchNo" label="炉批号" align="center" min-width="150px">
       <template #default="{ row }">
         <el-input
-          v-if="props.boolPartyA || (!props.boolPartyA && form.selectObj[row.purchaseOrderDetailId].isSelected)"
+          v-if="props.boolPartyA || (!props.boolPartyA && form.selectObj?.[row.purchaseOrderDetailId]?.isSelected)"
           v-model.trim="row.heatNoAndBatchNo"
           size="mini"
           placeholder="炉批号"
@@ -176,8 +178,8 @@
     <template v-if="!props.boolPartyA">
       <el-table-column prop="quantity" align="center" width="135px" :label="`本次实收数 (${baseUnit.measure.unit})`">
         <template #default="{ row }">
-          <common-input-number
-            v-if="Boolean(currentCfg?.quantity & basicClass) && form.selectObj[row.purchaseOrderDetailId].isSelected"
+          <!-- <common-input-number
+            v-if="Boolean(currentCfg?.quantity & basicClass) && form.selectObj?.[row.purchaseOrderDetailId]?.isSelected"
             v-model="row.quantity"
             :min="0"
             :max="999999999"
@@ -188,8 +190,59 @@
             size="mini"
             placeholder="实收数"
             @blur="handleOverQuantity(row)"
-          />
-          <span v-else>{{ row.quantity }}</span>
+          /> -->
+          <span>{{ row.quantity }}</span>
+          <el-popover placement="top" :width="700" trigger="click">
+            <template #reference>
+              <span style="margin-left: 5px; cursor: pointer">
+                <el-edit
+                  v-if="Boolean(currentCfg?.quantity & basicClass) && form.selectObj?.[row.purchaseOrderDetailId]?.isSelected"
+                  class="el-icon"
+                  style="color: #1881ef; vertical-align: middle"
+                />
+                <el-icon-view v-else class="el-icon" style="color: #1881ef; vertical-align: middle" />
+              </span>
+            </template>
+            <common-table :data="row.applyPurchase" style="width: 100%" return-source-data :show-empty-symbol="false">
+              <el-table-column label="序号" type="index" align="center" width="60" />
+              <el-table-column prop="serialNumber" :show-overflow-tooltip="true" label="申购单号" min-width="140" align="center" />
+              <el-table-column prop="project" :show-overflow-tooltip="true" label="项目" min-width="140" align="center">
+                <template #default="{ row }">
+                  <span>{{ projectNameFormatter(row.project) }}</span>
+                </template>
+              </el-table-column>
+              <el-table-column
+                prop="purchaseQuantity"
+                :show-overflow-tooltip="true"
+                :label="`采购数量 (${baseUnit.measure.unit})`"
+                min-width="100"
+                align="center"
+              />
+              <el-table-column
+                v-if="Boolean(currentCfg?.quantity & basicClass) && form.selectObj?.[row.purchaseOrderDetailId]?.isSelected"
+                prop="quantity"
+                :show-overflow-tooltip="true"
+                :label="`本次实收数 (${baseUnit.measure.unit})`"
+                min-width="135px"
+                align="center"
+              >
+                <template #default="{ row: purRow }">
+                  <common-input-number
+                    v-model="purRow.quantity"
+                    :min="0"
+                    :max="999999999"
+                    controls-position="right"
+                    :controls="false"
+                    :step="1"
+                    :precision="baseUnit.measure.precision"
+                    size="mini"
+                    placeholder="实收数"
+                    @blur="handleOverQuantity(purRow, true)"
+                  />
+                </template>
+              </el-table-column>
+            </common-table>
+          </el-popover>
         </template>
       </el-table-column>
       <el-table-column
@@ -208,7 +261,7 @@
             placement="top"
           >
             <common-input-number
-              v-if="form.selectObj[row.purchaseOrderDetailId].isSelected"
+              v-if="form.selectObj?.[row.purchaseOrderDetailId]?.isSelected"
               v-model="row.weighingTotalWeight"
               :min="0"
               :max="999999999"
@@ -221,7 +274,7 @@
               @change="handleWeightChange(row)"
               @blur="handleOverMete(row)"
             />
-            <span v-else>{{ row.weighingTotalWeight }}</span>
+            <span v-else>{{ row.weighingTotalWeight || '-' }}</span>
           </el-tooltip>
         </template>
       </el-table-column>
@@ -248,6 +301,7 @@ import elExpandTableColumn from '@comp-common/el-expand-table-column.vue'
 import { createUniqueString } from '@/utils/data-type/string'
 import { calcSteelPlateWeight } from '@/utils/wms/measurement-calc'
 import { positiveNumPattern } from '@/utils/validate/pattern'
+import { projectNameFormatter } from '@/utils/project'
 
 import priceSetColumns from '@/views/wms/material-inbound/raw-material/components/price-set-columns.vue'
 
@@ -343,9 +397,12 @@ function selectAllTableChange(select) {
 }
 
 // 设置选择的回显
-function setSelect() {
+function setSelect(_rowWatch = false) {
   form.steelPlateList.forEach((v) => {
-    if (form.selectObj[v.purchaseOrderDetailId].isSelected) {
+    if (_rowWatch) {
+      rowWatch(v)
+    }
+    if (form.selectObj?.[v.purchaseOrderDetailId]?.isSelected) {
       tableRef.value.toggleRowSelection(v, true)
     }
   })
@@ -402,6 +459,9 @@ function rowWatch(row) {
         isSelected: _isSelected
       }
     }
+    if (Boolean(currentCfg.value?.quantity & basicClass) && form.selectObj?.[row.purchaseOrderDetailId]?.isSelected) {
+      row.quantity = row?.applyPurchase?.reduce((a, b) => a + (b.quantity || 0), 0)
+    }
   })
   // 计算单件理论重量
   watch([() => row.length, () => row.width, () => row.thickness, baseUnit], () => calcTheoryWeight(row))
@@ -431,10 +491,14 @@ async function calcTheoryWeight(row) {
 function calcTotalWeight(row) {
   if (isNotBlank(row.theoryWeight) && row.quantity) {
     row.theoryTotalWeight = toPrecision(row.theoryWeight * row.quantity, baseUnit.value.weight.precision)
-    row.weighingTotalWeight = toPrecision(row.theoryWeight * row.quantity, baseUnit.value.weight.precision)
+    if (props.boolPartyA) {
+      row.weighingTotalWeight = toPrecision(row.theoryWeight * row.quantity, baseUnit.value.weight.precision)
+    }
   } else {
     row.theoryTotalWeight = undefined
-    row.weighingTotalWeight = undefined
+    if (props.boolPartyA) {
+      row.weighingTotalWeight = undefined
+    }
   }
 }
 

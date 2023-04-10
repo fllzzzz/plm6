@@ -112,6 +112,11 @@ const props = defineProps({
     type: String,
     default: 'accumulator' // accumulator
   },
+  // 是否多选
+  multiple: {
+    type: Boolean,
+    default: false
+  },
   maxHeight: {
     type: Number,
     default: 600
@@ -238,6 +243,15 @@ function handleListChange({ addList, cancelList }) {
   }
   if (props.mode === 'selector') {
     // TODO:
+    if (isNotBlank(addList)) {
+      addList.forEach((sn) => {
+        const row = matClsSpecKV.value[sn]
+        if (row) list.value.push(row)
+      })
+    }
+    if (isNotBlank(cancelList)) {
+      list.value = list.value.filter((l) => !cancelList.map((v) => v.sn).includes(l.sn))
+    }
   }
   emit('update:modelValue', list.value)
   emit('change', list.value)
@@ -277,16 +291,35 @@ function initSelected(snArr) {
  * selector 模式
  */
 function handleSelectChange(sn) {
+  if (!props.multiple && selected.value[sn]) return
   // TODO: 改为 0 1 不使用true，false,统一
   selected.value[sn] = !selected.value[sn]
   const status = selected.value[sn]
-  if (!status) {
-    delete selected.value[sn]
+  let _cancelList = []
+  let _addList = []
+  // 单选模式下，取消其他选中
+  if (!props.multiple) {
+    Object.keys(selected.value).forEach((key) => {
+      if (key !== sn) {
+        selected.value[key] = 0
+        _cancelList.push({ sn: key, num: 1 })
+      }
+    })
+    _addList = [sn]
+    console.log(selected.value, _cancelList, _addList)
+  } else {
+    // 多选模式下，取消选中时，删除该条数据
+    if (!status) {
+      delete selected.value[sn]
+      _cancelList = [{ sn, num: 1 }]
+    } else {
+      _addList = [sn]
+    }
   }
   const data = {
     snList: Object.keys(selected.value), // sn 列表
-    addList: status ? [sn] : [], // 添加列表
-    cancelList: !status ? [{ sn, num: 1 }] : [] // 删除列表
+    addList: _addList, // 添加列表
+    cancelList: _cancelList // 删除列表
   }
   handleListChange(data)
   emit('selectionChange', data)
