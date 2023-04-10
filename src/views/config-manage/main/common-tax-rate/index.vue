@@ -41,7 +41,7 @@ import crudApi from '@/api/config/wms/tax-rate'
 import { configCommonTaxRatePM as permission } from '@/page-permission/config'
 
 import { ref } from 'vue'
-import { supplierClassEnum } from '@enum-ms/supplier'
+import { taxRateEnum } from '@enum-ms/config'
 
 import useCRUD from '@compos/use-crud'
 import udOperation from '@crud/UD.operation'
@@ -69,7 +69,7 @@ const { CRUD, crud, columns } = useCRUD(
 
 CRUD.HOOK.handleRefresh = (crud, { data: { content = [] }}) => {
   content.forEach((v) => {
-    v.name = supplierClassEnum.VL[v.classification]
+    v.name = taxRateEnum.VL[v.classification]
     v.taxRate = v.taxRateList.map((v) => `${v}%`).join('、')
   })
 }
