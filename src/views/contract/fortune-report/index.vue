@@ -169,7 +169,7 @@
         </el-descriptions-item>
       </el-descriptions>
     </common-dialog>
-    <cost-page-dialog :detail-row="detailRow" v-model:visible="drawerVisible" />
+    <cost-page-dialog :detail-row="detailRow" v-model:visible="drawerVisible" :settlementStatus="crud.query.settlementStatus" />
   </div>
 </template>
 <script setup>

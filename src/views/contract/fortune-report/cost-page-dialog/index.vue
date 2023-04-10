@@ -9,15 +9,15 @@
   >
     <template #content>
       <div style="display: flex">
-        <div style="width: 30%">
+        <div style="width: 36%">
           <!--表格渲染-->
           <el-row :gutter="20" class="panel-group">
             <el-col :span="8" class="card-panel-col">
               <Panel
-                name="合同额/结算额"
+                :name="props.settlementStatus === projectStatusEnum.SETTLED.V ? '结算额' : '合同额'"
                 text-color="#626262"
                 num-color="#1890ff"
-                :end-val="detailRow.settlementAmount || detailRow.contractAmount || 0"
+                :end-val="props.settlementStatus === projectStatusEnum.SETTLED.V ? detailRow.settlementAmount : detailRow.contractAmount"
                 :precision="2"
               />
             </el-col>
@@ -68,7 +68,7 @@
           </common-table>
         </div>
         <div style="border-right: 1px solid #ededed; margin: 0 20px; height: calc(100vh - 180px)"></div>
-        <div style="width: 68%">
+        <div style="width: 62%">
           <div v-if="!costTypeData.key" class="my-code">*点击左侧表格行查看详情</div>
           <div v-if="costTypeData.key">
             <component :is="currentView" ref="detailRef" :cost-type-data="costTypeData" :permission="permission" />
@@ -96,6 +96,7 @@ import shippingFee from './module/shipping-fee.vue'
 import testingFee from './module/testing-fee.vue'
 import subcontractingFee from './module/subcontracting-fee.vue'
 import Panel from '@/components/Panel'
+import { projectStatusEnum } from '@enum-ms/contract'
 
 const permission = fortuneReportPM.cost
 const costTypeData = ref({})
@@ -127,6 +128,9 @@ const props = defineProps({
   detailRow: {
     type: Object,
     default: () => {}
+  },
+  settlementStatus: {
+    type: Number
   }
 })
 
