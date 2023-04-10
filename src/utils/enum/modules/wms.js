@@ -203,7 +203,8 @@ constantize(purchaseStatusEnum)
 // (申购单采购状态)
 const requisitionStatusEnum = {
   NOT_STARTED: { L: '未开始', K: 'NOT_STARTED', V: 1 << 0, T: '' },
-  PARTIALLY_COMPLETED: { L: '已采购', K: 'PARTIALLY_COMPLETED', V: 1 << 1, T: 'warning' }
+  PARTIALLY_COMPLETED: { L: '部分采购', K: 'PARTIALLY_COMPLETED', V: 1 << 1, T: 'warning' },
+  COMPLETED: { L: '已采购', K: 'COMPLETED', V: 1 << 2, T: 'success' }
 }
 constantize(requisitionStatusEnum)
 

@@ -1,8 +1,8 @@
 import { ElMessageBox } from 'element-plus'
 
 export default function useOverReceive({ quantityField = 'quantity', meteField = 'mete' }) {
-  const handleOverQuantity = (row) => {
-    if (row[quantityField] > row.purchaseQuantity && row[quantityField] !== row.originQuantity && row.purchaseOrderDetailId) {
+  const handleOverQuantity = (row, manual = false) => {
+    if (row[quantityField] > row.purchaseQuantity && row[quantityField] !== row.originQuantity && (row.purchaseOrderDetailId || manual)) {
       ElMessageBox.confirm('本次实收数大于采购数，请确认', '提示', {
         confirmButtonText: '是',
         cancelButtonText: '否',

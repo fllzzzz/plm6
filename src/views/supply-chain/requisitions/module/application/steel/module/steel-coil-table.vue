@@ -49,6 +49,7 @@
     <el-table-column prop="thickness" align="center" :label="`厚 (${baseUnit.thickness.unit})`">
       <template #default="{ row }">
         <common-input-number
+          v-if="row.requisitionMode !== requisitionModeEnum.USE_INVENTORY.V"
           v-model="row.thickness"
           :min="0"
           :max="999999"
@@ -58,11 +59,13 @@
           size="mini"
           placeholder="厚"
         />
+        <span v-else>{{ row.thickness }}</span>
       </template>
     </el-table-column>
     <el-table-column prop="width" align="center" :label="`宽 (${baseUnit.width.unit})`">
       <template #default="{ row }">
         <common-input-number
+          v-if="row.requisitionMode !== requisitionModeEnum.USE_INVENTORY.V"
           v-model="row.width"
           :min="0"
           :max="999999"
@@ -72,11 +75,13 @@
           size="mini"
           placeholder="宽"
         />
+        <span v-else>{{ row.width }}</span>
       </template>
     </el-table-column>
     <el-table-column prop="length" align="center" :label="`长 (m)`">
       <template #default="{ row }">
         <common-input-number
+          v-if="row.requisitionMode !== requisitionModeEnum.USE_INVENTORY.V"
           v-model="row.length"
           :min="0"
           :max="999999999"
@@ -85,16 +90,31 @@
           size="mini"
           placeholder="长"
         />
+        <span v-else>{{ row.length }}</span>
       </template>
     </el-table-column>
     <el-table-column prop="color" label="颜色" align="center">
       <template #default="{ row }">
-        <el-input v-model.trim="row.color" maxlength="20" size="mini" placeholder="颜色" />
+        <el-input
+          v-if="row.requisitionMode !== requisitionModeEnum.USE_INVENTORY.V"
+          v-model.trim="row.color"
+          maxlength="20"
+          size="mini"
+          placeholder="颜色"
+        />
+        <span v-else>{{ row.color }}</span>
       </template>
     </el-table-column>
     <el-table-column prop="brand" label="品牌" align="center">
       <template #default="{ row }">
-        <el-input v-model.trim="row.brand" maxlength="60" size="mini" placeholder="品牌" />
+        <el-input
+          v-if="row.requisitionMode !== requisitionModeEnum.USE_INVENTORY.V"
+          v-model.trim="row.brand"
+          maxlength="60"
+          size="mini"
+          placeholder="品牌"
+        />
+        <span v-else>{{ row.brand }}</span>
       </template>
     </el-table-column>
     <el-table-column label="操作" width="140" align="center" fixed="right">

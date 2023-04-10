@@ -32,7 +32,7 @@
       </el-form-item>
       <el-form-item class="form-tip-item" label="重量允许误差(%)" prop="steelDiffType">
         <template #label>
-          <span>单件钢材重量误差({{ form.steelDiffType === numOrPctEnum.NUMBER.V ? STEEL_DIFF_UNIT : '%' }})</span>
+          <span>钢材重量误差({{ form.steelDiffType === numOrPctEnum.NUMBER.V ? STEEL_DIFF_UNIT : '%' }})</span>
         </template>
         <div class="flex-r">
           <common-radio-button v-model="form.steelDiffType" :options="numOrPctEnum.ENUM" type="enum" size="small" />
@@ -49,10 +49,10 @@
       </el-form-item>
       <el-form-item>
         <span class="form-item-tip">
-          可配置单件钢材的最大误差。【钢材的采购重量】与【钢材的申购重量】的差值（绝对值）超过该误差，办理时将发出预警（可提交采购申请）。
+          可配置钢材的最大误差。【钢材的采购重量】与【钢材的申购重量】的差值（绝对值）超过该误差，办理时将发出预警（可提交采购申请）。
         </span>
         <span class="form-item-tip">固定重量({{ STEEL_DIFF_UNIT }})：误差不可超过 固定重量；</span>
-        <span class="form-item-tip">百分比(%)：误差不可超过 采购钢材的理论重量*百分比。</span>
+        <span class="form-item-tip">百分比(%)：误差不可超过 采购钢材的申购重量*百分比。</span>
       </el-form-item>
     </el-form>
   </el-card>
@@ -79,6 +79,7 @@ const defaultConfig = {
     quantity: { L: '数量', V: false }
   },
   [rawMatClsEnum.SECTION_STEEL.V]: {
+    spec: { L: '规格', V: false },
     length: { L: '定尺长度', V: false },
     quantity: { L: '数量', V: false }
   },

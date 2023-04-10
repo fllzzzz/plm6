@@ -92,7 +92,7 @@
       <template #default="{ row, $index }">
         <common-button
           icon="el-icon-plus"
-          :disabled="isExist(row.id)"
+          :disabled="isExist(row.id) || row.boolPurchase"
           type="warning"
           size="mini"
           @click="addRow(row, $index)"

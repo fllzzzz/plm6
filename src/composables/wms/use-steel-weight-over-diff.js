@@ -6,7 +6,7 @@ import { convertUnits } from '@/utils/convert/unit'
 
 import useWmsConfig from '../store/use-wms-config'
 // 计算重量是否在正常范围内
-export default function useWeightOverDiff(baseUnit, cfgType = 'inbound', compareWeightField = 'theoryTotalWeight', weightTip = '理论重量') {
+export default function useWeightOverDiff(baseUnit, { cfgType = 'inbound', weightField = 'weighingTotalWeight', compareWeightField = 'theoryTotalWeight', weightTip = '理论重量' }) {
   const { loaded, inboundSteelCfg, purchaseCfg } = useWmsConfig()
 
   const weightCfg = computed(() => {
@@ -44,20 +44,20 @@ export default function useWeightOverDiff(baseUnit, cfgType = 'inbound', compare
     if (!loaded) {
       return `请等待${cfgType === 'inbound' ? 'wms钢材入库' : '采购钢材'}重量配置信息加载后再试`
     }
-    if (isBlank(row.weighingTotalWeight) && isBlank(row[compareWeightField])) return
+    if (isBlank(row[weightField]) && isBlank(row[compareWeightField])) return
     let hasOver = false
-    const overNum = row.weighingTotalWeight - row[compareWeightField]
+    const overNum = row[weightField] - row[compareWeightField]
     const steelDiff = weightCfg.value.steelDiff
     const steelDiffType = weightCfg.value.steelDiffType
     if (steelDiffType === numOrPctEnum.PERCENTAGE.V) {
       hasOver =
-      (Math.abs((row.weighingTotalWeight / row[compareWeightField]) * Math.pow(10, 5) - 1 * Math.pow(10, 5)) / Math.pow(10, 5)) * 100 >
+      (Math.abs((row[weightField] / row[compareWeightField]) * Math.pow(10, 5) - 1 * Math.pow(10, 5)) / Math.pow(10, 5)) * 100 >
       steelDiff
     }
     if (steelDiffType === numOrPctEnum.NUMBER.V) {
       hasOver =
       convertUnits(
-        Math.abs(row.weighingTotalWeight - row[compareWeightField]),
+        Math.abs(row[weightField] - row[compareWeightField]),
         baseUnit.value.weight.unit,
         STEEL_DIFF_UNIT,
         baseUnit.value.weight.precision

@@ -8,7 +8,16 @@
     row-key="uid"
   >
     <el-table-column label="序号" type="index" align="center" width="60" fixed="left" />
-    <el-table-column label="申购单号" prop="purchaseSN" fixed="left" width="140" align="center" />
+    <el-table-column label="申购单号" prop="purchaseSN" fixed="left" width="140" align="center">
+      <template #default="{ row }">
+        <table-cell-tag
+          :show="row.boolPurchase"
+          name="已采购"
+          color="#e6a23c"
+        />
+        <span>{{ row.purchaseSN }}</span>
+      </template>
+    </el-table-column>
     <el-table-column prop="serialNumber" label="编号" align="center" fixed="left" />
     <el-table-column prop="classifyName" label="物料种类" align="center" fixed="left" show-overflow-tooltip>
       <template #default="{ row }">
@@ -87,7 +96,7 @@
     </el-table-column>
     <el-table-column label="操作" width="90" align="center" fixed="right">
       <template #default="{ row, $index }">
-        <common-button icon="el-icon-plus" :disabled="isExist(row.id)" type="warning" size="mini" @click="addRow(row, $index)" />
+        <common-button icon="el-icon-plus" :disabled="isExist(row.id) || row.boolPurchase" type="warning" size="mini" @click="addRow(row, $index)" />
       </template>
     </el-table-column>
   </common-table>
@@ -96,12 +105,12 @@
 <script setup>
 import { defineExpose, defineEmits, inject, watchEffect, watch } from 'vue'
 import { matClsEnum } from '@/utils/enum/modules/classification'
-import { isNotBlank, toPrecision } from '@/utils/data-type'
+import { isNotBlank } from '@/utils/data-type'
 
 import useTableValidate from '@compos/form/use-table-validate'
 import useMatBaseUnit from '@/composables/store/use-mat-base-unit'
 import useWeightOverDiff from '@/composables/wms/use-steel-weight-over-diff'
-import { calcSectionSteelTotalLength, calcSectionSteelWeight } from '@/utils/wms/measurement-calc'
+import { calcSectionSteelTotalLength } from '@/utils/wms/measurement-calc'
 import { positiveNumPattern } from '@/utils/validate/pattern'
 
 const emit = defineEmits(['add-purchase'])
@@ -115,10 +124,8 @@ const { baseUnit } = useMatBaseUnit(basicClass) // 当前分类基础单位
 
 const { overDiffTip, weightOverDiff, diffSubmitValidate, currentCfg } = useWeightOverDiff(
   baseUnit,
-  'purchase',
-  'purchaseTotalWeight',
-  '申购重量'
-) // 过磅重量超出理论重量处理
+  { cfgType: 'purchase', weightField: 'weighingTotalWeight', compareWeightField: 'purchaseTotalWeight', weightTip: '申购重量' }
+) // 超出重量处理
 
 // 校验规则
 const rules = {
@@ -144,11 +151,11 @@ function isExist(id) {
 function rowWatch(row) {
   watchEffect(() => weightOverDiff(row))
   // 计算单件理论重量
-  watch([() => row.length, () => row.unitWeight, baseUnit], () => calcTheoryWeight(row), { immediate: true })
+  // watch([() => row.length, () => row.unitWeight, baseUnit], () => calcTheoryWeight(row), { immediate: true })
   // 计算总重
-  watch([() => row.theoryWeight, () => row.quantity], () => {
-    calcTotalWeight(row)
-  })
+  // watch([() => row.theoryWeight, () => row.quantity], () => {
+  //   calcTotalWeight(row)
+  // })
   // 计算总长度
   watch([() => row.length, () => row.quantity], () => {
     calcTotalLength(row)
@@ -157,12 +164,12 @@ function rowWatch(row) {
 
 // 总重计算与单位重量计算分开，避免修改数量时需要重新计算单件重量
 // 计算单件重量
-async function calcTheoryWeight(row) {
-  row.theoryWeight = await calcSectionSteelWeight({
-    length: row.length, // 长度
-    unitWeight: row.unitWeight // 单位重量
-  })
-}
+// async function calcTheoryWeight(row) {
+//   row.theoryWeight = await calcSectionSteelWeight({
+//     length: row.length, // 长度
+//     unitWeight: row.unitWeight // 单位重量
+//   })
+// }
 
 // 计算总长
 function calcTotalLength(row) {
@@ -177,20 +184,20 @@ function calcTotalLength(row) {
 }
 
 // 计算总重
-function calcTotalWeight(row) {
-  if (row.purchaseNetMete && row.quantity) {
-    row.purchaseTotalWeight = toPrecision(row.purchaseNetMete * row.quantity, baseUnit.value.weight.precision)
-  } else {
-    row.purchaseTotalWeight = undefined
-  }
-  if (isNotBlank(row.theoryWeight) && row.quantity) {
-    row.theoryTotalWeight = toPrecision(row.theoryWeight * row.quantity, baseUnit.value.weight.precision)
-    row.weighingTotalWeight = toPrecision(row.theoryWeight * row.quantity, baseUnit.value.weight.precision)
-  } else {
-    row.theoryTotalWeight = undefined
-    row.weighingTotalWeight = undefined
-  }
-}
+// function calcTotalWeight(row) {
+//   // if (row.purchaseNetMete && row.quantity) {
+//   //   row.purchaseTotalWeight = toPrecision(row.purchaseNetMete * row.quantity, baseUnit.value.weight.precision)
+//   // } else {
+//   //   row.purchaseTotalWeight = undefined
+//   // }
+//   if (isNotBlank(row.theoryWeight) && row.quantity) {
+//     row.theoryTotalWeight = toPrecision(row.theoryWeight * row.quantity, baseUnit.value.weight.precision)
+//     row.weighingTotalWeight = toPrecision(row.theoryWeight * row.quantity, baseUnit.value.weight.precision)
+//   } else {
+//     row.theoryTotalWeight = undefined
+//     row.weighingTotalWeight = undefined
+//   }
+// }
 
 function addRow(row, index) {
   emit('add-purchase', row, index)

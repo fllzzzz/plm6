@@ -514,21 +514,21 @@ async function handleOrderInfoChange(orderInfo) {
         if (!currentBasicClass.value) currentBasicClass.value = steelBasicClassKV[k].K // 为空则赋值
         disabledBasicClass.value[k] = false
       }
-      if (boolPartyA.value || !(steelBasicClassKV[k].V & orderInfo.basicClass)) {
-        form[k] = []
-        const trigger = watch(
-          matSpecRef,
-          () => {
-            if (matSpecRef.value) {
-              matSpecRef.value.clearByBasicClass(steelBasicClassKV[k].V)
-              nextTick(() => {
-                trigger()
-              })
-            }
-          },
-          { immediate: true }
-        )
-      }
+      // if (boolPartyA.value || !(steelBasicClassKV[k].V & orderInfo.basicClass)) {
+      form[k] = []
+      const trigger = watch(
+        matSpecRef,
+        () => {
+          if (matSpecRef.value) {
+            matSpecRef.value.clearByBasicClass(steelBasicClassKV[k].V)
+            nextTick(() => {
+              trigger()
+            })
+          }
+        },
+        { immediate: true }
+      )
+      // }
     })
     // 默认赋值
     nextTick(() => {
@@ -560,7 +560,7 @@ function init() {
     steelCoilList: true
   }
   currentBasicClass.value = undefined // 当前分类
-  totalWeight.value = 0 // 总重
+  // totalWeight.value = 0 // 总重
   orderLoaded.value = false // 订单加载状态
   boolPartyA.value = false // 是否“甲供”
 }

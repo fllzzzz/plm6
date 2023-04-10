@@ -1,7 +1,16 @@
 <template>
   <common-table v-bind="$attrs" :data="list" :cell-class-name="wrongCellMask" :show-empty-symbol="false" return-source-data row-key="uid">
     <el-table-column label="序号" type="index" align="center" width="60" fixed="left" />
-    <el-table-column label="申购单号" prop="purchaseSN" fixed="left" width="140" align="center" />
+    <el-table-column label="申购单号" prop="purchaseSN" fixed="left" width="140" align="center">
+      <template #default="{ row }">
+        <table-cell-tag
+          :show="row.boolPurchase"
+          name="已采购"
+          color="#e6a23c"
+        />
+        <span>{{ row.purchaseSN }}</span>
+      </template>
+    </el-table-column>
     <el-table-column prop="serialNumber" show-overflow-tooltip label="编号" align="center" fixed="left" />
     <el-table-column prop="classifyName" label="物料种类" align="center" fixed="left" show-overflow-tooltip>
       <template #default="{ row }">
@@ -72,7 +81,7 @@
     </el-table-column>
     <el-table-column label="操作" width="90" align="center" fixed="right">
       <template #default="{ row, $index }">
-        <common-button icon="el-icon-plus" :disabled="isExist(row.id)" type="warning" size="mini" @click="addRow(row, $index)" />
+        <common-button icon="el-icon-plus" :disabled="isExist(row.id) || row.boolPurchase" type="warning" size="mini" @click="addRow(row, $index)" />
       </template>
     </el-table-column>
   </common-table>

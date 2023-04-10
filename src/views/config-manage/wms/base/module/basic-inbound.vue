@@ -93,6 +93,7 @@ const defaultConfig = {
     quantity: { L: '数量', V: false }
   },
   [rawMatClsEnum.SECTION_STEEL.V]: {
+    spec: { L: '规格', V: false },
     length: { L: '定尺长度', V: false },
     quantity: { L: '数量', V: false }
   },
