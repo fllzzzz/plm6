@@ -13,7 +13,7 @@
         v-model="workshopId"
         placeholder="请选择车间"
         :factory-id="factoryId"
-        style="width: 170px"
+        style="width: 150px"
         class="filter-item"
         :clearable="true"
         @change="processDetailGet"
@@ -24,7 +24,7 @@
         :workshop-id="workshopId"
         :clearable="true"
         class="filter-item"
-        style="width: 170px"
+        style="width: 150px"
         @change="processDetailGet"
       />
       <monomer-select-area-select
@@ -34,13 +34,13 @@
         clearable
         areaClearable
         :project-id="projectId"
-        style="width: 170px"
+        style="width: 150px"
         @change="processDetailGet"
       />
       <el-input
         v-model.trim="serialNumber"
         placeholder="编号搜索"
-        style="width: 170px"
+        style="width: 150px"
         class="filter-item"
         clearable
         @keyup.enter="processDetailGet"
@@ -232,12 +232,15 @@ watch(
 watch(
   () => commonQuery.value,
   (val) => {
-    processDetailGet()
+    if (val) {
+      processDetailGet()
+    }
   }
 )
 
 async function processDetailGet() {
   let _list = []
+  if (!dialogVisible.value) return
   try {
     const { content = [], totalElements } = await getProcessDetail({
       processId: props.detailData.id,

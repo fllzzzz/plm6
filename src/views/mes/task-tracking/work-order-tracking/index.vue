@@ -25,7 +25,10 @@
             label="排产日期"
           >
             <template v-slot="scope">
-              <span>{{ scope.row.scheduleTime ? parseTime(scope.row.scheduleTime, '{y}-{m}-{d}') : '-' }}</span>
+              <span v-if="crud.query.productType === componentTypeEnum.ARTIFACT.V">{{
+                scope.row.scheduleTime ? parseTime(scope.row.scheduleTime, '{y}-{m}-{d}') : '-'
+              }}</span>
+              <span v-else>-</span>
             </template>
           </el-table-column>
           <el-table-column
