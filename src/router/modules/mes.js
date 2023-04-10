@@ -1396,7 +1396,7 @@ export default {
         hidden: false,
         component: '/mes/factory-report/product-statistics/index',
         meta: {
-          title: '生产统计',
+          title: '生产分析',
           icon: 'project',
           noCache: true
         }
