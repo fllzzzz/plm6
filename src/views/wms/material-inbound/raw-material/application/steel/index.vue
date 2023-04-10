@@ -90,12 +90,15 @@ import { steelInboundApplication } from '@/api/wms/material-inbound/raw-material
 import { edit as editInboundApplication } from '@/api/wms/material-inbound/raw-material/record'
 import { steelInboundApplicationPM as permission } from '@/page-permission/wms'
 
+import { toPrecision } from '@/utils/data-type'
+import { createUniqueString } from '@/utils/data-type/string'
 import { defineProps, defineEmits, ref, computed, watch, provide, nextTick, reactive } from 'vue'
 import { STEEL_ENUM } from '@/settings/config'
 import { matClsEnum } from '@/utils/enum/modules/classification'
 import { weightMeasurementModeEnum } from '@/utils/enum/modules/finance'
 import { orderSupplyTypeEnum } from '@/utils/enum/modules/wms'
 
+import useMatBaseUnit from '@/composables/store/use-mat-base-unit'
 import useForm from '@/composables/form/use-form'
 import useMaxHeight from '@compos/use-max-height'
 // import useWmsConfig from '@/composables/store/use-wms-config'
@@ -158,6 +161,8 @@ const steelRefList = reactive({
   steelCoilList: null
 })
 
+const { baseUnit } = useMatBaseUnit() // 当前分类基础单位
+
 // const { inboundFillWayCfg } = useWmsConfig()
 // 显示金额相关信息（由采购填写的信息）
 const fillableAmount = computed(
@@ -169,9 +174,9 @@ const addable = computed(() => !!(currentBasicClass.value && order.value)) // �
 
 function getNum(key) {
   if (boolPartyA.value) {
-    return form[key].length
+    return form[key]?.length || 0
   } else {
-    return form[key].filter((v) => form.selectObj[v.purchaseOrderDetailId]?.isSelected)?.length
+    return form[key]?.filter((v) => form.selectObj[v.purchaseOrderDetailId]?.isSelected)?.length || 0
   }
 }
 
@@ -429,11 +434,34 @@ function validate() {
   }
   const tableValidateRes = validateTable()
   if (tableValidateRes) {
-    form.list = formList.value
-    form.list.forEach((v) => {
-      v.mete = v.weighingTotalWeight
-      v.weight = v.weighingTotalWeight
+    const _list = []
+    formList.value.forEach((v) => {
+      if (v.applyPurchase?.length) {
+        v.applyPurchase.forEach((a) => {
+          if (a.quantity) {
+            const _weight = toPrecision((a.quantity / v.quantity) * v.weighingTotalWeight, baseUnit.value[v.basicClass].weight.precision)
+            _list.push({
+              ...v,
+              quantity: a.quantity,
+              projectId: a.project?.id,
+              uid: createUniqueString(),
+              boolApplyPurchase: true,
+              mete: _weight,
+              weight: _weight
+            })
+          }
+        })
+      } else {
+        _list.push({
+          ...v,
+          uid: createUniqueString(),
+          boolApplyPurchase: false,
+          mete: v.weighingTotalWeight,
+          weight: v.weighingTotalWeight
+        })
+      }
     })
+    form.list = _list
   }
   // 进入仓库级价格填写页面
   return tableValidateRes
@@ -530,7 +558,7 @@ async function handleOrderInfoChange(orderInfo) {
     // }
   })
   if (orderInfo) {
-  // 默认赋值
+    // 默认赋值
     nextTick(() => {
       steelRefList[currentBasicClass.value] = steelRef.value
     })

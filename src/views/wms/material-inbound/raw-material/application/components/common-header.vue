@@ -333,6 +333,9 @@ async function handleOrderInfoChange(order, oldOrder) {
     if (orderInfo.value && orderInfo.value.weightMeasurementMode !== order.weightMeasurementMode) {
       form.loadingWeight = undefined
     }
+    if (order.applyPurchase?.length) {
+      order.projects = []
+    }
     if (order.id) {
       const { content = [] } = await getPurchaseOrderDetail(order.id)
       await setSpecInfoToList(content)
@@ -366,12 +369,12 @@ async function handleOrderInfoChange(order, oldOrder) {
           isSelected: _isSelected
         }
         if (v.applyPurchase?.length) {
-          v.applyPurchase = v.applyPurchase.map((item) => {
+          v.applyPurchase.forEach((item) => {
             item.purchaseQuantity = item.quantity
             item.originQuantity = item.quantity
             item.purchaseMete = item.mete
             item.quantity = undefined
-            return item
+            order.projects.push(item.project)
           })
           v.quantity = 0
           v.mete = undefined

@@ -176,7 +176,7 @@
     </el-table-column>
 
     <template v-if="!props.boolPartyA">
-      <el-table-column prop="quantity" align="center" width="135px" :label="`本次实收数 (${baseUnit.measure.unit})`">
+      <el-table-column prop="quantity" align="center" width="110px" :label="`本次实收数 (${baseUnit.measure.unit})`">
         <template #default="{ row }">
           <!-- <common-input-number
             v-if="Boolean(currentCfg?.quantity & basicClass) && form.selectObj?.[row.purchaseOrderDetailId]?.isSelected"
@@ -245,6 +245,7 @@
           </el-popover>
         </template>
       </el-table-column>
+      <el-table-column prop="theoryTotalWeight" align="center" :label="`理论重量 (${baseUnit.weight.unit})`" width="100px" />
       <el-table-column
         key="weighingTotalWeight"
         prop="weighingTotalWeight"

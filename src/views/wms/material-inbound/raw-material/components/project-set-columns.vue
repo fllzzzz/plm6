@@ -24,6 +24,7 @@
           :options="projectOptions"
           :dataStructure="{ key: 'id', label: 'name', value: 'id' }"
           :show-extra="$index !== 0"
+          :disabled="row.boolApplyPurchase"
           :disabled-val="row.disabledProjectId"
           type="other"
           placeholder="所属项目"
@@ -40,6 +41,7 @@
           :options="projectMap?.[getProjectVal($index)]?.children || []"
           :dataStructure="{ key: 'id', label: 'name', value: 'id' }"
           :show-extra="!projectDittoableIndex.includes($index)"
+          :disabled="row.boolApplyPurchase && !row.projectId"
           clearable
           type="other"
           placeholder="单体"
@@ -56,6 +58,7 @@
           :options="monomerMap?.[getMonomerVal($index)]?.children || []"
           :dataStructure="{ key: 'id', label: 'name', value: 'id' }"
           :show-extra="!monomerDittoableIndex.includes($index)"
+          :disabled="row.boolApplyPurchase && !row.projectId"
           clearable
           type="other"
           placeholder="区域"

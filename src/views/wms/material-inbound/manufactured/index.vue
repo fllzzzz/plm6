@@ -112,7 +112,7 @@ const fillableAmount = computed(
 )
 
 function getNum(key) {
-  return form[key]?.filter((v) => form.selectObj?.[v.purchaseOrderDetailId]?.isSelected)?.length
+  return form[key]?.filter((v) => form.selectObj?.[v.purchaseOrderDetailId]?.isSelected)?.length || 0
 }
 
 // 列表汇总数据
