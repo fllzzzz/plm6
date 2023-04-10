@@ -10,7 +10,7 @@
         v-loading="crud.loading"
         :data="crud.data"
         :empty-text="crud.emptyText"
-        :max-height="maxHeight"
+        :max-height="maxHeight - 40"
         row-key="id"
         style="width: 100%"
       >
