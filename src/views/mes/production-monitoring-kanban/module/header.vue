@@ -18,7 +18,7 @@
           <panel name="设计产能（吨）:" :decimals="2" num-color="#1890ff" :end-val="projectInfo.summary.capacityNetWeight / 1000 || 0" />
         </el-col>
         <el-col :span="5" class="card-panel-col">
-          <panel name="平均产量（年/吨）:" :decimals="2" num-color="#1890ff" :end-val="projectInfo.summary.yearNetWeight / 1000 || 0" />
+          <panel name="平均产量（吨/年）:" :decimals="2" num-color="#1890ff" :end-val="projectInfo.summary.yearNetWeight / 1000 || 0" />
         </el-col>
         <el-col :span="4" class="card-panel-col">
           <panel name="上月产量（吨）:" :decimals="2" num-color="#1890ff" :end-val="projectInfo.summary.lastMonthNetWeight / 1000 || 0" />

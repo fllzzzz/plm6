@@ -55,7 +55,7 @@
     </el-table-column>
     <el-table-column v-if="columns.visible('paymentAmountRate')" key="paymentAmountRate" prop="paymentAmountRate" label="付款比例" align="center" min-width="80">
       <template v-slot="scope">
-        <div>{{ scope.row.paymentAmount? ((scope.row.paymentAmount/scope.row.freight)*100).toFixed(2)+'%': 0 }}</div>
+        <div>{{ scope.row.paymentAmount && scope.row.freight? ((scope.row.paymentAmount/scope.row.freight)*100).toFixed(2)+'%': 0 }}</div>
       </template>
     </el-table-column>
     <el-table-column v-if="columns.visible('invoiceAmount')" key="invoiceAmount" prop="invoiceAmount" label="收票额" align="center" min-width="100">

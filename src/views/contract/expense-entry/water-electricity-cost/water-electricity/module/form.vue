@@ -6,7 +6,7 @@
     :visible="crud.status.cu > 0"
     :title="crud.query.type === costTypeEnum.ELECTRIC_COST.V ? `${isEdit ? '编辑' : '新增'}电费` : `${isEdit ? '编辑' : '新增'}水费`"
     :show-close="false"
-    width="25%"
+    width="500px"
     top="10vh"
   >
     <template #titleRight>

@@ -29,7 +29,7 @@
       @change="fetchProject"
     /> -->
   </div>
-  <div :style="`height:${maxHeight}px`">
+  <div :style="`height:${maxHeight - 30 }px`">
     <el-tree
       ref="treeMenuRef"
       v-loading="projectLoading"

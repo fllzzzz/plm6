@@ -71,6 +71,14 @@
         class="filter-item"
         @change="crud.toQuery"
       />
+      <branch-company-select
+        v-model="query.branchCompanyId"
+        placeholder="合同签订主体"
+        class="filter-item"
+        clearable
+        style="width: 250px"
+        @change="crud.toQuery"
+      />
       <el-input
         v-model.trim="query.purchaseSN"
         clearable
@@ -98,6 +106,7 @@
         class="filter-item"
         @keyup.enter="crud.toQuery"
       />
+      <br />
       <el-input
         v-model.trim="query.shipmentNumber"
         clearable
@@ -139,6 +148,7 @@ import { regHeader } from '@compos/use-crud'
 import rrOperation from '@crud/RR.operation'
 import crudOperation from '@crud/CRUD.operation'
 import supplierSelect from '@comp-base/supplier-select/index.vue'
+import BranchCompanySelect from '@comp-base/branch-company-select.vue'
 import warehouseProjectCascader from '@comp-wms/warehouse-project-cascader'
 
 const defaultTime = ref([new Date(2000, 1, 1, 0, 0, 0), new Date(2000, 2, 1, 23, 59, 59)])

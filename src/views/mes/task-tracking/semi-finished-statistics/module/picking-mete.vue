@@ -46,6 +46,7 @@
         v-loading="tableLoading"
         :data="list"
         :max-height="maxHeight - 100"
+        :show-empty-symbol="false"
         row-key="rowId"
         style="width: 100%"
         show-summary
@@ -54,7 +55,7 @@
         <el-table-column label="序号" type="index" align="center" width="60" />
         <el-table-column prop="monomer.name" :show-overflow-tooltip="true" label="单体">
           <template #default="{ row }">
-            <span>{{ row.monomer?.name }}</span>
+            <span>{{ row.monomer? row.monomer?.name : '/' }}</span>
           </template>
         </el-table-column>
         <el-table-column :show-overflow-tooltip="true" prop="serialNumber" label="编号" align="center" />

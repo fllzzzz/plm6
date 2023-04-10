@@ -41,7 +41,7 @@
     <el-table-column label="序号" type="index" align="center" width="60" />
     <el-table-column prop="projectName" :show-overflow-tooltip="true" label="项目列表" min-width="100" align="center">
       <template #default="{ row }">
-        <span>{{ row.serialNumber }}-{{ row.name }}</span>
+        <span style="cursor: pointer">{{ row.serialNumber }}-{{ row.name }}</span>
       </template>
     </el-table-column>
   </common-table>

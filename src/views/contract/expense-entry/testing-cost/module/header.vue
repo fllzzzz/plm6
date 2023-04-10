@@ -27,7 +27,11 @@
         @change="crud.toQuery"
       />
       <rrOperation />
-      <crudOperation />
+      <crudOperation>
+        <template #optLeft>
+          <slot name="btn"></slot>
+        </template>
+      </crudOperation>
     </div>
   </div>
 </template>
