@@ -72,7 +72,7 @@ import { cost } from '@/api/contract/sales-manage/price-manage/auxiliary-materia
 import { ref, watch, nextTick, inject, computed, defineExpose } from 'vue'
 
 import checkPermission from '@/utils/system/check-permission'
-import { packTypeEnum } from '@enum-ms/mes'
+import { contractSaleTypeEnum } from '@enum-ms/mes'
 import { toThousand } from '@/utils/data-type/number'
 import { emptyTextFormatter } from '@/utils/data-type'
 
@@ -93,7 +93,7 @@ const modifiedData = computed(() => {
 const previewParams = computed(() => {
   return {
     monomerId: query.monomerId,
-    type: packTypeEnum.AUXILIARY_MATERIAL.V
+    type: contractSaleTypeEnum.AUXILIARY_MATERIAL.V
   }
 })
 

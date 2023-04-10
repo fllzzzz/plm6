@@ -5,9 +5,8 @@
         <div class="filter-left-box">
           <common-radio-button
             v-model="productType"
-            :options="packTypeEnum.ENUM"
+            :options="contractSaleTypeEnum.ENUM"
             default
-            :unshowVal="[packTypeEnum.MACHINE_PART.V]"
             type="enumSL"
             size="small"
             class="filter-item"
@@ -72,7 +71,7 @@ import { ref, computed, onMounted, provide } from 'vue'
 import { mapGetters } from '@/store/lib'
 import { priceManagePM as permission } from '@/page-permission/contract'
 
-import { packTypeEnum } from '@enum-ms/mes'
+import { contractSaleTypeEnum } from '@enum-ms/mes'
 import { debounce } from '@/utils'
 import { isBlank } from '@data-type/index'
 import checkPermission from '@/utils/system/check-permission'
@@ -81,15 +80,18 @@ import monomerSelect from '@/components-system/plan/monomer-select'
 import structure from './structure'
 // import enclosure from './enclosure'
 import auxiliaryMaterial from './auxiliary-material'
+import machinePart from './machine-part'
 import modifyRecord from './price-modify-list/index'
 import projectVisaSelect from '@comp-base/project-visa-select'
 
 // 当前显示组件
 const currentView = computed(() => {
   switch (productType.value) {
-    // case packTypeEnum.ENCLOSURE.V:
+    // case contractSaleTypeEnum.ENCLOSURE.V:
     //   return enclosure
-    case packTypeEnum.AUXILIARY_MATERIAL.V:
+    case contractSaleTypeEnum.MACHINE_PART.V:
+      return machinePart
+    case contractSaleTypeEnum.AUXILIARY_MATERIAL.V:
       return auxiliaryMaterial
     default:
       return structure

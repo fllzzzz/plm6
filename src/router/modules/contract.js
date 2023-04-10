@@ -141,7 +141,7 @@ export default {
           path: 'price-manage',
           hidden: false,
           component: '/contract/sales-manage/price-manage/index',
-          meta: { title: '价格管理', icon: 'contract2', noCache: true }
+          meta: { title: '商务录入', icon: 'contract2', noCache: true }
         },
         {
           name: 'VisaManage',

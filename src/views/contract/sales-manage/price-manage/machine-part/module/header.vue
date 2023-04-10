@@ -11,6 +11,15 @@
         @keyup.enter="crud.toQuery"
       />
       <el-input
+        v-model="query.specification"
+        placeholder="输入规格搜索"
+        class="filter-item"
+        style="width: 200px;"
+        size="small"
+        clearable
+        @keyup.enter="crud.toQuery"
+      />
+      <el-input
         v-model="query.material"
         placeholder="输入材质搜索"
         class="filter-item"
@@ -32,8 +41,8 @@
         </span>
         <print-table
           v-permission="crud.permission.print"
-          api-key="contractStructurePrice"
-          :params="{ monomerId: query.monomerId }"
+          api-key="contractMachinePartPrice"
+          :params="{ monomerId: query.monomerId,specification:query.specification, material:query.material}"
           size="mini"
           type="warning"
           class="filter-item"
@@ -42,17 +51,17 @@
       <template #viewLeft>
         <span v-if="checkPermission(crud.permission.cost) && query.monomerId">
           <el-tag effect="plain" type="success" size="medium" class="filter-item">
-            单体结构总数：
+            单体散发制品总数：
             <span v-if="!costLoading">{{ monomerCost.quantity }}</span>
             <i v-else class="el-icon-loading" />
           </el-tag>
           <el-tag effect="plain" type="success" size="medium" class="filter-item">
-            单体结构总量(t)：
+            单体散发制品总量(t)：
             <span v-if="!costLoading">{{ convertUnits(monomerCost.mete, 'kg', 't', DP.COM_WT__T) }}</span>
             <i v-else class="el-icon-loading" />
           </el-tag>
           <el-tag effect="plain" type="success" size="medium" class="filter-item">
-            单体结构造价(元)：
+            单体散发制品造价(元)：
             <span v-if="!costLoading" v-thousand="monomerCost.price" />
             <i v-else class="el-icon-loading" />
           </el-tag>
@@ -64,7 +73,7 @@
 </template>
 
 <script setup>
-import { cost } from '@/api/contract/sales-manage/price-manage/structure'
+import { cost } from '@/api/contract/sales-manage/price-manage/machine-part'
 import { ref, watch, nextTick, inject, computed, defineExpose, defineEmits, defineProps } from 'vue'
 
 import checkPermission from '@/utils/system/check-permission'
@@ -98,7 +107,7 @@ const modifiedData = computed(() => {
 const previewParams = computed(() => {
   return {
     monomerId: query.monomerId,
-    type: contractSaleTypeEnum.STRUCTURE.V
+    type: contractSaleTypeEnum.MACHINE_PART.V
   }
 })
 
@@ -154,7 +163,7 @@ async function fetchCost() {
     })
     monomerCost.value = res
   } catch (error) {
-    console.log('获取商务构件成本失败', error)
+    console.log('获取商务散发制品成本失败', error)
   } finally {
     costLoading.value = false
   }

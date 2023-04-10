@@ -75,7 +75,7 @@ import { ref, watch, nextTick, inject, computed, defineExpose } from 'vue'
 import checkPermission from '@/utils/system/check-permission'
 import { convertUnits } from '@/utils/convert/unit'
 import { DP } from '@/settings/config'
-// import { packTypeEnum } from '@enum-ms/mes'
+// import { contractSaleTypeEnum } from '@enum-ms/mes'
 import { enclosureSettlementTypeEnum } from '@enum-ms/contract'
 import { toThousand } from '@/utils/data-type/number'
 import { emptyTextFormatter } from '@/utils/data-type'
@@ -97,7 +97,7 @@ const modifiedData = computed(() => {
 const previewParams = computed(() => {
   return {
     monomerId: query.monomerId
-    // type: packTypeEnum.ENCLOSURE.V
+    // type: contractSaleTypeEnum.ENCLOSURE.V
   }
 })
 
