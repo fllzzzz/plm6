@@ -19,6 +19,7 @@
         style="width: 100%"
         class="collection-table"
         :stripe="false"
+        :show-empty-symbol="false"
         :row-class-name="handleRowClassName"
       >
         <el-table-column prop="index" label="序号" align="center" width="50" type="index">
@@ -205,7 +206,10 @@ CRUD.HOOK.handleRefresh = (crud, { data }) => {
     completeTotalArr = []
     currentMonthArr = []
     v.type = 1
-    v.projectName = v.project && v.project.shortName ? v.project.serialNumber + ' ' + v.project.shortName : '-'
+    v.projectName = v.project && v.project.shortName ? v.project.serialNumber + ' ' + v.project.shortName : '实际完成'
+    if (v.projectName === '实际完成') {
+      v.type = 2
+    }
     v.monomerName = v.monomer && v.monomer.name ? v.monomer.name : '-'
     if (crud.query.type === timeTypeEnum.ALL_YEAR.V) {
       if (v.mete && v.mete.length > 0) {
@@ -223,15 +227,15 @@ CRUD.HOOK.handleRefresh = (crud, { data }) => {
         weekList.value = v.mete
       }
     }
-    if (v.projectName !== '-') {
+    if (v.projectName !== '实际完成') {
       monthProject1.value = v.mete
-    } else if (v.projectName === '-') {
+    } else if (v.projectName === '实际完成') {
       monthProject2.value = v.mete
     }
     for (let m = 1; m <= monthArr.value.length; m++) {
-      if (monthProject1.value.findIndex((o) => Number(o.date) === m) > -1 && v.projectName !== '-') {
+      if (monthProject1.value.findIndex((o) => Number(o.date) === m) > -1 && v.projectName !== '实际完成') {
         monthData.push(monthProject1.value[monthProject1.value.findIndex((o) => Number(o.date) === m)])
-      } else if (monthProject2.value.findIndex((o) => Number(o.date) === m) > -1 && v.projectName === '-') {
+      } else if (monthProject2.value.findIndex((o) => Number(o.date) === m) > -1 && v.projectName === '实际完成') {
         actualMonthData.push(monthProject2.value[monthProject2.value.findIndex((o) => Number(o.date) === m)])
       }
       const monthList = monthData.filter((n) => Number(n?.date) === m)
@@ -317,13 +321,13 @@ CRUD.HOOK.handleRefresh = (crud, { data }) => {
         monomerName: '',
         mete: meteArr
       },
-      {
-        type: 2,
-        index: '',
-        projectName: '实际完成',
-        monomerName: '',
-        mete: actualMeteArr
-      },
+      // {
+      //   type: 2,
+      //   index: '',
+      //   projectName: '实际完成',
+      //   monomerName: '',
+      //   mete: actualMeteArr
+      // },
       {
         type: 2,
         index: '',
