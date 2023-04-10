@@ -106,7 +106,7 @@
         <template #default="{ row: { sourceRow: row } }">
           <el-switch
             v-model="row.enabled"
-            :disabled="!checkPermission(permission.add) || row.reviewStatus !== ddReviewStatusEnum.PASS.V"
+            :disabled="!checkPermission(permission.add) || (isOpenApproval && row.reviewStatus !== ddReviewStatusEnum.PASS.V)"
             active-color="#409EFF"
             inactive-color="#F56C6C"
             :active-value="enabledEnum.TRUE.V"
