@@ -194,16 +194,19 @@ const { visible: drawerVisible, handleClose } = useVisible({ emit, props, field:
 
 const { handleSizeChange, handleCurrentChange, total, setTotalPage, queryPage } = usePagination({ fetchHook: processDetailGet })
 
-const { maxHeight } = useMaxHeight({
-  mainBox: '.common-drawer',
-  extraBox: ['.el-drawer__header'],
-  wrapperBox: ['.el-drawer__body'],
-  navbar: false,
-  clientHRepMainH: true,
-  extraHeight: 50,
-  minHeight: 300,
-  paginate: true
-})
+const { maxHeight } = useMaxHeight(
+  {
+    mainBox: '.common-drawer',
+    extraBox: ['.el-drawer__header'],
+    wrapperBox: ['.el-drawer__body'],
+    navbar: false,
+    clientHRepMainH: true,
+    extraHeight: 50,
+    minHeight: 300,
+    paginate: true
+  },
+  drawerVisible
+)
 
 async function processDetailGet() {
   let _list = []

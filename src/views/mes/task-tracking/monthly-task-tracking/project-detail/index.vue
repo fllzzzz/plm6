@@ -38,7 +38,7 @@
         </div>
         <div>
           <print-table
-          v-permission="permission.print"
+            v-permission="permission.print"
             api-key="mesMonthlyTaskList"
             :params="{
               projectId: props.detailData.project.id,
@@ -46,6 +46,7 @@
               dateTime: new Date(props.dateTime).getTime(),
               areaId: areaId,
               serialNumber: serialNumber,
+              ...props.paramsQuery
             }"
             size="mini"
             type="warning"
@@ -79,7 +80,8 @@
         <el-table-column :show-overflow-tooltip="true" prop="grossWeight" label="单毛重" align="center"></el-table-column>
         <el-table-column :show-overflow-tooltip="true" prop="quantity" label="排产数" align="center"></el-table-column>
         <el-table-column :show-overflow-tooltip="true" prop="completeQuantity" label="完成数" align="center"></el-table-column>
-        <el-table-column :show-overflow-tooltip="true" prop="completeNetWeight" label="完成量" align="center"></el-table-column>
+        <el-table-column :show-overflow-tooltip="true" prop="completeNetWeight" label="完成净重" align="center"></el-table-column>
+        <el-table-column :show-overflow-tooltip="true" prop="completeGrossWeight" label="完成毛重" align="center"></el-table-column>
       </common-table>
       <!-- 分页 -->
       <el-pagination
@@ -123,6 +125,9 @@ const props = defineProps({
   dateTime: {
     type: String,
     default: ''
+  },
+  paramsQuery: {
+    type: Object
   }
 })
 
@@ -142,6 +147,7 @@ async function showProjectDetail() {
       areaId: areaId.value,
       serialNumber: serialNumber.value,
       dateTime: new Date(props.dateTime).getTime(),
+      ...props.paramsQuery,
       ...queryPage
     })
     setTotalPage(totalElements)

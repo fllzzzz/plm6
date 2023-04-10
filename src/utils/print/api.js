@@ -132,8 +132,19 @@ const mesGroupsReport = mes.groupsReport
 
 const mesStudSleeveStatisticsList = mes.studSleeveStatisticsList
 const mesProjectShipDetail = mes.mesProjectShipDetail
+const mesShipMeteDetail = mes.mesShipMeteDetail
+const mesShipTaskMeteDetail = mes.mesShipTaskMeteDetail
+const mesShipInboundMeteDetail = mes.mesShipInboundMeteDetail
+const mesShipTotalMeteDetail = mes.mesShipTotalMeteDetail
+const mesShipMonthMeteDetail = mes.mesShipMonthMeteDetail
+const mesShipStockMeteDetail = mes.mesShipStockMeteDetail
+const mesShipTrainMeteDetail = mes.mesShipTrainMeteDetail
 const mesProductSendReceiveStorage = mes.productSendReceiveStorage
 const productSendReceiveStorageDetail = mes.productSendReceiveStorageDetail
+const mesBeginningInventoryDetail = mes.mesBeginningInventoryDetail
+const mesEndInventoryDetail = mes.mesEndInventoryDetail
+const mesInboundInventoryDetail = mes.mesInboundInventoryDetail
+const mesOutboundInventoryDetail = mes.mesOutboundInventoryDetail
 const mesMainMaterialTrack = mes.mainMaterialTrackSummary
 const mesMainMaterialTrackUseRecord = mes.mainMaterialTrackUseRecord
 const mesMainMaterialTrackStock = mes.mainMaterialTrackStock
@@ -286,8 +297,19 @@ export default {
   mesStudSleeveStatisticsList, // 栓钉套筒统计清单详情
 
   mesProjectShipDetail, // 发运管理项目发运详情
+  mesShipMeteDetail, // 发运统计/清单总量详情
+  mesShipTaskMeteDetail, // 发运统计/任务总量详情
+  mesShipInboundMeteDetail, // 发运统计/入库量详情
+  mesShipTotalMeteDetail, // 发运统计/累计发运详情
+  mesShipMonthMeteDetail, // 发运统计/本月发运详情
+  mesShipStockMeteDetail, // 发运统计/库存详情
+  mesShipTrainMeteDetail, // 发运统计/累计车次详情
   mesProductSendReceiveStorage, // 发运管理制成品入发存
   productSendReceiveStorageDetail, // 发运管理制成品入发存详情
+  mesBeginningInventoryDetail, // 期初库存
+  mesEndInventoryDetail, // 期末库存
+  mesInboundInventoryDetail, // 入库量
+  mesOutboundInventoryDetail, // 出库量
 
   // wms
   wmsRmOutboundReceipt, // 出库（领料单）单

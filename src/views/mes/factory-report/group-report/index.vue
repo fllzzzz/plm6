@@ -50,24 +50,27 @@
               <el-tag size="medium">车间：{{ info?.workshop?.name }}>{{ info?.groups?.name }}</el-tag>
               <el-tag size="medium" style="margin-left: 10px">工序：{{ info?.process?.name }}</el-tag>
             </div>
-            <div style="width: 300px">
-              <print-table
-                v-permission="permission.print"
-                api-key="mesGroupsReport"
-                :params="{
-                  processId: crud.query.processId,
-                  workshopId: workshopId,
-                  startDate: startDate,
-                  endDate: endDate,
-                  taskTypeEnum: crud.query.taskTypeEnum,
-                  groupsId: crud.query.groupsId,
-                  teamId: crud.query.teamId,
-                }"
-                size="mini"
-                type="warning"
-                class="filter-item"
-              />
-            </div>
+            <crudOperation>
+              <template #optRight>
+                <print-table
+                  v-permission="permission.print"
+                  api-key="mesGroupsReport"
+                  :params="{
+                    processId: crud.query.processId,
+                    workshopId: workshopId,
+                    startDate: startDate,
+                    endDate: endDate,
+                    taskTypeEnum: crud.query.taskTypeEnum,
+                    groupsId: crud.query.groupsId,
+                    teamId: crud.query.teamId,
+                  }"
+                  size="mini"
+                  type="warning"
+                  class="filter-item"
+                  style="width: 300px"
+                />
+              </template>
+            </crudOperation>
           </div>
           <!--表格渲染-->
           <common-table
@@ -81,26 +84,27 @@
             style="width: 100%"
           >
             <el-table-column label="序号" type="index" align="center" width="70" />
-            <el-table-column :show-overflow-tooltip="true" label="项目" type="project" align="center" min-width="120">
+            <el-table-column v-if="columns.visible('project')" :show-overflow-tooltip="true" label="项目" type="project" align="center" min-width="120">
               <template #default="{ row }">
                 <span>{{ row.project?.serialNumber }}-{{ row.project?.name }}</span>
               </template>
             </el-table-column>
-            <el-table-column :show-overflow-tooltip="true" prop="monomer.name" label="单体" align="center">
+            <el-table-column v-if="columns.visible('monomer.name')" :show-overflow-tooltip="true" prop="monomer.name" label="单体" align="center">
               <template #default="{ row }">
                 <span>{{ row.monomer ? row.monomer?.name : '/' }}</span>
               </template>
             </el-table-column>
-            <el-table-column :show-overflow-tooltip="true" prop="area.name" label="区域" align="center">
+            <el-table-column v-if="columns.visible('area.name')" :show-overflow-tooltip="true" prop="area.name" label="区域" align="center">
               <template #default="{ row }">
                 <span>{{ row.area ? row.area?.name : '/' }}</span>
               </template>
             </el-table-column>
-            <el-table-column :show-overflow-tooltip="true" prop="serialNumber" label="编号" min-width="80px" align="center" />
-            <el-table-column :show-overflow-tooltip="true" prop="specification" label="规格" min-width="80px" align="center" />
-            <el-table-column :show-overflow-tooltip="true" prop="length" label="长度" align="center" />
-            <el-table-column :show-overflow-tooltip="true" prop="quantity" label="数量" align="center" />
-            <el-table-column :show-overflow-tooltip="true" prop="netWeight" label="单重（kg）" align="center" />
+            <el-table-column v-if="columns.visible('serialNumber')" :show-overflow-tooltip="true" prop="serialNumber" label="编号" min-width="80px" align="center" />
+            <el-table-column v-if="columns.visible('specification')" :show-overflow-tooltip="true" prop="specification" label="规格" min-width="80px" align="center" />
+            <el-table-column v-if="columns.visible('length')" :show-overflow-tooltip="true" prop="length" label="长度" align="center" />
+            <el-table-column v-if="columns.visible('quantity')" :show-overflow-tooltip="true" prop="quantity" label="数量" align="center" />
+            <el-table-column v-if="columns.visible('netWeight')" :show-overflow-tooltip="true" prop="netWeight" label="单净重（kg）" align="center" />
+            <el-table-column v-if="columns.visible('grossWeight')" :show-overflow-tooltip="true" prop="grossWeight" label="单毛重（kg）" align="center" />
           </common-table>
           <!--分页组件-->
           <pagination />
@@ -121,6 +125,7 @@ import { mesGroupReportPM as permission } from '@/page-permission/mes'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
+import crudOperation from '@crud/CRUD.operation'
 import pagination from '@crud/Pagination'
 import processList from './module/process-list.vue'
 
@@ -133,13 +138,14 @@ const optShow = {
 
 const tableRef = ref()
 const info = ref({})
-const { crud, CRUD } = useCRUD(
+const { crud, columns, CRUD } = useCRUD(
   {
     title: '班组报表',
     sort: [],
     permission: { ...permission },
     optShow: { ...optShow },
     crudApi: { ...crudApi },
+    invisibleColumns: ['grossWeight'],
     requiredQuery: ['groupsId']
   },
   tableRef
@@ -150,8 +156,8 @@ const { maxHeight } = useMaxHeight({ paginate: true })
 
 const processListRef = ref()
 const date = ref([moment().startOf('month').valueOf(), moment().valueOf()])
-const startDate = ref()
-const endDate = ref()
+const startDate = ref(moment().startOf('month').valueOf())
+const endDate = ref(moment().valueOf())
 const workshopId = ref()
 const factoryId = ref()
 const processType = ref()
@@ -213,8 +219,8 @@ async function handleDateChange(val) {
     startDate.value = val[0]
     endDate.value = val[1]
   } else {
-    startDate.value = undefined
-    endDate.value = undefined
+    startDate.value = moment().startOf('month').valueOf()
+    endDate.value = moment().valueOf()
   }
   fetchProcess()
   fetchProcessList()
@@ -232,6 +238,8 @@ function handleNestingTaskClick(val) {
   crud.query.groupsId = val?.groups?.id
   crud.query.teamId = val?.team?.id
   crud.query.taskTypeEnum = val?.taskTypeEnum
+  crud.query.startDate = startDate.value
+  crud.query.endDate = endDate.value
   info.value = val
   crud.toQuery()
 }
