@@ -1,5 +1,6 @@
 import request from '@/utils/request'
 
+// 获取所有围护项目
 export function allEnclosureProject(params) {
   return request({
     url: '/api/enclosurePlanDetail',
@@ -8,10 +9,19 @@ export function allEnclosureProject(params) {
   })
 }
 
-export function get(id) {
+// 获取围护项目合同量
+export function enclosureProjectContent(projectId) {
   return request({
-    url: `/api/enclosurePlanDetail/tech/${id}`,
+    url: `/api/enclosurePlanDetail/${projectId}`,
     method: 'get'
+  })
+}
+
+export function get(params) {
+  return request({
+    url: `/api/enclosurePlanDetail/tech`,
+    method: 'get',
+    params
   })
 }
 
