@@ -81,17 +81,25 @@
     </el-table-column>
     <el-table-column prop="quantity" align="center" :label="`数量 (${baseUnit.measure.unit})`">
       <template #default="{ row }">
-        <common-input-number
-          v-model="row.quantity"
-          :min="1"
-          :max="getCanUseQuantity(row)"
-          controls-position="right"
-          :controls="false"
-          :step="1"
-          :precision="baseUnit.measure.precision"
-          size="mini"
-          placeholder="数量"
-        />
+        <el-tooltip
+          class="item"
+          effect="dark"
+          :content="`可利用库存数量：${getCanUseQuantity(row)} ${baseUnit.measure.unit}`"
+          :disabled="row.requisitionMode !== requisitionModeEnum.USE_INVENTORY.V"
+          placement="top"
+        >
+          <common-input-number
+            v-model="row.quantity"
+            :min="1"
+            :max="getCanUseQuantity(row)"
+            controls-position="right"
+            :controls="false"
+            :step="1"
+            :precision="baseUnit.measure.precision"
+            size="mini"
+            placeholder="数量"
+          />
+        </el-tooltip>
       </template>
     </el-table-column>
     <el-table-column key="weighingTotalWeight" prop="weighingTotalWeight" align="center" :label="`总重 (${baseUnit.weight.unit})`">

@@ -115,9 +115,21 @@ CRUD.HOOK.beforeEditDetailLoaded = async (crud, detail) => {
     detail.projectId = detail.project?.id
   }
   if (!isManufactured.value) {
+    if (!detail.originInventoryInfo) detail.originInventoryInfo = {}
     detail.list = detail.detailList.map((v) => {
       if (v.materialInventoryId) {
         v.requisitionMode = requisitionModeEnum.USE_INVENTORY.V
+        if (!detail.originInventoryInfo[v.materialInventoryId]) {
+          detail.originInventoryInfo[v.materialInventoryId] = {
+            quantity: v.materialFreezeNum?.quantity,
+            frozenQuantity: v.materialFreezeNum?.frozenQuantity - v.quantity
+          }
+        } else {
+          detail.originInventoryInfo[v.materialInventoryId].frozenQuantity -= v.quantity
+          if (detail.originInventoryInfo[v.materialInventoryId].frozenQuantity < 0) {
+            detail.originInventoryInfo[v.materialInventoryId].frozenQuantity = 0
+          }
+        }
       } else {
         v.requisitionMode = requisitionModeEnum.PURCHASE.V
       }
