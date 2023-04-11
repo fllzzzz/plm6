@@ -5,7 +5,7 @@
       <div class="head-container" style="display: flex; justify-content: space-between">
         <!-- <el-tag>班组：{{ props.detailData?.groups?.name }}</el-tag> -->
         <div>
-          <project-cascader v-model="projectId" class="filter-item" clearable style="width: 220px" />
+          <project-cascader v-model="projectId" class="filter-item" clearable style="width: 200px" />
           <monomer-select-area-select
             v-model:monomerId="monomerId"
             v-model:areaId="areaId"
@@ -112,13 +112,13 @@
 import { getGroupDetail } from '@/api/mes/production-monitoring-kanban/kanban.js'
 import { ref, defineProps, watch, inject, computed } from 'vue'
 import { projectNameFormatter } from '@/utils/project'
-import { mapGetters } from '@/store/lib'
+// import { mapGetters } from '@/store/lib'
 import projectCascader from '@comp-base/project-cascader'
 import monomerSelectAreaSelect from '@comp-base/monomer-select-area-select'
 import usePagination from '@compos/use-pagination'
 import useMaxHeight from '@compos/use-max-height'
 
-const { globalProjectId } = mapGetters(['globalProjectId'])
+// const { globalProjectId } = mapGetters(['globalProjectId'])
 const props = defineProps({
   detailData: {
     type: Object,
@@ -151,18 +151,18 @@ watch(
     if (value) {
       fetchGroupDetail()
     }
-  }
+  }, { immediate: true, deep: true }
 )
-watch(
-  () => globalProjectId.value,
-  (val) => {
-    if (val) {
-      projectId.value = globalProjectId.value
-      fetchGroupDetail()
-    }
-  },
-  { immediate: true, deep: true }
-)
+// watch(
+//   () => globalProjectId.value,
+//   (val) => {
+//     if (val) {
+//       projectId.value = globalProjectId.value
+//       fetchGroupDetail()
+//     }
+//   },
+//   { immediate: true, deep: true }
+// )
 const commonQuery = computed(() => {
   return {
     projectId: projectId.value,

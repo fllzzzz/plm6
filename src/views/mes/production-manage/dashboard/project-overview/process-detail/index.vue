@@ -83,9 +83,9 @@
       style="width: 100%"
     >
       <el-table-column :show-overflow-tooltip="true" prop="index" label="序号" align="center" width="60" type="index" />
-      <el-table-column :show-overflow-tooltip="true" prop="workshop" label="车间/产线" align="center" min-width="140px">
+      <el-table-column :show-overflow-tooltip="true" prop="workshop" label="车间/产线/班组" header-align="center" min-width="140px">
         <template #default="{ row }">
-          <span>{{ row.workshop?.name + '/' + row.productionLine?.name }}</span>
+          <span>{{ row.workshop?.name + '/' + row.productionLine?.name + '/' + row.groups?.name + '/' + row.team?.name }}</span>
         </template>
       </el-table-column>
       <el-table-column :show-overflow-tooltip="true" prop="monomer.name" label="单体" align="center" min-width="100px">
