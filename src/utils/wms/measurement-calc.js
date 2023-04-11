@@ -181,7 +181,7 @@ export async function steelInboundFormFormat(form) {
           thickness: row.thickness
         }).then((val) => {
           row.theoryWeight = val
-          row.theoryTotalWeight = toPrecision(row.theoryWeight * row.quantity, baseUnit[matClsEnum.STEEL_PLATE.V].weight.precision) // 理论总重量
+          row.theoryTotalWeight = toPrecision(row.theoryWeight * (row.quantity || 0), baseUnit[matClsEnum.STEEL_PLATE.V].weight.precision) // 理论总重量
           form.steelPlateList.push(row)
         })
         break
@@ -191,7 +191,7 @@ export async function steelInboundFormFormat(form) {
           unitWeight: row.unitWeight // 单位重量
         }).then((val) => {
           row.theoryWeight = val
-          row.theoryTotalWeight = toPrecision(row.theoryWeight * row.quantity, baseUnit[matClsEnum.SECTION_STEEL.V].weight.precision) // 理论总重量
+          row.theoryTotalWeight = toPrecision(row.theoryWeight * (row.quantity || 0), baseUnit[matClsEnum.SECTION_STEEL.V].weight.precision) // 理论总重量
           row.totalLength = calcSectionSteelTotalLength({
             length: row.length, // 长度
             quantity: row.quantity // 数量

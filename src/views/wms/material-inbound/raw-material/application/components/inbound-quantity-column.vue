@@ -1,19 +1,22 @@
 <template>
   <el-table-column prop="quantity" align="center" width="110px" :label="`本次实收数 (${baseUnit.measure.unit})`">
     <template #default="{ row }">
-      <common-input-number
-        v-if="!row.boolApplyPurchase && Boolean(currentCfg?.quantity & basicClass) && form.selectObj?.[row.mergeId]?.isSelected"
-        v-model="row.quantity"
-        :min="0"
-        :max="999999999"
-        controls-position="right"
-        :controls="false"
-        :step="1"
-        :precision="baseUnit.measure.precision"
-        size="mini"
-        placeholder="实收数"
-        @blur="handleOverQuantity(row)"
-      />
+      <template v-if="!row.boolApplyPurchase">
+        <common-input-number
+          v-if="!row.boolApplyPurchase && Boolean(currentCfg?.quantity & basicClass) && form.selectObj?.[row.mergeId]?.isSelected"
+          v-model="row.quantity"
+          :min="0"
+          :max="999999999"
+          controls-position="right"
+          :controls="false"
+          :step="1"
+          :precision="baseUnit.measure.precision"
+          size="mini"
+          placeholder="实收数"
+          @blur="handleOverQuantity(row)"
+        />
+        <span v-else>{{ row.quantity }}</span>
+      </template>
       <template v-else>
         <span>{{ row.quantity }}</span>
         <el-popover placement="top" :width="700" trigger="click">

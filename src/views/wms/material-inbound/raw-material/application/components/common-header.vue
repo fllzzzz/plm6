@@ -141,25 +141,25 @@ const emit = defineEmits(['update:purchaseId', 'purchase-order-change'])
 
 const props = defineProps({
   purchaseId: {
-    type: String,
+    type: String
   },
   basicClass: {
-    type: Number,
+    type: Number
   },
   validate: {
-    type: Function,
+    type: Function
   },
   currentBasicClass: {
-    type: Number,
+    type: Number
   },
   isManuf: {
     type: Boolean,
-    default: false,
+    default: false
   },
   edit: {
     type: Boolean,
-    default: false,
-  },
+    default: false
+  }
 })
 
 const router = useRouter()
@@ -190,23 +190,23 @@ const validateLoadingWeight = (rule, value, callback) => {
 const baseRules = {
   purchaseId: [{ required: true, message: '请选择订单', trigger: 'change' }],
   licensePlate: [{ pattern: patternLicensePlate, message: '请填写正确的车牌号', trigger: 'blur' }],
-  loadingWeight: [{ validator: validateLoadingWeight, trigger: 'blur' }],
+  loadingWeight: [{ validator: validateLoadingWeight, trigger: 'blur' }]
 }
 
 // 磅计校验规则
 const overWeightRules = {
   loadingWeight: [
     { required: true, message: '请填写过磅重量', trigger: 'blur' },
-    { validator: validateLoadingWeight, trigger: 'blur' },
-  ],
+    { validator: validateLoadingWeight, trigger: 'blur' }
+  ]
 }
 
 // 自提车牌校验规则
 const licensePlateRules = {
   licensePlate: [
     { required: true, message: '请填写车牌号', trigger: 'blur' },
-    { pattern: patternLicensePlate, message: '请填写正确的车牌号', trigger: 'blur' },
-  ],
+    { pattern: patternLicensePlate, message: '请填写正确的车牌号', trigger: 'blur' }
+  ]
 }
 
 const rules = computed(() => {
@@ -293,7 +293,7 @@ watch(
         supplyType: form.supplyType,
         weightMeasurementMode: weightMeasurementModeEnum.THEORY.V,
         basicClass: props.basicClass,
-        projects: projects.value,
+        projects: projects.value
       }
       handleOrderInfoChange(_order)
     } else {
@@ -342,7 +342,7 @@ async function handleOrderInfoChange(order, oldOrder) {
       await numFmtByBasicClass(
         content,
         {
-          toNum: true,
+          toNum: true
         },
         { mete: ['mete', 'inboundMete'] }
       )
@@ -367,12 +367,12 @@ async function handleOrderInfoChange(order, oldOrder) {
           _v = {
             ..._v,
             ...form?.selectObj?.[v.mergeId],
-            ...form?.editObj?.[v.mergeId],
+            ...form?.editObj?.[v.mergeId]
           }
         }
         form.selectObj[v.mergeId] = {
           ..._v,
-          isSelected: _isSelected,
+          isSelected: _isSelected
         }
         if (_v.applyPurchase?.length) {
           _v.boolApplyPurchase = true
@@ -395,7 +395,7 @@ async function handleOrderInfoChange(order, oldOrder) {
             }
           })
           _v.quantity = _quantity
-          _v.mete = _mete ? _mete : undefined
+          _v.mete = _mete
         } else {
           if (props.edit && form?.editObj?.[_v.mergeId]) {
             _v.quantity = form?.editObj?.[_v.mergeId]?.quantity
@@ -446,7 +446,7 @@ function handleExcelSuccess(list) {
 
 // TODO:跳转到入库记录
 function toInboundRecord() {
-  router.push({ name: 'RawMatInboundApplicationRecord', params: { basicClass: props.basicClass } })
+  router.push({ name: 'RawMatInboundApplicationRecord', params: { basicClass: props.basicClass }})
 }
 
 // 查看申购单
@@ -468,7 +468,7 @@ async function validate() {
 
 // 外部调用
 defineExpose({
-  validate,
+  validate
 })
 </script>
 <style lang="scss" scoped>

@@ -245,12 +245,12 @@ import inboundQuantityColumn from '@/views/wms/material-inbound/raw-material/app
 const props = defineProps({
   boolPartyA: {
     type: Boolean,
-    default: false,
+    default: false
   },
   fillableAmount: {
     type: Boolean,
-    default: false,
-  },
+    default: false
+  }
 })
 
 // 当前物料基础类型
@@ -269,25 +269,25 @@ const rules = {
   classifyId: [{ required: true, message: '请选择物料种类', trigger: 'change' }],
   width: [
     { required: true, message: '请填写宽度', trigger: 'blur' },
-    { pattern: positiveNumPattern, message: '宽度必须大于0', trigger: 'blur' },
+    { pattern: positiveNumPattern, message: '宽度必须大于0', trigger: 'blur' }
   ],
   thickness: [
     { required: true, message: '请填写厚度', trigger: 'blur' },
-    { pattern: positiveNumPattern, message: '厚度必须大于0', trigger: 'blur' },
+    { pattern: positiveNumPattern, message: '厚度必须大于0', trigger: 'blur' }
   ],
   weighingTotalWeight: [
     { required: true, message: '请填写重量', trigger: 'blur' },
     { validator: diffSubmitValidate, message: '超出误差允许范围,不可提交', trigger: 'blur' },
-    { pattern: positiveNumPattern, message: '重量必须大于0', trigger: 'blur' },
+    { pattern: positiveNumPattern, message: '重量必须大于0', trigger: 'blur' }
   ],
   length: [
     { required: true, message: '请填写长度', trigger: 'blur' },
-    { pattern: positiveNumPattern, message: '长度必须大于0', trigger: 'blur' },
+    { pattern: positiveNumPattern, message: '长度必须大于0', trigger: 'blur' }
   ],
   quantity: [
     { required: true, message: '请填写数量', trigger: 'blur' },
-    { pattern: positiveNumPattern, message: '数量必须大于0', trigger: 'blur' },
-  ],
+    { pattern: positiveNumPattern, message: '数量必须大于0', trigger: 'blur' }
+  ]
 }
 
 // 金额校验
@@ -303,8 +303,8 @@ const amountRules = {
   unitPrice: [{ required: true, message: '请填写单价', trigger: 'blur' }],
   amount: [
     { required: true, message: '请填写金额', trigger: 'blur' },
-    { validator: validateAmount, message: '金额有误，请手动修改', trigger: 'blur' },
-  ],
+    { validator: validateAmount, message: '金额有误，请手动修改', trigger: 'blur' }
+  ]
 }
 
 const tableRules = computed(() => {
@@ -369,7 +369,7 @@ function rowInit(row) {
     width: undefined, // 宽度
     theoryWeight: undefined, // 理论单件重量
     theoryTotalWeight: undefined, // 理论总重量
-    weighingTotalWeight: undefined, // 过磅重量
+    weighingTotalWeight: undefined // 过磅重量
   })
 
   // 非甲供
@@ -393,7 +393,7 @@ function rowWatch(row) {
       form.selectObj[row.mergeId] = {
         ...form.selectObj[row.mergeId],
         ...row,
-        isSelected: _isSelected,
+        isSelected: _isSelected
       }
     }
     if (row.boolApplyPurchase && Boolean(currentCfg.value?.quantity & basicClass) && form.selectObj?.[row.mergeId]?.isSelected) {
@@ -425,7 +425,7 @@ async function calcTheoryWeight(row) {
     name: row.classifyFullName, // 名称，用于判断是否为不锈钢，不锈钢与普通钢板密度不同
     length: row.length,
     width: row.width,
-    thickness: row.thickness,
+    thickness: row.thickness
   })
 }
 
@@ -484,6 +484,6 @@ defineExpose({
   rowWatch,
   toggleRowSelection,
   validate,
-  setSelect,
+  setSelect
 })
 </script>
