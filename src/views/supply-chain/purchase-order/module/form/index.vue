@@ -231,8 +231,8 @@
                       <span v-if="form[compListVK[item.V]]?.length">({{ form[compListVK[item.V]]?.length }})</span>
                     </template>
                   </common-radio-button>
-                  <el-tag v-for="item in form.requisitions" :key="item.id" effect="plain" class="preparation-sn-tag">
-                    {{ item.serialNumber }}
+                  <el-tag v-for="item in form.actualRequisitionIds" :key="item" effect="plain" class="preparation-sn-tag">
+                    {{ form.requisitionsKV[item].serialNumber }}
                   </el-tag>
                 </span>
                 <span class="opt-content" v-if="!form.boolUsed">
@@ -398,6 +398,7 @@ import { clearObject } from '@/utils/data-type/object'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { setSpecInfoToList } from '@/utils/wms/spec'
 import { arr2obj, obj2arr } from '@/utils/convert/type'
+import { uniqueArr } from '@/utils/data-type/array'
 import steelPlateTemp from '@/utils/excel/import-template/supply-chain/purchase-temp/steel-plate'
 import sectionSteelTemp from '@/utils/excel/import-template/supply-chain/purchase-temp/section-steel'
 import steelCoilTemp from '@/utils/excel/import-template/supply-chain/purchase-temp/steel-coil'
@@ -458,6 +459,7 @@ const defaultForm = {
   steelCoilList: [],
   requisitions: [],
   requisitionsKV: {},
+  actualRequisitionIds: [],
   manufListObj: {},
   manufMergeObj: {}
 }
@@ -611,6 +613,7 @@ const clearList = () => {
   form.steelPlateList = []
   form.steelCoilList = []
   form.requisitionsKV = {}
+  form.actualRequisitionIds = []
   form.manufListObj = {}
   // form.manufMergeObj = {}
 }
@@ -766,6 +769,24 @@ const requisitionVisible = ref(false)
 
 watchEffect(() => {
   form.requisitions = obj2arr(form.requisitionsKV)
+  const _actualRequisitionIds = []
+  if (form.materialType & materialPurchaseClsEnum.STEEL.V) {
+    form.steelPlateList.forEach((v) => {
+      _actualRequisitionIds.push(v.applyPurchaseId)
+    })
+    form.steelCoilList.forEach((v) => {
+      _actualRequisitionIds.push(v.applyPurchaseId)
+    })
+    form.sectionSteelList.forEach((v) => {
+      _actualRequisitionIds.push(v.applyPurchaseId)
+    })
+  }
+  if (form.materialType & materialPurchaseClsEnum.MATERIAL.V) {
+    form.list.forEach((v) => {
+      _actualRequisitionIds.push(v.applyPurchaseId)
+    })
+  }
+  form.actualRequisitionIds = uniqueArr(_actualRequisitionIds)
 })
 
 function addRequisition() {
@@ -884,7 +905,7 @@ crud.submitFormFormat = async (form) => {
   form.attachmentIds = form.attachments ? form.attachments.map((v) => v.id) : undefined
   form.auxMaterialIds = form.isAllMaterial ? [0] : form.auxMaterialIds
   if (form.useRequisitions) {
-    form.applyPurchaseIds = form.requisitions.map((v) => v.id)
+    form.applyPurchaseIds = form.actualRequisitionIds
   }
   if (!isManuf.value) {
     form.list = await numFmtByBasicClass(form.list, { toSmallest: true, toNum: true })
