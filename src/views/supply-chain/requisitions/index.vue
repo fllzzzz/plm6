@@ -122,7 +122,7 @@
             show-detail
             :data="{ id: row.id }"
             :disabled-edit="
-              row.purchaseCreationState === requisitionStatusEnum.PARTIALLY_COMPLETED.V ||
+              row.purchaseCreationState !== requisitionStatusEnum.NOT_STARTED.V ||
               Boolean(
                 row.reviewStatus & (ddReviewStatusEnum.UNREVIEWED.V | ddReviewStatusEnum.AUDITING.V | ddReviewStatusEnum.PASS.V) &&
                   isOpenApproval
