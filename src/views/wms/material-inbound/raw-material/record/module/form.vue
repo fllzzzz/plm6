@@ -52,25 +52,25 @@ const comp = computed(() => {
 })
 
 CRUD.HOOK.beforeEditDetailLoaded = async (crud, detail) => {
-  detail.originList = deepClone(detail.list)
-  detail.list = []
-  await setSpecInfoToList(detail.originList)
-  detail.originList = await numFmtByBasicClass(detail.originList, {
+  await setSpecInfoToList(detail.list)
+  detail.list = await numFmtByBasicClass(detail.list, {
     toSmallest: false,
-    toNum: true
+    toNum: true,
   })
   // 物流信息
   detail.logistics = detail.logisticsOrder
   if (detail.supplyType !== orderSupplyTypeEnum.PARTY_A.V) {
+    detail.originList = deepClone(detail.list)
+    detail.list = []
     detail.editObj = {}
-    detail.originList.forEach(v => {
+    detail.originList.forEach((v) => {
       if (!detail.editObj[v.mergeId]) {
         detail.editObj[v.mergeId] = {
           ...v,
           applyPurchaseObj: {
-            [v.applyPurchaseId]: { ...v }
+            [v.applyPurchaseId]: { ...v },
           },
-          isSelected: true
+          isSelected: true,
         }
       } else {
         detail.editObj[v.mergeId].applyPurchaseObj[v.applyPurchaseId] = { ...v }
