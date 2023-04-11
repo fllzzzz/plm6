@@ -237,20 +237,20 @@ function selectable(row, rowIndex) {
 
 function selectTableChange(select, row) {
   const boolSelect = Boolean(select.findIndex((v) => v.id === row.id) !== -1)
-  form.selectObj[row.purchaseOrderDetailId].isSelected = boolSelect
+  form.selectObj[row.mergeId].isSelected = boolSelect
 }
 
 function selectAllTableChange(select) {
   const boolSelect = Boolean(select?.length)
   form.steelCoilList.forEach((v) => {
-    form.selectObj[v.purchaseOrderDetailId].isSelected = boolSelect
+    form.selectObj[v.mergeId].isSelected = boolSelect
   })
 }
 
 // 设置选择的回显
 function setSelect() {
   form.steelCoilList.forEach((v) => {
-    if (form.selectObj?.[v.purchaseOrderDetailId]?.isSelected) {
+    if (form.selectObj?.[v.mergeId]?.isSelected) {
       tableRef.value.toggleRowSelection(v, true)
     }
   })
@@ -300,10 +300,10 @@ function rowWatch(row) {
   // watchEffect(() => calcTheoryLength(_row))
   // watchEffect(() => calcTotalLength(_row))
   watchEffect(() => {
-    if (!props.boolPartyA && isNotBlank(form.selectObj?.[row.purchaseOrderDetailId])) {
-      const _isSelected = form.selectObj[row.purchaseOrderDetailId]?.isSelected
-      form.selectObj[row.purchaseOrderDetailId] = {
-        ...form.selectObj[row.purchaseOrderDetailId],
+    if (!props.boolPartyA && isNotBlank(form.selectObj?.[row.mergeId])) {
+      const _isSelected = form.selectObj[row.mergeId]?.isSelected
+      form.selectObj[row.mergeId] = {
+        ...form.selectObj[row.mergeId],
         ...row,
         isSelected: _isSelected
       }

@@ -43,7 +43,7 @@
           <span>{{ row.specification }}</span>
         </el-tooltip>
         <el-edit
-          v-if="form.selectObj?.[row.purchaseOrderDetailId]?.isSelected && Boolean(currentCfg?.spec & basicClass)"
+          v-if="form.selectObj?.[row.mergeId]?.isSelected && Boolean(currentCfg?.spec & basicClass)"
           class="el-icon"
           style="color: #1881ef; vertical-align: middle; margin-left: 5px; cursor: pointer"
           @click="handleClickEditSpec(row)"
@@ -53,7 +53,7 @@
     <el-table-column prop="length" align="center" width="135px" :label="`定尺长度 (${baseUnit.length.unit})`">
       <template #default="{ row }">
         <common-input-number
-          v-if="props.boolPartyA || (form.selectObj?.[row.purchaseOrderDetailId]?.isSelected && Boolean(currentCfg?.length & basicClass))"
+          v-if="props.boolPartyA || (form.selectObj?.[row.mergeId]?.isSelected && Boolean(currentCfg?.length & basicClass))"
           v-model="row.length"
           :max="999999"
           :controls="false"
@@ -124,7 +124,7 @@
     <el-table-column prop="brand" label="品牌" align="center" min-width="100px">
       <template #default="{ row }">
         <el-input
-          v-if="props.boolPartyA || (!props.boolPartyA && form.selectObj?.[row.purchaseOrderDetailId]?.isSelected)"
+          v-if="props.boolPartyA || (!props.boolPartyA && form.selectObj?.[row.mergeId]?.isSelected)"
           v-model.trim="row.brand"
           maxlength="60"
           size="mini"
@@ -136,7 +136,7 @@
     <el-table-column prop="heatNoAndBatchNo" label="炉批号" align="center" min-width="150px">
       <template #default="{ row }">
         <el-input
-          v-if="props.boolPartyA || (!props.boolPartyA && form.selectObj?.[row.purchaseOrderDetailId]?.isSelected)"
+          v-if="props.boolPartyA || (!props.boolPartyA && form.selectObj?.[row.mergeId]?.isSelected)"
           v-model.trim="row.heatNoAndBatchNo"
           size="mini"
           placeholder="炉批号"
@@ -146,25 +146,15 @@
       </template>
     </el-table-column>
     <template v-if="!props.boolPartyA">
-      <el-table-column prop="quantity" align="center" width="135px" :label="`本次实收数 (${baseUnit.measure.unit})`">
-        <template #default="{ row }">
-          <common-input-number
-            v-if="Boolean(currentCfg?.quantity & basicClass) && form.selectObj?.[row.purchaseOrderDetailId]?.isSelected"
-            v-model="row.quantity"
-            :min="0"
-            :max="999999999"
-            controls-position="right"
-            :controls="false"
-            :step="5"
-            :precision="baseUnit.measure.precision"
-            size="mini"
-            placeholder="实收数"
-            @blur="handleOverQuantity(row)"
-          />
-          <span v-else>{{ row.quantity }}</span>
-        </template>
-      </el-table-column>
+      <inbound-quantity-column
+        :base-unit="baseUnit"
+        :current-cfg="currentCfg"
+        :basic-class="basicClass"
+        :form="form"
+        :handleOverQuantity="handleOverQuantity"
+      />
       <el-table-column prop="totalLength" align="center" width="135px" :label="`实收总长度 (m)`" />
+      <el-table-column prop="theoryTotalWeight" align="center" :label="`理论重量 (${baseUnit.weight.unit})`" width="100px" />
       <el-table-column
         key="weighingTotalWeight"
         prop="weighingTotalWeight"
@@ -181,7 +171,7 @@
             placement="top"
           >
             <common-input-number
-              v-if="form.selectObj?.[row.purchaseOrderDetailId]?.isSelected"
+              v-if="form.selectObj?.[row.mergeId]?.isSelected"
               v-model="row.weighingTotalWeight"
               :min="0"
               :max="999999999"
@@ -246,17 +236,18 @@ import { calcSectionSteelTotalLength, calcSectionSteelWeight } from '@/utils/wms
 import { positiveNumPattern } from '@/utils/validate/pattern'
 
 import priceSetColumns from '@/views/wms/material-inbound/raw-material/components/price-set-columns.vue'
+import inboundQuantityColumn from '@/views/wms/material-inbound/raw-material/application/components/inbound-quantity-column'
 import materialSpecSelect from '@comp-cls/material-spec-select/index.vue'
 
 const props = defineProps({
   boolPartyA: {
     type: Boolean,
-    default: false
+    default: false,
   },
   fillableAmount: {
     type: Boolean,
-    default: false
-  }
+    default: false,
+  },
 })
 
 // 当前物料基础类型
@@ -279,17 +270,17 @@ const rules = {
   classifyId: [{ required: true, message: '请选择物料种类', trigger: 'change' }],
   length: [
     { required: true, message: '请填写定尺长度', trigger: 'blur' },
-    { pattern: positiveNumPattern, message: '定尺长度必须大于0', trigger: 'blur' }
+    { pattern: positiveNumPattern, message: '定尺长度必须大于0', trigger: 'blur' },
   ],
   quantity: [
     { required: true, message: '请填写数量', trigger: 'blur' },
-    { pattern: positiveNumPattern, message: '数量必须大于0', trigger: 'blur' }
+    { pattern: positiveNumPattern, message: '数量必须大于0', trigger: 'blur' },
   ],
   weighingTotalWeight: [
     { required: true, message: '请填写重量', trigger: 'blur' },
     { validator: diffSubmitValidate, message: '超出误差允许范围,不可提交', trigger: 'blur' },
-    { pattern: positiveNumPattern, message: '重量必须大于0', trigger: 'blur' }
-  ]
+    { pattern: positiveNumPattern, message: '重量必须大于0', trigger: 'blur' },
+  ],
 }
 
 // 金额校验
@@ -305,8 +296,8 @@ const amountRules = {
   unitPrice: [{ required: true, message: '请填写单价', trigger: 'blur' }],
   amount: [
     { required: true, message: '请填写金额', trigger: 'blur' },
-    { validator: validateAmount, message: '金额有误，请手动修改', trigger: 'blur' }
-  ]
+    { validator: validateAmount, message: '金额有误，请手动修改', trigger: 'blur' },
+  ],
 }
 
 const tableRules = computed(() => {
@@ -325,20 +316,20 @@ function selectable(row, rowIndex) {
 
 function selectTableChange(select, row) {
   const boolSelect = Boolean(select.findIndex((v) => v.id === row.id) !== -1)
-  form.selectObj[row.purchaseOrderDetailId].isSelected = boolSelect
+  form.selectObj[row.mergeId].isSelected = boolSelect
 }
 
 function selectAllTableChange(select) {
   const boolSelect = Boolean(select?.length)
   form.sectionSteelList.forEach((v) => {
-    form.selectObj[v.purchaseOrderDetailId].isSelected = boolSelect
+    form.selectObj[v.mergeId].isSelected = boolSelect
   })
 }
 
 // 设置选择的回显
 function setSelect() {
   form.sectionSteelList.forEach((v) => {
-    if (form.selectObj?.[v.purchaseOrderDetailId]?.isSelected) {
+    if (form.selectObj?.[v.mergeId]?.isSelected) {
       tableRef.value.toggleRowSelection(v, true)
     }
   })
@@ -369,7 +360,7 @@ function rowInit(row) {
     theoryWeight: undefined, // 理论单件重量
     theoryTotalWeight: undefined, // 理论总重量
     weighingTotalWeight: undefined, // 过磅重量
-    hasOver: false // 是否超出理论重量
+    hasOver: false, // 是否超出理论重量
   })
 
   // 非甲供
@@ -389,13 +380,21 @@ function rowWatch(row) {
   // watchEffect(() => calcTotalLength(_row))
   watchEffect(() => {
     weightOverDiff(row)
-    if (!props.boolPartyA && isNotBlank(form.selectObj?.[row.purchaseOrderDetailId])) {
-      const _isSelected = form.selectObj[row.purchaseOrderDetailId]?.isSelected
-      form.selectObj[row.purchaseOrderDetailId] = {
-        ...form.selectObj[row.purchaseOrderDetailId],
+    if (!props.boolPartyA && isNotBlank(form.selectObj?.[row.mergeId])) {
+      const _isSelected = form.selectObj[row.mergeId]?.isSelected
+      form.selectObj[row.mergeId] = {
+        ...form.selectObj[row.mergeId],
         ...row,
-        isSelected: _isSelected
+        isSelected: _isSelected,
       }
+    }
+    if (row.needFirstCalcTheoryWeight) {
+      calcTheoryWeight(row)
+      calcTotalWeight(row)
+      row.needFirstCalcTheoryWeight = false
+    }
+    if (row.boolApplyPurchase && Boolean(currentCfg.value?.quantity & basicClass) && form.selectObj?.[row.mergeId]?.isSelected) {
+      row.quantity = row?.applyPurchase?.reduce((a, b) => a + (b.quantity || 0), 0)
     }
   })
   // 计算单件理论重量
@@ -416,7 +415,7 @@ function rowWatch(row) {
 async function calcTheoryWeight(row) {
   row.theoryWeight = await calcSectionSteelWeight({
     length: row.length, // 长度
-    unitWeight: row.unitWeight // 单位重量
+    unitWeight: row.unitWeight, // 单位重量
   })
 }
 
@@ -425,7 +424,7 @@ function calcTotalLength(row) {
   if (isNotBlank(row.length) && row.quantity) {
     row.totalLength = calcSectionSteelTotalLength({
       length: row.length, // 长度
-      quantity: row.quantity // 数量
+      quantity: row.quantity, // 数量
     })
   } else {
     row.totalLength = undefined
@@ -436,10 +435,14 @@ function calcTotalLength(row) {
 function calcTotalWeight(row) {
   if (isNotBlank(row.theoryWeight) && row.quantity) {
     row.theoryTotalWeight = toPrecision(row.theoryWeight * row.quantity, baseUnit.value.weight.precision)
-    row.weighingTotalWeight = toPrecision(row.theoryWeight * row.quantity, baseUnit.value.weight.precision)
+    if (props.boolPartyA) {
+      row.weighingTotalWeight = toPrecision(row.theoryWeight * row.quantity, baseUnit.value.weight.precision)
+    }
   } else {
     row.theoryTotalWeight = undefined
-    row.weighingTotalWeight = undefined
+    if (props.boolPartyA) {
+      row.weighingTotalWeight = undefined
+    }
   }
 }
 
@@ -462,7 +465,7 @@ function delRow(sn, $index) {
 // 校验
 function validate() {
   const _list = form.sectionSteelList.filter((v) => {
-    if (props.boolPartyA || form.selectObj[v.purchaseOrderDetailId]?.isSelected) {
+    if (props.boolPartyA || form.selectObj[v.mergeId]?.isSelected) {
       return true
     } else {
       return false
@@ -483,6 +486,6 @@ defineExpose({
   rowWatch,
   toggleRowSelection,
   validate,
-  setSelect
+  setSelect,
 })
 </script>

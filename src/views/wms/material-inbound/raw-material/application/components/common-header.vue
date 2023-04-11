@@ -128,7 +128,7 @@ import { regExtra } from '@/composables/form/use-form'
 import useWeightOverDiff from '@/composables/wms/use-trains-weight-over-diff'
 import excelResolveButton from '@/components-system/common/excel-resolve-button/index.vue'
 import purchaseSnSelect from '@/components-system/wms/purchase-sn-select/index.vue'
-import { isNotBlank, isBlank, toPrecision } from '@/utils/data-type'
+import { isNotBlank, isBlank } from '@/utils/data-type'
 import StoreOperation from '@crud/STORE.operation.vue'
 import steelPlateTemp from '@/utils/excel/import-template/wms/inbound-application-temp/steel-plate'
 import sectionSteelTemp from '@/utils/excel/import-template/wms/inbound-application-temp/section-steel'
@@ -141,25 +141,25 @@ const emit = defineEmits(['update:purchaseId', 'purchase-order-change'])
 
 const props = defineProps({
   purchaseId: {
-    type: String
+    type: String,
   },
   basicClass: {
-    type: Number
+    type: Number,
   },
   validate: {
-    type: Function
+    type: Function,
   },
   currentBasicClass: {
-    type: Number
+    type: Number,
   },
   isManuf: {
     type: Boolean,
-    default: false
+    default: false,
   },
   edit: {
     type: Boolean,
-    default: false
-  }
+    default: false,
+  },
 })
 
 const router = useRouter()
@@ -190,23 +190,23 @@ const validateLoadingWeight = (rule, value, callback) => {
 const baseRules = {
   purchaseId: [{ required: true, message: '请选择订单', trigger: 'change' }],
   licensePlate: [{ pattern: patternLicensePlate, message: '请填写正确的车牌号', trigger: 'blur' }],
-  loadingWeight: [{ validator: validateLoadingWeight, trigger: 'blur' }]
+  loadingWeight: [{ validator: validateLoadingWeight, trigger: 'blur' }],
 }
 
 // 磅计校验规则
 const overWeightRules = {
   loadingWeight: [
     { required: true, message: '请填写过磅重量', trigger: 'blur' },
-    { validator: validateLoadingWeight, trigger: 'blur' }
-  ]
+    { validator: validateLoadingWeight, trigger: 'blur' },
+  ],
 }
 
 // 自提车牌校验规则
 const licensePlateRules = {
   licensePlate: [
     { required: true, message: '请填写车牌号', trigger: 'blur' },
-    { pattern: patternLicensePlate, message: '请填写正确的车牌号', trigger: 'blur' }
-  ]
+    { pattern: patternLicensePlate, message: '请填写正确的车牌号', trigger: 'blur' },
+  ],
 }
 
 const rules = computed(() => {
@@ -293,7 +293,7 @@ watch(
         supplyType: form.supplyType,
         weightMeasurementMode: weightMeasurementModeEnum.THEORY.V,
         basicClass: props.basicClass,
-        projects: projects.value
+        projects: projects.value,
       }
       handleOrderInfoChange(_order)
     } else {
@@ -342,42 +342,73 @@ async function handleOrderInfoChange(order, oldOrder) {
       await numFmtByBasicClass(
         content,
         {
-          toNum: true
+          toNum: true,
         },
         { mete: ['mete', 'inboundMete'] }
       )
       order.details = content?.map((v) => {
+        v.mergeId = v.id // 处理合并问题
         v.purchaseOrderDetailId = v.id
         v.purchaseQuantity = v.quantity
         v.purchaseMete = v.mete
+        v.boolApplyPurchase = false
         v.canPurchaseQuantity = v.purchaseQuantity - v.inboundQuantity > 0 ? v.purchaseQuantity - v.inboundQuantity : 0
-        const _canMete = toPrecision(v.purchaseMete - v.inboundMete)
-        const _isSelected = form.selectObj?.[v.purchaseOrderDetailId] ? form.selectObj[v.purchaseOrderDetailId]?.isSelected : false
-        v.quantity = v.canPurchaseQuantity
-        v.mete = _canMete > 0 ? _canMete : 0
+        // const _canMete = toPrecision(v.purchaseMete - v.inboundMete)
+        let _isSelected = false
+        if (form.selectObj?.[v.mergeId]) {
+          _isSelected = form.selectObj[v.mergeId]?.isSelected
+        } else if (props.edit && form?.editObj?.[v.mergeId]) {
+          _isSelected = form?.editObj?.[v.mergeId]?.isSelected
+        }
+        // v.quantity = v.canPurchaseQuantity
+        // v.mete = _canMete > 0 ? _canMete : 0
         let _v = v
         if (_isSelected) {
           _v = {
             ..._v,
-            ...form.selectObj?.[v.purchaseOrderDetailId]
+            ...form?.selectObj?.[v.mergeId],
+            ...form?.editObj?.[v.mergeId],
+          }
+        }
+        form.selectObj[v.mergeId] = {
+          ..._v,
+          isSelected: _isSelected,
+        }
+        if (_v.applyPurchase?.length) {
+          _v.boolApplyPurchase = true
+          let _mete = 0
+          let _quantity = 0
+          _v.applyPurchase.forEach((item) => {
+            item.applyPurchaseId = item.id
+            item.purchaseQuantity = item.quantity
+            item.originQuantity = item.quantity
+            item.purchaseMete = item.mete
+            if (props.edit && form?.editObj?.[_v.mergeId]?.applyPurchaseObj?.[item.applyPurchaseId]) {
+              item.quantity = form?.editObj?.[_v.mergeId]?.applyPurchaseObj?.[item.applyPurchaseId]?.quantity
+              _quantity += form?.editObj?.[_v.mergeId]?.applyPurchaseObj?.[item.applyPurchaseId]?.quantity
+              _mete += form?.editObj?.[_v.mergeId]?.applyPurchaseObj?.[item.applyPurchaseId]?.mete
+            } else {
+              item.quantity = undefined
+            }
+            if (item?.project) {
+              order.projects.push(item?.project)
+            }
+          })
+          _v.quantity = _quantity
+          _v.mete = _mete ? _mete : undefined
+        } else {
+          if (props.edit && form?.editObj?.[_v.mergeId]) {
+            _v.quantity = form?.editObj?.[_v.mergeId]?.quantity
+            _v.mete = form?.editObj?.[_v.mergeId]?.mete
+          } else {
+            _v.quantity = undefined
+            _v.mete = undefined
           }
         }
         _v.originQuantity = _v.quantity
         _v.originMete = _v.mete
-        form.selectObj[v.purchaseOrderDetailId] = {
-          ..._v,
-          isSelected: _isSelected
-        }
-        if (v.applyPurchase?.length) {
-          v.applyPurchase.forEach((item) => {
-            item.purchaseQuantity = item.quantity
-            item.originQuantity = item.quantity
-            item.purchaseMete = item.mete
-            item.quantity = undefined
-            order.projects.push(item.project)
-          })
-          v.quantity = 0
-          v.mete = undefined
+        if (props.edit) {
+          _v.needFirstCalcTheoryWeight = true
         }
         return _v
       })
@@ -415,7 +446,7 @@ function handleExcelSuccess(list) {
 
 // TODO:跳转到入库记录
 function toInboundRecord() {
-  router.push({ name: 'RawMatInboundApplicationRecord', params: { basicClass: props.basicClass }})
+  router.push({ name: 'RawMatInboundApplicationRecord', params: { basicClass: props.basicClass } })
 }
 
 // 查看申购单
@@ -437,7 +468,7 @@ async function validate() {
 
 // 外部调用
 defineExpose({
-  validate
+  validate,
 })
 </script>
 <style lang="scss" scoped>

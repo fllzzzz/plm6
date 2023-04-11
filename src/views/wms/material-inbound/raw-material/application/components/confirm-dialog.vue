@@ -258,7 +258,7 @@ const { tableValidate, cleanUpData, wrongCellMask } = useTableValidate({ rules: 
 
 function showHook() {
   formList.value = form.list.filter((v) => {
-    if (boolPartyA.value || form.selectObj[v.purchaseOrderDetailId]?.isSelected) {
+    if (boolPartyA.value || form.selectObj[v.mergeId]?.isSelected) {
       return true
     } else {
       return false

@@ -98,22 +98,22 @@ function selectable(row, rowIndex) {
 
 function selectTableChange(select, row) {
   const boolSelect = Boolean(select.findIndex((v) => v.id === row.id) !== -1)
-  form.selectObj[row.purchaseOrderDetailId].isSelected = boolSelect
+  form.selectObj[row.mergeId].isSelected = boolSelect
 }
 
 function selectAllTableChange(select) {
   const boolSelect = Boolean(select?.length)
   form.strucManufList.forEach((v) => {
-    form.selectObj[v.purchaseOrderDetailId].isSelected = boolSelect
+    form.selectObj[v.mergeId].isSelected = boolSelect
   })
 }
 
 function rowWatch(row) {
   watchEffect(() => {
-    if (!props.boolPartyA && isNotBlank(form.selectObj?.[row.purchaseOrderDetailId])) {
-      const _isSelected = form.selectObj[row.purchaseOrderDetailId]?.isSelected
-      form.selectObj[row.purchaseOrderDetailId] = {
-        ...form.selectObj[row.purchaseOrderDetailId],
+    if (!props.boolPartyA && isNotBlank(form.selectObj?.[row.mergeId])) {
+      const _isSelected = form.selectObj[row.mergeId]?.isSelected
+      form.selectObj[row.mergeId] = {
+        ...form.selectObj[row.mergeId],
         ...row,
         isSelected: _isSelected
       }
@@ -135,7 +135,7 @@ function calcTotalWeight(row) {
 // 校验
 function validate() {
   const _list = form.strucManufList.filter((v) => {
-    if (props.boolPartyA || form.selectObj[v.purchaseOrderDetailId]?.isSelected) {
+    if (props.boolPartyA || form.selectObj[v.mergeId]?.isSelected) {
       return true
     } else {
       return false

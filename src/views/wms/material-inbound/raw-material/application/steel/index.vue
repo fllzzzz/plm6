@@ -176,7 +176,7 @@ function getNum(key) {
   if (boolPartyA.value) {
     return form[key]?.length || 0
   } else {
-    return form[key]?.filter((v) => form.selectObj[v.purchaseOrderDetailId]?.isSelected)?.length || 0
+    return form[key]?.filter((v) => form.selectObj[v.mergeId]?.isSelected)?.length || 0
   }
 }
 
@@ -185,21 +185,21 @@ const formList = computed(() => {
   const list = []
   if (isNotBlank(form.steelPlateList)) {
     form.steelPlateList.forEach((v) => {
-      if (boolPartyA.value || form.selectObj[v.purchaseOrderDetailId]?.isSelected) {
+      if (boolPartyA.value || form.selectObj[v.mergeId]?.isSelected) {
         list.push(v)
       }
     })
   }
   if (isNotBlank(form.sectionSteelList)) {
     form.sectionSteelList.forEach((v) => {
-      if (boolPartyA.value || form.selectObj[v.purchaseOrderDetailId]?.isSelected) {
+      if (boolPartyA.value || form.selectObj[v.mergeId]?.isSelected) {
         list.push(v)
       }
     })
   }
   if (isNotBlank(form.steelCoilList)) {
     form.steelCoilList.forEach((v) => {
-      if (boolPartyA.value || form.selectObj[v.purchaseOrderDetailId]?.isSelected) {
+      if (boolPartyA.value || form.selectObj[v.mergeId]?.isSelected) {
         list.push(v)
       }
     })
@@ -274,7 +274,7 @@ const setFormCallback = (form) => {
             // 初始化数据监听，执行一次后取消当前监听
             form[key].forEach((v) => {
               ref[key].rowWatch(v)
-              if (!boolPartyA.value && form.selectObj?.[v.purchaseOrderDetailId]?.isSelected) {
+              if (!boolPartyA.value && form.selectObj?.[v.mergeId]?.isSelected) {
                 ref[key].toggleRowSelection(v, true)
               }
             })
@@ -445,7 +445,6 @@ function validate() {
               quantity: a.quantity,
               projectId: a.project?.id,
               uid: createUniqueString(),
-              boolApplyPurchase: true,
               mete: _weight,
               weight: _weight
             })
@@ -455,7 +454,6 @@ function validate() {
         _list.push({
           ...v,
           uid: createUniqueString(),
-          boolApplyPurchase: false,
           mete: v.weighingTotalWeight,
           weight: v.weighingTotalWeight
         })

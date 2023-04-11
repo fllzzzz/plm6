@@ -112,7 +112,7 @@ const fillableAmount = computed(
 )
 
 function getNum(key) {
-  return form[key]?.filter((v) => form.selectObj?.[v.purchaseOrderDetailId]?.isSelected)?.length || 0
+  return form[key]?.filter((v) => form.selectObj?.[v.mergeId]?.isSelected)?.length || 0
 }
 
 // 列表汇总数据
@@ -120,14 +120,14 @@ const formList = computed(() => {
   const list = []
   if (isNotBlank(form.strucManufList)) {
     form.strucManufList.forEach((v) => {
-      if (boolPartyA.value || form.selectObj?.[v.purchaseOrderDetailId]?.isSelected) {
+      if (boolPartyA.value || form.selectObj?.[v.mergeId]?.isSelected) {
         list.push(v)
       }
     })
   }
   if (isNotBlank(form.enclManufList)) {
     form.enclManufList.forEach((v) => {
-      if (boolPartyA.value || form.selectObj?.[v.purchaseOrderDetailId]?.isSelected) {
+      if (boolPartyA.value || form.selectObj?.[v.mergeId]?.isSelected) {
         list.push(v)
       }
     })
@@ -196,7 +196,7 @@ const setFormCallback = (form) => {
             // 初始化数据监听，执行一次后取消当前监听
             form[key].forEach((v) => {
               ref[key].rowWatch(v)
-              if (!boolPartyA.value && form.selectObj?.[v.purchaseOrderDetailId]?.isSelected) {
+              if (!boolPartyA.value && form.selectObj?.[v.mergeId]?.isSelected) {
                 ref[key].toggleRowSelection(v, true)
               }
             })

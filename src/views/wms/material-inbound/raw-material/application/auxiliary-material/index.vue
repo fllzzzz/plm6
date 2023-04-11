@@ -138,7 +138,7 @@ const setFormCallback = (form) => {
         if (!boolPartyA.value) {
           form.list.forEach((v) => {
             tableRef.value.rowWatch(v)
-            if (!boolPartyA.value && form.selectObj?.[v.purchaseOrderDetailId]?.isSelected) {
+            if (!boolPartyA.value && form.selectObj?.[v.mergeId]?.isSelected) {
               tableRef.value.toggleRowSelection(v, true)
             }
           })

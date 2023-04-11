@@ -23,6 +23,7 @@ import { orderSupplyTypeEnum } from '@enum-ms/wms'
 import { matClsEnum } from '@/utils/enum/modules/classification'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { setSpecInfoToList } from '@/utils/wms/spec'
+import { deepClone } from '@/utils/data-type'
 
 import SteelApplication from '@/views/wms/material-inbound/raw-material/application/steel/index.vue'
 import AuxMatApplication from '@/views/wms/material-inbound/raw-material/application/auxiliary-material/index.vue'
@@ -51,19 +52,28 @@ const comp = computed(() => {
 })
 
 CRUD.HOOK.beforeEditDetailLoaded = async (crud, detail) => {
-  await setSpecInfoToList(detail.list)
-  detail.list = await numFmtByBasicClass(detail.list, {
+  detail.originList = deepClone(detail.list)
+  detail.list = []
+  await setSpecInfoToList(detail.originList)
+  detail.originList = await numFmtByBasicClass(detail.originList, {
     toSmallest: false,
     toNum: true
   })
   // 物流信息
   detail.logistics = detail.logisticsOrder
   if (detail.supplyType !== orderSupplyTypeEnum.PARTY_A.V) {
-    detail.selectObj = {}
-    detail.list.forEach(v => {
-      detail.selectObj[v.purchaseOrderDetailId] = {
-        ...v,
-        isSelected: true
+    detail.editObj = {}
+    detail.originList.forEach(v => {
+      if (!detail.editObj[v.mergeId]) {
+        detail.editObj[v.mergeId] = {
+          ...v,
+          applyPurchaseObj: {
+            [v.applyPurchaseId]: { ...v }
+          },
+          isSelected: true
+        }
+      } else {
+        detail.editObj[v.mergeId].applyPurchaseObj[v.applyPurchaseId] = { ...v }
       }
     })
   }
