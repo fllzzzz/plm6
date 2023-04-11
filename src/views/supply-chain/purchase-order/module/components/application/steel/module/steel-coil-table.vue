@@ -195,8 +195,6 @@ function rowInit(row) {
     accountingPrecision: row.classify.accountingPrecision, // 核算单位小数精度
     // measurePrecision: row.classify.measurePrecision, // 计量单位小数精度
     // quantity: undefined, // 数量（毫米，计量单位对应的值）
-    measureUnit: '米', // 计量单位
-    measurePrecision: 3, // 计量单位小数精度
     quantity: undefined, // 数量（米，计量单位对应的值）
     color: undefined, // 颜色
     brand: undefined, // 品牌
@@ -236,7 +234,7 @@ async function calcTheoryLength(row) {
 function calcTotalLength(row) {
   if (isNotBlank(row.theoryLength)) {
     // mm转为m
-    row.length = row.theoryLength / 1000
+    row.length = row.theoryLength * 1
   } else {
     row.length = undefined
   }

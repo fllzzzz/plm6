@@ -43,7 +43,7 @@
 <script setup>
 import { steelInboundApplication } from '@/api/wms/material-inbound/raw-material/application'
 import { edit as editInboundApplication } from '@/api/wms/material-inbound/raw-material/record'
-import { steelInboundApplicationPM as permission } from '@/page-permission/wms'
+import { manufInboundApplicationPM as permission } from '@/page-permission/wms'
 
 import { defineProps, defineEmits, ref, computed, watch, provide, nextTick, reactive } from 'vue'
 import { matClsEnum } from '@/utils/enum/modules/classification'

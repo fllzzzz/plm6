@@ -45,6 +45,9 @@ export const steelInboundApplicationPM = ['wms_steelInbound_application:submit']
 // 入库办理/辅材入库办理
 export const auxMatInboundApplicationPM = ['wms_auxMatInbound_application:submit']
 
+// 入库办理/制成品入库办理
+export const manufInboundApplicationPM = ['wms_manufInbound_application:submit']
+
 // 入库办理/气体入库办理
 export const gasInboundApplicationPM = ['wms_gasInbound_application:submit']
 

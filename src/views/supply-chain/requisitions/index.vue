@@ -130,7 +130,7 @@
             "
             :disabled-del="
               row.purchaseCreationState !== requisitionStatusEnum.NOT_STARTED.V ||
-              (isOpenApproval &&
+              Boolean(isOpenApproval &&
                 row.reviewStatus & (ddReviewStatusEnum.UNREVIEWED.V | ddReviewStatusEnum.AUDITING.V | ddReviewStatusEnum.PASS.V))
             "
             :del-type="isOpenApproval ? 'warning' : 'danger'"
@@ -172,7 +172,7 @@ const optShow = {
   add: true,
   edit: false,
   del: false,
-  download: false,
+  download: false
 }
 
 const tableRef = ref()
@@ -182,7 +182,7 @@ const dataFormat = ref([
   ['reviewStatus', ['parse-enum', ddReviewStatusEnum, { f: 'L' }]],
   ['materialTypeTag', ['parse-enum', materialPurchaseClsEnum, { f: 'T' }], { source: 'materialType' }],
   ['materialType', ['parse-enum', materialPurchaseClsEnum, { f: 'L' }]],
-  ['createTime', 'parse-time'],
+  ['createTime', 'parse-time']
 ])
 
 const { CRUD, crud, columns } = useCRUD(
@@ -192,7 +192,7 @@ const { CRUD, crud, columns } = useCRUD(
     invisibleColumns: [],
     // formStore: true,
     crudApi: { ...crudApi },
-    optShow: { ...optShow },
+    optShow: { ...optShow }
   },
   tableRef
 )
@@ -207,7 +207,7 @@ async function changeStatus(data, val) {
     await ElMessageBox.confirm('此操作将 "' + enabledEnum.VL[val] + '" ' + data.serialNumber + ', 是否继续？', '提示', {
       confirmButtonText: '确定',
       cancelButtonText: '取消',
-      type: 'warning',
+      type: 'warning'
     })
     await editStatus({ id: data.id, enabled: val })
     crud.refresh()

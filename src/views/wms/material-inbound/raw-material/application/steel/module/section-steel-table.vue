@@ -242,12 +242,12 @@ import materialSpecSelect from '@comp-cls/material-spec-select/index.vue'
 const props = defineProps({
   boolPartyA: {
     type: Boolean,
-    default: false,
+    default: false
   },
   fillableAmount: {
     type: Boolean,
-    default: false,
-  },
+    default: false
+  }
 })
 
 // 当前物料基础类型
@@ -270,17 +270,17 @@ const rules = {
   classifyId: [{ required: true, message: '请选择物料种类', trigger: 'change' }],
   length: [
     { required: true, message: '请填写定尺长度', trigger: 'blur' },
-    { pattern: positiveNumPattern, message: '定尺长度必须大于0', trigger: 'blur' },
+    { pattern: positiveNumPattern, message: '定尺长度必须大于0', trigger: 'blur' }
   ],
   quantity: [
     { required: true, message: '请填写数量', trigger: 'blur' },
-    { pattern: positiveNumPattern, message: '数量必须大于0', trigger: 'blur' },
+    { pattern: positiveNumPattern, message: '数量必须大于0', trigger: 'blur' }
   ],
   weighingTotalWeight: [
     { required: true, message: '请填写重量', trigger: 'blur' },
     { validator: diffSubmitValidate, message: '超出误差允许范围,不可提交', trigger: 'blur' },
-    { pattern: positiveNumPattern, message: '重量必须大于0', trigger: 'blur' },
-  ],
+    { pattern: positiveNumPattern, message: '重量必须大于0', trigger: 'blur' }
+  ]
 }
 
 // 金额校验
@@ -296,8 +296,8 @@ const amountRules = {
   unitPrice: [{ required: true, message: '请填写单价', trigger: 'blur' }],
   amount: [
     { required: true, message: '请填写金额', trigger: 'blur' },
-    { validator: validateAmount, message: '金额有误，请手动修改', trigger: 'blur' },
-  ],
+    { validator: validateAmount, message: '金额有误，请手动修改', trigger: 'blur' }
+  ]
 }
 
 const tableRules = computed(() => {
@@ -360,7 +360,7 @@ function rowInit(row) {
     theoryWeight: undefined, // 理论单件重量
     theoryTotalWeight: undefined, // 理论总重量
     weighingTotalWeight: undefined, // 过磅重量
-    hasOver: false, // 是否超出理论重量
+    hasOver: false // 是否超出理论重量
   })
 
   // 非甲供
@@ -385,7 +385,7 @@ function rowWatch(row) {
       form.selectObj[row.mergeId] = {
         ...form.selectObj[row.mergeId],
         ...row,
-        isSelected: _isSelected,
+        isSelected: _isSelected
       }
     }
     if (row.needFirstCalcTheoryWeight) {
@@ -415,7 +415,7 @@ function rowWatch(row) {
 async function calcTheoryWeight(row) {
   row.theoryWeight = await calcSectionSteelWeight({
     length: row.length, // 长度
-    unitWeight: row.unitWeight, // 单位重量
+    unitWeight: row.unitWeight // 单位重量
   })
 }
 
@@ -424,7 +424,7 @@ function calcTotalLength(row) {
   if (isNotBlank(row.length) && row.quantity) {
     row.totalLength = calcSectionSteelTotalLength({
       length: row.length, // 长度
-      quantity: row.quantity, // 数量
+      quantity: row.quantity // 数量
     })
   } else {
     row.totalLength = undefined
@@ -486,6 +486,6 @@ defineExpose({
   rowWatch,
   toggleRowSelection,
   validate,
-  setSelect,
+  setSelect
 })
 </script>

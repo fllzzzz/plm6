@@ -170,7 +170,7 @@ async function calcTheoryLength(row) {
 function calcTotalLength(row) {
   if (isNotBlank(row.theoryLength)) {
     // mm转为m
-    row.length = row.theoryLength / 1000
+    row.length = row.theoryLength * 1
   } else {
     row.length = undefined
   }
