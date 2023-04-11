@@ -122,7 +122,7 @@
         min-width="120"
       >
         <template v-slot="scope">
-          <span>{{ convertUnits(scope.row.actualGrossWeight, 'kg', 't', DP.COM_WT__T) }}</span>
+          <span>{{ convertUnits(scope.row.actualGrossWeight, 'kg', 't', 2) }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -135,7 +135,7 @@
         min-width="120"
       >
         <template v-slot="scope">
-          <span>{{ convertUnits(scope.row.emptyCars, 'kg', 't', DP.COM_WT__T) }}</span>
+          <span>{{ convertUnits(scope.row.emptyCars, 'kg', 't', 2) }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -148,7 +148,7 @@
         min-width="120"
       >
         <template v-slot="scope">
-          <span>{{ convertUnits(scope.row.actualWeight, 'kg', 't', DP.COM_WT__T) }}</span>
+          <span>{{ convertUnits(scope.row.actualWeight, 'kg', 't', 2) }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -161,7 +161,7 @@
         min-width="120"
       >
         <template v-slot="scope">
-          <span>{{ convertUnits(scope.row.totalNetWeight, 'kg', 't', DP.COM_WT__T) }}</span>
+          <span>{{ convertUnits(scope.row.totalNetWeight, 'kg', 't', 2) }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -175,7 +175,7 @@
       >
         <template v-slot="scope">
           <span :style="{ color: scope.row.acceptDifference ? '#13ce66' : '#ff4949' }">{{
-            convertUnits(scope.row.difference, 'kg', 't', DP.COM_WT__T)
+            convertUnits(scope.row.difference, 'kg', 't', 2)
           }}</span>
         </template>
       </el-table-column>
@@ -222,7 +222,7 @@ import { ref } from 'vue'
 import { mesShipPM as permission } from '@/page-permission/mes'
 import { manufactureTypeEnum } from '@enum-ms/production'
 import { packTypeEnum, deliveryStatusEnum } from '@enum-ms/mes'
-import { DP } from '@/settings/config'
+// import { DP } from '@/settings/config'
 import { cleanArray } from '@/utils/data-type/array'
 import EO from '@enum'
 import { convertUnits } from '@/utils/convert/unit'

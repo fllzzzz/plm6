@@ -3,7 +3,7 @@
     ref="drawerRef"
     fullscreen
     v-model="dialogVisible"
-    :title="`${props.detailData.name}工序生产明细`"
+    :title="`${componentTypeEnum.VL[props.detailData?.productType]}：${props.detailData?.name}生产明细`"
     :before-close="handleClose"
     :close-on-click-modal="false"
     :show-close="false"
@@ -22,6 +22,7 @@
         v-model="productionLineId"
         :factory-id="factoryId"
         :workshop-id="workshopId"
+        :productType="detailData.productType"
         :clearable="true"
         class="filter-item"
         style="width: 150px"
@@ -153,7 +154,7 @@ import { getProcessDetail } from '@/api/mes/production-manage/dashboard/project-
 import { defineProps, defineEmits, ref, watch, computed } from 'vue'
 import { tableSummary } from '@/utils/el-extra'
 import { weightTypeEnum } from '@enum-ms/common'
-import { taskTrackingSchedulingStatusEnum } from '@enum-ms/mes'
+import { taskTrackingSchedulingStatusEnum, componentTypeEnum } from '@enum-ms/mes'
 import { mesProjectOverviewPM as permission } from '@/page-permission/mes'
 import useVisible from '@compos/use-visible'
 import usePagination from '@compos/use-pagination'
@@ -222,9 +223,13 @@ const { handleSizeChange, handleCurrentChange, total, setTotalPage, queryPage } 
 watch(
   () => dialogVisible.value,
   (val) => {
-    if (val) {
-      processDetailGet()
-    }
+    workshopId.value = undefined
+    productionLineId.value = undefined
+    monomerId.value = undefined
+    areaId.value = undefined
+    serialNumber.value = undefined
+    status.value = undefined
+    processDetailGet()
   },
   { deep: true }
 )

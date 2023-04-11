@@ -82,8 +82,8 @@
         <el-table-column key="serialNumber" prop="serialNumber" label="编号" align="center" :show-overflow-tooltip="true" />
         <el-table-column key="specification" prop="specification" label="规格" align="center" :show-overflow-tooltip="true" />
         <el-table-column key="length" prop="length" label="长度(mm)" align="center" :show-overflow-tooltip="true" />
-        <el-table-column key="material" prop="material" label="材质" align="center" :show-overflow-tooltip="true" />
-        <el-table-column key="quantity" prop="quantity" label="数量" align="center" :show-overflow-tooltip="true" />
+        <el-table-column key="material" prop="material" label="材质" align="center" :show-overflow-tooltip="true" width="80px" />
+        <el-table-column key="quantity" prop="quantity" label="数量" align="center" :show-overflow-tooltip="true" width="60px" />
         <el-table-column key="netWeight" prop="netWeight" label="单净重（kg）" align="center" :show-overflow-tooltip="true" />
         <el-table-column key="grossWeight" prop="grossWeight" label="单毛重（kg）" align="center" :show-overflow-tooltip="true" />
         <el-table-column key="totalNetWeight" prop="totalNetWeight" label="总净重（kg）" align="center" :show-overflow-tooltip="true" />
@@ -197,7 +197,7 @@ const dataFormat = ref([
 // 合计
 function getSummaries(param) {
   const summary = tableSummary(param, {
-    props: ['quantity', 'netWeight', 'totalNetWeight', 'grossWeight', 'totalGrossWeight']
+    props: ['quantity', 'totalNetWeight', 'totalGrossWeight']
   })
   return summary
 }
