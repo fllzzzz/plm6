@@ -22,7 +22,7 @@
           </template>
         </el-table-column>
         <el-table-column v-if="columns.visible('monomerName')" align="center" key="monomerName" prop="monomerName" :show-overflow-tooltip="true" label="单体"/>
-        <el-table-column v-if="columns.visible('type')" align="center" key="type" prop="type" :show-overflow-tooltip="true" label="项目内容">
+        <el-table-column v-if="columns.visible('type')" align="center" key="type" prop="type" :show-overflow-tooltip="true" width="70" label="项目内容">
           <template v-slot="scope">
             <span>{{scope.row.contentType?TechnologyTypeAllEnum.VL[scope.row.contentType]:'-'}}</span>
           </template>
@@ -102,6 +102,40 @@
           </template>
         </el-table-column>
         <el-table-column
+          v-if="columns.visible('processProgress')"
+          key="processProgress"
+          prop="processProgress"
+          :show-overflow-tooltip="true"
+          label="发运计划"
+          min-width="220"
+        >
+          <template v-slot="scope">
+            <template v-if="isNotBlank(scope.row.deepVal)">
+              <template v-if="scope.row.showType===1">
+                <div><span>{{`计划用时${scope.row.processVal?.totalDays || '-'}天 | `}}</span><span :class="(scope.row.processVal?.actualDays && scope.row.processVal?.totalDays) && (scope.row.processVal.actualDays>scope.row.processVal.totalDays)?'red-color':'green-color'">{{`已用时${scope.row.processVal?.actualDays}天`}}</span></div>
+                <el-progress
+                  v-if="isNotBlank(scope.row.processVal)"
+                  :text-inside="true"
+                  :stroke-width="26"
+                  :percentage="scope.row.processVal?.dayRate"
+                />
+                <div>{{`总量${scope.row.processVal?.mete.toFixed(scope.row.processVal.decimal) || '-'}${scope.row.processVal?.unit || ''}|已完成${scope.row.processVal?.completedMete.toFixed(scope.row.processVal?.decimal) || '-' }${scope.row.processVal?.unit || ''}`}}</div>
+                <el-progress
+                  v-if="isNotBlank(scope.row.processVal)"
+                  :text-inside="true"
+                  :stroke-width="26"
+                  :percentage="scope.row.processVal?.meteRate"
+                  :status="'success'"
+                />
+              </template>
+              <template v-else>
+                <div><span>{{`计划用时${scope.row.processVal?.totalDays || '-'}天 | `}}</span><span :class="(scope.row.processVal?.actualDays && scope.row.processVal?.totalDays) && (scope.row.processVal.actualDays>scope.row.processVal.totalDays)?'red-color':'green-color'">{{`已用时${scope.row.processVal?.actualDays}天 | `}}</span><span>{{`总量${scope.row.processVal?.mete.toFixed(scope.row.processVal?.decimal) || '-' }${scope.row.processVal?.unit || ''} | 已完成${scope.row.processVal?.completedMete.toFixed(scope.row.processVal?.decimal) || '-' }${scope.row.processVal?.unit || ''}`}}</span></div>
+              </template>
+            </template>
+            <template v-else>-</template>
+          </template>
+        </el-table-column>
+        <el-table-column
           v-if="columns.visible('installProgress') && globalProject.businessType === businessTypeEnum.INSTALLATION.V"
           key="installProgress"
           prop="installProgress"
@@ -129,7 +163,7 @@
                 />
               </template>
               <template v-else>
-                <div><span>{{`计划用时${scope.row.installVal?.totalDays || '-'}天 | `}}</span><span :class="(scope.row.installVal?.actualDays && scope.row.installVal?.totalDays) && (scope.row.installVal.actualDays>scope.row.installVal.totalDays)?'red-color':'green-color'">{{`已用时${scope.row.installVal?.actualDays}天`}}</span></div>
+                <div><span>{{`计划用时${scope.row.installVal?.totalDays || '-'}天 | `}}</span><span :class="(scope.row.installVal?.actualDays && scope.row.installVal?.totalDays) && (scope.row.installVal.actualDays>scope.row.installVal.totalDays)?'red-color':'green-color'">{{`已用时${scope.row.installVal?.actualDays || '-'}天`}}</span></div>
               </template>
             </template>
             <template v-else>-</template>

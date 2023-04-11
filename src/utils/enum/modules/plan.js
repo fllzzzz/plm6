@@ -123,6 +123,14 @@ const paintTypeEnum = {
 }
 constantize(paintTypeEnum)
 
+// 工艺类型
+const planProcessTypeEnum = {
+  WELD: { L: '焊接工艺', K: 'WELD', V: 1 << 0 },
+  ASSEMBLE: { L: '装配工艺', K: 'ASSEMBLE', V: 1 << 1 },
+  PAINT: { L: '涂装工艺', K: 'PAINT', V: 1 << 2 }
+}
+constantize(planProcessTypeEnum)
+
 export {
   manufactureTypeEnum, // 制造类型
   overallPlanTypeEnum, // 部门计划类型
@@ -138,7 +146,8 @@ export {
   serialNumChangeTypeEnum,
   preparationRangeEnum, // 备料范围（类型）
   preparationStatusEnum, // 备料状态
-  paintTypeEnum
+  paintTypeEnum,
+  planProcessTypeEnum
 }
 
 export default {
@@ -156,5 +165,6 @@ export default {
   serialNumChangeTypeEnum,
   preparationRangeEnum, // 备料范围（类型）
   preparationStatusEnum, // 备料状态
-  paintTypeEnum
+  paintTypeEnum,
+  planProcessTypeEnum
 }

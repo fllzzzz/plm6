@@ -22,6 +22,7 @@
         prop="content"
         label="项目内容"
         align="center"
+        width="70"
       >
         <template v-slot="scope">
           {{scope.row.type?TechnologyTypeAllEnum.VL[scope.row.type]:'-'}}
@@ -50,6 +51,7 @@
           key="type"
           prop="type"
           label="生产方式"
+          width="70"
           align="center"
         >
           <template v-slot="scope">
@@ -102,6 +104,41 @@
           key="process"
           prop="process"
           label="加工计划"
+          align="center"
+          min-width="150"
+        >
+          <template v-slot="scope">
+            <template v-if="scope.row.areaList.length > 0">
+              <div v-for="(k,i) in scope.row.areaList" :key="k.id">
+                <div :class="i===scope.row.areaList.length-1?'sandwich-cell-bottom':'sandwich-cell-top'">
+                  <template v-if="isNotBlank(k.processVal)">
+                    <el-date-picker
+                      v-if="k.isModify"
+                      v-model="k.processVal.timeArr"
+                      type="daterange"
+                      range-separator=":"
+                      size="small"
+                      class="date-item filter-item"
+                      value-format="x"
+                      start-placeholder="开始"
+                      end-placeholder="结束"
+                      @change="timeChange(k.processVal,k)"
+                      :disabled="!isNotBlank(k.deepVal.timeArr)"
+                      :disabledDate="(date) => {if (k.deepVal.startDate) { return date.getTime() < k.deepVal.startDate || date.getTime() > k.date } else { return date.getTime() < globalProject.startDate || date.getTime() > k.date }}"
+                    />
+                    <span>{{k.processVal?.startDate && k.processVal?.endDate? parseTime(k.processVal.startDate,'{y}-{m}-{d}')+' : '+parseTime(k.processVal.endDate,'{y}-{m}-{d}'): '-'}}</span>
+                  </template>
+                </div>
+              </div>
+            </template>
+            <div v-else class="sandwich-cell-bottom"></div>
+          </template>
+        </el-table-column>
+        <el-table-column
+          v-if="columns.visible('process')"
+          key="process"
+          prop="process"
+          label="发运计划"
           align="center"
           min-width="150"
         >

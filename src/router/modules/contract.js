@@ -162,7 +162,7 @@ export default {
           path: 'order-tracking',
           hidden: false,
           component: '/contract/sales-manage/order-tracking/index',
-          meta: { title: '订单跟踪', icon: 'contract2', noCache: true }
+          meta: { title: '销售台账', icon: 'contract2', noCache: true }
         },
         {
           name: 'TransactionRecord',
