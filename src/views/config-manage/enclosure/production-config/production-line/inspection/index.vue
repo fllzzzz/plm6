@@ -11,7 +11,7 @@
         <el-table-column key="memberNames" prop="memberNames" label="质检人员" min-width="160px" show-overflow-tooltip />
       </common-table>
       <common-dialog
-        title="选择班组"
+        title="选择质检"
         v-model="dialogVisible"
         :before-close="
           () => {
@@ -104,7 +104,7 @@ async function fetchList() {
     const data = await get({ id: lineId.value })
     list.value = (data.inspectionTeams || []).map((row) => {
       row.memberNames = row.userLinkList.map(m => {
-        row.teamId = m.teamId
+        row.teamId = m.inspectionTeamId
         return m.userName
       }).join(', ')
       return row

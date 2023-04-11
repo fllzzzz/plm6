@@ -14,6 +14,7 @@
                   :disabled="!currentLine.name"
                   size="mini"
                   type="enum"
+                  :unshowVal="[teamTypeEnum.INSPECTION.V]"
                   :options="teamTypeEnum.ENUM"
                 />
                 <el-tooltip
