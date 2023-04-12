@@ -93,6 +93,7 @@ const mesStructureProjectSummary = mes.structureProjectSummary
 const mesEnclosureProjectSummary = mes.enclosureProjectSummary
 const mesQHSEProductionLineReport = mes.qhseProductionLineReport
 const mesProjectOverviewList = mes.projectOverviewList
+const mesSchedulingDataList = mes.mesSchedulingDataList
 
 const mesStructureTeamWage = mes.teamWage
 const mesEnclosureTeamWage = mes.teamWage
@@ -253,6 +254,7 @@ export default {
   mesEnclosureProjectSummary, // 围护项目汇总
   mesQHSEProductionLineReport, // 生产线质检报表
   mesProjectOverviewList, // 工序生产明细清单
+  mesSchedulingDataList, // 排产数据生产明细
 
   mesMainMaterialTrack, // 主材跟踪汇总
   mesMainMaterialTrackUseRecord, // 主材跟踪-钢材领用记录

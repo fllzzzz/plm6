@@ -83,7 +83,7 @@
               label="完成（件/kg）"
             >
               <template v-slot="scope">
-                <span>{{
+                <span class="tc-primary">{{
                   weightStatus === weightTypeEnum.NET.V
                     ? scope.row.completeQuantity + '/' + scope.row.completeNetWeight?.toFixed(DP.COM_WT__KG)
                     : scope.row.completeQuantity + '/' + '-'
@@ -148,7 +148,7 @@
               label="完成（件/kg）"
             >
               <template v-slot="scope">
-                <span>{{
+                <span class="tc-primary">{{
                   weightStatus === weightTypeEnum.NET.V
                     ? scope.row.completeQuantity + '/' + scope.row.completeNetWeight?.toFixed(DP.COM_WT__KG)
                     : scope.row.completeQuantity + '/' + scope.row.completeGrossWeight?.toFixed(DP.COM_WT__KG)

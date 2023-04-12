@@ -685,6 +685,15 @@ export function projectOverviewList(params) {
   })
 }
 
+// 生产排产：排产数据
+export function mesSchedulingDataList(params) {
+  return request({
+    url: `/api/mes/building/scheduling/artifact/artifact/scheduling/detail/print`,
+    method: 'get',
+    params
+  })
+}
+
 // 制成品入发存
 export function productSendReceiveStorage(params) {
   return request({
@@ -758,6 +767,9 @@ export default {
   structureProjectSummary, // 结构项目汇总
   enclosureProjectSummary, // 围护项目汇总
   projectOverviewList, // 项目总览工序清单
+
+  // 生产排产
+  mesSchedulingDataList, // 排产数据清单
 
   // 工单管理
   schedulingDetail, // 工单详情

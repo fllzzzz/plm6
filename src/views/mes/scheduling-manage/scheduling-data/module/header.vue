@@ -102,6 +102,7 @@ function handleChange(val) {
     query.dateTime = moment().startOf('month').valueOf()
   }
   fetchSummary()
+  crud.data = []
   crud.toQuery()
 }
 

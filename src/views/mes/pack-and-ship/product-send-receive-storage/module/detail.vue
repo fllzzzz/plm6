@@ -11,6 +11,7 @@
   >
     <template #titleAfter>
       <el-tag size="medium">{{ `项目：${projectNameFormatter(detailInfo.project)}` }}</el-tag>
+      <el-tag size="medium">{{ `查询日期：${dateTime ? parseTime(dateTime, '{y}-{m}') : '-'}` }}</el-tag>
     </template>
     <template #titleRight>
       <print-table
@@ -144,7 +145,7 @@ import { weightTypeEnum } from '@enum-ms/common'
 import { tableSummary } from '@/utils/el-extra'
 import { DP } from '@/settings/config'
 import { projectNameFormatter } from '@/utils/project'
-
+import { parseTime } from '@/utils/date'
 import useVisible from '@compos/use-visible'
 import useMaxHeight from '@compos/use-max-height'
 import usePagination from '@compos/use-pagination'
@@ -186,6 +187,9 @@ const props = defineProps({
   },
   weightStatus: {
     type: Number
+  },
+  dateTime: {
+    type: String
   }
 })
 

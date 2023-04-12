@@ -6,8 +6,42 @@
     v-model="drawerVisible"
     direction="rtl"
     :before-close="handleClose"
-    size="70%"
+    size="90%"
   >
+    <template #titleAfter>
+      <project-cascader v-model="projectId" class="filter-item" clearable style="width: 270px" @change="fetchDetail" />
+      <monomer-select-area-select
+        v-model:monomerId="monomerId"
+        v-model:areaId="areaId"
+        needConvert
+        clearable
+        areaClearable
+        :project-id="projectId"
+        style="width: 150px"
+        @change="fetchDetail"
+      />
+      <el-input
+        v-model.trim="serialNumber"
+        placeholder="编号搜索"
+        style="width: 150px"
+        class="filter-item"
+        clearable
+        @keyup.enter="fetchDetail"
+      />
+      <common-button class="filter-item" size="mini" type="success" icon="el-icon-search" @click.stop="searchQuery">搜索</common-button>
+      <common-button class="filter-item" size="mini" type="warning" icon="el-icon-refresh-left" @click.stop="resetQuery">
+        重置
+      </common-button>
+    </template>
+    <template #titleRight>
+      <print-table
+        api-key="mesSchedulingDataList"
+        :params="{ dateTime: props.dateTime, workshopId: props.workshopId, ...commonQuery }"
+        size="mini"
+        type="warning"
+        class="filter-item"
+      />
+    </template>
     <template #content>
       <!--表格渲染-->
       <common-table ref="tableRef" :show-empty-symbol="false" :max-height="maxHeight" :data="list" return-source-data style="width: 100%">
@@ -39,7 +73,7 @@
         />
         <el-table-column :show-overflow-tooltip="true" prop="completeQuantity" key="completeQuantity" label="完成数" align="center">
           <template #default="{ row }">
-            <span :class="row.schedulingQuantity === row.completeQuantity ? '' : 'tc-danger'">{{ row.completeQuantity }}</span>
+            <span :class="row.schedulingQuantity === row.completeQuantity ? 'tc-success' : 'tc-danger'">{{ row.completeQuantity }}</span>
           </template>
         </el-table-column>
         <el-table-column
@@ -50,7 +84,9 @@
           align="center"
         >
           <template #default="{ row }">
-            <span :class="row.schedulingQuantity === row.completeQuantity ? '' : 'tc-danger'">{{ row.completeTotalNetWeight }}</span>
+            <span :class="row.schedulingQuantity === row.completeQuantity ? 'tc-success' : 'tc-danger'">{{
+              row.completeTotalNetWeight
+            }}</span>
           </template>
         </el-table-column>
       </common-table>
@@ -73,12 +109,18 @@ import { getScheduleDetail } from '@/api/mes/scheduling-manage/scheduling-data.j
 import useVisible from '@compos/use-visible'
 import usePagination from '@compos/use-pagination'
 import useMaxHeight from '@compos/use-max-height'
-import { defineProps, defineEmits, ref } from 'vue'
+import { defineProps, defineEmits, ref, computed } from 'vue'
 import { projectNameFormatter } from '@/utils/project'
+import projectCascader from '@comp-base/project-cascader'
+import monomerSelectAreaSelect from '@comp-base/monomer-select-area-select'
 // import { mesProductionLineTrackingPM as permission } from '@/page-permission/mes'
 
 const emit = defineEmits(['update:visible'])
 const list = ref([])
+const projectId = ref()
+const monomerId = ref()
+const areaId = ref()
+const serialNumber = ref()
 
 const props = defineProps({
   visible: {
@@ -93,6 +135,14 @@ const props = defineProps({
   }
 })
 
+const commonQuery = computed(() => {
+  return {
+    projectId: projectId.value,
+    monomerId: monomerId.value,
+    areaId: areaId.value,
+    serialNumber: serialNumber.value
+  }
+})
 const { visible: drawerVisible, handleClose } = useVisible({ emit, props, field: 'visible', showHook: fetchDetail })
 const { handleSizeChange, handleCurrentChange, total, setTotalPage, queryPage } = usePagination({ fetchHook: fetchDetail })
 
@@ -115,6 +165,7 @@ async function fetchDetail() {
     const { content = [], totalElements } = await getScheduleDetail({
       dateTime: props.dateTime,
       workshopId: props.workshopId,
+      ...commonQuery.value,
       ...queryPage
     })
     setTotalPage(totalElements)
@@ -124,6 +175,18 @@ async function fetchDetail() {
   } finally {
     list.value = _list
   }
+}
+
+function searchQuery() {
+  fetchDetail()
+}
+
+function resetQuery() {
+  projectId.value = undefined
+  monomerId.value = undefined
+  areaId.value = undefined
+  serialNumber.value = undefined
+  fetchDetail()
 }
 </script>
 

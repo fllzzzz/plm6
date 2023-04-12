@@ -12,7 +12,7 @@
           highlight-current-row
           :empty-text="crud.emptyText"
           :max-height="maxHeight"
-          style="width: 100%"
+          style="width: 100%; cursor: pointer"
           @current-change="currentChange"
         >
           <el-table-column prop="index" label="序号" align="center" width="60" type="index" />
@@ -25,10 +25,7 @@
             label="排产日期"
           >
             <template v-slot="scope">
-              <span v-if="crud.query.productType === componentTypeEnum.ARTIFACT.V">{{
-                scope.row.scheduleTime ? parseTime(scope.row.scheduleTime, '{y}-{m}-{d}') : '-'
-              }}</span>
-              <span v-else>-</span>
+              <span>{{ scope.row.scheduleTime ? parseTime(scope.row.scheduleTime, '{y}-{m}-{d}') : '-' }}</span>
             </template>
           </el-table-column>
           <el-table-column
@@ -84,7 +81,7 @@
             width="130px"
           >
             <template v-slot="scope">
-              <span>{{
+              <span class="tc-primary">{{
                 crud.query.weightStatus === weightTypeEnum.NET.V
                   ? scope.row.completeQuantity + '/' + (scope.row.completeNetWeight / 1000)?.toFixed(DP.COM_WT__KG)
                   : scope.row.completeQuantity + '/' + (scope.row.completeGrossWeight / 1000)?.toFixed(DP.COM_WT__KG)
