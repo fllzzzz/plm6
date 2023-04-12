@@ -256,6 +256,11 @@ export const settlementManagePM = {
   download: ['contract_settlement_manage:download'] // 结算单下载
 }
 
+// 销售管理/发运跟踪
+export const deliveryTrackingPM = {
+  get: ['delivery_tracking:get'] // 列表
+}
+
 // --------------------------- 销售管理 end --------------------------------
 
 // --------------------------- 费用录入 start ------------------------------

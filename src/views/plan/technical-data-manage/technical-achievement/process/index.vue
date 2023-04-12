@@ -112,7 +112,7 @@ const query = ref({})
 const areaInfo = ref([])
 const { crud, columns, CRUD } = useCRUD(
   {
-    title: '变更文件',
+    title: '工艺文件',
     sort: ['id.desc'],
     permission: { ...permission },
     optShow: { ...optShow },

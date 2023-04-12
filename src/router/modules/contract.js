@@ -170,6 +170,13 @@ export default {
           hidden: false,
           component: '/contract/sales-manage/transaction-record/index',
           meta: { title: '客户交易记录', icon: 'contract2', noCache: true }
+        },
+        {
+          name: 'DeliveryTracking',
+          path: 'delivery-tracking',
+          hidden: false,
+          component: '/contract/sales-manage/delivery-tracking/index',
+          meta: { title: '发运跟踪', icon: 'contract2', noCache: true }
         }
       ]
     },

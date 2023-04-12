@@ -10,21 +10,32 @@
         class="filter-item"
         @change="crud.toQuery"
       />
-      <common-radio-button
-        v-model="query.productType"
-        :options="packTypeEnum.ENUM"
+       <common-radio-button
+        v-model="query.projectStatus"
+        :options="projectStatusEnum.ENUM"
+        :unshowVal="[projectStatusEnum.SUSPEND.V]"
         showOptionAll
-        type="enumSL"
+        type="enum"
         size="small"
         class="filter-item"
-        @change="crud.toQuery"
+        @change="projectStatusChange"
       />
       <project-visa-select
         v-model="query.projectId"
         class="filter-item"
         style="width: 300px"
         @change="crud.toQuery"
+        :projectStatus="status"
+        :saveSettlement="query.projectStatus===projectStatusEnum.SETTLED.V?true:false"
         placeholder="可选择项目搜索"
+        clearable
+      />
+      <el-input
+        v-model.trim="query.projectContent"
+        size="small"
+        placeholder="输入项目内容"
+        style="width: 200px;"
+        class="filter-item"
         clearable
       />
       <el-date-picker
@@ -56,9 +67,9 @@
 </template>
 
 <script setup>
+import { ref } from 'vue'
 import moment from 'moment'
-import { packTypeEnum } from '@enum-ms/mes'
-import { orderSourceTypeEnum } from '@enum-ms/contract'
+import { orderSourceTypeEnum, projectStatusEnum } from '@enum-ms/contract'
 
 import { regHeader } from '@compos/use-crud'
 import crudOperation from '@crud/CRUD.operation'
@@ -68,10 +79,17 @@ import projectVisaSelect from '@comp-base/project-visa-select'
 const defaultQuery = {
   date: undefined, startDate: undefined, endDate: undefined,
   orderSourceType: undefined,
-  productType: { value: undefined, resetAble: false },
+  projectContent: undefined,
   projectId: { value: undefined, resetAble: false }
 }
 const { crud, query } = regHeader(defaultQuery)
+const status = ref()
+function projectStatusChange(val) {
+  if (val !== projectStatusEnum.SETTLED.V) {
+    status.value = val
+  }
+  crud.toQuery()
+}
 
 function handleDateChange() {
   if (query.date && query.date.length > 1) {
