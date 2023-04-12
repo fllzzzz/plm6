@@ -27,26 +27,35 @@
       ref="tableRef"
       :data="processDetailData"
       :max-height="maxHeight + 115"
+      :show-empty-symbol="false"
       show-summary
       :summary-method="getSummaries"
       style="width: 100%"
     >
       <el-table-column :show-overflow-tooltip="true" prop="index" label="序号" align="center" width="60" type="index" />
-      <el-table-column :show-overflow-tooltip="true" prop="monomer.name" label="单体" align="center"></el-table-column>
-      <el-table-column :show-overflow-tooltip="true" prop="area.name" label="区域" align="center"></el-table-column>
-      <el-table-column :show-overflow-tooltip="true" prop="serialNumber" label="编号" align="center"></el-table-column>
-      <el-table-column :show-overflow-tooltip="true" prop="specification" label="规格" align="center"></el-table-column>
-      <el-table-column :show-overflow-tooltip="true" prop="material" label="材质" align="center"></el-table-column>
-      <el-table-column :show-overflow-tooltip="true" prop="length" label="长度" align="center"></el-table-column>
-      <el-table-column :show-overflow-tooltip="true" prop="netWeight" label="单净重（kg）" align="center"></el-table-column>
+      <el-table-column :show-overflow-tooltip="true" prop="monomer.name" label="单体" align="center">
+        <template #default="{ row }">
+          <span>{{ row.monomer ? row.monomer?.name : '/' }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column :show-overflow-tooltip="true" prop="area.name" label="区域" align="center">
+        <template #default="{ row }">
+          <span>{{ row.area ? row.area?.name : '/' }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column :show-overflow-tooltip="true" prop="serialNumber" label="编号" align="center" />
+      <el-table-column :show-overflow-tooltip="true" prop="specification" label="规格" align="center" />
+      <el-table-column :show-overflow-tooltip="true" prop="material" label="材质" align="center" />
+      <el-table-column :show-overflow-tooltip="true" prop="length" label="长度" align="center" />
+      <el-table-column :show-overflow-tooltip="true" prop="netWeight" label="单净重（kg）" align="center" />
       <el-table-column
         v-if="props.detailData.productType !== componentTypeEnum.ASSEMBLE.V"
         :show-overflow-tooltip="true"
         prop="grossWeight"
         label="单毛重（kg）"
         align="center"
-      ></el-table-column>
-      <el-table-column :show-overflow-tooltip="true" prop="quantity" label="需生产数" align="center"></el-table-column>
+      />
+      <el-table-column :show-overflow-tooltip="true" prop="quantity" label="需生产数" align="center" />
       <el-table-column :show-overflow-tooltip="true" prop="completeQuantity" label="完成数" align="center">
         <template #default="{ row }">
           <el-tag style="cursor: pointer" @click="showQuantity(row)">{{ row.completeQuantity }}</el-tag>
@@ -99,16 +108,14 @@ const props = defineProps({
 
 const monomerId = inject('monomerId')
 const areaId = inject('areaId')
-const startDate = inject('startDate')
-const endDate = inject('endDate')
+const productionLineId = inject('productionLineId')
 
 const query = computed(() => {
   return {
     productType: props.detailData.productType,
     processId: props.detailData.id,
     projectId: props.projectId,
-    startDate: startDate.value,
-    endDate: endDate.value
+    productionLineId: productionLineId.value
   }
 })
 

@@ -57,7 +57,7 @@ const wmsRmRejectReceipt = wms.dataFormat // 退货单
 const wmsRmSupplementReceipt = wms.supplementDataFormat // 红冲记录
 const wmsRmTransferReceipt = wms.transferDataFormat // 调拨单
 const auxiliaryMaterialList = wms.dataFormat // 业财报表辅材费清单
-const gasRecord = wms.dataFormat // 合同管理/费用录入/气体统计
+// const gasRecord = wms.dataFormat // 合同管理/费用录入/气体统计
 const conMainMaterialList = wms.dataFormat // 合同管理/业财报表主材费
 const mesOutBoundStatisticsList = wms.dataFormat // 任务跟踪/在制品出库记录详情
 
@@ -109,7 +109,7 @@ export default {
   wmsRmTransferReceipt, // 调拨单
 
   auxiliaryMaterialList, // 业财报表/辅材费清单
-  gasRecord, // 合同管理/费用录入/气体统计
+  // gasRecord, // 合同管理/费用录入/气体统计
   conMainMaterialList, // 合同管理/业财报表主材费
   mesOutBoundStatisticsList // 任务跟踪/在制品出库记录详情
 }

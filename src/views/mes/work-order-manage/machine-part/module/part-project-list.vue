@@ -41,7 +41,7 @@
     <el-table-column label="序号" type="index" align="center" width="60" />
     <el-table-column prop="projectName" :show-overflow-tooltip="true" label="项目列表" min-width="100" align="center">
       <template #default="{ row }">
-        <span>{{ row.serialNumber }}-{{ row.name }}</span>
+        <span style="cursor: pointer">{{ row.serialNumber }}-{{ row.name }}</span>
       </template>
     </el-table-column>
   </common-table>
@@ -53,7 +53,7 @@ import { ref, defineProps, defineEmits, watch, inject } from 'vue'
 import moment from 'moment'
 import checkPermission from '@/utils/system/check-permission'
 import { mesMachinePartOrderTypeEnum } from '@enum-ms/mes'
-import { machinePartSchedulingNestingResultPM as permission } from '@/page-permission/mes'
+import { machinePartWorkOrderPM as permission } from '@/page-permission/mes'
 
 const emit = defineEmits(['nesting-task-click'])
 const crud = inject('crud')

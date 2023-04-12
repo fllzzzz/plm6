@@ -6,7 +6,7 @@
     :visible="crud.status.cu > 0"
     :title="`${isEdit ? '编辑' : '新增'} ${gasType} 气体统计`"
     :show-close="false"
-    width="25%"
+    width="500px"
     top="10vh"
   >
     <template #titleRight>
@@ -77,7 +77,7 @@
 
 <script setup>
 import { ref, defineProps, computed } from 'vue'
-import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
+// import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { regForm } from '@compos/use-crud'
 import { ElMessage } from 'element-plus'
 
@@ -160,43 +160,43 @@ CRUD.HOOK.beforeSubmit = async () => {
   form.accountingUnit = crud.query.unit
   crud.query.year = form.year
   crud.refresh()
-  crud.form = await numFmtByBasicClass(
-    form,
-    {
-      toSmallest: true,
-      toNum: true
-    },
-    {
-      mete: ['usedMete'],
-      amount: ['avgUnitPrice']
-    }
-  )
-  prop.detailData.forEach(async (v) => {
-    if ((v.year === crud.query.year && v.month !== form.month) || (v.year !== crud.query.year && v.month === form.month)) {
-      crud.form = await numFmtByBasicClass(
-        form,
-        {
-          toSmallest: false,
-          toNum: true
-        },
-        {
-          mete: ['usedMete'],
-          amount: ['avgUnitPrice']
-        }
-      )
-      crud.data = await numFmtByBasicClass(
-        crud.data,
-        {
-          toSmallest: false,
-          toNum: true
-        },
-        {
-          mete: ['usedMete'],
-          amount: ['avgUnitPrice']
-        }
-      )
-    }
-  })
+  // crud.form = await numFmtByBasicClass(
+  //   form,
+  //   {
+  //     toSmallest: true,
+  //     toNum: true
+  //   },
+  //   {
+  //     mete: ['usedMete'],
+  //     amount: ['avgUnitPrice']
+  //   }
+  // )
+  // prop.detailData.forEach(async (v) => {
+  //   if ((v.year === crud.query.year && v.month !== form.month) || (v.year !== crud.query.year && v.month === form.month)) {
+  //     crud.form = await numFmtByBasicClass(
+  //       form,
+  //       {
+  //         toSmallest: false,
+  //         toNum: true
+  //       },
+  //       {
+  //         mete: ['usedMete'],
+  //         amount: ['avgUnitPrice']
+  //       }
+  //     )
+  //     crud.data = await numFmtByBasicClass(
+  //       crud.data,
+  //       {
+  //         toSmallest: false,
+  //         toNum: true
+  //       },
+  //       {
+  //         mete: ['usedMete'],
+  //         amount: ['avgUnitPrice']
+  //       }
+  //     )
+  //   }
+  // })
 }
 
 function disabledDate(time) {

@@ -57,7 +57,12 @@ export const artifactSchedulingPM = {
 // 生产排产/零件排产/零件排产
 export const machinePartSchedulingPM = {
   get: ['mes_scheduling_machine_part:get'], // 列表
-  save: ['mes_scheduling_machine_part:save'] // 零件排产保存
+  save: ['mes_scheduling_machine_part:save'], // 零件排产保存
+  add: ['mes_scheduling_machine_part:add'], // 添加标准件
+  detailAdd: ['mes_scheduling_machine_part:detailAdd'], // 标准件详情添加
+  noNestingSave: ['mes_scheduling_machine_part:noNestingSave'], // 无需套料保存
+  nestingSave: ['mes_scheduling_machine_part:nestingSave'], // 套料保存
+  del: ['mes_scheduling_machine_part:del'] // 删除
 }
 
 // 生产排产/零件排产/预览记录
@@ -71,8 +76,11 @@ export const machinePartSchedulingRecordPM = {
 // 生产排产/零件排产/套料成果
 export const machinePartSchedulingNestingResultPM = {
   get: ['mes_scheduling_machine_part_nesting_result:get'], // 列表
-  del: ['mes_scheduling_machine_part_nesting_result:del'], // 删除
-  save: ['mes_scheduling_machine_part_nesting_result:save'] // 任务下发
+  // del: ['mes_scheduling_machine_part_nesting_result:del'], // 删除
+  // save: ['mes_scheduling_machine_part_nesting_result:save'], // 任务下发
+  document: ['mes_scheduling_machine_part_nesting_result:document'], // 套料文档详情
+  downloadZip: ['mes_scheduling_machine_part_nesting_result:downloadZip'], // 下载压缩包
+  scheduling: ['mes_scheduling_machine_part_nesting_result:scheduling'] // 排产
 }
 
 // 生产监控看板
@@ -101,6 +109,13 @@ export const machinePartWorkOrderPM = {
   get: ['mes_work_order_machine_part:get'], // 列表
   detail: ['mes_work_order_machine_part:detail'], // 查看
   print: ['mes_work_order_machine_part:print'] // 打印
+}
+
+// 工单管理/钻孔工单
+export const drillWorkOrderPM = {
+  get: ['mes_work_order_drill:get'], // 列表
+  detail: ['mes_work_order_drill:detail'], // 查看
+  print: ['mes_work_order_drill:print'] // 打印
 }
 
 // --------------------------- 工单管理 end --------------------------------
@@ -585,6 +600,12 @@ export const mesProductionStatisticsPM = {
   get: ['mes_production_statistics:get'], // 产量统计列表
   statistics: ['mes_production_statistics:statistics'], // 产量统计汇总数据
   export: ['mes_production_statistics:export'] // 产量统计工资清单导出
+}
+
+// 产线工资统计/栓钉套筒统计
+export const mesStudSleeveStatisticsPM = {
+  get: ['mes_stud_sleeve_statistics:get'], // 列表
+  print: ['mes_stud_sleeve_statistics:export'] // 打印
 }
 
 // 产线工资统计/工价调整

@@ -8,6 +8,7 @@
       v-loading="crud.loading"
       :data="crud.data"
       :empty-text="crud.emptyText"
+      :show-empty-symbol="false"
       :max-height="maxHeight"
       row-key="projectId"
       style="width: 100%"
@@ -26,25 +27,43 @@
         </template>
       </el-table-column>
       <el-table-column prop="unit" key="unit" label="单位" align="center" />
-      <el-table-column prop="taskNetWeight" key="taskNetWeight" label="任务量（件/kg）" align="center">
+      <el-table-column prop="taskQuantity" key="taskQuantity" label="任务量（件/kg）" align="center">
         <template #default="{ row }">
-          <span @click.stop="getTaskDetail(row)" style="cursor: pointer" class="tc-danger">
-            {{ row.taskQuantity }}/{{ row.taskNetWeight }}
-          </span>
+          <div @click.stop="getTaskDetail(row)" style="cursor: pointer">
+            <span class="tc-danger">
+              {{ row.taskQuantity }}
+            </span>
+            <span> / </span>
+            <span class="tc-danger">
+              {{ row.taskNetWeight }}
+            </span>
+          </div>
         </template>
       </el-table-column>
-      <el-table-column prop="taskNetWeight" key="taskNetWeight" label="生产量（件/kg）" align="center">
+      <el-table-column prop="productionQuantity" key="productionQuantity" label="生产量（件/kg）" align="center">
         <template #default="{ row }">
-          <span @click.stop="getProductionDetail(row)" style="cursor: pointer" class="tc-danger">
-            {{ row.productionQuantity }}/{{ row.productionNetWeight }}
-          </span>
+          <div @click.stop="getProductionDetail(row)" style="cursor: pointer">
+            <span class="tc-danger">
+              {{ row.productionQuantity }}
+            </span>
+            <span> / </span>
+            <span class="tc-danger">
+              {{ row.productionNetWeight }}
+            </span>
+          </div>
         </template>
       </el-table-column>
-      <el-table-column prop="taskNetWeight" key="taskNetWeight" label="领料量（件/kg）" align="center">
+      <el-table-column prop="pickingQuantity" key="pickingQuantity" label="领料量（件/kg）" align="center">
         <template #default="{ row }">
-          <span @click.stop="getPickingDetail(row)" style="cursor: pointer" class="tc-danger">
-            {{ row.pickingQuantity }}/{{ row.pickingNetWeight }}
-          </span>
+          <div @click.stop="getPickingDetail(row)" style="cursor: pointer">
+            <span class="tc-danger">
+              {{ row.pickingQuantity }}
+            </span>
+            <span> / </span>
+            <span class="tc-danger">
+              {{ row.pickingNetWeight }}
+            </span>
+          </div>
         </template>
       </el-table-column>
     </common-table>

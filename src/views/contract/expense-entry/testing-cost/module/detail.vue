@@ -9,7 +9,7 @@
       </template>
       <template #content>
         <!--表格渲染-->
-        <common-table ref="tableRef" :max-height="maxHeight" :data="detailList" return-source-data style="width: 100%">
+        <common-table ref="tableRef" :show-empty-symbol="false" :max-height="maxHeight" :data="detailList" style="width: 100%">
           <el-table-column :show-overflow-tooltip="true" prop="index" label="序号" align="center" width="60" type="index" />
           <el-table-column align="center" key="month" prop="month" :show-overflow-tooltip="true" label="月份" width="80">
             <template #default="{ row }">
@@ -56,6 +56,30 @@
               </template>
             </template>
           </el-table-column>
+          <el-table-column align="center" key="remark" prop="remark" :show-overflow-tooltip="true" label="备注" />
+          <el-table-column align="center" label="操作">
+            <template #default="{ row: { sourceRow: row } }">
+              <!-- <del-btn :data="scope.row" /> -->
+              <common-button type="primary" size="mini" icon="el-icon-edit" @click.stop="editClick(row)" />
+              <el-popover
+                v-model:visible="row.pop"
+                placement="top"
+                width="180"
+                trigger="manual"
+                @show="onPopoverShow"
+                @hide="onPopoverHide"
+              >
+                <p>确定删除吗？</p>
+                <div style="text-align: right; margin: 0">
+                  <common-button size="mini" type="text" @click.stop="cancelDel(row)">取消</common-button>
+                  <common-button type="primary" size="mini" @click.stop="delClick(row)">确定</common-button>
+                </div>
+                <template #reference>
+                  <common-button type="danger" icon="el-icon-delete" size="mini" @click.stop="toDelete(row)" />
+                </template>
+              </el-popover>
+            </template>
+          </el-table-column>
         </common-table>
         <!-- 分页 -->
         <el-pagination
@@ -69,14 +93,15 @@
         />
       </template>
     </common-drawer>
+    <m-form v-model:visible="editFormVisible" :info="itemInfo" @success="fetchDetail" @refresh="crud.toQuery" />
     <showPdfAndImg v-if="pdfShow" :isVisible="pdfShow" :showType="'attachment'" :id="currentId" @close="pdfShow = false" />
   </div>
 </template>
 
 <script setup>
-import { getDetail } from '@/api/contract/expense-entry/testing-cost'
-import { defineProps, defineEmits, ref } from 'vue'
-
+import { getDetail, del } from '@/api/contract/expense-entry/testing-cost'
+import { defineProps, defineEmits, ref, inject } from 'vue'
+import { ElMessage } from 'element-plus'
 import { parseTime } from '@/utils/date'
 import { toThousand } from '@data-type/number'
 import useVisible from '@compos/use-visible'
@@ -85,13 +110,16 @@ import useMaxHeight from '@compos/use-max-height'
 import { projectNameFormatter } from '@/utils/project'
 
 import showPdfAndImg from '@comp-base/show-pdf-and-img.vue'
+import mForm from './form.vue'
 
 // import projectCascader from '@comp-base/project-cascader.vue'
 
-const emit = defineEmits(['update:visible'])
+const emit = defineEmits(['update:visible', 'refresh'])
 const detailList = ref([])
 const pdfShow = ref(false)
 const currentId = ref()
+const crud = inject('crud')
+const pop = ref(false)
 
 const props = defineProps({
   visible: {
@@ -108,6 +136,9 @@ const props = defineProps({
   }
 })
 
+const editFormVisible = ref(false)
+const itemInfo = ref({})
+
 // 高度
 const { maxHeight } = useMaxHeight({
   extraBox: ['.el-drawer__header'],
@@ -117,8 +148,12 @@ const { maxHeight } = useMaxHeight({
   paginate: true
 })
 
-const { visible: drawerVisible, handleClose } = useVisible({ emit, props, field: 'visible', showHook: fetchDetail })
+const { visible: drawerVisible, handleClose } = useVisible({ emit, props, field: 'visible', showHook: showHook })
 const { handleSizeChange, handleCurrentChange, total, setTotalPage, queryPage } = usePagination({ fetchHook: fetchDetail })
+
+function showHook() {
+  fetchDetail()
+}
 
 async function fetchDetail() {
   let _list = []
@@ -130,7 +165,10 @@ async function fetchDetail() {
       ...queryPage
     })
     setTotalPage(totalElements)
-    _list = content
+    _list = content.map((v) => {
+      v.pop = false
+      return v
+    })
   } catch (e) {
     console.log('获取检测费用', e)
   } finally {
@@ -144,15 +182,58 @@ function attachmentView(item) {
   pdfShow.value = true
 }
 
-// 搜索
-// function searchQuery() {
-//   fetchDetail()
-// }
-// 重置
-// function resetQuery() {
-//   projectId.value = undefined
-//   fetchDetail()
-// }
+async function delClick(row) {
+  try {
+    const data = []
+    data.push(row.id)
+    await del(data)
+    ElMessage({ type: 'success', message: '删除成功' })
+    // 重新查询
+    fetchDetail()
+    emit('refresh')
+  } catch (err) {
+    console.log('delClick', err)
+  }
+}
+
+function editClick(row) {
+  const attachmentIds = row.attachmentFiles ? row.attachmentFiles.map((v) => v.id) : row.attachmentIds
+  itemInfo.value = {
+    payDate: row.payDate,
+    projectId: row.project?.id,
+    testingFeeTypeId: row.testingFeeTypeId,
+    attachmentIds: attachmentIds,
+    feeAmount: row.feeAmount,
+    id: row.id,
+    attachmentFiles: row.attachments,
+    attachments: row.attachments,
+    remark: row.remark
+  }
+  editFormVisible.value = true
+}
+
+function toDelete(row) {
+  row.pop = true
+}
+function cancelDel(row) {
+  row.pop = false
+}
+
+function handleDocumentClick(event) {
+  pop.value = false
+}
+
+// 打开删除提示窗
+function onPopoverShow() {
+  setTimeout(() => {
+    document.addEventListener('click', handleDocumentClick, { passive: false })
+  }, 0)
+}
+
+// 隐藏删除提示窗
+function onPopoverHide() {
+  document.removeEventListener('click', handleDocumentClick)
+}
 </script>
 
 <style rel="stylesheet/scss" lang="scss" scoped>

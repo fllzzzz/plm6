@@ -39,19 +39,13 @@
           style="display: inline-block"
           :data="artifactTypeList"
           itemKey="structureClassId"
-          @change="handleStructureChange"
         >
           <template #default="{ item }">
             <span>{{ item.name }}：</span>
             <span>{{ item.quantity }}件</span>
           </template>
         </tag-tabs>
-        <group-header
-          v-model="queryVO.groupsId"
-          :data="groupData"
-          @change="fetch"
-          @task-issue-success="handleTaskIssueSuccess"
-        />
+        <group-header v-show="queryVO.structureClassId" v-model="queryVO.groupsId" :data="groupData" @task-issue-success="handleTaskIssueSuccess" />
         <el-input
           v-model.trim="queryVO.serialNumber"
           size="small"
@@ -299,10 +293,27 @@ const { maxHeight } = useMaxHeight(
 )
 
 watch(
-  [() => queryVO.value.productionLineTypeEnum, () => queryVO.value.structureClassId],
+  [() => queryVO.value.productionLineTypeEnum],
   () => {
     refreshArtifactType({ ...artifactTypeParams.value })
+    // fetchGroup()
+  },
+  { deep: true }
+)
+watch(
+  [() => queryVO.value.structureClassId],
+  (val) => {
     fetchGroup()
+    // fetch()
+  },
+  { deep: true }
+)
+watch(
+  [() => queryVO.value.groupsId],
+  (val) => {
+    if (val) {
+      fetch()
+    }
   },
   { deep: true }
 )
@@ -310,6 +321,7 @@ watch(
 // 获取生产组信息
 async function fetchGroup() {
   const areaIdList = props.otherQuery.areaIdList
+  if (!queryVO.value.structureClassId) return
   try {
     const { content } = (await groupSummary({ areaIdList, structureClassId: queryVO.value.structureClassId })) || {}
     groupData.value = content || []
@@ -355,9 +367,10 @@ function artifactTypeInit() {
   }
   if (
     artifactTypeList.value?.length &&
-    (artifactTypeList.value?.length === 1 || queryVO.value.productionLineTypeEnum === artifactProductLineEnum.INTELLECT.V)
+    (artifactTypeList.value?.length > 0 || queryVO.value.productionLineTypeEnum === artifactProductLineEnum.INTELLECT.V)
   ) {
-    queryVO.value.structureClassId = artifactTypeList.value[0].structureClassId
+    // queryVO.value.structureClassId = artifactTypeList.value[0].structureClassId
+    queryVO.value.structureClassId = artifactTypeList.value?.length ? artifactTypeList.value[0]?.structureClassId : undefined
   }
   fetch()
 }
@@ -382,10 +395,8 @@ function closeHook() {
 
 function resetQuery() {
   queryVO.value.serialNumber = undefined
-  queryVO.value.groupsId = undefined
-  if (queryVO.value.productionLineTypeEnum !== artifactProductLineEnum.INTELLECT.V) {
-    queryVO.value.structureClassId = undefined
-  }
+  queryVO.value.groupsId = groupData.value[0]?.groups?.id
+  queryVO.value.structureClassId = artifactTypeList.value[0]?.structureClassId
   fetch()
 }
 
@@ -394,12 +405,11 @@ async function fetch() {
   listObjIdsByGroup.value = {}
   summaryInfo.value = {}
   if (
-    (queryVO.value.productionLineTypeEnum === artifactProductLineEnum.INTELLECT.V && !queryVO.value.structureClassId) ||
+    !queryVO.value.structureClassId ||
     !queryVO.value.productionLineTypeEnum
   ) {
     return
   }
-  console.log(props.otherQuery, queryVO.value, 'value')
   try {
     tableLoading.value = true
     summaryInfo.value = (await recordSummary({ ...props.otherQuery, ...queryVO.value })) || {}
@@ -468,7 +478,7 @@ function handleCheckAllChange(val, row, index) {
   console.log(row, _groupId, val, listObjIdsByGroup.value[_groupId], 'handleCheckAllChange')
   if (_groupId && listObjIdsByGroup.value[_groupId]) {
     tableData.value.forEach((v) => {
-      if (listObjIdsByGroup.value[_groupId].includes(v.id)) {
+      if (Array.from(new Set(listObjIdsByGroup.value[_groupId])).includes(v.id)) {
         recordTableRef?.value?.toggleRowSelection(v, val)
       }
     })
@@ -521,7 +531,7 @@ function selectionChangeHandler(val) {
   if (val.length) {
     for (const item in listObjIdsByGroup.value) {
       const _groupsId = Number(item)
-      const compareLength = listObjIdsByGroup.value[item].length
+      const compareLength = Array.from(new Set(listObjIdsByGroup.value[item])).length
       const _list = val.filter((v) => v.groups.id === _groupsId)
       if (_list.length) {
         const _index = _list[0].mergeIndex
@@ -608,10 +618,10 @@ function handleTaskIssueSuccess() {
   emit('refresh')
 }
 
-function handleStructureChange() {
-  fetchGroup()
-  fetch()
-}
+// function handleStructureChange() {
+//   fetchGroup()
+//   fetch()
+// }
 </script>
 
 <style lang="scss" scoped>

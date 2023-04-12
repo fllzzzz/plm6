@@ -349,6 +349,15 @@ const artifactTypeEnum = {
 }
 constantize(artifactTypeEnum)
 
+// 次构件类型
+const smallArtifactClassEnum = {
+  OTHER: { L: '其他', K: 'OTHER', V: 1 << 0 },
+  PLATE: { L: '板材类', K: 'PLATE', V: 1 << 1 },
+  SECTION: { L: '型材类', K: 'SECTION', V: 1 << 2 },
+  PURLIN: { L: '檩条类', K: 'PURLIN', V: 1 << 3 }
+}
+constantize(smallArtifactClassEnum)
+
 // 打码方式
 const codingTypeEnum = {
   SINGLE: { L: '一物一码', K: 'SINGLE', V: 1 },
@@ -618,6 +627,7 @@ export {
   freightChangeTypeEnum,
   mesWarehouseStateTypeEnum,
   artifactTypeEnum,
+  smallArtifactClassEnum,
   codingTypeEnum,
   partKeyWordEnum,
   hasHoleEnum,
@@ -692,6 +702,7 @@ export default {
   freightChangeTypeEnum,
   mesWarehouseStateTypeEnum,
   artifactTypeEnum,
+  smallArtifactClassEnum,
   codingTypeEnum,
   partKeyWordEnum,
   hasHoleEnum,

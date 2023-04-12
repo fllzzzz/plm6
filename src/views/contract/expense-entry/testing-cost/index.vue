@@ -1,7 +1,13 @@
 <template>
   <div class="app-container">
     <div class="head-container">
-      <mHeader />
+      <mHeader ref="headerRef">
+        <template #btn>
+          <common-button size="mini" @click="showType='addBtn';editFormVisible = true" icon="el-icon-plus" type="primary" class="filter-item">
+            新增
+          </common-button>
+        </template>
+      </mHeader>
     </div>
     <common-table
       ref="tableRef"
@@ -68,9 +74,9 @@
       </el-table-column>
     </common-table>
     <!-- 表单 -->
-    <m-form />
+    <m-form :showType="showType" v-model:visible="editFormVisible" :info="itemInfo" @refresh="crud.toQuery" />
     <!-- 详情 -->
-    <mDetail :detail-data="detailData" v-model:visible="drawerVisible" :query="crud.query" />
+    <mDetail :detail-data="detailData" v-model:visible="drawerVisible" :query="crud.query" @refresh="crud.toQuery" />
   </div>
 </template>
 
@@ -97,11 +103,15 @@ for (let i = 1; i <= 12; i++) {
   monthArr.value.push(i)
 }
 const optShow = {
-  add: true,
+  add: false,
   edit: false,
   del: false,
   download: false
 }
+
+const editFormVisible = ref(false)
+const itemInfo = ref({})
+const showType = ref('addBtn')
 
 const { crud, CRUD, columns } = useCRUD(
   {
@@ -117,6 +127,7 @@ const { crud, CRUD, columns } = useCRUD(
 )
 
 provide('dict', dict)
+provide('crud', crud)
 
 const dataFormat = ref([
   ['project', 'parse-project'],

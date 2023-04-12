@@ -1,5 +1,12 @@
 <template>
-  <common-drawer ref="drawerRef" title="生产量详情" v-model="productionDrawerVisible" direction="rtl" :before-close="handleClose" size="70%">
+  <common-drawer
+    ref="drawerRef"
+    title="生产量详情"
+    v-model="productionDrawerVisible"
+    direction="rtl"
+    :before-close="handleClose"
+    size="70%"
+  >
     <template #titleAfter>
       <!-- <el-tag size="small" effect="plain">
         项目：<span>{{ productionInfo.project?.serialNumber }}-{{ productionInfo.project?.name }}</span>
@@ -38,7 +45,14 @@
     </template>
     <template #titleRight>
       <div style="width: 300px">
-        <print-table v-permission="permission.print" :api-key="apiKey" :params="{ ...queryParams }" size="mini" type="warning" class="filter-item" />
+        <print-table
+          v-permission="permission.print"
+          :api-key="apiKey"
+          :params="{ ...queryParams }"
+          size="mini"
+          type="warning"
+          class="filter-item"
+        />
       </div>
     </template>
     <template #content>
@@ -46,6 +60,7 @@
         v-loading="tableLoading"
         :data="list"
         :max-height="maxHeight - 100"
+        :show-empty-symbol="false"
         row-key="rowId"
         style="width: 100%"
         show-summary
@@ -54,7 +69,7 @@
         <el-table-column label="序号" type="index" align="center" width="60" />
         <el-table-column prop="monomer.name" :show-overflow-tooltip="true" label="单体">
           <template #default="{ row }">
-            <span>{{ row.monomer?.name }}</span>
+            <span>{{ row.monomer ? row.monomer?.name : '/' }}</span>
           </template>
         </el-table-column>
         <el-table-column :show-overflow-tooltip="true" prop="serialNumber" label="编号" align="center" />

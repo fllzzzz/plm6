@@ -60,7 +60,6 @@
                 value-format="x"
                 placeholder="选择约定开工日期"
                 style="width:260px"
-                :disabledDate="(date) => { if (form.endDate) { return date.getTime() > form.endDate- 1 * 24 * 60 * 60 * 1000||  date.getTime() < form.createTime - 1 * 24 * 60 * 60 * 1000 } else { return date.getTime() < form.createTime - 1 * 24 * 60 * 60 * 1000 } }"
               />
               <template v-else>
                 <span>{{ detail.startDate? parseTime(detail.startDate,'{y}-{m}-{d}'): '-' }}</span>

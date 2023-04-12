@@ -4,7 +4,14 @@
       <mHeader />
     </div>
     <div>
-      <common-button v-permission="permission.status" class="btn" size="mini" type="warning" style="float: right; margin-bottom: 8px" @click.stop="groupsDetail">
+      <common-button
+        v-permission="permission.status"
+        class="btn"
+        size="mini"
+        type="warning"
+        style="float: right; margin-bottom: 8px"
+        @click.stop="groupsDetail"
+      >
         班组状态
       </common-button>
       <common-table
@@ -13,6 +20,7 @@
         :data="crud.data"
         :empty-text="crud.emptyText"
         :max-height="maxHeight"
+        :show-empty-symbol="false"
         row-key="projectId"
         style="width: 100%"
       >
@@ -38,7 +46,7 @@
           label="单体"
         >
           <template v-slot="scope">
-            <span>{{ scope.row.monomer?.name }}</span>
+            <span>{{ scope.row.monomer ? scope.row.monomer?.name : '/' }}</span>
           </template>
         </el-table-column>
         <el-table-column
@@ -50,7 +58,7 @@
           label="区域"
         >
           <template v-slot="scope">
-            <span>{{ scope.row.area?.name }}</span>
+            <span>{{ scope.row.area ? scope.row.area?.name : '/' }}</span>
           </template>
         </el-table-column>
 
@@ -91,11 +99,9 @@
           label="实际完成量（件/吨）"
         >
           <template v-slot="scope">
-            <span
-@click.stop="views(scope.row)"
-style="color: #409eff; cursor: pointer"
-              >{{ scope.row.completeQuantity }}/{{ (scope.row.completeNetWeight / 1000)?.toFixed(2) }}</span
-            >
+            <span @click.stop="views(scope.row)" style="color: #409eff; cursor: pointer">
+              {{ scope.row.completeQuantity }}/{{ (scope.row.completeNetWeight / 1000)?.toFixed(2) }}
+            </span>
           </template>
         </el-table-column>
         <el-table-column
@@ -139,11 +145,17 @@ style="color: #409eff; cursor: pointer"
     <!-- 生产监控看板详情 -->
     <kanban-detail v-model:visible="detailDialogVisible" :detail-list="detailList" :workshopId="crud.query.workshopId" />
     <!-- 班组状态详情 -->
-    <group-status-drawer v-model:visible="drawerVisible" :workshopId="crud.query.workshopId" :group-detail-data="crud.data[0]" />
+    <group-status-drawer
+      v-model:visible="drawerVisible"
+      :areaId="crud.query.areaId"
+      :workshopId="crud.query.workshopId"
+      :group-detail-data="crud.data[0]"
+    />
   </div>
 </template>
 <script setup>
 import { ref, reactive, provide, watch } from 'vue'
+import { useRoute } from 'vue-router'
 import crudApi, { getSummary } from '@/api/mes/production-monitoring-kanban/kanban.js'
 import useCRUD from '@compos/use-crud'
 import { productionKanbanTypeEnum } from '@enum-ms/mes'
@@ -161,6 +173,7 @@ const optShow = {
   download: false
 }
 
+const route = useRoute()
 const tableRef = ref()
 const detailDialogVisible = ref(false)
 const drawerVisible = ref(false)
@@ -171,7 +184,7 @@ const { crud, CRUD, columns } = useCRUD(
     title: '生产监控看板',
     sort: [],
     optShow: { ...optShow },
-    permission: { ... permission },
+    permission: { ...permission },
     crudApi: { ...crudApi },
     requiredQuery: ['workshopId'],
     hasPagination: true
@@ -197,16 +210,16 @@ const projectInfo = reactive({
 provide('projectInfo', projectInfo)
 provide('permission', permission)
 
-watch(
-  () => crud.query.workshopId,
-  (val) => {
-    if (val) {
-      fetchProjectInfo()
-      crud.toQuery()
-    }
-  },
-  { immediate: true }
-)
+CRUD.HOOK.beforeToQuery = () => {
+  crud.query.areaId = route.params?.areaId
+}
+
+watch([() => crud.query.workshopId, () => crud.query.areaId], (val) => {
+  if (val) {
+    fetchProjectInfo()
+    crud.toQuery()
+  }
+})
 
 // 班组详情
 function groupsDetail() {
@@ -217,7 +230,7 @@ function groupsDetail() {
 async function fetchProjectInfo() {
   projectInfo.loading = true
   try {
-    const res = (await getSummary({ workshopId: crud.query.workshopId })) || {}
+    const res = (await getSummary({ workshopId: crud.query.workshopId, areaId: crud.query.areaId ? crud.query.areaId : undefined })) || {}
     projectInfo.summary = res
   } catch (error) {
     console.log('获取项目汇总图表数据', error)

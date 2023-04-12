@@ -25,25 +25,21 @@
     />
     <crudOperation>
       <template #viewLeft>
-        <print-table
-          api-key="mesStudSleeveStatisticsList"
-          :params="{ ...query }"
-          size="mini"
-          type="warning"
-          class="filter-item"
-        />
+        <print-table v-permission="permission.print" api-key="mesStudSleeveStatisticsList" :params="{ ...query }" size="mini" type="warning" class="filter-item" />
       </template>
     </crudOperation>
   </div>
 </template>
 
 <script setup>
+import { inject } from 'vue'
 import { regHeader } from '@compos/use-crud'
 import { auxiliaryMaterialTypeEnum } from '@enum-ms/mes'
 import { PICKER_OPTIONS_SHORTCUTS } from '@/settings/config'
 import moment from 'moment'
 import crudOperation from '@crud/CRUD.operation'
 
+const permission = inject('permission')
 const defaultQuery = {
   projectId: undefined,
   auxiliaryTypeEnum: undefined,

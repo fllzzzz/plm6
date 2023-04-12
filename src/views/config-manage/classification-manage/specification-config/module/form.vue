@@ -61,6 +61,11 @@
                   maxlength="3"
                   class="input-underline"
                   style="width: 100%"
+                  @blur="
+                    () => {
+                      scope.row.code = prefixZero(scope.row.code, 3)
+                    }
+                  "
                 />
               </template>
             </el-table-column>
@@ -102,6 +107,7 @@
 import { inject, ref } from 'vue'
 import { boolWeightedAverageEnum } from '@enum-ms/finance'
 import checkPermission from '@/utils/system/check-permission'
+import { prefixZero } from '@data-type/number'
 
 import { regForm } from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'

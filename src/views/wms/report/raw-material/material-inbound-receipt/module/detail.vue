@@ -115,7 +115,7 @@ const order = computed(() => detail.purchaseOrder || {})
 const showAmount = computed(() => checkPermission(permission.showAmount))
 
 // 是否甲供订单
-const boolPartyA = computed(() => order.value.supplyType === orderSupplyTypeEnum.PARTY_A.V)
+const boolPartyA = computed(() => order.value?.supplyType === orderSupplyTypeEnum.PARTY_A.V)
 
 // 标题
 const drawerTitle = computed(() =>

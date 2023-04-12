@@ -1,5 +1,5 @@
 <template>
-  <common-drawer ref="drawerRef" title="生产任务单" v-model="drawerVisible" direction="rtl" :before-close="handleClose" size="60%">
+  <common-drawer ref="drawerRef" title="生产任务单" v-model="drawerVisible" direction="rtl" :before-close="handleClose" size="80%">
     <template #titleAfter>
       <el-tag>项目：{{ props.detailData.project?.name }}</el-tag>
       <el-tag>产线：{{ props.detailData.workshop?.name }}>{{ props.detailData.productionLine?.name }}</el-tag>

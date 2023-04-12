@@ -6,7 +6,7 @@
     <div class="wrap-right">
       <el-tag v-if="!crud.query?.processType" type="info" size="medium"> * 请点击左侧项目列表查看详情 </el-tag>
       <div v-else>
-        <div class="head-container">
+        <div class="wrap-head">
           <mHeader />
         </div>
         <!-- 表格 -->
@@ -144,7 +144,7 @@
   </div>
 </template>
 <script setup>
-import { ref } from 'vue'
+import { ref, provide } from 'vue'
 import crudApi from '@/api/mes/work-order-manage/machine-part.js'
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
@@ -162,6 +162,7 @@ const optShow = {
   del: false,
   download: false
 }
+
 const tableRef = ref()
 const cuttingDetailData = ref({})
 const cuttingDrawerVisible = ref(false)
@@ -179,8 +180,9 @@ const { crud, CRUD, columns } = useCRUD(
   tableRef
 )
 
+provide('permission', permission)
 const { maxHeight } = useMaxHeight({
-  extraBox: ['.head-container'],
+  extraBox: ['.wrap-head'],
   extraHeight: 15,
   paginate: true
 })
