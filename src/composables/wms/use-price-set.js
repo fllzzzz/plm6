@@ -21,6 +21,8 @@ export default function usePriceSet(meteField = 'mete') {
   }
 
   const handleMeteChangeCalcPrice = (row) => {
+    // 像编辑时，数据都有，但是没有priceType，需要手动设置
+    if (row.unitPrice && row.amount && !row.priceType) row.priceType = 'unitPrice'
     if (!row.priceType || !row[meteField]) return
     if (row.priceType === 'unitPrice') {
       handleUnitPriceChange(row.unitPrice, row)
