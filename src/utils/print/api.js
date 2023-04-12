@@ -4,6 +4,7 @@ import wms from '@/api/print/wms'
 import supply from '@/api/print/supply-chain'
 import project from '@/api/print/project'
 import plan from '@/api/print/plan'
+import enclosure from '@/api/print/enclosure'
 
 // 合同
 const myProject = contract.myProject
@@ -158,6 +159,9 @@ const installReportList = project.installReportList // 安装报表
 // plan
 const auxiliaryMaterialSummary = plan.auxiliaryMaterialSummary // 配套件汇总
 
+// 围护MES
+const enclosureSchedulingWorkOrderDetail = enclosure.schedulingWorkOrderDetail
+
 export default {
   myProject, // 我的项目
   projectList, // 项目列表
@@ -310,5 +314,8 @@ export default {
   installReportList, // 安装报表
 
   // 计划管理
-  auxiliaryMaterialSummary // 配套件汇总
+  auxiliaryMaterialSummary, // 配套件汇总
+
+  // 围护MES
+  enclosureSchedulingWorkOrderDetail // 排产工单详情
 }

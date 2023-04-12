@@ -44,13 +44,18 @@ const plan = {
   technical_manage: '技术管理'
 }
 
+const enclosure = {
+  production_manage: '生产管理'
+}
+
 const moduleType = {
   contract: { L: '合同管理', V: contract },
   supply: { L: '供应链', V: supply },
   wms: { L: 'WMS', V: wms },
   mes: { L: 'MES', V: mes },
   project: { L: '项目管理', V: project },
-  plan: { L: '计划管理', V: plan }
+  plan: { L: '计划管理', V: plan },
+  enclosure: { L: '围护MES', V: enclosure }
 }
 
 const mt = moduleType
@@ -206,7 +211,10 @@ const tableType = {
   installReportList: { L: '安装报表', M: 'install_manage', T: mt.project.L + ' / ' + project.install_manage },
 
   // 计划管理
-  auxiliaryMaterialSummary: { L: '配套件汇总', M: 'technical_manage', T: mt.plan.L + ' / ' + plan.technical_manage }
+  auxiliaryMaterialSummary: { L: '配套件汇总', M: 'technical_manage', T: mt.plan.L + ' / ' + plan.technical_manage },
+
+  // 围护MES
+  enclosureSchedulingWorkOrderDetail: { L: '排产工单详情', M: 'production_manage', T: mt.plan.L + ' / ' + enclosure.production_manage }
 
 }
 

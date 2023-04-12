@@ -18,6 +18,13 @@ export default {
           hidden: false,
           component: '/enclosure/production-manage/scheduling-manage/index',
           meta: { title: '排产管理', icon: 'project', noCache: true }
+        },
+        {
+          name: 'EnclosureSchedulingWorkOrder',
+          path: 'scheduling-work-order',
+          hidden: false,
+          component: '/enclosure/production-manage/scheduling-work-order/index',
+          meta: { title: '排产工单', icon: 'project', noCache: true }
         }
       ]
     }

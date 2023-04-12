@@ -15,4 +15,12 @@ export const enclosureSchedulingManagePM = {
   add: ['enclosure_scheduling_manage:add'] // 下发
 }
 
+// 生产管理/排产工单
+export const enclosureSchedulingWorkOrderPM = {
+  get: ['enclosure_scheduling_work_order:get'], // 列表
+  del: ['enclosure_scheduling_work_order:del'], // 删除
+  detail: ['enclosure_scheduling_work_order:detail'], // 详情
+  print: ['enclosure_scheduling_work_order:print'] // 打印
+}
+
 // --------------------------- 生产管理 end --------------------------------

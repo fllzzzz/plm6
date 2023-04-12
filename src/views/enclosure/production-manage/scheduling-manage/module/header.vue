@@ -4,7 +4,6 @@
       <span class="filter-item">
         <el-checkbox v-model="checkAll" :indeterminate="isIndeterminate" border @change="handleCheckAllChange"> 批次全选 </el-checkbox>
       </span>
-      <el-tag effect="plain" size="large" class="filter-item">{{ props.project?.name }}</el-tag>
       <common-radio-button
         v-loading="categoryLoading"
         v-model="query.category"
@@ -24,13 +23,20 @@
     </div>
     <crudOperation>
       <template #optLeft>
-        <common-button v-permission="permission.add" :disabled="!crud.selections.length" type="primary" @click="dialogVisible = true">
+        <common-button v-permission="crud.permission.add" :disabled="!crud.selections.length" type="primary" @click="dialogVisible = true">
           任务下发
         </common-button>
       </template>
       <template #viewLeft>
-        <el-tag type="success" effect="plain" size="medium" style="margin-right: 6px">当前批次量：1000m</el-tag>
-        <el-tag type="success" effect="plain" size="medium">全部批次量：1000m</el-tag>
+        <el-tag effect="plain" size="medium" style="margin-right: 6px">
+          <span v-parse-project="{ project: props.project }" v-empty-text />
+        </el-tag>
+        <el-tag v-loading="summaryLoading" type="success" effect="plain" size="medium" style="margin-right: 6px">
+          当前批次量：{{ (query.planIds.length && summaryData?.planLength) || 0 }}m
+        </el-tag>
+        <el-tag v-loading="summaryLoading" type="success" effect="plain" size="medium">
+          全部批次量：{{ summaryData?.projectLength || 0 }}m
+        </el-tag>
       </template>
     </crudOperation>
     <common-dialog
@@ -45,7 +51,7 @@
       width="540px"
     >
       <template #titleRight>
-        <common-button :loading="submitLoading" size="mini" type="primary" @click="submitIt"> 保存 </common-button>
+        <common-button :loading="submitLoading" size="mini" type="primary" @click="submit"> 保存 </common-button>
       </template>
       <el-form ref="formRef" :model="taskForm" :rules="rules" size="small" label-width="170px">
         <el-form-item label="围护种类">
@@ -81,9 +87,9 @@
 </template>
 
 <script setup>
-import { categoryList, areaList, add } from '@/api/enclosure/production-manage/scheduling-manage'
+import { categoryList, areaList, add, enclosureSummary } from '@/api/enclosure/production-manage/scheduling-manage'
 import { ref, defineProps, computed, watch, nextTick } from 'vue'
-import { ElNotification } from 'element-plus'
+import { ElMessage, ElMessageBox } from 'element-plus'
 
 import { mesEnclosureTypeEnum } from '@enum-ms/mes'
 
@@ -110,7 +116,7 @@ const categoryArr = computed(() => {
 
 const totalLength = computed(() => {
   const num = crud.selections.reduce((total, cur) => {
-    total += cur.totalLength
+    total += +cur.totalLength
     return total
   }, 0)
   return num.toFixed(2)
@@ -155,10 +161,23 @@ const dialogVisible = ref(false)
 const submitLoading = ref(false)
 const taskForm = ref({})
 const formRef = ref()
+const summaryLoading = ref(false)
+const summaryData = ref({})
 
+// 最小计划时间
+const planDate = computed(() => {
+  const arr = areas.value
+    .filter((row) => {
+      return query.planIds.includes(row.id)
+    })
+    .map((v) => v.date)
+  return Math.min(...arr)
+})
+
+// 校验规则
 const rules = {
   teamId: [{ required: true, message: '请选择班组', trigger: 'change' }],
-  askCompleteTime: [{ required: true, message: '请选择班组', trigger: 'change' }]
+  askCompleteTime: [{ required: true, message: '请选择完成时间', trigger: 'change' }]
 }
 
 // 选择全部
@@ -166,6 +185,7 @@ const handleCheckAllChange = (val) => {
   query.planIds = val ? areas.value.map((v) => v.id) : []
   isIndeterminate.value = false
   crud.toQuery()
+  fetchEnclosureSummary()
 }
 
 // 选择区域
@@ -174,6 +194,24 @@ const handleCheckedAresChange = (value) => {
   checkAll.value = checkedCount === areas.value.length
   isIndeterminate.value = checkedCount > 0 && checkedCount < areas.value.length
   crud.toQuery()
+  fetchEnclosureSummary()
+}
+
+// 获取围护汇总
+async function fetchEnclosureSummary() {
+  try {
+    summaryLoading.value = true
+    summaryData.value = {}
+    summaryData.value = await enclosureSummary({
+      projectId: props.project.id,
+      planIds: query.planIds,
+      category: query.category
+    })
+  } catch (error) {
+    console.log('获取获取围护汇总失败', error)
+  } finally {
+    summaryLoading.value = false
+  }
 }
 
 // 获取围护种类
@@ -215,20 +253,28 @@ async function fetchArea() {
   }
 }
 
-async function submitIt() {
+async function submit() {
   try {
     submitLoading.value = true
     const valid = await formRef.value.validate()
-    if (!valid) return false
-    const list = crud.selections.filter((v) => !!v.taskQuantity || typeof v.taskQuantity !== 'number')
+    if (!valid) return
+
+    // 过滤没有任务数的数据
+    const list = crud.selections.filter((v) => typeof v.taskQuantity === 'number' && v.taskQuantity > 0)
     if (!list.length) {
-      ElNotification({
-        title: '没有任务数',
-        type: 'error',
-        duration: 2500
-      })
+      ElMessage.error('没有填写任务数')
       return
     }
+
+    // 完成日期大于计划日期
+    if (taskForm.value.askCompleteTime > planDate.value) {
+      await ElMessageBox.confirm('完成日期大于计划日期，是否下发？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      })
+    }
+
     const group = groupsObj.value?.[taskForm.value.teamId] || {}
     await add({
       ...taskForm.value,
@@ -246,11 +292,7 @@ async function submitIt() {
     })
     dialogVisible.value = false
     taskForm.value = {}
-    ElNotification({
-      title: '任务下发成功',
-      type: 'success',
-      duration: 2500
-    })
+    ElMessage.success('任务下发成功')
     crud.toQuery()
   } catch (error) {
     console.log(error, '任务下发失败')
@@ -261,7 +303,7 @@ async function submitIt() {
 
 CRUD.HOOK.handleRefresh = async (crud, { data }) => {
   data.content.forEach((row) => {
-    row.totalLength = (row.length * row.needSchedulingQuantity) / 1000
+    row.totalLength = ((row.length * row.needSchedulingQuantity) / 1000).toFixed(2)
     row.taskQuantity = row.needSchedulingQuantity
   })
 }

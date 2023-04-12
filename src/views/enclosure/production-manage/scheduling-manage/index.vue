@@ -39,8 +39,8 @@
               prop="length"
               v-if="columns.visible('length')"
               show-overflow-tooltip
-              label="单长（mm）"
-              align="center"
+              label="单长(mm)"
+              align="right"
             />
             <el-table-column
               key="needSchedulingQuantity"
@@ -55,8 +55,8 @@
               prop="totalLength"
               v-if="columns.visible('totalLength')"
               show-overflow-tooltip
-              label="总长度（m）"
-              align="center"
+              label="总长度(m)"
+              align="right"
             />
             <el-table-column
               key="taskQuantity"
