@@ -375,16 +375,18 @@ const weightAssignable = computed(() => {
 watch(
   currentBasicClass,
   (k) => {
-    list.value = form[k]
     if (k) {
+      list.value = form[k]
       nextTick(() => {
         // nextTick 后 steelRef.value 才会发生变化
         if (!steelRefList[k]) steelRefList[k] = steelRef.value
         steelRef.value?.setSelect()
       })
+    } else {
+      list.value = []
     }
   },
-  { immediate: true }
+  { immediate: true, deep: true }
 )
 
 // 监听list变更,为对应的钢材清单赋值，监听地址即可
