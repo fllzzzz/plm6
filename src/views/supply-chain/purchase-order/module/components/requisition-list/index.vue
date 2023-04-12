@@ -28,6 +28,7 @@ import { matClsEnum } from '@/utils/enum/modules/classification'
 import { STEEL_ENUM } from '@/settings/config'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { setSpecInfoToList } from '@/utils/wms/spec'
+import { compareArray } from '@/utils/data-type/array'
 import { calcSteelPlateWeight, calcSectionSteelWeight, calcSectionSteelTotalLength } from '@/utils/wms/measurement-calc'
 import { materialPurchaseClsEnum } from '@enum-ms/classification'
 
@@ -43,10 +44,14 @@ const compRef = ref()
 const loading = ref(false)
 const list = ref([])
 
+const requisitionIds = computed(() => form.requisitions?.map((v) => v.id) || [])
+
 watch(
-  () => form.requisitions,
-  () => {
-    fetchList()
+  requisitionIds,
+  (val, oldVal) => {
+    if (!compareArray(val, oldVal)) {
+      fetchList()
+    }
   },
   { immediate: true, deep: true }
 )
@@ -68,14 +73,13 @@ const currentView = computed(() => {
 
 async function fetchList() {
   list.value = []
-  if (!form.requisitions?.length) {
+  if (!requisitionIds.value?.length) {
     nextTick(() => compRef.value?.initList([]))
     return
   }
   try {
     loading.value = true
-    const ids = form.requisitions?.map((v) => v.id) || []
-    const content = (await canPurchaseDetail({ ids })) || []
+    const content = (await canPurchaseDetail({ ids: requisitionIds.value })) || []
     if (materialType.value & materialPurchaseClsEnum.MANUFACTURED.V) {
       list.value = content
     } else {
