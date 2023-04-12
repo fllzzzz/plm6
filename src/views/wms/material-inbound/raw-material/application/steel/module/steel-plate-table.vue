@@ -334,11 +334,8 @@ function selectAllTableChange(select) {
 }
 
 // 设置选择的回显
-function setSelect(_rowWatch = false) {
+function setSelect() {
   form.steelPlateList.forEach((v) => {
-    if (_rowWatch) {
-      rowWatch(v)
-    }
     if (form.selectObj?.[v.mergeId]?.isSelected) {
       tableRef.value.toggleRowSelection(v, true)
     }

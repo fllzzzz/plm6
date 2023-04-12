@@ -2,7 +2,7 @@
   <common-table
     ref="tableRef"
     v-bind="$attrs"
-    :data="form.list"
+    :data="form.auxMatList"
     :cell-class-name="wrongCellMask"
     :expand-row-keys="expandRowKeys"
     :show-empty-symbol="false"
@@ -12,7 +12,7 @@
     @select-all="selectAllTableChange"
   >
     <el-table-column v-if="!props.boolPartyA" type="selection" width="55" align="center" :selectable="selectable" />
-    <el-expand-table-column :data="form.list" v-model:expand-row-keys="expandRowKeys" row-key="uid" fixed="left">
+    <el-expand-table-column :data="form.auxMatList" v-model:expand-row-keys="expandRowKeys" row-key="uid" fixed="left">
       <template #default="{ row }">
         <div class="mtb-10">
           <el-input
@@ -121,7 +121,12 @@
       <el-table-column prop="quantity" label="本次实收数" align="center" min-width="120px">
         <template #default="{ row }">
           <common-input-number
-            v-if="row.measureUnit && Boolean(currentCfg?.quantity & basicClass) && form.selectObj?.[row.mergeId]?.isSelected"
+            v-if="
+              !boolApplyPurchase &&
+              row.measureUnit &&
+              Boolean(currentCfg?.quantity & basicClass) &&
+              form.selectObj?.[row.mergeId]?.isSelected
+            "
             v-model="row.quantity"
             :min="0"
             :max="999999999"
@@ -132,13 +137,13 @@
             placeholder="本次实收数"
             @blur="handleOverQuantity(row)"
           />
-          <span v-else v-empty-text>{{ row.quantity }}</span>
+          <span v-else>{{ row.quantity || '-' }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="mete" label="实收量" align="center" min-width="120px">
+      <el-table-column prop="mete" label="本次实收量" align="center" min-width="120px">
         <template #default="{ row }">
           <common-input-number
-            v-if="Boolean(currentCfg?.mete & basicClass) && form.selectObj?.[row.mergeId]?.isSelected"
+            v-if="!boolApplyPurchase && Boolean(currentCfg?.mete & basicClass) && form.selectObj?.[row.mergeId]?.isSelected"
             v-model="row.mete"
             :min="0.000001"
             :max="999999999"
@@ -150,7 +155,70 @@
             @change="handleWeightChange($event, row)"
             @blur="handleOverMete(row)"
           />
-          <span v-else>{{ row.mete }}</span>
+          <span v-else>{{ row.mete || '-' }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column v-if="boolApplyPurchase" label="操作" width="70" align="center" fixed="right">
+        <template #default="{ row }">
+          <el-popover placement="top" :width="900" trigger="click">
+            <template #reference>
+              <span style="margin-left: 5px; cursor: pointer">
+                <el-edit
+                  v-if="Boolean(currentCfg?.quantity & basicClass) && form.selectObj?.[row.mergeId]?.isSelected"
+                  class="el-icon"
+                  style="color: #1881ef; vertical-align: middle"
+                />
+                <el-icon-view v-else class="el-icon" style="color: #1881ef; vertical-align: middle" />
+              </span>
+            </template>
+            <common-table :data="row.applyPurchase" style="width: 100%" return-source-data :show-empty-symbol="false">
+              <el-table-column label="序号" type="index" align="center" width="60" />
+              <el-table-column prop="serialNumber" :show-overflow-tooltip="true" label="申购单号" min-width="140" align="center" />
+              <el-table-column prop="project" :show-overflow-tooltip="true" label="项目" min-width="140" align="center">
+                <template #default="{ row: purRow }">
+                  <span v-if="purRow.project">{{ projectNameFormatter(purRow.project) }}</span>
+                  <span v-else>-</span>
+                </template>
+              </el-table-column>
+              <el-table-column prop="purchaseQuantity" :show-overflow-tooltip="true" label="采购数量" min-width="100" align="center" />
+              <el-table-column prop="purchaseMete" :show-overflow-tooltip="true" label="采购量" min-width="100" align="center" />
+              <el-table-column prop="quantity" label="本次实收数" align="center" min-width="120px">
+                <template #default="{ row: purRow }">
+                  <common-input-number
+                    v-if="row.measureUnit && Boolean(currentCfg?.quantity & basicClass) && form.selectObj?.[row.mergeId]?.isSelected"
+                    v-model="purRow.quantity"
+                    :min="0"
+                    :max="999999999"
+                    :controls="false"
+                    :step="1"
+                    :precision="row.measurePrecision"
+                    size="mini"
+                    placeholder="本次实收数"
+                    @blur="handleOverQuantity(purRow)"
+                  />
+                  <span v-else>{{ purRow.quantity || '-' }}</span>
+                </template>
+              </el-table-column>
+              <el-table-column prop="mete" label="本次实收量" align="center" min-width="120px">
+                <template #default="{ row: purRow }">
+                  <common-input-number
+                    v-if="Boolean(currentCfg?.mete & basicClass) && form.selectObj?.[row.mergeId]?.isSelected"
+                    v-model="purRow.mete"
+                    :min="0.000001"
+                    :max="999999999"
+                    :controls="false"
+                    :step="1"
+                    :precision="row.accountingPrecision"
+                    size="mini"
+                    placeholder="实收量"
+                    @change="handleWeightChange($event, purRow)"
+                    @blur="handleOverMete(purRow)"
+                  />
+                  <span v-else>{{ purRow.mete || '-' }}</span>
+                </template>
+              </el-table-column>
+            </common-table>
+          </el-popover>
         </template>
       </el-table-column>
     </template>
@@ -168,6 +236,7 @@ import { matClsEnum } from '@/utils/enum/modules/classification'
 import { createUniqueString } from '@/utils/data-type/string'
 import { positiveNumPattern } from '@/utils/validate/pattern'
 import { isNotBlank, toPrecision } from '@/utils/data-type'
+import { projectNameFormatter } from '@/utils/project'
 
 import useWmsConfig from '@/composables/store/use-wms-config'
 import { regExtra } from '@/composables/form/use-form'
@@ -180,6 +249,10 @@ import priceSetColumns from '@/views/wms/material-inbound/raw-material/component
 
 const props = defineProps({
   boolPartyA: {
+    type: Boolean,
+    default: false
+  },
+  boolApplyPurchase: {
     type: Boolean,
     default: false
   },
@@ -254,8 +327,16 @@ function selectTableChange(select, row) {
 
 function selectAllTableChange(select) {
   const boolSelect = Boolean(select?.length)
-  form.list.forEach((v) => {
+  form.auxMatList.forEach((v) => {
     form.selectObj[v.mergeId].isSelected = boolSelect
+  })
+}
+// 设置选择的回显
+function setSelect(_rowWatch = false) {
+  form.auxMatList.forEach((v) => {
+    if (form.selectObj?.[v.mergeId]?.isSelected) {
+      tableRef.value.toggleRowSelection(v, true)
+    }
   })
 }
 
@@ -300,6 +381,10 @@ function rowWatch(row) {
         isSelected: _isSelected
       }
     }
+    if (props.boolApplyPurchase && Boolean(currentCfg.value?.quantity & basicClass) && form.selectObj?.[row.mergeId]?.isSelected) {
+      row.quantity = row?.applyPurchase?.reduce((a, b) => a + (b.quantity || 0), 0)
+      row.mete = row?.applyPurchase?.reduce((a, b) => a + (b.mete || 0), 0)
+    }
   })
 }
 
@@ -315,13 +400,13 @@ function delRow(sn, $index) {
   if (matSpecRef.value) {
     matSpecRef.value.delListItem(sn, $index)
   } else {
-    form.list.splice($index, 1)
+    form.auxMatList.splice($index, 1)
   }
 }
 
 // 校验
 function validate() {
-  const _list = form.list.filter((v) => {
+  const _list = form.auxMatList.filter((v) => {
     if (props.boolPartyA || form.selectObj[v.mergeId]?.isSelected) {
       return true
     } else {
@@ -329,7 +414,7 @@ function validate() {
     }
   })
   const { validResult } = tableValidate(_list)
-  // form.list = dealList
+  // form.auxMatList = dealList
   return validResult
 }
 
@@ -340,6 +425,7 @@ function toggleRowSelection(row, selected) {
 defineExpose({
   rowInit,
   toggleRowSelection,
+  setSelect,
   rowWatch,
   validate
 })

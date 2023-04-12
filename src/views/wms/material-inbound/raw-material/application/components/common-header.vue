@@ -376,26 +376,31 @@ async function handleOrderInfoChange(order, oldOrder) {
         }
         if (_v.applyPurchase?.length) {
           _v.boolApplyPurchase = true
-          let _mete = 0
-          let _quantity = 0
+          let _totalMete = 0
+          let _totalQuantity = 0
           _v.applyPurchase.forEach((item) => {
             item.applyPurchaseId = item.id
             item.purchaseQuantity = item.quantity
             item.originQuantity = item.quantity
             item.purchaseMete = item.mete
+            item.originMete = item.mete
             if (props.edit && form?.editObj?.[_v.mergeId]?.applyPurchaseObj?.[item.applyPurchaseId]) {
-              item.quantity = form?.editObj?.[_v.mergeId]?.applyPurchaseObj?.[item.applyPurchaseId]?.quantity
-              _quantity += form?.editObj?.[_v.mergeId]?.applyPurchaseObj?.[item.applyPurchaseId]?.quantity
-              _mete += form?.editObj?.[_v.mergeId]?.applyPurchaseObj?.[item.applyPurchaseId]?.mete
+              const _quantity = form?.editObj?.[_v.mergeId]?.applyPurchaseObj?.[item.applyPurchaseId]?.quantity
+              const _mete = form?.editObj?.[_v.mergeId]?.applyPurchaseObj?.[item.applyPurchaseId]?.mete
+              item.quantity = _quantity
+              _totalQuantity += _quantity
+              item.mete = _mete
+              _totalMete += _mete
             } else {
               item.quantity = undefined
+              item.mete = undefined
             }
             if (item?.project) {
               order.projects.push(item?.project)
             }
           })
-          _v.quantity = _quantity
-          _v.mete = _mete
+          _v.quantity = _totalQuantity
+          _v.mete = _totalMete
         } else {
           if (props.edit && form?.editObj?.[_v.mergeId]) {
             _v.quantity = form?.editObj?.[_v.mergeId]?.quantity

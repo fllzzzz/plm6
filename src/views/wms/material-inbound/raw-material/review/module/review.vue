@@ -121,8 +121,8 @@ import { tableSummary } from '@/utils/el-extra'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { setSpecInfoToList } from '@/utils/wms/spec'
 // import { deepClone, isBlank, isNotBlank, toFixed } from '@/utils/data-type'
-import { deepClone, isBlank, toPrecision, isNotBlank } from '@/utils/data-type'
-import { getDP } from '@/utils/data-type/number'
+import { deepClone, isBlank, isNotBlank } from '@/utils/data-type'
+// import { getDP } from '@/utils/data-type/number'
 import { materialHasAmountColumns } from '@/utils/columns-format/wms'
 
 import { regExtra } from '@compos/use-crud'
@@ -483,19 +483,19 @@ function setDitto(list) {
 //   )
 // }
 
-function handleUnitPriceChange(val, row) {
-  const dp = getDP(val)
-  if (dp > 10) {
-    row.unitPrice = toPrecision(val, 10)
-    val = row.unitPrice
-  }
-  row.amount = isNotBlank(val) ? toPrecision(val * row.mete, 2) : undefined
-}
+// function handleUnitPriceChange(val, row) {
+//   const dp = getDP(val)
+//   if (dp > 10) {
+//     row.unitPrice = toPrecision(val, 10)
+//     val = row.unitPrice
+//   }
+//   row.amount = isNotBlank(val) ? toPrecision(val * row.mete, 2) : undefined
+// }
 
-// 处理金额变化
-function handleAmountChange(val, row) {
-  row.unitPrice = isNotBlank(val) ? toPrecision(val / row.mete, 10) : undefined
-}
+// // 处理金额变化
+// function handleAmountChange(val, row) {
+//   row.unitPrice = isNotBlank(val) ? toPrecision(val / row.mete, 10) : undefined
+// }
 
 // 合计
 function getSummaries(param) {

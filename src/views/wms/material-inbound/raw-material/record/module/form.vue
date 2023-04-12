@@ -55,7 +55,11 @@ CRUD.HOOK.beforeEditDetailLoaded = async (crud, detail) => {
   await setSpecInfoToList(detail.list)
   detail.list = await numFmtByBasicClass(detail.list, {
     toSmallest: false,
-    toNum: true,
+    toNum: true
+  })
+  detail.list.forEach((v) => {
+    v.warehouseId = v.warehouse?.id || v.warehouseId
+    v.projectId = v.project?.id || v.projectId
   })
   // 物流信息
   detail.logistics = detail.logisticsOrder
@@ -68,9 +72,9 @@ CRUD.HOOK.beforeEditDetailLoaded = async (crud, detail) => {
         detail.editObj[v.mergeId] = {
           ...v,
           applyPurchaseObj: {
-            [v.applyPurchaseId]: { ...v },
+            [v.applyPurchaseId]: { ...v }
           },
-          isSelected: true,
+          isSelected: true
         }
       } else {
         detail.editObj[v.mergeId].applyPurchaseObj[v.applyPurchaseId] = { ...v }

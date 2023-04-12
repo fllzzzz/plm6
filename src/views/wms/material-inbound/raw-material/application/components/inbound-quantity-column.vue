@@ -34,8 +34,8 @@
             <el-table-column label="序号" type="index" align="center" width="60" />
             <el-table-column prop="serialNumber" :show-overflow-tooltip="true" label="申购单号" min-width="140" align="center" />
             <el-table-column prop="project" :show-overflow-tooltip="true" label="项目" min-width="140" align="center">
-              <template #default="{ row }">
-                <span v-if="row.project">{{ projectNameFormatter(row.project) }}</span>
+              <template #default="{ row: purRow }">
+                <span v-if="purRow.project">{{ projectNameFormatter(purRow.project) }}</span>
                 <span v-else>-</span>
               </template>
             </el-table-column>
