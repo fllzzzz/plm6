@@ -7,6 +7,7 @@
         size="mini"
         icon="el-icon-plus"
         type="primary"
+        v-permission="permission.add"
         @click="crud.toAdd"
       />
     </div>
@@ -33,6 +34,7 @@
       <el-table-column key="remark" prop="remark" label="备注" align="center" />
       <!--编辑与删除-->
       <el-table-column
+        v-if="checkPermission([...permission.edit,...permission.del])"
         label="操作"
         width="190px"
         align="center"
@@ -54,14 +56,14 @@ import { ref, defineProps, watch } from 'vue'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
-import { supplierLogisticsPaymentPM } from '@/page-permission/supply-chain'
+import { enclosureAreaListPM } from '@/page-permission/enclosure'
 import { parseTime } from '@/utils/date'
 
 import pagination from '@crud/Pagination'
 import udOperation from '@crud/UD.operation'
 import mForm from './form'
 
-const permission = supplierLogisticsPaymentPM.application
+const permission = enclosureAreaListPM.plan
 
 const optShow = {
   add: true,
