@@ -33,6 +33,7 @@
         placeholder="选择车间"
         style="width: 200px"
         class="filter-item"
+        clearable
         :factory-id="query.factoryId"
         @change="handleWorkshopChange"
       />
