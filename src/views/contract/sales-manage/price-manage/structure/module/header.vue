@@ -68,7 +68,7 @@ import { cost } from '@/api/contract/sales-manage/price-manage/structure'
 import { ref, watch, nextTick, inject, computed, defineExpose, defineEmits, defineProps } from 'vue'
 
 import checkPermission from '@/utils/system/check-permission'
-import { packTypeEnum } from '@enum-ms/mes'
+import { contractSaleTypeEnum } from '@enum-ms/mes'
 import { convertUnits } from '@/utils/convert/unit'
 import { toThousand } from '@/utils/data-type/number'
 import { emptyTextFormatter } from '@/utils/data-type'
@@ -98,7 +98,7 @@ const modifiedData = computed(() => {
 const previewParams = computed(() => {
   return {
     monomerId: query.monomerId,
-    type: packTypeEnum.STRUCTURE.V
+    type: contractSaleTypeEnum.STRUCTURE.V
   }
 })
 

@@ -11,8 +11,17 @@
         @keyup.enter="crud.toQuery"
       />
       <el-input
-        v-model="query.plateType"
-        placeholder="输入板型搜索"
+        v-model="query.specification"
+        placeholder="输入规格搜索"
+        class="filter-item"
+        style="width: 200px;"
+        size="small"
+        clearable
+        @keyup.enter="crud.toQuery"
+      />
+      <el-input
+        v-model="query.material"
+        placeholder="输入材质搜索"
         class="filter-item"
         style="width: 200px;"
         size="small"
@@ -26,14 +35,14 @@
         <span v-if="checkPermission(crud.permission.save)" style="margin-right: 6px">
           <span v-if="modifying">
             <common-button type="warning" size="mini" @click="handelModifying(false, true)">取消录入</common-button>
-            <common-button type="success" size="mini" @click="previewVisible = true">预览并保存</common-button>
+            <common-button type="success" size="mini" @click="confirmModifying">预览并保存</common-button>
           </span>
           <common-button v-else type="primary" size="mini" @click="handelModifying(true)">录入价格</common-button>
         </span>
         <print-table
           v-permission="crud.permission.print"
-          api-key="contractEnclosurePrice"
-          :params="{ monomerId: query.monomerId }"
+          api-key="contractMachinePartPrice"
+          :params="{ monomerId: query.monomerId,specification:query.specification, material:query.material}"
           size="mini"
           type="warning"
           class="filter-item"
@@ -42,23 +51,18 @@
       <template #viewLeft>
         <span v-if="checkPermission(crud.permission.cost) && query.monomerId">
           <el-tag effect="plain" type="success" size="medium" class="filter-item">
-            单体围护总数(张)：
-            <span v-if="!costLoading">{{ monomerCost.totalQuantity }}</span>
+            单体散发制品总数：
+            <span v-if="!costLoading">{{ monomerCost.quantity }}</span>
             <i v-else class="el-icon-loading" />
           </el-tag>
           <el-tag effect="plain" type="success" size="medium" class="filter-item">
-            单体围护总长(m)：
-            <span v-if="!costLoading">{{ convertUnits(monomerCost.totalLength, 'mm', 'm', DP.MES_ENCLOSURE_L__M) }}</span>
+            单体散发制品总量(t)：
+            <span v-if="!costLoading">{{ convertUnits(monomerCost.mete, 'kg', 't', DP.COM_WT__T) }}</span>
             <i v-else class="el-icon-loading" />
           </el-tag>
           <el-tag effect="plain" type="success" size="medium" class="filter-item">
-            单体围护面积(㎡)：
-            <span v-if="!costLoading">{{ convertUnits(monomerCost.totalArea, 'mm2','m2', DP.COM_AREA__M2) }}</span>
-            <i v-else class="el-icon-loading" />
-          </el-tag>
-          <el-tag effect="plain" type="success" size="medium" class="filter-item">
-            单体围护造价：
-            <span v-if="!costLoading" v-thousand="monomerCost.totalPrice" />
+            单体散发制品造价(元)：
+            <span v-if="!costLoading" v-thousand="monomerCost.price" />
             <i v-else class="el-icon-loading" />
           </el-tag>
         </span>
@@ -69,16 +73,16 @@
 </template>
 
 <script setup>
-import { cost } from '@/api/contract/sales-manage/price-manage/enclosure'
-import { ref, watch, nextTick, inject, computed, defineExpose } from 'vue'
+import { cost } from '@/api/contract/sales-manage/price-manage/machine-part'
+import { ref, watch, nextTick, inject, computed, defineExpose, defineEmits, defineProps } from 'vue'
 
 import checkPermission from '@/utils/system/check-permission'
+import { contractSaleTypeEnum } from '@enum-ms/mes'
 import { convertUnits } from '@/utils/convert/unit'
-import { DP } from '@/settings/config'
-// import { contractSaleTypeEnum } from '@enum-ms/mes'
-import { enclosureSettlementTypeEnum } from '@enum-ms/contract'
 import { toThousand } from '@/utils/data-type/number'
 import { emptyTextFormatter } from '@/utils/data-type'
+import { pricingMannerEnum } from '@enum-ms/contract'
+import { DP } from '@/settings/config'
 
 import { regHeader } from '@compos/use-crud'
 import crudOperation from '@crud/CRUD.operation'
@@ -87,17 +91,23 @@ import mPreview from '../../preview'
 
 const projectId = inject('projectId')
 const monomerId = inject('monomerId')
-
+const emit = defineEmits(['checkSubmit'])
+const props = defineProps({
+  showAble: {
+    type: Boolean,
+    default: false
+  }
+})
 // 有变动的数据
 const modifiedData = computed(() => {
-  return crud.data.filter((v) => v.unitPrice !== v.originUnitPrice)
+  return crud.data.filter((v) => (v.pricingManner !== v.originPricingManner && v.unitPrice !== '-') || (v.unitPrice !== v.originUnitPrice && v.newUnitPrice))
 })
 
 // 预览参数
 const previewParams = computed(() => {
   return {
-    monomerId: query.monomerId
-    // type: contractSaleTypeEnum.ENCLOSURE.V
+    monomerId: query.monomerId,
+    type: contractSaleTypeEnum.MACHINE_PART.V
   }
 })
 
@@ -117,16 +127,14 @@ const modifying = ref(false)
 const costLoading = ref(false)
 const previewVisible = ref(false)
 const costData = {
-  totalArea: 0,
-  totalAreaPrice: 0,
-  totalLength: 0,
-  totalLengthPrice: 0,
-  totalQuantity: 0
+  mete: 0,
+  price: 0,
+  quantity: 0
 }
 const monomerCost = ref({ ...costData })
 
 const defaultQuery = {
-  name: undefined, plateType: undefined,
+  name: undefined, material: undefined,
   monomerId: { value: undefined, resetAble: false }
 }
 const { crud, query, CRUD } = regHeader(defaultQuery)
@@ -134,17 +142,17 @@ const { crud, query, CRUD } = regHeader(defaultQuery)
 // 刷新数据后
 CRUD.HOOK.handleRefresh = (crud, { data }) => {
   data.content.forEach(v => {
+    v.totalWeight = convertUnits(v.totalWeight, 'kg', 't', DP.COM_WT__T)
     v.newUnitPrice = v.unitPrice // number类型的单价（unitPrice可能会有千位符）
     v.originNewUnitPrice = v.newUnitPrice
     v.originUnitPrice = emptyTextFormatter(toThousand(v.unitPrice))
-    v.totalLength = convertUnits(v.totalLength, 'mm', 'm', DP.MES_ENCLOSURE_L__M)
-    v.totalArea = convertUnits(v.totalArea, 'mm2', 'm2', DP.COM_AREA__M2)
-    v.totalPrice = (v.priceType === enclosureSettlementTypeEnum.LENGTH.V ? v.totalLength : v.totalArea) * (v.unitPrice || 0)
+    v.totalPrice = v.pricingManner === pricingMannerEnum.WEIGHT.V ? v.totalWeight * (v.unitPrice || 0) : v.totalLength * (v.unitPrice || 0)
+    v.originPricingManner = v.pricingManner
   })
   fetchCost()
 }
 
-// 获取商务围护成本
+// 获取商务构件成本
 async function fetchCost() {
   if (!checkPermission(crud.permission.cost)) return
   costLoading.value = true
@@ -155,7 +163,7 @@ async function fetchCost() {
     })
     monomerCost.value = res
   } catch (error) {
-    console.log('获取商务围护成本失败', error)
+    console.log('获取商务散发制品成本失败', error)
   } finally {
     costLoading.value = false
   }
@@ -166,20 +174,30 @@ function costInit() {
   monomerCost.value = { ...costData }
 }
 
-// 出来录入状态
+// 处理录入状态
 function handelModifying(status, reset = false) {
   // 取消分配，数据还原
   if (reset) {
     crud.data.forEach((v) => {
       v.unitPrice = v.originUnitPrice
       v.newUnitPrice = v.originNewUnitPrice
-      v.totalPrice = (v.priceType === enclosureSettlementTypeEnum.LENGTH.V ? v.totalLength : v.totalArea) * (v.newUnitPrice || 0)
-      return v
+      v.pricingManner = v.originPricingManner
+      if (!v.newUnitPrice) {
+        v.totalPrice = 0
+      } else {
+        v.totalPrice = v.pricingManner === pricingMannerEnum.WEIGHT.V ? v.totalWeight * (v.unitPrice || 0) : v.totalLength * (v.unitPrice || 0)
+      }
     })
   }
   modifying.value = status
 }
 
+function confirmModifying() {
+  emit('checkSubmit')
+  nextTick(() => {
+    previewVisible.value = props.showAble
+  })
+}
 // 提交成功后
 function handleSuccess() {
   modifying.value = false

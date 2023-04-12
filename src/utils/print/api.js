@@ -17,6 +17,7 @@ const arrearsList = contract.arrearsList
 const contractStructurePrice = contract.structurePrice
 const contractEnclosurePrice = contract.enclosurePrice
 const contractAuxiliaryMaterialPrice = contract.auxiliaryMaterialPrice
+const contractMachinePartPrice = contract.machinePartPrice
 const projectCollectionDetail = contract.collectionDetail
 const projectInvoiceDetail = contract.invoiceDetail
 const projectHappenedDetail = contract.happenedDetail
@@ -184,6 +185,7 @@ export default {
   contractStructurePrice, // 结构计价表
   contractEnclosurePrice, // 围护计价表
   contractAuxiliaryMaterialPrice, // 配套件计价表
+  contractMachinePartPrice, // 散发制品计价表
   projectCollectionDetail, // 项目收款详情
   projectInvoiceDetail, // 项目开票详情
   projectHappenedDetail, // 项目发运详情

@@ -45,7 +45,7 @@ import { ref, inject, watch, defineEmits } from 'vue'
 import { priceManagePM as permission } from '@/page-permission/contract'
 
 import checkPermission from '@/utils/system/check-permission'
-import { packTypeEnum } from '@enum-ms/mes'
+import { contractSaleTypeEnum } from '@enum-ms/mes'
 import { reviewStatusEnum } from '@enum-ms/common'
 
 import useMaxHeight from '@compos/use-max-height'
@@ -68,7 +68,7 @@ const tableRef = ref()
 const detailInfo = ref({})
 const dataFormat = ref([
   ['project', 'parse-project'],
-  ['type', ['parse-enum', packTypeEnum, { f: 'SL' }]],
+  ['type', ['parse-enum', contractSaleTypeEnum, { f: 'SL' }]],
   ['status', ['parse-enum', reviewStatusEnum]],
   ['createTime', 'parse-time'],
   ['checkTime', 'parse-time']

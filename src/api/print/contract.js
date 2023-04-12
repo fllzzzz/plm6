@@ -144,6 +144,18 @@ export function structurePrice(params) {
 }
 
 /**
+ * 散发制品计价表
+ */
+export function machinePartPrice(params) {
+  return request({
+    module: 'contract',
+    url: 'business/machine-part/print',
+    method: 'get',
+    params
+  })
+}
+
+/**
  * 围护件计价表
  */
 export function enclosurePrice(params) {
