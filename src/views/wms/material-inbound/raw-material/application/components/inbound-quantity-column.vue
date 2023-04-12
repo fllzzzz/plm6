@@ -3,7 +3,7 @@
     <template #default="{ row }">
       <template v-if="!row.boolApplyPurchase">
         <common-input-number
-          v-if="!row.boolApplyPurchase && Boolean(currentCfg?.quantity & basicClass) && form.selectObj?.[row.mergeId]?.isSelected"
+          v-if="!row.boolApplyPurchase && form.selectObj?.[row.mergeId]?.isSelected"
           v-model="row.quantity"
           :min="0"
           :max="999999999"
@@ -15,7 +15,7 @@
           placeholder="实收数"
           @blur="handleOverQuantity(row)"
         />
-        <span v-else>{{ row.quantity }}</span>
+        <span v-else>{{ row.quantity || '-' }}</span>
       </template>
       <template v-else>
         <span>{{ row.quantity }}</span>
@@ -23,7 +23,7 @@
           <template #reference>
             <span style="margin-left: 5px; cursor: pointer">
               <el-edit
-                v-if="Boolean(currentCfg?.quantity & basicClass) && form.selectObj?.[row.mergeId]?.isSelected"
+                v-if="form.selectObj?.[row.mergeId]?.isSelected"
                 class="el-icon"
                 style="color: #1881ef; vertical-align: middle"
               />
@@ -47,7 +47,7 @@
               align="center"
             />
             <el-table-column
-              v-if="Boolean(currentCfg?.quantity & basicClass) && form.selectObj?.[row.mergeId]?.isSelected"
+              v-if="form.selectObj?.[row.mergeId]?.isSelected"
               prop="quantity"
               :show-overflow-tooltip="true"
               :label="`本次实收数 (${baseUnit.measure.unit})`"

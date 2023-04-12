@@ -124,7 +124,6 @@
             v-if="
               !boolApplyPurchase &&
               row.measureUnit &&
-              Boolean(currentCfg?.quantity & basicClass) &&
               form.selectObj?.[row.mergeId]?.isSelected
             "
             v-model="row.quantity"
@@ -143,7 +142,7 @@
       <el-table-column prop="mete" label="本次实收量" align="center" min-width="120px">
         <template #default="{ row }">
           <common-input-number
-            v-if="!boolApplyPurchase && Boolean(currentCfg?.mete & basicClass) && form.selectObj?.[row.mergeId]?.isSelected"
+            v-if="!boolApplyPurchase && form.selectObj?.[row.mergeId]?.isSelected"
             v-model="row.mete"
             :min="0.000001"
             :max="999999999"
@@ -164,7 +163,7 @@
             <template #reference>
               <span style="margin-left: 5px; cursor: pointer">
                 <el-edit
-                  v-if="Boolean(currentCfg?.quantity & basicClass) && form.selectObj?.[row.mergeId]?.isSelected"
+                  v-if="form.selectObj?.[row.mergeId]?.isSelected"
                   class="el-icon"
                   style="color: #1881ef; vertical-align: middle"
                 />
@@ -185,7 +184,7 @@
               <el-table-column prop="quantity" label="本次实收数" align="center" min-width="120px">
                 <template #default="{ row: purRow }">
                   <common-input-number
-                    v-if="row.measureUnit && Boolean(currentCfg?.quantity & basicClass) && form.selectObj?.[row.mergeId]?.isSelected"
+                    v-if="row.measureUnit && form.selectObj?.[row.mergeId]?.isSelected"
                     v-model="purRow.quantity"
                     :min="0"
                     :max="999999999"
@@ -202,7 +201,7 @@
               <el-table-column prop="mete" label="本次实收量" align="center" min-width="120px">
                 <template #default="{ row: purRow }">
                   <common-input-number
-                    v-if="Boolean(currentCfg?.mete & basicClass) && form.selectObj?.[row.mergeId]?.isSelected"
+                    v-if="form.selectObj?.[row.mergeId]?.isSelected"
                     v-model="purRow.mete"
                     :min="0.000001"
                     :max="999999999"
@@ -263,9 +262,9 @@ const props = defineProps({
 })
 
 // 当前物料基础类型
-const basicClass = matClsEnum.MATERIAL.V
+// const basicClass = matClsEnum.MATERIAL.V
 
-const { purchaseCfg: currentCfg } = useWmsConfig()
+// const { purchaseCfg: currentCfg } = useWmsConfig()
 
 const tableRef = ref()
 const matSpecRef = inject('matSpecRef') // 调用父组件matSpecRef
@@ -381,7 +380,7 @@ function rowWatch(row) {
         isSelected: _isSelected
       }
     }
-    if (props.boolApplyPurchase && Boolean(currentCfg.value?.quantity & basicClass) && form.selectObj?.[row.mergeId]?.isSelected) {
+    if (props.boolApplyPurchase && form.selectObj?.[row.mergeId]?.isSelected) {
       row.quantity = row?.applyPurchase?.reduce((a, b) => a + (b.quantity || 0), 0)
       row.mete = row?.applyPurchase?.reduce((a, b) => a + (b.mete || 0), 0)
     }

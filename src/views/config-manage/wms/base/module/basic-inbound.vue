@@ -89,18 +89,18 @@ const defaultConfig = {
   [rawMatClsEnum.STEEL_PLATE.V]: {
     thickness: { L: '厚度', V: false },
     length: { L: '长度', V: false },
-    width: { L: '宽度', V: false },
-    quantity: { L: '数量', V: false }
+    width: { L: '宽度', V: false }
+    // quantity: { L: '数量', V: false }
   },
   [rawMatClsEnum.SECTION_STEEL.V]: {
     spec: { L: '规格', V: false },
-    length: { L: '定尺长度', V: false },
-    quantity: { L: '数量', V: false }
-  },
-  [rawMatClsEnum.MATERIAL.V]: {
-    quantity: { L: '数量', V: false },
-    mete: { L: '核算量', V: false }
+    length: { L: '定尺长度', V: false }
+    // quantity: { L: '数量', V: false }
   }
+  // [rawMatClsEnum.MATERIAL.V]: {
+  //   quantity: { L: '数量', V: false },
+  //   mete: { L: '核算量', V: false }
+  // }
 }
 
 const basicFillConfig = ref()

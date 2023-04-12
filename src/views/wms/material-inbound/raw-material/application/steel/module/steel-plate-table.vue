@@ -393,7 +393,7 @@ function rowWatch(row) {
         isSelected: _isSelected
       }
     }
-    if (row.boolApplyPurchase && Boolean(currentCfg.value?.quantity & basicClass) && form.selectObj?.[row.mergeId]?.isSelected) {
+    if (row.boolApplyPurchase && form.selectObj?.[row.mergeId]?.isSelected) {
       row.quantity = row?.applyPurchase?.reduce((a, b) => a + (b.quantity || 0), 0)
     }
     if (row.needFirstCalcTheoryWeight) {

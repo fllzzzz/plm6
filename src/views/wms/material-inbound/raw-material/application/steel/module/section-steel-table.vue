@@ -184,7 +184,7 @@
               @change="handleWeightChange(row)"
               @blur="handleOverMete(row)"
             />
-            <span v-else>{{ row.weighingTotalWeight }}</span>
+            <span v-else>{{ row.weighingTotalWeight || '-' }}</span>
           </el-tooltip>
         </template>
       </el-table-column>
@@ -393,7 +393,7 @@ function rowWatch(row) {
       calcTotalWeight(row)
       row.needFirstCalcTheoryWeight = false
     }
-    if (row.boolApplyPurchase && Boolean(currentCfg.value?.quantity & basicClass) && form.selectObj?.[row.mergeId]?.isSelected) {
+    if (row.boolApplyPurchase && form.selectObj?.[row.mergeId]?.isSelected) {
       row.quantity = row?.applyPurchase?.reduce((a, b) => a + (b.quantity || 0), 0)
     }
   })
