@@ -192,10 +192,14 @@ export async function steelInboundFormFormat(form) {
         }).then((val) => {
           row.theoryWeight = val
           row.theoryTotalWeight = toPrecision(row.theoryWeight * (row.quantity || 0), baseUnit[matClsEnum.SECTION_STEEL.V].weight.precision) // 理论总重量
-          row.totalLength = calcSectionSteelTotalLength({
-            length: row.length, // 长度
-            quantity: row.quantity // 数量
-          })
+          if (row.length && row.quantity) {
+            row.totalLength = calcSectionSteelTotalLength({
+              length: row.length, // 长度
+              quantity: row.quantity // 数量
+            })
+          } else {
+            row.totalLength = 0
+          }
           form.sectionSteelList.push(row)
         })
         break

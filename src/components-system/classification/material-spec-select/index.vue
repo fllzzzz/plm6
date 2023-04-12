@@ -306,7 +306,6 @@ function handleSelectChange(sn) {
       }
     })
     _addList = [sn]
-    console.log(selected.value, _cancelList, _addList)
   } else {
     // 多选模式下，取消选中时，删除该条数据
     if (!status) {

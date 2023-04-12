@@ -39,7 +39,6 @@ export default function useEditSectionSpec() {
   }
 
   function handleSpecChange(list) {
-    console.log('handle----', list)
     const row = list[0]
     editRow.value.sn = row.sn
     editRow.value.specificationLabels = row.specificationLabels // 规格中文
