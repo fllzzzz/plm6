@@ -135,13 +135,13 @@
 <script setup>
 import { defineExpose, defineEmits, inject, watchEffect, watch } from 'vue'
 import { matClsEnum } from '@/utils/enum/modules/classification'
-import { isNotBlank } from '@/utils/data-type'
+import { isNotBlank, toPrecision } from '@/utils/data-type'
 
 import useEditSectionSpec from '@compos/wms/use-edit-section-spec'
 import useTableValidate from '@compos/form/use-table-validate'
 import useMatBaseUnit from '@/composables/store/use-mat-base-unit'
 import useWeightOverDiff from '@/composables/wms/use-steel-weight-over-diff'
-import { calcSectionSteelTotalLength } from '@/utils/wms/measurement-calc'
+import { calcSectionSteelTotalLength, calcSectionSteelWeight } from '@/utils/wms/measurement-calc'
 import { positiveNumPattern } from '@/utils/validate/pattern'
 import materialSpecSelect from '@comp-cls/material-spec-select/index.vue'
 
@@ -188,11 +188,11 @@ function isExist(id) {
 function rowWatch(row) {
   watchEffect(() => weightOverDiff(row))
   // 计算单件理论重量
-  // watch([() => row.length, () => row.unitWeight, baseUnit], () => calcTheoryWeight(row), { immediate: true })
+  watch([() => row.length, () => row.unitWeight, baseUnit], () => calcTheoryWeight(row), { immediate: true })
   // 计算总重
-  // watch([() => row.theoryWeight, () => row.quantity], () => {
-  //   calcTotalWeight(row)
-  // })
+  watch([() => row.theoryWeight, () => row.quantity], () => {
+    calcTotalWeight(row)
+  })
   // 计算总长度
   watch([() => row.length, () => row.quantity], () => {
     calcTotalLength(row)
@@ -201,12 +201,12 @@ function rowWatch(row) {
 
 // 总重计算与单位重量计算分开，避免修改数量时需要重新计算单件重量
 // 计算单件重量
-// async function calcTheoryWeight(row) {
-//   row.theoryWeight = await calcSectionSteelWeight({
-//     length: row.length, // 长度
-//     unitWeight: row.unitWeight // 单位重量
-//   })
-// }
+async function calcTheoryWeight(row) {
+  row.theoryWeight = await calcSectionSteelWeight({
+    length: row.length, // 长度
+    unitWeight: row.unitWeight // 单位重量
+  })
+}
 
 // 计算总长
 function calcTotalLength(row) {
@@ -221,20 +221,20 @@ function calcTotalLength(row) {
 }
 
 // 计算总重
-// function calcTotalWeight(row) {
-//   // if (row.purchaseNetMete && row.quantity) {
-//   //   row.purchaseTotalWeight = toPrecision(row.purchaseNetMete * row.quantity, baseUnit.value.weight.precision)
-//   // } else {
-//   //   row.purchaseTotalWeight = undefined
-//   // }
-//   if (isNotBlank(row.theoryWeight) && row.quantity) {
-//     row.theoryTotalWeight = toPrecision(row.theoryWeight * row.quantity, baseUnit.value.weight.precision)
-//     row.weighingTotalWeight = toPrecision(row.theoryWeight * row.quantity, baseUnit.value.weight.precision)
-//   } else {
-//     row.theoryTotalWeight = undefined
-//     row.weighingTotalWeight = undefined
-//   }
-// }
+function calcTotalWeight(row) {
+  // if (row.purchaseNetMete && row.quantity) {
+  //   row.purchaseTotalWeight = toPrecision(row.purchaseNetMete * row.quantity, baseUnit.value.weight.precision)
+  // } else {
+  //   row.purchaseTotalWeight = undefined
+  // }
+  if (isNotBlank(row.theoryWeight) && row.quantity) {
+    row.theoryTotalWeight = toPrecision(row.theoryWeight * row.quantity, baseUnit.value.weight.precision)
+    row.weighingTotalWeight = toPrecision(row.theoryWeight * row.quantity, baseUnit.value.weight.precision)
+  } else {
+    row.theoryTotalWeight = undefined
+    row.weighingTotalWeight = undefined
+  }
+}
 
 function addRow(row, index) {
   emit('add-purchase', row, index)

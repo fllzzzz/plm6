@@ -232,7 +232,7 @@
                     </template>
                   </common-radio-button>
                   <el-tag v-for="item in form.actualRequisitionIds" :key="item" effect="plain" class="preparation-sn-tag">
-                    {{ form.requisitionsKV[item].serialNumber }}
+                    {{ form.requisitionsKV?.[item]?.serialNumber }}
                   </el-tag>
                 </span>
                 <span class="opt-content" v-if="!form.boolUsed">
@@ -771,18 +771,18 @@ watchEffect(() => {
   form.requisitions = obj2arr(form.requisitionsKV)
   const _actualRequisitionIds = []
   if (form.materialType & materialPurchaseClsEnum.STEEL.V) {
-    form.steelPlateList.forEach((v) => {
+    form.steelPlateList?.forEach((v) => {
       _actualRequisitionIds.push(v.applyPurchaseId)
     })
-    form.steelCoilList.forEach((v) => {
+    form.steelCoilList?.forEach((v) => {
       _actualRequisitionIds.push(v.applyPurchaseId)
     })
-    form.sectionSteelList.forEach((v) => {
+    form.sectionSteelList?.forEach((v) => {
       _actualRequisitionIds.push(v.applyPurchaseId)
     })
   }
   if (form.materialType & materialPurchaseClsEnum.MATERIAL.V) {
-    form.list.forEach((v) => {
+    form.list?.forEach((v) => {
       _actualRequisitionIds.push(v.applyPurchaseId)
     })
   }
@@ -831,7 +831,7 @@ CRUD.HOOK.beforeToCU = () => {
 }
 
 // 加载处理
-CRUD.HOOK.beforeEditDetailLoaded = async (crud, form) => {
+CRUD.HOOK.beforeEditDetailLoaded = async (crud) => {
   if (isNotBlank(form.projects)) {
     form.projectIds = form.projects.map((v) => v.id)
   }
@@ -840,8 +840,9 @@ CRUD.HOOK.beforeEditDetailLoaded = async (crud, form) => {
   }
   // 是否绑定申购
   form.useRequisitions = isNotBlank(form.applyPurchase)
+  let applyPurchaseObj = {}
   if (form.useRequisitions) {
-    form.requisitionsKV = arr2obj(form.applyPurchase)
+    applyPurchaseObj = arr2obj(form.applyPurchase)
   }
   // 是否选中所有辅材，0表示所有
   form.isAllMaterial = form.auxMaterialIds?.includes(0)
@@ -866,7 +867,7 @@ CRUD.HOOK.beforeEditDetailLoaded = async (crud, form) => {
       toNum: true
     })
     form.list = form.details.map((v) => {
-      v.purchaseSN = form.requisitionsKV[v.applyPurchaseId]?.serialNumber
+      v.purchaseSN = applyPurchaseObj[v.applyPurchaseId]?.serialNumber
       return v
     })
     if (form.materialType & materialPurchaseClsEnum.STEEL.V) {
@@ -874,6 +875,8 @@ CRUD.HOOK.beforeEditDetailLoaded = async (crud, form) => {
       await steelInboundFormFormat(form)
     }
   }
+
+  Object.assign(form, { requisitionsKV: applyPurchaseObj })
 
   // form.currentBasicClass设置初始值
   for (const item in matClsEnum.ENUM) {
