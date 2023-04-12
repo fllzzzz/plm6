@@ -448,7 +448,8 @@ function validate() {
               projectId: a.project?.id,
               uid: createUniqueString(),
               mete: _weight,
-              weight: _weight
+              weight: _weight,
+              applyPurchaseId: a.applyPurchaseId
             })
           }
         })
