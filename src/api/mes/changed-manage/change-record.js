@@ -25,4 +25,12 @@ export function taskDetail(id) {
   })
 }
 
+export function getChangeTaskList(id) {
+  return request({
+    module: 'mes',
+    url: `tech/change/${id}/task/issued`,
+    method: 'get'
+  })
+}
+
 export default { get }

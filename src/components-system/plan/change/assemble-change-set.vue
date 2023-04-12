@@ -51,7 +51,14 @@
                 v-for="t in assembleHandleMethodEnum.ENUM"
                 :key="t.V"
                 class="method-item"
-                :class="{ 'is-active': Boolean(row.handleObj?.[item]?.handleType & t.V) }"
+                :class="{
+                  'is-active': Boolean(row.handleObj?.[item]?.handleType & t.V),
+                  'is-disabled':
+                    (t.V === assembleHandleMethodEnum.ADD_LENGTH.V &&
+                      !Boolean(row.handleObj?.[item]?.handleType & assembleHandleMethodEnum.TRUNCATE.V)) ||
+                    (t.V === assembleHandleMethodEnum.TRUNCATE.V &&
+                      !Boolean(row.handleObj?.[item]?.handleType & assembleHandleMethodEnum.ADD_LENGTH.V)),
+                }"
                 @click="handleTypeChange(row, item, t.V)"
               >
                 {{ t.L }}
@@ -180,6 +187,10 @@ function handleSerialNumberChange(val, row) {
 }
 
 function handleTypeChange(row, oldSn, val) {
+  if (
+    (val === assembleHandleMethodEnum.ADD_LENGTH.V && !(row.handleObj?.[oldSn]?.handleType & assembleHandleMethodEnum.TRUNCATE.V)) ||
+    (val === assembleHandleMethodEnum.TRUNCATE.V && !(row.handleObj?.[oldSn]?.handleType & assembleHandleMethodEnum.ADD_LENGTH.V))
+  ) { return }
   if (props.onlyShow) return
   if (!(row.handleObj[oldSn]?.handleType & val)) {
     row.handleObj[oldSn].handleType |= val
@@ -231,6 +242,10 @@ function handleTypeChange(row, oldSn, val) {
 
       .is-active {
         background-color: #0066ff;
+      }
+
+      .is-disabled {
+        cursor: not-allowed;
       }
     }
   }

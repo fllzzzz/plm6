@@ -1,13 +1,14 @@
 <template>
   <el-steps
     :space="props.space"
-    :active="props.modelValue"
+    :active="curActive"
     :direction="props.direction"
     :process-status="props.processStatus"
     :finish-status="props.finishStatus"
     :align-center="props.alignCenter"
     :simple="props.simple"
     class="common-step"
+    @change="handleChange"
   >
     <el-step
       v-for="item in options"
@@ -21,8 +22,9 @@
 </template>
 
 <script setup>
-import { defineProps } from 'vue'
+import { defineProps, defineEmits, ref, watch } from 'vue'
 
+const emit = defineEmits(['update:modelValue', 'change'])
 const props = defineProps({
   modelValue: {
     type: Number,
@@ -56,10 +58,26 @@ const props = defineProps({
     default: false
   }
 })
+
+const curActive = ref()
+
+// 监听modelValue变化, 更新curActive
+watch(
+  () => props.modelValue,
+  (val) => {
+    curActive.value = val
+  }
+)
+
+function handleChange(val) {
+  emit('update:modelValue', val)
+  emit('change', val)
+}
 </script>
 
 <style lang="scss" scoped>
 .common-step {
+
   ::v-deep(.el-step__main) {
     position: absolute;
     top: -8px;

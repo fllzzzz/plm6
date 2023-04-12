@@ -16,7 +16,9 @@
     <template #titleRight> </template>
     <template #content>
       <el-card class="step-content">
-        <common-step v-model="step" :options="stepOptions" space="16.6%" finish-status="success" style="width: calc(100% - 240px)" />
+        <div class="common-step-warp">
+          <common-step v-model="step" :options="stepOptions" finish-status="success" :style="`width: ${200 * stepOptions.length}px`" />
+        </div>
         <span class="step-btn">
           <common-button size="mini" plain :disabled="step === 0" @click="step--">上一步</common-button>
           <common-button size="mini" plain :disabled="step === stepOptions.length - 1" @click="handleNextStep">下一步</common-button>
@@ -31,8 +33,8 @@
 </template>
 
 <script setup>
-import { changeDetail, taskDetail } from '@/api/mes/changed-manage/change-record'
-import { defineProps, defineEmits, computed, reactive, ref, provide } from 'vue'
+import { changeDetail, taskDetail, getChangeTaskList } from '@/api/mes/changed-manage/change-record'
+import { defineProps, defineEmits, computed, ref, provide, watch } from 'vue'
 import { ElMessage, ElNotification } from 'element-plus'
 
 import { changeTypeEnum } from '@/components-system/plan/change/common.js'
@@ -46,6 +48,10 @@ import mReason from './change-detail/reason'
 import mHandleInfo from './change-detail/handle-info'
 import mChangeSummary from './change-detail/change-summary'
 import mTaskChangeInfo from './change-detail/task-change-info'
+import artifactRescheduling from './change-detail/artifact-rescheduling.vue'
+import assembleRescheduling from './change-detail/assemble-rescheduling.vue'
+import artifactPointWorkScheduling from './change-detail/artifact-point-work-scheduling.vue'
+import assemblePointWorkScheduling from './change-detail/assemble-point-work-scheduling.vue'
 
 const drawerRef = ref()
 const emit = defineEmits(['update:visible'])
@@ -76,25 +82,63 @@ const { maxHeight, heightStyle } = useMaxHeight(
 const { handleAssembleList, handleCompareAssembleList } = useHandleChangeList()
 const { handleSummaryData } = useHandelSummaryData()
 
-const stepOptions = reactive([
-  { title: '变更原因' },
-  { title: '变更详情' },
-  { title: '变更总览' },
-  { title: '任务变更总览' },
-  { title: '变更文件总览' },
-  { title: '变更任务重新排产' }
-])
-const stepComponent = [mReason, mHandleInfo, mChangeSummary, mTaskChangeInfo]
 const step = ref(0)
 const detailLoading = ref(false)
 const submitLoading = ref(false)
 const contentLoading = ref(false)
 const changeInfo = ref()
 const taskInfo = ref({})
+const schedulingInfo = ref({})
+const schedulingHandle = ref({
+  artifact: {},
+  artifactPointWork: {},
+  assemble: {},
+  assemblePointWork: {}
+})
 provide('changeInfo', changeInfo)
 provide('taskInfo', taskInfo)
+provide('schedulingInfo', schedulingInfo)
+provide('schedulingHandle', schedulingHandle)
 
-const currentView = computed(() => stepComponent[step.value])
+const stepOptions = computed(() => {
+  const baseOptions = [
+    { title: '变更原因', comp: mReason },
+    { title: '变更详情', comp: mHandleInfo },
+    { title: '变更总览', comp: mChangeSummary },
+    { title: '变更文件总览', comp: mTaskChangeInfo },
+    { title: '任务变更总览', comp: mTaskChangeInfo }
+  ]
+  if (schedulingInfo.value?.artifactList?.length) {
+    baseOptions.push({ title: '构件任务变更下发', comp: artifactRescheduling })
+  }
+  if (schedulingInfo.value?.pointWorkTaskArtifactList?.length) {
+    baseOptions.push({ title: '构件点工下发', comp: artifactPointWorkScheduling })
+  }
+  if (schedulingInfo.value?.assembleList?.length) {
+    baseOptions.push({ title: '部件任务变更下发', comp: assembleRescheduling })
+  }
+  if (schedulingInfo.value?.pointWorkTaskAssembleList?.length) {
+    baseOptions.push({ title: '部件点工下发', comp: assemblePointWorkScheduling })
+  }
+  return baseOptions
+})
+
+const currentView = computed(() => stepOptions.value[step.value].comp)
+
+// 监听step变化，滚动到当前step
+watch(
+  () => step.value,
+  (val) => {
+    if (document.querySelector('.common-step-warp')) {
+      const dom = document.querySelector('.common-step-warp').querySelectorAll('.el-step')[val]
+      dom.scrollIntoView({ behavior: 'smooth' })
+      // 当step为0时，滚动到顶部
+      if (val === 0) {
+        document.querySelector('.common-step-warp').scrollTo(0, 0)
+      }
+    }
+  }
+)
 
 function showHook() {
   step.value = 0
@@ -114,6 +158,7 @@ async function fetchChangeDetail() {
       v.assembleCompareList = assembleCompareList
       return v
     })
+    await fetchChangeTaskList()
   } catch (error) {
     console.log(error, '获取详情失败')
   } finally {
@@ -131,6 +176,33 @@ async function fetchTaskDetail() {
     console.log(error, '获取详情失败')
   } finally {
     contentLoading.value = false
+  }
+}
+
+async function fetchChangeTaskList() {
+  // 重置
+  schedulingInfo.value = {}
+  schedulingHandle.value = {
+    artifact: {},
+    artifactPointWork: {},
+    assemble: {},
+    assemblePointWork: {}
+  }
+  try {
+    submitLoading.value = true
+    const data = await getChangeTaskList(props.info.id)
+    for (const key in data) {
+      if (data[key]?.length) {
+        data[key].forEach((v) => {
+          v.originQuantity = v.quantity
+        })
+      }
+    }
+    schedulingInfo.value = data
+  } catch (error) {
+    console.log(error, '获取变更list失败')
+  } finally {
+    submitLoading.value = false
   }
 }
 
@@ -177,6 +249,19 @@ async function submit() {
 </script>
 
 <style lang="scss" scoped>
+.common-step-warp {
+  &::-webkit-scrollbar {
+    width: 0 !important;
+    height: 0 !important;
+  }
+
+  width: calc(100% - 240px);
+  overflow: auto;
+
+  ::v-deep(.el-step) {
+    width: 200px !important;
+  }
+}
 .step-content {
   position: relative;
   margin-bottom: 10px;

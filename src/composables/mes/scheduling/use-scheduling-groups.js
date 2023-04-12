@@ -74,9 +74,9 @@ const useSchedulingGroups = ({ queryParams, factoryIds, disabledIds }) => {
 }
 
 // 手动获取
-export async function manualFetchGroupsTree({ productType, structureClassId, _factoryIds, disabledIds = [] }) {
+export async function manualFetchGroupsTree({ productType, structureClassId, _factoryIds, disabledIds = [] }, returnAll = false) {
   // 零件不必传structureClassId
-  if (!productType || (!structureClassId && productType !== componentTypeEnum.MACHINE_PART.V)) {
+  if ((!productType || (!structureClassId && productType !== componentTypeEnum.MACHINE_PART.V)) && !returnAll) {
     return {
       list: [],
       obj: {}
@@ -84,8 +84,8 @@ export async function manualFetchGroupsTree({ productType, structureClassId, _fa
   }
   const content = await getGroupsTree({ productType, structureClassId })
   // 零件返回全部
-  const returnAll = Boolean(productType === componentTypeEnum.MACHINE_PART.V)
-  return dataFormat(content, _factoryIds, disabledIds, returnAll)
+  const _returnAll = Boolean(productType === componentTypeEnum.MACHINE_PART.V) || returnAll
+  return dataFormat(content, _factoryIds, disabledIds, _returnAll)
 }
 
 function dataFormat(list, _factoryIds, disabledIds = [], returnAll = false) {

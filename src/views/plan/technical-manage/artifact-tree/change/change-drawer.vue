@@ -194,20 +194,20 @@ async function submit() {
           changeLinkList
         })
       }
-      const partList = []
-      for (const part of item.partCompareList) {
-        partList.push({
-          ...part,
-          changeTypeEnum: part.changeType
-        })
-      }
+      // const partList = []
+      // for (const part of item.partCompareList) {
+      //   partList.push({
+      //     ...part,
+      //     changeTypeEnum: part.changeType
+      //   })
+      // }
       const _artifact = {
         ...item.newArtifact,
         areaList: item.areaList.map((v) => {
           return { id: v.id, quantity: v.newQuantity }
         }),
-        assembleList,
-        partList
+        assembleList
+        // partList
       }
       _artifactList.push(_artifact)
     }
