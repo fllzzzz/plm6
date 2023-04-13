@@ -865,9 +865,12 @@ CRUD.HOOK.beforeEditDetailLoaded = async (crud) => {
     await setSpecInfoToList(form.details)
     await numFmtByBasicClass(form.details, {
       toNum: true
+    }, {
+      mete: ['mete', 'applyPurchaseMete']
     })
     form.list = form.details.map((v) => {
       v.purchaseSN = applyPurchaseObj[v.applyPurchaseId]?.serialNumber
+      v.purchaseTotalWeight = v.applyPurchaseMete
       return v
     })
     if (form.materialType & materialPurchaseClsEnum.STEEL.V) {
