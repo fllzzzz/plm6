@@ -145,12 +145,19 @@ export default {
           meta: { title: '围护清单', icon: 'project', noCache: true }
         },
         {
-          name: 'PlanAuxiliaryMaterialList',
-          path: 'planAuxiliaryMaterialList',
+          name: 'PlanStandardPart',
+          path: 'planStandardPart',
           hidden: false,
-          component: '/plan/technical-manage/auxiliary-material/index',
-          meta: { title: '配套件清单', icon: 'project', noCache: true }
+          component: '/plan/technical-manage/standard-part/index',
+          meta: { title: '项目配套', icon: 'project', noCache: true }
         },
+        // {
+        //   name: 'PlanAuxiliaryMaterialList',
+        //   path: 'planAuxiliaryMaterialList',
+        //   hidden: false,
+        //   component: '/plan/technical-manage/auxiliary-material/index',
+        //   meta: { title: '配套件清单', icon: 'project', noCache: true }
+        // },
         // {
         //   name: 'PlanAuxiliaryMaterialSummary',
         //   path: 'auxiliary-material-summary',

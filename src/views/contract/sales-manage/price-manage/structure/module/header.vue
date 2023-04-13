@@ -1,6 +1,12 @@
 <template>
   <div class="head-container">
     <div v-show="crud.searchToggle">
+      <monomer-select
+        v-model="monomerId"
+        :project-id="projectId"
+        class="filter-item"
+        @change="handleMonomerChange"
+      />
       <el-input
         v-model="query.name"
         placeholder="可输入名称搜索"
@@ -65,7 +71,7 @@
 
 <script setup>
 import { cost } from '@/api/contract/sales-manage/price-manage/structure'
-import { ref, watch, nextTick, inject, computed, defineExpose, defineEmits, defineProps } from 'vue'
+import { ref, nextTick, inject, computed, defineExpose, defineEmits, defineProps } from 'vue'
 
 import checkPermission from '@/utils/system/check-permission'
 import { contractSaleTypeEnum } from '@enum-ms/mes'
@@ -79,6 +85,7 @@ import { regHeader } from '@compos/use-crud'
 import crudOperation from '@crud/CRUD.operation'
 import rrOperation from '@crud/RR.operation'
 import mPreview from '../../preview'
+import monomerSelect from '@/components-system/plan/monomer-select'
 
 const projectId = inject('projectId')
 const monomerId = inject('monomerId')
@@ -102,17 +109,22 @@ const previewParams = computed(() => {
   }
 })
 
-watch(
-  monomerId,
-  (val) => {
-    nextTick(() => {
-      crud.query.monomerId = val
-      costInit()
-      crud.toQuery()
-    })
-  },
-  { immediate: true }
-)
+// watch(
+//   monomerId,
+//   (val) => {
+//     nextTick(() => {
+//       crud.query.monomerId = val
+//       costInit()
+//       crud.toQuery()
+//     })
+//   },
+//   { immediate: true }
+// )
+
+function handleMonomerChange(val) {
+  costInit()
+  crud.toQuery()
+}
 
 const modifying = ref(false)
 const costLoading = ref(false)

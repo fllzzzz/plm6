@@ -19,69 +19,42 @@
         :cell-class-name="wrongCellMask"
       >
       <el-table-column label="序号" type="index" align="center" width="60" fixed="left" />
-      <el-table-column prop="serialNumber" label="编号" align="center" width="110px" fixed="left" v-if="columns.visible('serialNumber')" :show-overflow-tooltip="true" />
       <el-table-column
-        prop="classifyName"
+        prop="name"
         label="名称"
         align="center"
         fixed="left"
         min-width="150"
-        v-if="columns.visible('classifyName')"
+        v-if="columns.visible('name')"
         :show-overflow-tooltip="true"
       >
         <template #default="{ row }">
-          <el-tooltip :content="row.classifyFullName" :disabled="!row.classifyFullName" :show-after="200" placement="top">
-            <span>{{ row.classifyName }}</span>
-          </el-tooltip>
+          <el-input v-if="row.isModify" v-model.trim="row.name" type="text" placeholder="名称" style="width:100%" maxlength="20"/>
+          <span v-else>{{row.name}}</span>
         </template>
       </el-table-column>
-      <el-table-column v-if="columns.visible('specification')" :show-overflow-tooltip="true" prop="specification" label="规格" align="center" min-width="200px" fixed="left" />
-      <el-table-column v-if="columns.visible('measureUnit')" :show-overflow-tooltip="true" prop="measureUnit" label="计量单位" align="center" min-width="70px" />
+      <el-table-column v-if="columns.visible('specification')" :show-overflow-tooltip="true" prop="specification" label="规格" align="center" min-width="200px">
+        <template #default="{ row }">
+          <el-input v-if="row.isModify" v-model.trim="row.specification" type="text" placeholder="规格" style="width:100%" maxlength="20"/>
+          <span v-else>{{row.specification}}</span>
+        </template>
+      </el-table-column>
+      <el-table-column v-if="columns.visible('measureUnit')" :show-overflow-tooltip="true" prop="measureUnit" label="单位" align="center" min-width="70px" />
       <el-table-column v-if="columns.visible('quantity')" :show-overflow-tooltip="true" prop="quantity" label="数量" align="center" min-width="120px">
         <template #default="{ row }">
           <common-input-number
-            v-if="row.measureUnit && row.isModify"
+            v-if="row.isModify"
             v-model="row.quantity"
             :min="0"
             :max="999999999"
             :controls="false"
             :step="1"
-            :precision="row.measurePrecision"
             size="mini"
             placeholder="数量"
           />
           <span v-else>{{ row.quantity }}</span>
         </template>
       </el-table-column>
-      <el-table-column v-if="columns.visible('accountingUnit')" :show-overflow-tooltip="true" prop="accountingUnit" label="核算单位" align="center" min-width="70px" />
-      <el-table-column v-if="columns.visible('mete')" :show-overflow-tooltip="true" prop="mete" label="核算量" align="center" min-width="120px">
-        <template #default="{ row }">
-          <common-input-number
-            v-if="row.isModify"
-            v-model="row.mete"
-            :min="0.000001"
-            :max="999999999"
-            :controls="false"
-            :step="1"
-            :precision="row.accountingPrecision"
-            size="mini"
-            placeholder="核算量"
-          />
-          <span v-else>{{ row.mete }}</span>
-        </template>
-      </el-table-column>
-      <!-- <el-table-column v-if="columns.visible('color')" :show-overflow-tooltip="true" prop="color" label="颜色" align="center" min-width="120px">
-        <template #default="{ row }">
-          <el-input v-if="row.isModify" v-model.trim="row.color" maxlength="20" size="mini" placeholder="颜色" />
-          <span v-else>{{ row.color }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column v-if="columns.visible('brand')" :show-overflow-tooltip="true" prop="brand" label="品牌" align="center" min-width="120px">
-        <template #default="{ row }">
-          <el-input v-if="row.isModify" v-model.trim="row.brand" maxlength="60" size="mini" placeholder="品牌" />
-          <span v-else>{{ row.brand }}</span>
-        </template>
-      </el-table-column> -->
       <el-table-column v-if="columns.visible('useProperty')" prop="useProperty" label="使用范围" align="center" min-width="120px">
       <template #default="{ row }">
         <common-select
@@ -136,6 +109,10 @@
 <script setup>
 import crudApi from '@/api/plan/technical-manage/standard-part'
 import { provide, ref } from 'vue'
+
+import { isNotBlank } from '@data-type/index'
+import { validate } from '@compos/form/use-table-validate'
+import { auxiliaryMaterialUseTypeEnum } from '@enum-ms/plan'
 import checkPermission from '@/utils/system/check-permission'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
@@ -145,11 +122,9 @@ import mHeader from './module/header'
 import mForm from './module/form'
 import { ElMessage } from 'element-plus'
 // import { auxiliaryMaterialPM as permission } from '@/page-permission/plan'
-import { validate } from '@compos/form/use-table-validate'
-import { positiveNumPattern } from '@/utils/validate/pattern'
-import { auxiliaryMaterialUseTypeEnum } from '@enum-ms/plan'
 
 const { globalProject, globalProjectId } = mapGetters(['globalProject', 'globalProjectId'])
+
 const permission = {
   get: ['get'],
   add: ['add'],
@@ -181,7 +156,7 @@ const { crud, columns, CRUD } = useCRUD(
 )
 
 const { maxHeight } = useMaxHeight({
-  wrapperBox: '.plan-auxiliary-material',
+  wrapperBox: '.plan-standard-part',
   paginate: true,
   extraHeight: 40
 })
@@ -198,21 +173,12 @@ provide('currentMonomer', currentMonomer)
 provide('globalProject', globalProject)
 provide('currentArea', currentArea)
 
-// 数量校验方式
-const validateQuantity = (value, row) => {
-  if (row.measureUnit) return !!value
-
-  return true
-}
-
 const tableRules = {
-  classifyId: [{ required: true, message: '请选择物料种类', trigger: 'change' }],
-  quantity: [{ validator: validateQuantity, message: '请填写数量', trigger: 'blur' }],
-  mete: [
-    { required: true, message: '请填写核算量', trigger: 'blur' },
-    { pattern: positiveNumPattern, message: '核算量必须大于0', trigger: 'blur' }
-  ],
-  useProperty: [{ required: true, message: '请选择使用范围', trigger: 'change' }]
+  name: [{ required: true, message: '请输入名称', trigger: 'blur' }],
+  useProperty: [{ required: true, message: '请输入选择使用范围', trigger: 'change' }],
+  specification: [{ required: true, message: '请输入规格', trigger: 'blur' }],
+  measureUnit: [{ required: true, message: '请输入单位', trigger: 'blur' }],
+  quantity: [{ required: true, message: '请输入数量', trigger: 'change' }]
 }
 
 function wrongCellMask({ row, column }) {
@@ -236,7 +202,7 @@ function editRow(row) {
 }
 async function deleteRow(row) {
   try {
-    await crudApi.del(crud.query.projectId, [row.id])
+    await crudApi.del([row.id])
     crud.notify(`删除成功`, CRUD.NOTIFICATION_TYPE.SUCCESS)
     crud.toQuery()
   } catch (e) {
@@ -269,6 +235,19 @@ async function rowSubmit(row) {
   } catch (e) {
     console.log(`修改`, e)
   }
+}
+
+CRUD.HOOK.handleRefresh = (crud, data) => {
+  data.data.content.map(v => {
+    v.projectId = v.project.id
+    if (isNotBlank(v.monomer)) {
+      v.monomerId = v.monomer.id
+    }
+    if (isNotBlank(v.area)) {
+      v.areaId = v.area.id
+    }
+    return v
+  })
 }
 </script>
 

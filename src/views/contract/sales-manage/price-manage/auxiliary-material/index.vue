@@ -15,70 +15,21 @@
       :cell-class-name="changedCellMask"
     >
       <el-table-column label="序号" type="index" align="center" width="60" />
+      <el-table-column v-if="columns.visible('useProperty')" prop="useProperty" label="使用类别" align="center">
+         <template #default="{ row }">
+          {{auxiliaryMaterialUseTypeEnum.VL[row.sourceRow?.useProperty]}}
+         </template>
+      </el-table-column>
       <el-table-column
-        v-if="columns.visible('name')"
-        key="name"
         prop="name"
-        show-overflow-tooltip
         label="名称"
         align="center"
-        min-width="120"
-      >
-        <template #default="{ row }">
-          <el-tooltip :content="row.classifyFullName" :disabled="!row.classifyFullName" :show-after="200" placement="top">
-            <span>{{ row.classifyName }}</span>
-          </el-tooltip>
-        </template>
-      </el-table-column>
-      <el-table-column
-        v-if="columns.visible('serialNumber')"
-        key="serialNumber"
-        prop="serialNumber"
-        show-overflow-tooltip
-        label="编号"
-        align="center"
-        min-width="120"
+        v-if="columns.visible('name')"
+        :show-overflow-tooltip="true"
       />
-      <el-table-column
-        v-if="columns.visible('specification')"
-        key="specification"
-        prop="specification"
-        show-overflow-tooltip
-        label="规格"
-        align="center"
-        min-width="120"
-      />
-      <el-table-column
-        v-if="columns.visible('color')"
-        key="color"
-        prop="color"
-        show-overflow-tooltip
-        label="颜色"
-        align="center"
-        width="100"
-      />
-      <el-table-column
-        v-if="columns.visible('accountingUnit')"
-        key="accountingUnit"
-        prop="accountingUnit"
-        show-overflow-tooltip
-        label="核算单位"
-        align="center"
-        width="100"
-      />
-      <el-table-column
-        v-if="columns.visible('mete')"
-        key="mete"
-        prop="mete"
-        show-overflow-tooltip
-        label="核算量"
-        align="center"
-        min-width="100"
-      >
-        <template #default="{ row }">
-          <span :class="row.status === 1 ? 'tc-danger' : ''">{{ row.mete }}</span>
-        </template>
-      </el-table-column>
+      <el-table-column v-if="columns.visible('specification')" :show-overflow-tooltip="true" prop="specification" label="规格" align="center" min-width="120" />
+      <el-table-column v-if="columns.visible('measureUnit')" :show-overflow-tooltip="true" prop="measureUnit" label="单位" align="center"/>
+      <el-table-column v-if="columns.visible('quantity')" :show-overflow-tooltip="true" prop="quantity" label="数量" align="center"/>
       <el-table-column
         v-if="columns.visible('unitPrice')"
         key="unitPrice"
@@ -107,7 +58,7 @@
       </el-table-column>
       <el-table-column v-if="columns.visible('totalPrice')" key="totalPrice" prop="totalPrice" align="center" min-width="120" label="金额">
         <template #default="{ row }">
-          <span :class="row.status === 1 ? 'tc-danger' : ''">{{ row.totalPrice }}</span>
+          <span :class="row.status === 1 ? 'tc-danger' : ''">{{ row.totalPrice || '-' }}</span>
         </template>
       </el-table-column>
     </common-table>
@@ -122,6 +73,7 @@ import { ref, defineExpose } from 'vue'
 import { priceManagePM as permission } from '@/page-permission/contract'
 
 import { DP } from '@/settings/config'
+import { auxiliaryMaterialUseTypeEnum } from '@enum-ms/plan'
 
 import useTableChange from '@compos/form/use-table-change'
 import useMaxHeight from '@compos/use-max-height'
@@ -151,7 +103,7 @@ const { crud, columns } = useCRUD(
     permission: { ...permission },
     crudApi: { ...crudApi },
     optShow: { ...optShow },
-    requiredQuery: ['monomerId']
+    requiredQuery: ['projectId']
   },
   tableRef
 )
@@ -165,7 +117,7 @@ const { changedCellMask } = useTableChange({ fieldMap: sourceMap })
 // 价格变动
 function handlePrice(row) {
   row.unitPrice = row.newUnitPrice
-  row.totalPrice = row.mete * (row.unitPrice || 0)
+  row.totalPrice = row.quantity * (row.unitPrice || 0)
 }
 
 defineExpose({

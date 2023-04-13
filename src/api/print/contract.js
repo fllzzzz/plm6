@@ -173,7 +173,7 @@ export function enclosurePrice(params) {
 export function auxiliaryMaterialPrice(params) {
   return request({
     module: 'contract',
-    url: 'business/auxiliary-material/print',
+    url: 'business/standardPart/print',
     method: 'get',
     params
   })

@@ -3,6 +3,13 @@
     <div class="head-container">
       <div class="filter-container">
         <div class="filter-left-box">
+          <project-visa-select
+            v-model="projectId"
+            :default-id="globalProjectId"
+            class="filter-item"
+            style="width: 300px"
+            placeholder="可选择项目搜索"
+          />
           <common-radio-button
             v-model="productType"
             :options="contractSaleTypeEnum.ENUM"
@@ -11,19 +18,12 @@
             size="small"
             class="filter-item"
           />
-          <project-visa-select
-            v-model="projectId"
-            :default-id="globalProjectId"
-            class="filter-item"
-            style="width: 300px"
-            placeholder="可选择项目搜索"
-          />
-          <monomer-select
+          <!-- <monomer-select
             v-model="monomerId"
             :project-id="projectId"
             class="filter-item"
             @change="handleMonomerChange"
-          />
+          /> -->
         </div>
         <div class="filter-right-box">
           <template v-if="checkPermission(permission.cost)">
@@ -76,7 +76,7 @@ import { debounce } from '@/utils'
 import { isBlank } from '@data-type/index'
 import checkPermission from '@/utils/system/check-permission'
 
-import monomerSelect from '@/components-system/plan/monomer-select'
+// import monomerSelect from '@/components-system/plan/monomer-select'
 import structure from './structure'
 // import enclosure from './enclosure'
 import auxiliaryMaterial from './auxiliary-material'
@@ -110,7 +110,7 @@ const monomerCost = ref(0)
 const monomerId = ref()
 const modifyVisible = ref(false)
 
-provide('monomerId', monomerId)
+// provide('monomerId', monomerId)
 provide('projectId', projectId)
 provide('modifyVisible', modifyVisible)
 
@@ -125,9 +125,9 @@ function handleProjectChange() {
 }
 
 // 单体变动
-function handleMonomerChange() {
-  fetchCost()
-}
+// function handleMonomerChange() {
+//   fetchCost()
+// }
 
 // 获取项目造价
 const fetchCost = debounce(async function () {
@@ -139,12 +139,12 @@ const fetchCost = debounce(async function () {
   try {
     costLoading.value = true
     const params = {
-      projectId: projectId.value,
-      monomerId: monomerId.value
+      projectId: projectId.value
+      // monomerId: monomerId.value
     }
     const { monomerPrice, projectPrice } = await cost(params)
     projectCost.value = projectPrice || 0
-    monomerCost.value = monomerPrice || 0
+    // monomerCost.value = monomerPrice || 0
   } catch (error) {
     console.log(error)
   } finally {
