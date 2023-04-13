@@ -223,9 +223,9 @@ const tableRules = computed(() => {
   // 甲供不填写金额方面的信息
   if (fillableAmount.value && !boolPartyA.value) {
     Object.assign(rules, amountRules)
-    if (isNotBlank(order.value.projects)) {
-      Object.assign(rules, projectRules)
-    }
+  }
+  if (isNotBlank(order.value.projects) && (boolPartyA.value || !order.value?.boolApplyPurchase)) {
+    Object.assign(rules, projectRules)
   }
   return rules
 })

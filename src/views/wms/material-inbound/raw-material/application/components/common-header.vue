@@ -334,7 +334,10 @@ async function handleOrderInfoChange(order, oldOrder) {
       form.loadingWeight = undefined
     }
     if (order.applyPurchase?.length) {
+      order.boolApplyPurchase = true
       order.projects = []
+    } else {
+      order.boolApplyPurchase = false
     }
     if (order.id) {
       const { content = [] } = await getPurchaseOrderDetail(order.id)
