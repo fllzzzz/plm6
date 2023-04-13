@@ -40,6 +40,7 @@
                   <common-radio
                     v-model="form.materialType"
                     :disabled="Boolean(form.boolUsed)"
+                    :disabledVal="[materialPurchaseClsEnum.MANUFACTURED.V]"
                     :options="materialPurchaseClsEnum.ENUM"
                     type="enum"
                   />

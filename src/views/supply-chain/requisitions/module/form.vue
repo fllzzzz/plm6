@@ -14,7 +14,7 @@
     </template>
     <template #content>
       <div class="requisitions-application-select">
-        <common-radio-button v-model="form.materialType" :options="materialPurchaseClsEnum.ENUM" type="enum" size="small" />
+        <common-radio-button v-model="form.materialType" :options="materialPurchaseClsEnum.ENUM"  :disabledVal="[materialPurchaseClsEnum.MANUFACTURED.V]" type="enum" size="small" />
         <common-radio-button
           v-if="isManufactured"
           v-model="form.finishedProductType"
