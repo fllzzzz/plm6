@@ -227,10 +227,21 @@ watchEffect(() => {
     for (let i = 0; i < list.value.length; i++) {
       const item = list.value[i]
       if (item.requisitionMode === requisitionModeEnum.USE_INVENTORY.V) {
+        // 若是利用钢卷，使用用长度计算
+        const _useBasicClass = form.originInventoryInfo[item.materialInventoryId]?.basicClass
+        const _useQuantity =
+          _useBasicClass & matClsEnum.STEEL_COIL.V
+            ? convertUnits(
+              item.length,
+                baseUnit.value[item.basicClass]?.length?.unit,
+                baseUnit.value[_useBasicClass]?.measure?.unit,
+                baseUnit.value[_useBasicClass]?.measure?.precision
+            )
+            : item.quantity
         if (!_obj[item.materialInventoryId]) {
-          _obj[item.materialInventoryId] = item.quantity
+          _obj[item.materialInventoryId] = _useQuantity
         } else {
-          _obj[item.materialInventoryId] += item.quantity
+          _obj[item.materialInventoryId] += _useQuantity
         }
       }
     }
