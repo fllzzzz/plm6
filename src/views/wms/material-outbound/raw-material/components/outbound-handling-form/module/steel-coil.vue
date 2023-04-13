@@ -25,6 +25,13 @@
         </common-material-info>
       </div>
       <div class="form-info" v-if="!isPlateOut">
+        <div class="tip">
+          <span>* 提示：</span>
+          <span> 出库至钢板库后，无法再进行退库操作，请谨慎操作</span>
+        </div>
+        <el-form-item label="是否到钢板库" required>
+          <common-radio v-model="form.boolChangeBasicClass" :options="whetherEnum.ENUM" type="enum" size="small" />
+        </el-form-item>
         <common-form-item :material="material" :form="form" />
       </div>
       <div class="plate-out-material-info" style="margin-top: 20px" v-else>
@@ -167,6 +174,7 @@
 import { steelCoilOutboundHandling } from '@/api/wms/material-outbound/raw-material/outbound-handling'
 import { defineProps, reactive, defineExpose, provide, computed, ref, watch, watchEffect } from 'vue'
 import { mapGetters } from '@/store/lib'
+import { whetherEnum } from '@enum-ms/common'
 import { deepClone, isBlank, isNotBlank, toPrecision } from '@/utils/data-type'
 import { calcSteelCoilWeight } from '@/utils/wms/measurement-calc'
 import { positiveNumPattern } from '@/utils/validate/pattern'
@@ -390,6 +398,7 @@ async function calcMete(row) {
 function formInit(data) {
   const newForm = {
     materialOutboundMode: steelCoilOutboundModeEnum.BY_LENGTH.V, // 钢卷出库方式
+    boolChangeBasicClass: whetherEnum.FALSE.V, // 是否变更基础分类
     materialId: data.id, // 物料id
     monomerId: data?.monomerId, // 单体id
     areaId: data?.areaId, // 区域id
@@ -459,6 +468,12 @@ defineExpose({
 </script>
 
 <style lang="scss" scoped>
+
+.tip {
+  display: inline-block;
+  color: red;
+  margin-bottom: 15px;
+}
 .form {
   display: flex;
   flex-direction: row;
