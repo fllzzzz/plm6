@@ -51,7 +51,7 @@ export default function useWeightOverDiff(baseUnit, { cfgType = 'inbound', weigh
     const steelDiffType = weightCfg.value.steelDiffType
     if (steelDiffType === numOrPctEnum.PERCENTAGE.V) {
       hasOver =
-      (Math.abs((row[weightField] / row[compareWeightField]) * Math.pow(10, 5) - 1 * Math.pow(10, 5)) / Math.pow(10, 5)) * 100 >
+      (Math.abs(parseInt((row[weightField] / row[compareWeightField]) * Math.pow(10, 5) - 1 * Math.pow(10, 5))) / Math.pow(10, 5)) * 100 >
       steelDiff
     }
     if (steelDiffType === numOrPctEnum.NUMBER.V) {
