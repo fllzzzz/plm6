@@ -352,7 +352,8 @@ function useInventory(quantity, data) {
   if (!form.originInventoryInfo) form.originInventoryInfo = {}
   form.originInventoryInfo[materialInventoryId] = {
     quantity: data.quantity,
-    frozenQuantity: data.frozenQuantity
+    frozenQuantity: data.frozenQuantity,
+    basicClass: data.basicClass
   }
   const _curBasicClass = steelBasicClassKV?.[currentBasicClass.value]?.V
   if (_curBasicClass & matClsEnum.STEEL_PLATE.V) {

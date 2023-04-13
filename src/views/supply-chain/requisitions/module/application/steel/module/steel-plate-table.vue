@@ -236,6 +236,9 @@ function rowInit(row) {
 // 获取可使用数量
 function getCanUseQuantity(row) {
   if (row.materialInventoryId && form.originInventoryInfo[row.materialInventoryId]) {
+    if (form.originInventoryInfo?.[row.materialInventoryId]?.basicClass & matClsEnum.STEEL_COIL.V) {
+      return 1
+    }
     return (
       form.originInventoryInfo[row.materialInventoryId].quantity -
       form.originInventoryInfo[row.materialInventoryId].frozenQuantity -

@@ -173,16 +173,18 @@ async function fetchList() {
       _query.classifyId = undefined
     }
     const { content } = await inventoryGet(_query)
-    content.forEach((v) => {
+
+    await setSpecInfoToList(content)
+    await numFmtByBasicClass(content, {
+      toSmallest: false,
+      toNum: true
+    })
+    tableData.value = content.map((v) => {
       let _frozenQuantity = v.frozenQuantity || 0
       if (useInventoryInfo.value?.[v.id]) _frozenQuantity += useInventoryInfo.value[v.id]
       if (materialInventoryId && materialInventoryId === v.id) _frozenQuantity -= quantity || 0
       v.canUseQuantity = v.quantity - _frozenQuantity
-    })
-    await setSpecInfoToList(content)
-    tableData.value = await numFmtByBasicClass(content, {
-      toSmallest: false,
-      toNum: true
+      return v
     })
   } catch (er) {
     console.log('获取可申购库存失败', er)
