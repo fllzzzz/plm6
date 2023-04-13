@@ -119,6 +119,47 @@ export function warehouseStateReport(params) {
   })
 }
 
+/**
+ * 入发存报表/期初库存
+ */
+export function mesBeginningInventoryDetail(params) {
+  return request({
+    url: `/api/mes/building/warehouse/print/finish-product/artifact`,
+    method: 'get',
+    params
+  })
+}
+/**
+ * 入发存报表/期末库存
+ */
+export function mesEndInventoryDetail(params) {
+  return request({
+    url: `/api/mes/building/warehouse/print/finish-product/artifact`,
+    method: 'get',
+    params
+  })
+}
+/**
+ * 入发存报表/入库量
+ */
+export function mesInboundInventoryDetail(params) {
+  return request({
+    url: `/api/mes/building/warehouse/print/finish-product/artifact`,
+    method: 'get',
+    params
+  })
+}
+/**
+ * 入发存报表/出库量
+ */
+export function mesOutboundInventoryDetail(params) {
+  return request({
+    url: `/api/mes/building/warehouse/print/finish-product/artifact`,
+    method: 'get',
+    params
+  })
+}
+
 // 班组报表
 /**
  * 围护生产线报表
@@ -484,6 +525,69 @@ export function mesProjectShipDetail(params) {
   })
 }
 
+// 发运管理-发运统计-清单总量详情
+export function mesShipMeteDetail(params) {
+  return request({
+    url: `api/mes/building/cargo/project/detail/type/print`,
+    method: 'get',
+    params
+  })
+}
+
+// 发运管理-发运统计-任务总量详情
+export function mesShipTaskMeteDetail(params) {
+  return request({
+    url: `api/mes/building/cargo/project/detail/type/print`,
+    method: 'get',
+    params
+  })
+}
+
+// 发运管理-发运统计-入库量详情
+export function mesShipInboundMeteDetail(params) {
+  return request({
+    url: `api/mes/building/cargo/project/detail/type/print`,
+    method: 'get',
+    params
+  })
+}
+
+// 发运管理-发运统计-累计发运详情
+export function mesShipTotalMeteDetail(params) {
+  return request({
+    url: `api/mes/building/cargo/project/detail/type/print`,
+    method: 'get',
+    params
+  })
+}
+
+// 发运管理-发运统计-本月发运发运详情
+export function mesShipMonthMeteDetail(params) {
+  return request({
+    url: `api/mes/building/cargo/project/detail/type/print`,
+    method: 'get',
+    params
+  })
+}
+
+// 发运管理-发运统计-库存详情
+export function mesShipStockMeteDetail(params) {
+  return request({
+    url: `api/mes/building/cargo/project/detail/type/print`,
+    method: 'get',
+    params
+  })
+}
+
+// 发运管理-发运统计-累计车次详情
+export function mesShipTrainMeteDetail(params) {
+  return request({
+    url: `api/mes/building/cargo/project/detail/type/print`,
+    method: 'get',
+    params
+  })
+}
+
 // 工厂报表-车间报表详情
 export function factoryWorkshopReport(params) {
   return request({
@@ -581,6 +685,15 @@ export function projectOverviewList(params) {
   })
 }
 
+// 生产排产：排产数据
+export function mesSchedulingDataList(params) {
+  return request({
+    url: `/api/mes/building/scheduling/artifact/artifact/scheduling/detail/print`,
+    method: 'get',
+    params
+  })
+}
+
 // 制成品入发存
 export function productSendReceiveStorage(params) {
   return request({
@@ -655,6 +768,9 @@ export default {
   enclosureProjectSummary, // 围护项目汇总
   projectOverviewList, // 项目总览工序清单
 
+  // 生产排产
+  mesSchedulingDataList, // 排产数据清单
+
   // 工单管理
   schedulingDetail, // 工单详情
   productionTaskOrder, // 工单管理：构件生产任务单
@@ -692,6 +808,10 @@ export default {
   warehouseStateStructure, // 结构出入库状态
   warehouseStateEnclosure, // 围护出入库状态
   warehouseStateReport, // 入发存报表
+  mesBeginningInventoryDetail, // 期初库存
+  mesEndInventoryDetail, // 期末库存
+  mesInboundInventoryDetail, // 入库量
+  mesOutboundInventoryDetail, // 出库量
 
   // 生产订单
   artifactClassList, // 构件分类清单明细
@@ -704,6 +824,13 @@ export default {
 
   // 发运管理
   mesProjectShipDetail, // 项目发运详情
+  mesShipMeteDetail, // 清单总量详情
+  mesShipTaskMeteDetail, // 任务总量详情
+  mesShipInboundMeteDetail, // 入库量详情
+  mesShipTotalMeteDetail, // 累计发运详情
+  mesShipMonthMeteDetail, // 本月发运详情
+  mesShipStockMeteDetail, // 库存
+  mesShipTrainMeteDetail, // 累计车次
 
   // 工厂报表-车间报表
   factoryWorkshopReport, // 车间报表详情

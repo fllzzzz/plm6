@@ -12,10 +12,22 @@
           highlight-current-row
           :empty-text="crud.emptyText"
           :max-height="maxHeight"
-          style="width: 100%"
+          style="width: 100%; cursor: pointer"
           @current-change="currentChange"
         >
           <el-table-column prop="index" label="序号" align="center" width="60" type="index" />
+          <el-table-column
+            v-if="columns.visible('scheduleTime')"
+            align="center"
+            key="scheduleTime"
+            prop="scheduleTime"
+            :show-overflow-tooltip="true"
+            label="排产日期"
+          >
+            <template v-slot="scope">
+              <span>{{ scope.row.scheduleTime ? parseTime(scope.row.scheduleTime, '{y}-{m}-{d}') : '-' }}</span>
+            </template>
+          </el-table-column>
           <el-table-column
             v-if="columns.visible('orderNumber')"
             align="center"
@@ -30,28 +42,16 @@
             </template>
           </el-table-column>
           <el-table-column
-            v-if="columns.visible('project') && productType !== componentTypeEnum.MACHINE_PART.V"
-            key="project.name"
+            v-if="columns.visible('groups.name')"
+            key="groups.name"
             prop="project"
-            :show-overflow-tooltip="true"
-            label="所属项目"
-            min-width="100px"
-          >
-            <template v-slot="scope">
-              <span>{{ projectNameFormatter(scope.row.project) }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column
-            v-if="columns.visible('completeTime')"
             align="center"
-            key="completeTime"
-            prop="completeTime"
             :show-overflow-tooltip="true"
-            label="计划完成日期"
+            label="生产组"
+            min-width="80px"
           >
             <template v-slot="scope">
-              <span v-if="scope.row.productionLineTypeEnum === artifactProductLineEnum.TRADITION.V">{{ scope.row.completeTime ? parseTime(scope.row.completeTime, '{y}-{m}-{d}') : '-' }}</span>
-              <span v-else>-</span>
+              <span>{{ scope.row.groups ? scope.row.groups.name : '-' }}</span>
             </template>
           </el-table-column>
           <el-table-column
@@ -60,10 +60,15 @@
             key="totalQuantity"
             prop="totalQuantity"
             :show-overflow-tooltip="true"
-            label="总量（件/kg）"
+            label="任务数（件/吨）"
+            width="130px"
           >
             <template v-slot="scope">
-              <span>{{ scope.row.totalQuantity }}/{{ scope.row.totalNetWeight?.toFixed(DP.COM_WT__KG) }}</span>
+              <span>{{
+                crud.query.weightStatus === weightTypeEnum.NET.V
+                  ? scope.row.totalQuantity + '/' + (scope.row.totalNetWeight / 1000)?.toFixed(DP.COM_WT__KG)
+                  : scope.row.totalQuantity + '/' + (scope.row.totalGrossWeight / 1000)?.toFixed(DP.COM_WT__KG)
+              }}</span>
             </template>
           </el-table-column>
           <el-table-column
@@ -72,11 +77,15 @@
             key="completeQuantity"
             prop="completeQuantity"
             :show-overflow-tooltip="true"
-            label="实际完成（件/kg）"
+            label="实际完成（件/吨）"
             width="130px"
           >
             <template v-slot="scope">
-              <span>{{ scope.row.completeQuantity }}/{{ scope.row.completeNetWeight?.toFixed(DP.COM_WT__KG) }}</span>
+              <span class="tc-primary">{{
+                crud.query.weightStatus === weightTypeEnum.NET.V
+                  ? scope.row.completeQuantity + '/' + (scope.row.completeNetWeight / 1000)?.toFixed(DP.COM_WT__KG)
+                  : scope.row.completeQuantity + '/' + (scope.row.completeGrossWeight / 1000)?.toFixed(DP.COM_WT__KG)
+              }}</span>
             </template>
           </el-table-column>
           <el-table-column
@@ -109,7 +118,7 @@
       </div>
       <div style="border-right: 1px solid #ededed; margin: 0 20px; height: calc(100vh - 130px)"></div>
       <div style="width: 48%">
-        <process-detail :process-list="processList" />
+        <process-detail :process-list="processList" :weightStatus="crud.query.weightStatus" />
       </div>
     </div>
   </div>
@@ -119,9 +128,10 @@
 import { ref, provide, computed, watch } from 'vue'
 import { get, machinePart } from '@/api/mes/task-tracking/work-order-tracking.js'
 import { parseTime } from '@/utils/date'
-import { projectNameFormatter } from '@/utils/project'
+// import { projectNameFormatter } from '@/utils/project'
 import { mesWorkOrderTrackingPM as permission } from '@/page-permission/mes'
-import { componentTypeEnum, artifactProductLineEnum } from '@enum-ms/mes'
+import { componentTypeEnum } from '@enum-ms/mes'
+import { weightTypeEnum } from '@enum-ms/common'
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
 import { DP } from '@/settings/config'
@@ -145,7 +155,7 @@ const { crud, CRUD, columns } = useCRUD(
     sort: [],
     optShow: { ...optShow },
     permission: { ...permission },
-    requiredQuery: ['productType'],
+    requiredQuery: ['productType', 'projectId'],
     crudApi: { get },
     hasPagination: true
   },
@@ -174,6 +184,7 @@ const { maxHeight } = useMaxHeight({
 })
 
 function currentChange(row) {
+  console.log(row, 'row')
   processList.value = row
 }
 

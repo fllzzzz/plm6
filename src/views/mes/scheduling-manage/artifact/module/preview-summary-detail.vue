@@ -45,7 +45,12 @@
             <span>{{ item.quantity }}件</span>
           </template>
         </tag-tabs>
-        <group-header v-show="queryVO.structureClassId" v-model="queryVO.groupsId" :data="groupData" @task-issue-success="handleTaskIssueSuccess" />
+        <group-header
+          v-show="queryVO.structureClassId"
+          v-model="queryVO.groupsId"
+          :data="groupData"
+          @task-issue-success="handleTaskIssueSuccess"
+        />
         <el-input
           v-model.trim="queryVO.serialNumber"
           size="small"
@@ -107,8 +112,7 @@
         :stripe="false"
         :data-format="dataFormat"
         row-key="id"
-        :class="
-          selectionMode === selectionModeEnum.EDIT.V || listProductionLineTypeEnum === artifactProductLineEnum.INTELLECT.V
+        :class="listProductionLineTypeEnum === artifactProductLineEnum.INTELLECT.V
             ? 'hidden-table-check-all'
             : ''
         "
@@ -116,7 +120,7 @@
         @selection-change="selectionChangeHandler"
       >
         <el-table-column label="序号" type="index" align="center" width="60" />
-        <el-table-column prop="groups.name" :show-overflow-tooltip="true" label="车间>生产线>生产组" min-width="170" align="center">
+        <!-- <el-table-column prop="groups.name" :show-overflow-tooltip="true" label="车间>生产线>生产组" min-width="170" align="center">
           <template #default="{ row, $index }">
             <div class="flex-rsc">
               <el-checkbox
@@ -135,7 +139,7 @@
               </div>
             </div>
           </template>
-        </el-table-column>
+        </el-table-column> -->
         <el-table-column prop="monomer.name" :show-overflow-tooltip="true" label="单体" min-width="100" align="center">
           <template #default="{ row }">
             <span>{{ row.monomer?.name }}</span>
@@ -173,7 +177,7 @@
         </el-table-column>
       </common-table>
       <!--分页组件-->
-      <el-pagination
+      <!-- <el-pagination
         :total="total"
         :current-page="queryPage.pageNumber"
         :page-size="queryPage.pageSize"
@@ -181,7 +185,7 @@
         layout="total, prev, pager, next, sizes"
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
-      />
+      /> -->
       <edit-form v-model:visible="editVisible" :itemInfo="itemInfo" @refresh="fetch" />
       <batch-edit-form
         v-model:visible="batchEditVisible"
@@ -211,7 +215,7 @@ import { artifactSchedulingPM as permission } from '@/page-permission/mes'
 
 import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'
-import usePagination from '@compos/use-pagination'
+// import usePagination from '@compos/use-pagination'
 import useGetArtifactTypeList from '@compos/mes/scheduling/use-get-artifact-type-list'
 import editForm from './edit-form'
 import batchEditForm from './batch-edit-form'
@@ -222,7 +226,7 @@ import tagTabs from '@comp-common/tag-tabs'
 
 import groupHeader from '@/views/mes/scheduling-manage/common/group-header.vue'
 
-const { handleSizeChange, handleCurrentChange, total, setTotalPage, queryPage } = usePagination({ fetchHook: fetch })
+// const { handleSizeChange, handleCurrentChange, total, setTotalPage, queryPage } = usePagination({ fetchHook: fetch })
 
 const drawerRef = ref()
 const recordTableRef = ref()
@@ -304,7 +308,7 @@ watch(
   [() => queryVO.value.structureClassId],
   (val) => {
     fetchGroup()
-    // fetch()
+    fetch()
   },
   { deep: true }
 )
@@ -404,17 +408,14 @@ async function fetch() {
   tableData.value = []
   listObjIdsByGroup.value = {}
   summaryInfo.value = {}
-  if (
-    !queryVO.value.structureClassId ||
-    !queryVO.value.productionLineTypeEnum
-  ) {
+  if (!queryVO.value.structureClassId || !queryVO.value.productionLineTypeEnum) {
     return
   }
   try {
     tableLoading.value = true
     summaryInfo.value = (await recordSummary({ ...props.otherQuery, ...queryVO.value })) || {}
-    const { content, totalElements } = await record({ ...props.otherQuery, ...queryVO.value, ...queryPage })
-    setTotalPage(totalElements)
+    const content = await record({ ...props.otherQuery, ...queryVO.value })
+    // setTotalPage(totalElements)
     const _list = content
     let _curNeedMergeIndex = 0 // 首行为初始需要的合并行
     let _mergeRowspan = 0
@@ -473,20 +474,20 @@ async function fetch() {
   }
 }
 
-function handleCheckAllChange(val, row, index) {
-  const _groupId = row.groups?.id
-  console.log(row, _groupId, val, listObjIdsByGroup.value[_groupId], 'handleCheckAllChange')
-  if (_groupId && listObjIdsByGroup.value[_groupId]) {
-    tableData.value.forEach((v) => {
-      if (Array.from(new Set(listObjIdsByGroup.value[_groupId])).includes(v.id)) {
-        recordTableRef?.value?.toggleRowSelection(v, val)
-      }
-    })
-  }
-  if (!val) {
-    tableData.value[index].isIndeterminateCheck = false
-  }
-}
+// function handleCheckAllChange(val, row, index) {
+//   const _groupId = row.groups?.id
+//   console.log(row, _groupId, val, listObjIdsByGroup.value[_groupId], 'handleCheckAllChange')
+//   if (_groupId && listObjIdsByGroup.value[_groupId]) {
+//     tableData.value.forEach((v) => {
+//       if (Array.from(new Set(listObjIdsByGroup.value[_groupId])).includes(v.id)) {
+//         recordTableRef?.value?.toggleRowSelection(v, val)
+//       }
+//     })
+//   }
+//   if (!val) {
+//     tableData.value[index].isIndeterminateCheck = false
+//   }
+// }
 
 // 合并单元格
 function spanMethod({ row, column, rowIndex, columnIndex }) {
@@ -510,16 +511,16 @@ function selectable(row, rowIndex) {
   return true
 }
 
-function getDisabled(row) {
-  if (selectionMode.value === selectionModeEnum.EDIT.V || listProductionLineTypeEnum.value === artifactProductLineEnum.INTELLECT.V) {
-    if (!selections.value?.length) {
-      return false
-    } else {
-      return !(row.groups?.id === selections.value[0]?.groups?.id)
-    }
-  }
-  return false
-}
+// function getDisabled(row) {
+//   if (selectionMode.value === selectionModeEnum.EDIT.V || listProductionLineTypeEnum.value === artifactProductLineEnum.INTELLECT.V) {
+//     if (!selections.value?.length) {
+//       return false
+//     } else {
+//       return !(row.groups?.id === selections.value[0]?.groups?.id)
+//     }
+//   }
+//   return false
+// }
 
 // --------------------------- 操作数据 start ------------------------------
 

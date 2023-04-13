@@ -5,7 +5,7 @@
     v-model="drawerVisible"
     direction="rtl"
     :before-close="handleClose"
-    size="80%"
+    size="90%"
   >
     <template #titleAfter>
       <el-tag effect="plain" v-if="crud.query.taskTypeEnum !== taskTypeENUM.MACHINE_PART.V">
@@ -97,14 +97,34 @@
           width="100px"
           align="center"
         />
-        <el-table-column align="center" prop="totalTaskMete.quantity" :show-overflow-tooltip="true" label="任务（件/kg）">
+        <el-table-column align="center" prop="totalTaskMete.quantity" :show-overflow-tooltip="true" label="任务数（件）">
           <template #default="{ row }">
-            <span>{{ row.totalTaskMete?.quantity || 0 }}/{{ row.totalTaskMete?.netWeight || 0 }}</span>
+            <span>{{ row.totalTaskMete?.quantity || 0 }}</span>
           </template>
         </el-table-column>
-        <el-table-column align="center" prop="totalCompleteMete.quantity" :show-overflow-tooltip="true" label="完成（件/kg）">
+        <el-table-column align="center" prop="totalTaskMete.netWeight" :show-overflow-tooltip="true" label="任务总净重（kg）">
           <template #default="{ row }">
-            <span>{{ row.totalCompleteMete?.quantity || 0 }}/{{ row.totalCompleteMete?.netWeight || 0 }}</span>
+            <span>{{ row.totalTaskMete?.netWeight || 0 }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column align="center" prop="totalTaskMete.grossWeight" :show-overflow-tooltip="true" label="任务总毛重（kg）">
+          <template #default="{ row }">
+            <span>{{ row.totalTaskMete?.grossWeight || 0 }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column align="center" prop="totalCompleteMete.quantity" :show-overflow-tooltip="true" label="完成数（件）">
+          <template #default="{ row }">
+            <span>{{ row.totalCompleteMete?.quantity || 0 }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column align="center" prop="totalCompleteMete.netWeight" :show-overflow-tooltip="true" label="完成总净重（kg）">
+          <template #default="{ row }">
+            <span>{{ row.totalCompleteMete?.netWeight || 0 }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column align="center" prop="totalCompleteMete.grossWeight" :show-overflow-tooltip="true" label="完成总毛重（kg）">
+          <template #default="{ row }">
+            <span>{{ row.totalCompleteMete?.grossWeight || 0 }}</span>
           </template>
         </el-table-column>
         <el-table-column

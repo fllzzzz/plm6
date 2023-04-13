@@ -28,4 +28,24 @@ export function shipmentSummary(params) {
   })
 }
 
+// 查询项目发运数据汇总
+export function projectSummary(params) {
+  return request({
+    module: 'mes',
+    url: `cargo/project/detail/summary`,
+    method: 'get',
+    params
+  })
+}
+
+// 发运统计-查询项目各类数据详情
+export function summaryDetail(params) {
+  return request({
+    module: 'mes',
+    url: `cargo/project/detail/type`,
+    method: 'get',
+    params
+  })
+}
+
 export default { get }

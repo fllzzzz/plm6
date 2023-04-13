@@ -78,20 +78,21 @@
           :style="{ 'max-height': `${maxHeight - 90}px` }"
         >
           <template v-for="item in boardList" :key="item.id">
-            <el-tooltip
-              v-model="item.visibleTip"
-              manual
-              :open-delay="300"
-              class="item"
-              effect="light"
-              :content="`${item.project?.shortName}\n
-          编号：${item.serialNumber}\n
-          长度：${item.length} mm\n
-          单重：${item.netWeight} kg\n
-          数量：${item.quantity}\n
-          `"
-              placement="left-start"
-            >
+            <el-tooltip v-model="item.visibleTip" manual :open-delay="300" class="item" effect="light" placement="left-start">
+              <template #content>
+                <div style="display: flex">
+                  <div style="display: flex; flex-direction: column;justify-content:center">
+                    <p>{{ item.project?.shortName }}</p>
+                    <p>编号：{{ item.serialNumber }}</p>
+                    <p>长度：{{ item.length }}</p>
+                    <p>单重：{{ item.netWeight }}</p>
+                    <p>数量：{{ item.quantity }}</p>
+                  </div>
+                  <div style="flex: 1; display: flex">
+                    <el-image style="flex: 1; width: 95%; height: 95%;" :src="item.picturePath" z-index="999999" />
+                  </div>
+                </div>
+              </template>
               <div
                 class="board-box"
                 style="position: relative; cursor: pointer"
@@ -116,7 +117,8 @@
                   style="flex: 1; width: 95%"
                   :src="item.picturePath"
                   z-index="999999"
-                  :preview-src-list="[item.picturePath]"
+                  @dblclick.stop="item.visibleTip = !item.visibleTip"
+                  @mouseleave="item.visibleTip = false"
                   @error="item.imgLoad = false"
                 >
                   <template #error>
