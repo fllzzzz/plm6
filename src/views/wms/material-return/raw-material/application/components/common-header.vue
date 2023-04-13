@@ -204,9 +204,9 @@ defineExpose({
 </script>
 
 <style lang="scss" scoped>
-.filter-left-box {
-  width: 100%;
-}
+// .filter-left-box {
+//   width: 100%;
+// }
 
 .total-info {
   line-height: 15px;
