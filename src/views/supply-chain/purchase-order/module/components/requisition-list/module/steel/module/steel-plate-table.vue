@@ -134,14 +134,15 @@
 </template>
 
 <script setup>
-import { defineExpose, defineEmits, watchEffect, inject } from 'vue'
+import { defineExpose, defineEmits, watchEffect, inject, watch } from 'vue'
 import { matClsEnum } from '@/utils/enum/modules/classification'
-// import { isNotBlank, toPrecision } from '@/utils/data-type'
+import { isNotBlank, toPrecision } from '@/utils/data-type'
 
+import usePriceSet from '@/composables/wms/use-price-set'
 import useTableValidate from '@compos/form/use-table-validate'
 import useMatBaseUnit from '@/composables/store/use-mat-base-unit'
 import useWeightOverDiff from '@/composables/wms/use-steel-weight-over-diff'
-// import { calcSteelPlateWeight } from '@/utils/wms/measurement-calc'
+import { calcSteelPlateWeight } from '@/utils/wms/measurement-calc'
 import { positiveNumPattern } from '@/utils/validate/pattern'
 
 const emit = defineEmits(['add-purchase'])
@@ -152,6 +153,8 @@ const bcListObj = inject('bcListObj')
 const form = inject('crud')?.form
 
 const { baseUnit } = useMatBaseUnit(basicClass) // 当前分类基础单位
+
+const { handleMeteChangeCalcPrice } = usePriceSet('weighingTotalWeight')
 
 const { overDiffTip, weightOverDiff, diffSubmitValidate, currentCfg } = useWeightOverDiff(
   baseUnit,
@@ -189,37 +192,39 @@ function isExist(id) {
 function rowWatch(row) {
   watchEffect(() => weightOverDiff(row))
   // 计算单件理论重量
-  // watch([() => row.length, () => row.width, () => row.thickness, baseUnit], () => calcTheoryWeight(row))
+  watch([() => row.length, () => row.width, () => row.thickness, baseUnit], () => calcTheoryWeight(row))
   // 计算总重
-  // watch([() => row.theoryWeight, () => row.quantity], () => calcTotalWeight(row))
+  watch([() => row.theoryWeight, () => row.quantity], () => calcTotalWeight(row))
+  // 计算价格
+  watch([() => row.weighingTotalWeight], () => handleMeteChangeCalcPrice(row))
 }
 
 // 总重计算与单位重量计算分开，避免修改数量时需要重新计算单件重量
 // 计算单件重量
-// async function calcTheoryWeight(row) {
-//   row.theoryWeight = await calcSteelPlateWeight({
-//     name: row.classifyFullName, // 名称，用于判断是否为不锈钢，不锈钢与普通钢板密度不同
-//     length: row.length,
-//     width: row.width,
-//     thickness: row.thickness
-//   })
-// }
+async function calcTheoryWeight(row) {
+  row.theoryWeight = await calcSteelPlateWeight({
+    name: row.classifyFullName, // 名称，用于判断是否为不锈钢，不锈钢与普通钢板密度不同
+    length: row.length,
+    width: row.width,
+    thickness: row.thickness
+  })
+}
 
 // 计算总重
-// function calcTotalWeight(row) {
-//   // if (row.purchaseNetMete && row.quantity) {
-//   //   row.purchaseTotalWeight = toPrecision(row.purchaseNetMete * row.quantity, baseUnit.value.weight.precision)
-//   // } else {
-//   //   row.purchaseTotalWeight = undefined
-//   // }
-//   if (isNotBlank(row.theoryWeight) && row.quantity) {
-//     row.theoryTotalWeight = toPrecision(row.theoryWeight * row.quantity, baseUnit.value.weight.precision)
-//     row.weighingTotalWeight = toPrecision(row.theoryWeight * row.quantity, baseUnit.value.weight.precision)
-//   } else {
-//     row.theoryTotalWeight = undefined
-//     row.weighingTotalWeight = undefined
-//   }
-// }
+function calcTotalWeight(row) {
+  // if (row.purchaseNetMete && row.quantity) {
+  //   row.purchaseTotalWeight = toPrecision(row.purchaseNetMete * row.quantity, baseUnit.value.weight.precision)
+  // } else {
+  //   row.purchaseTotalWeight = undefined
+  // }
+  if (isNotBlank(row.theoryWeight) && row.quantity) {
+    row.theoryTotalWeight = toPrecision(row.theoryWeight * row.quantity, baseUnit.value.weight.precision)
+    row.weighingTotalWeight = toPrecision(row.theoryWeight * row.quantity, baseUnit.value.weight.precision)
+  } else {
+    row.theoryTotalWeight = undefined
+    row.weighingTotalWeight = undefined
+  }
+}
 
 function addRow(row, index) {
   emit('add-purchase', row, index)

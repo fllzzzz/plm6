@@ -210,7 +210,11 @@ const rules = computed(() => {
     ],
     weighingTotalWeight: [
       { required: true, message: '请填写重量', trigger: 'blur' },
-      { validator: form.useRequisitions ? diffSubmitValidate : inboundDiffSubmitValidate, message: '超出误差允许范围,不可提交', trigger: 'blur' },
+      {
+        validator: form.useRequisitions ? diffSubmitValidate : inboundDiffSubmitValidate,
+        message: '超出误差允许范围,不可提交',
+        trigger: 'blur'
+      },
       { pattern: positiveNumPattern, message: '重量必须大于0', trigger: 'blur' }
     ],
     length: [

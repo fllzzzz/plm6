@@ -137,6 +137,7 @@ import { defineExpose, defineEmits, inject, watchEffect, watch } from 'vue'
 import { matClsEnum } from '@/utils/enum/modules/classification'
 import { isNotBlank, toPrecision } from '@/utils/data-type'
 
+import usePriceSet from '@/composables/wms/use-price-set'
 import useEditSectionSpec from '@compos/wms/use-edit-section-spec'
 import useTableValidate from '@compos/form/use-table-validate'
 import useMatBaseUnit from '@/composables/store/use-mat-base-unit'
@@ -153,6 +154,8 @@ const bcListObj = inject('bcListObj')
 const form = inject('crud')?.form
 
 const { baseUnit } = useMatBaseUnit(basicClass) // 当前分类基础单位
+
+const { handleMeteChangeCalcPrice } = usePriceSet('weighingTotalWeight')
 
 const { overDiffTip, weightOverDiff, diffSubmitValidate, currentCfg } = useWeightOverDiff(baseUnit, {
   cfgType: 'purchase',
@@ -197,6 +200,8 @@ function rowWatch(row) {
   watch([() => row.length, () => row.quantity], () => {
     calcTotalLength(row)
   })
+  // 计算价格
+  watch([() => row.weighingTotalWeight], () => handleMeteChangeCalcPrice(row))
 }
 
 // 总重计算与单位重量计算分开，避免修改数量时需要重新计算单件重量
