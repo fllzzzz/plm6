@@ -7,7 +7,7 @@
     :title="detail?.rowDetail?.orderNumber"
     :show-close="true"
     size="100%"
-    custom-class="enclosure-scheduling-work-order-detail"
+    custom-class="enclosure-task-tracking-detail"
   >
     <template #titleAfter>
       <el-tag effect="plain" size="medium">
@@ -72,7 +72,7 @@ const { CRUD, crud, detail } = regDetail()
 // 表格高度处理
 const { maxHeight } = useMaxHeight(
   {
-    mainBox: '.enclosure-scheduling-work-order-detail',
+    mainBox: '.enclosure-task-tracking-detail',
     extraBox: ['.el-drawer__header'],
     wrapperBox: ['.el-drawer__body'],
     clientHRepMainH: true

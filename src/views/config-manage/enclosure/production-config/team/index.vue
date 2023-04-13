@@ -1,13 +1,14 @@
 <template>
   <component :is="currentView">
     <template #teamType>
-      <common-radio-button
+      <!-- 围护暂时不需要质检 -->
+      <!-- <common-radio-button
         class="filter-item"
         v-model="teamType"
         size="small"
         type="enum"
         :options="teamTypeEnum.ENUM"
-      />
+      /> -->
     </template>
   </component>
 </template>

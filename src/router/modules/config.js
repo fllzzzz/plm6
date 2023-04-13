@@ -436,14 +436,14 @@ export default {
           hidden: false,
           component: '/config-manage/enclosure/production-config/production-line/index',
           meta: { title: '生产线管理', icon: 'project', noCache: true }
-        },
-        {
-          name: 'EnclosureConfigInspectionMode',
-          path: 'inspection-mode',
-          hidden: false,
-          component: '/config-manage/enclosure/production-config/inspection-mode/index',
-          meta: { title: '报检方式', icon: 'project', noCache: true }
         }
+        // {
+        //   name: 'EnclosureConfigInspectionMode',
+        //   path: 'inspection-mode',
+        //   hidden: false,
+        //   component: '/config-manage/enclosure/production-config/inspection-mode/index',
+        //   meta: { title: '报检方式', icon: 'project', noCache: true }
+        // }
       ]
     },
     {

@@ -25,6 +25,21 @@ export default {
           hidden: false,
           component: '/enclosure/production-manage/scheduling-work-order/index',
           meta: { title: '排产工单', icon: 'project', noCache: true }
+        },
+        {
+          name: 'EnclosureProductionTracking',
+          path: 'production-tracking',
+          hidden: false,
+          meta: { title: '生产跟踪', icon: 'project', noCache: true },
+          children: [
+            {
+              name: 'EnclosureTaskTracking',
+              path: 'task-tracking',
+              hidden: false,
+              component: '/enclosure/production-manage/production-tracking/task-tracking/index',
+              meta: { title: '任务跟踪', icon: 'project', noCache: true }
+            }
+          ]
         }
       ]
     }
