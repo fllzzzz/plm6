@@ -58,6 +58,7 @@ import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import { enclosureAreaListPM } from '@/page-permission/enclosure'
 import { parseTime } from '@/utils/date'
+import checkPermission from '@/utils/system/check-permission'
 
 import pagination from '@crud/Pagination'
 import udOperation from '@crud/UD.operation'
