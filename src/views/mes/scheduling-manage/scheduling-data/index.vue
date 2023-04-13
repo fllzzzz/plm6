@@ -348,11 +348,16 @@ function openDetail() {
   drawerVisible.value = true
 }
 
-// function handleRowClassName({ row, rowIndex }) {
-//   if (row.projectName === '合计' || row.projectName === '实际完成' || row.projectName === '完成率') {
+// function rowStyle({ row, rowIndex }) {
+//   console.log(row.type === 2, rowIndex, 'rowIndex')
+//   if (row.type === 2) {
+
+//   }
+// }
+
+// function rowClassNameChange({ row, rowIndex }) {
+//   if (row.type === 2) {
 //     return 'success-row'
-//   } else {
-//     return ''
 //   }
 // }
 

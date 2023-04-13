@@ -9,13 +9,13 @@
           <span>{{ detailData.project?.serialNumber }}-{{ detailData.project?.shortName }}</span>
         </el-descriptions-item>
         <el-descriptions-item align="center" label="单体">
-          <span>{{ detailData.monomer?.name }}</span>
+          <span>{{ detailData.monomerName }}</span>
         </el-descriptions-item>
         <el-descriptions-item align="center" label="制造人">
-          <span>{{ detailData.monomer?.name }}</span>
+          <span>{{ detailData.dutyName }}</span>
         </el-descriptions-item>
         <el-descriptions-item align="center" label="质检人">
-          <span>{{ detailData.monomer?.name }}</span>
+          <span>{{ detailData.userName }}</span>
         </el-descriptions-item>
         <el-descriptions-item align="center" label="问题类型">
           <span>{{ problemTypeEnum.VL[detailData.type] }}</span>
