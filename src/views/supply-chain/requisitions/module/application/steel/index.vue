@@ -230,7 +230,7 @@ watchEffect(() => {
         // 若是利用钢卷，使用用长度计算
         const _useBasicClass = form.originInventoryInfo[item.materialInventoryId]?.basicClass
         const _useQuantity =
-          _useBasicClass & matClsEnum.STEEL_COIL.V
+          (_useBasicClass & matClsEnum.STEEL_COIL.V) && (item.basicClass & matClsEnum.STEEL_COIL.V)
             ? convertUnits(
               item.length,
                 baseUnit.value[item.basicClass]?.length?.unit,
@@ -238,6 +238,7 @@ watchEffect(() => {
                 baseUnit.value[_useBasicClass]?.measure?.precision
             )
             : item.quantity
+        item.useQuantity = _useQuantity
         if (!_obj[item.materialInventoryId]) {
           _obj[item.materialInventoryId] = _useQuantity
         } else {

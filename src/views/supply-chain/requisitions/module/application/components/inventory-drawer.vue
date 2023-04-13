@@ -23,7 +23,14 @@
           />
         </el-form-item>
       </el-form>
-      <common-table v-loading="tableLoading" :data="tableData" :cell-style="handleCellStyle" :max-height="maxHeight" style="width: 100%">
+      <common-table
+        v-loading="tableLoading"
+        :data="tableData"
+        :data-format="dataFormat"
+        :cell-style="handleCellStyle"
+        :max-height="maxHeight"
+        style="width: 100%"
+      >
         <material-base-info-columns :basic-class="basicClass" specMerge>
           <template #snTag="{ row }">
             <table-cell-tag
@@ -42,6 +49,14 @@
         <material-unit-quantity-columns :basic-class="basicClass" />
         <!-- 次要信息 -->
         <material-secondary-info-columns :basic-class="basicClass" />
+        <el-table-column
+          v-if="query.warehouseType === projectWarehouseTypeEnum.PROJECT.V"
+          prop="project"
+          label="项目"
+          align="left"
+          min-width="120px"
+          show-overflow-tooltip
+        />
         <!-- 仓库信息 -->
         <warehouse-info-columns
           show-workshop
@@ -143,6 +158,11 @@ const { maxHeight } = useMaxHeight(
 const defaultQuery = {
   warehouseType: projectWarehouseTypeEnum.PUBLIC.V
 }
+
+const dataFormat = ref([
+  ['project', 'parse-project']
+])
+
 const query = ref({})
 const quantityVisible = ref(false)
 const quantity = ref()
@@ -166,7 +186,7 @@ function showHook() {
 async function fetchList() {
   try {
     tableLoading.value = true
-    const { classifyId, specification, basicClass, thickness, width, length, materialInventoryId, quantity } = props.params
+    const { classifyId, specification, basicClass, thickness, width, length, materialInventoryId, useQuantity } = props.params
     const _query = { spec: specification, classifyId, thickness, width, length, ...query.value }
     // 钢板查询钢卷时 去掉classifyId
     if (basicClass !== query.value.basicClass) {
@@ -182,7 +202,7 @@ async function fetchList() {
     tableData.value = content.map((v) => {
       let _frozenQuantity = v.frozenQuantity || 0
       if (useInventoryInfo.value?.[v.id]) _frozenQuantity += useInventoryInfo.value[v.id]
-      if (materialInventoryId && materialInventoryId === v.id) _frozenQuantity -= quantity || 0
+      if (materialInventoryId && materialInventoryId === v.id) _frozenQuantity -= useQuantity || 0
       v.canUseQuantity = v.quantity - _frozenQuantity
       return v
     })
