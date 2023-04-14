@@ -33,7 +33,11 @@
           label="所属项目"
           min-width="160"
           :show-overflow-tooltip="true"
-        />
+        >
+          <template #default="{ row }">
+            <span :class="row.type === 2 && row.projectName !== '合计'? 'tc-success' : ''">{{ row.projectName }}</span>
+          </template>
+        </el-table-column>
         <el-table-column
           v-if="columns.visible('monomerName')"
           key="monomerName"
@@ -41,7 +45,11 @@
           label="单体"
           align="center"
           :show-overflow-tooltip="true"
-        />
+        >
+          <template #default="{ row }">
+            <span :class="row.type === 2 && row.projectName !== '合计'? 'tc-success' : ''">{{ row.monomerName }}</span>
+          </template>
+        </el-table-column>
         <el-table-column
           v-if="columns.visible('schedulingTotalNetWeight') && crud.query.type === timeTypeEnum.CURRENT_MONTH.V"
           key="schedulingTotalNetWeight"
@@ -93,11 +101,11 @@
                 <div v-if="row.mete?.findIndex((v) => v.date == item) > -1">
                   <template v-for="m in row.mete" :key="m">
                     <template v-if="m.date == item">
-                      <span>{{ m.totalNetWeight || 0 }}</span>
+                      <span :class="row.type === 2 && row.projectName !== '合计'? 'tc-success' : ''">{{ m.totalNetWeight || 0 }}</span>
                     </template>
                   </template>
                 </div>
-                <div v-else>0</div>
+                <div v-else :class="row.type === 2 && row.projectName !== '合计'? 'tc-success' : ''">0</div>
               </template>
             </el-table-column>
           </template>
