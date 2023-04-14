@@ -48,27 +48,39 @@
           width="120px"
         />
         <el-table-column
-          v-if="columns.visible('totalMete')"
+          v-if="columns.visible('totalMete.quantity')"
           align="center"
-          prop="totalMete"
+          prop="totalMete.quantity"
           :show-overflow-tooltip="true"
           label="任务量（件/kg）"
           width="135px"
         >
           <template #default="{ row }">
-            <span>{{ row.totalMete?.quantity || 0 }} / {{ row.totalMete?.netWeight || 0 }}</span>
+            <span>{{
+              crud.query.weightStatus === weightTypeEnum.NET.V
+                ? row.totalMete?.quantity + '/' + row.totalMete?.netWeight
+                : row.totalMete?.grossWeight
+                ? row.totalMete?.quantity + '/' + row.totalMete?.grossWeight
+                : row.totalMete?.quantity + '/' + '-'
+            }}</span>
           </template>
         </el-table-column>
         <el-table-column
-          v-if="columns.visible('totalCompleteMete')"
+          v-if="columns.visible('totalCompleteMete.quantity')"
           align="center"
-          prop="totalCompleteMete"
+          prop="totalCompleteMete.quantity"
           :show-overflow-tooltip="true"
           label="实际完成（件/kg）"
           width="135px"
         >
           <template #default="{ row }">
-            <span>{{ row.totalCompleteMete?.quantity || 0 }} / {{ row.totalCompleteMete.netWeight || 0 }}</span>
+            <span>{{
+              crud.query.weightStatus === weightTypeEnum.NET.V
+                ? row.totalCompleteMete?.quantity + '/' + row.totalCompleteMete?.netWeight
+                : row.totalMete?.grossWeight
+                ? row.totalCompleteMete?.quantity + '/' + row.totalCompleteMete?.grossWeight
+                : row.totalCompleteMete?.quantity + '/' + '-'
+            }}</span>
           </template>
         </el-table-column>
         <el-table-column
@@ -119,14 +131,28 @@
                 />
               </template>
             </el-table-column>
-            <el-table-column align="center" prop="totalTaskMete.quantity" :show-overflow-tooltip="true" label="任务（件/kg）">
+            <el-table-column align="center" prop="totalTaskMete.quantity" :show-overflow-tooltip="true" label="任务（件/kg）" width="120px">
               <template #default="{ row }">
-                <span>{{ row.totalTaskMete?.quantity || 0 }}/{{ row.totalTaskMete?.netWeight || 0 }}</span>
+                <span>{{
+                  crud.query.weightStatus === weightTypeEnum.NET.V
+                    ? row.totalTaskMete?.quantity + '/' + row.totalTaskMete?.netWeight
+                    : row.totalTaskMete?.quantity + '/' + row.totalTaskMete?.grossWeight
+                }}</span>
               </template>
             </el-table-column>
-            <el-table-column align="center" prop="totalCompleteMete.quantity" :show-overflow-tooltip="true" label="完成（件/kg）">
+            <el-table-column
+              align="center"
+              prop="totalCompleteMete.quantity"
+              :show-overflow-tooltip="true"
+              label="完成（件/kg）"
+              width="120px"
+            >
               <template #default="{ row }">
-                <span>{{ row.totalCompleteMete?.quantity || 0 }}/{{ row.totalCompleteMete?.netWeight || 0 }}</span>
+                <span>{{
+                  crud.query.weightStatus === weightTypeEnum.NET.V
+                    ? row.totalCompleteMete?.quantity + '/' + row.totalCompleteMete?.netWeight
+                    : row.totalCompleteMete?.quantity + '/' + row.totalCompleteMete?.grossWeight
+                }}</span>
               </template>
             </el-table-column>
             <el-table-column label="操作" width="120px" align="center" fixed="right">
@@ -148,7 +174,7 @@ import { ref } from 'vue'
 
 import { componentTypeEnum } from '@enum-ms/mes'
 import { mesProcessAssistancePM as permission } from '@/page-permission/mes'
-
+import { weightTypeEnum } from '@enum-ms/common'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import pagination from '@crud/Pagination'

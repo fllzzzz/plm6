@@ -272,6 +272,17 @@ export default {
         }
       },
       {
+        name: 'MesSchedulingData',
+        path: 'scheduling/scheduling-data',
+        hidden: false,
+        component: '/mes/scheduling-manage/scheduling-data/index',
+        meta: {
+          title: '排产数据',
+          icon: 'project',
+          noCache: true
+        }
+      },
+      {
         name: 'MesSchedulingMachinePart',
         path: 'scheduling/machine-part',
         component: '',
@@ -321,32 +332,32 @@ export default {
       }
     ]
   },
-  {
-    path: '/mes/production-monitoring-kanban',
-    component: 'Layout',
-    hidden: false,
-    name: 'MesProductionMonitoringKanban',
-    alwaysShow: false,
-    redirect: '/mes/production-monitoring-kanban',
-    meta: {
-      title: '生产监控看板',
-      icon: 'project',
-      noCache: true
-    },
-    children: [
-      {
-        name: 'MesMonitoringKanban',
-        path: 'monitoring-kanban',
-        hidden: false,
-        component: '/mes/production-monitoring-kanban/index',
-        meta: {
-          title: '生产监控看板',
-          icon: 'project',
-          noCache: true
-        }
-      }
-    ]
-  },
+  // {
+  //   path: '/mes/production-monitoring-kanban',
+  //   component: 'Layout',
+  //   hidden: false,
+  //   name: 'MesProductionMonitoringKanban',
+  //   alwaysShow: false,
+  //   redirect: '/mes/production-monitoring-kanban',
+  //   meta: {
+  //     title: '生产监控看板',
+  //     icon: 'project',
+  //     noCache: true
+  //   },
+  //   children: [
+  //     {
+  //       name: 'MesMonitoringKanban',
+  //       path: 'monitoring-kanban',
+  //       hidden: false,
+  //       component: '/mes/production-monitoring-kanban/index',
+  //       meta: {
+  //         title: '生产监控看板',
+  //         icon: 'project',
+  //         noCache: true
+  //       }
+  //     }
+  //   ]
+  // },
   {
     path: '/mes/work-order-manage',
     component: 'Layout',
@@ -431,12 +442,23 @@ export default {
         }
       },
       {
+        name: 'MesMonitoringKanban',
+        path: 'monitoring-kanban',
+        hidden: false,
+        component: '/mes/task-tracking/production-monitoring-kanban/index',
+        meta: {
+          title: '车间任务状态',
+          icon: 'project',
+          noCache: true
+        }
+      },
+      {
         name: 'MesMonthlyTaskTracking',
         path: 'monthly-task-tracking',
         hidden: false,
         component: '/mes/task-tracking/monthly-task-tracking/index',
         meta: {
-          title: '月度任务跟踪',
+          title: '产量达成',
           icon: 'project',
           noCache: true
         }
@@ -497,29 +519,29 @@ export default {
             }
           }
         ]
-      },
-      {
-        name: 'MesWipStatistics',
-        path: 'wip-statistics',
-        hidden: false,
-        component: '/mes/task-tracking/wip-statistics/index',
-        meta: {
-          title: '在制品统计',
-          icon: 'project',
-          noCache: true
-        }
-      },
-      {
-        name: 'MesSemiFinishedStatistics',
-        path: 'semi-finished-statistics',
-        hidden: false,
-        component: '/mes/task-tracking/semi-finished-statistics/index',
-        meta: {
-          title: '半成品统计',
-          icon: 'project',
-          noCache: true
-        }
       }
+      // {
+      //   name: 'MesWipStatistics',
+      //   path: 'wip-statistics',
+      //   hidden: false,
+      //   component: '/mes/task-tracking/wip-statistics/index',
+      //   meta: {
+      //     title: '在制品统计',
+      //     icon: 'project',
+      //     noCache: true
+      //   }
+      // }
+      // {
+      //   name: 'MesSemiFinishedStatistics',
+      //   path: 'semi-finished-statistics',
+      //   hidden: false,
+      //   component: '/mes/task-tracking/semi-finished-statistics/index',
+      //   meta: {
+      //     title: '半成品统计',
+      //     icon: 'project',
+      //     noCache: true
+      //   }
+      // }
     ]
   },
   {
@@ -676,7 +698,7 @@ export default {
     hidden: false,
     redirect: '/mes/production-manage/dashboard/project-state',
     meta: {
-      title: '项目制造',
+      title: '项目跟踪',
       icon: 'project',
       noCache: true
     },
@@ -1023,7 +1045,7 @@ export default {
         hidden: false,
         component: '/mes/QHSE-manage/disclosure/index',
         meta: {
-          title: '问题曝光',
+          title: '问题报告',
           icon: 'project',
           noCache: true
         }
@@ -1227,7 +1249,7 @@ export default {
         hidden: false,
         component: '/mes/pack-and-ship/ship-summary/index',
         meta: {
-          title: '发运管理',
+          title: '发运统计',
           icon: 'project',
           noCache: true
         }
@@ -1364,6 +1386,17 @@ export default {
         component: '/mes/factory-report/workshop-report/index',
         meta: {
           title: '车间报表',
+          icon: 'project',
+          noCache: true
+        }
+      },
+      {
+        name: 'MesProductStatistics',
+        path: 'product-statistics',
+        hidden: false,
+        component: '/mes/factory-report/product-statistics/index',
+        meta: {
+          title: '生产分析',
           icon: 'project',
           noCache: true
         }

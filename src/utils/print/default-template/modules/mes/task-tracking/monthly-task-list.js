@@ -211,7 +211,8 @@ const mesMonthlyTaskList = {
       { show: true, key: 'grossWeight', title: '单毛重', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.WEIGHT.K },
       { show: true, key: 'quantity', title: '排产数', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 8, type: typeEnum.QUANTITY.K },
       { show: true, key: 'completeQuantity', title: '完成数', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 5, type: typeEnum.QUANTITY.K },
-      { show: true, key: 'completeNetWeight', title: '完成重', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 10, type: typeEnum.WEIGHT.K }
+      { show: true, key: 'completeNetWeight', title: '完成净重', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 10, type: typeEnum.WEIGHT.K },
+      { show: true, key: 'completeGrossWeight', title: '完成毛重', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 10, type: typeEnum.WEIGHT.K }
     ]
   }
 }

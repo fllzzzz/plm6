@@ -446,7 +446,8 @@ const MesBuildingTypesettingStatusEnum = {
   COMPLETE: { L: '套料完成', K: 'COMPLETE', V: 1 << 1, T: 'success' },
   EXPIRED: { L: '已过期', K: 'EXPIRED', V: 1 << 2, T: 'info' },
   ISSUED: { L: '已下发', K: 'ISSUED', V: 1 << 3, T: 'warning' },
-  PRODUCTION: { L: '生产中', K: 'PRODUCTION', V: 1 << 4, T: 'danger' }
+  PRODUCTION: { L: '生产中', K: 'PRODUCTION', V: 1 << 4, T: 'danger' },
+  FINISHED: { L: '已完成', K: 'FINISHED', V: 1 << 5, T: 'success' }
 }
 constantize(MesBuildingTypesettingStatusEnum)
 
@@ -517,12 +518,25 @@ constantize(sortingListEnum)
 
 // 制成品出入库详情查询类型
 const productSearchTypeEnum = {
-  LIST: { L: '清单', K: 'LIST', V: 1 },
+  BEGINNING: { L: '期初库存', K: 'BEGINNING', V: 1 },
   INBOUND: { L: '入库', K: 'INBOUND', V: 2 },
   OUTBOUND: { L: '出库', K: 'OUTBOUND', V: 3 },
-  STOCK: { L: '库存', K: 'STOCK', V: 4 }
+  STOCK: { L: '期末库存', K: 'STOCK', V: 4 }
 }
 constantize(productSearchTypeEnum)
+
+// 发运管理/项目发运汇总类型查询
+const projectSearchTypeEnum = {
+  INVENTORY: { L: '清单总量', K: 'INVENTORY', V: 1 },
+  ASSIGNMENT: { L: '任务量', K: 'ASSIGNMENT', V: 2 },
+  STORAGE: { L: '入库量', K: 'STORAGE', V: 3 },
+  CUMULATIVE_SHIPMENT: { L: '累计发运', K: 'CUMULATIVE_SHIPMENT', V: 4 },
+  SHIPMENT_MONTH: { L: '本月发运', K: 'SHIPMENT_MONTH', V: 5 },
+  IN_STOCK: { L: '库存', K: 'IN_STOCK', V: 6 },
+  ACCUMULATED_NUMBER: { L: '累计车次', K: 'ACCUMULATED_NUMBER', V: 7 }
+}
+constantize(projectSearchTypeEnum)
+
 // 钻孔工单
 const drillListEnum = {
   PRODUCTION_TASK_ORDER: { L: '钻孔任务单', K: 'PRODUCTION_TASK_ORDER', V: 1 },
@@ -647,6 +661,7 @@ export {
   fileNC1TypeEnum,
   sortingListEnum,
   productSearchTypeEnum,
+  projectSearchTypeEnum,
   drillListEnum,
   structureOrderTypeEnum,
   auxiliaryMaterialTypeEnum,
@@ -722,6 +737,7 @@ export default {
   fileNC1TypeEnum,
   sortingListEnum,
   productSearchTypeEnum,
+  projectSearchTypeEnum,
   drillListEnum,
   structureOrderTypeEnum,
   auxiliaryMaterialTypeEnum,

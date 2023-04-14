@@ -8,14 +8,14 @@
     size="100%"
   >
     <template #titleAfter>
-      <project-cascader v-model="projectId" clearable class="filter-item" style="width: 300px" />
+      <!-- <project-cascader v-model="projectId" clearable class="filter-item" style="width: 300px" /> -->
       <monomer-select-area-select
         v-model:monomerId="monomerId"
         v-model:areaId="areaId"
         needConvert
         clearable
         areaClearable
-        :project-id="projectId"
+        :project-id="props.projectId"
       />
       <el-input
         v-if="props.detailData.productType === componentTypeEnum.ARTIFACT.V"
@@ -50,7 +50,7 @@
           taskType: props.detailData.productType,
           orderId: props.detailData.taskOrderId,
           name: name,
-          projectId: projectId,
+          projectId: props.projectId,
           groupId: props.detailData.group?.id,
           monomerId: monomerId,
           areaId: areaId,
@@ -150,7 +150,7 @@ import { defineProps, defineEmits, ref, watch } from 'vue'
 import { mesWorkOrderTrackingPM as permission } from '@/page-permission/mes'
 import { parseTime } from '@/utils/date'
 import { componentTypeEnum, workOrderTypeEnum } from '@enum-ms/mes'
-import projectCascader from '@comp-base/project-cascader.vue'
+// import projectCascader from '@comp-base/project-cascader.vue'
 import monomerSelectAreaSelect from '@comp-base/monomer-select-area-select'
 
 const emit = defineEmits(['update:visible'])
@@ -170,7 +170,7 @@ const props = defineProps({
     type: Object,
     default: () => {}
   },
-  projectIds: {
+  projectId: {
     type: Number
   }
 })
@@ -194,16 +194,19 @@ const { visible: drawerVisible, handleClose } = useVisible({ emit, props, field:
 
 const { handleSizeChange, handleCurrentChange, total, setTotalPage, queryPage } = usePagination({ fetchHook: processDetailGet })
 
-const { maxHeight } = useMaxHeight({
-  mainBox: '.common-drawer',
-  extraBox: ['.el-drawer__header'],
-  wrapperBox: ['.el-drawer__body'],
-  navbar: false,
-  clientHRepMainH: true,
-  extraHeight: 50,
-  minHeight: 300,
-  paginate: true
-})
+const { maxHeight } = useMaxHeight(
+  {
+    mainBox: '.common-drawer',
+    extraBox: ['.el-drawer__header'],
+    wrapperBox: ['.el-drawer__body'],
+    navbar: false,
+    clientHRepMainH: true,
+    extraHeight: 50,
+    minHeight: 300,
+    paginate: true
+  },
+  drawerVisible
+)
 
 async function processDetailGet() {
   let _list = []
@@ -214,7 +217,7 @@ async function processDetailGet() {
       orderId: props.detailData.taskOrderId,
       groupId: props.detailData.group?.id,
       name: name.value,
-      projectId: projectId.value,
+      projectId: props.projectId,
       monomerId: monomerId.value,
       areaId: areaId.value,
       serialNumber: serialNumber.value,
@@ -235,7 +238,6 @@ function searchQuery() {
 }
 // 重置
 function resetQuery() {
-  projectId.value = undefined
   monomerId.value = undefined
   areaId.value = undefined
   name.value = undefined

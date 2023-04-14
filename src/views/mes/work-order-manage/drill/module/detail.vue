@@ -5,7 +5,7 @@
     v-model="drawerVisible"
     direction="rtl"
     :before-close="handleClose"
-    size="60%"
+    size="63%"
   >
     <template #titleAfter>
       <common-radio-button

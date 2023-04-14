@@ -54,7 +54,7 @@ const { maxHeight } = useMaxHeight({
 })
 
 const dataFormat = ref([
-  ['amount', 'to-thousand'],
+  // ['amount', 'to-thousand'],
   ['mete', 'to-thousand'],
   ['averagePrice', 'to-thousand']
 ])

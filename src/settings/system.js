@@ -66,6 +66,7 @@ export const showProjectSearch = [
   { component: '/mes/production-manage/dashboard/project-dashboard/index', type: pt.STEEL.V, required: true },
   { component: '/mes/production-manage/dashboard/main-material-track/index', type: pt.STEEL.V, required: true },
   { component: '/mes/production-manage/dashboard/artifact-dashboard/index', type: pt.STEEL.V, required: true },
+  { component: '/mes/production-manage/dashboard/production-tracking/index', type: pt.STEEL.V, required: true },
   { component: '/mes/production-manage/dashboard/enclosure-dashboard/index', type: pt.STEEL.V, required: true },
   { component: '/mes/production-manage/dashboard/project-report/index', type: pt.STEEL.V, required: true },
   { component: '/mes/production-manage/dashboard/assembly-match/index', type: pt.STEEL.V, required: true },

@@ -201,7 +201,7 @@ const testingFee = {
      */
     fields: [
       { show: true, key: 'testingFeeTypeName', title: '科目', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 22, type: typeEnum.SUBJECT_NAME.K },
-      { show: true, key: 'amount', title: '检测费总额', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.AMOUNT.K, format: { toThousand: true, precision: 2, unit: amountUnitEnum.YUAN.V }, sum: true }
+      { show: true, key: 'amount', title: '检测费总额', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.AMOUNT.K, format: { toThousand: true, precision: 4, unit: amountUnitEnum.YUAN.V }, sum: true }
       // { show: true, key: 'mete', title: '累计产量（t）', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.WEIGHT.K, format: { toThousand: false, precision: DEF_UNIT.T_WEIGHT, unit: weightUnitEnum.T.V }, sum: true },
       // { show: true, key: 'supplier.price', title: '平均单价', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.AMOUNT.K, format: { toThousand: true, precision: 2, unit: amountUnitEnum.YUAN.V }}
     ]

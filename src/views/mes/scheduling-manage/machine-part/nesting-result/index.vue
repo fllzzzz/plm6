@@ -1,10 +1,15 @@
 <template>
   <div class="app-container wrap">
     <div class="wrap-left">
-      <nesting-task-list ref="nestingTaskRef" :maxHeight="maxHeight - 40" @nesting-task-click="handleNestingTaskClick" />
+      <nesting-task-list
+        ref="nestingTaskRef"
+        :heightStyle="heightStyle"
+        :maxHeight="maxHeight - 40"
+        @nesting-task-click="handleNestingTaskClick"
+      />
     </div>
     <div class="wrap-right">
-      <el-tag v-if="!crud.query?.projectId" type="info" size="medium"> * 请先选择套料任务，进行零件任务下发 </el-tag>
+      <el-tag v-if="!crud.query?.areaId" type="info" size="medium"> * 请先选择套料任务，进行零件任务下发 </el-tag>
       <div v-else>
         <div class="head-container">
           <mHeader />
@@ -136,6 +141,7 @@ import { ref, provide } from 'vue'
 import { machinePartSchedulingNestingResultPM as permission } from '@/page-permission/mes'
 import { layOffWayTypeEnum } from '@enum-ms/uploading-form'
 import { machinePartSchedulingIssueStatusEnum as issueStatusEnum, nestingTypeEnum } from '@enum-ms/mes'
+import { debounce } from '@/utils'
 import { parseTime } from '@/utils/date'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
@@ -153,6 +159,10 @@ const nestingList = ref({})
 const detailDialogVisible = ref(false)
 const detailList = ref([])
 const partList = ref([])
+
+const areaId = ref()
+const projectId = ref()
+
 const optShow = {
   add: false,
   edit: false,
@@ -170,14 +180,14 @@ const { crud, columns, CRUD } = useCRUD(
     crudApi: { get: getNestingTask },
     invisibleColumns: [''],
     hasPagination: true,
-    requiredQuery: ['projectId']
+    requiredQuery: ['areaId']
   },
   tableRef
 )
 
 provide('crud', crud)
 provide('permission', permission)
-const { maxHeight } = useMaxHeight({
+const { maxHeight, heightStyle } = useMaxHeight({
   extraBox: ['.head-container'],
   paginate: false
 })
@@ -186,6 +196,20 @@ const nestingTaskRef = ref()
 CRUD.HOOK.beforeToQuery = async () => {
   crud.query.boolNestCutEnum = layOffWayTypeEnum.NESTING.V
 }
+
+const handleNestingTaskClick = debounce(function (nodes = []) {
+  areaId.value = undefined
+  projectId.value = undefined
+  for (let x = 0; x < nodes.length; x++) {
+    console.log(nodes[x].parentIds, 'x')
+    areaId.value = nodes[x].id
+    projectId.value = nodes[x].parentIds[1]
+    console.log(projectId.value, 'projectId.value')
+  }
+  crud.query.areaId = areaId.value
+  crud.query.projectId = projectId.value
+  crud.toQuery()
+}, 500)
 
 CRUD.HOOK.handleRefresh = (crud, res) => {
   res.data.content = res.data.content.map((v) => {
@@ -211,12 +235,12 @@ function toDetail(row) {
   detailList.value = row
 }
 
-function handleNestingTaskClick(val, query) {
-  crud.query.projectId = val?.id
-  if (crud.query.projectId) {
-    crud.toQuery()
-  }
-}
+// function handleNestingTaskClick(val, query) {
+//   crud.query.projectId = val?.id
+//   if (crud.query.projectId) {
+//     crud.toQuery()
+//   }
+// }
 </script>
 
 <style lang="scss" scoped>
