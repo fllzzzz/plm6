@@ -6,7 +6,7 @@
     :visible="crud.status.cu > 0"
     :title="crud.status.title"
     :show-close="false"
-    width="25%"
+    width="500px"
     top="10vh"
   >
     <template #titleRight>

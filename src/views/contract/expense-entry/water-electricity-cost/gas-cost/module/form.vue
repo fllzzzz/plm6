@@ -6,7 +6,7 @@
     :visible="crud.status.cu > 0"
     :title="`${isEdit ? '编辑' : '新增'} ${gasType} 气体统计`"
     :show-close="false"
-    width="25%"
+    width="500px"
     top="10vh"
   >
     <template #titleRight>
