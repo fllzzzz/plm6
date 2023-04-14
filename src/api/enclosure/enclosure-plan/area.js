@@ -48,4 +48,11 @@ export function del(id) {
   })
 }
 
+// 获取项目下所有的计划
+export function allProjectPlan(projectId) {
+  return request({
+    url: `/api/enclosurePlanDetail/tech/${projectId}`,
+    method: 'get'
+  })
+}
 export default { add, edit, del, get }

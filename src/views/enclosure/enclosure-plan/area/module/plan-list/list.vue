@@ -1,7 +1,7 @@
 <template>
   <common-drawer
     ref="dialogRef"
-    title="收票记录"
+    title="计划"
     :close-on-click-modal="false"
     v-model="visible"
     direction="rtl"
@@ -9,6 +9,9 @@
     custom-class="invoice-record"
     size="80%"
   >
+    <template #titleAfter>
+      <span>项目:{{detailInfo.project}}</span>
+    </template>
     <template #content>
       <div class="wrap">
         <div class="wrap-left">

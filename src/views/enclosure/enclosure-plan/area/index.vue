@@ -27,7 +27,7 @@
       <el-table-column v-if="columns.visible('type')" key="type" prop="type" label="状态" align="center" min-width="80">
          <template v-slot="scope">
           <el-tag type="danger" effect="plain" v-if="!scope.row.type">计划未创建</el-tag>
-          <el-tag type="success" effect="plain" v-else>计划未创建</el-tag>
+          <el-tag type="success" effect="plain" v-else>计划已创建</el-tag>
         </template>
       </el-table-column>
       <el-table-column v-if="columns.visible('createName')" key="createName" prop="createName" :show-overflow-tooltip="true" label="创建人" min-width="140" />
@@ -38,7 +38,7 @@
       </el-table-column>
       <!--编辑与删除-->
       <el-table-column
-        v-if="checkPermission([...permission.edit, ...permission.del])"
+        v-if="checkPermission([...permission.plan.get])"
         label="操作"
         width="130px"
         align="center"
@@ -49,11 +49,11 @@
             size="mini"
             icon="el-icon-plus"
             type="primary"
-            v-if="!scope.row.type"
+            v-if="!scope.row.type && checkPermission(permission.plan.get)"
             @click="openDetail(scope.row,'add')"
           />
           <common-button
-            v-if="scope.row.type"
+            v-if="scope.row.type && checkPermission(permission.plan.get)"
             size="mini"
             icon="el-icon-view"
             type="info"
@@ -72,7 +72,7 @@
 import { allEnclosureProject as get } from '@/api/enclosure/enclosure-plan/area'
 import { ref } from 'vue'
 
-import { areaListPM as permission } from '@/page-permission/plan'
+import { enclosureAreaListPM as permission } from '@/page-permission/enclosure'
 import checkPermission from '@/utils/system/check-permission'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
@@ -80,7 +80,6 @@ import useCRUD from '@compos/use-crud'
 import pagination from '@crud/Pagination'
 import mHeader from './module/header'
 import planList from './module/plan-list/list'
-// import mForm from './module/form'
 import { parseTime } from '@/utils/date'
 
 const optShow = {
