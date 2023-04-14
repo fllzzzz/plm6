@@ -26,7 +26,7 @@
           /> -->
         </div>
         <div class="filter-right-box">
-          <template v-if="checkPermission(permission.cost)">
+          <template v-if="checkPermission(permission.cost) && productType!==contractSaleTypeEnum.AUXILIARY_MATERIAL.V">
             <el-tag effect="plain" size="medium" class="filter-item">
               项目造价：
               <span v-if="!costLoading" v-thousand="projectCost" />

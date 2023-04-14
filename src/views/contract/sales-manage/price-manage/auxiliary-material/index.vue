@@ -16,9 +16,9 @@
     >
       <el-table-column label="序号" type="index" align="center" width="60" />
       <el-table-column v-if="columns.visible('useProperty')" prop="useProperty" label="使用类别" align="center">
-         <template #default="{ row }">
-          {{auxiliaryMaterialUseTypeEnum.VL[row.sourceRow?.useProperty]}}
-         </template>
+        <template #default="{ row }">
+          <span>{{ row.useProperty?auxiliaryMaterialUseTypeEnum.VL[row.useProperty]:'-' }}</span>
+        </template>
       </el-table-column>
       <el-table-column
         prop="name"
@@ -58,7 +58,7 @@
       </el-table-column>
       <el-table-column v-if="columns.visible('totalPrice')" key="totalPrice" prop="totalPrice" align="center" min-width="120" label="金额">
         <template #default="{ row }">
-          <span :class="row.status === 1 ? 'tc-danger' : ''">{{ row.totalPrice || '-' }}</span>
+          <span :class="row.status === 1 ? 'tc-danger' : ''">{{ row.totalPrice }}</span>
         </template>
       </el-table-column>
     </common-table>

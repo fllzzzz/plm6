@@ -31,7 +31,7 @@
         <el-table-column prop="plate" label="板型" width="100px" />
       </template> -->
       <template v-if="props.detailInfo.type === contractSaleTypeEnum.AUXILIARY_MATERIAL.V">
-        <el-table-column prop="classifyName" label="配套件名称" align="center" />
+        <el-table-column prop="name" label="配套件名称" align="center" />
         <el-table-column prop="specification" label="规格" />
       </template>
       <el-table-column align="center" prop="price" label="综合单价">

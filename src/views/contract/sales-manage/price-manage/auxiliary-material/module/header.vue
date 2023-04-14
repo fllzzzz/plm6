@@ -58,7 +58,7 @@
           class="filter-item"
         />
       </template>
-      <template #viewLeft>
+      <!-- <template #viewLeft>
         <span v-if="checkPermission(crud.permission.cost) && query.projectId">
           <el-tag effect="plain" type="success" size="medium" class="filter-item">
             单体配套件总量：
@@ -71,7 +71,7 @@
             <i v-else class="el-icon-loading" />
           </el-tag>
         </span>
-      </template>
+      </template> -->
     </crudOperation>
     <mPreview v-model="previewVisible" :modified-data="modifiedData" v-bind="$attrs" :params="previewParams" @success="handleSuccess" />
   </div>
@@ -142,7 +142,7 @@ CRUD.HOOK.handleRefresh = (crud, { data }) => {
     v.newUnitPrice = v.unitPrice // number类型的单价（unitPrice可能会有千位符）
     v.originNewUnitPrice = v.newUnitPrice
     v.originUnitPrice = emptyTextFormatter(toThousand(v.unitPrice))
-    v.totalPrice = v.mete * (v.unitPrice || 0)
+    v.totalPrice = v.quantity * (v.unitPrice || 0)
   })
   fetchCost()
 }
