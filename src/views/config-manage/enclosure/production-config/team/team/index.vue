@@ -42,6 +42,15 @@
         label="组员"
         min-width="160px"
       />
+      <el-table-column
+        v-if="columns.visible('price')"
+        key="price"
+        prop="price"
+        :show-overflow-tooltip="true"
+        label="工资(元/m)"
+        min-width="100px"
+        align="right"
+      />
       <!--编辑与删除-->
       <el-table-column
         v-if="checkPermission([...permission.edit, ...permission.del])"

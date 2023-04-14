@@ -37,6 +37,18 @@
           @change="memberChange"
         />
       </el-form-item>
+      <el-form-item label="工资(元/m)" prop="price">
+        <el-input-number
+          v-model="form.price"
+          :max="999999999999"
+          :precision="DP.YUAN"
+          :step="100"
+          :controls="false"
+          style="width: 270px"
+          placeholder="请填写工资"
+          autocomplete="off"
+        />
+      </el-form-item>
     </el-form>
   </common-dialog>
 </template>
@@ -44,6 +56,9 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { regForm } from '@compos/use-crud'
+
+import { DP } from '@/settings/config'
+
 import factorySelect from '@comp-base/factory-select.vue'
 import userSelect from '@comp-common/user-select'
 
@@ -55,16 +70,25 @@ const defaultForm = {
   id: undefined,
   factoryId: undefined,
   leaderId: undefined,
-  memberIds: []
+  memberIds: [],
+  price: undefined
 }
 
 const { crud, form } = regForm(defaultForm, formRef)
 const isEdit = computed(() => crud.status.edit >= 1)
 
+const validatePrice = (rule, value, callback) => {
+  if (!value) {
+    callback(new Error('工资必填且大于0'))
+  }
+  callback()
+}
+
 const rules = {
   factoryId: [{ required: true, message: '请选择工厂', trigger: 'change' }],
   leaderId: [{ required: true, message: '请选择组长', trigger: 'change' }],
-  memberIds: [{ required: true, message: '请选择组员', trigger: 'change' }]
+  memberIds: [{ required: true, message: '请选择组员', trigger: 'change' }],
+  price: { required: true, validator: validatePrice, trigger: 'blur' }
 }
 
 function leaderChange(userlist) {

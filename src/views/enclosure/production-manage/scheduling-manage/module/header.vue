@@ -2,7 +2,9 @@
   <div>
     <div v-show="crud.searchToggle">
       <span class="filter-item">
-        <el-checkbox v-model="checkAll" :indeterminate="isIndeterminate" border @change="handleCheckAllChange"> 批次全选 </el-checkbox>
+        <el-checkbox v-model="checkAll" :indeterminate="isIndeterminate" :disabled="!areas.length" border @change="handleCheckAllChange">
+          批次全选
+        </el-checkbox>
       </span>
       <common-radio-button
         v-loading="categoryLoading"
@@ -13,7 +15,8 @@
         class="filter-item"
         size="small"
       />
-      <div style="height: 32px; margin-bottom: 10px" v-loading="areaLoading">
+      <div class="area-wrap" v-loading="areaLoading">
+        <span v-if="!areas.length">暂无批次</span>
         <el-checkbox-group v-model="query.planIds" @change="handleCheckedAresChange">
           <el-checkbox v-for="area in areas" :key="area.id" :label="area.id">
             {{ area.name }} / 交货期：<span v-parse-time="{ val: area.date, fmt: '{y}-{m}-{d}' }" />
@@ -309,10 +312,20 @@ CRUD.HOOK.handleRefresh = async (crud, { data }) => {
 }
 </script>
 <style lang="scss" scoped>
-.el-checkbox-group {
-  display: flex;
-  overflow-x: auto;
+.area-wrap {
+  height: 32px;
+  margin-bottom: 10px;
   border-bottom: 1px solid #ebeef5;
+  > span:first-child {
+    line-height: 24px;
+    font-size: 12px;
+    margin: 0 10px;
+    color: #409eff;
+  }
+  .el-checkbox-group {
+    display: flex;
+    overflow-x: auto;
+  }
 }
 
 ::-webkit-scrollbar {

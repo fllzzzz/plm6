@@ -38,6 +38,13 @@ export default {
               hidden: false,
               component: '/enclosure/production-manage/production-tracking/task-tracking/index',
               meta: { title: '任务跟踪', icon: 'project', noCache: true }
+            },
+            {
+              name: 'EnclosureProjectOverview',
+              path: 'project-overview',
+              hidden: false,
+              component: '/enclosure/production-manage/production-tracking/project-overview/index',
+              meta: { title: '项目全貌', icon: 'project', noCache: true }
             }
           ]
         }

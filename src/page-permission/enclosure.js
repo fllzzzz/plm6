@@ -30,4 +30,9 @@ export const enclosureTaskTrackingPM = {
   print: ['enclosure_task_tracking:print'] // 打印
 }
 
+// 生产跟踪/项目全貌
+export const enclosureProjectOverviewPM = {
+  get: ['enclosure_project_overview:get'] // 列表
+}
+
 // --------------------------- 生产管理 end --------------------------------
