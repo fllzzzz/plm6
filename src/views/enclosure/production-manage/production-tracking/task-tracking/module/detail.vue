@@ -3,7 +3,7 @@
     ref="drawerRef"
     :visible="crud.detailVisible"
     :content-loading="crud.detailLoading"
-    :before-close="beforeClose"
+    :before-close="crud.cancelDetail"
     :title="detail?.rowDetail?.orderNumber"
     :show-close="true"
     size="100%"
@@ -22,16 +22,15 @@
     <template #titleRight>
       <print-table
         v-permission="crud.permission.print"
-        api-key="enclosureSchedulingWorkOrderDetail"
+        api-key="enclosureTaskTrackingDetail"
         :params="{ id: detail?.rowDetail?.id }"
         size="mini"
         type="warning"
         class="filter-item"
-        @print-success="printSuccess"
       />
     </template>
     <template #content>
-      <common-table :data="detail.content" :max-height="maxHeight" :data-format="dataFormat" show-summary :summary-method="getSummaries">
+      <common-table :data="detail.content" :max-height="maxHeight" show-summary :summary-method="getSummaries">
         <el-table-column label="序号" type="index" align="center" width="60" />
         <el-table-column key="planName" prop="planName" label="批次" show-overflow-tooltip align="center" />
         <el-table-column key="name" prop="name" show-overflow-tooltip label="名称" align="center" />
@@ -42,14 +41,20 @@
         <el-table-column key="length" prop="length" show-overflow-tooltip label="单长(mm)" align="center" />
         <el-table-column key="quantity" prop="quantity" show-overflow-tooltip label="数量(件)" align="center" />
         <el-table-column key="totalLength" prop="totalLength" show-overflow-tooltip label="总长度(m)" align="center" />
-        <el-table-column key="askCompleteTime" prop="askCompleteTime" show-overflow-tooltip label="完成日期" align="center" />
+        <el-table-column key="completeQuantity" prop="completeQuantity" show-overflow-tooltip label="完成数(件)" align="center" />
+        <el-table-column key="completeLength" prop="completeLength" show-overflow-tooltip label="完成量(m)" align="center" />
+        <el-table-column key="booleanlag" prop="booleanlag" show-overflow-tooltip label="状态" align="center">
+          <template v-slot="{ row }">
+            <el-tag v-if="!!row.booleanlag" effect="plain" size="medium" type="success">正常</el-tag>
+            <el-tag v-else effect="plain" size="medium" type="danger">滞后</el-tag>
+          </template>
+        </el-table-column>
       </common-table>
     </template>
   </common-drawer>
 </template>
 
 <script setup>
-import { report } from '@/api/enclosure/production-manage/scheduling-work-order'
 import { computed, defineProps, ref } from 'vue'
 
 import { tableSummary } from '@/utils/el-extra'
@@ -65,7 +70,6 @@ const props = defineProps({
 })
 
 const drawerRef = ref()
-const dataFormat = ref([['askCompleteTime', ['parse-time', '{y}-{m}-{d}']]])
 
 const { CRUD, crud, detail } = regDetail()
 
@@ -80,33 +84,21 @@ const { maxHeight } = useMaxHeight(
   () => computed(() => !crud.detailLoading)
 )
 
-// 关闭
-function beforeClose() {
-  crud.cancelDetail()
-  crud.toQuery()
-}
-
-// 打印成功（预览和下载不算）
-async function printSuccess() {
-  try {
-    await report(detail?.rowDetail?.id)
-  } catch (error) {
-    console.log('打印成功上报失败')
-  }
-}
-
 // 合计
 function getSummaries(param) {
   return tableSummary(param, {
-    // 此页面钢材默认显示吨，保留3位，金额显示4位
-    props: [['totalLength', 2]]
+    props: [
+      ['totalLength', 2],
+      ['completeLength', 2]
+    ]
   })
 }
 
 // 详情加载后
 CRUD.HOOK.beforeDetailLoaded = async (crud) => {
   (detail.content || []).forEach((row) => {
-    row.totalLength = (row.totalLength / 1000).toFixed(2)
+    row.totalLength = (row.totalLength || 0) / 1000
+    row.completeLength = (row.completeLength || 0) / 1000
   })
 }
 </script>

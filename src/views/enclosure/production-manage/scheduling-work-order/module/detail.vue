@@ -98,7 +98,6 @@ async function printSuccess() {
 // 合计
 function getSummaries(param) {
   return tableSummary(param, {
-    // 此页面钢材默认显示吨，保留3位，金额显示4位
     props: [['totalLength', 2]]
   })
 }
@@ -106,7 +105,7 @@ function getSummaries(param) {
 // 详情加载后
 CRUD.HOOK.beforeDetailLoaded = async (crud) => {
   (detail.content || []).forEach((row) => {
-    row.totalLength = (row.totalLength / 1000).toFixed(2)
+    row.totalLength = (row.totalLength || 0) / 1000
   })
 }
 </script>

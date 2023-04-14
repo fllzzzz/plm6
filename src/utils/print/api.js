@@ -173,6 +173,7 @@ const auxiliaryMaterialSummary = plan.auxiliaryMaterialSummary // 配套件汇�
 
 // 围护MES
 const enclosureSchedulingWorkOrderDetail = enclosure.schedulingWorkOrderDetail
+const enclosureTaskTrackingDetail = enclosure.taskTrackingDetail
 
 export default {
   myProject, // 我的项目
@@ -341,5 +342,6 @@ export default {
   auxiliaryMaterialSummary, // 配套件汇总
 
   // 围护MES
-  enclosureSchedulingWorkOrderDetail // 排产工单详情
+  enclosureSchedulingWorkOrderDetail, // 排产工单详情
+  enclosureTaskTrackingDetail // 生产跟踪详情
 }

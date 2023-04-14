@@ -23,4 +23,11 @@ export const enclosureSchedulingWorkOrderPM = {
   print: ['enclosure_scheduling_work_order:print'] // 打印
 }
 
+// 生产跟踪/任务跟踪
+export const enclosureTaskTrackingPM = {
+  get: ['enclosure_task_tracking:get'], // 列表
+  detail: ['enclosure_task_tracking:detail'], // 详情
+  print: ['enclosure_task_tracking:print'] // 打印
+}
+
 // --------------------------- 生产管理 end --------------------------------

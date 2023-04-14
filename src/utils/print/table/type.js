@@ -226,7 +226,8 @@ const tableType = {
   auxiliaryMaterialSummary: { L: '配套件汇总', M: 'technical_manage', T: mt.plan.L + ' / ' + plan.technical_manage },
 
   // 围护MES
-  enclosureSchedulingWorkOrderDetail: { L: '排产工单详情', M: 'production_manage', T: mt.plan.L + ' / ' + enclosure.production_manage }
+  enclosureSchedulingWorkOrderDetail: { L: '排产工单详情', M: 'production_manage', T: mt.plan.L + ' / ' + enclosure.production_manage },
+  enclosureTaskTrackingDetail: { L: '生产跟踪详情', M: 'production_manage', T: mt.plan.L + ' / ' + enclosure.production_manage }
 
 }
 

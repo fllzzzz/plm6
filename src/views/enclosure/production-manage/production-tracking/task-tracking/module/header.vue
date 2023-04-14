@@ -1,29 +1,31 @@
 <template>
   <div>
-    <div v-show="crud.searchToggle">
-      <el-input
-        v-model="query.orderNumber"
-        placeholder="工单号搜索"
-        class="filter-item"
-        style="width: 180px"
-        size="small"
-        clearable
-        @blur="crud.toQuery"
-      />
-      <el-input
-        v-model="query.userName"
-        placeholder="排产人搜索"
-        class="filter-item"
-        style="width: 180px"
-        size="small"
-        clearable
-        @blur="crud.toQuery"
-      />
-      <rrOperation />
-    </div>
     <crudOperation>
+      <template #optLeft>
+        <div v-show="crud.searchToggle">
+          <el-input
+            v-model="query.orderNumber"
+            placeholder="工单号搜索"
+            class="filter-item"
+            style="width: 180px"
+            size="small"
+            clearable
+            @blur="crud.toQuery"
+          />
+          <el-input
+            v-model="query.userName"
+            placeholder="排产人搜索"
+            class="filter-item"
+            style="width: 180px"
+            size="small"
+            clearable
+            @blur="crud.toQuery"
+          />
+          <rrOperation />
+        </div>
+      </template>
       <template #viewLeft>
-      <slot name="viewLeft" />
+        <slot name="viewLeft" />
       </template>
     </crudOperation>
   </div>

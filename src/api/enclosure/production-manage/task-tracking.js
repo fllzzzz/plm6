@@ -5,12 +5,13 @@ import request from '@/utils/request'
  * @export
  * @param {string} year 年份
  * @param {string} name 项目模糊查询
+ * @param {number} state 排产状态 1: 生产中 2:部分排产 4:已完成
  * @returns
  */
 export function projectList(params) {
   return request({
     module: 'enclosure',
-    url: 'order/project/list',
+    url: 'produce/project',
     method: 'get',
     params
   })
@@ -29,7 +30,7 @@ export function projectList(params) {
 export function get(params) {
   return request({
     module: 'enclosure',
-    url: 'order/order/list',
+    url: 'produce/order/list',
     method: 'get',
     params
   })
@@ -46,37 +47,10 @@ export function get(params) {
 export function detail(id) {
   return request({
     module: 'enclosure',
-    url: 'order/order/detail',
+    url: 'produce/order/detail',
     method: 'get',
     params: { id }
   })
 }
 
-/**
- * 删除工单
- */
-export function del(ids) {
-  return request({
-    module: 'enclosure',
-    url: 'order/order',
-    method: 'delete',
-    data: ids
-  })
-}
-
-/**
- * 打印成功后上报
- * @export
- * @param {number} id|required 工单id
- * @returns
- */
-export function report(id) {
-  return request({
-    module: 'enclosure',
-    url: 'order/order/detail/save/print',
-    method: 'put',
-    params: { id }
-  })
-}
-
-export default { get, del, detail }
+export default { get, detail }

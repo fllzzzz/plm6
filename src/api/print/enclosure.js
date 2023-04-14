@@ -12,8 +12,20 @@ export function schedulingWorkOrderDetail(params) {
   })
 }
 
+/**
+ * 生产跟踪详情
+ */
+export function taskTrackingDetail(params) {
+  return request({
+    url: `/api/mes/enclosure/produce/order/detail/print`,
+    method: 'get',
+    params
+  })
+}
+
 export default {
   // 生产管理
-  schedulingWorkOrderDetail // 排产工单详情
+  schedulingWorkOrderDetail, // 排产工单详情
+  taskTrackingDetail // 生产跟踪详情
 }
 

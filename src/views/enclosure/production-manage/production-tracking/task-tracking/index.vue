@@ -32,7 +32,7 @@
               show-overflow-tooltip
               label="排产日期"
               align="center"
-              width="100"
+              width="90"
             />
             <el-table-column
               key="orderNumber"
@@ -41,13 +41,8 @@
               label="任务工单"
               show-overflow-tooltip
               align="center"
-              min-width="140"
-            >
-              <template v-slot="{ row }">
-                <table-cell-tag :show="Boolean(row.printQuantity)" name="已打印" color="#e64242" :offset="15" />
-                <span>{{ row.orderNumber }}</span>
-              </template>
-            </el-table-column>
+              min-width="130"
+            />
             <el-table-column
               key="userName"
               prop="userName"
@@ -104,27 +99,56 @@
               prop="quantity"
               v-if="columns.visible('quantity')"
               show-overflow-tooltip
-              label="任务数(件)"
+              label="任务数(件/m)"
               align="center"
-              width="80"
-            />
-            <el-table-column
-              key="totalLength"
-              prop="totalLength"
-              v-if="columns.visible('totalLength')"
-              show-overflow-tooltip
-              label="任务量(m)"
-              align="right"
-              width="80"
-            />
-            <!--编辑与删除-->
-            <el-table-column
-              v-if="checkPermission([...permission.detail, ...permission.del])"
-              label="操作"
-              width="80px"
-              align="center"
-              fixed="right"
+              min-width="100"
             >
+              <template v-slot="{ row }">
+                <span>{{ row.quantity }} / {{ row.totalLength }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column
+              key="completeQuantity"
+              prop="completeQuantity"
+              v-if="columns.visible('completeQuantity')"
+              show-overflow-tooltip
+              label="完成数(件/m)"
+              align="center"
+              min-width="100"
+            >
+              <template v-slot="{ row }">
+                <span>{{ row.completeQuantity }} / {{ row.completeLength }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column
+              key="booleanlag"
+              prop="booleanlag"
+              v-if="columns.visible('booleanlag')"
+              show-overflow-tooltip
+              label="状态"
+              align="center"
+              width="70"
+            >
+              <template v-slot="{ row }">
+                <el-tag v-if="!!row.booleanlag" effect="plain" size="medium" type="success">正常</el-tag>
+                <el-tag v-else effect="plain" size="medium" type="danger">滞后</el-tag>
+              </template>
+            </el-table-column>
+            <el-table-column
+              key="completeRate"
+              prop="completeRate"
+              v-if="columns.visible('completeRate')"
+              show-overflow-tooltip
+              label="进度"
+              align="center"
+              min-width="90"
+            >
+              <template v-slot="{ row }">
+                <el-progress :text-inside="true" :stroke-width="29" :percentage="row.completeRate" />
+              </template>
+            </el-table-column>
+            <!--详情-->
+            <el-table-column v-if="checkPermission([...permission.detail])" label="操作" width="70px" align="center" fixed="right">
               <template #default="{ row }">
                 <udOperation :data="row" :show-edit="false" :show-del="false" show-detail />
               </template>
@@ -144,9 +168,10 @@
 import crudApi from '@/api/enclosure/production-manage/task-tracking'
 import { ref } from 'vue'
 
-import { enclosureSchedulingWorkOrderPM as permission } from '@/page-permission/enclosure'
+import { enclosureTaskTrackingPM as permission } from '@/page-permission/enclosure'
 import { mesEnclosureTypeEnum } from '@enum-ms/mes'
 import checkPermission from '@/utils/system/check-permission'
+import { toFixed } from '@data-type/index'
 
 import useMaxHeight from '@compos/use-max-height'
 import UdOperation from '@crud/UD.operation'
@@ -155,7 +180,6 @@ import projectList from './project-list'
 import pagination from '@crud/Pagination'
 import mHeader from './module/header'
 import MDetail from './module/detail'
-import tableCellTag from '@comp-common/table-cell-tag/index'
 
 const optShow = {
   add: false,
@@ -168,13 +192,14 @@ const tableRef = ref()
 const project = ref({})
 const dataFormat = ref([
   ['totalLength', ['to-fixed', 2]],
+  ['completeLength', ['to-fixed', 2]],
   ['createTime', ['parse-time', '{y}-{m}-{d}']],
   ['category', ['parse-enum', mesEnclosureTypeEnum]]
 ])
 
 const { CRUD, crud, columns } = useCRUD(
   {
-    title: '排产工单',
+    title: '任务跟踪',
     sort: [],
     permission: { ...permission },
     optShow: { ...optShow },
@@ -198,7 +223,9 @@ function projectChange(row = {}) {
 
 CRUD.HOOK.handleRefresh = async (crud, { data }) => {
   data.content.forEach((row) => {
+    row.completeRate = Number(toFixed((row.completeLength / row.totalLength) * 100, 2))
     row.totalLength = (row.totalLength || 0) / 1000
+    row.completeLength = (row.completeLength || 0) / 1000
   })
 }
 </script>
