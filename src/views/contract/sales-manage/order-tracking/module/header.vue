@@ -30,7 +30,7 @@
         class="filter-item"
         @change="projectStatusChange"
       /> -->
-      <project-visa-select
+      <!-- <project-visa-select
         v-model="query.projectId"
         class="filter-item"
         style="width: 300px"
@@ -38,6 +38,14 @@
         :projectStatus="status"
         :saveSettlement="query.projectStatus===projectStatusEnum.SETTLED.V?true:false"
         placeholder="可选择项目搜索"
+        clearable
+      /> -->
+      <el-input
+        v-model="query.name"
+        placeholder="项目名称"
+        class="filter-item"
+        style="width: 200px;"
+        size="small"
         clearable
       />
       <common-radio-button
@@ -84,13 +92,13 @@ import { contractSaleTypeEnum } from '@enum-ms/mes'
 import { regHeader } from '@compos/use-crud'
 import crudOperation from '@crud/CRUD.operation'
 import rrOperation from '@crud/RR.operation'
-import projectVisaSelect from '@comp-base/project-visa-select'
+// import projectVisaSelect from '@comp-base/project-visa-select'
 
 const defaultQuery = {
   year: undefined,
   projectStatus: undefined,
-  orderSourceType: undefined,
-  projectId: { value: undefined, resetAble: false }
+  orderSourceType: undefined
+  // projectId: { value: undefined, resetAble: false }
 }
 const { crud, query } = regHeader(defaultQuery)
 </script>
