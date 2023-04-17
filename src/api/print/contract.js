@@ -435,6 +435,7 @@ export default {
   projectList, // 项目列表
   structurePrice, // 结构计价表
   enclosurePrice, // 围护计价表
+  machinePartPrice, // 散发件计价表
   auxiliaryMaterialPrice, // 配套件计价表
   logisticsLedger, // 物流台账
   payableSummary, // 应付汇总

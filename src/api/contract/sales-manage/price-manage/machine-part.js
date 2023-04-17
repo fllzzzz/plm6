@@ -18,12 +18,12 @@ export function get(params) {
  * 获取散发制品商务汇总
  * @param {number} monomerId | required 单体id
  */
-export function cost({ monomerId }) {
+export function cost({ projectId, monomerId, areaId }) {
   return request({
     module: 'contract',
     url: 'business/machine-part/summary',
     method: 'get',
-    params: { monomerId }
+    params: { projectId, monomerId, areaId }
   })
 }
 

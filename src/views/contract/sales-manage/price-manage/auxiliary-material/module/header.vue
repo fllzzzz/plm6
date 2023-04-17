@@ -78,7 +78,7 @@
 </template>
 
 <script setup>
-import { cost } from '@/api/contract/sales-manage/price-manage/auxiliary-material'
+// import { cost } from '@/api/contract/sales-manage/price-manage/auxiliary-material'
 import { ref, watch, nextTick, inject, computed, defineExpose } from 'vue'
 
 import { auxiliaryMaterialUseTypeEnum } from '@enum-ms/plan'
@@ -122,17 +122,16 @@ watch(
 )
 
 const modifying = ref(false)
-const costLoading = ref(false)
+// const costLoading = ref(false)
 const previewVisible = ref(false)
-const costData = {
-  totalPrice: 0,
-  totalMete: 0
-}
-const monomerCost = ref({ ...costData })
+// const costData = {
+//   totalPrice: 0,
+//   totalMete: 0
+// }
+// const monomerCost = ref({ ...costData })
 
 const defaultQuery = {
   name: undefined, specification: undefined, serialNumber: undefined
-  // monomerId: { value: undefined, resetAble: false }
 }
 const { crud, query, CRUD } = regHeader(defaultQuery)
 
@@ -144,25 +143,24 @@ CRUD.HOOK.handleRefresh = (crud, { data }) => {
     v.originUnitPrice = emptyTextFormatter(toThousand(v.unitPrice))
     v.totalPrice = v.quantity * (v.unitPrice || 0)
   })
-  fetchCost()
+  // fetchCost()
 }
 
 // 获取商务配套件成本
-async function fetchCost() {
-  if (!checkPermission(crud.permission.cost)) return
-  costLoading.value = true
-  try {
-    const res = await cost({
-      // monomerId: query.monomerId,
-      projectId: projectId.value
-    })
-    monomerCost.value = res
-  } catch (error) {
-    console.log('获取商务配套件成本失败', error)
-  } finally {
-    costLoading.value = false
-  }
-}
+// async function fetchCost() {
+//   if (!checkPermission(crud.permission.cost)) return
+//   costLoading.value = true
+//   try {
+//     const res = await cost({
+//       projectId: projectId.value
+//     })
+//     monomerCost.value = res
+//   } catch (error) {
+//     console.log('获取商务配套件成本失败', error)
+//   } finally {
+//     costLoading.value = false
+//   }
+// }
 
 // 成本初始化
 // function costInit() {

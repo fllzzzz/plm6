@@ -19,14 +19,14 @@ export function get(params) {
  * @param {number} projectId | required 项目id
  * @param {number} monomerId | required 单体id
  */
-export function cost({ projectId, monomerId }) {
-  return request({
-    module: 'contract',
-    url: 'business/auxiliary-material/summary',
-    method: 'get',
-    params: { projectId, monomerId }
-  })
-}
+// export function cost({ projectId, monomerId }) {
+//   return request({
+//     module: 'contract',
+//     url: 'business/auxiliary-material/summary',
+//     method: 'get',
+//     params: { projectId, monomerId }
+//   })
+// }
 
 // 保存标准件价格
 export function saveStandardPart(data) {

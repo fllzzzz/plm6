@@ -135,9 +135,9 @@
           </template>
         </el-table-column>
         <el-table-column
-          v-if="columns.visible('process')"
-          key="process"
-          prop="process"
+          v-if="columns.visible('delivery')"
+          key="delivery"
+          prop="delivery"
           label="发运计划"
           align="center"
           min-width="150"
@@ -146,10 +146,10 @@
             <template v-if="scope.row.areaList.length > 0">
               <div v-for="(k,i) in scope.row.areaList" :key="k.id">
                 <div :class="i===scope.row.areaList.length-1?'sandwich-cell-bottom':'sandwich-cell-top'">
-                  <template v-if="isNotBlank(k.processVal)">
+                  <template v-if="isNotBlank(k.deliveryVal)">
                     <el-date-picker
                       v-if="k.isModify"
-                      v-model="k.processVal.timeArr"
+                      v-model="k.deliveryVal.timeArr"
                       type="daterange"
                       range-separator=":"
                       size="small"
@@ -157,11 +157,11 @@
                       value-format="x"
                       start-placeholder="开始"
                       end-placeholder="结束"
-                      @change="timeChange(k.processVal,k)"
-                      :disabled="!isNotBlank(k.deepVal.timeArr)"
-                      :disabledDate="(date) => {if (k.deepVal.startDate) { return date.getTime() < k.deepVal.startDate || date.getTime() > k.date } else { return date.getTime() < globalProject.startDate || date.getTime() > k.date }}"
+                      @change="timeChange(k.deliveryVal,k)"
+                      :disabled="!isNotBlank(k.processVal.timeArr)"
+                      :disabledDate="(date) => {if (k.processVal.startDate) { return date.getTime() < k.processVal.startDate || date.getTime() > k.date } else { return date.getTime() < globalProject.startDate || date.getTime() > k.date }}"
                     />
-                    <span>{{k.processVal?.startDate && k.processVal?.endDate? parseTime(k.processVal.startDate,'{y}-{m}-{d}')+' : '+parseTime(k.processVal.endDate,'{y}-{m}-{d}'): '-'}}</span>
+                    <span>{{k.deliveryVal?.startDate && k.deliveryVal?.endDate? parseTime(k.deliveryVal.startDate,'{y}-{m}-{d}')+' : '+parseTime(k.deliveryVal.endDate,'{y}-{m}-{d}'): '-'}}</span>
                   </template>
                 </div>
               </div>
@@ -194,7 +194,7 @@
                       end-placeholder="结束"
                       @change="timeChange(k.installVal,k)"
                       :disabled="!(isNotBlank(k.processVal.timeArr)&&isNotBlank(k.deepVal.timeArr))"
-                      :disabledDate="(date) => {if (k.processVal.startDate) { return date.getTime() < k.processVal.startDate || date.getTime() > k.date } else { return date.getTime() < globalProject.startDate || date.getTime() > k.date }}"
+                      :disabledDate="(date) => {if(k.deliveryVal.startDate){ return date.getTime() < k.deliveryVal.startDate || date.getTime() > k.date} else { return date.getTime() < globalProject.startDate || date.getTime() > k.date }}"
                     />
                     <span>{{k.installVal?.startDate && k.installVal?.endDate? parseTime(k.installVal.startDate,'{y}-{m}-{d}')+' : '+parseTime(k.installVal.endDate,'{y}-{m}-{d}'): '-'}}</span>
                   </template>
@@ -350,8 +350,8 @@ function timeChange(value, k) {
 }
 
 function totalTime(k) {
-  const startDate = k.deepVal?.startDate || k.processVal?.startDate || k?.startDate || undefined
-  const endDate = k.installVal?.endDate || k.processVal?.endDate || k.deepVal?.endDate || undefined
+  const startDate = k.deepVal?.startDate || k.processVal?.startDate || k.deliveryVal?.startDate || k.installVal?.startDate || undefined
+  const endDate = k.deliveryVal?.startDate || k.installVal?.endDate || k.processVal?.endDate || k.deepVal?.endDate || undefined
   if (startDate && endDate) {
     k.totalDays = dateDifference(startDate, endDate)
   }
@@ -365,12 +365,16 @@ async function rowSubmit(row, index) {
     ElMessage.error('生产计划必填')
     return
   }
+  if (!isNotBlank(row.areaList[index].deliveryVal.timeArr)) {
+    ElMessage.error('发运计划必填')
+    return
+  }
   if (globalProject.value.businessType === businessTypeEnum.INSTALLATION.V && isNotBlank(originDetailRow.value.installVal.timeArr) && !isNotBlank(row.areaList[index].installVal.timeArr)) {
     ElMessage.error('安装计划必填')
     return
   }
   try {
-    const data = [{ ...row.areaList[index].deepVal }, { ...row.areaList[index].processVal }]
+    const data = [{ ...row.areaList[index].deepVal }, { ...row.areaList[index].processVal }, { ...row.areaList[index].deliveryVal }]
     if (globalProject.value.businessType === businessTypeEnum.INSTALLATION.V) {
       data.push({ ...row.areaList[index].installVal })
     }
@@ -396,6 +400,7 @@ CRUD.HOOK.handleRefresh = (crud, data) => {
             const deepVal = value.planDetailList.find(m => m.type === areaPlanTypeEnum.DEEPEN.V)
             const processVal = value.planDetailList.find(m => m.type === areaPlanTypeEnum.PROCESS.V)
             const installVal = value.planDetailList.find(m => m.type === areaPlanTypeEnum.INSTALL.V)
+            const deliveryVal = value.planDetailList.find(m => m.type === areaPlanTypeEnum.DELIVERY.V) || {}
             if (deepVal) {
               deepVal.timeArr = []
               if (deepVal.startDate && deepVal.endDate) {
@@ -414,9 +419,17 @@ CRUD.HOOK.handleRefresh = (crud, data) => {
                 installVal.timeArr = [installVal.startDate, installVal.endDate]
               }
             }
+            if (deliveryVal) {
+              deliveryVal.timeArr = []
+              deliveryVal.type = areaPlanTypeEnum.DELIVERY.V
+              if (deliveryVal.startDate && deliveryVal.endDate) {
+                deliveryVal.timeArr = [deliveryVal.startDate, deliveryVal.endDate]
+              }
+            }
             value.deepVal = deepVal
             value.processVal = processVal
             value.installVal = installVal
+            value.deliveryVal = deliveryVal
             totalTime(value)
           })
         }

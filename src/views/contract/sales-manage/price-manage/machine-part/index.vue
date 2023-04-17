@@ -19,9 +19,9 @@
       <el-table-column v-if="columns.visible('specification')" key="specification" prop="specification" show-overflow-tooltip label="规格" align="center" min-width="140" />
       <el-table-column v-if="columns.visible('material')" key="material" prop="material" show-overflow-tooltip label="材质" align="center" min-width="120" />
       <el-table-column v-if="columns.visible('totalQuantity')" key="totalQuantity" prop="totalQuantity" label="数量" align="center" min-width="70" show-overflow-tooltip />
-      <el-table-column v-if="columns.visible('totalLength')" key="totalLength" prop="totalLength" label="总长度(米)" align="center" min-width="70" show-overflow-tooltip />
       <el-table-column v-if="columns.visible('totalWeight')" key="totalWeight" prop="totalWeight" show-overflow-tooltip label="总量(t)" align="center" min-width="120" />
-       <el-table-column v-if="columns.visible('pricingManner')" key="pricingManner" prop="pricingManner" show-overflow-tooltip label="计价方式" align="center" min-width="120">
+      <el-table-column v-if="columns.visible('totalLength')" key="totalLength" prop="totalLength" label="总长度(米)" align="center" min-width="70" show-overflow-tooltip />
+      <el-table-column v-if="columns.visible('pricingManner')" key="pricingManner" prop="pricingManner" show-overflow-tooltip label="计价方式" align="center" min-width="120">
         <template #default="{ row }">
            <common-select
             v-if="headerRef && headerRef.modifying"

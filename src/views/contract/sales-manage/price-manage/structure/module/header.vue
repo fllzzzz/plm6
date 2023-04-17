@@ -1,12 +1,27 @@
 <template>
   <div class="head-container">
     <div v-show="crud.searchToggle">
-      <monomer-select
-        v-model="monomerId"
-        :project-id="projectId"
-        class="filter-item"
-        @change="handleMonomerChange"
-      />
+      <div>
+        <!-- <monomer-select
+          v-model="query.monomerId"
+          :project-id="projectId"
+          class="filter-item"
+          @change="handleMonomerChange"
+          @getAreaInfo="getAreaInfo"
+        />
+        <common-select
+          v-model="query.areaId"
+          :options="areaInfo"
+          type="other"
+          :dataStructure="{ key: 'id', label: 'name', value: 'id' }"
+          size="small"
+          clearable
+          placeholder="请选择区域"
+          class="filter-item"
+          style="width:200px;"
+          @change="areaChange"
+        /> -->
+      </div>
       <el-input
         v-model="query.name"
         placeholder="可输入名称搜索"
@@ -39,7 +54,7 @@
         <print-table
           v-permission="crud.permission.print"
           api-key="contractStructurePrice"
-          :params="{ monomerId: query.monomerId }"
+          :params="{ ...query }"
           size="mini"
           type="warning"
           class="filter-item"
@@ -48,17 +63,17 @@
       <template #viewLeft>
         <span v-if="checkPermission(crud.permission.cost) && query.monomerId">
           <el-tag effect="plain" type="success" size="medium" class="filter-item">
-            单体结构总数：
-            <span v-if="!costLoading">{{ monomerCost.quantity }}</span>
-            <i v-else class="el-icon-loading" />
-          </el-tag>
-          <el-tag effect="plain" type="success" size="medium" class="filter-item">
-            单体结构总量(t)：
+            结构总量(t)：
             <span v-if="!costLoading">{{ convertUnits(monomerCost.mete, 'kg', 't', DP.COM_WT__T) }}</span>
             <i v-else class="el-icon-loading" />
           </el-tag>
           <el-tag effect="plain" type="success" size="medium" class="filter-item">
-            单体结构造价(元)：
+            结构总数(件)：
+            <span v-if="!costLoading">{{ monomerCost.quantity }}</span>
+            <i v-else class="el-icon-loading" />
+          </el-tag>
+          <el-tag effect="plain" type="success" size="medium" class="filter-item">
+            结构造价(元)：
             <span v-if="!costLoading" v-thousand="monomerCost.price" />
             <i v-else class="el-icon-loading" />
           </el-tag>
@@ -71,7 +86,7 @@
 
 <script setup>
 import { cost } from '@/api/contract/sales-manage/price-manage/structure'
-import { ref, nextTick, inject, computed, defineExpose, defineEmits, defineProps } from 'vue'
+import { ref, watch, nextTick, inject, computed, defineExpose, defineEmits, defineProps } from 'vue'
 
 import checkPermission from '@/utils/system/check-permission'
 import { contractSaleTypeEnum } from '@enum-ms/mes'
@@ -85,10 +100,10 @@ import { regHeader } from '@compos/use-crud'
 import crudOperation from '@crud/CRUD.operation'
 import rrOperation from '@crud/RR.operation'
 import mPreview from '../../preview'
-import monomerSelect from '@/components-system/plan/monomer-select'
 
 const projectId = inject('projectId')
 const monomerId = inject('monomerId')
+const areaId = inject('areaId')
 const emit = defineEmits(['checkSubmit'])
 const props = defineProps({
   showAble: {
@@ -96,6 +111,31 @@ const props = defineProps({
     default: false
   }
 })
+
+watch(
+  monomerId,
+  (val) => {
+    nextTick(() => {
+      crud.query.monomerId = val
+      costInit()
+      crud.toQuery()
+    })
+  },
+  { immediate: true }
+)
+
+watch(
+  areaId,
+  (val) => {
+    nextTick(() => {
+      crud.query.areaId = val
+      costInit()
+      crud.toQuery()
+    })
+  },
+  { immediate: true }
+)
+
 // 有变动的数据
 const modifiedData = computed(() => {
   return crud.data.filter((v) => (v.pricingManner !== v.originPricingManner && v.unitPrice !== '-') || (v.unitPrice !== v.originUnitPrice))
@@ -105,26 +145,10 @@ const modifiedData = computed(() => {
 const previewParams = computed(() => {
   return {
     monomerId: query.monomerId,
+    areaId: query.areaId,
     type: contractSaleTypeEnum.STRUCTURE.V
   }
 })
-
-// watch(
-//   monomerId,
-//   (val) => {
-//     nextTick(() => {
-//       crud.query.monomerId = val
-//       costInit()
-//       crud.toQuery()
-//     })
-//   },
-//   { immediate: true }
-// )
-
-function handleMonomerChange(val) {
-  costInit()
-  crud.toQuery()
-}
 
 const modifying = ref(false)
 const costLoading = ref(false)
@@ -157,12 +181,13 @@ CRUD.HOOK.handleRefresh = (crud, { data }) => {
 
 // 获取商务构件成本
 async function fetchCost() {
-  if (!checkPermission(crud.permission.cost)) return
+  if (!checkPermission(crud.permission.cost) || !projectId.value) return
   costLoading.value = true
   try {
     const res = await cost({
       monomerId: query.monomerId,
-      projectId: projectId.value
+      projectId: projectId.value,
+      areaId: query.areaId
     })
     monomerCost.value = res
   } catch (error) {
@@ -211,3 +236,21 @@ defineExpose({
   modifying
 })
 </script>
+<style lang="scss" scoped>
+// .panel-group {
+//   margin-bottom:10px;
+//   ::v-deep(.card-panel) {
+//     .card-panel-description {
+//       .card-panel-text {
+//         text-align:left;
+//         margin-top: 2px;
+//       }
+//       .card-panel-num {
+//         display:block;
+//         font-size: 18px;
+//         text-align:right;
+//       }
+//     }
+//   }
+// }
+</style>

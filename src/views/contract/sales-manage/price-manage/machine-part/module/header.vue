@@ -1,7 +1,7 @@
 <template>
   <div class="head-container">
     <div v-show="crud.searchToggle">
-      <el-input
+      <!-- <el-input
         v-model="query.name"
         placeholder="可输入名称搜索"
         class="filter-item"
@@ -27,8 +27,8 @@
         size="small"
         clearable
         @keyup.enter="crud.toQuery"
-      />
-      <rrOperation/>
+      /> -->
+      <!-- <rrOperation/> -->
     </div>
     <crudOperation>
       <template v-if="query.monomerId" #optRight>
@@ -42,7 +42,7 @@
         <print-table
           v-permission="crud.permission.print"
           api-key="contractMachinePartPrice"
-          :params="{ monomerId: query.monomerId,specification:query.specification, material:query.material}"
+          :params="{ ...query}"
           size="mini"
           type="warning"
           class="filter-item"
@@ -50,18 +50,19 @@
       </template>
       <template #viewLeft>
         <span v-if="checkPermission(crud.permission.cost) && query.monomerId">
-          <el-tag effect="plain" type="success" size="medium" class="filter-item">
-            单体散发制品总数：
-            <span v-if="!costLoading">{{ monomerCost.quantity }}</span>
-            <i v-else class="el-icon-loading" />
-          </el-tag>
-          <el-tag effect="plain" type="success" size="medium" class="filter-item">
-            单体散发制品总量(t)：
+           <el-tag effect="plain" type="success" size="medium" class="filter-item">
+           散发制品总量(t)：
             <span v-if="!costLoading">{{ convertUnits(monomerCost.mete, 'kg', 't', DP.COM_WT__T) }}</span>
             <i v-else class="el-icon-loading" />
           </el-tag>
           <el-tag effect="plain" type="success" size="medium" class="filter-item">
-            单体散发制品造价(元)：
+            散发制品总数：
+            <span v-if="!costLoading">{{ monomerCost.quantity }}</span>
+            <i v-else class="el-icon-loading" />
+          </el-tag>
+
+          <el-tag effect="plain" type="success" size="medium" class="filter-item">
+            散发制品造价(元)：
             <span v-if="!costLoading" v-thousand="monomerCost.price" />
             <i v-else class="el-icon-loading" />
           </el-tag>
@@ -86,11 +87,12 @@ import { DP } from '@/settings/config'
 
 import { regHeader } from '@compos/use-crud'
 import crudOperation from '@crud/CRUD.operation'
-import rrOperation from '@crud/RR.operation'
+// import rrOperation from '@crud/RR.operation'
 import mPreview from '../../preview'
 
 const projectId = inject('projectId')
 const monomerId = inject('monomerId')
+const areaId = inject('areaId')
 const emit = defineEmits(['checkSubmit'])
 const props = defineProps({
   showAble: {
@@ -107,6 +109,7 @@ const modifiedData = computed(() => {
 const previewParams = computed(() => {
   return {
     monomerId: query.monomerId,
+    areaId: query.areaId,
     type: contractSaleTypeEnum.MACHINE_PART.V
   }
 })
@@ -116,6 +119,18 @@ watch(
   (val) => {
     nextTick(() => {
       crud.query.monomerId = val
+      costInit()
+      crud.toQuery()
+    })
+  },
+  { immediate: true }
+)
+
+watch(
+  areaId,
+  (val) => {
+    nextTick(() => {
+      crud.query.areaId = val
       costInit()
       crud.toQuery()
     })
@@ -154,12 +169,13 @@ CRUD.HOOK.handleRefresh = (crud, { data }) => {
 
 // 获取商务构件成本
 async function fetchCost() {
-  if (!checkPermission(crud.permission.cost)) return
+  if (!checkPermission(crud.permission.cost) || !projectId.value) return
   costLoading.value = true
   try {
     const res = await cost({
       monomerId: query.monomerId,
-      projectId: projectId.value
+      projectId: projectId.value,
+      areaId: query.areaId
     })
     monomerCost.value = res
   } catch (error) {

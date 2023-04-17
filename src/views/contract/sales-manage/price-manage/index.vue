@@ -17,31 +17,48 @@
             type="enumSL"
             size="small"
             class="filter-item"
+            @change="()=>{if(productType===contractSaleTypeEnum.AUXILIARY_MATERIAL.V){monomerId=undefined;areaId=undefined}}"
           />
-          <!-- <monomer-select
-            v-model="monomerId"
-            :project-id="projectId"
-            class="filter-item"
-            @change="handleMonomerChange"
-          /> -->
+          <template v-if="productType!==contractSaleTypeEnum.AUXILIARY_MATERIAL.V">
+            <monomer-select
+              v-model="monomerId"
+              :project-id="projectId"
+              class="filter-item"
+              @change="handleMonomerChange"
+              @getAreaInfo="getAreaInfo"
+            />
+            <common-select
+              v-model="areaId"
+              :options="areaInfo"
+              type="other"
+              :dataStructure="{ key: 'id', label: 'name', value: 'id' }"
+              size="small"
+              clearable
+              placeholder="请选择区域"
+              class="filter-item"
+              style="width:200px;"
+              @change="fetchCost"
+            />
+          </template>
         </div>
         <div class="filter-right-box">
-          <template v-if="checkPermission(permission.cost) && productType!==contractSaleTypeEnum.AUXILIARY_MATERIAL.V">
-            <el-tag effect="plain" size="medium" class="filter-item">
-              项目造价：
-              <span v-if="!costLoading" v-thousand="projectCost" />
-              <i v-else class="el-icon-loading" />
-            </el-tag>
-            <el-tag v-if="monomerId" effect="plain" size="medium" class="filter-item">
-              单体造价：
-              <span v-if="!costLoading" v-thousand="monomerCost" />
-              <i v-else class="el-icon-loading" />
-            </el-tag>
-          </template>
           <el-badge v-if="checkPermission(permission.list)" :value="modifyCount" :hidden="modifyCount <= 0">
             <common-button class="filter-item" size="mini" type="info" @click="modifyVisible = true">变更记录</common-button>
           </el-badge>
         </div>
+      </div>
+      <div>
+        <el-row v-if="checkPermission(permission.cost)" :gutter="20" class="panel-group" style="margin-bottom:10px;">
+          <el-col :span="8">
+            <Panel name="项目造价（元）" text-color="#626262" num-color="#1890ff" :end-val="projectCost || 0" :precision="2" />
+          </el-col>
+          <el-col :span="8">
+            <Panel name="单体造价（元）" text-color="#626262" num-color="#1890ff" :end-val="monomerCost || 0" :precision="2" />
+          </el-col>
+          <el-col :span="8">
+            <Panel name="选定区域造价（元）" text-color="#626262" num-color="#1890ff" :end-val="areaCost || 0" :precision="2" />
+          </el-col>
+        </el-row>
       </div>
     </div>
     <component :is="currentView" ref="domRef" @refresh-count="fetchModifyCount" />
@@ -71,18 +88,20 @@ import { ref, computed, onMounted, provide } from 'vue'
 import { mapGetters } from '@/store/lib'
 import { priceManagePM as permission } from '@/page-permission/contract'
 
+// import { TechnologyTypeAllEnum } from '@enum-ms/contract'
 import { contractSaleTypeEnum } from '@enum-ms/mes'
 import { debounce } from '@/utils'
 import { isBlank } from '@data-type/index'
 import checkPermission from '@/utils/system/check-permission'
 
-// import monomerSelect from '@/components-system/plan/monomer-select'
+import monomerSelect from '@/components-system/plan/monomer-select'
 import structure from './structure'
 // import enclosure from './enclosure'
 import auxiliaryMaterial from './auxiliary-material'
 import machinePart from './machine-part'
 import modifyRecord from './price-modify-list/index'
 import projectVisaSelect from '@comp-base/project-visa-select'
+import Panel from '@/components/Panel'
 
 // 当前显示组件
 const currentView = computed(() => {
@@ -107,10 +126,14 @@ const modifyCount = ref(0)
 const costLoading = ref(false)
 const projectCost = ref(0)
 const monomerCost = ref(0)
+const areaCost = ref(0)
 const monomerId = ref()
+const areaId = ref()
 const modifyVisible = ref(false)
+const areaInfo = ref([])
 
-// provide('monomerId', monomerId)
+provide('monomerId', monomerId)
+provide('areaId', areaId)
 provide('projectId', projectId)
 provide('modifyVisible', modifyVisible)
 
@@ -125,26 +148,33 @@ function handleProjectChange() {
 }
 
 // 单体变动
-// function handleMonomerChange() {
-//   fetchCost()
-// }
+function handleMonomerChange() {
+  fetchCost()
+}
 
+function getAreaInfo(val) {
+  fetchCost()
+  areaInfo.value = val
+}
 // 获取项目造价
 const fetchCost = debounce(async function () {
   if (!checkPermission(permission.cost) || isBlank(projectId.value)) {
     projectCost.value = 0
     monomerCost.value = 0
+    areaCost.value = 0
     return
   }
   try {
     costLoading.value = true
     const params = {
-      projectId: projectId.value
-      // monomerId: monomerId.value
+      projectId: projectId.value,
+      monomerId: monomerId.value,
+      areaId: areaId.value
     }
-    const { monomerPrice, projectPrice } = await cost(params)
+    const { monomerPrice, projectPrice, areaPrice } = await cost(params)
     projectCost.value = projectPrice || 0
-    // monomerCost.value = monomerPrice || 0
+    monomerCost.value = monomerPrice || 0
+    areaCost.value = areaPrice || 0
   } catch (error) {
     console.log(error)
   } finally {
