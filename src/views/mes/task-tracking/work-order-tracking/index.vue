@@ -118,7 +118,7 @@
       </div>
       <div style="border-right: 1px solid #ededed; margin: 0 20px; height: calc(100vh - 130px)"></div>
       <div style="width: 48%">
-        <process-detail :process-list="processList" :weightStatus="crud.query.weightStatus" />
+        <process-detail :process-list="processList" :weightStatus="crud.query.weightStatus" :query="crud.query" />
       </div>
     </div>
   </div>
