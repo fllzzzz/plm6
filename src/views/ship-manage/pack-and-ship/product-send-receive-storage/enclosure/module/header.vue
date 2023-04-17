@@ -13,6 +13,15 @@
         style="width: 120px"
       />
       <project-radio-button size="small" :type="'all'" v-model="query.projectId" class="filter-item" @change="crud.toQuery" />
+      <common-radio-button
+        type="enum"
+        v-model="category"
+        :options="mesEnclosureTypeEnum.ENUM"
+        default
+        placeholder="请选择围护类型"
+        class="filter-item"
+        @change="crud.toQuery"
+      />
       <!-- <common-radio-button
         v-model="query.productType"
         :options="[packTypeEnum.STRUCTURE, packTypeEnum.MACHINE_PART]"
@@ -93,7 +102,7 @@
 <script setup>
 import { summaryData } from '@/api/mes/pack-and-ship/product-receive-send-storage'
 import { ref, watch } from 'vue'
-import { packTypeEnum } from '@enum-ms/mes'
+import { packTypeEnum, mesEnclosureTypeEnum } from '@enum-ms/mes'
 import { weightTypeEnum } from '@enum-ms/common'
 // import checkPermission from '@/utils/system/check-permission'
 // import { DP } from '@/settings/config'
@@ -109,6 +118,7 @@ const defaultQuery = {
   productType: packTypeEnum.STRUCTURE.V,
   dateTime: defaultTime.toString(),
   projectId: undefined,
+  category: undefined,
   weightStatus: weightTypeEnum.NET.V
 }
 

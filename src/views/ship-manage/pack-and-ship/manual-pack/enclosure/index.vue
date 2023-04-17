@@ -28,7 +28,7 @@
           <span>{{ scope.row.name }}</span>
         </template>
       </el-table-column>
-      <el-table-column
+      <!-- <el-table-column
         v-if="columns.visible('monomer.name')"
         prop="monomer.name"
         label="单体"
@@ -36,7 +36,7 @@
         align="center"
         width="100px"
       />
-      <el-table-column v-if="columns.visible('area.name')" prop="area.name" label="区域" sortable="custom" align="center" width="100px" />
+      <el-table-column v-if="columns.visible('area.name')" prop="area.name" label="区域" sortable="custom" align="center" width="100px" /> -->
       <el-table-column
         v-if="columns.visible('serialNumber')"
         prop="serialNumber"
@@ -45,7 +45,7 @@
         align="center"
         width="120px"
       />
-      <el-table-column
+      <!-- <el-table-column
         v-if="columns.visible('plate')"
         key="plate"
         prop="plate"
@@ -90,22 +90,21 @@
         <template v-slot="scope">
           {{ toFixed(scope.row.width, DP.MES_ENCLOSURE_W__MM) }}
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column
         v-if="columns.visible('length')"
         key="length"
         prop="length"
         sortable="custom"
         :show-overflow-tooltip="true"
-        :label="`长度\n(mm)`"
-        align="left"
-        min-width="85px"
+        label="单长（mm）"
+        align="center"
       >
         <template v-slot="scope">
           {{ toFixed(scope.row.length, DP.MES_ENCLOSURE_L__MM) }}
         </template>
       </el-table-column>
-      <el-table-column
+      <!-- <el-table-column
         v-if="columns.visible('totalArea')"
         key="totalArea"
         prop="totalArea"
@@ -127,42 +126,38 @@
         :show-overflow-tooltip="true"
         label="图号"
         min-width="140px"
-      />
+      /> -->
       <el-table-column
         v-if="columns.visible('quantity')"
         key="quantity"
         prop="quantity"
         sortable="custom"
-        label="清单数"
+        label="清单数（件）"
         align="center"
-        min-width="80px"
       />
       <el-table-column
         v-if="columns.visible('inQuantity')"
         key="inQuantity"
         prop="inQuantity"
         sortable="custom"
-        label="入库量"
+        label="入库数（件）"
         align="center"
-        min-width="80px"
       />
       <el-table-column
         v-if="columns.visible('unPackageQuantity')"
         key="unPackageQuantity"
         prop="unPackageQuantity"
         sortable="custom"
-        label="可打包量"
+        label="可打包数（件）"
         align="center"
-        min-width="80px"
       />
       <el-table-column
         v-if="columns.visible('packageQuantity')"
         key="packageQuantity"
         prop="packageQuantity"
         sortable="custom"
-        label="已打包量"
+        label="已打包数（件）"
         align="center"
-        min-width="80px"
       />
       <!-- <el-table-column v-if="columns.visible('status')" key="status" prop="status" label="状态" align="center" width="70px" fixed="right">
         <template slot="header">

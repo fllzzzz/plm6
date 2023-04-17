@@ -1,25 +1,17 @@
 <template>
-  <div class="app-container">
+  <div class="app-container manual-pack-wrapper">
     <div class="head-container">
-      <!-- <div class="manual-pack-common-header"> -->
-      <div style="display: flex; justify-content: space-between">
+      <div class="manual-pack-common-header" style="display: flex; justify-content: space-between">
         <div>
           <project-cascader
-            v-model="globalProjectId"
+            v-model="projectId"
             clearable
             class="filter-item"
             style="width: 270px"
             placeholder="选择项目"
             @change="handleProjectChange"
           />
-          <component-radio-button
-            v-model="packType"
-            :options="packTypeEnum.ENUM"
-            :disabledVal="[packTypeEnum.AUXILIARY_MATERIAL.V]"
-            type="enum"
-            size="small"
-            class="filter-item"
-          />
+          <component-radio-button v-model="packType" :options="packTypeEnum.ENUM" type="enum" size="small" class="filter-item" />
         </div>
         <el-badge :value="totalBadge" :max="99" :hidden="totalBadge < 1">
           <common-button type="primary" size="mini" :disabled="isEmpty" @click="packVisible = true">打包列表</common-button>
@@ -50,13 +42,28 @@
           /> -->
         <!-- <monomer-select v-model="monomerId" :default="false" clearable :project-id="globalProjectId" class="filter-item" /> -->
       </div>
-      <monomer-select-area-tabs :project-id="projectId" @change="fetchMonomerAndArea" :productType="productType" needConvert />
+      <monomer-select-area-tabs
+        v-if="packType === packTypeEnum.STRUCTURE.V || packType === packTypeEnum.MACHINE_PART.V"
+        :project-id="projectId"
+        @change="fetchMonomerAndArea"
+        :productType="packType"
+        needConvert
+      />
+      <area-tabs
+        v-if="packType === packTypeEnum.ENCLOSURE.V || packType === packTypeEnum.AUXILIARY_MATERIAL.V"
+        class="filter-item"
+        :style="areaInfo.length > 0 ? 'width:calc(100% - 230px)' : 'width:calc(100% - 380px)'"
+        v-model="areaId"
+        :area-info="areaInfo"
+        :default-tab="defaultTab"
+        :show-type="2"
+      />
       <!-- </div> -->
     </div>
     <component
       ref="mainRef"
       :is="currentView"
-      :maxHeight="maxHeight"
+      :maxHeight="maxHeight - 20"
       :project-id="projectId"
       :workshop-id="workshopId"
       :monomer-id="monomerId"
@@ -103,6 +110,7 @@ import packListDrawer from './pack-list-drawer'
 import projectCascader from '@comp-base/project-cascader.vue'
 // import monomerSelect from '@/components-system/plan/monomer-select'
 import monomerSelectAreaTabs from '@comp-base/monomer-select-area-tabs'
+import areaTabs from '@/components-system/plan/area-tabs'
 import oneCodeNumberList from '@/components-system/mes/one-code-number-list'
 
 const route = useRoute()
@@ -115,6 +123,11 @@ const category = ref()
 const monomerId = ref()
 const areaId = ref()
 const projectId = ref()
+const areaInfo = ref([
+  { id: 152, name: '回归1', date: 1682784000000, axis: '500', type: 0, productType: 1, sort: 1, remark: '' },
+  { id: 153, name: '回归2', date: 1682784000000, axis: '500', type: 0, productType: 1, sort: 1, remark: '' }
+])
+const defaultTab = ref({})
 // 一物一码选择
 const oneCodeVisible = ref(false)
 const saveOneCodeData = ref()
@@ -139,7 +152,11 @@ const totalBadge = computed(() => {
   return num
 })
 
-const { maxHeight } = useMaxHeight({ wrapperBox: '.manual-pack-wrapper', extraBox: ['.manual-pack-common-header', '.head-container'] })
+const { maxHeight } = useMaxHeight({
+  wrapperBox: '.manual-pack-wrapper',
+  extraBox: ['.manual-pack-common-header', '.head-container'],
+  paginate: true
+})
 
 provide('packData', packData)
 provide('permission', permission)
@@ -158,9 +175,24 @@ watch(
       packData[packTypeEnum.MACHINE_PART.K] = {}
       packData[packTypeEnum.AUXILIARY_MATERIAL.K] = {}
     }
-    projectId.value = globalProjectId.value
+    projectId.value = projectId.value ? projectId.value : globalProjectId.value
   },
   { immediate: true, deep: true }
+)
+
+watch(
+  () => packType.value,
+  (val) => {
+    projectId.value = projectId.value ? projectId.value : globalProjectId.value
+    // if (packType.value === packTypeEnum.ENCLOSURE.V || packType.value === packTypeEnum.AUXILIARY_MATERIAL.V) {
+    //   monomerId.value = undefined
+    //   defaultTab.value = {
+    //     id: areaInfo.value[0]?.id + '',
+    //     name: areaInfo.value[0]?.name
+    //   }
+    //   mainRef.value?.refresh()
+    // }
+  }
 )
 
 watch(
@@ -259,7 +291,7 @@ async function fetchMonomerAndArea(val) {
 }
 
 function handleProjectChange(val) {
-  projectId.value = val
+  projectId.value = val || globalProjectId.value
   mainRef?.value?.refresh()
 }
 </script>
