@@ -3,15 +3,34 @@
     <div class="head-container">
       <div class="manual-pack-common-header" style="display: flex; justify-content: space-between">
         <div>
-          <project-cascader
+          <component-radio-button v-model="packType" :options="packTypeEnum.ENUM" type="enum" size="small" class="filter-item" />
+          <!-- <project-cascader
             v-model="projectId"
             clearable
             class="filter-item"
             style="width: 270px"
             placeholder="选择项目"
             @change="handleProjectChange"
+          /> -->
+          <!-- <workshop-select
+            v-if="packType !== packTypeEnum.AUXILIARY_MATERIAL.V"
+            v-model="workshopId"
+            placeholder="请选择车间"
+            clearable
+            style="width: 200px"
+            class="filter-item"
+          /> -->
+          <common-select
+            v-if="packType !== packTypeEnum.AUXILIARY_MATERIAL.V"
+            v-model="workshopId"
+            :options="workshopList"
+            type="other"
+            :data-structure="{ key: 'id', label: 'name', value: 'id' }"
+            class="filter-item"
+            clearable
+            style="width: 200px"
+            placeholder="请选择车间"
           />
-          <component-radio-button v-model="packType" :options="packTypeEnum.ENUM" type="enum" size="small" class="filter-item" />
         </div>
         <el-badge :value="totalBadge" :max="99" :hidden="totalBadge < 1">
           <common-button type="primary" size="mini" :disabled="isEmpty" @click="packVisible = true">打包列表</common-button>
@@ -25,14 +44,6 @@
             placeholder="请选择围护类型"
             class="filter-item"
           /> -->
-        <!-- <workshop-select
-            v-if="packType !== packTypeEnum.AUXILIARY_MATERIAL.V"
-            v-model="workshopId"
-            placeholder="请选择车间"
-            clearable
-            style="width: 200px"
-            class="filter-item"
-          /> -->
         <!-- <factory-select
             v-if="packType !== packTypeEnum.AUXILIARY_MATERIAL.V"
             v-model="factoryId"
@@ -44,7 +55,7 @@
       </div>
       <monomer-select-area-tabs
         v-if="packType === packTypeEnum.STRUCTURE.V || packType === packTypeEnum.MACHINE_PART.V"
-        :project-id="projectId"
+        :project-id="globalProjectId"
         @change="fetchMonomerAndArea"
         :productType="packType"
         needConvert
@@ -64,7 +75,7 @@
       ref="mainRef"
       :is="currentView"
       :maxHeight="maxHeight - 20"
-      :project-id="projectId"
+      :project-id="globalProjectId"
       :workshop-id="workshopId"
       :monomer-id="monomerId"
       :area-id="areaId"
@@ -91,12 +102,13 @@
 
 <script setup>
 // import { ElNotification } from 'element-plus'
-import { computed, reactive, ref, provide, watch, nextTick } from 'vue'
+import { getWorkshopsAllSimple } from '@/api/mes/common.js'
+import { computed, reactive, ref, provide, watch, nextTick, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { mapGetters } from '@/store/lib'
 
 import { isBlank, isNotBlank } from '@data-type/index'
-import { packTypeEnum } from '@enum-ms/mes'
+import { packTypeEnum, packWorkshopTypeEnum } from '@enum-ms/mes'
 import { manualPackPM as permission } from '@/page-permission/mes'
 
 import useMaxHeight from '@compos/use-max-height'
@@ -107,7 +119,7 @@ import enclosureTable from './enclosure'
 import auxiliaryMaterialTable from './auxiliary-material'
 import partTable from './part'
 import packListDrawer from './pack-list-drawer'
-import projectCascader from '@comp-base/project-cascader.vue'
+// import projectCascader from '@comp-base/project-cascader.vue'
 // import monomerSelect from '@/components-system/plan/monomer-select'
 import monomerSelectAreaTabs from '@comp-base/monomer-select-area-tabs'
 import areaTabs from '@/components-system/plan/area-tabs'
@@ -123,6 +135,7 @@ const category = ref()
 const monomerId = ref()
 const areaId = ref()
 const projectId = ref()
+const workshopList = ref([])
 const areaInfo = ref([
   { id: 152, name: '回归1', date: 1682784000000, axis: '500', type: 0, productType: 1, sort: 1, remark: '' },
   { id: 153, name: '回归2', date: 1682784000000, axis: '500', type: 0, productType: 1, sort: 1, remark: '' }
@@ -142,6 +155,10 @@ const packData = reactive({
   [packTypeEnum.ENCLOSURE.K]: {},
   [packTypeEnum.MACHINE_PART.K]: {},
   [packTypeEnum.AUXILIARY_MATERIAL.K]: {}
+})
+
+onMounted(() => {
+  fetWorkshop()
 })
 
 const totalBadge = computed(() => {
@@ -184,14 +201,14 @@ watch(
   () => packType.value,
   (val) => {
     projectId.value = projectId.value ? projectId.value : globalProjectId.value
-    // if (packType.value === packTypeEnum.ENCLOSURE.V || packType.value === packTypeEnum.AUXILIARY_MATERIAL.V) {
-    //   monomerId.value = undefined
-    //   defaultTab.value = {
-    //     id: areaInfo.value[0]?.id + '',
-    //     name: areaInfo.value[0]?.name
-    //   }
-    //   mainRef.value?.refresh()
-    // }
+    if (packType.value === packTypeEnum.ENCLOSURE.V || packType.value === packTypeEnum.AUXILIARY_MATERIAL.V) {
+      monomerId.value = undefined
+      defaultTab.value = {
+        id: areaInfo.value[0]?.id + '',
+        name: areaInfo.value[0]?.name
+      }
+    }
+    fetWorkshop()
   }
 )
 
@@ -226,6 +243,19 @@ watch(
   },
   { immediate: true, deep: true }
 )
+
+async function fetWorkshop() {
+  if (packType.value === packTypeEnum.AUXILIARY_MATERIAL.V) return
+  try {
+    const { content } = await getWorkshopsAllSimple({
+      boolEnabledEnum: true,
+      type: packType.value === packTypeEnum.ENCLOSURE.V ? packWorkshopTypeEnum.ENCLOSURE_WORKSHOP.V : packWorkshopTypeEnum.MES_WORKSHOP.V
+    })
+    workshopList.value = content || []
+  } catch (e) {
+    console.log('获取车间信息失败', e)
+  }
+}
 
 const currentView = computed(() => {
   switch (packType.value) {
@@ -284,10 +314,10 @@ function addIn(row, packTypeK) {
   packData[packTypeK][row.id] = { ...row }
 }
 
-async function fetchMonomerAndArea(val) {
+function fetchMonomerAndArea(val) {
   monomerId.value = val?.monomerId
   areaId.value = val?.areaId
-  await mainRef?.value?.refresh()
+  mainRef?.value?.refresh()
 }
 
 function handleProjectChange(val) {
