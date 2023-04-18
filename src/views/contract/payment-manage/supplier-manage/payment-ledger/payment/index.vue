@@ -35,7 +35,7 @@
       <template v-slot="scope">
         <template v-if="scope.row.attachments && scope.row.attachments.length>0">
           <div v-for="item in scope.row.attachments" :key="item.id">
-            <div style="cursor:pointer;" @dblclick="attachmentView(item)">{{item.name}}</div>
+            <div style="cursor:pointer;color:#409eff;" @dblclick="attachmentView(item)">{{item.name}}</div>
           </div>
         </template>
       </template>

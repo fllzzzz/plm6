@@ -12,7 +12,7 @@
   >
     <template #titleAfter>
       <el-tag type="warning" effect="plain" size="medium">物流公司：{{detailInfo.supplierName}}</el-tag>
-      <el-tag>累计支付：</el-tag>
+      <el-tag>累计支付：{{detailInfo.paymentAmount}}</el-tag>
     </template>
     <template #titleRight>
       <div class="print-wrap">
@@ -48,7 +48,7 @@
         <template #default="{ row }">
           <template v-if="row.attachments && row.attachments.length>0">
             <div v-for="item in row.attachments" :key="item.id">
-              <div style="cursor:pointer;" @dblclick="attachmentView(item)">{{toThousand(row.actuallyPaymentAmount)}}</div>
+              <div style="cursor:pointer;color:#409eff;" @dblclick="attachmentView(item)">{{toThousand(row.actuallyPaymentAmount)}}</div>
             </div>
           </template>
           <template v-else>{{toThousand(row.actuallyPaymentAmount)}}</template>

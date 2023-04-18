@@ -12,7 +12,7 @@
     <template #titleAfter>
       <el-tag v-if="detailInfo.serialNumber" type="success" effect="plain" size="medium">采购合同编号：{{detailInfo.serialNumber}}</el-tag>
       <el-tag v-else type="warning" effect="plain" size="medium">供应商：{{detailInfo.supplierName}}</el-tag>
-      <el-tag>累计收票：</el-tag>
+      <el-tag>累计收票：{{detailInfo.invoiceAmount}}</el-tag>
     </template>
     <template #titleRight>
       <div class="print-wrap">
@@ -47,7 +47,7 @@
            <template #default="{ row }">
           <template v-if="row.attachments && row.attachments.length>0">
             <div v-for="item in row.attachments" :key="item.id">
-              <div style="cursor:pointer;" @dblclick="attachmentView(item)">{{toThousand(row.invoiceAmount)}}</div>
+              <div style="cursor:pointer;color:#409eff;" @dblclick="attachmentView(item)">{{toThousand(row.invoiceAmount)}}</div>
             </div>
           </template>
           <template v-else>{{toThousand(row.invoiceAmount)}}</template>

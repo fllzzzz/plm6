@@ -160,7 +160,7 @@
               </template>
               <template v-if="form.id && form.attachments?.length && !form.files?.length">
                 <div v-for="item in form.attachments" :key="item.id">
-                  <div style="cursor:pointer;" @dblclick="attachmentView(item)">{{item.name}}</div>
+                  <div style="cursor:pointer;color:#409eff;" @dblclick="attachmentView(item)">{{item.name}}</div>
                 </div>
               </template>
               <upload-btn ref="uploadRef" v-model:files="form.files" :file-classify="fileClassifyEnum.CONTRACT_ATT.V" :limit="1" :accept="'.jpg,.png,.pdf,.jpeg'"/>

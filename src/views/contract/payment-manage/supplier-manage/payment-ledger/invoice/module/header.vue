@@ -29,7 +29,7 @@
           type="warning"
           class="filter-item"
         />
-        <el-tag type="warning" effect="plain" size="medium">{{ `累计收票：${toThousand(totalSum)}元` }}</el-tag>
+        <el-tag type="warning" effect="plain" size="medium">{{ `累计收票：{{detailInfo.invoiceAmount}}${toThousand(totalSum)}元` }}</el-tag>
       </template>
     </crudOperation>
   </div>

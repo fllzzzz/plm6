@@ -50,7 +50,7 @@
         </template>
         <template v-if="detail.attachments?.length">
           <div v-for="item in detail.attachments" :key="item.id">
-            <div style="cursor:pointer;" @dblclick="attachmentView(item)">{{item.name}}</div>
+            <div style="cursor:pointer;color:#409eff;" @dblclick="attachmentView(item)">{{item.name}}</div>
           </div>
         </template>
       </el-form-item>

@@ -109,7 +109,7 @@
       <el-descriptions-item label-class-name="contractLabel" label="附件">
         <template v-if="currentInfo && currentInfo.attachments && currentInfo.attachments.length>0">
           <div v-for="item in currentInfo.attachments" :key="item.id">
-            <div style="cursor:pointer;" @dblclick="attachmentView(item)">{{item.name}}</div>
+            <div style="cursor:pointer;color:#409eff;" @dblclick="attachmentView(item)">{{item.name}}</div>
           </div>
         </template>
       </el-descriptions-item>

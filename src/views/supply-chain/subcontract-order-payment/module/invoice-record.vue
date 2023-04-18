@@ -45,8 +45,8 @@
         <el-table-column prop="invoiceAmount" label="票面金额" align="right" min-width="120" show-overflow-tooltip>
            <template #default="{ row }">
           <template v-if="row.attachments && row.attachments.length>0">
-            <div v-for="item in attachments" :key="item.id">
-              <div style="cursor:pointer;" @dblclick="attachmentView(item)">{{toThousand(row.invoiceAmount)}}</div>
+            <div v-for="item in row.attachments" :key="item.id">
+              <div style="cursor:pointer;color:#409eff;" @dblclick="attachmentView(item)">{{toThousand(row.invoiceAmount)}}</div>
             </div>
           </template>
           <template v-else>{{toThousand(row.invoiceAmount)}}</template>

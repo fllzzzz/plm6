@@ -76,7 +76,7 @@
           <upload-btn ref="uploadRef" v-if="scope.row.isModify" v-model:files="scope.row.files" :file-classify="fileClassifyEnum.CONTRACT_ATT.V" :limit="1" :accept="'.pdf,.jpg,.jpeg,.png'"/>
           <template v-if="scope.row.attachments && scope.row.attachments.length>0 && !scope.row.files">
             <div v-for="item in scope.row.attachments" :key="item.id">
-              <div style="cursor:pointer;" @dblclick="attachmentView(item)">{{item.name}}</div>
+              <div style="cursor:pointer;color:#409eff;" @dblclick="attachmentView(item)">{{item.name}}</div>
             </div>
           </template>
         </template>
