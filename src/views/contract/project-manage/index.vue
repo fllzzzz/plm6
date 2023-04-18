@@ -95,6 +95,19 @@
           <span>{{ scope.row.contractAmount? toThousand(scope.row.contractAmount): '-' }}</span>
         </template>
       </el-table-column>
+      <el-table-column
+        v-if="columns.visible('structureStatus')"
+        key="structureStatus"
+        prop="structureStatus"
+        :show-overflow-tooltip="true"
+        min-width="120"
+        align="center"
+        :label="`结构类型`"
+      >
+        <template v-slot="scope">
+          <span>{{ scope.row.structureStatus? structureTypeEnum.VL(scope.row.structureStatus): '-' }}</span>
+        </template>
+      </el-table-column>
       <el-table-column v-if="columns.visible('allDays')" key="allDays" prop="allDays" label="总工期(天)" align="center" width="80">
         <template v-slot="scope">
           <div>{{ scope.row.allDays }}</div>
@@ -229,7 +242,7 @@ import pagination from '@crud/Pagination'
 import { mapGetters } from '@/store/lib'
 import mHeader from './module/header'
 import mForm from './module/form'
-import { projectTypeEnum, businessTypeEnum, projectStatusEnum, orderSourceTypeEnum } from '@enum-ms/contract'
+import { projectTypeEnum, businessTypeEnum, projectStatusEnum, orderSourceTypeEnum, structureTypeEnum } from '@enum-ms/contract'
 import { ElMessageBox } from 'element-plus'
 import contractInfo from '@/views/contract/info/index'
 import members from './members'
