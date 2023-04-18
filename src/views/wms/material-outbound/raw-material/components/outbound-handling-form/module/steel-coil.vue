@@ -1,14 +1,20 @@
 <template>
   <el-form v-if="unitLoaded" ref="formRef" :model="form" :rules="formRules" size="small" label-position="left" label-width="120px">
     <el-form-item label="出库方式" class="material-outbound-mode-info">
-      <common-radio
-        v-model="form.materialOutboundMode"
-        :options="steelCoilOutboundModeEnum"
-        :unshowVal="material.classifyFullName.indexOf('卷板') === -1 ? [steelCoilOutboundModeEnum.BY_PLATE.V] : []"
-        type="enum"
-        size="small"
-        @change="materialOutboundModeChange"
-      />
+      <div style="display:flex;">
+        <common-radio
+          v-model="form.materialOutboundMode"
+          :options="steelCoilOutboundModeEnum"
+          :unshowVal="material.classifyFullName.indexOf('卷板') === -1 ? [steelCoilOutboundModeEnum.BY_PLATE.V] : []"
+          type="enum"
+          size="small"
+          @change="materialOutboundModeChange"
+        />
+        <div class="tip" v-if="isPlateOut">
+          <span>* 提示：</span>
+          <span> 出库至钢板库后，无法再进行退库操作，请谨慎操作</span>
+        </div>
+      </div>
     </el-form-item>
     <div :class="isPlateOut ? 'plate-out-form' : 'form'">
       <div :class="isPlateOut ? 'plate-out-material-info' : 'material-info'">
@@ -76,7 +82,7 @@
               <!-- </el-tooltip> -->
             </template>
           </el-table-column>
-          <el-table-column prop="length" align="center" width="135px" :label="`长 (${baseUnit.length.unit})`">
+          <el-table-column prop="length" align="center" width="135px" :label="`长 (mm)`">
             <template #default>
               <!-- <el-tooltip class="item" effect="dark" content="长度不可大于出库总长度" :disabled="!row.overLength" placement="top">
                 <common-input-number
@@ -90,7 +96,7 @@
                   placeholder="长"
                 />
               </el-tooltip> -->
-              <span>{{ form.quantity }}</span>
+              <span>{{ convertUnits(form.quantity, baseUnit.length.unit, 'mm') }}</span>
             </template>
           </el-table-column>
           <el-table-column prop="quantity" align="center" width="135px" label="数量 (张)">
@@ -114,7 +120,7 @@
             </template>
           </el-table-column>
           <!-- 项目设置 -->
-          <project-set-columns :form="form" />
+          <project-set-columns project-clearable :form="form" />
           <el-table-column label="操作" width="100px" align="center" fixed="right">
             <template #default="{ $index }">
               <common-button
@@ -182,6 +188,7 @@ import { numFmtByUnit, numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import userDeptCascader from '@comp-base/user-dept-cascader.vue'
 import projectSetColumns from '../components/project-set-columns.vue'
 import { ElMessage } from 'element-plus'
+import { convertUnits } from '@/utils/convert/unit'
 
 const steelCoilOutboundModeEnum = {
   BY_LENGTH: { L: '按长度出库', K: 'BY_LENGTH ', V: 1 << 0 },
@@ -353,13 +360,17 @@ function rowWatch(row) {
 }
 
 watchEffect(async () => {
-  form.value.totalWeight = toPrecision((form.value.quantity / maxQuantity.value) * material.value.operableMete, baseUnit.value?.weight?.precision)
-  form.value.theoryWeight = (await calcSteelCoilWeight({
-    name: material.value.classifyFullName,
-    length: form.value.quantity,
-    width: material.value.width,
-    thickness: material.value.thickness
-  })) || 0
+  form.value.totalWeight = toPrecision(
+    (form.value.quantity / maxQuantity.value) * material.value.operableMete,
+    baseUnit.value?.weight?.precision
+  )
+  form.value.theoryWeight =
+    (await calcSteelCoilWeight({
+      name: material.value.classifyFullName,
+      length: form.value.quantity,
+      width: material.value.width,
+      thickness: material.value.thickness
+    })) || 0
 })
 
 function addRow() {
@@ -467,6 +478,11 @@ defineExpose({
 </script>
 
 <style lang="scss" scoped>
+.tip {
+  display: inline-block;
+  color: red;
+  margin-left: 15px;
+}
 .form {
   display: flex;
   flex-direction: row;
