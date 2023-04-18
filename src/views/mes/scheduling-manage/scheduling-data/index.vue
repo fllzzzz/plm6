@@ -146,7 +146,7 @@ import crudApi from '@/api/mes/scheduling-manage/scheduling-data.js'
 import { ref, provide } from 'vue'
 import { timeTypeEnum } from '@enum-ms/contract'
 import { parseTime } from '@/utils/date'
-import { mesScheduleDetailPM as permission } from '@/page-permission/mes'
+import { schedulingDataPM as permission } from '@/page-permission/mes'
 // import { convertUnits } from '@/utils/convert/unit'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
@@ -159,8 +159,7 @@ const optShow = {
   del: false,
   download: false
 }
-// const monthProject1 = ref([])
-// const monthProject2 = ref([])
+
 const monthArr = ref([])
 for (let i = 1; i <= 12; i++) {
   monthArr.value.push(i)

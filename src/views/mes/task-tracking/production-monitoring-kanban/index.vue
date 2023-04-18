@@ -4,7 +4,7 @@
       <mHeader ref="headerRef">
         <template #btn>
           <common-button
-            v-permission="permission.status"
+            v-permission="permission.groupStatus"
             class="filter-item"
             size="mini"
             type="warning"
@@ -158,7 +158,7 @@ import useCRUD from '@compos/use-crud'
 
 import { productionKanbanTypeEnum } from '@enum-ms/mes'
 import useMaxHeight from '@compos/use-max-height'
-import { productionMonitoringKanbanPM as permission } from '@/page-permission/mes'
+import { mesWorkshopTaskStatusPM as permission } from '@/page-permission/mes'
 import pagination from '@crud/Pagination'
 import mHeader from './module/header.vue'
 import kanbanDetail from './module/kanban-detail.vue'
@@ -206,6 +206,7 @@ const projectInfo = reactive({
 })
 
 provide('projectInfo', projectInfo)
+provide('permission', permission)
 
 watch(
   () => crud.query.workshopId,

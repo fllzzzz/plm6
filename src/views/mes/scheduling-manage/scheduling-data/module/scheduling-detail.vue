@@ -35,6 +35,7 @@
     </template>
     <template #titleRight>
       <print-table
+        v-permission="permission.print"
         api-key="mesSchedulingDataList"
         :params="{ dateTime: props.dateTime, workshopId: props.workshopId, ...commonQuery }"
         size="mini"
@@ -113,7 +114,7 @@ import { defineProps, defineEmits, ref, computed } from 'vue'
 import { projectNameFormatter } from '@/utils/project'
 import projectCascader from '@comp-base/project-cascader'
 import monomerSelectAreaSelect from '@comp-base/monomer-select-area-select'
-// import { mesProductionLineTrackingPM as permission } from '@/page-permission/mes'
+import { schedulingDataPM as permission } from '@/page-permission/mes'
 
 const emit = defineEmits(['update:visible'])
 const list = ref([])
@@ -125,14 +126,14 @@ const serialNumber = ref()
 const props = defineProps({
   visible: {
     type: Boolean,
-    default: false
+    default: false,
   },
   dateTime: {
-    type: String
+    type: String,
   },
   workshopId: {
-    type: Number
-  }
+    type: Number,
+  },
 })
 
 const commonQuery = computed(() => {
@@ -140,7 +141,7 @@ const commonQuery = computed(() => {
     projectId: projectId.value,
     monomerId: monomerId.value,
     areaId: areaId.value,
-    serialNumber: serialNumber.value
+    serialNumber: serialNumber.value,
   }
 })
 const { visible: drawerVisible, handleClose } = useVisible({ emit, props, field: 'visible', showHook: fetchDetail })
@@ -154,7 +155,7 @@ const { maxHeight } = useMaxHeight(
     wrapperBox: ['.el-drawer__body'],
     navbar: false,
     clientHRepMainH: true,
-    paginate: true
+    paginate: true,
   },
   drawerVisible
 )
@@ -166,7 +167,7 @@ async function fetchDetail() {
       dateTime: props.dateTime,
       workshopId: props.workshopId,
       ...commonQuery.value,
-      ...queryPage
+      ...queryPage,
     })
     setTotalPage(totalElements)
     _list = content

@@ -1,7 +1,7 @@
 <template>
   <common-drawer ref="drawerRef" title="QHSE事件曝光" v-model="drawerVisible" direction="rtl" :before-close="handleClose" size="55%">
     <template #titleRight>
-      <export-button type="warning" size="mini" :params="{ id: detailData.id }" :fn="getExcelFn">下载</export-button>
+      <export-button v-permission="permission.export" type="warning" size="mini" :params="{ id: detailData.id }" :fn="getExcelFn">下载</export-button>
     </template>
     <template #content>
       <el-descriptions v-loading="listLoading" :data="detailData" :column="2" size="large" border>
@@ -75,6 +75,7 @@ import { defineProps, defineEmits, ref } from 'vue'
 import { getExcelFn } from '@/api/mes/QHSE-manage/disclosure'
 import { parseTime } from '@/utils/date'
 import { problemTypeEnum } from '@enum-ms/production'
+import { qhseDisclosurePM as permission } from '@/page-permission/mes'
 import useVisible from '@compos/use-visible'
 import ExportButton from '@comp-common/export-button/index.vue'
 
