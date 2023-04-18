@@ -46,8 +46,8 @@
       <!-- <el-table-column key="applyAmount" prop="applyAmount" label="申请金额" align="right" min-width="80" /> -->
       <el-table-column key="actuallyPaymentAmount" prop="actuallyPaymentAmount" label="支付金额" align="right" min-width="80">
         <template #default="{ row }">
-          <template v-if="row.attachments && attachments.length>0">
-            <div v-for="item in attachments" :key="item.id">
+          <template v-if="row.attachments && row.attachments.length>0">
+            <div v-for="item in row.attachments" :key="item.id">
               <div style="cursor:pointer;" @dblclick="attachmentView(item)">{{toThousand(row.actuallyPaymentAmount)}}</div>
             </div>
           </template>

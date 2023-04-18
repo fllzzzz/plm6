@@ -21,7 +21,7 @@
       </template>
     </template>
     <template #content>
-      <el-form ref="formRef" size="small" label-width="130px">
+      <el-form ref="formRef" size="small" label-width="130px" style="position:relative;">
         <el-row>
           <el-col :span="12">
             <el-form-item label="供应商">
@@ -141,6 +141,9 @@
             </el-form-item>
           </el-col>
         </el-row>
+        <div v-if="currentRow.auditStatus===auditTypeEnum.PASS.V" style="position:absolute;top:50%;left:50%;transform:translateX(-50%) translateY(-50%);">
+          <span style="font-size:26px;color:red;padding:10px 50px;border:1px solid red;">已支付</span>
+        </div>
       </el-form>
       <showPdfAndImg v-if="pdfShow" :isVisible="pdfShow" :showType="'attachment'" :id="currentId" @close="pdfShow=false"/>
     </template>
@@ -148,7 +151,7 @@
 </template>
 
 <script setup>
-import { audit } from '@/api/contract/supplier-manage/jd-material-payment'
+import { audit } from '@/api/contract/supplier-manage/jd-subcontract-payment'
 import { ref, defineProps, defineEmits } from 'vue'
 import { ElMessageBox, ElNotification } from 'element-plus'
 

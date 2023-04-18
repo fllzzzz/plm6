@@ -114,7 +114,7 @@
       ref="invoiceRef"
       :show-close="true"
       size="85%"
-      title="收票款申请登记"
+      title="收票申请登记"
       append-to-body
       v-model="invoiceVisible"
       :close-on-click-modal="false"
