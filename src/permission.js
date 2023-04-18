@@ -25,6 +25,7 @@ NProgress.configure({ showSpinner: false }) // 进度条配置：不显示Loadin
 // 页面白名单
 const whiteList = [
   '/login',
+  '/external/model',
   '/auth-redirect',
   specialPath.QR_SCAN_ARTIFACT_TASK,
   specialPath.QR_SCAN_ENCLOSURE_TASK,
