@@ -121,7 +121,7 @@
         v-if="columns.visible('quantity')"
         prop="quantity"
         sortable="custom"
-        label="清单数"
+        label="清单数（件）"
         align="center"
         min-width="80px"
       />
@@ -129,7 +129,7 @@
         v-if="columns.visible('inQuantity')"
         prop="inQuantity"
         sortable="custom"
-        label="入库量"
+        label="入库数（件）"
         align="center"
         min-width="80px"
       />
@@ -138,7 +138,7 @@
         key="unPackageQuantity"
         prop="unPackageQuantity"
         sortable="custom"
-        label="可打包量"
+        label="可打包数（件）"
         align="center"
         min-width="80px"
       />
@@ -147,7 +147,7 @@
         key="packageQuantity"
         prop="packageQuantity"
         sortable="custom"
-        label="已打包量"
+        label="已打包数（件）"
         align="center"
         min-width="80px"
       />

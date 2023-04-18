@@ -72,7 +72,7 @@
         :max-height="maxHeight - 100"
       >
         <el-table-column label="序号" type="index" align="center" width="60" />
-        <el-table-column key="monomer.name" prop="monomer.name" label="单体" align="center" :show-overflow-tooltip="true">
+        <!-- <el-table-column key="monomer.name" prop="monomer.name" label="单体" align="center" :show-overflow-tooltip="true">
           <template #default="{ row }">
             <table-cell-tag :show="!!row.typeName" :name="row.typeName" :color="row.typeName === '构件' ? '#67C23A' : '#409EFF'" />
             <span>{{ row.monomer ? row.monomer?.name : '-' }}</span>
@@ -87,7 +87,45 @@
         <el-table-column key="netWeight" prop="netWeight" label="单净重（kg）" align="center" :show-overflow-tooltip="true" />
         <el-table-column key="grossWeight" prop="grossWeight" label="单毛重（kg）" align="center" :show-overflow-tooltip="true" />
         <el-table-column key="totalNetWeight" prop="totalNetWeight" label="总净重（kg）" align="center" :show-overflow-tooltip="true" />
-        <el-table-column key="totalGrossWeight" prop="totalGrossWeight" label="总毛重（kg）" align="center" :show-overflow-tooltip="true" />
+        <el-table-column key="totalGrossWeight" prop="totalGrossWeight" label="总毛重（kg）" align="center" :show-overflow-tooltip="true" /> -->
+        <el-table-column key="name" prop="name" label="名称" align="center" :show-overflow-tooltip="true" />
+        <el-table-column key="serialNumber" prop="serialNumber" label="编号" align="center" :show-overflow-tooltip="true" />
+        <el-table-column key="specification" prop="specification" label="规格" align="center" :show-overflow-tooltip="true" />
+        <el-table-column key="length" prop="length" label="单长（mm）" align="center" :show-overflow-tooltip="true" />
+        <el-table-column
+          key="quantity"
+          prop="quantity"
+          :label="`${
+            showType === 'INBOUND'
+              ? '入库'
+              : showType === 'OUTBOUND'
+              ? '出库'
+              : showType === 'STOCK'
+              ? '期末'
+              : showType === 'BEGINNING'
+              ? '期初'
+              : '清单'
+          }数（件）`"
+          align="center"
+          :show-overflow-tooltip="true"
+        />
+        <el-table-column
+          key="totalNetWeight"
+          prop="totalNetWeight"
+          :label="`${
+            showType === 'INBOUND'
+              ? '入库'
+              : showType === 'OUTBOUND'
+              ? '出库'
+              : showType === 'STOCK'
+              ? '期末'
+              : showType === 'BEGINNING'
+              ? '期初'
+              : '清单'
+          }量（米）`"
+          align="center"
+          :show-overflow-tooltip="true"
+        />
         <el-table-column
           key="createTime"
           prop="createTime"
