@@ -4,6 +4,7 @@
       <common-radio
         v-model="form.materialOutboundMode"
         :options="steelCoilOutboundModeEnum"
+        :unshowVal="material.classifyFullName.indexOf('卷板') === -1 ? [steelCoilOutboundModeEnum.BY_PLATE.V] : []"
         type="enum"
         size="small"
         @change="materialOutboundModeChange"
@@ -60,24 +61,24 @@
           <el-table-column label="序号" type="index" align="center" width="60" />
           <el-table-column prop="width" align="center" width="135px" :label="`宽 (${baseUnit.width.unit})`">
             <template #default="{ row }">
-              <el-tooltip class="item" effect="dark" content="宽度不可大于物料本身宽度" :disabled="!row.overWidth" placement="top">
-                <common-input-number
-                  v-model="row.width"
-                  :min="0"
-                  :max="999999999"
-                  controls-position="right"
-                  :controls="false"
-                  :class="{ 'over-weight-tip': row.overWidth }"
-                  :precision="baseUnit.width.precision"
-                  size="mini"
-                  placeholder="宽"
-                />
-              </el-tooltip>
+              <!-- <el-tooltip class="item" effect="dark" content="宽度不可大于物料本身宽度" :disabled="!row.overWidth" placement="top"> -->
+              <common-input-number
+                v-model="row.width"
+                :min="0"
+                :max="999999999"
+                controls-position="right"
+                :controls="false"
+                :class="{ 'over-weight-tip': row.overWidth }"
+                :precision="baseUnit.width.precision"
+                size="mini"
+                placeholder="宽"
+              />
+              <!-- </el-tooltip> -->
             </template>
           </el-table-column>
           <el-table-column prop="length" align="center" width="135px" :label="`长 (${baseUnit.length.unit})`">
-            <template #default="{ row }">
-              <el-tooltip class="item" effect="dark" content="长度不可大于出库总长度" :disabled="!row.overLength" placement="top">
+            <template #default>
+              <!-- <el-tooltip class="item" effect="dark" content="长度不可大于出库总长度" :disabled="!row.overLength" placement="top">
                 <common-input-number
                   v-model="row.length"
                   :min="0"
@@ -88,7 +89,8 @@
                   size="mini"
                   placeholder="长"
                 />
-              </el-tooltip>
+              </el-tooltip> -->
+              <span>{{ form.quantity }}</span>
             </template>
           </el-table-column>
           <el-table-column prop="quantity" align="center" width="135px" label="数量 (张)">
@@ -236,39 +238,39 @@ const rules = {
 }
 
 // 提交校验
-function validatorWidth(value, row) {
-  console.log(value, row, props.material.width)
-  if (value > props.material.width) {
-    return false
-  }
-  return true
-}
+// function validatorWidth(value, row) {
+//   console.log(value, row, props.material.width)
+//   if (value > props.material.width) {
+//     return false
+//   }
+//   return true
+// }
 
 // 提交校验
-function validatorLength(value, row) {
-  console.log(value, row, form.value.quantity)
-  if (value > form.value.quantity) {
-    return false
-  }
-  return true
-}
+// function validatorLength(value, row) {
+//   console.log(value, row, form.value.quantity)
+//   if (value > form.value.quantity) {
+//     return false
+//   }
+//   return true
+// }
 
 const tableRules = {
   width: [
     { required: true, message: '请填写宽度', trigger: 'blur' },
-    { validator: validatorWidth, message: '超出允许范围,不可提交', trigger: 'blur' },
+    // { validator: validatorWidth, message: '超出允许范围,不可提交', trigger: 'blur' },
     { pattern: positiveNumPattern, message: '宽度必须大于0', trigger: 'blur' }
   ],
-  length: [
-    { required: true, message: '请填写长度', trigger: 'blur' },
-    { validator: validatorLength, message: '超出允许范围,不可提交', trigger: 'blur' },
-    { pattern: positiveNumPattern, message: '长度必须大于0', trigger: 'blur' }
-  ],
+  // length: [
+  //   { required: true, message: '请填写长度', trigger: 'blur' },
+  //   { validator: validatorLength, message: '超出允许范围,不可提交', trigger: 'blur' },
+  //   { pattern: positiveNumPattern, message: '长度必须大于0', trigger: 'blur' }
+  // ],
   quantity: [
     { required: true, message: '请填写数量', trigger: 'blur' },
     { pattern: positiveNumPattern, message: '数量必须大于0', trigger: 'blur' }
-  ],
-  projectId: [{ required: true, message: '请选择出库项目', trigger: 'change' }]
+  ]
+  // projectId: [{ required: true, message: '请选择出库项目', trigger: 'change' }]
 }
 
 const { tableValidate, wrongCellMask } = useTableValidate({ rules: tableRules }) // 表格校验
@@ -327,10 +329,10 @@ function rowInit() {
     basicClass: props.basicClass,
     name: material.value.classifyFullName,
     thickness: material.value.thickness,
-    length: undefined,
+    // length: undefined,
     width: undefined,
     quantity: undefined,
-    projectId: material.value.project ? material.value.project.id : undefined, // 项目id,
+    // projectId: material.value.project ? material.value.project.id : undefined, // 项目id,
     monomerId: material.value?.monomerId,
     areaId: material.value?.areaId,
     workshopId: material.value?.workshop?.id,
@@ -342,24 +344,22 @@ function rowInit() {
 }
 
 function rowWatch(row) {
-  watchEffect(() => {
-    row.overWidth = Boolean(row.width > material.value.width)
-    row.overLength = Boolean(row.length > form.value.quantity)
-  })
+  // watchEffect(() => {
+  //   row.overWidth = Boolean(row.width > material.value.width)
+  //   row.overLength = Boolean(row.length > form.value.quantity)
+  // })
   // 计算单件理论重量
-  watch([() => row.length, () => row.width, () => row.quantity], () => calcMete(row))
+  watch([() => form.value.quantity, () => row.width, () => row.quantity], () => calcMete(row))
 }
 
 watchEffect(async () => {
-  form.value.totalWeight =
-    form.value.quantity === maxQuantity.value
-      ? material.value.operableMete
-      : (await calcSteelCoilWeight({
-        name: material.value.classifyFullName,
-        length: form.value.quantity,
-        width: material.value.width,
-        thickness: material.value.thickness
-      })) || 0
+  form.value.totalWeight = toPrecision((form.value.quantity / maxQuantity.value) * material.value.operableMete, baseUnit.value?.weight?.precision)
+  form.value.theoryWeight = (await calcSteelCoilWeight({
+    name: material.value.classifyFullName,
+    length: form.value.quantity,
+    width: material.value.width,
+    thickness: material.value.thickness
+  })) || 0
 })
 
 function addRow() {
@@ -373,14 +373,15 @@ function delRow(index) {
 }
 
 async function calcMete(row) {
-  if (isNotBlank(row.quantity) && isNotBlank(row.length) && isNotBlank(row.width)) {
-    row.mete = await calcSteelCoilWeight({
+  if (isNotBlank(row.quantity) && isNotBlank(form.value.quantity) && isNotBlank(row.width)) {
+    row.theoryWeight = await calcSteelCoilWeight({
       name: row.name,
-      length: row.length,
+      length: form.value.quantity,
       width: row.width,
       thickness: row.thickness,
       quantity: row.quantity
     })
+    row.mete = toPrecision((row.theoryWeight / form.value.theoryWeight) * form.value.totalWeight, baseUnit.value?.weight?.precision)
   } else {
     row.mete = 0
   }
@@ -423,16 +424,23 @@ async function submit() {
     toNum: true
   })
   if (isPlateOut.value) {
-    let _weight = 0
+    // let _weight = 0
+    let _width = 0
     form.value.list.forEach((v) => {
-      _weight += v.mete
+      // _weight += v.mete
+      _width += v.width * v.quantity
+      v.length = form.value.quantity
     })
-    if (_weight > form.value.totalWeight) {
-      ElMessage.error(`条板总重：${_weight}kg，条板总重不可大于开平总重`)
-      throw new Error('重量超出允许值')
+    // if (_weight > form.value.totalWeight) {
+    //   ElMessage.error(`条板总重：${_weight}kg，条板总重不可大于开平总重`)
+    //   throw new Error('重量超出允许值')
+    // }
+    if (_width > material.value.width) {
+      ElMessage.error(`条板总宽：${_width}mm，条板总宽不可大于开平宽度`)
+      throw new Error('宽度超出允许值')
     }
     const { validResult, dealList } = tableValidate(form.value.list)
-    console.log(validResult, 'validResult')
+    // console.log(validResult, 'validResult')
     if (!validResult) throw new Error('表格请修正')
     formData.battenList = await numFmtByBasicClass(deepClone(dealList), { toSmallest: true, toNum: true }, { weight: ['mete'] })
   }
