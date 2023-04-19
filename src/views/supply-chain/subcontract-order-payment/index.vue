@@ -12,7 +12,7 @@
       :max-height="maxHeight"
     >
       <el-table-column label="序号" type="index" align="center" width="60"/>
-      <el-table-column v-if="columns.visible('signDate')" show-overflow-tooltip key="signDate" prop="signDate" label="签订日期" align="center" width="100" />
+      <!-- <el-table-column v-if="columns.visible('signDate')" show-overflow-tooltip key="signDate" prop="signDate" label="签订日期" align="center" width="100" /> -->
       <el-table-column v-if="columns.visible('project')" show-overflow-tooltip key="project" prop="project" label="所属项目" min-width="130" />
       <el-table-column v-if="columns.visible('supplierName')" show-overflow-tooltip key="supplierName" prop="supplierName" label="分包单位" min-width="110"/>
       <el-table-column v-if="columns.visible('subcontractClassName')" show-overflow-tooltip key="subcontractClassName" prop="subcontractClassName" label="分包类别" />
@@ -76,7 +76,7 @@ import { ref, provide, computed, nextTick } from 'vue'
 
 import { supplyChainSubcontractPaymentPM as permission } from '@/page-permission/supply-chain'
 import checkPermission from '@/utils/system/check-permission'
-import { settlementStatusEnum } from '@enum-ms/finance'
+// import { settlementStatusEnum } from '@enum-ms/finance'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
@@ -84,7 +84,7 @@ import pagination from '@crud/Pagination'
 import mHeader from './module/header'
 import invoiceRecord from './module/invoice-record'
 import paymentRecord from './module/payment-record'
-import tableCellTag from '@comp-common/table-cell-tag/index.vue'
+// import tableCellTag from '@comp-common/table-cell-tag/index.vue'
 
 const optShow = {
   add: false,

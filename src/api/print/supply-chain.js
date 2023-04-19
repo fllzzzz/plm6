@@ -61,12 +61,67 @@ export function supplierPaymentLedger(params) {
 }
 
 /**
- * 物流记录
+ * 原材料物流记录
  */
 export function logisticsRecord(params) {
   return request({
     module: 'contract',
     url: `supply-chain/logistics/record/print`,
+    method: 'get',
+    params
+  })
+}
+
+/**
+ * 制成品物流记录
+ */
+export function productLogisticsRecord(params) {
+  return request({
+    url: `/api/scm/cargoListLedger/listCargoList/print`,
+    method: 'get',
+    params
+  })
+}
+
+/**
+ * 制成品物流收票记录
+ */
+export function productLogisticsInvoiceRecord(params) {
+  return request({
+    url: `/api/scm/cargoListLedger/listInvoice/print`,
+    method: 'get',
+    params
+  })
+}
+
+/**
+ * 制成品物流付款记录
+ */
+export function productLogisticsPaymentRecord(params) {
+  return request({
+    url: `/api/scm/cargoListLedger/listPayment/print`,
+    method: 'get',
+    params
+  })
+}
+
+/**
+ * 原材料物流收票记录
+ */
+export function logisticsInvoiceRecord(params) {
+  return request({
+    url: `/api/scm/logisticsLedger/listInvoice/print`,
+    method: 'get',
+    params
+  })
+}
+
+/**
+ * 原材料物流付款记录
+ */
+export function logisticsPaymentRecord(params) {
+  return request({
+    url: `/api/scm/logisticsLedger/listPayment/print`,
     method: 'get',
     params
   })
@@ -89,6 +144,11 @@ export default {
   inboundRecord, // 入库记录
   orderPaymentLedger, // 采购合同付款台账
   supplierPaymentLedger, // 供应商付款台账
-  logisticsRecord, // 物流记录
+  logisticsRecord, // 原材料物流记录
+  productLogisticsRecord, // 制成品物流记录
+  productLogisticsInvoiceRecord, // 制成品物流收票记录
+  productLogisticsPaymentRecord, // 制成品物流付款记录
+  logisticsInvoiceRecord, // 原材料物流收票记录
+  logisticsPaymentRecord, // 原材料物流付款记录
   requisitionsDetail // 申购详情
 }

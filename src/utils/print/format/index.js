@@ -20,6 +20,7 @@ const saleOrderTracking = contract.handleRate
 const orderPaymentLedger = contract.handleSupplierPaymentRate
 const scmSupplierPaymentLedger = contract.handleSupplierPaymentRate
 const purchaseLogisticsRecord = scm.handleOrderName
+const productLogisticsRecord = scm.handleOrderName
 const scmRequisitionsDetail = scm.handleRequisitionsRecord
 
 const mesAssembleNestingOrder = mes.assembleNestingOrder
@@ -98,7 +99,8 @@ export default {
   mesMainMaterialTrackUseRecord, // 主材跟踪-钢材领用记录
   mesMainMaterialTrackStock, // 主材跟踪-库存明细
 
-  purchaseLogisticsRecord, // 供应链/物流记录
+  purchaseLogisticsRecord, // 供应链/原材料物流记录
+  productLogisticsRecord, // 供应链/制成品物流记录
   scmRequisitionsDetail, // 供应商/申购详情
 
   wmsRmInboundReceipt, // 入库单

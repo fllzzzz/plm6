@@ -18,13 +18,45 @@
           <span>{{ scope.row.supplierName }}</span>
         </template>
       </el-table-column>
-      <el-table-column v-if="columns.visible('trainNumber')" key="trainNumber" prop="trainNumber" :show-overflow-tooltip="true" label="车次" align="center" />
+      <el-table-column v-if="columns.visible('trainNumber')" key="trainNumber" prop="trainNumber" :show-overflow-tooltip="true" label="车次" align="center">
+        <template v-if="checkPermission(permission.detail)" #header>
+          <el-tooltip
+            effect="light"
+            placement="top"
+            content="点击行可以查看详情"
+          >
+            <div style="display: inline-block">
+              <span>车次 </span>
+              <i class="el-icon-info" />
+            </div>
+          </el-tooltip>
+        </template>
+        <template #default="{ row }">
+          <div class="clickable" @click.stop="openLogisticsRecord(row)">{{ row.trainNumber }}</div>
+        </template>
+      </el-table-column>
       <el-table-column v-if="columns.visible('actualWeight')" key="actualWeight" prop="actualWeight" :show-overflow-tooltip="true" label="累计发运量(吨)" align="center" min-width="180">
         <template v-slot="scope">
           <span>{{ scope.row.actualWeight }}</span>
         </template>
       </el-table-column>
-      <el-table-column v-if="columns.visible('freight')" prop="freight" key="freight" label="运输费" align="right" min-width="120" show-overflow-tooltip />
+      <el-table-column v-if="columns.visible('totalPrice')" prop="totalPrice" key="totalPrice" label="运输费" align="right" min-width="120" show-overflow-tooltip>
+        <template v-if="checkPermission(permission.detail)" #header>
+          <el-tooltip
+            effect="light"
+            placement="top"
+            content="点击行可以查看详情"
+          >
+            <div style="display: inline-block">
+              <span>运输费 </span>
+              <i class="el-icon-info" />
+            </div>
+          </el-tooltip>
+        </template>
+        <template #default="{ row }">
+          <div class="clickable" @click.stop="openLogisticsRecord(row)">{{ row.totalPrice }}</div>
+        </template>
+      </el-table-column>
       <el-table-column v-if="columns.visible('paymentAmount')" prop="paymentAmount" key="paymentAmount" label="累计付款" align="right" min-width="120" show-overflow-tooltip>
         <template v-if="checkPermission(permission.detail)" #header>
           <el-tooltip
@@ -76,6 +108,8 @@
     <invoiceRecord v-model="recordVisible" :permission="permission" :detail-info="detailInfo" :query-date="{startDate:crud.query.startDate,endDate:crud.query.endDate}"/>
      <!-- 付款记录 -->
     <paymentRecord v-model="paymentVisible" :permission="permission" :detail-info="detailInfo" :query-date="{startDate:crud.query.startDate,endDate:crud.query.endDate}"/>
+    <!-- 物流记录 -->
+    <logisticsRecord v-model="logisticsVisible" :permission="permission" :detail-info="detailInfo" />
   </div>
 </template>
 
@@ -91,6 +125,7 @@ import pagination from '@crud/Pagination'
 import mHeader from './module/header'
 import invoiceRecord from './module/invoice-record'
 import paymentRecord from './module/payment-record'
+import logisticsRecord from './module/logistics-record'
 
 const optShow = {
   add: false,
@@ -106,7 +141,7 @@ const dataFormat = ref([
   ['project', ['parse-project']],
   ['paymentRate', ['to-fixed', 2]],
   ['invoiceRate', ['to-fixed', 2]],
-  ['freight', 'to-thousand'],
+  ['totalPrice', 'to-thousand'],
   ['paymentAmount', 'to-thousand'],
   ['invoiceAmount', 'to-thousand']
 ])
@@ -126,12 +161,14 @@ const { maxHeight } = useMaxHeight({ paginate: true })
 
 const detailInfo = ref({})
 const recordVisible = ref(false)
+const logisticsVisible = ref(false)
 
 // 刷新数据后
 CRUD.HOOK.handleRefresh = (crud, { data }) => {
   data.content.forEach(v => {
     // 付款比例
     v.actualWeight = (v.actualWeight / 1000).toFixed(2)
+    v.projectId = v.project?.id
     v.paymentRate = v.freight ? (v.paymentAmount || 0) / (v.freight || 0) * 100 : 0
     // 开票比例
     v.invoiceRate = v.freight ? (v.invoiceAmount || 0) / (v.freight || 0) * 100 : 0
@@ -153,6 +190,15 @@ function openPaymentRecord(row) {
   detailInfo.value = row.sourceRow
   nextTick(() => {
     paymentVisible.value = true
+  })
+}
+
+// 打开物流记录
+function openLogisticsRecord(row) {
+  if (!checkPermission(permission.detail)) return
+  detailInfo.value = row.sourceRow
+  nextTick(() => {
+    logisticsVisible.value = true
   })
 }
 </script>

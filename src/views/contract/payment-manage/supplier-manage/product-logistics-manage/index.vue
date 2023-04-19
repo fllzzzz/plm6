@@ -12,23 +12,35 @@
       :max-height="maxHeight"
     >
       <el-table-column label="序号" type="index" align="center" width="60" />
+      <el-table-column v-if="columns.visible('project')" key="project" prop="project" :show-overflow-tooltip="true" label="项目" align="center" min-width="180" />
       <el-table-column v-if="columns.visible('supplierName')" key="supplierName" prop="supplierName" :show-overflow-tooltip="true" label="物流公司" align="center" min-width="180">
         <template v-slot="scope">
           <span>{{ scope.row.supplierName }}</span>
         </template>
       </el-table-column>
-      <el-table-column v-if="columns.visible('trainNumber')" key="trainNumber" prop="trainNumber" :show-overflow-tooltip="true" label="车次" align="center" />
-      <el-table-column v-if="columns.visible('loadingWeight')" key="loadingWeight" prop="loadingWeight" :show-overflow-tooltip="true" label="过磅重量(吨)" align="center" min-width="180">
-        <template v-slot="scope">
-          <span>{{ scope.row.loadingWeight }}</span>
+      <el-table-column v-if="columns.visible('trainNumber')" key="trainNumber" prop="trainNumber" :show-overflow-tooltip="true" label="车次" align="center">
+        <template v-if="checkPermission(permission.detail)" #header>
+          <el-tooltip
+            effect="light"
+            placement="top"
+            content="点击行可以查看详情"
+          >
+            <div style="display: inline-block">
+              <span>车次 </span>
+              <i class="el-icon-info" />
+            </div>
+          </el-tooltip>
+        </template>
+        <template #default="{ row }">
+          <div class="clickable" @click.stop="openLogisticsRecord(row)">{{ row.trainNumber }}</div>
         </template>
       </el-table-column>
-      <el-table-column v-if="columns.visible('other')" key="other" prop="other" :show-overflow-tooltip="true" label="关联入库及供方" align="center" min-width="180">
+      <el-table-column v-if="columns.visible('actualWeight')" key="actualWeight" prop="actualWeight" :show-overflow-tooltip="true" label="累计发运量(吨)" align="center" min-width="180">
         <template v-slot="scope">
-          <common-button icon="el-icon-view" type="info" size="mini" @click="openDetail(scope.row, 'detail')"/>
+          <span>{{ scope.row.actualWeight }}</span>
         </template>
       </el-table-column>
-      <el-table-column v-if="columns.visible('freight')" prop="freight" key="freight" label="运输费" align="right" min-width="120" show-overflow-tooltip />
+      <el-table-column v-if="columns.visible('totalPrice')" prop="totalPrice" key="totalPrice" label="运输费" align="right" min-width="120" show-overflow-tooltip />
       <el-table-column prop="paymentAmount" key="paymentAmount" label="累计已付款" align="right" min-width="120" show-overflow-tooltip>
         <template v-if="checkPermission(permission.detail)" #header>
           <el-tooltip
@@ -123,6 +135,8 @@
         <invoice :visibleValue="invoiceVisible" :detail-info="detailInfo" @success="crud.toQuery"/>
       </template>
     </common-drawer>
+    <!-- 物流记录 -->
+    <logisticsRecord v-model="logisticsVisible" :permission="permission" :detail-info="detailInfo" />
   </div>
 </template>
 
@@ -141,6 +155,7 @@ import inboundRecord from './module/inbound-record'
 import invoiceRecord from './module/invoice-record'
 import paymentRecord from './module/payment-record'
 import paymentApplication from './module/payment-application/index'
+import logisticsRecord from './module/logistics-record'
 import invoice from './module/invoice/index'
 
 const optShow = {
@@ -165,9 +180,11 @@ const applicationVisible = ref(false)
 const invoiceVisible = ref(false)
 
 const dataFormat = ref([
+  ['project', 'parse-project'],
   ['createTime', 'parse-time'],
   ['paymentRate', ['to-fixed', 2]],
   ['invoiceRate', ['to-fixed', 2]],
+  ['totalPrice', 'to-thousand'],
   ['amount', 'to-thousand'],
   ['inboundAmount', 'to-thousand'],
   ['paymentAmount', 'to-thousand'],
@@ -192,6 +209,7 @@ const detailInfo = ref({})
 const supplierId = ref(undefined)
 const recordType = ref('')
 const recordVisible = ref(false)
+const logisticsVisible = ref(false)
 
 provide('supplierId', supplierId)
 
@@ -225,6 +243,15 @@ function openRecord(row, type) {
   supplierId.value = row.supplierId
   nextTick(() => {
     recordVisible.value = true
+  })
+}
+
+// 打开物流记录
+function openLogisticsRecord(row) {
+  if (!checkPermission(permission.detail)) return
+  detailInfo.value = row.sourceRow
+  nextTick(() => {
+    logisticsVisible.value = true
   })
 }
 </script>

@@ -8,7 +8,7 @@
     direction="rtl"
     :before-close="handleClose"
     custom-class="payment-record"
-    size="100%"
+    size="80%"
   >
     <template #titleAfter>
       <el-tag type="warning" effect="plain" size="medium">物流公司：{{detailInfo.supplierName}}</el-tag>
@@ -18,8 +18,8 @@
       <div class="print-wrap">
         <print-table
           v-permission="props.permission?.print"
-          api-key="purchasePaymentRecord"
-          :params="{ ...params }"
+          api-key="productLogisticsPaymentRecord"
+          :params="{ supplierId: props.detailInfo.supplierId,auditStatus: auditTypeEnum.PASS.V,projectId: props.detailInfo.projectId, }"
           size="mini"
           type="warning"
         />
