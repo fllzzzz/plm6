@@ -31,7 +31,7 @@
       :showEmptySymbol="false"
     >
       <el-table-column prop="index" label="序号" align="center" width="50" type="index" />
-      <el-table-column key="invoiceDate" prop="invoiceDate" label="*开票日期" align="center" width="160">
+      <el-table-column key="invoiceDate" prop="invoiceDate" label="*开票日期" align="center" width="125">
         <template v-slot="scope">
           <el-date-picker
             v-if="scope.row.isModify"
@@ -47,8 +47,8 @@
           </template>
         </template>
       </el-table-column>
-      <el-table-column key="invoiceAmount2" prop="invoiceAmount2" label="*开票额" align="center" min-width="170" class="money-column">
-        <el-table-column key="invoiceAmount" prop="invoiceAmount" label="金额" align="center" min-width="85">
+      <el-table-column key="invoiceAmount2" prop="invoiceAmount2" label="*开票额" align="center" min-width="220" class="money-column">
+        <el-table-column key="invoiceAmount" prop="invoiceAmount" label="金额" align="center" min-width="110">
           <template v-slot="scope">
             <el-input-number
                 v-if="scope.row.isModify"
@@ -65,18 +65,18 @@
               <div v-else>{{ scope.row.invoiceAmount && scope.row.invoiceAmount>0? toThousand(scope.row.invoiceAmount): scope.row.invoiceAmount }}</div>
           </template>
         </el-table-column>
-        <el-table-column key="invoiceAmount1" prop="invoiceAmount1" label="大写" align="center" min-width="85" :show-overflow-tooltip="true">
+        <el-table-column key="invoiceAmount1" prop="invoiceAmount1" label="大写" align="center" min-width="110" :show-overflow-tooltip="true">
           <template v-slot="scope">
             <div>{{scope.row.invoiceAmount?'('+digitUppercase(scope.row.invoiceAmount)+')':''}}</div>
           </template>
         </el-table-column>
       </el-table-column>
-      <el-table-column key="invoiceType" prop="invoiceType" label="*发票类型" align="center" width="120">
+      <el-table-column key="invoiceType" prop="invoiceType" label="*发票类型" align="center" width="110">
         <template v-slot="scope">
           <div>{{ scope.row.invoiceType? invoiceTypeEnum.VL[scope.row.invoiceType]: '' }}</div>
         </template>
       </el-table-column>
-      <el-table-column key="taxRate" prop="taxRate" label="税率" align="center" width="110">
+      <el-table-column key="taxRate" prop="taxRate" label="税率" align="center" width="70">
         <template v-slot="scope">
           <div v-if="scope.row.invoiceType !== invoiceTypeEnum.RECEIPT.V && scope.row.isModify">
             <el-input-number
@@ -88,12 +88,17 @@
               :controls="false"
               controls-position="right"
               class="input-underline"
-              style="width: 70px; text-align: center"
+              style="width: 50px; text-align: center"
               placeholder="0-100"
               @change="taxMoney(scope.row)"
             />%
           </div>
           <div v-else>{{ scope.row.taxRate? scope.row.taxRate+'%': '' }}</div>
+        </template>
+      </el-table-column>
+      <el-table-column key="noTaxAmount" prop="noTaxAmount" label="不含税价格" align="center" width="70">
+        <template v-slot="scope">
+          <span>{{scope.row.noTaxAmount && scope.row.noTaxAmount>0? toThousand(scope.row.noTaxAmount): scope.row.noTaxAmount}}</span>
         </template>
       </el-table-column>
       <el-table-column key="invoiceUnit" prop="invoiceUnit" label="*开票单位" align="center" min-width="120" :show-overflow-tooltip="true">
@@ -113,18 +118,30 @@
           <div v-else>{{ scope.row.collectionUnit  }}</div>
         </template>
       </el-table-column>
-      <el-table-column prop="invoiceNo" label="*发票号码" align="center" min-width="150">
+      <el-table-column prop="invoiceNo" label="*发票号码" align="center" min-width="130">
         <template v-slot="scope">
-          <el-input v-if="scope.row.isModify" v-model.trim="scope.row.invoiceNo" type="text" placeholder="发票号码" style="width: 100%;" @change="checkInvoiceNo(scope.row,scope.$index)" maxlength="20"/>
+          <el-input v-if="scope.row.isModify" v-model.trim="scope.row.invoiceNo" type="text" placeholder="发票号码" style="width: 100%;" @change="checkInvoiceNo(scope.row,scope.$index)" />
           <span v-else>{{ scope.row.invoiceNo  }}</span>
         </template>
       </el-table-column>
-      <el-table-column key="writtenByName" prop="writtenByName" label="办理人" align="center" width="100px">
+       <el-table-column prop="invoiceContent" label="发票内容" align="center" min-width="130">
+        <template v-slot="scope">
+          <el-input v-if="scope.row.isModify" v-model.trim="scope.row.invoiceContent" type="text" placeholder="发票内容" style="width: 100%;"/>
+          <span v-else>{{ scope.row.invoiceContent  }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column prop="remark" label="备注" align="center" min-width="100">
+        <template v-slot="scope">
+          <el-input v-if="scope.row.isModify" v-model.trim="scope.row.remark" type="text" placeholder="备注" style="width: 100%;" />
+          <span v-else>{{ scope.row.remark  }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column key="writtenByName" prop="writtenByName" label="办理人" align="center" width="80px">
         <template v-slot="scope">
           <div>{{ scope.row.writtenByName }}</div>
         </template>
       </el-table-column>
-      <el-table-column key="auditorName" prop="auditorName" label="审核人" align="center" width="100px">
+      <el-table-column key="auditorName" prop="auditorName" label="审核人" align="center" width="80px">
         <template v-slot="scope">
           <div>{{ scope.row.auditorName }}</div>
         </template>
@@ -351,15 +368,19 @@ function moneyChange(row) {
           }
         })
       })
-    } else {
-      taxMoney(row)
     }
   }
+  taxMoney(row)
 }
 
 function taxMoney(row) {
   if (row.invoiceAmount && row.taxRate) {
     row.tax = row.invoiceAmount * row.taxRate / 100
+    row.noTaxAmount = (row.invoiceAmount / (1 + row.taxRate / 100)).toFixed(2)
+  } else {
+    if (row.invoiceType === invoiceTypeEnum.RECEIPT.V) {
+      row.noTaxAmount = row.invoiceAmount
+    }
   }
 }
 function checkInvoiceNo(row) {
@@ -484,6 +505,7 @@ CRUD.HOOK.handleRefresh = (crud, data) => {
         dataIndex: v.dataIndex
       })
     }
+    v.noTaxAmount = v.invoiceType !== invoiceTypeEnum.RECEIPT.V ? (v.invoiceAmount / (1 + v.taxRate / 100)).toFixed(2) : v.invoiceAmount
   })
 }
 </script>
@@ -510,14 +532,21 @@ $font-size: 1.5em;
 }
 .collection-table{
   ::v-deep(.el-select .el-input__inner){
-    padding-left:2px;
-    padding-right:5px;
+    padding-left:2px !important;
+    padding-right:5px !important;
   }
-  ::v-deep(.el-input-number .el-input__inner, .el-input__inner) {
+  ::v-deep(.el-input-number .el-input__inner) {
     text-align: left;
-    padding:0 5px;
+    padding:0 5px !important;
   }
-  ::v-deep(.el-table .cell){
+  ::v-deep(.el-input__inner) {
+    text-align: left;
+    padding:0 5px !important;
+  }
+  ::v-deep(.el-date-editor .el-input__inner){
+    padding-left:25px !important;
+  }
+  ::v-deep(.el-table__cell .cell){
     padding-left:2px;
     padding-right:2px;
   }
