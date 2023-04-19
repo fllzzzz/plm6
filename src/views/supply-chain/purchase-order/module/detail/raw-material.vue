@@ -48,6 +48,16 @@
                 <span v-else v-split="detail.auxMaterialNames" />
               </el-form-item>
 
+              <el-form-item
+                v-if="detail.basicClass & matClsEnum.OTHER.V"
+                label="其它明细"
+                prop="otherMaterialNames"
+                style="width: 100%; word-break: break-all"
+              >
+                <span v-if="detail.otherMaterialIds.includes(0)">所有其它科目</span>
+                <span v-else v-split="detail.otherMaterialNames" />
+              </el-form-item>
+
               <template v-if="detail.supplyType === orderSupplyTypeEnum.SELF.V">
                 <el-form-item label="合同量" prop="mete">
                   <span>{{ detail.mete }} {{ detail.meteUnit }}</span>
@@ -247,6 +257,15 @@ CRUD.HOOK.beforeDetailLoaded = (crud, detail) => {
   const setInfo = async () => {
     if (detail.auxMaterialIds) {
       detail.auxMaterialNames = detail.auxMaterialIds.map((id) => {
+        const material = rawMatClsKV.value[id]
+        if (material) {
+          return material.name
+        }
+        return '-'
+      })
+    }
+    if (detail.otherMaterialIds) {
+      detail.otherMaterialNames = detail.otherMaterialIds.map((id) => {
         const material = rawMatClsKV.value[id]
         if (material) {
           return material.name

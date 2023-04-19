@@ -148,6 +148,7 @@ import {
   sectionSteelBatchOutboundHandling,
   steelCoilBatchOutboundHandling,
   auxMatBatchOutboundHandling,
+  otherBatchOutboundHandling,
   gasBatchOutboundHandling
 } from '@/api/wms/material-outbound/raw-material/outbound-handling'
 import { defineEmits, defineProps, watch, ref, computed, nextTick } from 'vue'
@@ -458,6 +459,8 @@ function getApi(basicClass) {
       return steelCoilBatchOutboundHandling
     case matClsEnum.MATERIAL.V:
       return auxMatBatchOutboundHandling
+    case matClsEnum.OTHER.V:
+      return otherBatchOutboundHandling
     case matClsEnum.GAS.V:
       return gasBatchOutboundHandling
     default:

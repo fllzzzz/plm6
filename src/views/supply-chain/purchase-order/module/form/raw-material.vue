@@ -83,6 +83,33 @@
                     />
                   </div>
                 </el-form-item>
+                <el-form-item v-if="form.basicClass & matClsEnum.OTHER.V" class="el-form-item-5" label="其它明细" prop="otherMaterialIds">
+                   <div class="flex-rss child-mr-10">
+                    <!-- 是否选择所有辅材 -->
+                    <el-checkbox
+                      v-model="form.isAllOtherMaterial"
+                      :disabled="form.boolUsed"
+                      label="所有其它科目"
+                      size="mini"
+                      border
+                      style="margin-top: 3px;margin-right:5px;"
+                    />
+                    <material-cascader
+                      v-model="form.otherMaterialIds"
+                      :basic-class="matClsEnum.OTHER.V"
+                      :deep="2"
+                      :disabled="form.boolUsed || form.isAllOtherMaterial"
+                      multiple
+                      :collapse-tags="false"
+                      separator=" > "
+                      clearable
+                      placeholder="请选择其它科目"
+                      class="input-underline"
+                      size="small"
+                      style="width: 100%"
+                    />
+                  </div>
+                </el-form-item>
                 <el-form-item class="el-form-item-7" label="供应商" prop="supplierId">
                   <supplier-select
                     v-model="form.supplierId"
@@ -318,6 +345,8 @@ const defaultForm = {
   basicClass: null, // 物料类型
   isAllMaterial: false, // 是否选择全部辅材
   auxMaterialIds: undefined, // 辅材明细ids
+  isAllOtherMaterial: false, // 是否选择全部其他材料
+  otherMaterialIds: undefined, // 其他材料明细ids
   projectIds: undefined, // 项目ids
   requisitionsSN: undefined, // 申购单编号
   supplierId: undefined, // 供应商id
@@ -414,6 +443,24 @@ const auxMatRules = {
   auxMaterialIds: [{ required: true, validator: validateAuxMat, trigger: 'change' }]
 }
 
+const validateOtherMat = (rule, value, callback) => {
+  if (!form.isAllOtherMaterial) {
+    if (!value) {
+      callback(new Error('请选择其它科目'))
+      return
+    } else {
+      callback()
+    }
+  } else {
+    callback()
+  }
+}
+
+// 其它校验
+const otherMatRules = {
+  otherMaterialIds: [{ required: true, validator: validateOtherMat, trigger: 'change' }]
+}
+
 // rules变更
 watchEffect(() => {
   if (dialogVisible.value) {
@@ -429,6 +476,9 @@ watchEffect(() => {
     }
     if (form.basicClass & matClsEnum.MATERIAL.V) {
       Object.assign(r, auxMatRules)
+    }
+    if (form.basicClass & matClsEnum.OTHER.V) {
+      Object.assign(r, otherMatRules)
     }
     nextTick(() => {
       formRef.value && formRef.value.clearValidate()
@@ -485,6 +535,8 @@ CRUD.HOOK.beforeEditDetailLoaded = async (crud, form) => {
   }
   // 是否选中所有辅材，0表示所有
   form.isAllMaterial = form.auxMaterialIds?.includes(0)
+  // 是否选中所有其它科目，0表示所有
+  form.isAllOtherMaterial = form.otherMaterialIds?.includes(0)
   // 是否甲供
   form.boolPartyA = form.supplyType === orderSupplyTypeEnum.PARTY_A.V
   // 签订主体id
@@ -536,6 +588,7 @@ CRUD.HOOK.beforeSubmit = (crud, form) => {
 crud.submitFormFormat = (form) => {
   form.attachmentIds = form.attachments ? form.attachments.map((v) => v.id) : undefined
   form.auxMaterialIds = form.isAllMaterial ? [0] : form.auxMaterialIds
+  form.otherMaterialIds = form.isAllOtherMaterial ? [0] : form.otherMaterialIds
   return form
 }
 
