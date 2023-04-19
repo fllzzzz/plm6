@@ -10,7 +10,7 @@
           v-loading="crud.loading"
           :data="crud.data"
           highlight-current-row
-          :empty-text="crud.emptyText"
+          :empty-text="crud.query.projectId ? '暂无数据' : '请选择项目'"
           :max-height="maxHeight"
           style="width: 100%; cursor: pointer"
           @current-change="currentChange"
@@ -143,7 +143,7 @@ const optShow = {
   add: false,
   edit: false,
   del: false,
-  download: false
+  download: false,
 }
 
 const tableRef = ref()
@@ -157,7 +157,7 @@ const { crud, CRUD, columns } = useCRUD(
     permission: { ...permission },
     requiredQuery: ['productType', 'projectId'],
     crudApi: { get },
-    hasPagination: true
+    hasPagination: true,
   },
   tableRef
 )
@@ -180,7 +180,7 @@ watch(
 )
 const { maxHeight } = useMaxHeight({
   extraBox: ['.head-container'],
-  paginate: true
+  paginate: true,
 })
 
 function currentChange(row) {
