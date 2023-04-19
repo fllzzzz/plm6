@@ -58,7 +58,12 @@ const purchasePaymentRecord = supply.paymentRecord
 const orderPaymentLedger = supply.orderPaymentLedger
 const scmSupplierPaymentLedger = supply.supplierPaymentLedger
 
+const productLogisticsInvoiceRecord = supply.productLogisticsInvoiceRecord
 const purchaseLogisticsRecord = supply.logisticsRecord
+const productLogisticsRecord = supply.productLogisticsRecord
+const productLogisticsPaymentRecord = supply.productLogisticsPaymentRecord
+const logisticsInvoiceRecord = supply.logisticsInvoiceRecord
+const logisticsPaymentRecord = supply.logisticsPaymentRecord
 
 const scmRequisitionsDetail = supply.requisitionsDetail // 申购详情
 
@@ -207,7 +212,12 @@ export default {
   orderPaymentLedger, // 采购合同付款台账
   scmSupplierPaymentLedger, // 供应商付款台账
 
-  purchaseLogisticsRecord, // 物流记录
+  purchaseLogisticsRecord, // 原材料物流记录
+  productLogisticsRecord, // 制成品物流记录
+  productLogisticsInvoiceRecord, // 制成品物流收票记录
+  productLogisticsPaymentRecord, // 制成品物流付款记录
+  logisticsPaymentRecord, // 原材料物流付款记录
+  logisticsInvoiceRecord, // 原材料物流收票记录
 
   scmRequisitionsDetail, // 申购详情
 

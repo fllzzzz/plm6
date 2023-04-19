@@ -53,11 +53,6 @@
           <template v-else>{{toThousand(row.invoiceAmount)}}</template>
         </template>
         </el-table-column>
-        <!-- <el-table-column label="大写" align="center" min-width="150" show-overflow-tooltip>
-          <template #default="{ row }">
-          <span>{{ digitUppercase(row?.sourceRow?.invoiceAmount) }}</span>
-        </template>
-      </el-table-column> -->
         <el-table-column prop="invoiceType" label="发票类型" align="center" width="110" show-overflow-tooltip />
         <el-table-column prop="taxRate" label="税率" align="center" width="70" show-overflow-tooltip>
           <template #default="{ row }">

@@ -18,8 +18,8 @@
       <div class="print-wrap">
         <print-table
           v-permission="props.permission?.print"
-          api-key="purchasePaymentRecord"
-          :params="{ ...params }"
+          api-key="logisticsPaymentRecord"
+          :params="{ supplierId: props.detailInfo.supplierId,auditStatus: auditTypeEnum.PASS.V}"
           size="mini"
           type="warning"
         />

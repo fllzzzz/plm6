@@ -8,7 +8,7 @@
     direction="rtl"
     :before-close="handleClose"
     custom-class="payment-record"
-    size="100%"
+    size="80%"
   >
     <template #titleAfter>
       <el-tag type="warning" effect="plain" size="medium">物流公司：{{detailInfo.supplierName}}</el-tag>
@@ -18,8 +18,8 @@
       <div class="print-wrap">
         <print-table
           v-permission="props.permission?.print"
-          api-key="purchasePaymentRecord"
-          :params="{ ...params }"
+          api-key="productLogisticsPaymentRecord"
+          :params="{ supplierId: props.detailInfo.supplierId,auditStatus: auditTypeEnum.PASS.V,projectId: props.detailInfo.projectId, }"
           size="mini"
           type="warning"
         />
@@ -43,7 +43,6 @@
       <common-table :data="list" v-loading="tableLoading" show-summary :summary-method="getSummaries" :data-format="dataFormat" :max-height="maxHeight">
       <el-table-column prop="index" label="序号" align="center" width="50" type="index" />
       <el-table-column key="paymentDate" prop="paymentDate" label="付款日期" align="center" width="90" />
-      <!-- <el-table-column key="applyAmount" prop="applyAmount" label="申请金额" align="right" min-width="80" /> -->
       <el-table-column key="actuallyPaymentAmount" prop="actuallyPaymentAmount" label="支付金额" align="right" min-width="80">
         <template #default="{ row }">
           <template v-if="row.attachments && row.attachments.length>0">
@@ -54,19 +53,9 @@
           <template v-else>{{toThousand(row.actuallyPaymentAmount)}}</template>
         </template>
       </el-table-column>
-      <!-- <el-table-column label="大写" align="center" min-width="120" show-overflow-tooltip>
-          <template #default="{ row }">
-          <div v-if="row.actuallyPaymentAmount">{{ digitUppercase(row?.sourceRow?.actuallyPaymentAmount) }}</div>
-        </template>
-      </el-table-column> -->
       <el-table-column key="paymentReasonId" prop="paymentReasonId" label="付款事由" align="center" width="100">
           <template #default="{ row }">
          <div>{{ dict?.label?.['payment_reason']?.[row.paymentReasonId] }}</div>
-        </template>
-      </el-table-column>
-      <el-table-column key="paymentMethod" prop="paymentMethod" label="付款方式" align="center" width="100">
-          <template #default="{ row }">
-          <div>{{ paymentFineModeEnum.VL?.[row.paymentMethod] }}</div>
         </template>
       </el-table-column>
       <el-table-column key="paymentUnit" prop="paymentUnit" label="付款单位" align="center" min-width="140" show-overflow-tooltip />
@@ -76,11 +65,11 @@
         </template>
       </el-table-column>
       <el-table-column key="receivingUnit" prop="receivingUnit" label="收款单位" align="center" min-width="140" show-overflow-tooltip />
-      <el-table-column key="receivingBank" prop="receivingBank" label="收款银行" align="center" min-width="140" show-overflow-tooltip>
+      <!-- <el-table-column key="receivingBank" prop="receivingBank" label="收款银行" align="center" min-width="140" show-overflow-tooltip>
         <template #default="{ row }">
           <div>{{row.receivingBank}}{{row.receiveBankAccount?'【'+row.receiveBankAccount+'】':''}}</div>
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column key="applyUserName" prop="applyUserName" label="办理人" align="center" width="100px" />
       <el-table-column key="auditUserName" prop="auditUserName" label="审核人" align="center" width="100px" />
       <!-- <el-table-column key="remark" prop="remark" label="备注" align="center" min-width="120" show-overflow-tooltip /> -->
@@ -111,7 +100,6 @@ import { defineEmits, defineProps, ref, computed, watch } from 'vue'
 
 import { auditTypeEnum } from '@enum-ms/contract'
 import { digitUppercase, getDP, toThousand } from '@/utils/data-type/number'
-import { paymentFineModeEnum } from '@enum-ms/finance'
 import { tableSummary } from '@/utils/el-extra'
 
 import useVisible from '@/composables/use-visible'

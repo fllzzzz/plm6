@@ -11,8 +11,7 @@ export function get(params) {
 // 物流记录
 export function logisticsRecordDetail(params) {
   return request({
-    module: 'contract',
-    url: 'supply-chain/logistics/record',
+    url: '/api/scm/cargoListLedger/listCargoList',
     method: 'get',
     params
   })

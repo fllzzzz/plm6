@@ -110,6 +110,7 @@ const dataFormat = ref([
   ['paymentRate', ['to-fixed', 2]],
   ['invoiceRate', ['to-fixed', 2]],
   ['freight', 'to-thousand'],
+  ['loadingWeight', ['to-fixed', 2]],
   ['paymentAmount', 'to-thousand'],
   ['invoiceAmount', 'to-thousand']
 ])
@@ -134,7 +135,7 @@ const recordVisible = ref(false)
 CRUD.HOOK.handleRefresh = (crud, { data }) => {
   data.content.forEach(v => {
     // 付款比例
-    v.loadingWeight = (v.loadingWeight / 1000).toFixed(2)
+    v.loadingWeight = v.loadingWeight ? v.loadingWeight / 1000 : 0
     v.paymentRate = v.freight ? (v.paymentAmount || 0) / (v.freight || 0) * 100 : 0
     // 开票比例
     v.invoiceRate = v.freight ? (v.invoiceAmount || 0) / (v.freight || 0) * 100 : 0

@@ -168,6 +168,7 @@ const dataFormat = ref([
   ['createTime', 'parse-time'],
   ['paymentRate', ['to-fixed', 2]],
   ['invoiceRate', ['to-fixed', 2]],
+  ['loadingWeight', ['to-fixed', 2]],
   ['amount', 'to-thousand'],
   ['inboundAmount', 'to-thousand'],
   ['paymentAmount', 'to-thousand'],
@@ -199,6 +200,7 @@ provide('supplierId', supplierId)
 CRUD.HOOK.handleRefresh = (crud, { data }) => {
   data.content.forEach(v => {
     // 付款比例
+    v.loadingWeight = v.loadingWeight ? v.loadingWeight / 1000 : 0
     v.paymentRate = v.inboundAmount ? (v.paymentAmount || 0) / (v.amount || 0) * 100 : 0
     // 收票比例
     v.invoiceRate = v.inboundAmount ? (v.invoiceAmount || 0) / (v.amount || 0) * 100 : 0
