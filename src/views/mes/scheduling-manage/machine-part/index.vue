@@ -35,11 +35,11 @@
                   标准零件列表
                 </common-button>
               </el-badge> -->
-              <common-button v-permission="permission.save" type="success" class="filter-item" size="mini" @click="addPadBlock">
+              <common-button v-permission="permission.add" type="success" class="filter-item" size="mini" @click="addPadBlock">
                 添加标准零件
               </common-button>
               <common-button
-                v-permission="permission.save"
+                v-permission="permission.noNestingSave"
                 type="warning"
                 class="filter-item"
                 :disabled="Boolean(!checkedNodes?.length && padBlockData?.length)"
@@ -49,7 +49,7 @@
                 无需套料保存
               </common-button>
               <common-button
-                v-permission="permission.save"
+                v-permission="permission.nestingSave"
                 type="success"
                 class="filter-item"
                 size="mini"
@@ -160,7 +160,7 @@
 
 <script setup>
 import crudApi from '@/api/mes/scheduling-manage/machine-part'
-import { computed, ref, onUnmounted, onMounted, nextTick, watch } from 'vue'
+import { computed, ref, onUnmounted, onMounted, nextTick, watch, provide } from 'vue'
 import { ElMessage } from 'element-plus'
 import { isNotBlank } from '@/utils/data-type'
 import RAF from '@/utils/raf'
@@ -205,6 +205,8 @@ const { crud, CRUD } = useCRUD(
   },
   tableRef
 )
+
+provide('permission', permission)
 
 // 监听厚度 重置全选按钮
 watch(

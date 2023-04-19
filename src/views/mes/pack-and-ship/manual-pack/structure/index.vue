@@ -186,6 +186,8 @@
         </template>
       </el-table-column>
     </common-table>
+    <!--分页组件-->
+    <pagination />
   </div>
 </template>
 
@@ -202,6 +204,7 @@ import useCRUD from '@compos/use-crud'
 import mHeader from './module/header'
 import { deepClone } from '@/utils/data-type'
 import tableCellTag from '@comp-common/table-cell-tag/index.vue'
+import pagination from '@crud/Pagination'
 
 const optShow = {
   add: false,
@@ -219,8 +222,7 @@ const { crud, columns, CRUD } = useCRUD(
     optShow: { ...optShow },
     crudApi: { get },
     invisibleColumns: ['drawingNumber', 'packageQuantity'],
-    queryOnPresenterCreated: false,
-    hasPagination: false
+    queryOnPresenterCreated: false
   },
   tableRef
 )
@@ -275,10 +277,10 @@ CRUD.HOOK.beforeRefresh = () => {
 }
 
 CRUD.HOOK.handleRefresh = (crud, res) => {
-  res.data.content = res.data.artifactList.map((v, index) => {
+  res.data.content = res.data.content.map((v, index) => {
     v.rowKey = `${packTypeK}_${Math.random()}_${index}`
     v.productQuantity = v.unPackageQuantity
-    v.originNumberList = v.numberList && deepClone(v.numberList) || []
+    v.originNumberList = (v.numberList && deepClone(v.numberList)) || []
     return v
   })
 }

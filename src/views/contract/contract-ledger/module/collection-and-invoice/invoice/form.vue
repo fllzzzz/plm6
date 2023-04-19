@@ -6,7 +6,7 @@
     :visible="crud.status.cu > 0"
     :title="crud.status.title"
     :wrapper-closable="false"
-    size="90%"
+    size="100%"
   >
     <template #titleRight>
       <common-button :loading="crud.status.cu === 2" type="primary" size="mini" @click="crud.submitCU">确认</common-button>
@@ -43,7 +43,7 @@
               </template>
             </template>
           </el-table-column>
-          <el-table-column key="invoiceAmount2" prop="invoiceAmount2" label="*开票额" align="center" min-width="170" class="money-column">
+          <el-table-column key="invoiceAmount2" prop="invoiceAmount2" label="*开票额" align="center" min-width="180" class="money-column">
             <el-table-column key="invoiceAmount" prop="invoiceAmount" label="金额" align="center" min-width="85">
               <template v-slot="scope">
                 <el-input-number
@@ -72,7 +72,7 @@
               <div>{{ scope.row.invoiceType? invoiceTypeEnum.VL[scope.row.invoiceType]: '' }}</div>
             </template>
           </el-table-column>
-          <el-table-column key="taxRate" prop="taxRate" label="税率" align="center" width="110">
+          <el-table-column key="taxRate" prop="taxRate" label="税率" align="center" width="80">
             <template v-slot="scope">
               <div v-if="scope.row.invoiceType !== invoiceTypeEnum.RECEIPT.V && scope.row.isModify">
                 <el-input-number
@@ -84,12 +84,17 @@
                   :controls="false"
                   controls-position="right"
                   class="input-underline"
-                  style="width: 70px; text-align: center"
+                  style="width: 60px; text-align: center"
                   placeholder="0-100"
                   @change="taxMoney(scope.row)"
                 />%
               </div>
               <div v-else>{{ scope.row.taxRate? scope.row.taxRate+'%': '' }}</div>
+            </template>
+          </el-table-column>
+          <el-table-column key="noTaxAmount" prop="noTaxAmount" label="不含税价格" align="center" width="70">
+            <template v-slot="scope">
+              <span>{{scope.row.noTaxAmount && scope.row.noTaxAmount>0? toThousand(scope.row.noTaxAmount): scope.row.noTaxAmount}}</span>
             </template>
           </el-table-column>
           <el-table-column key="invoiceUnit" prop="invoiceUnit" label="*开票单位" align="center" min-width="120" :show-overflow-tooltip="true">
@@ -109,10 +114,22 @@
               <div v-else>{{ scope.row.collectionUnit  }}</div>
             </template>
           </el-table-column>
-          <el-table-column prop="invoiceNo" label="*发票号码" align="center" min-width="150">
+          <el-table-column prop="invoiceNo" label="*发票号码" align="center" min-width="130">
             <template v-slot="scope">
-              <el-input v-if="scope.row.isModify" v-model.trim="scope.row.invoiceNo" type="text" placeholder="发票号码" style="width: 100%;" @change="checkInvoiceNo(scope.row,scope.$index)" maxlength="20"/>
+              <el-input v-if="scope.row.isModify" v-model.trim="scope.row.invoiceNo" type="text" placeholder="发票号码" style="width: 100%;" @change="checkInvoiceNo(scope.row,scope.$index)" />
               <span v-else>{{ scope.row.invoiceNo  }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column prop="invoiceContent" label="发票内容" align="center" min-width="130">
+            <template v-slot="scope">
+              <el-input v-if="scope.row.isModify" v-model.trim="scope.row.invoiceContent" type="text" placeholder="发票内容" style="width: 100%;"/>
+              <span v-else>{{ scope.row.invoiceContent  }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column prop="remark" label="备注" align="center" min-width="130">
+            <template v-slot="scope">
+              <el-input v-if="scope.row.isModify" v-model.trim="scope.row.remark" type="text" placeholder="备注" style="width: 100%;" />
+              <span v-else>{{ scope.row.remark  }}</span>
             </template>
           </el-table-column>
           <el-table-column label="操作" align="center">
@@ -247,7 +264,6 @@ function moneyChange(row) {
     })
     if (extraAmount.value > (props.currentRow.settlementAmount - totalAmount.value)) {
       const num = row.invoiceAmount - (extraAmount.value - (props.currentRow.settlementAmount - totalAmount.value))
-      console.log(row.invoiceAmount)
       // 解决修改失效
       nextTick(() => {
         row.invoiceAmount = num || 0
@@ -259,15 +275,20 @@ function moneyChange(row) {
           }
         })
       })
-    } else {
-      taxMoney(row)
     }
   }
+  taxMoney(row)
 }
 
 function taxMoney(row) {
+  console.log(row)
   if (row.invoiceAmount && row.taxRate) {
     row.tax = row.invoiceAmount * row.taxRate / 100
+    row.noTaxAmount = (row.invoiceAmount / (1 + row.taxRate / 100)).toFixed(2)
+  } else {
+    if (row.invoiceType === invoiceTypeEnum.RECEIPT.V) {
+      row.noTaxAmount = row.invoiceAmount
+    }
   }
 }
 function checkInvoiceNo(row) {
@@ -327,4 +348,10 @@ CRUD.HOOK.beforeValidateCU = (crud, form) => {
   text-align: center;
   margin-top: 20px;
 }
+.table-form {
+  ::v-deep(.el-table__cell .cell) {
+  padding: 0 2px;
+}
+}
+
 </style>

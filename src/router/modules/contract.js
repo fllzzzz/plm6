@@ -225,30 +225,44 @@ export default {
             }
           ]
         },
+        // {
+        //   path: 'water-electricity-cost',
+        //   component: '',
+        //   hidden: false,
+        //   name: 'WaterElectricityCost',
+        //   alwaysShow: false,
+        //   redirect: '/contract/expense-entry/water-electricity-cost',
+        //   meta: { title: '水电费', icon: 'contract2', noCache: true },
+        //   children: [
+        //     {
+        //       name: 'WaterElectricity',
+        //       path: 'water-electricity',
+        //       hidden: false,
+        //       component: '/contract/expense-entry/water-electricity-cost/water-electricity/index',
+        //       meta: { title: '水电费', icon: 'contract2', noCache: true }
+        //     },
+        //     {
+        //       name: 'GasCost',
+        //       path: 'gas-cost',
+        //       hidden: false,
+        //       component: '/contract/expense-entry/water-electricity-cost/gas-cost/index',
+        //       meta: { title: '气体统计', icon: 'contract2', noCache: true }
+        //     }
+        //   ]
+        // },
         {
-          path: 'water-electricity-cost',
-          component: '',
+          name: 'WaterElectricity',
+          path: 'water-electricity',
           hidden: false,
-          name: 'WaterElectricityCost',
-          alwaysShow: false,
-          redirect: '/contract/expense-entry/water-electricity-cost',
-          meta: { title: '水电费', icon: 'contract2', noCache: true },
-          children: [
-            {
-              name: 'WaterElectricity',
-              path: 'water-electricity',
-              hidden: false,
-              component: '/contract/expense-entry/water-electricity-cost/water-electricity/index',
-              meta: { title: '水电费', icon: 'contract2', noCache: true }
-            },
-            {
-              name: 'GasCost',
-              path: 'gas-cost',
-              hidden: false,
-              component: '/contract/expense-entry/water-electricity-cost/gas-cost/index',
-              meta: { title: '气体统计', icon: 'contract2', noCache: true }
-            }
-          ]
+          component: '/contract/expense-entry/water-electricity-cost/water-electricity/index',
+          meta: { title: '水电费', icon: 'contract2', noCache: true }
+        },
+        {
+          name: 'GasCost',
+          path: 'gas-cost',
+          hidden: false,
+          component: '/contract/expense-entry/water-electricity-cost/gas-cost/index',
+          meta: { title: '气体统计', icon: 'contract2', noCache: true }
         },
         {
           name: 'ExpenseReporting',

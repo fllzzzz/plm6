@@ -171,7 +171,7 @@
 <script setup>
 import crudApi, { getSummary, getBadgeNum } from '@/api/mes/scheduling-manage/artifact'
 import { downloadTemplate } from '@/api/mes/scheduling-manage/common'
-import { ref, provide, computed, watch } from 'vue'
+import { ref, provide, computed } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import moment from 'moment'
 
@@ -339,18 +339,10 @@ function refresh(isRefreshTypeList = false) {
   schedulingNumGet()
 }
 
-watch(
-  () => crud.query.areaIdList,
-  (val) => {
-    schedulingNumGet()
-  }
-)
-
 async function schedulingNumGet() {
   try {
-    const data = await getBadgeNum({ productionLineTypeEnum: crud.query.productionLineTypeEnum, areaIdList: crud.query.areaIdList })
+    const data = await getBadgeNum({ areaIdList: crud.query.areaIdList })
     totalBadge.value = data
-    console.log(totalBadge.value, 'totalBadge.value')
   } catch (error) {
     console.log('获取构件排产记录气泡条数失败', error)
   }
@@ -359,6 +351,7 @@ async function schedulingNumGet() {
 const handleAreaClick = debounce(function (nodes = []) {
   console.log(nodes, 'handleAreaClick')
   summaryInfo.value = {}
+  totalBadge.value = 0
   const _areaIds = []
   const _areaIdObj = {}
   const _factoryIds = []

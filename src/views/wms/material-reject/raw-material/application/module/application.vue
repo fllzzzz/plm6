@@ -166,7 +166,7 @@ const showAmount = computed(() => checkPermission(permission.showAmount))
 // 采购合同信息
 const order = computed(() => detail.value.purchaseOrder || {})
 // 是否甲供订单
-const boolPartyA = computed(() => order.value.supplyType === orderSupplyTypeEnum.PARTY_A.V)
+const boolPartyA = computed(() => order.value?.supplyType === orderSupplyTypeEnum.PARTY_A.V)
 // 标题
 const drawerTitle = computed(() =>
   detailLoading.value ? `入库单` : `入库单：${detail.value.serialNumber}（ ${order.value.supplier ? order.value.supplier.name : ''} ）`

@@ -108,9 +108,12 @@ const props = defineProps({
   }
 })
 
-watch([() => props.processData?.id, () => monomerId.value, () => areaId.value, () => productType.value, () => productionLineId.value], () => {
-  processListGet()
-})
+watch(
+  [() => props.processData?.id, () => monomerId.value, () => areaId.value, () => productType.value, () => productionLineId.value],
+  () => {
+    processListGet()
+  }
+)
 
 provide('monomerId', monomerId)
 provide('areaId', areaId)
