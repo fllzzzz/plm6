@@ -49,6 +49,31 @@ export default {
           ]
         }
       ]
+    },
+    {
+      path: 'enclosure/production-report',
+      component: 'Layout',
+      hidden: false,
+      name: 'EnclosureProductionReport',
+      alwaysShow: false,
+      redirect: '/enclosure/production-report/production-statistics',
+      meta: { title: '生产报表', icon: 'project', noCache: true },
+      children: [
+        {
+          name: 'EnclosureProductionStatistics',
+          path: 'production-statistics',
+          hidden: false,
+          component: '/enclosure/production-report/production-statistics/index',
+          meta: { title: '生产统计', icon: 'project', noCache: true }
+        },
+        {
+          name: 'EnclosureTeamProduction',
+          path: 'team-production',
+          hidden: false,
+          component: '/enclosure/production-report/team-production/index',
+          meta: { title: '班组产量', icon: 'project', noCache: true }
+        }
+      ]
     }
   ]
 }

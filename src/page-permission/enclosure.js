@@ -35,4 +35,18 @@ export const enclosureProjectOverviewPM = {
   get: ['enclosure_project_overview:get'] // 列表
 }
 
+// 生产报表/生产统计
+export const enclosureProductionStatisticsPM = {
+  get: ['enclosure_production_statistics:get'], // 列表
+  print: ['enclosure_production_statistics:print'] // 打印
+}
+
+// 生产报表/班组产量统计
+export const enclosureTeamProductionPM = {
+  get: ['enclosure_team_production:get'], // 列表
+  detail: ['enclosure_team_production:detail'], // 详情
+  print: ['enclosure_team_production:print'], // 打印
+  printDetail: ['enclosure_team_production:printDetail'] // 打印详情
+}
+
 // --------------------------- 生产管理 end --------------------------------

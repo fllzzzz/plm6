@@ -63,7 +63,9 @@ const conMainMaterialList = wms.dataFormat // 合同管理/业财报表主材费
 const mesOutBoundStatisticsList = wms.dataFormat // 任务跟踪/在制品出库记录详情
 
 // 围护MES
-const enclosureTaskTrackingDetail = enclosure.handleProductionStatus // 任务跟踪/在制品出库记录详情
+const enclosureTaskTrackingDetail = enclosure.handleProductionStatus // 围护生产跟踪详情
+const enclosureTeamProduction = enclosure.handleProductionAmount // 围护班组产量
+const enclosureTeamProductionDetail = enclosure.handleProductionAmount // 围护班组产量详情
 
 export default {
   invoiceLedger,
@@ -118,5 +120,7 @@ export default {
   mesOutBoundStatisticsList, // 任务跟踪/在制品出库记录详情
 
   // 围护MES
-  enclosureTaskTrackingDetail // 生产跟踪详情
+  enclosureTaskTrackingDetail, // 生产跟踪详情
+  enclosureTeamProduction, // 围护班组产量
+  enclosureTeamProductionDetail // 围护班组产量详情
 }
