@@ -68,7 +68,7 @@
       <!-- 钢卷条板显示 -->
       <table-cell-tag
         v-if="showOutboundMode && row.basicClass & rawMatClsEnum.STEEL_COIL.V && row.length"
-        name="条板出库"
+        :name="row.boolBasicClassChange ? '出至钢板库' : '条板出库'"
         color="#e6a23c"
         :offset="15"
       />

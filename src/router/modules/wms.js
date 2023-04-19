@@ -34,6 +34,13 @@ export default {
           meta: { title: '制成品入库', icon: 'project', noCache: true }
         },
         {
+          name: 'OtherInboundApplication',
+          path: 'other',
+          hidden: false,
+          component: '/wms/material-inbound/raw-material/application/other/index',
+          meta: { title: '其它入库', icon: 'project', noCache: true }
+        },
+        {
           name: 'RawMatInboundApplicationRecord',
           path: 'material-inbound/raw-material/record',
           hidden: false,
@@ -78,6 +85,13 @@ export default {
           hidden: false,
           component: '/wms/material-return/raw-material/application/auxiliary-material/index',
           meta: { title: '辅材退库', icon: 'project', noCache: true }
+        },
+        {
+          name: 'OtherReturnApplication',
+          path: 'other',
+          hidden: false,
+          component: '/wms/material-return/raw-material/application/other/index',
+          meta: { title: '其它退库', icon: 'project', noCache: true }
         },
         {
           name: 'RawMatReturnApplicationRecord',
@@ -206,6 +220,13 @@ export default {
           hidden: false,
           component: '/wms/material-inventory/aux-material/index',
           meta: { title: '辅材仓库', icon: 'project', noCache: true }
+        },
+        {
+          name: 'WMSOtherMaterialInventory',
+          path: 'other',
+          hidden: false,
+          component: '/wms/material-inventory/other/index',
+          meta: { title: '其它仓库', icon: 'project', noCache: true }
         },
         {
           name: 'WMSOutboundReview',

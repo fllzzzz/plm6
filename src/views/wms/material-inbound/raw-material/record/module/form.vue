@@ -27,6 +27,7 @@ import { deepClone } from '@/utils/data-type'
 
 import SteelApplication from '@/views/wms/material-inbound/raw-material/application/steel/index.vue'
 import AuxMatApplication from '@/views/wms/material-inbound/raw-material/application/auxiliary-material/index.vue'
+import OtherApplication from '@/views/wms/material-inbound/raw-material/application/other/index.vue'
 import GasApplication from '@/views/wms/material-inbound/raw-material/application/gas/index.vue'
 import ManufApplication from '@/views/wms/material-inbound/manufactured/index.vue'
 
@@ -45,6 +46,8 @@ const comp = computed(() => {
     case matClsEnum.STRUC_MANUFACTURED.V:
     case matClsEnum.ENCL_MANUFACTURED.V:
       return ManufApplication
+    case matClsEnum.OTHER.V:
+      return OtherApplication
     default:
       if (form.basicClass & STEEL_ENUM) return SteelApplication
       return undefined

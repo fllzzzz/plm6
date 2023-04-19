@@ -14,6 +14,8 @@ export function specFormat(row) {
       return steelCoilSpec(row)
     case matClsEnum.MATERIAL.V:
       return auxMatSpec(row)
+    case matClsEnum.OTHER.V:
+      return otherMatSpec(row)
     case matClsEnum.GAS.V:
       return gasSpec(row)
     case matClsEnum.STRUC_MANUFACTURED.V:
@@ -40,6 +42,9 @@ export function specTip(row) {
       break
     case matClsEnum.MATERIAL.V:
       tip = auxMatSpecTip(row)
+      break
+    case matClsEnum.OTHER.V:
+      tip = otherMatSpecTip(row)
       break
     case matClsEnum.GAS.V:
       tip = gasSpecTip(row)
@@ -104,6 +109,14 @@ function steelCoilSpec(row) {
 
 // 辅材规格
 function auxMatSpec(row) {
+  const spec = []
+  if (isNotBlank(row.specification) && row.specificationLabels !== '无规格') spec.push(row.specification)
+  if (isNotBlank(row.color)) spec.push(row.color)
+  return spec.join(' * ')
+}
+
+// 其它规格
+function otherMatSpec(row) {
   const spec = []
   if (isNotBlank(row.specification) && row.specificationLabels !== '无规格') spec.push(row.specification)
   if (isNotBlank(row.color)) spec.push(row.color)
@@ -190,6 +203,14 @@ function steelCoilSpecTip(row) {
 
 // 辅材规格
 function auxMatSpecTip(row) {
+  const tip = []
+  if (isNotBlank(row.specificationLabels) && row.specificationLabels !== '无规格') tip.push(row.specificationLabels)
+  if (isNotBlank(row.color)) tip.push('颜色')
+  return tip.join(' * ')
+}
+
+// 其他规格
+function otherMatSpecTip(row) {
   const tip = []
   if (isNotBlank(row.specificationLabels) && row.specificationLabels !== '无规格') tip.push(row.specificationLabels)
   if (isNotBlank(row.color)) tip.push('颜色')

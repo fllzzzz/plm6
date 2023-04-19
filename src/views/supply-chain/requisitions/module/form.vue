@@ -45,6 +45,7 @@ import ProjectCascader from '@comp-base/project-cascader.vue'
 import SteelApplication from './application/steel/index'
 import AuxMatApplication from './application/auxiliary-material/index'
 import ManufApplication from './application/manufactured/index'
+import OtherApplication from './application/other/index'
 // import StoreOperation from '@crud/STORE.operation.vue'
 
 const defaultForm = {
@@ -105,6 +106,8 @@ const comp = computed(() => {
       return AuxMatApplication
     case materialPurchaseClsEnum.MANUFACTURED.V:
       return ManufApplication
+    case materialPurchaseClsEnum.OTHER.V:
+      return OtherApplication
     default:
       return undefined
   }

@@ -28,6 +28,7 @@ import {
   sectionSteelTransferHandling,
   steelCoilTransferHandling,
   auxMatTransferHandling,
+  otherTransferHandling,
   gasTransferHandling
 } from '@/api/wms/material-transfer/raw-material/transfer-handling'
 import { defineEmits, defineProps, watch, computed, ref, nextTick } from 'vue'
@@ -44,6 +45,7 @@ import sectionSteel from './module/section-steel.vue'
 import steelCoil from './module/steel-coil.vue'
 import auxMat from './module/aux-mat.vue'
 import gas from './module/gas.vue'
+import other from './module/other.vue'
 import { ElMessage } from 'element-plus'
 
 const emit = defineEmits(['success', 'update:visible'])
@@ -188,6 +190,8 @@ const comp = computed(() => {
       return steelCoil
     case rawMatClsEnum.MATERIAL.V:
       return auxMat
+    case rawMatClsEnum.OTHER.V:
+      return other
     case rawMatClsEnum.GAS.V:
       return gas
     default:
@@ -206,6 +210,8 @@ function getApi(basicClass) {
       return steelCoilTransferHandling
     case rawMatClsEnum.MATERIAL.V:
       return auxMatTransferHandling
+    case rawMatClsEnum.OTHER.V:
+      return otherTransferHandling
     case rawMatClsEnum.GAS.V:
       return gasTransferHandling
     default:

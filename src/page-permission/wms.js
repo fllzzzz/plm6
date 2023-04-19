@@ -48,6 +48,9 @@ export const auxMatInboundApplicationPM = ['wms_auxMatInbound_application:submit
 // 入库办理/制成品入库办理
 export const manufInboundApplicationPM = ['wms_manufInbound_application:submit']
 
+// 入库办理/其它入库办理
+export const otherInboundApplicationPM = ['wms_otherInbound_application:submit']
+
 // 入库办理/气体入库办理
 export const gasInboundApplicationPM = ['wms_gasInbound_application:submit']
 
@@ -134,6 +137,16 @@ export const auxMatMaterialWarehousePM = {
   freezeRecord: rawMaterialFreezeListPM.get // 冻结记录
 }
 
+// 物料仓/其它仓库
+export const otherMaterialWarehousePM = {
+  get: ['wms_matWarehouse_other:get'], // 查看 其它仓库
+  outbound: ['wms_matWarehouse_other:outbound'], // 添加其它出库单
+  outboundAudit: ['wms_matWarehouse_other:outboundAudit'], // 其它出库审核
+  transfer: ['wms_matWarehouse_other:transfer'], // 其它调拨
+  outboundRecord: rawMaterialOutboundRecordPM.get, // 出库记录
+  freezeRecord: rawMaterialFreezeListPM.get // 冻结记录
+}
+
 // 物料仓/气体仓库
 export const gasMaterialWarehousePM = {
   get: ['wms_matWarehouse_gas:get'], // 查看 气体仓库
@@ -197,6 +210,9 @@ export const steelCoilReturnApplicationPM = ['wms_steelCoil_return_application:s
 
 // 退库办理/辅材退库办理
 export const auxMatReturnApplicationPM = ['wms_auxMat_return_application:submit']
+
+// 退库办理/其它退库办理
+export const otherReturnApplicationPM = ['wms_other_return_application:submit']
 
 // 退库办理/气体退库办理
 export const gasReturnApplicationPM = ['wms_gas_return_application:submit']

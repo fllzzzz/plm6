@@ -134,6 +134,7 @@ import steelPlateTemp from '@/utils/excel/import-template/wms/inbound-applicatio
 import sectionSteelTemp from '@/utils/excel/import-template/wms/inbound-application-temp/section-steel'
 import steelCoilTemp from '@/utils/excel/import-template/wms/inbound-application-temp/steel-coil'
 import auxMaterialTemp from '@/utils/excel/import-template/wms/inbound-application-temp/aux-material'
+import otherMaterialTemp from '@/utils/excel/import-template/wms/inbound-application-temp/other'
 import gasTemp from '@/utils/excel/import-template/wms/inbound-application-temp/gas'
 import { ElMessage } from 'element-plus'
 
@@ -235,6 +236,8 @@ const importTemp = computed(() => {
       return steelCoilTemp
     case matClsEnum.MATERIAL.V:
       return auxMaterialTemp
+    case matClsEnum.OTHER.V:
+      return otherMaterialTemp
     case matClsEnum.GAS.V:
       return gasTemp
     default:
