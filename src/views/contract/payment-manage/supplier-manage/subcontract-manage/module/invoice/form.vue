@@ -137,6 +137,7 @@ import { regForm } from '@compos/use-crud'
 import { DP } from '@/settings/config'
 import { fileClassifyEnum } from '@enum-ms/file'
 import { supplierTypeEnum } from '@/utils/enum/modules/supplier'
+import { supplierClassEnum } from '@enum-ms/supplier'
 
 import UploadBtn from '@comp/file-upload/UploadBtn'
 import branchCompanySelect from '@comp-base/branch-company-select.vue'
@@ -160,6 +161,8 @@ const defaultForm = {
 }
 
 const { CRUD, crud, form } = regForm(defaultForm, formRef)
+
+const classification = supplierClassEnum.PROFESSIONAL_SUBCONTRACTING.V & supplierClassEnum.LABOR_SUBCONTRACTING.V
 
 const props = defineProps({
   detailInfo: {

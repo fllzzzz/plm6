@@ -163,9 +163,9 @@ CRUD.HOOK.handleRefresh = (crud, { data }) => {
     const basicClassArr = EO.getBits(matClsEnum.ENUM, v.supplierClassification, 'L')
     v.typeText = basicClassArr.join(' | ')
     // 付款比例
-    v.paymentRate = v.inboundAmount ? (v.paymentAmount || 0) / (v.amount || 0) * 100 : 0
+    v.paymentRate = v.inboundAmount ? (v.paymentAmount || 0) / (v.inboundAmount || 0) * 100 : 0
     // 收票比例
-    v.invoiceRate = v.inboundAmount ? (v.invoiceAmount || 0) / (v.amount || 0) * 100 : 0
+    v.invoiceRate = v.inboundAmount ? (v.invoiceAmount || 0) / (v.inboundAmount || 0) * 100 : 0
   })
 }
 
