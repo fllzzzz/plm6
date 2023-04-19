@@ -96,7 +96,7 @@
           <div v-else>{{ scope.row.taxRate? scope.row.taxRate+'%': '' }}</div>
         </template>
       </el-table-column>
-      <el-table-column key="noTaxAmount" prop="noTaxAmount" label="不含税价格" align="center" width="70">
+      <el-table-column key="noTaxAmount" prop="noTaxAmount" label="不含税金额" align="center" width="70">
         <template v-slot="scope">
           <span>{{scope.row.noTaxAmount && scope.row.noTaxAmount>0? toThousand(scope.row.noTaxAmount): scope.row.noTaxAmount}}</span>
         </template>
