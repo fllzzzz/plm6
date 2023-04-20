@@ -204,6 +204,7 @@ function validate() {
 
 defineExpose({
   rowInit,
-  validate
+  validate,
+  rowWatch
 })
 </script>

@@ -44,12 +44,12 @@
         </el-tooltip>
       </template>
     </el-table-column>
+    <el-table-column prop="measureUnit" label="计量单位" align="center" min-width="70px">
+      <template #default="{ row }">
+        <span v-empty-text>{{ row.measureUnit }}</span>
+      </template>
+    </el-table-column>
     <template v-if="props.boolPartyA">
-      <el-table-column prop="measureUnit" label="计量单位" align="center" min-width="70px">
-        <template #default="{ row }">
-          <span v-empty-text>{{ row.measureUnit }}</span>
-        </template>
-      </el-table-column>
       <el-table-column prop="quantity" label="数量" align="center" min-width="120px">
         <template #default="{ row }">
           <common-input-number
@@ -66,11 +66,25 @@
           <span v-else v-empty-text />
         </template>
       </el-table-column>
-      <el-table-column prop="accountingUnit" label="核算单位" align="center" min-width="70px">
+    </template>
+    <template v-else>
+      <el-table-column prop="purchaseQuantity" :label="`采购数量`" align="right" width="100px">
         <template #default="{ row }">
-          <span v-empty-text>{{ row.accountingUnit }}</span>
+          <span>
+            <el-tooltip effect="dark" content="已入库数量" placement="top">
+              <span class="color-green">{{ row.inboundQuantity }}</span>
+            </el-tooltip>
+            / {{ row.purchaseQuantity }}
+          </span>
         </template>
       </el-table-column>
+    </template>
+    <el-table-column prop="accountingUnit" label="核算单位" align="center" min-width="70px">
+      <template #default="{ row }">
+        <span v-empty-text>{{ row.accountingUnit }}</span>
+      </template>
+    </el-table-column>
+    <template v-if="props.boolPartyA">
       <el-table-column prop="mete" label="核算量" align="center" min-width="120px">
         <template #default="{ row }">
           <common-input-number
@@ -87,8 +101,18 @@
         </template>
       </el-table-column>
     </template>
-    <!-- 单位及其数量 -->
-    <material-unit-quantity-columns v-else quantityField="purchaseQuantity" meteField="purchaseMete" />
+    <template v-else>
+      <el-table-column prop="purchaseMete" :label="`采购量`" align="right" width="100px">
+        <template #default="{ row }">
+          <span>
+            <el-tooltip effect="dark" content="已入库量" placement="top">
+              <span class="color-green">{{ row.inboundMete }}</span>
+            </el-tooltip>
+            / {{ row.purchaseMete }}
+          </span>
+        </template>
+      </el-table-column>
+    </template>
 
     <!-- 金额设置 -->
     <price-set-columns v-if="!props.boolPartyA && fillableAmount" weight-attribute="mete" />
@@ -121,11 +145,7 @@
       <el-table-column prop="quantity" label="本次实收数" align="center" min-width="120px">
         <template #default="{ row }">
           <common-input-number
-            v-if="
-              !boolApplyPurchase &&
-              row.measureUnit &&
-              form.selectObj?.[row.mergeId]?.isSelected
-            "
+            v-if="!boolApplyPurchase && row.measureUnit && form.selectObj?.[row.mergeId]?.isSelected"
             v-model="row.quantity"
             :min="0"
             :max="999999999"
@@ -162,11 +182,7 @@
           <el-popover placement="top" :width="900" trigger="click">
             <template #reference>
               <span style="margin-left: 5px; cursor: pointer">
-                <el-edit
-                  v-if="form.selectObj?.[row.mergeId]?.isSelected"
-                  class="el-icon"
-                  style="color: #1881ef; vertical-align: middle"
-                />
+                <el-edit v-if="form.selectObj?.[row.mergeId]?.isSelected" class="el-icon" style="color: #1881ef; vertical-align: middle" />
                 <el-icon-view v-else class="el-icon" style="color: #1881ef; vertical-align: middle" />
               </span>
             </template>
@@ -179,8 +195,26 @@
                   <span v-else>-</span>
                 </template>
               </el-table-column>
-              <el-table-column prop="purchaseQuantity" :show-overflow-tooltip="true" label="采购数量" min-width="100" align="center" />
-              <el-table-column prop="purchaseMete" :show-overflow-tooltip="true" label="采购量" min-width="100" align="center" />
+              <el-table-column prop="purchaseQuantity" :label="`采购数量`" align="right" width="100px">
+                <template #default="{ row }">
+                  <span>
+                    <el-tooltip effect="dark" content="已入库数量" placement="top">
+                      <span class="color-green">{{ row.inboundQuantity }}</span>
+                    </el-tooltip>
+                    / {{ row.purchaseQuantity }}
+                  </span>
+                </template>
+              </el-table-column>
+              <el-table-column prop="purchaseMete" :label="`采购量`" align="right" width="100px">
+                <template #default="{ row }">
+                  <span>
+                    <el-tooltip effect="dark" content="已入库量" placement="top">
+                      <span class="color-green">{{ row.inboundMete }}</span>
+                    </el-tooltip>
+                    / {{ row.purchaseMete }}
+                  </span>
+                </template>
+              </el-table-column>
               <el-table-column prop="quantity" label="本次实收数" align="center" min-width="120px">
                 <template #default="{ row: purRow }">
                   <common-input-number
@@ -231,19 +265,18 @@
 
 <script setup>
 import { defineExpose, defineProps, watchEffect, computed, ref, inject, reactive } from 'vue'
-import { matClsEnum } from '@/utils/enum/modules/classification'
+// import { matClsEnum } from '@/utils/enum/modules/classification'
 import { createUniqueString } from '@/utils/data-type/string'
 import { positiveNumPattern } from '@/utils/validate/pattern'
 import { isNotBlank, toPrecision } from '@/utils/data-type'
 import { projectNameFormatter } from '@/utils/project'
 
-import useWmsConfig from '@/composables/store/use-wms-config'
+// import useWmsConfig from '@/composables/store/use-wms-config'
 import { regExtra } from '@/composables/form/use-form'
 import useTableValidate from '@compos/form/use-table-validate'
 import useOverReceive from '@/views/wms/material-inbound/raw-material/application/composables/use-over-receive.js'
 import elExpandTableColumn from '@comp-common/el-expand-table-column.vue'
 
-import materialUnitQuantityColumns from '@/components-system/wms/table-columns/material-unit-quantity-columns/index.vue'
 import priceSetColumns from '@/views/wms/material-inbound/raw-material/components/price-set-columns.vue'
 
 const props = defineProps({

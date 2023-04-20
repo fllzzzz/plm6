@@ -102,7 +102,8 @@
         <!-- </el-tooltip> -->
       </template>
     </el-table-column>
-    <el-table-column key="weighingTotalWeight" prop="weighingTotalWeight" align="center" :label="`总重 (${baseUnit.weight.unit})`">
+    <el-table-column key="weighingTotalWeight" prop="weighingTotalWeight" align="center" :label="`总重 (${baseUnit.weight.unit})`" />
+    <!-- <el-table-column key="weighingTotalWeight" prop="weighingTotalWeight" align="center" :label="`总重 (${baseUnit.weight.unit})`">
       <template #default="{ row }">
         <el-tooltip
           class="item"
@@ -123,7 +124,7 @@
           />
         </el-tooltip>
       </template>
-    </el-table-column>
+    </el-table-column> -->
 
     <el-table-column prop="brand" label="品牌" align="center">
       <template #default="{ row }">

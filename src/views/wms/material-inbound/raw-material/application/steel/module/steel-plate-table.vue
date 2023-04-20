@@ -42,6 +42,12 @@
         <el-tooltip :content="row.specificationLabels" placement="top">
           <span>{{ row.specification }}</span>
         </el-tooltip>
+        <el-edit
+          v-if="Boolean(currentCfg?.spec & basicClass)"
+          class="el-icon"
+          style="color: #1881ef; vertical-align: middle; margin-left: 5px; cursor: pointer"
+          @click="handleClickEditSpec(row)"
+        />
       </template>
     </el-table-column>
     <el-table-column prop="thickness" align="center" width="100px" :label="`厚 (${baseUnit.thickness.unit})`">
@@ -141,8 +147,26 @@
       </el-table-column>
     </template>
     <template v-else>
-      <el-table-column prop="purchaseQuantity" :label="`采购数量 (${baseUnit.measure.unit})`" align="center" width="100px" />
-      <el-table-column prop="purchaseMete" :label="`采购重量 (${baseUnit.weight.unit})`" align="center" width="100px" />
+      <el-table-column prop="purchaseQuantity" :label="`采购数量 (${baseUnit.measure.unit})`" align="right" width="100px">
+        <template #default="{ row }">
+          <span>
+            <el-tooltip effect="dark" content="已入库数量" placement="top">
+              <span class="color-green">{{ row.inboundQuantity }}</span>
+            </el-tooltip>
+            / {{ row.purchaseQuantity }}
+          </span>
+        </template>
+      </el-table-column>
+      <el-table-column prop="purchaseMete" :label="`采购重量 (${baseUnit.weight.unit})`" align="right" width="100px">
+        <template #default="{ row }">
+          <span>
+            <el-tooltip effect="dark" content="已入库量" placement="top">
+              <span class="color-green">{{ row.inboundMete }}</span>
+            </el-tooltip>
+            / {{ row.purchaseMete }}
+          </span>
+        </template>
+      </el-table-column>
     </template>
 
     <!-- 金额设置 -->
@@ -222,6 +246,28 @@
       </template>
     </el-table-column>
   </common-table>
+  <common-drawer
+    ref="drawerRef"
+    v-model="materialSelectVisible"
+    title="钢材规格选择"
+    :show-close="true"
+    :size="900"
+    custom-class="material-spec-select"
+  >
+    <template #content>
+      <material-spec-select
+        ref="specRef"
+        v-model="editList"
+        :visible="materialSelectVisible"
+        :classifyId="editRow.classifyId"
+        :show-classify="false"
+        mode="selector"
+        :max-height="specSelectMaxHeight"
+        expand-query
+        @change="handleSpecChange"
+      />
+    </template>
+  </common-drawer>
 </template>
 
 <script setup>
@@ -230,6 +276,7 @@ import { matClsEnum } from '@/utils/enum/modules/classification'
 import { isBlank, isNotBlank, toPrecision } from '@/utils/data-type'
 
 import { regExtra } from '@/composables/form/use-form'
+import useEditSectionSpec from '@compos/wms/use-edit-section-spec'
 import useTableValidate from '@compos/form/use-table-validate'
 import useMatBaseUnit from '@/composables/store/use-mat-base-unit'
 import useWeightOverDiff from '@/composables/wms/use-steel-weight-over-diff'
@@ -241,6 +288,7 @@ import { positiveNumPattern } from '@/utils/validate/pattern'
 
 import priceSetColumns from '@/views/wms/material-inbound/raw-material/components/price-set-columns.vue'
 import inboundQuantityColumn from '@/views/wms/material-inbound/raw-material/application/components/inbound-quantity-column'
+import materialSpecSelect from '@comp-cls/material-spec-select/index.vue'
 
 const props = defineProps({
   boolPartyA: {
@@ -264,6 +312,9 @@ const expandRowKeys = ref([]) // 展开行key
 
 const { overDiffTip, weightOverDiff, diffSubmitValidate, currentCfg } = useWeightOverDiff(baseUnit) // 过磅重量超出理论重量处理
 const { handleOverQuantity, handleOverMete } = useOverReceive({ meteField: 'weighingTotalWeight' })
+
+const { specSelectMaxHeight, specRef, drawerRef, editRow, editList, materialSelectVisible, handleClickEditSpec, handleSpecChange } =
+  useEditSectionSpec()
 
 const rules = {
   classifyId: [{ required: true, message: '请选择物料种类', trigger: 'change' }],

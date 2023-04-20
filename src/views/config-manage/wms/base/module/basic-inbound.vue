@@ -87,6 +87,7 @@ import { ElNotification } from 'element-plus'
 const permission = inject('permission')
 const defaultConfig = {
   [rawMatClsEnum.STEEL_PLATE.V]: {
+    spec: { L: '规格', V: false },
     thickness: { L: '厚度', V: false },
     length: { L: '长度', V: false },
     width: { L: '宽度', V: false }

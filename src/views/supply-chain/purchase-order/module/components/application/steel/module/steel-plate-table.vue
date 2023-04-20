@@ -22,6 +22,12 @@
         <el-tooltip :content="row.specificationLabels" placement="top">
           <span>{{ row.specification }}</span>
         </el-tooltip>
+        <el-edit
+          v-if="Boolean(currentCfg?.spec & basicClass)"
+          class="el-icon"
+          style="color: #1881ef; vertical-align: middle; margin-left: 5px; cursor: pointer"
+          @click="handleClickEditSpec(row)"
+        />
       </template>
     </el-table-column>
     <el-table-column prop="thickness" align="center" :label="`厚 (${baseUnit.thickness.unit})`" min-width="120">
@@ -77,7 +83,7 @@
           v-if="!form.useRequisitions || (form.useRequisitions && Boolean(currentCfg?.quantity & basicClass))"
           v-model="row.quantity"
           :min="1"
-          :max="999999999"
+          :max="!form.useRequisitions ? 999999999 : row.canPurchaseQuantity"
           controls-position="right"
           :controls="false"
           :step="1"
@@ -97,6 +103,7 @@
     >
       <template #default="{ row }">
         <el-tooltip
+          v-if="!form.useRequisitions"
           class="item"
           effect="dark"
           :content="
@@ -119,6 +126,7 @@
             :class="{ 'over-weight-tip': row.hasOver }"
           />
         </el-tooltip>
+        <span v-else>{{ row.weighingTotalWeight || '-' }}</span>
       </template>
     </el-table-column>
 
@@ -148,6 +156,28 @@
       </template>
     </el-table-column>
   </common-table>
+  <common-drawer
+    ref="drawerRef"
+    v-model="materialSelectVisible"
+    title="钢材规格选择"
+    :show-close="true"
+    :size="900"
+    custom-class="material-spec-select"
+  >
+    <template #content>
+      <material-spec-select
+        ref="specRef"
+        v-model="editList"
+        :visible="materialSelectVisible"
+        :classifyId="editRow.classifyId"
+        :show-classify="false"
+        mode="selector"
+        :max-height="specSelectMaxHeight"
+        expand-query
+        @change="handleSpecChange"
+      />
+    </template>
+  </common-drawer>
 </template>
 
 <script setup>
@@ -157,6 +187,7 @@ import { weightMeasurementModeEnum } from '@enum-ms/finance'
 import { isBlank, isNotBlank, toPrecision } from '@/utils/data-type'
 
 import usePriceSet from '@/composables/wms/use-price-set'
+import useEditSectionSpec from '@compos/wms/use-edit-section-spec'
 import useTableValidate from '@compos/form/use-table-validate'
 import useMatBaseUnit from '@/composables/store/use-mat-base-unit'
 import useWeightOverDiff from '@/composables/wms/use-steel-weight-over-diff'
@@ -164,6 +195,7 @@ import { createUniqueString } from '@/utils/data-type/string'
 import { calcSteelPlateWeight } from '@/utils/wms/measurement-calc'
 import { positiveNumPattern } from '@/utils/validate/pattern'
 import priceSetColumns from '@/views/wms/material-inbound/raw-material/components/price-set-columns.vue'
+import materialSpecSelect from '@comp-cls/material-spec-select/index.vue'
 
 // 当前物料基础类型
 const basicClass = matClsEnum.STEEL_PLATE.V
@@ -174,7 +206,7 @@ const { baseUnit } = useMatBaseUnit(basicClass) // 当前分类基础单位
 
 const { handleMeteChangeCalcPrice } = usePriceSet('weighingTotalWeight')
 
-const { overDiffTip, weightOverDiff, diffSubmitValidate, currentCfg } = useWeightOverDiff(baseUnit, {
+const { overDiffTip, weightOverDiff, currentCfg } = useWeightOverDiff(baseUnit, {
   cfgType: 'purchase',
   weightField: 'weighingTotalWeight',
   compareWeightField: 'purchaseTotalWeight',
@@ -187,6 +219,9 @@ const {
   weightOverDiff: inboundWeightOverDiff,
   diffSubmitValidate: inboundDiffSubmitValidate
 } = useWeightOverDiff(baseUnit) // 超出重量处理
+
+const { specSelectMaxHeight, specRef, drawerRef, editRow, editList, materialSelectVisible, handleClickEditSpec, handleSpecChange } =
+  useEditSectionSpec()
 
 // 金额校验
 const validateAmount = (value, row) => {
@@ -211,7 +246,7 @@ const rules = computed(() => {
     weighingTotalWeight: [
       { required: true, message: '请填写重量', trigger: 'blur' },
       {
-        validator: form.useRequisitions ? diffSubmitValidate : inboundDiffSubmitValidate,
+        validator: form.useRequisitions ? null : inboundDiffSubmitValidate,
         message: '超出误差允许范围,不可提交',
         trigger: 'blur'
       },

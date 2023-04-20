@@ -64,6 +64,8 @@ const currentView = computed(() => {
       return Steel
     case materialPurchaseClsEnum.MATERIAL.V:
       return AuxMat
+    case materialPurchaseClsEnum.OTHER.V:
+      return AuxMat
     case materialPurchaseClsEnum.MANUFACTURED.V:
       return Manufactured
     default:
@@ -84,17 +86,34 @@ async function fetchList() {
       list.value = content
     } else {
       await setSpecInfoToList(content)
-      list.value = await numFmtByBasicClass(content, {
-        toSmallest: false,
-        toNum: true
-      })
+      list.value = await numFmtByBasicClass(
+        content,
+        {
+          toSmallest: false,
+          toNum: true
+        },
+        {
+          mete: ['mete', 'productMete']
+        }
+      )
       // 计算理论重量、申购单量
       for (let i = 0; i < list.value.length; i++) {
         const v = list.value[i]
         v.purchaseSN = form.requisitionsKV[v.applyPurchaseId]?.serialNumber
+        v.productQuantity = v.productQuantity || 0
+        v.productMete = v.productMete || 0
+        const _mete = v.mete
+        const _quantity = v.quantity
+        v.originMete = _mete
+        v.originQuantity = _quantity
+        v.canPurchaseQuantity = _quantity - v.productQuantity > 0 ? _quantity - v.productQuantity : 0
+        v.canPurchaseMete = _mete - v.productMete > 0 ? _mete - v.productMete : 0
+        v.quantity = v.canPurchaseQuantity
+        console.log(v, 'v')
         if (v.basicClass & STEEL_ENUM) {
           // v.purchaseNetMete = v.mete / v.quantity
           v.purchaseTotalWeight = v.mete
+          v.weighingTotalWeight = v.canPurchaseMete
           if (v.basicClass & matClsEnum.STEEL_PLATE.V) {
             v.theoryWeight = await calcSteelPlateWeight({
               name: v.classifyFullName, // 名称，用于判断是否为不锈钢，不锈钢与普通钢板密度不同
@@ -115,6 +134,8 @@ async function fetchList() {
               quantity: v.quantity // 数量
             })
           }
+        } else {
+          v.mete = v.canPurchaseMete
         }
       }
     }

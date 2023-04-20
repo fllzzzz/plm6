@@ -9,6 +9,9 @@
       :contract-unit="order?.meteUnit"
       :contract-value="order?.mete"
       :showContractTotal="!boolPartyA && !!form.purchaseId"
+      :inbound-unit="order?.meteUnit"
+      :inbound-value="order?.inboundTotalMete"
+      :showInboundTotal="!boolPartyA && !!form.purchaseId"
       :validate="validate"
       :edit="props.edit"
       unit="kg"
@@ -449,7 +452,8 @@ function validate() {
               uid: createUniqueString(),
               mete: _weight,
               weight: _weight,
-              applyPurchaseId: a.applyPurchaseId
+              applyPurchaseId: a.applyPurchaseId,
+              purchaseDetailId: a.purchaseDetailId
             })
           }
         })

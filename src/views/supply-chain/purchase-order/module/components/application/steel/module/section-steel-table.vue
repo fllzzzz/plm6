@@ -51,7 +51,7 @@
           v-if="!form.useRequisitions || (form.useRequisitions && Boolean(currentCfg?.quantity & basicClass))"
           v-model="row.quantity"
           :min="1"
-          :max="999999999"
+          :max="!form.useRequisitions ? 999999999 : row.canPurchaseQuantity"
           controls-position="right"
           :controls="false"
           :step="5"
@@ -72,6 +72,7 @@
     >
       <template #default="{ row }">
         <el-tooltip
+          v-if="!form.useRequisitions"
           class="item"
           effect="dark"
           :content="`单位重量：${row.unitWeight} kg/m， ${
@@ -94,6 +95,7 @@
             :class="{ 'over-weight-tip': row.hasOver }"
           />
         </el-tooltip>
+        <span v-else>{{ row.weighingTotalWeight || '-' }}</span>
       </template>
     </el-table-column>
 
@@ -171,7 +173,7 @@ const matSpecRef = inject('matSpecRef') // 调用父组件matSpecRef
 const form = inject('crud')?.form
 const { baseUnit } = useMatBaseUnit(basicClass) // 当前分类基础单位
 
-const { overDiffTip, weightOverDiff, diffSubmitValidate, currentCfg } = useWeightOverDiff(baseUnit, {
+const { overDiffTip, weightOverDiff, currentCfg } = useWeightOverDiff(baseUnit, {
   cfgType: 'purchase',
   weightField: 'weighingTotalWeight',
   compareWeightField: 'purchaseTotalWeight',
@@ -211,7 +213,7 @@ const rules = computed(() => {
     ],
     weighingTotalWeight: [
       { required: true, message: '请填写重量', trigger: 'blur' },
-      { validator: form.useRequisitions ? diffSubmitValidate : inboundDiffSubmitValidate, message: '超出误差允许范围,不可提交', trigger: 'blur' },
+      { validator: form.useRequisitions ? null : inboundDiffSubmitValidate, message: '超出误差允许范围,不可提交', trigger: 'blur' },
       { pattern: positiveNumPattern, message: '重量必须大于0', trigger: 'blur' }
     ],
     unitPrice: [{ required: true, message: '请填写单价', trigger: 'blur' }],

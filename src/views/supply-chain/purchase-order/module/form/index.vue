@@ -422,6 +422,7 @@ import ManufList from '../components/manuf-list.vue'
 // import SubmitPreview from '../components/submit-preview.vue'
 import SteelApplication from '../components/application/steel/index'
 import AuxMatApplication from '../components/application/auxiliary-material/index'
+import OtherApplication from '../components/application/other/index'
 import ManufApplication from '../components/application/manufactured/index'
 import materialTableSpecSelect from '@/components-system/classification/material-table-spec-select.vue'
 import excelResolveButton from '@/components-system/common/excel-resolve-button/index.vue'
@@ -600,6 +601,8 @@ const currentView = computed(() => {
       return SteelApplication
     case materialPurchaseClsEnum.MATERIAL.V:
       return AuxMatApplication
+    case materialPurchaseClsEnum.OTHER.V:
+      return OtherApplication
     case materialPurchaseClsEnum.MANUFACTURED.V:
       return ManufApplication
     default:

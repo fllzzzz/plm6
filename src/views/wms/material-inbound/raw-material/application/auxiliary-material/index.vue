@@ -273,7 +273,8 @@ function validate() {
               projectId: a.project?.id,
               uid: createUniqueString(),
               mete: a.mete,
-              applyPurchaseId: a.applyPurchaseId
+              applyPurchaseId: a.applyPurchaseId,
+              purchaseDetailId: a.purchaseDetailId
             })
           }
         })

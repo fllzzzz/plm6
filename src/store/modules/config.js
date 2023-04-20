@@ -23,7 +23,8 @@ import { getWarehouseBrief } from '@/api/config/wms/warehouse'
 import { getSteelClassifyConfBrief } from '@/api/config/system-config/steel-classic'
 
 import { unitTypeEnum } from '@enum-ms/common'
-import { matClsEnum } from '@enum-ms/classification'
+import { convertUnits } from '@/utils/convert/unit'
+import { matClsEnum, materialPurchaseClsEnum } from '@enum-ms/classification'
 import { setEmptyArr2Undefined, tree2list, tree2listForLeaf } from '@/utils/data-type/tree'
 import { isBlank, isNotBlank } from '@/utils/data-type'
 import { arr2obj } from '@/utils/convert/type'
@@ -513,6 +514,7 @@ const actions = {
     const { content = [] } = await getPurchasingPurchaseOrderBrief()
     content.forEach((v) => {
       if (v.projects) v.projectIds = v.projects.map((v) => v.id)
+      if (v.materialType & materialPurchaseClsEnum.STEEL.V) v.inboundTotalMete = convertUnits(v.inboundTotalMete, 'g', v.meteUnit)
     })
     commit('SET_UNCLOSED_PURCHASE_ORDER', content)
     commit('SET_LOADED', { key: 'unclosedPurchaseOrder' })

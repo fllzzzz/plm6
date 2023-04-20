@@ -85,7 +85,7 @@ function initList(list) {
   if (!list?.length) return
   let _basicClass = steelClsEnum.STEEL_PLATE.V
   list.forEach((v, i) => {
-    v.weighingTotalWeight = v.mete
+    // v.weighingTotalWeight = v.mete
     bcListObj[bcListKV[steelClsEnum.VK[v.basicClass]]].push(reactive(v))
     _basicClass = v.basicClass < _basicClass || i === 0 ? v.basicClass : _basicClass
   })

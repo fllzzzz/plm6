@@ -19,7 +19,7 @@
       </template>
       <template v-else>
         <span>{{ row.quantity }}</span>
-        <el-popover placement="top" :width="700" trigger="click">
+        <el-popover placement="top" :width="730" trigger="click">
           <template #reference>
             <span style="margin-left: 5px; cursor: pointer">
               <el-edit
@@ -44,6 +44,13 @@
               :show-overflow-tooltip="true"
               :label="`采购数量 (${baseUnit.measure.unit})`"
               min-width="100"
+              align="center"
+            />
+            <el-table-column
+              prop="inboundQuantity"
+              :show-overflow-tooltip="true"
+              :label="`已入库数量 (${baseUnit.measure.unit})`"
+              min-width="110"
               align="center"
             />
             <el-table-column

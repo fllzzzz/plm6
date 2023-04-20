@@ -21,6 +21,9 @@
       :showContractTotal="showContractTotal"
       :contract-value="props.contractValue"
       :contract-unit="props.contractUnit"
+      :showInboundTotal="showInboundTotal"
+      :inbound-value="props.inboundValue"
+      :inbound-unit="props.inboundUnit"
       :show-total="props.showTotal"
       :show-total-amount="props.showTotalAmount"
       :total-amount="props.totalAmount"
@@ -74,6 +77,18 @@ const props = defineProps({
   btnName: {
     type: String,
     default: '下一步'
+  },
+  inboundUnit: {
+    type: String,
+    default: ''
+  },
+  inboundValue: {
+    type: [Number, String],
+    default: 0
+  },
+  showInboundTotal: {
+    type: Boolean,
+    default: false
   },
   showContractTotal: {
     type: Boolean,

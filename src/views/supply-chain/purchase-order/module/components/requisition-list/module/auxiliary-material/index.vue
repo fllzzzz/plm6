@@ -3,11 +3,11 @@
     <el-table-column label="序号" type="index" align="center" width="60" fixed="left" />
     <el-table-column label="申购单号" prop="purchaseSN" fixed="left" width="140" align="center">
       <template #default="{ row }">
-        <table-cell-tag
+        <!-- <table-cell-tag
           :show="row.boolPurchase"
           name="已采购"
           color="#e6a23c"
-        />
+        /> -->
         <span>{{ row.purchaseSN }}</span>
       </template>
     </el-table-column>
@@ -31,9 +31,9 @@
         <span v-empty-text>{{ row.measureUnit }}</span>
       </template>
     </el-table-column>
-    <el-table-column prop="quantity" label="数量" align="center">
+    <el-table-column prop="quantity" label="可采购数/申购数" align="right">
       <template #default="{ row }">
-        <common-input-number
+        <!-- <common-input-number
           v-if="row.measureUnit && Boolean(currentCfg?.quantity & basicClass)"
           v-model="row.quantity"
           :min="0"
@@ -44,7 +44,11 @@
           size="mini"
           placeholder="数量"
         />
-        <span v-else v-empty-text>{{ row.quantity }}</span>
+        <span v-else v-empty-text>{{ row.quantity }}</span> -->
+        <span>
+          <span class="color-green">{{ row.quantity }}</span>
+          / {{ row.originQuantity }}
+        </span>
       </template>
     </el-table-column>
     <el-table-column prop="accountingUnit" label="核算单位" align="center">
@@ -52,9 +56,9 @@
         <span v-empty-text>{{ row.accountingUnit }}</span>
       </template>
     </el-table-column>
-    <el-table-column prop="mete" label="核算量" align="center">
+    <el-table-column prop="mete" label="可采购量/申购量" align="right">
       <template #default="{ row }">
-        <common-input-number
+        <!-- <common-input-number
           v-if="Boolean(currentCfg?.mete & basicClass)"
           v-model="row.mete"
           :min="0.000001"
@@ -65,41 +69,54 @@
           size="mini"
           placeholder="核算量"
         />
-        <span v-else>{{ row.mete }}</span>
+        <span v-else>{{ row.mete }}</span> -->
+        <span>
+          <span class="color-green">{{ row.mete }}</span>
+          / {{ row.originMete }}
+        </span>
       </template>
     </el-table-column>
 
-    <el-table-column prop="color" label="颜色" align="center">
-      <template #default="{ row }">
+    <el-table-column prop="color" label="颜色" align="center" />
+    <!-- <template #default="{ row }">
         <el-input v-model.trim="row.color" maxlength="20" size="mini" placeholder="颜色" />
       </template>
-    </el-table-column>
-    <el-table-column prop="brand" label="品牌" align="center">
-      <template #default="{ row }">
+    </el-table-column> -->
+    <el-table-column prop="brand" label="品牌" align="center" />
+    <!-- <template #default="{ row }">
         <el-input v-model.trim="row.brand" maxlength="60" size="mini" placeholder="品牌" />
       </template>
-    </el-table-column>
+    </el-table-column> -->
     <el-table-column label="操作" width="90" align="center" fixed="right">
       <template #default="{ row, $index }">
-        <common-button icon="el-icon-plus" :disabled="isExist(row.id) || row.boolPurchase" type="warning" size="mini" @click="addRow(row, $index)" />
+        <common-button
+          icon="el-icon-plus"
+          :disabled="isExist(row.id) || !row.mete"
+          type="warning"
+          size="mini"
+          @click="addRow(row, $index)"
+        />
       </template>
     </el-table-column>
   </common-table>
 </template>
 
 <script setup>
-import { defineExpose, defineEmits, inject, ref } from 'vue'
-import { matClsEnum } from '@/utils/enum/modules/classification'
+import { defineExpose, defineEmits, inject, ref, watch } from 'vue'
+// import { matClsEnum } from '@/utils/enum/modules/classification'
 import { positiveNumPattern } from '@/utils/validate/pattern'
 
-import useWmsConfig from '@/composables/store/use-wms-config'
+// import useWmsConfig from '@/composables/store/use-wms-config'
+import usePriceSet from '@/composables/wms/use-price-set'
 import useTableValidate from '@compos/form/use-table-validate'
 import { deepClone } from '@/utils/data-type'
 
 // 当前物料基础类型
-const basicClass = matClsEnum.MATERIAL.V
+// const basicClass = matClsEnum.MATERIAL.V
 
-const { purchaseCfg: currentCfg } = useWmsConfig()
+// const { purchaseCfg: currentCfg } = useWmsConfig()
+
+const { handleMeteChangeCalcPrice } = usePriceSet('mete')
 
 const emit = defineEmits(['add-purchase'])
 const form = inject('crud')?.form
@@ -130,6 +147,13 @@ function addRow(row, index) {
   emit('add-purchase', row, index)
 }
 
+// 行监听
+// 使用watch 监听方法，优点：初始化时表单数据时，可以不立即执行（惰性），可以避免“草稿/修改”状态下重量被自动修改；缺点：初始化时需要指定监听参数
+function rowWatch(row) {
+  // 计算价格
+  watch([() => row.mete], () => handleMeteChangeCalcPrice(row))
+}
+
 // 校验
 function validate(list) {
   const { validResult } = tableValidate(list)
@@ -142,6 +166,7 @@ function initList(_list) {
 
 defineExpose({
   initList,
-  validate
+  validate,
+  rowWatch
 })
 </script>

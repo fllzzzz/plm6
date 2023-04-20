@@ -56,22 +56,23 @@
           :disabled="row.requisitionMode !== requisitionModeEnum.USE_INVENTORY.V"
           placement="top"
         > -->
-          <common-input-number
-            v-model="row.quantity"
-            :min="1"
-            :max="getCanUseQuantity(row)"
-            controls-position="right"
-            :controls="false"
-            :step="5"
-            :precision="baseUnit.measure.precision"
-            size="mini"
-            placeholder="数量"
-          />
+        <common-input-number
+          v-model="row.quantity"
+          :min="1"
+          :max="getCanUseQuantity(row)"
+          controls-position="right"
+          :controls="false"
+          :step="5"
+          :precision="baseUnit.measure.precision"
+          size="mini"
+          placeholder="数量"
+        />
         <!-- </el-tooltip> -->
       </template>
     </el-table-column>
     <el-table-column prop="totalLength" align="center" :label="`总长度 (m)`" />
-    <el-table-column key="weighingTotalWeight" prop="weighingTotalWeight" align="center" :label="`总重 (${baseUnit.weight.unit})`">
+    <el-table-column key="weighingTotalWeight" prop="weighingTotalWeight" align="center" :label="`总重 (${baseUnit.weight.unit})`" />
+    <!-- <el-table-column key="weighingTotalWeight" prop="weighingTotalWeight" align="center" :label="`总重 (${baseUnit.weight.unit})`">
       <template #default="{ row }">
         <el-tooltip
           class="item"
@@ -92,7 +93,7 @@
           />
         </el-tooltip>
       </template>
-    </el-table-column>
+    </el-table-column> -->
     <el-table-column prop="brand" label="品牌" align="center">
       <template #default="{ row }">
         <el-input

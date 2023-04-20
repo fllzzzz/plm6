@@ -114,8 +114,26 @@
       </el-table-column>
     </template>
     <template v-else>
-      <el-table-column prop="purchaseQuantity" :label="`采购数量 (${baseUnit.measure.unit})`" align="center" width="100px" />
-      <el-table-column prop="purchaseMete" :label="`采购重量 (${baseUnit.weight.unit})`" align="center" width="100px" />
+      <el-table-column prop="purchaseQuantity" :label="`采购数量 (${baseUnit.measure.unit})`" align="right" width="100px">
+        <template #default="{ row }">
+          <span>
+            <el-tooltip effect="dark" content="已入库数量" placement="top">
+              <span class="color-green">{{ row.inboundQuantity }}</span>
+            </el-tooltip>
+            / {{ row.purchaseQuantity }}
+          </span>
+        </template>
+      </el-table-column>
+      <el-table-column prop="purchaseMete" :label="`采购重量 (${baseUnit.weight.unit})`" align="right" width="100px">
+        <template #default="{ row }">
+          <span>
+            <el-tooltip effect="dark" content="已入库量" placement="top">
+              <span class="color-green">{{ row.inboundMete }}</span>
+            </el-tooltip>
+            / {{ row.purchaseMete }}
+          </span>
+        </template>
+      </el-table-column>
     </template>
 
     <!-- 金额设置 -->

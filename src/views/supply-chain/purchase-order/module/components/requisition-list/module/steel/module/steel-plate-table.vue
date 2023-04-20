@@ -7,13 +7,13 @@
     return-source-data
   >
     <el-table-column label="序号" type="index" align="center" width="60" fixed="left" />
-    <el-table-column label="申购单号" prop="purchaseSN" fixed="left" width="140" align="center" >
+    <el-table-column label="申购单号" prop="purchaseSN" fixed="left" width="140" align="center">
       <template #default="{ row }">
-        <table-cell-tag
+        <!-- <table-cell-tag
           :show="row.boolPurchase"
           name="已采购"
           color="#e6a23c"
-        />
+        /> -->
         <span>{{ row.purchaseSN }}</span>
       </template>
     </el-table-column>
@@ -30,10 +30,16 @@
         <el-tooltip :content="row.specificationLabels" placement="top">
           <span>{{ row.specification }}</span>
         </el-tooltip>
+        <!-- <el-edit
+          v-if="Boolean(currentCfg?.spec & basicClass)"
+          class="el-icon"
+          style="color: #1881ef; vertical-align: middle; margin-left: 5px; cursor: pointer"
+          @click="handleClickEditSpec(row)"
+        /> -->
       </template>
     </el-table-column>
-    <el-table-column prop="thickness" align="center" :label="`厚 (${baseUnit.thickness.unit})`">
-      <template #default="{ row }">
+    <el-table-column prop="thickness" align="center" :label="`厚 (${baseUnit.thickness.unit})`" />
+    <!-- <template #default="{ row }">
         <common-input-number
           v-if="Boolean(currentCfg?.thickness & basicClass)"
           v-model="row.thickness"
@@ -47,9 +53,9 @@
         />
         <span v-else>{{ row.thickness }}</span>
       </template>
-    </el-table-column>
-    <el-table-column prop="width" align="center" :label="`宽 (${baseUnit.width.unit})`">
-      <template #default="{ row }">
+    </el-table-column> -->
+    <el-table-column prop="width" align="center" :label="`宽 (${baseUnit.width.unit})`" />
+    <!-- <template #default="{ row }">
         <common-input-number
           v-if="Boolean(currentCfg?.width & basicClass)"
           v-model="row.width"
@@ -63,9 +69,9 @@
         />
         <span v-else>{{ row.width }}</span>
       </template>
-    </el-table-column>
-    <el-table-column prop="length" align="center" :label="`长 (${baseUnit.length.unit})`">
-      <template #default="{ row }">
+    </el-table-column> -->
+    <el-table-column prop="length" align="center" :label="`长 (${baseUnit.length.unit})`" />
+    <!-- <template #default="{ row }">
         <common-input-number
           v-if="Boolean(currentCfg?.length & basicClass)"
           v-model="row.length"
@@ -78,10 +84,10 @@
         />
         <span v-else>{{ row.length }}</span>
       </template>
-    </el-table-column>
-    <el-table-column prop="quantity" align="center" :label="`数量 (${baseUnit.measure.unit})`">
+    </el-table-column> -->
+    <el-table-column prop="quantity" align="right" :label="`可采购数/申购数 (${baseUnit.measure.unit})`" width="140">
       <template #default="{ row }">
-        <common-input-number
+        <!-- <common-input-number
           v-if="Boolean(currentCfg?.quantity & basicClass)"
           v-model="row.quantity"
           :min="1"
@@ -93,12 +99,16 @@
           size="mini"
           placeholder="数量"
         />
-        <span v-else>{{ row.quantity }}</span>
+        <span v-else>{{ row.quantity }}</span> -->
+        <span>
+          <span class="color-green">{{ row.quantity }}</span>
+          / {{ row.originQuantity }}
+        </span>
       </template>
     </el-table-column>
-    <el-table-column key="weighingTotalWeight" prop="weighingTotalWeight" align="center" :label="`总重 (${baseUnit.weight.unit})`">
+    <el-table-column key="weighingTotalWeight" prop="weighingTotalWeight" align="right" :label="`可采购量/申购量 (${baseUnit.weight.unit})`" width="140">
       <template #default="{ row }">
-        <el-tooltip
+        <!-- <el-tooltip
           class="item"
           effect="dark"
           :content="`申购重量：${row.purchaseTotalWeight} kg， ${overDiffTip}`"
@@ -116,34 +126,68 @@
             placeholder="重量"
             :class="{ 'over-weight-tip': row.hasOver }"
           />
-        </el-tooltip>
+        </el-tooltip> -->
+        <span>
+          <span class="color-green">{{ row.weighingTotalWeight }}</span>
+          / {{ row.originMete }}
+        </span>
       </template>
     </el-table-column>
 
-    <el-table-column prop="brand" label="品牌" align="center">
-      <template #default="{ row }">
+    <el-table-column prop="brand" label="品牌" align="center" />
+    <!-- <template #default="{ row }">
         <el-input v-model.trim="row.brand" maxlength="60" size="mini" placeholder="品牌" />
       </template>
-    </el-table-column>
+    </el-table-column> -->
     <el-table-column label="操作" width="90" align="center" fixed="right">
       <template #default="{ row, $index }">
-        <common-button icon="el-icon-plus" :disabled="isExist(row.id) || row.boolPurchase" type="warning" size="mini" @click="addRow(row, $index)" />
+        <common-button
+          icon="el-icon-plus"
+          :disabled="isExist(row.id) || !row.quantity"
+          type="warning"
+          size="mini"
+          @click="addRow(row, $index)"
+        />
       </template>
     </el-table-column>
   </common-table>
+  <!-- <common-drawer
+    ref="drawerRef"
+    v-model="materialSelectVisible"
+    title="钢材规格选择"
+    :show-close="true"
+    :size="900"
+    custom-class="material-spec-select"
+  >
+    <template #content>
+      <material-spec-select
+        ref="specRef"
+        v-model="editList"
+        :visible="materialSelectVisible"
+        :classifyId="editRow.classifyId"
+        :show-classify="false"
+        mode="selector"
+        :max-height="specSelectMaxHeight"
+        expand-query
+        @change="handleSpecChange"
+      />
+    </template>
+  </common-drawer> -->
 </template>
 
 <script setup>
-import { defineExpose, defineEmits, watchEffect, inject, watch } from 'vue'
+import { defineExpose, defineEmits, inject, watch } from 'vue'
 import { matClsEnum } from '@/utils/enum/modules/classification'
 import { isNotBlank, toPrecision } from '@/utils/data-type'
 
 import usePriceSet from '@/composables/wms/use-price-set'
+// import useEditSectionSpec from '@compos/wms/use-edit-section-spec'
 import useTableValidate from '@compos/form/use-table-validate'
 import useMatBaseUnit from '@/composables/store/use-mat-base-unit'
-import useWeightOverDiff from '@/composables/wms/use-steel-weight-over-diff'
+// import useWeightOverDiff from '@/composables/wms/use-steel-weight-over-diff'
 import { calcSteelPlateWeight } from '@/utils/wms/measurement-calc'
 import { positiveNumPattern } from '@/utils/validate/pattern'
+// import materialSpecSelect from '@comp-cls/material-spec-select/index.vue'
 
 const emit = defineEmits(['add-purchase'])
 
@@ -156,10 +200,15 @@ const { baseUnit } = useMatBaseUnit(basicClass) // 当前分类基础单位
 
 const { handleMeteChangeCalcPrice } = usePriceSet('weighingTotalWeight')
 
-const { overDiffTip, weightOverDiff, diffSubmitValidate, currentCfg } = useWeightOverDiff(
-  baseUnit,
-  { cfgType: 'purchase', weightField: 'weighingTotalWeight', compareWeightField: 'purchaseTotalWeight', weightTip: '申购重量' }
-) // 超出重量处理
+// const { overDiffTip, weightOverDiff, diffSubmitValidate, currentCfg } = useWeightOverDiff(baseUnit, {
+//   cfgType: 'purchase',
+//   weightField: 'weighingTotalWeight',
+//   compareWeightField: 'purchaseTotalWeight',
+//   weightTip: '申购重量',
+// }) // 超出重量处理
+
+// const { specSelectMaxHeight, specRef, drawerRef, editRow, editList, materialSelectVisible, handleClickEditSpec, handleSpecChange } =
+//   useEditSectionSpec()
 
 const rules = {
   width: [
@@ -168,7 +217,7 @@ const rules = {
   ],
   weighingTotalWeight: [
     { required: true, message: '请填写重量', trigger: 'blur' },
-    { validator: diffSubmitValidate, message: '超出误差允许范围,不可提交', trigger: 'blur' },
+    // { validator: diffSubmitValidate, message: '超出误差允许范围,不可提交', trigger: 'blur' },
     { pattern: positiveNumPattern, message: '重量必须大于0', trigger: 'blur' }
   ],
   length: [
@@ -190,7 +239,7 @@ function isExist(id) {
 // 行监听
 // 使用watch 监听方法，优点：初始化时表单数据时，可以不立即执行（惰性），可以避免“草稿/修改”状态下重量被自动修改；缺点：初始化时需要指定监听参数
 function rowWatch(row) {
-  watchEffect(() => weightOverDiff(row))
+  // watchEffect(() => weightOverDiff(row))
   // 计算单件理论重量
   watch([() => row.length, () => row.width, () => row.thickness, baseUnit], () => calcTheoryWeight(row))
   // 计算总重
