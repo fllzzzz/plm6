@@ -66,11 +66,11 @@
         </template>
       </el-table-column>
       <el-table-column key="receivingUnit" prop="receivingUnit" label="收款单位" align="center" min-width="140" show-overflow-tooltip />
-      <el-table-column key="receivingBank" prop="receivingBank" label="收款银行" align="center" min-width="140" show-overflow-tooltip>
+      <!-- <el-table-column key="receivingBank" prop="receivingBank" label="收款银行" align="center" min-width="140" show-overflow-tooltip>
         <template #default="{ row }">
           <div>{{row.receivingBank}}{{row.receiveBankAccount?'【'+row.receiveBankAccount+'】':''}}</div>
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column key="applyUserName" prop="applyUserName" label="办理人" align="center" width="100px" />
       <el-table-column key="auditUserName" prop="auditUserName" label="审核人" align="center" width="100px" />
       <el-table-column key="auditStatus" prop="auditStatus" label="审核状态" align="center" width="80">

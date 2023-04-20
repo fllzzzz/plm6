@@ -172,7 +172,7 @@ export default {
 
   logisticsPaymentLedger, // 物流台账
   supplierPayableSummary, // 供应商应付汇总
-  supplierPaymentLedger, // 供应商付款台账
+  supplierPaymentLedger, // 原材料采购台账
   supplierInvoiceLedger, // 供应商收票台账
 
   contractStructurePrice, // 结构计价表
@@ -210,7 +210,7 @@ export default {
   purchaseInboundRecord, // 入库记录
   purchasePaymentRecord, // 付款记录
   orderPaymentLedger, // 采购合同付款台账
-  scmSupplierPaymentLedger, // 供应商付款台账
+  scmSupplierPaymentLedger, // 原材料采购台账
 
   purchaseLogisticsRecord, // 原材料物流记录
   productLogisticsRecord, // 制成品物流记录

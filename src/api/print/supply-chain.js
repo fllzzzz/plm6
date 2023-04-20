@@ -47,12 +47,11 @@ export function orderPaymentLedger(params) {
 }
 
 /**
- * 供应商付款台账
+ * 原材料采购台账
  */
 export function supplierPaymentLedger(params) {
   return request({
-    module: 'contract',
-    url: `supply-chain/order-payment/sumBySupplier/print`,
+    url: `/api/scm/purchaseLedger/print`,
     method: 'get',
     params
   })
@@ -141,7 +140,7 @@ export default {
   paymentRecord, // 付款记录
   inboundRecord, // 入库记录
   orderPaymentLedger, // 采购合同付款台账
-  supplierPaymentLedger, // 供应商付款台账
+  supplierPaymentLedger, // 原材料采购台账
   logisticsRecord, // 原材料物流记录
   productLogisticsRecord, // 制成品物流记录
   productLogisticsInvoiceRecord, // 制成品物流收票记录

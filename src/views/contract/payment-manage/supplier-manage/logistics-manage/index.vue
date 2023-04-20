@@ -201,9 +201,9 @@ CRUD.HOOK.handleRefresh = (crud, { data }) => {
   data.content.forEach(v => {
     // 付款比例
     v.loadingWeight = v.loadingWeight ? v.loadingWeight / 1000 : 0
-    v.paymentRate = v.inboundAmount ? (v.paymentAmount || 0) / (v.amount || 0) * 100 : 0
+    v.paymentRate = v.freight ? (v.paymentAmount || 0) / (v.freight || 0) * 100 : 0
     // 收票比例
-    v.invoiceRate = v.inboundAmount ? (v.invoiceAmount || 0) / (v.amount || 0) * 100 : 0
+    v.invoiceRate = v.freight ? (v.invoiceAmount || 0) / (v.freight || 0) * 100 : 0
   })
 }
 

@@ -169,9 +169,9 @@ CRUD.HOOK.handleRefresh = (crud, { data }) => {
     // 付款比例
     v.actualWeight = (v.actualWeight / 1000).toFixed(2)
     v.projectId = v.project?.id
-    v.paymentRate = v.freight ? (v.paymentAmount || 0) / (v.freight || 0) * 100 : 0
+    v.paymentRate = v.totalPrice ? (v.paymentAmount || 0) / (v.totalPrice || 0) * 100 : 0
     // 开票比例
-    v.invoiceRate = v.freight ? (v.invoiceAmount || 0) / (v.freight || 0) * 100 : 0
+    v.invoiceRate = v.totalPrice ? (v.invoiceAmount || 0) / (v.totalPrice || 0) * 100 : 0
   })
 }
 

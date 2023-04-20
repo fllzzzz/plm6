@@ -1,12 +1,12 @@
 import { dataSourceEnum, alignEnum, verticleAlignEnum, fieldTypeEnum as typeEnum, cssUnitEnum, cssUnitPrecisionEnum, pageFormatEnum, amountUnitEnum } from '@/utils/print/enum'
 
-// 供应商付款台账
+// 原材料采购台账
 const supplierPaymentLedger = {
   fontUnit: 'pt', // 字体单位
   unit: cssUnitEnum.MM.V, // 长度单位
   unitPrecision: cssUnitPrecisionEnum.ZERO.V, // 长度单位精度
   type: 'supplierPaymentLedger', // 表格类型 KEY
-  name: '供应商付款台账（平台）', // 表格名称
+  name: '原材料采购台账（平台）', // 表格名称
   width: 210, // 打印纸的宽度
   height: 297, // 打印纸的高度
   paddingLR: 10, // 左右内边距
@@ -60,7 +60,7 @@ const supplierPaymentLedger = {
   title: {
     show: true,
     allPage: false,
-    title: '供应商付款台账',
+    title: '原材料采购台账',
     align: alignEnum.CENTER.V,
     verticleAlign: verticleAlignEnum.CENTER.V,
     size: 17,
@@ -208,5 +208,5 @@ const supplierPaymentLedger = {
 }
 
 export default {
-  supplierPaymentLedger // 供应商付款台账
+  supplierPaymentLedger // 原材料采购台账
 }

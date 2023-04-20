@@ -216,10 +216,12 @@ provide('supplierId', supplierId)
 // 刷新数据后
 CRUD.HOOK.handleRefresh = (crud, { data }) => {
   data.content.forEach(v => {
+    v.actualWeight = (v.actualWeight / 1000).toFixed(2)
     // 付款比例
-    v.paymentRate = v.inboundAmount ? (v.paymentAmount || 0) / (v.amount || 0) * 100 : 0
+    v.projectId = v.project?.id
+    v.paymentRate = v.totalPrice ? (v.paymentAmount || 0) / (v.totalPrice || 0) * 100 : 0
     // 收票比例
-    v.invoiceRate = v.inboundAmount ? (v.invoiceAmount || 0) / (v.amount || 0) * 100 : 0
+    v.invoiceRate = v.totalPrice ? (v.invoiceAmount || 0) / (v.totalPrice || 0) * 100 : 0
   })
 }
 

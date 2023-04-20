@@ -426,7 +426,7 @@ export default {
   auxiliaryMaterialPrice, // 配套件计价表
   logisticsLedger, // 物流台账
   payableSummary, // 应付汇总
-  supplierPayableLedger, // 供应商付款台账
+  supplierPayableLedger, // 原材料采购台账
   supplierInvoiceLedger, // 供应商收票台账
   collectionDetail, // 项目收款详情
   invoiceDetail, // 项目开票详情
