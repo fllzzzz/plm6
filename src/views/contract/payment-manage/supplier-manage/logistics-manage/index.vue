@@ -25,7 +25,7 @@
       </el-table-column>
       <el-table-column v-if="columns.visible('other')" key="other" prop="other" :show-overflow-tooltip="true" label="关联入库及供方" align="center" min-width="180">
         <template v-slot="scope">
-          <common-button icon="el-icon-view" type="info" size="mini" @click="openRecord(row, 'logistics')"/>
+          <common-button icon="el-icon-view" type="info" size="mini" @click="openRecord(scope.row, 'logistics')"/>
         </template>
       </el-table-column>
       <el-table-column v-if="columns.visible('freight')" prop="freight" key="freight" label="运输费" align="right" min-width="120" show-overflow-tooltip />
