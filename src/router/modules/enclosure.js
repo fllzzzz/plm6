@@ -72,6 +72,13 @@ export default {
           hidden: false,
           component: '/enclosure/production-report/team-production/index',
           meta: { title: '班组产量', icon: 'project', noCache: true }
+        },
+        {
+          name: 'EnclosureTypeAnalysis',
+          path: 'type-analysis',
+          hidden: false,
+          component: '/enclosure/production-report/type-analysis/index',
+          meta: { title: '类型分析', icon: 'project', noCache: true }
         }
       ]
     }

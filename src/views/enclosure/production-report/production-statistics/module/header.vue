@@ -163,11 +163,7 @@ const { getMyChart } = useChart({
     legend: { show: false },
     xAxis: { data: monthArr.value },
     title: {
-      text: '单位：m',
-      left: '0',
-      textStyle: {
-        fontSize: 14
-      }
+      text: '单位：m'
     },
     yAxis: {
       axisTick: {
@@ -177,7 +173,7 @@ const { getMyChart } = useChart({
         show: true
       },
       splitLine: {
-        show: true
+        show: false
       }
     },
     series: [

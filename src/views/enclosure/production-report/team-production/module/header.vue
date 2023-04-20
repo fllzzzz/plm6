@@ -43,7 +43,7 @@ import crudOperation from '@crud/CRUD.operation'
 import rrOperation from '@crud/RR.operation'
 
 const defaultQuery = {
-  projectId: { value: 1, resetAble: false },
+  projectId: { value: undefined, resetAble: false },
   date: [moment().subtract(1, 'month').valueOf(), moment().valueOf()],
   startTime: moment().subtract(1, 'month').valueOf(),
   endTime: moment().valueOf()

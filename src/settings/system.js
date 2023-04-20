@@ -176,7 +176,8 @@ export const showProjectSearch = [
   // { component: '/wms/report/raw-material/send-and-receive-storage/index', type: allPT, required: false }
 
   // 围护MES
-  { component: '/enclosure/production-report/team-production/index', type: pt.STEEL.V, required: false }
+  { component: '/enclosure/production-report/team-production/index', type: pt.STEEL.V, required: false },
+  { component: '/enclosure/production-report/type-analysis/index', type: pt.STEEL.V, required: false }
 
 ]
 

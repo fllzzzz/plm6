@@ -49,4 +49,9 @@ export const enclosureTeamProductionPM = {
   printDetail: ['enclosure_team_production:printDetail'] // 打印详情
 }
 
+// 生产报表/类型分析
+export const enclosureTypeAnalysisPM = {
+  get: ['enclosure_type_analysis:get'] // 列表
+}
+
 // --------------------------- 生产管理 end --------------------------------
