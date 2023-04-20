@@ -201,7 +201,7 @@ const mesFactoryWorkshopReport = {
      */
     fields: [
       { show: true, key: 'project', title: '项目名称', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 28, type: typeEnum.PROJECT.K, format: { showProjectFullName: false, showSerialNumber: true, projectNameShowConfig: projectNameArrangementModeEnum.SERIAL_NUMBER_START.V } },
-      { show: true, key: 'productionLineName', title: '生产线', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 15, type: typeEnum.PRODUCTION_LINE.K },
+      { show: true, key: 'productionLine.name', title: '生产线', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 15, type: typeEnum.PRODUCTION_LINE.K },
       { show: true, key: 'name', title: '名称', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 15, type: typeEnum.OTHER.K },
       { show: true, key: 'serialNumber', title: '构件编号', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.SERIAL_NUMBER.K },
       { show: true, key: 'specification', title: '规格', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 20, type: typeEnum.SPECIFICATION.K },
@@ -213,7 +213,7 @@ const mesFactoryWorkshopReport = {
         format: { precision: 2 }, sum: true
       },
       {
-        show: true, key: 'inBoundDate', title: '入库日期', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 24, type: typeEnum.DATE.K,
+        show: true, key: 'date', title: '入库日期', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 24, type: typeEnum.DATE.K,
         format: 'YY/MM/DD'
       }
     ]
