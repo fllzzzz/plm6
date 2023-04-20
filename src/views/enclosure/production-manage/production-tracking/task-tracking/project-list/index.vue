@@ -27,7 +27,7 @@
 </template>
 
 <script setup>
-import { projectList as get } from '@/api/enclosure/production-manage/scheduling-manage'
+import { projectList as get } from '@/api/enclosure/production-manage/task-tracking'
 import { ref, defineEmits } from 'vue'
 
 import { enclosureSchedulingManagePM as permission } from '@/page-permission/enclosure'

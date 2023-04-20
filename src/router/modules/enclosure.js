@@ -1,6 +1,6 @@
 // 路由：围护
 export default {
-  id: 800,
+  id: 11,
   name: '围护MES',
   children: [
     {
