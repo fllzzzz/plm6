@@ -64,6 +64,8 @@ const productLogisticsRecord = supply.productLogisticsRecord
 const productLogisticsPaymentRecord = supply.productLogisticsPaymentRecord
 const logisticsInvoiceRecord = supply.logisticsInvoiceRecord
 const logisticsPaymentRecord = supply.logisticsPaymentRecord
+const subcontractInvoiceRecord = supply.subcontractInvoiceRecord
+const subcontractPaymentRecord = supply.subcontractPaymentRecord
 
 const scmRequisitionsDetail = supply.requisitionsDetail // 申购详情
 
@@ -218,6 +220,8 @@ export default {
   productLogisticsPaymentRecord, // 制成品物流付款记录
   logisticsPaymentRecord, // 原材料物流付款记录
   logisticsInvoiceRecord, // 原材料物流收票记录
+  subcontractInvoiceRecord, // 分包订单收票记录
+  subcontractPaymentRecord, // 分包订单付款记录
 
   scmRequisitionsDetail, // 申购详情
 

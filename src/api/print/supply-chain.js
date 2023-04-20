@@ -125,6 +125,27 @@ export function logisticsPaymentRecord(params) {
 }
 
 /**
+ * 分包订单收票记录
+ */
+export function subcontractInvoiceRecord(params) {
+  return request({
+    url: `/api/contract/subLedger/listInvoice/print`,
+    method: 'get',
+    params
+  })
+}
+
+/**
+ * 分包订单付款记录
+ */
+export function subcontractPaymentRecord(params) {
+  return request({
+    url: `/api/contract/subLedger/listPayment/print`,
+    method: 'get',
+    params
+  })
+}
+/**
  * 申购详情
  */
 export function requisitionsDetail({ id }) {
