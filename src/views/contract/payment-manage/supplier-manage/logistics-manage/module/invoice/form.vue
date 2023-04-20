@@ -127,9 +127,9 @@
           </el-col>
         </el-row>
       </el-form>
+      <showPdfAndImg v-if="pdfShow" :isVisible="pdfShow" :showType="'attachment'" :id="currentId" @close="pdfShow=false"/>
     </template>
   </common-drawer>
-  <showPdfAndImg v-if="pdfShow" :isVisible="pdfShow" :showType="'attachment'" :id="currentId" @close="pdfShow=false"/>
 </template>
 
 <script setup>

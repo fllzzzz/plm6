@@ -71,6 +71,7 @@ async function checkSuffix() {
       productId: props.productId,
       productType: props.productType
     }
+    console.log(param)
     const res = props.showType ? await downloadAttachment({ id: props.id }) : await previewPDF(param)
     const msg = props.showType ? '附件' : '图纸'
     // 获取文件格式

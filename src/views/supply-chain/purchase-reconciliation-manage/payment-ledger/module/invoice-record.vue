@@ -43,8 +43,8 @@
         <el-table-column label="序号" type="index" align="center" width="60" />
         <el-table-column prop="receiveInvoiceDate" label="收票日期" align="center" width="100" show-overflow-tooltip />
         <el-table-column prop="invoiceAmount" label="票面金额" align="center" min-width="120" show-overflow-tooltip>
-           <template #default="{ row }">
-          <template v-if="row.attachments && row.attachments.length>0">
+        <template #default="{ row }">
+          <template v-if="row.sourceRow.attachments && row.sourceRow.attachments.length>0">
             <div v-for="item in row.attachments" :key="item.id">
               <div style="cursor:pointer;color:#409eff;" @dblclick="attachmentView(item)">{{toThousand(row.invoiceAmount)}}</div>
             </div>
@@ -74,8 +74,8 @@
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
       />
+      <showPdfAndImg v-if="pdfShow" :isVisible="pdfShow" :showType="'attachment'" :id="currentId" @close="pdfShow=false"/>
     </template>
-    <showPdfAndImg v-if="pdfShow" :isVisible="pdfShow" :showType="'attachment'" :id="currentId" @close="pdfShow=false"/>
   </common-drawer>
 </template>
 

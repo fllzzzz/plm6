@@ -100,8 +100,8 @@
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
       />
+      <showPdfAndImg v-if="pdfShow" :isVisible="pdfShow" :showType="'attachment'" :id="currentId" @close="pdfShow=false"/>
     </template>
-    <showPdfAndImg v-if="pdfShow" :isVisible="pdfShow" :showType="'attachment'" :id="currentId" @close="pdfShow=false"/>
   </common-drawer>
 </template>
 
