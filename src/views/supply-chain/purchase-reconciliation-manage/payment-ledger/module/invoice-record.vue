@@ -42,7 +42,7 @@
       <common-table :data="list" v-loading="tableLoading" show-summary :summary-method="getSummaries" :data-format="dataFormat" :max-height="maxHeight">
         <el-table-column label="序号" type="index" align="center" width="60" />
         <el-table-column prop="receiveInvoiceDate" label="收票日期" align="center" width="100" show-overflow-tooltip />
-        <el-table-column prop="invoiceAmount" label="票面金额" align="right" min-width="120" show-overflow-tooltip>
+        <el-table-column prop="invoiceAmount" label="票面金额" align="center" min-width="120" show-overflow-tooltip>
            <template #default="{ row }">
           <template v-if="row.attachments && row.attachments.length>0">
             <div v-for="item in row.attachments" :key="item.id">

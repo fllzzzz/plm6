@@ -58,11 +58,11 @@
          <div>{{ dict?.label?.['payment_reason']?.[row.paymentReasonId] }}</div>
         </template>
       </el-table-column>
-      <el-table-column key="paymentMethod" prop="paymentMethod" label="付款方式" align="center" width="100">
+      <!-- <el-table-column key="paymentMethod" prop="paymentMethod" label="付款方式" align="center" width="100">
           <template #default="{ row }">
           <div>{{ paymentFineModeEnum.VL?.[row.paymentMethod] }}</div>
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column key="paymentUnit" prop="paymentUnit" label="付款单位" align="center" min-width="140" show-overflow-tooltip />
       <el-table-column key="paymentBank" prop="paymentBank" show-overflow-tooltip label="付款银行" align="center" min-width="130">
         <template #default="{ row }">
@@ -70,11 +70,11 @@
         </template>
       </el-table-column>
       <el-table-column key="receivingUnit" prop="receivingUnit" label="收款单位" align="center" min-width="140" show-overflow-tooltip />
-      <el-table-column key="receivingBank" prop="receivingBank" label="收款银行" align="center" min-width="140" show-overflow-tooltip>
+      <!-- <el-table-column key="receivingBank" prop="receivingBank" label="收款银行" align="center" min-width="140" show-overflow-tooltip>
         <template #default="{ row }">
           <div>{{row.receivingBank}}{{row.receiveBankAccount?'【'+row.receiveBankAccount+'】':''}}</div>
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column key="applyUserName" prop="applyUserName" label="办理人" align="center" width="100px" />
       <el-table-column key="auditUserName" prop="auditUserName" label="审核人" align="center" width="100px" />
       <!-- <el-table-column key="remark" prop="remark" label="备注" align="center" min-width="120" show-overflow-tooltip /> -->
@@ -105,7 +105,7 @@ import { defineEmits, defineProps, ref, computed, watch } from 'vue'
 
 import { auditTypeEnum } from '@enum-ms/contract'
 import { digitUppercase, getDP, toThousand } from '@/utils/data-type/number'
-import { paymentFineModeEnum } from '@enum-ms/finance'
+// import { paymentFineModeEnum } from '@enum-ms/finance'
 import { tableSummary } from '@/utils/el-extra'
 
 import useVisible from '@/composables/use-visible'

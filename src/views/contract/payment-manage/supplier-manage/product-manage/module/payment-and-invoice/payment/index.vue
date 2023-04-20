@@ -42,11 +42,11 @@
           <div>{{ scope.row.paymentReasonId && dict && dict.label && dict.label['payment_reason']? dict.label['payment_reason'][ scope.row.paymentReasonId]: '' }}</div>
         </template>
       </el-table-column>
-      <el-table-column key="paymentMethod" prop="paymentMethod" label="*付款方式" align="center" :show-overflow-tooltip="true">
+      <!-- <el-table-column key="paymentMethod" prop="paymentMethod" label="*付款方式" align="center" :show-overflow-tooltip="true">
         <template v-slot="scope">
           <div>{{ scope.row.paymentMethod? paymentFineModeEnum.VL[scope.row.paymentMethod]: '-' }}</div>
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column key="paymentBank" prop="paymentBank" :show-overflow-tooltip="true" label="*付款银行" align="center">
         <template v-slot="scope">
          <div>{{ scope.row.paymentBank? scope.row.paymentBank: '-' }}</div>
@@ -105,7 +105,7 @@ import useCRUD from '@compos/use-crud'
 import pagination from '@crud/Pagination'
 import useDict from '@compos/store/use-dict'
 import { auditTypeEnum, supplierPayTypeEnum } from '@enum-ms/contract'
-import { paymentFineModeEnum } from '@enum-ms/finance'
+// import { paymentFineModeEnum } from '@enum-ms/finance'
 import { parseTime } from '@/utils/date'
 import { toThousand, digitUppercase } from '@data-type/number'
 import { contractSupplierProductPM } from '@/page-permission/contract'
