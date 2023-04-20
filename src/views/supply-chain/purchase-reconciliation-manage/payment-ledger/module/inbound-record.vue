@@ -17,8 +17,8 @@
       <div class="print-wrap">
         <print-table
           v-permission="props.permission?.print"
-          api-key="purchaseInboundRecord"
-          :params="{ ...params }"
+          api-key="purchaseMaterialInboundRecord"
+          :params="{ supplierId: props.detailInfo.supplierId }"
           size="mini"
           type="warning"
         />

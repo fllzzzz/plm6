@@ -25,14 +25,14 @@
     </div>
     <crudOperation>
       <template #optRight>
-        <print-table
+        <!-- <print-table
           v-permission="crud.permission.print"
           api-key="logisticsPaymentLedger"
           :params="{ ...query }"
           size="mini"
           type="warning"
           class="filter-item"
-        />
+        /> -->
       </template>
     </crudOperation>
   </div>

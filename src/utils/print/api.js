@@ -54,6 +54,7 @@ const fortuneReportList = contract.fortuneReportList
 // 供应链
 const purchaseInvoiceRecord = supply.invoiceDetail
 const purchaseInboundRecord = supply.inboundRecord
+const purchaseMaterialInboundRecord = supply.inboundRecord
 const purchasePaymentRecord = supply.paymentRecord
 const orderPaymentLedger = supply.orderPaymentLedger
 const scmSupplierPaymentLedger = supply.supplierPaymentLedger
@@ -210,6 +211,7 @@ export default {
   // 供应链
   purchaseInvoiceRecord, // 收票记录
   purchaseInboundRecord, // 入库记录
+  purchaseMaterialInboundRecord, // 原材料采购入库记录
   purchasePaymentRecord, // 付款记录
   orderPaymentLedger, // 采购合同付款台账
   scmSupplierPaymentLedger, // 原材料采购台账

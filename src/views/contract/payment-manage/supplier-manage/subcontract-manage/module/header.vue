@@ -24,7 +24,7 @@
       <rrOperation />
     </div>
     <crudOperation>
-      <template #optRight>
+      <!-- <template #optRight>
         <print-table
           v-permission="crud.permission.print"
           api-key="logisticsPaymentLedger"
@@ -33,7 +33,7 @@
           type="warning"
           class="filter-item"
         />
-      </template>
+      </template> -->
     </crudOperation>
   </div>
 </template>

@@ -63,6 +63,8 @@
             <el-form-item label="收票日期" prop="receiveInvoiceDate">
               <span>{{parseTime(currentRow.receiveInvoiceDate,'{y}-{m}-{d}')}}</span>
             </el-form-item>
+          </el-col>
+          <el-col :span="12">
              <el-form-item label="备注" prop="remark">
               <span>{{currentRow.remark}}</span>
             </el-form-item>

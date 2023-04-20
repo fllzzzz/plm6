@@ -363,7 +363,7 @@ constantize(mainAuxiliaryTypeEnum)
 const productLProjectStatusEnum = {
   PROCESS: { L: '进行中', K: 'PROCESS', V: 1 << 0, TAG: '' },
   SUSPEND: { L: '已暂停', K: 'SUSPEND', V: 1 << 1, TAG: 'danger' },
-  COMPLETE: { L: '已完工未结算', K: 'COMPLETE', V: 1 << 2, TAG: 'warning' },
+  COMPLETE: { L: '已完工', K: 'COMPLETE', V: 1 << 2, TAG: 'warning' },
   SETTLED: { L: '已结算', K: 'COMPLETE', V: 1 << 3, TAG: 'success' }
 }
 constantize(productLProjectStatusEnum)
