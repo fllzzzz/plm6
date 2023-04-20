@@ -42,6 +42,16 @@
           <div v-if="scope.row.invoiceType !== invoiceTypeEnum.RECEIPT.V">{{ scope.row.taxRate? scope.row.taxRate+'%': '' }}</div>
         </template>
       </el-table-column>
+      <el-table-column prop="amountExcludingTax" label="不含税" align="center" min-width="120" show-overflow-tooltip>
+          <template #default="{ row }">
+            <span>{{toThousand(row.amountExcludingTax)}}</span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="tax" label="税额" align="center" min-width="120" show-overflow-tooltip>
+          <template #default="{ row }">
+            <span>{{toThousand(row.tax)}}</span>
+          </template>
+        </el-table-column>
       <el-table-column prop="invoiceSerialNumber" label="发票编号" align="center" min-width="100" show-overflow-tooltip />
       <el-table-column prop="branchCompanyName" label="购买方" align="center" min-width="140" show-overflow-tooltip />
       <el-table-column prop="supplierName" label="销售方" align="center" min-width="140" show-overflow-tooltip />
@@ -135,7 +145,7 @@ const currentId = ref()
 const showType = ref('detail')
 const detailVisible = ref(false)
 
-const { crud } = useCRUD(
+const { CRUD, crud } = useCRUD(
   {
     title: '收票填报',
     sort: [],
@@ -176,8 +186,8 @@ function attachmentView(item) {
 // 合计
 function getSummaries(param) {
   return tableSummary(param, {
-    props: ['invoiceAmount'],
-    toThousandFields: ['invoiceAmount']
+    props: ['invoiceAmount', 'tax', 'amountExcludingTax'],
+    toThousandFields: ['invoiceAmount', 'tax', 'amountExcludingTax']
   })
 }
 
@@ -185,6 +195,21 @@ function openDetail(row, type) {
   showType.value = type
   currentRow.value = row
   detailVisible.value = true
+}
+
+CRUD.HOOK.handleRefresh = (crud, data) => {
+  data.data.content.map(v => {
+    v.amountExcludingTax = v.taxRate ? (v.invoiceAmount / (1 + v.taxRate / 100)).toFixed(2) : v.invoiceAmount
+    v.tax = (v.invoiceAmount - v.amountExcludingTax).toFixed(2)
+  })
+}
+
+CRUD.HOOK.afterDelete = () => {
+  emit('success')
+}
+
+CRUD.HOOK.afterAddSuccess = () => {
+  emit('success')
 }
 
 function handleSuccess() {

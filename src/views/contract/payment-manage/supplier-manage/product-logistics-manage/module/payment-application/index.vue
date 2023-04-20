@@ -194,6 +194,14 @@ CRUD.HOOK.handleRefresh = (crud, { data }) => {
   })
 }
 
+CRUD.HOOK.afterDelete = () => {
+  emit('success')
+}
+
+CRUD.HOOK.afterAddSuccess = () => {
+  emit('success')
+}
+
 function openDetail(row, type) {
   showType.value = type
   currentRow.value = row

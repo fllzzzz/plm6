@@ -7,7 +7,7 @@
     direction="rtl"
     :before-close="handleClose"
     custom-class="invoice-record"
-    size="80%"
+    size="90%"
   >
     <template #titleAfter>
       <el-tag type="warning" effect="plain" size="medium">供应商：{{detailInfo.supplierName}}</el-tag>
@@ -56,6 +56,16 @@
         <el-table-column prop="taxRate" label="税率" align="center" width="70" show-overflow-tooltip>
           <template #default="{ row }">
             <span>{{ row.taxRate }}<span v-if="row.taxRate!=='-'">%</span></span>
+          </template>
+        </el-table-column>
+         <el-table-column prop="amountExcludingTax" label="不含税" align="center" min-width="120" show-overflow-tooltip>
+          <template #default="{ row }">
+            <span>{{toThousand(row.amountExcludingTax)}}</span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="tax" label="税额" align="center" min-width="120" show-overflow-tooltip>
+          <template #default="{ row }">
+            <span>{{toThousand(row.tax)}}</span>
           </template>
         </el-table-column>
         <el-table-column prop="invoiceSerialNumber" label="发票编号" align="center" min-width="100" show-overflow-tooltip />
@@ -206,6 +216,10 @@ async function fetchList() {
   tableLoading.value = true
   try {
     const { content = [], totalElements } = await invoiceRecord({ ...params.value, ...queryPage })
+    content.map(v => {
+      v.amountExcludingTax = v.taxRate ? (v.invoiceAmount / (1 + v.taxRate / 100)).toFixed(2) : v.invoiceAmount
+      v.tax = (v.invoiceAmount - v.amountExcludingTax).toFixed(2)
+    })
     _list = content
     setTotalPage(totalElements)
   } catch (error) {

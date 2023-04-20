@@ -188,6 +188,14 @@ function handleSuccess() {
   emit('success')
 }
 
+CRUD.HOOK.afterDelete = () => {
+  emit('success')
+}
+
+CRUD.HOOK.afterAddSuccess = () => {
+  emit('success')
+}
+
 CRUD.HOOK.handleRefresh = (crud, { data }) => {
   data.content.forEach(v => {
     v.paymentDate = String(v.paymentDate)

@@ -182,6 +182,14 @@ function attachmentView(item) {
   pdfShow.value = true
 }
 
+CRUD.HOOK.afterDelete = () => {
+  emit('success')
+}
+
+CRUD.HOOK.afterAddSuccess = () => {
+  emit('success')
+}
+
 function handleSuccess() {
   crud.toQuery()
   emit('success')

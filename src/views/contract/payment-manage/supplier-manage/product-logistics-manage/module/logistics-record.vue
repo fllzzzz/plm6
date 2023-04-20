@@ -7,7 +7,7 @@
     direction="rtl"
     :before-close="handleClose"
     custom-class="invoice-record"
-    size="80%"
+    size="90%"
   >
     <template #titleAfter>
       <el-tag type="warning" effect="plain" size="medium">物流公司：{{detailInfo.supplierName}}</el-tag>

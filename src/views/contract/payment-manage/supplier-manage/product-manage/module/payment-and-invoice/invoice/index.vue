@@ -422,8 +422,8 @@ function attachmentView(item) {
 // 合计
 function getSummaries(param) {
   return tableSummary(param, {
-    props: ['invoiceAmount'],
-    toThousandFields: ['invoiceAmount']
+    props: ['invoiceAmount', 'tax', 'amountExcludingTax'],
+    toThousandFields: ['invoiceAmount', 'tax', 'amountExcludingTax']
   })
 }
 
