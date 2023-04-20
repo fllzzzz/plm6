@@ -53,6 +53,19 @@ export function auxMatOutboundHandling(data) {
 }
 
 /**
+ * 其它出库办理
+ * @returns
+ */
+export function otherOutboundHandling(data) {
+  return request({
+    module: 'wms',
+    url: 'outbound/application/other-material',
+    method: 'put',
+    data
+  })
+}
+
+/**
  * 气体出库办理
  * @returns
  */
@@ -113,6 +126,19 @@ export function auxMatBatchOutboundHandling(data) {
   return request({
     module: 'wms',
     url: 'outbound/application/auxiliary-material/batch',
+    method: 'put',
+    data
+  })
+}
+
+/**
+ * 其它出库办理
+ * @returns
+ */
+export function otherBatchOutboundHandling(data) {
+  return request({
+    module: 'wms',
+    url: 'outbound/application/other-material/batch',
     method: 'put',
     data
   })
