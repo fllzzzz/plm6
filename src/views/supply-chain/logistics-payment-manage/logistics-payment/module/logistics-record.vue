@@ -11,30 +11,21 @@
   >
     <template #titleAfter>
       <el-tag type="warning" effect="plain" size="medium">物流公司：{{detailInfo.supplierName}}</el-tag>
-      <el-tag>运费总额：{{detailInfo.totalPrice}}</el-tag>
-    </template>
-    <template #titleRight>
-      <div class="print-wrap">
-        <print-table
-          v-permission="props.permission?.print"
-          api-key="productLogisticsRecord"
-          :params="{ ...params }"
-          size="mini"
-          type="warning"
-        />
-      </div>
+      <el-tag>运费总额：{{detailInfo.freight}}</el-tag>
     </template>
     <template #content>
       <common-table :data="list" v-loading="tableLoading" show-summary :summary-method="getSummaries" :data-format="dataFormat" :max-height="maxHeight">
         <el-table-column label="序号" type="index" align="center" width="60" />
-        <el-table-column prop="serialNumber" label="运输单号" align="center" width="100" show-overflow-tooltip />
-        <el-table-column prop="auditTime" label="运输日期" align="center" width="100" show-overflow-tooltip />
-        <el-table-column prop="userName" label="装车人" align="center" min-width="140" show-overflow-tooltip />
-        <el-table-column prop="auditUserName" label="过磅复核人" align="center" min-width="140" show-overflow-tooltip />
-        <el-table-column prop="actualWeight" label="过磅重量（吨）" align="center" min-width="100" show-overflow-tooltip />
-        <el-table-column prop="carModel" label="车型" align="center" min-width="100" show-overflow-tooltip />
-        <el-table-column prop="priceType" label="计价方式" align="center" min-width="100" show-overflow-tooltip />
-        <el-table-column prop="totalPrice" label="总额" align="center" min-width="100" show-overflow-tooltip />
+        <el-table-column prop="inboundTime" label="入库日期" width="90" align="center" show-overflow-tooltip />
+        <el-table-column prop="licensePlate" label="车牌号" align="center" show-overflow-tooltip />
+        <el-table-column prop="loadingWeight" label="装载重量（吨）" align="center" show-overflow-tooltip />
+        <el-table-column prop="freight" label="运输费" align="center" show-overflow-tooltip />
+        <el-table-column prop="inboundSn" label="关联入库单" align="center" show-overflow-tooltip>
+          <template #default="{ row }">
+            <span class="clickable" @click="openRecord(row)"> {{ row.inboundSn }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="supplierName" label="关联供应商" align="center" show-overflow-tooltip />
       </common-table>
       <!--分页组件-->
       <el-pagination
@@ -46,21 +37,22 @@
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
       />
+      <inbound-record v-model="recordVisible" :detailInfo="currentRow" />
     </template>
   </common-drawer>
 </template>
 
 <script setup>
-import { logisticsRecordDetail } from '@/api/supply-chain/logistics-payment-manage/jd-product-logistics-record-ledger'
-import { ref, defineEmits, defineProps, watch, computed } from 'vue'
+import { logisticsRecordDetail } from '@/api/supply-chain/logistics-payment-manage/jd-logistics-record-ledger'
+import { ref, nextTick, defineEmits, defineProps, watch, computed } from 'vue'
 
 import { digitUppercase, getDP, toThousand } from '@/utils/data-type/number'
 import { tableSummary } from '@/utils/el-extra'
-import { logisticsPriceTypeEnum } from '@enum-ms/mes'
 
 import useVisible from '@/composables/use-visible'
 import useMaxHeight from '@compos/use-max-height'
 import usePagination from '@compos/use-pagination'
+import inboundRecord from './inbound-record'
 
 const emit = defineEmits(['update:modelValue'])
 
@@ -85,6 +77,8 @@ const props = defineProps({
 
 const { visible, handleClose } = useVisible({ emit, props })
 const { handleSizeChange, handleCurrentChange, total, setTotalPage, queryPage } = usePagination({ fetchHook: fetchList })
+const currentRow = ref({})
+const recordVisible = ref(false)
 
 // 请求参数
 const params = computed(() => {
@@ -109,10 +103,9 @@ const list = ref([])
 const drawerRef = ref()
 const tableLoading = ref(false)
 const dataFormat = ref([
-  ['priceType', ['parse-enum', logisticsPriceTypeEnum]],
-  ['auditTime', ['parse-time', '{y}-{m}-{d}']],
-  ['actualWeight', ['to-fixed', 2]],
-  ['totalPrice', 'to-thousand']
+  ['inboundTime', ['parse-time', '{y}-{m}-{d}']],
+  ['loadingWeight', ['to-fixed', 2]],
+  ['freight', 'to-thousand']
 ])
 
 const { maxHeight } = useMaxHeight(
@@ -131,7 +124,7 @@ const { maxHeight } = useMaxHeight(
 // 合计
 function getSummaries(param) {
   const summary = tableSummary(param, {
-    props: ['totalPrice']
+    props: ['freight']
   })
   const num = summary[2]
   if (num) {
@@ -149,7 +142,7 @@ async function fetchList() {
   try {
     const { content = [], totalElements } = await logisticsRecordDetail({ ...params.value, ...queryPage })
     content.map(v => {
-      v.actualWeight = v.actualWeight ? v.actualWeight / 1000 : 0
+      v.loadingWeight = v.loadingWeight ? v.loadingWeight / 1000 : 0
     })
     _list = content
     setTotalPage(totalElements)
@@ -160,4 +153,18 @@ async function fetchList() {
     tableLoading.value = false
   }
 }
+
+// 打开入库记录
+function openRecord(row) {
+  currentRow.value = row.sourceRow
+  nextTick(() => {
+    recordVisible.value = true
+  })
+}
 </script>
+<style lang="scss" scoped>
+.clickable {
+  cursor: pointer;
+  color:#409eff;
+}
+</style>

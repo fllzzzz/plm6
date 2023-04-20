@@ -25,7 +25,7 @@
       </el-table-column>
       <el-table-column v-if="columns.visible('other')" key="other" prop="other" :show-overflow-tooltip="true" label="关联入库及供方" align="center" min-width="180">
         <template v-slot="scope">
-          <common-button icon="el-icon-view" type="info" size="mini" @click="openDetail(scope.row, 'detail')"/>
+          <common-button icon="el-icon-view" type="info" size="mini" @click="openLogisticsRecord(scope.row)"/>
         </template>
       </el-table-column>
       <el-table-column v-if="columns.visible('freight')" prop="freight" key="freight" label="运输费" align="right" min-width="120" show-overflow-tooltip />
@@ -80,6 +80,8 @@
     <invoiceRecord v-model="recordVisible" :permission="permission" :detail-info="detailInfo" :query-date="{startDate:crud.query.startDate,endDate:crud.query.endDate}"/>
      <!-- 付款记录 -->
     <paymentRecord v-model="paymentVisible" :permission="permission" :detail-info="detailInfo" :query-date="{startDate:crud.query.startDate,endDate:crud.query.endDate}"/>
+    <!-- 物流记录 -->
+    <logisticsRecord v-model="logisticsVisible" :permission="permission" :detail-info="detailInfo" />
   </div>
 </template>
 
@@ -95,6 +97,7 @@ import pagination from '@crud/Pagination'
 import mHeader from './module/header'
 import invoiceRecord from './module/invoice-record'
 import paymentRecord from './module/payment-record'
+import logisticsRecord from './module/logistics-record'
 
 const optShow = {
   add: false,
@@ -130,6 +133,7 @@ const { maxHeight } = useMaxHeight({ paginate: true })
 
 const detailInfo = ref({})
 const recordVisible = ref(false)
+const logisticsVisible = ref(false)
 
 // 刷新数据后
 CRUD.HOOK.handleRefresh = (crud, { data }) => {
@@ -157,6 +161,15 @@ function openPaymentRecord(row) {
   detailInfo.value = row.sourceRow
   nextTick(() => {
     paymentVisible.value = true
+  })
+}
+
+// 打开物流记录
+function openLogisticsRecord(row) {
+  if (!checkPermission(permission.detail)) return
+  detailInfo.value = row.sourceRow
+  nextTick(() => {
+    logisticsVisible.value = true
   })
 }
 </script>

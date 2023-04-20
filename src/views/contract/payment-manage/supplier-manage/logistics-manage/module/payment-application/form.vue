@@ -40,14 +40,14 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="累计付款">
-            <span v-thousand="detailInfo.paymentAmount"/><span>（{{ detailInfo.paymentRate }}%）</span>
+            <span v-thousand="detailInfo.paymentAmount"/><span>（{{ (detailInfo.paymentRate).toFix(2) }}%）</span>
           </el-form-item>
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="12">
             <el-form-item label="累计收票">
-              <span v-thousand="detailInfo.invoiceAmount"/><span>（{{ detailInfo.invoiceRate }}%）</span>
+              <span v-thousand="detailInfo.invoiceAmount"/><span>（{{ (detailInfo.invoiceRate).toFix(2) }}%）</span>
             </el-form-item>
           </el-col>
           <el-col :span="12">
