@@ -29,8 +29,8 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="累计入库额">
-              <span>{{toThousand(detailInfo.inboundAmount)}}</span>
+            <el-form-item label="累计运输费">
+              <span>{{toThousand(detailInfo.totalPrice)}}</span>
             </el-form-item>
           </el-col>
         </el-row>

@@ -36,8 +36,8 @@
         </el-row>
         <el-row>
           <el-col :span="12">
-            <el-form-item label="发票及税率" prop="invoiceTypeEnum" class="form-label-require">
-              <span>{{}}</span>
+           <el-form-item label="发票及税率" prop="invoiceTypeEnum">
+              <span>{{invoiceTypeEnum.VL[currentRow.invoiceType]}}【{{currentRow.taxRate}}%】</span>
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -116,6 +116,7 @@ import { audit } from '@/api/contract/supplier-manage/jd-product-logistics-invoi
 import { ref, defineProps, defineEmits } from 'vue'
 import { ElMessageBox, ElNotification } from 'element-plus'
 
+import { invoiceTypeEnum } from '@enum-ms/finance'
 import { toThousand } from '@data-type/number'
 import { parseTime } from '@/utils/date'
 import useVisible from '@compos/use-visible'

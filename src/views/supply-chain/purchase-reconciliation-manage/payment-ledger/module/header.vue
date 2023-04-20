@@ -46,7 +46,7 @@
       <template #optRight>
         <print-table
           v-permission="crud.permission.print"
-          :api-key="isOrderType ? 'orderPaymentLedger' : 'scmSupplierPaymentLedger'"
+          :api-key="'scmSupplierPaymentLedger'"
           :params="{ ...query }"
           size="mini"
           type="warning"
@@ -58,9 +58,6 @@
 </template>
 
 <script setup>
-// import { get as orderList } from '@/api/supply-chain/purchase-reconciliation-manage/payment-ledger'
-// import { getBySupplier as summaryList } from '@/api/supply-chain/purchase-reconciliation-manage/payment-ledger'
-import { ref, computed, defineExpose } from 'vue'
 import moment from 'moment'
 
 import { regHeader } from '@compos/use-crud'
@@ -82,27 +79,6 @@ const defaultQuery = {
 }
 const { crud, query } = regHeader(defaultQuery)
 
-// 列表类型
-const listTypeEnum = {
-  ORDER: { L: '采购合同', K: 'ORDER', V: 1 },
-  SUPPLIER: { L: '供应商', K: 'SUPPLIER', V: 2 }
-}
-
-const listType = ref(listTypeEnum.ORDER.V)
-
-// 是否为订单列表
-const isOrderType = computed(() => {
-  return listType.value === listTypeEnum.ORDER.V
-})
-
-// 列表类型切换
-// function handleListTypeChange(val) {
-//   crud.data = []
-//   crud.loading = true
-//   crud.crudApi.get = val === listTypeEnum.ORDER.V ? orderList : summaryList
-//   crud.toQuery()
-// }
-
 // 时间变动
 function handleDateChange() {
   if (query.date && query.date.length > 1) {
@@ -114,8 +90,4 @@ function handleDateChange() {
   }
   crud.toQuery()
 }
-
-defineExpose({
-  isOrderType
-})
 </script>

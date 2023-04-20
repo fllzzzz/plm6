@@ -15,7 +15,7 @@
             @change="handleDateChange"
           />
           <common-radio-button
-            v-model="query.auditStatus"
+            v-model="query.projectStatus"
             :options="productLProjectStatusEnum.ENUM"
             showOptionAll
             :optionAllValue="undefined"
@@ -50,18 +50,19 @@ const defaultQuery = {
   date: [],
   startDate: undefined,
   endDate: undefined,
+  projectStatus: undefined,
   supplierName: undefined
 }
 const { crud, query } = regHeader(defaultQuery)
 
 // 时间变动
 function handleDateChange(val) {
-  if (query.value.date && query.value.date.length > 1) {
-    query.value.startDate = val[0]
-    query.value.endDate = val[1]
+  if (query.date && query.date.length > 1) {
+    query.startDate = val[0]
+    query.endDate = val[1]
   } else {
-    query.value.startDate = undefined
-    query.value.endDate = undefined
+    query.startDate = undefined
+    query.endDate = undefined
   }
   crud.toQuery()
 }

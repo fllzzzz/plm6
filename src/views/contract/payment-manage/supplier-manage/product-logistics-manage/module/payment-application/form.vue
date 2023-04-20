@@ -20,8 +20,8 @@
           </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="累计运输费">
-              <span v-thousand="detailInfo.freight" />
+           <el-form-item label="累计运输费">
+              <span>{{toThousand(detailInfo.totalPrice)}}</span>
             </el-form-item>
           </el-col>
         </el-row>
@@ -178,7 +178,7 @@ import { ref, defineProps } from 'vue'
 
 import moment from 'moment'
 import { fileClassifyEnum } from '@enum-ms/file'
-import { digitUppercase } from '@data-type/number'
+import { toThousand, digitUppercase } from '@data-type/number'
 import { parseTime } from '@/utils/date'
 import { DP } from '@/settings/config'
 import { supplierClassEnum } from '@enum-ms/supplier'

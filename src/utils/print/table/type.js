@@ -107,7 +107,7 @@ const tableType = {
   purchaseInboundRecord: { L: '入库记录', M: 'purchase_reconciliation', T: mt.supply.L + ' / ' + supply.purchase_reconciliation },
   purchasePaymentRecord: { L: '付款记录', M: 'purchase_reconciliation', T: mt.supply.L + ' / ' + supply.purchase_reconciliation },
   orderPaymentLedger: { L: '采购付款台账', M: 'purchase_reconciliation', T: mt.supply.L + ' / ' + supply.purchase_reconciliation },
-  scmSupplierPaymentLedger: { L: '供应商付款台账', M: 'purchase_reconciliation', T: mt.supply.L + ' / ' + supply.purchase_reconciliation },
+  scmSupplierPaymentLedger: { L: '原材料采购台账', M: 'purchase_reconciliation', T: mt.supply.L + ' / ' + supply.purchase_reconciliation },
 
   purchaseLogisticsRecord: { L: '原材料物流记录', M: 'logistics_reconciliation', T: mt.supply.L + ' / ' + supply.logistics_reconciliation },
   productLogisticsRecord: { L: '制成品物流记录', M: 'logistics_reconciliation', T: mt.supply.L + ' / ' + supply.logistics_reconciliation },
