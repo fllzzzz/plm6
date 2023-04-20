@@ -71,7 +71,7 @@ import { provide, ref } from 'vue'
 
 import { teamTypeEnum, componentTypeEnum } from '@enum-ms/mes'
 import checkPermission from '@/utils/system/check-permission'
-import { configProductionLineGroupPM as permission } from '@/page-permission/config'
+import { enclosureConfigProductionLineGroupPM as permission } from '@/page-permission/config'
 
 import useMaxHeight from '@compos/use-max-height'
 import lineConfig from './line'

@@ -385,6 +385,21 @@ export const enclosureConfigInspectionModePM = {
   edit: ['enclosure_inspection_mode:edit'] // 编辑报检方式
 }
 
+// 围护-生产配置/生产线管理
+export const enclosureConfigProductionLinePM = {
+  get: ['enclosure_productionLine:get'], // 生产线列表
+  add: ['enclosure_productionLine:add'], // 添加生产线
+  edit: ['enclosure_productionLine:edit'], // 编辑生产线
+  del: ['enclosure_productionLine:del'], // 删除生产线
+  editStatus: ['enclosure_productionLine:editStatus'] // 更改生产线状态
+}
+
+// 围护-生产配置/生产线管理:生产组
+export const enclosureConfigProductionLineGroupPM = {
+  get: ['enclosure_productionLine_group:get'], // 班组列表
+  edit: ['enclosure_productionLine_group:edit'] // 编辑班组
+}
+
 // ---------------------------- 围护-生产配置 end -------------------------------
 
 // ---------------------------- 基础配置 end -------------------------------

@@ -128,10 +128,11 @@
 import crudApi, { editStatus } from '@/api/config/enclosure/production-config/production-line'
 import { ref, defineEmits, inject } from 'vue'
 import { useStore } from 'vuex'
+
 import { enabledEnum } from '@enum-ms/common'
 import { componentTypeEnum } from '@enum-ms/mes'
 import checkPermission from '@/utils/system/check-permission'
-import { configProductionLinePM as permission } from '@/page-permission/config'
+import { enclosureConfigProductionLinePM as permission } from '@/page-permission/config'
 
 import { getBitwiseBack } from '@data-type/number'
 import { TechnologyTypeAllEnum } from '@enum-ms/contract'

@@ -53,6 +53,9 @@
 import { get, productionTeam, saveProductionTeam } from '@/api/config/enclosure/production-config/production-line-team'
 import { defineProps, defineExpose, ref, watch, computed, inject, nextTick } from 'vue'
 
+import checkPermission from '@/utils/system/check-permission'
+import { enclosureConfigProductionLineGroupPM as permission } from '@/page-permission/config'
+
 import { ElNotification } from 'element-plus'
 
 const maxHeight = inject('maxHeight')
@@ -101,6 +104,7 @@ watch(
 async function fetchList() {
   try {
     list.value = []
+    if (!checkPermission(permission.get)) return
     listLoading.value = true
     const data = await get({ id: lineId.value })
     list.value = (data.teams || []).map((row) => {

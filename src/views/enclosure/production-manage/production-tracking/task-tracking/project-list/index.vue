@@ -54,7 +54,7 @@ const dataFormat = ref([
 
 const { crud, CRUD } = useCRUD(
   {
-    title: '排产管理-项目列表',
+    title: '任务跟踪-项目列表',
     sort: [],
     permission: { ...permission },
     optShow: { ...optShow },
