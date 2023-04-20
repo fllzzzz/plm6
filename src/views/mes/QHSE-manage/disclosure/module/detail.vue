@@ -1,7 +1,7 @@
 <template>
   <common-drawer ref="drawerRef" title="QHSE事件曝光" v-model="drawerVisible" direction="rtl" :before-close="handleClose" size="55%">
     <template #titleRight>
-      <export-button type="warning" size="mini" :params="{ id: detailData.project?.id }" :fn="downloadZipGet">下载</export-button>
+      <export-button v-permission="permission.export" type="warning" size="mini" :params="{ id: detailData.id }" :fn="getExcelFn">下载</export-button>
     </template>
     <template #content>
       <el-descriptions v-loading="listLoading" :data="detailData" :column="2" size="large" border>
@@ -9,13 +9,13 @@
           <span>{{ detailData.project?.serialNumber }}-{{ detailData.project?.shortName }}</span>
         </el-descriptions-item>
         <el-descriptions-item align="center" label="单体">
-          <span>{{ detailData.monomer?.name }}</span>
+          <span>{{ detailData.monomerName }}</span>
         </el-descriptions-item>
         <el-descriptions-item align="center" label="制造人">
-          <span>{{ detailData.monomer?.name }}</span>
+          <span>{{ detailData.dutyName }}</span>
         </el-descriptions-item>
         <el-descriptions-item align="center" label="质检人">
-          <span>{{ detailData.monomer?.name }}</span>
+          <span>{{ detailData.userName }}</span>
         </el-descriptions-item>
         <el-descriptions-item align="center" label="问题类型">
           <span>{{ problemTypeEnum.VL[detailData.type] }}</span>
@@ -72,8 +72,10 @@
 
 <script setup>
 import { defineProps, defineEmits, ref } from 'vue'
+import { getExcelFn } from '@/api/mes/QHSE-manage/disclosure'
 import { parseTime } from '@/utils/date'
 import { problemTypeEnum } from '@enum-ms/production'
+import { qhseDisclosurePM as permission } from '@/page-permission/mes'
 import useVisible from '@compos/use-visible'
 import ExportButton from '@comp-common/export-button/index.vue'
 

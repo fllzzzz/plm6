@@ -85,7 +85,11 @@
       <el-table-column :show-overflow-tooltip="true" prop="index" label="序号" align="center" width="60" type="index" />
       <el-table-column :show-overflow-tooltip="true" prop="workshop" label="车间/产线/班组" header-align="center" min-width="140px">
         <template #default="{ row }">
-          <span>{{ row.workshop?.name + '/' + row.productionLine?.name + '/' + row.groups?.name + '/' + row.team?.name }}</span>
+          <span>{{
+            row.team?.name
+              ? row.workshop?.name + '/' + row.productionLine?.name + '/' + row.groups?.name + '/' + row.team?.name
+              : row.workshop?.name + '/' + row.productionLine?.name + '/' + row.groups?.name + '/' + '-'
+          }}</span>
         </template>
       </el-table-column>
       <el-table-column :show-overflow-tooltip="true" prop="monomer.name" label="单体" align="center" min-width="100px">
@@ -178,18 +182,18 @@ const status = ref()
 const props = defineProps({
   visible: {
     type: Boolean,
-    default: false
+    default: false,
   },
   detailData: {
     type: Object,
-    default: () => {}
+    default: () => {},
   },
   projectId: {
-    type: Number
+    type: Number,
   },
   weightStatus: {
-    type: Number
-  }
+    type: Number,
+  },
 })
 
 // const lastMonomerId = inject('monomerId')
@@ -201,7 +205,7 @@ const query = computed(() => {
     productType: props.detailData.productType,
     processId: props.detailData.id,
     projectId: props.projectId,
-    productionLineId: productionLineId.value
+    productionLineId: productionLineId.value,
   }
 })
 
@@ -212,7 +216,7 @@ const commonQuery = computed(() => {
     monomerId: monomerId.value,
     areaId: areaId.value,
     serialNumber: serialNumber.value,
-    status: status.value
+    status: status.value,
   }
 })
 
@@ -253,7 +257,7 @@ async function processDetailGet() {
       areaId: areaId.value,
       ...commonQuery.value,
       ...query.value,
-      ...queryPage
+      ...queryPage,
     })
     setTotalPage(totalElements)
     _list = content
@@ -265,7 +269,7 @@ async function processDetailGet() {
 }
 
 const { maxHeight } = useMaxHeight({
-  paginate: true
+  paginate: true,
 })
 
 // 搜索
@@ -291,7 +295,7 @@ function resetQuery() {
 // 合计
 function getSummaries(param) {
   return tableSummary(param, {
-    props: ['quantity']
+    props: ['quantity', 'taskNetWeight', 'taskGrossWeight', 'completeQuantity', 'completeNetWeight', 'completeGrossWeight'],
   })
 }
 </script>

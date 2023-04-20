@@ -211,11 +211,11 @@ const mesProjectOverviewList = {
       // { show: true, key: 'netWeight', title: '单净重', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.WEIGHT.K },
       // { show: true, key: 'grossWeight', title: '单毛重', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.WEIGHT.K },
       { show: true, key: 'quantity', title: '任务数', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 10, type: typeEnum.QUANTITY.K, sum: true },
-      { show: true, key: 'taskNetWeight', title: '任务净重（kg）', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 10, type: typeEnum.WEIGHT.K },
-      { show: true, key: 'taskGrossWeight', title: '任务毛重（kg）', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 10, type: typeEnum.WEIGHT.K },
-      { show: true, key: 'completeQuantity', title: '已完成数', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 10, type: typeEnum.QUANTITY.K },
-      { show: true, key: 'completeNetWeight', title: '已完成净重（kg）', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 10, type: typeEnum.WEIGHT.K },
-      { show: true, key: 'completeGrossWeight', title: '已完成毛重（kg）', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 14, type: typeEnum.WEIGHT.K }
+      { show: true, key: 'taskNetWeight', title: '任务净重（kg）', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 10, type: typeEnum.WEIGHT.K, sum: true },
+      { show: true, key: 'taskGrossWeight', title: '任务毛重（kg）', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 10, type: typeEnum.WEIGHT.K, sum: true },
+      { show: true, key: 'completeQuantity', title: '已完成数', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 10, type: typeEnum.QUANTITY.K, sum: true },
+      { show: true, key: 'completeNetWeight', title: '已完成净重（kg）', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 10, type: typeEnum.WEIGHT.K, sum: true },
+      { show: true, key: 'completeGrossWeight', title: '已完成毛重（kg）', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 14, type: typeEnum.WEIGHT.K, sum: true }
     ]
   }
 }

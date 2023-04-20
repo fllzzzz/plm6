@@ -1045,7 +1045,7 @@ export default {
         hidden: false,
         component: '/mes/QHSE-manage/disclosure/index',
         meta: {
-          title: '问题曝光',
+          title: '问题报告',
           icon: 'project',
           noCache: true
         }
