@@ -38,7 +38,7 @@
         clearable
         @change="handleWorkshopChange"
       />
-      <!-- <production-line-select
+      <production-line-select
         ref="productionLineRef"
         class="filter-item"
         v-model="query.productionLineId"
@@ -48,7 +48,7 @@
         style="width: 200px"
         clearable
         @change="handleProductionLineChange"
-      /> -->
+      />
       <el-tag class="filter-item" size="medium">
         <span>全年累计产量（吨）</span>
         <span>：</span>
@@ -147,7 +147,7 @@ import { weightTypeEnum } from '@enum-ms/common'
 import { timeTypeEnum } from '@enum-ms/contract'
 import { mesFactoryReportPM as permission } from '@/page-permission/mes'
 import workshopSelect from '@comp-mes/workshop-select'
-// import productionLineSelect from '@comp-mes/production-line-select'
+import productionLineSelect from '@comp-mes/production-line-select'
 // import projectCascader from '@comp-base/project-cascader'
 import crudOperation from '@crud/CRUD.operation'
 
@@ -211,6 +211,11 @@ async function fetchSummary() {
 }
 
 function handleWorkshopChange() {
+  fetchSummary()
+  fetchChart()
+}
+
+function handleProductionLineChange() {
   fetchSummary()
   fetchChart()
 }
@@ -346,7 +351,8 @@ async function fetchChart() {
     const data = await workshopEcharts({
       type: query.type,
       dateTime: query.dateTime ? query.dateTime : moment().startOf('year').valueOf(),
-      workShopId: query.workShopId
+      workShopId: query.workShopId,
+      productionLineId: query.productionLineId
     })
     const option = _myChart.getOption()
     if (crud.query.type === timeTypeEnum.CURRENT_MONTH.V) {

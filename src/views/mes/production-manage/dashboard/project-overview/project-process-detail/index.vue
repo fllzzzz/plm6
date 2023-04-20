@@ -43,6 +43,7 @@
         <el-table-column prop="index" label="序号" align="center" width="60px" type="index" />
         <el-table-column align="center" key="name" prop="name" :show-overflow-tooltip="true" label="涉及工序" width="100px">
           <template v-slot="scope">
+            <table-cell-tag :show="!scope.row.id" color="#e64242" name="特殊" />
             <span>{{ scope.row.name }}</span>
           </template>
         </el-table-column>
@@ -77,7 +78,12 @@
           </template>
         </el-table-column>
       </common-table>
-      <process-detail v-model:visible="dialogVisible" :project-id="props.processData.id" :detail-data="detailData" :weightStatus="weightStatus" />
+      <process-detail
+        v-model:visible="dialogVisible"
+        :project-id="props.processData.id"
+        :detail-data="detailData"
+        :weightStatus="weightStatus"
+      />
     </div>
   </div>
 </template>
@@ -108,8 +114,8 @@ const dialogVisible = ref(false)
 const props = defineProps({
   processData: {
     type: Object,
-    default: () => {}
-  }
+    default: () => {},
+  },
 })
 
 watch(
@@ -125,7 +131,7 @@ provide('productionLineId', productionLineId)
 
 const { maxHeight } = useMaxHeight({
   extraBox: ['.head-container'],
-  paginate: true
+  paginate: true,
 })
 
 async function processListGet() {
@@ -138,7 +144,7 @@ async function processListGet() {
       monomerId: monomerId.value,
       areaId: areaId.value,
       projectId: props.processData.id,
-      productionLineId: productionLineId.value
+      productionLineId: productionLineId.value,
     })
     processList.value = data
   } catch (e) {
