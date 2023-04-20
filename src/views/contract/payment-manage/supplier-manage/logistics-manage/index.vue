@@ -25,7 +25,7 @@
       </el-table-column>
       <el-table-column v-if="columns.visible('other')" key="other" prop="other" :show-overflow-tooltip="true" label="关联入库及供方" align="center" min-width="180">
         <template v-slot="scope">
-          <common-button icon="el-icon-view" type="info" size="mini" @click="openDetail(scope.row, 'detail')"/>
+          <common-button icon="el-icon-view" type="info" size="mini" @click="openRecord(row, 'logistics')"/>
         </template>
       </el-table-column>
       <el-table-column v-if="columns.visible('freight')" prop="freight" key="freight" label="运输费" align="right" min-width="120" show-overflow-tooltip />
@@ -137,7 +137,7 @@ import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import pagination from '@crud/Pagination'
 import mHeader from './module/header'
-import inboundRecord from './module/inbound-record'
+import logisticsRecord from './module/logistics-record'
 import invoiceRecord from './module/invoice-record'
 import paymentRecord from './module/payment-record'
 import paymentApplication from './module/payment-application/index'
@@ -151,8 +151,8 @@ const optShow = {
 }
 
 const currentView = computed(() => {
-  if (recordType.value === 'inbound') {
-    return inboundRecord
+  if (recordType.value === 'logistics') {
+    return logisticsRecord
   } else if (recordType.value === 'invoice') {
     return invoiceRecord
   }

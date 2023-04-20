@@ -10,8 +10,8 @@
     size="100%"
   >
     <template #titleAfter>
-      <el-tag v-if="detailInfo.serialNumber" type="success" effect="plain" size="medium">采购合同编号：{{detailInfo.serialNumber}}</el-tag>
-      <el-tag v-else type="warning" effect="plain" size="medium">供应商：{{detailInfo.supplierName}}</el-tag>
+      <el-tag type="warning" effect="plain" size="medium">供应商：{{detailInfo.supplierName}}</el-tag>
+      <el-tag effect="plain" size="medium">入库单号：{{detailInfo.inboundSn}}</el-tag>
     </template>
     <template #titleRight>
       <div class="print-wrap">
@@ -71,7 +71,6 @@
         <el-table-column prop="inboundTime" label="入库时间" align="center" width="90" show-overflow-tooltip />
         <el-table-column prop="applicantName" label="入库人" align="center" show-overflow-tooltip width="90" />
         <el-table-column prop="reviewerName" label="审核人" align="center" show-overflow-tooltip width="90" />
-        <el-table-column prop="inboundSerialNumber" label="入库单号" align="center" min-width="110" show-overflow-tooltip />
       </common-table>
       <!--分页组件-->
       <el-pagination

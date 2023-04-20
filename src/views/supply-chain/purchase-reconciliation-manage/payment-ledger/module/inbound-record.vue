@@ -71,7 +71,7 @@
           :columns="{}"
           spec-merge
         />
-         <el-table-column prop="purchaseSn" label="采购单号" align="center" min-width="130" show-overflow-tooltip />
+        <el-table-column prop="purchaseSn" label="采购单号" align="center" min-width="130" show-overflow-tooltip />
         <!-- 单位及其数量 -->
         <material-unit-quantity-columns :columns="{}" />
         <!-- 价格信息 -->
