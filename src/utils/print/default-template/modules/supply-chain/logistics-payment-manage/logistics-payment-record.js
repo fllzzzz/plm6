@@ -1,11 +1,11 @@
 import { dataSourceEnum, alignEnum, verticleAlignEnum, fieldTypeEnum as typeEnum, cssUnitEnum, cssUnitPrecisionEnum, pageFormatEnum, amountUnitEnum } from '@/utils/print/enum'
 
 // 原材料物流付款记录
-const productLogisticsPaymentRecord = {
+const logisticsPaymentRecord = {
   fontUnit: 'pt', // 字体单位
   unit: cssUnitEnum.MM.V, // 长度单位
   unitPrecision: cssUnitPrecisionEnum.ZERO.V, // 长度单位精度
-  type: 'productLogisticsPaymentRecord', // 表格类型 KEY
+  type: 'logisticsPaymentRecord', // 表格类型 KEY
   name: '原材料物流付款记录（平台）', // 表格名称
   width: 210, // 打印纸的宽度
   height: 297, // 打印纸的高度
@@ -213,5 +213,5 @@ const productLogisticsPaymentRecord = {
 }
 
 export default {
-  productLogisticsPaymentRecord // 原材料物流付款记录
+  logisticsPaymentRecord // 原材料物流付款记录
 }

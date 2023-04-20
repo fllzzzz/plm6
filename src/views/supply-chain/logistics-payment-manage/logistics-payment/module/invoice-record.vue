@@ -189,6 +189,7 @@ function getSummaries(param) {
 
 // 预览附件
 function attachmentView(item) {
+  console.log(item)
   currentId.value = item.id
   pdfShow.value = true
 }

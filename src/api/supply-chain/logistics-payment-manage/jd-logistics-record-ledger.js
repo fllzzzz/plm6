@@ -2,8 +2,7 @@ import request from '@/utils/request'
 
 export function get(params) {
   return request({
-    module: 'contract',
-    url: 'supply-chain/logistics/summary',
+    url: '/api/scm/logisticsLedger',
     method: 'get',
     params
   })
@@ -22,7 +21,7 @@ export function logisticsRecordDetail(params) {
 // 物流付款汇总
 export function paymentRecord(params) {
   return request({
-    url: '/api/scm/logisticsLedger',
+    url: '/api/scm/logisticsLedger/listPayment',
     method: 'get',
     params
   })
