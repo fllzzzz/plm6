@@ -18,8 +18,8 @@
       <div class="print-wrap">
         <print-table
           v-permission="props.permission?.payment.print"
-          api-key="purchasePaymentRecord"
-          :params="{ ...params }"
+          api-key="subcontractPaymentRecord"
+          :params="{ supplierId: props.detailInfo.supplierId,projectId: props.detailInfo.projectId,auditStatus: auditTypeEnum.PASS.V}"
           size="mini"
           type="warning"
         />
@@ -145,6 +145,7 @@ const props = defineProps({
 const params = computed(() => {
   const data = {
     supplierId: props.detailInfo.supplierId,
+    projectId: props.detailInfo.projectId,
     auditStatus: auditTypeEnum.PASS.V,
     ...query.value
   }

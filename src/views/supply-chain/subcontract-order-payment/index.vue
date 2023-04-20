@@ -137,6 +137,7 @@ provide('orderId', orderId)
 // 刷新数据后
 CRUD.HOOK.handleRefresh = (crud, { data }) => {
   data.content.forEach(v => {
+    v.projectId = v.project?.id
     // 付款比例
     v.paymentRate = v.amount ? (v.paymentAmount || 0) / (v.amount || 0) * 100 : 0
     // 收票比例
@@ -158,5 +159,6 @@ function openRecord(row, type) {
 <style lang="scss" scoped>
 .clickable {
   cursor: pointer;
+  color:#409eff;
 }
 </style>
