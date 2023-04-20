@@ -98,7 +98,7 @@
 import { get as paymentRecord } from '@/api/contract/supplier-manage/jd-material-payment'
 import { defineEmits, defineProps, ref, computed, watch } from 'vue'
 
-import { auditTypeEnum, supplierPayTypeEnum } from '@enum-ms/contract'
+import { auditTypeEnum } from '@enum-ms/contract'
 import { digitUppercase, getDP, toThousand } from '@/utils/data-type/number'
 import { tableSummary } from '@/utils/el-extra'
 
@@ -138,15 +138,9 @@ const props = defineProps({
 // 请求参数
 const params = computed(() => {
   const data = {
-    propertyType: supplierPayTypeEnum.PURCHASE.V,
+    supplierId: props.detailInfo.supplierId,
+    auditStatus: auditTypeEnum.PASS.V,
     ...query.value
-  }
-  if (props.detailInfo.id) {
-    // 订单列表
-    data.orderId = props.detailInfo.id
-  } else {
-    // 汇总列表
-    data.supplierId = props.detailInfo.supplierId
   }
   return data
 })

@@ -39,8 +39,6 @@
 </template>
 
 <script setup>
-import moment from 'moment'
-
 import { regHeader } from '@compos/use-crud'
 import crudOperation from '@crud/CRUD.operation'
 import rrOperation from '@crud/RR.operation'
@@ -56,8 +54,8 @@ const { crud, query } = regHeader(defaultQuery)
 // 时间变动
 function handleDateChange() {
   if (query.date && query.date.length > 1) {
-    query.startDate = moment(query.date[0]).valueOf()
-    query.endDate = moment(query.date[1]).valueOf()
+    query.startDate = query.date[0]
+    query.endDate = query.date[1]
   } else {
     query.startDate = undefined
     query.endDate = undefined
