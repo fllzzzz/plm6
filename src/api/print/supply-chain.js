@@ -5,8 +5,7 @@ import request from '@/utils/request'
  */
 export function invoiceDetail(params) {
   return request({
-    module: 'contract',
-    url: `contract/receive-invoice/list/print`,
+    url: `/api/scm/purchaseLedger/listInvoice/print`,
     method: 'get',
     params
   })
@@ -29,8 +28,7 @@ export function inboundRecord(params) {
  */
 export function paymentRecord(params) {
   return request({
-    module: 'contract',
-    url: `contract/payment/list/print`,
+    url: `/api/scm/purchaseLedger/listPayment/print`,
     method: 'get',
     params
   })

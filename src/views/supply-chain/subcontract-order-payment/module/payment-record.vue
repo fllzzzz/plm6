@@ -43,7 +43,6 @@
       <common-table :data="list" v-loading="tableLoading" show-summary :summary-method="getSummaries" :data-format="dataFormat" :max-height="maxHeight">
       <el-table-column prop="index" label="序号" align="center" width="50" type="index" />
       <el-table-column key="paymentDate" prop="paymentDate" label="付款日期" align="center" width="90" />
-      <!-- <el-table-column key="applyAmount" prop="applyAmount" label="申请金额" align="right" min-width="80" /> -->
       <el-table-column key="actuallyPaymentAmount" prop="actuallyPaymentAmount" label="支付金额" align="right" min-width="80">
         <template #default="{ row }">
           <template v-if="row.attachments && row.attachments.length>0">
@@ -54,11 +53,6 @@
           <template v-else>{{toThousand(row.actuallyPaymentAmount)}}</template>
         </template>
       </el-table-column>
-      <!-- <el-table-column label="大写" align="center" min-width="120" show-overflow-tooltip>
-          <template #default="{ row }">
-          <div v-if="row.actuallyPaymentAmount">{{ digitUppercase(row?.sourceRow?.actuallyPaymentAmount) }}</div>
-        </template>
-      </el-table-column> -->
       <el-table-column key="paymentReasonId" prop="paymentReasonId" label="付款事由" align="center" width="100">
           <template #default="{ row }">
          <div>{{ dict?.label?.['payment_reason']?.[row.paymentReasonId] }}</div>
