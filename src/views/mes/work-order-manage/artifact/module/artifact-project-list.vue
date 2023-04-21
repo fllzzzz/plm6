@@ -20,7 +20,7 @@
       clearable
     />
   </div>
-  <div :style="{height: `${maxHeight}px`}">
+  <div :style="{ height: `${maxHeight}px` }">
     <project-to-area-tree :tree-data="treeData" :filter-text="filterText" :loading="loading" v-bind="$attrs" />
   </div>
 </template>

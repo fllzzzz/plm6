@@ -35,7 +35,7 @@
       class="filter-item"
       @change="fetchTaskList"
     />
-    <el-input
+    <!-- <el-input
       v-model="name"
       placeholder="项目搜索"
       class="filter-item"
@@ -43,11 +43,19 @@
       size="small"
       clearable
       @keyup.enter="fetchTaskList"
+    /> -->
+    <el-input
+      v-model.trim="filterText"
+      size="small"
+      placeholder="输入项目/单体/区域搜索"
+      style="width: 260px"
+      class="filter-item"
+      clearable
     />
-    <common-button class="filter-item" size="mini" type="success" icon="el-icon-search" @click.stop="searchQuery">搜索</common-button>
+    <!-- <common-button class="filter-item" size="mini" type="success" icon="el-icon-search" @click.stop="searchQuery">搜索</common-button>
     <common-button class="filter-item" size="mini" type="warning" icon="el-icon-refresh-left" @click.stop="resetQuery">
       重置
-    </common-button>
+    </common-button> -->
   </div>
   <div :style="heightStyle">
     <el-tree
@@ -58,11 +66,12 @@
       :filter-node-method="filterNode"
       style="height: 100%"
       :indent="20"
+      show-checkbox
       expand-on-click-node
       node-key="rowKey"
       :auto-expand-parent="false"
       :default-expanded-keys="expandedKeys"
-      @node-click="handleNodeClick"
+      @check-change="handleCheckClick"
     >
       <template #default="{ node, data }">
         <div style="padding: 3px 5px; border-radius: 3px; width: 100%; position: relative" class="tree-custom-content">
@@ -125,9 +134,9 @@ const loading = ref(false)
 const expandedKeys = ref([])
 const treeData = ref([])
 const treeMenuRef = ref()
-const currentMonomerId = ref()
+// const currentMonomerId = ref()
 
-const filterText = ref()
+const filterText = ref('')
 const filterIds = ref([])
 
 watch([() => date.value, () => name.value, () => issueStatusEnum.value], () => {
@@ -140,12 +149,12 @@ fetchTaskList()
 async function fetchTaskList() {
   if (!checkPermission(permission.get)) return
   try {
+    filterText.value = ''
     loading.value = true
     expandedKeys.value = []
     const { content } = await getProjectTaskDetail({
       startDate: startDate.value,
       endDate: endDate.value,
-      name: name.value,
       issueStatusEnum: issueStatusEnum.value
     })
     treeData.value = await dataFormat(content)
@@ -194,7 +203,7 @@ function dataFormat(content) {
         label: monomers[x].name,
         children: _area,
         isLeaf: false,
-        disabled: true,
+        disabled: false,
         fontSize: 15,
         type: '单体',
         icon: 'document'
@@ -218,7 +227,7 @@ function dataFormat(content) {
       children: _monomer,
       isLeaf: false,
       fontSize: 16,
-      disabled: true,
+      disabled: false,
       type: '项目',
       icon: 'project'
     })
@@ -227,23 +236,44 @@ function dataFormat(content) {
 }
 
 // 切换区域
-function handleNodeClick(data, node) {
-  if (data.isLeaf) {
-    // console.log(data, node, currentMonomerId.value)
-    if (!node.checked) {
-      if (data.monomerId === currentMonomerId.value) {
-        treeMenuRef.value.setChecked(node, true)
-      } else {
-        currentMonomerId.value = data.monomerId
-        treeMenuRef.value.setCheckedNodes([])
-        treeMenuRef.value.setChecked(node, true)
-      }
-    } else {
-      treeMenuRef.value.setChecked(node, false)
-    }
+// function handleNodeClick(data, node) {
+//   if (data.isLeaf) {
+//     // console.log(data, node, currentMonomerId.value)
+//     if (!node.checked) {
+//       if (data.monomerId === currentMonomerId.value) {
+//         treeMenuRef.value.setChecked(node, true)
+//       } else {
+//         currentMonomerId.value = data.monomerId
+//         treeMenuRef.value.setCheckedNodes([])
+//         treeMenuRef.value.setChecked(node, true)
+//       }
+//     } else {
+//       treeMenuRef.value.setChecked(node, false)
+//     }
 
-    emit('nesting-task-click', treeMenuRef.value.getCheckedNodes(true))
-  }
+//     emit('nesting-task-click', treeMenuRef.value.getCheckedNodes(true))
+//   }
+// }
+
+// 切换区域
+function handleCheckClick(data, node) {
+  const _keys = treeMenuRef.value.getCheckedKeys()
+  const areaIds = []
+  const monomerIds = []
+  const projectIds = []
+  _keys.forEach((v) => {
+    const _id = v.split('_')[1]
+    if (v.indexOf('project') !== -1) {
+      projectIds.push(_id)
+    }
+    if (v.indexOf('monomer') !== -1) {
+      monomerIds.push(_id)
+    }
+    if (v.indexOf('area') !== -1) {
+      areaIds.push(_id)
+    }
+  })
+  emit('nesting-task-click', { areaIds, monomerIds, projectIds })
 }
 
 // tree过滤输入监听
@@ -283,18 +313,18 @@ function handleDateChange(val) {
   fetchTaskList()
 }
 
-function searchQuery() {
-  fetchTaskList()
-}
+// function searchQuery() {
+//   fetchTaskList()
+// }
 
-function resetQuery() {
-  name.value = undefined
-  date.value = []
-  startDate.value = undefined
-  endDate.value = undefined
-  issueStatusEnum.value = undefined
-  fetchTaskList()
-}
+// function resetQuery() {
+//   filterText.value = ''
+//   date.value = []
+//   startDate.value = undefined
+//   endDate.value = undefined
+//   issueStatusEnum.value = undefined
+//   fetchTaskList()
+// }
 
 defineExpose({
   refresh: fetchTaskList
@@ -307,9 +337,9 @@ defineExpose({
   padding-right: 5px;
   font-size: 15px;
 
-  ::v-deep(.el-tree-node.is-checked > .el-tree-node__content .tree-custom-content) {
-    background-color: #ffe48d !important;
-  }
+  // ::v-deep(.el-tree-node.is-checked > .el-tree-node__content .tree-custom-content) {
+  //   background-color: #ffe48d !important;
+  // }
   ::v-deep(.el-tree-node__content:hover) {
     background-color: transparent !important;
   }
@@ -320,6 +350,9 @@ defineExpose({
 
   ::v-deep(.el-tree-node__content > .el-tree-node__expand-icon) {
     display: none;
+  }
+  ::v-deep(.el-checkbox__inner) {
+    border: 2px solid #000;
   }
 }
 

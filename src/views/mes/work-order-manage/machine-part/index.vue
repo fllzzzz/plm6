@@ -4,7 +4,7 @@
       <part-project-list :maxHeight="maxHeight - 40" @nesting-task-click="handleNestingTaskClick" />
     </div>
     <div class="wrap-right">
-      <el-tag v-if="!crud.query?.areaId" type="info" size="medium"> * 请点击左侧项目列表查看详情 </el-tag>
+      <el-tag v-if="!crud.query?.areaIds?.length" type="info" size="medium"> * 请点击左侧项目列表查看详情 </el-tag>
       <div v-else>
         <div class="wrap-head">
           <mHeader />
@@ -174,7 +174,7 @@ import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
 import pagination from '@crud/Pagination'
 import { parseTime } from '@/utils/date'
-import { debounce } from '@/utils'
+// import { debounce } from '@/utils'
 import { mesMachinePartOrderTypeEnum } from '@enum-ms/mes'
 import { machinePartWorkOrderPM as permission } from '@/page-permission/mes'
 import mHeader from '../components/header.vue'
@@ -200,7 +200,7 @@ const { crud, CRUD, columns } = useCRUD(
     optShow: { ...optShow },
     crudApi: { ...crudApi },
     invisibleColumns: ['taskGrossWeight'],
-    requiredQuery: ['processType', 'areaId'],
+    requiredQuery: ['processType', 'areaIds'],
     hasPagination: true
   },
   tableRef
@@ -217,17 +217,25 @@ function showCuttingDetail(row) {
   cuttingDetailData.value = row
 }
 
-const handleNestingTaskClick = debounce(function (nodes = []) {
+// const handleNestingTaskClick = debounce(function (nodes = []) {
+//   crud.query.processType = mesMachinePartOrderTypeEnum.CUTTING_ORDER.V
+//   if (nodes?.length) {
+//     crud.query.areaId = nodes[0].id
+//     crud.query.projectId = nodes[0].projectId
+//   } else {
+//     crud.query.areaId = undefined
+//     crud.query.projectId = undefined
+//   }
+//   crud.toQuery()
+// }, 500)
+
+function handleNestingTaskClick({ areaIds, projectIds, monomerIds }) {
   crud.query.processType = mesMachinePartOrderTypeEnum.CUTTING_ORDER.V
-  if (nodes?.length) {
-    crud.query.areaId = nodes[0].id
-    crud.query.projectId = nodes[0].projectId
-  } else {
-    crud.query.areaId = undefined
-    crud.query.projectId = undefined
-  }
+  crud.query.projectIds = projectIds
+  crud.query.monomerIds = monomerIds
+  crud.query.areaIds = areaIds
   crud.toQuery()
-}, 500)
+}
 
 CRUD.HOOK.handleRefresh = (crud, res) => {
   res.data.content = res.data.content.map((v) => {

@@ -9,7 +9,7 @@
       />
     </div>
     <div class="wrap-right">
-      <el-tag v-if="!crud.query?.areaId" type="info" size="medium"> * 请先选择套料任务，进行零件任务下发 </el-tag>
+      <el-tag v-if="!crud.query?.areaIds?.length" type="info" size="medium"> * 请先选择套料任务，进行零件任务下发 </el-tag>
       <div v-else>
         <div class="head-container">
           <mHeader />
@@ -142,7 +142,7 @@ import { ref, provide } from 'vue'
 import { machinePartSchedulingNestingResultPM as permission } from '@/page-permission/mes'
 import { layOffWayTypeEnum } from '@enum-ms/uploading-form'
 import { machinePartSchedulingIssueStatusEnum as issueStatusEnum, nestingTypeEnum } from '@enum-ms/mes'
-import { debounce } from '@/utils'
+// import { debounce } from '@/utils'
 import { parseTime } from '@/utils/date'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
@@ -161,8 +161,8 @@ const detailDialogVisible = ref(false)
 const detailList = ref([])
 const partList = ref([])
 
-const areaId = ref()
-const projectId = ref()
+// const areaId = ref()
+// const projectId = ref()
 
 const optShow = {
   add: false,
@@ -181,7 +181,7 @@ const { crud, columns, CRUD } = useCRUD(
     crudApi: { get: getNestingTask },
     invisibleColumns: [''],
     hasPagination: true,
-    requiredQuery: ['areaId']
+    requiredQuery: ['areaIds']
   },
   tableRef
 )
@@ -198,20 +198,26 @@ CRUD.HOOK.beforeToQuery = async () => {
   crud.query.boolNestCutEnum = layOffWayTypeEnum.NESTING.V
 }
 
-const handleNestingTaskClick = debounce(function (nodes = []) {
-  areaId.value = undefined
-  projectId.value = undefined
-  for (let x = 0; x < nodes.length; x++) {
-    console.log(nodes[x].parentIds, 'x')
-    areaId.value = nodes[x].id
-    projectId.value = nodes[x].parentIds[1]
-    console.log(projectId.value, 'projectId.value')
-  }
-  crud.query.areaId = areaId.value
-  crud.query.projectId = projectId.value
-  crud.toQuery()
-}, 500)
+// const handleNestingTaskClick = debounce(function (nodes = []) {
+//   areaId.value = undefined
+//   projectId.value = undefined
+//   for (let x = 0; x < nodes.length; x++) {
+//     console.log(nodes[x].parentIds, 'x')
+//     areaId.value = nodes[x].id
+//     projectId.value = nodes[x].parentIds[1]
+//     console.log(projectId.value, 'projectId.value')
+//   }
+//   crud.query.areaId = areaId.value
+//   crud.query.projectId = projectId.value
+//   crud.toQuery()
+// }, 500)
 
+function handleNestingTaskClick({ projectIds, monomerIds, areaIds }) {
+  crud.query.projectIds = projectIds
+  crud.query.monomerIds = monomerIds
+  crud.query.areaIds = areaIds
+  crud.toQuery()
+}
 CRUD.HOOK.handleRefresh = (crud, res) => {
   res.data.content = res.data.content.map((v) => {
     return v

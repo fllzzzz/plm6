@@ -69,8 +69,8 @@ export const machinePartSchedulingPM = {
 // 生产排产/排产数据
 export const schedulingDataPM = {
   get: ['scheduling_data:get'], // 列表
-  statistics: ['scheduling_data: statistics'], // 汇总统计
-  print: ['scheduling_data:print'], // 打印
+  statistics: ['scheduling_data:statistics'], // 汇总统计
+  print: ['scheduling_data:print'] // 打印
 }
 
 // 生产排产/零件排产/预览记录
@@ -298,7 +298,7 @@ export const qhseProductionLineReportPM = {
 // 质安管理/问题曝光
 export const qhseDisclosurePM = {
   get: ['mes_qhse_disclosure:get'], // 问题曝光列表
-  export: ['mes_qhse_disclosure:print'] // 问题报告导出excel
+  export: ['mes_qhse_disclosure:export'] // 问题报告导出excel
 }
 
 // --------------------------- 质安管理 end --------------------------------
@@ -629,7 +629,7 @@ export const mesProductionStatisticsPM = {
 // 产线工资统计/栓钉套筒统计
 export const mesStudSleeveStatisticsPM = {
   get: ['mes_stud_sleeve_statistics:get'], // 列表
-  print: ['mes_stud_sleeve_statistics:export'] // 打印
+  print: ['mes_stud_sleeve_statistics:print'] // 打印
 }
 
 // 产线工资统计/工价调整
