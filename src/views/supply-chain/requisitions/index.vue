@@ -66,8 +66,8 @@
           }}</el-tag>
         </template>
       </el-table-column>
-      <!-- <el-table-column
-        v-if="checkPermission(permission.detail) && columns.visible('mete')"
+      <el-table-column
+        v-if="columns.visible('mete')"
         prop="mete"
         key="mete"
         label="采购进度"
@@ -75,10 +75,18 @@
         width="90"
         show-overflow-tooltip
       >
-        <template #default="{ row }">
-          <common-button icon="el-icon-view" size="mini" type="success"></common-button>
+        <template #default="{ row: { sourceRow: row } }">
+          <span
+            v-if="row.materialType === materialPurchaseClsEnum.STEEL.V"
+            @click="showTrackList(row)"
+            class="tc-primary"
+            style="cursor: pointer"
+          >
+            {{ row.inboundRate }}%
+          </span>
+          <common-button v-else icon="el-icon-view" size="mini" type="success" @click="showTrackList(row)" />
         </template>
-      </el-table-column> -->
+      </el-table-column>
       <el-table-column
         v-if="columns.visible('approveInfoName') && isOpenApproval"
         key="approveInfoName"
@@ -130,8 +138,10 @@
             "
             :disabled-del="
               row.purchaseCreationState !== requisitionStatusEnum.NOT_STARTED.V ||
-              Boolean(isOpenApproval &&
-                row.reviewStatus & (ddReviewStatusEnum.UNREVIEWED.V | ddReviewStatusEnum.AUDITING.V | ddReviewStatusEnum.PASS.V))
+              Boolean(
+                isOpenApproval &&
+                  row.reviewStatus & (ddReviewStatusEnum.UNREVIEWED.V | ddReviewStatusEnum.AUDITING.V | ddReviewStatusEnum.PASS.V)
+              )
             "
             :del-type="isOpenApproval ? 'warning' : 'danger'"
             :del-icon="isOpenApproval ? 'el-icon-document-delete' : 'el-icon-delete'"
@@ -145,6 +155,7 @@
     <pagination />
     <mForm />
     <mDetail />
+    <track-drawer v-model:visible="trackVisible" :info="itemInfo" />
   </div>
 </template>
 
@@ -159,6 +170,8 @@ import { materialPurchaseClsEnum } from '@enum-ms/classification'
 import checkPermission from '@/utils/system/check-permission'
 import { enabledEnum } from '@enum-ms/common'
 import { ElMessageBox } from 'element-plus'
+import { convertUnits } from '@/utils/convert/unit'
+import { toPrecision } from '@/utils/data-type'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
@@ -166,6 +179,7 @@ import pagination from '@crud/Pagination'
 import mHeader from './module/header'
 import mForm from './module/form'
 import mDetail from './module/detail.vue'
+import trackDrawer from './module/track-drawer'
 import udOperation from '@crud/UD.operation.vue'
 
 const optShow = {
@@ -199,6 +213,9 @@ const { CRUD, crud, columns } = useCRUD(
 
 const { maxHeight } = useMaxHeight({ paginate: true })
 
+const trackVisible = ref(false)
+const itemInfo = ref({})
+
 // 是否开启申购审批
 const isOpenApproval = computed(() => crud.query.boolInitiateApprove)
 
@@ -216,6 +233,23 @@ async function changeStatus(data, val) {
     console.log('申购单状态', error)
     data.enabled = data.enabled === enabledEnum.TRUE.V ? enabledEnum.FALSE.V : enabledEnum.TRUE.V
   }
+}
+
+function showTrackList(data) {
+  itemInfo.value = data
+  trackVisible.value = true
+}
+
+CRUD.HOOK.handleRefresh = (crud, { data }) => {
+  data.content.forEach((v) => {
+    v.inboundMete = v.inboundMete || 0
+    v.totalMete = v.totalMete || 0
+    v.inboundRate = v.inboundMete ? toPrecision((v.inboundMete / v.totalMete) * 100, 2) : 0
+    if (v.materialType === materialPurchaseClsEnum.STEEL.V) {
+      v.inboundMete = convertUnits(v.inboundMete, 'g', 'kg')
+      v.totalMete = convertUnits(v.totalMete, 'g', 'kg')
+    }
+  })
 }
 </script>
 <style lang="scss" scoped>

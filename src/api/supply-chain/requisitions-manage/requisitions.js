@@ -33,6 +33,33 @@ export function detail(id) {
 }
 
 /**
+ * 查询采购进度
+ * @param {Number} id 申购id
+ * @returns
+ */
+export function getSchedule(id) {
+  return request({
+    module: 'scm',
+    url: `apply-purchase/schedule/${id}`,
+    method: 'get'
+  })
+}
+
+/**
+ * 查询采购进度
+ * @param {Number} id 申购id
+ * @returns
+ */
+export function exportScheduleExcel({ id }) {
+  return request({
+    module: 'scm',
+    url: `apply-purchase/excel/${id}`,
+    method: 'get',
+    responseType: 'blob'
+  })
+}
+
+/**
  * 获取申购单号
  * @returns
  */
