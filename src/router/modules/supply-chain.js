@@ -46,7 +46,7 @@ export default {
       name: 'PurchaseReconciliationManage',
       alwaysShow: false,
       redirect: '/supply-chain/payment-ledger',
-      meta: { title: '采购台账', icon: 'contract', noCache: true },
+      meta: { title: '采购台账管理', icon: 'contract', noCache: true },
       children: [
         {
           name: 'InboundLog',

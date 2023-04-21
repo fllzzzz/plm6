@@ -49,7 +49,7 @@
 import crudApi from '@/api/supply-chain/purchase-reconciliation-manage/payment-ledger'
 import { ref, provide } from 'vue'
 
-import { supplierMaterialPaymentPM as permission } from '@/page-permission/supply-chain'
+import { supplierOrderLedgerPM as permission } from '@/page-permission/supply-chain'
 import checkPermission from '@/utils/system/check-permission'
 
 import useMaxHeight from '@compos/use-max-height'

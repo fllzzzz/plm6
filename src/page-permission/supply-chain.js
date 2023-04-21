@@ -48,27 +48,33 @@ export const scmRequisitionsPM = {
 
 // --------------------------- 采购对账 start --------------------------------
 
-// 采购对账管理/入库记录
+// 采购台账管理/入库记录
 export const supplierMaterialInboundPM = {
   get: ['supplier_material_inbound:get'], // 入库记录列表
   detail: ['supplier_material_inbound:detail'], // 入库记录详情
   print: ['supplier_material_inbound:print'] // 打印入库记录详情
 }
 
-// 采购对账管理/采购台账
+// 采购台账管理/采购台账
 export const supplierMaterialPaymentPM = {
   get: ['supplier_material_payment:get'], // 采购台账列表
   detail: ['supplier_material_payment:detail'], // 入库/付款/收票记录
   print: ['supplier_material_payment:print'] // 列表/入库/付款/收票打印下载
 }
 
-// 采购对账管理/验收记录
+// 采购台账管理/订单查询
+export const supplierOrderLedgerPM = {
+  get: ['supplier_order_ledger:get'], // 列表
+  detail: ['supplier_order_ledger:detail'] // 入库记录
+}
+
+// 采购台账管理/验收记录
 export const purchaseAcceptanceLogPM = {
   get: ['purchase_acceptance_log:get'], // 查看
   download: ['purchase_acceptance_log:download'] // 下载
 }
 
-// 采购对账管理/供应商对账
+// 采购台账管理/供应商对账
 export const supplierReconciliationLogPM = {
   get: ['supplier_reconciliation_Log:get'], // 查看
   download: ['supplier_reconciliation_Log:download'] // 下载
