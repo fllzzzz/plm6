@@ -106,7 +106,7 @@
 </template>
 
 <script setup>
-import { get as paymentRecord } from '@/api/contract/supplier-manage/jd-subcontract-payment'
+import { paymentRecord } from '@/api/supply-chain/subcontract-manage/jd-subcontract-payment'
 import { defineEmits, defineProps, ref, computed, watch } from 'vue'
 
 import { auditTypeEnum } from '@enum-ms/contract'

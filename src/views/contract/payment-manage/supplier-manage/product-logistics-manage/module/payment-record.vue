@@ -106,7 +106,7 @@
 </template>
 
 <script setup>
-import { get as paymentRecord } from '@/api/contract/supplier-manage/jd-product-logistics-payment'
+import { paymentRecord } from '@/api/supply-chain/logistics-payment-manage/jd-product-logistics-record-ledger'
 import { defineEmits, defineProps, ref, computed, watch } from 'vue'
 
 import { auditTypeEnum } from '@enum-ms/contract'

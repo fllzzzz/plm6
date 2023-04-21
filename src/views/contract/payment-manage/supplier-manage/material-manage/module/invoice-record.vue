@@ -91,7 +91,7 @@
 </template>
 
 <script setup>
-import { get as invoiceRecord } from '@/api/contract/supplier-manage/jd-material-invoice'
+import { invoiceRecord } from '@/api/supply-chain/purchase-reconciliation-manage/jd-payment-ledger'
 import { ref, defineEmits, defineProps, watch, computed } from 'vue'
 
 import { auditTypeEnum } from '@enum-ms/contract'
