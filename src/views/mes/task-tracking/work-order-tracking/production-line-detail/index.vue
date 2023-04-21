@@ -8,14 +8,14 @@
     size="100%"
   >
     <template #titleAfter>
-      <project-cascader v-model="projectId" clearable class="filter-item" style="width: 300px" />
+      <!-- <project-cascader v-model="projectId" clearable class="filter-item" style="width: 300px" /> -->
       <monomer-select-area-select
         v-model:monomerId="monomerId"
         v-model:areaId="areaId"
         needConvert
         clearable
         areaClearable
-        :project-id="projectId"
+        :project-id="props.projectId"
       />
       <el-input
         v-if="props.detailData.productType === componentTypeEnum.ARTIFACT.V"
@@ -50,10 +50,10 @@
           taskType: props.detailData.productType,
           orderId: props.detailData.taskOrderId,
           name: name,
-          projectId: projectId,
+          projectId: props.projectId,
           groupId: props.detailData.group?.id,
-          monomerId: monomerId,
-          areaId: areaId,
+          monomerId: monomerId ? monomerId : props.query?.monomerId,
+          areaId: areaId ? areaId : props.query?.areaId,
           serialNumber: serialNumber,
         }"
         size="mini"
@@ -150,7 +150,7 @@ import { defineProps, defineEmits, ref, watch } from 'vue'
 import { mesWorkOrderTrackingPM as permission } from '@/page-permission/mes'
 import { parseTime } from '@/utils/date'
 import { componentTypeEnum, workOrderTypeEnum } from '@enum-ms/mes'
-import projectCascader from '@comp-base/project-cascader.vue'
+// import projectCascader from '@comp-base/project-cascader.vue'
 import monomerSelectAreaSelect from '@comp-base/monomer-select-area-select'
 
 const emit = defineEmits(['update:visible'])
@@ -164,15 +164,18 @@ const projectId = ref()
 const props = defineProps({
   visible: {
     type: Boolean,
-    default: false
+    default: false,
   },
   detailData: {
     type: Object,
-    default: () => {}
+    default: () => {},
   },
-  projectIds: {
-    type: Number
-  }
+  projectId: {
+    type: Number,
+  },
+  query: {
+    type: Object,
+  },
 })
 watch([() => monomerId.value, () => areaId.value, () => projectId.value], (val) => {
   processDetailGet()
@@ -203,7 +206,7 @@ const { maxHeight } = useMaxHeight(
     clientHRepMainH: true,
     extraHeight: 50,
     minHeight: 300,
-    paginate: true
+    paginate: true,
   },
   drawerVisible
 )
@@ -217,11 +220,13 @@ async function processDetailGet() {
       orderId: props.detailData.taskOrderId,
       groupId: props.detailData.group?.id,
       name: name.value,
-      projectId: projectId.value,
-      monomerId: monomerId.value,
-      areaId: areaId.value,
+      projectId: props.projectId,
+      monomerId: monomerId.value ? monomerId.value : props.query?.monomerId,
+      areaId: areaId.value ? areaId.value : props.query?.areaId,
+      // monomerId: monomerId.value,
+      // areaId: areaId.value,
       serialNumber: serialNumber.value,
-      ...queryPage
+      ...queryPage,
     })
     setTotalPage(totalElements)
     _list = content
@@ -238,7 +243,6 @@ function searchQuery() {
 }
 // 重置
 function resetQuery() {
-  projectId.value = undefined
   monomerId.value = undefined
   areaId.value = undefined
   name.value = undefined

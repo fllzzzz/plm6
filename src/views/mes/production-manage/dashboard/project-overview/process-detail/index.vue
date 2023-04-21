@@ -3,7 +3,7 @@
     ref="drawerRef"
     fullscreen
     v-model="dialogVisible"
-    :title="`${props.detailData.name}工序生产明细`"
+    :title="`${componentTypeEnum.VL[props.detailData?.productType]}：${props.detailData?.name}生产明细`"
     :before-close="handleClose"
     :close-on-click-modal="false"
     :show-close="false"
@@ -22,6 +22,7 @@
         v-model="productionLineId"
         :factory-id="factoryId"
         :workshop-id="workshopId"
+        :productType="detailData.productType"
         :clearable="true"
         class="filter-item"
         style="width: 150px"
@@ -82,9 +83,13 @@
       style="width: 100%"
     >
       <el-table-column :show-overflow-tooltip="true" prop="index" label="序号" align="center" width="60" type="index" />
-      <el-table-column :show-overflow-tooltip="true" prop="workshop" label="车间/产线" align="center" min-width="140px">
+      <el-table-column :show-overflow-tooltip="true" prop="workshop" label="车间/产线/班组" header-align="center" min-width="140px">
         <template #default="{ row }">
-          <span>{{ row.workshop?.name + '/' + row.productionLine?.name }}</span>
+          <span>{{
+            row.team?.name
+              ? row.workshop?.name + '/' + row.productionLine?.name + '/' + row.groups?.name + '/' + row.team?.name
+              : row.workshop?.name + '/' + row.productionLine?.name + '/' + row.groups?.name + '/' + '-'
+          }}</span>
         </template>
       </el-table-column>
       <el-table-column :show-overflow-tooltip="true" prop="monomer.name" label="单体" align="center" min-width="100px">
@@ -153,7 +158,7 @@ import { getProcessDetail } from '@/api/mes/production-manage/dashboard/project-
 import { defineProps, defineEmits, ref, watch, computed } from 'vue'
 import { tableSummary } from '@/utils/el-extra'
 import { weightTypeEnum } from '@enum-ms/common'
-import { taskTrackingSchedulingStatusEnum } from '@enum-ms/mes'
+import { taskTrackingSchedulingStatusEnum, componentTypeEnum } from '@enum-ms/mes'
 import { mesProjectOverviewPM as permission } from '@/page-permission/mes'
 import useVisible from '@compos/use-visible'
 import usePagination from '@compos/use-pagination'
@@ -177,18 +182,18 @@ const status = ref()
 const props = defineProps({
   visible: {
     type: Boolean,
-    default: false
+    default: false,
   },
   detailData: {
     type: Object,
-    default: () => {}
+    default: () => {},
   },
   projectId: {
-    type: Number
+    type: Number,
   },
   weightStatus: {
-    type: Number
-  }
+    type: Number,
+  },
 })
 
 // const lastMonomerId = inject('monomerId')
@@ -200,7 +205,7 @@ const query = computed(() => {
     productType: props.detailData.productType,
     processId: props.detailData.id,
     projectId: props.projectId,
-    productionLineId: productionLineId.value
+    productionLineId: productionLineId.value,
   }
 })
 
@@ -211,7 +216,7 @@ const commonQuery = computed(() => {
     monomerId: monomerId.value,
     areaId: areaId.value,
     serialNumber: serialNumber.value,
-    status: status.value
+    status: status.value,
   }
 })
 
@@ -222,9 +227,13 @@ const { handleSizeChange, handleCurrentChange, total, setTotalPage, queryPage } 
 watch(
   () => dialogVisible.value,
   (val) => {
-    if (val) {
-      processDetailGet()
-    }
+    workshopId.value = undefined
+    productionLineId.value = undefined
+    monomerId.value = undefined
+    areaId.value = undefined
+    serialNumber.value = undefined
+    status.value = undefined
+    processDetailGet()
   },
   { deep: true }
 )
@@ -248,7 +257,7 @@ async function processDetailGet() {
       areaId: areaId.value,
       ...commonQuery.value,
       ...query.value,
-      ...queryPage
+      ...queryPage,
     })
     setTotalPage(totalElements)
     _list = content
@@ -260,7 +269,7 @@ async function processDetailGet() {
 }
 
 const { maxHeight } = useMaxHeight({
-  paginate: true
+  paginate: true,
 })
 
 // 搜索
@@ -286,7 +295,7 @@ function resetQuery() {
 // 合计
 function getSummaries(param) {
   return tableSummary(param, {
-    props: ['quantity']
+    props: ['quantity', 'taskNetWeight', 'taskGrossWeight', 'completeQuantity', 'completeNetWeight', 'completeGrossWeight'],
   })
 }
 </script>

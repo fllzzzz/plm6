@@ -5,7 +5,7 @@
       type="year"
       size="small"
       class="date-item filter-item"
-      style="width: 120px !important"
+      style="width: 100px !important"
       format="YYYY"
       value-format="x"
       placeholder="选择年"
@@ -38,7 +38,7 @@
       v-model="query.projectId"
       clearable
       class="filter-item"
-      style="width: 260px"
+      style="width: 270px"
       @change="crud.toQuery"
     />
     <div>
@@ -73,7 +73,7 @@ import monomerSelectAreaSelect from '@comp-base/monomer-select-area-select'
 import rrOperation from '@crud/RR.operation'
 
 const defaultQuery = {
-  dateTime: undefined,
+  dateTime: new Date().getTime(),
   monomerId: undefined,
   areaId: undefined,
   productType: componentTypeEnum.ARTIFACT.V,

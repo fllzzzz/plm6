@@ -58,7 +58,14 @@
         />
       </div>
     </div>
-    <common-table :data="list" v-loading="tableLoading" :show-empty-symbol="false" :max-height="maxHeight - 30">
+    <common-table
+      :data="list"
+      v-loading="tableLoading"
+      :show-empty-symbol="false"
+      show-summary
+      :summary-method="getSummaries"
+      :max-height="maxHeight - 30"
+    >
       <el-table-column prop="index" label="序号" align="center" width="45" type="index" />
       <el-table-column
         v-if="showType !== 'INVENTORY'"
@@ -71,7 +78,14 @@
       <el-table-column key="monomer.name" prop="monomer.name" label="单体" align="center" :show-overflow-tooltip="true" min-width="100px" />
       <el-table-column key="area.name" prop="area.name" label="区域" align="center" :show-overflow-tooltip="true" min-width="100px" />
       <el-table-column key="serialNumber" prop="serialNumber" label="编号" align="center" :show-overflow-tooltip="true" />
-      <el-table-column key="specification" prop="specification" label="规格" align="center" :show-overflow-tooltip="true" min-width="120px" />
+      <el-table-column
+        key="specification"
+        prop="specification"
+        label="规格"
+        align="center"
+        :show-overflow-tooltip="true"
+        min-width="120px"
+      />
       <el-table-column key="material" prop="material" label="材质" align="center" :show-overflow-tooltip="true" />
       <el-table-column key="quantity" prop="quantity" label="数量" align="center" :show-overflow-tooltip="true" width="80px" />
       <el-table-column key="netWeight" prop="netWeight" label="单重（kg）" align="center" :show-overflow-tooltip="true">
@@ -100,6 +114,7 @@
 <script setup>
 import { ref, defineProps, watch } from 'vue'
 import { summaryDetail } from '@/api/mes/pack-and-ship/ship-summary'
+import { tableSummary } from '@/utils/el-extra'
 import { projectSearchTypeEnum } from '@enum-ms/mes'
 import { weightTypeEnum } from '@enum-ms/common'
 import useMaxHeight from '@compos/use-max-height'
@@ -164,6 +179,14 @@ async function fetchDetail() {
     console.log('获取详情失败', error)
     tableLoading.value = false
   }
+}
+
+// 合计
+function getSummaries(param) {
+  const summary = tableSummary(param, {
+    props: ['quantity', 'totalNetWeight', 'totalGrossWeight']
+  })
+  return summary
 }
 </script>
 <style lang="scss" scoped>

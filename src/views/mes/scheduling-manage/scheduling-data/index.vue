@@ -20,7 +20,7 @@
         class="collection-table"
         :stripe="false"
         :show-empty-symbol="false"
-        :row-class-name="handleRowClassName"
+        :row-style="handleRowStyle"
       >
         <el-table-column prop="index" label="序号" align="center" width="50" type="index">
           <template #default="{ row, $index }">
@@ -34,7 +34,11 @@
           label="所属项目"
           min-width="160"
           :show-overflow-tooltip="true"
-        />
+        >
+          <template #default="{ row }">
+            <span :class="row.type === 2 && row.projectName !== '合计' ? 'tc-success' : ''">{{ row.projectName }}</span>
+          </template>
+        </el-table-column>
         <el-table-column
           v-if="columns.visible('monomerName')"
           key="monomerName"
@@ -42,7 +46,11 @@
           label="单体"
           align="center"
           :show-overflow-tooltip="true"
-        />
+        >
+          <template #default="{ row }">
+            <span :class="row.type === 2 && row.projectName !== '合计' ? 'tc-success' : ''">{{ row.monomerName }}</span>
+          </template>
+        </el-table-column>
         <el-table-column
           v-if="columns.visible('schedulingTotalNetWeight') && crud.query.type === timeTypeEnum.CURRENT_MONTH.V"
           key="schedulingTotalNetWeight"
@@ -53,9 +61,9 @@
         >
           <template #default="{ row }">
             <span style="color: #409eff; cursor: pointer" v-if="row.projectName === '合计'" @click.stop="openDetail">{{
-              (row.schedulingTotalNetWeight / 1000).toFixed(2)
+              (row.schedulingTotalNetWeight / 1000).toFixed(2) || 0
             }}</span>
-            <span v-else>{{ (row.schedulingTotalNetWeight / 1000).toFixed(2) }}</span>
+            <span v-else>{{ (row.schedulingTotalNetWeight / 1000).toFixed(2) || 0 }}</span>
           </template>
         </el-table-column>
         <el-table-column
@@ -67,7 +75,7 @@
           :show-overflow-tooltip="true"
         >
           <template #default="{ row }">
-            <span>{{ (row.completeTotalNetWeight / 1000).toFixed(2) }}</span>
+            <span>{{ (row.completeTotalNetWeight / 1000).toFixed(2) || 0 }}</span>
           </template>
         </el-table-column>
         <el-table-column
@@ -79,7 +87,7 @@
           :show-overflow-tooltip="true"
         >
           <template #default="{ row }">
-            <span>{{ ((row.completeTotalNetWeight / row.schedulingTotalNetWeight) * 100).toFixed(2) }}%</span>
+            <span>{{ row.completeRate || 0 }}%</span>
           </template>
         </el-table-column>
         <el-table-column
@@ -94,11 +102,11 @@
                 <div v-if="row.mete?.findIndex((v) => v.date == item) > -1">
                   <template v-for="m in row.mete" :key="m">
                     <template v-if="m.date == item">
-                      <span>{{ m.totalNetWeight }}</span>
+                      <span :class="row.type === 2 && row.projectName !== '合计' ? 'tc-success' : ''">{{ m.totalNetWeight || 0 }}</span>
                     </template>
                   </template>
                 </div>
-                <div v-else>0</div>
+                <div v-else :class="row.type === 2 && row.projectName !== '合计' ? 'tc-success' : ''">0</div>
               </template>
             </el-table-column>
           </template>
@@ -117,7 +125,7 @@
                 <div v-if="row.mete?.findIndex((v) => v.date == week.date) > -1">
                   <template v-for="w in row.mete" :key="w">
                     <template v-if="w.date == week.date">
-                      <span>{{ w.totalNetWeight }}</span>
+                      <span>{{ w.totalNetWeight || 0 }}</span>
                     </template>
                   </template>
                 </div>
@@ -138,7 +146,7 @@ import crudApi from '@/api/mes/scheduling-manage/scheduling-data.js'
 import { ref, provide } from 'vue'
 import { timeTypeEnum } from '@enum-ms/contract'
 import { parseTime } from '@/utils/date'
-import { mesScheduleDetailPM as permission } from '@/page-permission/mes'
+import { schedulingDataPM as permission } from '@/page-permission/mes'
 // import { convertUnits } from '@/utils/convert/unit'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
@@ -151,8 +159,7 @@ const optShow = {
   del: false,
   download: false
 }
-const monthProject1 = ref([])
-const monthProject2 = ref([])
+
 const monthArr = ref([])
 for (let i = 1; i <= 12; i++) {
   monthArr.value.push(i)
@@ -183,6 +190,7 @@ const { maxHeight } = useMaxHeight({
 })
 
 CRUD.HOOK.handleRefresh = (crud, { data }) => {
+  weekList.value = []
   let yearTotal = 0
   let actualYearTotal = 0
   let meteArr = []
@@ -192,7 +200,7 @@ CRUD.HOOK.handleRefresh = (crud, { data }) => {
   let currentMonthTotal = 0
   const monthData = []
   const currentMonthData = []
-  const actualMonthData = []
+  // const actualMonthData = []
   const schedulingTotal = []
   const completeTotal = []
   let schedulingTotalArr = []
@@ -206,42 +214,36 @@ CRUD.HOOK.handleRefresh = (crud, { data }) => {
     completeTotalArr = []
     currentMonthArr = []
     v.type = 1
-    v.projectName = v.project && v.project.shortName ? v.project.serialNumber + ' ' + v.project.shortName : '实际完成'
-    if (v.projectName === '实际完成') {
-      v.type = 2
-    }
+    v.projectName = v.project && v.project.shortName ? v.project.serialNumber + ' ' + v.project.shortName : '-'
+    // if (v.projectName === '实际完成') {
+    //   v.type = 2
+    // }
+    v.completeRate = v && v.schedulingTotalNetWeight ? ((v.completeTotalNetWeight / v.schedulingTotalNetWeight) * 100).toFixed(2) : 0
     v.monomerName = v.monomer && v.monomer.name ? v.monomer.name : '-'
     if (crud.query.type === timeTypeEnum.ALL_YEAR.V) {
       if (v.mete && v.mete.length > 0) {
         v.mete.map((k) => {
           v[Number(k.date)] = k.totalNetWeight ? (k.totalNetWeight / 1000).toFixed(2) : 0
           k.totalNetWeight = (k.totalNetWeight / 1000).toFixed(2)
+          k.completeNetWeight = (k.completeNetWeight / 1000).toFixed(2)
         })
       }
     } else {
       if (v.mete && v.mete.length > 0) {
         v.mete.map((k) => {
           v[k.date] = k
-          k.totalNetWeight = (k.totalNetWeight / 1000).toFixed(2)
+          k.totalNetWeight = (k.totalNetWeight / 1000).toFixed(2) || 0
         })
         weekList.value = v.mete
       }
     }
-    if (v.projectName !== '实际完成') {
-      monthProject1.value = v.mete
-    } else if (v.projectName === '实际完成') {
-      monthProject2.value = v.mete
-    }
     for (let m = 1; m <= monthArr.value.length; m++) {
-      if (monthProject1.value.findIndex((o) => Number(o.date) === m) > -1 && v.projectName !== '实际完成') {
-        monthData.push(monthProject1.value[monthProject1.value.findIndex((o) => Number(o.date) === m)])
-      } else if (monthProject2.value.findIndex((o) => Number(o.date) === m) > -1 && v.projectName === '实际完成') {
-        actualMonthData.push(monthProject2.value[monthProject2.value.findIndex((o) => Number(o.date) === m)])
+      if (v.mete?.findIndex((o) => Number(o.date) === m) > -1) {
+        monthData.push(v.mete[v.mete?.findIndex((o) => Number(o.date) === m)])
       }
       const monthList = monthData.filter((n) => Number(n?.date) === m)
-      const actualMonthList = actualMonthData.filter((n) => Number(n?.date) === m)
       const totalArr = monthList.map((k) => k.totalNetWeight)
-      const actualTotalArr = actualMonthList.map((k) => k.totalNetWeight)
+      const actualTotalArr = monthList.map((k) => k.completeNetWeight)
       yearTotal = totalArr.reduce((pre, cur) => {
         if (cur) {
           return pre + Number(cur)
@@ -311,8 +313,7 @@ CRUD.HOOK.handleRefresh = (crud, { data }) => {
 
     return v
   })
-
-  if (crud.query.type === timeTypeEnum.ALL_YEAR.V) {
+  if (data.content.length > 0 && crud.query.type === timeTypeEnum.ALL_YEAR.V) {
     data.content.push(
       {
         type: 2,
@@ -321,13 +322,13 @@ CRUD.HOOK.handleRefresh = (crud, { data }) => {
         monomerName: '',
         mete: meteArr
       },
-      // {
-      //   type: 2,
-      //   index: '',
-      //   projectName: '实际完成',
-      //   monomerName: '',
-      //   mete: actualMeteArr
-      // },
+      {
+        type: 2,
+        index: '',
+        projectName: '实际完成',
+        monomerName: '',
+        mete: actualMeteArr
+      },
       {
         type: 2,
         index: '',
@@ -336,7 +337,8 @@ CRUD.HOOK.handleRefresh = (crud, { data }) => {
         mete: actualRateArr
       }
     )
-  } else {
+  }
+  if (data.content.length > 0 && crud.query.type === timeTypeEnum.CURRENT_MONTH.V) {
     data.content.push({
       type: 2,
       index: '',
@@ -344,6 +346,7 @@ CRUD.HOOK.handleRefresh = (crud, { data }) => {
       monomerName: '',
       schedulingTotalNetWeight: schedulingTotalArr,
       completeTotalNetWeight: completeTotalArr,
+      completeRate: completeTotalArr && schedulingTotalArr ? Number((completeTotalArr / schedulingTotalArr) * 100).toFixed(2) : 0,
       mete: currentMonthArr
     })
   }
@@ -353,73 +356,39 @@ function openDetail() {
   drawerVisible.value = true
 }
 
-// function handleRowClassName({ row, rowIndex }) {
-//   if (row.projectName === '合计' || row.projectName === '实际完成' || row.projectName === '完成率') {
-//     return 'success-row'
-//   } else {
-//     return ''
-//   }
-// }
+function handleRowStyle({ row, rowIndex }) {
+  if (row.projectName === '完成率') {
+    return {
+      position: 'sticky',
+      bottom: '0 !important'
+    }
+  }
+  if (row.projectName === '合计') {
+    if (crud.query.type === timeTypeEnum.CURRENT_MONTH.V) {
+      return {
+        position: 'sticky',
+        bottom: '0 !important'
+      }
+    } else {
+      return {
+        position: 'sticky',
+        bottom: '80px !important'
+      }
+    }
+  }
+  if (row.projectName === '实际完成') {
+    return {
+      position: 'sticky',
+      bottom: '40px !important'
+    }
+  }
+}
 
-// 合计
-// function getSummaries(param) {
-//   const { columns, data } = param
-//   const sums = []
-//   columns.forEach((column, index) => {
-//     if (index === 1) {
-//       sums[index] = '合计'
-//       return
-//     }
-//     if (crud.query.type === timeTypeEnum.ALL_YEAR.V) {
-//       if (Number(column.label > 0)) {
-//         const values = data.map((item) => (item.project ? item[column.label] : 0))
-//         sums[index] = values.reduce((prev, curr) => {
-//           const value = Number(curr)
-//           if (!isNaN(value)) {
-//             return prev + Number(curr)
-//           } else {
-//             return prev
-//           }
-//         }, 0)
-//         sums[index] = Number(sums[index]).toFixed(2)
-//       }
-//     }
-//     if (crud.query.type === timeTypeEnum.CURRENT_MONTH.V) {
-//       if (index === 3 || index === 4) {
-//         const values = data.map((item) => item[column.property] || 0)
-//         sums[index] = values.reduce((prev, curr) => {
-//           const value = Number(curr)
-//           if (!isNaN(value)) {
-//             return prev + Number(curr)
-//           } else {
-//             return prev
-//           }
-//         }, 0)
-//         sums[index] = (Number(sums[index]) / 1000).toFixed(2)
-//       }
-//       if (index > 5) {
-//         const values = data.map((item) => item[column.label?.split('周\n')[1]]?.totalNetWeight)
-//         console.log(values, 'values')
-//         sums[index] = values.reduce((prev, curr) => {
-//           const value = Number(curr)
-//           console.log(value, 'value')
-//           if (!isNaN(value)) {
-//             return prev + Number(curr)
-//           } else {
-//             return prev
-//           }
-//         }, 0)
-//         sums[index] = (Number(sums[index]) / 1000).toFixed(2)
-//       }
-//     }
-//   })
-//   return sums
-// }
 </script>
 
 <style lang="scss" scoped>
 ::v-deep(.success-row) {
-  display: table-row;
+  // display: table-row;
   position: sticky;
   bottom: 0 !important;
   width: 100%;

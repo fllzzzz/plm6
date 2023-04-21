@@ -83,7 +83,7 @@
               label="完成（件/kg）"
             >
               <template v-slot="scope">
-                <span>{{
+                <span class="tc-primary">{{
                   weightStatus === weightTypeEnum.NET.V
                     ? scope.row.completeQuantity + '/' + scope.row.completeNetWeight?.toFixed(DP.COM_WT__KG)
                     : scope.row.completeQuantity + '/' + '-'
@@ -148,7 +148,7 @@
               label="完成（件/kg）"
             >
               <template v-slot="scope">
-                <span>{{
+                <span class="tc-primary">{{
                   weightStatus === weightTypeEnum.NET.V
                     ? scope.row.completeQuantity + '/' + scope.row.completeNetWeight?.toFixed(DP.COM_WT__KG)
                     : scope.row.completeQuantity + '/' + scope.row.completeGrossWeight?.toFixed(DP.COM_WT__KG)
@@ -234,7 +234,7 @@
         </div>
       </div>
     </div>
-    <production-line-detail :project-id="processList?.project?.id" v-model:visible="drawerVisible" :detail-data="detailData" />
+    <production-line-detail :project-id="processList?.project?.id" v-model:visible="drawerVisible" :detail-data="detailData" :query="props.query" />
   </div>
 </template>
 <script setup>
@@ -254,17 +254,20 @@ import productionLineDetail from '../production-line-detail/index.vue'
 const componentTypeTag = {
   [componentTypeEnum.ARTIFACT.K]: 'success',
   [componentTypeEnum.ASSEMBLE.K]: 'warning',
-  [componentTypeEnum.MACHINE_PART.K]: ''
+  [componentTypeEnum.MACHINE_PART.K]: '',
 }
 
 const props = defineProps({
   processList: {
     type: Object,
-    default: () => {}
+    default: () => {},
   },
   weightStatus: {
-    type: Number
-  }
+    type: Number,
+  },
+  query: {
+    type: Object,
+  },
 })
 
 const tableRef = ref()
@@ -317,14 +320,20 @@ async function processGet() {
     const data = await process({
       topTaskOrderId: props.processList.taskOrderId,
       workshopId: workshopId.value,
-      productionLineId: productionLineId.value
+      productionLineId: productionLineId.value,
+      projectId: props.query?.projectId,
+      monomerId: props.query?.monomerId,
+      areaId: props.query?.areaId,
     })
     if (props.processList?.productionLineTypeEnum === artifactProductLineEnum.INTELLECT.V) {
       const { content = [], totalElements } = await smartLineProcess({
         topTaskOrderId: props.processList.taskOrderId,
         workshopId: workshopId.value,
         productionLineId: productionLineId.value,
-        ...queryPage
+        projectId: props.query?.projectId,
+        monomerId: props.query?.monomerId,
+        areaId: props.query?.areaId,
+        ...queryPage,
       })
       processData.value = content || []
       setTotalPage(totalElements)
@@ -347,7 +356,10 @@ async function machineProcessGet() {
       productType: productType.value,
       topTaskOrderId: props.processList.taskOrderId,
       workshopId: workshopId.value,
-      productionLineId: productionLineId.value
+      productionLineId: productionLineId.value,
+      projectId: props.query?.projectId,
+      monomerId: props.query?.monomerId,
+      areaId: props.query?.areaId,
     })
     processData.value = data || []
   } catch (e) {
@@ -365,7 +377,7 @@ async function machineProcessGet() {
 
 const { maxHeight } = useMaxHeight({
   extraBox: ['.head-container'],
-  paginate: true
+  paginate: true,
 })
 
 function handleRowChange(row) {

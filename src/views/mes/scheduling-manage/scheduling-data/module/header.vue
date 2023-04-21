@@ -33,10 +33,11 @@
         placeholder="选择车间"
         style="width: 200px"
         class="filter-item"
+        clearable
         :factory-id="query.factoryId"
         @change="handleWorkshopChange"
       />
-      <el-row v-loading="summaryLoading" v-permission="permission.get" :gutter="24" class="panel-group">
+      <el-row v-loading="summaryLoading" v-permission="permission.statistics" :gutter="24" class="panel-group">
         <el-col :span="6" class="card-panel-col">
           <Panel
             name="排产总量(吨)"
@@ -79,6 +80,7 @@ import { ref, watch, inject } from 'vue'
 import { getScheduleSummary } from '@/api/mes/scheduling-manage/scheduling-data.js'
 import { timeTypeEnum } from '@enum-ms/contract'
 import { regHeader } from '@compos/use-crud'
+import { schedulingDataPM as permission } from '@/page-permission/mes'
 // import { parseTime } from '@/utils/date'
 import workshopSelect from '@comp-mes/workshop-select'
 import Panel from '@/components/Panel'
@@ -86,7 +88,6 @@ import moment from 'moment'
 
 const summaryLoading = ref(false)
 const summaryInfo = ref({})
-const permission = inject('permission')
 const defaultQuery = {
   dateTime: moment().startOf('year').valueOf(),
   type: timeTypeEnum.ALL_YEAR.V,
@@ -102,6 +103,7 @@ function handleChange(val) {
     query.dateTime = moment().startOf('month').valueOf()
   }
   fetchSummary()
+  crud.data = []
   crud.toQuery()
 }
 

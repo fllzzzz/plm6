@@ -127,8 +127,8 @@
           name="今年发运量（t）"
           text-color="#626262"
           num-color="#1890ff"
-          :end-val="convertUnits(totalAmount.yearMete, 'kg', 't', DP.COM_WT__T) || 0"
-          :precision="DP.COM_WT__T"
+          :end-val="convertUnits(totalAmount.yearMete, 'kg', 't', 2) || 0"
+          :precision="2"
         />
       </el-col>
       <el-col :span="6" class="card-panel-col">
@@ -139,8 +139,8 @@
           name="本月发运量（t）"
           text-color="#626262"
           num-color="#1890ff"
-          :end-val="convertUnits(totalAmount.monthMete, 'kg', 't', DP.COM_WT__T) || 0"
-          :precision="DP.COM_WT__T"
+          :end-val="convertUnits(totalAmount.monthMete, 'kg', 't', 2) || 0"
+          :precision="2"
         />
       </el-col>
       <el-col :span="6" class="card-panel-col">
@@ -163,7 +163,7 @@
       <template v-slot:viewLeft>
         <el-tag v-permission="permission.get" effect="plain" class="filter-item" size="medium">
           累计发运重量（查询）：
-          <span v-if="!summaryLoading">{{ convertUnits(shipWeight, 'kg', 't', DP.COM_WT__T) }} t</span>
+          <span v-if="!summaryLoading">{{ convertUnits(shipWeight, 'kg', 't', 2) }} t</span>
           <i v-else class="el-icon-loading" />
         </el-tag>
       </template>
@@ -178,7 +178,7 @@ import moment from 'moment'
 
 import { packTypeEnum, deliveryStatusEnum } from '@enum-ms/mes'
 import { manufactureTypeEnum } from '@enum-ms/production'
-import { DP } from '@/settings/config'
+// import { DP } from '@/settings/config'
 import { convertUnits } from '@/utils/convert/unit'
 import { isBlank, isNotBlank } from '@data-type/index'
 import { PICKER_OPTIONS_SHORTCUTS } from '@/settings/config'

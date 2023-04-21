@@ -38,8 +38,8 @@
               prop="groups.name"
               key="groups.name"
               label="产线/班组"
-              align="center"
-              min-width="120"
+              align="left"
+              min-width="220"
             >
               <template #default="{ row }">
                 <span>{{ row.productionLine?.name }}>{{ row.groups?.name }}>{{ row.team?.name }}</span>
@@ -49,33 +49,33 @@
               :show-overflow-tooltip="true"
               prop="yearNetWeight"
               key="yearNetWeight"
-              label="年度平均产量（吨）"
+              :label="`年度平均产量\n（吨）`"
               align="center"
-              width="150px"
+              width="110px"
             >
               <template #default="{ row }">
-                <span>{{ (row.yearNetWeight / 1000)?.toFixed(2) }}</span>
+                <span class="tc-success">{{ (row.yearNetWeight / 1000)?.toFixed(2) }}</span>
               </template>
             </el-table-column>
             <el-table-column
               :show-overflow-tooltip="true"
               prop="lastMonthNetWeight"
               key="lastMonthNetWeight"
-              label="上月产量（吨）"
+              :label="`上月产量\n（吨）`"
               align="center"
-              width="120px"
+              width="90px"
             >
               <template #default="{ row }">
-                <span>{{ (row.lastMonthNetWeight / 1000)?.toFixed(2) }}</span>
+                <span class="tc-primary">{{ (row.lastMonthNetWeight / 1000)?.toFixed(2) }}</span>
               </template>
             </el-table-column>
             <el-table-column
               :show-overflow-tooltip="true"
               prop="unNetWeight"
               key="unNetWeight"
-              label="在手任务（吨）"
+              :label="`在手任务\n（吨）`"
               align="center"
-              width="120px"
+              width="90px"
             >
               <template #default="{ row }">
                 <span class="tc-danger">{{ (row.unNetWeight / 1000)?.toFixed(2) }}</span>
@@ -111,7 +111,7 @@ import { defineProps, defineEmits, ref, watch } from 'vue'
 import groupStatusDetail from './group-status-detail.vue'
 
 const emit = defineEmits(['update:visible'])
-const detailData = ref([])
+const detailData = ref({})
 const list = ref([])
 const processData = ref([])
 const processId = ref()
@@ -169,6 +169,7 @@ watch(
   () => processId.value,
   (val) => {
     if (val) {
+      detailData.value = {}
       fetchGroupDetailGet()
     }
   }

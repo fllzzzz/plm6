@@ -11,6 +11,7 @@
   >
     <template #titleAfter>
       <el-tag size="medium">{{ `项目：${projectNameFormatter(detailInfo.project)}` }}</el-tag>
+      <el-tag size="medium">{{ `查询日期：${dateTime ? parseTime(dateTime, '{y}-{m}') : '-'}` }}</el-tag>
     </template>
     <template #titleRight>
       <print-table
@@ -53,24 +54,14 @@
           style="width: 200px; margin-bottom: 10px; margin-left: 3px"
           class="filter-item"
           clearable
+          @keyup.enter="fetchList"
         />
-        <common-button
-class="filter-item"
-size="mini"
-type="success"
-icon="el-icon-search"
-@click="fetchList"
-style="margin-left: 10px"
-          >搜索</common-button
-        >
-        <common-button
-class="filter-item"
-size="mini"
-type="warning"
-icon="el-icon-refresh-left"
-@click=";(query = {}), fetchList()"
-          >重置</common-button
-        >
+        <common-button class="filter-item" size="mini" type="success" icon="el-icon-search" @click="fetchList" style="margin-left: 10px">
+          搜索
+        </common-button>
+        <common-button class="filter-item" size="mini" type="warning" icon="el-icon-refresh-left" @click=";(query = {}), fetchList()">
+          重置
+        </common-button>
       </div>
       <common-table
         :data="list"
@@ -85,7 +76,7 @@ icon="el-icon-refresh-left"
         <el-table-column key="monomerName" prop="monomerName" label="单体" align="center" show-overflow-tooltip>
           <template #default="{ row }">
             <table-cell-tag :show="!!row.typeName" :name="row.typeName" :color="row.typeName === '构件' ? '#67C23A' : '#409EFF'" />
-            <span>{{ row.monomer ? row.monomer?.name : '-' }}</span>
+            <span>{{ row.monomerName ? row.monomerName : '-' }}</span>
           </template>
         </el-table-column>
         <el-table-column key="areaName" prop="areaName" label="区域" align="center" show-overflow-tooltip />
@@ -154,7 +145,7 @@ import { weightTypeEnum } from '@enum-ms/common'
 import { tableSummary } from '@/utils/el-extra'
 import { DP } from '@/settings/config'
 import { projectNameFormatter } from '@/utils/project'
-
+import { parseTime } from '@/utils/date'
 import useVisible from '@compos/use-visible'
 import useMaxHeight from '@compos/use-max-height'
 import usePagination from '@compos/use-pagination'
@@ -196,6 +187,9 @@ const props = defineProps({
   },
   weightStatus: {
     type: Number
+  },
+  dateTime: {
+    type: String
   }
 })
 

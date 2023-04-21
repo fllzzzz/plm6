@@ -28,7 +28,7 @@
         prop="list"
         v-if="columns.visible('list')"
         :show-overflow-tooltip="true"
-        label="清单数（件/kg）"
+        label="清单总数（件/kg）"
         align="center"
       >
         <template v-slot="scope">
@@ -124,6 +124,7 @@
       :detailQuery="detailQuery"
       :productType="crud.query.productType"
       :workshopId="crud.query.workshopId"
+      :dateTime="crud.query.dateTime"
       :weightStatus="crud.query.weightStatus"
       :detailInfo="currentRow"
       :permission="permission"

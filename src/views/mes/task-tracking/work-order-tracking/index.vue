@@ -10,9 +10,9 @@
           v-loading="crud.loading"
           :data="crud.data"
           highlight-current-row
-          :empty-text="crud.emptyText"
+          :empty-text="crud.query.projectId ? '暂无数据' : '请选择项目'"
           :max-height="maxHeight"
-          style="width: 100%"
+          style="width: 100%; cursor: pointer"
           @current-change="currentChange"
         >
           <el-table-column prop="index" label="序号" align="center" width="60" type="index" />
@@ -25,10 +25,7 @@
             label="排产日期"
           >
             <template v-slot="scope">
-              <span v-if="crud.query.productType === componentTypeEnum.ARTIFACT.V">{{
-                scope.row.scheduleTime ? parseTime(scope.row.scheduleTime, '{y}-{m}-{d}') : '-'
-              }}</span>
-              <span v-else>-</span>
+              <span>{{ scope.row.scheduleTime ? parseTime(scope.row.scheduleTime, '{y}-{m}-{d}') : '-' }}</span>
             </template>
           </el-table-column>
           <el-table-column
@@ -84,7 +81,7 @@
             width="130px"
           >
             <template v-slot="scope">
-              <span>{{
+              <span class="tc-primary">{{
                 crud.query.weightStatus === weightTypeEnum.NET.V
                   ? scope.row.completeQuantity + '/' + (scope.row.completeNetWeight / 1000)?.toFixed(DP.COM_WT__KG)
                   : scope.row.completeQuantity + '/' + (scope.row.completeGrossWeight / 1000)?.toFixed(DP.COM_WT__KG)
@@ -121,7 +118,7 @@
       </div>
       <div style="border-right: 1px solid #ededed; margin: 0 20px; height: calc(100vh - 130px)"></div>
       <div style="width: 48%">
-        <process-detail :process-list="processList" :weightStatus="crud.query.weightStatus" />
+        <process-detail :process-list="processList" :weightStatus="crud.query.weightStatus" :query="crud.query" />
       </div>
     </div>
   </div>
@@ -146,7 +143,7 @@ const optShow = {
   add: false,
   edit: false,
   del: false,
-  download: false
+  download: false,
 }
 
 const tableRef = ref()
@@ -160,7 +157,7 @@ const { crud, CRUD, columns } = useCRUD(
     permission: { ...permission },
     requiredQuery: ['productType', 'projectId'],
     crudApi: { get },
-    hasPagination: true
+    hasPagination: true,
   },
   tableRef
 )
@@ -183,7 +180,7 @@ watch(
 )
 const { maxHeight } = useMaxHeight({
   extraBox: ['.head-container'],
-  paginate: true
+  paginate: true,
 })
 
 function currentChange(row) {
