@@ -13,8 +13,19 @@
     </template>
     <template #content>
       <el-form ref="formRef" :model="form" :rules="rules" size="small" label-width="140px">
-        <el-form-item label="类型名称" prop="name">
-          <el-input v-model="form.name" type="text" placeholder="请填写费用类型名称" style="width: 270px" maxlength="30"/>
+        <el-form-item label="费用归属" prop="costAscriptionEnum">
+          <common-select
+            v-model="form.costAscriptionEnum"
+            :options="costAscriptionEnum.ENUM"
+            type="enum"
+            size="small"
+            clearable
+            placeholder="请选择费用归属"
+            style="width: 270px"
+          />
+        </el-form-item>
+        <el-form-item label="费用类型" prop="name">
+          <el-input v-model="form.name" type="text" placeholder="请填写费用类型" style="width: 270px" maxlength="30" />
         </el-form-item>
         <el-form-item label="排序" prop="sort">
           <el-input-number v-model.number="form.sort" :min="1" :max="999" :step="1" controls-position="right" style="width: 270px" />
@@ -55,6 +66,9 @@
 
 <script setup>
 import { ref } from 'vue'
+
+import { costAscriptionEnum } from '@enum-ms/config'
+
 import { regForm } from '@compos/use-crud'
 import useDict from '@compos/store/use-dict'
 
@@ -65,11 +79,15 @@ const defaultForm = {
   iid: undefined,
   name: '',
   sort: 1,
+  costAscriptionEnum: undefined,
   dictionaryIdList: []
 }
 
 const { crud, form } = regForm(defaultForm, formRef)
 const validateLinks = (rule, value, callback) => {
+  if (!value?.length) {
+    callback(new Error('请选择费用类型'))
+  }
   if (value && value.length) {
     for (const i in value) {
       if (!value[i]) {
@@ -80,8 +98,9 @@ const validateLinks = (rule, value, callback) => {
   callback()
 }
 const rules = {
+  costAscriptionEnum: [{ required: true, message: '请选择费用归属', trigger: 'change' }],
   name: [
-    { required: true, message: '请填写费用类型名称', trigger: 'blur' },
+    { required: true, message: '请填写费用类型', trigger: 'blur' },
     { min: 1, max: 30, message: '长度在 1 到 30 个字符', trigger: 'blur' }
   ],
   sort: [{ required: true, message: '请填写排序值', trigger: 'blur', type: 'number' }],

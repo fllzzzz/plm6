@@ -54,7 +54,7 @@
         <div @click="openContractMoney(scope.row.id)" style="cursor:pointer;color:#409eff;text-align:right;">{{ isNotBlank(scope.row.contractAmount)? toThousand(scope.row.contractAmount): '-' }}</div>
       </template>
     </el-table-column>
-    <el-table-column v-if="columns.visible('settlementAmount')" key="settlementAmount" prop="settlementAmount" label="结算额" align="center">
+    <el-table-column v-if="columns.visible('settlementAmount')" key="settlementAmount" prop="settlementAmount" label="结算额" align="right">
       <template v-slot="scope">
         <div>{{ scope.row.settlementAmount? toThousand(scope.row.settlementAmount): '-' }}</div>
       </template>
@@ -71,7 +71,7 @@
         </div>
       </template>
     </el-table-column>
-    <el-table-column v-if="columns.visible('collectionRate')" key="collectionRate" prop="collectionRate" label="收款比例" align="center" width="80px">
+    <el-table-column v-if="columns.visible('collectionRate')" key="collectionRate" prop="collectionRate" label="收款比例" align="right" width="80px">
       <template v-slot="scope">
         <div>{{ scope.row.collectionRate? (scope.row.collectionRate*100).toFixed(2)+'%': '-' }}</div>
       </template>
@@ -88,7 +88,7 @@
         </div>
       </template>
     </el-table-column>
-    <el-table-column v-if="columns.visible('invoiceRate')" key="invoiceRate" prop="invoiceRate" label="开票比例" align="center" width="80px">
+    <el-table-column v-if="columns.visible('invoiceRate')" key="invoiceRate" prop="invoiceRate" label="开票比例" align="right" width="80px">
       <template v-slot="scope">
         <div>{{ scope.row.invoiceRate? (scope.row.invoiceRate*100).toFixed(2)+'%': '-' }}</div>
       </template>
@@ -98,14 +98,14 @@
         <div @click="openOccurAmount(scope.row.id)" style="cursor:pointer;color:#409eff;text-align:right;">{{ isNotBlank(scope.row.deliverInstallAmount)? toThousand(scope.row.deliverInstallAmount): '-' }}</div>
       </template>
     </el-table-column>
-    <el-table-column v-if="columns.visible('availableBalance')" key="availableBalance" prop="availableBalance" label="可用余额" align="center">
+    <el-table-column v-if="columns.visible('availableBalance')" key="availableBalance" prop="availableBalance" label="可用余额" align="right">
       <template v-slot="scope">
         <div>{{ scope.row.availableBalance? toThousand(scope.row.availableBalance): '-' }}</div>
       </template>
     </el-table-column>
     <el-table-column v-if="columns.visible('status')" key="status" prop="status" label="项目状态" align="center" width="80px">
       <template v-slot="scope">
-        <el-tag :type="scope.row.status===projectStatusEnum.SETTLED.V?'success':'warning'" effect="plain">{{ scope.row.status? projectStatusEnum.VL[scope.row.status]:'-' }}</el-tag>
+        <el-tag :type="scope.row.status===projectStatusEnum.SETTLED.V?'success':'warning'" size="medium" effect="plain">{{ scope.row.status? projectStatusEnum.VL[scope.row.status]:'-' }}</el-tag>
       </template>
     </el-table-column>
   </common-table>

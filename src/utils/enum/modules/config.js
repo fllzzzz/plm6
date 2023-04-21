@@ -40,12 +40,23 @@ const taxRateEnum = {
 }
 constantize(taxRateEnum)
 
+// 文件编号
+const costAscriptionEnum = {
+  DIRECT_COSTS: { L: '直接费用', K: 'DIRECT_COSTS', V: 1 },
+  INDIRECT_COSTS: { L: '间接费用', K: 'INDIRECT_COSTS', V: 2 },
+  PERIOD_COSTS: { L: '期间费用', K: 'PERIOD_COSTS', V: 3 },
+  PROJECT_RETENTION: { L: '项目留存', K: 'PROJECT_RETENTION', V: 4 }
+}
+constantize(costAscriptionEnum)
+
 export {
   numberTypeEnum, // 文件编号
-  taxRateEnum
+  taxRateEnum,
+  costAscriptionEnum // 费用归属
 }
 
 export default {
   numberTypeEnum, // 文件编号
-  taxRateEnum
+  taxRateEnum,
+  costAscriptionEnum // 费用归属
 }
