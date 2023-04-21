@@ -25,6 +25,7 @@ import { setSpecInfoToList } from '@/utils/wms/spec'
 
 import SteelApplication from '@/views/wms/material-inbound/raw-material/application/steel/index.vue'
 import AuxMatApplication from '@/views/wms/material-inbound/raw-material/application/auxiliary-material/index.vue'
+import OtherApplication from '@/views/wms/material-inbound/raw-material/application/other/index.vue'
 import GasApplication from '@/views/wms/material-inbound/raw-material/application/gas/index.vue'
 
 const { CRUD, crud, form } = regForm()
@@ -39,6 +40,8 @@ const comp = computed(() => {
       return AuxMatApplication
     case matClsEnum.GAS.V:
       return GasApplication
+    case matClsEnum.OTHER.V:
+      return OtherApplication
     default:
       if (form.basicClass & STEEL_ENUM) return SteelApplication
       return undefined

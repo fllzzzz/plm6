@@ -53,6 +53,19 @@ export function getAuxMatInventory(params) {
 }
 
 /**
+ * 其它库存
+ * @returns
+ */
+export function getOtherInventory(params) {
+  return request({
+    module: 'wms',
+    url: 'material-inventory/other-material',
+    method: 'get',
+    params
+  })
+}
+
+/**
  * 气体库存
  * @returns
  */

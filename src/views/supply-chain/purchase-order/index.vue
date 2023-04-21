@@ -18,6 +18,9 @@
           <p v-if="isNotBlank(row.auxMaterialIds)">
             辅材明细：<span>{{ row.auxMaterialNames }}</span>
           </p>
+          <p v-if="isNotBlank(row.otherMaterialIds)">
+            其它明细：<span>{{ row.otherMaterialNames }}</span>
+          </p>
           <p>
             关联项目：<span>{{ row.projectsFullName }}</span>
           </p>
@@ -253,7 +256,8 @@ const columnsDataFormat = ref([
   ['amount', 'to-thousand'],
   ['requisitionsSNStr', 'empty-text'],
   ['remark', 'empty-text'],
-  ['auxMaterialNames', 'split']
+  ['auxMaterialNames', 'split'],
+  ['otherMaterialNames', 'split']
 ])
 const { CRUD, crud, columns } = useCRUD(
   {
@@ -292,6 +296,15 @@ CRUD.HOOK.handleRefresh = (crud, { data }) => {
     v.supplierId = v.supplier ? v.supplier.id : undefined
     if (v.auxMaterialIds) {
       v.auxMaterialNames = v.auxMaterialIds.map((id) => {
+        const material = rawMatClsKV.value[id]
+        if (material) {
+          return material.name
+        }
+        return '-'
+      })
+    }
+    if (v.otherMaterialIds) {
+      v.otherMaterialNames = v.otherMaterialIds.map((id) => {
         const material = rawMatClsKV.value[id]
         if (material) {
           return material.name

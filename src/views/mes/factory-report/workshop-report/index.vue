@@ -18,7 +18,7 @@
       <el-table-column
         v-if="columns.visible('project')"
         header-align="center"
-        key="project.shortName"
+        key="project"
         prop="project"
         :show-overflow-tooltip="true"
         label="项目"
@@ -29,8 +29,19 @@
         </template>
       </el-table-column>
       <el-table-column
+        v-if="columns.visible('productionLine.name')"
+        align="center"
+        key="productionLine.name"
+        prop="productionLine.name"
+        :show-overflow-tooltip="true"
+        label="生产线"
+      >
+        <template v-slot="scope">
+          <span>{{ scope.row.productionLine ? scope.row.productionLine?.name : '-' }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
         v-if="columns.visible('monomer.name')"
-        header-align="center"
         key="monomer.name"
         prop="monomer.name"
         align="center"
@@ -39,32 +50,22 @@
       />
       <el-table-column
         v-if="columns.visible('area.name')"
-        header-align="center"
+        align="center"
         key="area.name"
         prop="area.name"
-        align="center"
         :show-overflow-tooltip="true"
         label="区域"
       />
-      <el-table-column
-        v-if="columns.visible('name')"
-        header-align="center"
-        key="name"
-        prop="name"
-        align="center"
-        :show-overflow-tooltip="true"
-        label="名称"
-      >
+      <el-table-column v-if="columns.visible('name')" align="center" key="name" prop="name" :show-overflow-tooltip="true" label="名称">
         <template v-slot="scope">
           <span>{{ scope.row.name }}</span>
         </template>
       </el-table-column>
       <el-table-column
         v-if="columns.visible('serialNumber')"
-        header-align="center"
+        align="center"
         key="serialNumber"
         prop="serialNumber"
-        align="center"
         :show-overflow-tooltip="true"
         label="编号"
       >
@@ -74,10 +75,9 @@
       </el-table-column>
       <el-table-column
         v-if="columns.visible('specification')"
-        header-align="center"
+        align="center"
         key="specification"
         prop="specification"
-        align="center"
         :show-overflow-tooltip="true"
         label="规格"
       >
@@ -90,7 +90,6 @@
         header-align="center"
         key="length"
         prop="length"
-        align="center"
         :show-overflow-tooltip="true"
         label="长度（mm）"
       >
@@ -100,10 +99,9 @@
       </el-table-column> -->
       <el-table-column
         v-if="columns.visible('material')"
-        header-align="center"
+        align="center"
         key="material"
         prop="material"
-        align="center"
         :show-overflow-tooltip="true"
         label="材质"
       >
@@ -113,10 +111,9 @@
       </el-table-column>
       <el-table-column
         v-if="columns.visible('quantity')"
-        header-align="center"
+        align="center"
         key="quantity"
         prop="quantity"
-        align="center"
         :show-overflow-tooltip="true"
         label="数量"
       >
@@ -126,10 +123,9 @@
       </el-table-column>
       <el-table-column
         v-if="columns.visible('netWeight')"
-        header-align="center"
+        align="center"
         key="netWeight"
         prop="netWeight"
-        align="center"
         :show-overflow-tooltip="true"
         label="单重（kg）"
       >
@@ -141,10 +137,9 @@
       </el-table-column>
       <el-table-column
         v-if="columns.visible('totalNetWeight')"
-        header-align="center"
+        align="center"
         key="totalNetWeight"
         prop="totalNetWeight"
-        align="center"
         :show-overflow-tooltip="true"
         label="总重（kg）"
       >
@@ -152,6 +147,11 @@
           <span>{{
             crud.query.weightStatus === weightTypeEnum.NET.V ? scope.row.totalNetWeight?.toFixed(2) : scope.row.totalGrossWeight?.toFixed(2)
           }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column v-if="columns.visible('date')" align="center" key="date" prop="date" :show-overflow-tooltip="true" label="入库日期">
+        <template v-slot="scope">
+          <span>{{ parseTime(scope.row.date, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
     </common-table>
@@ -166,6 +166,7 @@ import { ref } from 'vue'
 import useCRUD from '@compos/use-crud'
 import pagination from '@crud/Pagination'
 import useMaxHeight from '@compos/use-max-height'
+import { parseTime } from '@/utils/date'
 import { tableSummary } from '@/utils/el-extra'
 import { weightTypeEnum } from '@enum-ms/common'
 import { projectNameFormatter } from '@/utils/project'
@@ -178,7 +179,7 @@ const optShow = {
   add: false,
   edit: false,
   del: false,
-  download: false
+  download: false,
 }
 
 const { crud, CRUD, columns } = useCRUD(
@@ -188,7 +189,8 @@ const { crud, CRUD, columns } = useCRUD(
     optShow: { ...optShow },
     permission: { ...permission },
     crudApi: { ...crudApi },
-    hasPagination: true
+    invisibleColumns: ['productionLine.name', 'date'],
+    hasPagination: true,
   },
   tableRef
 )
@@ -203,7 +205,7 @@ CRUD.HOOK.handleRefresh = (crud, res) => {
 // 合计
 function getSummaries(param) {
   return tableSummary(param, {
-    props: ['length', 'quantity', ['netWeight', 2], ['grossWeight', 2], ['totalNetWeight', 2], ['totalGrossWeight', 2]]
+    props: ['length', 'quantity', ['netWeight', 2], ['grossWeight', 2], ['totalNetWeight', 2], ['totalGrossWeight', 2]],
   })
 }
 

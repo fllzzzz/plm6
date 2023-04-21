@@ -30,6 +30,7 @@
             :show-overflow-tooltip="true"
             label="排产日期"
             align="center"
+            width="130px"
           >
             <template #default="{ row }">
               <span>{{ parseTime(row.createTime, '{y}-{m}-{d}') }}</span>
@@ -106,7 +107,7 @@
               }}</el-tag>
             </template>
           </el-table-column>
-          <el-table-column label="操作" align="center">
+          <el-table-column label="操作" align="center" width="190px">
             <template #default="{ row }">
               <common-button v-permission="permission.document" class="filter-item" size="mini" type="primary" @click="toViews(row)">
                 套料文档

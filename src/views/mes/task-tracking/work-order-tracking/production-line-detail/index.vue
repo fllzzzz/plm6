@@ -52,8 +52,8 @@
           name: name,
           projectId: props.projectId,
           groupId: props.detailData.group?.id,
-          monomerId: monomerId,
-          areaId: areaId,
+          monomerId: monomerId ? monomerId : props.query?.monomerId,
+          areaId: areaId ? areaId : props.query?.areaId,
           serialNumber: serialNumber,
         }"
         size="mini"
@@ -164,15 +164,18 @@ const projectId = ref()
 const props = defineProps({
   visible: {
     type: Boolean,
-    default: false
+    default: false,
   },
   detailData: {
     type: Object,
-    default: () => {}
+    default: () => {},
   },
   projectId: {
-    type: Number
-  }
+    type: Number,
+  },
+  query: {
+    type: Object,
+  },
 })
 watch([() => monomerId.value, () => areaId.value, () => projectId.value], (val) => {
   processDetailGet()
@@ -203,7 +206,7 @@ const { maxHeight } = useMaxHeight(
     clientHRepMainH: true,
     extraHeight: 50,
     minHeight: 300,
-    paginate: true
+    paginate: true,
   },
   drawerVisible
 )
@@ -218,10 +221,12 @@ async function processDetailGet() {
       groupId: props.detailData.group?.id,
       name: name.value,
       projectId: props.projectId,
-      monomerId: monomerId.value,
-      areaId: areaId.value,
+      monomerId: monomerId.value ? monomerId.value : props.query?.monomerId,
+      areaId: areaId.value ? areaId.value : props.query?.areaId,
+      // monomerId: monomerId.value,
+      // areaId: areaId.value,
       serialNumber: serialNumber.value,
-      ...queryPage
+      ...queryPage,
     })
     setTotalPage(totalElements)
     _list = content

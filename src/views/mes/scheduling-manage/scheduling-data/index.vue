@@ -20,6 +20,7 @@
         class="collection-table"
         :stripe="false"
         :show-empty-symbol="false"
+        :row-style="handleRowStyle"
       >
         <el-table-column prop="index" label="序号" align="center" width="50" type="index">
           <template #default="{ row, $index }">
@@ -33,7 +34,11 @@
           label="所属项目"
           min-width="160"
           :show-overflow-tooltip="true"
-        />
+        >
+          <template #default="{ row }">
+            <span :class="row.type === 2 && row.projectName !== '合计' ? 'tc-success' : ''">{{ row.projectName }}</span>
+          </template>
+        </el-table-column>
         <el-table-column
           v-if="columns.visible('monomerName')"
           key="monomerName"
@@ -41,7 +46,11 @@
           label="单体"
           align="center"
           :show-overflow-tooltip="true"
-        />
+        >
+          <template #default="{ row }">
+            <span :class="row.type === 2 && row.projectName !== '合计' ? 'tc-success' : ''">{{ row.monomerName }}</span>
+          </template>
+        </el-table-column>
         <el-table-column
           v-if="columns.visible('schedulingTotalNetWeight') && crud.query.type === timeTypeEnum.CURRENT_MONTH.V"
           key="schedulingTotalNetWeight"
@@ -93,11 +102,11 @@
                 <div v-if="row.mete?.findIndex((v) => v.date == item) > -1">
                   <template v-for="m in row.mete" :key="m">
                     <template v-if="m.date == item">
-                      <span>{{ m.totalNetWeight || 0 }}</span>
+                      <span :class="row.type === 2 && row.projectName !== '合计' ? 'tc-success' : ''">{{ m.totalNetWeight || 0 }}</span>
                     </template>
                   </template>
                 </div>
-                <div v-else>0</div>
+                <div v-else :class="row.type === 2 && row.projectName !== '合计' ? 'tc-success' : ''">0</div>
               </template>
             </el-table-column>
           </template>
@@ -137,7 +146,7 @@ import crudApi from '@/api/mes/scheduling-manage/scheduling-data.js'
 import { ref, provide } from 'vue'
 import { timeTypeEnum } from '@enum-ms/contract'
 import { parseTime } from '@/utils/date'
-import { mesScheduleDetailPM as permission } from '@/page-permission/mes'
+import { schedulingDataPM as permission } from '@/page-permission/mes'
 // import { convertUnits } from '@/utils/convert/unit'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
@@ -150,8 +159,7 @@ const optShow = {
   del: false,
   download: false
 }
-// const monthProject1 = ref([])
-// const monthProject2 = ref([])
+
 const monthArr = ref([])
 for (let i = 1; i <= 12; i++) {
   monthArr.value.push(i)
@@ -348,78 +356,39 @@ function openDetail() {
   drawerVisible.value = true
 }
 
-// function rowStyle({ row, rowIndex }) {
-//   console.log(row.type === 2, rowIndex, 'rowIndex')
-//   if (row.type === 2) {
+function handleRowStyle({ row, rowIndex }) {
+  if (row.projectName === '完成率') {
+    return {
+      position: 'sticky',
+      bottom: '0 !important'
+    }
+  }
+  if (row.projectName === '合计') {
+    if (crud.query.type === timeTypeEnum.CURRENT_MONTH.V) {
+      return {
+        position: 'sticky',
+        bottom: '0 !important'
+      }
+    } else {
+      return {
+        position: 'sticky',
+        bottom: '80px !important'
+      }
+    }
+  }
+  if (row.projectName === '实际完成') {
+    return {
+      position: 'sticky',
+      bottom: '40px !important'
+    }
+  }
+}
 
-//   }
-// }
-
-// function rowClassNameChange({ row, rowIndex }) {
-//   if (row.type === 2) {
-//     return 'success-row'
-//   }
-// }
-
-// 合计
-// function getSummaries(param) {
-//   const { columns, data } = param
-//   const sums = []
-//   columns.forEach((column, index) => {
-//     if (index === 1) {
-//       sums[index] = '合计'
-//       return
-//     }
-//     if (crud.query.type === timeTypeEnum.ALL_YEAR.V) {
-//       if (Number(column.label > 0)) {
-//         const values = data.map((item) => (item.project ? item[column.label] : 0))
-//         sums[index] = values.reduce((prev, curr) => {
-//           const value = Number(curr)
-//           if (!isNaN(value)) {
-//             return prev + Number(curr)
-//           } else {
-//             return prev
-//           }
-//         }, 0)
-//         sums[index] = Number(sums[index]).toFixed(2)
-//       }
-//     }
-//     if (crud.query.type === timeTypeEnum.CURRENT_MONTH.V) {
-//       if (index === 3 || index === 4) {
-//         const values = data.map((item) => item[column.property] || 0)
-//         sums[index] = values.reduce((prev, curr) => {
-//           const value = Number(curr)
-//           if (!isNaN(value)) {
-//             return prev + Number(curr)
-//           } else {
-//             return prev
-//           }
-//         }, 0)
-//         sums[index] = (Number(sums[index]) / 1000).toFixed(2)
-//       }
-//       if (index > 5) {
-//         const values = data.map((item) => item[column.label?.split('周\n')[1]]?.totalNetWeight)
-//         console.log(values, 'values')
-//         sums[index] = values.reduce((prev, curr) => {
-//           const value = Number(curr)
-//           console.log(value, 'value')
-//           if (!isNaN(value)) {
-//             return prev + Number(curr)
-//           } else {
-//             return prev
-//           }
-//         }, 0)
-//         sums[index] = (Number(sums[index]) / 1000).toFixed(2)
-//       }
-//     }
-//   })
-//   return sums
-// }
 </script>
 
 <style lang="scss" scoped>
 ::v-deep(.success-row) {
-  display: table-row;
+  // display: table-row;
   position: sticky;
   bottom: 0 !important;
   width: 100%;

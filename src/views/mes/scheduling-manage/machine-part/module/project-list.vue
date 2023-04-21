@@ -289,6 +289,10 @@ defineExpose({
   ::v-deep(.el-tree-node__content > .el-tree-node__expand-icon) {
     display: none;
   }
+
+  ::v-deep(.el-checkbox__inner) {
+    border: 2px solid #000;
+  }
 }
 
 ::-webkit-scrollbar {

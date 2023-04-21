@@ -339,8 +339,8 @@ constantize(gasTypeEnum)
 
 // 时间类型
 const timeTypeEnum = {
-  ALL_YEAR: { L: '全年', K: 'ALL_YEAR', V: 1 << 0 },
-  CURRENT_MONTH: { L: '当月', K: 'CURRENT_MONTH', V: 1 << 1 }
+  ALL_YEAR: { L: '全年', SL: '年', K: 'ALL_YEAR', V: 1 << 0 },
+  CURRENT_MONTH: { L: '当月', SL: '月', K: 'CURRENT_MONTH', V: 1 << 1 }
 }
 constantize(timeTypeEnum)
 

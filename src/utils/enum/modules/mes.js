@@ -105,7 +105,7 @@ constantize(floorPlateTypeEnum)
 
 // 围护产品类型
 const mesEnclosureTypeEnum = {
-  PRESSED_PLATE: { L: '压型板', K: 'PRESSED_PLATE', V: 1 << 1 },
+  PRESSED_PLATE: { L: '压型彩板', K: 'PRESSED_PLATE', V: 1 << 1 },
   SANDWICH_BOARD: { L: '夹芯板', K: 'SANDWICH_BOARD', V: 1 << 2 },
   TRUSS_FLOOR_PLATE: floorPlateTypeEnum.TRUSS_FLOOR_PLATE,
   PRESSED_FLOOR_PLATE: floorPlateTypeEnum.PRESSED_FLOOR_PLATE,

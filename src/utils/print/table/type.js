@@ -44,13 +44,19 @@ const plan = {
   technical_manage: '技术管理'
 }
 
+const enclosure = {
+  production_manage: '生产管理',
+  production_report: '生产报表'
+}
+
 const moduleType = {
   contract: { L: '合同管理', V: contract },
   supply: { L: '供应链', V: supply },
   wms: { L: 'WMS', V: wms },
   mes: { L: 'MES', V: mes },
   project: { L: '项目管理', V: project },
-  plan: { L: '计划管理', V: plan }
+  plan: { L: '计划管理', V: plan },
+  enclosure: { L: '围护MES', V: enclosure }
 }
 
 const mt = moduleType
@@ -80,6 +86,9 @@ const tableType = {
   transactionRecord: { L: '客户交易记录', M: 'sales_manage', T: mt.contract.L + ' / ' + contract.sales_manage },
   saleOrderTracking: { L: '订单跟踪', M: 'sales_manage', T: mt.contract.L + ' / ' + contract.sales_manage },
   projectWarehouseRecord: { L: '入库记录', M: 'sales_manage', T: mt.contract.L + ' / ' + contract.sales_manage },
+  contractStructureProduct: { L: '结构制品', M: 'sales_manage', T: mt.contract.L + ' / ' + contract.sales_manage },
+  contractEnclosureProduct: { L: '围护制品', M: 'sales_manage', T: mt.contract.L + ' / ' + contract.sales_manage },
+  contractAuxiliaryMaterialProduct: { L: '配套制品', M: 'sales_manage', T: mt.contract.L + ' / ' + contract.sales_manage },
 
   industryElectricRecord: { L: '工业用电电费清单', M: 'expense_entry', T: mt.contract.L + ' / ' + contract.expense_entry },
   civilElectricRecord: { L: '民用用电电费清单', M: 'expense_entry', T: mt.contract.L + ' / ' + contract.expense_entry },
@@ -215,7 +224,14 @@ const tableType = {
   installReportList: { L: '安装报表', M: 'install_manage', T: mt.project.L + ' / ' + project.install_manage },
 
   // 计划管理
-  auxiliaryMaterialSummary: { L: '配套件汇总', M: 'technical_manage', T: mt.plan.L + ' / ' + plan.technical_manage }
+  auxiliaryMaterialSummary: { L: '配套件汇总', M: 'technical_manage', T: mt.plan.L + ' / ' + plan.technical_manage },
+
+  // 围护MES
+  enclosureSchedulingWorkOrderDetail: { L: '排产工单详情', M: 'production_manage', T: mt.plan.L + ' / ' + enclosure.production_manage },
+  enclosureTaskTrackingDetail: { L: '生产跟踪详情', M: 'production_manage', T: mt.plan.L + ' / ' + enclosure.production_manage },
+  enclosureProductionStatistics: { L: '围护生产统计', M: 'production_report', T: mt.plan.L + ' / ' + enclosure.production_report },
+  enclosureTeamProduction: { L: '围护班组产量', M: 'production_report', T: mt.plan.L + ' / ' + enclosure.production_report },
+  enclosureTeamProductionDetail: { L: '围护班组产量详情', M: 'production_report', T: mt.plan.L + ' / ' + enclosure.production_report }
 
 }
 
