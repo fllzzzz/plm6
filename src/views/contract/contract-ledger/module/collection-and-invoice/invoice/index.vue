@@ -96,7 +96,7 @@
           <div v-else>{{ scope.row.taxRate? scope.row.taxRate+'%': '' }}</div>
         </template>
       </el-table-column>
-      <el-table-column key="noTaxAmount" prop="noTaxAmount" label="不含税金额" align="center" width="70">
+      <el-table-column key="noTaxAmount" prop="noTaxAmount" label="不含税金额" align="center" width="85" show-overflow-tooltip>
         <template v-slot="scope">
           <span>{{scope.row.noTaxAmount && scope.row.noTaxAmount>0? toThousand(scope.row.noTaxAmount): scope.row.noTaxAmount}}</span>
         </template>
@@ -118,30 +118,30 @@
           <div v-else>{{ scope.row.collectionUnit  }}</div>
         </template>
       </el-table-column>
-      <el-table-column prop="invoiceNo" label="*发票号码" align="center" min-width="130">
+      <el-table-column prop="invoiceNo" label="*发票号码" align="center" min-width="130" :show-overflow-tooltip="true">
         <template v-slot="scope">
           <el-input v-if="scope.row.isModify" v-model.trim="scope.row.invoiceNo" type="text" placeholder="发票号码" style="width: 100%;" @change="checkInvoiceNo(scope.row,scope.$index)" />
           <span v-else>{{ scope.row.invoiceNo  }}</span>
         </template>
       </el-table-column>
-       <el-table-column prop="invoiceContent" label="发票内容" align="center" min-width="130">
+       <el-table-column prop="invoiceContent" label="发票内容" align="center" min-width="130" :show-overflow-tooltip="true">
         <template v-slot="scope">
           <el-input v-if="scope.row.isModify" v-model.trim="scope.row.invoiceContent" type="text" placeholder="发票内容" style="width: 100%;"/>
           <span v-else>{{ scope.row.invoiceContent  }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="remark" label="备注" align="center" min-width="100">
+      <el-table-column prop="remark" label="备注" align="center" min-width="100" :show-overflow-tooltip="true">
         <template v-slot="scope">
           <el-input v-if="scope.row.isModify" v-model.trim="scope.row.remark" type="text" placeholder="备注" style="width: 100%;" />
           <span v-else>{{ scope.row.remark  }}</span>
         </template>
       </el-table-column>
-      <el-table-column key="writtenByName" prop="writtenByName" label="办理人" align="center" width="80px">
+      <el-table-column key="writtenByName" prop="writtenByName" label="办理人" align="center" width="65px" :show-overflow-tooltip="true">
         <template v-slot="scope">
           <div>{{ scope.row.writtenByName }}</div>
         </template>
       </el-table-column>
-      <el-table-column key="auditorName" prop="auditorName" label="审核人" align="center" width="80px">
+      <el-table-column key="auditorName" prop="auditorName" label="审核人" align="center" width="65px" :show-overflow-tooltip="true">
         <template v-slot="scope">
           <div>{{ scope.row.auditorName }}</div>
         </template>
@@ -154,6 +154,7 @@
         align="center"
       >
         <template v-slot="scope">
+          <el-tag type="success" size="medium" v-if="scope.row.auditStatus===auditTypeEnum.PASS.V" style="margin-right:8px;">已复核</el-tag>
           <template v-if="!scope.row.isModify">
             <common-button icon="el-icon-edit" type="primary" size="mini" @click="modifyRow(scope.row)" v-if="!currentRow.settlementAmount && checkPermission(permission.edit)"/>
             <el-popconfirm
@@ -178,7 +179,7 @@
                 <common-button type="success" size="mini" >通过</common-button>
               </template>
             </el-popconfirm>
-            <el-tag type="success" v-if="scope.row.auditStatus===auditTypeEnum.PASS.V" class="pass-tag">已复核</el-tag>
+
           </template>
           <template v-else>
             <el-popconfirm
