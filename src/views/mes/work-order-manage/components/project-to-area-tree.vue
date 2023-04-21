@@ -140,27 +140,27 @@ function dataFormat(content) {
 }
 
 // 切换区域
-function handleNodeClick(data, node) {
-  if (data.isLeaf) {
-    if (!node.checked) {
-      // 区域多选
-      // if (data.monomerId === currentMonomerId.value) {
-      //   treeMenuRef.value.setChecked(node, true)
-      // } else {
-      //   currentMonomerId.value = data.monomerId
-      //   treeMenuRef.value.setCheckedNodes([])
-      //   treeMenuRef.value.setChecked(node, true)
-      // }
-      // 区域单选
-      treeMenuRef.value.setCheckedNodes([])
-      treeMenuRef.value.setChecked(node, true)
-    } else {
-      treeMenuRef.value.setChecked(node, false)
-    }
+// function handleNodeClick(data, node) {
+//   if (data.isLeaf) {
+//     if (!node.checked) {
+//       // 区域多选
+//       // if (data.monomerId === currentMonomerId.value) {
+//       //   treeMenuRef.value.setChecked(node, true)
+//       // } else {
+//       //   currentMonomerId.value = data.monomerId
+//       //   treeMenuRef.value.setCheckedNodes([])
+//       //   treeMenuRef.value.setChecked(node, true)
+//       // }
+//       // 区域单选
+//       treeMenuRef.value.setCheckedNodes([])
+//       treeMenuRef.value.setChecked(node, true)
+//     } else {
+//       treeMenuRef.value.setChecked(node, false)
+//     }
 
-    emit('nesting-task-click', treeMenuRef.value.getCheckedNodes(true))
-  }
-}
+//     emit('nesting-task-click', treeMenuRef.value.getCheckedNodes(true))
+//   }
+// }
 
 // 切换区域
 function handleCheckClick(data, node) {
