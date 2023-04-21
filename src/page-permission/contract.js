@@ -229,6 +229,13 @@ export const orderTrackingPM = {
   print: ['order_tracking:print'] // 打印
 }
 
+// 销售管理/发运跟踪
+export const shipmentTrackingPM = {
+  get: ['shipment_tracking:get'], // 列表
+  summary: ['shipment_tracking:summary'], // 汇总
+  print: ['shipment_tracking:print'] // 打印
+}
+
 // 销售管理/客户交易记录
 export const transactionRecordPM = {
   get: ['transaction_record:get'], // 列表

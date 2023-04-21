@@ -356,6 +356,52 @@ export const mesParallelConfigPM = {
   del: ['mes_parallel_config:del'], // 删除垫块配置
   import: ['mes_parallel_config:import'] // 导入dxf
 }
+
+// ---------------------------- 建钢-生产配置 end -------------------------------
+
+// ########################################################################
+
+// --------------------------- 围护-生产配置 start --------------------------
+
+// 围护-生产配置/生产线管理:班组
+export const enclosureConfigProductionLineTeamPM = {
+  get: ['enclosure_productionLine_team:get'], // 班组列表
+  add: ['enclosure_productionLine_team:add'], // 添加班组
+  edit: ['enclosure_productionLine_team:edit'], // 编辑班组
+  del: ['enclosure_productionLine_team:del'] // 删除班组
+}
+
+// 围护-生产配置/生产线管理:质检
+export const enclosureConfigProductionLineInspectPM = {
+  get: ['enclosure_productionLine_inspect:get'], // 质检列表
+  add: ['enclosure_productionLine_inspect:add'], // 添加质检
+  edit: ['enclosure_productionLine_inspect:edit'], // 编辑质检
+  del: ['enclosure_productionLine_inspect:del'] // 删除质检
+}
+
+// 围护-生产配置/报检方式
+export const enclosureConfigInspectionModePM = {
+  get: ['enclosure_inspection_mode:get'], // 报检方式列表
+  edit: ['enclosure_inspection_mode:edit'] // 编辑报检方式
+}
+
+// 围护-生产配置/生产线管理
+export const enclosureConfigProductionLinePM = {
+  get: ['enclosure_productionLine:get'], // 生产线列表
+  add: ['enclosure_productionLine:add'], // 添加生产线
+  edit: ['enclosure_productionLine:edit'], // 编辑生产线
+  del: ['enclosure_productionLine:del'], // 删除生产线
+  editStatus: ['enclosure_productionLine:editStatus'] // 更改生产线状态
+}
+
+// 围护-生产配置/生产线管理:生产组
+export const enclosureConfigProductionLineGroupPM = {
+  get: ['enclosure_productionLine_group:get'], // 班组列表
+  edit: ['enclosure_productionLine_group:edit'] // 编辑班组
+}
+
+// ---------------------------- 围护-生产配置 end -------------------------------
+
 // ---------------------------- 基础配置 end -------------------------------
 
 // ########################################################################

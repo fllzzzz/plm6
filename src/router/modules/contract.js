@@ -165,6 +165,13 @@ export default {
           meta: { title: '销售台账', icon: 'contract2', noCache: true }
         },
         {
+          name: 'ShipmentTracking',
+          path: 'shipment-tracking',
+          hidden: false,
+          component: '/contract/sales-manage/shipment-tracking/index',
+          meta: { title: '发运跟踪', icon: 'contract2', noCache: true }
+        },
+        {
           name: 'TransactionRecord',
           path: 'transaction-record',
           hidden: false,

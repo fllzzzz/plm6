@@ -26,6 +26,7 @@ import sectionSteel from './module/section-steel.vue'
 import steelCoil from './module/steel-coil.vue'
 import auxMat from './module/aux-mat.vue'
 import gas from './module/gas.vue'
+import other from './module/other.vue'
 import useWmsConfig from '@/composables/store/use-wms-config'
 import { ElMessage } from 'element-plus'
 
@@ -56,6 +57,8 @@ const comp = computed(() => {
       return steelCoil
     case rawMatClsEnum.MATERIAL.V:
       return auxMat
+    case rawMatClsEnum.OTHER.V:
+      return other
     case rawMatClsEnum.GAS.V:
       return gas
     default:

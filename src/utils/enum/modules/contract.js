@@ -339,8 +339,8 @@ constantize(gasTypeEnum)
 
 // 时间类型
 const timeTypeEnum = {
-  ALL_YEAR: { L: '全年', K: 'ALL_YEAR', V: 1 << 0 },
-  CURRENT_MONTH: { L: '当月', K: 'CURRENT_MONTH', V: 1 << 1 }
+  ALL_YEAR: { L: '全年', SL: '年', K: 'ALL_YEAR', V: 1 << 0 },
+  CURRENT_MONTH: { L: '当月', SL: '月', K: 'CURRENT_MONTH', V: 1 << 1 }
 }
 constantize(timeTypeEnum)
 
@@ -358,6 +358,17 @@ const mainAuxiliaryTypeEnum = {
   AUXILIARY: { L: '辅材', K: 'AUXILIARY', V: 8 }
 }
 constantize(mainAuxiliaryTypeEnum)
+
+// 结构类型
+const structureTypeEnum = {
+  WORKSHOP: { L: '厂房', K: 'WORKSHOP', V: 1 << 0 },
+  FRAME: { L: '框架类', K: 'FRAME', V: 1 << 1 },
+  SPACE: { L: '空间结构', K: 'SPACE', V: 1 << 2 },
+  BEAM_TYPE: { L: '梁氏', K: 'BEAM_TYPE', V: 1 << 3 },
+  ARCH_TYPE: { L: '拱式', K: 'ARCH_TYPE', V: 1 << 4 },
+  STEEL_FRAME: { L: '钢架', K: 'STEEL_FRAME', V: 1 << 5 }
+}
+constantize(structureTypeEnum)
 
 export {
   projectStatusEnum, // 项目状态
@@ -401,7 +412,8 @@ export {
   gasTypeEnum,
   timeTypeEnum,
   managementSalaryTypeEnum,
-  mainAuxiliaryTypeEnum
+  mainAuxiliaryTypeEnum,
+  structureTypeEnum
 }
 
 export default {
@@ -446,5 +458,6 @@ export default {
   gasTypeEnum, // 气体类型
   timeTypeEnum, // 时间类型
   managementSalaryTypeEnum, // 不同人员类型工资
-  mainAuxiliaryTypeEnum
+  mainAuxiliaryTypeEnum,
+  structureTypeEnum
 }

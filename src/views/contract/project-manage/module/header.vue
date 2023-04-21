@@ -67,6 +67,16 @@
         @change="crud.toQuery"
         filterable
       />
+      <common-select
+        type="enum"
+        size="small"
+        v-model="query.structureStatus"
+        :options="structureTypeEnum.ENUM"
+        class="filter-item"
+        placeholder="结构类型"
+        style="width: 200px"
+        @change="crud.toQuery"
+      />
       <branch-company-select
         v-model="query.contractSignBodyId"
         class="filter-item"
@@ -88,8 +98,8 @@
         <el-input
           v-model.trim="query.signerName"
           size="small"
-          placeholder="输入签约人"
-          style="width: 120px;"
+          placeholder="销售负责人"
+          style="width: 180px;"
           class="filter-item"
           clearable
           @blur="crud.toQuery"
@@ -163,7 +173,7 @@ import { regHeader } from '@compos/use-crud'
 import checkPermission from '@/utils/system/check-permission'
 import rrOperation from '@crud/RR.operation'
 import crudOperation from '@crud/CRUD.operation'
-import { projectStatusEnum, projectTypeEnum, businessTypeEnum } from '@enum-ms/contract'
+import { projectStatusEnum, projectTypeEnum, businessTypeEnum, structureTypeEnum } from '@enum-ms/contract'
 import { settlementStatusEnum } from '@enum-ms/finance'
 import { getContentInfo } from '@/api/contract/project'
 import { ElRadioGroup } from 'element-plus'

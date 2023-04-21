@@ -105,7 +105,7 @@ constantize(floorPlateTypeEnum)
 
 // 围护产品类型
 const mesEnclosureTypeEnum = {
-  PRESSED_PLATE: { L: '压型板', K: 'PRESSED_PLATE', V: 1 << 1 },
+  PRESSED_PLATE: { L: '压型彩板', K: 'PRESSED_PLATE', V: 1 << 1 },
   SANDWICH_BOARD: { L: '夹芯板', K: 'SANDWICH_BOARD', V: 1 << 2 },
   TRUSS_FLOOR_PLATE: floorPlateTypeEnum.TRUSS_FLOOR_PLATE,
   PRESSED_FLOOR_PLATE: floorPlateTypeEnum.PRESSED_FLOOR_PLATE,
@@ -170,11 +170,19 @@ constantize(contractSaleTypeEnum)
 // 可打包类型
 const packTypeEnum = {
   STRUCTURE: { L: '结构', SL: '结构制品', K: 'STRUCTURE', V: componentTypeEnum.ARTIFACT.V, T: '' },
-  // ENCLOSURE: { L: '围护', SL: '围护', K: 'ENCLOSURE', V: componentTypeEnum.ENCLOSURE.V, T: 'warning' },
+  ENCLOSURE: { L: '围护', SL: '围护', K: 'ENCLOSURE', V: componentTypeEnum.ENCLOSURE.V, T: 'warning' },
   MACHINE_PART: { L: '直发件', SL: '散发制品', K: 'MACHINE_PART', V: componentTypeEnum.MACHINE_PART.V | componentTypeEnum.ASSEMBLE.V, T: 'danger' },
   AUXILIARY_MATERIAL: { L: '辅材', SL: '配套制品', K: 'AUXILIARY_MATERIAL', V: componentTypeEnum.AUXILIARY_MATERIAL.V, T: 'success' }
 }
 constantize(packTypeEnum)
+
+// 车间
+const packWorkshopTypeEnum = {
+  MES_WORKSHOP: { L: '建钢车间', K: 'MES_WORKSHOP', V: 1 << 0 },
+  ENCLOSURE_WORKSHOP: { L: '围护车间', K: 'ENCLOSURE_WORKSHOP', V: 1 << 2 },
+  BRIDGE_WORKSHOP: { L: '桥梁车间', K: 'BRIDGE_WORKSHOP', V: 1 << 1 }
+}
+constantize(packWorkshopTypeEnum)
 
 // 打包清单状态
 const packStatusTypeEnum = {
@@ -620,6 +628,7 @@ export {
   machinePartSchedulingIssueStatusEnum,
   machinePartNestingStatusEnum,
   packTypeEnum,
+  packWorkshopTypeEnum,
   packStatusTypeEnum,
   receiptStatusEnum,
   logisticsPriceTypeEnum,
@@ -697,6 +706,7 @@ export default {
   machinePartSchedulingIssueStatusEnum,
   machinePartNestingStatusEnum,
   packTypeEnum,
+  packWorkshopTypeEnum,
   packStatusTypeEnum,
   receiptStatusEnum,
   logisticsPriceTypeEnum,

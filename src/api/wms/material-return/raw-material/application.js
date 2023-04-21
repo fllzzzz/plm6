@@ -57,6 +57,20 @@ export function auxMatReturnApplication(data) {
     data
   })
 }
+/**
+ * 其它退库申请
+ *
+ * @export
+ * @returns
+ */
+export function otherReturnApplication(data) {
+  return request({
+    module: 'wms',
+    url: 'return/application/other-material',
+    method: 'post',
+    data
+  })
+}
 
 /**
  * 辅材入库申请

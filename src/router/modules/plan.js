@@ -137,20 +137,13 @@ export default {
           component: '/plan/technical-manage/assembly/index',
           meta: { title: '构件-部件清单', icon: 'project', noCache: true }
         },
-        {
-          name: 'PlanEnclosureList',
-          path: 'enclosureList',
-          hidden: false,
-          component: '/plan/technical-manage/enclosure-list/index',
-          meta: { title: '围护清单', icon: 'project', noCache: true }
-        },
-        {
-          name: 'PlanStandardPart',
-          path: 'planStandardPart',
-          hidden: false,
-          component: '/plan/technical-manage/standard-part/index',
-          meta: { title: '项目配套', icon: 'project', noCache: true }
-        },
+        // {
+        //   name: 'PlanEnclosureList',
+        //   path: 'enclosureList',
+        //   hidden: false,
+        //   component: '/plan/technical-manage/enclosure-list/index',
+        //   meta: { title: '围护清单', icon: 'project', noCache: true }
+        // },
         // {
         //   name: 'PlanAuxiliaryMaterialList',
         //   path: 'planAuxiliaryMaterialList',

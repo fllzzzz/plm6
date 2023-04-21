@@ -69,6 +69,11 @@
               <span>{{ detail.projectManagerFullName || '-' }}</span>
             </div>
           </el-form-item>
+          <el-form-item label="销售负责人" prop="projectManagerId">
+            <div class="input-underline" style="width:300px">
+              <span>{{ detail.singerName || '-' }}</span>
+            </div>
+          </el-form-item>
         </div>
         <el-divider><span class="title">合同金额</span></el-divider>
         <div class="form-row">
