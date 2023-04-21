@@ -16,7 +16,7 @@
     <template #titleRight>
       <div class="print-wrap">
         <print-table
-          v-permission="props.permission?.invoice.print"
+          v-permission="props.permission?.print"
           api-key="subcontractInvoiceRecord"
           :params="{ supplierId: props.detailInfo.supplierId,projectId: props.detailInfo.projectId,auditStatus: auditTypeEnum.PASS.V}"
           size="mini"

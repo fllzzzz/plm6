@@ -55,18 +55,11 @@ export const supplierMaterialInboundPM = {
   print: ['supplier_material_inbound:print'] // 打印入库记录详情
 }
 
-// 采购对账管理/付款台账
+// 采购对账管理/采购台账
 export const supplierMaterialPaymentPM = {
-  get: ['supplier_material_payment:get'], // 付款台账列表
-  settle: ['supplier_material_payment:settle'], // 订单结算申请
+  get: ['supplier_material_payment:get'], // 采购台账列表
   detail: ['supplier_material_payment:detail'], // 入库/付款/收票记录
-  print: ['supplier_material_payment:print'], // 打印下载付款台账
-  application: {
-    get: ['supplier_material_payment_application:get'], // 付款申请列表
-    add: ['supplier_material_payment_application:add'], // 添加付款申请
-    edit: ['supplier_material_payment_application:edit'], // 编辑付款申请
-    del: ['supplier_material_payment_application:del'] // 删除付款申请
-  }
+  print: ['supplier_material_payment:print'] // 列表/入库/付款/收票打印下载
 }
 
 // 采购对账管理/验收记录
@@ -81,23 +74,25 @@ export const supplierReconciliationLogPM = {
   download: ['supplier_reconciliation_Log:download'] // 下载
 }
 
-// 物流对账管理/物流记录
+// 物流台账/物流记录
 export const supplierLogisticsLogPM = {
   get: ['supplier_logistics_Log:get'], // 物流记录列表
   detail: ['supplier_logistics_Log:detail'], // 物流记录详情
   print: ['supplier_logistics_Log:print'] // 打印物流记录
 }
 
-// 物流对账管理/付款明细
+// 原材料物流
 export const supplierLogisticsPaymentPM = {
-  get: ['supplier_logistics_payment:get'], // 付款明细列表
-  add: ['supplier_logistics_payment:add'], // 新增申请
-  detail: ['supplier_logistics_payment:detail'], // 收票记录
-  application: {
-    get: ['supplier_logistics_payment_application:get'], // 申请记录列表
-    edit: ['supplier_logistics_payment_application:edit'], // 编辑付款申请
-    del: ['supplier_logistics_payment_application:del'] // 删除付款申请
-  }
+  get: ['supplier_logistics_payment:get'], // 原材料物流列表
+  detail: ['supplier_logistics_payment:detail'], // 关联供方/付款/收票记录
+  print: ['supplier_logistics_payment:print'] // 入库单付款收票记录打印
+}
+
+// 制成品物流
+export const supplierProductLogisticsPaymentPM = {
+  get: ['supplier_product_logistics_payment:get'], // 制成品物流列表
+  detail: ['supplier_product_logistics_payment:detail'], // 物流/付款/收票记录
+  print: ['supplier_product_logistics_payment:print'] // 物流/付款/收票记录打印
 }
 
 // --------------------------- 供应商 end ---------------------------------
@@ -153,16 +148,10 @@ export const subcontractOrderPM = {
   detail: ['subcontract_order:detail'] // 详情
 }
 
-// 分包订单付款台账
+// 分包订单/付款台账
 export const supplyChainSubcontractPaymentPM = {
   get: ['subcontract_chain_subcontract_payment:get'], // 列表
-  payment: {
-    get: ['subcontract_chain_subcontract_payment_manage:get'], // 付款记录列表
-    print: ['subcontract_chain_subcontract_payment_manage:print'] // 付款记录打印下载
-  },
-  invoice: {
-    get: ['subcontract_chain_subcontract_invoice:get'], // 收票记录列表
-    print: ['subcontract_chain_subcontract_invoice:print'] // 收票记录打印下载
-  }
+  detail: ['subcontract_chain_subcontract_payment:detail'], // 付款开票记录
+  print: ['subcontract_chain_subcontract_payment:print'] // 付款开票记录打印
 }
 // --------------------------- 分包订单 end ---------------------------------

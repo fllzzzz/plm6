@@ -120,7 +120,7 @@
     <common-drawer
       ref="invoiceRef"
       :show-close="true"
-      size="85%"
+      size="95%"
       title="收票申请登记"
       append-to-body
       v-model="invoiceVisible"
@@ -138,7 +138,7 @@ import crudApi from '@/api/contract/supplier-manage/jd-material-manage'
 import { ref, provide, computed, nextTick } from 'vue'
 
 import { parseTime } from '@/utils/date'
-import { supplierMaterialPaymentPM as permission } from '@/page-permission/supply-chain'
+import { contractSupplierMaterialPM as permission } from '@/page-permission/contract'
 import checkPermission from '@/utils/system/check-permission'
 import { matClsEnum } from '@/utils/enum/modules/classification'
 import EO from '@enum'
@@ -152,7 +152,6 @@ import invoiceRecord from './module/invoice-record'
 import paymentRecord from './module/payment-record'
 import paymentApplication from './module/payment-application/index'
 import invoice from './module/invoice/index'
-// import tableCellTag from '@comp-common/table-cell-tag/index.vue'
 
 const optShow = {
   add: false,

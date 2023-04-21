@@ -60,13 +60,13 @@
       </el-table-column>
       <!--编辑与删除-->
       <el-table-column
-        v-if="checkPermission([ ...permission.edit,...permission.del])"
+        v-if="checkPermission([ ...permission.edit,...permission.del,...permission.detail])"
         label="操作"
         width="190px"
         align="center"
       >
         <template v-slot="scope">
-          <common-button icon="el-icon-view" type="info" size="mini" @click="openDetail(scope.row, 'detail')"/>
+          <common-button v-if="checkPermission(permission.detail)" icon="el-icon-view" type="info" size="mini" @click="openDetail(scope.row, 'detail')"/>
           <udOperation :data="scope.row" :show-edit="scope.row.auditStatus!==auditTypeEnum.PASS.V?true:false" :show-del="scope.row.auditStatus!==auditTypeEnum.PASS.V?true:false" :permission="permission"/>
         </template>
       </el-table-column>
@@ -85,7 +85,7 @@ import { ref, defineProps, watch, nextTick, inject, defineEmits } from 'vue'
 
 import { auditTypeEnum } from '@enum-ms/contract'
 import { toThousand } from '@data-type/number'
-import { supplierMaterialPaymentPM } from '@/page-permission/supply-chain'
+import { contractSupplierSubcontractPM } from '@/page-permission/contract'
 import checkPermission from '@/utils/system/check-permission'
 import useDict from '@compos/store/use-dict'
 
@@ -98,7 +98,7 @@ import mForm from './form'
 import mDetail from './detail'
 import showPdfAndImg from '@comp-base/show-pdf-and-img.vue'
 
-const permission = supplierMaterialPaymentPM.application
+const permission = contractSupplierSubcontractPM.payment
 
 const emit = defineEmits(['success'])
 

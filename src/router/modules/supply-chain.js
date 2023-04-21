@@ -91,7 +91,7 @@ export default {
       hidden: false,
       name: 'SupplyChainLogisticsPayment',
       alwaysShow: false,
-      redirect: '/supply-chain/logistics-record',
+      redirect: '/supply-chain/logistics-payment-manage/logistics-record',
       meta: { title: '物流台账', icon: 'contract', noCache: true },
       children: [
         {

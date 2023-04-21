@@ -37,7 +37,7 @@
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
       />
-      <inbound-record v-model="recordVisible" :detailInfo="currentRow" />
+      <inbound-record v-model="recordVisible" :detailInfo="currentRow" :permission="permission"/>
     </template>
   </common-drawer>
 </template>

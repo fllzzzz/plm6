@@ -93,18 +93,15 @@ export const collectionWarnPM = {
 // 供应商付款/采购合同
 export const contractSupplierMaterialPM = {
   get: ['contract_supplier_material:get'], // 采购合同列表
-  print: ['contract_supplier_material:print'], // 打印下载
-  settleDetail: ['contract_supplier_material:settleDetail'], // 结算详情
-  settleAudit: ['contract_supplier_material:settleAudit'], // 结算审核
-  inbound: {
-    get: ['contract_supplier_material_inbound:get'], // 入库记录列表
-    print: ['contract_supplier_material_inbound:print'] // 入库记录打印下载
-  },
+  print: ['supplier_material_payment:print'], // 列表/入库/付款/收票打印下载付款
+  detail: ['supplier_material_payment:detail'], // 入库/付款/收票记录
   payment: {
     get: ['contract_supplier_material_payment:get'], // 付款列表
+    add: ['contract_supplier_material_payment:add'], // 付款添加
+    edit: ['contract_supplier_material_payment:edit'], // 付款修改
+    del: ['contract_supplier_material_payment:del'], // 付款删除
     detail: ['contract_supplier_material_payment:detail'], // 付款详情
-    audit: ['contract_supplier_material_payment:audit'], // 付款审核
-    print: ['contract_supplier_material_payment:print'] // 打印下载
+    audit: ['contract_supplier_material_payment:audit'] // 付款审核
   },
   invoice: {
     get: ['contract_supplier_material_invoice:get'], // 收票列表
@@ -112,8 +109,7 @@ export const contractSupplierMaterialPM = {
     edit: ['contract_supplier_material_invoice:edit'], // 收票修改
     del: ['contract_supplier_material_invoice:del'], // 收票删除
     audit: ['contract_supplier_material_invoice:audit'], // 收票审核
-    detail: ['contract_supplier_material_invoice:detail'], // 收票详情
-    print: ['contract_supplier_material_invoice:print'] // 打印下载
+    detail: ['contract_supplier_material_invoice:detail'] // 收票详情
   }
 }
 
@@ -144,19 +140,18 @@ export const contractSupplierProductPM = {
   }
 }
 
-// 供应商付款/物流
+// 供应商付款/原材料物流
 export const contractSupplierLogisticsPM = {
-  get: ['contract_supplier_logistics:get'], // 物流列表
-  print: ['contract_supplier_logistics:print'], // 打印下载
-  logisticsLog: {
-    get: ['contract_supplier_logistics_log:get'], // 物流记录列表
-    print: ['contract_supplier_logistics_log:print'] // 物流记录打印下载
-  },
+  get: ['contract_supplier_logistics:get'], // 原材料物流列表
+  print: ['supplier_logistics_payment:print'], // 入库单/付款/收票打印下载
+  detail: ['supplier_logistics_payment:detail'], // 关联入库/付款/收票记录
   payment: {
     get: ['contract_supplier_logistics_payment:get'], // 付款列表
+    add: ['contract_supplier_logistics_payment:add'], // 付款添加
+    edit: ['contract_supplier_logistics_payment:edit'], // 付款修改
+    del: ['contract_supplier_logistics_payment:del'], // 付款删除
     detail: ['contract_supplier_logistics_payment:detail'], // 付款详情
-    audit: ['contract_supplier_logistics_payment:audit'], // 付款审核
-    print: ['contract_supplier_logistics_payment:print'] // 付款打印下载
+    audit: ['contract_supplier_logistics_payment:audit'] // 付款审核
   },
   invoice: {
     get: ['contract_supplier_logistics_invoice:get'], // 收票列表
@@ -164,29 +159,52 @@ export const contractSupplierLogisticsPM = {
     edit: ['contract_supplier_logistics_invoice:edit'], // 收票修改
     del: ['contract_supplier_logistics_invoice:del'], // 收票删除
     audit: ['contract_supplier_logistics_invoice:audit'], // 收票审核
-    detail: ['contract_supplier_logistics_invoice:detail'], // 收票详情
-    print: ['contract_supplier_logistics_invoice:print'] // 收票打印下载
+    detail: ['contract_supplier_logistics_invoice:detail'] // 收票详情
   }
 }
 
+// 供应商付款/制成品物流
+export const contractSupplierProductLogisticsPM = {
+  get: ['contract_supplier_product_logistics:get'], // 制成品物流列表
+  print: ['supplier_product_logistics_payment:print'], // 物流记录/付款/收票打印下载
+  detail: ['supplier_product_logistics_payment:detail'], // 物流/付款/收票记录
+  payment: {
+    get: ['contract_supplier_product_logistics_payment:get'], // 付款列表
+    add: ['contract_supplier_product_logistics_payment:add'], // 付款添加
+    edit: ['contract_supplier_product_logistics_payment:edit'], // 付款修改
+    del: ['contract_supplier_product_logistics_payment:del'], // 付款删除
+    detail: ['contract_supplier_product_logistics_payment:detail'], // 付款详情
+    audit: ['contract_supplier_product_logistics_payment:audit'] // 付款审核
+  },
+  invoice: {
+    get: ['contract_supplier_product_logistics_invoice:get'], // 收票列表
+    add: ['contract_supplier_product_logistics_invoice:add'], // 收票添加
+    edit: ['contract_supplier_product_logistics_invoice:edit'], // 收票修改
+    del: ['contract_supplier_product_logistics_invoice:del'], // 收票删除
+    audit: ['contract_supplier_product_logistics_invoice:audit'], // 收票审核
+    detail: ['contract_supplier_product_logistics_invoice:detail'] // 收票详情
+  }
+}
 // 供应商付款/分包订单
 export const contractSupplierSubcontractPM = {
   get: ['contract_supplier_subcontract:get'], // 分包订单列表
-  settleDetail: ['contract_supplier_subcontract:settleDetail'], // 结算详情
-  settleAudit: ['contract_supplier_subcontract:settleAudit'], // 结算审核
+  print: ['subcontract_chain_subcontract_payment:print'], // 付款/收票打印下载付款
+  detail: ['subcontract_chain_subcontract_payment:detail'], // 付款/收票记录
   payment: {
     get: ['contract_supplier_subcontract_payment:get'], // 付款列表
+    add: ['contract_supplier_subcontract_payment:add'], // 付款添加
+    edit: ['contract_supplier_subcontract_payment:edit'], // 付款修改
+    del: ['contract_supplier_subcontract_payment:del'], // 付款删除
     detail: ['contract_supplier_subcontract_payment:detail'], // 付款详情
-    audit: ['contract_supplier_subcontract_payment:audit'], // 付款审核
-    print: ['contract_supplier_subcontract_payment:print'] // 付款打印下载
+    audit: ['contract_supplier_subcontract_payment:audit'] // 付款审核
   },
   invoice: {
     get: ['contract_supplier_subcontract_invoice:get'], // 收票列表
     add: ['contract_supplier_subcontract_invoice:add'], // 收票添加
     edit: ['contract_supplier_subcontract_invoice:edit'], // 收票修改
     del: ['contract_supplier_subcontract_invoice:del'], // 收票删除
-    audit: ['contract_supplier_subcontract_invoice:audit'], // 收票审核
-    print: ['contract_supplier_subcontract_invoice:print'] // 收票打印下载
+    detail: ['contract_supplier_subcontract_invoice:detail'], // 收票详情
+    audit: ['contract_supplier_subcontract_invoice:audit'] // 收票审核
   }
 }
 

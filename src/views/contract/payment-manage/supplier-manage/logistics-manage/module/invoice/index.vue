@@ -79,13 +79,13 @@
       </el-table-column>
       <!--编辑与删除-->
       <el-table-column
-        v-if="checkPermission([ ...permission.edit,...permission.audit])"
+        v-if="checkPermission([ ...permission.edit,...permission.audit,...permission.detail])"
         label="操作"
         width="190px"
         align="center"
       >
         <template v-slot="scope">
-          <common-button icon="el-icon-view" type="info" size="mini" @click="openDetail(scope.row, 'detail')"/>
+          <common-button v-if="checkPermission(permission.detail)" icon="el-icon-view" type="info" size="mini" @click="openDetail(scope.row, 'detail')"/>
           <udOperation :data="scope.row" :show-edit="scope.row.auditStatus!==auditTypeEnum.PASS.V?true:false" :show-del="scope.row.auditStatus!==auditTypeEnum.PASS.V?true:false" :permission="permission"/>
         </template>
       </el-table-column>
@@ -108,7 +108,7 @@ import { auditTypeEnum } from '@enum-ms/contract'
 import { invoiceTypeEnum } from '@enum-ms/finance'
 import { parseTime } from '@/utils/date'
 import { toThousand } from '@data-type/number'
-import { contractSupplierMaterialPM } from '@/page-permission/contract'
+import { contractSupplierLogisticsPM } from '@/page-permission/contract'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
@@ -119,7 +119,7 @@ import mHeader from './header'
 import mDetail from './detail'
 import udOperation from '@crud/UD.operation'
 
-const permission = contractSupplierMaterialPM.invoice
+const permission = contractSupplierLogisticsPM.invoice
 const emit = defineEmits(['success'])
 const optShow = {
   add: true,

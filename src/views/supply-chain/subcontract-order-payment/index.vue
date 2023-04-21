@@ -76,7 +76,6 @@ import { ref, provide, computed, nextTick } from 'vue'
 
 import { supplyChainSubcontractPaymentPM as permission } from '@/page-permission/supply-chain'
 import checkPermission from '@/utils/system/check-permission'
-// import { settlementStatusEnum } from '@enum-ms/finance'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
@@ -84,7 +83,6 @@ import pagination from '@crud/Pagination'
 import mHeader from './module/header'
 import invoiceRecord from './module/invoice-record'
 import paymentRecord from './module/payment-record'
-// import tableCellTag from '@comp-common/table-cell-tag/index.vue'
 
 const optShow = {
   add: false,

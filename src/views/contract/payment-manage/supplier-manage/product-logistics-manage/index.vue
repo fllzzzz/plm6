@@ -125,7 +125,7 @@
     <common-drawer
       ref="invoiceRef"
       :show-close="true"
-      size="85%"
+      size="95%"
       title="收票申请登记"
       append-to-body
       v-model="invoiceVisible"
@@ -144,7 +144,7 @@
 import crudApi from '@/api/contract/supplier-manage/jd-product-logistics-manage'
 import { ref, provide, computed, nextTick } from 'vue'
 
-import { contractSupplierLogisticsPM as permission } from '@/page-permission/contract'
+import { contractSupplierProductLogisticsPM as permission } from '@/page-permission/contract'
 import checkPermission from '@/utils/system/check-permission'
 
 import useMaxHeight from '@compos/use-max-height'

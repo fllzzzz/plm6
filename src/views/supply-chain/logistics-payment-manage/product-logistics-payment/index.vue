@@ -116,7 +116,7 @@
 <script setup>
 import crudApi from '@/api/supply-chain/logistics-payment-manage/jd-product-logistics-record-ledger'
 import { ref, nextTick } from 'vue'
-import { supplierLogisticsPaymentPM as permission } from '@/page-permission/supply-chain'
+import { supplierProductLogisticsPaymentPM as permission } from '@/page-permission/supply-chain'
 import checkPermission from '@/utils/system/check-permission'
 
 import useMaxHeight from '@compos/use-max-height'

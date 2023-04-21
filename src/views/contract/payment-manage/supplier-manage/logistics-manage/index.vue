@@ -113,7 +113,7 @@
     <common-drawer
       ref="invoiceRef"
       :show-close="true"
-      size="85%"
+      size="95%"
       title="收票申请登记"
       append-to-body
       v-model="invoiceVisible"

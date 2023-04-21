@@ -79,13 +79,13 @@
       </el-table-column>
       <!--编辑与删除-->
       <el-table-column
-        v-if="checkPermission([ ...permission.edit,...permission.audit])"
+        v-if="checkPermission([ ...permission.edit,...permission.audit,...permission.detail])"
         label="操作"
         width="190px"
         align="center"
       >
         <template v-slot="scope">
-          <common-button icon="el-icon-view" type="info" size="mini" @click="openDetail(scope.row, 'detail')"/>
+          <common-button v-if="checkPermission(permission.detail)" icon="el-icon-view" type="info" size="mini" @click="openDetail(scope.row, 'detail')"/>
           <udOperation :data="scope.row" :show-edit="scope.row.auditStatus!==auditTypeEnum.PASS.V?true:false" :show-del="scope.row.auditStatus!==auditTypeEnum.PASS.V?true:false" :permission="permission"/>
         </template>
       </el-table-column>
@@ -120,6 +120,7 @@ import mDetail from './detail'
 import udOperation from '@crud/UD.operation'
 
 const permission = contractSupplierMaterialPM.invoice
+
 const emit = defineEmits(['success'])
 const optShow = {
   add: true,
