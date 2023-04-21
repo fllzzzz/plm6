@@ -136,6 +136,7 @@ import {
   sectionSteelBatchTransferHandling,
   steelCoilBatchTransferHandling,
   auxMatBatchTransferHandling,
+  otherBatchTransferHandling,
   gasBatchTransferHandling
 } from '@/api/wms/material-transfer/raw-material/transfer-handling'
 import { defineEmits, defineProps, ref, watchEffect, computed } from 'vue'
@@ -356,6 +357,8 @@ function getApi(basicClass) {
       return steelCoilBatchTransferHandling
     case matClsEnum.MATERIAL.V:
       return auxMatBatchTransferHandling
+    case matClsEnum.OTHER.V:
+      return otherBatchTransferHandling
     case matClsEnum.GAS.V:
       return gasBatchTransferHandling
     default:

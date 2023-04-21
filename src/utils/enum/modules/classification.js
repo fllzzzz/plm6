@@ -7,6 +7,7 @@ const classificationEnum = {
   STEEL_COIL: { L: '钢卷', K: 'STEEL_COIL', V: 1 << 2 },
   MATERIAL: { L: '辅材', K: 'MATERIAL', V: 1 << 3 },
   GAS: { L: '气体', K: 'GAS', V: 1 << 4 },
+  OTHER: { L: '其它', K: 'OTHER', V: 1 << 7 },
   STRUC_MANUFACTURED: { L: '成品构件', K: 'STRUC_MANUFACTURED', V: 1 << 5 },
   ENCL_MANUFACTURED: { L: '成品围护', K: 'ENCL_MANUFACTURED', V: 1 << 6 }
 }
@@ -19,6 +20,7 @@ const matClsEnum = {
   STEEL_COIL: { L: '钢卷', K: 'STEEL_COIL', V: 1 << 2 },
   MATERIAL: { L: '辅材', K: 'MATERIAL', V: 1 << 3 },
   GAS: { L: '气体', K: 'GAS', V: 1 << 4 },
+  OTHER: { L: '其它', K: 'OTHER', V: 1 << 7 },
   STRUC_MANUFACTURED: { L: '成品构件', K: 'STRUC_MANUFACTURED', V: 1 << 5 },
   ENCL_MANUFACTURED: { L: '成品围护', K: 'ENCL_MANUFACTURED', V: 1 << 6 }
 }
@@ -30,7 +32,8 @@ const rawMatClsEnum = {
   SECTION_STEEL: { L: '型材', K: 'SECTION_STEEL', V: 1 << 1 },
   STEEL_COIL: { L: '钢卷', K: 'STEEL_COIL', V: 1 << 2 },
   MATERIAL: { L: '辅材', K: 'MATERIAL', V: 1 << 3 },
-  GAS: { L: '气体', K: 'GAS', V: 1 << 4 }
+  GAS: { L: '气体', K: 'GAS', V: 1 << 4 },
+  OTHER: { L: '其它', K: 'OTHER', V: 1 << 7 }
 }
 constantize(rawMatClsEnum)
 
@@ -54,7 +57,8 @@ const projectPreparationMatClsEnum = {
   STEEL_PLATE: matClsEnum.STEEL_PLATE,
   SECTION_STEEL: matClsEnum.SECTION_STEEL,
   STEEL_COIL: matClsEnum.STEEL_COIL,
-  MATERIAL: matClsEnum.MATERIAL
+  MATERIAL: matClsEnum.MATERIAL,
+  OTHER: matClsEnum.OTHER
 }
 constantize(projectPreparationMatClsEnum)
 
@@ -68,7 +72,8 @@ constantize(extrusionClsEnum)
 // 材料申购物料分类
 const materialPurchaseClsEnum = {
   STEEL: { L: '钢材', K: 'STEEL', V: matClsEnum.STEEL_PLATE.V | matClsEnum.SECTION_STEEL.V | matClsEnum.STEEL_COIL.V },
-  MATERIAL: matClsEnum.MATERIAL
+  MATERIAL: matClsEnum.MATERIAL,
+  OTHER: matClsEnum.OTHER
   // MANUFACTURED: { L: '制成品', K: 'MANUFACTURED', V: matClsEnum.STRUC_MANUFACTURED.V | matClsEnum.ENCL_MANUFACTURED.V }
 }
 constantize(materialPurchaseClsEnum)
