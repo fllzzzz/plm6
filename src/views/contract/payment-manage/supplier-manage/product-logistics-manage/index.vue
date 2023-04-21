@@ -151,7 +151,7 @@ import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import pagination from '@crud/Pagination'
 import mHeader from './module/header'
-import inboundRecord from './module/inbound-record'
+// import inboundRecord from './module/inbound-record'
 import invoiceRecord from './module/invoice-record'
 import paymentRecord from './module/payment-record'
 import paymentApplication from './module/payment-application/index'
@@ -166,8 +166,8 @@ const optShow = {
 }
 
 const currentView = computed(() => {
-  if (recordType.value === 'inbound') {
-    return inboundRecord
+  if (recordType.value === 'logistics') {
+    return logisticsRecord
   } else if (recordType.value === 'invoice') {
     return invoiceRecord
   }
