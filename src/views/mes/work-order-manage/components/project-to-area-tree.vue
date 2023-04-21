@@ -7,11 +7,12 @@
     :filter-node-method="filterNode"
     style="height: 100%"
     :indent="20"
+    show-checkbox
     expand-on-click-node
     node-key="rowKey"
     :auto-expand-parent="false"
     :default-expanded-keys="expandedKeys"
-    @node-click="handleNodeClick"
+    @check-change="handleCheckClick"
   >
     <template #default="{ node, data }">
       <div style="padding: 3px 5px; border-radius: 3px; width: 100%; position: relative" class="tree-custom-content">
@@ -106,7 +107,7 @@ function dataFormat(content) {
         label: monomers[x].name,
         children: _area,
         isLeaf: false,
-        disabled: true,
+        disabled: false,
         fontSize: 15,
         type: '单体',
         icon: 'document'
@@ -130,7 +131,7 @@ function dataFormat(content) {
       children: _monomer,
       isLeaf: false,
       fontSize: 16,
-      disabled: true,
+      disabled: false,
       type: '项目',
       icon: 'project'
     })
@@ -139,26 +140,47 @@ function dataFormat(content) {
 }
 
 // 切换区域
-function handleNodeClick(data, node) {
-  if (data.isLeaf) {
-    if (!node.checked) {
-      // 区域多选
-      // if (data.monomerId === currentMonomerId.value) {
-      //   treeMenuRef.value.setChecked(node, true)
-      // } else {
-      //   currentMonomerId.value = data.monomerId
-      //   treeMenuRef.value.setCheckedNodes([])
-      //   treeMenuRef.value.setChecked(node, true)
-      // }
-      // 区域单选
-      treeMenuRef.value.setCheckedNodes([])
-      treeMenuRef.value.setChecked(node, true)
-    } else {
-      treeMenuRef.value.setChecked(node, false)
-    }
+// function handleNodeClick(data, node) {
+//   if (data.isLeaf) {
+//     if (!node.checked) {
+//       // 区域多选
+//       // if (data.monomerId === currentMonomerId.value) {
+//       //   treeMenuRef.value.setChecked(node, true)
+//       // } else {
+//       //   currentMonomerId.value = data.monomerId
+//       //   treeMenuRef.value.setCheckedNodes([])
+//       //   treeMenuRef.value.setChecked(node, true)
+//       // }
+//       // 区域单选
+//       treeMenuRef.value.setCheckedNodes([])
+//       treeMenuRef.value.setChecked(node, true)
+//     } else {
+//       treeMenuRef.value.setChecked(node, false)
+//     }
 
-    emit('nesting-task-click', treeMenuRef.value.getCheckedNodes(true))
-  }
+//     emit('nesting-task-click', treeMenuRef.value.getCheckedNodes(true))
+//   }
+// }
+
+// 切换区域
+function handleCheckClick(data, node) {
+  const _keys = treeMenuRef.value.getCheckedKeys()
+  const areaIds = []
+  const monomerIds = []
+  const projectIds = []
+  _keys.forEach((v) => {
+    const _id = v.split('_')[1]
+    if (v.indexOf('project') !== -1) {
+      projectIds.push(_id)
+    }
+    if (v.indexOf('monomer') !== -1) {
+      monomerIds.push(_id)
+    }
+    if (v.indexOf('area') !== -1) {
+      areaIds.push(_id)
+    }
+  })
+  emit('nesting-task-click', { areaIds, monomerIds, projectIds })
 }
 
 // tree过滤输入监听
@@ -198,9 +220,9 @@ function judgeFilterIds(ids) {
   padding-right: 5px;
   font-size: 15px;
 
-  ::v-deep(.el-tree-node.is-checked > .el-tree-node__content .tree-custom-content) {
-    background-color: #ffe48d !important;
-  }
+  // ::v-deep(.el-tree-node.is-checked > .el-tree-node__content .tree-custom-content) {
+  //   background-color: #ffe48d !important;
+  // }
   ::v-deep(.el-tree-node__content:hover) {
     background-color: transparent !important;
   }
@@ -211,6 +233,9 @@ function judgeFilterIds(ids) {
 
   ::v-deep(.el-tree-node__content > .el-tree-node__expand-icon) {
     display: none;
+  }
+  ::v-deep(.el-checkbox__inner) {
+    border: 2px solid #000;
   }
 }
 

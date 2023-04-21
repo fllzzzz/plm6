@@ -4,7 +4,7 @@
       <artifact-project-list :maxHeight="maxHeight - 40" @nesting-task-click="handleNestingTaskClick" />
     </div>
     <div class="wrap-right">
-      <el-tag v-if="!crud.query?.areaId" type="info" size="medium"> * 请点击左侧项目列表查看详情 </el-tag>
+      <el-tag v-if="!crud.query?.areaIds?.length" type="info" size="medium"> * 请点击左侧项目列表查看详情 </el-tag>
       <template v-else>
         <div class="wrap-head">
           <mHeader />
@@ -135,7 +135,7 @@ import { ref, provide } from 'vue'
 
 import { componentTypeEnum, artifactProductLineEnum } from '@enum-ms/mes'
 import { artifactWorkOrderPM as permission } from '@/page-permission/mes'
-import { debounce } from '@/utils'
+// import { debounce } from '@/utils'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import pagination from '@crud/Pagination'
@@ -159,7 +159,7 @@ const { crud, columns, CRUD } = useCRUD(
     optShow: { ...optShow },
     crudApi: { ...crudApi },
     invisibleColumns: ['taskGrossWeight'],
-    requiredQuery: ['productType', 'areaId']
+    requiredQuery: ['productType', 'areaIds']
   },
   tableRef
 )
@@ -171,16 +171,25 @@ provide('permission', permission)
 
 const { maxHeight } = useMaxHeight()
 
-const handleNestingTaskClick = debounce(function (nodes = []) {
-  if (nodes?.length) {
-    crud.query.areaId = nodes[0].id
-    crud.query.projectId = nodes[0].projectId
-  } else {
-    crud.query.areaId = undefined
-    crud.query.projectId = undefined
-  }
+// const handleNestingTaskClick = debounce(function (nodes = []) {
+//   if (nodes?.length) {
+//     console.log(nodes, 'nodes')
+//     crud.query.areaId = nodes[0].id
+//     crud.query.projectId = nodes[0].projectId
+//   } else {
+//     crud.query.areaId = undefined
+//     crud.query.projectId = undefined
+//   }
+//   crud.toQuery()
+// }, 500)
+
+function handleNestingTaskClick({ areaIds, projectIds, monomerIds }) {
+  // console.log(areaIds, 'areaIds')
+  crud.query.areaIds = areaIds
+  crud.query.projectIds = projectIds
+  crud.query.monomerIds = monomerIds
   crud.toQuery()
-}, 500)
+}
 
 CRUD.HOOK.handleRefresh = (crud, res) => {
   res.data.content = res.data.content.map((v) => {
