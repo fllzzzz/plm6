@@ -168,5 +168,7 @@ export default {
   productLogisticsPaymentRecord, // 制成品物流付款记录
   logisticsInvoiceRecord, // 原材料物流收票记录
   logisticsPaymentRecord, // 原材料物流付款记录
+  subcontractInvoiceRecord,
+  subcontractPaymentRecord,
   requisitionsDetail // 申购详情
 }

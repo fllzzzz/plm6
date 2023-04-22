@@ -2,11 +2,11 @@ import { dataSourceEnum, alignEnum, verticleAlignEnum, fieldTypeEnum as typeEnum
 import { projectNameArrangementModeEnum } from '@/utils/enum/modules/contract'
 
 // 分包订单收票记录
-const purchaseInvoiceRecord = {
+const subcontractInvoiceRecord = {
   fontUnit: 'pt', // 字体单位
   unit: cssUnitEnum.MM.V, // 长度单位
   unitPrecision: cssUnitPrecisionEnum.ZERO.V, // 长度单位精度
-  type: 'purchaseInvoiceRecord', // 表格类型 KEY
+  type: 'subcontractInvoiceRecord', // 表格类型 KEY
   name: '分包订单收票记录（平台）', // 表格名称
   width: 210, // 打印纸的宽度
   height: 297, // 打印纸的高度
@@ -216,5 +216,5 @@ const purchaseInvoiceRecord = {
 }
 
 export default {
-  purchaseInvoiceRecord // 分包订单收票记录
+  subcontractInvoiceRecord // 分包订单收票记录
 }

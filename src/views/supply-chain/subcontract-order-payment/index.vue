@@ -19,7 +19,7 @@
       <el-table-column v-if="columns.visible('amount')" prop="amount" key="amount" label="合同额" align="right" show-overflow-tooltip />
       <el-table-column v-if="columns.visible('settlementAmount')" prop="settlementAmount" key="settlementAmount" label="结算额" align="right"  show-overflow-tooltip />
       <el-table-column v-if="columns.visible('paymentAmount')" prop="paymentAmount" key="paymentAmount" label="付款额" align="right" show-overflow-tooltip>
-        <template v-if="checkPermission(permission.payment.get)" #header>
+        <template v-if="checkPermission(permission.detail)" #header>
           <el-tooltip
             effect="light"
             placement="top"
@@ -32,7 +32,7 @@
           </el-tooltip>
         </template>
         <template #default="{ row }">
-          <div type="warning" class="clickable" @click.stop="openRecord(row, 'payment')" v-if="checkPermission(permission.payment.get)">{{ row.paymentAmount }}</div>
+          <div type="warning" class="clickable" @click.stop="openRecord(row, 'payment')" v-if="checkPermission(permission.detail)">{{ row.paymentAmount }}</div>
         </template>
       </el-table-column>
       <el-table-column v-if="columns.visible('paymentRate')" key="paymentRate" prop="paymentRate" label="付款比例" align="center" width="80">
@@ -41,7 +41,7 @@
         </template>
       </el-table-column>
       <el-table-column v-if="columns.visible('invoiceAmount')" prop="invoiceAmount" key="invoiceAmount" label="收票额" align="right" min-width="120" show-overflow-tooltip>
-        <template v-if="checkPermission(permission.invoice.get)" #header>
+        <template v-if="checkPermission(permission.detail)" #header>
           <el-tooltip
             effect="light"
             placement="top"
@@ -54,7 +54,7 @@
           </el-tooltip>
         </template>
         <template #default="{ row }">
-          <div class="clickable" @click.stop="openRecord(row, 'invoice')" v-if="checkPermission(permission.invoice.get)">{{ row.invoiceAmount }}</div>
+          <div class="clickable" @click.stop="openRecord(row, 'invoice')" v-if="checkPermission(permission.detail)">{{ row.invoiceAmount }}</div>
         </template>
       </el-table-column>
       <el-table-column v-if="columns.visible('invoiceRate')" key="invoiceRate" prop="invoiceRate" label="收票比例" align="center" width="80">

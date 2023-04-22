@@ -10,7 +10,7 @@
     size="90%"
   >
    <template #titleAfter>
-      <el-tag type="success" effect="plain" size="medium">分包订单：{{detailInfo.serialNumber}}</el-tag>
+      <el-tag type="success" effect="plain" size="medium">项目：{{detailInfo.project}}</el-tag>
       <el-tag type="warning" effect="plain" size="medium">分包单位：{{detailInfo.supplierName}}</el-tag>
     </template>
     <template #titleRight>

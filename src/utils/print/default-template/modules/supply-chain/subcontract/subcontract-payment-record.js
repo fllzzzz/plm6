@@ -1,13 +1,13 @@
 import { dataSourceEnum, alignEnum, verticleAlignEnum, fieldTypeEnum as typeEnum, cssUnitEnum, cssUnitPrecisionEnum, pageFormatEnum, amountUnitEnum } from '@/utils/print/enum'
 import { projectNameArrangementModeEnum } from '@/utils/enum/modules/contract'
 
-// 付款记录
-const purchasePaymentRecord = {
+// 分包订单付款记录
+const subcontractPaymentRecord = {
   fontUnit: 'pt', // 字体单位
   unit: cssUnitEnum.MM.V, // 长度单位
   unitPrecision: cssUnitPrecisionEnum.ZERO.V, // 长度单位精度
-  type: 'purchasePaymentRecord', // 表格类型 KEY
-  name: '付款记录（平台）', // 表格名称
+  type: 'subcontractPaymentRecord', // 表格类型 KEY
+  name: '分包订单付款记录（平台）', // 表格名称
   width: 210, // 打印纸的宽度
   height: 297, // 打印纸的高度
   paddingLR: 10, // 左右内边距
@@ -61,7 +61,7 @@ const purchasePaymentRecord = {
   title: {
     show: true,
     allPage: false,
-    title: '付款记录',
+    title: '分包订单付款记录',
     align: alignEnum.CENTER.V,
     verticleAlign: verticleAlignEnum.CENTER.V,
     size: 17,
@@ -215,5 +215,5 @@ const purchasePaymentRecord = {
 }
 
 export default {
-  purchasePaymentRecord // 付款记录
+  subcontractPaymentRecord // 分包订单付款记录
 }

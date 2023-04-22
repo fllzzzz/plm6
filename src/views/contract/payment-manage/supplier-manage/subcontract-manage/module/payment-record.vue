@@ -11,7 +11,7 @@
     size="100%"
   >
     <template #titleAfter>
-      <el-tag type="warning" effect="plain" size="medium">物流公司：{{detailInfo.supplierName}}</el-tag>
+      <el-tag type="warning" effect="plain" size="medium">分包单位：{{detailInfo.supplierName}}</el-tag>
       <el-tag>累计支付：{{detailInfo.paymentAmount}}</el-tag>
     </template>
     <template #titleRight>

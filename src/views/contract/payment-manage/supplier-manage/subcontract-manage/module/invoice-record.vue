@@ -10,7 +10,7 @@
     size="90%"
   >
     <template #titleAfter>
-      <el-tag type="warning" effect="plain" size="medium">物流公司：{{detailInfo.supplierName}}</el-tag>
+      <el-tag type="warning" effect="plain" size="medium">分包单位：{{detailInfo.supplierName}}</el-tag>
       <el-tag>累计收票：{{detailInfo.invoiceAmount}}</el-tag>
     </template>
     <template #titleRight>
