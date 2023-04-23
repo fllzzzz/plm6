@@ -37,7 +37,8 @@ constantize(projectNameArrangementModeEnum)
 const projectTypeEnum = {
   STEEL: { L: '建筑钢结构', SL: '建钢', K: 'STEEL', V: 1 << 0 },
   BRIDGE: { L: '桥梁钢结构', SL: '桥梁', K: 'BRIDGE', V: 1 << 1 },
-  CARBARN: { L: '立体停车库', SL: '停车库', K: 'CARBARN', V: 1 << 2 }
+  CARBARN: { L: '立体停车库', SL: '停车库', K: 'CARBARN', V: 1 << 2 },
+  ENCLOSURE: { L: '建筑围护结构', SL: '围护', K: 'ENCLOSURE', V: 1 << 3 }
 }
 constantize(projectTypeEnum)
 

@@ -25,7 +25,7 @@
         <div class="wrap-right">
           <el-tag v-if="!currentRow?.id" type="info" size="medium"> * 请点击左侧项目列表查看详情 </el-tag>
           <template v-else>
-            <planForm :visibleValue="visible" :currentRow="currentRow"/>
+            <planForm :visibleValue="visible" :currentRow="currentRow" :detailInfo="detailInfo" />
           </template>
         </div>
       </div>

@@ -410,6 +410,8 @@ const projectContentOption = computed(() => {
         return form.value.businessType === businessTypeEnum.MACHINING.V ? machiningData[projectTypeEnum.STEEL.V] : installData[projectTypeEnum.STEEL.V]
       case projectTypeEnum.BRIDGE.V:
         return form.value.businessType === businessTypeEnum.MACHINING.V ? machiningData[projectTypeEnum.BRIDGE.V] : installData[projectTypeEnum.BRIDGE.V]
+      case projectTypeEnum.ENCLOSURE.V:
+        return form.value.businessType === businessTypeEnum.MACHINING.V ? machiningData[projectTypeEnum.ENCLOSURE.V] : installData[projectTypeEnum.ENCLOSURE.V]
       default: return form.value.businessType === businessTypeEnum.MACHINING.V ? machiningData[projectTypeEnum.CARBARN.V] : installData[projectTypeEnum.CARBARN.V]
     }
   } else {
@@ -468,6 +470,11 @@ async function contentInfo() {
       }
       if (dataArr[i] && dataArr[i][projectTypeEnum.CARBARN.V].length > 0) {
         dataArr[i][projectTypeEnum.CARBARN.V].map(v => {
+          v.name = v.categoryName
+        })
+      }
+      if (dataArr[i] && dataArr[i][projectTypeEnum.ENCLOSURE.V].length > 0) {
+        dataArr[i][projectTypeEnum.ENCLOSURE.V].map(v => {
           v.name = v.categoryName
         })
       }
