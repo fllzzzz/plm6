@@ -40,7 +40,7 @@
     </div>
     <div class="wrap-content">
       <div class="wrap-left">
-        <process-list ref="processListRef" :maxHeight="maxHeight - 40" @nesting-task-click="handleNestingTaskClick" />
+        <process-list ref="processListRef" @nesting-task-click="handleNestingTaskClick" />
       </div>
       <div class="wrap-right">
         <el-tag v-if="!crud.query?.groupsId" type="info" size="medium"> * 请点击左侧工序列表查看详情 </el-tag>
