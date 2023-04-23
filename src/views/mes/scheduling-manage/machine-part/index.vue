@@ -80,7 +80,7 @@
           <template v-for="item in boardList" :key="item.id">
             <el-tooltip v-model="item.visibleTip" manual :open-delay="300" class="item" effect="light" placement="left-start">
               <template #content>
-                <div style="display: flex">
+                <div style="display: flex;">
                   <div style="display: flex; flex-direction: column;justify-content:center">
                     <p>{{ item.project?.shortName }}</p>
                     <p>编号：{{ item.serialNumber }}</p>
@@ -89,7 +89,7 @@
                     <p>数量：{{ item.quantity }}</p>
                   </div>
                   <div style="flex: 1; display: flex">
-                    <el-image style="flex: 1; width: 95%; height: 95%;" :src="item.picturePath" z-index="999999" />
+                    <el-image style="flex: 1; width: 300px; height: 260px;" :src="item.picturePath" z-index="999999" />
                   </div>
                 </div>
               </template>
