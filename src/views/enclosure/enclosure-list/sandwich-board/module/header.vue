@@ -291,7 +291,9 @@ async function getAllProjectPlan() {
   tipsShow.value = false
   if (crud.query.projectId) {
     try {
-      areaInfo.value = await allProjectPlan(crud.query.projectId) || []
+      const data = await allProjectPlan(crud.query.projectId) || []
+      areaInfo.value = data.filter(v => v.category === crud.query.category) || []
+      console.log(areaInfo.value)
       if (areaInfo.value && areaInfo.value.length > 0) {
         defaultTab.value = {
           id: areaInfo.value[0].id + '',
