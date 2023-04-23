@@ -137,7 +137,7 @@
         <span class="parent-span"><span class="title-span">项目模式:</span></span>
         <common-select
           v-model="modeType"
-          :options="[projectModeEnum.STRUCTURE,projectModeEnum.STRUCTURE_ASSEMBLE]"
+          :options="projectModeEnum.ENUM"
           type="enum"
           size="small"
           placeholder="项目模式"
@@ -332,8 +332,9 @@ async function projectModeChange(val) {
   try {
     await changeProjectMode(props.projectId, val)
     crud.notify('项目模式更改成功', CRUD.NOTIFICATION_TYPE.SUCCESS)
-    store.dispatch('project/fetchUserProjects')
-    store.dispatch('project/fetchProjectTree')
+    await store.dispatch('project/fetchUserProjects')
+    await store.dispatch('project/fetchProjectTree')
+    await store.dispatch('project/setProjectId', props.projectId)
   } catch (e) {
     modeType.value = props.globalProject.mode
     console.log('项目模式修改', e)
@@ -380,8 +381,9 @@ async function getTechInfo() {
   }
 }
 
-function openUpload(type) {
+async function openUpload(type) {
   importType.value = type
+  await checkProjectModeChangAble()
   uploadVisible.value = true
   JDImportType.value = undefined
 }
