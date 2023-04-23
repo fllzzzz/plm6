@@ -26,7 +26,7 @@
         <template v-slot="scope">
           <template v-if="scope.row.attachments && scope.row.attachments.length>0">
             <div v-for="item in scope.row.attachments" :key="item.id">
-              <div style="cursor:pointer;color:#41;" @dblclick="attachmentView(item)">{{toThousand(scope.row.invoiceAmount)}}</div>
+              <div style="cursor:pointer;color:#409eff;" @dblclick="attachmentView(item)">{{toThousand(scope.row.invoiceAmount)}}</div>
             </div>
           </template>
           <template v-else>{{toThousand(scope.row.invoiceAmount)}}</template>

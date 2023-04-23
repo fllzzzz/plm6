@@ -154,13 +154,13 @@
         <template v-slot="scope">
           <el-tag type="success" size="medium" v-if="scope.row.auditStatus===auditTypeEnum.PASS.V" style="margin-right:8px;">已复核</el-tag>
           <template v-if="!scope.row.isModify">
-            <common-button icon="el-icon-edit" type="primary" size="mini" @click="modifyRow(scope.row)" v-if="!currentRow.settlementAmount && checkPermission(permission.edit)"/>
+            <common-button icon="el-icon-edit" type="primary" size="mini" @click="modifyRow(scope.row)" v-if="checkPermission(permission.edit)"/>
             <el-popconfirm
               confirm-button-text="确定"
               cancel-button-text="取消"
               title="确定删除吗?"
               @confirm="rowDelete(scope.row)"
-              v-if="!currentRow.settlementAmount && checkPermission(permission.del)"
+              v-if="checkPermission(permission.del)"
             >
               <template #reference>
                 <common-button icon="el-icon-delete" type="danger" size="mini" />

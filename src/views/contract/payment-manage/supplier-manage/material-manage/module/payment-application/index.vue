@@ -22,7 +22,7 @@
         <template #default="{ row }">
           <template v-if="row.attachments && row.attachments.length>0">
             <div v-for="item in row.attachments" :key="item.id">
-              <div style="cursor:pointer;color:#41;" @dblclick="attachmentView(item)">{{toThousand(row.applyAmount)}}</div>
+              <div style="cursor:pointer;color:#409eff;" @dblclick="attachmentView(item)">{{toThousand(row.applyAmount)}}</div>
             </div>
           </template>
           <template v-else>{{toThousand(row.applyAmount)}}</template>

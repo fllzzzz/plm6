@@ -34,7 +34,7 @@
         <el-table-column prop="actualWeight" label="过磅重量（吨）" align="center" min-width="100" show-overflow-tooltip />
         <el-table-column prop="carModel" label="车型" align="center" min-width="100" show-overflow-tooltip />
         <el-table-column prop="priceType" label="计价方式" align="center" min-width="100" show-overflow-tooltip />
-        <el-table-column prop="price" label="总额" align="center" min-width="100" show-overflow-tooltip />
+        <el-table-column prop="totalPrice" label="总额" align="center" min-width="100" show-overflow-tooltip />
       </common-table>
       <!--分页组件-->
       <el-pagination
