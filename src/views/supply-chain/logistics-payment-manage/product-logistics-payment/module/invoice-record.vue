@@ -18,7 +18,7 @@
         <print-table
           v-permission="props.permission?.print"
           api-key="productLogisticsInvoiceRecord"
-          :params="{ supplierId: props.detailInfo.supplierId,auditStatus: auditTypeEnum.PASS.V,projectId: props.detailInfo.projectId }"
+          :params="{ ...params }"
           size="mini"
           type="warning"
         />

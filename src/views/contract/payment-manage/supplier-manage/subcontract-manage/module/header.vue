@@ -6,6 +6,7 @@
         type="daterange"
         range-separator=":"
         size="small"
+        value-format="x"
         class="filter-item date-item"
         start-placeholder="开始时间"
         end-placeholder="结束时间"

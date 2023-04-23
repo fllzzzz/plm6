@@ -18,7 +18,7 @@
         <print-table
           v-permission="props.permission?.print"
           api-key="purchaseMaterialInboundRecord"
-          :params="{ supplierId: props.detailInfo.supplierId }"
+          :params="{ ...params }"
           size="mini"
           type="warning"
         />
@@ -69,7 +69,6 @@
         <!-- 基础信息 -->
         <material-base-info-columns
           :columns="{}"
-          spec-merge
         />
         <el-table-column prop="purchaseSn" label="采购单号" align="center" min-width="130" show-overflow-tooltip />
         <!-- 单位及其数量 -->

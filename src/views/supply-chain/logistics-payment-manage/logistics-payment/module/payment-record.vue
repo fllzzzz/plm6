@@ -19,7 +19,7 @@
         <print-table
           v-permission="props.permission?.print"
           api-key="logisticsPaymentRecord"
-          :params="{ supplierId: props.detailInfo.supplierId,auditStatus: auditTypeEnum.PASS.V}"
+          :params="{ ...params }"
           size="mini"
           type="warning"
         />

@@ -18,7 +18,7 @@
         <print-table
           v-permission="props.permission?.print"
           api-key="subcontractInvoiceRecord"
-          :params="{ supplierId: props.detailInfo.supplierId,projectId: props.detailInfo.projectId,auditStatus: auditTypeEnum.PASS.V}"
+          :params="{ ...params }"
           size="mini"
           type="warning"
         />

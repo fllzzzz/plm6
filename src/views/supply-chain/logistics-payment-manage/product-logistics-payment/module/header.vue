@@ -7,6 +7,7 @@
             v-model="query.date"
             type="daterange"
             range-separator=":"
+            value-format="x"
             size="small"
             class="filter-item date-item"
             start-placeholder="开始时间"

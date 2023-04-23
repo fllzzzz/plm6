@@ -15,6 +15,7 @@
         type="daterange"
         range-separator=":"
         size="small"
+        value-format="x"
         class="filter-item date-item"
         start-placeholder="开始时间"
         end-placeholder="结束时间"
@@ -59,7 +60,6 @@
 </template>
 
 <script setup>
-import moment from 'moment'
 // import { ref } from 'vue'
 import { regHeader } from '@compos/use-crud'
 import crudOperation from '@crud/CRUD.operation'
@@ -80,8 +80,8 @@ const { crud, query } = regHeader(defaultQuery)
 // 时间变动
 function handleDateChange() {
   if (query.date && query.date.length > 1) {
-    query.startDate = moment(query.date[0]).valueOf()
-    query.endDate = moment(query.date[1]).valueOf()
+    query.startDate = query.date[0]
+    query.endDate = query.date[1]
   } else {
     query.startDate = undefined
     query.endDate = undefined

@@ -69,7 +69,6 @@
         <!-- 基础信息 -->
         <material-base-info-columns
           :columns="{}"
-          spec-merge
         />
         <!-- 单位及其数量 -->
         <material-unit-quantity-columns :columns="{}" />

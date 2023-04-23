@@ -10,7 +10,7 @@
     size="100%"
   >
     <template #titleAfter>
-      <el-tag type="warning" effect="plain" size="medium">供应商：{{detailInfo.supplierName}}</el-tag>
+      <el-tag type="warning" effect="plain" size="medium">物流公司：{{detailInfo.supplierName}}</el-tag>
       <el-tag effect="plain" size="medium">入库单号：{{detailInfo.inboundSn}}</el-tag>
     </template>
     <template #titleRight>
@@ -18,7 +18,7 @@
         <print-table
           v-permission="props.permission?.print"
           api-key="purchaseInboundRecord"
-          :params="{ inboundId: props.detailInfo.inboundId }"
+          :params="{ ...params }"
           size="mini"
           type="warning"
         />
@@ -61,7 +61,6 @@
         <!-- 基础信息 -->
         <material-base-info-columns
           :columns="{}"
-          spec-merge
         />
          <el-table-column prop="purchaseSn" label="采购单号" align="center" min-width="130" show-overflow-tooltip />
         <!-- 单位及其数量 -->
