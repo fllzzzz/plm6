@@ -161,6 +161,7 @@
         :other-query="{
           areaIdList: crud.query.areaIdList,
         }"
+        :monomerDetail="crud.data[0]"
         @refresh="refresh(true)"
       />
       <task-import-dialog v-model:visible="taskImportVisible" :query="crud.query" :productType="productType" @success="refresh(true)" />
@@ -215,7 +216,7 @@ const optShow = {
   add: false,
   edit: false,
   del: false,
-  download: false,
+  download: false
 }
 
 const totalBadge = ref()
@@ -228,7 +229,7 @@ const { crud, columns, CRUD } = useCRUD(
     optShow: { ...optShow },
     crudApi: { ...crudApi },
     queryOnPresenterCreated: false,
-    requiredQuery: ['areaIdList', 'structureClassId'],
+    requiredQuery: ['areaIdList', 'structureClassId']
   },
   tableRef
 )
@@ -241,7 +242,7 @@ const summaryInfo = ref({})
 const queryParams = computed(() => {
   return {
     productType: productType,
-    structureClassId: crud.query.structureClassId,
+    structureClassId: crud.query.structureClassId
   }
 })
 const { groupsTree, groupsObj } = useSchedulingGroups({ queryParams, factoryIds: curFactoryIds })
@@ -279,14 +280,14 @@ function handleExpandChange(expend, row, index, curCascaderRef) {
 const tableRules = {
   needSchedulingQuantity: [
     { required: true, message: '请填写数量', trigger: 'blur' },
-    { pattern: positiveNumPattern, message: '数量必须大于0', trigger: 'blur' },
+    { pattern: positiveNumPattern, message: '数量必须大于0', trigger: 'blur' }
   ],
   groupsId: [{ required: true, message: '请选择生产组', trigger: 'change' }],
-  askCompleteTime: [{ required: true, message: '请选择需求完成日期', trigger: 'change' }],
+  askCompleteTime: [{ required: true, message: '请选择需求完成日期', trigger: 'change' }]
 }
 const ditto = new Map([
   ['groupsId', '同上'],
-  ['askCompleteTime', '同上'],
+  ['askCompleteTime', '同上']
 ])
 const { tableValidate, cleanUpData, wrongCellMask } = useTableValidate({ rules: tableRules, ditto })
 
@@ -392,7 +393,7 @@ async function previewIt() {
       }
       return {
         ...v,
-        ...groupsObj.value[v.groupsId],
+        ...groupsObj.value[v.groupsId]
       }
     })
     if (timeFlag) {
@@ -400,7 +401,7 @@ async function previewIt() {
         await ElMessageBox.confirm('排产计划大于排期计划，是否确定？', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
-          type: 'warning',
+          type: 'warning'
         })
         previewVisible.value = true
       } catch (er) {
