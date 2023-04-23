@@ -218,3 +218,25 @@ export function setSteelType(data) {
     data
   })
 }
+/**
+ * 获取APP任务上报重量是否显示
+ */
+export function getTaskReport() {
+  return request({
+    module: 'config',
+    url: 'getWeight',
+    method: 'get'
+  })
+}
+
+/**
+ * 设置APP任务上报重量是否显示
+ */
+export function setTaskReport(data) {
+  return request({
+    module: 'config',
+    url: 'setWeight',
+    method: 'put',
+    data
+  })
+}
