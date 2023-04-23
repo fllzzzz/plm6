@@ -59,11 +59,15 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, defineProps } from 'vue'
 import { regForm } from '@compos/use-crud'
-import { mapGetters } from '@/store/lib'
 
-const { globalProject } = mapGetters(['globalProject'])
+const props = defineProps({
+  detailInfo: {
+    type: Object,
+    default: () => {}
+  }
+})
 
 const formRef = ref()
 const defaultForm = {
@@ -98,7 +102,8 @@ const rules = {
 }
 
 function dateOptionFn(time) {
-  return time.getTime() < globalProject.value.startDate || time.getTime() > globalProject.value.endDate
+  // return time.getTime() < new Date().getTime()
+  return time.getTime() < props.detailInfo.startDate || time.getTime() > props.detailInfo.endDate
 }
 
 CRUD.HOOK.beforeSubmit = (crud, form) => {

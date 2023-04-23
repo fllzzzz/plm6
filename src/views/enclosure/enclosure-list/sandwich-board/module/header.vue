@@ -16,7 +16,7 @@
       <area-tabs
         class="filter-item"
         :style="areaInfo.length > 0 ? 'width:calc(100% - 230px)' : 'width:calc(100% - 380px)'"
-        v-model="query.areaId"
+        v-model="query.enclosurePlanId"
         :area-info="areaInfo"
         :default-tab="defaultTab"
         :show-type="2"
@@ -136,14 +136,14 @@
           type="primary"
           size="mini"
           @click="techVisible = true"
-          v-if="query.category !== TechnologyTypeAllEnum.BENDING.V && checkPermission(crud.permission.techDetail)"
+          v-if="query.category !== TechnologyTypeAllEnum.BENDING.V && crud.query.projectId && checkPermission(crud.permission.techDetail)"
           >技术交底配置（已{{ enabledEnum.V?.[technicalTypeStatus]?.L }}）</common-button
         >
         <zip-upload-btn
           ref="changeFileRef"
-          v-if="query.category === TechnologyTypeAllEnum.BENDING.V && checkPermission(crud.permission.draw) && query.areaId"
+          v-if="query.category === TechnologyTypeAllEnum.BENDING.V && checkPermission(crud.permission.draw) && query.enclosurePlanId"
           :upload-fun="uploadBendingZip"
-          :data="{ areaId: query.areaId }"
+          :data="{ enclosurePlanId: query.enclosurePlanId }"
           :btn-name="'批量上传图纸'"
           :btn-type="'warning'"
           :btn-size="'mini'"
@@ -178,7 +178,7 @@ import { uploadBendingZip, downloadEnclosureData, downloadEnclosureTemplate, lis
 import { defineProps, ref, computed, inject } from 'vue'
 import { regHeader } from '@compos/use-crud'
 
-import { enclosureCreateTypeEnum } from '@enum-ms/plan'
+// import { enclosureCreateTypeEnum } from '@enum-ms/plan'
 import { TechnologyTypeAllEnum } from '@enum-ms/contract'
 import { enabledEnum } from '@enum-ms/common'
 import { DP } from '@/settings/config'
@@ -199,10 +199,10 @@ import zipUploadBtn from '@/views/plan/technical-data-manage/components/drawing-
 const defaultQuery = {
   name: undefined,
   serialNumber: undefined,
-  monomerId: { value: undefined, resetAble: false },
-  areaId: { value: undefined, resetAble: false },
+  // monomerId: { value: undefined, resetAble: false },
+  enclosurePlanId: { value: undefined, resetAble: false },
   category: { value: TechnologyTypeAllEnum.SANDWICH_BOARD.V, resetAble: false },
-  createType: { value: enclosureCreateTypeEnum.UPLOAD.V, resetAble: false },
+  // createType: { value: enclosureCreateTypeEnum.UPLOAD.V, resetAble: false },
   thickness: undefined,
   plate: undefined
 }
@@ -215,21 +215,8 @@ const defaultTab = ref({})
 const { crud, query, CRUD } = regHeader(defaultQuery)
 const techVisible = ref(false)
 const tipsShow = ref(false)
-// const emit = defineEmits(['tableAdd', 'categoryChange'])
 
 const props = defineProps({
-  projectId: {
-    type: [Number, String],
-    default: undefined
-  },
-  tableData: {
-    type: Object,
-    default: () => {}
-  },
-  globalProject: {
-    type: Object,
-    default: () => {}
-  },
   typeOption: {
     type: Array,
     default: () => []
@@ -273,10 +260,10 @@ const currentView = computed(() => {
 //   { deep: true, immediate: true }
 // )
 const addParam = computed(() => {
-  return { areaId: crud.query.areaId, category: query.category, importType: 1 }
+  return { enclosurePlanId: crud.query.enclosurePlanId, category: query.category, importType: 1 }
 })
 const carryParam = computed(() => {
-  return { areaId: crud.query.areaId, category: query.category, importType: 2 }
+  return { enclosurePlanId: crud.query.enclosurePlanId, category: query.category, importType: 2 }
 })
 
 const exportParam = computed(() => {
@@ -322,20 +309,20 @@ async function getAllProjectPlan() {
 }
 
 async function getData() {
-  if (crud.query.monomerId && crud.query.category) {
-    try {
-      sumData.value = await getTotalSum({ monomerId: crud.query.monomerId, category: crud.query.category })
-    } catch (e) {
-      console.log('获取围护汇总', e)
-    }
-  } else {
-    sumData.value = {}
-  }
+  // if (crud.query.monomerId && crud.query.category) {
+  //   try {
+  //     sumData.value = await getTotalSum({ monomerId: crud.query.monomerId, category: crud.query.category })
+  //   } catch (e) {
+  //     console.log('获取围护汇总', e)
+  //   }
+  // } else {
+  //   sumData.value = {}
+  // }
 }
 
 async function deleteEnclosure() {
   try {
-    await delEnclosureByArea(crud.query.areaId)
+    await delEnclosureByArea(crud.query.enclosurePlanId)
     crud.notify('操作成功', CRUD.NOTIFICATION_TYPE.SUCCESS)
     crud.toQuery()
   } catch (e) {
