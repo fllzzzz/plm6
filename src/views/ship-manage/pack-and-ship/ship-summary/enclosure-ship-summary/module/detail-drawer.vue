@@ -77,7 +77,7 @@
 </template>
 
 <script setup>
-import { inboundDetail } from '@/api/mes/pack-and-ship/ship-summary'
+import { inboundDetail } from '@/api/ship-manage/pack-and-ship/ship-summary'
 import useVisible from '@compos/use-visible'
 import usePagination from '@compos/use-pagination'
 import useMaxHeight from '@compos/use-max-height'
@@ -85,7 +85,7 @@ import { DP } from '@/settings/config'
 import { tableSummary } from '@/utils/el-extra'
 import { toThousand } from '@/utils/data-type/number'
 import { defineProps, defineEmits, ref } from 'vue'
-import { mesProductionLineTrackingPM as permission } from '@/page-permission/mes'
+import { mesProductionLineTrackingPM as permission } from '@/page-permission/ship-manage'
 
 const emit = defineEmits(['update:visible'])
 const list = ref([])

@@ -210,7 +210,7 @@ import { projectNameFormatter } from '@/utils/project'
 import { convertUnits } from '@/utils/convert/unit'
 import { parseTime } from '@/utils/date'
 import { debounce } from '@/utils'
-import { mesPackPM as permission } from '@/page-permission/mes'
+import { mesPackPM as permission } from '@/page-permission/ship-manage'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'

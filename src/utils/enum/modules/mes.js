@@ -167,14 +167,6 @@ const packTypeEnum = {
 }
 constantize(packTypeEnum)
 
-// 车间
-const packWorkshopTypeEnum = {
-  MES_WORKSHOP: { L: '建钢车间', K: 'MES_WORKSHOP', V: 1 << 0 },
-  ENCLOSURE_WORKSHOP: { L: '围护车间', K: 'ENCLOSURE_WORKSHOP', V: 1 << 2 },
-  BRIDGE_WORKSHOP: { L: '桥梁车间', K: 'BRIDGE_WORKSHOP', V: 1 << 1 }
-}
-constantize(packWorkshopTypeEnum)
-
 // 打包清单状态
 const packStatusTypeEnum = {
   // UNENTRUCK: { L: '未装车', K: 'UNENTRUCK', V: 1 },
@@ -619,7 +611,6 @@ export {
   machinePartSchedulingIssueStatusEnum,
   machinePartNestingStatusEnum,
   packTypeEnum,
-  packWorkshopTypeEnum,
   packStatusTypeEnum,
   receiptStatusEnum,
   logisticsPriceTypeEnum,
@@ -696,7 +687,6 @@ export default {
   machinePartSchedulingIssueStatusEnum,
   machinePartNestingStatusEnum,
   packTypeEnum,
-  packWorkshopTypeEnum,
   packStatusTypeEnum,
   receiptStatusEnum,
   logisticsPriceTypeEnum,
