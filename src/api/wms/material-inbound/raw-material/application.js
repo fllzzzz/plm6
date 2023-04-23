@@ -31,6 +31,21 @@ export function auxMatInboundApplication(data) {
 }
 
 /**
+ * 其它入库申请
+ *
+ * @export
+ * @returns
+ */
+export function otherInboundApplication(data) {
+  return request({
+    module: 'wms',
+    url: 'inbound/application/other-material',
+    method: 'post',
+    data
+  })
+}
+
+/**
  * 辅材入库申请
  *
  * @export

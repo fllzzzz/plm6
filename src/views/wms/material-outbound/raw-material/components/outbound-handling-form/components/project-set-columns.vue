@@ -8,6 +8,7 @@
         :options="projectOptions"
         :dataStructure="{ key: 'id', label: 'name', value: 'id' }"
         :show-extra="$index !== 0"
+        :clearable="props.projectClearable"
         :disabled-val="row.disabledProjectId"
         type="other"
         placeholder="所属项目"
@@ -69,6 +70,10 @@ const props = defineProps({
     default: () => {
       return {}
     }
+  },
+  projectClearable: {
+    type: Boolean,
+    default: false
   }
 })
 

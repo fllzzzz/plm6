@@ -57,6 +57,7 @@ import { preparationTypeEnum } from '@enum-ms/wms'
 import ProjectCascader from '@comp-base/project-cascader.vue'
 import SteelApplication from './application/steel/index'
 import AuxMatApplication from './application/auxiliary-material/index'
+import OtherApplication from './application/other/index'
 
 const defaultForm = {
   materialType: materialPurchaseClsEnum.STEEL.V, // 申购类型
@@ -81,6 +82,8 @@ const comp = computed(() => {
       return SteelApplication
     case matClsEnum.MATERIAL.V:
       return AuxMatApplication
+    case matClsEnum.OTHER.V:
+      return OtherApplication
     default:
       if (form.materialType & STEEL_ENUM) return SteelApplication
       return undefined
