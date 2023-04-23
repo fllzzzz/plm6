@@ -192,7 +192,7 @@
 import { getPart as get } from '@/api/mes/pack-and-ship/manual-pack'
 import { computed, ref, watch, defineEmits, defineProps, defineExpose, inject } from 'vue'
 
-import { enclosureManualPackPM as permission } from '@/page-permission/mes'
+import { enclosureManualPackPM as permission } from '@/page-permission/ship-manage'
 import { DP } from '@/settings/config'
 import { toFixed } from '@data-type'
 import { packTypeEnum } from '@enum-ms/mes'

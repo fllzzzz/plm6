@@ -16,7 +16,7 @@
       <common-radio-button
         type="enum"
         v-model="category"
-        :options="mesEnclosureTypeEnum.ENUM"
+        :options="enclosureTypeEnum.ENUM"
         default
         placeholder="请选择围护类型"
         class="filter-item"
@@ -102,7 +102,7 @@
 <script setup>
 import { summaryData } from '@/api/mes/pack-and-ship/product-receive-send-storage'
 import { ref, watch } from 'vue'
-import { packTypeEnum, mesEnclosureTypeEnum } from '@enum-ms/mes'
+import { enclosureTypeEnum } from '@enum-ms/ship-manage'
 import { weightTypeEnum } from '@enum-ms/common'
 // import checkPermission from '@/utils/system/check-permission'
 // import { DP } from '@/settings/config'
@@ -115,10 +115,10 @@ import moment from 'moment'
 const defaultTime = moment().valueOf().toString()
 
 const defaultQuery = {
-  productType: packTypeEnum.STRUCTURE.V,
+  // productType: packTypeEnum.STRUCTURE.V,
   dateTime: defaultTime.toString(),
   projectId: undefined,
-  category: undefined,
+  category: enclosureTypeEnum.PRESSED_PLATE.V,
   weightStatus: weightTypeEnum.NET.V
 }
 

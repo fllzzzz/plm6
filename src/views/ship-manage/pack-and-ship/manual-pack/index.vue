@@ -108,8 +108,8 @@ import { useRoute } from 'vue-router'
 import { mapGetters } from '@/store/lib'
 
 import { isBlank, isNotBlank } from '@data-type/index'
-import { packTypeEnum, packWorkshopTypeEnum } from '@enum-ms/mes'
-import { manualPackPM as permission } from '@/page-permission/mes'
+import { packTypeEnum, packWorkshopTypeEnum } from '@enum-ms/ship-manage'
+import { manualPackPM as permission } from '@/page-permission/ship-manage'
 
 import useMaxHeight from '@compos/use-max-height'
 // import factorySelect from '@comp-base/factory-select'

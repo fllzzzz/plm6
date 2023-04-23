@@ -136,7 +136,7 @@
 import crudApi from '@/api/mes/pack-and-ship/product-receive-send-storage'
 import { ref, nextTick, computed } from 'vue'
 
-import { mesProductSendReceiveStoragePM as permission } from '@/page-permission/mes'
+import { mesProductSendReceiveStoragePM as permission } from '@/page-permission/ship-manage'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import { DP } from '@/settings/config'

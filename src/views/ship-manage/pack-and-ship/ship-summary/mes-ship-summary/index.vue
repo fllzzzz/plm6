@@ -53,10 +53,10 @@
 </template>
 
 <script setup>
-import crudApi from '@/api/mes/pack-and-ship/ship-summary'
+import crudApi from '@/api/ship-manage/pack-and-ship/ship-summary'
 import { ref } from 'vue'
 
-import { mesShipSummaryPM as permission } from '@/page-permission/mes'
+import { mesShipSummaryPM as permission } from '@/page-permission/ship-manage'
 import { isNotBlank } from '@data-type/index'
 import { weightTypeEnum } from '@enum-ms/common'
 import useMaxHeight from '@compos/use-max-height'

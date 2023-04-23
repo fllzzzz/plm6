@@ -28,7 +28,7 @@
         />
       </div>
       <el-descriptions
-        v-show="type !== enclosureShipStatisticsTypeEnum.KIT.V"
+        v-show="type !== enclosureShipStatisticsTypeEnum.AUXILIARY_MATERIAL.V"
         v-loading="summaryLoading"
         :data="summaryData"
         direction="vertical"
@@ -93,7 +93,7 @@
         </el-descriptions-item>
       </el-descriptions>
       <common-table
-        v-show="type === enclosureShipStatisticsTypeEnum.KIT.V"
+        v-show="type === enclosureShipStatisticsTypeEnum.AUXILIARY_MATERIAL.V"
         :data="list"
         v-loading="tableLoading"
         :show-empty-symbol="false"
@@ -136,7 +136,7 @@
 
 <script setup>
 import { ref, defineProps, watch, nextTick, computed } from 'vue'
-import { projectSummary } from '@/api/mes/pack-and-ship/ship-summary'
+import { projectSummary } from '@/api/ship-manage/pack-and-ship/ship-summary'
 import { weightTypeEnum } from '@enum-ms/common'
 import { enclosureShipStatisticsTypeEnum } from '@enum-ms/ship-manage'
 // import monomerSelect from '@/components-system/plan/monomer-select'
@@ -163,7 +163,7 @@ const props = defineProps({
   }
 })
 
-const type = ref(enclosureShipStatisticsTypeEnum.TRUSS_FLOOR_PLATE.V)
+const type = ref(enclosureShipStatisticsTypeEnum.PRESSED_PLATE.V)
 const list = ref([])
 const tableLoading = ref(false)
 const areaInfo = ref([])

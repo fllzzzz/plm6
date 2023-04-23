@@ -3,7 +3,7 @@ export default {
   name: '发运管理',
   children: [
     {
-      path: '/ship-manage/pack-and-ship',
+      path: '/ship-manage',
       component: 'Layout',
       hidden: false,
       name: 'ShipManagePackAndShip',

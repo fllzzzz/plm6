@@ -208,7 +208,7 @@
 import crudApi, { detail, deliverySign } from '@/api/mes/pack-and-ship/receipt-status'
 import { ref } from 'vue'
 
-import { receiptStatusPM as permission } from '@/page-permission/mes'
+import { receiptStatusPM as permission } from '@/page-permission/ship-manage'
 import { manufactureTypeEnum } from '@enum-ms/production'
 import { businessTypeEnum } from '@enum-ms/contract'
 import { packTypeEnum, deliveryReceiptStatusEnum } from '@enum-ms/mes'
