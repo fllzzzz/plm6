@@ -8,8 +8,8 @@
     return-source-data
     row-key="id"
     :stripe="false"
-    :max-height="maxHeight - 45"
-    style="width: 100%"
+    :max-height="maxHeight - 15"
+    style="width: 100%; cursor: pointer"
     @current-change="handleClickChange"
   >
     <el-table-column label="序号" type="index" align="center" width="60" />
@@ -32,20 +32,17 @@
 </template>
 
 <script setup>
-import { inject, defineProps, defineEmits } from 'vue'
+import { inject, defineEmits } from 'vue'
+import useMaxHeight from '@compos/use-max-height'
 
 const tableData = inject('tableData')
 const loading = inject('loading')
 const emit = defineEmits(['nesting-task-click'])
-defineProps({
-  maxHeight: {
-    type: [Number, String],
-    default: undefined
-  }
-})
 
 function handleClickChange(val) {
   emit('nesting-task-click', val)
 }
+
+const { maxHeight } = useMaxHeight({ paginate: false })
 
 </script>
