@@ -93,7 +93,7 @@
         </el-descriptions-item>
       </el-descriptions>
       <common-table
-        v-show="type === mesShipStatisticsTypeEnum.KIT.V"
+        v-show="type === mesShipStatisticsTypeEnum.AUXILIARY_MATERIAL.V"
         :data="list"
         v-loading="tableLoading"
         :show-empty-symbol="false"
@@ -136,7 +136,7 @@
 
 <script setup>
 import { ref, defineProps, watch, nextTick, computed } from 'vue'
-import { projectSummary } from '@/api/mes/pack-and-ship/ship-summary'
+import { projectSummary } from '@/api/ship-manage/pack-and-ship/ship-summary'
 import { weightTypeEnum } from '@enum-ms/common'
 import { mesShipStatisticsTypeEnum } from '@enum-ms/ship-manage'
 import monomerSelect from '@/components-system/plan/monomer-select'

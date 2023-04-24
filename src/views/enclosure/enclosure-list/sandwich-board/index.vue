@@ -1,401 +1,395 @@
 <template>
   <div class="app-container">
-    <template v-if="pageShow">
-      <!--工具栏-->
-      <div class="head-container">
-        <mHeader
-          :project-id="globalProjectId"
-          @tableAdd="tableAdd"
-          :table-data="totalTechInfo"
-          :globalProject="globalProject"
-          :typeOption="typeOption"
-          @categoryChange="getPlate"
-        />
-      </div>
-      <!--表格渲染-->
-      <common-table
-        ref="tableRef"
-        v-loading="crud.loading"
-        :data="crud.data"
-        :empty-text="crud.emptyText"
-        :max-height="maxHeight"
-        return-source-data
-        :showEmptySymbol="false"
-        style="width: 100%"
-        @sort-change="crud.handleSortChange"
-        class="enclosure-table"
-        :cell-class-name="wrongCellMask"
-      >
-        <el-table-column label="序号" type="index" align="center" width="50" />
-        <el-table-column v-if="columns.visible('name')" key="name" prop="name" :show-overflow-tooltip="true" label="名称" min-width="100">
-          <template v-slot="scope">
-            <div>{{ scope.row.name }}</div>
-          </template>
-        </el-table-column>
-        <el-table-column
-          v-if="columns.visible('serialNumber') && crud.query.category !== TechnologyTypeAllEnum.BENDING.V"
-          key="serialNumber"
-          prop="serialNumber"
-          :show-overflow-tooltip="true"
-          label="编号"
-          min-width="90px"
-        >
-          <template v-slot="scope">
-            <div>{{ scope.row.serialNumber }}</div>
-          </template>
-        </el-table-column>
-        <el-table-column
-          v-if="columns.visible('serialNumber') && crud.query.category === TechnologyTypeAllEnum.BENDING.V"
-          key="serialNumber"
-          prop="serialNumber"
-          :show-overflow-tooltip="true"
-          label="编号"
-          min-width="90px"
-        >
-          <template v-slot:header>
-            <el-tooltip class="item" effect="light" :content="`双击编号可预览图纸`" placement="top">
-              <div style="display: inline-block">
-                <span>编号</span>
-                <i class="el-icon-info" />
-              </div>
-            </el-tooltip>
-          </template>
-          <template v-slot="scope">
-            <!-- <div>{{ scope.row.serialNumber }}</div> -->
-            <span style="cursor: pointer" @dblclick="drawingPreview(scope.row)">{{ scope.row.serialNumber }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column
-          v-if="columns.visible('plateId') && crud.query.category !== TechnologyTypeAllEnum.BENDING.V"
-          key="plateId"
-          prop="plateId"
-          :show-overflow-tooltip="true"
-          label="版型"
-          min-width="100px"
-        >
-          <template v-slot="scope">
-            <template v-if="scope.row.isModify && !scope.row.inProductionQuantity">
-              <common-select
-                v-model="scope.row.plateId"
-                :options="plateOption"
-                :type="'other'"
-                :dataStructure="crud.query.category === TechnologyTypeAllEnum.TRUSS_FLOOR_PLATE.V ? trussProp : typeProp"
-                size="small"
-                placeholder="版型"
-                @change="plateChange(scope.row, scope.$index)"
-              />
-            </template>
-            <div v-else>{{ scope.row.plate ? scope.row.plate : '-' }}</div>
-          </template>
-        </el-table-column>
-        <el-table-column
-          v-if="columns.visible('width') && crud.query.category !== TechnologyTypeAllEnum.BENDING.V"
-          key="width"
-          prop="width"
-          :show-overflow-tooltip="true"
-          :label="crud.query.category === TechnologyTypeAllEnum.SANDWICH_BOARD.V ? '宽度\n(mm)' : `有效宽度\n(mm)`"
-          min-width="100px"
-        >
-          <template v-slot="scope">
-            <el-input-number
-              v-if="
-                scope.row.isModify &&
-                crud.query.category !== TechnologyTypeAllEnum.PROFILED_PLATE.V &&
-                crud.query.category !== TechnologyTypeAllEnum.PRESSURE_BEARING_PLATE.V &&
-                !scope.row.inProductionQuantity
-              "
-              v-model.number="scope.row.width"
-              :min="0"
-              :max="99999999999"
-              :step="1"
-              :precision="DP.MES_ENCLOSURE_W__MM"
-              placeholder="有效宽度"
-              controls-position="right"
-              style="width: 100%"
-              @change="getTotalData(scope.row)"
-            />
-            <div v-else>{{ scope.row.width ? scope.row.width.toFixed(DP.MES_ENCLOSURE_W__MM) : '-' }}</div>
-          </template>
-        </el-table-column>
-        <el-table-column
-          v-if="columns.visible('unfoldedWidth') && (crud.query.category===TechnologyTypeAllEnum.BENDING.V || (crud.query.category===TechnologyTypeAllEnum.PROFILED_PLATE.V || crud.query.category===TechnologyTypeAllEnum.PRESSURE_BEARING_PLATE.V))"
-          key="unfoldedWidth"
-          prop="unfoldedWidth"
-          :show-overflow-tooltip="true"
-          :label="`展开宽度\n(mm)`"
-          min-width="100px"
-        >
-          <template v-slot="scope">
-            <el-input-number
-              v-if="scope.row.isModify && !scope.row.inProductionQuantity && crud.query.category===TechnologyTypeAllEnum.BENDING.V"
-              v-model.number="scope.row.unfoldedWidth"
-              :min="0"
-              :max="99999999999"
-              :step="1"
-              :precision="DP.MES_ENCLOSURE_W__MM"
-              placeholder="展开宽度"
-              controls-position="right"
-              style="width: 100%"
-              @change="getTotalData(scope.row)"
-            />
-            <div v-else>{{ scope.row.unfoldedWidth ? scope.row.unfoldedWidth.toFixed(DP.MES_ENCLOSURE_W__MM) : '-' }}</div>
-          </template>
-        </el-table-column>
-        <el-table-column
-          v-if="crud.query.category===TechnologyTypeAllEnum.BENDING.V"
-          key="bendTimes"
-          prop="bendTimes"
-          :show-overflow-tooltip="true"
-          :label="`折弯次数`"
-          width="80px"
-        >
-          <template v-slot="scope">
-            <el-input-number
-              v-if="scope.row.isModify && !scope.row.inProductionQuantity"
-              v-model.number="scope.row.bendTimes"
-              :min="0"
-              :max="99999999999"
-              :step="1"
-              :precision="0"
-              placeholder="折弯次数"
-              controls-position="right"
-              style="width:100%"
-            />
-            <span v-else>{{scope.row.bendTimes? scope.row.bendTimes : '-'}}</span>
-          </template>
-        </el-table-column>
-        <el-table-column
-          v-if="columns.visible('thickness') && crud.query.category !== TechnologyTypeAllEnum.TRUSS_FLOOR_PLATE.V"
-          key="thickness"
-          prop="thickness"
-          :show-overflow-tooltip="true"
-          :label="`板厚\n(mm)`"
-          align="left"
-          min-width="100px"
-        >
-          <template v-slot="scope">
-            <el-input-number
-              v-if="scope.row.isModify && !scope.row.inProductionQuantity"
-              v-model.number="scope.row.thickness"
-              :min="0"
-              :max="99999999999"
-              :step="1"
-              :precision="DP.MES_ENCLOSURE_T__MM"
-              placeholder="板厚"
-              controls-position="right"
-              style="width: 100%"
-              @change="thicknessChange(scope.row)"
-            />
-            <span v-else>{{ scope.row.thickness ? scope.row.thickness.toFixed(DP.MES_ENCLOSURE_T__MM) : '-' }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column
-          v-if="columns.visible('length')"
-          key="length"
-          prop="length"
-          :show-overflow-tooltip="true"
-          :label="`单长\n(㎜)`"
-          align="left"
-          min-width="100px"
-        >
-          <template v-slot="scope">
-            <el-input-number
-              v-if="scope.row.isModify && !scope.row.inProductionQuantity"
-              v-model.number="scope.row.length"
-              :min="0"
-              :max="99999999999"
-              :step="1"
-              :precision="DP.MES_ENCLOSURE_L__MM"
-              placeholder="单长"
-              controls-position="right"
-              style="width: 100%"
-              @change="getTotalData(scope.row)"
-            />
-            <span v-else>{{ scope.row.length ? scope.row.length.toFixed(DP.MES_ENCLOSURE_L__MM) : '-' }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column
-          v-if="columns.visible('quantity')"
-          key="quantity"
-          prop="quantity"
-          :label="'数量(张)'"
-          align="left"
-          min-width="100px"
-        >
-          <template v-slot="scope">
-            <el-input-number
-              v-if="scope.row.isModify && !scope.row.inProductionQuantity"
-              v-model.number="scope.row.quantity"
-              :min="0"
-              :max="99999999999"
-              :step="1"
-              :precision="DP.MES_ENCLOSURE_L__MM"
-              placeholder="数量"
-              controls-position="right"
-              style="width: 100%"
-              @change="getTotalData(scope.row)"
-            />
-            <span v-else>{{ scope.row.quantity }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column
-          v-if="columns.visible('totalArea')"
-          key="totalArea"
-          prop="totalArea"
-          :show-overflow-tooltip="true"
-          :label="`总面积(㎡)`"
-          align="left"
-          min-width="100px"
-        >
-          <template v-slot="scope">
-            {{ scope.row.totalArea ? scope.row.totalArea.toFixed(DP.COM_AREA__M2) : '-' }}
-          </template>
-        </el-table-column>
-        <el-table-column
-          v-if="columns.visible('totalLength')"
-          key="totalLength"
-          prop="totalLength"
-          :label="`总长度(m)`"
-          align="left"
-          min-width="100px"
-        >
-          <template v-slot="scope">
-            {{ scope.row.totalLength ? scope.row.totalLength.toFixed(DP.MES_ENCLOSURE_L__M) : '-' }}
-          </template>
-        </el-table-column>
-        <el-table-column
-          v-if="crud.query.category!==TechnologyTypeAllEnum.SANDWICH_BOARD.V"
-          key="weight"
-          prop="weight"
-          :label="`总重量(kg)`"
-          align="left"
-          min-width="100px"
-        >
-          <template v-slot="scope">
-            {{ scope.row.weight ? scope.row.weight.toFixed(DP.COM_WT__KG) : '-' }}
-          </template>
-        </el-table-column>
-        <el-table-column
-          v-if="
-            columns.visible('brand') &&
-            crud.query.category !== TechnologyTypeAllEnum.SANDWICH_BOARD.V &&
-            crud.query.category !== TechnologyTypeAllEnum.TRUSS_FLOOR_PLATE.V
-          "
-          key="brand"
-          prop="brand"
-          :show-overflow-tooltip="true"
-          label="品牌"
-          width="100px"
-        >
-          <template v-slot="scope">
-            <el-input v-if="scope.row.isModify" v-model="scope.row.brand" placeholder="品牌" maxlength="10" style="width: 100%" />
-            <div v-else>{{ scope.row.brand ? scope.row.brand : '-' }}</div>
-          </template>
-        </el-table-column>
-        <el-table-column
-          v-if="
-            columns.visible('color') &&
-            crud.query.category != TechnologyTypeAllEnum.TRUSS_FLOOR_PLATE.V &&
-            crud.query.category != TechnologyTypeAllEnum.PRESSURE_BEARING_PLATE.V &&
-            crud.query.category != TechnologyTypeAllEnum.SANDWICH_BOARD.V
-          "
-          key="color"
-          prop="color"
-          :show-overflow-tooltip="true"
-          label="颜色"
-          width="80px"
-        >
-          <template v-slot="scope">
-            <el-input v-if="scope.row.isModify" v-model="scope.row.color" placeholder="颜色" maxlength="10" style="width: 100%" />
-            <div v-else>{{ scope.row.color ? scope.row.color : '-' }}</div>
-          </template>
-        </el-table-column>
-        <el-table-column
-          v-if="columns.visible('draw') && crud.query.category === TechnologyTypeAllEnum.BENDING.V"
-          key="draw"
-          prop="draw"
-          :show-overflow-tooltip="true"
-          label="画图"
-          min-width="190px"
-        >
-          <template v-slot="scope">
-              <upload-btn
-              :upload-fun="uploadBendingSingle"
-              :data="{ id: scope.row.id }"
-              :fileClassify="undefined"
-              :accept="'.jpg,.jpeg,.png'"
-              success-msg="上传成功"
-              :btn-name="`上传`"
-              btn-type="warning"
-              btn-size="mini"
-              @success="uploadSuccess"
-              style="display:inline-block;margin-right:5px;"
-            />
-            <common-button size="mini" type="primary" @click="handleDraw(scope.row)" :disabled="scope.row.isModify" v-permission="permission.draw">{{
-              scope.row.attachmentId ? '换图' : '画图'
-            }}</common-button>
-            <common-button size="mini" type="primary" icon="el-icon-view" v-permission="permission.drawDownload" @click="drawingPreview(scope.row)" v-if="scope.row.attachmentId"/>
-          </template>
-        </el-table-column>
-        <!--状态、编辑与删除-->
-        <el-table-column v-if="columns.visible('status')" key="status" prop="status" label="状态" align="center" width="70px" fixed="right">
-          <template v-slot="scope">
-            <el-switch
-              v-if="scope.row.id"
-              v-model="scope.row.boolStatusEnum"
-              :disabled="!checkPermission(permission.edit)"
-              active-color="#13ce66"
-              :active-value="processingEnum.PROCESS.V"
-              :inactive-value="processingEnum.PAUSE.V"
-              @change="changeStatus(scope.row, scope.row.boolStatusEnum)"
-            />
-          </template>
-        </el-table-column>
-        <el-table-column
-          v-if="checkPermission([...permission.edit, ...permission.del])"
-          label="操作"
-          width="180px"
-          align="center"
-          fixed="right"
-        >
-          <template v-slot="scope">
-            <template v-if="scope.row.isModify">
-              <common-button type="info" size="mini" @click="rowCancel(scope.row)">取消</common-button>
-              <common-button type="primary" size="mini" @click="rowSubmit(scope.row)">保存</common-button>
-            </template>
-            <template v-else>
-              <common-button size="small" class="el-icon-edit" type="primary" @click="editRow(scope.row)" v-permission="permission.edit"/>
-              <el-popconfirm
-                confirm-button-text="确定"
-                cancel-button-text="取消"
-                icon-color="red"
-                title="确定删除吗?"
-                @confirm="deleteRow(scope.row)"
-                v-if="checkPermission(permission.del)"
-              >
-                <template #reference>
-                  <common-button size="small" class="el-icon-delete" type="danger"/>
-                </template>
-              </el-popconfirm>
-            </template>
-          </template>
-        </el-table-column>
-      </common-table>
-      <!--分页组件-->
-      <pagination />
-      <mForm />
-      <!-- 画图 -->
-      <SimpleDrawing ref="simpleDrawRef" v-model="drawVisible" :current="currentRow" @toQuery="crud.toQuery" />
-      <!-- img预览 -->
-      <drawing-img
-        v-model="showDrawing"
-        :serial-number="drawingRow?.serialNumber"
-        :attachmentId="drawingRow?.attachmentId"
+    <!--工具栏-->
+    <div class="head-container">
+      <mHeader
+        @tableAdd="tableAdd"
+        :table-data="totalTechInfo"
+        :globalProject="globalProject"
+        :typeOption="typeOption"
+        @categoryChange="getPlate"
       />
-    </template>
-    <template v-else>
-      <span style="color:red;font-size:13px;">当前项目内容没有包含围护制品，请到合同管理中进行配置</span>
-    </template>
+    </div>
+    <!--表格渲染-->
+    <common-table
+      ref="tableRef"
+      v-loading="crud.loading"
+      :data="crud.data"
+      :empty-text="crud.emptyText"
+      :max-height="maxHeight"
+      return-source-data
+      :showEmptySymbol="false"
+      style="width: 100%"
+      @sort-change="crud.handleSortChange"
+      class="enclosure-table"
+      :cell-class-name="wrongCellMask"
+    >
+      <el-table-column label="序号" type="index" align="center" width="50" />
+      <el-table-column v-if="columns.visible('name')" key="name" prop="name" :show-overflow-tooltip="true" label="名称" min-width="100">
+        <template v-slot="scope">
+          <div>{{ scope.row.name }}</div>
+        </template>
+      </el-table-column>
+      <el-table-column
+        v-if="columns.visible('serialNumber') && crud.query.category !== TechnologyTypeAllEnum.BENDING.V"
+        key="serialNumber"
+        prop="serialNumber"
+        :show-overflow-tooltip="true"
+        label="编号"
+        min-width="90px"
+      >
+        <template v-slot="scope">
+          <div>{{ scope.row.serialNumber }}</div>
+        </template>
+      </el-table-column>
+      <el-table-column
+        v-if="columns.visible('serialNumber') && crud.query.category === TechnologyTypeAllEnum.BENDING.V"
+        key="serialNumber"
+        prop="serialNumber"
+        :show-overflow-tooltip="true"
+        label="编号"
+        min-width="90px"
+      >
+        <template v-slot:header>
+          <el-tooltip class="item" effect="light" :content="`双击编号可预览图纸`" placement="top">
+            <div style="display: inline-block">
+              <span>编号</span>
+              <i class="el-icon-info" />
+            </div>
+          </el-tooltip>
+        </template>
+        <template v-slot="scope">
+          <!-- <div>{{ scope.row.serialNumber }}</div> -->
+          <span style="cursor: pointer" @dblclick="drawingPreview(scope.row)">{{ scope.row.serialNumber }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        v-if="columns.visible('plateId') && crud.query.category !== TechnologyTypeAllEnum.BENDING.V"
+        key="plateId"
+        prop="plateId"
+        :show-overflow-tooltip="true"
+        label="版型"
+        min-width="100px"
+      >
+        <template v-slot="scope">
+          <template v-if="scope.row.isModify && !scope.row.inProductionQuantity">
+            <common-select
+              v-model="scope.row.plateId"
+              :options="plateOption"
+              :type="'other'"
+              :dataStructure="crud.query.category === TechnologyTypeAllEnum.TRUSS_FLOOR_PLATE.V ? trussProp : typeProp"
+              size="small"
+              placeholder="版型"
+              @change="plateChange(scope.row, scope.$index)"
+            />
+          </template>
+          <div v-else>{{ scope.row.plate ? scope.row.plate : '-' }}</div>
+        </template>
+      </el-table-column>
+      <el-table-column
+        v-if="columns.visible('width') && crud.query.category !== TechnologyTypeAllEnum.BENDING.V"
+        key="width"
+        prop="width"
+        :show-overflow-tooltip="true"
+        :label="crud.query.category === TechnologyTypeAllEnum.SANDWICH_BOARD.V ? '宽度\n(mm)' : `有效宽度\n(mm)`"
+        min-width="100px"
+      >
+        <template v-slot="scope">
+          <el-input-number
+            v-if="
+              scope.row.isModify &&
+              crud.query.category !== TechnologyTypeAllEnum.PROFILED_PLATE.V &&
+              crud.query.category !== TechnologyTypeAllEnum.PRESSURE_BEARING_PLATE.V &&
+              !scope.row.inProductionQuantity
+            "
+            v-model.number="scope.row.width"
+            :min="0"
+            :max="99999999999"
+            :step="1"
+            :precision="DP.MES_ENCLOSURE_W__MM"
+            placeholder="有效宽度"
+            controls-position="right"
+            style="width: 100%"
+            @change="getTotalData(scope.row)"
+          />
+          <div v-else>{{ scope.row.width ? scope.row.width.toFixed(DP.MES_ENCLOSURE_W__MM) : '-' }}</div>
+        </template>
+      </el-table-column>
+      <el-table-column
+        v-if="columns.visible('unfoldedWidth') && (crud.query.category===TechnologyTypeAllEnum.BENDING.V || (crud.query.category===TechnologyTypeAllEnum.PROFILED_PLATE.V || crud.query.category===TechnologyTypeAllEnum.PRESSURE_BEARING_PLATE.V))"
+        key="unfoldedWidth"
+        prop="unfoldedWidth"
+        :show-overflow-tooltip="true"
+        :label="`展开宽度\n(mm)`"
+        min-width="100px"
+      >
+        <template v-slot="scope">
+          <el-input-number
+            v-if="scope.row.isModify && !scope.row.inProductionQuantity && crud.query.category===TechnologyTypeAllEnum.BENDING.V"
+            v-model.number="scope.row.unfoldedWidth"
+            :min="0"
+            :max="99999999999"
+            :step="1"
+            :precision="DP.MES_ENCLOSURE_W__MM"
+            placeholder="展开宽度"
+            controls-position="right"
+            style="width: 100%"
+            @change="getTotalData(scope.row)"
+          />
+          <div v-else>{{ scope.row.unfoldedWidth ? scope.row.unfoldedWidth.toFixed(DP.MES_ENCLOSURE_W__MM) : '-' }}</div>
+        </template>
+      </el-table-column>
+      <el-table-column
+        v-if="crud.query.category===TechnologyTypeAllEnum.BENDING.V"
+        key="bendTimes"
+        prop="bendTimes"
+        :show-overflow-tooltip="true"
+        :label="`折弯次数`"
+        width="80px"
+      >
+        <template v-slot="scope">
+          <el-input-number
+            v-if="scope.row.isModify && !scope.row.inProductionQuantity"
+            v-model.number="scope.row.bendTimes"
+            :min="0"
+            :max="99999999999"
+            :step="1"
+            :precision="0"
+            placeholder="折弯次数"
+            controls-position="right"
+            style="width:100%"
+          />
+          <span v-else>{{scope.row.bendTimes? scope.row.bendTimes : '-'}}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        v-if="columns.visible('thickness') && crud.query.category !== TechnologyTypeAllEnum.TRUSS_FLOOR_PLATE.V"
+        key="thickness"
+        prop="thickness"
+        :show-overflow-tooltip="true"
+        :label="`板厚\n(mm)`"
+        align="left"
+        min-width="100px"
+      >
+        <template v-slot="scope">
+          <el-input-number
+            v-if="scope.row.isModify && !scope.row.inProductionQuantity"
+            v-model.number="scope.row.thickness"
+            :min="0"
+            :max="99999999999"
+            :step="1"
+            :precision="DP.MES_ENCLOSURE_T__MM"
+            placeholder="板厚"
+            controls-position="right"
+            style="width: 100%"
+            @change="thicknessChange(scope.row)"
+          />
+          <span v-else>{{ scope.row.thickness ? scope.row.thickness.toFixed(DP.MES_ENCLOSURE_T__MM) : '-' }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        v-if="columns.visible('length')"
+        key="length"
+        prop="length"
+        :show-overflow-tooltip="true"
+        :label="`单长\n(㎜)`"
+        align="left"
+        min-width="100px"
+      >
+        <template v-slot="scope">
+          <el-input-number
+            v-if="scope.row.isModify && !scope.row.inProductionQuantity"
+            v-model.number="scope.row.length"
+            :min="0"
+            :max="99999999999"
+            :step="1"
+            :precision="DP.MES_ENCLOSURE_L__MM"
+            placeholder="单长"
+            controls-position="right"
+            style="width: 100%"
+            @change="getTotalData(scope.row)"
+          />
+          <span v-else>{{ scope.row.length ? scope.row.length.toFixed(DP.MES_ENCLOSURE_L__MM) : '-' }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        v-if="columns.visible('quantity')"
+        key="quantity"
+        prop="quantity"
+        :label="'数量(张)'"
+        align="left"
+        min-width="100px"
+      >
+        <template v-slot="scope">
+          <el-input-number
+            v-if="scope.row.isModify && !scope.row.inProductionQuantity"
+            v-model.number="scope.row.quantity"
+            :min="0"
+            :max="99999999999"
+            :step="1"
+            :precision="DP.MES_ENCLOSURE_L__MM"
+            placeholder="数量"
+            controls-position="right"
+            style="width: 100%"
+            @change="getTotalData(scope.row)"
+          />
+          <span v-else>{{ scope.row.quantity }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        v-if="columns.visible('totalArea')"
+        key="totalArea"
+        prop="totalArea"
+        :show-overflow-tooltip="true"
+        :label="`总面积(㎡)`"
+        align="left"
+        min-width="100px"
+      >
+        <template v-slot="scope">
+          {{ scope.row.totalArea ? scope.row.totalArea.toFixed(DP.COM_AREA__M2) : '-' }}
+        </template>
+      </el-table-column>
+      <el-table-column
+        v-if="columns.visible('totalLength')"
+        key="totalLength"
+        prop="totalLength"
+        :label="`总长度(m)`"
+        align="left"
+        min-width="100px"
+      >
+        <template v-slot="scope">
+          {{ scope.row.totalLength ? scope.row.totalLength.toFixed(DP.MES_ENCLOSURE_L__M) : '-' }}
+        </template>
+      </el-table-column>
+      <el-table-column
+        v-if="crud.query.category!==TechnologyTypeAllEnum.SANDWICH_BOARD.V"
+        key="weight"
+        prop="weight"
+        :label="`总重量(kg)`"
+        align="left"
+        min-width="100px"
+      >
+        <template v-slot="scope">
+          {{ scope.row.weight ? scope.row.weight.toFixed(DP.COM_WT__KG) : '-' }}
+        </template>
+      </el-table-column>
+      <el-table-column
+        v-if="
+          columns.visible('brand') &&
+          crud.query.category !== TechnologyTypeAllEnum.SANDWICH_BOARD.V &&
+          crud.query.category !== TechnologyTypeAllEnum.TRUSS_FLOOR_PLATE.V
+        "
+        key="brand"
+        prop="brand"
+        :show-overflow-tooltip="true"
+        label="品牌"
+        width="100px"
+      >
+        <template v-slot="scope">
+          <el-input v-if="scope.row.isModify" v-model="scope.row.brand" placeholder="品牌" maxlength="10" style="width: 100%" />
+          <div v-else>{{ scope.row.brand ? scope.row.brand : '-' }}</div>
+        </template>
+      </el-table-column>
+      <el-table-column
+        v-if="
+          columns.visible('color') &&
+          crud.query.category != TechnologyTypeAllEnum.TRUSS_FLOOR_PLATE.V &&
+          crud.query.category != TechnologyTypeAllEnum.PRESSURE_BEARING_PLATE.V &&
+          crud.query.category != TechnologyTypeAllEnum.SANDWICH_BOARD.V
+        "
+        key="color"
+        prop="color"
+        :show-overflow-tooltip="true"
+        label="颜色"
+        width="80px"
+      >
+        <template v-slot="scope">
+          <el-input v-if="scope.row.isModify" v-model="scope.row.color" placeholder="颜色" maxlength="10" style="width: 100%" />
+          <div v-else>{{ scope.row.color ? scope.row.color : '-' }}</div>
+        </template>
+      </el-table-column>
+      <el-table-column
+        v-if="columns.visible('draw') && crud.query.category === TechnologyTypeAllEnum.BENDING.V"
+        key="draw"
+        prop="draw"
+        :show-overflow-tooltip="true"
+        label="画图"
+        min-width="190px"
+      >
+        <template v-slot="scope">
+            <upload-btn
+            :upload-fun="uploadBendingSingle"
+            :data="{ id: scope.row.id }"
+            :fileClassify="undefined"
+            :accept="'.jpg,.jpeg,.png'"
+            success-msg="上传成功"
+            :btn-name="`上传`"
+            btn-type="warning"
+            btn-size="mini"
+            @success="uploadSuccess"
+            style="display:inline-block;margin-right:5px;"
+          />
+          <common-button size="mini" type="primary" @click="handleDraw(scope.row)" :disabled="scope.row.isModify" v-permission="permission.draw">{{
+            scope.row.attachmentId ? '换图' : '画图'
+          }}</common-button>
+          <common-button size="mini" type="primary" icon="el-icon-view" v-permission="permission.drawDownload" @click="drawingPreview(scope.row)" v-if="scope.row.attachmentId"/>
+        </template>
+      </el-table-column>
+      <!--状态、编辑与删除-->
+      <el-table-column v-if="columns.visible('status')" key="status" prop="status" label="状态" align="center" width="70px" fixed="right">
+        <template v-slot="scope">
+          <el-switch
+            v-if="scope.row.id"
+            v-model="scope.row.boolStatusEnum"
+            :disabled="!checkPermission(permission.edit)"
+            active-color="#13ce66"
+            :active-value="processingEnum.PROCESS.V"
+            :inactive-value="processingEnum.PAUSE.V"
+            @change="changeStatus(scope.row, scope.row.boolStatusEnum)"
+          />
+        </template>
+      </el-table-column>
+      <el-table-column
+        v-if="checkPermission([...permission.edit, ...permission.del])"
+        label="操作"
+        width="180px"
+        align="center"
+        fixed="right"
+      >
+        <template v-slot="scope">
+          <template v-if="scope.row.isModify">
+            <common-button type="info" size="mini" @click="rowCancel(scope.row)">取消</common-button>
+            <common-button type="primary" size="mini" @click="rowSubmit(scope.row)">保存</common-button>
+          </template>
+          <template v-else>
+            <common-button size="small" class="el-icon-edit" type="primary" @click="editRow(scope.row)" v-permission="permission.edit"/>
+            <el-popconfirm
+              confirm-button-text="确定"
+              cancel-button-text="取消"
+              icon-color="red"
+              title="确定删除吗?"
+              @confirm="deleteRow(scope.row)"
+              v-if="checkPermission(permission.del)"
+            >
+              <template #reference>
+                <common-button size="small" class="el-icon-delete" type="danger"/>
+              </template>
+            </el-popconfirm>
+          </template>
+        </template>
+      </el-table-column>
+    </common-table>
+    <!--分页组件-->
+    <pagination />
+    <mForm />
+    <!-- 画图 -->
+    <SimpleDrawing ref="simpleDrawRef" v-model="drawVisible" :current="currentRow" @toQuery="crud.toQuery" />
+    <!-- img预览 -->
+    <drawing-img
+      v-model="showDrawing"
+      :serial-number="drawingRow?.serialNumber"
+      :attachmentId="drawingRow?.attachmentId"
+    />
   </div>
 </template>
 
@@ -409,7 +403,7 @@ import checkPermission from '@/utils/system/check-permission'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import pagination from '@crud/Pagination'
-import { mapGetters } from '@/store/lib'
+// import { mapGetters } from '@/store/lib'
 import mHeader from './module/header'
 import mForm from './module/form'
 import { DP } from '@/settings/config'
@@ -424,7 +418,7 @@ import useDrawing from '@compos/use-drawing'
 import drawingImg from '@comp-base/drawing-img.vue'
 import uploadBtn from '@comp/file-upload/SingleFileUploadBtn'
 
-const { globalProject, globalProjectId } = mapGetters(['globalProject', 'globalProjectId'])
+// const { globalProject, globalProjectId } = mapGetters(['globalProject', 'globalProjectId'])
 const { showDrawing, drawingRow, drawingPreview } = useDrawing({})
 
 const plateOption = ref([])
@@ -433,40 +427,39 @@ const totalTechInfo = ref({})
 const simpleDrawRef = ref()
 const typeProp = { key: 'id', label: 'plateType', value: 'id' }
 const trussProp = { key: 'id', label: 'serialNumber', value: 'id' }
-const pageShow = ref(true)
 
 provide('plateOption', plateOption)
 provide('technicalTypeStatus', technicalTypeStatus)
 const drawVisible = ref(false)
 const currentRow = ref({})
 const typeOption = ref([])
-const techOptions = [
-  {
-    name: '压型彩板',
-    no: TechnologyTypeAllEnum.PROFILED_PLATE.V,
-    alias: 'ENCLOSURE'
-  },
-  {
-    name: '压型楼承板',
-    no: TechnologyTypeAllEnum.PRESSURE_BEARING_PLATE.V,
-    alias: 'ENCLOSURE'
-  },
-  {
-    name: '桁架楼承板',
-    no: TechnologyTypeAllEnum.TRUSS_FLOOR_PLATE.V,
-    alias: 'ENCLOSURE'
-  },
-  {
-    name: '夹芯板',
-    no: TechnologyTypeAllEnum.SANDWICH_BOARD.V,
-    alias: 'ENCLOSURE'
-  },
-  {
-    name: '折边件',
-    no: TechnologyTypeAllEnum.BENDING.V,
-    alias: 'ENCLOSURE'
-  }
-]
+// const techOptions = [
+//   {
+//     name: '压型彩板',
+//     no: TechnologyTypeAllEnum.PROFILED_PLATE.V,
+//     alias: 'ENCLOSURE'
+//   },
+//   {
+//     name: '压型楼承板',
+//     no: TechnologyTypeAllEnum.PRESSURE_BEARING_PLATE.V,
+//     alias: 'ENCLOSURE'
+//   },
+//   {
+//     name: '桁架楼承板',
+//     no: TechnologyTypeAllEnum.TRUSS_FLOOR_PLATE.V,
+//     alias: 'ENCLOSURE'
+//   },
+//   {
+//     name: '夹芯板',
+//     no: TechnologyTypeAllEnum.SANDWICH_BOARD.V,
+//     alias: 'ENCLOSURE'
+//   },
+//   {
+//     name: '折边件',
+//     no: TechnologyTypeAllEnum.BENDING.V,
+//     alias: 'ENCLOSURE'
+//   }
+// ]
 
 const optShow = {
   add: false,
@@ -578,32 +571,30 @@ function wrongCellMask({ row, column }) {
 }
 
 watch(
-  () => globalProjectId.value,
+  () => crud.query.projectId,
   (val) => {
     if (val) {
       getTechInfo()
-      crud.query.projectId = globalProjectId.value
-      crud.toQuery()
     }
   },
   { immediate: true, deep: true }
 )
 
-watch(
-  () => globalProject.value,
-  (val) => {
-    typeOption.value = []
-    if (isNotBlank(val)) {
-      techOptions.forEach((v) => {
-        if (val.projectContentList.findIndex((k) => Number(k.no) === v.no) > -1) {
-          typeOption.value.push(v)
-        }
-      })
-      pageShow.value = typeOption.value.length > 0
-    }
-  },
-  { deep: true, immediate: true }
-)
+// watch(
+//   () => globalProject.value,
+//   (val) => {
+//     typeOption.value = []
+//     if (isNotBlank(val)) {
+//       techOptions.forEach((v) => {
+//         if (val.projectContentList.findIndex((k) => Number(k.no) === v.no) > -1) {
+//           typeOption.value.push(v)
+//         }
+//       })
+//       pageShow.value = typeOption.value.length > 0
+//     }
+//   },
+//   { deep: true, immediate: true }
+// )
 
 getTechnicalTypeStatus()
 
@@ -640,11 +631,13 @@ function uploadSuccess() {
 }
 
 function getPlate() {
-  plateOption.value = crud.query.category !== TechnologyTypeAllEnum.BENDING.V ? totalTechInfo.value[crud.query.category] : []
+  plateOption.value = crud.query.category !== TechnologyTypeAllEnum.BENDING.V && isNotBlank(totalTechInfo.value) ? totalTechInfo.value[crud.query.category] : []
 }
+
 async function getTechInfo() {
   try {
-    const data = await getContractTechInfo(globalProjectId.value)
+    const data = await getContractTechInfo(crud.query.projectId)
+    console.log(data)
     if (isNotBlank(data)) {
       totalTechInfo.value = {
         [TechnologyTypeAllEnum.PROFILED_PLATE.V]: data.profiledPlateList || [],
@@ -652,12 +645,21 @@ async function getTechInfo() {
         [TechnologyTypeAllEnum.TRUSS_FLOOR_PLATE.V]: data.trussFloorPlateList || [],
         [TechnologyTypeAllEnum.SANDWICH_BOARD.V]: data.sandwichBoardList || []
       }
+    } else {
+      totalTechInfo.value = {
+        [TechnologyTypeAllEnum.PROFILED_PLATE.V]: [],
+        [TechnologyTypeAllEnum.PRESSURE_BEARING_PLATE.V]: [],
+        [TechnologyTypeAllEnum.TRUSS_FLOOR_PLATE.V]: [],
+        [TechnologyTypeAllEnum.SANDWICH_BOARD.V]: []
+      }
     }
     getPlate()
+    console.log(totalTechInfo.value)
   } catch (error) {
     console.log('获取技术交底', error)
   }
 }
+
 function plateChange(row, index) {
   const choseVal = plateOption.value.find((v) => v.id === row.plateId)
   if (crud.query.category === TechnologyTypeAllEnum.TRUSS_FLOOR_PLATE.V) {

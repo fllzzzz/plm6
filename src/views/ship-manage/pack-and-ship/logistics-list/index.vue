@@ -197,7 +197,7 @@
 import crudApi from '@/api/mes/pack-and-ship/logistics-list'
 import { ref } from 'vue'
 
-import { logisticsPM as permission } from '@/page-permission/mes'
+import { logisticsPM as permission } from '@/page-permission/ship-manage'
 import { manufactureTypeEnum } from '@enum-ms/production'
 import { packTypeEnum, logisticsPriceTypeEnum, deliveryStatusEnum, freightChangeTypeEnum } from '@enum-ms/mes'
 import { projectNameFormatter } from '@/utils/project'

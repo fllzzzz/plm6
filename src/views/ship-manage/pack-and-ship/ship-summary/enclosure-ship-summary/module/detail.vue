@@ -1,9 +1,9 @@
 <template>
-  <div v-show="!props.showType && props.type !== enclosureShipStatisticsTypeEnum.KIT.V" class="my-code" style="margin-top: 20px">
+  <div v-show="!props.showType && props.type !== enclosureShipStatisticsTypeEnum.AUXILIARY_MATERIAL.V" class="my-code" style="margin-top: 20px">
     *点击上方表格数据查看详情
   </div>
   <div v-show="props.showType" style="margin-top: 20px">
-    <div class="head-container" v-show="props.type !== enclosureShipStatisticsTypeEnum.KIT.V">
+    <div class="head-container" v-show="props.type !== enclosureShipStatisticsTypeEnum.AUXILIARY_MATERIAL.V">
       <el-tag size="small" style="float: left">{{
         showType === 'INVENTORY'
           ? '清单总量'
@@ -61,7 +61,7 @@
       </div>
     </div>
     <common-table
-      v-show="props.type !== enclosureShipStatisticsTypeEnum.KIT.V"
+      v-show="props.type !== enclosureShipStatisticsTypeEnum.AUXILIARY_MATERIAL.V"
       :data="list"
       v-loading="tableLoading"
       :show-empty-symbol="false"
@@ -101,7 +101,7 @@
     </common-table>
     <!--分页组件-->
     <el-pagination
-      v-show="props.type !== enclosureShipStatisticsTypeEnum.KIT.V"
+      v-show="props.type !== enclosureShipStatisticsTypeEnum.AUXILIARY_MATERIAL.V"
       :total="total"
       :current-page="queryPage.pageNumber"
       :page-size="queryPage.pageSize"
@@ -114,7 +114,7 @@
 </template>
 <script setup>
 import { ref, defineProps, watch } from 'vue'
-import { summaryDetail } from '@/api/mes/pack-and-ship/ship-summary'
+import { summaryDetail } from '@/api/ship-manage/pack-and-ship/ship-summary'
 import { tableSummary } from '@/utils/el-extra'
 import { projectSearchTypeEnum } from '@enum-ms/mes'
 import { enclosureShipStatisticsTypeEnum } from '@enum-ms/ship-manage'
