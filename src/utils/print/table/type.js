@@ -81,9 +81,8 @@ const tableType = {
   saleOrderTracking: { L: '订单跟踪', M: 'sales_manage', T: mt.contract.L + ' / ' + contract.sales_manage },
   projectWarehouseRecord: { L: '入库记录', M: 'sales_manage', T: mt.contract.L + ' / ' + contract.sales_manage },
 
-  industryElectricRecord: { L: '工业用电电费清单', M: 'expense_entry', T: mt.contract.L + ' / ' + contract.expense_entry },
-  civilElectricRecord: { L: '民用用电电费清单', M: 'expense_entry', T: mt.contract.L + ' / ' + contract.expense_entry },
   waterRecord: { L: '水费清单', M: 'expense_entry', T: mt.contract.L + ' / ' + contract.expense_entry },
+  electricRecord: { L: '电费清单', M: 'expense_entry', T: mt.contract.L + ' / ' + contract.expense_entry },
   gasRecord: { L: '气体费用清单', M: 'expense_entry', T: mt.contract.L + ' / ' + contract.expense_entry },
   expenseReimburseList: { L: '费用报销清单', M: 'expense_entry', T: mt.contract.L + ' / ' + contract.expense_entry },
   managementSalaryList: { L: '人员工资清单', M: 'expense_entry', T: mt.contract.L + ' / ' + contract.expense_entry },

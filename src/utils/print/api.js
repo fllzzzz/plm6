@@ -30,9 +30,8 @@ const supplierInvoiceLedger = contract.supplierInvoiceLedger
 const saleOrderTracking = contract.saleOrderTracking
 const projectWarehouseRecord = contract.warehouseRecord
 
-const industryElectricRecord = contract.industryElectricRecord
-const civilElectricRecord = contract.civilElectricRecord
-const waterRecord = contract.waterRecord
+const waterRecord = contract.waterElectricityRecord
+const electricRecord = contract.waterElectricityRecord
 const gasRecord = contract.gasRecord
 const expenseReimburseList = contract.expenseReimburseList
 const managementSalaryList = contract.managementSalaryList
@@ -179,9 +178,8 @@ export default {
   transactionRecord, // 客户交易记录
   saleOrderTracking, // 订单跟踪
   projectWarehouseRecord, // 销售管理入库记录
-  industryElectricRecord, // 工业电费
-  civilElectricRecord, // 民用电费
   waterRecord, // 水费
+  electricRecord, // 电费
   gasRecord, // 气体统计
   expenseReimburseList, // 费用报销
   managementSalaryList, // 管理人员工资清单

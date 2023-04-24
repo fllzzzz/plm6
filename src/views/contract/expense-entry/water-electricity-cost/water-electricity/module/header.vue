@@ -26,15 +26,22 @@
     </div>
     <crudOperation>
       <template #viewLeft>
-        <print-table v-permission="crud.permission.print" :api-key="`${crud.query.type === costTypeEnum.WATER_COST.V? 'waterRecord':crud.query.childType === usedElectricityTypeEnum.INDUSTRY_ELECTRIC.V? 'industryElectricRecord' : 'civilElectricRecord'}`" :params="{ ...query }" size="mini" type="warning" class="filter-item" />
+        <print-table
+          v-permission="crud.permission.print"
+          :api-key="`${crud.query.type === costTypeEnum.WATER_COST.V ? 'waterRecord' : 'electricRecord'}`"
+          :params="{ ...query }"
+          size="mini"
+          type="warning"
+        />
       </template>
     </crudOperation>
   </div>
 </template>
 <script setup>
 import { parseTime } from '@/utils/date'
-import { regHeader } from '@compos/use-crud'
 import { costTypeEnum, usedElectricityTypeEnum } from '@enum-ms/contract'
+
+import { regHeader } from '@compos/use-crud'
 import crudOperation from '@crud/CRUD.operation'
 
 const defaultQuery = {
@@ -50,6 +57,3 @@ function disabledDate(time) {
 
 const { crud, query } = regHeader(defaultQuery)
 </script>
-
-<style lang="scss" scoped>
-</style>

@@ -239,31 +239,9 @@ export function warehouseRecord(params) {
 }
 
 /**
- * 工业用电电费
+ * 水电费清单
  */
-export function industryElectricRecord(params) {
-  return request({
-    url: '/api/contract/waterElectricity/print',
-    method: 'get',
-    params
-  })
-}
-
-/**
- * 民用用电电费
- */
-export function civilElectricRecord(params) {
-  return request({
-    url: '/api/contract/waterElectricity/print',
-    method: 'get',
-    params
-  })
-}
-
-/**
- * 水费
- */
-export function waterRecord(params) {
+export function waterElectricityRecord(params) {
   return request({
     url: '/api/contract/waterElectricity/print',
     method: 'get',
@@ -434,9 +412,7 @@ export default {
   transactionRecord, // 客户交易记录
   saleOrderTracking, // 订单跟踪列表
   warehouseRecord, // 入库记录
-  industryElectricRecord, // 工业用电电费
-  civilElectricRecord, // 民用用电电费
-  waterRecord, // 水费
+  waterElectricityRecord, // 水电费清单
   gasRecord, // 气体统计
   expenseReimburseList, // 费用报销
   managementSalaryList, // 管理人员工资清单

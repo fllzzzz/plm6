@@ -110,7 +110,7 @@ function disabledDate(time) {
 // 设置时间
 async function setDate() {
   try {
-    const data = await getDate({ type: crud.query.type })
+    const data = await getDate({ type: crud.query.type, childType: crud.query.childType })
     form.startDate = `${data.startDate || ''}`
     form.endDate = `${data.endDate || ''}`
   } catch (error) {

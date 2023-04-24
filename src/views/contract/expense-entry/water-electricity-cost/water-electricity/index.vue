@@ -54,7 +54,8 @@
       <el-table-column align="center" label="操作" width="140px">
         <template #default="{ row }">
           <el-tag v-if="row.isAmortization" size="medium" type="success" effect="plain"> 已摊销 </el-tag>
-          <udOperation v-else :data="row" />
+          <udOperation v-else-if="row.isEdit" :data="row" />
+          <udOperation v-else :data="row" :disabled-edit="true" :disabled-del="true" />
         </template>
       </el-table-column>
     </common-table>
@@ -147,8 +148,10 @@ function getSummaries(param) {
   return sums
 }
 
-CRUD.HOOK.handleRefresh = (crud, res) => {
-  res.data.content = res.data.content.map((v) => {
+CRUD.HOOK.handleRefresh = (crud, { data }) => {
+  const length = data.content.length
+  data.content = data.content.map((v, i) => {
+    // 时间范围
     let _startDate = moment(v.startDate).format('YYYY')
     let _endDate = moment(v.endDate).format('YYYY')
     if (_startDate !== crud.query.year || _endDate !== crud.query.year) {
@@ -159,6 +162,8 @@ CRUD.HOOK.handleRefresh = (crud, res) => {
       _endDate = moment(v.endDate).format('MM-DD')
     }
     v.date = `${_startDate} ~ ${_endDate}`
+    // 最后一条记录才能编辑并且不能为已摊销状态
+    v.isEdit = (i + 1 === length) && !v.isAmortization
     v.averageValue = v.totalAmount && v.usedMete ? (v.totalAmount / v.usedMete).toFixed(2) : 0
     return v
   })
