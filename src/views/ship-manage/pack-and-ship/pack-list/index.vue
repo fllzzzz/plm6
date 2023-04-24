@@ -339,7 +339,7 @@ function handleDataFormat({ artifactList, partList, enclosureList, auxList }) {
 async function edit(id, projectId) {
   try {
     const data = (await detail(id)) || {}
-    router.push({ name: 'MesManualPack', params: { id, projectId, remark: data.remark, data: handleDataFormat(data) }})
+    router.push({ name: 'ShipManageManualPack', params: { id, projectId, remark: data.remark, data: handleDataFormat(data) }})
   } catch (error) {
     console.log('去编辑包', error)
   }
