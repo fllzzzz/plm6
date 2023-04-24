@@ -44,7 +44,7 @@
         </template>
       </el-table-column>
     </common-table>
-    <mForm :currentRow="currentRow" />
+    <mForm :detailInfo="currentRow" />
   <!--分页组件-->
   <pagination />
   </div>
@@ -105,7 +105,7 @@ const { maxHeight } = useMaxHeight({
 })
 
 watch(
-  () => props.visibleValue,
+  () => props.currentRow,
   (val) => {
     if (val) {
       crud.query.techId = props.currentRow?.id

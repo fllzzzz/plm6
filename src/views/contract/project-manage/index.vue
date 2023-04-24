@@ -105,7 +105,7 @@
         :label="`结构类型`"
       >
         <template v-slot="scope">
-          <span>{{ scope.row.structureStatus? structureTypeEnum.VL(scope.row.structureStatus): '-' }}</span>
+          <span>{{ scope.row.structureStatus? structureTypeEnum.VL[scope.row.structureStatus]: '-' }}</span>
         </template>
       </el-table-column>
       <el-table-column v-if="columns.visible('allDays')" key="allDays" prop="allDays" label="总工期(天)" align="center" width="80">

@@ -3,7 +3,6 @@
     <!--工具栏-->
     <div class="head-container">
       <mHeader
-        :project-id="globalProjectId"
         @tableAdd="tableAdd"
         :table-data="totalTechInfo"
         :globalProject="globalProject"
@@ -638,6 +637,7 @@ function getPlate() {
 async function getTechInfo() {
   try {
     const data = await getContractTechInfo(crud.query.projectId)
+    console.log(data)
     if (isNotBlank(data)) {
       totalTechInfo.value = {
         [TechnologyTypeAllEnum.PROFILED_PLATE.V]: data.profiledPlateList || [],
@@ -654,6 +654,7 @@ async function getTechInfo() {
       }
     }
     getPlate()
+    console.log(totalTechInfo.value)
   } catch (error) {
     console.log('获取技术交底', error)
   }

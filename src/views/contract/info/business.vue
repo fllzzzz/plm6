@@ -254,7 +254,7 @@
                   <div v-for="(item,index) in detail.measureModeList" :key="index" style="display:flex;">
                     <span style="float:left;width:90px;text-align:right;">{{TechnologyTypeAllEnum.VL[item.no]}}：</span>
                     <common-radio style="float:left;" v-model="item.measureMode" :options="enclosureSettlementTypeEnum.ENUM" type="enum" :disabled="true"/>
-                    <span>{{item.quantityWork}}</span>
+                    <span style="margin-left:5px;">工程量：{{item.quantityWork}}</span>
                   </div>
                 </template>
               </el-form-item>
@@ -338,6 +338,24 @@
                   placeholder="付款方式描述"
                 />
                 <div v-else class="detail-break" style="max-height:220px;overflow-y:auto;">{{ detail.payTypeDesc }}</div>
+              </div>
+            </el-form-item>
+          </div>
+          <div class="form-row">
+            <el-form-item label="技术要求描述" prop="technologyRemark">
+              <div class="input-underline" style="width: 600px">
+                <el-input
+                  v-if="isModify"
+                  v-model.trim="form.technologyRemark"
+                  type="textarea"
+                  :autosize="{ minRows: 4, maxRows: 8 }"
+                  class="input-underline"
+                  maxlength="2000"
+                  show-word-limit
+                  style="width: 550px"
+                  placeholder="付款方式描述"
+                />
+              <div v-else class="detail-break" style="max-height:220px;overflow-y:auto;">{{ detail.technologyRemark }}</div>
               </div>
             </el-form-item>
           </div>
@@ -508,6 +526,18 @@ const validateTax = (rule, value, callback) => {
   callback()
 }
 
+const validateMeasureModeList = (rule, value, callback) => {
+  if (value.length) {
+    value.forEach(v => {
+      if (!v.quantityWork) {
+        callback(new Error('请填写工程量'))
+      }
+    })
+    callback()
+  }
+  callback()
+}
+
 const rules = {
   payTypeDesc: [{ max: 2000, message: '不能超过 2000 个字符', trigger: 'blur' }],
   businessType: [{ required: true, message: '请选择业务类型', trigger: 'change' }],
@@ -519,7 +549,16 @@ const rules = {
     { required: true, message: '请选择合同签订主体（签订主体可在配置管理-基础配置-分支机构中创建）', trigger: 'change' }
   ],
   invoiceType: [{ validator: validateInvoiceType, message: '请选择发票类型', trigger: 'change' }],
-  businessTaxRate: [{ validator: validateTax, message: '请输入税率', trigger: 'blur' }]
+  businessTaxRate: [{ validator: validateTax, message: '请输入税率', trigger: 'blur' }],
+  quantityWork: [
+    { required: true, message: '请填写构件工程量', trigger: 'blur' }
+  ],
+  structureStatus: [
+    { required: true, message: '请选择结构类型', trigger: 'change' }
+  ],
+  measureModeList: [
+    { validator: validateMeasureModeList, message: '请输入围护结算与工程量', trigger: 'change' }
+  ]
 }
 
 const props = defineProps({
@@ -559,6 +598,8 @@ const projectContentOption = computed(() => {
         return form.value.businessType === businessTypeEnum.MACHINING.V ? machiningData[projectTypeEnum.STEEL.V] : installData[projectTypeEnum.STEEL.V]
       case projectTypeEnum.BRIDGE.V:
         return form.value.businessType === businessTypeEnum.MACHINING.V ? machiningData[projectTypeEnum.BRIDGE.V] : installData[projectTypeEnum.BRIDGE.V]
+      case projectTypeEnum.ENCLOSURE.V:
+        return form.value.businessType === businessTypeEnum.MACHINING.V ? machiningData[projectTypeEnum.ENCLOSURE.V] : installData[projectTypeEnum.ENCLOSURE.V]
       default: return form.value.businessType === businessTypeEnum.MACHINING.V ? machiningData[projectTypeEnum.CARBARN.V] : installData[projectTypeEnum.CARBARN.V]
     }
   } else {
@@ -785,6 +826,11 @@ async function fetchDetail() {
       }
       if (dataArr[i] && dataArr[i][projectTypeEnum.CARBARN.V].length > 0) {
         dataArr[i][projectTypeEnum.CARBARN.V].map(v => {
+          v.name = v.categoryName
+        })
+      }
+      if (dataArr[i] && dataArr[i][projectTypeEnum.ENCLOSURE.V].length > 0) {
+        dataArr[i][projectTypeEnum.ENCLOSURE.V].map(v => {
           v.name = v.categoryName
         })
       }
