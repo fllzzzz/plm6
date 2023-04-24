@@ -2,9 +2,9 @@
   <el-card shadow="always">
     <template #header>
       <div class="clearfix">
-        <span class="card-title">钢板绑定配置</span>
+        <span class="card-title">APP任务上报重量配置</span>
         <common-tip-button
-          v-permission="permission.steelBindConfigEdit"
+          v-permission="permission.appTaskReportEdit"
           :loading="submitLoading"
           :disabled="submitDisabled"
           show-tip
@@ -18,10 +18,16 @@
       </div>
     </template>
     <el-form v-loading="dataLoading" :model="form" :disabled="formDisabled" label-width="100px">
-      <el-form-item label="是否绑定钢板" prop="steelPlateType">
-        <el-radio-group v-model="form.steelPlateType">
-          <el-radio :label="true">是</el-radio>
-          <el-radio :label="false">否</el-radio>
+      <el-form-item label="上报页面" prop="boolShowWeightInManufacture">
+        <el-radio-group v-model="form.boolShowWeightInManufacture">
+          <el-radio :label="true">显示</el-radio>
+          <el-radio :label="false">不显示</el-radio>
+        </el-radio-group>
+      </el-form-item>
+      <el-form-item label="上报记录页面" prop="boolShowWeightInRecord">
+        <el-radio-group v-model="form.boolShowWeightInRecord">
+          <el-radio :label="true">显示</el-radio>
+          <el-radio :label="false">不显示</el-radio>
         </el-radio-group>
       </el-form-item>
     </el-form>
@@ -29,7 +35,7 @@
 </template>
 
 <script setup>
-import { getSteelType, setSteelType } from '@/api/config/mes/base'
+import { getTaskReport, setTaskReport } from '@/api/config/mes/base'
 import { ref, computed, onMounted, inject } from 'vue'
 import { ElRadioGroup } from 'element-plus'
 
@@ -42,7 +48,8 @@ const permission = inject('permission')
 
 // 数据源
 const dataSource = ref({
-  steelPlateType: undefined
+  boolShowWeightInManufacture: undefined,
+  boolShowWeightInRecord: undefined
 })
 // 表单
 const form = ref(dataSource.value)
@@ -60,11 +67,11 @@ onMounted(() => {
 async function fetchData() {
   dataLoading.value = true
   try {
-    const { steelPlateType = false } = await getSteelType()
-    form.value = { steelPlateType }
-    dataSource.value = { steelPlateType }
+    const { boolShowWeightInManufacture = false, boolShowWeightInRecord = false } = await getTaskReport()
+    form.value = { boolShowWeightInManufacture, boolShowWeightInRecord }
+    dataSource.value = { boolShowWeightInManufacture, boolShowWeightInRecord }
   } catch (error) {
-    console.log('获取绑定钢板配置', error)
+    console.log('获取APP任务上报重量配置', error)
   } finally {
     dataLoading.value = false
   }
@@ -73,15 +80,15 @@ async function fetchData() {
 async function submit() {
   submitLoading.value = true
   try {
-    await setSteelType(form.value)
+    await setTaskReport(form.value)
     ElNotification({
-      title: '绑定钢板配置成功',
+      title: 'APP任务上报重量配置成功',
       type: 'success',
       duration: 2500
     })
     dataSource.value = deepClone(form.value)
   } catch (error) {
-    console.log('设置绑定钢板配置', error)
+    console.log('设置APP任务上报重量配置', error)
   } finally {
     submitLoading.value = false
   }

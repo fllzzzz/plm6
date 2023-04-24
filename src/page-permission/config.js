@@ -142,6 +142,8 @@ export const configMesBasePM = {
   overweightSMSRecipientEdit: ['overweight_sms_recipient:edit'], // 编辑过磅短信接收人
   safeAmountFactorGet: ['safe_amount_factor:get'], // 查看安全余额系数
   safeAmountFactorEdit: ['safe_amount_factor:edit'], // 编辑安全余额系数
+  steelBindConfigGet: ['steel_bind_config:get'], // 查看钢板绑定配置
+  steelBindConfigEdit: ['steel_bind_config:edit'], // 编辑钢板绑定配置
   // driverFillConfigGet: ['driver_fill_config:get'], // 查看物流信息填写配置
   // driverFillConfigEdit: ['driver_fill_config:edit'], // 编辑物流信息填写配置
   drawingSNConfigGet: ['drawing_sn_config:get'], // 查看图纸识别规则配置
@@ -151,7 +153,9 @@ export const configMesBasePM = {
   carModelConfigGet: ['car_model_config:get'], // 查看车型配置
   carModelConfigEdit: ['car_model_config:edit'], // 编辑车型配置
   foldingPriceMethodGet: ['folding_price_method:get'], // 查看围护折边件计价方式
-  foldingPriceMethodEdit: ['folding_price_method:edit'] // 编辑围护折边件计价方式
+  foldingPriceMethodEdit: ['folding_price_method:edit'], // 编辑围护折边件计价方式
+  appTaskReportGet: ['app_task_report:get'], // 查看app任务上报重量显示
+  appTaskReportEdit: ['app_task_report:edit'] // 编辑app任务上报重量显示
 }
 
 // MES-公共配置/变更原因

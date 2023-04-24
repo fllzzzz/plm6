@@ -16,7 +16,6 @@
         style="width: 150px"
         class="filter-item"
         :clearable="true"
-        @change="processDetailGet"
       />
       <production-line-select
         v-model="productionLineId"
@@ -26,7 +25,6 @@
         :clearable="true"
         class="filter-item"
         style="width: 150px"
-        @change="processDetailGet"
       />
       <monomer-select-area-select
         v-model:monomerId="monomerId"
@@ -36,23 +34,14 @@
         areaClearable
         :project-id="projectId"
         style="width: 150px"
-        @change="processDetailGet"
       />
-      <el-input
-        v-model.trim="serialNumber"
-        placeholder="编号搜索"
-        style="width: 150px"
-        class="filter-item"
-        clearable
-        @keyup.enter="processDetailGet"
-      />
+      <el-input v-model.trim="serialNumber" placeholder="编号搜索" style="width: 150px" class="filter-item" clearable @keyup.enter="processDetailGet" />
       <common-radio-button
         type="enum"
         style="vertical-align: middle"
         v-model="status"
         showOptionAll
         :options="taskTrackingSchedulingStatusEnum.ENUM"
-        @change="processDetailGet"
       />
       <common-button class="filter-item" size="mini" type="success" icon="el-icon-search" @click.stop="searchQuery">搜索</common-button>
       <common-button class="filter-item" size="mini" type="warning" icon="el-icon-refresh-left" @click.stop="resetQuery">
@@ -64,7 +53,7 @@
         <print-table
           v-permission="permission.print"
           api-key="mesProjectOverviewList"
-          :params="{ ...query, ...commonQuery, processId: props.detailData.id }"
+          :params="{ ...query, ...commonQuery, serialNumber: serialNumber }"
           size="mini"
           type="warning"
           class="filter-item"
@@ -155,7 +144,7 @@
 
 <script setup>
 import { getProcessDetail } from '@/api/mes/production-manage/dashboard/project-overview'
-import { defineProps, defineEmits, ref, watch, computed } from 'vue'
+import { defineProps, defineEmits, ref, watch, computed, inject } from 'vue'
 import { tableSummary } from '@/utils/el-extra'
 import { weightTypeEnum } from '@enum-ms/common'
 import { taskTrackingSchedulingStatusEnum, componentTypeEnum } from '@enum-ms/mes'
@@ -182,41 +171,39 @@ const status = ref()
 const props = defineProps({
   visible: {
     type: Boolean,
-    default: false,
+    default: false
   },
   detailData: {
     type: Object,
-    default: () => {},
+    default: () => {}
   },
   projectId: {
-    type: Number,
+    type: Number
   },
   weightStatus: {
-    type: Number,
-  },
+    type: Number
+  }
 })
 
-// const lastMonomerId = inject('monomerId')
-// const lastAeaId = inject('areaId')
-// const lastProductionLineId = inject('productionLineId')
+const lastMonomerId = inject('monomerId')
+const lastAreaId = inject('areaId')
+const lastProductionLineId = inject('productionLineId')
 
 const query = computed(() => {
   return {
     productType: props.detailData.productType,
     processId: props.detailData.id,
-    projectId: props.projectId,
-    productionLineId: productionLineId.value,
+    projectId: props.projectId
   }
 })
 
 const commonQuery = computed(() => {
   return {
     workshopId: workshopId.value,
-    productionLineId: productionLineId.value,
-    monomerId: monomerId.value,
-    areaId: areaId.value,
-    serialNumber: serialNumber.value,
-    status: status.value,
+    productionLineId: productionLineId.value ? productionLineId.value : lastProductionLineId.value,
+    monomerId: monomerId.value ? monomerId.value : lastMonomerId.value,
+    areaId: areaId.value ? areaId.value : lastAreaId.value,
+    status: status.value
   }
 })
 
@@ -252,12 +239,10 @@ async function processDetailGet() {
   if (!dialogVisible.value) return
   try {
     const { content = [], totalElements } = await getProcessDetail({
-      processId: props.detailData.id,
-      monomerId: monomerId.value,
-      areaId: areaId.value,
+      serialNumber: serialNumber.value,
       ...commonQuery.value,
       ...query.value,
-      ...queryPage,
+      ...queryPage
     })
     setTotalPage(totalElements)
     _list = content
@@ -269,7 +254,7 @@ async function processDetailGet() {
 }
 
 const { maxHeight } = useMaxHeight({
-  paginate: true,
+  paginate: true
 })
 
 // 搜索
@@ -295,7 +280,7 @@ function resetQuery() {
 // 合计
 function getSummaries(param) {
   return tableSummary(param, {
-    props: ['quantity', 'taskNetWeight', 'taskGrossWeight', 'completeQuantity', 'completeNetWeight', 'completeGrossWeight'],
+    props: ['quantity', 'taskNetWeight', 'taskGrossWeight', 'completeQuantity', 'completeNetWeight', 'completeGrossWeight']
   })
 }
 </script>
