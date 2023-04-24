@@ -46,7 +46,7 @@ import { ElSubMenu, ElMenuItem } from 'element-plus'
 import Item from './item.vue'
 import AppLink from './link.vue'
 import { isNotBlank } from '@/utils/data-type'
-import { TechnologyTypeAllEnum, projectModeEnum, TechnologyMainTypeEnum } from '@enum-ms/contract'
+import { TechnologyTypeAllEnum, projectModeEnum } from '@enum-ms/contract'
 
 const props = defineProps({
   item: {
@@ -64,12 +64,13 @@ const props = defineProps({
 })
 
 const { globalProject, currentMenu, globalProjectId, globalProContentBit } = mapGetters(['globalProject', 'currentMenu', 'globalProjectId', 'globalProContentBit'])
-const allEnclosure = ['PlanEnclosureList', 'PlanArtifactTreeList', 'PlanArtifactList', 'PlanMachinePartList', 'PlanAssemblyList', 'PlanArtifactManifest', 'PlanPartsManifest']
+const allEnclosure = ['enclosureSandwichBoard', 'enclosureProfiledPlate', 'enclosurePressureBearingPlate', 'enclosureTrussFloorPlate', 'enclosureBending', 'PlanArtifactTreeList', 'PlanArtifactList', 'PlanMachinePartList', 'PlanAssemblyList', 'PlanArtifactManifest', 'PlanPartsManifest']
 const enclosureItem = [
-  { name: 'PlanTrussSupportList', no: TechnologyTypeAllEnum.TRUSS_FLOOR_PLATE.V },
-  { name: 'PlanSandwichList', no: TechnologyTypeAllEnum.SANDWICH_BOARD.V },
-  { name: 'PlanPressedSupportList', no: TechnologyTypeAllEnum.PRESSURE_BEARING_PLATE.V },
-  { name: 'PlanPressedColorList', no: TechnologyTypeAllEnum.PROFILED_PLATE.V },
+  { name: 'enclosureBending', no: TechnologyTypeAllEnum.BENDING.V },
+  { name: 'enclosureTrussFloorPlate', no: TechnologyTypeAllEnum.TRUSS_FLOOR_PLATE.V },
+  { name: 'enclosureSandwichBoard', no: TechnologyTypeAllEnum.SANDWICH_BOARD.V },
+  { name: 'enclosurePressureBearingPlate', no: TechnologyTypeAllEnum.PRESSURE_BEARING_PLATE.V },
+  { name: 'enclosureProfiledPlate', no: TechnologyTypeAllEnum.PROFILED_PLATE.V },
   { name: 'PlanArtifactTreeList', no: TechnologyTypeAllEnum.STRUCTURE.V },
   { name: 'PlanArtifactManifest', no: TechnologyTypeAllEnum.BRIDGE.V }
 ]
@@ -100,9 +101,6 @@ watch(
             }
           }
         })
-        if (projectContentData.findIndex((k) => k.categoryType === TechnologyMainTypeEnum.ENCLOSURE.V) > -1) {
-          arr.push('PlanEnclosureList')
-        }
       }
       showItem.value = arr
     } else {

@@ -27,6 +27,26 @@ export const enclosureAreaListPM = {
 // --------------------------- 计划管理 end --------------------------------
 
 // ########################################################################
+
+// --------------------------- 清单管理 start ------------------------------
+
+// 清单管理/围护列表
+export const enclosureListPM = {
+  get: ['plan_enclosure_list:get'], // 围护列表
+  edit: ['plan_enclosure_list:edit'], // 修改围护
+  del: ['plan_enclosure_list:del'], // 删除围护
+  download: ['plan_enclosure_list:download'], // 下载围护
+  import: ['plan_enclosure_list:import'], // 导入围护
+  save: ['plan_enclosure_list:save'], // 添加围护
+  draw: ['plan_enclosure_list:draw'], // 画图
+  drawDownload: ['plan_enclosure_list:drawDownload'], // 下载图片
+  templateDownload: ['plan_enclosure_list:templateDownload'], // 下载围护模板
+  techDetail: ['plan_enclosure_list:techDetail'] // 技术交底
+}
+
+// --------------------------- 清单管理 end --------------------------------
+
+// ########################################################################
 // --------------------------- 生产管理 start ------------------------------
 
 // 生产管理/排产管理

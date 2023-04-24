@@ -178,9 +178,14 @@ export const showProjectSearch = [
   // { component: '/wms/report/raw-material/send-and-receive-storage/index', type: allPT, required: false }
 
   // 围护MES
-  { component: '/enclosure/production-report/team-production/index', type: pt.STEEL.V, required: false },
-  { component: '/enclosure/production-report/type-analysis/index', type: pt.STEEL.V, required: false }
-
+  { component: '/enclosure/enclosure-list/sandwich-board/index', type: pt.STEEL.V | pt.ENCLOSURE.V, required: true },
+  { component: '/enclosure/enclosure-list/profiled-plate/index', type: pt.STEEL.V | pt.ENCLOSURE.V, required: true },
+  { component: '/enclosure/enclosure-list/pressure-bearing-plate/index', type: pt.STEEL.V | pt.ENCLOSURE.V, required: true },
+  { component: '/enclosure/enclosure-list/truss-floor-plate/index', type: pt.STEEL.V | pt.ENCLOSURE.V, required: true },
+  { component: '/enclosure/enclosure-list/bending/index', type: pt.STEEL.V | pt.ENCLOSURE.V, required: true },
+  { component: '/enclosure/enclosure-list/standard-part/index', type: pt.ENCLOSURE.V, required: true },
+  { component: '/enclosure/production-report/team-production/index', type: pt.STEEL.V | pt.ENCLOSURE.V, required: false },
+  { component: '/enclosure/production-report/type-analysis/index', type: pt.STEEL.V | pt.ENCLOSURE.V, required: false }
 ]
 
 /**

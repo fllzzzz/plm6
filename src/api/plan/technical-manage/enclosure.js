@@ -32,7 +32,7 @@ export function add(data) {
     module: 'plan',
     url: 'enclosure/saveList',
     method: 'post',
-    params: { areaId: data.areaId },
+    params: { planId: data.planId },
     data: data.list
   })
 }
@@ -49,8 +49,9 @@ export function editStatus(id, params) {
 export function del(id) {
   return request({
     module: 'plan',
-    url: `enclosure/deleteEnclosure/${id}`,
-    method: 'delete'
+    url: `enclosure`,
+    method: 'delete',
+    data: [id]
   })
 }
 
