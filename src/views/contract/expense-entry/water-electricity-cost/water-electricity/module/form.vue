@@ -18,37 +18,44 @@
       </span>
     </template>
     <div class="form">
-      <el-form ref="formRef" :model="form" :rules="rules" size="small" label-width="140px" class="demo-form">
-        <el-form-item label="月份：" prop="month">
-          <common-select
-            v-model="form.month"
-            :options="monthArr"
-            type="other"
-            placeholder="请选择月份"
-            :data-structure="{ key: 'id', label: 'name', value: 'id' }"
-            class="filter-item"
-            clearable
+      <el-form ref="formRef" :model="form" :rules="rules" size="small" label-width="160px" class="demo-form">
+        <el-form-item label="起始日期" prop="startDate">
+          <el-date-picker
+            v-model="form.startDate"
+            type="date"
+            value-format="x"
+            placeholder="选择起始日期"
+            :disabled="true"
             style="width: 270px"
-            :disabled="isEdit"
           />
         </el-form-item>
-        <el-form-item label="用量：" prop="usedMete">
+        <el-form-item label="结束日期" prop="endDate">
+          <el-date-picker
+            v-model="form.endDate"
+            type="date"
+            value-format="x"
+            placeholder="选择结束日期"
+            style="width: 270px"
+            :disabled-date="disabledDate"
+          />
+        </el-form-item>
+        <el-form-item label="用电度数（kW·h）" prop="usedMete">
           <el-input-number
             v-show-thousand
             v-model="form.usedMete"
             style="width: 270px"
-            placeholder="输入用量"
+            placeholder="请输入用电度数"
             controls-position="right"
             :min="0"
             :max="9999999999"
           />
         </el-form-item>
-        <el-form-item label="费用总额（元）：" prop="totalAmount">
+        <el-form-item label="电费（元）" prop="totalAmount">
           <el-input-number
             v-show-thousand
             v-model="form.totalAmount"
             style="width: 270px"
-            placeholder="输入费用总额"
+            placeholder="请输入电费"
             controls-position="right"
             :min="0"
             :max="9999999999"
@@ -60,23 +67,13 @@
 </template>
 
 <script setup>
-import { ref, defineProps, computed } from 'vue'
+import { getDate } from '@/api/contract/expense-entry/water-electricity-cost'
+import { ref, computed } from 'vue'
+
 import { costTypeEnum } from '@enum-ms/contract'
+
 import { regForm } from '@compos/use-crud'
 
-const prop = defineProps({
-  query: {
-    type: Object
-  }
-})
-
-const monthArr = ref([])
-for (let i = 1; i <= 12; i++) {
-  monthArr.value.push({
-    id: i,
-    name: i
-  })
-}
 // 是否是编辑状态
 const isEdit = computed(() => {
   return crud.status.edit > 0
@@ -85,9 +82,10 @@ const formRef = ref()
 
 const defaultForm = {
   id: undefined,
-  month: undefined,
   usedMete: undefined,
-  totalAmount: undefined
+  totalAmount: undefined,
+  startDate: undefined,
+  endDate: undefined
 }
 
 const { crud, form, CRUD } = regForm(defaultForm, formRef)
@@ -99,31 +97,37 @@ const validateQuantity = (rule, value, callback) => {
   callback()
 }
 const rules = {
-  month: [{ required: true, message: '请选择月份', trigger: 'blur' }],
+  startDate: [{ required: true, message: '请选择起始时间', trigger: 'blur' }],
+  endDate: [{ required: true, message: '请选择结束时间', trigger: 'blur' }],
   usedMete: [{ required: true, validator: validateQuantity, trigger: 'blur' }],
   totalAmount: [{ required: true, validator: validateQuantity, trigger: 'blur' }]
 }
 
-// 编辑之前
-CRUD.HOOK.beforeToEdit = (crud, form) => {
-  console.log(form, 'form')
+function disabledDate(time) {
+  return time > new Date() || time < form.startDate
 }
 
-// 处理刷新数据
-CRUD.HOOK.beforeToQuery = async () => {}
-// 编辑之前
-CRUD.HOOK.beforeToEdit = () => {
-  console.log(form)
+// 设置时间
+async function setDate() {
+  try {
+    const data = await getDate({ type: crud.query.type })
+    form.startDate = `${data.startDate || ''}`
+    form.endDate = `${data.endDate || ''}`
+  } catch (error) {
+    console.log('获取水电费新增的时间', error)
+  }
+}
+
+// 新增需要获取开始、结束时间
+CRUD.HOOK.afterToAdd = () => {
+  setDate()
 }
 
 // 提交前
 CRUD.HOOK.beforeSubmit = async () => {
   const valid = await formRef.value.validate()
   if (!valid) return false
-  form.type = prop.query.type
-  form.childType = prop.query.childType
-  form.year = prop.query.year
+  form.type = crud.query.type
+  form.childType = crud.query.childType
 }
 </script>
-
-<style lang="scss" scoped></style>

@@ -243,7 +243,7 @@ export function warehouseRecord(params) {
  */
 export function industryElectricRecord(params) {
   return request({
-    url: '/api/contract/water-electricity/print',
+    url: '/api/contract/waterElectricity/print',
     method: 'get',
     params
   })
@@ -254,7 +254,7 @@ export function industryElectricRecord(params) {
  */
 export function civilElectricRecord(params) {
   return request({
-    url: '/api/contract/water-electricity/print',
+    url: '/api/contract/waterElectricity/print',
     method: 'get',
     params
   })
@@ -265,7 +265,7 @@ export function civilElectricRecord(params) {
  */
 export function waterRecord(params) {
   return request({
-    url: '/api/contract/water-electricity/print',
+    url: '/api/contract/waterElectricity/print',
     method: 'get',
     params
   })

@@ -1,7 +1,7 @@
 import { isNotBlank } from '@data-type/index'
 import { dateDifference } from '@/utils/date'
 import { convertUnits } from '@/utils/convert/unit'
-// import { supplierPayTypeEnum } from '@enum-ms/contract'
+import moment from 'moment'
 
 // 计算用时天数
 function durationCalculation({ header, table = [], footer, qrCode }) {
@@ -93,10 +93,34 @@ function handleAreaUnit({ header, table = [], footer, qrCode }) {
   }
 }
 
+// 处理时间范围
+function handleTimeHorizon({ header, table = [], footer, qrCode }) {
+  const _table = table.map(row => {
+    let _startDate = moment(row.startDate).format('YYYY')
+    let _endDate = moment(row.endDate).format('YYYY')
+    if (_startDate !== header.year || _endDate !== header.year) {
+      _startDate = moment(row.startDate).format('YYYY-MM-DD')
+      _endDate = moment(row.endDate).format('YYYY-MM-DD')
+    } else {
+      _startDate = moment(row.startDate).format('MM-DD')
+      _endDate = moment(row.endDate).format('MM-DD')
+    }
+    row.date = `${_startDate} ~ ${_endDate}`
+    return row
+  })
+  return {
+    header,
+    table: _table,
+    qrCode,
+    footer
+  }
+}
+
 export default {
   handleRate,
   handleAreaUnit,
   handleSupplierPaymentRate,
   durationCalculation,
-  handleSupplierPaymentOrder
+  handleSupplierPaymentOrder,
+  handleTimeHorizon
 }

@@ -14,11 +14,7 @@
       show-summary
       :summary-method="getSummaries"
     >
-      <el-table-column v-if="columns.visible('month')" prop="month" label="月份" align="center" width="100">
-        <template #default="{ row }">
-          <span>{{ row.month }}月</span>
-        </template>
-      </el-table-column>
+      <el-table-column v-if="columns.visible('date')" prop="date" key="date" :label="`${crud.query.year}年`" align="center" />
       <el-table-column
         v-if="columns.visible('usedMete')"
         align="center"
@@ -37,7 +33,7 @@
         key="totalAmount"
         prop="totalAmount"
         :show-overflow-tooltip="true"
-        :label="crud.query.type === costTypeEnum.ELECTRIC_COST.V ? '电费总额（元）' : '水费总额（元）'"
+        :label="crud.query.type === costTypeEnum.ELECTRIC_COST.V ? '电费（元）' : '水费（元）'"
       >
         <template #default="{ row }">
           <span>{{ row.totalAmount }}</span>
@@ -49,20 +45,21 @@
         key="averageValue"
         prop="averageValue"
         :show-overflow-tooltip="true"
-        :label="crud.query.type === costTypeEnum.ELECTRIC_COST.V ? '平均电费（元/kw/h）' : '平均水费（元/吨）'"
+        :label="crud.query.type === costTypeEnum.ELECTRIC_COST.V ? '平均电费（元/kw·h）' : '平均单价（元/吨）'"
       >
         <template #default="{ row }">
           <span>{{ row.averageValue }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="操作" width="200px">
+      <el-table-column align="center" label="操作" width="140px">
         <template #default="{ row }">
-          <udOperation :data="row" :permission="permission" />
+          <el-tag v-if="row.isAmortization" size="medium" type="success" effect="plain"> 已摊销 </el-tag>
+          <udOperation v-else :data="row" />
         </template>
       </el-table-column>
     </common-table>
     <!-- 表单 -->
-    <m-form :query="crud.query" />
+    <m-form />
   </div>
 </template>
 
@@ -74,6 +71,7 @@ import { waterElectricityCostPM as permission } from '@/page-permission/contract
 import { costTypeEnum } from '@enum-ms/contract'
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
+import moment from 'moment'
 
 import udOperation from '@crud/UD.operation'
 import mHeader from './module/header.vue'
@@ -148,17 +146,25 @@ function getSummaries(param) {
   })
   return sums
 }
-CRUD.HOOK.beforeToQuery = () => {}
+
 CRUD.HOOK.handleRefresh = (crud, res) => {
   res.data.content = res.data.content.map((v) => {
+    let _startDate = moment(v.startDate).format('YYYY')
+    let _endDate = moment(v.endDate).format('YYYY')
+    if (_startDate !== crud.query.year || _endDate !== crud.query.year) {
+      _startDate = moment(v.startDate).format('YYYY-MM-DD')
+      _endDate = moment(v.endDate).format('YYYY-MM-DD')
+    } else {
+      _startDate = moment(v.startDate).format('MM-DD')
+      _endDate = moment(v.endDate).format('MM-DD')
+    }
+    v.date = `${_startDate} ~ ${_endDate}`
     v.averageValue = v.totalAmount && v.usedMete ? (v.totalAmount / v.usedMete).toFixed(2) : 0
     return v
   })
 }
+
 const { maxHeight } = useMaxHeight({
-  extraBox: ['.head-container'],
   paginate: true
 })
 </script>
-<style lang="scss" scoped>
-</style>
