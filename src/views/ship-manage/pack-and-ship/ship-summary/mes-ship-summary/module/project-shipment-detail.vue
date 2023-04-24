@@ -1,9 +1,9 @@
 <template>
   <div class="detail-container">
     <div style="margin-bottom: 10px" class="head-container">
-      <div style="float: left">
+      <div>
         <el-tag class="filter-item" size="medium" style="margin-right: 3px">{{
-          `项目:${props.currentRow.project.serialNumber + ' ' + props.currentRow.project.shortName}`
+          `项目:${props.currentRow.project.serialNumber + '-' + props.currentRow.project.shortName}`
         }}</el-tag>
         <common-radio-button v-model="type" :options="mesShipStatisticsTypeEnum.ENUM" type="enum" class="filter-item" />
         <monomer-select
@@ -39,44 +39,46 @@
       >
         <el-descriptions-item align="center" label="清单总量（吨）">
           <span class="tc-primary" style="cursor: pointer" @click="openDetail('INVENTORY')">{{
-            props.weightStatus === weightTypeEnum.NET.V ? (summaryData.mete / 1000).toFixed(2) : (summaryData.grossMete / 1000).toFixed(2)
+            props.weightStatus === weightTypeEnum.NET.V
+              ? convertUnits(summaryData?.mete || 0, 'kg', 't', 2)
+              : convertUnits(summaryData?.grossMete || 0, 'kg', 't', 2)
           }}</span>
         </el-descriptions-item>
         <el-descriptions-item align="center" label="任务总量（吨）">
           <span class="tc-primary" style="cursor: pointer" @click="openDetail('ASSIGNMENT')">{{
             props.weightStatus === weightTypeEnum.NET.V
-              ? (summaryData.schedulingMete / 1000).toFixed(2)
-              : (summaryData.schedulingGrossMete / 1000).toFixed(2)
+              ? convertUnits(summaryData?.schedulingMete || 0, 'kg', 't', 2)
+              : convertUnits(summaryData?.schedulingGrossMete || 0, 'kg', 't', 2)
           }}</span>
         </el-descriptions-item>
         <el-descriptions-item align="center" label="入库量（吨）">
           <span class="tc-primary" style="cursor: pointer" @click="openDetail('STORAGE')">{{
             props.weightStatus === weightTypeEnum.NET.V
-              ? (summaryData.inBoundMete / 1000).toFixed(2)
-              : (summaryData.inBoundGrossMete / 1000).toFixed(2)
+              ? convertUnits(summaryData?.inBoundMete || 0, 'kg', 't', 2)
+              : convertUnits(summaryData?.inBoundGrossMete || 0, 'kg', 't', 2)
           }}</span>
         </el-descriptions-item>
         <el-descriptions-item align="center" label="累计发运">
           <span class="tc-primary" style="cursor: pointer" @click="openDetail('CUMULATIVE_SHIPMENT')">{{
             props.weightStatus === weightTypeEnum.NET.V
-              ? (summaryData.outBoundMete / 1000).toFixed(2)
-              : (summaryData.outBoundGrossMete / 1000).toFixed(2)
+              ? convertUnits(summaryData?.outBoundMete || 0, 'kg', 't', 2)
+              : convertUnits(summaryData?.outBoundGrossMete || 0, 'kg', 't', 2)
           }}</span>
         </el-descriptions-item>
         <el-descriptions-item align="center" label="本月发运">
           <span class="tc-primary" style="cursor: pointer" @click="openDetail('SHIPMENT_MONTH')">
             {{
               props.weightStatus === weightTypeEnum.NET.V
-                ? (summaryData.outMounthBoundMete / 1000).toFixed(2)
-                : (summaryData.outMounthBoundGrossMete / 1000).toFixed(2)
+                ? convertUnits(summaryData?.outMounthBoundMete || 0, 'kg', 't', 2)
+                : convertUnits(summaryData?.outMounthBoundGrossMete || 0, 'kg', 't', 2)
             }}
           </span>
         </el-descriptions-item>
         <el-descriptions-item align="center" label="库存（吨）">
           <span class="tc-primary" style="cursor: pointer" @click="openDetail('IN_STOCK')">{{
             props.weightStatus === weightTypeEnum.NET.V
-              ? (summaryData.stockMete / 1000).toFixed(2)
-              : (summaryData.stockGrossMete / 1000).toFixed(2)
+              ? convertUnits(summaryData?.stockMete || 0, 'kg', 't', 2)
+              : convertUnits(summaryData?.stockGrossMete || 0, 'kg', 't', 2)
           }}</span>
         </el-descriptions-item>
         <el-descriptions-item align="center" label="累计车次">
@@ -138,6 +140,7 @@
 import { ref, defineProps, watch, nextTick, computed } from 'vue'
 import { projectSummary } from '@/api/ship-manage/pack-and-ship/ship-summary'
 import { weightTypeEnum } from '@enum-ms/common'
+import { convertUnits } from '@/utils/convert/unit'
 import { mesShipStatisticsTypeEnum } from '@enum-ms/ship-manage'
 import monomerSelect from '@/components-system/plan/monomer-select'
 import mDetail from './detail.vue'
@@ -208,7 +211,7 @@ function getAreaInfo(val) {
 async function fetchSummary() {
   summaryData.value = {}
   summaryLoading.value = true
-  if (!props.currentRow.projectId) {
+  if (!props.currentRow?.projectId) {
     return
   }
   try {
