@@ -4,7 +4,7 @@
       <div class="clearfix">
         <span class="card-title">APP任务上报重量配置</span>
         <common-tip-button
-          v-permission="permission.foldingPriceMethodEdit"
+          v-permission="permission.appTaskReportEdit"
           :loading="submitLoading"
           :disabled="submitDisabled"
           show-tip
