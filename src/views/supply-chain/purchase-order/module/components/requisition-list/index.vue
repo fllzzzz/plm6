@@ -109,7 +109,6 @@ async function fetchList() {
         v.canPurchaseQuantity = _quantity - v.productQuantity > 0 ? _quantity - v.productQuantity : 0
         v.canPurchaseMete = _mete - v.productMete > 0 ? _mete - v.productMete : 0
         v.quantity = v.canPurchaseQuantity
-        console.log(v, 'v')
         if (v.basicClass & STEEL_ENUM) {
           // v.purchaseNetMete = v.mete / v.quantity
           v.purchaseTotalWeight = v.mete

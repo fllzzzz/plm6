@@ -32,7 +32,11 @@
     <el-table-column prop="quantity" label="数量" align="center">
       <template #default="{ row }">
         <common-input-number
-          v-if="row.measureUnit && (!form.useRequisitions || (form.useRequisitions && Boolean(currentCfg?.quantity & basicClass)))"
+          v-if="
+            row.measureUnit &&
+            (!form.useRequisitions ||
+              (form.useRequisitions && Boolean(currentCfg?.quantity & basicClass) && row.outboundUnitType === measureTypeEnum.MEASURE.V))
+          "
           v-model="row.quantity"
           :min="0"
           :max="999999999"
@@ -41,6 +45,7 @@
           :precision="row.measurePrecision"
           size="mini"
           placeholder="数量"
+          @change="handleQuantityChange(row)"
         />
         <span v-else v-empty-text>{{ row.quantity }}</span>
       </template>
@@ -53,7 +58,10 @@
     <el-table-column prop="mete" label="核算量" align="center">
       <template #default="{ row }">
         <common-input-number
-          v-if="!form.useRequisitions || (form.useRequisitions && Boolean(currentCfg?.mete & basicClass))"
+          v-if="
+            !form.useRequisitions ||
+            (form.useRequisitions && Boolean(currentCfg?.mete & basicClass) && row.outboundUnitType === measureTypeEnum.ACCOUNTING.V)
+          "
           v-model="row.mete"
           :min="0.000001"
           :max="999999999"
@@ -62,6 +70,7 @@
           :precision="row.accountingPrecision"
           size="mini"
           placeholder="核算量"
+          @change="handleMeteChange(row)"
         />
         <span v-else>{{ row.mete }}</span>
       </template>
@@ -90,9 +99,10 @@
 <script setup>
 import { defineExpose, inject, reactive, watch, watchEffect } from 'vue'
 import { matClsEnum } from '@/utils/enum/modules/classification'
+import { measureTypeEnum } from '@/utils/enum/modules/wms'
 import { createUniqueString } from '@/utils/data-type/string'
 import { positiveNumPattern } from '@/utils/validate/pattern'
-import { isNotBlank } from '@/utils/data-type'
+import { isNotBlank, toPrecision } from '@/utils/data-type'
 
 import useWmsConfig from '@/composables/store/use-wms-config'
 import usePriceSet from '@compos/wms/use-price-set'
@@ -172,6 +182,9 @@ function rowInit(row) {
     accountingUnit: row.classify.accountingUnit, // 核算单位
     accountingPrecision: row.classify.accountingPrecision, // 核算单位小数精度
     measurePrecision: row.classify.measurePrecision, // 计量单位小数精度
+    outboundUnitType: row.classify.outboundUnitType, // 出库单位类型
+    unitNet: row.unitNet, // 单位净重
+    accountingUnitNet: row.accountingUnitNet, // 核算单位净重
     mete: undefined, // 核算量
     quantity: undefined // 数量
   })
@@ -191,6 +204,18 @@ function delRow(sn, $index) {
     matSpecRef.value.delListItem(sn, $index)
   } else {
     form.list.splice($index, 1)
+  }
+}
+
+function handleQuantityChange(row) {
+  if (form.useRequisitions) {
+    row.mete = toPrecision(row.quantity * row.unitNet, row.measurePrecision)
+  }
+}
+
+function handleMeteChange(row) {
+  if (form.useRequisitions) {
+    row.quantity = toPrecision(row.mete * row.accountingUnitNet, row.accountingPrecision)
   }
 }
 

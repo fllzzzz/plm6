@@ -145,7 +145,7 @@
       <el-table-column prop="quantity" label="本次实收数" align="center" min-width="120px">
         <template #default="{ row }">
           <common-input-number
-            v-if="!boolApplyPurchase && row.measureUnit && form.selectObj?.[row.mergeId]?.isSelected"
+            v-if="!boolApplyPurchase && row.measureUnit && form.selectObj?.[row.mergeId]?.isSelected && row.outboundUnitType === measureTypeEnum.MEASURE.V"
             v-model="row.quantity"
             :min="0"
             :max="999999999"
@@ -154,6 +154,7 @@
             :precision="row.measurePrecision"
             size="mini"
             placeholder="本次实收数"
+            @change="handleQuantityChange(row)"
             @blur="handleOverQuantity(row)"
           />
           <span v-else>{{ row.quantity || '-' }}</span>
@@ -162,7 +163,7 @@
       <el-table-column prop="mete" label="本次实收量" align="center" min-width="120px">
         <template #default="{ row }">
           <common-input-number
-            v-if="!boolApplyPurchase && form.selectObj?.[row.mergeId]?.isSelected"
+            v-if="!boolApplyPurchase && form.selectObj?.[row.mergeId]?.isSelected && row.outboundUnitType === measureTypeEnum.ACCOUNTING.V"
             v-model="row.mete"
             :min="0.000001"
             :max="999999999"
@@ -218,7 +219,9 @@
               <el-table-column prop="quantity" label="本次实收数" align="center" min-width="120px">
                 <template #default="{ row: purRow }">
                   <common-input-number
-                    v-if="row.measureUnit && form.selectObj?.[row.mergeId]?.isSelected"
+                    v-if="
+                      row.measureUnit && form.selectObj?.[row.mergeId]?.isSelected && row.outboundUnitType === measureTypeEnum.MEASURE.V
+                    "
                     v-model="purRow.quantity"
                     :min="0"
                     :max="999999999"
@@ -227,6 +230,7 @@
                     :precision="row.measurePrecision"
                     size="mini"
                     placeholder="本次实收数"
+                    @change="handleQuantityChange(purRow, row)"
                     @blur="handleOverQuantity(purRow)"
                   />
                   <span v-else>{{ purRow.quantity || '-' }}</span>
@@ -235,7 +239,7 @@
               <el-table-column prop="mete" label="本次实收量" align="center" min-width="120px">
                 <template #default="{ row: purRow }">
                   <common-input-number
-                    v-if="form.selectObj?.[row.mergeId]?.isSelected"
+                    v-if="form.selectObj?.[row.mergeId]?.isSelected && row.outboundUnitType === measureTypeEnum.ACCOUNTING.V"
                     v-model="purRow.mete"
                     :min="0.000001"
                     :max="999999999"
@@ -244,7 +248,7 @@
                     :precision="row.accountingPrecision"
                     size="mini"
                     placeholder="实收量"
-                    @change="handleWeightChange($event, purRow)"
+                    @change="handleWeightChange($event, purRow, row)"
                     @blur="handleOverMete(purRow)"
                   />
                   <span v-else>{{ purRow.mete || '-' }}</span>
@@ -266,6 +270,7 @@
 <script setup>
 import { defineExpose, defineProps, watchEffect, computed, ref, inject, reactive } from 'vue'
 // import { matClsEnum } from '@/utils/enum/modules/classification'
+import { measureTypeEnum } from '@/utils/enum/modules/wms'
 import { createUniqueString } from '@/utils/data-type/string'
 import { positiveNumPattern } from '@/utils/validate/pattern'
 import { isNotBlank, toPrecision } from '@/utils/data-type'
@@ -391,6 +396,9 @@ function rowInit(row) {
     accountingUnit: row.classify.accountingUnit, // 核算单位
     accountingPrecision: row.classify.accountingPrecision, // 核算单位小数精度
     measurePrecision: row.classify.measurePrecision, // 计量单位小数精度
+    outboundUnitType: row.classify.outboundUnitType, // 出库单位类型
+    unitNet: row.unitNet, // 单位净重
+    accountingUnitNet: row.accountingUnitNet, // 核算单位净重
     mete: undefined, // 核算量
     quantity: undefined // 数量
   })
@@ -421,10 +429,11 @@ function rowWatch(row) {
 }
 
 // 处理重量变化
-function handleWeightChange(val, row) {
+function handleWeightChange(val, row, _row) {
   if (isNotBlank(row.unitPrice) && isNotBlank(val)) {
     row.amount = toPrecision(val * row.unitPrice, 2)
   }
+  handleMeteChange(row, _row || row)
 }
 
 // 删除行
@@ -433,6 +442,18 @@ function delRow(sn, $index) {
     matSpecRef.value.delListItem(sn, $index)
   } else {
     form.auxMatList.splice($index, 1)
+  }
+}
+
+function handleQuantityChange(row, { unitNet, measurePrecision }) {
+  if (!props.boolPartyA) {
+    row.mete = toPrecision(row.quantity * unitNet, measurePrecision)
+  }
+}
+
+function handleMeteChange(row, { accountingUnitNet, accountingPrecision }) {
+  if (!props.boolPartyA) {
+    row.quantity = toPrecision(row.mete * accountingUnitNet, accountingPrecision)
   }
 }
 
