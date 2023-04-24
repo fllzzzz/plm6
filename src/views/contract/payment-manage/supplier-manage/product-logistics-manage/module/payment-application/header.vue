@@ -24,7 +24,7 @@
         style="float:left;"
       />
     </div>
-    <common-button type="primary" style="float:right;" @click="crud.toAdd">+添加</common-button>
+    <common-button type="primary" style="float:right;" @click="crud.toAdd" v-permission="crud.permission.add">+添加</common-button>
   </div>
 </template>
 

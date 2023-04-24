@@ -19,18 +19,6 @@
         <el-table-column v-if="columns.visible('serialNumber')" key="serialNumber" prop="serialNumber" :show-overflow-tooltip="true" label="采购合同编号" align="center" min-width="130" />
         <el-table-column v-if="columns.visible('amount')" prop="amount" key="amount" label="合同额" align="right" min-width="120" show-overflow-tooltip />
         <el-table-column v-if="columns.visible('inboundAmount')" prop="inboundAmount" key="inboundAmount" label="入库额" align="right" min-width="120" show-overflow-tooltip>
-          <template v-if="checkPermission(permission.detail)" #header>
-            <el-tooltip
-              effect="light"
-              placement="top"
-              content="点击行可以查看详情"
-            >
-              <div style="display: inline-block">
-                <span>入库额 </span>
-                <i class="el-icon-info" />
-              </div>
-            </el-tooltip>
-          </template>
           <template #default="{ row }">
             <div>{{ row.inboundAmount }}</div>
           </template>
@@ -40,7 +28,7 @@
       <pagination />
     </div>
     <div class="wrap-right">
-      <inboundRecord :detail-info="detailInfo" style="width:100%;"/>
+      <inboundRecord :detail-info="detailInfo" style="width:100%;" :permission="permission"/>
     </div>
   </div>
 </template>
@@ -50,7 +38,7 @@ import crudApi from '@/api/supply-chain/purchase-reconciliation-manage/payment-l
 import { ref, provide } from 'vue'
 
 import { supplierOrderLedgerPM as permission } from '@/page-permission/supply-chain'
-import checkPermission from '@/utils/system/check-permission'
+// import checkPermission from '@/utils/system/check-permission'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'

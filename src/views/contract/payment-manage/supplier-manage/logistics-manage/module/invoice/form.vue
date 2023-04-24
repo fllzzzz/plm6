@@ -33,12 +33,12 @@
         <el-row>
           <el-col :span="12">
             <el-form-item label="发票及税率" prop="invoiceType" class="form-label-require">
-              <invoice-type-select
-                v-model:invoiceType="form.invoiceType"
-                v-model:taxRate="form.taxRate"
-                style="width: 360px"
-                :classification="classification"
-              />
+                <invoice-type-select
+                  v-model:invoiceType="form.invoiceType"
+                  v-model:taxRate="form.taxRate"
+                  style="width: 280px"
+                  :classification="classification"
+                />
             </el-form-item>
           </el-col>
           <el-col :span="12">

@@ -65,17 +65,18 @@
       </el-table-column>
       <!--付款和收票-->
       <el-table-column
+        v-if="checkPermission([...permission.payment.get,...permission.invoice.get])"
         label="操作"
         width="120px"
         align="center"
       >
         <template #default="{ row }">
-          <span style="margin-right:5px;display:inline-block;position:relative;padding:10px 0;">
+          <span style="margin-right:5px;display:inline-block;position:relative;padding:10px 0;" v-if="checkPermission(permission.payment.get)">
             <common-button type="success" icon="el-icon-money" size="mini" @click="openApplication(row)" />
             <el-badge :value="row.sourceRow.unCheckPaymentCount" :max="99" :hidden="row.sourceRow.unCheckPaymentCount < 1" style="position:absolute;top:4px;right:-5px;">
             </el-badge>
           </span>
-          <span style="margin-right:5px;display:inline-block;position:relative;padding:10px 0;">
+          <span style="margin-right:5px;display:inline-block;position:relative;padding:10px 0;" v-if="checkPermission(permission.invoice.get)">
             <common-button type="primary" icon="el-icon-tickets" size="mini" @click="openInvoice(row)" />
             <el-badge :value="row.sourceRow.unCheckInvoiceCount" :max="99" :hidden="row.sourceRow.unCheckInvoiceCount < 1" style="position:absolute;top:4px;right:-5px;">
             </el-badge>

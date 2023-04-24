@@ -36,7 +36,7 @@
               <invoice-type-select
                 v-model:invoiceType="form.invoiceType"
                 v-model:taxRate="form.taxRate"
-                style="width: 360px"
+                style="width: 280px"
                 :classification="classification"
               />
             </el-form-item>

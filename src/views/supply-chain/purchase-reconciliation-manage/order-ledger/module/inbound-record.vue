@@ -1,44 +1,47 @@
 <template>
   <div class="app-container">
-    <div v-show="!props.detailInfo?.id" class="my-code" style="width: 100%">*点击左侧表格行查看详情</div>
+    <div v-show="!props.detailInfo?.id " class="my-code" style="width: 100%">*点击左侧表格行查看详情</div>
     <div v-show="props.detailInfo?.id" style="width: 100%">
-      <div style="margin-bottom:5px;">采购单号：{{detailInfo.serialNumber}} <el-tag>累计入库额：{{toThousand(detailInfo.inboundAmount)}}</el-tag></div>
-      <div class="head-container">
-        <el-input
-          v-model="query.inboundSn"
-          placeholder="入库单号"
-          class="filter-item"
-          style="width: 200px"
-          size="small"
-          clearable
+      <template v-if="checkPermission(permission.detail)">
+        <div style="margin-bottom:5px;">采购单号：{{detailInfo.serialNumber}} <el-tag>累计入库额：{{toThousand(detailInfo.inboundAmount)}}</el-tag></div>
+        <div class="head-container">
+          <el-input
+            v-model="query.inboundSn"
+            placeholder="入库单号"
+            class="filter-item"
+            style="width: 200px"
+            size="small"
+            clearable
+          />
+          <common-button class="filter-item" size="small" type="success" icon="el-icon-search" @click.stop="fetchList">搜索</common-button>
+          <common-button class="filter-item" size="small" type="warning" icon="el-icon-refresh" @click.stop="query.inboundSn=undefined;fetchList()">重置</common-button>
+        </div>
+        <common-table style="width: 100%;" :data="list" v-loading="tableLoading" show-summary :summary-method="getSummaries" :data-format="dataFormat" :max-height="maxHeight">
+          <!-- 基础信息 -->
+          <material-base-info-columns
+            :columns="{}"
+          />
+          <!-- 单位及其数量 -->
+          <material-unit-quantity-columns :columns="{}" />
+          <!-- 价格信息 -->
+          <amount-info-columns :columns="{}" :show-tax-rate="false"/>
+          <el-table-column prop="inboundTime" label="入库时间" align="center" width="90" show-overflow-tooltip />
+          <el-table-column prop="applicantName" label="入库人" align="center" show-overflow-tooltip width="90" />
+          <el-table-column prop="reviewerName" label="审核人" align="center" show-overflow-tooltip width="90" />
+          <el-table-column fixed="right" prop="inboundSerialNumber" label="入库单号" align="center" min-width="110" show-overflow-tooltip />
+        </common-table>
+        <!-- 分页 -->
+        <el-pagination
+          :total="total"
+          :current-page="queryPage.pageNumber"
+          :page-size="queryPage.pageSize"
+          style="margin-top: 8px"
+          layout="total, prev, pager, next, sizes"
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
         />
-        <common-button class="filter-item" size="small" type="success" icon="el-icon-search" @click.stop="fetchList">搜索</common-button>
-        <common-button class="filter-item" size="small" type="warning" icon="el-icon-refresh" @click.stop="query.inboundSn=undefined;fetchList()">重置</common-button>
-      </div>
-      <common-table style="width: 100%;" :data="list" v-loading="tableLoading" show-summary :summary-method="getSummaries" :data-format="dataFormat" :max-height="maxHeight">
-        <!-- 基础信息 -->
-        <material-base-info-columns
-          :columns="{}"
-        />
-        <!-- 单位及其数量 -->
-        <material-unit-quantity-columns :columns="{}" />
-        <!-- 价格信息 -->
-        <amount-info-columns :columns="{}" :show-tax-rate="false"/>
-        <el-table-column prop="inboundTime" label="入库时间" align="center" width="90" show-overflow-tooltip />
-        <el-table-column prop="applicantName" label="入库人" align="center" show-overflow-tooltip width="90" />
-        <el-table-column prop="reviewerName" label="审核人" align="center" show-overflow-tooltip width="90" />
-        <el-table-column fixed="right" prop="inboundSerialNumber" label="入库单号" align="center" min-width="110" show-overflow-tooltip />
-      </common-table>
-      <!-- 分页 -->
-      <el-pagination
-        :total="total"
-        :current-page="queryPage.pageNumber"
-        :page-size="queryPage.pageSize"
-        style="margin-top: 8px"
-        layout="total, prev, pager, next, sizes"
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-      />
+      </template>
+      <template>暂无入库明细权限</template>
     </div>
   </div>
 </template>
@@ -51,6 +54,7 @@ import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { DP } from '@/settings/config'
 import { tableSummary } from '@/utils/el-extra'
 import { toThousand } from '@/utils/data-type/number'
+import checkPermission from '@/utils/system/check-permission'
 
 import MaterialBaseInfoColumns from '@/components-system/wms/table-columns/material-base-info-columns/index.vue'
 import MaterialUnitQuantityColumns from '@/components-system/wms/table-columns/material-unit-quantity-columns/index.vue'
@@ -60,6 +64,10 @@ import usePagination from '@compos/use-pagination'
 
 const props = defineProps({
   detailInfo: {
+    type: Object,
+    default: () => {}
+  },
+  permission: {
     type: Object,
     default: () => {}
   }
