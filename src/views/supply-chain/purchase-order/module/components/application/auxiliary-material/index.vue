@@ -47,7 +47,7 @@
           placeholder="数量"
           @change="handleQuantityChange(row)"
         />
-        <span v-else v-empty-text>{{ row.quantity }}</span>
+        <span v-else v-empty-text>{{ row.quantity || '-' }}</span>
       </template>
     </el-table-column>
     <el-table-column prop="accountingUnit" label="核算单位" align="center">
@@ -72,7 +72,7 @@
           placeholder="核算量"
           @change="handleMeteChange(row)"
         />
-        <span v-else>{{ row.mete }}</span>
+        <span v-else>{{ row.mete || '-' }}</span>
       </template>
     </el-table-column>
 

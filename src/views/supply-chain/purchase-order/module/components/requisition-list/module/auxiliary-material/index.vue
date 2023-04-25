@@ -45,10 +45,11 @@
           placeholder="数量"
         />
         <span v-else v-empty-text>{{ row.quantity }}</span> -->
-        <span>
+        <span v-if="row.measureUnit">
           <span class="color-green">{{ row.quantity }}</span>
           / {{ row.originQuantity }}
         </span>
+        <span v-else>-</span>
       </template>
     </el-table-column>
     <el-table-column prop="accountingUnit" label="核算单位" align="center">
@@ -70,10 +71,11 @@
           placeholder="核算量"
         />
         <span v-else>{{ row.mete }}</span> -->
-        <span>
+        <span v-if="row.accountingUnit">
           <span class="color-green">{{ row.mete }}</span>
           / {{ row.originMete }}
         </span>
+        <span v-else></span>
       </template>
     </el-table-column>
 

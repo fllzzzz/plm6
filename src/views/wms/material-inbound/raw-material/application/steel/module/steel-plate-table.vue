@@ -39,15 +39,15 @@
     </el-table-column>
     <el-table-column prop="specification" label="规格" align="center" width="100px" fixed="left" show-overflow-tooltip>
       <template #default="{ row }">
-        <el-tooltip :content="row.specificationLabels" placement="top">
-          <span>{{ row.specification }}</span>
-        </el-tooltip>
         <el-edit
           v-if="Boolean(currentCfg?.spec & basicClass)"
           class="el-icon"
-          style="color: #1881ef; vertical-align: middle; margin-left: 5px; cursor: pointer"
+          style="color: #1881ef; vertical-align: middle; margin-right: 5px; cursor: pointer"
           @click="handleClickEditSpec(row)"
         />
+        <el-tooltip :content="row.specificationLabels" placement="top">
+          <span>{{ row.specification }}</span>
+        </el-tooltip>
       </template>
     </el-table-column>
     <el-table-column prop="thickness" align="center" width="100px" :label="`厚 (${baseUnit.thickness.unit})`">
@@ -157,7 +157,7 @@
           </span>
         </template>
       </el-table-column>
-      <el-table-column prop="purchaseMete" :label="`采购重量 (${baseUnit.weight.unit})`" align="right" width="100px">
+      <el-table-column prop="purchaseMete" :label="`采购重量 (${baseUnit.weight.unit})`" align="right" width="110px">
         <template #default="{ row }">
           <span>
             <el-tooltip effect="dark" content="已入库量" placement="top">

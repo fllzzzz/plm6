@@ -19,15 +19,15 @@
     </el-table-column>
     <el-table-column prop="specification" label="规格" align="center" fixed="left" show-overflow-tooltip min-width="140">
       <template #default="{ row }">
-        <el-tooltip :content="row.specificationLabels" placement="top">
-          <span>{{ row.specification }}</span>
-        </el-tooltip>
         <el-edit
           v-if="!form.useRequisitions || (form.useRequisitions && Boolean(currentCfg?.spec & basicClass))"
           class="el-icon"
-          style="color: #1881ef; vertical-align: middle; margin-left: 5px; cursor: pointer"
+          style="color: #1881ef; vertical-align: middle; margin-right: 5px; cursor: pointer"
           @click="handleClickEditSpec(row)"
         />
+        <el-tooltip :content="row.specificationLabels" placement="top">
+          <span>{{ row.specification }}</span>
+        </el-tooltip>
       </template>
     </el-table-column>
     <el-table-column prop="length" align="center" :label="`定尺长度 (${baseUnit.length.unit})`" min-width="120">

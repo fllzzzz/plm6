@@ -45,6 +45,7 @@
       </template>
     </el-table-column>
     <el-table-column
+      v-if="props.boolPartyA"
       key="weighingTotalWeight"
       prop="weighingTotalWeight"
       align="center"
@@ -65,9 +66,47 @@
         />
       </template>
     </el-table-column>
+    <template v-if="!props.boolPartyA">
+      <el-table-column prop="purchaseMete" :label="`采购重量 (${baseUnit.weight.unit})`" align="right" width="120px">
+        <template #default="{ row }">
+          <span>
+            <el-tooltip effect="dark" content="已入库量" placement="top">
+              <span class="color-green">{{ row.inboundMete }}</span>
+            </el-tooltip>
+            / {{ row.purchaseMete }}
+          </span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        key="weighingTotalWeight"
+        prop="weighingTotalWeight"
+        align="center"
+        :label="`实收量 (${baseUnit.weight.unit})`"
+        width="135px"
+      >
+        <template #default="{ row }">
+          <common-input-number
+            v-if="form.selectObj?.[row.mergeId]?.isSelected"
+            v-model="row.weighingTotalWeight"
+            :min="0"
+            :max="999999999"
+            controls-position="right"
+            :controls="false"
+            :precision="baseUnit.weight.precision"
+            size="mini"
+            placeholder="实收量"
+            :class="{ 'over-weight-tip': row.hasOver }"
+            @change="handleWeightChange($event, row)"
+            @blur="handleOverMete(row)"
+          />
+          <span v-else>{{ row.weighingTotalWeight || '-' }}</span>
+        </template>
+      </el-table-column>
+    </template>
     <el-table-column prop="thickness" align="center" width="100px" :label="`厚 (${baseUnit.thickness.unit})`">
       <template #default="{ row }">
         <common-input-number
+          v-if="props.boolPartyA || form.selectObj?.[row.mergeId]?.isSelected"
           v-model="row.thickness"
           :min="0"
           :max="999999"
@@ -77,11 +116,13 @@
           size="mini"
           placeholder="厚"
         />
+        <span v-else>{{ row.thickness }}</span>
       </template>
     </el-table-column>
     <el-table-column prop="width" align="center" width="135px" :label="`宽 (${baseUnit.width.unit})`">
       <template #default="{ row }">
         <common-input-number
+          v-if="props.boolPartyA || form.selectObj?.[row.mergeId]?.isSelected"
           v-model="row.width"
           :min="0"
           :max="999999"
@@ -91,11 +132,13 @@
           size="mini"
           placeholder="宽"
         />
+        <span v-else>{{ row.width }}</span>
       </template>
     </el-table-column>
     <el-table-column prop="length" align="center" width="135px" :label="`长 (${baseUnit.length.unit})`">
       <template #default="{ row }">
         <common-input-number
+          v-if="props.boolPartyA || form.selectObj?.[row.mergeId]?.isSelected"
           v-model="row.length"
           :min="0"
           :max="999999999"
@@ -104,6 +147,7 @@
           size="mini"
           placeholder="长"
         />
+        <span v-else>{{ row.length }}</span>
       </template>
     </el-table-column>
     <!-- <el-table-column prop="number" align="center" width="135px" :label="`数量 (${baseUnit.measure.unit})`">
@@ -123,7 +167,14 @@
     </el-table-column> -->
     <el-table-column prop="color" label="颜色" align="center" width="140px">
       <template #default="{ row }">
-        <el-input v-model.trim="row.color" maxlength="20" size="mini" placeholder="颜色" />
+        <el-input
+          v-if="props.boolPartyA || (!props.boolPartyA && form.selectObj?.[row.mergeId]?.isSelected)"
+          v-model.trim="row.color"
+          maxlength="20"
+          size="mini"
+          placeholder="颜色"
+        />
+        <span v-else v-empty-text>{{ row.color }}</span>
       </template>
     </el-table-column>
 
@@ -132,15 +183,30 @@
 
     <el-table-column prop="brand" label="品牌" align="center" min-width="100px">
       <template #default="{ row }">
-        <el-input v-model.trim="row.brand" maxlength="60" size="mini" placeholder="品牌" />
+        <el-input
+          v-if="props.boolPartyA || (!props.boolPartyA && form.selectObj?.[row.mergeId]?.isSelected)"
+          v-model.trim="row.brand"
+          maxlength="60"
+          size="mini"
+          placeholder="品牌"
+        />
+        <span v-else v-empty-text>{{ row.brand }}</span>
       </template>
     </el-table-column>
     <el-table-column prop="heatNoAndBatchNo" label="卷号" align="center" min-width="150px">
       <template #default="{ row }">
-        <el-input v-model.trim="row.heatNoAndBatchNo" size="mini" placeholder="卷号" maxlength="200" />
+        <el-input
+          v-if="props.boolPartyA || (!props.boolPartyA && form.selectObj?.[row.mergeId]?.isSelected)"
+          v-model.trim="row.heatNoAndBatchNo"
+          size="mini"
+          placeholder="卷号"
+          maxlength="200"
+        />
+        <span v-else v-empty-text>{{ row.heatNoAndBatchNo }}</span>
       </template>
     </el-table-column>
-    <el-table-column label="操作" width="70" align="center" fixed="right">
+
+    <el-table-column v-if="props.boolPartyA" label="操作" width="70" align="center" fixed="right">
       <template #default="{ row, $index }">
         <common-button icon="el-icon-delete" type="danger" size="mini" @click="delRow(row.sn, $index)" />
       </template>
@@ -156,6 +222,7 @@ import { isBlank, isNotBlank, toPrecision } from '@/utils/data-type'
 import { regExtra } from '@/composables/form/use-form'
 import useTableValidate from '@compos/form/use-table-validate'
 import useMatBaseUnit from '@/composables/store/use-mat-base-unit'
+import useOverReceive from '@/views/wms/material-inbound/raw-material/application/composables/use-over-receive.js'
 import elExpandTableColumn from '@comp-common/el-expand-table-column.vue'
 import { createUniqueString } from '@/utils/data-type/string'
 import { calcSteelCoilLength } from '@/utils/wms/measurement-calc'
@@ -177,6 +244,7 @@ const props = defineProps({
 const tableRef = ref()
 // 当前物料基础类型
 const basicClass = matClsEnum.STEEL_COIL.V
+const { handleOverMete } = useOverReceive({ meteField: 'weighingTotalWeight' })
 
 const rules = {
   classifyId: [{ required: true, message: '请选择物料种类', trigger: 'change' }],

@@ -77,6 +77,38 @@
                     />
                   </div>
                 </el-form-item>
+                <el-form-item
+                  v-if="form.materialType & materialPurchaseClsEnum.OTHER.V && !form.useRequisitions"
+                  class="el-form-item-5"
+                  label="其它明细"
+                  prop="otherMaterialIds"
+                >
+                  <div class="flex-rss child-mr-10">
+                    <!-- 是否选择所有辅材 -->
+                    <el-checkbox
+                      v-model="form.isAllOtherMaterial"
+                      :disabled="form.boolUsed"
+                      label="所有其它科目"
+                      size="mini"
+                      border
+                      style="margin-top: 3px; margin-right: 5px"
+                    />
+                    <material-cascader
+                      v-model="form.otherMaterialIds"
+                      :basic-class="matClsEnum.OTHER.V"
+                      :deep="2"
+                      :disabled="form.boolUsed || form.isAllOtherMaterial"
+                      multiple
+                      :collapse-tags="false"
+                      separator=" > "
+                      clearable
+                      placeholder="请选择其它科目"
+                      class="input-underline"
+                      size="small"
+                      style="width: 100%"
+                    />
+                  </div>
+                </el-form-item>
                 <el-form-item v-if="!form.useRequisitions && isManuf" label="选择项目" class="el-form-item-4" prop="projectId">
                   <project-cascader v-model="form.projectId" clearable :disabled="Boolean(form.boolUsed)" class="input-underline" />
                 </el-form-item>
@@ -145,7 +177,9 @@
                     v-model:invoiceType="form.invoiceType"
                     v-model:taxRate="form.taxRate"
                     :disabled="Boolean(form.boolUsed)"
-                    :classification="form.materialType"
+                    :classification="
+                      form.materialType & materialPurchaseClsEnum.OTHER.V ? materialPurchaseClsEnum.MATERIAL.V : form.materialType
+                    "
                   />
                 </el-form-item>
                 <!-- <el-form-item class="el-form-item-11" prop="weightMeasurementMode" label="计量方式">
@@ -317,7 +351,7 @@
                 :bool-use-requisitions="form.useRequisitions"
               />
               <div class="table-remark">
-                <template v-if="!Boolean(form.materialType & materialPurchaseClsEnum.MATERIAL.V)">
+                <template v-if="!Boolean(form.materialType & (materialPurchaseClsEnum.MATERIAL.V | materialPurchaseClsEnum.OTHER.V))">
                   <span class="title">合同量</span>
                   <span class="con">
                     <span>{{ form.mete }}</span>
@@ -355,7 +389,13 @@
             :row-init-fn="rowInit"
             :max-height="specSelectMaxHeight"
             :basic-class="form.currentBasicClass"
-            :classify-ids="form.materialType & materialPurchaseClsEnum.MATERIAL.V ? form.auxMaterialIds : []"
+            :classify-ids="
+              form.materialType & materialPurchaseClsEnum.MATERIAL.V
+                ? form.auxMaterialIds
+                : form.materialType & materialPurchaseClsEnum.OTHER.V
+                ? form.otherMaterialIds
+                : []
+            "
             :table-width="350"
             auto-selected
             expand-query
@@ -439,6 +479,8 @@ const defaultForm = {
   currentBasicClass: matClsEnum.STEEL_PLATE.V, // 物料类型
   isAllMaterial: false, // 是否选择全部辅材
   auxMaterialIds: undefined, // 辅材明细ids
+  isAllOtherMaterial: false, // 是否选择全部其他材料
+  otherMaterialIds: undefined, // 其他材料明细ids
   projectIds: undefined, // 项目ids
   projectId: undefined,
   supplierId: undefined, // 供应商id
@@ -544,6 +586,24 @@ const auxMatRules = {
   auxMaterialIds: [{ required: true, validator: validateAuxMat, trigger: 'change' }]
 }
 
+const validateOtherMat = (rule, value, callback) => {
+  if (!form.isAllOtherMaterial) {
+    if (!value) {
+      callback(new Error('请选择其它科目'))
+      return
+    } else {
+      callback()
+    }
+  } else {
+    callback()
+  }
+}
+
+// 其它校验
+const otherMatRules = {
+  otherMaterialIds: [{ required: true, validator: validateOtherMat, trigger: 'change' }]
+}
+
 // rules变更
 watchEffect(() => {
   if (dialogVisible.value) {
@@ -553,6 +613,9 @@ watchEffect(() => {
     Object.assign(r, selfRules)
     if (form.materialType & materialPurchaseClsEnum.MATERIAL.V && !form.useRequisitions) {
       Object.assign(r, auxMatRules)
+    }
+    if (form.materialType & materialPurchaseClsEnum.OTHER.V && !form.useRequisitions) {
+      Object.assign(r, otherMatRules)
     }
     nextTick(() => {
       formRef.value && formRef.value.clearValidate()
@@ -569,6 +632,9 @@ watch(
   (val) => {
     if (val & materialPurchaseClsEnum.MATERIAL.V) {
       form.basicClass = form.currentBasicClass = matClsEnum.MATERIAL.V
+    }
+    if (val & materialPurchaseClsEnum.OTHER.V) {
+      form.basicClass = form.currentBasicClass = matClsEnum.OTHER.V
     }
     if (val & materialPurchaseClsEnum.STEEL.V) {
       form.basicClass = matClsEnum.STEEL_PLATE.V | matClsEnum.STEEL_COIL.V | matClsEnum.SECTION_STEEL.V
@@ -629,6 +695,7 @@ const compListVK = {
   [matClsEnum.SECTION_STEEL.V]: 'sectionSteelList',
   [matClsEnum.STEEL_COIL.V]: 'steelCoilList',
   [matClsEnum.MATERIAL.V]: 'list',
+  [matClsEnum.OTHER.V]: 'list',
   [matClsEnum.STRUC_MANUFACTURED.V]: 'list',
   [matClsEnum.ENCL_MANUFACTURED.V]: 'list'
 }
@@ -645,7 +712,7 @@ const importTemp = computed(() => {
     case matClsEnum.MATERIAL.V:
       return auxMaterialTemp
     default:
-      return steelPlateTemp
+      return auxMaterialTemp
   }
 })
 
@@ -785,7 +852,7 @@ watchEffect(() => {
       _actualRequisitionIds.push(v.applyPurchaseId)
     })
   }
-  if (form.materialType & materialPurchaseClsEnum.MATERIAL.V) {
+  if (form.materialType & (materialPurchaseClsEnum.MATERIAL.V | materialPurchaseClsEnum.OTHER.V)) {
     form.list?.forEach((v) => {
       _actualRequisitionIds.push(v.applyPurchaseId)
     })
@@ -850,6 +917,8 @@ CRUD.HOOK.beforeEditDetailLoaded = async (crud) => {
   }
   // 是否选中所有辅材，0表示所有
   form.isAllMaterial = form.auxMaterialIds?.includes(0)
+  // 是否选中所有其它科目，0表示所有
+  form.isAllOtherMaterial = form.otherMaterialIds?.includes(0)
   // 签订主体id
   form.branchCompanyId = form.branchCompany ? form.branchCompany.id : undefined
   // 供应商id
@@ -867,11 +936,15 @@ CRUD.HOOK.beforeEditDetailLoaded = async (crud) => {
     handleAddManuf(_list)
   } else {
     await setSpecInfoToList(form.details)
-    await numFmtByBasicClass(form.details, {
-      toNum: true
-    }, {
-      mete: ['mete', 'applyPurchaseMete']
-    })
+    await numFmtByBasicClass(
+      form.details,
+      {
+        toNum: true
+      },
+      {
+        mete: ['mete', 'applyPurchaseMete']
+      }
+    )
     form.list = form.details.map((v) => {
       v.purchaseSN = applyPurchaseObj[v.applyPurchaseId]?.serialNumber
       v.purchaseTotalWeight = v.applyPurchaseMete
@@ -914,6 +987,7 @@ CRUD.HOOK.beforeSubmit = () => {
 crud.submitFormFormat = async (form) => {
   form.attachmentIds = form.attachments ? form.attachments.map((v) => v.id) : undefined
   form.auxMaterialIds = form.isAllMaterial ? [0] : form.auxMaterialIds
+  form.otherMaterialIds = form.isAllOtherMaterial ? [0] : form.otherMaterialIds
   if (form.useRequisitions) {
     form.applyPurchaseIds = form.actualRequisitionIds
   }

@@ -52,10 +52,10 @@
         </span>
         <span class="form-item-tip">固定重量({{ STEEL_DIFF_UNIT }})：误差不可超过 固定重量；</span>
         <span class="form-item-tip">百分比(%)：误差不可超过 采购钢材的申购重量*百分比。</span>
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item label="无申购采购重量误差：" label-width="153px">
         <span style="color: #e6a23cc2;">由【入库-单件钢材重量误差】配置决定</span>
-      </el-form-item> -->
+      </el-form-item>
     </el-form>
   </el-card>
 </template>
@@ -87,6 +87,10 @@ const defaultConfig = {
     quantity: { L: '数量', V: false }
   },
   [rawMatClsEnum.MATERIAL.V]: {
+    quantity: { L: '数量', V: false },
+    mete: { L: '核算量', V: false }
+  },
+  [rawMatClsEnum.OTHER.V]: {
     quantity: { L: '数量', V: false },
     mete: { L: '核算量', V: false }
   }
