@@ -15,11 +15,11 @@ export const commonPM = {
 
 // 计划管理/区域列表
 export const enclosureAreaListPM = {
-  get: ['enclosure_area_manage:get'], // 列表
+  get: ['enclosure_area_manage:get'], // 项目列表
   plan: {
-    get: ['enclosure_area_plan_manage:get'], // 区域列表
-    add: ['enclosure_area_plan_manage:add'], // 新增区域
-    edit: ['enclosure_area_plan_manage:edit'], // 修改区域
+    get: ['enclosure_area_plan_manage:get'], // 计划列表
+    add: ['enclosure_area_plan_manage:add'], // 新增计划
+    edit: ['enclosure_area_plan_manage:edit'], // 修改计划
     del: ['enclosure_area_plan_manage:del'] // 删除区域
   }
 }
