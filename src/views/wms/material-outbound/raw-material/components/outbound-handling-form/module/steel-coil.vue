@@ -18,7 +18,9 @@
           <common-radio
             v-model="form.materialOutboundMode"
             :options="steelCoilOutboundModeEnum"
-            :unshowVal="material.classifyFullName.indexOf('卷板') === -1 ? [steelCoilOutboundModeEnum.BY_PLATE.V] : []"
+            :unshowVal="
+              material.classifyFullName.indexOf('卷板') === -1 || material.boolPartyA ? [steelCoilOutboundModeEnum.BY_PLATE.V] : []
+            "
             type="enum"
             size="small"
             @change="materialOutboundModeChange"
@@ -246,7 +248,7 @@
             <common-input-number
               v-model="form.segmentQuantity"
               :min="1"
-              :precision="material.outboundUnitPrecision"
+              :precision="0"
               :max="form.singleQuantity ? parseInt(maxQuantity / form.singleQuantity) : 1"
               controls-position="right"
               style="width: 100%"
@@ -439,7 +441,7 @@ const surplusMaterial = computed(() => {
   })
   return {
     width: _width,
-    mete: _mete
+    mete: _mete > 0 ? _mete : 0
   }
 })
 
@@ -477,8 +479,10 @@ watch(
 
 watch([() => form.value.singleQuantity, () => form.value.segmentQuantity], () => {
   if (isPlateOut.value) {
-    form.value.quantity =
-      form.value.singleQuantity && form.value.segmentQuantity ? form.value.singleQuantity * form.value.segmentQuantity : 0
+    form.value.quantity = toPrecision(
+      form.value.singleQuantity && form.value.segmentQuantity ? form.value.singleQuantity * form.value.segmentQuantity : 0,
+      material.value.outboundUnitPrecision
+    )
   }
 })
 
@@ -611,7 +615,7 @@ async function submit() {
       ElMessage.error(`条板总宽：${_width}mm，条板总宽不可大于开平宽度`)
       throw new Error('宽度超出允许值')
     }
-    if (surplusMaterial.value?.width <= 0) {
+    if (surplusMaterial.value?.width < 0) {
       ElMessage.error(`余料错误`)
       throw new Error('余料错误')
     }
@@ -619,6 +623,7 @@ async function submit() {
     const _list = deepClone(dealList)
     _list.forEach((v) => {
       v.quantity = v.quantity * form.value.segmentQuantity
+      v.boolSurplus = false
     })
     if (surplusMaterial.value?.width > 0) {
       _list.push({
@@ -628,7 +633,8 @@ async function submit() {
         width: surplusMaterial.value.width,
         length: form.value.singleQuantity,
         quantity: form.value.segmentQuantity,
-        mete: surplusMaterial.value.mete
+        mete: surplusMaterial.value.mete,
+        boolSurplus: true // 是否余料
       })
     }
     // console.log(validResult, 'validResult')
@@ -669,7 +675,7 @@ function getSummaries(param) {
       data.forEach((item) => {
         _mete -= item.mete || 0
       })
-      sums[index] = _mete
+      sums[index] = _mete > 0 ? _mete : 0
     }
     if (column.property === 'quantity') {
       sums[index] = 1
