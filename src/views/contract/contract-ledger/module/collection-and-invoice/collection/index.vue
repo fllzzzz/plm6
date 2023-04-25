@@ -395,6 +395,7 @@ async function rowDelete(row) {
   try {
     await crudApi.del(row.id)
     crud.notify(`删除成功`, CRUD.NOTIFICATION_TYPE.SUCCESS)
+    emit('success')
     crud.toQuery()
   } catch (e) {
     console.log(`删除失败`, e)
@@ -436,6 +437,7 @@ async function rowSubmit(row) {
       await crudApi.add(row)
     }
     crud.notify(`${messageName}成功`, CRUD.NOTIFICATION_TYPE.SUCCESS)
+    emit('success')
     crud.toQuery()
   } catch (e) {
     console.log(messageName, e)
@@ -448,6 +450,10 @@ function getSummaries(param) {
     props: ['collectionAmount'],
     toThousandFields: ['collectionAmount']
   })
+}
+
+CRUD.HOOK.afterSubmit = () => {
+  emit('success')
 }
 
 CRUD.HOOK.beforeRefresh = () => {

@@ -427,6 +427,7 @@ async function rowDelete(row) {
   try {
     await crudApi.del(row.id)
     crud.notify(`删除成功`, CRUD.NOTIFICATION_TYPE.SUCCESS)
+    emit('success')
     crud.toQuery()
   } catch (e) {
     console.log(`删除失败`, e)
@@ -473,6 +474,7 @@ async function rowSubmit(row) {
       await crudApi.add(row)
     }
     crud.notify(`${messageName}成功`, CRUD.NOTIFICATION_TYPE.SUCCESS)
+    emit('success')
     crud.toQuery()
   } catch (e) {
     console.log(messageName, e)
@@ -509,6 +511,11 @@ CRUD.HOOK.handleRefresh = (crud, data) => {
     v.noTaxAmount = v.invoiceType !== invoiceTypeEnum.RECEIPT.V ? (v.invoiceAmount / (1 + v.taxRate / 100)).toFixed(2) : v.invoiceAmount
   })
 }
+
+CRUD.HOOK.afterSubmit = () => {
+  emit('success')
+}
+
 </script>
 
 <style lang="scss" scoped>

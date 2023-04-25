@@ -37,7 +37,7 @@
                 v-model:invoiceType="form.invoiceType"
                 v-model:taxRate="form.taxRate"
                 style="width: 280px"
-                :classification="classification"
+                :taxRateOption="taxRateOption"
               />
             </el-form-item>
           </el-col>
@@ -131,17 +131,16 @@
 </template>
 
 <script setup>
-import { ref, defineProps } from 'vue'
+import { ref, defineProps, computed } from 'vue'
 import { regForm } from '@compos/use-crud'
 
 import { DP } from '@/settings/config'
 import { fileClassifyEnum } from '@enum-ms/file'
 import { supplierTypeEnum } from '@/utils/enum/modules/supplier'
-import { supplierClassEnum } from '@enum-ms/supplier'
 
 import UploadBtn from '@comp/file-upload/UploadBtn'
 import branchCompanySelect from '@comp-base/branch-company-select.vue'
-import invoiceTypeSelect from '@comp-base/invoice-type-select.vue'
+import invoiceTypeSelect from './invoice-type-select.vue'
 import supplierSelect from '@comp-base/supplier-select/index.vue'
 
 const formRef = ref()
@@ -162,8 +161,6 @@ const defaultForm = {
 
 const { CRUD, crud, form } = regForm(defaultForm, formRef)
 
-const classification = supplierClassEnum.PROFESSIONAL_SUBCONTRACTING.V & supplierClassEnum.LABOR_SUBCONTRACTING.V
-
 const props = defineProps({
   detailInfo: {
     type: Object,
@@ -171,6 +168,15 @@ const props = defineProps({
   }
 })
 
+const taxRateOption = computed(() => {
+  const data = []
+  for (let i = 0; i < props.detailInfo?.taxReteList.length; i++) {
+    data.push({
+      value: props.detailInfo?.taxReteList[i]
+    })
+  }
+  return data
+})
 CRUD.HOOK.afterToAdd = () => {
   crud.form.actualInvoiceUnitId = crud.form.actualInvoiceUnitId || props.detailInfo.supplierId
 }

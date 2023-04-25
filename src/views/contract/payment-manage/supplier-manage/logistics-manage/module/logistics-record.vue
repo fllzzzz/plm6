@@ -80,12 +80,15 @@ const { handleSizeChange, handleCurrentChange, total, setTotalPage, queryPage } 
 const currentRow = ref({})
 const recordVisible = ref(false)
 
+const query = ref({})
+
 // 请求参数
 const params = computed(() => {
   // 汇总列表
   return {
     supplierId: props.detailInfo.supplierId,
-    projectId: props.detailInfo.projectId
+    projectId: props.detailInfo.projectId,
+    ...query.value
   }
 })
 
@@ -93,6 +96,11 @@ watch(
   visible,
   (val) => {
     if (val) {
+      query.value = {
+        date: props.queryDate?.startDate && props.queryDate?.endDate ? [props.queryDate.startDate, props.queryDate.endDate] : [],
+        startDate: props.queryDate?.startDate,
+        endDate: props.queryDate?.endDate
+      }
       fetchList()
     }
   },

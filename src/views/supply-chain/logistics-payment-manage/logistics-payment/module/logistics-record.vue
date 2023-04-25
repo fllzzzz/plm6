@@ -79,6 +79,7 @@ const { visible, handleClose } = useVisible({ emit, props })
 const { handleSizeChange, handleCurrentChange, total, setTotalPage, queryPage } = usePagination({ fetchHook: fetchList })
 const currentRow = ref({})
 const recordVisible = ref(false)
+const query = ref({})
 
 // 请求参数
 const params = computed(() => {
@@ -93,6 +94,11 @@ watch(
   visible,
   (val) => {
     if (val) {
+      query.value = {
+        date: props.queryDate?.startDate && props.queryDate?.endDate ? [props.queryDate.startDate, props.queryDate.endDate] : [],
+        startDate: props.queryDate?.startDate,
+        endDate: props.queryDate?.endDate
+      }
       fetchList()
     }
   },

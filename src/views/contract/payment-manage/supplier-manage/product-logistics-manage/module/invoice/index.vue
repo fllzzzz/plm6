@@ -208,7 +208,7 @@ CRUD.HOOK.afterDelete = () => {
   emit('success')
 }
 
-CRUD.HOOK.afterAddSuccess = () => {
+CRUD.HOOK.afterSubmit = () => {
   emit('success')
 }
 

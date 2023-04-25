@@ -18,7 +18,6 @@ const contractEnclosurePrice = contract.handleAreaUnit
 const saleOrderTracking = contract.handleRate
 
 const orderPaymentLedger = contract.handleSupplierPaymentRate
-const scmSupplierPaymentLedger = contract.handleSupplierPaymentRate
 const purchaseLogisticsRecord = scm.handleOrderName
 const productLogisticsRecord = scm.handleOrderName
 const scmRequisitionsDetail = scm.handleRequisitionsRecord
@@ -70,7 +69,6 @@ export default {
   logisticsPaymentLedger,
   supplierPaymentLedger,
   orderPaymentLedger,
-  scmSupplierPaymentLedger,
   myProject,
   projectList,
   contractLedger,

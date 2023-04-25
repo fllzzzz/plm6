@@ -10,8 +10,8 @@
     size="100%"
   >
     <template #titleAfter>
-      <el-tag type="warning" effect="plain" size="medium">物流公司：{{detailInfo.supplierName}}</el-tag>
-      <el-tag effect="plain" size="medium">入库单号：{{detailInfo.inboundSn}}</el-tag>
+      <el-tag v-if="detailInfo.serialNumber" type="success" effect="plain" size="medium">采购合同编号：{{detailInfo.serialNumber}}</el-tag>
+      <el-tag v-else type="warning" effect="plain" size="medium">供应商：{{detailInfo.supplierName}}</el-tag>
     </template>
     <template #titleRight>
       <div class="print-wrap">
@@ -54,6 +54,14 @@
           size="small"
           clearable
         />
+        <el-input
+          v-model="query.inboundSn"
+          placeholder="入库单"
+          class="filter-item"
+          style="width: 200px"
+          size="small"
+          clearable
+        />
         <common-button class="filter-item" size="small" type="success" icon="el-icon-search" @click.stop="fetchList">搜索</common-button>
         <common-button class="filter-item" size="small" type="warning" icon="el-icon-refresh" @click.stop="resetSubmit">重置</common-button>
       </div>
@@ -61,8 +69,8 @@
         <!-- 基础信息 -->
         <material-base-info-columns
           :columns="{}"
+          spec-merge
         />
-         <el-table-column prop="purchaseSn" label="采购单号" align="center" min-width="130" show-overflow-tooltip />
         <!-- 单位及其数量 -->
         <material-unit-quantity-columns :columns="{}" />
         <!-- 价格信息 -->
@@ -70,6 +78,7 @@
         <el-table-column prop="inboundTime" label="入库时间" align="center" width="90" show-overflow-tooltip />
         <el-table-column prop="applicantName" label="入库人" align="center" show-overflow-tooltip width="90" />
         <el-table-column prop="reviewerName" label="审核人" align="center" show-overflow-tooltip width="90" />
+        <el-table-column prop="inboundSerialNumber" label="入库单号" align="center" min-width="110" show-overflow-tooltip />
       </common-table>
       <!--分页组件-->
       <el-pagination
@@ -131,7 +140,7 @@ const query = ref({})
 const params = computed(() => {
   // 汇总列表
   return {
-    inboundId: props.detailInfo.inboundId,
+    supplierId: props.detailInfo.supplierId,
     ...query.value
   }
 })

@@ -444,7 +444,7 @@ CRUD.HOOK.handleRefresh = (crud, data) => {
   })
 }
 
-CRUD.HOOK.afterAddSuccess = () => {
+CRUD.HOOK.afterSubmit = () => {
   emit('success')
 }
 </script>

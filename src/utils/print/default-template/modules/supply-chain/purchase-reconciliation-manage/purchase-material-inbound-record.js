@@ -203,7 +203,7 @@ const purchaseMaterialInboundRecord = {
      */
     fields: [
       { show: true, key: 'inboundTime', title: '入库日期', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.DATE.K, format: 'YY/MM/DD' },
-      { show: true, key: 'serialNumber', title: '物料编号', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 16, type: typeEnum.SERIAL_NUMBER.K },
+      { show: true, key: 'materialSn', title: '物料编号', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 16, type: typeEnum.SERIAL_NUMBER.K },
       { show: true, key: 'classifyName', title: '物料种类', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 14, type: typeEnum.MATERIAL_CLASS_FULL_NAME.K },
       { show: true, key: 'specification', title: '规格', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 14, type: typeEnum.SPECIFICATION.K },
       { show: true, key: 'measureUnit', title: '计量单位', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 12, type: typeEnum.MEASUREMENT_UNIT.K },
