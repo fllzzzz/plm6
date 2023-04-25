@@ -181,7 +181,7 @@ const defaultQuery = {
   name: undefined,
   serialNumber: undefined,
   enclosurePlanId: { value: undefined, resetAble: false },
-  category: { value: TechnologyTypeAllEnum.SANDWICH_BOARD.V, resetAble: false },
+  category: { value: TechnologyTypeAllEnum.PROFILED_PLATE.V, resetAble: false },
   thickness: undefined,
   plate: undefined
 }

@@ -171,8 +171,8 @@ import {
   enclosureSettlementTypeEnum,
   transportModeEnum,
   TechnologyTypeEnum,
-  TechnologyTypeAllEnum
-  // structureTypeEnum
+  TechnologyTypeAllEnum,
+  structureTypeEnum
 } from '@enum-ms/contract'
 import { invoiceTypeEnum, paymentModeEnum } from '@enum-ms/finance'
 import { isNotBlank } from '@data-type/index'
