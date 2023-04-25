@@ -30,7 +30,7 @@ export const enclosureAreaListPM = {
 
 // --------------------------- 清单管理 start ------------------------------
 
-// 清单管理/围护列表
+// 清单管理/各围护列表
 export const enclosureListPM = {
   get: ['plan_enclosure_list:get'], // 围护列表
   edit: ['plan_enclosure_list:edit'], // 修改围护
@@ -42,6 +42,16 @@ export const enclosureListPM = {
   drawDownload: ['plan_enclosure_list:drawDownload'], // 下载图片
   templateDownload: ['plan_enclosure_list:templateDownload'], // 下载围护模板
   techDetail: ['plan_enclosure_list:techDetail'] // 技术交底
+}
+
+// 清单管理/项目配套
+export const enclosureStandardPartPM = {
+  get: ['enclosure_standard_part:get'], // 列表
+  add: ['enclosure_standard_part:add'], // 添加
+  edit: ['enclosure_standard_part:edit'], // 修改
+  del: ['enclosure_standard_part:del'], // 删除
+  import: ['enclosure_standard_part:import'], // 导入围护
+  templateDownload: ['enclosure_standard_part:templateDownload'] // 下载围护模板
 }
 
 // --------------------------- 清单管理 end --------------------------------
