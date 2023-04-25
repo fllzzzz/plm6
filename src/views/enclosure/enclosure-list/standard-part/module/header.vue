@@ -1,30 +1,6 @@
 <template>
   <div>
     <div v-show="crud.searchToggle">
-      <!-- <monomer-select
-        ref="monomerSelectRef"
-        v-model="query.monomerId"
-        :project-id="props.projectId"
-        class="filter-item"
-        :default="false"
-        clearable
-        @change="crud.toQuery"
-        @getCurrentInfo="handleCurrent"
-        @getAreaInfo="getAreaInfo"
-      />
-      <common-select
-        v-model="query.areaId"
-        :options="areaInfo"
-        type="other"
-        :dataStructure="{ key: 'id', label: 'name', value: 'id' }"
-        size="small"
-        clearable
-        placeholder="请选择区域"
-        class="filter-item"
-        style="width:200px;"
-        @change="areaChange"
-      />
-      <rrOperation /> -->
     </div>
     <crudOperation>
        <template #optRight>
