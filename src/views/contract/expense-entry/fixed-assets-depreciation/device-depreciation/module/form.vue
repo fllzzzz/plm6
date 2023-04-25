@@ -19,8 +19,19 @@
     </template>
     <div class="form">
       <el-form ref="formRef" :model="form" :rules="rules" size="small" label-width="140px" class="demo-form">
-        <el-form-item label="厂房名称" prop="name">
-          <el-input ref="saveTagInput" v-model="form.name" placeholder="输入厂房名称" style="width: 270px" maxlength="50" />
+        <el-form-item label="设备名称" prop="name">
+          <el-input ref="saveTagInput" v-model="form.name" placeholder="输入设备名称" style="width: 270px" maxlength="50" />
+        </el-form-item>
+        <el-form-item label="数量（台）" prop="num">
+          <el-input-number
+            v-model="form.num"
+            style="width: 270px"
+            placeholder="输入数量"
+            controls-position="right"
+            :precision="0"
+            :min="1"
+            :max="9999999999"
+          />
         </el-form-item>
         <el-form-item label="初始价值（元）" prop="originalValue">
           <el-input-number
@@ -88,8 +99,6 @@
 <script setup>
 import { ref, computed } from 'vue'
 
-import { depreciationTypeEnum } from '@enum-ms/contract'
-
 import { regForm } from '@compos/use-crud'
 
 const formRef = ref()
@@ -97,9 +106,9 @@ const formRef = ref()
 const defaultForm = {
   id: undefined,
   name: undefined,
+  num: undefined,
   originalValue: undefined,
   depreciationYear: undefined,
-  type: depreciationTypeEnum.PLANT.V, // 固定此类型
   startDate: `${new Date().getTime()}`,
   residualValueRate: undefined
 }
@@ -114,7 +123,8 @@ const validateQuantity = (rule, value, callback) => {
 }
 
 const rules = {
-  name: [{ required: true, message: '请输入厂房名称', trigger: 'blur' }],
+  name: [{ required: true, message: '请输入设备名称', trigger: 'blur' }],
+  quantity: [{ required: true, validator: validateQuantity, trigger: 'blur' }],
   originalValue: [{ required: true, validator: validateQuantity, trigger: 'blur' }],
   depreciationYear: [{ required: true, validator: validateQuantity, trigger: 'blur' }],
   residualValueRate: [{ required: true, validator: validateQuantity, trigger: 'blur' }],

@@ -365,10 +365,28 @@ export function managementFee(params) {
   })
 }
 
-// 业财报表/水电费
+// 费用录入/水电费
 export function waterElectricFee(params) {
   return request({
     url: `/api/contract/project-finance/list-water/print`,
+    method: 'get',
+    params
+  })
+}
+
+// 费用录入/厂房折旧
+export function plantDepreciationRecord(params) {
+  return request({
+    url: `/api/contract/fixed-assets-depreciation/print`,
+    method: 'get',
+    params
+  })
+}
+
+// 费用录入/设备折旧
+export function deviceDepreciationRecord(params) {
+  return request({
+    url: `/api/contract/equipmentDepreciation/print`,
     method: 'get',
     params
   })
@@ -413,6 +431,8 @@ export default {
   saleOrderTracking, // 订单跟踪列表
   warehouseRecord, // 入库记录
   waterElectricityRecord, // 水电费清单
+  plantDepreciationRecord, // 厂房折旧
+  deviceDepreciationRecord, // 设备折旧
   gasRecord, // 气体统计
   expenseReimburseList, // 费用报销
   managementSalaryList, // 管理人员工资清单

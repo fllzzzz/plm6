@@ -275,7 +275,20 @@ export const plantDepreciationPM = {
   add: ['plant_depreciation:add'], // 新增
   edit: ['plant_depreciation:edit'], // 修改
   del: ['plant_depreciation:del'], // 删除
+  print: ['plant_depreciation:print'], // 打印
   changeStatus: ['plant_depreciation:change_status'] // 更改状态
+}
+
+// 费用录入/设备折旧
+export const contractDeviceDepreciationPM = {
+  get: ['contract_device_depreciation:get'], // 列表
+  add: ['contract_device_depreciation:add'], // 新增
+  edit: ['contract_device_depreciation:edit'], // 修改
+  del: ['contract_device_depreciation:del'], // 删除
+  print: ['contract_device_depreciation:print'], // 打印
+  import: ['contract_device_depreciation:import'], // 导入
+  download: ['contract_device_depreciation:download'], // 下载
+  changeStatus: ['contract_device_depreciation:change_status'] // 更改状态
 }
 
 // 费用录入/水电费

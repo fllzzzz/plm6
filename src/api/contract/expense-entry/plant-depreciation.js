@@ -45,7 +45,7 @@ export function editStatus({ id, boolStatus }) {
   return request({
     module: 'contract',
     url: `contract/fixed-assets-depreciation/${id}/${boolStatus}`,
-    method: 'delete'
+    method: 'put'
   })
 }
 export default { get, add, edit, del }

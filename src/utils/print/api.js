@@ -32,6 +32,9 @@ const projectWarehouseRecord = contract.warehouseRecord
 
 const waterRecord = contract.waterElectricityRecord
 const electricRecord = contract.waterElectricityRecord
+const contractPlantDepreciationRecord = contract.plantDepreciationRecord
+const contractDeviceDepreciationRecord = contract.deviceDepreciationRecord
+
 const gasRecord = contract.gasRecord
 const expenseReimburseList = contract.expenseReimburseList
 const managementSalaryList = contract.managementSalaryList
@@ -180,6 +183,8 @@ export default {
   projectWarehouseRecord, // 销售管理入库记录
   waterRecord, // 水费
   electricRecord, // 电费
+  contractPlantDepreciationRecord, // 厂房折旧
+  contractDeviceDepreciationRecord, // 设备折旧
   gasRecord, // 气体统计
   expenseReimburseList, // 费用报销
   managementSalaryList, // 管理人员工资清单

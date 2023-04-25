@@ -83,6 +83,8 @@ const tableType = {
 
   waterRecord: { L: '水费清单', M: 'expense_entry', T: mt.contract.L + ' / ' + contract.expense_entry },
   electricRecord: { L: '电费清单', M: 'expense_entry', T: mt.contract.L + ' / ' + contract.expense_entry },
+  contractPlantDepreciationRecordRecord: { L: '厂房折旧清单', M: 'expense_entry', T: mt.contract.L + ' / ' + contract.expense_entry },
+  contractDeviceDepreciationRecord: { L: '设备折旧清单', M: 'expense_entry', T: mt.contract.L + ' / ' + contract.expense_entry },
   gasRecord: { L: '气体费用清单', M: 'expense_entry', T: mt.contract.L + ' / ' + contract.expense_entry },
   expenseReimburseList: { L: '费用报销清单', M: 'expense_entry', T: mt.contract.L + ' / ' + contract.expense_entry },
   managementSalaryList: { L: '人员工资清单', M: 'expense_entry', T: mt.contract.L + ' / ' + contract.expense_entry },

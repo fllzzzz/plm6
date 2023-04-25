@@ -31,8 +31,12 @@ function durationCalculation({ header, table = [], footer, qrCode }) {
 // 处理合同台账收付款比例
 function handleRate({ header, table = [], footer, qrCode }) {
   const _table = table.map(row => {
+    // 同台账：收付款比例
     row.collectionRate *= 100 || 0
     row.invoiceRate *= 100 || 0
+    // 设备折旧：折旧率
+    row.yearDepreciationRate *= 100 || 0
+    row.monthDepreciationRate *= 100 || 0
     return row
   })
   return {

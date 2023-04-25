@@ -20,7 +20,17 @@
       />
       <rrOperation />
     </div>
-    <crudOperation />
+    <crudOperation>
+      <template #viewLeft>
+        <print-table
+          v-permission="crud.permission.print"
+          api-key="contractPlantDepreciationRecord"
+          :params="{ type: query.type }"
+          size="mini"
+          type="warning"
+        />
+      </template>
+    </crudOperation>
   </div>
 </template>
 <script setup>
