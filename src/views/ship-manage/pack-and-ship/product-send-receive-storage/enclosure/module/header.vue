@@ -15,7 +15,7 @@
       <project-radio-button size="small" :type="'all'" v-model="query.projectId" class="filter-item" @change="crud.toQuery" />
       <common-radio-button
         type="enum"
-        v-model="category"
+        v-model="query.category"
         :options="enclosureTypeEnum.ENUM"
         default
         placeholder="请选择围护类型"

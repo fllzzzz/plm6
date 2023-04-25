@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <template v-if="globalProject && globalProject.projectContentList && globalProject.projectContentList.length > 0">
+    <template v-if="pageShow">
       <!--工具栏-->
       <div class="head-container">
         <mHeader :project-id="globalProjectId" @currentChange="currentChange" @currentAreaChange="currentAreaChange"/>
@@ -55,20 +55,6 @@
           <span v-else>{{ row.quantity }}</span>
         </template>
       </el-table-column>
-      <el-table-column v-if="columns.visible('useProperty')" prop="useProperty" label="使用范围" align="center" min-width="120px">
-      <template #default="{ row }">
-        <common-select
-          v-if="row.isModify"
-          v-model="row.useProperty"
-          :options="auxiliaryMaterialUseTypeEnum.ENUM"
-          type="enum"
-          size="small"
-          clearable
-          placeholder="使用范围"
-        />
-        <span v-else>{{ auxiliaryMaterialUseTypeEnum.VL[row.useProperty] }}</span>
-      </template>
-    </el-table-column>
       <el-table-column
         v-if="checkPermission([...permission.edit, ...permission.del])"
         label="操作"
@@ -103,25 +89,29 @@
       <pagination />
       <mForm />
     </template>
+    <template v-else>
+      <span style="color:red;font-size:13px;">当前项目内容没有包含围护制品，请到合同管理中进行配置</span>
+    </template>
   </div>
 </template>
 
 <script setup>
-import crudApi from '@/api/plan/technical-manage/standard-part'
-import { provide, ref } from 'vue'
+import crudApi from '@/api/enclosure/enclosure-plan/standard-part'
+import { watch, provide, ref } from 'vue'
 
 import { isNotBlank } from '@data-type/index'
+import { TechnologyTypeAllEnum } from '@enum-ms/contract'
 import { validate } from '@compos/form/use-table-validate'
-import { auxiliaryMaterialUseTypeEnum } from '@enum-ms/plan'
 import checkPermission from '@/utils/system/check-permission'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
-import pagination from '@crud/Pagination'
 import { mapGetters } from '@/store/lib'
+import { ElMessage } from 'element-plus'
+import { enclosureStandardPartPM as permission } from '@/page-permission/enclosure'
+
+import pagination from '@crud/Pagination'
 import mHeader from './module/header'
 import mForm from './module/form'
-import { ElMessage } from 'element-plus'
-import { planStandardPartListPM as permission } from '@/page-permission/plan'
 
 const { globalProject, globalProjectId } = mapGetters(['globalProject', 'globalProjectId'])
 
@@ -136,9 +126,39 @@ const tableRef = ref()
 const originRow = ref({})
 const currentMonomer = ref({})
 const currentArea = ref({})
+
+const typeOption = ref([])
+const pageShow = ref(false)
+const techOptions = [
+  {
+    name: '压型彩板',
+    no: TechnologyTypeAllEnum.PROFILED_PLATE.V,
+    alias: 'ENCLOSURE'
+  },
+  {
+    name: '压型楼承板',
+    no: TechnologyTypeAllEnum.PRESSURE_BEARING_PLATE.V,
+    alias: 'ENCLOSURE'
+  },
+  {
+    name: '桁架楼承板',
+    no: TechnologyTypeAllEnum.TRUSS_FLOOR_PLATE.V,
+    alias: 'ENCLOSURE'
+  },
+  {
+    name: '夹芯板',
+    no: TechnologyTypeAllEnum.SANDWICH_BOARD.V,
+    alias: 'ENCLOSURE'
+  },
+  {
+    name: '折边件',
+    no: TechnologyTypeAllEnum.BENDING.V,
+    alias: 'ENCLOSURE'
+  }
+]
 const { crud, columns, CRUD } = useCRUD(
   {
-    title: '配套件清单',
+    title: '围护配套件清单',
     sort: ['id.desc'],
     permission: { ...permission },
     optShow: { ...optShow },
@@ -155,6 +175,22 @@ const { maxHeight } = useMaxHeight({
   extraHeight: 40
 })
 
+watch(
+  () => globalProject.value,
+  (val) => {
+    typeOption.value = []
+    if (isNotBlank(val)) {
+      techOptions.forEach((v) => {
+        if (val.projectContentList.findIndex((k) => Number(k.no) === v.no) > -1) {
+          typeOption.value.push(v)
+        }
+      })
+      pageShow.value = typeOption.value.length > 0
+    }
+  },
+  { deep: true, immediate: true }
+)
+
 function currentChange(val) {
   currentMonomer.value = val
 }
@@ -169,7 +205,6 @@ provide('currentArea', currentArea)
 
 const tableRules = {
   name: [{ required: true, message: '请输入名称', trigger: 'blur' }],
-  useProperty: [{ required: true, message: '请输入选择使用范围', trigger: 'change' }],
   specification: [{ required: true, message: '请输入规格', trigger: 'blur' }],
   measureUnit: [{ required: true, message: '请输入单位', trigger: 'blur' }],
   quantity: [{ required: true, message: '请输入数量', trigger: 'change' }]
@@ -234,12 +269,6 @@ async function rowSubmit(row) {
 CRUD.HOOK.handleRefresh = (crud, data) => {
   data.data.content.map(v => {
     v.projectId = v.project.id
-    if (isNotBlank(v.monomer)) {
-      v.monomerId = v.monomer.id
-    }
-    if (isNotBlank(v.area)) {
-      v.areaId = v.area.id
-    }
     return v
   })
 }

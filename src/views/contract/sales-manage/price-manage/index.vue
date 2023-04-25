@@ -24,6 +24,7 @@
               v-model="monomerId"
               :project-id="projectId"
               class="filter-item"
+              clearable
               @change="handleMonomerChange"
               @getAreaInfo="getAreaInfo"
             />

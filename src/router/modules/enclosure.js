@@ -1,6 +1,6 @@
 // 路由：围护
 export default {
-  id: 888,
+  id: 11,
   name: '围护MES',
   children: [
     {
@@ -36,6 +36,41 @@ export default {
           hidden: false,
           component: '/enclosure/enclosure-list/sandwich-board/index',
           meta: { title: '夹芯板', icon: 'project', noCache: true }
+        },
+        {
+          name: 'enclosureProfiledPlate',
+          path: 'enclosure-profiled-plate',
+          hidden: false,
+          component: '/enclosure/enclosure-list/profiled-plate/index',
+          meta: { title: '压型彩板', icon: 'project', noCache: true }
+        },
+        {
+          name: 'enclosurePressureBearingPlate',
+          path: 'enclosure-pressure-bearing-plate',
+          hidden: false,
+          component: '/enclosure/enclosure-list/pressure-bearing-plate/index',
+          meta: { title: '压型楼承板', icon: 'project', noCache: true }
+        },
+        {
+          name: 'enclosureTrussFloorPlate',
+          path: 'enclosure-truss-floor-plate',
+          hidden: false,
+          component: '/enclosure/enclosure-list/truss-floor-plate/index',
+          meta: { title: '桁架楼承板', icon: 'project', noCache: true }
+        },
+        {
+          name: 'enclosureBending',
+          path: 'enclosure-bending',
+          hidden: false,
+          component: '/enclosure/enclosure-list/bending/index',
+          meta: { title: '折边件', icon: 'project', noCache: true }
+        },
+        {
+          name: 'enclosureStandardPart',
+          path: 'enclosure-standard-part',
+          hidden: false,
+          component: '/enclosure/enclosure-list/standard-part/index',
+          meta: { title: '配套件', icon: 'project', noCache: true }
         }
       ]
     },

@@ -480,7 +480,7 @@ const optShow = {
 const tableRef = ref()
 const { crud, columns, CRUD } = useCRUD(
   {
-    title: '夹芯板清单',
+    title: '压型彩板清单',
     sort: ['id.desc'],
     permission: { ...permission },
     optShow: { ...optShow },

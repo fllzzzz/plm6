@@ -50,7 +50,7 @@
       />
       <common-radio-button
         v-model="query.productType"
-        :options="contractSaleTypeEnum.ENUM"
+        :options="[packTypeEnum.STRUCTURE,packTypeEnum.ENCLOSURE]"
         default
         type="enumSL"
         size="small"
@@ -87,7 +87,7 @@
 
 <script setup>
 import { orderSourceTypeEnum, projectStatusEnum } from '@enum-ms/contract'
-import { contractSaleTypeEnum } from '@enum-ms/mes'
+import { packTypeEnum } from '@enum-ms/mes'
 
 import { regHeader } from '@compos/use-crud'
 import crudOperation from '@crud/CRUD.operation'
