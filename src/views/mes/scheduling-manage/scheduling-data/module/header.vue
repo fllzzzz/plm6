@@ -12,6 +12,7 @@
         placeholder="选择年"
         format="YYYY"
         value-format="x"
+        :clearable="false"
         :disabled-date="disabledDate"
         @change="handleYearChange"
       />
@@ -25,6 +26,7 @@
         placeholder="选择月"
         format="YYYY-MM"
         value-format="x"
+        :clearable="false"
         :disabled-date="disabledDate"
         @change="handleMonthChange"
       />
@@ -76,7 +78,7 @@
 </template>
 
 <script setup>
-import { ref, watch, inject } from 'vue'
+import { ref, watch } from 'vue'
 import { getScheduleSummary } from '@/api/mes/scheduling-manage/scheduling-data.js'
 import { timeTypeEnum } from '@enum-ms/contract'
 import { regHeader } from '@compos/use-crud'
