@@ -179,6 +179,16 @@ export const summaryListPM = {
 export const steelStatisticalPM = {
   get: ['steel_statistical:get'] // 钢材使用量列表
 }
+
+// 技术管理/项目配套件清单
+export const planStandardPartListPM = {
+  get: ['plan_standard_part_list:get'], // 列表
+  add: ['plan_standard_part_list:add'], // 添加
+  edit: ['plan_standard_part_list:edit'], // 修改
+  del: ['plan_standard_part_list:del'], // 删除
+  import: ['plan_standard_part_list:import'], // 导入清单
+  templateDownload: ['plan_standard_part_list:templateDownload'] // 下载模板
+}
 // --------------------------- 技术管理 end --------------------------------
 
 // ########################################################################

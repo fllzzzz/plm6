@@ -121,16 +121,10 @@ import { mapGetters } from '@/store/lib'
 import mHeader from './module/header'
 import mForm from './module/form'
 import { ElMessage } from 'element-plus'
-// import { auxiliaryMaterialPM as permission } from '@/page-permission/plan'
+import { planStandardPartListPM as permission } from '@/page-permission/plan'
 
 const { globalProject, globalProjectId } = mapGetters(['globalProject', 'globalProjectId'])
 
-const permission = {
-  get: ['get'],
-  add: ['add'],
-  edit: ['edit'],
-  del: ['del']
-}
 const optShow = {
   add: true,
   edit: false,
