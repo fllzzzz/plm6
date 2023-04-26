@@ -202,7 +202,7 @@
               <el-form-item label="围护运输方式" prop="enclosureTransportMode">
                 <common-radio v-model="form.enclosureTransportMode" :options="transportModeEnum.ENUM" type="enum" />
               </el-form-item>
-              <el-form-item label="围护结算方式与工程量" prop="measureModeList" v-if="form.measureModeList?.length>0">
+              <el-form-item label="围护结算方式与工程量" prop="measureModeList" v-if="form.measureModeList?.length>0" label-width="220px">
                 <template v-if="form.measureModeList.length>0">
                   <div v-for="(item,index) in form.measureModeList" :key="index" style="display:flex;">
                     <span style="float:left;width:90px;text-align:right;">{{TechnologyTypeAllEnum.VL[item.no]}}：</span>
@@ -219,6 +219,7 @@
                     style="width: 120px;margin-left:10px;"
                     placeholder="工程量"
                   />
+                  <span style="margin-left:2px;">{{item.measureMode===enclosureSettlementTypeEnum.LENGTH.V?'m':'㎡'}}</span>
                   </div>
                 </template>
               </el-form-item>
@@ -249,12 +250,13 @@
               <el-form-item label="围护运输方式" prop="enclosureTransportMode">
                 <common-radio v-model="detail.enclosureTransportMode" :options="transportModeEnum.ENUM" type="enum" :disabled="true"/>
               </el-form-item>
-              <el-form-item label="围护结算方式与工程量" prop="measureModeList" v-if="detail.measureModeList?.length>0">
+              <el-form-item label="围护结算方式与工程量" prop="measureModeList" v-if="detail.measureModeList?.length>0" label-width="220px">
                 <template v-if="detail.measureModeList.length>0">
                   <div v-for="(item,index) in detail.measureModeList" :key="index" style="display:flex;">
                     <span style="float:left;width:90px;text-align:right;">{{TechnologyTypeAllEnum.VL[item.no]}}：</span>
                     <common-radio style="float:left;" v-model="item.measureMode" :options="enclosureSettlementTypeEnum.ENUM" type="enum" :disabled="true"/>
                     <span style="margin-left:5px;">工程量：{{item.quantityWork}}</span>
+                    <span style="margin-left:2px;">{{item.measureMode===enclosureSettlementTypeEnum.LENGTH.V?'m':'㎡'}}</span>
                   </div>
                 </template>
               </el-form-item>
@@ -557,7 +559,7 @@ const rules = {
     { required: true, message: '请选择结构类型', trigger: 'change' }
   ],
   measureModeList: [
-    { validator: validateMeasureModeList, message: '请输入围护结算与工程量', trigger: 'change' }
+    { validator: validateMeasureModeList, message: '请输入围护结算与工程量', trigger: ['change', 'blur'] }
   ]
 }
 

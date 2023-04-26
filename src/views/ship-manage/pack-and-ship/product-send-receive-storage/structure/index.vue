@@ -34,8 +34,8 @@
         <template v-slot="scope">
           <span>{{
             crud.query.weightStatus === weightTypeEnum.NET.V
-              ? scope.row.quantity + ' / ' + scope.row.totalNetWeight
-              : scope.row.quantity + ' / ' + scope.row.totalGrossWeight
+              ? scope.row.quantity + ' / ' + convertUnits(scope.row.totalNetWeight, 'kg', 't', 2)
+              : scope.row.quantity + ' / ' + convertUnits(scope.row.totalGrossWeight, 'kg', 't', 2)
           }}</span>
         </template>
       </el-table-column>
@@ -50,8 +50,8 @@
         <template v-slot="scope">
           <span style="cursor: pointer; color: #0d84ff" @click="openDetail(scope.row, 'BEGINNING')">{{
             crud.query.weightStatus === weightTypeEnum.NET.V
-              ? scope.row.beginningQuantity + ' / ' + scope.row.beginningNetWeight
-              : scope.row.beginningQuantity + ' / ' + scope.row.beginningGrossWeight
+              ? scope.row.beginningQuantity + ' / ' + convertUnits(scope.row.beginningNetWeight, 'kg', 't', 2)
+              : scope.row.beginningQuantity + ' / ' + convertUnits(scope.row.beginningGrossWeight, 'kg', 't', 2)
           }}</span>
         </template>
       </el-table-column>
@@ -66,8 +66,8 @@
         <template v-slot="scope">
           <span style="cursor: pointer; color: #0d84ff" @click="openDetail(scope.row, 'INBOUND')">{{
             crud.query.weightStatus === weightTypeEnum.NET.V
-              ? scope.row.inboundQuantity + ' / ' + scope.row.inboundNetWeight
-              : scope.row.inboundQuantity + ' / ' + scope.row.inboundGrossWeight
+              ? scope.row.inboundQuantity + ' / ' + convertUnits(scope.row.inboundNetWeight, 'kg', 't', 2)
+              : scope.row.inboundQuantity + ' / ' + convertUnits(scope.row.inboundGrossWeight, 'kg', 't', 2)
           }}</span>
         </template>
       </el-table-column>
@@ -82,8 +82,8 @@
         <template v-slot="scope">
           <span style="cursor: pointer; color: #0d84ff" @click="openDetail(scope.row, 'OUTBOUND')">{{
             crud.query.weightStatus === weightTypeEnum.NET.V
-              ? scope.row.outboundQuantity + ' / ' + scope.row.outboundNetWeight
-              : scope.row.outboundQuantity + ' / ' + scope.row.outboundGrossWeight
+              ? scope.row.outboundQuantity + ' / ' + convertUnits(scope.row.outboundNetWeight, 'kg', 't', 2)
+              : scope.row.outboundQuantity + ' / ' + convertUnits(scope.row.outboundGrossWeight, 'kg', 't', 2)
           }}</span>
         </template>
       </el-table-column>
@@ -98,8 +98,8 @@
         <template v-slot="scope">
           <span style="cursor: pointer; color: #0d84ff" @click="openDetail(scope.row, 'STOCK')">{{
             crud.query.weightStatus === weightTypeEnum.NET.V
-              ? scope.row.stockQuantity + ' / ' + scope.row.stockNetWeight
-              : scope.row.stockQuantity + ' / ' + scope.row.stockGrossWeight
+              ? scope.row.stockQuantity + ' / ' + convertUnits(scope.row.stockNetWeight, 'kg', 't', 2)
+              : scope.row.stockQuantity + ' / ' + convertUnits(scope.row.stockGrossWeight, 'kg', 't', 2)
           }}</span>
         </template>
       </el-table-column>
@@ -140,6 +140,7 @@ import { mesProductSendReceiveStoragePM as permission } from '@/page-permission/
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import { DP } from '@/settings/config'
+import { convertUnits } from '@/utils/convert/unit'
 import checkPermission from '@/utils/system/check-permission'
 import { weightTypeEnum } from '@enum-ms/common'
 import mHeader from './module/header'
@@ -227,7 +228,7 @@ function getSummaries(param) {
       } else if (column.property !== 'list' && crud.query.weightStatus === weightTypeEnum.GROSS.V) {
         valueWeightKeys = column.property + 'GrossWeight'
       }
-      const valueWeight = data.map((item) => Number(item.sourceRow?.[valueWeightKeys]))
+      const valueWeight = data.map((item) => Number(convertUnits(item.sourceRow?.[valueWeightKeys], 'kg', 't', 2)))
       let valueWeightSum = 0
       if (!values.every((value) => isNaN(value))) {
         valuesSum = values.reduce((prev, curr) => {

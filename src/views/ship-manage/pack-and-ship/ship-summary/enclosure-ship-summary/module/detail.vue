@@ -87,12 +87,12 @@
         :show-overflow-tooltip="true"
         min-width="120px"
       />
-      <el-table-column key="netWeight" prop="netWeight" label="单重长（mm）" align="center" :show-overflow-tooltip="true">
+      <el-table-column key="netWeight" prop="netWeight" label="单长（mm）" align="center" :show-overflow-tooltip="true">
         <template #default="{ row }">
           <span>{{ weightStatus === weightTypeEnum.NET.V ? row.netWeight || '-' : row.grossWeight || '-' }}</span>
         </template>
       </el-table-column>
-      <el-table-column key="quantity" prop="quantity" label="数量（件）" align="center" :show-overflow-tooltip="true" width="80px" />
+      <el-table-column key="quantity" prop="quantity" label="数量（件）" align="center" :show-overflow-tooltip="true" width="90px" />
       <el-table-column key="totalNetWeight" prop="totalNetWeight" label="总长（米）" align="center" :show-overflow-tooltip="true">
         <template #default="{ row }">
           <span>{{ weightStatus === weightTypeEnum.NET.V ? row.totalNetWeight || '-' : row.totalGrossNetWeight || '-' }}</span>

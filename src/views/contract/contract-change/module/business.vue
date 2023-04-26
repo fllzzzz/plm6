@@ -80,12 +80,13 @@
             <el-form-item label="围护运输方式" prop="enclosureTransportMode">
               <span>{{ isNotBlank(detail.enclosureTransportMode) ? transportModeEnum.VL[detail.enclosureTransportMode] : '' }}</span>
             </el-form-item>
-            <el-form-item label="围护结算方式与工程量" prop="measureModeList" v-if="detail.measureModeList?.length>0">
+            <el-form-item label="围护结算方式与工程量" prop="measureModeList" v-if="detail.measureModeList?.length>0" label-width="220px">
               <template v-if="detail.measureModeList.length>0">
                 <div v-for="(item,index) in detail.measureModeList" :key="index" style="display:flex;">
                   <span style="float:left;width:90px;text-align:right;">{{TechnologyTypeAllEnum.VL[item.no]}}：</span>
-                <span style="float:left;">{{enclosureSettlementTypeEnum.VL[item.measureMode]}}</span>
+                  <span style="float:left;">{{enclosureSettlementTypeEnum.VL[item.measureMode]}}</span>
                   <span style="margin-left:5px;">工程量：{{item.quantityWork}}</span>
+                  <span style="margin-left:2px;">{{item.measureMode===enclosureSettlementTypeEnum.LENGTH.V?'m':'㎡'}}</span>
                 </div>
               </template>
             </el-form-item>
