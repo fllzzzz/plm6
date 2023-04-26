@@ -11,7 +11,9 @@
       <span v-if="info?.project"> 【{{ projectNameFormatter(info?.project) }}】 </span>
     </template>
     <template #titleRight>
-      <export-button size="mini" :params="{ id: props.info?.id }" :fn="exportScheduleExcel"> 下载 </export-button>
+      <export-button v-permission="permission?.trackPrint" size="mini" :params="{ id: props.info?.id }" :fn="exportScheduleExcel">
+        下载
+      </export-button>
     </template>
     <template #content>
       <el-row v-if="info?.materialType === materialPurchaseClsEnum.STEEL.V" :gutter="20" class="panel-group">
@@ -40,7 +42,7 @@
 
         <div style="flex: 1">
           <div class="table-title" style="background-color: #f5ffef">
-            <span>采购数据</span>
+            <span>入库数据</span>
           </div>
           <common-table v-loading="contentLoading" :data="inboundList" :max-height="maxHeight" style="width: 100%">
             <!-- 基础信息 -->
@@ -56,7 +58,7 @@
 
 <script setup>
 import { getSchedule, exportScheduleExcel } from '@/api/supply-chain/requisitions-manage/requisitions'
-import { defineProps, defineEmits, ref } from 'vue'
+import { defineProps, defineEmits, ref, inject } from 'vue'
 
 import { projectNameFormatter } from '@/utils/project'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
@@ -85,6 +87,7 @@ const props = defineProps({
 
 const { visible: drawerVisible, handleClose } = useVisible({ emit, props, field: 'visible', showHook })
 
+const permission = inject('permission')
 // 高度
 const { maxHeight } = useMaxHeight(
   {

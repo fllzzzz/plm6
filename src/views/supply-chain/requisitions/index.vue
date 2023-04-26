@@ -76,15 +76,20 @@
         show-overflow-tooltip
       >
         <template #default="{ row: { sourceRow: row } }">
-          <span
-            v-if="row.materialType === materialPurchaseClsEnum.STEEL.V"
-            @click="showTrackList(row)"
-            class="tc-primary"
-            style="cursor: pointer"
-          >
-            {{ row.inboundRate }}%
-          </span>
-          <common-button v-else icon="el-icon-view" size="mini" type="success" @click="showTrackList(row)" />
+          <template v-if="checkPermission(permission.trackGet)">
+            <span
+              v-if="row.materialType === materialPurchaseClsEnum.STEEL.V"
+              @click="showTrackList(row)"
+              class="tc-primary"
+              style="cursor: pointer"
+            >
+              {{ row.inboundRate }}%
+            </span>
+            <common-button v-else icon="el-icon-view" size="mini" type="success" @click="showTrackList(row)" />
+          </template>
+          <template v-else>
+            <span>{{ row.materialType === materialPurchaseClsEnum.STEEL.V ? row.inboundRate + '%' : '-' }}</span>
+          </template>
         </template>
       </el-table-column>
       <el-table-column
@@ -114,7 +119,7 @@
         <template #default="{ row: { sourceRow: row } }">
           <el-switch
             v-model="row.enabled"
-            :disabled="!checkPermission(permission.add) || (isOpenApproval && row.reviewStatus !== ddReviewStatusEnum.PASS.V)"
+            :disabled="!checkPermission(permission.editStatus) || (isOpenApproval && row.reviewStatus !== ddReviewStatusEnum.PASS.V)"
             active-color="#409EFF"
             inactive-color="#F56C6C"
             :active-value="enabledEnum.TRUE.V"
@@ -124,7 +129,7 @@
         </template>
       </el-table-column>
       <!--详情与审核-->
-      <el-table-column v-permission="[...permission.detail, ...permission.del]" align="center" label="操作" width="170">
+      <el-table-column v-permission="[...permission.detail, ...permission.edit, ...permission.del]" align="center" label="操作" width="170">
         <template #default="{ row: { sourceRow: row } }">
           <udOperation
             show-detail

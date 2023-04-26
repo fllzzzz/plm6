@@ -99,6 +99,7 @@
 <script setup>
 import { defineExpose, inject, reactive, watch, watchEffect } from 'vue'
 import { matClsEnum } from '@/utils/enum/modules/classification'
+import { measureTypeEnum } from '@/utils/enum/modules/wms'
 import { createUniqueString } from '@/utils/data-type/string'
 import { positiveNumPattern } from '@/utils/validate/pattern'
 import { isNotBlank, toPrecision } from '@/utils/data-type'

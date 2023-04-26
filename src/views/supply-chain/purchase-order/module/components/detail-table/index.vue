@@ -34,7 +34,7 @@ const comp = computed(() => {
     case materialPurchaseClsEnum.MATERIAL.V:
       return RawMaterialTable
     default:
-      return undefined
+      return RawMaterialTable
   }
 })
 </script>
