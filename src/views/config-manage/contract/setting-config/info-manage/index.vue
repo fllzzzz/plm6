@@ -24,7 +24,7 @@
         :show-overflow-tooltip="true"
         label="模板名称"
         align="center"
-        min-width="120"
+        min-width="100"
       >
         <template v-slot="scope">
           <table-cell-tag :show="scope.row.isDefault" name="默认" />
@@ -38,13 +38,13 @@
         :show-overflow-tooltip="true"
         label="描述信息"
         align="center"
-        min-width="120"
+        min-width="180"
       >
         <template v-slot="scope">
           <div>{{ scope.row.remark }}</div>
         </template>
       </el-table-column>
-      <el-table-column v-if="columns.visible('remark')" key="remark" prop="remark" label="状态" align="center" min-width="260">
+      <el-table-column v-if="columns.visible('remark')" key="remark" prop="remark" label="状态" align="center" width="140">
         <template v-slot="scope">
           <el-switch
             v-model="scope.row.status"

@@ -151,9 +151,9 @@ export async function calcSteelCoilWeight({ name, length, width, thickness, quan
   const len = convertUnits(length, lengthUnit, 'm')
   const wth = convertUnits(width, widthUnit, 'm')
   // 计算结果为 kg
-  theoryWeight = len * wth * thickness * density
+  theoryWeight = len * wth * thickness * density * quantity
   theoryWeight = convertUnits(theoryWeight, 'kg', weightUnit, weightPrecision)
-  return toPrecision(theoryWeight * quantity, weightPrecision)
+  return toPrecision(theoryWeight, weightPrecision)
 }
 
 // 钢材入库表单格式转换
