@@ -111,7 +111,7 @@
     <!-- 收付款 -->
     <paymentAndInvoice v-model="tabVisible" :currentRow="currentRow" :tabName="activeName" :propertyType="crud.query.propertyType" @success="crud.toQuery"/>
     <!-- 结算审核 -->
-    <settleForm v-model="settleVisible" :detail-info="currentRow" :showType="showType" @success="crud.toQuery"/>
+    <!-- <settleForm v-model="settleVisible" :detail-info="currentRow" :showType="showType" @success="crud.toQuery"/> -->
     <!--分页组件-->
     <pagination />
   </div>
@@ -135,7 +135,7 @@ import { isNotBlank } from '@data-type/index'
 import { matClsEnum } from '@/utils/enum/modules/classification'
 import EO from '@enum'
 import paymentAudit from './module/payment-audit/index'
-import settleForm from '@/views/supply-chain/purchase-reconciliation-manage/payment-ledger/module/settle-form'
+// import settleForm from '@/views/supply-chain/purchase-reconciliation-manage/payment-ledger/module/settle-form'
 import tableCellTag from '@comp-common/table-cell-tag/index.vue'
 
 const optShow = {
