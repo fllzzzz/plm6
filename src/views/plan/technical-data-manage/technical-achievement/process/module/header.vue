@@ -1,43 +1,112 @@
 <template>
   <div>
     <div v-show="crud.searchToggle">
-      <el-input
-        v-model="query.serialNumber"
-        size="small"
-        placeholder="编号搜索"
-        style="width: 170px"
+      <project-radio-button size="small" :type="'all'" v-model="query.projectId" class="filter-item" @change="crud.toQuery" />
+      <common-radio-button
+        v-model="query.useType"
+        :options="processUseTypeEnum.ENUM"
+        show-option-all
         class="filter-item"
+        type="enum"
+        style="margin-bottom:10px;"
       />
-       <el-input
-        v-model="query.classifyName"
-        size="small"
-        placeholder="规格搜索"
-        style="width: 170px; margin-left: 0"
+      <common-radio-button
+        v-model="query.processType"
+        :options="planProcessTypeEnum.ENUM"
+        show-option-all
         class="filter-item"
+        type="enum"
+        style="margin-bottom:10px;"
       />
       <el-input
         v-model="query.fileName"
-        placeholder="材质搜索"
+        placeholder="文件名搜索"
         class="filter-item"
         style="width: 200px;"
         size="small"
+        clearable
+      />
+      <el-input
+        v-model="query.fileName"
+        placeholder="构件类型搜索"
+        class="filter-item"
+        style="width: 200px;"
+        size="small"
+        clearable
+      />
+      <el-input
+        v-model="query.fileName"
+        placeholder="构件类型搜索"
+        class="filter-item"
+        style="width: 200px;"
+        size="small"
+        clearable
+      />
+      <el-input
+        v-model="query.fileName"
+        placeholder="构件名称搜索"
+        class="filter-item"
+        style="width: 200px;"
+        size="small"
+        clearable
+      />
+      <el-input
+        v-model="query.fileName"
+        placeholder="构件编号"
+        class="filter-item"
+        style="width: 200px;"
+        size="small"
+        clearable
+      />
+      <el-input
+        v-model="query.fileName"
+        placeholder="构件规格"
+        class="filter-item"
+        style="width: 200px;"
+        size="small"
+        clearable
+      />
+      <el-input
+        v-model="query.fileName"
+        placeholder="构件材质"
+        class="filter-item"
+        style="width: 200px;"
+        size="small"
+        clearable
       />
       <rrOperation/>
     </div>
+    <crudOperation :permission="crud.permission">
+      <template #optLeft>
+        <common-button type="warning" size="mini" @click="emit('handleUpload')" v-permission="crud.permission.import" class="filter-item">
+          上传工艺文件
+        </common-button>
+      </template>
+    </crudOperation>
   </div>
 </template>
 
 <script setup>
-// import { defineProps, ref, defineEmits } from 'vue'
+import { defineProps, ref, defineEmits } from 'vue'
 import { regHeader } from '@compos/use-crud'
+
+import { processUseTypeEnum, planProcessTypeEnum } from '@enum-ms/plan'
+import checkPermission from '@/utils/system/check-permission'
+
 import rrOperation from '@crud/RR.operation'
-// import checkPermission from '@/utils/system/check-permission'
+import crudOperation from '@crud/CRUD.operation'
 
 const defaultQuery = {
-  monomerId: undefined
+  projectId: undefined
 }
 
-// const emit = defineEmits(['currentChange', 'handleUpload'])
+const emit = defineEmits(['currentChange', 'handleUpload'])
 const { crud, query } = regHeader(defaultQuery)
+const props = defineProps({
+  projectId: {
+    type: [Number, String],
+    default: undefined
+  }
+})
 
 </script>

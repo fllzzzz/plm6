@@ -1,79 +1,57 @@
 <template>
   <div class="app-container">
-    <!-- 统一查询条件 -->
-    <div style="margin-bottom:15px;padding-bottom:10px;border-bottom:1px solid #eee;">
-      <monomer-select
-        ref="monomerSelectRef"
-        v-model="query.monomerId"
-        :project-id="globalProjectId"
-        class="filter-item"
-        @getAreaInfo="getAreaInfo"
-      />
-      <common-select
-        v-model="query.areaId"
-        :options="areaInfo"
-        type="other"
-        :dataStructure="{ key: 'id', label: 'name', value: 'id' }"
-        size="small"
-        clearable
-        placeholder="请选择区域"
-        class="filter-item"
-        style="width:200px;margin-left:10px;"
-      />
+    <!--工具栏-->
+    <div class="head-container">
+      <mHeader :project-id="globalProjectId" @currentChange="currentChange" @handleUpload="handleUpload"/>
     </div>
-    <div class="wrap">
-      <div class="wrap-left">
-        <structure-type />
-      </div>
-      <div class="wrap-center">
-          <!--工具栏-->
-          <div class="head-container">
-            <mHeader />
-          </div>
-          <!--表格渲染-->
-          <common-table
-            ref="tableRef"
-            v-loading="crud.loading"
-            :data="crud.data"
-            :empty-text="crud.emptyText"
-            :max-height="maxHeight"
-            return-source-data
-            :showEmptySymbol="false"
-            style="width: 100%"
-            @selection-change="crud.selectionChangeHandler"
-          >
-          <el-table-column type="selection" width="55" align="center" />
-          <el-table-column prop="index" label="序号" align="center" width="60" type="index" />
-          <el-table-column key="createTime" prop="createTime" label="日期" align="center">
-            <template v-slot="scope">
-              <div>{{ scope.row.createTime? parseTime(scope.row.createTime,'{y}-{m}-{d}'): '-' }}</div>
-            </template>
-          </el-table-column>
-          <el-table-column v-if="columns.visible('createUserName')" key="createUserName" prop="createUserName" :show-overflow-tooltip="true" label="导入人" align="center"/>
-          <el-table-column v-if="columns.visible('fileName')" key="fileName" prop="fileName" :show-overflow-tooltip="true" label="文件" align="center"/>
-          <!--编辑与删除-->
-          <el-table-column
-            v-if="checkPermission([...permission.edit, ...permission.download])"
-            label="操作"
-            width="150px"
-            align="center"
-            fixed="right"
-          >
-            <template v-slot="scope">
-              <!-- <common-button size="mini" type="primary" @click="editRow(scope.row)" v-permission="permission.edit">替换</common-button> -->
-              <!-- 下载 -->
-              <!-- <e-operation :data="scope.row" :permission="permission.download" /> -->
-            </template>
-          </el-table-column>
-        </common-table>
-        <!--分页组件-->
-        <pagination />
-      </div>
-      <div class="wrap-right">
-        <technology-file />
-      </div>
-    </div>
-  <uploadForm v-model="uploadVisible" :currentMonomer="currentMonomer" :globalProject="globalProject" :dataType="crud.query.dataType" @success="crud.toQuery" :currentRow="currentRow"/>
+    <!--表格渲染-->
+    <common-table
+      ref="tableRef"
+      v-loading="crud.loading"
+      :data="[{}]"
+      :empty-text="crud.emptyText"
+      :max-height="maxHeight"
+      return-source-data
+      :showEmptySymbol="false"
+      style="width: 100%"
+    >
+    <el-table-column prop="index" label="序号" align="center" width="60" type="index" />
+    <el-table-column v-if="columns.visible('fileName')" key="fileName" prop="fileName" :show-overflow-tooltip="true" label="工艺类型" align="center"/>
+    <el-table-column v-if="columns.visible('fileName')" key="fileName" prop="fileName" :show-overflow-tooltip="true" label="文件类型" align="center"/>
+    <el-table-column v-if="columns.visible('fileName')" key="fileName" prop="fileName" :show-overflow-tooltip="true" label="所属项目" align="center"/>
+    <el-table-column v-if="columns.visible('fileName')" key="fileName" prop="fileName" :show-overflow-tooltip="true" label="文件名称" align="center"/>
+    <el-table-column v-if="columns.visible('fileName')" key="fileName" prop="fileName" :show-overflow-tooltip="true" label="备注" align="center"/>
+    <el-table-column v-if="columns.visible('fileName')" key="fileName" prop="fileName" :show-overflow-tooltip="true" label="绑定构件数量" align="center"/>
+    <el-table-column v-if="columns.visible('fileName')" key="fileName" prop="fileName" :show-overflow-tooltip="true" label="修订版本" align="center"/>
+    <el-table-column key="createTime" prop="createTime" label="上传日期" align="center">
+      <template v-slot="scope">
+        <div>{{ scope.row.createTime? parseTime(scope.row.createTime,'{y}-{m}-{d}'): '-' }}</div>
+      </template>
+    </el-table-column>
+    <el-table-column v-if="columns.visible('createUserName')" key="createUserName" prop="createUserName" :show-overflow-tooltip="true" label="上传人" align="center"/>
+    <el-table-column v-if="columns.visible('fileName')" key="fileName" prop="fileName" :show-overflow-tooltip="true" label="文件" align="center"/>
+    <!--编辑与删除-->
+    <el-table-column
+      v-if="checkPermission([...permission.edit, ...permission.download])"
+      label="操作"
+      width="220px"
+      align="center"
+      fixed="right"
+    >
+      <template v-slot="scope">
+        <common-button size="mini" icon="el-icon-view" type="info" @click="detailVisible=true" />
+        <common-button size="mini" icon="el-icon-edit" type="primary" @click="modifyVisible=true" v-permission="permission.edit" />
+        <common-button size="mini" type="success" @click="bindVisible=true">绑定构件</common-button>
+        <!-- 下载 -->
+        <!-- <e-operation :data="scope.row" :permission="permission.download" /> -->
+      </template>
+    </el-table-column>
+  </common-table>
+  <!--分页组件-->
+  <pagination />
+  <detail v-model="detailVisible" :currentMonomer="currentMonomer" :globalProject="globalProject" :dataType="crud.query.dataType" @success="crud.toQuery" :currentRow="currentRow"/>
+  <modify-form v-model="modifyVisible" :currentMonomer="currentMonomer" :globalProject="globalProject" :dataType="crud.query.dataType" @success="crud.toQuery" :currentRow="currentRow" />
+  <artifact-bind-form v-model="bindVisible" :currentMonomer="currentMonomer" :globalProject="globalProject" :dataType="crud.query.dataType" @success="crud.toQuery" :currentRow="currentRow" />
   </div>
 </template>
 
@@ -87,29 +65,29 @@ import checkPermission from '@/utils/system/check-permission'
 import { parseTime } from '@/utils/date'
 import { changeFileListPM as permission } from '@/page-permission/plan'
 
-import uploadForm from './module/upload-form'
+import detail from './module/detail'
+import modifyForm from './module/modify-form'
+import artifactBindForm from './module/artifact-bind-form'
 // import eOperation from '@crud/E.operation'
 import pagination from '@crud/Pagination'
 import mHeader from './module/header'
-import structureType from './module/structure-type'
-import technologyFile from './module/technology-file'
-import monomerSelect from '@/components-system/plan/monomer-select'
 
 const { globalProjectId, globalProject } = mapGetters(['globalProjectId', 'globalProject'])
 
 const optShow = {
   add: false,
   edit: false,
-  del: true,
+  del: false,
   download: false
 }
 
 const tableRef = ref()
 const currentRow = ref({})
 const currentMonomer = ref({})
-const uploadVisible = ref(false)
-const query = ref({})
-const areaInfo = ref([])
+
+const modifyVisible = ref(false)
+const detailVisible = ref(false)
+const bindVisible = ref(false)
 const { crud, columns, CRUD } = useCRUD(
   {
     title: '工艺文件',
@@ -124,7 +102,7 @@ const { crud, columns, CRUD } = useCRUD(
 )
 
 const { maxHeight } = useMaxHeight({
-  wrapperBox: '.plan-process',
+  wrapperBox: '.changeFile',
   paginate: true,
   extraHeight: 40
 })
@@ -139,8 +117,9 @@ watch(
   { immediate: true, deep: true }
 )
 
-function getAreaInfo(val) {
-  areaInfo.value = val || []
+function editRow(row) {
+  currentRow.value = row
+  uploadVisible.value = true
 }
 
 function currentChange(val) {
@@ -186,18 +165,5 @@ $font-size: 1.5em;
   border: 1px solid;
   border-radius: 50%;
   line-height: $font-size;
-}
-.wrap{
-  display:flex;
-  .wrap-left{
-    width:260px;
-  }
-  .wrap-center{
-    flex:1;
-    padding:0 16px;
-  }
-  .wrap-right{
-     width:280px;
-  }
 }
 </style>
