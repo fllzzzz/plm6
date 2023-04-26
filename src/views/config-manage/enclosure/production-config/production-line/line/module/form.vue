@@ -19,7 +19,8 @@
           :disabled="isEdit"
           v-model="form.workshopId"
           :factory-id="form.factoryId"
-          placeholder="请先选择工厂"
+          :workshop-type="workshopTypeEnum.ENCLOSURE.V"
+          placeholder="请先选择车间"
           style="width: 270px"
         />
       </el-form-item>
@@ -81,6 +82,7 @@ import { getProductionLineName } from '@/api/config/enclosure/production-config/
 import { ref, computed, onMounted, watchEffect } from 'vue'
 
 import { TechnologyTypeAllEnum } from '@enum-ms/contract'
+import { workshopTypeEnum } from '@enum-ms/common'
 
 import { regForm } from '@compos/use-crud'
 import factorySelect from '@comp-base/factory-select.vue'
