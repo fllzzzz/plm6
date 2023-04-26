@@ -86,7 +86,8 @@ const params = computed(() => {
   // 汇总列表
   return {
     supplierId: props.detailInfo.supplierId,
-    projectId: props.detailInfo.projectId
+    projectId: props.detailInfo.projectId,
+    ...query.value
   }
 })
 

@@ -81,7 +81,7 @@
      <!-- 付款记录 -->
     <paymentRecord v-model="paymentVisible" :permission="permission" :detail-info="detailInfo" :query-date="{startDate:crud.query.startDate,endDate:crud.query.endDate}"/>
     <!-- 物流记录 -->
-    <logisticsRecord v-model="logisticsVisible" :permission="permission" :detail-info="detailInfo" />
+    <logisticsRecord v-model="logisticsVisible" :permission="permission" :detail-info="detailInfo" :query-date="{startDate:crud.query.startDate,endDate:crud.query.endDate}" />
   </div>
 </template>
 
