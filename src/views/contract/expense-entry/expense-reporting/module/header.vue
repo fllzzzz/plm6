@@ -1,7 +1,7 @@
 <template>
   <div class="head-container">
     <div v-show="crud.searchToggle">
-      <common-radio-button
+      <!-- <common-radio-button
         v-model="query.timeType"
         :options="timeTypeEnum.ENUM"
         class="filter-item"
@@ -34,7 +34,7 @@
         value-format="MM"
         :disabled-date="disabledDate"
         @change="crud.toQuery"
-      />
+      /> -->
       <common-select
         v-model="query.expenseTypeId"
         :options="expenseList"
@@ -62,7 +62,16 @@
         clearable
         style="width: 150px"
         size="small"
-        placeholder="报销人"
+        placeholder="报销人搜索"
+        class="filter-item"
+        @keyup.enter="crud.toQuery"
+      />
+      <el-input
+        v-model.trim="query.payee"
+        clearable
+        style="width: 150px"
+        size="small"
+        placeholder="收款单位搜索"
         class="filter-item"
         @keyup.enter="crud.toQuery"
       />
@@ -71,20 +80,15 @@
     <crudOperation>
       <template #viewLeft>
         <el-tag effect="plain" class="filter-item" size="medium">
-          <span> 报销总额（元）：{{ summaryData.info }}</span>
+          <span> 报销总额（元）： <span v-thousand="totalAmount" /> </span>
         </el-tag>
         <print-table
           api-key="expenseReimburseList"
           :params="{
-            reimburseUserName: query.reimbursementPerson,
-            expenseSubjectId: query.expenseSubjectId,
-            month: query.month,
-            year: query.year,
-            expenseTypeId: query.expenseTypeId,
+            ...query,
           }"
           size="mini"
           type="warning"
-          class="filter-item"
           v-permission="crud.permission.print"
         />
       </template>
@@ -93,46 +97,41 @@
 </template>
 <script setup>
 import { ref, inject } from 'vue'
-import { parseTime } from '@/utils/date'
+
+import { dateQueryTypeEnum } from '@enum-ms/contract'
+
 import { regHeader } from '@compos/use-crud'
-import { timeTypeEnum } from '@enum-ms/contract'
-// import useDict from '@compos/store/use-dict'
 import rrOperation from '@crud/RR.operation'
 import crudOperation from '@crud/CRUD.operation'
 
-// const dict = useDict(['reimbursement_type'])
 const subjectList = ref([])
-const summaryData = inject('summaryData')
+const totalAmount = ref(0)
 const expenseList = inject('expenseList')
 
 const defaultQuery = {
-  timeType: timeTypeEnum.ALL_YEAR.V,
   expenseTypeId: undefined,
   expenseSubjectId: undefined,
-  year: parseTime(new Date(), '{y}'),
+  dateQueryTypeEnum: dateQueryTypeEnum.YEAR.V,
+  date: undefined,
   month: undefined,
+  payee: undefined,
   reimbursementPerson: undefined
 }
 
-const { crud, query } = regHeader(defaultQuery)
-
-function handleChange(val) {
-  if (val === timeTypeEnum.ALL_YEAR.V) {
-    query.year = parseTime(new Date(), '{y}')
-    query.month = undefined
-  } else {
-    query.year = parseTime(new Date(), '{y}')
-    query.month = parseTime(new Date(), '{m}')
-  }
-  crud.toQuery()
-}
-
+const { crud, query, CRUD } = regHeader(defaultQuery)
 function fetchChange(val) {
   subjectList.value = expenseList.find((v) => v.id === val)?.links
   crud.toQuery()
 }
-// 如果时间选取的时间年份比当前的时间大就被禁用
-function disabledDate(time) {
-  return time > new Date()
+
+CRUD.HOOK.handleRefresh = (crud, { data }) => {
+  totalAmount.value = data.content.reduce((prev, curr) => {
+    const value = Number(curr.reimburseAmount)
+    if (!isNaN(value)) {
+      return prev + value
+    } else {
+      return prev
+    }
+  }, 0)
 }
 </script>

@@ -359,6 +359,14 @@ const mainAuxiliaryTypeEnum = {
 }
 constantize(mainAuxiliaryTypeEnum)
 
+// 时间类型
+const dateQueryTypeEnum = {
+  YEAR: { L: '年', K: ' YEAR', V: 1 },
+  MONTH: { L: '月', K: ' MONTH', V: 2 },
+  DAY: { L: '日', K: ' DAY', V: 3 }
+}
+constantize(dateQueryTypeEnum)
+
 export {
   projectStatusEnum, // 项目状态
   projectTypeEnum, // 项目类型
@@ -401,7 +409,8 @@ export {
   gasTypeEnum,
   timeTypeEnum,
   managementSalaryTypeEnum,
-  mainAuxiliaryTypeEnum
+  mainAuxiliaryTypeEnum,
+  dateQueryTypeEnum // 时间类型
 }
 
 export default {
@@ -446,5 +455,6 @@ export default {
   gasTypeEnum, // 气体类型
   timeTypeEnum, // 时间类型
   managementSalaryTypeEnum, // 不同人员类型工资
-  mainAuxiliaryTypeEnum
+  mainAuxiliaryTypeEnum,
+  dateQueryTypeEnum // 时间类型
 }

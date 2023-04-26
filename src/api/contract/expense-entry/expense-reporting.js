@@ -3,8 +3,8 @@ import request from '@/utils/request'
 // 费用填报
 export function get(params) {
   return request({
-    module: '',
-    url: '/api/contract/expense-reimburse',
+    module: 'contract',
+    url: 'contract/expense-reimburse',
     method: 'get',
     params
   })
@@ -22,8 +22,8 @@ export function getExpenseType(params) {
 
 export function add(data) {
   return request({
-    module: '',
-    url: '/api/contract/expense-reimburse',
+    module: 'contract',
+    url: 'contract/expense-reimburse',
     method: 'post',
     data: [data]
   })
@@ -31,8 +31,8 @@ export function add(data) {
 
 export function edit(data) {
   return request({
-    module: '',
-    url: '/api/contract/expense-reimburse',
+    module: 'contract',
+    url: 'contract/expense-reimburse',
     method: 'put',
     data: data
   })
@@ -40,8 +40,8 @@ export function edit(data) {
 
 export function del(ids) {
   return request({
-    module: '',
-    url: `/api/contract/expense-reimburse`,
+    module: 'contract',
+    url: `contract/expense-reimburse`,
     method: 'delete',
     data: ids
   })

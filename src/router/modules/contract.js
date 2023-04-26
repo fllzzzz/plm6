@@ -252,39 +252,39 @@ export default {
           hidden: false,
           component: '/contract/expense-entry/expense-reporting/index',
           meta: { title: '费用填报', icon: 'contract2', noCache: true }
-        },
-        {
-          path: 'management-cost',
-          component: '',
-          hidden: false,
-          name: 'ManagementCost',
-          alwaysShow: false,
-          redirect: '/contract/expense-entry/management-cost',
-          meta: { title: '管理费', icon: 'contract2', noCache: true },
-          children: [
-            {
-              name: 'Salary',
-              path: 'salary',
-              hidden: false,
-              component: '/contract/expense-entry/management-cost/salary/index',
-              meta: { title: '人员工资', icon: 'contract2', noCache: true }
-            },
-            {
-              name: 'PropertyCost',
-              path: 'property-cost',
-              hidden: false,
-              component: '/contract/expense-entry/management-cost/property-cost/index',
-              meta: { title: '物业费', icon: 'contract2', noCache: true }
-            }
-          ]
-        },
-        {
-          name: 'TestingCost',
-          path: 'testing-cost',
-          hidden: false,
-          component: '/contract/expense-entry/testing-cost/index',
-          meta: { title: '检测费', icon: 'contract2', noCache: true }
         }
+        // {
+        //   path: 'management-cost',
+        //   component: '',
+        //   hidden: false,
+        //   name: 'ManagementCost',
+        //   alwaysShow: false,
+        //   redirect: '/contract/expense-entry/management-cost',
+        //   meta: { title: '管理费', icon: 'contract2', noCache: true },
+        //   children: [
+        //     {
+        //       name: 'Salary',
+        //       path: 'salary',
+        //       hidden: false,
+        //       component: '/contract/expense-entry/management-cost/salary/index',
+        //       meta: { title: '人员工资', icon: 'contract2', noCache: true }
+        //     },
+        //     {
+        //       name: 'PropertyCost',
+        //       path: 'property-cost',
+        //       hidden: false,
+        //       component: '/contract/expense-entry/management-cost/property-cost/index',
+        //       meta: { title: '物业费', icon: 'contract2', noCache: true }
+        //     }
+        //   ]
+        // },
+        // {
+        //   name: 'TestingCost',
+        //   path: 'testing-cost',
+        //   hidden: false,
+        //   component: '/contract/expense-entry/testing-cost/index',
+        //   meta: { title: '检测费', icon: 'contract2', noCache: true }
+        // }
       ]
     },
     {

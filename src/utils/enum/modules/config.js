@@ -40,7 +40,7 @@ const taxRateEnum = {
 }
 constantize(taxRateEnum)
 
-// 文件编号
+// 费用归属
 const costAscriptionEnum = {
   DIRECT_COSTS: { L: '直接费用', K: 'DIRECT_COSTS', V: 1 },
   INDIRECT_COSTS: { L: '间接费用', K: 'INDIRECT_COSTS', V: 2 },

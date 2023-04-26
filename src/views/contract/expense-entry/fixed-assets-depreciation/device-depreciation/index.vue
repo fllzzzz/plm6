@@ -35,7 +35,7 @@
         key="originalValue"
         prop="originalValue"
         :show-overflow-tooltip="true"
-        label="初始价值"
+        label="单台初始价值"
       />
       <el-table-column
         v-if="columns.visible('depreciationYear')"
