@@ -47,8 +47,9 @@
           <el-input
             v-model.trim="form.remark"
             type="textarea"
+            show-word-limit
             :autosize="{ minRows: 4, maxRows: 6}"
-            maxlength="500"
+            maxlength="200"
             placeholder="请填写备注"
             style="width: 320px;"
           />
