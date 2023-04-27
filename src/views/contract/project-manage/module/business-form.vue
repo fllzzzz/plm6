@@ -91,7 +91,7 @@
                 type="enum"
                 size="small"
                 v-model="form.structureStatus"
-                :options="form.projectType!==projectTypeEnum.BRIDGE.V?structureTypeEnum.ENUM:[structureTypeEnum.BEAM_TYPE,structureTypeEnum.ARCH_TYPE,structureTypeEnum.STEEL_FRAME]"
+                :options="form.projectType!==projectTypeEnum.BRIDGE.V?[structureTypeEnum.WORKSHOP,structureTypeEnum.FRAME,structureTypeEnum.SPACE]:[structureTypeEnum.BEAM_TYPE,structureTypeEnum.ARCH_TYPE,structureTypeEnum.STEEL_FRAME]"
                 class="input-underline"
                 placeholder="结构类型"
                 style="width: 200px"
