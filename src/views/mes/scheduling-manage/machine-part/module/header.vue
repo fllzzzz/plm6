@@ -132,11 +132,14 @@ async function fetchType(lastQuery) {
   query.taskTypeEnum = undefined
   query.material = undefined
   query.thick = []
-  if (isBlank(query.areaIds)) return
+  if (isBlank(query.areaIds) && isBlank(query.workshopIds) && isBlank(query.productionLineIds) && isBlank(query.groupsIds)) return
   try {
     const { content } = await getTypeList({
       monthList: query.monthList,
-      areaIds: query.areaIds
+      areaIds: query.areaIds,
+      workshopIds: query.workshopIds,
+      productionLineIds: query.productionLineIds,
+      groupsIds: query.groupsIds
     })
     typeList.value =
       content?.map((v) => {
@@ -165,11 +168,14 @@ async function fetchType(lastQuery) {
 }
 
 async function fetchMaterial(lastQuery) {
-  if (isBlank(query.areaIds)) return
+  if (isBlank(query.areaIds) && isBlank(query.workshopIds) && isBlank(query.productionLineIds) && isBlank(query.groupsIds)) return
   try {
     const { content } = await getMaterial({
       monthList: query.monthList,
       areaIds: query.areaIds,
+      workshopIds: query.workshopIds,
+      productionLineIds: query.productionLineIds,
+      groupsIds: query.groupsIds,
       taskTypeEnum: query.taskTypeEnum
     })
     materialList.value =
@@ -197,12 +203,15 @@ async function fetchMaterial(lastQuery) {
 }
 
 async function fetchTick(lastQuery) {
-  if (isBlank(query.areaIds)) return
+  if (isBlank(query.areaIds) && isBlank(query.workshopIds) && isBlank(query.productionLineIds) && isBlank(query.groupsIds)) return
   try {
     thickData.value = []
     const { content } = await getThick({
       monthList: query.monthList,
       areaIds: query.areaIds,
+      workshopIds: query.workshopIds,
+      productionLineIds: query.productionLineIds,
+      groupsIds: query.groupsIds,
       material: query.material,
       taskTypeEnum: query.taskTypeEnum
     })

@@ -240,3 +240,25 @@ export function setTaskReport(data) {
     data
   })
 }
+
+/**
+ * 获取车间、产线、班组是否显示
+ */
+export function getInfo() {
+  return request({
+    module: 'config',
+    url: 'show/need',
+    method: 'get'
+  })
+}
+
+/**
+ * 设置车间、产线、班组是否显示
+ */
+export function setInfo({ type }) {
+  return request({
+    module: 'config',
+    url: `show/need/${type}`,
+    method: 'put'
+  })
+}
