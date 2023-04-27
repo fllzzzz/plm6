@@ -1092,7 +1092,7 @@ export default {
         icon: 'project',
         noCache: true
       }
-    },
+    }
     // {
     //   name: 'MesLabelPrintEnclosure',
     //   path: 'enclosure',
@@ -1104,17 +1104,17 @@ export default {
     //     noCache: true
     //   }
     // },
-    {
-      name: 'MesLabelPrintAuxiliaryMaterial',
-      path: 'auxiliary-material',
-      hidden: false,
-      component: '/mes/label-print/auxiliary-material/index',
-      meta: {
-        title: '配套件',
-        icon: 'project',
-        noCache: true
-      }
-    }
+    // {
+    //   name: 'MesLabelPrintAuxiliaryMaterial',
+    //   path: 'auxiliary-material',
+    //   hidden: false,
+    //   component: '/mes/label-print/auxiliary-material/index',
+    //   meta: {
+    //     title: '配套件',
+    //     icon: 'project',
+    //     noCache: true
+    //   }
+    // }
       // {
       //   name: 'MesLabelPrintFoldingPiece',
       //   path: 'enclosure',
