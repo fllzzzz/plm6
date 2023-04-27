@@ -7,6 +7,7 @@
       type="enum"
       size="small"
       class="filter-item"
+      :disabledVal="[packTypeEnum.ENCLOSURE.V]"
       @change="crud.toQuery"
     />
     <!-- <common-radio-button
@@ -61,6 +62,7 @@
       @keyup.enter="crud.toQuery"
     />
     <el-input
+      v-if="query.productType !== packTypeEnum.AUXILIARY_MATERIAL.V"
       v-model="query.productSerialNumber"
       placeholder="输入产品编号搜索"
       class="filter-item"
@@ -133,7 +135,6 @@ import { printPackageLabel } from '@/utils/print/index'
 import { QR_SCAN_F_TYPE, QR_SCAN_TYPE } from '@/settings/config'
 import { DP } from '@/settings/config'
 import { isNotBlank } from '@data-type/index'
-
 import usePrintLabel from '@compos/mes/label-print/use-label-print'
 import { regHeader } from '@compos/use-crud'
 import crudOperation from '@crud/CRUD.operation'
@@ -192,7 +193,7 @@ const dataField = {
   [packTypeEnum.STRUCTURE.V]: 'artifactList',
   [packTypeEnum.MACHINE_PART.V]: 'partList',
   // [packTypeEnum.ENCLOSURE.V]: 'enclosureList',
-  [packTypeEnum.AUXILIARY_MATERIAL.V]: 'materialList'
+  [packTypeEnum.AUXILIARY_MATERIAL.V]: 'auxiliaryMaterialList'
 }
 
 async function getLabelInfo(row) {
@@ -211,9 +212,12 @@ async function getLabelInfo(row) {
       if (_itemList?.length) {
         for (let i = 0; i < _itemList.length; i++) {
           const v = _itemList[i]
-          const { serialNumber, material, packageQuantity, grossWeight, plate, length } = v
+          const { name, specification, measureUnit, serialNumber, material, packageQuantity, grossWeight, plate, length } = v
           _list.push({
             serialNumber,
+            name,
+            specification,
+            measureUnit,
             material,
             quantity: packageQuantity,
             totalWeight: (packageQuantity * grossWeight).toFixed(DP.COM_WT__KG),

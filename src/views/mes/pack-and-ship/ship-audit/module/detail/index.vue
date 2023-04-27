@@ -77,8 +77,8 @@
         <el-radio-button
           v-if="packTypeEnum.AUXILIARY_MATERIAL.V & productType"
           :label="packTypeEnum.AUXILIARY_MATERIAL.V"
-          :disabled="auxList.length == 0"
-          >{{ packTypeEnum.AUXILIARY_MATERIAL.L }}({{ auxList.length }})</el-radio-button
+          :disabled="auxiliaryMaterialList.length == 0"
+          >{{ packTypeEnum.AUXILIARY_MATERIAL.L }}({{ auxiliaryMaterialList.length }})</el-radio-button
         >
       </el-radio-group>
     </div>
@@ -155,7 +155,7 @@ const tableLoading = ref(false)
 const artifactList = ref([])
 const partList = ref([])
 const enclosureList = ref([])
-const auxList = ref([])
+const auxiliaryMaterialList = ref([])
 const contract = ref({})
 const curProductType = ref()
 
@@ -229,11 +229,11 @@ const list = computed(() => {
     //   )
     case packTypeEnum.AUXILIARY_MATERIAL.V:
       return (
-        auxList.value &&
-        auxList.value.map((v) => {
-          v.showQuantity = v[props.quantityFelid]
+        auxiliaryMaterialList.value &&
+        auxiliaryMaterialList.value.map((v) => {
+          // v.showQuantity = v[props.quantityFelid]
           v.fullClassName = `${v.firstName}/${v.secondName}/${v.thirdName}`
-          v.totalPrice = v.unitPrice * v.showQuantity || 0
+          v.totalPrice = v.unitPrice * v.shipQuantity || 0
           return v
         })
       )
@@ -255,7 +255,7 @@ function init() {
   artifactList.value = []
   partList.value = []
   enclosureList.value = []
-  auxList.value = []
+  auxiliaryMaterialList.value = []
   contract.value = {}
   curProductType.value = undefined
 }
@@ -269,7 +269,7 @@ async function fetchDetail() {
     artifactList.value = data.artifactList || []
     partList.value = data.partList || []
     enclosureList.value = data.enclosureList || []
-    auxList.value = data.auxList || []
+    auxiliaryMaterialList.value = data.auxiliaryMaterialList || []
     contract.value = data.review || {}
     contract.value.attachmentImgSrc = contract.value.attachmentDTOS && contract.value.attachmentDTOS.map((k) => k.imageUrl)
   } catch (error) {
