@@ -22,11 +22,7 @@
         prop="usedMete"
         :show-overflow-tooltip="true"
         :label="crud.query.type === costTypeEnum.ELECTRIC_COST.V ? '用电度数（kw/h）' : '用水量（吨）'"
-      >
-        <template #default="{ row }">
-          <span>{{ row.usedMete }}</span>
-        </template>
-      </el-table-column>
+      />
       <el-table-column
         v-if="columns.visible('totalAmount')"
         align="center"
@@ -34,11 +30,7 @@
         prop="totalAmount"
         :show-overflow-tooltip="true"
         :label="crud.query.type === costTypeEnum.ELECTRIC_COST.V ? '电费（元）' : '水费（元）'"
-      >
-        <template #default="{ row }">
-          <span>{{ row.totalAmount }}</span>
-        </template>
-      </el-table-column>
+      />
       <el-table-column
         v-if="columns.visible('averageValue')"
         align="center"
@@ -46,12 +38,8 @@
         prop="averageValue"
         :show-overflow-tooltip="true"
         :label="crud.query.type === costTypeEnum.ELECTRIC_COST.V ? '平均电费（元/kw·h）' : '平均单价（元/吨）'"
-      >
-        <template #default="{ row }">
-          <span>{{ row.averageValue }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column align="center" label="操作" width="140px">
+      />
+      <el-table-column v-if="checkPermission([...permission.edit, ...permission.del])" align="center" label="操作" width="140px">
         <template #default="{ row }">
           <el-tag v-if="row.isAmortization" size="medium" type="success" effect="plain"> 已摊销 </el-tag>
           <udOperation v-else-if="row.isEdit" :data="row" />
@@ -73,6 +61,9 @@ import { costTypeEnum } from '@enum-ms/contract'
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
 import moment from 'moment'
+import checkPermission from '@/utils/system/check-permission'
+import { tableSummary } from '@/utils/el-extra'
+import { toThousand } from '@/utils/data-type/number'
 
 import udOperation from '@crud/UD.operation'
 import mHeader from './module/header.vue'
@@ -101,51 +92,19 @@ const { crud, CRUD, columns } = useCRUD(
 
 // 合计
 function getSummaries(param) {
-  const { columns, data } = param
-  const sums = []
-  columns.forEach((column, index) => {
-    if (index === 0) {
-      sums[index] = '合计'
-      return
-    }
-    if (index === 3) {
-      sums[index] = 0
-      const usedMeteList = data.map((v) => v.usedMete)
-      const totalAmountList = data.map((v) => v.totalAmount)
-      const usedMeteSum = usedMeteList.reduce((pre, cur) => {
-        if (cur) {
-          return pre + Number(cur)
-        } else {
-          return pre
-        }
-      }, 0)
-      const totalAmountSum = totalAmountList.reduce((pre, cur) => {
-        if (cur) {
-          return pre + Number(cur)
-        } else {
-          return pre
-        }
-      }, 0)
-      sums[index] = usedMeteSum ? (totalAmountSum / usedMeteSum).toFixed(2) : 0
-      return
-    }
-    if (column.property === 'usedMete' || column.property === 'totalAmount') {
-      const values = data.map((item) => Number(item[column.property]))
-      let valuesSum = 0
-      if (!values.every((value) => isNaN(value))) {
-        valuesSum = values.reduce((prev, curr) => {
-          const value = Number(curr)
-          if (!isNaN(value)) {
-            return prev + curr
-          } else {
-            return prev
-          }
-        }, 0)
-      }
-      sums[index] = valuesSum.toFixed(2)
-    }
+  const data = tableSummary(param, {
+    props: ['usedMete', 'totalAmount']
   })
-  return sums
+  if (data[1] && data[2]) {
+    data[3] = toThousand(data[2] / data[1])
+  }
+  if (data[1]) {
+    data[1] = toThousand(data[1])
+  }
+  if (data[2]) {
+    data[2] = toThousand(data[2])
+  }
+  return data
 }
 
 CRUD.HOOK.handleRefresh = (crud, { data }) => {
@@ -163,7 +122,7 @@ CRUD.HOOK.handleRefresh = (crud, { data }) => {
     }
     v.date = `${_startDate} ~ ${_endDate}`
     // 最后一条记录才能编辑并且不能为已摊销状态
-    v.isEdit = (i + 1 === length) && !v.isAmortization
+    v.isEdit = i + 1 === length && !v.isAmortization
     v.averageValue = v.totalAmount && v.usedMete ? (v.totalAmount / v.usedMete).toFixed(2) : 0
     return v
   })

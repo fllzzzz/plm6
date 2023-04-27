@@ -254,7 +254,7 @@ export function waterElectricityRecord(params) {
  */
 export function gasRecord(params) {
   return request({
-    url: '/api/contract/gas-summary/print',
+    url: '/api/contract/gas/print',
     method: 'get',
     params
   })

@@ -474,3 +474,22 @@ export function removeNodeByExistIds(tree, ids) {
     return exist
   })
 }
+
+/**
+ * 设置层级名称
+ * @param {array} tree 数组（树）
+ * @param {string} childField 子级字段名
+ * @param {string} field 名称字段名
+ * @param {string} newField 新名称字段名
+ * @param {string} levelName 默认层级名称
+ */
+export function setLevelName(tree = [], { childField = 'children', field = 'name', newField = 'levelName', levelName = '' } = {}) {
+  tree?.forEach(node => {
+    if (levelName) {
+      node[newField] = `${levelName} > ${node[field]}`
+    } else {
+      node[newField] = node[field]
+    }
+    setLevelName(node[childField], { childField, field, newField, levelName: node.levelName })
+  })
+}

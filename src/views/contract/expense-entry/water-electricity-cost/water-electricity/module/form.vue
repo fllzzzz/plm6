@@ -18,7 +18,7 @@
       </span>
     </template>
     <div class="form">
-      <el-form ref="formRef" :model="form" :rules="rules" size="small" label-width="160px" class="demo-form">
+      <el-form ref="formRef" :model="form" :rules="rules" size="small" label-width="160px">
         <el-form-item label="起始日期" prop="startDate">
           <el-date-picker
             v-model="form.startDate"
@@ -97,8 +97,8 @@ const validateQuantity = (rule, value, callback) => {
   callback()
 }
 const rules = {
-  startDate: [{ required: true, message: '请选择起始时间', trigger: 'blur' }],
-  endDate: [{ required: true, message: '请选择结束时间', trigger: 'blur' }],
+  startDate: [{ required: true, message: '请选择起始日期', trigger: 'blur' }],
+  endDate: [{ required: true, message: '请选择结束日期', trigger: 'blur' }],
   usedMete: [{ required: true, validator: validateQuantity, trigger: 'blur' }],
   totalAmount: [{ required: true, validator: validateQuantity, trigger: 'blur' }]
 }

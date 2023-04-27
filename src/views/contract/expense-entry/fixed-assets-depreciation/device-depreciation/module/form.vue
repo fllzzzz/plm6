@@ -18,9 +18,9 @@
       </span>
     </template>
     <div class="form">
-      <el-form ref="formRef" :model="form" :rules="rules" size="small" label-width="140px" class="demo-form">
+      <el-form ref="formRef" :model="form" :rules="rules" size="small" label-width="160px" class="demo-form">
         <el-form-item label="设备名称" prop="name">
-          <el-input ref="saveTagInput" v-model="form.name" placeholder="输入设备名称" style="width: 270px" maxlength="50" />
+          <el-input v-model="form.name" placeholder="输入设备名称" style="width: 270px" maxlength="50" />
         </el-form-item>
         <el-form-item label="数量（台）" prop="num">
           <el-input-number
@@ -33,12 +33,12 @@
             :max="9999999999"
           />
         </el-form-item>
-        <el-form-item label="初始价值（元）" prop="originalValue">
+        <el-form-item label="单台初始价值（元）" prop="originalValue">
           <el-input-number
             v-show-thousand
             v-model="form.originalValue"
             style="width: 270px"
-            placeholder="输入初始价值 单位元"
+            placeholder="输入单台初始价值 单位元"
             controls-position="right"
             :min="0"
             :max="9999999999"
@@ -124,7 +124,7 @@ const validateQuantity = (rule, value, callback) => {
 
 const rules = {
   name: [{ required: true, message: '请输入设备名称', trigger: 'blur' }],
-  quantity: [{ required: true, validator: validateQuantity, trigger: 'blur' }],
+  num: [{ required: true, validator: validateQuantity, trigger: 'blur' }],
   originalValue: [{ required: true, validator: validateQuantity, trigger: 'blur' }],
   depreciationYear: [{ required: true, validator: validateQuantity, trigger: 'blur' }],
   residualValueRate: [{ required: true, validator: validateQuantity, trigger: 'blur' }],
@@ -138,8 +138,8 @@ const annualDepreciationRate = computed(() => {
 
 const annualDepreciationAmount = computed(() => {
   // 初始价值*（（1-净残值）/ 使用年限）
-  return form.originalValue && form.residualValueRate && form.depreciationYear
-    ? (form.originalValue * ((100 - form.residualValueRate) / 100 / form.depreciationYear)).toFixed(2)
+  return form.num && form.originalValue && form.residualValueRate && form.depreciationYear
+    ? (form.num * form.originalValue * ((100 - form.residualValueRate) / 100 / form.depreciationYear)).toFixed(2)
     : ''
 })
 
@@ -152,8 +152,8 @@ const monthValueDepreciationRate = computed(() => {
 
 const monthValueDepreciationAmount = computed(() => {
   // 初始价值*（（1-净残值）/ 使用年限 / 12）
-  return form.originalValue && form.residualValueRate && form.depreciationYear
-    ? (form.originalValue * ((100 - form.residualValueRate) / 100 / form.depreciationYear / 12)).toFixed(2)
+  return form.num * form.originalValue && form.residualValueRate && form.depreciationYear
+    ? (form.num * form.originalValue * ((100 - form.residualValueRate) / 100 / form.depreciationYear / 12)).toFixed(2)
     : ''
 })
 
