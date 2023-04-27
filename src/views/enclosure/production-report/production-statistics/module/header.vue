@@ -143,7 +143,7 @@ for (let i = 1; i <= 12; i++) {
 const day = ref()
 const dayArr = ref([])
 
-watch([() => query.type, () => query.time], (val) => {
+watch([() => query.category, () => query.type, () => query.time], (val) => {
   if (query.type === timeTypeEnum.CURRENT_MONTH.V) {
     // 更新天数列表
     day.value = moment(parseTime(query.time, '{y}-{m}'), 'YYYY-MM').daysInMonth()
