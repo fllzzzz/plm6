@@ -26,8 +26,7 @@
        <el-table-column v-if="columns.visible('projectContent')" key="projectContent" prop="projectContent" :show-overflow-tooltip="true" label="合同内容" min-width="160" />
       <el-table-column v-if="columns.visible('type')" key="type" prop="type" label="状态" align="center" min-width="80">
          <template v-slot="scope">
-          <el-tag type="danger" effect="plain" v-if="!scope.row.type">计划未创建</el-tag>
-          <el-tag type="success" effect="plain" v-else>计划已创建</el-tag>
+          <el-tag :type="enclosurePlanTypeEnum.V[scope.row.sourceRow.type].TAG" effect="plain">{{ scope.row.type }}</el-tag>
         </template>
       </el-table-column>
       <el-table-column v-if="columns.visible('createName')" key="createName" prop="createName" :show-overflow-tooltip="true" label="创建人" min-width="140" />
@@ -72,6 +71,7 @@
 import { allEnclosureProject as get } from '@/api/enclosure/enclosure-plan/area'
 import { ref } from 'vue'
 
+import { enclosurePlanTypeEnum } from '@enum-ms/enclosure'
 import { enclosureAreaListPM as permission } from '@/page-permission/enclosure'
 import checkPermission from '@/utils/system/check-permission'
 import useMaxHeight from '@compos/use-max-height'
@@ -94,7 +94,8 @@ const planVisible = ref(false)
 const detailInfo = ref({})
 
 const dataFormat = ref([
-  ['project', 'parse-project']
+  ['project', 'parse-project'],
+  ['type', ['parse-enum', enclosurePlanTypeEnum]]
 ])
 
 const { crud, columns, CRUD } = useCRUD(
