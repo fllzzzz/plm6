@@ -119,7 +119,8 @@ export function editUsers(projectId, data) {
 export function getEnclosureDictList(type) {
   return request({
     url: '/api/project/listByType/' + type,
-    method: 'get'
+    method: 'get',
+    cancelKey: false
   })
 }
 
