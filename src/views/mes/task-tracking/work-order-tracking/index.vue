@@ -12,6 +12,7 @@
           highlight-current-row
           :empty-text="crud.emptyText"
           :max-height="maxHeight"
+          :show-empty-symbol="false"
           style="width: 100%"
           @current-change="currentChange"
         >
