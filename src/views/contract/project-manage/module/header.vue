@@ -71,9 +71,10 @@
         type="enum"
         size="small"
         v-model="query.structureStatus"
-        :options="structureTypeEnum.ENUM"
+        :options="query.projectType!==projectTypeEnum.BRIDGE.V?[structureTypeEnum.WORKSHOP,structureTypeEnum.FRAME,structureTypeEnum.SPACE]:[structureTypeEnum.BEAM_TYPE,structureTypeEnum.ARCH_TYPE,structureTypeEnum.STEEL_FRAME]"
         class="filter-item"
         placeholder="结构类型"
+        clearable
         style="width: 200px"
         @change="crud.toQuery"
       />
