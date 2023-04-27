@@ -360,10 +360,11 @@ const AUX_MAT_COMMON_L_HTML = function ({ component = defComponent, printConfig 
   return `
   <div class="aux-mat-label">
     <div class="row">
-      <div class="col col-center" style="font-size:10pt;">${emptyTextFormatter(component.projectName)}</div>
+      <div class="col col-center" style="font-size:10pt;">项目：${emptyTextFormatter(component.projectName)}</div>
     </div>
     <div class="row">
-      <div class="col col-center" style="font-size:10pt;">${emptyTextFormatter(component.monomerName)}</div>
+      <div class="col" style="font-size:10pt;">单体：${emptyTextFormatter(component.monomerName)}</div>
+      <div class="col" style="font-size:10pt;">区域：${emptyTextFormatter(component.areaName)}</div>
     </div>
     <div class="contains-rows">
       <div class="col" style="flex: 2">
@@ -375,8 +376,8 @@ const AUX_MAT_COMMON_L_HTML = function ({ component = defComponent, printConfig 
           <div class="col">总数：${emptyTextFormatter(component.quantity)}</div>
         </div>
         <div class="row">
-          <div class="col">颜色：${emptyTextFormatter(component.color)}</div>
-          <div class="col">品牌：${emptyTextFormatter(component.brand)}</div>
+          <div class="col">单位：${emptyTextFormatter(component.unit)}</div>
+          <div class="col">使用范围：${emptyTextFormatter(component.useProperty)}</div>
         </div>
       </div>
       <div class="col" style="flex: 1">
