@@ -32,6 +32,7 @@
         ref="workshopInfRef"
         v-model="query.workShopId"
         placeholder="请选择车间"
+        :workshop-type="workshopTypeEnum.BUILDING.V"
         :factory-id="query.factoryId"
         style="width: 200px"
         class="filter-item"
@@ -143,7 +144,7 @@ import { parseTime } from '@/utils/date'
 import { PICKER_OPTIONS_SHORTCUTS } from '@/settings/config'
 // import { getOrderDeliveryRate } from '@/api/operation/order-delivery-rate'
 import { fullYearProduction, workshopEcharts } from '@/api/mes/factory-report/workshop-report.js'
-import { weightTypeEnum } from '@enum-ms/common'
+import { weightTypeEnum, workshopTypeEnum } from '@enum-ms/common'
 import { timeTypeEnum } from '@enum-ms/contract'
 import { mesFactoryReportPM as permission } from '@/page-permission/mes'
 import workshopSelect from '@comp-mes/workshop-select'
