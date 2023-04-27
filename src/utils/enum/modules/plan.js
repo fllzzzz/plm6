@@ -126,8 +126,8 @@ constantize(paintTypeEnum)
 
 // 工艺类型通用专用
 const processUseTypeEnum = {
-  NORMAL: { L: '通用', K: 'NORMAL', V: 1 << 0 },
-  SPECIAL: { L: '专用', K: 'SPECIAL', V: 1 << 1 }
+  NORMAL: { L: '通用', K: 'NORMAL', V: false },
+  SPECIAL: { L: '专用', K: 'SPECIAL', V: true }
 }
 constantize(processUseTypeEnum)
 
@@ -141,8 +141,8 @@ constantize(planProcessTypeEnum)
 
 // 工艺文件是否绑定构件
 const isArtifactBindTypeEnum = {
-  NO: { L: '未绑定', K: 'NO', V: 0 },
-  YES: { L: '已绑定', K: 'YES', V: 1 }
+  NO: { L: '未绑定', K: 'NO', V: false },
+  YES: { L: '已绑定', K: 'YES', V: true }
 }
 constantize(isArtifactBindTypeEnum)
 
