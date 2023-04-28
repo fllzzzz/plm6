@@ -41,7 +41,7 @@
         </el-col>
         <el-col class="card-panel-col">
           <Panel
-            name="累计车次（元）"
+            name="累计车次"
             text-color="#626262"
             num-color="#1890ff"
             :end-val="summaryData.cargoQuantity || 0"
