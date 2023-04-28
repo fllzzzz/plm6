@@ -29,15 +29,15 @@
       </template>
     </el-expand-table-column>
     <el-table-column label="序号" type="index" align="center" width="60" fixed="left" />
-    <el-table-column prop="serialNumber" label="编号" align="center" width="110px" fixed="left" />
-    <el-table-column prop="classifyName" label="物料种类" align="center" fixed="left" width="120" show-overflow-tooltip>
+    <el-table-column prop="serialNumber" label="编号" align="center" min-width="110px" fixed="left" />
+    <el-table-column prop="classifyName" label="物料种类" align="center" fixed="left" min-width="120" show-overflow-tooltip>
       <template #default="{ row }">
         <el-tooltip :content="row.classifyParentFullName" :disabled="!row.classifyParentFullName" :show-after="500" placement="top">
           <span v-empty-text="row.classifyName" />
         </el-tooltip>
       </template>
     </el-table-column>
-    <el-table-column prop="specification" label="规格" align="center" width="200px" fixed="left" show-overflow-tooltip>
+    <el-table-column prop="specification" label="规格" align="center" min-width="200px" fixed="left" show-overflow-tooltip>
       <template #default="{ row }">
         <el-edit
           v-if="form.selectObj?.[row.mergeId]?.isSelected && Boolean(currentCfg?.spec & basicClass)"
@@ -50,7 +50,7 @@
         </el-tooltip>
       </template>
     </el-table-column>
-    <el-table-column prop="length" align="center" width="135px" :label="`定尺长度 (${baseUnit.length.unit})`">
+    <el-table-column prop="length" align="center" min-width="135px" :label="`定尺长度 (${baseUnit.length.unit})`">
       <template #default="{ row }">
         <common-input-number
           v-if="props.boolPartyA || (form.selectObj?.[row.mergeId]?.isSelected && Boolean(currentCfg?.length & basicClass))"
@@ -66,7 +66,7 @@
       </template>
     </el-table-column>
     <template v-if="props.boolPartyA">
-      <el-table-column prop="quantity" align="center" width="135px" :label="`数量 (${baseUnit.measure.unit})`">
+      <el-table-column prop="quantity" align="center" min-width="135px" :label="`数量 (${baseUnit.measure.unit})`">
         <template #default="{ row }">
           <common-input-number
             v-model="row.quantity"
@@ -81,13 +81,13 @@
           />
         </template>
       </el-table-column>
-      <el-table-column prop="totalLength" align="center" width="135px" :label="`总长度 (m)`" />
+      <el-table-column prop="totalLength" align="center" min-width="135px" :label="`总长度 (m)`" />
       <el-table-column
         key="weighingTotalWeight"
         prop="weighingTotalWeight"
         align="center"
         :label="`总重 (${baseUnit.weight.unit})`"
-        width="135px"
+        min-width="135px"
       >
         <template #default="{ row }">
           <el-tooltip
@@ -114,7 +114,7 @@
       </el-table-column>
     </template>
     <template v-else>
-      <el-table-column prop="purchaseQuantity" :label="`采购数量 (${baseUnit.measure.unit})`" align="right" width="100px">
+      <el-table-column prop="purchaseQuantity" :label="`采购数量 (${baseUnit.measure.unit})`" align="right" min-width="100px">
         <template #default="{ row }">
           <span>
             <el-tooltip effect="dark" content="已入库数量" placement="top">
@@ -124,7 +124,7 @@
           </span>
         </template>
       </el-table-column>
-      <el-table-column prop="purchaseMete" :label="`采购重量 (${baseUnit.weight.unit})`" align="right" width="110px">
+      <el-table-column prop="purchaseMete" :label="`采购重量 (${baseUnit.weight.unit})`" align="right" min-width="110px">
         <template #default="{ row }">
           <span>
             <el-tooltip effect="dark" content="已入库量" placement="top">
@@ -171,14 +171,14 @@
         :form="form"
         :handleOverQuantity="handleOverQuantity"
       />
-      <el-table-column prop="totalLength" align="center" width="135px" :label="`实收总长度 (m)`" />
-      <el-table-column prop="theoryTotalWeight" align="center" :label="`理论重量 (${baseUnit.weight.unit})`" width="100px" />
+      <el-table-column prop="totalLength" align="center" min-width="135px" :label="`实收总长度 (m)`" />
+      <el-table-column prop="theoryTotalWeight" align="center" :label="`理论重量 (${baseUnit.weight.unit})`" min-width="100px" />
       <el-table-column
         key="weighingTotalWeight"
         prop="weighingTotalWeight"
         align="center"
         :label="`实收量 (${baseUnit.weight.unit})`"
-        width="135px"
+        min-width="135px"
       >
         <template #default="{ row }">
           <el-tooltip

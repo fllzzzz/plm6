@@ -29,15 +29,15 @@
       </template>
     </el-expand-table-column>
     <el-table-column label="序号" type="index" align="center" width="60" fixed="left" />
-    <el-table-column prop="serialNumber" label="编号" align="center" width="110px" fixed="left" />
-    <el-table-column prop="classifyName" label="物料种类" align="center" fixed="left" width="120" show-overflow-tooltip>
+    <el-table-column prop="serialNumber" label="编号" align="center" min-width="110px" fixed="left" />
+    <el-table-column prop="classifyName" label="物料种类" align="center" fixed="left" min-width="120" show-overflow-tooltip>
       <template #default="{ row }">
         <el-tooltip :content="row.classifyParentFullName" :disabled="!row.classifyParentFullName" :show-after="500" placement="top">
           <span v-empty-text="row.classifyName" />
         </el-tooltip>
       </template>
     </el-table-column>
-    <el-table-column prop="specification" label="规格" align="center" width="160px" fixed="left" show-overflow-tooltip>
+    <el-table-column prop="specification" label="规格" align="center" min-width="160px" fixed="left" show-overflow-tooltip>
       <template #default="{ row }">
         <el-tooltip :content="row.specificationLabels" placement="top">
           <span>{{ row.specification }}</span>
@@ -50,7 +50,7 @@
       prop="weighingTotalWeight"
       align="center"
       :label="`总重 (${baseUnit.weight.unit})`"
-      width="135px"
+      min-width="135px"
     >
       <template #default="{ row }">
         <common-input-number
@@ -67,7 +67,7 @@
       </template>
     </el-table-column>
     <template v-if="!props.boolPartyA">
-      <el-table-column prop="purchaseMete" :label="`采购重量 (${baseUnit.weight.unit})`" align="right" width="120px">
+      <el-table-column prop="purchaseMete" :label="`采购重量 (${baseUnit.weight.unit})`" align="right" min-width="120px">
         <template #default="{ row }">
           <span>
             <el-tooltip effect="dark" content="已入库量" placement="top">
@@ -82,7 +82,7 @@
         prop="weighingTotalWeight"
         align="center"
         :label="`实收量 (${baseUnit.weight.unit})`"
-        width="135px"
+        min-width="135px"
       >
         <template #default="{ row }">
           <common-input-number
@@ -103,7 +103,7 @@
         </template>
       </el-table-column>
     </template>
-    <el-table-column prop="thickness" align="center" width="100px" :label="`厚 (${baseUnit.thickness.unit})`">
+    <el-table-column prop="thickness" align="center" min-width="100px" :label="`厚 (${baseUnit.thickness.unit})`">
       <template #default="{ row }">
         <common-input-number
           v-if="props.boolPartyA || form.selectObj?.[row.mergeId]?.isSelected"
@@ -119,7 +119,7 @@
         <span v-else>{{ row.thickness }}</span>
       </template>
     </el-table-column>
-    <el-table-column prop="width" align="center" width="135px" :label="`宽 (${baseUnit.width.unit})`">
+    <el-table-column prop="width" align="center" min-width="135px" :label="`宽 (${baseUnit.width.unit})`">
       <template #default="{ row }">
         <common-input-number
           v-if="props.boolPartyA || form.selectObj?.[row.mergeId]?.isSelected"
@@ -135,7 +135,7 @@
         <span v-else>{{ row.width }}</span>
       </template>
     </el-table-column>
-    <el-table-column prop="length" align="center" width="135px" :label="`长 (${baseUnit.length.unit})`">
+    <el-table-column prop="length" align="center" min-width="135px" :label="`长 (${baseUnit.length.unit})`">
       <template #default="{ row }">
         <common-input-number
           v-if="props.boolPartyA || form.selectObj?.[row.mergeId]?.isSelected"
@@ -150,7 +150,7 @@
         <span v-else>{{ row.length }}</span>
       </template>
     </el-table-column>
-    <!-- <el-table-column prop="number" align="center" width="135px" :label="`数量 (${baseUnit.measure.unit})`">
+    <!-- <el-table-column prop="number" align="center" min-width="135px" :label="`数量 (${baseUnit.measure.unit})`">
       <template #default="{ row }">
         <common-input-number
           v-model="row.quantity"
@@ -165,7 +165,7 @@
         />
       </template>
     </el-table-column> -->
-    <el-table-column prop="color" label="颜色" align="center" width="140px">
+    <el-table-column prop="color" label="颜色" align="center" min-width="140px">
       <template #default="{ row }">
         <el-input
           v-if="props.boolPartyA || (!props.boolPartyA && form.selectObj?.[row.mergeId]?.isSelected)"

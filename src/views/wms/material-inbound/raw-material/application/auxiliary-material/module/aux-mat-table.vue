@@ -29,7 +29,7 @@
       </template>
     </el-expand-table-column>
     <el-table-column label="序号" type="index" align="center" width="60" fixed="left" />
-    <el-table-column prop="serialNumber" label="编号" align="center" width="110px" fixed="left" show-overflow-tooltip />
+    <el-table-column prop="serialNumber" label="编号" align="center" min-width="110px" fixed="left" show-overflow-tooltip />
     <el-table-column prop="classifyName" label="物料种类" align="center" fixed="left" min-width="150" show-overflow-tooltip>
       <template #default="{ row }">
         <el-tooltip :content="row.classifyParentFullName" :disabled="!row.classifyParentFullName" :show-after="500" placement="top">
@@ -68,7 +68,7 @@
       </el-table-column>
     </template>
     <template v-else>
-      <el-table-column prop="purchaseQuantity" :label="`采购数量`" align="right" width="100px">
+      <el-table-column prop="purchaseQuantity" :label="`采购数量`" align="right" min-width="100px">
         <template #default="{ row }">
           <span>
             <el-tooltip effect="dark" content="已入库数量" placement="top">
@@ -102,7 +102,7 @@
       </el-table-column>
     </template>
     <template v-else>
-      <el-table-column prop="purchaseMete" :label="`采购量`" align="right" width="100px">
+      <el-table-column prop="purchaseMete" :label="`采购量`" align="right" min-width="100px">
         <template #default="{ row }">
           <span>
             <el-tooltip effect="dark" content="已入库量" placement="top">
@@ -196,7 +196,7 @@
                   <span v-else>-</span>
                 </template>
               </el-table-column>
-              <el-table-column prop="purchaseQuantity" :label="`采购数量`" align="right" width="100px">
+              <el-table-column prop="purchaseQuantity" :label="`采购数量`" align="right" min-width="100px">
                 <template #default="{ row }">
                   <span>
                     <el-tooltip effect="dark" content="已入库数量" placement="top">
@@ -206,7 +206,7 @@
                   </span>
                 </template>
               </el-table-column>
-              <el-table-column prop="purchaseMete" :label="`采购量`" align="right" width="100px">
+              <el-table-column prop="purchaseMete" :label="`采购量`" align="right" min-width="100px">
                 <template #default="{ row }">
                   <span>
                     <el-tooltip effect="dark" content="已入库量" placement="top">
