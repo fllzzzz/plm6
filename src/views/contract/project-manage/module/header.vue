@@ -45,7 +45,7 @@
       />
       <common-select
         v-model="query.projectType"
-        :options="projectTypeEnum.ENUM"
+        :options="projectTypeEnumArr"
         type="enum"
         size="small"
         clearable
@@ -182,6 +182,12 @@ import completeList from './complete-list'
 import { completeData, projectNumData } from '@/api/contract/project'
 import branchCompanySelect from '@comp-base/branch-company-select.vue'
 import Panel from '@/components/Panel'
+import { mapGetters } from '@/store/lib'
+
+const { projectTypeEnumArr, flag } = mapGetters([
+  'projectTypeEnumArr',
+  'flag'
+])
 
 // const projectContentOption = ref([])
 let machiningData = []
@@ -216,8 +222,7 @@ const props = defineProps({
   }
 })
 const projectContentOption = computed(() => {
-  if (query.businessType && query.projectType) {
-    console.log(machiningData)
+  if (query.projectType) {
     switch (query.projectType) {
       case projectTypeEnum.STEEL.V:
         return query.businessType === businessTypeEnum.MACHINING.V ? machiningData[projectTypeEnum.STEEL.V] : installData[projectTypeEnum.STEEL.V]
@@ -244,8 +249,8 @@ contentInfo()
 
 async function contentInfo() {
   try {
-    machiningData = await getContentInfo({ businessType: businessTypeEnum.MACHINING.V })
-    installData = await getContentInfo({ businessType: businessTypeEnum.INSTALLATION.V })
+    machiningData = await getContentInfo({ businessType: businessTypeEnum.MACHINING.V, flag: flag.value })
+    installData = await getContentInfo({ businessType: businessTypeEnum.INSTALLATION.V, flag: flag.value })
     const dataArr = [machiningData, installData]
     for (let i = 0; i < dataArr.length; i++) {
       if (dataArr[i] && dataArr[i][projectTypeEnum.STEEL.V].length > 0) {
