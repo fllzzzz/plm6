@@ -1,7 +1,16 @@
 <template>
   <div class="head-container">
     <div v-show="crud.searchToggle">
-      <el-input
+      <common-select
+        v-model="query.useProperty"
+        :options="auxiliaryMaterialUseTypeEnum.ENUM"
+        type="enum"
+        size="small"
+        class="filter-item"
+        clearable
+        placeholder="使用范围"
+      />
+      <!-- <el-input
         v-model="query.name"
         placeholder="可输入名称搜索"
         class="filter-item"
@@ -27,11 +36,12 @@
         size="small"
         clearable
         @keyup.enter="crud.toQuery"
-      />
+      /> -->
+
       <rrOperation/>
     </div>
     <crudOperation>
-      <template v-if="query.monomerId" #optRight>
+      <template v-if="query.projectId" #optRight>
         <span v-if="checkPermission(crud.permission.save)" style="margin-right: 6px">
           <span v-if="modifying">
             <common-button type="warning" size="mini" @click="handelModifying(false, true)">取消录入</common-button>
@@ -42,37 +52,38 @@
         <print-table
           v-permission="crud.permission.print"
           api-key="contractAuxiliaryMaterialPrice"
-          :params="{ monomerId: query.monomerId }"
+          :params="{ projectId: query.projectId }"
           size="mini"
           type="warning"
           class="filter-item"
         />
       </template>
-      <template #viewLeft>
-        <span v-if="checkPermission(crud.permission.cost) && query.monomerId">
+      <!-- <template #viewLeft>
+        <span v-if="checkPermission(crud.permission.cost) && query.projectId">
           <el-tag effect="plain" type="success" size="medium" class="filter-item">
             单体配套件总量：
             <span v-if="!costLoading">{{ monomerCost.totalMete }}</span>
             <i v-else class="el-icon-loading" />
           </el-tag>
-          <el-tag effect="plain" type="success" size="medium" class="filter-item">
+          <el-tag effect="plain" type="success" size="medium">
             单体配套件造价(元)：
             <span v-if="!costLoading" v-thousand="monomerCost.totalPrice" />
             <i v-else class="el-icon-loading" />
           </el-tag>
         </span>
-      </template>
+      </template> -->
     </crudOperation>
     <mPreview v-model="previewVisible" :modified-data="modifiedData" v-bind="$attrs" :params="previewParams" @success="handleSuccess" />
   </div>
 </template>
 
 <script setup>
-import { cost } from '@/api/contract/sales-manage/price-manage/auxiliary-material'
+// import { cost } from '@/api/contract/sales-manage/price-manage/auxiliary-material'
 import { ref, watch, nextTick, inject, computed, defineExpose } from 'vue'
 
+import { auxiliaryMaterialUseTypeEnum } from '@enum-ms/plan'
 import checkPermission from '@/utils/system/check-permission'
-import { packTypeEnum } from '@enum-ms/mes'
+import { contractSaleTypeEnum } from '@enum-ms/mes'
 import { toThousand } from '@/utils/data-type/number'
 import { emptyTextFormatter } from '@/utils/data-type'
 
@@ -82,7 +93,7 @@ import rrOperation from '@crud/RR.operation'
 import mPreview from '../../preview'
 
 const projectId = inject('projectId')
-const monomerId = inject('monomerId')
+// const monomerId = inject('monomerId')
 
 // 有变动的数据
 const modifiedData = computed(() => {
@@ -92,17 +103,18 @@ const modifiedData = computed(() => {
 // 预览参数
 const previewParams = computed(() => {
   return {
-    monomerId: query.monomerId,
-    type: packTypeEnum.AUXILIARY_MATERIAL.V
+    // monomerId: query.monomerId,
+    projectId: query.projectId,
+    type: contractSaleTypeEnum.AUXILIARY_MATERIAL.V
   }
 })
 
 watch(
-  monomerId,
+  projectId,
   (val) => {
     nextTick(() => {
-      crud.query.monomerId = val
-      costInit()
+      crud.query.projectId = val
+      // costInit()
       crud.toQuery()
     })
   },
@@ -110,17 +122,16 @@ watch(
 )
 
 const modifying = ref(false)
-const costLoading = ref(false)
+// const costLoading = ref(false)
 const previewVisible = ref(false)
-const costData = {
-  totalPrice: 0,
-  totalMete: 0
-}
-const monomerCost = ref({ ...costData })
+// const costData = {
+//   totalPrice: 0,
+//   totalMete: 0
+// }
+// const monomerCost = ref({ ...costData })
 
 const defaultQuery = {
-  name: undefined, specification: undefined, serialNumber: undefined,
-  monomerId: { value: undefined, resetAble: false }
+  name: undefined, specification: undefined, serialNumber: undefined
 }
 const { crud, query, CRUD } = regHeader(defaultQuery)
 
@@ -130,32 +141,31 @@ CRUD.HOOK.handleRefresh = (crud, { data }) => {
     v.newUnitPrice = v.unitPrice // number类型的单价（unitPrice可能会有千位符）
     v.originNewUnitPrice = v.newUnitPrice
     v.originUnitPrice = emptyTextFormatter(toThousand(v.unitPrice))
-    v.totalPrice = v.mete * (v.unitPrice || 0)
+    v.totalPrice = v.quantity * (v.unitPrice || 0)
   })
-  fetchCost()
+  // fetchCost()
 }
 
 // 获取商务配套件成本
-async function fetchCost() {
-  if (!checkPermission(crud.permission.cost)) return
-  costLoading.value = true
-  try {
-    const res = await cost({
-      monomerId: query.monomerId,
-      projectId: projectId.value
-    })
-    monomerCost.value = res
-  } catch (error) {
-    console.log('获取商务配套件成本失败', error)
-  } finally {
-    costLoading.value = false
-  }
-}
+// async function fetchCost() {
+//   if (!checkPermission(crud.permission.cost)) return
+//   costLoading.value = true
+//   try {
+//     const res = await cost({
+//       projectId: projectId.value
+//     })
+//     monomerCost.value = res
+//   } catch (error) {
+//     console.log('获取商务配套件成本失败', error)
+//   } finally {
+//     costLoading.value = false
+//   }
+// }
 
 // 成本初始化
-function costInit() {
-  monomerCost.value = { ...costData }
-}
+// function costInit() {
+//   monomerCost.value = { ...costData }
+// }
 
 // 处理录入状态
 function handelModifying(status, reset = false) {

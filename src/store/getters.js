@@ -103,7 +103,11 @@ const getters = {
   // 项目级联列表Map（key:项目类型,val:项目级联列表）
   projectsCascadeMap: state => state.project.projectsCascadeMap,
   // 当前页面业务类型
-  routeBusinessType: state => state.project.routeBusinessType
+  routeBusinessType: state => state.project.routeBusinessType,
+  projectTypeEnumArr: state => state.user.projectTypeEnumArr,
+  installTypeEnumArr: state => state.user.installTypeEnumArr,
+  deliveryInstallEnumArr: state => state.user.deliveryInstallEnumArr,
+  flag: state => state.user.flag
 }
 
 export default getters

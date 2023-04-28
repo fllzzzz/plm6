@@ -8,6 +8,7 @@ import { fetchMenus } from '@/api/user' // 获取菜单
 import { specialPath } from '@/settings/config'
 // import configRouter from '@/router/modules/config'
 // import mesRouter from '@/router/modules/mes'
+// import enclosureRouter from '@/router/modules/enclosure'
 // import wmsRouter from '@/router/modules/wms'
 // import planRouter from '@/router/modules/plan'
 // import contractRouter from '@/router/modules/contract'
@@ -130,7 +131,7 @@ const loadMenus = async (next, to) => {
   try {
     // 菜单：content
     const menus = await fetchMenus()
-    // const menus = [configRouter, wmsRouter, mesRouter, planRouter, contractRouter, supplyChainRouter, userRouter, cuttingRouter, bimRouter, operationRouter, projectManage]
+    // const menus = [configRouter, wmsRouter, mesRouter, enclosureRouter, planRouter, contractRouter, supplyChainRouter, userRouter, cuttingRouter, bimRouter, operationRouter, projectManage]
     await store.dispatch('permission/generateRoutes', menus)
     const asyncRoutes = await store.dispatch('permission/setRoutes', to.path)
     addRoutes(asyncRoutes)

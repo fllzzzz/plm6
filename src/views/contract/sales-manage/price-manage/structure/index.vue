@@ -193,7 +193,7 @@ const { maxHeight } = useMaxHeight({
 })
 
 const validatePrice = (value, row) => {
-  if (row.pricingManner !== row.originPricingManner || row.unitPrice !== row.originUnitPrice && row.unitPrice > 0) {
+  if (row.pricingManner !== row.originPricingManner || (row.unitPrice !== row.originUnitPrice && row.unitPrice > 0)) {
     return !!row.newUnitPrice
   }
   return true

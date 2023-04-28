@@ -211,7 +211,7 @@ async function fetchDetail() {
     artifactList.value = data.artifactList || []
     partList.value = data.partList || []
     enclosureList.value = data.enclosureList || []
-    auxList.value = data.auxList || []
+    auxList.value = data.auxiliaryMaterialList || []
   } catch (error) {
     console.log('详情', error)
   } finally {

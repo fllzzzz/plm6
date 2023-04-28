@@ -10,6 +10,7 @@
           v-model:areaId="areaId"
           needConvert
           clearable
+          areaClearable
           :project-id="props.processData.id"
         />
         <production-line-select
@@ -20,14 +21,15 @@
           class="filter-item"
           style="width: 200px"
         />
-        <common-radio-button
+        <common-radio-button type="enum" v-model="weightStatus" :options="[weightTypeEnum.NET, weightTypeEnum.GROSS]" class="filter-item" />
+        <!-- <common-radio-button
           v-model="productType"
           :options="[componentTypeEnum.ARTIFACT, componentTypeEnum.ASSEMBLE, componentTypeEnum.MACHINE_PART]"
           showOptionAll
           type="enum"
           size="small"
           class="filter-item"
-        />
+        /> -->
       </div>
       <common-table
         ref="tableRef"
@@ -41,6 +43,7 @@
         <el-table-column prop="index" label="序号" align="center" width="60px" type="index" />
         <el-table-column align="center" key="name" prop="name" :show-overflow-tooltip="true" label="涉及工序" width="100px">
           <template v-slot="scope">
+            <table-cell-tag :show="!scope.row.id" color="#e64242" name="特殊" />
             <span>{{ scope.row.name }}</span>
           </template>
         </el-table-column>
@@ -51,7 +54,7 @@
         </el-table-column>
         <el-table-column align="center" key="totalNetWeight" prop="totalNetWeight" :show-overflow-tooltip="true" label="需生产量（kg）">
           <template v-slot="scope">
-            <span>{{ scope.row.totalNetWeight }}</span>
+            <span>{{ weightStatus === weightTypeEnum.NET.V ? scope.row.totalNetWeight : scope.row.totalGrossWeight }}</span>
           </template>
         </el-table-column>
         <el-table-column align="center" key="completeQuantity" prop="completeQuantity" :show-overflow-tooltip="true" label="完成（件）">
@@ -75,14 +78,20 @@
           </template>
         </el-table-column>
       </common-table>
-      <process-detail v-model:visible="dialogVisible" :project-id="props.processData.id" :detail-data="detailData" />
+      <process-detail
+        v-model:visible="dialogVisible"
+        :project-id="props.processData.id"
+        :detail-data="detailData"
+        :weightStatus="weightStatus"
+      />
     </div>
   </div>
 </template>
 <script setup>
 import { ref, defineProps, watch, provide } from 'vue'
 import { getProcessList } from '@/api/mes/production-manage/dashboard/project-overview'
-import { componentTypeEnum } from '@enum-ms/mes'
+// import { componentTypeEnum } from '@enum-ms/mes'
+import { weightTypeEnum } from '@enum-ms/common'
 import { mesProjectOverviewPM as permission } from '@/page-permission/mes'
 import useMaxHeight from '@compos/use-max-height'
 import monomerSelectAreaSelect from '@comp-base/monomer-select-area-select'
@@ -96,6 +105,7 @@ const productType = ref()
 const monomerId = ref()
 const areaId = ref()
 const productionLineId = ref()
+const weightStatus = ref(weightTypeEnum.NET.V)
 const factoryId = ref()
 const workshopId = ref()
 const detailData = ref([])
@@ -104,12 +114,12 @@ const dialogVisible = ref(false)
 const props = defineProps({
   processData: {
     type: Object,
-    default: () => {}
-  }
+    default: () => {},
+  },
 })
 
 watch(
-  [() => props.processData?.id, () => monomerId.value, () => areaId.value, () => productType.value, () => productionLineId.value],
+  [() => props.processData?.id, () => monomerId.value, () => areaId.value, () => productionLineId.value, () => weightStatus.value],
   () => {
     processListGet()
   }
@@ -121,7 +131,7 @@ provide('productionLineId', productionLineId)
 
 const { maxHeight } = useMaxHeight({
   extraBox: ['.head-container'],
-  paginate: true
+  paginate: true,
 })
 
 async function processListGet() {
@@ -134,7 +144,7 @@ async function processListGet() {
       monomerId: monomerId.value,
       areaId: areaId.value,
       projectId: props.processData.id,
-      productionLineId: productionLineId.value
+      productionLineId: productionLineId.value,
     })
     processList.value = data
   } catch (e) {

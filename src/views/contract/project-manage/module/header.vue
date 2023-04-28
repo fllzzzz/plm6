@@ -45,7 +45,7 @@
       />
       <common-select
         v-model="query.projectType"
-        :options="projectTypeEnum.ENUM"
+        :options="projectTypeEnumArr"
         type="enum"
         size="small"
         clearable
@@ -66,6 +66,17 @@
         style="width:200px"
         @change="crud.toQuery"
         filterable
+      />
+      <common-select
+        type="enum"
+        size="small"
+        v-model="query.structureStatus"
+        :options="query.projectType!==projectTypeEnum.BRIDGE.V?[structureTypeEnum.WORKSHOP,structureTypeEnum.FRAME,structureTypeEnum.SPACE]:[structureTypeEnum.BEAM_TYPE,structureTypeEnum.ARCH_TYPE,structureTypeEnum.STEEL_FRAME]"
+        class="filter-item"
+        placeholder="结构类型"
+        clearable
+        style="width: 200px"
+        @change="crud.toQuery"
       />
       <branch-company-select
         v-model="query.contractSignBodyId"
@@ -88,8 +99,8 @@
         <el-input
           v-model.trim="query.signerName"
           size="small"
-          placeholder="输入签约人"
-          style="width: 120px;"
+          placeholder="销售负责人"
+          style="width: 180px;"
           class="filter-item"
           clearable
           @blur="crud.toQuery"
@@ -163,7 +174,7 @@ import { regHeader } from '@compos/use-crud'
 import checkPermission from '@/utils/system/check-permission'
 import rrOperation from '@crud/RR.operation'
 import crudOperation from '@crud/CRUD.operation'
-import { projectStatusEnum, projectTypeEnum, businessTypeEnum } from '@enum-ms/contract'
+import { projectStatusEnum, projectTypeEnum, businessTypeEnum, structureTypeEnum } from '@enum-ms/contract'
 import { settlementStatusEnum } from '@enum-ms/finance'
 import { getContentInfo } from '@/api/contract/project'
 import { ElRadioGroup } from 'element-plus'
@@ -171,6 +182,12 @@ import completeList from './complete-list'
 import { completeData, projectNumData } from '@/api/contract/project'
 import branchCompanySelect from '@comp-base/branch-company-select.vue'
 import Panel from '@/components/Panel'
+import { mapGetters } from '@/store/lib'
+
+const { projectTypeEnumArr, flag } = mapGetters([
+  'projectTypeEnumArr',
+  'flag'
+])
 
 // const projectContentOption = ref([])
 let machiningData = []
@@ -205,8 +222,7 @@ const props = defineProps({
   }
 })
 const projectContentOption = computed(() => {
-  if (query.businessType && query.projectType) {
-    console.log(machiningData)
+  if (query.projectType) {
     switch (query.projectType) {
       case projectTypeEnum.STEEL.V:
         return query.businessType === businessTypeEnum.MACHINING.V ? machiningData[projectTypeEnum.STEEL.V] : installData[projectTypeEnum.STEEL.V]
@@ -233,8 +249,8 @@ contentInfo()
 
 async function contentInfo() {
   try {
-    machiningData = await getContentInfo({ businessType: businessTypeEnum.MACHINING.V })
-    installData = await getContentInfo({ businessType: businessTypeEnum.INSTALLATION.V })
+    machiningData = await getContentInfo({ businessType: businessTypeEnum.MACHINING.V, flag: flag.value })
+    installData = await getContentInfo({ businessType: businessTypeEnum.INSTALLATION.V, flag: flag.value })
     const dataArr = [machiningData, installData]
     for (let i = 0; i < dataArr.length; i++) {
       if (dataArr[i] && dataArr[i][projectTypeEnum.STEEL.V].length > 0) {

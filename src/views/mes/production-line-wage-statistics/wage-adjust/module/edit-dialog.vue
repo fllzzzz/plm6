@@ -173,7 +173,7 @@ const hasAreaQuota = ref(false)
 
 // 油漆类 且计价方式为面积 需要显示底漆、中间漆、面漆的单价
 const showMoreColumn = computed(() => {
-  return !!(props.processInfo && props.processInfo?.type & processCategoryEnum.PAINT.V && true)
+  return !!(props.processInfo && props.processInfo?.type & processCategoryEnum.PAINT.V && hasAreaQuota.value)
 })
 
 function showHook() {

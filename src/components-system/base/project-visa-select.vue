@@ -78,6 +78,14 @@ const props = defineProps({
   businessType: {
     type: Number,
     default: businessTypeEnum.MACHINING.V
+  },
+  projectStatus: {
+    type: Number,
+    default: undefined
+  },
+  saveSettlement: {
+    type: Boolean,
+    default: false
   }
 })
 
@@ -89,7 +97,16 @@ const store = useStore()
 const { visaProjects } = useUserVisaProjects()
 
 const options = computed(() => {
-  const projectData = visaProjects.value.filter(v => v.businessType === props.businessType)
+  const filterData = visaProjects.value.filter(v => v.businessType === props.businessType)
+  let projectData = []
+  if (props.projectStatus) {
+    projectData = filterData.filter(v => v.status === props.projectStatus)
+  } else {
+    projectData = filterData
+  }
+  if (props.saveSettlement) {
+    projectData = projectData.filter(v => v.isSubmitSettle === true)
+  }
   // 是否过滤有结算记录的项目
   return projectData.filter(v => {
     // isSubmitSettle === true 表示该项目有结算记录

@@ -13,7 +13,7 @@
       />
       <common-radio-button
         v-model="query.type"
-        :options="TechnologyTypeAllEnum.ENUM"
+        :options="[TechnologyTypeAllEnum.STRUCTURE]"
         type="enum"
         class="filter-item"
         @change="crud.toQuery"

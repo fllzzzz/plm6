@@ -1,11 +1,13 @@
 <template>
   <common-drawer
+    ref="drawerRef"
     append-to-body
     v-model="visible"
     top="10vh"
     width="600px"
     :before-close="handleClose"
     title="发生记录"
+    custom-class="occur-detail"
     :wrapper-closable="false"
     size="80%"
   >
@@ -13,7 +15,7 @@
       <common-table
         ref="tableRef"
         :data="tableData"
-        :max-height="maxHeight"
+        :max-height="maxHeight-60"
         style="width: 100%"
         return-source-data
         :showEmptySymbol="false"
@@ -24,12 +26,12 @@
           <span style="cursor: pointer;">{{ scope.row.name }}</span>
         </template>
       </el-table-column>
-      <el-table-column key="serialNumber" prop="serialNumber" :show-overflow-tooltip="true" label="编号">
+      <el-table-column key="serialNumber" prop="serialNumber" :show-overflow-tooltip="true" label="编号" min-width="120">
         <template v-slot="scope">
           <span>{{ scope.row.serialNumber }}</span>
         </template>
       </el-table-column>
-      <el-table-column key="specification" prop="specification" :show-overflow-tooltip="true" label="规格">
+      <el-table-column key="specification" prop="specification" :show-overflow-tooltip="true" label="规格" min-width="120">
         <template v-slot="scope">
           <span>{{ scope.row.specification }}</span>
         </template>
@@ -39,7 +41,7 @@
           <span>{{ scope.row.material }}</span>
         </template>
       </el-table-column>
-      <el-table-column key="measure" prop="measure" :show-overflow-tooltip="true" label="计量单位">
+      <el-table-column key="measure" prop="measure" :show-overflow-tooltip="true" label="计量单位" width="70">
         <template v-slot="scope">
           <span>{{ scope.row.measure }}</span>
         </template>
@@ -49,7 +51,7 @@
           <span>{{ scope.row.quantity }}</span>
         </template>
       </el-table-column>
-      <el-table-column key="nuclear" prop="nuclear" :show-overflow-tooltip="true" label="核算单位">
+      <el-table-column key="nuclear" prop="nuclear" :show-overflow-tooltip="true" label="核算单位" width="70">
         <template v-slot="scope">
           <span>{{ scope.row.nuclear }}</span>
         </template>
@@ -93,13 +95,10 @@ const props = defineProps({
 })
 
 const tableData = ref([])
+const drawerRef = ref()
+
 const emit = defineEmits(['success', 'update:modelValue'])
 const { visible, handleClose } = useVisible({ emit, props })
-const { maxHeight } = useMaxHeight({
-  wrapperBox: '.occurAmountLog',
-  paginate: true,
-  extraHeight: 40
-})
 
 watch(
   () => props.projectId,
@@ -111,6 +110,19 @@ watch(
     }
   },
   { deep: true, immediate: true }
+)
+
+const { maxHeight } = useMaxHeight(
+  {
+    mainBox: '.occur-detail',
+    extraBox: '.el-drawer__header',
+    wrapperBox: '.el-drawer__body',
+    paginate: true,
+    minHeight: 300,
+    navbar: false,
+    clientHRepMainH: true
+  },
+  drawerRef
 )
 
 async function getOccurLog() {

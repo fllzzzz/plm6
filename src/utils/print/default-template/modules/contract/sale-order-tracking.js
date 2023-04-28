@@ -7,7 +7,7 @@ const saleOrderTracking = {
   unit: cssUnitEnum.MM.V, // 长度单位
   unitPrecision: cssUnitPrecisionEnum.ZERO.V, // 长度单位精度
   type: 'saleOrderTracking', // 表格类型 KEY
-  name: '订单跟踪（平台）', // 表格名称
+  name: '销售台账（平台）', // 表格名称
   width: 210, // 打印纸的宽度
   height: 297, // 打印纸的高度
   paddingLR: 10, // 左右内边距
@@ -61,7 +61,7 @@ const saleOrderTracking = {
   title: {
     show: true,
     allPage: false,
-    title: '订单跟踪',
+    title: '销售台账',
     align: alignEnum.CENTER.V,
     verticleAlign: verticleAlignEnum.CENTER.V,
     size: 17,
@@ -218,5 +218,5 @@ const saleOrderTracking = {
 }
 
 export default {
-  saleOrderTracking // 订单跟踪
+  saleOrderTracking // 销售台账
 }

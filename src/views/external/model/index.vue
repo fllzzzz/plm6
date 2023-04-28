@@ -133,6 +133,11 @@ async function loadModel(viewToken) {
     tip.value = modelStatus.value.status
 
     _viewer.value = app.value.getViewer()
+
+    // setInterval(() => {
+    // 获取相机位置
+    //   console.log('_viewer.value.setCameraStatus: ', _viewer.value.getCameraStatus())
+    // }, 1000)
     _viewer3DEvent.value = bimModel.getViewer3DEvent()
     _viewer.value.addEventListener(
       _viewer3DEvent.value.ViewAdded,
@@ -146,8 +151,39 @@ async function loadModel(viewToken) {
         //   }
         //   _viewer.value.clearSelectedComponents()
         // }
+        // 设置相机位置
+        _viewer.value.setCameraStatus({
+          'name': 'persp',
+          'position': {
+            'x': 54.547698323782186,
+            'y': 86.83118048858243,
+            'z': 77.13685483363594
+          },
+          'target': {
+            'x': 2140.3670003318134,
+            'y': 2042.015833744974,
+            'z': -1534.4280786281722
+          },
+          'up': {
+            'x': 0.358267488959695,
+            'y': 0.33582501629812855,
+            'z': 0.8711291320940178
+          },
+          'near': 0.21709201041907406,
+          'far': 1862.4471785859046,
+          'zoom': 12.659755707466722,
+          'version': 1,
+          'fov': 45,
+          'aspect': 2.049092849519744,
+          'coordinateSystem': 'world'
+        })
+        // 隐藏构件
+        _viewer.value.hideComponentsById(['741'])
+        // 是否开启构件线框
+        _viewer.value.enableWireframe(false)
+        _viewer.value.toggleContextMenuDisplay(false)
         _viewer.value.render()
-        autoRotate()
+        // autoRotate()
       },
       { passive: false }
     )
@@ -158,9 +194,9 @@ async function loadModel(viewToken) {
 }
 
 // 自动旋转
-function autoRotate(speed = 2) {
-  _viewer.value.startAutoRotate(speed)
-}
+// function autoRotate(speed = 2) {
+//   _viewer.value.startAutoRotate(speed)
+// }
 </script>
 
 <style lang="scss" scoped>
@@ -168,8 +204,8 @@ function autoRotate(speed = 2) {
   min-height: 100%;
 }
 .app-model-container {
-  width: 900px;
-  height: 580px;
+  width: 100%;
+  height: 100vh;
   overflow: hidden;
 }
 ::v-deep(#modelView) {

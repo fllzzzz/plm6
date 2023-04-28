@@ -38,11 +38,11 @@
             </el-form-item>
           </div>
           <div class="form-row">
-              <el-form-item label="签约人" prop="signerId">
+              <!-- <el-form-item label="签约人" prop="signerId">
               <div style="width: 200px">
                 <span>{{ detail.signerName }}</span>
               </div>
-            </el-form-item>
+            </el-form-item> -->
             <el-form-item label="签订日期" prop="signingDate">
               <div style="width: 200px">
                 <span v-if="detail.signingDate">{{ parseTime(detail.signingDate,'{y}-{m}-{d}') }}</span>
@@ -54,7 +54,44 @@
               </div>
             </el-form-item>
           </div>
-          <div class="form-row">
+          <div v-if="detail.structureMeasureMode">
+            <el-divider><span class="title">结构</span></el-divider>
+            <div class="form-row">
+              <el-form-item label="结构工程量" prop="quantityWork">
+                <span>{{detail.quantityWork}}</span>吨
+              </el-form-item>
+              <el-form-item label="结构类型" prop="structureStatus">
+                <span>{{detail.structureStatus?structureTypeEnum.VL[detail.structureStatus]:'-'}}</span>
+              </el-form-item>
+            </div>
+            <div class="form-row">
+              <el-form-item label="结构结算方式" prop="structureMeasureMode">
+                 <span>{{
+                  isNotBlank(detail.structureMeasureMode) ? engineerSettlementTypeEnumN.VL[detail.structureMeasureMode] : ''
+                }}</span>
+              </el-form-item>
+              <el-form-item label="结构运输方式" prop="transportMode">
+                <span>{{ isNotBlank(detail.transportMode) ? transportModeEnum.VL[detail.transportMode] : '' }}</span>
+              </el-form-item>
+            </div>
+          </div>
+          <div class="form-row" v-if="detail.measureModeList && detail.measureModeList.length>0">
+            <el-divider><span class="title">围护</span></el-divider>
+            <el-form-item label="围护运输方式" prop="enclosureTransportMode">
+              <span>{{ isNotBlank(detail.enclosureTransportMode) ? transportModeEnum.VL[detail.enclosureTransportMode] : '' }}</span>
+            </el-form-item>
+            <el-form-item label="围护结算方式与工程量" prop="measureModeList" v-if="detail.measureModeList?.length>0" label-width="220px">
+              <template v-if="detail.measureModeList.length>0">
+                <div v-for="(item,index) in detail.measureModeList" :key="index" style="display:flex;">
+                  <span style="float:left;width:90px;text-align:right;">{{TechnologyTypeAllEnum.VL[item.no]}}：</span>
+                  <span style="float:left;">{{enclosureSettlementTypeEnum.VL[item.measureMode]}}</span>
+                  <span style="margin-left:5px;">工程量：{{item.quantityWork}}</span>
+                  <span style="margin-left:2px;">{{item.measureMode===enclosureSettlementTypeEnum.LENGTH.V?'m':'㎡'}}</span>
+                </div>
+              </template>
+            </el-form-item>
+          </div>
+          <!-- <div class="form-row">
             <el-form-item label="工程结算方式" prop="structureMeasureMode">
               <div style="width: 200px">
                 <span>{{
@@ -80,13 +117,20 @@
                 <span>{{ isNotBlank(detail.payType) ? paymentModeEnum.VL[detail.payType] : '' }}</span>
               </div>
             </el-form-item>
-          </div>
+          </div> -->
           <div class="form-row">
+            <el-form-item label="支付方式" prop="payType">
+              <div>
+                <span>{{ isNotBlank(detail.payType) ? paymentModeEnum.VL[detail.payType] : '' }}</span>
+              </div>
+            </el-form-item>
             <el-form-item label="合同含税" prop="isTax">
               <div style="width: 200px">
                 <span>{{ isNotBlank(detail.isTax) ? isTaxContractEnum.VL[detail.isTax] : '' }}</span>
               </div>
             </el-form-item>
+          </div>
+           <div class="form-row">
             <el-form-item label="发票类型" prop="invoiceType">
               <div class="input-underline form-row" style="width: 200px">
                 <span>{{ detail.invoiceType ? invoiceTypeEnum.VL[detail.invoiceType] : '' }}</span>
@@ -100,6 +144,13 @@
             <el-form-item label="付款方式描述" prop="payTypeDesc">
               <div class="input-underline" style="width: 600px">
                 <div style="max-height:220px;overflow-y:auto;word-break:break-all;">{{ detail.payTypeDesc }}</div>
+              </div>
+            </el-form-item>
+          </div>
+          <div class="form-row">
+            <el-form-item label="技术要求描述" prop="technologyRemark">
+              <div class="input-underline" style="width: 600px">
+                <div style="max-height:220px;overflow-y:auto;word-break:break-all;">{{ detail.technologyRemark }}</div>
               </div>
             </el-form-item>
           </div>
@@ -121,7 +172,8 @@ import {
   enclosureSettlementTypeEnum,
   transportModeEnum,
   TechnologyTypeEnum,
-  TechnologyTypeAllEnum
+  TechnologyTypeAllEnum,
+  structureTypeEnum
 } from '@enum-ms/contract'
 import { invoiceTypeEnum, paymentModeEnum } from '@enum-ms/finance'
 import { isNotBlank } from '@data-type/index'

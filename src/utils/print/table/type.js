@@ -44,13 +44,19 @@ const plan = {
   technical_manage: '技术管理'
 }
 
+const enclosure = {
+  production_manage: '生产管理',
+  production_report: '生产报表'
+}
+
 const moduleType = {
   contract: { L: '合同管理', V: contract },
   supply: { L: '供应链', V: supply },
   wms: { L: 'WMS', V: wms },
   mes: { L: 'MES', V: mes },
   project: { L: '项目管理', V: project },
-  plan: { L: '计划管理', V: plan }
+  plan: { L: '计划管理', V: plan },
+  enclosure: { L: '围护MES', V: enclosure }
 }
 
 const mt = moduleType
@@ -72,14 +78,20 @@ const tableType = {
   supplierPayableSummary: { L: '应付汇总', M: 'supplier_payment', T: mt.contract.L + ' / ' + contract.supplier_payment },
 
   contractStructurePrice: { L: '结构计价表', M: 'sales_manage', T: mt.contract.L + ' / ' + contract.sales_manage },
+  contractMachinePartPrice: { L: '散发制品计价表', M: 'sales_manage', T: mt.contract.L + ' / ' + contract.sales_manage },
   contractEnclosurePrice: { L: '围护计价表', M: 'sales_manage', T: mt.contract.L + ' / ' + contract.sales_manage },
   contractAuxiliaryMaterialPrice: { L: '配套件计价表', M: 'sales_manage', T: mt.contract.L + ' / ' + contract.sales_manage },
   projectCollectionDetail: { L: '项目收款明细表', M: 'sales_manage', T: mt.contract.L + ' / ' + contract.sales_manage },
   projectInvoiceDetail: { L: '项目开票明细表', M: 'sales_manage', T: mt.contract.L + ' / ' + contract.sales_manage },
   projectHappenedDetail: { L: '项目出库明细表', M: 'sales_manage', T: mt.contract.L + ' / ' + contract.sales_manage },
   transactionRecord: { L: '客户交易记录', M: 'sales_manage', T: mt.contract.L + ' / ' + contract.sales_manage },
-  saleOrderTracking: { L: '订单跟踪', M: 'sales_manage', T: mt.contract.L + ' / ' + contract.sales_manage },
+  saleOrderTracking: { L: '销售台账', M: 'sales_manage', T: mt.contract.L + ' / ' + contract.sales_manage },
   projectWarehouseRecord: { L: '入库记录', M: 'sales_manage', T: mt.contract.L + ' / ' + contract.sales_manage },
+  contractStructureProduct: { L: '结构制品', M: 'sales_manage', T: mt.contract.L + ' / ' + contract.sales_manage },
+  contractEnclosureProduct: { L: '围护制品', M: 'sales_manage', T: mt.contract.L + ' / ' + contract.sales_manage },
+  contractAuxiliaryMaterialProduct: { L: '配套制品', M: 'sales_manage', T: mt.contract.L + ' / ' + contract.sales_manage },
+  contractStructureShipmentTracking: { L: '结构发运跟踪', M: 'sales_manage', T: mt.contract.L + ' / ' + contract.sales_manage },
+  contractAuxiliaryMaterialShipmentTracking: { L: '配套件发运跟踪', M: 'sales_manage', T: mt.contract.L + ' / ' + contract.sales_manage },
 
   industryElectricRecord: { L: '工业用电电费清单', M: 'expense_entry', T: mt.contract.L + ' / ' + contract.expense_entry },
   civilElectricRecord: { L: '民用用电电费清单', M: 'expense_entry', T: mt.contract.L + ' / ' + contract.expense_entry },
@@ -156,6 +168,7 @@ const tableType = {
   mesPaintingList: { L: '油漆用量明细', M: 'mes_production', T: mt.mes.L + ' / ' + mes.mes_production },
   mesQHSEProductionLineReport: { L: '生产线质检不合格报表', M: 'mes_production', T: mt.mes.L + ' / ' + mes.mes_production },
   mesProjectOverviewList: { L: '工序生产明细清单', M: 'mes_production', T: mt.mes.L + ' / ' + mes.mes_production },
+  mesSchedulingDataList: { L: '排产数据明细清单', M: 'mes_production', T: mt.mes.L + ' / ' + mes.mes_production },
 
   mesStructureTeamWage: { L: '结构班组工资', M: 'mes_wage', T: mt.mes.L + ' / ' + mes.mes_wage },
   mesEnclosureTeamWage: { L: '围护班组工资', M: 'mes_wage', T: mt.mes.L + ' / ' + mes.mes_wage },
@@ -165,6 +178,10 @@ const tableType = {
   mesWarehouseStateStructure: { L: '结构出入库状态', M: 'mes_warehouse', T: mt.mes.L + ' / ' + mes.mes_warehouse },
   mesWarehouseStateEnclosure: { L: '围护出入库状态', M: 'mes_warehouse', T: mt.mes.L + ' / ' + mes.mes_warehouse },
   mesWarehouseStateReport: { L: '入发存报表', M: 'mes_warehouse', T: mt.mes.L + ' / ' + mes.mes_warehouse },
+  mesBeginningInventoryDetail: { L: '期初库存', M: 'mes_warehouse', T: mt.mes.L + ' / ' + mes.mes_warehouse },
+  mesEndInventoryDetail: { L: '期末库存', M: 'mes_warehouse', T: mt.mes.L + ' / ' + mes.mes_warehouse },
+  mesInboundInventoryDetail: { L: '入库量', M: 'mes_warehouse', T: mt.mes.L + ' / ' + mes.mes_warehouse },
+  mesOutboundInventoryDetail: { L: '出库量', M: 'mes_warehouse', T: mt.mes.L + ' / ' + mes.mes_warehouse },
 
   mesPackingList: { L: '打包清单', M: 'mes_logistics', T: mt.mes.L + ' / ' + mes.mes_logistics },
   mesShipmentSummary: { L: '发运汇总', M: 'mes_logistics', T: mt.mes.L + ' / ' + mes.mes_logistics },
@@ -195,6 +212,13 @@ const tableType = {
 
   mesStudSleeveStatisticsList: { L: '栓钉套筒统计清单详情', M: 'mes_production_line_wage_statistics', T: mt.mes.L + ' / ' + mes.mes_production_line_wage_statistics },
   mesProjectShipDetail: { L: '项目发运详情报表', M: 'mes_pack_and_ship_manage', T: mt.mes.L + ' / ' + mes.mes_pack_and_ship_manage },
+  mesShipMeteDetail: { L: '清单总量详情报表', M: 'mes_pack_and_ship_manage', T: mt.mes.L + ' / ' + mes.mes_pack_and_ship_manage },
+  mesShipTaskMeteDetail: { L: '任务总量详情报表', M: 'mes_pack_and_ship_manage', T: mt.mes.L + ' / ' + mes.mes_pack_and_ship_manage },
+  mesShipInboundMeteDetail: { L: '入库量详情报表', M: 'mes_pack_and_ship_manage', T: mt.mes.L + ' / ' + mes.mes_pack_and_ship_manage },
+  mesShipTotalMeteDetail: { L: '累计发运详情报表', M: 'mes_pack_and_ship_manage', T: mt.mes.L + ' / ' + mes.mes_pack_and_ship_manage },
+  mesShipMonthMeteDetail: { L: '本月发运详情报表', M: 'mes_pack_and_ship_manage', T: mt.mes.L + ' / ' + mes.mes_pack_and_ship_manage },
+  mesShipStockMeteDetail: { L: '库存详情报表', M: 'mes_pack_and_ship_manage', T: mt.mes.L + ' / ' + mes.mes_pack_and_ship_manage },
+  mesShipTrainMeteDetail: { L: '累计车次详情报表', M: 'mes_pack_and_ship_manage', T: mt.mes.L + ' / ' + mes.mes_pack_and_ship_manage },
   mesProductSendReceiveStorage: { L: '制成品入发存', M: 'mes_pack_and_ship_manage', T: mt.mes.L + ' / ' + mes.mes_pack_and_ship_manage },
   productSendReceiveStorageDetail: { L: '制成品入发存详情', M: 'mes_pack_and_ship_manage', T: mt.mes.L + ' / ' + mes.mes_pack_and_ship_manage },
 
@@ -210,7 +234,14 @@ const tableType = {
   installReportList: { L: '安装报表', M: 'install_manage', T: mt.project.L + ' / ' + project.install_manage },
 
   // 计划管理
-  auxiliaryMaterialSummary: { L: '配套件汇总', M: 'technical_manage', T: mt.plan.L + ' / ' + plan.technical_manage }
+  auxiliaryMaterialSummary: { L: '配套件汇总', M: 'technical_manage', T: mt.plan.L + ' / ' + plan.technical_manage },
+
+  // 围护MES
+  enclosureSchedulingWorkOrderDetail: { L: '排产工单详情', M: 'production_manage', T: mt.plan.L + ' / ' + enclosure.production_manage },
+  enclosureTaskTrackingDetail: { L: '生产跟踪详情', M: 'production_manage', T: mt.plan.L + ' / ' + enclosure.production_manage },
+  enclosureProductionStatistics: { L: '围护生产统计', M: 'production_report', T: mt.plan.L + ' / ' + enclosure.production_report },
+  enclosureTeamProduction: { L: '围护班组产量', M: 'production_report', T: mt.plan.L + ' / ' + enclosure.production_report },
+  enclosureTeamProductionDetail: { L: '围护班组产量详情', M: 'production_report', T: mt.plan.L + ' / ' + enclosure.production_report }
 
 }
 

@@ -14,7 +14,7 @@
       />
       <common-radio-button
         v-model="query.productType"
-        :options="installProjectTypeEnum.ENUM"
+        :options="installTypeEnumArr"
         type="enum"
         class="filter-item"
         @change="productTypeChange"
@@ -117,6 +117,9 @@ import { manufactureTypeEnum } from '@enum-ms/plan'
 import crudOperation from '@crud/CRUD.operation'
 import rrOperation from '@crud/RR.operation'
 import monomerSelect from '@/components-system/plan/monomer-select'
+import { mapGetters } from '@/store/lib'
+
+const { installTypeEnumArr } = mapGetters('installTypeEnumArr')
 
 const defaultQuery = {
   projectId: { value: undefined, resetAble: false },

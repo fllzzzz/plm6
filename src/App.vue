@@ -21,7 +21,7 @@ const route = useRoute()
 watch(
   () => route.path,
   () => {
-    route.meta.projectType = route.path === '/' ? allPT : (route.meta.ownProductType || route.meta.projectType)
+    route.meta.projectType = (route.path === '/' || route.path === '/login') ? allPT : (route.meta.ownProductType || route.meta.projectType)
     nextTick(() => {
       store.dispatch('project/setRouteProjectByMeta', route.meta)
     })

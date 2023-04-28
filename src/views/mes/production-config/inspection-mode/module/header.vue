@@ -2,6 +2,7 @@
   <component-radio-button
     v-model="query.productType"
     :options="typeEnum.ENUM"
+    :unshowVal="[typeEnum.ENCLOSURE.V]"
     class="filter-item"
     type="enum"
     size="small"

@@ -124,3 +124,14 @@ export function getProjectInfo(params) {
   })
 }
 
+/**
+ * 获取围护生产组信息 车间-产线-生产组
+ */
+export function enclosureGroupsTree(params) {
+  return request({
+    module: 'enclosure',
+    url: 'scheduling/tree',
+    method: 'get',
+    params
+  })
+}
