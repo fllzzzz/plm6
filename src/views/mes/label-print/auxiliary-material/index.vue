@@ -80,15 +80,15 @@
         align="center"
         width="120px"
       >
-        <template v-slot="scope">
-          <el-input-number v-model="scope.row.printQuantity" :step="1" :min="0" size="mini" style="width: 100%" controls-position="right" />
+        <template #default="{ row: { sourceRow: row } }">
+          <el-input-number v-model="row.printQuantity" :step="1" :min="0" size="mini" style="width: 100%" controls-position="right" />
         </template>
       </el-table-column>
       <el-table-column label="操作" width="225px" align="center" fixed="right">
-        <template v-slot="scope">
-          <common-button icon="el-icon-printer" type="success" size="mini" @click="printLabel(scope.row)" />
-          <common-button icon="el-icon-view" type="primary" size="mini" @click="previewLabel(scope.row)" />
-          <common-button type="info" size="mini" @click="openRecordView(scope.row)">打印记录</common-button>
+        <template #default="{ row: { sourceRow: row } }">
+          <common-button icon="el-icon-printer" type="success" size="mini" @click="printLabel(row)" />
+          <common-button icon="el-icon-view" type="primary" size="mini" @click="previewLabel(row)" />
+          <common-button type="info" size="mini" @click="openRecordView(row)">打印记录</common-button>
         </template>
       </el-table-column>
     </common-table>
