@@ -94,13 +94,12 @@
         label="金额"
       />
       <el-table-column
-        v-if="columns.visible('shipmentTime')"
-        key="shipmentTime"
-        prop="shipmentTime"
+        v-if="columns.visible('createTime')"
+        key="createTime"
+        prop="createTime"
         align="center"
-        sortable="custom"
         label="发运日期"
-        width="120"
+        width="100"
       />
     </common-table>
     <!--分页组件-->
@@ -109,9 +108,10 @@
 </template>
 
 <script setup>
-import crudApi from '@/api/contract/sales-manage/price-manage/structure'
+import { structureList as get } from '@/api/contract/sales-manage/shipment-tracking'
 import { ref } from 'vue'
-import { transactionRecordPM as permission } from '@/page-permission/contract'
+
+import { shipmentTrackingPM as permission } from '@/page-permission/contract'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
@@ -128,7 +128,7 @@ const optShow = {
 const tableRef = ref()
 const headerRef = ref()
 const dataFormat = ref([
-  ['shipmentTime', 'parse-time'],
+  ['createTime', ['parse-time', '{y}-{m}-{d}']],
   ['unitPrice', 'to-thousand'],
   ['totalPrice', 'to-thousand']
 ])
@@ -138,8 +138,9 @@ const { crud, columns } = useCRUD(
     title: '围护制品',
     sort: [],
     permission: { ...permission },
-    crudApi: { ...crudApi },
+    crudApi: { get },
     optShow: { ...optShow },
+    invisibleColumns: [],
     requiredQuery: ['projectId']
   },
   tableRef

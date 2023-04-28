@@ -30,10 +30,10 @@
                   item.detailLoading
                     ? '正在加载中...'
                     : `名称：${item.name}\n
-                  规格：${item.serialNumber}\n
-                  板型：${item.plate}\n
-                  品牌：${item.brand}\n
-                  颜色：${item.color}\n
+                  规格：${item.serialNumber || '-'}\n
+                  板型：${item.plate || '-'}\n
+                  品牌：${item.brand || '-'}\n
+                  颜色：${item.color || '-'}\n
                   清单量：${item.quantity}张\n
                   生产量：${item.producedQuantity}张\n
                   排产量：${item.schedulingQuantity}张`

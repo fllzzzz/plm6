@@ -32,6 +32,7 @@
         type="enum"
         size="small"
         class="filter-item"
+        :disabledVal="[packTypeEnum.ENCLOSURE.V]"
         @change="crud.toQuery"
       />
       <common-radio-button

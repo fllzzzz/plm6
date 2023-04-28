@@ -1,6 +1,12 @@
 <template>
   <common-dialog
-    :title="`${component.name ? component.name + '-' + component.serialNumber : component.serialNumber}`"
+    :title="`${
+      productType === componentTypeEnum.AUXILIARY_MATERIAL.V
+        ? component.name
+        : component.name
+        ? component.name + '-' + component.serialNumber
+        : component.serialNumber
+    }`"
     v-model:visible="dialogVisible"
     width="640px"
     :before-close="handleClose"
@@ -25,7 +31,7 @@
 <script setup>
 import { computed, defineEmits, defineProps } from 'vue'
 import QrcodeVue from 'qrcode.vue'
-
+import { componentTypeEnum } from '@enum-ms/mes'
 import { getPreviewLabelHtml } from '@/utils/label/index.js'
 
 import useVisible from '@compos/use-visible'

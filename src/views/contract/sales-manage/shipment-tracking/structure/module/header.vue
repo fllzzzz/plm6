@@ -2,24 +2,6 @@
   <div class="head-container">
     <div v-show="crud.searchToggle">
       <el-input
-        v-model="query.monomerName"
-        placeholder="可输入单体名称搜索"
-        class="filter-item"
-        style="width: 200px"
-        size="small"
-        clearable
-        @keyup.enter="crud.toQuery"
-      />
-      <el-input
-        v-model="query.areaName"
-        placeholder="可输入区域名称搜索"
-        class="filter-item"
-        style="width: 200px"
-        size="small"
-        clearable
-        @keyup.enter="crud.toQuery"
-      />
-      <el-input
         v-model="query.serialNumber"
         placeholder="可输入编号搜索"
         class="filter-item"
@@ -52,19 +34,23 @@
       <template #optRight>
         <el-tag size="medium" effect="plain">
           统计日期：
-          <span v-parse-time="{ val: statisticalTime?.[0], fmt: '{y}-{m}-{d}' }" />
+          <span v-parse-time="{ val: query.startDate, fmt: '{y}-{m}-{d}' }" />
           ~
-          <span v-parse-time="{ val: statisticalTime?.[1], fmt: '{y}-{m}-{d}' }" />
+          <span v-parse-time="{ val: query.endDate, fmt: '{y}-{m}-{d}' }" />
         </el-tag>
       </template>
       <template #viewLeft>
         <print-table
           v-permission="crud.permission.print"
-          api-key="contractStructureProduct"
-          :params="{ projectId: query.projectId }"
+          api-key="contractStructureShipmentTracking"
+          :params="{
+            projectId: query.projectId,
+            productType: query.productType,
+            startDate: query.startDate,
+            endDate: query.endDate,
+          }"
           size="mini"
           type="warning"
-          class="filter-item"
         />
       </template>
     </crudOperation>
@@ -76,31 +62,38 @@ import { watch, nextTick, inject } from 'vue'
 
 import { convertUnits } from '@/utils/convert/unit'
 import { DP } from '@/settings/config'
+import { PICKER_OPTIONS_SHORTCUTS } from '@/settings/config'
+import moment from 'moment'
+import { installProjectTypeEnum } from '@enum-ms/project'
 
 import { regHeader } from '@compos/use-crud'
 import crudOperation from '@crud/CRUD.operation'
 import rrOperation from '@crud/RR.operation'
 
-const projectId = inject('projectId')
-const statisticalTime = inject('statisticalTime')
+const commonParams = inject('commonParams')
 
 watch(
-  projectId,
-  (val) => {
+  commonParams,
+  (data = {}) => {
     nextTick(() => {
-      crud.query.projectId = val
+      for (const key in data) {
+        crud.query[key] = data[key]
+      }
       crud.toQuery()
     })
   },
-  { immediate: true }
+  { immediate: true, deep: true }
 )
 
+const times = PICKER_OPTIONS_SHORTCUTS[1]?.value()
+
 const defaultQuery = {
-  areaName: undefined,
-  monomerName: undefined,
+  startDate: moment(times[0]).valueOf(),
+  endDate: moment(times[1]).valueOf(),
   serialNumber: undefined,
   specification: undefined,
   material: undefined,
+  productType: installProjectTypeEnum.ARTIFACT.V,
   projectId: { value: undefined, resetAble: false }
 }
 const { crud, query, CRUD } = regHeader(defaultQuery)

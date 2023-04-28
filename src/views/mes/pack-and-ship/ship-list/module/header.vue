@@ -17,6 +17,7 @@
         showOptionAll
         type="enum"
         size="small"
+        :disabledVal="[packTypeEnum.ENCLOSURE.V]"
         class="filter-item"
         @change="crud.toQuery"
       />
