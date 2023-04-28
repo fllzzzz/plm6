@@ -195,7 +195,8 @@ const list = computed(() => {
             contract.value.structureMeasureMode === weightMeasurementModeEnum.OVERWEIGHT.V
               ? convertUnits(v.totalWeight, 'kg', 't')
               : convertUnits(v.weight * v.showQuantity, 'kg', 't')
-          v.totalPrice = v.pricingManner === pricingMannerEnum.WEIGHT.V ? v.totalMete * (v.unitPrice || 0) : v.totalLength * (v.unitPrice || 0)
+          v.totalPrice = v.boolAllPartSendDirectly
+            ? v.totalPrice : (v.pricingManner === pricingMannerEnum.WEIGHT.V ? v.totalMete * (v.unitPrice || 0) : v.totalLength * (v.unitPrice || 0))
           return v
         })
       )
