@@ -60,8 +60,6 @@
 <script setup>
 import { watch, nextTick, inject } from 'vue'
 
-import { convertUnits } from '@/utils/convert/unit'
-import { DP } from '@/settings/config'
 import { PICKER_OPTIONS_SHORTCUTS } from '@/settings/config'
 import moment from 'moment'
 import { installProjectTypeEnum } from '@enum-ms/project'
@@ -96,12 +94,5 @@ const defaultQuery = {
   productType: installProjectTypeEnum.ARTIFACT.V,
   projectId: { value: undefined, resetAble: false }
 }
-const { crud, query, CRUD } = regHeader(defaultQuery)
-
-// 刷新数据后
-CRUD.HOOK.handleRefresh = (crud, { data }) => {
-  data.content.forEach((v) => {
-    v.totalWeight = convertUnits(v.totalWeight, 'kg', 't', DP.COM_WT__T)
-  })
-}
+const { crud, query } = regHeader(defaultQuery)
 </script>

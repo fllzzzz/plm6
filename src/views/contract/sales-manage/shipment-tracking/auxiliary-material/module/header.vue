@@ -80,7 +80,7 @@ const defaultQuery = {
   endDate: moment(times[1]).valueOf(),
   name: undefined,
   specification: undefined,
-  productType: installProjectTypeEnum.ARTIFACT.V,
+  productType: installProjectTypeEnum.AUXILIARY.V,
   projectId: { value: undefined, resetAble: false }
 }
 const { crud, query } = regHeader(defaultQuery)

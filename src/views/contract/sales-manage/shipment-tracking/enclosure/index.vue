@@ -109,7 +109,7 @@
 
 <script setup>
 import { structureList as get } from '@/api/contract/sales-manage/shipment-tracking'
-import { ref } from 'vue'
+import { ref, defineEmits } from 'vue'
 
 import { shipmentTrackingPM as permission } from '@/page-permission/contract'
 
@@ -117,6 +117,8 @@ import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import pagination from '@crud/Pagination'
 import mHeader from './module/header'
+
+const emit = defineEmits(['resetQuery'])
 
 const optShow = {
   add: false,
@@ -133,7 +135,7 @@ const dataFormat = ref([
   ['totalPrice', 'to-thousand']
 ])
 
-const { crud, columns } = useCRUD(
+const { crud, columns, CRUD } = useCRUD(
   {
     title: '围护制品',
     sort: [],
@@ -151,4 +153,9 @@ const { maxHeight } = useMaxHeight({
   minHeight: 300,
   paginate: true
 })
+
+// 重置前
+CRUD.HOOK.beforeResetQuery = () => {
+  emit('resetQuery')
+}
 </script>
