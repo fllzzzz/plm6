@@ -100,7 +100,7 @@ const defaultQuery = {
   name: undefined,
   plate: undefined,
   serialNumber: undefined,
-  productType: installProjectTypeEnum.ARTIFACT.V,
+  productType: installProjectTypeEnum.ENCLOSURE.V,
   projectId: { value: undefined, resetAble: false }
 }
 const { crud, query } = regHeader(defaultQuery)

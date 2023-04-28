@@ -45,7 +45,6 @@
             text-color="#626262"
             num-color="#1890ff"
             :end-val="summaryData.cargoQuantity || 0"
-            :precision="2"
             :show-empty="productType === installProjectTypeEnum.AUXILIARY.V"
           />
         </el-col>
@@ -70,7 +69,7 @@
         </el-col>
       </el-row>
     </div>
-    <component :is="currentView" ref="domRef" />
+    <component :is="currentView" @reset-query="resetQuery" />
   </div>
 </template>
 
@@ -105,7 +104,6 @@ const currentView = computed(() => {
 
 const { globalProjectId } = mapGetters(['globalProjectId'])
 
-const domRef = ref()
 const productType = ref()
 const summaryLoading = ref(false)
 const summaryData = ref({})
@@ -137,6 +135,11 @@ watch(
 
 function disabledDate(time) {
   return time > new Date()
+}
+
+// 重置
+function resetQuery() {
+  statisticalTime.value = [moment(times[0]).valueOf(), moment(times[1]).valueOf()]
 }
 
 // 获取发运汇总
