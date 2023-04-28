@@ -20,6 +20,7 @@
       <workshop-select
         v-model="workshopId"
         placeholder="请选择车间"
+        :workshop-type="workshopTypeEnum.BUILDING.V"
         :factory-id="factoryId"
         style="width: 200px"
         class="filter-item"
@@ -122,7 +123,7 @@ import moment from 'moment'
 import { PICKER_OPTIONS_SHORTCUTS } from '@/settings/config'
 import workshopSelect from '@comp-mes/workshop-select'
 import { mesGroupReportPM as permission } from '@/page-permission/mes'
-
+import { workshopTypeEnum } from '@enum-ms/common'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import crudOperation from '@crud/CRUD.operation'

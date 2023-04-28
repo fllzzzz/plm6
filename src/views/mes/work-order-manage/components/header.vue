@@ -15,6 +15,7 @@
         <workshop-select
           v-model="query.workshopId"
           placeholder="请选择车间"
+          :workshop-type="workshopTypeEnum.BUILDING.V"
           :factory-id="query.factoryId"
           style="width: 200px"
           class="filter-item"
@@ -41,7 +42,7 @@
 </template>
 <script setup>
 import { regHeader } from '@compos/use-crud'
-import { boolPrintedEnum } from '@enum-ms/common'
+import { boolPrintedEnum, workshopTypeEnum } from '@enum-ms/common'
 import workshopSelect from '@comp-mes/workshop-select'
 import crudOperation from '@crud/CRUD.operation'
 

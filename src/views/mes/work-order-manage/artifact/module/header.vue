@@ -44,6 +44,7 @@
         /> -->
           <workshop-select
             v-model="query.workshopId"
+            :workshop-type="workshopTypeEnum.BUILDING.V"
             placeholder="请选择车间"
             clearable
             style="width: 200px"
@@ -71,7 +72,7 @@
 </template>
 
 <script setup>
-import { boolPrintedEnum } from '@enum-ms/common'
+import { boolPrintedEnum, workshopTypeEnum } from '@enum-ms/common'
 import { componentTypeEnum } from '@enum-ms/mes'
 
 import { regHeader } from '@compos/use-crud'

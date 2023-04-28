@@ -31,6 +31,7 @@
         v-model="query.workshopId"
         placeholder="请选择车间"
         clearable
+        :workshop-type="workshopTypeEnum.BUILDING.V"
         style="width: 200px"
         class="filter-item"
         @change="crud.toQuery"
@@ -76,7 +77,7 @@ import { shipmentSummary } from '@/api/mes/pack-and-ship/ship-summary'
 import workshopSelect from '@comp-mes/workshop-select'
 import { regHeader } from '@compos/use-crud'
 import { shipStatusEnum } from '@enum-ms/mes'
-import { weightTypeEnum } from '@enum-ms/common'
+import { weightTypeEnum, workshopTypeEnum } from '@enum-ms/common'
 import rrOperation from '@crud/RR.operation'
 import moment from 'moment'
 import { DP } from '@/settings/config'
