@@ -3,7 +3,7 @@
     <div v-show="crud.searchToggle">
       <common-radio-button
         v-model="query.productType"
-        :options="deliveryInstallTypeEnum.ENUM"
+        :options="deliveryInstallEnumArr"
         type="enum"
         class="filter-item"
         @change="crud.toQuery"
@@ -98,6 +98,9 @@ import crudOperation from '@crud/CRUD.operation'
 import rrOperation from '@crud/RR.operation'
 import monomerSelect from '@/components-system/plan/monomer-select'
 import Panel from '../../../components/Panel'
+import { mapGetters } from '@/store/lib'
+
+const { deliveryInstallEnumArr } = mapGetters('deliveryInstallEnumArr')
 
 const defaultQuery = {
   projectId: { value: undefined, resetAble: false },

@@ -3,7 +3,7 @@
   <div v-show="showable" class="cascader-container">
     <common-select
       v-model="projectType"
-      :options="projectTypeEnum.ENUM"
+      :options="projectTypeEnumArr"
       :all-val="allPT"
       :disabled-val="disabledTypeArr"
       show-option-all
@@ -110,13 +110,14 @@ const props = defineProps({
   }
 })
 
-const { routeProjectType, currentProjectType, globalProjectId, globalProject, navbarShowAll, routeBusinessType } = mapGetters([
+const { routeProjectType, currentProjectType, globalProjectId, globalProject, navbarShowAll, routeBusinessType, projectTypeEnumArr } = mapGetters([
   'routeProjectType',
   'currentProjectType',
   'globalProjectId',
   'globalProject',
   'navbarShowAll',
-  'routeBusinessType'
+  'routeBusinessType',
+  'projectTypeEnumArr'
 ])
 
 const copyValue = ref()

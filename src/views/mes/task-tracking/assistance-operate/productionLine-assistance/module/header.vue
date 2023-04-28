@@ -22,6 +22,13 @@
           class="filter-item"
           @change="crud.toQuery"
         />
+        <common-radio-button
+          type="enum"
+          v-model="query.weightStatus"
+          :options="[weightTypeEnum.NET, weightTypeEnum.GROSS]"
+          class="filter-item"
+          @change="crud.toQuery"
+        />
       </div>
     </template>
     <template #viewLeft>
@@ -32,6 +39,7 @@
 
 <script setup>
 import { taskTypeENUM } from '@enum-ms/mes'
+import { weightTypeEnum } from '@enum-ms/common'
 import { regHeader } from '@compos/use-crud'
 import crudOperation from '@crud/CRUD.operation'
 import moment from 'moment'
@@ -47,7 +55,8 @@ const queryTaskTypeENUM = {
 const defaultQuery = {
   projectId: undefined,
   taskTypeEnum: undefined,
-  dateTime: defaultTime.toString()
+  dateTime: defaultTime.toString(),
+  weightStatus: weightTypeEnum.NET.V
 }
 
 const { crud, query } = regHeader(defaultQuery)

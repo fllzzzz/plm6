@@ -80,6 +80,17 @@
             placeholder="项目经理"
           />
         </el-form-item>
+        <el-form-item label="销售负责人" prop="signerId">
+          <user-dept-cascader
+            v-model="form.signerId"
+            filterable
+            :collapse-tags="false"
+            clearable
+            class="input-underline"
+            style="width: 200px"
+            placeholder="销售负责人"
+          />
+        </el-form-item>
       </div>
       <el-divider><span class="title">合同金额</span></el-divider>
       <div class="form-row">
@@ -227,7 +238,8 @@ const defaultForm = {
   businessLeaderTwoId: undefined, // 业务负责人2
   attachmentFiles: [], // 附件
   attachments: [],
-  orderSourceType: undefined
+  orderSourceType: undefined,
+  signerId: undefined // 销售签约人
 }
 
 const form = ref(JSON.parse(JSON.stringify(defaultForm)))

@@ -250,47 +250,47 @@ const tableRef = ref()
 const originDetailRow = ref({})
 const techOptions = [
   { label: '构件', key: 'mainStructure', dateKey: 'mainStructureDate', no: TechnologyTypeAllEnum.STRUCTURE.V, alias: 'STRUCTURE', unit: 't' },
-  { label: '箱体', key: 'bridgeStructure', dateKey: 'bridgeStructureDate', no: TechnologyTypeAllEnum.BRIDGE.V, alias: 'STRUCTURE', unit: 't' },
-  {
-    label: '夹芯板',
-    key: 'battenBoard',
-    dateKey: 'battenBoardDate',
-    no: TechnologyTypeAllEnum.SANDWICH_BOARD.V,
-    alias: 'ENCLOSURE',
-    unit: 'm'
-  },
-  {
-    label: '压型彩板',
-    key: 'contourPlate',
-    dateKey: 'contourPlateDate',
-    no: TechnologyTypeAllEnum.PROFILED_PLATE.V,
-    alias: 'ENCLOSURE',
-    unit: 'm'
-  },
-  {
-    label: '折边件',
-    key: 'flangingPiece',
-    dateKey: 'flangingPieceDate',
-    no: TechnologyTypeAllEnum.BENDING.V,
-    alias: 'ENCLOSURE',
-    unit: 'm'
-  },
-  {
-    label: '桁架楼承板',
-    key: 'trussFloorPlate',
-    dateKey: 'trussFloorPlateDate',
-    no: TechnologyTypeAllEnum.TRUSS_FLOOR_PLATE.V,
-    alias: 'ENCLOSURE',
-    unit: 'm'
-  },
-  {
-    label: '压型楼承板',
-    key: 'pressureBearingPlate',
-    dateKey: 'pressureBearingPlateDate',
-    no: TechnologyTypeAllEnum.PRESSURE_BEARING_PLATE.V,
-    alias: 'ENCLOSURE',
-    unit: 'm'
-  }
+  { label: '箱体', key: 'bridgeStructure', dateKey: 'bridgeStructureDate', no: TechnologyTypeAllEnum.BRIDGE.V, alias: 'STRUCTURE', unit: 't' }
+  // {
+  //   label: '夹芯板',
+  //   key: 'battenBoard',
+  //   dateKey: 'battenBoardDate',
+  //   no: TechnologyTypeAllEnum.SANDWICH_BOARD.V,
+  //   alias: 'ENCLOSURE',
+  //   unit: 'm'
+  // },
+  // {
+  //   label: '压型彩板',
+  //   key: 'contourPlate',
+  //   dateKey: 'contourPlateDate',
+  //   no: TechnologyTypeAllEnum.PROFILED_PLATE.V,
+  //   alias: 'ENCLOSURE',
+  //   unit: 'm'
+  // },
+  // {
+  //   label: '折边件',
+  //   key: 'flangingPiece',
+  //   dateKey: 'flangingPieceDate',
+  //   no: TechnologyTypeAllEnum.BENDING.V,
+  //   alias: 'ENCLOSURE',
+  //   unit: 'm'
+  // },
+  // {
+  //   label: '桁架楼承板',
+  //   key: 'trussFloorPlate',
+  //   dateKey: 'trussFloorPlateDate',
+  //   no: TechnologyTypeAllEnum.TRUSS_FLOOR_PLATE.V,
+  //   alias: 'ENCLOSURE',
+  //   unit: 'm'
+  // },
+  // {
+  //   label: '压型楼承板',
+  //   key: 'pressureBearingPlate',
+  //   dateKey: 'pressureBearingPlateDate',
+  //   no: TechnologyTypeAllEnum.PRESSURE_BEARING_PLATE.V,
+  //   alias: 'ENCLOSURE',
+  //   unit: 'm'
+  // }
 ]
 
 const { crud, columns, CRUD } = useCRUD(

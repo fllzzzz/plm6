@@ -16,19 +16,19 @@
         :row-class-name="handleRowClassName"
         style="width: 100%"
       >
-         <el-table-column prop="index" label="序号" align="center" width="60">
+         <el-table-column prop="index" label="序号" align="center" width="55">
           <template v-slot="scope">
             <span v-if="scope.row.showType===1">{{ scope.row.showIndex }}</span>
           </template>
         </el-table-column>
         <el-table-column v-if="columns.visible('monomerName')" align="center" key="monomerName" prop="monomerName" :show-overflow-tooltip="true" label="单体"/>
-        <el-table-column v-if="columns.visible('type')" align="center" key="type" prop="type" :show-overflow-tooltip="true" label="项目内容">
+        <el-table-column v-if="columns.visible('type')" align="center" key="type" prop="type" :show-overflow-tooltip="true" width="70" label="项目内容">
           <template v-slot="scope">
             <span>{{scope.row.contentType?TechnologyTypeAllEnum.VL[scope.row.contentType]:'-'}}</span>
           </template>
         </el-table-column>
         <el-table-column v-if="columns.visible('areaName')" align="center" key="areaName" prop="areaName" :show-overflow-tooltip="true" label="单元" min-width="150"/>
-        <el-table-column v-if="columns.visible('produceArr')" align="center" key="produceArr" prop="produceArr" :show-overflow-tooltip="true" label="生产方式">
+        <el-table-column v-if="columns.visible('produceArr')" align="center" key="produceArr" prop="produceArr" :show-overflow-tooltip="true" label="生产方式" width="70">
           <template v-slot="scope">
             <span v-for="(item,index) in scope.row.produceArr" :key="index">{{manufactureTypeEnum.VL[item]}}{{index!==scope.row.produceArr.length-1?'、':''}}</span>
           </template>
@@ -102,6 +102,40 @@
           </template>
         </el-table-column>
         <el-table-column
+          v-if="columns.visible('deliveryProgress')"
+          key="deliveryProgress"
+          prop="deliveryProgress"
+          :show-overflow-tooltip="true"
+          label="发运计划"
+          min-width="220"
+        >
+          <template v-slot="scope">
+            <template v-if="isNotBlank(scope.row.deliveryVal)">
+              <template v-if="scope.row.showType===1">
+                <div><span>{{`计划用时${scope.row.deliveryVal?.totalDays || '-'}天 | `}}</span><span :class="(scope.row.deliveryVal?.actualDays && scope.row.deliveryVal?.totalDays) && (scope.row.deliveryVal.actualDays>scope.row.deliveryVal.totalDays)?'red-color':'green-color'">{{`已用时${scope.row.deliveryVal?.actualDays}天`}}</span></div>
+                <el-progress
+                  v-if="isNotBlank(scope.row.deliveryVal)"
+                  :text-inside="true"
+                  :stroke-width="26"
+                  :percentage="scope.row.deliveryVal?.dayRate"
+                />
+                <div>{{`总量${scope.row.deliveryVal?.mete.toFixed(scope.row.deliveryVal.decimal) || '-'}${scope.row.deliveryVal?.unit || ''}|已完成${scope.row.deliveryVal?.completedMete.toFixed(scope.row.deliveryVal?.decimal) || '-' }${scope.row.deliveryVal?.unit || ''}`}}</div>
+                <el-progress
+                  v-if="isNotBlank(scope.row.deliveryVal)"
+                  :text-inside="true"
+                  :stroke-width="26"
+                  :percentage="scope.row.deliveryVal?.meteRate"
+                  :status="'success'"
+                />
+              </template>
+              <template v-else>
+                <div><span>{{`计划用时${scope.row.deliveryVal?.totalDays || '-'}天 | `}}</span><span :class="(scope.row.deliveryVal?.actualDays && scope.row.deliveryVal?.totalDays) && (scope.row.deliveryVal.actualDays>scope.row.deliveryVal.totalDays)?'red-color':'green-color'">{{`已用时${scope.row.deliveryVal?.actualDays}天 | `}}</span><span>{{`总量${scope.row.deliveryVal?.mete.toFixed(scope.row.deliveryVal?.decimal) || '-' }${scope.row.deliveryVal?.unit || ''} | 已完成${scope.row.deliveryVal?.completedMete.toFixed(scope.row.deliveryVal?.decimal) || '-' }${scope.row.deliveryVal?.unit || ''}`}}</span></div>
+              </template>
+            </template>
+            <template v-else>-</template>
+          </template>
+        </el-table-column>
+        <el-table-column
           v-if="columns.visible('installProgress') && globalProject.businessType === businessTypeEnum.INSTALLATION.V"
           key="installProgress"
           prop="installProgress"
@@ -129,7 +163,7 @@
                 />
               </template>
               <template v-else>
-                <div><span>{{`计划用时${scope.row.installVal?.totalDays || '-'}天 | `}}</span><span :class="(scope.row.installVal?.actualDays && scope.row.installVal?.totalDays) && (scope.row.installVal.actualDays>scope.row.installVal.totalDays)?'red-color':'green-color'">{{`已用时${scope.row.installVal?.actualDays}天`}}</span></div>
+                <div><span>{{`计划用时${scope.row.installVal?.totalDays || '-'}天 | `}}</span><span :class="(scope.row.installVal?.actualDays && scope.row.installVal?.totalDays) && (scope.row.installVal.actualDays>scope.row.installVal.totalDays)?'red-color':'green-color'">{{`已用时${scope.row.installVal?.actualDays || '-'}天`}}</span></div>
               </template>
             </template>
             <template v-else>-</template>
@@ -234,9 +268,11 @@ CRUD.HOOK.handleRefresh = (crud, data) => {
         const deepVal = k.detailTraceList.find(m => m.type === areaPlanTypeEnum.DEEPEN.V) || undefined
         const processVal = k.detailTraceList.find(m => m.type === areaPlanTypeEnum.PROCESS.V) || undefined
         const installVal = k.detailTraceList.find(m => m.type === areaPlanTypeEnum.INSTALL.V) || undefined
+        const deliveryVal = k.detailTraceList.find(m => m.type === areaPlanTypeEnum.DELIVERY.V) || undefined
         k.deepVal = deepVal
         k.processVal = processVal
         k.installVal = installVal
+        k.deliveryVal = deliveryVal
         if (k.areaList && k.areaList.length > 0) {
           k.areaList.map((value, index) => {
             value.id = k.id + '' + value.id
@@ -261,9 +297,11 @@ CRUD.HOOK.handleRefresh = (crud, data) => {
             const deepVal = value.planDetailList.find(m => m.type === areaPlanTypeEnum.DEEPEN.V)
             const processVal = value.planDetailList.find(m => m.type === areaPlanTypeEnum.PROCESS.V)
             const installVal = value.planDetailList.find(m => m.type === areaPlanTypeEnum.INSTALL.V)
+            const deliveryVal = value.planDetailList.find(m => m.type === areaPlanTypeEnum.DELIVERY.V)
             value.deepVal = deepVal || undefined
             value.processVal = processVal || undefined
             value.installVal = installVal || undefined
+            value.deliveryVal = deliveryVal || undefined
             if (k.produceArr.indexOf(value.type) < 0) {
               k.produceArr.push(value.type)
             }

@@ -25,7 +25,13 @@
     </el-form>
   </common-dialog>
   <!-- 是否需要钻孔 -->
-  <drill-scheduling-dialog v-model:visible="drillDialogVisible" :drill-data="drillData" :groupsId="form.groupsId" @success="success" :schedulingId="props.partList?.id" />
+  <drill-scheduling-dialog
+    v-model:visible="drillDialogVisible"
+    :drill-data="drillData"
+    :groupsId="form.groupsId"
+    @success="success"
+    :schedulingId="props.partList?.id"
+  />
 </template>
 
 <script setup>
@@ -34,7 +40,7 @@ import { saveNestingTask } from '@/api/mes/scheduling-manage/common'
 import { getHoleTaskDetail } from '@/api/mes/scheduling-manage/machine-part'
 import { manualFetchGroupsTree } from '@compos/mes/scheduling/use-scheduling-groups'
 import { componentTypeEnum } from '@enum-ms/mes'
-import { ElNotification } from 'element-plus'
+import { ElNotification, ElMessage } from 'element-plus'
 import useVisible from '@compos/use-visible'
 import drillSchedulingDialog from './drill-scheduling-dialog.vue'
 
@@ -69,7 +75,7 @@ function showHook() {
 }
 
 const rules = {
-  groupsId: [{ required: true, message: '请选择生产班组', trigger: 'blur' }]
+  groupsId: [{ required: true, message: '请选择生产班组', trigger: 'change' }]
 }
 
 // --------------------------- 获取生产班组 start ------------------------------
@@ -87,18 +93,22 @@ async function fetchPartGroups() {
 }
 // --------------------------- 获取生产班组 end --------------------------------
 async function submitForm(formRef) {
+  const _partIds = []
+  _partIds.push({
+    id: props.partList?.id,
+    quantity: props.partList?.quantity
+  })
+  const _list = {
+    // drillAskCompleteTime: form.drillAskCompleteTime,
+    // drillGroupsId: form.drillGroupsId,
+    groupsId: form.groupsId,
+    schedulingId: props.partList?.id
+  }
+  if (!form.groupsId) {
+    ElMessage.error(`请选择生产组`)
+    return
+  }
   try {
-    const _partIds = []
-    _partIds.push({
-      id: props.partList?.id,
-      quantity: props.partList?.quantity
-    })
-    const _list = {
-      // drillAskCompleteTime: form.drillAskCompleteTime,
-      // drillGroupsId: form.drillGroupsId,
-      groupsId: form.groupsId,
-      schedulingId: props.partList?.id
-    }
     const data = await getHoleTaskDetail({
       thick: props.partList?.thick,
       cutConfigId: props.partList?.cutConfigId,

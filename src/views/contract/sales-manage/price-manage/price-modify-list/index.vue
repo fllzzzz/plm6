@@ -14,7 +14,7 @@
     >
       <el-table-column label="序号" type="index" align="center" width="60" />
       <el-table-column v-if="columns.visible('project')" show-overflow-tooltip key="project" prop="project" label="项目" min-width="140" />
-      <el-table-column v-if="columns.visible('monomer.name')" key="monomer.name" prop="monomer.name" label="单体" align="center" min-width="120" show-overflow-tooltip />
+      <el-table-column v-if="columns.visible('monomer.name') && crud.query.type!==contractSaleTypeEnum.AUXILIARY_MATERIAL.V" key="monomer.name" prop="monomer.name" label="单体" align="center" min-width="120" show-overflow-tooltip />
       <el-table-column v-if="columns.visible('type')" show-overflow-tooltip key="type" prop="type" align="center" label="类型" width="90" />
       <el-table-column v-if="columns.visible('remark')" key="remark" prop="remark" label="事由" align="center" min-width="140" show-overflow-tooltip />
       <el-table-column v-if="columns.visible('createUserName')" key="createUserName" prop="createUserName" label="创建人" align="center" min-width="100" show-overflow-tooltip />
@@ -45,7 +45,7 @@ import { ref, inject, watch, defineEmits } from 'vue'
 import { priceManagePM as permission } from '@/page-permission/contract'
 
 import checkPermission from '@/utils/system/check-permission'
-import { packTypeEnum } from '@enum-ms/mes'
+import { contractSaleTypeEnum } from '@enum-ms/mes'
 import { reviewStatusEnum } from '@enum-ms/common'
 
 import useMaxHeight from '@compos/use-max-height'
@@ -68,7 +68,7 @@ const tableRef = ref()
 const detailInfo = ref({})
 const dataFormat = ref([
   ['project', 'parse-project'],
-  ['type', ['parse-enum', packTypeEnum, { f: 'SL' }]],
+  ['type', ['parse-enum', contractSaleTypeEnum, { f: 'SL' }]],
   ['status', ['parse-enum', reviewStatusEnum]],
   ['createTime', 'parse-time'],
   ['checkTime', 'parse-time']

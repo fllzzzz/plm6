@@ -60,7 +60,7 @@
                 <common-select
                   v-if="isModify"
                   v-model="form.projectType"
-                  :options="projectTypeEnum.ENUM"
+                  :options="projectTypeEnumArr"
                   type="enum"
                   size="small"
                   clearable
@@ -96,22 +96,6 @@
             </el-form-item>
           </div>
           <div class="form-row">
-            <el-form-item label="签约人" prop="signerId">
-              <div style="width: 200px">
-                <template v-if="isModify">
-                  <user-dept-cascader
-                    v-model="form.signerId"
-                    filterable
-                    :collapse-tags="false"
-                    clearable
-                    class="input-underline"
-                    style="width: 200px"
-                    placeholder="签约人"
-                  />
-                </template>
-                <span v-else>{{ detail.signerName }}</span>
-              </div>
-            </el-form-item>
             <el-form-item label="签订日期" prop="signingDate">
               <div style="width: 200px">
                 <el-date-picker
@@ -141,7 +125,7 @@
               </div>
             </el-form-item>
           </div>
-          <div class="form-row">
+          <!-- <div class="form-row">
             <el-form-item label="工程结算方式" prop="structureMeasureMode">
               <div style="width: 200px">
                 <common-radio v-if="isModify" v-model="form.structureMeasureMode" :options="engineerSettlementTypeEnumN.ENUM" type="enum" :disabled="!form.structureMeasureMode"/>
@@ -173,14 +157,118 @@
                 <span v-else>{{ isNotBlank(detail.transportMode) ? transportModeEnum.VL[detail.transportMode] : '' }}</span>
               </div>
             </el-form-item>
+          </div> -->
+          <div v-if="isModify">
+            <div v-if="form.structureMeasureMode">
+              <el-divider><span class="title">结构</span></el-divider>
+              <div class="form-row">
+                <el-form-item label="结构工程量" prop="quantityWork">
+                  <el-input-number
+                    v-model="form.quantityWork"
+                    :step="1"
+                    :min="0"
+                    :max="99999999"
+                    :precision="0"
+                    :controls="false"
+                    controls-position="right"
+                    class="input-underline"
+                    style="width: 200px"
+                    placeholder=""
+                  />吨
+                </el-form-item>
+                <el-form-item label="结构类型" prop="structureStatus">
+                  <common-select
+                    type="enum"
+                    size="small"
+                    v-model="form.structureStatus"
+                    :options="form.projectType!==projectTypeEnum.BRIDGE.V?[structureTypeEnum.WORKSHOP,structureTypeEnum.FRAME,structureTypeEnum.SPACE]:[structureTypeEnum.BEAM_TYPE,structureTypeEnum.ARCH_TYPE,structureTypeEnum.STEEL_FRAME]"
+                    class="input-underline"
+                    placeholder="结构类型"
+                    style="width: 200px"
+                  />
+                </el-form-item>
+              </div>
+              <div class="form-row">
+                <el-form-item label="结构结算方式" prop="structureMeasureMode">
+                  <common-radio v-model="form.structureMeasureMode" :options="engineerSettlementTypeEnumN.ENUM" type="enum" :disabled="!form.structureMeasureMode"/>
+                </el-form-item>
+                <el-form-item label="结构运输方式" prop="transportMode">
+                  <common-radio v-model="form.transportMode" :options="transportModeEnum.ENUM" type="enum" />
+                </el-form-item>
+              </div>
+            </div>
+            <div class="form-row" v-if="form.measureModeList && form.measureModeList.length>0">
+              <el-divider><span class="title">围护</span></el-divider>
+              <el-form-item label="围护运输方式" prop="enclosureTransportMode">
+                <common-radio v-model="form.enclosureTransportMode" :options="transportModeEnum.ENUM" type="enum" />
+              </el-form-item>
+              <el-form-item label="围护结算方式与工程量" prop="measureModeList" v-if="form.measureModeList?.length>0" label-width="220px">
+                <template v-if="form.measureModeList.length>0">
+                  <div v-for="(item,index) in form.measureModeList" :key="index" style="display:flex;">
+                    <span style="float:left;width:90px;text-align:right;">{{TechnologyTypeAllEnum.VL[item.no]}}：</span>
+                    <common-radio style="float:left;" v-model="item.measureMode" :options="enclosureSettlementTypeEnum.ENUM" type="enum"/>
+                    <el-input-number
+                    v-model="item.quantityWork"
+                    :step="1"
+                    :min="0"
+                    :max="99999999"
+                    :precision="0"
+                    :controls="false"
+                    controls-position="right"
+                    class="input-underline"
+                    style="width: 120px;margin-left:10px;"
+                    placeholder="工程量"
+                  />
+                  <span style="margin-left:2px;">{{item.measureMode===enclosureSettlementTypeEnum.LENGTH.V?'m':'㎡'}}</span>
+                  </div>
+                </template>
+              </el-form-item>
+            </div>
+          </div>
+          <div v-else>
+             <div v-if="detail.structureMeasureMode">
+              <el-divider><span class="title">结构</span></el-divider>
+              <div class="form-row">
+                <el-form-item label="结构工程量" prop="quantityWork">
+                  <span>{{detail.quantityWork}}</span>吨
+                </el-form-item>
+                <el-form-item label="结构类型" prop="structureStatus">
+                  <span>{{structureTypeEnum.VL[detail.structureStatus]}}</span>
+                </el-form-item>
+              </div>
+              <div class="form-row">
+                <el-form-item label="结构结算方式" prop="structureMeasureMode">
+                  <common-radio v-model="detail.structureMeasureMode" :options="engineerSettlementTypeEnumN.ENUM" type="enum" :disabled="true"/>
+                </el-form-item>
+                <el-form-item label="结构运输方式" prop="transportMode">
+                  <common-radio v-model="form.transportMode" :options="transportModeEnum.ENUM" type="enum" :disabled="true"/>
+                </el-form-item>
+              </div>
+            </div>
+            <div class="form-row" v-if="detail.measureModeList && detail.measureModeList.length>0">
+              <el-divider><span class="title">围护</span></el-divider>
+              <el-form-item label="围护运输方式" prop="enclosureTransportMode">
+                <common-radio v-model="detail.enclosureTransportMode" :options="transportModeEnum.ENUM" type="enum" :disabled="true"/>
+              </el-form-item>
+              <el-form-item label="围护结算方式与工程量" prop="measureModeList" v-if="detail.measureModeList?.length>0" label-width="220px">
+                <template v-if="detail.measureModeList.length>0">
+                  <div v-for="(item,index) in detail.measureModeList" :key="index" style="display:flex;">
+                    <span style="float:left;width:90px;text-align:right;">{{TechnologyTypeAllEnum.VL[item.no]}}：</span>
+                    <common-radio style="float:left;" v-model="item.measureMode" :options="enclosureSettlementTypeEnum.ENUM" type="enum" :disabled="true"/>
+                    <span style="margin-left:5px;">工程量：{{item.quantityWork}}</span>
+                    <span style="margin-left:2px;">{{item.measureMode===enclosureSettlementTypeEnum.LENGTH.V?'m':'㎡'}}</span>
+                  </div>
+                </template>
+              </el-form-item>
+            </div>
+          </div>
+          <div class="form-row">
             <el-form-item label="支付方式" prop="payType">
               <div>
                 <common-radio v-if="isModify" v-model="form.payType" :options="paymentModeEnum.ENUM" type="enum" />
                 <span v-else>{{ isNotBlank(detail.payType) ? paymentModeEnum.VL[detail.payType] : '' }}</span>
               </div>
             </el-form-item>
-          </div>
-          <div class="form-row">
             <el-form-item label="合同含税" prop="isTax">
               <div style="width: 200px">
                  <el-radio-group v-model="form.isTax" v-if="isModify" @change="isTaxChange">
@@ -195,6 +283,8 @@
                 <span v-else>{{ isNotBlank(detail.isTax) ? isTaxContractEnum.VL[detail.isTax] : '' }}</span>
               </div>
             </el-form-item>
+          </div>
+          <div class="form-row">
             <el-form-item label="发票类型" prop="invoiceType">
               <div class="input-underline form-row" style="width: 200px">
                 <template v-if="isModify">
@@ -253,6 +343,24 @@
               </div>
             </el-form-item>
           </div>
+          <div class="form-row">
+            <el-form-item label="技术要求描述" prop="technologyRemark">
+              <div class="input-underline" style="width: 600px">
+                <el-input
+                  v-if="isModify"
+                  v-model.trim="form.technologyRemark"
+                  type="textarea"
+                  :autosize="{ minRows: 4, maxRows: 8 }"
+                  class="input-underline"
+                  maxlength="2000"
+                  show-word-limit
+                  style="width: 550px"
+                  placeholder="付款方式描述"
+                />
+              <div v-else class="detail-break" style="max-height:220px;overflow-y:auto;">{{ detail.technologyRemark }}</div>
+              </div>
+            </el-form-item>
+          </div>
         </div>
         <el-divider><span class="title">技术交底</span></el-divider>
         <div style="text-align: right; margin-right: 20px">
@@ -299,7 +407,7 @@
 
 <script setup>
 import { ref, defineProps, watch, defineExpose, nextTick, computed } from 'vue'
-import userDeptCascader from '@comp-base/user-dept-cascader.vue'
+// import userDeptCascader from '@comp-base/user-dept-cascader.vue'
 import branchCompanySelect from '@comp-base/branch-company-select.vue'
 import useWatchFormValidate from '@compos/form/use-watch-form-validate'
 import { ElRadioGroup } from 'element-plus'
@@ -312,7 +420,8 @@ import {
   transportModeEnum,
   TechnologyTypeEnum,
   TechnologyMainTypeEnum,
-  TechnologyTypeAllEnum
+  TechnologyTypeAllEnum,
+  structureTypeEnum
 } from '@enum-ms/contract'
 import { invoiceTypeEnum, paymentModeEnum } from '@enum-ms/finance'
 import { isNotBlank } from '@data-type/index'
@@ -320,6 +429,13 @@ import EnclosureShow from '@/views/contract/project-manage/module/enclosure-show
 import EnclosureForm from '@/views/contract/project-manage/module/enclosure-form'
 import { getContractBusiness, getContractTechInfo, getContentInfo } from '@/api/contract/project'
 import { parseTime } from '@/utils/date'
+
+import { mapGetters } from '@/store/lib'
+
+const { projectTypeEnumArr, flag } = mapGetters([
+  'projectTypeEnumArr',
+  'flag'
+])
 
 const formRef = ref()
 let machiningData = []
@@ -346,7 +462,7 @@ const defaultForm = {
   projectType: undefined, // 项目类型
   projectContent: [], // 项目内容
   projectContentList: [],
-  signerId: undefined, // 签约人
+  // signerId: undefined, // 签约人
   signingDate: undefined, // 签约日期
   signingAddress: undefined, // 签约地址
   structureMeasureMode: engineerSettlementTypeEnumN.THEORY.V, // 结算方式
@@ -363,7 +479,10 @@ const defaultForm = {
   profiledPlateList: [],
   pressureBearingPlateList: [],
   trussFloorPlateList: [],
-  sandwichBoardList: []
+  sandwichBoardList: [],
+  technologyRemark: undefined, // 技术要求描述
+  structureStatus: undefined, // 结构
+  enclosureTransportMode: transportModeEnum.HOME_DELIVERY.V // 围护运输方式
 }
 const techForm = {
   enclosureInfo: {},
@@ -416,6 +535,18 @@ const validateTax = (rule, value, callback) => {
   callback()
 }
 
+const validateMeasureModeList = (rule, value, callback) => {
+  if (value.length) {
+    value.forEach(v => {
+      if (!v.quantityWork) {
+        callback(new Error('请填写工程量'))
+      }
+    })
+    callback()
+  }
+  callback()
+}
+
 const rules = {
   payTypeDesc: [{ max: 2000, message: '不能超过 2000 个字符', trigger: 'blur' }],
   businessType: [{ required: true, message: '请选择业务类型', trigger: 'change' }],
@@ -427,7 +558,16 @@ const rules = {
     { required: true, message: '请选择合同签订主体（签订主体可在配置管理-基础配置-分支机构中创建）', trigger: 'change' }
   ],
   invoiceType: [{ validator: validateInvoiceType, message: '请选择发票类型', trigger: 'change' }],
-  businessTaxRate: [{ validator: validateTax, message: '请输入税率', trigger: 'blur' }]
+  businessTaxRate: [{ validator: validateTax, message: '请输入税率', trigger: 'blur' }],
+  quantityWork: [
+    { required: true, message: '请填写构件工程量', trigger: 'blur' }
+  ],
+  structureStatus: [
+    { required: true, message: '请选择结构类型', trigger: 'change' }
+  ],
+  measureModeList: [
+    { validator: validateMeasureModeList, message: '请输入围护结算与工程量', trigger: ['change', 'blur'] }
+  ]
 }
 
 const props = defineProps({
@@ -461,12 +601,14 @@ const AllContent = computed(() => {
 })
 
 const projectContentOption = computed(() => {
-  if (form.value.businessType && form.value.projectType) {
+  if (form.value.projectType) {
     switch (form.value.projectType) {
       case projectTypeEnum.STEEL.V:
         return form.value.businessType === businessTypeEnum.MACHINING.V ? machiningData[projectTypeEnum.STEEL.V] : installData[projectTypeEnum.STEEL.V]
       case projectTypeEnum.BRIDGE.V:
         return form.value.businessType === businessTypeEnum.MACHINING.V ? machiningData[projectTypeEnum.BRIDGE.V] : installData[projectTypeEnum.BRIDGE.V]
+      case projectTypeEnum.ENCLOSURE.V:
+        return form.value.businessType === businessTypeEnum.MACHINING.V ? machiningData[projectTypeEnum.ENCLOSURE.V] : installData[projectTypeEnum.ENCLOSURE.V]
       default: return form.value.businessType === businessTypeEnum.MACHINING.V ? machiningData[projectTypeEnum.CARBARN.V] : installData[projectTypeEnum.CARBARN.V]
     }
   } else {
@@ -677,8 +819,8 @@ async function fetchDetail() {
     _detail.trussFloorPlateList = data.trussFloorPlateList ? data.trussFloorPlateList : []
     _detail.pressureBearingPlateList = data.pressureBearingPlateList ? data.pressureBearingPlateList : []
     _detail.sandwichBoardList = data.sandwichBoardList ? data.sandwichBoardList : []
-    machiningData = await getContentInfo({ businessType: businessTypeEnum.MACHINING.V })
-    installData = await getContentInfo({ businessType: businessTypeEnum.INSTALLATION.V })
+    machiningData = await getContentInfo({ businessType: businessTypeEnum.MACHINING.V, flag: flag.value })
+    installData = await getContentInfo({ businessType: businessTypeEnum.INSTALLATION.V, flag: flag.value })
     const dataArr = [machiningData, installData]
     for (let i = 0; i < dataArr.length; i++) {
       if (dataArr[i] && dataArr[i][projectTypeEnum.STEEL.V].length > 0) {
@@ -693,6 +835,11 @@ async function fetchDetail() {
       }
       if (dataArr[i] && dataArr[i][projectTypeEnum.CARBARN.V].length > 0) {
         dataArr[i][projectTypeEnum.CARBARN.V].map(v => {
+          v.name = v.categoryName
+        })
+      }
+      if (dataArr[i] && dataArr[i][projectTypeEnum.ENCLOSURE.V].length > 0) {
+        dataArr[i][projectTypeEnum.ENCLOSURE.V].map(v => {
           v.name = v.categoryName
         })
       }

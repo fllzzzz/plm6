@@ -33,7 +33,7 @@
           重置
         </common-button>
       </div>
-      <!-- <common-button class="filter-item" size="mini" type="info" @click.stop="productionLineStatus">产线状态</common-button> -->
+      <common-button v-permission="permission.taskAchieved" class="filter-item" size="mini" type="info" @click.stop="productionLineStatus">车间在产数据</common-button>
     </div>
   </div>
   <crudOperation>
@@ -49,16 +49,16 @@
 <script setup>
 import { getArtifactType, getLineType } from '@/api/mes/scheduling-manage/artifact'
 import { inject, watch, defineExpose, ref } from 'vue'
-// import { useRouter } from 'vue-router'
+import { useRouter } from 'vue-router'
 import { artifactProductLineEnum } from '@enum-ms/mes'
-
+import { artifactSchedulingPM as permission } from '@/page-permission/mes'
 import { regHeader } from '@compos/use-crud'
 import useGetArtifactTypeList from '@compos/mes/scheduling/use-get-artifact-type-list'
 import crudOperation from '@crud/CRUD.operation'
 import tagTabs from '@comp-common/tag-tabs'
 import productTypeQuery from '@comp-mes/header-query/product-type-query'
 
-// const router = useRouter()
+const router = useRouter()
 const defaultQuery = {}
 
 const productType = inject('productType')
@@ -130,9 +130,9 @@ function refreshTypeList() {
   })
 }
 
-// function productionLineStatus() {
-//   router.push({ name: 'MesMonitoringKanban', params: { areaId: crud.query.areaIdList[0] }})
-// }
+function productionLineStatus() {
+  router.push({ name: 'MesMonitoringKanban' })
+}
 
 defineExpose({
   refreshTypeList
