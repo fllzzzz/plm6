@@ -124,6 +124,13 @@ const paintTypeEnum = {
 }
 constantize(paintTypeEnum)
 
+// 工艺类型通用专用
+const processUseTypeEnum = {
+  NORMAL: { L: '通用', K: 'NORMAL', V: false },
+  SPECIAL: { L: '专用', K: 'SPECIAL', V: true }
+}
+constantize(processUseTypeEnum)
+
 // 工艺类型
 const planProcessTypeEnum = {
   WELD: { L: '焊接工艺', K: 'WELD', V: 1 << 0 },
@@ -131,6 +138,13 @@ const planProcessTypeEnum = {
   PAINT: { L: '涂装工艺', K: 'PAINT', V: 1 << 2 }
 }
 constantize(planProcessTypeEnum)
+
+// 工艺文件是否绑定构件
+const isArtifactBindTypeEnum = {
+  NO: { L: '未绑定', K: 'NO', V: false },
+  YES: { L: '已绑定', K: 'YES', V: true }
+}
+constantize(isArtifactBindTypeEnum)
 
 export {
   manufactureTypeEnum, // 制造类型
@@ -148,7 +162,9 @@ export {
   preparationRangeEnum, // 备料范围（类型）
   preparationStatusEnum, // 备料状态
   paintTypeEnum,
-  planProcessTypeEnum
+  planProcessTypeEnum,
+  processUseTypeEnum,
+  isArtifactBindTypeEnum
 }
 
 export default {
@@ -167,5 +183,7 @@ export default {
   preparationRangeEnum, // 备料范围（类型）
   preparationStatusEnum, // 备料状态
   paintTypeEnum,
-  planProcessTypeEnum
+  planProcessTypeEnum,
+  processUseTypeEnum,
+  isArtifactBindTypeEnum
 }
