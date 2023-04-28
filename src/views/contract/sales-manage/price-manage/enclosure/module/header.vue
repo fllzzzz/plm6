@@ -51,7 +51,7 @@
             <span v-if="!costLoading">{{ convertUnits(monomerCost.totalLength, 'mm', 'm', DP.MES_ENCLOSURE_L__M) }}</span>
             <i v-else class="el-icon-loading" />
           </el-tag>
-          <el-tag effect="plain" type="success" size="medium" class="filter-item">
+          <el-tag effect="plain" type="success" size="medium">
             单体围护面积(㎡)：
             <span v-if="!costLoading">{{ convertUnits(monomerCost.totalArea, 'mm2','m2', DP.COM_AREA__M2) }}</span>
             <i v-else class="el-icon-loading" />

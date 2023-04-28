@@ -51,7 +51,7 @@
             <span v-if="!costLoading">{{ convertUnits(monomerCost.mete, 'kg', 't', DP.COM_WT__T) }}</span>
             <i v-else class="el-icon-loading" />
           </el-tag>
-          <el-tag effect="plain" type="success" size="medium" class="filter-item">
+          <el-tag effect="plain" type="success" size="medium">
             单体结构造价(元)：
             <span v-if="!costLoading" v-thousand="monomerCost.price" />
             <i v-else class="el-icon-loading" />

@@ -228,6 +228,18 @@ export function saleOrderTracking(params) {
 }
 
 /**
+ * 发运跟踪
+ */
+export function shipmentTracking(params) {
+  return request({
+    module: 'contract',
+    url: 'business/ship/detail/print',
+    method: 'get',
+    params
+  })
+}
+
+/**
  * 入库记录
  */
 export function warehouseRecord(params) {
@@ -433,6 +445,7 @@ export default {
   happenedDetail, // 项目发运详情
   transactionRecord, // 客户交易记录
   saleOrderTracking, // 订单跟踪列表
+  shipmentTracking, // 发运跟踪
   warehouseRecord, // 入库记录
   industryElectricRecord, // 工业用电电费
   civilElectricRecord, // 民用用电电费
