@@ -12,90 +12,69 @@
     custom-class="contract-change"
   >
     <template #content>
-      <el-form ref="formRef" :model="form" :rules="rules" size="small" label-width="150px">
-        <el-form-item label="文件名称">
-          <span></span>
-        </el-form-item>
-        <el-form-item label="文件">
-          <span>{{ currentMonomer.name }}</span>
-        </el-form-item>
-        <el-row :gutter="20">
-          <el-col :span="12">
-            <el-form-item label="文件类型">
-              <span>{{ currentRow.fileName }}</span>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="文件属性">
-              <span>{{ currentRow.fileName }}</span>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-form-item label="所属项目">
-          <span>{{ currentMonomer.name }}</span>
-        </el-form-item>
-        <el-row :gutter="20">
-          <el-col :span="12">
-            <el-form-item label="上传人">
-              <span></span>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="上传日期">
-            <span></span>
-          </el-form-item>
-          </el-col>
-        </el-row>
-        <el-form-item label="备注">
-          <span></span>
-        </el-form-item>
-      </el-form>
+       <el-descriptions class="margin-top" :column="2" border label-width="110">
+        <el-descriptions-item label-class-name="fileName" label="文件名称" :span="2">{{currentRow.fileName}}</el-descriptions-item>
+        <el-descriptions-item label-class-name="attachmentDTO" label="文件" :span="2">
+          <template v-if="currentRow.attachmentDTO">
+            <div style="cursor: pointer; color: #409eff" @dblclick="attachmentView(currentRow.attachmentDTO)">{{ currentRow.attachmentDTO.name }}</div>
+          </template>
+          <span v-else>-</span>
+        </el-descriptions-item>
+        <el-descriptions-item label-class-name="processType" label="文件类型">{{planProcessTypeEnum.VL[currentRow.processType]}}</el-descriptions-item>
+        <el-descriptions-item label-class-name="boolSingleProject" label="文件属性">{{processUseTypeEnum.VL[currentRow.boolSingleProject]}}</el-descriptions-item>
+        <el-descriptions-item label-class-name="project" label="所属项目" :span="2">
+          {{currentRow.project?projectNameFormatter(currentRow.project):'-'}}
+        </el-descriptions-item>
+         <el-descriptions-item label-class-name="userName" label="上传人">{{currentRow.userName}}</el-descriptions-item>
+        <el-descriptions-item label-class-name="uploadTime" label="上传日期">{{currentRow.uploadTime?parseTime(currentRow.uploadTime,'{y}-{m}-{d}'):'-'}}</el-descriptions-item>
+        <el-descriptions-item label-class-name="remark" label="备注">
+          {{currentRow.remark}}
+        </el-descriptions-item>
+      </el-descriptions>
       <el-divider><span class="title">历史修订版本</span></el-divider>
       <common-table
         ref="detailRef"
         border
-        :data="[]"
+        :data="currentRow.processFileRecordDTOList"
         :max-height="300"
         style="width: 100%"
         class="table-form"
-        return-source-data
+        :dataFormat="dataFormat"
       >
         <el-table-column label="序号" type="index" align="center" width="50" />
-        <el-table-column prop="depositBank" label="版本" align="center" />
-        <el-table-column prop="account" label="文件" align="center" min-width="270">
+        <el-table-column prop="fileVersion" label="版本" align="center" />
+        <el-table-column key="attachmentDTO" prop="attachmentDTO" :show-overflow-tooltip="true" label="文件" align="center">
           <template v-slot="scope">
-            <el-input v-model="scope.row.account" type="text" placeholder="账号" style="width: 260px" maxlength="30"/>
+            <template v-if="scope.row.attachmentDTO">
+              <div style="cursor: pointer; color: #409eff" @dblclick="attachmentView(scope.row.attachmentDTO)">{{ scope.row.attachmentDTO.name }}</div>
+            </template>
+            <span v-else>-</span>
           </template>
         </el-table-column>
-        <el-table-column prop="depositBank" label="上传人" align="center" />
-        <el-table-column prop="depositBank" label="上传时间" align="center" />
+        <el-table-column prop="userName" label="上传人" align="center" />
+        <el-table-column prop="uploadTime" label="上传时间" align="center" />
         <el-table-column label="操作" align="center">
           <template v-slot="scope">
-            <common-button size="small" class="el-icon-view" type="primary"/>
+            <common-button size="small" class="el-icon-view" type="primary" @click="attachmentView(scope.row.attachmentDTO)"/>
           </template>
         </el-table-column>
       </common-table>
+      <showPdfAndImg v-if="pdfShow" :isVisible="pdfShow" :showType="'attachment'" :id="currentId" @close="pdfShow = false" />
     </template>
   </common-drawer>
 </template>
 
 <script setup>
-import { defineProps, defineEmits, computed, ref, watch } from 'vue'
+import { defineProps, defineEmits, ref } from 'vue'
 import useVisible from '@compos/use-visible'
 
+import { projectNameFormatter } from '@/utils/project'
+import { processUseTypeEnum, planProcessTypeEnum } from '@enum-ms/plan'
+import { parseTime } from '@/utils/date'
+
+import showPdfAndImg from '@comp-base/show-pdf-and-img.vue'
+
 const props = defineProps({
-  currentMonomer: {
-    type: Object,
-    default: () => {}
-  },
-  globalProject: {
-    type: Object,
-    default: () => {}
-  },
-  dataType: {
-    type: [String, Number],
-    default: undefined
-  },
   modelValue: {
     type: Boolean,
     require: true
@@ -106,36 +85,20 @@ const props = defineProps({
   }
 })
 
-const defaultForm = {
-  fileName: undefined
-}
-
-const form = ref(JSON.parse(JSON.stringify(defaultForm)))
-const formRef = ref()
-const rules = {
-  fileName: { required: true, message: '请输入文件命名', trigger: 'blur' }
-}
 const emit = defineEmits(['success', 'update:modelValue'])
 const { visible, handleClose } = useVisible({ emit, props })
 
-watch(
-  () => visible.value,
-  (val) => {
-    if (val) {
-      form.value.fileName = undefined
-    }
-  },
-  { deep: true, immediate: true }
-)
+const pdfShow = ref(false)
+const currentId = ref()
 
-const carryParam = computed(() => {
-  return {}
-  // return props.currentRow.id ? { id: props.currentRow.id, fileName: form.value.fileName } : { projectId: props.globalProject.id, monomerId: props.currentMonomer.id, dataType: props.dataType, fileName: form.value.fileName }
-})
+const dataFormat = ref([
+  ['uploadTime', ['parse-time', '{y}-{m}-{d}']]
+])
 
-function handleSuccess() {
-  emit('success')
-  handleClose()
+// 预览附件
+function attachmentView(item) {
+  currentId.value = item.id
+  pdfShow.value = true
 }
 
 </script>

@@ -189,6 +189,17 @@ export const planStandardPartListPM = {
   import: ['plan_standard_part:import'], // 导入清单
   templateDownload: ['plan_standard_part:templateDownload'] // 下载模板
 }
+
+// 技术管理工艺文件
+export const planProcessListPM = {
+  get: ['plan_process_list:get'], // 列表
+  add: ['plan_process_list:add'], // 上传工艺文件
+  edit: ['plan_process_list:edit'], // 修改
+  detail: ['plan_process_list:detail'], // 详情、修订版本、绑定列表
+  unbind: ['plan_process_list:unbind'], // 解绑
+  bind: ['plan_process_list:bind'] // 绑定构件
+}
+
 // --------------------------- 技术管理 end --------------------------------
 
 // ########################################################################

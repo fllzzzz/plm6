@@ -6,29 +6,36 @@
     top="10vh"
     width="600px"
     :before-close="handleClose"
-    title="构件绑定列表"
+    title="本次绑定列表"
     :wrapper-closable="false"
     size="80%"
-    custom-class="already-form"
+    custom-class="current-form"
   >
-    <template #titleAfter>
-      <el-tag>{{planProcessTypeEnum.VL[currentRow.processType]}}</el-tag>
-    </template>
+  <template #titleAfter>
+    <el-tag>{{planProcessTypeEnum.VL[currentRow.processType]}}</el-tag>
+    <el-tag v-if="currentRow.boolSingleProject">所属项目:{{currentRow.project?projectNameFormatter(currentRow.project):'-'}}</el-tag>
+  </template>
+  <template #titleRight>
+    <common-button size="small" type="primary" v-loading="loading" @click.stop="onSubmit" :disabled="list.length===0">提交（共{{list.length}}条）</common-button>
+  </template>
     <template #content>
+      <el-form ref="formRef" size="small" label-width="150px">
         <div style="display:flex;">
           <div>
-            <project-cascader v-model="query.projectId" clearable class="filter-item" style="width: 270px;margin-bottom:10px;" placeholder="项目搜索" />
+            <!-- <project-cascader v-model="query.projectId" clearable class="filter-item" style="width: 270px;margin-bottom:10px;" placeholder="项目搜索" /> -->
             <div>
               <monomer-select
                 ref="monomerSelectRef"
                 v-model="query.monomerId"
                 style="width: 270px;"
                 :default="false"
+                clearable
                 :project-id="projectId"
                 class="filter-item"
+                @change="fetchList"
               />
             </div>
-             <div style="margin:10px 0;">
+            <div style="margin:10px 0;">
               <common-select
                 v-model="query.structureClassId"
                 :options="structureClassList"
@@ -38,9 +45,10 @@
                 class="filter-item"
                 style="width: 270px"
                 placeholder="构件类型"
+                @change="fetchList"
               />
             </div>
-           <div style="margin-bottom:10px;">
+            <div style="margin-bottom:10px;">
               <el-input
                 v-model="query.name"
                 placeholder="构件名称搜索"
@@ -113,44 +121,45 @@
               <el-table-column prop="material" label="材质" align="center" show-overflow-tooltip />
               <el-table-column label="操作" align="center">
                 <template v-slot="scope">
-                  <common-button size="small" type="danger" @click="deleteItem(scope.row)" v-permission="permission.unbind">解绑</common-button>
+                  <common-button size="small" type="danger" @click="deleteItem(scope.$index)">移除</common-button>
                 </template>
               </el-table-column>
             </common-table>
-             <!-- 分页 -->
-            <el-pagination
-              :total="total"
-              :current-page="queryPage.pageNumber"
-              :page-size="queryPage.pageSize"
-              style="margin-top: 8px"
-              layout="total, prev, pager, next, sizes"
-              @size-change="handleSizeChange"
-              @current-change="handleCurrentChange"
-            />
           </div>
         </div>
+      </el-form>
     </template>
   </common-drawer>
 </template>
 
 <script setup>
-import { bindStructureList, unbindStructure } from '@/api/plan/technical-data-manage/process'
-import { defineProps, defineEmits, ref, watch, inject } from 'vue'
+import { bindStructure } from '@/api/plan/technical-data-manage/process'
+import { defineProps, defineEmits, ref, watch, inject, nextTick } from 'vue'
 import useVisible from '@compos/use-visible'
 
-import { planProcessTypeEnum } from '@enum-ms/plan'
 import { ElMessage } from 'element-plus'
-import { planProcessListPM as permission } from '@/page-permission/plan'
+import { planProcessTypeEnum } from '@enum-ms/plan'
+import { projectNameFormatter } from '@/utils/project'
 import useMaxHeight from '@compos/use-max-height'
 
-import usePagination from '@compos/use-pagination'
-import projectCascader from '@comp-base/project-cascader.vue'
 import monomerSelect from '@/components-system/plan/monomer-select'
 
 const props = defineProps({
   modelValue: {
     type: Boolean,
     require: true
+  },
+  showList: {
+    type: Object,
+    default: () => {}
+  },
+  projectId: {
+    type: [Number, String],
+    default: undefined
+  },
+  monomerId: {
+    type: [Number, String],
+    default: undefined
   },
   currentRow: {
     type: Object,
@@ -159,27 +168,38 @@ const props = defineProps({
 })
 
 const query = ref({})
-const list = ref([])
-
-const tableLoading = ref(false)
-const emit = defineEmits(['success', 'update:modelValue'])
+const formRef = ref()
+const emit = defineEmits(['success', 'update:modelValue', 'delete'])
 const { visible, handleClose } = useVisible({ emit, props })
-
-const { handleSizeChange, handleCurrentChange, total, setTotalPage, queryPage } = usePagination({ fetchHook: fetchList })
+const list = ref([])
+const loading = ref(false)
+const structureClassList = inject('structureClassList')
+const drawerRef = ref()
 
 const dataFormat = ref([
   ['project', 'parse-project']
 ])
 
-const structureClassList = inject('structureClassList')
-const drawerRef = ref()
+watch(
+  () => visible.value,
+  (val) => {
+    if (val) {
+      list.value = JSON.parse(JSON.stringify(props.showList))
+      for (const i in query.value) {
+        query.value[i] = undefined
+      }
+      query.value.monomerId = props.monomerId
+    }
+  },
+  { deep: true, immediate: true }
+)
 
 const { maxHeight } = useMaxHeight(
   {
-    mainBox: '.already-form',
+    mainBox: '.current-form',
     extraBox: '.el-drawer__header',
     wrapperBox: '.el-drawer__body',
-    paginate: true,
+    paginate: false,
     minHeight: 300,
     navbar: false,
     clientHRepMainH: true
@@ -187,64 +207,62 @@ const { maxHeight } = useMaxHeight(
   drawerRef
 )
 
-watch(
-  () => visible.value,
-  (val) => {
-    if (val) {
-      for (const i in query.value) {
-        if (props.currentRow.boolSingleProject) {
-          query.value[i] = props.currentRow.projectId
-        } else {
-          query.value[i] = undefined
-        }
-      }
-      fetchList()
-    }
-  },
-  { deep: true, immediate: true }
-)
-
-async function deleteItem(row) {
-  try {
-    await unbindStructure({
-      processFileId: props.currentRow.id,
-      details: [{
-        monomerId: row.monomerId,
-        serialNumber: row.serialNumber
-      }]
-    })
-    ElMessage.success('构件：' + row.serialNumber + '解绑成功')
-    fetchList()
-    emit('success')
-  } catch (error) {
-    console.log('绑定失败', error)
-  }
+function handleSuccess() {
+  emit('success')
+  handleClose()
 }
 
-async function fetchList() {
-  let _list = []
-  tableLoading.value = true
-  try {
-    const { content = [], totalElements } = await bindStructureList({ ...query.value, processFileId: props.currentRow.id, ...queryPage })
-    setTotalPage(totalElements)
-    _list = content
-  } catch (error) {
-    console.log('构件绑定明细', error)
-  } finally {
-    list.value = _list
-    tableLoading.value = false
+function fetchList() {
+  let filterVal = JSON.parse(JSON.stringify(props.showList))
+  const searchArr = []
+  for (const i in query.value) {
+    if (query.value[i]) {
+      searchArr.push(i)
+    }
   }
+  for (let i = 0; i < searchArr.length; i++) {
+    if (searchArr[i] === 'monomerId' || searchArr[i] === 'structureClassId') {
+      filterVal = filterVal.filter(v => v[searchArr[i]] === query.value[searchArr[i]])
+    } else {
+      filterVal = filterVal.filter(v => v[searchArr[i]].indexOf(query.value[searchArr[i]]) > -1)
+    }
+  }
+  list.value = filterVal
 }
 
 function resetSubmit() {
-  for (const i in query.value) {
-    if (props.currentRow.boolSingleProject) {
-      query.value[i] = props.currentRow.projectId
-    } else {
-      query.value[i] = undefined
-    }
+  query.value = {}
+  nextTick(() => {
+    list.value = JSON.parse(JSON.stringify(props.showList))
+  })
+}
+
+function deleteItem(index) {
+  emit('delete', list.value[index])
+  list.value.splice(index, 1)
+}
+
+async function onSubmit() {
+  loading.value = true
+  const submitArr = []
+  list.value.forEach(v => {
+    submitArr.push({
+      monomerId: v.monomerId,
+      serialNumber: v.serialNumber
+    })
+  })
+  try {
+    await bindStructure({
+      processFileId: props.currentRow.id,
+      details: submitArr
+    })
+    ElMessage.success('绑定成功')
+    handleSuccess()
+  } catch (error) {
+    console.log('绑定失败', error)
+  } finally {
+    loading.value = false
   }
-  fetchList()
 }
 
 </script>

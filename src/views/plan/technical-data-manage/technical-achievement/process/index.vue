@@ -2,7 +2,7 @@
   <div class="app-container">
     <!--工具栏-->
     <div class="head-container">
-      <mHeader :project-id="globalProjectId" @currentChange="currentChange" @handleUpload="handleUpload"/>
+      <mHeader @structureClassChange="structureClassChange"/>
     </div>
     <!--表格渲染-->
     <common-table
@@ -34,18 +34,16 @@
     </el-table-column>
     <!--编辑与删除-->
     <el-table-column
-      v-if="checkPermission([...permission.edit, ...permission.download])"
+      v-if="checkPermission([...permission.detail, ...permission.edit,...permission.bind])"
       label="操作"
       width="220px"
       align="center"
       fixed="right"
     >
       <template v-slot="scope">
-        <common-button size="mini" icon="el-icon-view" type="info" @click="openDetail(scope.row)" />
+        <common-button size="mini" icon="el-icon-view" type="info" @click="openDetail(scope.row)" v-permission="permission.detail" />
         <common-button size="mini" icon="el-icon-edit" type="primary" @click="openModify(scope.row)" v-permission="permission.edit" />
-        <common-button size="mini" type="success" @click="bindVisible=true">绑定构件</common-button>
-        <!-- 下载 -->
-        <!-- <e-operation :data="scope.row" :permission="permission.download" /> -->
+        <common-button size="mini" type="success" @click="openBind(scope.row)" v-permission="permission.bind">绑定构件</common-button>
       </template>
     </el-table-column>
   </common-table>
@@ -61,26 +59,21 @@
 
 <script setup>
 import crudApi from '@/api/plan/technical-data-manage/process'
-import { ref, watch } from 'vue'
+import { ref, provide } from 'vue'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
-import { mapGetters } from '@/store/lib'
 import checkPermission from '@/utils/system/check-permission'
-import { parseTime } from '@/utils/date'
-import { changeFileListPM as permission } from '@/page-permission/plan'
+import { planProcessListPM as permission } from '@/page-permission/plan'
 import { processUseTypeEnum, planProcessTypeEnum } from '@enum-ms/plan'
 
 import detail from './module/detail'
 import modifyForm from './module/modify-form'
 import artifactBindForm from './module/artifact-bind-form'
-// import eOperation from '@crud/E.operation'
 import mForm from './module/form'
 import pagination from '@crud/Pagination'
 import mHeader from './module/header'
 import showPdfAndImg from '@comp-base/show-pdf-and-img.vue'
-
-const { globalProjectId, globalProject } = mapGetters(['globalProjectId', 'globalProject'])
 
 const optShow = {
   add: false,
@@ -98,6 +91,8 @@ const bindVisible = ref(false)
 
 const pdfShow = ref(false)
 const currentId = ref()
+const structureClassList = ref([])
+provide('structureClassList', structureClassList)
 
 const dataFormat = ref([
   ['project', 'parse-project'],
@@ -106,7 +101,7 @@ const dataFormat = ref([
   ['boolSingleProject', ['parse-enum', processUseTypeEnum]]
 ])
 
-const { crud, columns, CRUD } = useCRUD(
+const { crud, columns } = useCRUD(
   {
     title: '工艺文件',
     sort: ['id.desc'],
@@ -125,15 +120,9 @@ const { maxHeight } = useMaxHeight({
   extraHeight: 40
 })
 
-// watch(
-//   () => globalProjectId.value,
-//   (val) => {
-//     if (val) {
-//       crud.toQuery()
-//     }
-//   },
-//   { immediate: true, deep: true }
-// )
+function structureClassChange(val) {
+  structureClassList.value = val
+}
 
 // 预览附件
 function attachmentView(item) {
@@ -151,33 +140,38 @@ function openModify(row) {
   modifyVisible.value = true
 }
 
-function editRow(row) {
-  currentRow.value = row
-  uploadVisible.value = true
+function openBind(row) {
+  currentRow.value = row?.sourceRow
+  bindVisible.value = true
 }
 
-function currentChange(val) {
-  currentMonomer.value = val
-}
+// function editRow(row) {
+//   currentRow.value = row
+//   uploadVisible.value = true
+// }
 
-function handleUpload() {
-  currentRow.value = {}
-  uploadVisible.value = true
-}
+// function currentChange(val) {
+//   currentMonomer.value = val
+// }
 
-CRUD.HOOK.beforeRefresh = () => {
-  // crud.query.projectId = globalProjectId.value
-  // return crud.query.projectId
-}
+// function handleUpload() {
+//   currentRow.value = {}
+//   uploadVisible.value = true
+// }
 
-CRUD.HOOK.handleRefresh = (crud, data) => {
-  data.data.content = data.data.content.map(v => {
-    v.edit = false
-    v.originalRemark = v.remark
-    v.editLoading = false
-    return v
-  })
-}
+// CRUD.HOOK.beforeRefresh = () => {
+//   // crud.query.projectId = globalProjectId.value
+//   // return crud.query.projectId
+// }
+
+// CRUD.HOOK.handleRefresh = (crud, data) => {
+//   data.data.content = data.data.content.map(v => {
+//     v.edit = false
+//     v.originalRemark = v.remark
+//     v.editLoading = false
+//     return v
+//   })
+// }
 </script>
 
 <style lang="scss" scoped>

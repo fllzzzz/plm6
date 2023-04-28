@@ -47,6 +47,44 @@ export function getStructureList(params) {
   })
 }
 
+// 绑定构件
+export function bindStructure(data) {
+  return request({
+    module: 'plan',
+    url: 'artifact-processFile/bind',
+    method: 'post',
+    data
+  })
+}
+
+// 获取已绑定构件
+export function bindStructureList(params) {
+  return request({
+    module: 'plan',
+    url: 'artifact-processFile/listBind',
+    method: 'get',
+    params
+  })
+}
+
+// 构件解绑
+export function unbindStructure(data) {
+  return request({
+    module: 'plan',
+    url: 'artifact-processFile/unbind',
+    method: 'put',
+    data
+  })
+}
+
+// 获取系统已配置构件类型
+export function systemStructureClass() {
+  return request({
+    url: '/api/system/structure-classification/listAll',
+    method: 'get'
+  })
+}
+
 export function del(ids) {
   return request({
     module: 'plan',

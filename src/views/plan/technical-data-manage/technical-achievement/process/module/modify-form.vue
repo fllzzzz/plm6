@@ -50,13 +50,19 @@
           />
         </el-descriptions-item>
         <el-descriptions-item label-class-name="attachmentDTO" label="*文件" :span="2">
-         <template v-if="form.file">
-            <span style="cursor: pointer; color: #409eff" @dblclick="updateAttachmentView(form)">{{ form.file }}</span>
-          </template>
-          <template v-else-if="form.attachmentDTO">
-            <span style="cursor: pointer; color: #409eff" @dblclick="attachmentView(form.attachmentDTO)">{{ form.attachmentDTO.name }}</span>
-          </template>
-          <upload-btn ref="uploadRef" v-model:files="form.attachmentFiles" :file-classify="fileClassifyEnum.PLAN_ATT.V" :show-file-list="false" :limit="1" :accept="'.pdf'" @change="uploadFile" :btn-text="'变更文件'"/>
+          <div style="display:flex;">
+            <div style="flex:1;">
+               <template v-if="form.file">
+                <span style="cursor: pointer; color: #409eff" @dblclick="updateAttachmentView(form)">{{ form.file }}</span>
+              </template>
+              <template v-else-if="form.attachmentDTO">
+                <span style="cursor: pointer; color: #409eff" @dblclick="attachmentView(form.attachmentDTO)">{{ form.attachmentDTO.name }}</span>
+              </template>
+            </div>
+            <div style="flex:1;text-align:right;">
+              <upload-btn ref="uploadRef" v-model:files="form.attachmentFiles" :file-classify="fileClassifyEnum.PLAN_ATT.V" :show-file-list="false" :limit="1" :accept="'.pdf'" @change="uploadFile" :btnName="'变更文件'"/>
+            </div>
+          </div>
         </el-descriptions-item>
         <el-descriptions-item label-class-name="processType" label="文件类型">{{planProcessTypeEnum.VL[currentRow.processType]}}</el-descriptions-item>
         <el-descriptions-item label-class-name="boolSingleProject" label="文件属性">{{processUseTypeEnum.VL[currentRow.boolSingleProject]}}</el-descriptions-item>

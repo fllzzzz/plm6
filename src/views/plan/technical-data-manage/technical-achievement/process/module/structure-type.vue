@@ -47,10 +47,10 @@ async function fetchList() {
   }
   tableLoading.value = true
   try {
-    const { content = [] } = await getStructureClass({ projectId: props.query.projectId, monomerId: props.query.monomerId })
+    const { content = [] } = await getStructureClass({ ...props.query })
     _list = content
   } catch (error) {
-    console.log('收货明细', error)
+    console.log('构件类型明细', error)
   } finally {
     list.value = _list
     tableLoading.value = false
