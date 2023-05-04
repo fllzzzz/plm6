@@ -11,12 +11,12 @@
       <el-table-column prop="area.name" label="区域" align="center" show-overflow-tooltip min-width="100px" />
       <el-table-column prop="serialNumber" label="编号" align="center" show-overflow-tooltip min-width="100px" />
       <el-table-column prop="specification" label="规格" align="center" show-overflow-tooltip min-width="130px" />
-      <!-- <el-table-column prop="wageQuotaTypeStr" align="center" show-overflow-tooltip label="核算单位" width="70px" /> -->
-      <!-- <el-table-column align="center" prop="wage" label="定额单价" min-width="100px">
+      <el-table-column prop="wageQuotaTypeStr" align="center" show-overflow-tooltip label="核算单位" width="70px" />
+      <el-table-column align="center" prop="wage" label="定额单价" min-width="100px">
         <template #default="{ row }">
           <cell-change-preview :old="row.sourceWage" :new="row.wage" />
         </template>
-      </el-table-column> -->
+      </el-table-column>
       <template v-if="showMoreColumn">
         <el-table-column align="center" prop="primer" label="底漆" min-width="100px">
           <el-table-column prop="primerWageQuotaType" align="center" show-overflow-tooltip label="核算单位" width="70px">

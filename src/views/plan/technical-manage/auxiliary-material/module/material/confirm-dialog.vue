@@ -12,6 +12,7 @@
     <template #titleAfter>
       <span>项目:<span>{{globalProject.serialNumber}}</span><span style="margin-left:5px;">{{globalProject.shortName}}</span></span>
       <span v-if="isNotBlank(currentMonomer)" style="margin-left:10px;">单体:{{currentMonomer.name}}</span>
+      <span v-if="isNotBlank(currentArea)" style="margin-left:10px;">区域:{{currentArea.name}}</span>
     </template>
     <!-- 不刷新组件无法正常更新 -->
     <template v-if="dialogVisible">
@@ -77,7 +78,7 @@
               <span v-empty-text>{{ row.brand }}</span>
             </template>
           </el-table-column>
-          <el-table-column prop="useProperty" label="属性" align="center">
+          <el-table-column prop="useProperty" label="使用范围" align="center">
             <template #default="{ row }">
               <span v-empty-text>{{ auxiliaryMaterialUseTypeEnum.VL[row.useProperty] }}</span>
             </template>
@@ -130,6 +131,7 @@ const { maxHeight } = useMaxHeight(
   dialogVisible
 )
 const currentMonomer = inject('currentMonomer')
+const currentArea = inject('currentArea')
 const globalProject = inject('globalProject')
 // 表单提交后：关闭预览窗口
 FORM.HOOK.afterSubmit = () => {

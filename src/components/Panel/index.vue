@@ -7,7 +7,9 @@
       <div class="card-panel-text" :style="{ color: props.textColor }">
         {{ props.name }}
       </div>
+      <span v-if="showEmpty" v-empty class="card-panel-empty" />
       <count-to
+        v-else
         :style="{ color: props.numColor }"
         :start-val="props.startVal"
         :end-val="props.endVal"
@@ -34,6 +36,10 @@ const props = defineProps({
   icon: {
     type: String,
     default: undefined
+  },
+  showEmpty: { // 不显示数字，显示-
+    type: Boolean,
+    default: false
   },
   precision: {
     type: Number,
@@ -154,6 +160,11 @@ const props = defineProps({
 
     .card-panel-num {
       font-size: 40px;
+      line-height: 40px;
+    }
+
+    .card-panel-empty {
+      font-size: 30px;
       line-height: 40px;
     }
   }

@@ -27,14 +27,14 @@ export function getPart(params) {
   })
 }
 
-// export function getAuxiliaryMaterial(params) {
-//   return request({
-//     module: 'mes',
-//     url: 'package/auxiliary_material/use',
-//     method: 'get',
-//     params
-//   })
-// }
+export function getAuxiliaryMaterial(params) {
+  return request({
+    module: 'mes',
+    url: 'package/auxiliary_material/use',
+    method: 'get',
+    params
+  })
+}
 
 export function pack(data) {
   return request({

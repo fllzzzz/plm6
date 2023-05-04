@@ -9,11 +9,12 @@
       :data="crud.data"
       :empty-text="crud.emptyText"
       :max-height="maxHeight"
+      :data-format="dataFormat"
       row-key="projectId"
       style="width: 100%"
     >
       <el-table-column prop="index" label="序号" align="center" width="60" type="index" />
-      <el-table-column v-if="columns.visible('name')" key="name" prop="name" :show-overflow-tooltip="true" label="产线">
+      <el-table-column v-if="columns.visible('name')" key="name" prop="name" :show-overflow-tooltip="true" label="产线" min-width="120px">
         <template v-slot="scope">
           <span>{{ scope.row.workShopName }}>{{ scope.row.name }}</span>
         </template>
@@ -55,10 +56,14 @@
         key="taskQuantity"
         prop="taskQuantity"
         :show-overflow-tooltip="true"
-        label="任务量（件/kg）"
+        label="任务量（件/吨）"
       >
         <template v-slot="scope">
-          <span>{{ scope.row.taskQuantity }}/{{ scope.row.taskNetWeight?.toFixed(DP.COM_WT__KG) }}</span>
+          <span>{{
+            crud.query.weightStatus === weightTypeEnum.NET.V
+              ? scope.row.taskQuantity + '/' + (scope.row.taskNetWeight / 1000).toFixed(2)
+              : scope.row.taskQuantity + '/' + (scope.row.taskGrossWeight / 1000).toFixed(2)
+          }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -67,10 +72,14 @@
         key="completeQuantity"
         prop="completeQuantity"
         :show-overflow-tooltip="true"
-        label="完成量（件/kg）"
+        label="完成量（件/吨）"
       >
         <template v-slot="scope">
-          <span>{{ scope.row.completeQuantity }}/{{ scope.row.completeNetWeight?.toFixed(DP.COM_WT__KG) }}</span>
+          <span>{{
+            crud.query.weightStatus === weightTypeEnum.NET.V
+              ? scope.row.completeQuantity + '/' + (scope.row.completeNetWeight / 1000).toFixed(2)
+              : scope.row.completeQuantity + '/' + (scope.row.completeGrossWeight / 1000).toFixed(2)
+          }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -108,14 +117,22 @@
 import { ref } from 'vue'
 import crudApi from '@/api/mes/task-tracking/production-line-tracking.js'
 import useCRUD from '@compos/use-crud'
-import { DP } from '@/settings/config'
 import { mesProductionLineTrackingPM as permission } from '@/page-permission/mes'
 // import { parseTime } from '@/utils/date'
 import { componentTypeEnum } from '@enum-ms/mes'
+import { weightTypeEnum } from '@enum-ms/common'
 import useMaxHeight from '@compos/use-max-height'
 // import pagination from '@crud/Pagination'
 import mHeader from './module/header.vue'
 import productionLineTrackingDetail from './production-line-tracking-detail/index.vue'
+
+// 表格列数据格式转换
+const dataFormat = ref([
+  ['taskNetWeight', ['to-fixed', 2]],
+  ['taskGrossWeight', ['to-fixed', 2]],
+  ['completeNetWeight', ['to-fixed', 2]],
+  ['completeGrossWeight', ['to-fixed', 2]]
+])
 
 // 由于mes枚举构件、部件的type值相同，单独定义枚举type值
 const componentTypeTag = {
@@ -139,7 +156,7 @@ const { crud, CRUD, columns } = useCRUD(
     title: '产线跟踪',
     sort: [],
     optShow: { ...optShow },
-    permission: { ... permission },
+    permission: { ...permission },
     crudApi: { ...crudApi },
     hasPagination: true
   },

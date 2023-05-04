@@ -85,6 +85,7 @@ async function nextStep() {
         // TODO:没有对form重新赋值
         projectMembersRef.value.getCheckUser()
         crud.form.userIdList = projectMembersRef.value.checkUser || []
+        crud.form.business.signerId = crud.form.baseRequestVO.signerId
         crud.submitCU()
         const enclosureInfo = crud.form.business.enclosureInfo
         const dictData = []

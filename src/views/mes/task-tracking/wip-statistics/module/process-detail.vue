@@ -47,8 +47,10 @@
         <el-table-column :show-overflow-tooltip="true" prop="specification" label="规格" align="center" />
         <el-table-column :show-overflow-tooltip="true" prop="material" label="材质" align="center" />
         <el-table-column :show-overflow-tooltip="true" align="center" prop="quantity" label="数量" />
-        <el-table-column :show-overflow-tooltip="true" align="center" prop="netWeight" label="单重（kg）" />
-        <el-table-column :show-overflow-tooltip="true" align="center" prop="totalNetWeight" label="总重（kg）" />
+        <el-table-column :show-overflow-tooltip="true" align="center" prop="netWeight" label="单净重（kg）" />
+        <el-table-column :show-overflow-tooltip="true" align="center" prop="grossWeight" label="单毛重（kg）" />
+        <el-table-column :show-overflow-tooltip="true" align="center" prop="totalNetWeight" label="总净重（kg）" />
+        <el-table-column :show-overflow-tooltip="true" align="center" prop="totalGrossWeight" label="总毛重（kg）" />
       </common-table>
       <!-- 分页 -->
       <el-pagination

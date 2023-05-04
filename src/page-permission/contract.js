@@ -229,6 +229,13 @@ export const orderTrackingPM = {
   print: ['order_tracking:print'] // 打印
 }
 
+// 销售管理/发运跟踪
+export const shipmentTrackingPM = {
+  get: ['shipment_tracking:get'], // 列表
+  summary: ['shipment_tracking:summary'], // 汇总
+  print: ['shipment_tracking:print'] // 打印
+}
+
 // 销售管理/客户交易记录
 export const transactionRecordPM = {
   get: ['transaction_record:get'], // 列表
@@ -254,6 +261,11 @@ export const settlementManagePM = {
   detail: ['contract_settlement_manage:detail'], // 结算单详情
   audit: ['contract_settlement_manage:audit'], // 审核结算单
   download: ['contract_settlement_manage:download'] // 结算单下载
+}
+
+// 销售管理/发运跟踪
+export const deliveryTrackingPM = {
+  get: ['delivery_tracking:get'] // 列表
 }
 
 // --------------------------- 销售管理 end --------------------------------

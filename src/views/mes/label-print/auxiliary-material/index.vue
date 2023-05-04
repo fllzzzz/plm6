@@ -16,14 +16,57 @@
       @selection-change="crud.selectionChangeHandler"
     >
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="序号" type="index" align="center" width="60" />
-      <belonging-info-columns :columns="columns" showMonomer />
-      <productType-base-info-columns :productType="productType" :columns="columns">
+      <el-table-column prop="index" label="序号" align="center" width="60" type="index" />
+      <el-table-column v-if="columns.visible('name')" key="name" prop="name" :show-overflow-tooltip="true" label="名称" align="center">
+        <template #default="{ row }">
+          <table-cell-tag :show="Boolean(row.printedQuantity)" name="已打印" color="#e64242" :offset="15" />
+          <span>{{ row.name }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        v-if="columns.visible('measureUnit')"
+        key="measureUnit"
+        prop="measureUnit"
+        :show-overflow-tooltip="true"
+        align="center"
+        label="单位"
+      />
+      <el-table-column
+        v-if="columns.visible('specification')"
+        key="specification"
+        prop="specification"
+        :show-overflow-tooltip="true"
+        align="center"
+        label="规格"
+      />
+      <el-table-column
+        v-if="columns.visible('useProperty')"
+        key="useProperty"
+        prop="useProperty"
+        :show-overflow-tooltip="true"
+        align="center"
+        label="使用范围"
+      >
+        <template #default="{ row }">
+          <span>{{ typeEnum.VL[row.useProperty] }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column v-if="columns.visible('quantity')" key="quantity" prop="quantity" label="数量" align="center" />
+      <!-- <el-table-column
+        v-if="columns.visible('remark')"
+        key="remark"
+        prop="remark"
+        :show-overflow-tooltip="true"
+        align="center"
+        label="备注"
+      /> -->
+      <!-- <belonging-info-columns :columns="columns" showMonomer /> -->
+      <!-- <productType-base-info-columns :productType="productType" :columns="columns">
         <template #namePrefix="{ row }">
           <table-cell-tag :show="Boolean(row.printedQuantity)" name="已打印" color="#e64242" :offset="15" />
         </template>
-      </productType-base-info-columns>
-      <el-table-column
+      </productType-base-info-columns> -->
+      <!-- <el-table-column
         v-if="columns.visible('measureUnit')"
         :show-overflow-tooltip="true"
         prop="measureUnit"
@@ -66,11 +109,11 @@
         label="核算量"
         align="center"
         min-width="120px"
-      >
-        <template #default="{ row }">
+      > -->
+      <!-- <template #default="{ row }">
           <span>{{ row.mete }}</span>
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column
         v-if="columns.visible('printQuantity')"
         key="printQuantity"
@@ -105,6 +148,7 @@ import crudApi from '@/api/mes/label-print/auxiliary-material'
 import { ref, provide } from 'vue'
 
 import { componentTypeEnum, labelTypeEnum } from '@enum-ms/mes'
+import { auxiliaryMaterialUseTypeEnum as typeEnum } from '@enum-ms/plan'
 import { QR_SCAN_F_TYPE } from '@/settings/config'
 import { parseTime } from '@/utils/date'
 import { printAuxiliaryMaterial as printComponent } from '@/utils/print/index'
@@ -113,8 +157,8 @@ import { auxiliaryMaterialLabelPM as permission } from '@/page-permission/mes'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import pagination from '@crud/Pagination'
-import belongingInfoColumns from '@comp-mes/table-columns/belonging-info-columns'
-import productTypeBaseInfoColumns from '@comp-mes/table-columns/productType-base-info-columns'
+// import belongingInfoColumns from '@comp-mes/table-columns/belonging-info-columns'
+// import productTypeBaseInfoColumns from '@comp-mes/table-columns/productType-base-info-columns'
 import mHeader from './module/header.vue'
 import labelDlg from '../components/label-dlg'
 import printedRecordDrawer from '../components/task-printed-record-drawer.vue'
@@ -134,6 +178,7 @@ const { crud, columns } = useCRUD(
     permission: { ...permission },
     optShow: { ...optShow },
     crudApi: { ...crudApi },
+    requiredQuery: ['projectId'],
     queryOnPresenterCreated: false
   },
   tableRef
@@ -158,6 +203,7 @@ async function printLabel(row) {
 }
 
 function previewLabel(row) {
+  console.log(row, 'row')
   currentLabel.value = getLabelInfo(row)
   labelVisible.value = true
 }
@@ -174,13 +220,14 @@ function getLabelInfo(row) {
     projectName: row.project?.shortName,
     printTime: row.printTime ? parseTime(row.printTime, '{y}/{m}/{d}') : parseTime(new Date().getTime(), '{y}/{m}/{d}'),
     monomerName: row.monomer?.name,
-    name: row.classifyName,
-    serialNumber: row.serialNumber,
-    color: row.color,
-    brand: row.brand,
-    quantity: row.mete,
-    specification: row.specification,
-    drawingNumber: row.drawingNumber
+    areaName: row.area?.name,
+    name: row.name,
+    // serialNumber: row.serialNumber,
+    unit: row.measureUnit,
+    useProperty: typeEnum.VL[row.useProperty],
+    quantity: row.quantity,
+    specification: row.specification
+    // drawingNumber: row.drawingNumber
   }
   const baseUrl = requestUrl
   return {

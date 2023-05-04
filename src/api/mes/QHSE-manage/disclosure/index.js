@@ -17,6 +17,23 @@ export function get(params) {
   })
 }
 
+/**
+ *
+ * 导入问题报告excel
+ * @export
+ * @param {*} page|required 页码
+ * @param {*} size|required 页大小
+ * @returns
+ */
+export function getExcelFn({ id }) {
+  return request({
+    module: 'mes',
+    url: `qhse/detail/${id}/download`,
+    responseType: 'blob',
+    method: 'get'
+  })
+}
+
 export default {
   get
 }

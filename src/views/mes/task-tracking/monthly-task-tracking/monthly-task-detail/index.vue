@@ -36,9 +36,13 @@
             </template>
           </template>
         </el-table-column>
-        <el-table-column align="center" key="quantity" prop="quantity" :show-overflow-tooltip="true" label="排产量（件/吨）">
+        <el-table-column align="center" key="list" prop="list" :show-overflow-tooltip="true" label="排产量（件/吨）">
           <template v-slot="scope">
-            <span>{{ scope.row.quantity }}/{{ (scope.row.netWeight / 1000).toFixed(DP.COM_WT__KG) }}</span>
+            <span class="tc-primary">{{
+              props.weightStatus === weightTypeEnum.NET.V
+                ? scope.row.quantity + '/' + (scope.row.netWeight / 1000).toFixed(DP.COM_WT__KG)
+                : scope.row.quantity + '/' + (scope.row.grossWeight / 1000).toFixed(DP.COM_WT__KG)
+            }}</span>
           </template>
         </el-table-column>
         <el-table-column align="center" key="rate" prop="rate" :show-overflow-tooltip="true" label="完成率" width="160px">
@@ -56,13 +60,17 @@
         </el-table-column>
         <el-table-column
           align="center"
-          key="completeQuantity"
-          prop="completeQuantity"
+          key="complete"
+          prop="complete"
           :show-overflow-tooltip="true"
           label="实际完成（件/吨）"
         >
           <template v-slot="scope">
-            <span>{{ scope.row.completeQuantity }}/{{ (scope.row.completeNetWeight / 1000).toFixed(DP.COM_WT__KG) }}</span>
+            <span class="tc-primary">{{
+              props.weightStatus === weightTypeEnum.NET.V
+                ? scope.row.completeQuantity + '/' + (scope.row.completeNetWeight / 1000).toFixed(DP.COM_WT__KG)
+                : scope.row.completeQuantity + '/' + (scope.row.completeGrossWeight / 1000).toFixed(DP.COM_WT__KG)
+            }}</span>
           </template>
         </el-table-column>
       </common-table>
@@ -77,12 +85,13 @@
         @current-change="handleCurrentChange"
       />
     </div>
-    <project-detail v-model:visible="drawerVisible" :dateTime="props.monthlyData?.month" :detail-data="detailData" />
+    <project-detail v-model:visible="drawerVisible" :dateTime="props.monthlyData?.month" :detail-data="detailData" :params-query="props.query" />
   </div>
 </template>
 <script setup>
 import { monthlyProject } from '@/api/mes/task-tracking/monthly-task-tracking.js'
 import { ref, defineProps, watch } from 'vue'
+import { weightTypeEnum } from '@enum-ms/common'
 import useMaxHeight from '@compos/use-max-height'
 import usePagination from '@compos/use-pagination'
 import projectDetail from '../project-detail/index.vue'
@@ -96,6 +105,9 @@ const props = defineProps({
   },
   query: {
     type: Object
+  },
+  weightStatus: {
+    type: Number
   }
 })
 

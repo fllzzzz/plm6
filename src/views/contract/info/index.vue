@@ -258,16 +258,18 @@ async function onSubmit() {
   if (!valid) {
     return
   }
+  const projectUpdateDTOParam = {
+    baseUpdateDTOParam: baseRef.value.form,
+    businessUpdateDTOParam: businessRef.value.form,
+    customerUpdateDTOParam: customerRef.value.form,
+    userIdList: memberRef.value.checkedList
+  }
+  projectUpdateDTOParam.businessUpdateDTOParam.signerId = projectUpdateDTOParam.baseUpdateDTOParam.signerId
   try {
     await editContract({
       projectId: props.projectId,
       type: contractChangeTypeEnum.ENUM.CONTRACT_INFO.V,
-      projectUpdateDTOParam: {
-        baseUpdateDTOParam: baseRef.value.form,
-        businessUpdateDTOParam: businessRef.value.form,
-        customerUpdateDTOParam: customerRef.value.form,
-        userIdList: memberRef.value.checkedList
-      },
+      projectUpdateDTOParam: projectUpdateDTOParam,
       ...changeForm.value
     })
     ElNotification({ title: '提交成功', type: 'success' })

@@ -142,6 +142,8 @@ export const configMesBasePM = {
   overweightSMSRecipientEdit: ['overweight_sms_recipient:edit'], // 编辑过磅短信接收人
   safeAmountFactorGet: ['safe_amount_factor:get'], // 查看安全余额系数
   safeAmountFactorEdit: ['safe_amount_factor:edit'], // 编辑安全余额系数
+  steelBindConfigGet: ['steel_bind_config:get'], // 查看钢板绑定配置
+  steelBindConfigEdit: ['steel_bind_config:edit'], // 编辑钢板绑定配置
   // driverFillConfigGet: ['driver_fill_config:get'], // 查看物流信息填写配置
   // driverFillConfigEdit: ['driver_fill_config:edit'], // 编辑物流信息填写配置
   drawingSNConfigGet: ['drawing_sn_config:get'], // 查看图纸识别规则配置
@@ -151,7 +153,9 @@ export const configMesBasePM = {
   carModelConfigGet: ['car_model_config:get'], // 查看车型配置
   carModelConfigEdit: ['car_model_config:edit'], // 编辑车型配置
   foldingPriceMethodGet: ['folding_price_method:get'], // 查看围护折边件计价方式
-  foldingPriceMethodEdit: ['folding_price_method:edit'] // 编辑围护折边件计价方式
+  foldingPriceMethodEdit: ['folding_price_method:edit'], // 编辑围护折边件计价方式
+  appTaskReportGet: ['app_task_report:get'], // 查看app任务上报重量显示
+  appTaskReportEdit: ['app_task_report:edit'] // 编辑app任务上报重量显示
 }
 
 // MES-公共配置/变更原因
@@ -356,6 +360,52 @@ export const mesParallelConfigPM = {
   del: ['mes_parallel_config:del'], // 删除垫块配置
   import: ['mes_parallel_config:import'] // 导入dxf
 }
+
+// ---------------------------- 建钢-生产配置 end -------------------------------
+
+// ########################################################################
+
+// --------------------------- 围护-生产配置 start --------------------------
+
+// 围护-生产配置/生产线管理:班组
+export const enclosureConfigProductionLineTeamPM = {
+  get: ['enclosure_productionLine_team:get'], // 班组列表
+  add: ['enclosure_productionLine_team:add'], // 添加班组
+  edit: ['enclosure_productionLine_team:edit'], // 编辑班组
+  del: ['enclosure_productionLine_team:del'] // 删除班组
+}
+
+// 围护-生产配置/生产线管理:质检
+export const enclosureConfigProductionLineInspectPM = {
+  get: ['enclosure_productionLine_inspect:get'], // 质检列表
+  add: ['enclosure_productionLine_inspect:add'], // 添加质检
+  edit: ['enclosure_productionLine_inspect:edit'], // 编辑质检
+  del: ['enclosure_productionLine_inspect:del'] // 删除质检
+}
+
+// 围护-生产配置/报检方式
+export const enclosureConfigInspectionModePM = {
+  get: ['enclosure_inspection_mode:get'], // 报检方式列表
+  edit: ['enclosure_inspection_mode:edit'] // 编辑报检方式
+}
+
+// 围护-生产配置/生产线管理
+export const enclosureConfigProductionLinePM = {
+  get: ['enclosure_productionLine:get'], // 生产线列表
+  add: ['enclosure_productionLine:add'], // 添加生产线
+  edit: ['enclosure_productionLine:edit'], // 编辑生产线
+  del: ['enclosure_productionLine:del'], // 删除生产线
+  editStatus: ['enclosure_productionLine:editStatus'] // 更改生产线状态
+}
+
+// 围护-生产配置/生产线管理:生产组
+export const enclosureConfigProductionLineGroupPM = {
+  get: ['enclosure_productionLine_group:get'], // 班组列表
+  edit: ['enclosure_productionLine_group:edit'] // 编辑班组
+}
+
+// ---------------------------- 围护-生产配置 end -------------------------------
+
 // ---------------------------- 基础配置 end -------------------------------
 
 // ########################################################################

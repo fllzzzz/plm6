@@ -28,7 +28,8 @@ constantize(overallPlanTypeEnum)
 const areaPlanTypeEnum = {
   DEEPEN: { L: '深化计划', K: 'DEEPEN', V: 1 << 0 },
   PROCESS: { L: '加工计划', K: 'PROCESS', V: 1 << 1 },
-  INSTALL: { L: '安装计划', K: 'INSTALL', V: 1 << 2 }
+  INSTALL: { L: '安装计划', K: 'INSTALL', V: 1 << 2 },
+  DELIVERY: { L: '发运计划', K: 'DELIVERY', V: 1 << 3 }
 }
 constantize(areaPlanTypeEnum)
 
@@ -123,6 +124,28 @@ const paintTypeEnum = {
 }
 constantize(paintTypeEnum)
 
+// 工艺类型通用专用
+const processUseTypeEnum = {
+  NORMAL: { L: '通用', K: 'NORMAL', V: false },
+  SPECIAL: { L: '专用', K: 'SPECIAL', V: true }
+}
+constantize(processUseTypeEnum)
+
+// 工艺类型
+const planProcessTypeEnum = {
+  WELD: { L: '焊接工艺', K: 'WELD', V: 1 << 0 },
+  ASSEMBLE: { L: '装配工艺', K: 'ASSEMBLE', V: 1 << 1 },
+  PAINT: { L: '涂装工艺', K: 'PAINT', V: 1 << 2 }
+}
+constantize(planProcessTypeEnum)
+
+// 工艺文件是否绑定构件
+const isArtifactBindTypeEnum = {
+  NO: { L: '未绑定', K: 'NO', V: false },
+  YES: { L: '已绑定', K: 'YES', V: true }
+}
+constantize(isArtifactBindTypeEnum)
+
 export {
   manufactureTypeEnum, // 制造类型
   overallPlanTypeEnum, // 部门计划类型
@@ -138,7 +161,10 @@ export {
   serialNumChangeTypeEnum,
   preparationRangeEnum, // 备料范围（类型）
   preparationStatusEnum, // 备料状态
-  paintTypeEnum
+  paintTypeEnum,
+  planProcessTypeEnum,
+  processUseTypeEnum,
+  isArtifactBindTypeEnum
 }
 
 export default {
@@ -156,5 +182,8 @@ export default {
   serialNumChangeTypeEnum,
   preparationRangeEnum, // 备料范围（类型）
   preparationStatusEnum, // 备料状态
-  paintTypeEnum
+  paintTypeEnum,
+  planProcessTypeEnum,
+  processUseTypeEnum,
+  isArtifactBindTypeEnum
 }
