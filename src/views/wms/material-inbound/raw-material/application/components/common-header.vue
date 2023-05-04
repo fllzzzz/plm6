@@ -313,6 +313,7 @@ function handlePurchaseIdChange(val) {
     trainsDiff.value = {}
     formRef?.value?.clearValidate()
   })
+  form.purchaseId = val
   emit('update:purchaseId', val)
 }
 
