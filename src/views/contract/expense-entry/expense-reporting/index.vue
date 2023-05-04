@@ -65,11 +65,11 @@
       />
       <el-table-column
         v-if="columns.visible('reimburseAmount')"
-        align="center"
+        align="right"
         key="reimburseAmount"
         prop="reimburseAmount"
         :show-overflow-tooltip="true"
-        label="报销金额（元）"
+        label="报销金额"
       />
       <el-table-column
         v-if="columns.visible('project')"
@@ -140,6 +140,7 @@ const tableRef = ref()
 const expenseList = ref([])
 
 const columnsDataFormat = ref([
+  ['reimburseAmount', 'to-thousand'],
   ['reimburseDate', ['parse-time', '{y}-{m}-{d}']],
   ['project', 'parse-project'],
   ['costAscriptionEnum', ['parse-enum', costAscriptionEnum]]

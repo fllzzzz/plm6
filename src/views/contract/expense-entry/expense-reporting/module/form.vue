@@ -93,6 +93,7 @@
             style="width: 270px"
             placeholder="输入报销费用"
             controls-position="right"
+            :precision="DP.YUAN"
             :min="0"
             :max="9999999999"
           />
@@ -117,6 +118,8 @@
 import { ref, inject } from 'vue'
 
 import { costAscriptionEnum } from '@enum-ms/config'
+import { DP } from '@/settings/config'
+import { isBlank } from '@data-type/index'
 
 import { regForm } from '@compos/use-crud'
 import userSelect from '@comp-common/user-select'
@@ -148,26 +151,30 @@ const validateQuantity = (rule, value, callback) => {
 }
 
 const validateProject = (rule, value, callback) => {
-  if (form.costAscriptionEnum !== costAscriptionEnum.PERIOD_COSTS.V && !value) {
-    callback(new Error('必须选择项目'))
+  if (form.costAscriptionEnum !== costAscriptionEnum.PERIOD_COSTS.V) {
+    if (isBlank(form.expenseTypeId)) {
+      callback(new Error('请先选择费用类别'))
+    } else if (isBlank(value)) {
+      callback(new Error('请选择项目'))
+    }
   }
   callback()
 }
 
 const rules = {
-  reimburseDate: [{ required: true, message: '请选择报销日期', trigger: 'blur' }],
-  reimburseUserId: [{ required: true, message: '请选择报销人', trigger: 'blur' }],
-  expenseTypeId: [{ required: true, message: '请选择费用类别', trigger: 'blur' }],
-  expenseSubjectId: [{ required: true, message: '请选择报销科目', trigger: 'blur' }],
+  reimburseDate: [{ required: true, message: '请选择报销日期', trigger: 'change' }],
+  reimburseUserId: [{ required: true, message: '请选择报销人', trigger: 'change' }],
+  expenseTypeId: [{ required: true, message: '请选择费用类别', trigger: 'change' }],
+  expenseSubjectId: [{ required: true, message: '请选择报销科目', trigger: 'change' }],
   reimburseAmount: [{ required: true, validator: validateQuantity, trigger: 'blur' }],
-  projectId: [{ required: true, validator: validateProject, trigger: 'blur' }]
+  projectId: [{ required: true, validator: validateProject, trigger: 'change' }]
 }
 
 function handleChange() {
   const row = expenseList.value.find((v) => v.id === form.expenseTypeId) || {}
   subjectList.value = row?.links || []
   form.costAscriptionEnum = row?.costAscriptionEnum
-  if (form.costAscriptionEnum === costAscriptionEnum.PERIOD_COSTS.V) {
+  if (form.costAscriptionEnum === costAscriptionEnum.PERIOD_COSTS.V || isBlank(form.expenseTypeId)) {
     form.projectId = undefined
   }
 }

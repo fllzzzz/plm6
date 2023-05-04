@@ -64,6 +64,14 @@ export const contractLedgerPM = {
     del: ['contract_ledger_invoice:del'], // 开票删除
     audit: ['contract_ledger_invoice:audit'], // 开票审核
     print: ['contract_ledger_invoice:print'] // 打印下载
+  },
+  exportTaxRebate: {
+    get: ['contract_ledger_tax:get'], // 出口退税列表
+    add: ['contract_ledger_tax:add'], // 添加出口退税
+    edit: ['contract_ledger_tax:edit'], // 修改出口退税
+    del: ['contract_ledger_tax:del'], // 删除出口退税
+    audit: ['contract_ledger_tax:audit'], // 审核出口退税
+    print: ['contract_ledger_tax:print'] // 打印出口退税
   }
 }
 

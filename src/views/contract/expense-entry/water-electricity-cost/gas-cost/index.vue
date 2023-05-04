@@ -135,6 +135,7 @@ const { crud, CRUD, columns } = useCRUD(
     optShow: { ...optShow },
     permission: { ...permission },
     crudApi: { ...crudApi },
+    queryOnPresenterCreated: false,
     hasPagination: false
   },
   tableRef
@@ -149,7 +150,11 @@ async function gasListGet() {
     setLevelName(gasTree.value)
     setLastGas(gasTree.value)
     nextTick(() => {
-      setRowDetail(gasTree.value)
+      if (gasTree.value.length) {
+        setRowDetail(gasTree.value)
+      } else {
+        crud.toQuery()
+      }
     })
   } catch (e) {
     console.log('获取气体类型失败', e)

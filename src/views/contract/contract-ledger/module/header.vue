@@ -32,19 +32,19 @@
       />
       <el-input v-model.trim="query.projectManagerName" placeholder="业务负责人搜索" style="width: 200px" class="filter-item" />
       <rrOperation />
-      <div v-loading="totalLoading" class="filter-item" style="display: block;">
-        <el-row :gutter="20" class="panel-group">
+      <div v-loading="totalLoading" style="margin-bottom: 6px;">
+        <el-row :gutter="10" class="panel-group">
           <el-col :span="6" class="card-panel-col">
-            <Panel name="累计合同额：" text-color="#626262" num-color="#1890ff" :end-val="toThousand(totalSum.contractAmountSum || 0)" :precision="2" />
+            <Panel name="累计合同额：" text-color="#626262" num-color="#1890ff" :end-val="totalSum.contractAmountSum || 0" :precision="2" />
           </el-col>
           <el-col :span="6" class="card-panel-col">
-            <Panel name="累计结算额：" text-color="#626262" num-color="#36ae81" :end-val="toThousand(totalSum.settlementAmountSum || 0)" :precision="2" />
+            <Panel name="累计结算额：" text-color="#626262" num-color="#36ae81" :end-val="totalSum.settlementAmountSum || 0" :precision="2" />
           </el-col>
           <el-col :span="6" class="card-panel-col">
-            <Panel name="累计收款额：" text-color="#626262" num-color="#36ae81" :end-val="toThousand(totalSum.collectionAmountSum || 0)" :precision="2" />
+            <Panel name="累计收款额：" text-color="#626262" num-color="#36ae81" :end-val="totalSum.collectionAmountSum || 0" :precision="2" />
           </el-col>
           <el-col :span="6" class="card-panel-col">
-            <Panel name="累计开票额：" text-color="#626262" num-color="#36ae81" :end-val="toThousand(totalSum.invoiceAmountSum || 0)" :precision="2" />
+            <Panel name="累计开票额：" text-color="#626262" num-color="#36ae81" :end-val="totalSum.invoiceAmountSum || 0" :precision="2" />
           </el-col>
         </el-row>
       </div>
@@ -63,7 +63,6 @@ import { ledgerSum } from '@/api/contract/contract-ledger'
 
 import { settlementStatusEnum } from '@enum-ms/finance'
 import { businessTypeEnum } from '@enum-ms/contract'
-import { toThousand } from '@data-type/number'
 
 import { regHeader } from '@compos/use-crud'
 import rrOperation from '@crud/RR.operation'
