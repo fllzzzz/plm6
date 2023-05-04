@@ -121,16 +121,22 @@ async function printTable({ header, table, footer, qrCode, config, printMode = P
           LODOP.SET_PRINT_STYLEA(0, 'Offset2Top', `${-tbOffset2Top}${config.unit}`) // 从次页开始的上边距偏移量
         }
         // 当底部信息“显示且只在尾页显示”的情况，每页显示则再table的tfoot中加入代码
-        if (isNotBlank(config.footer) && config.footer.show && !config.footer.allPage) {
-          LODOP.ADD_PRINT_HTM(0, 0, '100%', '100%', footerHtml)
+        if (isNotBlank(config.footer) && config.footer.show && config.footer.height && !config.footer.allPage) {
+          LODOP.ADD_PRINT_HTM(0, 0, '100%', `${config.footer.height}${config.unit}`, footerHtml)
           LODOP.SET_PRINT_STYLEA(0, 'LinkedItem', -1) // 关联上一个table对象，在table的末尾显示
         }
         if (isNotBlank(config.page) && config.page.show) {
-          LODOP.ADD_PRINT_HTM(0, 0, '100%', '100%', pageNumberHtml)
+          const pageNumberHeight = convertUnits(6, 'mm', config.unit)
+          LODOP.ADD_PRINT_HTM(`${config.height - pageNumberHeight - config.page.bottom}${config.unit}`, 0, '100%', `${pageNumberHeight + config.page.bottom}${config.unit}`, pageNumberHtml)
           LODOP.SET_PRINT_STYLEA(0, 'ItemType', 1) // 设置标题每页显示
         }
         if (isNotBlank(config.logo) && config.logo.show && config.logo.url) {
-          LODOP.ADD_PRINT_HTM(`${config.logo.top}${config.unit}`, `${config.logo.left}${config.unit}`, '100%', '100%', logoHtml)
+          LODOP.ADD_PRINT_HTM(
+            `${config.logo.top}${config.unit}`,
+            `${config.logo.left}${config.unit}`,
+            `${config.logo.width}${config.unit}`,
+            `${config.logo.height}${config.unit}`,
+            logoHtml)
           LODOP.SET_PRINT_STYLEA(0, 'ItemType', 1) // 设置标题每页显示
           if (!config.logo.allPage) {
           // 如果logo不是每页都显示（只有第一页显示）
