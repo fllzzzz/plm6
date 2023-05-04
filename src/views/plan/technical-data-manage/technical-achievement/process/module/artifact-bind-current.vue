@@ -112,7 +112,7 @@
               :data-format="dataFormat"
             >
               <el-table-column label="序号" type="index" align="center" width="50" />
-              <el-table-column prop="project" label="项目" align="center" show-overflow-tooltip/>
+              <el-table-column prop="project" label="项目" align="center" show-overflow-tooltip v-if="!currentRow.boolSingleProject" />
               <el-table-column prop="monomerName" label="单体" align="center" show-overflow-tooltip/>
               <el-table-column prop="serialNumber" label="编号" align="center" show-overflow-tooltip/>
               <el-table-column prop="name" label="构件名称" align="center" show-overflow-tooltip/>

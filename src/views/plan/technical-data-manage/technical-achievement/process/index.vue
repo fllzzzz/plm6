@@ -15,15 +15,15 @@
       style="width: 100%"
     >
     <el-table-column prop="index" label="序号" align="center" width="60" type="index" />
-    <el-table-column v-if="columns.visible('processType')" key="processType" prop="processType" :show-overflow-tooltip="true" label="工艺类型" align="center"/>
-    <el-table-column v-if="columns.visible('boolSingleProject')" key="boolSingleProject" prop="boolSingleProject" :show-overflow-tooltip="true" label="文件类型" align="center"/>
+    <el-table-column v-if="columns.visible('processType')" key="processType" prop="processType" :show-overflow-tooltip="true" label="工艺类型"  width="80" align="center"/>
+    <el-table-column v-if="columns.visible('boolSingleProject')" key="boolSingleProject" prop="boolSingleProject" :show-overflow-tooltip="true" width="80" label="文件类型" align="center"/>
     <el-table-column v-if="columns.visible('project')" key="project" prop="project" :show-overflow-tooltip="true" label="所属项目" align="center"/>
     <el-table-column v-if="columns.visible('fileName')" key="fileName" prop="fileName" :show-overflow-tooltip="true" label="文件名称" align="center"/>
     <el-table-column v-if="columns.visible('remark')" key="remark" prop="remark" :show-overflow-tooltip="true" label="备注" align="center"/>
     <el-table-column v-if="columns.visible('bindQuantity')" key="bindQuantity" prop="bindQuantity" :show-overflow-tooltip="true" label="绑定构件数量" align="center"/>
-    <el-table-column v-if="columns.visible('fileVersion')" key="fileVersion" prop="fileVersion" :show-overflow-tooltip="true" label="修订版本" align="center"/>
-    <el-table-column v-if="columns.visible('uploadTime')" key="uploadTime" prop="uploadTime" label="上传日期" align="center" />
-    <el-table-column v-if="columns.visible('userName')" key="userName" prop="userName" :show-overflow-tooltip="true" label="上传人" align="center"/>
+    <el-table-column v-if="columns.visible('fileVersion')" key="fileVersion" prop="fileVersion" :show-overflow-tooltip="true" label="修订版本" width="80" align="center"/>
+    <el-table-column v-if="columns.visible('uploadTime')" key="uploadTime" prop="uploadTime" label="上传日期" align="center" width="140" />
+    <el-table-column v-if="columns.visible('userName')" key="userName" prop="userName" :show-overflow-tooltip="true" label="上传人" align="center" width="90" />
     <el-table-column v-if="columns.visible('attachmentDTO')" key="attachmentDTO" prop="attachmentDTO" :show-overflow-tooltip="true" label="文件" align="center">
       <template v-slot="scope">
         <template v-if="scope.row.attachmentDTO">
@@ -36,13 +36,13 @@
     <el-table-column
       v-if="checkPermission([...permission.detail, ...permission.edit,...permission.bind])"
       label="操作"
-      width="220px"
+      width="240px"
       align="center"
       fixed="right"
     >
       <template v-slot="scope">
-        <common-button size="mini" icon="el-icon-view" type="info" @click="openDetail(scope.row)" v-permission="permission.detail" />
-        <common-button size="mini" icon="el-icon-edit" type="primary" @click="openModify(scope.row)" v-permission="permission.edit" />
+        <common-button size="mini" @click="openDetail(scope.row)" v-permission="permission.detail">详情</common-button>
+        <common-button size="mini" type="primary" @click="openModify(scope.row)" v-permission="permission.edit">修改</common-button>
         <common-button size="mini" type="success" @click="openBind(scope.row)" v-permission="permission.bind">绑定构件</common-button>
       </template>
     </el-table-column>
@@ -96,7 +96,7 @@ provide('structureClassList', structureClassList)
 
 const dataFormat = ref([
   ['project', 'parse-project'],
-  ['uploadTime', ['parse-time', '{y}-{m}-{d}']],
+  ['uploadTime', ['parse-time', '{y}-{m}-{d} {h}:{i}:{s}']],
   ['processType', ['parse-enum', planProcessTypeEnum]],
   ['boolSingleProject', ['parse-enum', processUseTypeEnum]]
 ])

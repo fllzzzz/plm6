@@ -31,9 +31,9 @@
           {{currentRow.project?projectNameFormatter(currentRow.project):'-'}}
         </el-descriptions-item>
          <el-descriptions-item label-class-name="userName" label="上传人">{{currentRow.userName}}</el-descriptions-item>
-        <el-descriptions-item label-class-name="uploadTime" label="上传日期">{{currentRow.uploadTime?parseTime(currentRow.uploadTime,'{y}-{m}-{d}'):'-'}}</el-descriptions-item>
+        <el-descriptions-item label-class-name="uploadTime" label="上传日期">{{currentRow.uploadTime?parseTime(currentRow.uploadTime,'{y}-{m}-{d} {h}:{i}:{s}'):'-'}}</el-descriptions-item>
         <el-descriptions-item label-class-name="remark" label="备注">
-          {{currentRow.remark}}
+          <div style="word-break:break-all;width:100%;">{{currentRow.remark}}</div>
         </el-descriptions-item>
       </el-descriptions>
       <el-divider><span class="title">新文件信息</span></el-divider>
@@ -41,6 +41,7 @@
       <el-descriptions class="margin-top" :column="2" border label-width="110">
         <el-descriptions-item label-class-name="fileName" label="*文件名称" :span="2">
           <el-input
+            class="input-border-none"
             v-model="form.fileName"
             placeholder="名称"
             style="width: 100%;"
@@ -60,7 +61,7 @@
               </template>
             </div>
             <div style="flex:1;text-align:right;">
-              <upload-btn ref="uploadRef" v-model:files="form.attachmentFiles" :file-classify="fileClassifyEnum.PLAN_ATT.V" :show-file-list="false" :limit="1" :accept="'.pdf'" @change="uploadFile" :btnName="'变更文件'"/>
+              <upload-btn ref="uploadRef" btnType="warning" v-model:files="form.attachmentFiles" :file-classify="fileClassifyEnum.PLAN_ATT.V" :show-file-list="false" :limit="1" :accept="'.pdf'" @change="uploadFile" :btnName="'变更文件'"/>
             </div>
           </div>
         </el-descriptions-item>
@@ -70,9 +71,10 @@
           {{currentRow.project?projectNameFormatter(currentRow.project):'-'}}
         </el-descriptions-item>
          <el-descriptions-item label-class-name="userName" label="上传人">{{currentRow.userName}}</el-descriptions-item>
-        <el-descriptions-item label-class-name="uploadTime" label="上传日期">{{currentRow.uploadTime?parseTime(currentRow.uploadTime,'{y}-{m}-{d}'):'-'}}</el-descriptions-item>
+        <el-descriptions-item label-class-name="uploadTime" label="上传日期">{{currentRow.uploadTime?parseTime(currentRow.uploadTime,'{y}-{m}-{d} {h}:{i}:{s}'):'-'}}</el-descriptions-item>
         <el-descriptions-item label-class-name="remark" label="备注">
            <el-input
+            class="input-border-none"
             v-model.trim="form.remark"
             type="textarea"
             :autosize="{ minRows: 1, maxRows: 3 }"
@@ -124,6 +126,7 @@ const defaultForm = {
 
 const form = ref(JSON.parse(JSON.stringify(defaultForm)))
 const formRef = ref()
+const uploadRef = ref()
 
 const emit = defineEmits(['success', 'update:modelValue'])
 const { visible, handleClose } = useVisible({ emit, props })
@@ -146,6 +149,10 @@ watch(
         formRef.value.clearValidate()
       })
     }
+    if (uploadRef.value) {
+      uploadRef.value.clearFiles()
+    }
+    form.value.attachmentFiles = []
   },
   { deep: true, immediate: true }
 )
@@ -162,9 +169,24 @@ function updateAttachmentView(item) {
 }
 
 function uploadFile() {
-  form.value.fileName = form.value.attachmentFiles[0].name.split('.')[0]
-  form.value.file = form.value.attachmentFiles[0].name
+  const file = form.value.attachmentFiles[0].name
+  const fileNameArr = file.split('.')
+  let fileName = ''
+  for (let i = 0; i < fileNameArr.length; i++) {
+    if (i !== (fileNameArr.length - 1)) {
+      if (i !== (fileNameArr.length - 2)) {
+        fileName = fileName + fileNameArr[i] + '.'
+      } else {
+        fileName = fileName + fileNameArr[i]
+      }
+    }
+  }
+  form.value.fileName = fileName
+  form.value.file = file
   form.value.attachmentId = form.value.attachmentFiles[0].id
+  if (uploadRef.value) {
+    uploadRef.value.clearFiles()
+  }
   form.value.attachmentFiles = []
 }
 
@@ -203,5 +225,8 @@ async function onSubmit() {
 <style lang="scss" scoped>
 ::v-deep(.el-input-number .el-input__inner) {
   text-align: left;
+}
+::v-deep(.el-descriptions__label.el-descriptions__cell.is-bordered-label){
+  width:110px;
 }
 </style>

@@ -43,6 +43,7 @@ watch(
 async function fetchList() {
   let _list = []
   if (!props.query.projectId) {
+    list.value = _list
     return
   }
   tableLoading.value = true

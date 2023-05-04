@@ -20,14 +20,19 @@
     <template #content>
       <el-form ref="formRef" :model="form" :rules="rules" size="small" label-width="100px">
         <el-descriptions class="margin-top" :column="3" border label-width="110">
-        <el-descriptions-item label-class-name="fileName" label="文件名称" :span="currentRow.boolSingleProject?2:3">{{currentRow.fileName}}</el-descriptions-item>
+        <el-descriptions-item label-class-name="fileName" label="文件名称" :span="currentRow.boolSingleProject?2:3">
+          <div>
+            <span>{{currentRow.fileName}}</span>
+            <common-button style="float:right;" type="primary">查看文件</common-button>
+          </div>
+        </el-descriptions-item>
         <el-descriptions-item label-class-name="project" label="所属项目" :span="1" v-if="currentRow.boolSingleProject">
           {{currentRow.project?projectNameFormatter(currentRow.project):'-'}}
         </el-descriptions-item>
-        <el-descriptions-item label-class-name="processType" label="文件类型">{{planProcessTypeEnum.VL[currentRow.processType]}}</el-descriptions-item>
-        <el-descriptions-item label-class-name="boolSingleProject" label="文件属性">{{processUseTypeEnum.VL[currentRow.boolSingleProject]}}</el-descriptions-item>
-        <el-descriptions-item label-class-name="remark" label="备注">
-          {{currentRow.remark}}
+        <el-descriptions-item class-name="content-class" class="" label="文件类型"><div style="width:30%">{{planProcessTypeEnum.VL[currentRow.processType]}}</div></el-descriptions-item>
+        <el-descriptions-item class-name="content-class" label="文件属性"><div style="width:30%">{{processUseTypeEnum.VL[currentRow.boolSingleProject]}}</div></el-descriptions-item>
+        <el-descriptions-item class-name="content-class" label="备注">
+          <div style="word-break:break-all;">{{currentRow.remark}}</div>
         </el-descriptions-item>
       </el-descriptions>
       <el-descriptions class="margin-top" :column="1" border style="margin:15px 0;">
@@ -66,7 +71,7 @@
             </div>
             <div style="margin-bottom:10px;">
               <common-radio-button
-                v-model="query.boolBindStatus"
+                v-model="tableQuery.boolBindStatus"
                 :options="isArtifactBindTypeEnum.ENUM"
                 show-option-all
                 class="filter-item"
@@ -142,7 +147,7 @@
             >
               <el-table-column type="selection" width="55" align="center" />
               <el-table-column label="序号" type="index" align="center" width="50" />
-              <el-table-column prop="project" label="项目" align="center" show-overflow-tooltip/>
+              <el-table-column prop="project" label="项目" align="center" v-if="!currentRow.boolSingleProject" show-overflow-tooltip/>
               <el-table-column prop="monomerName" label="单体" align="center" show-overflow-tooltip/>
               <el-table-column prop="serialNumber" label="编号" align="center" show-overflow-tooltip/>
               <el-table-column prop="name" label="构件名称" align="center" show-overflow-tooltip/>
@@ -216,7 +221,9 @@ watch(
   () => visible.value,
   (val) => {
     if (val) {
+      query.value = {}
       query.value.projectId = props.currentRow.boolSingleProject ? props.currentRow.project?.id : projects.value[0].id
+      fetchList()
     }
   },
   { deep: true, immediate: true }
@@ -250,6 +257,7 @@ const dataFormat = ref([
 async function fetchList() {
   let _list = []
   if (!query.value.projectId || !props.currentRow.id || !tableQuery.value.structureClassIds) {
+    list.value = _list
     return
   }
   tableLoading.value = true
@@ -309,5 +317,11 @@ function handleBind() {
 <style lang="scss" scoped>
 ::v-deep(.el-input-number .el-input__inner) {
   text-align: left;
+}
+::v-deep(.el-descriptions__label.el-descriptions__cell.is-bordered-label){
+  width:110px;
+}
+::v-deep(.content-class){
+  width:25% !important;
 }
 </style>
