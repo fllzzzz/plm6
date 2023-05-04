@@ -317,7 +317,6 @@ const { cu, form, FORM } = useForm(
     formStoreKey: 'WMS_INBOUND_APPLICATION_STEEL',
     permission: permission,
     defaultForm: defaultForm,
-    useDraftCallback: setFormCallback,
     clearDraftCallback: init,
     api: props.edit ? editInboundApplication : steelInboundApplication
   },
@@ -394,7 +393,9 @@ watch(
 
 // 监听list变更,为对应的钢材清单赋值，监听地址即可
 watch(list, (val) => {
-  form[currentBasicClass.value] = val
+  if (currentBasicClass.value) {
+    form[currentBasicClass.value] = val
+  }
 })
 
 // 用于与车的过磅重量比较

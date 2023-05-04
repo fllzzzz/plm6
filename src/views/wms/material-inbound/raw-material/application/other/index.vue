@@ -189,7 +189,6 @@ const { cu, form, FORM } = useForm(
     formStoreKey: 'WMS_INBOUND_APPLICATION_OTHER_MAT',
     permission: permission,
     defaultForm: defaultForm,
-    useDraftCallback: setFormCallback,
     clearDraftCallback: init,
     api: props.edit ? editInboundApplication : otherInboundApplication
   },
