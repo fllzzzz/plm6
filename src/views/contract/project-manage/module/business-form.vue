@@ -466,22 +466,22 @@ async function contentInfo() {
     installData = await getContentInfo({ businessType: businessTypeEnum.INSTALLATION.V, flag: flag.value })
     const dataArr = [machiningData, installData]
     for (let i = 0; i < dataArr.length; i++) {
-      if (dataArr[i] && dataArr[i][projectTypeEnum.STEEL.V].length > 0) {
+      if (dataArr[i] && dataArr[i][projectTypeEnum.STEEL.V]?.length > 0) {
         dataArr[i][projectTypeEnum.STEEL.V].map(v => {
           v.name = v.categoryName
         })
       }
-      if (dataArr[i] && dataArr[i][projectTypeEnum.BRIDGE.V].length > 0) {
+      if (dataArr[i] && dataArr[i][projectTypeEnum.BRIDGE.V]?.length > 0) {
         dataArr[i][projectTypeEnum.BRIDGE.V].map(v => {
           v.name = v.categoryName
         })
       }
-      if (dataArr[i] && dataArr[i][projectTypeEnum.CARBARN.V].length > 0) {
+      if (dataArr[i] && dataArr[i][projectTypeEnum.CARBARN.V]?.length > 0) {
         dataArr[i][projectTypeEnum.CARBARN.V].map(v => {
           v.name = v.categoryName
         })
       }
-      if (dataArr[i] && dataArr[i][projectTypeEnum.ENCLOSURE.V].length > 0) {
+      if (dataArr[i] && dataArr[i][projectTypeEnum.ENCLOSURE.V]?.length > 0) {
         dataArr[i][projectTypeEnum.ENCLOSURE.V].map(v => {
           v.name = v.categoryName
         })
