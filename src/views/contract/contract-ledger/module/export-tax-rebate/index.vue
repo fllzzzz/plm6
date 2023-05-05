@@ -1,5 +1,13 @@
 <template>
-  <common-drawer append-to-body v-model="visible" :before-close="handleClose" title="出口退税" :wrapper-closable="false" size="100%">
+  <common-drawer
+    customClass="export-tax-rebate-drawer"
+    append-to-body
+    v-model="visible"
+    :before-close="handleClose"
+    title="出口退税"
+    :wrapper-closable="false"
+    size="100%"
+  >
     <template #titleAfter>
       <common-button type="primary" size="mini" @click="crud.toAdd" style="margin-right: 6px" v-permission="permission.add">
         添加
@@ -14,7 +22,7 @@
       </el-tag>
     </template>
     <template #titleRight>
-      <print-table v-permission="crud.permission.print" api-key="invoiceRecord" :params="crud.query" size="mini" type="warning" />
+      <print-table v-permission="crud.permission.print" api-key="exportTaxRebateList" :params="crud.query" size="mini" type="warning" />
     </template>
     <template #content>
       <!--表格渲染-->
@@ -32,7 +40,7 @@
         :showEmptySymbol="false"
       >
         <el-table-column prop="index" label="序号" align="center" width="50" type="index" />
-        <el-table-column key="drawbackDate" prop="drawbackDate" label="退税日期" align="center" width="125">
+        <el-table-column key="drawbackDate" prop="drawbackDate" label="退税日期" align="center" width="160">
           <template v-slot="{ row }">
             <el-date-picker
               v-if="row.isModify"
@@ -78,13 +86,25 @@
             <span v-else v-thousand="row.drawbackAmount"></span>
           </template>
         </el-table-column>
-        <el-table-column prop="remark" label="备注" align="center" min-width="100">
+        <el-table-column prop="remark" label="备注" align="left" min-width="160">
           <template v-slot="{ row }">
             <el-input v-if="row.isModify" v-model.trim="row.remark" type="text" placeholder="备注" style="width: 100%" />
             <span v-else>{{ row.remark }}</span>
           </template>
         </el-table-column>
-        <el-table-column key="accountantName" prop="accountantName" label="核算人" align="center" width="100px" />
+        <el-table-column key="accountantId" prop="accountantId" label="核算人" align="center" min-width="110">
+          <template v-slot="{ row }">
+            <user-select
+              v-if="row.isModify"
+              v-model="row.accountantId"
+              placeholder="请选择核算人"
+              size="small"
+              clearable
+              style="width: 100%"
+            />
+            <span v-else>{{ row.accountantName }}</span>
+          </template>
+        </el-table-column>
         <el-table-column key="agentName" prop="agentName" label="办理人" align="center" width="100px" />
         <el-table-column key="auditorName" prop="auditorName" label="审核人" align="center" width="100px" />
         <!--编辑与删除-->
@@ -147,17 +167,19 @@ import { tableSummary } from '@/utils/el-extra'
 import { auditTypeEnum } from '@enum-ms/contract'
 import { DP } from '@/settings/config'
 import { contractLedgerPM } from '@/page-permission/contract'
+import { ElMessageBox } from 'element-plus'
 
 import mForm from './form'
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
-import { validate } from '@compos/form/use-table-validate'
+import useTableValidate from '@compos/form/use-table-validate'
 import useVisible from '@compos/use-visible'
+import userSelect from '@comp-common/user-select'
 
 const permission = contractLedgerPM.exportTaxRebate
 
 const optShow = {
-  add: true,
+  add: false,
   edit: false,
   del: false,
   download: false
@@ -203,31 +225,23 @@ const { crud, CRUD } = useCRUD(
   tableRef
 )
 
-const tableRules = {
-  drawbackDate: [{ required: true, message: '请选择开票日期', trigger: 'change' }],
-  sendAmount: [{ required: true, message: '请选择开票额', trigger: 'change', type: 'number' }],
-  taxRate: [{ required: true, message: '请输入税率', trigger: 'blur' }],
-  invoiceType: [{ required: true, message: '请选择发票类型', trigger: 'change' }],
-  invoiceNo: [{ required: true, message: '请输入发票号', trigger: 'blur' }],
-  collectionUnit: [{ required: true, message: '请输入收票单位', trigger: 'blur' }]
+// 金额校验
+const validateAmount = (value, row) => {
+  if (!value) return false
+  return true
 }
 
-function wrongCellMask({ row, column }) {
-  if (!row) return
-  const rules = tableRules
-  let flag = true
-  if (row.verify && Object.keys(row.verify) && Object.keys(row.verify).length > 0) {
-    if (row.verify[column.property] === false) {
-      flag = validate(column.property, rules[column.property], row)
-    }
-    if (flag) {
-      row.verify[column.property] = true
-    }
-  }
-  return flag ? '' : 'mask-td'
+const tableRules = {
+  drawbackDate: [{ required: true, message: '请选择退税日期', trigger: 'change' }],
+  accountantId: [{ required: true, message: '请选择核算人', trigger: 'change' }],
+  sendAmount: [{ validator: validateAmount, message: '请选择发货额', trigger: 'change', type: 'number' }],
+  drawbackAmount: [{ validator: validateAmount, message: '请选择退税总额', trigger: 'change', type: 'number' }]
 }
+
+const { tableValidate, wrongCellMask } = useTableValidate({ rules: tableRules }) // 表格校验
 
 const { maxHeight } = useMaxHeight({
+  mainBox: '.export-tax-rebate-drawer',
   extraBox: ['.el-drawer__header'],
   wrapperBox: ['.el-drawer__body']
 })
@@ -272,6 +286,24 @@ function rowCancel(row) {
 
 async function rowSubmit(row) {
   try {
+    const { validResult } = tableValidate(crud.data)
+    if (!validResult) {
+      return validResult
+    }
+    const _totalSendAmount = crud.data.reduce((prev, curr) => {
+      if (curr.sendAmount) {
+        return prev + curr.sendAmount
+      } else {
+        return prev
+      }
+    }, 0)
+    if (_totalSendAmount > props.currentRow.deliverInstallAmount) {
+      await ElMessageBox.confirm(`'已退税发货总额' 已超出 '发货总额'，确认提交？`, '注意事项', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      })
+    }
     await crudApi.edit(row)
     crud.notify(`修改成功`, CRUD.NOTIFICATION_TYPE.SUCCESS)
     crud.toQuery()

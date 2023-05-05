@@ -44,6 +44,19 @@ export function invoiceLedger(params) {
 }
 
 /**
+ * 项目台账/出口退税
+ * @param {number} projectId 项目id
+ */
+export function exportTaxRebate(params) {
+  return request({
+    module: 'contract',
+    url: 'contract/exportTaxRebate/print',
+    method: 'get',
+    params
+  })
+}
+
+/**
  * 欠款清单
  * @param {number} projectId 项目id
  * @param {number} year 年份
@@ -414,6 +427,7 @@ export default {
   contractLedger, // 合同台账（合同登记表）
   collectionLedger, // 收款记录
   invoiceLedger, // 开票记录
+  exportTaxRebate, // 出口退税
   arrearsList, // 欠款清单
   myProject, // 我的项目
   projectList, // 项目列表

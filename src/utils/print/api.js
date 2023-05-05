@@ -13,6 +13,7 @@ const collectionRecord = contract.collectionLedger
 const collectionLedger = contract.collectionLedger
 const invoiceRecord = contract.invoiceLedger
 const invoiceLedger = contract.invoiceLedger
+const exportTaxRebateList = contract.exportTaxRebate
 const arrearsList = contract.arrearsList
 const contractStructurePrice = contract.structurePrice
 const contractEnclosurePrice = contract.enclosurePrice
@@ -165,6 +166,7 @@ export default {
   collectionRecord, // 项目收款记录
   invoiceLedger, // 开票台账
   invoiceRecord, // 项目开票记录
+  exportTaxRebateList, // 出口退税
   arrearsList, // 欠款清单
 
   logisticsPaymentLedger, // 物流台账

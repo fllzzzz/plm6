@@ -1,5 +1,6 @@
 <template>
   <common-drawer
+    customClass="export-tax-rebate-detail-drawer"
     append-to-body
     :close-on-click-modal="false"
     :before-close="crud.cancelCU"
@@ -8,7 +9,7 @@
     :wrapper-closable="false"
     size="100%"
   >
-  <template #titleAfter>
+    <template #titleAfter>
       <el-tag size="medium" effect="plain">
         发货总额：
         <span v-thousand="props.currentRow.deliverInstallAmount"></span>
@@ -19,7 +20,9 @@
       </el-tag>
     </template>
     <template #titleRight>
-      <common-button :loading="crud.status.cu === 2" type="primary" size="mini" @click="crud.submitCU">确认</common-button>
+      <common-button :loading="crud.status.cu === 2" :disabled="!form.list.length" type="primary" size="mini" @click="crud.submitCU">
+        确认
+      </common-button>
     </template>
     <template #content>
       <el-form ref="formRef" :model="form" size="small" label-width="140px">
@@ -33,6 +36,8 @@
           :cell-class-name="wrongCellMask"
           return-source-data
           :showEmptySymbol="false"
+          show-summary
+          :summary-method="getSummaries"
         >
           <el-table-column label="序号" type="index" align="center" width="50" />
           <el-table-column key="drawbackDate" prop="drawbackDate" label="退税日期" align="center" width="160">
@@ -77,13 +82,7 @@
           </el-table-column>
           <el-table-column key="accountantId" prop="accountantId" label="核算人" align="center" min-width="85">
             <template v-slot="{ row }">
-              <user-select
-                v-model="row.accountantId"
-                placeholder="请选择核算人"
-                size="small"
-                clearable
-                style="width: 100%"
-              />
+              <user-select v-model="row.accountantId" placeholder="请选择核算人" size="small" clearable style="width: 100%" />
             </template>
           </el-table-column>
           <el-table-column prop="remark" label="备注" align="center" min-width="130">
@@ -108,8 +107,9 @@
 <script setup>
 import { ref, defineProps } from 'vue'
 
-import { ElMessage } from 'element-plus'
 import { DP } from '@/settings/config'
+import { tableSummary } from '@/utils/el-extra'
+import { ElMessageBox } from 'element-plus'
 
 import useMaxHeight from '@compos/use-max-height'
 import { regForm } from '@compos/use-crud'
@@ -132,15 +132,22 @@ const props = defineProps({
 })
 
 const { maxHeight } = useMaxHeight({
+  mainBox: '.export-tax-rebate-detail-drawer',
   extraBox: ['.el-drawer__header', '.add-row-box'],
   wrapperBox: ['.el-drawer__body']
 })
 
+// 金额校验
+const validateAmount = (value, row) => {
+  if (!value) return false
+  return true
+}
+
 const tableRules = {
   drawbackDate: [{ required: true, message: '请选择退税日期', trigger: 'change' }],
   accountantId: [{ required: true, message: '请选择核算人', trigger: 'change' }],
-  sendAmount: [{ required: true, message: '请选择发货额', trigger: 'change', type: 'number' }],
-  drawbackAmount: [{ required: true, message: '请选择退税总额', trigger: 'change', type: 'number' }]
+  sendAmount: [{ validator: validateAmount, message: '请选择发货额', trigger: 'change', type: 'number' }],
+  drawbackAmount: [{ validator: validateAmount, message: '请选择退税总额', trigger: 'change', type: 'number' }]
 }
 
 const { tableValidate, wrongCellMask } = useTableValidate({ rules: tableRules }) // 表格校验
@@ -153,24 +160,46 @@ function addRow() {
   form.list.push({
     projectId: props.currentRow.id,
     sendAmount: undefined,
-    drawbackDate: undefined,
+    drawbackDate: `${new Date().getTime()}`,
     accountantId: undefined
   })
 }
 
-CRUD.HOOK.beforeValidateCU = (crud, form) => {
-  if (crud.form.list.length <= 0) {
-    ElMessage({ message: '请添加出口退税明细', type: 'error' })
-    return false
-  }
-  const { validResult, dealList } = tableValidate(crud.form.list)
-  if (validResult) {
-    crud.form.list = dealList
-  } else {
+// 合计
+function getSummaries(param) {
+  return tableSummary(param, {
+    props: ['sendAmount', 'drawbackAmount'],
+    toThousandFields: ['sendAmount', 'drawbackAmount']
+  })
+}
+
+CRUD.HOOK.beforeValidateCU = async () => {
+  const { validResult } = tableValidate(form.list)
+  if (!validResult) {
     return validResult
+  }
+  try {
+    const totalSendAmount = form.list.reduce((prev, curr) => {
+      if (curr.sendAmount) {
+        return prev + curr.sendAmount
+      } else {
+        return prev
+      }
+    }, 0)
+    if (totalSendAmount > props.currentRow.deliverInstallAmount - props.currentRow.totalSendAmount) {
+      await ElMessageBox.confirm(`'本次发货总额'  加上 '已退税发货总额' 已超出 '发货总额'，确认提交？`, '注意事项', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      })
+    }
+  } catch (error) {
+    console.log('取消提交', error)
+    return false
   }
 }
 </script>
+
 <style lang="scss" scoped>
 .add-row-box {
   text-align: center;
