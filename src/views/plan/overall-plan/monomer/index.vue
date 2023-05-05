@@ -129,7 +129,7 @@
             <template v-if="scope.row.monomerDetailList.length > 0">
               <div v-for="(k,i) in scope.row.monomerDetailList" :key="k.type">
                 <div :class="i===scope.row.monomerDetailList.length-1?'sandwich-cell-bottom':'sandwich-cell-top'">
-                  {{ globalProject.startDate?parseTime(globalProject.startDate,'{y}-{m}-{d}'):'-' }}
+                  {{ scope.row.startDate?parseTime(scope.row.startDate,'{y}-{m}-{d}'):'-' }}
                 </div>
               </div>
             </template>
@@ -329,6 +329,7 @@ CRUD.HOOK.beforeRefresh = () => {
 CRUD.HOOK.handleRefresh = (crud, data) => {
   data.data.content.forEach((v) => {
     v.date = String(v.date)
+    v.startDate = v.startDate || globalProject.value.startDate
     if (v.monomerDetailList.length > 0) {
       techOptions.forEach((val) => {
         const choseVal = v.monomerDetailList.find((k) => k.type === val.no)

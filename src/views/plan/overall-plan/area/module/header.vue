@@ -7,6 +7,7 @@
         :project-id="props.projectId"
         class="filter-item"
         @change="monomerChange"
+        @getCurrentInfo="getCurrentInfo"
       />
       <common-radio-button
         v-model="query.productType"
@@ -53,7 +54,7 @@ const props = defineProps({
     default: undefined
   }
 })
-const emit = defineEmits(['monomerChangeType'])
+const emit = defineEmits(['monomerChangeType', 'monomerValChange'])
 
 async function monomerChange() {
   try {
@@ -68,6 +69,10 @@ async function monomerChange() {
   } finally {
     crud.toQuery()
   }
+}
+
+function getCurrentInfo(val) {
+  emit('monomerValChange', val)
 }
 
 async function getTypeInfo() {
