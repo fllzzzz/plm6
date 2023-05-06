@@ -23,7 +23,7 @@
         <el-descriptions-item label-class-name="fileName" label="文件名称" :span="currentRow.boolSingleProject?2:3">
           <div>
             <span>{{currentRow.fileName}}</span>
-            <common-button style="float:right;" type="primary">查看文件</common-button>
+            <common-button style="float:right;" type="primary" @click="attachmentView(currentRow)">查看文件</common-button>
           </div>
         </el-descriptions-item>
         <el-descriptions-item label-class-name="project" label="所属项目" :span="1" v-if="currentRow.boolSingleProject">
@@ -145,7 +145,7 @@
               :data-format="dataFormat"
               @selection-change="handleSelectionChange"
             >
-              <el-table-column type="selection" width="55" align="center" />
+              <el-table-column type="selection" width="55" align="center" :selectable="selectable" />
               <el-table-column label="序号" type="index" align="center" width="50" />
               <el-table-column prop="project" label="项目" align="center" v-if="!currentRow.boolSingleProject" show-overflow-tooltip/>
               <el-table-column prop="monomerName" label="单体" align="center" show-overflow-tooltip/>
@@ -153,13 +153,27 @@
               <el-table-column prop="name" label="构件名称" align="center" show-overflow-tooltip/>
               <el-table-column prop="specification" label="规格" align="center" show-overflow-tooltip />
               <el-table-column prop="material" label="材质" align="center" show-overflow-tooltip />
-              <el-table-column prop="boolBindStatus" label="状态" align="center" show-overflow-tooltip />
+              <el-table-column prop="processFileDTO" label="绑定文件名称" align="center" show-overflow-tooltip>
+                <template v-slot="scope">
+                  <template v-if="isNotBlank(scope.row.processFileDTO)">
+                    <span style="cursor: pointer; color: #409eff" @click="attachmentView(scope.row.processFileDTO)">{{scope.row.processFileDTO.fileName}}</span>
+                  </template>
+                  <template v-else>-</template>
+                </template>
+              </el-table-column>
+              <el-table-column label="操作" align="center" width="80">
+                <template v-slot="scope">
+                  <common-button v-if="scope.row.sourceRow?.bindStatus !== artifactBindTypeEnum.YES.V" size="mini" icon="el-icon-plus" type="primary" @click="addItem(scope.row)" />
+                  <el-tag type="success" v-else>已绑定</el-tag>
+                </template>
+              </el-table-column>
             </common-table>
           </div>
         </div>
       </el-form>
       <artifactBindCurrent v-model="currentVisible" :currentRow="currentRow" :showList="showList" @delete="deleteItem" @success="handleSuccess" :projectId="query.projectId" :monomerId="query.monomerId"/>
       <artifactBindDetail v-model="bindVisible" :currentRow="currentRow" @success="handleSuccess" />
+      <showPdfAndImg v-if="pdfShow" :isVisible="pdfShow" :showType="'attachment'" :id="currentId" @close="pdfShow = false" />
     </template>
   </common-drawer>
 </template>
@@ -169,9 +183,10 @@ import { getStructureList } from '@/api/plan/technical-data-manage/process'
 import { defineProps, defineEmits, ref, watch } from 'vue'
 import useVisible from '@compos/use-visible'
 
+import { isNotBlank } from '@data-type/index'
 import { processUseTypeEnum, planProcessTypeEnum } from '@enum-ms/plan'
 import { projectNameFormatter } from '@/utils/project'
-import { isArtifactBindTypeEnum } from '@enum-ms/plan'
+import { isArtifactBindTypeEnum, artifactBindTypeEnum } from '@enum-ms/plan'
 import useUserProjects from '@compos/store/use-user-projects'
 import { planProcessListPM as permission } from '@/page-permission/plan'
 import useMaxHeight from '@compos/use-max-height'
@@ -181,6 +196,7 @@ import projectCascader from '@comp-base/project-cascader.vue'
 import monomerSelect from '@/components-system/plan/monomer-select'
 import structureType from './structure-type'
 import artifactBindCurrent from './artifact-bind-current'
+import showPdfAndImg from '@comp-base/show-pdf-and-img.vue'
 
 const { projects } = useUserProjects()
 
@@ -209,6 +225,8 @@ const projectRef = ref()
 const detailRef = ref()
 const currentVisible = ref(false)
 const bindVisible = ref(false)
+const pdfShow = ref(false)
+const currentId = ref()
 
 const showList = ref([])
 const rules = {
@@ -249,9 +267,19 @@ function handleSuccess() {
 }
 
 const dataFormat = ref([
-  ['project', 'parse-project'],
-  ['boolBindStatus', ['parse-enum', isArtifactBindTypeEnum]]
+  ['project', 'parse-project']
 ])
+
+// 是否可选
+function selectable(row) {
+  return row.sourceRow?.bindStatus !== artifactBindTypeEnum.YES.V
+}
+
+// 预览附件
+function attachmentView(item) {
+  currentId.value = item.attachmentId
+  pdfShow.value = true
+}
 
 // 获取构件明细
 async function fetchList() {
@@ -293,10 +321,10 @@ function choseAll() {
   })
 }
 
-// function addItem(val) {
-//   const findVal = list.value.find(v => v.uuid === val.uuid)
-//   detailRef?.value?.toggleRowSelection(findVal, true)
-// }
+function addItem(val) {
+  const findVal = list.value.find(v => v.uuid === val.uuid)
+  detailRef?.value?.toggleRowSelection(findVal, true)
+}
 
 function handleSelectionChange(val) {
   showList.value = val

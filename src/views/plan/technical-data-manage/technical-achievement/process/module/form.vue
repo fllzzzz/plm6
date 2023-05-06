@@ -39,7 +39,7 @@
           ref="detailRef"
           border
           :data="form.fileList"
-          :max-height="maxHeight"
+          :max-height="maxHeight-100"
           style="width: 100%"
           class="table-form"
           return-source-data
@@ -48,7 +48,7 @@
           <el-table-column label="序号" type="index" align="center" width="50" />
           <el-table-column prop="file" label="文件" align="left">
             <template v-slot="scope">
-              <span @dblclick="attachmentView(scope.row)">{{scope.row.file}}</span>
+              <span style="cursor: pointer; color: #409eff" @click="attachmentView(scope.row)">{{scope.row.file}}</span>
             </template>
           </el-table-column>
           <el-table-column prop="fileName" label="名称" align="center">

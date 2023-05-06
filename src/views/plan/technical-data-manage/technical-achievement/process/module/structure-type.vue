@@ -59,7 +59,6 @@ async function fetchList() {
 }
 
 function handleSelectionChange(val) {
-  console.log(val)
   emit('change', val)
 }
 </script>

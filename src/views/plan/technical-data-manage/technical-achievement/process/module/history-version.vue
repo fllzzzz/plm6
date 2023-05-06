@@ -9,7 +9,7 @@
     title="文件详情"
     :wrapper-closable="false"
     size="900px"
-    custom-class="contract-change"
+    custom-class="history-version"
   >
     <template #content>
        <el-descriptions class="margin-top" :column="2" border label-width="110">
@@ -36,7 +36,7 @@
         ref="detailRef"
         border
         :data="currentRow.processFileRecordDTOList"
-        :max-height="300"
+        :max-height="maxHeight-200"
         style="width: 100%"
         class="table-form"
         :dataFormat="dataFormat"
@@ -71,6 +71,7 @@ import useVisible from '@compos/use-visible'
 import { projectNameFormatter } from '@/utils/project'
 import { processUseTypeEnum, planProcessTypeEnum } from '@enum-ms/plan'
 import { parseTime } from '@/utils/date'
+import useMaxHeight from '@compos/use-max-height'
 
 import showPdfAndImg from '@comp-base/show-pdf-and-img.vue'
 
@@ -87,6 +88,19 @@ const props = defineProps({
 
 const emit = defineEmits(['success', 'update:modelValue'])
 const { visible, handleClose } = useVisible({ emit, props })
+const drawerRef = ref()
+const { maxHeight } = useMaxHeight(
+  {
+    mainBox: '.history-version',
+    extraBox: '.el-drawer__header',
+    wrapperBox: '.el-drawer__body',
+    paginate: false,
+    minHeight: 300,
+    navbar: false,
+    clientHRepMainH: true
+  },
+  drawerRef
+)
 
 const pdfShow = ref(false)
 const currentId = ref()
