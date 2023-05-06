@@ -317,6 +317,14 @@ export const gasCostPM = {
   print: ['gas_cost:print'] // 打印
 }
 
+// 费用录入/摊销管理
+export const amortizationManagePM = {
+  get: ['amortization_manage:get'], // 列表
+  add: ['amortization_manage:add'], // 新增
+  edit: ['amortization_manage:edit'], // 修改
+  del: ['amortization_manage:del'] // 删除
+}
+
 // 费用录入/管理费/员工工资
 export const salaryCostPM = {
   get: ['salary_cost:get'], // 列表

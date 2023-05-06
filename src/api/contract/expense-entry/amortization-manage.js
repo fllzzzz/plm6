@@ -1,10 +1,10 @@
 import request from '@/utils/request'
 
-// 气体统计
+// 摊销管理列表
 export function get(params) {
   return request({
     module: 'contract',
-    url: 'contract/gas/list',
+    url: 'contract/amortization/page',
     method: 'get',
     params
   })
@@ -50,16 +50,11 @@ export function getDate(params) {
   })
 }
 
-/**
- * 获取科目分类
- * @export
- * @param {number} basicClassEnum|required 物料分类
- * @returns
- */
-export function subjectTree(params) {
+// 摊销分类树
+export function amortizationClassTree(params) {
   return request({
     module: 'contract',
-    url: `contract/amortizationClass/subjectTree`,
+    url: `contract/amortizationClass/tree`,
     method: 'get',
     params
   })

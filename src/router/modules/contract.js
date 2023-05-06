@@ -252,6 +252,13 @@ export default {
           hidden: false,
           component: '/contract/expense-entry/expense-reporting/index',
           meta: { title: '费用填报', icon: 'contract2', noCache: true }
+        },
+        {
+          name: 'AmortizationManage',
+          path: 'amortization-manage',
+          hidden: false,
+          component: '/contract/expense-entry/amortization-manage/index',
+          meta: { title: '摊销管理', icon: 'contract2', noCache: true }
         }
         // {
         //   path: 'management-cost',

@@ -128,7 +128,5 @@ CRUD.HOOK.handleRefresh = (crud, { data }) => {
   })
 }
 
-const { maxHeight } = useMaxHeight({
-  paginate: true
-})
+const { maxHeight } = useMaxHeight()
 </script>

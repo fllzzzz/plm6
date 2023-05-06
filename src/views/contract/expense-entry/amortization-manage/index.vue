@@ -1,15 +1,15 @@
 <template>
   <div class="app-container">
     <div class="flex-r">
-      <el-card body-style="padding: 10px" class="gas-tree">
+      <el-card body-style="padding: 10px" class="amortization-tree">
         <template #header>
-          <div>气体分类</div>
+          <div>摊销种类</div>
         </template>
         <el-tree
-          ref="gasTreeRef"
+          ref="amortizationTreeRef"
           v-loading="crud.loading"
           :style="{ maxHeight: maxHeight - 20 + 'px' }"
-          :data="gasTree"
+          :data="amortizationTree"
           :props="defaultProps"
           :expand-on-click-node="false"
           node-key="id"
@@ -31,30 +31,15 @@
           :data-format="columnsDataFormat"
           :summary-method="getSummaries"
         >
-          <el-table-column v-if="columns.visible('date')" prop="date" key="date" :label="`${crud.query.year}年`" align="center" />
+          <el-table-column type="index" prop="index" label="序号" align="center" width="60px" />
+          <el-table-column v-if="columns.visible('date')" prop="date" key="date" label="摊销时间段" align="center" />
           <el-table-column
             v-if="columns.visible('classifyName')"
             align="center"
             key="classifyName"
             prop="classifyName"
             :show-overflow-tooltip="true"
-            label="气体种类"
-          />
-          <el-table-column
-            v-if="columns.visible('accountingUnit')"
-            align="center"
-            key="accountingUnit"
-            prop="accountingUnit"
-            :show-overflow-tooltip="true"
-            label="核算单位"
-          />
-          <el-table-column
-            v-if="columns.visible('usedMete')"
-            align="center"
-            key="usedMete"
-            prop="usedMete"
-            :show-overflow-tooltip="true"
-            label="使用量"
+            label="摊销种类"
           />
           <el-table-column
             v-if="columns.visible('totalAmount')"
@@ -62,54 +47,51 @@
             key="totalAmount"
             prop="totalAmount"
             :show-overflow-tooltip="true"
-            label="总额"
+            label="摊销金额"
           />
           <el-table-column
-            v-if="columns.visible('avgUnitPrice')"
+            v-if="columns.visible('usedMete')"
             align="center"
-            key="avgUnitPrice"
-            prop="avgUnitPrice"
+            key="usedMete"
+            prop="usedMete"
             :show-overflow-tooltip="true"
-            label="平均单价"
+            label="产量（吨）"
           />
           <el-table-column v-if="checkPermission([...permission.edit, ...permission.del])" align="center" label="操作" width="140px">
             <template #default="{ row }">
-              <el-tag v-if="row.isAmortization" size="medium" type="success" effect="plain"> 已摊销 </el-tag>
-              <udOperation v-else-if="row.isEdit" :data="row" />
-              <udOperation v-else :data="row" :disabled-edit="true" :disabled-del="true" />
+              <udOperation :data="row" :disabled-edit="true" :disabled-del="true" />
             </template>
           </el-table-column>
         </common-table>
+        <!-- 分页 -->
+        <pagination />
       </div>
     </div>
-    <!-- 表单 -->
-    <m-form :gas-tree="gasTree" :row-detail="rowDetail" :lastGasKV="lastGasKV" />
   </div>
 </template>
 
 <script setup>
-import { ref, nextTick } from 'vue'
-import crudApi, { subjectTree } from '@/api/contract/expense-entry/gas-cost'
+import crudApi, { amortizationClassTree } from '@/api/contract/expense-entry/amortization-manage'
+import { ref, nextTick, provide } from 'vue'
 
 import { gasCostPM as permission } from '@/page-permission/contract'
 import { tableSummary } from '@/utils/el-extra'
-import { matClsEnum } from '@enum-ms/classification'
 import { setEmptyArr2Undefined, setLevelName } from '@/utils/data-type/tree'
 import { toThousand } from '@/utils/data-type/number'
 import moment from 'moment'
 import checkPermission from '@/utils/system/check-permission'
 
+import pagination from '@crud/Pagination'
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
 import udOperation from '@crud/UD.operation'
 import mHeader from './module/header.vue'
-import mForm from './module/form.vue'
 
 const tableRef = ref()
-const gasTreeRef = ref()
-const gasTree = ref([])
+const amortizationTreeRef = ref()
+const amortizationTree = ref([])
+const amortizationKV = ref({})
 const rowDetail = ref({})
-const lastGasKV = ref({}) // 末级气体{id: data}
 
 const defaultProps = ref({
   children: 'children',
@@ -121,8 +103,10 @@ const columnsDataFormat = ref([
   ['usedMete', 'to-thousand']
 ])
 
+provide('amortizationKV', amortizationKV)
+
 const optShow = {
-  add: true,
+  add: false,
   edit: false,
   del: false,
   download: false
@@ -130,45 +114,42 @@ const optShow = {
 
 const { crud, CRUD, columns } = useCRUD(
   {
-    title: '气体统计',
+    title: '摊销管理',
     sort: [],
     optShow: { ...optShow },
     permission: { ...permission },
     crudApi: { ...crudApi },
-    queryOnPresenterCreated: false,
-    hasPagination: false
+    queryOnPresenterCreated: false
   },
   tableRef
 )
 
-gasListGet()
+getAmortizationTree()
 
-async function gasListGet() {
+async function getAmortizationTree() {
   try {
-    gasTree.value = (await subjectTree({ basicClassEnum: matClsEnum.GAS.V })) || []
-    setEmptyArr2Undefined(gasTree.value)
-    setLevelName(gasTree.value)
-    setLastGas(gasTree.value)
+    amortizationKV.value = {}
+    amortizationTree.value = (await amortizationClassTree()) || []
+    setLevelName(amortizationTree.value)
+    setAmortizationKV(amortizationTree.value)
+    setEmptyArr2Undefined(amortizationTree.value)
     nextTick(() => {
-      if (gasTree.value.length) {
-        selectLast(gasTree.value)
+      if (amortizationTree.value.length) {
+        selectLast(amortizationTree.value)
       } else {
         crud.toQuery()
       }
     })
   } catch (e) {
-    console.log('获取气体类型失败', e)
+    console.log('获取摊销种类失败', e)
   }
 }
 
-// 设置末级气体
-function setLastGas(tree = []) {
-  tree?.forEach((row) => {
-    if (row?.children?.length) {
-      setLastGas(row.children)
-    } else {
-      lastGasKV.value[row.id] = row
-    }
+// 设置摊销KV
+function setAmortizationKV(tree) {
+  tree?.forEach(row => {
+    amortizationKV.value[row.id] = row
+    setAmortizationKV(row.children)
   })
 }
 
@@ -183,6 +164,14 @@ function selectLast(tree = []) {
   }
 }
 
+// 获取摊销种类ids
+function getIds(tree = []) {
+  tree?.forEach((row) => {
+    crud.query.ids.push(row.id)
+    getIds(row.children)
+  })
+}
+
 // el-tree 左键点击
 function nodeClick(row = {}) {
   // 取消选中
@@ -190,8 +179,11 @@ function nodeClick(row = {}) {
     row = {}
   }
   rowDetail.value = row
-  gasTreeRef.value.setCurrentKey(row.id)
-  crud.query.wmsClassificationId = row.id
+  amortizationTreeRef.value.setCurrentKey(row.id)
+  crud.query.ids = []
+  if (row.id) {
+    getIds([row])
+  }
   crud.toQuery()
 }
 
@@ -213,29 +205,21 @@ function getSummaries(param) {
 }
 
 CRUD.HOOK.handleRefresh = async (crud, { data }) => {
-  const length = data.length
-  data.content = data.map((v, i) => {
+  data.content.forEach((v, i) => {
     // 时间范围
-    let _startDate = moment(v.startDate).format('YYYY')
-    let _endDate = moment(v.endDate).format('YYYY')
-    if (_startDate !== crud.query.year || _endDate !== crud.query.year) {
-      _startDate = moment(v.startDate).format('YYYY-MM-DD')
-      _endDate = moment(v.endDate).format('YYYY-MM-DD')
-    } else {
-      _startDate = moment(v.startDate).format('MM-DD')
-      _endDate = moment(v.endDate).format('MM-DD')
-    }
+    const _startDate = moment(v.startDate).format('YYYY-MM-DD')
+    const _endDate = moment(v.endDate).format('YYYY-MM-DD')
     v.date = `${_startDate} ~ ${_endDate}`
-    // 最后一条记录才能编辑并且不能为已摊销状态
-    v.isEdit = i + 1 === length && !v.isAmortization
-    return v
   })
 }
-const { maxHeight } = useMaxHeight()
+const { maxHeight } = useMaxHeight({
+  paginate: true
+})
 </script>
+
 <style lang="scss" scoped>
-::v-deep(.gas-tree) {
-  width: 240px;
+::v-deep(.amortization-tree) {
+  width: 340px;
   margin-right: 20px;
   .el-card__header {
     padding: 10px 15px;
