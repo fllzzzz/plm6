@@ -129,23 +129,21 @@ async function printPackageLabel({ packageInfo, qrCode, printMode = PrintMode.QU
   const headHtml = `
       <div style="font-weight: bold; font-size: 12pt;color: #333;padding-bottom: 2pt;">${packageInfo.project.shortName}</div>
       <div class="package-label">
-        <div class="flex">
-          <div class="row-2 w-1 col border-r border-b">
+        <div class="row border-b">
+          <div class="row row-2 w-1 col border-r">
             <div class="qr-content"></div>
           </div>
-          <div class="flex w-3 flex-column">
-            <div class="row-1 col border-b" style="font-weight:bold;font-size: 10pt;">打包单</div>
-            <div class="flex">
-              <div class="flex-1 row-1 col border-b border-r">包单号</div>
-              <div class="flex-2 row-1 col border-b" style="font-weight:bold">${packageInfo.serialNumber}</div>
-            </div>
+          <div class="row w-3 row-1 col border-b" style="font-weight:bold;font-size: 10pt;">打包单</div>
+          <div class="row w-3">
+            <div style="width:33.4%;" class="row-1 col border-r">包单号</div>
+            <div style="width:66%;" class="row-1 col" style="font-weight:bold">${packageInfo.serialNumber}</div>
           </div>
         </div>
-        <div class="flex">
-          <div class="row-0 col border-r" style="flex:1;" >编号</div>
-          <div class="row-0 w-1 col border-r">材质</div>
-          <div class="row-0 col border-r" style="width:10mm;">数量</div>
-          <div class="row-0 w-1 col">重量(kg)</div>
+        <div class="row">
+          <div class="row-0 col border-r" style="width:34%;"><div class="col-div">编号</div></div>
+          <div class="row-0 w-1 col border-r"><div class="col-div">材质</div></div>
+          <div class="row-0 col border-r" style="width:14%;"><div class="col-div">数量</div></div>
+          <div class="row-0 w-1 col"><div class="col-div">重量(kg)</div></div>
         </div>
       </div>
   `
@@ -176,11 +174,11 @@ async function printPackageLabel({ packageInfo, qrCode, printMode = PrintMode.QU
   for (let x = 0; x < packageInfo.list.length; x++) {
     const item = packageInfo.list[x]
     bodyHtml += `
-    <div class="flex">
-      <div class="row-0 col border-b border-r" style="flex:1;">${item.serialNumber}</div>
-      <div class="row-0 col w-1 border-b border-r">${item.material}</div>
-      <div class="row-0 col border-b border-r" style="width:10mm;">${item.quantity}</div>
-      <div class="row-0 col w-1 border-b">${item.totalWeight}</div>
+    <div class="row border-b">
+      <div class="row-0 col border-r" style="width:34%;"><div class="col-div">${item.serialNumber}</div></div>
+      <div class="row-0 col w-1 border-r"><div class="col-div">${item.material}</div></div>
+      <div class="row-0 col border-r" style="width:14%;"><div class="col-div">${item.quantity}</div></div>
+      <div class="row-0 col w-1"><div class="col-div">${item.totalWeight}</div></div>
     </div>
   `
   }
@@ -193,8 +191,8 @@ async function printPackageLabel({ packageInfo, qrCode, printMode = PrintMode.QU
     LODOP.SET_PRINT_PAGESIZE(2, 1030, 680, '1') /* 纸张大小*/ // 100mm* 75mm
     LODOP.ADD_PRINT_HTM('3mm', '1.5mm', '67mm', '29.5mm', headStrHtml)
     LODOP.SET_PRINT_STYLEA(0, 'ItemType', 1)
-    LODOP.ADD_PRINT_HTM('31.5mm', '1.5mm', '67mm', '66mm', strHtml)
-    LODOP.ADD_PRINT_HTM('101.5mm', '1.5mm', '67mm', '5mm', pageHtml)
+    LODOP.ADD_PRINT_HTM('31.7mm', '1.5mm', '67mm', '61.5mm', strHtml)
+    LODOP.ADD_PRINT_HTM('96mm', '1.5mm', '67mm', '5mm', pageHtml)
     LODOP.SET_PRINT_STYLEA(0, 'ItemType', 1)
     LODOP.ADD_PRINT_BARCODE('8.8mm', '1.8mm', '16.4mm', '16.4mm', 'QRCode', qrCode)
     LODOP.SET_PRINT_STYLEA(0, 'QRCodeVersion', 3)
@@ -604,80 +602,71 @@ const GAS_STYLE = `
 const PACKAGE_STYLE = `
   <style>
   .package-label {
+    float: left;
     font-family: "微软雅黑";
     font-size: 9pt;
     color: black;
-    box-sizing: border-box;
+    width: 100%;
     border: 1px solid #000;
   }
 
-  .package-label .flex {
-    display: flex;
+  .row {
     width: 100%;
+    float: left;
   }
 
-  .package-label .flex-column {
-    flex-direction: column;
-  }
-  
-  .package-label .flex-auto {
-    flex:1 1 auto;
-  }
-
-  .package-label .flex-1 {
-    width: 34%;
-  }
-
-  .package-label .flex-2 {
-    width: 67%;
-  }
-
-  .package-label .w-0 {
-    width: 20%;
-  }
-
-  .package-label .w-1 {
+  .w-1 {
     width: 25%;
   }
 
-  .package-label .w-2 {
+  .w-2 {
     width: 50%;
   }
 
-  .package-label .w-3 {
-    width: 75%;
+  .w-3 {
+    width: 74.5%;
   }
 
-  .package-label .row-0 {
-    height: 6.6mm;
-  }
-  .package-label .row-1 {
-    height: 8mm;
+  .row-0 {
+    height: 5.85mm;
+    position: relative;
   }
 
-  .package-label .row-2 {
+  .col-div {
+    width: 100%;
+    text-align: center;
+    position: absolute;
+    left: 0;
+    top: 50%;
+    margin: -0.5em 0 0 0;
+  }
+
+  .row-1 {
+    height: 7.9mm;
+    line-height: 7mm;
+  }
+
+  .row-2 {
     height: 16mm;
+    line-height: 16mm;
   }
 
-  .package-label .border-r {
+  .border-r {
     border-right: 1px solid #000;
   }
 
-  .package-label .border-t {
+  .border-t {
     border-top: 1px solid #000;
   }
 
-  .package-label .border-b {
+  .border-b {
     border-bottom: 1px solid #000;
   }
 
-  .package-label .col {
-    // padding: 0 1mm;
-    box-sizing: border-box;
+  .col {
+    float: left;
     word-break: break-all;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    text-align: center;
   }
 </style>`
 
