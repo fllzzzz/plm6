@@ -20,12 +20,12 @@
       :stripe="false"
     >
       <el-table-column prop="index" label="序号" align="center" width="50" type="index" />
-      <el-table-column key="paymentDate" prop="paymentDate" label="*付款日期" align="center" width="160">
+      <el-table-column key="paymentDate" prop="paymentDate" label="付款日期" align="center" width="160">
         <template v-slot="scope">
           <div>{{ scope.row.paymentDate? parseTime(scope.row.paymentDate,'{y}-{m}-{d}'): '-' }}</div>
         </template>
       </el-table-column>
-      <el-table-column key="applyAmount1" prop="applyAmount1" label="*付款金额" align="center" min-width="170" class="money-column">
+      <el-table-column key="applyAmount1" prop="applyAmount1" label="付款金额" align="center" min-width="170" class="money-column">
         <el-table-column key="applyAmount" prop="applyAmount" label="金额" align="center" min-width="85">
           <template v-slot="scope">
             <div>{{ scope.row.applyAmount && scope.row.applyAmount>0? toThousand(scope.row.applyAmount): scope.row.applyAmount }}</div>
@@ -33,26 +33,26 @@
         </el-table-column>
         <el-table-column key="applyAmount2" prop="applyAmount2" label="大写" align="center" min-width="85">
           <template v-slot="scope">
-            <div>{{scope.row.applyAmount?'('+digitUppercase(scope.row.applyAmount)+')':''}}</div>
+            <div>{{scope.row.applyAmount?digitUppercase(scope.row.applyAmount):''}}</div>
           </template>
         </el-table-column>
       </el-table-column>
-      <el-table-column key="paymentReasonId" prop="paymentReasonId" label="*付款事由" align="center" :show-overflow-tooltip="true">
+      <el-table-column key="paymentReasonId" prop="paymentReasonId" label="付款事由" align="center" :show-overflow-tooltip="true">
         <template v-slot="scope">
           <div>{{ scope.row.paymentReasonId && dict && dict.label && dict.label['payment_reason']? dict.label['payment_reason'][ scope.row.paymentReasonId]: '' }}</div>
         </template>
       </el-table-column>
-      <el-table-column key="paymentMethod" prop="paymentMethod" label="*付款方式" align="center" :show-overflow-tooltip="true">
+      <el-table-column key="paymentMethod" prop="paymentMethod" label="付款方式" align="center" :show-overflow-tooltip="true">
         <template v-slot="scope">
           <div>{{ scope.row.paymentMethod? paymentFineModeEnum.VL[scope.row.paymentMethod]: '-' }}</div>
         </template>
       </el-table-column>
-      <el-table-column key="paymentBank" prop="paymentBank" :show-overflow-tooltip="true" label="*付款银行" align="center">
+      <el-table-column key="paymentBank" prop="paymentBank" :show-overflow-tooltip="true" label="付款银行" align="center">
         <template v-slot="scope">
          <div>{{ scope.row.paymentBank? scope.row.paymentBank: '-' }}</div>
         </template>
       </el-table-column>
-      <el-table-column key="receivingUnit" prop="receivingUnit" label="*收款单位" align="center" :show-overflow-tooltip="true">
+      <el-table-column key="receivingUnit" prop="receivingUnit" label="收款单位" align="center" :show-overflow-tooltip="true">
         <template v-slot="scope">
           <div>{{ scope.row.receivingUnit? scope.row.receivingUnit: '-'  }}</div>
         </template>
