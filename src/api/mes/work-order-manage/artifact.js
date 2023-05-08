@@ -85,5 +85,38 @@ export function getProjectInfo(params) {
   })
 }
 
+/**
+ * @description: 工单撤回
+*/
+export function backWorkOrder(ids) {
+  return request({
+    url: `api/mes/building/task/task/revoke`,
+    method: 'delete',
+    data: ids
+  })
+}
+
+/**
+ * @description: 查询整个详情工单是否可撤回
+*/
+export function getInitBack(params) {
+  return request({
+    url: `api/mes/building/task/process/task_order/revoke`,
+    method: 'get',
+    params
+  })
+}
+
+/**
+ * @description: 整个详情工单撤回
+*/
+export function allOrderBatch(id) {
+  return request({
+    url: `api/mes/building/task/task_order/revoke/${id}`,
+    method: 'delete',
+    data: id
+  })
+}
+
 export default { get }
 
