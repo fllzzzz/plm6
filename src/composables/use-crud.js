@@ -595,7 +595,7 @@ function addCrudBusinessMethod(crud) {
       crud.crudApi
         .detail(data.id)
         .then((val) => {
-          crud.resetRowDetail(val)
+          crud.resetRowDetail({ rowDetail: { ...data }, ...val })
           callVmHook(crud, CRUD.HOOK.beforeDetailLoaded, crud.rowDetail).then(() => {
             crud.detailLoading = false
           })
@@ -1206,6 +1206,7 @@ function addCrudFeatureMethod(crud, data) {
         .detail(detailId)
         .then((val) => {
           crud.resetRowDetail(val)
+          crud.resetRowDetail({ rowDetail: { ...data.rowDetail }, ...val })
           callVmHook(crud, CRUD.HOOK.beforeDetailLoaded, crud.rowDetail).then(() => {
             crud.detailLoading = false
           })

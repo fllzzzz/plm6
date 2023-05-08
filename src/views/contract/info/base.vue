@@ -148,6 +148,19 @@
               <span v-else>{{ detail.projectManagerFullName || '-' }}</span>
             </div>
           </el-form-item>
+          <el-form-item label="销售负责人" prop="signerId">
+            <user-dept-cascader
+              v-if="isModify"
+              v-model="form.signerId"
+              filterable
+              :collapse-tags="false"
+              clearable
+              class="input-underline"
+              style="width: 200px"
+              placeholder="销售负责人"
+            />
+            <span v-else>{{ detail.signerName || '-' }}</span>
+          </el-form-item>
         </div>
         <el-divider><span class="title">合同金额</span></el-divider>
         <div class="form-row">
@@ -268,7 +281,8 @@
       <div class="table-box">
         <upload-list
           v-if="!isModify"
-          :show-download="!isModify"
+          showView
+          show-download
           :file-classify="fileClassifyEnum.CONTRACT_ATT.V"
           v-model:files="detail.attachmentFiles"
           :download-fn="downloadBaseAttachments"
@@ -277,7 +291,8 @@
         />
         <upload-list
           v-else
-          :show-download="!isModify"
+          showView
+          show-download
           :file-classify="fileClassifyEnum.CONTRACT_ATT.V"
           v-model:files="form.attachmentFiles"
           :download-fn="downloadBaseAttachments"
@@ -332,7 +347,8 @@ const defaultForm = {
   businessLeaderTwoId: undefined, // 业务负责人2
   attachmentFiles: [], // 附件
   attachments: [],
-  orderSourceType: undefined
+  orderSourceType: undefined,
+  signerId: undefined // 销售负责人
 }
 
 const form = ref(JSON.parse(JSON.stringify(defaultForm)))

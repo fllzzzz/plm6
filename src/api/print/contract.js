@@ -144,6 +144,18 @@ export function structurePrice(params) {
 }
 
 /**
+ * 散发制品计价表
+ */
+export function machinePartPrice(params) {
+  return request({
+    module: 'contract',
+    url: 'business/machine-part/print',
+    method: 'get',
+    params
+  })
+}
+
+/**
  * 围护件计价表
  */
 export function enclosurePrice(params) {
@@ -161,7 +173,7 @@ export function enclosurePrice(params) {
 export function auxiliaryMaterialPrice(params) {
   return request({
     module: 'contract',
-    url: 'business/auxiliary-material/print',
+    url: 'business/standardPart/print',
     method: 'get',
     params
   })
@@ -222,6 +234,18 @@ export function saleOrderTracking(params) {
   return request({
     module: 'contract',
     url: 'project/tracking/print',
+    method: 'get',
+    params
+  })
+}
+
+/**
+ * 发运跟踪
+ */
+export function shipmentTracking(params) {
+  return request({
+    module: 'contract',
+    url: 'business/ship/detail/print',
     method: 'get',
     params
   })
@@ -423,6 +447,7 @@ export default {
   projectList, // 项目列表
   structurePrice, // 结构计价表
   enclosurePrice, // 围护计价表
+  machinePartPrice, // 散发件计价表
   auxiliaryMaterialPrice, // 配套件计价表
   logisticsLedger, // 物流台账
   payableSummary, // 应付汇总
@@ -433,6 +458,7 @@ export default {
   happenedDetail, // 项目发运详情
   transactionRecord, // 客户交易记录
   saleOrderTracking, // 订单跟踪列表
+  shipmentTracking, // 发运跟踪
   warehouseRecord, // 入库记录
   industryElectricRecord, // 工业用电电费
   civilElectricRecord, // 民用用电电费

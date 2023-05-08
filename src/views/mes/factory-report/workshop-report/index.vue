@@ -1,14 +1,14 @@
 <template>
   <div class="app-container">
     <div class="head-container">
-        <mHeader />
+      <mHeader @zoomChangeSize="getZoomIn" />
     </div>
     <common-table
       ref="tableRef"
       v-loading="crud.loading"
       :data="crud.data"
       :empty-text="crud.emptyText"
-      max-height="330px"
+      :max-height="flag ? 360 : maxHeight"
       show-summary
       :summary-method="getSummaries"
       row-key="projectId"
@@ -18,37 +18,56 @@
       <el-table-column
         v-if="columns.visible('project')"
         header-align="center"
-        key="project.shortName"
+        key="project"
         prop="project"
         :show-overflow-tooltip="true"
         label="项目"
-        min-width="60"
+        min-width="120"
       >
         <template v-slot="scope">
           <span>{{ projectNameFormatter(scope.row.project) }}</span>
         </template>
       </el-table-column>
       <el-table-column
-        v-if="columns.visible('name')"
-        header-align="center"
-        key="name"
-        prop="name"
+        v-if="columns.visible('productionLine.name')"
+        align="center"
+        key="productionLine.name"
+        prop="productionLine.name"
+        :show-overflow-tooltip="true"
+        label="生产线"
+      >
+        <template v-slot="scope">
+          <span>{{ scope.row.productionLine ? scope.row.productionLine?.name : '-' }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        v-if="columns.visible('monomer.name')"
+        key="monomer.name"
+        prop="monomer.name"
         align="center"
         :show-overflow-tooltip="true"
-        label="名称"
-      >
+        label="单体"
+      />
+      <el-table-column
+        v-if="columns.visible('area.name')"
+        align="center"
+        key="area.name"
+        prop="area.name"
+        :show-overflow-tooltip="true"
+        label="区域"
+      />
+      <el-table-column v-if="columns.visible('name')" align="center" key="name" prop="name" :show-overflow-tooltip="true" label="名称">
         <template v-slot="scope">
           <span>{{ scope.row.name }}</span>
         </template>
       </el-table-column>
       <el-table-column
         v-if="columns.visible('serialNumber')"
-        header-align="center"
+        align="center"
         key="serialNumber"
         prop="serialNumber"
-        align="center"
         :show-overflow-tooltip="true"
-        label="构件编号"
+        label="编号"
       >
         <template v-slot="scope">
           <span>{{ scope.row.serialNumber }}</span>
@@ -56,10 +75,9 @@
       </el-table-column>
       <el-table-column
         v-if="columns.visible('specification')"
-        header-align="center"
+        align="center"
         key="specification"
         prop="specification"
-        align="center"
         :show-overflow-tooltip="true"
         label="规格"
       >
@@ -67,25 +85,23 @@
           <span>{{ scope.row.specification }}</span>
         </template>
       </el-table-column>
-      <el-table-column
+      <!-- <el-table-column
         v-if="columns.visible('length')"
         header-align="center"
         key="length"
         prop="length"
-        align="center"
         :show-overflow-tooltip="true"
         label="长度（mm）"
       >
         <template v-slot="scope">
           <span>{{ scope.row.length }}</span>
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column
         v-if="columns.visible('material')"
-        header-align="center"
+        align="center"
         key="material"
         prop="material"
-        align="center"
         :show-overflow-tooltip="true"
         label="材质"
       >
@@ -95,28 +111,47 @@
       </el-table-column>
       <el-table-column
         v-if="columns.visible('quantity')"
-        header-align="center"
+        align="center"
         key="quantity"
         prop="quantity"
-        align="center"
         :show-overflow-tooltip="true"
-        label="生产数"
+        label="数量"
       >
         <template v-slot="scope">
           <span>{{ scope.row.quantity }}</span>
         </template>
       </el-table-column>
       <el-table-column
+        v-if="columns.visible('netWeight')"
+        align="center"
+        key="netWeight"
+        prop="netWeight"
+        :show-overflow-tooltip="true"
+        label="单重（kg）"
+      >
+        <template v-slot="scope">
+          <span>{{
+            crud.query.weightStatus === weightTypeEnum.NET.V ? scope.row.netWeight?.toFixed(2) : scope.row.grossWeight?.toFixed(2)
+          }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
         v-if="columns.visible('totalNetWeight')"
-        header-align="center"
+        align="center"
         key="totalNetWeight"
         prop="totalNetWeight"
-        align="center"
         :show-overflow-tooltip="true"
         label="总重（kg）"
       >
         <template v-slot="scope">
-          <span>{{ scope.row.totalNetWeight?.toFixed(2) }}</span>
+          <span>{{
+            crud.query.weightStatus === weightTypeEnum.NET.V ? scope.row.totalNetWeight?.toFixed(2) : scope.row.totalGrossWeight?.toFixed(2)
+          }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column v-if="columns.visible('date')" align="center" key="date" prop="date" :show-overflow-tooltip="true" label="入库日期">
+        <template v-slot="scope">
+          <span>{{ parseTime(scope.row.date, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
     </common-table>
@@ -130,29 +165,37 @@ import crudApi from '@/api/mes/factory-report/workshop-report.js'
 import { ref } from 'vue'
 import useCRUD from '@compos/use-crud'
 import pagination from '@crud/Pagination'
+import useMaxHeight from '@compos/use-max-height'
+import { parseTime } from '@/utils/date'
 import { tableSummary } from '@/utils/el-extra'
+import { weightTypeEnum } from '@enum-ms/common'
 import { projectNameFormatter } from '@/utils/project'
 import { mesFactoryReportPM as permission } from '@/page-permission/mes'
 import mHeader from './module/header'
 
 const tableRef = ref()
+const flag = ref()
 const optShow = {
   add: false,
   edit: false,
   del: false,
-  download: false
+  download: false,
 }
 
-const { crud, CRUD, columns } = useCRUD({
-  title: '车间报表',
-  sort: [],
-  optShow: { ...optShow },
-  permission: { ...permission },
-  crudApi: { ...crudApi },
-  hasPagination: true
-},
-tableRef
+const { crud, CRUD, columns } = useCRUD(
+  {
+    title: '车间报表',
+    sort: [],
+    optShow: { ...optShow },
+    permission: { ...permission },
+    crudApi: { ...crudApi },
+    invisibleColumns: ['productionLine.name', 'date'],
+    hasPagination: true,
+  },
+  tableRef
 )
+
+const { maxHeight } = useMaxHeight({ minHeight: '15', extraBox: ['.head-container'], paginate: true })
 
 CRUD.HOOK.handleRefresh = (crud, res) => {
   res.data.content = res.data.content.map((v) => {
@@ -162,8 +205,12 @@ CRUD.HOOK.handleRefresh = (crud, res) => {
 // 合计
 function getSummaries(param) {
   return tableSummary(param, {
-    props: ['length', 'quantity', ['totalNetWeight', 2]]
+    props: ['length', 'quantity', ['netWeight', 2], ['grossWeight', 2], ['totalNetWeight', 2], ['totalGrossWeight', 2]],
   })
+}
+
+function getZoomIn(val) {
+  flag.value = val
 }
 </script>
 

@@ -19,6 +19,7 @@
     <workshop-select
       v-model="query.workshopId"
       :factory-id="query.factoryId"
+      :workshop-type="workshopTypeEnum.BUILDING.V"
       placeholder="选择车间搜索"
       class="filter-item"
       style="width: 200px"
@@ -61,7 +62,7 @@
 </template>
 
 <script setup>
-import { enabledEnum } from '@enum-ms/common'
+import { enabledEnum, workshopTypeEnum } from '@enum-ms/common'
 import { componentTypeEnum, artifactProductLineEnum } from '@enum-ms/mes'
 import { regHeader } from '@compos/use-crud'
 import crudOperation from '@crud/CRUD.operation'

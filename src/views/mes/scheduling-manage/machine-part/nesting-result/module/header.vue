@@ -11,7 +11,7 @@
       @change="crud.toQuery"
     />
     <div>
-      <monomer-select
+      <!-- <monomer-select
         ref="monomerRef"
         v-model="query.monomerId"
         clearable
@@ -19,7 +19,7 @@
         :project-id="crud.query.projectId"
         class="filter-item"
         @change="crud.toQuery"
-      />
+      /> -->
       <el-input
         v-model="query.orderNumber"
         placeholder="任务单号搜索"
@@ -58,7 +58,7 @@
 <script setup>
 import { regHeader } from '@compos/use-crud'
 import { machinePartSchedulingIssueStatusEnum as issueStatusEnum } from '@enum-ms/mes'
-import monomerSelect from '@/components-system/plan/monomer-select'
+// import monomerSelect from '@/components-system/plan/monomer-select'
 
 const defaultQuery = {}
 
@@ -67,7 +67,7 @@ function searchQuery() {
 }
 function resetQuery() {
   query.issueStatusEnum = undefined
-  query.monomerId = undefined
+  // query.monomerId = undefined
   query.orderNumber = undefined
   query.thick = undefined
   query.material = undefined

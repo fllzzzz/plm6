@@ -3,7 +3,34 @@
     <div v-show="!props.batchRow.id" class="my-code">*点击左侧项目行查看详情</div>
     <div v-show="props.batchRow.id">
       <div class="batch-operation head-container" style="display: flex; justify-content: space-between">
-        <el-tag class="filter-item" size="medium" style="align-self: center">当前项目：{{ props.batchRow.projectName }}</el-tag>
+        <div>
+          <el-tag class="filter-item" size="medium" style="align-self: center">当前项目：{{ props.batchRow.projectName }}</el-tag>
+          <common-select
+            v-model="monomerId"
+            :options="monomerList"
+            type="other"
+            :data-structure="{ key: 'id', label: 'name', value: 'id' }"
+            size="small"
+            clearable
+            class="filter-item"
+            style="width: 240px"
+            placeholder="选择单体"
+            @change="handleMonomerChange"
+          />
+          <common-select
+            v-model="areaId"
+            :options="areaList"
+            type="other"
+            :data-structure="{ key: 'id', label: 'name', value: 'id' }"
+            size="small"
+            clearable
+            :noDataText="monomerId ? '暂无数据' : '未选择单体'"
+            class="filter-item"
+            style="width: 240px"
+            placeholder="选择区域"
+            @change="handleAreaChange"
+          />
+        </div>
         <div class="filter-item">
           <common-button
             type="danger"
@@ -139,7 +166,7 @@
           </template>
         </el-table-column>
       </common-table>
-      <nesting-file v-model:visible="nestingFileVisible" :detail-data="detailData" />
+      <nesting-file v-model:visible="nestingFileVisible" :detail-data="detailData" :monomerId="monomerId" :areaId="areaId" />
     </div>
   </div>
 </template>
@@ -147,7 +174,7 @@
 <script setup>
 import { ref, defineProps, defineEmits, watch } from 'vue'
 // import { nestingBatchList, downloadZipGet } from '@/api/mes/craft-manage/section-steel/nesting-result'
-import { nestingBatchList } from '@/api/mes/craft-manage/section-steel/nesting-result'
+import { nestingBatchList, nestingMonomerAreaList } from '@/api/mes/craft-manage/section-steel/nesting-result'
 
 import useMaxHeight from '@compos/use-max-height'
 import { ElMessageBox, ElNotification } from 'element-plus'
@@ -172,11 +199,18 @@ const detailData = ref({})
 const nestingFileVisible = ref(false)
 const handleSelectionData = ref([])
 const batchList = ref([])
+const monomerId = ref()
+const areaId = ref()
+const monomerList = ref([])
+const areaList = ref([])
 
 watch(
   () => props.batchRow?.id,
   (val) => {
+    monomerId.value = undefined
+    areaId.value = undefined
     if (val) {
+      fetchMonomerArea()
       fetchData()
     }
   },
@@ -188,11 +222,35 @@ async function fetchData() {
     return
   }
   try {
-    const { content } = await nestingBatchList({ id: props.batchRow?.id })
+    const { content } = await nestingBatchList({ id: props.batchRow?.id, monomerId: monomerId.value, areaId: areaId.value })
     batchList.value = content
   } catch (error) {
     console.log('获取套料批次数据失败')
   }
+}
+
+// 获取单体区域的列表
+async function fetchMonomerArea() {
+  if (!props.batchRow?.id) {
+    return
+  }
+  try {
+    const { content } = await nestingMonomerAreaList({ id: props.batchRow?.id })
+    monomerList.value = content || []
+  } catch (error) {
+    console.log('获取单体区域的列表失败', error)
+  }
+}
+
+function handleMonomerChange(val) {
+  if (val) {
+    areaList.value = monomerList.value.find((v) => v.id === val)?.areaList
+  }
+  fetchData()
+}
+
+function handleAreaChange() {
+  fetchData()
 }
 
 function selectable(row, rowIndex) {

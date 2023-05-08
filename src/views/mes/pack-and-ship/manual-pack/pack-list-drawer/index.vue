@@ -81,7 +81,7 @@
         <template v-if="packType & (packTypeEnum.STRUCTURE.V | packTypeEnum.MACHINE_PART.V)">
           <el-table-column v-if="packType & packTypeEnum.STRUCTURE.V" key="name" prop="name" :show-overflow-tooltip="true" label="名称" width="120px">
             <template v-slot="scope">
-              <table-cell-tag v-if="scope.row.workshop" :name="scope.row.workshop?.name" />
+              <table-cell-tag v-if="scope.row.workshop?.name" :name="scope.row.workshop?.name" />
               <span>{{ scope.row.name }}</span>
             </template>
           </el-table-column>
@@ -167,10 +167,8 @@
           </el-table-column>
         </template> -->
         <template v-if="packType === packTypeEnum.AUXILIARY_MATERIAL.V">
-          <el-table-column key="serialNumber" prop="serialNumber" :show-overflow-tooltip="true" label="编号" min-width="120" />
-          <el-table-column key="fullClassName" prop="fullClassName" :show-overflow-tooltip="true" label="辅材类别" min-width="250" />
-          <el-table-column key="unit" prop="unit" label="单位" min-width="80px" />
-          <el-table-column key="color" prop="color" :show-overflow-tooltip="true" label="颜色" min-width="120" />
+          <el-table-column key="name" prop="name" :show-overflow-tooltip="true" label="名称" min-width="120" />
+          <el-table-column key="measureUnit" prop="measureUnit" label="单位" min-width="80px" />
           <el-table-column key="specification" prop="specification" :show-overflow-tooltip="true" label="规格" min-width="120" />
         </template>
         <el-table-column key="inQuantity" prop="inQuantity" label="入库量" align="center" min-width="80px" />
@@ -303,7 +301,7 @@ const disabledVal = computed(() => {
 const totalBadge = computed(() => {
   let _total = 0
   for (const item in packTypeEnum.ENUM) {
-    if (listObj[item]?.length) {
+    if (listObj[item].length) {
       _total += listObj[item].length
     }
   }
@@ -324,6 +322,7 @@ watch(
     let _type
     for (const item in packTypeEnum.ENUM) {
       if (packData[item] === null) packData[item] = {}
+      if (packData[item] === undefined) packData[item] = {}
       listObj[item] = Object.values(packData[item])
       listObj['source' + item] = Object.values(packData[item])
       if (listObj[item].length && !_type) _type = packTypeEnum.KV[item]
@@ -371,13 +370,14 @@ async function handlePack({ bagId, isNew, selectBagId }) {
     // 所有类型打包
     for (const item in packTypeEnum.ENUM) {
       const _list = listObj[item]
+      console.log(_list, '_list')
       for (let i = 0; i < _list.length; i++) {
         const v = _list[i]
         params.packageLinks.push({
           id: v.id,
           numberList: v.numberList,
           quantity: v.productQuantity,
-          productType: v.productType
+          productType: packTypeEnum[item].V
         })
       }
     }

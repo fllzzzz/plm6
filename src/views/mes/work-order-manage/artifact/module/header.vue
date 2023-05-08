@@ -1,22 +1,23 @@
 <template>
-  <div v-show="crud.searchToggle">
-    <!-- <project-radio-button size="small" v-model="query.projectId" class="filter-item" @change="crud.toQuery" /> -->
-    <common-radio-button
-      v-model="query.printType"
-      :options="boolPrintedEnum.ENUM"
-      type="enum"
-      show-option-all
-      class="filter-item"
-      @change="crud.toQuery"
-    />
-    <common-radio-button
-      v-model="query.productType"
-      :options="orderComponentTypeEnum"
-      type="enum"
-      class="filter-item"
-      @change="crud.toQuery"
-    />
-    <!-- <project-cascader
+  <div class="head-container">
+    <div v-show="crud.searchToggle">
+      <!-- <project-radio-button size="small" v-model="query.projectId" class="filter-item" @change="crud.toQuery" /> -->
+      <common-radio-button
+        v-model="query.printType"
+        :options="boolPrintedEnum.ENUM"
+        type="enum"
+        show-option-all
+        class="filter-item"
+        @change="crud.toQuery"
+      />
+      <common-radio-button
+        v-model="query.productType"
+        :options="orderComponentTypeEnum"
+        type="enum"
+        class="filter-item"
+        @change="crud.toQuery"
+      />
+      <!-- <project-cascader
       v-model="query.projectId"
       placeholder="所属项目"
       clearable
@@ -24,11 +25,11 @@
       style="width: 300px"
       @change="crud.toQuery"
     /> -->
-  </div>
-  <crudOperation>
-    <template #optLeft>
-      <div v-show="crud.searchToggle">
-        <!-- <el-date-picker
+    </div>
+    <crudOperation>
+      <template #optLeft>
+        <div v-show="crud.searchToggle">
+          <!-- <el-date-picker
           v-model="query.localDateTime"
           type="month"
           range-separator=":"
@@ -41,35 +42,37 @@
           class="filter-item"
           @change="crud.toQuery"
         /> -->
-        <workshop-select
-          v-model="query.workshopId"
-          placeholder="请选择车间"
-          clearable
-          style="width: 200px"
-          class="filter-item"
-          @change="crud.toQuery"
-        />
-        <el-input
-          v-model="query.orderNumber"
-          placeholder="输入任务单号搜索搜索"
-          class="filter-item"
-          style="width: 200px"
-          size="small"
-          clearable
-          @keyup.enter="crud.toQuery"
-        />
-        <common-button class="filter-item" size="mini" type="success" icon="el-icon-search" @click.stop="searchQuery">搜索</common-button>
-        <common-button class="filter-item" size="mini" type="warning" icon="el-icon-refresh-left" @click.stop="resetQuery">
-          重置
-        </common-button>
-        <!-- <rrOperation /> -->
-      </div>
-    </template>
-  </crudOperation>
+          <workshop-select
+            v-model="query.workshopId"
+            :workshop-type="workshopTypeEnum.BUILDING.V"
+            placeholder="请选择车间"
+            clearable
+            style="width: 200px"
+            class="filter-item"
+            @change="crud.toQuery"
+          />
+          <el-input
+            v-model="query.orderNumber"
+            placeholder="输入任务单号搜索搜索"
+            class="filter-item"
+            style="width: 200px"
+            size="small"
+            clearable
+            @keyup.enter="crud.toQuery"
+          />
+          <common-button class="filter-item" size="mini" type="success" icon="el-icon-search" @click.stop="searchQuery">搜索</common-button>
+          <common-button class="filter-item" size="mini" type="warning" icon="el-icon-refresh-left" @click.stop="resetQuery">
+            重置
+          </common-button>
+          <!-- <rrOperation /> -->
+        </div>
+      </template>
+    </crudOperation>
+  </div>
 </template>
 
 <script setup>
-import { boolPrintedEnum } from '@enum-ms/common'
+import { boolPrintedEnum, workshopTypeEnum } from '@enum-ms/common'
 import { componentTypeEnum } from '@enum-ms/mes'
 
 import { regHeader } from '@compos/use-crud'

@@ -6,7 +6,7 @@
           <component-radio-button
             v-model="packType"
             :options="packTypeEnum.ENUM"
-            :disabledVal="[packTypeEnum.AUXILIARY_MATERIAL.V]"
+            :disabledVal="[packTypeEnum.ENCLOSURE.V]"
             type="enum"
             size="small"
             class="filter-item"
@@ -164,7 +164,7 @@ watch(
       // packData[packTypeEnum.ENCLOSURE.K] =
       //   (_data.enclosureList && _data.enclosureList.reduce((obj, item) => ((obj[item.id] = item), obj), {})) || {}
       packData[packTypeEnum.AUXILIARY_MATERIAL.K] =
-        (_data.auxList && _data.auxList.reduce((obj, item) => ((obj[item.id] = item), obj), {})) || {}
+        (_data.auxiliaryMaterialList && _data.auxiliaryMaterialList.reduce((obj, item) => ((obj[item.id] = item), obj), {})) || {}
       nextTick(() => {
         packVisible.value = true
       })

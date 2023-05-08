@@ -121,16 +121,22 @@ async function printTable({ header, table, footer, qrCode, config, printMode = P
           LODOP.SET_PRINT_STYLEA(0, 'Offset2Top', `${-tbOffset2Top}${config.unit}`) // 从次页开始的上边距偏移量
         }
         // 当底部信息“显示且只在尾页显示”的情况，每页显示则再table的tfoot中加入代码
-        if (isNotBlank(config.footer) && config.footer.show && !config.footer.allPage) {
-          LODOP.ADD_PRINT_HTM(0, 0, '100%', '100%', footerHtml)
+        if (isNotBlank(config.footer) && config.footer.show && config.footer.height && !config.footer.allPage) {
+          LODOP.ADD_PRINT_HTM(`1${config.unit}`, 0, '100%', `${config.footer.height}${config.unit}`, footerHtml)
           LODOP.SET_PRINT_STYLEA(0, 'LinkedItem', -1) // 关联上一个table对象，在table的末尾显示
         }
         if (isNotBlank(config.page) && config.page.show) {
-          LODOP.ADD_PRINT_HTM(0, 0, '100%', '100%', pageNumberHtml)
+          const pageNumberHeight = convertUnits(6, 'mm', config.unit)
+          LODOP.ADD_PRINT_HTM(`${config.height - pageNumberHeight - config.page.bottom}${config.unit}`, 0, '100%', `${pageNumberHeight + config.page.bottom}${config.unit}`, pageNumberHtml)
           LODOP.SET_PRINT_STYLEA(0, 'ItemType', 1) // 设置标题每页显示
         }
         if (isNotBlank(config.logo) && config.logo.show && config.logo.url) {
-          LODOP.ADD_PRINT_HTM(`${config.logo.top}${config.unit}`, `${config.logo.left}${config.unit}`, '100%', '100%', logoHtml)
+          LODOP.ADD_PRINT_HTM(
+            `${config.logo.top}${config.unit}`,
+            `${config.logo.left}${config.unit}`,
+            `${config.logo.width}${config.unit}`,
+            `${config.logo.height}${config.unit}`,
+            logoHtml)
           LODOP.SET_PRINT_STYLEA(0, 'ItemType', 1) // 设置标题每页显示
           if (!config.logo.allPage) {
           // 如果logo不是每页都显示（只有第一页显示）
@@ -202,7 +208,7 @@ function getTitleHtml(config) {
     return ''
   }
   let html = TITLE_STYLE + config.style
-  html += `<span class="title-content">${config.title || ''}</span>`
+  html += `<div class="title-content">${config.title || ''}</div>`
   return html
 }
 
@@ -218,10 +224,14 @@ function getHeadAbstractHtml(data, config) {
   let html = ''
   if (config.show && config.fields) {
     html += HEADER_STYLE + config.style
-    html += `<div class="header-content">`
+    html += `<div class="header-content" style="text-align:${textAlign(config.align)}">`
     for (const field of config.fields) {
       if (field.show) {
-        html += `<div style="${field.style}">`
+        html += `<div class="header-content-item" style="${field.style}">`
+        html += `<div style="display: inline;zoom: 1;">`
+        if (field.title || data && field.key) {
+          html += `<div style="position: absolute;${verticleAlign(config.verticleAlign)}">`
+        }
         if (field.title) {
           html += `<span style="font-weight:${config.bold}">${field.title}</span>`
         }
@@ -229,7 +239,10 @@ function getHeadAbstractHtml(data, config) {
           const _val = dataFormat({ row: data, field, emptyVal: config.emptyVal })
           html += isNotBlank(_val) ? `<span>${_val}</span>` : ''
         }
-        html += `</div>`
+        if (field.title || data && field.key) {
+          html += `</div>`
+        }
+        html += `</div></div>`
       }
     }
     html += `</div>`
@@ -245,7 +258,7 @@ function getFooterHtml(data, globalConfig) {
   const tipCfg = config.tip
   let html = ''
   html += FOOTER_STYLE + config.style
-  html += `<div class="footer-content">`
+  html += `<div class="footer-content" style="text-align:${textAlign(config.align)}">`
   if (tipCfg && tipCfg.show && tipCfg.above) {
     html += `<span class="tip" style="font-size:${tipCfg.size}${globalConfig.fontUnit};font-weight:${tipCfg.bold};text-align:${textAlign(
       tipCfg.align
@@ -254,7 +267,11 @@ function getFooterHtml(data, globalConfig) {
   if (config.fields) {
     for (const field of config.fields) {
       if (field.show) {
-        html += `<div style="${field.style}">`
+        html += `<div class="footer-content-item" style="${field.style}">`
+        html += `<div style="display: inline;zoom: 1;">`
+        if (field.title || data && field.key) {
+          html += `<div style="position: absolute;${verticleAlign(config.verticleAlign)}">`
+        }
         if (field.title) {
           html += `<span style="font-weight:${config.bold}">${field.title}</span>`
         }
@@ -262,7 +279,10 @@ function getFooterHtml(data, globalConfig) {
           const _val = dataFormat({ row: data, field, emptyVal: config.emptyVal })
           html += isNotBlank(_val) ? `<span>${_val}</span>` : ''
         }
-        html += `</div>`
+        if (field.title || data && field.key) {
+          html += `</div>`
+        }
+        html += `</div></div>`
       }
     }
   }
@@ -509,12 +529,12 @@ function setTitleStyle(config) {
     if (isNotBlank(itemConfig.width)) {
       _style += `width:${itemConfig.width}${config.unit};`
     }
-    if (isNotBlank(itemConfig.align)) {
-      _style += `justify-content:${flexAlign(itemConfig.align)};`
-    }
-    if (isNotBlank(itemConfig.verticleAlign)) {
-      _style += `align-items:${verticleAlign(itemConfig.verticleAlign)};`
-    }
+    // if (isNotBlank(itemConfig.align)) {
+    //   _style += `justify-content:${flexAlign(itemConfig.align)};`
+    // }
+    // if (isNotBlank(itemConfig.verticleAlign)) {
+    //   _style += `align-items:${verticleAlign(itemConfig.verticleAlign)};`
+    // }
     if (isNotBlank(config.paddingLR)) {
       _style += `padding:0 ${config.paddingLR}${config.unit};`
     }
@@ -545,12 +565,12 @@ function setHeaderStyle(config) {
     if (isNotBlank(itemConfig.size)) {
       _style += `font-size: ${itemConfig.size}${config.fontUnit};`
     }
-    if (isNotBlank(itemConfig.align)) {
-      _style += `justify-content: ${flexAlign(itemConfig.align)};`
-    }
-    if (isNotBlank(itemConfig.verticleAlign)) {
-      _style += `align-items: ${verticleAlign(itemConfig.verticleAlign)};`
-    }
+    // if (isNotBlank(itemConfig.align)) {
+    //   _style += `justify-content: ${flexAlign(itemConfig.align)};`
+    // }
+    // if (isNotBlank(itemConfig.verticleAlign)) {
+    //   _style += `align-items: ${verticleAlign(itemConfig.verticleAlign)};`
+    // }
     _style += `}</style>`
     itemConfig.style = _style
   }
@@ -571,7 +591,8 @@ function setFooterStyle(config) {
       _style += `padding:0 ${config.paddingLR}${config.unit};`
     }
     if (isNotBlank(itemConfig.width)) {
-      _style += `width:${itemConfig.width}${config.unit};`
+      const _width = config.footer.allPage ? itemConfig.width : itemConfig.width + (config.paddingLR || 0) * 2
+      _style += `width:${_width}${config.unit};`
     }
     if (isNotBlank(itemConfig.height)) {
       _style += `height:${itemConfig.height}${config.unit};`
@@ -579,13 +600,14 @@ function setFooterStyle(config) {
     if (isNotBlank(itemConfig.size)) {
       _style += `font-size:${itemConfig.size}${config.fontUnit};`
     }
-    if (isNotBlank(itemConfig.align)) {
-      _style += `justify-content:${flexAlign(itemConfig.align)};`
-    }
-    if (isNotBlank(itemConfig.verticleAlign)) {
-      _style += `align-items: ${verticleAlign(itemConfig.verticleAlign)};`
-    }
-    _style += `}</style>`
+    // if (isNotBlank(itemConfig.align)) {
+    //   _style += `justify-content:${flexAlign(itemConfig.align)};`
+    // }
+    // if (isNotBlank(itemConfig.verticleAlign)) {
+    //   _style += `align-items: ${verticleAlign(itemConfig.verticleAlign)};`
+    // }
+    _style += `}
+    </style>`
     itemConfig.style = _style
   }
 }
@@ -775,6 +797,7 @@ function setTableColumnsStyle(globalConfig) {
 function setHeaderFieldStyle(globalConfig) {
   const config = globalConfig.header
   const fields = config.fields
+  const itemHeight = setItemHeight(config)
   isNotBlank(fields) &&
     fields.forEach((field) => {
       let _style = ''
@@ -782,6 +805,9 @@ function setHeaderFieldStyle(globalConfig) {
         _style += `width:${field.width}${globalConfig.unit};`
       } else if (isNotBlank(field.maxWidth)) {
         _style += `max-width:${field.maxWidth}${globalConfig.unit};`
+      }
+      if (isNotBlank(itemHeight)) {
+        _style += `height:${itemHeight}${globalConfig.unit};`
       }
       field.style = _style
     })
@@ -794,6 +820,7 @@ function setHeaderFieldStyle(globalConfig) {
 function setFooterFieldStyle(globalConfig) {
   const config = globalConfig.footer
   const fields = config.fields
+  const itemHeight = setItemHeight(config)
   isNotBlank(fields) &&
     fields.forEach((field) => {
       let _style = ''
@@ -805,8 +832,34 @@ function setFooterFieldStyle(globalConfig) {
       if (isNotBlank(field.align)) {
         _style += `text-align:${textAlign(field.align)};`
       }
+      if (isNotBlank(itemHeight)) {
+        _style += `height:${itemHeight}${globalConfig.unit};`
+      }
       field.style = _style
     })
+}
+
+/**
+ * 计算表头、表尾的单行高度
+ */
+function setItemHeight(config) {
+  const width = config.width
+  const fields = config.fields
+  let line = 1
+  let calcWidth = 0
+
+  isNotBlank(fields) &&
+    fields.forEach((field) => {
+      if (isNotBlank(field.width)) {
+        calcWidth += field.width
+      }
+      if (calcWidth > width) {
+        line++
+        calcWidth = field.width
+      }
+    })
+  // 减margin
+  return (config.height / line) - 2
 }
 
 /**
@@ -1117,18 +1170,18 @@ function rateFormat(val, format = {}) {
  * flex对齐方式
  * @param {*} align
  */
-function flexAlign(align) {
-  switch (align) {
-    case alignEnum.LEFT.V:
-      return 'flex-start'
-    case alignEnum.RIGHT.V:
-      return 'flex-end'
-    case alignEnum.CENTER.V:
-      return 'center'
-    default:
-      return 'flex-start'
-  }
-}
+// function flexAlign(align) {
+//   switch (align) {
+//     case alignEnum.LEFT.V:
+//       return 'flex-start'
+//     case alignEnum.RIGHT.V:
+//       return 'flex-end'
+//     case alignEnum.CENTER.V:
+//       return 'center'
+//     default:
+//       return 'flex-start'
+//   }
+// }
 
 /**
  * flex垂直对齐方式（align-item）
@@ -1137,13 +1190,13 @@ function flexAlign(align) {
 function verticleAlign(align) {
   switch (align) {
     case verticleAlignEnum.TOP.V:
-      return 'flex-start'
+      return 'top:0;'
     case verticleAlignEnum.BOTTOM.V:
-      return 'flex-end'
+      return 'bottom:0;'
     case verticleAlignEnum.CENTER.V:
-      return 'center'
+      return 'top: 50%;transform: translateY(-50%);'
     default:
-      return 'flex-start'
+      return 'top:0;'
   }
 }
 
@@ -1227,25 +1280,26 @@ const HEADER_STYLE =
 .header-content {
   font-family: lucida sans unicode,lucida grande,Sans-Serif;
   width: 100%;
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  align-items: center;
-  flex-wrap: wrap;
   box-sizing: border-box;
   overflow: hidden;
   line-height: 1.15;
   margin-bottom: 1mm;
 }
-.header-content >div {
+.header-content-item {
   margin: 1mm 0;
-  text-align: left;
+  /*float: left;*/
   display: inline-block;
+  position: relative;
+  text-align: left;
   /* padding-right: 5mm; */
   box-sizing: border-box;
   overflow : hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+
+  /* 为了兼容 IE6，使用 *display: inline; */
+  *display: inline;
+  *zoom: 1;
 }
 .header-content :first-child {
   margin-top: 0;
@@ -1257,9 +1311,6 @@ const TITLE_STYLE =
   `
 <style>
 .title-content {
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
   width: 100%;
   box-sizing: border-box;
   text-align: center;
@@ -1351,22 +1402,24 @@ const FOOTER_STYLE =
   font-family: lucida sans unicode,lucida grande,Sans-Serif;
   overflow: hidden;
   width: 100%;
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  align-items: center;
-  flex-wrap: wrap;
+  box-sizing: border-box;
   line-height: 1.15;
   /* margin-bottom: 3mm;*/
 }
-.footer-content >div {
+.footer-content-item {
   margin: 1mm 0;
+  /*float: left;*/
   display: inline-block;
+  position: relative;
   /* padding-right: 5mm; */
   box-sizing: border-box;
   overflow : hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+
+  /* 为了兼容 IE6，使用 *display: inline; */
+  *display: inline;
+  *zoom: 1;
 }
 </style>
 `
@@ -1390,10 +1443,7 @@ const PAGE_STYLE =
 const LOGO_STYLE = `
 <style>
 .logo-content {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
+
 }
 </style>
 `

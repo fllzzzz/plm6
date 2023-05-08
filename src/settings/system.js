@@ -34,6 +34,8 @@ export const showProjectSearch = [
   // bim
   { component: '/bim/model-show/index', type: pt.STEEL.V, required: true },
   { component: '/bim/integration-model-show/index', type: pt.STEEL.V, required: true },
+  // 发运管理
+  { component: '/ship-manage/pack-and-ship/manual-pack/index', type: pt.STEEL.V, required: true },
   // MES
   { component: '/mes/projects/index', type: allPT, required: true },
   { component: '/mes/overall-plan/monomer/index', type: pt.STEEL.V, required: true },
@@ -66,6 +68,7 @@ export const showProjectSearch = [
   { component: '/mes/production-manage/dashboard/project-dashboard/index', type: pt.STEEL.V, required: true },
   { component: '/mes/production-manage/dashboard/main-material-track/index', type: pt.STEEL.V, required: true },
   { component: '/mes/production-manage/dashboard/artifact-dashboard/index', type: pt.STEEL.V, required: true },
+  { component: '/mes/production-manage/dashboard/production-tracking/index', type: pt.STEEL.V, required: true },
   { component: '/mes/production-manage/dashboard/enclosure-dashboard/index', type: pt.STEEL.V, required: true },
   { component: '/mes/production-manage/dashboard/project-report/index', type: pt.STEEL.V, required: true },
   { component: '/mes/production-manage/dashboard/assembly-match/index', type: pt.STEEL.V, required: true },
@@ -121,6 +124,7 @@ export const showProjectSearch = [
   { component: '/plan/technical-manage/summary-list/index', type: allPT, required: true },
   { component: '/plan/technical-manage/steel-statistical/index', type: allPT, required: true },
   { component: '/plan/technical-manage/auxiliary-material/index', type: allPT, required: true },
+  { component: '/plan/technical-manage/standard-part/index', type: allPT, required: true },
   { component: '/plan/technical-manage/auxiliary-material-summary/index', type: allPT, required: true },
   { component: '/plan/material-preparation/project-preparation/index', type: allPT, required: false },
   { component: '/contract/contract-change/index', type: allPT, required: false },
@@ -128,6 +132,7 @@ export const showProjectSearch = [
   { component: '/contract/contract-ledger/index', type: allPT, required: false },
   { component: '/contract/collection-ledger/index', type: allPT, required: false },
   { component: '/contract/collection-warn/index', type: allPT, required: false },
+  { component: '/contract/sales-manage/shipment-tracking/index', type: allPT, required: true },
   { component: '/project-manage/progress-manage/project-progress/index', type: allPT, required: true, businessType: businessTypeEnum.INSTALLATION.V },
   { component: '/project-manage/subcontract-manage/subcontract-plan/index', type: allPT, required: true, businessType: businessTypeEnum.INSTALLATION.V },
   { component: '/project-manage/subcontract-manage/subcontract-progress/index', type: allPT, required: true, businessType: businessTypeEnum.INSTALLATION.V },
@@ -144,7 +149,7 @@ export const showProjectSearch = [
   { component: '/project-manage/install-manage/handle-install/index', type: allPT, required: true, businessType: businessTypeEnum.INSTALLATION.V },
   { component: '/project-manage/install-config/index', type: allPT, required: true, businessType: businessTypeEnum.INSTALLATION.V },
   { component: '/project-manage/data-manage/construction-log/index', type: allPT, required: true, businessType: businessTypeEnum.INSTALLATION.V },
-  { component: '/project-manage/data-manage/construction-data/index', type: allPT, required: true, businessType: businessTypeEnum.INSTALLATION.V }
+  { component: '/project-manage/data-manage/construction-data/index', type: allPT, required: true, businessType: businessTypeEnum.INSTALLATION.V },
   // { component: '/supply-chain/purchase-order/index', type: allPT, required: false },
   // { component: '/supply-chain/logistics-order/index', type: allPT, required: false }
 
@@ -172,6 +177,16 @@ export const showProjectSearch = [
   // { component: '/wms/report/raw-material/material-outbound-details/index', type: allPT, required: false },
   // { component: '/wms/report/raw-material/material-return-details/index', type: allPT, required: false },
   // { component: '/wms/report/raw-material/send-and-receive-storage/index', type: allPT, required: false }
+
+  // 围护MES
+  { component: '/enclosure/enclosure-list/sandwich-board/index', type: pt.STEEL.V | pt.ENCLOSURE.V, required: true },
+  { component: '/enclosure/enclosure-list/profiled-plate/index', type: pt.STEEL.V | pt.ENCLOSURE.V, required: true },
+  { component: '/enclosure/enclosure-list/pressure-bearing-plate/index', type: pt.STEEL.V | pt.ENCLOSURE.V, required: true },
+  { component: '/enclosure/enclosure-list/truss-floor-plate/index', type: pt.STEEL.V | pt.ENCLOSURE.V, required: true },
+  { component: '/enclosure/enclosure-list/bending/index', type: pt.STEEL.V | pt.ENCLOSURE.V, required: true },
+  { component: '/enclosure/enclosure-list/standard-part/index', type: pt.STEEL.V | pt.ENCLOSURE.V, required: true },
+  { component: '/enclosure/production-report/team-production/index', type: pt.STEEL.V | pt.ENCLOSURE.V, required: false },
+  { component: '/enclosure/production-report/type-analysis/index', type: pt.STEEL.V | pt.ENCLOSURE.V, required: false }
 ]
 
 /**

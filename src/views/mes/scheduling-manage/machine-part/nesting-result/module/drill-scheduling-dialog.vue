@@ -53,7 +53,7 @@ import { defineProps, ref, defineEmits, reactive } from 'vue'
 import { saveNestingTask } from '@/api/mes/scheduling-manage/common'
 import { manualFetchGroupsTree } from '@compos/mes/scheduling/use-drill-scheduling-groups'
 import { componentTypeEnum } from '@enum-ms/mes'
-import { ElNotification } from 'element-plus'
+import { ElNotification, ElMessage } from 'element-plus'
 import useVisible from '@compos/use-visible'
 
 const formRef = ref()
@@ -125,6 +125,10 @@ async function fetchDrillGroups() {
 }
 // --------------------------- 获取生产班组 end --------------------------------
 async function submitForm(formRef) {
+  if (!form.drillAskCompleteTime || !form.drillGroupsId) {
+    ElMessage.error(`请选择必选项`)
+    return
+  }
   try {
     const _list = {
       drillAskCompleteTime: form.drillAskCompleteTime,

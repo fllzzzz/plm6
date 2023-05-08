@@ -35,6 +35,10 @@ const props = defineProps({
     type: [Number, String, undefined],
     default: undefined
   },
+  workshopType: { // 车间类型（ workshopTypeEnum ）
+    type: [Number, String],
+    default: undefined
+  },
   size: {
     type: String,
     default: 'small'
@@ -95,19 +99,11 @@ watch(
 )
 
 watch(
-  workshops,
-  (list) => {
+  [workshops, () => props.factoryId, () => props.workshopType],
+  () => {
     dataFormat()
   },
   { immediate: true, deep: true }
-)
-
-watch(
-  () => props.factoryId,
-  (value) => {
-    dataFormat()
-  },
-  { immediate: true }
 )
 
 function handleChange(val) {
@@ -124,6 +120,7 @@ function dataFormat() {
     if (isNotBlank(workshops.value)) {
       let list = deepClone(workshops.value)
       if (props.factoryId) list = list.filter((v) => props.factoryId === v.factoryId)
+      if (props.workshopType) list = list.filter((v) => props.workshopType === v.type)
       _options = list.map((o) => {
         return {
           id: o.id,

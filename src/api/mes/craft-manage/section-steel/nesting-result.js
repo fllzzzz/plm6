@@ -20,6 +20,16 @@ export function nestingBatchList(params) {
   })
 }
 
+// 获取项目套料单体区域列表
+export function nestingMonomerAreaList(params) {
+  return request({
+    module: 'mes',
+    url: 'section_steel/nesting/wait/monomer_area/list',
+    method: 'get',
+    params
+  })
+}
+
 // 批次下发
 export function nestingBatchIssued(data) {
   return request({

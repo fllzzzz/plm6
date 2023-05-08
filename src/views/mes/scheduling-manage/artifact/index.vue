@@ -161,6 +161,7 @@
         :other-query="{
           areaIdList: crud.query.areaIdList,
         }"
+        :monomerDetail="crud.data[0]"
         @refresh="refresh(true)"
       />
       <task-import-dialog v-model:visible="taskImportVisible" :query="crud.query" :productType="productType" @success="refresh(true)" />
@@ -334,9 +335,9 @@ function refresh(isRefreshTypeList = false) {
   if (isRefreshTypeList) {
     mHeaderRef.value?.refreshTypeList()
   }
-  crud.toQuery()
   fetchSummary()
   schedulingNumGet()
+  crud.toQuery()
 }
 
 async function schedulingNumGet() {
@@ -369,6 +370,9 @@ const handleAreaClick = debounce(function (nodes = []) {
   curAreaIdObj.value = _areaIdObj
   curFactoryIds.value = _factoryIds
   curWorkshopIds.value = _workshopIds
+  schedulingNumGet()
+  fetchSummary()
+  mHeaderRef.value?.refreshTypeList()
   crud.toQuery()
 }, 500)
 

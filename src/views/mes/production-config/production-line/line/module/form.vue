@@ -18,6 +18,7 @@
         <workshop-select
           :disabled="isEdit"
           v-model="form.workshopId"
+          :workshop-type="workshopTypeEnum.BUILDING.V"
           :factory-id="form.factoryId"
           placeholder="请先选择工厂"
           style="width: 270px"
@@ -122,7 +123,7 @@
 <script setup>
 import { productConfigInfo, getProductionLineName } from '@/api/mes/production-config/production-line'
 import { ref, computed, watch, onMounted, watchEffect } from 'vue'
-
+import { workshopTypeEnum } from '@enum-ms/common'
 import { componentTypeEnum, artifactProductLineEnum } from '@enum-ms/mes'
 // import { whetherEnum } from '@enum-ms/common'
 

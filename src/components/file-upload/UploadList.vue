@@ -9,7 +9,7 @@
             <span v-parse-time="{ val: row.createTime, fmt: '{y}-{m}-{d}' }" />
           </template>
         </el-table-column>
-        <el-table-column label="操作" :width="uploadable && props.showDownload ? 117 : 67" align="left">
+        <el-table-column label="操作" :width="uploadable && props.showDownload && props.showView?170:((uploadable && props.showDownload || props.showDownload && props.showView) ? 117 : 67)" align="left">
           <template #default="{ row, $index }">
             <common-button v-if="uploadable" type="danger" icon="el-icon-delete" size="mini" @click="toDelete($index)" />
             <export-button
@@ -18,9 +18,11 @@
               :params="getParams(row, $index)"
               :fn="props.downloadFn"
             />
+            <common-button v-if="(row.name.indexOf('.pdf')>-1 || row.name.indexOf('.png')>-1 || row.name.indexOf('.jpg')>-1 || row.name.indexOf('.jpeg')>-1) && props.showView" icon="el-icon-view" size="mini" @click="attachmentView(row)" />
           </template>
         </el-table-column>
       </common-table>
+      <showPdfAndImg v-if="pdfShow" :isVisible="pdfShow" :showType="'attachment'" :id="currentId" @close="pdfShow = false" />
       <el-upload
         v-if="uploadable"
         ref="uploadRef"
@@ -55,6 +57,7 @@ import { mapGetters } from '@/store/lib'
 import { getToken } from '@/utils/storage'
 import { fileClassifyEnum } from '@enum-ms/file'
 
+import showPdfAndImg from '@comp-base/show-pdf-and-img.vue'
 import { ElUpload, ElMessage, ElMessageBox } from 'element-plus'
 import ExportButton from '@comp-common/export-button/index.vue'
 
@@ -90,6 +93,10 @@ const props = defineProps({
     }
   },
   showDownload: {
+    type: Boolean,
+    default: false
+  },
+  showView: {
     type: Boolean,
     default: false
   },
@@ -153,10 +160,18 @@ const headers = ref({ Authorization: getToken() })
 const uploadLoading = ref(false)
 const currentUpload = ref([])
 const curFiles = ref()
+const pdfShow = ref(false)
+const currentId = ref()
 
 watchEffect(() => {
   curFiles.value = props.files || []
 })
+
+// 预览附件
+function attachmentView(item) {
+  currentId.value = item.id
+  pdfShow.value = true
+}
 
 function getParams(row, index) {
   const id = index >= 0 && index <= curFiles.value.length - 1 ? curFiles.value[index].id : undefined

@@ -3,7 +3,7 @@
     <div v-show="!props.processList?.taskOrderId" class="my-code">*点击左侧表格行查看详情</div>
     <div v-show="props.processList?.taskOrderId">
       <div class="head-container">
-        <workshop-select
+        <!-- <workshop-select
           ref="workshopInfRef"
           v-model="workshopId"
           placeholder="请选择车间"
@@ -24,7 +24,7 @@
           style="width: 200px"
           clearable
           @change="handleWorkshopProductionLineChange"
-        />
+        /> -->
       </div>
       <div :style="`height: ${maxHeight + 40}px; overflow-y: auto`">
         <div style="margin-bottom: 20px" v-for="item in assembleProcessData" :key="item">
@@ -68,7 +68,11 @@
             </el-table-column>
             <el-table-column align="center" key="quantity" prop="quantity" :show-overflow-tooltip="true" label="任务（件/kg）">
               <template v-slot="scope">
-                <span>{{ scope.row.quantity }}/{{ scope.row.totalNetWeight?.toFixed(DP.COM_WT__KG) }}</span>
+                <span>{{
+                  weightStatus === weightTypeEnum.NET.V
+                    ? scope.row.quantity + '/' + scope.row.totalNetWeight?.toFixed(DP.COM_WT__KG)
+                    : scope.row.quantity + '/' + '-'
+                }}</span>
               </template>
             </el-table-column>
             <el-table-column
@@ -79,7 +83,11 @@
               label="完成（件/kg）"
             >
               <template v-slot="scope">
-                <span>{{ scope.row.completeQuantity }}/{{ scope.row.completeNetWeight?.toFixed(DP.COM_WT__KG) }}</span>
+                <span class="tc-primary">{{
+                  weightStatus === weightTypeEnum.NET.V
+                    ? scope.row.completeQuantity + '/' + scope.row.completeNetWeight?.toFixed(DP.COM_WT__KG)
+                    : scope.row.completeQuantity + '/' + '-'
+                }}</span>
               </template>
             </el-table-column>
           </common-table>
@@ -125,7 +133,11 @@
             </el-table-column>
             <el-table-column align="center" key="quantity" prop="quantity" :show-overflow-tooltip="true" label="任务（件/kg）">
               <template v-slot="scope">
-                <span>{{ scope.row.quantity }}/{{ scope.row.totalNetWeight?.toFixed(DP.COM_WT__KG) }}</span>
+                <span>{{
+                  weightStatus === weightTypeEnum.NET.V
+                    ? scope.row.quantity + '/' + scope.row.totalNetWeight?.toFixed(DP.COM_WT__KG)
+                    : scope.row.quantity + '/' + scope.row.totalGrossWeight?.toFixed(DP.COM_WT__KG)
+                }}</span>
               </template>
             </el-table-column>
             <el-table-column
@@ -136,7 +148,11 @@
               label="完成（件/kg）"
             >
               <template v-slot="scope">
-                <span>{{ scope.row.completeQuantity }}/{{ scope.row.completeNetWeight?.toFixed(DP.COM_WT__KG) }}</span>
+                <span class="tc-primary">{{
+                  weightStatus === weightTypeEnum.NET.V
+                    ? scope.row.completeQuantity + '/' + scope.row.completeNetWeight?.toFixed(DP.COM_WT__KG)
+                    : scope.row.completeQuantity + '/' + scope.row.completeGrossWeight?.toFixed(DP.COM_WT__KG)
+                }}</span>
               </template>
             </el-table-column>
           </common-table>
@@ -190,7 +206,15 @@
             <el-table-column align="center" key="completeQuantity" prop="completeQuantity" :show-overflow-tooltip="true" label="完成数" />
             <el-table-column align="center" key="netWeight" prop="netWeight" :show-overflow-tooltip="true" label="单净重" />
             <el-table-column align="center" key="grossWeight" prop="grossWeight" :show-overflow-tooltip="true" label="单毛重" />
-            <el-table-column v-if="props.processList.productionLineTypeEnum === artifactProductLineEnum.TRADITION.V" align="center" key="status" prop="status" :show-overflow-tooltip="true" label="状态" fixed="right">
+            <el-table-column
+              v-if="props.processList.productionLineTypeEnum === artifactProductLineEnum.TRADITION.V"
+              align="center"
+              key="status"
+              prop="status"
+              :show-overflow-tooltip="true"
+              label="状态"
+              fixed="right"
+            >
               <template #default="{ row }">
                 <span style="color: red" v-if="row.status === workOrderTypeEnum.DELAY.V">{{ workOrderTypeEnum.VL[row.status] }}</span>
                 <span v-else>{{ workOrderTypeEnum.VL[row.status] }}</span>
@@ -210,19 +234,20 @@
         </div>
       </div>
     </div>
-    <production-line-detail :project-id="processList?.project?.id" v-model:visible="drawerVisible" :detail-data="detailData" />
+    <production-line-detail :project-id="processList?.project?.id" v-model:visible="drawerVisible" :detail-data="detailData" :query="props.query" />
   </div>
 </template>
 <script setup>
 import { smartLineProcess, process, machineProcess } from '@/api/mes/task-tracking/work-order-tracking.js'
 import { componentTypeEnum, workOrderTypeEnum, artifactProductLineEnum } from '@enum-ms/mes'
-import { ref, defineProps, watch, inject, computed } from 'vue'
+import { ref, defineProps, watch, inject } from 'vue'
 import { DP } from '@/settings/config'
+import { weightTypeEnum } from '@enum-ms/common'
 import { BellFilled } from '@element-plus/icons'
 import useMaxHeight from '@compos/use-max-height'
 import usePagination from '@compos/use-pagination'
-import workshopSelect from '@/components-system/base/workshop-select.vue'
-import productionLineSelect from '@comp-mes/production-line-select'
+// import workshopSelect from '@/components-system/base/workshop-select.vue'
+// import productionLineSelect from '@comp-mes/production-line-select'
 import productionLineDetail from '../production-line-detail/index.vue'
 
 // 由于mes枚举构件、部件的type值相同，单独定义枚举type值
@@ -236,6 +261,12 @@ const props = defineProps({
   processList: {
     type: Object,
     default: () => {}
+  },
+  weightStatus: {
+    type: Number
+  },
+  query: {
+    type: Object
   }
 })
 
@@ -247,17 +278,17 @@ const drawerVisible = ref(false)
 
 const workshopId = ref()
 const productionLineId = ref()
-const factoryId = ref()
+// const factoryId = ref()
 
 const productType = inject('productType')
 
 // 产线过滤
-const lineProductType = computed(() => {
-  if (productType.value === componentTypeEnum.ARTIFACT.V) {
-    return productType.value | componentTypeEnum.ASSEMBLE.V
-  }
-  return productType.value
-})
+// const lineProductType = computed(() => {
+//   if (productType.value === componentTypeEnum.ARTIFACT.V) {
+//     return productType.value | componentTypeEnum.ASSEMBLE.V
+//   }
+//   return productType.value
+// })
 
 watch(
   () => props.processList,
@@ -289,13 +320,19 @@ async function processGet() {
     const data = await process({
       topTaskOrderId: props.processList.taskOrderId,
       workshopId: workshopId.value,
-      productionLineId: productionLineId.value
+      productionLineId: productionLineId.value,
+      projectId: props.query?.projectId,
+      monomerId: props.query?.monomerId,
+      areaId: props.query?.areaId
     })
     if (props.processList?.productionLineTypeEnum === artifactProductLineEnum.INTELLECT.V) {
       const { content = [], totalElements } = await smartLineProcess({
         topTaskOrderId: props.processList.taskOrderId,
         workshopId: workshopId.value,
         productionLineId: productionLineId.value,
+        projectId: props.query?.projectId,
+        monomerId: props.query?.monomerId,
+        areaId: props.query?.areaId,
         ...queryPage
       })
       processData.value = content || []
@@ -319,7 +356,10 @@ async function machineProcessGet() {
       productType: productType.value,
       topTaskOrderId: props.processList.taskOrderId,
       workshopId: workshopId.value,
-      productionLineId: productionLineId.value
+      productionLineId: productionLineId.value,
+      projectId: props.query?.projectId,
+      monomerId: props.query?.monomerId,
+      areaId: props.query?.areaId
     })
     processData.value = data || []
   } catch (e) {
@@ -327,13 +367,13 @@ async function machineProcessGet() {
   }
 }
 
-function handleWorkshopProductionLineChange() {
-  if (productType.value === componentTypeEnum.ARTIFACT.V) {
-    processGet()
-  } else {
-    machineProcessGet()
-  }
-}
+// function handleWorkshopProductionLineChange() {
+//   if (productType.value === componentTypeEnum.ARTIFACT.V) {
+//     processGet()
+//   } else {
+//     machineProcessGet()
+//   }
+// }
 
 const { maxHeight } = useMaxHeight({
   extraBox: ['.head-container'],

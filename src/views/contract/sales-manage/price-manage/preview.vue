@@ -1,6 +1,6 @@
 <template>
   <common-dialog
-    :title="`${packTypeEnum.V[props.params.type]?.SL}价格修改`"
+    :title="`${contractSaleTypeEnum.V[props.params.type]?.SL}价格修改`"
     v-model="visible"
     top="10vh"
     append-to-body
@@ -14,7 +14,7 @@
     </template>
     <common-table :data="props.modifiedData" :max-height="maxHeight" empty-text="未做改动" style="width: 100%">
       <el-table-column label="序号" type="index" align="center" width="60" />
-      <template v-if="props.params.type === packTypeEnum.STRUCTURE.V">
+      <template v-if="props.params.type === contractSaleTypeEnum.STRUCTURE.V || props.params.type === contractSaleTypeEnum.MACHINE_PART.V">
         <el-table-column prop="name" label="名称" align="center" />
         <el-table-column prop="material" label="材质" align="center" />
         <el-table-column prop="totalQuantity" label="数量" align="center" />
@@ -25,19 +25,19 @@
           </template>
         </el-table-column>
       </template>
-      <!-- <template v-if="props.params.type === packTypeEnum.ENCLOSURE.V">
+      <!-- <template v-if="props.params.type === contractSaleTypeEnum.ENCLOSURE.V">
         <el-table-column prop="name" label="名称" align="center" />
         <el-table-column prop="plate" label="板型" align="center" />
         <el-table-column prop="totalQuantity" label="数量" align="center" />
       </template> -->
-      <template v-if="props.params.type === packTypeEnum.AUXILIARY_MATERIAL.V">
-        <el-table-column prop="classifyName" label="名称" align="center" />
+      <template v-if="props.params.type === contractSaleTypeEnum.AUXILIARY_MATERIAL.V">
+        <el-table-column prop="name" label="名称" align="center" />
         <el-table-column prop="specification" label="规格" align="center" />
-        <el-table-column prop="mete" label="核算量" align="center" />
+        <el-table-column prop="quantity" label="数量" align="center" />
       </template>
       <el-table-column align="center" prop="price" label="综合单价">
         <template #default="{ row }">
-          <template v-if="props.params.type === packTypeEnum.STRUCTURE.V">
+          <template v-if="props.params.type === contractSaleTypeEnum.STRUCTURE.V">
             <span v-if="row.originUnitPrice === row.unitPrice">{{ row.unitPrice }}</span>
             <cell-change-preview :old="row.originUnitPrice" :new="row.unitPrice" v-else/>
           </template>
@@ -63,10 +63,11 @@
 
 <script setup>
 import { save } from '@/api/contract/sales-manage/price-manage/common'
+import { saveStandardPart } from '@/api/contract/sales-manage/price-manage/auxiliary-material'
 import { defineEmits, defineProps, ref, useAttrs } from 'vue'
 import { ElNotification } from 'element-plus'
 
-import { packTypeEnum } from '@enum-ms/mes'
+import { contractSaleTypeEnum } from '@enum-ms/mes'
 import { pricingMannerEnum } from '@enum-ms/contract'
 
 import useMaxHeight from '@compos/use-max-height'
@@ -112,11 +113,11 @@ async function submit() {
     submitLoading.value = true
     const _list = []
     props.modifiedData.map((v) => {
-      if (props.params.type === packTypeEnum.STRUCTURE.V) {
+      if (props.params.type === contractSaleTypeEnum.STRUCTURE.V || props.params.type.type === contractSaleTypeEnum.MACHINE_PART.V) {
         _list.push({
           id: v.id,
           unitPrice: v.newUnitPrice ? v.newUnitPrice : (v.unitPrice !== '-' ? v.unitPrice : null),
-          pricingManner: props.params.type === packTypeEnum.STRUCTURE.V ? v.pricingManner : undefined
+          pricingManner: props.params.type === contractSaleTypeEnum.STRUCTURE.V ? v.pricingManner : undefined
         })
       } else {
         _list.push({
@@ -125,7 +126,8 @@ async function submit() {
         })
       }
     })
-    await save({
+    const api = props.params.type === contractSaleTypeEnum.AUXILIARY_MATERIAL.V ? saveStandardPart : save
+    await api({
       details: _list,
       remark: remark.value,
       ...props.params
