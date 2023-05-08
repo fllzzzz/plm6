@@ -6,7 +6,7 @@
     top="10vh"
     width="600px"
     :before-close="handleClose"
-    title="文件详情"
+    title="修订版本"
     :wrapper-closable="false"
     size="900px"
     custom-class="history-version"
@@ -36,7 +36,7 @@
         ref="detailRef"
         border
         :data="currentRow.processFileRecordDTOList"
-        :max-height="maxHeight-200"
+        :max-height="maxHeight-260"
         style="width: 100%"
         class="table-form"
         :dataFormat="dataFormat"

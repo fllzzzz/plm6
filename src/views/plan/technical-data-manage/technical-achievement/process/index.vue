@@ -17,21 +17,20 @@
     <el-table-column prop="index" label="序号" align="center" width="60" type="index" />
     <el-table-column v-if="columns.visible('processType')" key="processType" prop="processType" :show-overflow-tooltip="true" label="工艺类型"  width="80" align="center"/>
     <el-table-column v-if="columns.visible('boolSingleProject')" key="boolSingleProject" prop="boolSingleProject" :show-overflow-tooltip="true" width="80" label="文件类型" align="center"/>
-    <el-table-column v-if="columns.visible('project')" key="project" prop="project" :show-overflow-tooltip="true" label="所属项目" align="center"/>
-    <el-table-column v-if="columns.visible('fileName')" key="fileName" prop="fileName" :show-overflow-tooltip="true" label="文件名称" align="center"/>
-    <el-table-column v-if="columns.visible('remark')" key="remark" prop="remark" :show-overflow-tooltip="true" label="备注" align="center"/>
-    <el-table-column v-if="columns.visible('bindQuantity')" key="bindQuantity" prop="bindQuantity" :show-overflow-tooltip="true" label="绑定构件数量" align="center"/>
-    <el-table-column v-if="columns.visible('fileVersion')" key="fileVersion" prop="fileVersion" :show-overflow-tooltip="true" label="修订版本" width="80" align="center"/>
-    <el-table-column v-if="columns.visible('uploadTime')" key="uploadTime" prop="uploadTime" label="上传日期" align="center" width="140" />
-    <el-table-column v-if="columns.visible('userName')" key="userName" prop="userName" :show-overflow-tooltip="true" label="上传人" align="center" width="90" />
-    <el-table-column v-if="columns.visible('attachmentDTO')" key="attachmentDTO" prop="attachmentDTO" :show-overflow-tooltip="true" label="文件" align="center">
+    <el-table-column v-if="columns.visible('project')" key="project" prop="project" :show-overflow-tooltip="true" label="所属项目" align="left" min-width="150" />
+     <el-table-column v-if="columns.visible('fileName')" key="fileName" prop="fileName" :show-overflow-tooltip="true" label="文件" align="left" min-width="120">
       <template v-slot="scope">
         <template v-if="scope.row.attachmentDTO">
-          <div style="cursor: pointer; color: #409eff" @dblclick="attachmentView(scope.row.attachmentDTO)">{{ scope.row.attachmentDTO.name }}</div>
+          <div style="cursor: pointer; color: #409eff" @dblclick="attachmentView(scope.row.attachmentDTO)">{{ scope.row.fileName }}</div>
         </template>
         <span v-else>-</span>
       </template>
     </el-table-column>
+    <el-table-column v-if="columns.visible('remark')" key="remark" prop="remark" :show-overflow-tooltip="true" label="备注"  min-width="120" align="left"/>
+    <el-table-column v-if="columns.visible('bindQuantity')" key="bindQuantity" prop="bindQuantity" :show-overflow-tooltip="true" label="绑定构件数量" width="100" align="left"/>
+    <el-table-column v-if="columns.visible('fileVersion')" key="fileVersion" prop="fileVersion" :show-overflow-tooltip="true" label="修订版本" width="80" align="center"/>
+    <el-table-column v-if="columns.visible('uploadTime')" key="uploadTime" prop="uploadTime" label="上传日期" align="center" width="140" />
+    <el-table-column v-if="columns.visible('userName')" key="userName" prop="userName" :show-overflow-tooltip="true" label="上传人" align="center" width="90" />
     <!--编辑与删除-->
     <el-table-column
       v-if="checkPermission([...permission.detail, ...permission.edit,...permission.bind])"

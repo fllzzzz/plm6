@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="padding:10px;padding-left:0;">
     <common-table ref="tableRef" :data="list" v-loading="tableLoading" :max-height="maxHeight" style="width:300px;"  @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column key="structureClassName" prop="structureClassName" label="构件类型" align="center" />

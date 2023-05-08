@@ -8,13 +8,13 @@
     :wrapper-closable="false"
     :close-on-click-modal="false"
     size="50%"
-    custom-class="raw-mat-inbound-application-record-form"
+    custom-class="delivery-detail"
   >
     <template #titleRight>
       <common-button :loading="crud.status.cu === 2" type="primary" size="mini" @click="crud.submitCU">提交</common-button>
     </template>
     <template #content>
-      <el-form ref="formRef" :model="form" :rules="rules" size="small" label-width="140px">
+      <el-form ref="formRef" :model="form" :rules="rules" size="small" label-width="100px">
         <el-form-item label="工艺类型" prop="processType">
           <common-radio
             v-model="form.processType"
@@ -39,7 +39,7 @@
           ref="detailRef"
           border
           :data="form.fileList"
-          :max-height="maxHeight-100"
+          :max-height="maxHeight-200"
           style="width: 100%"
           class="table-form"
           return-source-data
