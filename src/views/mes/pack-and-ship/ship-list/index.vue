@@ -24,7 +24,7 @@
         min-width="140px"
       >
         <template v-slot="scope">
-          <table-cell-tag :show="scope.row.deliveryStatus===deliveryStatusEnum.RETURN.V" name="已取消" color="#f56c6c"/>
+          <table-cell-tag :show="scope.row.deliveryStatus === deliveryStatusEnum.RETURN.V" name="已取消" color="#f56c6c" />
           <span>{{ scope.row.serialNumber }}</span>
         </template>
       </el-table-column>
@@ -113,6 +113,45 @@
         min-width="100"
       />
       <el-table-column
+        v-if="columns.visible('actualGrossWeight')"
+        key="actualGrossWeight"
+        prop="actualGrossWeight"
+        :show-overflow-tooltip="true"
+        label="毛重（t）"
+        align="center"
+        min-width="120"
+      >
+        <template v-slot="scope">
+          <span>{{ convertUnits(scope.row.actualGrossWeight, 'kg', 't', 2) }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        v-if="columns.visible('emptyCars')"
+        key="emptyCars"
+        prop="emptyCars"
+        :show-overflow-tooltip="true"
+        label="皮重（t）"
+        align="center"
+        min-width="120"
+      >
+        <template v-slot="scope">
+          <span>{{ convertUnits(scope.row.emptyCars, 'kg', 't', 2) }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        v-if="columns.visible('actualWeight')"
+        key="actualWeight"
+        prop="actualWeight"
+        :show-overflow-tooltip="true"
+        label="净重（t）"
+        align="center"
+        min-width="120"
+      >
+        <template v-slot="scope">
+          <span>{{ convertUnits(scope.row.actualWeight, 'kg', 't', 2) }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
         v-if="columns.visible('totalNetWeight')"
         key="totalNetWeight"
         prop="totalNetWeight"
@@ -122,20 +161,7 @@
         min-width="120"
       >
         <template v-slot="scope">
-          <span>{{ convertUnits(scope.row.totalNetWeight, 'kg', 't', DP.COM_WT__T) }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column
-        v-if="columns.visible('actualWeight')"
-        key="actualWeight"
-        prop="actualWeight"
-        :show-overflow-tooltip="true"
-        label="过磅重量（t）"
-        align="center"
-        min-width="120"
-      >
-        <template v-slot="scope">
-          <span>{{ convertUnits(scope.row.actualWeight, 'kg', 't', DP.COM_WT__T) }}</span>
+          <span>{{ convertUnits(scope.row.totalNetWeight, 'kg', 't', 2) }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -149,7 +175,7 @@
       >
         <template v-slot="scope">
           <span :style="{ color: scope.row.acceptDifference ? '#13ce66' : '#ff4949' }">{{
-            convertUnits(scope.row.difference, 'kg', 't', DP.COM_WT__T)
+            convertUnits(scope.row.difference, 'kg', 't', 2)
           }}</span>
         </template>
       </el-table-column>
@@ -178,8 +204,8 @@
     <pagination />
     <m-detail v-model:visible="detailVisible" :detail-info="shipInfo" title="装车详情" :detailFunc="detail">
       <template #tip>
-        <div style="width:150px;height:53px;overflow:hidden;position:absolute;top:-18px;left:-20px;">
-          <table-cell-tag :show="shipInfo.deliveryStatus===deliveryStatusEnum.RETURN.V" name="已取消" color="#f56c6c"/>
+        <div style="width: 150px; height: 53px; overflow: hidden; position: absolute; top: -18px; left: -20px">
+          <table-cell-tag :show="shipInfo.deliveryStatus === deliveryStatusEnum.RETURN.V" name="已取消" color="#f56c6c" />
         </div>
         <el-tag effect="plain" size="medium" type="danger">车次：{{ shipInfo.serialNumber }}</el-tag>
         <el-tag effect="plain" size="medium">项目：{{ shipInfo.project && shipInfo.project.shortName }}</el-tag>
@@ -196,7 +222,7 @@ import { ref } from 'vue'
 import { mesShipPM as permission } from '@/page-permission/mes'
 import { manufactureTypeEnum } from '@enum-ms/production'
 import { packTypeEnum, deliveryStatusEnum } from '@enum-ms/mes'
-import { DP } from '@/settings/config'
+// import { DP } from '@/settings/config'
 import { cleanArray } from '@/utils/data-type/array'
 import EO from '@enum'
 import { convertUnits } from '@/utils/convert/unit'

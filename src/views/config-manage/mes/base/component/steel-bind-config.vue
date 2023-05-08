@@ -4,7 +4,7 @@
       <div class="clearfix">
         <span class="card-title">钢板绑定配置</span>
         <common-tip-button
-          v-permission="permission.foldingPriceMethodEdit"
+          v-permission="permission.steelBindConfigEdit"
           :loading="submitLoading"
           :disabled="submitDisabled"
           show-tip

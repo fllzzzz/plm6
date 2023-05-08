@@ -198,19 +198,22 @@ const productSendReceiveStorageDetail = {
      * @param {boolean} sum 列需要合计
      */
     fields: [
-      { show: true, key: 'monomerName', title: '单体', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 14, type: typeEnum.STRUCTURE_NAME.K },
-      { show: true, key: 'areaName', title: '区域', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 14, type: typeEnum.STRUCTURE_NAME.K },
-      { show: true, key: 'serialNumber', title: '编号', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 16, type: typeEnum.SERIAL_NUMBER.K },
-      { show: true, key: 'specification', title: '规格', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 16, type: typeEnum.SPECIFICATION.K },
-      { show: true, key: 'length', title: '长度', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 12, type: typeEnum.LENGTH.K },
+      { show: true, key: 'typeName', title: '类型', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 10, type: typeEnum.OTHER.K },
+      { show: true, key: 'monomerName', title: '单体', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 10, type: typeEnum.STRUCTURE_NAME.K },
+      { show: true, key: 'areaName', title: '区域', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 10, type: typeEnum.STRUCTURE_NAME.K },
+      { show: true, key: 'serialNumber', title: '编号', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 10, type: typeEnum.SERIAL_NUMBER.K },
+      { show: true, key: 'specification', title: '规格', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 10, type: typeEnum.SPECIFICATION.K },
+      { show: true, key: 'length', title: '长度', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 10, type: typeEnum.LENGTH.K },
       { show: true, key: 'quantity', title: '清单数', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 14, type: typeEnum.QUANTITY.K, sum: true },
-      { show: true, key: 'totalNetWeight', title: '清单量(kg)', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 14, type: typeEnum.METE.K, sum: true },
-      { show: true, key: 'inboundQuantity', title: '入库数', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 14, type: typeEnum.QUANTITY.K, sum: true },
-      { show: true, key: 'inboundNetWeight', title: '入库量(kg)', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 14, type: typeEnum.METE.K, sum: true },
-      { show: true, key: 'outboundQuantity', title: '使用数', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 14, type: typeEnum.QUANTITY.K, sum: true },
-      { show: true, key: 'outboundNetWeight', title: '使用量(kg)', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 14, type: typeEnum.METE.K, sum: true },
-      { show: true, key: 'stockQuantity', title: '库存数', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 14, type: typeEnum.QUANTITY.K, sum: true },
-      { show: true, key: 'stockNetWeight', title: '库存量(kg)', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 14, type: typeEnum.METE.K, sum: true }
+      { show: true, key: 'totalNetWeight', title: '清单量(米)', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 14, type: typeEnum.METE.K, sum: true },
+      { show: true, key: 'beginningQuantity', title: '期初数', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 10, type: typeEnum.QUANTITY.K, sum: true },
+      { show: true, key: 'beginningNetWeight', title: '期初量(米)', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 10, type: typeEnum.METE.K, sum: true },
+      { show: true, key: 'inboundQuantity', title: '入库数', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 10, type: typeEnum.QUANTITY.K, sum: true },
+      { show: true, key: 'inboundNetWeight', title: '入库量(米)', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 10, type: typeEnum.METE.K, sum: true },
+      { show: true, key: 'outboundQuantity', title: '出库数', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 10, type: typeEnum.QUANTITY.K, sum: true },
+      { show: true, key: 'outboundNetWeight', title: '出库量(米)', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 10, type: typeEnum.METE.K, sum: true },
+      { show: true, key: 'stockQuantity', title: '期末数', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 10, type: typeEnum.QUANTITY.K, sum: true },
+      { show: true, key: 'stockNetWeight', title: '期末量(米)', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 10, type: typeEnum.METE.K, sum: true }
     ]
   }
 }

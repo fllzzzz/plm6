@@ -69,6 +69,11 @@
               <span>{{ detail.projectManagerFullName || '-' }}</span>
             </div>
           </el-form-item>
+          <el-form-item label="销售负责人" prop="projectManagerId">
+            <div class="input-underline" style="width:300px">
+              <span>{{ detail.singerName || '-' }}</span>
+            </div>
+          </el-form-item>
         </div>
         <el-divider><span class="title">合同金额</span></el-divider>
         <div class="form-row">
@@ -110,6 +115,7 @@
       <div class="table-box">
         <upload-list
           :show-download="true"
+          showView
           :file-classify="fileClassifyEnum.CONTRACT_ATT.V"
           v-model:files="detail.attachments"
           :download-fn="downloadBaseAttachments"

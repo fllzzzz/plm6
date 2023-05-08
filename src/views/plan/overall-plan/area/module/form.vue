@@ -103,6 +103,10 @@ const props = defineProps({
   globalProject: {
     type: Object,
     default: () => {}
+  },
+  currentMonomer: {
+    type: Object,
+    default: () => {}
   }
 })
 const typeProp = { key: 'no', label: 'name', value: 'no' }
@@ -160,9 +164,9 @@ const rules = {
 function dateOptionFn(time) {
   if (crud.form.productType && props.typeInfo && props.typeInfo.length > 0) {
     const val = props.typeInfo.find(v => v.no === crud.form.productType)
-    return time.getTime() - 8.64e6 > val.date || time.getTime() < props.globalProject.startDate
+    return time.getTime() - 8.64e6 > val.date || (props.currentMonomer.startDate ? time.getTime() < props.currentMonomer.startDate : time.getTime() < props.globalProject.startDate)
   } else {
-    return time.getTime() < props.globalProject.startDate
+    return time.getTime() < (props.currentMonomer.startDate ? time.getTime() < props.currentMonomer.startDate : time.getTime() < props.globalProject.startDate)
   }
 }
 

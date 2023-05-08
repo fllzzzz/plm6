@@ -8,7 +8,7 @@ import request from '@/utils/request'
 export function get(params) {
   return request({
     module: 'contract',
-    url: 'business/auxiliary-material',
+    url: 'business/standardPart',
     method: 'get',
     params
   })
@@ -19,13 +19,22 @@ export function get(params) {
  * @param {number} projectId | required 项目id
  * @param {number} monomerId | required 单体id
  */
-export function cost({ projectId, monomerId }) {
+// export function cost({ projectId, monomerId }) {
+//   return request({
+//     module: 'contract',
+//     url: 'business/auxiliary-material/summary',
+//     method: 'get',
+//     params: { projectId, monomerId }
+//   })
+// }
+
+// 保存标准件价格
+export function saveStandardPart(data) {
   return request({
     module: 'contract',
-    url: 'business/auxiliary-material/summary',
-    method: 'get',
-    params: { projectId, monomerId }
+    url: 'business/standardPart',
+    method: 'put',
+    data
   })
 }
-
 export default { get }

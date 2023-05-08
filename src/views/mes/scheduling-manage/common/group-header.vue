@@ -13,14 +13,17 @@
           <div
             class="time-item"
             :style="judgeIsSelected(item.groups?.id) ? `background: rgb(64 158 255);color: #fff;` : ''"
-            style="display: flex; width: 300px; height: 50px"
+            style="display: flex; height: 50px"
             v-for="(item, index) in data"
             :key="index"
             @click="handleTagClick(item.groups?.id)"
           >
-            <div style="padding: 4px 8px; align-self: center">{{ item.groups?.name }}</div>
-            <div style="border-right: 3px solid #fff"></div>
-            <div
+            <div style="display: flex; padding: 4px 8px; align-self: center">
+              <div>{{ item.workshop?.name }}>{{ item.productionLine?.name }}>{{ item.groups?.name }}:</div>
+              <div>{{ item.mete ? item.mete?.quantity : 0 }}件/{{ item.mete ? (item.mete.netWeight / 1000).toFixed(2) : 0 }}吨</div>
+            </div>
+            <!-- <div style="border-right: 3px solid #fff"></div> -->
+            <!-- <div
               style="
                 display: flex;
                 flex-direction: column;
@@ -31,7 +34,7 @@
             >
               <span style="margin-left: 20px"> 构件排产量（件/吨）</span>
               <span>{{ item.mete ? item.mete?.quantity : 0 }}/{{ item.mete ? (item.mete.netWeight / 1000).toFixed(2) : 0 }}</span>
-            </div>
+            </div> -->
             <!-- <div>{{ item.year }}</div>
             <div>{{ item.month }}月</div> -->
           </div>
@@ -197,15 +200,15 @@ function selectChange(val) {
     cursor: pointer;
     white-space: nowrap;
     text-align: center;
-    width: 65px;
+    // width: 65px;
     font-size: 14px;
     box-sizing: border-box;
 
     div {
       padding: 3px 5px;
-        // &:not(:last-child) {
-        //   border-bottom: 1px solid #ebebeb;
-        // }
+      // &:not(:last-child) {
+      //   border-bottom: 1px solid #ebebeb;
+      // }
     }
     &:not(:last-child) {
       border-right: 1px solid #ebebeb;

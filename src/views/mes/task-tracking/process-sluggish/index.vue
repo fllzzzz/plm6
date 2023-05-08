@@ -5,7 +5,7 @@
         <div class="head-container">
           <mHeader />
         </div>
-        <production-line-detail :workShopId="crud.query.workShopId" @change="processDetailChange" />
+        <production-line-detail :workShopId="crud.query.workShopId" :weightStatus="crud.query.weightStatus" @change="processDetailChange" />
       </div>
       <div style="border-right: 1px solid #ededed; margin: 0 20px; height: calc(100vh - 130px)"></div>
       <!--表格渲染-->
@@ -14,21 +14,42 @@
           <div class="my-code">*点击左侧未完成任务的工序图表查看详情</div>
         </div>
         <div v-show="processList.process?.id">
-          <div style="display: flex; justify-content: space-between">
-            <div class="head-container">
-              <el-tag class="filter-item">工序：{{ processList.process?.name }}</el-tag>
-              <project-cascader v-model="projectId" clearable class="filter-item" style="width: 300px" />
-              <common-radio-button
-                v-model="groupId"
-                :options="groupData"
-                type="other"
-                class="filter-item"
-                showOptionAll
-                :dataStructure="{ key: 'id', label: 'name', value: 'id' }"
-                size="small"
-                @change="crud.toQuery"
-              />
+          <div class="head-container">
+            <div style="display: flex; justify-content: space-between">
               <div>
+                <el-tag class="filter-item">工序：{{ processList.process?.name }}</el-tag>
+                <project-cascader v-model="projectId" clearable class="filter-item" style="width: 300px" />
+                <common-radio-button
+                  v-model="groupId"
+                  :options="groupData"
+                  type="other"
+                  class="filter-item"
+                  showOptionAll
+                  :dataStructure="{ key: 'id', label: 'name', value: 'id' }"
+                  size="small"
+                  @change="crud.toQuery"
+                />
+              </div>
+              <print-table
+                v-permission="permission.print"
+                api-key="mesProcessList"
+                :params="{
+                  productionLineId: crud.query.productionLineId,
+                  productType: crud.query.productType,
+                  processId: crud.query.processId,
+                  projectId: crud.query.projectId,
+                  monomerId: crud.query.monomerId,
+                  areaId: crud.query.areaId,
+                  serialNumber: crud.query.serialNumber,
+                  groupId: crud.query.groupId,
+                }"
+                style="width: 300px"
+                size="mini"
+                type="warning"
+              />
+            </div>
+            <crudOperation>
+              <template #optLeft>
                 <monomer-select-area-select
                   v-model:monomerId="monomerId"
                   v-model:areaId="areaId"
@@ -45,40 +66,14 @@
                   class="filter-item"
                   clearable
                 />
-                <!-- <el-input
-                  v-model.trim="groupName"
-                  placeholder="输入班组搜索"
-                  class="filter-item"
-                  style="width: 170px"
-                  size="small"
-                  clearable
-                  @keyup.enter="handleChange"
-                /> -->
                 <common-button class="filter-item" size="mini" type="success" icon="el-icon-search" @click.stop="searchQuery">
                   搜索
                 </common-button>
                 <common-button class="filter-item" size="mini" type="warning" icon="el-icon-refresh-left" @click.stop="resetQuery">
                   重置
                 </common-button>
-              </div>
-            </div>
-            <print-table
-              v-permission="permission.print"
-              api-key="mesProcessList"
-              :params="{
-                productionLineId: crud.query.productionLineId,
-                productType: crud.query.productType,
-                processId: crud.query.processId,
-                projectId: crud.query.projectId,
-                monomerId: crud.query.monomerId,
-                areaId: crud.query.areaId,
-                serialNumber: crud.query.serialNumber,
-                groupId: crud.query.groupId,
-              }"
-              style="width: 300px"
-              size="mini"
-              type="warning"
-            />
+              </template>
+            </crudOperation>
           </div>
           <common-table
             ref="tableRef"
@@ -96,7 +91,7 @@
               key="project.shortName"
               prop="project"
               :show-overflow-tooltip="true"
-              min-width="160"
+              min-width="150"
               label="项目"
             >
               <template v-slot="scope">
@@ -108,7 +103,7 @@
               key="monomer.name"
               prop="monomer.name"
               :show-overflow-tooltip="true"
-              min-width="120"
+              min-width="110"
               align="center"
               label="单体"
             />
@@ -152,17 +147,25 @@
               :show-overflow-tooltip="true"
               key="netWeight"
               prop="netWeight"
-              label="单净重"
+              label="单重（kg）"
               align="center"
-            />
+            >
+              <template #default="{ row }">
+                <span>{{ crud.query.weightStatus === weightTypeEnum.NET.V ? row.netWeight : row.grossWeight }}</span>
+              </template>
+            </el-table-column>
             <el-table-column
-              v-if="columns.visible('grossWeight')&&crud.query.productType !== componentTypeEnum.ASSEMBLE.V"
+              v-if="columns.visible('unNetWeight')"
               :show-overflow-tooltip="true"
-              key="grossWeight"
-              prop="grossWeight"
-              label="单毛重"
+              key="unNetWeight"
+              prop="unNetWeight"
+              label="总重（kg）"
               align="center"
-            />
+            >
+              <template #default="{ row }">
+                <span>{{ crud.query.weightStatus === weightTypeEnum.NET.V ? row.unNetWeight : row.unGrossWeight }}</span>
+              </template>
+            </el-table-column>
             <el-table-column
               v-if="columns.visible('completeDate')"
               :show-overflow-tooltip="true"
@@ -198,7 +201,9 @@ import { ref, watch, provide, computed } from 'vue'
 import { mesProcessSluggishPM as permission } from '@/page-permission/mes'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
-import { componentTypeEnum } from '@enum-ms/mes'
+import crudOperation from '@crud/CRUD.operation'
+// import { componentTypeEnum } from '@enum-ms/mes'
+import { weightTypeEnum } from '@enum-ms/common'
 import { parseTime } from '@/utils/date'
 import pagination from '@crud/Pagination'
 import { processCategoryEnum } from '@enum-ms/mes'
@@ -243,7 +248,6 @@ const { crud, CRUD, columns } = useCRUD(
     optShow: { ...optShow },
     crudApi: { get },
     permission: { ...permission },
-    invisibleColumns: [],
     requiredQuery: ['processId', 'productType'],
     hasPagination: true
   },

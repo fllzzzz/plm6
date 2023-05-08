@@ -5,7 +5,7 @@
     :before-close="crud.cancelCU"
     :visible="crud.status.cu > 0"
     :title="crud.status.title"
-    width="650px"
+    width="1000px"
   >
     <template #titleRight>
       <common-button :loading="crud.status.cu === 2" type="primary" size="mini" @click="crud.submitCU">确认</common-button>
@@ -14,6 +14,16 @@
       <div class="form-row" style="display: flex">
         <el-form-item label="单体名称" prop="name">
           <el-input v-model="form.name" type="text" placeholder="请填写单体名称" style="width: 270px" @blur="form.name=form.name.replace(/[ ]/g,'')"/>
+        </el-form-item>
+        <el-form-item label-width="5px" prop="startDate">
+          <el-date-picker
+            v-model="form.startDate"
+            type="date"
+            value-format="x"
+            placeholder="选择开始日期"
+            style="width: 160px"
+            :disabledDate="startDateOptionFn"
+          />
         </el-form-item>
         <el-form-item label-width="5px" prop="date">
           <el-date-picker
@@ -45,7 +55,7 @@
             value-format="x"
             placeholder="选择完成日期"
             style="width: 160px"
-            :disabledDate="subDateOptionFn"
+            :disabledDate="(date) => {return (form.startDate?date.getTime() <form.startDate: date.getTime() < globalProject.startDate) || (form.date?date.getTime() > form.date:date.getTime() > globalProject.endDate)}"
             :disabled="!form[item.key]"
           />
         </el-form-item>
@@ -128,6 +138,7 @@ const checkDate = (rule, value, callback) => {
     }
   }
 }
+
 // const checkOtherDate = (rule, value, callback) => {
 //   if (!value) {
 //     callback(new Error('请选择完成日期'))
@@ -151,6 +162,7 @@ const checkOtherDate = (rule, value, callback) => {
   callback()
 }
 const rules = {
+  startDate: [{ required: true, message: '请选择开始时间', trigger: 'change' }],
   date: [{ validator: checkDate, trigger: 'change' }],
   sort: [{ required: true, message: '请填写排序值', trigger: 'blur', type: 'number' }],
   battenBoard: [{ message: '请填写', trigger: 'blur', type: 'number' }],
@@ -188,20 +200,12 @@ watch(
   },
   { deep: true, immediate: true }
 )
-function mainDateOptionFn(time) {
-  if (props.globalProject.endDate) {
-    return time.getTime() - 8.64e6 > props.globalProject.endDate || time.getTime() < props.globalProject.startDate
-  } else {
-    return time.getTime() < props.globalProject.startDate
-  }
+function startDateOptionFn(time) {
+  return crud.form.date ? (time.getTime() > crud.form.date || time.getTime() < props.globalProject.startDate) : (time.getTime() - 8.64e6 > props.globalProject.endDate || time.getTime() < props.globalProject.startDate)
 }
 
-function subDateOptionFn(time) {
-  if (crud.form.date) {
-    return time.getTime() - 8.64e6 > crud.form.date || time.getTime() < props.globalProject.startDate
-  } else {
-    return time.getTime() - 8.64e6 > props.globalProject.endDate || time.getTime() < props.globalProject.startDate
-  }
+function mainDateOptionFn(time) {
+  return crud.form.startDate ? (time.getTime() - 8.64e6 > props.globalProject.endDate || time.getTime() < crud.form.startDate) : (time.getTime() - 8.64e6 > props.globalProject.endDate || time.getTime() < props.globalProject.startDate)
 }
 
 CRUD.HOOK.beforeSubmit = () => {
