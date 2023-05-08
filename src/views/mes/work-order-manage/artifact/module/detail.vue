@@ -29,6 +29,7 @@
         />
         <common-button
           class="filter-item"
+          v-permission="permission.allRevoke"
           v-show="isEdit === true"
           :disabled="isAllOrder === false"
           size="mini"
@@ -58,8 +59,8 @@
             type="warning"
             class="filter-item"
           /> -->
-          <common-button v-show="isEdit" size="mini" type="warning" @click="cancelEdit">取消编辑</common-button>
-          <common-button v-show="!processId && isEdit === false && props.detailData.productType === componentTypeEnum.ARTIFACT.V" size="mini" type="primary" @click="editMode">编辑</common-button>
+          <common-button v-permission="permission.cancelEdit" v-show="isEdit" size="mini" type="warning" @click="cancelEdit">取消编辑</common-button>
+          <common-button v-permission="permission.edit" v-show="!processId && isEdit === false && props.detailData.productType === componentTypeEnum.ARTIFACT.V" size="mini" type="primary" @click="editMode">编辑</common-button>
           <el-popover
             v-model:visible="delBtn"
             placement="top"
@@ -74,7 +75,7 @@
               <common-button size="mini" type="danger" @click="batchBack">确定</common-button>
             </div>
             <template #reference>
-              <common-button v-show="isEdit === true" size="mini" type="danger" :disabled="!selectionList.length" @click.stop="handleBatch">
+              <common-button v-permission="permission.batchRevoke" v-show="isEdit === true" size="mini" type="danger" :disabled="!selectionList.length" @click.stop="handleBatch">
                 批量撤回
               </common-button>
             </template>
@@ -138,7 +139,7 @@
                   <common-button type="primary" size="mini" @click.stop="handleDelete(scope.row)">确定</common-button>
                 </div>
                 <template #reference>
-                  <common-button size="mini" type="danger" :disabled="scope.row.boolCanRevoke === false" @click.stop="back(scope.row)">
+                  <common-button v-permission="permission.revoke" size="mini" type="danger" :disabled="scope.row.boolCanRevoke === false" @click.stop="back(scope.row)">
                     撤回
                   </common-button>
                 </template>
