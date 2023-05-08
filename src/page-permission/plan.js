@@ -194,6 +194,7 @@ export const planStandardPartListPM = {
 export const planProcessListPM = {
   get: ['plan_process_list:get'], // 列表
   add: ['plan_process_list:add'], // 上传工艺文件
+  del: ['plan_process_list:del'], // 删除工艺文件
   edit: ['plan_process_list:edit'], // 修改
   detail: ['plan_process_list:detail'], // 详情、修订版本、绑定列表
   unbind: ['plan_process_list:unbind'], // 解绑

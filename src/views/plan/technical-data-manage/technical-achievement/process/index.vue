@@ -33,9 +33,9 @@
     <el-table-column v-if="columns.visible('userName')" key="userName" prop="userName" :show-overflow-tooltip="true" label="上传人" align="center" width="90" />
     <!--编辑与删除-->
     <el-table-column
-      v-if="checkPermission([...permission.detail, ...permission.edit,...permission.bind])"
+      v-if="checkPermission([...permission.detail, ...permission.edit,...permission.bind,...permission.del])"
       label="操作"
-      width="240px"
+      width="280px"
       align="center"
       fixed="right"
     >
@@ -43,6 +43,25 @@
         <common-button size="mini" @click="openDetail(scope.row)" v-permission="permission.detail">详情</common-button>
         <common-button size="mini" type="primary" @click="openModify(scope.row)" v-permission="permission.edit">修改</common-button>
         <common-button size="mini" type="success" @click="openBind(scope.row)" v-permission="permission.bind">绑定构件</common-button>
+        <el-popover
+          v-model:visible="scope.row.pop"
+          placement="top"
+          width="180"
+          trigger="hover"
+          @show="onPopoverShow"
+          @hide="onPopoverHide"
+        >
+          <p>{{scope.row.sourceRow?.bindQuantity>0?'已绑定构件，不可删除!':'确定删除？'}}</p>
+          <div style="text-align: right; margin: 0" v-if="scope.row.sourceRow?.bindQuantity<=0">
+            <common-button size="mini" type="text" @click.stop="cancelDel(scope.row)">取消</common-button>
+            <common-button type="primary" size="mini" @click.stop="delClick(scope.row)">确定</common-button>
+          </div>
+          <template #reference>
+            <div style="display:inline-block;margin-left:6px;">
+              <common-button type="danger" :disabled="scope.row.sourceRow?.bindQuantity>0" icon="el-icon-delete" size="mini" @click.stop="toDelete(scope.row)" />
+            </div>
+          </template>
+        </el-popover>
       </template>
     </el-table-column>
   </common-table>
@@ -59,6 +78,7 @@
 <script setup>
 import crudApi from '@/api/plan/technical-data-manage/process'
 import { ref, provide } from 'vue'
+import { ElMessage } from 'element-plus'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
@@ -87,6 +107,7 @@ const currentRow = ref({})
 const modifyVisible = ref(false)
 const detailVisible = ref(false)
 const bindVisible = ref(false)
+const pop = ref(false)
 
 const pdfShow = ref(false)
 const currentId = ref()
@@ -142,6 +163,40 @@ function openModify(row) {
 function openBind(row) {
   currentRow.value = row?.sourceRow
   bindVisible.value = true
+}
+
+async function delClick(row) {
+  try {
+    await crudApi.del(row.id)
+    ElMessage({ type: 'success', message: '删除成功' })
+    // 重新查询
+    crud.toQuery()
+  } catch (err) {
+    console.log('删除工艺文件')
+  }
+}
+
+function toDelete(row) {
+  row.pop = true
+}
+function cancelDel(row) {
+  row.pop = false
+}
+
+function handleDocumentClick(event) {
+  pop.value = false
+}
+
+// 打开删除提示窗
+function onPopoverShow() {
+  setTimeout(() => {
+    document.addEventListener('hover', handleDocumentClick, { passive: false })
+  }, 0)
+}
+
+// 隐藏删除提示窗
+function onPopoverHide() {
+  document.removeEventListener('hover', handleDocumentClick)
 }
 
 // function editRow(row) {

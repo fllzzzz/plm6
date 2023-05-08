@@ -5,14 +5,14 @@
     v-model="visible"
     top="10vh"
     width="600px"
-    :before-close="handleClose"
+    :before-close="closeConfirm"
     title="绑定构件"
     :wrapper-closable="false"
     size="95%"
     custom-class="bind-form"
   >
     <template #titleRight>
-      <common-button size="small" type="success" @click.stop="bindVisible=true" v-permission="permission.bind">已绑定构件</common-button>
+      <common-button size="small" type="success" @click.stop="bindVisible=true" v-permission="permission.bind">查看已绑定构件</common-button>
       <el-badge :value="showList.length" :max="99" style="margin-right:10px;">
         <common-button size="small" type="primary" @click.stop="handleBind">本次绑定构件预览提交</common-button>
       </el-badge>
@@ -73,6 +73,8 @@
                   size="small"
                   type="primary"
                   style="width:100%;"
+                  @click="confirmSelect"
+                  :disabled="!tableSelection?.length"
                 >
                   加入所选
                 </common-button>
@@ -181,6 +183,7 @@
 <script setup>
 import { getStructureList } from '@/api/plan/technical-data-manage/process'
 import { defineProps, defineEmits, ref, watch } from 'vue'
+import { ElMessageBox } from 'element-plus'
 import useVisible from '@compos/use-visible'
 
 import { isNotBlank } from '@data-type/index'
@@ -241,8 +244,11 @@ watch(
   (val) => {
     if (val) {
       query.value = {}
+      query.value.processType = props.currentRow.processType
+      query.value.boolBindStatus = isArtifactBindTypeEnum.NO.V
       query.value.projectId = props.currentRow.boolSingleProject ? props.currentRow.project?.id : projects.value[0].id
       fetchList()
+      showList.value = []
     }
   },
   { deep: true, immediate: true }
@@ -261,6 +267,19 @@ const { maxHeight } = useMaxHeight(
   },
   drawerRef
 )
+
+function closeConfirm() {
+  if (showList.value?.length) {
+    ElMessageBox.confirm('您本次操作的绑定记录尚未提交，确认退出？', '提示', { type: 'warning' })
+      .then(() => {
+        handleClose()
+      })
+      .catch(() => {
+      })
+  } else {
+    handleClose()
+  }
+}
 
 function handleSuccess() {
   emit('success')
@@ -323,6 +342,10 @@ function choseAll() {
   showList.value = tableSelection.value || []
 }
 
+function confirmSelect() {
+  showList.value = tableSelection.value
+}
+
 function addItem(val) {
   const findVal = list.value.find(v => v.uuid === val.uuid)
   detailRef?.value?.toggleRowSelection(findVal, true)
@@ -335,6 +358,10 @@ function handleSelectionChange(val) {
 
 function deleteItem(val) {
   const findVal = list.value.find(v => v.uuid === val.uuid)
+  const findShowIndex = showList.value.findIndex(v => v.uuid === val.uuid)
+  if (isNotBlank(findShowIndex)) {
+    showList.value.splice(findShowIndex, 1)
+  }
   if (findVal) {
     detailRef?.value?.toggleRowSelection(findVal, false)
   }
