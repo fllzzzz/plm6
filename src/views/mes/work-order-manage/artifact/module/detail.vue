@@ -59,7 +59,7 @@
             class="filter-item"
           /> -->
           <common-button v-show="isEdit" size="mini" type="warning" @click="cancelEdit">取消编辑</common-button>
-          <common-button v-show="!processId && isEdit === false" size="mini" type="primary" @click="editMode">编辑</common-button>
+          <common-button v-show="!processId && isEdit === false && props.detailData.productType === componentTypeEnum.ARTIFACT.V" size="mini" type="primary" @click="editMode">编辑</common-button>
           <el-popover
             v-model:visible="delBtn"
             placement="top"
