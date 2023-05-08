@@ -206,7 +206,7 @@ const rules = {
     { pattern: validatorNatural, message: '请输入数字', trigger: 'blur' }
   ],
   receivingManager: [{ required: true, max: 20, message: '长度不超过 20个字符', trigger: 'blur' }],
-  receivingManagerPhone: [{ pattern: validatorTel, message: '请填写正确的联系电话【手机号/固话】', trigger: 'blur' }],
+  receivingManagerPhone: [{ required: true, pattern: validatorTel, message: '请填写正确的联系电话【手机号/固话】', trigger: 'blur' }],
   designManagerPhone: [{ pattern: validatorTel, message: '请填写正确的联系电话【手机号/固话】', trigger: 'blur' }],
   financeManagerPhone: [{ pattern: validatorTel, message: '请填写正确的联系电话【手机号/固话】', trigger: 'blur' }],
   settleManagerPhone: [{ pattern: validatorTel, message: '请填写正确的联系电话【手机号/固话】', trigger: 'blur' }],
