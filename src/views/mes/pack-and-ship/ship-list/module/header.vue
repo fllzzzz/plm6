@@ -162,6 +162,11 @@
         />
       </template>
       <template v-slot:viewLeft>
+        <el-tag v-permission="permission.get" type="warning" effect="plain" class="filter-item" size="medium">
+          过磅重量汇总（查询）：
+          <span v-if="!summaryLoading">{{ convertUnits(overWeight, 'kg', 't', 2) }} t</span>
+          <i v-else class="el-icon-loading" />
+        </el-tag>
         <el-tag v-permission="permission.get" effect="plain" class="filter-item" size="medium">
           累计发运重量（查询）：
           <span v-if="!summaryLoading">{{ convertUnits(shipWeight, 'kg', 't', 2) }} t</span>
@@ -209,6 +214,7 @@ const { crud, query, CRUD } = regHeader(defaultQuery)
 const permission = inject('permission')
 const summaryLoading = ref(false)
 const shipWeight = ref(0)
+const overWeight = ref(0)
 const currentKey = ref()
 const apiKey = ref([])
 const totalAmount = ref({})
@@ -260,8 +266,9 @@ async function fetchSummary() {
   }
   try {
     summaryLoading.value = true
-    const { weight } = await getSummaryShipMete(query)
+    const { weight, actualWeight } = await getSummaryShipMete(query)
     shipWeight.value = weight
+    overWeight.value = actualWeight
   } catch (error) {
     console.log('获取汇总信息', error)
   } finally {
