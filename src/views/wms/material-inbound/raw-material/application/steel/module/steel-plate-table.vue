@@ -436,23 +436,28 @@ function rowWatch(row) {
   // watchEffect(() => calcTotalWeight(row))
   watchEffect(() => {
     weightOverDiff(row)
-    if (!props.boolPartyA && isNotBlank(form.selectObj?.[row.mergeId])) {
-      const _isSelected = form.selectObj[row.mergeId]?.isSelected
-      form.selectObj[row.mergeId] = {
-        ...form.selectObj[row.mergeId],
-        ...row,
-        isSelected: _isSelected
-      }
-    }
-    if (row.boolApplyPurchase && form.selectObj?.[row.mergeId]?.isSelected) {
-      row.quantity = row?.applyPurchase?.reduce((a, b) => a + (b.quantity || 0), 0)
-    }
     if (row.needFirstCalcTheoryWeight) {
       calcTheoryWeight(row)
       calcTotalWeight(row)
       row.needFirstCalcTheoryWeight = false
     }
   })
+  watch([() => row.boolApplyPurchase, () => row?.applyPurchase], () => {
+    if (row.boolApplyPurchase && form.selectObj?.[row.mergeId]?.isSelected) {
+      row.quantity = row?.applyPurchase?.reduce((a, b) => a + (b.quantity || 0), 0)
+    }
+  }, { deep: true })
+  watch(() => row, () => {
+    if (!props.boolPartyA && form.selectObj?.[row.mergeId]?.isSelected) {
+      const _isSelected = form.selectObj[row.mergeId]?.isSelected
+      form.selectObj[row.mergeId] = {
+        ...form.selectObj[row.mergeId],
+        ...row,
+        mete: row.weighingTotalWeight,
+        isSelected: _isSelected
+      }
+    }
+  }, { deep: true })
   // 计算单件理论重量
   watch([() => row.length, () => row.width, () => row.thickness, baseUnit], () => calcTheoryWeight(row))
   // 计算总重

@@ -53,7 +53,6 @@
       </div>
       <el-form ref="formRef" :model="form">
         <component
-          v-if="orderLoaded"
           ref="steelRef"
           :max-height="tableMaxHeight"
           :style="maxHeightStyle"

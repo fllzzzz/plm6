@@ -215,7 +215,7 @@
 </template>
 
 <script setup>
-import { defineProps, computed, defineExpose, watchEffect, ref, inject, reactive, watch } from 'vue'
+import { defineProps, computed, defineExpose, ref, inject, reactive, watch } from 'vue'
 import { matClsEnum } from '@/utils/enum/modules/classification'
 import { isBlank, isNotBlank, toPrecision } from '@/utils/data-type'
 
@@ -367,16 +367,17 @@ function rowInit(row) {
 function rowWatch(row) {
   // watchEffect(() => calcTheoryLength(_row))
   // watchEffect(() => calcTotalLength(_row))
-  watchEffect(() => {
-    if (!props.boolPartyA && isNotBlank(form.selectObj?.[row.mergeId])) {
+  watch(() => row, () => {
+    if (!props.boolPartyA && form.selectObj?.[row.mergeId]?.isSelected) {
       const _isSelected = form.selectObj[row.mergeId]?.isSelected
       form.selectObj[row.mergeId] = {
         ...form.selectObj[row.mergeId],
         ...row,
+        mete: row.weighingTotalWeight,
         isSelected: _isSelected
       }
     }
-  })
+  }, { deep: true })
   // 计算理论长度
   watch([() => row.weighingTotalWeight, () => row.width, () => row.thickness, baseUnit], () => calcTheoryLength(row))
   // 计算总长度

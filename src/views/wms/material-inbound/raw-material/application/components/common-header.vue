@@ -386,11 +386,15 @@ async function handleOrderInfoChange(order, oldOrder) {
           let _totalMete = 0
           let _totalQuantity = 0
           _v.applyPurchase.forEach((item) => {
-            item.applyPurchaseId = item.id
-            item.purchaseQuantity = item.quantity
-            item.originQuantity = item.quantity
-            item.purchaseMete = item.mete
-            item.originMete = item.mete
+            if (!_isSelected || props.edit) {
+              item.applyPurchaseId = item.id
+              item.purchaseQuantity = item.quantity
+              item.originQuantity = item.quantity
+              item.purchaseMete = item.mete
+              item.originMete = item.mete
+              item.quantity = null
+              item.mete = null
+            }
             if (props.edit && form?.editObj?.[_v.mergeId]?.applyPurchaseObj?.[item.applyPurchaseId]) {
               const _quantity = form?.editObj?.[_v.mergeId]?.applyPurchaseObj?.[item.applyPurchaseId]?.quantity
               const _mete = form?.editObj?.[_v.mergeId]?.applyPurchaseObj?.[item.applyPurchaseId]?.mete
@@ -399,8 +403,8 @@ async function handleOrderInfoChange(order, oldOrder) {
               item.mete = _mete
               _totalMete += _mete
             } else {
-              item.quantity = undefined
-              item.mete = undefined
+              _totalQuantity += item.quantity || 0
+              _totalMete += item.mete || 0
             }
             if (item?.project) {
               order.projects.push(item?.project)
@@ -409,13 +413,15 @@ async function handleOrderInfoChange(order, oldOrder) {
           _v.quantity = _totalQuantity
           _v.mete = _totalMete
         } else {
-          if (props.edit && form?.editObj?.[_v.mergeId]) {
-            _v.quantity = form?.editObj?.[_v.mergeId]?.quantity
-            _v.mete = form?.editObj?.[_v.mergeId]?.mete
-          } else {
-            _v.quantity = undefined
-            _v.mete = undefined
-          }
+          _v.quantity = null
+          _v.mete = null
+        }
+        if (props.edit && form?.editObj?.[_v.mergeId]) {
+          _v.quantity = form?.editObj?.[_v.mergeId]?.quantity
+          _v.mete = form?.editObj?.[_v.mergeId]?.mete
+        } else if (_isSelected) {
+          _v.quantity = form?.selectObj?.[_v.mergeId]?.quantity
+          _v.mete = form?.selectObj?.[_v.mergeId]?.mete
         }
         _v.originQuantity = _v.quantity
         _v.originMete = _v.mete

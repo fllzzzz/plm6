@@ -268,7 +268,7 @@
 </template>
 
 <script setup>
-import { defineExpose, defineProps, watchEffect, computed, ref, inject, reactive } from 'vue'
+import { defineExpose, defineProps, watch, computed, ref, inject, reactive } from 'vue'
 // import { matClsEnum } from '@/utils/enum/modules/classification'
 import { measureTypeEnum } from '@/utils/enum/modules/wms'
 import { createUniqueString } from '@/utils/data-type/string'
@@ -412,8 +412,14 @@ function rowInit(row) {
 }
 
 function rowWatch(row) {
-  watchEffect(() => {
-    if (!props.boolPartyA && isNotBlank(form.selectObj?.[row.mergeId])) {
+  watch([() => row.boolApplyPurchase, () => row?.applyPurchase], () => {
+    if (row.boolApplyPurchase && form.selectObj?.[row.mergeId]?.isSelected) {
+      row.quantity = row?.applyPurchase?.reduce((a, b) => a + (b.quantity || 0), 0)
+      row.mete = row?.applyPurchase?.reduce((a, b) => a + (b.mete || 0), 0)
+    }
+  }, { deep: true })
+  watch(() => row, () => {
+    if (!props.boolPartyA && form.selectObj?.[row.mergeId]?.isSelected) {
       const _isSelected = form.selectObj[row.mergeId]?.isSelected
       form.selectObj[row.mergeId] = {
         ...form.selectObj[row.mergeId],
@@ -421,11 +427,7 @@ function rowWatch(row) {
         isSelected: _isSelected
       }
     }
-    if (props.boolApplyPurchase && form.selectObj?.[row.mergeId]?.isSelected) {
-      row.quantity = row?.applyPurchase?.reduce((a, b) => a + (b.quantity || 0), 0)
-      row.mete = row?.applyPurchase?.reduce((a, b) => a + (b.mete || 0), 0)
-    }
-  })
+  }, { deep: true })
 }
 
 // 处理重量变化
