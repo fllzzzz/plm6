@@ -28,6 +28,7 @@
       </div>
       <el-form ref="formRef" :model="form">
         <aux-mat-table
+          v-if="orderLoaded"
           ref="tableRef"
           :max-height="tableMaxHeight"
           :bool-party-a="boolPartyA"
