@@ -53,7 +53,7 @@
 </template>
 
 <script setup>
-import crudApi from '@/api/ship-manage/pack-and-ship/ship-summary'
+import crudApi from '@/api/ship-manage/pack-and-ship/enclosure-ship-summary'
 import { ref } from 'vue'
 
 import { mesShipSummaryPM as permission } from '@/page-permission/ship-manage'

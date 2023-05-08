@@ -64,7 +64,7 @@
         v-if="packType === packTypeEnum.ENCLOSURE.V || packType === packTypeEnum.AUXILIARY_MATERIAL.V"
         class="filter-item"
         :style="areaInfo.length > 0 ? 'width:calc(100% - 230px)' : 'width:calc(100% - 380px)'"
-        v-model="areaId"
+        v-model="batchId"
         :area-info="areaInfo"
         :default-tab="defaultTab"
         :show-type="2"
@@ -79,6 +79,7 @@
       :workshop-id="workshopId"
       :monomer-id="monomerId"
       :area-id="areaId"
+      :batch-id="batchId"
       :category="category"
       @add="beforeAddIn"
     />
@@ -102,7 +103,7 @@
 
 <script setup>
 // import { ElNotification } from 'element-plus'
-import { getWorkshopsAllSimple } from '@/api/mes/common.js'
+import { getWorkshopsAllSimple, getEnclosureBatch } from '@/api/mes/common.js'
 import { computed, reactive, ref, provide, watch, nextTick, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { mapGetters } from '@/store/lib'
@@ -134,12 +135,10 @@ const workshopId = ref()
 const category = ref()
 const monomerId = ref()
 const areaId = ref()
+const batchId = ref()
 const projectId = ref()
 const workshopList = ref([])
-const areaInfo = ref([
-  { id: 152, name: '回归1', date: 1682784000000, axis: '500', type: 0, productType: 1, sort: 1, remark: '' },
-  { id: 153, name: '回归2', date: 1682784000000, axis: '500', type: 0, productType: 1, sort: 1, remark: '' }
-])
+const areaInfo = ref([])
 const defaultTab = ref({})
 // 一物一码选择
 const oneCodeVisible = ref(false)
@@ -159,6 +158,7 @@ const packData = reactive({
 
 onMounted(() => {
   fetWorkshop()
+  fetchBatch()
 })
 
 const totalBadge = computed(() => {
@@ -203,12 +203,9 @@ watch(
     projectId.value = projectId.value ? projectId.value : globalProjectId.value
     if (packType.value === packTypeEnum.ENCLOSURE.V || packType.value === packTypeEnum.AUXILIARY_MATERIAL.V) {
       monomerId.value = undefined
-      defaultTab.value = {
-        id: areaInfo.value[0]?.id + '',
-        name: areaInfo.value[0]?.name
-      }
     }
     fetWorkshop()
+    fetchBatch()
   }
 )
 
@@ -235,7 +232,7 @@ watch(
       packData[packTypeEnum.ENCLOSURE.K] =
         (_data.enclosureList && _data.enclosureList.reduce((obj, item) => ((obj[item.id] = item), obj), {})) || {}
       packData[packTypeEnum.AUXILIARY_MATERIAL.K] =
-        (_data.auxList && _data.auxList.reduce((obj, item) => ((obj[item.id] = item), obj), {})) || {}
+        (_data.auxiliaryMaterialList && _data.auxiliaryMaterialList.reduce((obj, item) => ((obj[item.id] = item), obj), {})) || {}
       nextTick(() => {
         packVisible.value = true
       })
@@ -254,6 +251,20 @@ async function fetWorkshop() {
     workshopList.value = content || []
   } catch (e) {
     console.log('获取车间信息失败', e)
+  }
+}
+
+async function fetchBatch() {
+  try {
+    const data = await getEnclosureBatch(globalProjectId.value)
+    areaInfo.value = data || []
+    defaultTab.value = {
+      id: areaInfo.value[0]?.id + '',
+      name: areaInfo.value[0]?.name
+    }
+    batchId.value = areaInfo.value[0]?.id
+  } catch (e) {
+    console.log('获取围护的批次失败', e)
   }
 }
 
@@ -320,10 +331,10 @@ function fetchMonomerAndArea(val) {
   mainRef?.value?.refresh()
 }
 
-function handleProjectChange(val) {
-  projectId.value = val || globalProjectId.value
-  mainRef?.value?.refresh()
-}
+// function handleProjectChange(val) {
+//   projectId.value = val || globalProjectId.value
+//   mainRef?.value?.refresh()
+// }
 </script>
 
 <style lang="scss" scoped>

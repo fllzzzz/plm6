@@ -29,6 +29,15 @@ export function get(params) {
   })
 }
 
+// 围护： 收货状态-列表
+export function getEnclosure(params) {
+  return request({
+    url: '/api/mes/enclosure/cargo/receipt',
+    method: 'get',
+    params
+  })
+}
+
 /**
  * 下载物流详单
  * @param {number} id|required 物流信息id

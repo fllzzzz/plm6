@@ -116,6 +116,19 @@ export function getAllPackage(params) {
 }
 
 /**
+ * 围护：所有包单号列表
+ * @export
+ * @returns
+ */
+export function getEnclosureAllPackage(params) {
+  return request({
+    url: '/api/mes/enclosure/package/list',
+    method: 'get',
+    params
+  })
+}
+
+/**
  * 获取区域下有任务的生产线idsArr
  * @param {number} monomerId 单体id
  * @param {number} areaId 区域id
@@ -136,5 +149,13 @@ export function getHasTaskLine({
       monomerId,
       productType
     }
+  })
+}
+
+// 围护：获取所有批次
+export function getEnclosureBatch(projectId) {
+  return request({
+    url: `/api/enclosurePlanDetail/tech/${projectId}`,
+    method: 'get'
   })
 }

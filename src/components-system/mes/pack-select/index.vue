@@ -17,9 +17,9 @@
 </template>
 
 <script setup>
-import { getAllPackage as getAll } from '@/api/mes/common'
+import { getAllPackage as getAll, getEnclosureAllPackage as getEnclosureAll } from '@/api/mes/common'
 import { defineProps, watch, defineEmits, defineExpose, ref } from 'vue'
-
+import { packTypeEnum } from '@enum-ms/mes'
 import { isNotBlank } from '@data-type'
 
 const emit = defineEmits(['update:modelValue', 'change'])
@@ -106,7 +106,10 @@ async function fetch() {
   let _options = []
   loading.value = true
   try {
-    const { content } = (await getAll({ projectId: props.projectId })) || []
+    const { content } =
+      (props.packType !== packTypeEnum.ENCLOSURE.V
+        ? await getAll({ projectId: props.projectId })
+        : await getEnclosureAll({ projectId: props.projectId })) || []
     _options = content.map((o) => {
       return {
         value: o.id,

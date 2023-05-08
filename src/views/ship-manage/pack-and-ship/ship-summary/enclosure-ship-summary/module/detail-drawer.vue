@@ -77,7 +77,7 @@
 </template>
 
 <script setup>
-import { inboundDetail } from '@/api/ship-manage/pack-and-ship/ship-summary'
+import { inboundDetail } from '@/api/ship-manage/pack-and-ship/enclosure-ship-summary'
 import useVisible from '@compos/use-visible'
 import usePagination from '@compos/use-pagination'
 import useMaxHeight from '@compos/use-max-height'

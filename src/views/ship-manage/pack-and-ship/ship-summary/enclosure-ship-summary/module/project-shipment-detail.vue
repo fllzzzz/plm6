@@ -144,7 +144,7 @@
 
 <script setup>
 import { ref, defineProps, watch, nextTick, computed } from 'vue'
-import { projectSummary } from '@/api/ship-manage/pack-and-ship/ship-summary'
+import { projectSummary } from '@/api/ship-manage/pack-and-ship/enclosure-ship-summary'
 import { weightTypeEnum } from '@enum-ms/common'
 import { enclosureShipStatisticsTypeEnum } from '@enum-ms/ship-manage'
 import { convertUnits } from '@/utils/convert/unit'

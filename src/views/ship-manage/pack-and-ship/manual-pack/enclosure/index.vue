@@ -45,13 +45,14 @@
         align="center"
         width="120px"
       />
-      <!-- <el-table-column
+      <el-table-column
         v-if="columns.visible('plate')"
         key="plate"
         prop="plate"
         sortable="custom"
         :show-overflow-tooltip="true"
         label="板型"
+        align="center"
         min-width="100px"
       />
       <el-table-column
@@ -61,20 +62,21 @@
         sortable="custom"
         :show-overflow-tooltip="true"
         label="颜色"
+        align="center"
         min-width="100px"
       />
       <el-table-column
-        v-if="columns.visible('thickness')"
-        key="thickness"
-        prop="thickness"
+        v-if="columns.visible('weight')"
+        key="weight"
+        prop="weight"
         sortable="custom"
         :show-overflow-tooltip="true"
-        :label="`厚度\n(mm)`"
-        align="left"
+        :label="`单重\n(kg)`"
+        align="center"
         min-width="85px"
       >
         <template v-slot="scope">
-          {{ toFixed(scope.row.thickness, DP.MES_ENCLOSURE_T__MM) }}
+          {{ scope.row.weight }}
         </template>
       </el-table-column>
       <el-table-column
@@ -84,13 +86,13 @@
         sortable="custom"
         :show-overflow-tooltip="true"
         :label="`有效宽度\n(mm)`"
-        align="left"
+        align="center"
         min-width="85px"
       >
         <template v-slot="scope">
           {{ toFixed(scope.row.width, DP.MES_ENCLOSURE_W__MM) }}
         </template>
-      </el-table-column> -->
+      </el-table-column>
       <el-table-column
         v-if="columns.visible('length')"
         key="length"
@@ -201,7 +203,7 @@ import { computed, ref, watch, defineEmits, defineProps, defineExpose, inject } 
 import { enclosureManualPackPM as permission } from '@/page-permission/ship-manage'
 import { DP } from '@/settings/config'
 import { toFixed } from '@data-type'
-// import { packTypeEnum } from '@enum-ms/mes'
+import { packTypeEnum } from '@enum-ms/mes'
 
 import useCRUD from '@compos/use-crud'
 import mHeader from './module/header'
@@ -222,15 +224,15 @@ const { crud, columns, CRUD } = useCRUD(
     permission: { ...permission },
     optShow: { ...optShow },
     crudApi: { get },
-    invisibleColumns: ['drawingNumber', 'packageQuantity'],
+    invisibleColumns: ['color', 'packageQuantity'],
     queryOnPresenterCreated: false,
     hasPagination: false
   },
   tableRef
 )
 
-// const packTypeK = packTypeEnum.ENCLOSURE.K
-const packTypeK = 0
+const packTypeK = packTypeEnum.ENCLOSURE.K
+// const packTypeK = 0
 const emit = defineEmits(['add'])
 const props = defineProps({
   projectId: {
@@ -253,6 +255,10 @@ const props = defineProps({
     type: [String, Number],
     default: undefined
   },
+  batchId: {
+    type: [String, Number],
+    default: undefined
+  },
   maxHeight: {
     type: [String, Number],
     default: undefined
@@ -265,7 +271,7 @@ const ids = computed(() => {
 })
 
 watch(
-  () => [props.projectId, props.workshopId, props.monomerId, props.areaId, props.category],
+  () => [props.projectId, props.workshopId, props.monomerId, props.batchId, props.category],
   () => {
     crud.toQuery()
   },
@@ -273,11 +279,12 @@ watch(
 )
 
 CRUD.HOOK.beforeRefresh = () => {
+  console.log(props.batchId, props.areaId, 'batchId')
   crud.query.projectId = props.projectId
   crud.query.workshopId = props.workshopId
   crud.query.category = props.category
   crud.query.monomerId = props.monomerId
-  crud.query.areaId = props.areaId
+  crud.query.areaId = props.batchId
 }
 
 function add(row) {
@@ -285,7 +292,7 @@ function add(row) {
 }
 
 CRUD.HOOK.handleRefresh = (crud, res) => {
-  res.data.content = res.data.enclosureList.map((v) => {
+  res.data.content = res.data.content.map((v) => {
     v.productQuantity = v.unPackageQuantity
     return v
   })

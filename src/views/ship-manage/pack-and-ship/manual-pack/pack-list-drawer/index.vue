@@ -36,6 +36,7 @@
         <workshop-select
           v-if="packType !== packTypeEnum.AUXILIARY_MATERIAL.V"
           v-model="workshopId"
+          :workshop-type="packType === packTypeEnum.ENCLOSURE.V ? workshopTypeEnum.ENCLOSURE.V : workshopTypeEnum.BUILDING.V"
           placeholder="请选择车间"
           clearable
           style="width: 200px"
@@ -79,7 +80,14 @@
         </el-table-column>
         <el-table-column label="序号" type="index" align="center" width="60" />
         <template v-if="packType & (packTypeEnum.STRUCTURE.V | packTypeEnum.MACHINE_PART.V)">
-          <el-table-column v-if="packType & packTypeEnum.STRUCTURE.V" key="name" prop="name" :show-overflow-tooltip="true" label="名称" width="120px">
+          <el-table-column
+            v-if="packType & packTypeEnum.STRUCTURE.V"
+            key="name"
+            prop="name"
+            :show-overflow-tooltip="true"
+            label="名称"
+            width="120px"
+          >
             <template v-slot="scope">
               <table-cell-tag v-if="scope.row.workshop" :name="scope.row.workshop?.name" />
               <span>{{ scope.row.name }}</span>
@@ -121,51 +129,39 @@
           </el-table-column>
         </template>
 
-        <!-- <template v-if="packType === packTypeEnum.ENCLOSURE.V">
-          <el-table-column key="name" prop="name" :show-overflow-tooltip="true" label="名称" width="120px">
+        <template v-if="packType === packTypeEnum.ENCLOSURE.V">
+          <el-table-column prop="area.name" label="计划" align="center" width="120px" />
+          <el-table-column key="name" prop="name" align="center" :show-overflow-tooltip="true" label="名称" width="120px">
             <template v-slot="scope">
-              <table-cell-tag v-if="scope.row.workshop" :name="scope.row.workshop?.name" />
+              <!-- <table-cell-tag v-if="scope.row.workshop" :name="scope.row.workshop?.name" /> -->
               <span>{{ scope.row.name }}</span>
             </template>
           </el-table-column>
           <el-table-column prop="serialNumber" label="编号" align="center" width="120px" />
-          <el-table-column key="plate" prop="plate" :show-overflow-tooltip="true" label="板型" min-width="100px" />
-          <el-table-column key="color" prop="color" :show-overflow-tooltip="true" label="颜色" min-width="100px" />
+          <el-table-column key="plate" align="center" prop="plate" :show-overflow-tooltip="true" label="板型" min-width="100px" />
           <el-table-column
-            key="thickness"
-            prop="thickness"
+            key="weight"
+            prop="weight"
             :show-overflow-tooltip="true"
-            :label="`厚度\n(mm)`"
-            align="left"
+            :label="`单重\n(kg)`"
+            align="center"
             min-width="85px"
           >
             <template v-slot="scope">
-              {{ toFixed(scope.row.thickness, DP.MES_ENCLOSURE_T__MM) }}
+              {{ scope.row.weight }}
             </template>
           </el-table-column>
-          <el-table-column key="width" prop="width" :show-overflow-tooltip="true" :label="`有效宽度\n(mm)`" align="left" min-width="85px">
+          <el-table-column key="width" prop="width" :show-overflow-tooltip="true" :label="`有效宽度\n(mm)`" align="center" min-width="85px">
             <template v-slot="scope">
               {{ toFixed(scope.row.width, DP.MES_ENCLOSURE_W__MM) }}
             </template>
           </el-table-column>
-          <el-table-column key="length" prop="length" :show-overflow-tooltip="true" :label="`长度\n(mm)`" align="left" min-width="85px">
+          <el-table-column key="length" prop="length" :show-overflow-tooltip="true" :label="`单长\n(mm)`" align="center" min-width="85px">
             <template v-slot="scope">
               {{ toFixed(scope.row.length, DP.MES_ENCLOSURE_L__MM) }}
             </template>
           </el-table-column>
-          <el-table-column
-            key="totalArea"
-            prop="totalArea"
-            :show-overflow-tooltip="true"
-            :label="`总面积\n(㎡)`"
-            align="left"
-            min-width="100px"
-          >
-            <template v-slot="scope">
-              {{ toFixed(scope.row.totalArea, DP.COM_AREA__M2) }}
-            </template>
-          </el-table-column>
-        </template> -->
+        </template>
         <template v-if="packType === packTypeEnum.AUXILIARY_MATERIAL.V">
           <el-table-column key="serialNumber" prop="serialNumber" :show-overflow-tooltip="true" label="编号" min-width="120" />
           <el-table-column key="fullClassName" prop="fullClassName" :show-overflow-tooltip="true" label="辅材类别" min-width="250" />
@@ -220,10 +216,10 @@
 </template>
 
 <script setup>
-import { pack, editPack, additionalPack } from '@/api/mes/pack-and-ship/manual-pack'
+import { pack, editPack, additionalPack, enclosurePack, editEnclosurePack, additionalEnclosurePack } from '@/api/mes/pack-and-ship/manual-pack'
 import { defineProps, defineEmits, ref, watch, inject, reactive, computed } from 'vue'
 import { ElMessage } from 'element-plus'
-
+import { workshopTypeEnum } from '@enum-ms/common'
 import { DP } from '@/settings/config'
 import { packTypeEnum } from '@enum-ms/mes'
 import { toFixed } from '@data-type/index'
@@ -390,21 +386,40 @@ async function handlePack({ bagId, isNew, selectBagId }) {
     //     quantity: v.productQuantity
     //   }
     // })
-    if (bagId) {
-      params.id = bagId
-      if (await editPack(params)) {
-        ElMessage({ type: 'success', message: '更新打包清单成功' })
-      }
-    } else if (isNew) {
-      if (await pack(params)) {
-        ElMessage({ type: 'success', message: '打包成功' })
+    if (packType.value !== packTypeEnum.ENCLOSURE.V) {
+      if (bagId) {
+        params.id = bagId
+        if (await editPack(params)) {
+          ElMessage({ type: 'success', message: '更新打包清单成功' })
+        }
+      } else if (isNew) {
+        if (await pack(params)) {
+          ElMessage({ type: 'success', message: '打包成功' })
+        }
+      } else {
+        params.id = selectBagId
+        if (await additionalPack(params)) {
+          ElMessage({ type: 'success', message: '追加打包成功' })
+        }
       }
     } else {
-      params.id = selectBagId
-      if (await additionalPack(params)) {
-        ElMessage({ type: 'success', message: '追加打包成功' })
+      if (bagId) {
+        params.id = bagId
+        if (await editEnclosurePack(params)) {
+          ElMessage({ type: 'success', message: '更新打包清单成功' })
+        }
+      } else if (isNew) {
+        if (await enclosurePack(params)) {
+          ElMessage({ type: 'success', message: '打包成功' })
+        }
+      } else {
+        params.id = selectBagId
+        if (await additionalEnclosurePack(params)) {
+          ElMessage({ type: 'success', message: '追加打包成功' })
+        }
       }
     }
+
     // 关闭选择框，重置选择
     choseDialogRef.value.handleSuccess()
     handleSuccess()

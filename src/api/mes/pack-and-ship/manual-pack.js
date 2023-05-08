@@ -11,8 +11,7 @@ export function getArtifact(params) {
 
 export function getEnclosure(params) {
   return request({
-    module: 'mes',
-    url: 'package/enclosure/use',
+    url: '/api/mes/enclosure/package/enclosure/use',
     method: 'get',
     params
   })
@@ -45,6 +44,15 @@ export function pack(data) {
   })
 }
 
+// 围护：打包
+export function enclosurePack(data) {
+  return request({
+    url: '/api/mes/enclosure/package',
+    method: 'post',
+    data
+  })
+}
+
 export function editPack({ id, remark, packageLinks }) {
   return request({
     module: 'mes',
@@ -54,10 +62,28 @@ export function editPack({ id, remark, packageLinks }) {
   })
 }
 
+// 围护
+export function editEnclosurePack({ id, remark, packageLinks }) {
+  return request({
+    url: `/api/mes/enclosure/package`,
+    method: 'put',
+    data: { id, remark, packageLinks }
+  })
+}
+
 export function additionalPack({ id, remark, packageLinks }) {
   return request({
     module: 'mes',
     url: `package/add`,
+    method: 'put',
+    data: { id, remark, packageLinks }
+  })
+}
+
+// 围护
+export function additionalEnclosurePack({ id, remark, packageLinks }) {
+  return request({
+    url: `/api/mes/enclosure/package/add`,
     method: 'put',
     data: { id, remark, packageLinks }
   })

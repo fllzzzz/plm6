@@ -114,7 +114,7 @@
 </template>
 <script setup>
 import { ref, defineProps, watch } from 'vue'
-import { summaryDetail } from '@/api/ship-manage/pack-and-ship/ship-summary'
+import { summaryDetail } from '@/api/ship-manage/pack-and-ship/enclosure-ship-summary'
 import { tableSummary } from '@/utils/el-extra'
 import { projectSearchTypeEnum } from '@enum-ms/mes'
 import { enclosureShipStatisticsTypeEnum } from '@enum-ms/ship-manage'

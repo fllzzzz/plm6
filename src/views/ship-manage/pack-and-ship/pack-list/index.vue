@@ -52,13 +52,7 @@
       >
         <template v-slot="scope">
           <template v-for="item in packTypeEnum.ENUM" :key="item">
-            <el-tag
-              style="margin-right: 5px"
-              v-if="scope.row.productType & item.V"
-              :type="item.T"
-              effect="light"
-              >{{ item.L }}</el-tag
-            >
+            <el-tag style="margin-right: 5px" v-if="scope.row.productType & item.V" :type="item.T" effect="light">{{ item.L }}</el-tag>
           </template>
         </template>
       </el-table-column>
@@ -185,7 +179,7 @@
       :detail-info="packageInfo"
       title="打包清单"
       quantityFelid="packageQuantity"
-      :detailFunc="detail"
+      :detailFunc="crud.query.productType !== packTypeEnum.ENCLOSURE.V ? detail : enclosureDetail"
       @getDetail="handleDetail"
     >
       <template #tip>
@@ -197,7 +191,7 @@
 </template>
 
 <script setup>
-import crudApi, { detail } from '@/api/mes/pack-and-ship/pack-list'
+import { get, detail, getEnclosure, del as delApi, enclosureDel, enclosureDetail } from '@/api/mes/pack-and-ship/pack-list'
 import { ref, reactive, provide } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElNotification } from 'element-plus'
@@ -237,7 +231,7 @@ const { crud, columns, CRUD } = useCRUD(
   {
     title: '打包记录',
     permission: { ...permission },
-    crudApi: { ...crudApi },
+    crudApi: { get },
     optShow: { ...optShow },
     invisibleColumns: []
   },
@@ -253,6 +247,10 @@ const printedRecordId = ref()
 const currentLabel = ref({})
 const packageInfo = ref({})
 
+CRUD.HOOK.beforeToQuery = (crud, res) => {
+  crud.crudApi.get = crud.query.productType === packTypeEnum.ENCLOSURE.V ? getEnclosure : get
+}
+
 CRUD.HOOK.handleRefresh = (crud, res) => {
   res.data.content = res.data.content.map((v) => {
     v.packerName = v.userName
@@ -263,6 +261,7 @@ CRUD.HOOK.handleRefresh = (crud, res) => {
 
 // 查看详情
 function showDetail(row) {
+  console.log(row, 'row')
   packageInfo.value = row
   detailVisible.value = true
 }
@@ -292,7 +291,7 @@ function openRecordView(row) {
   recordVisible.value = true
 }
 
-function handleDataFormat({ artifactList, partList, enclosureList, auxList }) {
+function handleDataFormat({ artifactList, partList, enclosureList, auxiliaryMaterialList }) {
   const data = {}
   data.artifactList =
     artifactList &&
@@ -305,15 +304,15 @@ function handleDataFormat({ artifactList, partList, enclosureList, auxList }) {
       return v
     })
   data.partList =
-  partList &&
-  partList.map((v) => {
-    v.weight = v.netWeight || v.grossWeight
-    v.totalWeight = convertUnits(v.weight * v.packageQuantity, 'kg', 't')
-    v.productQuantity = v.packageQuantity
-    v.originNumberList = v.numberList ? deepClone(v.numberList) : []
-    v.numberList = v.numberList ? v.numberList.filter((v) => v.boolPackage).map((v) => v.number) : []
-    return v
-  })
+    partList &&
+    partList.map((v) => {
+      v.weight = v.netWeight || v.grossWeight
+      v.totalWeight = convertUnits(v.weight * v.packageQuantity, 'kg', 't')
+      v.productQuantity = v.packageQuantity
+      v.originNumberList = v.numberList ? deepClone(v.numberList) : []
+      v.numberList = v.numberList ? v.numberList.filter((v) => v.boolPackage).map((v) => v.number) : []
+      return v
+    })
   data.enclosureList =
     enclosureList &&
     enclosureList.map((v) => {
@@ -324,9 +323,9 @@ function handleDataFormat({ artifactList, partList, enclosureList, auxList }) {
       v.numberList = v.numberList ? v.numberList.filter((v) => v.boolPackage).map((v) => v.number) : []
       return v
     })
-  data.auxList =
-    auxList &&
-    auxList.map((v) => {
+  data.auxiliaryMaterialList =
+    auxiliaryMaterialList &&
+    auxiliaryMaterialList.map((v) => {
       v.fullClassName = `${v.firstName}/${v.secondName}/${v.thirdName}`
       v.productQuantity = v.packageQuantity
       v.originNumberList = v.numberList ? deepClone(v.numberList) : []
@@ -338,7 +337,7 @@ function handleDataFormat({ artifactList, partList, enclosureList, auxList }) {
 
 async function edit(id, projectId) {
   try {
-    const data = (await detail(id)) || {}
+    const data = (crud.query.productType !== packTypeEnum.ENCLOSURE.V ? await detail(id) : await enclosureDetail(id)) || {}
     router.push({ name: 'ShipManageManualPack', params: { id, projectId, remark: data.remark, data: handleDataFormat(data) }})
   } catch (error) {
     console.log('去编辑包', error)
@@ -348,7 +347,11 @@ async function edit(id, projectId) {
 const del = debounce(
   async function (id) {
     try {
-      await crudApi.del(id)
+      if (crud.query.productType !== packTypeEnum.ENCLOSURE.V) {
+        await delApi(id)
+      } else {
+        await enclosureDel(id)
+      }
       ElNotification({ title: '删除成功', type: 'success', duration: 2500 })
       crud.toQuery()
     } catch (error) {

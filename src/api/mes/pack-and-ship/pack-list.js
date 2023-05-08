@@ -21,6 +21,15 @@ export function get(params) {
   })
 }
 
+// 打包记录：围护
+export function getEnclosure(params) {
+  return request({
+    url: '/api/mes/enclosure/package/page',
+    method: 'get',
+    params
+  })
+}
+
 /**
  * 打包详情
  * @param {number} id|required 包id
@@ -34,6 +43,17 @@ export function detail(id) {
 }
 
 /**
+ * 围护：打包详情
+ * @param {number} id|required 包id
+ */
+export function enclosureDetail(id) {
+  return request({
+    url: `/api/mes/enclosure/package/${id}`,
+    method: 'get'
+  })
+}
+
+/**
  * 打包详情
  * @param {number} id|required 包id
  */
@@ -41,6 +61,18 @@ export function del(id) {
   return request({
     module: 'mes',
     url: 'package',
+    method: 'delete',
+    data: { ids: [id] }
+  })
+}
+
+/**
+ * 围护：打包详情
+ * @param {number} id|required 包id
+ */
+export function enclosureDel(id) {
+  return request({
+    url: '/api/mes/enclosure/package',
     method: 'delete',
     data: { ids: [id] }
   })
