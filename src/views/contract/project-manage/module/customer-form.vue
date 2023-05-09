@@ -54,19 +54,43 @@
       </div>
       <!--      <el-divider><span class="title">负责人</span></el-divider>-->
       <div class="form-row">
-        <el-form-item label="负责人1" prop="customerManagerOne">
-          <el-input v-model.trim="form.customerManagerOne" placeholder="负责人1" class="input-underline" style="width:320px;"/>
+        <el-form-item label="收货负责人" prop="receivingManager">
+          <el-input v-model.trim="form.receivingManager" placeholder="收货负责人" class="input-underline" style="width:320px;" maxlength="20" />
         </el-form-item>
-        <el-form-item label="联系电话" prop="customerManagerOnePhone">
-          <el-input v-model.trim="form.customerManagerOnePhone" placeholder="负责人1联系电话" class="input-underline" />
+        <el-form-item label="联系电话" prop="receivingManagerPhone">
+          <el-input v-model.trim="form.receivingManagerPhone" placeholder="联系电话" class="input-underline" />
         </el-form-item>
       </div>
       <div class="form-row">
-        <el-form-item label="负责人2" prop="customerManagerTwo">
-          <el-input v-model.trim="form.customerManagerTwo" placeholder="负责人2" class="input-underline" style="width:320px;"/>
+        <el-form-item label="结算负责人" prop="settleManager">
+          <el-input v-model.trim="form.settleManager" placeholder="结算负责人" class="input-underline" style="width:320px;" maxlength="20" />
         </el-form-item>
-        <el-form-item label="联系电话" prop="customerManagerTwoPhone">
-          <el-input v-model.trim="form.customerManagerTwoPhone" placeholder="负责人2联系电话" class="input-underline" />
+        <el-form-item label="联系电话" prop="settleManagerPhone">
+          <el-input v-model.trim="form.settleManagerPhone" placeholder="联系电话" class="input-underline" />
+        </el-form-item>
+      </div>
+      <div class="form-row">
+        <el-form-item label="财务负责人" prop="financeManager">
+          <el-input v-model.trim="form.financeManager" placeholder="财务负责人" class="input-underline" style="width:320px;" maxlength="20" />
+        </el-form-item>
+        <el-form-item label="联系电话" prop="financeManagerPhone">
+          <el-input v-model.trim="form.financeManagerPhone" placeholder="联系电话" class="input-underline" />
+        </el-form-item>
+      </div>
+      <div class="form-row">
+        <el-form-item label="审核负责人" prop="auditManager">
+          <el-input v-model.trim="form.auditManager" placeholder="审核负责人" class="input-underline" style="width:320px;" maxlength="20" />
+        </el-form-item>
+        <el-form-item label="联系电话" prop="auditManagerPhone">
+          <el-input v-model.trim="form.auditManagerPhone" placeholder="联系电话" class="input-underline" />
+        </el-form-item>
+      </div>
+      <div class="form-row">
+        <el-form-item label="设计负责人" prop="designManager">
+          <el-input v-model.trim="form.designManager" placeholder="设计负责人" class="input-underline" style="width:320px;" maxlength="20" />
+        </el-form-item>
+        <el-form-item label="联系电话" prop="designManagerPhone">
+          <el-input v-model.trim="form.designManagerPhone" placeholder="联系电话" class="input-underline" />
         </el-form-item>
       </div>
     </div>
@@ -93,10 +117,16 @@ const defaultForm = {
   customerAddress: undefined, // 地址
   customerBankName: undefined, // 开户行
   customerBankCode: undefined, // 银行账号
-  customerManagerOne: undefined, // 负责人1名称
-  customerManagerOnePhone: undefined, // 负责人1联系电话
-  customerManagerTwo: undefined, // 负责人2名称
-  customerManagerTwoPhone: undefined // 负责人2联系电话
+  receivingManager: undefined,
+  receivingManagerPhone: undefined,
+  designManager: undefined,
+  designManagerPhone: undefined,
+  financeManager: undefined,
+  financeManagerPhone: undefined,
+  settleManager: undefined,
+  settleManagerPhone: undefined,
+  auditManager: undefined,
+  auditManagerPhone: undefined
 }
 
 const form = ref(JSON.parse(JSON.stringify(defaultForm)))
@@ -114,10 +144,12 @@ const rules = {
     { max: 30, message: '长度不超过 30 个字符', trigger: 'blur' },
     { pattern: validatorNatural, message: '请输入数字', trigger: 'blur' }
   ],
-  customerManagerOne: [{ max: 20, message: '长度不超过 20个字符', trigger: 'blur' }],
-  customerManagerOnePhone: [{ pattern: validatorTel, message: '请填写正确的联系电话【手机号/固话】', trigger: 'blur' }],
-  customerManagerTwo: [{ max: 20, message: '长度不超过 20 个字符', trigger: 'blur' }],
-  customerManagerTwoPhone: [{ pattern: validatorTel, message: '请填写正确的联系电话【手机号/固话】', trigger: 'blur' }]
+  receivingManager: [{ required: true, max: 20, message: '长度不超过 20个字符', trigger: 'blur' }],
+  receivingManagerPhone: [{ required: true, pattern: validatorTel, message: '请填写正确的联系电话【手机号/固话】', trigger: 'blur' }],
+  designManagerPhone: [{ pattern: validatorTel, message: '请填写正确的联系电话【手机号/固话】', trigger: 'blur' }],
+  financeManagerPhone: [{ pattern: validatorTel, message: '请填写正确的联系电话【手机号/固话】', trigger: 'blur' }],
+  settleManagerPhone: [{ pattern: validatorTel, message: '请填写正确的联系电话【手机号/固话】', trigger: 'blur' }],
+  auditManagerPhone: [{ pattern: validatorTel, message: '请填写正确的联系电话【手机号/固话】', trigger: 'blur' }]
 }
 
 const props = defineProps({
