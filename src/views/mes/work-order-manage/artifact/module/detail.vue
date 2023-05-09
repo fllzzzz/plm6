@@ -60,7 +60,7 @@
             class="filter-item"
           /> -->
           <common-button v-permission="permission.cancelEdit" v-show="isEdit" size="mini" type="warning" @click="cancelEdit">取消编辑</common-button>
-          <common-button v-permission="permission.edit" v-show="!processId && isEdit === false && props.detailData.productType === componentTypeEnum.ARTIFACT.V" size="mini" type="primary" @click="editMode">编辑</common-button>
+          <!-- <common-button v-permission="permission.edit" v-show="!processId && isEdit === false && props.detailData.productType === componentTypeEnum.ARTIFACT.V" size="mini" type="primary" @click="editMode">编辑</common-button> -->
           <el-popover
             v-model:visible="delBtn"
             placement="top"
@@ -329,10 +329,10 @@ const typeEnum = {
 }
 constantize(typeEnum)
 
-function editMode() {
-  isEdit.value = true
-  initBack()
-}
+// function editMode() {
+//   isEdit.value = true
+//   initBack()
+// }
 
 function cancelEdit() {
   isEdit.value = false

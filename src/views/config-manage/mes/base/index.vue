@@ -42,7 +42,7 @@ import carModelConfig from './component/car-model-config'
 import foldingPriceMethod from './component/folding-price-method'
 import steelBindConfig from './component/steel-bind-config.vue'
 import appTaskReport from './component/app-task-report.vue'
-import machinePartSchedulingConfig from './component/machine-part-scheduling-config.vue'
+// import machinePartSchedulingConfig from './component/machine-part-scheduling-config.vue'
 
 provide('permission', permission)
 
