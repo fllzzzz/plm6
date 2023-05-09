@@ -30,7 +30,7 @@
       >
         <el-expand-table-column :data="detail.list" v-model:expand-row-keys="expandRowKeys" row-key="id">
           <template #default="{ row: { sourceRow: row } }">
-            <div v-if="isNotBlank(row.allRejectList)" class="flex-rcc mtb-20">
+            <div v-if="isNotBlank(row.allRejectList)" class="flex-rsc mtb-20" style="margin-left:30px;">
               <reject-info-table
                 :stripe="false"
                 :material="row"
@@ -38,7 +38,7 @@
                 :list="row.allRejectList"
                 operable
                 @del="handleRejectDel"
-                style="width: 1500px"
+                style="width: 1600px;"
               />
             </div>
           </template>
