@@ -18,7 +18,7 @@
     <el-table-column v-if="columns.visible('processType')" key="processType" prop="processType" :show-overflow-tooltip="true" label="工艺类型"  width="80" align="center"/>
     <el-table-column v-if="columns.visible('boolSingleProject')" key="boolSingleProject" prop="boolSingleProject" :show-overflow-tooltip="true" width="80" label="文件类型" align="center"/>
     <el-table-column v-if="columns.visible('project')" key="project" prop="project" :show-overflow-tooltip="true" label="所属项目" align="left" min-width="150" />
-     <el-table-column v-if="columns.visible('fileName')" key="fileName" prop="fileName" :show-overflow-tooltip="true" label="文件" align="left" min-width="120">
+     <el-table-column v-if="columns.visible('fileName')" key="fileName" prop="fileName" :show-overflow-tooltip="true" label="文件名称" align="left" min-width="120">
       <template v-slot="scope">
         <template v-if="scope.row.attachmentDTO">
           <div style="cursor: pointer; color: #409eff" @dblclick="attachmentView(scope.row.attachmentDTO)">{{ scope.row.fileName }}</div>
@@ -44,6 +44,7 @@
         <common-button size="mini" type="primary" @click="openModify(scope.row)" v-permission="permission.edit">修改</common-button>
         <common-button size="mini" type="success" @click="openBind(scope.row)" v-permission="permission.bind">绑定构件</common-button>
         <el-popover
+          v-if="checkPermission(permission.del)"
           v-model:visible="scope.row.pop"
           placement="top"
           width="180"

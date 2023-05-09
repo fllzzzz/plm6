@@ -12,7 +12,7 @@
     custom-class="bind-form"
   >
     <template #titleRight>
-      <common-button size="small" type="success" @click.stop="bindVisible=true" v-permission="permission.bind">查看已绑定构件</common-button>
+      <common-button size="small" type="success" @click.stop="bindVisible=true" v-permission="permission.detail">查看已绑定构件</common-button>
       <el-badge :value="showList.length" :max="99" style="margin-right:10px;">
         <common-button size="small" type="primary" @click.stop="handleBind">本次绑定构件预览提交</common-button>
       </el-badge>
@@ -337,7 +337,9 @@ function resetSubmit() {
 
 function choseAll() {
   list.value.forEach((v) => {
-    detailRef?.value?.toggleRowSelection(v, true)
+    if (v.bindStatus !== artifactBindTypeEnum.YES.V) {
+      detailRef?.value?.toggleRowSelection(v, true)
+    }
   })
   showList.value = tableSelection.value || []
 }
