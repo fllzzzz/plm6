@@ -1,9 +1,9 @@
 <template>
-  <common-drawer ref="drawerRef" title="生产任务单" v-model="drawerVisible" direction="rtl" :before-close="handleClose" size="80%">
+  <common-drawer ref="drawerRef" title="生产任务单" v-model:visible="drawerVisible" direction="rtl" :before-close="handleClose" size="87%">
     <template #titleAfter>
       <el-tag>项目：{{ props.detailData.project?.name }}</el-tag>
       <el-tag>产线：{{ props.detailData.workshop?.name }}>{{ props.detailData.productionLine?.name }}</el-tag>
-      <el-tag>总量：{{ props.detailData.taskQuantity }}/{{ props.detailData.taskNetWeight }}</el-tag>
+      <el-tag>总量：{{ totalQuantity }}/{{ totalWeight }}</el-tag>
       <el-tag>任务单号：{{ props.detailData.scheduleOrder }}</el-tag>
     </template>
     <template #content>
@@ -27,6 +27,17 @@
           class="filter-item"
           @change="handleTypeChange"
         />
+        <common-button
+          class="filter-item"
+          v-permission="permission.allRevoke"
+          v-show="isEdit === true"
+          :disabled="isAllOrder === false"
+          size="mini"
+          type="danger"
+          @click="taskOrderBack"
+        >
+          全部工单撤回
+        </common-button>
         <div style="float: right">
           <!-- <print-table
             v-permission="permission.print"
@@ -48,6 +59,27 @@
             type="warning"
             class="filter-item"
           /> -->
+          <common-button v-permission="permission.cancelEdit" v-show="isEdit" size="mini" type="warning" @click="cancelEdit">取消编辑</common-button>
+          <common-button v-permission="permission.edit" v-show="!processId && isEdit === false && props.detailData.productType === componentTypeEnum.ARTIFACT.V" size="mini" type="primary" @click="editMode">编辑</common-button>
+          <el-popover
+            v-model:visible="delBtn"
+            placement="top"
+            width="180"
+            trigger="click"
+            @show="onPopoverBatchClickShow"
+            @hide="onPopoverBatchClickHide"
+          >
+            <p>是否确认批量撤回操作</p>
+            <div style="text-align: right; margin: 0">
+              <common-button size="mini" type="text" @click.stop="cancelBatch">取消</common-button>
+              <common-button size="mini" type="danger" @click="batchBack">确定</common-button>
+            </div>
+            <template #reference>
+              <common-button v-permission="permission.batchRevoke" v-show="isEdit === true" size="mini" type="danger" :disabled="!selectionList.length" @click.stop="handleBatch">
+                批量撤回
+              </common-button>
+            </template>
+          </el-popover>
           <common-button v-permission="permission.print" icon="el-icon-printer" size="mini" type="success" @click="printIt">
             打印{{
               props.detailData.productType === componentTypeEnum.ARTIFACT.V
@@ -64,10 +96,12 @@
           ref="table"
           :data="tableData"
           empty-text="暂无数据"
-          :max-height="maxHeight"
+          :max-height="isEdit === true ? maxHeight - 50 : maxHeight"
           style="width: 100%"
+          @selection-change="handleSelectChange"
           v-if="props.detailData.productType === componentTypeEnum.ARTIFACT.V"
         >
+          <el-table-column v-if="isEdit === true" :selectable="selectable" type="selection" align="center" width="60" />
           <el-table-column label="序号" type="index" align="center" width="60" />
           <el-table-column :show-overflow-tooltip="true" label="单体" key="monomer.name" prop="monomer.name" align="center" />
           <el-table-column :show-overflow-tooltip="true" label="区域" key="area.name" prop="area.name" align="center" />
@@ -87,6 +121,29 @@
           <el-table-column :show-overflow-tooltip="true" label="完成日期" key="complete" prop="completeTime" align="center">
             <template v-slot="scope">
               <span>{{ scope.row.completeTime ? parseTime(scope.row.completeTime, '{y}-{m}-{d}') : '-' }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column v-if="isEdit === true" :show-overflow-tooltip="true" label="操作" align="center" width="90px">
+            <template v-slot="scope">
+              <el-popover
+                v-model:visible="scope.row.pop"
+                placement="top"
+                width="180"
+                trigger="click"
+                @show="onPopoverDelClickShow"
+                @hide="onPopoverDelClickHide"
+              >
+                <p>是否确认撤回操作</p>
+                <div style="text-align: right; margin: 0">
+                  <common-button size="mini" type="text" @click.stop="cancelDelete(scope.row)">取消</common-button>
+                  <common-button type="primary" size="mini" @click.stop="handleDelete(scope.row)">确定</common-button>
+                </div>
+                <template #reference>
+                  <common-button v-permission="permission.revoke" size="mini" type="danger" :disabled="scope.row.boolCanRevoke === false" @click.stop="back(scope.row)">
+                    撤回
+                  </common-button>
+                </template>
+              </el-popover>
             </template>
           </el-table-column>
         </common-table>
@@ -211,9 +268,17 @@
 
 <script setup>
 import fetchFn from '@/utils/print/api'
-import { processInfo, getTaskList, getNestingList, printSign } from '@/api/mes/work-order-manage/artifact.js'
+import {
+  processInfo,
+  getTaskList,
+  getNestingList,
+  printSign,
+  backWorkOrder,
+  getInitBack,
+  allOrderBatch
+} from '@/api/mes/work-order-manage/artifact.js'
 import { defineProps, defineEmits, ref, computed, watch, inject } from 'vue'
-import { ElNotification, ElLoading } from 'element-plus'
+import { ElNotification, ElLoading, ElMessageBox, ElMessage } from 'element-plus'
 
 import { componentTypeEnum, structureOrderTypeEnum } from '@enum-ms/mes'
 import { printModeEnum } from '@/utils/print/enum'
@@ -231,6 +296,12 @@ import useDefaultTableTemplate from '@compos/use-default-table-template'
 
 const permission = inject('permission')
 const drawerRef = ref()
+const isEdit = ref(false)
+const delBtn = ref(false)
+const isAllOrder = ref()
+const selectionList = ref([])
+const totalQuantity = ref()
+const totalWeight = ref()
 const emit = defineEmits(['update:visible', 'refresh'])
 const props = defineProps({
   visible: {
@@ -257,6 +328,19 @@ const typeEnum = {
   NESTING_LIST: { L: '套料清单', K: 'NESTING_LIST', V: 2, [componentTypeEnum.ASSEMBLE.K]: 'mesAssembleNestingOrder' }
 }
 constantize(typeEnum)
+
+function editMode() {
+  isEdit.value = true
+  initBack()
+}
+
+function cancelEdit() {
+  isEdit.value = false
+}
+
+function handleSelectChange(row) {
+  selectionList.value = row
+}
 // 高度
 const { maxHeight } = useMaxHeight(
   {
@@ -292,12 +376,23 @@ watch(
   () => drawerVisible.value,
   (val) => {
     if (val) {
+      isEdit.value = false
       listType.value = typeEnum.TASK_LIST.V
       processId.value = undefined
       processGet()
     }
+    emit('refresh')
   },
   { deep: true, immediate: true }
+)
+
+watch(
+  () => processId.value,
+  (val) => {
+    if (val) {
+      isEdit.value = false
+    }
+  }
 )
 
 async function processGet() {
@@ -315,6 +410,8 @@ async function processGet() {
 
 // 构件查看、部件任务清单接口
 async function fetch() {
+  totalQuantity.value = 0
+  totalWeight.value = 0
   let _list = []
   try {
     const query =
@@ -325,6 +422,11 @@ async function fetch() {
       ...query,
       ...queryPage
     })
+    content.forEach((v) => {
+      v.pop = false
+      totalQuantity.value += v.quantity
+      totalWeight.value += v.totalNetWeight
+    })
     setTotalPage(totalElements)
     _list = content
   } catch (err) {
@@ -332,6 +434,122 @@ async function fetch() {
   } finally {
     tableData.value = _list
   }
+}
+
+// 工单撤回
+function back(row) {
+  row.pop = true
+}
+
+function cancelDelete(row) {
+  row.pop = false
+}
+async function handleDelete(row) {
+  const ids = []
+  ids.push(row.taskId)
+  try {
+    await backWorkOrder(ids)
+    emit('refresh')
+    fetch()
+    ElMessage.success(`当前工单撤回成功`)
+  } catch (e) {
+    console.log('撤回工单操作失败', e)
+  }
+}
+
+function handleDocumentDelClick(row) {
+  row.pop = false
+}
+
+function onPopoverDelClickShow() {
+  setTimeout(() => {
+    document.addEventListener('click', handleDocumentDelClick, { passive: false })
+  }, 0)
+}
+
+function onPopoverDelClickHide() {
+  document.removeEventListener('click', handleDocumentDelClick)
+}
+
+// 批量撤回
+async function batchBack() {
+  const ids = []
+  selectionList.value?.forEach((v) => {
+    ids.push(v.taskId)
+  })
+  try {
+    await backWorkOrder(ids)
+    emit('refresh')
+    fetch()
+    ElMessage.success(`工单批量撤回成功`)
+  } catch (e) {
+    console.log('撤回操作失败', e)
+  } finally {
+    delBtn.value = false
+  }
+}
+
+function handleBatch() {
+  delBtn.value = true
+}
+
+function cancelBatch() {
+  delBtn.value = false
+}
+
+function handleDocumentBatchClick() {
+  delBtn.value = false
+}
+
+function onPopoverBatchClickShow() {
+  setTimeout(() => {
+    document.addEventListener('click', handleDocumentBatchClick, { passive: false })
+  }, 0)
+}
+
+function onPopoverBatchClickHide() {
+  document.removeEventListener('click', handleDocumentBatchClick)
+}
+
+// 批量撤回是否禁用
+function selectable(row) {
+  if (row.boolCanRevoke === false) {
+    return false
+  } else {
+    return true
+  }
+}
+
+// 查询整个详情工单是否可删除
+async function initBack() {
+  try {
+    const data = await getInitBack({
+      ...params.value,
+      productionLineTypeEnum: props.detailData.productionLine?.productionLineTypeEnum
+    })
+    isAllOrder.value = data
+  } catch (e) {
+    console.log('获取整个工单是否可撤回失败', e)
+  }
+}
+
+// 整个工单撤回
+async function taskOrderBack() {
+  if (!isAllOrder.value) return
+  ElMessageBox.confirm(`是否确认撤回整个工单`, '提示', {
+    confirmButtonText: '确认',
+    cancelButtonText: '取消',
+    type: 'warning'
+  }).then(async () => {
+    try {
+      await allOrderBatch(props.detailData.orderId)
+      ElNotification({ title: '删除整个工单成功', type: 'success' })
+      emit('refresh')
+      fetch()
+    } catch (error) {
+      console.log('删除模型失败', error)
+    }
+  })
 }
 
 // 部件套料清单
@@ -370,6 +588,7 @@ function handleProcessChange(val) {
 }
 
 function fetchHook() {
+  isEdit.value = false
   if (listType.value === typeEnum.TASK_LIST.V) {
     fetch()
   } else {
@@ -399,11 +618,11 @@ async function printIt() {
   })
   try {
     const apiKey =
-  props.detailData.productType === componentTypeEnum.ARTIFACT.V
-    ? 'mesProductionTaskOrder'
-    : listType.value === typeEnum.TASK_LIST.V
-      ? 'mesAssembleProductionTaskOrder'
-      : 'mesAssembleNestingOrder'
+      props.detailData.productType === componentTypeEnum.ARTIFACT.V
+        ? 'mesProductionTaskOrder'
+        : listType.value === typeEnum.TASK_LIST.V
+          ? 'mesAssembleProductionTaskOrder'
+          : 'mesAssembleNestingOrder'
     // for (const item in typeEnum.ENUM) {
     //   console.log(typeEnum[item].V, 'item')
     //   const apiKey = typeEnum[item][componentTypeEnum.VK[props.detailData.productType]]

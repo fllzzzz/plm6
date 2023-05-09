@@ -8,6 +8,19 @@
         class="filter-item"
         @change="crud.toQuery"
         @getCurrentInfo="handleCurrent"
+        @getAreaInfo="getAreaInfo"
+      />
+      <common-select
+        v-model="query.areaId"
+        :options="areaInfo"
+        type="other"
+        :dataStructure="{ key: 'id', label: 'name', value: 'id' }"
+        size="small"
+        clearable
+        placeholder="请选择区域"
+        class="filter-item"
+        style="width:200px;"
+        @change="areaChange"
       />
       <el-input
         v-model="query.classifyName"
@@ -51,7 +64,8 @@ const defaultQuery = {
 }
 
 const monomerSelectRef = ref()
-const emit = defineEmits(['currentChange'])
+const emit = defineEmits(['currentChange', 'currentAreaChange'])
+const areaInfo = ref([])
 const { crud, query } = regHeader(defaultQuery)
 const props = defineProps({
   projectId: {
@@ -73,5 +87,15 @@ watch(
 
 function handleCurrent(val) {
   emit('currentChange', val)
+}
+
+function areaChange(val) {
+  const findVal = areaInfo.value.find(v => v.id === val) || {}
+  emit('currentAreaChange', findVal)
+  crud.toQuery()
+}
+
+function getAreaInfo(val) {
+  areaInfo.value = val || []
 }
 </script>

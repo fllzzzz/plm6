@@ -83,7 +83,15 @@
         v-if="columns.visible('netWeight')"
         show-overflow-tooltip
         prop="netWeight"
-        label="重量(kg)"
+        label="单净重(kg)"
+        align="center"
+        min-width="90px"
+      />
+      <el-table-column
+        v-if="columns.visible('grossWeight')"
+        show-overflow-tooltip
+        prop="grossWeight"
+        label="单毛重(kg)"
         align="center"
         min-width="90px"
       />

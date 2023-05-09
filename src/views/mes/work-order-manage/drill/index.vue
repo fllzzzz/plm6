@@ -4,7 +4,7 @@
       <drill-project-list :maxHeight="maxHeight - 40" @nesting-task-click="handleNestingTaskClick" />
     </div>
     <div class="wrap-right">
-      <el-tag v-if="!crud.query?.processType" type="info" size="medium"> * 请点击左侧项目列表查看详情 </el-tag>
+      <el-tag v-if="!crud.query?.areaIds?.length" type="info" size="medium"> * 请点击左侧项目列表查看详情 </el-tag>
       <div v-else>
         <div class="wrap-head">
           <mHeader />
@@ -15,7 +15,7 @@
           v-loading="crud.loading"
           :data="crud.data"
           :empty-text="crud.emptyText"
-          :max-height="maxHeight"
+          :max-height="maxHeight - 130"
           style="width: 100%"
         >
           <el-table-column prop="index" label="序号" align="center" width="60" type="index" />
@@ -100,10 +100,34 @@
             key="taskQuantity"
             prop="taskQuantity"
             :show-overflow-tooltip="true"
-            label="任务量（件/kg）"
+            label="任务数（件）"
           >
             <template v-slot="scope">
-              <span>{{ scope.row.taskQuantity }}/{{ scope.row.taskNetWeight }}</span>
+              <span>{{ scope.row.taskQuantity }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column
+            v-if="columns.visible('taskNetWeight')"
+            align="center"
+            key="taskNetWeight"
+            prop="taskNetWeight"
+            :show-overflow-tooltip="true"
+            label="总净重（kg）"
+          >
+            <template v-slot="scope">
+              <span>{{ scope.row.taskNetWeight }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column
+            v-if="columns.visible('taskGrossWeight')"
+            align="center"
+            key="taskGrossWeight"
+            prop="taskGrossWeight"
+            :show-overflow-tooltip="true"
+            label="总毛重（kg）"
+          >
+            <template v-slot="scope">
+              <span>{{ scope.row.taskGrossWeight }}</span>
             </template>
           </el-table-column>
           <el-table-column
@@ -145,6 +169,7 @@ import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
 import pagination from '@crud/Pagination'
 import { parseTime } from '@/utils/date'
+// import { debounce } from '@/utils'
 import { mesMachinePartOrderTypeEnum } from '@enum-ms/mes'
 import { drillWorkOrderPM as permission } from '@/page-permission/mes'
 import mHeader from '../components/header.vue'
@@ -168,7 +193,8 @@ const { crud, CRUD, columns } = useCRUD(
     permission: { ...permission },
     optShow: { ...optShow },
     crudApi: { ...crudApi },
-    requiredQuery: ['processType'],
+    invisibleColumns: ['taskGrossWeight'],
+    requiredQuery: ['processType', 'areaIds'],
     hasPagination: true
   },
   tableRef
@@ -176,11 +202,8 @@ const { crud, CRUD, columns } = useCRUD(
 
 provide('crud', crud)
 provide('permission', permission)
-const { maxHeight } = useMaxHeight({
-  extraBox: ['.wrap-head'],
-  extraHeight: 15,
-  paginate: true
-})
+
+const { maxHeight } = useMaxHeight()
 
 // 查看钻孔工单详情
 function showDrill(row) {
@@ -188,13 +211,23 @@ function showDrill(row) {
   detailData.value = row
 }
 
-function handleNestingTaskClick(val, query) {
-  crud.query.projectId = val?.id
-  // crud.query.localDateTime = year
+// const handleNestingTaskClick = debounce(function (nodes = []) {
+//   crud.query.processType = mesMachinePartOrderTypeEnum.DRILL_ORDER.V
+//   if (nodes?.length) {
+//     crud.query.areaId = nodes[0].id
+//     crud.query.projectId = nodes[0].projectId
+//   } else {
+//     crud.query.areaId = undefined
+//     crud.query.projectId = undefined
+//   }
+//   crud.toQuery()
+// }, 500)
+
+function handleNestingTaskClick({ projectIds, monomerIds, areaIds }) {
   crud.query.processType = mesMachinePartOrderTypeEnum.DRILL_ORDER.V
-  // if (crud.query.projectId) {
-  //   crud.toQuery()
-  // }
+  crud.query.projectIds = projectIds
+  crud.query.monomerIds = monomerIds
+  crud.query.areaIds = areaIds
   crud.toQuery()
 }
 

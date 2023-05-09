@@ -13,7 +13,7 @@ export const commonPM = {
   rawMatOutboundReceiptDetail: ['wms_rawMat_outbound_review:detail'],
   // 原材料-退库单详情
   rawMatReturnReceiptDetail: ['wms_rawMat_return_review:detail'],
-  // 原材料-红冲单详情
+  // 原材料-调整单详情
   rawMatSupplementReceiptDetail: ['wms_report_rawMat_supplement_details:detail'],
   // 原材料-退货单详情
   rawMatRejectReceiptDetail: ['wms_rawMat_reject_review:detail'],
@@ -42,6 +42,9 @@ export const steelInboundApplicationPM = ['wms_steelInbound_application:submit']
 
 // 入库办理/辅材入库办理
 export const auxMatInboundApplicationPM = ['wms_auxMatInbound_application:submit']
+
+// 入库办理/其它入库办理
+export const otherInboundApplicationPM = ['wms_otherInbound_application:submit']
 
 // 入库办理/气体入库办理
 export const gasInboundApplicationPM = ['wms_gasInbound_application:submit']
@@ -129,6 +132,16 @@ export const auxMatMaterialWarehousePM = {
   freezeRecord: rawMaterialFreezeListPM.get // 冻结记录
 }
 
+// 物料仓/其它仓库
+export const otherMaterialWarehousePM = {
+  get: ['wms_matWarehouse_other:get'], // 查看 其它仓库
+  outbound: ['wms_matWarehouse_other:outbound'], // 添加其它出库单
+  outboundAudit: ['wms_matWarehouse_other:outboundAudit'], // 其它出库审核
+  transfer: ['wms_matWarehouse_other:transfer'], // 其它调拨
+  outboundRecord: rawMaterialOutboundRecordPM.get, // 出库记录
+  freezeRecord: rawMaterialFreezeListPM.get // 冻结记录
+}
+
 // 物料仓/气体仓库
 export const gasMaterialWarehousePM = {
   get: ['wms_matWarehouse_gas:get'], // 查看 气体仓库
@@ -192,6 +205,9 @@ export const steelCoilReturnApplicationPM = ['wms_steelCoil_return_application:s
 
 // 退库办理/辅材退库办理
 export const auxMatReturnApplicationPM = ['wms_auxMat_return_application:submit']
+
+// 退库办理/其它退库办理
+export const otherReturnApplicationPM = ['wms_other_return_application:submit']
 
 // 退库办理/气体退库办理
 export const gasReturnApplicationPM = ['wms_gas_return_application:submit']
@@ -310,10 +326,10 @@ export const reportRawMaterialTransferDetailsPM = {
   transferReceiptDetail: commonPM.rawMatTransferReceiptDetail // 退库详情
 }
 
-// 报表中心/原材料/红冲记录
+// 报表中心/原材料/调整记录
 export const reportRawMaterialSupplementDetailsPM = {
   get: ['wms_report_rawMat_supplement_details:get'], // 查看
-  print: ['wms_report_rawMat_supplement_details:print'] // 打印红冲记录
+  print: ['wms_report_rawMat_supplement_details:print'] // 打印调整记录
 }
 
 // 报表中心/原材料/进销存记录
@@ -406,7 +422,7 @@ export const receiptDetailCPM = {
   outboundReceiptDetail: commonPM.rawMatOutboundReceiptDetail, // 出库详情
   transferReceiptDetail: commonPM.rawMatTransferReceiptDetail, // 调拨详情
   returnReceiptDetail: commonPM.rawMatReturnReceiptDetail, // 退库详情
-  supplementReceiptDetail: commonPM.rawMatSupplementReceiptDetail, // 红冲单详情
+  supplementReceiptDetail: commonPM.rawMatSupplementReceiptDetail, // 调整单详情
   rejectReceiptDetail: commonPM.rawMatRejectReceiptDetail // 退货单详情
 }
 

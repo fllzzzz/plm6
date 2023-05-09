@@ -16,7 +16,7 @@
     </template>
     <common-table :data="list" :data-format="dataFormat" :max-height="maxHeight">
       <el-table-column label="序号" type="index" align="center" width="60" />
-      <template v-if="props.detailInfo.type === packTypeEnum.STRUCTURE.V">
+      <template v-if="props.detailInfo.type === contractSaleTypeEnum.STRUCTURE.V">
         <el-table-column prop="name" label="结构名称" align="center" />
         <el-table-column prop="material" label="材质" align="center" />
         <el-table-column align="center" prop="pricingManner" label="计价方式">
@@ -26,17 +26,17 @@
           </template>
         </el-table-column>
       </template>
-      <!-- <template v-if="props.detailInfo.type === packTypeEnum.ENCLOSURE.V">
+      <!-- <template v-if="props.detailInfo.type === contractSaleTypeEnum.ENCLOSURE.V">
         <el-table-column prop="name" label="围护名称" align="center" />
         <el-table-column prop="plate" label="板型" width="100px" />
       </template> -->
-      <template v-if="props.detailInfo.type === packTypeEnum.AUXILIARY_MATERIAL.V">
-        <el-table-column prop="classifyName" label="配套件名称" align="center" />
+      <template v-if="props.detailInfo.type === contractSaleTypeEnum.AUXILIARY_MATERIAL.V">
+        <el-table-column prop="name" label="配套件名称" align="center" />
         <el-table-column prop="specification" label="规格" />
       </template>
       <el-table-column align="center" prop="price" label="综合单价">
         <template #default="{ row }">
-           <template v-if="props.detailInfo.type === packTypeEnum.STRUCTURE.V">
+           <template v-if="props.detailInfo.type === contractSaleTypeEnum.STRUCTURE.V">
             <span v-if="row.oldUnitPrice === row.newUnitPrice">{{ row.oldUnitPrice }}</span>
             <cell-change-preview :old="row.oldUnitPrice" :new="row.newUnitPrice" v-else/>
           </template>
@@ -52,7 +52,7 @@ import { priceModifySave as save } from '@/api/contract/sales-manage/price-manag
 import { ref, defineProps, defineEmits } from 'vue'
 
 import checkPermission from '@/utils/system/check-permission'
-import { packTypeEnum } from '@enum-ms/mes'
+import { contractSaleTypeEnum } from '@enum-ms/mes'
 import { reviewStatusEnum } from '@enum-ms/common'
 import { pricingMannerEnum } from '@enum-ms/contract'
 

@@ -1,4 +1,4 @@
-// 红冲记录
+// 调整记录
 const supplementRecord = {
   url: '/api/wms/report/raw-materials/supplement/details',
   method: 'get',
@@ -51,7 +51,7 @@ const supplementRecord = {
   }
 }
 
-// 获取红冲单详情
+// 获取调整单详情
 const getDetails = {
   url: RegExp('/api/wms/report/raw-materials/supplement/' + '\\d'),
   method: 'get',

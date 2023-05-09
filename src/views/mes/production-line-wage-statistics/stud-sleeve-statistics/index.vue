@@ -83,10 +83,22 @@
         key="netWeight"
         prop="netWeight"
         :show-overflow-tooltip="true"
-        label="重量（kg）"
+        label="单净重（kg）"
       >
         <template v-slot="scope">
           <span>{{ scope.row.netWeight }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        v-if="columns.visible('grossWeight')"
+        align="center"
+        key="grossWeight"
+        prop="grossWeight"
+        :show-overflow-tooltip="true"
+        label="单毛重（kg）"
+      >
+        <template v-slot="scope">
+          <span>{{ scope.row.grossWeight }}</span>
         </template>
       </el-table-column>
       <el-table-column

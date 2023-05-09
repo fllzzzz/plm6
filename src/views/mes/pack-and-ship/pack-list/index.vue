@@ -263,6 +263,7 @@ CRUD.HOOK.handleRefresh = (crud, res) => {
 
 // 查看详情
 function showDetail(row) {
+  console.log(row, 'row')
   packageInfo.value = row
   detailVisible.value = true
 }
@@ -284,6 +285,7 @@ async function printLabel(row) {
 
 async function previewLabel(row) {
   currentLabel.value = await headerRef.value.getLabelInfo(row)
+  console.log(currentLabel.value, 'value')
   labelVisible.value = true
 }
 
@@ -292,7 +294,7 @@ function openRecordView(row) {
   recordVisible.value = true
 }
 
-function handleDataFormat({ artifactList, partList, enclosureList, auxList }) {
+function handleDataFormat({ artifactList, partList, enclosureList, auxiliaryMaterialList }) {
   const data = {}
   data.artifactList =
     artifactList &&
@@ -324,9 +326,9 @@ function handleDataFormat({ artifactList, partList, enclosureList, auxList }) {
       v.numberList = v.numberList ? v.numberList.filter((v) => v.boolPackage).map((v) => v.number) : []
       return v
     })
-  data.auxList =
-    auxList &&
-    auxList.map((v) => {
+  data.auxiliaryMaterialList =
+    auxiliaryMaterialList &&
+    auxiliaryMaterialList.map((v) => {
       v.fullClassName = `${v.firstName}/${v.secondName}/${v.thirdName}`
       v.productQuantity = v.packageQuantity
       v.originNumberList = v.numberList ? deepClone(v.numberList) : []

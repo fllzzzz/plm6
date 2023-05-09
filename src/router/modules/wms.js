@@ -34,6 +34,13 @@ export default {
           meta: { title: '气体入库', icon: 'project', noCache: true }
         },
         {
+          name: 'OtherInboundApplication',
+          path: 'other',
+          hidden: false,
+          component: '/wms/material-inbound/raw-material/application/other/index',
+          meta: { title: '其它入库', icon: 'project', noCache: true }
+        },
+        {
           name: 'RawMatInboundApplicationRecord',
           path: 'material-inbound/raw-material/record',
           hidden: false,
@@ -85,6 +92,13 @@ export default {
           hidden: false,
           component: '/wms/material-return/raw-material/application/gas/index',
           meta: { title: '气体退库', icon: 'project', noCache: true }
+        },
+        {
+          name: 'OtherReturnApplication',
+          path: 'other',
+          hidden: false,
+          component: '/wms/material-return/raw-material/application/other/index',
+          meta: { title: '其它退库', icon: 'project', noCache: true }
         },
         {
           name: 'RawMatReturnApplicationRecord',
@@ -222,6 +236,13 @@ export default {
           meta: { title: '气体仓库', icon: 'project', noCache: true }
         },
         {
+          name: 'WMSOtherMaterialInventory',
+          path: 'other',
+          hidden: false,
+          component: '/wms/material-inventory/other/index',
+          meta: { title: '其它仓库', icon: 'project', noCache: true }
+        },
+        {
           name: 'WMSOutboundReview',
           path: 'material-outbound/raw-material/review',
           hidden: false,
@@ -350,7 +371,7 @@ export default {
           path: 'report/raw-material/supplement-record',
           hidden: false,
           component: '/wms/report/raw-material/supplement-record/index',
-          meta: { title: '红冲记录', icon: 'project', noCache: true }
+          meta: { title: '调整记录', icon: 'project', noCache: true }
         },
         {
           name: 'WMSReportRawMaterialMaterialRejectReceipt',

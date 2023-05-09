@@ -129,7 +129,7 @@
             <template v-if="scope.row.monomerDetailList.length > 0">
               <div v-for="(k,i) in scope.row.monomerDetailList" :key="k.type">
                 <div :class="i===scope.row.monomerDetailList.length-1?'sandwich-cell-bottom':'sandwich-cell-top'">
-                  {{ globalProject.startDate?parseTime(globalProject.startDate,'{y}-{m}-{d}'):'-' }}
+                  {{ scope.row.startDate?parseTime(scope.row.startDate,'{y}-{m}-{d}'):'-' }}
                 </div>
               </div>
             </template>
@@ -250,47 +250,47 @@ const tableRef = ref()
 const originDetailRow = ref({})
 const techOptions = [
   { label: '构件', key: 'mainStructure', dateKey: 'mainStructureDate', no: TechnologyTypeAllEnum.STRUCTURE.V, alias: 'STRUCTURE', unit: 't' },
-  { label: '箱体', key: 'bridgeStructure', dateKey: 'bridgeStructureDate', no: TechnologyTypeAllEnum.BRIDGE.V, alias: 'STRUCTURE', unit: 't' },
-  {
-    label: '夹芯板',
-    key: 'battenBoard',
-    dateKey: 'battenBoardDate',
-    no: TechnologyTypeAllEnum.SANDWICH_BOARD.V,
-    alias: 'ENCLOSURE',
-    unit: 'm'
-  },
-  {
-    label: '压型彩板',
-    key: 'contourPlate',
-    dateKey: 'contourPlateDate',
-    no: TechnologyTypeAllEnum.PROFILED_PLATE.V,
-    alias: 'ENCLOSURE',
-    unit: 'm'
-  },
-  {
-    label: '折边件',
-    key: 'flangingPiece',
-    dateKey: 'flangingPieceDate',
-    no: TechnologyTypeAllEnum.BENDING.V,
-    alias: 'ENCLOSURE',
-    unit: 'm'
-  },
-  {
-    label: '桁架楼承板',
-    key: 'trussFloorPlate',
-    dateKey: 'trussFloorPlateDate',
-    no: TechnologyTypeAllEnum.TRUSS_FLOOR_PLATE.V,
-    alias: 'ENCLOSURE',
-    unit: 'm'
-  },
-  {
-    label: '压型楼承板',
-    key: 'pressureBearingPlate',
-    dateKey: 'pressureBearingPlateDate',
-    no: TechnologyTypeAllEnum.PRESSURE_BEARING_PLATE.V,
-    alias: 'ENCLOSURE',
-    unit: 'm'
-  }
+  { label: '箱体', key: 'bridgeStructure', dateKey: 'bridgeStructureDate', no: TechnologyTypeAllEnum.BRIDGE.V, alias: 'STRUCTURE', unit: 't' }
+  // {
+  //   label: '夹芯板',
+  //   key: 'battenBoard',
+  //   dateKey: 'battenBoardDate',
+  //   no: TechnologyTypeAllEnum.SANDWICH_BOARD.V,
+  //   alias: 'ENCLOSURE',
+  //   unit: 'm'
+  // },
+  // {
+  //   label: '压型彩板',
+  //   key: 'contourPlate',
+  //   dateKey: 'contourPlateDate',
+  //   no: TechnologyTypeAllEnum.PROFILED_PLATE.V,
+  //   alias: 'ENCLOSURE',
+  //   unit: 'm'
+  // },
+  // {
+  //   label: '折边件',
+  //   key: 'flangingPiece',
+  //   dateKey: 'flangingPieceDate',
+  //   no: TechnologyTypeAllEnum.BENDING.V,
+  //   alias: 'ENCLOSURE',
+  //   unit: 'm'
+  // },
+  // {
+  //   label: '桁架楼承板',
+  //   key: 'trussFloorPlate',
+  //   dateKey: 'trussFloorPlateDate',
+  //   no: TechnologyTypeAllEnum.TRUSS_FLOOR_PLATE.V,
+  //   alias: 'ENCLOSURE',
+  //   unit: 'm'
+  // },
+  // {
+  //   label: '压型楼承板',
+  //   key: 'pressureBearingPlate',
+  //   dateKey: 'pressureBearingPlateDate',
+  //   no: TechnologyTypeAllEnum.PRESSURE_BEARING_PLATE.V,
+  //   alias: 'ENCLOSURE',
+  //   unit: 'm'
+  // }
 ]
 
 const { crud, columns, CRUD } = useCRUD(
@@ -329,6 +329,7 @@ CRUD.HOOK.beforeRefresh = () => {
 CRUD.HOOK.handleRefresh = (crud, data) => {
   data.data.content.forEach((v) => {
     v.date = String(v.date)
+    v.startDate = v.startDate || globalProject.value.startDate
     if (v.monomerDetailList.length > 0) {
       techOptions.forEach((val) => {
         const choseVal = v.monomerDetailList.find((k) => k.type === val.no)

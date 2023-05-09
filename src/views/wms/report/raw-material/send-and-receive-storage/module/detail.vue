@@ -49,7 +49,7 @@
     >
       <el-table-column label="序号" type="index" align="center" width="55" fixed="left">
         <template #default="{ row, $index }">
-          <!-- 是否红冲单 -->
+          <!-- 是否调整单 -->
           <table-cell-tag
             :show="row.sourceRow?.receipt?.receiptType === receiptTypeEnum.SUPPLEMENT.V"
             :name="receiptTypeEnum.SUPPLEMENT.L"

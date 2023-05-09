@@ -5,7 +5,7 @@
         <div v-show="crud.searchToggle">
           <common-radio-button
             v-model="query.type"
-            :options="packTypeEnum.ENUM"
+            :options="contractSaleTypeEnum.ENUM"
             showOptionAll
             type="enumSL"
             size="small"
@@ -37,7 +37,7 @@
 </template>
 
 <script setup>
-import { packTypeEnum } from '@enum-ms/mes'
+import { contractSaleTypeEnum } from '@enum-ms/mes'
 import { reviewStatusEnum } from '@enum-ms/common'
 
 import { regHeader } from '@compos/use-crud'

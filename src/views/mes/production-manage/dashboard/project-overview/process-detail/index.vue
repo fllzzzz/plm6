@@ -1,20 +1,60 @@
 <template>
   <common-dialog
     ref="drawerRef"
-    v-model="dialogVisible"
     fullscreen
-    :title="`${props.detailData.name}工序生产明细`"
+    v-model="dialogVisible"
+    :title="`${componentTypeEnum.VL[props.detailData?.productType]}：${props.detailData?.name}生产明细`"
     :before-close="handleClose"
-    :show-close="false"
     :close-on-click-modal="false"
-    top="10vh"
+    :show-close="false"
   >
+    <template #titleAfter>
+      <workshop-select
+        v-model="workshopId"
+        placeholder="请选择车间"
+        :workshop-type="workshopTypeEnum.BUILDING.V"
+        :factory-id="factoryId"
+        style="width: 150px"
+        class="filter-item"
+        :clearable="true"
+      />
+      <production-line-select
+        v-model="productionLineId"
+        :factory-id="factoryId"
+        :workshop-id="workshopId"
+        :productType="detailData.productType"
+        :clearable="true"
+        class="filter-item"
+        style="width: 150px"
+      />
+      <monomer-select-area-select
+        v-model:monomerId="monomerId"
+        v-model:areaId="areaId"
+        needConvert
+        clearable
+        areaClearable
+        :project-id="projectId"
+        style="width: 150px"
+      />
+      <el-input v-model.trim="serialNumber" placeholder="编号搜索" style="width: 150px" class="filter-item" clearable @keyup.enter="processDetailGet" />
+      <common-radio-button
+        type="enum"
+        style="vertical-align: middle"
+        v-model="status"
+        showOptionAll
+        :options="taskTrackingSchedulingStatusEnum.ENUM"
+      />
+      <common-button class="filter-item" size="mini" type="success" icon="el-icon-search" @click.stop="searchQuery">搜索</common-button>
+      <common-button class="filter-item" size="mini" type="warning" icon="el-icon-refresh-left" @click.stop="resetQuery">
+        重置
+      </common-button>
+    </template>
     <template #titleRight>
       <div style="display: flex">
         <print-table
           v-permission="permission.print"
           api-key="mesProjectOverviewList"
-          :params="{ ...query, processId: props.detailData.id }"
+          :params="{ ...query, ...commonQuery, serialNumber: serialNumber }"
           size="mini"
           type="warning"
           class="filter-item"
@@ -26,19 +66,28 @@
     <common-table
       ref="tableRef"
       :data="processDetailData"
-      :max-height="maxHeight + 115"
+      :max-height="maxHeight + 110"
       :show-empty-symbol="false"
       show-summary
       :summary-method="getSummaries"
       style="width: 100%"
     >
       <el-table-column :show-overflow-tooltip="true" prop="index" label="序号" align="center" width="60" type="index" />
-      <el-table-column :show-overflow-tooltip="true" prop="monomer.name" label="单体" align="center">
+      <el-table-column :show-overflow-tooltip="true" prop="workshop" label="车间/产线/班组" header-align="center" min-width="140px">
+        <template #default="{ row }">
+          <span>{{
+            row.team?.name
+              ? row.workshop?.name + '/' + row.productionLine?.name + '/' + row.groups?.name + '/' + row.team?.name
+              : row.workshop?.name + '/' + row.productionLine?.name + '/' + row.groups?.name + '/' + '-'
+          }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column :show-overflow-tooltip="true" prop="monomer.name" label="单体" align="center" min-width="100px">
         <template #default="{ row }">
           <span>{{ row.monomer ? row.monomer?.name : '/' }}</span>
         </template>
       </el-table-column>
-      <el-table-column :show-overflow-tooltip="true" prop="area.name" label="区域" align="center">
+      <el-table-column :show-overflow-tooltip="true" prop="area.name" label="区域" align="center" min-width="100px">
         <template #default="{ row }">
           <span>{{ row.area ? row.area?.name : '/' }}</span>
         </template>
@@ -46,7 +95,25 @@
       <el-table-column :show-overflow-tooltip="true" prop="serialNumber" label="编号" align="center" />
       <el-table-column :show-overflow-tooltip="true" prop="specification" label="规格" align="center" />
       <el-table-column :show-overflow-tooltip="true" prop="material" label="材质" align="center" />
-      <el-table-column :show-overflow-tooltip="true" prop="length" label="长度" align="center" />
+      <el-table-column :show-overflow-tooltip="true" prop="quantity" label="任务数" align="center" />
+      <el-table-column :show-overflow-tooltip="true" prop="taskNetWeight" label="任务量（kg）" align="center">
+        <template #default="{ row }">
+          <span>{{ weightStatus === weightTypeEnum.NET.V ? row.taskNetWeight : row.taskGrossWeight }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column :show-overflow-tooltip="true" prop="completeQuantity" label="已生产数" align="center">
+        <template #default="{ row }">
+          <span :class="row.completeQuantity === row.quantity ? 'tc-success' : 'tc-danger'">{{ row.completeQuantity }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column :show-overflow-tooltip="true" prop="completeNetWeight" label="生产量（kg）" align="center">
+        <template #default="{ row }">
+          <span :class="row.completeQuantity === row.quantity ? 'tc-success' : 'tc-danger'">{{
+            weightStatus === weightTypeEnum.NET.V ? row.completeNetWeight : row.completeGrossWeight
+          }}</span>
+        </template>
+      </el-table-column>
+      <!-- <el-table-column :show-overflow-tooltip="true" prop="length" label="长度" align="center" />
       <el-table-column :show-overflow-tooltip="true" prop="netWeight" label="单净重（kg）" align="center" />
       <el-table-column
         v-if="props.detailData.productType !== componentTypeEnum.ASSEMBLE.V"
@@ -60,7 +127,7 @@
         <template #default="{ row }">
           <el-tag style="cursor: pointer" @click="showQuantity(row)">{{ row.completeQuantity }}</el-tag>
         </template>
-      </el-table-column>
+      </el-table-column> -->
     </common-table>
     <!-- 分页 -->
     <el-pagination
@@ -73,24 +140,34 @@
       @current-change="handleCurrentChange"
     />
   </common-dialog>
-  <detail-drawer v-model:visible="drawerVisible" :query="query" :team-data="teamData" />
+  <!-- <detail-drawer v-model:visible="drawerVisible" :query="query" :team-data="teamData" /> -->
 </template>
 
 <script setup>
 import { getProcessDetail } from '@/api/mes/production-manage/dashboard/project-overview'
 import { defineProps, defineEmits, ref, watch, computed, inject } from 'vue'
 import { tableSummary } from '@/utils/el-extra'
-import { componentTypeEnum } from '@enum-ms/mes'
+import { weightTypeEnum, workshopTypeEnum } from '@enum-ms/common'
+import { taskTrackingSchedulingStatusEnum, componentTypeEnum } from '@enum-ms/mes'
 import { mesProjectOverviewPM as permission } from '@/page-permission/mes'
 import useVisible from '@compos/use-visible'
 import usePagination from '@compos/use-pagination'
 import useMaxHeight from '@compos/use-max-height'
-import detailDrawer from './detail-drawer.vue'
+import monomerSelectAreaSelect from '@comp-base/monomer-select-area-select'
+import productionLineSelect from '@comp-mes/production-line-select'
+import workshopSelect from '@comp-mes/workshop-select'
+// import detailDrawer from './detail-drawer.vue'
 
 const emit = defineEmits(['update:visible'])
 const processDetailData = ref([])
-const drawerVisible = ref(false)
-const teamData = ref({})
+// const drawerVisible = ref(false)
+// const teamData = ref({})
+const workshopId = ref()
+const productionLineId = ref()
+const monomerId = ref()
+const areaId = ref()
+const serialNumber = ref()
+const status = ref()
 
 const props = defineProps({
   visible: {
@@ -103,19 +180,31 @@ const props = defineProps({
   },
   projectId: {
     type: Number
+  },
+  weightStatus: {
+    type: Number
   }
 })
 
-const monomerId = inject('monomerId')
-const areaId = inject('areaId')
-const productionLineId = inject('productionLineId')
+const lastMonomerId = inject('monomerId')
+const lastAreaId = inject('areaId')
+const lastProductionLineId = inject('productionLineId')
 
 const query = computed(() => {
   return {
     productType: props.detailData.productType,
     processId: props.detailData.id,
-    projectId: props.projectId,
-    productionLineId: productionLineId.value
+    projectId: props.projectId
+  }
+})
+
+const commonQuery = computed(() => {
+  return {
+    workshopId: workshopId.value,
+    productionLineId: productionLineId.value ? productionLineId.value : lastProductionLineId.value,
+    monomerId: monomerId.value ? monomerId.value : lastMonomerId.value,
+    areaId: areaId.value ? areaId.value : lastAreaId.value,
+    status: status.value
   }
 })
 
@@ -126,20 +215,33 @@ const { handleSizeChange, handleCurrentChange, total, setTotalPage, queryPage } 
 watch(
   () => dialogVisible.value,
   (val) => {
-    if (val) {
-      processDetailGet()
-    }
+    workshopId.value = undefined
+    productionLineId.value = undefined
+    monomerId.value = undefined
+    areaId.value = undefined
+    serialNumber.value = undefined
+    status.value = undefined
+    processDetailGet()
   },
   { deep: true }
 )
 
+watch(
+  () => commonQuery.value,
+  (val) => {
+    if (val) {
+      processDetailGet()
+    }
+  }
+)
+
 async function processDetailGet() {
   let _list = []
+  if (!dialogVisible.value) return
   try {
     const { content = [], totalElements } = await getProcessDetail({
-      processId: props.detailData.id,
-      monomerId: monomerId.value,
-      areaId: areaId.value,
+      serialNumber: serialNumber.value,
+      ...commonQuery.value,
       ...query.value,
       ...queryPage
     })
@@ -156,15 +258,30 @@ const { maxHeight } = useMaxHeight({
   paginate: true
 })
 
-// 点击完成数显示详情
-function showQuantity(row) {
-  drawerVisible.value = true
-  teamData.value = row
+// 搜索
+function searchQuery() {
+  processDetailGet()
 }
+// 重置
+function resetQuery() {
+  workshopId.value = undefined
+  productionLineId.value = undefined
+  monomerId.value = undefined
+  areaId.value = undefined
+  serialNumber.value = undefined
+  status.value = undefined
+  processDetailGet()
+}
+
+// // 点击完成数显示详情
+// function showQuantity(row) {
+//   drawerVisible.value = true
+//   teamData.value = row
+// }
 // 合计
 function getSummaries(param) {
   return tableSummary(param, {
-    props: ['quantity']
+    props: ['quantity', 'taskNetWeight', 'taskGrossWeight', 'completeQuantity', 'completeNetWeight', 'completeGrossWeight']
   })
 }
 </script>

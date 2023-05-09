@@ -29,7 +29,7 @@
       @change="fetchProject"
     /> -->
   </div>
-  <div :style="`height:${maxHeight - 30 }px`">
+  <div :style="`height:${maxHeight - 30}px`">
     <el-tree
       ref="treeMenuRef"
       v-loading="projectLoading"
@@ -58,6 +58,7 @@
 </template>
 
 <script setup>
+import { getInfo } from '@/api/config/mes/base'
 import { getProject, getMonth } from '@/api/mes/scheduling-manage/machine-part'
 import { ref, defineProps, defineEmits, defineExpose } from 'vue'
 import { isBlank, isNotBlank } from '@/utils/data-type'
@@ -85,8 +86,19 @@ const treeData = ref([])
 const projectLoading = ref(false)
 const filterIds = ref([])
 const expandedKeys = ref([])
+const configData = ref()
 
 fetchTime()
+fetchConfig()
+
+async function fetchConfig() {
+  try {
+    const data = await getInfo()
+    configData.value = data
+  } catch (error) {
+    console.log('获取车间、产线、生产组的配置层级失败', error)
+  }
+}
 
 async function fetchTime(lastQuery) {
   if (!checkPermission(permission.get)) return
@@ -164,18 +176,74 @@ function dataFormat(content) {
       const areas = monomers[x].areaList
       const _area = []
       for (let y = 0; y < areas.length; y++) {
+        const workshops = areas[y].workshopList
+        const productionLines = areas[y].productionLineList
+        const groups = areas[y].groupsList
+        const _workshop = []
+        const _productionLine = []
+        const _groups = []
+        for (let w = 0; w < workshops?.length; w++) {
+          const rowKey = 'workshop_' + workshops[w].id
+          _workshop.push({
+            id: workshops[w].id,
+            isLast: w === workshops.length - 1,
+            rowKey: rowKey,
+            label: workshops[w].name,
+            name: workshops[w].name,
+            parentIds: [areas[y].id, monomers[x].id, content[i].id],
+            areaId: areas[y].id,
+            isLeaf: true,
+            fontSize: 14,
+            type: '',
+            icon: 'config-2'
+          })
+          expandedKeys.value.push(rowKey)
+        }
+        for (let p = 0; p < productionLines?.length; p++) {
+          const rowKey = 'productionLine_' + productionLines[p].id
+          _productionLine.push({
+            id: productionLines[p].id,
+            isLast: p === productionLines.length - 1,
+            rowKey: rowKey,
+            label: productionLines[p].name,
+            name: productionLines[p].name,
+            parentIds: [areas[y].id, monomers[x].id, content[i].id],
+            areaId: areas[y].id,
+            isLeaf: true,
+            fontSize: 14,
+            type: '',
+            icon: 'config-2'
+          })
+          expandedKeys.value.push(rowKey)
+        }
+        for (let g = 0; g < groups?.length; g++) {
+          const rowKey = 'groups_' + groups[g].id
+          _groups.push({
+            id: groups[g].id,
+            isLast: g === groups.length - 1,
+            rowKey: rowKey,
+            label: groups[g].name,
+            name: groups[g].name,
+            parentIds: [areas[y].id, monomers[x].id, content[i].id],
+            areaId: areas[y].id,
+            isLeaf: true,
+            fontSize: 14,
+            type: '',
+            icon: 'config-2'
+          })
+          expandedKeys.value.push(rowKey)
+        }
         const rowKey = 'area_' + areas[y].id
         _area.push({
           id: areas[y].id,
           isLast: y === areas.length - 1,
           rowKey: rowKey,
-          label: areas[y].name,
-          name: areas[y].name,
           parentIds: [monomers[x].id, content[i].id],
-          monomerId: monomers[x].id,
+          label: areas[y].name,
+          children: workshops?.length ? _workshop : productionLines?.length ? _productionLine : _groups,
           isLeaf: true,
-          fontSize: 14,
-          type: '',
+          fontSize: 15,
+          type: '区域',
           icon: 'config-2'
         })
         expandedKeys.value.push(rowKey)
@@ -245,7 +313,10 @@ function handleCheckClick(data, node) {
   const areaIds = []
   const monomerIds = []
   const projectIds = []
-  _keys.forEach(v => {
+  const workshopIds = []
+  const productionLineIds = []
+  const groupsIds = []
+  _keys.forEach((v) => {
     const _id = v.split('_')[1]
     if (v.indexOf('project') !== -1) {
       projectIds.push(_id)
@@ -256,8 +327,17 @@ function handleCheckClick(data, node) {
     if (v.indexOf('area') !== -1) {
       areaIds.push(_id)
     }
+    if (v.indexOf('workshop') !== -1) {
+      workshopIds.push(_id)
+    }
+    if (v.indexOf('productionLine') !== -1) {
+      productionLineIds.push(_id)
+    }
+    if (v.indexOf('groups') !== -1) {
+      groupsIds.push(_id)
+    }
   })
-  emit('project-click', { areaIds, monomerIds, projectIds }, month.value)
+  emit('project-click', { areaIds, monomerIds, projectIds, workshopIds, productionLineIds, groupsIds }, month.value, configData.value)
 }
 
 defineExpose({
@@ -288,6 +368,10 @@ defineExpose({
 
   ::v-deep(.el-tree-node__content > .el-tree-node__expand-icon) {
     display: none;
+  }
+
+  ::v-deep(.el-checkbox__inner) {
+    border: 2px solid #000;
   }
 }
 

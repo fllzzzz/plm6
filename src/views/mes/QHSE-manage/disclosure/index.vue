@@ -12,6 +12,7 @@
       :empty-text="crud.emptyText"
       :max-height="maxHeight"
       style="width: 100%"
+      @row-dblclick="handleDblRowClick"
     >
       <el-table-column label="序号" type="index" align="center" width="60" />
       <el-table-column
@@ -164,6 +165,8 @@
     </common-table>
     <!--分页组件-->
     <pagination />
+    <!-- 详情 -->
+    <detail v-model:visible="drawerVisible" :detail-data="detailData" />
   </div>
 </template>
 
@@ -180,6 +183,7 @@ import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import pagination from '@crud/Pagination'
 import mHeader from './module/header'
+import detail from './module/detail.vue'
 
 const optShow = {
   add: false,
@@ -195,6 +199,8 @@ const dataFormat = ref([
 ])
 
 const tableRef = ref()
+const detailData = ref({})
+const drawerVisible = ref(false)
 const { crud, columns, CRUD } = useCRUD(
   {
     title: '问题曝光',
@@ -227,6 +233,12 @@ CRUD.HOOK.handleRefresh = (crud, res) => {
     }
     return v
   })
+}
+
+function handleDblRowClick(val) {
+  console.log(val, 'val')
+  drawerVisible.value = true
+  detailData.value = val
 }
 </script>
 

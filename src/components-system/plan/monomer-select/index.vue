@@ -13,6 +13,7 @@
       :placeholder="placeholder"
       :no-data-text="projectId ? '无数据' : '未选择项目'"
       @change="selectChange"
+      style="width:100%;"
     >
       <el-option v-if="showAll" label="全部单体" :value="undefined" />
       <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />

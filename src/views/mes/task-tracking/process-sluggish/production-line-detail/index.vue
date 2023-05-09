@@ -18,7 +18,11 @@
             >
               <span class="process-way">{{ m.process?.name }}</span>
               <el-divider style="margin: 0" />
-              <span class="process-data">{{ m.quantity }}/{{ convertUnits(m.totalNetWeight, 'kg', 't', DP.COM_WT__T) }}</span>
+              <span class="process-data">{{
+                weightStatus === weightTypeEnum.NET.V
+                  ? m.quantity + '/' + convertUnits(m.totalNetWeight, 'kg', 't', 2)
+                  : m.quantity + '/' + convertUnits(m.totalGrossWeight, 'kg', 't', 2)
+              }}</span>
             </div>
           </div>
         </div>
@@ -37,7 +41,13 @@
             >
               <span class="process-way">{{ m.process?.name }}</span>
               <el-divider style="margin: 0" />
-              <span class="process-data">{{ m.quantity }}/{{ convertUnits(m.totalNetWeight, 'kg', 't', DP.COM_WT__T) }}</span>
+              <span class="process-data">{{
+                weightStatus === weightTypeEnum.NET.V
+                  ? m.quantity + '/' + convertUnits(m.totalNetWeight, 'kg', 't', 2)
+                  : m.totalGrossWeight ? m.quantity + '/' +
+                   convertUnits(m.totalGrossWeight, 'kg', 't', 2)
+                  : m.quantity + '/' + '-'
+              }}</span>
             </div>
           </div>
         </div>
@@ -56,7 +66,11 @@
             >
               <span class="process-way">{{ m.process?.name }}</span>
               <el-divider style="margin: 0" />
-              <span class="process-data">{{ m.quantity }}/{{ convertUnits(m.totalNetWeight, 'kg', 't', DP.COM_WT__T) }}</span>
+              <span class="process-data">{{
+                weightStatus === weightTypeEnum.NET.V
+                  ? m.quantity + '/' + convertUnits(m.totalNetWeight, 'kg', 't', 2)
+                  : m.quantity + '/' + convertUnits(m.totalGrossWeight, 'kg', 't', 2)
+              }}</span>
             </div>
           </div>
         </div>
@@ -70,13 +84,17 @@ import useMaxHeight from '@compos/use-max-height'
 import { ref, defineEmits, defineProps, watch } from 'vue'
 import { getAllProcess } from '@/api/mes/task-tracking/process-sluggish.js'
 import { componentTypeEnum } from '@enum-ms/mes'
-import { DP } from '@/settings/config'
+import { weightTypeEnum } from '@enum-ms/common'
+// import { DP } from '@/settings/config'
 import { convertUnits } from '@/utils/convert/unit'
 
 const processData = ref([])
 const emit = defineEmits(['change'])
 const props = defineProps({
   workShopId: {
+    type: Number
+  },
+  weightStatus: {
     type: Number
   }
 })

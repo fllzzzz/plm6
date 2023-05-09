@@ -4,7 +4,7 @@
       <artifact-project-list :maxHeight="maxHeight - 40" @nesting-task-click="handleNestingTaskClick" />
     </div>
     <div class="wrap-right">
-      <el-tag v-if="!crud.query?.projectId" type="info" size="medium"> * 请点击左侧项目列表查看详情 </el-tag>
+      <el-tag v-if="!crud.query?.areaIds?.length" type="info" size="medium"> * 请点击左侧项目列表查看详情 </el-tag>
       <template v-else>
         <div class="wrap-head">
           <mHeader />
@@ -16,7 +16,7 @@
           :data="crud.data"
           :empty-text="crud.emptyText"
           :dataFormat="dataFormat"
-          :max-height="maxHeight"
+          :max-height="maxHeight - 130"
           style="width: 100%"
         >
           <el-table-column label="序号" type="index" align="center" width="70">
@@ -73,7 +73,7 @@
             :show-overflow-tooltip="true"
             prop="workshop.name"
             label="车间"
-            min-width="110px"
+            min-width="100px"
             align="center"
           />
           <el-table-column
@@ -81,7 +81,7 @@
             :show-overflow-tooltip="true"
             prop="productionLine.name"
             label="生产线"
-            min-width="110px"
+            min-width="100px"
             align="center"
           />
           <el-table-column
@@ -104,7 +104,14 @@
             v-if="columns.visible('taskNetWeight')"
             :show-overflow-tooltip="true"
             prop="taskNetWeight"
-            label="任务量（kg）"
+            label="总净重（kg）"
+            align="center"
+          />
+          <el-table-column
+            v-if="columns.visible('taskGrossWeight')"
+            :show-overflow-tooltip="true"
+            prop="taskGrossWeight"
+            label="总毛重（kg）"
             align="center"
           />
           <el-table-column v-permission="[...permission.detail]" label="操作" width="80px" align="center">
@@ -128,7 +135,7 @@ import { ref, provide } from 'vue'
 
 import { componentTypeEnum, artifactProductLineEnum } from '@enum-ms/mes'
 import { artifactWorkOrderPM as permission } from '@/page-permission/mes'
-
+// import { debounce } from '@/utils'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import pagination from '@crud/Pagination'
@@ -142,7 +149,6 @@ const optShow = {
   del: false,
   download: false
 }
-
 const tableRef = ref()
 const { crud, columns, CRUD } = useCRUD(
   {
@@ -151,7 +157,8 @@ const { crud, columns, CRUD } = useCRUD(
     permission: { ...permission },
     optShow: { ...optShow },
     crudApi: { ...crudApi },
-    requiredQuery: ['productType']
+    invisibleColumns: ['taskGrossWeight'],
+    requiredQuery: ['productType', 'areaIds']
   },
   tableRef
 )
@@ -161,11 +168,27 @@ const dataFormat = ref([['scheduleTime', ['parse-time', '{y}-{m}-{d}']]])
 provide('crud', crud)
 provide('permission', permission)
 
-const { maxHeight } = useMaxHeight({
-  extraBox: ['.wrap-head'],
-  extraHeight: 15,
-  paginate: true
-})
+const { maxHeight } = useMaxHeight()
+
+// const handleNestingTaskClick = debounce(function (nodes = []) {
+//   if (nodes?.length) {
+//     console.log(nodes, 'nodes')
+//     crud.query.areaId = nodes[0].id
+//     crud.query.projectId = nodes[0].projectId
+//   } else {
+//     crud.query.areaId = undefined
+//     crud.query.projectId = undefined
+//   }
+//   crud.toQuery()
+// }, 500)
+
+function handleNestingTaskClick({ areaIds, projectIds, monomerIds }) {
+  // console.log(areaIds, 'areaIds')
+  crud.query.areaIds = areaIds
+  crud.query.projectIds = projectIds
+  crud.query.monomerIds = monomerIds
+  crud.toQuery()
+}
 
 CRUD.HOOK.handleRefresh = (crud, res) => {
   res.data.content = res.data.content.map((v) => {
@@ -181,17 +204,11 @@ const drawerVisible = ref(false)
 
 function showDetail(row) {
   drawerVisible.value = true
-  detailData.value = row
+  detailData.value = row.sourceRow
+  console.log(row, detailData.value.taskQuantity, 'row')
   itemInfo.value = Object.assign({}, row)
 }
 
-function handleNestingTaskClick(val, query) {
-  // crud.query.localDateTime = year
-  crud.query.projectId = val?.id
-  if (crud.query.projectId) {
-    crud.toQuery()
-  }
-}
 </script>
 <style lang="scss" scoped>
 .wrap {

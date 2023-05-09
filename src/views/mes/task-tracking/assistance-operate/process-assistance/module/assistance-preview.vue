@@ -5,7 +5,7 @@
     :close-on-click-modal="false"
     title="工序协同预览"
     v-model="dialogVisible"
-    width="1100px"
+    width="1300px"
     :before-close="handleClose"
   >
     <template #titleAfter>
@@ -63,9 +63,19 @@
         width="100px"
         align="center"
       />
-      <el-table-column align="center" prop="totalTaskMete.quantity" :show-overflow-tooltip="true" label="任务（件/kg）">
+      <el-table-column align="center" prop="totalTaskMete.quantity" :show-overflow-tooltip="true" label="任务数（件）">
         <template #default="{ row }">
-          <span>{{ row.totalTaskMete?.quantity || 0 }}/{{ row.totalTaskMete?.netWeight || 0 }}</span>
+          <span>{{ row.totalTaskMete?.quantity || 0 }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" prop="totalTaskMete.netWeight" :show-overflow-tooltip="true" label="任务总净重（kg）" width="125px">
+        <template #default="{ row }">
+          <span>{{ row.totalTaskMete?.netWeight || 0 }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" prop="totalTaskMete.grossWeight" :show-overflow-tooltip="true" label="任务总毛重（kg）" width="125px">
+        <template #default="{ row }">
+          <span>{{ row.totalTaskMete?.grossWeight || 0 }}</span>
         </template>
       </el-table-column>
       <el-table-column

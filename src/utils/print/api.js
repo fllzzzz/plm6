@@ -4,6 +4,7 @@ import wms from '@/api/print/wms'
 import supply from '@/api/print/supply-chain'
 import project from '@/api/print/project'
 import plan from '@/api/print/plan'
+import enclosure from '@/api/print/enclosure'
 
 // 合同
 const myProject = contract.myProject
@@ -17,10 +18,16 @@ const arrearsList = contract.arrearsList
 const contractStructurePrice = contract.structurePrice
 const contractEnclosurePrice = contract.enclosurePrice
 const contractAuxiliaryMaterialPrice = contract.auxiliaryMaterialPrice
+const contractMachinePartPrice = contract.machinePartPrice
 const projectCollectionDetail = contract.collectionDetail
 const projectInvoiceDetail = contract.invoiceDetail
 const projectHappenedDetail = contract.happenedDetail
 const transactionRecord = contract.transactionRecord
+const contractStructureProduct = contract.structurePrice
+const contractEnclosureProduct = contract.structurePrice
+const contractAuxiliaryMaterialProduct = contract.structurePrice
+const contractStructureShipmentTracking = contract.shipmentTracking
+const contractAuxiliaryMaterialShipmentTracking = contract.shipmentTracking
 
 const logisticsPaymentLedger = contract.logisticsLedger
 const supplierPayableSummary = contract.payableSummary
@@ -93,6 +100,7 @@ const mesStructureProjectSummary = mes.structureProjectSummary
 const mesEnclosureProjectSummary = mes.enclosureProjectSummary
 const mesQHSEProductionLineReport = mes.qhseProductionLineReport
 const mesProjectOverviewList = mes.projectOverviewList
+const mesSchedulingDataList = mes.mesSchedulingDataList
 
 const mesStructureTeamWage = mes.teamWage
 const mesEnclosureTeamWage = mes.teamWage
@@ -132,8 +140,19 @@ const mesGroupsReport = mes.groupsReport
 
 const mesStudSleeveStatisticsList = mes.studSleeveStatisticsList
 const mesProjectShipDetail = mes.mesProjectShipDetail
+const mesShipMeteDetail = mes.mesShipMeteDetail
+const mesShipTaskMeteDetail = mes.mesShipTaskMeteDetail
+const mesShipInboundMeteDetail = mes.mesShipInboundMeteDetail
+const mesShipTotalMeteDetail = mes.mesShipTotalMeteDetail
+const mesShipMonthMeteDetail = mes.mesShipMonthMeteDetail
+const mesShipStockMeteDetail = mes.mesShipStockMeteDetail
+const mesShipTrainMeteDetail = mes.mesShipTrainMeteDetail
 const mesProductSendReceiveStorage = mes.productSendReceiveStorage
 const productSendReceiveStorageDetail = mes.productSendReceiveStorageDetail
+const mesBeginningInventoryDetail = mes.mesBeginningInventoryDetail
+const mesEndInventoryDetail = mes.mesEndInventoryDetail
+const mesInboundInventoryDetail = mes.mesInboundInventoryDetail
+const mesOutboundInventoryDetail = mes.mesOutboundInventoryDetail
 const mesMainMaterialTrack = mes.mainMaterialTrackSummary
 const mesMainMaterialTrackUseRecord = mes.mainMaterialTrackUseRecord
 const mesMainMaterialTrackStock = mes.mainMaterialTrackStock
@@ -144,7 +163,7 @@ const wmsRmInboundReceipt = wms.wmsRmInboundReceipt // 入库
 const wmsRmReturnReceipt = wms.wmsRmReturnReceipt // 退库
 const wmsRmRejectReceipt = wms.wmsRmRejectReceipt // 退货
 const wmsRmTransferReceipt = wms.wmsRmTransferReceipt // 调拨
-const wmsRmSupplementReceipt = wms.wmsRmSupplementReceipt // 红冲
+const wmsRmSupplementReceipt = wms.wmsRmSupplementReceipt // 调整
 
 // project
 const deliveryCargoList = project.deliveryCargoList // 自制收货记录
@@ -154,6 +173,14 @@ const installReportList = project.installReportList // 安装报表
 
 // plan
 const auxiliaryMaterialSummary = plan.auxiliaryMaterialSummary // 配套件汇总
+
+// 围护MES
+const enclosureSchedulingWorkOrderDetail = enclosure.schedulingWorkOrderDetail
+const enclosureTaskTrackingDetail = enclosure.taskTrackingDetail
+
+const enclosureProductionStatistics = enclosure.productionStatistics
+const enclosureTeamProduction = enclosure.teamProduction
+const enclosureTeamProductionDetail = enclosure.teamProductionDetail
 
 export default {
   myProject, // 我的项目
@@ -173,11 +200,17 @@ export default {
   contractStructurePrice, // 结构计价表
   contractEnclosurePrice, // 围护计价表
   contractAuxiliaryMaterialPrice, // 配套件计价表
+  contractMachinePartPrice, // 散发制品计价表
   projectCollectionDetail, // 项目收款详情
   projectInvoiceDetail, // 项目开票详情
   projectHappenedDetail, // 项目发运详情
   transactionRecord, // 客户交易记录
   saleOrderTracking, // 订单跟踪
+  contractStructureProduct, // 结构制品
+  contractEnclosureProduct, // 围护制品
+  contractAuxiliaryMaterialProduct, // 配套制品
+  contractStructureShipmentTracking, // 结构发运跟踪
+  contractAuxiliaryMaterialShipmentTracking, // 配套件发运跟踪
   projectWarehouseRecord, // 销售管理入库记录
   industryElectricRecord, // 工业电费
   civilElectricRecord, // 民用电费
@@ -242,6 +275,7 @@ export default {
   mesEnclosureProjectSummary, // 围护项目汇总
   mesQHSEProductionLineReport, // 生产线质检报表
   mesProjectOverviewList, // 工序生产明细清单
+  mesSchedulingDataList, // 排产数据生产明细
 
   mesMainMaterialTrack, // 主材跟踪汇总
   mesMainMaterialTrackUseRecord, // 主材跟踪-钢材领用记录
@@ -286,8 +320,19 @@ export default {
   mesStudSleeveStatisticsList, // 栓钉套筒统计清单详情
 
   mesProjectShipDetail, // 发运管理项目发运详情
+  mesShipMeteDetail, // 发运统计/清单总量详情
+  mesShipTaskMeteDetail, // 发运统计/任务总量详情
+  mesShipInboundMeteDetail, // 发运统计/入库量详情
+  mesShipTotalMeteDetail, // 发运统计/累计发运详情
+  mesShipMonthMeteDetail, // 发运统计/本月发运详情
+  mesShipStockMeteDetail, // 发运统计/库存详情
+  mesShipTrainMeteDetail, // 发运统计/累计车次详情
   mesProductSendReceiveStorage, // 发运管理制成品入发存
   productSendReceiveStorageDetail, // 发运管理制成品入发存详情
+  mesBeginningInventoryDetail, // 期初库存
+  mesEndInventoryDetail, // 期末库存
+  mesInboundInventoryDetail, // 入库量
+  mesOutboundInventoryDetail, // 出库量
 
   // wms
   wmsRmOutboundReceipt, // 出库（领料单）单
@@ -295,7 +340,7 @@ export default {
   wmsRmReturnReceipt, // 退库单
   wmsRmRejectReceipt, // 退货单
   wmsRmTransferReceipt, // 调拨单
-  wmsRmSupplementReceipt, // 红冲记录
+  wmsRmSupplementReceipt, // 调整记录
 
   // 项目管理
   deliveryCargoList, // 自制收货记录
@@ -304,5 +349,12 @@ export default {
   installReportList, // 安装报表
 
   // 计划管理
-  auxiliaryMaterialSummary // 配套件汇总
+  auxiliaryMaterialSummary, // 配套件汇总
+
+  // 围护MES
+  enclosureSchedulingWorkOrderDetail, // 排产工单详情
+  enclosureTaskTrackingDetail, // 生产跟踪详情
+  enclosureProductionStatistics, // 围护生产统计
+  enclosureTeamProduction, // 围护班组产量
+  enclosureTeamProductionDetail // 围护班组产量详情
 }
