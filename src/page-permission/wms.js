@@ -13,7 +13,7 @@ export const commonPM = {
   rawMatOutboundReceiptDetail: ['wms_rawMat_outbound_review:detail'],
   // 原材料-退库单详情
   rawMatReturnReceiptDetail: ['wms_rawMat_return_review:detail'],
-  // 原材料-红冲单详情
+  // 原材料-调整单详情
   rawMatSupplementReceiptDetail: ['wms_report_rawMat_supplement_details:detail'],
   // 原材料-退货单详情
   rawMatRejectReceiptDetail: ['wms_rawMat_reject_review:detail'],
@@ -326,10 +326,10 @@ export const reportRawMaterialTransferDetailsPM = {
   transferReceiptDetail: commonPM.rawMatTransferReceiptDetail // 退库详情
 }
 
-// 报表中心/原材料/红冲记录
+// 报表中心/原材料/调整记录
 export const reportRawMaterialSupplementDetailsPM = {
   get: ['wms_report_rawMat_supplement_details:get'], // 查看
-  print: ['wms_report_rawMat_supplement_details:print'] // 打印红冲记录
+  print: ['wms_report_rawMat_supplement_details:print'] // 打印调整记录
 }
 
 // 报表中心/原材料/进销存记录
@@ -422,7 +422,7 @@ export const receiptDetailCPM = {
   outboundReceiptDetail: commonPM.rawMatOutboundReceiptDetail, // 出库详情
   transferReceiptDetail: commonPM.rawMatTransferReceiptDetail, // 调拨详情
   returnReceiptDetail: commonPM.rawMatReturnReceiptDetail, // 退库详情
-  supplementReceiptDetail: commonPM.rawMatSupplementReceiptDetail, // 红冲单详情
+  supplementReceiptDetail: commonPM.rawMatSupplementReceiptDetail, // 调整单详情
   rejectReceiptDetail: commonPM.rawMatRejectReceiptDetail // 退货单详情
 }
 

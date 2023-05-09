@@ -163,7 +163,7 @@ const wmsRmInboundReceipt = wms.wmsRmInboundReceipt // 入库
 const wmsRmReturnReceipt = wms.wmsRmReturnReceipt // 退库
 const wmsRmRejectReceipt = wms.wmsRmRejectReceipt // 退货
 const wmsRmTransferReceipt = wms.wmsRmTransferReceipt // 调拨
-const wmsRmSupplementReceipt = wms.wmsRmSupplementReceipt // 红冲
+const wmsRmSupplementReceipt = wms.wmsRmSupplementReceipt // 调整
 
 // project
 const deliveryCargoList = project.deliveryCargoList // 自制收货记录
@@ -340,7 +340,7 @@ export default {
   wmsRmReturnReceipt, // 退库单
   wmsRmRejectReceipt, // 退货单
   wmsRmTransferReceipt, // 调拨单
-  wmsRmSupplementReceipt, // 红冲记录
+  wmsRmSupplementReceipt, // 调整记录
 
   // 项目管理
   deliveryCargoList, // 自制收货记录

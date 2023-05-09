@@ -155,7 +155,9 @@ export const configMesBasePM = {
   foldingPriceMethodGet: ['folding_price_method:get'], // 查看围护折边件计价方式
   foldingPriceMethodEdit: ['folding_price_method:edit'], // 编辑围护折边件计价方式
   appTaskReportGet: ['app_task_report:get'], // 查看app任务上报重量显示
-  appTaskReportEdit: ['app_task_report:edit'] // 编辑app任务上报重量显示
+  appTaskReportEdit: ['app_task_report:edit'], // 编辑app任务上报重量显示
+  machinePartSchedulingGet: ['machine_part_scheduling:get'], // 查看零件排产车间、产线、生产组显示
+  machinePartSchedulingEdit: ['machine_part_scheduling:edit'] // 编辑零件排产车间、产线、生产组显示
 }
 
 // MES-公共配置/变更原因
