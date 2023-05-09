@@ -8,7 +8,7 @@
     :before-close="handleClose"
     title="构件绑定列表"
     :wrapper-closable="false"
-    size="80%"
+    size="90%"
     custom-class="already-form"
   >
     <template #titleAfter>
@@ -24,7 +24,7 @@
                 v-model="query.monomerId"
                 style="width: 270px;"
                 :default="false"
-                :project-id="projectId"
+                :project-id="query.projectId"
                 class="filter-item"
               />
             </div>
@@ -104,16 +104,16 @@
               :data-format="dataFormat"
             >
               <el-table-column label="序号" type="index" align="center" width="50" />
-              <el-table-column prop="project" label="项目" align="center" show-overflow-tooltip/>
-              <el-table-column prop="monomerName" label="单体" align="center" show-overflow-tooltip/>
+              <el-table-column prop="project" label="项目" align="left" min-width="150" show-overflow-tooltip v-if="!currentRow.boolSingleProject" />
+              <el-table-column prop="monomerName" label="单体" align="left" show-overflow-tooltip/>
               <el-table-column prop="serialNumber" label="编号" align="center" show-overflow-tooltip/>
               <el-table-column prop="name" label="构件名称" align="center" show-overflow-tooltip/>
               <el-table-column prop="structureClassName" label="构件类型" align="center" show-overflow-tooltip/>
               <el-table-column prop="specification" label="规格" align="center" show-overflow-tooltip />
-              <el-table-column prop="material" label="材质" align="center" show-overflow-tooltip />
-              <el-table-column label="操作" align="center">
+              <el-table-column prop="material" label="材质" align="center" show-overflow-tooltip width="80" />
+              <el-table-column label="操作" align="center" width="80">
                 <template v-slot="scope">
-                  <common-button size="small" type="danger" @click="deleteItem(scope.row)" v-permission="permission.unbind">解绑</common-button>
+                  <common-button size="mini" type="danger" @click="deleteItem(scope.row)" v-permission="permission.unbind">解绑</common-button>
                 </template>
               </el-table-column>
             </common-table>

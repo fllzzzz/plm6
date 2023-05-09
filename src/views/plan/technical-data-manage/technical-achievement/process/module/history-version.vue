@@ -6,10 +6,10 @@
     top="10vh"
     width="600px"
     :before-close="handleClose"
-    title="文件详情"
+    title="修订版本"
     :wrapper-closable="false"
     size="900px"
-    custom-class="contract-change"
+    custom-class="history-version"
   >
     <template #content>
        <el-descriptions class="margin-top" :column="2" border label-width="110">
@@ -26,9 +26,9 @@
           {{currentRow.project?projectNameFormatter(currentRow.project):'-'}}
         </el-descriptions-item>
          <el-descriptions-item label-class-name="userName" label="上传人">{{currentRow.userName}}</el-descriptions-item>
-        <el-descriptions-item label-class-name="uploadTime" label="上传日期">{{currentRow.uploadTime?parseTime(currentRow.uploadTime,'{y}-{m}-{d}'):'-'}}</el-descriptions-item>
+        <el-descriptions-item label-class-name="uploadTime" label="上传日期">{{currentRow.uploadTime?parseTime(currentRow.uploadTime,'{y}-{m}-{d} {h}:{i}:{s}'):'-'}}</el-descriptions-item>
         <el-descriptions-item label-class-name="remark" label="备注">
-          {{currentRow.remark}}
+          <div style="word-break:break-all;">{{currentRow.remark}}</div>
         </el-descriptions-item>
       </el-descriptions>
       <el-divider><span class="title">历史修订版本</span></el-divider>
@@ -36,14 +36,14 @@
         ref="detailRef"
         border
         :data="currentRow.processFileRecordDTOList"
-        :max-height="300"
+        :max-height="maxHeight-260"
         style="width: 100%"
         class="table-form"
         :dataFormat="dataFormat"
       >
         <el-table-column label="序号" type="index" align="center" width="50" />
-        <el-table-column prop="fileVersion" label="版本" align="center" />
-        <el-table-column key="attachmentDTO" prop="attachmentDTO" :show-overflow-tooltip="true" label="文件" align="center">
+        <el-table-column prop="fileVersion" label="版本" align="center" width="80" />
+        <el-table-column key="attachmentDTO" prop="attachmentDTO" :show-overflow-tooltip="true" label="文件" align="left">
           <template v-slot="scope">
             <template v-if="scope.row.attachmentDTO">
               <div style="cursor: pointer; color: #409eff" @dblclick="attachmentView(scope.row.attachmentDTO)">{{ scope.row.attachmentDTO.name }}</div>
@@ -51,9 +51,9 @@
             <span v-else>-</span>
           </template>
         </el-table-column>
-        <el-table-column prop="userName" label="上传人" align="center" />
-        <el-table-column prop="uploadTime" label="上传时间" align="center" />
-        <el-table-column label="操作" align="center">
+        <el-table-column prop="userName" label="上传人" align="center" width="90" />
+        <el-table-column prop="uploadTime" label="上传时间" align="center" width="140" />
+        <el-table-column label="操作" align="center" width="80">
           <template v-slot="scope">
             <common-button size="small" class="el-icon-view" type="primary" @click="attachmentView(scope.row.attachmentDTO)"/>
           </template>
@@ -71,6 +71,7 @@ import useVisible from '@compos/use-visible'
 import { projectNameFormatter } from '@/utils/project'
 import { processUseTypeEnum, planProcessTypeEnum } from '@enum-ms/plan'
 import { parseTime } from '@/utils/date'
+import useMaxHeight from '@compos/use-max-height'
 
 import showPdfAndImg from '@comp-base/show-pdf-and-img.vue'
 
@@ -87,12 +88,25 @@ const props = defineProps({
 
 const emit = defineEmits(['success', 'update:modelValue'])
 const { visible, handleClose } = useVisible({ emit, props })
+const drawerRef = ref()
+const { maxHeight } = useMaxHeight(
+  {
+    mainBox: '.history-version',
+    extraBox: '.el-drawer__header',
+    wrapperBox: '.el-drawer__body',
+    paginate: false,
+    minHeight: 300,
+    navbar: false,
+    clientHRepMainH: true
+  },
+  drawerRef
+)
 
 const pdfShow = ref(false)
 const currentId = ref()
 
 const dataFormat = ref([
-  ['uploadTime', ['parse-time', '{y}-{m}-{d}']]
+  ['uploadTime', ['parse-time', '{y}-{m}-{d} {h}:{i}:{s}']]
 ])
 
 // 预览附件
@@ -105,5 +119,8 @@ function attachmentView(item) {
 <style lang="scss" scoped>
 ::v-deep(.el-input-number .el-input__inner) {
   text-align: left;
+}
+::v-deep(.el-descriptions__label.el-descriptions__cell.is-bordered-label){
+  width:110px;
 }
 </style>
