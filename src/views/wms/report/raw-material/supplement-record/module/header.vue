@@ -53,7 +53,7 @@
             clearable
             style="width: 200px"
             size="small"
-            placeholder="红冲单号"
+            placeholder="调整单号"
             class="filter-item"
             @keyup.enter="crud.toQuery"
           />
@@ -92,7 +92,7 @@ const defaultTime = ref([new Date(2000, 1, 1, 0, 0, 0), new Date(2000, 2, 1, 23,
 
 const defaultQuery = {
   returnTime: [], // [开始日期，结束日期]
-  serialNumber: undefined, // 红冲单号
+  serialNumber: undefined, // 调整单号
   projectId: { value: undefined, resetAble: false }, // 项目id
   factoryId: { value: undefined, resetAble: false }, // 工厂id
   basicClass: { value: undefined, resetAble: false }

@@ -371,7 +371,7 @@ export default {
           path: 'report/raw-material/supplement-record',
           hidden: false,
           component: '/wms/report/raw-material/supplement-record/index',
-          meta: { title: '红冲记录', icon: 'project', noCache: true }
+          meta: { title: '调整记录', icon: 'project', noCache: true }
         },
         {
           name: 'WMSReportRawMaterialMaterialRejectReceipt',
