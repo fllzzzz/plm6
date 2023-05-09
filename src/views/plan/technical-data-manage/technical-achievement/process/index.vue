@@ -43,26 +43,31 @@
         <common-button size="mini" @click="openDetail(scope.row)" v-permission="permission.detail">详情</common-button>
         <common-button size="mini" type="primary" @click="openModify(scope.row)" v-permission="permission.edit">修改</common-button>
         <common-button size="mini" type="success" @click="openBind(scope.row)" v-permission="permission.bind">绑定构件</common-button>
-        <el-popover
-          v-if="checkPermission(permission.del)"
-          v-model:visible="scope.row.pop"
-          placement="top"
-          width="180"
-          trigger="hover"
-          @show="onPopoverShow"
-          @hide="onPopoverHide"
-        >
-          <p>{{scope.row.sourceRow?.bindQuantity>0?'已绑定构件，不可删除!':'确定删除？'}}</p>
-          <div style="text-align: right; margin: 0" v-if="scope.row.sourceRow?.bindQuantity<=0">
-            <common-button size="mini" type="text" @click.stop="cancelDel(scope.row)">取消</common-button>
-            <common-button type="primary" size="mini" @click.stop="delClick(scope.row)">确定</common-button>
-          </div>
-          <template #reference>
+        <template v-if="checkPermission(permission.del)">
+          <el-tooltip effect="light" v-if="scope.row.sourceRow?.bindQuantity>0" content="已绑定构件，不可删除!" placement="top">
             <div style="display:inline-block;margin-left:6px;">
-              <common-button type="danger" :disabled="scope.row.sourceRow?.bindQuantity>0" icon="el-icon-delete" size="mini" @click.stop="toDelete(scope.row)" />
+              <common-button type="danger" :disabled="scope.row.sourceRow?.bindQuantity>0" icon="el-icon-delete" size="mini" />
             </div>
-          </template>
-        </el-popover>
+          </el-tooltip>
+          <el-popover
+            v-else
+            v-model:visible="scope.row.pop"
+            placement="top"
+            width="180"
+            trigger="manual"
+            @show="onPopoverShow"
+            @hide="onPopoverHide"
+          >
+            <p>{{scope.row.sourceRow?.bindQuantity>0?'已绑定构件，不可删除!':'确定删除？'}}</p>
+            <div style="text-align: right; margin: 0" v-if="scope.row.sourceRow?.bindQuantity<=0">
+              <common-button size="mini" type="text" @click.stop="cancelDel(scope.row)">取消</common-button>
+              <common-button type="primary" size="mini" @click.stop="delClick(scope.row)">确定</common-button>
+            </div>
+            <template #reference>
+              <common-button type="danger" :disabled="scope.row.sourceRow?.bindQuantity>0" icon="el-icon-delete" size="mini" @click.stop="toDelete(scope.row)" />
+            </template>
+          </el-popover>
+        </template>
       </template>
     </el-table-column>
   </common-table>

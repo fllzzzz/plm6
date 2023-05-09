@@ -12,7 +12,7 @@
     custom-class="contract-change"
   >
     <template #titleRight>
-      <common-button type="info" @click="versionVisible=true">修订版本</common-button>
+      <common-button type="info" v-permission="permission.detail" @click="versionVisible=true">修订版本</common-button>
       <common-button type="primary" v-loading="loading" size="small" @click="onSubmit">提交</common-button>
     </template>
     <template #content>
@@ -112,6 +112,7 @@ import { parseTime } from '@/utils/date'
 import UploadBtn from '@comp/file-upload/UploadBtn'
 import { ElMessage } from 'element-plus'
 import { judgeSameValue } from '@/views/contract/info/judgeSameValue'
+import { planProcessListPM as permission } from '@/page-permission/plan'
 
 import historyVersion from './history-version'
 import showPdfAndImg from '@comp-base/show-pdf-and-img.vue'
