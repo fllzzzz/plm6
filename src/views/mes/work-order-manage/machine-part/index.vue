@@ -168,8 +168,8 @@
   </div>
 </template>
 <script setup>
-import { ref, provide } from 'vue'
-import crudApi from '@/api/mes/work-order-manage/machine-part.js'
+import { ref, provide, watch } from 'vue'
+import crudApi, { getCutType } from '@/api/mes/work-order-manage/machine-part.js'
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
 import pagination from '@crud/Pagination'
@@ -191,6 +191,7 @@ const optShow = {
 const tableRef = ref()
 const cuttingDetailData = ref({})
 const cuttingDrawerVisible = ref(false)
+const cutTypeList = ref([])
 
 const { crud, CRUD, columns } = useCRUD(
   {
@@ -206,8 +207,17 @@ const { crud, CRUD, columns } = useCRUD(
   tableRef
 )
 
-provide('permission', permission)
+watch(
+  () => crud.query.areaIds,
+  (val) => {
+    if (val) {
+      fetchCutType()
+    }
+  }
+)
 
+provide('permission', permission)
+provide('cutTypeList', cutTypeList)
 const { maxHeight } = useMaxHeight()
 
 // 预览切割工单 pdf
@@ -215,6 +225,21 @@ function showCuttingDetail(row) {
   console.log(row, 'row')
   cuttingDrawerVisible.value = true
   cuttingDetailData.value = row
+}
+
+async function fetchCutType() {
+  if (crud.query.processType !== mesMachinePartOrderTypeEnum.CUTTING_ORDER.V) return
+  try {
+    const data = await getCutType({
+      projectIds: crud.query.projectIds,
+      monomerIds: crud.query.monomerIds,
+      areaIds: crud.query.areaIds,
+      processType: mesMachinePartOrderTypeEnum.CUTTING_ORDER.V
+    })
+    cutTypeList.value = data || []
+  } catch (e) {
+    console.log('获取切割类型失败', e)
+  }
 }
 
 // const handleNestingTaskClick = debounce(function (nodes = []) {
