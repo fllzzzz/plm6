@@ -51,7 +51,7 @@ export function wmsRmTransferReceipt(id) {
 }
 
 /**
- * 红冲记录
+ * 调整记录
  */
 export function wmsRmSupplementReceipt(params) {
   return request({
@@ -67,5 +67,5 @@ export default {
   wmsRmReturnReceipt, // 退库单
   wmsRmRejectReceipt, // 退货单
   wmsRmTransferReceipt, // 调拨单
-  wmsRmSupplementReceipt // 红冲记录
+  wmsRmSupplementReceipt // 调整记录
 }

@@ -26,6 +26,8 @@ const transactionRecord = contract.transactionRecord
 const contractStructureProduct = contract.structurePrice
 const contractEnclosureProduct = contract.structurePrice
 const contractAuxiliaryMaterialProduct = contract.structurePrice
+const contractStructureShipmentTracking = contract.shipmentTracking
+const contractAuxiliaryMaterialShipmentTracking = contract.shipmentTracking
 
 const logisticsPaymentLedger = contract.logisticsLedger
 const supplierPayableSummary = contract.payableSummary
@@ -161,7 +163,7 @@ const wmsRmInboundReceipt = wms.wmsRmInboundReceipt // 入库
 const wmsRmReturnReceipt = wms.wmsRmReturnReceipt // 退库
 const wmsRmRejectReceipt = wms.wmsRmRejectReceipt // 退货
 const wmsRmTransferReceipt = wms.wmsRmTransferReceipt // 调拨
-const wmsRmSupplementReceipt = wms.wmsRmSupplementReceipt // 红冲
+const wmsRmSupplementReceipt = wms.wmsRmSupplementReceipt // 调整
 
 // project
 const deliveryCargoList = project.deliveryCargoList // 自制收货记录
@@ -207,6 +209,8 @@ export default {
   contractStructureProduct, // 结构制品
   contractEnclosureProduct, // 围护制品
   contractAuxiliaryMaterialProduct, // 配套制品
+  contractStructureShipmentTracking, // 结构发运跟踪
+  contractAuxiliaryMaterialShipmentTracking, // 配套件发运跟踪
   projectWarehouseRecord, // 销售管理入库记录
   industryElectricRecord, // 工业电费
   civilElectricRecord, // 民用电费
@@ -336,7 +340,7 @@ export default {
   wmsRmReturnReceipt, // 退库单
   wmsRmRejectReceipt, // 退货单
   wmsRmTransferReceipt, // 调拨单
-  wmsRmSupplementReceipt, // 红冲记录
+  wmsRmSupplementReceipt, // 调整记录
 
   // 项目管理
   deliveryCargoList, // 自制收货记录

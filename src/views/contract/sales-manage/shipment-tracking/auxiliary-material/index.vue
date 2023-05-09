@@ -15,6 +15,24 @@
     >
       <el-table-column label="序号" type="index" align="center" width="60" />
       <el-table-column
+        v-if="columns.visible('monomer.name')"
+        key="monomer.name"
+        prop="monomer.name"
+        show-overflow-tooltip
+        label="单体"
+        align="center"
+        min-width="160"
+      />
+      <el-table-column
+        v-if="columns.visible('area.name')"
+        key="area.name"
+        prop="area.name"
+        show-overflow-tooltip
+        label="区域"
+        align="center"
+        min-width="160"
+      />
+      <el-table-column
         v-if="columns.visible('name')"
         key="name"
         prop="name"
@@ -33,18 +51,18 @@
         min-width="140"
       />
       <el-table-column
-        v-if="columns.visible('unit')"
-        key="unit"
-        prop="unit"
+        v-if="columns.visible('measureUnit')"
+        key="measureUnit"
+        prop="measureUnit"
         show-overflow-tooltip
         label="单位"
         align="center"
         min-width="120"
       />
       <el-table-column
-        v-if="columns.visible('totalQuantity')"
-        key="totalQuantity"
-        prop="totalQuantity"
+        v-if="columns.visible('quantity')"
+        key="quantity"
+        prop="quantity"
         label="数量"
         align="center"
         min-width="110"
@@ -67,13 +85,12 @@
         label="金额"
       />
       <el-table-column
-        v-if="columns.visible('shipmentTime')"
-        key="shipmentTime"
-        prop="shipmentTime"
+        v-if="columns.visible('createTime')"
+        key="createTime"
+        prop="createTime"
         align="center"
-        sortable="custom"
         label="发运日期"
-        width="120"
+        width="100"
       />
     </common-table>
     <!--分页组件-->
@@ -82,14 +99,17 @@
 </template>
 
 <script setup>
-import crudApi from '@/api/contract/sales-manage/price-manage/structure'
-import { ref } from 'vue'
-import { transactionRecordPM as permission } from '@/page-permission/contract'
+import { auxiliaryMaterialList as get } from '@/api/contract/sales-manage/shipment-tracking'
+import { ref, defineEmits } from 'vue'
+
+import { shipmentTrackingPM as permission } from '@/page-permission/contract'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import pagination from '@crud/Pagination'
 import mHeader from './module/header'
+
+const emit = defineEmits(['resetQuery'])
 
 const optShow = {
   add: false,
@@ -101,18 +121,19 @@ const optShow = {
 const tableRef = ref()
 const headerRef = ref()
 const dataFormat = ref([
-  ['shipmentTime', 'parse-time'],
+  ['createTime', ['parse-time', '{y}-{m}-{d}']],
   ['unitPrice', 'to-thousand'],
   ['totalPrice', 'to-thousand']
 ])
 
-const { crud, columns } = useCRUD(
+const { crud, columns, CRUD } = useCRUD(
   {
     title: '配套制品',
     sort: [],
     permission: { ...permission },
-    crudApi: { ...crudApi },
+    crudApi: { get },
     optShow: { ...optShow },
+    invisibleColumns: [],
     requiredQuery: ['projectId']
   },
   tableRef
@@ -123,4 +144,9 @@ const { maxHeight } = useMaxHeight({
   minHeight: 300,
   paginate: true
 })
+
+// 重置前
+CRUD.HOOK.beforeResetQuery = () => {
+  emit('resetQuery')
+}
 </script>

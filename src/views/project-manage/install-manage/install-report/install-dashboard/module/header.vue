@@ -3,7 +3,7 @@
     <div v-show="crud.searchToggle">
       <common-radio-button
         v-model="query.productType"
-        :options="installProjectTypeEnum.ENUM"
+        :options="installTypeEnumArr"
         type="enum"
         class="filter-item"
         @change="productTypeChange"
@@ -55,6 +55,9 @@ import crudOperation from '@crud/CRUD.operation'
 import ColorCard from '@comp/ColorCard'
 import Scale from '@comp/Scale'
 import monomerSelect from '@/components-system/plan/monomer-select'
+import { mapGetters } from '@/store/lib'
+
+const { installTypeEnumArr } = mapGetters('installTypeEnumArr')
 
 const defaultQuery = {
   productType: installProjectTypeEnum.ARTIFACT.V,

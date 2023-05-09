@@ -89,7 +89,7 @@
                       start-placeholder="开始"
                       end-placeholder="结束"
                       @change="timeChange(k.deepVal,k)"
-                      :disabledDate="(date) => {return date.getTime() < globalProject.startDate || date.getTime() > k.date}"
+                      :disabledDate="(date) => {return (scope.row.startDate?date.getTime() < scope.row.startDate:date.getTime() < globalProject.startDate) || date.getTime() > k.date}"
                     />
                     <span>{{k.deepVal?.startDate && k.deepVal?.endDate? parseTime(k.deepVal.startDate,'{y}-{m}-{d}')+' : '+parseTime(k.deepVal.endDate,'{y}-{m}-{d}'): '-'}}</span>
                   </template>
@@ -124,7 +124,7 @@
                       end-placeholder="结束"
                       @change="timeChange(k.processVal,k)"
                       :disabled="!isNotBlank(k.deepVal.timeArr)"
-                      :disabledDate="(date) => {if (k.deepVal.startDate) { return date.getTime() < k.deepVal.startDate || date.getTime() > k.date } else { return date.getTime() < globalProject.startDate || date.getTime() > k.date }}"
+                      :disabledDate="(date) => {if (k.deepVal.startDate) { return date.getTime() < k.deepVal.startDate || date.getTime() > k.date } else { return (scope.row.startDate?date.getTime() < scope.row.startDate:date.getTime() < globalProject.startDate) || date.getTime() > k.date }}"
                     />
                     <span>{{k.processVal?.startDate && k.processVal?.endDate? parseTime(k.processVal.startDate,'{y}-{m}-{d}')+' : '+parseTime(k.processVal.endDate,'{y}-{m}-{d}'): '-'}}</span>
                   </template>
@@ -159,7 +159,7 @@
                       end-placeholder="结束"
                       @change="timeChange(k.deliveryVal,k)"
                       :disabled="!isNotBlank(k.processVal.timeArr)"
-                      :disabledDate="(date) => {if (k.processVal.startDate) { return date.getTime() < k.processVal.startDate || date.getTime() > k.date } else { return date.getTime() < globalProject.startDate || date.getTime() > k.date }}"
+                      :disabledDate="(date) => {if (k.processVal.startDate) { return date.getTime() < k.processVal.startDate || date.getTime() > k.date } else { return (scope.row.startDate?date.getTime() < scope.row.startDate:date.getTime() < globalProject.startDate) || date.getTime() > k.date }}"
                     />
                     <span>{{k.deliveryVal?.startDate && k.deliveryVal?.endDate? parseTime(k.deliveryVal.startDate,'{y}-{m}-{d}')+' : '+parseTime(k.deliveryVal.endDate,'{y}-{m}-{d}'): '-'}}</span>
                   </template>
@@ -194,7 +194,7 @@
                       end-placeholder="结束"
                       @change="timeChange(k.installVal,k)"
                       :disabled="!(isNotBlank(k.processVal.timeArr)&&isNotBlank(k.deepVal.timeArr))"
-                      :disabledDate="(date) => {if(k.deliveryVal.startDate){ return date.getTime() < k.deliveryVal.startDate || date.getTime() > k.date} else { return date.getTime() < globalProject.startDate || date.getTime() > k.date }}"
+                      :disabledDate="(date) => {if(k.deliveryVal.startDate){ return date.getTime() < k.deliveryVal.startDate || date.getTime() > k.date} else { return (scope.row.startDate?date.getTime() < scope.row.startDate:date.getTime() < globalProject.startDate) || date.getTime() > k.date }}"
                     />
                     <span>{{k.installVal?.startDate && k.installVal?.endDate? parseTime(k.installVal.startDate,'{y}-{m}-{d}')+' : '+parseTime(k.installVal.endDate,'{y}-{m}-{d}'): '-'}}</span>
                   </template>
@@ -391,6 +391,7 @@ CRUD.HOOK.handleRefresh = (crud, data) => {
   data.data.content.map(v => {
     if (v.monomerDetailList.length > 0) {
       v.monomerDetailList.map((k, index) => {
+        k.startDate = v.startDate
         k.monomerName = v.name
         if (index === 0) {
           k.monomerNameSpan = v.monomerDetailList.length

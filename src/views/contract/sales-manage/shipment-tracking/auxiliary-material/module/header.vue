@@ -25,19 +25,23 @@
       <template #optRight>
         <el-tag size="medium" effect="plain">
           统计日期：
-          <span v-parse-time="{ val: statisticalTime?.[0], fmt: '{y}-{m}-{d}' }" />
+          <span v-parse-time="{ val: query.startDate, fmt: '{y}-{m}-{d}' }" />
           ~
-          <span v-parse-time="{ val: statisticalTime?.[1], fmt: '{y}-{m}-{d}' }" />
+          <span v-parse-time="{ val: query.endDate, fmt: '{y}-{m}-{d}' }" />
         </el-tag>
       </template>
       <template #viewLeft>
         <print-table
           v-permission="crud.permission.print"
-          api-key="contractAuxiliaryMaterialProduct"
-          :params="{ projectId: query.projectId }"
+          api-key="contractAuxiliaryMaterialShipmentTracking"
+          :params="{
+            projectId: query.projectId,
+            productType: query.productType,
+            startDate: query.startDate,
+            endDate: query.endDate,
+          }"
           size="mini"
           type="warning"
-          class="filter-item"
         />
       </template>
     </crudOperation>
@@ -47,27 +51,36 @@
 <script setup>
 import { watch, nextTick, inject } from 'vue'
 
+import { PICKER_OPTIONS_SHORTCUTS } from '@/settings/config'
+import moment from 'moment'
+import { installProjectTypeEnum } from '@enum-ms/project'
+
 import { regHeader } from '@compos/use-crud'
 import crudOperation from '@crud/CRUD.operation'
 import rrOperation from '@crud/RR.operation'
 
-const projectId = inject('projectId')
-const statisticalTime = inject('statisticalTime')
+const commonParams = inject('commonParams')
 
 watch(
-  projectId,
-  (val) => {
+  commonParams,
+  (data = {}) => {
     nextTick(() => {
-      crud.query.projectId = val
+      for (const key in data) {
+        crud.query[key] = data[key]
+      }
       crud.toQuery()
     })
   },
-  { immediate: true }
+  { immediate: true, deep: true }
 )
+const times = PICKER_OPTIONS_SHORTCUTS[1]?.value()
 
 const defaultQuery = {
+  startDate: moment(times[0]).valueOf(),
+  endDate: moment(times[1]).valueOf(),
   name: undefined,
   specification: undefined,
+  productType: installProjectTypeEnum.AUXILIARY.V,
   projectId: { value: undefined, resetAble: false }
 }
 const { crud, query } = regHeader(defaultQuery)

@@ -3,7 +3,7 @@
     <template v-if="globalProject && globalProject.projectContentList && globalProject.projectContentList.length>0">
       <!--工具栏-->
       <div class="head-container">
-        <mHeader :project-id="globalProjectId" @monomerChangeType="monomerChange"/>
+        <mHeader :project-id="globalProjectId" @monomerChangeType="monomerChange" @monomerValChange="monomerValChange"/>
       </div>
       <!--表格渲染-->
       <common-table
@@ -46,7 +46,7 @@
     </common-table>
       <!--分页组件-->
       <pagination />
-      <mForm :project-id="globalProjectId" :type-info="typeInfo" :global-project="globalProject"/>
+      <mForm :project-id="globalProjectId" :type-info="typeInfo" :global-project="globalProject" :currentMonomer="currentMonomer"/>
     </template>
     <template v-else>
       <div style="color:red;font-size:14px;">*请先前去合同管理模块添加项目内容</div>
@@ -80,6 +80,8 @@ const optShow = {
 
 const tableRef = ref()
 const typeInfo = ref([])
+const currentMonomer = ref({})
+
 const { crud, columns, CRUD } = useCRUD(
   {
     title: '区域',
@@ -109,6 +111,10 @@ watch(
   },
   { immediate: true, deep: true }
 )
+
+function monomerValChange(val) {
+  currentMonomer.value = val || {}
+}
 
 function monomerChange(val) {
   typeInfo.value = val || []

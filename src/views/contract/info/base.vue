@@ -281,7 +281,8 @@
       <div class="table-box">
         <upload-list
           v-if="!isModify"
-          :show-download="!isModify"
+          showView
+          show-download
           :file-classify="fileClassifyEnum.CONTRACT_ATT.V"
           v-model:files="detail.attachmentFiles"
           :download-fn="downloadBaseAttachments"
@@ -290,7 +291,8 @@
         />
         <upload-list
           v-else
-          :show-download="!isModify"
+          showView
+          show-download
           :file-classify="fileClassifyEnum.CONTRACT_ATT.V"
           v-model:files="form.attachmentFiles"
           :download-fn="downloadBaseAttachments"

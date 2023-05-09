@@ -194,7 +194,7 @@
           />
           <udOperation :data="scope.row" :show-edit="false" :permission="permission"/>
           <!-- 下载 -->
-           <export-button :fn="downloadProjectInfo" :params="{ projectId: scope.row.id }" v-permission="permission.download"/>
+          <export-button :fn="downloadProjectInfo" :params="{ projectId: scope.row.id }" v-permission="permission.download"/>
         </template>
       </el-table-column>
     </common-table>

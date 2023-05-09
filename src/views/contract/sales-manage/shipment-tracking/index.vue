@@ -4,6 +4,7 @@
       <common-radio-button
         v-model="productType"
         :options="installProjectTypeEnum.ENUM"
+        :unshowVal="[installProjectTypeEnum.ENCLOSURE.V]"
         default
         type="enum"
         size="small"
@@ -22,41 +23,67 @@
         :shortcuts="PICKER_OPTIONS_SHORTCUTS"
         :disabled-date="disabledDate"
         :clearable="false"
-        style="width:230px"
-        @change="fetchSummary"
+        style="width: 230px"
       />
-      <el-row v-loading="summaryLoading" :gutter="10" class="panel-group">
+      <el-row v-if="checkPermission(permission.summary)" v-loading="summaryLoading" :gutter="10" class="panel-group">
         <el-col class="card-panel-col">
-          <Panel :name="`累计发运量（吨）`" text-color="#626262" num-color="#1890ff" :end-val="projectSummary.beginPeriod || 0" :precision="2" />
+          <Panel
+            :name="`累计发运量（吨）`"
+            text-color="#626262"
+            num-color="#1890ff"
+            :end-val="summaryData.shipMet || 0"
+            :precision="2"
+            :show-empty="productType === installProjectTypeEnum.AUXILIARY.V"
+          />
         </el-col>
         <el-col class="card-panel-col">
-          <Panel name="累计发运额（元）" text-color="#626262" num-color="#1890ff" :end-val="projectSummary.inbound || 0" :precision="2" />
+          <Panel name="累计发运额（元）" text-color="#626262" num-color="#1890ff" :end-val="summaryData.shipAmount || 0" :precision="2" />
         </el-col>
         <el-col class="card-panel-col">
-          <Panel name="累计车次（元）" text-color="#626262" num-color="#1890ff" :end-val="projectSummary.outbound || 0" :precision="2" />
+          <Panel
+            name="累计车次"
+            text-color="#626262"
+            num-color="#1890ff"
+            :end-val="summaryData.cargoQuantity || 0"
+            :show-empty="productType === installProjectTypeEnum.AUXILIARY.V"
+          />
         </el-col>
         <el-col class="card-panel-col">
-          <Panel :name="`筛选日期发运量（吨）`" text-color="#626262" num-color="#1890ff" :end-val="projectSummary.endPeriod || 0" :precision="2" />
+          <Panel
+            :name="`筛选日期发运量（吨）`"
+            text-color="#626262"
+            num-color="#1890ff"
+            :end-val="summaryData.shipMetTime || 0"
+            :precision="2"
+            :show-empty="productType === installProjectTypeEnum.AUXILIARY.V"
+          />
         </el-col>
         <el-col class="card-panel-col">
-          <Panel name="筛选日期发运额（元）" text-color="#626262" num-color="#1890ff" :end-val="projectSummary.endPeriod || 0" :precision="2" />
+          <Panel
+            name="筛选日期发运额（元）"
+            text-color="#626262"
+            num-color="#1890ff"
+            :end-val="summaryData.shipAmountTime || 0"
+            :precision="2"
+          />
         </el-col>
       </el-row>
     </div>
-    <component :is="currentView" ref="domRef" />
+    <component :is="currentView" @reset-query="resetQuery" />
   </div>
 </template>
 
 <script setup>
-import { cost } from '@/api/contract/sales-manage/price-manage/common'
-import { ref, computed, provide } from 'vue'
+import { shipSummary } from '@/api/contract/sales-manage/shipment-tracking'
+import { ref, computed, provide, watch } from 'vue'
 import { mapGetters } from '@/store/lib'
-import { transactionRecordPM as permission } from '@/page-permission/contract'
-import { PICKER_OPTIONS_SHORTCUTS } from '@/settings/config'
 
+import { shipmentTrackingPM as permission } from '@/page-permission/contract'
+import { PICKER_OPTIONS_SHORTCUTS } from '@/settings/config'
 import { installProjectTypeEnum } from '@enum-ms/project'
 import { isBlank } from '@data-type/index'
 import checkPermission from '@/utils/system/check-permission'
+import moment from 'moment'
 
 import structure from './structure'
 import enclosure from './enclosure'
@@ -77,39 +104,53 @@ const currentView = computed(() => {
 
 const { globalProjectId } = mapGetters(['globalProjectId'])
 
-const domRef = ref()
-const projectId = ref()
 const productType = ref()
 const summaryLoading = ref(false)
-const monomerId = ref()
-const projectSummary = ref({})
-const statisticalTime = ref(PICKER_OPTIONS_SHORTCUTS[1]?.value())
+const summaryData = ref({})
+
+const times = PICKER_OPTIONS_SHORTCUTS[1]?.value()
+const statisticalTime = ref([moment(times[0]).valueOf(), moment(times[1]).valueOf()])
 
 const defaultTime = ref([new Date(2000, 1, 1, 0, 0, 0), new Date(2000, 2, 1, 23, 59, 59)])
 
-provide('statisticalTime', statisticalTime)
-provide('monomerId', monomerId)
-provide('projectId', globalProjectId)
+// 公共参数
+const commonParams = computed(() => {
+  return {
+    startDate: statisticalTime.value[0],
+    endDate: statisticalTime.value[1],
+    projectId: globalProjectId.value,
+    productType: productType.value
+  }
+})
+
+provide('commonParams', commonParams)
+
+watch(
+  commonParams,
+  () => {
+    fetchSummary()
+  },
+  { immediate: true, deep: true }
+)
 
 function disabledDate(time) {
   return time > new Date()
 }
 
-fetchSummary()
+// 重置
+function resetQuery() {
+  statisticalTime.value = [moment(times[0]).valueOf(), moment(times[1]).valueOf()]
+}
 
-// 获取项目汇总
-function fetchSummary() {
-  if (!checkPermission(permission.summary) || isBlank(projectId.value)) {
-    projectSummary.value = {}
+// 获取发运汇总
+async function fetchSummary() {
+  if (!checkPermission(permission.summary) || isBlank(globalProjectId.value)) {
+    summaryData.value = {}
     return
   }
   try {
     summaryLoading.value = true
-    const params = {
-      statisticalTime: statisticalTime.value,
-      projectId: projectId.value
-    }
-    projectSummary.value = cost(params)
+    summaryData.value = (await shipSummary(commonParams.value)) || {}
   } catch (error) {
     console.log(error)
   } finally {

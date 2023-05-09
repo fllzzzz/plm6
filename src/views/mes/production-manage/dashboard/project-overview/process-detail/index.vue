@@ -12,6 +12,7 @@
       <workshop-select
         v-model="workshopId"
         placeholder="请选择车间"
+        :workshop-type="workshopTypeEnum.BUILDING.V"
         :factory-id="factoryId"
         style="width: 150px"
         class="filter-item"
@@ -146,7 +147,7 @@
 import { getProcessDetail } from '@/api/mes/production-manage/dashboard/project-overview'
 import { defineProps, defineEmits, ref, watch, computed, inject } from 'vue'
 import { tableSummary } from '@/utils/el-extra'
-import { weightTypeEnum } from '@enum-ms/common'
+import { weightTypeEnum, workshopTypeEnum } from '@enum-ms/common'
 import { taskTrackingSchedulingStatusEnum, componentTypeEnum } from '@enum-ms/mes'
 import { mesProjectOverviewPM as permission } from '@/page-permission/mes'
 import useVisible from '@compos/use-visible'

@@ -36,6 +36,7 @@
           ref="workshopInfRef"
           v-model="query.workShopId"
           placeholder="请选择车间"
+          :workshop-type="workshopTypeEnum.BUILDING.V"
           :factory-id="query.factoryId"
           style="width: 200px"
           class="filter-item"
@@ -53,7 +54,7 @@
 import { regHeader } from '@compos/use-crud'
 import moment from 'moment'
 import { componentTypeEnum } from '@enum-ms/mes'
-import { weightTypeEnum } from '@enum-ms/common'
+import { weightTypeEnum, workshopTypeEnum } from '@enum-ms/common'
 import { PICKER_OPTIONS_SHORTCUTS } from '@/settings/config'
 import workshopSelect from '@comp-mes/workshop-select'
 import rrOperation from '@crud/RR.operation'

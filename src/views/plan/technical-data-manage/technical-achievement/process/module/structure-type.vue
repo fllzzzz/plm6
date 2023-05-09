@@ -1,24 +1,18 @@
 <template>
   <div>
-    <common-radio-button
-      v-model="processType"
-      :options="planProcessTypeEnum.ENUM"
-      type="enum"
-      style="margin-bottom:10px;"
-    />
-    <common-table :data="list" v-loading="tableLoading" :max-height="maxHeight">
+    <common-table ref="tableRef" :data="list" v-loading="tableLoading" :max-height="maxHeight" style="width:300px;"  @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column key="monomer.name" prop="monomer.name" label="构件类型" align="center" />
-      <el-table-column key="area.name" prop="area.name" label="数量(件)" align="center" />
+      <el-table-column key="structureClassName" prop="structureClassName" label="构件类型" align="center" />
+      <el-table-column key="quantity" prop="quantity" label="数量(件)" align="center" />
     </common-table>
   </div>
 </template>
 
 <script setup>
-import { planProcessTypeEnum } from '@enum-ms/plan'
-import { ref, defineEmits, defineProps } from 'vue'
+import { getStructureClass } from '@/api/plan/technical-data-manage/process'
+import { ref, defineEmits, defineProps, watch } from 'vue'
 
-const emit = defineEmits(['update:modelValue', 'success'])
+const emit = defineEmits(['change'])
 
 const props = defineProps({
   query: {
@@ -33,20 +27,38 @@ const props = defineProps({
 
 const list = ref([])
 const tableLoading = ref(false)
-const processType = ref()
+const tableRef = ref()
 
-// 获取收货明细
+watch(
+  () => props.query,
+  (val) => {
+    if (val) {
+      fetchList()
+    }
+  },
+  { deep: true, immediate: true }
+)
+
+// 获取构件类型明细
 async function fetchList() {
-  // let _list = []
-  // tableLoading.value = true
-  // try {
-  //   const { content = [] } = await deliveryProductList(props.detailInfo?.id)
-  //   _list = content
-  // } catch (error) {
-  //   console.log('收货明细', error)
-  // } finally {
-  //   list.value = _list
-  //   tableLoading.value = false
-  // }
+  let _list = []
+  if (!props.query.projectId) {
+    return
+  }
+  tableLoading.value = true
+  try {
+    const { content = [] } = await getStructureClass({ ...props.query })
+    _list = content
+  } catch (error) {
+    console.log('构件类型明细', error)
+  } finally {
+    list.value = _list
+    tableLoading.value = false
+  }
+}
+
+function handleSelectionChange(val) {
+  console.log(val)
+  emit('change', val)
 }
 </script>

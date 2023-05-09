@@ -1,14 +1,14 @@
 <template>
   <div v-show="crud.searchToggle">
-    <monomer-select
+    <!-- <monomer-select
       v-model="query.monomerId"
       :project-id="globalProjectId"
       :default="false"
       clearable
       class="filter-item"
       @change="crud.toQuery"
-    />
-    <material-cascader
+    /> -->
+    <!-- <material-cascader
       v-model="query.classifyId"
       :basic-class="rawMatClsEnum.MATERIAL.V "
       separator=" > "
@@ -20,7 +20,7 @@
       style="width: 300px"
       placeholder="可选择/输入科目、编号搜索"
       @change="crud.toQuery"
-    />
+    /> -->
     <!-- <el-input
       v-model="query.classifyName"
       size="small"
@@ -30,7 +30,29 @@
       clearable
       @blur="crud.toQuery"
     /> -->
-    <rrOperation />
+    <monomer-select-area-tabs :project-id="globalProjectId" @change="fetchMonomerAndArea" :default="false" :productType="productType" needConvert />
+    <el-input
+      v-model.trim="query.name"
+      size="small"
+      placeholder="输入名称搜索"
+      style="width: 170px"
+      class="filter-item"
+      clearable
+      @keyup.enter="crud.toQuery"
+    />
+    <el-input
+      v-model.trim="query.specification"
+      size="small"
+      placeholder="输入规格搜索"
+      style="width: 170px"
+      class="filter-item"
+      clearable
+      @keyup.enter="crud.toQuery"
+    />
+       <common-button class="filter-item" size="mini" type="success" icon="el-icon-search" @click.stop="searchQuery">搜索</common-button>
+      <common-button class="filter-item" size="mini" type="warning" icon="el-icon-refresh-left" @click.stop="resetQuery">
+        重置
+      </common-button>
   </div>
   <crudOperation>
     <template #optRight>
@@ -76,9 +98,9 @@
 
 <script setup>
 import { materialAdd as addPrintRecord } from '@/api/mes/label-print/print-record'
-import { ref, reactive, inject, defineExpose } from 'vue'
+import { ref, reactive, watch, inject, defineExpose } from 'vue'
 
-import { rawMatClsEnum } from '@enum-ms/classification'
+// import { rawMatClsEnum } from '@enum-ms/classification'
 import { mapGetters } from '@/store/lib'
 import { deepClone } from '@data-type/index'
 import { spliceQrCodeUrl, QR_SCAN_PATH } from '@/utils/label'
@@ -87,13 +109,16 @@ import usePrintLabel from '@compos/mes/label-print/use-label-print'
 import { regHeader } from '@compos/use-crud'
 import useGlobalProjectIdChangeToQuery from '@compos/use-global-project-id-change-to-query'
 import crudOperation from '@crud/CRUD.operation'
-import MaterialCascader from '@comp-cls/material-cascader/index.vue'
-import monomerSelect from '@/components-system/plan/monomer-select'
-import rrOperation from '@crud/RR.operation'
+// import MaterialCascader from '@comp-cls/material-cascader/index.vue'
+// import monomerSelect from '@/components-system/plan/monomer-select'
+import monomerSelectAreaTabs from './monomer-select-area-tabs'
+// import rrOperation from '@crud/RR.operation'
 
 const defaultQuery = {
-  classifyId: undefined,
-  monomerId: undefined
+  monomerId: { value: undefined, resetAble: false },
+  areaId: { value: undefined, resetAble: false },
+  name: undefined,
+  specification: undefined
 }
 
 const { crud, query, CRUD } = regHeader(defaultQuery)
@@ -115,13 +140,14 @@ let printConfig = reactive({
 const sourcePrintConfig = ref(deepClone(printConfig))
 
 const permission = inject('permission')
+// const productType = inject('productType')
 
 const { getLabelInfo, printLabelFunc } = inject('headerObj')
 const { batchPrint, print } = usePrintLabel({
   getPrintTotalNumber: (row) => (row.printQuantity || 0) * sourcePrintConfig.value.copiesQuantity,
   getLabelInfo: getLabelInfo,
   printFinallyHook: crud.toQuery,
-  getLoadingTextFunc: (row) => `${row.classifyName}-${row.serialNumber}`,
+  getLoadingTextFunc: (row) => `${row.name}`,
   printLabelFunc: printLabelFunc,
   needAddPrintRecord: true,
   addPrintIdField: 'id',
@@ -134,6 +160,29 @@ function handleCopiesChange(val) {
   }
 }
 
+function fetchMonomerAndArea({ monomerId, areaId }) {
+  query.monomerId = monomerId
+  query.areaId = areaId
+}
+
+watch(
+  [() => globalProjectId.value, () => query.monomerId, () => query.areaId],
+  (val) => {
+    crud.query.projectId = globalProjectId.value
+    crud.toQuery()
+  },
+  { immediate: true, deep: true }
+)
+
+function searchQuery() {
+  crud.toQuery()
+}
+
+function resetQuery() {
+  query.name = undefined
+  query.specification = undefined
+  crud.toQuery()
+}
 // 取消配置恢复数据
 function cancelConfig() {
   printConfigVisible.value = false

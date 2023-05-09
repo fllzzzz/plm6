@@ -67,8 +67,8 @@
         </el-table-column>
         <el-table-column
           v-if="columns.visible('plateId') && crud.query.category !== TechnologyTypeAllEnum.BENDING.V"
-          key="plateId"
-          prop="plateId"
+          :key="technicalTypeStatus ? 'plateId' : 'plate'"
+          :prop="technicalTypeStatus ? 'plateId' : 'plate'"
           :show-overflow-tooltip="true"
           label="版型"
           min-width="100px"
@@ -76,13 +76,23 @@
           <template v-slot="scope">
             <template v-if="scope.row.isModify && !scope.row.inProductionQuantity">
               <common-select
+                v-if="technicalTypeStatus"
                 v-model="scope.row.plateId"
                 :options="plateOption"
                 :type="'other'"
-                :dataStructure="crud.query.category === TechnologyTypeAllEnum.TRUSS_FLOOR_PLATE.V ? trussProp : typeProp"
+                :dataStructure="crud.query.category===TechnologyTypeAllEnum.TRUSS_FLOOR_PLATE.V?trussProp:typeProp"
                 size="small"
                 placeholder="版型"
-                @change="plateChange(scope.row, scope.$index)"
+                @change="plateChange(scope.row,scope.$index)"
+              />
+              <common-select
+                v-else
+                v-model="scope.row.plate"
+                :options="enclosureDictKV?.['plate_type']"
+                :dataStructure="{ key: 'name', label: 'name', value: 'name' }"
+                size="small"
+                placeholder="版型"
+                @change="plateChange(scope.row,scope.$index)"
               />
             </template>
             <div v-else>{{ scope.row.plate ? scope.row.plate : '-' }}</div>
@@ -401,9 +411,9 @@
 
 <script setup>
 import crudApi, { editStatus, uploadBendingSingle } from '@/api/plan/technical-manage/enclosure'
-import { getContractTechInfo } from '@/api/contract/project'
+import { getContractTechInfo, getEnclosureDictList } from '@/api/contract/project'
 import { getTechnicalType } from '@/api/config/mes/base'
-import { ref, watch, provide } from 'vue'
+import { ref, watch, provide, computed } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 
 import { enclosureListPM as permission } from '@/page-permission/plan'
@@ -442,6 +452,7 @@ provide('technicalTypeStatus', technicalTypeStatus)
 const drawVisible = ref(false)
 const currentRow = ref({})
 const typeOption = ref([])
+const enclosureDictKV = ref({}) // 围护配置
 const techOptions = [
   {
     name: '压型彩板',
@@ -550,7 +561,7 @@ const validateColor = (value, row) => {
   return true
 }
 
-const tableRules = {
+const rules = {
   serialNumber: [{ required: true, message: '请输入编号', trigger: 'blur' }],
   unfoldedWidth: [{ validator: validateUnfoldedWidth, message: '展开宽度必填', trigger: 'change' }],
   plateId: [{ validator: validatePlateId, message: '请选择版型', trigger: 'change' }],
@@ -564,9 +575,23 @@ const tableRules = {
   color: [{ validator: validateColor, message: '请输入颜色', trigger: 'blur' }]
 }
 
+const tableRules = computed(() => {
+  let data = {}
+  if (technicalTypeStatus.value) {
+    data = {
+      plateId: [{ validator: validatePlateId, message: '请选择版型', trigger: 'change' }]
+    }
+  } else {
+    data = {
+      plate: [{ required: true, message: '请选择版型', trigger: 'change' }]
+    }
+  }
+  return { ...rules, ...data }
+})
+
 function wrongCellMask({ row, column }) {
   if (!row) return
-  const rules = tableRules
+  const rules = tableRules.value
   let flag = true
   if (row.verify && Object.keys(row.verify) && Object.keys(row.verify).length > 0) {
     if (row.verify[column.property] === false) {
@@ -614,9 +639,48 @@ async function getTechnicalTypeStatus() {
   try {
     const { technicalType = true } = await getTechnicalType()
     technicalTypeStatus.value = technicalType
+    getConfig()
   } catch (error) {
     console.log('获取技术交底配置状态', error)
     technicalTypeStatus.value = true
+  }
+}
+
+// 获取围护配置信息列表
+async function getConfig() {
+  enclosureDictKV.value = {}
+  if (technicalTypeStatus.value || !crud.query.category || crud.query.category === TechnologyTypeAllEnum.BENDING.V) return
+  try {
+    const { content = [] } = await getEnclosureDictList(crud.query.category) || {}
+    const plateKV = {}
+    if (crud.query.category === TechnologyTypeAllEnum.TRUSS_FLOOR_PLATE.V) {
+      enclosureDictKV.value['plate_type'] = content.map(row => {
+        let effectiveWidth = ''
+        row?.list.forEach(v => {
+          if (v.name === 'effectiveWidth') {
+            effectiveWidth = v.value
+          }
+        })
+        plateKV[row.code] = { effectiveWidth }
+        return { name: row.code }
+      })
+    } else {
+      content.forEach((row) => {
+        if (row.name === 'plate_type') {
+          (row.plateTypeList || []).forEach(v => {
+            plateKV[v.plateType] = v
+          })
+          enclosureDictKV.value[row.name] = (row.labels || []).map(v => {
+            return {
+              name: v
+            }
+          })
+        }
+      })
+    }
+    enclosureDictKV.value.KV = plateKV
+  } catch (error) {
+    console.log('获取围护配置信息列表', error)
   }
 }
 
@@ -661,18 +725,29 @@ async function getTechInfo() {
   }
 }
 function plateChange(row, index) {
-  const choseVal = plateOption.value.find((v) => v.id === row.plateId)
-  if (crud.query.category === TechnologyTypeAllEnum.TRUSS_FLOOR_PLATE.V) {
-    crud.data[index].plate = choseVal.serialNumber
-    crud.data[index].weightMeter = choseVal.weightMeter
+  if (row.plateId) {
+    const choseVal = plateOption.value.find(v => v.id === row.plateId)
+    if (crud.query.category === TechnologyTypeAllEnum.TRUSS_FLOOR_PLATE.V) {
+      crud.data[index].plate = choseVal.serialNumber
+      crud.data[index].weightMeter = choseVal.weightMeter
+    } else {
+      crud.data[index].plate = choseVal.plateType
+      crud.data[index].brand = choseVal.brand
+      crud.data[index].thickness = choseVal.thickness
+      crud.data[index].color = choseVal.colour
+      crud.data[index].unfoldedWidth = choseVal.unfoldedWidth
+    }
+    crud.data[index].width = choseVal.effectiveWidth
+    getTotalData(row)
   } else {
-    crud.data[index].plate = choseVal.plateType
-    crud.data[index].brand = choseVal.brand
-    crud.data[index].thickness = choseVal.thickness
-    crud.data[index].color = choseVal.colour
+    const data = enclosureDictKV.value.KV?.[row.plate] || {}
+    if (crud.query.category === TechnologyTypeAllEnum.TRUSS_FLOOR_PLATE.V) {
+      crud.data[index].width = +data.effectiveWidth
+    } else if (crud.query.category === TechnologyTypeAllEnum.PROFILED_PLATE.V || crud.query.category === TechnologyTypeAllEnum.PRESSURE_BEARING_PLATE.V) {
+      crud.data[index].width = +data.effectiveWidth
+      crud.data[index].unfoldedWidth = +data.unfoldedWidth
+    }
   }
-  crud.data[index].width = choseVal.effectiveWidth
-  getTotalData(row)
 }
 
 function getTotalData(row) {
@@ -718,8 +793,10 @@ function tableAdd() {
 const originRow = ref({})
 function editRow(row) {
   originRow.value = JSON.parse(JSON.stringify(row))
-  const chosePlate = plateOption.value.find((k) => k.plateType === row.plate)
-  row.plateId = isNotBlank(chosePlate) ? chosePlate.id : undefined
+  if (technicalTypeStatus.value) {
+    const chosePlate = plateOption.value.find((k) => k.plateType === row.plate)
+    row.plateId = isNotBlank(chosePlate) ? chosePlate.id : undefined
+  }
   row.isModify = true
 }
 async function deleteRow(row) {
@@ -744,13 +821,13 @@ function rowCancel(row) {
 async function rowSubmit(row) {
   if (crud.query.category !== TechnologyTypeAllEnum.BENDING.V) {
     crud.data.map((v) => {
-      if (!v.isModify && v.plate) {
+      if (!v.isModify && v.plate && technicalTypeStatus.value) {
         const chosePlate = plateOption.value.find((k) => k.plateType === v.plate)
         v.plateId = chosePlate.id
       }
     })
   }
-  const rules = tableRules
+  const rules = tableRules.value
   let flag = true
   row.verify = {}
   for (const rule in rules) {

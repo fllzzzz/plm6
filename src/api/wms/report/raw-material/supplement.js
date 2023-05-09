@@ -1,7 +1,7 @@
 import request from '@/utils/request'
 
 /**
- * 红冲记录
+ * 调整记录
  */
 export function get(params) {
   return request({
@@ -13,7 +13,7 @@ export function get(params) {
 }
 
 /**
- * 红冲d单详情
+ * 调整d单详情
  */
 export function detail(id) {
   return request({

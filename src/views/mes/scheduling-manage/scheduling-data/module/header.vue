@@ -36,6 +36,7 @@
         style="width: 200px"
         class="filter-item"
         clearable
+        :workshop-type="workshopTypeEnum.BUILDING.V"
         :factory-id="query.factoryId"
         @change="handleWorkshopChange"
       />
@@ -81,6 +82,7 @@
 import { ref, watch } from 'vue'
 import { getScheduleSummary } from '@/api/mes/scheduling-manage/scheduling-data.js'
 import { timeTypeEnum } from '@enum-ms/contract'
+import { workshopTypeEnum } from '@enum-ms/common'
 import { regHeader } from '@compos/use-crud'
 import { schedulingDataPM as permission } from '@/page-permission/mes'
 // import { parseTime } from '@/utils/date'

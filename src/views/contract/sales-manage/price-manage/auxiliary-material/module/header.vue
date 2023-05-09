@@ -65,7 +65,7 @@
             <span v-if="!costLoading">{{ monomerCost.totalMete }}</span>
             <i v-else class="el-icon-loading" />
           </el-tag>
-          <el-tag effect="plain" type="success" size="medium" class="filter-item">
+          <el-tag effect="plain" type="success" size="medium">
             单体配套件造价(元)：
             <span v-if="!costLoading" v-thousand="monomerCost.totalPrice" />
             <i v-else class="el-icon-loading" />

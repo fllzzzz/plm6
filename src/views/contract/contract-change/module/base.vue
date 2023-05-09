@@ -115,6 +115,7 @@
       <div class="table-box">
         <upload-list
           :show-download="true"
+          showView
           :file-classify="fileClassifyEnum.CONTRACT_ATT.V"
           v-model:files="detail.attachments"
           :download-fn="downloadBaseAttachments"

@@ -5,6 +5,7 @@
       v-model="query.workshopId"
       placeholder="请选择车间"
       :factory-id="query.factoryId"
+      :workshop-type="workshopTypeEnum.BUILDING.V"
       style="width: 200px"
       class="filter-item"
       clearable
@@ -77,6 +78,7 @@
 import { inject } from 'vue'
 import { regHeader } from '@compos/use-crud'
 import { purchaseOrderStatusEnum } from '@enum-ms/contract'
+import { workshopTypeEnum } from '@enum-ms/common'
 import workshopSelect from '@comp-mes/workshop-select'
 import Panel from './panel.vue'
 import crudOperation from '@crud/CRUD.operation'

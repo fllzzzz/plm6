@@ -28,7 +28,7 @@
           <el-form-item label="项目类型" prop="projectType">
             <common-select
               v-model="form.projectType"
-              :options="projectTypeEnum.ENUM"
+              :options="projectTypeEnumArr"
               type="enum"
               size="small"
               clearable
@@ -268,6 +268,13 @@ import enclosureForm from './enclosure-form'
 import enclosureShow from './enclosure-show'
 import { isNotBlank } from '@/utils/data-type'
 
+import { mapGetters } from '@/store/lib'
+
+const { projectTypeEnumArr, flag } = mapGetters([
+  'projectTypeEnumArr',
+  'flag'
+])
+
 const formRef = ref()
 let machiningData = []
 let installData = []
@@ -405,7 +412,7 @@ const AllContent = computed(() => {
 })
 
 const projectContentOption = computed(() => {
-  if (form.value.businessType && form.value.projectType) {
+  if (form.value.projectType) {
     switch (form.value.projectType) {
       case projectTypeEnum.STEEL.V:
         return form.value.businessType === businessTypeEnum.MACHINING.V ? machiningData[projectTypeEnum.STEEL.V] : installData[projectTypeEnum.STEEL.V]
@@ -455,26 +462,26 @@ contentInfo()
 
 async function contentInfo() {
   try {
-    machiningData = await getContentInfo({ businessType: businessTypeEnum.MACHINING.V })
-    installData = await getContentInfo({ businessType: businessTypeEnum.INSTALLATION.V })
+    machiningData = await getContentInfo({ businessType: businessTypeEnum.MACHINING.V, flag: flag.value })
+    installData = await getContentInfo({ businessType: businessTypeEnum.INSTALLATION.V, flag: flag.value })
     const dataArr = [machiningData, installData]
     for (let i = 0; i < dataArr.length; i++) {
-      if (dataArr[i] && dataArr[i][projectTypeEnum.STEEL.V].length > 0) {
+      if (dataArr[i] && dataArr[i][projectTypeEnum.STEEL.V]?.length > 0) {
         dataArr[i][projectTypeEnum.STEEL.V].map(v => {
           v.name = v.categoryName
         })
       }
-      if (dataArr[i] && dataArr[i][projectTypeEnum.BRIDGE.V].length > 0) {
+      if (dataArr[i] && dataArr[i][projectTypeEnum.BRIDGE.V]?.length > 0) {
         dataArr[i][projectTypeEnum.BRIDGE.V].map(v => {
           v.name = v.categoryName
         })
       }
-      if (dataArr[i] && dataArr[i][projectTypeEnum.CARBARN.V].length > 0) {
+      if (dataArr[i] && dataArr[i][projectTypeEnum.CARBARN.V]?.length > 0) {
         dataArr[i][projectTypeEnum.CARBARN.V].map(v => {
           v.name = v.categoryName
         })
       }
-      if (dataArr[i] && dataArr[i][projectTypeEnum.ENCLOSURE.V].length > 0) {
+      if (dataArr[i] && dataArr[i][projectTypeEnum.ENCLOSURE.V]?.length > 0) {
         dataArr[i][projectTypeEnum.ENCLOSURE.V].map(v => {
           v.name = v.categoryName
         })
