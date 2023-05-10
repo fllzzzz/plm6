@@ -108,6 +108,7 @@ const mesStructureTeamWageDetail = mes.teamWageDetail
 const mesEnclosureTeamWageDetail = mes.teamWageDetail
 
 const mesPackingList = mes.packingList
+const enclosurePackingList = mes.enclosurePackingList
 const mesShipmentSummary = mes.shipmentSummary
 const mesShipmentDetail = mes.shipmentDetail
 const mesReceiptStatusSummary = mes.receiptStatusSummary
@@ -287,6 +288,7 @@ export default {
   mesEnclosureTeamWageDetail, // 围护班组工资详情
 
   mesPackingList, // 打包清单
+  enclosurePackingList, // 围护打包清单
   mesShipmentSummary, // 发运汇总
   mesShipmentDetail, // 发运详情
   mesReceiptStatusSummary, // 收货状态汇总

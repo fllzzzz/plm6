@@ -179,19 +179,19 @@
       :detail-info="packageInfo"
       title="打包清单"
       quantityFelid="packageQuantity"
-      :detailFunc="crud.query.productType !== packTypeEnum.ENCLOSURE.V ? detail : enclosureDetail"
+      :detailFunc="detail"
       @getDetail="handleDetail"
     >
       <template #tip>
         <el-tag effect="plain" style="margin-left: 5px" size="medium">{{ packageInfo.serialNumber }}</el-tag>
       </template>
     </m-detail>
-    <printed-record-drawer v-model:visible="recordVisible" :package-id="printedRecordId" />
+    <printed-record-drawer v-model:visible="recordVisible" :package-id="printedRecordId" :productType="crud.query.productType" />
   </div>
 </template>
 
 <script setup>
-import { get, detail, getEnclosure, del as delApi, enclosureDel, enclosureDetail } from '@/api/mes/pack-and-ship/pack-list'
+import { get, detail, del as delApi } from '@/api/ship-manage/pack-and-ship/pack-list'
 import { ref, reactive, provide } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElNotification } from 'element-plus'
@@ -247,10 +247,6 @@ const printedRecordId = ref()
 const currentLabel = ref({})
 const packageInfo = ref({})
 
-CRUD.HOOK.beforeToQuery = (crud, res) => {
-  crud.crudApi.get = crud.query.productType === packTypeEnum.ENCLOSURE.V ? getEnclosure : get
-}
-
 CRUD.HOOK.handleRefresh = (crud, res) => {
   res.data.content = res.data.content.map((v) => {
     v.packerName = v.userName
@@ -283,6 +279,7 @@ async function printLabel(row) {
 
 async function previewLabel(row) {
   currentLabel.value = await headerRef.value.getLabelInfo(row)
+  console.log(currentLabel.value, 'currentLabel.value')
   labelVisible.value = true
 }
 
@@ -337,7 +334,7 @@ function handleDataFormat({ artifactList, partList, enclosureList, auxiliaryMate
 
 async function edit(id, projectId) {
   try {
-    const data = (crud.query.productType !== packTypeEnum.ENCLOSURE.V ? await detail(id) : await enclosureDetail(id)) || {}
+    const data = await detail(id) || {}
     router.push({ name: 'ShipManageManualPack', params: { id, projectId, remark: data.remark, data: handleDataFormat(data) }})
   } catch (error) {
     console.log('去编辑包', error)
@@ -347,11 +344,7 @@ async function edit(id, projectId) {
 const del = debounce(
   async function (id) {
     try {
-      if (crud.query.productType !== packTypeEnum.ENCLOSURE.V) {
-        await delApi(id)
-      } else {
-        await enclosureDel(id)
-      }
+      await delApi(id)
       ElNotification({ title: '删除成功', type: 'success', duration: 2500 })
       crud.toQuery()
     } catch (error) {

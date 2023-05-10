@@ -189,7 +189,7 @@
 </template>
 
 <script setup>
-import { getPart as get } from '@/api/mes/pack-and-ship/manual-pack'
+import { getPart as get } from '@/api/ship-manage/pack-and-ship/manual-pack'
 import { computed, ref, watch, defineEmits, defineProps, defineExpose, inject } from 'vue'
 
 import { enclosureManualPackPM as permission } from '@/page-permission/ship-manage'

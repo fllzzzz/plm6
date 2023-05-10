@@ -98,7 +98,7 @@
       }}</el-tag>
       <print-table
         v-permission="permission.printPackList"
-        api-key="mesPackingList"
+        :api-key="crud.query.productType !== packTypeEnum.ENCLOSURE.V ? 'mesPackingList' : 'enclosurePackingList'"
         :params="printParams"
         :before-print="handleBeforePrint"
         size="mini"
@@ -121,7 +121,7 @@
 </template>
 
 <script setup>
-import { detail } from '@/api/mes/pack-and-ship/pack-list'
+import { detail } from '@/api/ship-manage/pack-and-ship/pack-list'
 import { packageRecordAdd } from '@/api/mes/label-print/print-record'
 import { inject, reactive, defineExpose, computed, defineEmits } from 'vue'
 import { mapGetters } from '@/store/lib'
@@ -191,7 +191,7 @@ const detailStore = inject('detailStore')
 const dataField = {
   [packTypeEnum.STRUCTURE.V]: 'artifactList',
   [packTypeEnum.MACHINE_PART.V]: 'partList',
-  // [packTypeEnum.ENCLOSURE.V]: 'enclosureList',
+  [packTypeEnum.ENCLOSURE.V]: 'enclosureList',
   [packTypeEnum.AUXILIARY_MATERIAL.V]: 'auxiliaryMaterialList'
 }
 
@@ -250,7 +250,19 @@ async function getLabelInfo(row) {
         if (_itemList?.length) {
           for (let i = 0; i < _itemList.length; i++) {
             const v = _itemList[i]
-            const { name, specification, measureUnit, serialNumber, material, packageQuantity, grossWeight, plate, length } = v
+            const {
+              name,
+              specification,
+              measureUnit,
+              serialNumber,
+              material,
+              packageQuantity,
+              grossWeight,
+              plate,
+              length,
+              productType,
+              surfaceArea
+            } = v
             _list.push({
               serialNumber,
               name,
@@ -261,6 +273,8 @@ async function getLabelInfo(row) {
               totalWeight: (packageQuantity * grossWeight).toFixed(DP.COM_WT__KG),
               // totalNetWeight: totalNetWeight ? totalNetWeight.toFixed(DP.COM_WT__KG) : 0,
               plate,
+              surfaceArea,
+              productType,
               length: length ? length.toFixed(DP.MES_ENCLOSURE_L__MM) : 0
             })
           }

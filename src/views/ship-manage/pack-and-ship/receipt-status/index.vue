@@ -264,7 +264,7 @@ style="font-size: 14px"
 </template>
 
 <script setup>
-import { get, getEnclosure, detail, deliverySign } from '@/api/mes/pack-and-ship/receipt-status'
+import { get, detail, deliverySign } from '@/api/ship-manage/pack-and-ship/receipt-status'
 import { ref } from 'vue'
 
 import { receiptStatusPM as permission } from '@/page-permission/ship-manage'
@@ -300,7 +300,7 @@ const tableRef = ref()
 const cancelVisible = ref(false)
 const detailInfo = ref({})
 const showType = ref('detail')
-const { crud, CRUD, columns } = useCRUD(
+const { crud, columns } = useCRUD(
   {
     title: '收货状态',
     sort: ['auditReceiptTime.desc'],
@@ -335,7 +335,4 @@ async function signSubmit() {
   }
 }
 
-CRUD.HOOK.beforeToQuery = (crud) => {
-  crud.crudApi.get = crud.query.productType !== packTypeEnum.ENCLOSURE.V ? get : getEnclosure
-}
 </script>

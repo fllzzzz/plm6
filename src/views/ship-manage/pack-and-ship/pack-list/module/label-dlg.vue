@@ -8,15 +8,15 @@
             <qrcode-vue :value="labelData.qrCode" :size="90" :margin="2" />
           </div>
         </td>
-        <td colspan="3">
+        <td :colspan="packageInfo.productType === packTypeEnum.ENCLOSURE.V ? 4 : 3">
           <span style="font-weight: bold; font-size: 10pt">打包单</span>
         </td>
       </tr>
       <tr>
         <td>包单号</td>
-        <td colspan="2" style="font-weight: bold">{{ packageInfo.serialNumber }}</td>
+        <td :colspan="packageInfo.productType === packTypeEnum.ENCLOSURE.V ? 3 : 2" style="font-weight: bold">{{ packageInfo.serialNumber }}</td>
       </tr>
-      <tr v-if="packageInfo.productType !== packTypeEnum.AUXILIARY_MATERIAL.V">
+      <tr v-if="packageInfo.productType !== packTypeEnum.AUXILIARY_MATERIAL.V && packageInfo.productType !== packTypeEnum.ENCLOSURE.V">
         <td>编号</td>
         <td>材质</td>
         <td>数量</td>
@@ -28,13 +28,16 @@
         <td>规格</td>
         <td>数量</td>
       </tr>
-      <!-- <tr v-if="packageInfo.productType === packTypeEnum.ENCLOSURE.V">
+      <tr v-if="packageInfo.productType === packTypeEnum.ENCLOSURE.V">
         <td>编号</td>
         <td>版型</td>
-        <td>长度</td>
+        <td>单长(mm)</td>
+        <td>单面积(mm²)</td>
         <td>数量</td>
-      </tr> -->
-      <template v-if="packageInfo.productType !== packTypeEnum.AUXILIARY_MATERIAL.V">
+      </tr>
+      <template
+        v-if="packageInfo.productType !== packTypeEnum.AUXILIARY_MATERIAL.V && packageInfo.productType !== packTypeEnum.ENCLOSURE.V"
+      >
         <tr v-for="(item, index) in breakUpList[page - 1]" :key="index">
           <td class="col-1">{{ item.serialNumber }}</td>
           <td class="col-1">{{ item.material }}</td>
@@ -47,6 +50,15 @@
           <td class="col-1">{{ item.name }}</td>
           <td class="col-1">{{ item.measureUnit }}</td>
           <td class="col-1">{{ item.specification }}</td>
+          <td class="col-1">{{ item.quantity }}</td>
+        </tr>
+      </template>
+      <template v-if="packageInfo.productType === packTypeEnum.ENCLOSURE.V">
+        <tr v-for="(item, index) in breakUpList[page - 1]" :key="index">
+          <td class="col-1">{{ item.serialNumber }}</td>
+          <td class="col-1">{{ item.plate }}</td>
+          <td class="col-1">{{ item.length }}</td>
+          <td class="col-1">{{ item.surfaceArea }}</td>
           <td class="col-1">{{ item.quantity }}</td>
         </tr>
       </template>

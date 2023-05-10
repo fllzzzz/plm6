@@ -80,17 +80,17 @@
         </template>
       </el-table-column>
       <el-table-column
-        v-if="columns.visible('width')"
-        key="width"
-        prop="width"
+        v-if="columns.visible('surfaceArea')"
+        key="surfaceArea"
+        prop="surfaceArea"
         sortable="custom"
         :show-overflow-tooltip="true"
-        :label="`有效宽度\n(mm)`"
+        :label="`单面积\n(mm²)`"
         align="center"
         min-width="85px"
       >
         <template v-slot="scope">
-          {{ toFixed(scope.row.width, DP.MES_ENCLOSURE_W__MM) }}
+          {{ toFixed(scope.row.surfaceArea, DP.COM_AREA__M2) }}
         </template>
       </el-table-column>
       <el-table-column
@@ -197,7 +197,7 @@
 </template>
 
 <script setup>
-import { getEnclosure as get } from '@/api/mes/pack-and-ship/manual-pack'
+import { getEnclosure as get } from '@/api/ship-manage/pack-and-ship/manual-pack'
 import { computed, ref, watch, defineEmits, defineProps, defineExpose, inject } from 'vue'
 
 import { enclosureManualPackPM as permission } from '@/page-permission/ship-manage'
@@ -271,7 +271,7 @@ const ids = computed(() => {
 })
 
 watch(
-  () => [props.projectId, props.workshopId, props.monomerId, props.batchId, props.category],
+  () => [props.projectId, props.workshopId, props.monomerId, props.category],
   () => {
     crud.toQuery()
   },
@@ -279,12 +279,11 @@ watch(
 )
 
 CRUD.HOOK.beforeRefresh = () => {
-  console.log(props.batchId, props.areaId, 'batchId')
   crud.query.projectId = props.projectId
   crud.query.workshopId = props.workshopId
   crud.query.category = props.category
   crud.query.monomerId = props.monomerId
-  crud.query.areaId = props.batchId
+  crud.query.areaId = props.batchId ? props.batchId : undefined
 }
 
 function add(row) {
@@ -292,7 +291,7 @@ function add(row) {
 }
 
 CRUD.HOOK.handleRefresh = (crud, res) => {
-  res.data.content = res.data.content.map((v) => {
+  res.data.content = res.data.content?.map((v) => {
     v.productQuantity = v.unPackageQuantity
     return v
   })

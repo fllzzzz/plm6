@@ -109,7 +109,7 @@ import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'
 import structureTable from './module/structure'
 import partTable from './module/part'
-// import enclosureTable from './module/enclosure'
+import enclosureTable from './module/enclosure'
 import auxiliaryMaterialTable from './module/auxiliary-material'
 
 const emit = defineEmits(['update:visible'])
@@ -174,8 +174,8 @@ const currentView = computed(() => {
       return structureTable
     case packTypeEnum.MACHINE_PART.V:
       return partTable
-    // case packTypeEnum.ENCLOSURE.V:
-    //   return enclosureTable
+    case packTypeEnum.ENCLOSURE.V:
+      return enclosureTable
     case packTypeEnum.AUXILIARY_MATERIAL.V:
       return auxiliaryMaterialTable
     default:
@@ -214,19 +214,19 @@ const list = computed(() => {
           return v
         })
       )
-    // case packTypeEnum.ENCLOSURE.V:
-    //   return (
-    //     enclosureList.value &&
-    //     enclosureList.value.map((v) => {
-    //       v.showQuantity = v[props.quantityFelid]
-    //       v.totalMete =
-    //         contract.value.enclosureMeasureMode === enclosureSettlementTypeEnum.AREA.V
-    //           ? toFixed(v.totalArea, DP.COM_AREA__M2)
-    //           : convertUnits(v.totalLength, 'mm', 'm', DP.MES_ENCLOSURE_L__M)
-    //       v.totalPrice = v.unitPrice * v.totalMete || 0
-    //       return v
-    //     })
-    //   )
+    case packTypeEnum.ENCLOSURE.V:
+      return (
+        enclosureList.value &&
+        enclosureList.value.map((v) => {
+          v.showQuantity = v[props.quantityFelid]
+          v.totalMete =
+            contract.value.enclosureMeasureMode === enclosureSettlementTypeEnum.AREA.V
+              ? toFixed(v.totalArea, DP.COM_AREA__M2)
+              : convertUnits(v.totalLength, 'mm', 'm', DP.MES_ENCLOSURE_L__M)
+          v.totalPrice = v.unitPrice * v.totalMete || 0
+          return v
+        })
+      )
     case packTypeEnum.AUXILIARY_MATERIAL.V:
       return (
         auxiliaryMaterialList.value &&

@@ -42,6 +42,7 @@
       </el-radio-group>
       <common-radio-button
         v-model="monomerStatus"
+        v-if="productType !== packTypeEnum.ENCLOSURE.V"
         :options="SummaryStatusEnum"
         type="enum"
         size="small"
@@ -211,8 +212,7 @@ async function fetchDetail() {
     emit('getDetail', detailId.value, data)
     artifactList.value = data.artifactList || []
     partList.value = data.partList || []
-    // enclosureList.value = data.enclosureList || []
-    enclosureList.value = data.content || []
+    enclosureList.value = data.enclosureList || []
     auxList.value = data.auxiliaryMaterialList || []
   } catch (error) {
     console.log('详情', error)

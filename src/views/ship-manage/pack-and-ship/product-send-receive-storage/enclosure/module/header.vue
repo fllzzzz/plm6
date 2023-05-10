@@ -32,6 +32,7 @@
       /> -->
       <workshop-select
         v-model="query.workshopId"
+        :workshop-type="workshopTypeEnum.ENCLOSURE.V"
         placeholder="请选择车间"
         clearable
         style="width: 200px"
@@ -100,10 +101,10 @@
 </template>
 
 <script setup>
-import { summaryData } from '@/api/mes/pack-and-ship/product-receive-send-storage'
+import { summaryData } from '@/api/ship-manage/pack-and-ship/product-receive-send-storage'
 import { ref, watch } from 'vue'
 import { enclosureTypeEnum } from '@enum-ms/ship-manage'
-import { weightTypeEnum } from '@enum-ms/common'
+import { weightTypeEnum, workshopTypeEnum } from '@enum-ms/common'
 // import checkPermission from '@/utils/system/check-permission'
 // import { DP } from '@/settings/config'
 import workshopSelect from '@comp-mes/workshop-select'

@@ -89,7 +89,7 @@
             width="120px"
           >
             <template v-slot="scope">
-              <table-cell-tag v-if="scope.row.workshop" :name="scope.row.workshop?.name" />
+              <table-cell-tag v-if="scope.row.workshop" :name="scope.row?.workshop?.name" />
               <span>{{ scope.row.name }}</span>
             </template>
           </el-table-column>
@@ -139,21 +139,14 @@
           </el-table-column>
           <el-table-column prop="serialNumber" label="编号" align="center" width="120px" />
           <el-table-column key="plate" align="center" prop="plate" :show-overflow-tooltip="true" label="板型" min-width="100px" />
-          <el-table-column
-            key="weight"
-            prop="weight"
-            :show-overflow-tooltip="true"
-            :label="`单重\n(kg)`"
-            align="center"
-            min-width="85px"
-          >
+          <el-table-column key="weight" prop="weight" :show-overflow-tooltip="true" :label="`单重\n(kg)`" align="center" min-width="85px">
             <template v-slot="scope">
               {{ scope.row.weight }}
             </template>
           </el-table-column>
-          <el-table-column key="width" prop="width" :show-overflow-tooltip="true" :label="`有效宽度\n(mm)`" align="center" min-width="85px">
+          <el-table-column key="surfaceArea" prop="surfaceArea" :show-overflow-tooltip="true" :label="`单面积\n(mm²)`" align="center" min-width="85px">
             <template v-slot="scope">
-              {{ toFixed(scope.row.width, DP.MES_ENCLOSURE_W__MM) }}
+              {{ toFixed(scope.row.surfaceArea, DP.COM_AREA__M2) }}
             </template>
           </el-table-column>
           <el-table-column key="length" prop="length" :show-overflow-tooltip="true" :label="`单长\n(mm)`" align="center" min-width="85px">
@@ -216,7 +209,7 @@
 </template>
 
 <script setup>
-import { pack, editPack, additionalPack, enclosurePack, editEnclosurePack, additionalEnclosurePack } from '@/api/mes/pack-and-ship/manual-pack'
+import { pack, editPack, additionalPack } from '@/api/ship-manage/pack-and-ship/manual-pack'
 import { defineProps, defineEmits, ref, watch, inject, reactive, computed } from 'vue'
 import { ElMessage } from 'element-plus'
 import { workshopTypeEnum } from '@enum-ms/common'
@@ -367,13 +360,14 @@ async function handlePack({ bagId, isNew, selectBagId }) {
     // 所有类型打包
     for (const item in packTypeEnum.ENUM) {
       const _list = listObj[item]
-      for (let i = 0; i < _list.length; i++) {
+      for (let i = 0; i < _list?.length; i++) {
         const v = _list[i]
+        console.log(v, 'v')
         params.packageLinks.push({
           id: v.id,
           numberList: v.numberList,
           quantity: v.productQuantity,
-          productType: v.productType
+          productType: packType.value
         })
       }
     }
@@ -386,40 +380,21 @@ async function handlePack({ bagId, isNew, selectBagId }) {
     //     quantity: v.productQuantity
     //   }
     // })
-    if (packType.value !== packTypeEnum.ENCLOSURE.V) {
-      if (bagId) {
-        params.id = bagId
-        if (await editPack(params)) {
-          ElMessage({ type: 'success', message: '更新打包清单成功' })
-        }
-      } else if (isNew) {
-        if (await pack(params)) {
-          ElMessage({ type: 'success', message: '打包成功' })
-        }
-      } else {
-        params.id = selectBagId
-        if (await additionalPack(params)) {
-          ElMessage({ type: 'success', message: '追加打包成功' })
-        }
+    if (bagId) {
+      params.id = bagId
+      if (await editPack(params)) {
+        ElMessage({ type: 'success', message: '更新打包清单成功' })
+      }
+    } else if (isNew) {
+      if (await pack(params)) {
+        ElMessage({ type: 'success', message: '打包成功' })
       }
     } else {
-      if (bagId) {
-        params.id = bagId
-        if (await editEnclosurePack(params)) {
-          ElMessage({ type: 'success', message: '更新打包清单成功' })
-        }
-      } else if (isNew) {
-        if (await enclosurePack(params)) {
-          ElMessage({ type: 'success', message: '打包成功' })
-        }
-      } else {
-        params.id = selectBagId
-        if (await additionalEnclosurePack(params)) {
-          ElMessage({ type: 'success', message: '追加打包成功' })
-        }
+      params.id = selectBagId
+      if (await additionalPack(params)) {
+        ElMessage({ type: 'success', message: '追加打包成功' })
       }
     }
-
     // 关闭选择框，重置选择
     choseDialogRef.value.handleSuccess()
     handleSuccess()

@@ -57,6 +57,7 @@
         v-if="packType === packTypeEnum.STRUCTURE.V || packType === packTypeEnum.MACHINE_PART.V"
         :project-id="globalProjectId"
         @change="fetchMonomerAndArea"
+        :default="false"
         :productType="packType"
         needConvert
       />
@@ -68,6 +69,7 @@
         :area-info="areaInfo"
         :default-tab="defaultTab"
         :show-type="2"
+        @tab-click="tabClick"
       />
       <!-- </div> -->
     </div>
@@ -122,7 +124,7 @@ import partTable from './part'
 import packListDrawer from './pack-list-drawer'
 // import projectCascader from '@comp-base/project-cascader.vue'
 // import monomerSelect from '@/components-system/plan/monomer-select'
-import monomerSelectAreaTabs from '@comp-base/monomer-select-area-tabs'
+import monomerSelectAreaTabs from './components/monomer-select-area-tabs.vue'
 import areaTabs from '@/components-system/plan/area-tabs'
 import oneCodeNumberList from '@/components-system/mes/one-code-number-list'
 
@@ -191,8 +193,8 @@ watch(
       packData[packTypeEnum.ENCLOSURE.K] = {}
       packData[packTypeEnum.MACHINE_PART.K] = {}
       packData[packTypeEnum.AUXILIARY_MATERIAL.K] = {}
+      fetchBatch()
     }
-    projectId.value = projectId.value ? projectId.value : globalProjectId.value
   },
   { immediate: true, deep: true }
 )
@@ -255,14 +257,14 @@ async function fetWorkshop() {
 }
 
 async function fetchBatch() {
+  if (packType.value === packTypeEnum.STRUCTURE.V || packType.value === packTypeEnum.MACHINE_PART.V) return
   try {
     const data = await getEnclosureBatch(globalProjectId.value)
     areaInfo.value = data || []
-    defaultTab.value = {
-      id: areaInfo.value[0]?.id + '',
-      name: areaInfo.value[0]?.name
-    }
-    batchId.value = areaInfo.value[0]?.id
+    // defaultTab.value = {
+    //   id: data[0]?.id + '',
+    //   name: data[0]?.name
+    // }
   } catch (e) {
     console.log('获取围护的批次失败', e)
   }
@@ -328,6 +330,12 @@ function addIn(row, packTypeK) {
 function fetchMonomerAndArea(val) {
   monomerId.value = val?.monomerId
   areaId.value = val?.areaId
+  mainRef?.value?.refresh()
+}
+
+function tabClick(val) {
+  const { name } = val
+  batchId.value = name
   mainRef?.value?.refresh()
 }
 

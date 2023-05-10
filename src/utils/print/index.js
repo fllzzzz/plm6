@@ -1,7 +1,7 @@
 import { printModeEnum as PrintMode } from './enum'
 import { getLODOP, printByMode, combineHtml } from './base'
 import { projectNameFormatter } from '@/utils/project'
-import { labelTypeEnum } from '@enum-ms/mes'
+import { labelTypeEnum, packTypeEnum, componentTypeEnum } from '@enum-ms/mes'
 import { getPrintLabelHtml } from '@/utils/label/index'
 import { isNotBlank } from '@data-type/index'
 
@@ -111,6 +111,7 @@ async function printAuxiliaryMaterial({ productType, labelType, component, manuf
    */
 async function printPackageLabel({ packageInfo, qrCode, printMode = PrintMode.QUEUE.V }) {
   const pageHtml = `<div style="text-align:center;"><span tdata='pageNO'>##</span> / <span tdata='pageCount'>##</span></div>`
+  let headHtml = ''
   // const theadHtml = {
   //   [packTypeEnum.STRUCTURE.V]: `<div class="flex">
   //       <div class="row-0 w-1 col border-r">编号</div>
@@ -126,29 +127,73 @@ async function printPackageLabel({ packageInfo, qrCode, printMode = PrintMode.QU
   //   //   </div>`,
   //   [packTypeEnum.AUXILIARY_MATERIAL.V]: ''
   // }
-  const headHtml = `
-      <div style="font-weight: bold; font-size: 12pt;color: #333;padding-bottom: 2pt;">${packageInfo.project.shortName}</div>
-      <div class="package-label">
-        <div class="flex">
-          <div class="row-2 w-1 col border-r border-b">
-            <div class="qr-content"></div>
-          </div>
-          <div class="flex w-3 flex-column">
-            <div class="row-1 col border-b" style="font-weight:bold;font-size: 10pt;">打包单</div>
-            <div class="flex">
-              <div class="flex-1 row-1 col border-b border-r">包单号</div>
-              <div class="flex-2 row-1 col border-b" style="font-weight:bold">${packageInfo.serialNumber}</div>
-            </div>
-          </div>
+  if (packageInfo.productType === packTypeEnum.STRUCTURE.V || packageInfo.productType === packTypeEnum.MACHINE_PART.V || packageInfo.productType === packTypeEnum.AUXILIARY_MATERIAL.V || packageInfo.productType === componentTypeEnum.MACHINE_PART.V || packageInfo.productType === componentTypeEnum.ASSEMBLE.V) {
+    headHtml = `
+    <div style="font-weight: bold; font-size: 12pt;color: #333;padding-bottom: 2pt;">${packageInfo.project.shortName}</div>
+    <div class="package-label">
+      <div class="flex">
+        <div class="row-2 w-1 col border-r border-b">
+          <div class="qr-content"></div>
         </div>
-        <div class="flex">
-          <div class="row-0 col border-r" style="flex:1;" >编号</div>
-          <div class="row-0 w-1 col border-r">材质</div>
-          <div class="row-0 col border-r" style="width:10mm;">数量</div>
-          <div class="row-0 w-1 col">重量(kg)</div>
+        <div class="flex w-3 flex-column">
+          <div class="row-1 col border-b" style="font-weight:bold;font-size: 10pt;">打包单</div>
+          <div class="flex">
+            <div class="flex-1 row-1 col border-b border-r">包单号</div>
+            <div class="flex-2 row-1 col border-b" style="font-weight:bold">${packageInfo.serialNumber}</div>
+          </div>
         </div>
       </div>
-  `
+`
+  } else {
+    headHtml = `
+    <div style="font-weight: bold; font-size: 12pt;color: #333;padding-bottom: 2pt;">${packageInfo.project.shortName}</div>
+    <div class="package-label">
+      <div class="flex">
+        <div class="row-2 w-1 col border-r border-b" >
+          <div class="qr-content"></div>
+        </div>
+        <div class="flex w-3 flex-column">
+          <div class="row-1 col border-b" style="font-weight:bold;font-size: 10pt;">打包单</div>
+          <div class="flex">
+            <div class="w-1 row-1 col border-b border-r">包单号</div>
+            <div class="w-3 row-1 col border-b" style="font-weight:bold">${packageInfo.serialNumber}</div>
+          </div>
+        </div>
+      </div>
+`
+  }
+
+  const structureHtml = `<div class="flex">
+      <div class="row-0 col border-r" style="flex:1;" >编号</div>
+      <div class="row-0 w-1 col border-r">材质</div>
+      <div class="row-0 col border-r" style="width:10mm;">数量</div>
+      <div class="row-0 w-1 col">重量(kg)</div>
+    </div>
+    </div>`
+  const enclosureHtml = `
+  <div class="flex">
+  <div class="row-0 w-1 col border-r">编号</div>
+  <div class="row-0 col border-r" style="width:18mm;">版型</div>
+  <div class="row-0 col border-r" style="width:13mm;" >单长</div>
+  <div class="row-0 col border-r" style="width:14mm;">单面积</div>
+  <div class="row-0 w-1 col">数量</div>
+</div>
+</div>`
+  const auxHtml = `
+  <div class="flex">
+  <div class="row-0 col border-r" style="flex:1;" >名称</div>
+  <div class="row-0 w-1 col border-r">单位</div>
+  <div class="row-0 col border-r" style="width:10mm;">规格</div>
+  <div class="row-0 w-1 col">数量</div>
+</div>
+</div>`
+  if (packageInfo.productType === packTypeEnum.STRUCTURE.V || packageInfo.productType === packTypeEnum.MACHINE_PART.V || packageInfo.productType === componentTypeEnum.MACHINE_PART.V || packageInfo.productType === componentTypeEnum.ASSEMBLE.V) {
+    headHtml += structureHtml
+  } else if (packageInfo.productType === packTypeEnum.ENCLOSURE.V) {
+    headHtml += enclosureHtml
+  } else if (packageInfo.productType === packTypeEnum.AUXILIARY_MATERIAL.V) {
+    headHtml += auxHtml
+  }
   let bodyHtml = '<div class="package-label" style="border-top:none;border-bottom:none;">'
   // const tbodyHtml = {
   //   [packTypeEnum.STRUCTURE.V]: function (item) {
@@ -175,14 +220,35 @@ async function printPackageLabel({ packageInfo, qrCode, printMode = PrintMode.QU
   // }
   for (let x = 0; x < packageInfo.list.length; x++) {
     const item = packageInfo.list[x]
-    bodyHtml += `
-    <div class="flex">
-      <div class="row-0 col border-b border-r" style="flex:1;">${item.serialNumber}</div>
-      <div class="row-0 col w-1 border-b border-r">${item.material}</div>
-      <div class="row-0 col border-b border-r" style="width:10mm;">${item.quantity}</div>
-      <div class="row-0 col w-1 border-b">${item.totalWeight}</div>
-    </div>
-  `
+    if (packageInfo.productType === packTypeEnum.STRUCTURE.V || packageInfo.productType === packTypeEnum.MACHINE_PART.V || packageInfo.productType === componentTypeEnum.MACHINE_PART.V || packageInfo.productType === componentTypeEnum.ASSEMBLE.V) {
+      bodyHtml += `
+      <div class="flex">
+        <div class="row-0 col border-b border-r" style="flex:1;">${item.serialNumber}</div>
+        <div class="row-0 col w-1 border-b border-r">${item.material}</div>
+        <div class="row-0 col border-b border-r" style="width:10mm;">${item.quantity}</div>
+        <div class="row-0 col w-1 border-b">${item.totalWeight}</div>
+      </div>
+    `
+    } else if (packageInfo.productType === packTypeEnum.ENCLOSURE.V) {
+      bodyHtml += `
+      <div class="flex">
+        <div class="row-0 w-1 col border-b border-r">${item.serialNumber}</div>
+        <div class="row-0 col border-b border-r" style="width:18mm;">${item.plate}</div>
+        <div class="row-0 col border-b border-r" style="width:13mm;">${item.length}</div>
+        <div class="row-0 col border-b border-r" style="width:14mm;">${item.surfaceArea}</div>
+        <div class="row-0 col w-1 border-b">${item.quantity}</div>
+      </div>
+    `
+    } else if (packageInfo.productType === packTypeEnum.AUXILIARY_MATERIAL.V) {
+      bodyHtml += `
+      <div class="flex">
+        <div class="row-0 col border-b border-r" style="flex:1;">${item.name}</div>
+        <div class="row-0 col w-1 border-b border-r">${item.unit}</div>
+        <div class="row-0 col border-b border-r" style="width:10mm;">${item.specification}</div>
+        <div class="row-0 col w-1 border-b">${item.quantity}</div>
+      </div>
+    `
+    }
   }
   bodyHtml += '</div>'
   const strHtml = combineHtml(PACKAGE_STYLE, bodyHtml)

@@ -177,6 +177,7 @@ const tableType = {
   mesOutboundInventoryDetail: { L: '出库量', M: 'mes_warehouse', T: mt.mes.L + ' / ' + mes.mes_warehouse },
 
   mesPackingList: { L: '打包清单', M: 'mes_logistics', T: mt.mes.L + ' / ' + mes.mes_logistics },
+  enclosurePackingList: { L: '打包清单', M: 'mes_logistics', T: mt.mes.L + ' / ' + mes.mes_logistics },
   mesShipmentSummary: { L: '发运汇总', M: 'mes_logistics', T: mt.mes.L + ' / ' + mes.mes_logistics },
   mesShipmentDetail: { L: '发运详情', M: 'mes_logistics', T: mt.mes.L + ' / ' + mes.mes_logistics },
   mesShipmentAudit: { L: '发运审核', M: 'mes_logistics', T: mt.mes.L + ' / ' + mes.mes_logistics },

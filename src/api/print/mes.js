@@ -12,6 +12,16 @@ export function packingList(id) {
 }
 
 /**
+ * 打包清单：围护
+ */
+export function enclosurePackingList(id) {
+  return request({
+    url: `api/mes/building/package/${id}/print`,
+    method: 'get'
+  })
+}
+
+/**
  * 发运汇总
  */
 export function shipmentSummary(params) {
@@ -797,6 +807,7 @@ export default {
 
   // 打包与发运
   packingList, // 打包清单
+  enclosurePackingList, // 围护打包清单
   shipmentSummary, // 发运汇总
   shipmentDetail, // 发运详情
   receiptStatusSummary, // 收货状态汇总

@@ -133,7 +133,7 @@
 </template>
 
 <script setup>
-import crudApi from '@/api/mes/pack-and-ship/product-receive-send-storage'
+import crudApi from '@/api/ship-manage/pack-and-ship/product-receive-send-storage'
 import { ref, nextTick, computed } from 'vue'
 
 import { mesProductSendReceiveStoragePM as permission } from '@/page-permission/ship-manage'
