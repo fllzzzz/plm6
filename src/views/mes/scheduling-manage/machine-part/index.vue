@@ -4,8 +4,26 @@
       <project-list ref="projectListRef" :maxHeight="maxHeight" @project-click="handleProjectClick" />
     </div>
     <div class="wrap-right">
-      <el-tag v-show="!crud.query?.areaIds?.length" type="info" size="medium"> * 请先选择区域，进行零件排产 </el-tag>
-      <div v-show="crud.query?.areaIds?.length">
+      <el-tag
+        v-show="
+          !crud.query?.areaIds?.length &&
+          !crud.query?.workshopIds?.length &&
+          !crud.query.productionLineIds?.length &&
+          !crud.query.groupsIds?.length
+        "
+        type="info"
+        size="medium"
+      >
+        * 请先选择区域、车间、产线或者生产组进行零件排产
+      </el-tag>
+      <div
+        v-show="
+          crud.query?.areaIds?.length ||
+          crud.query?.workshopIds?.length ||
+          crud.query.productionLineIds?.length ||
+          crud.query.groupsIds?.length
+        "
+      >
         <div class="head-container">
           <mHeader ref="headRef" @load="load" @change="handleChange">
             <template #optLeft>
@@ -80,8 +98,8 @@
           <template v-for="item in boardList" :key="item.id">
             <el-tooltip v-model="item.visibleTip" manual :open-delay="300" class="item" effect="light" placement="left-start">
               <template #content>
-                <div style="display: flex;">
-                  <div style="display: flex; flex-direction: column;justify-content:center">
+                <div style="display: flex">
+                  <div style="display: flex; flex-direction: column; justify-content: center">
                     <p>{{ item.project?.shortName }}</p>
                     <p>编号：{{ item.serialNumber }}</p>
                     <p>长度：{{ item.length }}</p>
@@ -89,7 +107,7 @@
                     <p>数量：{{ item.quantity }}</p>
                   </div>
                   <div style="flex: 1; display: flex">
-                    <el-image style="flex: 1; width: 300px; height: 260px;" :src="item.picturePath" z-index="999999" />
+                    <el-image style="flex: 1; width: 300px; height: 260px" :src="item.picturePath" z-index="999999" />
                   </div>
                 </div>
               </template>
@@ -166,7 +184,7 @@ import { computed, ref, onUnmounted, onMounted, nextTick, watch, provide } from 
 import { ElMessage } from 'element-plus'
 import { isNotBlank } from '@/utils/data-type'
 import RAF from '@/utils/raf'
-import { machinePartDxfTypeEnum } from '@enum-ms/mes'
+import { machinePartDxfTypeEnum, machinePartSchedulingTypeEnum as typeEnum } from '@enum-ms/mes'
 import { machinePartSchedulingPM as permission } from '@/page-permission/mes'
 
 import useMaxHeight from '@compos/use-max-height'
@@ -203,7 +221,7 @@ const { crud, CRUD } = useCRUD(
     crudApi: { ...crudApi },
     queryOnPresenterCreated: false,
     hasPagination: false,
-    requiredQuery: ['monthList', 'material', 'areaIds', 'thick']
+    requiredQuery: ['monthList', 'material', 'thick']
   },
   tableRef
 )
@@ -313,9 +331,18 @@ CRUD.HOOK.afterRefresh = () => {
 
 // --------------------------- end --------------------------------
 
-function handleProjectClick({ areaIds }, month) {
+function handleProjectClick({ areaIds, workshopIds, productionLineIds, groupsIds }, month, configData) {
   crud.query.monthList = month
   crud.query.areaIds = areaIds
+  if (configData === typeEnum.WORKSHOP.V) {
+    crud.query.workshopIds = workshopIds
+  }
+  if (configData === typeEnum.PRODUCTION_LINE.V) {
+    crud.query.productionLineIds = productionLineIds
+  }
+  if (configData === typeEnum.GROUPS.V) {
+    crud.query.groupsIds = groupsIds
+  }
   const arr = []
   checkedNodes.value.forEach((v) => {
     if (areaIds.indexOf(String(v.areaId)) > -1 || areaIds.indexOf(v.areaId) > -1) {

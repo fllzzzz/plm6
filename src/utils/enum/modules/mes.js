@@ -605,6 +605,15 @@ const steelOutBoundRecordTypeEnum = {
 }
 constantize(steelOutBoundRecordTypeEnum)
 
+// 配置管理/MES-公共配置
+const machinePartSchedulingTypeEnum = {
+  NO: { L: '无', K: 'NO', V: 1 << 0 },
+  WORKSHOP: { L: '车间级', K: 'WORKSHOP', V: 1 << 1 },
+  PRODUCTION_LINE: { L: '产线级', K: 'PRODUCTION_LINE', V: 1 << 2 },
+  GROUPS: { L: '生产组级', K: 'GROUPS', V: 1 << 3 }
+}
+constantize(machinePartSchedulingTypeEnum)
+
 export {
   teamTypeEnum,
   teamAttributeEnum,
@@ -679,7 +688,8 @@ export {
   nestingTypeEnum,
   productionKanbanTypeEnum,
   steelOutBoundRecordTypeEnum,
-  contractSaleTypeEnum
+  contractSaleTypeEnum,
+  machinePartSchedulingTypeEnum
 }
 
 export default {
@@ -756,5 +766,6 @@ export default {
   nestingTypeEnum,
   productionKanbanTypeEnum,
   steelOutBoundRecordTypeEnum,
-  contractSaleTypeEnum
+  contractSaleTypeEnum,
+  machinePartSchedulingTypeEnum
 }

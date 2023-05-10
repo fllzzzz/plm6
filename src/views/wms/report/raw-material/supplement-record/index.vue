@@ -32,7 +32,7 @@
             key="supplementNo"
             :show-overflow-tooltip="true"
             prop="supplementNo"
-            label="红冲单号"
+            label="调整单号"
             align="center"
             min-width="120"
           />
@@ -76,7 +76,7 @@
         key="amount"
         :show-overflow-tooltip="true"
         prop="amount"
-        :label="`红冲金额(含税)`"
+        :label="`调整金额(含税)`"
         align="right"
         width="110"
       />
@@ -85,7 +85,7 @@
         key="amountExcludingVAT"
         :show-overflow-tooltip="true"
         prop="amountExcludingVAT"
-        :label="`红冲金额(不含税)`"
+        :label="`调整金额(不含税)`"
         align="right"
         width="120"
       />
@@ -131,7 +131,7 @@ const columnsDataFormat = ref([
 
 const { CRUD, crud, columns } = useCRUD(
   {
-    title: '红冲记录',
+    title: '调整记录',
     sort: [],
     permission: { ...permission },
     invisibleColumns: [],
@@ -149,7 +149,7 @@ const basicClass = computed(() => (crud.query ? crud.query.basicClass : undefine
 // 处理刷新
 CRUD.HOOK.handleRefresh = async (crud, { data }) => {
   data.content = data.content.map(v => {
-    // 红冲单号和物料种类字段冲突了
+    // 调整单号和物料种类字段冲突了
     v.supplementNo = v.serialNumber
     return v
   })

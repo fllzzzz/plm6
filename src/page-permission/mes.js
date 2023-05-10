@@ -109,7 +109,12 @@ export const productionMonitoringKanbanPM = {
 export const artifactWorkOrderPM = {
   get: ['mes_work_order_artifact:get'], // 列表
   detail: ['mes_work_order_artifact:detail'], // 查看
-  print: ['mes_work_order_artifact:print'] // 打印
+  print: ['mes_work_order_artifact:print'], // 打印
+  edit: ['mes_work_order_artifact:edit'], // 编辑
+  cancelEdit: ['mes_work_order_artifact:cancelEdit'], // 取消编辑
+  revoke: ['mes_work_order_artifact:revoke'], // 撤回
+  batchRevoke: ['mes_work_order_artifact:batchRevoke'], // 批量撤回
+  allRevoke: ['mes_work_order_artifact:allRevoke'] // 整个工单撤回
 }
 
 // 工单管理/零件工单

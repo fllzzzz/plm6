@@ -55,27 +55,63 @@
             </div>
           </el-form-item>
         </div>
-        <div class="form-row">
-          <el-form-item label="负责人1" prop="customerManagerOne">
+          <div class="form-row">
+          <el-form-item label="收货负责人" prop="receivingManager">
             <div class="input-underline">
-              <span>{{ detail.customerManagerOne }}</span>
+              <span>{{ detail.receivingManager }}</span>
             </div>
           </el-form-item>
-          <el-form-item label="联系电话" prop="customerManagerOnePhone">
-            <div class="input-underline" style="width:260px;">
-              <span>{{ detail.customerManagerOnePhone }}</span>
+          <el-form-item label="联系电话" prop="receivingManagerPhone">
+            <div class="input-underline">
+              <span>{{ detail.receivingManagerPhone }}</span>
             </div>
           </el-form-item>
         </div>
         <div class="form-row">
-          <el-form-item label="负责人2" prop="customerManagerTwo">
+          <el-form-item label="结算负责人" prop="settleManager">
             <div class="input-underline">
-              <span>{{ detail.customerManagerTwo }}</span>
+              <span>{{ detail.settleManager }}</span>
             </div>
           </el-form-item>
-          <el-form-item label="联系电话" prop="customerManagerTwoPhone">
-            <div class="input-underline" style="width:260px;">
-              <span>{{ props.detail.customerManagerTwoPhone }}</span>
+          <el-form-item label="联系电话" prop="settleManagerPhone">
+            <div class="input-underline">
+              <span>{{ detail.settleManagerPhone }}</span>
+            </div>
+          </el-form-item>
+        </div>
+        <div class="form-row">
+          <el-form-item label="财务负责人" prop="financeManager">
+            <div class="input-underline">
+              <span>{{ detail.financeManager }}</span>
+            </div>
+          </el-form-item>
+          <el-form-item label="联系电话" prop="financeManagerPhone">
+            <div class="input-underline">
+              <span>{{ detail.financeManagerPhone }}</span>
+            </div>
+          </el-form-item>
+        </div>
+        <div class="form-row">
+          <el-form-item label="审核负责人" prop="auditManager">
+            <div class="input-underline">
+              <span>{{ detail.auditManager }}</span>
+            </div>
+          </el-form-item>
+          <el-form-item label="联系电话" prop="auditManagerPhone">
+            <div class="input-underline">
+              <span>{{ detail.auditManagerPhone }}</span>
+            </div>
+          </el-form-item>
+        </div>
+        <div class="form-row">
+          <el-form-item label="设计负责人" prop="designManager">
+            <div class="input-underline">
+              <span>{{ detail.designManager }}</span>
+            </div>
+          </el-form-item>
+          <el-form-item label="联系电话" prop="designManagerPhone">
+            <div class="input-underline">
+              <span>{{ props.detail.designManagerPhone }}</span>
             </div>
           </el-form-item>
         </div>

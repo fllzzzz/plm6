@@ -38,7 +38,7 @@ async function dataFormat({ header, table = [], footer, qrCode }) {
   }
 }
 
-// 红冲记录数据格式转化
+// 调整记录数据格式转化
 async function supplementDataFormat({ header, table = [], footer, qrCode }) {
   table.forEach(v => {
     v.supplementNo = v.serialNumber

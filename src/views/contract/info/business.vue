@@ -197,7 +197,7 @@
                 </el-form-item>
               </div>
             </div>
-            <div class="form-row" v-if="form.measureModeList && form.measureModeList.length>0">
+            <div class="form-row" v-if="form.measureModeList && form.measureModeList.length>0 && (flag===isEnclosureContainEnum.YES.V)">
               <el-divider><span class="title">围护</span></el-divider>
               <el-form-item label="围护运输方式" prop="enclosureTransportMode">
                 <common-radio v-model="form.enclosureTransportMode" :options="transportModeEnum.ENUM" type="enum" />
@@ -245,7 +245,7 @@
                 </el-form-item>
               </div>
             </div>
-            <div class="form-row" v-if="detail.measureModeList && detail.measureModeList.length>0">
+            <div class="form-row" v-if="detail.measureModeList && detail.measureModeList.length>0 && (flag===isEnclosureContainEnum.YES.V)">
               <el-divider><span class="title">围护</span></el-divider>
               <el-form-item label="围护运输方式" prop="enclosureTransportMode">
                 <common-radio v-model="detail.enclosureTransportMode" :options="transportModeEnum.ENUM" type="enum" :disabled="true"/>
@@ -421,7 +421,8 @@ import {
   TechnologyTypeEnum,
   TechnologyMainTypeEnum,
   TechnologyTypeAllEnum,
-  structureTypeEnum
+  structureTypeEnum,
+  isEnclosureContainEnum
 } from '@enum-ms/contract'
 import { invoiceTypeEnum, paymentModeEnum } from '@enum-ms/finance'
 import { isNotBlank } from '@data-type/index'
