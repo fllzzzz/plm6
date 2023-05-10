@@ -20,13 +20,31 @@
     <template #content>
       <el-form ref="formRef" :model="form" :rules="rules" size="small" label-width="100px">
         <el-descriptions class="margin-top" :column="3" border label-width="110">
-        <el-descriptions-item label-class-name="desc-label" label="文件名称" :span="currentRow.boolSingleProject?2:3">
+        <el-descriptions-item label-class-name="desc-label" label="文件名称" :span="2">
           <div>
             <span style="cursor: pointer; color: #409eff" @click.stop="attachmentView(currentRow)">{{currentRow.fileName}}</span>
           </div>
         </el-descriptions-item>
-        <el-descriptions-item label-class-name="desc-label" label="所属项目" :span="1" v-if="currentRow.boolSingleProject">
-          {{currentRow.project?projectNameFormatter(currentRow.project):'-'}}
+        <el-descriptions-item label-class-name="desc-label" label="所属项目" :span="1">
+          <el-tooltip placement="top">
+            <template #content>
+              <template v-if="isNotBlank(currentRow.projectList)">
+                <div v-for="item in currentRow.projectList" :key="item.id">{{projectNameFormatter(item)}}</div>
+              </template>
+              <template v-else>-</template>
+            </template>
+            <div class="project-div">
+              <template v-if="isNotBlank(currentRow.projectList)">
+                <template v-if="currentRow.projectList.length===1">
+                  <span v-for="item in currentRow.projectList" :key="item.id">{{projectNameFormatter(item)}}</span>
+                </template>
+                <template v-else>
+                  <span v-for="item in currentRow.projectList" :key="item.id">【{{projectNameFormatter(item)}}】</span>
+                </template>
+              </template>
+              <template v-else>-</template>
+            </div>
+          </el-tooltip>
         </el-descriptions-item>
         <el-descriptions-item label-class-name="desc-label" class-name="content-class" class="" label="文件类型"><div style="width:30%">{{planProcessTypeEnum.VL[currentRow.processType]}}</div></el-descriptions-item>
         <el-descriptions-item label-class-name="desc-label" class-name="content-class" label="文件属性"><div style="width:30%">{{processUseTypeEnum.VL[currentRow.boolSingleProject]}}</div></el-descriptions-item>
@@ -174,7 +192,7 @@
         </div>
       </el-form>
       <artifactBindCurrent v-model="currentVisible" :currentRow="currentRow" :showList="showList" @delete="deleteItem" @success="handleSuccess" :projectId="query.projectId" :monomerId="query.monomerId"/>
-      <artifactBindDetail v-model="bindVisible" :currentRow="currentRow" @success="handleSuccess" />
+      <artifactBindDetail v-model="bindVisible" :currentRow="currentRow" @success="emit('success')" />
       <showPdfAndImg v-if="pdfShow" :isVisible="pdfShow" :showType="'attachment'" :id="currentId" @close="pdfShow = false" />
     </template>
   </common-drawer>
@@ -312,7 +330,7 @@ async function fetchList() {
   try {
     const { content = [] } = await getStructureList({ processFileId: props.currentRow.id, ...query.value, ...tableQuery.value })
     content.map((v, index) => {
-      v.uuid = '_' + index
+      v.uuid = v.project?.id + '_' + v.serialNumber
       v.projectId = v.project?.id
     })
     _list = content
@@ -341,17 +359,29 @@ function choseAll() {
       detailRef?.value?.toggleRowSelection(v, true)
     }
   })
-  showList.value = tableSelection.value || []
+  tableSelection.value.forEach(v => {
+    if (showList.value.findIndex(k => k.uuid === v.uuid) < 0) {
+      showList.value.push(v)
+    }
+  })
 }
 
 function confirmSelect() {
-  showList.value = tableSelection.value
+  tableSelection.value.forEach(v => {
+    if (showList.value.findIndex(k => k.uuid === v.uuid) < 0) {
+      showList.value.push(v)
+    }
+  })
 }
 
 function addItem(val) {
   const findVal = list.value.find(v => v.uuid === val.uuid)
   detailRef?.value?.toggleRowSelection(findVal, true)
-  showList.value = tableSelection.value
+  tableSelection.value.forEach(v => {
+    if (showList.value.findIndex(k => k.uuid === v.uuid) < 0) {
+      showList.value.push(v)
+    }
+  })
 }
 
 function handleSelectionChange(val) {
@@ -385,5 +415,14 @@ function handleBind() {
 }
 ::v-deep(.desc-label){
   width:149px !important;
+}
+.project-div{
+  word-break: break-all;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
 }
 </style>
