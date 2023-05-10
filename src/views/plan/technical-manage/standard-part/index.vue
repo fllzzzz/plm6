@@ -69,7 +69,21 @@
         <span v-else>{{ auxiliaryMaterialUseTypeEnum.VL[row.useProperty] }}</span>
       </template>
     </el-table-column>
-      <el-table-column
+    <el-table-column prop="remark" label="备注" align="center">
+      <template #default="{ row }">
+        <el-input
+          v-if="row.isModify"
+          v-model.trim="row.remark"
+          type="textarea"
+          :autosize="{ minRows: 1, maxRows: 6 }"
+          :maxlength="200"
+          placeholder="备注"
+          style="width:100%"
+        />
+        <span v-else>{{ row.remark }}</span>
+      </template>
+    </el-table-column>
+    <el-table-column
         v-if="checkPermission([...permission.edit, ...permission.del])"
         label="操作"
         width="180px"
