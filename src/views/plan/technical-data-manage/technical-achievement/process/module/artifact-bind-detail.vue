@@ -98,7 +98,7 @@
               ref="detailRef"
               border
               :data="list"
-              :max-height="maxHeight-80"
+              :max-height="maxHeight-100"
               style="width: 100%;"
               class="table-form"
               :data-format="dataFormat"

@@ -3,7 +3,7 @@
     ref="drawerRef"
     :visible="crud.status.cu > 0"
     :before-close="crud.cancelCU"
-    :title="crud.status.title"
+    title="上传工艺文件"
     :show-close="true"
     :wrapper-closable="false"
     :close-on-click-modal="false"

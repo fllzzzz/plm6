@@ -42,7 +42,7 @@ watch(
 // 获取构件类型明细
 async function fetchList() {
   let _list = []
-  if (!props.query.projectId) {
+  if (!props.query.projectId && !props.query.processType) {
     list.value = _list
     return
   }
