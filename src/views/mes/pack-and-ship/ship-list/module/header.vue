@@ -162,11 +162,11 @@
         />
       </template>
       <template v-slot:viewLeft>
-        <el-tag v-permission="permission.get" type="warning" effect="plain" class="filter-item" size="medium">
+        <!-- <el-tag v-permission="permission.get" type="warning" effect="plain" class="filter-item" size="medium">
           过磅重量汇总（磅计）：
           <span v-if="!summaryLoading">{{ convertUnits(overWeight, 'kg', 't', 2) }} t</span>
           <i v-else class="el-icon-loading" />
-        </el-tag>
+        </el-tag> -->
         <el-tag v-permission="permission.get" effect="plain" class="filter-item" size="medium">
           累计发运重量（理计）：
           <span v-if="!summaryLoading">{{ convertUnits(shipWeight, 'kg', 't', 2) }} t</span>

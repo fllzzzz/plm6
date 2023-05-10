@@ -10,7 +10,7 @@
         class="filter-item"
         @change="crud.toQuery"
       />
-      <common-radio-button
+      <!-- <common-radio-button
         v-if="crud.query.processType === mesMachinePartOrderTypeEnum.CUTTING_ORDER.V"
         v-model="query.cutConfigId"
         :options="cutTypeList"
@@ -20,7 +20,7 @@
         size="small"
         class="filter-item"
         @change="crud.toQuery"
-      />
+      /> -->
       <crudOperation>
         <template #optLeft>
           <workshop-select
