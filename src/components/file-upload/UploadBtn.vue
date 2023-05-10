@@ -7,17 +7,18 @@
     :headers="headers"
     :on-success="handleSuccess"
     :on-error="handleError"
+    :on-progress="handleProgress"
     :on-remove="handleRemove"
     :before-upload="beforeUpload"
     :before-remove="beforeRemove"
     :limit="props.limit"
     :show-file-list="props.showFileList"
     :on-exceed="handleExceed"
-    :disabled="props.disabled"
+    :disabled="props.disabled || uploadLoading"
     :accept="props.accept"
     multiple
   >
-    <common-button :size="props.size" :icon="props.icon" :disabled="props.disabled" :type="props.btnType">{{ props.btnName }}</common-button>
+    <common-button :loading="uploadLoading" :size="props.size" :icon="props.icon" :disabled="props.disabled || uploadLoading" :type="props.btnType">{{ props.btnName }}</common-button>
     <template v-slot:tip>
       <div v-if="props.tip" class="el-upload__tip">{{ props.tip }}</div>
     </template>
@@ -103,6 +104,7 @@ const { fileUploadApi } = mapGetters('fileUploadApi')
 
 const upload = ref()
 const headers = ref({ Authorization: getToken() })
+const uploadLoading = ref(false)
 
 watch(
   () => props.files,
@@ -115,6 +117,7 @@ watch(
 )
 
 function handleSuccess(response, file, fileList) {
+  uploadLoading.value = false
   if (response && response.code === 20000) {
     const f = response.data
     const files = [...(props.files || [])]
@@ -128,6 +131,7 @@ function handleSuccess(response, file, fileList) {
 }
 
 function handleError() {
+  uploadLoading.value = false
   ElMessage.error('上传失败')
 }
 
@@ -163,6 +167,10 @@ function clearFiles() {
   if (upload.value && upload.value.uploadRef) {
     upload.value.uploadRef.fileList.length = 0
   }
+}
+
+function handleProgress() {
+  uploadLoading.value = true
 }
 
 defineExpose({
