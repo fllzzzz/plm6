@@ -22,7 +22,7 @@
       <rrOperation/>
     </div>
     <crudOperation>
-      <template v-if="query.monomerId" #optRight>
+      <template v-if="query.enclosurePlanId" #optRight>
         <span v-if="checkPermission(crud.permission.save)" style="margin-right: 6px">
           <span v-if="modifying">
             <common-button type="warning" size="mini" @click="handelModifying(false, true)">取消录入</common-button>
@@ -33,7 +33,7 @@
         <print-table
           v-permission="crud.permission.print"
           api-key="contractEnclosurePrice"
-          :params="{ monomerId: query.monomerId }"
+          :params="{ projectId:projectId,enclosurePlanId: query.enclosurePlanId }"
           size="mini"
           type="warning"
           class="filter-item"
@@ -41,7 +41,7 @@
       </template>
       <template #viewLeft>
         <span v-if="checkPermission(crud.permission.cost) && query.monomerId">
-          <el-tag effect="plain" type="success" size="medium" class="filter-item">
+          <!-- <el-tag effect="plain" type="success" size="medium" class="filter-item">
             单体围护总数(张)：
             <span v-if="!costLoading">{{ monomerCost.totalQuantity }}</span>
             <i v-else class="el-icon-loading" />
@@ -60,7 +60,7 @@
             单体围护造价：
             <span v-if="!costLoading" v-thousand="monomerCost.totalPrice" />
             <i v-else class="el-icon-loading" />
-          </el-tag>
+          </el-tag> -->
         </span>
       </template>
     </crudOperation>
@@ -73,9 +73,7 @@ import { cost } from '@/api/contract/sales-manage/price-manage/enclosure'
 import { ref, watch, nextTick, inject, computed, defineExpose } from 'vue'
 
 import checkPermission from '@/utils/system/check-permission'
-import { convertUnits } from '@/utils/convert/unit'
-import { DP } from '@/settings/config'
-// import { contractSaleTypeEnum } from '@enum-ms/mes'
+import { contractSaleTypeEnum } from '@enum-ms/mes'
 import { enclosureSettlementTypeEnum } from '@enum-ms/contract'
 import { toThousand } from '@/utils/data-type/number'
 import { emptyTextFormatter } from '@/utils/data-type'
@@ -86,7 +84,7 @@ import rrOperation from '@crud/RR.operation'
 import mPreview from '../../preview'
 
 const projectId = inject('projectId')
-const monomerId = inject('monomerId')
+const enclosurePlanId = inject('enclosurePlanId')
 
 // 有变动的数据
 const modifiedData = computed(() => {
@@ -96,16 +94,16 @@ const modifiedData = computed(() => {
 // 预览参数
 const previewParams = computed(() => {
   return {
-    monomerId: query.monomerId
-    // type: contractSaleTypeEnum.ENCLOSURE.V
+    enclosurePlanId: query.enclosurePlanId,
+    type: contractSaleTypeEnum.ENCLOSURE.V
   }
 })
 
 watch(
-  monomerId,
+  enclosurePlanId,
   (val) => {
     nextTick(() => {
-      crud.query.monomerId = val
+      crud.query.enclosurePlanId = val
       costInit()
       crud.toQuery()
     })
@@ -137,9 +135,7 @@ CRUD.HOOK.handleRefresh = (crud, { data }) => {
     v.newUnitPrice = v.unitPrice // number类型的单价（unitPrice可能会有千位符）
     v.originNewUnitPrice = v.newUnitPrice
     v.originUnitPrice = emptyTextFormatter(toThousand(v.unitPrice))
-    v.totalLength = convertUnits(v.totalLength, 'mm', 'm', DP.MES_ENCLOSURE_L__M)
-    v.totalArea = convertUnits(v.totalArea, 'mm2', 'm2', DP.COM_AREA__M2)
-    v.totalPrice = (v.priceType === enclosureSettlementTypeEnum.LENGTH.V ? v.totalLength : v.totalArea) * (v.unitPrice || 0)
+    v.totalPrice = (v.pricingManner === enclosureSettlementTypeEnum.LENGTH.V ? v.totalLength : v.totalArea) * (v.unitPrice || 0)
   })
   fetchCost()
 }
@@ -150,7 +146,7 @@ async function fetchCost() {
   costLoading.value = true
   try {
     const res = await cost({
-      monomerId: query.monomerId,
+      enclosurePlanId: query.enclosurePlanId,
       projectId: projectId.value
     })
     monomerCost.value = res

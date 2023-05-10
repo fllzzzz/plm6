@@ -27,9 +27,9 @@
           <span>{{ TechnologyTypeAllEnum.V?.[row.category]?.L }}</span>
         </template>
       </el-table-column>
-      <el-table-column v-if="columns.visible('priceType')" key="priceType" prop="priceType" show-overflow-tooltip label="计价方式" align="center">
+      <el-table-column v-if="columns.visible('pricingManner')" key="pricingManner" prop="pricingManner" show-overflow-tooltip label="计价方式" align="center">
         <template #default="{ row }">
-          <span>{{ enclosureSettlementTypeEnum.V?.[row.priceType]?.L }}</span>
+          <span>{{ enclosureSettlementTypeEnum.VL[row.pricingManner] }}</span>
         </template>
       </el-table-column>
       <el-table-column v-if="columns.visible('unitPrice')" key="unitPrice" prop="unitPrice" :show-overflow-tooltip="true" label="综合单价" align="center" min-width="120">
@@ -46,11 +46,15 @@
             @change="handlePrice(row)"
           />
           <template v-else>
-          <span>{{ row.unitPrice }}</span>
+            <span :class="row.status === 1 ? 'tc-danger' : ''">{{ row.unitPrice }}</span>
           </template>
         </template>
       </el-table-column>
-      <el-table-column v-if="columns.visible('totalPrice')" key="totalPrice" prop="totalPrice" align="center" min-width="120" label="金额" />
+       <el-table-column v-if="columns.visible('totalPrice')" key="totalPrice" prop="totalPrice" align="center" min-width="120" label="金额">
+        <template #default="{ row }">
+          <span :class="row.status === 1 ? 'tc-danger' : ''">{{ row.totalPrice }}</span>
+        </template>
+      </el-table-column>
     </common-table>
     <!--分页组件-->
     <pagination />
@@ -96,7 +100,7 @@ const { crud, columns } = useCRUD(
     permission: { ...permission },
     crudApi: { ...crudApi },
     optShow: { ...optShow },
-    requiredQuery: ['monomerId']
+    requiredQuery: ['enclosurePlanId']
   },
   tableRef
 )

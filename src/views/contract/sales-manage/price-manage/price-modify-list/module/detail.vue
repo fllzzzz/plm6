@@ -26,10 +26,15 @@
           </template>
         </el-table-column>
       </template>
-      <!-- <template v-if="props.detailInfo.type === contractSaleTypeEnum.ENCLOSURE.V">
-        <el-table-column prop="name" label="围护名称" align="center" />
-        <el-table-column prop="plate" label="板型" width="100px" />
-      </template> -->
+      <template v-if="props.detailInfo.type === contractSaleTypeEnum.ENCLOSURE.V">
+        <el-table-column prop="name" label="名称" align="center" />
+        <el-table-column prop="plate" label="板型" align="center" />
+        <el-table-column align="center" prop="pricingManner" label="计价方式">
+          <template #default="{ row }">
+            <span>{{ enclosureSettlementTypeEnum.VL[row.pricingManner] }}</span>
+          </template>
+        </el-table-column>
+      </template>
       <template v-if="props.detailInfo.type === contractSaleTypeEnum.AUXILIARY_MATERIAL.V">
         <el-table-column prop="name" label="配套件名称" align="center" />
         <el-table-column prop="specification" label="规格" />
@@ -54,7 +59,7 @@ import { ref, defineProps, defineEmits } from 'vue'
 import checkPermission from '@/utils/system/check-permission'
 import { contractSaleTypeEnum } from '@enum-ms/mes'
 import { reviewStatusEnum } from '@enum-ms/common'
-import { pricingMannerEnum } from '@enum-ms/contract'
+import { pricingMannerEnum, enclosureSettlementTypeEnum } from '@enum-ms/contract'
 
 import { regDetail } from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'

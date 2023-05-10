@@ -25,11 +25,16 @@
           </template>
         </el-table-column>
       </template>
-      <!-- <template v-if="props.params.type === contractSaleTypeEnum.ENCLOSURE.V">
+      <template v-if="props.params.type === contractSaleTypeEnum.ENCLOSURE.V">
         <el-table-column prop="name" label="名称" align="center" />
         <el-table-column prop="plate" label="板型" align="center" />
         <el-table-column prop="totalQuantity" label="数量" align="center" />
-      </template> -->
+        <el-table-column align="center" prop="pricingManner" label="计价方式">
+          <template #default="{ row }">
+            <span>{{ enclosureSettlementTypeEnum.VL[row.pricingManner] }}</span>
+          </template>
+        </el-table-column>
+      </template>
       <template v-if="props.params.type === contractSaleTypeEnum.AUXILIARY_MATERIAL.V">
         <el-table-column prop="name" label="名称" align="center" />
         <el-table-column prop="specification" label="规格" align="center" />
@@ -68,7 +73,7 @@ import { defineEmits, defineProps, ref, useAttrs } from 'vue'
 import { ElNotification } from 'element-plus'
 
 import { contractSaleTypeEnum } from '@enum-ms/mes'
-import { pricingMannerEnum } from '@enum-ms/contract'
+import { enclosureSettlementTypeEnum, pricingMannerEnum } from '@enum-ms/contract'
 
 import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'
@@ -113,11 +118,11 @@ async function submit() {
     submitLoading.value = true
     const _list = []
     props.modifiedData.map((v) => {
-      if (props.params.type === contractSaleTypeEnum.STRUCTURE.V || props.params.type.type === contractSaleTypeEnum.MACHINE_PART.V) {
+      if (props.params.type !== contractSaleTypeEnum.AUXILIARY_MATERIAL.V) {
         _list.push({
           id: v.id,
           unitPrice: v.newUnitPrice ? v.newUnitPrice : (v.unitPrice !== '-' ? v.unitPrice : null),
-          pricingManner: props.params.type === contractSaleTypeEnum.STRUCTURE.V ? v.pricingManner : undefined
+          pricingManner: props.params.type === contractSaleTypeEnum.STRUCTURE.V || props.params.type === contractSaleTypeEnum.ENCLOSURE.V ? v.pricingManner : undefined
         })
       } else {
         _list.push({
