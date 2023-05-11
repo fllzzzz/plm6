@@ -26,11 +26,15 @@
         </el-descriptions-item>
         <el-descriptions-item label-class-name="processType" label="文件类型">{{planProcessTypeEnum.VL[currentRow.processType]}}</el-descriptions-item>
         <el-descriptions-item label-class-name="boolSingleProject" label="文件属性">{{processUseTypeEnum.VL[currentRow.boolSingleProject]}}</el-descriptions-item>
-        <el-descriptions-item label-class-name="project" label="所属项目" :span="2">
-          <template v-if="isNotBlank(currentRow.projectList)">
-            <div v-for="item in currentRow.projectList" :key="item.id">{{projectNameFormatter(item)}}</div>
-          </template>
-          <template v-else>-</template>
+        <el-descriptions-item label-class-name="project" :label="currentRow.boolSingleProject?'所属项目':'关联项目'" :span="2">
+          <el-row>
+            <template v-if="isNotBlank(currentRow.projectList)">
+              <el-col v-for="item in currentRow.projectList" :key="item.id" :span="12">
+                【{{projectNameFormatter(item)}}】
+              </el-col>
+            </template>
+            <template v-else>-</template>
+          </el-row>
         </el-descriptions-item>
          <el-descriptions-item label-class-name="userName" label="上传人">{{currentRow.userName}}</el-descriptions-item>
         <el-descriptions-item label-class-name="uploadTime" label="上传日期">{{currentRow.uploadTime?parseTime(currentRow.uploadTime,'{y}-{m}-{d} {h}:{i}:{s}'):'-'}}</el-descriptions-item>

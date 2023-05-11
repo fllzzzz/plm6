@@ -22,7 +22,7 @@
         </el-descriptions-item>
         <el-descriptions-item label-class-name="processType" label="文件类型">{{planProcessTypeEnum.VL[currentRow.processType]}}</el-descriptions-item>
         <el-descriptions-item label-class-name="boolSingleProject" label="文件属性">{{processUseTypeEnum.VL[currentRow.boolSingleProject]}}</el-descriptions-item>
-        <el-descriptions-item label-class-name="project" label="所属项目" :span="2">
+        <el-descriptions-item label-class-name="project" :label="currentRow.boolSingleProject?'所属项目':'关联项目'" :span="2">
           <el-tooltip placement="top">
             <template #content>
               <template v-if="isNotBlank(currentRow.projectList)">
