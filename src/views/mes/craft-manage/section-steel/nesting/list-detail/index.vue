@@ -10,7 +10,7 @@
       <div class="content-container" style="display: flex; margin-bottom: 8px">
         <common-radio-button
           v-model="productionLineTypeEnum"
-          :options="artifactProductLineEnum.ENUM"
+          :options="hasIntelligent ? artifactProductLineEnum.ENUM : traditionLineEnum.ENUM"
           type="enum"
           style="align-self: center"
           class="filter-item"
@@ -152,7 +152,7 @@
 import useVisible from '@compos/use-visible'
 import useMaxHeight from '@compos/use-max-height'
 import { getAssembleList, getNoFileList } from '@/api/mes/craft-manage/section-steel/nesting'
-import { artifactProductLineEnum, componentTypeEnum, fileNC1TypeEnum } from '@enum-ms/mes'
+import { artifactProductLineEnum, traditionLineEnum, componentTypeEnum, fileNC1TypeEnum } from '@enum-ms/mes'
 import { mesExtrusionNestingPM as permission } from '@/page-permission/mes'
 import { technicalDataTypeEnum } from '@enum-ms/plan'
 import { ref, defineProps, defineEmits, watch, reactive } from 'vue'
@@ -160,6 +160,7 @@ import usePagination from '@compos/use-pagination'
 import { upload } from '@/api/plan/technical-data-manage/technical-achievement'
 import uploadBtn from '@/components/file-upload/SingleFileUploadBtn.vue'
 import { ElMessage, ElNotification } from 'element-plus'
+import { mapGetters } from '@/store/lib'
 
 const emit = defineEmits(['success'])
 const productionLineTypeEnum = ref(artifactProductLineEnum.TRADITION.V)
@@ -168,6 +169,8 @@ const assembleData = ref([])
 const noFileData = reactive({
   summaryList: 0
 })
+
+const { hasIntelligent } = mapGetters('hasIntelligent')
 const innerLoading = ref(false)
 const props = defineProps({
   visible: {

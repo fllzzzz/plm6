@@ -33,7 +33,7 @@
         <common-radio-button
           v-if="lineTypeLoad && unshowLineType.length !== artifactProductLineEnum.KEYS.length"
           v-model="queryVO.productionLineTypeEnum"
-          :options="artifactProductLineEnum.ENUM"
+          :options="hasIntelligent ? artifactProductLineEnum.ENUM : traditionLineEnum.ENUM"
           type="enum"
           size="small"
           :unshowVal="unshowLineType"
@@ -235,9 +235,9 @@ import { record, getArtifactRecordType, getLineRecordType, recordSummary, groupS
 import { ElMessage } from 'element-plus'
 import { defineProps, defineEmits, ref, inject, computed, watch } from 'vue'
 // import { getLightColor } from '@/utils/color'
-import { artifactProductLineEnum } from '@enum-ms/mes'
+import { artifactProductLineEnum, traditionLineEnum } from '@enum-ms/mes'
 import { artifactSchedulingPM as permission } from '@/page-permission/mes'
-
+import { mapGetters } from '@/store/lib'
 import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'
 // import usePagination from '@compos/use-pagination'
@@ -271,6 +271,8 @@ const props = defineProps({
     default: () => {}
   }
 })
+
+const { hasIntelligent } = mapGetters('hasIntelligent')
 
 const selectionModeEnum = {
   SCHEDULING: { K: 'SCHEDULING', L: '排产模式', V: 1 },
