@@ -20,12 +20,12 @@
     <template #content>
       <el-form ref="formRef" :model="form" :rules="rules" size="small" label-width="100px">
         <el-descriptions class="margin-top" :column="3" border label-width="110">
-        <el-descriptions-item label-class-name="desc-label" label="文件名称" :span="2">
+        <el-descriptions-item label-class-name="desc-label" label="文件名称" :span="currentRow.boolSingleProject?2:3">
           <div>
             <span style="cursor: pointer; color: #409eff" @click.stop="attachmentView(currentRow)">{{currentRow.fileName}}</span>
           </div>
         </el-descriptions-item>
-        <el-descriptions-item label-class-name="desc-label" label="所属项目" :span="1">
+        <el-descriptions-item label-class-name="desc-label" label="所属项目" :span="1" v-if="currentRow.boolSingleProject">
           <el-tooltip placement="top">
             <template #content>
               <template v-if="isNotBlank(currentRow.projectList)">
