@@ -17,7 +17,9 @@
         @sort-change="crud.handleSortChange"
         class="enclosure-table"
         :cell-class-name="wrongCellMask"
+        @selection-change="crud.selectionChangeHandler"
       >
+      <el-table-column key="selection" type="selection" width="55" />
       <el-table-column label="序号" type="index" align="center" width="60" fixed="left" />
       <el-table-column
         prop="name"
@@ -142,7 +144,7 @@ const { globalProject, globalProjectId } = mapGetters(['globalProject', 'globalP
 const optShow = {
   add: true,
   edit: false,
-  del: false,
+  del: true,
   download: false
 }
 
