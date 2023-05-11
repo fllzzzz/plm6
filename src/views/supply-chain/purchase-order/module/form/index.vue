@@ -298,7 +298,7 @@
                     class="filter-item"
                     type="success"
                     size="mini"
-                    @click="materialSelectVisible = true"
+                    @click="addMaterialSelf"
                   >
                     添加物料
                   </common-button>
@@ -759,6 +759,18 @@ function rowInit(row) {
 }
 
 // --------------------------- 自选采购 end --------------------------------
+function addMaterialSelf() {
+  if (form.materialType & materialPurchaseClsEnum.MATERIAL.V && (!form.isAllMaterial && !form.auxMaterialIds?.length)) {
+    ElMessage.warning('请先选择辅材明细')
+    return
+  }
+  if (form.materialType & materialPurchaseClsEnum.OTHER.V && (!form.isAllOtherMaterial && !form.otherMaterialIds?.length)) {
+    ElMessage.warning('请先选择其它明细')
+    return
+  }
+  materialSelectVisible.value = true
+}
+
 // 添加制成品
 function handleAddManuf(list) {
   for (let i = 0; i < list.length; i++) {

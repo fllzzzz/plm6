@@ -154,7 +154,7 @@
             :precision="row.measurePrecision"
             size="mini"
             placeholder="本次实收数"
-            @change="handleQuantityChange(row)"
+            @change="handleQuantityChange(row, row)"
             @blur="handleOverQuantity(row)"
           />
           <span v-else>{{ row.quantity || '-' }}</span>
