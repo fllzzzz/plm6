@@ -43,7 +43,7 @@
         </el-descriptions-item>
       </el-descriptions>
       <historyVersion v-model="versionVisible" :currentRow="currentRow" />
-      <artifactBindDetail v-model="bindVisible" :currentRow="currentRow" @success="handleSuccess" />
+      <artifactBindDetail v-model="bindVisible" :currentRow="currentRow" @success="emit('success')" />
       <showPdfAndImg v-if="pdfShow" :isVisible="pdfShow" :showType="'attachment'" :id="currentId" @close="pdfShow = false" />
     </template>
   </common-drawer>
@@ -86,11 +86,6 @@ const currentId = ref()
 function attachmentView(item) {
   currentId.value = item.id
   pdfShow.value = true
-}
-
-function handleSuccess() {
-  emit('success')
-  handleClose()
 }
 
 </script>
