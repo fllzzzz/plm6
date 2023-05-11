@@ -31,7 +31,7 @@
       :showEmptySymbol="false"
     >
       <el-table-column prop="index" label="序号" align="center" width="50" type="index" />
-      <el-table-column key="invoiceDate" prop="invoiceDate" label="*开票日期" align="center" width="125">
+      <el-table-column key="invoiceDate" prop="invoiceDate" label="开票日期" align="center" width="125">
         <template v-slot="scope">
           <el-date-picker
             v-if="scope.row.isModify"
@@ -47,7 +47,7 @@
           </template>
         </template>
       </el-table-column>
-      <el-table-column key="invoiceAmount2" prop="invoiceAmount2" label="*开票额" align="center" min-width="220" class="money-column">
+      <el-table-column key="invoiceAmount2" prop="invoiceAmount2" label="开票额" align="center" min-width="220" class="money-column">
         <el-table-column key="invoiceAmount" prop="invoiceAmount" label="金额" align="center" min-width="110">
           <template v-slot="scope">
             <el-input-number
@@ -67,11 +67,11 @@
         </el-table-column>
         <el-table-column key="invoiceAmount1" prop="invoiceAmount1" label="大写" align="center" min-width="110" :show-overflow-tooltip="true">
           <template v-slot="scope">
-            <div>{{scope.row.invoiceAmount?'('+digitUppercase(scope.row.invoiceAmount)+')':''}}</div>
+            <div>{{scope.row.invoiceAmount?digitUppercase(scope.row.invoiceAmount):''}}</div>
           </template>
         </el-table-column>
       </el-table-column>
-      <el-table-column key="invoiceType" prop="invoiceType" label="*发票类型" align="center" width="110">
+      <el-table-column key="invoiceType" prop="invoiceType" label="发票类型" align="center" width="110">
         <template v-slot="scope">
           <div>{{ scope.row.invoiceType? invoiceTypeEnum.VL[scope.row.invoiceType]: '' }}</div>
         </template>
@@ -101,12 +101,12 @@
           <span>{{scope.row.noTaxAmount && scope.row.noTaxAmount>0? toThousand(scope.row.noTaxAmount): scope.row.noTaxAmount}}</span>
         </template>
       </el-table-column>
-      <el-table-column key="invoiceUnit" prop="invoiceUnit" label="*开票单位" align="center" min-width="120" :show-overflow-tooltip="true">
+      <el-table-column key="invoiceUnit" prop="invoiceUnit" label="开票单位" align="center" min-width="120" :show-overflow-tooltip="true">
         <template v-slot="scope">
           <div>{{ scope.row.invoiceUnit }}</div>
         </template>
       </el-table-column>
-      <el-table-column key="collectionUnit" prop="collectionUnit" label="*收票单位" align="center" min-width="120" :show-overflow-tooltip="true">
+      <el-table-column key="collectionUnit" prop="collectionUnit" label="收票单位" align="center" min-width="120" :show-overflow-tooltip="true">
         <template v-slot="scope">
           <el-input
             v-if="scope.row.isModify"
@@ -118,7 +118,7 @@
           <div v-else>{{ scope.row.collectionUnit  }}</div>
         </template>
       </el-table-column>
-      <el-table-column prop="invoiceNo" label="*发票号码" align="center" min-width="130" :show-overflow-tooltip="true">
+      <el-table-column prop="invoiceNo" label="发票号码" align="center" min-width="130" :show-overflow-tooltip="true">
         <template v-slot="scope">
           <el-input v-if="scope.row.isModify" v-model.trim="scope.row.invoiceNo" type="text" placeholder="发票号码" style="width: 100%;" @change="checkInvoiceNo(scope.row,scope.$index)" />
           <span v-else>{{ scope.row.invoiceNo  }}</span>

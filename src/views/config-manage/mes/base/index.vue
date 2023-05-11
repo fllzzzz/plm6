@@ -20,6 +20,7 @@
       </el-col>
       <el-col :xs="24" :sm="24" :md="24" :lg="8">
         <carModelConfig v-permission="permission.carModelConfigGet" style="margin-bottom: 20px" />
+         <machine-part-scheduling-config v-permission="permission.machinePartSchedulingGet" style="margin-bottom: 20px" />
       </el-col>
     </el-row>
   </div>
@@ -41,6 +42,7 @@ import carModelConfig from './component/car-model-config'
 import foldingPriceMethod from './component/folding-price-method'
 import steelBindConfig from './component/steel-bind-config.vue'
 import appTaskReport from './component/app-task-report.vue'
+// import machinePartSchedulingConfig from './component/machine-part-scheduling-config.vue'
 
 provide('permission', permission)
 

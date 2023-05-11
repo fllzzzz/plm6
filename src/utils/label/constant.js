@@ -24,117 +24,118 @@ const defComponent = {
 // 构件-常规标签
 const ARTIFACT_COMMON_L_HTML = function ({ component = defComponent, printConfig, manufacturerName = '制造商名称' }) {
   return `
-<div class="artifact-label">
-<div class="row">
-  <div class="col" style="font-size:10pt;${printConfig?.showMonomer ? '' : 'border:none;'}">${emptyTextFormatter(component.projectName)}</div>
-  <div class="col" style="font-size:10pt;${printConfig?.showMonomer ? '' : 'display:none;'}">${emptyTextFormatter(component.monomerName)}</div>
-</div>
-<div class="row row-2">
-  <div class="col amplify-content">
-    <span class="amplify-no">NO:</span>
-    <span class="amplify-text">${emptyTextFormatter(component.serialNumber)}</span>
-    <span class="amplify-date" style="${printConfig?.dateInProduced ? '' : 'display:none;'}">生产日期：${emptyTextFormatter(component.printTime)}</span>
+  <div class="artifact-label">
+    <table class="artifact-table">
+      <tr>
+        <td style="width:50%;font-size:10pt;${printConfig?.showMonomer ? '' : 'border:none;'}">${emptyTextFormatter(component.projectName)}</td>
+        <td style="width:50%;font-size:10pt;${printConfig?.showMonomer ? '' : 'display:none;'}">${emptyTextFormatter(component.monomerName)}</td>
+      </tr>
+    </table>
+    <table class="artifact-table">
+      <tr class="row-2">
+        <td colspan="3" class="amplify-content">
+          <span class="amplify-no">NO:</span>
+          <span class="amplify-text">${emptyTextFormatter(component.serialNumber)}</span>
+          <span class="amplify-date" style="${printConfig?.dateInProduced ? '' : 'display:none;'}">生产日期：${emptyTextFormatter(component.printTime)}</span>
+        </td>
+      </tr>
+    </table>
+    <table class="artifact-table">
+      <tr>
+        <td style="${printConfig?.weight !== printWeightTypeEnum.NONE.V ? '' : 'width:50%;'}">名称：${emptyTextFormatter(component.name)}</td>
+        <td style="${printConfig?.weight !== printWeightTypeEnum.NONE.V ? '' : 'width:50%;'}">任务数(件)：${emptyTextFormatter(component.quantity)}</td>
+        <td style="${printConfig?.weight !== printWeightTypeEnum.NONE.V ? '' : 'display:none;'}">单重(kg)：${emptyTextFormatter(component.weight)}</td>
+      </tr>
+    </table>
+    <table class="artifact-table">
+      <tr>
+        <td>长度(mm)：${emptyTextFormatter(component.length)}</td>
+        <td>规格：${emptyTextFormatter(component.specification)}</td>
+        <td rowspan="3" class="qr-content"></td>
+      </tr>
+      <tr style="${!printConfig?.showArea && !component?.oneCode ? 'border-bottom:1px solid #000;' : ''}">
+        <td colspan="${printConfig?.showArea && component?.oneCode ? 1 : 2}" style="${printConfig?.showArea ? '' : 'display:none;'}">区域：${emptyTextFormatter(component.areaName)}</td>
+        <td colspan="${printConfig?.showArea && component?.oneCode ? 1 : 2}" style="${component?.oneCode ? '' : 'display:none;'}">编码：${component.oneCode}</td>
+      </tr>
+      <tr>
+        <td colspan="2">${emptyTextFormatter(manufacturerName)}</td>
+      </tr>
+    </table>
   </div>
-</div>
-<div class="row">
-  <div class="col">名称：${emptyTextFormatter(component.name)}</div>
-  <div class="col">任务数(件)：${emptyTextFormatter(component.quantity)}</div>
-  <div class="col" style="${printConfig?.weight !== printWeightTypeEnum.NONE.V ? '' : 'display:none;'}">单重(kg)：${emptyTextFormatter(component.weight)}</div>
-</div>
-<div class="contains-rows">
-  <div class="col" style="flex: 2">
-    <div class="row">
-      <div class="col">长度(mm)：${emptyTextFormatter(component.length)}</div>
-      <div class="col">规格：${emptyTextFormatter(component.specification)}</div>
-    </div>
-    <div class="row">
-      <div class="col" style="${printConfig?.showArea ? '' : 'display:none;'}">区域：${emptyTextFormatter(component.areaName)}</div>
-      <div class="col" style="${component?.oneCode ? '' : 'display:none;'}">编码：${component.oneCode}</div>
-    </div>
-    <div class="row">
-      <div class="col">${emptyTextFormatter(manufacturerName)}</div>
-    </div>
-  </div>
-  <div class="col" style="flex: 1">
-    <div class="row row-3">
-      <div class="col qr-content">
-      </div>
-    </div>
-  </div>
-</div>
-</div>
 `
 }
 
 // 构件-简约标签
 const ARTIFACT_SIMPLE_L_HTML = function ({ component = defComponent, printConfig }) {
   return `
-<div class="artifact-label">
-<div class="row">
-  <div class="col">
-    <span style="font-size: 60px; font-weight: 600;">${emptyTextFormatter(component.serialNumber)}</span>
+  <div class="artifact-label">
+    <table class="artifact-table">
+      <tr>
+        <td colspan="2" style="font-size: 60px; font-weight: 600;">${emptyTextFormatter(component.serialNumber)}</td>
+      </tr>
+      <tr>
+        <td style="width:66.66%">
+          <span style="${printConfig?.dateInProduced ? '' : 'display:none;'}">
+            生产日期：${emptyTextFormatter(component.printTime)}
+          </span>
+          <span style="${component?.oneCode ? '' : 'display:none;'}">
+            编码：${component.oneCode}
+          </span>
+        </td>
+        <td class="qr-content"></td>
+      </tr>
+    </table>
   </div>
-</div>
-<div class="row">
-  <div class="col" style="flex:2;flex-direction:column;">
-    <span style="${printConfig?.dateInProduced ? '' : 'display:none;'}">
-      生产日期：${emptyTextFormatter(component.printTime)}
-    </span>
-    <span style="${component?.oneCode ? '' : 'display:none;'}">
-      编码：${component.oneCode}
-    </span>
-  </div>
-  <div class="col qr-content" style="flex:1;">
-  </div>
-</div>
-</div>
-`
+  `
 }
 
 // 构件-定制标签
 const ARTIFACT_CUSTOM_L_HTML = function ({ component = defComponent, printConfig, manufacturerName = '制造商名称', logo = labelLogo }) {
   return `
   <div class="artifact-label">
-  <div class="row">
-    <div class="col" style="justify-content:center;">
-      <img src="${logo}" alt="logo" style="height:70%;max-width: 96%;vertical-align: middle;">
-    </div>
-    <div class="col" style="font-size:10pt;">${emptyTextFormatter(manufacturerName)}</div>
-  </div>
-  <div class="row row-2">
-    <div class="col amplify-content">
-      <span class="amplify-no">NO:</span>
-      <span class="amplify-text">${emptyTextFormatter(component.serialNumber)}</span>
-      <span class="amplify-date" style="${printConfig?.dateInProduced ? '' : 'display:none;'}">生产日期：${emptyTextFormatter(component.printTime)}</span>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col" style="${printConfig?.showMonomer ? '' : 'border:none;'}">${emptyTextFormatter(component.projectName)}</div>
-    <div class="col" style="${printConfig?.showMonomer ? '' : 'display:none;'}">${emptyTextFormatter(component.monomerName)}</div>
-  </div>
-  <div class="contains-rows">
-    <div class="col" style="flex: 2">
-      <div class="row">
-        <div class="col" style="${printConfig?.showArea ? '' : 'display:none;'}">区域：${emptyTextFormatter(component.areaName)}</div>
-        <div class="col" style="${component?.oneCode ? '' : 'display:none;'}">编码：${component.oneCode}</div>
-      </div>
-      <div class="row">
-        <div class="col">任务数(件)：${emptyTextFormatter(component.quantity)}</div>
-        <div class="col">长度(mm)：${emptyTextFormatter(component.length)}</div>
-        <div class="col" style="${printConfig?.weight !== printWeightTypeEnum.NONE.V ? '' : 'display:none;'}">单重(kg)：${emptyTextFormatter(component.weight)}</div>
-      </div>
-      <div class="row">
-        <div class="col">${emptyTextFormatter(component.name)}</div>
-        <div class="col">${emptyTextFormatter(component.specification)}</div>
-      </div>
-    </div>
-    <div class="col" style="flex: 1">
-      <div class="row row-3">
-        <div class="col qr-content">
-        </div>
-      </div>
-    </div>
-  </div>
+    <table class="artifact-table">
+      <tr>
+        <td style="width:50%;"><img src="${logo}" alt="logo" style="max-width: 96%;vertical-align: middle;display: block;margin: auto;" /></td>
+        <td style="width:50%;font-size:10pt;">${emptyTextFormatter(manufacturerName)}</td>
+      </tr>
+    </table>
+    <table class="artifact-table">
+      <tr class="row-2">
+        <td colspan="3" class="amplify-content">
+          <span class="amplify-no">NO:</span>
+          <span class="amplify-text">${emptyTextFormatter(component.serialNumber)}</span>
+          <span class="amplify-date" style="${printConfig?.dateInProduced ? '' : 'display:none;'}">生产日期：${emptyTextFormatter(component.printTime)}</span>
+        </td>
+      </tr>
+    </table>
+    <table class="artifact-table">
+      <tr>
+        <td style="width:50%;font-size:10pt;${printConfig?.showMonomer ? '' : 'border:none;'}">${emptyTextFormatter(component.projectName)}</td>
+        <td style="width:50%;font-size:10pt;${printConfig?.showMonomer ? '' : 'display:none;'}">${emptyTextFormatter(component.monomerName)}</td>
+      </tr>
+    </table>
+    <table class="artifact-table">
+      <tr>
+        <td colspan="${printConfig?.showArea && component?.oneCode ? 1 : 2}" style="${printConfig?.showArea ? '' : 'display:none;'}">区域：${emptyTextFormatter(component.areaName)}</td>
+        <td colspan="${printConfig?.showArea && component?.oneCode ? 1 : 2}" style="${component?.oneCode ? '' : 'display:none;'}">编码：${component.oneCode}</td>
+        <td rowspan="3" class="qr-content"></td>
+      </tr>
+      <tr>
+        <td colspan="2" style="font-size:0;padding:0px;border-bottom:none;${!printConfig?.showArea && !component?.oneCode ? 'border-top:1px solid #000;' : ''}">
+          <table class="artifact-table">
+            <tr>
+              <td style="${printConfig?.weight !== printWeightTypeEnum.NONE.V ? '' : 'width:50%;'}">任务数(件)：${emptyTextFormatter(component.quantity)}</td>
+              <td style="${printConfig?.weight !== printWeightTypeEnum.NONE.V ? '' : 'width:50%;border-right:none;'}">长度(mm)：${emptyTextFormatter(component.length)}</td>
+              <td style="${printConfig?.weight !== printWeightTypeEnum.NONE.V ? 'border-right:none;' : 'display:none;'}">单重(kg)：${emptyTextFormatter(component.weight)}</td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+      <tr>
+        <td>${emptyTextFormatter(component.name)}</td>
+        <td>${emptyTextFormatter(component.specification)}</td>
+      </tr>
+    </table>
   </div>
   `
 }
@@ -142,7 +143,7 @@ const ARTIFACT_CUSTOM_L_HTML = function ({ component = defComponent, printConfig
 // 构件标签样式
 const ARTIFACT_STYLE = function ({
   fClass = '',
-  colContent = 'start',
+  colContent = 'left',
   rowHeight = 60,
   colPadding = 10,
   unit = 'px',
@@ -154,19 +155,29 @@ const ARTIFACT_STYLE = function ({
     style: `
     <style>
     .${fClass} .artifact-label {
+      width: 100%;
+      font-size: 0;
+      border-top: 1px solid #000;
+      border-left: 1px solid #000;
+    }
+
+    .${fClass} .artifact-table {
       font-family: "微软雅黑";
       font-size: 9pt;
       color: black;
-      box-sizing: border-box;
-      display: flex;
-      flex-direction: column;
+      width: 100%;
+      border-collapse:collapse;
+      text-align: ${colContent};
+      vertical-align:middle;
     }
     
-    .${fClass} .artifact-label .row {
-      display: flex;
-      border: 1px solid #000;
-      box-sizing: border-box;
+    .${fClass} .artifact-label tr {
+      width: 100%;
       height: ${rowHeight}${unit};
+    }
+
+    .${fClass} .artifact-label img{
+      height: ${rowHeight * 0.7}${unit};
     }
     
     .${fClass} .artifact-label .row-2 {
@@ -176,24 +187,13 @@ const ARTIFACT_STYLE = function ({
     .${fClass} .artifact-label .row-3 {
       height: ${rowHeight * 3}${unit};
     }
-    
-    .${fClass} .artifact-label .row:not(:last-child) {
-      border-bottom: none;
-    }
   
-    .${fClass} .artifact-label .row > .col {
-      height: 100%;
+    .${fClass} .artifact-label tr td{
+      width: 33.333%;
       padding: 0 ${colPadding}${unit};
-      box-sizing: border-box;
       word-break: break-all;
-      flex: 1;
-      display: flex;
-      align-items: center;
-      justify-content: ${colContent};
-    }
-      
-    .${fClass} .artifact-label .row > .col:not(:last-child) {
       border-right: 1px solid #000;
+      border-bottom: 1px solid #000;
     }
   
     .${fClass} .artifact-label .amplify-content{
@@ -218,22 +218,6 @@ const ARTIFACT_STYLE = function ({
       right: 10px;
       font-size:7pt;
     }
-    
-    .${fClass} .artifact-label .contains-rows {
-      display: flex;
-      box-sizing: border-box;
-      border-left: 1px solid #000;
-    }
-    
-    .${fClass} .artifact-label .contains-rows .row {
-      border-left: none;
-    }
-    .${fClass} .artifact-label .contains-rows .col {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: stretch;
-    }
     </style>
     `
   }
@@ -241,7 +225,6 @@ const ARTIFACT_STYLE = function ({
 
 // 围护-常规标签
 const ENCLOSURE_COMMON_L_HTML = function ({ component = defComponent, printConfig, manufacturerName = '制造商名称' }) {
-  console.log('ENCLOSURE_COMMON_L_HTML')
   return `
   <div class="enclosure-label">
     <div class="content">

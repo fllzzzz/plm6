@@ -31,7 +31,7 @@
       :showEmptySymbol="false"
     >
       <el-table-column prop="index" label="序号" align="center" width="50" type="index" />
-      <el-table-column key="collectionDate" prop="collectionDate" label="*收款日期" align="center" width="160">
+      <el-table-column key="collectionDate" prop="collectionDate" label="收款日期" align="center" width="160">
         <template v-slot="scope">
           <el-date-picker
             v-if="scope.row.isModify"
@@ -47,7 +47,7 @@
           </template>
         </template>
       </el-table-column>
-      <el-table-column key="collectionAmount2" prop="collectionAmount2" label="*收款金额" align="center" min-width="170" class="money-column">
+      <el-table-column key="collectionAmount2" prop="collectionAmount2" label="收款金额" align="center" min-width="170" class="money-column">
         <el-table-column key="collectionAmount" prop="collectionAmount" label="金额" align="center" min-width="85">
           <template v-slot="scope">
             <el-input-number
@@ -68,11 +68,11 @@
         </el-table-column>
         <el-table-column key="collectionAmount1" prop="collectionAmount1" label="大写" align="center" min-width="85" :show-overflow-tooltip="true">
           <template v-slot="scope">
-            <div>{{scope.row.collectionAmount?'('+digitUppercase(scope.row.collectionAmount)+')':''}}</div>
+            <div>{{scope.row.collectionAmount?digitUppercase(scope.row.collectionAmount):''}}</div>
           </template>
         </el-table-column>
       </el-table-column>
-      <el-table-column key="collectionReason" prop="collectionReason" label="*收款事由" align="center" width="120">
+      <el-table-column key="collectionReason" prop="collectionReason" label="收款事由" align="center" width="120">
         <template v-slot="scope">
           <common-select
             v-if="scope.row.isModify"
@@ -87,7 +87,7 @@
           <div v-else>{{ scope.row.collectionReason && dict && dict.label && dict.label['payment_reason']? dict.label['payment_reason'][ scope.row.collectionReason]: '' }}</div>
         </template>
       </el-table-column>
-      <el-table-column key="collectionMode" prop="collectionMode" label="*收款方式" align="center" width="110">
+      <el-table-column key="collectionMode" prop="collectionMode" label="收款方式" align="center" width="110">
         <template v-slot="scope">
           <common-select
             v-if="scope.row.isModify"
@@ -101,12 +101,12 @@
           <div v-else>{{ scope.row.collectionMode? paymentFineModeEnum.VL[scope.row.collectionMode]: '' }}</div>
         </template>
       </el-table-column>
-      <el-table-column key="collectionUnit" prop="collectionUnit" label="*收款单位" align="center" min-width="120" :show-overflow-tooltip="true">
+      <el-table-column key="collectionUnit" prop="collectionUnit" label="收款单位" align="center" min-width="120" :show-overflow-tooltip="true">
         <template v-slot="scope">
           <div>{{ scope.row.collectionUnit }}</div>
         </template>
       </el-table-column>
-      <el-table-column key="collectionBankAccountId" prop="collectionBankAccountId" :show-overflow-tooltip="true" label="*收款银行" align="center" min-width="120">
+      <el-table-column key="collectionBankAccountId" prop="collectionBankAccountId" :show-overflow-tooltip="true" label="收款银行" align="center" min-width="120">
         <template v-slot="scope">
           <common-select
             v-if="scope.row.isModify"
@@ -122,7 +122,7 @@
           <div v-else>{{ scope.row.collectionDepositBank }}</div>
         </template>
       </el-table-column>
-      <el-table-column key="paymentUnit" prop="paymentUnit" label="*付款单位" align="center" min-width="120" :show-overflow-tooltip="true">
+      <el-table-column key="paymentUnit" prop="paymentUnit" label="付款单位" align="center" min-width="120" :show-overflow-tooltip="true">
         <template v-slot="scope">
           <el-input
             v-if="scope.row.isModify"

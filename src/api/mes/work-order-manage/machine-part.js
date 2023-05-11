@@ -83,4 +83,16 @@ export function getProjectInfo(params) {
   })
 }
 
+/**
+ * @description: 获取切割类型
+*/
+export function getCutType(params) {
+  return request({
+    module: 'mes',
+    url: `task/order/machinePart/cutConfig/list`,
+    method: 'get',
+    params
+  })
+}
+
 export default { get }

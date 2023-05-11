@@ -17,7 +17,9 @@
         @sort-change="crud.handleSortChange"
         class="enclosure-table"
         :cell-class-name="wrongCellMask"
+        @selection-change="crud.selectionChangeHandler"
       >
+      <el-table-column key="selection" type="selection" width="55" />
       <el-table-column label="序号" type="index" align="center" width="60" fixed="left" />
       <el-table-column
         prop="name"
@@ -69,7 +71,21 @@
         <span v-else>{{ auxiliaryMaterialUseTypeEnum.VL[row.useProperty] }}</span>
       </template>
     </el-table-column>
-      <el-table-column
+    <el-table-column prop="remark" label="备注" align="center">
+      <template #default="{ row }">
+        <el-input
+          v-if="row.isModify"
+          v-model.trim="row.remark"
+          type="textarea"
+          :autosize="{ minRows: 1, maxRows: 6 }"
+          :maxlength="200"
+          placeholder="备注"
+          style="width:100%"
+        />
+        <span v-else>{{ row.remark }}</span>
+      </template>
+    </el-table-column>
+    <el-table-column
         v-if="checkPermission([...permission.edit, ...permission.del])"
         label="操作"
         width="180px"
@@ -128,7 +144,7 @@ const { globalProject, globalProjectId } = mapGetters(['globalProject', 'globalP
 const optShow = {
   add: true,
   edit: false,
-  del: false,
+  del: true,
   download: false
 }
 
