@@ -1,4 +1,12 @@
-export {initBimfaceApp}  from './index'
+export { initBimfaceApp } from './index'
+
+function getAxisOptionZ() {
+    return Glodon.Bimface.Viewer.AxisOption.Z
+}
+
+function getNavigationMode3D() {
+    return Glodon.Bimface.Viewer.NavigationMode3D.Fly
+}
 
 // webAppConfig.renderingMode = 1
 // 1代表全量绘制，2代表增量绘制，0代表自动
@@ -42,6 +50,10 @@ function getIsolateOption() {
     return Glodon.Bimface.Viewer.IsolateOption
 }
 
+function getSkyBoxManager(skyBoxManagerConfig) {
+    return new Glodon.Bimface.Plugins.SkyBox.SkyBoxManager(skyBoxManagerConfig)
+}
+
 function getDrawableContainerConfig() {
     return new Glodon.Bimface.Plugins.Drawable.DrawableContainerConfig()
 }
@@ -51,7 +63,7 @@ function getDrawableContainer(drawableConfig) {
 }
 
 function getCustomItemConfig() {
-   return new Glodon.Bimface.Plugins.Drawable.CustomItemConfig()
+    return new Glodon.Bimface.Plugins.Drawable.CustomItemConfig()
 }
 
 function getCustomItem(config) {
@@ -63,6 +75,15 @@ function getLeadLabelConfig() {
 }
 function getLeadLabel(config) {
     return new Glodon.Bimface.Plugins.Drawable.LeadLabel(config)
+}
+
+
+function getWalkthroughConfig() {
+    return new Glodon.Bimface.Plugins.Walkthrough.WalkthroughConfig()
+}
+
+function getWalkthrough(config) {
+    return new Glodon.Bimface.Plugins.Walkthrough.Walkthrough(config)
 }
 
 function getPanelPositions() {
@@ -107,6 +128,8 @@ function getTreeApi(el) {
 }
 
 export {
+    getAxisOptionZ,
+    getNavigationMode3D,
     getConfig,
     getApp,
     getViewer3DEvent,
@@ -116,12 +139,15 @@ export {
     getViewer2DEvent,
     getColor,
     getIsolateOption,
+    getSkyBoxManager,
     getDrawableContainerConfig,
     getDrawableContainer,
     getCustomItemConfig,
     getCustomItem,
     getLeadLabelConfig,
     getLeadLabel,
+    getWalkthroughConfig,
+    getWalkthrough,
     getPanelPositions,
     getPanelConfig,
     createPanel,
