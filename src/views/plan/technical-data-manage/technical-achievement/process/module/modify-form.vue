@@ -28,7 +28,10 @@
         <el-descriptions-item label="文件类型">{{planProcessTypeEnum.VL[currentRow.processType]}}</el-descriptions-item>
         <el-descriptions-item label="文件属性">{{processUseTypeEnum.VL[currentRow.boolSingleProject]}}</el-descriptions-item>
         <el-descriptions-item label="所属项目" :span="2">
-          {{currentRow.project?projectNameFormatter(currentRow.project):'-'}}
+          <template v-if="isNotBlank(currentRow.projectList)">
+            <div v-for="item in currentRow.projectList" :key="item.id">{{projectNameFormatter(item)}}</div>
+          </template>
+          <template v-else>-</template>
         </el-descriptions-item>
          <el-descriptions-item label="上传人">{{currentRow.userName}}</el-descriptions-item>
         <el-descriptions-item label="上传日期">{{currentRow.uploadTime?parseTime(currentRow.uploadTime,'{y}-{m}-{d} {h}:{i}:{s}'):'-'}}</el-descriptions-item>
@@ -36,7 +39,7 @@
           <div style="word-break:break-all;width:100%;">{{currentRow.remark}}</div>
         </el-descriptions-item>
       </el-descriptions>
-      <el-divider><span class="title">新文件信息</span></el-divider>
+      <el-divider><span class="title" style="background-color:#e6a23c;">新文件信息</span></el-divider>
       <el-form ref="formRef" :model="form" :rules="rules" size="small">
       <el-descriptions class="margin-top" :column="2" border label-width="110">
         <el-descriptions-item label-class-name="modify-content" label="*文件名称" :span="2">
@@ -76,7 +79,10 @@
         <el-descriptions-item label="文件类型">{{planProcessTypeEnum.VL[currentRow.processType]}}</el-descriptions-item>
         <el-descriptions-item label="文件属性">{{processUseTypeEnum.VL[currentRow.boolSingleProject]}}</el-descriptions-item>
         <el-descriptions-item label="所属项目" :span="2">
-          {{currentRow.project?projectNameFormatter(currentRow.project):'-'}}
+          <template v-if="isNotBlank(currentRow.projectList)">
+            <div v-for="item in currentRow.projectList" :key="item.id">{{projectNameFormatter(item)}}</div>
+          </template>
+          <template v-else>-</template>
         </el-descriptions-item>
          <el-descriptions-item label="上传人">{{currentRow.userName}}</el-descriptions-item>
         <el-descriptions-item label="上传日期">{{currentRow.uploadTime?parseTime(currentRow.uploadTime,'{y}-{m}-{d} {h}:{i}:{s}'):'-'}}</el-descriptions-item>
@@ -105,6 +111,7 @@ import crudApi from '@/api/plan/technical-data-manage/process'
 import { defineProps, defineEmits, ref, watch, nextTick } from 'vue'
 import useVisible from '@compos/use-visible'
 
+import { isNotBlank } from '@data-type/index'
 import { fileClassifyEnum } from '@enum-ms/file'
 import { processUseTypeEnum, planProcessTypeEnum } from '@enum-ms/plan'
 import { projectNameFormatter } from '@/utils/project'

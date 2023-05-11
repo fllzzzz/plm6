@@ -17,8 +17,20 @@
     <el-table-column prop="index" label="序号" align="center" width="60" type="index" />
     <el-table-column v-if="columns.visible('processType')" key="processType" prop="processType" :show-overflow-tooltip="true" label="工艺类型"  width="80" align="center"/>
     <el-table-column v-if="columns.visible('boolSingleProject')" key="boolSingleProject" prop="boolSingleProject" :show-overflow-tooltip="true" width="80" label="文件类型" align="center"/>
-    <el-table-column v-if="columns.visible('project')" key="project" prop="project" :show-overflow-tooltip="true" label="所属项目" align="left" min-width="150" />
-     <el-table-column v-if="columns.visible('fileName')" key="fileName" prop="fileName" :show-overflow-tooltip="true" label="文件名称" align="left" min-width="120">
+    <el-table-column v-if="columns.visible('projectList')" key="projectList" prop="projectList" :show-overflow-tooltip="true" label="所属项目" align="left" min-width="150">
+      <template v-slot="scope">
+        <template v-if="isNotBlank(scope.row.sourceRow.projectList)">
+          <template v-if="scope.row.projectList.length===1">
+            <span v-for="item in scope.row.projectList" :key="item.id">{{projectNameFormatter(item)}}</span>
+          </template>
+          <template v-else>
+            <span v-for="item in scope.row.projectList" :key="item.id">【{{projectNameFormatter(item)}}】</span>
+          </template>
+        </template>
+        <span v-else>-</span>
+      </template>
+    </el-table-column>
+    <el-table-column v-if="columns.visible('fileName')" key="fileName" prop="fileName" :show-overflow-tooltip="true" label="文件名称" align="left" min-width="120">
       <template v-slot="scope">
         <template v-if="scope.row.attachmentDTO">
           <div style="cursor: pointer; color: #409eff" @dblclick="attachmentView(scope.row.attachmentDTO)">{{ scope.row.fileName }}</div>
@@ -86,11 +98,13 @@ import crudApi from '@/api/plan/technical-data-manage/process'
 import { ref, provide } from 'vue'
 import { ElMessage } from 'element-plus'
 
+import { isNotBlank } from '@data-type/index'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import checkPermission from '@/utils/system/check-permission'
 import { planProcessListPM as permission } from '@/page-permission/plan'
 import { processUseTypeEnum, planProcessTypeEnum } from '@enum-ms/plan'
+import { projectNameFormatter } from '@/utils/project'
 
 import detail from './module/detail'
 import modifyForm from './module/modify-form'
@@ -121,7 +135,7 @@ const structureClassList = ref([])
 provide('structureClassList', structureClassList)
 
 const dataFormat = ref([
-  ['project', 'parse-project'],
+  // ['project', 'parse-project'],
   ['uploadTime', ['parse-time', '{y}-{m}-{d} {h}:{i}:{s}']],
   ['processType', ['parse-enum', planProcessTypeEnum]],
   ['boolSingleProject', ['parse-enum', processUseTypeEnum]]

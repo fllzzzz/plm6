@@ -6,13 +6,13 @@
     top="10vh"
     width="600px"
     :before-close="handleClose"
-    title="构件绑定列表"
+    :title="`构件绑定列表：${currentRow.fileName}`"
     :wrapper-closable="false"
     size="90%"
     custom-class="already-form"
   >
     <template #titleAfter>
-      <el-tag>{{planProcessTypeEnum.VL[currentRow.processType]}}</el-tag>
+      <el-tag>文件类型:{{planProcessTypeEnum.VL[currentRow.processType]}}</el-tag>
     </template>
     <template #content>
         <div style="display:flex;">
@@ -80,7 +80,7 @@
                 clearable
               />
             </div>
-            <div style="text-align:right;">
+            <div style="text-align:right;margin-bottom:10px;">
               <common-button class="filter-item" size="small" type="success" icon="el-icon-search" @click.stop="fetchList">搜索</common-button>
               <common-button
                 class="filter-item"
@@ -92,6 +92,10 @@
                 重置
               </common-button>
             </div>
+            <div style="color:#999;font-size:13px;margin-bottom:10px;">
+              *  注意：
+            </div>
+            <div style="color:#999;font-size:13px;">1. 解绑操作即刻生效，无需提交。</div>
           </div>
           <div style="flex:1;padding-left:10px;">
             <common-table
