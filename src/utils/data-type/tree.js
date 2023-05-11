@@ -451,7 +451,7 @@ export function getChildIds(tree) {
   const ids = []
   if (Array.isArray(tree)) {
     tree.forEach((node) => {
-      if (node.children) {
+      if (node.children?.length) {
         const childIds = getChildIds(node.children)
         return ids.push.apply(ids, childIds)
       } else {

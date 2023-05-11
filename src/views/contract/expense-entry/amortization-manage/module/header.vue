@@ -18,33 +18,16 @@
         />
       </template>
       <template #viewLeft>
-        <el-tag v-if="props.rowDetail?.levelName" size="medium" effect="plain" type="warning" class="filter-item">
-          {{ props.rowDetail?.levelName }}
-        </el-tag>
-        <common-button v-permission="crud.permission.add" type="primary" size="mini">摊销设置</common-button>
-        <common-button v-permission="crud.permission.add" type="warning" size="mini" @click="amortizationSettingVisible = true">
-          摊销设置
-        </common-button>
+        <slot name="viewLeft" />
       </template>
     </crudOperation>
-    <amortization-setting v-model="amortizationSettingVisible" @success="crud.toQuery" />
   </div>
 </template>
 <script setup>
-import { ref, defineProps } from 'vue'
-
 import { PICKER_OPTIONS_SHORTCUTS } from '@/settings/config'
 
 import { regHeader } from '@compos/use-crud'
 import crudOperation from '@crud/CRUD.operation'
-import amortizationSetting from './amortization-setting'
-
-const props = defineProps({
-  rowDetail: {
-    type: Object,
-    default: () => {}
-  }
-})
 
 const defaultQuery = {
   date: [],
@@ -54,8 +37,6 @@ const defaultQuery = {
 }
 
 const { crud, query } = regHeader(defaultQuery)
-
-const amortizationSettingVisible = ref(false)
 
 function handleDateChange() {
   if (query.date?.length) {
@@ -68,9 +49,3 @@ function handleDateChange() {
   crud.toQuery()
 }
 </script>
-
-<style lang="scss" scoped>
-.el-button + .el-button {
-  margin-left: 6px;
-}
-</style>

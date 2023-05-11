@@ -36,7 +36,7 @@
           <project-cascader
             v-model="form.projectId"
             clearable
-            :disabled="!form.expenseTypeId || form.costAscriptionEnum === costAscriptionEnum.PERIOD_COSTS.V"
+            :disabled="!form.expenseTypeId || form.costAscriptionEnum === costAscriptionEnum.INDIRECT_COSTS.V"
             class="filter-item"
             style="width: 270px"
             placeholder="请先选择费用类别"
@@ -151,7 +151,7 @@ const validateQuantity = (rule, value, callback) => {
 }
 
 const validateProject = (rule, value, callback) => {
-  if (form.costAscriptionEnum !== costAscriptionEnum.PERIOD_COSTS.V) {
+  if (form.costAscriptionEnum !== costAscriptionEnum.INDIRECT_COSTS.V) {
     if (isBlank(form.expenseTypeId)) {
       callback(new Error('请先选择费用类别'))
     } else if (isBlank(value)) {
@@ -174,7 +174,7 @@ function handleChange() {
   const row = expenseList.value.find((v) => v.id === form.expenseTypeId) || {}
   subjectList.value = row?.links || []
   form.costAscriptionEnum = row?.costAscriptionEnum
-  if (form.costAscriptionEnum === costAscriptionEnum.PERIOD_COSTS.V || isBlank(form.expenseTypeId)) {
+  if (form.costAscriptionEnum === costAscriptionEnum.INDIRECT_COSTS.V || isBlank(form.expenseTypeId)) {
     form.projectId = undefined
   }
 }

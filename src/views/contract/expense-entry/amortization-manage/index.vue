@@ -19,7 +19,31 @@
         />
       </el-card>
       <div style="flex: 1; min-width: 1px">
-        <mHeader :row-detail="rowDetail" />
+        <mHeader :row-detail="treeRow">
+          <template #viewLeft>
+            <el-tag v-if="treeRow?.levelName" size="medium" effect="plain" type="warning" class="filter-item">
+              {{ treeRow?.levelName }}
+            </el-tag>
+            <div class="btn-wrap">
+              <common-button v-permission="permission.auto" type="primary" size="mini" @click="autoAmortizationVisible = true">
+                自动摊销
+              </common-button>
+              <el-badge
+                :value="manualAmortizationCount"
+                :max="99"
+                :style="{ marginRight: manualAmortizationCount ? '10px' : 0 }"
+                :hidden="manualAmortizationCount < 1"
+              >
+                <common-button v-permission="permission.manual" type="primary" size="mini" @click="manualAmortizationVisible = true">
+                  手动摊销
+                </common-button>
+              </el-badge>
+              <common-button v-permission="permission.set" type="warning" size="mini" @click="amortizationSettingVisible = true">
+                摊销设置
+              </common-button>
+            </div>
+          </template>
+        </mHeader>
         <common-table
           ref="tableRef"
           v-loading="crud.loading"
@@ -27,57 +51,70 @@
           :empty-text="crud.emptyText"
           :max-height="maxHeight"
           row-key="id"
-          show-summary
           :data-format="columnsDataFormat"
-          :summary-method="getSummaries"
         >
           <el-table-column type="index" prop="index" label="序号" align="center" width="60px" />
-          <el-table-column v-if="columns.visible('date')" prop="date" key="date" label="摊销时间段" align="center" />
+          <el-table-column v-if="columns.visible('date')" prop="date" key="date" label="摊销时间段" align="center" min-width="160">
+            <template #default="{ row }">
+              <span style="font-weight: bold">{{ row.date }}</span>
+            </template>
+          </el-table-column>
           <el-table-column
-            v-if="columns.visible('classifyName')"
+            v-if="columns.visible('name')"
             align="center"
-            key="classifyName"
-            prop="classifyName"
+            key="name"
+            prop="name"
             :show-overflow-tooltip="true"
             label="摊销种类"
-          />
+            min-width="180"
+          >
+            <template #default="{ row }">
+              <span>
+                <span v-if="row.fullPathName" style="color: #adadad">{{ row.fullPathName }} > </span>{{ row.name }}
+              </span>
+            </template>
+          </el-table-column>
           <el-table-column
-            v-if="columns.visible('totalAmount')"
+            v-if="columns.visible('amount')"
             align="center"
-            key="totalAmount"
-            prop="totalAmount"
+            key="amount"
+            prop="amount"
             :show-overflow-tooltip="true"
             label="摊销金额"
+            min-width="120"
           />
           <el-table-column
-            v-if="columns.visible('usedMete')"
+            v-if="columns.visible('productMete')"
             align="center"
-            key="usedMete"
-            prop="usedMete"
+            key="productMete"
+            prop="productMete"
             :show-overflow-tooltip="true"
             label="产量（吨）"
+            min-width="120"
           />
-          <el-table-column v-if="checkPermission([...permission.edit, ...permission.del])" align="center" label="操作" width="140px">
+          <el-table-column v-if="checkPermission(permission.detail)" align="center" label="操作" width="80px">
             <template #default="{ row }">
-              <udOperation :data="row" :disabled-edit="true" :disabled-del="true" />
+              <common-button size="mini" type="info" icon="el-icon-view" @click="showDetail(row)" />
             </template>
           </el-table-column>
         </common-table>
         <!-- 分页 -->
         <pagination />
+        <amortization-setting v-model="amortizationSettingVisible" @success="getAmortizationTree" />
+        <auto-amortization v-model="autoAmortizationVisible" />
+        <manual-amortization v-model="manualAmortizationVisible" @success="crud.toQuery" />
+        <mDetail v-model="detailVisible" :detail-row="detailRow" />
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import crudApi, { amortizationClassTree } from '@/api/contract/expense-entry/amortization-manage'
+import crudApi, { amortizationClassTree, getManualAmortizationCount } from '@/api/contract/expense-entry/amortization-manage'
 import { ref, nextTick, provide } from 'vue'
 
-import { gasCostPM as permission } from '@/page-permission/contract'
-import { tableSummary } from '@/utils/el-extra'
+import { amortizationManagePM as permission } from '@/page-permission/contract'
 import { setEmptyArr2Undefined, setLevelName } from '@/utils/data-type/tree'
-import { toThousand } from '@/utils/data-type/number'
 import moment from 'moment'
 import checkPermission from '@/utils/system/check-permission'
 
@@ -86,30 +123,42 @@ import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
 import udOperation from '@crud/UD.operation'
 import mHeader from './module/header.vue'
+import mDetail from './module/detail.vue'
+import amortizationSetting from './module/amortization-setting'
+import autoAmortization from './module/auto-amortization'
+import manualAmortization from './module/manual-amortization'
+import useMatClsList from '@/composables/store/use-mat-class-list'
 
 const tableRef = ref()
 const amortizationTreeRef = ref()
 const amortizationTree = ref([])
 const amortizationKV = ref({})
-const rowDetail = ref({})
+const treeRow = ref({})
+const detailRow = ref({})
+const detailVisible = ref(false)
+const amortizationSettingVisible = ref(false)
+const autoAmortizationVisible = ref(false)
+const manualAmortizationVisible = ref(false)
+const manualAmortizationCount = ref(0)
 
 const defaultProps = ref({
   children: 'children',
-  label: 'name'
+  label: 'name',
 })
 
 const columnsDataFormat = ref([
   ['avgUnitPrice', 'to-thousand'],
-  ['usedMete', 'to-thousand']
+  ['productMete', 'to-thousand'],
 ])
 
 provide('amortizationKV', amortizationKV)
+const { rawMatClsKV } = useMatClsList()
 
 const optShow = {
   add: false,
   edit: false,
   del: false,
-  download: false
+  download: false,
 }
 
 const { crud, CRUD, columns } = useCRUD(
@@ -119,26 +168,26 @@ const { crud, CRUD, columns } = useCRUD(
     optShow: { ...optShow },
     permission: { ...permission },
     crudApi: { ...crudApi },
-    queryOnPresenterCreated: false
+    queryOnPresenterCreated: false,
   },
   tableRef
 )
+
+const { maxHeight } = useMaxHeight({
+  paginate: true,
+})
 
 getAmortizationTree()
 
 async function getAmortizationTree() {
   try {
     amortizationKV.value = {}
-    amortizationTree.value = (await amortizationClassTree()) || []
+    amortizationTree.value = (await amortizationClassTree({ enable: true })) || []
     setLevelName(amortizationTree.value)
     setAmortizationKV(amortizationTree.value)
     setEmptyArr2Undefined(amortizationTree.value)
     nextTick(() => {
-      if (amortizationTree.value.length) {
-        selectLast(amortizationTree.value)
-      } else {
-        crud.toQuery()
-      }
+      crud.toQuery()
     })
   } catch (e) {
     console.log('获取摊销种类失败', e)
@@ -147,21 +196,10 @@ async function getAmortizationTree() {
 
 // 设置摊销KV
 function setAmortizationKV(tree) {
-  tree?.forEach(row => {
+  tree?.forEach((row) => {
     amortizationKV.value[row.id] = row
     setAmortizationKV(row.children)
   })
-}
-
-// 默认选中第一个末级
-function selectLast(tree = []) {
-  if (tree.length) {
-    if (tree[0].children?.length) {
-      selectLast(tree[0].children)
-    } else {
-      nodeClick(tree[0])
-    }
-  }
 }
 
 // 获取摊销种类ids
@@ -175,10 +213,10 @@ function getIds(tree = []) {
 // el-tree 左键点击
 function nodeClick(row = {}) {
   // 取消选中
-  if (row.id && row.id === rowDetail.value.id) {
+  if (row.id && row.id === treeRow.value.id) {
     row = {}
   }
-  rowDetail.value = row
+  treeRow.value = row
   amortizationTreeRef.value.setCurrentKey(row.id)
   crud.query.ids = []
   if (row.id) {
@@ -187,34 +225,37 @@ function nodeClick(row = {}) {
   crud.toQuery()
 }
 
-// 合计
-function getSummaries(param) {
-  const data = tableSummary(param, {
-    props: ['usedMete', 'totalAmount']
-  })
-  if (data[3] && data[4]) {
-    data[5] = toThousand(data[4] / data[3])
+function showDetail(row) {
+  detailRow.value = row
+  detailVisible.value = true
+}
+
+async function getCount() {
+  try {
+    manualAmortizationCount.value = (await getManualAmortizationCount()) || 0
+  } catch (e) {
+    console.log('获取手动待摊销数量', e)
   }
-  if (data[3]) {
-    data[3] = toThousand(data[3])
-  }
-  if (data[4]) {
-    data[4] = toThousand(data[4])
-  }
-  return data
 }
 
 CRUD.HOOK.handleRefresh = async (crud, { data }) => {
-  data.content.forEach((v, i) => {
+  getCount()
+  data.content.forEach((row) => {
     // 时间范围
-    const _startDate = moment(v.startDate).format('YYYY-MM-DD')
-    const _endDate = moment(v.endDate).format('YYYY-MM-DD')
-    v.date = `${_startDate} ~ ${_endDate}`
+    const _startDate = moment(row.startDate).format('YYYY-MM-DD')
+    const _endDate = moment(row.endDate).format('YYYY-MM-DD')
+    row.date = `${_startDate} ~ ${_endDate}`
+    row.bizId = amortizationKV.value[row.amortizationClassId]?.bizId
+    // 科目层级名称
+    const raw = rawMatClsKV.value[row.bizId]
+    if (raw) {
+      const names = [raw.basicClassName, ...raw.fullPathName]
+      row.name = names.at(-1)
+      names.splice(names.length - 1)
+      row.fullPathName = names.join(' > ')
+    }
   })
 }
-const { maxHeight } = useMaxHeight({
-  paginate: true
-})
 </script>
 
 <style lang="scss" scoped>
@@ -227,6 +268,13 @@ const { maxHeight } = useMaxHeight({
   }
   .el-tree {
     overflow-y: auto;
+  }
+}
+
+.btn-wrap {
+  > * {
+    margin-left: 6px;
+    vertical-align: middle;
   }
 }
 </style>

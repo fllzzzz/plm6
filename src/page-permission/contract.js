@@ -320,9 +320,10 @@ export const gasCostPM = {
 // 费用录入/摊销管理
 export const amortizationManagePM = {
   get: ['amortization_manage:get'], // 列表
-  add: ['amortization_manage:add'], // 新增
-  edit: ['amortization_manage:edit'], // 修改
-  del: ['amortization_manage:del'] // 删除
+  detail: ['amortization_manage:detail'], // 详情
+  set: ['amortization_manage:set'], // 摊销设置
+  auto: ['amortization_manage:auto'], // 自动摊销
+  manual: ['amortization_manage:manual'] // 手动摊销
 }
 
 // 费用录入/管理费/员工工资

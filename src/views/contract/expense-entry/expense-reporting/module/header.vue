@@ -120,7 +120,7 @@ const defaultQuery = {
 
 const { crud, query, CRUD } = regHeader(defaultQuery)
 function fetchChange(val) {
-  subjectList.value = expenseList.find((v) => v.id === val)?.links
+  subjectList.value = expenseList.value.find((v) => v.id === val)?.links
   crud.toQuery()
 }
 

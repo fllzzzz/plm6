@@ -17,16 +17,24 @@
               <span>材料-摊销分类设置</span>
               <div class="icons">
                 <template v-if="materialEdit">
-                  <svg-icon class="icon" icon-class="comp-save" style="fill: #ffac00" />
-                  <svg-icon class="icon" icon-class="comp-quit" @click="materialEdit = false" />
+                  <svg-icon
+                    v-loading="materialEditLoading"
+                    class="icon"
+                    icon-class="comp-save"
+                    style="fill: #ffac00"
+                    @click="saveMaterial"
+                  />
+                  <svg-icon v-loading="materialEditLoading" class="icon" icon-class="comp-quit" @click="materialEdit = false" />
                 </template>
-                <el-edit v-else class="icon" @click="materialEdit = true" />
+                <el-edit v-else class="icon" @click="edit(true)" />
               </div>
             </div>
           </template>
           <el-tree
+            ref="materialTreeRef"
+            v-loading="materialLoading"
             :style="{ maxHeight: maxHeight + 'px' }"
-            :data="materialTree"
+            :data="materialEdit ? materialTree : amortizationKV[amortizationTypeEnum.MATERIAL.V]?.children || []"
             :props="defaultProps"
             :show-checkbox="materialEdit"
             :expand-on-click-node="false"
@@ -35,13 +43,22 @@
             default-expand-all
           />
         </el-card>
-        <el-card body-style="padding: 10px" class="indirect-tree">
+        <el-card body-style="padding: 10px" class="other-tree">
           <template #header>
-            <div>间接费用-摊销分类设置</div>
+            <span>间接费用-摊销分类设置</span>
+            <div class="icons">
+              <template v-if="otherEdit">
+                <svg-icon v-loading="otherEditLoading" class="icon" icon-class="comp-save" style="fill: #ffac00" @click="saveOther" />
+                <svg-icon v-loading="otherEditLoading" class="icon" icon-class="comp-quit" @click="otherEdit = false" />
+              </template>
+              <el-edit v-else class="icon" @click="otherEdit = true" />
+            </div>
           </template>
           <el-tree
+            ref="otherTreeRef"
+            v-loading="otherLoading"
             :style="{ maxHeight: maxHeight + 'px' }"
-            :data="materialTree"
+            :data="otherEdit ? otherTree : amortizationKV[amortizationTypeEnum.OTHER_EXPENSES.V]?.children || []"
             :props="defaultProps"
             :expand-on-click-node="false"
             node-key="id"
@@ -55,12 +72,12 @@
 </template>
 
 <script setup>
-import { subjectTree } from '@/api/contract/expense-entry/gas-cost'
 import { amortizationClassTree } from '@/api/contract/expense-entry/amortization-manage'
-import { ref, defineEmits, defineProps, watch, inject } from 'vue'
+import { saveAmortizationClass } from '@/api/contract/expense-entry/amortization-manage'
+import { ref, defineEmits, defineProps, inject } from 'vue'
 
-import { matClsEnum } from '@enum-ms/classification'
 import { amortizationTypeEnum } from '@enum-ms/contract'
+import { getChildIds } from '@/utils/data-type/tree'
 
 import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'
@@ -77,50 +94,100 @@ const amortizationKV = inject('amortizationKV')
 const emit = defineEmits(['success', 'update:modelValue'])
 const { visible, handleClose } = useVisible({ emit, props })
 
-watch(
-  () => visible.value,
-  (val) => {
-    if (val) {
-      getAmortizationTree()
-      getMaterialTree()
-      console.log('amortizationKV: ', amortizationKV)
-    }
-  }
-)
-
-const amortizationTree = ref([])
+const materialTreeRef = ref()
 const materialTree = ref([])
 const materialEdit = ref(false)
+const materialLoading = ref(false)
+const materialEditLoading = ref(false)
+const otherTreeRef = ref()
+const otherTree = ref([])
+const otherEdit = ref(false)
+const otherLoading = ref(false)
+const otherEditLoading = ref(false)
 const defaultProps = ref({
   children: 'children',
   label: 'name'
 })
 
-const { maxHeight } = useMaxHeight({
-  navbar: false,
-  extraBox: ['.el-drawer__header', '.el-card__header'],
-  wrapperBox: ['.el-drawer__body'],
-  extraHeight: 70
-})
+const { maxHeight } = useMaxHeight(
+  {
+    mainBox: '.amortization-setting-drawer',
+    extraBox: ['.el-drawer__header', '.el-card__header'],
+    wrapperBox: ['.el-drawer__body'],
+    extraHeight: 22
+  },
+  visible
+)
+
+// 编辑
+function edit(val) {
+  if (val) {
+    materialEdit.value = true
+    getMaterialTree()
+  }
+}
 
 // 获取材料分类的全部数据
 async function getMaterialTree() {
   try {
-    const material = matClsEnum.MATERIAL.V + matClsEnum.OTHER.V // 材料
-    materialTree.value = (await subjectTree({ basicClassEnum: material })) || []
-    console.log('materialTree.value: ', materialTree.value)
+    materialLoading.value = true
+    const data = await amortizationClassTree({ amortizationClassEnum: amortizationTypeEnum.MATERIAL.V })
+    materialTree.value = data?.[0]?.children || []
+    materialTreeRef.value.setCheckedKeys(getChildIds(amortizationKV.value[amortizationTypeEnum.MATERIAL.V]?.children))
   } catch (error) {
     console.log('获取材料树失败', error)
+  } finally {
+    materialLoading.value = false
   }
 }
 
-// 获取摊销种类内已设置的材料分类
-async function getAmortizationTree() {
+// 保存材料分类
+async function saveMaterial() {
   try {
-    amortizationTree.value = (await amortizationClassTree({ basicClassEnum: amortizationTypeEnum.MATERIAL.V })) || []
-  } catch (e) {
-    console.log('获取摊销种类失败', e)
+    materialEditLoading.value = true
+    const ids = materialTreeRef.value.getCheckedNodes(false, true).map((row) => row.id)
+    await saveAmortizationClass({
+      amortizationClassEnum: amortizationTypeEnum.MATERIAL.V,
+      ids
+    })
+    emit('success')
+    materialTree.value = filterTree(JSON.parse(JSON.stringify(materialTree.value)), ids)
+    materialEdit.value = false
+  } catch (error) {
+    console.log('保存材料树失败', error)
+  } finally {
+    materialEditLoading.value = false
   }
+}
+
+// 保存其他费用分类
+async function saveOther() {
+  try {
+    otherEditLoading.value = true
+    const ids = otherTreeRef.value.getCheckedNodes(false, true).map((row) => row.id)
+    await saveAmortizationClass({
+      amortizationClassEnum: amortizationTypeEnum.OTHER_EXPENSES.V,
+      ids
+    })
+    emit('success')
+    otherTree.value = filterTree(JSON.parse(JSON.stringify(otherTree.value)), ids)
+    otherEdit.value = false
+  } catch (error) {
+    console.log('保存其他费用失败', error)
+  } finally {
+    otherEditLoading.value = false
+  }
+}
+
+// 过滤树
+function filterTree(tree = [], ids) {
+  return tree.filter((row) => {
+    if (ids.includes(row.id)) {
+      row.children = filterTree(row.children || [], ids)
+      return true
+    }
+    return false
+  })
 }
 </script>
 
@@ -151,7 +218,7 @@ async function getAmortizationTree() {
       background: #0079ff;
     }
   }
-  &.indirect-tree {
+  &.other-tree {
     .el-card__header {
       background: #36ae81;
     }
