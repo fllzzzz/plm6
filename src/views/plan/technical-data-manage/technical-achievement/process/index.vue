@@ -127,7 +127,7 @@ const dataFormat = ref([
   ['boolSingleProject', ['parse-enum', processUseTypeEnum]]
 ])
 
-const { crud, columns } = useCRUD(
+const { CRUD, crud, columns } = useCRUD(
   {
     title: '工艺文件',
     sort: ['id.desc'],
@@ -224,14 +224,12 @@ function onPopoverHide() {
 //   // return crud.query.projectId
 // }
 
-// CRUD.HOOK.handleRefresh = (crud, data) => {
-//   data.data.content = data.data.content.map(v => {
-//     v.edit = false
-//     v.originalRemark = v.remark
-//     v.editLoading = false
-//     return v
-//   })
-// }
+CRUD.HOOK.handleRefresh = (crud, data) => {
+  data.data.content = data.data.content.map(v => {
+    v.project = v.boolSingleProject ? v.projectList[0] : {}
+    return v
+  })
+}
 </script>
 
 <style lang="scss" scoped>
