@@ -23,7 +23,7 @@
         <div style="display:flex;">
           <div>
             <div>
-              <project-cascader v-model="query.projectId" clearable class="filter-item" style="width: 270px;margin-bottom:10px;" placeholder="项目搜索" v-if="!currentRow.boolSingleProject"/>
+              <project-cascader v-model="query.projectId" clearable class="filter-item" style="width: 270px;" placeholder="项目搜索" v-if="!currentRow.boolSingleProject"/>
             </div>
             <div style="margin:10px 0;">
               <monomer-select
