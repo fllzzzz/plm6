@@ -30,9 +30,9 @@
           {{currentRow.project?projectNameFormatter(currentRow.project):'-'}}
         </el-descriptions-item>
          <el-descriptions-item label-class-name="userName" label="上传人">{{currentRow.userName}}</el-descriptions-item>
-        <el-descriptions-item label-class-name="uploadTime" label="上传日期">{{currentRow.uploadTime?parseTime(currentRow.uploadTime,'{y}-{m}-{d}'):'-'}}</el-descriptions-item>
+        <el-descriptions-item label-class-name="uploadTime" label="上传日期">{{currentRow.uploadTime?parseTime(currentRow.uploadTime,'{y}-{m}-{d} {h}:{i}:{s}'):'-'}}</el-descriptions-item>
         <el-descriptions-item label-class-name="remark" label="备注">
-          {{currentRow.remark}}
+          <div style="word-break:break-all;">{{currentRow.remark}}</div>
         </el-descriptions-item>
       </el-descriptions>
       <historyVersion v-model="versionVisible" :currentRow="currentRow" />
@@ -89,5 +89,8 @@ function handleSuccess() {
 <style lang="scss" scoped>
 ::v-deep(.el-input-number .el-input__inner) {
   text-align: left;
+}
+::v-deep(.el-descriptions__label.el-descriptions__cell.is-bordered-label){
+  width:110px;
 }
 </style>
