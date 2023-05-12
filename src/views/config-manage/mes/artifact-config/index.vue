@@ -2,10 +2,21 @@
   <div class="app-container">
     <!--工具栏-->
     <div class="head-container">
-      <common-button size="mini" @click="showType='add';formVisible=true;" icon="el-icon-plus" type="primary" v-permission="permission.add" class="filter-item">新增</common-button>
+      <common-button
+        size="mini"
+        @click="
+          showType = 'add',
+          formVisible = true
+        "
+        icon="el-icon-plus"
+        type="primary"
+        v-permission="permission.add"
+        class="filter-item"
+        >新增</common-button
+      >
       <common-radio-button
         v-model="productionLineTypeEnum"
-        :options="artifactProductLineEnum.ENUM"
+        :options="hasIntelligent ? artifactProductLineEnum.ENUM : traditionLineEnum.ENUM"
         showOptionAll
         :optionAllValue="undefined"
         type="enum"
@@ -28,7 +39,14 @@
       style="width: 100%"
     >
       <el-table-column prop="index" label="序号" align="center" width="60" type="index" />
-      <el-table-column key="productionLineTypeEnum" prop="productionLineTypeEnum" align="center" :show-overflow-tooltip="true" label="生产线" width="80">
+      <el-table-column
+        key="productionLineTypeEnum"
+        prop="productionLineTypeEnum"
+        align="center"
+        :show-overflow-tooltip="true"
+        label="生产线"
+        width="80"
+      >
         <template v-slot="scope">
           <span>{{ scope.row.productionLineTypeEnum ? artifactProductLineEnum.VL[scope.row.productionLineTypeEnum] : '-' }}</span>
         </template>
@@ -38,12 +56,24 @@
           <span>{{ scope.row.mainClassificationName }}</span>
         </template>
       </el-table-column>
-      <el-table-column key="classificationName" prop="classificationName" align="center" :show-overflow-tooltip="true" label="子分类" min-width="120" v-if="productionLineTypeEnum!==artifactProductLineEnum.TRADITION.V">
+      <el-table-column
+        key="classificationName"
+        prop="classificationName"
+        align="center"
+        :show-overflow-tooltip="true"
+        label="子分类"
+        min-width="120"
+        v-if="productionLineTypeEnum !== artifactProductLineEnum.TRADITION.V"
+      >
         <template v-slot="scope">
           <template v-if="scope.row.productionLineTypeEnum === artifactProductLineEnum.INTELLECT.V">
-            <div v-for="(item,index) in scope.row.structureClassificationList" :key="item.id" :class="index === scope.row.structureClassificationList.length-1 ? 'sandwich-cell-bottom' : 'sandwich-cell-top'">
-                <span style="margin-left:5px;">{{ item.classificationName }}</span>
-                <!-- <template  v-if="item.parentType === intellectParentType.BRIDGE.V">
+            <div
+              v-for="(item, index) in scope.row.structureClassificationList"
+              :key="item.id"
+              :class="index === scope.row.structureClassificationList.length - 1 ? 'sandwich-cell-bottom' : 'sandwich-cell-top'"
+            >
+              <span style="margin-left: 5px">{{ item.classificationName }}</span>
+              <!-- <template  v-if="item.parentType === intellectParentType.BRIDGE.V">
                   <div v-if="item.minLength && item.maxLength">（{{item.minLength}}mm &lt; 长度 {{ '≤' }} {{ item.maxLength}}mm）</div>
                   <div v-else-if="item.minLength">（&gt;{{ item.minLength }}mm）</div>
                   <div v-else-if="item.maxLength">（{{ '≤' }}{{ item.maxLength}}mm）</div>
@@ -53,57 +83,126 @@
           <span v-else>-</span>
         </template>
       </el-table-column>
-      <el-table-column key="artifactType" prop="artifactType" align="center" :show-overflow-tooltip="true" label="构件类型" v-if="productionLineTypeEnum!==artifactProductLineEnum.INTELLECT.V">
+      <el-table-column
+        key="artifactType"
+        prop="artifactType"
+        align="center"
+        :show-overflow-tooltip="true"
+        label="构件类型"
+        v-if="productionLineTypeEnum !== artifactProductLineEnum.INTELLECT.V"
+      >
         <template v-slot="scope">
-          <span>{{ scope.row.artifactType? artifactTypeEnum.VL[scope.row.artifactType] : '-' }}</span>
+          <span>{{ scope.row.artifactType ? artifactTypeEnum.VL[scope.row.artifactType] : '-' }}</span>
         </template>
       </el-table-column>
-      <el-table-column key="smallArtifactClassEnum" prop="smallArtifactClassEnum" align="center" :show-overflow-tooltip="true" label="次构件类型" v-if="productionLineTypeEnum!==artifactProductLineEnum.INTELLECT.V">
+      <el-table-column
+        key="smallArtifactClassEnum"
+        prop="smallArtifactClassEnum"
+        align="center"
+        :show-overflow-tooltip="true"
+        label="次构件类型"
+        v-if="productionLineTypeEnum !== artifactProductLineEnum.INTELLECT.V"
+      >
         <template v-slot="scope">
           <span>{{ smallArtifactClassEnum.VL[scope.row.smallArtifactClassEnum] || '-' }}</span>
         </template>
       </el-table-column>
-      <el-table-column key="specPrefixList" prop="specPrefixList" label="构件规格前缀" align="center" min-width="120" :show-overflow-tooltip="true">
+      <el-table-column
+        key="specPrefixList"
+        prop="specPrefixList"
+        label="构件规格前缀"
+        align="center"
+        min-width="120"
+        :show-overflow-tooltip="true"
+      >
         <template v-slot="scope">
-          <div v-for="(item,index) in scope.row.structureClassificationList" :key="item.id" :class="index === scope.row.structureClassificationList.length-1 ? 'sandwich-cell-bottom div-ellipsis' : 'sandwich-cell-top div-ellipsis'">
+          <div
+            v-for="(item, index) in scope.row.structureClassificationList"
+            :key="item.id"
+            :class="
+              index === scope.row.structureClassificationList.length - 1
+                ? 'sandwich-cell-bottom div-ellipsis'
+                : 'sandwich-cell-top div-ellipsis'
+            "
+          >
             <template v-if="item.specPrefixList && item.specPrefixList.length > 0">
-              <span v-for="k in item.specPrefixList" :key="k.id">{{`【${k.specPrefix}】`}}</span>
+              <span v-for="k in item.specPrefixList" :key="k.id">{{ `【${k.specPrefix}】` }}</span>
             </template>
           </div>
         </template>
       </el-table-column>
-       <el-table-column key="serialNumberPrefixList" prop="serialNumberPrefixList" label="编号前缀" align="center" min-width="120" :show-overflow-tooltip="true" v-if="productionLineTypeEnum!==artifactProductLineEnum.INTELLECT.V">
+      <el-table-column
+        key="serialNumberPrefixList"
+        prop="serialNumberPrefixList"
+        label="编号前缀"
+        align="center"
+        min-width="120"
+        :show-overflow-tooltip="true"
+        v-if="productionLineTypeEnum !== artifactProductLineEnum.INTELLECT.V"
+      >
         <template v-slot="scope">
-          <div v-for="(item,index) in scope.row.structureClassificationList" :key="item.id" :class="index === scope.row.structureClassificationList.length-1 ? 'sandwich-cell-bottom div-ellipsis' : 'sandwich-cell-top div-ellipsis'">
-            <template v-if="scope.row.artifactType===artifactTypeEnum.SMALL.V && item.serialNumberPrefixList && item.serialNumberPrefixList.length > 0">
-              <span v-for="k in item.serialNumberPrefixList" :key="k.id">{{`【${k.serialNumberPrefix}】`}}</span>
+          <div
+            v-for="(item, index) in scope.row.structureClassificationList"
+            :key="item.id"
+            :class="
+              index === scope.row.structureClassificationList.length - 1
+                ? 'sandwich-cell-bottom div-ellipsis'
+                : 'sandwich-cell-top div-ellipsis'
+            "
+          >
+            <template
+              v-if="
+                scope.row.artifactType === artifactTypeEnum.SMALL.V && item.serialNumberPrefixList && item.serialNumberPrefixList.length > 0
+              "
+            >
+              <span v-for="k in item.serialNumberPrefixList" :key="k.id">{{ `【${k.serialNumberPrefix}】` }}</span>
             </template>
             <span v-else>-</span>
           </div>
         </template>
       </el-table-column>
-      <el-table-column key="codingType" prop="codingType" align="center" :show-overflow-tooltip="true" label="打码方式" width="100" v-if="productionLineTypeEnum!==artifactProductLineEnum.INTELLECT.V">
+      <el-table-column
+        key="codingType"
+        prop="codingType"
+        align="center"
+        :show-overflow-tooltip="true"
+        label="打码方式"
+        width="100"
+        v-if="productionLineTypeEnum !== artifactProductLineEnum.INTELLECT.V"
+      >
         <template v-slot="scope">
-          <span>{{ scope.row.codingType && scope.row.productionLineTypeEnum===artifactProductLineEnum.TRADITION.V? codingTypeEnum.VL[scope.row.codingType]:'-' }}</span>
+          <span>{{
+            scope.row.codingType && scope.row.productionLineTypeEnum === artifactProductLineEnum.TRADITION.V
+              ? codingTypeEnum.VL[scope.row.codingType]
+              : '-'
+          }}</span>
         </template>
       </el-table-column>
-      <el-table-column key="definitionWord" prop="definitionWord" align="center" :show-overflow-tooltip="true" label="定义代码" v-if="productionLineTypeEnum!==artifactProductLineEnum.TRADITION.V">
+      <el-table-column
+        key="definitionWord"
+        prop="definitionWord"
+        align="center"
+        :show-overflow-tooltip="true"
+        label="定义代码"
+        v-if="productionLineTypeEnum !== artifactProductLineEnum.TRADITION.V"
+      >
         <template v-slot="scope">
-          <div v-for="(item,index) in scope.row.structureClassificationList" :key="item.id" :class="index === scope.row.structureClassificationList.length-1 ? 'sandwich-cell-bottom' : 'sandwich-cell-top'">
+          <div
+            v-for="(item, index) in scope.row.structureClassificationList"
+            :key="item.id"
+            :class="index === scope.row.structureClassificationList.length - 1 ? 'sandwich-cell-bottom' : 'sandwich-cell-top'"
+          >
             {{ item.definitionWord || '-' }}
           </div>
         </template>
       </el-table-column>
-      <el-table-column
-        key="sort"
-        prop="sort"
-        :show-overflow-tooltip="true"
-        label="排序"
-        width="60"
-        align="center"
-      >
+      <el-table-column key="sort" prop="sort" :show-overflow-tooltip="true" label="排序" width="60" align="center">
         <template v-slot="scope">
-          <div v-for="(item,index) in scope.row.structureClassificationList" :key="item.id" :class="index === scope.row.structureClassificationList.length-1 ? 'sandwich-cell-bottom' : 'sandwich-cell-top'">
+          <div
+            v-for="(item, index) in scope.row.structureClassificationList"
+            :key="item.id"
+            :class="index === scope.row.structureClassificationList.length - 1 ? 'sandwich-cell-bottom' : 'sandwich-cell-top'"
+          >
             <span>{{ item.sort }}</span>
           </div>
         </template>
@@ -117,25 +216,29 @@
         fixed="right"
       >
         <template v-slot="scope">
-          <div v-for="(item,index) in scope.row.structureClassificationList" :key="item.id" :class="index === scope.row.structureClassificationList.length-1 ? 'sandwich-cell-bottom' : 'sandwich-cell-top'">
-            <common-button size="mini" @click="openForm(item,'edit')" icon="el-icon-edit" type="primary" v-permission="permission.edit"/>
+          <div
+            v-for="(item, index) in scope.row.structureClassificationList"
+            :key="item.id"
+            :class="index === scope.row.structureClassificationList.length - 1 ? 'sandwich-cell-bottom' : 'sandwich-cell-top'"
+          >
+            <common-button size="mini" @click="openForm(item, 'edit')" icon="el-icon-edit" type="primary" v-permission="permission.edit" />
             <el-popconfirm
-                confirm-button-text="确定"
-                cancel-button-text="取消"
-                icon-color="red"
-                title="确定删除吗?"
-                @confirm="handleDelete(item,k)"
-                v-if="checkPermission(permission.del)"
-              >
-                <template #reference>
-                  <common-button size="small" class="el-icon-delete" type="danger"/>
-                </template>
-              </el-popconfirm>
+              confirm-button-text="确定"
+              cancel-button-text="取消"
+              icon-color="red"
+              title="确定删除吗?"
+              @confirm="handleDelete(item, k)"
+              v-if="checkPermission(permission.del)"
+            >
+              <template #reference>
+                <common-button size="small" class="el-icon-delete" type="danger" />
+              </template>
+            </el-popconfirm>
           </div>
         </template>
       </el-table-column>
     </common-table>
-    <mForm v-model="formVisible" :detailInfo="detailInfo" :showType="showType" @success="fetchList"/>
+    <mForm v-model="formVisible" :detailInfo="detailInfo" :showType="showType" @success="fetchList" />
   </div>
 </template>
 
@@ -143,9 +246,16 @@
 import crudApi from '@/api/config/system-config/artifact-config'
 import { ref } from 'vue'
 import { ElNotification } from 'element-plus'
-
+import { mapGetters } from '@/store/lib'
 import { artifactConfigPM as permission } from '@/page-permission/config'
-import { artifactProductLineEnum, intellectParentType, artifactTypeEnum, smallArtifactClassEnum, codingTypeEnum } from '@enum-ms/mes'
+import {
+  artifactProductLineEnum,
+  traditionLineEnum,
+  intellectParentType,
+  artifactTypeEnum,
+  smallArtifactClassEnum,
+  codingTypeEnum
+} from '@enum-ms/mes'
 
 import checkPermission from '@/utils/system/check-permission'
 import useMaxHeight from '@compos/use-max-height'
@@ -160,6 +270,8 @@ const showType = ref('add')
 const productionLineTypeEnum = ref()
 const traditionArr = ref([])
 const intellectArr = ref([])
+
+const { hasIntelligent } = mapGetters('hasIntelligent')
 
 const { maxHeight } = useMaxHeight({
   wrapperBox: '.artifact-config',
@@ -225,19 +337,24 @@ async function fetchList() {
   tableLoading.value = true
   try {
     const { content = [] } = await crudApi.get()
-    content.forEach(v => {
+    content.forEach((v) => {
       if (v.structureClassificationList?.length) {
-        v.mainClassificationName = v.productionLineTypeEnum === artifactProductLineEnum.INTELLECT.V ? (v.parentType ? intellectParentType.VL[v.parentType] : '-') : v.structureClassificationList[0].classificationName
+        v.mainClassificationName =
+          v.productionLineTypeEnum === artifactProductLineEnum.INTELLECT.V
+            ? v.parentType
+              ? intellectParentType.VL[v.parentType]
+              : '-'
+            : v.structureClassificationList[0].classificationName
         v.artifactType = v.structureClassificationList[0].artifactType
         v.smallArtifactClassEnum = v.structureClassificationList[0].smallArtifactClassEnum
         v.codingType = v.structureClassificationList[0].codingType
       }
     })
-    traditionArr.value = content.filter(v => v.productionLineTypeEnum === artifactProductLineEnum.TRADITION.V)
+    traditionArr.value = content.filter((v) => v.productionLineTypeEnum === artifactProductLineEnum.TRADITION.V)
     if (traditionArr.value?.length) {
       traditionArr.value[0].rowSpan = traditionArr.value.length
     }
-    intellectArr.value = content.filter(v => v.productionLineTypeEnum === artifactProductLineEnum.INTELLECT.V)
+    intellectArr.value = content.filter((v) => v.productionLineTypeEnum === artifactProductLineEnum.INTELLECT.V)
     if (intellectArr.value?.length) {
       intellectArr.value[0].rowSpan = intellectArr.value.length
     }
@@ -302,13 +419,13 @@ $font-size: 1.5em;
 ::v-deep(.el-table--small .el-table__cell) {
   padding: 4px 0;
 }
-.float-ele{
-  float:left;
+.float-ele {
+  float: left;
 }
-.div-ellipsis{
-  width:100%;
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
+.div-ellipsis {
+  width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 </style>

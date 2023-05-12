@@ -32,7 +32,8 @@ const state = {
   projectTypeEnumArr: [projectTypeEnum.STEEL, projectTypeEnum.CARBARN, projectTypeEnum.ENCLOSURE],
   installTypeEnumArr: [installProjectTypeEnum.ARTIFACT, installProjectTypeEnum.ENCLOSURE, installProjectTypeEnum.AUXILIARY],
   deliveryInstallEnumArr: [deliveryInstallTypeEnum.ARTIFACT, deliveryInstallTypeEnum.ENCLOSURE],
-  flag: 0
+  flag: 0,
+  hasIntelligent: 0
 }
 
 const mutations = {
@@ -71,6 +72,9 @@ const mutations = {
   },
   SET_FLAG: (state, flag) => {
     state.flag = flag
+  },
+  SET_HAS_INTELLIGENT: (state, hasIntelligent) => {
+    state.hasIntelligent = hasIntelligent
   }
 }
 
@@ -110,7 +114,7 @@ const actions = {
   // 设置用户信息
   setInfo(res, commit) {
     // dept
-    const { permissions = [], roles = [], productMenu, enclosureType } = res
+    const { permissions = [], roles = [], productMenu, enclosureType, boolSmartLine } = res
     let { menus = [] } = res
 
     // 如果没有任何权限，则赋予一个默认的权限，避免请求死循环
@@ -141,6 +145,7 @@ const actions = {
     commit('SET_PROJECT_TYPE_ENUM_ARR', arr)
     commit('SET_DELIVERY_INSTALL_ARR', deliveryArr)
     commit('SET_FLAG', enclosureType)
+    commit('SET_HAS_INTELLIGENT', boolSmartLine)
     commit('SET_MENUS', menus)
     commit('SET_PRODUCT_MENU', productMenu)
     commit('SET_USER', res)

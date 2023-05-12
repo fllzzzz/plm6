@@ -13,7 +13,7 @@
       />
       <!-- <common-radio-button
         v-model="query.productionLineTypeEnum"
-        :options="artifactProductLineEnum.ENUM"
+        :options="hasIntelligent ? artifactProductLineEnum.ENUM : traditionLineEnum.ENUM"
         showOptionAll
         type="enum"
         class="filter-item"
@@ -95,6 +95,7 @@ const defaultQuery = {
   projectName: undefined,
   weightStatus: weightTypeEnum.NET.V
 }
+
 const { crud, query } = regHeader(defaultQuery)
 
 const summaryInfo = ref({})

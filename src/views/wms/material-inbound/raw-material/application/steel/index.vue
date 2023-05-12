@@ -203,7 +203,9 @@ const formList = computed(() => {
   if (isNotBlank(form.steelCoilList)) {
     form.steelCoilList.forEach((v) => {
       if (boolPartyA.value || form.selectObj[v.mergeId]?.isSelected) {
-        list.push(v)
+        const _v = { ...v }
+        _v.quantity = _v.length
+        list.push(_v)
       }
     })
   }

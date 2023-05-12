@@ -13,7 +13,7 @@
       />
       <!-- <common-radio-button
         v-model="query.productionLineTypeEnum"
-        :options="artifactProductLineEnum.ENUM"
+        :options="hasIntelligent ? artifactProductLineEnum.ENUM : traditionLineEnum.ENUM"
         showOptionAll
         type="enum"
         class="filter-item"

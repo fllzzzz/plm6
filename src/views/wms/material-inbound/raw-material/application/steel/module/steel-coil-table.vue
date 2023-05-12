@@ -423,12 +423,15 @@ function delRow(sn, $index) {
 
 // 校验
 function validate() {
-  if (isBlank(form.steelCoilList)) return true
-  const { validResult, dealList } = tableValidate(form.steelCoilList)
-  form.steelCoilList = dealList
-  form.steelCoilList.forEach((row) => {
-    row.quantity = row.length
+  const _list = form.steelCoilList.filter((v) => {
+    if (props.boolPartyA || form.selectObj[v.mergeId]?.isSelected) {
+      return true
+    } else {
+      return false
+    }
   })
+  if (isBlank(_list)) return true
+  const { validResult } = tableValidate(_list)
   return validResult
 }
 

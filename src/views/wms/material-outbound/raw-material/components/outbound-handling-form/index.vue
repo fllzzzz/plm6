@@ -2,7 +2,7 @@
   <common-dialog
     title="出库办理"
     v-model="dialogVisible"
-    :width="!enlargeWth ? '850px' : '95%'"
+    :width="!enlargeWth ? '855px' : '95%'"
     :before-close="handleClose"
     :show-close="true"
     custom-class="wms-outbound-handling"
