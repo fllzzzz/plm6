@@ -1,9 +1,9 @@
 <template>
-  <div v-show="!props.showType && props.type !== enclosureShipStatisticsTypeEnum.AUXILIARY_MATERIAL.V" class="my-code" style="margin-top: 20px">
+  <div v-show="!props.showType && props.query?.category !== 64" class="my-code" style="margin-top: 20px">
     *点击上方表格数据查看详情
   </div>
   <div v-show="props.showType" style="margin-top: 20px">
-    <div class="head-container" v-show="props.type !== enclosureShipStatisticsTypeEnum.AUXILIARY_MATERIAL.V">
+    <div class="head-container" v-show="props.query?.category !== 64">
       <el-tag size="small" style="float: left">{{
         showType === 'INVENTORY'
           ? '清单总量'
@@ -23,17 +23,17 @@
         <print-table
           :api-key="
             showType === 'INVENTORY'
-              ? 'mesShipMeteDetail'
+              ? 'enclosureShipMeteDetail'
               : showType === 'ASSIGNMENT'
-              ? 'mesShipTaskMeteDetail'
+              ? 'enclosureShipTaskMeteDetail'
               : showType === 'STORAGE'
-              ? 'mesShipInboundMeteDetail'
+              ? 'enclosureShipInboundMeteDetail'
               : showType === 'CUMULATIVE_SHIPMENT'
-              ? 'mesShipTotalMeteDetail'
+              ? 'enclosureShipTotalMeteDetail'
               : showType === 'SHIPMENT_MONTH'
-              ? 'mesShipMonthMeteDetail'
+              ? 'enclosureShipMonthMeteDetail'
               : showType === 'IN_STOCK'
-              ? 'mesShipStockMeteDetail'
+              ? 'enclosureShipStockMeteDetail'
               : 'mesShipTrainMeteDetail'
           "
           :params="{
@@ -61,7 +61,7 @@
       </div>
     </div>
     <common-table
-      v-show="props.type !== enclosureShipStatisticsTypeEnum.AUXILIARY_MATERIAL.V"
+      v-show="props.query?.category !== 64"
       :data="list"
       v-loading="tableLoading"
       :show-empty-symbol="false"
@@ -71,37 +71,37 @@
     >
       <el-table-column prop="index" label="序号" align="center" width="45" type="index" />
       <el-table-column
-        key="batch"
-        prop="batch"
-        label="批次"
+        key="area.name"
+        prop="area.name"
+        label="计划"
         align="center"
         :show-overflow-tooltip="true"
       />
       <el-table-column key="name" prop="name" label="名称" align="center" :show-overflow-tooltip="true" min-width="100px" />
       <el-table-column key="serialNumber" prop="serialNumber" label="编号" align="center" :show-overflow-tooltip="true" />
       <el-table-column
-        key="specification"
-        prop="specification"
-        label="规格"
+        key="plate"
+        prop="plate"
+        label="板型"
         align="center"
         :show-overflow-tooltip="true"
         min-width="120px"
       />
-      <el-table-column key="netWeight" prop="netWeight" label="单长（mm）" align="center" :show-overflow-tooltip="true">
+      <el-table-column key="length" prop="length" label="单长（mm）" align="center" :show-overflow-tooltip="true">
         <template #default="{ row }">
-          <span>{{ weightStatus === weightTypeEnum.NET.V ? row.netWeight || '-' : row.grossWeight || '-' }}</span>
+          <span>{{ row.length || '-' }}</span>
         </template>
       </el-table-column>
       <el-table-column key="quantity" prop="quantity" label="数量（件）" align="center" :show-overflow-tooltip="true" width="90px" />
-      <el-table-column key="totalNetWeight" prop="totalNetWeight" label="总长（米）" align="center" :show-overflow-tooltip="true">
+      <el-table-column key="totalLength" prop="totalLength" label="总长（mm）" align="center" :show-overflow-tooltip="true">
         <template #default="{ row }">
-          <span>{{ weightStatus === weightTypeEnum.NET.V ? row.totalNetWeight || '-' : row.totalGrossNetWeight || '-' }}</span>
+          <span>{{ row.totalLength || '-' }}</span>
         </template>
       </el-table-column>
     </common-table>
     <!--分页组件-->
     <el-pagination
-      v-show="props.type !== enclosureShipStatisticsTypeEnum.AUXILIARY_MATERIAL.V"
+      v-show="props.query?.category !== 64"
       :total="total"
       :current-page="queryPage.pageNumber"
       :page-size="queryPage.pageSize"
@@ -117,8 +117,7 @@ import { ref, defineProps, watch } from 'vue'
 import { summaryDetail } from '@/api/ship-manage/pack-and-ship/enclosure-ship-summary'
 import { tableSummary } from '@/utils/el-extra'
 import { projectSearchTypeEnum } from '@enum-ms/mes'
-import { enclosureShipStatisticsTypeEnum } from '@enum-ms/ship-manage'
-import { weightTypeEnum } from '@enum-ms/common'
+// import { enclosureShipStatisticsTypeEnum } from '@enum-ms/ship-manage'
 import useMaxHeight from '@compos/use-max-height'
 import usePagination from '@compos/use-pagination'
 
@@ -132,9 +131,6 @@ const props = defineProps({
   },
   query: {
     type: Object
-  },
-  type: {
-    type: Number
   },
   workshopId: {
     type: Number
@@ -189,7 +185,7 @@ async function fetchDetail() {
 // 合计
 function getSummaries(param) {
   const summary = tableSummary(param, {
-    props: ['quantity', 'totalNetWeight', 'totalGrossWeight']
+    props: ['quantity', 'totalLength']
   })
   return summary
 }

@@ -167,7 +167,7 @@ const showComponent = computed(() => {
 
 const { crud, columns } = useCRUD(
   {
-    title: '结构制品',
+    title: '结构制成品入发存',
     sort: ['id.desc'],
     permission: { ...permission },
     optShow: { ...optShow },

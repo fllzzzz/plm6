@@ -28,7 +28,7 @@
       end-placeholder="结束日期"
       size="small"
       class="filter-item"
-      style="width: 400px"
+      style="width: 370px"
       clearable
       :shortcuts="PICKER_OPTIONS_SHORTCUTS"
       @change="handleDateChange"

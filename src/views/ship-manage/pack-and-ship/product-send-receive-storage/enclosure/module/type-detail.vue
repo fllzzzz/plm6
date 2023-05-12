@@ -43,12 +43,12 @@
           <print-table
             :api-key="
               showType === 'INBOUND'
-                ? 'mesInboundInventoryDetail'
+                ? 'enclosureInboundInventoryDetail'
                 : showType === 'OUTBOUND'
-                ? 'mesOutboundInventoryDetail'
+                ? 'enclosureOutboundInventoryDetail'
                 : showType === 'STOCK'
-                ? 'mesEndInventoryDetail'
-                : 'mesBeginningInventoryDetail'
+                ? 'enclosureEndInventoryDetail'
+                : 'enclosureBeginningInventoryDetail'
             "
             :params="{
               projectId: props.detailQuery?.projectId,
@@ -90,7 +90,7 @@
         <el-table-column key="totalGrossWeight" prop="totalGrossWeight" label="总毛重（kg）" align="center" :show-overflow-tooltip="true" /> -->
         <el-table-column key="name" prop="name" label="名称" align="center" :show-overflow-tooltip="true" />
         <el-table-column key="serialNumber" prop="serialNumber" label="编号" align="center" :show-overflow-tooltip="true" />
-        <el-table-column key="specification" prop="specification" label="规格" align="center" :show-overflow-tooltip="true" />
+        <el-table-column key="plate" prop="plate" label="板型" align="center" :show-overflow-tooltip="true" />
         <el-table-column key="length" prop="length" label="单长（mm）" align="center" :show-overflow-tooltip="true" />
         <el-table-column
           key="quantity"
@@ -110,8 +110,8 @@
           :show-overflow-tooltip="true"
         />
         <el-table-column
-          key="totalNetWeight"
-          prop="totalNetWeight"
+          key="totalLength"
+          prop="totalLength"
           :label="`${
             showType === 'INBOUND'
               ? '入库'
@@ -122,7 +122,7 @@
               : showType === 'BEGINNING'
               ? '期初'
               : '清单'
-          }量（米）`"
+          }量（mm）`"
           align="center"
           :show-overflow-tooltip="true"
         />
@@ -150,7 +150,7 @@
 </template>
 
 <script setup>
-import { artifactProductDetail } from '@/api/ship-manage/pack-and-ship/product-receive-send-storage'
+import { enclosureProductDetail } from '@/api/ship-manage/pack-and-ship/enclosure-product-receive-send-storage'
 import { ref, defineEmits, defineProps, watch } from 'vue'
 
 import { tableSummary } from '@/utils/el-extra'
@@ -191,6 +191,9 @@ const props = defineProps({
   },
   productType: {
     type: Number
+  },
+  category: {
+    type: Number
   }
 })
 
@@ -225,17 +228,14 @@ const { maxHeight } = useMaxHeight(
 )
 
 const dataFormat = ref([
-  ['netWeight', ['to-fixed', DP.COM_WT__KG]],
-  ['totalNetWeight', ['to-fixed', DP.COM_WT__KG]],
-  ['grossWeight', ['to-fixed', DP.COM_WT__KG]],
-  ['totalGrossWeight', ['to-fixed', DP.COM_WT__KG]],
+  ['totalLength', ['to-fixed', DP.COM_L__M]],
   ['createTime', 'parse-time']
 ])
 
 // 合计
 function getSummaries(param) {
   const summary = tableSummary(param, {
-    props: ['quantity', 'totalNetWeight', 'totalGrossWeight']
+    props: ['quantity', 'totalLength']
   })
   return summary
 }
@@ -255,10 +255,11 @@ async function fetchList() {
   let _list = []
   tableLoading.value = true
   try {
-    const { content = [], totalElements } = await artifactProductDetail({
+    const { content = [], totalElements } = await enclosureProductDetail({
       projectId: props.detailQuery?.projectId,
       workshopId: props.workshopId,
       productType: props.productType,
+      category: props.category,
       ...queryPage,
       ...query.value,
       type: productSearchTypeEnum[props.showType].V

@@ -80,11 +80,13 @@
         </template>
       </el-table-column>
     </common-table>
+    <!-- 分页 -->
+    <pagination />
   </div>
 </template>
 
 <script setup>
-import { getEnclosure as get } from '@/api/ship-manage/pack-and-ship/manual-pack'
+import { getAuxiliaryMaterial as get } from '@/api/ship-manage/pack-and-ship/manual-pack'
 import { computed, ref, watch, defineEmits, defineProps, defineExpose, inject } from 'vue'
 
 import { enclosureManualPackPM as permission } from '@/page-permission/ship-manage'
@@ -94,6 +96,7 @@ import { packTypeEnum } from '@enum-ms/mes'
 
 import useCRUD from '@compos/use-crud'
 import mHeader from './module/header'
+import pagination from '@crud/Pagination'
 // import tableCellTag from '@comp-common/table-cell-tag/index.vue'
 
 const optShow = {
@@ -113,7 +116,7 @@ const { crud, columns, CRUD } = useCRUD(
     crudApi: { get },
     invisibleColumns: ['drawingNumber', 'packageQuantity'],
     queryOnPresenterCreated: false,
-    hasPagination: false
+    hasPagination: true
   },
   tableRef
 )

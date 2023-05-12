@@ -15,7 +15,7 @@
           @current-change="handleCurrentChange"
           highlight-current-row
           :max-height="maxHeight"
-          style="width: 100%;"
+          style="width: 100%"
           :stripe="false"
           :showEmptySymbol="false"
         >
@@ -24,11 +24,9 @@
           <el-table-column key="rate" prop="rate" label="发运数据(米)" align="center" min-width="160" show-overflow-tooltip>
             <template v-slot="scope">
               <div style="position: relative">
-                <el-progress :stroke-width="16" :percentage="scope.row.rate" />
+                <el-progress :stroke-width="16" :percentage="scope.row.ratio" />
                 <span style="position: absolute; top: -2px; left: 0; width: 100%; text-align: right; padding-right: 60px">{{
-                  crud.query.weightStatus === weightTypeEnum.NET.V
-                    ? (scope.row.sendMete / 1000).toFixed(2) + ' | ' + (scope.row.mete / 1000).toFixed(2)
-                    : (scope.row.sendGrossMete / 1000).toFixed(2) + ' | ' + (scope.row.grossMete / 1000).toFixed(2)
+                  (scope.row.sendTotalLength / 1000).toFixed(2) + ' | ' + (scope.row.totalLength / 1000).toFixed(2)
                 }}</span>
               </div>
             </template>
@@ -43,6 +41,7 @@
           :weightStatus="crud.query.weightStatus"
           :production-line-type-enum="crud.query.productionLineTypeEnum"
           :currentRow="currentRow"
+          :category-list="categoryList"
           v-if="isNotBlank(currentRow)"
           :permission="permission"
         />
@@ -55,10 +54,8 @@
 <script setup>
 import crudApi from '@/api/ship-manage/pack-and-ship/enclosure-ship-summary'
 import { ref } from 'vue'
-
-import { mesShipSummaryPM as permission } from '@/page-permission/ship-manage'
+import { enclosureShipSummaryPM as permission } from '@/page-permission/ship-manage'
 import { isNotBlank } from '@data-type/index'
-import { weightTypeEnum } from '@enum-ms/common'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import mHeader from './module/header'
@@ -76,6 +73,7 @@ const dataFormat = ref([['project', 'parse-project']])
 
 const tableRef = ref()
 const currentRow = ref({})
+const categoryList = ref([])
 
 const { crud, CRUD } = useCRUD(
   {
@@ -101,6 +99,13 @@ CRUD.HOOK.handleRefresh = (crud, { data }) => {
 
 function handleCurrentChange(val) {
   currentRow.value = val
+  categoryList.value = val?.project?.projectContentList
+  categoryList.value.push({
+    id: 20,
+    name: '配套制品',
+    no: 64,
+    categoryType: 4
+  })
 }
 </script>
 

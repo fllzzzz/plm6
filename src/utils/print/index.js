@@ -127,64 +127,70 @@ async function printPackageLabel({ packageInfo, qrCode, printMode = PrintMode.QU
   //   //   </div>`,
   //   [packTypeEnum.AUXILIARY_MATERIAL.V]: ''
   // }
-  if (packageInfo.productType === packTypeEnum.STRUCTURE.V || packageInfo.productType === packTypeEnum.MACHINE_PART.V || packageInfo.productType === packTypeEnum.AUXILIARY_MATERIAL.V || packageInfo.productType === componentTypeEnum.MACHINE_PART.V || packageInfo.productType === componentTypeEnum.ASSEMBLE.V) {
-    headHtml = `
-    <div style="font-weight: bold; font-size: 12pt;color: #333;padding-bottom: 2pt;">${packageInfo.project.shortName}</div>
+  headHtml = `<div style="font-weight: bold; font-size: 12pt;color: #333;padding-bottom: 2pt;">${packageInfo.project.shortName}</div>
     <div class="package-label">
-      <div class="flex">
-        <div class="row-2 w-1 col border-r border-b">
+      <div class="row border-b">
+        <div class="row row-2 w-1 col border-r">
           <div class="qr-content"></div>
         </div>
-        <div class="flex w-3 flex-column">
-          <div class="row-1 col border-b" style="font-weight:bold;font-size: 10pt;">打包单</div>
-          <div class="flex">
-            <div class="flex-1 row-1 col border-b border-r">包单号</div>
-            <div class="flex-2 row-1 col border-b" style="font-weight:bold">${packageInfo.serialNumber}</div>
-          </div>
+        <div class="row w-3 row-1 col border-b" style="font-weight:bold;font-size: 10pt;">打包单</div>
+        <div class="row w-3">
+          <div style="width:33.4%;" class="row-1 col border-r">包单号</div>
+          <div style="width:66%;" class="row-1 col" style="font-weight:bold">${packageInfo.serialNumber}</div>
         </div>
       </div>
 `
-  } else {
-    headHtml = `
-    <div style="font-weight: bold; font-size: 12pt;color: #333;padding-bottom: 2pt;">${packageInfo.project.shortName}</div>
-    <div class="package-label">
-      <div class="flex">
-        <div class="row-2 w-1 col border-r border-b" >
-          <div class="qr-content"></div>
-        </div>
-        <div class="flex w-3 flex-column">
-          <div class="row-1 col border-b" style="font-weight:bold;font-size: 10pt;">打包单</div>
-          <div class="flex">
-            <div class="w-1 row-1 col border-b border-r">包单号</div>
-            <div class="w-3 row-1 col border-b" style="font-weight:bold">${packageInfo.serialNumber}</div>
-          </div>
-        </div>
-      </div>
-`
-  }
 
-  const structureHtml = `<div class="flex">
-      <div class="row-0 col border-r" style="flex:1;" >编号</div>
-      <div class="row-0 w-1 col border-r">材质</div>
-      <div class="row-0 col border-r" style="width:10mm;">数量</div>
-      <div class="row-0 w-1 col">重量(kg)</div>
-    </div>
-    </div>`
-  const enclosureHtml = `
-  <div class="flex">
-  <div class="row-0 w-1 col border-r">编号</div>
-  <div class="row-0 col border-r" style="width:18mm;">版型</div>
-  <div class="row-0 col border-r" style="width:13mm;" >单长</div>
-  <div class="row-0 col border-r" style="width:14mm;">单面积</div>
-  <div class="row-0 w-1 col">数量</div>
+  const structureHtml = `
+  <div class="row">
+  <div class="row-0 col border-r" style="width:34%;">
+  <div class="col-div">编号</div>
+  </div>
+  <div class="row-0 w-1 col border-r">
+  <div class="col-div">材质</div>
+  </div>
+  <div class="row-0 col border-r" style="width:14%;">
+  <div class="col-div">数量</div>
+  </div>
+  <div class="row-0 w-1 col">
+  <div class="col-div">重量(kg)</div>
+  </div>
 </div>
 </div>`
+  const enclosureHtml = `
+<div class="row">
+<div class="row-0 col border-r" style="width:25%;">
+<div class="col-div">编号</div>
+</div>
+<div class="row-0 col border-r" style="width: 24%;">
+<div class="col-div">板型</div>
+</div>
+<div class="row-0 col border-r" style="width:14%;">
+<div class="col-div">单长</div>
+</div>
+<div class="row-0 col border-r" style="width: 23%">
+<div class="col-div">单面积</div>
+</div>
+<div class="row-0 col" style="width: 12%">
+<div class="col-div">数量</div>
+</div>
+</div>
+</div>
+`
   const auxHtml = `
-  <div class="flex">
-  <div class="row-0 col border-r" style="flex:1;" >名称</div>
-  <div class="row-0 w-1 col border-r">单位</div>
-  <div class="row-0 col border-r" style="width:10mm;">规格</div>
-  <div class="row-0 w-1 col">数量</div>
+  <div class="row">
+  <div class="row-0 col border-r" style="width:34%;">
+  <div class="col-div">名称</div>
+  </div>
+  <div class="row-0 w-1 col border-r">
+  <div class="col-div">单位</div>
+  </div>
+  <div class="row-0 col border-r" style="width:14%;">
+  <div class="col-div">规格</div>
+  </div>
+  <div class="row-0 w-1 col">
+  <div class="col-div">数量</div>
+  </div>
 </div>
 </div>`
   if (packageInfo.productType === packTypeEnum.STRUCTURE.V || packageInfo.productType === packTypeEnum.MACHINE_PART.V || packageInfo.productType === componentTypeEnum.MACHINE_PART.V || packageInfo.productType === componentTypeEnum.ASSEMBLE.V) {
@@ -222,31 +228,57 @@ async function printPackageLabel({ packageInfo, qrCode, printMode = PrintMode.QU
     const item = packageInfo.list[x]
     if (packageInfo.productType === packTypeEnum.STRUCTURE.V || packageInfo.productType === packTypeEnum.MACHINE_PART.V || packageInfo.productType === componentTypeEnum.MACHINE_PART.V || packageInfo.productType === componentTypeEnum.ASSEMBLE.V) {
       bodyHtml += `
-      <div class="flex">
-        <div class="row-0 col border-b border-r" style="flex:1;">${item.serialNumber}</div>
-        <div class="row-0 col w-1 border-b border-r">${item.material}</div>
-        <div class="row-0 col border-b border-r" style="width:10mm;">${item.quantity}</div>
-        <div class="row-0 col w-1 border-b">${item.totalWeight}</div>
+      <div class="row border-b">
+      <div class="row-0 col border-r" style="width:34%;">
+      <div class="col-div">${item.serialNumber}</div>
       </div>
+      <div class="row-0 col w-1 border-r">
+      <div class="col-div">${item.material}</div>
+      </div>
+      <div class="row-0 col border-r" style="width:14%;">
+      <div class="col-div">${item.quantity}</div>
+      </div>
+      <div class="row-0 col w-1">
+      <div class="col-div">${item.totalWeight}</div>
+      </div>
+    </div>
     `
     } else if (packageInfo.productType === packTypeEnum.ENCLOSURE.V) {
       bodyHtml += `
-      <div class="flex">
-        <div class="row-0 w-1 col border-b border-r">${item.serialNumber}</div>
-        <div class="row-0 col border-b border-r" style="width:18mm;">${item.plate}</div>
-        <div class="row-0 col border-b border-r" style="width:13mm;">${item.length}</div>
-        <div class="row-0 col border-b border-r" style="width:14mm;">${item.surfaceArea}</div>
-        <div class="row-0 col w-1 border-b">${item.quantity}</div>
+      <div class="row border-b">
+      <div class="row-0 col border-r" style="width:25%;">
+      <div class="col-div">${item.serialNumber}</div>
       </div>
+      <div class="row-0 col border-r" style="width: 24%;">
+      <div class="col-div">${item.plate}</div>
+      </div>
+      <div class="row-0 col border-r" style="width:14%;">
+      <div class="col-div">${item.length}</div>
+      </div>
+      <div class="row-0 col border-r" style="width: 23%">
+      <div class="col-div">${item.surfaceArea}</div>
+      </div>
+      <div class="row-0 col" style="width: 12%">
+      <div class="col-div">${item.quantity}</div>
+      </div>
+    </div>
     `
     } else if (packageInfo.productType === packTypeEnum.AUXILIARY_MATERIAL.V) {
       bodyHtml += `
-      <div class="flex">
-        <div class="row-0 col border-b border-r" style="flex:1;">${item.name}</div>
-        <div class="row-0 col w-1 border-b border-r">${item.unit}</div>
-        <div class="row-0 col border-b border-r" style="width:10mm;">${item.specification}</div>
-        <div class="row-0 col w-1 border-b">${item.quantity}</div>
+      <div class="row border-b">
+      <div class="row-0 col border-r" style="width:34%;">
+      <div class="col-div">${item.name}</div>
       </div>
+      <div class="row-0 col w-1 border-r">
+      <div class="col-div">${item.unit}</div>
+      </div>
+      <div class="row-0 col border-r" style="width:14%;">
+      <div class="col-div">${item.specification}</div>
+      </div>
+      <div class="row-0 col w-1">
+      <div class="col-div">${item.quantity}</div>
+      </div>
+    </div>
     `
     }
   }

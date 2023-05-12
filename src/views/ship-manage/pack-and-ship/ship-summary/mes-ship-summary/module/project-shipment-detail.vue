@@ -5,7 +5,7 @@
         <el-tag class="filter-item" size="medium" style="margin-right: 3px">{{
           `项目:${props.currentRow.project.serialNumber + '-' + props.currentRow.project.shortName}`
         }}</el-tag>
-        <common-radio-button v-model="type" :options="mesShipStatisticsTypeEnum.ENUM" type="enum" class="filter-item" />
+        <common-radio-button v-model="category" :options="mesShipStatisticsTypeEnum.ENUM" type="enum" class="filter-item" />
         <monomer-select
           ref="monomerSelectRef"
           v-model="query.monomerId"
@@ -26,9 +26,24 @@
           class="filter-item"
           style="width: 200px; margin-left: 3px"
         />
+        <print-table
+          v-show="category === mesShipStatisticsTypeEnum.AUXILIARY_MATERIAL.V"
+          v-permission="permission.print"
+          api-key="mesAuxMatDetail"
+          :params="{
+            projectId: props.currentRow?.projectId,
+            workshopId: props.workshopId,
+            relationType: mesShipStatisticsTypeEnum.AUXILIARY_MATERIAL.V,
+            ...query,
+          }"
+          size="mini"
+          type="warning"
+          class="filter-item"
+          style="float: right"
+        />
       </div>
       <el-descriptions
-        v-show="type === mesShipStatisticsTypeEnum.STRUCTURE.V"
+        v-show="category === mesShipStatisticsTypeEnum.STRUCTURE.V"
         v-loading="summaryLoading"
         :data="summaryData"
         direction="vertical"
@@ -95,12 +110,14 @@
         </el-descriptions-item>
       </el-descriptions>
       <common-table
-        v-show="type === mesShipStatisticsTypeEnum.AUXILIARY_MATERIAL.V"
+        v-show="category === mesShipStatisticsTypeEnum.AUXILIARY_MATERIAL.V"
         :data="list"
         v-loading="tableLoading"
         :show-empty-symbol="false"
       >
         <el-table-column prop="index" label="序号" align="center" width="45" type="index" />
+        <el-table-column key="monomerName" prop="monomerName" label="单体" align="center" :show-overflow-tooltip="true" min-width="100px" />
+        <el-table-column key="areaName" prop="areaName" label="区域" align="center" :show-overflow-tooltip="true" min-width="100px" />
         <el-table-column key="name" prop="name" label="名称" align="center" :show-overflow-tooltip="true" min-width="100px" />
         <el-table-column
           key="specification"
@@ -113,7 +130,7 @@
         <el-table-column key="unit" prop="unit" label="单位" align="center" :show-overflow-tooltip="true" />
         <el-table-column key="quantity" prop="quantity" label="清单量" align="center" :show-overflow-tooltip="true" />
         <el-table-column key="shipQuantity" prop="shipQuantity" label="已发运" align="center" :show-overflow-tooltip="true" />
-        <el-table-column key="unShipQuantity" prop="unShipQuantity" label="未发运" align="center" :show-overflow-tooltip="true" />
+        <el-table-column key="unCargoQuantity" prop="unCargoQuantity" label="未发运" align="center" :show-overflow-tooltip="true" />
       </common-table>
     </div>
     <component
@@ -121,7 +138,7 @@
       :showType="showType"
       v-model="detailVisible"
       :query="query"
-      :type="type"
+      :category="category"
       :workshopId="props.workshopId"
       :projectId="props.currentRow.projectId"
       :weightStatus="props.weightStatus"
@@ -138,7 +155,7 @@
 
 <script setup>
 import { ref, defineProps, watch, nextTick, computed } from 'vue'
-import { projectSummary } from '@/api/ship-manage/pack-and-ship/ship-summary'
+import { projectSummary, auxInboundDetail } from '@/api/ship-manage/pack-and-ship/ship-summary'
 import { weightTypeEnum } from '@enum-ms/common'
 import { convertUnits } from '@/utils/convert/unit'
 import { mesShipStatisticsTypeEnum } from '@enum-ms/ship-manage'
@@ -166,7 +183,7 @@ const props = defineProps({
   }
 })
 
-const type = ref(mesShipStatisticsTypeEnum.STRUCTURE.V)
+const category = ref(mesShipStatisticsTypeEnum.STRUCTURE.V)
 const list = ref([])
 const tableLoading = ref(false)
 const areaInfo = ref([])
@@ -203,6 +220,15 @@ watch(
   { immediate: true, deep: true }
 )
 
+watch(
+  () => category.value,
+  (val) => {
+    if (val === mesShipStatisticsTypeEnum.AUXILIARY_MATERIAL.V) {
+      fetchAuxMat()
+    }
+  }
+)
+
 function getAreaInfo(val) {
   areaInfo.value = val || []
 }
@@ -225,6 +251,20 @@ async function fetchSummary() {
     console.log('获取项目发运数据汇总', err)
   } finally {
     summaryLoading.value = false
+  }
+}
+
+async function fetchAuxMat() {
+  try {
+    const { content } = await auxInboundDetail({
+      projectId: props.currentRow.projectId,
+      workshopId: props.workshopId,
+      relationType: mesShipStatisticsTypeEnum.AUXILIARY_MATERIAL.V,
+      ...query.value
+    })
+    list.value = content || []
+  } catch (e) {
+    console.log('获取配套件详情失败')
   }
 }
 

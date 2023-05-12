@@ -32,11 +32,7 @@
         align="center"
       >
         <template v-slot="scope">
-          <span>{{
-            crud.query.weightStatus === weightTypeEnum.NET.V
-              ? scope.row.quantity + ' / ' + scope.row.totalNetWeight
-              : scope.row.quantity + ' / ' + scope.row.totalGrossWeight
-          }}</span>
+          <span>{{ scope.row.quantity + ' / ' + toFixed(scope.row.totalLength, DP.COM_L__M) }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -49,9 +45,7 @@
       >
         <template v-slot="scope">
           <span style="cursor: pointer; color: #0d84ff" @click="openDetail(scope.row, 'BEGINNING')">{{
-            crud.query.weightStatus === weightTypeEnum.NET.V
-              ? scope.row.beginningQuantity + ' / ' + scope.row.beginningNetWeight
-              : scope.row.beginningQuantity + ' / ' + scope.row.beginningGrossWeight
+            scope.row.beginningQuantity + ' / ' + toFixed(scope.row.beginningTotalLength, DP.COM_L__M)
           }}</span>
         </template>
       </el-table-column>
@@ -65,9 +59,7 @@
       >
         <template v-slot="scope">
           <span style="cursor: pointer; color: #0d84ff" @click="openDetail(scope.row, 'INBOUND')">{{
-            crud.query.weightStatus === weightTypeEnum.NET.V
-              ? scope.row.inboundQuantity + ' / ' + scope.row.inboundNetWeight
-              : scope.row.inboundQuantity + ' / ' + scope.row.inboundGrossWeight
+            scope.row.inboundQuantity + ' / ' + toFixed(scope.row.inboundTotalLength, DP.COM_L__M)
           }}</span>
         </template>
       </el-table-column>
@@ -81,9 +73,7 @@
       >
         <template v-slot="scope">
           <span style="cursor: pointer; color: #0d84ff" @click="openDetail(scope.row, 'OUTBOUND')">{{
-            crud.query.weightStatus === weightTypeEnum.NET.V
-              ? scope.row.outboundQuantity + ' / ' + scope.row.outboundNetWeight
-              : scope.row.outboundQuantity + ' / ' + scope.row.outboundGrossWeight
+            scope.row.outboundQuantity + ' / ' + toFixed(scope.row.outboundTotalLength, DP.COM_L__M)
           }}</span>
         </template>
       </el-table-column>
@@ -97,9 +87,7 @@
       >
         <template v-slot="scope">
           <span style="cursor: pointer; color: #0d84ff" @click="openDetail(scope.row, 'STOCK')">{{
-            crud.query.weightStatus === weightTypeEnum.NET.V
-              ? scope.row.stockQuantity + ' / ' + scope.row.stockNetWeight
-              : scope.row.stockQuantity + ' / ' + scope.row.stockGrossWeight
+            scope.row.stockQuantity + ' / ' + toFixed(scope.row.stockTotalLength, DP.COM_L__M)
           }}</span>
         </template>
       </el-table-column>
@@ -125,7 +113,7 @@
       :productType="crud.query.productType"
       :workshopId="crud.query.workshopId"
       :dateTime="crud.query.dateTime"
-      :weightStatus="crud.query.weightStatus"
+      :category="crud.query.category"
       :detailInfo="currentRow"
       :permission="permission"
     />
@@ -133,15 +121,16 @@
 </template>
 
 <script setup>
-import crudApi from '@/api/ship-manage/pack-and-ship/product-receive-send-storage'
+import crudApi from '@/api/ship-manage/pack-and-ship/enclosure-product-receive-send-storage'
 import { ref, nextTick, computed } from 'vue'
 
-import { mesProductSendReceiveStoragePM as permission } from '@/page-permission/ship-manage'
+import { enclosureProductSendReceiveStoragePM as permission } from '@/page-permission/ship-manage'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
+import { toFixed } from '@/utils/data-type'
 import { DP } from '@/settings/config'
 import checkPermission from '@/utils/system/check-permission'
-import { weightTypeEnum } from '@enum-ms/common'
+import { packTypeEnum } from '@enum-ms/ship-manage'
 import mHeader from './module/header'
 import pagination from '@crud/Pagination'
 import mDetail from './module/detail'
@@ -164,9 +153,9 @@ const showComponent = computed(() => {
   return showType.value === 'detail' ? mDetail : typeDetail
 })
 
-const { crud, columns } = useCRUD(
+const { crud, CRUD, columns } = useCRUD(
   {
-    title: '制成品入发存',
+    title: '围护制成品入发存',
     sort: ['id.desc'],
     permission: { ...permission },
     optShow: { ...optShow },
@@ -196,6 +185,10 @@ function openDetail(row, show) {
   })
 }
 
+CRUD.HOOK.beforeToQuery = (crud) => {
+  crud.query.productType = packTypeEnum.ENCLOSURE.V
+}
+
 function getSummaries(param) {
   const { columns, data } = param
   const sums = []
@@ -216,14 +209,10 @@ function getSummaries(param) {
       let valuesSum = 0
       // const valueWeightKeys = column.property === 'list' ? 'totalNetWeight' : column.property + 'NetWeight'
       let valueWeightKeys = ''
-      if (column.property === 'list' && crud.query.weightStatus === weightTypeEnum.NET.V) {
-        valueWeightKeys = 'totalNetWeight'
-      } else if (column.property === 'list' && crud.query.weightStatus === weightTypeEnum.GROSS.V) {
-        valueWeightKeys = 'totalGrossWeight'
-      } else if (column.property !== 'list' && crud.query.weightStatus === weightTypeEnum.NET.V) {
-        valueWeightKeys = column.property + 'NetWeight'
-      } else if (column.property !== 'list' && crud.query.weightStatus === weightTypeEnum.GROSS.V) {
-        valueWeightKeys = column.property + 'GrossWeight'
+      if (column.property === 'list') {
+        valueWeightKeys = 'totalLength'
+      } else if (column.property !== 'list') {
+        valueWeightKeys = column.property + 'TotalLength'
       }
       const valueWeight = data.map((item) => Number(item.sourceRow?.[valueWeightKeys]))
       let valueWeightSum = 0
@@ -247,7 +236,7 @@ function getSummaries(param) {
           }
         }, 0)
       }
-      sums[index] = valuesSum + ' / ' + valueWeightSum.toFixed(DP.COM_WT__KG)
+      sums[index] = valuesSum + ' / ' + valueWeightSum.toFixed(DP.COM_L__M)
     }
   })
   return sums

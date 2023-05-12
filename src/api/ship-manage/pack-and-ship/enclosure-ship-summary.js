@@ -4,7 +4,7 @@ import request from '@/utils/request'
 
 export function get(params) {
   return request({
-    url: `/api/mes/enclosure/cargo/project/summary`,
+    url: `/api/mes/building/cargo/project/enclosure/summary`,
     method: 'get',
     params
   })
@@ -13,7 +13,7 @@ export function get(params) {
 // 项目发运详情
 export function inboundDetail(params) {
   return request({
-    url: `/api/mes/enclosure/cargo/project/cargoList/details/page`,
+    url: `/api/mes/building/cargo/project/cargoList/enclosure/details/page`,
     method: 'get',
     params
   })
@@ -22,7 +22,7 @@ export function inboundDetail(params) {
 // 发运汇总
 export function shipmentSummary(params) {
   return request({
-    url: `/api/mes/enclosure/cargo/year/summary`,
+    url: `/api/mes/building/cargo/year/enclosure/summary`,
     method: 'get',
     params
   })
@@ -31,7 +31,7 @@ export function shipmentSummary(params) {
 // 查询项目发运数据汇总
 export function projectSummary(params) {
   return request({
-    url: `/api/mes/enclosure/cargo/project/detail/summary`,
+    url: `/api/mes/building/cargo/project/detail/enclosure/summary`,
     method: 'get',
     params
   })
@@ -40,7 +40,7 @@ export function projectSummary(params) {
 // 发运统计-查询项目各类数据详情
 export function summaryDetail(params) {
   return request({
-    url: `/api/mes/enclosure/cargo/project/detail/type`,
+    url: `/api/mes/building/cargo/project/enclosure/detail/type`,
     method: 'get',
     params
   })

@@ -10,7 +10,7 @@
   >
     <template #titleRight>
       <print-table
-        api-key="mesProjectShipDetail"
+        api-key="enclosureProjectShipDetail"
         v-permission="permission.print"
         :params="{
           projectId: props.projectId,
@@ -25,39 +25,28 @@
       <!--表格渲染-->
       <common-table :data="list" v-loading="tableLoading" show-summary :summary-method="getSummaries" :max-height="maxHeight - 70">
         <el-table-column prop="index" label="序号" align="center" width="45" type="index" />
-        <el-table-column key="monomerName" prop="monomerName" label="单体" align="center" :show-overflow-tooltip="true" />
-        <el-table-column key="areaName" prop="areaName" label="区域" align="center" :show-overflow-tooltip="true" />
+        <el-table-column key="areaName" prop="areaName" label="计划" align="center" :show-overflow-tooltip="true" />
+        <el-table-column key="name" prop="name" label="名称" align="center" :show-overflow-tooltip="true" />
         <el-table-column key="serialNumber" prop="serialNumber" label="编号" align="center" :show-overflow-tooltip="true" />
-        <el-table-column key="netWeight" prop="netWeight" label="单净重" align="center" :show-overflow-tooltip="true">
+        <el-table-column key="plate" prop="plate" label="板型" align="center" :show-overflow-tooltip="true" />
+        <el-table-column key="length" prop="length" label="单长" align="center" :show-overflow-tooltip="true">
           <template v-slot="scope">
-            <span>{{ toThousand(scope.row.netWeight, DP.COM_WT__KG) }}</span>
+            <span>{{ scope.row.length }}</span>
             <!-- <span style="margin-left: 3px">kg</span> -->
           </template>
         </el-table-column>
-        <el-table-column key="grossWeight" prop="grossWeight" label="单毛重" align="center" :show-overflow-tooltip="true">
+        <el-table-column key="totalLength" prop="totalLength" label="总长" align="center" :show-overflow-tooltip="true">
           <template v-slot="scope">
-            <span>{{ toThousand(scope.row.grossWeight, DP.COM_WT__KG) }}</span>
-            <!-- <span style="margin-left: 3px">kg</span> -->
-          </template>
-        </el-table-column>
-        <el-table-column key="totalNetWeight" prop="totalNetWeight" label="总净重" align="center" :show-overflow-tooltip="true">
-          <template v-slot="scope">
-            <span>{{ toThousand(scope.row.totalNetWeight, DP.COM_WT__KG) }}</span>
-            <!-- <span style="margin-left: 3px">kg</span> -->
-          </template>
-        </el-table-column>
-        <el-table-column key="totalGrossWeight" prop="totalGrossWeight" label="总毛重" align="center" :show-overflow-tooltip="true">
-          <template v-slot="scope">
-            <span>{{ toThousand(scope.row.totalGrossWeight, DP.COM_WT__KG) }}</span>
+            <span>{{ scope.row.totalLength }}</span>
             <!-- <span style="margin-left: 3px">kg</span> -->
           </template>
         </el-table-column>
         <el-table-column key="quantity" prop="quantity" label="清单数" align="center" :show-overflow-tooltip="true" />
         <el-table-column key="inboundQuantity" prop="inboundQuantity" label="入库数" align="center" :show-overflow-tooltip="true" />
         <el-table-column key="cargoQuantity" prop="cargoQuantity" label="发运数" align="center" :show-overflow-tooltip="true" />
-        <el-table-column key="cargoNetWeight" prop="cargoNetWeight" label="发运量" align="center" :show-overflow-tooltip="true">
+        <el-table-column key="cargoTotalLength" prop="cargoTotalLength" label="发运总长" align="center" :show-overflow-tooltip="true">
           <template v-slot="scope">
-            <span>{{ toThousand(scope.row.cargoNetWeight, DP.COM_WT__KG) }}</span>
+            <span>{{ scope.row.cargoTotalLength }}</span>
             <!-- <span style="margin-left: 3px">kg</span> -->
           </template>
         </el-table-column>
@@ -81,11 +70,11 @@ import { inboundDetail } from '@/api/ship-manage/pack-and-ship/enclosure-ship-su
 import useVisible from '@compos/use-visible'
 import usePagination from '@compos/use-pagination'
 import useMaxHeight from '@compos/use-max-height'
-import { DP } from '@/settings/config'
+// import { DP } from '@/settings/config'
 import { tableSummary } from '@/utils/el-extra'
-import { toThousand } from '@/utils/data-type/number'
+// import { toThousand } from '@/utils/data-type/number'
 import { defineProps, defineEmits, ref } from 'vue'
-import { mesShipSummaryPM as permission } from '@/page-permission/ship-manage'
+import { enclosureShipSummaryPM as permission } from '@/page-permission/ship-manage'
 
 const emit = defineEmits(['update:visible'])
 const list = ref([])
@@ -148,16 +137,7 @@ async function fetchDetail() {
 // 合计
 function getSummaries(param) {
   const summary = tableSummary(param, {
-    props: [
-      'quantity',
-      'totalNetWeight',
-      'totalGrossWeight',
-      'inboundQuantity',
-      'cargoQuantity',
-      'cargoQuantity',
-      'cargoNetWeight',
-      'cargoGrossWeight'
-    ]
+    props: ['quantity', 'inboundQuantity', 'cargoQuantity', 'cargoQuantity', 'cargoTotalLength']
   })
   return summary
 }

@@ -35,7 +35,8 @@ export const showProjectSearch = [
   { component: '/bim/model-show/index', type: pt.STEEL.V, required: true },
   { component: '/bim/integration-model-show/index', type: pt.STEEL.V, required: true },
   // 发运管理
-  { component: '/ship-manage/pack-and-ship/manual-pack/index', type: pt.STEEL.V, required: true },
+  { component: '/ship-manage/pack-and-ship/manual-pack/index', type: allPT, required: true },
+  { component: '/ship-manage/pack-and-ship/ship-list/index', type: allPT, required: true },
   // MES
   { component: '/mes/projects/index', type: allPT, required: true },
   { component: '/mes/overall-plan/monomer/index', type: pt.STEEL.V, required: true },

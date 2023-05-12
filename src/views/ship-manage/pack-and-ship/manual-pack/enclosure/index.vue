@@ -193,6 +193,8 @@
         </template>
       </el-table-column>
     </common-table>
+    <!-- 分页 -->
+    <pagination />
   </div>
 </template>
 
@@ -208,6 +210,7 @@ import { packTypeEnum } from '@enum-ms/mes'
 import useCRUD from '@compos/use-crud'
 import mHeader from './module/header'
 import tableCellTag from '@comp-common/table-cell-tag/index.vue'
+import pagination from '@crud/Pagination'
 
 const optShow = {
   add: false,
@@ -226,7 +229,7 @@ const { crud, columns, CRUD } = useCRUD(
     crudApi: { get },
     invisibleColumns: ['color', 'packageQuantity'],
     queryOnPresenterCreated: false,
-    hasPagination: false
+    hasPagination: true
   },
   tableRef
 )
