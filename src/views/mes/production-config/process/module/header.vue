@@ -2,7 +2,7 @@
   <div v-show="crud.searchToggle">
     <common-radio-button
       v-model="query.productionLineTypeEnum"
-      :options="artifactProductLineEnum.ENUM"
+      :options="hasIntelligent ? artifactProductLineEnum.ENUM : traditionLineEnum.ENUM"
       type="enum"
       size="small"
       class="filter-item"
@@ -13,10 +13,12 @@
 </template>
 
 <script setup>
-import { artifactProductLineEnum } from '@enum-ms/mes'
+import { artifactProductLineEnum, traditionLineEnum } from '@enum-ms/mes'
 import { regHeader } from '@compos/use-crud'
+import { mapGetters } from '@/store/lib'
 // import rrOperation from '@crud/RR.operation'
 
+const { hasIntelligent } = mapGetters('hasIntelligent')
 const defaultQuery = {
   productionLineTypeEnum: artifactProductLineEnum.TRADITION.V
 }
