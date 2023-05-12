@@ -91,6 +91,7 @@ const tableType = {
   contractEnclosureProduct: { L: '围护制品', M: 'sales_manage', T: mt.contract.L + ' / ' + contract.sales_manage },
   contractAuxiliaryMaterialProduct: { L: '配套制品', M: 'sales_manage', T: mt.contract.L + ' / ' + contract.sales_manage },
   contractStructureShipmentTracking: { L: '结构发运跟踪', M: 'sales_manage', T: mt.contract.L + ' / ' + contract.sales_manage },
+  contractEnclosureShipmentTracking: { L: '围护发运跟踪', M: 'sales_manage', T: mt.contract.L + ' / ' + contract.sales_manage },
   contractAuxiliaryMaterialShipmentTracking: { L: '配套件发运跟踪', M: 'sales_manage', T: mt.contract.L + ' / ' + contract.sales_manage },
 
   industryElectricRecord: { L: '工业用电电费清单', M: 'expense_entry', T: mt.contract.L + ' / ' + contract.expense_entry },

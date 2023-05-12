@@ -2,7 +2,7 @@
   <div class="head-container">
     <div v-show="crud.searchToggle">
       <el-input
-        v-model="query.name"
+        v-model="query.planName"
         placeholder="可输入批次搜索"
         class="filter-item"
         style="width: 200px"
@@ -51,7 +51,7 @@
       <template #viewLeft>
         <print-table
           v-permission="crud.permission.print"
-          api-key="contractStructureShipmentTracking"
+          api-key="contractEnclosureShipmentTracking"
           :params="{
             projectId: query.projectId,
             productType: query.productType,
@@ -97,6 +97,7 @@ const times = PICKER_OPTIONS_SHORTCUTS[1]?.value()
 const defaultQuery = {
   startDate: moment(times[0]).valueOf(),
   endDate: moment(times[1]).valueOf(),
+  planName: undefined,
   name: undefined,
   plate: undefined,
   serialNumber: undefined,

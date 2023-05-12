@@ -7,17 +7,14 @@
       ref="tableRef"
       v-loading="crud.loading"
       :data="crud.data"
-      return-source-data
       :data-format="dataFormat"
-      style="width: 100%"
-      class="businessTable"
       :max-height="maxHeight"
     >
       <el-table-column label="序号" type="index" align="center" width="60" />
       <el-table-column
-        v-if="columns.visible('name')"
-        key="name"
-        prop="name"
+        v-if="columns.visible('area.name')"
+        key="area.name"
+        prop="area.name"
         show-overflow-tooltip
         label="批次"
         align="center"
@@ -60,10 +57,19 @@
         min-width="120"
       />
       <el-table-column
+        v-if="columns.visible('surfaceArea')"
+        key="surfaceArea"
+        prop="surfaceArea"
+        show-overflow-tooltip
+        label="单面积(mm²)"
+        align="right"
+        min-width="120"
+      />
+      <el-table-column
         v-if="columns.visible('totalQuantity')"
         key="totalQuantity"
         prop="totalQuantity"
-        label="数量"
+        label="数量(张)"
         align="center"
         min-width="70"
         show-overflow-tooltip
@@ -76,6 +82,23 @@
         label="总长度(mm)"
         align="center"
         min-width="120"
+      />
+      <el-table-column
+        v-if="columns.visible('totalArea')"
+        key="totalArea"
+        prop="totalArea"
+        show-overflow-tooltip
+        label="总面积(mm²)"
+        align="right"
+        min-width="120"
+      />
+      <el-table-column
+        v-if="columns.visible('pricingManner')"
+        key="pricingManner"
+        prop="pricingManner"
+        align="center"
+        min-width="120"
+        label="计价方式"
       />
       <el-table-column
         v-if="columns.visible('unitPrice')"
@@ -108,10 +131,11 @@
 </template>
 
 <script setup>
-import { structureList as get } from '@/api/contract/sales-manage/shipment-tracking'
+import { enclosureList as get } from '@/api/contract/sales-manage/shipment-tracking'
 import { ref, defineEmits } from 'vue'
 
 import { shipmentTrackingPM as permission } from '@/page-permission/contract'
+import { enclosurePricingMannerEnum } from '@enum-ms/enclosure'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
@@ -132,7 +156,8 @@ const headerRef = ref()
 const dataFormat = ref([
   ['createTime', ['parse-time', '{y}-{m}-{d}']],
   ['unitPrice', 'to-thousand'],
-  ['totalPrice', 'to-thousand']
+  ['totalPrice', 'to-thousand'],
+  ['pricingManner', ['parse-enum', enclosurePricingMannerEnum]]
 ])
 
 const { crud, columns, CRUD } = useCRUD(
