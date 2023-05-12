@@ -65,7 +65,8 @@ const { globalProjectId } = mapGetters(['globalProjectId'])
 const emit = defineEmits('load')
 
 const boxScale = ref(1)
-const { colors, boxZoomOut, getColor } = useStructureDashboardHeader({ colorCardTitles: ['未生产', '生产中', '已完成', '待质检'], emit, crud })
+// const { colors, boxZoomOut, getColor } = useStructureDashboardHeader({ colorCardTitles: ['未生产', '生产中', '已完成', '待质检'], emit, crud })
+const { colors, boxZoomOut, getColor } = useStructureDashboardHeader({ colorCardTitles: ['未生产', '生产中', '已完成'], emit, crud })
 
 CRUD.HOOK.handleRefresh = (crud, res) => {
   res.data.content = res.data.content.map((v) => {
