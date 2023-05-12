@@ -87,10 +87,9 @@ export function systemStructureClass() {
 
 export function del(ids) {
   return request({
-    module: 'plan',
-    url: 'otherData',
+    url: '/api/plan/artifact-processFile',
     method: 'delete',
-    data: ids
+    data: [ids]
   })
 }
 
