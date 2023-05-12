@@ -4,7 +4,29 @@ import {
   processingColorsEnum
 } from '@enum-ms/production'
 
-export default function useStructureDashboardHeader({ colorCardTitles = ['未入库', '部分入库', '全部入库', '异常'], emit, crud, fetchSummaryInfo }) {
+// export default function useStructureDashboardHeader({ colorCardTitles = ['未入库', '部分入库', '全部入库', '异常'], emit, crud, fetchSummaryInfo }) {
+//   const colors = [{
+//     title: colorCardTitles[0],
+//     color: processingColorsEnum.UNSTART.COLOR,
+//     value: processingColorsEnum.UNSTART.V
+//   },
+//   {
+//     title: colorCardTitles[1],
+//     color: processingColorsEnum.PROCESS.COLOR,
+//     value: processingColorsEnum.PROCESS.V
+//   },
+//   {
+//     title: colorCardTitles[2],
+//     color: processingColorsEnum.COMPLETE.COLOR,
+//     value: processingColorsEnum.COMPLETE.V
+//   },
+//   {
+//     title: colorCardTitles[3],
+//     color: processingColorsEnum.ABNORMAL.COLOR,
+//     value: processingColorsEnum.ABNORMAL.V
+//   }
+//   ]
+export default function useStructureDashboardHeader({ colorCardTitles = ['未入库', '部分入库', '全部入库'], emit, crud, fetchSummaryInfo }) {
   const colors = [{
     title: colorCardTitles[0],
     color: processingColorsEnum.UNSTART.COLOR,
@@ -19,11 +41,6 @@ export default function useStructureDashboardHeader({ colorCardTitles = ['未入
     title: colorCardTitles[2],
     color: processingColorsEnum.COMPLETE.COLOR,
     value: processingColorsEnum.COMPLETE.V
-  },
-  {
-    title: colorCardTitles[3],
-    color: processingColorsEnum.ABNORMAL.COLOR,
-    value: processingColorsEnum.ABNORMAL.V
   }
   ]
 
