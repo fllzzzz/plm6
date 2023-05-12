@@ -38,7 +38,7 @@
           <span>单件钢材重量误差({{ form.steelDiffType === numOrPctEnum.NUMBER.V ? STEEL_DIFF_UNIT : '%' }})</span>
         </template>
         <div class="flex-r">
-          <common-radio-button v-model="form.steelDiffType" :options="numOrPctEnum.ENUM" type="enum" size="small" />
+          <common-radio-button v-model="form.steelDiffType" :options="numOrPctEnum.ENUM" default type="enum" size="small" />
           <common-input-number
             v-model="form.steelDiff"
             :max="form.steelDiffType === numOrPctEnum.NUMBER.V ? 999999999999 : 100"
