@@ -117,6 +117,7 @@
               <el-divider><span class="title">附件</span></el-divider>
               <upload-list
                 show-download
+                showView
                 :file-classify="fileClassifyEnum.PURCHASE_ORDER_ATT.V"
                 v-model:files="detail.attachments"
                 :uploadable="false"

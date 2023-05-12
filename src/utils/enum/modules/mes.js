@@ -330,6 +330,12 @@ const artifactProductLineEnum = {
 }
 constantize(artifactProductLineEnum)
 
+// 构件配置传统/智能生产线
+const traditionLineEnum = {
+  TRADITION: { L: '传统线', K: 'TRADITION', V: 1 << 0 }
+}
+constantize(traditionLineEnum)
+
 // 构件配置智能线父类型
 const intellectParentType = {
   PILLAR: { L: '柱', K: 'PILLAR', V: 1 << 1 },
@@ -605,6 +611,15 @@ const steelOutBoundRecordTypeEnum = {
 }
 constantize(steelOutBoundRecordTypeEnum)
 
+// 配置管理/MES-公共配置
+const machinePartSchedulingTypeEnum = {
+  NO: { L: '无', K: 'NO', V: 1 << 0 },
+  WORKSHOP: { L: '车间级', K: 'WORKSHOP', V: 1 << 1 },
+  PRODUCTION_LINE: { L: '产线级', K: 'PRODUCTION_LINE', V: 1 << 2 },
+  GROUPS: { L: '生产组级', K: 'GROUPS', V: 1 << 3 }
+}
+constantize(machinePartSchedulingTypeEnum)
+
 export {
   teamTypeEnum,
   teamAttributeEnum,
@@ -640,6 +655,7 @@ export {
   inProductionDetailReportEnum,
   schedulingStatusEnum,
   artifactProductLineEnum,
+  traditionLineEnum,
   intellectParentType,
   minEqualTypeEnum,
   maxEqualTypeEnum,
@@ -679,7 +695,8 @@ export {
   nestingTypeEnum,
   productionKanbanTypeEnum,
   steelOutBoundRecordTypeEnum,
-  contractSaleTypeEnum
+  contractSaleTypeEnum,
+  machinePartSchedulingTypeEnum
 }
 
 export default {
@@ -717,6 +734,7 @@ export default {
   inProductionDetailReportEnum,
   schedulingStatusEnum,
   artifactProductLineEnum,
+  traditionLineEnum,
   intellectParentType,
   minEqualTypeEnum,
   maxEqualTypeEnum,
@@ -756,5 +774,6 @@ export default {
   nestingTypeEnum,
   productionKanbanTypeEnum,
   steelOutBoundRecordTypeEnum,
-  contractSaleTypeEnum
+  contractSaleTypeEnum,
+  machinePartSchedulingTypeEnum
 }

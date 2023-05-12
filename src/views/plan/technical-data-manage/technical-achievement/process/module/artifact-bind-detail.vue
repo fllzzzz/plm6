@@ -6,13 +6,13 @@
     top="10vh"
     width="600px"
     :before-close="handleClose"
-    title="构件绑定列表"
+    :title="`构件绑定列表：${currentRow.fileName}`"
     :wrapper-closable="false"
-    size="80%"
+    size="90%"
     custom-class="already-form"
   >
     <template #titleAfter>
-      <el-tag>{{planProcessTypeEnum.VL[currentRow.processType]}}</el-tag>
+      <el-tag>文件类型:{{planProcessTypeEnum.VL[currentRow.processType]}}</el-tag>
     </template>
     <template #content>
         <div style="display:flex;">
@@ -24,7 +24,7 @@
                 v-model="query.monomerId"
                 style="width: 270px;"
                 :default="false"
-                :project-id="projectId"
+                :project-id="query.projectId"
                 class="filter-item"
               />
             </div>
@@ -80,7 +80,7 @@
                 clearable
               />
             </div>
-            <div style="text-align:right;">
+            <div style="text-align:right;margin-bottom:10px;">
               <common-button class="filter-item" size="small" type="success" icon="el-icon-search" @click.stop="fetchList">搜索</common-button>
               <common-button
                 class="filter-item"
@@ -92,28 +92,32 @@
                 重置
               </common-button>
             </div>
+            <div style="color:#999;font-size:13px;margin-bottom:10px;">
+              *  注意：
+            </div>
+            <div style="color:#999;font-size:13px;">1. 解绑操作即刻生效，无需提交。</div>
           </div>
           <div style="flex:1;padding-left:10px;">
             <common-table
               ref="detailRef"
               border
               :data="list"
-              :max-height="maxHeight-80"
+              :max-height="maxHeight-100"
               style="width: 100%;"
               class="table-form"
               :data-format="dataFormat"
             >
               <el-table-column label="序号" type="index" align="center" width="50" />
-              <el-table-column prop="project" label="项目" align="center" show-overflow-tooltip v-if="!currentRow.boolSingleProject" />
-              <el-table-column prop="monomerName" label="单体" align="center" show-overflow-tooltip/>
+              <el-table-column prop="project" label="项目" align="left" min-width="150" show-overflow-tooltip v-if="!currentRow.boolSingleProject" />
+              <el-table-column prop="monomerName" label="单体" align="left" show-overflow-tooltip/>
               <el-table-column prop="serialNumber" label="编号" align="center" show-overflow-tooltip/>
               <el-table-column prop="name" label="构件名称" align="center" show-overflow-tooltip/>
               <el-table-column prop="structureClassName" label="构件类型" align="center" show-overflow-tooltip/>
               <el-table-column prop="specification" label="规格" align="center" show-overflow-tooltip />
-              <el-table-column prop="material" label="材质" align="center" show-overflow-tooltip />
-              <el-table-column label="操作" align="center">
+              <el-table-column prop="material" label="材质" align="center" show-overflow-tooltip width="80" />
+              <el-table-column label="操作" align="center" width="80">
                 <template v-slot="scope">
-                  <common-button size="small" type="danger" @click="deleteItem(scope.row)" v-permission="permission.unbind">解绑</common-button>
+                  <common-button size="mini" type="danger" @click="deleteItem(scope.row)" v-permission="permission.unbind">解绑</common-button>
                 </template>
               </el-table-column>
             </common-table>

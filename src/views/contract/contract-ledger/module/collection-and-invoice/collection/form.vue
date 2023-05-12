@@ -64,7 +64,7 @@
             </el-table-column>
             <el-table-column key="collectionAmount1" prop="collectionAmount1" label="大写" align="center" min-width="85" :show-overflow-tooltip="true">
               <template v-slot="scope">
-                <div>{{scope.row.collectionAmount?'('+digitUppercase(scope.row.collectionAmount)+')':''}}</div>
+                <div>{{scope.row.collectionAmount?digitUppercase(scope.row.collectionAmount):''}}</div>
               </template>
             </el-table-column>
           </el-table-column>

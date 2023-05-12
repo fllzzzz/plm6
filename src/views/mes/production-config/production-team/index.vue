@@ -3,7 +3,7 @@
     <template #teamType>
       <common-radio-button
         v-model="productionLineTypeEnum"
-        :options="artifactProductLineEnum.ENUM"
+        :options="hasIntelligent ? artifactProductLineEnum.ENUM : traditionLineEnum.ENUM"
         type="enum"
         size="small"
         class="filter-item"
@@ -23,14 +23,16 @@
 
 <script setup>
 import { ref, computed } from 'vue'
-import { artifactProductLineEnum } from '@enum-ms/mes'
+import { artifactProductLineEnum, traditionLineEnum } from '@enum-ms/mes'
 import { teamTypeEnum } from '@enum-ms/mes'
 import team from './team'
 import inspection from './inspection'
+import { mapGetters } from '@/store/lib'
 
 const teamType = ref(teamTypeEnum.TEAM.V)
 const productionLineTypeEnum = ref(artifactProductLineEnum.TRADITION.V)
 
+const { hasIntelligent } = mapGetters('hasIntelligent')
 const currentView = computed(() => {
   return teamType.value & teamTypeEnum.TEAM.V ? team : inspection
 })

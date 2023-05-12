@@ -149,7 +149,6 @@ const optShow = {
   del: false,
   download: false
 }
-
 const tableRef = ref()
 const { crud, columns, CRUD } = useCRUD(
   {
@@ -205,7 +204,8 @@ const drawerVisible = ref(false)
 
 function showDetail(row) {
   drawerVisible.value = true
-  detailData.value = row
+  detailData.value = row.sourceRow
+  console.log(row, detailData.value.taskQuantity, 'row')
   itemInfo.value = Object.assign({}, row)
 }
 

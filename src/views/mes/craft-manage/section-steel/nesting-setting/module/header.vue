@@ -26,7 +26,7 @@
       <el-form-item label="生产模式" class="form-label-require">
         <common-radio-button
           v-model="query.productionLineTypeEnum"
-          :options="artifactProductLineEnum.ENUM"
+          :options="hasIntelligent ? artifactProductLineEnum.ENUM : traditionLineEnum.ENUM"
           type="enum"
           default
           class="filter-item"
@@ -183,7 +183,7 @@ import { getCondition, setNotNeedNesting } from '@/api/mes/craft-manage/section-
 import { ref, computed, defineEmits, watchEffect } from 'vue'
 import { ElMessage, ElNotification, ElMessageBox } from 'element-plus'
 
-import { artifactProductLineEnum, assembleTypeEnum } from '@enum-ms/mes'
+import { artifactProductLineEnum, traditionLineEnum, assembleTypeEnum } from '@enum-ms/mes'
 import { mesNestingSettingPM as permission } from '@/page-permission/mes'
 import { regHeader } from '@compos/use-crud'
 import crudOperation from '@crud/CRUD.operation'
@@ -191,6 +191,7 @@ import rrOperation from '@crud/RR.operation'
 import monomerSelectAreaSelect from '@comp-base/monomer-select-area-select'
 import noNestingDrawer from './no-nesting-drawer.vue'
 import extrusionNestingSetting from './extrusion-nesting-setting.vue'
+import { mapGetters } from '@/store/lib'
 
 const emits = defineEmits(['change-mode'])
 
@@ -202,6 +203,8 @@ const defaultQuery = {
   specPrefix: undefined,
   boolMainAssemble: assembleTypeEnum.MAIN_ASSEMBLE.V
 }
+
+const { hasIntelligent } = mapGetters('hasIntelligent')
 
 const { crud, query } = regHeader(defaultQuery)
 

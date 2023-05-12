@@ -6,14 +6,14 @@
     top="10vh"
     width="600px"
     :before-close="handleClose"
-    title="本次绑定列表"
+    :title=" `本次绑定列表：${currentRow.fileName}`"
     :wrapper-closable="false"
-    size="80%"
+    size="90%"
     custom-class="current-form"
   >
   <template #titleAfter>
-    <el-tag>{{planProcessTypeEnum.VL[currentRow.processType]}}</el-tag>
-    <el-tag v-if="currentRow.boolSingleProject">所属项目:{{currentRow.project?projectNameFormatter(currentRow.project):'-'}}</el-tag>
+    <el-tag>文件类型:{{planProcessTypeEnum.VL[currentRow.processType]}}</el-tag>
+    <el-tag v-if="currentRow.boolSingleProject">所属项目:{{currentRow.project?projectNameFormatter(currentRow.projectList[0]):'-'}}</el-tag>
   </template>
   <template #titleRight>
     <common-button size="small" type="primary" v-loading="loading" @click.stop="onSubmit" :disabled="list.length===0">提交（共{{list.length}}条）</common-button>
@@ -22,8 +22,10 @@
       <el-form ref="formRef" size="small" label-width="150px">
         <div style="display:flex;">
           <div>
-            <!-- <project-cascader v-model="query.projectId" clearable class="filter-item" style="width: 270px;margin-bottom:10px;" placeholder="项目搜索" /> -->
             <div>
+              <project-cascader v-model="query.projectId" clearable class="filter-item" style="width: 270px;" placeholder="项目搜索" v-if="!currentRow.boolSingleProject"/>
+            </div>
+            <div style="margin:10px 0;">
               <monomer-select
                 ref="monomerSelectRef"
                 v-model="query.monomerId"
@@ -106,22 +108,22 @@
               ref="detailRef"
               border
               :data="list"
-              :max-height="maxHeight-80"
+              :max-height="maxHeight-60"
               style="width: 100%;"
               class="table-form"
               :data-format="dataFormat"
             >
               <el-table-column label="序号" type="index" align="center" width="50" />
-              <el-table-column prop="project" label="项目" align="center" show-overflow-tooltip v-if="!currentRow.boolSingleProject" />
-              <el-table-column prop="monomerName" label="单体" align="center" show-overflow-tooltip/>
+              <el-table-column prop="project" label="项目" align="left" min-width="150" show-overflow-tooltip v-if="!currentRow.boolSingleProject" />
+              <el-table-column prop="monomerName" label="单体" align="left" show-overflow-tooltip/>
               <el-table-column prop="serialNumber" label="编号" align="center" show-overflow-tooltip/>
               <el-table-column prop="name" label="构件名称" align="center" show-overflow-tooltip/>
               <el-table-column prop="structureClassName" label="构件类型" align="center" show-overflow-tooltip/>
               <el-table-column prop="specification" label="规格" align="center" show-overflow-tooltip />
-              <el-table-column prop="material" label="材质" align="center" show-overflow-tooltip />
-              <el-table-column label="操作" align="center">
+              <el-table-column prop="material" label="材质" align="center" show-overflow-tooltip width="80" />
+              <el-table-column label="操作" align="center" width="80">
                 <template v-slot="scope">
-                  <common-button size="small" type="danger" @click="deleteItem(scope.$index)">移除</common-button>
+                  <common-button size="mini" type="danger" @click="deleteItem(scope.$index)">移除</common-button>
                 </template>
               </el-table-column>
             </common-table>
@@ -188,6 +190,7 @@ watch(
       for (const i in query.value) {
         query.value[i] = undefined
       }
+      query.value.monomerId = props.projectId
       query.value.monomerId = props.monomerId
     }
   },
@@ -221,7 +224,7 @@ function fetchList() {
     }
   }
   for (let i = 0; i < searchArr.length; i++) {
-    if (searchArr[i] === 'monomerId' || searchArr[i] === 'structureClassId') {
+    if (searchArr[i] === 'monomerId' || searchArr[i] === 'structureClassId' || searchArr[i] === 'projectId') {
       filterVal = filterVal.filter(v => v[searchArr[i]] === query.value[searchArr[i]])
     } else {
       filterVal = filterVal.filter(v => v[searchArr[i]].indexOf(query.value[searchArr[i]]) > -1)

@@ -259,8 +259,8 @@ async function printPackageLabel({ packageInfo, qrCode, printMode = PrintMode.QU
     LODOP.SET_PRINT_PAGESIZE(2, 1030, 680, '1') /* 纸张大小*/ // 100mm* 75mm
     LODOP.ADD_PRINT_HTM('3mm', '1.5mm', '67mm', '29.5mm', headStrHtml)
     LODOP.SET_PRINT_STYLEA(0, 'ItemType', 1)
-    LODOP.ADD_PRINT_HTM('31.5mm', '1.5mm', '67mm', '66mm', strHtml)
-    LODOP.ADD_PRINT_HTM('101.5mm', '1.5mm', '67mm', '5mm', pageHtml)
+    LODOP.ADD_PRINT_HTM('31.7mm', '1.5mm', '67mm', '61.5mm', strHtml)
+    LODOP.ADD_PRINT_HTM('96mm', '1.5mm', '67mm', '5mm', pageHtml)
     LODOP.SET_PRINT_STYLEA(0, 'ItemType', 1)
     LODOP.ADD_PRINT_BARCODE('8.8mm', '1.8mm', '16.4mm', '16.4mm', 'QRCode', qrCode)
     LODOP.SET_PRINT_STYLEA(0, 'QRCodeVersion', 3)
@@ -670,80 +670,71 @@ const GAS_STYLE = `
 const PACKAGE_STYLE = `
   <style>
   .package-label {
+    float: left;
     font-family: "微软雅黑";
     font-size: 9pt;
     color: black;
-    box-sizing: border-box;
+    width: 100%;
     border: 1px solid #000;
   }
 
-  .package-label .flex {
-    display: flex;
+  .row {
     width: 100%;
+    float: left;
   }
 
-  .package-label .flex-column {
-    flex-direction: column;
-  }
-  
-  .package-label .flex-auto {
-    flex:1 1 auto;
-  }
-
-  .package-label .flex-1 {
-    width: 34%;
-  }
-
-  .package-label .flex-2 {
-    width: 67%;
-  }
-
-  .package-label .w-0 {
-    width: 20%;
-  }
-
-  .package-label .w-1 {
+  .w-1 {
     width: 25%;
   }
 
-  .package-label .w-2 {
+  .w-2 {
     width: 50%;
   }
 
-  .package-label .w-3 {
-    width: 75%;
+  .w-3 {
+    width: 74.5%;
   }
 
-  .package-label .row-0 {
-    height: 6.6mm;
-  }
-  .package-label .row-1 {
-    height: 8mm;
+  .row-0 {
+    height: 5.85mm;
+    position: relative;
   }
 
-  .package-label .row-2 {
+  .col-div {
+    width: 100%;
+    text-align: center;
+    position: absolute;
+    left: 0;
+    top: 50%;
+    margin: -0.5em 0 0 0;
+  }
+
+  .row-1 {
+    height: 7.9mm;
+    line-height: 7mm;
+  }
+
+  .row-2 {
     height: 16mm;
+    line-height: 16mm;
   }
 
-  .package-label .border-r {
+  .border-r {
     border-right: 1px solid #000;
   }
 
-  .package-label .border-t {
+  .border-t {
     border-top: 1px solid #000;
   }
 
-  .package-label .border-b {
+  .border-b {
     border-bottom: 1px solid #000;
   }
 
-  .package-label .col {
-    // padding: 0 1mm;
-    box-sizing: border-box;
+  .col {
+    float: left;
     word-break: break-all;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    text-align: center;
   }
 </style>`
 

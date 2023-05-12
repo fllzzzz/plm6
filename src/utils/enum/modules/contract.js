@@ -371,6 +371,13 @@ const structureTypeEnum = {
 }
 constantize(structureTypeEnum)
 
+// 是否含有围护模块
+const isEnclosureContainEnum = {
+  YES: { L: '是', K: 'YES', V: 0 },
+  NO: { L: '否', K: 'NO', V: 1 }
+}
+constantize(isEnclosureContainEnum)
+
 export {
   projectStatusEnum, // 项目状态
   projectTypeEnum, // 项目类型
@@ -414,7 +421,8 @@ export {
   timeTypeEnum,
   managementSalaryTypeEnum,
   mainAuxiliaryTypeEnum,
-  structureTypeEnum
+  structureTypeEnum,
+  isEnclosureContainEnum
 }
 
 export default {
@@ -460,5 +468,6 @@ export default {
   timeTypeEnum, // 时间类型
   managementSalaryTypeEnum, // 不同人员类型工资
   mainAuxiliaryTypeEnum,
-  structureTypeEnum
+  structureTypeEnum,
+  isEnclosureContainEnum
 }

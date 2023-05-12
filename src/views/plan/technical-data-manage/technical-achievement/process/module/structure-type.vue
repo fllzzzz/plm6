@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="padding:10px;padding-left:0;">
     <common-table ref="tableRef" :data="list" v-loading="tableLoading" :max-height="maxHeight" style="width:300px;"  @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column key="structureClassName" prop="structureClassName" label="构件类型" align="center" />
@@ -42,7 +42,7 @@ watch(
 // 获取构件类型明细
 async function fetchList() {
   let _list = []
-  if (!props.query.projectId) {
+  if (!props.query.projectId && !props.query.processType) {
     list.value = _list
     return
   }
@@ -59,7 +59,6 @@ async function fetchList() {
 }
 
 function handleSelectionChange(val) {
-  console.log(val)
   emit('change', val)
 }
 </script>

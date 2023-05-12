@@ -12,34 +12,45 @@
     custom-class="contract-change"
   >
     <template #titleRight>
-      <common-button type="info" @click="versionVisible=true">修订版本</common-button>
+      <common-button type="info" v-permission="permission.detail" @click="versionVisible=true">修订版本</common-button>
       <common-button type="primary" v-loading="loading" size="small" @click="onSubmit">提交</common-button>
     </template>
     <template #content>
       <el-divider><span class="title">原文件信息</span></el-divider>
       <el-descriptions class="margin-top" :column="2" border label-width="110">
-        <el-descriptions-item label-class-name="fileName" label="文件名称" :span="2">{{currentRow.fileName}}</el-descriptions-item>
-        <el-descriptions-item label-class-name="attachmentDTO" label="文件" :span="2">
+        <el-descriptions-item label="文件名称" :span="2">{{currentRow.fileName}}</el-descriptions-item>
+        <el-descriptions-item label="文件" :span="2">
           <template v-if="currentRow.attachmentDTO">
             <div style="cursor: pointer; color: #409eff" @dblclick="attachmentView(currentRow.attachmentDTO)">{{ currentRow.attachmentDTO.name }}</div>
           </template>
           <span v-else>-</span>
         </el-descriptions-item>
-        <el-descriptions-item label-class-name="processType" label="文件类型">{{planProcessTypeEnum.VL[currentRow.processType]}}</el-descriptions-item>
-        <el-descriptions-item label-class-name="boolSingleProject" label="文件属性">{{processUseTypeEnum.VL[currentRow.boolSingleProject]}}</el-descriptions-item>
-        <el-descriptions-item label-class-name="project" label="所属项目" :span="2">
-          {{currentRow.project?projectNameFormatter(currentRow.project):'-'}}
+        <el-descriptions-item label="文件类型">{{planProcessTypeEnum.VL[currentRow.processType]}}</el-descriptions-item>
+        <el-descriptions-item label="文件属性">{{processUseTypeEnum.VL[currentRow.boolSingleProject]}}</el-descriptions-item>
+        <el-descriptions-item :label="currentRow.boolSingleProject?'所属项目':'关联项目'" :span="2">
+           <el-row>
+            <template v-if="isNotBlank(currentRow.projectList)">
+              <el-col v-for="item in currentRow.projectList" :key="item.id" :span="12">
+                【{{projectNameFormatter(item)}}】
+              </el-col>
+            </template>
+            <template v-else>-</template>
+          </el-row>
         </el-descriptions-item>
-         <el-descriptions-item label-class-name="userName" label="上传人">{{currentRow.userName}}</el-descriptions-item>
-        <el-descriptions-item label-class-name="uploadTime" label="上传日期">{{currentRow.uploadTime?parseTime(currentRow.uploadTime,'{y}-{m}-{d} {h}:{i}:{s}'):'-'}}</el-descriptions-item>
-        <el-descriptions-item label-class-name="remark" label="备注">
+         <el-descriptions-item label="上传人">{{currentRow.userName}}</el-descriptions-item>
+        <el-descriptions-item label="上传日期">{{currentRow.uploadTime?parseTime(currentRow.uploadTime,'{y}-{m}-{d} {h}:{i}:{s}'):'-'}}</el-descriptions-item>
+        <el-descriptions-item label="备注">
           <div style="word-break:break-all;width:100%;">{{currentRow.remark}}</div>
         </el-descriptions-item>
       </el-descriptions>
-      <el-divider><span class="title">新文件信息</span></el-divider>
+      <el-divider><span class="title" style="background-color:#e6a23c;">新文件信息</span></el-divider>
       <el-form ref="formRef" :model="form" :rules="rules" size="small">
       <el-descriptions class="margin-top" :column="2" border label-width="110">
-        <el-descriptions-item label-class-name="fileName" label="*文件名称" :span="2">
+        <el-descriptions-item label-class-name="modify-content" label="*文件名称" :span="2">
+          <template #label>
+            <span style="color:red;margin-right:5px;font-size:14px;">*</span>
+            <span>文件名称</span>
+          </template>
           <el-input
             class="input-border-none"
             v-model="form.fileName"
@@ -50,7 +61,11 @@
             clearable
           />
         </el-descriptions-item>
-        <el-descriptions-item label-class-name="attachmentDTO" label="*文件" :span="2">
+        <el-descriptions-item label-class-name="modify-content" label="*文件" :span="2">
+          <template #label>
+            <span style="color:red;margin-right:5px;font-size:14px;">*</span>
+            <span>文件</span>
+          </template>
           <div style="display:flex;">
             <div style="flex:1;">
                <template v-if="form.file">
@@ -65,14 +80,21 @@
             </div>
           </div>
         </el-descriptions-item>
-        <el-descriptions-item label-class-name="processType" label="文件类型">{{planProcessTypeEnum.VL[currentRow.processType]}}</el-descriptions-item>
-        <el-descriptions-item label-class-name="boolSingleProject" label="文件属性">{{processUseTypeEnum.VL[currentRow.boolSingleProject]}}</el-descriptions-item>
-        <el-descriptions-item label-class-name="project" label="所属项目" :span="2">
-          {{currentRow.project?projectNameFormatter(currentRow.project):'-'}}
+        <el-descriptions-item label="文件类型">{{planProcessTypeEnum.VL[currentRow.processType]}}</el-descriptions-item>
+        <el-descriptions-item label="文件属性">{{processUseTypeEnum.VL[currentRow.boolSingleProject]}}</el-descriptions-item>
+        <el-descriptions-item :label="currentRow.boolSingleProject?'所属项目':'关联项目'" :span="2">
+          <el-row>
+            <template v-if="isNotBlank(currentRow.projectList)">
+              <el-col v-for="item in currentRow.projectList" :key="item.id" :span="12">
+                【{{projectNameFormatter(item)}}】
+              </el-col>
+            </template>
+            <template v-else>-</template>
+          </el-row>
         </el-descriptions-item>
-         <el-descriptions-item label-class-name="userName" label="上传人">{{currentRow.userName}}</el-descriptions-item>
-        <el-descriptions-item label-class-name="uploadTime" label="上传日期">{{currentRow.uploadTime?parseTime(currentRow.uploadTime,'{y}-{m}-{d} {h}:{i}:{s}'):'-'}}</el-descriptions-item>
-        <el-descriptions-item label-class-name="remark" label="备注">
+         <el-descriptions-item label="上传人">{{currentRow.userName}}</el-descriptions-item>
+        <el-descriptions-item label="上传日期">{{currentRow.uploadTime?parseTime(currentRow.uploadTime,'{y}-{m}-{d} {h}:{i}:{s}'):'-'}}</el-descriptions-item>
+        <el-descriptions-item label-class-name="modify-content" label="备注">
            <el-input
             class="input-border-none"
             v-model.trim="form.remark"
@@ -83,6 +105,8 @@
             style="width:100%"/>
         </el-descriptions-item>
       </el-descriptions>
+      <div style="color:#e6a23c;margin-top:10px;font-size:13px;">*  1. 深色框内的信息可进行修改，其它信息不可变更</div>
+      <div style="color:#e6a23c;font-size:13px;margin-top:3px;">*  2. 更换工艺文件会生成新的修订版本</div>
       </el-form>
       <historyVersion v-model="versionVisible" :currentRow="currentRow" />
       <showPdfAndImg v-if="pdfShow" :isVisible="pdfShow" :showType="'attachment'" :id="currentId" @close="pdfShow = false" />
@@ -95,6 +119,7 @@ import crudApi from '@/api/plan/technical-data-manage/process'
 import { defineProps, defineEmits, ref, watch, nextTick } from 'vue'
 import useVisible from '@compos/use-visible'
 
+import { isNotBlank } from '@data-type/index'
 import { fileClassifyEnum } from '@enum-ms/file'
 import { processUseTypeEnum, planProcessTypeEnum } from '@enum-ms/plan'
 import { projectNameFormatter } from '@/utils/project'
@@ -102,6 +127,7 @@ import { parseTime } from '@/utils/date'
 import UploadBtn from '@comp/file-upload/UploadBtn'
 import { ElMessage } from 'element-plus'
 import { judgeSameValue } from '@/views/contract/info/judgeSameValue'
+import { planProcessListPM as permission } from '@/page-permission/plan'
 
 import historyVersion from './history-version'
 import showPdfAndImg from '@comp-base/show-pdf-and-img.vue'
@@ -228,5 +254,9 @@ async function onSubmit() {
 }
 ::v-deep(.el-descriptions__label.el-descriptions__cell.is-bordered-label){
   width:110px;
+}
+::v-deep(.modify-content){
+  background:#999 !important;
+  color:#fff !important;
 }
 </style>

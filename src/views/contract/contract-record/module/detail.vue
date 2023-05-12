@@ -44,9 +44,11 @@
       <el-table-column key="filePath" prop="filePath" :show-overflow-tooltip="true" label="附件" min-width="150px">
         <template v-slot="scope">
           <export-button :params="{id: scope.row.id}" v-permission="permission.download"/>
+          <common-button v-if="(scope.row.name.indexOf('.pdf')>-1 || scope.row.name.indexOf('.png')>-1 || scope.row.name.indexOf('.jpg')>-1 || scope.row.name.indexOf('.jpeg')>-1)" icon="el-icon-view" size="mini" @click="attachmentView(scope.row)" />
         </template>
       </el-table-column>
     </common-table>
+    <showPdfAndImg v-if="pdfShow" :isVisible="pdfShow" :showType="'attachment'" :id="currentId" @close="pdfShow = false" />
     </template>
   </common-drawer>
 </template>
@@ -59,6 +61,7 @@ import useVisible from '@compos/use-visible'
 import useMaxHeight from '@compos/use-max-height'
 
 import ExportButton from '@comp-common/export-button/index.vue'
+import showPdfAndImg from '@comp-base/show-pdf-and-img.vue'
 
 const permission = inject('permission')
 const props = defineProps({
@@ -72,6 +75,9 @@ const props = defineProps({
   }
 })
 
+const pdfShow = ref(false)
+const currentId = ref()
+
 const drawerRef = ref()
 const emit = defineEmits(['success', 'update:modelValue'])
 const { visible, handleClose } = useVisible({ emit, props })
@@ -83,6 +89,13 @@ const { maxHeight } = useMaxHeight(
   },
   visible
 )
+
+// 预览附件
+function attachmentView(item) {
+  currentId.value = item.id
+  pdfShow.value = true
+}
+
 </script>
 <style lang="scss" scoped>
 ::v-deep(.el-input-number .el-input__inner) {

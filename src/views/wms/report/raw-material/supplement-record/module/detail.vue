@@ -4,7 +4,7 @@
     :visible="crud.detailVisible"
     :content-loading="!clsLoaded || crud.detailLoading"
     :before-close="crud.cancelDetail"
-    :title="`红冲单：${detail?.supplementNo}`"
+    :title="`调整单：${detail?.supplementNo}`"
     :show-close="true"
     size="620px"
     custom-class="purchase-order-raw-mat-detail"
@@ -37,7 +37,7 @@
               <span v-empty-text>{{ detail.factory?.name }}</span>
             </el-form-item>
 
-            <el-form-item label="红冲金额" prop="amount">
+            <el-form-item label="调整金额" prop="amount">
               <span v-thousand="detail.amount" />
             </el-form-item>
 
@@ -87,7 +87,7 @@ const { CRUD, crud, detail } = regDetail()
 const { loaded: clsLoaded } = useMatClsList()
 
 CRUD.HOOK.beforeDetailLoaded = async (crud, detail) => {
-  // 红冲单号和物料种类字段冲突了
+  // 调整单号和物料种类字段冲突了
   detail.supplementNo = detail.serialNumber
   const list = [detail]
   await setSpecInfoToList(list)

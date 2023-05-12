@@ -3,18 +3,18 @@
     ref="drawerRef"
     :visible="crud.status.cu > 0"
     :before-close="crud.cancelCU"
-    :title="crud.status.title"
+    title="上传工艺文件"
     :show-close="true"
     :wrapper-closable="false"
     :close-on-click-modal="false"
     size="50%"
-    custom-class="raw-mat-inbound-application-record-form"
+    custom-class="delivery-detail"
   >
     <template #titleRight>
       <common-button :loading="crud.status.cu === 2" type="primary" size="mini" @click="crud.submitCU">提交</common-button>
     </template>
     <template #content>
-      <el-form ref="formRef" :model="form" :rules="rules" size="small" label-width="140px">
+      <el-form ref="formRef" :model="form" :rules="rules" size="small" label-width="100px">
         <el-form-item label="工艺类型" prop="processType">
           <common-radio
             v-model="form.processType"
@@ -39,7 +39,7 @@
           ref="detailRef"
           border
           :data="form.fileList"
-          :max-height="maxHeight"
+          :max-height="maxHeight-200"
           style="width: 100%"
           class="table-form"
           return-source-data
@@ -48,7 +48,7 @@
           <el-table-column label="序号" type="index" align="center" width="50" />
           <el-table-column prop="file" label="文件" align="left">
             <template v-slot="scope">
-              <span @dblclick="attachmentView(scope.row)">{{scope.row.file}}</span>
+              <span style="cursor: pointer; color: #409eff" @click="attachmentView(scope.row)">{{scope.row.file}}</span>
             </template>
           </el-table-column>
           <el-table-column prop="fileName" label="名称" align="center">

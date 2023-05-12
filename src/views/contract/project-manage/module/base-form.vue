@@ -189,7 +189,8 @@
     <el-divider><span class="title">合同附件</span></el-divider>
     <div class="upload-box">
       <upload-list
-        :show-download="!!form.id"
+        showView
+        show-download
         :file-classify="fileClassifyEnum.CONTRACT_ATT.V"
         v-model:files="form.attachmentFiles"
         empty-text="暂未上传合同附件"

@@ -53,7 +53,7 @@ const typeBgColor = {
   // 调拨标签默认颜色
   transfer: '#e64242',
 
-  // 红冲标签默认颜色
+  // 调整标签默认颜色
   supplement: '#f56c6c',
 
   // 出库调拨标签颜色
