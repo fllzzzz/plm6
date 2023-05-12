@@ -27,11 +27,11 @@
         </el-descriptions-item>
         <el-descriptions-item label="文件类型">{{planProcessTypeEnum.VL[currentRow.processType]}}</el-descriptions-item>
         <el-descriptions-item label="文件属性">{{processUseTypeEnum.VL[currentRow.boolSingleProject]}}</el-descriptions-item>
-        <el-descriptions-item :label="currentRow.boolSingleProject?'所属项目':'关联项目'" :span="2">
+        <el-descriptions-item label="所属项目" :span="2">
            <el-row>
-            <template v-if="isNotBlank(currentRow.projectList)">
+            <template v-if="isNotBlank(currentRow.projectList && currentRow.boolSingleProject)">
               <el-col v-for="item in currentRow.projectList" :key="item.id" :span="12">
-                【{{projectNameFormatter(item)}}】
+                {{projectNameFormatter(item)}}
               </el-col>
             </template>
             <template v-else>-</template>
@@ -82,11 +82,11 @@
         </el-descriptions-item>
         <el-descriptions-item label="文件类型">{{planProcessTypeEnum.VL[currentRow.processType]}}</el-descriptions-item>
         <el-descriptions-item label="文件属性">{{processUseTypeEnum.VL[currentRow.boolSingleProject]}}</el-descriptions-item>
-        <el-descriptions-item :label="currentRow.boolSingleProject?'所属项目':'关联项目'" :span="2">
-          <el-row>
-            <template v-if="isNotBlank(currentRow.projectList)">
+        <el-descriptions-item label="所属项目" :span="2">
+           <el-row>
+            <template v-if="isNotBlank(currentRow.projectList && currentRow.boolSingleProject)">
               <el-col v-for="item in currentRow.projectList" :key="item.id" :span="12">
-                【{{projectNameFormatter(item)}}】
+                {{projectNameFormatter(item)}}
               </el-col>
             </template>
             <template v-else>-</template>
