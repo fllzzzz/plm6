@@ -42,10 +42,10 @@ constantize(taxRateEnum)
 
 // 费用归属
 const costAscriptionEnum = {
-  DIRECT_COSTS: { L: '直接费用', K: 'DIRECT_COSTS', V: 1 },
-  INDIRECT_COSTS: { L: '间接费用', K: 'INDIRECT_COSTS', V: 2 },
-  PERIOD_COSTS: { L: '期间费用', K: 'PERIOD_COSTS', V: 3 },
-  PROJECT_RETENTION: { L: '项目留存', K: 'PROJECT_RETENTION', V: 4 }
+  DIRECT_COSTS: { L: '直接费用', K: 'DIRECT_COSTS', V: 1 << 0 },
+  INDIRECT_COSTS: { L: '间接费用', K: 'INDIRECT_COSTS', V: 1 << 1 },
+  PERIOD_COSTS: { L: '期间费用', K: 'PERIOD_COSTS', V: 1 << 2 },
+  PROJECT_RETENTION: { L: '项目留存', K: 'PROJECT_RETENTION', V: 1 << 3 }
 }
 constantize(costAscriptionEnum)
 

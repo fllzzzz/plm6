@@ -19,17 +19,7 @@
         class="filter-item"
         @change="crud.toQuery"
       />
-      <el-date-picker
-        v-model="query.year"
-        type="year"
-        size="small"
-        class="date-item filter-item"
-        style="width: 100px !important"
-        placeholder="选择年"
-        format="YYYY"
-        value-format="YYYY"
-        @change="crud.toQuery"
-      />
+      <time-range-select :query="query" clearable class="filter-item" style="width: 270px" @change="crud.toQuery" />
       <el-input v-model.trim="query.projectManagerName" placeholder="业务负责人搜索" style="width: 200px" class="filter-item" />
       <rrOperation />
       <div v-loading="totalLoading" style="margin-bottom: 6px;">
@@ -68,12 +58,15 @@ import { regHeader } from '@compos/use-crud'
 import rrOperation from '@crud/RR.operation'
 import crudOperation from '@crud/CRUD.operation'
 import Panel from '@/components/Panel'
+import timeRangeSelect from '@comp-common/time-range-select/index'
 
 const defaultQuery = {
   projectId: undefined,
   businessTypeEnum: undefined,
   settlementStatus: settlementStatusEnum.UNSETTLEMENT.V,
-  year: String(new Date().getFullYear()),
+  dateQueryTypeEnum: undefined,
+  startDate: undefined,
+  endDate: undefined,
   projectManagerName: undefined
 }
 

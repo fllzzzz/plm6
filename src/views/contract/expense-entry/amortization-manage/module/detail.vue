@@ -89,7 +89,7 @@ async function fetchList() {
     tableLoading.value = true
     _list = (await detail({ id: props.detailRow.id })) || []
     _list.forEach((row) => {
-      row.project = { id: row.projectId, name: row.projectName, serialNumber: row.serialNumber }
+      row.project = { id: row.projectId, name: row.projectName, serialNumber: row.serialNumber, shortName: row.shortName }
       row.proportion = toFixed((row.proportion *= 100), 2)
     })
   } catch (error) {

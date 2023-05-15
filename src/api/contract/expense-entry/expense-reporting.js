@@ -10,6 +10,16 @@ export function get(params) {
   })
 }
 
+// 费用填报汇总金额
+export function summary(params) {
+  return request({
+    module: 'contract',
+    url: 'contract/expense-reimburse/getSum',
+    method: 'get',
+    params
+  })
+}
+
 // 获取费用类别
 export function getExpenseType(params) {
   return request({

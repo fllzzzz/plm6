@@ -9,6 +9,7 @@
           size="small"
           value-format="x"
           :shortcuts="PICKER_OPTIONS_SHORTCUTS"
+          :default-time="defaultTime"
           unlink-panels
           start-placeholder="开始日期"
           end-placeholder="结束日期"
@@ -24,6 +25,8 @@
   </div>
 </template>
 <script setup>
+import { ref } from 'vue'
+
 import { PICKER_OPTIONS_SHORTCUTS } from '@/settings/config'
 
 import { regHeader } from '@compos/use-crud'
@@ -35,6 +38,7 @@ const defaultQuery = {
   endDate: undefined,
   ids: [] // 摊销分类的ids
 }
+const defaultTime = ref([new Date(2000, 1, 1, 0, 0, 0), new Date(2000, 2, 1, 23, 59, 59)])
 
 const { crud, query } = regHeader(defaultQuery)
 

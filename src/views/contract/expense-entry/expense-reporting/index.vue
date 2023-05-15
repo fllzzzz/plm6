@@ -1,8 +1,6 @@
 <template>
   <div class="app-container">
-    <div class="head-container">
-      <mHeader />
-    </div>
+    <mHeader :cascader-tree="cascaderTree" />
     <common-table
       ref="tableRef"
       v-loading="crud.loading"
@@ -12,7 +10,7 @@
       :data-format="columnsDataFormat"
       @selection-change="crud.selectionChangeHandler"
     >
-      <el-table-column type="selection" width="55" align="center" :selectable="row => !row.isAmortization" />
+      <el-table-column type="selection" width="55" align="center" :selectable="(row) => !row.isAmortization" />
       <el-table-column prop="index" label="序号" align="center" width="60" type="index" />
       <el-table-column
         v-if="columns.visible('reimburseDate')"
@@ -78,6 +76,7 @@
         prop="project"
         :show-overflow-tooltip="true"
         label="项目"
+        min-width="160"
       />
       <el-table-column
         v-if="columns.visible('writtenByName')"
@@ -138,6 +137,7 @@ const optShow = {
 }
 const tableRef = ref()
 const expenseList = ref([])
+const cascaderTree = ref([])
 
 const columnsDataFormat = ref([
   ['reimburseAmount', 'to-thousand'],
@@ -145,6 +145,9 @@ const columnsDataFormat = ref([
   ['project', 'parse-project'],
   ['costAscriptionEnum', ['parse-enum', costAscriptionEnum]]
 ])
+
+provide('expenseList', expenseList)
+provide('cascaderTree', cascaderTree)
 
 const { crud, columns } = useCRUD(
   {
@@ -158,20 +161,40 @@ const { crud, columns } = useCRUD(
   tableRef
 )
 
-initExpenseType()
+const { maxHeight } = useMaxHeight({
+  paginate: true
+})
 
-provide('expenseList', expenseList)
+initExpenseType()
 
 async function initExpenseType() {
   try {
     const { content = [] } = await getExpenseType()
     expenseList.value = content
+    const enumKV = costAscriptionEnum.V
+    expenseList.value.forEach(row => {
+      const _row = {
+        ...row,
+        label: row.name
+      }
+      if (enumKV[row.costAscriptionEnum]?.links) {
+        enumKV[row.costAscriptionEnum].links.push(_row)
+      } else {
+        enumKV[row.costAscriptionEnum].links = [_row]
+      }
+    })
+    const tree = []
+    for (const key in enumKV) {
+      const value = enumKV[key]
+      tree.push({
+        id: value.V,
+        label: value.L,
+        links: value.links
+      })
+    }
+    cascaderTree.value = tree
   } catch (e) {
     console.log('获取费用类别失败', e)
   }
 }
-const { maxHeight } = useMaxHeight({
-  paginate: true
-})
-
 </script>

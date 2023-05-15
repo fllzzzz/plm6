@@ -34,10 +34,9 @@
             ref="materialTreeRef"
             v-loading="materialLoading"
             :style="{ maxHeight: maxHeight + 'px' }"
-            :data="materialEdit ? materialTree : amortizationKV[amortizationTypeEnum.MATERIAL.V]?.children || []"
+            :data="materialEdit ? materialTree : amortizationClassEnumKV[amortizationClassEnum.MATERIAL.V]?.children || []"
             :props="defaultProps"
             :show-checkbox="materialEdit"
-            :expand-on-click-node="false"
             node-key="id"
             highlight-current
             default-expand-all
@@ -51,16 +50,16 @@
                 <svg-icon v-loading="otherEditLoading" class="icon" icon-class="comp-save" style="fill: #ffac00" @click="saveOther" />
                 <svg-icon v-loading="otherEditLoading" class="icon" icon-class="comp-quit" @click="otherEdit = false" />
               </template>
-              <el-edit v-else class="icon" @click="otherEdit = true" />
+              <el-edit v-else class="icon" @click="edit(false)" />
             </div>
           </template>
           <el-tree
             ref="otherTreeRef"
             v-loading="otherLoading"
             :style="{ maxHeight: maxHeight + 'px' }"
-            :data="otherEdit ? otherTree : amortizationKV[amortizationTypeEnum.OTHER_EXPENSES.V]?.children || []"
+            :data="otherEdit ? otherTree : amortizationClassEnumKV[amortizationClassEnum.OTHER_EXPENSES.V]?.children || []"
             :props="defaultProps"
-            :expand-on-click-node="false"
+            :show-checkbox="otherEdit"
             node-key="id"
             highlight-current
             default-expand-all
@@ -76,7 +75,7 @@ import { amortizationClassTree } from '@/api/contract/expense-entry/amortization
 import { saveAmortizationClass } from '@/api/contract/expense-entry/amortization-manage'
 import { ref, defineEmits, defineProps, inject } from 'vue'
 
-import { amortizationTypeEnum } from '@enum-ms/contract'
+import { amortizationClassEnum } from '@enum-ms/contract'
 import { getChildIds } from '@/utils/data-type/tree'
 
 import useMaxHeight from '@compos/use-max-height'
@@ -89,7 +88,7 @@ const props = defineProps({
   }
 })
 
-const amortizationKV = inject('amortizationKV')
+const amortizationClassEnumKV = inject('amortizationClassEnumKV')
 
 const emit = defineEmits(['success', 'update:modelValue'])
 const { visible, handleClose } = useVisible({ emit, props })
@@ -124,6 +123,9 @@ function edit(val) {
   if (val) {
     materialEdit.value = true
     getMaterialTree()
+  } else {
+    otherEdit.value = true
+    getOtherTree()
   }
 }
 
@@ -131,13 +133,27 @@ function edit(val) {
 async function getMaterialTree() {
   try {
     materialLoading.value = true
-    const data = await amortizationClassTree({ amortizationClassEnum: amortizationTypeEnum.MATERIAL.V })
+    const data = await amortizationClassTree({ expenseClassEnum: amortizationClassEnum.MATERIAL.V })
     materialTree.value = data?.[0]?.children || []
-    materialTreeRef.value.setCheckedKeys(getChildIds(amortizationKV.value[amortizationTypeEnum.MATERIAL.V]?.children))
+    materialTreeRef.value.setCheckedKeys(getChildIds(amortizationClassEnumKV.value[amortizationClassEnum.MATERIAL.V]?.children))
   } catch (error) {
     console.log('获取材料树失败', error)
   } finally {
     materialLoading.value = false
+  }
+}
+
+// 获取其他费用分类的全部数据
+async function getOtherTree() {
+  try {
+    otherLoading.value = true
+    const data = await amortizationClassTree({ expenseClassEnum: amortizationClassEnum.OTHER_EXPENSES.V })
+    otherTree.value = data?.[0]?.children || []
+    otherTreeRef.value.setCheckedKeys(getChildIds(amortizationClassEnumKV.value[amortizationClassEnum.OTHER_EXPENSES.V]?.children))
+  } catch (error) {
+    console.log('获取其他费用树失败', error)
+  } finally {
+    otherLoading.value = false
   }
 }
 
@@ -147,7 +163,7 @@ async function saveMaterial() {
     materialEditLoading.value = true
     const ids = materialTreeRef.value.getCheckedNodes(false, true).map((row) => row.id)
     await saveAmortizationClass({
-      amortizationClassEnum: amortizationTypeEnum.MATERIAL.V,
+      expenseClassEnum: amortizationClassEnum.MATERIAL.V,
       ids
     })
     emit('success')
@@ -166,7 +182,7 @@ async function saveOther() {
     otherEditLoading.value = true
     const ids = otherTreeRef.value.getCheckedNodes(false, true).map((row) => row.id)
     await saveAmortizationClass({
-      amortizationClassEnum: amortizationTypeEnum.OTHER_EXPENSES.V,
+      expenseClassEnum: amortizationClassEnum.OTHER_EXPENSES.V,
       ids
     })
     emit('success')
@@ -211,6 +227,9 @@ function filterTree(tree = [], ids) {
   }
   .el-tree {
     overflow-y: auto;
+    .el-tree-node__content > label.el-checkbox {
+      height: 26px;
+    }
   }
   &.amortization-tree {
     margin-right: 20px;

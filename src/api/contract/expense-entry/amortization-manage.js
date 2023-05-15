@@ -29,7 +29,7 @@ export function detail(params) {
  * 摊销分类树
  * @export
  * @param {boolean} enable 是否开启：true开启，false关闭
- * @param {number} amortizationClassEnum 摊销枚举类型
+ * @param {number} expenseClassEnum 摊销枚举类型
  * @returns
  */
 export function amortizationClassTree(params) {

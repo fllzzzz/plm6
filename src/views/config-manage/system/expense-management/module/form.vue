@@ -43,7 +43,7 @@
                   clearable
                   class="filter-item"
                   placeholder="费用类型"
-                  style="width: 250px"
+                  style="width: 270px"
                   :disabled-val="form.dictionaryIdList"
                 />
                 <common-button

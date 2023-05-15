@@ -8,7 +8,7 @@
         <el-tree
           ref="amortizationTreeRef"
           v-loading="crud.loading"
-          :style="{ maxHeight: maxHeight - 20 + 'px' }"
+          :style="{ maxHeight: maxHeight + 20 + 'px' }"
           :data="amortizationTree"
           :props="defaultProps"
           :expand-on-click-node="false"
@@ -19,7 +19,7 @@
         />
       </el-card>
       <div style="flex: 1; min-width: 1px">
-        <mHeader :row-detail="treeRow">
+        <mHeader>
           <template #viewLeft>
             <el-tag v-if="treeRow?.levelName" size="medium" effect="plain" type="warning" class="filter-item">
               {{ treeRow?.levelName }}
@@ -92,6 +92,15 @@
             label="产量（吨）"
             min-width="120"
           />
+          <el-table-column
+            v-if="columns.visible('amortizationType')"
+            align="center"
+            key="amortizationType"
+            prop="amortizationType"
+            :show-overflow-tooltip="true"
+            label="摊销类型"
+            min-width="100"
+          />
           <el-table-column v-if="checkPermission(permission.detail)" align="center" label="操作" width="80px">
             <template #default="{ row }">
               <common-button size="mini" type="info" icon="el-icon-view" @click="showDetail(row)" />
@@ -111,17 +120,17 @@
 
 <script setup>
 import crudApi, { amortizationClassTree, getManualAmortizationCount } from '@/api/contract/expense-entry/amortization-manage'
-import { ref, nextTick, provide } from 'vue'
+import { ref, provide } from 'vue'
 
 import { amortizationManagePM as permission } from '@/page-permission/contract'
 import { setEmptyArr2Undefined, setLevelName } from '@/utils/data-type/tree'
 import moment from 'moment'
 import checkPermission from '@/utils/system/check-permission'
+import { amortizationTypeEnum } from '@enum-ms/contract'
 
 import pagination from '@crud/Pagination'
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
-import udOperation from '@crud/UD.operation'
 import mHeader from './module/header.vue'
 import mDetail from './module/detail.vue'
 import amortizationSetting from './module/amortization-setting'
@@ -133,6 +142,7 @@ const tableRef = ref()
 const amortizationTreeRef = ref()
 const amortizationTree = ref([])
 const amortizationKV = ref({})
+const amortizationClassEnumKV = ref({})
 const treeRow = ref({})
 const detailRow = ref({})
 const detailVisible = ref(false)
@@ -143,22 +153,23 @@ const manualAmortizationCount = ref(0)
 
 const defaultProps = ref({
   children: 'children',
-  label: 'name',
+  label: 'name'
 })
 
 const columnsDataFormat = ref([
   ['avgUnitPrice', 'to-thousand'],
   ['productMete', 'to-thousand'],
+  ['amortizationType', ['parse-enum', amortizationTypeEnum]]
 ])
 
-provide('amortizationKV', amortizationKV)
+provide('amortizationClassEnumKV', amortizationClassEnumKV)
 const { rawMatClsKV } = useMatClsList()
 
 const optShow = {
   add: false,
   edit: false,
   del: false,
-  download: false,
+  download: false
 }
 
 const { crud, CRUD, columns } = useCRUD(
@@ -168,13 +179,13 @@ const { crud, CRUD, columns } = useCRUD(
     optShow: { ...optShow },
     permission: { ...permission },
     crudApi: { ...crudApi },
-    queryOnPresenterCreated: false,
+    queryOnPresenterCreated: false
   },
   tableRef
 )
 
 const { maxHeight } = useMaxHeight({
-  paginate: true,
+  paginate: true
 })
 
 getAmortizationTree()
@@ -182,13 +193,12 @@ getAmortizationTree()
 async function getAmortizationTree() {
   try {
     amortizationKV.value = {}
+    amortizationClassEnumKV.value = {}
     amortizationTree.value = (await amortizationClassTree({ enable: true })) || []
     setLevelName(amortizationTree.value)
     setAmortizationKV(amortizationTree.value)
     setEmptyArr2Undefined(amortizationTree.value)
-    nextTick(() => {
-      crud.toQuery()
-    })
+    nodeClick(treeRow.value)
   } catch (e) {
     console.log('获取摊销种类失败', e)
   }
@@ -198,6 +208,9 @@ async function getAmortizationTree() {
 function setAmortizationKV(tree) {
   tree?.forEach((row) => {
     amortizationKV.value[row.id] = row
+    if (row.bizId === 0) {
+      amortizationClassEnumKV.value[row.amortizationClassEnum] = row
+    }
     setAmortizationKV(row.children)
   })
 }

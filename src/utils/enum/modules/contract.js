@@ -361,24 +361,42 @@ constantize(mainAuxiliaryTypeEnum)
 
 // 时间类型
 const dateQueryTypeEnum = {
-  YEAR: { L: '年', K: ' YEAR', V: 1 },
-  MONTH: { L: '月', K: ' MONTH', V: 2 },
-  DAY: { L: '日', K: ' DAY', V: 3 }
+  YEAR: { L: '年', K: ' YEAR', V: '%Y' },
+  MONTH: { L: '月', K: ' MONTH', V: '%Y-%m' },
+  DAY: { L: '日', K: ' DAY', V: '%Y-%m-%d' }
 }
 constantize(dateQueryTypeEnum)
 
 // 摊销种类
+const amortizationClassEnum = {
+  WATER: { L: '水费', K: ' WATER', V: 1 << 0 },
+  INDUSTRIAL_ELECTRICITY: { L: '电费（工业）', K: ' INDUSTRIAL_ELECTRICITY', V: 12 << 1 },
+  CIVIL_ELECTRICITY: { L: '电费（民用）', K: ' CIVIL_ELECTRICITY', V: 1 << 2 },
+  WORKSHOP_DEPRECIATION: { L: '厂房折旧', K: ' WORKSHOP_DEPRECIATION', V: 1 << 3 },
+  EQUIPMENT_DEPRECIATION: { L: '设备折旧', K: ' EQUIPMENT_DEPRECIATION', V: 1 << 4 },
+  GAS: { L: '气体', K: ' GAS', V: 1 << 5 },
+  MATERIAL: { L: '材料', K: ' MATERIAL', V: 1 << 6 },
+  OTHER_EXPENSES: { L: '其它费用', K: ' OTHER_EXPENSES', V: 1 << 7 },
+  MAIN_MATERIAL: { L: '主材费', K: ' MAIN_MATERIAL', V: 1 << 8 },
+  LABOR: { L: '人工费', K: ' LABOR', V: 1 << 9 },
+  AUXILIARY_MATERIAL: { L: '辅材费', K: ' AUXILIARY_MATERIAL', V: 1 << 10 },
+  OTHER_MATERIAL: { L: '其它材料费', K: ' OTHER_MATERIAL', V: 1 << 11 }
+}
+constantize(amortizationClassEnum)
+
+// 摊销类型
 const amortizationTypeEnum = {
-  WATER: { L: '水费', K: ' WATER', V: 1 },
-  INDUSTRIAL_ELECTRICITY: { L: '电费（工业）', K: ' INDUSTRIAL_ELECTRICITY', V: 2 },
-  CIVIL_ELECTRICITY: { L: '电费（民用）', K: ' CIVIL_ELECTRICITY', V: 3 },
-  WORKSHOP_DEPRECIATION: { L: '厂房折旧', K: ' WORKSHOP_DEPRECIATION', V: 4 },
-  EQUIPMENT_DEPRECIATION: { L: '设备折旧', K: ' EQUIPMENT_DEPRECIATION', V: 5 },
-  GAS: { L: '气体', K: ' GAS', V: 6 },
-  MATERIAL: { L: '材料', K: ' MATERIAL', V: 7 },
-  OTHER_EXPENSES: { L: '其它费用', K: ' OTHER_EXPENSES', V: 3 }
+  MANUAL_AMORTIZATION: { L: '手动摊销', K: ' MANUAL_AMORTIZATION', V: 1 },
+  AUTOMATIC_AMORTIZATION: { L: '自动摊销', K: ' AUTOMATIC_AMORTIZATION', V: 2 }
 }
 constantize(amortizationTypeEnum)
+
+// 项目报销类型
+const projectReimbursementTypeEnum = {
+  NO_PROJECT: { L: '无项目报销', K: ' NO_PROJECT', V: 0 },
+  PROJECT: { L: '项目报销', K: ' PROJECT', V: 1 }
+}
+constantize(projectReimbursementTypeEnum)
 
 export {
   projectStatusEnum, // 项目状态
@@ -424,7 +442,9 @@ export {
   managementSalaryTypeEnum,
   mainAuxiliaryTypeEnum,
   dateQueryTypeEnum, // 时间类型
-  amortizationTypeEnum // 摊销种类
+  amortizationClassEnum, // 摊销种类
+  amortizationTypeEnum, // 摊销类型
+  projectReimbursementTypeEnum // 项目报销类型
 }
 
 export default {
@@ -471,5 +491,7 @@ export default {
   managementSalaryTypeEnum, // 不同人员类型工资
   mainAuxiliaryTypeEnum,
   dateQueryTypeEnum, // 时间类型
-  amortizationTypeEnum // 摊销种类
+  amortizationClassEnum, // 摊销种类
+  amortizationTypeEnum, // 摊销类型
+  projectReimbursementTypeEnum // 项目报销类型
 }

@@ -1,62 +1,29 @@
 <template>
   <div class="head-container">
     <div v-show="crud.searchToggle">
-      <!-- <common-radio-button
-        v-model="query.timeType"
-        :options="timeTypeEnum.ENUM"
+      <common-radio-button
+        v-model="query.isProject"
+        :options="projectReimbursementTypeEnum.ENUM"
         class="filter-item"
-        :showOptionAll="false"
         type="enum"
-        @change="handleChange"
-      />
-      <el-date-picker
-        v-if="query.timeType === timeTypeEnum.ALL_YEAR.V"
-        v-model="query.year"
-        type="year"
-        size="small"
-        class="date-item filter-item"
-        style="width: 120px !important"
-        placeholder="选择年"
-        format="YYYY"
-        value-format="YYYY"
-        :disabled-date="disabledDate"
+        showOptionAll
         @change="crud.toQuery"
       />
-      <el-date-picker
-        v-if="query.timeType === timeTypeEnum.CURRENT_MONTH.V"
-        v-model="query.month"
-        type="month"
-        size="small"
-        class="date-item filter-item"
-        style="width: 120px !important"
-        placeholder="选择月"
-        format="MM"
-        value-format="MM"
-        :disabled-date="disabledDate"
-        @change="crud.toQuery"
-      /> -->
-      <common-select
-        v-model="query.expenseTypeId"
-        :options="expenseList"
-        type="other"
-        :data-structure="{ key: 'id', label: 'name', value: 'id' }"
-        class="filter-item"
+      <time-range-select :query="query" clearable class="filter-item" style="width: 270px" @change="crud.toQuery" />
+      <el-cascader
+        :options="cascaderTree"
+        v-model="cascaderValue"
+        :props="cascaderProps"
+        separator=" > "
+        show-all-levels
         clearable
-        style="width: 200px"
-        placeholder="费用类别"
-        @change="fetchChange"
-      />
-      <common-select
-        v-model="query.expenseSubjectId"
-        :options="subjectList"
-        type="other"
-        :data-structure="{ key: 'id', label: 'label', value: 'id' }"
         size="small"
-        clearable
         class="filter-item"
-        placeholder="报销科目"
-        @change="crud.toQuery"
+        style="width: 260px"
+        placeholder="可选费用归属/费用类型/费用科目"
+        @change="cascaderChange"
       />
+      <project-cascader v-model="query.projectId" clearable style="width: 260px" class="filter-item" @change="crud.toQuery" />
       <el-input
         v-model.trim="query.reimbursementPerson"
         clearable
@@ -96,42 +63,60 @@
   </div>
 </template>
 <script setup>
+import { summary } from '@/api/contract/expense-entry/expense-reporting'
 import { ref, inject } from 'vue'
 
-import { dateQueryTypeEnum } from '@enum-ms/contract'
+import { projectReimbursementTypeEnum } from '@enum-ms/contract'
+import { isNotBlank } from '@/utils/data-type'
 
 import { regHeader } from '@compos/use-crud'
 import rrOperation from '@crud/RR.operation'
 import crudOperation from '@crud/CRUD.operation'
+import projectCascader from '@comp-base/project-cascader'
+import timeRangeSelect from '@comp-common/time-range-select/index'
 
-const subjectList = ref([])
 const totalAmount = ref(0)
-const expenseList = inject('expenseList')
+const cascaderValue = ref([])
+const cascaderProps = ref({
+  value: 'id',
+  label: 'label',
+  children: 'links',
+  checkStrictly: true
+})
+
+const cascaderTree = inject('cascaderTree')
 
 const defaultQuery = {
   expenseTypeId: undefined,
   expenseSubjectId: undefined,
-  dateQueryTypeEnum: dateQueryTypeEnum.YEAR.V,
-  date: undefined,
-  month: undefined,
+  dateQueryTypeEnum: undefined,
+  startDate: undefined,
+  endDate: undefined,
   payee: undefined,
+  projectId: undefined,
+  isProject: undefined,
+  costAttribution: undefined,
   reimbursementPerson: undefined
 }
 
 const { crud, query, CRUD } = regHeader(defaultQuery)
-function fetchChange(val) {
-  subjectList.value = expenseList.value.find((v) => v.id === val)?.links
+
+function cascaderChange(val = []) {
+  query.costAttribution = isNotBlank(val?.[0]) ? val[0] : undefined
+  query.expenseTypeId = isNotBlank(val?.[1]) ? val[1] : undefined
+  query.expenseSubjectIds = isNotBlank(val?.[2]) ? val[2] : undefined
   crud.toQuery()
 }
 
+async function getSummary() {
+  try {
+    totalAmount.value = (await summary(query)) || 0
+  } catch (e) {
+    console.log('获取费用填报汇总金额失败', e)
+  }
+}
+
 CRUD.HOOK.handleRefresh = (crud, { data }) => {
-  totalAmount.value = data.content.reduce((prev, curr) => {
-    const value = Number(curr.reimburseAmount)
-    if (!isNaN(value)) {
-      return prev + value
-    } else {
-      return prev
-    }
-  }, 0)
+  getSummary()
 }
 </script>
