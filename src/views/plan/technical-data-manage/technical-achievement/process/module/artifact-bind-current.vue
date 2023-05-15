@@ -6,14 +6,14 @@
     top="10vh"
     width="600px"
     :before-close="handleClose"
-    title="本次绑定列表"
+    :title=" `本次绑定列表：${currentRow.fileName}`"
     :wrapper-closable="false"
     size="90%"
     custom-class="current-form"
   >
   <template #titleAfter>
-    <el-tag>{{planProcessTypeEnum.VL[currentRow.processType]}}</el-tag>
-    <el-tag v-if="currentRow.boolSingleProject">所属项目:{{currentRow.project?projectNameFormatter(currentRow.project):'-'}}</el-tag>
+    <el-tag>文件类型:{{planProcessTypeEnum.VL[currentRow.processType]}}</el-tag>
+    <el-tag v-if="currentRow.boolSingleProject">所属项目:{{currentRow.project?projectNameFormatter(currentRow.projectList[0]):'-'}}</el-tag>
   </template>
   <template #titleRight>
     <common-button size="small" type="primary" v-loading="loading" @click.stop="onSubmit" :disabled="list.length===0">提交（共{{list.length}}条）</common-button>
@@ -22,8 +22,10 @@
       <el-form ref="formRef" size="small" label-width="150px">
         <div style="display:flex;">
           <div>
-            <!-- <project-cascader v-model="query.projectId" clearable class="filter-item" style="width: 270px;margin-bottom:10px;" placeholder="项目搜索" /> -->
             <div>
+              <project-cascader v-model="query.projectId" clearable class="filter-item" style="width: 270px;" placeholder="项目搜索" v-if="!currentRow.boolSingleProject"/>
+            </div>
+            <div style="margin:10px 0;">
               <monomer-select
                 ref="monomerSelectRef"
                 v-model="query.monomerId"
@@ -188,6 +190,7 @@ watch(
       for (const i in query.value) {
         query.value[i] = undefined
       }
+      query.value.monomerId = props.projectId
       query.value.monomerId = props.monomerId
     }
   },
@@ -221,7 +224,7 @@ function fetchList() {
     }
   }
   for (let i = 0; i < searchArr.length; i++) {
-    if (searchArr[i] === 'monomerId' || searchArr[i] === 'structureClassId') {
+    if (searchArr[i] === 'monomerId' || searchArr[i] === 'structureClassId' || searchArr[i] === 'projectId') {
       filterVal = filterVal.filter(v => v[searchArr[i]] === query.value[searchArr[i]])
     } else {
       filterVal = filterVal.filter(v => v[searchArr[i]].indexOf(query.value[searchArr[i]]) > -1)
