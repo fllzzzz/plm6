@@ -12,7 +12,7 @@
     </el-table-column>
     <el-table-column :show-overflow-tooltip="true" prop="pricingManner" :label="`核算单位`" align="center">
       <template v-slot="scope">
-        {{ enclosureSettlementTypeEnum.V[scope.row.pricingManner].UNIT || '-' }}
+        {{ enclosureSettlementTypeEnum.V[scope.row.pricingManner]?.UNIT || '-' }}
       </template>
     </el-table-column>
     <!-- <el-table-column :show-overflow-tooltip="true" prop="surfaceArea" :label="`单面积\n(mm²)`" align="center">

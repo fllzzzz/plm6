@@ -18,7 +18,7 @@
     </el-table-column>
     <el-table-column :show-overflow-tooltip="true" prop="pricingManner" label="核算单位" align="center">
       <template v-slot="scope">
-        {{ pricingMannerEnum.V[scope.row.pricingManner].UNIT || '-' }}
+        {{ pricingMannerEnum.V[scope.row.pricingManner]?.UNIT || '-' }}
       </template>
     </el-table-column>
     <el-table-column :show-overflow-tooltip="true" prop="totalLength" :label="`总长\n(m)`" align="center">
