@@ -368,9 +368,9 @@ const dateQueryTypeEnum = {
 constantize(dateQueryTypeEnum)
 
 // 摊销种类
-const amortizationClassEnum = {
+const expenseClassEnum = {
   WATER: { L: '水费', K: ' WATER', V: 1 << 0 },
-  INDUSTRIAL_ELECTRICITY: { L: '电费（工业）', K: ' INDUSTRIAL_ELECTRICITY', V: 12 << 1 },
+  INDUSTRIAL_ELECTRICITY: { L: '电费（工业）', K: ' INDUSTRIAL_ELECTRICITY', V: 1 << 1 },
   CIVIL_ELECTRICITY: { L: '电费（民用）', K: ' CIVIL_ELECTRICITY', V: 1 << 2 },
   WORKSHOP_DEPRECIATION: { L: '厂房折旧', K: ' WORKSHOP_DEPRECIATION', V: 1 << 3 },
   EQUIPMENT_DEPRECIATION: { L: '设备折旧', K: ' EQUIPMENT_DEPRECIATION', V: 1 << 4 },
@@ -382,7 +382,7 @@ const amortizationClassEnum = {
   AUXILIARY_MATERIAL: { L: '辅材费', K: ' AUXILIARY_MATERIAL', V: 1 << 10 },
   OTHER_MATERIAL: { L: '其它材料费', K: ' OTHER_MATERIAL', V: 1 << 11 }
 }
-constantize(amortizationClassEnum)
+constantize(expenseClassEnum)
 
 // 摊销类型
 const amortizationTypeEnum = {
@@ -442,7 +442,7 @@ export {
   managementSalaryTypeEnum,
   mainAuxiliaryTypeEnum,
   dateQueryTypeEnum, // 时间类型
-  amortizationClassEnum, // 摊销种类
+  expenseClassEnum, // 摊销种类
   amortizationTypeEnum, // 摊销类型
   projectReimbursementTypeEnum // 项目报销类型
 }
@@ -491,7 +491,7 @@ export default {
   managementSalaryTypeEnum, // 不同人员类型工资
   mainAuxiliaryTypeEnum,
   dateQueryTypeEnum, // 时间类型
-  amortizationClassEnum, // 摊销种类
+  expenseClassEnum, // 摊销种类
   amortizationTypeEnum, // 摊销类型
   projectReimbursementTypeEnum // 项目报销类型
 }

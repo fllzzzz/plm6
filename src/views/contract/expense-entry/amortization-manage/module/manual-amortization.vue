@@ -42,6 +42,7 @@
         <el-table-column align="center" label="操作" width="80px">
           <template #default="{ row }">
             <el-popconfirm
+              v-if="row.isParent"
               confirm-button-text="确定"
               cancel-button-text="取消"
               icon="el-icon-info"
@@ -49,7 +50,7 @@
               @confirm="submit(false, row)"
             >
               <template #reference>
-                <common-button v-if="row.isParent" type="primary" size="mini">摊销</common-button>
+                <common-button type="primary" size="mini">摊销</common-button>
               </template>
             </el-popconfirm>
           </template>
@@ -65,6 +66,7 @@ import { ref, defineEmits, defineProps, watch } from 'vue'
 
 import moment from 'moment'
 import { debounce } from '@/utils'
+import { expenseClassEnum } from '@enum-ms/contract'
 
 import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'
@@ -114,7 +116,7 @@ const submit = debounce(
       if (flag) {
         await amortizationAll()
       } else {
-        await singleAmortize({ amortizationClassEnum: row.amortizationClassEnum, ids: row.ids })
+        await singleAmortize({ expenseClassEnum: row.expenseClassEnum, ids: row.ids })
       }
       ElMessage.success('摊销成功')
       getList()
@@ -145,9 +147,18 @@ async function getList() {
         row.amortizationClassName = names.at(-1)
         names.splice(names.length - 1)
         row.fullPathName = names.join(' > ')
+      } else if (row.bizId === 0) {
+        const _name = expenseClassEnum.VL[row.expenseClassEnum]
+        if (_name !== row.amortizationClassName) {
+          row.fullPathName = _name
+        }
       }
-      row?.children?.forEach((v, i) => {
+      row.children?.forEach((v, i) => {
         v.index = `${row.index}-${i + 1}`
+        if (row.fullPathName) {
+          v.amortizationClassName = row.amortizationClassName
+          v.fullPathName = row.fullPathName
+        }
       })
       return row
     })

@@ -34,7 +34,7 @@
             ref="materialTreeRef"
             v-loading="materialLoading"
             :style="{ maxHeight: maxHeight + 'px' }"
-            :data="materialEdit ? materialTree : amortizationClassEnumKV[amortizationClassEnum.MATERIAL.V]?.children || []"
+            :data="materialEdit ? materialTree : expenseClassEnumKV[expenseClassEnum.MATERIAL.V]?.children || []"
             :props="defaultProps"
             :show-checkbox="materialEdit"
             node-key="id"
@@ -57,7 +57,7 @@
             ref="otherTreeRef"
             v-loading="otherLoading"
             :style="{ maxHeight: maxHeight + 'px' }"
-            :data="otherEdit ? otherTree : amortizationClassEnumKV[amortizationClassEnum.OTHER_EXPENSES.V]?.children || []"
+            :data="otherEdit ? otherTree : expenseClassEnumKV[expenseClassEnum.OTHER_EXPENSES.V]?.children || []"
             :props="defaultProps"
             :show-checkbox="otherEdit"
             node-key="id"
@@ -75,7 +75,7 @@ import { amortizationClassTree } from '@/api/contract/expense-entry/amortization
 import { saveAmortizationClass } from '@/api/contract/expense-entry/amortization-manage'
 import { ref, defineEmits, defineProps, inject } from 'vue'
 
-import { amortizationClassEnum } from '@enum-ms/contract'
+import { expenseClassEnum } from '@enum-ms/contract'
 import { getChildIds } from '@/utils/data-type/tree'
 
 import useMaxHeight from '@compos/use-max-height'
@@ -88,7 +88,7 @@ const props = defineProps({
   }
 })
 
-const amortizationClassEnumKV = inject('amortizationClassEnumKV')
+const expenseClassEnumKV = inject('expenseClassEnumKV')
 
 const emit = defineEmits(['success', 'update:modelValue'])
 const { visible, handleClose } = useVisible({ emit, props })
@@ -133,9 +133,9 @@ function edit(val) {
 async function getMaterialTree() {
   try {
     materialLoading.value = true
-    const data = await amortizationClassTree({ expenseClassEnum: amortizationClassEnum.MATERIAL.V })
+    const data = await amortizationClassTree({ expenseClassEnum: expenseClassEnum.MATERIAL.V })
     materialTree.value = data?.[0]?.children || []
-    materialTreeRef.value.setCheckedKeys(getChildIds(amortizationClassEnumKV.value[amortizationClassEnum.MATERIAL.V]?.children))
+    materialTreeRef.value.setCheckedKeys(getChildIds(expenseClassEnumKV.value[expenseClassEnum.MATERIAL.V]?.children))
   } catch (error) {
     console.log('获取材料树失败', error)
   } finally {
@@ -147,9 +147,9 @@ async function getMaterialTree() {
 async function getOtherTree() {
   try {
     otherLoading.value = true
-    const data = await amortizationClassTree({ expenseClassEnum: amortizationClassEnum.OTHER_EXPENSES.V })
+    const data = await amortizationClassTree({ expenseClassEnum: expenseClassEnum.OTHER_EXPENSES.V })
     otherTree.value = data?.[0]?.children || []
-    otherTreeRef.value.setCheckedKeys(getChildIds(amortizationClassEnumKV.value[amortizationClassEnum.OTHER_EXPENSES.V]?.children))
+    otherTreeRef.value.setCheckedKeys(getChildIds(expenseClassEnumKV.value[expenseClassEnum.OTHER_EXPENSES.V]?.children))
   } catch (error) {
     console.log('获取其他费用树失败', error)
   } finally {
@@ -163,7 +163,7 @@ async function saveMaterial() {
     materialEditLoading.value = true
     const ids = materialTreeRef.value.getCheckedNodes(false, true).map((row) => row.id)
     await saveAmortizationClass({
-      expenseClassEnum: amortizationClassEnum.MATERIAL.V,
+      expenseClassEnum: expenseClassEnum.MATERIAL.V,
       ids
     })
     emit('success')
@@ -182,7 +182,7 @@ async function saveOther() {
     otherEditLoading.value = true
     const ids = otherTreeRef.value.getCheckedNodes(false, true).map((row) => row.id)
     await saveAmortizationClass({
-      expenseClassEnum: amortizationClassEnum.OTHER_EXPENSES.V,
+      expenseClassEnum: expenseClassEnum.OTHER_EXPENSES.V,
       ids
     })
     emit('success')

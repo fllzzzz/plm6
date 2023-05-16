@@ -65,7 +65,7 @@
             key="name"
             prop="name"
             :show-overflow-tooltip="true"
-            label="摊销种类"
+            label="摊销类型"
             min-width="180"
           >
             <template #default="{ row }">
@@ -126,7 +126,7 @@ import { amortizationManagePM as permission } from '@/page-permission/contract'
 import { setEmptyArr2Undefined, setLevelName } from '@/utils/data-type/tree'
 import moment from 'moment'
 import checkPermission from '@/utils/system/check-permission'
-import { amortizationTypeEnum } from '@enum-ms/contract'
+import { amortizationTypeEnum, expenseClassEnum } from '@enum-ms/contract'
 
 import pagination from '@crud/Pagination'
 import useCRUD from '@compos/use-crud'
@@ -142,7 +142,7 @@ const tableRef = ref()
 const amortizationTreeRef = ref()
 const amortizationTree = ref([])
 const amortizationKV = ref({})
-const amortizationClassEnumKV = ref({})
+const expenseClassEnumKV = ref({})
 const treeRow = ref({})
 const detailRow = ref({})
 const detailVisible = ref(false)
@@ -162,7 +162,7 @@ const columnsDataFormat = ref([
   ['amortizationType', ['parse-enum', amortizationTypeEnum]]
 ])
 
-provide('amortizationClassEnumKV', amortizationClassEnumKV)
+provide('expenseClassEnumKV', expenseClassEnumKV)
 const { rawMatClsKV } = useMatClsList()
 
 const optShow = {
@@ -193,7 +193,7 @@ getAmortizationTree()
 async function getAmortizationTree() {
   try {
     amortizationKV.value = {}
-    amortizationClassEnumKV.value = {}
+    expenseClassEnumKV.value = {}
     amortizationTree.value = (await amortizationClassTree({ enable: true })) || []
     setLevelName(amortizationTree.value)
     setAmortizationKV(amortizationTree.value)
@@ -209,7 +209,7 @@ function setAmortizationKV(tree) {
   tree?.forEach((row) => {
     amortizationKV.value[row.id] = row
     if (row.bizId === 0) {
-      amortizationClassEnumKV.value[row.amortizationClassEnum] = row
+      expenseClassEnumKV.value[row.expenseClassEnum] = row
     }
     setAmortizationKV(row.children)
   })
@@ -266,6 +266,11 @@ CRUD.HOOK.handleRefresh = async (crud, { data }) => {
       row.name = names.at(-1)
       names.splice(names.length - 1)
       row.fullPathName = names.join(' > ')
+    } else if (row.bizId === 0) {
+      const _name = expenseClassEnum.VL[row.expenseClassEnum]
+      if (_name !== row.name) {
+        row.fullPathName = _name
+      }
     }
   })
 }

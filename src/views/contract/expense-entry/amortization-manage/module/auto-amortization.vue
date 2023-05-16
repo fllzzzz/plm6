@@ -20,15 +20,15 @@
             <span :class="{ parentElement: row.isParent }">{{ row.date }}</span>
           </template>
         </el-table-column>
-        <el-table-column key="amortizationClassName" prop="amortizationClassName" label="摊销种类" align="center" />
+        <el-table-column key="amortizationClassName" prop="amortizationClassName" label="摊销类型" align="center">
+          <template #default="{ row }">
+            <span>
+              <span v-if="row.fullPathName" style="color: #adadad">{{ row.fullPathName }} > </span>{{ row.amortizationClassName }}
+            </span>
+          </template>
+        </el-table-column>
         <el-table-column key="totalAmount" prop="totalAmount" label="摊销金额" align="center" />
-        <el-table-column
-          key="projectMete"
-          prop="projectMete"
-          :show-overflow-tooltip="true"
-          label="预计摊销产量（吨）"
-          align="center"
-        />
+        <el-table-column key="projectMete" prop="projectMete" :show-overflow-tooltip="true" label="预计摊销产量（吨）" align="center" />
       </common-table>
     </template>
   </common-drawer>
@@ -39,9 +39,11 @@ import { getAutoAmortization } from '@/api/contract/expense-entry/amortization-m
 import { ref, defineEmits, defineProps, watch } from 'vue'
 
 import moment from 'moment'
+import { expenseClassEnum } from '@enum-ms/contract'
 
 import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'
+import useMatClsList from '@/composables/store/use-mat-class-list'
 
 const props = defineProps({
   modelValue: {
@@ -56,6 +58,8 @@ const autoAmortizationDate = ref()
 
 const emit = defineEmits(['update:modelValue'])
 const { visible, handleClose } = useVisible({ emit, props })
+
+const { rawMatClsKV } = useMatClsList()
 
 watch(
   () => visible.value,
@@ -90,8 +94,25 @@ async function getList() {
       row.date = `${_startDate} ~ ${_endDate}`
       row.index = index + 1
       row.isParent = true
-      row?.children?.forEach((v, i) => {
+      // 科目层级名称
+      const raw = rawMatClsKV.value[row.bizId]
+      if (raw) {
+        const names = [raw.basicClassName, ...raw.fullPathName]
+        row.amortizationClassName = names.at(-1)
+        names.splice(names.length - 1)
+        row.fullPathName = names.join(' > ')
+      } else if (row.bizId === 0) {
+        const _name = expenseClassEnum.VL[row.expenseClassEnum]
+        if (_name !== row.amortizationClassName) {
+          row.fullPathName = _name
+        }
+      }
+      row.children?.forEach((v, i) => {
         v.index = `${row.index}-${i + 1}`
+        if (row.fullPathName) {
+          v.amortizationClassName = row.amortizationClassName
+          v.fullPathName = row.fullPathName
+        }
       })
       return row
     })
