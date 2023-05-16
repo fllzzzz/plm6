@@ -40,7 +40,8 @@
           clearable
           placeholder="请选择批次"
           class="filter-item"
-          style="width: 200px; margin-left: 3px"
+          style="width: 180px; margin-left: 3px"
+          @change="fetchSummary"
         />
         <print-table
           v-show="query.category === 64"
@@ -146,7 +147,7 @@
 </template>
 
 <script setup>
-import { ref, defineProps, watch, nextTick, computed, onMounted } from 'vue'
+import { ref, defineProps, watch, nextTick, computed } from 'vue'
 import { getEnclosureBatch } from '@/api/mes/common.js'
 import { projectSummary } from '@/api/ship-manage/pack-and-ship/enclosure-ship-summary'
 import { auxInboundDetail } from '@/api/ship-manage/pack-and-ship/ship-summary'
@@ -193,17 +194,12 @@ const showComponent = computed(() => {
   return mDetail
 })
 
-onMounted(() => {
-  fetchBatch()
-})
-
 watch(
   () => props.currentRow.projectId,
   (val) => {
     if (val) {
       showType.value = undefined
       fetchSummary()
-      fetchBatch()
     }
   }
 )
@@ -215,9 +211,15 @@ watch(
     if (query.value?.category === 64) {
       fetchAuxMat()
     }
-    fetchSummary()
   },
   { immediate: true, deep: true }
+)
+
+watch(
+  () => query.value.category,
+  (val) => {
+    fetchBatch()
+  }
 )
 
 // function getAreaInfo(val) {
