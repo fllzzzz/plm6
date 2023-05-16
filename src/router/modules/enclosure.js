@@ -152,6 +152,83 @@ export default {
           meta: { title: '类型分析', icon: 'project', noCache: true }
         }
       ]
+    },
+    {
+      path: '/enclosure/label-print',
+      component: 'Layout',
+      hidden: false,
+      name: 'EnclosureLabelPrint',
+      alwaysShow: false,
+      redirect: '/enclosure/label-print/artifact',
+      meta: {
+        title: '产品标签',
+        icon: 'project',
+        noCache: true
+      },
+      children: [
+        // {
+        //   name: 'EnclosureLabelPrintArtifact',
+        //   path: 'artifact',
+        //   hidden: false,
+        //   component: '/enclosure/label-print/artifact/index',
+        //   meta: {
+        //     title: '构件',
+        //     icon: 'project',
+        //     noCache: true
+        //   }
+        // },
+        // {
+        //   name: 'EnclosureLabelPrintPart',
+        //   path: 'part',
+        //   hidden: false,
+        //   component: '/mes/label-print/part/index',
+        //   meta: {
+        //     title: '直发件',
+        //     icon: 'project',
+        //     noCache: true
+        //   }
+        // },
+        {
+          name: 'EnclosureLabelPrintEnclosure',
+          path: 'enclosure',
+          hidden: false,
+          component: '/enclosure/label-print/enclosure/index',
+          meta: {
+            title: '围护-产品标签',
+            icon: 'project',
+            noCache: true
+          }
+        }
+        // {
+        //   name: 'EnclosureLabelPrintAuxiliaryMaterial',
+        //   path: 'auxiliary-material',
+        //   hidden: false,
+        //   component: '/enclosure/label-print/auxiliary-material/index',
+        //   meta: {
+        //     title: '配套件',
+        //     icon: 'project',
+        //     noCache: true
+        //   }
+        // }
+        // {
+        //   name: 'EnclosureLabelPrintFoldingPiece',
+        //   path: 'enclosure',
+        //   hidden: false,
+        //   component: '/enclosure/label-print/folding-piece/index',
+        //   meta: {
+        //     title: '折边件',
+        //     icon: 'project',
+        //     noCache: true
+        //   }
+        // }
+        //     {
+        //       name: 'EnclosureLabelPrintingAuxiliaryMaterial',
+        //       path: 'auxiliary-material',
+        //       hidden: false,
+        //       component: '/enclosure/label-printing/auxiliary-material/index',
+        //       meta: { title: '辅材', icon: 'project', noCache: true }
+        //     }
+      ]
     }
   ]
 }
