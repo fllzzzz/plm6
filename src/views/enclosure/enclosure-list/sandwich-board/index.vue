@@ -286,9 +286,34 @@
           </template>
         </el-table-column>
         <el-table-column
+          v-if="columns.visible('coating')"
+          key="coating"
+          prop="coating"
+          :show-overflow-tooltip="true"
+          label="涂层"
+          width="100px"
+        >
+          <template v-slot="scope">
+            <el-input v-if="scope.row.isModify" v-model="scope.row.coating" placeholder="涂层" maxlength="10" style="width: 100%" />
+            <div v-else>{{ scope.row.coating ? scope.row.coating : '-' }}</div>
+          </template>
+        </el-table-column>
+        <el-table-column
+          v-if="columns.visible('plating')"
+          key="plating"
+          prop="plating"
+          :show-overflow-tooltip="true"
+          label="镀层"
+          width="80px"
+        >
+          <template v-slot="scope">
+            <el-input v-if="scope.row.isModify" v-model="scope.row.plating" placeholder="镀层" maxlength="10" style="width: 100%" />
+            <div v-else>{{ scope.row.plating ? scope.row.plating : '-' }}</div>
+          </template>
+        </el-table-column>
+        <el-table-column
           v-if="
             columns.visible('brand') &&
-            crud.query.category !== TechnologyTypeAllEnum.SANDWICH_BOARD.V &&
             crud.query.category !== TechnologyTypeAllEnum.TRUSS_FLOOR_PLATE.V
           "
           key="brand"
@@ -306,8 +331,7 @@
           v-if="
             columns.visible('color') &&
             crud.query.category != TechnologyTypeAllEnum.TRUSS_FLOOR_PLATE.V &&
-            crud.query.category != TechnologyTypeAllEnum.PRESSURE_BEARING_PLATE.V &&
-            crud.query.category != TechnologyTypeAllEnum.SANDWICH_BOARD.V
+            crud.query.category != TechnologyTypeAllEnum.PRESSURE_BEARING_PLATE.V
           "
           key="color"
           prop="color"

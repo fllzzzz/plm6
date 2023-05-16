@@ -6,7 +6,7 @@
     :visible="crud.status.cu > 0"
     :title="crud.query.category?crud.status.title+'('+TechnologyTypeAllEnum.VL[crud.query.category]+')':crud.status.title"
     :wrapper-closable="false"
-    size="90%"
+    size="100%"
   >
     <template #titleRight>
       <common-button :loading="crud.status.cu === 2" type="primary" size="mini" @click="crud.submitCU">确认</common-button>
@@ -255,6 +255,39 @@
           >
             <template v-slot="scope">
               {{ scope.row.weight ? scope.row.weight.toFixed(DP.COM_WT__KG) : '-' }}
+            </template>
+          </el-table-column>
+          <el-table-column
+            key="material"
+            prop="material"
+            :show-overflow-tooltip="true"
+            label="材质"
+            width="100px"
+          >
+            <template v-slot="scope">
+              <el-input v-model="scope.row.material" placeholder="材质" maxlength="20" style="width: 100%" />
+            </template>
+          </el-table-column>
+          <el-table-column
+            key="coating"
+            prop="coating"
+            :show-overflow-tooltip="true"
+            label="涂层"
+            width="100px"
+          >
+            <template v-slot="scope">
+              <el-input v-model="scope.row.coating" placeholder="涂层" maxlength="10" style="width: 100%" />
+            </template>
+          </el-table-column>
+          <el-table-column
+            key="plating"
+            prop="plating"
+            :show-overflow-tooltip="true"
+            label="镀层"
+            width="80px"
+          >
+            <template v-slot="scope">
+              <el-input v-model="scope.row.plating" placeholder="镀层" maxlength="10" style="width: 100%" />
             </template>
           </el-table-column>
           <el-table-column
