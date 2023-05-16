@@ -21,7 +21,7 @@
             :infinite-scroll-immediate-check="true"
             :style="{ 'max-height': `${maxHeight}px` }"
           >
-            <template v-for="item in boardList" :key="item.id">
+            <template v-for="item in (crud.query.planIds?.length ? boardList : [])" :key="item.id">
               <el-tooltip
                 :open-delay="300"
                 class="item"
@@ -30,7 +30,7 @@
                   item.detailLoading
                     ? '正在加载中...'
                     : `名称：${item.name}\n
-                  规格：${item.serialNumber || '-'}\n
+                  编号：${item.serialNumber || '-'}\n
                   板型：${item.plate || '-'}\n
                   品牌：${item.brand || '-'}\n
                   颜色：${item.color || '-'}\n
