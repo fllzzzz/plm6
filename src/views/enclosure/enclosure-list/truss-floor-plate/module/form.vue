@@ -451,12 +451,16 @@ async function getConfig() {
     if (crud.query.category === TechnologyTypeAllEnum.TRUSS_FLOOR_PLATE.V) {
       enclosureDictKV.value['plate_type'] = content.map(row => {
         let effectiveWidth = ''
+        let weightMeter = ''
         row?.list.forEach(v => {
           if (v.name === 'effectiveWidth') {
             effectiveWidth = v.value
           }
+          if (v.name === 'weightMeter') {
+            weightMeter = v.value
+          }
         })
-        plateKV[row.code] = { effectiveWidth }
+        plateKV[row.code] = { effectiveWidth, weightMeter }
         return { name: row.code }
       })
     } else {
@@ -524,6 +528,7 @@ function plateChange(row, index) {
     const data = enclosureDictKV.value.KV?.[row.plate] || {}
     if (crud.query.category === TechnologyTypeAllEnum.TRUSS_FLOOR_PLATE.V) {
       form.list[index].width = +data.effectiveWidth
+      form.list[index].weightMeter = +data.weightMeter
     } else if (crud.query.category === TechnologyTypeAllEnum.PROFILED_PLATE.V || crud.query.category === TechnologyTypeAllEnum.PRESSURE_BEARING_PLATE.V) {
       form.list[index].width = +data.effectiveWidth
       form.list[index].unfoldedWidth = +data.unfoldedWidth
