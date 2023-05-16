@@ -291,7 +291,7 @@
           prop="coating"
           :show-overflow-tooltip="true"
           label="涂层"
-          width="100px"
+          min-width="100px"
         >
           <template v-slot="scope">
             <el-input v-if="scope.row.isModify" v-model="scope.row.coating" placeholder="涂层" maxlength="10" style="width: 100%" />
@@ -304,7 +304,7 @@
           prop="plating"
           :show-overflow-tooltip="true"
           label="镀层"
-          width="80px"
+          min-width="100px"
         >
           <template v-slot="scope">
             <el-input v-if="scope.row.isModify" v-model="scope.row.plating" placeholder="镀层" maxlength="10" style="width: 100%" />

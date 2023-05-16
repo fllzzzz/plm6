@@ -4,7 +4,7 @@
     :close-on-click-modal="false"
     :before-close="crud.cancelCU"
     :visible="crud.status.cu > 0"
-    :title="crud.query.category?crud.status.title+'('+TechnologyTypeAllEnum.VL[crud.query.category]+')':crud.status.title"
+    :title="crud.status.title"
     :wrapper-closable="false"
     size="100%"
   >
@@ -262,7 +262,7 @@
             prop="material"
             :show-overflow-tooltip="true"
             label="材质"
-            width="100px"
+            min-width="100px"
           >
             <template v-slot="scope">
               <el-input v-model="scope.row.material" placeholder="材质" maxlength="20" style="width: 100%" />
@@ -273,7 +273,7 @@
             prop="coating"
             :show-overflow-tooltip="true"
             label="涂层"
-            width="100px"
+            min-width="100px"
           >
             <template v-slot="scope">
               <el-input v-model="scope.row.coating" placeholder="涂层" maxlength="10" style="width: 100%" />
@@ -284,7 +284,7 @@
             prop="plating"
             :show-overflow-tooltip="true"
             label="镀层"
-            width="80px"
+            min-width="100px"
           >
             <template v-slot="scope">
               <el-input v-model="scope.row.plating" placeholder="镀层" maxlength="10" style="width: 100%" />
