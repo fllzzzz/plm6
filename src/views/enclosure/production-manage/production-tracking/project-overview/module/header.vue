@@ -31,13 +31,13 @@
       </template>
       <template #viewLeft>
         <scale v-model:value="boxScale" :intervals="400" @zoom-out="boxZoomOut" />
-        <el-tag effect="plain" size="medium" style="margin-right: 6px;">
+        <el-tag effect="plain" size="medium" style="margin-right: 6px">
           <span v-parse-project="{ project: props.project }" v-empty-text />
         </el-tag>
-        <el-tag v-loading="summaryLoading" type="success" effect="plain" size="medium" style="margin-right: 6px;">
+        <el-tag v-loading="summaryLoading" type="success" effect="plain" size="medium" style="margin-right: 6px">
           总量：{{ summaryData?.totalLength || 0 }} m
         </el-tag>
-        <el-tag v-loading="summaryLoading" type="success" effect="plain" size="medium" style="margin-right: 6px;">
+        <el-tag v-loading="summaryLoading" type="success" effect="plain" size="medium" style="margin-right: 6px">
           已生产：{{ summaryData?.completedLength || 0 }} m
         </el-tag>
         <el-tag v-loading="summaryLoading" type="success" effect="plain" size="medium">
@@ -137,12 +137,17 @@ const handleCheckedAresChange = (value) => {
 async function fetchEnclosureSummary() {
   try {
     summaryLoading.value = true
-    summaryData.value = {}
-    summaryData.value = await enclosureSummary({
-      projectId: props.project.id,
-      planIds: query.planIds,
-      category: query.category
-    })
+    summaryData.value = {
+      totalLength: 0,
+      completedLength: 0
+    }
+    if (query.planIds?.length) {
+      summaryData.value = await enclosureSummary({
+        projectId: props.project.id,
+        planIds: query.planIds,
+        category: query.category
+      })
+    }
 
     summaryData.value.completeRate =
       Number(summaryData.value.completedLength) && Number(summaryData.value.totalLength)
