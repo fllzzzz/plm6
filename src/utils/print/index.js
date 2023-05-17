@@ -60,7 +60,7 @@ async function printEnclosure({ productType, labelType, component, manufacturerN
     if (labelType === labelTypeEnum.CUSTOM.V) {
       LODOP.SET_PRINT_PAGESIZE(1, 1030, 500, '1') /* 纸张大小*/
       LODOP.ADD_PRINT_HTM('2mm', '3mm', '100%', '100%', strHtml)
-      LODOP.ADD_PRINT_BARCODE('21mm', '150mm', '25mm', '25mm', 'QRCode', qrCode)
+      LODOP.ADD_PRINT_BARCODE('38mm', '130mm', '25mm', '25mm', 'QRCode', qrCode)
     }
     LODOP.SET_PRINT_STYLEA(0, 'QRCodeVersion', 7)
     LODOP.SET_PRINT_STYLEA(0, 'QRCodeErrorLevel', 'M')
