@@ -34,7 +34,16 @@
             ref="materialTreeRef"
             v-loading="materialLoading"
             :style="{ maxHeight: maxHeight + 'px' }"
-            :data="materialEdit ? materialTree : expenseClassEnumKV[expenseClassEnum.MATERIAL.V]?.children || []"
+            :data="
+              materialEdit
+                ? materialTree
+                : (expenseClassEnumKV[expenseClassEnum.MATERIAL_AUXILIARY.V] &&
+                    expenseClassEnumKV[expenseClassEnum.MATERIAL_OTHER.V] && [
+                      expenseClassEnumKV[expenseClassEnum.MATERIAL_AUXILIARY.V],
+                      expenseClassEnumKV[expenseClassEnum.MATERIAL_OTHER.V],
+                    ]) ||
+                  []
+            "
             :props="defaultProps"
             :show-checkbox="materialEdit"
             node-key="id"
@@ -57,7 +66,11 @@
             ref="otherTreeRef"
             v-loading="otherLoading"
             :style="{ maxHeight: maxHeight + 'px' }"
-            :data="otherEdit ? otherTree : expenseClassEnumKV[expenseClassEnum.OTHER_EXPENSES.V]?.children || []"
+            :data="
+              otherEdit
+                ? otherTree
+                : expenseClassEnumKV[expenseClassEnum.OTHER_EXPENSES.V] && [expenseClassEnumKV[expenseClassEnum.OTHER_EXPENSES.V] || []]
+            "
             :props="defaultProps"
             :show-checkbox="otherEdit"
             node-key="id"
@@ -80,6 +93,7 @@ import { getChildIds } from '@/utils/data-type/tree'
 
 import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'
+import { ElMessage } from 'element-plus'
 
 const props = defineProps({
   modelValue: {
@@ -105,7 +119,8 @@ const otherLoading = ref(false)
 const otherEditLoading = ref(false)
 const defaultProps = ref({
   children: 'children',
-  label: 'name'
+  label: 'name',
+  disabled: 'disabled'
 })
 
 const { maxHeight } = useMaxHeight(
@@ -113,7 +128,8 @@ const { maxHeight } = useMaxHeight(
     mainBox: '.amortization-setting-drawer',
     extraBox: ['.el-drawer__header', '.el-card__header'],
     wrapperBox: ['.el-drawer__body'],
-    extraHeight: 22
+    extraHeight: 22,
+    minHeight: 300
   },
   visible
 )
@@ -133,9 +149,21 @@ function edit(val) {
 async function getMaterialTree() {
   try {
     materialLoading.value = true
-    const data = await amortizationClassTree({ expenseClassEnum: expenseClassEnum.MATERIAL.V })
-    materialTree.value = data?.[0]?.children || []
-    materialTreeRef.value.setCheckedKeys(getChildIds(expenseClassEnumKV.value[expenseClassEnum.MATERIAL.V]?.children))
+    const data =
+      (await amortizationClassTree({ expenseClassEnum: expenseClassEnum.MATERIAL_AUXILIARY.V + expenseClassEnum.MATERIAL_OTHER.V })) || []
+    data?.forEach((row) => {
+      row.disabled = true
+    })
+    materialTree.value = data
+    // 回显
+    const tree = []
+    if (expenseClassEnumKV.value[expenseClassEnum.MATERIAL_AUXILIARY.V]?.children?.length) {
+      tree.push(...expenseClassEnumKV.value[expenseClassEnum.MATERIAL_AUXILIARY.V].children)
+    }
+    if (expenseClassEnumKV.value[expenseClassEnum.MATERIAL_OTHER.V]?.children?.length) {
+      tree.push(...expenseClassEnumKV.value[expenseClassEnum.MATERIAL_OTHER.V].children)
+    }
+    materialTreeRef.value.setCheckedKeys(getChildIds(tree))
   } catch (error) {
     console.log('获取材料树失败', error)
   } finally {
@@ -147,8 +175,11 @@ async function getMaterialTree() {
 async function getOtherTree() {
   try {
     otherLoading.value = true
-    const data = await amortizationClassTree({ expenseClassEnum: expenseClassEnum.OTHER_EXPENSES.V })
-    otherTree.value = data?.[0]?.children || []
+    const data = await amortizationClassTree({ expenseClassEnum: expenseClassEnum.OTHER_EXPENSES.V }) || []
+    data?.forEach((row) => {
+      row.disabled = true
+    })
+    otherTree.value = data
     otherTreeRef.value.setCheckedKeys(getChildIds(expenseClassEnumKV.value[expenseClassEnum.OTHER_EXPENSES.V]?.children))
   } catch (error) {
     console.log('获取其他费用树失败', error)
@@ -161,13 +192,22 @@ async function getOtherTree() {
 async function saveMaterial() {
   try {
     materialEditLoading.value = true
+    const params = [
+      {
+        expenseClassEnum: expenseClassEnum.MATERIAL_AUXILIARY.V,
+        ids: []
+      },
+      {
+        expenseClassEnum: expenseClassEnum.MATERIAL_OTHER.V,
+        ids: []
+      }
+    ]
     const ids = materialTreeRef.value.getCheckedNodes(false, true).map((row) => row.id)
-    await saveAmortizationClass({
-      expenseClassEnum: expenseClassEnum.MATERIAL.V,
-      ids
-    })
+    filterTree(materialTree.value, ids, params)
+
+    await saveAmortizationClass(params)
+    ElMessage.success('保存成功')
     emit('success')
-    materialTree.value = filterTree(JSON.parse(JSON.stringify(materialTree.value)), ids)
     materialEdit.value = false
   } catch (error) {
     console.log('保存材料树失败', error)
@@ -181,12 +221,14 @@ async function saveOther() {
   try {
     otherEditLoading.value = true
     const ids = otherTreeRef.value.getCheckedNodes(false, true).map((row) => row.id)
-    await saveAmortizationClass({
-      expenseClassEnum: expenseClassEnum.OTHER_EXPENSES.V,
-      ids
-    })
+    await saveAmortizationClass([
+      {
+        expenseClassEnum: expenseClassEnum.OTHER_EXPENSES.V,
+        ids
+      }
+    ])
+    ElMessage.success('保存成功')
     emit('success')
-    otherTree.value = filterTree(JSON.parse(JSON.stringify(otherTree.value)), ids)
     otherEdit.value = false
   } catch (error) {
     console.log('保存其他费用失败', error)
@@ -196,10 +238,15 @@ async function saveOther() {
 }
 
 // 过滤树
-function filterTree(tree = [], ids) {
+function filterTree(tree = [], ids, params) {
   return tree.filter((row) => {
     if (ids.includes(row.id)) {
-      row.children = filterTree(row.children || [], ids)
+      row.children = filterTree(row.children || [], ids, params)
+      if (row.expenseClassEnum === expenseClassEnum.MATERIAL_AUXILIARY.V) {
+        params[0].ids.push(row.id)
+      } else if (row.expenseClassEnum === expenseClassEnum.MATERIAL_OTHER.V) {
+        params[1].ids.push(row.id)
+      }
       return true
     }
     return false

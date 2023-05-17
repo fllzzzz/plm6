@@ -375,12 +375,14 @@ const expenseClassEnum = {
   WORKSHOP_DEPRECIATION: { L: '厂房折旧', K: ' WORKSHOP_DEPRECIATION', V: 1 << 3 },
   EQUIPMENT_DEPRECIATION: { L: '设备折旧', K: ' EQUIPMENT_DEPRECIATION', V: 1 << 4 },
   GAS: { L: '气体', K: ' GAS', V: 1 << 5 },
-  MATERIAL: { L: '材料', K: ' MATERIAL', V: 1 << 6 },
+  MATERIAL_AUXILIARY: { L: '材料（辅材）', K: ' MATERIAL_AUXILIARY', V: 1 << 6 },
   OTHER_EXPENSES: { L: '其它费用', K: ' OTHER_EXPENSES', V: 1 << 7 },
   MAIN_MATERIAL: { L: '主材费', K: ' MAIN_MATERIAL', V: 1 << 8 },
   LABOR: { L: '人工费', K: ' LABOR', V: 1 << 9 },
   AUXILIARY_MATERIAL: { L: '辅材费', K: ' AUXILIARY_MATERIAL', V: 1 << 10 },
-  OTHER_MATERIAL: { L: '其它材料费', K: ' OTHER_MATERIAL', V: 1 << 11 }
+  OTHER_MATERIAL: { L: '其它材料费', K: ' OTHER_MATERIAL', V: 1 << 11 },
+  REIMBURSE_EXPENSES: { L: '报销费用', K: ' REIMBURSE_EXPENSES', V: 1 << 12 },
+  MATERIAL_OTHER: { L: '材料（其它）', K: ' MATERIAL_OTHER', V: 1 << 13 }
 }
 constantize(expenseClassEnum)
 

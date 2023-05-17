@@ -13,7 +13,7 @@
       <el-tag v-if="list.length" effect="plain" type="warning" size="medium">于 {{ autoAmortizationDate }} 自动摊销</el-tag>
     </template>
     <template #content>
-      <common-table :data="list" row-key="id" tree-default-expand-all :data-format="columnsDataFormat" :max-height="maxHeight">
+      <common-table :data="list" row-key="id" tree-default-expand-all :data-format="columnsDataFormat" :indent="0" :max-height="maxHeight">
         <el-table-column prop="index" key="index" label="序号" align="center" width="80" />
         <el-table-column prop="date" key="date" label="摊销时间段" align="center">
           <template #default="{ row }">
@@ -108,6 +108,9 @@ async function getList() {
         }
       }
       row.children?.forEach((v, i) => {
+        const _startDate = moment(v.startDate).format('YYYY-MM-DD')
+        const _endDate = moment(v.endDate).format('YYYY-MM-DD')
+        v.date = `${_startDate} ~ ${_endDate}`
         v.index = `${row.index}-${i + 1}`
         if (row.fullPathName) {
           v.amortizationClassName = row.amortizationClassName
