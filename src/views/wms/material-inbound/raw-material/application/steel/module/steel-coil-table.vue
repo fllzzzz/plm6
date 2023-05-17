@@ -14,7 +14,7 @@
     <el-table-column v-if="!props.boolPartyA" type="selection" width="55" align="center" :selectable="selectable" />
     <el-expand-table-column :data="form.steelCoilList" v-model:expand-row-keys="expandRowKeys" row-key="uid" fixed="left">
       <template #default="{ row }">
-        <div class="mtb-10">
+        <div class="mtb-10" style="margin-left: 30px">
           <el-input
             v-model="row.remark"
             :rows="1"
@@ -25,6 +25,9 @@
             show-word-limit
             style="width: 400px"
           />
+        </div>
+        <div v-if="isNotBlank(row.inboundList)" class="flex-rsc mtb-20" style="margin-left: 30px">
+          <inbound-info-table :stripe="false" :material="row" :basic-class="basicClass" :list="row.inboundList" style="width: 1600px" />
         </div>
       </template>
     </el-expand-table-column>
@@ -228,6 +231,7 @@ import { createUniqueString } from '@/utils/data-type/string'
 import { calcSteelCoilLength } from '@/utils/wms/measurement-calc'
 import { positiveNumPattern } from '@/utils/validate/pattern'
 
+import inboundInfoTable from '@/views/wms/material-inbound/raw-material/components/inbound-info-table'
 import priceSetColumns from '@/views/wms/material-inbound/raw-material/components/price-set-columns.vue'
 
 const props = defineProps({
@@ -367,17 +371,21 @@ function rowInit(row) {
 function rowWatch(row) {
   // watchEffect(() => calcTheoryLength(_row))
   // watchEffect(() => calcTotalLength(_row))
-  watch(() => row, () => {
-    if (!props.boolPartyA && form.selectObj?.[row.mergeId]?.isSelected) {
-      const _isSelected = form.selectObj[row.mergeId]?.isSelected
-      form.selectObj[row.mergeId] = {
-        ...form.selectObj[row.mergeId],
-        ...row,
-        mete: row.weighingTotalWeight,
-        isSelected: _isSelected
+  watch(
+    () => row,
+    () => {
+      if (!props.boolPartyA && form.selectObj?.[row.mergeId]?.isSelected) {
+        const _isSelected = form.selectObj[row.mergeId]?.isSelected
+        form.selectObj[row.mergeId] = {
+          ...form.selectObj[row.mergeId],
+          ...row,
+          mete: row.weighingTotalWeight,
+          isSelected: _isSelected
+        }
       }
-    }
-  }, { deep: true })
+    },
+    { deep: true }
+  )
   // 计算理论长度
   watch([() => row.weighingTotalWeight, () => row.width, () => row.thickness, baseUnit], () => calcTheoryLength(row))
   // 计算总长度

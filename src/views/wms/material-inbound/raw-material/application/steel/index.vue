@@ -96,7 +96,7 @@ import { steelInboundApplicationPM as permission } from '@/page-permission/wms'
 import { toPrecision } from '@/utils/data-type'
 import { createUniqueString } from '@/utils/data-type/string'
 import { defineProps, defineEmits, ref, computed, watch, provide, nextTick, reactive } from 'vue'
-import { STEEL_ENUM } from '@/settings/config'
+import { STEEL_ENUM, DP } from '@/settings/config'
 import { matClsEnum } from '@/utils/enum/modules/classification'
 import { weightMeasurementModeEnum } from '@/utils/enum/modules/finance'
 import { orderSupplyTypeEnum } from '@/utils/enum/modules/wms'
@@ -447,14 +447,16 @@ function validate() {
       if (v.applyPurchase?.length) {
         v.applyPurchase.forEach((a) => {
           if (a.quantity) {
-            const _weight = toPrecision((a.quantity / v.quantity) * v.weighingTotalWeight, baseUnit.value[v.basicClass].weight.precision)
+            const _weight = toPrecision((a.theoryTotalWeight / v.theoryTotalWeight) * v.weighingTotalWeight, baseUnit.value[v.basicClass].weight.precision)
             _list.push({
               ...v,
+              ...a,
               quantity: a.quantity,
               projectId: a.project?.id,
               uid: createUniqueString(),
               mete: _weight,
               weight: _weight,
+              amount: v.unitPrice ? toPrecision(_weight * v.unitPrice, DP.YUAN) : undefined,
               applyPurchaseId: a.applyPurchaseId,
               purchaseDetailId: a.purchaseDetailId
             })

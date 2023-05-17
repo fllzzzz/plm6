@@ -12,9 +12,9 @@
     @select-all="selectAllTableChange"
   >
     <el-table-column v-if="!props.boolPartyA" type="selection" width="55" align="center" :selectable="selectable" />
-    <el-expand-table-column :data="form.sectionSteelList" v-model:expand-row-keys="expandRowKeys" row-key="uid" fixed="left">
+    <el-expand-table-column :data="form.sectionSteelList" v-model:expand-row-keys="expandRowKeys" row-key="uid" >
       <template #default="{ row }">
-        <div class="mtb-10">
+        <div class="mtb-10" style="margin-left: 30px">
           <el-input
             v-model="row.remark"
             :rows="1"
@@ -26,21 +26,30 @@
             style="width: 400px"
           />
         </div>
+        <div v-if="isNotBlank(row.inboundList)" class="flex-rsc mtb-20" style="margin-left: 30px">
+          <inbound-info-table
+            :stripe="false"
+            :material="row"
+            :basic-class="basicClass"
+            :list="row.inboundList"
+            style="width: 1600px"
+          />
+        </div>
       </template>
     </el-expand-table-column>
-    <el-table-column label="序号" type="index" align="center" width="60" fixed="left" />
-    <el-table-column prop="serialNumber" label="编号" align="center" min-width="110px" fixed="left" />
-    <el-table-column prop="classifyName" label="物料种类" align="center" fixed="left" min-width="120" show-overflow-tooltip>
+    <el-table-column label="序号" type="index" align="center" width="60"  />
+    <el-table-column prop="serialNumber" label="编号" align="center" min-width="110px"  />
+    <el-table-column prop="classifyName" label="物料种类" align="center"  min-width="120" show-overflow-tooltip>
       <template #default="{ row }">
         <el-tooltip :content="row.classifyParentFullName" :disabled="!row.classifyParentFullName" :show-after="500" placement="top">
           <span v-empty-text="row.classifyName" />
         </el-tooltip>
       </template>
     </el-table-column>
-    <el-table-column prop="specification" label="规格" align="center" min-width="200px" fixed="left" show-overflow-tooltip>
+    <el-table-column prop="specification" label="规格" align="center" min-width="200px"  show-overflow-tooltip>
       <template #default="{ row }">
         <el-edit
-          v-if="form.selectObj?.[row.mergeId]?.isSelected && Boolean(currentCfg?.spec & basicClass)"
+          v-if="form.selectObj?.[row.mergeId]?.isSelected && Boolean(currentCfg?.spec & basicClass) && !row.boolApplyPurchase"
           class="el-icon"
           style="color: #1881ef; vertical-align: middle; margin-right: 5px; cursor: pointer"
           @click="handleClickEditSpec(row)"
@@ -53,7 +62,10 @@
     <el-table-column prop="length" align="center" min-width="135px" :label="`定尺长度 (${baseUnit.length.unit})`">
       <template #default="{ row }">
         <common-input-number
-          v-if="props.boolPartyA || (form.selectObj?.[row.mergeId]?.isSelected && Boolean(currentCfg?.length & basicClass))"
+          v-if="
+            props.boolPartyA ||
+            (form.selectObj?.[row.mergeId]?.isSelected && Boolean(currentCfg?.length & basicClass) && !row.boolApplyPurchase)
+          "
           v-model="row.length"
           :max="999999"
           :controls="false"
@@ -170,7 +182,38 @@
         :basic-class="basicClass"
         :form="form"
         :handleOverQuantity="handleOverQuantity"
-      />
+      >
+        <template #editColumn="{ row }">
+          <el-table-column prop="specification" label="规格" align="center" min-width="200px"  show-overflow-tooltip>
+            <template #default="{ row: purRow }">
+              <el-edit
+                v-if="form.selectObj?.[row.mergeId]?.isSelected && Boolean(currentCfg?.spec & basicClass)"
+                class="el-icon"
+                style="color: #1881ef; vertical-align: middle; margin-right: 5px; cursor: pointer"
+                @click="handleClickEditSpec(purRow)"
+              />
+              <el-tooltip :content="purRow.specificationLabels" placement="top">
+                <span>{{ purRow.specification }}</span>
+              </el-tooltip>
+            </template>
+          </el-table-column>
+          <el-table-column prop="length" align="center" min-width="100px" :label="`定尺长度 (${baseUnit.length.unit})`">
+            <template #default="{ row: purRow }">
+              <common-input-number
+                v-if="props.boolPartyA || (form.selectObj?.[row.mergeId]?.isSelected && Boolean(currentCfg?.length & basicClass))"
+                v-model="purRow.length"
+                :max="999999"
+                :controls="false"
+                :min="0"
+                :precision="baseUnit.length.precision"
+                size="mini"
+                placeholder="长"
+              />
+              <span v-else>{{ purRow.length }}</span>
+            </template>
+          </el-table-column>
+        </template>
+      </inbound-quantity-column>
       <el-table-column prop="totalLength" align="center" min-width="135px" :label="`实收总长度 (m)`" />
       <el-table-column prop="theoryTotalWeight" align="center" :label="`理论重量 (${baseUnit.weight.unit})`" min-width="100px" />
       <el-table-column
@@ -254,6 +297,7 @@ import { calcSectionSteelTotalLength, calcSectionSteelWeight } from '@/utils/wms
 import { positiveNumPattern } from '@/utils/validate/pattern'
 
 import priceSetColumns from '@/views/wms/material-inbound/raw-material/components/price-set-columns.vue'
+import inboundInfoTable from '@/views/wms/material-inbound/raw-material/components/inbound-info-table'
 import inboundQuantityColumn from '@/views/wms/material-inbound/raw-material/application/components/inbound-quantity-column'
 import materialSpecSelect from '@comp-cls/material-spec-select/index.vue'
 
@@ -404,29 +448,40 @@ function rowWatch(row) {
       row.needFirstCalcTheoryWeight = false
     }
   })
-  watch([() => row.boolApplyPurchase, () => row?.applyPurchase], () => {
-    if (row.boolApplyPurchase && form.selectObj?.[row.mergeId]?.isSelected) {
-      row.quantity = row?.applyPurchase?.reduce((a, b) => a + (b.quantity || 0), 0)
-    }
-  }, { deep: true })
-  watch(() => row, () => {
-    if (!props.boolPartyA && form.selectObj?.[row.mergeId]?.isSelected) {
-      const _isSelected = form.selectObj[row.mergeId]?.isSelected
-      form.selectObj[row.mergeId] = {
-        ...form.selectObj[row.mergeId],
-        ...row,
-        mete: row.weighingTotalWeight,
-        isSelected: _isSelected
+  watch(
+    [() => row.boolApplyPurchase, () => row?.applyPurchase],
+    () => {
+      if (row.boolApplyPurchase && form.selectObj?.[row.mergeId]?.isSelected) {
+        row.quantity = row?.applyPurchase?.reduce((a, b) => a + (b.quantity || 0), 0)
+        row.theoryTotalWeight = row?.applyPurchase?.reduce((a, b) => a + (b.theoryTotalWeight || 0), 0)
       }
-    }
-  }, { deep: true })
-  // 计算单件理论重量
-  watch([() => row.length, () => row.unitWeight, baseUnit], () => calcTheoryWeight(row))
-  // 计算总重
-  watch([() => row.theoryWeight, () => row.quantity], () => {
-    calcTotalWeight(row)
-    handleWeightChange(row)
-  })
+    },
+    { deep: true }
+  )
+  watch(
+    () => row,
+    () => {
+      if (!props.boolPartyA && form.selectObj?.[row.mergeId]?.isSelected) {
+        const _isSelected = form.selectObj[row.mergeId]?.isSelected
+        form.selectObj[row.mergeId] = {
+          ...form.selectObj[row.mergeId],
+          ...row,
+          mete: row.weighingTotalWeight,
+          isSelected: _isSelected
+        }
+      }
+    },
+    { deep: true }
+  )
+  if (!row.boolApplyPurchase) {
+    // 计算单件理论重量
+    watch([() => row.length, () => row.unitWeight, baseUnit], () => calcTheoryWeight(row))
+    // 计算总重
+    watch([() => row.theoryWeight, () => row.quantity], () => {
+      calcTotalWeight(row)
+      handleWeightChange(row)
+    })
+  }
   // 计算总长度
   watch([() => row.length, () => row.quantity], () => {
     calcTotalLength(row)

@@ -9,7 +9,7 @@
     <template #titleAfter>
       <span class="child-mr-6" style="display: flex; align-items: center">
         <el-tag effect="plain" size="medium" v-if="form.projectId">申购项目：{{ projectName }}</el-tag>
-        <el-tag effect="plain" size="medium">申购编号：{{ form.serialNumber }}</el-tag>
+        <el-tag effect="plain" size="medium" v-if="form.serialNumber">申购编号：{{ form.serialNumber }}</el-tag>
         <el-tag type="success" effect="plain" size="medium">申购人：{{ user.name }}</el-tag>
         <common-radio-button
           v-if="!props.isManufactured"
@@ -144,7 +144,7 @@
 </template>
 
 <script setup>
-import { getSerialNumber } from '@/api/supply-chain/requisitions-manage/requisitions'
+// import { getSerialNumber } from '@/api/supply-chain/requisitions-manage/requisitions'
 import { get as getApprovalProcess } from '@/api/config/approval-config/company-process'
 import { defineEmits, defineProps, ref, watch, computed } from 'vue'
 import { mapGetters } from '@/store/lib'
@@ -228,9 +228,9 @@ watch(
   (val) => {
     approvalProcessOptions.value = []
     requisitionMode.value = undefined
-    if (val && !form.serialNumber) {
-      getNO()
-    }
+    // if (val && !form.serialNumber) {
+    //   getNO()
+    // }
     if (val) {
       fetchApprovalProcess()
     }
@@ -261,10 +261,10 @@ cu.submitFormFormat = async (form) => {
 
 // 表单提交前校验
 FORM.HOOK.beforeSubmit = async () => {
-  if (!form.serialNumber) {
-    ElMessage.error('获取申购单号失败，无法提交')
-    return false
-  }
+  // if (!form.serialNumber) {
+  //   ElMessage.error('获取申购单号失败，无法提交')
+  //   return false
+  // }
   // if (!form.arrivalTime) {
   //   ElMessage.warning('请选择到厂时间')
   //   return false
@@ -295,10 +295,10 @@ function handleArrivalTimeChange(val, row, index) {
 }
 
 // 获取申购单号
-async function getNO() {
-  const data = (await getSerialNumber()) || ''
-  form.serialNumber = data
-}
+// async function getNO() {
+//   const data = (await getSerialNumber()) || ''
+//   form.serialNumber = data
+// }
 
 async function fetchApprovalProcess() {
   const data = (await getApprovalProcess()) || []

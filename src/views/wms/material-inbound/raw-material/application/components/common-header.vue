@@ -354,6 +354,7 @@ async function handleOrderInfoChange(order, oldOrder) {
         { mete: ['mete', 'inboundMete'] }
       )
       order.details = content?.map((v) => {
+        const applyPurchaseObj = {}
         v.mergeId = v.id // 处理合并问题
         v.purchaseOrderDetailId = v.id
         v.purchaseQuantity = v.quantity
@@ -386,12 +387,33 @@ async function handleOrderInfoChange(order, oldOrder) {
           let _totalMete = 0
           let _totalQuantity = 0
           _v.applyPurchase.forEach((item) => {
+            item.applyPurchaseSN = item.serialNumber
+            applyPurchaseObj[item.id] = item
+            if (_v.basicClass & (matClsEnum.SECTION_STEEL.V | matClsEnum.STEEL_PLATE.V)) {
+              const _originInfo = !props.edit ? _v : form?.editObj?.[_v.mergeId]
+              item.sn = _originInfo?.sn
+              item.specificationLabels = _originInfo?.specificationLabels // 规格中文
+              item.serialNumber = _originInfo?.serialNumber // 科目编号 - 规格
+              item.classifyId = _originInfo?.classifyId // 科目id
+              item.classifyFullName = _originInfo?.classifyFullName // 全路径名称
+              item.classifyName = _originInfo?.classifyName // 当前科目名称
+              item.classifyParentFullName = _originInfo?.classifyParentFullName // 父级路径名称
+              item.basicClass = _originInfo?.basicClass // 基础类型
+              item.specification = _originInfo?.specification // 规格
+              item.specificationMap = _originInfo?.specificationMap // 规格KV格式
+              item.measureUnit = _originInfo?.measureUnit // 计量单位
+              item.accountingUnit = _originInfo?.accountingUnit // 核算单位
+              item.measurePrecision = _originInfo?.measurePrecision // 计量精度
+              item.accountingPrecision = _originInfo?.accountingPrecision // 核算精度
+              item.unitWeight = _originInfo?.unitWeight // 单位重量
+              item.length = _originInfo?.length
+              item.width = _originInfo?.width
+              item.thickness = _originInfo?.thickness
+            }
             if (!_isSelected || props.edit) {
               item.applyPurchaseId = item.id
               item.purchaseQuantity = item.quantity
-              item.originQuantity = item.quantity
               item.purchaseMete = item.mete
-              item.originMete = item.mete
               item.quantity = null
               item.mete = null
             }
@@ -406,6 +428,8 @@ async function handleOrderInfoChange(order, oldOrder) {
               _totalQuantity += item.quantity || 0
               _totalMete += item.mete || 0
             }
+            item.originQuantity = item.quantity
+            item.originMete = item.mete
             if (item?.project) {
               order.projects.push(item?.project)
             }
@@ -427,6 +451,19 @@ async function handleOrderInfoChange(order, oldOrder) {
         _v.originMete = _v.mete
         if (props.edit) {
           _v.needFirstCalcTheoryWeight = true
+        }
+
+        if (v.inboundList?.length) {
+          setSpecInfoToList(v.inboundList)
+          numFmtByBasicClass(
+            v.inboundList,
+            {
+              toNum: true
+            }
+          )
+          v.inboundList.forEach((item) => {
+            item.applyPurchaseSN = applyPurchaseObj[item.applyPurchaseId]?.applyPurchaseSN
+          })
         }
         return _v
       })

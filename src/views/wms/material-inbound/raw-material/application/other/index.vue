@@ -33,6 +33,7 @@
           :bool-party-a="boolPartyA"
           :bool-apply-purchase="boolApplyPurchase"
           :fillableAmount="fillableAmount"
+          :basic-class="currentBasicClass"
         />
       </el-form>
     </common-wrapper>

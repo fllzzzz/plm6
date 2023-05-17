@@ -33,7 +33,7 @@
       <el-form-item v-for="(item, key) in basicFillConfig" :key="key" :label="`【${rawMatClsEnum.VL[key]}】`" label-width="70px">
         <el-checkbox v-for="(spec, i) in item" :key="i" v-model="spec.V" :label="spec.L"></el-checkbox>
       </el-form-item>
-      <el-form-item class="form-tip-item" label="重量允许误差(%)" prop="steelDiffType">
+      <el-form-item class="form-tip-item" label="重量允许误差(%)" prop="steelDiffType" label-width="165px">
         <template #label>
           <span>单件钢材重量误差({{ form.steelDiffType === numOrPctEnum.NUMBER.V ? STEEL_DIFF_UNIT : '%' }})</span>
         </template>
@@ -56,6 +56,22 @@
         </span>
         <span class="form-item-tip">固定重量({{ STEEL_DIFF_UNIT }})：误差不可超过 固定重量；</span>
         <span class="form-item-tip">百分比(%)：误差不可超过 入库钢材的理论重量*百分比。</span>
+      </el-form-item>
+      <el-form-item class="form-tip-item" label="采购比入库比误差值(%)" prop="procureMeteDiff" label-width="165px">
+        <common-input-number
+          v-model="form.procureMeteDiff"
+          :max="100"
+          controls-position="right"
+          size="small"
+          placeholder="请输入允许的误差值"
+          style="width: 200px;"
+          :min="0"
+        />
+      </el-form-item>
+      <el-form-item>
+        <span class="form-item-tip">
+          可配置采购比入库比误差值。【采购重量】与【入库重量】的差值（绝对值）超过该误差，将不支持入库。
+        </span>
       </el-form-item>
       <!-- <el-form-item label="存储位置填写场景">
         <common-radio v-model="form.warehouseFillWay" :options="inboundFillWayEnum.ENUM" type="enum" size="small" />
@@ -120,7 +136,8 @@ const dataSource = ref({
   // 单件钢材差值
   steelDiff: undefined,
   // 差值类型（g 或 %）
-  steelDiffType: undefined
+  steelDiffType: undefined,
+  procureMeteDiff: undefined
 })
 // from-dom
 const formRef = ref()

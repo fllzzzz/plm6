@@ -94,7 +94,7 @@ import { tableSummary } from '@/utils/el-extra'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { destinationTypeEnum } from '@enum-ms/production'
 // import { isBlank, isNotBlank, toFixed } from '@/utils/data-type'
-import { isBlank, isNotBlank } from '@/utils/data-type'
+import { deepClone, isBlank, isNotBlank } from '@/utils/data-type'
 import { materialHasAmountColumns } from '@/utils/columns-format/wms'
 
 import { regExtra } from '@/composables/form/use-form'
@@ -269,8 +269,9 @@ function showHook() {
 
 // 表单提交数据清理
 cu.submitFormFormat = async (form) => {
-  cleanUpData(formList.value)
-  form.list = await numFmtByBasicClass(formList.value, { toSmallest: true, toNum: true })
+  const _list = deepClone(form.list)
+  cleanUpData(_list)
+  form.list = await numFmtByBasicClass(_list, { toSmallest: true, toNum: true })
   form.list.forEach((v) => {
     if (boolManuf.value) {
       v.projectId = order.value.projects?.length ? order.value.projects[0].id : undefined

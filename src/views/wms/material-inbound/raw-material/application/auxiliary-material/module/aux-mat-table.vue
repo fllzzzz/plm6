@@ -14,7 +14,7 @@
     <el-table-column v-if="!props.boolPartyA" type="selection" width="55" align="center" :selectable="selectable" />
     <el-expand-table-column :data="form.auxMatList" v-model:expand-row-keys="expandRowKeys" row-key="uid" fixed="left">
       <template #default="{ row }">
-        <div class="mtb-10">
+        <div class="mtb-10" style="margin-left: 30px">
           <el-input
             v-model="row.remark"
             :rows="1"
@@ -25,6 +25,9 @@
             show-word-limit
             style="width: 400px"
           />
+        </div>
+        <div v-if="isNotBlank(row.inboundList)" class="flex-rsc mtb-20" style="margin-left: 30px">
+          <inbound-info-table :stripe="false" :material="row" :basic-class="basicClass" :list="row.inboundList" style="width: 1600px" />
         </div>
       </template>
     </el-expand-table-column>
@@ -145,7 +148,12 @@
       <el-table-column prop="quantity" label="本次实收数" align="center" min-width="120px">
         <template #default="{ row }">
           <common-input-number
-            v-if="!boolApplyPurchase && row.measureUnit && form.selectObj?.[row.mergeId]?.isSelected && row.outboundUnitType === measureTypeEnum.MEASURE.V"
+            v-if="
+              !boolApplyPurchase &&
+              row.measureUnit &&
+              form.selectObj?.[row.mergeId]?.isSelected &&
+              row.outboundUnitType === measureTypeEnum.MEASURE.V
+            "
             v-model="row.quantity"
             :min="0"
             :max="999999999"
@@ -269,7 +277,7 @@
 
 <script setup>
 import { defineExpose, defineProps, watch, computed, ref, inject, reactive } from 'vue'
-// import { matClsEnum } from '@/utils/enum/modules/classification'
+import { matClsEnum } from '@/utils/enum/modules/classification'
 import { measureTypeEnum } from '@/utils/enum/modules/wms'
 import { createUniqueString } from '@/utils/data-type/string'
 import { positiveNumPattern } from '@/utils/validate/pattern'
@@ -282,6 +290,7 @@ import useTableValidate from '@compos/form/use-table-validate'
 import useOverReceive from '@/views/wms/material-inbound/raw-material/application/composables/use-over-receive.js'
 import elExpandTableColumn from '@comp-common/el-expand-table-column.vue'
 
+import inboundInfoTable from '@/views/wms/material-inbound/raw-material/components/inbound-info-table'
 import priceSetColumns from '@/views/wms/material-inbound/raw-material/components/price-set-columns.vue'
 
 const props = defineProps({
@@ -296,6 +305,10 @@ const props = defineProps({
   fillableAmount: {
     type: Boolean,
     default: false
+  },
+  basicClass: {
+    type: [String, Number],
+    default: matClsEnum.MATERIAL.V
   }
 })
 
@@ -412,22 +425,30 @@ function rowInit(row) {
 }
 
 function rowWatch(row) {
-  watch([() => row.boolApplyPurchase, () => row?.applyPurchase], () => {
-    if (row.boolApplyPurchase && form.selectObj?.[row.mergeId]?.isSelected) {
-      row.quantity = row?.applyPurchase?.reduce((a, b) => a + (b.quantity || 0), 0)
-      row.mete = row?.applyPurchase?.reduce((a, b) => a + (b.mete || 0), 0)
-    }
-  }, { deep: true })
-  watch(() => row, () => {
-    if (!props.boolPartyA && form.selectObj?.[row.mergeId]?.isSelected) {
-      const _isSelected = form.selectObj[row.mergeId]?.isSelected
-      form.selectObj[row.mergeId] = {
-        ...form.selectObj[row.mergeId],
-        ...row,
-        isSelected: _isSelected
+  watch(
+    [() => row.boolApplyPurchase, () => row?.applyPurchase],
+    () => {
+      if (row.boolApplyPurchase && form.selectObj?.[row.mergeId]?.isSelected) {
+        row.quantity = row?.applyPurchase?.reduce((a, b) => a + (b.quantity || 0), 0)
+        row.mete = row?.applyPurchase?.reduce((a, b) => a + (b.mete || 0), 0)
       }
-    }
-  }, { deep: true })
+    },
+    { deep: true }
+  )
+  watch(
+    () => row,
+    () => {
+      if (!props.boolPartyA && form.selectObj?.[row.mergeId]?.isSelected) {
+        const _isSelected = form.selectObj[row.mergeId]?.isSelected
+        form.selectObj[row.mergeId] = {
+          ...form.selectObj[row.mergeId],
+          ...row,
+          isSelected: _isSelected
+        }
+      }
+    },
+    { deep: true }
+  )
 }
 
 // 处理重量变化
