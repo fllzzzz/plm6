@@ -37,7 +37,7 @@
           />
         </el-col>
         <el-col class="card-panel-col">
-          <Panel name="累计发运额（元）" text-color="#626262" num-color="#1890ff" :end-val="summaryData.shipAmount || 0" :precision="2" />
+          <Panel name="累计发运额（元）" text-color="#626262" num-color="#1890ff" :end-val="summaryData.shipAmount || 0" :precision="DP.YUAN" />
         </el-col>
         <el-col class="card-panel-col">
           <Panel
@@ -64,7 +64,7 @@
             text-color="#626262"
             num-color="#1890ff"
             :end-val="summaryData.shipAmountTime || 0"
-            :precision="2"
+            :precision="DP.YUAN"
           />
         </el-col>
       </el-row>
@@ -82,6 +82,7 @@ import { shipmentTrackingPM as permission } from '@/page-permission/contract'
 import { PICKER_OPTIONS_SHORTCUTS } from '@/settings/config'
 import { installProjectTypeEnum } from '@enum-ms/project'
 import { isBlank } from '@data-type/index'
+import { DP } from '@/settings/config'
 import checkPermission from '@/utils/system/check-permission'
 import moment from 'moment'
 

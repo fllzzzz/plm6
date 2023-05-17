@@ -42,7 +42,7 @@
           v-model="form.unitPrice"
           :step="1"
           :min="0"
-          :precision="2"
+          :precision="DP.YUAN"
           clearable
           class="input-underline"
           :controls="false"
@@ -60,6 +60,7 @@ import useVisible from '@compos/use-visible'
 import { add, editGet as edit } from '@/api/mes/production-config/drill-detail'
 import { ref, defineProps, defineEmits } from 'vue'
 import { ElNotification } from 'element-plus'
+import { DP } from '@/settings/config'
 
 const emit = defineEmits(['update:visible', 'refresh'])
 
