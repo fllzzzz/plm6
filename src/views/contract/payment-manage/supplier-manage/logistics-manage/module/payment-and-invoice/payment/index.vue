@@ -59,6 +59,7 @@
 import { get } from '@/api/supply-chain/logistics-payment-manage/logistics-payment'
 import { ref, defineProps, watch } from 'vue'
 import { tableSummary } from '@/utils/el-extra'
+import { DP } from '@/settings/config'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import pagination from '@crud/Pagination'
@@ -130,7 +131,7 @@ CRUD.HOOK.beforeRefresh = () => {
 // 合计
 function getSummaries(param) {
   return tableSummary(param, {
-    props: ['applyAmount'],
+    props: [['applyAmount', DP.YUAN]],
     toThousandFields: ['applyAmount']
   })
 }

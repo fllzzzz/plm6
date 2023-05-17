@@ -108,6 +108,7 @@ import checkPermission from '@/utils/system/check-permission'
 import { mesProductionStatisticsPM as permission } from '@/page-permission/mes'
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
+import { DP } from '@/settings/config'
 // import usePagination from '@compos/use-pagination'
 // import { tableSummary } from '@/utils/el-extra'
 import { ElNotification } from 'element-plus'
@@ -243,7 +244,7 @@ function getSummaries(param) {
           }
         }, 0)
       }
-      sums[index] = valuesSum?.toFixed(2)
+      sums[index] = valuesSum?.toFixed(DP.YUAN)
     }
   })
   return sums

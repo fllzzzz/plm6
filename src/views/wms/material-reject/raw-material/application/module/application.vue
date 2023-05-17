@@ -92,6 +92,7 @@ import { materialRejectStatusEnum, measureTypeEnum, orderSupplyTypeEnum } from '
 import { reviewStatusEnum } from '@/utils/enum/modules/common'
 import { materialStatusEnum } from '@/views/wms/material-reject/enum'
 import { tableSummary } from '@/utils/el-extra'
+import { DP } from '@/settings/config'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { setSpecInfoToList } from '@/utils/wms/spec'
 import { deepClone, isNotBlank, toFixed } from '@/utils/data-type'
@@ -306,7 +307,7 @@ function handleSubmitSuccess() {
 // 合计
 function getSummaries(param) {
   return tableSummary(param, {
-    props: ['quantity', 'mete', 'amount', 'amountExcludingVAT', 'inputVAT'],
+    props: ['quantity', 'mete', ['amount', DP.YUAN], ['amountExcludingVAT', DP.YUAN], ['inputVAT', DP.YUAN]],
     toThousandFields: ['amount', 'amountExcludingVAT', 'inputVAT']
   })
 }

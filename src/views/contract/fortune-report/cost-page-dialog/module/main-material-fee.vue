@@ -89,6 +89,7 @@ import { mainAuxiliaryTypeEnum } from '@enum-ms/contract'
 import { setSpecInfoToList } from '@/utils/wms/spec'
 import { toThousand } from '@data-type/number'
 import { tableSummary } from '@/utils/el-extra'
+import { DP } from '@/settings/config'
 import { parseTime } from '@/utils/date'
 import useMaxHeight from '@compos/use-max-height'
 
@@ -131,7 +132,7 @@ watch(
 // 合计
 function getSummaries(param) {
   return tableSummary(param, {
-    props: ['mete', 'amount'],
+    props: ['mete', ['amount', DP.YUAN]],
     toThousandFields: ['mete', 'amount']
   })
 }

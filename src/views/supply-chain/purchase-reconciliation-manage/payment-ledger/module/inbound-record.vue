@@ -140,7 +140,7 @@ const { maxHeight } = useMaxHeight(
 
 function getSummaries(param) {
   return tableSummary(param, {
-    props: ['amount', 'amountExcludingVAT', 'inputVAT', ['mete', DP.COM_WT__KG]],
+    props: [['amount', DP.YUAN], ['amountExcludingVAT', DP.YUAN], ['inputVAT', DP.YUAN], ['mete', DP.COM_WT__KG]],
     toThousandFields: ['amount', 'amountExcludingVAT', 'inputVAT', 'mete']
   })
 }

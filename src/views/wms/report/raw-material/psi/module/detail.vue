@@ -57,6 +57,7 @@ import { STEEL_ENUM } from '@/settings/config'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { setSpecInfoToList } from '@/utils/wms/spec'
 import { toThousand, getDP } from '@data-type/number'
+import { DP } from '@/settings/config'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
@@ -131,7 +132,7 @@ CRUD.HOOK.handleRefresh = async (crud, { data }) => {
 function getSummaries(param) {
   return tableSummary(param, {
     // 此页面钢材默认显示吨，保留3位，金额显示4位
-    props: ['quantity', ['mete', 3], 'amountExcludingVAT'],
+    props: ['quantity', ['mete', 3], ['amountExcludingVAT', DP.YUAN]],
     toThousandFields: ['amountExcludingVAT']
   })
 }

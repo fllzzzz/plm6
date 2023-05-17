@@ -54,6 +54,7 @@ import { ref } from 'vue'
 import moment from 'moment'
 
 import { tableSummary } from '@/utils/el-extra'
+import { DP } from '@/settings/config'
 
 import useMaxHeight from '@compos/use-max-height'
 import useChart from '@compos/use-chart'
@@ -84,7 +85,7 @@ const dataFormat = ref([
 
 // 合计
 function getSummaries(param) {
-  return tableSummary(param, { props: ['income', 'expend'], toThousandFields: ['income', 'expend'] })
+  return tableSummary(param, { props: [['income', DP.YUAN], ['expend', DP.YUAN]], toThousandFields: ['income', 'expend'] })
 }
 
 const { getMyChart } = useChart({

@@ -43,6 +43,7 @@ import { teamAttributeEnum } from '@enum-ms/mes'
 // import { inStaffPieceworkSystemPM as permission } from '@/page-permission/mes'
 import { arr2obj } from '@/utils/convert/type'
 import { deepClone } from '@data-type/index'
+import { DP } from '@/settings/config'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
@@ -121,7 +122,7 @@ function getSummaries(param) {
             return prev
           }
         }, 0)
-        sums[index] = sums[index].toFixed(2)
+        sums[index] = sums[index].toFixed(DP.YUAN)
       }
     }
   })

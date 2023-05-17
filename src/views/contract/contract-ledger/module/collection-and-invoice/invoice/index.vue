@@ -481,7 +481,7 @@ async function rowSubmit(row) {
 // 合计
 function getSummaries(param) {
   return tableSummary(param, {
-    props: ['invoiceAmount'],
+    props: [['invoiceAmount', DP.YUAN]],
     toThousandFields: ['invoiceAmount']
   })
 }

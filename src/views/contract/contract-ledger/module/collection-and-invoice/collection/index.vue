@@ -445,7 +445,7 @@ async function rowSubmit(row) {
 // 合计
 function getSummaries(param) {
   return tableSummary(param, {
-    props: ['collectionAmount'],
+    props: [['collectionAmount', DP.YUAN]],
     toThousandFields: ['collectionAmount']
   })
 }

@@ -546,7 +546,10 @@ function handleAmountChange(val, row) {
 
 // 合计
 function getSummaries(param) {
-  return tableSummary(param, { props: ['quantity', 'mete', 'amount'] })
+  return tableSummary(param, {
+    props: ['quantity', 'mete', ['amount', DP.YUAN]],
+    toThousandFields: ['mete', 'amount']
+  })
 }
 </script>
 
