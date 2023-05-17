@@ -53,7 +53,7 @@
       </el-table-column>
       <el-table-column prop="unitPrice" key="unitPrice" label="单价" align="center">
         <template v-slot="scope">
-          <span>{{ scope.row.unitPrice?.toFixed(2) }}</span>
+          <span>{{ scope.row.unitPrice?.toFixed(DP.YUAN) }}</span>
         </template>
       </el-table-column>
       <el-table-column prop="amount" key="amount" label="总价" align="center">

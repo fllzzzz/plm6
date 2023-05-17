@@ -41,7 +41,7 @@
       </el-table-column>
       <el-table-column prop="avgPrice" key="avgPrice" label="平均单价（元/吨）" align="center">
         <template v-slot="scope">
-          <span>{{ scope.row.avgPrice?.toFixed(2) }}</span>
+          <span>{{ scope.row.avgPrice?.toFixed(DP.YUAN) }}</span>
         </template>
       </el-table-column>
     </common-table>

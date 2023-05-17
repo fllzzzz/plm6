@@ -68,7 +68,7 @@
           </el-table-column>
           <el-table-column align="center" key="price" prop="price" :show-overflow-tooltip="true" label="工资总额（元）" min-width="60px">
             <template v-slot="scope">
-              <span>{{ (scope.row.price)?.toFixed(2) }}</span>
+              <span>{{ (scope.row.price)?.toFixed(DP.YUAN) }}</span>
             </template>
           </el-table-column>
           <el-table-column
@@ -80,7 +80,7 @@
             min-width="60px"
           >
             <template v-slot="scope">
-              <span>{{ scope.row.mete? ((scope.row.price)?.toFixed(2) / (scope.row.mete / 1000)?.toFixed(2)).toFixed(2) : 0 }}</span>
+              <span>{{ scope.row.mete? ((scope.row.price) / (scope.row.mete / 1000)).toFixed(DP.YUAN) : 0 }}</span>
             </template>
           </el-table-column>
         </common-table>
