@@ -117,7 +117,7 @@ const { maxHeight } = useMaxHeight({
 
 const dataFormat = ref([
   ['basicClass', ['parse-enum', matClsEnum, { bit: true }]],
-  ['avgPrice', 'to-thousand']
+  ['avgPrice', ['to-thousand-ck', 'YUAN']]
 ])
 
 watch(

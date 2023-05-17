@@ -107,7 +107,7 @@ const { maxHeight } = useMaxHeight({
 })
 
 const dataFormat = ref([
-  ['invoiceAmount', 'to-thousand'],
+  ['invoiceAmount', ['to-thousand-ck', 'YUAN']],
   ['createTime', ['parse-time', '{y}-{m}-{d}']],
   ['propertyType', ['parse-enum', supplierPayTypeEnum]],
   ['invoiceType', ['parse-enum', invoiceTypeEnum]],

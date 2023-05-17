@@ -88,7 +88,7 @@ const props = defineProps({
 const dataFormat = ref([
   ['paymentDate', ['parse-time', '{y}-{m}-{d}']],
   ['auditTime', 'parse-time'],
-  ['applyAmount', 'to-thousand']
+  ['applyAmount', ['to-thousand-ck', 'YUAN']]
 ])
 
 const tableRef = ref()

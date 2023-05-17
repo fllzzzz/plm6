@@ -240,10 +240,10 @@ const dataFormat = ref([
   ['createTime', 'parse-time'],
   ['paymentRate', ['to-fixed', 2]],
   ['invoiceRate', ['to-fixed', 2]],
-  ['amount', 'to-thousand'],
-  ['inboundAmount', 'to-thousand'],
-  ['paymentAmount', 'to-thousand'],
-  ['invoiceAmount', 'to-thousand']
+  ['amount', ['to-thousand-ck', 'YUAN']],
+  ['inboundAmount', ['to-thousand-ck', 'YUAN']],
+  ['paymentAmount', ['to-thousand-ck', 'YUAN']],
+  ['invoiceAmount', ['to-thousand-ck', 'YUAN']]
 ])
 
 const { crud, columns, CRUD } = useCRUD(

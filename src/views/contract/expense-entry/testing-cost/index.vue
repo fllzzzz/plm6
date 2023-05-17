@@ -131,7 +131,7 @@ provide('crud', crud)
 
 const dataFormat = ref([
   ['project', 'parse-project'],
-  ['totalAmount', 'to-thousand']
+  ['totalAmount', ['to-thousand-ck', 'YUAN']]
 ])
 
 const { maxHeight } = useMaxHeight({

@@ -96,7 +96,7 @@ const { crud, columns, CRUD } = useCRUD(
 )
 
 const dataFormat = ref([
-  ['actuallyPaymentAmount', 'to-thousand'],
+  ['actuallyPaymentAmount', ['to-thousand-ck', 'YUAN']],
   ['paymentDate', ['parse-time', '{y}-{m}-{d}']]
 ])
 

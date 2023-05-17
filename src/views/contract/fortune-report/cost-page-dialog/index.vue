@@ -136,7 +136,7 @@ const props = defineProps({
 
 const dataFormat = ref([
   ['rate', ['to-fixed', 2]],
-  ['amount', 'to-thousand']
+  ['amount', ['to-thousand-ck', 'YUAN']]
 ])
 
 watch(

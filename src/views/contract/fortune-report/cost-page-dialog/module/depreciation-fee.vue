@@ -76,9 +76,9 @@ watch(
 )
 
 const dataFormat = ref([
-  ['amount', 'to-thousand'],
+  ['amount', ['to-thousand-ck', 'YUAN']],
   ['mete', 'to-thousand'],
-  ['avgPrice', 'to-thousand']
+  ['avgPrice', ['to-thousand-ck', 'YUAN']]
 ])
 
 // 合计

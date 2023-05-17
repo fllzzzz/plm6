@@ -78,8 +78,8 @@ const { maxHeight } = useMaxHeight({
 })
 
 const dataFormat = ref([
-  ['income', 'to-thousand'],
-  ['expend', 'to-thousand']
+  ['income', ['to-thousand-ck', 'YUAN']],
+  ['expend', ['to-thousand-ck', 'YUAN']]
 ])
 
 // 合计

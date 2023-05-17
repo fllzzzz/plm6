@@ -93,8 +93,8 @@ const sourceMap = new Map([['unitPrice', 'originUnitPrice']])
 const tableRef = ref()
 const headerRef = ref()
 const dataFormat = ref([
-  ['unitPrice', 'to-thousand'],
-  ['totalPrice', 'to-thousand']
+  ['unitPrice', ['to-thousand-ck', 'YUAN']],
+  ['totalPrice', ['to-thousand-ck', 'YUAN']]
 ])
 const { crud, columns } = useCRUD(
   {

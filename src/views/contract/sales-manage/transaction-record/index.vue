@@ -60,8 +60,8 @@ const optShow = {
 const tableRef = ref()
 const dataFormat = ref([
   ['businessType', ['parse-enum', businessTypeEnum]],
-  ['totalContractAmount', 'to-thousand'],
-  ['totalSettlementAmount', 'to-thousand']
+  ['totalContractAmount', ['to-thousand-ck', 'YUAN']],
+  ['totalSettlementAmount', ['to-thousand-ck', 'YUAN']]
 ])
 const { crud, columns } = useCRUD(
   {

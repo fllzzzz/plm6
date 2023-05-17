@@ -52,9 +52,9 @@ const { maxHeight } = useMaxHeight({
 })
 
 const dataFormat = ref([
-  ['price', 'to-thousand'],
+  ['price', ['to-thousand-ck', 'YUAN']],
   ['mete', 'to-thousand'],
-  ['avgPrice', 'to-thousand']
+  ['avgPrice', ['to-thousand-ck', 'YUAN']]
 ])
 
 watch(

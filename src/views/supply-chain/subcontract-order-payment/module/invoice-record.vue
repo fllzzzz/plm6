@@ -123,7 +123,7 @@ const tableLoading = ref(false)
 const dataFormat = ref([
   ['invoiceType', ['parse-enum', invoiceTypeEnum]],
   ['receiveInvoiceDate', ['parse-time', '{y}-{m}-{d}']],
-  ['invoiceAmount', 'to-thousand'],
+  ['invoiceAmount', ['to-thousand-ck', 'YUAN']],
   ['taxRate', ['to-fixed', 2]]
 ])
 
