@@ -189,9 +189,9 @@
       </el-table-column>
       <el-table-column label="操作" width="225px" align="center" fixed="right">
         <template #default="{ row }">
-          <common-button icon="el-icon-printer" type="success" size="mini" @click="printLabel(row)" />
-          <common-button icon="el-icon-view" type="primary" size="mini" @click="previewLabel(row)" />
-          <common-button type="info" size="mini" @click="openRecordView(row)">打印记录</common-button>
+          <common-button v-permission="permission.print" icon="el-icon-printer" type="success" size="mini" @click="printLabel(row)" />
+          <common-button v-permission="permission.preview" icon="el-icon-view" type="primary" size="mini" @click="previewLabel(row)" />
+          <common-button v-permission="permission.record" type="info" size="mini" @click="openRecordView(row)">打印记录</common-button>
         </template>
       </el-table-column>
     </common-table>
@@ -212,7 +212,7 @@ import { DP, QR_SCAN_F_TYPE } from '@/settings/config'
 import { toFixed } from '@data-type/index'
 import { parseTime } from '@/utils/date'
 import { printEnclosure as printComponent } from '@/utils/print/index'
-import { enclosureLabelPM as permission } from '@/page-permission/mes'
+import { enclosureLabelPM as permission } from '@/page-permission/enclosure'
 import { convertUnits } from '@/utils/convert/unit'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
@@ -255,6 +255,7 @@ const currentLabel = ref({})
 const currentTaskId = ref()
 const recordVisible = ref(false)
 const productType = componentTypeEnum.ENCLOSURE.V
+provide('permission', permission)
 provide('productType', productType)
 const printType = printProductTypeEnum.ENCLOSURE.V
 provide('printType', printType)

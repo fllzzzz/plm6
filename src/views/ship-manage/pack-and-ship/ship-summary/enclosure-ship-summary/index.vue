@@ -94,13 +94,14 @@ CRUD.HOOK.handleRefresh = (crud, { data }) => {
   data.forEach((v) => {
     v.projectId = v.project?.id
     v.rate = v.sendMete && v.mete ? ((v.sendMete / v.mete) * 100).toFixed(2) : 0
+    v.ratio = v.ratio?.toFixed(2)
   })
 }
 
 function handleCurrentChange(val) {
   currentRow.value = val
   categoryList.value = val?.project?.projectContentList
-  categoryList.value.push({
+  categoryList.value?.push({
     id: 20,
     name: '配套制品',
     no: 64,

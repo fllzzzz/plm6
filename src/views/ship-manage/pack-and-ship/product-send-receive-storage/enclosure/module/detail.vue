@@ -17,7 +17,7 @@
       <print-table
         api-key="enclosureProductSendReceiveStorageDetail"
         v-permission="permission.detailPrint"
-        :params="{ ...props.detailQuery, ...query, workshopId: props.workshopId, productType: props.productType }"
+        :params="{ ...props.detailQuery, ...query, category: props.category, workshopId: props.workshopId, productType: props.productType }"
         size="mini"
         type="warning"
         class="filter-item"
@@ -159,44 +159,43 @@ import usePagination from '@compos/use-pagination'
 
 const emit = defineEmits(['update:modelValue', 'success'])
 const query = ref({
-  monomerId: undefined,
   areaId: undefined,
-  serialNumber: undefined
+  serialNumber: undefined,
 })
 
 const props = defineProps({
   modelValue: {
     type: Boolean,
-    require: true
+    require: true,
   },
   detailInfo: {
     type: Object,
-    default: () => {}
+    default: () => {},
   },
   permission: {
     type: Object,
-    default: () => {}
+    default: () => {},
   },
   showType: {
     type: String,
-    default: undefined
+    default: undefined,
   },
   detailQuery: {
     type: Object,
-    default: () => {}
+    default: () => {},
   },
   workshopId: {
-    type: Number
+    type: Number,
   },
   productType: {
-    type: Number
+    type: Number,
   },
   dateTime: {
-    type: String
+    type: String,
   },
   category: {
-    type: Number
-  }
+    type: Number,
+  },
 })
 
 const { visible, handleClose } = useVisible({ emit, props })
@@ -204,6 +203,7 @@ const { handleSizeChange, handleCurrentChange, total, setTotalPage, queryPage } 
 
 watch(visible, (val) => {
   if (val) {
+    query.value.areaId = undefined
     fetchBatch()
     fetchList()
   }
@@ -222,7 +222,7 @@ const { maxHeight } = useMaxHeight(
     paginate: true,
     minHeight: 300,
     navbar: false,
-    clientHRepMainH: true
+    clientHRepMainH: true,
   },
   visible
 )
@@ -232,7 +232,7 @@ const dataFormat = ref([
   ['inboundTotalLength', ['to-fixed', DP.COM_L__MM]],
   ['outboundTotalLength', ['to-fixed', DP.COM_L__MM]],
   ['stockTotalLength', ['to-fixed', DP.COM_L__MM]],
-  ['beginningTotalLength', ['to-fixed', DP.COM_L__MM]]
+  ['beginningTotalLength', ['to-fixed', DP.COM_L__MM]],
 ])
 
 // 合计
@@ -248,8 +248,8 @@ function getSummaries(param) {
       'stockTotalLength',
       'stockQuantity',
       'beginningQuantity',
-      'beginningTotalLength'
-    ]
+      'beginningTotalLength',
+    ],
   })
   return summary
 }
@@ -279,7 +279,7 @@ async function fetchList() {
       category: props.category,
       ...props.detailQuery,
       ...query.value,
-      ...queryPage
+      ...queryPage,
     })
     _list = content
     setTotalPage(totalElements)
