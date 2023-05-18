@@ -362,7 +362,7 @@ const { CRUD, crud, form } = regForm(defaultForm, formRef)
 
 const { maxHeight } = useMaxHeight({
   wrapperBox: '.enclosureForm',
-  paginate: true,
+  paginate: false,
   extraHeight: 40
 })
 // 折边件展开宽度校验
