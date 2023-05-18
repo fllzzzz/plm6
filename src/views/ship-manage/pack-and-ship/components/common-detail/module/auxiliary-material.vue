@@ -11,8 +11,8 @@
         <span>{{ row.area ? row.area?.name : '-' }}</span>
       </template>
     </el-table-column>
-    <el-table-column :show-overflow-tooltip="true" prop="serialNumber" label="编号" />
-    <el-table-column :show-overflow-tooltip="true" prop="name" label="名称" width="280px" />
+    <!-- <el-table-column :show-overflow-tooltip="true" prop="serialNumber" label="编号" /> -->
+    <el-table-column :show-overflow-tooltip="true" prop="name" label="名称" />
     <el-table-column prop="measureUnit" label="单位" align="center" />
     <el-table-column :show-overflow-tooltip="true" prop="color" label="颜色">
       <template #default="{ row }">

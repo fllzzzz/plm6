@@ -1,9 +1,14 @@
 <template>
-  <common-table :data="list" :max-height="maxHeight" empty-text="暂无数据" style="width: 100%">
+  <common-table :data="list" :show-empty:symbol="false" :max-height="maxHeight" empty-text="暂无数据" style="width: 100%">
     <el-table-column label="序号" type="index" align="center" width="60" />
-    <el-table-column :show-overflow-tooltip="true" prop="serialNumber" label="编号" />
-    <el-table-column :show-overflow-tooltip="true" prop="monomer.name" label="单体" />
-    <el-table-column :show-overflow-tooltip="true" prop="name" label="辅材类别" width="280px" />
+    <!-- <el-table-column :show-overflow-tooltip="true" prop="serialNumber" label="编号" /> -->
+    <el-table-column :show-overflow-tooltip="true" prop="monomer.name" label="单体">
+      <template #default="{ row }">
+        <span>{{ row.monomer ? row.monomer?.name : '-' }}</span>
+      </template>
+    </el-table-column>
+    <el-table-column :show-overflow-tooltip="true" prop="name" label="名称" />
+    <el-table-column :show-overflow-tooltip="true" prop="specification" label="规格" />
     <el-table-column prop="showQuantity" label="数量" align="center" />
     <!-- <el-table-column :show-overflow-tooltip="true" label="计量单位" align="center">
       <span>件</span>
@@ -13,8 +18,8 @@
         {{ scope.row.measureUnit }}
       </template>
     </el-table-column>
-    <el-table-column :show-overflow-tooltip="true" prop="color" label="颜色" />
-    <el-table-column :show-overflow-tooltip="true" prop="specification" label="规格" />
+    <el-table-column :show-overflow-tooltip="true" prop="unitPrice" label="单价(元)" />
+    <el-table-column :show-overflow-tooltip="true" prop="totalPrice" label="总价(元)" />
   </common-table>
 </template>
 
@@ -24,11 +29,11 @@ import { defineProps } from 'vue'
 defineProps({
   list: {
     type: Array,
-    default: () => []
+    default: () => [],
   },
   maxHeight: {
     type: [String, Number],
-    default: undefined
-  }
+    default: undefined,
+  },
 })
 </script>
