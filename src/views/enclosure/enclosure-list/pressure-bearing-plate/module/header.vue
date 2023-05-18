@@ -62,7 +62,7 @@
           btn-type="primary"
           btn-size="mini"
           class="filter-item"
-          @success="crud.toQuery"
+          @success="uploadSuccess"
         />
         <upload-btn
           v-if="currentArea && currentArea.id && checkPermission(crud.permission.import)"
@@ -73,7 +73,7 @@
           btn-type="success"
           btn-size="mini"
           class="filter-item"
-          @success="crud.toQuery"
+          @success="uploadSuccess"
         />
         <common-button
           type="primary"
@@ -350,9 +350,22 @@ async function deleteEnclosure() {
   try {
     await delEnclosureByArea(crud.query.enclosurePlanId)
     crud.notify('操作成功', CRUD.NOTIFICATION_TYPE.SUCCESS)
-    crud.toQuery()
+    uploadSuccess()
   } catch (e) {
     console.log('清空区域下围护', e)
   }
+}
+
+function uploadSuccess() {
+  getData()
+  crud.toQuery()
+}
+
+CRUD.HOOK.afterSubmit = () => {
+  getData()
+}
+
+CRUD.HOOK.afterDelete = () => {
+  getData()
 }
 </script>

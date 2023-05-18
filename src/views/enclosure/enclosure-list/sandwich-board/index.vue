@@ -344,6 +344,19 @@
             <div v-else>{{ scope.row.color ? scope.row.color : '-' }}</div>
           </template>
         </el-table-column>
+         <el-table-column
+          v-if="columns.visible('remark')"
+          key="remark"
+          prop="remark"
+          :show-overflow-tooltip="true"
+          label="备注"
+          min-width="100px"
+        >
+          <template v-slot="scope">
+            <el-input v-if="scope.row.isModify" v-model="scope.row.remark" placeholder="备注" type="textarea" maxlength="200" style="width: 100%" />
+            <div v-else>{{ scope.row.remark ? scope.row.remark : '-' }}</div>
+          </template>
+        </el-table-column>
         <el-table-column
           v-if="columns.visible('draw') && crud.query.category === TechnologyTypeAllEnum.BENDING.V"
           key="draw"
