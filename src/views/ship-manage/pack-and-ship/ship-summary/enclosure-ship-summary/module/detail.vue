@@ -1,7 +1,5 @@
 <template>
-  <div v-show="!props.showType && props.query?.category !== 64" class="my-code" style="margin-top: 20px">
-    *点击上方表格数据查看详情
-  </div>
+  <div v-show="!props.showType && props.query?.category !== 64" class="my-code" style="margin-top: 20px">*点击上方表格数据查看详情</div>
   <div v-show="props.showType" style="margin-top: 20px">
     <div class="head-container" v-show="props.query?.category !== 64">
       <el-tag size="small" style="float: left">{{
@@ -71,22 +69,17 @@
     >
       <el-table-column prop="index" label="序号" align="center" width="45" type="index" />
       <el-table-column
-        key="area.name"
-        prop="area.name"
-        label="计划"
+        v-if="showType !== 'INVENTORY'"
+        key="workshop.name"
+        prop="workshop.name"
+        label="车间"
         align="center"
         :show-overflow-tooltip="true"
       />
+      <el-table-column key="area.name" prop="area.name" label="计划" align="center" :show-overflow-tooltip="true" />
       <el-table-column key="name" prop="name" label="名称" align="center" :show-overflow-tooltip="true" min-width="100px" />
       <el-table-column key="serialNumber" prop="serialNumber" label="编号" align="center" :show-overflow-tooltip="true" />
-      <el-table-column
-        key="plate"
-        prop="plate"
-        label="板型"
-        align="center"
-        :show-overflow-tooltip="true"
-        min-width="120px"
-      />
+      <el-table-column key="plate" prop="plate" label="板型" align="center" :show-overflow-tooltip="true" min-width="120px" />
       <el-table-column key="length" prop="length" label="单长（mm）" align="center" :show-overflow-tooltip="true">
         <template #default="{ row }">
           <span>{{ row.length || '-' }}</span>
@@ -124,23 +117,23 @@ import usePagination from '@compos/use-pagination'
 const props = defineProps({
   modelValue: {
     type: Boolean,
-    default: false
+    default: false,
   },
   showType: {
-    type: String
+    type: String,
   },
   query: {
-    type: Object
+    type: Object,
   },
   workshopId: {
-    type: Number
+    type: Number,
   },
   projectId: {
-    type: Number
+    type: Number,
   },
   weightStatus: {
-    type: Number
-  }
+    type: Number,
+  },
 })
 
 const list = ref([])
@@ -171,7 +164,7 @@ async function fetchDetail() {
       ...props.query,
       workshopId: props.workshopId,
       shipEnumType: projectSearchTypeEnum[props.showType].V,
-      ...queryPage
+      ...queryPage,
     })
     list.value = content
     setTotalPage(totalElements)
@@ -185,7 +178,7 @@ async function fetchDetail() {
 // 合计
 function getSummaries(param) {
   const summary = tableSummary(param, {
-    props: ['quantity', 'totalLength']
+    props: ['quantity', 'totalLength'],
   })
   return summary
 }
