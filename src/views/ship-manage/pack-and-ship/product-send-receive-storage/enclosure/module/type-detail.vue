@@ -54,6 +54,7 @@
               projectId: props.detailQuery?.projectId,
               workshopId: props.workshopId,
               productType: props.productType,
+              category: props.category,
               ...query,
               type: productSearchTypeEnum[props.showType].V,
             }"
