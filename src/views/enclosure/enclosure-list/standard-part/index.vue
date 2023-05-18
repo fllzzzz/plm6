@@ -3,7 +3,7 @@
     <template v-if="pageShow">
       <!--工具栏-->
       <div class="head-container">
-        <mHeader :project-id="globalProjectId" @currentChange="currentChange" @currentAreaChange="currentAreaChange"/>
+        <mHeader :project-id="globalProjectId" />
       </div>
       <!--表格渲染-->
       <common-table
@@ -55,6 +55,34 @@
           <span v-else>{{ row.quantity }}</span>
         </template>
       </el-table-column>
+      <el-table-column v-if="columns.visible('useProperty')" prop="useProperty" label="使用范围" align="center" min-width="120px">
+      <template #default="{ row }">
+        <common-select
+          v-if="row.isModify"
+          v-model="row.useProperty"
+          :options="auxiliaryMaterialUseTypeEnum.ENUM"
+          type="enum"
+          size="small"
+          clearable
+          placeholder="使用范围"
+        />
+        <span v-else>{{ auxiliaryMaterialUseTypeEnum.VL[row.useProperty] }}</span>
+      </template>
+    </el-table-column>
+    <el-table-column prop="remark" label="备注" align="center" min-width="120px">
+      <template #default="{ row }">
+        <el-input
+          v-if="row.isModify"
+          v-model.trim="row.remark"
+          type="textarea"
+          :autosize="{ minRows: 1, maxRows: 6 }"
+          :maxlength="200"
+          placeholder="备注"
+          style="width:100%"
+        />
+        <span v-else>{{ row.remark }}</span>
+      </template>
+    </el-table-column>
       <el-table-column
         v-if="checkPermission([...permission.edit, ...permission.del])"
         label="操作"
@@ -101,6 +129,7 @@ import { watch, provide, ref } from 'vue'
 
 import { isNotBlank } from '@data-type/index'
 import { TechnologyTypeAllEnum } from '@enum-ms/contract'
+import { auxiliaryMaterialUseTypeEnum } from '@enum-ms/plan'
 import { validate } from '@compos/form/use-table-validate'
 import checkPermission from '@/utils/system/check-permission'
 import useMaxHeight from '@compos/use-max-height'
@@ -124,8 +153,6 @@ const optShow = {
 
 const tableRef = ref()
 const originRow = ref({})
-const currentMonomer = ref({})
-const currentArea = ref({})
 
 const typeOption = ref([])
 const pageShow = ref(false)
@@ -191,19 +218,10 @@ watch(
   { deep: true, immediate: true }
 )
 
-function currentChange(val) {
-  currentMonomer.value = val
-}
-
-function currentAreaChange(val) {
-  currentArea.value = val
-}
-
-provide('currentMonomer', currentMonomer)
 provide('globalProject', globalProject)
-provide('currentArea', currentArea)
 
 const tableRules = {
+  useProperty: [{ required: true, message: '请输入选择使用范围', trigger: 'change' }],
   name: [{ required: true, message: '请输入名称', trigger: 'blur' }],
   specification: [{ required: true, message: '请输入规格', trigger: 'blur' }],
   measureUnit: [{ required: true, message: '请输入单位', trigger: 'blur' }],

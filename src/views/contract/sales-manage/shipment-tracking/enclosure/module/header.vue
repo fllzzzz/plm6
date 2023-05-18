@@ -30,7 +30,7 @@
       />
       <el-input
         v-model="query.plate"
-        placeholder="可输入版型搜索"
+        placeholder="可输入板型搜索"
         class="filter-item"
         style="width: 200px"
         size="small"
