@@ -104,4 +104,14 @@ export const enclosureTypeAnalysisPM = {
   get: ['enclosure_type_analysis:get'] // 列表
 }
 
+// 围护-产品标签
+export const enclosureLabelPM = {
+  get: ['enclosure_label:get'], // 围护列表
+  printSetting: ['enclosure_label:printSetting'], // 打印设置
+  batchPrint: ['enclosure_label:batchPrint'], // 批量打印标签
+  print: ['enclosure_label:print'], // 标签打印
+  preview: ['enclosure_label:preview'], // 标签预览
+  record: ['enclosure_label:record'] // 标签打印记录
+}
+
 // --------------------------- 生产管理 end --------------------------------

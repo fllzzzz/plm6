@@ -87,7 +87,7 @@ const productSendReceiveStorageDetail = {
     verticleAlign: verticleAlignEnum.CENTER.V,
     size: 10,
     bold: 'bold',
-    height: 6,
+    height: 12,
     width: 190,
     emptyVal: '',
     /**
@@ -102,8 +102,10 @@ const productSendReceiveStorageDetail = {
      * @param {*} format 格式转换
      */
     fields: [ // 字段内容
-      { show: false, source: dataSourceEnum.SYSTEM.V, key: 'printDate', title: '打印时间：', width: 150, type: typeEnum.DATE.K, format: 'YY/MM/DD kk:mm:ss' },
-      { show: false, source: dataSourceEnum.SYSTEM.V, key: 'printer', title: '打印人：', width: 40, type: typeEnum.USER_NAME.K }
+      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'projectName', title: '项目名称：', align: alignEnum.LEFT.V, width: 190, type: typeEnum.OTHER.K },
+      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'dateTime', title: '统计日期：', width: 90, type: typeEnum.DATE.K, format: 'YY/MM/DD kk:mm:ss' },
+      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'printDate', title: '打印时间：', width: 60, type: typeEnum.DATE.K, format: 'YY/MM/DD kk:mm:ss' },
+      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'printer', title: '打印人：', width: 40, type: typeEnum.USER_NAME.K }
     ]
   },
   /**
@@ -205,15 +207,15 @@ const productSendReceiveStorageDetail = {
       { show: true, key: 'specification', title: '规格', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 10, type: typeEnum.SPECIFICATION.K },
       { show: true, key: 'length', title: '长度', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 10, type: typeEnum.LENGTH.K },
       { show: true, key: 'quantity', title: '清单数', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 14, type: typeEnum.QUANTITY.K, sum: true },
-      { show: true, key: 'totalNetWeight', title: '清单量(米)', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 14, type: typeEnum.METE.K, sum: true },
+      { show: true, key: 'totalNetWeight', title: '清单量(kg)', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 14, type: typeEnum.METE.K, sum: true },
       { show: true, key: 'beginningQuantity', title: '期初数', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 10, type: typeEnum.QUANTITY.K, sum: true },
-      { show: true, key: 'beginningNetWeight', title: '期初量(米)', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 10, type: typeEnum.METE.K, sum: true },
+      { show: true, key: 'beginningNetWeight', title: '期初量(kg)', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 10, type: typeEnum.METE.K, sum: true },
       { show: true, key: 'inboundQuantity', title: '入库数', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 10, type: typeEnum.QUANTITY.K, sum: true },
-      { show: true, key: 'inboundNetWeight', title: '入库量(米)', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 10, type: typeEnum.METE.K, sum: true },
+      { show: true, key: 'inboundNetWeight', title: '入库量(kg)', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 10, type: typeEnum.METE.K, sum: true },
       { show: true, key: 'outboundQuantity', title: '出库数', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 10, type: typeEnum.QUANTITY.K, sum: true },
-      { show: true, key: 'outboundNetWeight', title: '出库量(米)', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 10, type: typeEnum.METE.K, sum: true },
+      { show: true, key: 'outboundNetWeight', title: '出库量(kg)', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 10, type: typeEnum.METE.K, sum: true },
       { show: true, key: 'stockQuantity', title: '期末数', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 10, type: typeEnum.QUANTITY.K, sum: true },
-      { show: true, key: 'stockNetWeight', title: '期末量(米)', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 10, type: typeEnum.METE.K, sum: true }
+      { show: true, key: 'stockNetWeight', title: '期末量(kg)', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 10, type: typeEnum.METE.K, sum: true }
     ]
   }
 }

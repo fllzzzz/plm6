@@ -99,7 +99,7 @@
             </el-form-item>
           </el-form>
           <template #reference>
-            <common-button type="primary" :disabled="configLoading" size="mini">打印设置</common-button>
+            <common-button type="primary" v-permission="permission.printSetting" :disabled="configLoading" size="mini">打印设置</common-button>
           </template>
           <div style="text-align: right">
             <common-button size="small" type="success" @click="cancelConfig">取 消</common-button>
@@ -133,7 +133,7 @@ v-show="productType & (componentTypeEnum.ARTIFACT.V | componentTypeEnum.MACHINE_
       </template>
       <template v-slot:viewLeft>
         <common-button
-          v-permission="permission.print"
+          v-permission="permission.batchPrint"
           type="success"
           size="mini"
           :disabled="crud.selections.length === 0"
