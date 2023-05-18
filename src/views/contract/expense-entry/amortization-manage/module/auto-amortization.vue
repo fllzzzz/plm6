@@ -13,7 +13,7 @@
       <el-tag v-if="list.length" effect="plain" type="warning" size="medium">于 {{ autoAmortizationDate }} 自动摊销</el-tag>
     </template>
     <template #content>
-      <common-table :data="list" row-key="id" tree-default-expand-all :data-format="columnsDataFormat" :indent="0" :max-height="maxHeight">
+      <common-table :data="list" row-key="key" tree-default-expand-all :data-format="columnsDataFormat" :indent="0" :max-height="maxHeight">
         <el-table-column prop="index" key="index" label="序号" align="center" width="80" />
         <el-table-column prop="date" key="date" label="摊销时间段" align="center">
           <template #default="{ row }">
@@ -43,7 +43,6 @@ import { expenseClassEnum } from '@enum-ms/contract'
 
 import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'
-import useMatClsList from '@/composables/store/use-mat-class-list'
 
 const props = defineProps({
   modelValue: {
@@ -58,8 +57,6 @@ const autoAmortizationDate = ref()
 
 const emit = defineEmits(['update:modelValue'])
 const { visible, handleClose } = useVisible({ emit, props })
-
-const { rawMatClsKV } = useMatClsList()
 
 watch(
   () => visible.value,
@@ -94,18 +91,11 @@ async function getList() {
       row.date = `${_startDate} ~ ${_endDate}`
       row.index = index + 1
       row.isParent = true
+      row.key = Math.random()
       // 科目层级名称
-      const raw = rawMatClsKV.value[row.bizId]
-      if (raw) {
-        const names = [raw.basicClassName, ...raw.fullPathName]
-        row.amortizationClassName = names.at(-1)
-        names.splice(names.length - 1)
-        row.fullPathName = names.join(' > ')
-      } else if (row.bizId === 0) {
-        const _name = expenseClassEnum.VL[row.expenseClassEnum]
-        if (_name !== row.amortizationClassName) {
-          row.fullPathName = _name
-        }
+      const _name = expenseClassEnum.VL[row.expenseClassEnum]
+      if (_name !== row.amortizationClassName) {
+        row.fullPathName = _name
       }
       row.children?.forEach((v, i) => {
         const _startDate = moment(v.startDate).format('YYYY-MM-DD')

@@ -136,7 +136,6 @@ import mDetail from './module/detail.vue'
 import amortizationSetting from './module/amortization-setting'
 import autoAmortization from './module/auto-amortization'
 import manualAmortization from './module/manual-amortization'
-import useMatClsList from '@/composables/store/use-mat-class-list'
 
 const tableRef = ref()
 const amortizationTreeRef = ref()
@@ -163,7 +162,6 @@ const columnsDataFormat = ref([
 ])
 
 provide('expenseClassEnumKV', expenseClassEnumKV)
-const { rawMatClsKV } = useMatClsList()
 
 const optShow = {
   add: false,
@@ -259,18 +257,9 @@ CRUD.HOOK.handleRefresh = async (crud, { data }) => {
     const _endDate = moment(row.endDate).format('YYYY-MM-DD')
     row.date = `${_startDate} ~ ${_endDate}`
     row.bizId = amortizationKV.value[row.amortizationClassId]?.bizId
-    // 科目层级名称
-    const raw = rawMatClsKV.value[row.bizId]
-    if (raw) {
-      const names = [raw.basicClassName, ...raw.fullPathName]
-      row.name = names.at(-1)
-      names.splice(names.length - 1)
-      row.fullPathName = names.join(' > ')
-    } else if (row.bizId === 0) {
-      const _name = expenseClassEnum.VL[row.expenseClassEnum]
-      if (_name !== row.name) {
-        row.fullPathName = _name
-      }
+    const _name = expenseClassEnum.VL[row.expenseClassEnum]
+    if (_name !== row.name) {
+      row.fullPathName = _name
     }
   })
 }

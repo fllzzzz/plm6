@@ -71,7 +71,6 @@ import { expenseClassEnum } from '@enum-ms/contract'
 import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'
 import { ElMessage } from 'element-plus'
-import useMatClsList from '@/composables/store/use-mat-class-list'
 
 const props = defineProps({
   modelValue: {
@@ -85,8 +84,6 @@ const listLoading = ref(false)
 
 const emit = defineEmits(['success', 'update:modelValue'])
 const { visible, handleClose } = useVisible({ emit, props })
-
-const { rawMatClsKV } = useMatClsList()
 
 watch(
   () => visible.value,
@@ -140,18 +137,13 @@ async function getList() {
       row.date = `${_startDate} ~ ${_endDate}`
       row.index = index + 1
       row.isParent = true
-      // 科目层级名称
-      const raw = rawMatClsKV.value[row.bizId]
-      if (raw) {
-        const names = [raw.basicClassName, ...raw.fullPathName]
-        row.amortizationClassName = names.at(-1)
-        names.splice(names.length - 1)
-        row.fullPathName = names.join(' > ')
-      } else if (row.bizId === 0) {
-        const _name = expenseClassEnum.VL[row.expenseClassEnum]
-        if (_name !== row.amortizationClassName) {
-          row.fullPathName = _name
-        }
+      const _name = expenseClassEnum.VL[row.expenseClassEnum]
+      if (_name !== row.amortizationClassName) {
+        row.fullPathName = _name
+      }
+      // 汇总数据没有id
+      if (!row.id) {
+        row.id = Math.random()
       }
       row.children?.forEach((v, i) => {
         const _startDate = moment(v.startDate).format('YYYY-MM-DD')

@@ -191,7 +191,7 @@ function nodeClick(row = {}) {
   }
   rowDetail.value = row
   gasTreeRef.value.setCurrentKey(row.id)
-  crud.query.wmsClassificationId = row.id
+  crud.query.classifyId = row.id
   crud.toQuery()
 }
 

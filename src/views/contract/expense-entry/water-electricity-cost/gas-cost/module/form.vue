@@ -19,9 +19,9 @@
     </template>
     <div class="form">
       <el-form ref="formRef" :model="form" :rules="rules" size="small" label-width="100px">
-        <el-form-item label="气体分类" prop="wmsClassificationId">
+        <el-form-item label="气体分类" prop="classifyId">
           <el-cascader
-            v-model="form.wmsClassificationId"
+            v-model="form.classifyId"
             :options="props.gasTree"
             :props="{ value: 'id', label: 'name', children: 'children', expandTrigger: 'hover', emitPath: false }"
             show-all-levels
@@ -98,7 +98,7 @@ const formRef = ref()
 
 const defaultForm = {
   id: undefined,
-  wmsClassificationId: undefined,
+  classifyId: undefined,
   accountingUnit: undefined,
   usedMete: undefined,
   totalAmount: undefined,
@@ -121,7 +121,7 @@ const validateQuantity = (rule, value, callback) => {
 }
 
 const validateAccountingUnit = (rule, value, callback) => {
-  if (!form.wmsClassificationId) {
+  if (!form.classifyId) {
     callback(new Error('请先选择气体分类'))
   } else if (!form.accountingUnit) {
     callback(new Error('请联系管理员进行对科目进行计量配置'))
@@ -132,7 +132,7 @@ const validateAccountingUnit = (rule, value, callback) => {
 const rules = {
   startDate: [{ required: true, message: '请选择起始日期', trigger: 'blur' }],
   endDate: [{ required: true, message: '请选择结束日期', trigger: 'blur' }],
-  wmsClassificationId: [{ required: true, message: '请选择气体分类', trigger: 'blur' }],
+  classifyId: [{ required: true, message: '请选择气体分类', trigger: 'blur' }],
   accountingUnit: [{ required: true, validator: validateAccountingUnit, trigger: 'blur' }],
   usedMete: [{ required: true, validator: validateQuantity, trigger: 'blur' }],
   totalAmount: [{ required: true, validator: validateQuantity, trigger: 'blur' }]
@@ -140,7 +140,6 @@ const rules = {
 
 // 选择气体
 function handleGasChange(id) {
-  console.log('id: ', id)
   form.accountingUnit = props.lastGasKV[id]?.accountingUnit
 }
 
@@ -165,7 +164,7 @@ CRUD.HOOK.afterToAdd = (crud, form) => {
   setDate()
   // 末级
   if (props.rowDetail?.id && !props.rowDetail.children) {
-    form.wmsClassificationId = props.rowDetail.id
+    form.classifyId = props.rowDetail.id
     form.accountingUnit = props.rowDetail.accountingUnit
   }
 }

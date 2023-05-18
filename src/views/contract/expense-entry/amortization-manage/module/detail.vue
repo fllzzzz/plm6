@@ -11,18 +11,16 @@
   >
     <template #content>
       <el-card class="amortization-detail">
-        <el-row :gutter="20" class="card-wrap">
-          <el-col :span="6" class="card-col">{{ props.detailRow.name }} </el-col>
-          <el-col :span="6" class="card-col">
-            时间 <span class="blue">{{ props.detailRow.date }}</span>
-          </el-col>
-          <el-col :span="6" class="card-col">
-            摊销金额 <span class="blue">{{ props.detailRow.amount }} 元</span>
-          </el-col>
-          <el-col :span="6" class="card-col">
-            摊销产量 <span class="blue">{{ props.detailRow.productMete }} 吨</span>
-          </el-col>
-        </el-row>
+        <div>{{ props.detailRow.name }}</div>
+        <div>
+          时间 <span class="blue">{{ props.detailRow.date }}</span>
+        </div>
+        <div>
+          摊销金额 <span class="blue">{{ props.detailRow.amount }} 元</span>
+        </div>
+        <div>
+          摊销产量 <span class="blue">{{ props.detailRow.productMete }} 吨</span>
+        </div>
       </el-card>
       <common-table ref="tableRef" v-loading="tableLoading" :data-format="columnsDataFormat" :data="list" :max-height="maxHeight">
         <el-table-column label="序号" type="index" align="center" width="60" />
@@ -104,19 +102,21 @@ async function fetchList() {
 <style lang="scss" scoped>
 .amortization-detail {
   margin-bottom: 20px;
-  .card-wrap {
-    text-align: center;
-    .card-col {
+  ::v-deep(.el-card__body) {
+    display: flex;
+    > div:first-child {
+      color: #706f6f;
+      font-weight: bold;
+      padding-right: 30px;
+    }
+    > div:not(:first-child) {
+      flex: 1;
+      text-align: center;
       border-left: 1px solid #ebeef5;
       .blue {
         color: #0079ff;
         font-weight: bold;
       }
-    }
-    > :first-child {
-      border: 0;
-      color: #706f6f;
-      font-weight: bold;
     }
   }
 }

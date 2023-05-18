@@ -42,7 +42,7 @@ const props = defineProps({
 
 const defaultQuery = {
   year: parseTime(new Date(), '{y}'),
-  wmsClassificationId: undefined
+  classifyId: undefined
 }
 
 // 如果时间选取的时间年份比当前的时间大就被禁用
