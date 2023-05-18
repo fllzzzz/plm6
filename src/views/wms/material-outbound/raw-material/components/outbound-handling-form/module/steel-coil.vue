@@ -138,39 +138,28 @@
             <project-set-columns project-clearable :form="form" />
             <el-table-column label="操作" width="100px" align="center" fixed="right">
               <template #default="{ $index }">
-                <common-button
-                  v-show="!(form.list.length === 1)"
-                  icon="el-icon-delete"
-                  type="danger"
-                  size="mini"
-                  class="icon-button"
-                  @click="delRow($index)"
-                />
-                <common-button
-                  v-show="$index === form.list.length - 1"
-                  icon="el-icon-plus"
-                  type="success"
-                  size="mini"
-                  class="icon-button"
-                  @click="addRow"
-                />
+                <common-button icon="el-icon-delete" type="danger" size="mini" class="icon-button" @click="delRow($index)" />
+                <common-button icon="el-icon-plus" type="success" size="mini" class="icon-button" @click="addRow($index)" />
               </template>
             </el-table-column>
           </common-table>
+          <div class="tip" style="margin-top:10px;" v-if="surplusMaterial.width < 0">
+            <span>* 错误提示：</span>
+            <span> 条板总宽不可大于开平宽度</span>
+          </div>
         </template>
       </div>
     </div>
     <div v-if="isPlateOut" style="margin-left: 30px">
       <span class="set-title">单段开平预览（横向）</span>
       <div style="display: flex; margin-bottom: 15px; margin-top: 15px">
-        <div
-          v-if="
-            form.singleQuantity && ((surplusMaterial.width && plateTotalQuantity > 1) || (!surplusMaterial.width && plateTotalQuantity))
-          "
-          class="preview-info"
-          :style="`height:${previewHeight}px;`"
-        >
-          <div :style="`height:${previewHeight}px;overflow:hidden;`">
+        <div class="preview-info" :style="`height:${previewHeight}px;`">
+          <div
+            v-if="
+              form.singleQuantity && ((surplusMaterial.width && plateTotalQuantity > 1) || (!surplusMaterial.width && plateTotalQuantity))
+            "
+            :style="`height:${previewHeight}px;overflow:hidden;`"
+          >
             <div v-for="(item, index) in form.list" :key="index">
               <template v-if="item.quantity && item.width">
                 <div
@@ -199,6 +188,12 @@
               {{ surplusMaterial.width }}{{ baseUnit.width.unit }}
             </div>
           </div>
+          <div
+            v-else
+            :style="`height:${previewHeight}px;line-height:${previewHeight}px;text-align:center;color: #9e9ea1;border: 1px solid;`"
+          >
+            <span>请配置单段长度和单段配置！</span>
+          </div>
           <mark-size
             :sizeInfo="`${material.width}${baseUnit.width.unit}`"
             direction="vertical"
@@ -209,9 +204,6 @@
             direction="horizontal"
             :customStyle="`width:320px;bottom:-30px;left:0px;`"
           />
-        </div>
-        <div v-else :style="`height:${previewHeight}px;width:370px;line-height:${previewHeight}px;text-align:center;color: #9e9ea1;`">
-          <span>请配置单段长度和单段配置！</span>
         </div>
         <div class="total-info">
           <div class="total-item">
@@ -270,7 +262,7 @@
           <el-input
             v-model.trim="form.remark"
             type="textarea"
-            :autosize="{ minRows: 3, maxRows: 9 }"
+            :autosize="{ minRows: 6, maxRows: 6 }"
             maxlength="200"
             show-word-limit
             placeholder="备注"
@@ -536,9 +528,9 @@ watchEffect(async () => {
     })) || 0
 })
 
-function addRow() {
+function addRow(index) {
   const _row = rowInit()
-  form.value.list.push(_row)
+  form.value.list.splice(index + 1, 0, _row)
 }
 
 // 删除行

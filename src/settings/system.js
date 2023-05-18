@@ -121,6 +121,7 @@ export const showProjectSearch = [
   { component: '/plan/technical-data-manage/change-file/index', type: allPT, required: true },
   { component: '/plan/technical-data-manage/model/index', type: allPT, required: true },
   { component: '/plan/technical-data-manage/other-file/index', type: allPT, required: true },
+  { component: '/plan/technical-data-manage/technical-achievement/process/index', type: allPT, required: false },
   { component: '/plan/technical-manage/summary-list/index', type: allPT, required: true },
   { component: '/plan/technical-manage/steel-statistical/index', type: allPT, required: true },
   { component: '/plan/technical-manage/auxiliary-material/index', type: allPT, required: true },
