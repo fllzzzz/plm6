@@ -6,13 +6,11 @@
     :title="crud.status.title"
     :show-close="true"
     :wrapper-closable="false"
-    size="90%"
+    size="65%"
     custom-class="raw-mat-inbound-application-record-form"
   >
     <template #titleAfter>
      <div>项目:<span>{{globalProject.serialNumber}}</span><span style="margin-left:5px;">{{globalProject.shortName}}</span></div>
-     <div v-if="isNotBlank(currentMonomer)" style="margin-left:10px;">单体:{{currentMonomer.name}}</div>
-     <div v-if="isNotBlank(currentArea)" style="margin-left:10px;">区域:{{currentArea.name}}</div>
     </template>
     <template #titleRight>
       <common-button :loading="crud.status.cu === 2" type="primary" size="mini" @click="crud.submitCU">确认</common-button>
@@ -31,6 +29,18 @@
           :cell-class-name="wrongCellMask"
         >
           <el-table-column label="序号" type="index" align="center" width="50" />
+           <el-table-column prop="useProperty" label="使用范围" align="center">
+            <template v-slot="scope">
+              <common-select
+                v-model="scope.row.useProperty"
+                :options="auxiliaryMaterialUseTypeEnum.ENUM"
+                type="enum"
+                size="small"
+                clearable
+                placeholder="使用范围"
+              />
+            </template>
+          </el-table-column>
           <el-table-column prop="name" label="名称" align="center" min-width="120">
             <template v-slot="scope">
               <el-input v-model.trim="scope.row.name" type="text" placeholder="名称" style="width:100%" maxlength="20"/>
@@ -92,15 +102,13 @@
 
 <script setup>
 import { inject, ref } from 'vue'
+import { ElMessage } from 'element-plus'
 import { regForm } from '@compos/use-crud'
-import { isNotBlank } from '@/utils/data-type'
 
+import { auxiliaryMaterialUseTypeEnum } from '@enum-ms/plan'
 import useMaxHeight from '@compos/use-max-height'
 import useTableValidate from '@compos/form/use-table-validate'
-import { ElMessage } from 'element-plus'
 
-const currentMonomer = inject('currentMonomer')
-const currentArea = inject('currentArea')
 const globalProject = inject('globalProject')
 
 const formRef = ref()
@@ -126,6 +134,7 @@ const { maxHeight } = useMaxHeight(
 )
 
 const tableRules = {
+  useProperty: [{ required: true, message: '请输入选择使用范围', trigger: 'change' }],
   name: [{ required: true, message: '请输入名称', trigger: 'blur' }],
   specification: [{ required: true, message: '请输入规格', trigger: 'blur' }],
   measureUnit: [{ required: true, message: '请输入单位', trigger: 'blur' }],

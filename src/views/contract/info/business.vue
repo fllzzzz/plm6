@@ -84,7 +84,7 @@
                   class="input-underline"
                   :props="cascaderProps"
                   :show-all-levels="true"
-                  :clearable="true"
+                  :clearable="isNotBlank(detail.projectContentNoList)?false:true"
                   style="width: 320px"
                   @change="getShowItem"
                   filterable
