@@ -48,7 +48,7 @@
           @change="fetchList"
         /> -->
         <common-select
-          v-model="query.areaId"
+          v-model="query.enclosurePlanId"
           :options="areaInfo"
           type="other"
           :dataStructure="{ key: 'id', label: 'name', value: 'id' }"
@@ -159,7 +159,7 @@ import usePagination from '@compos/use-pagination'
 
 const emit = defineEmits(['update:modelValue', 'success'])
 const query = ref({
-  areaId: undefined,
+  enclosurePlanId: undefined,
   serialNumber: undefined,
 })
 
