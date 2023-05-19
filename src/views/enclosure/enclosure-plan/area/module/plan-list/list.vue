@@ -25,7 +25,7 @@
         <div class="wrap-right">
           <el-tag v-if="!currentRow?.id" type="info" size="medium"> * 请点击左侧项目列表查看详情 </el-tag>
           <template v-else>
-            <planForm :visibleValue="visible" :currentRow="currentRow" :detailInfo="detailInfo" />
+            <planForm :visibleValue="visible" :currentRow="currentRow" :detailInfo="detailInfo" @success="emit('success')"/>
           </template>
         </div>
       </div>
@@ -41,7 +41,7 @@ import useVisible from '@/composables/use-visible'
 
 import planForm from './plan-form/index'
 
-const emit = defineEmits(['update:modelValue'])
+const emit = defineEmits(['update:modelValue', 'success'])
 
 const props = defineProps({
   modelValue: {

@@ -63,7 +63,7 @@
     </common-table>
     <!--分页组件-->
     <pagination />
-    <planList v-model="planVisible" :detailInfo="detailInfo"/>
+    <planList v-model="planVisible" :detailInfo="detailInfo" @success="crud.toQuery"/>
   </div>
 </template>
 

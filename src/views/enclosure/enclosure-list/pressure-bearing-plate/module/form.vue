@@ -299,7 +299,6 @@
             </template>
           </el-table-column>
           <el-table-column
-            v-if="crud.query.category!=TechnologyTypeAllEnum.TRUSS_FLOOR_PLATE.V && crud.query.category!=TechnologyTypeAllEnum.PRESSURE_BEARING_PLATE.V&& crud.query.category!=TechnologyTypeAllEnum.PRESSURE_BEARING_PLATE.V && crud.query.category!=TechnologyTypeAllEnum.SANDWICH_BOARD.V"
             key="color"
             prop="color"
             :show-overflow-tooltip="true"

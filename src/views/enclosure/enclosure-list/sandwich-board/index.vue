@@ -29,9 +29,10 @@
         :cell-class-name="wrongCellMask"
       >
         <el-table-column label="序号" type="index" align="center" width="50" fixed="left" />
-        <el-table-column v-if="columns.visible('name')" key="name" prop="name" :show-overflow-tooltip="true" label="名称" min-width="80">
+        <el-table-column v-if="columns.visible('name')" key="name" prop="name" :show-overflow-tooltip="true" label="名称" min-width="120">
           <template v-slot="scope">
-            <div>{{ scope.row.name }}</div>
+            <el-input v-if="scope.row.isModify" v-model="scope.row.name" placeholder="名称" maxlength="20" style="width: 100%" />
+            <div v-else>{{ scope.row.name ? scope.row.name : '-' }}</div>
           </template>
         </el-table-column>
         <el-table-column
@@ -40,10 +41,17 @@
           prop="serialNumber"
           :show-overflow-tooltip="true"
           label="编号"
-          min-width="90px"
+          min-width="120px"
         >
           <template v-slot="scope">
-            <div>{{ scope.row.serialNumber }}</div>
+            <el-input
+              v-if="scope.row.isModify"
+              v-model="scope.row.serialNumber"
+              placeholder="编号"
+              maxlength="10"
+              style="width:100%;"
+            />
+            <div v-else>{{ scope.row.serialNumber }}</div>
           </template>
         </el-table-column>
         <el-table-column
@@ -313,10 +321,7 @@
           </template>
         </el-table-column>
         <el-table-column
-          v-if="
-            columns.visible('brand') &&
-            crud.query.category !== TechnologyTypeAllEnum.TRUSS_FLOOR_PLATE.V
-          "
+          v-if="columns.visible('brand')"
           key="brand"
           prop="brand"
           :show-overflow-tooltip="true"
@@ -329,11 +334,7 @@
           </template>
         </el-table-column>
         <el-table-column
-          v-if="
-            columns.visible('color') &&
-            crud.query.category != TechnologyTypeAllEnum.TRUSS_FLOOR_PLATE.V &&
-            crud.query.category != TechnologyTypeAllEnum.PRESSURE_BEARING_PLATE.V
-          "
+          v-if="columns.visible('color')"
           key="color"
           prop="color"
           :show-overflow-tooltip="true"
@@ -351,7 +352,7 @@
           prop="remark"
           :show-overflow-tooltip="true"
           label="备注"
-          min-width="100px"
+          min-width="120px"
         >
           <template v-slot="scope">
             <el-input v-if="scope.row.isModify" v-model="scope.row.remark" placeholder="备注" type="textarea" maxlength="200" style="width: 100%" />

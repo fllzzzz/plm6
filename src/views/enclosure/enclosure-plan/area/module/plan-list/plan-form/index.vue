@@ -52,7 +52,7 @@
 
 <script setup>
 import crudApi from '@/api/enclosure/enclosure-plan/area'
-import { ref, defineProps, watch } from 'vue'
+import { ref, defineProps, watch, defineEmits } from 'vue'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
@@ -65,7 +65,7 @@ import udOperation from '@crud/UD.operation'
 import mForm from './form'
 
 const permission = enclosureAreaListPM.plan
-
+const emit = defineEmits(['success'])
 const optShow = {
   add: true,
   edit: false,
@@ -119,6 +119,14 @@ CRUD.HOOK.handleRefresh = (crud, res) => {
   // res.data.content = res.data.content.map((v) => {
   //   return v
   // })
+}
+
+CRUD.HOOK.afterSubmit = (crud, res) => {
+  emit('success')
+}
+
+CRUD.HOOK.afterDelete = (crud, res) => {
+  emit('success')
 }
 </script>
 
