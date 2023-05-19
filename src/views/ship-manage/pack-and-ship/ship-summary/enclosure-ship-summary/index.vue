@@ -54,6 +54,7 @@
 <script setup>
 import crudApi from '@/api/ship-manage/pack-and-ship/enclosure-ship-summary'
 import { ref } from 'vue'
+import { deepClone } from '@/utils/data-type'
 import { enclosureShipSummaryPM as permission } from '@/page-permission/ship-manage'
 import { isNotBlank } from '@data-type/index'
 import useMaxHeight from '@compos/use-max-height'
@@ -74,6 +75,7 @@ const dataFormat = ref([['project', 'parse-project']])
 const tableRef = ref()
 const currentRow = ref({})
 const categoryList = ref([])
+const categoryData = ref([])
 
 const { crud, CRUD } = useCRUD(
   {
@@ -100,7 +102,8 @@ CRUD.HOOK.handleRefresh = (crud, { data }) => {
 
 function handleCurrentChange(val) {
   currentRow.value = val
-  categoryList.value = val?.project?.projectContentList
+  categoryData.value = val?.project?.projectContentList?.filter(v => v.name !== '结构件')
+  categoryList.value = deepClone(categoryData.value)
   categoryList.value?.push({
     id: 20,
     name: '配套制品',
