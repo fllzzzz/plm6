@@ -108,9 +108,8 @@ const enclosureTaskTrackingDetail = {
       { show: true, source: dataSourceEnum.SYSTEM.V, key: 'factoryName', title: '工厂：', width: 60, type: typeEnum.FACTORY_NAME.K },
       { show: true, source: dataSourceEnum.SYSTEM.V, key: 'workshopName', title: '车间：', width: 60, type: typeEnum.WORKSHOP.K },
       { show: true, source: dataSourceEnum.SYSTEM.V, key: 'lineName', title: '生产线：', width: 70, type: typeEnum.PRODUCTION_LINE.K },
-      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'date', title: '统计日期：', width: 100, type: typeEnum.OTHER.K },
-      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'printDate', title: '打印时间：', width: 55, type: typeEnum.DATE.K, format: 'YY/MM/DD kk:mm:ss' },
-      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'printer', title: '打印人：', width: 35, type: typeEnum.USER_NAME.K }
+      { show: false, source: dataSourceEnum.SYSTEM.V, key: 'printDate', title: '打印时间：', width: 120, type: typeEnum.DATE.K, format: 'YY/MM/DD kk:mm:ss' },
+      { show: false, source: dataSourceEnum.SYSTEM.V, key: 'printer', title: '打印人：', width: 70, type: typeEnum.USER_NAME.K }
     ]
   },
   /**

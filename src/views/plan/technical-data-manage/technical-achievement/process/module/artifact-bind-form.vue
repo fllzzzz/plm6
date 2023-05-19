@@ -22,7 +22,7 @@
         <el-descriptions class="margin-top" :column="3" border label-width="110">
         <el-descriptions-item label-class-name="desc-label" label="文件名称" :span="currentRow.boolSingleProject?2:3">
           <div>
-            <span style="cursor: pointer; color: #409eff" @click.stop="attachmentView(currentRow)">{{currentRow.fileName}}</span>
+            <span style="cursor: pointer; color: #409eff;word-break:break-all;" @click.stop="attachmentView(currentRow)">{{currentRow.fileName}}</span>
           </div>
         </el-descriptions-item>
         <el-descriptions-item label-class-name="desc-label" label="所属项目" :span="1" v-if="currentRow.boolSingleProject">

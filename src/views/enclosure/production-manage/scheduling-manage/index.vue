@@ -31,7 +31,7 @@
               label="编号"
               align="center"
             />
-            <el-table-column key="plate" prop="plate" v-if="columns.visible('plate')" show-overflow-tooltip label="板型" align="center" />
+            <el-table-column key="plate" prop="plate" v-if="columns.visible('plate') && crud.query.category !== mesEnclosureTypeEnum.FOLDING_PIECE.V" show-overflow-tooltip label="板型" align="center" />
             <el-table-column key="brand" prop="brand" v-if="columns.visible('brand')" show-overflow-tooltip label="品牌" align="center" />
             <el-table-column key="color" prop="color" v-if="columns.visible('color')" show-overflow-tooltip label="颜色" align="center" />
             <el-table-column
@@ -90,6 +90,7 @@ import crudApi from '@/api/enclosure/production-manage/scheduling-manage'
 import { ref } from 'vue'
 
 import { enclosureSchedulingManagePM as permission } from '@/page-permission/enclosure'
+import { mesEnclosureTypeEnum } from '@enum-ms/mes'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'

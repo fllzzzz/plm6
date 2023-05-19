@@ -82,7 +82,7 @@
           />
         </el-form-item>
         <el-form-item label="完成时间" prop="askCompleteTime">
-          <el-date-picker v-model="taskForm.askCompleteTime" type="date" value-format="x" placeholder="选择完成时间" style="width: 300px" />
+          <el-date-picker v-model="taskForm.askCompleteTime" :disabled-date="disabledDate" type="date" value-format="x" placeholder="选择完成时间" style="width: 300px" />
         </el-form-item>
       </el-form>
     </common-dialog>
@@ -188,7 +188,6 @@ const handleCheckAllChange = (val) => {
   query.planIds = val ? areas.value.map((v) => v.id) : []
   isIndeterminate.value = false
   crud.toQuery()
-  fetchEnclosureSummary()
 }
 
 // 选择区域
@@ -197,7 +196,6 @@ const handleCheckedAresChange = (value) => {
   checkAll.value = checkedCount === areas.value.length
   isIndeterminate.value = checkedCount > 0 && checkedCount < areas.value.length
   crud.toQuery()
-  fetchEnclosureSummary()
 }
 
 // 获取围护汇总
@@ -224,6 +222,7 @@ async function fetchCategory() {
     query.category = undefined
     categoryLoading.value = true
     const arr = await categoryList({ projectId: props.project.id })
+    arr.sort((a, b) => (a - b))
     if (arr.length) {
       query.category = arr[0]
     }
@@ -270,7 +269,7 @@ async function submit() {
     }
 
     // 完成日期大于计划日期
-    if (taskForm.value.askCompleteTime > planDate.value) {
+    if (Number(taskForm.value.askCompleteTime) > Number(planDate.value)) {
       await ElMessageBox.confirm('完成日期大于计划日期，是否下发？', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -304,7 +303,12 @@ async function submit() {
   }
 }
 
+function disabledDate(time) {
+  return time > props.project?.endDate
+}
+
 CRUD.HOOK.handleRefresh = async (crud, { data }) => {
+  fetchEnclosureSummary()
   data.content.forEach((row) => {
     row.totalLength = ((row.length * row.needSchedulingQuantity) / 1000).toFixed(2)
     row.taskQuantity = row.needSchedulingQuantity

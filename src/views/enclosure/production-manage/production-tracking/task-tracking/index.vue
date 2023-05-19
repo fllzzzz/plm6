@@ -5,7 +5,7 @@
     </div>
     <div class="wrap-right">
       <div class="app-container">
-        <el-tag v-if="!crud.query?.projectId" type="info" effect="plain" size="large"> * 请点击左侧项目列表查看详情 </el-tag>
+        <el-tag v-if="!project.id" type="info" effect="plain" size="large"> * 请点击左侧项目列表查看详情 </el-tag>
         <template v-else>
           <!--工具栏-->
           <mHeader class="head-container task-head-container">
@@ -166,7 +166,7 @@
 
 <script setup>
 import crudApi from '@/api/enclosure/production-manage/task-tracking'
-import { ref } from 'vue'
+import { ref, nextTick } from 'vue'
 
 import { enclosureTaskTrackingPM as permission } from '@/page-permission/enclosure'
 import { mesEnclosureTypeEnum } from '@enum-ms/mes'
@@ -205,7 +205,8 @@ const { CRUD, crud, columns } = useCRUD(
     optShow: { ...optShow },
     crudApi: { ...crudApi },
     requiredQuery: ['projectId'],
-    invisibleColumns: []
+    invisibleColumns: [],
+    queryOnPresenterCreated: false
   },
   tableRef
 )
@@ -217,8 +218,10 @@ const { maxHeight } = useMaxHeight({
 
 function projectChange(row = {}) {
   project.value = row
-  crud.query.projectId = row.id
-  crud.toQuery()
+  nextTick(() => {
+    crud.query.projectId = row.id
+    crud.toQuery()
+  })
 }
 
 CRUD.HOOK.handleRefresh = async (crud, { data }) => {

@@ -221,7 +221,6 @@ const props = defineProps({
 })
 
 const tipsShow = ref(false)
-const sumData = ref({})
 const technicalTypeStatus = inject('technicalTypeStatus') // 技术交底状态
 
 const currentView = computed(() => {

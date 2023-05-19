@@ -108,8 +108,8 @@ const enclosureTeamProductionDetail = {
       { show: true, source: dataSourceEnum.SYSTEM.V, key: 'workshop', title: '车间：', width: 70, type: typeEnum.WORKSHOP.K },
       { show: true, source: dataSourceEnum.SYSTEM.V, key: 'line', title: '生产线：', width: 60, type: typeEnum.PRODUCTION_LINE.K },
       { show: true, source: dataSourceEnum.SYSTEM.V, key: 'teamLeader', title: '班组：', width: 60, type: typeEnum.TEAM_NAME.K },
-      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'printDate', title: '打印时间：', width: 70, type: typeEnum.DATE.K, format: 'YY/MM/DD kk:mm:ss' },
-      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'printer', title: '打印人：', width: 35, type: typeEnum.USER_NAME.K }
+      { show: false, source: dataSourceEnum.SYSTEM.V, key: 'printDate', title: '打印时间：', width: 70, type: typeEnum.DATE.K, format: 'YY/MM/DD kk:mm:ss' },
+      { show: false, source: dataSourceEnum.SYSTEM.V, key: 'printer', title: '打印人：', width: 35, type: typeEnum.USER_NAME.K }
     ]
   },
   /**

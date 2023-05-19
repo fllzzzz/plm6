@@ -65,7 +65,10 @@ const props = defineProps({
 })
 
 const drawerRef = ref()
-const dataFormat = ref([['askCompleteTime', ['parse-time', '{y}-{m}-{d}']]])
+const dataFormat = ref([
+  ['askCompleteTime', ['parse-time', '{y}-{m}-{d}']],
+  ['totalLength', ['to-fixed', 2]]
+])
 
 const { CRUD, crud, detail } = regDetail()
 
