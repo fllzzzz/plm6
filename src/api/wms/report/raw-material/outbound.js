@@ -13,6 +13,18 @@ export function getDetails(params) {
 }
 
 /**
+ * 出库钢材核算量
+ */
+export function getSummary(params) {
+  return request({
+    module: 'wms',
+    url: `report/raw-materials/outbound/details/mete`,
+    method: 'get',
+    params
+  })
+}
+
+/**
  * 出库明细excel导出
  */
 export function exportDetailsExcel(params) {
