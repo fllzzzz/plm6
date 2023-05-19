@@ -10,6 +10,7 @@
       :data="crud.data"
       :empty-text="crud.emptyText"
       :max-height="maxHeight"
+      :show-empty-symbol="false"
       style="width: 100%"
       row-key="id"
       @sort-change="crud.handleSortChange"
@@ -81,7 +82,7 @@
         min-width="80px"
       >
         <template v-slot="scope">
-          <span>{{ toFixed(scope.row.length, DP.MES_ENCLOSURE_L__MM) }}</span>
+          <span>{{ toFixed(scope.row.length, DP.MES_ENCLOSURE_L__MM) || '-' }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -95,7 +96,7 @@
         min-width="80px"
       >
         <template v-slot="scope">
-          <span>{{ toFixed(scope.row.thickness, DP.MES_ENCLOSURE_T__MM) }}</span>
+          <span>{{ toFixed(scope.row.thickness, DP.MES_ENCLOSURE_T__MM) || '-' }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -136,7 +137,7 @@
         min-width="80px"
       >
         <template v-slot="scope">
-          <span>{{ convertUnits(scope.row.totalLength, 'mm', 'm', DP.MES_ENCLOSURE_L__M) }}</span>
+          <span>{{ convertUnits(scope.row.totalLength, 'mm', 'm', DP.MES_ENCLOSURE_L__M) || '-' }}</span>
         </template>
       </el-table-column>
       <!-- <el-table-column
@@ -171,6 +172,15 @@
         prop="quantity"
         sortable="custom"
         label="数量"
+        align="center"
+        min-width="70px"
+      />
+      <el-table-column
+        v-if="columns.visible('taskQuantity')"
+        key="taskQuantity"
+        prop="taskQuantity"
+        sortable="custom"
+        label="任务数"
         align="center"
         min-width="70px"
       />

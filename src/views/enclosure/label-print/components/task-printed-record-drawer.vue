@@ -8,9 +8,7 @@
         <el-table-column :show-overflow-tooltip="true" prop="quantity" label="数量" align="center" min-width="80px" />
         <el-table-column :show-overflow-tooltip="true" prop="time" label="打印时间" min-width="300px">
           <template v-slot="scope">
-            <span>{{ scope.row.createTime }}</span>
-            ~
-            <span>{{ scope.row.updateTime }}</span>
+            <span>{{ scope.row.printTime }}</span>
           </template>
         </el-table-column>
       </common-table>
@@ -55,8 +53,7 @@ const { maxHeight } = useMaxHeight(
 )
 
 const dataFormat = ref([
-  ['createTime', 'parse-time'],
-  ['updateTime', 'parse-time']
+  ['printTime', 'parse-time']
 ])
 
 const loading = ref(false)
