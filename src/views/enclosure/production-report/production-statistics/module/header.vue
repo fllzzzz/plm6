@@ -36,7 +36,7 @@
       :disabled-date="disabledDate"
     />
     <el-tag class="filter-item" size="medium" effect="plain" style="float: right">
-      <span>全年累计产量（m）：{{ yearProduction || 0 }}</span>
+      <span>全年累计产量（m）：<span v-thousand="yearProduction || 0" /></span>
     </el-tag>
     <div v-show="crud.searchToggle">
       <div v-loading="chartLoading" id="enclosureWorkshopReportChart" style="width: 100%; height: 250px; margin-bottom: 10px"></div>

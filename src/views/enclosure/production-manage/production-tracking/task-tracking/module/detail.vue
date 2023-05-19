@@ -30,7 +30,7 @@
       />
     </template>
     <template #content>
-      <common-table :data="detail.content" :max-height="maxHeight" show-summary :summary-method="getSummaries">
+      <common-table :data="detail.content" :max-height="maxHeight" :data-format="dataFormat" show-summary :summary-method="getSummaries">
         <el-table-column label="序号" type="index" align="center" width="60" />
         <el-table-column key="planName" prop="planName" label="批次" show-overflow-tooltip align="center" />
         <el-table-column key="name" prop="name" show-overflow-tooltip label="名称" align="center" />
@@ -70,6 +70,10 @@ const props = defineProps({
 })
 
 const drawerRef = ref()
+const dataFormat = ref([
+  ['totalLength', ['to-fixed', 2]],
+  ['completeLength', ['to-fixed', 2]]
+])
 
 const { CRUD, crud, detail } = regDetail()
 

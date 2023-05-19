@@ -38,7 +38,8 @@ import rrOperation from '@crud/RR.operation'
 
 const defaultQuery = {
   orderNumber: undefined,
-  userName: undefined
+  userName: undefined,
+  projectId: { value: undefined, resetAble: false }
 }
 const { crud, query } = regHeader(defaultQuery)
 </script>

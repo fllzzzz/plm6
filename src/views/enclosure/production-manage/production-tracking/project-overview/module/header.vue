@@ -35,10 +35,10 @@
           <span v-parse-project="{ project: props.project }" v-empty-text />
         </el-tag>
         <el-tag v-loading="summaryLoading" type="success" effect="plain" size="medium" style="margin-right: 6px">
-          总量：{{ summaryData?.totalLength || 0 }} m
+          总量：<span v-thousand="summaryData?.totalLength || 0" /> m
         </el-tag>
         <el-tag v-loading="summaryLoading" type="success" effect="plain" size="medium" style="margin-right: 6px">
-          已生产：{{ summaryData?.completedLength || 0 }} m
+          已生产：<span v-thousand="summaryData?.completedLength || 0" /> m
         </el-tag>
         <el-tag v-loading="summaryLoading" type="success" effect="plain" size="medium">
           完成率：{{ summaryData?.completeRate || 0 }} %
