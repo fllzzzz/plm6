@@ -172,6 +172,7 @@ import { enclosureTaskTrackingPM as permission } from '@/page-permission/enclosu
 import { mesEnclosureTypeEnum } from '@enum-ms/mes'
 import checkPermission from '@/utils/system/check-permission'
 import { toFixed } from '@data-type/index'
+import { DP } from '@/settings/config'
 
 import useMaxHeight from '@compos/use-max-height'
 import UdOperation from '@crud/UD.operation'
@@ -191,8 +192,8 @@ const optShow = {
 const tableRef = ref()
 const project = ref({})
 const dataFormat = ref([
-  ['totalLength', ['to-fixed', 2]],
-  ['completeLength', ['to-fixed', 2]],
+  ['totalLength', ['to-fixed', DP.MES_ENCLOSURE_L__M]],
+  ['completeLength', ['to-fixed', DP.MES_ENCLOSURE_L__M]],
   ['createTime', ['parse-time', '{y}-{m}-{d}']],
   ['category', ['parse-enum', mesEnclosureTypeEnum]]
 ])

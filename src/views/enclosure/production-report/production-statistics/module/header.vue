@@ -36,7 +36,7 @@
       :disabled-date="disabledDate"
     />
     <el-tag class="filter-item" size="medium" effect="plain" style="float: right">
-      <span>全年累计产量（m）：<span v-thousand="yearProduction || 0" /></span>
+      <span>全年累计产量（m）：<span v-thousand="{ val: yearProduction || 0, dp: DP.MES_ENCLOSURE_L__M}" /></span>
     </el-tag>
     <div v-show="crud.searchToggle">
       <div v-loading="chartLoading" id="enclosureWorkshopReportChart" style="width: 100%; height: 250px; margin-bottom: 10px"></div>
@@ -75,7 +75,7 @@ import moment from 'moment'
 import { parseTime } from '@/utils/date'
 import { timeTypeEnum } from '@enum-ms/contract'
 import { mesEnclosureTypeEnum } from '@enum-ms/mes'
-import { PICKER_OPTIONS_SHORTCUTS } from '@/settings/config'
+import { PICKER_OPTIONS_SHORTCUTS, DP } from '@/settings/config'
 import { mesFactoryReportPM as permission } from '@/page-permission/mes'
 
 import useChart from '@compos/use-chart'
@@ -197,6 +197,7 @@ async function fetchChart() {
 
     // EChart 点击
     _myChart.on('click', function (params) {
+      console.log('params: ', params)
       chartYearTime.value = query.time
       if (crud.query.type === timeTypeEnum.ALL_YEAR.V) {
         chartDateTime.value = params.name.split('月')[0]

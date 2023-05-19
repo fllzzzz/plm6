@@ -69,6 +69,7 @@ import { ref } from 'vue'
 
 import { tableSummary } from '@/utils/el-extra'
 import { enclosureProductionStatisticsPM as permission } from '@/page-permission/enclosure'
+import { DP } from '@/settings/config'
 
 import mHeader from './module/header'
 import useCRUD from '@compos/use-crud'
@@ -85,7 +86,7 @@ const optShow = {
 const tableRef = ref()
 const dataFormat = ref([
   ['project', 'parse-project'],
-  ['totalLength', ['to-fixed', 2]],
+  ['totalLength', ['to-fixed', DP.MES_ENCLOSURE_L__M]],
   ['completeTime', ['parse-time', '{y}-{m}-{d}']]
 ])
 
@@ -109,7 +110,7 @@ const { maxHeight } = useMaxHeight({
 // 合计
 function getSummaries(param) {
   return tableSummary(param, {
-    props: [['totalLength', 2]]
+    props: [['totalLength', DP.MES_ENCLOSURE_L__M]]
   })
 }
 

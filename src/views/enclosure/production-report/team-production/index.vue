@@ -112,7 +112,7 @@ const itemInfo = ref({})
 
 const dataFormat = ref([
   ['project', 'parse-project'],
-  ['totalLength', ['to-fixed', 2]],
+  ['totalLength', ['to-fixed', DP.MES_ENCLOSURE_L__M]],
   ['price', ['to-fixed-ck', 'YUAN']],
   ['totalAmount', ['to-fixed-ck', 'YUAN']]
 ])
@@ -122,7 +122,7 @@ function getSummaries(param) {
   return tableSummary(param, {
     props: [
       ['totalAmount', DP.YUAN],
-      ['totalLength', 2]
+      ['totalLength', DP.MES_ENCLOSURE_L__M]
     ]
   })
 }

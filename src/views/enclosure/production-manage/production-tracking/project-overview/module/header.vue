@@ -35,10 +35,10 @@
           <span v-parse-project="{ project: props.project }" v-empty-text />
         </el-tag>
         <el-tag v-loading="summaryLoading" type="success" effect="plain" size="medium" style="margin-right: 6px">
-          总量：<span v-thousand="summaryData?.totalLength || 0" /> m
+          总量：<span v-thousand="{ val: summaryData?.totalLength || 0, dp: DP.MES_ENCLOSURE_L__M}" /> m
         </el-tag>
         <el-tag v-loading="summaryLoading" type="success" effect="plain" size="medium" style="margin-right: 6px">
-          已生产：<span v-thousand="summaryData?.completedLength || 0" /> m
+          已生产：<span v-thousand="{ val: summaryData?.completedLength || 0, dp: DP.MES_ENCLOSURE_L__M}" /> m
         </el-tag>
         <el-tag v-loading="summaryLoading" type="success" effect="plain" size="medium">
           完成率：{{ summaryData?.completeRate || 0 }} %
@@ -54,6 +54,7 @@ import { ref, defineProps, computed, watch, nextTick, defineExpose, defineEmits 
 
 import { mesEnclosureTypeEnum } from '@enum-ms/mes'
 import { toFixed } from '@data-type/index'
+import { DP } from '@/settings/config'
 
 import { regHeader } from '@compos/use-crud'
 import crudOperation from '@crud/CRUD.operation'

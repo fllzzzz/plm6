@@ -151,6 +151,7 @@ import { nextTick, ref } from 'vue'
 import { enclosureSchedulingWorkOrderPM as permission } from '@/page-permission/enclosure'
 import { mesEnclosureTypeEnum } from '@enum-ms/mes'
 import checkPermission from '@/utils/system/check-permission'
+import { DP } from '@/settings/config'
 
 import useMaxHeight from '@compos/use-max-height'
 import UdOperation from '@crud/UD.operation'
@@ -171,7 +172,7 @@ const optShow = {
 const tableRef = ref()
 const project = ref({})
 const dataFormat = ref([
-  ['totalLength', ['to-fixed', 2]],
+  ['totalLength', ['to-fixed', DP.MES_ENCLOSURE_L__M]],
   ['createTime', ['parse-time', '{y}-{m}-{d}']],
   ['category', ['parse-enum', mesEnclosureTypeEnum]]
 ])

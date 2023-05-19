@@ -245,11 +245,11 @@ const tableType = {
   auxiliaryMaterialSummary: { L: '配套件汇总', M: 'technical_manage', T: mt.plan.L + ' / ' + plan.technical_manage },
 
   // 围护MES
-  enclosureSchedulingWorkOrderDetail: { L: '排产工单详情', M: 'production_manage', T: mt.plan.L + ' / ' + enclosure.production_manage },
-  enclosureTaskTrackingDetail: { L: '生产跟踪详情', M: 'production_manage', T: mt.plan.L + ' / ' + enclosure.production_manage },
-  enclosureProductionStatistics: { L: '围护生产统计', M: 'production_report', T: mt.plan.L + ' / ' + enclosure.production_report },
-  enclosureTeamProduction: { L: '围护班组产量', M: 'production_report', T: mt.plan.L + ' / ' + enclosure.production_report },
-  enclosureTeamProductionDetail: { L: '围护班组产量详情', M: 'production_report', T: mt.plan.L + ' / ' + enclosure.production_report }
+  enclosureSchedulingWorkOrderDetail: { L: '排产工单详情', M: 'production_manage', T: mt.enclosure.L + ' / ' + enclosure.production_manage },
+  enclosureTaskTrackingDetail: { L: '生产跟踪详情', M: 'production_manage', T: mt.enclosure.L + ' / ' + enclosure.production_manage },
+  enclosureProductionStatistics: { L: '围护生产统计', M: 'production_report', T: mt.enclosure.L + ' / ' + enclosure.production_report },
+  enclosureTeamProduction: { L: '围护班组产量', M: 'production_report', T: mt.enclosure.L + ' / ' + enclosure.production_report },
+  enclosureTeamProductionDetail: { L: '围护班组产量详情', M: 'production_report', T: mt.enclosure.L + ' / ' + enclosure.production_report }
 
 }
 

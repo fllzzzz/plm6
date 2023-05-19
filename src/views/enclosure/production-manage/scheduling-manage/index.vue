@@ -16,6 +16,7 @@
             :data="crud.data"
             :empty-text="crud.emptyText"
             :max-height="maxHeight"
+            :data-format="dataFormat"
             row-key="id"
             returnSourceData
             @selection-change="crud.selectionChangeHandler"
@@ -91,6 +92,7 @@ import { ref } from 'vue'
 
 import { enclosureSchedulingManagePM as permission } from '@/page-permission/enclosure'
 import { mesEnclosureTypeEnum } from '@enum-ms/mes'
+import { DP } from '@/settings/config'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
@@ -107,6 +109,10 @@ const optShow = {
 
 const tableRef = ref()
 const project = ref({})
+
+const dataFormat = ref([
+  ['totalLength', ['to-fixed', DP.MES_ENCLOSURE_L__M]]
+])
 
 const { crud, columns } = useCRUD(
   {

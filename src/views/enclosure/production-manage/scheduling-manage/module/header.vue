@@ -35,10 +35,10 @@
           <span v-parse-project="{ project: props.project }" v-empty-text />
         </el-tag>
         <el-tag v-loading="summaryLoading" type="success" effect="plain" size="medium" style="margin-right: 6px">
-          当前批次量：{{ (query.planIds.length && summaryData?.planLength) || 0 }}m
+          当前批次量：<span v-thousand="{ val: (query.planIds.length && summaryData?.planLength) || 0, dp: DP.MES_ENCLOSURE_L__M}" />m
         </el-tag>
         <el-tag v-loading="summaryLoading" type="success" effect="plain" size="medium">
-          全部批次量：{{ summaryData?.projectLength || 0 }}m
+          全部批次量：<span v-thousand="{ val: summaryData?.projectLength || 0, dp: DP.MES_ENCLOSURE_L__M}" />m
         </el-tag>
       </template>
     </crudOperation>
@@ -95,6 +95,7 @@ import { ref, defineProps, computed, watch, nextTick } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 
 import { mesEnclosureTypeEnum } from '@enum-ms/mes'
+import { DP } from '@/settings/config'
 
 import { regHeader } from '@compos/use-crud'
 import crudOperation from '@crud/CRUD.operation'
@@ -122,7 +123,7 @@ const totalLength = computed(() => {
     total += +cur.totalLength
     return total
   }, 0)
-  return num.toFixed(2)
+  return num.toFixed(DP.MES_ENCLOSURE_L__M)
 })
 
 const props = defineProps({
@@ -310,7 +311,7 @@ function disabledDate(time) {
 CRUD.HOOK.handleRefresh = async (crud, { data }) => {
   fetchEnclosureSummary()
   data.content.forEach((row) => {
-    row.totalLength = ((row.length * row.needSchedulingQuantity) / 1000).toFixed(2)
+    row.totalLength = ((row.length * row.needSchedulingQuantity) / 1000).toFixed(DP.MES_ENCLOSURE_L__M)
     row.taskQuantity = row.needSchedulingQuantity
   })
 }

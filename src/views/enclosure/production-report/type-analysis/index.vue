@@ -55,7 +55,7 @@
           style="width: 404px; margin-right: 20px"
         >
           <el-table-column label="序号" type="index" align="center" width="60" />
-          <el-table-column show-overflow-tooltip prop="plate" key="plate" label="版型" align="center" />
+          <el-table-column show-overflow-tooltip prop="plate" key="plate" label="板型" align="center" />
           <el-table-column show-overflow-tooltip prop="completeLength" key="completeLength" label="产量(米)" align="center" />
           <el-table-column show-overflow-tooltip prop="proportion" key="proportion" label="占比" align="center" />
         </common-table>
@@ -74,6 +74,7 @@ import { ref } from 'vue'
 import { enclosureTypeAnalysisPM as permission } from '@/page-permission/enclosure'
 import { tableSummary } from '@/utils/el-extra'
 import { mesEnclosureTypeEnum } from '@enum-ms/mes'
+import { DP } from '@/settings/config'
 
 import useCRUD from '@compos/use-crud'
 import mHeader from './module/header'
@@ -95,7 +96,10 @@ const enclosureTypeArr = ref(Object.values(mesEnclosureTypeEnum.V))
 const detailTableLoading = ref(false)
 const detailList = ref([])
 
-const dataFormat = ref([['proportion', ['suffix', '%']]])
+const dataFormat = ref([
+  ['proportion', ['suffix', '%']],
+  ['completeLength', ['to-fixed', DP.MES_ENCLOSURE_L__M]]
+])
 
 // 高度
 const { maxHeight } = useMaxHeight(
@@ -110,7 +114,7 @@ const { maxHeight } = useMaxHeight(
 // 合计
 function getSummaries(param) {
   return tableSummary(param, {
-    props: [['completeLength', 2]]
+    props: [['completeLength', DP.MES_ENCLOSURE_L__M]]
   })
 }
 
@@ -138,7 +142,7 @@ const { getMyChart } = useChart({
       axisTick: {
         show: false
       },
-      data: enclosureTypeArr.value.map((v) => v.L)
+      data: enclosureTypeArr.value.reverse().map((v) => v.L)
     },
     xAxis: {
       type: 'value'
@@ -186,8 +190,8 @@ async function fetchDetailList() {
 
     const _myChart = getDetailEChart()
     const option = _myChart.getOption()
-    option.series[0].data = _series
-    option.yAxis[0].data = _yAxis
+    option.series[0].data = _series.reverse()
+    option.yAxis[0].data = _yAxis.reverse()
     option.title[0].text = `${itemInfo.value.name} 单位：m`
     _myChart.setOption(option)
   } catch (error) {
@@ -202,7 +206,9 @@ function showDetail(row = {}) {
   itemInfo.value = {
     ...row
   }
-  fetchDetailList()
+  if (row?.category) {
+    fetchDetailList()
+  }
 }
 
 CRUD.HOOK.handleRefresh = async (crud, { data }) => {

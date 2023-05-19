@@ -58,6 +58,7 @@
 import { computed, defineProps, ref } from 'vue'
 
 import { tableSummary } from '@/utils/el-extra'
+import { DP } from '@/settings/config'
 
 import { regDetail } from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
@@ -71,8 +72,8 @@ const props = defineProps({
 
 const drawerRef = ref()
 const dataFormat = ref([
-  ['totalLength', ['to-fixed', 2]],
-  ['completeLength', ['to-fixed', 2]]
+  ['totalLength', ['to-fixed', DP.MES_ENCLOSURE_L__M]],
+  ['completeLength', ['to-fixed', DP.MES_ENCLOSURE_L__M]]
 ])
 
 const { CRUD, crud, detail } = regDetail()
@@ -92,8 +93,8 @@ const { maxHeight } = useMaxHeight(
 function getSummaries(param) {
   return tableSummary(param, {
     props: [
-      ['totalLength', 2],
-      ['completeLength', 2]
+      ['totalLength', DP.MES_ENCLOSURE_L__M],
+      ['completeLength', DP.MES_ENCLOSURE_L__M]
     ]
   })
 }
