@@ -47,22 +47,23 @@
               </div>
             </div>
             <div class="method-opt">
-              <div
-                v-for="t in assembleHandleMethodEnum.ENUM"
-                :key="t.V"
-                class="method-item"
-                :class="{
-                  'is-active': Boolean(row.handleObj?.[item]?.handleType & t.V),
-                  'is-disabled':
-                    (t.V === assembleHandleMethodEnum.ADD_LENGTH.V &&
-                      !Boolean(row.handleObj?.[item]?.handleType & assembleHandleMethodEnum.TRUNCATE.V)) ||
-                    (t.V === assembleHandleMethodEnum.TRUNCATE.V &&
-                      !Boolean(row.handleObj?.[item]?.handleType & assembleHandleMethodEnum.ADD_LENGTH.V)),
-                }"
-                @click="handleTypeChange(row, item, t.V)"
-              >
-                {{ t.L }}
-              </div>
+              <template v-for="t in assembleHandleMethodEnum.ENUM" :key="t.V">
+                <div
+                  v-if="t.V === assembleHandleMethodEnum.KEEP.V"
+                  class="method-item"
+                  :class="{
+                    'is-active': Boolean(row.handleObj?.[item]?.handleType & t.V),
+                    'is-disabled':
+                      (t.V === assembleHandleMethodEnum.ADD_LENGTH.V &&
+                        !Boolean(row.handleObj?.[item]?.handleType & assembleHandleMethodEnum.TRUNCATE.V)) ||
+                      (t.V === assembleHandleMethodEnum.TRUNCATE.V &&
+                        !Boolean(row.handleObj?.[item]?.handleType & assembleHandleMethodEnum.ADD_LENGTH.V)),
+                  }"
+                  @click="handleTypeChange(row, item, t.V)"
+                >
+                  {{ t.L }}
+                </div>
+              </template>
             </div>
           </div>
         </div>
@@ -83,6 +84,7 @@
           v-if="!props.onlyShow"
           v-model="row.operateType"
           :options="assembleOperateTypeEnum.ENUM"
+          :unshowVal="[assembleOperateTypeEnum.EDIT.V]"
           type="enum"
           @change="handleOperateTypeChange($event, row)"
         />
@@ -190,7 +192,9 @@ function handleTypeChange(row, oldSn, val) {
   if (
     (val === assembleHandleMethodEnum.ADD_LENGTH.V && !(row.handleObj?.[oldSn]?.handleType & assembleHandleMethodEnum.TRUNCATE.V)) ||
     (val === assembleHandleMethodEnum.TRUNCATE.V && !(row.handleObj?.[oldSn]?.handleType & assembleHandleMethodEnum.ADD_LENGTH.V))
-  ) { return }
+  ) {
+    return
+  }
   if (props.onlyShow) return
   if (!(row.handleObj[oldSn]?.handleType & val)) {
     row.handleObj[oldSn].handleType |= val

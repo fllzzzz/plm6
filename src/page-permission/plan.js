@@ -77,6 +77,8 @@ export const artifactTreePM = {
   download: ['plan_artifact_tree_list:download'], // 下载零构件
   import: ['plan_artifact_tree_list:import'], // 导入零构件
   templateDownLoad: ['plan_artifact_tree_list:templateDownLoad'], // 下载零构件模板
+  changeImport: ['plan_artifact_tree_list:changeImport'], // 变更清单导入
+  changeTemplateDownLoad: ['plan_artifact_tree_list:changeTemplateDownLoad'], // 变更清单模板下载
   techDetail: ['plan_artifact_tree_list:techDetail'] // 技术交底
 }
 

@@ -3,11 +3,11 @@
     <el-card style="height: 100%">
       <el-form ref="formRef" :model="detail" size="small" class="reason-content-form">
         <div style="flex: 1">
-          <el-form-item label="变更原因" prop="reasonId">
-            <span></span>
+          <el-form-item label="变更原因" prop="changeReasonTypeEnum">
+            <span v-parse-enum="{ e: changeReasonTypeEnum, v: detail.changeReasonTypeEnum }" />
           </el-form-item>
           <el-form-item label="原因描述" prop="changeRemark">
-            <span></span>
+            <span>{{ detail.changeRemark }}</span>
           </el-form-item>
         </div>
         <div class="divider"></div>
@@ -29,6 +29,7 @@
 <script setup>
 import { defineProps, inject } from 'vue'
 import { fileClassifyEnum } from '@enum-ms/file'
+import { changeReasonTypeEnum } from '@enum-ms/plan'
 import UploadList from '@comp/file-upload/UploadList.vue'
 
 defineProps({

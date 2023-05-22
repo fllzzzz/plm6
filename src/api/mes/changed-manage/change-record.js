@@ -28,8 +28,17 @@ export function taskDetail(id) {
 export function getChangeTaskList(id) {
   return request({
     module: 'mes',
-    url: `tech/change/${id}/task/issued`,
+    url: `tech/change/${id}/task/issued/temporary`,
     method: 'get'
+  })
+}
+
+export function handleChange(data) {
+  return request({
+    module: 'mes',
+    url: `tech/change/task/handle/temporary`,
+    method: 'put',
+    data
   })
 }
 

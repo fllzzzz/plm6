@@ -80,6 +80,7 @@
           零构件清单模板
         </export-button>
         <upload-btn
+          v-if="checkPermission(crud.permission.changeImport)"
           :data="{ monomerId: crud.query.monomerId }"
           :upload-fun="changeListUpload"
           btn-name="变更清单导入"
@@ -88,6 +89,9 @@
           class="filter-item"
           @success="changeListUploadSuccess"
         />
+        <export-button :fn="changeListTemplate" class="filter-item" v-permission="crud.permission.changeTemplateDownLoad">
+          下载变更模板清单
+        </export-button>
         <common-button type="danger" size="mini" class="filter-item" @click="changeListTest">变更清单test</common-button>
         <el-popconfirm
           :title="`确认清空【${currentArea.name}】下的【零构件清单】么?`"
@@ -147,6 +151,7 @@ import { TechnologyTypeAllEnum } from '@enum-ms/contract'
 import {
   downloadArtifactTree,
   downloadArtifactTreeTemplate,
+  changeListTemplate,
   errorArtifact,
   delArtifactTreeByArea
 } from '@/api/plan/technical-manage/artifact-tree'

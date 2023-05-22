@@ -1,10 +1,16 @@
 <template>
   <div class="reason-content" :style="heightStyle">
     <el-card style="height: 100%">
-      <el-form ref="formRef" :model="form" :rules="rules" size="small" class="reason-content-form">
+      <el-form ref="formRef" :model="form" :rules="rules" size="small" class="reason-content-form" label-width="100px">
         <div style="flex: 1">
-          <el-form-item label="变更原因" prop="reasonId">
-            <change-reason-select v-model="form.reasonId" clearable />
+          <el-form-item label="变更原因" prop="changeReasonTypeEnum">
+            <common-select
+              v-model="form.changeReasonTypeEnum"
+              :options="changeReasonTypeEnum.ENUM"
+              type="enum"
+              clearable
+              placeholder="请选择变更原因"
+            />
           </el-form-item>
           <el-form-item label="原因描述" prop="changeRemark">
             <el-input
@@ -33,9 +39,9 @@
 </template>
 
 <script setup>
-import { defineProps, inject } from 'vue'
+import { defineProps, inject, defineExpose, ref } from 'vue'
 import { fileClassifyEnum } from '@enum-ms/file'
-import changeReasonSelect from '@comp-base/change-reason-select'
+import { changeReasonTypeEnum } from '@enum-ms/plan'
 import UploadList from '@comp/file-upload/UploadList.vue'
 
 defineProps({
@@ -46,10 +52,29 @@ defineProps({
 
 const form = inject('form')
 
+const formRef = ref()
 const rules = {
-  reasonId: [{ required: true, message: '请选择变更原因', trigger: 'change' }],
-  changeRemark: [{ required: true, max: 200, message: '不能超过 200 个字符', trigger: 'blur' }]
+  changeReasonTypeEnum: [{ required: true, message: '请选择变更原因', trigger: 'change' }],
+  changeRemark: [{ max: 200, message: '不能超过 200 个字符', trigger: 'blur' }]
 }
+
+// 验证
+const validate = () => {
+  return new Promise((resolve, reject) => {
+    formRef.value.validate(valid => {
+      if (valid) {
+        resolve(valid)
+      } else {
+        reject()
+      }
+    })
+  })
+}
+
+defineExpose({
+  validate
+})
+
 </script>
 
 <style lang="scss" scoped>

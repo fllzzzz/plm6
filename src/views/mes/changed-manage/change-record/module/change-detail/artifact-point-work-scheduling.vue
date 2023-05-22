@@ -7,7 +7,7 @@
       :data="needSchedulingList"
       :cell-class-name="wrongCellMask"
       style="width: 100%; margin-bottom: 50px"
-      @select-change="handleSelectionChange"
+      @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" align="center" width="60" />
       <el-table-column label="序号" type="index" align="center" width="60" />

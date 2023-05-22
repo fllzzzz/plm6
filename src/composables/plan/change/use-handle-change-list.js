@@ -18,6 +18,7 @@ function handleAssembleList(oldList, newList) {
   const needHandleNewList = []
   const needHandleNewObj = {}
   const amList = [] // 单纯加减数量的列表
+  const sameList = [] // 完全相同的列表
   const sameKeys = [] // 编号、规格、长度相同的列表
   const oldObj = arr2obj(oldList, 'serialNumber')
 
@@ -38,9 +39,12 @@ function handleAssembleList(oldList, newList) {
         n.oldSerialNumbers.push(item.oldAssembleSerialNumber)
       }
     }
-    if (isNotBlank(_o) && _o.specification === n.specification && _o.length === n.length) {
-      sameKeys.push(`${n.serialNumber}_${n.specification}_${n.length}`)
+    if (isNotBlank(_o)) {
+      sameKeys.push(`${n.serialNumber}`)
+      // if (isNotBlank(_o) && _o.specification === n.specification && _o.length === n.length) {
+      //   sameKeys.push(`${n.serialNumber}_${n.specification}_${n.length}`)
       if (_o.quantity === n.quantity) {
+        sameList.push({ newAssemble: n, oldAssemble: _o })
         continue
       } else {
         const diffQuantity = _o.quantity - n.quantity
@@ -49,6 +53,8 @@ function handleAssembleList(oldList, newList) {
         amList.push({ newAssemble: n, oldAssemble: _o, changeType, diffQuantity, diffTotalWeight })
       }
     } else {
+      // 默认为新增
+      if (!n.operateType) n.operateType = assembleOperateTypeEnum.NEW.V
       needHandleNewList.push(n)
       needHandleNewObj[n.serialNumber] = n
     }
@@ -56,7 +62,8 @@ function handleAssembleList(oldList, newList) {
 
   for (let i = 0; i < oldList.length; i++) {
     const o = oldList[i]
-    const _key = `${o.serialNumber}_${o.specification}_${o.length}`
+    // const _key = `${o.serialNumber}_${o.specification}_${o.length}`
+    const _key = `${o.serialNumber}`
     if (sameKeys.includes(_key)) {
       continue
     } else {
@@ -70,7 +77,8 @@ function handleAssembleList(oldList, newList) {
     needHandleNewList,
     needHandleOldObj,
     needHandleNewObj,
-    amList
+    amList,
+    sameList
   }
 }
 
@@ -88,7 +96,7 @@ function handleCompareAssembleList(assembleInfo) {
       const changeType = changeTypeEnum.NEW.V
       const diffQuantity = -v.quantity
       const diffTotalWeight = -v.totalNetWeight
-      assembleChangeList.push({ newAssemble: v, oldAssemble: null, changeType, diffQuantity, diffTotalWeight })
+      assembleChangeList.push({ newAssemble: v, oldAssemble: {}, changeType, diffQuantity, diffTotalWeight })
     }
 
     if (v.operateType !== assembleOperateTypeEnum.NEW.V && v.oldSerialNumbers?.length) {
@@ -122,7 +130,7 @@ function handleCompareAssembleList(assembleInfo) {
         const changeType = changeTypeEnum.DEL.V
         const diffQuantity = o.quantity
         const diffTotalWeight = o.totalNetWeight
-        assembleDelList.push({ newAssemble: null, oldAssemble: o, changeType, diffQuantity, diffTotalWeight })
+        assembleDelList.push({ newAssemble: {}, oldAssemble: o, changeType, diffQuantity, diffTotalWeight })
       }
     }
   }

@@ -8,44 +8,47 @@
           <span class="new-sn">{{ item.newArtifact?.serialNumber }}</span>
           <span class="old-sn">原构件编号：{{ item.oldArtifact?.serialNumber }}</span>
           <span class="right-btn">
-            <div class="circle-button" style="border-color: #ffac00"></div>
-            <div class="circle-button" style="border-color: #da0000; color: #da0000"><ElClose style="width: 85%" /></div>
+            <hamburger :is-active="item.foldOpened" class="hamburger-container" @toggleClick="item.foldOpened = !item.foldOpened" />
+            <!-- <div class="circle-button" style="border-color: #ffac00"></div>
+            <div class="circle-button" style="border-color: #da0000; color: #da0000"><ElClose style="width: 85%" /></div> -->
           </span>
         </template>
-        <div class="box-content">
-          <div class="handle-title">
-            <span># 基本信息</span>
+        <template v-if="item.foldOpened">
+          <div class="box-content">
+            <div class="handle-title">
+              <span># 基本信息</span>
+            </div>
+            <div style="display: flex">
+              <artifact-change-table :newArtifact="item.newArtifact" :oldArtifact="item.oldArtifact" style="width: 750px" />
+              <artifact-area-change-table :areaList="item.areaList" style="flex: 1; margin-left: 15px" />
+            </div>
           </div>
-          <div style="display: flex">
-            <artifact-change-table :newArtifact="item.newArtifact" :oldArtifact="item.oldArtifact" style="width: 750px" />
-            <artifact-area-change-table :areaList="item.areaList" style="flex: 1; margin-left: 15px" />
+          <div class="box-content" v-if="item.assembleInfo?.needHandleNewList?.length">
+            <div class="handle-title">
+              <span># 部件变更设置（单构件）</span>
+            </div>
+            <assemble-change-set
+              :new-assemble-list="item.assembleInfo?.needHandleNewList || []"
+              :old-assemble-list="item.assembleInfo?.needHandleOldList || []"
+              :assembleInfo="item.assembleInfo"
+            />
           </div>
-        </div>
-        <div class="box-content">
-          <div class="handle-title">
-            <span># 部件变更设置（单构件）</span>
+          <div class="box-content" v-if="item.assembleCompareList?.length">
+            <div class="handle-title">
+              <span># 部件变更信息</span>
+            </div>
+            <assemble-change-table :assembleCompareList="item.assembleCompareList" :assembleInfo="item.assembleInfo" />
           </div>
-          <assemble-change-set
-            :new-assemble-list="item.assembleInfo?.needHandleNewList || []"
-            :old-assemble-list="item.assembleInfo?.needHandleOldList || []"
-            :assembleInfo="item.assembleInfo"
-          />
-        </div>
-        <div class="box-content">
-          <div class="handle-title">
-            <span># 部件变更信息</span>
+          <div class="box-content" v-if="item.partCompareList?.length">
+            <div class="handle-title">
+              <span># 零件变更信息</span>
+            </div>
+            <machine-part-change-table :partCompareList="item.partCompareList" />
           </div>
-          <assemble-change-table :assembleCompareList="item.assembleCompareList" :assembleInfo="item.assembleInfo" />
-        </div>
-        <div class="box-content" v-if="item.partCompareList?.length">
-          <div class="handle-title">
-            <span># 零件变更信息</span>
-          </div>
-          <machine-part-change-table :partCompareList="item.partCompareList" />
-        </div>
+        </template>
       </el-card>
     </div>
-    <artifact-right-info class="right-con" />
+    <!-- <artifact-right-info class="right-con" /> -->
   </div>
 </template>
 
@@ -53,10 +56,11 @@
 import { inject, defineProps } from 'vue'
 import artifactChangeTable from '@/components-system/plan/change/artifact-change-table'
 import artifactAreaChangeTable from '@/components-system/plan/change/artifact-area-change-table'
-import artifactRightInfo from '@/components-system/plan/change/artifact-right-info'
+// import artifactRightInfo from '@/components-system/plan/change/artifact-right-info'
 import assembleChangeSet from '@/components-system/plan/change/assemble-change-set'
 import assembleChangeTable from '@/components-system/plan/change/assemble-change-table'
 import machinePartChangeTable from '@/components-system/plan/change/machine-part-change-table'
+import Hamburger from '@comp/Hamburger/index.vue'
 
 defineProps({
   heightStyle: {
@@ -138,6 +142,10 @@ const changeInfo = inject('changeInfo')
       justify-content: center;
       font-size: 16px;
     }
+  }
+
+  &:not(:last-child) {
+    margin-bottom: 15px;
   }
 }
 

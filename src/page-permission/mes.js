@@ -29,6 +29,12 @@ export const changeListPM = {
   detail: ['mes_change_list:detail'] // 查看详情
 }
 
+// 变更管理/变更记录
+export const changeRecordPM = {
+  get: ['mes_change_record:get'], // 变更列表
+  detail: ['mes_change_record:detail'] // 变更详情
+}
+
 // 变更管理/多余列表
 export const surplusListPM = {
   get: ['mes_surplus_list:get'], // 多余列表

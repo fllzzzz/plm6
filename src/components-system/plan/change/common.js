@@ -41,23 +41,25 @@ const changeTypeEnum = {
   ADD: { L: '加', K: 'ADD', V: 1 << 1, C: '#00ae11' },
   EDIT: { L: '改', K: 'EDIT', V: 1 << 2, C: '#ae4e00' },
   REDUCE: { L: '减', K: 'REDUCE', V: 1 << 3, C: '#e28a18' },
-  DEL: { L: '删', K: 'DEL', V: 1 << 4, C: '#ff0000' }
+  DEL: { L: '删', K: 'DEL', V: 1 << 4, C: '#ff0000' },
+  KEEP: { L: '保持', K: 'KEEP', V: 1 << 5, C: '#808080' }
 }
 constantize(changeTypeEnum)
 
 // 部件变更操作类型
 const assembleOperateTypeEnum = {
   EDIT: { L: '变更', K: 'EDIT', V: 1, T: 'warning' },
-  NEW: { L: '新增', K: 'NEW', V: 2, T: 'primary' }
+  NEW: { L: '新增', K: 'NEW', V: 2, T: '' }
 }
 constantize(assembleOperateTypeEnum)
 
 // 部件变更处理方式
 const assembleHandleMethodEnum = {
-  ADD_LENGTH: { L: '加长', K: 'ADD_LENGTH', V: 1 << 0 },
-  TRUNCATE: { L: '截短', K: 'TRUNCATE', V: 1 << 1 },
-  PUNCH_HOLE: { L: '打孔', K: 'PUNCH_HOLE', V: 1 << 2 },
-  OTHER: { L: '其他', K: 'OTHER', V: 1 << 3 }
+  KEEP: { L: '保持', K: 'KEEP', V: 1 << 0 },
+  OTHER: { L: '其他', K: 'OTHER', V: 1 << 1 },
+  ADD_LENGTH: { L: '加长', K: 'ADD_LENGTH', V: 1 << 2 },
+  TRUNCATE: { L: '截短', K: 'TRUNCATE', V: 1 << 3 },
+  PUNCH_HOLE: { L: '打孔', K: 'PUNCH_HOLE', V: 1 << 4 }
 }
 constantize(assembleHandleMethodEnum)
 

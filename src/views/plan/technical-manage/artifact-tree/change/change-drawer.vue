@@ -22,7 +22,7 @@
           </common-button>
         </span>
       </el-card>
-      <component :is="currentView" :height-style="heightStyle" />
+      <component ref="componentRef" :is="currentView" :height-style="heightStyle" />
     </template>
   </common-drawer>
 </template>
@@ -32,17 +32,17 @@ import { changeList } from '@/api/plan/technical-manage/artifact-tree'
 import { defineProps, defineEmits, computed, ref, reactive, provide, watchEffect } from 'vue'
 import { ElMessage, ElNotification } from 'element-plus'
 
-import { toPrecision, isBlank } from '@/utils/data-type'
-import { changeTypeEnum, artifactHandleStatusEnum, assembleOperateTypeEnum } from '@/components-system/plan/change/common.js'
+import { isBlank } from '@/utils/data-type'
+import { artifactHandleStatusEnum, assembleHandleMethodEnum } from '@/components-system/plan/change/common.js'
 
-import useMaxHeight from '@compos/use-max-height'
+// import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'
 import useHandleChangeList from '@compos/plan/change/use-handle-change-list'
-import useHandelSummaryData from '@compos/plan/change/use-handle-summary-data'
+// import useHandelSummaryData from '@compos/plan/change/use-handle-summary-data'
 import commonStep from '@comp-common/common-step/index'
 import mHandle from './module/handle'
-import mSummary from './module/summary'
-import mTechnicalUpload from './module/technical-upload'
+// import mSummary from './module/summary' // 变更汇总
+// import mTechnicalUpload from './module/technical-upload' // 技术变更上传
 import mReason from './module/reason'
 
 const drawerRef = ref()
@@ -69,22 +69,23 @@ const props = defineProps({
 const { visible: drawerVisible, handleClose } = useVisible({ emit, props, field: 'visible', showHook })
 
 // 高度
-const { maxHeight, heightStyle } = useMaxHeight(
-  {
-    extraBox: ['.el-drawer__header', '.step-content'],
-    wrapperBox: ['.el-drawer__body'],
-    navbar: false,
-    clientHRepMainH: true,
-    extraHeight: 50
-  },
-  drawerVisible
-)
+// const { maxHeight, heightStyle } = useMaxHeight(
+//   {
+//     extraBox: ['.el-drawer__header', '.step-content'],
+//     wrapperBox: ['.el-drawer__body'],
+//     navbar: false,
+//     clientHRepMainH: true,
+//     extraHeight: 50
+//   },
+//   drawerVisible
+// )
 
 const { handleAssembleList, handleCompareAssembleList, handleComparePartList } = useHandleChangeList()
-const { handleSummaryData } = useHandelSummaryData()
+// const { handleSummaryData } = useHandelSummaryData()
 
-const stepOptions = reactive([{ title: '变更处理' }, { title: '变更汇总' }, { title: '技术成果上传' }, { title: '变更原因填写' }])
-const stepComponent = [mHandle, mSummary, mTechnicalUpload, mReason]
+const componentRef = ref()
+const stepOptions = reactive([{ title: '变更处理' }, { title: '变更原因填写' }])
+const stepComponent = [mHandle, mReason]
 const step = ref(0)
 const submitLoading = ref(false)
 const form = ref({})
@@ -119,6 +120,7 @@ function showHook() {
     v.artifactHandleStatus = getArtifactInitStatus(v)
     v.boolTag = false
     v.boolDel = false
+    v.foldOpened = true
     artifactWatch(v)
     _list.push(v)
     changeInfoMap.value.set(v.newArtifact.serialNumber, v)
@@ -160,19 +162,27 @@ function getArtifactInitStatus(item) {
   return artifactHandleStatus
 }
 
-function handleNextStep() {
+async function handleNextStep() {
   if (step.value === 0) {
     const _unHandleQuantity = changeInfo.value.length - handledQuantity.value
     if (_unHandleQuantity) {
       ElMessage.warning(`变更构件还有${_unHandleQuantity}种未处理`)
       return
     }
-    handleSummaryData(changeInfo.value)
+    // handleSummaryData(changeInfo.value)
+  }
+  if (componentRef.value?.validate) {
+    const validate = await componentRef.value.validate()
+    if (!validate) return
   }
   step.value++
 }
 
 async function submit() {
+  if (componentRef.value?.validate) {
+    const validate = await componentRef.value.validate()
+    if (!validate) return
+  }
   try {
     submitLoading.value = true
     const _artifactList = []
@@ -180,7 +190,7 @@ async function submit() {
       // 过滤取消变更的构件
       if (item.artifactHandleStatus & artifactHandleStatusEnum.CANCEL_HANDLE.V) continue
       const assembleList = []
-      for (const assemble of item.assembleInfo.needHandleNewList) {
+      for (const assemble of item.assembleInfo?.needHandleNewList) {
         const changeLinkList = []
         for (const oldSN of assemble.oldSerialNumbers) {
           changeLinkList.push({
@@ -192,6 +202,32 @@ async function submit() {
         assembleList.push({
           ...assemble,
           changeLinkList
+        })
+      }
+      // 处理完全相同部件的数据
+      for (const assemble of item.assembleInfo?.sameList) {
+        assembleList.push({
+          ...assemble.newAssemble,
+          changeLinkList: [
+            {
+              assembleChangeTypeEnum: assembleHandleMethodEnum.KEEP.V,
+              oldAssembleSerialNumber: assemble.oldAssemble?.serialNumber,
+              quantity: assemble.oldAssemble?.quantity
+            }
+          ]
+        })
+      }
+      // 处理数量不同的部件
+      for (const assemble of item.assembleInfo?.amList) {
+        assembleList.push({
+          ...assemble.newAssemble,
+          changeLinkList: [
+            {
+              assembleChangeTypeEnum: assembleHandleMethodEnum.KEEP.V,
+              oldAssembleSerialNumber: assemble.oldAssemble?.serialNumber,
+              quantity: assemble.oldAssemble?.quantity
+            }
+          ]
         })
       }
       // const partList = []
@@ -211,10 +247,13 @@ async function submit() {
       }
       _artifactList.push(_artifact)
     }
+    const attachmentIds = form.value.attachments?.length ? form.value.attachments.map((v) => v.id) : undefined
     const submitInfo = {
+      ...form.value,
       monomerId: props.monomerId,
       projectId: props.projectId,
-      newArtifactList: _artifactList
+      newArtifactList: _artifactList,
+      attachmentIds
     }
     await changeList(submitInfo)
     ElNotification.success(`提交成功`)

@@ -14,13 +14,41 @@
       style="width: 100%"
     >
       <el-table-column label="序号" type="index" align="center" width="60" />
-      <el-table-column v-if="columns.visible('createTime')" show-overflow-tooltip label="变更编号" prop="" align="center" min-width="100" />
+      <el-table-column
+        v-if="columns.visible('serialNumber')"
+        show-overflow-tooltip
+        label="变更编号"
+        prop="serialNumber"
+        align="center"
+        min-width="100"
+      />
       <el-table-column v-if="columns.visible('project')" show-overflow-tooltip label="变更项目" prop="project" min-width="150" />
-      <el-table-column v-if="columns.visible('createTime')" show-overflow-tooltip label="变更原因" prop="" align="center" min-width="100" />
-      <el-table-column v-if="columns.visible('createTime')" show-overflow-tooltip label="变更提交人" prop="" align="center" width="120" />
-      <el-table-column v-if="columns.visible('createTime')" show-overflow-tooltip label="变更时间" prop="" align="center" width="170" />
-      <el-table-column v-if="columns.visible('createTime')" show-overflow-tooltip label="生产确认人" prop="" align="center" width="120" />
-      <el-table-column v-if="columns.visible('createTime')" show-overflow-tooltip label="确认时间" prop="" align="center" width="170" />
+      <el-table-column
+        v-if="columns.visible('changeReasonTypeEnum')"
+        show-overflow-tooltip
+        label="变更原因"
+        prop="changeReasonTypeEnum"
+        align="center"
+        min-width="100"
+      />
+      <el-table-column
+        v-if="columns.visible('user.name')"
+        show-overflow-tooltip
+        label="变更提交人"
+        prop="user.name"
+        align="center"
+        width="120"
+      />
+      <el-table-column
+        v-if="columns.visible('createTime')"
+        show-overflow-tooltip
+        label="变更时间"
+        prop="createTime"
+        align="center"
+        width="170"
+      />
+      <el-table-column v-if="columns.visible('confirmName')" show-overflow-tooltip label="生产确认人" prop="confirmName" align="center" width="120" />
+      <el-table-column v-if="columns.visible('confirmTime')" show-overflow-tooltip label="确认时间" prop="confirmTime" align="center" width="170" />
       <el-table-column v-if="columns.visible('statusEnum')" show-overflow-tooltip label="状态" prop="statusEnum" align="center" width="100">
         <template #default="{ row }">
           <el-tag v-if="row.statusEnum" effect="plain" :type="changeRecordStatusEnum.V[row.statusEnum].T">
@@ -28,9 +56,16 @@
           </el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="操作" width="100px" align="center" fixed="right">
+      <el-table-column v-permission="permission.detail" label="操作" width="100px" align="center" fixed="right">
         <template #default="{ row }">
-          <common-button v-permission="permission.get" size="mini" type="primary" icon="el-icon-view" @click.stop="toDetail(row)" />
+          <common-button
+            v-permission="permission.detail"
+            size="mini"
+            type="primary"
+            :disabled="row.statusEnum === changeRecordStatusEnum.CONFIRMED.V"
+            icon="el-icon-view"
+            @click.stop="toDetail(row)"
+          />
         </template>
       </el-table-column>
     </common-table>
@@ -45,6 +80,8 @@ import crudApi from '@/api/mes/changed-manage/change-record'
 import { ref } from 'vue'
 
 import { changeRecordStatusEnum } from '@enum-ms/production'
+import { changeReasonTypeEnum } from '@enum-ms/plan'
+import { changeRecordPM as permission } from '@/page-permission/mes'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
@@ -52,34 +89,28 @@ import pagination from '@crud/Pagination'
 import mHeader from './module/header'
 import mDetail from './module/detail'
 
-// crud交由presenter持有
-const permission = {
-  get: [''],
-  edit: [''],
-  add: [''],
-  del: [''],
-}
-
 const optShow = {
   add: false,
   edit: false,
   del: false,
-  download: false,
+  download: false
 }
 
 const dataFormat = ref([
   ['createTime', ['parse-time', '{y}-{m}-{d}']],
   ['project', 'parse-project'],
+  ['changeReasonTypeEnum', ['parse-enum', changeReasonTypeEnum]]
 ])
 
 const tableRef = ref()
 const { crud, columns, CRUD } = useCRUD(
   {
-    title: '',
+    title: '变更记录',
     sort: [],
     permission: { ...permission },
     optShow: { ...optShow },
-    crudApi: { ...crudApi },
+    invisibleColumns: [],
+    crudApi: { ...crudApi }
   },
   tableRef
 )
