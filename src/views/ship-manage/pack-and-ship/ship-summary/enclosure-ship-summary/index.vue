@@ -55,6 +55,7 @@
 import crudApi from '@/api/ship-manage/pack-and-ship/enclosure-ship-summary'
 import { ref } from 'vue'
 import { deepClone } from '@/utils/data-type'
+import { componentTypeEnum } from '@enum-ms/mes'
 import { enclosureShipSummaryPM as permission } from '@/page-permission/ship-manage'
 import { isNotBlank } from '@data-type/index'
 import useMaxHeight from '@compos/use-max-height'
@@ -102,7 +103,7 @@ CRUD.HOOK.handleRefresh = (crud, { data }) => {
 
 function handleCurrentChange(val) {
   currentRow.value = val
-  categoryData.value = val?.project?.projectContentList?.filter(v => v.name !== '结构件')
+  categoryData.value = val?.project?.projectContentList?.filter(v => v.categoryType === componentTypeEnum.ENCLOSURE.V)
   categoryList.value = deepClone(categoryData.value)
   categoryList.value?.push({
     id: 20,

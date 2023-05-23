@@ -117,23 +117,23 @@ import usePagination from '@compos/use-pagination'
 const props = defineProps({
   modelValue: {
     type: Boolean,
-    default: false,
+    default: false
   },
   showType: {
-    type: String,
+    type: String
   },
   query: {
-    type: Object,
+    type: Object
   },
   workshopId: {
-    type: Number,
+    type: Number
   },
   projectId: {
-    type: Number,
+    type: Number
   },
   weightStatus: {
-    type: Number,
-  },
+    type: Number
+  }
 })
 
 const list = ref([])
@@ -164,7 +164,7 @@ async function fetchDetail() {
       ...props.query,
       workshopId: props.workshopId,
       shipEnumType: projectSearchTypeEnum[props.showType].V,
-      ...queryPage,
+      ...queryPage
     })
     list.value = content
     setTotalPage(totalElements)
@@ -178,7 +178,7 @@ async function fetchDetail() {
 // 合计
 function getSummaries(param) {
   const summary = tableSummary(param, {
-    props: ['quantity', 'totalLength'],
+    props: ['quantity', 'totalLength']
   })
   return summary
 }

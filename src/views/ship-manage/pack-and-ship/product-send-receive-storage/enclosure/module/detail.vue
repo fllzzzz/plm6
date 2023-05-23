@@ -160,42 +160,42 @@ import usePagination from '@compos/use-pagination'
 const emit = defineEmits(['update:modelValue', 'success'])
 const query = ref({
   enclosurePlanId: undefined,
-  serialNumber: undefined,
+  serialNumber: undefined
 })
 
 const props = defineProps({
   modelValue: {
     type: Boolean,
-    require: true,
+    require: true
   },
   detailInfo: {
     type: Object,
-    default: () => {},
+    default: () => {}
   },
   permission: {
     type: Object,
-    default: () => {},
+    default: () => {}
   },
   showType: {
     type: String,
-    default: undefined,
+    default: undefined
   },
   detailQuery: {
     type: Object,
-    default: () => {},
+    default: () => {}
   },
   workshopId: {
-    type: Number,
+    type: Number
   },
   productType: {
-    type: Number,
+    type: Number
   },
   dateTime: {
-    type: String,
+    type: String
   },
   category: {
-    type: Number,
-  },
+    type: Number
+  }
 })
 
 const { visible, handleClose } = useVisible({ emit, props })
@@ -222,7 +222,7 @@ const { maxHeight } = useMaxHeight(
     paginate: true,
     minHeight: 300,
     navbar: false,
-    clientHRepMainH: true,
+    clientHRepMainH: true
   },
   visible
 )
@@ -232,7 +232,7 @@ const dataFormat = ref([
   ['inboundTotalLength', ['to-fixed', DP.COM_L__MM]],
   ['outboundTotalLength', ['to-fixed', DP.COM_L__MM]],
   ['stockTotalLength', ['to-fixed', DP.COM_L__MM]],
-  ['beginningTotalLength', ['to-fixed', DP.COM_L__MM]],
+  ['beginningTotalLength', ['to-fixed', DP.COM_L__MM]]
 ])
 
 // 合计
@@ -248,8 +248,8 @@ function getSummaries(param) {
       'stockTotalLength',
       'stockQuantity',
       'beginningQuantity',
-      'beginningTotalLength',
-    ],
+      'beginningTotalLength'
+    ]
   })
   return summary
 }
@@ -279,7 +279,7 @@ async function fetchList() {
       category: props.category,
       ...props.detailQuery,
       ...query.value,
-      ...queryPage,
+      ...queryPage
     })
     _list = content
     setTotalPage(totalElements)
