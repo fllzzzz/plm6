@@ -174,7 +174,7 @@ export const DP = {
   MES_MACHINE_PART_L__MM: 0, // mes_零件_长度（m）
   MES_MACHINE_PART_L__M: 2, // mes_零件_长度（m）
   MES_ENCLOSURE_L__MM: 0, // mes_围护_长度（mm）
-  MES_ENCLOSURE_L__M: 2, // mes_围护_长度（m）
+  MES_ENCLOSURE_L__M: 3, // mes_围护_长度（m）
   MES_ENCLOSURE_W__MM: 0, // mes_围护_有效宽度（mm）
   MES_ENCLOSURE_T__MM: 3, // mes_围护_厚度（mm）
   YUAN: 2,

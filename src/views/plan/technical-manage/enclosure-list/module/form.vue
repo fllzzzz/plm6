@@ -62,7 +62,7 @@
             :key="technicalTypeStatus ? 'plateId' : 'plate'"
             :prop="technicalTypeStatus ? 'plateId' : 'plate'"
             :show-overflow-tooltip="true"
-            label="版型"
+            label="板型"
             min-width="100px"
           >
             <template v-slot="scope">
@@ -73,7 +73,7 @@
                 :type="'other'"
                 :dataStructure="crud.query.category===TechnologyTypeAllEnum.TRUSS_FLOOR_PLATE.V?trussProp:typeProp"
                 size="small"
-                placeholder="版型"
+                placeholder="板型"
                 @change="plateChange(scope.row,scope.$index)"
               />
               <common-select
@@ -82,7 +82,7 @@
                 :options="enclosureDictKV?.['plate_type']"
                 :dataStructure="defaultProp"
                 size="small"
-                placeholder="版型"
+                placeholder="板型"
                 @change="plateChange(scope.row,scope.$index)"
               />
             </template>
@@ -415,11 +415,11 @@ const tableRules = computed(() => {
   let data = {}
   if (technicalTypeStatus.value) {
     data = {
-      plateId: [{ validator: validatePlateId, message: '请选择版型', trigger: 'change' }]
+      plateId: [{ validator: validatePlateId, message: '请选择板型', trigger: 'change' }]
     }
   } else {
     data = {
-      plate: [{ required: true, message: '请选择版型', trigger: 'change' }]
+      plate: [{ required: true, message: '请选择板型', trigger: 'change' }]
     }
   }
   return { ...rules, ...data }

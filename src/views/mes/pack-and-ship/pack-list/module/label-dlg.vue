@@ -30,7 +30,7 @@
       </tr>
       <!-- <tr v-if="packageInfo.productType === packTypeEnum.ENCLOSURE.V">
         <td>编号</td>
-        <td>版型</td>
+        <td>板型</td>
         <td>长度</td>
         <td>数量</td>
       </tr> -->
@@ -94,7 +94,7 @@
       </tr>
       <!-- <tr v-if="packageInfo.productType === packTypeEnum.ENCLOSURE.V">
         <td>编号</td>
-        <td>版型</td>
+        <td>板型</td>
         <td>长度</td>
         <td>数量</td>
       </tr> -->

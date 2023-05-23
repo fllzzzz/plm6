@@ -53,6 +53,7 @@ import { report } from '@/api/enclosure/production-manage/scheduling-work-order'
 import { computed, defineProps, ref } from 'vue'
 
 import { tableSummary } from '@/utils/el-extra'
+import { DP } from '@/settings/config'
 
 import { regDetail } from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
@@ -67,7 +68,7 @@ const props = defineProps({
 const drawerRef = ref()
 const dataFormat = ref([
   ['askCompleteTime', ['parse-time', '{y}-{m}-{d}']],
-  ['totalLength', ['to-fixed', 2]]
+  ['totalLength', ['to-fixed', DP.MES_ENCLOSURE_L__M]]
 ])
 
 const { CRUD, crud, detail } = regDetail()
@@ -101,7 +102,7 @@ async function printSuccess() {
 // 合计
 function getSummaries(param) {
   return tableSummary(param, {
-    props: [['totalLength', 2]]
+    props: [['totalLength', DP.MES_ENCLOSURE_L__M]]
   })
 }
 

@@ -121,7 +121,7 @@ async function printPackageLabel({ packageInfo, qrCode, printMode = PrintMode.QU
   //       </div>`,
   //   // [packTypeEnum.ENCLOSURE.V]: `<div class="flex">
   //   //     <div class="row-0 w-1 col border-r">编号</div>
-  //   //     <div class="row-0 w-1 col border-r">版型</div>
+  //   //     <div class="row-0 w-1 col border-r">板型</div>
   //   //     <div class="row-0 w-1 col border-r">长度</div>
   //   //     <div class="row-0 w-1 col">数量</div>
   //   //   </div>`,
