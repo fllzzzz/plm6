@@ -62,7 +62,7 @@
         needConvert
       />
       <area-tabs
-        v-if="packType === packTypeEnum.ENCLOSURE.V || packType === packTypeEnum.AUXILIARY_MATERIAL.V"
+        v-if="packType === packTypeEnum.ENCLOSURE.V"
         class="filter-item"
         :style="areaInfo.length > 0 ? 'width:calc(100% - 230px)' : 'width:calc(100% - 380px)'"
         v-model="batchId"

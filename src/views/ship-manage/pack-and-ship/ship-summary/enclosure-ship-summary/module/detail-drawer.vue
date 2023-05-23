@@ -25,7 +25,7 @@
       <!--表格渲染-->
       <common-table :data="list" v-loading="tableLoading" show-summary :summary-method="getSummaries" :max-height="maxHeight - 70">
         <el-table-column prop="index" label="序号" align="center" width="45" type="index" />
-        <el-table-column key="areaName" prop="areaName" label="计划" align="center" :show-overflow-tooltip="true" />
+        <el-table-column key="areaName" prop="areaName" label="批次" align="center" :show-overflow-tooltip="true" />
         <el-table-column key="name" prop="name" label="名称" align="center" :show-overflow-tooltip="true" />
         <el-table-column key="serialNumber" prop="serialNumber" label="编号" align="center" :show-overflow-tooltip="true" />
         <el-table-column key="plate" prop="plate" label="板型" align="center" :show-overflow-tooltip="true" />

@@ -199,7 +199,7 @@ const enclosureProjectShipDetail = {
      * @param {boolean} sum 列需要合计
      */
     fields: [
-      { show: true, key: 'enclosurePlanName', title: '计划', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 16, type: typeEnum.ENCLOSURE_NAME.K },
+      { show: true, key: 'enclosurePlanName', title: '批次', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 16, type: typeEnum.ENCLOSURE_NAME.K },
       { show: true, key: 'serialNumber', title: '编号', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 16, type: typeEnum.SERIAL_NUMBER.K },
       { show: true, key: 'name', title: '名称', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 16, type: typeEnum.ENCLOSURE_NAME.K },
       { show: true, key: 'plate', title: '板型', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 13, type: typeEnum.PLATE_TYPE.K },

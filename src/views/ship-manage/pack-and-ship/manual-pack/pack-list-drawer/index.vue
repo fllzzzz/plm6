@@ -156,10 +156,8 @@
           </el-table-column>
         </template>
         <template v-if="packType === packTypeEnum.AUXILIARY_MATERIAL.V">
-          <el-table-column key="serialNumber" prop="serialNumber" :show-overflow-tooltip="true" label="编号" min-width="120" />
-          <el-table-column key="fullClassName" prop="fullClassName" :show-overflow-tooltip="true" label="辅材类别" min-width="250" />
-          <el-table-column key="unit" prop="unit" label="单位" min-width="80px" />
-          <el-table-column key="color" prop="color" :show-overflow-tooltip="true" label="颜色" min-width="120" />
+          <el-table-column key="name" prop="name" :show-overflow-tooltip="true" label="名称" />
+          <el-table-column key="measureUnit" prop="measureUnit" label="单位" min-width="80px" />
           <el-table-column key="specification" prop="specification" :show-overflow-tooltip="true" label="规格" min-width="120" />
         </template>
         <el-table-column key="inQuantity" prop="inQuantity" label="入库量" align="center" min-width="80px" />
