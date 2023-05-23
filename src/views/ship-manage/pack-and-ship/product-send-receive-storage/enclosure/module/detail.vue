@@ -78,7 +78,6 @@
       <common-table
         :data="list"
         v-loading="tableLoading"
-        :data-format="dataFormat"
         show-summary
         :summary-method="getSummaries"
         :max-height="maxHeight"
@@ -89,43 +88,43 @@
         <el-table-column key="serialNumber" prop="serialNumber" label="编号" align="center" show-overflow-tooltip />
         <el-table-column key="plate" prop="plate" label="板型" align="center" show-overflow-tooltip />
         <el-table-column key="length" prop="length" label="单长(mm)" align="center" show-overflow-tooltip />
-        <el-table-column label="清单数(件/mm)" align="center">
+        <el-table-column label="清单数(件/米)" align="center">
           <el-table-column key="quantity" prop="quantity" label="清单数" align="center" show-overflow-tooltip />
           <el-table-column key="totalLength" prop="totalLength" label="总长" align="center" show-overflow-tooltip>
             <template #default="{ row }">
-              <span>{{ row.totalLength }}</span>
+              <span>{{ convertUnits(row.totalLength, 'mm', 'm', 2) || 0 }}</span>
             </template>
           </el-table-column>
         </el-table-column>
-        <el-table-column label="期初库存(件/mm)" align="center">
+        <el-table-column label="期初库存(件/米)" align="center">
           <el-table-column key="beginningQuantity" prop="beginningQuantity" label="期初数" align="center" show-overflow-tooltip />
           <el-table-column key="beginningTotalLength" prop="beginningTotalLength" label="总长" align="center" show-overflow-tooltip>
             <template #default="{ row }">
-              <span>{{ row.beginningTotalLength }}</span>
+              <span>{{ convertUnits(row.beginningTotalLength, 'mm', 'm', 2) || 0 }}</span>
             </template>
           </el-table-column>
         </el-table-column>
-        <el-table-column label="入库(件/mm)" align="center">
+        <el-table-column label="入库(件/米)" align="center">
           <el-table-column key="inboundQuantity" prop="inboundQuantity" label="入库数" align="center" show-overflow-tooltip />
           <el-table-column key="inboundTotalLength" prop="inboundTotalLength" label="总长" align="center" show-overflow-tooltip>
             <template #default="{ row }">
-              <span>{{ row.inboundTotalLength }}</span>
+              <span>{{ convertUnits(row.inboundTotalLength, 'mm', 'm', 2) || 0 }}</span>
             </template>
           </el-table-column>
         </el-table-column>
-        <el-table-column label="出库(件/mm)" align="center">
+        <el-table-column label="出库(件/米)" align="center">
           <el-table-column key="outboundQuantity" prop="outboundQuantity" label="出库数" align="center" show-overflow-tooltip />
           <el-table-column key="outboundTotalLength" prop="outboundTotalLength" label="总长" align="center" show-overflow-tooltip>
             <template #default="{ row }">
-              <span>{{ row.outboundTotalLength }}</span>
+              <span>{{ convertUnits(row.outboundTotalLength, 'mm', 'm', 2) || 0 }}</span>
             </template>
           </el-table-column>
         </el-table-column>
-        <el-table-column label="期末库存(件/mm)" align="center">
+        <el-table-column label="期末库存(件/米)" align="center">
           <el-table-column key="stockQuantity" prop="stockQuantity" label="期末数" align="center" show-overflow-tooltip />
           <el-table-column key="stockTotalLength" prop="stockTotalLength" label="期末量" align="center" show-overflow-tooltip>
             <template #default="{ row }">
-              <span>{{ row.stockTotalLength }}</span>
+              <span>{{ convertUnits(row.stockTotalLength, 'mm', 'm', 2) || 0 }}</span>
             </template>
           </el-table-column>
         </el-table-column>
@@ -148,8 +147,9 @@
 import { detail } from '@/api/ship-manage/pack-and-ship/enclosure-product-receive-send-storage'
 import { getEnclosureBatch } from '@/api/mes/common.js'
 import { ref, defineEmits, defineProps, watch } from 'vue'
-import { tableSummary } from '@/utils/el-extra'
-import { DP } from '@/settings/config'
+// import { tableSummary } from '@/utils/el-extra'
+import { convertUnits } from '@/utils/convert/unit'
+// import { DP } from '@/settings/config'
 import { projectNameFormatter } from '@/utils/project'
 import { parseTime } from '@/utils/date'
 import useVisible from '@compos/use-visible'
@@ -227,31 +227,62 @@ const { maxHeight } = useMaxHeight(
   visible
 )
 
-const dataFormat = ref([
-  ['totalLength', ['to-fixed', DP.COM_L__MM]],
-  ['inboundTotalLength', ['to-fixed', DP.COM_L__MM]],
-  ['outboundTotalLength', ['to-fixed', DP.COM_L__MM]],
-  ['stockTotalLength', ['to-fixed', DP.COM_L__MM]],
-  ['beginningTotalLength', ['to-fixed', DP.COM_L__MM]]
-])
-
 // 合计
 function getSummaries(param) {
-  const summary = tableSummary(param, {
-    props: [
-      'inboundQuantity',
-      'inboundTotalLength',
-      'outboundQuantity',
-      'outboundTotalLength',
-      'quantity',
-      'totalLength',
-      'stockTotalLength',
-      'stockQuantity',
-      'beginningQuantity',
-      'beginningTotalLength'
-    ]
+  // const summary = tableSummary(param, {
+  //   props: [
+  //     'inboundQuantity',
+  //     'inboundTotalLength',
+  //     'outboundQuantity',
+  //     'outboundTotalLength',
+  //     'quantity',
+  //     'totalLength',
+  //     'stockTotalLength',
+  //     'stockQuantity',
+  //     'beginningQuantity',
+  //     'beginningTotalLength'
+  //   ]
+  // })
+  // return summary
+  const { columns, data } = param
+  const sums = []
+  columns.forEach((column, index) => {
+    if (index === 0) {
+      sums[index] = '合计'
+      return
+    }
+    if (column.property === 'quantity' || column.property === 'inboundQuantity' || column.property === 'outboundQuantity' || column.property === 'stockQuantity' || column.property === 'beginningQuantity') {
+      const values = data.map((item) => Number(item[column.property]))
+      let valuesSum = 0
+      if (!values.every((value) => isNaN(value))) {
+        valuesSum = values.reduce((prev, curr) => {
+          const value = Number(curr)
+          if (!isNaN(value)) {
+            return prev + curr
+          } else {
+            return prev
+          }
+        }, 0)
+      }
+      sums[index] = valuesSum
+    }
+    if (column.property === 'totalLength' || column.property === 'inboundTotalLength' || column.property === 'outboundTotalLength' || column.property === 'stockTotalLength' || column.property === 'beginningTotalLength') {
+      const values = data.map((item) => Number(item[column.property]))
+      let valuesSum = 0
+      if (!values.every((value) => isNaN(value))) {
+        valuesSum = values.reduce((prev, curr) => {
+          const value = Number(curr)
+          if (!isNaN(value)) {
+            return prev + curr
+          } else {
+            return prev
+          }
+        }, 0)
+      }
+      sums[index] = convertUnits(valuesSum, 'mm', 'm', 2)
+    }
   })
-  return summary
+  return sums
 }
 
 // function getAreaInfo(val) {

@@ -185,7 +185,7 @@ function getSummaries(param) {
       sums[index] = '合计'
       return
     }
-    if (column.property === 'usedMete') {
+    if (column.property === 'quantity') {
       const values = data.map((item) => Number(item[column.property]))
       let valuesSum = 0
       if (!values.every((value) => isNaN(value))) {

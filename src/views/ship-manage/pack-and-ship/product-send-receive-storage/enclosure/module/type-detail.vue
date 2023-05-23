@@ -123,10 +123,14 @@
               : showType === 'BEGINNING'
               ? '期初'
               : '清单'
-          }量（mm）`"
+          }量（m）`"
           align="center"
           :show-overflow-tooltip="true"
-        />
+        >
+          <template #default="{ row }">
+            <span>{{ convertUnits(row.totalLength, 'mm', 'm', 2) || 0 }}</span>
+          </template>
+        </el-table-column>
         <el-table-column
           key="createTime"
           prop="createTime"
@@ -153,9 +157,9 @@
 <script setup>
 import { enclosureProductDetail } from '@/api/ship-manage/pack-and-ship/enclosure-product-receive-send-storage'
 import { ref, defineEmits, defineProps, watch } from 'vue'
-
-import { tableSummary } from '@/utils/el-extra'
-import { DP } from '@/settings/config'
+import { convertUnits } from '@/utils/convert/unit'
+// import { tableSummary } from '@/utils/el-extra'
+// import { DP } from '@/settings/config'
 import { projectNameFormatter } from '@/utils/project'
 import { productSearchTypeEnum } from '@enum-ms/mes'
 
@@ -229,16 +233,50 @@ const { maxHeight } = useMaxHeight(
 )
 
 const dataFormat = ref([
-  ['totalLength', ['to-fixed', DP.COM_L__M]],
   ['createTime', 'parse-time']
 ])
 
 // 合计
 function getSummaries(param) {
-  const summary = tableSummary(param, {
-    props: ['quantity', 'totalLength']
+  const { columns, data } = param
+  const sums = []
+  columns.forEach((column, index) => {
+    if (index === 0) {
+      sums[index] = '合计'
+      return
+    }
+    if (column.property === 'quantity') {
+      const values = data.map((item) => Number(item[column.property]))
+      let valuesSum = 0
+      if (!values.every((value) => isNaN(value))) {
+        valuesSum = values.reduce((prev, curr) => {
+          const value = Number(curr)
+          if (!isNaN(value)) {
+            return prev + curr
+          } else {
+            return prev
+          }
+        }, 0)
+      }
+      sums[index] = valuesSum
+    }
+    if (column.property === 'totalLength') {
+      const values = data.map((item) => Number(item[column.property]))
+      let valuesSum = 0
+      if (!values.every((value) => isNaN(value))) {
+        valuesSum = values.reduce((prev, curr) => {
+          const value = Number(curr)
+          if (!isNaN(value)) {
+            return prev + curr
+          } else {
+            return prev
+          }
+        }, 0)
+      }
+      sums[index] = convertUnits(valuesSum, 'mm', 'm', 2)
+    }
   })
-  return summary
+  return sums
 }
 
 // function timeChange(val) {
