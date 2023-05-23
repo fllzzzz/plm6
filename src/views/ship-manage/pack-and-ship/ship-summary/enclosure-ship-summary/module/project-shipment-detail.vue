@@ -122,9 +122,9 @@
           :show-overflow-tooltip="true"
           min-width="120px"
         />
-        <el-table-column key="unit" prop="unit" label="单位" align="center" :show-overflow-tooltip="true" />
+        <el-table-column key="measureUnit" prop="measureUnit" label="单位" align="center" :show-overflow-tooltip="true" />
         <el-table-column key="quantity" prop="quantity" label="清单量" align="center" :show-overflow-tooltip="true" />
-        <el-table-column key="shipQuantity" prop="shipQuantity" label="已发运" align="center" :show-overflow-tooltip="true" />
+        <el-table-column key="cargoQuantity" prop="cargoQuantity" label="已发运" align="center" :show-overflow-tooltip="true" />
         <el-table-column key="unCargoQuantity" prop="unCargoQuantity" label="未发运" align="center" :show-overflow-tooltip="true" />
       </common-table>
     </div>
@@ -200,6 +200,7 @@ watch(
     if (val) {
       showType.value = undefined
       fetchSummary()
+      fetchBatch()
     }
   }
 )

@@ -16,7 +16,7 @@
       <el-table-column label="序号" type="index" align="center" width="60" />
       <el-table-column v-if="columns.visible('name')" key="name" prop="name" label="名称" align="center" />
       <el-table-column v-if="columns.visible('specification')" key="specification" prop="specification" label="规格" align="center" />
-      <el-table-column v-if="columns.visible('unit')" key="unit" prop="unit" label="单位" align="center" />
+      <el-table-column v-if="columns.visible('measureUnit')" key="measureUnit" prop="measureUnit" label="单位" align="center" />
       <el-table-column
         v-if="columns.visible('quantity')"
         key="quantity"
@@ -173,7 +173,6 @@ CRUD.HOOK.beforeRefresh = () => {
   crud.query.workshopId = props.workshopId
   crud.query.category = props.category
   crud.query.monomerId = props.monomerId
-  crud.query.areaId = props.batchId ? props.areaId : undefined
 }
 
 function add(row) {
@@ -181,7 +180,7 @@ function add(row) {
 }
 
 CRUD.HOOK.handleRefresh = (crud, res) => {
-  res.data.content = res.data.auxiliaryMaterialList?.map((v) => {
+  res.data.content = res.data.content?.map((v) => {
     v.productQuantity = v.unPackageQuantity
     return v
   })

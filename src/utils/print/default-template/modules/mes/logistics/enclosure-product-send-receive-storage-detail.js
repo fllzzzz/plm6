@@ -1,4 +1,4 @@
-import { dataSourceEnum, alignEnum, verticleAlignEnum, fieldTypeEnum as typeEnum, cssUnitEnum, cssUnitPrecisionEnum, pageFormatEnum } from '@/utils/print/enum'
+import { dataSourceEnum, alignEnum, verticleAlignEnum, fieldTypeEnum as typeEnum, cssUnitEnum, cssUnitPrecisionEnum, pageFormatEnum, lengthUnitEnum } from '@/utils/print/enum'
 
 // 发运管理-围护制成品入发存详情
 const enclosureProductSendReceiveStorageDetail = {
@@ -205,15 +205,15 @@ const enclosureProductSendReceiveStorageDetail = {
       { show: true, key: 'plate', title: '板型', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 10, type: typeEnum.PLATE_TYPE.K },
       { show: true, key: 'length', title: '单长（mm）', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 10, type: typeEnum.LENGTH.K },
       { show: true, key: 'quantity', title: '清单数', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 14, type: typeEnum.QUANTITY.K, sum: true },
-      { show: true, key: 'totalLength', title: '总长(mm)', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 14, type: typeEnum.LENGTH.K, sum: true },
+      { show: true, key: 'totalLength', title: '总长(m)', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 14, type: typeEnum.LENGTH.K, format: { toThousand: false, precision: 2, unit: lengthUnitEnum.M.V }, sum: true },
       { show: true, key: 'beginningQuantity', title: '期初数', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 10, type: typeEnum.QUANTITY.K, sum: true },
-      { show: true, key: 'beginningTotalLength', title: '总长(mm)', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 10, type: typeEnum.LENGTH.K, sum: true },
+      { show: true, key: 'beginningTotalLength', title: '总长(m)', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 10, type: typeEnum.LENGTH.K, format: { toThousand: false, precision: 2, unit: lengthUnitEnum.M.V }, sum: true },
       { show: true, key: 'inboundQuantity', title: '入库数', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 10, type: typeEnum.QUANTITY.K, sum: true },
-      { show: true, key: 'inboundTotalLength', title: '总长(mm)', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 10, type: typeEnum.LENGTH.K, sum: true },
+      { show: true, key: 'inboundTotalLength', title: '总长(m)', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 10, type: typeEnum.LENGTH.K, format: { toThousand: false, precision: 2, unit: lengthUnitEnum.M.V }, sum: true },
       { show: true, key: 'outboundQuantity', title: '出库数', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 10, type: typeEnum.QUANTITY.K, sum: true },
-      { show: true, key: 'outboundTotalLength', title: '总长(mm)', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 10, type: typeEnum.LENGTH.K, sum: true },
+      { show: true, key: 'outboundTotalLength', title: '总长(m)', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 10, type: typeEnum.LENGTH.K, format: { toThousand: false, precision: 2, unit: lengthUnitEnum.M.V }, sum: true },
       { show: true, key: 'stockQuantity', title: '期末数', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 10, type: typeEnum.QUANTITY.K, sum: true },
-      { show: true, key: 'stockTotalLength', title: '总长(mm)', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 10, type: typeEnum.LENGTH.K, sum: true }
+      { show: true, key: 'stockTotalLength', title: '总长(m)', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 10, type: typeEnum.LENGTH.K, format: { toThousand: false, precision: 2, unit: lengthUnitEnum.M.V }, sum: true }
     ]
   }
 }

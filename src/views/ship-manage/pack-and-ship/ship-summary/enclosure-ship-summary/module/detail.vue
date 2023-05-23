@@ -76,7 +76,7 @@
         align="center"
         :show-overflow-tooltip="true"
       />
-      <el-table-column key="area.name" prop="area.name" label="计划" align="center" :show-overflow-tooltip="true" />
+      <el-table-column key="area.name" prop="area.name" label="批次" align="center" :show-overflow-tooltip="true" />
       <el-table-column key="name" prop="name" label="名称" align="center" :show-overflow-tooltip="true" min-width="100px" />
       <el-table-column key="serialNumber" prop="serialNumber" label="编号" align="center" :show-overflow-tooltip="true" />
       <el-table-column key="plate" prop="plate" label="板型" align="center" :show-overflow-tooltip="true" min-width="120px" />
@@ -86,9 +86,9 @@
         </template>
       </el-table-column>
       <el-table-column key="quantity" prop="quantity" label="数量（件）" align="center" :show-overflow-tooltip="true" width="90px" />
-      <el-table-column key="totalLength" prop="totalLength" label="总长（mm）" align="center" :show-overflow-tooltip="true">
+      <el-table-column key="totalLength" prop="totalLength" label="总长（m）" align="center" :show-overflow-tooltip="true">
         <template #default="{ row }">
-          <span>{{ row.totalLength || '-' }}</span>
+          <span>{{ convertUnits(row.totalLength, 'mm', 'm', 2) || '-' }}</span>
         </template>
       </el-table-column>
     </common-table>
@@ -108,7 +108,8 @@
 <script setup>
 import { ref, defineProps, watch } from 'vue'
 import { summaryDetail } from '@/api/ship-manage/pack-and-ship/enclosure-ship-summary'
-import { tableSummary } from '@/utils/el-extra'
+import { convertUnits } from '@/utils/convert/unit'
+// import { tableSummary } from '@/utils/el-extra'
 import { projectSearchTypeEnum } from '@enum-ms/mes'
 // import { enclosureShipStatisticsTypeEnum } from '@enum-ms/ship-manage'
 import useMaxHeight from '@compos/use-max-height'
@@ -117,23 +118,23 @@ import usePagination from '@compos/use-pagination'
 const props = defineProps({
   modelValue: {
     type: Boolean,
-    default: false,
+    default: false
   },
   showType: {
-    type: String,
+    type: String
   },
   query: {
-    type: Object,
+    type: Object
   },
   workshopId: {
-    type: Number,
+    type: Number
   },
   projectId: {
-    type: Number,
+    type: Number
   },
   weightStatus: {
-    type: Number,
-  },
+    type: Number
+  }
 })
 
 const list = ref([])
@@ -164,7 +165,7 @@ async function fetchDetail() {
       ...props.query,
       workshopId: props.workshopId,
       shipEnumType: projectSearchTypeEnum[props.showType].V,
-      ...queryPage,
+      ...queryPage
     })
     list.value = content
     setTotalPage(totalElements)
@@ -177,10 +178,45 @@ async function fetchDetail() {
 
 // 合计
 function getSummaries(param) {
-  const summary = tableSummary(param, {
-    props: ['quantity', 'totalLength'],
+  const { columns, data } = param
+  const sums = []
+  columns.forEach((column, index) => {
+    if (index === 0) {
+      sums[index] = '合计'
+      return
+    }
+    if (column.property === 'quantity') {
+      const values = data.map((item) => Number(item[column.property]))
+      let valuesSum = 0
+      if (!values.every((value) => isNaN(value))) {
+        valuesSum = values.reduce((prev, curr) => {
+          const value = Number(curr)
+          if (!isNaN(value)) {
+            return prev + curr
+          } else {
+            return prev
+          }
+        }, 0)
+      }
+      sums[index] = valuesSum
+    }
+    if (column.property === 'totalLength') {
+      const values = data.map((item) => Number(item[column.property]))
+      let valuesSum = 0
+      if (!values.every((value) => isNaN(value))) {
+        valuesSum = values.reduce((prev, curr) => {
+          const value = Number(curr)
+          if (!isNaN(value)) {
+            return prev + curr
+          } else {
+            return prev
+          }
+        }, 0)
+      }
+      sums[index] = convertUnits(valuesSum, 'mm', 'm', 2)
+    }
   })
-  return summary
+  return sums
 }
 </script>
 <style lang="scss" scoped>
