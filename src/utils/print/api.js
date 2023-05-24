@@ -27,6 +27,7 @@ const contractStructureProduct = contract.structurePrice
 const contractEnclosureProduct = contract.structurePrice
 const contractAuxiliaryMaterialProduct = contract.structurePrice
 const contractStructureShipmentTracking = contract.shipmentTracking
+const contractEnclosureShipmentTracking = contract.shipmentTracking
 const contractAuxiliaryMaterialShipmentTracking = contract.shipmentTracking
 
 const logisticsPaymentLedger = contract.logisticsLedger
@@ -225,6 +226,7 @@ export default {
   contractEnclosureProduct, // 围护制品
   contractAuxiliaryMaterialProduct, // 配套制品
   contractStructureShipmentTracking, // 结构发运跟踪
+  contractEnclosureShipmentTracking, // 围护发运跟踪
   contractAuxiliaryMaterialShipmentTracking, // 配套件发运跟踪
   projectWarehouseRecord, // 销售管理入库记录
   industryElectricRecord, // 工业电费
