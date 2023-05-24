@@ -49,7 +49,7 @@
         placeholder="输入厚度搜索"
         controls-position="right"
         :controls="false"
-        class="filter-item"
+        class="filter-item left-num"
         style="width: 170px;"
       />
       <rrOperation />
@@ -306,3 +306,8 @@ function uploadSuccess() {
 }
 
 </script>
+<style lang="scss" scoped>
+::v-deep(.left-num  .el-input__inner) {
+  text-align: left;
+}
+</style>

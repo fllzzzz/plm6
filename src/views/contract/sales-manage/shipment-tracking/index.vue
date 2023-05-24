@@ -4,7 +4,6 @@
       <common-radio-button
         v-model="productType"
         :options="installProjectTypeEnum.ENUM"
-        :unshowVal="[installProjectTypeEnum.ENCLOSURE.V]"
         default
         type="enum"
         size="small"
@@ -25,49 +24,120 @@
         :clearable="false"
         style="width: 230px"
       />
-      <el-row v-if="checkPermission(permission.summary)" v-loading="summaryLoading" :gutter="10" class="panel-group">
-        <el-col class="card-panel-col">
-          <Panel
-            :name="`累计发运量（吨）`"
-            text-color="#626262"
-            num-color="#1890ff"
-            :end-val="summaryData.shipMet || 0"
-            :precision="2"
-            :show-empty="productType === installProjectTypeEnum.AUXILIARY.V"
-          />
-        </el-col>
-        <el-col class="card-panel-col">
-          <Panel name="累计发运额（元）" text-color="#626262" num-color="#1890ff" :end-val="summaryData.shipAmount || 0" :precision="2" />
-        </el-col>
-        <el-col class="card-panel-col">
-          <Panel
-            name="累计车次"
-            text-color="#626262"
-            num-color="#1890ff"
-            :end-val="summaryData.cargoQuantity || 0"
-            :show-empty="productType === installProjectTypeEnum.AUXILIARY.V"
-          />
-        </el-col>
-        <el-col class="card-panel-col">
-          <Panel
-            :name="`筛选日期发运量（吨）`"
-            text-color="#626262"
-            num-color="#1890ff"
-            :end-val="summaryData.shipMetTime || 0"
-            :precision="2"
-            :show-empty="productType === installProjectTypeEnum.AUXILIARY.V"
-          />
-        </el-col>
-        <el-col class="card-panel-col">
-          <Panel
-            name="筛选日期发运额（元）"
-            text-color="#626262"
-            num-color="#1890ff"
-            :end-val="summaryData.shipAmountTime || 0"
-            :precision="2"
-          />
-        </el-col>
-      </el-row>
+      <div v-if="checkPermission(permission.summary)">
+        <div v-if="productType === installProjectTypeEnum.ENCLOSURE.V">
+          <el-row v-loading="summaryLoading" :gutter="10" class="panel-group" style="margin-bottom: 10px">
+            <el-col class="card-panel-col">
+              <Panel
+                :name="`累计发运长度（米）`"
+                text-color="#626262"
+                num-color="#1890ff"
+                :end-val="summaryData.shipLength || 0"
+                :precision="2"
+              />
+            </el-col>
+            <el-col class="card-panel-col">
+              <Panel
+                :name="`累计发运面积（平方米）`"
+                text-color="#626262"
+                num-color="#1890ff"
+                :end-val="summaryData.shipArea || 0"
+                :precision="2"
+              />
+            </el-col>
+            <el-col class="card-panel-col">
+              <Panel
+                name="累计发运额（元）"
+                text-color="#626262"
+                num-color="#1890ff"
+                :end-val="summaryData.shipAmount || 0"
+                :precision="2"
+              />
+            </el-col>
+          </el-row>
+          <el-row v-loading="summaryLoading" :gutter="10" class="panel-group">
+            <el-col class="card-panel-col">
+              <Panel
+                name="累计车次"
+                text-color="#626262"
+                num-color="#1890ff"
+                :end-val="summaryData.cargoQuantity || 0"
+                :show-empty="productType === installProjectTypeEnum.AUXILIARY.V"
+              />
+            </el-col>
+            <el-col class="card-panel-col">
+              <Panel
+                :name="`筛选日期发运长度（米）`"
+                text-color="#626262"
+                num-color="#1890ff"
+                :end-val="summaryData.shipLengthTime || 0"
+                :precision="2"
+              />
+            </el-col>
+            <el-col class="card-panel-col">
+              <Panel
+                :name="`筛选日期发运面积（平方米）`"
+                text-color="#626262"
+                num-color="#1890ff"
+                :end-val="summaryData.shipAreaTime || 0"
+                :precision="2"
+              />
+            </el-col>
+            <el-col class="card-panel-col">
+              <Panel
+                name="筛选日期发运额（元）"
+                text-color="#626262"
+                num-color="#1890ff"
+                :end-val="summaryData.shipAmountTime || 0"
+                :precision="2"
+              />
+            </el-col>
+          </el-row>
+        </div>
+        <el-row v-else v-loading="summaryLoading" :gutter="10" class="panel-group">
+          <el-col class="card-panel-col">
+            <Panel
+              :name="`累计发运量（吨）`"
+              text-color="#626262"
+              num-color="#1890ff"
+              :end-val="summaryData.shipMet || 0"
+              :precision="2"
+              :show-empty="productType === installProjectTypeEnum.AUXILIARY.V"
+            />
+          </el-col>
+          <el-col class="card-panel-col">
+            <Panel name="累计发运额（元）" text-color="#626262" num-color="#1890ff" :end-val="summaryData.shipAmount || 0" :precision="2" />
+          </el-col>
+          <el-col class="card-panel-col">
+            <Panel
+              name="累计车次"
+              text-color="#626262"
+              num-color="#1890ff"
+              :end-val="summaryData.cargoQuantity || 0"
+              :show-empty="productType === installProjectTypeEnum.AUXILIARY.V"
+            />
+          </el-col>
+          <el-col class="card-panel-col">
+            <Panel
+              :name="`筛选日期发运量（吨）`"
+              text-color="#626262"
+              num-color="#1890ff"
+              :end-val="summaryData.shipMetTime || 0"
+              :precision="2"
+              :show-empty="productType === installProjectTypeEnum.AUXILIARY.V"
+            />
+          </el-col>
+          <el-col class="card-panel-col">
+            <Panel
+              name="筛选日期发运额（元）"
+              text-color="#626262"
+              num-color="#1890ff"
+              :end-val="summaryData.shipAmountTime || 0"
+              :precision="2"
+            />
+          </el-col>
+        </el-row>
+      </div>
     </div>
     <component :is="currentView" @reset-query="resetQuery" />
   </div>

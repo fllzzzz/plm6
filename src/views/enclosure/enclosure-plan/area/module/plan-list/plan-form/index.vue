@@ -92,7 +92,7 @@ const { CRUD, crud } = useCRUD(
     permission: { ...permission },
     optShow: { ...optShow },
     crudApi: { ...crudApi },
-    requiredQuery: ['techId'],
+    requiredQuery: ['projectId', 'category'],
     hasPagination: true
   },
   tableRef
@@ -108,7 +108,8 @@ watch(
   () => props.currentRow,
   (val) => {
     if (val) {
-      crud.query.techId = props.currentRow?.id
+      crud.query.category = props.currentRow?.category
+      crud.query.projectId = props.currentRow?.projectId
       crud.toQuery()
     }
   },

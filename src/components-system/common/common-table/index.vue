@@ -243,7 +243,9 @@ const tableLoaded = watch(
       watch(
         [() => props.data, tableColumns],
         ([listData, columns]) => {
-          handleData(listData, columns)
+          if (filterData.value !== props.data) {
+            handleData(listData, columns)
+          }
         },
         { immediate: true, deep: true }
       )
@@ -586,7 +588,6 @@ function parseEnum(data, field) {
   const cfg = field.length > 1 ? Object.assign(defaultKey, field[1]) : defaultKey
   const fEnum = field[0]
   if (isBlank(data) || isBlank(fEnum)) return
-
   let enumV = fEnum.V
   if (isBlank(enumV)) {
     // 处理某些页面自定义而没有经过处理的枚举
