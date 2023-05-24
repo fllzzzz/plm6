@@ -25,7 +25,7 @@
               {{ treeRow?.levelName }}
             </el-tag>
             <div class="btn-wrap">
-              <common-button v-permission="permission.auto" type="primary" size="mini" @click="autoAmortizationVisible = true">
+              <common-button v-permission="permission.amortization" type="primary" size="mini" @click="autoAmortizationVisible = true">
                 自动摊销
               </common-button>
               <el-badge
@@ -34,7 +34,7 @@
                 :style="{ marginRight: manualAmortizationCount ? '10px' : 0 }"
                 :hidden="manualAmortizationCount < 1"
               >
-                <common-button v-permission="permission.manual" type="primary" size="mini" @click="manualAmortizationVisible = true">
+                <common-button v-permission="permission.amortization" type="primary" size="mini" @click="manualAmortizationVisible = true">
                   手动摊销
                 </common-button>
               </el-badge>
@@ -51,12 +51,13 @@
           :empty-text="crud.emptyText"
           :max-height="maxHeight"
           row-key="id"
+          :indent="0"
           :data-format="columnsDataFormat"
         >
-          <el-table-column type="index" prop="index" label="序号" align="center" width="60px" />
+          <el-table-column prop="index" key="index" label="序号" align="center" width="80" />
           <el-table-column v-if="columns.visible('date')" prop="date" key="date" label="摊销时间段" align="center" min-width="160">
             <template #default="{ row }">
-              <span style="font-weight: bold">{{ row.date }}</span>
+              <span :class="{ parentElement: row.isParent }">{{ row.date }}</span>
             </template>
           </el-table-column>
           <el-table-column
@@ -65,7 +66,7 @@
             key="name"
             prop="name"
             :show-overflow-tooltip="true"
-            label="摊销类型"
+            label="摊销种类"
             min-width="180"
           >
             <template #default="{ row }">
@@ -103,7 +104,7 @@
           />
           <el-table-column v-if="checkPermission(permission.detail)" align="center" label="操作" width="80px">
             <template #default="{ row }">
-              <common-button size="mini" type="info" icon="el-icon-view" @click="showDetail(row)" />
+              <common-button v-if="row.isParent" size="mini" type="info" icon="el-icon-view" @click="showDetail(row)" />
             </template>
           </el-table-column>
         </common-table>
@@ -140,7 +141,6 @@ import manualAmortization from './module/manual-amortization'
 const tableRef = ref()
 const amortizationTreeRef = ref()
 const amortizationTree = ref([])
-const amortizationKV = ref({})
 const expenseClassEnumKV = ref({})
 const treeRow = ref({})
 const detailRow = ref({})
@@ -190,11 +190,10 @@ getAmortizationTree()
 
 async function getAmortizationTree() {
   try {
-    amortizationKV.value = {}
     expenseClassEnumKV.value = {}
     amortizationTree.value = (await amortizationClassTree({ enable: true })) || []
     setLevelName(amortizationTree.value)
-    setAmortizationKV(amortizationTree.value)
+    setExpenseClassEnumKV(amortizationTree.value)
     setEmptyArr2Undefined(amortizationTree.value)
     nodeClick(treeRow.value)
   } catch (e) {
@@ -203,13 +202,12 @@ async function getAmortizationTree() {
 }
 
 // 设置摊销KV
-function setAmortizationKV(tree) {
+function setExpenseClassEnumKV(tree) {
   tree?.forEach((row) => {
-    amortizationKV.value[row.id] = row
     if (row.bizId === 0) {
       expenseClassEnumKV.value[row.expenseClassEnum] = row
     }
-    setAmortizationKV(row.children)
+    // setExpenseClassEnumKV(row.children)
   })
 }
 
@@ -250,17 +248,32 @@ async function getCount() {
 }
 
 CRUD.HOOK.handleRefresh = async (crud, { data }) => {
-  getCount()
-  data.content.forEach((row) => {
+  if (checkPermission(permission.amortization)) {
+    getCount()
+  }
+  data.content.forEach((row, index) => {
     // 时间范围
     const _startDate = moment(row.startDate).format('YYYY-MM-DD')
     const _endDate = moment(row.endDate).format('YYYY-MM-DD')
     row.date = `${_startDate} ~ ${_endDate}`
-    row.bizId = amortizationKV.value[row.amortizationClassId]?.bizId
+    row.index = index + 1
+    row.isParent = true
     const _name = expenseClassEnum.VL[row.expenseClassEnum]
     if (_name !== row.name) {
       row.fullPathName = _name
     }
+    row.children = row.childrenList?.map((v, i) => {
+      const _startDate = moment(v.startDate).format('YYYY-MM-DD')
+      const _endDate = moment(v.endDate).format('YYYY-MM-DD')
+      v.date = `${_startDate} ~ ${_endDate}`
+      v.index = `${row.index}-${i + 1}`
+      v.amortizationType = undefined
+      if (row.fullPathName) {
+        v.name = row.name
+        v.fullPathName = row.fullPathName
+      }
+      return v
+    })
   })
 }
 </script>
@@ -276,6 +289,10 @@ CRUD.HOOK.handleRefresh = async (crud, { data }) => {
   .el-tree {
     overflow-y: auto;
   }
+}
+
+.parentElement {
+  font-weight: bold;
 }
 
 .btn-wrap {

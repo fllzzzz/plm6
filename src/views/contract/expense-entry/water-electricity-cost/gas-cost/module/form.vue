@@ -46,6 +46,7 @@
             v-model="form.endDate"
             type="date"
             value-format="x"
+            :disabled="!form.startDate"
             placeholder="选择结束日期"
             style="width: 270px"
             :disabled-date="disabledDate"
@@ -141,6 +142,12 @@ const rules = {
 // 选择气体
 function handleGasChange(id) {
   form.accountingUnit = props.lastGasKV[id]?.accountingUnit
+  if (id) {
+    setDate()
+  } else {
+    form.startDate = undefined
+    form.endDate = undefined
+  }
 }
 
 // 禁止时间
@@ -151,7 +158,7 @@ function disabledDate(time) {
 // 设置时间
 async function setDate() {
   try {
-    const data = await getDate()
+    const data = await getDate({ classifyId: form.classifyId })
     form.startDate = `${data.startDate || ''}`
     form.endDate = `${data.endDate || ''}`
   } catch (error) {
@@ -161,11 +168,10 @@ async function setDate() {
 
 // 新增需要获取开始、结束时间
 CRUD.HOOK.afterToAdd = (crud, form) => {
-  setDate()
   // 末级
   if (props.rowDetail?.id && !props.rowDetail.children) {
     form.classifyId = props.rowDetail.id
-    form.accountingUnit = props.rowDetail.accountingUnit
+    handleGasChange(form.classifyId)
   }
 }
 

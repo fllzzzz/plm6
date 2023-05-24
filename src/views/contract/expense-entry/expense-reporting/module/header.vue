@@ -50,7 +50,7 @@
           <span> 报销总额（元）： <span v-thousand="totalAmount" /> </span>
         </el-tag>
         <print-table
-          api-key="expenseReimburseList"
+          api-key="expenseReporting"
           :params="{
             ...query,
           }"

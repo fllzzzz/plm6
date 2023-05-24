@@ -36,6 +36,7 @@ const defaultQuery = {
   date: [],
   startDate: undefined,
   endDate: undefined,
+  isAmortization: true,
   ids: [] // 摊销分类的ids
 }
 const defaultTime = ref([new Date(2000, 1, 1, 0, 0, 0), new Date(2000, 2, 1, 23, 59, 59)])

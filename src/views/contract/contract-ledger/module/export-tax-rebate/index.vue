@@ -219,7 +219,7 @@ const { crud, CRUD } = useCRUD(
     permission: { ...permission },
     optShow: { ...optShow },
     crudApi: { ...crudApi },
-    hasPagination: true,
+    hasPagination: false,
     requiredQuery: ['projectId']
   },
   tableRef

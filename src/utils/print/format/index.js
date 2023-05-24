@@ -20,7 +20,9 @@ const saleOrderTracking = contract.handleRate
 const waterRecord = contract.handleTimeHorizon
 const electricRecord = contract.handleTimeHorizon
 const gasRecord = contract.handleTimeHorizon
-const contractDeviceDepreciationRecord = contract.handleRate
+const contractDeviceDepreciationRecord = contract.handleAmortizationRecord
+const amortizationRecord = contract.handleAmortizationRecord
+const expenseReimburseSummary = contract.handleExpenseRate
 
 const orderPaymentLedger = contract.handleSupplierPaymentRate
 const scmSupplierPaymentLedger = contract.handleSupplierPaymentRate
@@ -83,7 +85,9 @@ export default {
   electricRecord,
   gasRecord,
   contractDeviceDepreciationRecord,
+  amortizationRecord,
   waterRecord,
+  expenseReimburseSummary,
 
   mesAssembleNestingOrder,
 

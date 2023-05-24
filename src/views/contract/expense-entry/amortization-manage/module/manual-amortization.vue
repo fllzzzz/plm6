@@ -30,19 +30,19 @@
             <span :class="{ parentElement: row.isParent }">{{ row.date }}</span>
           </template>
         </el-table-column>
-        <el-table-column key="amortizationClassName" prop="amortizationClassName" label="摊销类型" align="center">
+        <el-table-column key="name" prop="name" label="摊销种类" align="center">
           <template #default="{ row }">
             <span>
-              <span v-if="row.fullPathName" style="color: #adadad">{{ row.fullPathName }} > </span>{{ row.amortizationClassName }}
+              <span v-if="row.fullPathName" style="color: #adadad">{{ row.fullPathName }} > </span>{{ row.name }}
             </span>
           </template>
         </el-table-column>
-        <el-table-column key="totalAmount" prop="totalAmount" label="摊销金额" align="center" />
-        <el-table-column key="projectMete" prop="projectMete" :show-overflow-tooltip="true" label="预计摊销产量（吨）" align="center" />
+        <el-table-column key="amount" prop="amount" label="摊销金额" align="center" />
+        <el-table-column key="productMete" prop="productMete" :show-overflow-tooltip="true" label="预计摊销产量（吨）" align="center" />
         <el-table-column align="center" label="操作" width="80px">
           <template #default="{ row }">
             <el-popconfirm
-              v-if="row.isParent"
+              v-if="row.isParent && row.productMete"
               confirm-button-text="确定"
               cancel-button-text="取消"
               icon="el-icon-info"
@@ -61,12 +61,12 @@
 </template>
 
 <script setup>
-import { getManualAmortization, singleAmortize, amortizationAll } from '@/api/contract/expense-entry/amortization-manage'
+import { getAmortizationSummaryList, singleAmortize, amortizationAll } from '@/api/contract/expense-entry/amortization-manage'
 import { ref, defineEmits, defineProps, watch } from 'vue'
 
 import moment from 'moment'
 import { debounce } from '@/utils'
-import { expenseClassEnum } from '@enum-ms/contract'
+import { amortizationTypeEnum, expenseClassEnum } from '@enum-ms/contract'
 
 import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'
@@ -95,7 +95,7 @@ watch(
 )
 
 // 列格式转换
-const columnsDataFormat = [['totalAmount', 'to-thousand']]
+const columnsDataFormat = [['amount', 'to-thousand']]
 
 const { maxHeight } = useMaxHeight(
   {
@@ -113,7 +113,7 @@ const submit = debounce(
       if (flag) {
         await amortizationAll()
       } else {
-        await singleAmortize({ expenseClassEnum: row.expenseClassEnum, ids: row.ids })
+        await singleAmortize({ id: row.id })
       }
       ElMessage.success('摊销成功')
       getList()
@@ -130,7 +130,8 @@ const submit = debounce(
 async function getList() {
   try {
     listLoading.value = true
-    const data = (await getManualAmortization()) || []
+    const data =
+      (await getAmortizationSummaryList({ amortizationTypeEnum: amortizationTypeEnum.MANUAL_AMORTIZATION.V, isAmortization: false })) || []
     list.value = data.map((row, index) => {
       const _startDate = moment(row.startDate).format('YYYY-MM-DD')
       const _endDate = moment(row.endDate).format('YYYY-MM-DD')
@@ -138,22 +139,19 @@ async function getList() {
       row.index = index + 1
       row.isParent = true
       const _name = expenseClassEnum.VL[row.expenseClassEnum]
-      if (_name !== row.amortizationClassName) {
+      if (_name !== row.name) {
         row.fullPathName = _name
       }
-      // 汇总数据没有id
-      if (!row.id) {
-        row.id = Math.random()
-      }
-      row.children?.forEach((v, i) => {
+      row.children = row.childrenList?.map((v, i) => {
         const _startDate = moment(v.startDate).format('YYYY-MM-DD')
         const _endDate = moment(v.endDate).format('YYYY-MM-DD')
         v.date = `${_startDate} ~ ${_endDate}`
         v.index = `${row.index}-${i + 1}`
         if (row.fullPathName) {
-          v.amortizationClassName = row.amortizationClassName
+          v.name = row.name
           v.fullPathName = row.fullPathName
         }
+        return v
       })
       return row
     })

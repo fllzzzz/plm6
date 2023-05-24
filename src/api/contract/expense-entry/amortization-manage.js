@@ -4,7 +4,7 @@ import request from '@/utils/request'
 export function get(params) {
   return request({
     module: 'contract',
-    url: 'contract/amortization/page',
+    url: 'contract/amortization/getAmortizedPageList',
     method: 'get',
     params
   })
@@ -51,21 +51,11 @@ export function saveAmortizationClass(data) {
   })
 }
 
-// 查询自动待摊销列表数据
-export function getAutoAmortization(params) {
+// 查询摊销汇总列表数据
+export function getAmortizationSummaryList(params) {
   return request({
     module: 'contract',
-    url: 'contract/amortization/getAutoAmortization',
-    method: 'get',
-    params
-  })
-}
-
-// 查询手动待摊销列表数据
-export function getManualAmortization(params) {
-  return request({
-    module: 'contract',
-    url: 'contract/amortization/getManualPendingAmortization',
+    url: 'contract/amortization/getToBeAmortized',
     method: 'get',
     params
   })
@@ -75,19 +65,19 @@ export function getManualAmortization(params) {
 export function getManualAmortizationCount(params) {
   return request({
     module: 'contract',
-    url: 'contract/amortization/getManualPendingAmortizationCount',
+    url: 'contract/amortization/getToBeAmortizedCount',
     method: 'get',
     params
   })
 }
 
 // 单个摊销
-export function singleAmortize(data) {
+export function singleAmortize(params) {
   return request({
     module: 'contract',
     url: 'contract/amortization/amortization',
     method: 'post',
-    data
+    params
   })
 }
 

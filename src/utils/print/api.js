@@ -35,12 +35,18 @@ const waterRecord = contract.waterElectricityRecord
 const electricRecord = contract.waterElectricityRecord
 const contractPlantDepreciationRecord = contract.plantDepreciationRecord
 const contractDeviceDepreciationRecord = contract.deviceDepreciationRecord
+const expenseReporting = contract.expenseReporting
 
 const gasRecord = contract.gasRecord
-const expenseReimburseList = contract.expenseReimburseList
 const managementSalaryList = contract.managementSalaryList
 const productionSalaryList = contract.productionSalaryList
 const propertyFeeList = contract.propertyFeeList
+
+const amortizationRecord = contract.amortizationRecord
+const projectCollectionRecord = contract.projectCollectionPrint
+const projectInvoicePrint = contract.projectInvoicePrint
+const expenseReimburseRecord = contract.expenseReimburseRecord
+const expenseReimburseSummary = contract.expenseReimburseSummary
 
 const conMainMaterialList = contract.mainMaterialList
 const auxiliaryMaterialList = contract.mainMaterialList
@@ -187,8 +193,11 @@ export default {
   electricRecord, // 电费
   contractPlantDepreciationRecord, // 厂房折旧
   contractDeviceDepreciationRecord, // 设备折旧
+  expenseReporting, // 费用清单
   gasRecord, // 气体统计
-  expenseReimburseList, // 费用报销
+  amortizationRecord, // 摊销记录
+  expenseReimburseRecord, // 费用报销记录
+  expenseReimburseSummary, // 费用报销汇总
   managementSalaryList, // 管理人员工资清单
   productionSalaryList, // 生产人员工资清单
   propertyFeeList, // 物业费用清单
@@ -204,6 +213,9 @@ export default {
   depreciationFee, // 折旧费
   auxiliaryMaterialList, // 辅材费用清单
   fortuneReportList, // 业财报表
+
+  projectCollectionRecord, // 项目收款记录
+  projectInvoicePrint, // 项目开票记录
 
   // 供应链
   purchaseInvoiceRecord, // 收票记录

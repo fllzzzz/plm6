@@ -322,34 +322,33 @@ export const amortizationManagePM = {
   get: ['amortization_manage:get'], // 列表
   detail: ['amortization_manage:detail'], // 详情
   set: ['amortization_manage:set'], // 摊销设置
-  auto: ['amortization_manage:auto'], // 自动摊销
-  manual: ['amortization_manage:manual'] // 手动摊销
+  amortization: ['amortization_manage:amortization'] // 摊销
 }
 
-// 费用录入/管理费/员工工资
-export const salaryCostPM = {
-  get: ['salary_cost:get'], // 列表
-  add: ['salary_cost:add'], // 新增
-  edit: ['salary_cost:edit'], // 修改
-  del: ['salary_cost:del'], // 删除
-  print: ['salary_cost:print'] // 打印
-}
+// // 费用录入/管理费/员工工资
+// export const salaryCostPM = {
+//   get: ['salary_cost:get'], // 列表
+//   add: ['salary_cost:add'], // 新增
+//   edit: ['salary_cost:edit'], // 修改
+//   del: ['salary_cost:del'], // 删除
+//   print: ['salary_cost:print'] // 打印
+// }
 
-// 费用录入/管理费/物业费
-export const propertyCostPM = {
-  get: ['property_cost:get'], // 列表
-  add: ['property_cost:add'], // 新增
-  edit: ['property_cost:edit'], // 修改
-  del: ['property_cost:del'], // 删除
-  print: ['property_cost:print'] // 打印
-}
+// // 费用录入/管理费/物业费
+// export const propertyCostPM = {
+//   get: ['property_cost:get'], // 列表
+//   add: ['property_cost:add'], // 新增
+//   edit: ['property_cost:edit'], // 修改
+//   del: ['property_cost:del'], // 删除
+//   print: ['property_cost:print'] // 打印
+// }
 
-// 费用录入/检测费
-export const expenseTestingCostPM = {
-  get: ['expense_testing_cost:get'], // 列表
-  add: ['expense_testing_cost:add'], // 新增
-  detail: ['expense_testing_cost:detail'] // 详情
-}
+// // 费用录入/检测费
+// export const expenseTestingCostPM = {
+//   get: ['expense_testing_cost:get'], // 列表
+//   add: ['expense_testing_cost:add'], // 新增
+//   detail: ['expense_testing_cost:detail'] // 详情
+// }
 
 // --------------------------- 费用录入 end --------------------------------
 
@@ -358,13 +357,9 @@ export const expenseTestingCostPM = {
 // 业财报表
 export const fortuneReportPM = {
   get: ['fortune_report_cost:get'], // 列表
-  print: ['fortune_report_cost:print'], // 打印
-  settleDetail: ['fortune_report_cost:settle_detail'], // 结算详情
-  cost: {
-    get: ['fortune_report_cost_detail:get'], // 综合成本查看
-    detail: ['fortune_report_cost_detail:detail'], // 成本详情列表
-    print: ['fortune_report_cost_detail:print'] // 成本详情打印
-  }
+  print: contractLedgerPM.print, // 打印
+  detail: ['fortune_report_cost:detail'], // 详情
+  printDetail: ['fortune_report_cost:printDetail'] // 详情打印
 }
 
 // --------------------------- 业财报表 end --------------------------------

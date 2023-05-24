@@ -274,17 +274,6 @@ export function gasRecord(params) {
 }
 
 /**
- * 费用报销
- */
-export function expenseReimburseList(params) {
-  return request({
-    url: '/api/contract/expense-reimburse/print',
-    method: 'get',
-    params
-  })
-}
-
-/**
  * 管理人员工资
  */
 export function managementSalaryList(params) {
@@ -405,6 +394,15 @@ export function deviceDepreciationRecord(params) {
   })
 }
 
+// 费用录入/费用清单
+export function expenseReporting(params) {
+  return request({
+    url: `/api/contract/expense-reimburse/print`,
+    method: 'get',
+    params
+  })
+}
+
 // 业财报表/折旧费
 export function depreciationFee(params) {
   return request({
@@ -418,6 +416,51 @@ export function depreciationFee(params) {
 export function fortuneReportList(params) {
   return request({
     url: '/api/contract/project-finance/print',
+    method: 'get',
+    params
+  })
+}
+
+// 业财报表/摊销记录
+export function amortizationRecord(params) {
+  return request({
+    url: '/api/contract/amortization/getAmortizationListPrint',
+    method: 'get',
+    params
+  })
+}
+
+// 业财报表/项目收款记录（审核通过的数据）
+export function projectCollectionPrint(params) {
+  return request({
+    url: '/api/contract/collection/getCollectionPrint',
+    method: 'get',
+    params
+  })
+}
+
+// 业财报表/项目开票记录（审核通过的数据）
+export function projectInvoicePrint(params) {
+  return request({
+    url: '/api/contract/invoice/getInvoicePrint',
+    method: 'get',
+    params
+  })
+}
+
+// 业财报表/费用报销汇总
+export function expenseReimburseSummary(params) {
+  return request({
+    url: '/api/contract/expense-reimburse/getExpenseReimbursePrint',
+    method: 'get',
+    params
+  })
+}
+
+// 业财报表/费用报销记录
+export function expenseReimburseRecord(params) {
+  return request({
+    url: '/api/contract/expense-reimburse/getExpenseSubjectPrint',
     method: 'get',
     params
   })
@@ -447,11 +490,17 @@ export default {
   waterElectricityRecord, // 水电费清单
   plantDepreciationRecord, // 厂房折旧
   deviceDepreciationRecord, // 设备折旧
+  expenseReporting, // 费用清单
   gasRecord, // 气体统计
-  expenseReimburseList, // 费用报销
+  amortizationRecord, // 摊销记录
+  expenseReimburseRecord, // 费用报销记录
+  expenseReimburseSummary, // 费用报销汇总
   managementSalaryList, // 管理人员工资清单
   productionSalaryList, // 生产人员工资
   propertyFeeList, // 物业费用清单
+
+  projectCollectionPrint, // 项目收款记录
+  projectInvoicePrint, // 项目开票记录
 
   mainMaterialList, // 主材费清单
   manualList, // 人工费

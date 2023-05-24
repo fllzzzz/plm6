@@ -13,33 +13,33 @@
       <el-tag v-if="list.length" effect="plain" type="warning" size="medium">于 {{ autoAmortizationDate }} 自动摊销</el-tag>
     </template>
     <template #content>
-      <common-table :data="list" row-key="key" tree-default-expand-all :data-format="columnsDataFormat" :indent="0" :max-height="maxHeight">
+      <common-table :data="list" row-key="id" tree-default-expand-all :data-format="columnsDataFormat" :indent="0" :max-height="maxHeight">
         <el-table-column prop="index" key="index" label="序号" align="center" width="80" />
         <el-table-column prop="date" key="date" label="摊销时间段" align="center">
           <template #default="{ row }">
             <span :class="{ parentElement: row.isParent }">{{ row.date }}</span>
           </template>
         </el-table-column>
-        <el-table-column key="amortizationClassName" prop="amortizationClassName" label="摊销类型" align="center">
+        <el-table-column key="name" prop="name" label="摊销种类" align="center">
           <template #default="{ row }">
             <span>
-              <span v-if="row.fullPathName" style="color: #adadad">{{ row.fullPathName }} > </span>{{ row.amortizationClassName }}
+              <span v-if="row.fullPathName" style="color: #adadad">{{ row.fullPathName }} > </span>{{ row.name }}
             </span>
           </template>
         </el-table-column>
-        <el-table-column key="totalAmount" prop="totalAmount" label="摊销金额" align="center" />
-        <el-table-column key="projectMete" prop="projectMete" :show-overflow-tooltip="true" label="预计摊销产量（吨）" align="center" />
+        <el-table-column key="amount" prop="amount" label="摊销金额" align="center" />
+        <el-table-column key="productMete" prop="productMete" :show-overflow-tooltip="true" label="预计摊销产量（吨）" align="center" />
       </common-table>
     </template>
   </common-drawer>
 </template>
 
 <script setup>
-import { getAutoAmortization } from '@/api/contract/expense-entry/amortization-manage'
+import { getAmortizationSummaryList } from '@/api/contract/expense-entry/amortization-manage'
 import { ref, defineEmits, defineProps, watch } from 'vue'
 
 import moment from 'moment'
-import { expenseClassEnum } from '@enum-ms/contract'
+import { amortizationTypeEnum, expenseClassEnum } from '@enum-ms/contract'
 
 import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'
@@ -68,7 +68,7 @@ watch(
 )
 
 // 列格式转换
-const columnsDataFormat = [['totalAmount', 'to-thousand']]
+const columnsDataFormat = [['amount', 'to-thousand']]
 
 const { maxHeight } = useMaxHeight(
   {
@@ -84,26 +84,25 @@ async function getList() {
   try {
     listLoading.value = true
     autoAmortizationDate.value = moment().endOf('months').format('MM月DD日HH:mm:ss')
-    const data = (await getAutoAmortization()) || []
+    const data =
+    (await getAmortizationSummaryList({ amortizationTypeEnum: amortizationTypeEnum.AUTOMATIC_AMORTIZATION.V, isAmortization: false })) || []
     list.value = data.map((row, index) => {
       const _startDate = moment(row.startDate).format('YYYY-MM-DD')
       const _endDate = moment(row.endDate).format('YYYY-MM-DD')
       row.date = `${_startDate} ~ ${_endDate}`
       row.index = index + 1
       row.isParent = true
-      row.key = Math.random()
-      // 科目层级名称
       const _name = expenseClassEnum.VL[row.expenseClassEnum]
-      if (_name !== row.amortizationClassName) {
+      if (_name !== row.name) {
         row.fullPathName = _name
       }
-      row.children?.forEach((v, i) => {
+      row.children = row.childrenList?.forEach((v, i) => {
         const _startDate = moment(v.startDate).format('YYYY-MM-DD')
         const _endDate = moment(v.endDate).format('YYYY-MM-DD')
         v.date = `${_startDate} ~ ${_endDate}`
         v.index = `${row.index}-${i + 1}`
         if (row.fullPathName) {
-          v.amortizationClassName = row.amortizationClassName
+          v.name = row.name
           v.fullPathName = row.fullPathName
         }
       })

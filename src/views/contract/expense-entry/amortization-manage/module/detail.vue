@@ -52,7 +52,7 @@ const props = defineProps({
   }
 })
 
-const emit = defineEmits(['success', 'update:modelValue'])
+const emit = defineEmits(['update:modelValue'])
 const { visible, handleClose } = useVisible({ emit, props })
 
 const { maxHeight } = useMaxHeight(

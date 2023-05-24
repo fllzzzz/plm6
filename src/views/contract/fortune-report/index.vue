@@ -9,185 +9,321 @@
       :data="crud.data"
       :empty-text="crud.emptyText"
       :max-height="maxHeight"
-      row-key="id"
-      style="width: 100%"
+      :data-format="columnsDataFormat"
     >
-      <el-table-column prop="index" label="序号" align="center" width="60" type="index" />
-       <el-table-column
+      <el-table-column prop="index" label="序号" align="center" width="70" type="index" fixed="left">
+        <template v-slot="{ row, $index }">
+          <table-cell-tag
+            :show="row.status === projectStatusEnum.SETTLED.V"
+            :offset="10"
+            :name="projectStatusEnum.SETTLED.L"
+            color="#36ae81"
+          />
+          <span>{{ $index + 1 }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
         v-if="columns.visible('project')"
         align="center"
         key="project"
         prop="project"
-        :show-overflow-tooltip="true"
+        show-overflow-tooltip
         label="项目"
-        min-width="140"
-      >
-        <template v-slot="scope">
-          <span>{{ projectNameFormatter(scope.row) }}</span>
-        </template>
-      </el-table-column>
+        min-width="180"
+        fixed="left"
+      />
+      <el-table-column
+        v-if="columns.visible('customerUnit')"
+        align="center"
+        key="customerUnit"
+        prop="customerUnit"
+        show-overflow-tooltip
+        label="业主名称"
+        min-width="150"
+      />
       <el-table-column
         v-if="columns.visible('businessType')"
         align="center"
         key="businessType"
         prop="businessType"
-        :show-overflow-tooltip="true"
+        show-overflow-tooltip
         label="业务类型"
-      >
-        <template v-slot="scope">
-          <span>{{ businessTypeEnum.VL[scope.row.businessType] }}</span>
-        </template>
-      </el-table-column>
+        width="80"
+      />
       <el-table-column
-        v-if="columns.visible('orderType')"
+        v-if="columns.visible('signingDate')"
         align="center"
-        key="orderType"
-        prop="orderType"
-        :show-overflow-tooltip="true"
-        label="订单属性"
-      >
-        <template v-slot="scope">
-          <span>{{ orderSourceTypeEnum.VL[scope.row.orderSourceType] }}</span>
-        </template>
-      </el-table-column>
+        key="signingDate"
+        prop="signingDate"
+        show-overflow-tooltip
+        label="签订日期"
+        width="90"
+      />
       <el-table-column
-        v-if="columns.visible('status')"
+        v-if="columns.visible('deptName')"
         align="center"
-        key="status"
-        prop="status"
-        :show-overflow-tooltip="true"
-        label="状态"
-      >
-        <template v-slot="scope">
-          <el-tag :type="projectStatusEnum.V[scope.row.status].TAG">{{ projectStatusEnum.VL[scope.row.status] }}</el-tag>
-        </template>
-      </el-table-column>
+        key="deptName"
+        prop="deptName"
+        show-overflow-tooltip
+        label="签订部门"
+        min-width="100"
+      />
+      <el-table-column
+        v-if="columns.visible('projectManager')"
+        align="center"
+        key="projectManager"
+        prop="projectManager"
+        show-overflow-tooltip
+        label="项目经理"
+        min-width="90"
+      />
       <el-table-column
         v-if="columns.visible('contractAmount')"
-        align="center"
+        align="right"
         key="contractAmount"
         prop="contractAmount"
-        :show-overflow-tooltip="true"
-        label="合同额"
-      >
-        <template v-slot="scope">
-          <span>{{ toThousand(scope.row.contractAmount) }}</span>
-        </template>
-      </el-table-column>
+        show-overflow-tooltip
+        label="合同金额"
+        min-width="100"
+      />
       <el-table-column
         v-if="columns.visible('settlementAmount')"
-        align="center"
+        align="right"
         key="settlementAmount"
         prop="settlementAmount"
-        :show-overflow-tooltip="true"
+        show-overflow-tooltip
         label="结算额"
-      >
-        <template v-slot="scope">
-          <span style="color: #409EFF;cursor: pointer" @click="showSettlementDetail(scope.row)">{{ toThousand(scope.row.settlementAmount) }}</span>
-        </template>
-      </el-table-column>
+        min-width="100"
+      />
       <el-table-column
         v-if="columns.visible('costAmount')"
-        align="center"
+        align="right"
         key="costAmount"
         prop="costAmount"
-        :show-overflow-tooltip="true"
+        show-overflow-tooltip
         label="综合成本"
+        min-width="100"
       >
-        <template v-slot="scope">
-          <span style="color: #F56C6C;cursor: pointer" @click="showCostDetail(scope.row)">{{ toThousand(scope.row.costAmount) }}</span>
+        <template #default="{ row }">
+          <span v-if="checkPermission(permission.detail)" style="color: #ff5600" class="pointer" @click="openDetail('compositeCost', row)">
+            {{ row.costAmount }}
+          </span>
+          <span v-else>{{ row.costAmount }}</span>
         </template>
       </el-table-column>
       <el-table-column
         v-if="columns.visible('grossProfit')"
-        align="center"
+        align="right"
         key="grossProfit"
         prop="grossProfit"
-        :show-overflow-tooltip="true"
+        show-overflow-tooltip
         label="毛利润"
-      >
-        <template v-slot="scope">
-          <span>{{ toThousand(scope.row.grossProfit) }}</span>
-        </template>
-      </el-table-column>
+        min-width="100"
+      />
       <el-table-column
         v-if="columns.visible('grossProfitRate')"
         align="center"
         key="grossProfitRate"
         prop="grossProfitRate"
-        :show-overflow-tooltip="true"
-        label="利润率（%）"
+        show-overflow-tooltip
+        label="利润率"
+        width="80"
+      />
+      <el-table-column
+        v-if="columns.visible('exportTaxRebate')"
+        align="right"
+        key="exportTaxRebate"
+        prop="exportTaxRebate"
+        show-overflow-tooltip
+        label="出口退税"
+        min-width="100"
       >
-        <template v-slot="scope">
-          <span>{{ (scope.row.grossProfitRate * 100).toFixed(2) }}</span>
+        <template #default="{ row }">
+          <span
+            v-if="checkPermission(permission.detail)"
+            style="color: #ff5600"
+            class="pointer"
+            @click="openDetail('availableBalance', row)"
+          >
+            {{ row.exportTaxRebate }}
+          </span>
+          <span v-else>{{ row.exportTaxRebate }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" v-if="columns.visible('collectionAmount1')" key="collectionAmount1" prop="collectionAmount1" :show-overflow-tooltip="true" label="收款">
-        <el-table-column v-if="columns.visible('collectionAmount')" align="center" key="collectionAmount" prop="collectionAmount" :show-overflow-tooltip="true" label="收入">
-          <template v-slot="scope">
-            <span>{{ toThousand(scope.row.collectionAmount) }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column v-if="columns.visible('receivableAmount')" align="center" key="receivableAmount" prop="receivableAmount" :show-overflow-tooltip="true" label="应收款">
-          <template v-slot="scope">
-            <span>{{ toThousand(scope.row.receivableAmount) }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column v-if="columns.visible('availableBalance')" align="center" key="availableBalance" prop="availableBalance" :show-overflow-tooltip="true" label="可用余额">
-          <template v-slot="scope">
-            <span>{{ toThousand(scope.row.availableBalance) }}</span>
-          </template>
-        </el-table-column>
+      <el-table-column
+        v-if="columns.visible('collectionAmount')"
+        align="right"
+        key="collectionAmount"
+        prop="collectionAmount"
+        show-overflow-tooltip
+        label="收款金额"
+        min-width="100"
+      >
+        <template #default="{ row }">
+          <span v-if="checkPermission(permission.detail)" style="color: #0079ff" class="pointer" @click="openDetail('collection', row)">
+            {{ row.collectionAmount }}
+          </span>
+          <span v-else>{{ row.collectionAmount }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        v-if="columns.visible('unpaidAmount')"
+        align="right"
+        key="unpaidAmount"
+        prop="unpaidAmount"
+        show-overflow-tooltip
+        label="未付金额"
+        min-width="100"
+      />
+      <el-table-column
+        v-if="columns.visible('collectionRate')"
+        align="center"
+        key="collectionRate"
+        prop="collectionRate"
+        show-overflow-tooltip
+        label="收款率"
+        width="80"
+      />
+      <el-table-column
+        v-if="columns.visible('availableBalance')"
+        align="right"
+        key="availableBalance"
+        prop="availableBalance"
+        show-overflow-tooltip
+        label="可用余额"
+        min-width="100"
+      >
+        <template #default="{ row }">
+          <span
+            v-if="checkPermission(permission.detail)"
+            style="color: #ff5600"
+            class="pointer"
+            @click="openDetail('availableBalance', row)"
+          >
+            {{ row.availableBalance }}
+          </span>
+          <span v-else>{{ row.availableBalance }}</span>
+        </template>
       </el-table-column>
       <el-table-column
         v-if="columns.visible('happenedAmount')"
-        align="center"
+        align="right"
         key="happenedAmount"
         prop="happenedAmount"
-        :show-overflow-tooltip="true"
-        label="累计发生额"
+        show-overflow-tooltip
+        label="累计发货额"
+        min-width="100"
       >
-        <template v-slot="scope">
-          <span>{{ toThousand(scope.row.happenedAmount) }}</span>
+        <template #default="{ row }">
+          <span v-if="checkPermission(permission.detail)" style="color: #0079ff" class="pointer" @click="openDetail('happened', row)">
+            {{ row.happenedAmount }}
+          </span>
+          <span v-else>{{ row.happenedAmount }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        v-if="columns.visible('periodExpense')"
+        align="right"
+        key="periodExpense"
+        prop="periodExpense"
+        show-overflow-tooltip
+        label="期间费用"
+        min-width="100"
+      >
+        <template #default="{ row }">
+          <span
+            v-if="checkPermission(permission.detail)"
+            style="color: #0079ff"
+            class="pointer"
+            @click="
+              openDetail('costAscription', {
+                ...row,
+                costAscriptionEnum: costAscriptionEnum.PERIOD_COSTS.V,
+                costAscriptionAmount: row.sourceRow.periodExpense,
+              })
+            "
+          >
+            {{ row.periodExpense }}
+          </span>
+          <span v-else>{{ row.periodExpense }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        v-if="columns.visible('invoiceAmount')"
+        align="right"
+        key="invoiceAmount"
+        prop="invoiceAmount"
+        show-overflow-tooltip
+        label="开票金额"
+        min-width="100"
+      >
+        <template #default="{ row }">
+          <span v-if="checkPermission(permission.detail)" style="color: #0079ff" class="pointer" @click="openDetail('invoice', row)">
+            {{ row.invoiceAmount }}
+          </span>
+          <span v-else>{{ row.invoiceAmount }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        v-if="columns.visible('projectRetention')"
+        align="right"
+        key="projectRetention"
+        prop="projectRetention"
+        show-overflow-tooltip
+        label="项目留存"
+        min-width="100"
+      >
+        <template #default="{ row }">
+          <span
+            v-if="checkPermission(permission.detail)"
+            style="color: #0079ff"
+            class="pointer"
+            @click="
+              openDetail('costAscription', {
+                ...row,
+                costAscriptionEnum: costAscriptionEnum.PROJECT_RETENTION.V,
+                costAscriptionAmount: row.sourceRow.projectRetention,
+              })
+            "
+          >
+            {{ row.projectRetention }}
+          </span>
+          <span v-else>{{ row.projectRetention }}</span>
         </template>
       </el-table-column>
     </common-table>
     <!-- 分页 -->
     <pagination />
-    <common-dialog title="结算详情" v-model="dialogVisible" width="460px" show-close custom-class="settlement-detail" top="10vh">
-      <el-descriptions :column="1" :data="list" border style="cursor: pointer">
-        <el-descriptions-item label="结算额" label-align="center" align="center">
-          <span> {{ toThousand(list.settlementAmount) }}</span>
-        </el-descriptions-item>
-        <el-descriptions-item label="附件" label-align="center" align="center">
-          <template v-if="list.settlementAttachments?.length > 0">
-            <div v-for="item in list.settlementAttachments" :key="item.id" style="margin-bottom:3px;">
-              {{ item.name }}
-              <export-button :params="{ id: item.id }" />
-            </div>
-          </template>
-        </el-descriptions-item>
-      </el-descriptions>
-    </common-dialog>
+    <invoice-record v-model="invoiceVisible" :detail-row="detailRow" />
+    <collection-record v-model="collectionVisible" :detail-row="detailRow" />
+    <happened-record v-model="happenedVisible" :detail-row="detailRow" />
+    <available-balance v-model="availableBalanceVisible" :detail-row="detailRow" />
+    <composite-cost v-model="compositeCostVisible" :detail-row="detailRow" />
+    <cost-ascription v-model="costAscriptionVisible" :detail-row="detailRow" />
     <cost-page-dialog :detail-row="detailRow" v-model:visible="drawerVisible" :settlementStatus="crud.query.settlementStatus" />
   </div>
 </template>
 <script setup>
 import { ref } from 'vue'
 import crudApi from '@/api/contract/fortune-report/fortune-report'
-import pagination from '@crud/Pagination'
-import checkPermission from '@/utils/system/check-permission'
+
 import { fortuneReportPM as permission } from '@/page-permission/contract'
-import { projectNameFormatter } from '@/utils/project'
-import { businessTypeEnum, orderSourceTypeEnum, projectStatusEnum } from '@enum-ms/contract'
-import { settlementStatusEnum } from '@/utils/enum/modules/finance'
-import { toThousand } from '@data-type/number'
+import { businessTypeEnum, projectTypeEnum, projectStatusEnum } from '@enum-ms/contract'
+import { costAscriptionEnum } from '@enum-ms/config'
+import checkPermission from '@/utils/system/check-permission'
+import { toFixed } from '@data-type'
+
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
-
-import ExportButton from '@comp-common/export-button/index.vue'
+import pagination from '@crud/Pagination'
 import mHeader from './module/header.vue'
 import costPageDialog from './cost-page-dialog/index'
+import invoiceRecord from './module/invoice-record'
+import collectionRecord from './module/collection-record'
+import happenedRecord from './module/happened-record'
+import availableBalance from './module/available-balance'
+import compositeCost from './module/composite-cost'
+import costAscription from './module/cost-ascription'
 
 const optShow = {
   add: false,
@@ -197,10 +333,37 @@ const optShow = {
 }
 
 const tableRef = ref()
-const list = ref({})
+const invoiceVisible = ref(false)
+const collectionVisible = ref(false)
+const happenedVisible = ref(false)
+const availableBalanceVisible = ref(false)
+const compositeCostVisible = ref(false)
+const costAscriptionVisible = ref(false)
 const detailRow = ref({})
-const dialogVisible = ref(false)
 const drawerVisible = ref(false)
+const columnsDataFormat = ref([
+  ['contractAmount', 'to-thousand'],
+  ['settlementAmount', 'to-thousand'],
+  ['costAmount', 'to-thousand'],
+  ['grossProfit', 'to-thousand'],
+  ['collectionAmount', 'to-thousand'],
+  ['unpaidAmount', 'to-thousand'],
+  ['happenedAmount', 'to-thousand'],
+  ['availableBalance', 'to-thousand'],
+  ['safetyBalance', 'to-thousand'],
+  ['retainedProfit', 'to-thousand'],
+  ['periodExpense', 'to-thousand'],
+  ['invoiceAmount', 'to-thousand'],
+  ['projectRetention', 'to-thousand'],
+  ['exportTaxRebate', 'to-thousand'],
+  ['grossProfitRate', ['suffix', '%']],
+  ['collectionRate', ['suffix', '%']],
+  ['signingDate', ['parse-time', '{y}-{m}-{d}']],
+  ['project', 'parse-project'],
+  ['businessType', ['parse-enum', businessTypeEnum]],
+  ['projectType', ['parse-enum', projectTypeEnum]]
+])
+
 const { crud, CRUD, columns } = useCRUD(
   {
     title: '业财报表',
@@ -213,36 +376,37 @@ const { crud, CRUD, columns } = useCRUD(
   tableRef
 )
 const { maxHeight } = useMaxHeight({
-  extraBox: ['.head-container'],
   paginate: true
 })
 
-// 结算详情
-function showSettlementDetail(row) {
-  if (!checkPermission(permission.settleDetail)) {
-    return false
+// 打开详情
+function openDetail(type, row) {
+  if (type === 'invoice') {
+    invoiceVisible.value = true
+  } else if (type === 'collection') {
+    collectionVisible.value = true
+  } else if (type === 'happened') {
+    happenedVisible.value = true
+  } else if (type === 'availableBalance') {
+    availableBalanceVisible.value = true
+  } else if (type === 'compositeCost') {
+    compositeCostVisible.value = true
+  } else if (type === 'costAscription') {
+    costAscriptionVisible.value = true
   }
-  dialogVisible.value = true
-  list.value = row
+  detailRow.value = row
 }
 
-// 成本页面详情
-function showCostDetail(row) {
-  if (!checkPermission(permission.cost.get)) {
-    return false
-  }
-  drawerVisible.value = true
-  detailRow.value = row.sourceRow
-}
-
-CRUD.HOOK.handleRefresh = (crud, res) => {
-  res.data.content = res.data.content?.map(v => {
-    if (v.settlementStatus === settlementStatusEnum.SETTLED.V) {
-      v.status = projectStatusEnum.SETTLED.V
-    }
+CRUD.HOOK.handleRefresh = (crud, { data }) => {
+  data.content = data.content?.map((v) => {
+    v.grossProfitRate = toFixed(v.grossProfitRate * 100, 2)
+    v.unpaidAmount = v.contractAmount - v.collectionAmount
+    v.collectionRate = toFixed((v.collectionAmount / v.contractAmount) * 100, 2)
+    // 安全发货余额 = （合同金额 - 累计发货额）* 30%
+    v.safetyBalance = (v.contractAmount - v.happenedAmount) * 0.3
+    // 净利润 = 收款金额 - 综合成本 - 期间费用
+    v.retainedProfit = v.collectionAmount - v.costAmount - v.periodExpense
     return v
   })
 }
 </script>
-<style lang="scss" scoped>
-</style>
