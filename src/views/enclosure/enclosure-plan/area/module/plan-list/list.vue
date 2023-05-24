@@ -88,6 +88,9 @@ async function fetchList() {
   tableLoading.value = true
   try {
     const data = await enclosureProjectContent(props.detailInfo.projectId)
+    data.map(v => {
+      v.projectId = props.detailInfo.projectId
+    })
     _list = data
   } catch (error) {
     console.log('获取项目内容及合同量失败', error)
