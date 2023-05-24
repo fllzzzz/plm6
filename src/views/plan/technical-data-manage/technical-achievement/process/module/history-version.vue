@@ -13,10 +13,12 @@
   >
     <template #content>
        <el-descriptions class="margin-top" :column="2" border label-width="110">
-        <el-descriptions-item label-class-name="fileName" label="文件名称" :span="2">{{currentRow.fileName}}</el-descriptions-item>
+        <el-descriptions-item label-class-name="fileName" label="文件名称" :span="2">
+          <div style="word-break:break-all;">{{currentRow.fileName}}</div>
+        </el-descriptions-item>
         <el-descriptions-item label-class-name="attachmentDTO" label="文件" :span="2">
           <template v-if="currentRow.attachmentDTO">
-            <div style="cursor: pointer; color: #409eff" @dblclick="attachmentView(currentRow.attachmentDTO)">{{ currentRow.attachmentDTO.name }}</div>
+            <div style="cursor: pointer; color: #409eff;word-break:break-all;" @dblclick="attachmentView(currentRow.attachmentDTO)">{{ currentRow.attachmentDTO.name }}</div>
           </template>
           <span v-else>-</span>
         </el-descriptions-item>
@@ -61,7 +63,7 @@
       >
         <el-table-column label="序号" type="index" align="center" width="50" />
         <el-table-column prop="fileVersion" label="版本" align="center" width="80" />
-        <el-table-column key="attachmentDTO" prop="attachmentDTO" :show-overflow-tooltip="true" label="文件" align="left">
+        <el-table-column key="attachmentDTO" prop="attachmentDTO" label="文件" align="left">
           <template v-slot="scope">
             <template v-if="scope.row.attachmentDTO">
               <div style="cursor: pointer; color: #409eff" @dblclick="attachmentView(scope.row.attachmentDTO)">{{ scope.row.attachmentDTO.name }}</div>
