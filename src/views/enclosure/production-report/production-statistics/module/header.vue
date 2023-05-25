@@ -36,7 +36,7 @@
       :disabled-date="disabledDate"
     />
     <el-tag class="filter-item" size="medium" effect="plain" style="float: right">
-      <span>全年累计产量（m）：<span v-thousand="{ val: yearProduction || 0, dp: DP.MES_ENCLOSURE_L__M}" /></span>
+      <span>全年累计产量（m）：<span v-thousand="{ val: yearProduction || 0, dp: DP.MES_ENCLOSURE_L__M }" /></span>
     </el-tag>
     <div v-show="crud.searchToggle">
       <div v-loading="chartLoading" id="enclosureWorkshopReportChart" style="width: 100%; height: 250px; margin-bottom: 10px"></div>
@@ -61,7 +61,13 @@
         <rrOperation />
       </template>
       <template #viewLeft>
-        <print-table v-permission="permission.print" api-key="enclosureProductionStatistics" :params="{ ...query }" size="mini" type="warning" />
+        <print-table
+          v-permission="permission.print"
+          api-key="enclosureProductionStatistics"
+          :params="{ ...query }"
+          size="mini"
+          type="warning"
+        />
       </template>
     </crudOperation>
   </div>
@@ -181,7 +187,12 @@ const { getMyChart } = useChart({
         name: '产量',
         type: 'bar',
         yAxisIndex: 0,
-        data: []
+        data: [],
+        label: {
+          show: true,
+          position: 'top',
+          formatter: (params) => params.value || ''
+        }
       }
     ]
   }
@@ -195,25 +206,49 @@ async function fetchChart() {
     chartLoading.value = true
     const _myChart = getMyChart()
 
-    // EChart 点击
-    _myChart.on('click', function (params) {
-      chartYearTime.value = query.time
-      if (crud.query.type === timeTypeEnum.ALL_YEAR.V) {
-        chartDateTime.value = params.name.split('月')[0]
-      } else {
-        chartDateTime.value = params.name.split('日')[0]
-      }
-      chartDateTime.value = Number(chartDateTime.value) < 10 ? '0' + chartDateTime.value : chartDateTime.value
+    _myChart.getZr().off('click')
+    _myChart.getZr().on('click', function (params) {
+      // 点击坐标
+      const pointInPixel = [params.offsetX, params.offsetY]
+      // 是否在刻度内
+      if (_myChart.containPixel('grid', pointInPixel)) {
+        const pointInGrid = _myChart.convertFromPixel({ seriesIndex: 0 }, pointInPixel)
+        // x轴序号
+        const xIndex = pointInGrid[0]
 
-      if (crud.query.type === timeTypeEnum.ALL_YEAR.V) {
-        const _date = parseTime(chartYearTime.value, '{y}') + '-' + chartDateTime.value
-        chartVal.value = [moment(_date).startOf('month').valueOf(), moment(_date).endOf('month').valueOf()]
-      } else {
-        const _date = parseTime(chartYearTime.value, '{y}-{m}') + '-' + chartDateTime.value
-        chartVal.value = [moment(_date).startOf('date').valueOf(), moment(_date).endOf('date').valueOf()]
+        chartYearTime.value = query.time
+        chartDateTime.value = xIndex < 9 ? `0${xIndex + 1}` : xIndex
+
+        if (crud.query.type === timeTypeEnum.ALL_YEAR.V) {
+          const _date = parseTime(chartYearTime.value, '{y}') + '-' + chartDateTime.value
+          chartVal.value = [moment(_date).startOf('month').valueOf(), moment(_date).endOf('month').valueOf()]
+        } else {
+          const _date = parseTime(chartYearTime.value, '{y}-{m}') + '-' + chartDateTime.value
+          chartVal.value = [moment(_date).startOf('date').valueOf(), moment(_date).endOf('date').valueOf()]
+        }
+        handleDateChange(chartVal.value)
       }
-      handleDateChange(chartVal.value)
     })
+
+    // EChart 点击
+    // _myChart.on('click', function (params) {
+    //   chartYearTime.value = query.time
+    //   if (crud.query.type === timeTypeEnum.ALL_YEAR.V) {
+    //     chartDateTime.value = params.name.split('月')[0]
+    //   } else {
+    //     chartDateTime.value = params.name.split('日')[0]
+    //   }
+    //   chartDateTime.value = Number(chartDateTime.value) < 10 ? '0' + chartDateTime.value : chartDateTime.value
+
+    //   if (crud.query.type === timeTypeEnum.ALL_YEAR.V) {
+    //     const _date = parseTime(chartYearTime.value, '{y}') + '-' + chartDateTime.value
+    //     chartVal.value = [moment(_date).startOf('month').valueOf(), moment(_date).endOf('month').valueOf()]
+    //   } else {
+    //     const _date = parseTime(chartYearTime.value, '{y}-{m}') + '-' + chartDateTime.value
+    //     chartVal.value = [moment(_date).startOf('date').valueOf(), moment(_date).endOf('date').valueOf()]
+    //   }
+    //   handleDateChange(chartVal.value)
+    // })
 
     // 获取图表数据
     const data = await workshopEcharts({
