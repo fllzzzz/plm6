@@ -197,7 +197,6 @@ async function fetchChart() {
 
     // EChart 点击
     _myChart.on('click', function (params) {
-      console.log('params: ', params)
       chartYearTime.value = query.time
       if (crud.query.type === timeTypeEnum.ALL_YEAR.V) {
         chartDateTime.value = params.name.split('月')[0]

@@ -29,7 +29,7 @@
         :show-overflow-tooltip="true"
         label="编号"
       />
-      <el-table-column key="plate" prop="plate" v-if="columns.visible('plate')" show-overflow-tooltip label="板型" align="center" />
+      <el-table-column key="plate" prop="plate" v-if="columns.visible('plate') && crud.query.category !== mesEnclosureTypeEnum.FOLDING_PIECE.V" show-overflow-tooltip label="板型" align="center" />
       <el-table-column key="brand" prop="brand" v-if="columns.visible('brand')" show-overflow-tooltip label="品牌" align="center" />
       <el-table-column key="color" prop="color" v-if="columns.visible('color')" show-overflow-tooltip label="颜色" align="center" />
       <el-table-column key="length" prop="length" v-if="columns.visible('length')" show-overflow-tooltip label="单长(mm)" align="right" />
@@ -70,6 +70,7 @@ import { ref } from 'vue'
 import { tableSummary } from '@/utils/el-extra'
 import { enclosureProductionStatisticsPM as permission } from '@/page-permission/enclosure'
 import { DP } from '@/settings/config'
+import { mesEnclosureTypeEnum } from '@enum-ms/mes'
 
 import mHeader from './module/header'
 import useCRUD from '@compos/use-crud'
