@@ -55,7 +55,7 @@
         min-width="100px"
       >
         <template v-slot="scope">
-          <span>{{ scope.row.color }}</span>
+          <span>{{ scope.row.color || '-' }}</span>
         </template>
       </el-table-column>
       <!-- <el-table-column
@@ -100,7 +100,7 @@
         </template>
       </el-table-column>
       <el-table-column
-        v-if="columns.visible('plate')"
+        v-if="columns.visible('plate') && crud.query.category !== mesEnclosureTypeEnum.FOLDING_PIECE.V"
         key="plate"
         prop="plate"
         sortable="custom"
@@ -110,7 +110,7 @@
         min-width="80px"
       >
         <template v-slot="scope">
-          <span>{{ scope.row.plate }}</span>
+          <span>{{ scope.row.plate || '-' }}</span>
         </template>
       </el-table-column>
       <!-- <el-table-column
@@ -217,7 +217,7 @@ import { getEnclosureRecord } from '@/api/mes/label-print/enclosure'
 import crudApi from '@/api/mes/label-print/enclosure'
 import { ref, provide, computed } from 'vue'
 
-import { componentTypeEnum, printProductTypeEnum } from '@enum-ms/mes'
+import { componentTypeEnum, printProductTypeEnum, mesEnclosureTypeEnum } from '@enum-ms/mes'
 import { DP, QR_SCAN_F_TYPE } from '@/settings/config'
 import { toFixed } from '@data-type/index'
 import { parseTime } from '@/utils/date'

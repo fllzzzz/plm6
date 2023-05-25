@@ -26,7 +26,7 @@
               <div style="position: relative">
                 <el-progress :stroke-width="16" :percentage="scope.row.ratio" />
                 <span style="position: absolute; top: -2px; left: 0; width: 100%; text-align: right; padding-right: 60px">{{
-                  (scope.row.sendTotalLength / 1000).toFixed(2) + ' | ' + (scope.row.totalLength / 1000).toFixed(2)
+                  (scope.row.sendTotalLength / 1000).toFixed(3) + ' | ' + (scope.row.totalLength / 1000).toFixed(3)
                 }}</span>
               </div>
             </template>
