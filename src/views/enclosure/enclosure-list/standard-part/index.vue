@@ -69,7 +69,7 @@
         <span v-else>{{ auxiliaryMaterialUseTypeEnum.VL[row.useProperty] }}</span>
       </template>
     </el-table-column>
-    <el-table-column prop="remark" label="备注" align="center" min-width="120px">
+    <el-table-column prop="remark" label="备注" align="center" :show-overflow-tooltip="true" min-width="120px">
       <template #default="{ row }">
         <el-input
           v-if="row.isModify"
