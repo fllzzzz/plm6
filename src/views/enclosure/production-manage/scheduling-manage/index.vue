@@ -23,6 +23,7 @@
           >
             <el-table-column type="selection" width="55" align="center" />
             <el-table-column label="序号" type="index" align="center" width="60" />
+            <el-table-column key="planName" prop="planName" label="批次" v-if="columns.visible('planName') && crud.query.planIds.length > 1" show-overflow-tooltip align="center" />
             <el-table-column key="name" prop="name" label="名称" v-if="columns.visible('name')" show-overflow-tooltip align="center" />
             <el-table-column
               key="serialNumber"
