@@ -56,7 +56,6 @@ import { defineEmits, defineProps, ref, watch } from 'vue'
 import { materialFreezeTypeEnum, measureTypeEnum } from '@/utils/enum/modules/wms'
 import checkPermission from '@/utils/system/check-permission'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
-import { materialColumns } from '@/utils/columns-format/wms'
 import UnfreezeForm from '../components/unfreeze/index.vue'
 import ReceiptSnClickable from '@/components-system/wms/receipt-sn-clickable'
 
@@ -90,7 +89,8 @@ const unfreezeFormVisible = ref(false)
 const currentRecord = ref()
 // 表格列数据格式转换
 const columnsDataFormat = ref([
-  ...materialColumns,
+  ['project', ['parse-project', { onlyShortName: true }]],
+  ['projectFullName', 'parse-project', { source: 'project' }],
   ['frozenTime', ['parse-time', '{y}-{m}-{d}']],
   ['freezeTypeName', ['parse-enum', materialFreezeTypeEnum], ['suffix', '冻结'], { source: 'freezeType' }]
 ])

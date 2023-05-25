@@ -83,6 +83,7 @@ const currentBasicClass = matClsEnum.MATERIAL.V // 当前基础分类
 provide('matSpecRef', matSpecRef) // 供兄弟组件调用 删除
 
 const currentMonomer = inject('currentMonomer')
+const currentArea = inject('currentArea')
 const globalProject = inject('globalProject')
 
 // 使用草稿/修改时，为数据设置监听
@@ -164,6 +165,7 @@ FORM.HOOK.afterSubmit = () => {
 FORM.HOOK.beforeSubmit = () => {
   form.projectId = globalProject.value.id
   form.monomerId = currentMonomer.value.id
+  form.areaId = currentArea.value.id
 }
 
 // 表单校验

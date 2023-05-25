@@ -18,6 +18,7 @@
         <workshop-select
           :disabled="isEdit"
           v-model="form.workshopId"
+          :workshop-type="workshopTypeEnum.BUILDING.V"
           :factory-id="form.factoryId"
           placeholder="请先选择工厂"
           style="width: 270px"
@@ -50,9 +51,17 @@
       </el-form-item>
       <el-form-item label="生产线类型" prop="productionLineTypeEnum">
         <!-- <common-radio v-model="form.boolMachineEnum" :options="whetherEnum.ENUM" type="enum" /> -->
-        <el-select v-model="form.productionLineTypeEnum" placeholder="请选择生产线类型" :size="'small'" style="width: 270px">
+        <!-- <el-select v-model="form.productionLineTypeEnum" placeholder="请选择生产线类型" :size="'small'" style="width: 270px">
           <el-option v-for="item in artifactProductLineEnum.ENUM" :key="item.V" :label="item.L" :value="item.V" />
-        </el-select>
+        </el-select> -->
+        <common-select
+          v-model="form.productionLineTypeEnum"
+          :options="hasIntelligent ? artifactProductLineEnum.ENUM : traditionLineEnum.ENUM"
+          type="enum"
+          size="small"
+          style="width: 270px"
+          placeholder="请选择生产线类型"
+        />
       </el-form-item>
       <el-form-item label="产品类型" prop="productType">
         <common-select
@@ -122,10 +131,10 @@
 <script setup>
 import { productConfigInfo, getProductionLineName } from '@/api/mes/production-config/production-line'
 import { ref, computed, watch, onMounted, watchEffect } from 'vue'
-
-import { componentTypeEnum, artifactProductLineEnum } from '@enum-ms/mes'
+import { workshopTypeEnum } from '@enum-ms/common'
+import { componentTypeEnum, traditionLineEnum, artifactProductLineEnum } from '@enum-ms/mes'
 // import { whetherEnum } from '@enum-ms/common'
-
+import { mapGetters } from '@/store/lib'
 import { regForm } from '@compos/use-crud'
 import factorySelect from '@comp-base/factory-select.vue'
 import workshopSelect from '@comp-mes/workshop-select'
@@ -150,6 +159,7 @@ const productionLineList = ref([])
 const configList = ref([])
 const configLoading = ref(false)
 
+const { hasIntelligent } = mapGetters('hasIntelligent')
 const { crud, CRUD, form } = regForm(defaultForm, formRef)
 const isEdit = computed(() => crud.status.edit >= 1)
 

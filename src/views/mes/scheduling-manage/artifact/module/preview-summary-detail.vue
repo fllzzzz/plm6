@@ -2,6 +2,10 @@
   <common-drawer ref="drawerRef" :title="`构件排产预览`" v-model="drawerVisible" direction="rtl" :before-close="handleClose" size="100%">
     <template #titleAfter>
       <el-tag size="small">
+        <span>当前单体：</span>
+        <span>{{ props.monomerDetail ? props.monomerDetail?.monomer?.name : tableData[0]?.monomer?.name }}</span>
+      </el-tag>
+      <el-tag size="small">
         <span>当前区域：</span>
         <span>{{ curAreaNames }}</span>
       </el-tag>
@@ -19,10 +23,17 @@
     </template>
     <template #content>
       <div class="head-container">
+        <!-- <group-header
+          v-show="queryVO.structureClassId"
+          v-model="queryVO.groupsId"
+          :data="groupData"
+          @task-issue-success="handleTaskIssueSuccess"
+        /> -->
+        <group-header v-model="queryVO.groupsId" :data="groupData" @task-issue-success="handleTaskIssueSuccess" />
         <common-radio-button
           v-if="lineTypeLoad && unshowLineType.length !== artifactProductLineEnum.KEYS.length"
           v-model="queryVO.productionLineTypeEnum"
-          :options="artifactProductLineEnum.ENUM"
+          :options="hasIntelligent ? artifactProductLineEnum.ENUM : traditionLineEnum.ENUM"
           type="enum"
           size="small"
           :unshowVal="unshowLineType"
@@ -35,6 +46,8 @@
           ref="tagTabsRef"
           v-model="queryVO.structureClassId"
           class="filter-item"
+          :hit="false"
+          :unselectable="true"
           :style="'width:calc(100% - 150px)'"
           style="display: inline-block"
           :data="artifactTypeList"
@@ -45,7 +58,6 @@
             <span>{{ item.quantity }}件</span>
           </template>
         </tag-tabs>
-        <group-header v-show="queryVO.structureClassId" v-model="queryVO.groupsId" :data="groupData" @task-issue-success="handleTaskIssueSuccess" />
         <el-input
           v-model.trim="queryVO.serialNumber"
           size="small"
@@ -85,10 +97,19 @@
         </common-button>
         <el-tooltip class="item" effect="light" :disabled="!!queryVO.structureClassId" content="请选择构件类型" placement="left">
           <span style="float: right; margin-right: 5px">
-            <common-button
+            <!-- <common-button
               v-permission="permission.recordEdit"
               v-if="selectionMode === selectionModeEnum.EDIT.V"
               :disabled="!queryVO.structureClassId"
+              size="mini"
+              type="primary"
+              @click="toBatchEdit"
+            >
+              批量重新分配
+            </common-button> -->
+            <common-button
+              v-permission="permission.recordEdit"
+              v-if="selectionMode === selectionModeEnum.EDIT.V"
               size="mini"
               type="primary"
               @click="toBatchEdit"
@@ -102,21 +123,24 @@
         ref="recordTableRef"
         v-loading="tableLoading"
         :data="tableData"
-        :span-method="spanMethod"
         :max-height="maxHeight - 50"
         :stripe="false"
         :data-format="dataFormat"
         row-key="id"
-        :class="
-          selectionMode === selectionModeEnum.EDIT.V || listProductionLineTypeEnum === artifactProductLineEnum.INTELLECT.V
-            ? 'hidden-table-check-all'
-            : ''
-        "
+        :class="listProductionLineTypeEnum === artifactProductLineEnum.INTELLECT.V ? 'hidden-table-check-all' : ''"
         style="width: 100%"
         @selection-change="selectionChangeHandler"
       >
+        <el-table-column
+          v-if="selectionMode === selectionModeEnum.EDIT.V"
+          type="selection"
+          width="55"
+          align="center"
+          class="selection"
+          :selectable="selectable"
+        />
         <el-table-column label="序号" type="index" align="center" width="60" />
-        <el-table-column prop="groups.name" :show-overflow-tooltip="true" label="车间>生产线>生产组" min-width="170" align="center">
+        <!-- <el-table-column prop="groups.name" :show-overflow-tooltip="true" label="车间>生产线>生产组" min-width="170" align="center">
           <template #default="{ row, $index }">
             <div class="flex-rsc">
               <el-checkbox
@@ -135,8 +159,8 @@
               </div>
             </div>
           </template>
-        </el-table-column>
-        <el-table-column prop="monomer.name" :show-overflow-tooltip="true" label="单体" min-width="100" align="center">
+        </el-table-column> -->
+        <!-- <el-table-column prop="monomer.name" :show-overflow-tooltip="true" label="单体" min-width="100" align="center">
           <template #default="{ row }">
             <span>{{ row.monomer?.name }}</span>
           </template>
@@ -145,15 +169,20 @@
           <template #default="{ row }">
             <span>{{ row.area?.name }}</span>
           </template>
+        </el-table-column> -->
+        <el-table-column prop="structureClass" :show-overflow-tooltip="true" label="类型" min-width="100" align="center">
+          <template #default="{ row }">
+            <el-tag v-if="row.structureClass?.name">{{ row.structureClass?.name }}</el-tag>
+          </template>
         </el-table-column>
         <el-table-column prop="serialNumber" :show-overflow-tooltip="true" label="编号" min-width="100" align="center">
           <template #default="{ row }">
             <span>{{ row.serialNumber }}</span>
-            <br />
-            <el-tag v-if="row.structureClass?.name">{{ row.structureClass?.name }}</el-tag>
+            <!-- <br />
+            <el-tag v-if="row.structureClass?.name">{{ row.structureClass?.name }}</el-tag> -->
           </template>
         </el-table-column>
-        <el-table-column type="selection" width="55" align="center" class="selection" :selectable="selectable" />
+        <el-table-column prop="name" :show-overflow-tooltip="true" label="构件名称" min-width="100" align="center" />
         <el-table-column prop="specification" :show-overflow-tooltip="true" label="规格" min-width="120" align="center" />
         <el-table-column prop="length" :show-overflow-tooltip="true" label="长度（mm）" min-width="90" align="center" />
         <el-table-column prop="schedulingQuantity" :show-overflow-tooltip="true" label="数量" min-width="90" align="center" />
@@ -173,7 +202,7 @@
         </el-table-column>
       </common-table>
       <!--分页组件-->
-      <el-pagination
+      <!-- <el-pagination
         :total="total"
         :current-page="queryPage.pageNumber"
         :page-size="queryPage.pageSize"
@@ -181,7 +210,7 @@
         layout="total, prev, pager, next, sizes"
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
-      />
+      /> -->
       <edit-form v-model:visible="editVisible" :itemInfo="itemInfo" @refresh="fetch" />
       <batch-edit-form
         v-model:visible="batchEditVisible"
@@ -193,7 +222,7 @@
       <batch-del-form v-model:visible="batchDelVisible" :selections="selections" @del-success="handleDelSuccess" />
       <assemble-scheduling-form
         v-model:visible="assembleVisible"
-        :artifact-list="selections"
+        :artifact-list="tableData"
         :productionLineTypeEnum="listProductionLineTypeEnum"
         @task-issue-success="handleTaskIssueSuccess"
       />
@@ -205,13 +234,13 @@
 import { record, getArtifactRecordType, getLineRecordType, recordSummary, groupSummary } from '@/api/mes/scheduling-manage/artifact'
 import { ElMessage } from 'element-plus'
 import { defineProps, defineEmits, ref, inject, computed, watch } from 'vue'
-
-import { artifactProductLineEnum } from '@enum-ms/mes'
+// import { getLightColor } from '@/utils/color'
+import { artifactProductLineEnum, traditionLineEnum } from '@enum-ms/mes'
 import { artifactSchedulingPM as permission } from '@/page-permission/mes'
-
+import { mapGetters } from '@/store/lib'
 import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'
-import usePagination from '@compos/use-pagination'
+// import usePagination from '@compos/use-pagination'
 import useGetArtifactTypeList from '@compos/mes/scheduling/use-get-artifact-type-list'
 import editForm from './edit-form'
 import batchEditForm from './batch-edit-form'
@@ -222,7 +251,7 @@ import tagTabs from '@comp-common/tag-tabs'
 
 import groupHeader from '@/views/mes/scheduling-manage/common/group-header.vue'
 
-const { handleSizeChange, handleCurrentChange, total, setTotalPage, queryPage } = usePagination({ fetchHook: fetch })
+// const { handleSizeChange, handleCurrentChange, total, setTotalPage, queryPage } = usePagination({ fetchHook: fetch })
 
 const drawerRef = ref()
 const recordTableRef = ref()
@@ -236,8 +265,14 @@ const props = defineProps({
   otherQuery: {
     type: Object,
     default: () => {}
+  },
+  monomerDetail: {
+    type: Object,
+    default: () => {}
   }
 })
+
+const { hasIntelligent } = mapGetters('hasIntelligent')
 
 const selectionModeEnum = {
   SCHEDULING: { K: 'SCHEDULING', L: '排产模式', V: 1 },
@@ -267,6 +302,7 @@ const closeRefreshOut = ref(false)
 const unshowLineType = ref([])
 const lineTypeLoad = ref(false)
 const groupData = ref([])
+// const colorObj = ref({}) // 班组id: color
 
 const artifactTypeParams = computed(() => {
   return {
@@ -300,14 +336,14 @@ watch(
   },
   { deep: true }
 )
-watch(
-  [() => queryVO.value.structureClassId],
-  (val) => {
-    fetchGroup()
-    // fetch()
-  },
-  { deep: true }
-)
+// watch(
+//   [() => queryVO.value.structureClassId],
+//   (val) => {
+//     fetchGroup()
+//     fetch()
+//   },
+//   { deep: true }
+// )
 watch(
   [() => queryVO.value.groupsId],
   (val) => {
@@ -321,9 +357,15 @@ watch(
 // 获取生产组信息
 async function fetchGroup() {
   const areaIdList = props.otherQuery.areaIdList
-  if (!queryVO.value.structureClassId) return
+  // if (!queryVO.value.structureClassId) return
   try {
     const { content } = (await groupSummary({ areaIdList, structureClassId: queryVO.value.structureClassId })) || {}
+    // content.forEach((v) => {
+    //   if (!colorObj.value[v.groups?.id]) {
+    //     colorObj.value[v.groups?.id] = getLightColor()
+    //   }
+    //   v.groupsColor = colorObj.value[v.groups?.id]
+    // })
     groupData.value = content || []
     if (content?.length) {
       queryVO.value.groupsId = content[0]?.groups?.id
@@ -370,7 +412,7 @@ function artifactTypeInit() {
     (artifactTypeList.value?.length > 0 || queryVO.value.productionLineTypeEnum === artifactProductLineEnum.INTELLECT.V)
   ) {
     // queryVO.value.structureClassId = artifactTypeList.value[0].structureClassId
-    queryVO.value.structureClassId = artifactTypeList.value?.length ? artifactTypeList.value[0]?.structureClassId : undefined
+    // queryVO.value.structureClassId = artifactTypeList.value?.length ? artifactTypeList.value[0]?.structureClassId : undefined
   }
   fetch()
 }
@@ -396,7 +438,7 @@ function closeHook() {
 function resetQuery() {
   queryVO.value.serialNumber = undefined
   queryVO.value.groupsId = groupData.value[0]?.groups?.id
-  queryVO.value.structureClassId = artifactTypeList.value[0]?.structureClassId
+  // queryVO.value.structureClassId = artifactTypeList.value[0]?.structureClassId
   fetch()
 }
 
@@ -404,17 +446,18 @@ async function fetch() {
   tableData.value = []
   listObjIdsByGroup.value = {}
   summaryInfo.value = {}
-  if (
-    !queryVO.value.structureClassId ||
-    !queryVO.value.productionLineTypeEnum
-  ) {
+  // if (!queryVO.value.structureClassId || !queryVO.value.productionLineTypeEnum) {
+  //   return
+  // }
+  if (!queryVO.value.productionLineTypeEnum) {
     return
   }
   try {
     tableLoading.value = true
     summaryInfo.value = (await recordSummary({ ...props.otherQuery, ...queryVO.value })) || {}
-    const { content, totalElements } = await record({ ...props.otherQuery, ...queryVO.value, ...queryPage })
-    setTotalPage(totalElements)
+    const content = await record({ ...props.otherQuery, ...queryVO.value }) || []
+    // const { content = [], totalElements } = await record({ ...props.otherQuery, ...queryVO.value, ...queryPage })
+    // setTotalPage(totalElements)
     const _list = content
     let _curNeedMergeIndex = 0 // 首行为初始需要的合并行
     let _mergeRowspan = 0
@@ -473,30 +516,30 @@ async function fetch() {
   }
 }
 
-function handleCheckAllChange(val, row, index) {
-  const _groupId = row.groups?.id
-  console.log(row, _groupId, val, listObjIdsByGroup.value[_groupId], 'handleCheckAllChange')
-  if (_groupId && listObjIdsByGroup.value[_groupId]) {
-    tableData.value.forEach((v) => {
-      if (Array.from(new Set(listObjIdsByGroup.value[_groupId])).includes(v.id)) {
-        recordTableRef?.value?.toggleRowSelection(v, val)
-      }
-    })
-  }
-  if (!val) {
-    tableData.value[index].isIndeterminateCheck = false
-  }
-}
+// function handleCheckAllChange(val, row, index) {
+//   const _groupId = row.groups?.id
+//   console.log(row, _groupId, val, listObjIdsByGroup.value[_groupId], 'handleCheckAllChange')
+//   if (_groupId && listObjIdsByGroup.value[_groupId]) {
+//     tableData.value.forEach((v) => {
+//       if (Array.from(new Set(listObjIdsByGroup.value[_groupId])).includes(v.id)) {
+//         recordTableRef?.value?.toggleRowSelection(v, val)
+//       }
+//     })
+//   }
+//   if (!val) {
+//     tableData.value[index].isIndeterminateCheck = false
+//   }
+// }
 
 // 合并单元格
-function spanMethod({ row, column, rowIndex, columnIndex }) {
-  if (columnIndex === 1 || columnIndex === 2) {
-    return {
-      rowspan: row.rowspan || 0,
-      colspan: 1
-    }
-  }
-}
+// function spanMethod({ row, column, rowIndex, columnIndex }) {
+//   if (columnIndex === 1 || columnIndex === 2) {
+//     return {
+//       rowspan: row.rowspan || 0,
+//       colspan: 1
+//     }
+//   }
+// }
 
 // 不同生产组的禁止选择
 function selectable(row, rowIndex) {
@@ -510,16 +553,16 @@ function selectable(row, rowIndex) {
   return true
 }
 
-function getDisabled(row) {
-  if (selectionMode.value === selectionModeEnum.EDIT.V || listProductionLineTypeEnum.value === artifactProductLineEnum.INTELLECT.V) {
-    if (!selections.value?.length) {
-      return false
-    } else {
-      return !(row.groups?.id === selections.value[0]?.groups?.id)
-    }
-  }
-  return false
-}
+// function getDisabled(row) {
+//   if (selectionMode.value === selectionModeEnum.EDIT.V || listProductionLineTypeEnum.value === artifactProductLineEnum.INTELLECT.V) {
+//     if (!selections.value?.length) {
+//       return false
+//     } else {
+//       return !(row.groups?.id === selections.value[0]?.groups?.id)
+//     }
+//   }
+//   return false
+// }
 
 // --------------------------- 操作数据 start ------------------------------
 
@@ -603,7 +646,7 @@ function toBatchDel() {
 const assembleVisible = ref(false)
 
 function toAssembleScheduling() {
-  if (!selections.value?.length) {
+  if (selectionMode.value === selectionModeEnum.EDIT.V && !selections.value?.length) {
     ElMessage.warning('请至少选择一条数据')
     return
   }

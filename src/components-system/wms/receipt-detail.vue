@@ -29,7 +29,7 @@
     <reject-detail />
   </detail-wrapper>
 
-  <!-- 红冲详情 -->
+  <!-- 调整详情 -->
   <detail-wrapper v-if="receiptExist[receiptTypeEnum.SUPPLEMENT.K]" ref="supplementDetailRef" :api="getSupplementDetail">
     <supplement-detail />
   </detail-wrapper>
@@ -87,7 +87,7 @@ const { detailRef: transferDetailRef, openDetail: openTransferDetail } = useOthe
 const { detailRef: returnDetailRef, openDetail: openReturnDetail } = useOtherCrudDetail()
 // 退货单详情
 const { detailRef: rejectDetailRef, openDetail: openRejectDetail } = useOtherCrudDetail()
-// 红冲单详情
+// 调整单详情
 const { detailRef: supplementDetailRef, openDetail: openSupplementDetail } = useOtherCrudDetail()
 
 function setReceiptExist(receiptTypes = []) {

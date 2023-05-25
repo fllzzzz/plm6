@@ -52,6 +52,19 @@
           min-width="100px"
         />
         <el-table-column
+          v-if="columns.visible('shortName')"
+          key="shortName"
+          prop="shortName"
+          :show-overflow-tooltip="true"
+          label="车间类型"
+          align="center"
+          width="80px"
+        >
+          <template v-slot="{ row }">
+            <span>{{ workshopTypeEnum.VL?.[row.type] }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column
           v-if="columns.visible('boolEnabledEnum')"
           key="boolEnabledEnum"
           prop="boolEnabledEnum"
@@ -117,6 +130,7 @@ import checkPermission from '@/utils/system/check-permission'
 import { configWorkshopPM as permission } from '@/page-permission/config'
 
 import { enabledEnum } from '@enum-ms/common'
+import { workshopTypeEnum } from '@enum-ms/common'
 
 import useCRUD from '@compos/use-crud'
 import udOperation from '@crud/UD.operation'

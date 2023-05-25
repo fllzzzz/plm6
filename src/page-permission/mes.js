@@ -45,6 +45,7 @@ export const surplusListPM = {
 // 生产排产/构件排产
 export const artifactSchedulingPM = {
   get: ['mes_scheduling_artifact:get'], // 列表
+  taskAchieved: ['mes_scheduling_artifact:taskAchieved'], // 车间任务达成
   save: ['mes_scheduling_artifact:save'], // 构件排产保存
   import: ['mes_scheduling_artifact:import'], // 任务导入
   recordGet: ['mes_scheduling_artifact_record:get'], // 获取构件排产记录
@@ -63,6 +64,13 @@ export const machinePartSchedulingPM = {
   noNestingSave: ['mes_scheduling_machine_part:noNestingSave'], // 无需套料保存
   nestingSave: ['mes_scheduling_machine_part:nestingSave'], // 套料保存
   del: ['mes_scheduling_machine_part:del'] // 删除
+}
+
+// 生产排产/排产数据
+export const schedulingDataPM = {
+  get: ['scheduling_data:get'], // 列表
+  statistics: ['scheduling_data:statistics'], // 汇总统计
+  print: ['scheduling_data:print'] // 打印
 }
 
 // 生产排产/零件排产/预览记录
@@ -101,7 +109,12 @@ export const productionMonitoringKanbanPM = {
 export const artifactWorkOrderPM = {
   get: ['mes_work_order_artifact:get'], // 列表
   detail: ['mes_work_order_artifact:detail'], // 查看
-  print: ['mes_work_order_artifact:print'] // 打印
+  print: ['mes_work_order_artifact:print'], // 打印
+  edit: ['mes_work_order_artifact:edit'], // 编辑
+  cancelEdit: ['mes_work_order_artifact:cancelEdit'], // 取消编辑
+  revoke: ['mes_work_order_artifact:revoke'], // 撤回
+  batchRevoke: ['mes_work_order_artifact:batchRevoke'], // 批量撤回
+  allRevoke: ['mes_work_order_artifact:allRevoke'] // 整个工单撤回
 }
 
 // 工单管理/零件工单
@@ -289,7 +302,8 @@ export const qhseProductionLineReportPM = {
 
 // 质安管理/问题曝光
 export const qhseDisclosurePM = {
-  get: ['mes_qhse_disclosure:get'] // 问题曝光列表
+  get: ['mes_qhse_disclosure:get'], // 问题曝光列表
+  export: ['mes_qhse_disclosure:export'] // 问题报告导出excel
 }
 
 // --------------------------- 质安管理 end --------------------------------
@@ -517,10 +531,18 @@ export const mesWorkOrderTrackingPM = {
   print: ['mes_work_order_tracking:print'] // 工单跟踪详情打印
 }
 
-// 任务跟踪/月度任务跟踪
+// 任务跟踪/产量达成
 export const mesMonthlyTaskTrackingPM = {
   get: ['mes_monthly_task_tracking:get'], // 月度任务跟踪列表
   print: ['mes_monthly_task_tracking:print'] // 月度任务跟踪详情打印
+}
+
+// 任务跟踪/车间任务状态
+export const mesWorkshopTaskStatusPM = {
+  get: ['mes_workshop_task_status:get'], // 车间任务状态列表
+  statistics: ['mes_workshop_task_status:statistics'], // 车间任务状态汇总
+  groupStatus: ['mes_workshop_task_status:groupStatus'], // 班组状态
+  print: ['mes_workshop_task_status:print'] // 车间任务状态打印
 }
 
 // 任务跟踪/产线跟踪
@@ -591,6 +613,13 @@ export const mesGroupReportPM = {
   get: ['mes_group_report:get'], // 列表
   print: ['mes_group_report:print'] // 打印
 }
+
+// 生产统计
+export const mesProductStatisticsPM = {
+  get: ['mes_product_statistics:get'] // 列表
+  // print: ['mes_product_statistics:print'] // 打印
+}
+
 // --------------------------- 6.0 车间报表 end --------------------------------
 
 // --------------------------- 6.0 产线工资统计 start --------------------------------
@@ -605,7 +634,7 @@ export const mesProductionStatisticsPM = {
 // 产线工资统计/栓钉套筒统计
 export const mesStudSleeveStatisticsPM = {
   get: ['mes_stud_sleeve_statistics:get'], // 列表
-  print: ['mes_stud_sleeve_statistics:export'] // 打印
+  print: ['mes_stud_sleeve_statistics:print'] // 打印
 }
 
 // 产线工资统计/工价调整

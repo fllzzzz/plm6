@@ -16,6 +16,7 @@
       ref="workshopInfRef"
       v-model="query.workShopId"
       placeholder="请选择车间"
+      :workshop-type="workshopTypeEnum.BUILDING.V"
       :factory-id="query.factoryId"
       style="width: 200px"
       class="filter-item"
@@ -34,13 +35,23 @@
       clearable
       @change="crud.toQuery"
     />
-    <rrOperation />
+    <div>
+      <common-radio-button
+        type="enum"
+        v-model="query.weightStatus"
+        :options="[weightTypeEnum.NET, weightTypeEnum.GROSS]"
+        class="filter-item"
+        @change="crud.toQuery"
+      />
+      <rrOperation />
+    </div>
   </div>
 </template>
 
 <script setup>
 import { regHeader } from '@compos/use-crud'
 import { componentTypeEnum } from '@enum-ms/mes'
+import { weightTypeEnum, workshopTypeEnum } from '@enum-ms/common'
 import rrOperation from '@crud/RR.operation'
 import workshopSelect from '@comp-mes/workshop-select'
 import productionLineSelect from '@comp-mes/production-line-select'
@@ -49,7 +60,8 @@ const defaultQuery = {
   dateTime: new Date().getTime().toString(),
   workShopId: undefined,
   productionLineId: undefined,
-  productType: componentTypeEnum.ARTIFACT.V
+  productType: componentTypeEnum.ARTIFACT.V,
+  weightStatus: weightTypeEnum.NET.V
 }
 
 const { crud, query } = regHeader(defaultQuery)

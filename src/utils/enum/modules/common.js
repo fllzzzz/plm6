@@ -106,6 +106,14 @@ const operationTypeEnum = {
 }
 constantize(operationTypeEnum)
 
+// 车间类型
+const workshopTypeEnum = {
+  BUILDING: { L: '建钢', K: 'BUILDING', V: 1 << 0 },
+  BRIDGE: { L: '桥梁', K: 'BRIDGE', V: 1 << 1 },
+  ENCLOSURE: { L: '围护', K: 'ENCLOSURE', V: 1 << 2 }
+}
+constantize(workshopTypeEnum)
+
 // 文件分类
 // const fileClassifyEnum = {
 //   MODEL: { L: '3D模型', K: 'MODEL', V: -2 },
@@ -136,6 +144,7 @@ export {
   visaTypeEnum, // 签证类型
   businessAuditStatusEnum, // 商务审核状态
   installationAuditStatusEnum, // 安装审核状态
+  workshopTypeEnum, // 车间类型
   operationTypeEnum // 操作类型
 }
 
@@ -154,6 +163,7 @@ export default {
   visaTypeEnum, // 签证类型
   businessAuditStatusEnum, // 商务审核状态
   installationAuditStatusEnum, // 安装审核状态
+  workshopTypeEnum, // 车间类型
   operationTypeEnum // 操作类型
 }
 

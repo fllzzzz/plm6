@@ -63,7 +63,7 @@
             </el-table-column>
             <el-table-column key="invoiceAmount1" prop="invoiceAmount1" label="大写" align="center" width="330" :show-overflow-tooltip="true">
               <template v-slot="scope">
-                <div>{{scope.row.invoiceAmount?'('+digitUppercase(scope.row.invoiceAmount)+')':''}}</div>
+                <div>{{scope.row.invoiceAmount?digitUppercase(scope.row.invoiceAmount):''}}</div>
               </template>
             </el-table-column>
           </el-table-column>
@@ -116,7 +116,7 @@
           </el-table-column>
           <el-table-column key="invoiceSerialNumber" prop="invoiceSerialNumber" label="*发票号码" align="center" width="120">
             <template v-slot="scope">
-              <el-input v-if="scope.row.isModify" v-model.trim="scope.row.invoiceSerialNumber" type="text" placeholder="发票号码" @blur="checkInvoiceNo(scope.row,scope.$index)" maxlength="20"/>
+              <el-input v-if="scope.row.isModify" v-model.trim="scope.row.invoiceSerialNumber" type="text" placeholder="发票号码" maxlength="20"/>
               <span v-else>{{ scope.row.invoiceSerialNumber }}</span>
             </template>
           </el-table-column>
@@ -146,7 +146,7 @@
 </template>
 
 <script setup>
-import { ref, inject, nextTick, defineProps, watch } from 'vue'
+import { ref, inject, nextTick, defineProps } from 'vue'
 import { regForm } from '@compos/use-crud'
 import { ElMessage } from 'element-plus'
 import { DP } from '@/settings/config'
@@ -167,7 +167,7 @@ const defaultForm = {
 const { CRUD, crud, form } = regForm(defaultForm, formRef)
 const totalAmount = inject('totalAmount')
 const extraAmount = ref(0)
-const invoiceNoArr = ref([])
+// const invoiceNoArr = ref([])
 
 const props = defineProps({
   existInvoiceNo: {
@@ -184,18 +184,18 @@ const props = defineProps({
   }
 })
 
-watch(
-  () => props.existInvoiceNo,
-  (val) => {
-    invoiceNoArr.value = []
-    if (val) {
-      if (props.existInvoiceNo.length > 0) {
-        invoiceNoArr.value = Object.assign([], props.existInvoiceNo)
-      }
-    }
-  },
-  { deep: true, immediate: true }
-)
+// watch(
+//   () => props.existInvoiceNo,
+//   (val) => {
+//     invoiceNoArr.value = []
+//     if (val) {
+//       if (props.existInvoiceNo.length > 0) {
+//         invoiceNoArr.value = Object.assign([], props.existInvoiceNo)
+//       }
+//     }
+//   },
+//   { deep: true, immediate: true }
+// )
 
 const { maxHeight } = useMaxHeight({
   wrapperBox: '.invoiceAddForm',
@@ -285,36 +285,36 @@ function taxMoney(row) {
     row.tax = row.invoiceAmount * row.taxRate / 100
   }
 }
-function checkInvoiceNo(row) {
-  const val = invoiceNoArr.value.find(v => v.dataIndex === row.dataIndex)
-  console.log(invoiceNoArr)
-  console.log(val)
-  if (val) {
-    if (row.invoiceSerialNumber) {
-      if (val.invoiceSerialNumber === row.invoiceSerialNumber) {
-        return
-      }
-      if (invoiceNoArr.value.findIndex(v => v.invoiceSerialNumber === row.invoiceSerialNumber) > -1) {
-        ElMessage({ message: '发票号已存在，请重新填写', type: 'error' })
-        row.invoiceSerialNumber = undefined
-      } else {
-        val.invoiceSerialNumber = row.invoiceSerialNumber
-      }
-    } else {
-      val.invoiceSerialNumber = undefined
-    }
-  } else {
-    if (invoiceNoArr.value.findIndex(v => v.invoiceSerialNumber === row.invoiceSerialNumber) > -1) {
-      ElMessage({ message: '发票号已存在，请重新填写', type: 'error' })
-      row.invoiceSerialNumber = undefined
-    } else {
-      invoiceNoArr.value.push({
-        invoiceSerialNumber: row.invoiceSerialNumber,
-        dataIndex: row.dataIndex
-      })
-    }
-  }
-}
+// function checkInvoiceNo(row) {
+//   const val = invoiceNoArr.value.find(v => v.dataIndex === row.dataIndex)
+//   console.log(invoiceNoArr)
+//   console.log(val)
+//   if (val) {
+//     if (row.invoiceSerialNumber) {
+//       if (val.invoiceSerialNumber === row.invoiceSerialNumber) {
+//         return
+//       }
+//       if (invoiceNoArr.value.findIndex(v => v.invoiceSerialNumber === row.invoiceSerialNumber) > -1) {
+//         ElMessage({ message: '发票号已存在，请重新填写', type: 'error' })
+//         row.invoiceSerialNumber = undefined
+//       } else {
+//         val.invoiceSerialNumber = row.invoiceSerialNumber
+//       }
+//     } else {
+//       val.invoiceSerialNumber = undefined
+//     }
+//   } else {
+//     if (invoiceNoArr.value.findIndex(v => v.invoiceSerialNumber === row.invoiceSerialNumber) > -1) {
+//       ElMessage({ message: '发票号已存在，请重新填写', type: 'error' })
+//       row.invoiceSerialNumber = undefined
+//     } else {
+//       invoiceNoArr.value.push({
+//         invoiceSerialNumber: row.invoiceSerialNumber,
+//         dataIndex: row.dataIndex
+//       })
+//     }
+//   }
+// }
 CRUD.HOOK.beforeValidateCU = (crud, form) => {
   if (crud.form.list.length <= 0) {
     ElMessage({ message: '请添加收票明细', type: 'error' })

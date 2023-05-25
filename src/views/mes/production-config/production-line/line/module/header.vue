@@ -19,6 +19,7 @@
     <workshop-select
       v-model="query.workshopId"
       :factory-id="query.factoryId"
+      :workshop-type="workshopTypeEnum.BUILDING.V"
       placeholder="选择车间搜索"
       class="filter-item"
       style="width: 200px"
@@ -39,7 +40,7 @@
     <div v-show="crud.searchToggle">
       <common-radio-button
         v-model="query.productionLineTypeEnum"
-        :options="artifactProductLineEnum.ENUM"
+        :options="hasIntelligent ? artifactProductLineEnum.ENUM : traditionLineEnum.ENUM"
         type="enum"
         showOptionAll
         class="filter-item"
@@ -61,13 +62,14 @@
 </template>
 
 <script setup>
-import { enabledEnum } from '@enum-ms/common'
-import { componentTypeEnum, artifactProductLineEnum } from '@enum-ms/mes'
+import { enabledEnum, workshopTypeEnum } from '@enum-ms/common'
+import { componentTypeEnum, artifactProductLineEnum, traditionLineEnum } from '@enum-ms/mes'
 import { regHeader } from '@compos/use-crud'
 import crudOperation from '@crud/CRUD.operation'
 import rrOperation from '@crud/RR.operation'
 import factorySelect from '@comp-base/factory-select.vue'
 import workshopSelect from '@comp-mes/workshop-select'
+import { mapGetters } from '@/store/lib'
 
 const defaultQuery = {
   factoryId: undefined,
@@ -76,6 +78,7 @@ const defaultQuery = {
   productionLineTypeEnum: undefined,
   productType: undefined
 }
+const { hasIntelligent } = mapGetters('hasIntelligent')
 
 const { crud, query } = regHeader(defaultQuery)
 </script>

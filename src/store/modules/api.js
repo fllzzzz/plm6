@@ -28,6 +28,7 @@ const state = {
     config: `/api/config/`,
     project: `/api/project/`,
     mes: `/api/mes/building/`,
+    enclosure: `/api/mes/enclosure/`,
     system: `/api/`,
     cost: `/api/`,
     scm: `/api/scm/`

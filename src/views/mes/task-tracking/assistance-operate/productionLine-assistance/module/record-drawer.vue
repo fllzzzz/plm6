@@ -20,7 +20,7 @@
     </template>
     <template #content>
       <div style="display: flex; height: 100%">
-        <div style="width: 45%">
+        <div style="width: 50%">
           <common-table
             v-loading="recordLoading"
             highlight-current-row
@@ -46,7 +46,11 @@
             />
             <el-table-column prop="quantity" :show-overflow-tooltip="true" label="协同数（件/kg）" width="120px" align="center">
               <template #default="{ row }">
-                <span>{{ row.quantity }} / {{ row.totalNetWeight }}</span>
+                <span>{{
+                  weightStatus === weightTypeEnum.NET.V
+                    ? row.quantity + '/' + row.totalNetWeight
+                    : row.quantity + '/' + row.totalGrossWeight
+                }}</span>
               </template>
             </el-table-column>
             <el-table-column
@@ -136,7 +140,7 @@
 <script setup>
 import { record, recordDetail } from '@/api/mes/task-tracking/assistance-operate/productionLine-assistance'
 import { defineProps, defineEmits, ref } from 'vue'
-
+import { weightTypeEnum } from '@enum-ms/common'
 import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'
 import usePagination from '@compos/use-pagination'
@@ -148,6 +152,9 @@ const props = defineProps({
   visible: {
     type: Boolean,
     default: false
+  },
+  weightStatus: {
+    type: Number
   }
 })
 

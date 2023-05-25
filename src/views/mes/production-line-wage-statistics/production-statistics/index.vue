@@ -22,6 +22,7 @@
           />
           <workshop-select
             v-model="workshopId"
+            :workshop-type="workshopTypeEnum.BUILDING.V"
             placeholder="请选择车间"
             clearable
             style="width: 160px"
@@ -110,6 +111,7 @@ import useMaxHeight from '@compos/use-max-height'
 // import usePagination from '@compos/use-pagination'
 // import { tableSummary } from '@/utils/el-extra'
 import { ElNotification } from 'element-plus'
+import { workshopTypeEnum } from '@enum-ms/common'
 import { componentTypeEnum } from '@enum-ms/mes'
 import { PICKER_OPTIONS_DATE } from '@/settings/config'
 import workshopSelect from '@comp-mes/workshop-select'

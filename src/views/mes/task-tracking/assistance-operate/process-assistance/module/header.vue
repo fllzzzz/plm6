@@ -13,6 +13,13 @@
           value-format="x"
           @change="crud.toQuery"
         />
+        <common-radio-button
+          type="enum"
+          v-model="query.weightStatus"
+          :options="[weightTypeEnum.NET, weightTypeEnum.GROSS]"
+          class="filter-item"
+          @change="crud.toQuery"
+        />
         <!-- <project-radio-button size="small" v-model="query.projectId" class="filter-item" @change="crud.toQuery" /> -->
       </div>
     </template>
@@ -24,6 +31,7 @@
 
 <script setup>
 import { regHeader } from '@compos/use-crud'
+import { weightTypeEnum } from '@enum-ms/common'
 import crudOperation from '@crud/CRUD.operation'
 import moment from 'moment'
 
@@ -31,7 +39,8 @@ const defaultTime = moment().startOf('month').valueOf().toString()
 
 const defaultQuery = {
   projectId: undefined,
-  dateTime: defaultTime.toString()
+  dateTime: defaultTime.toString(),
+  weightStatus: weightTypeEnum.NET.V
 }
 
 const { crud, query } = regHeader(defaultQuery)

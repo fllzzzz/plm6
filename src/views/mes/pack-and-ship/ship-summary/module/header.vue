@@ -13,7 +13,7 @@
       />
       <!-- <common-radio-button
         v-model="query.productionLineTypeEnum"
-        :options="artifactProductLineEnum.ENUM"
+        :options="hasIntelligent ? artifactProductLineEnum.ENUM : traditionLineEnum.ENUM"
         showOptionAll
         type="enum"
         class="filter-item"
@@ -21,7 +21,7 @@
       /> -->
       <common-radio-button
         v-model="query.status"
-        :options="shipStatusEnum.ENUM"
+        :options="[shipStatusEnum.SHIPPING, shipStatusEnum.SHIPPED]"
         showOptionAll
         type="enum"
         class="filter-item"
@@ -31,6 +31,7 @@
         v-model="query.workshopId"
         placeholder="请选择车间"
         clearable
+        :workshop-type="workshopTypeEnum.BUILDING.V"
         style="width: 200px"
         class="filter-item"
         @change="crud.toQuery"
@@ -49,6 +50,23 @@
           <Panel name="累计车次" text-color="#626262" num-color="#1890ff" :end-val="summaryInfo.quantity || 0" :precision="0" />
         </el-col>
       </el-row>
+      <common-radio-button
+        type="enum"
+        v-model="query.weightStatus"
+        :options="[weightTypeEnum.NET, weightTypeEnum.GROSS]"
+        class="filter-item"
+        @change="crud.toQuery"
+      />
+      <el-input
+        v-model="query.projectName"
+        placeholder="项目搜索"
+        class="filter-item"
+        style="width: 200px"
+        size="small"
+        clearable
+        @keyup.enter="crud.toQuery"
+      />
+      <rrOperation />
     </div>
   </div>
 </template>
@@ -58,7 +76,9 @@ import { ref, watch } from 'vue'
 import { shipmentSummary } from '@/api/mes/pack-and-ship/ship-summary'
 import workshopSelect from '@comp-mes/workshop-select'
 import { regHeader } from '@compos/use-crud'
-import { shipStatusEnum, artifactProductLineEnum } from '@enum-ms/mes'
+import { shipStatusEnum } from '@enum-ms/mes'
+import { weightTypeEnum, workshopTypeEnum } from '@enum-ms/common'
+import rrOperation from '@crud/RR.operation'
 import moment from 'moment'
 import { DP } from '@/settings/config'
 // import checkPermission from '@/utils/system/check-permission'
@@ -71,8 +91,11 @@ const defaultQuery = {
   workshopId: undefined,
   sendStatus: undefined,
   status: undefined,
-  settled: undefined
+  settled: undefined,
+  projectName: undefined,
+  weightStatus: weightTypeEnum.NET.V
 }
+
 const { crud, query } = regHeader(defaultQuery)
 
 const summaryInfo = ref({})

@@ -21,7 +21,7 @@ const numberTypeEnum = {
   SUPPLIER: { L: '物流订单', K: 'SUPPLIER', V: 15 },
   OUTBOUND_REVIEW: { L: '出库审核单', K: 'OUTBOUND_REVIEW', V: 17 },
   TRANSFER: { L: '调拨单', K: 'TRANSFER', V: 18 },
-  SUPPLEMENT: { L: '红冲单', K: 'SUPPLEMENT', V: 19 }
+  SUPPLEMENT: { L: '调整单', K: 'SUPPLEMENT', V: 19 }
 }
 constantize(numberTypeEnum)
 

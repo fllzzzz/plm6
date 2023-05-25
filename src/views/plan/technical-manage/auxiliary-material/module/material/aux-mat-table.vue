@@ -63,7 +63,7 @@
         />
       </template>
     </el-table-column>
-    <el-table-column prop="color" label="颜色" align="center" min-width="120px">
+    <!-- <el-table-column prop="color" label="颜色" align="center" min-width="120px">
       <template #default="{ row }">
         <el-input v-model.trim="row.color" maxlength="20" size="mini" placeholder="颜色" />
       </template>
@@ -72,8 +72,8 @@
       <template #default="{ row }">
         <el-input v-model.trim="row.brand" maxlength="60" size="mini" placeholder="品牌" />
       </template>
-    </el-table-column>
-    <el-table-column prop="useProperty" label="属性" align="center" min-width="120px">
+    </el-table-column> -->
+    <el-table-column prop="useProperty" label="使用范围" align="center" min-width="120px">
       <template #default="{ row }">
         <common-select
           v-model="row.useProperty"
@@ -81,7 +81,7 @@
           type="enum"
           size="small"
           clearable
-          placeholder="属性"
+          placeholder="使用范围"
         />
       </template>
     </el-table-column>
@@ -119,7 +119,7 @@ const tableRules = {
     { required: true, message: '请填写核算量', trigger: 'blur' },
     { pattern: positiveNumPattern, message: '核算量必须大于0', trigger: 'blur' }
   ],
-  useProperty: [{ required: true, message: '请选择属性', trigger: 'change' }]
+  useProperty: [{ required: true, message: '请选择使用范围', trigger: 'change' }]
 }
 
 const { tableValidate, wrongCellMask } = useTableValidate({ rules: tableRules }) // 表格校验

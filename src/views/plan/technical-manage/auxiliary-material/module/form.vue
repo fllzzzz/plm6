@@ -12,6 +12,7 @@
     <template #titleAfter>
      <div>项目:<span>{{globalProject.serialNumber}}</span><span style="margin-left:5px;">{{globalProject.shortName}}</span></div>
      <div v-if="isNotBlank(currentMonomer)" style="margin-left:10px;">单体:{{currentMonomer.name}}</div>
+     <div v-if="isNotBlank(currentArea)" style="margin-left:10px;">区域:{{currentArea.name}}</div>
     </template>
     <template #content>
       <component :is="comp" :detail="form" @success="handleSuccess" :project="crud.query"/>
@@ -27,6 +28,7 @@ import AuxMatApplication from './auxiliary-material-form'
 
 const { crud, form } = regForm()
 const currentMonomer = inject('currentMonomer')
+const currentArea = inject('currentArea')
 const globalProject = inject('globalProject')
 const comp = computed(() => {
   return AuxMatApplication

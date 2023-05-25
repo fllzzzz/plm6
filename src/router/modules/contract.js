@@ -141,7 +141,7 @@ export default {
           path: 'price-manage',
           hidden: false,
           component: '/contract/sales-manage/price-manage/index',
-          meta: { title: '价格管理', icon: 'contract2', noCache: true }
+          meta: { title: '商务录入', icon: 'contract2', noCache: true }
         },
         {
           name: 'VisaManage',
@@ -162,7 +162,14 @@ export default {
           path: 'order-tracking',
           hidden: false,
           component: '/contract/sales-manage/order-tracking/index',
-          meta: { title: '订单跟踪', icon: 'contract2', noCache: true }
+          meta: { title: '销售台账', icon: 'contract2', noCache: true }
+        },
+        {
+          name: 'ShipmentTracking',
+          path: 'shipment-tracking',
+          hidden: false,
+          component: '/contract/sales-manage/shipment-tracking/index',
+          meta: { title: '发运跟踪', icon: 'contract2', noCache: true }
         },
         {
           name: 'TransactionRecord',

@@ -2,6 +2,8 @@ import { addRoutes, resetRouter } from '@/router'
 import { login, logout as logoutApi, getInfo, fetchMenus } from '@/api/user'
 import { repairStartSymbol } from '@/utils'
 import { getToken, setToken, removeToken, getRequestUrl, setRequestUrl as storeSetRequestUrl, removeRequestUrl } from '@/utils/storage' // get token from cookie
+import { projectTypeEnum } from '@enum-ms/contract'
+import { installProjectTypeEnum, deliveryInstallTypeEnum } from '@enum-ms/project'
 import checkPermission from '@/utils/system/check-permission'
 
 const state = {
@@ -26,7 +28,12 @@ const state = {
   roles: [], // 权限
   currentMenu: null, // 当前主模块
   // 首次加载页面，是否已经加载菜单
-  loadedMenus: false
+  loadedMenus: false,
+  projectTypeEnumArr: [projectTypeEnum.STEEL, projectTypeEnum.CARBARN, projectTypeEnum.ENCLOSURE],
+  installTypeEnumArr: [installProjectTypeEnum.ARTIFACT, installProjectTypeEnum.ENCLOSURE, installProjectTypeEnum.AUXILIARY],
+  deliveryInstallEnumArr: [deliveryInstallTypeEnum.ARTIFACT, deliveryInstallTypeEnum.ENCLOSURE],
+  flag: 0,
+  hasIntelligent: 0
 }
 
 const mutations = {
@@ -53,6 +60,21 @@ const mutations = {
   },
   SET_REQUEST_URL: (state, requestUrl) => {
     state.requestUrl = requestUrl
+  },
+  SET_PROJECT_TYPE_ENUM_ARR: (state, projectTypeEnumArr) => {
+    state.projectTypeEnumArr = projectTypeEnumArr
+  },
+  SET_INSTALL_TYPE_ENUM_ARR: (state, installTypeEnumArr) => {
+    state.installTypeEnumArr = installTypeEnumArr
+  },
+  SET_DELIVERY_INSTALL_ARR: (state, deliveryInstallEnumArr) => {
+    state.deliveryInstallEnumArr = deliveryInstallEnumArr
+  },
+  SET_FLAG: (state, flag) => {
+    state.flag = flag
+  },
+  SET_HAS_INTELLIGENT: (state, hasIntelligent) => {
+    state.hasIntelligent = hasIntelligent
   }
 }
 
@@ -92,7 +114,7 @@ const actions = {
   // 设置用户信息
   setInfo(res, commit) {
     // dept
-    const { permissions = [], roles = [], productMenu } = res
+    const { permissions = [], roles = [], productMenu, enclosureType, boolSmartLine } = res
     let { menus = [] } = res
 
     // 如果没有任何权限，则赋予一个默认的权限，避免请求死循环
@@ -116,6 +138,14 @@ const actions = {
       // 如果是超级管理员【admin】加入系统管理模块
       menus.push({ name: '系统管理', id: -2, icon: 'module-system', redirect: '/system' })
     }
+    const arr = enclosureType ? [projectTypeEnum.STEEL, projectTypeEnum.CARBARN] : [projectTypeEnum.STEEL, projectTypeEnum.CARBARN, projectTypeEnum.ENCLOSURE]
+    const installArr = enclosureType ? [installProjectTypeEnum.ARTIFACT, installProjectTypeEnum.AUXILIARY] : [installProjectTypeEnum.ARTIFACT, installProjectTypeEnum.ENCLOSURE, installProjectTypeEnum.AUXILIARY]
+    const deliveryArr = enclosureType ? [deliveryInstallTypeEnum.ARTIFACT] : [deliveryInstallTypeEnum.ARTIFACT, deliveryInstallTypeEnum.ENCLOSURE]
+    commit('SET_INSTALL_TYPE_ENUM_ARR', installArr)
+    commit('SET_PROJECT_TYPE_ENUM_ARR', arr)
+    commit('SET_DELIVERY_INSTALL_ARR', deliveryArr)
+    commit('SET_FLAG', enclosureType)
+    commit('SET_HAS_INTELLIGENT', boolSmartLine)
     commit('SET_MENUS', menus)
     commit('SET_PRODUCT_MENU', productMenu)
     commit('SET_USER', res)

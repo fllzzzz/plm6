@@ -105,7 +105,7 @@ constantize(floorPlateTypeEnum)
 
 // 围护产品类型
 const mesEnclosureTypeEnum = {
-  PRESSED_PLATE: { L: '压型板', K: 'PRESSED_PLATE', V: 1 << 1 },
+  PRESSED_PLATE: { L: '压型彩板', K: 'PRESSED_PLATE', V: 1 << 1 },
   SANDWICH_BOARD: { L: '夹芯板', K: 'SANDWICH_BOARD', V: 1 << 2 },
   TRUSS_FLOOR_PLATE: floorPlateTypeEnum.TRUSS_FLOOR_PLATE,
   PRESSED_FLOOR_PLATE: floorPlateTypeEnum.PRESSED_FLOOR_PLATE,
@@ -158,12 +158,21 @@ const machinePartNestingStatusEnum = {
 }
 constantize(machinePartNestingStatusEnum)
 
+// 合同管理-商务录入查询类型
+const contractSaleTypeEnum = {
+  STRUCTURE: { L: '结构', SL: '结构制品', K: 'STRUCTURE', V: componentTypeEnum.ARTIFACT.V, T: '' },
+  // ENCLOSURE: { L: '围护', SL: '围护', K: 'ENCLOSURE', V: componentTypeEnum.ENCLOSURE.V, T: 'warning' },
+  MACHINE_PART: { L: '直发件', SL: '散发制品', K: 'MACHINE_PART', V: componentTypeEnum.MACHINE_PART.V, T: 'danger' },
+  AUXILIARY_MATERIAL: { L: '辅材', SL: '配套制品', K: 'AUXILIARY_MATERIAL', V: componentTypeEnum.AUXILIARY_MATERIAL.V, T: 'success' }
+}
+constantize(contractSaleTypeEnum)
+
 // 可打包类型
 const packTypeEnum = {
-  STRUCTURE: { L: '结构', SL: '结构', K: 'STRUCTURE', V: componentTypeEnum.ARTIFACT.V, T: '' },
-  // ENCLOSURE: { L: '围护', SL: '围护', K: 'ENCLOSURE', V: componentTypeEnum.ENCLOSURE.V, T: 'warning' },
-  MACHINE_PART: { L: '直发件', SL: '直发件', K: 'MACHINE_PART', V: componentTypeEnum.MACHINE_PART.V | componentTypeEnum.ASSEMBLE.V, T: 'danger' },
-  AUXILIARY_MATERIAL: { L: '辅材', SL: '配套件', K: 'AUXILIARY_MATERIAL', V: componentTypeEnum.AUXILIARY_MATERIAL.V, T: 'success' }
+  STRUCTURE: { L: '结构', SL: '结构制品', K: 'STRUCTURE', V: componentTypeEnum.ARTIFACT.V, T: '' },
+  ENCLOSURE: { L: '围护', SL: '围护', K: 'ENCLOSURE', V: componentTypeEnum.ENCLOSURE.V, T: 'warning' },
+  MACHINE_PART: { L: '直发件', SL: '散发制品', K: 'MACHINE_PART', V: componentTypeEnum.MACHINE_PART.V | componentTypeEnum.ASSEMBLE.V, T: 'danger' },
+  AUXILIARY_MATERIAL: { L: '辅材', SL: '配套制品', K: 'AUXILIARY_MATERIAL', V: componentTypeEnum.AUXILIARY_MATERIAL.V, T: 'success' }
 }
 constantize(packTypeEnum)
 
@@ -321,6 +330,12 @@ const artifactProductLineEnum = {
 }
 constantize(artifactProductLineEnum)
 
+// 构件配置传统/智能生产线
+const traditionLineEnum = {
+  TRADITION: { L: '传统线', K: 'TRADITION', V: 1 << 0 }
+}
+constantize(traditionLineEnum)
+
 // 构件配置智能线父类型
 const intellectParentType = {
   PILLAR: { L: '柱', K: 'PILLAR', V: 1 << 1 },
@@ -446,7 +461,8 @@ const MesBuildingTypesettingStatusEnum = {
   COMPLETE: { L: '套料完成', K: 'COMPLETE', V: 1 << 1, T: 'success' },
   EXPIRED: { L: '已过期', K: 'EXPIRED', V: 1 << 2, T: 'info' },
   ISSUED: { L: '已下发', K: 'ISSUED', V: 1 << 3, T: 'warning' },
-  PRODUCTION: { L: '生产中', K: 'PRODUCTION', V: 1 << 4, T: 'danger' }
+  PRODUCTION: { L: '生产中', K: 'PRODUCTION', V: 1 << 4, T: 'danger' },
+  FINISHED: { L: '已完成', K: 'FINISHED', V: 1 << 5, T: 'success' }
 }
 constantize(MesBuildingTypesettingStatusEnum)
 
@@ -517,12 +533,25 @@ constantize(sortingListEnum)
 
 // 制成品出入库详情查询类型
 const productSearchTypeEnum = {
-  LIST: { L: '清单', K: 'LIST', V: 1 },
+  BEGINNING: { L: '期初库存', K: 'BEGINNING', V: 1 },
   INBOUND: { L: '入库', K: 'INBOUND', V: 2 },
   OUTBOUND: { L: '出库', K: 'OUTBOUND', V: 3 },
-  STOCK: { L: '库存', K: 'STOCK', V: 4 }
+  STOCK: { L: '期末库存', K: 'STOCK', V: 4 }
 }
 constantize(productSearchTypeEnum)
+
+// 发运管理/项目发运汇总类型查询
+const projectSearchTypeEnum = {
+  INVENTORY: { L: '清单总量', K: 'INVENTORY', V: 1 },
+  ASSIGNMENT: { L: '任务量', K: 'ASSIGNMENT', V: 2 },
+  STORAGE: { L: '入库量', K: 'STORAGE', V: 3 },
+  CUMULATIVE_SHIPMENT: { L: '累计发运', K: 'CUMULATIVE_SHIPMENT', V: 4 },
+  SHIPMENT_MONTH: { L: '本月发运', K: 'SHIPMENT_MONTH', V: 5 },
+  IN_STOCK: { L: '库存', K: 'IN_STOCK', V: 6 },
+  ACCUMULATED_NUMBER: { L: '累计车次', K: 'ACCUMULATED_NUMBER', V: 7 }
+}
+constantize(projectSearchTypeEnum)
+
 // 钻孔工单
 const drillListEnum = {
   PRODUCTION_TASK_ORDER: { L: '钻孔任务单', K: 'PRODUCTION_TASK_ORDER', V: 1 },
@@ -582,6 +611,15 @@ const steelOutBoundRecordTypeEnum = {
 }
 constantize(steelOutBoundRecordTypeEnum)
 
+// 配置管理/MES-公共配置
+const machinePartSchedulingTypeEnum = {
+  NO: { L: '无', K: 'NO', V: 1 << 0 },
+  WORKSHOP: { L: '车间级', K: 'WORKSHOP', V: 1 << 1 },
+  PRODUCTION_LINE: { L: '产线级', K: 'PRODUCTION_LINE', V: 1 << 2 },
+  GROUPS: { L: '生产组级', K: 'GROUPS', V: 1 << 3 }
+}
+constantize(machinePartSchedulingTypeEnum)
+
 export {
   teamTypeEnum,
   teamAttributeEnum,
@@ -617,6 +655,7 @@ export {
   inProductionDetailReportEnum,
   schedulingStatusEnum,
   artifactProductLineEnum,
+  traditionLineEnum,
   intellectParentType,
   minEqualTypeEnum,
   maxEqualTypeEnum,
@@ -647,6 +686,7 @@ export {
   fileNC1TypeEnum,
   sortingListEnum,
   productSearchTypeEnum,
+  projectSearchTypeEnum,
   drillListEnum,
   structureOrderTypeEnum,
   auxiliaryMaterialTypeEnum,
@@ -654,7 +694,9 @@ export {
   machinePartIssuedWayEnum,
   nestingTypeEnum,
   productionKanbanTypeEnum,
-  steelOutBoundRecordTypeEnum
+  steelOutBoundRecordTypeEnum,
+  contractSaleTypeEnum,
+  machinePartSchedulingTypeEnum
 }
 
 export default {
@@ -692,6 +734,7 @@ export default {
   inProductionDetailReportEnum,
   schedulingStatusEnum,
   artifactProductLineEnum,
+  traditionLineEnum,
   intellectParentType,
   minEqualTypeEnum,
   maxEqualTypeEnum,
@@ -722,6 +765,7 @@ export default {
   fileNC1TypeEnum,
   sortingListEnum,
   productSearchTypeEnum,
+  projectSearchTypeEnum,
   drillListEnum,
   structureOrderTypeEnum,
   auxiliaryMaterialTypeEnum,
@@ -729,5 +773,7 @@ export default {
   machinePartIssuedWayEnum,
   nestingTypeEnum,
   productionKanbanTypeEnum,
-  steelOutBoundRecordTypeEnum
+  steelOutBoundRecordTypeEnum,
+  contractSaleTypeEnum,
+  machinePartSchedulingTypeEnum
 }

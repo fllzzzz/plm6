@@ -66,8 +66,8 @@
 
 <script setup>
 import crudApi from '@/api/mes/QHSE-manage/quality-inspection-report'
-import { provide, ref } from 'vue'
-
+import { provide, ref, computed } from 'vue'
+import { componentTypeEnum } from '@enum-ms/mes'
 import { qualityInspectionReportPM as permission } from '@/page-permission/mes'
 
 import useMaxHeight from '@compos/use-max-height'
@@ -82,6 +82,10 @@ const optShow = {
   del: false,
   download: false
 }
+
+const structure = computed(() => {
+  return componentTypeEnum.MACHINE_PART.V | componentTypeEnum.ASSEMBLE.V | componentTypeEnum.ARTIFACT.V
+})
 
 const tableRef = ref()
 const { crud, columns, CRUD } = useCRUD(
@@ -99,6 +103,10 @@ const { crud, columns, CRUD } = useCRUD(
 const { maxHeight } = useMaxHeight({ paginate: true })
 
 provide('query', crud.query)
+
+CRUD.HOOK.beforeToQuery = () => {
+  crud.query.productType = structure.value
+}
 
 CRUD.HOOK.handleRefresh = (crud, res) => {
   res.data.content = res.data.content.map((v, i) => {

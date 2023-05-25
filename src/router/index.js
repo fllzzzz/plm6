@@ -71,6 +71,13 @@ const constantRoutes = [
     ]
   },
   {
+    path: '/external/model',
+    component: () => import('@/views/external/model'),
+    name: 'ExternalModel',
+    meta: { title: '模型展示' },
+    hidden: true
+  },
+  {
     path: '/auth-redirect',
     component: () => import('@/views/login/auth-redirect'),
     hidden: true

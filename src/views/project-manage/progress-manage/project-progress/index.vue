@@ -16,19 +16,19 @@
         :row-class-name="handleRowClassName"
         style="width: 100%"
       >
-          <el-table-column prop="index" label="序号" align="center" width="60">
+          <el-table-column prop="index" label="序号" align="center" width="55">
           <template v-slot="scope">
             <span v-if="scope.row.showType===1">{{ scope.row.showIndex }}</span>
           </template>
         </el-table-column>
         <el-table-column v-if="columns.visible('monomerName')" align="center" key="monomerName" prop="monomerName" :show-overflow-tooltip="true" label="单体"/>
-        <el-table-column v-if="columns.visible('type')" align="center" key="type" prop="type" :show-overflow-tooltip="true" label="项目内容">
+        <el-table-column v-if="columns.visible('type')" align="center" key="type" prop="type" :show-overflow-tooltip="true" label="项目内容" width="70">
           <template v-slot="scope">
             <span>{{scope.row.contentType?TechnologyTypeAllEnum.VL[scope.row.contentType]:'-'}}</span>
           </template>
         </el-table-column>
         <el-table-column v-if="columns.visible('areaName')" align="center" key="areaName" prop="areaName" :show-overflow-tooltip="true" label="单元" min-width="150"/>
-        <el-table-column v-if="columns.visible('produceArr')" align="center" key="produceArr" prop="produceArr" :show-overflow-tooltip="true" label="生产方式">
+        <el-table-column v-if="columns.visible('produceArr')" align="center" key="produceArr" prop="produceArr" :show-overflow-tooltip="true" label="生产方式" width="70">
           <template v-slot="scope">
             <span v-for="(item,index) in scope.row.produceArr" :key="index">{{manufactureTypeEnum.VL[item]}}{{index!==scope.row.produceArr.length-1?'、':''}}</span>
           </template>
@@ -96,6 +96,40 @@
                   :percentage="scope.row.processVal?.dayRate"
                   status="warning"
                 />
+              </template>
+            </template>
+            <template v-else>-</template>
+          </template>
+        </el-table-column>
+         <el-table-column
+          v-if="columns.visible('deliveryProgress') && globalProject.businessType === businessTypeEnum.INSTALLATION.V"
+          key="deliveryProgress"
+          prop="deliveryProgress"
+          :show-overflow-tooltip="true"
+          label="发运计划"
+          min-width="220"
+        >
+          <template v-slot="scope">
+            <template v-if="isNotBlank(scope.row.deliveryVal)">
+              <template v-if="scope.row.showType===1">
+                <div><span>{{`计划用时${scope.row.deliveryVal?.totalDays || '-'}天 | `}}</span><span :class="(scope.row.deliveryVal?.actualDays && scope.row.deliveryVal?.totalDays) && (scope.row.deliveryVal.actualDays>scope.row.deliveryVal.totalDays)?'red-color':'green-color'">{{`已用时${scope.row.deliveryVal?.actualDays}天`}}</span></div>
+                <el-progress
+                  v-if="isNotBlank(scope.row.deliveryVal)"
+                  :text-inside="true"
+                  :stroke-width="26"
+                  :percentage="scope.row.deliveryVal?.dayRate"
+                />
+                <div>{{`总量${scope.row.deliveryVal?.mete.toFixed(scope.row.deliveryVal.decimal) || '-'}${scope.row.deliveryVal?.unit || ''}|已完成${scope.row.deliveryVal?.completedMete.toFixed(scope.row.deliveryVal?.decimal) || '-' }${scope.row.deliveryVal?.unit || ''}`}}</div>
+                <el-progress
+                  v-if="isNotBlank(scope.row.deliveryVal)"
+                  :text-inside="true"
+                  :stroke-width="26"
+                  :percentage="scope.row.deliveryVal?.meteRate"
+                  :status="'success'"
+                />
+              </template>
+              <template v-else>
+                <div><span>{{`计划用时${scope.row.deliveryVal?.totalDays || '-'}天 | `}}</span><span :class="(scope.row.deliveryVal?.actualDays && scope.row.deliveryVal?.totalDays) && (scope.row.deliveryVal.actualDays>scope.row.deliveryVal.totalDays)?'red-color':'green-color'">{{`已用时${scope.row.deliveryVal?.actualDays}天 | `}}</span><span>{{`总量${scope.row.deliveryVal?.mete.toFixed(scope.row.deliveryVal?.decimal) || '-' }${scope.row.deliveryVal?.unit || ''} | 已完成${scope.row.deliveryVal?.completedMete.toFixed(scope.row.deliveryVal?.decimal) || '-' }${scope.row.deliveryVal?.unit || ''}`}}</span></div>
               </template>
             </template>
             <template v-else>-</template>
@@ -226,22 +260,24 @@ CRUD.HOOK.handleRefresh = (crud, data) => {
         if (k.detailTraceList && k.detailTraceList.length > 0) {
           k.detailTraceList.map((value, index) => {
             value.totalDays = value.startDate && value.endDate ? dateDifference(value.startDate, value.endDate) : 0
-            value.actualDays = value.startDate && value.startDate <= currentDate ? (value.completeDate ? dateDifference(value.startDate, value.completeDate) : dateDifference(value.startDate, currentDate)) : 0
+            value.actualDays = value.startDate && value.startDate <= currentDate ? value.completeDate ? dateDifference(value.startDate, value.completeDate) : dateDifference(value.startDate, currentDate) : 0
             value.dayRate = value.totalDays ? Number((value.actualDays / value.totalDays * 100).toFixed(1)) : 0
             value.dayColor = '#1890ff'
             value.completedMete = value.completedMete || 0
             value.meteRate = value.completedMete && value.mete ? Number((value.completedMete / value.mete * 100).toFixed(1)) : 0
             value.meteColor = '#1890ff'
-            value.decimal = k.type === TechnologyTypeAllEnum.STRUCTURE.V ? DP.COM_WT__KG : DP.MES_ENCLOSURE_L__M
-            value.unit = k.type === TechnologyTypeAllEnum.STRUCTURE.V ? 't' : 'm'
+            value.decimal = k.type === TechnologyTypeAllEnum.STRUCTURE.V || k.type === TechnologyTypeAllEnum.BRIDGE.V ? DP.COM_WT__KG : DP.MES_ENCLOSURE_L__M
+            value.unit = k.type === TechnologyTypeAllEnum.STRUCTURE.V || k.type === TechnologyTypeAllEnum.BRIDGE.V ? 't' : 'm'
           })
         }
         const deepVal = k.detailTraceList.find(m => m.type === areaPlanTypeEnum.DEEPEN.V) || undefined
         const processVal = k.detailTraceList.find(m => m.type === areaPlanTypeEnum.PROCESS.V) || undefined
         const installVal = k.detailTraceList.find(m => m.type === areaPlanTypeEnum.INSTALL.V) || undefined
+        const deliveryVal = k.detailTraceList.find(m => m.type === areaPlanTypeEnum.DELIVERY.V) || undefined
         k.deepVal = deepVal
         k.processVal = processVal
         k.installVal = installVal
+        k.deliveryVal = deliveryVal
         if (k.areaList && k.areaList.length > 0) {
           k.areaList.map((value, index) => {
             value.id = k.id + '' + value.id
@@ -253,22 +289,24 @@ CRUD.HOOK.handleRefresh = (crud, data) => {
             if (value.planDetailList && value.planDetailList.length > 0) {
               value.planDetailList.map((values, index) => {
                 values.totalDays = values.startDate && values.endDate ? dateDifference(values.startDate, values.endDate) : 0
-                values.actualDays = values.startDate && values.startDate <= currentDate ? (values.completeDate ? dateDifference(values.startDate, values.completeDate) : dateDifference(values.startDate, currentDate)) : 0
+                values.actualDays = values.startDate && values.startDate <= currentDate ? values.completeDate ? dateDifference(values.startDate, values.completeDate) : dateDifference(values.startDate, currentDate) : 0
                 values.dayRate = values.totalDays ? Number((values.actualDays / values.totalDays * 100).toFixed(1)) : 0
                 values.dayColor = '#1890ff'
                 values.completedMete = values.completedMete || 0
                 values.meteRate = values.completedMete && values.mete ? Number((values.completedMete / values.mete * 100).toFixed(1)) : 0
                 values.meteColor = '#1890ff'
-                values.decimal = k.type === TechnologyTypeAllEnum.STRUCTURE.V ? DP.COM_WT__KG : DP.MES_ENCLOSURE_L__M
-                values.unit = k.type === TechnologyTypeAllEnum.STRUCTURE.V ? 't' : 'm'
+                values.decimal = k.type === TechnologyTypeAllEnum.STRUCTURE.V || k.type === TechnologyTypeAllEnum.BRIDGE.V ? DP.COM_WT__KG : DP.MES_ENCLOSURE_L__M
+                values.unit = k.type === TechnologyTypeAllEnum.STRUCTURE.V || k.type === TechnologyTypeAllEnum.BRIDGE.V ? 't' : 'm'
               })
             }
             const deepVal = value.planDetailList.find(m => m.type === areaPlanTypeEnum.DEEPEN.V)
             const processVal = value.planDetailList.find(m => m.type === areaPlanTypeEnum.PROCESS.V)
             const installVal = value.planDetailList.find(m => m.type === areaPlanTypeEnum.INSTALL.V)
+            const deliveryVal = value.planDetailList.find(m => m.type === areaPlanTypeEnum.DELIVERY.V)
             value.deepVal = deepVal || undefined
             value.processVal = processVal || undefined
             value.installVal = installVal || undefined
+            value.deliveryVal = deliveryVal || undefined
             if (k.produceArr.indexOf(value.type) < 0) {
               k.produceArr.push(value.type)
             }

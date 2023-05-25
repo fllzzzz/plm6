@@ -17,6 +17,7 @@
         showOptionAll
         type="enum"
         size="small"
+        :disabledVal="[packTypeEnum.ENCLOSURE.V]"
         class="filter-item"
         @change="crud.toQuery"
       />
@@ -127,8 +128,8 @@
           name="今年发运量（t）"
           text-color="#626262"
           num-color="#1890ff"
-          :end-val="convertUnits(totalAmount.yearMete, 'kg', 't', DP.COM_WT__T) || 0"
-          :precision="DP.COM_WT__T"
+          :end-val="convertUnits(totalAmount.yearMete, 'kg', 't', 2) || 0"
+          :precision="2"
         />
       </el-col>
       <el-col :span="6" class="card-panel-col">
@@ -139,8 +140,8 @@
           name="本月发运量（t）"
           text-color="#626262"
           num-color="#1890ff"
-          :end-val="convertUnits(totalAmount.monthMete, 'kg', 't', DP.COM_WT__T) || 0"
-          :precision="DP.COM_WT__T"
+          :end-val="convertUnits(totalAmount.monthMete, 'kg', 't', 2) || 0"
+          :precision="2"
         />
       </el-col>
       <el-col :span="6" class="card-panel-col">
@@ -161,9 +162,14 @@
         />
       </template>
       <template v-slot:viewLeft>
+        <el-tag v-permission="permission.get" type="warning" effect="plain" class="filter-item" size="medium">
+          过磅重量汇总（磅计）：
+          <span v-if="!summaryLoading">{{ convertUnits(overWeight, 'kg', 't', 2) }} t</span>
+          <i v-else class="el-icon-loading" />
+        </el-tag>
         <el-tag v-permission="permission.get" effect="plain" class="filter-item" size="medium">
-          累计发运重量（查询）：
-          <span v-if="!summaryLoading">{{ convertUnits(shipWeight, 'kg', 't', DP.COM_WT__T) }} t</span>
+          累计发运重量（理计）：
+          <span v-if="!summaryLoading">{{ convertUnits(shipWeight, 'kg', 't', 2) }} t</span>
           <i v-else class="el-icon-loading" />
         </el-tag>
       </template>
@@ -178,7 +184,7 @@ import moment from 'moment'
 
 import { packTypeEnum, deliveryStatusEnum } from '@enum-ms/mes'
 import { manufactureTypeEnum } from '@enum-ms/production'
-import { DP } from '@/settings/config'
+// import { DP } from '@/settings/config'
 import { convertUnits } from '@/utils/convert/unit'
 import { isBlank, isNotBlank } from '@data-type/index'
 import { PICKER_OPTIONS_SHORTCUTS } from '@/settings/config'
@@ -208,6 +214,7 @@ const { crud, query, CRUD } = regHeader(defaultQuery)
 const permission = inject('permission')
 const summaryLoading = ref(false)
 const shipWeight = ref(0)
+const overWeight = ref(0)
 const currentKey = ref()
 const apiKey = ref([])
 const totalAmount = ref({})
@@ -259,8 +266,9 @@ async function fetchSummary() {
   }
   try {
     summaryLoading.value = true
-    const { weight } = await getSummaryShipMete(query)
+    const { weight, actualWeight } = await getSummaryShipMete(query)
     shipWeight.value = weight
+    overWeight.value = actualWeight
   } catch (error) {
     console.log('获取汇总信息', error)
   } finally {
