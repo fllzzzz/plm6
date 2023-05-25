@@ -7,7 +7,7 @@
     :show-close="true"
     :wrapper-closable="false"
     size="65%"
-    custom-class="raw-mat-inbound-application-record-form"
+    custom-class="delivery-detail"
   >
     <template #titleAfter>
      <div>项目:<span>{{globalProject.serialNumber}}</span><span style="margin-left:5px;">{{globalProject.shortName}}</span></div>
@@ -21,7 +21,7 @@
           ref="detailRef"
           border
           :data="form.list"
-          :max-height="maxHeight"
+          :max-height="maxHeight-110"
           style="width: 100%"
           class="table-form"
           return-source-data
