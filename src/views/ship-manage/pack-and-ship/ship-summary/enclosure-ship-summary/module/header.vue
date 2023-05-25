@@ -43,7 +43,7 @@
             text-color="#626262"
             num-color="#1890ff"
             :end-val="summaryInfo.totalLength / 1000 || 0"
-            :precision="DP.COM_L__M"
+            :precision="DP.MES_ENCLOSURE_L__M"
           />
         </el-col>
         <el-col :span="12" class="card-panel-col">

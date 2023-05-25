@@ -79,7 +79,7 @@
       <el-table-column key="area.name" prop="area.name" label="批次" align="center" :show-overflow-tooltip="true" />
       <el-table-column key="name" prop="name" label="名称" align="center" :show-overflow-tooltip="true" min-width="100px" />
       <el-table-column key="serialNumber" prop="serialNumber" label="编号" align="center" :show-overflow-tooltip="true" />
-      <el-table-column key="plate" prop="plate" label="板型" align="center" :show-overflow-tooltip="true" min-width="120px" />
+      <el-table-column v-if="props.query?.category !== 32" key="plate" prop="plate" label="板型" align="center" :show-overflow-tooltip="true" min-width="120px" />
       <el-table-column key="length" prop="length" label="单长（mm）" align="center" :show-overflow-tooltip="true">
         <template #default="{ row }">
           <span>{{ row.length || '-' }}</span>
@@ -88,7 +88,7 @@
       <el-table-column key="quantity" prop="quantity" label="数量（件）" align="center" :show-overflow-tooltip="true" width="90px" />
       <el-table-column key="totalLength" prop="totalLength" label="总长（m）" align="center" :show-overflow-tooltip="true">
         <template #default="{ row }">
-          <span>{{ convertUnits(row.totalLength, 'mm', 'm', 2) || '-' }}</span>
+          <span>{{ convertUnits(row.totalLength, 'mm', 'm', DP.MES_ENCLOSURE_L__M) || '-' }}</span>
         </template>
       </el-table-column>
     </common-table>
@@ -109,6 +109,7 @@
 import { ref, defineProps, watch } from 'vue'
 import { summaryDetail } from '@/api/ship-manage/pack-and-ship/enclosure-ship-summary'
 import { convertUnits } from '@/utils/convert/unit'
+import { DP } from '@/settings/config'
 // import { tableSummary } from '@/utils/el-extra'
 import { projectSearchTypeEnum } from '@enum-ms/mes'
 // import { enclosureShipStatisticsTypeEnum } from '@enum-ms/ship-manage'

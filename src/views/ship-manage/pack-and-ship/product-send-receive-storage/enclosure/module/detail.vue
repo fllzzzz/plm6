@@ -84,15 +84,15 @@
         v-if="visible"
       >
         <el-table-column label="序号" type="index" align="center" width="60" />
-        <el-table-column key="enclosurePlanName" prop="enclosurePlanName" label="计划" align="center" show-overflow-tooltip />
+        <el-table-column key="enclosurePlanName" prop="enclosurePlanName" label="批次" align="center" show-overflow-tooltip />
         <el-table-column key="serialNumber" prop="serialNumber" label="编号" align="center" show-overflow-tooltip />
-        <el-table-column key="plate" prop="plate" label="板型" align="center" show-overflow-tooltip />
+        <el-table-column v-if="props.category !== enclosureTypeEnum.FOLDING_PIECE.V" key="plate" prop="plate" label="板型" align="center" show-overflow-tooltip />
         <el-table-column key="length" prop="length" label="单长(mm)" align="center" show-overflow-tooltip />
         <el-table-column label="清单数(件/米)" align="center">
           <el-table-column key="quantity" prop="quantity" label="清单数" align="center" show-overflow-tooltip />
           <el-table-column key="totalLength" prop="totalLength" label="总长" align="center" show-overflow-tooltip>
             <template #default="{ row }">
-              <span>{{ convertUnits(row.totalLength, 'mm', 'm', 2) || 0 }}</span>
+              <span>{{ convertUnits(row.totalLength, 'mm', 'm', DP.MES_ENCLOSURE_L__M) || 0 }}</span>
             </template>
           </el-table-column>
         </el-table-column>
@@ -100,7 +100,7 @@
           <el-table-column key="beginningQuantity" prop="beginningQuantity" label="期初数" align="center" show-overflow-tooltip />
           <el-table-column key="beginningTotalLength" prop="beginningTotalLength" label="总长" align="center" show-overflow-tooltip>
             <template #default="{ row }">
-              <span>{{ convertUnits(row.beginningTotalLength, 'mm', 'm', 2) || 0 }}</span>
+              <span>{{ convertUnits(row.beginningTotalLength, 'mm', 'm', DP.MES_ENCLOSURE_L__M) || 0 }}</span>
             </template>
           </el-table-column>
         </el-table-column>
@@ -108,7 +108,7 @@
           <el-table-column key="inboundQuantity" prop="inboundQuantity" label="入库数" align="center" show-overflow-tooltip />
           <el-table-column key="inboundTotalLength" prop="inboundTotalLength" label="总长" align="center" show-overflow-tooltip>
             <template #default="{ row }">
-              <span>{{ convertUnits(row.inboundTotalLength, 'mm', 'm', 2) || 0 }}</span>
+              <span>{{ convertUnits(row.inboundTotalLength, 'mm', 'm', DP.MES_ENCLOSURE_L__M) || 0 }}</span>
             </template>
           </el-table-column>
         </el-table-column>
@@ -116,7 +116,7 @@
           <el-table-column key="outboundQuantity" prop="outboundQuantity" label="出库数" align="center" show-overflow-tooltip />
           <el-table-column key="outboundTotalLength" prop="outboundTotalLength" label="总长" align="center" show-overflow-tooltip>
             <template #default="{ row }">
-              <span>{{ convertUnits(row.outboundTotalLength, 'mm', 'm', 2) || 0 }}</span>
+              <span>{{ convertUnits(row.outboundTotalLength, 'mm', 'm', DP.MES_ENCLOSURE_L__M) || 0 }}</span>
             </template>
           </el-table-column>
         </el-table-column>
@@ -124,7 +124,7 @@
           <el-table-column key="stockQuantity" prop="stockQuantity" label="期末数" align="center" show-overflow-tooltip />
           <el-table-column key="stockTotalLength" prop="stockTotalLength" label="期末量" align="center" show-overflow-tooltip>
             <template #default="{ row }">
-              <span>{{ convertUnits(row.stockTotalLength, 'mm', 'm', 2) || 0 }}</span>
+              <span>{{ convertUnits(row.stockTotalLength, 'mm', 'm', DP.MES_ENCLOSURE_L__M) || 0 }}</span>
             </template>
           </el-table-column>
         </el-table-column>
@@ -148,8 +148,9 @@ import { detail } from '@/api/ship-manage/pack-and-ship/enclosure-product-receiv
 import { getEnclosureBatch } from '@/api/mes/common.js'
 import { ref, defineEmits, defineProps, watch } from 'vue'
 // import { tableSummary } from '@/utils/el-extra'
+import { enclosureTypeEnum } from '@enum-ms/ship-manage'
 import { convertUnits } from '@/utils/convert/unit'
-// import { DP } from '@/settings/config'
+import { DP } from '@/settings/config'
 import { projectNameFormatter } from '@/utils/project'
 import { parseTime } from '@/utils/date'
 import useVisible from '@compos/use-visible'
@@ -279,7 +280,7 @@ function getSummaries(param) {
           }
         }, 0)
       }
-      sums[index] = convertUnits(valuesSum, 'mm', 'm', 2)
+      sums[index] = convertUnits(valuesSum, 'mm', 'm', DP.MES_ENCLOSURE_L__M)
     }
   })
   return sums

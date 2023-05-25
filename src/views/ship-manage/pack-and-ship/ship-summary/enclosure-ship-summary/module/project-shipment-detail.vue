@@ -70,32 +70,32 @@
       >
         <el-descriptions-item align="center" label="清单总量（米）">
           <span class="tc-primary" style="cursor: pointer" @click="openDetail('INVENTORY')">{{
-            convertUnits(summaryData?.totalLength || 0, 'mm', 'm', 2)
+            convertUnits(summaryData?.totalLength || 0, 'mm', 'm', DP.MES_ENCLOSURE_L__M)
           }}</span>
         </el-descriptions-item>
         <el-descriptions-item align="center" label="任务总量（米）">
           <span class="tc-primary" style="cursor: pointer" @click="openDetail('ASSIGNMENT')">{{
-            convertUnits(summaryData?.schedulingTotalLength || 0, 'mm', 'm', 2)
+            convertUnits(summaryData?.schedulingTotalLength || 0, 'mm', 'm', DP.MES_ENCLOSURE_L__M)
           }}</span>
         </el-descriptions-item>
         <el-descriptions-item align="center" label="入库量（米）">
           <span class="tc-primary" style="cursor: pointer" @click="openDetail('STORAGE')">{{
-            convertUnits(summaryData?.inBoundTotalLength || 0, 'mm', 'm', 2)
+            convertUnits(summaryData?.inBoundTotalLength || 0, 'mm', 'm', DP.MES_ENCLOSURE_L__M)
           }}</span>
         </el-descriptions-item>
         <el-descriptions-item align="center" label="累计发运（米）">
           <span class="tc-primary" style="cursor: pointer" @click="openDetail('CUMULATIVE_SHIPMENT')">{{
-            convertUnits(summaryData?.outBoundTotalLength || 0, 'mm', 'm', 2)
+            convertUnits(summaryData?.outBoundTotalLength || 0, 'mm', 'm', DP.MES_ENCLOSURE_L__M)
           }}</span>
         </el-descriptions-item>
         <el-descriptions-item align="center" label="本月发运（米）">
           <span class="tc-primary" style="cursor: pointer" @click="openDetail('SHIPMENT_MONTH')">
-            {{ convertUnits(summaryData?.outMounthBoundTotalLength || 0, 'mm', 'm', 2) }}
+            {{ convertUnits(summaryData?.outMounthBoundTotalLength || 0, 'mm', 'm', DP.MES_ENCLOSURE_L__M) }}
           </span>
         </el-descriptions-item>
         <el-descriptions-item align="center" label="库存（米）">
           <span class="tc-primary" style="cursor: pointer" @click="openDetail('IN_STOCK')">{{
-            convertUnits(summaryData?.stockTotalLength || 0, 'mm', 'm', 2)
+            convertUnits(summaryData?.stockTotalLength || 0, 'mm', 'm', DP.MES_ENCLOSURE_L__M)
           }}</span>
         </el-descriptions-item>
         <el-descriptions-item align="center" label="累计车次">
@@ -151,6 +151,7 @@ import { ref, defineProps, watch, nextTick, computed } from 'vue'
 import { getEnclosureBatch } from '@/api/mes/common.js'
 import { projectSummary } from '@/api/ship-manage/pack-and-ship/enclosure-ship-summary'
 import { auxInboundDetail } from '@/api/ship-manage/pack-and-ship/ship-summary'
+import { DP } from '@/settings/config'
 import { convertUnits } from '@/utils/convert/unit'
 // import monomerSelect from '@/components-system/plan/monomer-select'
 import mDetail from './detail.vue'
