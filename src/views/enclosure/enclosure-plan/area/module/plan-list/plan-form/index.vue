@@ -31,7 +31,11 @@
           <div>{{ scope.row.date? parseTime(scope.row.date,'{y}-{m}-{d}'): '-' }}</div>
         </template>
       </el-table-column>
-      <el-table-column key="remark" prop="remark" label="备注" align="center" />
+      <el-table-column key="remark" prop="remark" label="备注" align="center">
+         <template v-slot="scope">
+          <div>{{ scope.row.date || '-' }}</div>
+        </template>
+      </el-table-column>
       <!--编辑与删除-->
       <el-table-column
         v-if="checkPermission([...permission.edit,...permission.del])"
@@ -44,7 +48,7 @@
         </template>
       </el-table-column>
     </common-table>
-    <mForm :detailInfo="currentRow" />
+    <mForm :detailInfo="detailInfo" />
   <!--分页组件-->
   <pagination />
   </div>
@@ -74,6 +78,10 @@ const optShow = {
 }
 
 const props = defineProps({
+  detailInfo: {
+    type: Object,
+    default: () => {}
+  },
   currentRow: {
     type: Object,
     default: () => {}
