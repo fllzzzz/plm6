@@ -41,7 +41,7 @@
       </div>
     </div>
     <!-- 类型规格分析 -->
-    <div :style="{ opacity: itemInfo.category ? 100 : 0 }">
+    <div :style="{ opacity: detailVisible ? 100 : 0 }">
       <el-divider />
       <div style="display: flex">
         <common-table
@@ -202,11 +202,13 @@ async function fetchDetailList() {
 }
 
 function showDetail(row = {}) {
-  detailVisible.value = true
-  itemInfo.value = {
-    ...row
-  }
-  if (row?.category) {
+  if (!row?.category || row.category === mesEnclosureTypeEnum.FOLDING_PIECE.V) {
+    detailVisible.value = false
+  } else {
+    detailVisible.value = true
+    itemInfo.value = {
+      ...row
+    }
     fetchDetailList()
   }
 }

@@ -91,7 +91,7 @@
 
 <script setup>
 import { categoryList, areaList, add, enclosureSummary } from '@/api/enclosure/production-manage/scheduling-manage'
-import { ref, defineProps, computed, watch, nextTick } from 'vue'
+import { ref, defineProps, defineEmits, computed, watch, nextTick } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 
 import { mesEnclosureTypeEnum } from '@enum-ms/mes'
@@ -100,6 +100,8 @@ import { DP } from '@/settings/config'
 import { regHeader } from '@compos/use-crud'
 import crudOperation from '@crud/CRUD.operation'
 import useSchedulingGroups from '@compos/enclosure/scheduling/use-scheduling-groups'
+
+const emit = defineEmits(['refreshProject'])
 
 const defaultQuery = {
   category: undefined,
@@ -220,12 +222,20 @@ async function fetchEnclosureSummary() {
 async function fetchCategory() {
   try {
     unshowVal.value = []
+    const _category = query.category
     query.category = undefined
     categoryLoading.value = true
     const arr = await categoryList({ projectId: props.project.id })
     arr.sort((a, b) => (a - b))
     if (arr.length) {
-      query.category = arr[0]
+      if (arr.includes(_category)) {
+        query.category = _category
+      } else {
+        query.category = arr[0]
+      }
+    } else {
+      // 没有分类时，刷新项目列表
+      emit('refreshProject')
     }
     unshowVal.value = categoryArr.value.filter((v) => !arr.includes(v))
   } catch (error) {
@@ -296,7 +306,8 @@ async function submit() {
     dialogVisible.value = false
     taskForm.value = {}
     ElMessage.success('任务下发成功')
-    crud.toQuery()
+    // 如果此类型全部排产后，访问接口会报错，所以重新获取一下类型数据
+    fetchCategory()
   } catch (error) {
     console.log(error, '任务下发失败')
   } finally {
