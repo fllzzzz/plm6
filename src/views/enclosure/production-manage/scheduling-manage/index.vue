@@ -1,14 +1,14 @@
 <template>
   <div class="wrap">
     <div class="wrap-left">
-      <project-list @project-change="projectChange" />
+      <project-list ref="projectListRef" @project-change="projectChange" />
     </div>
     <div class="wrap-right">
       <div class="app-container">
         <el-tag v-if="!crud.query?.projectId" type="info" effect="plain" size="large"> * 请点击左侧项目列表查看详情 </el-tag>
         <template v-else>
           <!--工具栏-->
-          <mHeader class="head-container scheduling-head-container" :project="project" />
+          <mHeader class="head-container scheduling-head-container" :project="project" @refresh-project="projectListRef.refresh" />
           <!--表格渲染-->
           <common-table
             ref="tableRef"
@@ -110,6 +110,7 @@ const optShow = {
 
 const tableRef = ref()
 const project = ref({})
+const projectListRef = ref()
 
 const dataFormat = ref([
   ['totalLength', ['to-fixed', DP.MES_ENCLOSURE_L__M]]
