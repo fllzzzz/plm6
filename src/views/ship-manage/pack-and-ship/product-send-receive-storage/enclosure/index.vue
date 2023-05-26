@@ -32,7 +32,7 @@
         align="center"
       >
         <template v-slot="scope">
-          <span>{{ scope.row.quantity + ' / ' + toFixed(scope.row.totalLength, DP.COM_L__M) }}</span>
+          <span>{{ scope.row.quantity + ' / ' + toFixed(scope.row.totalLength, DP.MES_ENCLOSURE_L__M) }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -45,7 +45,7 @@
       >
         <template v-slot="scope">
           <span style="cursor: pointer; color: #0d84ff" @click="openDetail(scope.row, 'BEGINNING')">{{
-            scope.row.beginningQuantity + ' / ' + toFixed(scope.row.beginningTotalLength, DP.COM_L__M)
+            scope.row.beginningQuantity + ' / ' + toFixed(scope.row.beginningTotalLength, DP.MES_ENCLOSURE_L__M)
           }}</span>
         </template>
       </el-table-column>
@@ -59,7 +59,7 @@
       >
         <template v-slot="scope">
           <span style="cursor: pointer; color: #0d84ff" @click="openDetail(scope.row, 'INBOUND')">{{
-            scope.row.inboundQuantity + ' / ' + toFixed(scope.row.inboundTotalLength, DP.COM_L__M)
+            scope.row.inboundQuantity + ' / ' + toFixed(scope.row.inboundTotalLength, DP.MES_ENCLOSURE_L__M)
           }}</span>
         </template>
       </el-table-column>
@@ -73,7 +73,7 @@
       >
         <template v-slot="scope">
           <span style="cursor: pointer; color: #0d84ff" @click="openDetail(scope.row, 'OUTBOUND')">{{
-            scope.row.outboundQuantity + ' / ' + toFixed(scope.row.outboundTotalLength, DP.COM_L__M)
+            scope.row.outboundQuantity + ' / ' + toFixed(scope.row.outboundTotalLength, DP.MES_ENCLOSURE_L__M)
           }}</span>
         </template>
       </el-table-column>
@@ -87,7 +87,7 @@
       >
         <template v-slot="scope">
           <span style="cursor: pointer; color: #0d84ff" @click="openDetail(scope.row, 'STOCK')">{{
-            scope.row.stockQuantity + ' / ' + toFixed(scope.row.stockTotalLength, DP.COM_L__M)
+            scope.row.stockQuantity + ' / ' + toFixed(scope.row.stockTotalLength, DP.MES_ENCLOSURE_L__M)
           }}</span>
         </template>
       </el-table-column>
@@ -236,7 +236,7 @@ function getSummaries(param) {
           }
         }, 0)
       }
-      sums[index] = valuesSum + ' / ' + valueWeightSum.toFixed(DP.COM_L__M)
+      sums[index] = valuesSum + ' / ' + valueWeightSum.toFixed(DP.MES_ENCLOSURE_L__M)
     }
   })
   return sums

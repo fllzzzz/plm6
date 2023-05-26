@@ -179,7 +179,7 @@ const { maxHeight } = useMaxHeight({
 
 provide('packData', packData)
 provide('permission', permission)
-provide('projectId', projectId)
+provide('projectId', globalProjectId)
 
 const routeParams = computed(() => {
   return route.params

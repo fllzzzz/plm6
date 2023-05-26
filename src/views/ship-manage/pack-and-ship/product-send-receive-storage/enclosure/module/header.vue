@@ -46,7 +46,7 @@
             text-color="#626262"
             num-color="#1890ff"
             :end-val="totalAmount?.beginningTotalLength || 0"
-            :precision="DP.COM_L__M"
+            :precision="DP.MES_ENCLOSURE_L__M"
           />
         </el-col>
         <el-col :span="6" class="card-panel-col">
@@ -55,7 +55,7 @@
             text-color="#626262"
             num-color="#1890ff"
             :endVal="totalAmount?.inboundTotalLength || 0"
-            :precision="DP.COM_L__M"
+            :precision="DP.MES_ENCLOSURE_L__M"
           />
         </el-col>
         <el-col :span="6" class="card-panel-col">
@@ -64,7 +64,7 @@
             text-color="#626262"
             num-color="#1890ff"
             :endVal="totalAmount?.outboundTotalLength || 0"
-            :precision="DP.COM_L__M"
+            :precision="DP.MES_ENCLOSURE_L__M"
           />
         </el-col>
         <el-col :span="6" class="card-panel-col">
@@ -73,7 +73,7 @@
             text-color="#626262"
             num-color="#1890ff"
             :end-val="totalAmount?.stockTotalLength || 0"
-            :precision="DP.COM_L__M"
+            :precision="DP.MES_ENCLOSURE_L__M"
           />
         </el-col>
       </el-row>

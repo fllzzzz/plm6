@@ -5,7 +5,7 @@
         v-model="query.name"
         placeholder="可输入名称搜索"
         class="filter-item"
-        style="width: 200px;"
+        style="width: 200px"
         size="small"
         clearable
         @keyup.enter="crud.toQuery"
@@ -14,12 +14,12 @@
         v-model="query.plateType"
         placeholder="输入板型搜索"
         class="filter-item"
-        style="width: 200px;"
+        style="width: 200px"
         size="small"
         clearable
         @keyup.enter="crud.toQuery"
       />
-      <rrOperation/>
+      <rrOperation />
     </div>
     <crudOperation>
       <template v-if="query.enclosurePlanId" #optRight>
@@ -33,7 +33,7 @@
         <print-table
           v-permission="crud.permission.print"
           api-key="contractEnclosurePrice"
-          :params="{ projectId:projectId,enclosurePlanId: query.enclosurePlanId }"
+          :params="{ projectId: projectId, enclosurePlanId: query.enclosurePlanId }"
           size="mini"
           type="warning"
           class="filter-item"
@@ -124,18 +124,19 @@ const costData = {
 const monomerCost = ref({ ...costData })
 
 const defaultQuery = {
-  name: undefined, plateType: undefined,
+  name: undefined,
+  plateType: undefined,
   monomerId: { value: undefined, resetAble: false }
 }
 const { crud, query, CRUD } = regHeader(defaultQuery)
 
 // 刷新数据后
 CRUD.HOOK.handleRefresh = (crud, { data }) => {
-  data.content.forEach(v => {
+  data.content.forEach((v) => {
     v.newUnitPrice = v.unitPrice // number类型的单价（unitPrice可能会有千位符）
     v.originNewUnitPrice = v.newUnitPrice
     v.originUnitPrice = emptyTextFormatter(toThousand(v.unitPrice))
-    v.totalPrice = (v.pricingManner === enclosureSettlementTypeEnum.LENGTH.V ? v.totalLength : v.totalArea) * (v.unitPrice || 0)
+    v.totalPrice = (v.pricingManner === enclosureSettlementTypeEnum.LENGTH.V ? v.totalLength : v.totalArea) * (v.newUnitPrice || 0)
   })
   fetchCost()
 }
@@ -162,15 +163,14 @@ function costInit() {
   monomerCost.value = { ...costData }
 }
 
-// 出来录入状态
+// 处理录入状态
 function handelModifying(status, reset = false) {
   // 取消分配，数据还原
   if (reset) {
     crud.data.forEach((v) => {
       v.unitPrice = v.originUnitPrice
       v.newUnitPrice = v.originNewUnitPrice
-      v.totalPrice = (v.priceType === enclosureSettlementTypeEnum.LENGTH.V ? v.totalLength : v.totalArea) * (v.newUnitPrice || 0)
-      return v
+      v.totalPrice = (v.pricingManner === enclosureSettlementTypeEnum.LENGTH.V ? v.totalLength : v.totalArea) * (v.newUnitPrice || 0)
     })
   }
   modifying.value = status

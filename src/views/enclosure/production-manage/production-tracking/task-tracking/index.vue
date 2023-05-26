@@ -24,7 +24,7 @@
             :max-height="maxHeight"
             :data-format="dataFormat"
           >
-            <el-table-column label="序号" type="index" align="center" width="60" />
+            <el-table-column label="序号" type="index" align="center" width="50" />
             <el-table-column
               key="createTime"
               prop="createTime"
@@ -41,7 +41,7 @@
               label="任务工单"
               show-overflow-tooltip
               align="center"
-              min-width="130"
+              min-width="150"
             />
             <el-table-column
               key="userName"
@@ -72,7 +72,7 @@
               show-overflow-tooltip
               label="工厂"
               align="center"
-              min-width="100"
+              min-width="130"
             />
             <el-table-column
               key="workshopName"
@@ -81,7 +81,7 @@
               show-overflow-tooltip
               label="车间"
               align="center"
-              min-width="100"
+              min-width="130"
             />
             <el-table-column
               key="productionLineName"
@@ -120,6 +120,15 @@
                 <span>{{ row.completeQuantity }} / {{ row.completeLength }}</span>
               </template>
             </el-table-column>
+            <el-table-column
+              key="askCompleteTime"
+              prop="askCompleteTime"
+              v-if="columns.visible('askCompleteTime')"
+              show-overflow-tooltip
+              label="要求完成时间"
+              align="center"
+              width="94"
+            />
             <el-table-column
               key="booleanlag"
               prop="booleanlag"
@@ -194,6 +203,7 @@ const project = ref({})
 const dataFormat = ref([
   ['totalLength', ['to-fixed', DP.MES_ENCLOSURE_L__M]],
   ['completeLength', ['to-fixed', DP.MES_ENCLOSURE_L__M]],
+  ['askCompleteTime', ['parse-time', '{y}-{m}-{d}']],
   ['createTime', ['parse-time', '{y}-{m}-{d}']],
   ['category', ['parse-enum', mesEnclosureTypeEnum]]
 ])
@@ -206,7 +216,7 @@ const { CRUD, crud, columns } = useCRUD(
     optShow: { ...optShow },
     crudApi: { ...crudApi },
     requiredQuery: ['projectId'],
-    invisibleColumns: [],
+    invisibleColumns: ['factoryName'],
     queryOnPresenterCreated: false
   },
   tableRef

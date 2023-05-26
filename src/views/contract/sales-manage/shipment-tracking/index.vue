@@ -33,7 +33,7 @@
                 text-color="#626262"
                 num-color="#1890ff"
                 :end-val="summaryData.shipLength || 0"
-                :precision="2"
+                :precision="DP.MES_ENCLOSURE_L__M"
               />
             </el-col>
             <el-col class="card-panel-col">
@@ -42,7 +42,7 @@
                 text-color="#626262"
                 num-color="#1890ff"
                 :end-val="summaryData.shipArea || 0"
-                :precision="2"
+                :precision="DP.MES_ENCLOSURE_L__M"
               />
             </el-col>
             <el-col class="card-panel-col">
@@ -71,7 +71,7 @@
                 text-color="#626262"
                 num-color="#1890ff"
                 :end-val="summaryData.shipLengthTime || 0"
-                :precision="2"
+                :precision="DP.MES_ENCLOSURE_L__M"
               />
             </el-col>
             <el-col class="card-panel-col">
@@ -80,7 +80,7 @@
                 text-color="#626262"
                 num-color="#1890ff"
                 :end-val="summaryData.shipAreaTime || 0"
-                :precision="2"
+                :precision="DP.MES_ENCLOSURE_L__M"
               />
             </el-col>
             <el-col class="card-panel-col">
@@ -151,6 +151,7 @@ import { mapGetters } from '@/store/lib'
 import { shipmentTrackingPM as permission } from '@/page-permission/contract'
 import { PICKER_OPTIONS_SHORTCUTS } from '@/settings/config'
 import { installProjectTypeEnum } from '@enum-ms/project'
+import { DP } from '@/settings/config'
 import { isBlank } from '@data-type/index'
 import checkPermission from '@/utils/system/check-permission'
 import moment from 'moment'

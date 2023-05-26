@@ -28,25 +28,25 @@
         <el-table-column key="areaName" prop="areaName" label="批次" align="center" :show-overflow-tooltip="true" />
         <el-table-column key="name" prop="name" label="名称" align="center" :show-overflow-tooltip="true" />
         <el-table-column key="serialNumber" prop="serialNumber" label="编号" align="center" :show-overflow-tooltip="true" />
-        <el-table-column key="plate" prop="plate" label="板型" align="center" :show-overflow-tooltip="true" />
-        <el-table-column key="length" prop="length" label="单长" align="center" :show-overflow-tooltip="true">
+        <el-table-column v-if="query?.category !== 32" key="plate" prop="plate" label="板型" align="center" :show-overflow-tooltip="true" />
+        <el-table-column key="length" prop="length" label="单长(mm)" align="center" :show-overflow-tooltip="true">
           <template v-slot="scope">
             <span>{{ scope.row.length }}</span>
             <!-- <span style="margin-left: 3px">kg</span> -->
           </template>
         </el-table-column>
-        <el-table-column key="totalLength" prop="totalLength" label="总长" align="center" :show-overflow-tooltip="true">
+        <el-table-column key="totalLength" prop="totalLength" label="总长(m)" align="center" :show-overflow-tooltip="true">
           <template v-slot="scope">
-            <span>{{ scope.row.totalLength }}</span>
+            <span>{{ convertUnits(scope.row.totalLength, 'mm', 'm', DP.MES_ENCLOSURE_L__M) }}</span>
             <!-- <span style="margin-left: 3px">kg</span> -->
           </template>
         </el-table-column>
         <el-table-column key="quantity" prop="quantity" label="清单数" align="center" :show-overflow-tooltip="true" />
         <el-table-column key="inboundQuantity" prop="inboundQuantity" label="入库数" align="center" :show-overflow-tooltip="true" />
         <el-table-column key="cargoQuantity" prop="cargoQuantity" label="发运数" align="center" :show-overflow-tooltip="true" />
-        <el-table-column key="cargoTotalLength" prop="cargoTotalLength" label="发运总长" align="center" :show-overflow-tooltip="true">
+        <el-table-column key="cargoTotalLength" prop="cargoTotalLength" label="发运总长(m)" align="center" :show-overflow-tooltip="true">
           <template v-slot="scope">
-            <span>{{ scope.row.cargoTotalLength }}</span>
+            <span>{{ convertUnits(scope.row.cargoTotalLength, 'mm', 'm', DP.MES_ENCLOSURE_L__M)}}</span>
             <!-- <span style="margin-left: 3px">kg</span> -->
           </template>
         </el-table-column>
@@ -70,7 +70,8 @@ import { inboundDetail } from '@/api/ship-manage/pack-and-ship/enclosure-ship-su
 import useVisible from '@compos/use-visible'
 import usePagination from '@compos/use-pagination'
 import useMaxHeight from '@compos/use-max-height'
-// import { DP } from '@/settings/config'
+import { convertUnits } from '@/utils/convert/unit'
+import { DP } from '@/settings/config'
 import { tableSummary } from '@/utils/el-extra'
 // import { toThousand } from '@/utils/data-type/number'
 import { defineProps, defineEmits, ref } from 'vue'

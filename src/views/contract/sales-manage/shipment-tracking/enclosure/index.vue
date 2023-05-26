@@ -79,8 +79,8 @@
         key="totalLength"
         prop="totalLength"
         show-overflow-tooltip
-        label="总长度(mm)"
-        align="center"
+        label="总长度(m)"
+        align="right"
         min-width="120"
       />
       <el-table-column
@@ -88,7 +88,7 @@
         key="totalArea"
         prop="totalArea"
         show-overflow-tooltip
-        label="总面积(mm²)"
+        label="总面积(m²)"
         align="right"
         min-width="120"
       />
@@ -136,6 +136,7 @@ import { ref, defineEmits } from 'vue'
 
 import { shipmentTrackingPM as permission } from '@/page-permission/contract'
 import { enclosurePricingMannerEnum } from '@enum-ms/enclosure'
+import { DP } from '@/settings/config'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
@@ -155,6 +156,8 @@ const tableRef = ref()
 const headerRef = ref()
 const dataFormat = ref([
   ['createTime', ['parse-time', '{y}-{m}-{d}']],
+  ['totalLength', ['to-thousand', DP.MES_ENCLOSURE_L__M]],
+  ['totalArea', ['to-thousand', DP.MES_ENCLOSURE_L__M]],
   ['unitPrice', 'to-thousand'],
   ['totalPrice', 'to-thousand'],
   ['pricingManner', ['parse-enum', enclosurePricingMannerEnum]]

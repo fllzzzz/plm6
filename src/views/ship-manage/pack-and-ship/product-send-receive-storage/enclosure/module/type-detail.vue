@@ -91,7 +91,7 @@
         <el-table-column key="totalGrossWeight" prop="totalGrossWeight" label="总毛重（kg）" align="center" :show-overflow-tooltip="true" /> -->
         <el-table-column key="name" prop="name" label="名称" align="center" :show-overflow-tooltip="true" />
         <el-table-column key="serialNumber" prop="serialNumber" label="编号" align="center" :show-overflow-tooltip="true" />
-        <el-table-column key="plate" prop="plate" label="板型" align="center" :show-overflow-tooltip="true" />
+        <el-table-column v-if="props.category !== enclosureTypeEnum.FOLDING_PIECE.V" key="plate" prop="plate" label="板型" align="center" :show-overflow-tooltip="true" />
         <el-table-column key="length" prop="length" label="单长（mm）" align="center" :show-overflow-tooltip="true" />
         <el-table-column
           key="quantity"
@@ -128,7 +128,7 @@
           :show-overflow-tooltip="true"
         >
           <template #default="{ row }">
-            <span>{{ convertUnits(row.totalLength, 'mm', 'm', 2) || 0 }}</span>
+            <span>{{ convertUnits(row.totalLength, 'mm', 'm', DP.MES_ENCLOSURE_L__M) || 0 }}</span>
           </template>
         </el-table-column>
         <el-table-column
@@ -158,8 +158,9 @@
 import { enclosureProductDetail } from '@/api/ship-manage/pack-and-ship/enclosure-product-receive-send-storage'
 import { ref, defineEmits, defineProps, watch } from 'vue'
 import { convertUnits } from '@/utils/convert/unit'
+import { enclosureTypeEnum } from '@enum-ms/ship-manage'
 // import { tableSummary } from '@/utils/el-extra'
-// import { DP } from '@/settings/config'
+import { DP } from '@/settings/config'
 import { projectNameFormatter } from '@/utils/project'
 import { productSearchTypeEnum } from '@enum-ms/mes'
 
@@ -273,7 +274,7 @@ function getSummaries(param) {
           }
         }, 0)
       }
-      sums[index] = convertUnits(valuesSum, 'mm', 'm', 2)
+      sums[index] = convertUnits(valuesSum, 'mm', 'm', DP.MES_ENCLOSURE_L__M)
     }
   })
   return sums

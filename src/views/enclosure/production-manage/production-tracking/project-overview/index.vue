@@ -30,8 +30,7 @@
                   item.detailLoading
                     ? '正在加载中...'
                     : `名称：${item.name}\n
-                  编号：${item.serialNumber || '-'}\n
-                  板型：${item.plate || '-'}\n
+                  编号：${item.serialNumber || '-'}\n ${item.category !== mesEnclosureTypeEnum.FOLDING_PIECE.V ? `\n板型：${item.plate || '-'}\n` : ''}
                   品牌：${item.brand || '-'}\n
                   颜色：${item.color || '-'}\n
                   清单量：${item.quantity}张\n
@@ -64,6 +63,7 @@ import crudApi from '@/api/enclosure/production-manage/project-overview'
 import { ref } from 'vue'
 
 import { enclosureProjectOverviewPM as permission } from '@/page-permission/enclosure'
+import { mesEnclosureTypeEnum } from '@enum-ms/mes'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
