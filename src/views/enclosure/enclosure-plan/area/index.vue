@@ -17,9 +17,9 @@
     >
       <el-table-column label="序号" type="index" align="center" width="60" />
       <el-table-column v-if="columns.visible('projectName')" key="projectName" prop="projectName" :show-overflow-tooltip="true" label="项目" min-width="100" />
-      <el-table-column v-if="columns.visible('createTime')" key="createTime" prop="createTime" label="合同签订时间" align="center" width="180px">
+      <el-table-column v-if="columns.visible('signingDate')" key="signingDate" prop="signingDate" label="合同签订时间" align="center" width="180px">
         <template v-slot="scope">
-          <span>{{ scope.row.createTime?parseTime(scope.row.createTime,'{y}-{m}-{d}'):'-' }}</span>
+          <span>{{ scope.row.signingDate?parseTime(scope.row.signingDate,'{y}-{m}-{d}'):'-' }}</span>
         </template>
       </el-table-column>
       <el-table-column v-if="columns.visible('signerName')" key="signerName" prop="signerName" :show-overflow-tooltip="true" label="销售负责人" min-width="160" />
