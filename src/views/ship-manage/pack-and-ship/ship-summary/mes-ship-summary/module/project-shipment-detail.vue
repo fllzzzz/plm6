@@ -207,6 +207,7 @@ watch(
     if (val) {
       showType.value = undefined
       fetchSummary()
+      fetchAuxMat()
     }
   }
 )
