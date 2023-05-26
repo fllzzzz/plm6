@@ -22,7 +22,7 @@
         clearable
         @blur="crud.toQuery"
       />
-      <el-input
+      <!-- <el-input
         v-model="query.plate"
         size="small"
         placeholder="输入板型搜索"
@@ -30,7 +30,7 @@
         class="filter-item"
         clearable
         @blur="crud.toQuery"
-      />
+      /> -->
       <el-input
         v-model="query.serialNumber"
         size="small"

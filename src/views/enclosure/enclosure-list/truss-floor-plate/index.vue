@@ -835,7 +835,8 @@ const originRow = ref({})
 function editRow(row) {
   originRow.value = JSON.parse(JSON.stringify(row))
   if (technicalTypeStatus.value) {
-    const chosePlate = plateOption.value.find((k) => k.plateType === row.plate)
+    const chosePlate = crud.query.category !== TechnologyTypeAllEnum.TRUSS_FLOOR_PLATE.V ? plateOption.value.find((k) => k.plateType === row.plate) : plateOption.value.find((k) => k.serialNumber ===
+ row.plate)
     row.plateId = isNotBlank(chosePlate) ? chosePlate.id : undefined
   }
   row.isModify = true
@@ -864,7 +865,8 @@ async function rowSubmit(row) {
   if (crud.query.category !== TechnologyTypeAllEnum.BENDING.V) {
     crud.data.map((v) => {
       if (!v.isModify && v.plate && technicalTypeStatus.value) {
-        const chosePlate = plateOption.value.find((k) => k.plateType === v.plate)
+        const chosePlate = crud.query.category !== TechnologyTypeAllEnum.TRUSS_FLOOR_PLATE.V ? plateOption.value.find((k) => k.plateType === row.plate) : plateOption.value.find((k) => k.serialNumber ===
+ row.plate)
         v.plateId = chosePlate.id
       }
     })
