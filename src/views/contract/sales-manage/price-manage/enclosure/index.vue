@@ -15,24 +15,92 @@
       :cell-class-name="changedCellMask"
     >
       <el-table-column label="序号" type="index" align="center" width="60" />
-      <el-table-column v-if="columns.visible('name')" key="name" prop="name" show-overflow-tooltip label="名称" align="center" min-width="120" />
-      <el-table-column v-if="columns.visible('plate') && props.category !== TechnologyTypeAllEnum.BENDING.V" key="plate" prop="plate" show-overflow-tooltip label="板型" align="center" width="100" />
-      <el-table-column v-if="columns.visible('thickness')" key="thickness" prop="thickness" show-overflow-tooltip label="厚度(mm)" align="center" />
-      <el-table-column v-if="columns.visible('color')" key="color" prop="color" show-overflow-tooltip label="颜色" align="center" width="100" />
-      <el-table-column v-if="columns.visible('totalQuantity')" key="totalQuantity" prop="totalQuantity" :show-overflow-tooltip="true" label="数量(张)" align="center" width="100" />
-      <el-table-column v-if="columns.visible('totalArea')" key="totalArea" prop="totalArea" show-overflow-tooltip label="总面积(㎡)" align="center" />
-      <el-table-column v-if="columns.visible('totalLength')" key="totalLength" prop="totalLength" show-overflow-tooltip label="总长度(m)" align="center" />
+      <el-table-column
+        v-if="columns.visible('name')"
+        key="name"
+        prop="name"
+        show-overflow-tooltip
+        label="名称"
+        align="center"
+        min-width="120"
+      />
+      <el-table-column
+        v-if="columns.visible('plate') && props.category !== TechnologyTypeAllEnum.BENDING.V"
+        key="plate"
+        prop="plate"
+        show-overflow-tooltip
+        label="板型"
+        align="center"
+        width="100"
+      />
+      <el-table-column
+        v-if="columns.visible('thickness')"
+        key="thickness"
+        prop="thickness"
+        show-overflow-tooltip
+        label="厚度(mm)"
+        align="center"
+      />
+      <el-table-column
+        v-if="columns.visible('color')"
+        key="color"
+        prop="color"
+        show-overflow-tooltip
+        label="颜色"
+        align="center"
+        width="100"
+      />
+      <el-table-column
+        v-if="columns.visible('totalQuantity')"
+        key="totalQuantity"
+        prop="totalQuantity"
+        :show-overflow-tooltip="true"
+        label="数量(张)"
+        align="center"
+        width="100"
+      />
+      <el-table-column
+        v-if="columns.visible('totalArea')"
+        key="totalArea"
+        prop="totalArea"
+        show-overflow-tooltip
+        label="总面积(㎡)"
+        align="center"
+      />
+      <el-table-column
+        v-if="columns.visible('totalLength')"
+        key="totalLength"
+        prop="totalLength"
+        show-overflow-tooltip
+        label="总长度(m)"
+        align="center"
+      />
       <el-table-column v-if="columns.visible('category')" key="category" prop="category" show-overflow-tooltip label="类别" align="center">
         <template #default="{ row }">
           <span>{{ TechnologyTypeAllEnum.V?.[row.category]?.L }}</span>
         </template>
       </el-table-column>
-      <el-table-column v-if="columns.visible('pricingManner')" key="pricingManner" prop="pricingManner" show-overflow-tooltip label="计价方式" align="center">
+      <el-table-column
+        v-if="columns.visible('pricingManner')"
+        key="pricingManner"
+        prop="pricingManner"
+        show-overflow-tooltip
+        label="计价方式"
+        align="center"
+      >
         <template #default="{ row }">
           <span>{{ enclosureSettlementTypeEnum.VL[row.pricingManner] }}</span>
         </template>
       </el-table-column>
-      <el-table-column v-if="columns.visible('unitPrice')" key="unitPrice" prop="unitPrice" :show-overflow-tooltip="true" label="综合单价" align="center" min-width="120">
+      <el-table-column
+        v-if="columns.visible('unitPrice')"
+        key="unitPrice"
+        prop="unitPrice"
+        :show-overflow-tooltip="true"
+        label="综合单价"
+        align="center"
+        min-width="120"
+      >
         <template #default="{ row }">
           <common-input-number
             v-if="headerRef && headerRef.modifying"
@@ -50,9 +118,9 @@
           </template>
         </template>
       </el-table-column>
-       <el-table-column v-if="columns.visible('totalPrice')" key="totalPrice" prop="totalPrice" align="center" min-width="120" label="金额">
+      <el-table-column v-if="columns.visible('totalPrice')" key="totalPrice" prop="totalPrice" align="center" min-width="120" label="金额">
         <template #default="{ row }">
-          <span :class="row.status === 1 ? 'tc-danger' : ''">{{ toFixed(row.totalPrice, DP.YUAN) }}</span>
+          <span :class="row.status === 1 ? 'tc-danger' : ''" v-thousand="row.totalPrice" />
         </template>
       </el-table-column>
     </common-table>
@@ -64,8 +132,8 @@
 <script setup>
 import crudApi from '@/api/contract/sales-manage/price-manage/enclosure'
 import { ref, defineExpose, defineProps } from 'vue'
+
 import { priceManagePM as permission } from '@/page-permission/contract'
-import { toFixed } from '@/utils/data-type'
 import { DP } from '@/settings/config'
 import { enclosureSettlementTypeEnum, TechnologyTypeAllEnum } from '@enum-ms/contract'
 
@@ -87,16 +155,13 @@ const optShow = {
   download: false
 }
 
-const sourceMap = new Map([
-  ['unitPrice', 'originUnitPrice']
-])
+const sourceMap = new Map([['unitPrice', 'originUnitPrice']])
 
 const tableRef = ref()
 const headerRef = ref()
 const dataFormat = ref([
   ['thickness', ['to-fixed', DP.MES_ENCLOSURE_T__MM]],
-  ['unitPrice', 'to-thousand'],
-  ['totalPrice', 'to-thousand']
+  ['unitPrice', 'to-thousand']
 ])
 const { crud, columns } = useCRUD(
   {
@@ -119,7 +184,7 @@ const { changedCellMask } = useTableChange({ fieldMap: sourceMap })
 // 价格变动
 function handlePrice(row) {
   row.unitPrice = row.newUnitPrice
-  row.totalPrice = (row.priceType === enclosureSettlementTypeEnum.LENGTH.V ? row.totalLength : row.totalArea) * (row.unitPrice || 0)
+  row.totalPrice = (row.pricingManner === enclosureSettlementTypeEnum.LENGTH.V ? row.totalLength : row.totalArea) * (row.unitPrice || 0)
 }
 
 defineExpose({
