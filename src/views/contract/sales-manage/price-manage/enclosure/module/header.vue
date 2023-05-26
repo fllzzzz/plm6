@@ -5,21 +5,22 @@
         v-model="query.name"
         placeholder="可输入名称搜索"
         class="filter-item"
-        style="width: 200px;"
+        style="width: 200px"
         size="small"
         clearable
         @keyup.enter="crud.toQuery"
       />
       <el-input
+        v-if="categoryValue !== mesEnclosureTypeEnum.FOLDING_PIECE.V"
         v-model="query.plateType"
         placeholder="输入板型搜索"
         class="filter-item"
-        style="width: 200px;"
+        style="width: 200px"
         size="small"
         clearable
         @keyup.enter="crud.toQuery"
       />
-      <rrOperation/>
+      <rrOperation />
     </div>
     <crudOperation>
       <template v-if="query.enclosurePlanId" #optRight>
@@ -33,7 +34,7 @@
         <print-table
           v-permission="crud.permission.print"
           api-key="contractEnclosurePrice"
-          :params="{ projectId:projectId,enclosurePlanId: query.enclosurePlanId }"
+          :params="{ projectId: projectId, enclosurePlanId: query.enclosurePlanId }"
           size="mini"
           type="warning"
           class="filter-item"
@@ -64,7 +65,14 @@
         </span>
       </template>
     </crudOperation>
-    <mPreview v-model="previewVisible" :modified-data="modifiedData" v-bind="$attrs" :params="previewParams" @success="handleSuccess" />
+    <mPreview
+      v-model="previewVisible"
+      :modified-data="modifiedData"
+      v-bind="$attrs"
+      :params="previewParams"
+      @success="handleSuccess"
+      :categoryValue="categoryValue"
+    />
   </div>
 </template>
 
@@ -73,7 +81,7 @@ import { cost } from '@/api/contract/sales-manage/price-manage/enclosure'
 import { ref, watch, nextTick, inject, computed, defineExpose } from 'vue'
 
 import checkPermission from '@/utils/system/check-permission'
-import { contractSaleTypeEnum } from '@enum-ms/mes'
+import { contractSaleTypeEnum, mesEnclosureTypeEnum } from '@enum-ms/mes'
 import { enclosureSettlementTypeEnum } from '@enum-ms/contract'
 import { toThousand } from '@/utils/data-type/number'
 import { emptyTextFormatter } from '@/utils/data-type'
@@ -89,6 +97,10 @@ const enclosurePlanId = inject('enclosurePlanId')
 // 有变动的数据
 const modifiedData = computed(() => {
   return crud.data.filter((v) => v.unitPrice !== v.originUnitPrice)
+})
+
+const categoryValue = computed(() => {
+  return crud.data[0]?.category
 })
 
 // 预览参数
@@ -124,14 +136,16 @@ const costData = {
 const monomerCost = ref({ ...costData })
 
 const defaultQuery = {
-  name: undefined, plateType: undefined,
+  name: undefined,
+  plateType: undefined,
   monomerId: { value: undefined, resetAble: false }
 }
 const { crud, query, CRUD } = regHeader(defaultQuery)
 
 // 刷新数据后
 CRUD.HOOK.handleRefresh = (crud, { data }) => {
-  data.content.forEach(v => {
+  data.content.forEach((v) => {
+    console.log(v.category, 'category')
     v.newUnitPrice = v.unitPrice // number类型的单价（unitPrice可能会有千位符）
     v.originNewUnitPrice = v.newUnitPrice
     v.originUnitPrice = emptyTextFormatter(toThousand(v.unitPrice))
