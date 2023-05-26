@@ -86,7 +86,14 @@
         <el-table-column label="序号" type="index" align="center" width="60" />
         <el-table-column key="enclosurePlanName" prop="enclosurePlanName" label="批次" align="center" show-overflow-tooltip />
         <el-table-column key="serialNumber" prop="serialNumber" label="编号" align="center" show-overflow-tooltip />
-        <el-table-column v-if="props.category !== enclosureTypeEnum.FOLDING_PIECE.V" key="plate" prop="plate" label="板型" align="center" show-overflow-tooltip />
+        <el-table-column
+          v-if="props.category !== enclosureTypeEnum.FOLDING_PIECE.V"
+          key="plate"
+          prop="plate"
+          label="板型"
+          align="center"
+          show-overflow-tooltip
+        />
         <el-table-column key="length" prop="length" label="单长(mm)" align="center" show-overflow-tooltip />
         <el-table-column label="清单数(件/米)" align="center">
           <el-table-column key="quantity" prop="quantity" label="清单数" align="center" show-overflow-tooltip />
@@ -252,7 +259,13 @@ function getSummaries(param) {
       sums[index] = '合计'
       return
     }
-    if (column.property === 'quantity' || column.property === 'inboundQuantity' || column.property === 'outboundQuantity' || column.property === 'stockQuantity' || column.property === 'beginningQuantity') {
+    if (
+      column.property === 'quantity' ||
+      column.property === 'inboundQuantity' ||
+      column.property === 'outboundQuantity' ||
+      column.property === 'stockQuantity' ||
+      column.property === 'beginningQuantity'
+    ) {
       const values = data.map((item) => Number(item[column.property]))
       let valuesSum = 0
       if (!values.every((value) => isNaN(value))) {
@@ -267,7 +280,13 @@ function getSummaries(param) {
       }
       sums[index] = valuesSum
     }
-    if (column.property === 'totalLength' || column.property === 'inboundTotalLength' || column.property === 'outboundTotalLength' || column.property === 'stockTotalLength' || column.property === 'beginningTotalLength') {
+    if (
+      column.property === 'totalLength' ||
+      column.property === 'inboundTotalLength' ||
+      column.property === 'outboundTotalLength' ||
+      column.property === 'stockTotalLength' ||
+      column.property === 'beginningTotalLength'
+    ) {
       const values = data.map((item) => Number(item[column.property]))
       let valuesSum = 0
       if (!values.every((value) => isNaN(value))) {
@@ -295,6 +314,7 @@ async function fetchBatch() {
   try {
     const data = await getEnclosureBatch(props.detailQuery?.projectId)
     areaInfo.value = data || []
+    areaInfo.value = areaInfo.value.filter(v => v.category === props.category)
   } catch (e) {
     console.log('获取围护的批次失败', e)
   }

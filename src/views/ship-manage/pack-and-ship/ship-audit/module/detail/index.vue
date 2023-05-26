@@ -68,12 +68,12 @@
           :disabled="partList.length == 0"
           >{{ packTypeEnum.MACHINE_PART.L }}({{ partList.length }})</el-radio-button
         >
-        <!-- <el-radio-button
+        <el-radio-button
           v-if="packTypeEnum.ENCLOSURE.V & productType"
           :label="packTypeEnum.ENCLOSURE.V"
           :disabled="enclosureList.length == 0"
           >{{ packTypeEnum.ENCLOSURE.L }}({{ enclosureList.length }})</el-radio-button
-        > -->
+        >
         <el-radio-button
           v-if="packTypeEnum.AUXILIARY_MATERIAL.V & productType"
           :label="packTypeEnum.AUXILIARY_MATERIAL.V"

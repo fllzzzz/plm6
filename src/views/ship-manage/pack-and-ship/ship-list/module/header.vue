@@ -277,7 +277,7 @@ async function fetchSummary() {
 
 async function fetchMonthSummary() {
   try {
-    const data = await getSummaryMonthMete({ dateTime: new Date().getTime() })
+    const data = await getSummaryMonthMete({ dateTime: new Date().getTime(), projectId: query.projectId })
     totalAmount.value = data || {}
   } catch (e) {
     console.log('获取发运记录汇总失败', e)
