@@ -53,7 +53,7 @@
               <div style="display: flex; align-items: center">
                 <common-radio-button
                   v-model="printConfig.type"
-                  :unshowVal="productType & componentTypeEnum.ENCLOSURE.V ? [labelTypeEnum.SIMPLE.V] : []"
+                  :unshowVal="productType & componentTypeEnum.ENCLOSURE.V ? [labelTypeEnum.SIMPLE.V, labelTypeEnum.CUSTOM.V] : []"
                   :options="labelTypeEnum.ENUM"
                   type="enum"
                 />
