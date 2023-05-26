@@ -85,7 +85,7 @@
         </el-row>
       </div>
     </div>
-    <component :is="currentView" ref="domRef" @refresh-count="fetchModifyCount" />
+    <component :is="currentView" ref="domRef" @refresh-count="fetchModifyCount" :category="category" />
     <!-- 商务变更记录 -->
     <common-drawer
       append-to-body
