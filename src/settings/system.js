@@ -50,6 +50,7 @@ export const showProjectSearch = [
   { component: '/mes/changed-manage/machine-part/index', type: pt.STEEL.V, required: false },
   { component: '/mes/changed-manage/assemble/index', type: pt.STEEL.V, required: false },
   { component: '/mes/changed-manage/common-change/index', type: pt.STEEL.V, required: false },
+  { component: '/mes/changed-manage/simple-change-record/index', type: pt.STEEL.V, required: false },
   { component: '/mes/changed-manage/surplus-list/index', type: pt.STEEL.V, required: false },
   { component: '/mes/scheduling-manage/scheduling/assemble/index', type: pt.STEEL.V, required: true },
   { component: '/mes/scheduling-manage/scheduling/artifact/index', type: pt.STEEL.V, required: true },
