@@ -113,7 +113,7 @@ async function download({ filename, title, header = {}, table = [], footer = {},
   const wsData = []
 
   // worksheet name
-  const ws_name = titleCfg.title
+  const ws_name = titleCfg.title.replace(/<br\s*\/?>/g, '')
 
   // Converts an array of arrays of JS data to a worksheet
   var ws = XLSX.utils.aoa_to_sheet(wsData, wsopts)
@@ -675,7 +675,8 @@ function setTitle({ config, baseCfg, ws, sr, rn }) {
     return _sr
   }
   if (config.show && config.title) {
-    const rows = [[config.title]]
+    // 替换<br/>或者<br>为\n
+    const rows = [[config.title.replace(/<br\s*\/?>/g, '\n')]]
     _sr = sr.title = _sr || 0
     rn.title = 1
     XLSX.utils.sheet_add_aoa(ws, rows, { skipHeader: true, origin: _sr })

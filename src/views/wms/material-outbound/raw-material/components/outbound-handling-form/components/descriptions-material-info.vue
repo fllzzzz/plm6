@@ -40,11 +40,18 @@
       <span v-to-fixed="{ val: material.corQuantity, dp: material.outboundUnitPrecision }" />
       <span style="margin-left: 10px">{{ material.outboundUnit }}</span>
     </el-descriptions-item>
+    <el-descriptions-item label="库存重量" v-if="material.basicClass & STEEL_ENUM">
+      <span style="color: green;" v-to-fixed="{ val: material.operableMete, dp: material.accountingPrecision }" />
+      /
+      <span v-to-fixed="{ val: material.mete, dp: material.accountingPrecision }" />
+      <span style="margin-left: 10px">{{ material.accountingUnit }}</span>
+    </el-descriptions-item>
   </el-descriptions>
 </template>
 
 <script setup>
 import { defineProps, computed, inject } from 'vue'
+import { STEEL_ENUM } from '@/settings/config'
 
 const props = defineProps({
   material: {

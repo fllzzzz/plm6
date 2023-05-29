@@ -7,7 +7,7 @@
     :show-close="true"
     :wrapper-closable="false"
     :close-on-click-modal="false"
-    size="50%"
+    size="60%"
     custom-class="delivery-detail"
   >
     <template #titleRight>
@@ -42,6 +42,7 @@
           :max-height="maxHeight-200"
           style="width: 100%"
           class="table-form"
+          :cell-class-name="wrongCellMask"
           return-source-data
           :showEmptySymbol="false"
         >
@@ -53,7 +54,16 @@
           </el-table-column>
           <el-table-column prop="fileName" label="名称" align="center">
             <template v-slot="scope">
-              <el-input
+               <el-input
+                class="input-border-none"
+                v-model.trim="scope.row.fileName"
+                type="textarea"
+                autosize
+                :maxlength="50"
+                placeholder="名称"
+                clearable
+                style="width:100%"/>
+              <!-- <el-input
                 class="input-border-none"
                 v-model="scope.row.fileName"
                 placeholder="名称"
@@ -61,7 +71,7 @@
                 size="small"
                 maxlength="20"
                 clearable
-              />
+              /> -->
             </template>
           </el-table-column>
           <el-table-column prop="remark" label="备注" align="center">
@@ -70,7 +80,7 @@
                 class="input-border-none"
                 v-model.trim="scope.row.remark"
                 type="textarea"
-                :autosize="{ minRows: 1, maxRows: 3 }"
+                autosize
                 :maxlength="200"
                 placeholder="备注"
                 style="width:100%"/>
@@ -95,6 +105,7 @@ import { regForm } from '@compos/use-crud'
 
 import { fileClassifyEnum } from '@enum-ms/file'
 import { processUseTypeEnum, planProcessTypeEnum } from '@enum-ms/plan'
+import { validate } from '@compos/form/use-table-validate'
 
 // import UploadBtn from '@comp/file-upload/SingleFileUploadBtn'
 import useMaxHeight from '@compos/use-max-height'
@@ -138,6 +149,33 @@ const rules = {
   fileList: { required: true, message: '请上传文件', trigger: 'change' }
 }
 
+// 数量校验方式
+const validateLength = (value, row) => {
+  if (!value || value.length > 50) {
+    return false
+  }
+  return true
+}
+
+const tableRules = {
+  fileName: [{ validator: validateLength, message: '请填写文件名', trigger: ['blur', 'change'] }]
+}
+
+function wrongCellMask({ row, column }) {
+  if (!row) return
+  const rules = tableRules
+  let flag = true
+  if (row.verify && Object.keys(row.verify) && Object.keys(row.verify).length > 0) {
+    if (row.verify[column.property] === false) {
+      flag = validate(column.property, rules[column.property], row)
+    }
+    if (flag) {
+      row.verify[column.property] = true
+    }
+  }
+  return flag ? '' : 'mask-td'
+}
+
 function deleteRow(index) {
   form.fileList.splice(index, 1)
 }
@@ -145,6 +183,21 @@ function deleteRow(index) {
 CRUD.HOOK.beforeSubmit = (crud, form) => {
   if (crud.form.fileList.length <= 0) {
     ElMessage({ message: '请上传文件', type: 'error' })
+    return false
+  }
+  const rules = tableRules
+  let flag = true
+  crud.form.fileList.map(row => {
+    row.verify = {}
+    for (const rule in rules) {
+      row.verify[rule] = validate(rule, rules[rule], row)
+      if (!row.verify[rule]) {
+        flag = false
+      }
+    }
+  })
+  if (!flag) {
+    ElMessage.error('文件名称必填且长度不超过50字符')
     return false
   }
 }
