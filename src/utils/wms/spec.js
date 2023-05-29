@@ -56,7 +56,19 @@ export async function fetchSpecInfo(fullSpecMapKey, spec) {
   // 加载科目
   // await fetchSpecInfoByFullSpec(classifyId)
   const classifySpec = store.state.config.classifySpec[fullSpecMapKey]
-  return classifySpec.fullSpecMap.get(spec)
+  // fix：修复【无规格】入库后又配置规格，导致【无规格】信息获取不到的问题
+  return classifySpec.fullSpecMap.get(spec) || {
+    classify: classifySpec,
+    index: [0],
+    specificationLabels: '无规格',
+    arr: [],
+    spec: '',
+    specKV: {},
+    specNameKV: {},
+    specArrKV: [],
+    serialNumber: classifySpec.serialNumber,
+    sn: classifySpec.serialNumber
+  }
 }
 
 // 根据规格全称 获取 完整的规格信息
