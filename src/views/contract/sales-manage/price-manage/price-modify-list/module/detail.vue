@@ -32,7 +32,7 @@
       </template>
       <template v-if="props.detailInfo.type === contractSaleTypeEnum.ENCLOSURE.V">
         <el-table-column :show-overflow-tooltip="true" prop="name" label="名称" align="center" />
-        <el-table-column prop="plate" label="板型" align="center" />
+        <el-table-column v-if="list[0]?.category !== mesEnclosureTypeEnum.FOLDING_PIECE.V" prop="plate" label="板型" align="center" />
         <el-table-column align="center" prop="pricingManner" label="计价方式">
           <template #default="{ row }">
             <cell-change-preview
@@ -66,7 +66,7 @@ import { priceModifySave as save } from '@/api/contract/sales-manage/price-manag
 import { ref, defineProps, defineEmits } from 'vue'
 
 import checkPermission from '@/utils/system/check-permission'
-import { contractSaleTypeEnum } from '@enum-ms/mes'
+import { contractSaleTypeEnum, mesEnclosureTypeEnum } from '@enum-ms/mes'
 import { reviewStatusEnum } from '@enum-ms/common'
 import { pricingMannerEnum, enclosureSettlementTypeEnum } from '@enum-ms/contract'
 

@@ -11,6 +11,7 @@
         @keyup.enter="crud.toQuery"
       />
       <el-input
+        v-if="categoryValue !== mesEnclosureTypeEnum.FOLDING_PIECE.V"
         v-model="query.plateType"
         placeholder="输入板型搜索"
         class="filter-item"
@@ -64,7 +65,14 @@
         </span>
       </template>
     </crudOperation>
-    <mPreview v-model="previewVisible" :modified-data="modifiedData" v-bind="$attrs" :params="previewParams" @success="handleSuccess" />
+    <mPreview
+      v-model="previewVisible"
+      :modified-data="modifiedData"
+      v-bind="$attrs"
+      :params="previewParams"
+      @success="handleSuccess"
+      :categoryValue="categoryValue"
+    />
   </div>
 </template>
 
@@ -73,7 +81,7 @@ import { cost } from '@/api/contract/sales-manage/price-manage/enclosure'
 import { ref, watch, nextTick, inject, computed, defineExpose } from 'vue'
 
 import checkPermission from '@/utils/system/check-permission'
-import { contractSaleTypeEnum } from '@enum-ms/mes'
+import { contractSaleTypeEnum, mesEnclosureTypeEnum } from '@enum-ms/mes'
 import { enclosureSettlementTypeEnum } from '@enum-ms/contract'
 import { toThousand } from '@/utils/data-type/number'
 import { emptyTextFormatter } from '@/utils/data-type'
@@ -89,6 +97,10 @@ const enclosurePlanId = inject('enclosurePlanId')
 // 有变动的数据
 const modifiedData = computed(() => {
   return crud.data.filter((v) => v.unitPrice !== v.originUnitPrice)
+})
+
+const categoryValue = computed(() => {
+  return crud.data[0]?.category
 })
 
 // 预览参数

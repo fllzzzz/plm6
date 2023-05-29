@@ -202,6 +202,7 @@ watch(
       showType.value = undefined
       fetchSummary()
       fetchBatch()
+      fetchAuxMat()
     }
   }
 )

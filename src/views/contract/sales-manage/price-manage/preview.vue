@@ -27,7 +27,7 @@
       </template>
       <template v-if="props.params.type === contractSaleTypeEnum.ENCLOSURE.V">
         <el-table-column prop="name" label="名称" align="center" />
-        <el-table-column prop="plate" label="板型" align="center" />
+        <el-table-column v-if="props.categoryValue !== mesEnclosureTypeEnum.FOLDING_PIECE.V" prop="plate" label="板型" align="center" />
         <el-table-column prop="totalQuantity" label="数量" align="center" />
         <el-table-column align="center" prop="pricingManner" label="计价方式">
           <template #default="{ row }">
@@ -72,7 +72,7 @@ import { saveStandardPart } from '@/api/contract/sales-manage/price-manage/auxil
 import { defineEmits, defineProps, ref, useAttrs } from 'vue'
 import { ElNotification } from 'element-plus'
 
-import { contractSaleTypeEnum } from '@enum-ms/mes'
+import { contractSaleTypeEnum, mesEnclosureTypeEnum } from '@enum-ms/mes'
 import { enclosureSettlementTypeEnum, pricingMannerEnum } from '@enum-ms/contract'
 
 import useMaxHeight from '@compos/use-max-height'
@@ -92,6 +92,9 @@ const props = defineProps({
   modelValue: {
     type: Boolean,
     require: true
+  },
+  categoryValue: {
+    type: Number
   }
 })
 
