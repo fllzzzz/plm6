@@ -104,7 +104,7 @@
           }}</span> -->
           <span>{{ summaryData.trainNumber || 0 }}</span>
         </el-descriptions-item>
-        <el-descriptions-item align="center" label="操作">
+        <el-descriptions-item v-permission="permission.detail" align="center" label="操作">
           <!-- <span class="tc-primary" style="cursor: pointer" @click="openDetail('ACCUMULATED_NUMBER')">{{
             summaryData.trainNumber || 0
           }}</span> -->
@@ -258,7 +258,7 @@ async function fetchAuxMat() {
 async function fetchSummary() {
   summaryData.value = {}
   summaryLoading.value = true
-  if (!props.currentRow.projectId) {
+  if (!props.currentRow.projectId || !props.permission?.detail) {
     return
   }
   try {

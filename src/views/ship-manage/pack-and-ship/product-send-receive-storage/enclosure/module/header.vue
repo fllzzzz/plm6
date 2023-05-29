@@ -93,7 +93,7 @@
     <crudOperation>
       <template #viewLeft>
         <print-table
-          v-permission="crud.permission.print"
+          v-permission="permission.print"
           api-key="enclosureProductSendReceiveStorage"
           :params="{ ...query }"
           size="mini"
@@ -107,7 +107,7 @@
 
 <script setup>
 import { summaryData } from '@/api/ship-manage/pack-and-ship/enclosure-product-receive-send-storage'
-import { ref, watch } from 'vue'
+import { ref, watch, defineProps } from 'vue'
 import { enclosureTypeEnum, packTypeEnum } from '@enum-ms/ship-manage'
 import { workshopTypeEnum } from '@enum-ms/common'
 import { mapGetters } from '@/store/lib'
@@ -121,6 +121,12 @@ import crudOperation from '@crud/CRUD.operation'
 import Panel from '@/components/Panel'
 import moment from 'moment'
 
+const props = defineProps({
+  permission: {
+    type: Object,
+    default: () => {}
+  }
+})
 const defaultTime = moment().valueOf().toString()
 const categoryList = ref([])
 
@@ -195,6 +201,7 @@ watch(
 )
 async function fetchSummaryInfo() {
   summaryLoading.value = true
+  if (!props.permission?.get) return
   try {
     const data = await summaryData({
       ...query,

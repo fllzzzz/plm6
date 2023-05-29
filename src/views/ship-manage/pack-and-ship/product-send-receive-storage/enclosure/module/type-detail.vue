@@ -41,6 +41,7 @@
         />
         <div style="width: 300px; margin-bottom: 10px">
           <print-table
+            v-permission="permission.detailPrint"
             :api-key="
               showType === 'INBOUND'
                 ? 'enclosureInboundInventoryDetail'
@@ -91,7 +92,14 @@
         <el-table-column key="totalGrossWeight" prop="totalGrossWeight" label="总毛重（kg）" align="center" :show-overflow-tooltip="true" /> -->
         <el-table-column key="name" prop="name" label="名称" align="center" :show-overflow-tooltip="true" />
         <el-table-column key="serialNumber" prop="serialNumber" label="编号" align="center" :show-overflow-tooltip="true" />
-        <el-table-column v-if="props.category !== enclosureTypeEnum.FOLDING_PIECE.V" key="plate" prop="plate" label="板型" align="center" :show-overflow-tooltip="true" />
+        <el-table-column
+          v-if="props.category !== enclosureTypeEnum.FOLDING_PIECE.V"
+          key="plate"
+          prop="plate"
+          label="板型"
+          align="center"
+          :show-overflow-tooltip="true"
+        />
         <el-table-column key="length" prop="length" label="单长（mm）" align="center" :show-overflow-tooltip="true" />
         <el-table-column
           key="quantity"
@@ -233,9 +241,7 @@ const { maxHeight } = useMaxHeight(
   drawerRef
 )
 
-const dataFormat = ref([
-  ['createTime', 'parse-time']
-])
+const dataFormat = ref([['createTime', 'parse-time']])
 
 // 合计
 function getSummaries(param) {
