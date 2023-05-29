@@ -33,7 +33,7 @@
       </el-table-column>
       <el-table-column key="remark" prop="remark" label="备注" align="center">
          <template v-slot="scope">
-          <div>{{ scope.row.date || '-' }}</div>
+          <div>{{ scope.row.remark || '-' }}</div>
         </template>
       </el-table-column>
       <!--编辑与删除-->

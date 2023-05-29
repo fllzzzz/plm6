@@ -41,8 +41,19 @@
       <div style="color:red;font-size:13px;margin-bottom:10px;" v-if="detailInfo.boolProblemReceiving && detailInfo.problemDesc">*{{detailInfo.problemDesc}}</div>
       <common-table :data="list" v-loading="tableLoading" show-summary :summary-method="getSummaries" :max-height="maxHeight">
         <el-table-column label="序号" type="index" align="center" width="60" />
-        <el-table-column key="monomer.name" prop="monomer.name" label="单体" align="center" />
-        <el-table-column key="area.name" prop="area.name" label="区域" align="center" />
+        <el-table-column key="monomerName" prop="monomerName" label="单体" align="center" />
+        <el-table-column key="areaName" prop="areaName" label="区域" align="center">
+          <template v-slot="scope">
+            <span v-if="scope.row.sourceRow.productType!==installProjectTypeEnum.ENCLOSURE.V">{{scope.row.areaName}}</span>
+            <span v-else>-</span>
+          </template>
+        </el-table-column>
+        <el-table-column key="areaName1" prop="areaName" label="批次" align="center">
+          <template v-slot="scope">
+            <span v-if="scope.row.sourceRow.productType===installProjectTypeEnum.ENCLOSURE.V">{{scope.row.areaName}}</span>
+            <span v-else>-</span>
+          </template>
+        </el-table-column>
         <el-table-column key="productType" prop="productType" label="类型" align="center">
           <template v-slot="scope">
             <el-tag>{{installProjectTypeEnum.V[scope.row.productType].SL}}</el-tag>
@@ -135,6 +146,10 @@ async function fetchList() {
   tableLoading.value = true
   try {
     const { content = [] } = await deliveryProductList(props.detailInfo?.id)
+    content.map(v => {
+      v.monomerName = v.monomer?.name
+      v.areaName = v.area?.name
+    })
     _list = content
   } catch (error) {
     console.log('收货明细', error)
