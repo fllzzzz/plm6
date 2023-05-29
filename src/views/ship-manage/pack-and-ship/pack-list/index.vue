@@ -238,6 +238,8 @@ const { crud, columns, CRUD } = useCRUD(
   tableRef
 )
 
+provide('permission', permission)
+
 const { maxHeight } = useMaxHeight({ paginate: true })
 
 const recordVisible = ref(false)
