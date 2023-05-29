@@ -2,7 +2,7 @@
   <span class="table-cell-tag-container" :style="{ 'margin-left': `${props.offset}px` }">
     <span v-if="show" class="table-cell-tag" :style="tagStyle">
       <el-tooltip :disabled="unshowTooltip" :open-delay="300" effect="light" :content="props.name" :placement="props.placement">
-        <span>{{ props.name.substr(0, 4) }}</span>
+        <span>{{ props.name?.substr(0, 4) }}</span>
       </el-tooltip>
     </span>
   </span>
@@ -67,7 +67,7 @@ const typeBgColor = {
 }
 
 const unshowTooltip = computed(() => {
-  return props.name.length <= 4
+  return props.name?.length <= 4
 })
 
 const tagStyle = computed(() => {

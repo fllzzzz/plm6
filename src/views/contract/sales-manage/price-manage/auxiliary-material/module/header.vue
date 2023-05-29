@@ -141,7 +141,7 @@ CRUD.HOOK.handleRefresh = (crud, { data }) => {
     v.newUnitPrice = v.unitPrice // number类型的单价（unitPrice可能会有千位符）
     v.originNewUnitPrice = v.newUnitPrice
     v.originUnitPrice = emptyTextFormatter(toThousand(v.unitPrice))
-    v.totalPrice = v.quantity * (v.unitPrice || 0)
+    v.totalPrice = v.quantity * (v.newUnitPrice || 0)
   })
   // fetchCost()
 }
@@ -174,11 +174,7 @@ function handelModifying(status, reset = false) {
     crud.data.forEach((v) => {
       v.unitPrice = v.originUnitPrice
       v.newUnitPrice = v.originNewUnitPrice
-      if (typeof v.newUnitPrice === 'string') {
-        v.totalPrice = 0
-      } else {
-        v.totalPrice = v.mete * (v.newUnitPrice || 0)
-      }
+      v.totalPrice = v.quantity * (v.newUnitPrice || 0)
     })
   }
   modifying.value = status

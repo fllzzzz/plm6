@@ -36,7 +36,7 @@
         <el-table-column key="planName" prop="planName" label="批次" show-overflow-tooltip align="center" />
         <el-table-column key="name" prop="name" show-overflow-tooltip label="名称" align="center" />
         <el-table-column key="serialNumber" prop="serialNumber" show-overflow-tooltip label="编号" align="center" />
-        <el-table-column key="plate" prop="plate" show-overflow-tooltip label="板型" align="center" />
+        <el-table-column v-if="detail.rowDetail?.category !== mesEnclosureTypeEnum.FOLDING_PIECE.V" key="plate" prop="plate" show-overflow-tooltip label="板型" align="center" />
         <el-table-column key="brand" prop="brand" show-overflow-tooltip label="品牌" align="center" />
         <el-table-column key="color" prop="color" show-overflow-tooltip label="颜色" align="center" />
         <el-table-column key="length" prop="length" show-overflow-tooltip label="单长(mm)" align="center" />
@@ -53,6 +53,8 @@ import { report } from '@/api/enclosure/production-manage/scheduling-work-order'
 import { computed, defineProps, ref } from 'vue'
 
 import { tableSummary } from '@/utils/el-extra'
+import { DP } from '@/settings/config'
+import { mesEnclosureTypeEnum } from '@enum-ms/mes'
 
 import { regDetail } from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
@@ -65,7 +67,10 @@ const props = defineProps({
 })
 
 const drawerRef = ref()
-const dataFormat = ref([['askCompleteTime', ['parse-time', '{y}-{m}-{d}']]])
+const dataFormat = ref([
+  ['askCompleteTime', ['parse-time', '{y}-{m}-{d}']],
+  ['totalLength', ['to-fixed', DP.MES_ENCLOSURE_L__M]]
+])
 
 const { CRUD, crud, detail } = regDetail()
 
@@ -98,7 +103,7 @@ async function printSuccess() {
 // 合计
 function getSummaries(param) {
   return tableSummary(param, {
-    props: [['totalLength', 2]]
+    props: [['totalLength', DP.MES_ENCLOSURE_L__M]]
   })
 }
 

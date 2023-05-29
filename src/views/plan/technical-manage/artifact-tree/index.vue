@@ -70,7 +70,7 @@
           <template #header>
             <el-tooltip class="item" effect="light" :content="`双击编号可预览图纸`" placement="top">
               <div style="display: inline-block">
-                <span style="margin-left:10px;">编号</span>
+                <span style="margin-left: 10px">编号</span>
                 <i class="el-icon-info" />
               </div>
             </el-tooltip>
@@ -78,8 +78,8 @@
           <template v-slot="scope">
             <table-cell-tag :show="scope.row.dataType !== 2 && scope.row.boolSendDirectly" name="直发件" />
             <!-- relationType=8 显示配套件标记 -->
-            <table-cell-tag :show="scope.row.dataType !== 2 && scope.row.relationType===8" name="配套件" />
-            <span style="cursor: pointer;margin-left:10px;" @dblclick="drawingPreview(scope.row)">{{ scope.row.serialNumber }}</span>
+            <table-cell-tag :show="scope.row.dataType !== 2 && scope.row.relationType === 8" name="配套件" />
+            <span style="cursor: pointer; margin-left: 10px" @dblclick="drawingPreview(scope.row)">{{ scope.row.serialNumber }}</span>
           </template>
         </el-table-column>
         <el-table-column
@@ -132,7 +132,7 @@
           align="left"
           min-width="80px"
         >
-         <template v-slot="scope">
+          <template v-slot="scope">
             {{ scope.row.quantity ? scope.row.quantity : '-' }}
           </template>
         </el-table-column>
@@ -224,7 +224,7 @@
           label="备注"
           min-width="100"
         >
-         <template v-slot="scope">
+          <template v-slot="scope">
             {{ scope.row.remark ? scope.row.remark : '-' }}
           </template>
         </el-table-column>
@@ -259,7 +259,7 @@
         </el-table-column>
         <!--编辑与删除-->
         <el-table-column
-          v-if="checkPermission([...permission.editNum,...permission.productionStatus])"
+          v-if="checkPermission([...permission.editNum, ...permission.productionStatus])"
           label="操作"
           width="160px"
           align="center"
@@ -268,7 +268,13 @@
           <template v-slot="scope">
             <template v-if="scope.row.dataType === 2">
               <common-button size="mini" @click="handleNum(scope.row)" icon="el-icon-edit" v-permission="permission.editNum" />
-              <common-button size="mini" @click="viewState(scope.row)" v-permission="permission.productionStatus"><svg-icon icon-class="document"/></common-button>
+              <common-button
+size="mini"
+@click="viewState(scope.row)"
+v-permission="permission.productionStatus"
+                ><svg-icon
+icon-class="document"
+              /></common-button>
             </template>
           </template>
         </el-table-column>
@@ -299,7 +305,7 @@
       />
     </template>
     <template v-else>
-      <span style="color:red;font-size:13px;">当前项目内容没有包含构件,请到合同管理中进行配置</span>
+      <span style="color: red; font-size: 13px">当前项目内容没有包含构件,请到合同管理中进行配置</span>
     </template>
   </div>
 </template>
@@ -335,15 +341,12 @@ const showBimDialog = ref(false)
 const showDrawingDialog = ref(false)
 const pageShow = ref(true)
 
-watch(
-  [() => showBimDialog.value, () => showDrawingDialog.value],
-  ([b, d]) => {
-    if (!b && !d) {
-      showDrawing.value = false
-    }
-    console.log(b, d, showDrawing.value, 'show')
+watch([() => showBimDialog.value, () => showDrawingDialog.value], ([b, d]) => {
+  if (!b && !d) {
+    showDrawing.value = false
   }
-)
+  console.log(b, d, showDrawing.value, 'show')
+})
 
 watch(
   () => showDrawing.value,
@@ -363,7 +366,7 @@ watch(
   () => globalProject.value,
   (val) => {
     if (globalProject.value.projectContentList?.length > 0) {
-      pageShow.value = globalProject.value.projectContentList.findIndex(v => v.no === TechnologyTypeAllEnum.STRUCTURE.V) > -1
+      pageShow.value = globalProject.value.projectContentList.findIndex((v) => v.no === TechnologyTypeAllEnum.STRUCTURE.V) > -1
     } else {
       pageShow.value = false
     }

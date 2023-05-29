@@ -6,6 +6,7 @@ import { getFactoriesAllSimple } from '@/api/mes/common'
 import { getUserTree, getRegionalCascade } from '@/api/common'
 import { getWorkshopsAllSimple } from '@/api/mes/common'
 import { getAllFactoryWorkshopLines } from '@/api/mes/common'
+import { get as getEnclosureProductLine } from '@/api/config/enclosure/production-config/production-line'
 import { getLinesAllSimple } from '@/api/mes/common'
 import { getProductionTeamAllSimple } from '@/api/mes/common'
 import { getInspectionTeamAllSimple } from '@/api/mes/common'
@@ -74,6 +75,7 @@ const state = {
   inspectionTeam: [], // 质检班组
   inspectionTeamKV: {}, // 生产班组id:value 格式
   onlyProductLines: [], // 生产线
+  enclosureProductLines: [], // 围护生产线
   cutConfigs: [], // 切割配置（所有）
   cutConfigKV: {}, // 切割配置 id:value 格式
   process: [], // 工序
@@ -104,6 +106,7 @@ const state = {
     productionTeam: false,
     inspectionTeam: false,
     productLines: false,
+    enclosureProductLines: false,
     onlyProductLines: false,
     cutConfigs: false,
     process: false,
@@ -197,6 +200,9 @@ const mutations = {
   },
   SET_PRODUCT_LINES(state, productLines) {
     state.productLines = productLines
+  },
+  SET_ENCLOSURE_PRODUCT_LINES(state, enclosureProductLines) {
+    state.enclosureProductLines = enclosureProductLines
   },
   SET_ONLY_PRODUCT_LINES(state, onlyProductLines) {
     state.onlyProductLines = onlyProductLines
@@ -421,6 +427,13 @@ const actions = {
     const { content = [] } = await getAllFactoryWorkshopLines()
     commit('SET_PRODUCT_LINES', content)
     commit('SET_LOADED', { key: 'productLines', loaded: true })
+    return content
+  },
+  // 生产线
+  async fetchEnclosureProductLines({ commit }) {
+    const { content = [] } = await getEnclosureProductLine()
+    commit('SET_ENCLOSURE_PRODUCT_LINES', content)
+    commit('SET_LOADED', { key: 'enclosureProductLines', loaded: true })
     return content
   },
   // 生产线

@@ -38,7 +38,7 @@
       <el-input
         v-model.trim="query.plateType"
         size="small"
-        placeholder="输入版型"
+        placeholder="输入板型"
         style="width: 200px;"
         class="filter-item"
         clearable

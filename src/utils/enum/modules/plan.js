@@ -155,6 +155,14 @@ const isArtifactBindTypeEnum = {
 }
 constantize(isArtifactBindTypeEnum)
 
+// 变更原因类型
+const changeReasonTypeEnum = {
+  CUSTOM_REASON: { L: '甲方原因', K: 'CUSTOM_REASON', V: 1 << 0 },
+  DESIGN_CHANGE: { L: '设计变更', K: 'DESIGN_CHANGE', V: 1 << 1 },
+  SELF_REASON: { L: '自身原因', K: 'SELF_REASON', V: 1 << 2 }
+}
+constantize(changeReasonTypeEnum)
+
 // 构件绑定状态
 const artifactBindTypeEnum = {
   NO: { L: '未绑定', K: 'NO', V: 1 << 0 },
@@ -183,6 +191,7 @@ export {
   planProcessTypeEnum,
   processUseTypeEnum,
   isArtifactBindTypeEnum,
+  changeReasonTypeEnum,
   artifactBindTypeEnum
 }
 
@@ -206,5 +215,6 @@ export default {
   planProcessTypeEnum,
   processUseTypeEnum,
   isArtifactBindTypeEnum,
+  changeReasonTypeEnum,
   artifactBindTypeEnum
 }

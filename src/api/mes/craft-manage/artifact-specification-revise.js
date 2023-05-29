@@ -27,4 +27,14 @@ export function specConfig(params) {
     params
   })
 }
+
+// 获取规格列表
+export function getSpecList(params) {
+  return request({
+    module: '',
+    url: '/api/plan/artifact/list-spec',
+    method: 'get',
+    params
+  })
+}
 export default { get, edit }

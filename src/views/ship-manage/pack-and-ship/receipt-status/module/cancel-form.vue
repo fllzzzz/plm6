@@ -102,7 +102,7 @@
 </template>
 
 <script setup>
-import { deliveryCancel } from '@/api/mes/pack-and-ship/receipt-status'
+import { deliveryCancel } from '@/api/ship-manage/pack-and-ship/receipt-status'
 import { ref, defineProps, watch, defineEmits, nextTick } from 'vue'
 
 import { logisticsPriceTypeEnum, freightChangeTypeEnum } from '@enum-ms/mes'

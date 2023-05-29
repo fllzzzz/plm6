@@ -129,6 +129,13 @@ async function handleRequest(file) {
       } else {
         await downloadFileByResponse(res)
       }
+    } else if (res.headers['content-type'] === 'application/json') {
+      const reader = new FileReader() // 创建读取文件对象
+      reader.addEventListener('loadend', function () { //
+        const res = JSON.parse(reader.result) // 返回的数据
+        emit('success', res)
+      })
+      reader.readAsText(res.data, 'utf-8') // 设置读取的数据以及返回的数据类型为utf-8
     } else {
       ElMessage.error(`上传失败`)
     }

@@ -194,7 +194,7 @@
 </template>
 
 <script setup>
-import crudApi from '@/api/mes/pack-and-ship/logistics-list'
+import crudApi from '@/api/ship-manage/pack-and-ship/logistics-list'
 import { ref } from 'vue'
 
 import { logisticsPM as permission } from '@/page-permission/ship-manage'

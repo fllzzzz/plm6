@@ -1,9 +1,16 @@
 // --------------------------- 发运管理 start --------------------------------
 
-// 发运管理/发运管理列表
+// 发运管理/建钢-发运统计
 export const mesShipSummaryPM = {
   get: ['mes_ship_summary:get'], // 列表
+  detail: ['mes_ship_summary:detail'], // 详情
   print: ['mes_ship_summary:print'] // 发运详情打印
+}
+// 发运管理/围护-发运统计
+export const enclosureShipSummaryPM = {
+  get: ['enclosure_ship_summary:get'], // 列表
+  detail: ['enclosure_ship_summary:detail'], // 详情
+  print: ['enclosure_ship_summary:print'] // 发运详情打印
 }
 
 // 发运管理/手工打包:手工打包
@@ -69,11 +76,18 @@ export const shipAuditPM = {
   audit: ['mes_ship_audit:audit'] // 发运审核
 }
 
-// 发运管理/制成品入发存
+// 发运管理/结构制成品入发存
 export const mesProductSendReceiveStoragePM = {
   get: ['mes_product-send-receive-storage:get'], // 列表
   print: ['mes_product-send-receive-storage:print'], // 制成品入发存打印
   detail: ['mes_product-send-receive-storage:detail'], // 制成品入发存详情
   detailPrint: ['mes_product-send-receive-storage:detailPrint'] // 制成品入发存详情打印
+}
+// 发运管理/围护制成品入发存
+export const enclosureProductSendReceiveStoragePM = {
+  get: ['enclosure_product-send-receive-storage:get'], // 列表
+  print: ['enclosure_product-send-receive-storage:print'], // 制成品入发存打印
+  detail: ['enclosure_product-send-receive-storage:detail'], // 制成品入发存详情
+  detailPrint: ['enclosure_product-send-receive-storage:detailPrint'] // 制成品入发存详情打印
 }
 // --------------------------- 发运管理 end --------------------------------

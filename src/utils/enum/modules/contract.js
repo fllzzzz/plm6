@@ -142,8 +142,8 @@ constantize(contractChangeTypeEnum)
 
 // 围护结算类型
 const enclosureSettlementTypeEnum = {
-  LENGTH: { L: '按长度计价', SL: '长度', K: 'LENGTH', V: 1 },
-  AREA: { L: '按面积计价', SL: '面积', K: 'AREA', V: 2 }
+  LENGTH: { L: '按长度计价', SL: '长度', K: 'LENGTH', V: 1, UNIT: '米' },
+  AREA: { L: '按面积计价', SL: '面积', K: 'AREA', V: 2, UNIT: '平方米' }
 }
 constantize(enclosureSettlementTypeEnum)
 
@@ -282,8 +282,8 @@ constantize(logisticsSearchTypeEnum)
 
 // 价格管理构件计价方式
 const pricingMannerEnum = {
-  WEIGHT: { L: '重量', K: 'WEIGHT', V: 0 },
-  LENGTH: { L: '长度', K: 'LENGTH', V: 1 }
+  WEIGHT: { L: '重量', K: 'WEIGHT', V: 0, UNIT: '吨' },
+  LENGTH: { L: '长度', K: 'LENGTH', V: 1, UNIT: '米' }
 }
 constantize(pricingMannerEnum)
 // 分包订单项目结算状态

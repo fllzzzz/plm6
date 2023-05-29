@@ -11,8 +11,7 @@ export function getArtifact(params) {
 
 export function getEnclosure(params) {
   return request({
-    module: 'mes',
-    url: 'package/enclosure/use',
+    url: '/api/mes/building/package/enclosure/use',
     method: 'get',
     params
   })
@@ -62,3 +61,4 @@ export function additionalPack({ id, remark, packageLinks }) {
     data: { id, remark, packageLinks }
   })
 }
+

@@ -45,7 +45,7 @@
       />
       <rrOperation />
     </div>
-    <crudOperation>
+    <crudOperation delText="删除【未排产构件】">
       <template #optLeft>
         <!-- <upload-btn
           v-if="currentArea && currentArea.id && checkPermission(crud.permission.import)"
@@ -67,8 +67,22 @@
           class="filter-item"
           @success="uploadSuccess"
         /> -->
-        <common-button type="primary" class="filter-item" size="mini" v-if="currentArea && currentArea.id && checkPermission(crud.permission.import)" @click="openUpload(1)">清单增量导入</common-button>
-        <common-button type="success" class="filter-item" size="mini" v-if="currentArea && currentArea.id && checkPermission(crud.permission.import)" @click="openUpload(2)">清单覆盖导入</common-button>
+        <common-button
+          type="primary"
+          class="filter-item"
+          size="mini"
+          v-if="currentArea && currentArea.id && checkPermission(crud.permission.import)"
+          @click="openUpload(1)"
+          >清单增量导入</common-button
+        >
+        <common-button
+          type="success"
+          class="filter-item"
+          size="mini"
+          v-if="currentArea && currentArea.id && checkPermission(crud.permission.import)"
+          @click="openUpload(2)"
+          >清单覆盖导入</common-button
+        >
         <export-button
           v-if="currentArea && currentArea.id && checkPermission(crud.permission.download)"
           :fn="downloadArtifactTree"
@@ -81,6 +95,20 @@
         <export-button :fn="downloadArtifactTreeTemplate" class="filter-item" v-permission="crud.permission.templateDownload">
           零构件清单模板
         </export-button>
+        <!-- <upload-btn
+          v-if="checkPermission(crud.permission.changeImport)"
+          :data="{ monomerId: crud.query.monomerId }"
+          :upload-fun="changeListUpload"
+          btn-name="变更清单导入"
+          btn-type="primary"
+          btn-size="mini"
+          class="filter-item"
+          @success="changeListUploadSuccess"
+        />
+        <export-button :fn="changeListTemplate" class="filter-item" v-permission="crud.permission.changeTemplateDownLoad">
+          下载变更模板清单
+        </export-button>
+        <common-button type="danger" size="mini" class="filter-item" @click="changeListTest">变更清单test</common-button> -->
         <el-popconfirm
           :title="`确认清空【${currentArea.name}】下的【零构件清单】么?`"
           @confirm="deleteArtifact"
@@ -130,7 +158,7 @@
         }
       "
       :visible="uploadVisible"
-      :title="importType===1 ? '清单增量导入' : '清单覆盖导入'"
+      :title="importType === 1 ? '清单增量导入' : '清单覆盖导入'"
       width="400px"
     >
       <div class="parent-div">
@@ -141,42 +169,51 @@
           type="enum"
           size="small"
           placeholder="项目模式"
-          style="flex:1;"
+          style="flex: 1"
           :disabled="!changAble"
           @change="projectModeChange"
         />
-     </div>
+      </div>
       <div class="parent-div">
-        <span class="parent-span"><span style="color:red;">*</span><span class="title-span">清单模式:</span></span>
+        <span class="parent-span"><span style="color: red">*</span><span class="title-span">清单模式:</span></span>
         <common-select
           v-model="JDImportType"
           :options="importTypeEnum.ENUM"
           type="enum"
           size="small"
           placeholder="清单模式"
-           style="flex:1;"
+          style="flex: 1"
         />
-     </div>
+      </div>
       <div class="parent-div">
         <span class="parent-span title-span">上传清单:</span>
         <upload-btn
           :data="{ areaId: crud.query.areaId, importType: importType, JDImportType: JDImportType }"
           :upload-fun="listUpload"
-          :btn-name="importType===1 ? '增量导入' : '覆盖导入'"
-          :btn-type="importType===1 ? 'primary' : 'success'"
+          :btn-name="importType === 1 ? '增量导入' : '覆盖导入'"
+          :btn-type="importType === 1 ? 'primary' : 'success'"
           btn-size="mini"
-          style="float:left;"
+          style="float: left"
           :disabled="!JDImportType"
           @success="uploadSuccess"
         />
-     </div>
+      </div>
     </common-dialog>
+    <!-- <change-drawer
+      v-model:visible="changeVisible"
+      :origin-changeInfo="originChangeInfo"
+      :monomerId="crud.query.monomerId"
+      :projectId="crud.query.projectId"
+    /> -->
   </div>
 </template>
 
 <script setup>
 import { defineProps, ref, computed, watch, defineEmits } from 'vue'
 import { listUpload, changAbleProjectMode, changeProjectMode } from '@/api/plan/technical-manage/artifact-tree'
+// import {
+//   changeListUpload
+// } from '@/api/plan/technical-manage/artifact-tree'
 
 import { projectModeEnum } from '@enum-ms/contract'
 import { regHeader } from '@compos/use-crud'
@@ -185,6 +222,7 @@ import { importTypeEnum } from '@enum-ms/plan'
 import {
   downloadArtifactTree,
   downloadArtifactTreeTemplate,
+  // changeListTemplate,
   errorArtifact,
   delArtifactTreeByArea
 } from '@/api/plan/technical-manage/artifact-tree'
@@ -200,6 +238,8 @@ import areaTabs from '@/components-system/plan/area-tabs'
 import uploadBtn from '@comp/file-upload/ExcelUploadBtn'
 import ExportButton from '@comp-common/export-button/index.vue'
 import structureTable from '@/views/contract/project-manage/module/enclosure-table/structure-table'
+// import changeDrawer from '../change/change-drawer.vue'
+// import { changeRes } from '@/components-system/plan/change/mock'
 
 const defaultQuery = {
   artifactName: '',
@@ -322,7 +362,7 @@ async function checkProjectModeChangAble() {
     return
   }
   try {
-    changAble.value = await changAbleProjectMode(props.projectId) || undefined
+    changAble.value = (await changAbleProjectMode(props.projectId)) || undefined
   } catch (e) {
     console.log('获取异常构件', e)
   }
@@ -387,20 +427,37 @@ async function openUpload(type) {
   uploadVisible.value = true
   JDImportType.value = undefined
 }
+// --------------------------- 变更清单导入 start ------------------------------
+// const changeVisible = ref(false)
+// const originChangeInfo = ref({})
+
+// function changeListUploadSuccess(res) {
+//   if (typeof res === 'object') {
+//     originChangeInfo.value = res.data?.content || []
+//     changeVisible.value = true
+//   }
+// }
+
+// function changeListTest() {
+//   console.log(changeRes)
+//   originChangeInfo.value = changeRes.data.content || []
+//   changeVisible.value = true
+// }
+// --------------------------- 变更清单导入 end --------------------------------
 </script>
 <style lang="scss" scoped>
-.parent-div{
-  display:flex;
-  margin-bottom:20px;
-  height:28px;
+.parent-div {
+  display: flex;
+  margin-bottom: 20px;
+  height: 28px;
 }
-.parent-span{
+.parent-span {
   // float:left;
-  margin-right:8px;
-  width:80px;
-  text-align:right;
+  margin-right: 8px;
+  width: 80px;
+  text-align: right;
 }
-.title-span{
-  line-height:28px;
+.title-span {
+  line-height: 28px;
 }
 </style>

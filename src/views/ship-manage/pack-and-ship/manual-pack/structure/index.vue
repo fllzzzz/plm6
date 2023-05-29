@@ -67,7 +67,6 @@
           <span>{{ row.specification }}</span>
         </template>
       </el-table-column>
-/ -->
       <el-table-column
         v-if="columns.visible('material')"
         prop="material"
@@ -180,7 +179,7 @@
 </template>
 
 <script setup>
-import { getArtifact as get } from '@/api/mes/pack-and-ship/manual-pack'
+import { getArtifact as get } from '@/api/ship-manage/pack-and-ship/manual-pack'
 import { computed, ref, watch, defineEmits, defineProps, defineExpose, inject } from 'vue'
 
 import { DP } from '@/settings/config'

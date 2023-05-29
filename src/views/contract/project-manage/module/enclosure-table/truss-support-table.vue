@@ -7,7 +7,7 @@
     border
   >
     <el-table-column :label="'序号'" type="index" align="center" width="60" />
-    <el-table-column prop="serialNumber" :show-overflow-tooltip="true" align="center" label="版型">
+    <el-table-column prop="serialNumber" :show-overflow-tooltip="true" align="center" label="板型">
       <template v-slot="scope">
         <span>{{ scope.row.serialNumber }}</span>
       </template>

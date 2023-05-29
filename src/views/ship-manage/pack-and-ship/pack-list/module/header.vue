@@ -28,7 +28,7 @@
       end-placeholder="结束日期"
       size="small"
       class="filter-item"
-      style="width: 400px"
+      style="width: 370px"
       clearable
       :shortcuts="PICKER_OPTIONS_SHORTCUTS"
       @change="handleDateChange"
@@ -98,7 +98,7 @@
       }}</el-tag>
       <print-table
         v-permission="permission.printPackList"
-        api-key="mesPackingList"
+        :api-key="crud.query.productType !== packTypeEnum.ENCLOSURE.V ? 'mesPackingList' : 'enclosurePackingList'"
         :params="printParams"
         :before-print="handleBeforePrint"
         size="mini"
@@ -121,7 +121,7 @@
 </template>
 
 <script setup>
-import { detail } from '@/api/mes/pack-and-ship/pack-list'
+import { detail } from '@/api/ship-manage/pack-and-ship/pack-list'
 import { packageRecordAdd } from '@/api/mes/label-print/print-record'
 import { inject, reactive, defineExpose, computed, defineEmits } from 'vue'
 import { mapGetters } from '@/store/lib'
@@ -191,12 +191,14 @@ const detailStore = inject('detailStore')
 const dataField = {
   [packTypeEnum.STRUCTURE.V]: 'artifactList',
   [packTypeEnum.MACHINE_PART.V]: 'partList',
-  // [packTypeEnum.ENCLOSURE.V]: 'enclosureList',
-  [packTypeEnum.AUXILIARY_MATERIAL.V]: 'materialList'
+  [packTypeEnum.ENCLOSURE.V]: 'enclosureList',
+  [packTypeEnum.AUXILIARY_MATERIAL.V]: 'auxiliaryMaterialList'
 }
 
 async function getLabelInfo(row) {
   const _list = []
+  const _auxList = []
+  const _structureList = []
   let _data = {}
   try {
     if (detailStore[row.id]) {
@@ -205,22 +207,77 @@ async function getLabelInfo(row) {
       _data = await detail(row.id)
       emit('getDetail', row.id, _data)
     }
+    const auxList = _data[dataField[packTypeEnum.AUXILIARY_MATERIAL.V]]
+    const structureList = _data[dataField[packTypeEnum.STRUCTURE.V]]
     // 多类型打包处理
-    for (const item in dataField) {
-      const _itemList = _data[dataField[item]]
-      if (_itemList?.length) {
-        for (let i = 0; i < _itemList.length; i++) {
-          const v = _itemList[i]
-          const { serialNumber, material, packageQuantity, grossWeight, plate, length } = v
-          _list.push({
-            serialNumber,
-            material,
-            quantity: packageQuantity,
-            totalWeight: (packageQuantity * grossWeight).toFixed(DP.COM_WT__KG),
-            // totalNetWeight: totalNetWeight ? totalNetWeight.toFixed(DP.COM_WT__KG) : 0,
-            plate,
-            length: length ? length.toFixed(DP.MES_ENCLOSURE_L__MM) : 0
-          })
+
+    if (auxList?.length > 0 && structureList?.length > 0) {
+      for (let m = 0; m < auxList.length; m++) {
+        const a = auxList[m]
+        const { name, specification, measureUnit, serialNumber, material, packageQuantity, grossWeight, plate, length } = a
+        _auxList.push({
+          serialNumber,
+          name,
+          specification,
+          measureUnit,
+          material,
+          quantity: packageQuantity,
+          totalWeight: (packageQuantity * grossWeight).toFixed(DP.COM_WT__KG),
+          // totalNetWeight: totalNetWeight ? totalNetWeight.toFixed(DP.COM_WT__KG) : 0,
+          plate,
+          length: length ? length.toFixed(DP.MES_ENCLOSURE_L__MM) : 0
+        })
+      }
+      for (let p = 0; p < structureList.length; p++) {
+        const s = structureList[p]
+        const { name, specification, measureUnit, serialNumber, material, packageQuantity, grossWeight, plate, length } = s
+        _structureList.push({
+          serialNumber,
+          name,
+          specification,
+          measureUnit,
+          material,
+          quantity: packageQuantity,
+          totalWeight: (packageQuantity * grossWeight).toFixed(DP.COM_WT__KG),
+          // totalNetWeight: totalNetWeight ? totalNetWeight.toFixed(DP.COM_WT__KG) : 0,
+          plate,
+          length: length ? length.toFixed(DP.MES_ENCLOSURE_L__MM) : 0
+        })
+      }
+    } else {
+      for (const item in dataField) {
+        const _itemList = _data[dataField[item]]
+        if (_itemList?.length) {
+          for (let i = 0; i < _itemList.length; i++) {
+            const v = _itemList[i]
+            const {
+              name,
+              specification,
+              measureUnit,
+              serialNumber,
+              material,
+              packageQuantity,
+              grossWeight,
+              plate,
+              length,
+              productType,
+              surfaceArea
+            } = v
+            _list.push({
+              serialNumber,
+              name,
+              specification,
+              measureUnit,
+              material,
+              quantity: packageQuantity,
+              totalWeight: (packageQuantity * grossWeight).toFixed(DP.COM_WT__KG),
+              // totalNetWeight: totalNetWeight ? totalNetWeight.toFixed(DP.COM_WT__KG) : 0,
+              plate,
+              surfaceArea,
+              productType,
+              length: length ? length.toFixed(DP.MES_ENCLOSURE_L__MM) : 0
+            })
+          }
         }
       }
     }
@@ -245,6 +302,8 @@ async function getLabelInfo(row) {
   const packageInfo = {
     serialNumber: row.serialNumber,
     list: _list,
+    structureList: _structureList,
+    auxList: _auxList,
     productType: row.productType,
     project: row.project,
     companyName: printConfig.manufacturerName

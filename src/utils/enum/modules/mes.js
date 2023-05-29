@@ -161,7 +161,7 @@ constantize(machinePartNestingStatusEnum)
 // 合同管理-商务录入查询类型
 const contractSaleTypeEnum = {
   STRUCTURE: { L: '结构', SL: '结构制品', K: 'STRUCTURE', V: componentTypeEnum.ARTIFACT.V, T: '' },
-  // ENCLOSURE: { L: '围护', SL: '围护', K: 'ENCLOSURE', V: componentTypeEnum.ENCLOSURE.V, T: 'warning' },
+  ENCLOSURE: { L: '围护', SL: '围护', K: 'ENCLOSURE', V: componentTypeEnum.ENCLOSURE.V, T: 'warning' },
   MACHINE_PART: { L: '直发件', SL: '散发制品', K: 'MACHINE_PART', V: componentTypeEnum.MACHINE_PART.V, T: 'danger' },
   AUXILIARY_MATERIAL: { L: '辅材', SL: '配套制品', K: 'AUXILIARY_MATERIAL', V: componentTypeEnum.AUXILIARY_MATERIAL.V, T: 'success' }
 }
@@ -225,6 +225,14 @@ const abnormalHandleStatusEnum = {
   CANCEL: { L: '已取消', K: 'CANCEL', V: 1 << 3, TAG: 'info' }
 }
 constantize(abnormalHandleStatusEnum)
+
+// 变更异常处理状态
+const changeHandleStatusEnum = {
+  PENDING: { L: '待处理', K: 'PENDING', V: 1 << 0, TAG: '' },
+  PASS: { L: '通过', K: 'PASS', V: 1 << 1, TAG: 'success' },
+  REJECT: { L: '驳回', K: 'REJECT', V: 1 << 2, TAG: 'danger' }
+}
+constantize(changeHandleStatusEnum)
 
 // 多余清单处理状态
 const surplusHandleStatusEnum = {
@@ -641,6 +649,7 @@ export {
   shipAuditStatusEnum,
   abnormalHandleTypeEnum,
   abnormalHandleStatusEnum,
+  changeHandleStatusEnum,
   abnormalReportTypeEnum,
   abnormalChangeTypeEnum,
   abnormalStatusEnum,
@@ -720,6 +729,7 @@ export default {
   shipAuditStatusEnum,
   abnormalHandleTypeEnum,
   abnormalHandleStatusEnum,
+  changeHandleStatusEnum,
   abnormalReportTypeEnum,
   abnormalChangeTypeEnum,
   abnormalStatusEnum,

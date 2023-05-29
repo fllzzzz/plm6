@@ -1,9 +1,9 @@
 <template>
-  <div v-show="!props.showType && props.type === mesShipStatisticsTypeEnum.STRUCTURE.V" class="my-code" style="margin-top: 20px">
+  <div v-show="!props.showType && props.category === mesShipStatisticsTypeEnum.STRUCTURE.V" class="my-code" style="margin-top: 20px">
     *点击上方表格数据查看详情
   </div>
   <div v-show="props.showType" style="margin-top: 20px">
-    <div class="head-container" v-show="props.type === mesShipStatisticsTypeEnum.STRUCTURE.V">
+    <div class="head-container" v-show="props.category === mesShipStatisticsTypeEnum.STRUCTURE.V">
       <el-tag size="small" style="float: left">{{
         showType === 'INVENTORY'
           ? '清单总量'
@@ -61,7 +61,7 @@
       </div>
     </div>
     <common-table
-      v-show="props.type === mesShipStatisticsTypeEnum.STRUCTURE.V"
+      v-show="props.category === mesShipStatisticsTypeEnum.STRUCTURE.V"
       :data="list"
       v-loading="tableLoading"
       :show-empty-symbol="false"
@@ -104,7 +104,7 @@
     </common-table>
     <!--分页组件-->
     <el-pagination
-      v-show="props.type === mesShipStatisticsTypeEnum.STRUCTURE.V"
+      v-show="props.category === mesShipStatisticsTypeEnum.STRUCTURE.V"
       :total="total"
       :current-page="queryPage.pageNumber"
       :page-size="queryPage.pageSize"
@@ -136,7 +136,7 @@ const props = defineProps({
   query: {
     type: Object
   },
-  type: {
+  category: {
     type: Number
   },
   workshopId: {

@@ -13,6 +13,7 @@
           value-format="x"
           @change="crud.toQuery"
         />
+        <project-radio-button size="small" :type="'all'" v-model="query.projectId" class="filter-item" @change="crud.toQuery" />
         <common-radio-button
           type="enum"
           v-model="query.weightStatus"

@@ -49,6 +49,30 @@ export function listUpload(data) {
   })
 }
 
+// 解析变更清单
+export function changeListUpload(data) {
+  return request({
+    module: 'mes',
+    url: 'tech/change/analyzing',
+    responseType: 'blob',
+    method: 'post',
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    },
+    data
+  })
+}
+
+// 提交变更清单
+export function changeList(data) {
+  return request({
+    module: 'mes',
+    url: 'tech/change/temporary',
+    method: 'post',
+    data
+  })
+}
+
 /**
  * 下载零构件关联清单
  */
@@ -69,6 +93,18 @@ export function downloadArtifactTreeTemplate() {
   return request({
     module: 'plan',
     url: 'artifactMachinePart/template/export',
+    responseType: 'blob',
+    method: 'get'
+  })
+}
+
+/**
+ * 下载变更模板清单
+ */
+export function changeListTemplate() {
+  return request({
+    module: 'plan',
+    url: 'artifactMachinePart/template/change/export',
     responseType: 'blob',
     method: 'get'
   })

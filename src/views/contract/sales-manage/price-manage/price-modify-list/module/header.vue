@@ -6,7 +6,6 @@
           <common-radio-button
             v-model="query.type"
             :options="contractSaleTypeEnum.ENUM"
-            showOptionAll
             type="enumSL"
             size="small"
             class="filter-item"
@@ -46,7 +45,7 @@ import rrOperation from '@crud/RR.operation'
 import projectVisaSelect from '@comp-base/project-visa-select'
 
 const defaultQuery = {
-  type: undefined, status: undefined,
+  type: contractSaleTypeEnum.STRUCTURE.V, status: undefined,
   projectId: { value: undefined, resetAble: false }
 }
 const { crud, query } = regHeader(defaultQuery)

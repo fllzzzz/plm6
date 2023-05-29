@@ -7,14 +7,14 @@
         <upload-btn
           v-if="crud.query.projectId && checkPermission(crud.permission.import)"
           :data="uploadQuery"
-          :upload-fun="standardPartUpload"
+          :upload-fun="enclosureStandardPartUpload"
           btn-name="清单导入"
           btn-type="primary"
           btn-size="mini"
           class="filter-item"
           @success="crud.toQuery()"
         />
-        <export-button :fn="downloadStandardPart" class="filter-item" v-permission="crud.permission.templateDownload">
+        <export-button :fn="enclosureDownloadStandardPart" class="filter-item" v-permission="crud.permission.templateDownload">
           清单模板
         </export-button>
       </template>
@@ -23,7 +23,7 @@
 </template>
 
 <script setup>
-import { standardPartUpload, downloadStandardPart } from '@/api/plan/technical-manage/standard-part'
+import { enclosureStandardPartUpload, enclosureDownloadStandardPart } from '@/api/plan/technical-manage/standard-part'
 import { defineProps, watch, computed } from 'vue'
 import { regHeader } from '@compos/use-crud'
 import checkPermission from '@/utils/system/check-permission'
