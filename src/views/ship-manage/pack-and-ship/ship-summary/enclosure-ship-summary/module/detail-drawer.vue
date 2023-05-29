@@ -97,6 +97,10 @@ const props = defineProps({
   },
   projectId: {
     type: Number
+  },
+  permission: {
+    type: Object,
+    default: () => {}
   }
 })
 

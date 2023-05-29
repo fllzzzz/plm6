@@ -104,7 +104,7 @@
           }}</span> -->
           <span>{{ summaryData.trainNumber || 0 }}</span>
         </el-descriptions-item>
-        <el-descriptions-item v-permission="permission.detail" align="center" label="操作">
+        <el-descriptions-item align="center" v-if="checkPermission(permission.detail)" label="操作">
           <!-- <span class="tc-primary" style="cursor: pointer" @click="openDetail('ACCUMULATED_NUMBER')">{{
             summaryData.trainNumber || 0
           }}</span> -->
@@ -135,6 +135,7 @@
       :query="query"
       :workshopId="props.workshopId"
       :projectId="props.currentRow.projectId"
+      :permission="props.permission"
     />
     <detail-drawer
       v-model:visible="drawerVisible"
@@ -142,6 +143,7 @@
       :workshopId="props.workshopId"
       :projectId="props.currentRow.projectId"
       :detail-data="props.currentRow"
+      :permission="props.permission"
     />
   </div>
 </template>
@@ -152,6 +154,7 @@ import { getEnclosureBatch } from '@/api/mes/common.js'
 import { projectSummary } from '@/api/ship-manage/pack-and-ship/enclosure-ship-summary'
 import { auxInboundDetail } from '@/api/ship-manage/pack-and-ship/ship-summary'
 import { DP } from '@/settings/config'
+import checkPermission from '@/utils/system/check-permission'
 import { convertUnits } from '@/utils/convert/unit'
 // import monomerSelect from '@/components-system/plan/monomer-select'
 import mDetail from './detail.vue'
@@ -258,7 +261,7 @@ async function fetchAuxMat() {
 async function fetchSummary() {
   summaryData.value = {}
   summaryLoading.value = true
-  if (!props.currentRow.projectId || !props.permission?.detail) {
+  if (!props.currentRow.projectId) {
     return
   }
   try {

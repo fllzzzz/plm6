@@ -2,7 +2,7 @@
   <div v-show="!props.showType && props.query?.category !== 64" class="my-code" style="margin-top: 20px">*点击上方表格数据查看详情</div>
   <div v-show="props.showType" style="margin-top: 20px">
     <div class="head-container" v-show="props.query?.category !== 64">
-      <el-tag size="small" style="float: left">{{
+      <el-tag class="filter-item" size="small" style="float: left;">{{
         showType === 'INVENTORY'
           ? '清单总量'
           : showType === 'ASSIGNMENT'
@@ -19,6 +19,7 @@
       }}</el-tag>
       <div class="filter-item" style="float: right">
         <print-table
+          v-permission="permission.print"
           :api-key="
             showType === 'INVENTORY'
               ? 'enclosureShipMeteDetail'
@@ -79,7 +80,15 @@
       <el-table-column key="area.name" prop="area.name" label="批次" align="center" :show-overflow-tooltip="true" />
       <el-table-column key="name" prop="name" label="名称" align="center" :show-overflow-tooltip="true" min-width="100px" />
       <el-table-column key="serialNumber" prop="serialNumber" label="编号" align="center" :show-overflow-tooltip="true" />
-      <el-table-column v-if="props.query?.category !== 32" key="plate" prop="plate" label="板型" align="center" :show-overflow-tooltip="true" min-width="120px" />
+      <el-table-column
+        v-if="props.query?.category !== 32"
+        key="plate"
+        prop="plate"
+        label="板型"
+        align="center"
+        :show-overflow-tooltip="true"
+        min-width="120px"
+      />
       <el-table-column key="length" prop="length" label="单长（mm）" align="center" :show-overflow-tooltip="true">
         <template #default="{ row }">
           <span>{{ row.length || '-' }}</span>
@@ -135,6 +144,10 @@ const props = defineProps({
   },
   weightStatus: {
     type: Number
+  },
+  permission: {
+    type: Object,
+    default: () => {}
   }
 })
 
