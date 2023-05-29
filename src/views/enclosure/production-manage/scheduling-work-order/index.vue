@@ -130,7 +130,7 @@
               fixed="right"
             >
               <template #default="{ row }">
-                <udOperation :data="row" :show-edit="false" :show-del="!row.booleanProduce" show-detail />
+                <udOperation :data="row" :show-edit="false" :show-del="!row.booleanProduce" :show-detail="checkPermission(permission.detail)" />
               </template>
             </el-table-column>
           </common-table>

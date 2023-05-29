@@ -134,8 +134,11 @@ const { maxHeight } = useMaxHeight({
 })
 
 function projectChange(row = {}) {
-  project.value = row
-  crud.query.projectId = row.id
+  // 防止快速点击时汇总接口报错
+  setTimeout(() => {
+    project.value = row
+    crud.query.projectId = row.id
+  }, 300)
 }
 </script>
 
