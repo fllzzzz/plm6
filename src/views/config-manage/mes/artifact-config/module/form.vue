@@ -4,7 +4,7 @@
     append-to-body
     v-model="visible"
     :before-close="handleClose"
-    :title="showType === 'edit'?'编辑构件特征定义':'新增构件特征定义'"
+    :title="showType === 'edit' ? '编辑构件特征定义' : '新增构件特征定义'"
     :center="false"
     :close-on-click-modal="false"
     size="800px"
@@ -17,7 +17,7 @@
         <el-form-item label="生产线" prop="productionLineTypeEnum">
           <common-select
             v-model="form.productionLineTypeEnum"
-            :options="artifactProductLineEnum.ENUM"
+            :options="hasIntelligent ? artifactProductLineEnum.ENUM : traditionLineEnum.ENUM"
             type="enum"
             size="small"
             clearable
@@ -133,10 +133,10 @@
                 />
               </div>
             </div>
-            <common-button icon="el-icon-plus" size="mini" type="success" style="margin: 0 0 12px 6px" @click="addProcess"/>
+            <common-button icon="el-icon-plus" size="mini" type="success" style="margin: 0 0 12px 6px" @click="addProcess" />
           </div>
         </el-form-item>
-        <el-form-item label="编号类型索引" prop="serialNumberPrefixList" v-if="form.artifactType===artifactTypeEnum.SMALL.V">
+        <el-form-item label="编号类型索引" prop="serialNumberPrefixList" v-if="form.artifactType === artifactTypeEnum.SMALL.V">
           <div class="process-container">
             <div class="process-box">
               <div v-for="(item, index) in form.serialNumberPrefixList" :key="index" class="process-drawer">
@@ -148,7 +148,7 @@
                   @blur="checkSerialNumber(item, index)"
                 />
                 <common-button
-                  v-show="form.serialNumberPrefixList	 && form.serialNumberPrefixList.length > 1"
+                  v-show="form.serialNumberPrefixList && form.serialNumberPrefixList.length > 1"
                   icon="el-icon-delete"
                   size="mini"
                   type="danger"
@@ -180,10 +180,17 @@
 import crudApi from '@/api/config/system-config/artifact-config'
 import { defineProps, defineEmits, ref, watch, nextTick, computed } from 'vue'
 import { ElMessage, ElNotification } from 'element-plus'
-
+import { mapGetters } from '@/store/lib'
 // import { isNotBlank } from '@data-type/index'
 // import { whetherEnum } from '@enum-ms/common'
-import { artifactProductLineEnum, intellectParentType, artifactTypeEnum, smallArtifactClassEnum, codingTypeEnum } from '@enum-ms/mes'
+import {
+  artifactProductLineEnum,
+  traditionLineEnum,
+  intellectParentType,
+  artifactTypeEnum,
+  smallArtifactClassEnum,
+  codingTypeEnum
+} from '@enum-ms/mes'
 
 import useVisible from '@compos/use-visible'
 import useWatchFormValidate from '@compos/form/use-watch-form-validate'
@@ -227,6 +234,8 @@ const defaultForm = {
   codingType: undefined
 }
 
+const { hasIntelligent } = mapGetters('hasIntelligent')
+
 const form = ref(JSON.parse(JSON.stringify(defaultForm)))
 // const plusShow = computed(() => {
 //   return form.value.productionLineTypeEnum === artifactProductLineEnum.TRADITION.V ? (form.value.specPrefixList?.length < 1 ? true : (form.value.artifactType === artifactTypeEnum.COMMON.V)) : true
@@ -235,7 +244,14 @@ const form = ref(JSON.parse(JSON.stringify(defaultForm)))
 const classificationNameOptions = computed(() => {
   let options = []
   if (form.value.productionLineTypeEnum === artifactProductLineEnum.INTELLECT.V && form.value.parentType) {
-    options = form.value.parentType === intellectParentType.PILLAR.V ? [{ key: 1, value: '钢柱' }] : [{ key: 2, value: '钢梁' }, { key: 3, value: '短梁' }, { key: 4, value: '长短梁' }]
+    options =
+      form.value.parentType === intellectParentType.PILLAR.V
+        ? [{ key: 1, value: '钢柱' }]
+        : [
+          { key: 2, value: '钢梁' },
+          { key: 3, value: '短梁' },
+          { key: 4, value: '长短梁' }
+        ]
   }
   return options
 })
@@ -313,18 +329,10 @@ const validateDefinitionWord = (rule, value, callback) => {
 }
 
 const rules = {
-  productionLineTypeEnum: [
-    { required: true, message: '请选择生产线', trigger: 'change' }
-  ],
-  artifactType: [
-    { required: true, message: '请选择构件类型', trigger: 'change' }
-  ],
-  smallArtifactClassEnum: [
-    { required: true, message: '请选择次构件类型', trigger: 'change' }
-  ],
-  parentType: [
-    { required: true, validator: validateParentType, message: '请选择类型', trigger: 'change' }
-  ],
+  productionLineTypeEnum: [{ required: true, message: '请选择生产线', trigger: 'change' }],
+  artifactType: [{ required: true, message: '请选择构件类型', trigger: 'change' }],
+  smallArtifactClassEnum: [{ required: true, message: '请选择次构件类型', trigger: 'change' }],
+  parentType: [{ required: true, validator: validateParentType, message: '请选择类型', trigger: 'change' }],
   // minLength: [
   //   { required: true, validator: validateLength, trigger: 'change' }
   // ],
@@ -345,9 +353,7 @@ const rules = {
     { required: true, message: '请填写编号前缀' },
     { validator: validateSerialNumberLinks, trigger: 'change' }
   ],
-  codingType: [
-    { required: true, message: '请选择打码方式', trigger: 'change' }
-  ]
+  codingType: [{ required: true, message: '请选择打码方式', trigger: 'change' }]
 }
 
 const emit = defineEmits(['success', 'update:modelValue'])
@@ -559,7 +565,6 @@ async function onSubmit() {
     loading.value = false
   }
 }
-
 </script>
 
 <style lang="scss" scoped>

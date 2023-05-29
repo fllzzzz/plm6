@@ -3,71 +3,84 @@
     ref="drawerRef"
     :visible="crud.status.cu > 0"
     :before-close="crud.cancelCU"
-    :title="crud.status.title"
+    title="上传工艺文件"
     :show-close="true"
     :wrapper-closable="false"
-    size="50%"
-    custom-class="raw-mat-inbound-application-record-form"
+    :close-on-click-modal="false"
+    size="60%"
+    custom-class="delivery-detail"
   >
     <template #titleRight>
       <common-button :loading="crud.status.cu === 2" type="primary" size="mini" @click="crud.submitCU">提交</common-button>
     </template>
     <template #content>
-      <el-form ref="formRef" :model="form" :rules="rules" size="small" label-width="140px">
-        <el-form-item label="工艺类型" prop="boolSingleProject">
-          <common-radio-button
-            v-model="form.boolSingleProject"
-            :options="processUseTypeEnum.ENUM"
-            type="enum"
-          />
-        </el-form-item>
-        <el-form-item label="文件类型" prop="processType">
-          <common-radio-button
+      <el-form ref="formRef" :model="form" :rules="rules" size="small" label-width="100px">
+        <el-form-item label="工艺类型" prop="processType">
+          <common-radio
             v-model="form.processType"
             :options="planProcessTypeEnum.ENUM"
             type="enum"
           />
         </el-form-item>
-        <el-form-item label="所属项目" v-if="form.boolSingleProject" prop="projectId">
-          <project-cascader v-model="form.projectId" clearable class="filter-item" style="width: 270px;margin-bottom:10px;" placeholder="项目搜索" />
+        <el-form-item label="文件类型" prop="boolSingleProject">
+          <common-radio
+            v-model="form.boolSingleProject"
+            :options="processUseTypeEnum.ENUM"
+            type="enum"
+          />
         </el-form-item>
-        <el-form-item label="上传文件">
-          <upload-btn ref="uploadRef" v-model:files="form.attachmentFiles" :file-classify="fileClassifyEnum.PLAN_ATT.V" :show-file-list="false" :accept="'.pdf'" @change="uploadFile"/>
+        <el-form-item label="所属项目" v-if="form.boolSingleProject" prop="projectId">
+          <project-cascader v-model="form.projectId" clearable style="width: 270px;margin-bottom:10px;" placeholder="项目搜索" />
+        </el-form-item>
+        <el-form-item label="上传文件" prop="fileList">
+          <upload-btn ref="uploadRef" btnType="warning" v-model:files="form.attachmentFiles" :file-classify="fileClassifyEnum.PLAN_ATT.V" :show-file-list="false" :accept="'.pdf'" :limit="1" @change="uploadFile"/>
         </el-form-item>
         <common-table
           ref="detailRef"
           border
           :data="form.fileList"
-          :max-height="maxHeight"
+          :max-height="maxHeight-200"
           style="width: 100%"
           class="table-form"
+          :cell-class-name="wrongCellMask"
           return-source-data
           :showEmptySymbol="false"
         >
           <el-table-column label="序号" type="index" align="center" width="50" />
-          <el-table-column prop="file" label="文件" align="center">
+          <el-table-column prop="file" label="文件" align="left">
             <template v-slot="scope">
-              <span @dblclick="attachmentView(scope.row)">{{scope.row.file}}</span>
+              <span style="cursor: pointer; color: #409eff" @click="attachmentView(scope.row)">{{scope.row.file}}</span>
             </template>
           </el-table-column>
           <el-table-column prop="fileName" label="名称" align="center">
             <template v-slot="scope">
-              <el-input
+               <el-input
+                class="input-border-none"
+                v-model.trim="scope.row.fileName"
+                type="textarea"
+                autosize
+                :maxlength="50"
+                placeholder="名称"
+                clearable
+                style="width:100%"/>
+              <!-- <el-input
+                class="input-border-none"
                 v-model="scope.row.fileName"
                 placeholder="名称"
                 style="width: 100%;"
                 size="small"
                 maxlength="20"
                 clearable
-              />
+              /> -->
             </template>
           </el-table-column>
           <el-table-column prop="remark" label="备注" align="center">
             <template v-slot="scope">
               <el-input
+                class="input-border-none"
                 v-model.trim="scope.row.remark"
                 type="textarea"
-                :autosize="{ minRows: 1, maxRows: 3 }"
+                autosize
                 :maxlength="200"
                 placeholder="备注"
                 style="width:100%"/>
@@ -92,6 +105,7 @@ import { regForm } from '@compos/use-crud'
 
 import { fileClassifyEnum } from '@enum-ms/file'
 import { processUseTypeEnum, planProcessTypeEnum } from '@enum-ms/plan'
+import { validate } from '@compos/form/use-table-validate'
 
 // import UploadBtn from '@comp/file-upload/SingleFileUploadBtn'
 import useMaxHeight from '@compos/use-max-height'
@@ -131,7 +145,35 @@ const { maxHeight } = useMaxHeight(
 const rules = {
   boolSingleProject: { required: true, message: '请选择文件类型', trigger: 'change' },
   processType: { required: true, message: '请选择工艺类型', trigger: 'change' },
-  projectId: { required: true, message: '请选择所属文件', trigger: 'change' }
+  projectId: { required: true, message: '请选择所属项目', trigger: 'change' },
+  fileList: { required: true, message: '请上传文件', trigger: 'change' }
+}
+
+// 数量校验方式
+const validateLength = (value, row) => {
+  if (!value || value.length > 50) {
+    return false
+  }
+  return true
+}
+
+const tableRules = {
+  fileName: [{ validator: validateLength, message: '请填写文件名', trigger: ['blur', 'change'] }]
+}
+
+function wrongCellMask({ row, column }) {
+  if (!row) return
+  const rules = tableRules
+  let flag = true
+  if (row.verify && Object.keys(row.verify) && Object.keys(row.verify).length > 0) {
+    if (row.verify[column.property] === false) {
+      flag = validate(column.property, rules[column.property], row)
+    }
+    if (flag) {
+      row.verify[column.property] = true
+    }
+  }
+  return flag ? '' : 'mask-td'
 }
 
 function deleteRow(index) {
@@ -143,6 +185,21 @@ CRUD.HOOK.beforeSubmit = (crud, form) => {
     ElMessage({ message: '请上传文件', type: 'error' })
     return false
   }
+  const rules = tableRules
+  let flag = true
+  crud.form.fileList.map(row => {
+    row.verify = {}
+    for (const rule in rules) {
+      row.verify[rule] = validate(rule, rules[rule], row)
+      if (!row.verify[rule]) {
+        flag = false
+      }
+    }
+  })
+  if (!flag) {
+    ElMessage.error('文件名称必填且长度不超过50字符')
+    return false
+  }
 }
 
 // 预览附件
@@ -152,12 +209,25 @@ function attachmentView(item) {
 }
 
 function uploadFile() {
+  const file = crud.form.attachmentFiles[0].name
+  const fileNameArr = file.split('.')
+  let fileName = ''
+  for (let i = 0; i < fileNameArr.length; i++) {
+    if (i !== (fileNameArr.length - 1)) {
+      if (i !== (fileNameArr.length - 2)) {
+        fileName = fileName + fileNameArr[i] + '.'
+      } else {
+        fileName = fileName + fileNameArr[i]
+      }
+    }
+  }
   crud.form.fileList.push({
     attachmentId: crud.form.attachmentFiles[0].id,
-    fileName: crud.form.attachmentFiles[0].name.split('.')[0],
-    file: crud.form.attachmentFiles[0].name,
+    fileName: fileName,
+    file: file,
     remark: undefined
   })
+  uploadRef.value.clearFiles()
   form.attachmentFiles = []
 }
 

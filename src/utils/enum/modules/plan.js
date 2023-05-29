@@ -154,6 +154,14 @@ const changeReasonTypeEnum = {
 }
 constantize(changeReasonTypeEnum)
 
+// 构件绑定状态
+const artifactBindTypeEnum = {
+  NO: { L: '未绑定', K: 'NO', V: 1 << 0 },
+  YES: { L: '已绑定', K: 'YES', V: 1 << 1 },
+  BIND_OTHER: { L: '绑定其他', K: 'BIND_OTHER', V: 1 << 2 }
+}
+constantize(artifactBindTypeEnum)
+
 export {
   manufactureTypeEnum, // 制造类型
   overallPlanTypeEnum, // 部门计划类型
@@ -173,7 +181,8 @@ export {
   planProcessTypeEnum,
   processUseTypeEnum,
   isArtifactBindTypeEnum,
-  changeReasonTypeEnum
+  changeReasonTypeEnum,
+  artifactBindTypeEnum
 }
 
 export default {
@@ -195,5 +204,6 @@ export default {
   planProcessTypeEnum,
   processUseTypeEnum,
   isArtifactBindTypeEnum,
-  changeReasonTypeEnum
+  changeReasonTypeEnum,
+  artifactBindTypeEnum
 }

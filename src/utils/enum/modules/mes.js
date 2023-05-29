@@ -338,6 +338,12 @@ const artifactProductLineEnum = {
 }
 constantize(artifactProductLineEnum)
 
+// 构件配置传统/智能生产线
+const traditionLineEnum = {
+  TRADITION: { L: '传统线', K: 'TRADITION', V: 1 << 0 }
+}
+constantize(traditionLineEnum)
+
 // 构件配置智能线父类型
 const intellectParentType = {
   PILLAR: { L: '柱', K: 'PILLAR', V: 1 << 1 },
@@ -658,6 +664,7 @@ export {
   inProductionDetailReportEnum,
   schedulingStatusEnum,
   artifactProductLineEnum,
+  traditionLineEnum,
   intellectParentType,
   minEqualTypeEnum,
   maxEqualTypeEnum,
@@ -737,6 +744,7 @@ export default {
   inProductionDetailReportEnum,
   schedulingStatusEnum,
   artifactProductLineEnum,
+  traditionLineEnum,
   intellectParentType,
   minEqualTypeEnum,
   maxEqualTypeEnum,
