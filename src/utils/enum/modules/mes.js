@@ -226,6 +226,14 @@ const abnormalHandleStatusEnum = {
 }
 constantize(abnormalHandleStatusEnum)
 
+// 变更异常处理状态
+const changeHandleStatusEnum = {
+  PENDING: { L: '待处理', K: 'PENDING', V: 1 << 0, TAG: '' },
+  PASS: { L: '通过', K: 'PASS', V: 1 << 1, TAG: 'success' },
+  REJECT: { L: '驳回', K: 'REJECT', V: 1 << 2, TAG: 'danger' }
+}
+constantize(changeHandleStatusEnum)
+
 // 多余清单处理状态
 const surplusHandleStatusEnum = {
   PENDING: { L: '未处理', K: 'PENDING', V: 1 << 0, TAG: '' },
@@ -635,6 +643,7 @@ export {
   shipAuditStatusEnum,
   abnormalHandleTypeEnum,
   abnormalHandleStatusEnum,
+  changeHandleStatusEnum,
   abnormalReportTypeEnum,
   abnormalChangeTypeEnum,
   abnormalStatusEnum,
@@ -713,6 +722,7 @@ export default {
   shipAuditStatusEnum,
   abnormalHandleTypeEnum,
   abnormalHandleStatusEnum,
+  changeHandleStatusEnum,
   abnormalReportTypeEnum,
   abnormalChangeTypeEnum,
   abnormalStatusEnum,

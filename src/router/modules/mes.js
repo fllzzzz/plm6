@@ -164,7 +164,7 @@ export default {
         name: 'MesChangeRecord',
         path: 'change-record',
         hidden: false,
-        component: '/mes/changed-manage/change-record/index',
+        component: '/mes/changed-manage/simple-change-record/index',
         meta: {
           title: '变更记录',
           icon: 'project',

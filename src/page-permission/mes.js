@@ -32,7 +32,8 @@ export const changeListPM = {
 // 变更管理/变更记录
 export const changeRecordPM = {
   get: ['mes_change_record:get'], // 变更列表
-  detail: ['mes_change_record:detail'] // 变更详情
+  // detail: ['mes_change_record:detail'], // 变更详情
+  audit: ['mes_change_record:audit'] // 变更审核
 }
 
 // 变更管理/多余列表
