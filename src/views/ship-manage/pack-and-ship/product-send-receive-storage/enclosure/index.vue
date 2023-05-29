@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <mHeader />
+    <mHeader :permission="permission" />
     <!--表格渲染-->
     <common-table
       ref="tableRef"

@@ -76,7 +76,7 @@ import { parseTime } from '@/utils/date'
 import { timeTypeEnum } from '@enum-ms/contract'
 import { mesEnclosureTypeEnum } from '@enum-ms/mes'
 import { PICKER_OPTIONS_SHORTCUTS } from '@/settings/config'
-import { mesFactoryReportPM as permission } from '@/page-permission/mes'
+import { enclosureProductionStatisticsPM as permission } from '@/page-permission/enclosure'
 
 import useChart from '@compos/use-chart'
 import { regHeader } from '@compos/use-crud'
