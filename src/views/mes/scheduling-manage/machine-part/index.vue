@@ -76,6 +76,9 @@
               >
                 套料保存
               </common-button>
+              <el-tag size="medium" effect="plain" type="danger" style="margin-right: 5px">
+                构件完成时间：{{ summaryInfo.minTime || '' }}~{{ summaryInfo.maxTime || '' }}
+              </el-tag>
               <el-tag size="medium" effect="plain" style="margin-right: 5px"> 数量(件)：{{ summaryInfo.quantity || 0 }} </el-tag>
               <el-tag size="medium" effect="plain" style="margin-right: 10px">
                 重量(kg)：{{ summaryInfo.totalNetWeight?.toFixed(2) || 0 }}
@@ -186,7 +189,7 @@ import { isNotBlank } from '@/utils/data-type'
 import RAF from '@/utils/raf'
 import { machinePartDxfTypeEnum, machinePartSchedulingTypeEnum as typeEnum } from '@enum-ms/mes'
 import { machinePartSchedulingPM as permission } from '@/page-permission/mes'
-
+import { parseTime } from '@/utils/date'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import mHeader from './module/header'
@@ -238,12 +241,14 @@ watch(
 const { maxHeight } = useMaxHeight()
 
 const boardList = ref([])
-const summaryInfo = ref({ totalNetWeight: 0, quantity: 0 })
+const summaryInfo = ref({ totalNetWeight: 0, quantity: 0, minTime: '', maxTime: '' })
 
 CRUD.HOOK.handleRefresh = (crud, res) => {
   // const arr = []
   summaryInfo.value.totalNetWeight = res.data?.totalNetWeight || 0
   summaryInfo.value.quantity = res.data?.quantity || 0
+  summaryInfo.value.minTime = parseTime(res.data?.minDate, '{y}-{m}-{d}')
+  summaryInfo.value.maxTime = parseTime(res.data?.maxDate, '{y}-{m}-{d}')
   res.data.content = res.data.collect.map((v) => {
     if (checkedNodes.value.findIndex((k) => k.id === v.id) > -1) {
       // arr.push(v)

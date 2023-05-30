@@ -5,19 +5,22 @@
     <!-- <el-table-column :show-overflow-tooltip="true" prop="monomer.name" label="单体" /> -->
     <el-table-column :show-overflow-tooltip="true" prop="serialNumber" label="编号" />
     <el-table-column :show-overflow-tooltip="true" prop="specification" label="规格" min-width="120" />
+    <el-table-column prop="showQuantity" label="数量" align="center" />
     <!-- <el-table-column :show-overflow-tooltip="true" prop="specification" label="规格" /> -->
     <!-- <el-table-column :show-overflow-tooltip="true" prop="material" label="材质" align="center" /> -->
-    <el-table-column :show-overflow-tooltip="true" prop="length" :label="`长度\n(mm)`" align="center">
+    <!-- <el-table-column :show-overflow-tooltip="true" prop="length" :label="`长度\n(mm)`" align="center">
       <template v-slot="scope">
         {{ toFixed(scope.row.length, DP.MES_ARTIFACT_L__MM) }}
       </template>
+    </el-table-column> -->
+    <el-table-column :show-overflow-tooltip="true" label="计量单位" align="center">
+      <span>件</span>
     </el-table-column>
-    <el-table-column :show-overflow-tooltip="true" prop="weight" :label="`单重\n（kg）`" align="center">
+    <el-table-column :show-overflow-tooltip="true" prop="pricingManner" label="核算单位" align="center">
       <template v-slot="scope">
-        {{ toFixed(scope.row.weight, DP.COM_WT__KG) }}
+        {{ pricingMannerEnum.V[scope.row.pricingManner]?.UNIT || '-' }}
       </template>
     </el-table-column>
-    <el-table-column prop="showQuantity" label="数量" align="center" />
     <el-table-column :show-overflow-tooltip="true" prop="totalLength" :label="`总长\n(m)`" align="center">
       <template v-slot="scope">
         {{ toFixed(scope.row.totalLength, DP.MES_ARTIFACT_L__M) }}
@@ -43,7 +46,7 @@
 
 <script setup>
 import { defineProps } from 'vue'
-
+import { pricingMannerEnum } from '@enum-ms/contract'
 import { DP } from '@/settings/config'
 import { toFixed } from '@/utils/data-type'
 

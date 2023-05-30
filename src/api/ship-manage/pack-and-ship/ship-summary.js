@@ -18,6 +18,15 @@ export function inboundDetail(params) {
   })
 }
 
+// 配套件发运详情
+export function auxInboundDetail(params) {
+  return request({
+    url: `/api/mes/building/cargo/project/cargoList/auxiliary/details/page`,
+    method: 'get',
+    params
+  })
+}
+
 // 发运汇总
 export function shipmentSummary(params) {
   return request({

@@ -133,7 +133,7 @@
 </template>
 
 <script setup>
-import crudApi from '@/api/mes/pack-and-ship/product-receive-send-storage'
+import crudApi from '@/api/ship-manage/pack-and-ship/product-receive-send-storage'
 import { ref, nextTick, computed } from 'vue'
 
 import { mesProductSendReceiveStoragePM as permission } from '@/page-permission/ship-manage'
@@ -167,7 +167,7 @@ const showComponent = computed(() => {
 
 const { crud, columns } = useCRUD(
   {
-    title: '结构制品',
+    title: '结构制成品入发存',
     sort: ['id.desc'],
     permission: { ...permission },
     optShow: { ...optShow },

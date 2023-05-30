@@ -62,4 +62,31 @@ export function downloadStandardPart(params) {
     params
   })
 }
+
+// 围护：导入标准件
+export function enclosureStandardPartUpload(data) {
+  return request({
+    module: 'plan',
+    url: 'enclosureStandardPart/import',
+    responseType: 'blob',
+    method: 'post',
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    },
+    data
+  })
+}
+
+/**
+ * 围护：下载零构件关联清单
+ */
+export function enclosureDownloadStandardPart(params) {
+  return request({
+    module: 'plan',
+    url: 'enclosureStandardPart/download-template',
+    responseType: 'blob',
+    method: 'get',
+    params
+  })
+}
 export default { get, edit, del, add }

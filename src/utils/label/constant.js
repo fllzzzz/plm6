@@ -226,25 +226,30 @@ const ARTIFACT_STYLE = function ({
 // 围护-常规标签
 const ENCLOSURE_COMMON_L_HTML = function ({ component = defComponent, printConfig, manufacturerName = '制造商名称' }) {
   return `
-  <div class="enclosure-label">
-    <div class="content">
-      <div class="flex-1">
-        <div class="qr-content">
-        </div>
-      </div>
-      <div class="flex-2">
-        <div class="row">品名：${emptyTextFormatter(component.name)}</div>
-        <div class="row">厚度(mm)：${emptyTextFormatter(component.thickness)}</div>
-        <div class="row">单长(mm)：${emptyTextFormatter(component.length)}</div>
-        <div class="row">颜色：${emptyTextFormatter(component.color)}</div>
-      </div>
-      <div class="flex-2">
-        <div class="row">编号：${emptyTextFormatter(component.serialNumber)}</div>
-        <div class="row">总张数：${emptyTextFormatter(component.quantity)}</div>
-        <div class="row">板型：${emptyTextFormatter(component.plate)}</div>
-        <div class="row" style="${printConfig?.dateInProduced ? '' : 'display:none;'}">生产日期：${emptyTextFormatter(component.printTime)}</div>
-      </div>
-    </div>
+  <div>
+    <table class="enclosure-label">
+      <tr>
+        <td rowspan="6" class="qr-content">
+        </td>
+      </tr>
+      <tr>
+        <td class="row">品名：${emptyTextFormatter(component.name)}</td>
+        <td class="row">编号：${emptyTextFormatter(component.serialNumber)}</td>
+      </tr>
+      <tr>
+        <td class="row">厚度(mm)：${emptyTextFormatter(component.thickness)}</td>
+        <td class="row">总张数：${emptyTextFormatter(component.quantity)}</td>
+      </tr>
+      <tr>
+      <tr>
+        <td class="row">单长(mm)：${emptyTextFormatter(component.length)}</td>
+        <td class="row">板型：${emptyTextFormatter(component.plate)}</td>
+      </tr>
+      <tr>
+        <td class="row">颜色：${emptyTextFormatter(component.color)}</td>
+        <td class="row" style="${printConfig?.dateInProduced ? '' : 'display:none;'}">生产日期：${emptyTextFormatter(component.printTime)}</td>
+      </tr>
+    </table>
   </div>
 `
 }
@@ -253,30 +258,37 @@ const ENCLOSURE_COMMON_L_HTML = function ({ component = defComponent, printConfi
 const ENCLOSURE_CUSTOM_L_HTML = function ({ component = defComponent, printConfig, manufacturerName = '制造商名称', logo = labelLogo }) {
   return `
   <div class="enclosure-label">
-    <div class="company">
-      <div style="width:35%;display:flex;align-items: center;">
-        <img src="${logo}" alt="logo" style="height:70%;width:100%;vertical-align: middle;">
-      </div>
-      <div style="flex:1;text-align:center;">${emptyTextFormatter(manufacturerName)}</div>
-    </div>
-    <div class="content">
-      <div class="flex-2">
-        <div class="row">品名：${emptyTextFormatter(component.name)}</div>
-        <div class="row">厚度(mm)：${emptyTextFormatter(component.thickness)}</div>
-        <div class="row">单长(mm)：${emptyTextFormatter(component.length)}</div>
-        <div class="row">颜色：${emptyTextFormatter(component.color)}</div>
-      </div>
-      <div class="flex-2">
-        <div class="row">编号：${emptyTextFormatter(component.serialNumber)}</div>
-        <div class="row">总张数：${emptyTextFormatter(component.quantity)}</div>
-        <div class="row">板型：${emptyTextFormatter(component.plate)}</div>
-        <div class="row" style="${printConfig?.dateInProduced ? '' : 'display:none;'}">生产日期：${emptyTextFormatter(component.printTime)}</div>
-      </div>
-      <div class="flex-1">
-        <div class="qr-content">
-        </div>
-      </div>
-    </div>
+    <table>
+      <tr class="company">
+        <td style="width:35%;text-align: center;">
+         <img src="${logo}" alt="logo" style="height:70%;width:100%;vertical-align: middle;" />
+        </td>
+      <td style="width:63%; text-align:center;">${emptyTextFormatter(manufacturerName)}</td>
+    </tr>
+    </table>
+    <table>
+    <tr>
+      <td class="row">品名：${emptyTextFormatter(component.name)}</td>
+      <td class="row">编号：${emptyTextFormatter(component.serialNumber)}</td>
+    </tr>
+    <tr>
+      <td class="row">厚度(mm)：${emptyTextFormatter(component.thickness)}</td>
+      <td class="row">总张数：${emptyTextFormatter(component.quantity)}</td>
+    </tr>
+    <tr>
+    <tr>
+      <td class="row">单长(mm)：${emptyTextFormatter(component.length)}</td>
+      <td class="row">板型：${emptyTextFormatter(component.plate)}</td>
+    </tr>
+    <tr>
+      <td class="row">颜色：${emptyTextFormatter(component.color)}</td>
+      <td class="row" style="${printConfig?.dateInProduced ? '' : 'display:none;'}">生产日期：${emptyTextFormatter(component.printTime)}</td>
+    </tr>
+    <tr>
+      <td rowspan="8" class="qr-content">
+        </td>
+    </tr>
+  </table>
   </div>
 `
 }
@@ -286,7 +298,7 @@ const ENCLOSURE_STYLE = function ({
   fClass = '',
   qrPosition = {},
   rowHeight = 40,
-  headerHeight = 60,
+  headerHeight = 180,
   padding = 15,
   border = 1,
   unit = 'px'
@@ -296,43 +308,35 @@ const ENCLOSURE_STYLE = function ({
     qrPosition,
     style: `
     <style>
-    .${fClass} .company{
-      display:flex;
-      align-items: center;
-      height: ${headerHeight}${unit};
-      font-size: 25pt;
-    }
-
     .${fClass} .enclosure-label {
       font-family: "微软雅黑";
       font-size: 9pt;
       color: black;
-      padding:0 ${padding}${unit};
+      width: 100%;
+      height: 100%;
       box-sizing: border-box;
+      padding: 0 ${padding}${unit};
       border:${border}px solid #000;
       border-radius: 15px;
     }
 
-    .${fClass} .enclosure-label .content {
-      display: flex;
-      justify-content: space-around;
+    .${fClass} .company{
+      width: 100%;
+      font-size: 25pt;
+    }
+
+    .${fClass} .enclosure-label tr {
+      width: 33.333%;
+    }
+
+    .${fClass} .enclosure-label tr td {
+      width: 33.333%;
+      height: 25%
     }
 
     .${fClass} .enclosure-label .row {
-      display: flex;
       height: ${rowHeight}${unit};
-      align-items: center;
-    }
-    
-    .${fClass} .enclosure-label .flex-1{
-      width:25%;
-    }
-    
-    .${fClass} .enclosure-label .flex-2{
-      width: 35%;
-      display: flex;
-      flex-direction: column;
-    }
+    } 
     </style>
     `
   }

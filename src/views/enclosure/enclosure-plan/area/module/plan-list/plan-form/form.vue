@@ -108,8 +108,9 @@ function dateOptionFn(time) {
 }
 
 CRUD.HOOK.beforeSubmit = (crud, form) => {
-  crud.form.techId = crud.query.techId
-  return !!crud.form.techId
+  crud.form.projectId = crud.query.projectId
+  crud.form.category = crud.query.category
+  return !!crud.form.category
 }
 </script>
 <style scoped>

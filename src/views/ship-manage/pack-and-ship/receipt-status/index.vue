@@ -104,9 +104,13 @@
         min-width="90"
       >
         <template v-slot="scope">
-          <el-tag :type="deliveryReceiptStatusEnum.V[scope.row.shipmentStatus].T" disable-transitions effect="plain" v-if="scope.row.sourceRow.shipmentStatus">{{
-            deliveryReceiptStatusEnum.VL[scope.row.shipmentStatus]
-          }}</el-tag>
+          <el-tag
+            :type="deliveryReceiptStatusEnum.V[scope.row.shipmentStatus].T"
+            disable-transitions
+            effect="plain"
+            v-if="scope.row.sourceRow.shipmentStatus"
+            >{{ deliveryReceiptStatusEnum.VL[scope.row.shipmentStatus] }}</el-tag
+          >
           <span v-else>-</span>
         </template>
       </el-table-column>
@@ -169,43 +173,98 @@
         align="center"
         min-width="100"
       />
-      <el-table-column v-if="checkPermission([...permission.detail,...permission.cancelDelivery,...permission.confirmDelivery])" label="操作" width="180px" align="center" fixed="right">
+      <el-table-column
+        v-if="checkPermission([...permission.detail, ...permission.cancelDelivery, ...permission.confirmDelivery])"
+        label="操作"
+        width="180px"
+        align="center"
+        fixed="right"
+      >
         <template #default="{ row: { sourceRow: row } }">
           <!-- 详情 -->
-          <common-button type="primary" icon="el-icon-view" size="mini" v-if="checkPermission(permission.detail)" @click.stop="showDetail(row,'detail')" />
-          <common-button size="mini" type="success" v-if="row.shipmentStatus===deliveryReceiptStatusEnum.DELIVERY.V && row.project?.businessType===businessTypeEnum.MACHINING.V && checkPermission(permission.confirmDelivery)" @click.stop="showDetail(row,'sign')"><svg-icon icon-class="sign" /></common-button>
-          <common-button type="warning" size="mini" v-if="row.shipmentStatus===deliveryReceiptStatusEnum.DELIVERY.V && checkPermission(permission.cancelDelivery)" @click.stop="showDetail(row,'cancel')"><svg-icon icon-class="delivery-cancel" style="font-size:14px;" /></common-button>
+          <common-button
+            type="primary"
+            icon="el-icon-view"
+            size="mini"
+            v-if="checkPermission(permission.detail)"
+            @click.stop="showDetail(row, 'detail')"
+          />
+          <common-button
+            size="mini"
+            type="success"
+            v-if="
+              row.shipmentStatus === deliveryReceiptStatusEnum.DELIVERY.V &&
+              row.project?.businessType === businessTypeEnum.MACHINING.V &&
+              checkPermission(permission.confirmDelivery)
+            "
+            @click.stop="showDetail(row, 'sign')"
+            ><svg-icon
+icon-class="sign"
+          /></common-button>
+          <common-button
+            type="warning"
+            size="mini"
+            v-if="row.shipmentStatus === deliveryReceiptStatusEnum.DELIVERY.V && checkPermission(permission.cancelDelivery)"
+            @click.stop="showDetail(row, 'cancel')"
+            ><svg-icon
+icon-class="delivery-cancel"
+style="font-size: 14px"
+          /></common-button>
         </template>
       </el-table-column>
     </common-table>
     <!--分页组件-->
     <pagination />
-    <m-detail v-model:visible="detailVisible" :detail-info="receiptInfo" :title="showType==='detail'?'装车详情':(showType==='cancel'?'取消送货':'到场签收')" :detailFunc="detail">
+    <m-detail
+      v-model:visible="detailVisible"
+      :detail-info="receiptInfo"
+      :title="showType === 'detail' ? '装车详情' : showType === 'cancel' ? '取消送货' : '到场签收'"
+      :detailFunc="detail"
+    >
       <template #tip>
-        <div style="width:150px;height:53px;overflow:hidden;position:absolute;top:-18px;left:-20px;">
-          <table-cell-tag :show="receiptInfo.shipmentStatus===deliveryReceiptStatusEnum.RETURN.V" name="已取消" color="#f56c6c"/>
+        <div style="width: 150px; height: 53px; overflow: hidden; position: absolute; top: -18px; left: -20px">
+          <table-cell-tag :show="receiptInfo.shipmentStatus === deliveryReceiptStatusEnum.RETURN.V" name="已取消" color="#f56c6c" />
         </div>
-        <el-tag effect="plain" size="medium" v-if="receiptInfo.shipmentStatus" :type="deliveryReceiptStatusEnum.V[receiptInfo.shipmentStatus].T">{{deliveryReceiptStatusEnum.VL[receiptInfo.shipmentStatus]}}</el-tag>
+        <el-tag
+          effect="plain"
+          size="medium"
+          v-if="receiptInfo.shipmentStatus"
+          :type="deliveryReceiptStatusEnum.V[receiptInfo.shipmentStatus].T"
+          >{{ deliveryReceiptStatusEnum.VL[receiptInfo.shipmentStatus] }}</el-tag
+        >
         <el-tag effect="plain" size="medium" style="margin-left: 5px" type="danger">车次：{{ receiptInfo.serialNumber }}</el-tag>
         <el-tag effect="plain" size="medium">项目：{{ receiptInfo.project && receiptInfo.project.shortName }}</el-tag>
         <el-tag effect="plain" size="medium" type="success">发运人：{{ receiptInfo.auditUserName }}</el-tag>
         <el-tag effect="plain" size="medium" type="success">收货人：{{ receiptInfo.receiptName }}</el-tag>
       </template>
       <template #titleRight>
-        <common-button type="warning" size="mini" v-if="showType==='cancel' && checkPermission(permission.cancelDelivery)" @click.stop="cancelVisible=true">取消送货</common-button>
-        <el-popconfirm title="确定签收吗?" @confirm="signSubmit" v-if="showType==='sign' && checkPermission(permission.confirmDelivery)">
+        <common-button
+          type="warning"
+          size="mini"
+          v-if="showType === 'cancel' && checkPermission(permission.cancelDelivery)"
+          @click.stop="cancelVisible = true"
+          >取消送货</common-button
+        >
+        <el-popconfirm title="确定签收吗?" @confirm="signSubmit" v-if="showType === 'sign' && checkPermission(permission.confirmDelivery)">
           <template #reference>
             <common-button type="success" size="mini">确认签收</common-button>
           </template>
         </el-popconfirm>
       </template>
     </m-detail>
-    <cancelForm v-model="cancelVisible" :detailInfo="detailInfo" @success="detailVisible=false;crud.toQuery()"/>
+    <cancelForm
+      v-model="cancelVisible"
+      :detailInfo="detailInfo"
+      @success="
+        detailVisible = false,
+        crud.toQuery()
+      "
+    />
   </div>
 </template>
 
 <script setup>
-import crudApi, { detail, deliverySign } from '@/api/mes/pack-and-ship/receipt-status'
+import { get, detail, deliverySign } from '@/api/ship-manage/pack-and-ship/receipt-status'
 import { ref } from 'vue'
 
 import { receiptStatusPM as permission } from '@/page-permission/ship-manage'
@@ -246,7 +305,7 @@ const { crud, columns } = useCRUD(
     title: '收货状态',
     sort: ['auditReceiptTime.desc'],
     permission: { ...permission },
-    crudApi: { ...crudApi },
+    crudApi: { get },
     optShow: { ...optShow },
     invisibleColumns: ['manufactureType', 'productType']
   },
@@ -275,4 +334,5 @@ async function signSubmit() {
     console.log('签收失败', error)
   }
 }
+
 </script>

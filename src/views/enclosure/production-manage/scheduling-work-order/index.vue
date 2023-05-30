@@ -5,7 +5,7 @@
     </div>
     <div class="wrap-right">
       <div class="app-container">
-        <el-tag v-if="!crud.query?.projectId" type="info" effect="plain" size="large"> * 请点击左侧项目列表查看详情 </el-tag>
+        <el-tag v-if="!project.id" type="info" effect="plain" size="large"> * 请点击左侧项目列表查看详情 </el-tag>
         <template v-else>
           <!--工具栏-->
           <mHeader class="head-container scheduling-head-container">
@@ -130,7 +130,7 @@
               fixed="right"
             >
               <template #default="{ row }">
-                <udOperation :data="row" :show-edit="false" :show-del="!row.booleanProduce" show-detail />
+                <udOperation :data="row" :show-edit="false" :show-del="!row.booleanProduce" :show-detail="checkPermission(permission.detail)" />
               </template>
             </el-table-column>
           </common-table>
@@ -146,11 +146,12 @@
 
 <script setup>
 import crudApi from '@/api/enclosure/production-manage/scheduling-work-order'
-import { ref } from 'vue'
+import { nextTick, ref } from 'vue'
 
 import { enclosureSchedulingWorkOrderPM as permission } from '@/page-permission/enclosure'
 import { mesEnclosureTypeEnum } from '@enum-ms/mes'
 import checkPermission from '@/utils/system/check-permission'
+import { DP } from '@/settings/config'
 
 import useMaxHeight from '@compos/use-max-height'
 import UdOperation from '@crud/UD.operation'
@@ -171,7 +172,7 @@ const optShow = {
 const tableRef = ref()
 const project = ref({})
 const dataFormat = ref([
-  ['totalLength', ['to-fixed', 2]],
+  ['totalLength', ['to-fixed', DP.MES_ENCLOSURE_L__M]],
   ['createTime', ['parse-time', '{y}-{m}-{d}']],
   ['category', ['parse-enum', mesEnclosureTypeEnum]]
 ])
@@ -184,7 +185,8 @@ const { CRUD, crud, columns } = useCRUD(
     optShow: { ...optShow },
     crudApi: { ...crudApi },
     requiredQuery: ['projectId'],
-    invisibleColumns: []
+    invisibleColumns: [],
+    queryOnPresenterCreated: false
   },
   tableRef
 )
@@ -196,8 +198,10 @@ const { maxHeight } = useMaxHeight({
 
 function projectChange(row = {}) {
   project.value = row
-  crud.query.projectId = row.id
-  crud.toQuery()
+  nextTick(() => {
+    crud.query.projectId = row.id
+    crud.toQuery()
+  })
 }
 
 // 是否可以删除（生产后不能删除）

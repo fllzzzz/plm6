@@ -57,7 +57,7 @@
           <span v-else>{{ row.quantity }}</span>
         </template>
       </el-table-column>
-      <el-table-column v-if="columns.visible('useProperty')" prop="useProperty" label="使用范围" align="center" min-width="120px">
+      <el-table-column v-if="columns.visible('useProperty')" :show-overflow-tooltip="true" prop="useProperty" label="使用范围" align="center" min-width="120px">
       <template #default="{ row }">
         <common-select
           v-if="row.isModify"
@@ -71,7 +71,7 @@
         <span v-else>{{ auxiliaryMaterialUseTypeEnum.VL[row.useProperty] }}</span>
       </template>
     </el-table-column>
-    <el-table-column prop="remark" label="备注" align="center">
+    <el-table-column prop="remark" label="备注" :show-overflow-tooltip="true" align="center">
       <template #default="{ row }">
         <el-input
           v-if="row.isModify"

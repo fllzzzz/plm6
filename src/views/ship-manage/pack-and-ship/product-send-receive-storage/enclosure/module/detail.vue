@@ -15,9 +15,9 @@
     </template>
     <template #titleRight>
       <print-table
-        api-key="productSendReceiveStorageDetail"
+        api-key="enclosureProductSendReceiveStorageDetail"
         v-permission="permission.detailPrint"
-        :params="{ ...props.detailQuery, ...query, workshopId: props.workshopId, productType: props.productType }"
+        :params="{ ...props.detailQuery, ...query, category: props.category, workshopId: props.workshopId, productType: props.productType }"
         size="mini"
         type="warning"
         class="filter-item"
@@ -25,7 +25,7 @@
     </template>
     <template #content>
       <div class="header-div">
-        <monomer-select
+        <!-- <monomer-select
           ref="monomerSelectRef"
           v-model="query.monomerId"
           :project-id="props.detailInfo.project.id"
@@ -43,6 +43,18 @@
           size="small"
           clearable
           placeholder="请选择区域"
+          class="filter-item"
+          style="width: 200px; margin-left: 3px"
+          @change="fetchList"
+        /> -->
+        <common-select
+          v-model="query.enclosurePlanId"
+          :options="areaInfo"
+          type="other"
+          :dataStructure="{ key: 'id', label: 'name', value: 'id' }"
+          size="small"
+          clearable
+          placeholder="请选择批次"
           class="filter-item"
           style="width: 200px; margin-left: 3px"
           @change="fetchList"
@@ -66,60 +78,60 @@
       <common-table
         :data="list"
         v-loading="tableLoading"
-        :data-format="dataFormat"
         show-summary
         :summary-method="getSummaries"
         :max-height="maxHeight"
         v-if="visible"
       >
         <el-table-column label="序号" type="index" align="center" width="60" />
-        <el-table-column key="monomerName" prop="monomerName" label="单体" align="center" show-overflow-tooltip>
-          <template #default="{ row }">
-            <table-cell-tag :show="!!row.typeName" :name="row.typeName" :color="row.typeName === '构件' ? '#67C23A' : '#409EFF'" />
-            <span>{{ row.monomerName ? row.monomerName : '-' }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column key="areaName" prop="areaName" label="区域" align="center" show-overflow-tooltip />
+        <el-table-column key="enclosurePlanName" prop="enclosurePlanName" label="批次" align="center" show-overflow-tooltip />
         <el-table-column key="serialNumber" prop="serialNumber" label="编号" align="center" show-overflow-tooltip />
-        <el-table-column key="specification" prop="specification" label="规格" align="center" show-overflow-tooltip />
-        <el-table-column key="length" prop="length" label="长度(mm)" align="center" show-overflow-tooltip />
+        <el-table-column
+          v-if="props.category !== enclosureTypeEnum.FOLDING_PIECE.V"
+          key="plate"
+          prop="plate"
+          label="板型"
+          align="center"
+          show-overflow-tooltip
+        />
+        <el-table-column key="length" prop="length" label="单长(mm)" align="center" show-overflow-tooltip />
         <el-table-column label="清单数(件/米)" align="center">
           <el-table-column key="quantity" prop="quantity" label="清单数" align="center" show-overflow-tooltip />
-          <el-table-column key="totalNetWeight" prop="totalNetWeight" label="清单量" align="center" show-overflow-tooltip>
+          <el-table-column key="totalLength" prop="totalLength" label="总长" align="center" show-overflow-tooltip>
             <template #default="{ row }">
-              <span>{{ props.weightStatus === weightTypeEnum.NET.V ? row.totalNetWeight : row.totalGrossWeight }}</span>
+              <span>{{ convertUnits(row.totalLength, 'mm', 'm', DP.MES_ENCLOSURE_L__M) || 0 }}</span>
             </template>
           </el-table-column>
         </el-table-column>
         <el-table-column label="期初库存(件/米)" align="center">
           <el-table-column key="beginningQuantity" prop="beginningQuantity" label="期初数" align="center" show-overflow-tooltip />
-          <el-table-column key="beginningNetWeight" prop="beginningNetWeight" label="期初量" align="center" show-overflow-tooltip>
+          <el-table-column key="beginningTotalLength" prop="beginningTotalLength" label="总长" align="center" show-overflow-tooltip>
             <template #default="{ row }">
-              <span>{{ props.weightStatus === weightTypeEnum.NET.V ? row.beginningNetWeight : row.beginningGrossWeight }}</span>
+              <span>{{ convertUnits(row.beginningTotalLength, 'mm', 'm', DP.MES_ENCLOSURE_L__M) || 0 }}</span>
             </template>
           </el-table-column>
         </el-table-column>
         <el-table-column label="入库(件/米)" align="center">
           <el-table-column key="inboundQuantity" prop="inboundQuantity" label="入库数" align="center" show-overflow-tooltip />
-          <el-table-column key="inboundNetWeight" prop="inboundNetWeight" label="入库量" align="center" show-overflow-tooltip>
+          <el-table-column key="inboundTotalLength" prop="inboundTotalLength" label="总长" align="center" show-overflow-tooltip>
             <template #default="{ row }">
-              <span>{{ props.weightStatus === weightTypeEnum.NET.V ? row.inboundNetWeight : row.inboundGrossWeight }}</span>
+              <span>{{ convertUnits(row.inboundTotalLength, 'mm', 'm', DP.MES_ENCLOSURE_L__M) || 0 }}</span>
             </template>
           </el-table-column>
         </el-table-column>
         <el-table-column label="出库(件/米)" align="center">
           <el-table-column key="outboundQuantity" prop="outboundQuantity" label="出库数" align="center" show-overflow-tooltip />
-          <el-table-column key="outboundNetWeight" prop="outboundNetWeight" label="出库量" align="center" show-overflow-tooltip>
+          <el-table-column key="outboundTotalLength" prop="outboundTotalLength" label="总长" align="center" show-overflow-tooltip>
             <template #default="{ row }">
-              <span>{{ props.weightStatus === weightTypeEnum.NET.V ? row.outboundNetWeight : row.outboundGrossWeight }}</span>
+              <span>{{ convertUnits(row.outboundTotalLength, 'mm', 'm', DP.MES_ENCLOSURE_L__M) || 0 }}</span>
             </template>
           </el-table-column>
         </el-table-column>
         <el-table-column label="期末库存(件/米)" align="center">
           <el-table-column key="stockQuantity" prop="stockQuantity" label="期末数" align="center" show-overflow-tooltip />
-          <el-table-column key="stockNetWeight" prop="stockNetWeight" label="期末量" align="center" show-overflow-tooltip>
+          <el-table-column key="stockTotalLength" prop="stockTotalLength" label="期末量" align="center" show-overflow-tooltip>
             <template #default="{ row }">
-              <span>{{ props.weightStatus === weightTypeEnum.NET.V ? row.stockNetWeight : row.stockGrossWeight }}</span>
+              <span>{{ convertUnits(row.stockTotalLength, 'mm', 'm', DP.MES_ENCLOSURE_L__M) || 0 }}</span>
             </template>
           </el-table-column>
         </el-table-column>
@@ -139,22 +151,23 @@
 </template>
 
 <script setup>
-import { detail } from '@/api/mes/pack-and-ship/product-receive-send-storage'
+import { detail } from '@/api/ship-manage/pack-and-ship/enclosure-product-receive-send-storage'
+import { getEnclosureBatch } from '@/api/mes/common.js'
 import { ref, defineEmits, defineProps, watch } from 'vue'
-import { weightTypeEnum } from '@enum-ms/common'
-import { tableSummary } from '@/utils/el-extra'
+// import { tableSummary } from '@/utils/el-extra'
+import { enclosureTypeEnum } from '@enum-ms/ship-manage'
+import { convertUnits } from '@/utils/convert/unit'
 import { DP } from '@/settings/config'
 import { projectNameFormatter } from '@/utils/project'
 import { parseTime } from '@/utils/date'
 import useVisible from '@compos/use-visible'
 import useMaxHeight from '@compos/use-max-height'
 import usePagination from '@compos/use-pagination'
-import monomerSelect from '@/components-system/plan/monomer-select'
+// import monomerSelect from '@/components-system/plan/monomer-select'
 
 const emit = defineEmits(['update:modelValue', 'success'])
 const query = ref({
-  monomerId: undefined,
-  areaId: undefined,
+  enclosurePlanId: undefined,
   serialNumber: undefined
 })
 
@@ -185,11 +198,11 @@ const props = defineProps({
   productType: {
     type: Number
   },
-  weightStatus: {
-    type: Number
-  },
   dateTime: {
     type: String
+  },
+  category: {
+    type: Number
   }
 })
 
@@ -198,6 +211,8 @@ const { handleSizeChange, handleCurrentChange, total, setTotalPage, queryPage } 
 
 watch(visible, (val) => {
   if (val) {
+    query.value.areaId = undefined
+    fetchBatch()
     fetchList()
   }
 })
@@ -220,35 +235,89 @@ const { maxHeight } = useMaxHeight(
   visible
 )
 
-const dataFormat = ref([
-  ['mete', ['to-fixed', DP.COM_WT__KG]],
-  ['inboundMete', ['to-fixed', DP.COM_WT__KG]],
-  ['outboundMete', ['to-fixed', DP.COM_WT__KG]],
-  ['stockMete', ['to-fixed', DP.COM_WT__KG]],
-  ['beginningMete', ['to-fixed', DP.COM_WT__KG]]
-])
-
 // 合计
 function getSummaries(param) {
-  const summary = tableSummary(param, {
-    props: [
-      'inboundQuantity',
-      'inboundMete',
-      'outboundQuantity',
-      'outboundMete',
-      'quantity',
-      'mete',
-      'stockMete',
-      'stockQuantity',
-      'beginningQuantity',
-      'beginningMete'
-    ]
+  // const summary = tableSummary(param, {
+  //   props: [
+  //     'inboundQuantity',
+  //     'inboundTotalLength',
+  //     'outboundQuantity',
+  //     'outboundTotalLength',
+  //     'quantity',
+  //     'totalLength',
+  //     'stockTotalLength',
+  //     'stockQuantity',
+  //     'beginningQuantity',
+  //     'beginningTotalLength'
+  //   ]
+  // })
+  // return summary
+  const { columns, data } = param
+  const sums = []
+  columns.forEach((column, index) => {
+    if (index === 0) {
+      sums[index] = '合计'
+      return
+    }
+    if (
+      column.property === 'quantity' ||
+      column.property === 'inboundQuantity' ||
+      column.property === 'outboundQuantity' ||
+      column.property === 'stockQuantity' ||
+      column.property === 'beginningQuantity'
+    ) {
+      const values = data.map((item) => Number(item[column.property]))
+      let valuesSum = 0
+      if (!values.every((value) => isNaN(value))) {
+        valuesSum = values.reduce((prev, curr) => {
+          const value = Number(curr)
+          if (!isNaN(value)) {
+            return prev + curr
+          } else {
+            return prev
+          }
+        }, 0)
+      }
+      sums[index] = valuesSum
+    }
+    if (
+      column.property === 'totalLength' ||
+      column.property === 'inboundTotalLength' ||
+      column.property === 'outboundTotalLength' ||
+      column.property === 'stockTotalLength' ||
+      column.property === 'beginningTotalLength'
+    ) {
+      const values = data.map((item) => Number(item[column.property]))
+      let valuesSum = 0
+      if (!values.every((value) => isNaN(value))) {
+        valuesSum = values.reduce((prev, curr) => {
+          const value = Number(curr)
+          if (!isNaN(value)) {
+            return prev + curr
+          } else {
+            return prev
+          }
+        }, 0)
+      }
+      sums[index] = convertUnits(valuesSum, 'mm', 'm', DP.MES_ENCLOSURE_L__M)
+    }
   })
-  return summary
+  return sums
 }
 
-function getAreaInfo(val) {
-  areaInfo.value = val || []
+// function getAreaInfo(val) {
+//   areaInfo.value = val || []
+// }
+
+// 获取围护批次
+async function fetchBatch() {
+  try {
+    const data = await getEnclosureBatch(props.detailQuery?.projectId)
+    areaInfo.value = data || []
+    areaInfo.value = areaInfo.value.filter(v => v.category === props.category)
+  } catch (e) {
+    console.log('获取围护的批次失败', e)
+  }
 }
 
 // 获取明细
@@ -256,13 +325,13 @@ async function fetchList() {
   let _list = []
   tableLoading.value = true
   try {
-    console.log(props.detailQuery, 'props')
     const { content = [], totalElements } = await detail({
-      ...props.detailQuery,
-      ...queryPage,
       workshopId: props.workshopId,
       productType: props.productType,
-      ...query.value
+      category: props.category,
+      ...props.detailQuery,
+      ...query.value,
+      ...queryPage
     })
     _list = content
     setTotalPage(totalElements)

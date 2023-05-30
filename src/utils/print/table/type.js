@@ -92,6 +92,7 @@ const tableType = {
   contractEnclosureProduct: { L: '围护制品', M: 'sales_manage', T: mt.contract.L + ' / ' + contract.sales_manage },
   contractAuxiliaryMaterialProduct: { L: '配套制品', M: 'sales_manage', T: mt.contract.L + ' / ' + contract.sales_manage },
   contractStructureShipmentTracking: { L: '结构发运跟踪', M: 'sales_manage', T: mt.contract.L + ' / ' + contract.sales_manage },
+  contractEnclosureShipmentTracking: { L: '围护发运跟踪', M: 'sales_manage', T: mt.contract.L + ' / ' + contract.sales_manage },
   contractAuxiliaryMaterialShipmentTracking: { L: '配套件发运跟踪', M: 'sales_manage', T: mt.contract.L + ' / ' + contract.sales_manage },
 
   waterRecord: { L: '水费清单', M: 'expense_entry', T: mt.contract.L + ' / ' + contract.expense_entry },
@@ -184,8 +185,13 @@ const tableType = {
   mesEndInventoryDetail: { L: '期末库存', M: 'mes_warehouse', T: mt.mes.L + ' / ' + mes.mes_warehouse },
   mesInboundInventoryDetail: { L: '入库量', M: 'mes_warehouse', T: mt.mes.L + ' / ' + mes.mes_warehouse },
   mesOutboundInventoryDetail: { L: '出库量', M: 'mes_warehouse', T: mt.mes.L + ' / ' + mes.mes_warehouse },
+  enclosureBeginningInventoryDetail: { L: '期初库存', M: 'mes_warehouse', T: mt.mes.L + ' / ' + mes.mes_warehouse },
+  enclosureEndInventoryDetail: { L: '期末库存', M: 'mes_warehouse', T: mt.mes.L + ' / ' + mes.mes_warehouse },
+  enclosureInboundInventoryDetail: { L: '入库量', M: 'mes_warehouse', T: mt.mes.L + ' / ' + mes.mes_warehouse },
+  enclosureOutboundInventoryDetail: { L: '出库量', M: 'mes_warehouse', T: mt.mes.L + ' / ' + mes.mes_warehouse },
 
   mesPackingList: { L: '打包清单', M: 'mes_logistics', T: mt.mes.L + ' / ' + mes.mes_logistics },
+  enclosurePackingList: { L: '打包清单', M: 'mes_logistics', T: mt.mes.L + ' / ' + mes.mes_logistics },
   mesShipmentSummary: { L: '发运汇总', M: 'mes_logistics', T: mt.mes.L + ' / ' + mes.mes_logistics },
   mesShipmentDetail: { L: '发运详情', M: 'mes_logistics', T: mt.mes.L + ' / ' + mes.mes_logistics },
   mesShipmentAudit: { L: '发运审核', M: 'mes_logistics', T: mt.mes.L + ' / ' + mes.mes_logistics },
@@ -214,15 +220,25 @@ const tableType = {
 
   mesStudSleeveStatisticsList: { L: '栓钉套筒统计清单详情', M: 'mes_production_line_wage_statistics', T: mt.mes.L + ' / ' + mes.mes_production_line_wage_statistics },
   mesProjectShipDetail: { L: '项目发运详情报表', M: 'mes_pack_and_ship_manage', T: mt.mes.L + ' / ' + mes.mes_pack_and_ship_manage },
+  enclosureProjectShipDetail: { L: '项目发运详情报表', M: 'mes_pack_and_ship_manage', T: mt.mes.L + ' / ' + mes.mes_pack_and_ship_manage },
   mesShipMeteDetail: { L: '清单总量详情报表', M: 'mes_pack_and_ship_manage', T: mt.mes.L + ' / ' + mes.mes_pack_and_ship_manage },
   mesShipTaskMeteDetail: { L: '任务总量详情报表', M: 'mes_pack_and_ship_manage', T: mt.mes.L + ' / ' + mes.mes_pack_and_ship_manage },
   mesShipInboundMeteDetail: { L: '入库量详情报表', M: 'mes_pack_and_ship_manage', T: mt.mes.L + ' / ' + mes.mes_pack_and_ship_manage },
   mesShipTotalMeteDetail: { L: '累计发运详情报表', M: 'mes_pack_and_ship_manage', T: mt.mes.L + ' / ' + mes.mes_pack_and_ship_manage },
   mesShipMonthMeteDetail: { L: '本月发运详情报表', M: 'mes_pack_and_ship_manage', T: mt.mes.L + ' / ' + mes.mes_pack_and_ship_manage },
   mesShipStockMeteDetail: { L: '库存详情报表', M: 'mes_pack_and_ship_manage', T: mt.mes.L + ' / ' + mes.mes_pack_and_ship_manage },
+  enclosureShipMeteDetail: { L: '清单总量详情报表', M: 'mes_pack_and_ship_manage', T: mt.mes.L + ' / ' + mes.mes_pack_and_ship_manage },
+  enclosureShipTaskMeteDetail: { L: '围护任务总量详情报表', M: 'mes_pack_and_ship_manage', T: mt.mes.L + ' / ' + mes.mes_pack_and_ship_manage },
+  enclosureShipInboundMeteDetail: { L: '围护入库量详情报表', M: 'mes_pack_and_ship_manage', T: mt.mes.L + ' / ' + mes.mes_pack_and_ship_manage },
+  enclosureShipTotalMeteDetail: { L: '围护累计发运详情报表', M: 'mes_pack_and_ship_manage', T: mt.mes.L + ' / ' + mes.mes_pack_and_ship_manage },
+  enclosureShipMonthMeteDetail: { L: '围护本月发运详情报表', M: 'mes_pack_and_ship_manage', T: mt.mes.L + ' / ' + mes.mes_pack_and_ship_manage },
+  enclosureShipStockMeteDetail: { L: '围护库存详情报表', M: 'mes_pack_and_ship_manage', T: mt.mes.L + ' / ' + mes.mes_pack_and_ship_manage },
   mesShipTrainMeteDetail: { L: '累计车次详情报表', M: 'mes_pack_and_ship_manage', T: mt.mes.L + ' / ' + mes.mes_pack_and_ship_manage },
+  mesAuxMatDetail: { L: '配套件详情报表', M: 'mes_pack_and_ship_manage', T: mt.mes.L + ' / ' + mes.mes_pack_and_ship_manage },
   mesProductSendReceiveStorage: { L: '制成品入发存', M: 'mes_pack_and_ship_manage', T: mt.mes.L + ' / ' + mes.mes_pack_and_ship_manage },
+  enclosureProductSendReceiveStorage: { L: '制成品入发存', M: 'mes_pack_and_ship_manage', T: mt.mes.L + ' / ' + mes.mes_pack_and_ship_manage },
   productSendReceiveStorageDetail: { L: '制成品入发存详情', M: 'mes_pack_and_ship_manage', T: mt.mes.L + ' / ' + mes.mes_pack_and_ship_manage },
+  enclosureProductSendReceiveStorageDetail: { L: '制成品入发存详情', M: 'mes_pack_and_ship_manage', T: mt.mes.L + ' / ' + mes.mes_pack_and_ship_manage },
 
   // 项目报表
   mesMainMaterialTrack: { L: '主材跟踪汇总', M: 'mes_project_report', T: mt.mes.L + ' / ' + mes.mes_project_report },
@@ -239,11 +255,11 @@ const tableType = {
   auxiliaryMaterialSummary: { L: '配套件汇总', M: 'technical_manage', T: mt.plan.L + ' / ' + plan.technical_manage },
 
   // 围护MES
-  enclosureSchedulingWorkOrderDetail: { L: '排产工单详情', M: 'production_manage', T: mt.plan.L + ' / ' + enclosure.production_manage },
-  enclosureTaskTrackingDetail: { L: '生产跟踪详情', M: 'production_manage', T: mt.plan.L + ' / ' + enclosure.production_manage },
-  enclosureProductionStatistics: { L: '围护生产统计', M: 'production_report', T: mt.plan.L + ' / ' + enclosure.production_report },
-  enclosureTeamProduction: { L: '围护班组产量', M: 'production_report', T: mt.plan.L + ' / ' + enclosure.production_report },
-  enclosureTeamProductionDetail: { L: '围护班组产量详情', M: 'production_report', T: mt.plan.L + ' / ' + enclosure.production_report }
+  enclosureSchedulingWorkOrderDetail: { L: '排产工单详情', M: 'production_manage', T: mt.enclosure.L + ' / ' + enclosure.production_manage },
+  enclosureTaskTrackingDetail: { L: '生产跟踪详情', M: 'production_manage', T: mt.enclosure.L + ' / ' + enclosure.production_manage },
+  enclosureProductionStatistics: { L: '围护生产统计', M: 'production_report', T: mt.enclosure.L + ' / ' + enclosure.production_report },
+  enclosureTeamProduction: { L: '围护班组产量', M: 'production_report', T: mt.enclosure.L + ' / ' + enclosure.production_report },
+  enclosureTeamProductionDetail: { L: '围护班组产量详情', M: 'production_report', T: mt.enclosure.L + ' / ' + enclosure.production_report }
 
 }
 

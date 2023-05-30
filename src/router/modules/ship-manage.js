@@ -1,5 +1,5 @@
 export default {
-  id: 999,
+  id: 9578,
   name: '发运管理',
   children: [
     {
@@ -100,17 +100,17 @@ export default {
             }
           ]
         },
-        // {
-        //   name: 'ShipManageShipList',
-        //   path: 'ship-list',
-        //   hidden: false,
-        //   component: '/ship-manage/pack-and-ship/ship-list/index',
-        //   meta: {
-        //     title: '发运记录',
-        //     icon: 'project',
-        //     noCache: true
-        //   }
-        // },
+        {
+          name: 'ShipManageShipList',
+          path: 'ship-list',
+          hidden: false,
+          component: '/ship-manage/pack-and-ship/ship-list/index',
+          meta: {
+            title: '发运记录',
+            icon: 'project',
+            noCache: true
+          }
+        },
         {
           name: 'ShipManageReceiptStatus',
           path: 'receipt-status',

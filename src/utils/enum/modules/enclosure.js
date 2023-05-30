@@ -16,12 +16,21 @@ const schedulingEnum = {
 }
 constantize(schedulingEnum)
 
+// 围护计价方式
+const enclosurePricingMannerEnum = {
+  LENGTH: { L: '长度', K: 'LENGTH', V: 1 },
+  AREA: { L: '面积', K: 'AREA', V: 2 }
+}
+constantize(enclosurePricingMannerEnum)
+
 export {
   schedulingEnum,
-  enclosurePlanTypeEnum
+  enclosurePlanTypeEnum,
+  enclosurePricingMannerEnum
 }
 
 export default {
   schedulingEnum,
-  enclosurePlanTypeEnum
+  enclosurePlanTypeEnum,
+  enclosurePricingMannerEnum
 }

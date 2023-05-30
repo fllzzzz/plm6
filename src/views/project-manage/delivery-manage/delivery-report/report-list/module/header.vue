@@ -19,13 +19,8 @@
         class="filter-item"
         @change="productTypeChange"
       />
-      <!-- <project-subcontract-select
-        v-model="query.projectId"
-        style="width: 200px;margin-right:5px;"
-        class="filter-item"
-        @change="crud.toQuery"
-      /> -->
       <monomer-select
+       v-if="query.productType!==installProjectTypeEnum.ENCLOSURE.V"
         ref="monomerSelectRef"
         v-model="query.monomerId"
         :project-id="query.projectId"
@@ -37,7 +32,7 @@
         @getAreaInfo="getAreaInfo"
       />
        <common-select
-        v-if="query.productType!==installProjectTypeEnum.AUXILIARY.V"
+        v-if="query.productType!==installProjectTypeEnum.AUXILIARY.V && query.productType!==installProjectTypeEnum.ENCLOSURE.V"
         v-model="query.areaId"
         :options="areaInfo"
         type="other"
@@ -49,6 +44,32 @@
         style="width:200px;"
         @change="crud.toQuery"
       />
+      <template v-if="query.productType===installProjectTypeEnum.ENCLOSURE.V">
+        <common-select
+          v-model="query.category"
+          :options="TechnologyTypeAllEnum.ENUM"
+          :unshow-options="[TechnologyTypeAllEnum.STRUCTURE.K,TechnologyTypeAllEnum.BRIDGE.K]"
+          type="enum"
+          size="small"
+          clearable
+          placeholder="请选择围护类型"
+          class="filter-item"
+          style="width:200px;"
+          @change="categoryChange"
+        />
+        <common-select
+          v-model="query.areaId"
+          :options="areaInfo"
+          type="other"
+          :dataStructure="typeProp"
+          size="small"
+          clearable
+          placeholder="请选择批次"
+          class="filter-item"
+          style="width:200px;"
+          @change="crud.toQuery"
+        />
+      </template>
       <div>
         <el-input
           v-model.trim="query.supplierName"
@@ -108,9 +129,11 @@
 
 <script setup>
 import { ref, defineProps, watch } from 'vue'
+import { allProjectPlan } from '@/api/enclosure/enclosure-plan/area'
 
 import moment from 'moment'
 import { regHeader } from '@compos/use-crud'
+import { TechnologyTypeAllEnum } from '@enum-ms/contract'
 import { installProjectTypeEnum } from '@enum-ms/project'
 import { manufactureTypeEnum } from '@enum-ms/plan'
 
@@ -127,6 +150,7 @@ const defaultQuery = {
   startDate: undefined,
   endDate: undefined,
   productType: installProjectTypeEnum.ARTIFACT.V,
+  category: undefined,
   monomerId: undefined,
   areaId: undefined,
   name: undefined,
@@ -138,6 +162,7 @@ const defaultQuery = {
 const { crud, query } = regHeader(defaultQuery)
 const typeProp = { key: 'id', label: 'name', value: 'id' }
 const areaInfo = ref([])
+const totalArea = ref([])
 
 const props = defineProps({
   projectId: {
@@ -151,6 +176,10 @@ watch(
   (val) => {
     if (val) {
       crud.query.projectId = props.projectId
+      totalArea.value = []
+      if (crud.query.productType === installProjectTypeEnum.ENCLOSURE.V) {
+        getAllProjectPlan()
+      }
       crud.toQuery()
     }
   },
@@ -175,6 +204,32 @@ function getAreaInfo(val) {
 
 function productTypeChange(val) {
   query.areaId = undefined
+  if (val === installProjectTypeEnum.ENCLOSURE.V) {
+    getAllProjectPlan()
+  }
   crud.toQuery()
+}
+
+function categoryChange(val) {
+  areaInfo.value = totalArea.value?.filter(v => v.category === val) || []
+  crud.toQuery()
+}
+
+async function getAllProjectPlan() {
+  crud.query.monomerId = undefined
+  areaInfo.value = []
+  if (props.projectId) {
+    try {
+      const data = await allProjectPlan(props.projectId) || []
+      totalArea.value = data || []
+      if (crud.query.category) {
+        areaInfo.value = totalArea.value?.filter(v => v.category === crud.query.category)
+      } else {
+        areaInfo.value = totalArea.value
+      }
+    } catch (e) {
+      console.log('获取项目所有围护计划', e)
+    }
+  }
 }
 </script>

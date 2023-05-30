@@ -1,12 +1,14 @@
 <template>
   <common-drawer
+    ref="drawerRef"
     append-to-body
     :close-on-click-modal="false"
     :before-close="crud.cancelCU"
     :visible="crud.status.cu > 0"
-    :title="crud.query.category?crud.status.title+'('+TechnologyTypeAllEnum.VL[crud.query.category]+')':crud.status.title"
+    :title="crud.status.title"
     :wrapper-closable="false"
-    size="90%"
+    custom-class="detail"
+    size="100%"
   >
     <template #titleRight>
       <common-button :loading="crud.status.cu === 2" type="primary" size="mini" @click="crud.submitCU">确认</common-button>
@@ -17,14 +19,14 @@
           ref="detailRef"
           border
           :data="form.list"
-          :max-height="maxHeight"
+          :max-height="maxHeight-150"
           return-source-data
           :showEmptySymbol="false"
           style="width: 100%"
           class="table-form"
           :cell-class-name="wrongCellMask"
         >
-          <el-table-column label="序号" type="index" align="center" width="50" />
+          <el-table-column label="序号" type="index" align="center" width="50" fixed="left" />
           <el-table-column
             key="name"
             prop="name"
@@ -62,7 +64,7 @@
             :key="technicalTypeStatus ? 'plateId' : 'plate'"
             :prop="technicalTypeStatus ? 'plateId' : 'plate'"
             :show-overflow-tooltip="true"
-            label="版型"
+            label="板型"
             min-width="100px"
           >
             <template v-slot="scope">
@@ -73,7 +75,7 @@
                 :type="'other'"
                 :dataStructure="crud.query.category===TechnologyTypeAllEnum.TRUSS_FLOOR_PLATE.V?trussProp:typeProp"
                 size="small"
-                placeholder="版型"
+                placeholder="板型"
                 @change="plateChange(scope.row,scope.$index)"
               />
               <common-select
@@ -82,7 +84,7 @@
                 :options="enclosureDictKV?.['plate_type']"
                 :dataStructure="defaultProp"
                 size="small"
-                placeholder="版型"
+                placeholder="板型"
                 @change="plateChange(scope.row,scope.$index)"
               />
             </template>
@@ -100,10 +102,10 @@
                 v-if="crud.query.category!==TechnologyTypeAllEnum.PROFILED_PLATE.V && crud.query.category!==TechnologyTypeAllEnum.PRESSURE_BEARING_PLATE.V"
                 v-model.number="scope.row.width"
                 :min="0"
-                :max="99999999999"
+                :max="9999999999"
                 :step="1"
                 :precision="DP.MES_ENCLOSURE_W__MM"
-                placeholder="有效宽度"
+                :label="crud.query.category===TechnologyTypeAllEnum.SANDWICH_BOARD.V?'宽度':`有效宽度`"
                 controls-position="right"
                 style="width:100%"
                 @change="getTotalData(scope.row)"
@@ -124,7 +126,7 @@
                 v-if="crud.query.category===TechnologyTypeAllEnum.BENDING.V"
                 v-model.number="scope.row.unfoldedWidth"
                 :min="0"
-                :max="99999999999"
+                :max="9999999999"
                 :step="1"
                 :precision="DP.MES_ENCLOSURE_W__MM"
                 placeholder="展开宽度"
@@ -147,7 +149,7 @@
               <el-input-number
                 v-model.number="scope.row.bendTimes"
                 :min="0"
-                :max="99999999999"
+                :max="9999999999"
                 :step="1"
                 :precision="0"
                 placeholder="折弯次数"
@@ -169,7 +171,7 @@
               <el-input-number
                 v-model.number="scope.row.thickness"
                 :min="0"
-                :max="99999999999"
+                :max="9999999999"
                 :step="1"
                 :precision="DP.MES_ENCLOSURE_T__MM"
                 placeholder="板厚"
@@ -191,7 +193,7 @@
               <el-input-number
                 v-model.number="scope.row.length"
                 :min="0"
-                :max="99999999999"
+                :max="9999999999"
                 :step="1"
                 :precision="DP.MES_ENCLOSURE_L__MM"
                 placeholder="单长"
@@ -212,7 +214,7 @@
               <el-input-number
                 v-model.number="scope.row.quantity"
                 :min="0"
-                :max="99999999999"
+                :max="9999999999"
                 :step="1"
                 :precision="DP.MES_ENCLOSURE_L__MM"
                 placeholder="数量"
@@ -246,19 +248,40 @@
             </template>
           </el-table-column>
           <el-table-column
-            v-if="crud.query.category!==TechnologyTypeAllEnum.SANDWICH_BOARD.V"
-            key="weight"
-            prop="weight"
+            key="totalWeight"
+            prop="totalWeight"
             :label="`总重量(kg)`"
             align="left"
             min-width="100px"
           >
             <template v-slot="scope">
-              {{ scope.row.weight ? scope.row.weight.toFixed(DP.COM_WT__KG) : '-' }}
+              {{ scope.row.totalWeight ? scope.row.totalWeight.toFixed(DP.COM_WT__KG) : '-' }}
+            </template>
+          </el-table-column>
+           <el-table-column
+            key="coating"
+            prop="coating"
+            :show-overflow-tooltip="true"
+            label="涂层"
+            min-width="100px"
+          >
+            <template v-slot="scope">
+              <el-input v-model="scope.row.coating" placeholder="涂层" maxlength="10" style="width: 100%" />
             </template>
           </el-table-column>
           <el-table-column
-            v-if="crud.query.category!==TechnologyTypeAllEnum.SANDWICH_BOARD.V && crud.query.category!==TechnologyTypeAllEnum.TRUSS_FLOOR_PLATE.V"
+            key="plating"
+            prop="plating"
+            :show-overflow-tooltip="true"
+            label="镀层"
+            min-width="100px"
+          >
+            <template v-slot="scope">
+              <el-input v-model="scope.row.plating" placeholder="镀层" maxlength="10" style="width: 100%" />
+            </template>
+          </el-table-column>
+          <el-table-column
+            v-if="crud.query.category!==TechnologyTypeAllEnum.TRUSS_FLOOR_PLATE.V"
             key="brand"
             prop="brand"
             :show-overflow-tooltip="true"
@@ -275,7 +298,7 @@
             </template>
           </el-table-column>
           <el-table-column
-            v-if="crud.query.category!=TechnologyTypeAllEnum.TRUSS_FLOOR_PLATE.V && crud.query.category!=TechnologyTypeAllEnum.PRESSURE_BEARING_PLATE.V&& crud.query.category!=TechnologyTypeAllEnum.PRESSURE_BEARING_PLATE.V && crud.query.category!=TechnologyTypeAllEnum.SANDWICH_BOARD.V"
+            v-if="crud.query.category!=TechnologyTypeAllEnum.TRUSS_FLOOR_PLATE.V && crud.query.category!=TechnologyTypeAllEnum.PRESSURE_BEARING_PLATE.V&& crud.query.category!=TechnologyTypeAllEnum.PRESSURE_BEARING_PLATE.V"
             key="color"
             prop="color"
             :show-overflow-tooltip="true"
@@ -291,7 +314,18 @@
               />
             </template>
           </el-table-column>
-          <el-table-column label="操作" align="center">
+          <el-table-column
+            key="remark"
+            prop="remark"
+            :show-overflow-tooltip="true"
+            label="备注"
+            min-width="100px"
+          >
+            <template v-slot="scope">
+              <el-input v-model="scope.row.remark" placeholder="备注" type="textarea" maxlength="200" style="width: 100%" />
+            </template>
+          </el-table-column>
+          <el-table-column label="操作" align="center" fixed="right">
             <template v-slot="scope">
               <common-button size="small" class="el-icon-delete" type="danger" @click="deleteRow(scope.$index)" />
             </template>
@@ -335,14 +369,28 @@ const defaultProp = { key: 'name', label: 'name', value: 'name' }
 
 const plateOption = inject('plateOption')
 const technicalTypeStatus = inject('technicalTypeStatus') // 技术交底状态
+const drawerRef = ref()
 
 const { CRUD, crud, form } = regForm(defaultForm, formRef)
 
-const { maxHeight } = useMaxHeight({
-  wrapperBox: '.enclosureForm',
-  paginate: true,
-  extraHeight: 40
-})
+const { maxHeight } = useMaxHeight(
+  {
+    mainBox: '.detail',
+    extraBox: ['.el-drawer__header'],
+    wrapperBox: '.table-form',
+    paginate: true,
+    minHeight: 300,
+    navbar: false,
+    clientHRepMainH: true
+  },
+  drawerRef
+)
+
+// const { maxHeight } = useMaxHeight({
+//   wrapperBox: '.enclosure-form',
+//   paginate: false,
+//   extraHeight: 0
+// })
 // 折边件展开宽度校验
 const validateUnfoldedWidth = (value, row) => {
   if (crud.query.category === TechnologyTypeAllEnum.BENDING.V) {
@@ -398,6 +446,7 @@ const validateColor = (value, row) => {
 }
 
 const rules = {
+  name: [{ required: true, message: '请输入名称', trigger: 'blur' }],
   serialNumber: [{ required: true, message: '请输入编号', trigger: 'blur' }],
   unfoldedWidth: [{ validator: validateUnfoldedWidth, message: '展开宽度必填', trigger: 'change' }],
   width: [{ validator: validateWidth, message: '有效宽度必填', trigger: 'change' }],
@@ -415,11 +464,11 @@ const tableRules = computed(() => {
   let data = {}
   if (technicalTypeStatus.value) {
     data = {
-      plateId: [{ validator: validatePlateId, message: '请选择版型', trigger: 'change' }]
+      plateId: [{ validator: validatePlateId, message: '请选择板型', trigger: 'change' }]
     }
   } else {
     data = {
-      plate: [{ required: true, message: '请选择版型', trigger: 'change' }]
+      plate: [{ required: true, message: '请选择板型', trigger: 'change' }]
     }
   }
   return { ...rules, ...data }
@@ -519,7 +568,6 @@ function plateChange(row, index) {
       form.list[index].unfoldedWidth = choseVal.unfoldedWidth
     }
     form.list[index].width = choseVal.effectiveWidth
-    getTotalData(row)
   } else {
     const data = enclosureDictKV.value.KV?.[row.plate] || {}
     if (crud.query.category === TechnologyTypeAllEnum.TRUSS_FLOOR_PLATE.V) {
@@ -529,6 +577,7 @@ function plateChange(row, index) {
       form.list[index].unfoldedWidth = +data.unfoldedWidth
     }
   }
+  getTotalData(row)
 }
 
 function getTotalData(row) {
@@ -550,12 +599,14 @@ function getTotalData(row) {
 function thicknessChange(row) {
   if (crud.query.category === TechnologyTypeAllEnum.BENDING.V || (crud.query.category === TechnologyTypeAllEnum.PROFILED_PLATE.V || crud.query.category === TechnologyTypeAllEnum.PRESSURE_BEARING_PLATE.V)) {
     if (row.unfoldedWidth && row.thickness && row.totalLength) {
-      row.weight = (row.unfoldedWidth / 1000) * row.thickness * row.totalLength * 7.85
+      row.totalWeight = (row.unfoldedWidth / 1000) * row.thickness * row.totalLength * 7.85
     }
   } else if (crud.query.category === TechnologyTypeAllEnum.TRUSS_FLOOR_PLATE.V) {
     if (row.weightMeter && row.totalLength) {
-      row.weight = row.weightMeter * row.totalLength
+      row.totalWeight = row.weightMeter * row.totalLength
     }
+  } else {
+    row.totalWeight = (row.width / 1000) * row.thickness * row.totalLength * 7.85
   }
 }
 

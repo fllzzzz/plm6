@@ -16,7 +16,7 @@
           key="plateId"
           prop="plateId"
           :show-overflow-tooltip="true"
-          label="版型"
+          label="板型"
         >
           <template v-slot="scope">
             <div>{{ scope.row.plate? scope.row.plate: '-' }}</div>
