@@ -53,12 +53,7 @@
                   <span v-if="item.showRate"> | {{ item.totalRate }}%</span>
                 </span>
               </el-divider>
-              <common-table
-                :data="item.list"
-                :data-format="columnsDataFormat"
-                @row-click="handleRowChange"
-                style="margin-bottom: 10px"
-              >
+              <common-table :data="item.list" :data-format="columnsDataFormat" @row-click="handleRowChange" style="margin-bottom: 10px">
                 <el-table-column type="index" prop="index" label="序号" align="center" width="60px" />
                 <el-table-column key="name" prop="name" label="项目" show-overflow-tooltip align="center" />
                 <el-table-column key="amount" prop="amount" label="金额（元）" show-overflow-tooltip align="center" />
@@ -159,7 +154,7 @@ watch(
             return pre
           }
         }, 0)
-        data.totalRate = toFixed((data.totalAmount / costAmount) * 100, 2)
+        data.totalRate = toFixed(costAmount === 0 ? 0 : (data.totalAmount / costAmount) * 100, 2)
         data.list = row.costMap[key].map((v) => {
           v.showRate = data.showRate
           v.costAscriptionEnum = key
@@ -167,7 +162,7 @@ watch(
           v.costAscriptionAmount = data.totalAmount // 费用总金额
           v.costAmount = costAmount // 综合成本
           if (data.showRate) {
-            v.rate = toFixed((v.amount / costAmount) * 100, 2)
+            v.rate = toFixed(costAmount === 0 ? 0 : (v.amount / costAmount) * 100, 2)
           }
           return v
         })

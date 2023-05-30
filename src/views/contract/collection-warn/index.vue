@@ -27,7 +27,7 @@
         <div>{{ scope.row.signingDate? parseTime(scope.row.signingDate,'{y}-{m}-{d}'): '-' }}</div>
       </template>
     </el-table-column>
-    <el-table-column v-if="columns.visible('projectManagerName')" key="projectManagerName" prop="projectManagerName" :show-overflow-tooltip="true" label="业务负责人" align="center">
+    <el-table-column v-if="columns.visible('projectManagerName')" key="projectManagerName" prop="projectManagerName" :show-overflow-tooltip="true" label="项目经理" align="center">
       <template v-slot="scope">
         <div>{{ scope.row.projectManagerName? scope.row.projectManagerName: '-' }}</div>
       </template>

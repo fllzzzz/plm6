@@ -76,6 +76,18 @@
         label="月折旧额"
       />
       <el-table-column
+        v-if="columns.visible('startDepreciation')"
+        align="center"
+        key="startDepreciation"
+        prop="startDepreciation"
+        :show-overflow-tooltip="true"
+        label="是否开始折旧"
+      >
+        <template #default="{ row }">
+        <el-tag v-if="row.startDepreciation" type="success" size="medium" effect="plain">是</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column
         v-if="columns.visible('boolStatus')"
         align="center"
         key="boolStatus"

@@ -87,7 +87,7 @@
           </el-table-column>
           <el-table-column prop="remark" label="备注" align="center" min-width="130">
             <template v-slot="{ row }">
-              <el-input v-model.trim="row.remark" type="text" placeholder="备注" style="width: 100%" />
+              <el-input v-model.trim="row.remark" type="text" placeholder="备注" maxlength="250" style="width: 100%" />
             </template>
           </el-table-column>
           <el-table-column label="操作" align="center" width="90">

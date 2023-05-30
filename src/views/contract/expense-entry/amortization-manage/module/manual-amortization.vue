@@ -18,7 +18,7 @@
         @confirm="submit(true)"
       >
         <template #reference>
-          <common-button type="primary" size="mini">一键摊销</common-button>
+          <common-button :disabled="!operableQuantity" type="primary" size="mini">一键摊销（{{ operableQuantity }}）</common-button>
         </template>
       </el-popconfirm>
     </template>
@@ -81,6 +81,7 @@ const props = defineProps({
 
 const list = ref([])
 const listLoading = ref(false)
+const operableQuantity = ref(0)
 
 const emit = defineEmits(['success', 'update:modelValue'])
 const { visible, handleClose } = useVisible({ emit, props })
@@ -130,6 +131,7 @@ const submit = debounce(
 async function getList() {
   try {
     listLoading.value = true
+    operableQuantity.value = 0
     const data =
       (await getAmortizationSummaryList({ amortizationTypeEnum: amortizationTypeEnum.MANUAL_AMORTIZATION.V, isAmortization: false })) || []
     list.value = data.map((row, index) => {
@@ -138,6 +140,9 @@ async function getList() {
       row.date = `${_startDate} ~ ${_endDate}`
       row.index = index + 1
       row.isParent = true
+      if (row.productMete) {
+        operableQuantity.value++
+      }
       const _name = expenseClassEnum.VL[row.expenseClassEnum]
       if (_name !== row.name) {
         row.fullPathName = _name

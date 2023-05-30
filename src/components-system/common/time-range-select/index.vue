@@ -134,6 +134,7 @@ function handleChange() {
     ::v-deep(.el-input__inner) {
       padding-left: 8px;
       padding-right: 0;
+      border-right-width: 0;
       border-top-right-radius: 0;
       border-bottom-right-radius: 0;
     }

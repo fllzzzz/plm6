@@ -14,7 +14,7 @@
         :disabled-date="disabledDate"
         @change="crud.toQuery"
       />
-      <common-radio-button v-model="query.type" :options="costTypeEnum.ENUM" class="filter-item" type="enum" @change="crud.toQuery" />
+      <common-radio-button v-model="query.type" :options="costTypeEnum.ENUM" class="filter-item" type="enum" @change="handleChange" />
       <common-radio-button
         v-if="query.type === costTypeEnum.ELECTRIC_COST.V"
         v-model="query.childType"
@@ -56,4 +56,12 @@ function disabledDate(time) {
 }
 
 const { crud, query } = regHeader(defaultQuery)
+
+function handleChange() {
+  if (query.type === costTypeEnum.WATER_COST.V) {
+    // 水费数据库里存的就是 usedElectricityTypeEnum.INDUSTRY_ELECTRIC.V
+    query.childType = usedElectricityTypeEnum.INDUSTRY_ELECTRIC.V
+  }
+  crud.toQuery()
+}
 </script>

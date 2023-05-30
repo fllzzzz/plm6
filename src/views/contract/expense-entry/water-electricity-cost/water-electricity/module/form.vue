@@ -4,7 +4,7 @@
     :close-on-click-modal="false"
     :before-close="crud.cancelCU"
     :visible="crud.status.cu > 0"
-    :title="crud.query.type === costTypeEnum.ELECTRIC_COST.V ? `${isEdit ? '编辑' : '新增'}电费` : `${isEdit ? '编辑' : '新增'}水费`"
+    :title="`${isEdit ? '编辑' : '新增'}${costTypeEnum.VL[crud.query.type]}`"
     :show-close="false"
     width="500px"
     top="10vh"
@@ -39,23 +39,23 @@
             :disabled-date="disabledDate"
           />
         </el-form-item>
-        <el-form-item label="用电度数（kW·h）" prop="usedMete">
+        <el-form-item :label="`用${crud.query.type === costTypeEnum.ELECTRIC_COST.V ? '电度数（kW·h）' : '水量（吨）'}`" prop="usedMete">
           <el-input-number
             v-show-thousand
             v-model="form.usedMete"
             style="width: 270px"
-            placeholder="请输入用电度数"
+            :placeholder="`请输入${crud.query.type === costTypeEnum.ELECTRIC_COST.V ? '用电度数' : '用水量'}`"
             controls-position="right"
             :min="0"
             :max="9999999999"
           />
         </el-form-item>
-        <el-form-item label="电费（元）" prop="totalAmount">
+        <el-form-item :label="`${costTypeEnum.VL[crud.query.type]}（元）`" prop="totalAmount">
           <el-input-number
             v-show-thousand
             v-model="form.totalAmount"
             style="width: 270px"
-            placeholder="请输入电费"
+            :placeholder="`请输入${costTypeEnum.VL[crud.query.type]}`"
             controls-position="right"
             :min="0"
             :max="9999999999"

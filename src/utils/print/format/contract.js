@@ -126,13 +126,13 @@ function handleTimeHorizon({ header, table = [], footer, qrCode }) {
 // 处理摊销记录
 function handleAmortizationRecord({ header, table = [], footer, qrCode }) {
   header.name = expenseClassEnum.VL[header.expenseClassName]
-  header.costRatio = toFixed((header.sumAmount / header.costAmount) * 100, 2)
+  header.costRatio = toFixed(header.costAmount === 0 ? 0 : (header.sumAmount / header.costAmount) * 100, 2)
   const _table = table.map(row => {
     const _startDate = moment(row.startDate).format('YYYY-MM-DD')
     const _endDate = moment(row.endDate).format('YYYY-MM-DD')
     row.date = `${_startDate} ~ ${_endDate}`
     row.expenseRatio = toFixed((row.amount / header.sumAmount) * 100, 2)
-    row.costRatio = toFixed((row.amount / header.costAmount) * 100, 2)
+    row.costRatio = toFixed(header.costAmount === 0 ? 0 : (row.amount / header.costAmount) * 100, 2)
     return row
   })
   return {

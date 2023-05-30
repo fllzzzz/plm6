@@ -39,7 +39,7 @@
         <div>{{ scope.row.businessType? businessTypeEnum.VL[scope.row.businessType]: '-' }}</div>
       </template>
     </el-table-column>
-    <el-table-column v-if="columns.visible('projectManagerName')" key="projectManagerName" prop="projectManagerName" :show-overflow-tooltip="true" label="业务负责人" align="center" width="90">
+    <el-table-column v-if="columns.visible('projectManagerName')" key="projectManagerName" prop="projectManagerName" :show-overflow-tooltip="true" label="项目经理" align="center" width="90">
       <template v-slot="scope">
         <div>{{ scope.row.projectManagerName }}</div>
       </template>
@@ -59,7 +59,7 @@
         <div>{{ scope.row.settlementAmount? toThousand(scope.row.settlementAmount): '-' }}</div>
       </template>
     </el-table-column>
-    <el-table-column v-if="columns.visible('exportTaxRebate')" key="exportTaxRebate" prop="collectionAmount" label="出口退税" align="right">
+    <el-table-column v-if="columns.visible('exportTaxRebate')" key="exportTaxRebate" prop="exportTaxRebate" label="出口退税" align="right">
       <template v-slot="scope">
         <div @click="openTax(scope.row)" style="cursor:pointer;">
           <span v-if="scope.row.unCheckExportTaxRebateCount > 0 && checkPermission(permission.exportTaxRebate.audit)">

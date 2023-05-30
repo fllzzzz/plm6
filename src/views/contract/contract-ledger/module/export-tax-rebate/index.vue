@@ -86,9 +86,9 @@
             <span v-else v-thousand="row.drawbackAmount"></span>
           </template>
         </el-table-column>
-        <el-table-column prop="remark" label="备注" align="left" min-width="160">
+        <el-table-column prop="remark" label="备注" show-overflow-tooltip align="left" min-width="160">
           <template v-slot="{ row }">
-            <el-input v-if="row.isModify" v-model.trim="row.remark" type="text" placeholder="备注" style="width: 100%" />
+            <el-input v-if="row.isModify" v-model.trim="row.remark" type="text" maxlength="250" placeholder="备注" style="width: 100%" />
             <span v-else>{{ row.remark }}</span>
           </template>
         </el-table-column>
@@ -324,7 +324,9 @@ function getSummaries(param) {
 CRUD.HOOK.handleRefresh = (crud, { data }) => {
   totalSendAmount.value = 0
   data.content = data.map((row) => {
-    totalSendAmount.value += row.sendAmount || 0
+    if (row.auditStatus === auditTypeEnum.PASS.V) {
+      totalSendAmount.value += row.sendAmount || 0
+    }
     return row
   })
 }

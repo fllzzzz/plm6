@@ -369,7 +369,7 @@ export const amortizationManagePM = {
 // 业财报表
 export const fortuneReportPM = {
   get: ['fortune_report_cost:get'], // 列表
-  print: contractLedgerPM.print, // 打印
+  print: ['fortune_report_cost:print'], // 打印
   detail: ['fortune_report_cost:detail'], // 详情
   printDetail: ['fortune_report_cost:printDetail'] // 详情打印
 }
