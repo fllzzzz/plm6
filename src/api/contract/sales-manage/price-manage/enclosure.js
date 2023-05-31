@@ -7,8 +7,7 @@ import request from '@/utils/request'
  */
 export function get(params) {
   return request({
-    module: 'contract',
-    url: 'business/enclosure',
+    url: '/api/business/enclosure',
     method: 'get',
     params
   })
@@ -21,8 +20,7 @@ export function get(params) {
  */
 export function cost({ projectId, monomerId }) {
   return request({
-    module: 'contract',
-    url: 'business/enclosure/summary',
+    url: '/api/business/enclosure/summary',
     method: 'get',
     params: { projectId, monomerId }
   })

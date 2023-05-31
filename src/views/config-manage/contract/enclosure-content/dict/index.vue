@@ -63,7 +63,7 @@
         key="code"
         prop="code"
         :show-overflow-tooltip="true"
-        label="编码"
+        label="板型"
       />
       <el-table-column
         v-if="columns.visible('sort')"

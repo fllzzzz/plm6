@@ -58,7 +58,7 @@
       </el-table-column>
       <el-table-column v-if="columns.visible('totalPrice')" key="totalPrice" prop="totalPrice" align="center" min-width="120" label="金额">
         <template #default="{ row }">
-          <span :class="row.status === 1 ? 'tc-danger' : ''">{{ row.totalPrice }}</span>
+          <span :class="row.status === 1 ? 'tc-danger' : ''" v-thousand="row.totalPrice" />
         </template>
       </el-table-column>
     </common-table>
@@ -71,7 +71,6 @@
 import crudApi from '@/api/contract/sales-manage/price-manage/auxiliary-material'
 import { ref, defineExpose } from 'vue'
 import { priceManagePM as permission } from '@/page-permission/contract'
-
 import { DP } from '@/settings/config'
 import { auxiliaryMaterialUseTypeEnum } from '@enum-ms/plan'
 
@@ -93,8 +92,7 @@ const sourceMap = new Map([['unitPrice', 'originUnitPrice']])
 const tableRef = ref()
 const headerRef = ref()
 const dataFormat = ref([
-  ['unitPrice', 'to-thousand'],
-  ['totalPrice', 'to-thousand']
+  ['unitPrice', 'to-thousand']
 ])
 const { crud, columns } = useCRUD(
   {

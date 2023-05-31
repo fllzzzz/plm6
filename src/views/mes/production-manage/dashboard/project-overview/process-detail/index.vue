@@ -9,6 +9,13 @@
     :show-close="false"
   >
     <template #titleAfter>
+      <common-radio-button
+        type="enum"
+        style="vertical-align: middle"
+        v-model="status"
+        showOptionAll
+        :options="taskTrackingSchedulingStatusEnum.ENUM"
+      />
       <workshop-select
         v-model="workshopId"
         placeholder="请选择车间"
@@ -36,13 +43,13 @@
         :project-id="projectId"
         style="width: 150px"
       />
-      <el-input v-model.trim="serialNumber" placeholder="编号搜索" style="width: 150px" class="filter-item" clearable @keyup.enter="processDetailGet" />
-      <common-radio-button
-        type="enum"
-        style="vertical-align: middle"
-        v-model="status"
-        showOptionAll
-        :options="taskTrackingSchedulingStatusEnum.ENUM"
+      <el-input
+        v-model.trim="serialNumber"
+        placeholder="编号搜索"
+        style="width: 150px"
+        class="filter-item"
+        clearable
+        @keyup.enter="processDetailGet"
       />
       <common-button class="filter-item" size="mini" type="success" icon="el-icon-search" @click.stop="searchQuery">搜索</common-button>
       <common-button class="filter-item" size="mini" type="warning" icon="el-icon-refresh-left" @click.stop="resetQuery">
@@ -183,6 +190,9 @@ const props = defineProps({
   },
   weightStatus: {
     type: Number
+  },
+  dateQuery: {
+    type: Object
   }
 })
 
@@ -194,7 +204,8 @@ const query = computed(() => {
   return {
     productType: props.detailData.productType,
     processId: props.detailData.id,
-    projectId: props.projectId
+    projectId: props.projectId,
+    ...props.dateQuery
   }
 })
 

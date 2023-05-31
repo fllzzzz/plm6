@@ -28,7 +28,7 @@
 
 <script setup>
 import { projectList as get } from '@/api/enclosure/production-manage/scheduling-manage'
-import { ref, defineEmits } from 'vue'
+import { ref, defineEmits, defineExpose } from 'vue'
 
 import { enclosureSchedulingManagePM as permission } from '@/page-permission/enclosure'
 import { schedulingEnum } from '@enum-ms/enclosure'
@@ -76,5 +76,9 @@ function currentChange(row) {
 CRUD.HOOK.handleRefresh = async (crud, { data }) => {
   data.content = data
 }
+
+defineExpose({
+  refresh: crud.refresh
+})
 </script>
 

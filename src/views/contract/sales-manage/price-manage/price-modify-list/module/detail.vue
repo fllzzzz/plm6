@@ -17,30 +17,44 @@
     <common-table :data="list" :data-format="dataFormat" :max-height="maxHeight">
       <el-table-column label="序号" type="index" align="center" width="60" />
       <template v-if="props.detailInfo.type === contractSaleTypeEnum.STRUCTURE.V">
-        <el-table-column prop="name" label="结构名称" align="center" />
+        <el-table-column :show-overflow-tooltip="true" prop="name" label="结构名称" align="center" />
         <el-table-column prop="material" label="材质" align="center" />
         <el-table-column align="center" prop="pricingManner" label="计价方式">
           <template #default="{ row }">
-            <cell-change-preview :old="pricingMannerEnum.VL[row.oldPricingManner]" :new="pricingMannerEnum.VL[row.newPricingManner]" v-if="row.oldPricingManner!==row.newPricingManner"/>
+            <cell-change-preview
+              :old="pricingMannerEnum.VL[row.oldPricingManner]"
+              :new="pricingMannerEnum.VL[row.newPricingManner]"
+              v-if="row.oldPricingManner !== row.newPricingManner"
+            />
             <span v-else>{{ pricingMannerEnum.VL[row.oldPricingManner] }}</span>
           </template>
         </el-table-column>
       </template>
-      <!-- <template v-if="props.detailInfo.type === contractSaleTypeEnum.ENCLOSURE.V">
-        <el-table-column prop="name" label="围护名称" align="center" />
-        <el-table-column prop="plate" label="板型" width="100px" />
-      </template> -->
+      <template v-if="props.detailInfo.type === contractSaleTypeEnum.ENCLOSURE.V">
+        <el-table-column :show-overflow-tooltip="true" prop="name" label="名称" align="center" />
+        <el-table-column v-if="list[0]?.category !== mesEnclosureTypeEnum.FOLDING_PIECE.V" prop="plate" label="板型" align="center" />
+        <el-table-column align="center" prop="pricingManner" label="计价方式">
+          <template #default="{ row }">
+            <cell-change-preview
+              :old="enclosureSettlementTypeEnum.VL[row.oldPricingManner]"
+              :new="enclosureSettlementTypeEnum.VL[row.newPricingManner]"
+              v-if="row.oldPricingManner !== row.newPricingManner"
+            />
+            <span v-else>{{ enclosureSettlementTypeEnum.VL[row.oldPricingManner] }}</span>
+          </template>
+        </el-table-column>
+      </template>
       <template v-if="props.detailInfo.type === contractSaleTypeEnum.AUXILIARY_MATERIAL.V">
         <el-table-column prop="name" label="配套件名称" align="center" />
         <el-table-column prop="specification" label="规格" />
       </template>
       <el-table-column align="center" prop="price" label="综合单价">
         <template #default="{ row }">
-           <template v-if="props.detailInfo.type === contractSaleTypeEnum.STRUCTURE.V">
+          <template v-if="props.detailInfo.type === contractSaleTypeEnum.STRUCTURE.V">
             <span v-if="row.oldUnitPrice === row.newUnitPrice">{{ row.oldUnitPrice }}</span>
-            <cell-change-preview :old="row.oldUnitPrice" :new="row.newUnitPrice" v-else/>
+            <cell-change-preview :old="row.oldUnitPrice" :new="row.newUnitPrice" v-else />
           </template>
-          <cell-change-preview :old="row.oldUnitPrice" :new="row.newUnitPrice" v-else/>
+          <cell-change-preview :old="row.oldUnitPrice" :new="row.newUnitPrice" v-else />
         </template>
       </el-table-column>
     </common-table>
@@ -52,9 +66,9 @@ import { priceModifySave as save } from '@/api/contract/sales-manage/price-manag
 import { ref, defineProps, defineEmits } from 'vue'
 
 import checkPermission from '@/utils/system/check-permission'
-import { contractSaleTypeEnum } from '@enum-ms/mes'
+import { contractSaleTypeEnum, mesEnclosureTypeEnum } from '@enum-ms/mes'
 import { reviewStatusEnum } from '@enum-ms/common'
-import { pricingMannerEnum } from '@enum-ms/contract'
+import { pricingMannerEnum, enclosureSettlementTypeEnum } from '@enum-ms/contract'
 
 import { regDetail } from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
@@ -103,5 +117,4 @@ async function submit(status) {
     emit('success')
   }
 }
-
 </script>

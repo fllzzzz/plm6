@@ -30,6 +30,7 @@
       <workshop-select
         v-model="query.workshopId"
         placeholder="请选择车间"
+        :workshop-type="workshopTypeEnum.BUILDING.V"
         clearable
         style="width: 200px"
         class="filter-item"
@@ -76,7 +77,7 @@ import { shipmentSummary } from '@/api/ship-manage/pack-and-ship/ship-summary'
 import workshopSelect from '@/components-system/base/workshop-select.vue'
 import { regHeader } from '@compos/use-crud'
 import { shipStatusEnum } from '@enum-ms/mes'
-import { weightTypeEnum } from '@enum-ms/common'
+import { weightTypeEnum, workshopTypeEnum } from '@enum-ms/common'
 import rrOperation from '@crud/RR.operation'
 import moment from 'moment'
 import { DP } from '@/settings/config'

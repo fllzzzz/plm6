@@ -30,6 +30,7 @@
       <workshop-select
         v-model="query.workshopId"
         placeholder="请选择车间"
+        :workshop-type="workshopTypeEnum.ENCLOSURE.V"
         clearable
         style="width: 200px"
         class="filter-item"
@@ -41,21 +42,14 @@
             name="累计发运量（米）"
             text-color="#626262"
             num-color="#1890ff"
-            :end-val="summaryInfo.mete / 1000 || 0"
-            :precision="DP.COM_WT__T"
+            :end-val="summaryInfo.totalLength / 1000 || 0"
+            :precision="DP.MES_ENCLOSURE_L__M"
           />
         </el-col>
         <el-col :span="12" class="card-panel-col">
           <Panel name="累计车次" text-color="#626262" num-color="#1890ff" :end-val="summaryInfo.quantity || 0" :precision="0" />
         </el-col>
       </el-row>
-      <common-radio-button
-        type="enum"
-        v-model="query.weightStatus"
-        :options="[weightTypeEnum.NET, weightTypeEnum.GROSS]"
-        class="filter-item"
-        @change="crud.toQuery"
-      />
       <el-input
         v-model="query.projectName"
         placeholder="项目搜索"
@@ -72,11 +66,11 @@
 
 <script setup>
 import { ref, watch } from 'vue'
-import { shipmentSummary } from '@/api/ship-manage/pack-and-ship/ship-summary'
+import { shipmentSummary } from '@/api/ship-manage/pack-and-ship/enclosure-ship-summary'
 import workshopSelect from '@/components-system/base/workshop-select.vue'
 import { regHeader } from '@compos/use-crud'
 import { shipStatusEnum } from '@enum-ms/mes'
-import { weightTypeEnum } from '@enum-ms/common'
+import { workshopTypeEnum } from '@enum-ms/common'
 import rrOperation from '@crud/RR.operation'
 import moment from 'moment'
 import { DP } from '@/settings/config'
@@ -91,8 +85,7 @@ const defaultQuery = {
   sendStatus: undefined,
   status: undefined,
   settled: undefined,
-  projectName: undefined,
-  weightStatus: weightTypeEnum.NET.V
+  projectName: undefined
 }
 const { crud, query } = regHeader(defaultQuery)
 

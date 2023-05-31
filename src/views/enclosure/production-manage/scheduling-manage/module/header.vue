@@ -35,10 +35,10 @@
           <span v-parse-project="{ project: props.project }" v-empty-text />
         </el-tag>
         <el-tag v-loading="summaryLoading" type="success" effect="plain" size="medium" style="margin-right: 6px">
-          当前批次量：{{ (query.planIds.length && summaryData?.planLength) || 0 }}m
+          当前批次量：<span v-thousand="{ val: (query.planIds.length && summaryData?.planLength) || 0, dp: DP.MES_ENCLOSURE_L__M}" />m
         </el-tag>
         <el-tag v-loading="summaryLoading" type="success" effect="plain" size="medium">
-          全部批次量：{{ summaryData?.projectLength || 0 }}m
+          全部批次量：<span v-thousand="{ val: summaryData?.projectLength || 0, dp: DP.MES_ENCLOSURE_L__M}" />m
         </el-tag>
       </template>
     </crudOperation>
@@ -82,7 +82,7 @@
           />
         </el-form-item>
         <el-form-item label="完成时间" prop="askCompleteTime">
-          <el-date-picker v-model="taskForm.askCompleteTime" type="date" value-format="x" placeholder="选择完成时间" style="width: 300px" />
+          <el-date-picker v-model="taskForm.askCompleteTime" :disabled-date="disabledDate" type="date" value-format="x" placeholder="选择完成时间" style="width: 300px" />
         </el-form-item>
       </el-form>
     </common-dialog>
@@ -91,14 +91,17 @@
 
 <script setup>
 import { categoryList, areaList, add, enclosureSummary } from '@/api/enclosure/production-manage/scheduling-manage'
-import { ref, defineProps, computed, watch, nextTick } from 'vue'
+import { ref, defineProps, defineEmits, computed, watch, nextTick } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 
 import { mesEnclosureTypeEnum } from '@enum-ms/mes'
+import { DP } from '@/settings/config'
 
 import { regHeader } from '@compos/use-crud'
 import crudOperation from '@crud/CRUD.operation'
 import useSchedulingGroups from '@compos/enclosure/scheduling/use-scheduling-groups'
+
+const emit = defineEmits(['refreshProject'])
 
 const defaultQuery = {
   category: undefined,
@@ -122,7 +125,7 @@ const totalLength = computed(() => {
     total += +cur.totalLength
     return total
   }, 0)
-  return num.toFixed(2)
+  return num.toFixed(DP.MES_ENCLOSURE_L__M)
 })
 
 const props = defineProps({
@@ -188,7 +191,6 @@ const handleCheckAllChange = (val) => {
   query.planIds = val ? areas.value.map((v) => v.id) : []
   isIndeterminate.value = false
   crud.toQuery()
-  fetchEnclosureSummary()
 }
 
 // 选择区域
@@ -197,7 +199,6 @@ const handleCheckedAresChange = (value) => {
   checkAll.value = checkedCount === areas.value.length
   isIndeterminate.value = checkedCount > 0 && checkedCount < areas.value.length
   crud.toQuery()
-  fetchEnclosureSummary()
 }
 
 // 获取围护汇总
@@ -221,11 +222,20 @@ async function fetchEnclosureSummary() {
 async function fetchCategory() {
   try {
     unshowVal.value = []
+    const _category = query.category
     query.category = undefined
     categoryLoading.value = true
     const arr = await categoryList({ projectId: props.project.id })
+    arr.sort((a, b) => (a - b))
     if (arr.length) {
-      query.category = arr[0]
+      if (arr.includes(_category)) {
+        query.category = _category
+      } else {
+        query.category = arr[0]
+      }
+    } else {
+      // 没有分类时，刷新项目列表
+      emit('refreshProject')
     }
     unshowVal.value = categoryArr.value.filter((v) => !arr.includes(v))
   } catch (error) {
@@ -270,7 +280,7 @@ async function submit() {
     }
 
     // 完成日期大于计划日期
-    if (taskForm.value.askCompleteTime > planDate.value) {
+    if (Number(taskForm.value.askCompleteTime) > Number(planDate.value)) {
       await ElMessageBox.confirm('完成日期大于计划日期，是否下发？', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -296,7 +306,8 @@ async function submit() {
     dialogVisible.value = false
     taskForm.value = {}
     ElMessage.success('任务下发成功')
-    crud.toQuery()
+    // 如果此类型全部排产后，访问接口会报错，所以重新获取一下类型数据
+    fetchCategory()
   } catch (error) {
     console.log(error, '任务下发失败')
   } finally {
@@ -304,9 +315,14 @@ async function submit() {
   }
 }
 
+function disabledDate(time) {
+  return time > props.project?.endDate
+}
+
 CRUD.HOOK.handleRefresh = async (crud, { data }) => {
+  fetchEnclosureSummary()
   data.content.forEach((row) => {
-    row.totalLength = ((row.length * row.needSchedulingQuantity) / 1000).toFixed(2)
+    row.totalLength = ((row.length * row.needSchedulingQuantity) / 1000).toFixed(DP.MES_ENCLOSURE_L__M)
     row.taskQuantity = row.needSchedulingQuantity
   })
 }

@@ -12,8 +12,20 @@
         @change="crud.toQuery"
         style="width: 120px"
       />
-      <project-radio-button size="small" :type="'all'" v-model="query.projectId" class="filter-item" @change="crud.toQuery" />
+      <project-radio-button size="small" :type="'all'" v-model="query.projectId" class="filter-item" @change="projectChange" />
       <common-radio-button
+        v-if="query.projectId"
+        type="other"
+        v-model="query.category"
+        :options="categoryList"
+        :data-structure="{ key: 'no', label: 'name', value: 'no' }"
+        default
+        placeholder="请选择围护类型"
+        class="filter-item"
+        @change="crud.toQuery"
+      />
+      <common-radio-button
+        v-if="!query.projectId"
         type="enum"
         v-model="query.category"
         :options="enclosureTypeEnum.ENUM"
@@ -32,63 +44,57 @@
       /> -->
       <workshop-select
         v-model="query.workshopId"
+        :workshop-type="workshopTypeEnum.ENCLOSURE.V"
         placeholder="请选择车间"
         clearable
         style="width: 200px"
         class="filter-item"
         @change="crud.toQuery"
       />
-      <common-radio-button
-        type="enum"
-        v-model="query.weightStatus"
-        :options="[weightTypeEnum.NET, weightTypeEnum.GROSS]"
-        class="filter-item"
-        @change="crud.toQuery"
-      />
-      <!-- <el-row v-loading="summaryLoading" v-if="checkPermission(crud.permission.get)" :gutter="24" class="panel-group">
+      <el-row v-loading="summaryLoading" v-if="checkPermission(crud.permission.get)" :gutter="24" class="panel-group">
         <el-col :span="6" class="card-panel-col">
           <Panel
-            name="期初库存(kg)"
+            name="期初库存(米)"
             text-color="#626262"
             num-color="#1890ff"
-            :end-val="query.weightStatus === weightTypeEnum.NET.V? totalAmount.beginningNetWeight || 0 : totalAmount.beginningGrossWeight || 0"
-            :precision="DP.COM_WT__KG"
+            :end-val="totalAmount?.beginningTotalLength || 0"
+            :precision="DP.MES_ENCLOSURE_L__M"
           />
         </el-col>
         <el-col :span="6" class="card-panel-col">
           <Panel
-            name="入库量(kg)"
+            name="入库量(米)"
             text-color="#626262"
             num-color="#1890ff"
-            :endVal="query.weightStatus === weightTypeEnum.NET.V?totalAmount.inboundNetWeight || 0:totalAmount.inboundGrossWeight || 0"
-            :precision="DP.COM_WT__KG"
+            :endVal="totalAmount?.inboundTotalLength || 0"
+            :precision="DP.MES_ENCLOSURE_L__M"
           />
         </el-col>
         <el-col :span="6" class="card-panel-col">
           <Panel
-            name="出库量(kg)"
+            name="出库量(米)"
             text-color="#626262"
             num-color="#1890ff"
-            :endVal="query.weightStatus === weightTypeEnum.NET.V?totalAmount.outboundNetWeight || 0:totalAmount.outboundGrossWeight || 0"
-            :precision="DP.COM_WT__KG"
+            :endVal="totalAmount?.outboundTotalLength || 0"
+            :precision="DP.MES_ENCLOSURE_L__M"
           />
         </el-col>
         <el-col :span="6" class="card-panel-col">
           <Panel
-            name="期末库存(kg)"
+            name="期末库存(米)"
             text-color="#626262"
             num-color="#1890ff"
-            :end-val="query.weightStatus === weightTypeEnum.NET.V?totalAmount.stockNetWeight || 0:totalAmount.stockGrossWeight || 0"
-            :precision="DP.COM_WT__KG"
+            :end-val="totalAmount?.stockTotalLength || 0"
+            :precision="DP.MES_ENCLOSURE_L__M"
           />
         </el-col>
-      </el-row> -->
+      </el-row>
     </div>
     <crudOperation>
       <template #viewLeft>
         <print-table
-          v-permission="crud.permission.print"
-          api-key="mesProductSendReceiveStorage"
+          v-permission="permission.print"
+          api-key="enclosureProductSendReceiveStorage"
           :params="{ ...query }"
           size="mini"
           type="warning"
@@ -100,32 +106,81 @@
 </template>
 
 <script setup>
-import { summaryData } from '@/api/mes/pack-and-ship/product-receive-send-storage'
-import { ref, watch } from 'vue'
-import { enclosureTypeEnum } from '@enum-ms/ship-manage'
-import { weightTypeEnum } from '@enum-ms/common'
-// import checkPermission from '@/utils/system/check-permission'
-// import { DP } from '@/settings/config'
+import { summaryData } from '@/api/ship-manage/pack-and-ship/enclosure-product-receive-send-storage'
+import { ref, watch, defineProps } from 'vue'
+import { enclosureTypeEnum, packTypeEnum } from '@enum-ms/ship-manage'
+import { workshopTypeEnum } from '@enum-ms/common'
+import { mapGetters } from '@/store/lib'
+import { TechnologyTypeAllEnum } from '@enum-ms/contract'
+import useUserProjects from '@compos/store/use-user-projects'
+import checkPermission from '@/utils/system/check-permission'
+import { DP } from '@/settings/config'
 import workshopSelect from '@/components-system/base/workshop-select.vue'
 import { regHeader } from '@compos/use-crud'
 import crudOperation from '@crud/CRUD.operation'
-// import Panel from '@/components/Panel'
+import Panel from '@/components/Panel'
 import moment from 'moment'
 
+const props = defineProps({
+  permission: {
+    type: Object,
+    default: () => {}
+  }
+})
 const defaultTime = moment().valueOf().toString()
+const categoryList = ref([])
+
+const { globalProjectId } = mapGetters(['globalProjectId'])
+const { projects } = useUserProjects()
+
+const techOptions = [
+  {
+    name: '压型彩板',
+    no: TechnologyTypeAllEnum.PROFILED_PLATE.V,
+    alias: 'ENCLOSURE'
+  },
+  {
+    name: '压型楼承板',
+    no: TechnologyTypeAllEnum.PRESSURE_BEARING_PLATE.V,
+    alias: 'ENCLOSURE'
+  },
+  {
+    name: '桁架楼承板',
+    no: TechnologyTypeAllEnum.TRUSS_FLOOR_PLATE.V,
+    alias: 'ENCLOSURE'
+  },
+  {
+    name: '夹芯板',
+    no: TechnologyTypeAllEnum.SANDWICH_BOARD.V,
+    alias: 'ENCLOSURE'
+  },
+  {
+    name: '折边件',
+    no: TechnologyTypeAllEnum.BENDING.V,
+    alias: 'ENCLOSURE'
+  }
+]
 
 const defaultQuery = {
   // productType: packTypeEnum.STRUCTURE.V,
   dateTime: defaultTime.toString(),
   projectId: undefined,
-  category: enclosureTypeEnum.PRESSED_PLATE.V,
-  weightStatus: weightTypeEnum.NET.V
+  category: enclosureTypeEnum.PRESSED_PLATE.V
 }
 
 const { crud, query } = regHeader(defaultQuery)
 const totalAmount = ref({})
 const summaryLoading = ref(false)
 
+watch(
+  () => globalProjectId.value,
+  (val) => {
+    if (val) {
+      init(val)
+    }
+  },
+  { immediate: true }
+)
 watch(
   query,
   (val) => {
@@ -135,10 +190,23 @@ watch(
   },
   { immediate: true, deep: true }
 )
+watch(
+  () => query.projectId,
+  (val) => {
+    if (val) {
+      init(val)
+    }
+  },
+  { immediate: true }
+)
 async function fetchSummaryInfo() {
   summaryLoading.value = true
+  if (!props.permission?.get) return
   try {
-    const data = await summaryData(query)
+    const data = await summaryData({
+      ...query,
+      productType: packTypeEnum.ENCLOSURE.V
+    })
     totalAmount.value = data
     // totalAmount.value.intoWeight = (totalAmount.value.intoWeight / 1000).toFixed(DP.COM_WT__T)
     // totalAmount.value.outWeight = (totalAmount.value.outWeight / 1000).toFixed(DP.COM_WT__T)
@@ -148,6 +216,21 @@ async function fetchSummaryInfo() {
   } finally {
     summaryLoading.value = false
   }
+}
+
+function init(val) {
+  categoryList.value = []
+  const data = projects.value.find((v) => v.id === val)?.categorys
+  techOptions.forEach((o) => {
+    if (data?.findIndex((p) => p === o.no) > -1) {
+      categoryList.value.push(o)
+    }
+  })
+}
+
+function projectChange(val) {
+  query.category = categoryList.value[0]?.no
+  crud.toQuery()
 }
 </script>
 <style lang="scss" scoped>

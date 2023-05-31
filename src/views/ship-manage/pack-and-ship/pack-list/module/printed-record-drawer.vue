@@ -31,6 +31,9 @@ const props = defineProps({
   packageId: {
     type: [Number, String],
     default: undefined
+  },
+  productType: {
+    type: Number
   }
 })
 const { visible: drawerVisible, handleClose } = useVisible({ emit, props, field: 'visible' })

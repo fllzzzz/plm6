@@ -197,7 +197,7 @@
 </template>
 
 <script setup>
-import crudApi, { detail, audit } from '@/api/mes/pack-and-ship/ship-audit'
+import crudApi, { detail, audit } from '@/api/ship-manage/pack-and-ship/ship-audit'
 import { ref, reactive } from 'vue'
 import { ElNotification } from 'element-plus'
 

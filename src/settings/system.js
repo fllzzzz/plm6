@@ -35,7 +35,14 @@ export const showProjectSearch = [
   { component: '/bim/model-show/index', type: pt.STEEL.V, required: true },
   { component: '/bim/integration-model-show/index', type: pt.STEEL.V, required: true },
   // 发运管理
-  { component: '/ship-manage/pack-and-ship/manual-pack/index', type: pt.STEEL.V, required: true },
+  { component: '/ship-manage/pack-and-ship/manual-pack/index', type: allPT, required: true },
+  { component: '/ship-manage/pack-and-ship/ship-list/index', type: allPT, required: true },
+  { component: '/ship-manage/pack-and-ship/logistics-list/index', type: allPT, required: true },
+  { component: '/ship-manage/pack-and-ship/pack-list/index', type: allPT, required: true },
+  { component: '/ship-manage/pack-and-ship/receipt-status/index', type: allPT, required: true },
+  { component: '/ship-manage/pack-and-ship/ship-audit/index', type: allPT, required: true },
+  { component: '/ship-manage/pack-and-ship/product-send-receive-storage/structure/index', type: allPT, required: true },
+  { component: '/ship-manage/pack-and-ship/product-send-receive-storage/enclosure/index', type: allPT, required: true },
   // MES
   { component: '/mes/projects/index', type: allPT, required: true },
   { component: '/mes/overall-plan/monomer/index', type: pt.STEEL.V, required: true },
@@ -43,6 +50,7 @@ export const showProjectSearch = [
   { component: '/mes/changed-manage/machine-part/index', type: pt.STEEL.V, required: false },
   { component: '/mes/changed-manage/assemble/index', type: pt.STEEL.V, required: false },
   { component: '/mes/changed-manage/common-change/index', type: pt.STEEL.V, required: false },
+  { component: '/mes/changed-manage/simple-change-record/index', type: pt.STEEL.V, required: false },
   { component: '/mes/changed-manage/surplus-list/index', type: pt.STEEL.V, required: false },
   { component: '/mes/scheduling-manage/scheduling/assemble/index', type: pt.STEEL.V, required: true },
   { component: '/mes/scheduling-manage/scheduling/artifact/index', type: pt.STEEL.V, required: true },
@@ -187,7 +195,8 @@ export const showProjectSearch = [
   { component: '/enclosure/enclosure-list/bending/index', type: pt.STEEL.V | pt.ENCLOSURE.V, required: true },
   { component: '/enclosure/enclosure-list/standard-part/index', type: pt.STEEL.V | pt.ENCLOSURE.V, required: true },
   { component: '/enclosure/production-report/team-production/index', type: pt.STEEL.V | pt.ENCLOSURE.V, required: false },
-  { component: '/enclosure/production-report/type-analysis/index', type: pt.STEEL.V | pt.ENCLOSURE.V, required: false }
+  { component: '/enclosure/production-report/type-analysis/index', type: pt.STEEL.V | pt.ENCLOSURE.V, required: false },
+  { component: '/enclosure/label-print/enclosure/index', type: pt.STEEL.V | pt.ENCLOSURE.V, required: true }
 ]
 
 /**

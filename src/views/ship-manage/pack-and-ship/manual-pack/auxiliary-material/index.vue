@@ -14,27 +14,9 @@
       @sort-change="crud.handleSortChange"
     >
       <el-table-column label="序号" type="index" align="center" width="60" />
-      <el-table-column
-        v-if="columns.visible('name')"
-        key="name"
-        prop="name"
-        label="名称"
-        align="center"
-      />
-      <el-table-column
-        v-if="columns.visible('specification')"
-        key="specification"
-        prop="specification"
-        label="规格"
-        align="center"
-      />
-      <el-table-column
-        v-if="columns.visible('unit')"
-        key="unit"
-        prop="unit"
-        label="单位"
-        align="center"
-      />
+      <el-table-column v-if="columns.visible('name')" key="name" prop="name" label="名称" align="center" />
+      <el-table-column v-if="columns.visible('specification')" key="specification" prop="specification" label="规格" align="center" />
+      <el-table-column v-if="columns.visible('measureUnit')" key="measureUnit" prop="measureUnit" label="单位" align="center" />
       <el-table-column
         v-if="columns.visible('quantity')"
         key="quantity"
@@ -98,20 +80,23 @@
         </template>
       </el-table-column>
     </common-table>
+    <!-- 分页 -->
+    <pagination />
   </div>
 </template>
 
 <script setup>
-import { getEnclosure as get } from '@/api/mes/pack-and-ship/manual-pack'
+import { getAuxiliaryMaterial as get } from '@/api/ship-manage/pack-and-ship/manual-pack'
 import { computed, ref, watch, defineEmits, defineProps, defineExpose, inject } from 'vue'
 
-import { enclosureManualPackPM as permission } from '@/page-permission/ship-manage'
+import { artifactManualPackPM as permission } from '@/page-permission/ship-manage'
 // import { DP } from '@/settings/config'
 // import { toFixed } from '@data-type'
-// import { packTypeEnum } from '@enum-ms/mes'
+import { packTypeEnum } from '@enum-ms/mes'
 
 import useCRUD from '@compos/use-crud'
 import mHeader from './module/header'
+import pagination from '@crud/Pagination'
 // import tableCellTag from '@comp-common/table-cell-tag/index.vue'
 
 const optShow = {
@@ -131,13 +116,13 @@ const { crud, columns, CRUD } = useCRUD(
     crudApi: { get },
     invisibleColumns: ['drawingNumber', 'packageQuantity'],
     queryOnPresenterCreated: false,
-    hasPagination: false
+    hasPagination: true
   },
   tableRef
 )
 
-// const packTypeK = packTypeEnum.ENCLOSURE.K
-const packTypeK = 0
+const packTypeK = packTypeEnum.AUXILIARY_MATERIAL.K
+// const packTypeK = 0
 const emit = defineEmits(['add'])
 const props = defineProps({
   projectId: {
@@ -160,6 +145,10 @@ const props = defineProps({
     type: [String, Number],
     default: undefined
   },
+  batchId: {
+    type: [String, Number],
+    default: undefined
+  },
   maxHeight: {
     type: [String, Number],
     default: undefined
@@ -172,7 +161,7 @@ const ids = computed(() => {
 })
 
 watch(
-  () => [props.projectId, props.workshopId, props.monomerId, props.areaId, props.category],
+  () => [props.projectId, props.workshopId, props.monomerId, props.category],
   () => {
     crud.toQuery()
   },
@@ -184,7 +173,6 @@ CRUD.HOOK.beforeRefresh = () => {
   crud.query.workshopId = props.workshopId
   crud.query.category = props.category
   crud.query.monomerId = props.monomerId
-  crud.query.areaId = props.areaId
 }
 
 function add(row) {
@@ -192,7 +180,7 @@ function add(row) {
 }
 
 CRUD.HOOK.handleRefresh = (crud, res) => {
-  res.data.content = res.data.enclosureList.map((v) => {
+  res.data.content = res.data.content?.map((v) => {
     v.productQuantity = v.unPackageQuantity
     return v
   })

@@ -5,6 +5,7 @@
     </div>
     <div v-show="props.processData.id">
       <div class="head-container">
+        <common-radio-button type="enum" v-model="weightStatus" :options="[weightTypeEnum.NET, weightTypeEnum.GROSS]" class="filter-item" />
         <monomer-select-area-select
           v-model:monomerId="monomerId"
           v-model:areaId="areaId"
@@ -21,7 +22,20 @@
           class="filter-item"
           style="width: 200px"
         />
-        <common-radio-button type="enum" v-model="weightStatus" :options="[weightTypeEnum.NET, weightTypeEnum.GROSS]" class="filter-item" />
+        <el-date-picker
+          v-model="date"
+          type="daterange"
+          range-separator=":"
+          size="small"
+          value-format="x"
+          :shortcuts="PICKER_OPTIONS_SHORTCUTS"
+          unlink-panels
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
+          style="width: 240px; margin-right: 10px"
+          class="filter-item date-item"
+          @change="handleDateChange"
+        />
         <!-- <common-radio-button
           v-model="productType"
           :options="[componentTypeEnum.ARTIFACT, componentTypeEnum.ASSEMBLE, componentTypeEnum.MACHINE_PART]"
@@ -83,17 +97,19 @@
         :project-id="props.processData.id"
         :detail-data="detailData"
         :weightStatus="weightStatus"
+        :dateQuery="dateQuery"
       />
     </div>
   </div>
 </template>
 <script setup>
-import { ref, defineProps, watch, provide } from 'vue'
+import { ref, defineProps, watch, provide, computed } from 'vue'
 import { getProcessList } from '@/api/mes/production-manage/dashboard/project-overview'
 // import { componentTypeEnum } from '@enum-ms/mes'
 import { weightTypeEnum } from '@enum-ms/common'
 import { mesProjectOverviewPM as permission } from '@/page-permission/mes'
 import useMaxHeight from '@compos/use-max-height'
+import { PICKER_OPTIONS_SHORTCUTS } from '@/settings/config'
 import monomerSelectAreaSelect from '@comp-base/monomer-select-area-select'
 import productionLineSelect from '@comp-mes/production-line-select'
 import processDetail from '../process-detail/index.vue'
@@ -110,12 +126,22 @@ const factoryId = ref()
 const workshopId = ref()
 const detailData = ref([])
 const dialogVisible = ref(false)
+const date = ref([])
+const startDate = ref()
+const endDate = ref()
 
 const props = defineProps({
   processData: {
     type: Object,
-    default: () => {},
-  },
+    default: () => {}
+  }
+})
+
+const dateQuery = computed(() => {
+  return {
+    startDate: startDate.value,
+    endDate: endDate.value
+  }
 })
 
 watch(
@@ -131,7 +157,7 @@ provide('productionLineId', productionLineId)
 
 const { maxHeight } = useMaxHeight({
   extraBox: ['.head-container'],
-  paginate: true,
+  paginate: true
 })
 
 async function processListGet() {
@@ -145,6 +171,8 @@ async function processListGet() {
       areaId: areaId.value,
       projectId: props.processData.id,
       productionLineId: productionLineId.value,
+      startDate: startDate.value,
+      endDate: endDate.value
     })
     processList.value = data
   } catch (e) {
@@ -157,6 +185,17 @@ async function processListGet() {
 function showDetail(row) {
   dialogVisible.value = true
   detailData.value = row
+}
+
+function handleDateChange() {
+  if (date.value && date.value.length > 1) {
+    startDate.value = date.value[0]
+    endDate.value = date.value[1]
+  } else {
+    startDate.value = undefined
+    endDate.value = undefined
+  }
+  processListGet()
 }
 </script>
 <style lang="scss" scoped>

@@ -1,5 +1,13 @@
 import { constantize } from '../base'
 
+// 变更记录状态
+const changeRecordStatusEnum = {
+  UNCONFIRMED: { L: '未确认', K: 'UNCONFIRMED', V: 1 << 0, T: 'danger' },
+  CONFIRMING: { L: '处理中', K: 'CONFIRMING', V: 1 << 1, T: '' },
+  CONFIRMED: { L: '处理完成', K: 'CONFIRMED', V: 1 << 2, T: 'success' }
+}
+constantize(changeRecordStatusEnum)
+
 // 制造类型
 const manufactureTypeEnum = {
   HOMEMADE: { L: '自制', K: 'HOMEMADE', V: 1, T: '' },
@@ -49,6 +57,7 @@ const monthNumEnum = {
 constantize(monthNumEnum)
 
 export {
+  changeRecordStatusEnum,
   manufactureTypeEnum,
   processingColorsEnum,
   scheduleStatusEnum,
@@ -58,6 +67,7 @@ export {
 }
 
 export default {
+  changeRecordStatusEnum,
   manufactureTypeEnum,
   processingColorsEnum,
   scheduleStatusEnum,

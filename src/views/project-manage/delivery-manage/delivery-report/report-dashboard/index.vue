@@ -2,7 +2,7 @@
   <div class="app-container">
     <div v-if="globalProject?.businessType===businessTypeEnum.INSTALLATION.V">
       <!--工具栏-->
-      <mHeader ref="headRef" @load="load" :globalProject="globalProject"/>
+      <mHeader ref="headRef" @load="load" :globalProject="globalProject" :projectId="globalProjectId"/>
       <!--看板渲染-->
       <div
         v-if="crud.firstLoaded"
@@ -47,7 +47,7 @@
 
 <script setup>
 import { deliveryDashboardData as get } from '@/api/project-manage/delivery-manage/delivery-report/report-list'
-import { ref, watch } from 'vue'
+import { ref } from 'vue'
 
 import { businessTypeEnum } from '@enum-ms/contract'
 import { deliveryReportDashboardPM as permission } from '@/page-permission/project'
@@ -85,16 +85,6 @@ const { maxHeight } = useMaxHeight({ paginate: false })
 
 const { boxStyle, load, boardList } = useDashboardIndex({ headRef, scrollBoxRef, crud, CRUD })
 
-watch(
-  () => globalProjectId.value,
-  (val) => {
-    if (val) {
-      crud.query.projectId = globalProjectId.value
-      crud.toQuery()
-    }
-  },
-  { immediate: true, deep: true }
-)
 </script>
 
 <style lang="scss" scoped>

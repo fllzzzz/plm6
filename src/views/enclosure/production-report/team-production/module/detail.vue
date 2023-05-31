@@ -16,6 +16,7 @@
     </template>
     <template #titleRight>
       <print-table
+        v-if="visible"
         v-permission="props.permission.printDetail"
         :params="params"
         api-key="enclosureTeamProductionDetail"
@@ -92,7 +93,7 @@ const list = ref([])
 const drawerRef = ref()
 
 const dataFormat = ref([
-  ['reportTotalLength', ['to-fixed', 2]],
+  ['reportTotalLength', ['to-fixed', DP.MES_ENCLOSURE_L__M]],
   ['price', ['to-fixed-ck', 'YUAN']],
   ['totalAmount', ['to-fixed-ck', 'YUAN']]
 ])
@@ -133,7 +134,10 @@ const { maxHeight } = useMaxHeight(
 // 合计
 function getSummaries(param) {
   return tableSummary(param, {
-    props: [['totalAmount', DP.YUAN], ['reportTotalLength', 2]]
+    props: [
+      ['totalAmount', DP.YUAN],
+      ['reportTotalLength', DP.MES_ENCLOSURE_L__M]
+    ]
   })
 }
 

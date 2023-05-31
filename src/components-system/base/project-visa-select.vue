@@ -24,7 +24,7 @@ import { useStore } from 'vuex'
 import { businessTypeEnum } from '@enum-ms/contract'
 import useUserVisaProjects from '@compos/store/use-user-visa-projects'
 
-const emit = defineEmits(['update:modelValue', 'change'])
+const emit = defineEmits(['update:modelValue', 'change', 'projectChange'])
 const props = defineProps({
   modelValue: {
     type: [Number, String],
@@ -155,5 +155,7 @@ function fetchProjects() {
 function selectChange(val) {
   emit('update:modelValue', val)
   emit('change', val)
+  const findVal = options.value.find(v => v.id === val) || {}
+  emit('projectChange', findVal)
 }
 </script>

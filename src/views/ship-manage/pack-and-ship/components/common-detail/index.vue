@@ -27,12 +27,12 @@
           :disabled="partList.length == 0"
           >{{ packTypeEnum.MACHINE_PART.L }}({{ partList.length }})</el-radio-button
         >
-        <!-- <el-radio-button
+        <el-radio-button
           v-if="packTypeEnum.ENCLOSURE.V & productType"
           :label="packTypeEnum.ENCLOSURE.V"
           :disabled="enclosureList.length == 0"
           >{{ packTypeEnum.ENCLOSURE.L }}({{ enclosureList.length }})</el-radio-button
-        > -->
+        >
         <el-radio-button
           v-if="packTypeEnum.AUXILIARY_MATERIAL.V & productType"
           :label="packTypeEnum.AUXILIARY_MATERIAL.V"
@@ -42,6 +42,7 @@
       </el-radio-group>
       <common-radio-button
         v-model="monomerStatus"
+        v-if="productType !== packTypeEnum.ENCLOSURE.V"
         :options="SummaryStatusEnum"
         type="enum"
         size="small"
@@ -71,7 +72,7 @@ import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'
 import structureTable from './module/structure'
 import partTable from './module/part'
-// import enclosureTable from './module/enclosure'
+import enclosureTable from './module/enclosure'
 import auxiliaryMaterialTable from './module/auxiliary-material'
 
 const SummaryStatusEnum = {
@@ -140,8 +141,8 @@ const currentView = computed(() => {
       return structureTable
     case packTypeEnum.MACHINE_PART.V:
       return partTable
-    // case packTypeEnum.ENCLOSURE.V:
-    //   return enclosureTable
+    case packTypeEnum.ENCLOSURE.V:
+      return enclosureTable
     case packTypeEnum.AUXILIARY_MATERIAL.V:
       return auxiliaryMaterialTable
     default:
@@ -170,15 +171,15 @@ const list = computed(() => {
           return v
         })
       )
-    // case packTypeEnum.ENCLOSURE.V:
-    //   return (
-    //     enclosureList.value &&
-    //     enclosureList.value.map((v) => {
-    //       v.showQuantity = v[props.quantityFelid]
-    //       v.totalLength = convertUnits(v.length * v.showQuantity, 'mm', 'm')
-    //       return v
-    //     })
-    //   )
+    case packTypeEnum.ENCLOSURE.V:
+      return (
+        enclosureList.value &&
+        enclosureList.value.map((v) => {
+          v.showQuantity = v[props.quantityFelid]
+          v.totalLength = convertUnits(v.length * v.showQuantity, 'mm', 'm')
+          return v
+        })
+      )
     case packTypeEnum.AUXILIARY_MATERIAL.V:
       return (
         auxList.value &&
@@ -207,11 +208,12 @@ async function fetchDetail() {
     tableLoading.value = true
     curProductType.value = productTypeBits.value[0]
     const data = await props.detailFunc(detailId.value)
+    console.log(data, 'data')
     emit('getDetail', detailId.value, data)
     artifactList.value = data.artifactList || []
     partList.value = data.partList || []
     enclosureList.value = data.enclosureList || []
-    auxList.value = data.auxList || []
+    auxList.value = data.auxiliaryMaterialList || []
   } catch (error) {
     console.log('详情', error)
   } finally {
