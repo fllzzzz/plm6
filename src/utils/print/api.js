@@ -156,6 +156,7 @@ const enclosureShipMonthMeteDetail = mes.enclosureShipMonthMeteDetail
 const enclosureShipStockMeteDetail = mes.enclosureShipStockMeteDetail
 const mesShipTrainMeteDetail = mes.mesShipTrainMeteDetail
 const mesAuxMatDetail = mes.mesAuxMatDetail
+const enclosureAuxMatDetail = mes.enclosureAuxMatDetail
 const mesProductSendReceiveStorage = mes.productSendReceiveStorage
 const enclosureProductSendReceiveStorage = mes.enclosureProductSendReceiveStorage
 const productSendReceiveStorageDetail = mes.productSendReceiveStorageDetail
@@ -351,6 +352,7 @@ export default {
   enclosureShipStockMeteDetail, // 发运统计/库存详情
   mesShipTrainMeteDetail, // 发运统计/累计车次详情
   mesAuxMatDetail, // 发运统计/配套件详情
+  enclosureAuxMatDetail, // 发运统计/围护配套件详情
   mesProductSendReceiveStorage, // 发运管理制成品入发存
   enclosureProductSendReceiveStorage, // 围护制品入发存
   productSendReceiveStorageDetail, // 发运管理制成品入发存详情
