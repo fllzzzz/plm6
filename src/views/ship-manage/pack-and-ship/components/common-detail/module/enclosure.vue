@@ -13,9 +13,9 @@
         {{ toFixed(scope.row.thickness, DP.MES_ENCLOSURE_T__MM) }}
       </template>
     </el-table-column> -->
-    <el-table-column :show-overflow-tooltip="true" prop="surfaceArea" :label="`单面积\n(mm²)`" align="center">
+    <el-table-column :show-overflow-tooltip="true" prop="surfaceArea" :label="`单面积\n(m²)`" align="center">
       <template v-slot="scope">
-        {{ toFixed(scope.row.surfaceArea, DP.COM_AREA__M2) }}
+         {{ convertUnits(scope.row.surfaceArea, 'mm²', 'm²', DP.COM_AREA__M2) }}
       </template>
     </el-table-column>
     <el-table-column :show-overflow-tooltip="true" prop="length" :label="`单长\n(mm)`" align="center">
@@ -33,7 +33,7 @@
 
 <script setup>
 import { defineProps } from 'vue'
-
+import { convertUnits } from '@/utils/convert/unit'
 import { DP } from '@/settings/config'
 import { toFixed } from '@/utils/data-type'
 
