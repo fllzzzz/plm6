@@ -39,9 +39,9 @@
         <div>{{ scope.row.businessType? businessTypeEnum.VL[scope.row.businessType]: '-' }}</div>
       </template>
     </el-table-column>
-    <el-table-column v-if="columns.visible('projectManagerName')" key="projectManagerName" prop="projectManagerName" :show-overflow-tooltip="true" label="业务负责人" align="center" width="90">
+    <el-table-column v-if="columns.visible('projectManagerName')" key="projectManagerName" prop="projectManagerName" :show-overflow-tooltip="true" label="项目经理" align="center" width="90">
       <template v-slot="scope">
-        <div>{{ scope.row.projectManagerName }}</div>
+        <div>{{ scope.row.projectManagerName || '-' }}</div>
       </template>
     </el-table-column>
     <el-table-column v-if="columns.visible('signingDate')" key="signingDate" prop="signingDate" :show-overflow-tooltip="true" label="签订日期" align="center" width="80">
