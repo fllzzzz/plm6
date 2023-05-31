@@ -29,7 +29,7 @@ const state = {
   currentMenu: null, // 当前主模块
   // 首次加载页面，是否已经加载菜单
   loadedMenus: false,
-  projectTypeEnumArr: [projectTypeEnum.STEEL, projectTypeEnum.CARBARN, projectTypeEnum.ENCLOSURE],
+  projectTypeEnumArr: [projectTypeEnum.STEEL, projectTypeEnum.BRIDGE, projectTypeEnum.CARBARN, projectTypeEnum.ENCLOSURE],
   installTypeEnumArr: [installProjectTypeEnum.ARTIFACT, installProjectTypeEnum.ENCLOSURE, installProjectTypeEnum.AUXILIARY],
   deliveryInstallEnumArr: [deliveryInstallTypeEnum.ARTIFACT, deliveryInstallTypeEnum.ENCLOSURE],
   flag: 0,
@@ -137,9 +137,9 @@ const actions = {
     if (checkPermission(['admin'])) {
       // 如果是超级管理员【admin】加入系统管理模块
       menus.push({ name: '系统管理', id: -2, icon: 'module-system', redirect: '/system' })
-      // menus.push({ name: '桥梁MES', id: 12, icon: 'module-bridge', redirect: '/bridge-project' })
+      menus.push({ name: '桥梁MES', id: 12, icon: 'module-bridge', redirect: '/bridge-project' })
     }
-    const arr = enclosureType ? [projectTypeEnum.STEEL, projectTypeEnum.CARBARN] : [projectTypeEnum.STEEL, projectTypeEnum.CARBARN, projectTypeEnum.ENCLOSURE]
+    const arr = enclosureType ? [projectTypeEnum.STEEL, projectTypeEnum.CARBARN] : [projectTypeEnum.STEEL, projectTypeEnum.CARBARN, projectTypeEnum.ENCLOSURE, projectTypeEnum.BRIDGE]
     const installArr = enclosureType ? [installProjectTypeEnum.ARTIFACT, installProjectTypeEnum.AUXILIARY] : [installProjectTypeEnum.ARTIFACT, installProjectTypeEnum.ENCLOSURE, installProjectTypeEnum.AUXILIARY]
     const deliveryArr = enclosureType ? [deliveryInstallTypeEnum.ARTIFACT] : [deliveryInstallTypeEnum.ARTIFACT, deliveryInstallTypeEnum.ENCLOSURE]
     commit('SET_INSTALL_TYPE_ENUM_ARR', installArr)
