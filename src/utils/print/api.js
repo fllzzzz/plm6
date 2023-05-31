@@ -1,5 +1,6 @@
 import contract from '@/api/print/contract'
 import mes from '@/api/print/mes'
+import bridge from '@/api/print/bridge'
 import wms from '@/api/print/wms'
 import supply from '@/api/print/supply-chain'
 import project from '@/api/print/project'
@@ -172,6 +173,73 @@ const enclosureOutboundInventoryDetail = mes.enclosureOutboundInventoryDetail
 const mesMainMaterialTrack = mes.mainMaterialTrackSummary
 const mesMainMaterialTrackUseRecord = mes.mainMaterialTrackUseRecord
 const mesMainMaterialTrackStock = mes.mainMaterialTrackStock
+
+// bridge
+const bridgeSchedulingDetail = bridge.schedulingDetail
+const bridgeProductionTaskOrder = bridge.productionTaskOrder
+const bridgeAssembleNestingOrder = bridge.assembleNestingOrder
+const bridgeAssembleProductionTaskOrder = bridge.assembleProductionTaskOrder
+const bridgeDrillProductionTaskOrder = bridge.drillProductionTaskOrder
+const bridgeNestingProductionTaskOrder = bridge.drillProductionTaskOrder
+
+const bridgeStructureProductionReport = bridge.productionReport
+const bridgeAssemblePartProductionReport = bridge.productionReport
+const bridgeMachinePartProductionReport = bridge.productionReport
+const bridgeEnclosureProductionReport = bridge.productionReport
+const bridgeStructureProductionStatistics = bridge.productionStatistics
+const bridgeStructureProductionStatisticsIn = bridge.productionStatisticsIn
+const bridgeStructureProductionStatisticsUn = bridge.productionStatisticsUn
+const bridgeStructureProductionStatisticsComplete = bridge.productionStatisticsComplete
+const bridgeEnclosureProductionStatistics = bridge.productionStatistics
+const bridgeEnclosureProductionStatisticsIn = bridge.productionStatisticsIn
+const bridgeEnclosureProductionStatisticsUn = bridge.productionStatisticsUn
+const bridgeEnclosureProductionStatisticsComplete = bridge.productionStatisticsComplete
+const bridgeUnfinishedList = bridge.unfinishedList
+const bridgeStructureProductionLine = bridge.structureProductionLine
+const bridgeStructureProcess = bridge.structureProcess
+const bridgeMachinePartDetail = bridge.machinePartDetail
+const bridgeMachinePartList = bridge.machinePartList
+const bridgePaintingList = bridge.paintingList
+const bridgeStructureProjectSummary = bridge.structureProjectSummary
+const bridgeEnclosureProjectSummary = bridge.enclosureProjectSummary
+const bridgeQHSEProductionLineReport = bridge.qhseProductionLineReport
+const bridgeProjectOverviewList = bridge.projectOverviewList
+
+const bridgeStructureTeamWage = bridge.teamWage
+const bridgeEnclosureTeamWage = bridge.teamWage
+const bridgeStructureTeamWageDetail = bridge.teamWageDetail
+const bridgeEnclosureTeamWageDetail = bridge.teamWageDetail
+
+const bridgePackingList = bridge.packingList
+const bridgeShipmentSummary = bridge.shipmentSummary
+const bridgeShipmentDetail = bridge.shipmentDetail
+const bridgeReceiptStatusSummary = bridge.receiptStatusSummary
+const bridgeShippingList = bridge.shippingList
+const bridgeShipmentAudit = bridge.shipmentAudit
+const bridgeLogisticsSummary = bridge.logisticsSummary
+
+const bridgeWarehouseStateStructure = bridge.warehouseStateStructure
+const bridgeWarehouseStateEnclosure = bridge.warehouseStateEnclosure
+const bridgeWarehouseStateReport = bridge.warehouseStateReport
+
+const bridgeBoxClassList = bridge.boxClassList
+const bridgeElementClassList = bridge.elementClassList
+const bridgeMachinePartClassList = bridge.machinePartClassList
+
+const bridgeMonthlyTaskList = bridge.monthlyTaskList
+const bridgeProcessList = bridge.processList
+const bridgeProductionLineList = bridge.productionLineList
+const bridgeWorkOrderTrackingList = bridge.workOrderTrackingList
+
+const bridgeFactoryWorkshopReport = bridge.factoryWorkshopReport
+
+const bridgeStudSleeveStatisticsList = bridge.studSleeveStatisticsList
+const bridgeProjectShipDetail = bridge.bridgeProjectShipDetail
+const bridgeProductSendReceiveStorage = bridge.productSendReceiveStorage
+const bridgeProductSendReceiveStorageDetail = bridge.productSendReceiveStorageDetail
+const boxSummary = bridge.boxSummary // 分段清单汇总
+const cellSummary = bridge.cellSummary // 单元清单汇总
+const partSummary = bridge.partSummary // 零件清单汇总
 
 // wms
 const wmsRmOutboundReceipt = wms.wmsRmOutboundReceipt // 出库
@@ -365,6 +433,74 @@ export default {
   enclosureEndInventoryDetail, // 围护期末库存
   enclosureInboundInventoryDetail, // 围护入库量
   enclosureOutboundInventoryDetail, // 围护出库量
+
+  // bridge
+  bridgeSchedulingDetail, // 工单详情
+  bridgeProductionTaskOrder, // 工单管理：构件生产任务单
+  bridgeAssembleNestingOrder, // 工单管理：部件套料清单
+  bridgeAssembleProductionTaskOrder, // 工单管理：部件生产任务单
+  bridgeNestingProductionTaskOrder, // 工单管理：切割生产任务单
+  bridgeDrillProductionTaskOrder, // 工单管理：钻孔生产任务单
+
+  bridgeStructureProductionReport, // 结构生产报表
+  bridgeAssemblePartProductionReport, // 部件生产报表
+  bridgeMachinePartProductionReport, // 零件生产报表
+  bridgeEnclosureProductionReport, // 围护生产报表
+  bridgeStructureProductionStatistics, // 结构在制品统计
+  bridgeStructureProductionStatisticsIn, // 结构在制品统计明细
+  bridgeStructureProductionStatisticsUn, // 结构未生产统计明细
+  bridgeStructureProductionStatisticsComplete, // 结构完成品统计明细
+  bridgeEnclosureProductionStatistics, // 围护在制品统计
+  bridgeEnclosureProductionStatisticsIn, // 围护在制品统计明细
+  bridgeEnclosureProductionStatisticsUn, // 围护未生产统计明细
+  bridgeEnclosureProductionStatisticsComplete, // 围护完成品统计明细
+  bridgeUnfinishedList, // 未完成清单
+  bridgeStructureProductionLine, // 结构生产线报表
+  bridgeStructureProcess, // 结构工序报表
+  bridgeMachinePartDetail, // 零件生产详情
+  bridgeMachinePartList, // 零部件生产清单详情
+  bridgePaintingList, // 油漆用量明细
+  bridgeStructureProjectSummary, // 结构项目汇总
+  bridgeEnclosureProjectSummary, // 围护项目汇总
+  bridgeQHSEProductionLineReport, // 生产线质检报表
+  bridgeProjectOverviewList, // 工序生产明细清单
+
+  bridgeStructureTeamWage, // 结构班组工资
+  bridgeEnclosureTeamWage, // 围护班组工资
+  bridgeStructureTeamWageDetail, // 结构班组工资详情
+  bridgeEnclosureTeamWageDetail, // 围护班组工资详情
+
+  bridgePackingList, // 打包清单
+  bridgeShipmentSummary, // 发运汇总
+  bridgeShipmentDetail, // 发运详情
+  bridgeReceiptStatusSummary, // 收货状态汇总
+  bridgeShippingList, // 发货清单
+  bridgeShipmentAudit, // 发运审核
+  bridgeLogisticsSummary, // 物流汇总
+
+  bridgeWarehouseStateStructure, // 结构出入库状态
+  bridgeWarehouseStateEnclosure, // 围护出入库状态
+  bridgeWarehouseStateReport, // 入发存报表
+
+  bridgeBoxClassList, // 分段分类清单明细
+  bridgeElementClassList, // 单元件分类清单明细
+  bridgeMachinePartClassList, // 零件分类清单明细
+
+  bridgeMonthlyTaskList, // 月度任务跟踪清单详情
+  bridgeProductionLineList, //  产线跟踪清单详情
+  bridgeWorkOrderTrackingList, // 工单跟踪清单详情
+  bridgeProcessList, // 工序呆滞清单详情
+
+  bridgeFactoryWorkshopReport, // 车间报表清单详情
+
+  bridgeStudSleeveStatisticsList, // 栓钉套筒统计清单详情
+
+  bridgeProjectShipDetail, // 发运管理项目发运详情
+  bridgeProductSendReceiveStorage, // 发运管理制成品入发存
+  bridgeProductSendReceiveStorageDetail, // 发运管理制成品入发存详情
+  boxSummary, // 分段清单汇总
+  cellSummary, // 单元清单汇总
+  partSummary, // 零件清单汇总
 
   // wms
   wmsRmOutboundReceipt, // 出库（领料单）单

@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <!--工具栏-->
-    <mHeader class="head-container" />
+    <mHeader class="head-container" :globalProject="globalProject"/>
     <!--表格渲染-->
     <common-table
       ref="tableRef"
@@ -13,7 +13,7 @@
     >
     <el-table-column prop="index" label="序号" align="center" width="60" type="index" />
     <el-table-column v-if="columns.visible('monomerName')" key="monomerName" prop="monomerName" show-overflow-tooltip label="单体" align="center"/>
-    <el-table-column v-if="columns.visible('quantity')" key="quantity" prop="quantity" show-overflow-tooltip :label="`${deepenTypeEnum.V?.[crud.query.productType]?.L}总数`" align="center"/>
+    <el-table-column v-if="columns.visible('quantity')" key="quantity" prop="quantity" show-overflow-tooltip :label="`${globalProject.projectType === projectTypeEnum.STEEL.V?deepenTypeEnum.V?.[crud.query.productType]?.L:bridgeProcessTypeEnum.V?.[crud.query.productType]?.L}总数`" align="center"/>
     <el-table-column v-if="columns.visible('drawingQuantity')" key="drawingQuantity" prop="drawingQuantity" show-overflow-tooltip label="图纸匹配总数" align="center"/>
     <!--编辑与删除-->
     <el-table-column
@@ -52,6 +52,8 @@ import { ref, watch } from 'vue'
 import { mapGetters } from '@/store/lib'
 
 import { drawingFileListPM as permission } from '@/page-permission/plan'
+import { projectTypeEnum } from '@enum-ms/contract'
+import { bridgeProcessTypeEnum } from '@enum-ms/bridge'
 import { deepenTypeEnum } from '@enum-ms/plan'
 import checkPermission from '@/utils/system/check-permission'
 
@@ -62,7 +64,7 @@ import mHeader from './module/header'
 import uploadBtn from '@/views/plan/technical-data-manage/technical-achievement/components/drawing-upload-btn.vue'
 import detail from '@/views/plan/technical-data-manage/technical-achievement/components/common-detail.vue'
 
-const { globalProjectId } = mapGetters(['globalProjectId'])
+const { globalProjectId, globalProject } = mapGetters(['globalProjectId', 'globalProject'])
 
 const optShow = {
   add: false,

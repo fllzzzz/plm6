@@ -20,11 +20,12 @@ export function edit(data) {
 }
 
 // 获取收货列表
-export function deliveryProductList(cargoListId) {
+export function deliveryProductList(cargoListId, params) {
   return request({
     module: 'project',
     url: `receiving/listProduct/${cargoListId}`,
-    method: 'get'
+    method: 'get',
+    params
   })
 }
 

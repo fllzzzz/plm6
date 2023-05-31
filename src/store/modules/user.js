@@ -137,6 +137,7 @@ const actions = {
     if (checkPermission(['admin'])) {
       // 如果是超级管理员【admin】加入系统管理模块
       menus.push({ name: '系统管理', id: -2, icon: 'module-system', redirect: '/system' })
+      // menus.push({ name: '桥梁MES', id: 12, icon: 'module-bridge', redirect: '/bridge-project' })
     }
     const arr = enclosureType ? [projectTypeEnum.STEEL, projectTypeEnum.CARBARN] : [projectTypeEnum.STEEL, projectTypeEnum.CARBARN, projectTypeEnum.ENCLOSURE]
     const installArr = enclosureType ? [installProjectTypeEnum.ARTIFACT, installProjectTypeEnum.AUXILIARY] : [installProjectTypeEnum.ARTIFACT, installProjectTypeEnum.ENCLOSURE, installProjectTypeEnum.AUXILIARY]

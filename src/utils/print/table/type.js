@@ -30,6 +30,20 @@ const mes = {
   mes_pack_and_ship_manage: '发运管理'
 }
 
+const bridge = {
+  bridge_task: '任务报表',
+  bridge_production: '生产报表',
+  bridge_warehouse: '出入库报表',
+  bridge_logistics: '物流报表',
+  bridge_wage: '工资报表',
+  bridge_production_order: '生产订单',
+  bridge_task_tracking: '任务跟踪报表',
+  bridge_factory_report: '工厂报表',
+  bridge_production_line_wage_statistics: '产线工资统计',
+  bridge_pack_and_ship_manage: '发运管理',
+  bridge_list_summary: '清单汇总'
+}
+
 const supply = {
   purchase_reconciliation: '采购对账报表',
   logistics_reconciliation: '物流对账报表'
@@ -54,6 +68,7 @@ const moduleType = {
   supply: { L: '供应链', V: supply },
   wms: { L: 'WMS', V: wms },
   mes: { L: 'MES', V: mes },
+  bridge: { L: '桥梁MES', V: bridge },
   project: { L: '项目管理', V: project },
   plan: { L: '计划管理', V: plan },
   enclosure: { L: '围护MES', V: enclosure }
@@ -236,6 +251,71 @@ const tableType = {
   mesMainMaterialTrackUseRecord: { L: '主材跟踪-钢材领用记录', M: 'mes_project_report', T: mt.mes.L + ' / ' + mes.mes_project_report },
   mesMainMaterialTrackStock: { L: '主材跟踪-库存明细', M: 'mes_project_report', T: mt.mes.L + ' / ' + mes.mes_project_report },
 
+  // bridge
+  bridgeSchedulingDetail: { L: '工单详情', M: 'bridge_task', T: mt.bridge.L + ' / ' + bridge.bridge_task },
+  bridgeProductionTaskOrder: { L: '构件生产任务单', M: 'bridge_task', T: mt.bridge.L + ' / ' + bridge.bridge_task },
+  bridgeAssembleProductionTaskOrder: { L: '部件生产任务单', M: 'bridge_task', T: mt.bridge.L + ' / ' + bridge.bridge_task },
+  bridgeAssembleNestingOrder: { L: '部件套料清单', M: 'bridge_task', T: mt.bridge.L + ' / ' + bridge.bridge_task },
+  // bridgeDrillProductionTaskOrder: { L: '钻孔生产任务单', M: 'bridge_task', T: mt.bridge.L + ' / ' + bridge.bridge_task },
+
+  bridgeAssemblePartProductionReport: { L: '部件生产报表', M: 'bridge_production', T: mt.bridge.L + ' / ' + bridge.bridge_production },
+  bridgeMachinePartProductionReport: { L: '零件生产报表', M: 'bridge_production', T: mt.bridge.L + ' / ' + bridge.bridge_production },
+  bridgeStructureProductionReport: { L: '结构生产报表', M: 'bridge_production', T: mt.bridge.L + ' / ' + bridge.bridge_production },
+  bridgeEnclosureProductionReport: { L: '围护生产报表', M: 'bridge_production', T: mt.bridge.L + ' / ' + bridge.bridge_production },
+  bridgeStructureProductionStatistics: { L: '结构在制品统计', M: 'bridge_production', T: mt.bridge.L + ' / ' + bridge.bridge_production },
+  bridgeStructureProductionStatisticsIn: { L: '结构在制品统计明细', M: 'bridge_production', T: mt.bridge.L + ' / ' + bridge.bridge_production },
+  bridgeStructureProductionStatisticsUn: { L: '结构未生产统计明细', M: 'bridge_production', T: mt.bridge.L + ' / ' + bridge.bridge_production },
+  bridgeStructureProductionStatisticsComplete: { L: '结构完成品统计明细', M: 'bridge_production', T: mt.bridge.L + ' / ' + bridge.bridge_production },
+  bridgeEnclosureProductionStatistics: { L: '围护在制品统计', M: 'bridge_production', T: mt.bridge.L + ' / ' + bridge.bridge_production },
+  bridgeEnclosureProductionStatisticsIn: { L: '围护在制品统计明细', M: 'bridge_production', T: mt.bridge.L + ' / ' + bridge.bridge_production },
+  bridgeEnclosureProductionStatisticsUn: { L: '围护未生产统计明细', M: 'bridge_production', T: mt.bridge.L + ' / ' + bridge.bridge_production },
+  bridgeEnclosureProductionStatisticsComplete: { L: '围护完成品统计明细', M: 'bridge_production', T: mt.bridge.L + ' / ' + bridge.bridge_production },
+  bridgeUnfinishedList: { L: '未完成清单', M: 'bridge_production', T: mt.bridge.L + ' / ' + bridge.bridge_production },
+  bridgeStructureProductionLine: { L: '结构生产线报表', M: 'bridge_production', T: mt.bridge.L + ' / ' + bridge.bridge_production },
+  bridgeStructureProcess: { L: '结构工序报表', M: 'bridge_production', T: mt.bridge.L + ' / ' + bridge.bridge_production },
+  bridgeStructureProjectSummary: { L: '结构项目汇总', M: 'bridge_production', T: mt.bridge.L + ' / ' + bridge.bridge_production },
+  bridgeEnclosureProjectSummary: { L: '围护项目汇总', M: 'bridge_production', T: mt.bridge.L + ' / ' + bridge.bridge_production },
+  bridgeMachinePartDetail: { L: '零件生产详情', M: 'bridge_production', T: mt.bridge.L + ' / ' + bridge.bridge_production },
+  bridgeMachinePartList: { L: '零部件生产清单详情', M: 'bridge_production', T: mt.bridge.L + ' / ' + bridge.bridge_production },
+  bridgePaintingList: { L: '油漆用量明细', M: 'bridge_production', T: mt.bridge.L + ' / ' + bridge.bridge_production },
+  bridgeQHSEProductionLineReport: { L: '生产线质检不合格报表', M: 'bridge_production', T: mt.bridge.L + ' / ' + bridge.bridge_production },
+  bridgeProjectOverviewList: { L: '工序生产明细清单', M: 'bridge_production', T: mt.bridge.L + ' / ' + bridge.bridge_production },
+
+  bridgeStructureTeamWage: { L: '结构班组工资', M: 'bridge_wage', T: mt.bridge.L + ' / ' + bridge.bridge_wage },
+  bridgeEnclosureTeamWage: { L: '围护班组工资', M: 'bridge_wage', T: mt.bridge.L + ' / ' + bridge.bridge_wage },
+  bridgeStructureTeamWageDetail: { L: '结构班组工资详情报表', M: 'bridge_wage', T: mt.bridge.L + ' / ' + bridge.bridge_wage },
+  bridgeEnclosureTeamWageDetail: { L: '围护班组工资详情报表', M: 'bridge_wage', T: mt.bridge.L + ' / ' + bridge.bridge_wage },
+
+  bridgeWarehouseStateStructure: { L: '结构出入库状态', M: 'bridge_warehouse', T: mt.bridge.L + ' / ' + bridge.bridge_warehouse },
+  bridgeWarehouseStateEnclosure: { L: '围护出入库状态', M: 'bridge_warehouse', T: mt.bridge.L + ' / ' + bridge.bridge_warehouse },
+  bridgeWarehouseStateReport: { L: '入发存报表', M: 'bridge_warehouse', T: mt.bridge.L + ' / ' + bridge.bridge_warehouse },
+
+  bridgePackingList: { L: '打包清单', M: 'bridge_logistics', T: mt.bridge.L + ' / ' + bridge.bridge_logistics },
+  bridgeShipmentSummary: { L: '发运汇总', M: 'bridge_logistics', T: mt.bridge.L + ' / ' + bridge.bridge_logistics },
+  bridgeShipmentDetail: { L: '发运详情', M: 'bridge_logistics', T: mt.bridge.L + ' / ' + bridge.bridge_logistics },
+  bridgeShipmentAudit: { L: '发运审核', M: 'bridge_logistics', T: mt.bridge.L + ' / ' + bridge.bridge_logistics },
+  bridgeReceiptStatusSummary: { L: '收货状态汇总', M: 'bridge_logistics', T: mt.bridge.L + ' / ' + bridge.bridge_logistics },
+  bridgeShippingList: { L: '发货清单', M: 'bridge_logistics', T: mt.bridge.L + ' / ' + bridge.bridge_logistics },
+  bridgeLogisticsSummary: { L: '物流汇总', M: 'bridge_logistics', T: mt.bridge.L + ' / ' + bridge.bridge_logistics },
+
+  bridgeBoxClassList: { L: '分段分类清单明细', M: 'bridge_production_order', T: mt.bridge.L + ' / ' + bridge.bridge_production_order },
+  bridgeElementClassList: { L: '单元件分类清单明细', M: 'bridge_production_order', T: mt.bridge.L + ' / ' + bridge.bridge_production_order },
+  bridgeMachinePartClassList: { L: '零件分类清单明细', M: 'bridge_production_order', T: mt.bridge.L + ' / ' + bridge.bridge_production_order },
+
+  bridgeWorkOrderTrackingList: { L: '工单跟踪清单详情', M: 'bridge_task_tracking', T: mt.bridge.L + ' / ' + bridge.bridge_task_tracking },
+  bridgeMonthlyTaskList: { L: '月度任务清单详情', M: 'bridge_task_tracking', T: mt.bridge.L + ' / ' + bridge.bridge_task_tracking },
+  bridgeProductionLineList: { L: '产线跟踪清单详情', M: 'bridge_task_tracking', T: mt.bridge.L + ' / ' + bridge.bridge_task_tracking },
+  bridgeProcessList: { L: '工序呆滞清单详情', M: 'bridge_task_tracking', T: mt.bridge.L + ' / ' + bridge.bridge_task_tracking },
+
+  bridgeFactoryWorkshopReport: { L: '车间报表清单（平台）', M: 'bridge_factory_report', T: mt.bridge.L + ' / ' + bridge.bridge_factory_report },
+
+  bridgeStudSleeveStatisticsList: { L: '栓钉套筒统计清单详情', M: 'bridge_production_line_wage_statistics', T: mt.bridge.L + ' / ' + bridge.bridge_production_line_wage_statistics },
+  bridgeProjectShipDetail: { L: '项目发运详情报表', M: 'bridge_pack_and_ship_manage', T: mt.bridge.L + ' / ' + bridge.bridge_pack_and_ship_manage },
+  bridgeProductSendReceiveStorage: { L: '制成品入发存', M: 'bridge_pack_and_ship_manage', T: mt.bridge.L + ' / ' + bridge.bridge_pack_and_ship_manage },
+  bridgeProductSendReceiveStorageDetail: { L: '制成品入发存详情', M: 'bridge_pack_and_ship_manage', T: mt.bridge.L + ' / ' + bridge.bridge_pack_and_ship_manage },
+  boxSummary: { L: '分段清单汇总', M: 'bridge_list_summary', T: mt.bridge.L + ' / ' + bridge.bridge_list_summary },
+  cellSummary: { L: '单元清单汇总', M: 'bridge_list_summary', T: mt.bridge.L + ' / ' + bridge.bridge_list_summary },
+  partSummary: { L: '零件清单汇总', M: 'bridge_list_summary', T: mt.bridge.L + ' / ' + bridge.bridge_list_summary },
   // 项目管理
   deliveryCargoList: { L: '自制收货记录', M: 'delivery_manage', T: mt.project.L + ' / ' + project.delivery_manage },
   deliveryReportList: { L: '收货报表', M: 'delivery_manage', T: mt.project.L + ' / ' + project.delivery_manage },
