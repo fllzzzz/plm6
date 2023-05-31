@@ -85,12 +85,12 @@
         prop="surfaceArea"
         sortable="custom"
         :show-overflow-tooltip="true"
-        :label="`单面积\n(mm²)`"
+        :label="`单面积\n(m²)`"
         align="center"
         min-width="85px"
       >
         <template v-slot="scope">
-          {{ toFixed(scope.row.surfaceArea, DP.COM_AREA__M2) }}
+          {{ convertUnits(scope.row.surfaceArea, 'mm²', 'm²', DP.COM_AREA__M2) }}
         </template>
       </el-table-column>
       <el-table-column
@@ -204,6 +204,7 @@ import { computed, ref, watch, defineEmits, defineProps, defineExpose, inject } 
 
 import { artifactManualPackPM as permission } from '@/page-permission/ship-manage'
 import { DP } from '@/settings/config'
+import { convertUnits } from '@/utils/convert/unit'
 import { toFixed } from '@data-type'
 import { packTypeEnum } from '@enum-ms/mes'
 
