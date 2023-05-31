@@ -33,7 +33,7 @@
           <el-tree
             ref="materialTreeRef"
             v-loading="materialLoading"
-            :style="{ maxHeight: maxHeight + 'px' }"
+            :style="{ height: maxHeight + 'px' }"
             :data="
               materialEdit
                 ? materialTree
@@ -65,7 +65,7 @@
           <el-tree
             ref="otherTreeRef"
             v-loading="otherLoading"
-            :style="{ maxHeight: maxHeight + 'px' }"
+            :style="{ height: maxHeight + 'px' }"
             :data="
               otherEdit
                 ? otherTree
@@ -79,6 +79,14 @@
           />
         </el-card>
       </div>
+      <common-table :data="describeData" :max-height="360" class="describe-data" style="margin-top: 20px">
+        <el-table-column key="index" type="index" label="序号" align="center" width="60" />
+        <el-table-column align="left" key="content" prop="content" label="摊销说明 (以下描述都以月表示摊销时间段)">
+          <template #default="{ row }">
+            <span style="white-space: pre-wrap;" v-html="row.content" />
+          </template>
+        </el-table-column>
+      </common-table>
     </template>
   </common-drawer>
 </template>
@@ -122,14 +130,50 @@ const defaultProps = ref({
   label: 'name',
   disabled: 'disabled'
 })
+const describeData = ref([
+  {
+    content: '产量 = 制成品累计入库的总量。'
+  },
+  {
+    content: ' 项目摊销比例 = 项目的当月产量 / 当月所有项目的产量。'
+  },
+  {
+    content: '摊销存在手动摊销与自动摊销两种类型。'
+  },
+  {
+    content: '手动摊销：水电费、气体统计这两种类型的摊销为手动摊销。需要相关在信息填报后，由操作人手动进行摊销操作。'
+  },
+  {
+    content: '自动摊销：材料费用、其它（报销）费用、厂房折旧等其它分类皆为自动摊销，系统将于每月底23:59:59自动进行摊销操作。'
+  },
+  {
+    content: `材料费用 及 其它费用 
+       （1）摊销分类需要通过“材料摊销分类设置” 与 “费用摊销分类设置”。
+       （2）只有不以项目为名义的出库及申报才会进行摊销，否则直接计入对应项目费用。
+       （3）摊销对应的时间是 当月在系统中进行材料出库的时间 与 费用填报的时间（而不是填写的报销日期等）。`
+  },
+  {
+    content: `材料摊销分类设置 与 费用摊销分类设置
+       （1）只有在配置中添加了的分类，该分类才会在月末进行摊销计算。
+       （2）添加新的分类，新分类摊销从当月月初开始计算。
+       （3）移除旧的分类，于当时直接生效。
+       （4）分类仅包含一级分类。`
+  },
+  {
+    content: '若所摊销的月份没有可摊销的产量，会将该月份需要摊销的金额并入下个月当中进行摊销。'
+  },
+  {
+    content: ' 已结算项目的产量不会参与摊销。'
+  }
+])
 
 const { maxHeight } = useMaxHeight(
   {
     mainBox: '.amortization-setting-drawer',
-    extraBox: ['.el-drawer__header', '.el-card__header'],
+    extraBox: ['.el-drawer__header', '.el-card__header', '.describe-data'],
     wrapperBox: ['.el-drawer__body'],
-    extraHeight: 22,
-    minHeight: 300
+    extraHeight: 68,
+    minHeight: 200
   },
   visible
 )
@@ -175,7 +219,7 @@ async function getMaterialTree() {
 async function getOtherTree() {
   try {
     otherLoading.value = true
-    const data = await amortizationClassTree({ expenseClassEnum: expenseClassEnum.OTHER_EXPENSES.V }) || []
+    const data = (await amortizationClassTree({ expenseClassEnum: expenseClassEnum.OTHER_EXPENSES.V })) || []
     data?.forEach((row) => {
       row.disabled = true
     })

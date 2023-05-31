@@ -10,6 +10,7 @@
     size="70%"
   >
     <template #titleRight>
+      <!-- <common-button type="primary" size="mini" @click="submit">一键自动摊销</common-button> -->
       <el-tag v-if="list.length" effect="plain" type="warning" size="medium">于 {{ autoAmortizationDate }} 自动摊销</el-tag>
     </template>
     <template #content>
@@ -35,14 +36,17 @@
 </template>
 
 <script setup>
-import { getAmortizationSummaryList } from '@/api/contract/expense-entry/amortization-manage'
+import { getAmortizationSummaryList, autoAmortization } from '@/api/contract/expense-entry/amortization-manage'
 import { ref, defineEmits, defineProps, watch } from 'vue'
 
 import moment from 'moment'
 import { amortizationTypeEnum, expenseClassEnum } from '@enum-ms/contract'
+import { convertUnits } from '@/utils/convert/unit'
+import { DP } from '@/settings/config'
 
 import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'
+import { ElMessage } from 'element-plus'
 
 const props = defineProps({
   modelValue: {
@@ -85,13 +89,15 @@ async function getList() {
     listLoading.value = true
     autoAmortizationDate.value = moment().endOf('months').format('MM月DD日HH:mm:ss')
     const data =
-    (await getAmortizationSummaryList({ amortizationTypeEnum: amortizationTypeEnum.AUTOMATIC_AMORTIZATION.V, isAmortization: false })) || []
+      (await getAmortizationSummaryList({ amortizationTypeEnum: amortizationTypeEnum.AUTOMATIC_AMORTIZATION.V, isAmortization: false })) ||
+      []
     list.value = data.map((row, index) => {
       const _startDate = moment(row.startDate).format('YYYY-MM-DD')
       const _endDate = moment(row.endDate).format('YYYY-MM-DD')
       row.date = `${_startDate} ~ ${_endDate}`
       row.index = index + 1
       row.isParent = true
+      row.productMete = convertUnits(row.productMete, 'kg', 't', DP.CONTRACT_WT__T)
       const _name = expenseClassEnum.VL[row.expenseClassEnum]
       if (_name !== row.name) {
         row.fullPathName = _name
@@ -101,6 +107,7 @@ async function getList() {
         const _endDate = moment(v.endDate).format('YYYY-MM-DD')
         v.date = `${_startDate} ~ ${_endDate}`
         v.index = `${row.index}-${i + 1}`
+        v.productMete = convertUnits(v.productMete, 'kg', 't', DP.CONTRACT_WT__T)
         if (row.fullPathName) {
           v.name = row.name
           v.fullPathName = row.fullPathName
@@ -112,6 +119,17 @@ async function getList() {
     console.log('获取自动摊销列表失败', error)
   } finally {
     listLoading.value = false
+  }
+}
+
+// 自动摊销（测试用）
+async function submit() {
+  try {
+    await autoAmortization()
+    ElMessage.success('自动摊销成功')
+    getList()
+  } catch (error) {
+    console.log('自动摊销失败', error)
   }
 }
 </script>

@@ -38,6 +38,9 @@ import { detail } from '@/api/contract/expense-entry/amortization-manage'
 import { defineProps, defineEmits, ref, watch } from 'vue'
 
 import { toFixed } from '@/utils/data-type'
+import { convertUnits } from '@/utils/convert/unit'
+import { DP } from '@/settings/config'
+
 import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'
 
@@ -89,6 +92,7 @@ async function fetchList() {
     _list.forEach((row) => {
       row.project = { id: row.projectId, name: row.projectName, serialNumber: row.serialNumber, shortName: row.shortName }
       row.proportion = toFixed((row.proportion *= 100), 2)
+      row.productMete = convertUnits(row.productMete, 'kg', 't', DP.CONTRACT_WT__T)
     })
   } catch (error) {
     console.log('获取摊销详情失败')

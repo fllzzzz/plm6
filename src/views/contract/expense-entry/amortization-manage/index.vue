@@ -21,7 +21,7 @@
       <div style="flex: 1; min-width: 1px">
         <mHeader>
           <template #viewLeft>
-            <el-tag v-if="treeRow?.levelName" size="medium" effect="plain" type="warning" class="filter-item">
+            <el-tag v-if="treeRow?.levelName" size="medium" effect="plain" type="warning" class="filter-item" style="margin: 0">
               {{ treeRow?.levelName }}
             </el-tag>
             <div class="btn-wrap">
@@ -128,6 +128,8 @@ import { setEmptyArr2Undefined, setLevelName } from '@/utils/data-type/tree'
 import moment from 'moment'
 import checkPermission from '@/utils/system/check-permission'
 import { amortizationTypeEnum, expenseClassEnum } from '@enum-ms/contract'
+import { convertUnits } from '@/utils/convert/unit'
+import { DP } from '@/settings/config'
 
 import pagination from '@crud/Pagination'
 import useCRUD from '@compos/use-crud'
@@ -157,7 +159,7 @@ const defaultProps = ref({
 
 const columnsDataFormat = ref([
   ['avgUnitPrice', 'to-thousand'],
-  ['productMete', 'to-thousand'],
+  // ['productMete', 'to-thousand'],
   ['amortizationType', ['parse-enum', amortizationTypeEnum]]
 ])
 
@@ -258,6 +260,7 @@ CRUD.HOOK.handleRefresh = async (crud, { data }) => {
     row.date = `${_startDate} ~ ${_endDate}`
     row.index = index + 1
     row.isParent = true
+    row.productMete = convertUnits(row.productMete, 'kg', 't', DP.CONTRACT_WT__T)
     const _name = expenseClassEnum.VL[row.expenseClassEnum]
     if (_name !== row.name) {
       row.fullPathName = _name
@@ -265,6 +268,7 @@ CRUD.HOOK.handleRefresh = async (crud, { data }) => {
     row.children = row.childrenList?.map((v, i) => {
       const _startDate = moment(v.startDate).format('YYYY-MM-DD')
       const _endDate = moment(v.endDate).format('YYYY-MM-DD')
+      v.productMete = convertUnits(v.productMete, 'kg', 't', DP.CONTRACT_WT__T)
       v.date = `${_startDate} ~ ${_endDate}`
       v.index = `${row.index}-${i + 1}`
       v.amortizationType = undefined

@@ -177,6 +177,7 @@ export const DP = {
   MES_ENCLOSURE_L__M: 3, // mes_围护_长度（m）
   MES_ENCLOSURE_W__MM: 0, // mes_围护_有效宽度（mm）
   MES_ENCLOSURE_T__MM: 3, // mes_围护_厚度（mm）
+  CONTRACT_WT__T: 3, // 合同（业财一体化）_重量（t）
   YUAN: 2,
   ACCOUNTING: 2 // 会计算法小数点保留2位
 }

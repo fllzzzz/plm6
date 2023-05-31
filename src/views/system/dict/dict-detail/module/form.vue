@@ -17,6 +17,7 @@
           placeholder="输入字典标签"
           class="filter-item"
           style="width: 350px"
+          maxlength="32"
           size="small"
           clearable
         />
@@ -30,6 +31,7 @@
           controls-position="right"
           style="width: 350px"
           :min="0"
+          :max="9999"
         />
       </el-form-item>
     </el-form>

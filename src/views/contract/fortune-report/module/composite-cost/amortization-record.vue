@@ -32,6 +32,8 @@ import { defineProps, nextTick, inject, ref, computed, watch } from 'vue'
 
 import { toFixed } from '@/utils/data-type'
 import { amortizationTypeEnum, expenseClassEnum } from '@enum-ms/contract'
+import { convertUnits } from '@/utils/convert/unit'
+import { DP } from '@/settings/config'
 
 import moment from 'moment'
 
@@ -101,6 +103,7 @@ async function fetchList() {
       row.date = `${_startDate} ~ ${_endDate}`
       row.costRate = toFixed((row.amount / props.detailRow.costAmount) * 100, 2)
       row.expenseRate = toFixed((row.amount / totalAmount.value) * 100, 2)
+      row.productMete = convertUnits(row.productMete, 'kg', 't', DP.COM_WT__T)
     })
   } catch (error) {
     console.log('获取摊销详情失败')
@@ -115,21 +118,33 @@ async function fetchList() {
 .amortization-detail {
   margin-bottom: 20px;
   ::v-deep(.el-card__body) {
-    display: flex;
-    align-items: center;
+    line-height: 29px;
+    position: relative;
+    padding-right: 334px;
     > div:first-child {
       color: #706f6f;
       font-weight: bold;
-      padding-right: 30px;
+      padding-right: 20px;
+      display: inline-block;
+      vertical-align: middle;
     }
     > div:not(:first-child, .print-wrap) {
-      flex: 1;
-      text-align: center;
+      padding: 0 20px;
+      display: inline-block;
+      vertical-align: middle;
       border-left: 1px solid #ebeef5;
       .blue {
         color: #0079ff;
         font-weight: bold;
       }
+    }
+    .print-wrap {
+      position: absolute;
+      height: 29px;
+      top: 0;
+      right: 20px;
+      bottom: 0;
+      margin: auto;
     }
   }
 }

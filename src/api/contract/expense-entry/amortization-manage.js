@@ -91,4 +91,14 @@ export function amortizationAll(data) {
   })
 }
 
+// 一键自动摊销
+export function autoAmortization(data) {
+  return request({
+    module: 'contract',
+    url: 'contract/amortization/autoAmortization',
+    method: 'post',
+    data
+  })
+}
+
 export default { get }

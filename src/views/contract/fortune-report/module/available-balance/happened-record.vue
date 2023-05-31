@@ -96,21 +96,33 @@ async function fetchList() {
 .card-detail {
   margin-bottom: 20px;
   ::v-deep(.el-card__body) {
-    display: flex;
-    align-items: center;
+    line-height: 29px;
+    position: relative;
+    padding-right: 334px;
     > div:first-child {
       color: #706f6f;
       font-weight: bold;
-      padding-right: 30px;
+      padding-right: 20px;
+      display: inline-block;
+      vertical-align: middle;
     }
     > div:not(:first-child, .print-wrap) {
-      flex: 1;
-      text-align: center;
+      padding: 0 20px;
+      display: inline-block;
+      vertical-align: middle;
       border-left: 1px solid #ebeef5;
       .blue {
         color: #0079ff;
         font-weight: bold;
       }
+    }
+    .print-wrap {
+      position: absolute;
+      height: 29px;
+      top: 0;
+      right: 20px;
+      bottom: 0;
+      margin: auto;
     }
   }
 }

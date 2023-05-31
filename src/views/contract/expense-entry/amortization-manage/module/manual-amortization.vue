@@ -67,6 +67,8 @@ import { ref, defineEmits, defineProps, watch } from 'vue'
 import moment from 'moment'
 import { debounce } from '@/utils'
 import { amortizationTypeEnum, expenseClassEnum } from '@enum-ms/contract'
+import { convertUnits } from '@/utils/convert/unit'
+import { DP } from '@/settings/config'
 
 import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'
@@ -140,6 +142,7 @@ async function getList() {
       row.date = `${_startDate} ~ ${_endDate}`
       row.index = index + 1
       row.isParent = true
+      row.productMete = convertUnits(row.productMete, 'kg', 't', DP.CONTRACT_WT__T)
       if (row.productMete) {
         operableQuantity.value++
       }
@@ -152,6 +155,7 @@ async function getList() {
         const _endDate = moment(v.endDate).format('YYYY-MM-DD')
         v.date = `${_startDate} ~ ${_endDate}`
         v.index = `${row.index}-${i + 1}`
+        v.productMete = convertUnits(v.productMete, 'kg', 't', DP.CONTRACT_WT__T)
         if (row.fullPathName) {
           v.name = row.name
           v.fullPathName = row.fullPathName
