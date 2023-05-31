@@ -7,7 +7,7 @@ const mesProductSendReceiveStorage = {
   unit: cssUnitEnum.MM.V, // 长度单位
   unitPrecision: cssUnitPrecisionEnum.ZERO.V, // 长度单位精度
   type: 'mesProductSendReceiveStorage', // 表格类型 KEY
-  name: '制成品入发存（平台）', // 表格名称
+  name: '结构制成品入发存（平台）', // 表格名称
   width: 210, // 打印纸的宽度
   height: 297, // 打印纸的高度
   paddingLR: 10, // 左右内边距
@@ -61,7 +61,7 @@ const mesProductSendReceiveStorage = {
   title: {
     show: true,
     allPage: false,
-    title: '制成品入发存',
+    title: '结构制成品入发存',
     align: alignEnum.CENTER.V,
     verticleAlign: verticleAlignEnum.CENTER.V,
     size: 17,

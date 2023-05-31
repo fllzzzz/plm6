@@ -6,7 +6,7 @@ const enclosureShipStockMeteDetail = {
   unit: cssUnitEnum.MM.V, // 长度单位
   unitPrecision: cssUnitPrecisionEnum.ZERO.V, // 长度单位精度
   type: 'enclosureShipStockMeteDetail', // 表格类型 KEY
-  name: '库存详情（平台）', // 表格名称
+  name: '围护库存详情（平台）', // 表格名称
   width: 210, // 打印纸的宽度
   height: 297, // 打印纸的高度
   paddingLR: 10, // 左右内边距
@@ -68,7 +68,7 @@ const enclosureShipStockMeteDetail = {
   title: {
     show: true,
     allPage: false,
-    title: '库存详情',
+    title: '围护库存详情',
     align: alignEnum.CENTER.V,
     verticleAlign: verticleAlignEnum.CENTER.V,
     size: 17,
