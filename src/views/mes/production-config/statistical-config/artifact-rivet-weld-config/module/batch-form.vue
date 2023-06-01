@@ -119,7 +119,7 @@
                   v-model="row.processObj[item.id].price"
                   :step="1"
                   :min="0"
-                  :precision="2"
+                  :precision="DP.YUAN"
                   clearable
                   class="input-underline"
                   :controls="false"
@@ -159,6 +159,7 @@ import { isNotBlank, deepClone } from '@data-type/index'
 import { createUniqueString } from '@/utils/data-type/string'
 import { wageQuotaTypeEnum } from '@enum-ms/mes'
 import { obj2arr } from '@/utils/convert/type'
+import { DP } from '@/settings/config'
 
 import { regBatchForm } from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'

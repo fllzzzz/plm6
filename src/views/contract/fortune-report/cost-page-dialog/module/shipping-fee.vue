@@ -195,7 +195,7 @@ function getSummaries(param) {
           }
         }, 0)
       }
-      sums[index] = sums[index]?.toFixed(2)
+      sums[index] = sums[index]?.toFixed(DP.YUAN)
     }
   })
   return sums

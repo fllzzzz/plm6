@@ -53,7 +53,7 @@
       </el-table-column>
       <el-table-column prop="unitPrice" key="unitPrice" label="单价" align="center">
         <template v-slot="scope">
-          <span>{{ scope.row.unitPrice?.toFixed(2) }}</span>
+          <span>{{ scope.row.unitPrice?.toFixed(DP.YUAN) }}</span>
         </template>
       </el-table-column>
       <el-table-column prop="amount" key="amount" label="总价" align="center">
@@ -89,6 +89,7 @@ import { mainAuxiliaryTypeEnum } from '@enum-ms/contract'
 import { setSpecInfoToList } from '@/utils/wms/spec'
 import { toThousand } from '@data-type/number'
 import { tableSummary } from '@/utils/el-extra'
+import { DP } from '@/settings/config'
 import { parseTime } from '@/utils/date'
 import useMaxHeight from '@compos/use-max-height'
 
@@ -117,7 +118,7 @@ const { maxHeight } = useMaxHeight({
 
 const dataFormat = ref([
   ['basicClass', ['parse-enum', matClsEnum, { bit: true }]],
-  ['avgPrice', 'to-thousand']
+  ['avgPrice', ['to-thousand-ck', 'YUAN']]
 ])
 
 watch(
@@ -131,7 +132,7 @@ watch(
 // 合计
 function getSummaries(param) {
   return tableSummary(param, {
-    props: ['mete', 'amount'],
+    props: ['mete', ['amount', DP.YUAN]],
     toThousandFields: ['mete', 'amount']
   })
 }

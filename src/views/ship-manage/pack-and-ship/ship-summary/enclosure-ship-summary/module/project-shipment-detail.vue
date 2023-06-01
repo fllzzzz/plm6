@@ -46,7 +46,7 @@
         <print-table
           v-show="query.category === 64"
           v-permission="permission.print"
-          api-key="mesAuxMatDetail"
+          api-key="enclosureAuxMatDetail"
           :params="{
             projectId: props.currentRow?.projectId,
             workshopId: props.workshopId,

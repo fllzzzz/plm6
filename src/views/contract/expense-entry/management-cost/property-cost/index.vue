@@ -47,6 +47,7 @@ import { ref } from 'vue'
 import crudApi from '@/api/contract/expense-entry/property-cost'
 
 import { toThousand } from '@data-type/number'
+import { DP } from '@/settings/config'
 import { tableSummary } from '@/utils/el-extra'
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
@@ -80,7 +81,7 @@ const { crud, CRUD, columns } = useCRUD(
 // 合计
 function getSummaries(param) {
   return tableSummary(param, {
-    props: ['feeAmount'],
+    props: [['feeAmount', DP.YUAN]],
     toThousandFields: ['feeAmount']
   })
 }

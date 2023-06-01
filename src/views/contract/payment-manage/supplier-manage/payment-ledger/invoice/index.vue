@@ -66,6 +66,7 @@ import { ref } from 'vue'
 import { contractSupplierPaymentLedgerPM } from '@/page-permission/contract'
 import { supplierPayTypeEnum } from '@enum-ms/contract'
 import { invoiceTypeEnum } from '@enum-ms/finance'
+import { DP } from '@/settings/config'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
@@ -107,7 +108,7 @@ const { maxHeight } = useMaxHeight({
 })
 
 const dataFormat = ref([
-  ['invoiceAmount', 'to-thousand'],
+  ['invoiceAmount', ['to-thousand-ck', 'YUAN']],
   ['createTime', ['parse-time', '{y}-{m}-{d}']],
   ['propertyType', ['parse-enum', supplierPayTypeEnum]],
   ['invoiceType', ['parse-enum', invoiceTypeEnum]],
@@ -149,7 +150,7 @@ function getSummaries(param) {
             return prev
           }
         }, 0)
-        sums[index] = sums[index].toFixed(2)
+        sums[index] = sums[index].toFixed(DP.YUAN)
       }
     }
   })

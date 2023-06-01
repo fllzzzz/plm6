@@ -74,7 +74,7 @@ const optShow = {
 const dataFormat = ref([
   ['project', ['parse-project', { onlyShortName: true }]],
   ['applyDate', ['parse-time', '{y}-{m}-{d}']],
-  ['visaAmount', 'to-thousand'],
+  ['visaAmount', ['to-thousand-ck', 'YUAN']],
   ['auditTime', ['parse-time', '{y}-{m}-{d}']],
   ['approveTime', ['parse-time', '{y}-{m}-{d}']]
 ])

@@ -52,7 +52,7 @@
     </div>
     <el-row v-loading="crud.loading" v-if="checkPermission(crud.permission.get)" :gutter="20" class="panel-group">
       <el-col :span="5" class="card-panel-col">
-        <Panel name="累计合同额" text-color="#626262" num-color="#1890ff" :end-val="totalAmount.amount || 0" :precision="2" />
+        <Panel name="累计合同额" text-color="#626262" num-color="#1890ff" :end-val="totalAmount.amount || 0" :precision="DP.YUAN" />
       </el-col>
       <el-col :span="5" class="card-panel-col">
         <Panel name="累计订单数" text-color="#626262" num-color="#1890ff" :end-val="totalAmount.orderQuantity || 0" :precision="0" />
@@ -64,7 +64,7 @@
         <Panel name="已结算" text-color="#626262" num-color="#1890ff" :end-val="totalAmount.settlementQuantity || 0" :precision="0" />
       </el-col>
       <el-col :span="4" class="card-panel-col">
-        <Panel name="累计结算额" text-color="#626262" num-color="#1890ff" :end-val="totalAmount.settlementAmount || 0" :precision="2" />
+        <Panel name="累计结算额" text-color="#626262" num-color="#1890ff" :end-val="totalAmount.settlementAmount || 0" :precision="DP.YUAN" />
       </el-col>
     </el-row>
     <crudOperation add-text="分包立项" />
@@ -78,6 +78,7 @@ import { regHeader } from '@compos/use-crud'
 
 import { subOrderSettleEnum } from '@enum-ms/contract'
 import checkPermission from '@/utils/system/check-permission'
+import { DP } from '@/settings/config'
 
 import crudOperation from '@crud/CRUD.operation'
 import rrOperation from '@crud/RR.operation'

@@ -95,7 +95,7 @@ const columnsDataFormat = ref([
   ...materialHasAmountColumns,
   ['outboundReceipt.outboundTime', ['parse-time', '{y}-{m}-{d}']],
   ['rdRate', ['suffix', ' %']],
-  ['rdFee', 'to-thousand']
+  ['rdFee', ['to-thousand-ck', 'YUAN']]
 ])
 
 // 展开行

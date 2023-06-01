@@ -18,14 +18,14 @@
                 text-color="#626262"
                 num-color="#1890ff"
                 :end-val="props.settlementStatus === projectStatusEnum.SETTLED.V ? detailRow.settlementAmount : detailRow.contractAmount"
-                :precision="2"
+                :precision="DP.YUAN"
               />
             </el-col>
             <el-col :span="8" class="card-panel-col">
-              <Panel name="综合成本" text-color="#626262" num-color="#F56C6C" :end-val="detailRow.costAmount || 0" :precision="2" />
+              <Panel name="综合成本" text-color="#626262" num-color="#F56C6C" :end-val="detailRow.costAmount || 0" :precision="DP.YUAN" />
             </el-col>
             <el-col :span="8" class="card-panel-col">
-              <Panel name="毛利润" text-color="#626262" num-color="#1890ff" :end-val="detailRow.grossProfit || 0" :precision="2" />
+              <Panel name="毛利润" text-color="#626262" num-color="#1890ff" :end-val="detailRow.grossProfit || 0" :precision="DP.YUAN" />
             </el-col>
           </el-row>
           <el-divider><span class="title">直接费用</span></el-divider>
@@ -85,6 +85,7 @@ import { defineProps, defineEmits, ref, watch, computed } from 'vue'
 
 import checkPermission from '@/utils/system/check-permission'
 import { fortuneReportPM } from '@/page-permission/contract'
+import { DP } from '@/settings/config'
 
 import mainMaterialFee from './module/main-material-fee.vue'
 import laborFee from './module/labor-fee.vue'
@@ -136,7 +137,7 @@ const props = defineProps({
 
 const dataFormat = ref([
   ['rate', ['to-fixed', 2]],
-  ['amount', 'to-thousand']
+  ['amount', ['to-thousand-ck', 'YUAN']]
 ])
 
 watch(

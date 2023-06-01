@@ -103,8 +103,8 @@ const drawerRef = ref()
 const tableLoading = ref(false)
 const dataFormat = ref([
   ['createTime', ['parse-time', '{y}-{m}-{d}']],
-  ['unitPrice', 'to-thousand'],
-  ['totalPrice', 'to-thousand']
+  ['unitPrice', ['to-thousand-ck', 'YUAN']],
+  ['totalPrice', ['to-thousand-ck', 'YUAN']]
 ])
 
 const { maxHeight } = useMaxHeight(

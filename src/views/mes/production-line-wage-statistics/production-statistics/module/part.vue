@@ -75,6 +75,7 @@ import useMaxHeight from '@compos/use-max-height'
 import { parseTime } from '@/utils/date'
 import { toThousand } from '@data-type/number'
 import { tableSummary } from '@/utils/el-extra'
+import { DP } from '@/settings/config'
 
 const tableData = [
   {
@@ -98,7 +99,7 @@ const { maxHeight } = useMaxHeight({
 // 合计
 function getSummaries(param) {
   return tableSummary(param, {
-    props: ['totalMete', 'totalPrice']
+    props: ['totalMete', ['totalPrice', DP.YUAN]]
   })
 }
 </script>
