@@ -13,7 +13,7 @@
           />
           <common-radio-button
             v-model="productType"
-            :options="contractSaleTypeEnum.ENUM"
+            :options="contractSaleTypeEnumArr"
             default
             type="enumSL"
             size="small"
@@ -143,7 +143,7 @@ const currentView = computed(() => {
   }
 })
 
-const { globalProjectId } = mapGetters(['globalProjectId'])
+const { globalProjectId, contractSaleTypeEnumArr } = mapGetters(['globalProjectId', 'contractSaleTypeEnumArr'])
 
 const domRef = ref()
 const projectId = ref()

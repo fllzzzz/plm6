@@ -50,7 +50,7 @@
       />
       <common-radio-button
         v-model="query.productType"
-        :options="[packTypeEnum.STRUCTURE,packTypeEnum.ENCLOSURE]"
+        :options="flag?[packTypeEnum.STRUCTURE]:[packTypeEnum.STRUCTURE,packTypeEnum.ENCLOSURE]"
         default
         type="enumSL"
         size="small"
@@ -89,10 +89,16 @@
 import { orderSourceTypeEnum, projectStatusEnum } from '@enum-ms/contract'
 import { packTypeEnum } from '@enum-ms/mes'
 
+import { mapGetters } from '@/store/lib'
+
 import { regHeader } from '@compos/use-crud'
 import crudOperation from '@crud/CRUD.operation'
 import rrOperation from '@crud/RR.operation'
 // import projectVisaSelect from '@comp-base/project-visa-select'
+
+const { flag } = mapGetters([
+  'flag'
+])
 
 const defaultQuery = {
   year: undefined,
