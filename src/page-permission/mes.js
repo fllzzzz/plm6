@@ -616,8 +616,8 @@ export const mesGroupReportPM = {
 
 // 生产统计
 export const mesProductStatisticsPM = {
-  get: ['mes_product_statistics:get'] // 列表
-  // print: ['mes_product_statistics:print'] // 打印
+  get: ['mes_product_statistics:get'], // 列表
+  print: ['mes_product_statistics:print'] // 打印
 }
 
 // --------------------------- 6.0 车间报表 end --------------------------------

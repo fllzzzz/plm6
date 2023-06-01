@@ -735,6 +735,15 @@ export function groupsReport(params) {
   })
 }
 
+// 工厂报表-生产统计详情
+export function productionStatisticsReport(params) {
+  return request({
+    url: `/api/mes/building/task/process/produce/statistics/print`,
+    method: 'get',
+    params
+  })
+}
+
 // 任务跟踪-工单跟踪报表详情
 export function workOrderTrackingList(params) {
   return request({
@@ -996,6 +1005,7 @@ export default {
   // 工厂报表-车间报表
   factoryWorkshopReport, // 车间报表详情
   groupsReport, // 班组报表详情
+  productionStatisticsReport, // 生产统计详情
 
   // 任务跟踪
   workOrderTrackingList, // 工单跟踪报表详情
