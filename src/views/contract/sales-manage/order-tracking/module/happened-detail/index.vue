@@ -69,8 +69,8 @@ const optShow = {
 const tableRef = ref()
 const dataFormat = ref([
   ['auditTime', 'parse-time'],
-  ['unitPrice', 'to-thousand'],
-  ['totalPrice', 'to-thousand']
+  ['unitPrice', ['to-thousand-ck', 'YUAN']],
+  ['totalPrice', ['to-thousand-ck', 'YUAN']]
 ])
 const { crud, columns, CRUD } = useCRUD(
   {

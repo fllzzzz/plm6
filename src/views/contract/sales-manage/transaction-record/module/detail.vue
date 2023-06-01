@@ -107,8 +107,8 @@ const list = ref([])
 const dataFormat = ref([
   ['project', ['parse-project']],
   ['signingDate', ['parse-time', '{y}-{m}-{d}']],
-  ['contractAmount', 'to-thousand'],
-  ['settlementAmount', 'to-thousand']
+  ['contractAmount', ['to-thousand-ck', 'YUAN']],
+  ['settlementAmount', ['to-thousand-ck', 'YUAN']]
 ])
 const permission = inject('permission')
 

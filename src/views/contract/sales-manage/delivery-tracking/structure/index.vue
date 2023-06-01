@@ -66,7 +66,7 @@ const dataFormat = ref([
   ['project', 'parse-project'],
   ['orderSourceType', ['parse-enum', orderSourceTypeEnum]],
   ['status', ['parse-enum', projectStatusEnum]],
-  ['contractAmount', 'to-thousand']
+  ['contractAmount', ['to-thousand-ck', 'YUAN']]
 ])
 
 // 刷新数据后

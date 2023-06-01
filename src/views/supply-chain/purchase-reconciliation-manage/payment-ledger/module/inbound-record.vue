@@ -164,11 +164,11 @@ const list = ref([])
 const drawerRef = ref()
 const tableLoading = ref(false)
 const dataFormat = ref([
-  ['unitPrice', 'to-thousand'],
-  ['amount', 'to-thousand'],
-  ['unitPriceExcludingVAT', 'to-thousand'],
-  ['amountExcludingVAT', 'to-thousand'],
-  ['inputVAT', 'to-thousand'],
+  ['unitPrice', ['to-thousand-ck', 'YUAN']],
+  ['amount', ['to-thousand-ck', 'YUAN']],
+  ['unitPriceExcludingVAT', ['to-thousand-ck', 'YUAN']],
+  ['amountExcludingVAT', ['to-thousand-ck', 'YUAN']],
+  ['inputVAT', ['to-thousand-ck', 'YUAN']],
   ['inboundTime', ['parse-time', '{y}-{m}-{d}']]
 ])
 
@@ -187,7 +187,7 @@ const { maxHeight } = useMaxHeight(
 
 function getSummaries(param) {
   return tableSummary(param, {
-    props: ['amount', 'amountExcludingVAT', 'inputVAT', ['mete', DP.COM_WT__KG]],
+    props: [['amount', DP.YUAN], ['amountExcludingVAT', DP.YUAN], ['inputVAT', DP.YUAN], ['mete', DP.COM_WT__KG]],
     toThousandFields: ['amount', 'amountExcludingVAT', 'inputVAT', 'mete']
   })
 }

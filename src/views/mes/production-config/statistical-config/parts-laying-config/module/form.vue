@@ -74,7 +74,7 @@
           v-model="form.unitPrice"
           :step="1"
           :min="0"
-          :precision="2"
+          :precision="DP.YUAN"
           clearable
           class="input-underline"
           :controls="false"
@@ -91,6 +91,7 @@
 import { ref, computed } from 'vue'
 import { partKeyWordEnum, wageQuotaTypeEnum } from '@enum-ms/mes'
 import { regForm } from '@compos/use-crud'
+import { DP } from '@/settings/config'
 import cutConfigSelect from '@/components-system/base/cut-config-select.vue'
 
 const formRef = ref()

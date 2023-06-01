@@ -68,8 +68,8 @@ const tableRef = ref()
 const headerRef = ref()
 const dataFormat = ref([
   ['createTime', 'parse-time'],
-  ['amount', 'to-thousand'],
-  ['inboundAmount', 'to-thousand'],
+  ['amount', ['to-thousand-ck', 'YUAN']],
+  ['inboundAmount', ['to-thousand-ck', 'YUAN']],
   ['inboundRate', ['to-fixed', 2]]
 ])
 const { crud, columns, CRUD } = useCRUD(

@@ -70,11 +70,11 @@ const { crud, columns, CRUD } = useCRUD(
 const dataFormat = ref([
   ['paymentRate', ['to-fixed', 2]],
   ['invoiceRate', ['to-fixed', 2]],
-  ['amount', 'to-thousand'],
-  ['paymentAmount', 'to-thousand'],
-  ['unPaymentAmount', 'to-thousand'],
-  ['invoiceAmount', 'to-thousand'],
-  ['unInvoiceAmount', 'to-thousand']
+  ['amount', ['to-thousand-ck', 'YUAN']],
+  ['paymentAmount', ['to-thousand-ck', 'YUAN']],
+  ['unPaymentAmount', ['to-thousand-ck', 'YUAN']],
+  ['invoiceAmount', ['to-thousand-ck', 'YUAN']],
+  ['unInvoiceAmount', ['to-thousand-ck', 'YUAN']]
 ])
 
 const { maxHeight } = useMaxHeight({

@@ -196,6 +196,9 @@
 <script setup>
 import { ref, provide } from 'vue'
 import crudApi from '@/api/mes/production-line-wage-statistics/stud-sleeve-statistics'
+
+import { DP } from '@/settings/config'
+
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
 import pagination from '@crud/Pagination'
@@ -233,7 +236,7 @@ provide('permission', permission)
 // 合计
 function getSummaries(param) {
   return tableSummary(param, {
-    props: ['auxiliaryQuantity', 'wages']
+    props: ['auxiliaryQuantity', ['wages', DP.YUAN]]
   })
 }
 </script>

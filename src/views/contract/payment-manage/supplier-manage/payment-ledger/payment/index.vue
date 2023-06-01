@@ -62,6 +62,7 @@ import { ref } from 'vue'
 
 import { contractSupplierPaymentLedgerPM } from '@/page-permission/contract'
 import { tableSummary } from '@/utils/el-extra'
+import { DP } from '@/settings/config'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
@@ -96,7 +97,7 @@ const { crud, columns, CRUD } = useCRUD(
 )
 
 const dataFormat = ref([
-  ['actuallyPaymentAmount', 'to-thousand'],
+  ['actuallyPaymentAmount', ['to-thousand-ck', 'YUAN']],
   ['paymentDate', ['parse-time', '{y}-{m}-{d}']]
 ])
 
@@ -125,7 +126,7 @@ CRUD.HOOK.beforeRefresh = () => {
 // 合计
 function getSummaries(param) {
   return tableSummary(param, {
-    props: ['actuallyPaymentAmount'],
+    props: [['actuallyPaymentAmount', DP.YUAN]],
     toThousandFields: ['actuallyPaymentAmount']
   })
 }

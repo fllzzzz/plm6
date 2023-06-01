@@ -137,8 +137,8 @@ const paintingFeeListETmpl = {
     data.table?.forEach(v => {
       v.mete = convertUnits(v.mete, 'kg', 't', DP.COM_WT__T)
       v.area = convertUnits(v.area, 'mm2', 'm2', DP.COM_AREA__M2)
-      v.paintingUnitPrice = v.price && v.area ? (v.price / v.area).toFixed(2) : 0
-      v.averageUnitPrice = v.price && v.mete ? (v.price / v.mete).toFixed(2) : 0
+      v.paintingUnitPrice = v.price && v.area ? (v.price / v.area).toFixed(DP.YUAN) : 0
+      v.averageUnitPrice = v.price && v.mete ? (v.price / v.mete).toFixed(DP.YUAN) : 0
     })
     return data
   }

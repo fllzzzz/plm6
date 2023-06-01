@@ -17,19 +17,20 @@
       <el-table-column label="序号" type="index" align="center" width="60" />
       <el-table-column v-if="columns.visible('useProperty')" prop="useProperty" label="使用类别" align="center">
         <template #default="{ row }">
-          <span>{{ row.useProperty?auxiliaryMaterialUseTypeEnum.VL[row.useProperty]:'-' }}</span>
+          <span>{{ row.useProperty ? auxiliaryMaterialUseTypeEnum.VL[row.useProperty] : '-' }}</span>
         </template>
       </el-table-column>
+      <el-table-column prop="name" label="名称" align="center" v-if="columns.visible('name')" :show-overflow-tooltip="true" />
       <el-table-column
-        prop="name"
-        label="名称"
-        align="center"
-        v-if="columns.visible('name')"
+        v-if="columns.visible('specification')"
         :show-overflow-tooltip="true"
+        prop="specification"
+        label="规格"
+        align="center"
+        min-width="120"
       />
-      <el-table-column v-if="columns.visible('specification')" :show-overflow-tooltip="true" prop="specification" label="规格" align="center" min-width="120" />
-      <el-table-column v-if="columns.visible('measureUnit')" :show-overflow-tooltip="true" prop="measureUnit" label="单位" align="center"/>
-      <el-table-column v-if="columns.visible('quantity')" :show-overflow-tooltip="true" prop="quantity" label="数量" align="center"/>
+      <el-table-column v-if="columns.visible('measureUnit')" :show-overflow-tooltip="true" prop="measureUnit" label="单位" align="center" />
+      <el-table-column v-if="columns.visible('quantity')" :show-overflow-tooltip="true" prop="quantity" label="数量" align="center" />
       <el-table-column
         v-if="columns.visible('unitPrice')"
         key="unitPrice"
@@ -91,9 +92,7 @@ const sourceMap = new Map([['unitPrice', 'originUnitPrice']])
 
 const tableRef = ref()
 const headerRef = ref()
-const dataFormat = ref([
-  ['unitPrice', 'to-thousand']
-])
+const dataFormat = ref([['unitPrice', ['to-thousand-ck', 'YUAN']]])
 const { crud, columns } = useCRUD(
   {
     title: '配套件价格',

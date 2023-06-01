@@ -284,7 +284,7 @@ function taxMoney(row) {
   console.log(row)
   if (row.invoiceAmount && row.taxRate) {
     row.tax = row.invoiceAmount * row.taxRate / 100
-    row.noTaxAmount = (row.invoiceAmount / (1 + row.taxRate / 100)).toFixed(2)
+    row.noTaxAmount = (row.invoiceAmount / (1 + row.taxRate / 100)).toFixed(DP.YUAN)
   } else {
     if (row.invoiceType === invoiceTypeEnum.RECEIPT.V) {
       row.noTaxAmount = row.invoiceAmount

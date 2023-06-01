@@ -112,10 +112,10 @@ const paymentVisible = ref(false)
 const dataFormat = ref([
   ['paymentRate', ['to-fixed', 2]],
   ['invoiceRate', ['to-fixed', 2]],
-  ['freight', 'to-thousand'],
   ['loadingWeight', ['to-fixed', 2]],
-  ['paymentAmount', 'to-thousand'],
-  ['invoiceAmount', 'to-thousand']
+  ['freight', ['to-thousand-ck', 'YUAN']],
+  ['paymentAmount', ['to-thousand-ck', 'YUAN']],
+  ['invoiceAmount', ['to-thousand-ck', 'YUAN']]
 ])
 const { crud, columns, CRUD } = useCRUD(
   {

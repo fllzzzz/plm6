@@ -290,14 +290,14 @@ const optShow = {
 
 const dataFormat = ref([
   ['project', ['parse-project', { onlyShortName: true }]],
-  ['beginPeriod.unitPriceExcludingVAT', 'to-thousand'],
-  ['beginPeriod.amountExcludingVAT', 'to-thousand'],
-  ['inbound.unitPriceExcludingVAT', 'to-thousand'],
-  ['inbound.amountExcludingVAT', 'to-thousand'],
-  ['outbound.unitPriceExcludingVAT', 'to-thousand'],
-  ['outbound.amountExcludingVAT', 'to-thousand'],
-  ['endPeriod.unitPriceExcludingVAT', 'to-thousand'],
-  ['endPeriod.amountExcludingVAT', 'to-thousand'],
+  ['beginPeriod.unitPriceExcludingVAT', ['to-thousand-ck', 'YUAN']],
+  ['beginPeriod.amountExcludingVAT', ['to-thousand-ck', 'YUAN']],
+  ['inbound.unitPriceExcludingVAT', ['to-thousand-ck', 'YUAN']],
+  ['inbound.amountExcludingVAT', ['to-thousand-ck', 'YUAN']],
+  ['outbound.unitPriceExcludingVAT', ['to-thousand-ck', 'YUAN']],
+  ['outbound.amountExcludingVAT', ['to-thousand-ck', 'YUAN']],
+  ['endPeriod.unitPriceExcludingVAT', ['to-thousand-ck', 'YUAN']],
+  ['endPeriod.amountExcludingVAT', ['to-thousand-ck', 'YUAN']],
   ['formatSpecArr', 'split']
 ])
 

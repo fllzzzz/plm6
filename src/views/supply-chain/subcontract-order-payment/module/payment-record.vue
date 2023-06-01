@@ -107,6 +107,7 @@ import { auditTypeEnum } from '@enum-ms/contract'
 import { digitUppercase, getDP, toThousand } from '@/utils/data-type/number'
 // import { paymentFineModeEnum } from '@enum-ms/finance'
 import { tableSummary } from '@/utils/el-extra'
+import { DP } from '@/settings/config'
 
 import useVisible from '@/composables/use-visible'
 import usePagination from '@compos/use-pagination'
@@ -173,8 +174,8 @@ const tableLoading = ref(false)
 const dict = useDict(['payment_reason'])
 
 const dataFormat = ref([
-  ['applyAmount', 'to-thousand'],
-  // ['actuallyPaymentAmount', 'to-thousand'],
+  ['applyAmount', ['to-thousand-ck', 'YUAN']],
+  ['actuallyPaymentAmount', ['to-thousand-ck', 'YUAN']],
   ['paymentDate', ['parse-time', '{y}-{m}-{d}']]
 ])
 
@@ -194,7 +195,7 @@ const { maxHeight } = useMaxHeight(
 // 合计
 function getSummaries(param) {
   const summary = tableSummary(param, {
-    props: ['applyAmount', 'actuallyPaymentAmount'],
+    props: [['applyAmount', DP.YUAN], ['actuallyPaymentAmount', DP.YUAN]],
     toThousandFields: ['applyAmount']
   })
   const num = summary[3]

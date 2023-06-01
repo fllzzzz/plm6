@@ -75,7 +75,7 @@ import { edit as editInboundApplication } from '@/api/wms/material-inbound/raw-m
 import { steelInboundApplicationPM as permission } from '@/page-permission/wms'
 
 import { defineProps, defineEmits, ref, computed, watch, provide, nextTick, reactive } from 'vue'
-import { STEEL_ENUM } from '@/settings/config'
+import { STEEL_ENUM, DP } from '@/settings/config'
 import { matClsEnum } from '@/utils/enum/modules/classification'
 import { weightMeasurementModeEnum } from '@/utils/enum/modules/finance'
 import { orderSupplyTypeEnum, inboundFillWayEnum } from '@/utils/enum/modules/wms'
@@ -173,7 +173,7 @@ const totalAmount = computed(() => {
       }
     })
   }
-  return toFixed(amount, 2)
+  return toFixed(amount, DP.YUAN)
 })
 
 // 总重

@@ -145,7 +145,7 @@ const dataFormat = ref([
   ['shipDate', ['parse-time', '{y}-{m}-{d}']],
   ['type', ['parse-enum', logisticsSearchTypeEnum]],
   ['loadingWeight', ['to-fixed', 2]],
-  ['freight', 'to-thousand'],
+  ['freight', ['to-thousand-ck', 'YUAN']],
   ['changeFreight', ['parse-enum', freightChangeTypeEnum, { f: 'SL' }]]
 ])
 

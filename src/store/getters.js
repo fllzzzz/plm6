@@ -107,6 +107,7 @@ const getters = {
   projectTypeEnumArr: state => state.user.projectTypeEnumArr,
   installTypeEnumArr: state => state.user.installTypeEnumArr,
   deliveryInstallEnumArr: state => state.user.deliveryInstallEnumArr,
+  contractSaleTypeEnumArr: state => state.user.contractSaleTypeEnumArr,
   flag: state => state.user.flag,
   hasIntelligent: state => state.user.hasIntelligent
 }

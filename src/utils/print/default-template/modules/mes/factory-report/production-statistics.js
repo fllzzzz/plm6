@@ -1,12 +1,13 @@
-import { dataSourceEnum, alignEnum, verticleAlignEnum, fieldTypeEnum as typeEnum, cssUnitEnum, cssUnitPrecisionEnum, pageFormatEnum, weightUnitEnum, DEF_UNIT } from '@/utils/print/enum'
+import { dataSourceEnum, alignEnum, verticleAlignEnum, fieldTypeEnum as typeEnum, cssUnitEnum, cssUnitPrecisionEnum, pageFormatEnum } from '@/utils/print/enum'
+import { projectNameArrangementModeEnum } from '@/utils/enum/modules/contract'
 
-// 库存详情
-const mesShipStockMeteDetail = {
+// 生产统计
+const mesProductionStatisticsReport = {
   fontUnit: 'pt', // 字体单位
   unit: cssUnitEnum.MM.V, // 长度单位
   unitPrecision: cssUnitPrecisionEnum.ZERO.V, // 长度单位精度
-  type: 'mesShipStockMeteDetail', // 表格类型 KEY
-  name: '建钢库存详情（平台）', // 表格名称
+  type: 'mesProductionStatisticsReport', // 表格类型 KEY
+  name: '生产分析清单（平台）', // 表格名称
   width: 210, // 打印纸的宽度
   height: 297, // 打印纸的高度
   paddingLR: 10, // 左右内边距
@@ -28,14 +29,6 @@ const mesShipStockMeteDetail = {
     top: 10,
     left: 10,
     url: ''
-  },
-  qrCode: {
-    show: true,
-    allPage: false,
-    height: 20.5,
-    width: 20.5,
-    top: 10,
-    left: 180
   },
   /**
     * 页码
@@ -68,7 +61,7 @@ const mesShipStockMeteDetail = {
   title: {
     show: true,
     allPage: false,
-    title: '建钢库存详情',
+    title: '生产分析清单（平台）',
     align: alignEnum.CENTER.V,
     verticleAlign: verticleAlignEnum.CENTER.V,
     size: 17,
@@ -95,7 +88,7 @@ const mesShipStockMeteDetail = {
     verticleAlign: verticleAlignEnum.CENTER.V,
     size: 10,
     bold: 'bold',
-    height: 12,
+    height: 6,
     width: 190,
     emptyVal: '',
     /**
@@ -104,16 +97,15 @@ const mesShipStockMeteDetail = {
      * @param {string} key 字段名
      * @param {string} title 列名
      * @param {enum} source 数据来源 系统/自定义
-     * @param {number} minWidth 最小列宽
+     * @param {number} maxWidth 最大列宽
      * @param {number} width 列宽
      * @param {enum} type 数据类型
      * @param {*} format 格式转换
      */
     fields: [ // 字段内容
-      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'projectName', title: '项目名称：', align: alignEnum.LEFT.V, width: 190, type: typeEnum.OTHER.K },
-      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'year', title: '统计日期：', width: 90, type: typeEnum.OTHER.K },
-      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'printDate', title: '打印时间：', width: 60, type: typeEnum.DATE.K, format: 'YY/MM/DD kk:mm:ss' },
-      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'printer', title: '打印人：', align: alignEnum.RIGHT.V, width: 40, type: typeEnum.USER_NAME.K }
+      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'date', title: '统计日期：', width: 100, type: typeEnum.OTHER.K },
+      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'printDate', title: '打印时间：', width: 55, type: typeEnum.DATE.K, format: 'YY/MM/DD kk:mm:ss' },
+      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'printer', title: '打印人：', width: 35, type: typeEnum.USER_NAME.K }
     ]
   },
   /**
@@ -137,7 +129,7 @@ const mesShipStockMeteDetail = {
     verticleAlign: verticleAlignEnum.CENTER.V,
     size: 10,
     bold: 'bold',
-    height: 24,
+    height: 0,
     width: 190,
     emptyVal: '',
     /**
@@ -156,7 +148,7 @@ const mesShipStockMeteDetail = {
      * @param {string} key 字段名
      * @param {string} title 列名
      * @param {enum} source 数据来源 系统/自定义
-     * @param {number} minWidth 最小列宽
+     * @param {number} maxWidth 最大列宽
      * @param {number} width 列宽
      * @param {enum} type 数据类型
      * @param {*} format 格式转换
@@ -178,7 +170,7 @@ const mesShipStockMeteDetail = {
      * @param {string} bold 是否加粗 'unset' || 'bold'
      * @param {number} lineHeight 行高
      */
-    td: { size: 9, bold: 'unset', lineHeight: 13, paddingTB: 2 },
+    td: { size: 9, bold: 'unset', lineHeight: 13, paddingTB: 1 },
     emptyVal: '/', // string 空值显示
     /**
      * 表格序号
@@ -208,19 +200,26 @@ const mesShipStockMeteDetail = {
      * @param {boolean} sum 列需要合计
      */
     fields: [
-      { show: true, key: 'workshop.name', title: '车间', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 18, type: typeEnum.WORKSHOP.K },
-      { show: true, key: 'monomer.name', title: '单体', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 18, type: typeEnum.MONOMER_NAME.K },
-      { show: true, key: 'area.name', title: '区域', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 18, type: typeEnum.AREA_NAME.K },
-      { show: true, key: 'serialNumber', title: '编号', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 19, type: typeEnum.SERIAL_NUMBER.K },
-      { show: true, key: 'specification', title: '规格', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 18, type: typeEnum.SPECIFICATION.K },
-      { show: true, key: 'material', title: '材质', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 18, type: typeEnum.MATERIAL.K },
-      { show: true, key: 'quantity', title: '数量', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 18, type: typeEnum.QUANTITY.K },
-      { show: true, key: 'netWeight', title: '单重（kg）', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 14, type: typeEnum.WEIGHT.K, format: { toThousand: false, precision: DEF_UNIT.WEIGHT_DP, unit: weightUnitEnum.KG.V }},
-      { show: true, key: 'totalNetWeight', title: '总重（kg）', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 14, type: typeEnum.WEIGHT.K, format: { toThousand: false, precision: DEF_UNIT.WEIGHT_DP, unit: weightUnitEnum.KG.V }, sum: true }
+      { show: true, key: 'project', title: '项目名称', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 28, type: typeEnum.PROJECT.K, format: { showProjectFullName: false, showSerialNumber: true, projectNameShowConfig: projectNameArrangementModeEnum.SERIAL_NUMBER_START.V }},
+      { show: true, key: 'productionLine.name', title: '生产线', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 15, type: typeEnum.PRODUCTION_LINE.K },
+      { show: true, key: 'name', title: '名称', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 15, type: typeEnum.OTHER.K },
+      { show: true, key: 'serialNumber', title: '构件编号', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.SERIAL_NUMBER.K },
+      { show: true, key: 'specification', title: '规格', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 20, type: typeEnum.SPECIFICATION.K },
+      { show: true, key: 'length', title: '长度', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 15, type: typeEnum.LENGTH.K, sum: true },
+      { show: true, key: 'material', title: '材质', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 15, type: typeEnum.MATERIAL.K },
+      { show: true, key: 'quantity', title: '生产数', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 13, type: typeEnum.QUANTITY.K, sum: true },
+      {
+        show: true, key: 'totalNetWeight', title: '总重（kg）', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 20, type: typeEnum.WEIGHT.K,
+        format: { precision: 2 }, sum: true
+      },
+      {
+        show: true, key: 'date', title: '入库日期', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 24, type: typeEnum.DATE.K,
+        format: 'YY/MM/DD'
+      }
     ]
   }
 }
 
 export default {
-  mesShipStockMeteDetail //  库存详情
+  mesProductionStatisticsReport // 生产统计
 }

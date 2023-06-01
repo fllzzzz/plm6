@@ -5,7 +5,7 @@
         <div v-show="crud.searchToggle">
           <common-radio-button
             v-model="query.type"
-            :options="contractSaleTypeEnum.ENUM"
+            :options="contractSaleTypeEnumArr"
             type="enumSL"
             size="small"
             class="filter-item"
@@ -38,11 +38,14 @@
 <script setup>
 import { contractSaleTypeEnum } from '@enum-ms/mes'
 import { reviewStatusEnum } from '@enum-ms/common'
+import { mapGetters } from '@/store/lib'
 
 import { regHeader } from '@compos/use-crud'
 import crudOperation from '@crud/CRUD.operation'
 import rrOperation from '@crud/RR.operation'
 import projectVisaSelect from '@comp-base/project-visa-select'
+
+const { contractSaleTypeEnumArr } = mapGetters('contractSaleTypeEnumArr')
 
 const defaultQuery = {
   type: contractSaleTypeEnum.STRUCTURE.V, status: undefined,
