@@ -3,7 +3,7 @@
     <div class="head-container common-container">
       <common-radio-button
         v-model="productType"
-        :options="installProjectTypeEnum.ENUM"
+        :options="installTypeEnumArr"
         default
         type="enum"
         size="small"
@@ -173,7 +173,7 @@ const currentView = computed(() => {
   }
 })
 
-const { globalProjectId } = mapGetters(['globalProjectId'])
+const { globalProjectId, installTypeEnumArr } = mapGetters(['globalProjectId', 'installTypeEnumArr'])
 
 const productType = ref()
 const summaryLoading = ref(false)
