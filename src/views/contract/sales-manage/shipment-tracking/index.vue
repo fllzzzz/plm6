@@ -153,7 +153,6 @@ import { PICKER_OPTIONS_SHORTCUTS } from '@/settings/config'
 import { installProjectTypeEnum } from '@enum-ms/project'
 import { DP } from '@/settings/config'
 import { isBlank } from '@data-type/index'
-import { DP } from '@/settings/config'
 import checkPermission from '@/utils/system/check-permission'
 import moment from 'moment'
 
