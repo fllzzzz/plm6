@@ -30,6 +30,7 @@ import { ref, defineProps, watch } from 'vue'
 
 import { toThousand } from '@data-type/number'
 import { tableSummary } from '@/utils/el-extra'
+import { DP } from '@/settings/config'
 import useMaxHeight from '@compos/use-max-height'
 
 const props = defineProps({
@@ -51,7 +52,7 @@ const { maxHeight } = useMaxHeight({
 })
 
 const dataFormat = ref([
-  ['amount', 'to-thousand']
+  ['amount', ['to-thousand-ck', 'YUAN']]
 ])
 
 watch(
@@ -65,7 +66,7 @@ watch(
 // 合计
 function getSummaries(param) {
   return tableSummary(param, {
-    props: ['amount'],
+    props: [['amount', DP.YUAN]],
     toThousandFields: ['amount']
   })
 }

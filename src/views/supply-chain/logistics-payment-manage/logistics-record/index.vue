@@ -76,7 +76,7 @@ const { crud, columns } = useCRUD(
 )
 
 const dataFormat = ref([
-  ['freight', 'to-thousand']
+  ['freight', ['to-thousand-ck', 'YUAN']]
 ])
 
 const { maxHeight } = useMaxHeight({

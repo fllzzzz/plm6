@@ -66,8 +66,8 @@ const tableRef = ref()
 const dataFormat = ref([
   ['project', 'parse-project'],
   ['status', ['parse-enum', reviewStatusEnum, { f: 'SL' }]],
-  ['contractAmount', 'to-thousand'],
-  ['amount', 'to-thousand'],
+  ['contractAmount', ['to-thousand-ck', 'YUAN']],
+  ['amount', ['to-thousand-ck', 'YUAN']],
   ['createTime', 'parse-time']
 ])
 const { crud, columns } = useCRUD(

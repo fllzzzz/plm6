@@ -70,6 +70,8 @@
 import crudApi from '@/api/mes/team-report/in-staff/piecework-system'
 import { ref, provide, computed } from 'vue'
 
+import { DP } from '@/settings/config'
+
 // import { wageQuotaTypeEnum } from '@enum-ms/mes'
 // import { inStaffPieceworkSystemPM as permission } from '@/page-permission/mes'
 
@@ -148,7 +150,7 @@ function getSummaries(param) {
             return prev
           }
         }, 0)
-        sums[index] = sums[index].toFixed(2)
+        sums[index] = sums[index].toFixed(DP.YUAN)
       }
     }
   })

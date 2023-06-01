@@ -107,7 +107,7 @@ const tableLoading = ref(false)
 const dataFormat = ref([
   ['collectionDate', ['parse-time', '{y}-{m}-{d}']],
   ['collectionMode', ['parse-enum', paymentFineModeEnum]],
-  ['collectionAmount', 'to-thousand'],
+  ['collectionAmount', ['to-thousand-ck', 'YUAN']],
   ['taxRate', ['to-fixed', 2]]
 ])
 

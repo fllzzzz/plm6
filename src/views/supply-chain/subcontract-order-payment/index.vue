@@ -114,9 +114,9 @@ const dataFormat = ref([
   ['project', 'parse-project'],
   ['paymentRate', ['to-fixed', 2]],
   ['invoiceRate', ['to-fixed', 2]],
-  ['amount', 'to-thousand'],
-  ['paymentAmount', 'to-thousand'],
-  ['invoiceAmount', 'to-thousand']
+  ['amount', ['to-thousand-ck', 'YUAN']],
+  ['paymentAmount', ['to-thousand-ck', 'YUAN']],
+  ['invoiceAmount', ['to-thousand-ck', 'YUAN']]
 ])
 
 const { crud, columns, CRUD } = useCRUD(

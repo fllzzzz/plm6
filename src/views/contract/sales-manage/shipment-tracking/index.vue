@@ -51,7 +51,7 @@
                 text-color="#626262"
                 num-color="#1890ff"
                 :end-val="summaryData.shipAmount || 0"
-                :precision="2"
+                :precision="DP.YUAN"
               />
             </el-col>
           </el-row>
@@ -89,7 +89,7 @@
                 text-color="#626262"
                 num-color="#1890ff"
                 :end-val="summaryData.shipAmountTime || 0"
-                :precision="2"
+                :precision="DP.YUAN"
               />
             </el-col>
           </el-row>
@@ -101,12 +101,12 @@
               text-color="#626262"
               num-color="#1890ff"
               :end-val="summaryData.shipMet || 0"
-              :precision="2"
+              :precision="DP.YUAN"
               :show-empty="productType === installProjectTypeEnum.AUXILIARY.V"
             />
           </el-col>
           <el-col class="card-panel-col">
-            <Panel name="累计发运额（元）" text-color="#626262" num-color="#1890ff" :end-val="summaryData.shipAmount || 0" :precision="2" />
+            <Panel name="累计发运额（元）" text-color="#626262" num-color="#1890ff" :end-val="summaryData.shipAmount || 0" :precision="DP.YUAN" />
           </el-col>
           <el-col class="card-panel-col">
             <Panel
@@ -133,7 +133,7 @@
               text-color="#626262"
               num-color="#1890ff"
               :end-val="summaryData.shipAmountTime || 0"
-              :precision="2"
+              :precision="DP.YUAN"
             />
           </el-col>
         </el-row>

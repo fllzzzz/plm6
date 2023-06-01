@@ -165,7 +165,7 @@
                       <common-input-number
                         v-model="form.amount"
                         :max="999999999999"
-                        :precision="2"
+                        :precision="DP.YUAN"
                         :step="1"
                         :controls="false"
                         placeholder="请填写合同额"
@@ -319,6 +319,7 @@ import { isNotBlank, isBlank, deepClone } from '@/utils/data-type'
 import { clearObject } from '@/utils/data-type/object'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { setSpecInfoToList } from '@/utils/wms/spec'
+import { DP } from '@/settings/config'
 
 import { regForm } from '@compos/use-crud'
 import UnitSelect from '@comp-common/unit-select/index.vue'

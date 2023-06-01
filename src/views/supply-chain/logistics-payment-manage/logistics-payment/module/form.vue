@@ -198,7 +198,7 @@ async function fetchList() {
 // 合计
 function getSummaries(param) {
   return tableSummary(param, {
-    props: ['freight', 'paymentAmount', 'applyAmount'],
+    props: [['freight', DP.YUAN], ['paymentAmount', DP.YUAN], ['applyAmount', DP.YUAN]],
     toThousandFields: ['freight', 'paymentAmount', 'applyAmount']
   })
 }

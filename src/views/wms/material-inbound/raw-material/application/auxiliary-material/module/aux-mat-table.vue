@@ -108,6 +108,7 @@ import { defineExpose, defineProps, computed, ref, inject, reactive } from 'vue'
 import { createUniqueString } from '@/utils/data-type/string'
 import { positiveNumPattern } from '@/utils/validate/pattern'
 import { isNotBlank, toPrecision } from '@/utils/data-type'
+import { DP } from '@/settings/config'
 
 import { regExtra } from '@/composables/form/use-form'
 import useTableValidate from '@compos/form/use-table-validate'
@@ -149,7 +150,7 @@ const rules = {
 // 金额校验
 const validateAmount = (value, row) => {
   if (isNotBlank(row.mete) && isNotBlank(row.unitPrice)) {
-    return +toPrecision(row.mete * row.unitPrice, 2) === +value
+    return +toPrecision(row.mete * row.unitPrice, DP.YUAN) === +value
   }
   return false
 }
@@ -207,7 +208,7 @@ function rowInit(row) {
 // 处理重量变化
 function handleWeightChange(val, row) {
   if (isNotBlank(row.unitPrice) && isNotBlank(val)) {
-    row.amount = toPrecision(val * row.unitPrice, 2)
+    row.amount = toPrecision(val * row.unitPrice, DP.YUAN)
   }
 }
 

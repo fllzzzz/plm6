@@ -69,7 +69,7 @@ const headerRef = ref()
 const dataFormat = ref([
   ['signDate', ['parse-time', '{y}-{m}-{d}']],
   ['project', 'parse-project'],
-  ['amount', 'to-thousand']
+  ['amount', ['to-thousand-ck', 'YUAN']]
 ])
 const { crud, columns, CRUD } = useCRUD(
   {

@@ -133,7 +133,7 @@ const drawerVisible = ref(false)
 const tableRef = ref()
 // 表格列数据格式转换
 const columnsDataFormat = ref([
-  ['amountExcludingVAT', 'to-thousand'],
+  ['amountExcludingVAT', ['to-thousand-ck', 'YUAN']],
   ['inboundTime', 'parse-time']
 ])
 

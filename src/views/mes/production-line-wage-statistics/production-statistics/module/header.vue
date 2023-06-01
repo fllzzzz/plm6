@@ -18,7 +18,7 @@
         <Panel name="产量（吨）" text-color="#626262" num-color="#1890ff" :endVal="summaryInfo.mete / 1000 || 0" :precision="2" />
       </el-col>
       <el-col :span="8" class="card-panel-col">
-        <Panel name="工资总额（元）" text-color="#626262" num-color="#1890ff" :endVal="summaryInfo.price || 0" :precision="2" />
+        <Panel name="工资总额（元）" text-color="#626262" num-color="#1890ff" :endVal="summaryInfo.price || 0" :precision="DP.YUAN" />
       </el-col>
       <el-col :span="8" class="card-panel-col">
         <Panel
@@ -26,7 +26,7 @@
           text-color="#626262"
           num-color="#1890ff"
           :end-val="summaryInfo.mete? summaryInfo.price?.toFixed(2) / ((summaryInfo.mete / 1000)?.toFixed(2)) : 0 || 0"
-          :precision="2"
+          :precision="DP.YUAN"
         />
       </el-col>
     </el-row>
@@ -39,6 +39,7 @@ import { regHeader } from '@compos/use-crud'
 import { getSummary } from '@/api/mes/production-line-wage-statistics/production-statistics'
 import Panel from '@/components/Panel'
 import moment from 'moment'
+import { DP } from '@/settings/config'
 
 const defaultTime = moment().valueOf().toString()
 const permission = inject('permission')

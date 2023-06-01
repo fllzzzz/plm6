@@ -108,12 +108,12 @@ const showAmount = computed(() => checkPermission(permission.showAmount))
 // 表格列数据格式转换
 const dataFormat = ref([
   ['createTime', ['parse-time', '{y}-{m}-{d}']],
-  ['inboundUnitPriceExcludingVat', 'to-thousand'],
-  ['inboundAmountExcludingVat', 'to-thousand'],
-  ['outboundUnitPriceExcludingVat', 'to-thousand'],
-  ['outboundAmountExcludingVat', 'to-thousand'],
-  ['endUnitPriceExcludingVat', 'to-thousand'],
-  ['endAmountExcludingVat', 'to-thousand']
+  ['inboundUnitPriceExcludingVat', ['to-thousand-ck', 'YUAN']],
+  ['inboundAmountExcludingVat', ['to-thousand-ck', 'YUAN']],
+  ['outboundUnitPriceExcludingVat', ['to-thousand-ck', 'YUAN']],
+  ['outboundAmountExcludingVat', ['to-thousand-ck', 'YUAN']],
+  ['endUnitPriceExcludingVat', ['to-thousand-ck', 'YUAN']],
+  ['endAmountExcludingVat', ['to-thousand-ck', 'YUAN']]
 
 ])
 

@@ -1,7 +1,7 @@
 <template>
   <common-dialog
     custom-class="inbound-application-preview"
-    :title="order.serialNumber?`订单：${order.serialNumber}（${order.supplier ? order.supplier.name : ''}）`:'甲供入库'"
+    :title="order.serialNumber ? `订单：${order.serialNumber}（${order.supplier ? order.supplier.name : ''}）` : '甲供入库'"
     append-to-body
     v-model="dialogVisible"
     width="1200px"
@@ -45,14 +45,14 @@
           <material-secondary-info-columns v-if="showTableColumnSecondary" :basic-class="props.basicClass" />
 
           <template v-if="fillableAmount && !boolPartyA">
-              <el-table-column key="unitPrice" prop="unitPrice" align="right" width="120" label="含税单价">
-                <template #default="{ row: { sourceRow: row } }">
-                  <span>{{ row.unitPrice }}</span>
-                </template>
-              </el-table-column>
-              <el-table-column key="amount" prop="amount" align="right" width="120" label="金额">
-                <template #default="{ row }">
-                  <span>{{ row.amount }}</span>
+            <el-table-column key="unitPrice" prop="unitPrice" align="right" width="120" label="含税单价">
+              <template #default="{ row: { sourceRow: row } }">
+                <span>{{ row.unitPrice }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column key="amount" prop="amount" align="right" width="120" label="金额">
+              <template #default="{ row }">
+                <span>{{ row.amount }}</span>
               </template>
             </el-table-column>
           </template>
@@ -67,11 +67,7 @@
             @amount-change="handleAmountChange"
           /> -->
           <!-- 项目设置 -->
-          <project-set-columns
-            :form="form"
-            :order="order"
-            :requisitions="cu.props.requisitions"
-          />
+          <project-set-columns :form="form" :order="order" :requisitions="cu.props.requisitions" />
           <!-- 仓库设置 -->
           <warehouse-set-columns :form="form" v-if="fillableWarehouse" />
         </common-table>
@@ -99,6 +95,7 @@ import { tableSummary } from '@/utils/el-extra'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 // import { isBlank, isNotBlank, toFixed } from '@/utils/data-type'
 import { isBlank, isNotBlank } from '@/utils/data-type'
+import { DP } from '@/settings/config'
 import { materialHasAmountColumns } from '@/utils/columns-format/wms'
 
 import { regExtra } from '@/composables/form/use-form'
@@ -188,7 +185,9 @@ const logisticsRef = ref()
 const order = computed(() => cu.props.order || {})
 // 显示金额相关信息（由采购填写的信息）
 // const fillableAmount = ref(true)
-const fillableAmount = computed(() => inboundFillWayCfg.value ? inboundFillWayCfg.value.amountFillWay === inboundFillWayEnum.APPLICATION.V : false)
+const fillableAmount = computed(() =>
+  inboundFillWayCfg.value ? inboundFillWayCfg.value.amountFillWay === inboundFillWayEnum.APPLICATION.V : false
+)
 // 显示仓库（由仓库填写的信息）
 const fillableWarehouse = ref(true)
 // const fillableWarehouse = computed(() => inboundFillWayCfg.value ? inboundFillWayCfg.value.warehouseFillWay === inboundFillWayEnum.APPLICATION.V : false)
@@ -199,7 +198,8 @@ const boolPartyA = computed(() => order.value?.supplyType === orderSupplyTypeEnu
 // 在列中显示次要信息
 const showTableColumnSecondary = computed(() => {
   // 非甲供订单，显示项目和申购单 或者仓库时
-  const unshow1 = fillableAmount.value && !boolPartyA.value && ((order.value.projects && order.value.requisitionsSN) || fillableWarehouse.value)
+  const unshow1 =
+    fillableAmount.value && !boolPartyA.value && ((order.value.projects && order.value.requisitionsSN) || fillableWarehouse.value)
   // 甲供订单，显示项目和申购单以及仓库时
   const unshow2 = fillableAmount.value && boolPartyA.value && order.value.projects && order.value.requisitionsSN && fillableWarehouse.value
   return !(unshow1 || unshow2)
@@ -341,7 +341,10 @@ function setDitto(list) {
 
 // 合计
 function getSummaries(param) {
-  return tableSummary(param, { props: ['quantity', 'mete', 'amount'] })
+  return tableSummary(param, {
+    props: ['quantity', 'mete', ['amount', DP.YUAN]],
+    toThousandFields: ['mete', 'amount']
+  })
 }
 </script>
 

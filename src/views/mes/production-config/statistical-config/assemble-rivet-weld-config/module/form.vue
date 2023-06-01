@@ -80,7 +80,7 @@
             v-model="form.processObj[item.processId].price"
             :step="1"
             :min="0"
-            :precision="2"
+            :precision="DP.YUAN"
             clearable
             class="input-underline"
             :controls="false"
@@ -103,6 +103,7 @@ import { wageQuotaTypeEnum } from '@enum-ms/mes'
 import { regForm } from '@compos/use-crud'
 import { isNotBlank } from '@/utils/data-type'
 import { obj2arr } from '@/utils/convert/type'
+import { DP } from '@/settings/config'
 
 const formRef = ref()
 const defaultForm = {
