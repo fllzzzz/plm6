@@ -4,27 +4,30 @@
     <el-table-column :show-overflow-tooltip="true" prop="name" label="名称" />
     <!-- <el-table-column :show-overflow-tooltip="true" prop="monomer.name" label="单体" /> -->
     <el-table-column :show-overflow-tooltip="true" prop="serialNumber" label="编号" />
-    <!-- <el-table-column :show-overflow-tooltip="true" prop="plate" label="板型" /> -->
-    <!-- <el-table-column :show-overflow-tooltip="true" prop="color" label="颜色" /> -->
-    <el-table-column :show-overflow-tooltip="true" prop="thickness" :label="`厚度\n(mm)`" align="center">
-      <template v-slot="scope">
-        {{ toFixed(scope.row.thickness, DP.MES_ENCLOSURE_T__MM) }}
-      </template>
-    </el-table-column>
-    <el-table-column :show-overflow-tooltip="true" prop="width" :label="`有效宽度\n(mm)`" align="center">
-      <template v-slot="scope">
-        {{ toFixed(scope.row.width, DP.MES_ENCLOSURE_W__MM) }}
-      </template>
-    </el-table-column>
-    <el-table-column :show-overflow-tooltip="true" prop="length" :label="`长度\n(mm)`" align="center">
-      <template v-slot="scope">
-        {{ toFixed(scope.row.length, DP.MES_ENCLOSURE_L__MM) }}
-      </template>
-    </el-table-column>
+    <el-table-column :show-overflow-tooltip="true" prop="plate" label="板型" />
     <el-table-column prop="showQuantity" label="数量" align="center" />
-    <el-table-column :show-overflow-tooltip="true" prop="totalMete" :label="`总量\n(${measureUnit})`" align="center" width="100px">
+    <!-- <el-table-column :show-overflow-tooltip="true" prop="color" label="颜色" /> -->
+    <el-table-column :show-overflow-tooltip="true" :label="`计量单位`" align="center">
+      <span>件</span>
+    </el-table-column>
+    <el-table-column :show-overflow-tooltip="true" prop="pricingManner" :label="`核算单位`" align="center">
       <template v-slot="scope">
-        <span>{{ scope.row.totalMete }}</span>
+        {{ enclosureSettlementTypeEnum.V[scope.row.pricingManner]?.UNIT || '-' }}
+      </template>
+    </el-table-column>
+    <!-- <el-table-column :show-overflow-tooltip="true" prop="surfaceArea" :label="`单面积\n(mm²)`" align="center">
+      <template v-slot="scope">
+        {{ toFixed(scope.row.surfaceArea, DP.COM_AREA__M2) }}
+      </template>
+    </el-table-column> -->
+    <el-table-column :show-overflow-tooltip="true" prop="totalLength" :label="`总长\n(m)`" align="center">
+      <template v-slot="scope">
+        {{ convertUnits(scope.row.totalLength, 'mm', 'm', DP.MES_ENCLOSURE_L__M) }}
+      </template>
+    </el-table-column>
+    <el-table-column :show-overflow-tooltip="true" prop="totalArea" :label="`总面积\n(㎡)`" align="center" width="100px">
+      <template v-slot="scope">
+        <span>{{ toFixed(scope.row.totalArea, DP.COM_AREA__M2) }}</span>
       </template>
     </el-table-column>
     <el-table-column :show-overflow-tooltip="true" prop="unitPrice" :label="`单价\n（元）`" align="center">
@@ -42,7 +45,8 @@
 
 <script setup>
 import { defineProps } from 'vue'
-
+import { convertUnits } from '@/utils/convert/unit'
+import { enclosureSettlementTypeEnum } from '@enum-ms/contract'
 import { DP } from '@/settings/config'
 import { toFixed } from '@/utils/data-type'
 

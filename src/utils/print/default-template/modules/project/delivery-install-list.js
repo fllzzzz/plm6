@@ -199,7 +199,7 @@ const deliveryInstallList = {
      */
     fields: [
       { show: true, key: 'monomer.name', title: '单体', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 12, type: typeEnum.STRUCTURE_NAME.K },
-      { show: true, key: 'area.name', title: '区域', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 12, type: typeEnum.STRUCTURE_NAME.K },
+      { show: true, key: 'area.name', title: '区域/批次', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 12, type: typeEnum.STRUCTURE_NAME.K },
       { show: true, key: 'name', title: '名称', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 12, type: typeEnum.STRUCTURE_NAME.K },
       { show: true, key: 'serialNumber', title: '编号', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 12, type: typeEnum.SERIAL_NUMBER.K },
       { show: true, key: 'material', title: '材质', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 12, type: typeEnum.MATERIAL.K },

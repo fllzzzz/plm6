@@ -26,7 +26,7 @@
         v-model="query.name"
         placeholder="可输入名称搜索"
         class="filter-item"
-        style="width: 200px;"
+        style="width: 200px"
         size="small"
         clearable
         @keyup.enter="crud.toQuery"
@@ -35,12 +35,12 @@
         v-model="query.material"
         placeholder="输入材质搜索"
         class="filter-item"
-        style="width: 200px;"
+        style="width: 200px"
         size="small"
         clearable
         @keyup.enter="crud.toQuery"
       />
-      <rrOperation/>
+      <rrOperation />
     </div>
     <crudOperation>
       <template v-if="query.monomerId" #optRight>
@@ -138,7 +138,7 @@ watch(
 
 // 有变动的数据
 const modifiedData = computed(() => {
-  return crud.data.filter((v) => (v.pricingManner !== v.originPricingManner && v.unitPrice !== '-') || (v.unitPrice !== v.originUnitPrice))
+  return crud.data.filter((v) => (v.pricingManner !== v.originPricingManner && v.unitPrice !== '-') || v.unitPrice !== v.originUnitPrice)
 })
 
 // 预览参数
@@ -161,19 +161,20 @@ const costData = {
 const monomerCost = ref({ ...costData })
 
 const defaultQuery = {
-  name: undefined, material: undefined,
+  name: undefined,
+  material: undefined,
   monomerId: { value: undefined, resetAble: false }
 }
 const { crud, query, CRUD } = regHeader(defaultQuery)
 
 // 刷新数据后
 CRUD.HOOK.handleRefresh = (crud, { data }) => {
-  data.content.forEach(v => {
+  data.content.forEach((v) => {
     v.totalWeight = convertUnits(v.totalWeight, 'kg', 't', DP.COM_WT__T)
     v.newUnitPrice = v.unitPrice // number类型的单价（unitPrice可能会有千位符）
     v.originNewUnitPrice = v.newUnitPrice
     v.originUnitPrice = emptyTextFormatter(toThousand(v.unitPrice))
-    v.totalPrice = v.pricingManner === pricingMannerEnum.WEIGHT.V ? v.totalWeight * (v.unitPrice || 0) : v.totalLength * (v.unitPrice || 0)
+    v.totalPrice = (v.pricingManner === pricingMannerEnum.WEIGHT.V ? v.totalWeight : v.totalLength) * (v.newUnitPrice || 0)
     v.originPricingManner = v.pricingManner
   })
   fetchCost()
@@ -210,11 +211,7 @@ function handelModifying(status, reset = false) {
       v.unitPrice = v.originUnitPrice
       v.newUnitPrice = v.originNewUnitPrice
       v.pricingManner = v.originPricingManner
-      if (!v.newUnitPrice) {
-        v.totalPrice = 0
-      } else {
-        v.totalPrice = v.pricingManner === pricingMannerEnum.WEIGHT.V ? v.totalWeight * (v.unitPrice || 0) : v.totalLength * (v.unitPrice || 0)
-      }
+      v.totalPrice = (v.pricingManner === pricingMannerEnum.WEIGHT.V ? v.totalWeight : v.totalLength) * (v.newUnitPrice || 0)
     })
   }
   modifying.value = status

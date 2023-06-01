@@ -1,14 +1,14 @@
 <template>
   <div class="wrap">
     <div class="wrap-left">
-      <project-list @project-change="projectChange" />
+      <project-list ref="projectListRef" @project-change="projectChange" />
     </div>
     <div class="wrap-right">
       <div class="app-container">
         <el-tag v-if="!crud.query?.projectId" type="info" effect="plain" size="large"> * 请点击左侧项目列表查看详情 </el-tag>
         <template v-else>
           <!--工具栏-->
-          <mHeader class="head-container scheduling-head-container" :project="project" />
+          <mHeader class="head-container scheduling-head-container" :project="project" @refresh-project="projectListRef.refresh" />
           <!--表格渲染-->
           <common-table
             ref="tableRef"
@@ -16,12 +16,14 @@
             :data="crud.data"
             :empty-text="crud.emptyText"
             :max-height="maxHeight"
+            :data-format="dataFormat"
             row-key="id"
             returnSourceData
             @selection-change="crud.selectionChangeHandler"
           >
             <el-table-column type="selection" width="55" align="center" />
             <el-table-column label="序号" type="index" align="center" width="60" />
+            <el-table-column key="planName" prop="planName" label="批次" v-if="columns.visible('planName') && crud.query.planIds.length > 1" show-overflow-tooltip align="center" />
             <el-table-column key="name" prop="name" label="名称" v-if="columns.visible('name')" show-overflow-tooltip align="center" />
             <el-table-column
               key="serialNumber"
@@ -31,7 +33,7 @@
               label="编号"
               align="center"
             />
-            <el-table-column key="plate" prop="plate" v-if="columns.visible('plate')" show-overflow-tooltip label="板型" align="center" />
+            <el-table-column key="plate" prop="plate" v-if="columns.visible('plate') && crud.query.category !== mesEnclosureTypeEnum.FOLDING_PIECE.V" show-overflow-tooltip label="板型" align="center" />
             <el-table-column key="brand" prop="brand" v-if="columns.visible('brand')" show-overflow-tooltip label="品牌" align="center" />
             <el-table-column key="color" prop="color" v-if="columns.visible('color')" show-overflow-tooltip label="颜色" align="center" />
             <el-table-column
@@ -90,6 +92,8 @@ import crudApi from '@/api/enclosure/production-manage/scheduling-manage'
 import { ref } from 'vue'
 
 import { enclosureSchedulingManagePM as permission } from '@/page-permission/enclosure'
+import { mesEnclosureTypeEnum } from '@enum-ms/mes'
+import { DP } from '@/settings/config'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
@@ -106,6 +110,11 @@ const optShow = {
 
 const tableRef = ref()
 const project = ref({})
+const projectListRef = ref()
+
+const dataFormat = ref([
+  ['totalLength', ['to-fixed', DP.MES_ENCLOSURE_L__M]]
+])
 
 const { crud, columns } = useCRUD(
   {
@@ -125,8 +134,11 @@ const { maxHeight } = useMaxHeight({
 })
 
 function projectChange(row = {}) {
-  project.value = row
-  crud.query.projectId = row.id
+  // 防止快速点击时汇总接口报错
+  setTimeout(() => {
+    project.value = row
+    crud.query.projectId = row.id
+  }, 300)
 }
 </script>
 

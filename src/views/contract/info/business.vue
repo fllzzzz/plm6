@@ -40,7 +40,7 @@
                   clearable
                   placeholder="业务类型"
                   class="input-underline"
-                  :disabled="detail.monomerQuantity>0"
+                  :disabled="isNotBlank(detail.projectContentNoList)"
                 />
                 <span v-else>{{ detail.businessType? businessTypeEnum.VL[detail.businessType]: '-' }}</span>
               </div>
@@ -68,7 +68,7 @@
                   style="width: 200px"
                   class="input-underline"
                   @change="projectTypeChange"
-                  :disabled="detail.monomerQuantity>0"
+                  :disabled="isNotBlank(detail.projectContentNoList)"
                 />
                 <span v-else>{{ detail.projectType? projectTypeEnum.VL[detail.projectType]: '-' }}</span>
               </div>
@@ -84,7 +84,7 @@
                   class="input-underline"
                   :props="cascaderProps"
                   :show-all-levels="true"
-                  :clearable="true"
+                  :clearable="isNotBlank(detail.projectContentNoList)?false:true"
                   style="width: 320px"
                   @change="getShowItem"
                   filterable
@@ -502,18 +502,19 @@ const defaultType = ref()
 const validateContent = (rule, value, callback) => {
   if (value.length <= 0) {
     callback(new Error('请选择项目内容'))
-  } else {
-    if (detail.value.monomerQuantity > 0) {
-      originContent.value.forEach(v => {
-        if (form.value.projectContent.indexOf(v) < 0) {
-          callback(new Error('项目内容只能增加不能减少'))
-        }
-      })
-      callback()
-    } else {
-      callback()
-    }
+  // } else {
+  //   if (detail.value.monomerQuantity > 0) {
+  //     originContent.value.forEach(v => {
+  //       if (form.value.projectContent.indexOf(v) < 0) {
+  //         callback(new Error('项目内容只能增加不能减少'))
+  //       }
+  //     })
+  //     callback()
+  //   } else {
+  //     callback()
+  //   }
   }
+  callback()
 }
 
 const validateInvoiceType = (rule, value, callback) => {
@@ -827,21 +828,33 @@ async function fetchDetail() {
       if (dataArr[i] && dataArr[i][projectTypeEnum.STEEL.V]?.length > 0) {
         dataArr[i][projectTypeEnum.STEEL.V].map(v => {
           v.name = v.categoryName
+          v.children.map(k => {
+            k.disabled = _detail.projectContentNoList?.indexOf(k.no) > -1
+          })
         })
       }
       if (dataArr[i] && dataArr[i][projectTypeEnum.BRIDGE.V]?.length > 0) {
         dataArr[i][projectTypeEnum.BRIDGE.V].map(v => {
           v.name = v.categoryName
+          v.children.map(k => {
+            k.disabled = _detail.projectContentNoList?.indexOf(k.no) > -1
+          })
         })
       }
       if (dataArr[i] && dataArr[i][projectTypeEnum.CARBARN.V]?.length > 0) {
         dataArr[i][projectTypeEnum.CARBARN.V].map(v => {
           v.name = v.categoryName
+          v.children.map(k => {
+            k.disabled = _detail.projectContentNoList?.indexOf(k.no) > -1
+          })
         })
       }
       if (dataArr[i] && dataArr[i][projectTypeEnum.ENCLOSURE.V]?.length > 0) {
         dataArr[i][projectTypeEnum.ENCLOSURE.V].map(v => {
           v.name = v.categoryName
+          v.children.map(k => {
+            k.disabled = _detail.projectContentNoList?.indexOf(k.no) > -1
+          })
         })
       }
     }

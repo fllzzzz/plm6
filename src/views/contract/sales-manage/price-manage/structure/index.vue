@@ -121,7 +121,7 @@
       </el-table-column>
       <el-table-column v-if="columns.visible('totalPrice')" key="totalPrice" prop="totalPrice" align="center" min-width="120" label="金额">
         <template #default="{ row }">
-          <span :class="row.status === 1 ? 'tc-danger' : ''">{{ row.totalPrice }}</span>
+          <span :class="row.status === 1 ? 'tc-danger' : ''" v-thousand="row.totalPrice" />
         </template>
       </el-table-column>
       <!--详情-->
@@ -172,8 +172,7 @@ const headerRef = ref()
 const detailInfo = ref({})
 const showAble = ref(false)
 const dataFormat = ref([
-  ['unitPrice', ['to-thousand-ck', 'YUAN']],
-  ['totalPrice', ['to-thousand-ck', 'YUAN']]
+  ['unitPrice', ['to-thousand-ck', 'YUAN']]
 ])
 const { crud, columns } = useCRUD(
   {
@@ -260,8 +259,7 @@ function openDetail(row) {
 // 价格变动
 function handlePrice(row) {
   row.unitPrice = row.newUnitPrice
-  row.totalPrice =
-    row.pricingManner === pricingMannerEnum.WEIGHT.V ? row.totalWeight * (row.unitPrice || 0) : row.totalLength * (row.unitPrice || 0)
+  row.totalPrice = (row.pricingManner === pricingMannerEnum.WEIGHT.V ? row.totalWeight : row.totalLength) * (row.unitPrice || 0)
 }
 
 defineExpose({

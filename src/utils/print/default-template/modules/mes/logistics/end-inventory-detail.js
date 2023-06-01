@@ -6,7 +6,7 @@ const mesEndInventoryDetail = {
   unit: cssUnitEnum.MM.V, // 长度单位
   unitPrecision: cssUnitPrecisionEnum.ZERO.V, // 长度单位精度
   type: 'mesEndInventoryDetail', // 表格类型 KEY
-  name: '期末库存明细（平台）', // 表格名称
+  name: '结构期末库存明细（平台）', // 表格名称
   width: 210, // 打印纸的宽度
   height: 297, // 打印纸的高度
   paddingLR: 10, // 左右内边距
@@ -60,7 +60,7 @@ const mesEndInventoryDetail = {
   title: {
     show: true,
     allPage: false,
-    title: '期末库存明细',
+    title: '结构期末库存明细',
     align: alignEnum.CENTER.V,
     verticleAlign: verticleAlignEnum.CENTER.V,
     size: 17,
@@ -103,8 +103,8 @@ const mesEndInventoryDetail = {
      */
     fields: [ // 字段内容
       { show: true, source: dataSourceEnum.SYSTEM.V, key: 'projectName', title: '项目名称：', align: alignEnum.LEFT.V, width: 190, type: typeEnum.OTHER.K },
-      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'dateTime', title: '统计日期：', width: 100, type: typeEnum.DATE.K, format: 'YY/MM/DD kk:mm:ss' },
-      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'printDate', title: '打印时间：', width: 40, type: typeEnum.DATE.K, format: 'YY/MM/DD kk:mm:ss' },
+      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'dateTime', title: '统计日期：', width: 90, type: typeEnum.DATE.K, format: 'YY/MM/DD kk:mm:ss' },
+      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'printDate', title: '打印时间：', width: 60, type: typeEnum.DATE.K, format: 'YY/MM/DD kk:mm:ss' },
       { show: true, source: dataSourceEnum.SYSTEM.V, key: 'printer', title: '打印人：', align: alignEnum.RIGHT.V, width: 40, type: typeEnum.USER_NAME.K }
     ]
   },

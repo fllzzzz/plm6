@@ -16,6 +16,7 @@
         v-show="selectionMode === selectionModeEnum.SCHEDULING.V"
         size="mini"
         type="success"
+        :disabled="tableData.length < 1"
         @click="toAssembleScheduling"
       >
         下一步【部件排产】

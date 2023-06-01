@@ -25,7 +25,7 @@
         <div class="wrap-right">
           <el-tag v-if="!currentRow?.id" type="info" size="medium"> * 请点击左侧项目列表查看详情 </el-tag>
           <template v-else>
-            <planForm :visibleValue="visible" :currentRow="currentRow" :detailInfo="detailInfo" />
+            <planForm :visibleValue="visible" :currentRow="currentRow" :detailInfo="detailInfo" @success="emit('success')"/>
           </template>
         </div>
       </div>
@@ -41,7 +41,7 @@ import useVisible from '@/composables/use-visible'
 
 import planForm from './plan-form/index'
 
-const emit = defineEmits(['update:modelValue'])
+const emit = defineEmits(['update:modelValue', 'success'])
 
 const props = defineProps({
   modelValue: {
@@ -88,6 +88,9 @@ async function fetchList() {
   tableLoading.value = true
   try {
     const data = await enclosureProjectContent(props.detailInfo.projectId)
+    data.map(v => {
+      v.projectId = props.detailInfo.projectId
+    })
     _list = data
   } catch (error) {
     console.log('获取项目内容及合同量失败', error)

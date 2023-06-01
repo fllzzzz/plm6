@@ -12,6 +12,16 @@ export function packingList(id) {
 }
 
 /**
+ * 打包清单：围护
+ */
+export function enclosurePackingList(id) {
+  return request({
+    url: `api/mes/building/package/${id}/print`,
+    method: 'get'
+  })
+}
+
+/**
  * 发运汇总
  */
 export function shipmentSummary(params) {
@@ -155,6 +165,46 @@ export function mesInboundInventoryDetail(params) {
 export function mesOutboundInventoryDetail(params) {
   return request({
     url: `/api/mes/building/warehouse/print/finish-product/artifact`,
+    method: 'get',
+    params
+  })
+}
+/**
+ * 围护入发存报表/期初库存
+ */
+export function enclosureBeginningInventoryDetail(params) {
+  return request({
+    url: `/api/mes/building/warehouse/print/finish-product/enclosure`,
+    method: 'get',
+    params
+  })
+}
+/**
+ * 围护入发存报表/期末库存
+ */
+export function enclosureEndInventoryDetail(params) {
+  return request({
+    url: `/api/mes/building/warehouse/print/finish-product/enclosure`,
+    method: 'get',
+    params
+  })
+}
+/**
+ * 围护入发存报表/入库量
+ */
+export function enclosureInboundInventoryDetail(params) {
+  return request({
+    url: `/api/mes/building/warehouse/print/finish-product/enclosure`,
+    method: 'get',
+    params
+  })
+}
+/**
+ * 围护入发存报表/出库量
+ */
+export function enclosureOutboundInventoryDetail(params) {
+  return request({
+    url: `/api/mes/building/warehouse/print/finish-product/enclosure`,
     method: 'get',
     params
   })
@@ -525,6 +575,15 @@ export function mesProjectShipDetail(params) {
   })
 }
 
+// 发运管理-围护项目发运详情
+export function enclosureProjectShipDetail(params) {
+  return request({
+    url: `/api/mes/building/cargo/project/cargoList/details/enclosure/print`,
+    method: 'get',
+    params
+  })
+}
+
 // 发运管理-发运统计-清单总量详情
 export function mesShipMeteDetail(params) {
   return request({
@@ -578,11 +637,81 @@ export function mesShipStockMeteDetail(params) {
     params
   })
 }
+// 发运管理-围护发运统计-清单总量详情
+export function enclosureShipMeteDetail(params) {
+  return request({
+    url: `api/mes/building/cargo/project/enclosure/detail/type/print`,
+    method: 'get',
+    params
+  })
+}
+
+// 发运管理-围护发运统计-任务总量详情
+export function enclosureShipTaskMeteDetail(params) {
+  return request({
+    url: `api/mes/building/cargo/project/enclosure/detail/type/print`,
+    method: 'get',
+    params
+  })
+}
+
+// 发运管理-围护发运统计-入库量详情
+export function enclosureShipInboundMeteDetail(params) {
+  return request({
+    url: `api/mes/building/cargo/project/enclosure/detail/type/print`,
+    method: 'get',
+    params
+  })
+}
+
+// 发运管理-围护发运统计-累计发运详情
+export function enclosureShipTotalMeteDetail(params) {
+  return request({
+    url: `api/mes/building/cargo/project/enclosure/detail/type/print`,
+    method: 'get',
+    params
+  })
+}
+
+// 发运管理-围护发运统计-本月发运发运详情
+export function enclosureShipMonthMeteDetail(params) {
+  return request({
+    url: `api/mes/building/cargo/project/enclosure/detail/type/print`,
+    method: 'get',
+    params
+  })
+}
+
+// 发运管理-围护发运统计-库存详情
+export function enclosureShipStockMeteDetail(params) {
+  return request({
+    url: `api/mes/building/cargo/project/enclosure/detail/type/print`,
+    method: 'get',
+    params
+  })
+}
 
 // 发运管理-发运统计-累计车次详情
 export function mesShipTrainMeteDetail(params) {
   return request({
     url: `api/mes/building/cargo/project/detail/type/print`,
+    method: 'get',
+    params
+  })
+}
+
+// 发运管理-发运统计-配套制品详情打印
+export function mesAuxMatDetail(params) {
+  return request({
+    url: `/api/mes/building/cargo/project/cargoList/details/auxiliary/print`,
+    method: 'get',
+    params
+  })
+}
+// 发运管理-发运统计-围护配套制品详情打印
+export function enclosureAuxMatDetail(params) {
+  return request({
+    url: `/api/mes/building/cargo/project/cargoList/details/auxiliary/print`,
     method: 'get',
     params
   })
@@ -703,10 +832,28 @@ export function productSendReceiveStorage(params) {
   })
 }
 
+// 围护：制成品入发存
+export function enclosureProductSendReceiveStorage(params) {
+  return request({
+    url: `/api/mes/building/warehouse/finish-product/enclosure/print`,
+    method: 'get',
+    params
+  })
+}
+
 // 制成品入发存详情
 export function productSendReceiveStorageDetail(params) {
   return request({
     url: `/api/mes/building/warehouse/finish-product/detail/print`,
+    method: 'get',
+    params
+  })
+}
+
+// 围护制成品入发存详情
+export function enclosureProductSendReceiveStorageDetail(params) {
+  return request({
+    url: `/api/mes/building/warehouse/finish-product/detail/enclosure/print`,
     method: 'get',
     params
   })
@@ -797,6 +944,7 @@ export default {
 
   // 打包与发运
   packingList, // 打包清单
+  enclosurePackingList, // 围护打包清单
   shipmentSummary, // 发运汇总
   shipmentDetail, // 发运详情
   receiptStatusSummary, // 收货状态汇总
@@ -812,6 +960,10 @@ export default {
   mesEndInventoryDetail, // 期末库存
   mesInboundInventoryDetail, // 入库量
   mesOutboundInventoryDetail, // 出库量
+  enclosureBeginningInventoryDetail, // 围护期初库存
+  enclosureEndInventoryDetail, // 围护期末库存
+  enclosureInboundInventoryDetail, // 围护入库量
+  enclosureOutboundInventoryDetail, // 围护出库量
 
   // 生产订单
   artifactClassList, // 构件分类清单明细
@@ -824,13 +976,22 @@ export default {
 
   // 发运管理
   mesProjectShipDetail, // 项目发运详情
+  enclosureProjectShipDetail, // 围护项目发运详情
   mesShipMeteDetail, // 清单总量详情
   mesShipTaskMeteDetail, // 任务总量详情
   mesShipInboundMeteDetail, // 入库量详情
   mesShipTotalMeteDetail, // 累计发运详情
   mesShipMonthMeteDetail, // 本月发运详情
   mesShipStockMeteDetail, // 库存
+  enclosureShipMeteDetail, // 围护清单总量详情
+  enclosureShipTaskMeteDetail, // 围护任务总量详情
+  enclosureShipInboundMeteDetail, // 围护入库量详情
+  enclosureShipTotalMeteDetail, // 围护累计发运详情
+  enclosureShipMonthMeteDetail, // 围护本月发运详情
+  enclosureShipStockMeteDetail, // 围护库存
   mesShipTrainMeteDetail, // 累计车次
+  mesAuxMatDetail, // 配套件详情
+  enclosureAuxMatDetail, // 围护配套件详情
 
   // 工厂报表-车间报表
   factoryWorkshopReport, // 车间报表详情
@@ -848,7 +1009,9 @@ export default {
 
   // 发运管理
   productSendReceiveStorage, // 制成品入发存
+  enclosureProductSendReceiveStorage, // 围护制品入发存
   productSendReceiveStorageDetail, // 制成品入发存详情
+  enclosureProductSendReceiveStorageDetail, // 围护制成品入发存详情
 
   // 项目报表
   mainMaterialTrackSummary, // 主材跟踪汇总

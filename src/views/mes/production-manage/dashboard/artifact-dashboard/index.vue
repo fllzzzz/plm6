@@ -39,15 +39,14 @@
             :content="`${item.detailLoading ? '正在加载中...' : `${item.processInfo}`}`"
             placement="left-start"
           >
-            <div class="board-box" :style="{ 'background-color': `${item.boxColor}`, ...boxStyle }" @mouseenter="getDetail(item)">
+            <div
+              class="board-box"
+              :style="{ 'background-color': `${item.boxColor}`, ...boxStyle }"
+              @mouseenter="getDetail(item)"
+            >
               <div style="width: 120px">
                 <span class="ellipsis-text" v-if="item.name">{{ item.name }}</span>
-                <el-tooltip
-                  class="item"
-                  effect="dark"
-                  :content="`${item.serialNumber}`"
-                  placement="top"
-                >
+                <el-tooltip class="item" effect="dark" :content="`${item.serialNumber}`" placement="top">
                   <span class="ellipsis-text" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{
                     item.serialNumber
                   }}</span>
@@ -77,6 +76,8 @@
         </div>
       </div>
     </div>
+    <!-- 看板详情 -->
+    <detail-drawer v-model:visible="detailVisible" :detail-row="detailRow" />
   </div>
 </template>
 
@@ -93,6 +94,7 @@ import useDashboardIndex from '@compos/mes/dashboard/use-dashboard-index'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import mHeader from './module/header'
+import detailDrawer from './module/detail-drawer'
 
 const optShow = {
   add: false,
@@ -101,6 +103,8 @@ const optShow = {
   download: false
 }
 
+const detailRow = ref({})
+const detailVisible = ref(false)
 const scrollBoxRef = ref()
 const headRef = ref()
 const tableRef = ref()
@@ -231,7 +235,6 @@ async function getAssembleDetail(item) {
         _data.processInfo += `${process.name}：${_processInfo}\n\n`
       })
     }
-
     item = Object.assign(item, { processInfo: _data.processInfo })
   } catch (error) {
     console.log('获取详情失败', error)
@@ -264,6 +267,11 @@ async function getMachinePartDetail(item) {
     item.detailLoading = false
   }
 }
+
+// function boardDetail(item) {
+//   detailVisible.value = true
+//   detailRow.value = item
+// }
 </script>
 
 <style lang="scss" scoped>

@@ -6,12 +6,21 @@
           `项目:${props.currentRow.project?.serialNumber + '-' + props.currentRow?.project.shortName}`
         }}</el-tag>
         <common-radio-button
+          v-model="query.category"
+          :options="categoryList"
+          :type="'other'"
+          default
+          :dataStructure="{ key: 'no', label: 'name', value: 'no' }"
+          class="filter-item"
+          @change="fetchSummary"
+        />
+        <!-- <common-radio-button
           v-model="type"
           :options="enclosureShipStatisticsTypeEnum.ENUM"
           type="enum"
           class="filter-item"
           @change="fetchSummary"
-        />
+        /> -->
         <!-- <monomer-select
           ref="monomerSelectRef"
           v-model="query.monomerId"
@@ -22,19 +31,35 @@
           @getAreaInfo="getAreaInfo"
         /> -->
         <common-select
-          v-model="query.areaId"
+          v-show="query.category !== 64"
+          v-model="query.enclosurePlanId"
           :options="areaInfo"
           type="other"
           :dataStructure="{ key: 'id', label: 'name', value: 'id' }"
           size="small"
           clearable
-          placeholder="请选择区域"
+          placeholder="请选择批次"
           class="filter-item"
-          style="width: 200px; margin-left: 3px"
+          style="width: 180px; margin-left: 3px"
+          @change="fetchSummary"
+        />
+        <print-table
+          v-show="query.category === 64"
+          v-permission="permission.print"
+          api-key="enclosureAuxMatDetail"
+          :params="{
+            projectId: props.currentRow?.projectId,
+            workshopId: props.workshopId,
+            relationType: 4
+          }"
+          size="mini"
+          type="warning"
+          class="filter-item"
+          style="float: right"
         />
       </div>
       <el-descriptions
-        v-show="type !== enclosureShipStatisticsTypeEnum.AUXILIARY_MATERIAL.V"
+        v-show="query.category !== 64"
         v-loading="summaryLoading"
         :data="summaryData"
         direction="vertical"
@@ -45,46 +70,32 @@
       >
         <el-descriptions-item align="center" label="清单总量（米）">
           <span class="tc-primary" style="cursor: pointer" @click="openDetail('INVENTORY')">{{
-            props.weightStatus === weightTypeEnum.NET.V
-              ? convertUnits(summaryData?.mete || 0, 'kg', 't', 2)
-              : convertUnits(summaryData?.grossMete || 0, 'kg', 't', 2)
+            convertUnits(summaryData?.totalLength || 0, 'mm', 'm', DP.MES_ENCLOSURE_L__M)
           }}</span>
         </el-descriptions-item>
         <el-descriptions-item align="center" label="任务总量（米）">
           <span class="tc-primary" style="cursor: pointer" @click="openDetail('ASSIGNMENT')">{{
-            props.weightStatus === weightTypeEnum.NET.V
-              ? convertUnits(summaryData?.schedulingMete || 0, 'kg', 't', 2)
-              : convertUnits(summaryData?.schedulingGrossMete || 0, 'kg', 't', 2)
+            convertUnits(summaryData?.schedulingTotalLength || 0, 'mm', 'm', DP.MES_ENCLOSURE_L__M)
           }}</span>
         </el-descriptions-item>
         <el-descriptions-item align="center" label="入库量（米）">
           <span class="tc-primary" style="cursor: pointer" @click="openDetail('STORAGE')">{{
-            props.weightStatus === weightTypeEnum.NET.V
-              ? convertUnits(summaryData?.inBoundMete || 0, 'kg', 't', 2)
-              : convertUnits(summaryData?.inBoundGrossMete || 0, 'kg', 't', 2)
+            convertUnits(summaryData?.inBoundTotalLength || 0, 'mm', 'm', DP.MES_ENCLOSURE_L__M)
           }}</span>
         </el-descriptions-item>
         <el-descriptions-item align="center" label="累计发运（米）">
           <span class="tc-primary" style="cursor: pointer" @click="openDetail('CUMULATIVE_SHIPMENT')">{{
-            props.weightStatus === weightTypeEnum.NET.V
-              ? convertUnits(summaryData?.outBoundMete || 0, 'kg', 't', 2)
-              : convertUnits(summaryData?.outBoundGrossMete || 0, 'kg', 't', 2)
+            convertUnits(summaryData?.outBoundTotalLength || 0, 'mm', 'm', DP.MES_ENCLOSURE_L__M)
           }}</span>
         </el-descriptions-item>
         <el-descriptions-item align="center" label="本月发运（米）">
           <span class="tc-primary" style="cursor: pointer" @click="openDetail('SHIPMENT_MONTH')">
-            {{
-              props.weightStatus === weightTypeEnum.NET.V
-                ? convertUnits(summaryData?.outMounthBoundMete || 0, 'kg', 't', 2)
-                : convertUnits(summaryData?.outMounthBoundGrossMete || 0, 'kg', 't', 2)
-            }}
+            {{ convertUnits(summaryData?.outMounthBoundTotalLength || 0, 'mm', 'm', DP.MES_ENCLOSURE_L__M) }}
           </span>
         </el-descriptions-item>
         <el-descriptions-item align="center" label="库存（米）">
           <span class="tc-primary" style="cursor: pointer" @click="openDetail('IN_STOCK')">{{
-            props.weightStatus === weightTypeEnum.NET.V
-              ? convertUnits(summaryData?.stockMete || 0, 'kg', 't', 2)
-              : convertUnits(summaryData?.stockGrossMete || 0, 'kg', 't', 2)
+            convertUnits(summaryData?.stockTotalLength || 0, 'mm', 'm', DP.MES_ENCLOSURE_L__M)
           }}</span>
         </el-descriptions-item>
         <el-descriptions-item align="center" label="累计车次">
@@ -93,19 +104,14 @@
           }}</span> -->
           <span>{{ summaryData.trainNumber || 0 }}</span>
         </el-descriptions-item>
-        <el-descriptions-item align="center" label="操作">
+        <el-descriptions-item align="center" v-if="checkPermission(permission.detail)" label="操作">
           <!-- <span class="tc-primary" style="cursor: pointer" @click="openDetail('ACCUMULATED_NUMBER')">{{
             summaryData.trainNumber || 0
           }}</span> -->
           <common-button type="primary" icon="el-icon-view" size="mini" @click.stop="showDetail" />
         </el-descriptions-item>
       </el-descriptions>
-      <common-table
-        v-show="type === enclosureShipStatisticsTypeEnum.AUXILIARY_MATERIAL.V"
-        :data="list"
-        v-loading="tableLoading"
-        :show-empty-symbol="false"
-      >
+      <common-table v-show="query.category === 64" :data="list" v-loading="tableLoading" :show-empty-symbol="false">
         <el-table-column prop="index" label="序号" align="center" width="45" type="index" />
         <el-table-column key="name" prop="name" label="名称" align="center" :show-overflow-tooltip="true" min-width="100px" />
         <el-table-column
@@ -116,10 +122,10 @@
           :show-overflow-tooltip="true"
           min-width="120px"
         />
-        <el-table-column key="unit" prop="unit" label="单位" align="center" :show-overflow-tooltip="true" />
+        <el-table-column key="measureUnit" prop="measureUnit" label="单位" align="center" :show-overflow-tooltip="true" />
         <el-table-column key="quantity" prop="quantity" label="清单量" align="center" :show-overflow-tooltip="true" />
-        <el-table-column key="shipQuantity" prop="shipQuantity" label="已发运" align="center" :show-overflow-tooltip="true" />
-        <el-table-column key="unShipQuantity" prop="unShipQuantity" label="未发运" align="center" :show-overflow-tooltip="true" />
+        <el-table-column key="cargoQuantity" prop="cargoQuantity" label="已发运" align="center" :show-overflow-tooltip="true" />
+        <el-table-column key="unCargoQuantity" prop="unCargoQuantity" label="未发运" align="center" :show-overflow-tooltip="true" />
       </common-table>
     </div>
     <component
@@ -127,10 +133,9 @@
       :showType="showType"
       v-model="detailVisible"
       :query="query"
-      :type="type"
       :workshopId="props.workshopId"
       :projectId="props.currentRow.projectId"
-      :weightStatus="props.weightStatus"
+      :permission="props.permission"
     />
     <detail-drawer
       v-model:visible="drawerVisible"
@@ -138,15 +143,18 @@
       :workshopId="props.workshopId"
       :projectId="props.currentRow.projectId"
       :detail-data="props.currentRow"
+      :permission="props.permission"
     />
   </div>
 </template>
 
 <script setup>
 import { ref, defineProps, watch, nextTick, computed } from 'vue'
-import { projectSummary } from '@/api/ship-manage/pack-and-ship/ship-summary'
-import { weightTypeEnum } from '@enum-ms/common'
-import { enclosureShipStatisticsTypeEnum } from '@enum-ms/ship-manage'
+import { getEnclosureBatch } from '@/api/mes/common.js'
+import { projectSummary } from '@/api/ship-manage/pack-and-ship/enclosure-ship-summary'
+import { auxInboundDetail } from '@/api/ship-manage/pack-and-ship/ship-summary'
+import { DP } from '@/settings/config'
+import checkPermission from '@/utils/system/check-permission'
 import { convertUnits } from '@/utils/convert/unit'
 // import monomerSelect from '@/components-system/plan/monomer-select'
 import mDetail from './detail.vue'
@@ -167,18 +175,18 @@ const props = defineProps({
   workshopId: {
     type: Number
   },
-  weightStatus: {
-    type: Number
+  categoryList: {
+    type: Array,
+    default: () => []
   }
 })
 
-const type = ref(enclosureShipStatisticsTypeEnum.PRESSED_PLATE.V)
 const list = ref([])
 const tableLoading = ref(false)
 const areaInfo = ref([])
 const query = ref({
-  monomerId: undefined,
-  areaId: undefined
+  category: undefined,
+  enclosurePlanId: undefined
 })
 const summaryLoading = ref(false)
 const summaryData = ref({})
@@ -196,6 +204,8 @@ watch(
     if (val) {
       showType.value = undefined
       fetchSummary()
+      fetchBatch()
+      fetchAuxMat()
     }
   }
 )
@@ -204,14 +214,48 @@ watch(
   () => query.value,
   (val) => {
     showType.value = undefined
-    fetchSummary()
+    if (query.value?.category === 64) {
+      fetchAuxMat()
+    }
   },
   { immediate: true, deep: true }
+)
+
+watch(
+  () => query.value.category,
+  (val) => {
+    fetchBatch()
+  }
 )
 
 // function getAreaInfo(val) {
 //   areaInfo.value = val || []
 // }
+
+// 获取围护批次
+async function fetchBatch() {
+  try {
+    const data = await getEnclosureBatch(props.currentRow.projectId)
+    areaInfo.value = data || []
+    areaInfo.value = areaInfo.value.filter((v) => v.category === query.value.category)
+  } catch (e) {
+    console.log('获取围护的批次失败', e)
+  }
+}
+
+async function fetchAuxMat() {
+  try {
+    const { content } = await auxInboundDetail({
+      projectId: props.currentRow.projectId,
+      workshopId: props.workshopId,
+      relationType: 4, // 围护配套件
+      ...query.value
+    })
+    list.value = content || []
+  } catch (e) {
+    console.log('获取配套件详情失败')
+  }
+}
 
 // 汇总列表
 async function fetchSummary() {
@@ -224,7 +268,6 @@ async function fetchSummary() {
     const data = await projectSummary({
       projectId: props.currentRow.projectId,
       ...query.value,
-      type: type.value,
       workshopId: props.workshopId
     })
     summaryData.value = data || {}

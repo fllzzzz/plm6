@@ -7,10 +7,7 @@
       ref="tableRef"
       v-loading="crud.loading"
       :data="crud.data"
-      return-source-data
       :data-format="dataFormat"
-      style="width: 100%"
-      class="businessTable"
       :max-height="maxHeight"
     >
       <el-table-column label="序号" type="index" align="center" width="60" />

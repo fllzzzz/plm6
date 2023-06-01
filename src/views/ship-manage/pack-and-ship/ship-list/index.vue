@@ -122,7 +122,7 @@
         min-width="120"
       >
         <template v-slot="scope">
-          <span>{{ convertUnits(scope.row.actualGrossWeight, 'kg', 't', 2) }}</span>
+          <span>{{ convertUnits(scope.row.actualGrossWeight, 'kg', 't', 3) }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -135,7 +135,7 @@
         min-width="120"
       >
         <template v-slot="scope">
-          <span>{{ convertUnits(scope.row.emptyCars, 'kg', 't', 2) }}</span>
+          <span>{{ convertUnits(scope.row.emptyCars, 'kg', 't', 3) }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -148,7 +148,7 @@
         min-width="120"
       >
         <template v-slot="scope">
-          <span>{{ convertUnits(scope.row.actualWeight, 'kg', 't', 2) }}</span>
+          <span>{{ convertUnits(scope.row.actualWeight, 'kg', 't', 3) }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -161,7 +161,7 @@
         min-width="120"
       >
         <template v-slot="scope">
-          <span>{{ convertUnits(scope.row.totalNetWeight, 'kg', 't', 2) }}</span>
+          <span>{{ convertUnits(scope.row.totalNetWeight, 'kg', 't', 3) }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -175,7 +175,7 @@
       >
         <template v-slot="scope">
           <span :style="{ color: scope.row.acceptDifference ? '#13ce66' : '#ff4949' }">{{
-            convertUnits(scope.row.difference, 'kg', 't', 2)
+            convertUnits(scope.row.difference, 'kg', 't', 3)
           }}</span>
         </template>
       </el-table-column>

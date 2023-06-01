@@ -138,3 +138,11 @@ export function getHasTaskLine({
     }
   })
 }
+
+// 围护：获取所有批次
+export function getEnclosureBatch(projectId) {
+  return request({
+    url: `/api/enclosurePlanDetail/tech/${projectId}`,
+    method: 'get'
+  })
+}

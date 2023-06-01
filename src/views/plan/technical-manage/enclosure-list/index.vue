@@ -70,7 +70,7 @@
           key="plateId"
           prop="plateId"
           :show-overflow-tooltip="true"
-          label="版型"
+          label="板型"
           min-width="100px"
         >
           <template v-slot="scope">
@@ -81,7 +81,7 @@
                 :type="'other'"
                 :dataStructure="crud.query.category === TechnologyTypeAllEnum.TRUSS_FLOOR_PLATE.V ? trussProp : typeProp"
                 size="small"
-                placeholder="版型"
+                placeholder="板型"
                 @change="plateChange(scope.row, scope.$index)"
               />
             </template>
@@ -551,7 +551,7 @@ const validateColor = (value, row) => {
 const tableRules = {
   serialNumber: [{ required: true, message: '请输入编号', trigger: 'blur' }],
   unfoldedWidth: [{ validator: validateUnfoldedWidth, message: '展开宽度必填', trigger: 'change' }],
-  plateId: [{ validator: validatePlateId, message: '请选择版型', trigger: 'change' }],
+  plateId: [{ validator: validatePlateId, message: '请选择板型', trigger: 'change' }],
   width: [{ validator: validateWidth, message: '有效宽度必填', trigger: 'change' }],
   thickness: [{ validator: validateThickness, message: '厚度必填', trigger: 'change' }],
   length: [{ required: true, message: '单长必填', trigger: 'change' }],

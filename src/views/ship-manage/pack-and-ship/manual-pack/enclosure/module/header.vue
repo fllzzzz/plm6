@@ -21,9 +21,9 @@
           @keyup.enter="crud.toQuery"
         />
         <el-input
-          v-model="query.specification"
+          v-model="query.plate"
           size="small"
-          placeholder="输入规格搜索"
+          placeholder="输入板型搜索"
           style="width: 170px"
           class="filter-item"
           clearable
@@ -52,7 +52,7 @@ import rrOperation from '@crud/RR.operation'
 const defaultQuery = {
   name: void 0,
   serialNumber: void 0,
-  specification: void 0,
+  plate: void 0,
   material: void 0
 }
 

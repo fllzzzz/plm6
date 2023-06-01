@@ -1,5 +1,6 @@
 import { dataSourceEnum, alignEnum, verticleAlignEnum, fieldTypeEnum as typeEnum, cssUnitEnum, cssUnitPrecisionEnum, pageFormatEnum, lengthUnitEnum } from '@/utils/print/enum'
 import { projectNameArrangementModeEnum } from '@/utils/enum/modules/contract'
+import { DP } from '@/settings/config'
 
 // 生产跟踪详情
 const enclosureTaskTrackingDetail = {
@@ -108,9 +109,8 @@ const enclosureTaskTrackingDetail = {
       { show: true, source: dataSourceEnum.SYSTEM.V, key: 'factoryName', title: '工厂：', width: 60, type: typeEnum.FACTORY_NAME.K },
       { show: true, source: dataSourceEnum.SYSTEM.V, key: 'workshopName', title: '车间：', width: 60, type: typeEnum.WORKSHOP.K },
       { show: true, source: dataSourceEnum.SYSTEM.V, key: 'lineName', title: '生产线：', width: 70, type: typeEnum.PRODUCTION_LINE.K },
-      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'date', title: '统计日期：', width: 100, type: typeEnum.OTHER.K },
-      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'printDate', title: '打印时间：', width: 55, type: typeEnum.DATE.K, format: 'YY/MM/DD kk:mm:ss' },
-      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'printer', title: '打印人：', width: 35, type: typeEnum.USER_NAME.K }
+      { show: false, source: dataSourceEnum.SYSTEM.V, key: 'printDate', title: '打印时间：', width: 120, type: typeEnum.DATE.K, format: 'YY/MM/DD kk:mm:ss' },
+      { show: false, source: dataSourceEnum.SYSTEM.V, key: 'printer', title: '打印人：', width: 70, type: typeEnum.USER_NAME.K }
     ]
   },
   /**
@@ -213,9 +213,9 @@ const enclosureTaskTrackingDetail = {
       { show: false, key: 'color', title: '颜色', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 18, type: typeEnum.COLOR.K },
       { show: true, key: 'length', title: '单长(mm)', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.LENGTH.K },
       { show: true, key: 'quantity', title: '数量', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.QUANTITY.K },
-      { show: true, key: 'totalLength', title: '总长(m)', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.LENGTH.K, format: { toThousand: false, precision: 2, unit: lengthUnitEnum.M.V }, sum: true },
+      { show: true, key: 'totalLength', title: '总长(m)', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.LENGTH.K, format: { toThousand: false, precision: DP.MES_ENCLOSURE_L__M, unit: lengthUnitEnum.M.V }, sum: true },
       { show: true, key: 'completeQuantity', title: '完成数', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.QUANTITY.K },
-      { show: true, key: 'completeLength', title: '完成量(m)', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.LENGTH.K, format: { toThousand: false, precision: 2, unit: lengthUnitEnum.M.V }, sum: true },
+      { show: true, key: 'completeLength', title: '完成量(m)', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.LENGTH.K, format: { toThousand: false, precision: DP.MES_ENCLOSURE_L__M, unit: lengthUnitEnum.M.V }, sum: true },
       { show: true, key: 'booleanlag', title: '状态', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 14, type: typeEnum.BLANK.K }
     ]
   }

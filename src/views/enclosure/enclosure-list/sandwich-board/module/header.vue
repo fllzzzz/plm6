@@ -40,7 +40,19 @@
         clearable
         @blur="crud.toQuery"
       />
-      <el-input
+      <el-input-number
+        v-model.number="query.thickness"
+        :min="0"
+        :max="9999999999"
+        :step="1"
+        :precision="DP.MES_ENCLOSURE_T__MM"
+        placeholder="输入厚度搜索"
+        controls-position="right"
+        :controls="false"
+        class="filter-item left-num"
+        style="width: 170px;"
+      />
+      <!-- <el-input
         v-model="query.thickness"
         size="small"
         placeholder="输入厚度搜索"
@@ -48,7 +60,7 @@
         class="filter-item"
         clearable
         @blur="crud.toQuery"
-      />
+      /> -->
       <rrOperation />
     </div>
     <crudOperation>
@@ -62,7 +74,7 @@
           btn-type="primary"
           btn-size="mini"
           class="filter-item"
-          @success="crud.toQuery"
+          @success="uploadSuccess"
         />
         <upload-btn
           v-if="currentArea && currentArea.id && checkPermission(crud.permission.import)"
@@ -73,7 +85,7 @@
           btn-type="success"
           btn-size="mini"
           class="filter-item"
-          @success="crud.toQuery"
+          @success="uploadSuccess"
         />
         <common-button
           type="primary"
@@ -109,9 +121,9 @@
             <common-button type="danger" size="mini" class="filter-item">一键清空(按区域)</common-button>
           </template>
         </el-popconfirm>
-        <el-tag type="success" size="medium" effect="plain" class="filter-item" v-if="sumData.totalLength">
-          <span>{{ `总长度:${sumData.totalLength.toFixed(DP.MES_ENCLOSURE_L__M)}m` }}</span>
-          <span>{{ ` | 总数量:${sumData.totalQuantity}张` }}</span>
+        <el-tag type="success" size="medium" effect="plain" class="filter-item">
+          <span>{{ `总长度:${sumData.totalLength?sumData.totalLength.toFixed(DP.MES_ENCLOSURE_L__M):0}m` }}</span>
+          <span>{{ ` | 总数量:${sumData.totalQuantity || 0}张` }}</span>
         </el-tag>
       </template>
       <template #viewLeft>
@@ -157,8 +169,8 @@
 
 <script setup>
 import { allProjectPlan } from '@/api/enclosure/enclosure-plan/area'
-import { uploadBendingZip, downloadEnclosureData, downloadEnclosureTemplate, listUpload, getTotalSum, delEnclosureByArea } from '@/api/plan/technical-manage/enclosure'
-import { watch, ref, computed, inject, defineProps } from 'vue'
+import { uploadBendingZip, downloadEnclosureData, downloadEnclosureTemplate, listUpload, delEnclosureByArea } from '@/api/plan/technical-manage/enclosure'
+import { watch, ref, computed, inject, defineProps, defineEmits } from 'vue'
 import { regHeader } from '@compos/use-crud'
 
 import { TechnologyTypeAllEnum } from '@enum-ms/contract'
@@ -186,6 +198,7 @@ const defaultQuery = {
   plate: undefined
 }
 
+const emit = defineEmits(['sumChange'])
 const currentArea = ref({})
 const areaInfo = ref([])
 const defaultTab = ref({})
@@ -208,12 +221,16 @@ const props = defineProps({
   typeOption: {
     type: Array,
     default: () => []
+  },
+  sumData: {
+    type: Object,
+    default: () => {}
   }
 })
 
 // const AllAreaInfo = ref([])
 const tipsShow = ref(false)
-const sumData = ref({})
+// const sumData = ref({})
 const technicalTypeStatus = inject('technicalTypeStatus') // 技术交底状态
 
 const currentView = computed(() => {
@@ -238,6 +255,14 @@ watch(
   },
   { deep: true, immediate: true }
 )
+
+// watch(
+//   () => crud.query,
+//   (val) => {
+//     getData()
+//   },
+//   { deep: true, immediate: true }
+// )
 
 // watch(
 //   () => props.typeOption,
@@ -298,7 +323,6 @@ function tabClick(val) {
     id: name,
     name: label
   }
-  getData()
   crud.toQuery()
 }
 
@@ -316,15 +340,12 @@ async function getAllProjectPlan() {
           id: areaInfo.value[0].id + '',
           name: areaInfo.value[0].name
         }
-        getData()
       } else {
         tipsShow.value = true
       }
     } catch (e) {
       console.log('获取项目所有计划', e)
     }
-  } else {
-    sumData.value = {}
   }
 }
 
@@ -334,25 +355,36 @@ async function getAllProjectPlan() {
 //   getData()
 // }
 
-async function getData() {
-  if (crud.query.enclosurePlanId && crud.query.category) {
-    try {
-      sumData.value = await getTotalSum({ planId: crud.query.enclosurePlanId, category: crud.query.category })
-    } catch (e) {
-      console.log('获取围护汇总', e)
-    }
-  } else {
-    sumData.value = {}
-  }
-}
+// async function getData() {
+//   if (crud.query.enclosurePlanId && crud.query.category) {
+//     try {
+//       sumData.value = await getTotalSum({ ...crud.query })
+//     } catch (e) {
+//       console.log('获取围护汇总', e)
+//     }
+//   } else {
+//     sumData.value = {}
+//   }
+// }
 
 async function deleteEnclosure() {
   try {
     await delEnclosureByArea(crud.query.enclosurePlanId)
     crud.notify('操作成功', CRUD.NOTIFICATION_TYPE.SUCCESS)
-    crud.toQuery()
+    uploadSuccess()
   } catch (e) {
     console.log('清空区域下围护', e)
   }
 }
+
+function uploadSuccess() {
+  emit('sumChange')
+  crud.toQuery()
+}
 </script>
+<style lang="scss" scoped>
+::v-deep(.left-num  .el-input__inner) {
+  text-align: left;
+}
+</style>
+
