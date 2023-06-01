@@ -90,14 +90,13 @@
           class="filter-item date-item"
           @change="handleDateChange"
         />
-        <!-- <project-cascader v-model="query.projectId" class="filter-item" @change="handleProjectIdChange" clearable style="width: 300px" /> -->
         <div class="icon-box" v-show="flag" style="vertical-align: middle" @click.stop="changeSize">
           <svg-icon class="icon" icon-class="comp-zoom" />
         </div>
         <div class="icon-box" v-show="!flag" style="vertical-align: middle" @click.stop="changeSize">
           <svg-icon class="icon" icon-class="comp-zoom-out" />
         </div>
-        <el-input
+        <!-- <el-input
           v-model.trim="query.projectName"
           size="small"
           placeholder="项目搜索"
@@ -105,16 +104,17 @@
           class="filter-item"
           clearable
           @keyup.enter="crud.toQuery"
-        />
-        <!-- <el-tag type="success" class="filter-item" size="medium">
-            <span>产量（吨）</span>
-            <span>：</span>
-            <span>{{
-              crud.query.weightStatus === weightTypeEnum.NET.V
-                ? (summaryList.mete?.totalNetWeight / 1000).toFixed(DP.COM_WT__KG)
-                : (summaryList.mete?.totalGrossWeight / 1000).toFixed(DP.COM_WT__KG)
-            }}</span>
-          </el-tag> -->
+        /> -->
+        <project-cascader v-model="query.projectId" class="filter-item" @change="handleProjectChange" clearable style="width: 300px" />
+        <el-tag type="warning" class="filter-item" size="medium">
+          <span>项目累计产量（吨）</span>
+          <span>：</span>
+          <span>{{
+            crud.query.weightStatus === weightTypeEnum.NET.V
+              ? (summaryList.mete?.totalNetWeight / 1000).toFixed(DP.COM_WT__KG)
+              : (summaryList.mete?.totalGrossWeight / 1000).toFixed(DP.COM_WT__KG)
+          }}</span>
+        </el-tag>
         <common-button class="filter-item" size="mini" type="success" icon="el-icon-search" @click.stop="searchQuery">搜索</common-button>
         <common-button class="filter-item" size="mini" type="warning" icon="el-icon-refresh-left" @click.stop="resetQuery">
           重置
@@ -124,7 +124,7 @@
         <print-table
           v-permission="permission.print"
           api-key="mesFactoryWorkshopReport"
-          :params="{ startTime: query.startTime, endTime: query.endTime, projectName: query.projectName }"
+          :params="{ startTime: query.startTime, endTime: query.endTime, projectId: query.projectId }"
           size="mini"
           type="warning"
           class="filter-item"
@@ -143,22 +143,22 @@ import { DP } from '@/settings/config'
 import { parseTime } from '@/utils/date'
 import { PICKER_OPTIONS_SHORTCUTS } from '@/settings/config'
 // import { getOrderDeliveryRate } from '@/api/operation/order-delivery-rate'
-import { fullYearProduction, workshopEcharts } from '@/api/mes/factory-report/workshop-report.js'
+import { fullYearProduction, workshopEcharts, workshopProduction } from '@/api/mes/factory-report/workshop-report.js'
 import { weightTypeEnum, workshopTypeEnum } from '@enum-ms/common'
 import { timeTypeEnum } from '@enum-ms/contract'
 import { mesFactoryReportPM as permission } from '@/page-permission/mes'
 import workshopSelect from '@comp-mes/workshop-select'
 import productionLineSelect from '@comp-mes/production-line-select'
-// import projectCascader from '@comp-base/project-cascader'
+import projectCascader from '@comp-base/project-cascader'
 import crudOperation from '@crud/CRUD.operation'
 
 const emit = defineEmits('zoomChangeSize')
 const yearProductionData = reactive({
   mete: 0
 })
-// const summaryList = reactive({
-//   mete: 0
-// })
+const summaryList = reactive({
+  mete: 0
+})
 const chartDateTime = ref()
 const chartYearTime = ref()
 const chartVal = ref([])
@@ -173,8 +173,7 @@ const defaultQuery = {
   projectId: undefined,
   workShopId: undefined,
   productionLineId: undefined,
-  weightStatus: weightTypeEnum.NET.V,
-  projectName: undefined
+  weightStatus: weightTypeEnum.NET.V
 }
 const { crud, query } = regHeader(defaultQuery)
 
@@ -195,7 +194,7 @@ function disabledDate(time) {
 }
 
 fetchSummary()
-// workshopSummary()
+workshopSummary()
 
 async function fetchSummary() {
   try {
@@ -209,6 +208,25 @@ async function fetchSummary() {
   } catch (e) {
     console.log('获取全年产量失败', e)
   }
+}
+
+// 项目累计产量
+async function workshopSummary() {
+  try {
+    const data = await workshopProduction({
+      startTime: query.startTime ? query.startTime : moment().startOf('month').valueOf(),
+      endTime: query.endTime ? query.endTime : moment().valueOf(),
+      projectId: query.projectId
+    })
+    summaryList.mete = data || {}
+  } catch (e) {
+    console.log('获取项目车间产量', e)
+  }
+}
+
+function handleProjectChange() {
+  workshopSummary()
+  crud.toQuery()
 }
 
 function handleWorkshopChange() {
@@ -237,11 +255,13 @@ function handleDateChange(val) {
   crud.query.date = val
   query.startTime = val[0]
   query.endTime = val[1]
+  workshopSummary()
   crud.toQuery()
 }
 // 搜索
 function searchQuery() {
   fetchSummary()
+  workshopSummary()
   fetchChart()
   crud.toQuery()
 }
@@ -252,8 +272,9 @@ function resetQuery() {
   query.workShopId = undefined
   query.productionLineId = undefined
   query.weightStatus = weightTypeEnum.NET.V
-  query.projectName = undefined
+  query.projectId = undefined
   fetchSummary()
+  workshopSummary()
   fetchChart()
   crud.toQuery()
 }

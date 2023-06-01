@@ -139,6 +139,7 @@ const mesOutBoundStatisticsList = mes.outBoundStatisticsList
 
 const mesFactoryWorkshopReport = mes.factoryWorkshopReport
 const mesGroupsReport = mes.groupsReport
+const mesProductionStatisticsReport = mes.productionStatisticsReport
 
 const mesStudSleeveStatisticsList = mes.studSleeveStatisticsList
 const mesProjectShipDetail = mes.mesProjectShipDetail
@@ -335,6 +336,7 @@ export default {
 
   mesFactoryWorkshopReport, // 车间报表清单详情
   mesGroupsReport, // 班组报表清单详情
+  mesProductionStatisticsReport, // 生产统计清单详情
 
   mesStudSleeveStatisticsList, // 栓钉套筒统计清单详情
 
