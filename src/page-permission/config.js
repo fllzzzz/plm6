@@ -71,6 +71,14 @@ export const expenseManagementPM = {
   del: ['expense_management:del'] // 删除费用归类
 }
 
+// 基础配置/费用归类
+export const expenseSubjectPM = {
+  get: ['expense_subject:get'], // 查看
+  add: ['expense_subject:add'], // 新增
+  edit: ['expense_subject:edit'], // 编辑
+  del: ['expense_subject:del'] // 删除
+}
+
 // 基础配置/分支机构
 export const branchCompanyPM = {
   get: ['branch_company:get'], // 分支机构列表

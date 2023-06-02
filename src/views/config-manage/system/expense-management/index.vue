@@ -40,7 +40,7 @@
       <el-table-column v-if="columns.visible('links')" key="links" prop="links" label="费用明细" min-width="260">
         <template v-slot="scope">
           <template v-if="scope.row.links && scope.row.links.length > 0">
-            <span v-for="item in scope.row.links" :key="item.id">{{ `【${item.label}】` }}</span>
+            <span v-for="item in scope.row.links" :key="item.id">{{ `【${item.name}】` }}</span>
           </template>
         </template>
       </el-table-column>

@@ -75,7 +75,7 @@
             v-model="form.expenseSubjectId"
             :options="subjectList"
             type="other"
-            :data-structure="{ key: 'id', label: 'label', value: 'id' }"
+            :data-structure="{ key: 'id', label: 'name', value: 'id' }"
             size="small"
             clearable
             class="filter-item"

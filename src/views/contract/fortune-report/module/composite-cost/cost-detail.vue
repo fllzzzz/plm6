@@ -36,7 +36,7 @@
         </el-card>
         <common-table :data-format="columnsDataFormat" :data="detailList" :max-height="maxHeight">
           <el-table-column label="序号" type="index" align="center" width="60" />
-          <el-table-column key="reimburseDate" prop="reimburseDate" show-overflow-tooltip label="日期" align="center" />
+          <el-table-column key="reimburseDate" prop="reimburseDate" show-overflow-tooltip label="报销日期" align="center" />
           <el-table-column key="deptName" prop="deptName" show-overflow-tooltip label="部门" align="center" />
           <el-table-column key="reimburseUserName" prop="reimburseUserName" show-overflow-tooltip label="报销人" align="center" />
           <el-table-column key="expenseSubjectName" prop="expenseSubjectName" show-overflow-tooltip label="报销科目" align="center" />

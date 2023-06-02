@@ -25,7 +25,7 @@
           />
         </el-form-item>
         <el-form-item label="费用类型" prop="name">
-          <el-input v-model="form.name" type="text" placeholder="请填写费用类型" style="width: 270px" maxlength="30" />
+          <el-input v-model.trim="form.name" type="text" placeholder="请填写费用类型" style="width: 270px" maxlength="30" />
         </el-form-item>
         <el-form-item label="排序" prop="sort">
           <el-input-number v-model.number="form.sort" :min="1" :max="999" :step="1" controls-position="right" style="width: 270px" />
@@ -36,13 +36,13 @@
               <div v-for="(item, index) in form.dictionaryIdList" :key="index" class="process-drawer">
                 <common-select
                   v-model="form.dictionaryIdList[index]"
-                  :options="dict.reimbursement_type"
+                  :options="expenseSubject"
                   type="other"
                   size="small"
                   :dataStructure="typeProp"
                   clearable
                   class="filter-item"
-                  placeholder="费用类型"
+                  placeholder="费用科目"
                   style="width: 270px"
                   :disabled-val="form.dictionaryIdList"
                 />
@@ -65,16 +65,16 @@
 </template>
 
 <script setup>
+import { expenseSubjectAll } from '@/api/contract/expense-subject'
 import { ref } from 'vue'
 
 import { costAscriptionEnum } from '@enum-ms/config'
 
 import { regForm } from '@compos/use-crud'
-import useDict from '@compos/store/use-dict'
 
 const formRef = ref()
-const dict = useDict(['reimbursement_type'])
-const typeProp = { key: 'id', label: 'label', value: 'id' }
+const expenseSubject = ref([])
+const typeProp = { key: 'id', label: 'name', value: 'id' }
 const defaultForm = {
   iid: undefined,
   name: '',
@@ -86,12 +86,12 @@ const defaultForm = {
 const { crud, form } = regForm(defaultForm, formRef)
 const validateLinks = (rule, value, callback) => {
   if (!value?.length) {
-    callback(new Error('请选择费用类型'))
+    callback(new Error('请选择费用科目'))
   }
   if (value && value.length) {
     for (const i in value) {
       if (!value[i]) {
-        callback(new Error('请选择费用类型'))
+        callback(new Error('请选择费用科目'))
       }
     }
   }
@@ -112,6 +112,19 @@ function addProcess() {
 }
 function delProcess(index) {
   form.dictionaryIdList.splice(index, 1)
+}
+
+fetchList()
+async function fetchList() {
+  expenseSubject.value = []
+  let list = []
+  try {
+    list = await expenseSubjectAll()
+  } catch (error) {
+    console.log('获取费用科目列表', error)
+  } finally {
+    expenseSubject.value = list
+  }
 }
 </script>
 <style lang="scss" scoped>

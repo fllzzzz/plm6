@@ -52,9 +52,10 @@ const propertyFeeList = contract.propertyFeeList
 
 const amortizationRecord = contract.amortizationRecord
 const projectCollectionRecord = contract.projectCollectionPrint
-const projectInvoicePrint = contract.projectInvoicePrint
+const projectInvoiceRecord = contract.projectInvoiceRecord
 const expenseReimburseRecord = contract.expenseReimburseRecord
 const expenseReimburseSummary = contract.expenseReimburseSummary
+const materialCostRecord = contract.materialCostRecord
 
 const conMainMaterialList = contract.mainMaterialList
 const auxiliaryMaterialList = contract.mainMaterialList
@@ -248,6 +249,8 @@ export default {
   amortizationRecord, // 摊销记录
   expenseReimburseRecord, // 费用报销记录
   expenseReimburseSummary, // 费用报销汇总
+  materialCostRecord, // 材料使用记录
+
   managementSalaryList, // 管理人员工资清单
   productionSalaryList, // 生产人员工资清单
   propertyFeeList, // 物业费用清单
@@ -265,7 +268,7 @@ export default {
   fortuneReportList, // 业财报表
 
   projectCollectionRecord, // 项目收款记录
-  projectInvoicePrint, // 项目开票记录
+  projectInvoiceRecord, // 项目开票记录
 
   // 供应链
   purchaseInvoiceRecord, // 收票记录

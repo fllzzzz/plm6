@@ -30,6 +30,16 @@ export function getInvoiceList(params) {
   })
 }
 
+// 综合成本-直接费用：固定费用（主、辅、其它）
+export function getOutDetail(params) {
+  return request({
+    module: 'contract',
+    url: 'contract/amortization/getOutDetail',
+    method: 'get',
+    params
+  })
+}
+
 // 综合成本-摊销列表
 export function getAmortizationList(params) {
   return request({

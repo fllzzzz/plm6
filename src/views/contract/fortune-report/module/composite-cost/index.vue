@@ -87,6 +87,7 @@ import { toFixed } from '@data-type'
 import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'
 import costRecord from './cost-record'
+import materialRecord from './material-record'
 import amortizationRecord from './amortization-record'
 
 const props = defineProps({
@@ -116,13 +117,19 @@ const amortizationType = [
   expenseClassEnum.EQUIPMENT_DEPRECIATION.V,
   expenseClassEnum.GAS.V
 ]
+// 材料类型
+const materialType = [
+  expenseClassEnum.MAIN_MATERIAL.V,
+  expenseClassEnum.AUXILIARY_MATERIAL.V,
+  expenseClassEnum.OTHER_MATERIAL.V
+]
 
 // 当前显示组件
 const currentView = computed(() => {
   if (currentRow.value.expenseClassEnum) {
-    // 费用类型
-    if (currentRow.value.expenseClassEnum === expenseClassEnum.REIMBURSE_EXPENSES.V) {
-      return costRecord
+    // 材料类型（主材、辅材、其它材料）
+    if (materialType.includes(currentRow.value.expenseClassEnum)) {
+      return materialRecord
     }
     // 摊销类型
     if (amortizationType.includes(currentRow.value.expenseClassEnum)) {

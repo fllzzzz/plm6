@@ -9,7 +9,13 @@
       综合成本占比 <span class="blue">{{ props.detailRow.rate || 0 }} %</span>
     </div>
     <div class="print-wrap">
-      <print-table v-permission="permission.printDetail" api-key="expenseReimburseSummary" :params="params" size="mini" type="warning" />
+      <print-table
+        v-permission="permission.printDetail"
+        api-key="expenseReimburseSummary"
+        :params="{ ...params, expenseTypeName: props.detailRow.name }"
+        size="mini"
+        type="warning"
+      />
     </div>
   </el-card>
   <common-table

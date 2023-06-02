@@ -4,6 +4,8 @@ import { dateDifference } from '@/utils/date'
 import { convertUnits } from '@/utils/convert/unit'
 import { expenseClassEnum } from '@enum-ms/contract'
 import { DP } from '@/settings/config'
+import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
+import { setSpecInfoToList } from '@/utils/wms/spec'
 
 import moment from 'moment'
 
@@ -160,6 +162,42 @@ function handleExpenseRate({ header, table = [], footer, qrCode }) {
   }
 }
 
+// 处理 费用录入/资产折旧 税率
+function handleDepreciationRate({ header, table = [], footer, qrCode }) {
+  const _table = table.map(row => {
+    row.yearDepreciationRate = toFixed(row.yearDepreciationRate * 100, 2)
+    row.monthDepreciationRate = toFixed(row.monthDepreciationRate * 100, 2)
+    return row
+  })
+  return {
+    header,
+    table: _table,
+    qrCode,
+    footer
+  }
+}
+
+// 处理 业财报表/材料使用记录 不含税单价
+async function handleUnitPrice({ header, table = [], footer, qrCode }) {
+  await setSpecInfoToList(table)
+  await numFmtByBasicClass(table)
+  const _table = table.map(row => {
+    if (row.amountExcludingVat) {
+      row.unitPrice = toFixed(row.amountExcludingVat / row.mete, DP.YUAN)
+    } else {
+      row.unitPrice = undefined
+      row.amountExcludingVat = undefined
+    }
+    return row
+  })
+  return {
+    header,
+    table: _table,
+    qrCode,
+    footer
+  }
+}
+
 export default {
   handleRate,
   handleAreaUnit,
@@ -168,5 +206,7 @@ export default {
   handleSupplierPaymentOrder,
   handleTimeHorizon,
   handleAmortizationRecord,
-  handleExpenseRate
+  handleExpenseRate,
+  handleDepreciationRate,
+  handleUnitPrice
 }

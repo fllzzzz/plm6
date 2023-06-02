@@ -14,7 +14,7 @@
       <div class="print-wrap">
         <print-table
           v-permission="permission.printDetail"
-          api-key="projectInvoicePrint"
+          api-key="projectInvoiceRecord"
           :params="{ projectId: props.detailRow.id }"
           size="mini"
           type="warning"

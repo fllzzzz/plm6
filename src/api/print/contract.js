@@ -464,7 +464,7 @@ export function projectCollectionPrint(params) {
 }
 
 // 业财报表/项目开票记录（审核通过的数据）
-export function projectInvoicePrint(params) {
+export function projectInvoiceRecord(params) {
   return request({
     url: '/api/contract/invoice/getInvoicePrint',
     method: 'get',
@@ -485,6 +485,15 @@ export function expenseReimburseSummary(params) {
 export function expenseReimburseRecord(params) {
   return request({
     url: '/api/contract/expense-reimburse/getExpenseSubjectPrint',
+    method: 'get',
+    params
+  })
+}
+
+// 业财报表/材料使用记录
+export function materialCostRecord(params) {
+  return request({
+    url: '/api/contract/amortization/getOutDetailPrint',
     method: 'get',
     params
   })
@@ -521,12 +530,14 @@ export default {
   amortizationRecord, // 摊销记录
   expenseReimburseRecord, // 费用报销记录
   expenseReimburseSummary, // 费用报销汇总
+  materialCostRecord, // 材料使用记录
+
   managementSalaryList, // 管理人员工资清单
   productionSalaryList, // 生产人员工资
   propertyFeeList, // 物业费用清单
 
   projectCollectionPrint, // 项目收款记录
-  projectInvoicePrint, // 项目开票记录
+  projectInvoiceRecord, // 项目开票记录
 
   mainMaterialList, // 主材费清单
   manualList, // 人工费

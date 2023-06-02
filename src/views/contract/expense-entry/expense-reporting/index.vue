@@ -102,7 +102,16 @@
         :show-overflow-tooltip="true"
         label="备注"
       />
-      <el-table-column align="center" label="操作">
+      <el-table-column
+        v-if="columns.visible('createTime')"
+        align="center"
+        key="createTime"
+        prop="createTime"
+        :show-overflow-tooltip="true"
+        label="创建时间"
+        width="140"
+      />
+      <el-table-column align="center" label="操作" width="120">
         <template v-slot="{ row }">
           <el-tag v-if="row.isAmortization" size="medium" type="success" effect="plain"> 已摊销 </el-tag>
           <udOperation v-else :data="row" :permission="permission" />
@@ -141,6 +150,7 @@ const cascaderTree = ref([])
 
 const columnsDataFormat = ref([
   ['reimburseAmount', 'to-thousand'],
+  ['createTime', ['parse-time', '{y}-{m}-{d} {h}:{i}:{s}']],
   ['reimburseDate', ['parse-time', '{y}-{m}-{d}']],
   ['project', 'parse-project'],
   ['costAscriptionEnum', ['parse-enum', costAscriptionEnum]]

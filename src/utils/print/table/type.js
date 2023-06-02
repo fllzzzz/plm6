@@ -106,10 +106,11 @@ const tableType = {
   // propertyFeeList: { L: '物业费清单', M: 'expense_entry', T: mt.contract.L + ' / ' + contract.expense_entry },
 
   amortizationRecord: { L: '摊销记录', M: 'property_report', T: mt.contract.L + ' / ' + contract.property_report },
-  projectInvoicePrint: { L: '项目开票记录', M: 'property_report', T: mt.contract.L + ' / ' + contract.property_report },
+  projectInvoiceRecord: { L: '项目开票记录', M: 'property_report', T: mt.contract.L + ' / ' + contract.property_report },
   projectCollectionRecord: { L: '项目收款记录', M: 'property_report', T: mt.contract.L + ' / ' + contract.property_report },
   expenseReimburseSummary: { L: '费用报销汇总', M: 'property_report', T: mt.contract.L + ' / ' + contract.property_report },
   expenseReimburseRecord: { L: '费用报销记录', M: 'property_report', T: mt.contract.L + ' / ' + contract.property_report },
+  materialCostRecord: { L: '材料使用记录', M: 'property_report', T: mt.contract.L + ' / ' + contract.property_report },
 
   conMainMaterialList: { L: '主材费清单', M: 'property_report', T: mt.contract.L + ' / ' + contract.property_report },
   auxiliaryMaterialList: { L: '辅材费清单', M: 'property_report', T: mt.contract.L + ' / ' + contract.property_report },

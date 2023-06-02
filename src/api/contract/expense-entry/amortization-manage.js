@@ -96,6 +96,7 @@ export function autoAmortization(data) {
   return request({
     module: 'contract',
     url: 'contract/amortization/autoAmortization',
+    timeout: 6000000, // 后台处理数据过慢
     method: 'post',
     data
   })

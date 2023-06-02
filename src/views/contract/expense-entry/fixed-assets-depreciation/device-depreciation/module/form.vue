@@ -54,6 +54,7 @@
             :step="0.1"
             :min="0"
             :max="1000"
+            @change="yearChange"
           />
         </el-form-item>
         <el-form-item label="净残值率（%）" prop="residualValueRate">
@@ -67,7 +68,7 @@
             :max="100"
           />
         </el-form-item>
-        <el-form-item label="折旧日期" prop="startDate">
+        <el-form-item label="折旧开始日期" prop="startDate">
           <el-date-picker
             v-model="form.startDate"
             type="date"
@@ -79,16 +80,35 @@
             style="width: 270px"
           />
         </el-form-item>
+        <el-form-item label="折旧结束日期" prop="endDate">
+          <el-date-picker
+            v-model="form.endDate"
+            :default-time="[new Date(2000, 2, 1, 23, 59, 59)]"
+            type="date"
+            size="small"
+            format="YYYY-MM-DD"
+            value-format="x"
+            :clearable="false"
+            :disabled-date="(time) => form.startDate >= time"
+            placeholder="选择折旧结束日期"
+            style="width: 270px"
+            @change="endChange"
+          />
+        </el-form-item>
         <el-form-item label="年折旧率(%)" prop="annualDepreciationRate">
+          <span v-if="isBlank(annualDepreciationRate)" class="hint">根据上方填写内容自动计算</span>
           <span>{{ annualDepreciationRate }}</span>
         </el-form-item>
         <el-form-item label="年折旧额（元）" prop="annualDepreciationAmount">
+          <span v-if="isBlank(annualDepreciationAmount)" class="hint">根据上方填写内容自动计算</span>
           <span>{{ annualDepreciationAmount }}</span>
         </el-form-item>
         <el-form-item label="月折旧率(%)" prop="monthValueDepreciationRate">
+          <span v-if="isBlank(monthValueDepreciationRate)" class="hint">根据上方填写内容自动计算</span>
           <span>{{ monthValueDepreciationRate }}</span>
         </el-form-item>
         <el-form-item label="月折旧额（元）" prop="monthValueDepreciationAmount">
+          <span v-if="isBlank(monthValueDepreciationAmount)" class="hint">根据上方填写内容自动计算</span>
           <span>{{ monthValueDepreciationAmount }}</span>
         </el-form-item>
       </el-form>
@@ -99,7 +119,10 @@
 <script setup>
 import { ref, computed } from 'vue'
 
+import { isBlank, toFixed } from '@/utils/data-type'
+
 import { regForm } from '@compos/use-crud'
+import moment from 'moment'
 
 const formRef = ref()
 
@@ -128,12 +151,14 @@ const rules = {
   originalValue: [{ required: true, validator: validateQuantity, trigger: 'blur' }],
   depreciationYear: [{ required: true, validator: validateQuantity, trigger: 'blur' }],
   residualValueRate: [{ required: true, validator: validateQuantity, trigger: 'blur' }],
-  startDate: [{ required: true, message: '请选择折旧日期', trigger: 'blur' }]
+  startDate: [{ required: true, message: '请选择折旧开始日期', trigger: 'blur' }]
 }
 
 const annualDepreciationRate = computed(() => {
   // （（1-净残值）/ 使用年限）
-  return form.residualValueRate && form.depreciationYear ? (((100 - form.residualValueRate) / 100 / form.depreciationYear) * 100).toFixed(2) : ''
+  return form.residualValueRate && form.depreciationYear
+    ? (((100 - form.residualValueRate) / 100 / form.depreciationYear) * 100).toFixed(2)
+    : ''
 })
 
 const annualDepreciationAmount = computed(() => {
@@ -157,6 +182,19 @@ const monthValueDepreciationAmount = computed(() => {
     : ''
 })
 
+function yearChange(val) {
+  if (val) {
+    const timestamp = moment(+form.startDate).add(val, 'years').valueOf() // 获取xx年后的时间戳
+    const endOfDay = moment(timestamp).endOf('day') // 获取当天 24 点的时间
+    form.endDate = `${endOfDay.valueOf()}`
+  }
+}
+
+function endChange(val) {
+  const duration = moment.duration(form.endDate - form.startDate) // 计算时间差
+  form.depreciationYear = toFixed(duration.asYears(), 1) // 将时间差换算成年份
+}
+
 // 编辑之前
 CRUD.HOOK.beforeToEdit = (crud, form) => {
   form.residualValueRate = form.residualValueRate * 100
@@ -169,3 +207,9 @@ CRUD.HOOK.beforeSubmit = async () => {
   form.residualValueRate = form.residualValueRate / 100
 }
 </script>
+
+<style lang="scss" scoped>
+.hint {
+  color: #999;
+}
+</style>
