@@ -283,6 +283,7 @@ import { createUniqueString } from '@/utils/data-type/string'
 import { positiveNumPattern } from '@/utils/validate/pattern'
 import { isNotBlank, toPrecision } from '@/utils/data-type'
 import { projectNameFormatter } from '@/utils/project'
+import { DP } from '@/settings/config'
 
 // import useWmsConfig from '@/composables/store/use-wms-config'
 import { regExtra } from '@/composables/form/use-form'
@@ -341,7 +342,7 @@ const rules = {
 // 金额校验
 const validateAmount = (value, row) => {
   if (isNotBlank(row.mete) && isNotBlank(row.unitPrice)) {
-    return +toPrecision(row.mete * row.unitPrice, 2) === +value
+    return +toPrecision(row.mete * row.unitPrice, DP.YUAN) === +value
   }
   return false
 }
@@ -454,7 +455,7 @@ function rowWatch(row) {
 // 处理重量变化
 function handleWeightChange(val, row, _row) {
   if (isNotBlank(row.unitPrice) && isNotBlank(val)) {
-    row.amount = toPrecision(val * row.unitPrice, 2)
+    row.amount = toPrecision(val * row.unitPrice, DP.YUAN)
   }
   handleMeteChange(row, _row || row)
 }

@@ -99,6 +99,7 @@ import { setSpecInfoToList } from '@/utils/wms/spec'
 import { materialHasAmountColumns } from '@/utils/columns-format/wms'
 import { specFormat } from '@/utils/wms/spec-format'
 import { isNotBlank } from '@/utils/data-type'
+import { DP } from '@/settings/config'
 import { formTypeEnum } from '../enum'
 import { rawMatClsEnum } from '@/utils/enum/modules/classification'
 
@@ -259,7 +260,7 @@ function getSummaries(param) {
       ? baseUnit.value[materialInfo.value.basicClass].measure.precision
       : 0
   return tableSummary(param, {
-    props: [['quantity', dp], 'mete', 'amount', 'amountExcludingVAT', 'inputVAT'],
+    props: [['quantity', dp], 'mete', ['amount', DP.YUAN], ['amountExcludingVAT', DP.YUAN], ['inputVAT', DP.YUAN]],
     toThousandFields: ['amount', 'amountExcludingVAT', 'inputVAT']
   })
 }

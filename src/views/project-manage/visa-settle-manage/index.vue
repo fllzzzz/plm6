@@ -95,7 +95,7 @@ const mDetail = computed(() => {
 const dataFormat = ref([
   ['project', ['parse-project', { onlyShortName: true }]],
   ['status', ['parse-enum', reviewStatusEnum, { f: 'SL' }]],
-  ['amount', 'to-thousand'],
+  ['amount', ['to-thousand-ck', 'YUAN']],
   ['createTime', 'parse-time']
 ])
 const { crud, columns } = useCRUD(

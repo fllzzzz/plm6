@@ -34,11 +34,11 @@ export const materialHasAmountColumns = [
   // 金额相关
   ['invoiceType', ['parse-enum', invoiceTypeEnum, { f: 'SL' }]],
   ['taxRate', ['suffix', '%']],
-  ['unitPrice', 'to-thousand'],
-  ['unitPriceExcludingVAT', 'to-thousand'],
-  ['amount', 'to-thousand'],
-  ['amountExcludingVAT', 'to-thousand'],
-  ['inputVAT', 'to-thousand']
+  ['unitPrice', ['to-thousand-ck', 'YUAN']],
+  ['unitPriceExcludingVAT', ['to-thousand-ck', 'YUAN']],
+  ['amount', ['to-thousand-ck', 'YUAN']],
+  ['amountExcludingVAT', ['to-thousand-ck', 'YUAN']],
+  ['inputVAT', ['to-thousand-ck', 'YUAN']]
 ]
 
 // wms单据信息

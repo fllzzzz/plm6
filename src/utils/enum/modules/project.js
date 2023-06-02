@@ -42,8 +42,8 @@ constantize(installProjectTypeEnum)
 
 // 收安报表
 const deliveryInstallTypeEnum = {
-  ARTIFACT: { L: '结构制品', K: 'ARTIFACT', V: 1 << 1 },
-  ENCLOSURE: { L: '围护制品', K: 'ENCLOSURE', V: 1 << 2 }
+  ARTIFACT: { L: '结构制品', SL: '结构', K: 'ARTIFACT', V: 1 << 1 },
+  ENCLOSURE: { L: '围护制品', SL: '围护', K: 'ENCLOSURE', V: 1 << 2 }
 }
 constantize(deliveryInstallTypeEnum)
 

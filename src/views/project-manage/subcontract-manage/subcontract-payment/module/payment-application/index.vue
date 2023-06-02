@@ -92,7 +92,7 @@ const dataFormat = ref([
   ['applyDate', ['parse-time', '{y}-{m}-{d}']],
   ['paymentDate', ['parse-time', '{y}-{m}-{d}']],
   ['auditTime', ['parse-time', '{y}-{m}-{d}']],
-  ['applyAmount', 'to-thousand']
+  ['applyAmount', ['to-thousand-ck', 'YUAN']]
 ])
 
 const tableRef = ref()

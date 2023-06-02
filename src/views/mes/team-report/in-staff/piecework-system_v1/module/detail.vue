@@ -83,6 +83,8 @@
 import { detail } from '@/api/mes/team-report/in-staff/piecework-system'
 import { defineProps, defineEmits, ref, watch, inject, computed } from 'vue'
 
+import { DP } from '@/settings/config'
+
 import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'
 import useWageQuotaUnit from '@compos/mes/use-wage-quota-unit'
@@ -201,7 +203,7 @@ function getSummaries(param) {
           }
         }, 0)
         if (column.property === 'price') {
-          sums[index] = sums[index].toFixed(2)
+          sums[index] = sums[index].toFixed(DP.YUAN)
         }
       }
     }

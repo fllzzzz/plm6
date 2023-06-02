@@ -221,6 +221,7 @@
 import { defineProps, computed, defineExpose, ref, inject, reactive, watch } from 'vue'
 import { matClsEnum } from '@/utils/enum/modules/classification'
 import { isBlank, isNotBlank, toPrecision } from '@/utils/data-type'
+import { DP } from '@/settings/config'
 
 import { regExtra } from '@/composables/form/use-form'
 import useTableValidate from '@compos/form/use-table-validate'
@@ -274,7 +275,7 @@ const rules = {
 // 金额校验
 const validateAmount = (value, row) => {
   if (isNotBlank(row.weighingTotalWeight) && isNotBlank(row.unitPrice)) {
-    return +toPrecision(row.weighingTotalWeight * row.unitPrice, 2) === +value
+    return +toPrecision(row.weighingTotalWeight * row.unitPrice, DP.YUAN) === +value
   }
   return false
 }
@@ -416,7 +417,7 @@ function calcTotalLength(row) {
 // 处理重量变化
 function handleWeightChange(val, row) {
   if (isNotBlank(row.unitPrice) && isNotBlank(val)) {
-    row.amount = toPrecision(val * row.unitPrice, 2)
+    row.amount = toPrecision(val * row.unitPrice, DP.YUAN)
   }
 }
 

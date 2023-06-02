@@ -51,6 +51,7 @@ import { orderSupplyTypeEnum } from '@enum-ms/wms'
 import { tableSummary } from '@/utils/el-extra'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { setSpecInfoToList } from '@/utils/wms/spec'
+import { DP } from '@/settings/config'
 import { materialHasAmountColumns } from '@/utils/columns-format/wms'
 import checkPermission from '@/utils/system/check-permission'
 
@@ -108,7 +109,7 @@ CRUD.HOOK.beforeDetailLoaded = async (crud, detail) => {
 // 合计
 function getSummaries(param) {
   return tableSummary(param, {
-    props: ['quantity', 'mete', 'amount', 'amountExcludingVAT', 'inputVAT'],
+    props: ['quantity', 'mete', ['amount', DP.YUAN], ['amountExcludingVAT', DP.YUAN], ['inputVAT', DP.YUAN]],
     toThousandFields: ['amount', 'amountExcludingVAT', 'inputVAT']
   })
 }

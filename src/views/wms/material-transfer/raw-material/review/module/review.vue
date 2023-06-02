@@ -100,6 +100,7 @@ import { tableSummary } from '@/utils/el-extra'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { setSpecInfoToList } from '@/utils/wms/spec'
 import { deepClone } from '@/utils/data-type'
+import { DP } from '@/settings/config'
 import { partyAMatTransferEnum, transferTypeEnum } from '@/utils/enum/modules/wms'
 import { invoiceTypeEnum } from '@/utils/enum/modules/finance'
 import { materialHasAmountColumns } from '@/utils/columns-format/wms'
@@ -369,7 +370,10 @@ function closeHook() {
 
 // 合计
 function getSummaries(param) {
-  return tableSummary(param, { props: ['quantity', 'mete', 'amount'], toThousandFields: ['amount'] })
+  return tableSummary(param, {
+    props: ['quantity', 'mete', ['amount', DP.YUAN]],
+    toThousandFields: ['mete', 'amount']
+  })
 }
 </script>
 

@@ -69,16 +69,16 @@
     <template v-if="showAmount">
       <el-row v-loading="crud.loading" :gutter="20" class="panel-group">
         <el-col :span="6" class="card-panel-col" @click="showDetail(formTypeEnum.BEGIN_PERIOD.V)">
-          <Panel name="期初总额（当月）" text-color="#626262" num-color="#1890ff" :end-val="totalAmount.beginPeriod || 0" :precision="2" />
+          <Panel name="期初总额（当月）" text-color="#626262" num-color="#1890ff" :end-val="totalAmount.beginPeriod || 0" :precision="DP.YUAN" />
         </el-col>
         <el-col :span="6" class="card-panel-col" @click="showDetail(formTypeEnum.END_PERIOD.V)">
-          <Panel name="入库总额（当月）" text-color="#626262" num-color="#1890ff" :end-val="totalAmount.inbound || 0" :precision="2" />
+          <Panel name="入库总额（当月）" text-color="#626262" num-color="#1890ff" :end-val="totalAmount.inbound || 0" :precision="DP.YUAN" />
         </el-col>
         <el-col :span="6" class="card-panel-col" @click="showDetail(formTypeEnum.INBOUND.V)">
-          <Panel name="出库总额（当月）" text-color="#626262" num-color="#1890ff" :end-val="totalAmount.outbound || 0" :precision="2" />
+          <Panel name="出库总额（当月）" text-color="#626262" num-color="#1890ff" :end-val="totalAmount.outbound || 0" :precision="DP.YUAN" />
         </el-col>
         <el-col :span="6" class="card-panel-col" @click="showDetail(formTypeEnum.OUTBOUND.V)">
-          <Panel name="期末结存（当月）" text-color="#626262" num-color="#1890ff" :end-val="totalAmount.endPeriod || 0" :precision="2" />
+          <Panel name="期末结存（当月）" text-color="#626262" num-color="#1890ff" :end-val="totalAmount.endPeriod || 0" :precision="DP.YUAN" />
         </el-col>
       </el-row>
     </template>
@@ -95,6 +95,7 @@ import { setSpecInfoToList } from '@/utils/wms/spec'
 import { specFormat, specTip } from '@/utils/wms/spec-format'
 import checkPermission from '@/utils/system/check-permission'
 import { formTypeEnum } from '../enum'
+import { DP } from '@/settings/config'
 
 import { regHeader } from '@compos/use-crud'
 import rrOperation from '@crud/RR.operation'

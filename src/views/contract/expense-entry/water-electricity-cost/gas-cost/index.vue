@@ -56,7 +56,7 @@
         label="总额"
       >
         <template #default="{ row }">
-          <span>{{ row.totalAmount?.toFixed(2) }}</span>
+          <span>{{ row.totalAmount?.toFixed(DP.YUAN) }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -68,7 +68,7 @@
         label="平均单价"
       >
         <template #default="{ row }">
-          <span>{{ row.avgUnitPrice?.toFixed(2) }}</span>
+          <span>{{ row.avgUnitPrice?.toFixed(DP.YUAN) }}</span>
         </template>
       </el-table-column>
       <el-table-column align="center" label="操作" width="200px">
@@ -87,6 +87,7 @@ import { ref } from 'vue'
 import crudApi, { getGasList } from '@/api/contract/expense-entry/gas-cost'
 
 import { gasCostPM as permission } from '@/page-permission/contract'
+import { DP } from '@/settings/config'
 // import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
@@ -156,7 +157,11 @@ function getSummaries(param) {
           }
         }, 0)
       }
-      sums[index] = valuesSum.toFixed(2)
+      if (column.property === 'totalAmount') {
+        sums[index] = valuesSum.toFixed(DP.YUAN)
+      } else {
+        sums[index] = valuesSum.toFixed(2)
+      }
     }
   })
   return sums

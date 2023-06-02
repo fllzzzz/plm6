@@ -247,7 +247,7 @@ const store = useStore()
 const columnsDataFormat = ref([
   ...wmsReceiptColumns,
   ['invoiceType', ['parse-enum', invoiceTypeEnum]],
-  ['amount', 'to-thousand'],
+  ['amount', ['to-thousand-ck', 'YUAN']],
   ['requisitionsSNStr', 'empty-text'],
   ['remark', 'empty-text'],
   ['auxMaterialNames', 'split'],

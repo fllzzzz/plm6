@@ -95,6 +95,7 @@ import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { destinationTypeEnum } from '@enum-ms/production'
 // import { isBlank, isNotBlank, toFixed } from '@/utils/data-type'
 import { deepClone, isBlank, isNotBlank } from '@/utils/data-type'
+import { DP } from '@/settings/config'
 import { materialHasAmountColumns } from '@/utils/columns-format/wms'
 
 import { regExtra } from '@/composables/form/use-form'
@@ -355,7 +356,10 @@ function setDitto(list) {
 
 // 合计
 function getSummaries(param) {
-  return tableSummary(param, { props: ['quantity', 'mete', 'amount'] })
+  return tableSummary(param, {
+    props: ['quantity', 'mete', ['amount', DP.YUAN]],
+    toThousandFields: ['mete', 'amount']
+  })
 }
 </script>
 

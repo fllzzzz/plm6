@@ -24,7 +24,7 @@
         :controls="false"
         :step="1"
         size="mini"
-        :precision="2"
+        :precision="DP.YUAN"
         placeholder="金额"
         @change="handleAmountChange($event, row)"
       />
@@ -35,6 +35,7 @@
 <script setup>
 import { defineProps } from 'vue'
 import usePriceSet from '@/composables/wms/use-price-set'
+import { DP } from '@/settings/config'
 
 const props = defineProps({
   weightAttribute: { // 重量属性

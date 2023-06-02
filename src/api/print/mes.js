@@ -708,6 +708,14 @@ export function mesAuxMatDetail(params) {
     params
   })
 }
+// 发运管理-发运统计-围护配套制品详情打印
+export function enclosureAuxMatDetail(params) {
+  return request({
+    url: `/api/mes/building/cargo/project/cargoList/details/auxiliary/print`,
+    method: 'get',
+    params
+  })
+}
 
 // 工厂报表-车间报表详情
 export function factoryWorkshopReport(params) {
@@ -722,6 +730,15 @@ export function factoryWorkshopReport(params) {
 export function groupsReport(params) {
   return request({
     url: `/api/mes/building/report/product/team/summary/review/print`,
+    method: 'get',
+    params
+  })
+}
+
+// 工厂报表-生产统计详情
+export function productionStatisticsReport(params) {
+  return request({
+    url: `/api/mes/building/task/process/produce/statistics/print`,
     method: 'get',
     params
   })
@@ -983,10 +1000,12 @@ export default {
   enclosureShipStockMeteDetail, // 围护库存
   mesShipTrainMeteDetail, // 累计车次
   mesAuxMatDetail, // 配套件详情
+  enclosureAuxMatDetail, // 围护配套件详情
 
   // 工厂报表-车间报表
   factoryWorkshopReport, // 车间报表详情
   groupsReport, // 班组报表详情
+  productionStatisticsReport, // 生产统计详情
 
   // 任务跟踪
   workOrderTrackingList, // 工单跟踪报表详情

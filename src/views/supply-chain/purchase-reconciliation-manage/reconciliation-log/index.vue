@@ -105,6 +105,7 @@ import { ref } from 'vue'
 
 import { supplierReconciliationLogPM as permission } from '@/page-permission/supply-chain'
 import { tableSummary } from '@/utils/el-extra'
+import { DP } from '@/settings/config'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
@@ -122,7 +123,7 @@ const optShow = {
 const tableRef = ref()
 // 表格列数据格式转换
 const columnsDataFormat = ref([
-  ['amountExcludingVAT', 'to-thousand']
+  ['amountExcludingVAT', ['to-thousand-ck', 'YUAN']]
 ])
 
 const { crud, columns } = useCRUD(
@@ -143,7 +144,7 @@ const { maxHeight } = useMaxHeight({ paginate: true })
 function getSummaries(param) {
   return tableSummary(param, {
     // 此页面钢材默认显示吨，保留3位，金额显示4位
-    props: ['quantity', ['mete', 3], 'amountExcludingVAT'],
+    props: ['quantity', ['mete', 3], ['amountExcludingVAT', DP.YUAN]],
     toThousandFields: ['amountExcludingVAT']
   })
 }

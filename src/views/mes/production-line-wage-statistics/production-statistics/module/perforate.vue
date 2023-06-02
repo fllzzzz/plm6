@@ -63,6 +63,7 @@
 <script setup>
 import useMaxHeight from '@compos/use-max-height'
 import { toThousand } from '@data-type/number'
+import { DP } from '@/settings/config'
 import { tableSummary } from '@/utils/el-extra'
 
 const tableData = [
@@ -89,7 +90,7 @@ const { maxHeight } = useMaxHeight({
 // 合计
 function getSummaries(param) {
   return tableSummary(param, {
-    props: ['apertureQuantity', 'totalPrice']
+    props: ['apertureQuantity', ['totalPrice', DP.YUAN]]
   })
 }
 </script>

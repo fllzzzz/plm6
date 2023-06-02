@@ -123,6 +123,7 @@ import { setSpecInfoToList } from '@/utils/wms/spec'
 // import { deepClone, isBlank, isNotBlank, toFixed } from '@/utils/data-type'
 import { deepClone, isBlank, isNotBlank } from '@/utils/data-type'
 // import { getDP } from '@/utils/data-type/number'
+import { DP } from '@/settings/config'
 import { materialHasAmountColumns } from '@/utils/columns-format/wms'
 
 import { regExtra } from '@compos/use-crud'
@@ -479,7 +480,7 @@ function setDitto(list) {
 //         return sum
 //       }
 //     }, 0),
-//     2
+//     DP.YUAN
 //   )
 // }
 
@@ -499,7 +500,10 @@ function setDitto(list) {
 
 // 合计
 function getSummaries(param) {
-  return tableSummary(param, { props: ['quantity', 'mete', 'amount'] })
+  return tableSummary(param, {
+    props: ['quantity', 'mete', ['amount', DP.YUAN]],
+    toThousandFields: ['mete', 'amount']
+  })
 }
 </script>
 

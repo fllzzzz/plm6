@@ -222,7 +222,7 @@ const totalAmount = computed(() => {
       }
     })
   }
-  return toFixed(amount, 2)
+  return toFixed(amount, DP.YUAN)
 })
 
 // 总重

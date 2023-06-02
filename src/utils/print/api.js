@@ -140,6 +140,7 @@ const mesOutBoundStatisticsList = mes.outBoundStatisticsList
 
 const mesFactoryWorkshopReport = mes.factoryWorkshopReport
 const mesGroupsReport = mes.groupsReport
+const mesProductionStatisticsReport = mes.productionStatisticsReport
 
 const mesStudSleeveStatisticsList = mes.studSleeveStatisticsList
 const mesProjectShipDetail = mes.mesProjectShipDetail
@@ -158,6 +159,7 @@ const enclosureShipMonthMeteDetail = mes.enclosureShipMonthMeteDetail
 const enclosureShipStockMeteDetail = mes.enclosureShipStockMeteDetail
 const mesShipTrainMeteDetail = mes.mesShipTrainMeteDetail
 const mesAuxMatDetail = mes.mesAuxMatDetail
+const enclosureAuxMatDetail = mes.enclosureAuxMatDetail
 const mesProductSendReceiveStorage = mes.productSendReceiveStorage
 const enclosureProductSendReceiveStorage = mes.enclosureProductSendReceiveStorage
 const productSendReceiveStorageDetail = mes.productSendReceiveStorageDetail
@@ -336,6 +338,7 @@ export default {
 
   mesFactoryWorkshopReport, // 车间报表清单详情
   mesGroupsReport, // 班组报表清单详情
+  mesProductionStatisticsReport, // 生产统计清单详情
 
   mesStudSleeveStatisticsList, // 栓钉套筒统计清单详情
 
@@ -355,6 +358,7 @@ export default {
   enclosureShipStockMeteDetail, // 发运统计/库存详情
   mesShipTrainMeteDetail, // 发运统计/累计车次详情
   mesAuxMatDetail, // 发运统计/配套件详情
+  enclosureAuxMatDetail, // 发运统计/围护配套件详情
   mesProductSendReceiveStorage, // 发运管理制成品入发存
   enclosureProductSendReceiveStorage, // 围护制品入发存
   productSendReceiveStorageDetail, // 发运管理制成品入发存详情

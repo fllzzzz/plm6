@@ -36,6 +36,7 @@ import { ref, computed } from 'vue'
 import { materialHasAmountColumns } from '@/utils/columns-format/wms'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { tableSummary } from '@/utils/el-extra'
+import { DP } from '@/settings/config'
 import { setSpecInfoToList } from '@/utils/wms/spec'
 
 import useCRUD from '@compos/use-crud'
@@ -80,7 +81,7 @@ const basicClass = computed(() => (crud.query ? crud.query.basicClass : undefine
 // 合计
 function getSummaries(param) {
   return tableSummary(param, {
-    props: ['quantity', 'mete', 'amount', 'amountExcludingVAT'],
+    props: ['quantity', 'mete', ['amount', DP.YUAN], ['amountExcludingVAT', DP.YUAN]],
     toThousandFields: ['amount', 'amountExcludingVAT']
   })
 }
