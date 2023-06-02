@@ -4,9 +4,13 @@
       <mHeader ref="headerRef">
         <template #viewLeft>
           <!-- <print-table
-            :api-key="apiKey"
+            v-permission="permission.print"
+            api-key="mesProductionStatisticsReport"
             :params="{
-              ...query,
+              status: crud.query.status,
+              startDate: crud.query.startDate,
+              endDate: crud.query.endDate,
+              weightStatus: crud.query.weightStatus,
             }"
             size="mini"
             type="warning"
@@ -94,7 +98,11 @@
                 <div v-if="row.processMap[item.id]">
                   <span>{{ row.processMap[item.id]?.unQuantity }}</span>
                   <span> / </span>
-                  <span >{{ crud.query.weightStatus === weightTypeEnum.NET.V ?row.processMap[item.id]?.unNetWeight:row.processMap[item.id]?.unGrossWeight }}</span>
+                  <span>{{
+                    crud.query.weightStatus === weightTypeEnum.NET.V
+                      ? row.processMap[item.id]?.unNetWeight
+                      : row.processMap[item.id]?.unGrossWeight
+                  }}</span>
                 </div>
                 <span v-else> - </span>
               </div>
