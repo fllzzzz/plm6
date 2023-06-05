@@ -161,7 +161,7 @@ const tableRef = ref()
 const headerRef = ref()
 const dataFormat = ref([
   ['thickness', ['to-fixed', DP.MES_ENCLOSURE_T__MM]],
-  ['unitPrice', 'to-thousand']
+  ['unitPrice', ['to-thousand-ck', 'YUAN']]
 ])
 const { crud, columns } = useCRUD(
   {

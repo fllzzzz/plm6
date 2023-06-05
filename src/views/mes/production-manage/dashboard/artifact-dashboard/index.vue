@@ -32,17 +32,16 @@
         :style="{ 'max-height': `${maxHeight}px` }"
       >
         <template v-for="item in boardList" :key="item.id">
-          <!-- <el-tooltip
+          <el-tooltip
             :show-after="300"
             class="item"
             effect="light"
             :content="`${item.detailLoading ? '正在加载中...' : `${item.processInfo}`}`"
             placement="left-start"
-          > -->
+          >
             <div
               class="board-box"
               :style="{ 'background-color': `${item.boxColor}`, ...boxStyle }"
-              @click.stop="boardDetail(item)"
               @mouseenter="getDetail(item)"
             >
               <div style="width: 120px">
@@ -68,7 +67,7 @@
                 <span class="ellipsis-text">{{ item.completeQuantity }}/{{ item.compareQuantity }}</span>
               </div>
             </div>
-          <!-- </el-tooltip> -->
+          </el-tooltip>
         </template>
         <span v-if="!boardList.length && !crud.loading" class="red-tip">* 暂无数据</span>
         <div v-if="crud.loading" class="loading-box" :style="boxStyle">
@@ -197,7 +196,7 @@ async function getArtifactDetail(item) {
       const _processInfo = _completed ? `√` : `${process.completeQuantity} / ${process.inspectionQuantity}`
       _data.processInfo += `${process.name}：${_processInfo}\n\n`
     })
-    item = Object.assign(item, _data, { processInfo: _data.processInfo })
+    item = Object.assign(item, { processInfo: _data.processInfo })
   } catch (error) {
     console.log('获取详情失败', error)
   } finally {
@@ -236,7 +235,7 @@ async function getAssembleDetail(item) {
         _data.processInfo += `${process.name}：${_processInfo}\n\n`
       })
     }
-    item = Object.assign(item, _data, { processInfo: _data.processInfo })
+    item = Object.assign(item, { processInfo: _data.processInfo })
   } catch (error) {
     console.log('获取详情失败', error)
   } finally {
@@ -261,7 +260,7 @@ async function getMachinePartDetail(item) {
       const _processInfo = _completed ? `√` : `${process.completeQuantity} / ${process.inspectionQuantity}`
       _data.processInfo += `${process.name}：${_processInfo}\n\n`
     })
-    item = Object.assign(item, _data, { processInfo: _data.processInfo })
+    item = Object.assign(item, { processInfo: _data.processInfo })
   } catch (error) {
     console.log('获取详情失败', error)
   } finally {
@@ -269,10 +268,10 @@ async function getMachinePartDetail(item) {
   }
 }
 
-function boardDetail(item) {
-  detailVisible.value = true
-  detailRow.value = item
-}
+// function boardDetail(item) {
+//   detailVisible.value = true
+//   detailRow.value = item
+// }
 </script>
 
 <style lang="scss" scoped>

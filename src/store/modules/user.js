@@ -4,6 +4,8 @@ import { repairStartSymbol } from '@/utils'
 import { getToken, setToken, removeToken, getRequestUrl, setRequestUrl as storeSetRequestUrl, removeRequestUrl } from '@/utils/storage' // get token from cookie
 import { projectTypeEnum } from '@enum-ms/contract'
 import { installProjectTypeEnum, deliveryInstallTypeEnum } from '@enum-ms/project'
+import { contractSaleTypeEnum } from '@enum-ms/mes'
+
 import checkPermission from '@/utils/system/check-permission'
 
 const state = {
@@ -32,6 +34,7 @@ const state = {
   projectTypeEnumArr: [projectTypeEnum.STEEL, projectTypeEnum.CARBARN, projectTypeEnum.ENCLOSURE],
   installTypeEnumArr: [installProjectTypeEnum.ARTIFACT, installProjectTypeEnum.ENCLOSURE, installProjectTypeEnum.AUXILIARY],
   deliveryInstallEnumArr: [deliveryInstallTypeEnum.ARTIFACT, deliveryInstallTypeEnum.ENCLOSURE],
+  contractSaleTypeEnumArr: [contractSaleTypeEnum.STRUCTURE, contractSaleTypeEnum.ENCLOSURE, contractSaleTypeEnum.MACHINE_PART, contractSaleTypeEnum.AUXILIARY_MATERIAL],
   flag: 0,
   hasIntelligent: 0
 }
@@ -69,6 +72,9 @@ const mutations = {
   },
   SET_DELIVERY_INSTALL_ARR: (state, deliveryInstallEnumArr) => {
     state.deliveryInstallEnumArr = deliveryInstallEnumArr
+  },
+  SET_CONTRACT_SALE_TYPE_ENUM_ARR: (state, contractSaleTypeEnumArr) => {
+    state.contractSaleTypeEnumArr = contractSaleTypeEnumArr
   },
   SET_FLAG: (state, flag) => {
     state.flag = flag
@@ -141,9 +147,12 @@ const actions = {
     const arr = enclosureType ? [projectTypeEnum.STEEL, projectTypeEnum.CARBARN] : [projectTypeEnum.STEEL, projectTypeEnum.CARBARN, projectTypeEnum.ENCLOSURE]
     const installArr = enclosureType ? [installProjectTypeEnum.ARTIFACT, installProjectTypeEnum.AUXILIARY] : [installProjectTypeEnum.ARTIFACT, installProjectTypeEnum.ENCLOSURE, installProjectTypeEnum.AUXILIARY]
     const deliveryArr = enclosureType ? [deliveryInstallTypeEnum.ARTIFACT] : [deliveryInstallTypeEnum.ARTIFACT, deliveryInstallTypeEnum.ENCLOSURE]
+    const contractSaleTypeArr = enclosureType ? [contractSaleTypeEnum.STRUCTURE, contractSaleTypeEnum.MACHINE_PART, contractSaleTypeEnum.AUXILIARY_MATERIAL] : [contractSaleTypeEnum.STRUCTURE, contractSaleTypeEnum.ENCLOSURE, contractSaleTypeEnum.MACHINE_PART, contractSaleTypeEnum.AUXILIARY_MATERIAL]
+    console.log(contractSaleTypeArr)
     commit('SET_INSTALL_TYPE_ENUM_ARR', installArr)
     commit('SET_PROJECT_TYPE_ENUM_ARR', arr)
     commit('SET_DELIVERY_INSTALL_ARR', deliveryArr)
+    commit('SET_CONTRACT_SALE_TYPE_ENUM_ARR', contractSaleTypeArr)
     commit('SET_FLAG', enclosureType)
     commit('SET_HAS_INTELLIGENT', boolSmartLine)
     commit('SET_MENUS', menus)

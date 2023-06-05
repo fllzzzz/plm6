@@ -247,7 +247,7 @@
               {{ scope.row.totalLength ? scope.row.totalLength.toFixed(DP.MES_ENCLOSURE_L__M) : '-' }}
             </template>
           </el-table-column>
-          <el-table-column
+          <!-- <el-table-column
             key="totalWeight"
             prop="totalWeight"
             :label="`总重量(kg)`"
@@ -257,7 +257,7 @@
             <template v-slot="scope">
               {{ scope.row.totalWeight ? scope.row.totalWeight.toFixed(DP.COM_WT__KG) : '-' }}
             </template>
-          </el-table-column>
+          </el-table-column> -->
            <el-table-column
             key="coating"
             prop="coating"

@@ -158,8 +158,8 @@ const dataFormat = ref([
   ['createTime', ['parse-time', '{y}-{m}-{d}']],
   ['totalLength', ['to-thousand', DP.MES_ENCLOSURE_L__M]],
   ['totalArea', ['to-thousand', DP.MES_ENCLOSURE_L__M]],
-  ['unitPrice', 'to-thousand'],
-  ['totalPrice', 'to-thousand'],
+  ['unitPrice', ['to-thousand-ck', 'YUAN']],
+  ['totalPrice', ['to-thousand-ck', 'YUAN']],
   ['pricingManner', ['parse-enum', enclosurePricingMannerEnum]]
 ])
 

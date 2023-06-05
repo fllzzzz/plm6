@@ -118,7 +118,7 @@ const optShow = {
 const dataFormat = ref([
   ['problemDate', ['parse-time', '{y}-{m}-{d}']],
   ['project', 'parse-project'],
-  ['penalty', 'to-thousand']
+  ['penalty', ['to-thousand-ck', 'YUAN']]
 ])
 
 const tableRef = ref()

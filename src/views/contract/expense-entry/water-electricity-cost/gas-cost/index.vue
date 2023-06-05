@@ -96,6 +96,7 @@ import { tableSummary } from '@/utils/el-extra'
 import { matClsEnum } from '@enum-ms/classification'
 import { setEmptyArr2Undefined, setLevelName } from '@/utils/data-type/tree'
 import { toThousand } from '@/utils/data-type/number'
+import { DP } from '@/settings/config'
 import moment from 'moment'
 import checkPermission from '@/utils/system/check-permission'
 
@@ -201,13 +202,13 @@ function getSummaries(param) {
     props: ['usedMete', 'totalAmount']
   })
   if (data[3] && data[4]) {
-    data[5] = toThousand(data[4] / data[3])
+    data[5] = toThousand(data[4] / data[3], DP.YUAN)
   }
   if (data[3]) {
     data[3] = toThousand(data[3])
   }
   if (data[4]) {
-    data[4] = toThousand(data[4])
+    data[4] = toThousand(data[4], DP.YUAN)
   }
   return data
 }

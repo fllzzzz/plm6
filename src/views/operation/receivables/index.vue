@@ -96,6 +96,7 @@ import { ref } from 'vue'
 import { projectNameFormatter } from '@/utils/project'
 import { tableSummary } from '@/utils/el-extra'
 import { constantize } from '@enum/base'
+import { DP } from '@/settings/config'
 
 import useMaxHeight from '@compos/use-max-height'
 import useChart from '@compos/use-chart'
@@ -117,17 +118,17 @@ const typeEnum = {
 constantize(typeEnum)
 
 const dataFormat = ref([
-  ['contractAmount', 'to-thousand'],
-  ['invoiceAmount', 'to-thousand'],
-  ['settlementAmount', 'to-thousand'],
-  ['collectionAmount', 'to-thousand'],
-  ['receivableAmount', 'to-thousand']
+  ['contractAmount', ['to-thousand-ck', 'YUAN']],
+  ['invoiceAmount', ['to-thousand-ck', 'YUAN']],
+  ['settlementAmount', ['to-thousand-ck', 'YUAN']],
+  ['collectionAmount', ['to-thousand-ck', 'YUAN']],
+  ['receivableAmount', ['to-thousand-ck', 'YUAN']]
 ])
 
 // 合计
 function getSummaries(param) {
   return tableSummary(param, {
-    props: ['contractAmount', 'invoiceAmount', 'settlementAmount', 'receivableAmount'],
+    props: [['contractAmount', DP.YUAN], ['invoiceAmount', DP.YUAN], ['settlementAmount', DP.YUAN], ['receivableAmount', DP.YUAN]],
     toThousandFields: ['contractAmount', 'invoiceAmount', 'settlementAmount', 'receivableAmount']
   })
 }

@@ -81,6 +81,7 @@ import { detail } from '@/api/mes/team-report/off-staff-settlement'
 import { defineProps, defineEmits, ref, watch, inject, computed } from 'vue'
 
 import { tableSummary } from '@/utils/el-extra'
+import { DP } from '@/settings/config'
 
 import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'
@@ -186,6 +187,6 @@ async function fetchList() {
 }
 
 function getSummaries(param) {
-  return tableSummary(param, { props: ['completeQuantity', 'completeMete', 'price'] })
+  return tableSummary(param, { props: ['completeQuantity', 'completeMete', ['price', DP.YUAN]] })
 }
 </script>

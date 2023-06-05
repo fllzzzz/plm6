@@ -101,6 +101,7 @@ import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import pagination from '@crud/Pagination'
 import { parseTime } from '@/utils/date'
+import { DP } from '@/settings/config'
 import { digitUppercase, toThousand } from '@data-type/number'
 import { validate } from '@compos/form/use-table-validate'
 import { auditTypeEnum, supplierPayTypeEnum } from '@enum-ms/contract'
@@ -203,7 +204,7 @@ function handleSuccess() {
 // 合计
 function getSummaries(param) {
   return tableSummary(param, {
-    props: ['applyAmount'],
+    props: [['applyAmount', DP.YUAN]],
     toThousandFields: ['applyAmount']
   })
 }

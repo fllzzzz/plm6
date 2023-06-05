@@ -58,6 +58,7 @@ import crudApi from '@/api/contract/expense-entry/water-electricity-cost'
 
 import { waterElectricityCostPM as permission } from '@/page-permission/contract'
 import { costTypeEnum } from '@enum-ms/contract'
+import { DP } from '@/settings/config'
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
 import moment from 'moment'
@@ -123,7 +124,7 @@ CRUD.HOOK.handleRefresh = (crud, { data }) => {
     v.date = `${_startDate} ~ ${_endDate}`
     // 最后一条记录才能编辑并且不能为已摊销状态
     v.isEdit = i + 1 === length && !v.isAmortization
-    v.averageValue = v.totalAmount && v.usedMete ? (v.totalAmount / v.usedMete).toFixed(2) : 0
+    v.averageValue = v.totalAmount && v.usedMete ? (v.totalAmount / v.usedMete).toFixed(DP.YUAN) : 0
     return v
   })
 }

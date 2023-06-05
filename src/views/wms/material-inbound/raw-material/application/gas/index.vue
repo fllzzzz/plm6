@@ -59,6 +59,7 @@ import { defineProps, defineEmits, ref, watch, provide, nextTick, reactive, comp
 import { matClsEnum } from '@/utils/enum/modules/classification'
 import { orderSupplyTypeEnum, inboundFillWayEnum } from '@/utils/enum/modules/wms'
 import { isNotBlank, toFixed } from '@/utils/data-type'
+import { DP } from '@/settings/config'
 
 import useForm from '@/composables/form/use-form'
 import useMaxHeight from '@compos/use-max-height'
@@ -115,7 +116,7 @@ const totalAmount = computed(() => {
       })
     }
   }
-  return toFixed(amount, 2)
+  return toFixed(amount, DP.YUAN)
 })
 
 provide('matSpecRef', matSpecRef) // 供兄弟组件调用 删除
