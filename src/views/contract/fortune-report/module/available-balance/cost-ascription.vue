@@ -2,7 +2,17 @@
   <el-card v-loading="tableLoading" class="card-detail">
     <div>{{ costAscriptionEnum.VL[props.detailRow.costAscription.costAscriptionEnum] }}</div>
     <div>
-      总金额 <span class="blue"> <span v-thousand="props.detailRow.exportTaxRebate || 0" /> 元</span>
+      总金额
+      <span class="blue">
+        <span
+          v-thousand="
+            props.detailRow.costAscription.costAscriptionEnum === costAscriptionEnum.PERIOD_COSTS.V
+              ? props.detailRow.periodExpense || 0
+              : props.detailRow.projectRetention || 0
+          "
+        />
+        元</span
+      >
     </div>
     <div class="print-wrap">
       <print-table

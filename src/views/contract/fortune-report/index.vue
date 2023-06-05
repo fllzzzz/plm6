@@ -399,13 +399,15 @@ function openDetail(type, row) {
 
 CRUD.HOOK.handleRefresh = (crud, { data }) => {
   data.content = data.content?.map((v) => {
-    v.grossProfitRate = toFixed(v.grossProfitRate * 100, 2)
+    if (v.grossProfitRate) {
+      v.grossProfitRate = toFixed(v.grossProfitRate * 100, 2)
+    }
     v.unpaidAmount = v.contractAmount - v.collectionAmount
     v.collectionRate = toFixed((v.collectionAmount / v.contractAmount) * 100, 2)
     // 安全发货余额 = （合同金额 - 累计发货额）* 30%
     v.safetyBalance = (v.contractAmount - v.happenedAmount) * 0.3
     // 净利润 = 收款金额 - 综合成本 - 期间费用
-    v.retainedProfit = v.collectionAmount - v.costAmount - v.periodExpense
+    v.retainedProfit = v.collectionAmount ? v.collectionAmount - v.costAmount - v.periodExpense : '-'
     return v
   })
 }
