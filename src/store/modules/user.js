@@ -144,7 +144,7 @@ const actions = {
       // 如果是超级管理员【admin】加入系统管理模块
       menus.push({ name: '系统管理', id: -2, icon: 'module-system', redirect: '/system' })
     }
-    const arr = enclosureType ? [projectTypeEnum.STEEL, projectTypeEnum.CARBARN] : [projectTypeEnum.STEEL, projectTypeEnum.CARBARN, projectTypeEnum.ENCLOSURE, projectTypeEnum.BRIDGE]
+    const arr = enclosureType ? [projectTypeEnum.STEEL, projectTypeEnum.CARBARN, projectTypeEnum.BRIDGE] : [projectTypeEnum.STEEL, projectTypeEnum.CARBARN, projectTypeEnum.ENCLOSURE, projectTypeEnum.BRIDGE]
     const installArr = enclosureType ? [installProjectTypeEnum.ARTIFACT, installProjectTypeEnum.AUXILIARY] : [installProjectTypeEnum.ARTIFACT, installProjectTypeEnum.ENCLOSURE, installProjectTypeEnum.AUXILIARY]
     const deliveryArr = enclosureType ? [deliveryInstallTypeEnum.ARTIFACT] : [deliveryInstallTypeEnum.ARTIFACT, deliveryInstallTypeEnum.ENCLOSURE]
     const contractSaleTypeArr = enclosureType ? [contractSaleTypeEnum.STRUCTURE, contractSaleTypeEnum.MACHINE_PART, contractSaleTypeEnum.AUXILIARY_MATERIAL] : [contractSaleTypeEnum.STRUCTURE, contractSaleTypeEnum.ENCLOSURE, contractSaleTypeEnum.MACHINE_PART, contractSaleTypeEnum.AUXILIARY_MATERIAL]
