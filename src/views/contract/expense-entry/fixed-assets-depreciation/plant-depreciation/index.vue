@@ -1,26 +1,29 @@
 <template>
   <div class="app-container">
-    <div class="header-container">
-      <mHeader />
-    </div>
+    <mHeader />
     <common-table
       ref="tableRef"
       v-loading="crud.loading"
       :data="crud.data"
       :empty-text="crud.emptyText"
       :max-height="maxHeight"
-      row-key="id"
-      style="width: 100%"
     >
       <el-table-column prop="index" label="序号" align="center" width="60" type="index" />
-      <el-table-column v-if="columns.visible('name')" align="center" key="name" prop="name" :show-overflow-tooltip="true" label="名称" />
+      <el-table-column
+        v-if="columns.visible('name')"
+        align="center"
+        key="name"
+        prop="name"
+        :show-overflow-tooltip="true"
+        label="厂房名称"
+      />
       <el-table-column
         v-if="columns.visible('originalValue')"
         align="center"
         key="originalValue"
         prop="originalValue"
         :show-overflow-tooltip="true"
-        label="原值"
+        label="初始价值"
       />
       <el-table-column
         v-if="columns.visible('depreciationYear')"
@@ -71,6 +74,18 @@
         label="月折旧额"
       />
       <el-table-column
+        v-if="columns.visible('startDepreciation')"
+        align="center"
+        key="startDepreciation"
+        prop="startDepreciation"
+        :show-overflow-tooltip="true"
+        label="是否开始折旧"
+      >
+        <template #default="{ row }">
+        <el-tag v-if="row.startDepreciation" type="success" size="medium" effect="plain">是</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column
         v-if="columns.visible('boolStatus')"
         align="center"
         key="boolStatus"
@@ -89,9 +104,9 @@
           />
         </template>
       </el-table-column>
-      <el-table-column align="center" label="操作">
-        <template v-slot="scope">
-          <udOperation :data="scope.row" :disabledEdit="!scope.row.boolStatus" :disabledDel="!scope.row.boolStatus" :permission="permission" />
+      <el-table-column v-if="checkPermission([...permission.edit, ...permission.del])" align="center" label="操作" width="140">
+        <template v-slot="{ row }">
+          <udOperation :data="row" :disabledEdit="!row.boolStatus" :disabledDel="!row.boolStatus" />
         </template>
       </el-table-column>
     </common-table>
@@ -103,15 +118,15 @@
 </template>
 <script setup>
 import { ref } from 'vue'
-import { enabledEnum } from '@enum-ms/common'
-import crudApi, { editStatus } from '@/api/contract/expense-entry/fixed-assets-depreciation'
+import crudApi, { editStatus } from '@/api/contract/expense-entry/plant-depreciation'
 
 import { plantDepreciationPM as permission } from '@/page-permission/contract'
+import checkPermission from '@/utils/system/check-permission'
+import { ElMessageBox, ElNotification } from 'element-plus'
+import { enabledEnum } from '@enum-ms/common'
+
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
-import { ElMessageBox, ElNotification } from 'element-plus'
-import checkPermission from '@/utils/system/check-permission'
-
 import pagination from '@crud/Pagination'
 import udOperation from '@crud/UD.operation'
 import mForm from './module/form.vue'
@@ -123,22 +138,21 @@ const optShow = {
   del: false,
   download: false
 }
+
 const tableRef = ref()
-const { crud, CRUD, columns } = useCRUD(
+const { crud, columns } = useCRUD(
   {
     title: '厂房折旧',
     sort: [],
     optShow: { ...optShow },
     permission: { ...permission },
     crudApi: { ...crudApi },
-    hasPagination: true,
-    formStore: true
+    hasPagination: true
   },
   tableRef
 )
 
 async function changeStatus(data, val) {
-  console.log(data, val)
   try {
     await ElMessageBox.confirm(`此操作将 ${data.name} 的状态改为 ${enabledEnum.VL[val]}, 是否继续？`, '提示', {
       confirmButtonText: '确定',
@@ -149,19 +163,11 @@ async function changeStatus(data, val) {
     crud.toQuery()
     ElNotification({ title: `${data.name}的状态修改成功`, type: 'success', duration: 3000 })
   } catch (error) {
-    console.log('变更是否固定资产折旧失败', error)
+    console.log('厂房折旧状态变更失败', error)
     data.boolStatus = data.boolStatus === enabledEnum.TRUE.V ? enabledEnum.FALSE.V : enabledEnum.TRUE.V
   }
 }
 const { maxHeight } = useMaxHeight({
   paginate: true
 })
-
-CRUD.HOOK.handleRefresh = (crud, res) => {
-  res.data.content = res.data.content.map(v => {
-    return v
-  })
-}
 </script>
-<style lang="scss" scoped>
-</style>

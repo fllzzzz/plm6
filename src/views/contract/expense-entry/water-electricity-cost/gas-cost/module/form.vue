@@ -4,9 +4,9 @@
     :close-on-click-modal="false"
     :before-close="crud.cancelCU"
     :visible="crud.status.cu > 0"
-    :title="`${isEdit ? '编辑' : '新增'} ${gasType} 气体统计`"
+    :title="`${isEdit ? '编辑' : '新增'}气体`"
     :show-close="false"
-    width="500px"
+    width="450px"
     top="10vh"
   >
     <template #titleRight>
@@ -18,53 +18,52 @@
       </span>
     </template>
     <div class="form">
-      <el-form ref="formRef" :model="form" :rules="rules" size="small" label-width="140px" class="demo-form">
-        <el-form-item label="年份：" prop="year">
+      <el-form ref="formRef" :model="form" :rules="rules" size="small" label-width="100px">
+        <el-form-item label="气体分类" prop="classifyId">
+          <el-cascader
+            v-model="form.classifyId"
+            :options="props.gasTree"
+            :props="{ value: 'id', label: 'name', children: 'children', expandTrigger: 'hover', emitPath: false }"
+            show-all-levels
+            clearable
+            placeholder="请选择气体分类"
+            style="width: 270px"
+            @change="handleGasChange"
+          />
+        </el-form-item>
+        <el-form-item label="起始日期" prop="startDate">
           <el-date-picker
-            v-model="form.year"
-            type="year"
-            size="small"
-            format="YYYY"
-            value-format="YYYY"
-            placeholder="选择日期"
+            v-model="form.startDate"
+            type="date"
+            value-format="x"
+            placeholder="选择起始日期"
+            :disabled="true"
+            style="width: 270px"
+          />
+        </el-form-item>
+        <el-form-item label="结束日期" prop="endDate">
+          <el-date-picker
+            v-model="form.endDate"
+            type="date"
+            value-format="x"
+            :disabled="!form.startDate"
+            placeholder="选择结束日期"
             style="width: 270px"
             :disabled-date="disabledDate"
-            @change="handleChange"
           />
         </el-form-item>
-        <!-- <el-form-item label="月份：" prop="month">
-          <el-input-number
-            v-model="form.month"
-            style="width: 270px"
-            placeholder="输入月份"
-            controls-position="right"
-            :step="1"
-            :min="1"
-            :max="12"
-          />
-        </el-form-item> -->
-        <el-form-item label="月份：" prop="month">
-          <common-select
-            v-model="form.month"
-            :options="monthArr"
-            type="other"
-            placeholder="请选择月份"
-            :data-structure="{ key: 'id', label: 'name', value: 'id' }"
-            class="filter-item"
-            clearable
-            style="width: 270px"
-            :disabled="isEdit"
-          />
+        <el-form-item label="气体单位" prop="accountingUnit">
+          <span>{{ form.accountingUnit }}</span>
         </el-form-item>
-        <el-form-item :label="`用量（${form.accountingUnit ? form.accountingUnit : ''}）：`" prop="usedMete">
-          <el-input-number v-model="form.usedMete" style="width: 270px" placeholder="输入用量" controls-position="right" :min="0" />
+        <el-form-item label="气体用量" prop="usedMete">
+          <el-input-number v-model="form.usedMete" style="width: 270px" placeholder="请输入用量" controls-position="right" :min="0" />
         </el-form-item>
-        <el-form-item label="费用总额（元）：" prop="totalAmount">
+        <el-form-item label="总额（元）" prop="totalAmount">
           <el-input-number
             v-show-thousand
             v-model="form.totalAmount"
             style="width: 270px"
-            placeholder="输入费用总额"
+            placeholder="请输入总额"
             controls-position="right"
             :min="0"
             :max="9999999999"
@@ -77,43 +76,35 @@
 
 <script setup>
 import { ref, defineProps, computed } from 'vue'
-// import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
-import { regForm } from '@compos/use-crud'
-import { ElMessage } from 'element-plus'
+import { getDate } from '@/api/contract/expense-entry/gas-cost'
 
-const prop = defineProps({
-  query: {
-    type: Object
+import { regForm } from '@compos/use-crud'
+
+const props = defineProps({
+  rowDetail: {
+    type: Object,
+    default: () => {}
   },
-  accountingUnit: {
-    type: String,
-    default: ''
-  },
-  gasType: {
-    type: String,
-    default: ''
-  },
-  detailData: {
+  gasTree: {
     type: Array,
     default: () => []
+  },
+  lastGasKV: {
+    type: Object,
+    default: () => {}
   }
 })
 
 const formRef = ref()
 
-const monthArr = ref([])
-for (let i = 1; i <= 12; i++) {
-  monthArr.value.push({
-    id: i,
-    name: i
-  })
-}
 const defaultForm = {
   id: undefined,
-  year: undefined,
-  month: undefined,
+  classifyId: undefined,
+  accountingUnit: undefined,
   usedMete: undefined,
-  totalAmount: undefined
+  totalAmount: undefined,
+  startDate: undefined,
+  endDate: undefined
 }
 
 const { crud, form, CRUD } = regForm(defaultForm, formRef)
@@ -122,6 +113,7 @@ const { crud, form, CRUD } = regForm(defaultForm, formRef)
 const isEdit = computed(() => {
   return crud.status.edit > 0
 })
+
 const validateQuantity = (rule, value, callback) => {
   if (!value) {
     callback(new Error('填写数据必须大于0'))
@@ -129,84 +121,63 @@ const validateQuantity = (rule, value, callback) => {
   callback()
 }
 
+const validateAccountingUnit = (rule, value, callback) => {
+  if (!form.classifyId) {
+    callback(new Error('请先选择气体分类'))
+  } else if (!form.accountingUnit) {
+    callback(new Error('请联系管理员进行对科目进行计量配置'))
+  }
+  callback()
+}
+
 const rules = {
-  month: [{ required: true, message: '请输入月份', trigger: 'blur' }],
+  startDate: [{ required: true, message: '请选择起始日期', trigger: 'blur' }],
+  endDate: [{ required: true, message: '请选择结束日期', trigger: 'blur' }],
+  classifyId: [{ required: true, message: '请选择气体分类', trigger: 'blur' }],
+  accountingUnit: [{ required: true, validator: validateAccountingUnit, trigger: 'blur' }],
   usedMete: [{ required: true, validator: validateQuantity, trigger: 'blur' }],
   totalAmount: [{ required: true, validator: validateQuantity, trigger: 'blur' }]
 }
 
-CRUD.HOOK.beforeToAdd = async (crud, form) => {
-  form.year = crud.query.year
-  form.accountingUnit = crud.query.unit
-  if (!form.accountingUnit) {
-    ElMessage.error('请到科目管理里面配置对应新增的气体的计量单位')
-    return false
+// 选择气体
+function handleGasChange(id) {
+  form.accountingUnit = props.lastGasKV[id]?.accountingUnit
+  if (id) {
+    setDate()
+  } else {
+    form.startDate = undefined
+    form.endDate = undefined
   }
 }
 
-// 处理刷新数据
-CRUD.HOOK.beforeToQuery = async () => {}
-// 编辑之前
-CRUD.HOOK.beforeToEdit = async () => {
-  form.year = prop.query.year
+// 禁止时间
+function disabledDate(time) {
+  return time > new Date() || time < form.startDate
+}
+
+// 设置时间
+async function setDate() {
+  try {
+    const data = await getDate({ classifyId: form.classifyId })
+    form.startDate = `${data.startDate || ''}`
+    form.endDate = `${data.endDate || ''}`
+  } catch (error) {
+    console.log('获取气体新增的时间', error)
+  }
+}
+
+// 新增需要获取开始、结束时间
+CRUD.HOOK.afterToAdd = (crud, form) => {
+  // 末级
+  if (props.rowDetail?.id && !props.rowDetail.children) {
+    form.classifyId = props.rowDetail.id
+    handleGasChange(form.classifyId)
+  }
 }
 
 // 提交前
 CRUD.HOOK.beforeSubmit = async () => {
   const valid = await formRef.value.validate()
   if (!valid) return false
-  form.classifyId = crud.query.classifyId
-  form.year = form.year ? form.year : prop.query.year
-  form.accountingUnit = crud.query.unit
-  crud.query.year = form.year
-  crud.refresh()
-  // crud.form = await numFmtByBasicClass(
-  //   form,
-  //   {
-  //     toSmallest: true,
-  //     toNum: true
-  //   },
-  //   {
-  //     mete: ['usedMete'],
-  //     amount: ['avgUnitPrice']
-  //   }
-  // )
-  // prop.detailData.forEach(async (v) => {
-  //   if ((v.year === crud.query.year && v.month !== form.month) || (v.year !== crud.query.year && v.month === form.month)) {
-  //     crud.form = await numFmtByBasicClass(
-  //       form,
-  //       {
-  //         toSmallest: false,
-  //         toNum: true
-  //       },
-  //       {
-  //         mete: ['usedMete'],
-  //         amount: ['avgUnitPrice']
-  //       }
-  //     )
-  //     crud.data = await numFmtByBasicClass(
-  //       crud.data,
-  //       {
-  //         toSmallest: false,
-  //         toNum: true
-  //       },
-  //       {
-  //         mete: ['usedMete'],
-  //         amount: ['avgUnitPrice']
-  //       }
-  //     )
-  //   }
-  // })
-}
-
-function disabledDate(time) {
-  return time > new Date()
-}
-
-function handleChange() {
-  crud.query.year = form.year
-  crud.refresh()
 }
 </script>
-
-<style lang="scss" scoped></style>

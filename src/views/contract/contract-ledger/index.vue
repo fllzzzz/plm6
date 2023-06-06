@@ -54,9 +54,21 @@
         <div @click="openContractMoney(scope.row.id)" style="cursor:pointer;color:#409eff;text-align:right;">{{ isNotBlank(scope.row.contractAmount)? toThousand(scope.row.contractAmount): '-' }}</div>
       </template>
     </el-table-column>
-    <el-table-column v-if="columns.visible('settlementAmount')" key="settlementAmount" prop="settlementAmount" label="结算额" align="center">
+    <el-table-column v-if="columns.visible('settlementAmount')" key="settlementAmount" prop="settlementAmount" label="结算额" align="right">
       <template v-slot="scope">
         <div>{{ scope.row.settlementAmount? toThousand(scope.row.settlementAmount): '-' }}</div>
+      </template>
+    </el-table-column>
+    <el-table-column v-if="columns.visible('exportTaxRebate')" key="exportTaxRebate" prop="exportTaxRebate" label="出口退税" align="right">
+      <template v-slot="scope">
+        <div @click="openTax(scope.row)" style="cursor:pointer;">
+          <span v-if="scope.row.unCheckExportTaxRebateCount > 0 && checkPermission(permission.exportTaxRebate.audit)">
+            <el-badge :value="scope.row.unCheckExportTaxRebateCount" :max="99">
+              <svg-icon icon-class="notify"  style="color:#e6a23c;font-size:15px;"/>
+            </el-badge>
+          </span>
+          <span style="color:#409eff;text-align:right;margin-left:8px;">{{ isNotBlank(scope.row.exportTaxRebate)? toThousand(scope.row.exportTaxRebate): '-' }}</span>
+        </div>
       </template>
     </el-table-column>
     <el-table-column v-if="columns.visible('collectionAmount')" key="collectionAmount" prop="collectionAmount" label="累计收款" align="right">
@@ -71,7 +83,7 @@
         </div>
       </template>
     </el-table-column>
-    <el-table-column v-if="columns.visible('collectionRate')" key="collectionRate" prop="collectionRate" label="收款比例" align="center" width="80px">
+    <el-table-column v-if="columns.visible('collectionRate')" key="collectionRate" prop="collectionRate" label="收款比例" align="right" width="80px">
       <template v-slot="scope">
         <div>{{ scope.row.collectionRate? (scope.row.collectionRate*100).toFixed(2)+'%': '-' }}</div>
       </template>
@@ -88,29 +100,31 @@
         </div>
       </template>
     </el-table-column>
-    <el-table-column v-if="columns.visible('invoiceRate')" key="invoiceRate" prop="invoiceRate" label="开票比例" align="center" width="80px">
+    <el-table-column v-if="columns.visible('invoiceRate')" key="invoiceRate" prop="invoiceRate" label="开票比例" align="right" width="80px">
       <template v-slot="scope">
         <div>{{ scope.row.invoiceRate? (scope.row.invoiceRate*100).toFixed(2)+'%': '-' }}</div>
       </template>
     </el-table-column>
-    <el-table-column v-if="columns.visible('deliverInstallAmount')" key="deliverInstallAmount" prop="deliverInstallAmount" label="累计发生额" align="center">
+    <el-table-column v-if="columns.visible('deliverInstallAmount')" key="deliverInstallAmount" prop="deliverInstallAmount" label="累计发货额" align="center">
       <template v-slot="scope">
         <div @click="openOccurAmount(scope.row.id)" style="cursor:pointer;color:#409eff;text-align:right;">{{ isNotBlank(scope.row.deliverInstallAmount)? toThousand(scope.row.deliverInstallAmount): '-' }}</div>
       </template>
     </el-table-column>
-    <el-table-column v-if="columns.visible('availableBalance')" key="availableBalance" prop="availableBalance" label="可用余额" align="center">
+    <el-table-column v-if="columns.visible('availableBalance')" key="availableBalance" prop="availableBalance" label="可用余额" align="right">
       <template v-slot="scope">
         <div>{{ scope.row.availableBalance? toThousand(scope.row.availableBalance): '-' }}</div>
       </template>
     </el-table-column>
     <el-table-column v-if="columns.visible('status')" key="status" prop="status" label="项目状态" align="center" width="80px">
       <template v-slot="scope">
-        <el-tag :type="scope.row.status===projectStatusEnum.SETTLED.V?'success':'warning'" effect="plain">{{ scope.row.status? projectStatusEnum.VL[scope.row.status]:'-' }}</el-tag>
+        <el-tag :type="scope.row.status===projectStatusEnum.SETTLED.V?'success':'warning'" size="medium" effect="plain">{{ scope.row.status? projectStatusEnum.VL[scope.row.status]:'-' }}</el-tag>
       </template>
     </el-table-column>
   </common-table>
   <!-- 合同额 -->
   <contract-money v-model="moneyVisible" :projectId="currentProjectId"/>
+  <!-- 出口退税 -->
+  <export-tax-rebate v-model="taxVisible" :current-row="currentRow" @success="crud.toQuery"/>
   <!-- 发生额 -->
   <occur-amount v-model="occurVisible" :projectId="currentProjectId"/>
   <!-- 收付款 -->
@@ -123,21 +137,24 @@
 <script setup>
 import crudApi from '@/api/contract/contract-ledger'
 import { ref } from 'vue'
+import { mapGetters } from '@/store/lib'
+
 import { contractLedgerPM as permission } from '@/page-permission/contract'
 import checkPermission from '@/utils/system/check-permission'
-import useMaxHeight from '@compos/use-max-height'
-import useCRUD from '@compos/use-crud'
-import pagination from '@crud/Pagination'
-import { mapGetters } from '@/store/lib'
-import mHeader from './module/header'
 import { businessTypeEnum, projectTypeEnum, projectStatusEnum } from '@enum-ms/contract'
 import { projectNameFormatter } from '@/utils/project'
-import occurAmount from './module/occur-amount'
-import contractMoney from './module/contract-money'
-import collectionAndInvoice from './module/collection-and-invoice'
 import { parseTime } from '@/utils/date'
 import { toThousand } from '@data-type/number'
 import { isNotBlank } from '@data-type/index'
+
+import useMaxHeight from '@compos/use-max-height'
+import useCRUD from '@compos/use-crud'
+import pagination from '@crud/Pagination'
+import mHeader from './module/header'
+import occurAmount from './module/occur-amount'
+import contractMoney from './module/contract-money'
+import exportTaxRebate from './module/export-tax-rebate'
+import collectionAndInvoice from './module/collection-and-invoice'
 
 const { currentProjectType } = mapGetters(['currentProjectType'])
 
@@ -150,6 +167,7 @@ const optShow = {
 
 const tableRef = ref()
 const moneyVisible = ref(false)
+const taxVisible = ref(false)
 const occurVisible = ref(false)
 const tabVisible = ref(false)
 const currentProjectId = ref()
@@ -179,6 +197,14 @@ function openContractMoney(row) {
   }
   currentProjectId.value = row
   moneyVisible.value = true
+}
+
+function openTax(row) {
+  if (!checkPermission(permission.exportTaxRebate.get)) {
+    return
+  }
+  currentRow.value = row
+  taxVisible.value = true
 }
 
 function openOccurAmount(row) {

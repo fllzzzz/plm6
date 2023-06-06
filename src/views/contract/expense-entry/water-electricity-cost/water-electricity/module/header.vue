@@ -14,7 +14,7 @@
         :disabled-date="disabledDate"
         @change="crud.toQuery"
       />
-      <common-radio-button v-model="query.type" :options="costTypeEnum.ENUM" class="filter-item" type="enum" @change="handleTypeChange" />
+      <common-radio-button v-model="query.type" :options="costTypeEnum.ENUM" class="filter-item" type="enum" @change="handleChange" />
       <common-radio-button
         v-if="query.type === costTypeEnum.ELECTRIC_COST.V"
         v-model="query.childType"
@@ -23,21 +23,26 @@
         type="enum"
         @change="crud.toQuery"
       />
-      <!-- <rrOperation /> -->
     </div>
     <crudOperation>
       <template #viewLeft>
-        <print-table v-permission="crud.permission.print" :api-key="`${crud.query.type === costTypeEnum.WATER_COST.V? 'waterRecord':crud.query.childType === usedElectricityTypeEnum.INDUSTRY_ELECTRIC.V? 'industryElectricRecord' : 'civilElectricRecord'}`" :params="{ ...query }" size="mini" type="warning" class="filter-item" />
+        <print-table
+          v-permission="crud.permission.print"
+          :api-key="`${crud.query.type === costTypeEnum.WATER_COST.V ? 'waterRecord' : 'electricRecord'}`"
+          :params="{ ...query }"
+          size="mini"
+          type="warning"
+        />
       </template>
     </crudOperation>
   </div>
 </template>
 <script setup>
 import { parseTime } from '@/utils/date'
-import { regHeader } from '@compos/use-crud'
 import { costTypeEnum, usedElectricityTypeEnum } from '@enum-ms/contract'
+
+import { regHeader } from '@compos/use-crud'
 import crudOperation from '@crud/CRUD.operation'
-// import rrOperation from '@crud/RR.operation'
 
 const defaultQuery = {
   year: parseTime(new Date(), '{y}'),
@@ -52,15 +57,11 @@ function disabledDate(time) {
 
 const { crud, query } = regHeader(defaultQuery)
 
-function handleTypeChange(val) {
-  if (val === costTypeEnum.WATER_COST.V) {
-    query.childType = undefined
-  } else {
+function handleChange() {
+  if (query.type === costTypeEnum.WATER_COST.V) {
+    // 水费数据库里存的就是 usedElectricityTypeEnum.INDUSTRY_ELECTRIC.V
     query.childType = usedElectricityTypeEnum.INDUSTRY_ELECTRIC.V
   }
   crud.toQuery()
 }
 </script>
-
-<style lang="scss" scoped>
-</style>
