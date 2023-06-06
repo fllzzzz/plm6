@@ -62,6 +62,7 @@
             v-model="form.expenseTypeId"
             :options="expenseList"
             type="other"
+            :disabled="crud.status.edit >= 1"
             :data-structure="{ key: 'id', label: 'name', value: 'id' }"
             class="filter-item"
             clearable

@@ -337,30 +337,30 @@ export const amortizationManagePM = {
   amortization: ['amortization_manage:amortization'] // 摊销
 }
 
-// // 费用录入/管理费/员工工资
-// export const salaryCostPM = {
-//   get: ['salary_cost:get'], // 列表
-//   add: ['salary_cost:add'], // 新增
-//   edit: ['salary_cost:edit'], // 修改
-//   del: ['salary_cost:del'], // 删除
-//   print: ['salary_cost:print'] // 打印
-// }
+// 费用录入/管理费/员工工资
+export const salaryCostPM = {
+  get: ['salary_cost:get'], // 列表
+  add: ['salary_cost:add'], // 新增
+  edit: ['salary_cost:edit'], // 修改
+  del: ['salary_cost:del'], // 删除
+  print: ['salary_cost:print'] // 打印
+}
 
-// // 费用录入/管理费/物业费
-// export const propertyCostPM = {
-//   get: ['property_cost:get'], // 列表
-//   add: ['property_cost:add'], // 新增
-//   edit: ['property_cost:edit'], // 修改
-//   del: ['property_cost:del'], // 删除
-//   print: ['property_cost:print'] // 打印
-// }
+// 费用录入/管理费/物业费
+export const propertyCostPM = {
+  get: ['property_cost:get'], // 列表
+  add: ['property_cost:add'], // 新增
+  edit: ['property_cost:edit'], // 修改
+  del: ['property_cost:del'], // 删除
+  print: ['property_cost:print'] // 打印
+}
 
-// // 费用录入/检测费
-// export const expenseTestingCostPM = {
-//   get: ['expense_testing_cost:get'], // 列表
-//   add: ['expense_testing_cost:add'], // 新增
-//   detail: ['expense_testing_cost:detail'] // 详情
-// }
+// 费用录入/检测费
+export const expenseTestingCostPM = {
+  get: ['expense_testing_cost:get'], // 列表
+  add: ['expense_testing_cost:add'], // 新增
+  detail: ['expense_testing_cost:detail'] // 详情
+}
 
 // --------------------------- 费用录入 end --------------------------------
 
