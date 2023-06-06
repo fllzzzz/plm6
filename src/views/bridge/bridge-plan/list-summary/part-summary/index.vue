@@ -187,11 +187,11 @@
           min-width="100px"
         />
         <el-table-column
-          v-if="columns.visible('remark')"
-          key="remark"
-          prop="remark"
+          v-if="columns.visible('category')"
+          key="category"
+          prop="category"
           :show-overflow-tooltip="true"
-          label="备注"
+          label="类别"
           min-width="120"
         />
       </common-table>
