@@ -101,11 +101,13 @@
 <script setup>
 import crudApi from '@/api/plan/plan-summary'
 import { ref } from 'vue'
+
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
-import mHeader from './module/header'
 import { isNotBlank } from '@data-type/index'
 import { planSummaryListPM as permission } from '@/page-permission/plan'
+
+import mHeader from './module/header'
 
 const optShow = {
   add: false,
@@ -118,7 +120,7 @@ const tableRef = ref()
 const { crud, columns, CRUD } = useCRUD(
   {
     title: '排产汇总',
-    permission: { ...permission },
+    permission: { ...permission.value },
     optShow: { ...optShow },
     requiredQuery: ['type', 'year'],
     crudApi: { ...crudApi },

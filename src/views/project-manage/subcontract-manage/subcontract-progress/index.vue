@@ -92,7 +92,7 @@
     <div v-else>
       <el-tag type="danger" size="medium" style="margin-bottom: 10px"> * 您好，请先选择业务类型为项目承包的项目，当前页面需要选择业务类型为项目承包方可查看 </el-tag>
     </div>
-    <subcontractDetail v-model="detailVisible" :detailInfo="detailInfo"/>
+    <subcontractDetail v-model="detailVisible" :detailInfo="detailInfo" :globalProject="globalProject"/>
   </div>
 </template>
 
@@ -105,7 +105,7 @@ import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import checkPermission from '@/utils/system/check-permission'
 import { mapGetters } from '@/store/lib'
-import { TechnologyTypeAllEnum, businessTypeEnum } from '@enum-ms/contract'
+import { TechnologyTypeAllEnum, businessTypeEnum, projectTypeEnum } from '@enum-ms/contract'
 import { manufactureTypeEnum, areaPlanTypeEnum } from '@enum-ms/plan'
 import { subcontractProgressPM as permission } from '@/page-permission/project'
 import { dateDifference } from '@/utils/date'
@@ -224,8 +224,8 @@ CRUD.HOOK.handleRefresh = (crud, data) => {
             value.meteRate = value.completedMete && value.mete ? Number((value.completedMete / value.mete * 100).toFixed(1)) : 0
             value.meteColor = '#1890ff'
             value.monomerId = k.monomerId
-            value.decimal = k.type === TechnologyTypeAllEnum.STRUCTURE.V ? DP.COM_WT__KG : DP.MES_ENCLOSURE_L__M
-            value.unit = k.type === TechnologyTypeAllEnum.STRUCTURE.V ? 't' : 'm'
+            value.decimal = (k.type === TechnologyTypeAllEnum.STRUCTURE.V || globalProject.value.projectType === projectTypeEnum.BRIDGE.V) ? DP.COM_WT__KG : DP.MES_ENCLOSURE_L__M
+            value.unit = (k.type === TechnologyTypeAllEnum.STRUCTURE.V || globalProject.value.projectType === projectTypeEnum.BRIDGE.V) ? 't' : 'm'
           })
         }
         const deepVal = k.detailTraceList.find(m => m.type === areaPlanTypeEnum.DEEPEN.V) || undefined
@@ -253,8 +253,8 @@ CRUD.HOOK.handleRefresh = (crud, data) => {
                 values.meteColor = '#1890ff'
                 values.monomerId = k.monomerId
                 values.areaId = value.id
-                values.decimal = k.type === TechnologyTypeAllEnum.STRUCTURE.V ? DP.COM_WT__KG : DP.MES_ENCLOSURE_L__M
-                values.unit = k.type === TechnologyTypeAllEnum.STRUCTURE.V ? 't' : 'm'
+                values.decimal = (k.type === TechnologyTypeAllEnum.STRUCTURE.V || globalProject.value.projectType === projectTypeEnum.BRIDGE.V) ? DP.COM_WT__KG : DP.MES_ENCLOSURE_L__M
+                values.unit = (k.type === TechnologyTypeAllEnum.STRUCTURE.V || globalProject.value.projectType === projectTypeEnum.BRIDGE.V) ? 't' : 'm'
               })
             }
             const deepVal = value.planDetailList.find(m => m.type === areaPlanTypeEnum.DEEPEN.V)

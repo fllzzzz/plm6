@@ -124,7 +124,9 @@ export const MOBILE_MODEL_PATH = '/mobile-model-preview'
 
 export const QR_SCAN_F_TYPE = {
   MEW_PRODUCTION: 1, // 建钢产品
-  MES_PACKAGE_SHIP: 2 // 建钢打包发运
+  MES_PACKAGE_SHIP: 2, // 建钢打包发运
+  BRIDGE_PRODUCTION: 16, // 桥梁产品
+  BRIDGE_PACKAGE_SHIP: 32 // 桥梁打包发运
 }
 
 export const QR_SCAN_TYPE = {

@@ -35,6 +35,16 @@ import { getChangeReasonConfig } from '@/api/config/system-config/change-reason'
 import { getSubcontractType } from '@/api/config/project-config/subcontract-config'
 import { getQualityProblemType } from '@/api/config/project-config/quality-problem-config'
 import { getVisaReason } from '@/api/config/project-config/visa-reason-config'
+
+// 桥梁
+import { getProcessAllSimple as getBridgeProcessAllSimple } from '@/api/bridge/common'
+import { getAllCutConfigs as getBridgeAllCutConfigs } from '@/api/bridge/common'
+import { getInspectionTeamAllSimple as getBridgeInspectionTeamAllSimple } from '@/api/bridge/common'
+import { getLinesAllSimple as getBridgeLinesAllSimple } from '@/api/bridge/common'
+import { getAllFactoryWorkshopLines as getBridgeAllFactoryWorkshopLines } from '@/api/bridge/common'
+import { getProductionTeamAllSimple as getBridgeProductionTeamAllSimple } from '@/api/bridge/common'
+import { getWorkshopsAllSimple as getBridgeWorkshopsAllSimple } from '@/api/bridge/common'
+
 import moment from 'moment'
 
 /**
@@ -73,16 +83,26 @@ const state = {
   warehouse: [], // 存储仓库
   workshops: [], // 车间
   workshopKV: {}, // 车间id:value 格式
+  bridgeWorkshops: [], // 桥梁-车间
   productLines: [], // 工厂-车间-生产线
+  bridgeProductLines: [], // 桥梁工厂-车间-生产线
   productionTeam: [], // 生产班组
-  productionTeamKV: {}, // 生产班组id:value 格式
+  productionTeamKV: {}, // 生产班组id:value 格式,
+  bridgeProductionTeam: [], // 桥梁-生产班组
+  bridgeProductionTeamKV: {}, // 桥梁-生产班组id:value 格式
   inspectionTeam: [], // 质检班组
   inspectionTeamKV: {}, // 生产班组id:value 格式
+  bridgeInspectionTeam: [], // 桥梁质检班组
+  bridgeInspectionTeamKV: {}, // 桥梁生产班组id:value 格式
   onlyProductLines: [], // 生产线
   enclosureProductLines: [], // 围护生产线
+  bridgeOnlyProductLines: [], // 桥梁生产线
   cutConfigs: [], // 切割配置（所有）
   cutConfigKV: {}, // 切割配置 id:value 格式
+  bridgeCutConfigs: [], // 桥梁切割配置（所有）
+  bridgeCutConfigKV: {}, // 桥梁切割配置 id:value 格式
   process: [], // 工序
+  bridgeProcess: [], // 桥梁工序
   users: [], // 人员列表
   dept: [], // 部门列表
   userDeptTree: [], // 人员部门树
@@ -107,13 +127,20 @@ const state = {
     factories: false,
     warehouse: false,
     workshops: false,
+    bridgeWorkshops: false,
     productionTeam: false,
+    bridgeProductionTeam: false,
     inspectionTeam: false,
+    bridgeInspectionTeam: false,
     productLines: false,
     enclosureProductLines: false,
+    bridgeProductLines: false,
     onlyProductLines: false,
+    bridgeOnlyProductLines: false,
     cutConfigs: false,
+    bridgeCutConfigs: false,
     process: false,
+    bridgeProcess: false,
     users: false,
     dept: false,
     unit: false,
@@ -191,6 +218,9 @@ const mutations = {
       state.workshopKV[v.id] = v
     })
   },
+  SET_BRIDGE_WORKSHOPS(state, bridgeWorkshops) {
+    state.bridgeWorkshops = bridgeWorkshops
+  },
   SET_WAREHOUSE(state, warehouse) {
     state.warehouse = warehouse
   },
@@ -202,6 +232,14 @@ const mutations = {
       state.productionTeamKV[v.id] = v
     })
   },
+  SET_BRIDGE_PRODUCTION_TEAM(state, bridgeProductionTeam) {
+    state.bridgeProductionTeam = bridgeProductionTeam
+    // kv
+    state.bridgeProductionTeamKV = {}
+    bridgeProductionTeam.forEach((v) => {
+      state.bridgeProductionTeamKV[v.id] = v
+    })
+  },
   SET_INSPECTION_TEAM(state, inspectionTeam) {
     state.inspectionTeam = inspectionTeam
     // kv
@@ -210,14 +248,28 @@ const mutations = {
       state.inspectionTeamKV[v.id] = v
     })
   },
+  SET_BRIDGE_INSPECTION_TEAM(state, bridgeInspectionTeam) {
+    state.bridgeInspectionTeam = bridgeInspectionTeam
+    // kv
+    state.bridgeInspectionTeamKV = {}
+    bridgeInspectionTeam.forEach((v) => {
+      state.bridgeInspectionTeamKV[v.id] = v
+    })
+  },
   SET_PRODUCT_LINES(state, productLines) {
     state.productLines = productLines
   },
   SET_ENCLOSURE_PRODUCT_LINES(state, enclosureProductLines) {
     state.enclosureProductLines = enclosureProductLines
   },
+  SET_BRIDGE_PRODUCT_LINES(state, bridgeProductLines) {
+    state.bridgeProductLines = bridgeProductLines
+  },
   SET_ONLY_PRODUCT_LINES(state, onlyProductLines) {
     state.onlyProductLines = onlyProductLines
+  },
+  SET_BRIDGE_ONLY_PRODUCT_LINES(state, bridgeOnlyProductLines) {
+    state.bridgeOnlyProductLines = bridgeOnlyProductLines
   },
   SET_CUT_CONFIGS(state, cutConfigs) {
     state.cutConfigs = cutConfigs
@@ -226,8 +278,15 @@ const mutations = {
     //   state.cutConfigKV[v.id] = v
     // })
   },
+  SET_BRIDGE_CUT_CONFIGS(state, bridgeCutConfigs) {
+    state.bridgeCutConfigs = bridgeCutConfigs
+    state.bridgeCutConfigKV = {}
+  },
   SET_PROCESS(state, process) {
     state.process = process
+  },
+  SET_BRIDGE_PROCESS(state, bridgeProcess) {
+    state.bridgeProcess = bridgeProcess
   },
   SET_USERS(state, users) {
     state.users = users
@@ -419,6 +478,12 @@ const actions = {
     commit('SET_LOADED', { key: 'workshops' })
     return content
   },
+  async fetchBridgeWorkshops({ commit }) {
+    const { content = [] } = await getBridgeWorkshopsAllSimple()
+    commit('SET_BRIDGE_WORKSHOPS', content)
+    commit('SET_LOADED', { key: 'bridgeWorkshops' })
+    return content
+  },
   async fetchProductionTeam({ commit }) {
     const { content = [] } = await getProductionTeamAllSimple()
     const list = content.map(v => {
@@ -431,6 +496,18 @@ const actions = {
     commit('SET_LOADED', { key: 'productionTeam' })
     return content
   },
+  async fetchBridgeProductionTeam({ commit }) {
+    const { content = [] } = await getBridgeProductionTeamAllSimple()
+    const list = content.map(v => {
+      v.leaderName = v.userLinkList.find(o => o.boolLeaderEnum)?.userName
+      v.memberNames = v.userLinkList?.filter(o => !o.boolLeaderEnum)?.map(o => o.userName)?.join(', ')
+      v.label = `${v.leaderName} - ${v.processName}`
+      return v
+    })
+    commit('SET_BRIDGE_PRODUCTION_TEAM', list)
+    commit('SET_LOADED', { key: 'bridgeProductionTeam' })
+    return content
+  },
   async fetchInspectionTeam({ commit }) {
     const { content = [] } = await getInspectionTeamAllSimple()
     const list = content.map(v => {
@@ -441,11 +518,28 @@ const actions = {
     commit('SET_LOADED', { key: 'inspectionTeam' })
     return content
   },
+  async fetchBridgeInspectionTeam({ commit }) {
+    const { content = [] } = await getBridgeInspectionTeamAllSimple()
+    const list = content.map(v => {
+      v.inspectorNames = v.userLinkList?.map(o => o.userName)?.join(', ')
+      return v
+    })
+    commit('SET_BRIDGE_INSPECTION_TEAM', list)
+    commit('SET_LOADED', { key: 'bridgeInspectionTeam' })
+    return content
+  },
   // 生产线
   async fetchProductLines({ commit }) {
     const { content = [] } = await getAllFactoryWorkshopLines()
     commit('SET_PRODUCT_LINES', content)
     commit('SET_LOADED', { key: 'productLines', loaded: true })
+    return content
+  },
+  // 桥梁生产线
+  async fetchBridgeProductLines({ commit }) {
+    const { content = [] } = await getBridgeAllFactoryWorkshopLines()
+    commit('SET_BRIDGE_PRODUCT_LINES', content)
+    commit('SET_LOADED', { key: 'bridgeProductLines', loaded: true })
     return content
   },
   // 生产线
@@ -462,6 +556,13 @@ const actions = {
     commit('SET_LOADED', { key: 'onlyProductLines', loaded: true })
     return content
   },
+  // 桥梁生产线
+  async fetchBridgeOnlyProductLines({ commit }) {
+    const { content = [] } = await getBridgeLinesAllSimple()
+    commit('SET_BRIDGE_ONLY_PRODUCT_LINES', content)
+    commit('SET_LOADED', { key: 'bridgeOnlyProductLines', loaded: true })
+    return content
+  },
   // 切割配置
   async fetchCutConfig({ commit }) {
     const content = await getAllCutConfigs() || []
@@ -469,11 +570,25 @@ const actions = {
     commit('SET_LOADED', { key: 'cutConfigs', loaded: true })
     return content
   },
+  // 桥梁切割配置
+  async fetchBridgeCutConfig({ commit }) {
+    const content = await getBridgeAllCutConfigs() || []
+    commit('SET_BRIDGE_CUT_CONFIGS', content)
+    commit('SET_LOADED', { key: 'bridgeCutConfigs', loaded: true })
+    return content
+  },
   // 工序
   async fetchProcess({ commit }) {
     const content = await getProcessAllSimple() || []
     commit('SET_PROCESS', content)
     commit('SET_LOADED', { key: 'process' })
+    return content
+  },
+  // 桥梁工序
+  async fetchBridgeProcess({ commit }) {
+    const content = await getBridgeProcessAllSimple() || []
+    commit('SET_BRIDGE_PROCESS', content)
+    commit('SET_LOADED', { key: 'bridgeProcess' })
     return content
   },
   // 用户

@@ -35,6 +35,7 @@ import { ref, defineEmits, defineProps, watch, computed } from 'vue'
 
 import { tableSummary } from '@/utils/el-extra'
 import { installProjectTypeEnum } from '@enum-ms/project'
+import { projectTypeEnum } from '@enum-ms/contract'
 
 import useVisible from '@/composables/use-visible'
 import useMaxHeight from '@compos/use-max-height'
@@ -51,6 +52,10 @@ const props = defineProps({
     default: () => {}
   },
   permission: {
+    type: Object,
+    default: () => {}
+  },
+  globalProject: {
     type: Object,
     default: () => {}
   }
@@ -116,7 +121,7 @@ async function fetchList() {
   try {
     const { content = [] } = await getSum({ ...params.value })
     content.map(v => {
-      v.accountUnit = installProjectTypeEnum.V[v.productType].accountUnit
+      v.accountUnit = props.globalProject.projectType === projectTypeEnum.BRIDGE.V ? 't' : installProjectTypeEnum.V[v.productType].accountUnit
     })
     _list = content
   } catch (error) {
