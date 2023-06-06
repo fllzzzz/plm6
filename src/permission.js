@@ -18,7 +18,7 @@ import { specialPath } from '@/settings/config'
 // import cuttingRouter from '@/router/modules/cutting'
 // import bimRouter from '@/router/modules/bim'
 // import operationRouter from '@/router/modules/operation'
-// import projectManage from '@/router/modules/project-manage'
+// import projectManage from '@/router/modules/project'
 // import shipManage from '@/router/modules/ship-manage'
 
 import { validRequestUrl } from '@/utils/validate' // 请求路径验证规则
