@@ -1,5 +1,6 @@
 import { dataSourceEnum, alignEnum, verticleAlignEnum, fieldTypeEnum as typeEnum, cssUnitEnum, cssUnitPrecisionEnum, pageFormatEnum, amountUnitEnum } from '@/utils/print/enum'
 import { projectNameArrangementModeEnum } from '@/utils/enum/modules/contract'
+import { DP } from '@/settings/config'
 
 // 费用清单
 const expenseReporting = {
@@ -205,7 +206,7 @@ const expenseReporting = {
       { show: false, key: 'costAscriptionEnum', title: '费用归属', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.ENUM.K, format: { enum: 'costAscriptionEnum', key: 'L' }},
       { show: false, key: 'expenseTypeName', title: '费用类别', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.SUPPLIER_FEE_TYPE.K },
       { show: true, key: 'expenseSubjectName', title: '费用科目', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.REIMBURSEMENT_TYPE.K },
-      { show: true, key: 'reimburseAmount', title: '报销金额', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.AMOUNT.K, format: { toThousand: true, precision: 2, unit: amountUnitEnum.YUAN.V }},
+      { show: true, key: 'reimburseAmount', title: '报销金额', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.AMOUNT.K, format: { toThousand: true, precision: DP.YUAN, unit: amountUnitEnum.YUAN.V }},
       { show: true, key: 'project', title: '项目', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 18, type: typeEnum.PROJECT.K, format: { showProjectFullName: false, showSerialNumber: true, projectNameShowConfig: projectNameArrangementModeEnum.SERIAL_NUMBER_START.V }},
       { show: false, key: 'writtenByName', title: '填报人', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.USER_NAME.K },
       { show: true, key: 'payee', title: '收款单位', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.COMPANY_NAME.K },

@@ -1,5 +1,6 @@
 import { dataSourceEnum, alignEnum, verticleAlignEnum, fieldTypeEnum as typeEnum, cssUnitEnum, cssUnitPrecisionEnum, pageFormatEnum, amountUnitEnum } from '@/utils/print/enum'
 import { projectNameArrangementModeEnum } from '@/utils/enum/modules/contract'
+import { DP } from '@/settings/config'
 
 // 材料使用记录
 const materialCostRecord = {
@@ -105,7 +106,7 @@ const materialCostRecord = {
     fields: [ // 字段内容
       { show: true, source: dataSourceEnum.SYSTEM.V, key: 'project', title: '项目：', width: 190, type: typeEnum.PROJECT.K, format: { showProjectFullName: false, showSerialNumber: true, projectNameShowConfig: projectNameArrangementModeEnum.SERIAL_NUMBER_START.V, lineBreak: false }},
       { show: true, source: dataSourceEnum.SYSTEM.V, key: 'name', title: '费用类型：', width: 140, type: typeEnum.REIMBURSEMENT_TYPE.K },
-      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'sumAmount', title: '总金额：', width: 50, type: typeEnum.AMOUNT.K, format: { toThousand: true, precision: 2, unit: amountUnitEnum.YUAN.V }},
+      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'sumAmount', title: '总金额：', width: 50, type: typeEnum.AMOUNT.K, format: { toThousand: true, precision: DP.YUAN, unit: amountUnitEnum.YUAN.V }},
       { show: false, source: dataSourceEnum.SYSTEM.V, key: 'printDate', title: '打印时间：', width: 140, type: typeEnum.DATE.K, format: 'YY/MM/DD kk:mm:ss' },
       { show: false, source: dataSourceEnum.SYSTEM.V, key: 'printer', title: '打印人：', width: 50, type: typeEnum.USER_NAME.K }
     ]
@@ -208,8 +209,8 @@ const materialCostRecord = {
       { show: false, key: 'specification', title: '材质', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.MATERIAL.K },
       { show: true, key: 'accountingUnit', title: '核算单位', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.ACCOUNTING_UNIT.K },
       { show: true, key: 'mete', title: '核算量', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.WEIGHT.K },
-      { show: true, key: 'unitPrice', title: '不含税单价', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 20, type: typeEnum.AMOUNT.K, format: { toThousand: true, precision: 2, unit: amountUnitEnum.YUAN.V }},
-      { show: true, key: 'amountExcludingVat', title: '不含税总价', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 20, type: typeEnum.AMOUNT.K, format: { toThousand: true, precision: 2, unit: amountUnitEnum.YUAN.V }},
+      { show: true, key: 'unitPrice', title: '不含税单价', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 20, type: typeEnum.AMOUNT.K, format: { toThousand: true, precision: DP.YUAN, unit: amountUnitEnum.YUAN.V }},
+      { show: true, key: 'amountExcludingVat', title: '不含税总价', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 20, type: typeEnum.AMOUNT.K, format: { toThousand: true, precision: DP.YUAN, unit: amountUnitEnum.YUAN.V }},
       { show: true, key: 'outboundTime', title: '出库日期', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.DATE.K, format: 'YY/MM/DD' }
     ]
   }

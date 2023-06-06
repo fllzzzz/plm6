@@ -1,5 +1,6 @@
 import { dataSourceEnum, alignEnum, verticleAlignEnum, fieldTypeEnum as typeEnum, cssUnitEnum, cssUnitPrecisionEnum, pageFormatEnum, amountUnitEnum } from '@/utils/print/enum'
 import { projectNameArrangementModeEnum } from '@/utils/enum/modules/contract'
+import { DP } from '@/settings/config'
 
 // 费用报销记录
 const expenseReimburseRecord = {
@@ -104,9 +105,9 @@ const expenseReimburseRecord = {
      */
     fields: [ // 字段内容
       { show: true, source: dataSourceEnum.SYSTEM.V, key: 'project', title: '项目：', width: 140, type: typeEnum.PROJECT.K, format: { showProjectFullName: false, showSerialNumber: true, projectNameShowConfig: projectNameArrangementModeEnum.SERIAL_NUMBER_START.V, lineBreak: false }},
-      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'sumAmount', title: '总金额：', width: 50, type: typeEnum.AMOUNT.K, format: { toThousand: true, precision: 2, unit: amountUnitEnum.YUAN.V }},
+      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'sumAmount', title: '总金额：', width: 50, type: typeEnum.AMOUNT.K, format: { toThousand: true, precision: DP.YUAN, unit: amountUnitEnum.YUAN.V }},
       { show: true, source: dataSourceEnum.SYSTEM.V, key: 'costAscriptionName', title: '费用类别：', width: 90, type: typeEnum.REIMBURSEMENT_TYPE.K },
-      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'costAscriptionSumAmount', title: '费用类别金额：', width: 50, type: typeEnum.AMOUNT.K, format: { toThousand: true, precision: 2, unit: amountUnitEnum.YUAN.V }},
+      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'costAscriptionSumAmount', title: '费用类别金额：', width: 50, type: typeEnum.AMOUNT.K, format: { toThousand: true, precision: DP.YUAN, unit: amountUnitEnum.YUAN.V }},
       { show: true, source: dataSourceEnum.SYSTEM.V, key: 'rate', title: '费用类别占比：', width: 50, type: typeEnum.RATE.K },
       { show: false, source: dataSourceEnum.SYSTEM.V, key: 'printDate', title: '打印时间：', width: 140, type: typeEnum.DATE.K, format: 'YY/MM/DD kk:mm:ss' },
       { show: false, source: dataSourceEnum.SYSTEM.V, key: 'printer', title: '打印人：', width: 50, type: typeEnum.USER_NAME.K }
@@ -207,7 +208,7 @@ const expenseReimburseRecord = {
       { show: true, key: 'deptName', title: '部门', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.DEPT.K },
       { show: true, key: 'reimburseUserName', title: '报销人', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.USER_NAME.K },
       { show: true, key: 'expenseSubjectName', title: '费用科目', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.REIMBURSEMENT_TYPE.K },
-      { show: true, key: 'reimburseAmount', title: '报销金额', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.AMOUNT.K, format: { toThousand: true, precision: 2, unit: amountUnitEnum.YUAN.V }},
+      { show: true, key: 'reimburseAmount', title: '报销金额', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.AMOUNT.K, format: { toThousand: true, precision: DP.YUAN, unit: amountUnitEnum.YUAN.V }},
       { show: true, key: 'writtenByName', title: '填报人', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.USER_NAME.K }
     ]
   }

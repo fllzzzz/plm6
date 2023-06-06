@@ -1,5 +1,6 @@
 import { dataSourceEnum, alignEnum, verticleAlignEnum, fieldTypeEnum as typeEnum, cssUnitEnum, cssUnitPrecisionEnum, pageFormatEnum, amountUnitEnum } from '@/utils/print/enum'
 import { projectNameArrangementModeEnum } from '@/utils/enum/modules/contract'
+import { DP } from '@/settings/config'
 
 // 项目开票记录
 const projectInvoiceRecord = {
@@ -104,7 +105,7 @@ const projectInvoiceRecord = {
      */
     fields: [ // 字段内容
       { show: true, source: dataSourceEnum.SYSTEM.V, key: 'project', title: '项目：', width: 140, type: typeEnum.PROJECT.K, format: { showProjectFullName: false, showSerialNumber: true, projectNameShowConfig: projectNameArrangementModeEnum.SERIAL_NUMBER_START.V, lineBreak: false }},
-      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'sumAmount', title: '开票金额：', width: 50, type: typeEnum.AMOUNT.K, format: { toThousand: true, precision: 2, unit: amountUnitEnum.YUAN.V }},
+      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'sumAmount', title: '开票金额：', width: 50, type: typeEnum.AMOUNT.K, format: { toThousand: true, precision: DP.YUAN, unit: amountUnitEnum.YUAN.V }},
       { show: false, source: dataSourceEnum.SYSTEM.V, key: 'printDate', title: '打印日期：', width: 60, type: typeEnum.DATE.K, format: 'YY/MM/DD kk:mm:ss' },
       { show: false, source: dataSourceEnum.SYSTEM.V, key: 'printer', title: '打印人：', width: 60, type: typeEnum.USER_NAME.K }
     ]
@@ -202,7 +203,7 @@ const projectInvoiceRecord = {
      */
     fields: [
       { show: true, key: 'invoiceDate', title: '开票日期', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.DATE.K, format: 'YY/MM/DD' },
-      { show: true, key: 'invoiceAmount', title: '开票金额', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.AMOUNT.K, format: { toThousand: true, precision: 2, unit: amountUnitEnum.YUAN.V }},
+      { show: true, key: 'invoiceAmount', title: '开票金额', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.AMOUNT.K, format: { toThousand: true, precision: DP.YUAN, unit: amountUnitEnum.YUAN.V }},
       { show: true, key: 'invoiceType', title: '发票类型', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.ENUM.K, format: { enum: 'invoiceTypeEnum', key: 'L' }},
       { show: true, key: 'taxRate', title: '税率', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 16, type: typeEnum.RATE.K },
       { show: true, key: 'invoiceUnit', title: '开票单位', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 22, type: typeEnum.COMPANY_NAME.K },

@@ -1,5 +1,6 @@
 import { dataSourceEnum, alignEnum, verticleAlignEnum, fieldTypeEnum as typeEnum, cssUnitEnum, cssUnitPrecisionEnum, pageFormatEnum, amountUnitEnum } from '@/utils/print/enum'
 import { projectNameArrangementModeEnum } from '@/utils/enum/modules/contract'
+import { DP } from '@/settings/config'
 
 // 摊销记录
 const amortizationRecord = {
@@ -105,8 +106,8 @@ const amortizationRecord = {
     fields: [ // 字段内容
       { show: true, source: dataSourceEnum.SYSTEM.V, key: 'project', title: '项目：', width: 190, type: typeEnum.PROJECT.K, format: { showProjectFullName: false, showSerialNumber: true, projectNameShowConfig: projectNameArrangementModeEnum.SERIAL_NUMBER_START.V, lineBreak: false }},
       { show: true, source: dataSourceEnum.SYSTEM.V, key: 'name', title: '摊销种类：', width: 64, type: typeEnum.OTHER.K },
-      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'sumAmount', title: '总金额：', width: 42, type: typeEnum.AMOUNT.K, format: { toThousand: true, precision: 2, unit: amountUnitEnum.YUAN.V }},
-      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'costAmount', title: '综合成本：', width: 42, type: typeEnum.AMOUNT.K, format: { toThousand: true, precision: 2, unit: amountUnitEnum.YUAN.V }},
+      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'sumAmount', title: '总金额：', width: 42, type: typeEnum.AMOUNT.K, format: { toThousand: true, precision: DP.YUAN, unit: amountUnitEnum.YUAN.V }},
+      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'costAmount', title: '综合成本：', width: 42, type: typeEnum.AMOUNT.K, format: { toThousand: true, precision: DP.YUAN, unit: amountUnitEnum.YUAN.V }},
       { show: true, source: dataSourceEnum.SYSTEM.V, key: 'costRatio', title: '综合成本占比：', width: 42, type: typeEnum.RATE.K },
       { show: false, source: dataSourceEnum.SYSTEM.V, key: 'printDate', title: '打印时间：', width: 55, type: typeEnum.DATE.K, format: 'YY/MM/DD kk:mm:ss' },
       { show: false, source: dataSourceEnum.SYSTEM.V, key: 'printer', title: '打印人：', width: 35, type: typeEnum.USER_NAME.K }
@@ -204,7 +205,8 @@ const amortizationRecord = {
      */
     fields: [
       { show: true, key: 'date', title: '摊销时间段', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.OTHER.K },
-      { show: true, key: 'amount', title: '摊销金额', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.AMOUNT.K, format: { toThousand: true, precision: 2, UNIT: typeEnum.AMOUNT.K }},
+      { show: true, key: 'name', title: '摊销种类', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.MATERIAL_CLASS_NAME.K },
+      { show: true, key: 'amount', title: '摊销金额', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.AMOUNT.K, format: { toThousand: true, precision: DP.YUAN, UNIT: typeEnum.AMOUNT.K }},
       { show: true, key: 'productMete', title: '产量（吨）', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.METE.K },
       { show: true, key: 'amortizationType', title: '摊销类型', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.ENUM.K, format: { enum: 'amortizationTypeEnum', key: 'L' }},
       { show: true, key: 'expenseRatio', title: '摊销占比', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.RATE.K, format: { precision: 2 }},
@@ -214,5 +216,5 @@ const amortizationRecord = {
 }
 
 export default {
-  amortizationRecord //  气体费
+  amortizationRecord //  摊销记录
 }

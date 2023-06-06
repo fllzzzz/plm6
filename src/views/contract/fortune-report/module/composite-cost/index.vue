@@ -115,7 +115,10 @@ const amortizationType = [
   expenseClassEnum.CIVIL_ELECTRICITY.V,
   expenseClassEnum.WORKSHOP_DEPRECIATION.V,
   expenseClassEnum.EQUIPMENT_DEPRECIATION.V,
-  expenseClassEnum.GAS.V
+  expenseClassEnum.GAS.V,
+  expenseClassEnum.MATERIAL_AUXILIARY.V,
+  expenseClassEnum.OTHER_EXPENSES.V,
+  expenseClassEnum.MATERIAL_OTHER.V
 ]
 // 材料类型
 const materialType = [
@@ -135,7 +138,7 @@ const currentView = computed(() => {
     if (amortizationType.includes(currentRow.value.expenseClassEnum)) {
       return amortizationRecord
     }
-    // 材料记录
+    // 费用类型
     return costRecord
   }
   return undefined

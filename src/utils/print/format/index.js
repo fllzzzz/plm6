@@ -26,6 +26,7 @@ const expenseReimburseSummary = contract.handleExpenseRate
 const contractPlantDepreciationRecord = contract.handleDepreciationRate
 const contractDeviceDepreciationRecord = contract.handleDepreciationRate
 const materialCostRecord = contract.handleUnitPrice
+const fortuneReportList = contract.handleFortuneReport
 
 const orderPaymentLedger = contract.handleSupplierPaymentRate
 const scmSupplierPaymentLedger = contract.handleSupplierPaymentRate
@@ -96,6 +97,7 @@ export default {
   contractPlantDepreciationRecord,
   contractDeviceDepreciationRecord,
   materialCostRecord,
+  fortuneReportList,
   waterRecord,
   expenseReimburseSummary,
 

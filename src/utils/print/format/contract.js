@@ -134,6 +134,10 @@ function handleAmortizationRecord({ header, table = [], footer, qrCode }) {
     const _startDate = moment(row.startDate).format('YYYY-MM-DD')
     const _endDate = moment(row.endDate).format('YYYY-MM-DD')
     row.date = `${_startDate} ~ ${_endDate}`
+    const _name = expenseClassEnum.VL[row.expenseClassEnum]
+    if (_name !== row.name) {
+      row.name = `${_name} > ${row.name}`
+    }
     row.productMete = convertUnits(row.productMete, 'kg', 't', DP.CONTRACT_WT__T)
     row.expenseRatio = toFixed((row.amount / header.sumAmount) * 100, 2)
     row.costRatio = toFixed(header.costAmount === 0 ? 0 : (row.amount / header.costAmount) * 100, 2)
@@ -198,6 +202,26 @@ async function handleUnitPrice({ header, table = [], footer, qrCode }) {
   }
 }
 
+// 处理 业财报表
+async function handleFortuneReport({ header, table = [], footer, qrCode }) {
+  await setSpecInfoToList(table)
+  await numFmtByBasicClass(table)
+  const _table = table.map(row => {
+    if (row.grossProfitRate) {
+      row.grossProfitRate = toFixed(row.grossProfitRate * 100, 2)
+    }
+    row.unpaidAmount = toFixed(row.contractAmount - row.collectionAmount, DP.YUAN)
+    row.collectionRate = toFixed(row.collectionAmount / row.contractAmount * 100, 2)
+    return row
+  })
+  return {
+    header,
+    table: _table,
+    qrCode,
+    footer
+  }
+}
+
 export default {
   handleRate,
   handleAreaUnit,
@@ -208,5 +232,6 @@ export default {
   handleAmortizationRecord,
   handleExpenseRate,
   handleDepreciationRate,
-  handleUnitPrice
+  handleUnitPrice,
+  handleFortuneReport
 }

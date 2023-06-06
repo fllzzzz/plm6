@@ -44,7 +44,7 @@
     <template #viewLeft>
       <print-table
         v-permission="crud.permission.print"
-        api-key="contractLedger"
+        api-key="fortuneReportList"
         :params="{ ...query }"
         size="mini"
         type="warning"

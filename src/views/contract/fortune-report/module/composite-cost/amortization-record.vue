@@ -13,9 +13,16 @@
   </el-card>
   <common-table ref="tableRef" v-loading="tableLoading" :data-format="columnsDataFormat" :data="list" :max-height="maxHeight - 92">
     <el-table-column label="序号" type="index" align="center" width="60" />
-    <el-table-column prop="date" key="date" show-overflow-tooltip label="摊销时间段" align="center">
+    <el-table-column prop="date" key="date" show-overflow-tooltip label="摊销时间段" align="center" min-width="140">
       <template #default="{ row }">
         <span style="font-weight: bold">{{ row.date }}</span>
+      </template>
+    </el-table-column>
+    <el-table-column key="name" prop="name" label="摊销种类" align="center" min-width="140">
+      <template #default="{ row }">
+        <span>
+          <span v-if="row.fullPathName" style="color: #adadad">{{ row.fullPathName }} > </span>{{ row.name }}
+        </span>
       </template>
     </el-table-column>
     <el-table-column key="amount" prop="amount" show-overflow-tooltip label="摊销金额" align="center" />
@@ -55,8 +62,12 @@ const params = computed(() => {
     projectId: props.detailRow.projectId,
     expenseClassEnum: props.detailRow.expenseClassEnum
   }
-  // 这两种类型需要bizId
-  if (data.expenseClassEnum === expenseClassEnum.MATERIAL_AUXILIARY.V || data.expenseClassEnum === expenseClassEnum.MATERIAL_OTHER.V) {
+  // 这三种类型需要bizId
+  if (
+    data.expenseClassEnum === expenseClassEnum.MATERIAL_AUXILIARY.V ||
+    data.expenseClassEnum === expenseClassEnum.OTHER_EXPENSES.V ||
+    data.expenseClassEnum === expenseClassEnum.MATERIAL_OTHER.V
+  ) {
     data.bizId = props.detailRow.bizId
   }
   return data
@@ -103,7 +114,11 @@ async function fetchList() {
       row.date = `${_startDate} ~ ${_endDate}`
       row.costRate = toFixed((row.amount / props.detailRow.costAmount) * 100, 2)
       row.expenseRate = toFixed((row.amount / totalAmount.value) * 100, 2)
-      row.productMete = convertUnits(row.productMete, 'kg', 't', DP.COM_WT__T)
+      row.productMete = convertUnits(row.productMete, 'kg', 't', DP.CONTRACT_WT__T)
+      const _name = expenseClassEnum.VL[row.expenseClassEnum]
+      if (_name !== row.name) {
+        row.fullPathName = _name
+      }
     })
   } catch (error) {
     console.log('获取摊销详情失败')
