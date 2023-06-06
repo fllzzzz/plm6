@@ -17,35 +17,35 @@ export default {
           path: 'system-config',
           hidden: false,
           component: '/config-manage/main/system-config/index',
-          meta: { title: '公司配置', icon: 'project', noCache: true }
+          meta: { title: '公司配置', icon: 'project', noCache: true, permissions: ['systemConfigPM'] }
         },
         {
           name: 'UnitConfig',
           path: 'unit-config',
           hidden: false,
           component: '/config-manage/main/unit-config/index',
-          meta: { title: '单位配置', icon: 'project', noCache: true }
+          meta: { title: '单位配置', icon: 'project', noCache: true, permissions: ['configUnitPM'] }
         },
         {
           name: 'factoryAndWorkshopConfig',
           path: 'factory-and-workshop',
           hidden: false,
           component: '/mes/production-config/factory-and-workshop/index',
-          meta: { title: '工厂管理', icon: 'project', noCache: true }
+          meta: { title: '工厂管理', icon: 'project', noCache: true, permissions: ['configFactoryPM'] }
         },
         {
           name: 'NumberConfig',
           path: 'number-config',
           hidden: false,
           component: '/config-manage/main/number-config/index',
-          meta: { title: '编号配置', icon: 'project', noCache: true }
+          meta: { title: '编号配置', icon: 'project', noCache: true, permissions: ['numberConfigPM'] }
         },
         {
           name: 'CommonTaxRate',
           path: 'common-tax-rate',
           hidden: false,
           component: '/config-manage/main/common-tax-rate/index',
-          meta: { title: '常用税率', icon: 'project', noCache: true }
+          meta: { title: '常用税率', icon: 'project', noCache: true, permissions: ['configCommonTaxRatePM'] }
         },
         {
           name: 'ExpenseSubject',
@@ -59,28 +59,28 @@ export default {
           path: 'expense-management',
           hidden: false,
           component: '/config-manage/system/expense-management/index',
-          meta: { title: '费用归类', icon: 'project', noCache: true }
+          meta: { title: '费用归类', icon: 'project', noCache: true, permissions: ['expenseManagementPM'] }
         },
         {
           name: 'BranchCompany',
           path: 'branch-company',
           hidden: false,
           component: '/config-manage/system/branch-company/index',
-          meta: { title: '分支机构', icon: 'project', noCache: true }
+          meta: { title: '分支机构', icon: 'project', noCache: true, permissions: ['branchCompanyPM'] }
         },
         {
           name: 'ProjectMode',
           path: 'project-mode',
           hidden: false,
           component: '/config-manage/system/project-mode/index',
-          meta: { title: '项目模式', icon: 'project', noCache: true }
+          meta: { title: '项目模式', icon: 'project', noCache: true, permissions: ['projectModePM'] }
         },
         {
           name: 'TablePrinting',
           path: 'table-printing',
           hidden: false,
           component: '/config-manage/system/table-print-template/index',
-          meta: { title: '表格模板', icon: 'project', noCache: true }
+          meta: { title: '表格模板', icon: 'project', noCache: true, permissions: ['tablePrintTemplatePM'] }
         }
       ]
     },
@@ -116,28 +116,28 @@ export default {
           path: 'classification-config',
           hidden: false,
           component: '/config-manage/classification-manage/classification-config/index',
-          meta: { title: '科目配置', icon: 'project', noCache: true }
+          meta: { title: '科目配置', icon: 'project', noCache: true, permissions: ['classConfigPM'] }
         },
         {
           name: 'SpecificationConfig',
           path: 'specification-config',
           hidden: false,
           component: '/config-manage/classification-manage/specification-config/index',
-          meta: { title: '规格配置', icon: 'project', noCache: true }
+          meta: { title: '规格配置', icon: 'project', noCache: true, permissions: ['specConfigPM'] }
         },
         {
           name: 'ClassificationUnitConfig',
           path: 'measure-config',
           hidden: false,
           component: '/config-manage/classification-manage/measure-config/index',
-          meta: { title: '计量配置', icon: 'project', noCache: true }
+          meta: { title: '计量配置', icon: 'project', noCache: true, permissions: ['measureConfigPM'] }
         },
         {
           name: 'ConfigSectionSteelLibrary',
           path: 'section-steel-specification-config',
           hidden: false,
           component: '/config-manage/classification-manage/section-steel-specification-config/index',
-          meta: { title: '型材库', icon: 'project', noCache: true }
+          meta: { title: '型材库', icon: 'project', noCache: true, permissions: ['sectionSteelLibraryPM'] }
         }
         // {
         //   name: 'OutboundMethod',
@@ -169,28 +169,28 @@ export default {
           path: 'base',
           hidden: false,
           component: '/config-manage/wms/base/index',
-          meta: { title: '基础配置', icon: 'project', noCache: true }
+          meta: { title: '基础配置', icon: 'project', noCache: true, permissions: ['configWmsBasicForPM'] }
         },
         {
           name: 'ConfigWarehouse',
           path: 'warehouse',
           hidden: false,
           component: '/config-manage/wms/warehouse/index',
-          meta: { title: '仓库设置', icon: 'project', noCache: true }
+          meta: { title: '仓库设置', icon: 'project', noCache: true, permissions: ['configWmsFactoryWarehousePM'] }
         },
         {
           name: 'ScrapDefinition',
           path: 'scrap-definition',
           hidden: false,
           component: '/config-manage/wms/scrap-definition/index',
-          meta: { title: '废料定义', icon: 'project', noCache: true }
+          meta: { title: '废料定义', icon: 'project', noCache: true, permissions: ['configWmsScrapDefinitionPM'] }
         },
         {
           name: 'ConfigInspectionRawMaterial',
           path: 'inspection-raw-material',
           hidden: false,
           component: '/config-manage/wms/inspection-raw-material/index',
-          meta: { title: '入库质检物料', icon: 'project', noCache: true }
+          meta: { title: '入库质检物料', icon: 'project', noCache: true, permissions: ['configWmsInspectionRawMaterialPM'] }
         }
       ]
     },
@@ -208,14 +208,14 @@ export default {
           path: 'base',
           hidden: false,
           component: '/config-manage/mes/base/index',
-          meta: { title: '基础配置', icon: 'project', noCache: true }
+          meta: { title: '基础配置', icon: 'project', noCache: true, permissions: ['configMesBasePM'] }
         },
         {
           name: 'ChangeReason',
           path: 'change-reason',
           hidden: false,
           component: '/config-manage/mes/change-reason-config/index',
-          meta: { title: '变更原因配置', icon: 'project', noCache: true }
+          meta: { title: '变更原因配置', icon: 'project', noCache: true, permissions: ['changeReasonPM'] }
         }
       ]
     },
@@ -225,9 +225,16 @@ export default {
       hidden: false,
       name: 'MesProductionConfig',
       alwaysShow: false,
-      redirect: '/mes/production-config/factory-and-workshop',
+      redirect: '/mes/production-config/steel-workshop',
       meta: { title: '建钢-生产配置', icon: 'project', noCache: true },
       children: [
+        {
+          name: 'SteelWorkshop',
+          path: 'steel-workshop',
+          hidden: false,
+          component: '/mes/production-config/workshop/index',
+          meta: { title: '建钢-车间', icon: 'project', noCache: true, permissions: ['configWorkshopPM'] }
+        },
         {
           path: 'characteristics-config',
           component: '',
@@ -242,28 +249,28 @@ export default {
               path: 'artifact-config',
               hidden: false,
               component: '/config-manage/mes/artifact-config/index',
-              meta: { title: '构件特征定义', icon: 'project', noCache: true }
+              meta: { title: '构件特征定义', icon: 'project', noCache: true, permissions: ['artifactConfigPM'] }
             },
             {
               name: 'MachinePartConfig',
               path: 'machine-part-config',
               hidden: false,
               component: '/config-manage/mes/machine-part/index',
-              meta: { title: '部件特征定义', icon: 'project', noCache: true }
+              meta: { title: '部件特征定义', icon: 'project', noCache: true, permissions: ['machinePartConfigPM'] }
             },
             {
               name: 'SteelClassic',
               path: 'steel-classic',
               hidden: false,
               component: '/config-manage/mes/steel-classic/index',
-              meta: { title: '零件特征定义', icon: 'project', noCache: true }
+              meta: { title: '零件特征定义', icon: 'project', noCache: true, permissions: ['steelClassicPM'] }
             },
             {
               name: 'AuxiliaryMaterialConfig',
               path: 'auxiliary-material-config',
               hidden: false,
               component: '/config-manage/mes/auxiliary-material-config/index',
-              meta: { title: '配套件特征定义', icon: 'project', noCache: true }
+              meta: { title: '配套件特征定义', icon: 'project', noCache: true, permissions: ['auxiliaryMaterialConfigPM'] }
             }
           ]
         },
@@ -281,28 +288,28 @@ export default {
               path: 'process',
               hidden: false,
               component: '/mes/production-config/process/index',
-              meta: { title: '工序配置', icon: 'project', noCache: true }
+              meta: { title: '工序配置', icon: 'project', noCache: true, permissions: ['configProcessPM'] }
             },
             {
               name: 'MesConfigArtifactProductProcess',
               path: 'artifact-product-process',
               hidden: false,
               component: '/mes/production-config/product-process/artifact/index',
-              meta: { title: '构件工序定义', icon: 'project', noCache: true }
+              meta: { title: '构件工序定义', icon: 'project', noCache: true, permissions: ['configProductProcessArtifactPM'] }
             },
             {
               name: 'MesConfigAssembleProductProcess',
               path: 'assemble-product-process',
               hidden: false,
               component: '/mes/production-config/product-process/assemble/index',
-              meta: { title: '部件工序定义', icon: 'project', noCache: true }
+              meta: { title: '部件工序定义', icon: 'project', noCache: true, permissions: ['configProductProcessAssemblePM'] }
             },
             {
               name: 'MesConfigMachinePartProductProcess',
               path: 'machine-part-product-process',
               hidden: false,
               component: '/mes/production-config/product-process/machine-part/index',
-              meta: { title: '零件工序定义', icon: 'project', noCache: true }
+              meta: { title: '零件工序定义', icon: 'project', noCache: true, permissions: ['configProductProcessMachinePartPM'] }
             }
           ]
         },
@@ -320,21 +327,21 @@ export default {
               path: 'production-team',
               hidden: false,
               component: '/mes/production-config/production-team/index',
-              meta: { title: '班组管理', icon: 'project', noCache: true }
+              meta: { title: '班组管理', icon: 'project', noCache: true, permissions: ['configProductionLineTeamPM', 'configProductionLineInspectPM'] }
             },
             {
               name: 'MesConfigProductionLine',
               path: 'production-line',
               hidden: false,
               component: '/mes/production-config/production-line/index',
-              meta: { title: '生产线管理', icon: 'project', noCache: true }
+              meta: { title: '生产线管理', icon: 'project', noCache: true, permissions: ['configProductionLinePM', 'configProductionLineGroupPM'] }
             },
             {
               name: 'MesConfigInspectionMode',
               path: 'inspection-mode',
               hidden: false,
               component: '/mes/production-config/inspection-mode/index',
-              meta: { title: '报检方式', icon: 'project', noCache: true }
+              meta: { title: '报检方式', icon: 'project', noCache: true, permissions: ['configInspectionModePM'] }
             }
           ]
         },
@@ -352,49 +359,49 @@ export default {
               path: 'artifact/artifact-type-config',
               hidden: false,
               component: '/mes/production-config/statistical-config/artifact-type-config/index',
-              meta: { title: '构件-清单种类', icon: 'project', noCache: true }
+              meta: { title: '构件-清单种类', icon: 'project', noCache: true, permissions: ['configArtifactTypeConfigPM'] }
             },
             {
               name: 'MesConfigArtifactRivetWeldConfig',
               path: 'artifact/rivet-weld-config',
               hidden: false,
               component: '/mes/production-config/statistical-config/artifact-rivet-weld-config/index',
-              meta: { title: '构件-组铆焊价格', icon: 'project', noCache: true }
+              meta: { title: '构件-组铆焊价格', icon: 'project', noCache: true, permissions: ['configArtifactRivetWeldConfigPM'] }
             },
             {
               name: 'MesConfigCoatingConfig',
               path: 'artifact/coating-config',
               hidden: false,
               component: '/mes/production-config/statistical-config/coating-config/index',
-              meta: { title: '构件-涂装', icon: 'project', noCache: true }
+              meta: { title: '构件-涂装', icon: 'project', noCache: true, permissions: ['configStatisticalCoatingPM'] }
             },
             {
               name: 'MesConfigAssembleRivetWeldConfig',
               path: 'assemble/rivet-weld-config',
               hidden: false,
               component: '/mes/production-config/statistical-config/assemble-rivet-weld-config/index',
-              meta: { title: '部件-组铆焊价格', icon: 'project', noCache: true }
+              meta: { title: '部件-组铆焊价格', icon: 'project', noCache: true, permissions: ['configAssembleRivetWeldConfigPM'] }
             },
             {
               name: 'MesConfigFabricatedConfig',
               path: 'artifact/fabricated-config',
               hidden: false,
               component: '/mes/production-config/statistical-config/fabricated-config/index',
-              meta: { title: '配套件-栓钉套筒', icon: 'project', noCache: true }
+              meta: { title: '配套件-栓钉套筒', icon: 'project', noCache: true, permissions: ['configStatisticalFabricatedPM'] }
             },
             {
               name: 'MesConfigDrillHoleConfig',
               path: 'parts/drill-hole-config',
               hidden: false,
               component: '/mes/production-config/statistical-config/drill-hole-config/index',
-              meta: { title: '零件-钻孔', icon: 'project', noCache: true }
+              meta: { title: '零件-钻孔', icon: 'project', noCache: true, permissions: ['configStatisticalDrillHolePM'] }
             },
             {
               name: 'MesConfigPartsLayingConfig',
               path: 'parts/parts-laying-config',
               hidden: false,
               component: '/mes/production-config/statistical-config/parts-laying-config/index',
-              meta: { title: '零件-下料', icon: 'project', noCache: true }
+              meta: { title: '零件-下料', icon: 'project', noCache: true, permissions: ['configStatisticalPartsLayingPM'] }
             }
           ]
         },
@@ -467,14 +474,14 @@ export default {
           path: 'info-manage',
           hidden: false,
           component: '/config-manage/contract/enclosure-content/index',
-          meta: { title: '围护信息配置', icon: 'project', noCache: true }
+          meta: { title: '围护信息配置', icon: 'project', noCache: true, permissions: ['enclosureInfoConfigPM'] }
         },
         {
           name: 'MemberConfig',
           path: 'member-config',
           hidden: false,
           component: '/config-manage/contract/setting-config/info-manage/index',
-          meta: { title: '项目成员配置', icon: 'project', noCache: true }
+          meta: { title: '项目成员配置', icon: 'project', noCache: true, permissions: ['memberConfigPM'] }
         }
       ]
     },
@@ -492,7 +499,7 @@ export default {
           path: 'company-process',
           hidden: false,
           component: '/config-manage/approval-manage/company-process/index',
-          meta: { title: '公司审批流程', icon: 'project', noCache: true }
+          meta: { title: '公司审批流程', icon: 'project', noCache: true, permissions: ['companyProcessConfigPM'] }
         }
       ]
     },
@@ -510,7 +517,7 @@ export default {
           path: 'subcontract-config',
           hidden: false,
           component: '/config-manage/supply-chain/base/index',
-          meta: { title: '分包配置', icon: 'project', noCache: true }
+          meta: { title: '分包配置', icon: 'project', noCache: true, permissions: ['subcontractConfigPM'] }
         }
       ]
     },
@@ -528,14 +535,14 @@ export default {
           path: 'quality-problem-config',
           hidden: false,
           component: '/config-manage/project/quality-problem-config/index',
-          meta: { title: '问题分类', icon: 'project', noCache: true }
+          meta: { title: '问题分类', icon: 'project', noCache: true, permissions: ['projectProblemConfigPM'] }
         },
         {
           name: 'VisaReasonConfig',
           path: 'visa-reason-config',
           hidden: false,
           component: '/config-manage/project/visa-reason-config/index',
-          meta: { title: '分包签证原因', icon: 'project', noCache: true }
+          meta: { title: '分包签证原因', icon: 'project', noCache: true, permissions: ['projectVisaReasonConfigPM'] }
         }
       ]
     }

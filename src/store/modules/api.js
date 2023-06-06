@@ -31,7 +31,8 @@ const state = {
     enclosure: `/api/mes/enclosure/`,
     system: `/api/`,
     cost: `/api/`,
-    scm: `/api/scm/`
+    scm: `/api/scm/`,
+    bridge: '/api/mes/bridge/'
   }
 }
 

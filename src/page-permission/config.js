@@ -26,15 +26,6 @@ export const configFactoryPM = {
   editStatus: ['factory:editStatus'] // 更改工厂状态
 }
 
-// 基础配置/工厂管理：车间
-export const configWorkshopPM = {
-  get: ['workshop:get'], // 车间列表
-  add: ['workshop:add'], // 添加车间
-  edit: ['workshop:edit'], // 编辑车间
-  del: ['workshop:del'], // 删除车间
-  editStatus: ['workshop:editStatus'] // 更改车间状态
-}
-
 // 基础配置/公司配置
 export const systemConfigPM = {
   company: {
@@ -181,6 +172,15 @@ export const changeReasonPM = {
 
 // --------------------------- 建钢-生产配置 start -------------------------
 
+// 建钢-生产配置/车间
+export const configWorkshopPM = {
+  get: ['workshop:get'], // 车间列表
+  add: ['workshop:add'], // 添加车间
+  edit: ['workshop:edit'], // 编辑车间
+  del: ['workshop:del'], // 删除车间
+  editStatus: ['workshop:editStatus'] // 更改车间状态
+}
+
 // 建钢-生产配置/构件特征定义
 export const artifactConfigPM = {
   get: ['artifact_config:get'], // 构件特征定义列表
@@ -310,19 +310,8 @@ export const configMachinePartLayingPM = {
 // 建钢-生产配置/工序配置
 export const configProcessPM = {
   get: ['process:get'], // 工序列表
-  // add: ['process:add'], // 添加工序
   edit: ['process:edit'] // 编辑工序
-  // del: ['process:del'] // 删除工序
 }
-
-// // 建钢-生产配置/工序管理
-// export const configProductProcessPM = {
-//   get: ['product_process:get'], // 产品工序列表
-//   add: ['product_process:add'], // 添加产品工序
-//   edit: ['product_process:edit'], // 编辑产品工序
-//   del: ['product_process:del'], // 删除产品工序
-//   editStatus: ['product_process:editStatus'] // 更改产品工序状态
-// }
 
 // 建钢-生产配置/构件工序定义
 export const configProductProcessArtifactPM = {
@@ -417,6 +406,192 @@ export const enclosureConfigProductionLineGroupPM = {
 // ---------------------------- 围护-生产配置 end -------------------------------
 
 // ---------------------------- 基础配置 end -------------------------------
+
+// ---------------------------- 建钢配置 end -------------------------------
+
+// ########################################################################
+// --------------------------- 桥梁-生产配置 start -------------------------
+
+// 桥梁-生产配置/车间
+export const bridgeWorkshopPM = {
+  get: ['bridge_workshop:get'], // 车间列表
+  add: ['bridge_workshop:add'], // 添加车间
+  edit: ['bridge_workshop:edit'], // 编辑车间
+  del: ['bridge_workshop:del'], // 删除车间
+  editStatus: ['bridge_workshop:editStatus'] // 更改车间状态
+}
+
+// 桥梁-生产配置/分段特征定义
+export const boxConfigPM = {
+  get: ['box_config:get'], // 分段特征定义列表
+  add: ['box_config:add'], // 添加分段特征定义
+  edit: ['box_config:edit'], // 修改分段特征定义
+  del: ['box_config:del'] // 删除分段特征定义
+}
+
+// 桥梁-生产配置/单元特征定义
+export const cellConfigPM = {
+  get: ['cell_config:get'], // 单元特征定义列表
+  add: ['cell_config:add'], // 添加单元特征定义
+  edit: ['cell_config:edit'], // 修改单元特征定义
+  del: ['cell_config:del'] // 删除单元特征定义
+}
+
+// 桥梁-生产配置/零件特征定义
+export const partConfigPM = {
+  get: ['part_config:get'], // 零件特征定义列表
+  add: ['part_config:add'], // 新增零件特征定义
+  edit: ['part_config:edit'], // 修改零件特征定义
+  del: ['part_config:del'] // 删除零件特征定义
+}
+
+// 桥梁-生产配置/配套件特征定义
+export const bridgeAuxiliaryMaterialConfigPM = {
+  get: ['bridge-auxiliary-material-config:get'], // 配套件特征定义列表
+  add: ['bridge-auxiliary-material-config:add'], // 新增配套件特征定义
+  edit: ['bridge-auxiliary-material-config:edit'], // 修改配套件特征定义
+  del: ['bridge-auxiliary-material-config:del'] // 删除配套件特征定义
+}
+
+// 桥梁-生产配置/生产线管理
+export const bridgeConfigProductionLinePM = {
+  get: ['bridgeProductionLine:get'], // 生产线列表
+  add: ['bridgeProductionLine:add'], // 添加生产线
+  edit: ['bridgeProductionLine:edit'], // 编辑生产线
+  del: ['bridgeProductionLine:del'], // 删除生产线
+  editStatus: ['bridgeProductionLine:editStatus'] // 更改生产线状态
+}
+
+// 桥梁-生产配置/生产线管理:生产组
+export const bridgeConfigProductionLineGroupPM = {
+  get: ['bridge_productionLine_group:get'], // 班组列表
+  add: ['bridge_productionLine_group:add'], // 添加班组
+  edit: ['bridge_productionLine_group:edit'], // 编辑班组
+  del: ['bridge_productionLine_group:del'] // 删除班组
+}
+
+// 桥梁-生产配置/生产线管理:班组
+export const bridgeConfigProductionLineTeamPM = {
+  get: ['bridge_productionLine_team:get'], // 班组列表
+  add: ['bridge_productionLine_team:add'], // 添加班组
+  edit: ['bridge_productionLine_team:edit'], // 编辑班组
+  del: ['bridge_productionLine_team:del'] // 删除班组
+}
+
+// 桥梁-生产配置/生产线管理:质检
+export const bridgeConfigProductionLineInspectPM = {
+  get: ['bridge_productionLine_inspect:get'], // 质检列表
+  add: ['bridge_productionLine_inspect:add'], // 添加质检
+  edit: ['bridge_productionLine_inspect:edit'], // 编辑质检
+  del: ['bridge_productionLine_inspect:del'] // 删除质检
+}
+
+// 桥梁-生产配置/统计配置/分段-种类配置
+export const configBoxTypeConfigPM = {
+  get: ['bridge_statistical_box_type_config:get'], // 分段-种类配置列表
+  add: ['bridge_statistical_box_type_config:add'], // 新增分段-种类配置
+  edit: ['bridge_statistical_box_type_config:edit'], // 编辑分段-种类配置
+  del: ['bridge_statistical_box_type_config:del'] // 删除分段-种类配置
+}
+
+// 桥梁-生产配置/统计配置/分段-组铆焊价格配置
+export const configBoxRivetWeldConfigPM = {
+  get: ['bridge_statistical_artifact_rivet_weld_config:get'], // 分段-组铆焊配置列表
+  add: ['bridge_statistical_artifact_rivet_weld_config:add'], // 新增分段-组铆焊价格配置
+  edit: ['bridge_statistical_artifact_rivet_weld_config:edit'], // 编辑分段-组铆焊价格配置
+  del: ['bridge_statistical_artifact_rivet_weld_config:del'] // 删除分段-组铆焊价格配置
+}
+
+// 桥梁-生产配置/统计配置/分段-涂装配置
+export const bridgeConfigStatisticalCoatingPM = {
+  get: ['bridge_statistical_coating_config:get'], // 分段-涂装配置列表
+  edit: ['bridge_statistical_coating_config:edit'] // 编辑分段-涂装配置
+}
+
+// 桥梁-生产配置/统计配置/单元-组铆焊价格配置
+export const configCellRivetWeldConfigPM = {
+  get: ['statistical_cell_rivet_weld_config:get'], // 单元-组铆焊配置列表
+  add: ['statistical_cell_rivet_weld_config:add'], // 新增单元-组铆焊价格配置
+  edit: ['statistical_cell_rivet_weld_config:edit'], // 编辑单元-组铆焊价格配置
+  del: ['statistical_cell_rivet_weld_config:del'] // 删除单元-组铆焊价格配置
+}
+
+// 桥梁-生产配置/统计配置/零件-栓钉套筒配置
+export const bridgeConfigStatisticalFabricatedPM = {
+  get: ['bridge_statistical_fabricated_config:get'], // 零件-栓钉套筒配置列表
+  del: ['bridge_statistical_fabricated_config:del'], // 删除零件-栓钉套筒配置
+  edit: ['bridge_statistical_fabricated_config:edit'] // 编辑零件-栓钉套筒配置
+}
+
+// 桥梁-生产配置/统计配置/零件-钻孔
+export const bridgeConfigStatisticalDrillHolePM = {
+  get: ['bridge_statistical_drill_hole_config:get'], // 零件-钻孔配置列表
+  add: ['bridge_statistical_drill_hole_config:add'], // 添加零件-钻孔配置
+  del: ['bridge_statistical_drill_hole_config:del'], // 删除零件-钻孔配置
+  edit: ['bridge_statistical_drill_hole_config:edit'] // 编辑零件-钻孔配置
+}
+
+// 桥梁-生产配置/统计配置/零件-下料
+export const bridgeConfigStatisticalPartsLayingPM = {
+  get: ['bridge_statistical_parts_laying_config:get'], // 零件-下料配置列表
+  add: ['bridge_statistical_parts_laying_config:add'], // 添加零件-下料配置
+  del: ['bridge_statistical_parts_laying_config:del'], // 删除零件-下料配置
+  edit: ['bridge_statistical_parts_laying_config:edit'] // 编辑零件-下料配置
+}
+
+// 桥梁-生产配置/零件下料配置
+export const bridgeConfigMachinePartLayingPM = {
+  get: ['bridge_machine_part_laying_config:get'], // 零件下料配置列表
+  add: ['bridge_machine_part_laying_config:add'], // 添加零件下料配置
+  del: ['bridge_machine_part_laying_config:del'], // 删除零件下料配置
+  edit: ['bridge_machine_part_laying_config:edit'] // 编辑零件下料配置
+}
+
+// 桥梁-生产配置/工序配置
+export const bridgeConfigProcessPM = {
+  get: ['bridge_process:get'], // 工序列表
+  edit: ['bridge_process:edit'] // 编辑工序
+}
+
+// 桥梁-生产配置/分段工序定义
+export const configProductProcessBoxPM = {
+  get: ['product_process_box:get'], // 分段工序列表
+  edit: ['product_process_box:edit'] // 编辑分段工序
+}
+
+// 桥梁-生产配置/单元工序定义
+export const configProductProcessCellPM = {
+  get: ['product_process_cell:get'], // 单元工序列表
+  edit: ['product_process_cell:edit'] // 编辑单元工序
+}
+
+// 桥梁-生产配置/零件工序定义
+export const bridgeConfigProductProcessMachinePartPM = {
+  get: ['bridge_product_process_machine_part:get'], // 零件工序列表
+  edit: ['bridge_product_process_machine_part:edit'] // 编辑零件工序
+}
+
+// 桥梁-生产配置/报检方式
+export const bridgeConfigInspectionModePM = {
+  get: ['bridge_inspection_mode:get'], // 报检方式列表
+  edit: ['bridge_inspection_mode:edit'] // 编辑报检方式
+}
+
+// 桥梁-生产配置/工价定额
+export const bridgeConfigWageQuotaPM = {
+  get: ['bridge_wage_quota:get'], // 工价定额列表
+  edit: ['bridge_wage_quota:edit'] // 编辑工价定额
+}
+
+// 桥梁-生产配置/切割配置
+export const bridgeCuttingConfigPM = {
+  get: ['bridge_cutting_config:get'], // 切割配置列表
+  add: ['bridge_cutting_config:add'], // 添加切割配置
+  edit: ['bridge_cutting_config:edit'], // 编辑切割配置
+  del: ['bridge_cutting_config:del'] // 删除切割配置
+}
+
+// ---------------------------- 桥梁配置 end -------------------------------
 
 // ########################################################################
 

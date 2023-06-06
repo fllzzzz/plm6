@@ -258,9 +258,9 @@
 <script setup>
 import crudApi from '@/api/plan/plan-make'
 import { ref, watch } from 'vue'
+
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
-import pagination from '@crud/Pagination'
 import { mapGetters } from '@/store/lib'
 import { businessTypeEnum } from '@enum-ms/contract'
 import { manufactureTypeEnum, areaPlanTypeEnum } from '@enum-ms/plan'
@@ -270,6 +270,8 @@ import { parseTime } from '@/utils/date'
 import { planMakeListPM as permission } from '@/page-permission/plan'
 import { TechnologyTypeAllEnum } from '@enum-ms/contract'
 import { ElMessage } from 'element-plus'
+
+import pagination from '@crud/Pagination'
 
 const { globalProject, globalProjectId } = mapGetters(['globalProject', 'globalProjectId'])
 
@@ -286,7 +288,7 @@ const { crud, columns, CRUD } = useCRUD(
   {
     title: '区域计划',
     sort: ['id.desc'],
-    permission: { ...permission },
+    permission: { ...permission.value },
     optShow: { ...optShow },
     requiredQuery: ['projectId'],
     crudApi: { ...crudApi },

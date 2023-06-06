@@ -17,7 +17,7 @@
         <template v-slot="scope">
           <div style="margin: 2px 0 6px 0">
             <div>{{ scope.row.name }}</div>
-            <el-tag effect="plain">结构</el-tag>
+            <el-tag effect="plain">{{globalProject.projectType===projectTypeEnum.STEEL.V?'结构':'分段'}}</el-tag>
           </div>
         </template>
       </el-table-column>
@@ -85,7 +85,7 @@ import { ref, watch, computed, nextTick } from 'vue'
 import useMaxHeight from '@compos/use-max-height'
 import { mapGetters } from '@/store/lib'
 import { isNotBlank } from '@data-type/index'
-import { TechnologyTypeAllEnum } from '@enum-ms/contract'
+import { TechnologyTypeAllEnum, projectTypeEnum } from '@enum-ms/contract'
 import { modelImportModeEnum, bimTeklaEditionEnum } from '@enum-ms/bim'
 import { modelFileListPM as permission } from '@/page-permission/plan'
 import checkPermission from '@/utils/system/check-permission'
@@ -112,7 +112,7 @@ watch(
   (val) => {
     tableData.value = []
     if (isNotBlank(val)) {
-      if (val.projectContentList.some(v => Number(v.no) === TechnologyTypeAllEnum.STRUCTURE.V)) {
+      if (val.projectContentList.some(v => Number(v.no) === TechnologyTypeAllEnum.STRUCTURE.V || Number(v.no) === TechnologyTypeAllEnum.BRIDGE.V)) {
         fetchData(val.id)
       }
     }
@@ -134,7 +134,7 @@ async function fetchData(val = globalProject.value?.id) {
       v.projectSerialNumber = globalProject.value.serialNumber
       v.edition = v.bimConfig?.edition
       v.importMode = v.bimConfig?.importMode
-      v.areaArr = v.areaSimpleList.filter((k) => k.productType === TechnologyTypeAllEnum.STRUCTURE.V)
+      v.areaArr = v.areaSimpleList.filter((k) => k.productType === TechnologyTypeAllEnum.STRUCTURE.V || k.productType === TechnologyTypeAllEnum.BRIDGE.V)
       if (index === 0) {
         v.rowSpanNum = content.length
       }

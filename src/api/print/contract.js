@@ -122,12 +122,12 @@ export function supplierInvoiceLedger(params) {
  * 我的项目
  * @param {number} year 年份
  */
-export function myProject({ year }) {
+export function myProject(params) {
   return request({
     module: 'contract',
     url: 'project/listMy/print',
     method: 'get',
-    params: { year }
+    params: params
   })
 }
 
@@ -135,12 +135,12 @@ export function myProject({ year }) {
  * 项目列表
  * @param {number} year 年份
  */
-export function projectList({ year }) {
+export function projectList(params) {
   return request({
     module: 'contract',
     url: 'project/listAllProject/print',
     method: 'get',
-    params: { year }
+    params
   })
 }
 
