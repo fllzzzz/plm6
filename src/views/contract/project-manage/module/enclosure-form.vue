@@ -372,7 +372,7 @@ const FIELD_INFO = {
         { field: 'thickness', name: '厚度', dict: 'thickness', placeholder: '请选择或填写厚度', rules: [
           { validator: validateThickness, trigger: ['change', 'blur'] }
         ], unit: 'mm', decimalPlace: 3 },
-        { field: 'plateType', name: '板型', dict: 'plate_type', placeholder: '请选择或填写板型', rules: validateLength('请选择或填写板型', 10) },
+        { field: 'plateType', name: '板型', dict: 'plate_type', placeholder: '请选择或填写板型', rules: validateLength('请选择或填写板型', 20) },
         { field: 'plating', name: '镀层', dict: 'cladding', placeholder: '请选择或填写镀层', rules: validateLength('请选择或填写镀层', 20) },
         { field: 'colour', name: '颜色', dict: 'color', placeholder: '请选择或填写颜色', rules: validateLength('请选择或填写颜色', 10) },
         { field: 'coating', name: '涂层', dict: 'coating', placeholder: '请选择或填写涂层', rules: validateLength('请选择或填写涂层', 10) },
@@ -395,7 +395,7 @@ const FIELD_INFO = {
       type: '产品信息',
       fields: [
         { field: 'mode', name: '类型', dict: 'mode', placeholder: '请选择或填写类型', rules: validateLength('请选择或填写类型', 10) },
-        { field: 'plateType', name: '板型', dict: 'plate_type', placeholder: '请选择或填写板型', rules: validateLength('请选择或填写板型', 10) },
+        { field: 'plateType', name: '板型', dict: 'plate_type', placeholder: '请选择或填写板型', rules: validateLength('请选择或填写板型', 20) },
         { field: 'thickness', name: '厚度', dict: 'thickness', placeholder: '请选择或填写厚度', rules: [
           { validator: validateThickness, trigger: ['change', 'blur'] }
         ], unit: 'mm', decimalPlace: 3 },
@@ -414,7 +414,7 @@ const FIELD_INFO = {
         { field: 'thickness', name: '厚度', dict: 'thickness', placeholder: '请选择或填写厚度', rules: [
           { validator: validateThickness, trigger: ['change', 'blur'] }
         ], unit: 'mm', decimalPlace: 3 },
-        { field: 'plateType', name: '板型', dict: 'plate_type', placeholder: '请选择或填写板型', rules: validateLength('请选择或填写板型', 10) },
+        { field: 'plateType', name: '板型', dict: 'plate_type', placeholder: '请选择或填写板型', rules: validateLength('请选择或填写板型', 20) },
         { field: 'effectiveWidth', name: '有效宽度', dict: 'effective_width', placeholder: '请选择或填写有效宽度', rules: [
           { validator: validateWidth, trigger: ['change', 'blur'] }
         ], unit: 'mm', decimalPlace: 0 }

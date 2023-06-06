@@ -15,7 +15,7 @@
       <print-table
         v-permission="permission.print"
         api-key="deliveryCargoList"
-        :params="props.detailInfo?.id"
+        :params="{cargoListId:props.detailInfo?.id,projectId:globalProject.id}"
         size="mini"
         type="warning"
         class="filter-item"
@@ -56,7 +56,7 @@
         </el-table-column>
         <el-table-column key="productType" prop="productType" label="类型" align="center">
           <template v-slot="scope">
-            <el-tag>{{installProjectTypeEnum.V[scope.row.productType].SL}}</el-tag>
+            <el-tag>{{globalProject.projectType === projectTypeEnum.STEEL.V ?installProjectTypeEnum.V[scope.row.productType].SL:bridgeComponentTypeEnum.VL[scope.row.productType]}}</el-tag>
           </template>
         </el-table-column>
         <el-table-column key="name" prop="name" label="名称" align="center" />
@@ -75,6 +75,8 @@
 import crudApi, { deliveryProductList } from '@/api/project-manage/delivery-manage/homemade-delivery'
 import { ref, defineEmits, defineProps, watch } from 'vue'
 
+import { projectTypeEnum } from '@enum-ms/contract'
+import { bridgeComponentTypeEnum } from '@enum-ms/bridge'
 import { installProjectTypeEnum } from '@enum-ms/project'
 import { tableSummary } from '@/utils/el-extra'
 import { isNotBlank } from '@data-type/index'
@@ -91,6 +93,10 @@ const props = defineProps({
     require: true
   },
   detailInfo: {
+    type: Object,
+    default: () => {}
+  },
+  globalProject: {
     type: Object,
     default: () => {}
   },
@@ -181,6 +187,7 @@ async function passConfirm(val) {
     const submitData = {
       boolProblemReceiving: val,
       cargoListId: props.detailInfo?.id,
+      projectId: props.globalProject.id,
       problemDesc: val === 1 ? remarkValue.value : undefined
     }
     await crudApi.edit(submitData)

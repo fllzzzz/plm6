@@ -10,7 +10,7 @@ export default function useUnshowProductTypeByMode({ resetQuery }) {
   const showComponent = ref(false)
 
   watch(
-    () => globalProject.value.mode,
+    () => globalProject.value?.mode,
     () => {
       if (typeof resetQuery === 'function') {
         resetQuery()
@@ -32,8 +32,8 @@ export default function useUnshowProductTypeByMode({ resetQuery }) {
         return [componentTypeEnum.ASSEMBLE.V, componentTypeEnum.MACHINE_PART.V]
       case projectModeEnum.STRUCTURE_ASSEMBLE.V:
         return [componentTypeEnum.MACHINE_PART.V]
-      case projectModeEnum.STRUCTURE_PART_ASSEMBLE.V:
-        return []
+      // case projectModeEnum.STRUCTURE_PART_ASSEMBLE.V:
+      //   return []
       default:
         return []
     }
