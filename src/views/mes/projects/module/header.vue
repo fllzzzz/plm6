@@ -33,7 +33,7 @@
         <print-table
           v-permission="crud.permission.print"
           api-key="myProject"
-          :params="{year: crud.query.year}"
+          :params="{year: crud.query.year, projectType: projectTypeEnum.STEEL.V}"
           size="mini"
           type="warning"
           class="filter-item"
@@ -51,12 +51,14 @@ import rrOperation from '@crud/RR.operation'
 import crudOperation from '@crud/CRUD.operation'
 import { parseTime } from '@/utils/date'
 import Panel from '@/components/Panel'
+import { projectTypeEnum } from '@enum-ms/contract'
 
 const projectInfo = inject('projectInfo')
 
 const defaultQuery = {
   noOrName: undefined,
-  year: parseTime(new Date(), '{y}')
+  year: parseTime(new Date(), '{y}'),
+  projectType: projectTypeEnum.STEEL.V
 }
 
 const { crud, query } = regHeader(defaultQuery)

@@ -13,7 +13,7 @@
         ref="monomerSelectRef"
         v-model="query.monomerId"
         :project-id="query.projectId"
-        :main-product-type="query.productType"
+        :main-product-type="(globalProject.projectType === projectTypeEnum.STEEL.V && query.productType!==installProjectTypeEnum.AUXILIARY.V)? query.productType:''"
         clearable
         class="filter-item"
         @change="crud.toQuery"
@@ -75,6 +75,8 @@ import { ref, defineExpose, defineEmits, defineProps, watch } from 'vue'
 import { allProjectPlan } from '@/api/enclosure/enclosure-plan/area'
 
 import { businessTypeEnum, TechnologyTypeAllEnum } from '@enum-ms/contract'
+import { projectTypeEnum } from '@enum-ms/contract'
+import { bridgeComponentTypeEnum } from '@enum-ms/bridge'
 import { installProjectTypeEnum } from '@enum-ms/project'
 
 import useDashboardHeader from '@compos/mes/dashboard/use-dashboard-header'
@@ -99,7 +101,7 @@ const props = defineProps({
   }
 })
 const defaultQuery = {
-  productType: installProjectTypeEnum.ARTIFACT.V,
+  productType: props.globalProject.projectType === projectTypeEnum.STEEL.V ? installProjectTypeEnum.ARTIFACT.V : bridgeComponentTypeEnum.BOX.V,
   monomerId: { value: undefined, resetAble: false },
   category: undefined,
   areaId: { value: undefined, resetAble: false },

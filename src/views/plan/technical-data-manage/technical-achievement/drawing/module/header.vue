@@ -3,7 +3,7 @@
     <template #optLeft>
       <common-radio-button
         v-model="query.productType"
-        :options="deepenTypeEnum.ENUM"
+        :options="globalProject.projectType === projectTypeEnum.STEEL.V?deepenTypeEnum.ENUM:bridgeProcessTypeEnum.ENUM"
         type="enum"
         size="small"
         class="filter-item"
@@ -17,17 +17,25 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, defineProps } from 'vue'
+import { projectTypeEnum } from '@enum-ms/contract'
 import { deepenTypeEnum, technicalDataTypeEnum } from '@enum-ms/plan'
+import { bridgeProcessTypeEnum } from '@enum-ms/bridge'
 
 import { regHeader } from '@compos/use-crud'
 import crudOperation from '@crud/CRUD.operation'
 
 const uploadType = ref('PDF格式')
+const props = defineProps({
+  globalProject: {
+    type: Object,
+    default: () => {}
+  }
+})
 
 const defaultQuery = {
   dataType: technicalDataTypeEnum.DEEPEN.V,
-  productType: deepenTypeEnum.ARTIFACT.V
+  productType: props.globalProject.projectType === projectTypeEnum.STEEL.V ? deepenTypeEnum.ARTIFACT.V : bridgeProcessTypeEnum.BOX.V
 }
 
 const { crud, query } = regHeader(defaultQuery)

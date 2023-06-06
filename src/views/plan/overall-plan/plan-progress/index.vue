@@ -180,6 +180,7 @@
 <script setup>
 import crudApi from '@/api/plan/plan-progress'
 import { ref, watch } from 'vue'
+
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import { mapGetters } from '@/store/lib'
@@ -204,7 +205,7 @@ const { crud, columns, CRUD } = useCRUD(
   {
     title: '计划跟踪',
     sort: ['id.desc'],
-    permission: { ...permission },
+    permission: { ...permission.value },
     optShow: { ...optShow },
     requiredQuery: ['projectId'],
     crudApi: { ...crudApi },
