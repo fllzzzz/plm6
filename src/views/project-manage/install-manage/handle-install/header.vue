@@ -3,7 +3,7 @@
     <div v-show="crud.searchToggle">
       <common-radio-button
         v-model="query.productType"
-        :options="deliveryInstallEnumArr"
+        :options="globalProject.projectType === projectTypeEnum.STEEL.V?deliveryInstallEnumArr:[bridgeComponentTypeEnum.BOX]"
         type="enum"
         class="filter-item"
         @change="crud.toQuery"
@@ -12,7 +12,7 @@
         ref="monomerSelectRef"
         v-model="query.monomerId"
         :project-id="query.projectId"
-        :main-product-type="query.productType"
+        :main-product-type="globalProject.projectType === projectTypeEnum.STEEL.V?query.productType:''"
         :default="false"
         clearable
         class="filter-item"
@@ -63,6 +63,8 @@
 <script setup>
 import { ref, defineProps, watch } from 'vue'
 
+import { projectTypeEnum } from '@enum-ms/contract'
+import { bridgeComponentTypeEnum } from '@enum-ms/bridge'
 import { deliveryInstallTypeEnum, installSetEnum } from '@enum-ms/project'
 // import checkPermission from '@/utils/system/check-permission'
 
@@ -78,7 +80,7 @@ const { deliveryInstallEnumArr } = mapGetters('deliveryInstallEnumArr')
 
 const defaultQuery = {
   projectId: { value: undefined, resetAble: false },
-  productType: deliveryInstallTypeEnum.ARTIFACT.V,
+  productType: props.globalProject.projectType === projectTypeEnum.STEEL.V ? deliveryInstallTypeEnum.ARTIFACT.V : bridgeComponentTypeEnum.BOX.V,
   monomerId: undefined,
   areaId: undefined,
   name: undefined,

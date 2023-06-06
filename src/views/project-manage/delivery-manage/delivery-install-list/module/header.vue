@@ -13,7 +13,7 @@
         ref="monomerSelectRef"
         v-model="query.monomerId"
         :project-id="query.projectId"
-        :main-product-type="query.productType"
+        :main-product-type="globalProject.projectType === projectTypeEnum.STEEL.V?query.productType:''"
         :default="false"
         clearable
         class="filter-item"
@@ -120,6 +120,8 @@ import { allProjectPlan } from '@/api/enclosure/enclosure-plan/area'
 import { ref, watch, defineProps } from 'vue'
 
 import { TechnologyTypeAllEnum } from '@enum-ms/contract'
+import { projectTypeEnum } from '@enum-ms/contract'
+import { bridgeComponentTypeEnum } from '@enum-ms/bridge'
 import { deliveryInstallTypeEnum, installProjectTypeEnum } from '@enum-ms/project'
 import checkPermission from '@/utils/system/check-permission'
 
@@ -134,7 +136,7 @@ const { deliveryInstallEnumArr } = mapGetters('deliveryInstallEnumArr')
 
 const defaultQuery = {
   projectId: { value: undefined, resetAble: false },
-  productType: deliveryInstallTypeEnum.ARTIFACT.V,
+  productType: props.globalProject.projectType === projectTypeEnum.STEEL.V ? installProjectTypeEnum.ARTIFACT.V : bridgeComponentTypeEnum.BOX.V,
   monomerId: undefined,
   areaId: undefined,
   name: undefined,
@@ -144,6 +146,10 @@ const props = defineProps({
   projectId: {
     type: [Number, String],
     default: undefined
+  },
+  globalProject: {
+    type: Object,
+    default: () => {}
   }
 })
 
@@ -201,48 +207,48 @@ async function fetchSummaryInfo() {
       totalQuantity: [
         {
           quantity: data.quantity,
-          unit: installProjectTypeEnum.V[crud.query.productType].unit,
+          unit: data.measureUnit,
           precision: 0
         },
         {
           quantity: data.mete,
-          unit: installProjectTypeEnum.V[crud.query.productType].accountUnit,
+          unit: data.accountingUnit,
           precision: 2
         }
       ],
       totalReceive: [
         {
           quantity: data.receivingQuantity,
-          unit: installProjectTypeEnum.V[crud.query.productType].unit,
+          unit: data.measureUnit,
           precision: 0
         },
         {
           quantity: data.receivingMete,
-          unit: installProjectTypeEnum.V[crud.query.productType].accountUnit,
+          unit: data.accountingUnit,
           precision: 2
         }
       ],
       totalInstall: [
         {
           quantity: data.installQuantity,
-          unit: installProjectTypeEnum.V[crud.query.productType].unit,
+          unit: data.measureUnit,
           precision: 0
         },
         {
           quantity: data.installMete,
-          unit: installProjectTypeEnum.V[crud.query.productType].accountUnit,
+          unit: data.accountingUnit,
           precision: 2
         }
       ],
       extraQuantity: [
         {
           quantity: data.receivingQuantity ? data.receivingQuantity - (data.installQuantity || 0) : 0,
-          unit: installProjectTypeEnum.V[crud.query.productType].unit,
+          unit: data.measureUnit,
           precision: 0
         },
         {
           quantity: data.receivingMete ? data.receivingMete - (data.installMete || 0) : 0,
-          unit: installProjectTypeEnum.V[crud.query.productType].accountUnit,
+          unit: data.accountingUnit,
           precision: 2
         }
       ]

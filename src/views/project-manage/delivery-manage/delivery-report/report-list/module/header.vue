@@ -24,7 +24,7 @@
         ref="monomerSelectRef"
         v-model="query.monomerId"
         :project-id="query.projectId"
-        :main-product-type="query.productType"
+        :main-product-type="(globalProject.projectType === projectTypeEnum.STEEL.V && query.productType!==installProjectTypeEnum.AUXILIARY.V)?query.productType:''"
         :default="false"
         clearable
         class="filter-item"
@@ -134,6 +134,8 @@ import { allProjectPlan } from '@/api/enclosure/enclosure-plan/area'
 import moment from 'moment'
 import { regHeader } from '@compos/use-crud'
 import { TechnologyTypeAllEnum } from '@enum-ms/contract'
+import { projectTypeEnum } from '@enum-ms/contract'
+import { bridgeComponentTypeEnum } from '@enum-ms/bridge'
 import { installProjectTypeEnum } from '@enum-ms/project'
 import { manufactureTypeEnum } from '@enum-ms/plan'
 
@@ -149,8 +151,9 @@ const defaultQuery = {
   date: undefined,
   startDate: undefined,
   endDate: undefined,
-  productType: installProjectTypeEnum.ARTIFACT.V,
+  // productType: installProjectTypeEnum.ARTIFACT.V,
   category: undefined,
+  productType: props.globalProject.projectType === projectTypeEnum.STEEL.V ? installProjectTypeEnum.ARTIFACT.V : bridgeComponentTypeEnum.BOX.V,
   monomerId: undefined,
   areaId: undefined,
   name: undefined,
@@ -168,6 +171,10 @@ const props = defineProps({
   projectId: {
     type: [Number, String],
     default: undefined
+  },
+  globalProject: {
+    type: Object,
+    default: () => {}
   }
 })
 

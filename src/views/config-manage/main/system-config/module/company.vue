@@ -71,6 +71,7 @@
 <script setup>
 import { getCompanyConfig, setCompanyConfig } from '@/api/config/main/system-config'
 import { ref, computed, nextTick } from 'vue'
+import { useStore } from 'vuex'
 
 import checkPermission from '@/utils/system/check-permission'
 import { isObjectValueEqual } from '@data-type/object'
@@ -87,6 +88,7 @@ const defaultData = {
   telephone: void 0
 }
 
+const store = useStore()
 const companyFormRef = ref()
 const loading = ref(false)
 const saveLoading = ref(false)
@@ -133,6 +135,7 @@ function submit() {
         await setCompanyConfig(form.value)
         sourceData.value = { ...form.value }
         ElMessage.success('修改成功')
+        store.dispatch('config/fetchCompany')
       } catch (error) {
         console.log('设置基础信息：项目信息', error)
       } finally {

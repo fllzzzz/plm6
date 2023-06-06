@@ -1,10 +1,11 @@
 import request from '@/utils/request'
 
-export function deliveryCargoList(cargoListId) {
+export function deliveryCargoList(params) {
   return request({
     module: 'project',
-    url: `receiving/listProduct/${cargoListId}/print`,
-    method: 'get'
+    url: `receiving/listProduct/${params.cargoListId}/print`,
+    method: 'get',
+    params
   })
 }
 
