@@ -17,6 +17,7 @@
         class="filter-item date-item"
         @change="handleDateChange"
       />
+      <project-radio-button size="small" v-model="projectId" class="filter-item" @change="handleProjectChange" />
       <workshop-select
         v-model="workshopId"
         placeholder="请选择车间"
@@ -64,6 +65,7 @@
                     taskTypeEnum: crud.query.taskTypeEnum,
                     groupsId: crud.query.groupsId,
                     teamId: crud.query.teamId,
+                    projectId: crud.query.projectId
                   }"
                   size="mini"
                   type="warning"
@@ -82,15 +84,30 @@
             :dataFormat="dataFormat"
             :max-height="maxHeight - 50"
             :show-empty-symbol="false"
+            show-summary
+            :summary-method="getSummaries"
             style="width: 100%"
           >
             <el-table-column label="序号" type="index" align="center" width="70" />
-            <el-table-column v-if="columns.visible('project')" :show-overflow-tooltip="true" label="项目" type="project" align="center" min-width="120">
+            <el-table-column
+              v-if="columns.visible('project')"
+              :show-overflow-tooltip="true"
+              label="项目"
+              type="project"
+              align="center"
+              min-width="120"
+            >
               <template #default="{ row }">
                 <span>{{ row.project?.serialNumber }}-{{ row.project?.name }}</span>
               </template>
             </el-table-column>
-            <el-table-column v-if="columns.visible('monomer.name')" :show-overflow-tooltip="true" prop="monomer.name" label="单体" align="center">
+            <el-table-column
+              v-if="columns.visible('monomer.name')"
+              :show-overflow-tooltip="true"
+              prop="monomer.name"
+              label="单体"
+              align="center"
+            >
               <template #default="{ row }">
                 <span>{{ row.monomer ? row.monomer?.name : '/' }}</span>
               </template>
@@ -100,12 +117,52 @@
                 <span>{{ row.area ? row.area?.name : '/' }}</span>
               </template>
             </el-table-column>
-            <el-table-column v-if="columns.visible('serialNumber')" :show-overflow-tooltip="true" prop="serialNumber" label="编号" min-width="80px" align="center" />
-            <el-table-column v-if="columns.visible('specification')" :show-overflow-tooltip="true" prop="specification" label="规格" min-width="80px" align="center" />
+            <el-table-column
+              v-if="columns.visible('serialNumber')"
+              :show-overflow-tooltip="true"
+              prop="serialNumber"
+              label="编号"
+              min-width="80px"
+              align="center"
+            />
+            <el-table-column
+              v-if="columns.visible('specification')"
+              :show-overflow-tooltip="true"
+              prop="specification"
+              label="规格"
+              min-width="80px"
+              align="center"
+            />
             <el-table-column v-if="columns.visible('length')" :show-overflow-tooltip="true" prop="length" label="长度" align="center" />
             <el-table-column v-if="columns.visible('quantity')" :show-overflow-tooltip="true" prop="quantity" label="数量" align="center" />
-            <el-table-column v-if="columns.visible('netWeight')" :show-overflow-tooltip="true" prop="netWeight" label="单净重（kg）" align="center" />
-            <el-table-column v-if="columns.visible('grossWeight')" :show-overflow-tooltip="true" prop="grossWeight" label="单毛重（kg）" align="center" />
+            <el-table-column
+              v-if="columns.visible('netWeight')"
+              :show-overflow-tooltip="true"
+              prop="netWeight"
+              label="单净重（kg）"
+              align="center"
+            />
+            <el-table-column
+              v-if="columns.visible('grossWeight')"
+              :show-overflow-tooltip="true"
+              prop="grossWeight"
+              label="单毛重（kg）"
+              align="center"
+            />
+            <el-table-column
+              v-if="columns.visible('totalNetWeight')"
+              :show-overflow-tooltip="true"
+              prop="totalNetWeight"
+              label="总净重（kg）"
+              align="center"
+            />
+            <el-table-column
+              v-if="columns.visible('totalGrossWeight')"
+              :show-overflow-tooltip="true"
+              prop="totalGrossWeight"
+              label="总毛重（kg）"
+              align="center"
+            />
           </common-table>
           <!--分页组件-->
           <pagination />
@@ -120,6 +177,7 @@ import crudApi from '@/api/mes/factory-report/group-report.js'
 import { getProcessList, getProcess } from '@/api/mes/factory-report/group-report.js'
 import { ref, watch, provide, onMounted } from 'vue'
 import moment from 'moment'
+import { tableSummary } from '@/utils/el-extra'
 import { PICKER_OPTIONS_SHORTCUTS } from '@/settings/config'
 import workshopSelect from '@comp-mes/workshop-select'
 import { mesGroupReportPM as permission } from '@/page-permission/mes'
@@ -146,7 +204,7 @@ const { crud, columns, CRUD } = useCRUD(
     permission: { ...permission },
     optShow: { ...optShow },
     crudApi: { ...crudApi },
-    invisibleColumns: ['grossWeight'],
+    invisibleColumns: ['grossWeight', 'totalGrossWeight'],
     requiredQuery: ['groupsId']
   },
   tableRef
@@ -159,6 +217,7 @@ const processListRef = ref()
 const date = ref([moment().startOf('month').valueOf(), moment().valueOf()])
 const startDate = ref(moment().startOf('month').valueOf())
 const endDate = ref(moment().valueOf())
+const projectId = ref()
 const workshopId = ref()
 const factoryId = ref()
 const processType = ref()
@@ -182,7 +241,8 @@ onMounted(() => {
 async function fetchProcess() {
   try {
     const data = await getProcess({
-      workshopId: workshopId.value
+      workshopId: workshopId.value,
+      projectId: projectId.value
     })
     processData.value = data || []
   } catch (error) {
@@ -198,7 +258,8 @@ async function fetchProcessList() {
       startDate: startDate.value,
       endDate: endDate.value,
       processId: processType.value,
-      workshopId: workshopId.value
+      workshopId: workshopId.value,
+      projectId: projectId.value
     })
     tableData.value = data || []
   } catch (error) {
@@ -233,6 +294,12 @@ CRUD.HOOK.handleRefresh = (crud, res) => {
   })
 }
 
+function handleProjectChange() {
+  workshopId.value = undefined
+  fetchProcess()
+  fetchProcessList()
+}
+
 function handleNestingTaskClick(val) {
   crud.query.processId = val?.process?.id
   crud.query.workshopId = val?.workshop?.id
@@ -241,8 +308,17 @@ function handleNestingTaskClick(val) {
   crud.query.taskTypeEnum = val?.taskTypeEnum
   crud.query.startDate = startDate.value
   crud.query.endDate = endDate.value
+  crud.query.projectId = projectId.value
   info.value = val
   crud.toQuery()
+}
+
+// 合计
+function getSummaries(param) {
+  return tableSummary(param, {
+    props: ['totalNetWeight', 'totalGrossWeight', 'quantity'],
+    toThousandFields: []
+  })
 }
 </script>
 <style lang="scss" scoped>

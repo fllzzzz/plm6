@@ -187,7 +187,7 @@ const mesGroupsReport = {
      * @param {boolean} show 是否显示
      * @param {string} title 合计名称
      */
-    summary: { show: false, title: '合计' },
+    summary: { show: true, title: '合计' },
     /**
      * 表格列
      * @param {boolean} show 是否显示
@@ -202,16 +202,19 @@ const mesGroupsReport = {
      * @param {boolean} sum 列需要合计
      */
     fields: [
-      { show: true, key: 'project', title: '项目名称', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 28, type: typeEnum.PROJECT.K, format: { showProjectFullName: false, showSerialNumber: true, projectNameShowConfig: projectNameArrangementModeEnum.SERIAL_NUMBER_START.V }},
-      { show: true, key: 'monomer.name', title: '单体', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.MONOMER_NAME.K },
-      { show: true, key: 'area.name', title: '区域', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.AREA_NAME.K },
-      { show: true, key: 'serialNumber', title: '编号', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 22, type: typeEnum.SERIAL_NUMBER.K },
-      { show: true, key: 'specification', title: '规格', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.SPECIFICATION.K, sum: true },
+      { show: true, key: 'project', title: '项目名称', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 24, type: typeEnum.PROJECT.K, format: { showProjectFullName: false, showSerialNumber: true, projectNameShowConfig: projectNameArrangementModeEnum.SERIAL_NUMBER_START.V }},
+      { show: true, key: 'monomer.name', title: '单体', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 14, type: typeEnum.MONOMER_NAME.K },
+      { show: true, key: 'area.name', title: '区域', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 14, type: typeEnum.AREA_NAME.K },
+      { show: true, key: 'serialNumber', title: '编号', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 16, type: typeEnum.SERIAL_NUMBER.K },
+      { show: true, key: 'specification', title: '规格', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 14, type: typeEnum.SPECIFICATION.K, sum: true },
       { show: true, key: 'length', title: '长度', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 13, type: typeEnum.LENGTH.K },
-      { show: true, key: 'quantity', title: '数量', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 13, type: typeEnum.QUANTITY.K },
-      { show: true, key: 'process.name', title: '工序', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 15, type: typeEnum.COMPONENT_PROCESS.K },
+      { show: true, key: 'quantity', title: '数量', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 10, type: typeEnum.QUANTITY.K, sum: true },
+      { show: true, key: 'process.name', title: '工序', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 10, type: typeEnum.COMPONENT_PROCESS.K },
       { show: true, key: 'teamUser.name', title: '班组长', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.USER_NAME.K },
-      { show: true, key: 'netWeight', title: '单重（kg）', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 22, type: typeEnum.WEIGHT.K }
+      { show: true, key: 'netWeight', title: '单净重（kg）', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 13, type: typeEnum.WEIGHT.K },
+      { show: true, key: 'grossWeight', title: '单毛重（kg）', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 13, type: typeEnum.WEIGHT.K },
+      { show: true, key: 'totalNetWeight', title: '总净重（kg）', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 13, type: typeEnum.WEIGHT.K, sum: true },
+      { show: true, key: 'totalGrossWeight', title: '总毛重（kg）', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 13, type: typeEnum.WEIGHT.K, sum: true }
     ]
   }
 }
