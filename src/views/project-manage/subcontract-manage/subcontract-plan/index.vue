@@ -184,7 +184,7 @@ import { dateDifference } from '@/utils/date'
 import { DP } from '@/settings/config'
 import { parseTime } from '@/utils/date'
 import { subcontractPlanPM as permission } from '@/page-permission/project'
-import { TechnologyTypeAllEnum, businessTypeEnum } from '@enum-ms/contract'
+import { TechnologyTypeAllEnum, businessTypeEnum, projectTypeEnum } from '@enum-ms/contract'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import { ElMessage } from 'element-plus'
@@ -312,8 +312,8 @@ CRUD.HOOK.handleRefresh = (crud, data) => {
       v.monomerDetailList.map((k, index) => {
         k.supplierList = v.supplierList
         k.monomerName = v.name
-        k.decimal = k.type === TechnologyTypeAllEnum.STRUCTURE.V ? DP.COM_WT__KG : DP.MES_ENCLOSURE_L__M
-        k.unit = k.type === TechnologyTypeAllEnum.STRUCTURE.V ? 't' : 'm'
+        k.decimal = (k.type === TechnologyTypeAllEnum.STRUCTURE.V || globalProject.value.projectType === projectTypeEnum.BRIDGE.V) ? DP.COM_WT__KG : DP.MES_ENCLOSURE_L__M
+        k.unit = (k.type === TechnologyTypeAllEnum.STRUCTURE.V || globalProject.value.projectType === projectTypeEnum.BRIDGE.V) ? 't' : 'm'
         if (index === 0) {
           k.monomerNameSpan = v.monomerDetailList.length
         }
