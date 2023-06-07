@@ -67,9 +67,9 @@ const defaultQuery = {
   settlementStatus: undefined,
   customerUnit: undefined,
   projectManager: undefined,
-  dateQueryTypeEnum: undefined,
-  startDate: undefined,
-  endDate: undefined
+  dateQueryFormat: { value: undefined, resetAble: false },
+  startDate: { value: undefined, resetAble: false },
+  endDate: { value: undefined, resetAble: false }
 }
 const { crud, query } = regHeader(defaultQuery)
 </script>
