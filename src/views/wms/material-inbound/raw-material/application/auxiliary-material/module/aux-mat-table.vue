@@ -99,7 +99,6 @@
             :precision="row.accountingPrecision"
             size="mini"
             placeholder="核算量"
-            @change="handleWeightChange($event, row)"
           />
         </template>
       </el-table-column>
@@ -180,7 +179,6 @@
             :precision="row.accountingPrecision"
             size="mini"
             placeholder="实收量"
-            @change="handleWeightChange($event, row)"
             @blur="handleOverMete(row)"
           />
           <span v-else>{{ row.mete || '-' }}</span>
@@ -256,7 +254,6 @@
                     :precision="row.accountingPrecision"
                     size="mini"
                     placeholder="实收量"
-                    @change="handleWeightChange($event, purRow, row)"
                     @blur="handleOverMete(purRow)"
                   />
                   <span v-else>{{ purRow.mete || '-' }}</span>
@@ -449,6 +446,13 @@ function rowWatch(row) {
       }
     },
     { deep: true }
+  )
+  // 核算量变化
+  watch(
+    () => row.mete,
+    () => {
+      handleWeightChange(row.mete, row)
+    }
   )
 }
 
