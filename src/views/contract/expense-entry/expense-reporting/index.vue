@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <mHeader :cascader-tree="cascaderTree" />
+    <mHeader />
     <common-table
       ref="tableRef"
       v-loading="crud.loading"
@@ -184,8 +184,7 @@ async function initExpenseType() {
     const enumKV = costAscriptionEnum.V
     expenseList.value.forEach(row => {
       const _row = {
-        ...row,
-        label: row.name
+        ...row
       }
       if (enumKV[row.costAscriptionEnum]?.links) {
         enumKV[row.costAscriptionEnum].links.push(_row)
@@ -198,7 +197,7 @@ async function initExpenseType() {
       const value = enumKV[key]
       tree.push({
         id: value.V,
-        label: value.L,
+        name: value.L,
         links: value.links
       })
     }

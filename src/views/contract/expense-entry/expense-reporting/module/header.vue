@@ -79,7 +79,7 @@ const totalAmount = ref(0)
 const cascaderValue = ref([])
 const cascaderProps = ref({
   value: 'id',
-  label: 'label',
+  label: 'name',
   children: 'links',
   checkStrictly: true
 })
@@ -89,9 +89,9 @@ const cascaderTree = inject('cascaderTree')
 const defaultQuery = {
   expenseTypeId: undefined,
   expenseSubjectId: undefined,
-  dateQueryTypeEnum: undefined,
-  startDate: undefined,
-  endDate: undefined,
+  dateQueryFormat: { value: undefined, resetAble: false },
+  startDate: { value: undefined, resetAble: false },
+  endDate: { value: undefined, resetAble: false },
   payee: undefined,
   projectId: undefined,
   isProject: undefined,

@@ -64,9 +64,9 @@ const defaultQuery = {
   projectId: undefined,
   businessTypeEnum: undefined,
   settlementStatus: settlementStatusEnum.UNSETTLEMENT.V,
-  dateQueryTypeEnum: undefined,
-  startDate: undefined,
-  endDate: undefined,
+  dateQueryFormat: { value: undefined, resetAble: false },
+  startDate: { value: undefined, resetAble: false },
+  endDate: { value: undefined, resetAble: false },
   projectManagerName: undefined
 }
 
