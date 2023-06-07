@@ -86,7 +86,7 @@ import highTechRdFeeConfView from '@/views/config-manage/wms/high-tech-rd-fee/in
 const defaultQuery = {
   outboundTime: { value: `${new Date().getTime()}`, resetAble: false }, // 月份
   projectId: undefined, // 原项目id
-  factoryId: undefined, // 工厂id
+  workshopId: undefined, // 车间id
   projectWarehouseType: undefined, // 仓库类型
   basicClass: undefined // 基础类型
 }

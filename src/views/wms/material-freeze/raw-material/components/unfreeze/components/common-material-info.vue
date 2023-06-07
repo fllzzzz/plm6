@@ -46,7 +46,7 @@ const props = defineProps({
 })
 
 const warehouseName = computed(() => {
-  const fcName = props.material.factory ? props.material.factory.name : ''
+  const fcName = props.material.workshop ? props.material.workshop.name : ''
   const warehouseName = props.material.warehouse ? props.material.warehouse.name : ''
   return `${fcName} - ${warehouseName}`
 })

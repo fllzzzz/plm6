@@ -19,14 +19,17 @@
 import { computed } from 'vue'
 import { regForm } from '@compos/use-crud'
 import { STEEL_ENUM } from '@/settings/config'
+import { orderSupplyTypeEnum } from '@enum-ms/wms'
 import { matClsEnum } from '@/utils/enum/modules/classification'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { setSpecInfoToList } from '@/utils/wms/spec'
+import { deepClone } from '@/utils/data-type'
 
 import SteelApplication from '@/views/wms/material-inbound/raw-material/application/steel/index.vue'
 import AuxMatApplication from '@/views/wms/material-inbound/raw-material/application/auxiliary-material/index.vue'
 import OtherApplication from '@/views/wms/material-inbound/raw-material/application/other/index.vue'
 import GasApplication from '@/views/wms/material-inbound/raw-material/application/gas/index.vue'
+import ManufApplication from '@/views/wms/material-inbound/manufactured/index.vue'
 
 const { CRUD, crud, form } = regForm()
 
@@ -40,6 +43,9 @@ const comp = computed(() => {
       return AuxMatApplication
     case matClsEnum.GAS.V:
       return GasApplication
+    case matClsEnum.STRUC_MANUFACTURED.V:
+    case matClsEnum.ENCL_MANUFACTURED.V:
+      return ManufApplication
     case matClsEnum.OTHER.V:
       return OtherApplication
     default:
@@ -54,6 +60,30 @@ CRUD.HOOK.beforeEditDetailLoaded = async (crud, detail) => {
     toSmallest: false,
     toNum: true
   })
+  detail.list.forEach((v) => {
+    v.warehouseId = v.warehouse?.id || v.warehouseId
+    v.projectId = v.project?.id || v.projectId
+  })
+  // 物流信息
+  detail.logistics = detail.logisticsOrder
+  if (detail.supplyType !== orderSupplyTypeEnum.PARTY_A.V) {
+    detail.originList = deepClone(detail.list)
+    detail.list = []
+    detail.editObj = {}
+    detail.originList.forEach((v) => {
+      if (!detail.editObj[v.mergeId]) {
+        detail.editObj[v.mergeId] = {
+          ...v,
+          applyPurchaseObj: {
+            [v.applyPurchaseId]: { ...v }
+          },
+          isSelected: true
+        }
+      } else {
+        detail.editObj[v.mergeId].applyPurchaseObj[v.applyPurchaseId] = { ...v }
+      }
+    })
+  }
 }
 
 function handleSuccess() {

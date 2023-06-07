@@ -484,9 +484,16 @@ export default {
       hidden: false,
       name: 'ApprovalManage',
       alwaysShow: true,
-      redirect: '/config-manage/approval-manage/company-process',
+      redirect: '/config-manage/approval-manage/base',
       meta: { title: '审批管理', icon: 'project', noCache: true },
       children: [
+        {
+          name: 'CompanyProcessBase',
+          path: 'base',
+          hidden: false,
+          component: '/config-manage/approval-manage/base/index',
+          meta: { title: '基础配置', icon: 'project', noCache: true }
+        },
         {
           name: 'CompanyProcess',
           path: 'company-process',

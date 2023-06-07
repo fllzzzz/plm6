@@ -30,7 +30,7 @@
             <el-form-item label="单体" prop="monomerId" label-width="55px">
               <common-select
                 v-model="form.monomerId"
-                :options="form.projectId && projectMap?.[form.projectId]?.children || []"
+                :options="(form.projectId && projectMap?.[form.projectId]?.children) || []"
                 :dataStructure="{ key: 'id', label: 'name', value: 'id' }"
                 class="input-underline"
                 clearable
@@ -42,7 +42,7 @@
             <el-form-item label="区域" prop="areaId" label-width="55px">
               <common-select
                 v-model="form.areaId"
-                :options="form.monomerId && monomerMap?.[form.monomerId]?.children || []"
+                :options="(form.monomerId && monomerMap?.[form.monomerId]?.children) || []"
                 :dataStructure="{ key: 'id', label: 'name', value: 'id' }"
                 class="input-underline"
                 clearable
@@ -52,9 +52,9 @@
               />
             </el-form-item>
           </template>
-            <el-form-item v-else label="项目" prop="projectId" label-width="55px">
-              <span v-parse-project="{ project: currentProject }" v-empty-text style="display: inline-block; min-width: 150px" />
-            </el-form-item>
+          <el-form-item v-else label="项目" prop="projectId" label-width="55px">
+            <span v-parse-project="{ project: currentProject }" v-empty-text style="display: inline-block; min-width: 150px" />
+          </el-form-item>
         </template>
         <el-form-item label="领用人" prop="recipientId">
           <user-dept-cascader
@@ -75,6 +75,7 @@
         :data-format="columnsDataFormat"
         :max-height="maxHeight"
         :default-expand-all="false"
+        :cell-class-name="wrongCellMask"
         :expand-row-keys="expandRowKeys"
         row-key="id"
       >
@@ -107,7 +108,7 @@
         <!-- 次要信息 -->
         <material-secondary-info-columns :basic-class="basicClass" :show-batch-no="false" />
         <warehouse-info-columns />
-        <el-table-column label="车间" width="170px" align="center" fixed="right">
+        <el-table-column label="车间" width="170px" align="center" fixed="right" prop="workshopId">
           <template #default="{ row: { sourceRow: row } }">
             <workshop-select
               v-model="row.workshopId"
@@ -163,6 +164,7 @@ import { materialOperateColumns } from '@/utils/columns-format/wms'
 import { getProjectInfo } from '@/utils/project'
 
 import useVisible from '@compos/use-visible'
+import useTableValidate from '@compos/form/use-table-validate'
 import useMaxHeight from '@compos/use-max-height'
 import useWmsConfig from '@/composables/store/use-wms-config'
 import userDeptCascader from '@comp-base/user-dept-cascader.vue'
@@ -174,7 +176,7 @@ import materialBaseInfoColumns from '@/components-system/wms/table-columns/mater
 import materialUnitOperateQuantityColumns from '@/components-system/wms/table-columns/material-unit-operate-quantity-columns/index.vue'
 import materialSecondaryInfoColumns from '@/components-system/wms/table-columns/material-secondary-info-columns/index.vue'
 import warehouseInfoColumns from '@/components-system/wms/table-columns/warehouse-info-columns/index.vue'
-import workshopSelect from '@comp-mes/workshop-select'
+import workshopSelect from '@/components-system/base/workshop-select.vue'
 import { ElMessage } from 'element-plus'
 
 const emit = defineEmits(['success', 'update:visible'])
@@ -206,6 +208,10 @@ const { projectMap, monomerMap } = useProjectTree()
 const steelRules = {
   projectId: [{ required: true, message: '请选择出库项目', trigger: 'change' }]
 }
+const tableRules = {
+  workshopId: [{ required: true, message: '请选择出库车间', trigger: 'change' }]
+}
+const { tableValidate, wrongCellMask } = useTableValidate({ rules: tableRules, errorMsg: '请选择出库车间' }) // 表格校验
 
 // 校验
 const rules = computed(() => {
@@ -386,6 +392,12 @@ async function submit() {
       toSmallest: true,
       toNum: true
     })
+    const { validResult, dealList } = tableValidate(data.list)
+    if (validResult) {
+      data.list = dealList
+    } else {
+      return validResult
+    }
     if (data.list.length === 0) {
       ElMessage.warning('请填写数据')
       return

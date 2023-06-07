@@ -21,10 +21,6 @@
             <span class="title">存储类型：</span>
             <span v-parse-enum="{ e: rawMatClsEnum, v: data.materialType, bit: true, split: ' | ' }"></span>
           </span>
-          <span class="extra-label">
-            <span class="title">类型：</span>
-            <span v-parse-enum="{ e: warehouseTypeEnum, v: data.type }"></span>
-          </span>
         </span>
       </span>
     </template>
@@ -33,7 +29,6 @@
 
 <script setup>
 import { defineProps, defineEmits, ref, watch, computed } from 'vue'
-import { warehouseTypeEnum } from '@/utils/enum/modules/wms'
 import { rawMatClsEnum } from '@/utils/enum/modules/classification'
 import { isBlank, judgeSameValue } from '@data-type/index'
 import useWarehouse from '@compos/store/use-warehouse'
@@ -43,11 +38,11 @@ const props = defineProps({
   modelValue: {
     type: [Array, Number, String]
   },
-  factoryId: {
-    // 工厂id
+  workshopId: {
+    // 车间id
     type: [Array, Number]
   },
-  // 在不传入工厂的时候查所有，不包含被禁用的
+  // 在不传入车间的时候查所有，不包含被禁用的
   showAll: {
     type: Boolean,
     default: false
@@ -110,12 +105,12 @@ const options = computed(() => {
   if (!props.showForbidden) {
     list = list.filter((v) => v.enabled)
   }
-  // 筛选工厂
-  if (props.factoryId) {
-    if (Array.isArray(props.factoryId)) {
-      list = list.filter((v) => props.factoryId.includes(v.factoryId))
+  // 筛选车间
+  if (props.workshopId) {
+    if (Array.isArray(props.workshopId)) {
+      list = list.filter((v) => props.workshopId.includes(v.workshopId))
     } else {
-      list = list.filter((v) => props.factoryId === v.factoryId)
+      list = list.filter((v) => props.workshopId === v.workshopId)
     }
   } else {
     list = props.showAll ? list : []

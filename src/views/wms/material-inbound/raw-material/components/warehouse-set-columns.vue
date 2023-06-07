@@ -1,24 +1,28 @@
 <template>
-  <el-table-column prop="factoryId" align="center" min-width="120px" label="工厂">
+  <el-table-column prop="workshopId" align="center" min-width="120px" label="车间">
     <template #default="{ row: { sourceRow: row }, $index }">
-      <factory-select
+      <workshop-select
         v-if="row"
-        v-model="row.factoryId"
-        placeholder="请选择工厂"
-        only-one-default
+        v-model="row.workshopId"
+        placeholder="请选择车间"
+        :disabled="props.boolManuf ? row.destination === destinationTypeEnum.CONSTRUCTION_SITE.V : false"
         :show-extra="$index !== 0"
-        @change="handleFactoryChange($event, $index, row)"
+        @change="handleWorkshopChange($event, $index, row)"
       />
     </template>
   </el-table-column>
-  <el-table-column prop="warehouseId" label="存储位置" min-width="140px" align="center">
+  <el-table-column v-if="showWarehouse" prop="warehouseId" label="存储位置" min-width="140px" align="center">
     <template #default="{ row: { sourceRow: row }, $index }">
       <warehouse-select
         v-if="row"
         v-model="row.warehouseId"
-        :factory-id="getFactoryVal($index)"
+        :workshop-id="getWorkshopVal($index)"
         :basic-class="row.basicClass"
-        :show-extra="(formList[$index - 1] && formList[$index]?.basicClass ===  formList[$index - 1]?.basicClass) && !warehouseDittoableIndex.includes($index)"
+        :show-extra="
+          formList[$index - 1] &&
+          formList[$index]?.basicClass === formList[$index - 1]?.basicClass &&
+          !warehouseDittoableIndex.includes($index)
+        "
         placeholder="存储位置"
       />
     </template>
@@ -27,8 +31,9 @@
 
 <script setup>
 import { defineProps, computed, watchEffect, ref, nextTick } from 'vue'
+import { destinationTypeEnum } from '@enum-ms/production'
 
-import factorySelect from '@/components-system/base/factory-select.vue'
+import workshopSelect from '@/components-system/base/workshop-select.vue'
 import warehouseSelect from '@/components-system/wms/warehouse-select.vue'
 import useDittoRealVal from '@/composables/form/use-ditto-real-val'
 import { isBlank } from '@/utils/data-type'
@@ -39,6 +44,14 @@ const props = defineProps({
     default: () => {
       return {}
     }
+  },
+  boolManuf: {
+    type: Boolean,
+    default: false
+  },
+  showWarehouse: {
+    type: Boolean,
+    default: true
   }
 })
 const currentForm = ref({ list: [] })
@@ -48,24 +61,24 @@ watchEffect(() => {
 })
 
 const {
-  getNotDittoArr: getFactoryNotDittoArr,
-  initScopeList: initFactoryScopeList,
-  handleValueChange: handleFactoryChangeForValue,
-  getRealVal: getFactoryVal
-} = useDittoRealVal('factoryId')
+  getNotDittoArr: getWorkshopNotDittoArr,
+  initScopeList: initWorkshopScopeList,
+  handleValueChange: handleWorkshopChangeForValue,
+  getRealVal: getWorkshopVal
+} = useDittoRealVal('workshopId')
 
 const warehouseDittoableIndex = computed(() => {
-  return getFactoryNotDittoArr()
+  return getWorkshopNotDittoArr()
 })
 
 const formList = computed(() => {
   return currentForm.value.list || []
 })
 
-watchEffect(() => initFactoryScopeList(formList.value))
+watchEffect(() => initWorkshopScopeList(formList.value))
 
-function handleFactoryChange(val, index, row) {
-  handleFactoryChangeForValue(val, index)
+function handleWorkshopChange(val, index, row) {
+  handleWorkshopChangeForValue(val, index)
   if (val !== -1) {
     row.warehouseId = undefined
   } else {

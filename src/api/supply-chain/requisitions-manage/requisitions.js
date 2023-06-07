@@ -33,6 +33,33 @@ export function detail(id) {
 }
 
 /**
+ * 查询采购进度
+ * @param {Number} id 申购id
+ * @returns
+ */
+export function getSchedule(id) {
+  return request({
+    module: 'scm',
+    url: `apply-purchase/schedule/${id}`,
+    method: 'get'
+  })
+}
+
+/**
+ * 查询采购进度
+ * @param {Number} id 申购id
+ * @returns
+ */
+export function exportScheduleExcel({ id }) {
+  return request({
+    module: 'scm',
+    url: `apply-purchase/excel/${id}`,
+    method: 'get',
+    responseType: 'blob'
+  })
+}
+
+/**
  * 获取申购单号
  * @returns
  */
@@ -54,12 +81,22 @@ export function add(data) {
   })
 }
 
+// 新增
+export function edit(data) {
+  return request({
+    module: 'scm',
+    url: `apply-purchase`,
+    method: 'put',
+    data
+  })
+}
+
 // 撤销
 export function del(ids) {
   return request({
     module: 'scm',
     url: `apply-purchase`,
-    method: 'put',
+    method: 'delete',
     params: {
       id: ids[0]
     }
@@ -76,4 +113,70 @@ export function editStatus({ id, enabled }) {
   })
 }
 
-export default { add, del, detail, get }
+// 申购单（简要）
+export function getRequisitionBrief(params) {
+  return request({
+    module: 'scm',
+    url: `apply-purchase/brief`,
+    method: 'get',
+    params
+  })
+}
+
+// 查询可采购物料详情
+export function canPurchaseDetail(params) {
+  return request({
+    module: 'scm',
+    url: `apply-purchase/can-purchase-detail`,
+    method: 'get',
+    params
+  })
+}
+
+/**
+ * 查询构件类型
+ *
+ * @param {Number} page 页码
+ * @param {Number} size 每页数量
+ * @returns
+ */
+export function manufClassListGet(params) {
+  return request({
+    module: 'scm',
+    url: 'purchase-order/purchasing/structure-class',
+    method: 'get',
+    params
+  })
+}
+
+/**
+ * 成品列表
+ *
+ * @param {Number} page 页码
+ * @param {Number} size 每页数量
+ * @returns
+ */
+export function manufListGet(params) {
+  return request({
+    module: 'scm',
+    url: 'purchase-order/purchasing/artifact-enclosure-detail',
+    method: 'get',
+    params
+  })
+}
+
+/**
+ * 可申购库存查询
+ *
+ * @returns
+ */
+export function inventoryGet(params) {
+  return request({
+    module: 'wms',
+    url: 'material-inventory/apply-purchase-steel',
+    method: 'get',
+    params
+  })
+}
+
+export default { add, edit, del, detail, get }

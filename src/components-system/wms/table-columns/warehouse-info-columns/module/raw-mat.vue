@@ -38,15 +38,6 @@
     min-width="100"
   />
   <el-table-column
-    v-if="showWorkshop"
-    key="workshop.name"
-    :show-overflow-tooltip="true"
-    prop="workshop.name"
-    label="车间"
-    align="left"
-    min-width="100"
-  />
-  <el-table-column
     v-if="showWarehouse"
     key="warehouse"
     prop="warehouse"
@@ -57,7 +48,7 @@
     show-overflow-tooltip
   >
     <template #default="{ row }">
-      <factory-table-cell-tag v-if="props.showFactory" :id="row.factory ? row.factory.id : row.factoryId" />
+      <workshop-table-cell-tag v-if="props.showWorkshop" :id="row.workshop ? row.workshop.id : row.workshopId" />
       {{ row.warehouse ? row.warehouse.name : row.warehouseName }}
     </template>
   </el-table-column>
@@ -67,7 +58,7 @@
 import { defineProps, computed } from 'vue'
 import { isBlank } from '@/utils/data-type'
 import { outboundRelationTypeEnum } from '@/utils/enum/modules/wms'
-import factoryTableCellTag from '@comp-base/factory-table-cell-tag.vue'
+import workshopTableCellTag from '@comp-base/workshop-table-cell-tag.vue'
 
 const props = defineProps({
   showProject: {
@@ -88,11 +79,7 @@ const props = defineProps({
     type: Boolean,
     default: false
   },
-  showWorkshop: { // 显示车间
-    type: Boolean,
-    default: false
-  },
-  showFactory: {
+  showWorkshop: {
     // 显示工厂
     type: Boolean,
     default: true
@@ -111,5 +98,4 @@ const showWarehouse = computed(() => isBlank(props.columns) || props.columns.vis
 const showProject = computed(() => props.showProject && (isBlank(props.columns) || props.columns.visible('project')))
 const showMonomer = computed(() => props.showMonomer && (isBlank(props.columns) || props.columns.visible('monomerName')))
 const showArea = computed(() => props.showArea && (isBlank(props.columns) || props.columns.visible('areaName')))
-const showWorkshop = computed(() => props.showWorkshop && (isBlank(props.columns) || props.columns.visible('workshop.name')))
 </script>

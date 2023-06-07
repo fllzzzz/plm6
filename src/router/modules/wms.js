@@ -27,11 +27,11 @@ export default {
           meta: { title: '辅材入库', icon: 'project', noCache: true }
         },
         {
-          name: 'GasInboundApplication',
-          path: 'gas',
+          name: 'ManufInboundApplication',
+          path: 'manufactured',
           hidden: false,
-          component: '/wms/material-inbound/raw-material/application/gas/index',
-          meta: { title: '气体入库', icon: 'project', noCache: true }
+          component: '/wms/material-inbound/manufactured/index',
+          meta: { title: '制成品入库', icon: 'project', noCache: true }
         },
         {
           name: 'OtherInboundApplication',
@@ -85,13 +85,6 @@ export default {
           hidden: false,
           component: '/wms/material-return/raw-material/application/auxiliary-material/index',
           meta: { title: '辅材退库', icon: 'project', noCache: true }
-        },
-        {
-          name: 'GasReturnApplication',
-          path: 'gas',
-          hidden: false,
-          component: '/wms/material-return/raw-material/application/gas/index',
-          meta: { title: '气体退库', icon: 'project', noCache: true }
         },
         {
           name: 'OtherReturnApplication',
@@ -227,13 +220,6 @@ export default {
           hidden: false,
           component: '/wms/material-inventory/aux-material/index',
           meta: { title: '辅材仓库', icon: 'project', noCache: true }
-        },
-        {
-          name: 'WMSGasMaterialInventory',
-          path: 'gas',
-          hidden: false,
-          component: '/wms/material-inventory/gas/index',
-          meta: { title: '气体仓库', icon: 'project', noCache: true }
         },
         {
           name: 'WMSOtherMaterialInventory',

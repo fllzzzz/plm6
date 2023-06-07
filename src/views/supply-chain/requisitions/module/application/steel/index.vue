@@ -12,7 +12,7 @@
       <div class="filter-container">
         <div class="filter-left-box">
           <el-radio-group v-model="currentBasicClass" size="small" class="filter-item">
-            <el-radio-button v-for="item in steelBasicClassKV" :key="item.K" :label="item.K">
+            <el-radio-button v-for="item in steelBasicClassKV" :key="item.K" :label="item.K" :disabled="item.V === matClsEnum.STEEL_COIL.V">
               {{ item.L }}{{ form[item.K] && form[item.K].length ? `(${form[item.K].length})` : '' }}
             </el-radio-button>
           </el-radio-group>
@@ -29,10 +29,20 @@
             :template="importTemp"
             @success="handleExcelSuccess"
           />
+          <export-button
+            v-if="currentBasicClass"
+            class="filter-item"
+            size="small"
+            type="info"
+            :params="{ basicClass: steelBasicClassKV[currentBasicClass].V, receiptType: receiptTypeEnum.REQUISITIONS.V }"
+            :fn="downloadExcelTemplate"
+          >
+            {{ steelBasicClassKV[currentBasicClass].L }}清单模板下载
+          </export-button>
         </div>
       </div>
       <el-form ref="formRef" :model="form">
-        <component ref="steelRef" :max-height="tableMaxHeight" :style="maxHeightStyle" :is="comp" />
+        <component ref="steelRef" :max-height="tableMaxHeight" :style="maxHeightStyle" :is="comp" @search-inventory="searchInventory" />
       </el-form>
     </common-wrapper>
     <common-drawer
@@ -57,20 +67,25 @@
         />
       </template>
     </common-drawer>
+    <inventory-drawer v-model:visible="inventoryVisible" :params="searchInfo" @use-inventory="useInventory" />
   </div>
 </template>
 
 <script setup>
 import crudApi from '@/api/supply-chain/requisitions-manage/requisitions'
+import { downloadExcelTemplate } from '@/api/wms/common'
 
-import { defineProps, defineEmits, ref, computed, watch, provide, nextTick, reactive } from 'vue'
+import { defineProps, defineEmits, ref, computed, watch, provide, nextTick, reactive, watchEffect } from 'vue'
 import { STEEL_ENUM } from '@/settings/config'
+import { convertUnits } from '@/utils/convert/unit'
 import { matClsEnum } from '@/utils/enum/modules/classification'
-import { preparationTypeEnum } from '@enum-ms/wms'
+import { steelInboundFormFormat } from '@/utils/wms/measurement-calc'
+import { preparationTypeEnum, requisitionModeEnum, receiptTypeEnum } from '@enum-ms/wms'
 import steelPlateTemp from '@/utils/excel/import-template/supply-chain/requisition-temp/steel-plate'
 import sectionSteelTemp from '@/utils/excel/import-template/supply-chain/requisition-temp/section-steel'
 import steelCoilTemp from '@/utils/excel/import-template/supply-chain/requisition-temp/steel-coil'
 
+import useMatBaseUnit from '@/composables/store/use-mat-base-unit'
 import useForm from '@/composables/form/use-form'
 import useMaxHeight from '@compos/use-max-height'
 import commonWrapper from './../components/common-wrapper.vue'
@@ -78,7 +93,9 @@ import materialTableSpecSelect from '@/components-system/classification/material
 import steelPlateTable from './module/steel-plate-table.vue'
 import sectionSteelTable from './module/section-steel-table.vue'
 import steelCoilTable from './module/steel-coil-table.vue'
+import inventoryDrawer from '../components/inventory-drawer'
 import excelResolveButton from '@/components-system/common/excel-resolve-button/index.vue'
+import ExportButton from '@comp-common/export-button/index.vue'
 import { ElMessage, ElRadioGroup } from 'element-plus'
 import { isBlank, isNotBlank, toFixed } from '@/utils/data-type'
 
@@ -87,8 +104,14 @@ const emit = defineEmits(['success'])
 const props = defineProps({
   detail: {
     type: Object
+  },
+  isEdit: {
+    type: Boolean,
+    default: false
   }
 })
+
+const { baseUnit } = useMatBaseUnit() // 当前分类基础单位
 
 // 基础分类
 const steelBasicClassKV = {
@@ -101,7 +124,8 @@ const defaultForm = {
   list: [], // 钢材列表，提交时合并
   steelPlateList: [], // 钢板列表
   sectionSteelList: [], // 型材列表
-  steelCoilList: [] // 钢卷列表
+  steelCoilList: [], // 钢卷列表
+  originInventoryInfo: {} // 使用库存
 }
 
 const steelRef = ref() // 表格ref
@@ -109,8 +133,14 @@ const matSpecRef = ref() // 规格列表ref
 const formRef = ref() // form表单ref
 const drawerRef = ref()
 const materialSelectVisible = ref(false) // 显示物料选择
+const inventoryVisible = ref(false)
+const searchInfo = ref({})
+const searchIdx = ref()
 const currentBasicClass = ref() // 当前基础分类
 const list = ref([]) // 当前操作的表格list
+const useInventoryInfo = ref({}) // 使用库存信息
+
+provide('useInventoryInfo', useInventoryInfo) // 供子组件调用
 
 // 钢材三个组件的ref列表
 const steelRefList = reactive({
@@ -121,16 +151,104 @@ const steelRefList = reactive({
 
 provide('matSpecRef', matSpecRef) // 供兄弟组件调用 删除
 
+// 使用草稿时，为数据设置监听
+const setFormCallback = (form) => {
+  const trigger = {
+    steelPlateList: null,
+    sectionSteelList: null,
+    steelCoilList: null
+  }
+  const initSelectedTrigger = {
+    steelPlateList: null,
+    sectionSteelList: null,
+    steelCoilList: null
+  }
+  const list = ['steelPlateList', 'sectionSteelList', 'steelCoilList']
+  let hasDefaultSelect = false // 是否有默认选中，优先选中有数据的类型
+  list.forEach((key) => {
+    if (isNotBlank(form[key])) {
+      if (!hasDefaultSelect) {
+        hasDefaultSelect = true
+        currentBasicClass.value = key
+      }
+
+      form[key] = form[key].map((v) => reactive(v))
+      trigger[key] = watch(
+        steelRefList,
+        (ref) => {
+          if (ref[key]) {
+            // 初始化数据监听，执行一次后取消当前监听
+            form[key].forEach((v) => ref[key].rowWatch(v))
+            // 初始化选中数据，执行一次后取消当前监听
+            initSelectedTrigger[key] = watch(
+              matSpecRef,
+              () => {
+                if (matSpecRef.value) {
+                  matSpecRef.value.initSelected(
+                    form[key].map((v) => {
+                      return { sn: v.sn, classifyId: v.classifyId }
+                    })
+                  )
+                  nextTick(() => {
+                    initSelectedTrigger[key]()
+                  })
+                }
+              },
+              { immediate: true }
+            )
+            nextTick(() => {
+              trigger[key]()
+            })
+          }
+        },
+        { immediate: true, deep: true }
+      )
+    }
+  })
+}
+
 const { cu, form, FORM } = useForm(
   {
     title: '钢材申购',
+    // formStore: !props.isEdit,
+    // formStoreKey: 'REQUISITIONS_STEEL',
     defaultForm: defaultForm,
+    useDraftCallback: setFormCallback,
     clearDraftCallback: init,
-    api: crudApi.add
+    api: props.isEdit ? crudApi.edit : crudApi.add
   },
   formRef,
   props.detail
 )
+
+watchEffect(() => {
+  if (list.value?.length) {
+    const _obj = {}
+    for (let i = 0; i < list.value.length; i++) {
+      const item = list.value[i]
+      if (item.requisitionMode === requisitionModeEnum.USE_INVENTORY.V) {
+        // 若是利用钢卷，使用用长度计算
+        const _useBasicClass = form.originInventoryInfo[item.materialInventoryId]?.basicClass
+        const _useQuantity =
+          (_useBasicClass & matClsEnum.STEEL_COIL.V) && (item.basicClass & matClsEnum.STEEL_COIL.V)
+            ? convertUnits(
+              item.length,
+                baseUnit.value[item.basicClass]?.length?.unit,
+                baseUnit.value[_useBasicClass]?.measure?.unit,
+                baseUnit.value[_useBasicClass]?.measure?.precision
+            )
+            : item.quantity
+        item.useQuantity = _useQuantity
+        if (!_obj[item.materialInventoryId]) {
+          _obj[item.materialInventoryId] = _useQuantity
+        } else {
+          _obj[item.materialInventoryId] += _useQuantity
+        }
+      }
+    }
+    useInventoryInfo.value = _obj
+  }
+})
 
 // 当前物料“批量导入模板”
 const importTemp = computed(() => {
@@ -151,22 +269,7 @@ watch(
   (val = {}) => {
     form.type = val.type
     form.materialType = val.materialType
-    // 项目id
-    if (val.type === preparationTypeEnum.PROJECT.V) {
-      form.projectId = val.projectId
-    } else if (val.type === preparationTypeEnum.PUBLIC.V) {
-      form.projectId = []
-    } else {
-      if (Array.isArray(val.projectId)) {
-        if (val.projectId.length === 1) {
-          form.projectId = val.projectId
-        } else {
-          form.projectId = []
-        }
-      } else {
-        form.projectId = val.projectId ? [val.projectId] : []
-      }
-    }
+    form.projectId = val.projectId
   },
   { deep: true, immediate: true }
 )
@@ -242,12 +345,71 @@ watch(
 )
 
 // 监听list变更,为对应的钢材清单赋值，监听地址即可
-watch(list, (val) => {
-  form[currentBasicClass.value] = val
-})
+watch(
+  list,
+  (val) => {
+    form[currentBasicClass.value] = val
+  },
+  { deep: true }
+)
+
+function searchInventory(row, index) {
+  searchInfo.value = row
+  searchIdx.value = index
+  inventoryVisible.value = true
+}
+
+function useInventory(quantity, data) {
+  const materialInventoryId = data.id
+  if (!form.originInventoryInfo) form.originInventoryInfo = {}
+  form.originInventoryInfo[materialInventoryId] = {
+    quantity: data.quantity,
+    frozenQuantity: data.frozenQuantity,
+    basicClass: data.basicClass
+  }
+  const _curBasicClass = steelBasicClassKV?.[currentBasicClass.value]?.V
+  if (_curBasicClass & matClsEnum.STEEL_PLATE.V) {
+    // 钢板冻结钢卷
+    if (data.basicClass & matClsEnum.STEEL_COIL.V) {
+      form[currentBasicClass.value][searchIdx.value].length = convertUnits(
+        quantity,
+        baseUnit.value[data.basicClass]?.measure?.unit,
+        baseUnit.value[_curBasicClass].length.unit,
+        baseUnit.value[_curBasicClass].length.precision
+      )
+      form[currentBasicClass.value][searchIdx.value].quantity = 1
+      form[currentBasicClass.value][searchIdx.value].canUseQuantity = 1
+    } else {
+      form[currentBasicClass.value][searchIdx.value].length = data.length
+      form[currentBasicClass.value][searchIdx.value].quantity = quantity
+      form[currentBasicClass.value][searchIdx.value].canUseQuantity = data.quantity
+    }
+    form[currentBasicClass.value][searchIdx.value].width = data.width
+  }
+  if (_curBasicClass & matClsEnum.SECTION_STEEL.V) {
+    form[currentBasicClass.value][searchIdx.value].quantity = quantity
+    form[currentBasicClass.value][searchIdx.value].length = data.length
+    form[currentBasicClass.value][searchIdx.value].canUseQuantity = data.quantity
+  }
+  if (_curBasicClass & matClsEnum.STEEL_COIL.V) {
+    form[currentBasicClass.value][searchIdx.value].quantity = quantity
+    form[currentBasicClass.value][searchIdx.value].canUseQuantity = data.quantity
+  }
+  form[currentBasicClass.value][searchIdx.value].color = data.color
+  form[currentBasicClass.value][searchIdx.value].brand = data.brand
+  form[currentBasicClass.value][searchIdx.value].requisitionMode = requisitionModeEnum.USE_INVENTORY.V
+  form[currentBasicClass.value][searchIdx.value].materialInventoryId = materialInventoryId
+}
 
 // 初始化
 init()
+
+FORM.HOOK.beforeToEdit = async (crud, form) => {
+  // 修改的情况下，数据预处理
+  await steelInboundFormFormat(form)
+  // 设置监听等
+  setFormCallback(form)
+}
 
 // 提交后清除校验结果
 FORM.HOOK.afterSubmit = () => {
@@ -287,8 +449,6 @@ function rowInit(row) {
   return steelRef.value.rowInit(row)
 }
 
-init()
-
 // 信息初始化
 function init() {
   nextTick(() => {
@@ -307,7 +467,6 @@ function handleExcelSuccess(list) {
   // 解析
   // 根据物料种类获取
   try {
-    console.log(list)
     cu.props.import(list)
   } catch (error) {
     ElMessage.error({ message: error.message, duration: 5000 })

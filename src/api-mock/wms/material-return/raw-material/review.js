@@ -239,9 +239,9 @@ const detail_id1 = {
               'shortName|+1': ['长安街', '你脸红个泡泡茶壶'],
               serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
             },
-            factory: {
+            workshop: {
               id: 1,
-              name: '一号工厂'
+              name: '一号车间'
             },
             warehouse: {
               id: 1,
@@ -273,9 +273,9 @@ const detail_id1 = {
                 id: 1,
                 serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
               },
-              factory: {
+              workshop: {
                 id: 1,
-                name: '一号工厂'
+                name: '一号车间'
               },
               warehouse: {
                 id: 1,
@@ -304,9 +304,9 @@ const detail_id1 = {
               'shortName|+1': ['长安街', '你脸红个泡泡茶壶'],
               serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
             },
-            factory: {
+            workshop: {
               id: 1,
-              name: '一号工厂'
+              name: '一号车间'
             },
             warehouse: {
               id: 1,
@@ -337,9 +337,9 @@ const detail_id1 = {
                 id: 1,
                 serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
               },
-              factory: {
+              workshop: {
                 id: 1,
-                name: '一号工厂'
+                name: '一号车间'
               },
               warehouse: {
                 id: 1,
@@ -393,9 +393,9 @@ const detail_id2 = {
               'shortName|+1': ['长安街', '你脸红个泡泡茶壶'],
               serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
             },
-            factory: {
+            workshop: {
               id: 1,
-              name: '1号工厂'
+              name: '1号车间'
             },
             warehouse: {
               id: 1,
@@ -428,9 +428,9 @@ const detail_id2 = {
                 id: 1,
                 serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
               },
-              factory: {
+              workshop: {
                 id: 1,
-                name: '一号工厂'
+                name: '一号车间'
               },
               warehouse: {
                 id: 1,
@@ -486,9 +486,9 @@ const detail_id3 = {
               'shortName|+1': ['长安街', '你脸红个泡泡茶壶'],
               serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
             },
-            factory: {
+            workshop: {
               id: 1,
-              name: '1号工厂'
+              name: '1号车间'
             },
             warehouse: {
               id: 1,
@@ -521,9 +521,9 @@ const detail_id3 = {
                 id: 1,
                 serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
               },
-              factory: {
+              workshop: {
                 id: 1,
-                name: '一号工厂'
+                name: '一号车间'
               },
               warehouse: {
                 id: 1,
@@ -573,9 +573,9 @@ const detail_id4 = {
               'shortName|+1': ['长安街', '你脸红个泡泡茶壶'],
               serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
             },
-            factory: {
+            workshop: {
               id: 1,
-              name: '一号工厂'
+              name: '一号车间'
             },
             warehouse: {
               id: 1,
@@ -605,9 +605,9 @@ const detail_id4 = {
                 id: 1,
                 serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
               },
-              factory: {
+              workshop: {
                 id: 1,
-                name: '一号工厂'
+                name: '一号车间'
               },
               warehouse: {
                 id: 1,
@@ -639,9 +639,9 @@ const detail_id4 = {
               id: 1,
               serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
             },
-            factory: {
+            workshop: {
               id: 1,
-              name: '一号工厂'
+              name: '一号车间'
             },
             warehouse: {
               id: 1,
@@ -672,9 +672,9 @@ const detail_id4 = {
                 id: 1,
                 serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
               },
-              factory: {
+              workshop: {
                 id: 1,
-                name: '一号工厂'
+                name: '一号车间'
               },
               warehouse: {
                 id: 1,
@@ -726,9 +726,9 @@ const detail_id5 = {
               'shortName|+1': ['长安街', '你脸红个泡泡茶壶'],
               serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
             },
-            factory: {
+            workshop: {
               id: 1,
-              name: '一号工厂'
+              name: '一号车间'
             },
             warehouse: {
               id: 1,
@@ -758,9 +758,9 @@ const detail_id5 = {
                 id: 1,
                 serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
               },
-              factory: {
+              workshop: {
                 id: 1,
-                name: '一号工厂'
+                name: '一号车间'
               },
               warehouse: {
                 id: 1,

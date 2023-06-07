@@ -73,67 +73,20 @@
           <!-- 次要信息 -->
           <material-secondary-info-columns v-if="showTableColumnSecondary" :basic-class="form.basicClass" />
           <!-- 金额设置 -->
-          <template v-if="showAmount">
-            <!-- <price-set-columns
-              v-if="fillableAmount"
-              :form="form"
-              :order="order"
-              :requisitions="requisitions"
-              weightAttribute="mete"
-              @amount-change="handleAmountChange"
-            /> -->
-            <template v-if="fillableAmount && !boolPartyA">
-              <el-table-column prop="unitPrice" align="center" width="135px" label="含税单价">
-                <template #default="{ row: { sourceRow: row } }">
-                  <common-input-number
-                    v-if="row"
-                    v-model="row.unitPrice"
-                    :min="0"
-                    :max="9999999999"
-                    :controls="false"
-                    :step="1"
-                    size="mini"
-                    placeholder="含税单价"
-                    @change="handleUnitPriceChange($event, row)"
-                  />
-                </template>
-              </el-table-column>
-              <el-table-column prop="amount" align="center" width="135px" label="金额">
-                <template #default="{ row: { sourceRow: row } }">
-                  <common-input-number
-                    v-if="row"
-                    v-model="row.amount"
-                    :min="0"
-                    :max="9999999999"
-                    :controls="false"
-                    :step="1"
-                    size="mini"
-                    :precision="DP.YUAN"
-                    placeholder="金额"
-                    @change="handleAmountChange($event, row)"
-                  />
-                </template>
-              </el-table-column>
-              <el-table-column prop="project" label="项目" align="left" min-width="120px" show-overflow-tooltip />
-            </template>
-            <template v-else>
-              <el-table-column prop="unitPrice" label="含税单价" align="right" min-width="120px" show-overflow-tooltip />
-              <el-table-column prop="amount" label="金额" align="right" min-width="120px" show-overflow-tooltip />
-              <el-table-column prop="sourceRequisitionsSN" label="申购单" align="left" min-width="120px" show-overflow-tooltip />
-              <el-table-column prop="project" label="项目" align="left" min-width="120px" show-overflow-tooltip />
-              <el-table-column prop="monomerName" label="单体" align="left" min-width="120px" show-overflow-tooltip />
-              <el-table-column prop="areaName" label="区域" align="left" min-width="120px" show-overflow-tooltip />
-            </template>
+          <template v-if="showAmount && !boolPartyA">
+            <el-table-column prop="unitPrice" label="含税单价" align="right" min-width="120px" show-overflow-tooltip />
+            <el-table-column prop="amount" label="金额" align="right" min-width="120px" show-overflow-tooltip />
           </template>
-          <template v-else>
-            <el-table-column prop="sourceRequisitionsSN" label="申购单" align="left" min-width="120px" show-overflow-tooltip />
-            <el-table-column prop="project" label="项目" align="left" min-width="120px" show-overflow-tooltip />
-            <el-table-column prop="monomerName" label="单体" align="left" min-width="120px" show-overflow-tooltip />
-            <el-table-column prop="areaName" label="区域" align="left" min-width="120px" show-overflow-tooltip />
-          </template>
+          <!-- <el-table-column prop="sourceRequisitionsSN" label="申购单" align="left" min-width="120px" show-overflow-tooltip /> -->
+          <el-table-column prop="project" label="项目" align="left" min-width="120px" show-overflow-tooltip />
+          <el-table-column prop="monomerName" label="单体" align="left" min-width="120px" show-overflow-tooltip />
+          <el-table-column prop="areaName" label="区域" align="left" min-width="120px" show-overflow-tooltip />
           <!-- 仓库设置 -->
-          <warehouse-set-columns v-if="fillableWarehouse" :form="form" />
-          <warehouse-info-columns v-else />
+          <template v-if="!boolManuf">
+            <warehouse-set-columns v-if="fillableWarehouse" :form="form" />
+            <warehouse-info-columns v-else />
+          </template>
+          <el-table-column v-else prop="workshop.name" label="车间" align="left" min-width="120px" show-overflow-tooltip />
         </common-table>
         <el-input
           class="approval-comments"
@@ -162,13 +115,14 @@
 import { getPendingReviewIdList, detail, reviewPassed, reviewReturned } from '@/api/wms/material-inbound/raw-material/review'
 import { inject, computed, ref, defineEmits, defineProps, watch } from 'vue'
 import { orderSupplyTypeEnum, inspectionStatusEnum, inboundFillWayEnum } from '@enum-ms/wms'
+import { materialPurchaseClsEnum } from '@/utils/enum/modules/classification'
 import { logisticsPayerEnum } from '@/utils/enum/modules/logistics'
 import { tableSummary } from '@/utils/el-extra'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { setSpecInfoToList } from '@/utils/wms/spec'
 // import { deepClone, isBlank, isNotBlank, toFixed } from '@/utils/data-type'
-import { deepClone, isBlank, toPrecision, isNotBlank } from '@/utils/data-type'
-import { getDP } from '@/utils/data-type/number'
+import { deepClone, isBlank, isNotBlank } from '@/utils/data-type'
+// import { getDP } from '@/utils/data-type/number'
 import { DP } from '@/settings/config'
 import { materialHasAmountColumns } from '@/utils/columns-format/wms'
 
@@ -234,7 +188,6 @@ const currentInboundId = ref() // 当前id
 const { inboundFillWayCfg } = useWmsConfig()
 
 // 可填写金额（统一为入库填写，取消后台配置）
-// const fillableAmount = ref(false)
 const fillableAmount = computed(() =>
   inboundFillWayCfg.value ? inboundFillWayCfg.value.amountFillWay === inboundFillWayEnum.REVIEWING.V : false
 )
@@ -252,6 +205,7 @@ const fillableWarehouse = ref(false)
 const fillableLogistics = computed(() => order.value.logisticsPayerType === logisticsPayerEnum.DEMAND.V && fillableAmount.value)
 // 是否“甲供”
 const boolPartyA = computed(() => form.value?.supplyType === orderSupplyTypeEnum.PARTY_A.V)
+const boolManuf = computed(() => form.value.basicClass & materialPurchaseClsEnum.MANUFACTURED.V)
 // 采购合同信息
 const order = computed(() => form.value.purchaseOrder || {})
 // 申购单信息
@@ -273,9 +227,9 @@ const showTableColumnSecondary = computed(() => {
   return !(unshow1 || unshow2)
 })
 
-// 仓管填写的信息（工厂及仓库）
+// 仓管填写的信息（车间及仓库）
 const warehouseRules = {
-  factoryId: [{ required: true, message: '请选择工厂', trigger: 'change' }],
+  workshopId: [{ required: true, message: '请选择车间', trigger: 'change' }],
   warehouseId: [{ required: true, message: '请选择仓库', trigger: 'change' }]
 }
 
@@ -322,7 +276,7 @@ const { maxHeight } = useMaxHeight(
 const ditto = new Map([
   ['requisitionsSN', -1],
   ['projectId', -1],
-  ['factoryId', -1],
+  ['workshopId', -1],
   ['warehouseId', -1]
 ])
 
@@ -490,7 +444,7 @@ function setDitto(list) {
   const dittoWithNotWare = new Map([
     ['requisitionsSN', -1],
     ['projectId', -1],
-    ['factoryId', -1]
+    ['workshopId', -1]
   ])
   let basicClass = list[0].basicClass // 首个不一样的物料类型，仓库位置不设置同上
   const warehouseDittoableIdex = [0]
@@ -530,19 +484,19 @@ function setDitto(list) {
 //   )
 // }
 
-function handleUnitPriceChange(val, row) {
-  const dp = getDP(val)
-  if (dp > 10) {
-    row.unitPrice = toPrecision(val, 10)
-    val = row.unitPrice
-  }
-  row.amount = isNotBlank(val) ? toPrecision(val * row.mete, DP.YUAN) : undefined
-}
+// function handleUnitPriceChange(val, row) {
+//   const dp = getDP(val)
+//   if (dp > 10) {
+//     row.unitPrice = toPrecision(val, 10)
+//     val = row.unitPrice
+//   }
+//   row.amount = isNotBlank(val) ? toPrecision(val * row.mete, 2) : undefined
+// }
 
-// 处理金额变化
-function handleAmountChange(val, row) {
-  row.unitPrice = isNotBlank(val) ? toPrecision(val / row.mete, 10) : undefined
-}
+// // 处理金额变化
+// function handleAmountChange(val, row) {
+//   row.unitPrice = isNotBlank(val) ? toPrecision(val / row.mete, 10) : undefined
+// }
 
 // 合计
 function getSummaries(param) {

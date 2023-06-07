@@ -14,6 +14,7 @@
     :clearable="props.clearable"
     :filterable="props.filterable"
     :textAlign="props.textAlign"
+    :unshowOptions="props.unshowOptions"
     type="enum"
     mode="bit"
     @change="selectChange"

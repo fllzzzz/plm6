@@ -34,11 +34,10 @@
         @change="toQuery"
       />
       <slot name="beforeWarehouse" />
-      <!-- <factory-select v-model="queryVO.factoryId" placeholder="工厂" class="filter-item" @change="toQuery" clearable /> -->
       <warehouse-select
         v-if="showWarehouse"
         v-model="queryVO.warehouseId"
-        :factory-id="queryVO.factoryId"
+        :workshop-id="queryVO.workshopId"
         :basic-class="props.basicClass"
         placeholder="存储位置"
         class="filter-item"
@@ -54,6 +53,7 @@
   </div>
   <slot name="secondLineFirstItem" class="child-mr-6" />
   <material-cascader
+    v-if="!(props.basicClass & MANUF_ENUM)"
     v-model="queryVO.classifyId"
     :basic-class="props.basicClass"
     separator=" > "
@@ -72,11 +72,11 @@
 
 <script setup>
 import { defineEmits, defineProps, computed, watchEffect, ref } from 'vue'
+import { MANUF_ENUM } from '@/settings/config'
 import { rawMatClsEnum } from '@/utils/enum/modules/classification'
 import { projectWarehouseTypeEnum, materialIsWholeEnum } from '@/utils/enum/modules/wms'
 
 import MaterialCascader from '@comp-cls/material-cascader/index.vue'
-// import FactorySelect from '@/components-system/base/factory-select.vue'
 import WarehouseSelect from '@/components-system/wms/warehouse-select.vue'
 import SteelPlate from './module/steel-plate.vue'
 import SectionSteel from './module/section-steel.vue'
@@ -84,6 +84,7 @@ import SteelCoil from './module/steel-coil.vue'
 import AuxMat from './module/aux-mat.vue'
 import Gas from './module/gas.vue'
 import RawMat from './module/raw-mat.vue'
+import ManufMat from './module/manuf-mat.vue'
 const emit = defineEmits(['to-query'])
 
 const props = defineProps({
@@ -121,6 +122,9 @@ const props = defineProps({
 })
 
 const comp = computed(() => {
+  if (props.basicClass & MANUF_ENUM) {
+    return ManufMat
+  }
   if (!props.showBasicClassQuery) {
     return RawMat
   }

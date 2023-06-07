@@ -35,13 +35,13 @@
       />
     </el-form-item>
   </template>
-  <el-form-item v-if="showFactoryAndWare" label="工厂" prop="factoryId">
-    <factory-select v-model="currentForm.factoryId" placeholder="工厂" style="width: 100%" />
+  <el-form-item v-if="showWorkshopAndWare" label="车间" prop="workshopId">
+    <workshop-select v-model="currentForm.workshopId" placeholder="车间" style="width: 100%" />
   </el-form-item>
-  <el-form-item v-if="showFactoryAndWare" label="仓库" prop="warehouseId">
+  <el-form-item v-if="showWorkshopAndWare" label="仓库" prop="warehouseId">
     <warehouse-select
       v-model="currentForm.warehouseId"
-      :factory-id="currentForm.factoryId"
+      :workshop-id="currentForm.workshopId"
       :basic-class="material.basicClass"
       placeholder="存储位置"
       style="width: 100%"
@@ -78,7 +78,7 @@ import { defineProps, computed, watchEffect, ref } from 'vue'
 import { transferNormalTypeEnum } from '@/utils/enum/modules/wms'
 
 import ProjectCascader from '@comp-base/project-cascader.vue'
-import FactorySelect from '@/components-system/base/factory-select.vue'
+import WorkshopSelect from '@/components-system/base/workshop-select.vue'
 import WarehouseSelect from '@/components-system/wms/warehouse-select.vue'
 import useProjectTree from '@compos/store/use-project-tree'
 
@@ -102,7 +102,7 @@ const currentForm = ref({
   projectId: undefined, // 项目id
   monomerId: undefined, // 单体id
   areaId: undefined, // 区域id
-  factoryId: undefined, // 工厂id
+  workshopId: undefined, // 车间id
   warehouseId: undefined, // 仓库id
   quantity: undefined, // 数量
   remark: undefined // 备注
@@ -125,7 +125,7 @@ const showProjectSelect = computed(() => {
   return currentForm.value.transferType === transferNormalTypeEnum.PROJECT_WARE.V
 })
 
-const showFactoryAndWare = computed(() => {
+const showWorkshopAndWare = computed(() => {
   return currentForm.value.transferType !== transferNormalTypeEnum.RETURN_PARTY_A.V
 })
 

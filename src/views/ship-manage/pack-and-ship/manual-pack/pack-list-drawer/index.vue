@@ -219,7 +219,7 @@ import { convertUnits } from '@/utils/convert/unit'
 import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'
 import oneCodeNumberList from '@/components-system/mes/one-code-number-list'
-import workshopSelect from '@comp-mes/workshop-select'
+import workshopSelect from '@/components-system/base/workshop-select.vue'
 import choseAddMethodDialog from '../chose-add-method-dialog'
 import tableCellTag from '@comp-common/table-cell-tag/index.vue'
 

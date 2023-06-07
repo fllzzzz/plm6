@@ -39,21 +39,6 @@
         </template>
       </el-table-column>
       <el-table-column
-        v-if="columns.visible('type')"
-        key="type"
-        :show-overflow-tooltip="true"
-        prop="name"
-        label="仓库类型"
-        align="center"
-        width="100px"
-      >
-        <template #default="{ row }">
-          <el-tag :type="row.sourceRow.type === warehouseTypeEnum.NORMAL.V ? 'info' : 'warning'">
-            {{ row.type }}
-          </el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column
         v-if="columns.visible('sort')"
         key="sort"
         :show-overflow-tooltip="true"
@@ -97,14 +82,13 @@
 
 <script setup>
 import crudApi, { editEnabled } from '@/api/config/wms/warehouse'
-import { configWmsFactoryWarehousePM as permission } from '@/page-permission/config'
+import { configWmsWorkshopWarehousePM as permission } from '@/page-permission/config'
 
 import { ref } from 'vue'
 import { useStore } from 'vuex'
 import EO from '@enum'
 import { matClsEnum } from '@enum-ms/classification'
 import { enabledEnum } from '@/utils/enum/modules/common'
-import { warehouseTypeEnum } from '@enum-ms/wms'
 import { baseTimeColumns } from '@/utils/columns-format/common'
 import checkPermission from '@/utils/system/check-permission'
 
@@ -127,7 +111,7 @@ const optShow = {
 
 const tableRef = ref()
 const store = useStore()
-const columnsDataFormat = [...baseTimeColumns, ['type', ['parse-enum', warehouseTypeEnum]]]
+const columnsDataFormat = [...baseTimeColumns]
 const { maxHeight } = useMaxHeight({
   paginate: true
 })

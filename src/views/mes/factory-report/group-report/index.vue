@@ -121,7 +121,7 @@ import { getProcessList, getProcess } from '@/api/mes/factory-report/group-repor
 import { ref, watch, provide, onMounted } from 'vue'
 import moment from 'moment'
 import { PICKER_OPTIONS_SHORTCUTS } from '@/settings/config'
-import workshopSelect from '@comp-mes/workshop-select'
+import workshopSelect from '@comp-base/workshop-select'
 import { mesGroupReportPM as permission } from '@/page-permission/mes'
 import { workshopTypeEnum } from '@enum-ms/common'
 import useMaxHeight from '@compos/use-max-height'

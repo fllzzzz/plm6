@@ -62,7 +62,7 @@ import { isBlank, isNotBlank } from '@/utils/data-type'
 import useDittoRealVal from '@/composables/form/use-ditto-real-val'
 
 import useProjectTree from '@compos/store/use-project-tree'
-import workshopSelect from '@comp-mes/workshop-select'
+import workshopSelect from '@comp-base/workshop-select'
 
 const props = defineProps({
   form: {

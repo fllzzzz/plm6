@@ -30,6 +30,7 @@ const useWmsConfig = (loadedCallBack) => {
     loaded,
     baseUnit: computed(() => store.state.wms.baseUnit), // wms基础单位
     inboundSteelCfg: computed(() => store.state.wms.inboundSteelCfg), // 钢材入库配置
+    purchaseCfg: computed(() => store.state.wms.purchaseCfg), // 采购入库配置
     inboundFillWayCfg: computed(() => store.state.wms.inboundFillWayCfg), // 入库填写方式
     outboundCfg: computed(() => store.state.wms.outboundCfg), // 出库配置
     rejectCfg: computed(() => store.state.wms.rejectCfg), // 退货配置

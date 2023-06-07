@@ -1,4 +1,9 @@
 <template>
+  <!-- 申购详情 -->
+  <detail-wrapper v-if="receiptExist[receiptTypeEnum.REQUISITIONS.K]" ref="requisitionsRef" :api="getRequisitionDetail">
+    <requisition-detail />
+  </detail-wrapper>
+
   <!-- 采购合同详情 -->
   <detail-wrapper v-if="receiptExist[receiptTypeEnum.PURCHASE.K]" ref="purchaseOrderRef" :api="getPurchaseOrderDetail">
     <purchase-order-detail />
@@ -39,6 +44,7 @@
 import { ref, watch, defineProps, defineExpose } from 'vue'
 import { receiptTypeEnum } from '@/utils/enum/modules/wms'
 
+import { detail as getRequisitionDetail } from '@/api/supply-chain/requisitions-manage/requisitions'
 import { detail as getPurchaseOrderDetail } from '@/api/supply-chain/purchase-order'
 import { detail as getInboundDetail } from '@/api/wms/material-inbound/raw-material/review'
 import { detail as getOutboundDetail } from '@/api/wms/material-outbound/raw-material/record'
@@ -49,7 +55,8 @@ import { detail as getSupplementDetail } from '@/api/wms/report/raw-material/sup
 
 import useOtherCrudDetail from '@compos/use-other-crud-detail'
 import DetailWrapper from '@crud/detail-wrapper.vue'
-import purchaseOrderDetail from '@/views/supply-chain/purchase-order/module/detail/raw-material.vue'
+import requisitionDetail from '@/views/supply-chain/requisitions/module/detail.vue'
+import purchaseOrderDetail from '@/views/supply-chain/purchase-order/module/detail/index.vue'
 import InboundDetail from '@/views/wms/material-inbound/raw-material/review/module/detail.vue'
 import OutboundDetail from '@/views/wms/material-outbound/raw-material/record/module/detail.vue'
 import TransferDetail from '@/views/wms/material-transfer/raw-material/review/module/detail.vue'
@@ -75,6 +82,8 @@ watch(
   { immediate: true }
 )
 
+// 申购详情
+const { detailRef: requisitionsRef, openDetail: openRequisitionDetail } = useOtherCrudDetail()
 // 采购合同详情
 const { detailRef: purchaseOrderRef, openDetail: openPurchaseDetail } = useOtherCrudDetail()
 // 入库单详情
@@ -92,6 +101,7 @@ const { detailRef: supplementDetailRef, openDetail: openSupplementDetail } = use
 
 function setReceiptExist(receiptTypes = []) {
   const re = {
+    [receiptTypeEnum.REQUISITIONS.K]: false,
     [receiptTypeEnum.PURCHASE.K]: false,
     [receiptTypeEnum.INBOUND.K]: false,
     [receiptTypeEnum.OUTBOUND.K]: false,
@@ -113,6 +123,9 @@ function openDetail(detailId, receiptType) {
     receiptType = receiptTypeEnum[props.receiptTypes[0]].V
   }
   switch (receiptType) {
+    case receiptTypeEnum.REQUISITIONS.V:
+      openRequisitionDetail(detailId)
+      return
     case receiptTypeEnum.PURCHASE.V:
       openPurchaseDetail(detailId)
       return

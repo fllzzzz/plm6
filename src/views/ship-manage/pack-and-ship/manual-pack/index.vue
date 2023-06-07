@@ -116,7 +116,7 @@ import { manualPackPM as permission } from '@/page-permission/ship-manage'
 
 import useMaxHeight from '@compos/use-max-height'
 // import factorySelect from '@comp-base/factory-select'
-// import workshopSelect from '@comp-mes/workshop-select'
+// import workshopSelect from '@/components-system/base/workshop-select.vue'
 import structureTable from './structure'
 import enclosureTable from './enclosure'
 import auxiliaryMaterialTable from './auxiliary-material'

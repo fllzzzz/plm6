@@ -8,7 +8,16 @@
     row-key="uid"
   >
     <el-table-column label="序号" type="index" align="center" width="60" fixed="left" />
-    <el-table-column prop="serialNumber" label="编号" align="center" fixed="left" />
+    <el-table-column prop="serialNumber" label="编号" align="center" fixed="left">
+      <template #default="{ row }">
+        <table-cell-tag
+          :show="row.requisitionMode === requisitionModeEnum.USE_INVENTORY.V"
+          :name="requisitionModeEnum.USE_INVENTORY.L"
+          color="#e6a23c"
+        />
+        <span>{{ row.serialNumber }}</span>
+      </template>
+    </el-table-column>
     <el-table-column prop="classifyName" label="物料种类" align="center" fixed="left" show-overflow-tooltip>
       <template #default="{ row }">
         <el-tooltip :content="row.classifyParentFullName" :disabled="!row.classifyParentFullName" :show-after="500" placement="top">
@@ -23,12 +32,7 @@
         </el-tooltip>
       </template>
     </el-table-column>
-    <el-table-column
-      key="weighingTotalWeight"
-      prop="weighingTotalWeight"
-      align="center"
-      :label="`总重 (${baseUnit.weight.unit})`"
-    >
+    <el-table-column key="weighingTotalWeight" prop="weighingTotalWeight" align="center" :label="`总重 (${baseUnit.weight.unit})`">
       <template #default="{ row }">
         <common-input-number
           v-model="row.weighingTotalWeight"
@@ -45,6 +49,7 @@
     <el-table-column prop="thickness" align="center" :label="`厚 (${baseUnit.thickness.unit})`">
       <template #default="{ row }">
         <common-input-number
+          v-if="row.requisitionMode !== requisitionModeEnum.USE_INVENTORY.V"
           v-model="row.thickness"
           :min="0"
           :max="999999"
@@ -54,11 +59,13 @@
           size="mini"
           placeholder="厚"
         />
+        <span v-else>{{ row.thickness }}</span>
       </template>
     </el-table-column>
     <el-table-column prop="width" align="center" :label="`宽 (${baseUnit.width.unit})`">
       <template #default="{ row }">
         <common-input-number
+          v-if="row.requisitionMode !== requisitionModeEnum.USE_INVENTORY.V"
           v-model="row.width"
           :min="0"
           :max="999999"
@@ -68,11 +75,13 @@
           size="mini"
           placeholder="宽"
         />
+        <span v-else>{{ row.width }}</span>
       </template>
     </el-table-column>
     <el-table-column prop="length" align="center" :label="`长 (m)`">
       <template #default="{ row }">
         <common-input-number
+          v-if="row.requisitionMode !== requisitionModeEnum.USE_INVENTORY.V"
           v-model="row.length"
           :min="0"
           :max="999999999"
@@ -81,20 +90,38 @@
           size="mini"
           placeholder="长"
         />
+        <span v-else>{{ row.length }}</span>
       </template>
     </el-table-column>
     <el-table-column prop="color" label="颜色" align="center">
       <template #default="{ row }">
-        <el-input v-model.trim="row.color" maxlength="20" size="mini" placeholder="颜色" />
+        <el-input
+          v-if="row.requisitionMode !== requisitionModeEnum.USE_INVENTORY.V"
+          v-model.trim="row.color"
+          maxlength="20"
+          size="mini"
+          placeholder="颜色"
+        />
+        <span v-else>{{ row.color }}</span>
       </template>
     </el-table-column>
     <el-table-column prop="brand" label="品牌" align="center">
       <template #default="{ row }">
-        <el-input v-model.trim="row.brand" maxlength="60" size="mini" placeholder="品牌" />
+        <el-input
+          v-if="row.requisitionMode !== requisitionModeEnum.USE_INVENTORY.V"
+          v-model.trim="row.brand"
+          maxlength="60"
+          size="mini"
+          placeholder="品牌"
+        />
+        <span v-else>{{ row.brand }}</span>
       </template>
     </el-table-column>
-    <el-table-column label="操作" width="70" align="center" fixed="right">
+    <el-table-column label="操作" width="140" align="center" fixed="right">
       <template #default="{ row, $index }">
+        <common-button type="primary" size="mini" v-if="form.type !== preparationTypeEnum.PUBLIC.V" @click="search(row, $index)">
+          查询
+        </common-button>
         <common-button icon="el-icon-delete" type="danger" size="mini" @click="delRow(row.sn, $index)" />
       </template>
     </el-table-column>
@@ -102,8 +129,9 @@
 </template>
 
 <script setup>
-import { defineExpose, inject, reactive, watch } from 'vue'
+import { defineExpose, defineEmits, inject, reactive, watch } from 'vue'
 import { matClsEnum } from '@/utils/enum/modules/classification'
+import { requisitionModeEnum, preparationTypeEnum } from '@enum-ms/wms'
 import { isBlank, isNotBlank } from '@/utils/data-type'
 
 import { regExtra } from '@/composables/form/use-form'
@@ -112,6 +140,9 @@ import useMatBaseUnit from '@/composables/store/use-mat-base-unit'
 import { createUniqueString } from '@/utils/data-type/string'
 import { calcSteelCoilLength } from '@/utils/wms/measurement-calc'
 import { positiveNumPattern } from '@/utils/validate/pattern'
+import { ElMessage } from 'element-plus'
+
+const emit = defineEmits(['search-inventory'])
 
 // 当前物料基础类型
 const basicClass = matClsEnum.STEEL_COIL.V
@@ -147,6 +178,7 @@ function rowInit(row) {
   const _row = reactive({
     uid: createUniqueString(),
     sn: row.sn, // 该科目规格唯一编号
+    requisitionMode: requisitionModeEnum.PURCHASE.V,
     specificationLabels: row.specificationLabels, // 规格中文
     serialNumber: row.serialNumber, // 科目编号 - 规格
     classifyId: row.classify.id, // 科目id
@@ -156,13 +188,11 @@ function rowInit(row) {
     basicClass: row.classify.basicClass, // 基础类型
     specification: row.spec, // 规格
     specificationMap: row.specKV, // 规格KV格式
-    // measureUnit: row.classify.measureUnit, // 计量单位
+    measureUnit: row.classify.measureUnit, // 计量单位
     accountingUnit: row.classify.accountingUnit, // 核算单位
     accountingPrecision: row.classify.accountingPrecision, // 核算单位小数精度
-    // measurePrecision: row.classify.measurePrecision, // 计量单位小数精度
+    measurePrecision: row.classify.measurePrecision, // 计量单位小数精度
     // quantity: undefined, // 数量（毫米，计量单位对应的值）
-    measureUnit: '米', // 计量单位
-    measurePrecision: 3, // 计量单位小数精度
     quantity: undefined, // 数量（米，计量单位对应的值）
     color: undefined, // 颜色
     brand: undefined, // 品牌
@@ -200,10 +230,18 @@ async function calcTheoryLength(row) {
 function calcTotalLength(row) {
   if (isNotBlank(row.theoryLength)) {
     // mm转为m
-    row.length = row.theoryLength / 1000
+    row.length = row.theoryLength * 1
   } else {
     row.length = undefined
   }
+}
+
+function search(row, index) {
+  if (isBlank(row.thickness)) {
+    ElMessage.warning('请填写厚度')
+    return
+  }
+  emit('search-inventory', row, index)
 }
 
 // 删除行

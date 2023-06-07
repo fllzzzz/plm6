@@ -25,7 +25,7 @@
     />
     <span class="public-ware-text" v-else>公共库</span>
     &nbsp;&nbsp;-&nbsp;&nbsp;
-    <span v-if="detail.direction.factory">{{ detail.direction.factory.name }}</span>
+    <span v-if="detail.direction.workshop">{{ detail.direction.workshop.name }}</span>
     &nbsp;&nbsp;-&nbsp;&nbsp;
     <span v-if="detail.direction.warehouse">{{ detail.direction.warehouse.name }}</span>
   </span>

@@ -93,6 +93,7 @@ const validateHalfSize = (rule, value, callback) => {
 
 const rules = {
   projectId: [{ required: true, message: '请选择出库项目', trigger: 'change' }],
+  workshopId: [{ required: true, message: '请选择出库车间', trigger: 'change' }],
   materialOutboundMode: [{ required: true, message: '请选择物料出库方式', trigger: 'change' }],
   halfMode: [{ required: true, message: '请选择物料半出方式', trigger: 'change' }],
   halfSize: [{ required: true, validator: validateHalfSize, trigger: 'blur' }],
@@ -160,7 +161,7 @@ function formInit(data) {
     materialId: data.id, // 物料id
     monomerId: data?.monomerId, // 单体id
     areaId: data?.areaId, // 区域id
-    factoryId: data.factory?.id, // 车间id
+    workshopId: data.workshop?.id, // 车间id
     outboundUnit: data.outboundUnit, // 出库单位
     outboundUnitPrecision: data.outboundUnitPrecision, // 出库单位精度
     projectId: data.project ? data.project.id : undefined, // 项目id

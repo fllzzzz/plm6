@@ -19,7 +19,7 @@
     <template v-if="dialogVisible">
       <el-form ref="formRef" :model="form" :disabled="cu.status.edit === FORM.STATUS.PROCESSING">
         <common-table
-          :data="form.list"
+          :data="formList"
           :data-format="columnsDataFormat"
           :max-height="maxHeight"
           show-summary
@@ -29,7 +29,7 @@
           row-key="uid"
         >
           <!-- 次要信息：当列过多的时候，在展开处显示次要信息 -->
-          <el-expand-table-column :data="form.list" v-model:expand-row-keys="expandRowKeys" row-key="uid" fixed="left">
+          <el-expand-table-column :data="formList" v-model:expand-row-keys="expandRowKeys" row-key="uid" fixed="left">
             <template #default="{ row }">
               <expand-secondary-info v-if="!showTableColumnSecondary" :basic-class="row.basicClass" :row="row" show-brand />
               <p>
@@ -39,10 +39,10 @@
           </el-expand-table-column>
           <!-- 基础信息 -->
           <material-base-info-columns :basic-class="props.basicClass" fixed="left" />
-          <!-- 单位及其数量 -->
-          <material-unit-quantity-columns :basic-class="props.basicClass" />
           <!-- 次要信息 -->
           <material-secondary-info-columns v-if="showTableColumnSecondary" :basic-class="props.basicClass" />
+          <!-- 单位及其数量 -->
+          <material-unit-quantity-columns :basic-class="props.basicClass" />
 
           <template v-if="fillableAmount && !boolPartyA">
             <el-table-column key="unitPrice" prop="unitPrice" align="right" width="120" label="含税单价">
@@ -67,9 +67,9 @@
             @amount-change="handleAmountChange"
           /> -->
           <!-- 项目设置 -->
-          <project-set-columns :form="form" :order="order" :requisitions="cu.props.requisitions" />
+          <project-set-columns v-if="!boolManuf" :form="form" :order="order" :requisitions="cu.props.requisitions" />
           <!-- 仓库设置 -->
-          <warehouse-set-columns :form="form" v-if="fillableWarehouse" />
+          <warehouse-set-columns :form="form" v-if="fillableWarehouse" :boolManuf="boolManuf" :showWarehouse="!boolManuf" />
         </common-table>
         <!-- 物流信息设置 -->
         <logistics-form
@@ -86,15 +86,15 @@
 </template>
 
 <script setup>
-import { computed, defineEmits, defineProps, provide, ref, watch } from 'vue'
+import { computed, defineEmits, defineProps, provide, ref } from 'vue'
 import { orderSupplyTypeEnum, inboundFillWayEnum } from '@enum-ms/wms'
-import { STEEL_ENUM } from '@/settings/config'
-import { matClsEnum } from '@/utils/enum/modules/classification'
+import { materialPurchaseClsEnum } from '@/utils/enum/modules/classification'
 import { logisticsPayerEnum } from '@/utils/enum/modules/logistics'
 import { tableSummary } from '@/utils/el-extra'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
+import { destinationTypeEnum } from '@enum-ms/production'
 // import { isBlank, isNotBlank, toFixed } from '@/utils/data-type'
-import { isBlank, isNotBlank } from '@/utils/data-type'
+import { deepClone, isBlank, isNotBlank } from '@/utils/data-type'
 import { DP } from '@/settings/config'
 import { materialHasAmountColumns } from '@/utils/columns-format/wms'
 
@@ -139,10 +139,73 @@ const columnsDataFormat = ref([
   ['remark', 'empty-text']
 ])
 
-// 仓管填写的信息（工厂及仓库）
+const formList = ref([])
+const expandRowKeys = ref([]) // 展开行key
+// const amount = ref() // 金额
+
+const { visible: dialogVisible, handleClose } = useVisible({ emit, props, showHook, closeHook })
+const { cu, form, FORM } = regExtra() // 表单
+const { inboundFillWayCfg } = useWmsConfig()
+
+// 物流组件ref
+const logisticsRef = ref()
+// 订单信息
+const order = computed(() => cu.props.order || {})
+// 显示金额相关信息（由采购填写的信息）
+const fillableAmount = computed(() => inboundFillWayCfg.value ? inboundFillWayCfg.value.amountFillWay === inboundFillWayEnum.APPLICATION.V : false)
+// 显示仓库（由仓库填写的信息）
+const fillableWarehouse = ref(true)
+// const fillableWarehouse = computed(() => inboundFillWayCfg.value ? inboundFillWayCfg.value.warehouseFillWay === inboundFillWayEnum.APPLICATION.V : false)
+// 显示物流信息
+const fillableLogistics = computed(() => order.value.logisticsPayerType === logisticsPayerEnum.DEMAND.V)
+// 是否“甲供”
+const boolPartyA = computed(() => order.value?.supplyType === orderSupplyTypeEnum.PARTY_A.V)
+// 是否制成品
+const boolManuf = computed(() => order.value.materialType === materialPurchaseClsEnum.MANUFACTURED.V)
+// 在列中显示次要信息
+const showTableColumnSecondary = computed(() => {
+  // 非甲供订单，显示项目和申购单 或者仓库时
+  const unshow1 =
+    fillableAmount.value && !boolPartyA.value && ((order.value.projects && order.value.requisitionsSN) || fillableWarehouse.value)
+  // 甲供订单，显示项目和申购单以及仓库时
+  const unshow2 = fillableAmount.value && boolPartyA.value && order.value.projects && order.value.requisitionsSN && fillableWarehouse.value
+  return !(unshow1 || unshow2)
+})
+
+// 车间
+const validateWorkshop = (value, row) => {
+  if (!boolManuf.value || (boolManuf.value && row.destination === destinationTypeEnum.FACTORY.V)) {
+    if (isNotBlank(value)) {
+      return true
+    } else {
+      return false
+    }
+  }
+  return true
+}
+
+// 车间
+const validateWarehouse = (value, row) => {
+  if (!boolManuf.value) {
+    if (isNotBlank(value)) {
+      return true
+    } else {
+      return false
+    }
+  }
+  return true
+}
+
+// 仓管填写的信息（车间及仓库）
 const warehouseRules = {
-  factoryId: [{ required: true, message: '请选择工厂', trigger: 'change' }],
-  warehouseId: [{ required: true, message: '请选择仓库', trigger: 'change' }]
+  workshopId: [
+    // { required: true, message: '请选择车间', trigger: 'change' },
+    { validator: validateWorkshop, message: '请选择车间', trigger: 'change' }
+  ],
+  warehouseId: [
+    // { required: true, message: '请选择仓库', trigger: 'change' },
+    { validator: validateWarehouse, message: '请选择仓库', trigger: 'change' }
+  ]
 }
 
 // 采购填写的信息（金额、申购单及项目）
@@ -161,48 +224,11 @@ const tableRules = computed(() => {
   // 甲供不填写金额方面的信息
   if (fillableAmount.value && !boolPartyA.value) {
     Object.assign(rules, amountRules)
-    if (isNotBlank(order.value.projects)) {
-      Object.assign(rules, projectRules)
-    }
   }
-  // 甲供项目必填
-  if (boolPartyA.value) {
+  if (isNotBlank(order.value.projects) && (boolPartyA.value || !order.value?.boolApplyPurchase)) {
     Object.assign(rules, projectRules)
   }
   return rules
-})
-
-const expandRowKeys = ref([]) // 展开行key
-// const amount = ref() // 金额
-
-const { visible: dialogVisible, handleClose } = useVisible({ emit, props, closeHook: closeHook })
-const { cu, form, FORM } = regExtra() // 表单
-const { inboundFillWayCfg } = useWmsConfig()
-
-// 物流组件ref
-const logisticsRef = ref()
-// 订单信息
-const order = computed(() => cu.props.order || {})
-// 显示金额相关信息（由采购填写的信息）
-// const fillableAmount = ref(true)
-const fillableAmount = computed(() =>
-  inboundFillWayCfg.value ? inboundFillWayCfg.value.amountFillWay === inboundFillWayEnum.APPLICATION.V : false
-)
-// 显示仓库（由仓库填写的信息）
-const fillableWarehouse = ref(true)
-// const fillableWarehouse = computed(() => inboundFillWayCfg.value ? inboundFillWayCfg.value.warehouseFillWay === inboundFillWayEnum.APPLICATION.V : false)
-// 显示物流信息
-const fillableLogistics = computed(() => order.value.logisticsPayerType === logisticsPayerEnum.DEMAND.V && fillableAmount.value)
-// 是否“甲供”
-const boolPartyA = computed(() => order.value?.supplyType === orderSupplyTypeEnum.PARTY_A.V)
-// 在列中显示次要信息
-const showTableColumnSecondary = computed(() => {
-  // 非甲供订单，显示项目和申购单 或者仓库时
-  const unshow1 =
-    fillableAmount.value && !boolPartyA.value && ((order.value.projects && order.value.requisitionsSN) || fillableWarehouse.value)
-  // 甲供订单，显示项目和申购单以及仓库时
-  const unshow2 = fillableAmount.value && boolPartyA.value && order.value.projects && order.value.requisitionsSN && fillableWarehouse.value
-  return !(unshow1 || unshow2)
 })
 
 // 表格高度处理
@@ -224,46 +250,34 @@ const ditto = new Map([
   ['projectId', -1],
   ['monomerId', -1],
   ['areaId', -1],
-  ['factoryId', -1],
+  ['workshopId', -1],
   ['warehouseId', -1]
 ])
 provide('ditto', ditto)
 // 表格校验
 const { tableValidate, cleanUpData, wrongCellMask } = useTableValidate({ rules: tableRules, ditto })
 
-watch(
-  () => props.modelValue,
-  (visible) => {
-    if (visible) {
-      setDitto(form.list) // 在list变化时设置同上
+function showHook() {
+  formList.value = form.list.filter((v) => {
+    if (boolPartyA.value || form.selectObj[v.mergeId]?.isSelected) {
+      return true
+    } else {
+      return false
     }
-  },
-  { immediate: true }
-)
+  })
+  setDitto(formList.value) // 在list变化时设置同上
+}
 
 // 表单提交数据清理
 cu.submitFormFormat = async (form) => {
-  cleanUpData(form.list)
-  form.list = await numFmtByBasicClass(form.list, { toSmallest: true, toNum: true })
-  if (props.basicClass <= STEEL_ENUM) {
-    // 钢材拆分为三个数组传递给服务端
-    form.steelPlateList = []
-    form.sectionSteelList = []
-    form.steelCoilList = []
-    form.list.forEach((v) => {
-      switch (v.basicClass) {
-        case matClsEnum.STEEL_PLATE.V:
-          form.steelPlateList.push(v)
-          break
-        case matClsEnum.SECTION_STEEL.V:
-          form.sectionSteelList.push(v)
-          break
-        case matClsEnum.STEEL_COIL.V:
-          form.steelCoilList.push(v)
-          break
-      }
-    })
-  }
+  const _list = deepClone(form.list)
+  cleanUpData(_list)
+  form.list = await numFmtByBasicClass(_list, { toSmallest: true, toNum: true })
+  form.list.forEach((v) => {
+    if (boolManuf.value) {
+      v.projectId = order.value.projects?.length ? order.value.projects[0].id : undefined
+    }
+  })
   if (form.supplyType & orderSupplyTypeEnum.PARTY_A.V) {
     form.purchaseId = undefined
   }
@@ -272,9 +286,9 @@ cu.submitFormFormat = async (form) => {
 
 // 表单提交前校验
 FORM.HOOK.beforeSubmit = async () => {
-  const { validResult, dealList } = tableValidate(form.list)
+  const { validResult, dealList } = tableValidate(formList.value)
   if (validResult) {
-    form.list = dealList
+    formList.value = dealList
   }
   let logisticsValidResult = true
   if (fillableLogistics.value && logisticsRef.value) {
@@ -285,6 +299,7 @@ FORM.HOOK.beforeSubmit = async () => {
 
 // 表单提交后：关闭预览窗口
 FORM.HOOK.afterSubmit = () => {
+  form.selectObj = {}
   handleClose()
 }
 
@@ -299,7 +314,7 @@ function setDitto(list) {
   const dittoWithNotWare = new Map([
     ['requisitionsSN', -1],
     ['projectId', -1],
-    ['factoryId', -1]
+    ['workshopId', -1]
   ])
   let basicClass = list[0].basicClass // 首个不一样的物料类型，仓库位置不设置同上
   const warehouseDittoableIdex = [0]

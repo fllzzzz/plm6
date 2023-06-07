@@ -17,9 +17,61 @@
         </common-tip-button>
       </div>
     </template>
-    <el-form v-loading="dataLoading" :disabled="formDisabled" :model="form" label-position="left" label-width="130px">
-      <el-form-item label="金额填写场景">
+    <el-form
+      ref="formRef"
+      v-loading="dataLoading"
+      :disabled="formDisabled"
+      :model="form"
+      :rules="rules"
+      label-position="left"
+      label-width="130px"
+    >
+      <el-form-item label="金额显示场景">
         <common-radio v-model="form.amountFillWay" :options="inboundFillWayEnum.ENUM" type="enum" size="small" />
+      </el-form-item>
+      <el-form-item label="入库信息是否可修改配置：" label-width="200px"></el-form-item>
+      <el-form-item v-for="(item, key) in basicFillConfig" :key="key" :label="`【${rawMatClsEnum.VL[key]}】`" label-width="70px">
+        <el-checkbox v-for="(spec, i) in item" :key="i" v-model="spec.V" :label="spec.L"></el-checkbox>
+      </el-form-item>
+      <el-form-item class="form-tip-item" label="重量允许误差(%)" prop="steelDiffType" label-width="165px">
+        <template #label>
+          <span>单件钢材重量误差({{ form.steelDiffType === numOrPctEnum.NUMBER.V ? STEEL_DIFF_UNIT : '%' }})</span>
+        </template>
+        <div class="flex-r">
+          <common-radio-button v-model="form.steelDiffType" :options="numOrPctEnum.ENUM" default type="enum" size="small" />
+          <common-input-number
+            v-model="form.steelDiff"
+            :max="form.steelDiffType === numOrPctEnum.NUMBER.V ? 999999999999 : 100"
+            controls-position="right"
+            size="small"
+            placeholder="请输入允许的误差值"
+            style="width: 200px; margin-left: 10px"
+            :min="0"
+          />
+        </div>
+      </el-form-item>
+      <el-form-item>
+        <span class="form-item-tip">
+          可配置单件钢材的最大误差。【钢材的入库重量】与【钢材的理论重量】的差值（绝对值）超过该误差，办理时将发出预警（可提交入库申请）。
+        </span>
+        <span class="form-item-tip">固定重量({{ STEEL_DIFF_UNIT }})：误差不可超过 固定重量；</span>
+        <span class="form-item-tip">百分比(%)：误差不可超过 入库钢材的理论重量*百分比。</span>
+      </el-form-item>
+      <el-form-item class="form-tip-item" label="采购比入库比误差值(%)" prop="procureMeteDiff" label-width="165px">
+        <common-input-number
+          v-model="form.procureMeteDiff"
+          :max="100"
+          controls-position="right"
+          size="small"
+          placeholder="请输入允许的误差值"
+          style="width: 200px;"
+          :min="0"
+        />
+      </el-form-item>
+      <el-form-item>
+        <span class="form-item-tip">
+          可配置采购比入库比误差值。【采购重量】与【入库重量】的差值（绝对值）超过该误差，将不支持入库。
+        </span>
       </el-form-item>
       <!-- <el-form-item label="存储位置填写场景">
         <common-radio v-model="form.warehouseFillWay" :options="inboundFillWayEnum.ENUM" type="enum" size="small" />
@@ -37,8 +89,11 @@
 
 <script setup>
 import { getInboundBasicConf, setInboundBasicConf } from '@/api/config/wms/base'
-import { ref, onMounted, inject, computed } from 'vue'
+import { reactive, ref, onMounted, inject, computed, watchEffect } from 'vue'
+import { STEEL_DIFF_UNIT } from '@/settings/config'
+import { numOrPctEnum } from '@enum-ms/common'
 import { inboundFillWayEnum } from '@enum-ms/wms'
+import { rawMatClsEnum } from '@enum-ms/classification'
 import { isObjectValueEqual } from '@data-type/object'
 import { deepClone } from '@/utils/data-type'
 
@@ -46,19 +101,46 @@ import useRefreshStore from '@/composables/store/use-refresh-store'
 import { ElNotification } from 'element-plus'
 
 const permission = inject('permission')
+const defaultConfig = {
+  [rawMatClsEnum.STEEL_PLATE.V]: {
+    spec: { L: '规格', V: false },
+    thickness: { L: '厚度', V: false },
+    length: { L: '长度', V: false },
+    width: { L: '宽度', V: false }
+    // quantity: { L: '数量', V: false }
+  },
+  [rawMatClsEnum.SECTION_STEEL.V]: {
+    spec: { L: '规格', V: false },
+    length: { L: '定尺长度', V: false }
+    // quantity: { L: '数量', V: false }
+  }
+  // [rawMatClsEnum.MATERIAL.V]: {
+  //   quantity: { L: '数量', V: false },
+  //   mete: { L: '核算量', V: false }
+  // }
+}
+
+const basicFillConfig = ref()
 
 // 数据源
 const dataSource = ref({
   // 金额填写方式
-  amountFillWay: undefined
-  // // 工厂填写方式
+  amountFillWay: undefined,
+  // // 车间填写方式
   // warehouseFillWay: undefined,
   // // 标签打印提示场景
   // printLabelTipWay: {
   //   afterApplication: undefined,
   //   afterReview: undefined
   // }
+  // 单件钢材差值
+  steelDiff: undefined,
+  // 差值类型（g 或 %）
+  steelDiffType: undefined,
+  procureMeteDiff: undefined
 })
+// from-dom
+const formRef = ref()
 // 表单
 const form = ref(dataSource.value)
 
@@ -69,6 +151,24 @@ const submitLoading = ref(false)
 // 未修改时，禁止点击保存按钮
 const submitDisabled = computed(() => isObjectValueEqual(form.value, dataSource.value))
 const formDisabled = computed(() => dataLoading.value || submitLoading.value)
+
+// 表单校验
+const rules = reactive({
+  steelDiffType: [{ validator: validateSteelDiff }]
+})
+
+watchEffect(() => {
+  const config = {}
+  for (const item in basicFillConfig.value) {
+    for (const key in basicFillConfig.value[item]) {
+      if (!config[key]) config[key] = 0
+      if (basicFillConfig.value[item][key].V) {
+        config[key] |= Number(item)
+      }
+    }
+  }
+  form.value = { ...form.value, ...config }
+})
 
 onMounted(() => {
   fetchData()
@@ -81,6 +181,14 @@ async function fetchData() {
     const res = await getInboundBasicConf()
     form.value = deepClone(res)
     dataSource.value = res
+    basicFillConfig.value = defaultConfig
+    for (const item in basicFillConfig.value) {
+      for (const key in basicFillConfig.value[item]) {
+        if (form.value[key] & item) {
+          basicFillConfig.value[item][key].V = true
+        }
+      }
+    }
   } catch (error) {
     console.log('wms基础配置', error)
   } finally {
@@ -91,8 +199,9 @@ async function fetchData() {
 // 保存数据
 async function submit() {
   try {
+    const passed = await formRef.value.validate()
+    if (!passed) return
     submitLoading.value = true
-
     await setInboundBasicConf(form.value)
     ElNotification({
       title: '入库基础配置设置成功',
@@ -111,5 +220,14 @@ async function submit() {
   } finally {
     submitLoading.value = false
   }
+}
+
+// 表单校验
+function validateSteelDiff(rule, value, callback) {
+  const flag = value === numOrPctEnum.PERCENTAGE.V && form.value.steelDiff > 100
+  if (flag) {
+    callback(new Error('误差百分比不可超过100'))
+  }
+  callback()
 }
 </script>
