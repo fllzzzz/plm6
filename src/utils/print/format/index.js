@@ -18,6 +18,16 @@ const supplierPaymentLedger = contract.handleSupplierPaymentOrder
 const contractEnclosurePrice = contract.handleAreaUnit
 const saleOrderTracking = contract.handleRate
 
+const waterRecord = contract.handleTimeHorizon
+const electricRecord = contract.handleTimeHorizon
+const gasRecord = contract.handleTimeHorizon
+const amortizationRecord = contract.handleAmortizationRecord
+const expenseReimburseSummary = contract.handleExpenseRate
+const contractPlantDepreciationRecord = contract.handleDepreciationRate
+const contractDeviceDepreciationRecord = contract.handleDepreciationRate
+const materialCostRecord = contract.handleUnitPrice
+const fortuneReportList = contract.handleFortuneReport
+
 const orderPaymentLedger = contract.handleSupplierPaymentRate
 const purchaseLogisticsRecord = scm.handleOrderName
 const productLogisticsRecord = scm.handleOrderName
@@ -80,6 +90,15 @@ export default {
   contractLedger,
   contractEnclosurePrice,
   saleOrderTracking,
+  electricRecord,
+  gasRecord,
+  amortizationRecord,
+  contractPlantDepreciationRecord,
+  contractDeviceDepreciationRecord,
+  materialCostRecord,
+  fortuneReportList,
+  waterRecord,
+  expenseReimburseSummary,
 
   mesAssembleNestingOrder,
 

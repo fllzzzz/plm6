@@ -6,7 +6,7 @@
     top="10vh"
     width="600px"
     :before-close="handleClose"
-    title="发生记录"
+    title="发货记录"
     custom-class="occur-detail"
     :wrapper-closable="false"
     size="80%"

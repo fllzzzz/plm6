@@ -80,7 +80,7 @@ const { maxHeight } = useMaxHeight(
 )
 
 watch(
-  () => props.projectId,
+  () => visible.value,
   (val) => {
     if (val) {
       getMoneyChangeLog()
@@ -100,8 +100,3 @@ async function getMoneyChangeLog() {
   }
 }
 </script>
-<style lang="scss" scoped>
-::v-deep(.el-input-number .el-input__inner) {
-  text-align: left;
-}
-</style>

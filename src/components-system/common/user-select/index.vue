@@ -4,6 +4,7 @@
     :size="size"
     :multiple="multiple"
     :collapse-tags="collapseTags"
+    :clearable="props.clearable"
     :loading="!loaded"
     filterable
     :placeholder="placeholder"
@@ -55,7 +56,7 @@ const props = defineProps({
   },
   // eslint-disable-next-line vue/require-default-prop
   modelValue: {
-    type: [Number, Array]
+    type: [Number, Array, String]
   }
 })
 

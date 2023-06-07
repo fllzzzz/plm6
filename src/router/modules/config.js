@@ -48,6 +48,13 @@ export default {
           meta: { title: '常用税率', icon: 'project', noCache: true, permissions: ['configCommonTaxRatePM'] }
         },
         {
+          name: 'ExpenseSubject',
+          path: 'expense-subject',
+          hidden: false,
+          component: '/config-manage/system/expense-subject/index',
+          meta: { title: '费用科目', icon: 'project', noCache: true }
+        },
+        {
           name: 'ExpenseManagement',
           path: 'expense-management',
           hidden: false,

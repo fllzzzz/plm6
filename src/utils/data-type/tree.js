@@ -451,7 +451,7 @@ export function getChildIds(tree) {
   const ids = []
   if (Array.isArray(tree)) {
     tree.forEach((node) => {
-      if (node.children) {
+      if (node.children?.length) {
         const childIds = getChildIds(node.children)
         return ids.push.apply(ids, childIds)
       } else {
@@ -472,5 +472,24 @@ export function removeNodeByExistIds(tree, ids) {
       node.children = isNotBlank(children) ? children : void 0
     }
     return exist
+  })
+}
+
+/**
+ * 设置层级名称
+ * @param {array} tree 数组（树）
+ * @param {string} childField 子级字段名
+ * @param {string} field 名称字段名
+ * @param {string} newField 新名称字段名
+ * @param {string} levelName 默认层级名称
+ */
+export function setLevelName(tree = [], { childField = 'children', field = 'name', newField = 'levelName', levelName = '' } = {}) {
+  tree?.forEach(node => {
+    if (levelName) {
+      node[newField] = `${levelName} > ${node[field]}`
+    } else {
+      node[newField] = node[field]
+    }
+    setLevelName(node[childField], { childField, field, newField, levelName: node.levelName })
   })
 }

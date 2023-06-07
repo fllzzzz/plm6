@@ -14,11 +14,7 @@
       show-summary
       :summary-method="getSummaries"
     >
-      <el-table-column v-if="columns.visible('month')" prop="month" label="月份" align="center" width="100">
-        <template #default="{ row }">
-          <span>{{ row.month }}月</span>
-        </template>
-      </el-table-column>
+      <el-table-column v-if="columns.visible('date')" prop="date" key="date" :label="`${crud.query.year}年`" align="center" />
       <el-table-column
         v-if="columns.visible('usedMete')"
         align="center"
@@ -26,43 +22,33 @@
         prop="usedMete"
         :show-overflow-tooltip="true"
         :label="crud.query.type === costTypeEnum.ELECTRIC_COST.V ? '用电度数（kw/h）' : '用水量（吨）'"
-      >
-        <template #default="{ row }">
-          <span>{{ row.usedMete }}</span>
-        </template>
-      </el-table-column>
+      />
       <el-table-column
         v-if="columns.visible('totalAmount')"
         align="center"
         key="totalAmount"
         prop="totalAmount"
         :show-overflow-tooltip="true"
-        :label="crud.query.type === costTypeEnum.ELECTRIC_COST.V ? '电费总额（元）' : '水费总额（元）'"
-      >
-        <template #default="{ row }">
-          <span>{{ row.totalAmount }}</span>
-        </template>
-      </el-table-column>
+        :label="crud.query.type === costTypeEnum.ELECTRIC_COST.V ? '电费（元）' : '水费（元）'"
+      />
       <el-table-column
         v-if="columns.visible('averageValue')"
         align="center"
         key="averageValue"
         prop="averageValue"
         :show-overflow-tooltip="true"
-        :label="crud.query.type === costTypeEnum.ELECTRIC_COST.V ? '平均电费（元/kw/h）' : '平均水费（元/吨）'"
-      >
+        :label="crud.query.type === costTypeEnum.ELECTRIC_COST.V ? '平均电费（元/kw·h）' : '平均单价（元/吨）'"
+      />
+      <el-table-column v-if="checkPermission([...permission.edit, ...permission.del])" align="center" label="操作" width="140px">
         <template #default="{ row }">
-          <span>{{ row.averageValue }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column align="center" label="操作" width="200px">
-        <template #default="{ row }">
-          <udOperation :data="row" :permission="permission" />
+          <el-tag v-if="row.isAmortization" size="medium" type="success" effect="plain"> 已摊销 </el-tag>
+          <udOperation v-else-if="row.isEdit" :data="row" />
+          <udOperation v-else :data="row" :disabled-edit="true" :disabled-del="true" />
         </template>
       </el-table-column>
     </common-table>
     <!-- 表单 -->
-    <m-form :query="crud.query" />
+    <m-form />
   </div>
 </template>
 
@@ -75,6 +61,10 @@ import { costTypeEnum } from '@enum-ms/contract'
 import { DP } from '@/settings/config'
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
+import moment from 'moment'
+import checkPermission from '@/utils/system/check-permission'
+import { tableSummary } from '@/utils/el-extra'
+import { toThousand } from '@/utils/data-type/number'
 
 import udOperation from '@crud/UD.operation'
 import mHeader from './module/header.vue'
@@ -103,67 +93,41 @@ const { crud, CRUD, columns } = useCRUD(
 
 // 合计
 function getSummaries(param) {
-  const { columns, data } = param
-  const sums = []
-  columns.forEach((column, index) => {
-    if (index === 0) {
-      sums[index] = '合计'
-      return
-    }
-    if (index === 3) {
-      sums[index] = 0
-      const usedMeteList = data.map((v) => v.usedMete)
-      const totalAmountList = data.map((v) => v.totalAmount)
-      const usedMeteSum = usedMeteList.reduce((pre, cur) => {
-        if (cur) {
-          return pre + Number(cur)
-        } else {
-          return pre
-        }
-      }, 0)
-      const totalAmountSum = totalAmountList.reduce((pre, cur) => {
-        if (cur) {
-          return pre + Number(cur)
-        } else {
-          return pre
-        }
-      }, 0)
-      sums[index] = usedMeteSum ? (totalAmountSum / usedMeteSum).toFixed(DP.YUAN) : 0
-      return
-    }
-    if (column.property === 'usedMete' || column.property === 'totalAmount') {
-      const values = data.map((item) => Number(item[column.property]))
-      let valuesSum = 0
-      if (!values.every((value) => isNaN(value))) {
-        valuesSum = values.reduce((prev, curr) => {
-          const value = Number(curr)
-          if (!isNaN(value)) {
-            return prev + curr
-          } else {
-            return prev
-          }
-        }, 0)
-      }
-      if (column.property === 'totalAmount') {
-        sums[index] = valuesSum.toFixed(DP.YUAN)
-      } else {
-        sums[index] = valuesSum.toFixed(2)
-      }
-    }
+  const data = tableSummary(param, {
+    props: ['usedMete', 'totalAmount']
   })
-  return sums
+  if (data[1] && data[2]) {
+    data[3] = toThousand(data[2] / data[1])
+  }
+  if (data[1]) {
+    data[1] = toThousand(data[1])
+  }
+  if (data[2]) {
+    data[2] = toThousand(data[2])
+  }
+  return data
 }
-CRUD.HOOK.beforeToQuery = () => {}
-CRUD.HOOK.handleRefresh = (crud, res) => {
-  res.data.content = res.data.content.map((v) => {
+
+CRUD.HOOK.handleRefresh = (crud, { data }) => {
+  const length = data.content.length
+  data.content = data.content.map((v, i) => {
+    // 时间范围
+    let _startDate = moment(v.startDate).format('YYYY')
+    let _endDate = moment(v.endDate).format('YYYY')
+    if (_startDate !== crud.query.year || _endDate !== crud.query.year) {
+      _startDate = moment(v.startDate).format('YYYY-MM-DD')
+      _endDate = moment(v.endDate).format('YYYY-MM-DD')
+    } else {
+      _startDate = moment(v.startDate).format('MM-DD')
+      _endDate = moment(v.endDate).format('MM-DD')
+    }
+    v.date = `${_startDate} ~ ${_endDate}`
+    // 最后一条记录才能编辑并且不能为已摊销状态
+    v.isEdit = i + 1 === length && !v.isAmortization
     v.averageValue = v.totalAmount && v.usedMete ? (v.totalAmount / v.usedMete).toFixed(DP.YUAN) : 0
     return v
   })
 }
-const { maxHeight } = useMaxHeight({
-  extraBox: ['.head-container'],
-  paginate: true
-})
+
+const { maxHeight } = useMaxHeight()
 </script>
-<style lang="scss" scoped>
-</style>

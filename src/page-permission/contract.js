@@ -64,6 +64,14 @@ export const contractLedgerPM = {
     del: ['contract_ledger_invoice:del'], // 开票删除
     audit: ['contract_ledger_invoice:audit'], // 开票审核
     print: ['contract_ledger_invoice:print'] // 打印下载
+  },
+  exportTaxRebate: {
+    get: ['contract_ledger_tax:get'], // 出口退税列表
+    add: ['contract_ledger_tax:add'], // 添加出口退税
+    edit: ['contract_ledger_tax:edit'], // 修改出口退税
+    del: ['contract_ledger_tax:del'], // 删除出口退税
+    audit: ['contract_ledger_tax:audit'], // 审核出口退税
+    print: ['contract_ledger_tax:print'] // 打印出口退税
   }
 }
 
@@ -305,7 +313,20 @@ export const plantDepreciationPM = {
   add: ['plant_depreciation:add'], // 新增
   edit: ['plant_depreciation:edit'], // 修改
   del: ['plant_depreciation:del'], // 删除
+  print: ['plant_depreciation:print'], // 打印
   changeStatus: ['plant_depreciation:change_status'] // 更改状态
+}
+
+// 费用录入/设备折旧
+export const contractDeviceDepreciationPM = {
+  get: ['contract_device_depreciation:get'], // 列表
+  add: ['contract_device_depreciation:add'], // 新增
+  edit: ['contract_device_depreciation:edit'], // 修改
+  del: ['contract_device_depreciation:del'], // 删除
+  print: ['contract_device_depreciation:print'], // 打印
+  import: ['contract_device_depreciation:import'], // 导入
+  download: ['contract_device_depreciation:download'], // 下载
+  changeStatus: ['contract_device_depreciation:change_status'] // 更改状态
 }
 
 // 费用录入/水电费
@@ -324,6 +345,14 @@ export const gasCostPM = {
   edit: ['gas_cost:edit'], // 修改
   del: ['gas_cost:del'], // 删除
   print: ['gas_cost:print'] // 打印
+}
+
+// 费用录入/摊销管理
+export const amortizationManagePM = {
+  get: ['amortization_manage:get'], // 列表
+  detail: ['amortization_manage:detail'], // 详情
+  set: ['amortization_manage:set'], // 摊销设置
+  amortization: ['amortization_manage:amortization'] // 摊销
 }
 
 // 费用录入/管理费/员工工资
@@ -359,12 +388,8 @@ export const expenseTestingCostPM = {
 export const fortuneReportPM = {
   get: ['fortune_report_cost:get'], // 列表
   print: ['fortune_report_cost:print'], // 打印
-  settleDetail: ['fortune_report_cost:settle_detail'], // 结算详情
-  cost: {
-    get: ['fortune_report_cost_detail:get'], // 综合成本查看
-    detail: ['fortune_report_cost_detail:detail'], // 成本详情列表
-    print: ['fortune_report_cost_detail:print'] // 成本详情打印
-  }
+  detail: ['fortune_report_cost:detail'], // 详情
+  printDetail: ['fortune_report_cost:printDetail'] // 详情打印
 }
 
 // --------------------------- 业财报表 end --------------------------------

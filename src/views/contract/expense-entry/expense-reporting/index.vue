@@ -1,17 +1,16 @@
 <template>
   <div class="app-container">
-    <div class="head-container">
-      <mHeader />
-    </div>
+    <mHeader :cascader-tree="cascaderTree" />
     <common-table
       ref="tableRef"
       v-loading="crud.loading"
       :data="crud.data"
       :empty-text="crud.emptyText"
       :max-height="maxHeight"
-      row-key="id"
-      style="width: 100%"
+      :data-format="columnsDataFormat"
+      @selection-change="crud.selectionChangeHandler"
     >
+      <el-table-column type="selection" width="55" align="center" :selectable="(row) => !row.isAmortization" />
       <el-table-column prop="index" label="序号" align="center" width="60" type="index" />
       <el-table-column
         v-if="columns.visible('reimburseDate')"
@@ -19,12 +18,9 @@
         key="reimburseDate"
         prop="reimburseDate"
         :show-overflow-tooltip="true"
-        label="日期"
-      >
-        <template v-slot="scope">
-          <span>{{ scope.row.reimburseDate ? parseTime(scope.row.reimburseDate, '{y}-{m}-{d}') : '-' }}</span>
-        </template>
-      </el-table-column>
+        label="报销日期"
+        width="100"
+      />
       <el-table-column
         v-if="columns.visible('deptName')"
         align="center"
@@ -32,11 +28,7 @@
         prop="deptName"
         :show-overflow-tooltip="true"
         label="部门"
-      >
-        <template v-slot="scope">
-          <span>{{ scope.row.deptName }}</span>
-        </template>
-      </el-table-column>
+      />
       <el-table-column
         v-if="columns.visible('reimburseUserName')"
         align="center"
@@ -44,11 +36,15 @@
         prop="reimburseUserName"
         :show-overflow-tooltip="true"
         label="报销人"
-      >
-        <template v-slot="scope">
-          <span>{{ scope.row.reimburseUserName }}</span>
-        </template>
-      </el-table-column>
+      />
+      <el-table-column
+        v-if="columns.visible('costAscriptionEnum')"
+        align="center"
+        key="costAscriptionEnum"
+        prop="costAscriptionEnum"
+        :show-overflow-tooltip="true"
+        label="费用归属"
+      />
       <el-table-column
         v-if="columns.visible('expenseTypeName')"
         align="center"
@@ -56,11 +52,7 @@
         prop="expenseTypeName"
         :show-overflow-tooltip="true"
         label="费用类别"
-      >
-        <template v-slot="scope">
-          <span>{{ scope.row.expenseTypeName }}</span>
-        </template>
-      </el-table-column>
+      />
       <el-table-column
         v-if="columns.visible('expenseSubjectName')"
         align="center"
@@ -68,23 +60,15 @@
         prop="expenseSubjectName"
         :show-overflow-tooltip="true"
         label="费用科目"
-      >
-        <template v-slot="scope">
-          <span>{{ scope.row.expenseSubjectName }}</span>
-        </template>
-      </el-table-column>
+      />
       <el-table-column
         v-if="columns.visible('reimburseAmount')"
-        align="center"
+        align="right"
         key="reimburseAmount"
         prop="reimburseAmount"
         :show-overflow-tooltip="true"
-        label="报销金额（元）"
-      >
-        <template v-slot="scope">
-          <span>{{ scope.row.reimburseAmount }}</span>
-        </template>
-      </el-table-column>
+        label="报销金额"
+      />
       <el-table-column
         v-if="columns.visible('project')"
         align="center"
@@ -92,11 +76,8 @@
         prop="project"
         :show-overflow-tooltip="true"
         label="项目"
-      >
-        <template v-slot="scope">
-          <span>{{ projectNameFormatter(scope.row.project) }}</span>
-        </template>
-      </el-table-column>
+        min-width="160"
+      />
       <el-table-column
         v-if="columns.visible('writtenByName')"
         align="center"
@@ -104,11 +85,15 @@
         prop="writtenByName"
         :show-overflow-tooltip="true"
         label="填报人"
-      >
-        <template v-slot="scope">
-          <span>{{ scope.row.writtenByName }}</span>
-        </template>
-      </el-table-column>
+      />
+      <el-table-column
+        v-if="columns.visible('payee')"
+        align="center"
+        key="payee"
+        prop="payee"
+        :show-overflow-tooltip="true"
+        label="收款单位"
+      />
       <el-table-column
         v-if="columns.visible('remark')"
         align="center"
@@ -116,14 +101,20 @@
         prop="remark"
         :show-overflow-tooltip="true"
         label="备注"
-      >
-        <template v-slot="scope">
-          <span>{{ scope.row.remark }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column align="center" label="操作">
-        <template v-slot="scope">
-          <udOperation :data="scope.row" :permission="permission"/>
+      />
+      <el-table-column
+        v-if="columns.visible('createTime')"
+        align="center"
+        key="createTime"
+        prop="createTime"
+        :show-overflow-tooltip="true"
+        label="创建时间"
+        width="140"
+      />
+      <el-table-column align="center" label="操作" width="120">
+        <template v-slot="{ row }">
+          <el-tag v-if="row.isAmortization" size="medium" type="success" effect="plain"> 已摊销 </el-tag>
+          <udOperation v-else :data="row" :permission="permission" />
         </template>
       </el-table-column>
     </common-table>
@@ -135,13 +126,12 @@
 </template>
 <script setup>
 import crudApi, { getExpenseType } from '@/api/contract/expense-entry/expense-reporting'
-import { ref, reactive, provide } from 'vue'
+import { ref, provide } from 'vue'
 
-import { parseTime } from '@/utils/date'
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
-import { projectNameFormatter } from '@/utils/project'
 import { expenseReportingPM as permission } from '@/page-permission/contract'
+import { costAscriptionEnum } from '@enum-ms/config'
 
 import pagination from '@crud/Pagination'
 import udOperation from '@crud/UD.operation'
@@ -151,16 +141,25 @@ import mForm from './module/form.vue'
 const optShow = {
   add: true,
   edit: false,
-  del: false,
+  del: true,
   download: false
 }
 const tableRef = ref()
 const expenseList = ref([])
-const summaryData = reactive({
-  info: 0
-})
+const cascaderTree = ref([])
 
-const { crud, CRUD, columns } = useCRUD(
+const columnsDataFormat = ref([
+  ['reimburseAmount', 'to-thousand'],
+  ['createTime', ['parse-time', '{y}-{m}-{d} {h}:{i}:{s}']],
+  ['reimburseDate', ['parse-time', '{y}-{m}-{d}']],
+  ['project', 'parse-project'],
+  ['costAscriptionEnum', ['parse-enum', costAscriptionEnum]]
+])
+
+provide('expenseList', expenseList)
+provide('cascaderTree', cascaderTree)
+
+const { crud, columns } = useCRUD(
   {
     title: '费用填报',
     sort: [],
@@ -172,45 +171,40 @@ const { crud, CRUD, columns } = useCRUD(
   tableRef
 )
 
-initExpenseType()
+const { maxHeight } = useMaxHeight({
+  paginate: true
+})
 
-provide('summaryData', summaryData)
-provide('expenseList', expenseList.value)
+initExpenseType()
 
 async function initExpenseType() {
   try {
-    const { content } = await getExpenseType()
-    for (let i = 0; i < content.length; i++) {
-      expenseList.value.push({
-        id: content[i]?.id,
-        name: content[i]?.name,
-        links: content[i]?.links
+    const { content = [] } = await getExpenseType()
+    expenseList.value = content
+    const enumKV = costAscriptionEnum.V
+    expenseList.value.forEach(row => {
+      const _row = {
+        ...row,
+        label: row.name
+      }
+      if (enumKV[row.costAscriptionEnum]?.links) {
+        enumKV[row.costAscriptionEnum].links.push(_row)
+      } else {
+        enumKV[row.costAscriptionEnum].links = [_row]
+      }
+    })
+    const tree = []
+    for (const key in enumKV) {
+      const value = enumKV[key]
+      tree.push({
+        id: value.V,
+        label: value.L,
+        links: value.links
       })
     }
+    cascaderTree.value = tree
   } catch (e) {
     console.log('获取费用类别失败', e)
   }
 }
-const { maxHeight } = useMaxHeight({
-  extraBox: ['.head-container'],
-  paginate: true
-})
-
-CRUD.HOOK.handleRefresh = (crud, res) => {
-  const values = []
-  res.data.content = res.data.content?.map((v) => {
-    values.push(v.reimburseAmount)
-    return v
-  })
-  summaryData.info = values.reduce((prev, curr) => {
-    const value = Number(curr)
-    if (!isNaN(value)) {
-      return prev + curr
-    } else {
-      return prev
-    }
-  }, 0)
-}
 </script>
-<style lang="scss" scoped>
-</style>

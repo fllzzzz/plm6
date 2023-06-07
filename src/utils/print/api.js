@@ -15,6 +15,7 @@ const collectionRecord = contract.collectionLedger
 const collectionLedger = contract.collectionLedger
 const invoiceRecord = contract.invoiceLedger
 const invoiceLedger = contract.invoiceLedger
+const exportTaxRebateList = contract.exportTaxRebate
 const arrearsList = contract.arrearsList
 const contractStructurePrice = contract.structurePrice
 const contractEnclosurePrice = contract.enclosurePrice
@@ -39,14 +40,23 @@ const supplierInvoiceLedger = contract.supplierInvoiceLedger
 const saleOrderTracking = contract.saleOrderTracking
 const projectWarehouseRecord = contract.warehouseRecord
 
-const industryElectricRecord = contract.industryElectricRecord
-const civilElectricRecord = contract.civilElectricRecord
-const waterRecord = contract.waterRecord
+const waterRecord = contract.waterElectricityRecord
+const electricRecord = contract.waterElectricityRecord
+const contractPlantDepreciationRecord = contract.plantDepreciationRecord
+const contractDeviceDepreciationRecord = contract.deviceDepreciationRecord
+const expenseReporting = contract.expenseReporting
+
 const gasRecord = contract.gasRecord
-const expenseReimburseList = contract.expenseReimburseList
 const managementSalaryList = contract.managementSalaryList
 const productionSalaryList = contract.productionSalaryList
 const propertyFeeList = contract.propertyFeeList
+
+const amortizationRecord = contract.amortizationRecord
+const projectCollectionRecord = contract.projectCollectionPrint
+const projectInvoiceRecord = contract.projectInvoiceRecord
+const expenseReimburseRecord = contract.expenseReimburseRecord
+const expenseReimburseSummary = contract.expenseReimburseSummary
+const materialCostRecord = contract.materialCostRecord
 
 const conMainMaterialList = contract.mainMaterialList
 const auxiliaryMaterialList = contract.mainMaterialList
@@ -284,6 +294,7 @@ export default {
   collectionRecord, // 项目收款记录
   invoiceLedger, // 开票台账
   invoiceRecord, // 项目开票记录
+  exportTaxRebateList, // 出口退税
   arrearsList, // 欠款清单
 
   logisticsPaymentLedger, // 物流台账
@@ -307,11 +318,17 @@ export default {
   contractEnclosureShipmentTracking, // 围护发运跟踪
   contractAuxiliaryMaterialShipmentTracking, // 配套件发运跟踪
   projectWarehouseRecord, // 销售管理入库记录
-  industryElectricRecord, // 工业电费
-  civilElectricRecord, // 民用电费
   waterRecord, // 水费
+  electricRecord, // 电费
+  contractPlantDepreciationRecord, // 厂房折旧
+  contractDeviceDepreciationRecord, // 设备折旧
+  expenseReporting, // 费用清单
   gasRecord, // 气体统计
-  expenseReimburseList, // 费用报销
+  amortizationRecord, // 摊销记录
+  expenseReimburseRecord, // 费用报销记录
+  expenseReimburseSummary, // 费用报销汇总
+  materialCostRecord, // 材料使用记录
+
   managementSalaryList, // 管理人员工资清单
   productionSalaryList, // 生产人员工资清单
   propertyFeeList, // 物业费用清单
@@ -327,6 +344,9 @@ export default {
   depreciationFee, // 折旧费
   auxiliaryMaterialList, // 辅材费用清单
   fortuneReportList, // 业财报表
+
+  projectCollectionRecord, // 项目收款记录
+  projectInvoiceRecord, // 项目开票记录
 
   // 供应链
   purchaseInvoiceRecord, // 收票记录

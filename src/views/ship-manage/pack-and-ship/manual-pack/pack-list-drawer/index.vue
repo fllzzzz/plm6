@@ -130,7 +130,7 @@
         </template>
 
         <template v-if="packType === packTypeEnum.ENCLOSURE.V">
-          <el-table-column prop="area.name" label="计划" align="center" width="120px" />
+          <el-table-column prop="area.name" label="批次" align="center" width="120px" />
           <el-table-column key="name" prop="name" align="center" :show-overflow-tooltip="true" label="名称" width="120px">
             <template v-slot="scope">
               <!-- <table-cell-tag v-if="scope.row.workshop" :name="scope.row.workshop?.name" /> -->
@@ -144,9 +144,9 @@
               {{ scope.row.weight }}
             </template>
           </el-table-column>
-          <el-table-column key="surfaceArea" prop="surfaceArea" :show-overflow-tooltip="true" :label="`单面积\n(mm²)`" align="center" min-width="85px">
+          <el-table-column key="surfaceArea" prop="surfaceArea" :show-overflow-tooltip="true" :label="`单面积\n(m²)`" align="center" min-width="85px">
             <template v-slot="scope">
-              {{ toFixed(scope.row.surfaceArea, DP.COM_AREA__M2) }}
+              {{ convertUnits(scope.row.surfaceArea, 'mm²', 'm²', DP.COM_AREA__M2) }}
             </template>
           </el-table-column>
           <el-table-column key="length" prop="length" :show-overflow-tooltip="true" :label="`单长\n(mm)`" align="center" min-width="85px">
@@ -215,7 +215,7 @@ import { DP } from '@/settings/config'
 import { packTypeEnum } from '@enum-ms/mes'
 import { toFixed } from '@data-type/index'
 import { tableSummary } from '@/utils/el-extra'
-
+import { convertUnits } from '@/utils/convert/unit'
 import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'
 import oneCodeNumberList from '@/components-system/mes/one-code-number-list'

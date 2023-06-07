@@ -368,6 +368,49 @@ const productLProjectStatusEnum = {
   SETTLED: { L: '已结算', K: 'COMPLETE', V: 1 << 3, TAG: 'success' }
 }
 constantize(productLProjectStatusEnum)
+// 时间类型
+const dateQueryTypeEnum = {
+  YEAR: { L: '年', K: ' YEAR', V: '%Y' },
+  MONTH: { L: '月', K: ' MONTH', V: '%Y-%m' },
+  DAY: { L: '日', K: ' DAY', V: '%Y-%m-%d' }
+}
+constantize(dateQueryTypeEnum)
+
+// 摊销种类
+const expenseClassEnum = {
+  // 摊销类型
+  WATER: { L: '水费', K: ' WATER', V: 1 << 0 },
+  INDUSTRIAL_ELECTRICITY: { L: '电费（工业）', K: ' INDUSTRIAL_ELECTRICITY', V: 1 << 1 },
+  CIVIL_ELECTRICITY: { L: '电费（民用）', K: ' CIVIL_ELECTRICITY', V: 1 << 2 },
+  WORKSHOP_DEPRECIATION: { L: '厂房折旧', K: ' WORKSHOP_DEPRECIATION', V: 1 << 3 },
+  EQUIPMENT_DEPRECIATION: { L: '设备折旧', K: ' EQUIPMENT_DEPRECIATION', V: 1 << 4 },
+  GAS: { L: '气体', K: ' GAS', V: 1 << 5 },
+  MATERIAL_AUXILIARY: { L: '材料（辅材）', K: ' MATERIAL_AUXILIARY', V: 1 << 6 },
+  OTHER_EXPENSES: { L: '其它费用', K: ' OTHER_EXPENSES', V: 1 << 7 },
+  MATERIAL_OTHER: { L: '材料（其它）', K: ' MATERIAL_OTHER', V: 1 << 13 },
+  // 材料类型
+  MAIN_MATERIAL: { L: '主材费', K: ' MAIN_MATERIAL', V: 1 << 8 },
+  AUXILIARY_MATERIAL: { L: '辅材费', K: ' AUXILIARY_MATERIAL', V: 1 << 10 },
+  OTHER_MATERIAL: { L: '其它材料费', K: ' OTHER_MATERIAL', V: 1 << 11 },
+  // 费用类型
+  LABOR: { L: '人工费', K: ' LABOR', V: 1 << 9 },
+  REIMBURSE_EXPENSES: { L: '报销费用', K: ' REIMBURSE_EXPENSES', V: 1 << 12 }
+}
+constantize(expenseClassEnum)
+
+// 摊销类型
+const amortizationTypeEnum = {
+  MANUAL_AMORTIZATION: { L: '手动摊销', K: ' MANUAL_AMORTIZATION', V: 1 },
+  AUTOMATIC_AMORTIZATION: { L: '自动摊销', K: ' AUTOMATIC_AMORTIZATION', V: 2 }
+}
+constantize(amortizationTypeEnum)
+
+// 项目报销类型
+const projectReimbursementTypeEnum = {
+  NO_PROJECT: { L: '无项目报销', K: ' NO_PROJECT', V: 0 },
+  PROJECT: { L: '项目报销', K: ' PROJECT', V: 1 }
+}
+constantize(projectReimbursementTypeEnum)
 // 结构类型
 const structureTypeEnum = {
   WORKSHOP: { L: '厂房', K: 'WORKSHOP', V: 1 << 0 },
@@ -430,6 +473,10 @@ export {
   managementSalaryTypeEnum,
   mainAuxiliaryTypeEnum,
   productLProjectStatusEnum,
+  dateQueryTypeEnum, // 时间类型
+  expenseClassEnum, // 摊销种类
+  amortizationTypeEnum, // 摊销类型
+  projectReimbursementTypeEnum, // 项目报销类型
   structureTypeEnum,
   isEnclosureContainEnum
 }
@@ -478,6 +525,10 @@ export default {
   managementSalaryTypeEnum, // 不同人员类型工资
   mainAuxiliaryTypeEnum,
   productLProjectStatusEnum,
+  dateQueryTypeEnum, // 时间类型
+  expenseClassEnum, // 摊销种类
+  amortizationTypeEnum, // 摊销类型
+  projectReimbursementTypeEnum, // 项目报销类型
   structureTypeEnum,
   isEnclosureContainEnum
 }

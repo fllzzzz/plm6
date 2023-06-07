@@ -12,6 +12,7 @@
     :row-style="rowStyle"
     :cell-class-name="cellClassName"
     :cell-style="cellStyle"
+    :default-expand-all="treeDefaultExpandAll"
     :header-row-class-name="headerRowClassName"
     :header-row-style="headerRowStyle"
     :header-cell-class-name="headerCellClassName"
@@ -146,6 +147,11 @@ const props = defineProps({
   defaultExpandAll: {
     type: Boolean,
     default: undefined
+  },
+  // 树结构表格是否默认展开所有行（不需要 expandRowKeys 配合）
+  treeDefaultExpandAll: {
+    type: Boolean,
+    default: false
   },
   // 可以通过该属性设置 Table 目前的展开行，需要设置 row-key 属性才能使用，该属性为展开行的 keys 数组
   expandRowKeys: {

@@ -2,67 +2,43 @@
   <div class="head-container">
     <div v-show="crud.searchToggle">
       <common-radio-button
-        v-model="query.timeType"
-        :options="timeTypeEnum.ENUM"
+        v-model="query.isProject"
+        :options="projectReimbursementTypeEnum.ENUM"
         class="filter-item"
-        :showOptionAll="false"
         type="enum"
-        @change="handleChange"
-      />
-      <el-date-picker
-        v-if="query.timeType === timeTypeEnum.ALL_YEAR.V"
-        v-model="query.year"
-        type="year"
-        size="small"
-        class="date-item filter-item"
-        style="width: 120px !important"
-        placeholder="选择年"
-        format="YYYY"
-        value-format="YYYY"
-        :disabled-date="disabledDate"
+        showOptionAll
         @change="crud.toQuery"
       />
-      <el-date-picker
-        v-if="query.timeType === timeTypeEnum.CURRENT_MONTH.V"
-        v-model="query.month"
-        type="month"
-        size="small"
-        class="date-item filter-item"
-        style="width: 120px !important"
-        placeholder="选择月"
-        format="MM"
-        value-format="MM"
-        :disabled-date="disabledDate"
-        @change="crud.toQuery"
-      />
-      <common-select
-        v-model="query.expenseTypeId"
-        :options="expenseList"
-        type="other"
-        :data-structure="{ key: 'id', label: 'name', value: 'id' }"
-        class="filter-item"
+      <time-range-select :query="query" clearable class="filter-item" style="width: 270px" @change="crud.toQuery" />
+      <el-cascader
+        :options="cascaderTree"
+        v-model="cascaderValue"
+        :props="cascaderProps"
+        separator=" > "
+        show-all-levels
         clearable
-        style="width: 200px"
-        placeholder="费用类别"
-        @change="fetchChange"
-      />
-      <common-select
-        v-model="query.expenseSubjectId"
-        :options="subjectList"
-        type="other"
-        :data-structure="{ key: 'id', label: 'label', value: 'id' }"
         size="small"
-        clearable
         class="filter-item"
-        placeholder="报销科目"
-        @change="crud.toQuery"
+        style="width: 260px"
+        placeholder="可选费用归属/费用类型/费用科目"
+        @change="cascaderChange"
       />
+      <project-cascader v-model="query.projectId" clearable style="width: 260px" class="filter-item" @change="crud.toQuery" />
       <el-input
         v-model.trim="query.reimbursementPerson"
         clearable
         style="width: 150px"
         size="small"
-        placeholder="报销人"
+        placeholder="报销人搜索"
+        class="filter-item"
+        @keyup.enter="crud.toQuery"
+      />
+      <el-input
+        v-model.trim="query.payee"
+        clearable
+        style="width: 150px"
+        size="small"
+        placeholder="收款单位搜索"
         class="filter-item"
         @keyup.enter="crud.toQuery"
       />
@@ -71,20 +47,15 @@
     <crudOperation>
       <template #viewLeft>
         <el-tag effect="plain" class="filter-item" size="medium">
-          <span> 报销总额（元）：{{ summaryData.info }}</span>
+          <span> 报销总额（元）： <span v-thousand="totalAmount" /> </span>
         </el-tag>
         <print-table
-          api-key="expenseReimburseList"
+          api-key="expenseReporting"
           :params="{
-            reimburseUserName: query.reimbursementPerson,
-            expenseSubjectId: query.expenseSubjectId,
-            month: query.month,
-            year: query.year,
-            expenseTypeId: query.expenseTypeId,
+            ...query,
           }"
           size="mini"
           type="warning"
-          class="filter-item"
           v-permission="crud.permission.print"
         />
       </template>
@@ -92,47 +63,60 @@
   </div>
 </template>
 <script setup>
+import { summary } from '@/api/contract/expense-entry/expense-reporting'
 import { ref, inject } from 'vue'
-import { parseTime } from '@/utils/date'
+
+import { projectReimbursementTypeEnum } from '@enum-ms/contract'
+import { isNotBlank } from '@/utils/data-type'
+
 import { regHeader } from '@compos/use-crud'
-import { timeTypeEnum } from '@enum-ms/contract'
-// import useDict from '@compos/store/use-dict'
 import rrOperation from '@crud/RR.operation'
 import crudOperation from '@crud/CRUD.operation'
+import projectCascader from '@comp-base/project-cascader'
+import timeRangeSelect from '@comp-common/time-range-select/index'
 
-// const dict = useDict(['reimbursement_type'])
-const subjectList = ref([])
-const summaryData = inject('summaryData')
-const expenseList = inject('expenseList')
+const totalAmount = ref(0)
+const cascaderValue = ref([])
+const cascaderProps = ref({
+  value: 'id',
+  label: 'label',
+  children: 'links',
+  checkStrictly: true
+})
+
+const cascaderTree = inject('cascaderTree')
 
 const defaultQuery = {
-  timeType: timeTypeEnum.ALL_YEAR.V,
   expenseTypeId: undefined,
   expenseSubjectId: undefined,
-  year: parseTime(new Date(), '{y}'),
-  month: undefined,
+  dateQueryTypeEnum: undefined,
+  startDate: undefined,
+  endDate: undefined,
+  payee: undefined,
+  projectId: undefined,
+  isProject: undefined,
+  costAttribution: undefined,
   reimbursementPerson: undefined
 }
 
-const { crud, query } = regHeader(defaultQuery)
+const { crud, query, CRUD } = regHeader(defaultQuery)
 
-function handleChange(val) {
-  if (val === timeTypeEnum.ALL_YEAR.V) {
-    query.year = parseTime(new Date(), '{y}')
-    query.month = undefined
-  } else {
-    query.year = parseTime(new Date(), '{y}')
-    query.month = parseTime(new Date(), '{m}')
+function cascaderChange(val = []) {
+  query.costAttribution = isNotBlank(val?.[0]) ? val[0] : undefined
+  query.expenseTypeId = isNotBlank(val?.[1]) ? val[1] : undefined
+  query.expenseSubjectIds = isNotBlank(val?.[2]) ? val[2] : undefined
+  crud.toQuery()
+}
+
+async function getSummary() {
+  try {
+    totalAmount.value = (await summary(query)) || 0
+  } catch (e) {
+    console.log('获取费用填报汇总金额失败', e)
   }
-  crud.toQuery()
 }
 
-function fetchChange(val) {
-  subjectList.value = expenseList.find((v) => v.id === val)?.links
-  crud.toQuery()
-}
-// 如果时间选取的时间年份比当前的时间大就被禁用
-function disabledDate(time) {
-  return time > new Date()
+CRUD.HOOK.handleRefresh = (crud, { data }) => {
+  getSummary()
 }
 </script>
