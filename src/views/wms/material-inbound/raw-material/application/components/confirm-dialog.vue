@@ -147,7 +147,7 @@ const expandRowKeys = ref([]) // 展开行key
 const { visible: dialogVisible, handleClose } = useVisible({ emit, props, showHook, closeHook })
 const { cu, form, FORM } = regExtra() // 表单
 const { inboundFillWayCfg } = useWmsConfig()
-const { projects } = useUserProjects()
+const { projectsAll } = useUserProjects()
 
 // 物流组件ref
 const logisticsRef = ref()
@@ -157,7 +157,7 @@ const order = computed(() => {
   if (cu.props.order.supplyType === orderSupplyTypeEnum.PARTY_A.V) {
     return {
       ...cu.props.order,
-      projects: projects.value
+      projects: projectsAll.value
     }
   }
   return cu.props.order
