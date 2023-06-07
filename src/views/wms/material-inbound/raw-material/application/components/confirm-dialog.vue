@@ -99,6 +99,7 @@ import { DP } from '@/settings/config'
 import { materialHasAmountColumns } from '@/utils/columns-format/wms'
 
 import { regExtra } from '@/composables/form/use-form'
+import useUserProjects from '@compos/store/use-user-projects'
 import useTableValidate from '@/composables/form/use-table-validate'
 import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'
@@ -146,11 +147,21 @@ const expandRowKeys = ref([]) // 展开行key
 const { visible: dialogVisible, handleClose } = useVisible({ emit, props, showHook, closeHook })
 const { cu, form, FORM } = regExtra() // 表单
 const { inboundFillWayCfg } = useWmsConfig()
+const { projects } = useUserProjects()
 
 // 物流组件ref
 const logisticsRef = ref()
 // 订单信息
-const order = computed(() => cu.props.order || {})
+const order = computed(() => {
+  if (isBlank(cu.props.order)) return {}
+  if (cu.props.order.supplyType === orderSupplyTypeEnum.PARTY_A.V) {
+    return {
+      ...cu.props.order,
+      projects: projects.value
+    }
+  }
+  return cu.props.order
+})
 // 显示金额相关信息（由采购填写的信息）
 const fillableAmount = computed(() => inboundFillWayCfg.value ? inboundFillWayCfg.value.amountFillWay === inboundFillWayEnum.APPLICATION.V : false)
 // 显示仓库（由仓库填写的信息）

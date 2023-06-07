@@ -123,7 +123,7 @@ import { patternLicensePlate } from '@/utils/validate/pattern'
 import { setSpecInfoToList } from '@/utils/wms/spec'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 
-import useUserProjects from '@compos/store/use-user-projects'
+// import useUserProjects from '@compos/store/use-user-projects'
 import { regExtra } from '@/composables/form/use-form'
 import useWeightOverDiff from '@/composables/wms/use-trains-weight-over-diff'
 import excelResolveButton from '@/components-system/common/excel-resolve-button/index.vue'
@@ -165,7 +165,7 @@ const props = defineProps({
 
 const router = useRouter()
 
-const { projects } = useUserProjects()
+// const { projects } = useUserProjects()
 
 const matSpecRef = inject('matSpecRef') // 调用父组件matSpecRef
 const { cu, form, FORM } = regExtra() // 表单
@@ -295,8 +295,8 @@ watch(
       const _order = {
         supplyType: form.supplyType,
         weightMeasurementMode: weightMeasurementModeEnum.THEORY.V,
-        basicClass: props.basicClass,
-        projects: projects.value
+        basicClass: props.basicClass
+        // projects: projects.value
       }
       handleOrderInfoChange(_order)
     } else {
