@@ -167,6 +167,9 @@ const setFormCallback = (form) => {
                 })
               )
               nextTick(() => {
+                if (isDraft.value) {
+                  isDraft.value = false
+                }
                 initSelectedTrigger()
               })
             }
@@ -183,6 +186,7 @@ const setFormCallback = (form) => {
   fixMaxHeight()
 }
 
+const isDraft = ref(!props.edit) // 是否草稿
 const { cu, form, FORM } = useForm(
   {
     title: '辅材入库',
@@ -298,19 +302,21 @@ async function handleOrderInfoChange(orderInfo) {
   order.value = orderInfo
   cu.props.order = orderInfo
   boolPartyA.value = orderInfo?.supplyType === orderSupplyTypeEnum.PARTY_A.V
-  form.auxMatList = []
-  const trigger = watch(
-    matSpecRef,
-    () => {
-      if (matSpecRef.value) {
-        matSpecRef.value.clearByBasicClass(currentBasicClass)
-        nextTick(() => {
-          trigger()
-        })
-      }
-    },
-    { immediate: true }
-  )
+  if (!(boolPartyA.value && isDraft.value)) {
+    form.auxMatList = []
+    const trigger = watch(
+      matSpecRef,
+      () => {
+        if (matSpecRef.value) {
+          matSpecRef.value.clearByBasicClass(currentBasicClass)
+          nextTick(() => {
+            trigger()
+          })
+        }
+      },
+      { immediate: true }
+    )
+  }
   // 筛除当前订单未指定的辅材科目
   // if (orderInfo && isNotBlank(orderInfo.auxMaterialIds)) {
   //   const filterList = form.auxMatList.filter((v) => {
@@ -340,6 +346,10 @@ async function handleOrderInfoChange(orderInfo) {
   //     { immediate: true }
   //   )
   // }
+  if (boolPartyA.value && isDraft.value) {
+    // 设置监听等
+    setFormCallback(form)
+  }
   if (orderInfo?.details?.length) {
     form.auxMatList = orderInfo.details.map((v) => {
       v.uid = createUniqueString()

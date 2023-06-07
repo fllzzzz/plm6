@@ -312,6 +312,7 @@ const setFormCallback = (form) => {
   fixMaxHeight()
 }
 
+const isDraft = ref(!props.edit) // 是否草稿
 const { cu, form, FORM } = useForm(
   {
     title: '钢材入库',
@@ -551,26 +552,33 @@ async function handleOrderInfoChange(orderInfo) {
       if (!currentBasicClass.value) currentBasicClass.value = steelBasicClassKV[k].K // 为空则赋值
       disabledBasicClass.value[k] = false
     }
-    // if (boolPartyA.value || !(steelBasicClassKV[k].V & orderInfo.basicClass)) {
-    form[k] = []
-    const trigger = watch(
-      matSpecRef,
-      () => {
-        if (matSpecRef.value) {
-          matSpecRef.value.clearByBasicClass(steelBasicClassKV[k].V)
-          nextTick(() => {
-            trigger()
-          })
-        }
-      },
-      { immediate: true }
-    )
-    // }
+    if (!(boolPartyA.value && isDraft.value)) {
+      form[k] = []
+      const trigger = watch(
+        matSpecRef,
+        () => {
+          if (matSpecRef.value) {
+            matSpecRef.value.clearByBasicClass(steelBasicClassKV[k].V)
+            nextTick(() => {
+              trigger()
+            })
+          }
+        },
+        { immediate: true }
+      )
+    }
   })
   if (orderInfo) {
     // 默认赋值
     nextTick(() => {
       steelRefList[currentBasicClass.value] = steelRef.value
+      if (boolPartyA.value && isDraft.value) {
+      // 设置监听等
+        setFormCallback(form)
+      }
+      if (isDraft.value) {
+        isDraft.value = false
+      }
     })
     if (!boolPartyA.value && orderInfo?.details?.length) {
       form.list = orderInfo.details || []
