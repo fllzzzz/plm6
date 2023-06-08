@@ -75,6 +75,16 @@ export function shipmentAudit(params) {
 }
 
 /**
+ * 过磅详情
+ */
+export function shipmentAuditOverWeight(id) {
+  return request({
+    url: `api/mes/building/cargo/receipt/${id}/print`,
+    method: 'get'
+  })
+}
+
+/**
  * 物流汇总
  */
 export function logisticsSummary(params) {
@@ -959,6 +969,7 @@ export default {
   receiptStatusSummary, // 收货状态汇总
   shippingList, // 发货清单
   shipmentAudit, // 发运审核
+  shipmentAuditOverWeight, // 过磅详情
   logisticsSummary, // 物流汇总
 
   // 制成品管理
