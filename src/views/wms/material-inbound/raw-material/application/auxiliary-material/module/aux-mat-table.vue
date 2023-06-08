@@ -73,12 +73,13 @@
     <template v-else>
       <el-table-column prop="purchaseQuantity" :label="`采购数量`" align="right" min-width="100px">
         <template #default="{ row }">
-          <span>
+          <span v-if="row.measureUnit">
             <el-tooltip effect="dark" content="已入库数量" placement="top">
               <span class="color-green">{{ row.inboundQuantity }}</span>
             </el-tooltip>
             / {{ row.purchaseQuantity }}
           </span>
+          <span v-else v-empty-text />
         </template>
       </el-table-column>
     </template>
@@ -480,7 +481,8 @@ function handleQuantityChange(row, { unitNet, measurePrecision }) {
 }
 
 function handleMeteChange(row, { accountingUnitNet, accountingPrecision }) {
-  if (!props.boolPartyA) {
+  // 非甲供 并且 存在计量单位
+  if (!props.boolPartyA && row.measureUnit) {
     row.quantity = toPrecision(row.mete * accountingUnitNet, accountingPrecision)
   }
 }
