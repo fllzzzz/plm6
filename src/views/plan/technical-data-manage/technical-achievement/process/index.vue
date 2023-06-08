@@ -30,7 +30,7 @@
         <span v-else>-</span>
       </template>
     </el-table-column>
-    <el-table-column v-if="columns.visible('fileName')" key="fileName" prop="fileName" :show-overflow-tooltip="true" label="文件名称" align="left" min-width="120">
+    <el-table-column v-if="columns.visible('fileName')" key="fileName" prop="fileName" label="文件名称" align="left" min-width="120">
       <template v-slot="scope">
         <template v-if="scope.row.attachmentDTO">
           <div style="cursor: pointer; color: #409eff" @dblclick="attachmentView(scope.row.attachmentDTO)">{{ scope.row.fileName }}</div>

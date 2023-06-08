@@ -31,7 +31,11 @@
           <div>{{ scope.row.date? parseTime(scope.row.date,'{y}-{m}-{d}'): '-' }}</div>
         </template>
       </el-table-column>
-      <el-table-column key="remark" prop="remark" label="备注" align="center" />
+      <el-table-column key="remark" prop="remark" label="备注" align="center">
+         <template v-slot="scope">
+          <div>{{ scope.row.remark || '-' }}</div>
+        </template>
+      </el-table-column>
       <!--编辑与删除-->
       <el-table-column
         v-if="checkPermission([...permission.edit,...permission.del])"
@@ -44,7 +48,7 @@
         </template>
       </el-table-column>
     </common-table>
-    <mForm :detailInfo="currentRow" />
+    <mForm :detailInfo="detailInfo" />
   <!--分页组件-->
   <pagination />
   </div>
@@ -52,7 +56,7 @@
 
 <script setup>
 import crudApi from '@/api/enclosure/enclosure-plan/area'
-import { ref, defineProps, watch } from 'vue'
+import { ref, defineProps, watch, defineEmits } from 'vue'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
@@ -65,7 +69,7 @@ import udOperation from '@crud/UD.operation'
 import mForm from './form'
 
 const permission = enclosureAreaListPM.plan
-
+const emit = defineEmits(['success'])
 const optShow = {
   add: true,
   edit: false,
@@ -74,6 +78,10 @@ const optShow = {
 }
 
 const props = defineProps({
+  detailInfo: {
+    type: Object,
+    default: () => {}
+  },
   currentRow: {
     type: Object,
     default: () => {}
@@ -92,7 +100,7 @@ const { CRUD, crud } = useCRUD(
     permission: { ...permission },
     optShow: { ...optShow },
     crudApi: { ...crudApi },
-    requiredQuery: ['techId'],
+    requiredQuery: ['projectId', 'category'],
     hasPagination: true
   },
   tableRef
@@ -108,7 +116,8 @@ watch(
   () => props.currentRow,
   (val) => {
     if (val) {
-      crud.query.techId = props.currentRow?.id
+      crud.query.category = props.currentRow?.category
+      crud.query.projectId = props.currentRow?.projectId
       crud.toQuery()
     }
   },
@@ -119,6 +128,14 @@ CRUD.HOOK.handleRefresh = (crud, res) => {
   // res.data.content = res.data.content.map((v) => {
   //   return v
   // })
+}
+
+CRUD.HOOK.afterSubmit = (crud, res) => {
+  emit('success')
+}
+
+CRUD.HOOK.afterDelete = (crud, res) => {
+  emit('success')
 }
 </script>
 

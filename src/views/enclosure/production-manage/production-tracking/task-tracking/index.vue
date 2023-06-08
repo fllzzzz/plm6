@@ -5,7 +5,7 @@
     </div>
     <div class="wrap-right">
       <div class="app-container">
-        <el-tag v-if="!crud.query?.projectId" type="info" effect="plain" size="large"> * 请点击左侧项目列表查看详情 </el-tag>
+        <el-tag v-if="!project.id" type="info" effect="plain" size="large"> * 请点击左侧项目列表查看详情 </el-tag>
         <template v-else>
           <!--工具栏-->
           <mHeader class="head-container task-head-container">
@@ -24,7 +24,7 @@
             :max-height="maxHeight"
             :data-format="dataFormat"
           >
-            <el-table-column label="序号" type="index" align="center" width="60" />
+            <el-table-column label="序号" type="index" align="center" width="50" />
             <el-table-column
               key="createTime"
               prop="createTime"
@@ -41,7 +41,7 @@
               label="任务工单"
               show-overflow-tooltip
               align="center"
-              min-width="130"
+              min-width="150"
             />
             <el-table-column
               key="userName"
@@ -72,7 +72,7 @@
               show-overflow-tooltip
               label="工厂"
               align="center"
-              min-width="100"
+              min-width="130"
             />
             <el-table-column
               key="workshopName"
@@ -81,7 +81,7 @@
               show-overflow-tooltip
               label="车间"
               align="center"
-              min-width="100"
+              min-width="130"
             />
             <el-table-column
               key="productionLineName"
@@ -120,6 +120,15 @@
                 <span>{{ row.completeQuantity }} / {{ row.completeLength }}</span>
               </template>
             </el-table-column>
+            <el-table-column
+              key="askCompleteTime"
+              prop="askCompleteTime"
+              v-if="columns.visible('askCompleteTime')"
+              show-overflow-tooltip
+              label="要求完成时间"
+              align="center"
+              width="94"
+            />
             <el-table-column
               key="booleanlag"
               prop="booleanlag"
@@ -166,12 +175,13 @@
 
 <script setup>
 import crudApi from '@/api/enclosure/production-manage/task-tracking'
-import { ref } from 'vue'
+import { ref, nextTick } from 'vue'
 
 import { enclosureTaskTrackingPM as permission } from '@/page-permission/enclosure'
 import { mesEnclosureTypeEnum } from '@enum-ms/mes'
 import checkPermission from '@/utils/system/check-permission'
 import { toFixed } from '@data-type/index'
+import { DP } from '@/settings/config'
 
 import useMaxHeight from '@compos/use-max-height'
 import UdOperation from '@crud/UD.operation'
@@ -191,8 +201,9 @@ const optShow = {
 const tableRef = ref()
 const project = ref({})
 const dataFormat = ref([
-  ['totalLength', ['to-fixed', 2]],
-  ['completeLength', ['to-fixed', 2]],
+  ['totalLength', ['to-fixed', DP.MES_ENCLOSURE_L__M]],
+  ['completeLength', ['to-fixed', DP.MES_ENCLOSURE_L__M]],
+  ['askCompleteTime', ['parse-time', '{y}-{m}-{d}']],
   ['createTime', ['parse-time', '{y}-{m}-{d}']],
   ['category', ['parse-enum', mesEnclosureTypeEnum]]
 ])
@@ -205,7 +216,8 @@ const { CRUD, crud, columns } = useCRUD(
     optShow: { ...optShow },
     crudApi: { ...crudApi },
     requiredQuery: ['projectId'],
-    invisibleColumns: []
+    invisibleColumns: ['factoryName'],
+    queryOnPresenterCreated: false
   },
   tableRef
 )
@@ -217,8 +229,10 @@ const { maxHeight } = useMaxHeight({
 
 function projectChange(row = {}) {
   project.value = row
-  crud.query.projectId = row.id
-  crud.toQuery()
+  nextTick(() => {
+    crud.query.projectId = row.id
+    crud.toQuery()
+  })
 }
 
 CRUD.HOOK.handleRefresh = async (crud, { data }) => {

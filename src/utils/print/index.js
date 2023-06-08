@@ -3,9 +3,39 @@ import { getLODOP, printByMode, combineHtml } from './base'
 import { projectNameFormatter } from '@/utils/project'
 import { labelTypeEnum, packTypeEnum, componentTypeEnum } from '@enum-ms/mes'
 import { getPrintLabelHtml } from '@/utils/label/index'
+import { getPrintLabelHtml as getBridgePrintLabelHtml } from '@/utils/bridge-label/index.js'
 import { isNotBlank } from '@data-type/index'
 
 let LODOP
+
+/**
+   * 桥梁
+   * 打印分段,直发件
+   * @param {object}
+   * @param component 构件信息
+   * @param manufacturerName 制造商
+   * @param qrCode 构件二维码
+   * @param printMode 打印模式
+   * @author duhh
+   */
+async function printBox({ productType, labelType, component, productionLineName, logo, manufacturerPhone, manufacturerURL, manufacturerName, printConfig, qrCode, printMode = PrintMode.QUEUE.V }) {
+  const strHtml = getBridgePrintLabelHtml({ productType, labelType, component, productionLineName, logo, manufacturerPhone, manufacturerURL, manufacturerName, printConfig })
+  let result = false
+  try {
+    LODOP = await getLODOP()
+    LODOP.SET_PRINT_PAGESIZE(1, 1030, 2080, '1') /* 纸张大小*/
+    LODOP.ADD_PRINT_HTM('7mm', '2mm', '98mm', '203mm', strHtml)
+    LODOP.ADD_PRINT_BARCODE('15mm', '70mm', '36mm', '36mm', 'QRCode', qrCode)
+    LODOP.SET_PRINT_STYLEA(0, 'QRCodeVersion', 7)
+    LODOP.SET_PRINT_STYLEA(0, 'QRCodeErrorLevel', 'M')
+    // LODOP.PRINT_DESIGN()/* 打印设计*/
+    // LODOP.PREVIEW()/* 打印预览*/
+    result = await printByMode(printMode)
+  } catch (error) {
+    throw new Error(error)
+  }
+  return result
+}
 
 /**
    * 建钢
@@ -46,8 +76,8 @@ async function printArtifact({ productType, labelType, component, manufacturerNa
    * @param printMode 打印模式
    * @author duhh
    */
-async function printEnclosure({ productType, labelType, component, manufacturerName, printConfig, qrCode, printMode = PrintMode.QUEUE.V }) {
-  const strHtml = getPrintLabelHtml({ productType, labelType, component, manufacturerName, printConfig })
+async function printEnclosure({ productType, labelType, component, productionLineName, manufacturerName, printConfig, qrCode, printMode = PrintMode.QUEUE.V }) {
+  const strHtml = getPrintLabelHtml({ productType, labelType, component, productionLineName, manufacturerName, printConfig })
   console.log(strHtml)
   let result = false
   try {
@@ -102,6 +132,34 @@ async function printAuxiliaryMaterial({ productType, labelType, component, manuf
 }
 
 /**
+   * 打印桥梁辅材
+   * @param {object}
+   * @param component 箱体、构件信息
+   * @param manufacturerName 制造商
+   * @param qrCode 箱体、构件二维码
+   * @param printMode 打印模式
+   * @author duhh
+   */
+async function printBridgeAuxiliaryMaterial({ productType, labelType, component, manufacturerName, qrCode, printConfig, printMode = PrintMode.QUEUE.V }) {
+  const strHtml = getBridgePrintLabelHtml({ productType, labelType, component, manufacturerName, printConfig })
+  let result = false
+  try {
+    LODOP = await getLODOP()
+    LODOP.SET_PRINT_PAGESIZE(1, 1030, 680, '1') /* 纸张大小*/
+    LODOP.ADD_PRINT_HTM('2mm', '3mm', '98mm', '68mm', strHtml)
+    LODOP.ADD_PRINT_BARCODE('32mm', '72mm', '28mm', '28mm', 'QRCode', qrCode)
+    LODOP.SET_PRINT_STYLEA(0, 'QRCodeVersion', 7)
+    LODOP.SET_PRINT_STYLEA(0, 'QRCodeErrorLevel', 'M')
+    // LODOP.PRINT_DESIGN()/* 打印设计*/
+    // LODOP.PREVIEW()/* 打印预览*/
+    result = await printByMode(printMode)
+  } catch (error) {
+    throw new Error(error)
+  }
+  return result
+}
+
+/**
    * 建钢、桥梁：打包清单
    * @param {object}
    * @param packageInfo 打包信息
@@ -121,7 +179,7 @@ async function printPackageLabel({ packageInfo, qrCode, printMode = PrintMode.QU
   //       </div>`,
   //   // [packTypeEnum.ENCLOSURE.V]: `<div class="flex">
   //   //     <div class="row-0 w-1 col border-r">编号</div>
-  //   //     <div class="row-0 w-1 col border-r">版型</div>
+  //   //     <div class="row-0 w-1 col border-r">板型</div>
   //   //     <div class="row-0 w-1 col border-r">长度</div>
   //   //     <div class="row-0 w-1 col">数量</div>
   //   //   </div>`,
@@ -847,5 +905,7 @@ export {
   printArtifact,
   printEnclosure,
   printAuxiliaryMaterial,
-  printPackageLabel
+  printPackageLabel,
+  printBox,
+  printBridgeAuxiliaryMaterial
 }

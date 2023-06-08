@@ -124,7 +124,7 @@
           <Panel name="已结算" text-color="#626262" num-color="#1890ff" :end-val="totalAmount.settlementQuantity || 0" :precision="0" />
         </el-col>
         <el-col :span="4" class="card-panel-col">
-          <Panel name="累计合同额" text-color="#626262" num-color="#1890ff" :end-val="totalAmount.contractAmount || 0" :precision="2" />
+          <Panel name="累计合同额" text-color="#626262" num-color="#1890ff" :end-val="totalAmount.contractAmount || 0" :precision="DP.YUAN" />
         </el-col>
       </el-row>
       <crudOperation add-text="合同立项">
@@ -169,9 +169,10 @@
 </template>
 
 <script setup>
-import { defineProps, ref, watch, defineEmits, computed } from 'vue'
+import { ref, defineEmits, computed } from 'vue'
 import { regHeader } from '@compos/use-crud'
 import checkPermission from '@/utils/system/check-permission'
+import { DP } from '@/settings/config'
 import rrOperation from '@crud/RR.operation'
 import crudOperation from '@crud/CRUD.operation'
 import { projectStatusEnum, projectTypeEnum, businessTypeEnum, structureTypeEnum } from '@enum-ms/contract'
@@ -215,14 +216,8 @@ const outFinishCount = ref()
 const totalAmount = ref({})
 const emit = defineEmits(['projectChange'])
 const { crud, query } = regHeader(defaultQuery)
-const props = defineProps({
-  currentProjectType: {
-    type: [Number, String],
-    default: undefined
-  }
-})
 const projectContentOption = computed(() => {
-  if (query.projectType) {
+  if (query.businessType && query.projectType) {
     switch (query.projectType) {
       case projectTypeEnum.STEEL.V:
         return query.businessType === businessTypeEnum.MACHINING.V ? machiningData[projectTypeEnum.STEEL.V] : installData[projectTypeEnum.STEEL.V]
@@ -234,16 +229,6 @@ const projectContentOption = computed(() => {
     return []
   }
 })
-watch(
-  () => props.currentProjectType,
-  (val) => {
-    if (val) {
-      crud.query.projectType = val
-      crud.toQuery()
-    }
-  },
-  { immediate: true }
-)
 
 contentInfo()
 

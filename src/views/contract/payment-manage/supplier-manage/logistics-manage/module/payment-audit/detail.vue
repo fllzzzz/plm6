@@ -87,6 +87,7 @@ import { ref, defineProps, defineEmits } from 'vue'
 import useVisible from '@compos/use-visible'
 import { editStatus } from '@/api/contract/supplier-manage/pay-invoice/pay'
 import { tableSummary } from '@/utils/el-extra'
+import { DP } from '@/settings/config'
 import useMaxHeight from '@compos/use-max-height'
 import { logisticsSearchTypeEnum, auditTypeEnum } from '@enum-ms/contract'
 import { toThousand } from '@data-type/number'
@@ -131,7 +132,7 @@ function attachmentView(item) {
 // 合计
 function getSummaries(param) {
   return tableSummary(param, {
-    props: ['freight', 'paymentAmount', 'applyAmount'],
+    props: [['freight', DP.YUAN], ['paymentAmount', DP.YUAN], ['applyAmount', DP.YUAN]],
     toThousandFields: ['freight', 'paymentAmount', 'applyAmount']
   })
 }

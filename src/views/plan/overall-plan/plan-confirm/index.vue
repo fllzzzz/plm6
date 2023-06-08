@@ -87,7 +87,7 @@
 
 <script setup>
 import crudApi from '@/api/plan/plan-make'
-import { ref, watch } from 'vue'
+import { ref } from 'vue'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import pagination from '@crud/Pagination'
@@ -96,7 +96,7 @@ import { mapGetters } from '@/store/lib'
 import mHeader from './module/header'
 import { planConfirmListPM as permission } from '@/page-permission/plan'
 
-const { globalProject, globalProjectId } = mapGetters(['globalProject', 'globalProjectId'])
+const { globalProject } = mapGetters(['globalProject'])
 
 const optShow = {
   add: false,
@@ -106,7 +106,7 @@ const optShow = {
 }
 
 const tableRef = ref()
-const { crud, columns } = useCRUD(
+const { CRUD, crud, columns } = useCRUD(
   {
     title: '工作确认',
     sort: ['id.desc'],
@@ -124,17 +124,6 @@ const { maxHeight } = useMaxHeight({
   paginate: true,
   extraHeight: 40
 })
-
-watch(
-  () => globalProjectId.value,
-  (val) => {
-    if (val) {
-      crud.query.projectId = globalProjectId.value
-      crud.toQuery()
-    }
-  },
-  { immediate: true, deep: true }
-)
 
 async function confirmEvent(name) {
   try {
@@ -164,9 +153,8 @@ async function confirmEvent(name) {
 //   })
 // }
 
-// CRUD.HOOK.beforeSubmit = () => {
-//   crud.form.projectId = globalProjectId
-//   return !!crud.form.projectId
-// }
+CRUD.HOOK.beforeRefresh = () => {
+  return false
+}
 </script>
 

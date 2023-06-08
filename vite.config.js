@@ -9,6 +9,8 @@ import viteSvgIcons from 'vite-plugin-svg-icons'
 // mock
 import { viteMockServe } from 'vite-plugin-mock'
 
+import viteCompression from 'vite-plugin-compression'
+
 const { resolve } = require('path')
 
 // https://vitejs.dev/config/
@@ -68,6 +70,15 @@ export default ({ command }) => {
           import { setupProdMockServer } from '/src/plugins/mock-prod-server';
           setupProdMockServer();
         `
+      }),
+      // gzip静态资源压缩
+      viteCompression({
+        verbose: true,
+        disable: false,
+        threshold: 1024 * 20, // 启用压缩的文件大小限制，20kb以上压缩
+        deleteOriginFile: true, // 压缩后是否删除原文件
+        algorithm: 'gzip',
+        ext: '.gz'
       })
     ],
     resolve: {
@@ -80,6 +91,7 @@ export default ({ command }) => {
         { find: '@comp-wms', replacement: resolve(__dirname, 'src/components-system/wms') },
         { find: '@comp-cls', replacement: resolve(__dirname, 'src/components-system/classification') },
         { find: '@comp-mes', replacement: resolve(__dirname, 'src/components-system/mes') },
+        { find: '@comp-bridge', replacement: resolve(__dirname, 'src/components-system/bridge') },
         { find: '@comp-label', replacement: resolve(__dirname, 'src/components-system/label') },
         { find: '@compos', replacement: resolve(__dirname, 'src/composables') },
         { find: '@enum', replacement: resolve(__dirname, 'src/utils/enum') },
@@ -95,7 +107,28 @@ export default ({ command }) => {
         output: {
           chunkFileNames: 'static/js/[name]-[hash].js',
           entryFileNames: 'static/js/[name]-[hash].js',
-          assetFileNames: 'static/[ext]/[name]-[hash].[ext]'
+          assetFileNames: 'static/[ext]/[name]-[hash].[ext]',
+          // 合并js
+          manualChunks(moduleName) {
+            if (moduleName.includes('node_modules')) {
+              // 按 node_modules 目录拆分
+              return moduleName.toString().split('node_modules/')[1].split('/')[0].toString()
+            } else if (moduleName.includes('views')) {
+              // 按 views 目录拆分
+              return moduleName.toString().split('views/')[1].split('/')[0].toString()
+            } else if (moduleName.includes('utils')) {
+              // 打印模板单独放一个文件
+              if (moduleName.includes('utils/print')) {
+                return 'print'
+              }
+              // 其他放在一起
+              return 'utils'
+            } else if (moduleName.includes('api')) {
+              return 'api'
+            } else {
+              return 'index'
+            }
+          }
         }
       }
     }

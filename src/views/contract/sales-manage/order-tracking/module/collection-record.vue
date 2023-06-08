@@ -56,6 +56,7 @@ import { collectionRecord } from '@/api/contract/sales-manage/order-tracking'
 import { ref, defineEmits, defineProps, watch, computed } from 'vue'
 
 import { paymentFineModeEnum } from '@enum-ms/finance'
+import { auditTypeEnum } from '@enum-ms/contract'
 
 import useVisible from '@/composables/use-visible'
 import useMaxHeight from '@compos/use-max-height'
@@ -86,7 +87,8 @@ const { handleSizeChange, handleCurrentChange, total, setTotalPage, queryPage } 
 // 请求参数
 const params = computed(() => {
   return {
-    projectId: props.detailInfo.project?.id
+    projectId: props.detailInfo.project?.id,
+    auditStatus: auditTypeEnum.PASS.V
   }
 })
 
@@ -105,7 +107,7 @@ const tableLoading = ref(false)
 const dataFormat = ref([
   ['collectionDate', ['parse-time', '{y}-{m}-{d}']],
   ['collectionMode', ['parse-enum', paymentFineModeEnum]],
-  ['collectionAmount', 'to-thousand'],
+  ['collectionAmount', ['to-thousand-ck', 'YUAN']],
   ['taxRate', ['to-fixed', 2]]
 ])
 

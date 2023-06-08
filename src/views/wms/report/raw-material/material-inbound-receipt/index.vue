@@ -229,8 +229,8 @@ const optShow = {
 const columnsDataFormat = ref([
   ...reviewTimeColumns,
   ['inboundTime', 'parse-time'],
-  ['rejectAmountExcludingVAT', 'to-thousand'],
-  ['inboundAmountExcludingVAT', 'to-thousand'],
+  ['rejectAmountExcludingVAT', ['to-thousand-ck', 'YUAN']],
+  ['inboundAmountExcludingVAT', ['to-thousand-ck', 'YUAN']],
   ['projects', ['parse-project', { onlyShortName: true }]],
   ['projectsFullName', 'parse-project', { source: 'projects' }],
   ['basicClass', ['parse-enum', rawMatClsEnum, { bit: true, split: ' | ' }]]

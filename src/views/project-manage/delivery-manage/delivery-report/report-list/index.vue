@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <div v-if="globalProject?.businessType===businessTypeEnum.INSTALLATION.V">
-      <mHeader :projectId="globalProjectId" />
+      <mHeader :projectId="globalProjectId" :globalProject="globalProject"/>
       <!--表格渲染-->
       <common-table
         ref="tableRef"
@@ -15,8 +15,8 @@
         style="width: 100%"
       >
         <el-table-column type="index" prop="index" label="序号" align="center" width="60" />
-        <el-table-column key="monomer.name" prop="monomer.name" label="单体" align="center" />
-        <el-table-column key="area.name" prop="area.name" label="区域" align="center" />
+        <el-table-column key="monomer.name" prop="monomer.name" label="单体" align="center" v-if="crud.query.productType!==installProjectTypeEnum.ENCLOSURE.V"/>
+        <el-table-column key="area.name" prop="area.name" :label="crud.query.productType!==installProjectTypeEnum.ENCLOSURE.V?'区域':'批次'" align="center" />
         <el-table-column key="name" prop="name" label="名称" align="center" />
         <el-table-column key="serialNumber" prop="serialNumber" label="编号" align="center" />
         <el-table-column key="specification" prop="specification" label="规格" align="center" />
@@ -41,6 +41,7 @@ import { ref } from 'vue'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
+import { installProjectTypeEnum } from '@enum-ms/project'
 import { businessTypeEnum } from '@enum-ms/contract'
 import { manufactureTypeEnum } from '@enum-ms/plan'
 import { deliveryReportListPM as permission } from '@/page-permission/project'

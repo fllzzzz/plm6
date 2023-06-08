@@ -72,6 +72,7 @@ import crudApi from '@/api/contract/expense-entry/water-electricity-cost'
 
 import { waterElectricityCostPM as permission } from '@/page-permission/contract'
 import { costTypeEnum } from '@enum-ms/contract'
+import { DP } from '@/settings/config'
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
 
@@ -127,7 +128,7 @@ function getSummaries(param) {
           return pre
         }
       }, 0)
-      sums[index] = usedMeteSum ? (totalAmountSum / usedMeteSum).toFixed(2) : 0
+      sums[index] = usedMeteSum ? (totalAmountSum / usedMeteSum).toFixed(DP.YUAN) : 0
       return
     }
     if (column.property === 'usedMete' || column.property === 'totalAmount') {
@@ -143,7 +144,11 @@ function getSummaries(param) {
           }
         }, 0)
       }
-      sums[index] = valuesSum.toFixed(2)
+      if (column.property === 'totalAmount') {
+        sums[index] = valuesSum.toFixed(DP.YUAN)
+      } else {
+        sums[index] = valuesSum.toFixed(2)
+      }
     }
   })
   return sums
@@ -151,7 +156,7 @@ function getSummaries(param) {
 CRUD.HOOK.beforeToQuery = () => {}
 CRUD.HOOK.handleRefresh = (crud, res) => {
   res.data.content = res.data.content.map((v) => {
-    v.averageValue = v.totalAmount && v.usedMete ? (v.totalAmount / v.usedMete).toFixed(2) : 0
+    v.averageValue = v.totalAmount && v.usedMete ? (v.totalAmount / v.usedMete).toFixed(DP.YUAN) : 0
     return v
   })
 }

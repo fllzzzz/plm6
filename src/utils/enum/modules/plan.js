@@ -71,6 +71,14 @@ const deepenTypeEnum = {
 }
 constantize(deepenTypeEnum)
 
+// 桥梁深化图纸类型
+const bridgeDeepenTypeEnum = {
+  BOX: { L: '分段', K: 'BOX', V: 1 << 0 },
+  CELL: { L: '单元', K: 'CELL', V: 1 << 1 },
+  PART: { L: '零件', K: 'PART', V: 1 << 2 }
+}
+constantize(bridgeDeepenTypeEnum)
+
 // 技术资料类型
 const technicalDataTypeEnum = {
   DEEPEN: { L: '深化图', K: 'DEEPEN', V: 1 << 0 },
@@ -146,6 +154,14 @@ const isArtifactBindTypeEnum = {
 }
 constantize(isArtifactBindTypeEnum)
 
+// 变更原因类型
+const changeReasonTypeEnum = {
+  CUSTOM_REASON: { L: '甲方原因', K: 'CUSTOM_REASON', V: 1 << 0 },
+  DESIGN_CHANGE: { L: '设计变更', K: 'DESIGN_CHANGE', V: 1 << 1 },
+  SELF_REASON: { L: '自身原因', K: 'SELF_REASON', V: 1 << 2 }
+}
+constantize(changeReasonTypeEnum)
+
 // 构件绑定状态
 const artifactBindTypeEnum = {
   NO: { L: '未绑定', K: 'NO', V: 1 << 0 },
@@ -173,7 +189,9 @@ export {
   planProcessTypeEnum,
   processUseTypeEnum,
   isArtifactBindTypeEnum,
-  artifactBindTypeEnum
+  changeReasonTypeEnum,
+  artifactBindTypeEnum,
+  bridgeDeepenTypeEnum
 }
 
 export default {
@@ -195,5 +213,7 @@ export default {
   planProcessTypeEnum,
   processUseTypeEnum,
   isArtifactBindTypeEnum,
-  artifactBindTypeEnum
+  changeReasonTypeEnum,
+  artifactBindTypeEnum,
+  bridgeDeepenTypeEnum
 }

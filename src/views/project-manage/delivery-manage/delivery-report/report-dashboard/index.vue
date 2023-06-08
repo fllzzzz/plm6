@@ -2,7 +2,7 @@
   <div class="app-container">
     <div v-if="globalProject?.businessType===businessTypeEnum.INSTALLATION.V">
       <!--工具栏-->
-      <mHeader ref="headRef" @load="load" :globalProject="globalProject"/>
+      <mHeader ref="headRef" @load="load" :globalProject="globalProject" :projectId="globalProjectId"/>
       <!--看板渲染-->
       <div
         v-if="crud.firstLoaded"
@@ -20,13 +20,13 @@
             :open-delay="300"
             class="item"
             effect="light"
-            :content="`${item.name} ${item.serialNumber}\n
+            :content="`${globalProject.projectType === projectTypeEnum.STEEL.V?item.name:''}${item.serialNumber}\n
             收货数量：${item.receivingQuantity}\n
             清单数量：${item.quantity}\n`"
             placement="left-start"
           >
             <div class="board-box" :style="{ 'background-color': `${item.boxColor}`, ...boxStyle }">
-              <span class="ellipsis-text">{{ item.name }}</span>
+              <span class="ellipsis-text" v-if="globalProject.projectType === projectTypeEnum.STEEL.V">{{ item.name }}</span>
               <span class="ellipsis-text">{{ item.serialNumber }}</span>
               <span class="ellipsis-text">{{ item.receivingQuantity }}/{{ item.quantity }}</span>
             </div>
@@ -47,8 +47,9 @@
 
 <script setup>
 import { deliveryDashboardData as get } from '@/api/project-manage/delivery-manage/delivery-report/report-list'
-import { ref, watch } from 'vue'
+import { ref } from 'vue'
 
+import { projectTypeEnum } from '@enum-ms/contract'
 import { businessTypeEnum } from '@enum-ms/contract'
 import { deliveryReportDashboardPM as permission } from '@/page-permission/project'
 import { mapGetters } from '@/store/lib'
@@ -85,16 +86,6 @@ const { maxHeight } = useMaxHeight({ paginate: false })
 
 const { boxStyle, load, boardList } = useDashboardIndex({ headRef, scrollBoxRef, crud, CRUD })
 
-watch(
-  () => globalProjectId.value,
-  (val) => {
-    if (val) {
-      crud.query.projectId = globalProjectId.value
-      crud.toQuery()
-    }
-  },
-  { immediate: true, deep: true }
-)
 </script>
 
 <style lang="scss" scoped>

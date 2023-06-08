@@ -103,7 +103,7 @@
       </el-table-column>
       <el-table-column prop="invoiceSerialNumber" label="发票号码" align="center" min-width="150">
         <template v-slot="scope">
-          <el-input v-if="scope.row.isModify" v-model.trim="scope.row.invoiceSerialNumber" type="text" placeholder="发票号码" style="width: 100%;" @change="checkInvoiceNo(scope.row,scope.$index)" maxlength="20"/>
+          <el-input v-if="scope.row.isModify" v-model.trim="scope.row.invoiceSerialNumber" type="text" placeholder="发票号码" style="width: 100%;" maxlength="20"/>
           <span v-else>{{ scope.row.invoiceSerialNumber  }}</span>
         </template>
       </el-table-column>
@@ -324,27 +324,27 @@ function taxMoney(row) {
     row.tax = row.invoiceAmount * row.taxRate / 100
   }
 }
-function checkInvoiceNo(row) {
-  if (row.invoiceSerialNumber) {
-    const val = invoiceNoArr.value.find(v => v.dataIndex === row.dataIndex)
-    if (invoiceNoArr.value.findIndex(v => v.invoiceSerialNumber === row.invoiceSerialNumber) > -1) {
-      ElMessage({ message: '发票号已存在，请重新填写', type: 'error' })
-      row.invoiceSerialNumber = undefined
-      if (val) {
-        val.invoiceSerialNumber = undefined
-      }
-    } else {
-      if (val) {
-        val.invoiceSerialNumber = row.invoiceSerialNumber
-      } else {
-        invoiceNoArr.value.push({
-          invoiceSerialNumber: row.invoiceSerialNumber,
-          dataIndex: row.dataIndex
-        })
-      }
-    }
-  }
-}
+// function checkInvoiceNo(row) {
+//   if (row.invoiceSerialNumber) {
+//     const val = invoiceNoArr.value.find(v => v.dataIndex === row.dataIndex)
+//     if (invoiceNoArr.value.findIndex(v => v.invoiceSerialNumber === row.invoiceSerialNumber) > -1) {
+//       ElMessage({ message: '发票号已存在，请重新填写', type: 'error' })
+//       row.invoiceSerialNumber = undefined
+//       if (val) {
+//         val.invoiceSerialNumber = undefined
+//       }
+//     } else {
+//       if (val) {
+//         val.invoiceSerialNumber = row.invoiceSerialNumber
+//       } else {
+//         invoiceNoArr.value.push({
+//           invoiceSerialNumber: row.invoiceSerialNumber,
+//           dataIndex: row.dataIndex
+//         })
+//       }
+//     }
+//   }
+// }
 
 async function passConfirm(row) {
   try {
@@ -425,7 +425,7 @@ function attachmentView(item) {
 // 合计
 function getSummaries(param) {
   return tableSummary(param, {
-    props: ['invoiceAmount'],
+    props: [['invoiceAmount', DP.YUAN]],
     toThousandFields: ['invoiceAmount']
   })
 }

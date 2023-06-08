@@ -10,6 +10,8 @@
           :globalProject="globalProject"
           :typeOption="typeOption"
           @categoryChange="getPlate"
+          :sumData="sumData"
+          @sumChange="getData"
         />
       </div>
       <!--表格渲染-->
@@ -26,10 +28,11 @@
         class="enclosure-table"
         :cell-class-name="wrongCellMask"
       >
-        <el-table-column label="序号" type="index" align="center" width="50" />
-        <el-table-column v-if="columns.visible('name')" key="name" prop="name" :show-overflow-tooltip="true" label="名称" min-width="100">
+        <el-table-column label="序号" type="index" align="center" width="50" fixed="left" />
+        <el-table-column v-if="columns.visible('name')" key="name" prop="name" :show-overflow-tooltip="true" label="名称" min-width="120">
           <template v-slot="scope">
-            <div>{{ scope.row.name }}</div>
+            <el-input v-if="scope.row.isModify" v-model="scope.row.name" placeholder="名称" maxlength="20" style="width: 100%" />
+            <div v-else>{{ scope.row.name ? scope.row.name : '-' }}</div>
           </template>
         </el-table-column>
         <el-table-column
@@ -38,10 +41,17 @@
           prop="serialNumber"
           :show-overflow-tooltip="true"
           label="编号"
-          min-width="90px"
+          min-width="120px"
         >
           <template v-slot="scope">
-            <div>{{ scope.row.serialNumber }}</div>
+            <el-input
+              v-if="scope.row.isModify"
+              v-model="scope.row.serialNumber"
+              placeholder="编号"
+              maxlength="10"
+              style="width:100%;"
+            />
+            <div v-else>{{ scope.row.serialNumber }}</div>
           </template>
         </el-table-column>
         <el-table-column
@@ -70,7 +80,7 @@
           :key="technicalTypeStatus ? 'plateId' : 'plate'"
           :prop="technicalTypeStatus ? 'plateId' : 'plate'"
           :show-overflow-tooltip="true"
-          label="版型"
+          label="板型"
           min-width="100px"
         >
           <template v-slot="scope">
@@ -82,7 +92,7 @@
                 :type="'other'"
                 :dataStructure="crud.query.category===TechnologyTypeAllEnum.TRUSS_FLOOR_PLATE.V?trussProp:typeProp"
                 size="small"
-                placeholder="版型"
+                placeholder="板型"
                 @change="plateChange(scope.row,scope.$index)"
               />
               <common-select
@@ -91,11 +101,23 @@
                 :options="enclosureDictKV?.['plate_type']"
                 :dataStructure="{ key: 'name', label: 'name', value: 'name' }"
                 size="small"
-                placeholder="版型"
+                placeholder="板型"
                 @change="plateChange(scope.row,scope.$index)"
               />
             </template>
             <div v-else>{{ scope.row.plate ? scope.row.plate : '-' }}</div>
+          </template>
+        </el-table-column>
+        <el-table-column
+          v-if="columns.visible('weightMeter')"
+          key="weightMeter"
+          prop="weightMeter"
+          :label="`米重(kg/m)`"
+          align="left"
+          width="100px"
+        >
+          <template v-slot="scope">
+            {{ scope.row.weightMeter ? scope.row.weightMeter.toFixed(DP.COM_WT__KG) : '-' }}
           </template>
         </el-table-column>
         <el-table-column
@@ -116,7 +138,7 @@
               "
               v-model.number="scope.row.width"
               :min="0"
-              :max="99999999999"
+              :max="9999999999"
               :step="1"
               :precision="DP.MES_ENCLOSURE_W__MM"
               placeholder="有效宽度"
@@ -140,7 +162,7 @@
               v-if="scope.row.isModify && !scope.row.inProductionQuantity && crud.query.category===TechnologyTypeAllEnum.BENDING.V"
               v-model.number="scope.row.unfoldedWidth"
               :min="0"
-              :max="99999999999"
+              :max="9999999999"
               :step="1"
               :precision="DP.MES_ENCLOSURE_W__MM"
               placeholder="展开宽度"
@@ -164,7 +186,7 @@
               v-if="scope.row.isModify && !scope.row.inProductionQuantity"
               v-model.number="scope.row.bendTimes"
               :min="0"
-              :max="99999999999"
+              :max="9999999999"
               :step="1"
               :precision="0"
               placeholder="折弯次数"
@@ -188,7 +210,7 @@
               v-if="scope.row.isModify && !scope.row.inProductionQuantity"
               v-model.number="scope.row.thickness"
               :min="0"
-              :max="99999999999"
+              :max="9999999999"
               :step="1"
               :precision="DP.MES_ENCLOSURE_T__MM"
               placeholder="板厚"
@@ -213,7 +235,7 @@
               v-if="scope.row.isModify && !scope.row.inProductionQuantity"
               v-model.number="scope.row.length"
               :min="0"
-              :max="99999999999"
+              :max="9999999999"
               :step="1"
               :precision="DP.MES_ENCLOSURE_L__MM"
               placeholder="单长"
@@ -237,7 +259,7 @@
               v-if="scope.row.isModify && !scope.row.inProductionQuantity"
               v-model.number="scope.row.quantity"
               :min="0"
-              :max="99999999999"
+              :max="9999999999"
               :step="1"
               :precision="DP.MES_ENCLOSURE_L__MM"
               placeholder="数量"
@@ -275,22 +297,18 @@
         </el-table-column>
         <el-table-column
           v-if="crud.query.category!==TechnologyTypeAllEnum.SANDWICH_BOARD.V"
-          key="weight"
-          prop="weight"
+          key="totalWeight"
+          prop="totalWeight"
           :label="`总重量(kg)`"
           align="left"
           min-width="100px"
         >
           <template v-slot="scope">
-            {{ scope.row.weight ? scope.row.weight.toFixed(DP.COM_WT__KG) : '-' }}
+            {{ scope.row.totalWeight ? scope.row.totalWeight.toFixed(DP.COM_WT__KG) : '-' }}
           </template>
         </el-table-column>
         <el-table-column
-          v-if="
-            columns.visible('brand') &&
-            crud.query.category !== TechnologyTypeAllEnum.SANDWICH_BOARD.V &&
-            crud.query.category !== TechnologyTypeAllEnum.TRUSS_FLOOR_PLATE.V
-          "
+          v-if="columns.visible('brand')"
           key="brand"
           prop="brand"
           :show-overflow-tooltip="true"
@@ -303,12 +321,7 @@
           </template>
         </el-table-column>
         <el-table-column
-          v-if="
-            columns.visible('color') &&
-            crud.query.category != TechnologyTypeAllEnum.TRUSS_FLOOR_PLATE.V &&
-            crud.query.category != TechnologyTypeAllEnum.PRESSURE_BEARING_PLATE.V &&
-            crud.query.category != TechnologyTypeAllEnum.SANDWICH_BOARD.V
-          "
+          v-if="columns.visible('color')"
           key="color"
           prop="color"
           :show-overflow-tooltip="true"
@@ -318,6 +331,19 @@
           <template v-slot="scope">
             <el-input v-if="scope.row.isModify" v-model="scope.row.color" placeholder="颜色" maxlength="10" style="width: 100%" />
             <div v-else>{{ scope.row.color ? scope.row.color : '-' }}</div>
+          </template>
+        </el-table-column>
+        <el-table-column
+          v-if="columns.visible('remark')"
+          key="remark"
+          prop="remark"
+          :show-overflow-tooltip="true"
+          label="备注"
+          min-width="120px"
+        >
+          <template v-slot="scope">
+            <el-input v-if="scope.row.isModify" v-model="scope.row.remark" placeholder="备注" type="textarea" maxlength="200" style="width: 100%" />
+            <div v-else>{{ scope.row.remark ? scope.row.remark : '-' }}</div>
           </template>
         </el-table-column>
         <el-table-column
@@ -410,7 +436,7 @@
 </template>
 
 <script setup>
-import crudApi, { editStatus, uploadBendingSingle } from '@/api/plan/technical-manage/enclosure'
+import crudApi, { editStatus, uploadBendingSingle, getTotalSum } from '@/api/plan/technical-manage/enclosure'
 import { getContractTechInfo, getEnclosureDictList } from '@/api/contract/project'
 import { getTechnicalType } from '@/api/config/mes/base'
 import { ref, watch, provide, computed } from 'vue'
@@ -446,6 +472,7 @@ const simpleDrawRef = ref()
 const typeProp = { key: 'id', label: 'plateType', value: 'id' }
 const trussProp = { key: 'id', label: 'serialNumber', value: 'id' }
 const pageShow = ref(true)
+const sumData = ref({})
 
 provide('plateOption', plateOption)
 provide('technicalTypeStatus', technicalTypeStatus)
@@ -564,7 +591,7 @@ const validateColor = (value, row) => {
 const rules = {
   serialNumber: [{ required: true, message: '请输入编号', trigger: 'blur' }],
   unfoldedWidth: [{ validator: validateUnfoldedWidth, message: '展开宽度必填', trigger: 'change' }],
-  plateId: [{ validator: validatePlateId, message: '请选择版型', trigger: 'change' }],
+  // plateId: [{ validator: validatePlateId, message: '请选择板型', trigger: 'change' }],
   width: [{ validator: validateWidth, message: '有效宽度必填', trigger: 'change' }],
   thickness: [{ validator: validateThickness, message: '厚度必填', trigger: 'change' }],
   length: [{ required: true, message: '单长必填', trigger: 'change' }],
@@ -579,11 +606,11 @@ const tableRules = computed(() => {
   let data = {}
   if (technicalTypeStatus.value) {
     data = {
-      plateId: [{ validator: validatePlateId, message: '请选择版型', trigger: 'change' }]
+      plateId: [{ validator: validatePlateId, message: '请选择板型', trigger: 'change' }]
     }
   } else {
     data = {
-      plate: [{ required: true, message: '请选择版型', trigger: 'change' }]
+      plate: [{ required: true, message: '请选择板型', trigger: 'change' }]
     }
   }
   return { ...rules, ...data }
@@ -608,6 +635,7 @@ watch(
   () => globalProjectId.value,
   (val) => {
     if (val) {
+      sumData.value = {}
       getTechInfo()
       crud.query.projectId = globalProjectId.value
       crud.toQuery()
@@ -628,6 +656,14 @@ watch(
       })
       pageShow.value = typeOption.value.length > 0
     }
+  },
+  { deep: true, immediate: true }
+)
+
+watch(
+  () => crud.query,
+  (val) => {
+    getData()
   },
   { deep: true, immediate: true }
 )
@@ -656,12 +692,16 @@ async function getConfig() {
     if (crud.query.category === TechnologyTypeAllEnum.TRUSS_FLOOR_PLATE.V) {
       enclosureDictKV.value['plate_type'] = content.map(row => {
         let effectiveWidth = ''
+        let weightMeter = ''
         row?.list.forEach(v => {
           if (v.name === 'effectiveWidth') {
             effectiveWidth = v.value
           }
+          if (v.name === 'weightMeter') {
+            weightMeter = v.value
+          }
         })
-        plateKV[row.code] = { effectiveWidth }
+        plateKV[row.code] = { effectiveWidth, weightMeter }
         return { name: row.code }
       })
     } else {
@@ -738,16 +778,17 @@ function plateChange(row, index) {
       crud.data[index].unfoldedWidth = choseVal.unfoldedWidth
     }
     crud.data[index].width = choseVal.effectiveWidth
-    getTotalData(row)
   } else {
     const data = enclosureDictKV.value.KV?.[row.plate] || {}
     if (crud.query.category === TechnologyTypeAllEnum.TRUSS_FLOOR_PLATE.V) {
       crud.data[index].width = +data.effectiveWidth
+      crud.data[index].weightMeter = +data.weightMeter
     } else if (crud.query.category === TechnologyTypeAllEnum.PROFILED_PLATE.V || crud.query.category === TechnologyTypeAllEnum.PRESSURE_BEARING_PLATE.V) {
       crud.data[index].width = +data.effectiveWidth
       crud.data[index].unfoldedWidth = +data.unfoldedWidth
     }
   }
+  getTotalData(row)
 }
 
 function getTotalData(row) {
@@ -769,11 +810,11 @@ function getTotalData(row) {
 function thicknessChange(row) {
   if (crud.query.category === TechnologyTypeAllEnum.BENDING.V || (crud.query.category === TechnologyTypeAllEnum.PROFILED_PLATE.V || crud.query.category === TechnologyTypeAllEnum.PRESSURE_BEARING_PLATE.V)) {
     if (row.unfoldedWidth && row.thickness && row.totalLength) {
-      row.weight = (row.unfoldedWidth / 1000) * row.thickness * row.totalLength * 7.85
+      row.totalWeight = (row.unfoldedWidth / 1000) * row.thickness * row.totalLength * 7.85
     }
   } else if (crud.query.category === TechnologyTypeAllEnum.TRUSS_FLOOR_PLATE.V) {
     if (row.weightMeter && row.totalLength) {
-      row.weight = row.weightMeter * row.totalLength
+      row.totalWeight = row.weightMeter * row.totalLength
     }
   }
 }
@@ -794,7 +835,8 @@ const originRow = ref({})
 function editRow(row) {
   originRow.value = JSON.parse(JSON.stringify(row))
   if (technicalTypeStatus.value) {
-    const chosePlate = plateOption.value.find((k) => k.plateType === row.plate)
+    const chosePlate = crud.query.category !== TechnologyTypeAllEnum.TRUSS_FLOOR_PLATE.V ? plateOption.value.find((k) => k.plateType === row.plate) : plateOption.value.find((k) => k.serialNumber ===
+ row.plate)
     row.plateId = isNotBlank(chosePlate) ? chosePlate.id : undefined
   }
   row.isModify = true
@@ -803,6 +845,7 @@ async function deleteRow(row) {
   try {
     await crudApi.del(row.id)
     crud.notify(`删除成功`, CRUD.NOTIFICATION_TYPE.SUCCESS)
+    getData()
     crud.toQuery()
   } catch (e) {
     console.log('删除', e)
@@ -822,7 +865,8 @@ async function rowSubmit(row) {
   if (crud.query.category !== TechnologyTypeAllEnum.BENDING.V) {
     crud.data.map((v) => {
       if (!v.isModify && v.plate && technicalTypeStatus.value) {
-        const chosePlate = plateOption.value.find((k) => k.plateType === v.plate)
+        const chosePlate = crud.query.category !== TechnologyTypeAllEnum.TRUSS_FLOOR_PLATE.V ? plateOption.value.find((k) => k.plateType === row.plate) : plateOption.value.find((k) => k.serialNumber ===
+ row.plate)
         v.plateId = chosePlate.id
       }
     })
@@ -848,6 +892,7 @@ async function rowSubmit(row) {
     } else {
       await crudApi.add(row)
     }
+    getData()
     crud.notify(`${messageName}成功`, CRUD.NOTIFICATION_TYPE.SUCCESS)
     row.isModify = false
   } catch (e) {
@@ -868,6 +913,23 @@ CRUD.HOOK.handleRefresh = (crud, data) => {
   }
   return data
 }
+
+async function getData() {
+  if (crud.query.enclosurePlanId && crud.query.category) {
+    try {
+      sumData.value = await getTotalSum({ ...crud.query })
+    } catch (e) {
+      console.log('获取围护汇总', e)
+    }
+  } else {
+    sumData.value = {}
+  }
+}
+
+CRUD.HOOK.afterSubmit = (crud, data) => {
+  getData()
+}
+
 </script>
 
 <style lang="scss" scoped>

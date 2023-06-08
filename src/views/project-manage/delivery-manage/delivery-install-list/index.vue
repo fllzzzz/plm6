@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <div v-if="globalProject?.businessType===businessTypeEnum.INSTALLATION.V">
-      <mHeader :projectId="globalProjectId" />
+      <mHeader :projectId="globalProjectId" :globalProject="globalProject"/>
       <!--表格渲染-->
       <common-table
         ref="tableRef"
@@ -13,8 +13,8 @@
         style="width: 100%"
       >
         <el-table-column type="index" prop="index" label="序号" align="center" width="60" />
-        <el-table-column key="monomer.name" prop="monomer.name" v-if="columns.visible('monomer.name')" :show-overflow-tooltip="true" label="单体" align="center" />
-        <el-table-column key="area.name" prop="area.name" v-if="columns.visible('area.name')" :show-overflow-tooltip="true" label="区域" align="center" />
+        <el-table-column key="monomer.name" prop="monomer.name" v-if="columns.visible('monomer.name') && crud.query.productType!==installProjectTypeEnum.ENCLOSURE.V" :show-overflow-tooltip="true" label="单体" align="center" />
+        <el-table-column key="area.name" prop="area.name" v-if="columns.visible('area.name')" :show-overflow-tooltip="true" :label="crud.query.productType!==installProjectTypeEnum.ENCLOSURE.V?'区域':'批次'" align="center" />
         <el-table-column key="name" prop="name" label="名称" v-if="columns.visible('name')" :show-overflow-tooltip="true" align="center" />
         <el-table-column key="serialNumber" prop="serialNumber" v-if="columns.visible('serialNumber')" :show-overflow-tooltip="true" label="编号" align="center" />
         <el-table-column key="material" prop="material" v-if="columns.visible('material')" :show-overflow-tooltip="true" label="材质" align="center" />
@@ -41,7 +41,7 @@ import { deliveryInstallData as get } from '@/api/project-manage/delivery-manage
 import { ref } from 'vue'
 
 import { businessTypeEnum } from '@enum-ms/contract'
-import { deliveryInstallTypeEnum } from '@enum-ms/project'
+import { deliveryInstallTypeEnum, installProjectTypeEnum } from '@enum-ms/project'
 import { deliveryInstallListPM as permission } from '@/page-permission/project'
 import { mapGetters } from '@/store/lib'
 

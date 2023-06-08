@@ -109,7 +109,7 @@
               v-model="row.unitPrice"
               :step="1"
               :min="0"
-              :precision="2"
+              :precision="DP.YUAN"
               clearable
               class="input-underline"
               :controls="false"
@@ -138,6 +138,7 @@
 <script setup>
 import { computed, ref, nextTick } from 'vue'
 import { partKeyWordEnum } from '@enum-ms/mes'
+import { DP } from '@/settings/config'
 
 import { regBatchForm } from '@compos/use-crud'
 import useTableOperate from '@compos/form/use-table-operate'

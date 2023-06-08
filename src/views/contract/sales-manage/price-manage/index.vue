@@ -13,7 +13,7 @@
           />
           <common-radio-button
             v-model="productType"
-            :options="contractSaleTypeEnum.ENUM"
+            :options="contractSaleTypeEnumArr"
             default
             type="enumSL"
             size="small"
@@ -74,13 +74,13 @@
       <div>
         <el-row v-if="checkPermission(permission.cost) && productType!==contractSaleTypeEnum.ENCLOSURE.V" :gutter="20" class="panel-group" style="margin-bottom:10px;">
           <el-col :span="8">
-            <Panel name="项目造价（元）" text-color="#626262" num-color="#1890ff" :end-val="projectCost || 0" :precision="2" />
+            <Panel name="项目造价（元）" text-color="#626262" num-color="#1890ff" :end-val="projectCost || 0" :precision="DP.YUAN" />
           </el-col>
           <el-col :span="8">
-            <Panel name="单体造价（元）" text-color="#626262" num-color="#1890ff" :end-val="monomerCost || 0" :precision="2" />
+            <Panel name="单体造价（元）" text-color="#626262" num-color="#1890ff" :end-val="monomerCost || 0" :precision="DP.YUAN" />
           </el-col>
           <el-col :span="8">
-            <Panel name="选定区域造价（元）" text-color="#626262" num-color="#1890ff" :end-val="areaCost || 0" :precision="2" />
+            <Panel name="选定区域造价（元）" text-color="#626262" num-color="#1890ff" :end-val="areaCost || 0" :precision="DP.YUAN" />
           </el-col>
         </el-row>
       </div>
@@ -117,6 +117,7 @@ import { TechnologyTypeAllEnum } from '@enum-ms/contract'
 import { contractSaleTypeEnum } from '@enum-ms/mes'
 import { debounce } from '@/utils'
 import { isBlank } from '@data-type/index'
+import { DP } from '@/settings/config'
 import checkPermission from '@/utils/system/check-permission'
 import { isNotBlank } from '@data-type/index'
 
@@ -143,7 +144,7 @@ const currentView = computed(() => {
   }
 })
 
-const { globalProjectId } = mapGetters(['globalProjectId'])
+const { globalProjectId, contractSaleTypeEnumArr } = mapGetters(['globalProjectId', 'contractSaleTypeEnumArr'])
 
 const domRef = ref()
 const projectId = ref()

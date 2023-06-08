@@ -45,7 +45,7 @@
       />
       <rrOperation />
     </div>
-    <crudOperation>
+    <crudOperation delText="删除【未排产构件】">
       <template #optLeft>
         <upload-btn
           v-if="currentArea && currentArea.id && checkPermission(crud.permission.import)"
@@ -79,6 +79,20 @@
         <export-button :fn="downloadArtifactTreeTemplate" class="filter-item" v-permission="crud.permission.templateDownload">
           零构件清单模板
         </export-button>
+        <!-- <upload-btn
+          v-if="checkPermission(crud.permission.changeImport)"
+          :data="{ monomerId: crud.query.monomerId }"
+          :upload-fun="changeListUpload"
+          btn-name="变更清单导入"
+          btn-type="primary"
+          btn-size="mini"
+          class="filter-item"
+          @success="changeListUploadSuccess"
+        />
+        <export-button :fn="changeListTemplate" class="filter-item" v-permission="crud.permission.changeTemplateDownLoad">
+          下载变更模板清单
+        </export-button>
+        <common-button type="danger" size="mini" class="filter-item" @click="changeListTest">变更清单test</common-button> -->
         <el-popconfirm
           :title="`确认清空【${currentArea.name}】下的【零构件清单】么?`"
           @confirm="deleteArtifact"
@@ -119,18 +133,28 @@
         <structureTable :table-data="tableData[TechnologyTypeAllEnum.STRUCTURE.V]" :is-show="true" style="margin-top: 20px" />
       </template>
     </common-drawer>
+    <!-- <change-drawer
+      v-model:visible="changeVisible"
+      :origin-changeInfo="originChangeInfo"
+      :monomerId="crud.query.monomerId"
+      :projectId="crud.query.projectId"
+    /> -->
   </div>
 </template>
 
 <script setup>
 import { defineProps, ref, computed, watch, defineEmits } from 'vue'
-import { listUpload } from '@/api/plan/technical-manage/artifact-tree'
+import {
+  listUpload
+  // changeListUpload
+} from '@/api/plan/technical-manage/artifact-tree'
 
 import { regHeader } from '@compos/use-crud'
 import { TechnologyTypeAllEnum } from '@enum-ms/contract'
 import {
   downloadArtifactTree,
   downloadArtifactTreeTemplate,
+  // changeListTemplate,
   errorArtifact,
   delArtifactTreeByArea
 } from '@/api/plan/technical-manage/artifact-tree'
@@ -145,6 +169,8 @@ import areaTabs from '@/components-system/plan/area-tabs'
 import uploadBtn from '@comp/file-upload/ExcelUploadBtn'
 import ExportButton from '@comp-common/export-button/index.vue'
 import structureTable from '@/views/contract/project-manage/module/enclosure-table/structure-table'
+// import changeDrawer from '../change/change-drawer.vue'
+// import { changeRes } from '@/components-system/plan/change/mock'
 
 const defaultQuery = {
   artifactName: '',
@@ -277,4 +303,21 @@ async function getTechInfo() {
   }
 }
 
+// --------------------------- 变更清单导入 start ------------------------------
+// const changeVisible = ref(false)
+// const originChangeInfo = ref({})
+
+// function changeListUploadSuccess(res) {
+//   if (typeof res === 'object') {
+//     originChangeInfo.value = res.data?.content || []
+//     changeVisible.value = true
+//   }
+// }
+
+// function changeListTest() {
+//   console.log(changeRes)
+//   originChangeInfo.value = changeRes.data.content || []
+//   changeVisible.value = true
+// }
+// --------------------------- 变更清单导入 end --------------------------------
 </script>

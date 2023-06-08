@@ -15,7 +15,7 @@
       <print-table
         v-permission="permission.print"
         api-key="deliveryCargoList"
-        :params="props.detailInfo?.id"
+        :params="{cargoListId:props.detailInfo?.id,projectId:globalProject.id}"
         size="mini"
         type="warning"
         class="filter-item"
@@ -41,11 +41,22 @@
       <div style="color:red;font-size:13px;margin-bottom:10px;" v-if="detailInfo.boolProblemReceiving && detailInfo.problemDesc">*{{detailInfo.problemDesc}}</div>
       <common-table :data="list" v-loading="tableLoading" show-summary :summary-method="getSummaries" :max-height="maxHeight">
         <el-table-column label="序号" type="index" align="center" width="60" />
-        <el-table-column key="monomer.name" prop="monomer.name" label="单体" align="center" />
-        <el-table-column key="area.name" prop="area.name" label="区域" align="center" />
+        <el-table-column key="monomerName" prop="monomerName" label="单体" align="center" />
+        <el-table-column key="areaName" prop="areaName" label="区域" align="center">
+          <template v-slot="scope">
+            <span v-if="scope.row.sourceRow.productType!==installProjectTypeEnum.ENCLOSURE.V">{{scope.row.areaName}}</span>
+            <span v-else>-</span>
+          </template>
+        </el-table-column>
+        <el-table-column key="areaName1" prop="areaName" label="批次" align="center">
+          <template v-slot="scope">
+            <span v-if="scope.row.sourceRow.productType===installProjectTypeEnum.ENCLOSURE.V">{{scope.row.areaName}}</span>
+            <span v-else>-</span>
+          </template>
+        </el-table-column>
         <el-table-column key="productType" prop="productType" label="类型" align="center">
           <template v-slot="scope">
-            <el-tag>{{installProjectTypeEnum.V[scope.row.productType].SL}}</el-tag>
+            <el-tag>{{globalProject.projectType === projectTypeEnum.STEEL.V ?installProjectTypeEnum.V[scope.row.productType].SL:bridgeComponentTypeEnum.VL[scope.row.productType]}}</el-tag>
           </template>
         </el-table-column>
         <el-table-column key="name" prop="name" label="名称" align="center" />
@@ -64,6 +75,8 @@
 import crudApi, { deliveryProductList } from '@/api/project-manage/delivery-manage/homemade-delivery'
 import { ref, defineEmits, defineProps, watch } from 'vue'
 
+import { projectTypeEnum } from '@enum-ms/contract'
+import { bridgeComponentTypeEnum } from '@enum-ms/bridge'
 import { installProjectTypeEnum } from '@enum-ms/project'
 import { tableSummary } from '@/utils/el-extra'
 import { isNotBlank } from '@data-type/index'
@@ -80,6 +93,10 @@ const props = defineProps({
     require: true
   },
   detailInfo: {
+    type: Object,
+    default: () => {}
+  },
+  globalProject: {
     type: Object,
     default: () => {}
   },
@@ -135,6 +152,10 @@ async function fetchList() {
   tableLoading.value = true
   try {
     const { content = [] } = await deliveryProductList(props.detailInfo?.id)
+    content.map(v => {
+      v.monomerName = v.monomer?.name
+      v.areaName = v.area?.name
+    })
     _list = content
   } catch (error) {
     console.log('收货明细', error)
@@ -166,6 +187,7 @@ async function passConfirm(val) {
     const submitData = {
       boolProblemReceiving: val,
       cargoListId: props.detailInfo?.id,
+      projectId: props.globalProject.id,
       problemDesc: val === 1 ? remarkValue.value : undefined
     }
     await crudApi.edit(submitData)

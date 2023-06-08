@@ -4,7 +4,7 @@ import { useStore } from 'vuex'
 // 获取车间
 const useWorkshop = (loadedCallBack) => {
   const store = useStore()
-  const loaded = computed(() => store.state.config.loaded.users)
+  const loaded = computed(() => store.state.config.loaded.workshops)
 
   // 未加载则拉取
   if (!store.state.config.loaded.workshops) {

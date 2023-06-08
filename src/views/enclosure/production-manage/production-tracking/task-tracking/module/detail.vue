@@ -30,12 +30,12 @@
       />
     </template>
     <template #content>
-      <common-table :data="detail.content" :max-height="maxHeight" show-summary :summary-method="getSummaries">
+      <common-table :data="detail.content" :max-height="maxHeight" :data-format="dataFormat" show-summary :summary-method="getSummaries">
         <el-table-column label="序号" type="index" align="center" width="60" />
         <el-table-column key="planName" prop="planName" label="批次" show-overflow-tooltip align="center" />
         <el-table-column key="name" prop="name" show-overflow-tooltip label="名称" align="center" />
         <el-table-column key="serialNumber" prop="serialNumber" show-overflow-tooltip label="编号" align="center" />
-        <el-table-column key="plate" prop="plate" show-overflow-tooltip label="板型" align="center" />
+        <el-table-column v-if="detail.rowDetail?.category !== mesEnclosureTypeEnum.FOLDING_PIECE.V" key="plate" prop="plate" show-overflow-tooltip label="板型" align="center" />
         <el-table-column key="brand" prop="brand" show-overflow-tooltip label="品牌" align="center" />
         <el-table-column key="color" prop="color" show-overflow-tooltip label="颜色" align="center" />
         <el-table-column key="length" prop="length" show-overflow-tooltip label="单长(mm)" align="center" />
@@ -58,6 +58,8 @@
 import { computed, defineProps, ref } from 'vue'
 
 import { tableSummary } from '@/utils/el-extra'
+import { DP } from '@/settings/config'
+import { mesEnclosureTypeEnum } from '@enum-ms/mes'
 
 import { regDetail } from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
@@ -70,6 +72,10 @@ const props = defineProps({
 })
 
 const drawerRef = ref()
+const dataFormat = ref([
+  ['totalLength', ['to-fixed', DP.MES_ENCLOSURE_L__M]],
+  ['completeLength', ['to-fixed', DP.MES_ENCLOSURE_L__M]]
+])
 
 const { CRUD, crud, detail } = regDetail()
 
@@ -88,8 +94,8 @@ const { maxHeight } = useMaxHeight(
 function getSummaries(param) {
   return tableSummary(param, {
     props: [
-      ['totalLength', 2],
-      ['completeLength', 2]
+      ['totalLength', DP.MES_ENCLOSURE_L__M],
+      ['completeLength', DP.MES_ENCLOSURE_L__M]
     ]
   })
 }

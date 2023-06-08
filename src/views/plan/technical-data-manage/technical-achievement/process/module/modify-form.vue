@@ -18,20 +18,22 @@
     <template #content>
       <el-divider><span class="title">原文件信息</span></el-divider>
       <el-descriptions class="margin-top" :column="2" border label-width="110">
-        <el-descriptions-item label="文件名称" :span="2">{{currentRow.fileName}}</el-descriptions-item>
+        <el-descriptions-item label="文件名称" :span="2">
+          <div style="word-break:break-all;">{{currentRow.fileName}}</div>
+        </el-descriptions-item>
         <el-descriptions-item label="文件" :span="2">
           <template v-if="currentRow.attachmentDTO">
-            <div style="cursor: pointer; color: #409eff" @dblclick="attachmentView(currentRow.attachmentDTO)">{{ currentRow.attachmentDTO.name }}</div>
+            <div style="cursor: pointer; color: #409eff;word-break:break-all;" @dblclick="attachmentView(currentRow.attachmentDTO)">{{ currentRow.attachmentDTO.name }}</div>
           </template>
           <span v-else>-</span>
         </el-descriptions-item>
         <el-descriptions-item label="文件类型">{{planProcessTypeEnum.VL[currentRow.processType]}}</el-descriptions-item>
         <el-descriptions-item label="文件属性">{{processUseTypeEnum.VL[currentRow.boolSingleProject]}}</el-descriptions-item>
-        <el-descriptions-item :label="currentRow.boolSingleProject?'所属项目':'关联项目'" :span="2">
+        <el-descriptions-item label="所属项目" :span="2">
            <el-row>
-            <template v-if="isNotBlank(currentRow.projectList)">
+            <template v-if="isNotBlank(currentRow.projectList && currentRow.boolSingleProject)">
               <el-col v-for="item in currentRow.projectList" :key="item.id" :span="12">
-                【{{projectNameFormatter(item)}}】
+                {{projectNameFormatter(item)}}
               </el-col>
             </template>
             <template v-else>-</template>
@@ -51,7 +53,16 @@
             <span style="color:red;margin-right:5px;font-size:14px;">*</span>
             <span>文件名称</span>
           </template>
-          <el-input
+           <el-input
+              class="input-border-none"
+              v-model.trim="form.fileName"
+              type="textarea"
+              :autosize="{ minRows: 1, maxRows: 3 }"
+              :maxlength="50"
+              placeholder="名称"
+              clearable
+              style="width:100%"/>
+          <!-- <el-input
             class="input-border-none"
             v-model="form.fileName"
             placeholder="名称"
@@ -59,7 +70,7 @@
             size="small"
             maxlength="20"
             clearable
-          />
+          /> -->
         </el-descriptions-item>
         <el-descriptions-item label-class-name="modify-content" label="*文件" :span="2">
           <template #label>
@@ -67,26 +78,26 @@
             <span>文件</span>
           </template>
           <div style="display:flex;">
-            <div style="flex:1;">
+            <div style="flex:1;padding-right:10px;">
                <template v-if="form.file">
-                <span style="cursor: pointer; color: #409eff" @dblclick="updateAttachmentView(form)">{{ form.file }}</span>
+                <span style="cursor: pointer; color: #409eff;word-break:break-all;" @dblclick="updateAttachmentView(form)">{{ form.file }}</span>
               </template>
               <template v-else-if="form.attachmentDTO">
-                <span style="cursor: pointer; color: #409eff" @dblclick="attachmentView(form.attachmentDTO)">{{ form.attachmentDTO.name }}</span>
+                <span style="cursor: pointer; color: #409eff;word-break:break-all;" @dblclick="attachmentView(form.attachmentDTO)">{{ form.attachmentDTO.name }}</span>
               </template>
             </div>
-            <div style="flex:1;text-align:right;">
+            <div style="text-align:right;">
               <upload-btn ref="uploadRef" btnType="warning" v-model:files="form.attachmentFiles" :file-classify="fileClassifyEnum.PLAN_ATT.V" :show-file-list="false" :limit="1" :accept="'.pdf'" @change="uploadFile" :btnName="'变更文件'"/>
             </div>
           </div>
         </el-descriptions-item>
         <el-descriptions-item label="文件类型">{{planProcessTypeEnum.VL[currentRow.processType]}}</el-descriptions-item>
         <el-descriptions-item label="文件属性">{{processUseTypeEnum.VL[currentRow.boolSingleProject]}}</el-descriptions-item>
-        <el-descriptions-item :label="currentRow.boolSingleProject?'所属项目':'关联项目'" :span="2">
-          <el-row>
-            <template v-if="isNotBlank(currentRow.projectList)">
+        <el-descriptions-item label="所属项目" :span="2">
+           <el-row>
+            <template v-if="isNotBlank(currentRow.projectList && currentRow.boolSingleProject)">
               <el-col v-for="item in currentRow.projectList" :key="item.id" :span="12">
-                【{{projectNameFormatter(item)}}】
+                {{projectNameFormatter(item)}}
               </el-col>
             </template>
             <template v-else>-</template>
@@ -227,7 +238,11 @@ async function onSubmit() {
     return
   }
   if (!form.value.fileName) {
-    ElMessage.error('新文件文件名不能为空')
+    ElMessage.error('新文件文件名称不能为空')
+    return
+  }
+  if (form.value.fileName.length > 50) {
+    ElMessage.error('新文件文件名称长度不能超过50')
     return
   }
   loading.value = true

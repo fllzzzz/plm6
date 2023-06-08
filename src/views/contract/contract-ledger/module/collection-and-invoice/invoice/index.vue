@@ -120,7 +120,7 @@
       </el-table-column>
       <el-table-column prop="invoiceNo" label="发票号码" align="center" min-width="130">
         <template v-slot="scope">
-          <el-input v-if="scope.row.isModify" v-model.trim="scope.row.invoiceNo" type="text" placeholder="发票号码" style="width: 100%;" @change="checkInvoiceNo(scope.row,scope.$index)" />
+          <el-input v-if="scope.row.isModify" v-model.trim="scope.row.invoiceNo" type="text" placeholder="发票号码" style="width: 100%;" />
           <span v-else>{{ scope.row.invoiceNo  }}</span>
         </template>
       </el-table-column>
@@ -376,34 +376,34 @@ function moneyChange(row) {
 function taxMoney(row) {
   if (row.invoiceAmount && row.taxRate) {
     row.tax = row.invoiceAmount * row.taxRate / 100
-    row.noTaxAmount = (row.invoiceAmount / (1 + row.taxRate / 100)).toFixed(2)
+    row.noTaxAmount = (row.invoiceAmount / (1 + row.taxRate / 100)).toFixed(DP.YUAN)
   } else {
     if (row.invoiceType === invoiceTypeEnum.RECEIPT.V) {
       row.noTaxAmount = row.invoiceAmount
     }
   }
 }
-function checkInvoiceNo(row) {
-  if (row.invoiceNo) {
-    const val = invoiceNoArr.value.find(v => v.dataIndex === row.dataIndex)
-    if (invoiceNoArr.value.findIndex(v => v.invoiceNo === row.invoiceNo) > -1) {
-      ElMessage({ message: '发票号已存在，请重新填写', type: 'error' })
-      row.invoiceNo = undefined
-      if (val) {
-        val.invoiceNo = undefined
-      }
-    } else {
-      if (val) {
-        val.invoiceNo = row.invoiceNo
-      } else {
-        invoiceNoArr.value.push({
-          invoiceNo: row.invoiceNo,
-          dataIndex: row.dataIndex
-        })
-      }
-    }
-  }
-}
+// function checkInvoiceNo(row) {
+//   if (row.invoiceNo) {
+//     const val = invoiceNoArr.value.find(v => v.dataIndex === row.dataIndex)
+//     if (invoiceNoArr.value.findIndex(v => v.invoiceNo === row.invoiceNo) > -1) {
+//       ElMessage({ message: '发票号已存在，请重新填写', type: 'error' })
+//       row.invoiceNo = undefined
+//       if (val) {
+//         val.invoiceNo = undefined
+//       }
+//     } else {
+//       if (val) {
+//         val.invoiceNo = row.invoiceNo
+//       } else {
+//         invoiceNoArr.value.push({
+//           invoiceNo: row.invoiceNo,
+//           dataIndex: row.dataIndex
+//         })
+//       }
+//     }
+//   }
+// }
 
 async function passConfirm(row) {
   try {
@@ -481,7 +481,7 @@ async function rowSubmit(row) {
 // 合计
 function getSummaries(param) {
   return tableSummary(param, {
-    props: ['invoiceAmount'],
+    props: [['invoiceAmount', DP.YUAN]],
     toThousandFields: ['invoiceAmount']
   })
 }
@@ -505,7 +505,7 @@ CRUD.HOOK.handleRefresh = (crud, data) => {
         dataIndex: v.dataIndex
       })
     }
-    v.noTaxAmount = v.invoiceType !== invoiceTypeEnum.RECEIPT.V ? (v.invoiceAmount / (1 + v.taxRate / 100)).toFixed(2) : v.invoiceAmount
+    v.noTaxAmount = v.invoiceType !== invoiceTypeEnum.RECEIPT.V ? (v.invoiceAmount / (1 + v.taxRate / 100)).toFixed(DP.YUAN) : v.invoiceAmount
   })
 }
 </script>

@@ -9,17 +9,18 @@
         @change="productTypeChange"
       />
       <monomer-select
+        v-if="query.productType!==installProjectTypeEnum.ENCLOSURE.V"
         ref="monomerSelectRef"
         v-model="query.monomerId"
         :project-id="query.projectId"
-        :main-product-type="query.productType"
+        :main-product-type="(globalProject.projectType === projectTypeEnum.STEEL.V && query.productType!==installProjectTypeEnum.AUXILIARY.V)? query.productType:''"
         clearable
         class="filter-item"
         @change="crud.toQuery"
         @getAreaInfo="getAreaInfo"
       />
        <common-select
-        v-if="query.productType!==installProjectTypeEnum.AUXILIARY.V"
+        v-if="query.productType!==installProjectTypeEnum.AUXILIARY.V && query.productType!==installProjectTypeEnum.ENCLOSURE.V"
         v-model="query.areaId"
         :options="areaInfo"
         type="other"
@@ -31,6 +32,32 @@
         style="width:200px;"
         @change="crud.toQuery"
       />
+      <template v-if="query.productType===installProjectTypeEnum.ENCLOSURE.V">
+         <common-select
+          v-model="query.category"
+          :options="TechnologyTypeAllEnum.ENUM"
+          :unshow-options="[TechnologyTypeAllEnum.STRUCTURE.K,TechnologyTypeAllEnum.BRIDGE.K]"
+          type="enum"
+          size="small"
+          clearable
+          placeholder="请选择围护类型"
+          class="filter-item"
+          style="width:200px;"
+          @change="categoryChange"
+        />
+        <common-select
+          v-model="query.areaId"
+          :options="areaInfo"
+          type="other"
+          :dataStructure="typeProp"
+          size="small"
+          clearable
+          placeholder="请选择批次"
+          class="filter-item"
+          style="width:200px;"
+          @change="crud.toQuery"
+        />
+      </template>
     </div>
     <crudOperation :show-grid="false" :show-refresh="false">
       <template #optRight>
@@ -44,9 +71,12 @@
 </template>
 
 <script setup>
-import { ref, defineExpose, defineEmits, defineProps } from 'vue'
+import { ref, defineExpose, defineEmits, defineProps, watch } from 'vue'
+import { allProjectPlan } from '@/api/enclosure/enclosure-plan/area'
 
-import { businessTypeEnum } from '@enum-ms/contract'
+import { businessTypeEnum, TechnologyTypeAllEnum } from '@enum-ms/contract'
+import { projectTypeEnum } from '@enum-ms/contract'
+import { bridgeComponentTypeEnum } from '@enum-ms/bridge'
 import { installProjectTypeEnum } from '@enum-ms/project'
 
 import useDashboardHeader from '@compos/mes/dashboard/use-dashboard-header'
@@ -64,11 +94,16 @@ const props = defineProps({
   globalProject: {
     type: Object,
     default: () => {}
+  },
+  projectId: {
+    type: [Number, String],
+    default: undefined
   }
 })
 const defaultQuery = {
-  productType: installProjectTypeEnum.ARTIFACT.V,
+  productType: props.globalProject.projectType === projectTypeEnum.STEEL.V ? installProjectTypeEnum.ARTIFACT.V : bridgeComponentTypeEnum.BOX.V,
   monomerId: { value: undefined, resetAble: false },
+  category: undefined,
   areaId: { value: undefined, resetAble: false },
   receivingStatus: undefined
 }
@@ -78,6 +113,7 @@ const emit = defineEmits('load')
 
 const boxScale = ref(1)
 const typeProp = { key: 'id', label: 'name', value: 'id' }
+const totalArea = ref([])
 const areaInfo = ref([])
 
 const { colors, boxZoomOut, getColor } = useDashboardHeader({
@@ -85,6 +121,21 @@ const { colors, boxZoomOut, getColor } = useDashboardHeader({
   emit,
   crud
 })
+
+watch(
+  () => props.projectId,
+  (val) => {
+    if (val) {
+      crud.query.projectId = props.projectId
+      totalArea.value = []
+      if (crud.query.productType === installProjectTypeEnum.ENCLOSURE.V) {
+        getAllProjectPlan()
+      }
+      crud.toQuery()
+    }
+  },
+  { immediate: true, deep: true }
+)
 
 CRUD.HOOK.beforeRefresh = () => {
   crud.query.projectId = props.globalProject.businessType === businessTypeEnum.INSTALLATION.V ? props.globalProject.id : undefined
@@ -107,7 +158,33 @@ function getAreaInfo(val) {
 
 function productTypeChange(val) {
   query.areaId = undefined
+  if (val === installProjectTypeEnum.ENCLOSURE.V) {
+    getAllProjectPlan()
+  }
   crud.toQuery()
+}
+
+function categoryChange(val) {
+  areaInfo.value = totalArea.value?.filter(v => v.category === val) || []
+  crud.toQuery()
+}
+
+async function getAllProjectPlan() {
+  crud.query.monomerId = undefined
+  areaInfo.value = []
+  if (props.projectId) {
+    try {
+      const data = await allProjectPlan(props.projectId) || []
+      totalArea.value = data || []
+      if (crud.query.category) {
+        areaInfo.value = totalArea.value?.filter(v => v.category === crud.query.category)
+      } else {
+        areaInfo.value = totalArea.value
+      }
+    } catch (e) {
+      console.log('获取项目所有围护计划', e)
+    }
+  }
 }
 
 defineExpose({

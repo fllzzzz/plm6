@@ -145,11 +145,10 @@ const { crud, query, CRUD } = regHeader(defaultQuery)
 // 刷新数据后
 CRUD.HOOK.handleRefresh = (crud, { data }) => {
   data.content.forEach((v) => {
-    console.log(v.category, 'category')
     v.newUnitPrice = v.unitPrice // number类型的单价（unitPrice可能会有千位符）
     v.originNewUnitPrice = v.newUnitPrice
     v.originUnitPrice = emptyTextFormatter(toThousand(v.unitPrice))
-    v.totalPrice = (v.pricingManner === enclosureSettlementTypeEnum.LENGTH.V ? v.totalLength : v.totalArea) * (v.unitPrice || 0)
+    v.totalPrice = (v.pricingManner === enclosureSettlementTypeEnum.LENGTH.V ? v.totalLength : v.totalArea) * (v.newUnitPrice || 0)
   })
   fetchCost()
 }
@@ -176,15 +175,14 @@ function costInit() {
   monomerCost.value = { ...costData }
 }
 
-// 出来录入状态
+// 处理录入状态
 function handelModifying(status, reset = false) {
   // 取消分配，数据还原
   if (reset) {
     crud.data.forEach((v) => {
       v.unitPrice = v.originUnitPrice
       v.newUnitPrice = v.originNewUnitPrice
-      v.totalPrice = (v.priceType === enclosureSettlementTypeEnum.LENGTH.V ? v.totalLength : v.totalArea) * (v.newUnitPrice || 0)
-      return v
+      v.totalPrice = (v.pricingManner === enclosureSettlementTypeEnum.LENGTH.V ? v.totalLength : v.totalArea) * (v.newUnitPrice || 0)
     })
   }
   modifying.value = status

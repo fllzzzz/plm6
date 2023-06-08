@@ -6,9 +6,9 @@
         <factory-config @click-factory="handleChangeFactory" />
       </el-col>
       <!-- 车间列表 -->
-      <el-col :xs="24" :sm="24" :md="24" :lg="12" :xl="12">
+      <!-- <el-col :xs="24" :sm="24" :md="24" :lg="12" :xl="12">
         <workshop-config :factory="curFactory" />
-      </el-col>
+      </el-col> -->
     </el-row>
   </div>
 </template>
@@ -19,7 +19,7 @@ import { ref, provide } from 'vue'
 import useMaxHeight from '@compos/use-max-height'
 
 import factoryConfig from './factory/index'
-import workshopConfig from './workshop/index'
+// import workshopConfig from './workshop/index'
 
 const curFactory = ref()
 

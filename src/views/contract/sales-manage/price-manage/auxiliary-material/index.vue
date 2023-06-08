@@ -17,19 +17,20 @@
       <el-table-column label="序号" type="index" align="center" width="60" />
       <el-table-column v-if="columns.visible('useProperty')" prop="useProperty" label="使用类别" align="center">
         <template #default="{ row }">
-          <span>{{ row.useProperty?auxiliaryMaterialUseTypeEnum.VL[row.useProperty]:'-' }}</span>
+          <span>{{ row.useProperty ? auxiliaryMaterialUseTypeEnum.VL[row.useProperty] : '-' }}</span>
         </template>
       </el-table-column>
+      <el-table-column prop="name" label="名称" align="center" v-if="columns.visible('name')" :show-overflow-tooltip="true" />
       <el-table-column
-        prop="name"
-        label="名称"
-        align="center"
-        v-if="columns.visible('name')"
+        v-if="columns.visible('specification')"
         :show-overflow-tooltip="true"
+        prop="specification"
+        label="规格"
+        align="center"
+        min-width="120"
       />
-      <el-table-column v-if="columns.visible('specification')" :show-overflow-tooltip="true" prop="specification" label="规格" align="center" min-width="120" />
-      <el-table-column v-if="columns.visible('measureUnit')" :show-overflow-tooltip="true" prop="measureUnit" label="单位" align="center"/>
-      <el-table-column v-if="columns.visible('quantity')" :show-overflow-tooltip="true" prop="quantity" label="数量" align="center"/>
+      <el-table-column v-if="columns.visible('measureUnit')" :show-overflow-tooltip="true" prop="measureUnit" label="单位" align="center" />
+      <el-table-column v-if="columns.visible('quantity')" :show-overflow-tooltip="true" prop="quantity" label="数量" align="center" />
       <el-table-column
         v-if="columns.visible('unitPrice')"
         key="unitPrice"
@@ -58,7 +59,7 @@
       </el-table-column>
       <el-table-column v-if="columns.visible('totalPrice')" key="totalPrice" prop="totalPrice" align="center" min-width="120" label="金额">
         <template #default="{ row }">
-          <span :class="row.status === 1 ? 'tc-danger' : ''">{{ toFixed(row.totalPrice, DP.YUAN) }}</span>
+          <span :class="row.status === 1 ? 'tc-danger' : ''" v-thousand="row.totalPrice" />
         </template>
       </el-table-column>
     </common-table>
@@ -71,7 +72,6 @@
 import crudApi from '@/api/contract/sales-manage/price-manage/auxiliary-material'
 import { ref, defineExpose } from 'vue'
 import { priceManagePM as permission } from '@/page-permission/contract'
-import { toFixed } from '@/utils/data-type'
 import { DP } from '@/settings/config'
 import { auxiliaryMaterialUseTypeEnum } from '@enum-ms/plan'
 
@@ -92,10 +92,7 @@ const sourceMap = new Map([['unitPrice', 'originUnitPrice']])
 
 const tableRef = ref()
 const headerRef = ref()
-const dataFormat = ref([
-  ['unitPrice', 'to-thousand'],
-  ['totalPrice', 'to-thousand']
-])
+const dataFormat = ref([['unitPrice', ['to-thousand-ck', 'YUAN']]])
 const { crud, columns } = useCRUD(
   {
     title: '配套件价格',

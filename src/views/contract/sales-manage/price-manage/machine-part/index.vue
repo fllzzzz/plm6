@@ -57,7 +57,7 @@
       </el-table-column>
       <el-table-column v-if="columns.visible('totalPrice')" key="totalPrice" prop="totalPrice" align="center" min-width="120" label="金额">
         <template #default="{ row }">
-          <span :class="row.status === 1 ? 'tc-danger' : ''">{{ toFixed(row.totalPrice, DP.YUAN) }}</span>
+          <span :class="row.status === 1 ? 'tc-danger' : ''" v-thousand="row.totalPrice" />
         </template>
       </el-table-column>
     </common-table>
@@ -70,7 +70,6 @@
 import crudApi from '@/api/contract/sales-manage/price-manage/machine-part'
 import { ref, defineExpose } from 'vue'
 import { priceManagePM as permission } from '@/page-permission/contract'
-import { toFixed } from '@/utils/data-type'
 import { DP } from '@/settings/config'
 import { pricingMannerEnum } from '@enum-ms/contract'
 import { ElMessage } from 'element-plus'
@@ -93,12 +92,11 @@ const tableRef = ref()
 const headerRef = ref()
 const showAble = ref(false)
 const dataFormat = ref([
-  ['unitPrice', 'to-thousand'],
-  ['totalPrice', 'to-thousand']
+  ['unitPrice', ['to-thousand-ck', 'YUAN']]
 ])
 const { crud, columns } = useCRUD(
   {
-    title: '结构价格',
+    title: '散发制品价格',
     sort: [],
     permission: { ...permission },
     crudApi: { ...crudApi },
@@ -175,7 +173,7 @@ async function checkModifyData(val) {
 // 价格变动
 function handlePrice(row) {
   row.unitPrice = row.newUnitPrice
-  row.totalPrice = row.pricingManner === pricingMannerEnum.WEIGHT.V ? row.totalWeight * (row.unitPrice || 0) : row.totalLength * (row.unitPrice || 0)
+  row.totalPrice = (row.pricingManner === pricingMannerEnum.WEIGHT.V ? row.totalWeight : row.totalLength) * (row.unitPrice || 0)
 }
 
 defineExpose({

@@ -116,7 +116,7 @@
           </el-table-column>
           <el-table-column prop="invoiceNo" label="*发票号码" align="center" min-width="130">
             <template v-slot="scope">
-              <el-input v-if="scope.row.isModify" v-model.trim="scope.row.invoiceNo" type="text" placeholder="发票号码" style="width: 100%;" @change="checkInvoiceNo(scope.row,scope.$index)" />
+              <el-input v-if="scope.row.isModify" v-model.trim="scope.row.invoiceNo" type="text" placeholder="发票号码" style="width: 100%;" />
               <span v-else>{{ scope.row.invoiceNo  }}</span>
             </template>
           </el-table-column>
@@ -153,7 +153,7 @@
 </template>
 
 <script setup>
-import { ref, inject, defineProps, watch, nextTick } from 'vue'
+import { ref, inject, defineProps, nextTick } from 'vue'
 import { regForm } from '@compos/use-crud'
 import { ElMessage } from 'element-plus'
 import { DP } from '@/settings/config'
@@ -173,7 +173,7 @@ const defaultForm = {
 const { CRUD, crud, form } = regForm(defaultForm, formRef)
 const contractInfo = inject('contractInfo')
 const totalAmount = inject('totalAmount')
-const invoiceNoArr = ref([])
+// const invoiceNoArr = ref([])
 const extraAmount = ref(0)
 
 const props = defineProps({
@@ -191,18 +191,18 @@ const props = defineProps({
   }
 })
 
-watch(
-  () => props.existInvoiceNo,
-  (val) => {
-    invoiceNoArr.value = []
-    if (val) {
-      if (props.existInvoiceNo.length > 0) {
-        invoiceNoArr.value = Object.assign([], props.existInvoiceNo)
-      }
-    }
-  },
-  { deep: true, immediate: true }
-)
+// watch(
+//   () => props.existInvoiceNo,
+//   (val) => {
+//     invoiceNoArr.value = []
+//     if (val) {
+//       if (props.existInvoiceNo.length > 0) {
+//         invoiceNoArr.value = Object.assign([], props.existInvoiceNo)
+//       }
+//     }
+//   },
+//   { deep: true, immediate: true }
+// )
 
 const { maxHeight } = useMaxHeight({
   wrapperBox: '.invoiceAddForm',
@@ -284,41 +284,41 @@ function taxMoney(row) {
   console.log(row)
   if (row.invoiceAmount && row.taxRate) {
     row.tax = row.invoiceAmount * row.taxRate / 100
-    row.noTaxAmount = (row.invoiceAmount / (1 + row.taxRate / 100)).toFixed(2)
+    row.noTaxAmount = (row.invoiceAmount / (1 + row.taxRate / 100)).toFixed(DP.YUAN)
   } else {
     if (row.invoiceType === invoiceTypeEnum.RECEIPT.V) {
       row.noTaxAmount = row.invoiceAmount
     }
   }
 }
-function checkInvoiceNo(row) {
-  const val = invoiceNoArr.value.find(v => v.dataIndex === row.dataIndex)
-  if (val) {
-    if (row.invoiceNo) {
-      if (val.invoiceNo === row.invoiceNo) {
-        return
-      }
-      if (invoiceNoArr.value.findIndex(v => v.invoiceNo === row.invoiceNo) > -1) {
-        ElMessage({ message: '发票号已存在，请重新填写', type: 'error' })
-        row.invoiceNo = undefined
-      } else {
-        val.invoiceNo = row.invoiceNo
-      }
-    } else {
-      val.invoiceNo = undefined
-    }
-  } else {
-    if (invoiceNoArr.value.findIndex(v => v.invoiceNo === row.invoiceNo) > -1) {
-      ElMessage({ message: '发票号已存在，请重新填写', type: 'error' })
-      row.invoiceNo = undefined
-    } else {
-      invoiceNoArr.value.push({
-        invoiceNo: row.invoiceNo,
-        dataIndex: row.dataIndex
-      })
-    }
-  }
-}
+// function checkInvoiceNo(row) {
+//   const val = invoiceNoArr.value.find(v => v.dataIndex === row.dataIndex)
+//   if (val) {
+//     if (row.invoiceNo) {
+//       if (val.invoiceNo === row.invoiceNo) {
+//         return
+//       }
+//       if (invoiceNoArr.value.findIndex(v => v.invoiceNo === row.invoiceNo) > -1) {
+//         ElMessage({ message: '发票号已存在，请重新填写', type: 'error' })
+//         row.invoiceNo = undefined
+//       } else {
+//         val.invoiceNo = row.invoiceNo
+//       }
+//     } else {
+//       val.invoiceNo = undefined
+//     }
+//   } else {
+//     if (invoiceNoArr.value.findIndex(v => v.invoiceNo === row.invoiceNo) > -1) {
+//       ElMessage({ message: '发票号已存在，请重新填写', type: 'error' })
+//       row.invoiceNo = undefined
+//     } else {
+//       invoiceNoArr.value.push({
+//         invoiceNo: row.invoiceNo,
+//         dataIndex: row.dataIndex
+//       })
+//     }
+//   }
+// }
 CRUD.HOOK.beforeValidateCU = (crud, form) => {
   if (crud.form.list.length <= 0) {
     ElMessage({ message: '请添加开票明细', type: 'error' })

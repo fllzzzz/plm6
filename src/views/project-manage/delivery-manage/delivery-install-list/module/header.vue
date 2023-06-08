@@ -6,13 +6,14 @@
         :options="deliveryInstallEnumArr"
         type="enum"
         class="filter-item"
-        @change="crud.toQuery"
+        @change="productTypeChange"
       />
       <monomer-select
+        v-if="query.productType!==installProjectTypeEnum.ENCLOSURE.V"
         ref="monomerSelectRef"
         v-model="query.monomerId"
         :project-id="query.projectId"
-        :main-product-type="query.productType"
+        :main-product-type="globalProject.projectType === projectTypeEnum.STEEL.V?query.productType:''"
         :default="false"
         clearable
         class="filter-item"
@@ -20,6 +21,7 @@
         @getAreaInfo="getAreaInfo"
       />
        <common-select
+        v-if="query.productType!==installProjectTypeEnum.ENCLOSURE.V"
         v-model="query.areaId"
         :options="areaInfo"
         type="other"
@@ -31,6 +33,32 @@
         style="width:200px;"
         @change="crud.toQuery"
       />
+      <template v-if="query.productType===installProjectTypeEnum.ENCLOSURE.V">
+        <common-select
+          v-model="query.category"
+          :options="TechnologyTypeAllEnum.ENUM"
+          :unshow-options="[TechnologyTypeAllEnum.STRUCTURE.K,TechnologyTypeAllEnum.BRIDGE.K]"
+          type="enum"
+          size="small"
+          clearable
+          placeholder="请选择围护类型"
+          class="filter-item"
+          style="width:200px;"
+          @change="categoryChange"
+        />
+        <common-select
+          v-model="query.areaId"
+          :options="areaInfo"
+          type="other"
+          :dataStructure="typeProp"
+          size="small"
+          clearable
+          placeholder="请选择批次"
+          class="filter-item"
+          style="width:200px;"
+          @change="crud.toQuery"
+        />
+      </template>
       <el-input
         v-model.trim="query.serialNumber"
         placeholder="编号搜索"
@@ -88,8 +116,12 @@
 
 <script setup>
 import { deliveryInstallSummary } from '@/api/project-manage/delivery-manage/delivery-report/report-list'
+import { allProjectPlan } from '@/api/enclosure/enclosure-plan/area'
 import { ref, watch, defineProps } from 'vue'
 
+import { TechnologyTypeAllEnum } from '@enum-ms/contract'
+import { projectTypeEnum } from '@enum-ms/contract'
+import { bridgeComponentTypeEnum } from '@enum-ms/bridge'
 import { deliveryInstallTypeEnum, installProjectTypeEnum } from '@enum-ms/project'
 import checkPermission from '@/utils/system/check-permission'
 
@@ -104,7 +136,7 @@ const { deliveryInstallEnumArr } = mapGetters('deliveryInstallEnumArr')
 
 const defaultQuery = {
   projectId: { value: undefined, resetAble: false },
-  productType: deliveryInstallTypeEnum.ARTIFACT.V,
+  productType: props.globalProject.projectType === projectTypeEnum.STEEL.V ? installProjectTypeEnum.ARTIFACT.V : bridgeComponentTypeEnum.BOX.V,
   monomerId: undefined,
   areaId: undefined,
   name: undefined,
@@ -114,6 +146,10 @@ const props = defineProps({
   projectId: {
     type: [Number, String],
     default: undefined
+  },
+  globalProject: {
+    type: Object,
+    default: () => {}
   }
 })
 
@@ -122,12 +158,17 @@ const typeProp = { key: 'id', label: 'name', value: 'id' }
 const areaInfo = ref([])
 const totalAmount = ref({})
 const summaryLoading = ref(false)
+const totalArea = ref([])
 
 watch(
   () => props.projectId,
   (val) => {
     if (val) {
       crud.query.projectId = props.projectId
+      totalArea.value = []
+      if (crud.query.productType === installProjectTypeEnum.ENCLOSURE.V) {
+        getAllProjectPlan()
+      }
       crud.toQuery()
     }
   },
@@ -143,6 +184,15 @@ watch(
   },
   { immediate: true, deep: true }
 )
+
+function productTypeChange(val) {
+  query.areaId = undefined
+  if (val === installProjectTypeEnum.ENCLOSURE.V) {
+    getAllProjectPlan()
+  }
+  crud.toQuery()
+}
+
 async function fetchSummaryInfo() {
   if (!query.projectId) {
     return
@@ -157,48 +207,48 @@ async function fetchSummaryInfo() {
       totalQuantity: [
         {
           quantity: data.quantity,
-          unit: installProjectTypeEnum.V[crud.query.productType].unit,
+          unit: data.measureUnit,
           precision: 0
         },
         {
           quantity: data.mete,
-          unit: installProjectTypeEnum.V[crud.query.productType].accountUnit,
+          unit: data.accountingUnit,
           precision: 2
         }
       ],
       totalReceive: [
         {
           quantity: data.receivingQuantity,
-          unit: installProjectTypeEnum.V[crud.query.productType].unit,
+          unit: data.measureUnit,
           precision: 0
         },
         {
           quantity: data.receivingMete,
-          unit: installProjectTypeEnum.V[crud.query.productType].accountUnit,
+          unit: data.accountingUnit,
           precision: 2
         }
       ],
       totalInstall: [
         {
           quantity: data.installQuantity,
-          unit: installProjectTypeEnum.V[crud.query.productType].unit,
+          unit: data.measureUnit,
           precision: 0
         },
         {
           quantity: data.installMete,
-          unit: installProjectTypeEnum.V[crud.query.productType].accountUnit,
+          unit: data.accountingUnit,
           precision: 2
         }
       ],
       extraQuantity: [
         {
           quantity: data.receivingQuantity ? data.receivingQuantity - (data.installQuantity || 0) : 0,
-          unit: installProjectTypeEnum.V[crud.query.productType].unit,
+          unit: data.measureUnit,
           precision: 0
         },
         {
           quantity: data.receivingMete ? data.receivingMete - (data.installMete || 0) : 0,
-          unit: installProjectTypeEnum.V[crud.query.productType].accountUnit,
+          unit: data.accountingUnit,
           precision: 2
         }
       ]
@@ -214,6 +264,28 @@ function getAreaInfo(val) {
   areaInfo.value = val || []
 }
 
+function categoryChange(val) {
+  areaInfo.value = totalArea.value?.filter(v => v.category === val) || []
+  crud.toQuery()
+}
+
+async function getAllProjectPlan() {
+  crud.query.monomerId = undefined
+  areaInfo.value = []
+  if (props.projectId) {
+    try {
+      const data = await allProjectPlan(props.projectId) || []
+      totalArea.value = data || []
+      if (crud.query.category) {
+        areaInfo.value = totalArea.value?.filter(v => v.category === crud.query.category)
+      } else {
+        areaInfo.value = totalArea.value
+      }
+    } catch (e) {
+      console.log('获取项目所有围护计划', e)
+    }
+  }
+}
 </script>
 <style lang="scss" scoped>
 .panel-group {

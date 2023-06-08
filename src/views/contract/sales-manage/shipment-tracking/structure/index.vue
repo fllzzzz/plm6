@@ -7,10 +7,7 @@
       ref="tableRef"
       v-loading="crud.loading"
       :data="crud.data"
-      return-source-data
       :data-format="dataFormat"
-      style="width: 100%"
-      class="businessTable"
       :max-height="maxHeight"
     >
       <el-table-column label="序号" type="index" align="center" width="60" />
@@ -140,8 +137,8 @@ const tableRef = ref()
 const headerRef = ref()
 const dataFormat = ref([
   ['createTime', ['parse-time', '{y}-{m}-{d}']],
-  ['unitPrice', 'to-thousand'],
-  ['totalPrice', 'to-thousand']
+  ['unitPrice', ['to-thousand-ck', 'YUAN']],
+  ['totalPrice', ['to-thousand-ck', 'YUAN']]
 ])
 
 const { crud, columns, CRUD } = useCRUD(

@@ -94,6 +94,7 @@ import { ref } from 'vue'
 import crudApi from '@/api/contract/expense-entry/salary'
 
 import { salaryCostPM as permission } from '@/page-permission/contract'
+import { DP } from '@/settings/config'
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
 
@@ -159,7 +160,7 @@ function getSummaries(param) {
           return pre
         }
       }, 0)
-      sums[index] = (totalWageSum / employeeQuantitySum).toFixed(2)
+      sums[index] = (totalWageSum / employeeQuantitySum).toFixed(DP.YUAN)
       return
     }
     if (column.property === 'employeeQuantity' || column.property === 'totalWage') {

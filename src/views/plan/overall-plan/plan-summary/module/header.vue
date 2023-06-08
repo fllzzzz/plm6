@@ -21,21 +21,29 @@
     </div>
     <crudOperation>
       <template #optLeft>
-        <el-tag>{{ query.type===TechnologyTypeAllEnum.STRUCTURE.V ||  query.type===TechnologyTypeAllEnum.BRIDGE.V? '单位(t)': '单位(m)' }}</el-tag>
+        <el-tag>{{ query.type===TechnologyTypeAllEnum.STRUCTURE.V || query.type===TechnologyTypeAllEnum.BRIDGE.V? '单位(t)': '单位(m)' }}</el-tag>
       </template>
     </crudOperation>
   </div>
 </template>
 
 <script setup>
+import { computed } from 'vue'
 import { regHeader } from '@compos/use-crud'
 import crudOperation from '@crud/CRUD.operation'
-import { TechnologyTypeAllEnum } from '@enum-ms/contract'
+import { mapGetters } from '@/store/lib'
+import { TechnologyTypeAllEnum, projectTypeEnum } from '@enum-ms/contract'
+
+const { globalProject } = mapGetters(['globalProject'])
 
 const defaultQuery = {
-  type: TechnologyTypeAllEnum.STRUCTURE.V,
+  type: globalProject.projectType === projectTypeEnum.STEEL.V ? TechnologyTypeAllEnum.STRUCTURE.V : TechnologyTypeAllEnum.BRIDGE.V,
   year: String(new Date().getFullYear())
 }
 
 const { crud, query } = regHeader(defaultQuery)
+
+const typeOptions = computed(() => {
+  return globalProject.projectType === projectTypeEnum.STEEL.V ? [TechnologyTypeAllEnum.STRUCTURE, TechnologyTypeAllEnum.PROFILED_PLATE, TechnologyTypeAllEnum.TRUSS_FLOOR_PLATE, TechnologyTypeAllEnum.PRESSURE_BEARING_PLATE, TechnologyTypeAllEnum.SANDWICH_BOARD, TechnologyTypeAllEnum.BENDING] : [TechnologyTypeAllEnum.BRIDGE]
+})
 </script>

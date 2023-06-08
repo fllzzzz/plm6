@@ -88,6 +88,7 @@
 import { ref, computed } from 'vue'
 import { regForm } from '@compos/use-crud'
 import { depreciationTypeEnum } from '@enum-ms/contract'
+import { DP } from '@/settings/config'
 
 const formRef = ref()
 
@@ -124,7 +125,7 @@ const annualDepreciationRate = computed(() => {
 const annualDepreciationAmount = computed(() => {
   // 原值*（（1-净残值）/ 使用年限）
   return form.originalValue && form.residualValueRate && form.depreciationYear
-    ? (form.originalValue * ((100 - form.residualValueRate) / 100 / form.depreciationYear)).toFixed(2)
+    ? (form.originalValue * ((100 - form.residualValueRate) / 100 / form.depreciationYear)).toFixed(DP.YUAN)
     : ''
 })
 const monthValueDepreciationRate = computed(() => {
@@ -137,7 +138,7 @@ const monthValueDepreciationRate = computed(() => {
 const monthValueDepreciationAmount = computed(() => {
   // 原值*（（1-净残值）/ 使用年限 / 12）
   return form.originalValue && form.residualValueRate && form.depreciationYear
-    ? (form.originalValue * ((100 - form.residualValueRate) / 100 / form.depreciationYear / 12)).toFixed(2)
+    ? (form.originalValue * ((100 - form.residualValueRate) / 100 / form.depreciationYear / 12)).toFixed(DP.YUAN)
     : ''
 })
 
