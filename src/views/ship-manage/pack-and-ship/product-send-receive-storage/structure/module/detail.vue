@@ -85,7 +85,7 @@
         <el-table-column key="length" prop="length" label="长度(mm)" align="center" show-overflow-tooltip />
         <el-table-column label="清单数(件/kg)" align="center">
           <el-table-column key="quantity" prop="quantity" label="清单数" align="center" show-overflow-tooltip />
-          <el-table-column key="totalNetWeight" prop="totalNetWeight" label="重量" align="center" show-overflow-tooltip>
+          <el-table-column key="totalNetWeight" prop="totalNetWeight" label="总净重" align="center" show-overflow-tooltip>
             <template #default="{ row }">
               <span>{{ props.weightStatus === weightTypeEnum.NET.V ? row.totalNetWeight : row.totalGrossWeight }}</span>
             </template>
@@ -93,7 +93,7 @@
         </el-table-column>
         <el-table-column label="期初库存(件/kg)" align="center">
           <el-table-column key="beginningQuantity" prop="beginningQuantity" label="库存数" align="center" show-overflow-tooltip />
-          <el-table-column key="beginningNetWeight" prop="beginningNetWeight" label="重量" align="center" show-overflow-tooltip>
+          <el-table-column key="beginningNetWeight" prop="beginningNetWeight" label="总净重" align="center" show-overflow-tooltip>
             <template #default="{ row }">
               <span>{{ props.weightStatus === weightTypeEnum.NET.V ? row.beginningNetWeight : row.beginningGrossWeight }}</span>
             </template>
@@ -101,7 +101,7 @@
         </el-table-column>
         <el-table-column label="入库(件/kg)" align="center">
           <el-table-column key="inboundQuantity" prop="inboundQuantity" label="入库数" align="center" show-overflow-tooltip />
-          <el-table-column key="inboundNetWeight" prop="inboundNetWeight" label="重量" align="center" show-overflow-tooltip>
+          <el-table-column key="inboundNetWeight" prop="inboundNetWeight" label="总净重" align="center" show-overflow-tooltip>
             <template #default="{ row }">
               <span>{{ props.weightStatus === weightTypeEnum.NET.V ? row.inboundNetWeight : row.inboundGrossWeight }}</span>
             </template>
@@ -109,7 +109,7 @@
         </el-table-column>
         <el-table-column label="出库(件/kg)" align="center">
           <el-table-column key="outboundQuantity" prop="outboundQuantity" label="出库数" align="center" show-overflow-tooltip />
-          <el-table-column key="outboundNetWeight" prop="outboundNetWeight" label="重量" align="center" show-overflow-tooltip>
+          <el-table-column key="outboundNetWeight" prop="outboundNetWeight" label="总净重" align="center" show-overflow-tooltip>
             <template #default="{ row }">
               <span>{{ props.weightStatus === weightTypeEnum.NET.V ? row.outboundNetWeight : row.outboundGrossWeight }}</span>
             </template>
@@ -117,7 +117,7 @@
         </el-table-column>
         <el-table-column label="期末库存(件/kg)" align="center">
           <el-table-column key="stockQuantity" prop="stockQuantity" label="库存数" align="center" show-overflow-tooltip />
-          <el-table-column key="stockNetWeight" prop="stockNetWeight" label="重量" align="center" show-overflow-tooltip>
+          <el-table-column key="stockNetWeight" prop="stockNetWeight" label="总净重" align="center" show-overflow-tooltip>
             <template #default="{ row }">
               <span>{{ props.weightStatus === weightTypeEnum.NET.V ? row.stockNetWeight : row.stockGrossWeight }}</span>
             </template>

@@ -10,7 +10,10 @@
       style="width: 100%"
       :max-height="maxHeight"
       @sort-change="crud.handleSortChange"
+       @selection-change="crud.selectionChangeHandler"
     >
+
+      <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="序号" type="index" align="center" width="60" />
       <el-table-column
         v-if="columns.visible('project.shortName') && !crud.query.projectId"
@@ -18,7 +21,7 @@
         prop="project.shortName"
         :show-overflow-tooltip="true"
         label="项目"
-        min-width="250"
+        min-width="230"
       >
         <template v-slot="scope">
           <span class="project-name">{{ projectNameFormatter(scope.row.project) }}</span>
@@ -198,7 +201,7 @@
 
 <script setup>
 import crudApi, { detail, audit } from '@/api/ship-manage/pack-and-ship/ship-audit'
-import { ref, reactive } from 'vue'
+import { ref, provide, reactive } from 'vue'
 import { ElNotification } from 'element-plus'
 
 import { shipAuditPM as permission } from '@/page-permission/ship-manage'
@@ -242,6 +245,7 @@ const { crud, columns } = useCRUD(
   tableRef
 )
 
+provide('permission', permission)
 const { maxHeight } = useMaxHeight({ paginate: true })
 
 const detailVisible = ref(false)
