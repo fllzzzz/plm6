@@ -171,7 +171,7 @@ const mesShipmentAuditOverWeight = {
      * @param {*} format 格式转换
      */
     fields: [
-      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'userName', title: '发货人：', width: 63, type: typeEnum.USER_NAME.K },
+      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'userName', title: '装车人：', width: 63, type: typeEnum.USER_NAME.K },
       { show: true, source: dataSourceEnum.SYSTEM.V, key: 'auditUserName', title: '审核：', width: 63, type: typeEnum.USER_NAME.K },
       { show: true, source: dataSourceEnum.CUSTOMIZE.V, key: 'approver', title: '签收：', width: 63 }
     ]
