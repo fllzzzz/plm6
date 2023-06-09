@@ -1,12 +1,12 @@
 import { dataSourceEnum, alignEnum, verticleAlignEnum, fieldTypeEnum as typeEnum, cssUnitEnum, cssUnitPrecisionEnum, pageFormatEnum } from '@/utils/print/enum'
 
-// 在制品排产记录清单
-const mesTaskStatisticsList = {
+// 制成品记录清单
+const mesUpsStatisticsList = {
   fontUnit: 'pt', // 字体单位
   unit: cssUnitEnum.MM.V, // 长度单位
   unitPrecision: cssUnitPrecisionEnum.ZERO.V, // 长度单位精度
-  type: 'mesTaskStatisticsList', // 表格类型 KEY
-  name: '在制品任务记录清单（平台）', // 表格名称
+  type: 'mesUpsStatisticsList', // 表格类型 KEY
+  name: '制成品记录清单（平台）', // 表格名称
   width: 210, // 打印纸的宽度
   height: 297, // 打印纸的高度
   paddingLR: 10, // 左右内边距
@@ -60,7 +60,7 @@ const mesTaskStatisticsList = {
   title: {
     show: true,
     allPage: false,
-    title: '在制品任务记录清单（平台）',
+    title: '制成品记录清单（平台）',
     align: alignEnum.CENTER.V,
     verticleAlign: verticleAlignEnum.CENTER.V,
     size: 17,
@@ -214,5 +214,5 @@ const mesTaskStatisticsList = {
 }
 
 export default {
-  mesTaskStatisticsList // 在制品排产记录清单报表
+  mesUpsStatisticsList // 制成品记录清单报表
 }

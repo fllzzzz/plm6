@@ -137,6 +137,7 @@ const mesWorkOrderTrackingList = mes.workOrderTrackingList
 const mesWipStatisticsList = mes.wipStatisticsLis
 const mesProcessStatisticsList = mes.processStatisticsList
 const mesTaskStatisticsList = mes.taskStatisticsList
+const mesUpsStatisticsList = mes.upsStatisticsList
 const mesOutBoundStatisticsList = mes.outBoundStatisticsList
 
 const mesFactoryWorkshopReport = mes.factoryWorkshopReport
@@ -402,6 +403,7 @@ export default {
   mesWipStatisticsList, // 在制品统计打印
   mesProcessStatisticsList, // 在制品统计工序详情打印
   mesTaskStatisticsList, // 在制品排产记录详情
+  mesUpsStatisticsList, // 制成品记录详情
   mesOutBoundStatisticsList, // 在制品出库记录详情
 
   mesFactoryWorkshopReport, // 车间报表清单详情

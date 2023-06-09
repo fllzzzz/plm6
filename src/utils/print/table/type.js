@@ -220,6 +220,7 @@ const tableType = {
   mesWipStatisticsList: { L: '在制品统计清单详情', M: 'mes_task_tracking', T: mt.mes.L + ' / ' + mes.mes_task_tracking },
   mesProcessStatisticsList: { L: '在制品工序清单详情', M: 'mes_task_tracking', T: mt.mes.L + ' / ' + mes.mes_task_tracking },
   mesTaskStatisticsList: { L: '在制品排产记录清单详情', M: 'mes_task_tracking', T: mt.mes.L + ' / ' + mes.mes_task_tracking },
+  mesUpsStatisticsList: { L: '制成品记录详情', M: 'mes_task_tracking', T: mt.mes.L + ' / ' + mes.mes_task_tracking },
   mesOutBoundStatisticsList: { L: '在制品出库记录清单详情', M: 'mes_task_tracking', T: mt.mes.L + ' / ' + mes.mes_task_tracking },
 
   mesFactoryWorkshopReport: { L: '车间报表清单（平台）', M: 'mes_factory_report', T: mt.mes.L + ' / ' + mes.mes_factory_report },

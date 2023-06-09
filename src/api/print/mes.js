@@ -797,28 +797,36 @@ export function wipStatisticsLis(params) {
   })
 }
 
-// 任务跟踪-工序详情报表详情
+// 生产统计-工序详情报表详情
 export function processStatisticsList(params) {
   return request({
-    url: `/api/mes/building/task/process/project/progressing/process/print`,
+    url: `/api/mes/building/task/process/produce/statistics/process/print`,
     method: 'get',
     params
   })
 }
 
-// 任务跟踪-排产记录详情报表详情
+// 生产统计-任务记录详情报表详情
 export function taskStatisticsList(params) {
   return request({
-    url: `/api/mes/building/task/process/project/progressing/task/print`,
+    url: `/api/mes/building/task/process/produce/statistics/task/print`,
     method: 'get',
     params
   })
 }
 
-// 任务跟踪-在制品出库记录报表详情
+// 生产统计-在制品报表详情
+export function upsStatisticsList(params) {
+  return request({
+    url: '/api/mes/building/task/process/produce/statistics/finish/print',
+    method: 'get',
+    params
+  })
+}
+// 生产统计-钢材出库报表详情
 export function outBoundStatisticsList(params) {
   return request({
-    url: `/api/mes/building/task/process/project/progressing/outBound/print`,
+    url: '/api/mes/building/task/process/produce/statistics/outBound/print',
     method: 'get',
     params
   })
@@ -1026,6 +1034,7 @@ export default {
   wipStatisticsLis, // 在制品统计
   processStatisticsList, // 在制品工序详情统计
   taskStatisticsList, // 在制品排产记录详情
+  upsStatisticsList, // 制成品详情
   outBoundStatisticsList, // 在制品出库统计详情
 
   // 发运管理
