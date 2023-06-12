@@ -42,7 +42,7 @@
     </el-table-column>
     <el-table-column prop="specification" label="规格" align="center" min-width="100px" show-overflow-tooltip>
       <template #default="{ row }">
-        <el-edit
+        <el-icon-edit
           v-if="form.selectObj?.[row.mergeId]?.isSelected && Boolean(currentCfg?.spec & basicClass) && !row.boolApplyPurchase"
           class="el-icon"
           style="color: #1881ef; vertical-align: middle; margin-right: 5px; cursor: pointer"
@@ -220,7 +220,7 @@
         <template #editColumn="{ row }">
           <el-table-column prop="specification" label="规格" align="center" min-width="100px" show-overflow-tooltip>
             <template #default="{ row: purRow }">
-              <el-edit
+              <el-icon-edit
                 v-if="form.selectObj?.[row.mergeId]?.isSelected && Boolean(currentCfg?.spec & basicClass)"
                 class="el-icon"
                 style="color: #1881ef; vertical-align: middle; margin-right: 5px; cursor: pointer"

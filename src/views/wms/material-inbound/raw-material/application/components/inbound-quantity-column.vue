@@ -20,7 +20,7 @@
       <template v-else>
         <span>{{ row.quantity }}</span>
         <span style="margin-left: 5px; cursor: pointer" @click="showDialog(row)">
-          <el-edit v-if="form.selectObj?.[row.mergeId]?.isSelected" class="el-icon" style="color: #1881ef; vertical-align: middle" />
+          <el-icon-edit v-if="form.selectObj?.[row.mergeId]?.isSelected" class="el-icon" style="color: #1881ef; vertical-align: middle" />
           <el-icon-view v-else class="el-icon" style="color: #1881ef; vertical-align: middle" />
         </span>
       </template>

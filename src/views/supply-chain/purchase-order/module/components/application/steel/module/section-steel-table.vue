@@ -19,7 +19,7 @@
     </el-table-column>
     <el-table-column prop="specification" label="规格" align="center" fixed="left" show-overflow-tooltip min-width="140">
       <template #default="{ row }">
-        <el-edit
+        <el-icon-edit
           v-if="!form.useRequisitions || (form.useRequisitions && Boolean(currentCfg?.spec & basicClass))"
           class="el-icon"
           style="color: #1881ef; vertical-align: middle; margin-right: 5px; cursor: pointer"

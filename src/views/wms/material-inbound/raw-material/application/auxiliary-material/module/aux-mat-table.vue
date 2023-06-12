@@ -190,7 +190,7 @@
           <el-popover placement="top" :width="900" trigger="click">
             <template #reference>
               <span style="margin-left: 5px; cursor: pointer">
-                <el-edit v-if="form.selectObj?.[row.mergeId]?.isSelected" class="el-icon" style="color: #1881ef; vertical-align: middle" />
+                <el-icon-edit v-if="form.selectObj?.[row.mergeId]?.isSelected" class="el-icon" style="color: #1881ef; vertical-align: middle" />
                 <el-icon-view v-else class="el-icon" style="color: #1881ef; vertical-align: middle" />
               </span>
             </template>
