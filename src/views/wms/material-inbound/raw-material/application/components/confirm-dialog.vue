@@ -47,12 +47,12 @@
           <template v-if="fillableAmount && !boolPartyA">
             <el-table-column key="unitPrice" prop="unitPrice" align="right" width="120" label="含税单价">
               <template #default="{ row: { sourceRow: row } }">
-                <span>{{ row.unitPrice }}</span>
+                <span>{{ row?.unitPrice }}</span>
               </template>
             </el-table-column>
             <el-table-column key="amount" prop="amount" align="right" width="120" label="金额">
               <template #default="{ row }">
-                <span>{{ row.amount }}</span>
+                <span>{{ row?.amount }}</span>
               </template>
             </el-table-column>
           </template>
