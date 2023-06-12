@@ -454,6 +454,201 @@ export default {
       ]
     },
     {
+      path: '/bridge/production-config',
+      component: 'Layout',
+      hidden: false,
+      name: 'BridgeProductionConfig',
+      alwaysShow: false,
+      redirect: '/bridge/production-config/factory-and-workshop',
+      meta: { title: '桥梁-生产配置', icon: 'project', noCache: true },
+      children: [
+        // {
+        //   name: 'BridgeWorkShop',
+        //   path: 'bridge-workshop',
+        //   hidden: false,
+        //   component: '/bridge/bridge-production-config/workshop/index',
+        //   meta: { title: '桥梁-车间', icon: 'project', noCache: true, permissions: ['bridgeWorkshopPM'] }
+        // },
+        {
+          path: 'bridge-characteristics-config',
+          component: '',
+          hidden: false,
+          name: 'BridgeCharacteristicsConfig',
+          alwaysShow: true,
+          redirect: '/bridge/production-config/bridge-characteristics-config/artifact-config',
+          meta: { title: '分段单元定义', icon: 'project', noCache: true },
+          children: [
+            {
+              name: 'BoxConfig',
+              path: 'box-config',
+              hidden: false,
+              component: '/bridge/bridge-production-config/bridge-characteristics-config/box-config/index',
+              meta: { title: '分段特征定义', icon: 'project', noCache: true, permissions: ['boxConfigPM'] }
+            },
+            {
+              name: 'CellConfig',
+              path: 'cell-config',
+              hidden: false,
+              component: '/bridge/bridge-production-config/bridge-characteristics-config/cell-config/index',
+              meta: { title: '单元特征定义', icon: 'project', noCache: true, permissions: ['cellConfigPM'] }
+            },
+            {
+              name: 'PartConfig',
+              path: 'part-config',
+              hidden: false,
+              component: '/bridge/bridge-production-config/bridge-characteristics-config/part-config/index',
+              meta: { title: '零件特征定义', icon: 'project', noCache: true, permissions: ['partConfigPM'] }
+            },
+            {
+              name: 'BridgeAuxiliaryMaterialConfig',
+              path: 'bridge-auxiliary-material-config',
+              hidden: false,
+              component: '/bridge/bridge-production-config/bridge-characteristics-config/auxiliary-material-config/index',
+              meta: { title: '配套件特征定义', icon: 'project', noCache: true, permissions: ['bridgeAuxiliaryMaterialConfigPM'] }
+            }
+          ]
+        },
+        {
+          path: 'bridge-process-config',
+          component: '',
+          hidden: false,
+          name: 'BridgeProcessConfig',
+          alwaysShow: true,
+          redirect: '/bridge/production-config/bridge-process-config/bridge-process',
+          meta: { title: '生产工序定义', icon: 'project', noCache: true },
+          children: [
+            {
+              name: 'BridgeConfigProcess',
+              path: 'bridge-process',
+              hidden: false,
+              component: '/bridge/bridge-production-config/process/index',
+              meta: { title: '工序配置', icon: 'project', noCache: true, permissions: ['bridgeConfigProcessPM'] }
+            },
+            {
+              name: 'BridgeConfigBoxProductProcess',
+              path: 'box-product-process',
+              hidden: false,
+              component: '/bridge/bridge-production-config/product-process/box/index',
+              meta: { title: '分段工序定义', icon: 'project', noCache: true, permissions: ['configProductProcessBoxPM'] }
+            },
+            {
+              name: 'BridgeConfigCellProductProcess',
+              path: 'cell-product-process',
+              hidden: false,
+              component: '/bridge/bridge-production-config/product-process/cell/index',
+              meta: { title: '单元工序定义', icon: 'project', noCache: true, permissions: ['configProductProcessCellPM'] }
+            },
+            {
+              name: 'BridgeConfigPartProductProcess',
+              path: 'bridge-part-product-process',
+              hidden: false,
+              component: '/bridge/bridge-production-config/product-process/machine-part/index',
+              meta: { title: '零件工序定义', icon: 'project', noCache: true, permissions: ['bridgeConfigProductProcessMachinePartPM'] }
+            }
+          ]
+        },
+        {
+          path: 'bridge-production-line-config',
+          component: '',
+          hidden: false,
+          name: 'BridgeProductionLineConfig',
+          alwaysShow: true,
+          redirect: '/bridge/production-config/bridge-production-line-config/bridge-production-line',
+          meta: { title: '生产线配置', icon: 'project', noCache: true },
+          children: [
+            {
+              name: 'BridgeConfigProductionTeam',
+              path: 'bridge-production-team',
+              hidden: false,
+              component: '/bridge/bridge-production-config/production-team/index',
+              meta: { title: '班组管理', icon: 'project', noCache: true, permissions: ['bridgeConfigProductionLineTeamPM', 'bridgeConfigProductionLineInspectPM'] }
+            },
+            {
+              name: 'BridgeConfigProductionLine',
+              path: 'bridge-production-line',
+              hidden: false,
+              component: '/bridge/bridge-production-config/production-line/index',
+              meta: { title: '生产线管理', icon: 'project', noCache: true, permissions: ['bridgeConfigProductionLinePM', 'bridgeConfigProductionLineGroupPM'] }
+            },
+            {
+              name: 'BridgeConfigInspectionMode',
+              path: 'bridge-inspection-mode',
+              hidden: false,
+              component: '/bridge/bridge-production-config/inspection-mode/index',
+              meta: { title: '报检方式', icon: 'project', noCache: true, permissions: ['bridgeConfigWageQuotaPM'] }
+            }
+          ]
+        },
+        // {
+        //   path: 'bridge-statistical-config',
+        //   component: '',
+        //   hidden: false,
+        //   name: 'BridgeStatisticalConfig',
+        //   alwaysShow: true,
+        //   redirect: '/bridge/production-config/bridge-statistical-config/box/box-type-config',
+        //   meta: { title: '统计配置', icon: 'project', noCache: true },
+        //   children: [
+        //     {
+        //       name: 'BridgeConfigBoxTypeConfig',
+        //       path: 'box/box-type-config',
+        //       hidden: false,
+        //       component: '/bridge/bridge-production-config/statistical-config/box-type-config/index',
+        //       meta: { title: '分段-清单种类', icon: 'project', noCache: true, permissions: ['configBoxTypeConfigPM'] }
+        //     },
+        //     {
+        //       name: 'BridgeConfigBoxRivetWeldConfig',
+        //       path: 'box/rivet-weld-config',
+        //       hidden: false,
+        //       component: '/bridge/bridge-production-config/statistical-config/box-rivet-weld-config/index',
+        //       meta: { title: '分段-组铆焊价格', icon: 'project', noCache: true, permissions: ['configBoxRivetWeldConfigPM'] }
+        //     },
+        //     {
+        //       name: 'BridgeConfigCoatingConfig',
+        //       path: 'box/coating-config',
+        //       hidden: false,
+        //       component: '/bridge/bridge-production-config/statistical-config/coating-config/index',
+        //       meta: { title: '分段-涂装', icon: 'project', noCache: true, permissions: ['bridgeConfigStatisticalCoatingPM'] }
+        //     },
+        //     {
+        //       name: 'BridgeConfigCellRivetWeldConfig',
+        //       path: 'cell/rivet-weld-config',
+        //       hidden: false,
+        //       component: '/bridge/bridge-production-config/statistical-config/cell-rivet-weld-config/index',
+        //       meta: { title: '单元件-组铆焊价格', icon: 'project', noCache: true, permissions: ['configCellRivetWeldConfigPM'] }
+        //     },
+        //     {
+        //       name: 'BridgeConfigFabricatedConfig',
+        //       path: 'box/fabricated-config',
+        //       hidden: false,
+        //       component: '/bridge/bridge-production-config/statistical-config/fabricated-config/index',
+        //       meta: { title: '配套件-栓钉套筒', icon: 'project', noCache: true, permissions: ['bridgeConfigStatisticalFabricatedPM'] }
+        //     },
+        //     {
+        //       name: 'BridgeConfigDrillHoleConfig',
+        //       path: 'bridge-parts/drill-hole-config',
+        //       hidden: false,
+        //       component: '/bridge/bridge-production-config/statistical-config/drill-hole-config/index',
+        //       meta: { title: '零件-钻孔', icon: 'project', noCache: true, permissions: ['bridgeConfigStatisticalDrillHolePM'] }
+        //     },
+        //     {
+        //       name: 'BridgeConfigPartsLayingConfig',
+        //       path: 'bridge-parts/parts-laying-config',
+        //       hidden: false,
+        //       component: '/bridge/bridge-production-config/statistical-config/parts-laying-config/index',
+        //       meta: { title: '零件-下料', icon: 'project', noCache: true, permissions: ['bridgeConfigStatisticalPartsLayingPM'] }
+        //     }
+        //   ]
+        // },
+        {
+          name: 'BridgeConfigCutting',
+          path: 'bridge-cutting-config',
+          hidden: false,
+          component: '/bridge/bridge-production-config/cutting-config/index',
+          meta: { title: '零件下料配置', icon: 'project', noCache: true, permissions: ['bridgeConfigMachinePartLayingPM'] }
+        }
+      ]
+    },
+    {
       path: '/contract/enclosure-config',
       component: 'Layout',
       hidden: false,

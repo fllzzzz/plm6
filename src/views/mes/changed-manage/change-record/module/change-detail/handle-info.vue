@@ -10,7 +10,7 @@
           <span class="right-btn">
             <hamburger :is-active="item.foldOpened" class="hamburger-container" @toggleClick="item.foldOpened = !item.foldOpened" />
             <!-- <div class="circle-button" style="border-color: #ffac00"></div>
-            <div class="circle-button" style="border-color: #da0000; color: #da0000"><ElClose style="width: 85%" /></div> -->
+            <div class="circle-button" style="border-color: #da0000; color: #da0000"><el-icon-close style="width: 85%" /></div> -->
           </span>
         </template>
         <template v-if="item.foldOpened">

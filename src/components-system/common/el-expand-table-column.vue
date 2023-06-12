@@ -1,7 +1,7 @@
 <template>
   <el-table-column type="expand">
     <template #header>
-      <el-icon class="pointer" @click="handleExpandAll"><el-arrow-down v-if="expandAll" /><el-arrow-right v-else /></el-icon>
+      <el-icon class="pointer" @click="handleExpandAll"><el-icon-arrow-down v-if="expandAll" /><el-icon-arrow-right v-else /></el-icon>
     </template>
     <template #default="scope">
       <div class="table-expand-container">

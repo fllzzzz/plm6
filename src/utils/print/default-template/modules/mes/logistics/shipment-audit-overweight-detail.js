@@ -1,13 +1,13 @@
 import { lengthUnitEnum, dataSourceEnum, alignEnum, verticleAlignEnum, fieldTypeEnum as typeEnum, cssUnitEnum, cssUnitPrecisionEnum, pageFormatEnum, weightUnitEnum, DEF_UNIT } from '@/utils/print/enum'
 import { projectNameArrangementModeEnum } from '@/utils/enum/modules/contract'
 
-// 发运详情
-const mesShipmentDetail = {
+// 过磅详情
+const mesShipmentAuditOverWeight = {
   fontUnit: 'pt', // 字体单位
   unit: cssUnitEnum.MM.V, // 长度单位
   unitPrecision: cssUnitPrecisionEnum.ZERO.V, // 长度单位精度
-  type: 'mesShipmentDetail', // 表格类型 KEY
-  name: '发运详情（平台）', // 表格名称
+  type: 'mesShipmentAuditOverWeight', // 表格类型 KEY
+  name: '过磅详情（平台）', // 表格名称
   width: 210, // 打印纸的宽度
   height: 297, // 打印纸的高度
   paddingLR: 10, // 左右内边距
@@ -69,7 +69,7 @@ const mesShipmentDetail = {
   title: {
     show: true,
     allPage: false,
-    title: '发运详情',
+    title: '过磅详情',
     align: alignEnum.CENTER.V,
     verticleAlign: verticleAlignEnum.CENTER.V,
     size: 17,
@@ -116,9 +116,9 @@ const mesShipmentDetail = {
       { show: true, source: dataSourceEnum.SYSTEM.V, key: 'address', title: '项目地址：', width: 190, type: typeEnum.OTHER.K },
       { show: true, source: dataSourceEnum.SYSTEM.V, key: 'supplierName', title: '物流单位：', width: 190, type: typeEnum.COMPANY_NAME.K },
       { show: true, source: dataSourceEnum.SYSTEM.V, key: 'customerUnit', title: '收货单位：', width: 135, type: typeEnum.COMPANY_NAME.K },
-      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'actualTime', title: '发货时间：', width: 55, type: typeEnum.DATE.K, format: 'YY/MM/DD kk:mm:ss' },
+      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'actualTime1', title: '发货时间：', width: 55, type: typeEnum.DATE.K, format: 'YY/MM/DD kk:mm:ss' },
       { show: true, source: dataSourceEnum.SYSTEM.V, key: 'receiptName', title: '收货人：', width: 45, type: typeEnum.USER_NAME.K },
-      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'serialNumber', title: '车次：', width: 90, type: typeEnum.GUID.K },
+      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'serialNumber1', title: '车次：', width: 90, type: typeEnum.GUID.K },
       { show: true, source: dataSourceEnum.SYSTEM.V, key: 'receiptPhone', title: '联系电话：', width: 55, type: typeEnum.PHONE.K },
       { show: true, source: dataSourceEnum.SYSTEM.V, key: 'driverName', title: '承运人：', width: 45, type: typeEnum.USER_NAME.K },
       { show: true, source: dataSourceEnum.SYSTEM.V, key: 'licensePlate', title: '车牌号：', width: 90, type: typeEnum.LICENSE_PLATE.K },
@@ -237,5 +237,5 @@ const mesShipmentDetail = {
 }
 
 export default {
-  mesShipmentDetail //  发运详情
+  mesShipmentAuditOverWeight //  过磅详情
 }

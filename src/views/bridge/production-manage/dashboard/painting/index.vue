@@ -33,7 +33,7 @@
                 class="pointer"
                 @click="toEditForm(row, row.primerPainting, paintingTypeEnum.PRIMER.V)"
               >
-                <el-edit />
+                <el-icon-edit />
               </el-icon>
             </div>
           </template>
@@ -53,7 +53,7 @@
                 class="pointer"
                 @click="toEditForm(row, row.intermediatePainting, paintingTypeEnum.INTERMEDIATE_PAINT.V)"
               >
-                <el-edit />
+                <el-icon-edit />
               </el-icon>
             </div>
           </template>
@@ -67,7 +67,7 @@
                 class="pointer"
                 @click="toEditForm(row, row.topcoatPainting, paintingTypeEnum.TOPCOAT.V)"
               >
-                <el-edit />
+                <el-icon-edit />
               </el-icon>
             </div>
           </template>

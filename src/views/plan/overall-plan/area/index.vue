@@ -3,7 +3,7 @@
     <template v-if="globalProject && globalProject.projectContentList && globalProject.projectContentList.length>0">
       <!--工具栏-->
       <div class="head-container">
-        <mHeader :project-id="globalProjectId" @monomerChangeType="monomerChange" @monomerValChange="monomerValChange"/>
+        <mHeader :project-id="globalProjectId" @monomerChangeType="monomerChange" @monomerValChange="monomerValChange" :global-project="globalProject" />
       </div>
       <!--表格渲染-->
       <common-table
