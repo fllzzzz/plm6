@@ -1,19 +1,19 @@
-import { Close, Delete, Expand, Fold, Edit, Loading, View, Plus, ArrowDown, ArrowRight, ArrowLeft, UploadFilled, QuestionFilled } from '@element-plus/icons'
+import { Close, Delete, Expand, Fold, Edit, Loading, View, Plus, ArrowDown, ArrowRight, ArrowLeft, UploadFilled, QuestionFilled } from '@element-plus/icons-vue'
 
 const components = new Map([
-  ['ElClose', Close],
-  ['ElDelete', Delete],
+  ['ElIconClose', Close],
+  ['ElIconDelete', Delete],
   ['ElIconExpand', Expand],
   ['ElIconFold', Fold],
   ['ElIconLoading', Loading],
   ['ElIconView', View],
   ['ElIconPlus', Plus],
-  ['ElArrowDown', ArrowDown],
-  ['ElArrowRight', ArrowRight],
-  ['ElArrowLeft', ArrowLeft],
-  ['ElEdit', Edit],
+  ['ElIconArrowDown', ArrowDown],
+  ['ElIconArrowRight', ArrowRight],
+  ['ElIconArrowLeft', ArrowLeft],
+  ['ElIconEdit', Edit],
   ['ElIconUploadFilled', UploadFilled],
-  ['ElQuestionFilled', QuestionFilled]
+  ['ElIconQuestionFilled', QuestionFilled]
 ])
 
 const useElementPlus = (app) => {
