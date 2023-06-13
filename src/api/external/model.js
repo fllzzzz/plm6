@@ -24,3 +24,14 @@ export function getTranslate(url, params) {
     params
   })
 }
+
+/**
+ * 根据项目id获取单体信息
+ * @param {number} projectId | required 项目id
+ */
+export function getMonomerList(projectId) {
+  return request({
+    url: `/plan/monomer/getTreeByProjectId/${projectId}`,
+    method: 'get'
+  })
+}
