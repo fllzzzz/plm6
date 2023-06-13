@@ -6,7 +6,7 @@
         style="padding: 0 2px; cursor: pointer; border-right: 1px solid #ebebeb; height: 51px; line-height: 51px"
         @click="handleScroll('left')"
       >
-        <el-icon><el-arrow-left /></el-icon>
+        <el-icon><el-icon-arrow-left /></el-icon>
       </div>
       <div class="time-scroll" ref="timeScrollRef">
         <div class="time-list" ref="timeListRef" :style="scrollStyle">
@@ -45,7 +45,7 @@
         style="padding: 0 2px; cursor: pointer; border-left: 1px solid #ebebeb; height: 51px; line-height: 51px"
         @click="handleScroll('right')"
       >
-        <el-icon><el-arrow-right /></el-icon>
+        <el-icon><el-icon-arrow-right /></el-icon>
       </div>
     </div>
     <div style="margin-bottom: 8px" v-else>

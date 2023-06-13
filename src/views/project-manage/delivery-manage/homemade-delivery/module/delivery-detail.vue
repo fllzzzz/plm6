@@ -151,7 +151,7 @@ async function fetchList() {
   let _list = []
   tableLoading.value = true
   try {
-    const { content = [] } = await deliveryProductList(props.detailInfo?.id)
+    const { content = [] } = await deliveryProductList(props.detailInfo?.id, { projectId: props.globalProject.id })
     content.map(v => {
       v.monomerName = v.monomer?.name
       v.areaName = v.area?.name
