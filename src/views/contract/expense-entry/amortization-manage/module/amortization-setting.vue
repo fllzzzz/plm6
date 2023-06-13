@@ -26,7 +26,7 @@
                   />
                   <svg-icon v-loading="materialEditLoading" class="icon" icon-class="comp-quit" @click="materialEdit = false" />
                 </template>
-                <el-edit v-else class="icon" @click="edit(true)" />
+                <el-icon-edit v-else class="icon" @click="edit(true)" />
               </div>
             </div>
           </template>
@@ -59,7 +59,7 @@
                 <svg-icon v-loading="otherEditLoading" class="icon" icon-class="comp-save" style="fill: #ffac00" @click="saveOther" />
                 <svg-icon v-loading="otherEditLoading" class="icon" icon-class="comp-quit" @click="otherEdit = false" />
               </template>
-              <el-edit v-else class="icon" @click="edit(false)" />
+              <el-icon-edit v-else class="icon" @click="edit(false)" />
             </div>
           </template>
           <el-tree
