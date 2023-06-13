@@ -1,10 +1,11 @@
 import store from '@/store/index'
-import { deepClone } from '@/utils/data-type'
+import { deepClone, toPrecision } from '@/utils/data-type'
 import { createUniqueString, trimStr } from '@/utils/data-type/string'
 import { matClsEnum } from '@/utils/enum/modules/classification'
 import { calcSteelCoilLength } from '@/utils/wms/measurement-calc'
 import { dataValidate } from '@/composables/form/use-table-validate'
 import { compareArray } from '@/utils/data-type/array'
+import { DP } from '@/settings/config'
 
 const sectionSteelSpecTmpl = {
   title: '钢卷采购清单', // 表格名称
@@ -20,9 +21,9 @@ const sectionSteelSpecTmpl = {
     { label: '长（mm）', field: 'length', type: 'number', excelField: '__EMPTY_4' },
     { label: '总重（kg）', field: 'weighingTotalWeight', type: 'number', precision: 0, excelField: '__EMPTY_5' },
     { label: '含税单价', field: 'unitPrice', excelField: '__EMPTY_6' },
-    { label: '金额', field: 'amount', excelField: '__EMPTY_7' },
-    { label: '颜色', field: 'color', excelField: '__EMPTY_8' },
-    { label: '品牌', field: 'brand', excelField: '__EMPTY_9' }
+    // { label: '金额', field: 'amount', excelField: '__EMPTY_7' },
+    { label: '颜色', field: 'color', excelField: '__EMPTY_7' },
+    { label: '品牌', field: 'brand', excelField: '__EMPTY_8' }
   ],
   // 校验规则
   rules: {
@@ -127,6 +128,11 @@ const sectionSteelSpecTmpl = {
         row.length = row.length ?? row.theoryLength
         row.quantity = row.length
         row.mete = row.weighingTotalWeight
+
+        // 计算金额
+        if (row.mete && row.unitPrice) {
+          row.amount = toPrecision(row.mete * row.unitPrice, DP.YUAN)
+        }
       } else {
         throw new Error(`${row.classifyName}下不存在规格为“${specification}”的材料，请联系初鸣售后人员添加`)
       }

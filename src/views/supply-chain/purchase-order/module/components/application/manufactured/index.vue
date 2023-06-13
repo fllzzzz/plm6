@@ -125,6 +125,7 @@ import { destinationTypeEnum } from '@enum-ms/production'
 import { manufClsEnum } from '@enum-ms/classification'
 import { isNotBlank, toPrecision } from '@/utils/data-type'
 import { getDP } from '@/utils/data-type/number'
+import { DP } from '@/settings/config'
 import useTableValidate from '@/composables/form/use-table-validate'
 // import useMaxHeight from '@compos/use-max-height'
 
@@ -195,7 +196,7 @@ watchEffect(() => {
       _amount += Number(v.amount) || 0
     })
   }
-  form.amount = _amount
+  form.amount = toPrecision(_amount, DP.YUAN)
   form.mete = _mete
   form.meteUnit = 'kg'
 })

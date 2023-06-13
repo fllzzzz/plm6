@@ -103,6 +103,7 @@ import { measureTypeEnum } from '@/utils/enum/modules/wms'
 import { createUniqueString } from '@/utils/data-type/string'
 import { positiveNumPattern } from '@/utils/validate/pattern'
 import { isNotBlank, toPrecision } from '@/utils/data-type'
+import { DP } from '@/settings/config'
 
 import useWmsConfig from '@/composables/store/use-wms-config'
 import usePriceSet from '@compos/wms/use-price-set'
@@ -126,7 +127,7 @@ watchEffect(() => {
       _amount += Number(v.amount) || 0
     })
   }
-  form.amount = _amount
+  form.amount = toPrecision(_amount, DP.YUAN)
   form.mete = undefined
   form.meteUnit = ''
 })

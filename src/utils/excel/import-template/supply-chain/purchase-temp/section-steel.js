@@ -6,6 +6,7 @@ import { calcSectionSteelTotalLength, calcSectionSteelWeight } from '@/utils/wms
 import { dataValidate } from '@/composables/form/use-table-validate'
 import { compareArray } from '@/utils/data-type/array'
 import { getBaseUnit } from '@/utils/wms/convert-unit'
+import { DP } from '@/settings/config'
 
 const sectionSteelSpecTmpl = {
   title: '型材采购清单', // 表格名称
@@ -20,8 +21,8 @@ const sectionSteelSpecTmpl = {
     { label: '数量（根）', field: 'quantity', type: 'number', excelField: '__EMPTY_3' },
     { label: '总重（kg）', field: 'weighingTotalWeight', type: 'number', precision: 0, excelField: '__EMPTY_4' },
     { label: '含税单价', field: 'unitPrice', excelField: '__EMPTY_5' },
-    { label: '金额', field: 'amount', excelField: '__EMPTY_6' },
-    { label: '品牌', field: 'brand', excelField: '__EMPTY_7' }
+    // { label: '金额', field: 'amount', excelField: '__EMPTY_6' },
+    { label: '品牌', field: 'brand', excelField: '__EMPTY_6' }
   ],
   // 校验规则
   rules: {
@@ -143,6 +144,11 @@ const sectionSteelSpecTmpl = {
         // 设置总长度
         calcTotalLength(row)
         row.mete = row.weighingTotalWeight
+
+        // 计算金额
+        if (row.mete && row.unitPrice) {
+          row.amount = toPrecision(row.mete * row.unitPrice, DP.YUAN)
+        }
       } else {
         throw new Error(`${row.classifyName}下不存在规格为“${specification}”的材料，请联系初鸣售后人员添加`)
       }

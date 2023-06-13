@@ -6,12 +6,13 @@
 import { ref, computed, reactive, inject, nextTick, watch, defineExpose, watchEffect } from 'vue'
 import { steelClsEnum } from '@enum-ms/classification'
 
-import { isNotBlank, isBlank } from '@/utils/data-type'
+import { isNotBlank, isBlank, toPrecision } from '@/utils/data-type'
 
 import SteelPlateTable from './module/steel-plate-table'
 import SectionSteelTable from './module/section-steel-table'
 import SteelCoilTable from './module/steel-coil-table'
 import { ElMessage } from 'element-plus'
+import { DP } from '@/settings/config'
 
 const form = inject('crud')?.form
 const matSpecRef = inject('matSpecRef') // 调用父组件matSpecRef
@@ -29,7 +30,7 @@ watchEffect(() => {
       })
     }
   })
-  form.amount = _amount
+  form.amount = toPrecision(_amount, DP.YUAN)
   form.mete = _mete
   form.meteUnit = 'kg'
 })
