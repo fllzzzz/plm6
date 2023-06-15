@@ -3,7 +3,7 @@
     <!--表格渲染-->
     <div>
       <common-button type="primary" size="mini" @click="crud.toAdd" style="margin-right:10px;" v-permission="permission.add">添加</common-button>
-      <el-tag type="success" size="medium" v-if="currentRow.freight">{{`运输额:${toThousand(currentRow.freight)}`}}</el-tag>
+      <el-tag type="success" size="medium" v-if="currentRow.freight">{{`运输额:${toThousand(currentRow.freight,decimalPrecision.contract)}`}}</el-tag>
     </div>
     <common-table
       ref="tableRef"
@@ -48,12 +48,12 @@
                 :min="0"
                 :max="props.currentRow.freight"
                 :step="100"
-                :precision="DP.YUAN"
+                :precision="decimalPrecision.contract"
                 placeholder="收票额(元)"
                 controls-position="right"
                 @change="moneyChange(scope.row)"
               />
-              <div v-else>{{ scope.row.invoiceAmount && scope.row.invoiceAmount>0? toThousand(scope.row.invoiceAmount): scope.row.invoiceAmount }}</div>
+              <div v-else>{{ scope.row.invoiceAmount && scope.row.invoiceAmount>0? toThousand(scope.row.invoiceAmount,decimalPrecision.contract): scope.row.invoiceAmount }}</div>
           </template>
         </el-table-column>
         <el-table-column key="invoiceAmount2" prop="invoiceAmount2" label="大写" align="center" width="330" :show-overflow-tooltip="true">
@@ -203,25 +203,27 @@
 <script setup>
 import crudApi, { editStatus } from '@/api/contract/supplier-manage/pay-invoice/logistics'
 import { ref, defineProps, watch, nextTick, provide, defineEmits } from 'vue'
+import { ElMessage } from 'element-plus'
+
 import checkPermission from '@/utils/system/check-permission'
 import { tableSummary } from '@/utils/el-extra'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
-import pagination from '@crud/Pagination'
 import { auditTypeEnum } from '@enum-ms/contract'
 import { invoiceTypeEnum } from '@enum-ms/finance'
 import { parseTime } from '@/utils/date'
-import { DP } from '@/settings/config'
-import { toThousand } from '@data-type/number'
-import { digitUppercase } from '@/utils/data-type/number'
+import { digitUppercase, toThousand } from '@/utils/data-type/number'
 import { validate } from '@compos/form/use-table-validate'
-import { ElMessage } from 'element-plus'
-import mForm from './form'
 import { contractSupplierLogisticsPM } from '@/page-permission/contract'
 import { fileClassifyEnum } from '@enum-ms/file'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
 import UploadBtn from '@comp/file-upload/UploadBtn'
 import showPdfAndImg from '@comp-base/show-pdf-and-img.vue'
+import mForm from './form'
+import pagination from '@crud/Pagination'
 
+const { decimalPrecision } = useDecimalPrecision()
 const permission = contractSupplierLogisticsPM.invoice
 const emit = defineEmits(['success'])
 const optShow = {
@@ -449,7 +451,7 @@ async function rowSubmit(row) {
 // 合计
 function getSummaries(param) {
   return tableSummary(param, {
-    props: [['invoiceAmount', DP.YUAN]],
+    props: [['invoiceAmount', decimalPrecision.contract]],
     toThousandFields: ['invoiceAmount']
   })
 }

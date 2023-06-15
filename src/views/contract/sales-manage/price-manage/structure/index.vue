@@ -109,7 +109,7 @@
             :step="1"
             :min="0"
             :max="99999999"
-            :precision="DP.YUAN"
+            :precision="decimalPrecision.contract"
             size="small"
             style="width: 100%"
             @change="handlePrice(row)"
@@ -143,7 +143,6 @@ import { ref, defineExpose } from 'vue'
 import { priceManagePM as permission } from '@/page-permission/contract'
 
 import checkPermission from '@/utils/system/check-permission'
-import { DP } from '@/settings/config'
 import { pricingMannerEnum } from '@enum-ms/contract'
 import { ElMessage } from 'element-plus'
 
@@ -154,6 +153,9 @@ import useCRUD from '@compos/use-crud'
 import pagination from '@crud/Pagination'
 import mHeader from './module/header'
 import mDetail from './module/detail'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const optShow = {
   add: false,
@@ -172,7 +174,7 @@ const headerRef = ref()
 const detailInfo = ref({})
 const showAble = ref(false)
 const dataFormat = ref([
-  ['unitPrice', ['to-thousand-ck', 'YUAN']]
+  ['unitPrice', ['to-thousand', decimalPrecision.contract]]
 ])
 const { crud, columns } = useCRUD(
   {

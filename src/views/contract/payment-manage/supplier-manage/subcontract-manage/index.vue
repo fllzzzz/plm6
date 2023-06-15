@@ -27,7 +27,7 @@
     <el-table-column v-if="columns.visible('amount')" prop="amount" key="amount" label="合同额" align="right" show-overflow-tooltip />
     <el-table-column v-if="columns.visible('settlementAmount')" key="settlementAmount" prop="settlementAmount"  :show-overflow-tooltip="true" label="结算额" align="center">
       <template v-slot="scope">
-        <span style="margin-right:10px;" @click="openSettleAudit(scope.row,'detail')">{{ scope.row.sourceRow.settlementAmount? toThousand(scope.row.sourceRow.settlementAmount): '-' }}</span>
+        <span style="margin-right:10px;" @click="openSettleAudit(scope.row,'detail')">{{ scope.row.sourceRow.settlementAmount? toThousand(scope.row.sourceRow.settlementAmount,decimalPrecision.contract): '-' }}</span>
         <span @click="openSettleAudit(scope.row,'audit')" style="cursor:pointer;" v-if="checkPermission(permission.settleAudit) && scope.row.sourceRow.unCheckSettlementCount>0">
           <el-badge :value="1" :max="99" :hidden="scope.row.sourceRow.unCheckSettlementCount < 1">
             <svg-icon icon-class="notify"  style="color:#e6a23c;font-size:15px;"/>
@@ -50,7 +50,7 @@
         </el-tooltip>
       </template>
       <template v-slot="scope">
-        <span style="cursor:pointer;margin-right:10px;" @click="openTab(scope.row,'payment')">{{ scope.row.sourceRow.paymentAmount? toThousand(scope.row.sourceRow.paymentAmount): '-' }}</span>
+        <span style="cursor:pointer;margin-right:10px;" @click="openTab(scope.row,'payment')">{{ scope.row.sourceRow.paymentAmount? toThousand(scope.row.sourceRow.paymentAmount,decimalPrecision.contract): '-' }}</span>
         <span @click="openPaymentAudit(scope.row)" style="cursor:pointer;" v-if="checkPermission(crud.permission.payment.audit) && scope.row.unCheckPaymentCount>0">
           <el-badge :value="scope.row.sourceRow.unCheckPaymentCount" :max="99" :hidden="scope.row.sourceRow.unCheckPaymentCount < 1">
             <svg-icon icon-class="notify"  style="color:#e6a23c;font-size:15px;"/>
@@ -78,7 +78,7 @@
       </template>
       <template v-slot="scope">
         <div @click="openTab(scope.row,'invoice')" style="cursor:pointer;">
-          <span style="cursor:pointer;margin-right:10px;">{{ scope.row.sourceRow.invoiceAmount? toThousand(scope.row.sourceRow.invoiceAmount): '-' }}</span>
+          <span style="cursor:pointer;margin-right:10px;">{{ scope.row.sourceRow.invoiceAmount? toThousand(scope.row.sourceRow.invoiceAmount,decimalPrecision.contract): '-' }}</span>
           <template v-if="checkPermission(crud.permission.invoice.audit) && scope.row.sourceRow.unCheckInvoiceCount>0">
             <el-badge :value="scope.row.sourceRow.unCheckInvoiceCount" :max="99" :hidden="scope.row.sourceRow.unCheckInvoiceCount < 1">
               <svg-icon icon-class="notify"  style="color:#e6a23c;font-size:15px;"/>
@@ -106,18 +106,23 @@
 <script setup>
 import crudApi from '@/api/project-manage/subcontract-payment/payment-list'
 import { ref } from 'vue'
+
 import { contractSupplierSubcontractPM as permission } from '@/page-permission/contract'
 import checkPermission from '@/utils/system/check-permission'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
+import { settlementStatusEnum } from '@enum-ms/finance'
+import { toThousand } from '@data-type/number'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
 import pagination from '@crud/Pagination'
 import mHeader from './module/header'
-import { settlementStatusEnum } from '@enum-ms/finance'
 import paymentAndInvoice from './module/payment-and-invoice'
-import { toThousand } from '@data-type/number'
 import paymentAudit from './module/payment-audit/index'
 import settleForm from '@/views/project-manage/subcontract-manage/subcontract-payment/module/settle-form'
 import tableCellTag from '@comp-common/table-cell-tag/index.vue'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const optShow = {
   add: false,
@@ -139,9 +144,9 @@ const dataFormat = ref([
   ['project', 'parse-project'],
   ['paymentRate', ['to-fixed', 2]],
   ['invoiceRate', ['to-fixed', 2]],
-  ['amount', ['to-thousand-ck', 'YUAN']],
-  ['paymentAmount', ['to-thousand-ck', 'YUAN']],
-  ['invoiceAmount', ['to-thousand-ck', 'YUAN']]
+  ['amount', ['to-thousand', decimalPrecision.contract]],
+  ['paymentAmount', ['to-thousand', decimalPrecision.contract]],
+  ['invoiceAmount', ['to-thousand', decimalPrecision.contract]]
 ])
 
 const { CRUD, crud, columns } = useCRUD(

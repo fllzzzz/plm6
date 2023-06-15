@@ -73,6 +73,9 @@ import { pricingMannerEnum, enclosureSettlementTypeEnum } from '@enum-ms/contrac
 import { regDetail } from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
 import cellChangePreview from '@comp-common/cell-change-preview'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const emit = defineEmits(['success'])
 
@@ -87,8 +90,8 @@ const { maxHeight } = useMaxHeight({ extraBox: '.el-drawer__header', wrapperBox:
 
 const list = ref([])
 const dataFormat = ref([
-  ['oldUnitPrice', ['to-thousand-ck', 'YUAN']],
-  ['newUnitPrice', ['to-thousand-ck', 'YUAN']]
+  ['oldUnitPrice', ['to-thousand', decimalPrecision.contract]],
+  ['newUnitPrice', ['to-thousand', decimalPrecision.contract]]
 ])
 const { crud, detail, CRUD } = regDetail()
 

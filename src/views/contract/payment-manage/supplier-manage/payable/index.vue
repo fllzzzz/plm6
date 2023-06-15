@@ -41,11 +41,15 @@
 import crudApi from '@/api/contract/supplier-manage/payable'
 import { ref } from 'vue'
 
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
 import { contractSupplierPayablePM as permission } from '@/page-permission/contract'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
+
 import pagination from '@crud/Pagination'
 import mHeader from './module/header'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const optShow = {
   add: false,
@@ -70,11 +74,11 @@ const { crud, columns, CRUD } = useCRUD(
 const dataFormat = ref([
   ['paymentRate', ['to-fixed', 2]],
   ['invoiceRate', ['to-fixed', 2]],
-  ['amount', ['to-thousand-ck', 'YUAN']],
-  ['paymentAmount', ['to-thousand-ck', 'YUAN']],
-  ['unPaymentAmount', ['to-thousand-ck', 'YUAN']],
-  ['invoiceAmount', ['to-thousand-ck', 'YUAN']],
-  ['unInvoiceAmount', ['to-thousand-ck', 'YUAN']]
+  ['amount', ['to-thousand', decimalPrecision.contract]],
+  ['paymentAmount', ['to-thousand', decimalPrecision.contract]],
+  ['unPaymentAmount', ['to-thousand', decimalPrecision.contract]],
+  ['invoiceAmount', ['to-thousand', decimalPrecision.contract]],
+  ['unInvoiceAmount', ['to-thousand', decimalPrecision.contract]]
 ])
 
 const { maxHeight } = useMaxHeight({

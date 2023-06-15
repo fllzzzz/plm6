@@ -61,6 +61,9 @@ import { defineProps, defineEmits, ref, watch, inject } from 'vue'
 
 import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const drawerRef = ref()
 const emit = defineEmits(['update:visible'])
@@ -107,8 +110,8 @@ const list = ref([])
 const dataFormat = ref([
   ['project', ['parse-project']],
   ['signingDate', ['parse-time', '{y}-{m}-{d}']],
-  ['contractAmount', ['to-thousand-ck', 'YUAN']],
-  ['settlementAmount', ['to-thousand-ck', 'YUAN']]
+  ['contractAmount', ['to-thousand', decimalPrecision.contract]],
+  ['settlementAmount', ['to-thousand', decimalPrecision.contract]]
 ])
 const permission = inject('permission')
 

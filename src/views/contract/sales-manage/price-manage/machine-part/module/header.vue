@@ -83,12 +83,15 @@ import { convertUnits } from '@/utils/convert/unit'
 import { toThousand } from '@/utils/data-type/number'
 import { emptyTextFormatter } from '@/utils/data-type'
 import { pricingMannerEnum } from '@enum-ms/contract'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
 import { DP } from '@/settings/config'
 
 import { regHeader } from '@compos/use-crud'
 import crudOperation from '@crud/CRUD.operation'
 // import rrOperation from '@crud/RR.operation'
 import mPreview from '../../preview'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const projectId = inject('projectId')
 const monomerId = inject('monomerId')
@@ -160,7 +163,7 @@ CRUD.HOOK.handleRefresh = (crud, { data }) => {
     v.totalWeight = convertUnits(v.totalWeight, 'kg', 't', DP.COM_WT__T)
     v.newUnitPrice = v.unitPrice // number类型的单价（unitPrice可能会有千位符）
     v.originNewUnitPrice = v.newUnitPrice
-    v.originUnitPrice = emptyTextFormatter(toThousand(v.unitPrice))
+    v.originUnitPrice = emptyTextFormatter(toThousand(v.unitPrice, decimalPrecision.contract))
     v.totalPrice = (v.pricingManner === pricingMannerEnum.WEIGHT.V ? v.totalWeight : v.totalLength) * (v.newUnitPrice || 0)
     v.originPricingManner = v.pricingManner
   })

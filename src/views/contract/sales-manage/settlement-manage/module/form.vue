@@ -101,7 +101,7 @@
               :min="0.01"
               :max="99999999999"
               :step="1000"
-              :precision="DP.YUAN"
+              :precision="decimalPrecision.contract"
               class="input-underline"
               placeholder="请输入违约金额"
               :controls="false"
@@ -114,7 +114,7 @@
               :min="0"
               :max="99999999999"
               :step="1000"
-              :precision="DP.YUAN"
+              :precision="decimalPrecision.contract"
               class="input-underline"
               placeholder="请输入签证额"
               :controls="false"
@@ -129,7 +129,7 @@
               :min="0"
               :max="99999999999"
               :step="1000"
-              :precision="DP.YUAN"
+              :precision="decimalPrecision.contract"
               class="input-underline"
               placeholder="请输入加工结算额"
               :controls="false"
@@ -142,7 +142,7 @@
               :min="0"
               :max="99999999999"
               :step="1000"
-              :precision="DP.YUAN"
+              :precision="decimalPrecision.contract"
               class="input-underline"
               placeholder="请输入最终结算额"
               :controls="false"
@@ -192,7 +192,6 @@ import { mapGetters } from '@/store/lib'
 
 import moment from 'moment'
 import { isBlank } from '@data-type/index'
-import { DP } from '@/settings/config'
 import { digitUppercase } from '@data-type/number'
 import { projectNameFormatter } from '@/utils/project'
 import { businessTypeEnum, isTaxContractEnum } from '@enum-ms/contract'
@@ -202,6 +201,9 @@ import { regForm } from '@compos/use-crud'
 import useDict from '@compos/store/use-dict'
 import userDeptCascader from '@comp-base/user-dept-cascader.vue'
 import projectVisaSelect from '@comp-base/project-visa-select'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const { user } = mapGetters('user')
 

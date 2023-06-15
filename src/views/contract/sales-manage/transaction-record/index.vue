@@ -49,6 +49,9 @@ import useCRUD from '@compos/use-crud'
 import pagination from '@crud/Pagination'
 import mHeader from './module/header'
 import mDetail from './module/detail'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const optShow = {
   add: false,
@@ -60,8 +63,8 @@ const optShow = {
 const tableRef = ref()
 const dataFormat = ref([
   ['businessType', ['parse-enum', businessTypeEnum]],
-  ['totalContractAmount', ['to-thousand-ck', 'YUAN']],
-  ['totalSettlementAmount', ['to-thousand-ck', 'YUAN']]
+  ['totalContractAmount', ['to-thousand', decimalPrecision.contract]],
+  ['totalSettlementAmount', ['to-thousand', decimalPrecision.contract]]
 ])
 const { crud, columns } = useCRUD(
   {

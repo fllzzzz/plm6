@@ -4,7 +4,7 @@
       <div style="width: 300px">
         <print-table v-permission="permission.print" api-key="depreciationFee" :params="{ projectId: props.costTypeData.projectId }" size="mini" type="warning" class="filter-item" />
       </div>
-      <el-tag>合计（单位：元）：{{ toThousand(props.costTypeData?.amount) }}</el-tag>
+      <el-tag>合计（单位：元）：{{ toThousand(props.costTypeData?.amount,decimalPrecision.contract) }}</el-tag>
     </div>
     <common-table
       ref="tableRef"
@@ -47,8 +47,8 @@ import { ref, defineProps, watch } from 'vue'
 
 import { toThousand } from '@data-type/number'
 import { tableSummary } from '@/utils/el-extra'
-import { DP } from '@/settings/config'
 import useMaxHeight from '@compos/use-max-height'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
 
 const props = defineProps({
   costTypeData: {
@@ -60,6 +60,8 @@ const props = defineProps({
     default: () => {}
   }
 })
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const tableRef = ref()
 const detailData = ref([])
@@ -77,15 +79,15 @@ watch(
 )
 
 const dataFormat = ref([
-  ['amount', ['to-thousand-ck', 'YUAN']],
+  ['amount', ['to-thousand', decimalPrecision.contract]],
   ['mete', 'to-thousand'],
-  ['avgPrice', ['to-thousand-ck', 'YUAN']]
+  ['avgPrice', ['to-thousand', decimalPrecision.contract]]
 ])
 
 // 合计
 function getSummaries(param) {
   return tableSummary(param, {
-    props: [['amount', DP.YUAN], 'mete'],
+    props: [['amount', decimalPrecision.contract], 'mete'],
     toThousandFields: ['amount', 'mete']
   })
 }

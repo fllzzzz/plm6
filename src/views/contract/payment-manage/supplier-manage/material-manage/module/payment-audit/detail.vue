@@ -35,19 +35,19 @@
       </el-descriptions-item>
       <el-descriptions-item label-class-name="contractLabel" label="供应商">{{currentRow.supplierName}}</el-descriptions-item>
       <el-descriptions-item label-class-name="contractLabel" label="合同额">
-        {{currentRow.amount?toThousand(currentRow.amount):'-'}}
-        <span>（入库额:{{currentRow.inboundAmount?toThousand(currentRow.inboundAmount):'-'}}）</span>
+        {{currentRow.amount?toThousand(currentRow.amount,decimalPrecision.contract):'-'}}
+        <span>（入库额:{{currentRow.inboundAmount?toThousand(currentRow.inboundAmount,decimalPrecision.contract):'-'}}）</span>
       </el-descriptions-item>
       <el-descriptions-item label-class-name="contractLabel" label="已付款">
-        <span>{{ currentRow.paymentAmount?toThousand(currentRow.paymentAmount):'-' }}</span>
+        <span>{{ currentRow.paymentAmount?toThousand(currentRow.paymentAmount,decimalPrecision.contract):'-' }}</span>
         <span style="margin-left:5px;" v-if="currentRow.paymentAmount && currentRow.inboundAmount">{{ ((currentRow.paymentAmount/currentRow.inboundAmount)*100).toFixed(2)+'%' }}</span>
       </el-descriptions-item>
       <el-descriptions-item label-class-name="contractLabel" label="最近一次付款">
-        <span>{{ currentRow.lastPaymentAmount?toThousand(currentRow.lastPaymentAmount):'-' }}</span>
+        <span>{{ currentRow.lastPaymentAmount?toThousand(currentRow.lastPaymentAmount,decimalPrecision.contract):'-' }}</span>
         <span v-if="currentRow.lastPaymentTime" style="margin-left:5px;">{{ parseTime(currentRow.lastPaymentTime,'{y}-{m}-{d}')}}</span>
       </el-descriptions-item>
       <el-descriptions-item label-class-name="contractLabel" label="本次申请">
-        <el-tag effect="plain">{{currentInfo.applyAmount?toThousand(currentInfo.applyAmount):'-'}}</el-tag>
+        <el-tag effect="plain">{{currentInfo.applyAmount?toThousand(currentInfo.applyAmount,decimalPrecision.contract):'-'}}</el-tag>
         <el-tag style="margin-left:5px;" v-if="currentInfo.applyAmount && currentRow.inboundAmount">{{ ((currentInfo.applyAmount/currentRow.inboundAmount)*100).toFixed(2)+'%' }}</el-tag>
       </el-descriptions-item>
       <el-descriptions-item label-class-name="contractLabel" label="大写">
@@ -67,12 +67,12 @@
           :min="0"
           :max="detailInfo.applyAmount"
           :step="100"
-          :precision="DP.YUAN"
+          :precision="decimalPrecision.contract"
           placeholder="本次实付(元)"
           controls-position="right"
           style="width:220px;"
         />
-        <span v-else>{{currentInfo.actuallyPaymentAmount?toThousand(currentInfo.actuallyPaymentAmount):'-'}}</span>
+        <span v-else>{{currentInfo.actuallyPaymentAmount?toThousand(currentInfo.actuallyPaymentAmount,decimalPrecision.contract):'-'}}</span>
         <template v-if="showType==='audit'">
           <el-tag type="success" style="margin-left:5px;" v-if="actuallyPaymentAmount && currentRow.inboundAmount">{{ ((actuallyPaymentAmount/currentRow.inboundAmount)*100).toFixed(2)+'%' }}</el-tag>
         </template>
@@ -122,18 +122,22 @@
 </template>
 
 <script setup>
-import { ref, defineProps, watch, defineEmits } from 'vue'
-import { auditTypeEnum } from '@enum-ms/contract'
-import useVisible from '@compos/use-visible'
 import { payDetail, editStatus } from '@/api/contract/supplier-manage/pay-invoice/pay'
 import { bankData } from '@/api/contract/collection-and-invoice/collection'
+import { ref, defineProps, watch, defineEmits } from 'vue'
+import { ElNotification, ElMessage } from 'element-plus'
+
+import { auditTypeEnum } from '@enum-ms/contract'
+import useVisible from '@compos/use-visible'
 import { digitUppercase, toThousand } from '@data-type/number'
 import { parseTime } from '@/utils/date'
-import { DP } from '@/settings/config'
 import { paymentFineModeEnum } from '@enum-ms/finance'
 import useDict from '@compos/store/use-dict'
-import { ElNotification, ElMessage } from 'element-plus'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
 import showPdfAndImg from '@comp-base/show-pdf-and-img.vue'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const props = defineProps({
   modelValue: {

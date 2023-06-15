@@ -143,6 +143,7 @@ import { ref, provide, computed, nextTick } from 'vue'
 import { projectStatusEnum, orderSourceTypeEnum } from '@enum-ms/contract'
 import { orderTrackingPM as permission } from '@/page-permission/contract'
 import checkPermission from '@/utils/system/check-permission'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
@@ -152,6 +153,8 @@ import collectionRecord from './module/collection-record'
 import invoiceRecord from './module/invoice-record'
 import happenedRecord from './module/happened-record'
 import warehouseRecord from './module/warehouse-record'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const optShow = {
   add: false,
@@ -193,12 +196,12 @@ const dataFormat = ref([
   ['project', 'parse-project'],
   ['orderSourceType', ['parse-enum', orderSourceTypeEnum]],
   ['status', ['parse-enum', projectStatusEnum]],
-  ['contractAmount', ['to-thousand-ck', 'YUAN']],
-  ['settlementAmount', ['to-thousand-ck', 'YUAN']],
-  ['collectionAmount', ['to-thousand-ck', 'YUAN']],
-  ['invoiceAmount', ['to-thousand-ck', 'YUAN']],
-  ['happenedAmount', ['to-thousand-ck', 'YUAN']],
-  ['warehouseAmount', ['to-thousand-ck', 'YUAN']],
+  ['contractAmount', ['to-thousand', decimalPrecision.contract]],
+  ['settlementAmount', ['to-thousand', decimalPrecision.contract]],
+  ['collectionAmount', ['to-thousand', decimalPrecision.contract]],
+  ['invoiceAmount', ['to-thousand', decimalPrecision.contract]],
+  ['happenedAmount', ['to-thousand', decimalPrecision.contract]],
+  ['warehouseAmount', ['to-thousand', decimalPrecision.contract]],
   ['warehouseRate', ['to-fixed', 2]],
   ['collectionRate', ['to-fixed', 2]],
   ['invoiceRate', ['to-fixed', 2]],

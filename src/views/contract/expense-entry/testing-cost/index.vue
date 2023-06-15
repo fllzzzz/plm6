@@ -49,7 +49,7 @@
           <div v-if="scope.row.testingFeeList.findIndex((v) => v.month == item) > -1">
             <template v-for="value in scope.row.testingFeeList" :key="value">
               <template v-if="value.month == item">
-                <span>{{ toThousand(value.feeAmount) }}</span>
+                <span>{{ toThousand(value.feeAmount,decimalPrecision.contract) }}</span>
               </template>
             </template>
           </div>
@@ -89,10 +89,13 @@ import { toThousand } from '@data-type/number'
 import useCRUD from '@compos/use-crud'
 import useDict from '@compos/store/use-dict'
 import useMaxHeight from '@compos/use-max-height'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
 
 import mHeader from './module/header.vue'
 import mForm from './module/form.vue'
 import mDetail from './module/detail.vue'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const tableRef = ref()
 const detailData = ref({})
@@ -131,7 +134,7 @@ provide('crud', crud)
 
 const dataFormat = ref([
   ['project', 'parse-project'],
-  ['totalAmount', ['to-thousand-ck', 'YUAN']]
+  ['totalAmount', ['to-thousand', decimalPrecision.contract]]
 ])
 
 const { maxHeight } = useMaxHeight({

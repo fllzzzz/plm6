@@ -94,7 +94,6 @@ import { ref } from 'vue'
 import crudApi from '@/api/contract/expense-entry/salary'
 
 import { salaryCostPM as permission } from '@/page-permission/contract'
-import { DP } from '@/settings/config'
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
 
@@ -102,6 +101,9 @@ import udOperation from '@crud/UD.operation'
 import mHeader from './module/header.vue'
 import mForm from './module/form.vue'
 import showPdfAndImg from '@comp-base/show-pdf-and-img.vue'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const tableRef = ref()
 const pdfShow = ref(false)
@@ -160,7 +162,7 @@ function getSummaries(param) {
           return pre
         }
       }, 0)
-      sums[index] = (totalWageSum / employeeQuantitySum).toFixed(DP.YUAN)
+      sums[index] = (totalWageSum / employeeQuantitySum).toFixed(decimalPrecision.contract)
       return
     }
     if (column.property === 'employeeQuantity' || column.property === 'totalWage') {

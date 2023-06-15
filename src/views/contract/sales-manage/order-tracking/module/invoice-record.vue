@@ -57,12 +57,15 @@ import { ref, defineEmits, defineProps, watch, computed } from 'vue'
 
 import { invoiceTypeEnum } from '@enum-ms/finance'
 import { auditTypeEnum } from '@enum-ms/contract'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
 
 import useVisible from '@/composables/use-visible'
 import useMaxHeight from '@compos/use-max-height'
 import usePagination from '@compos/use-pagination'
 
 const emit = defineEmits(['update:modelValue'])
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const props = defineProps({
   modelValue: {
@@ -105,7 +108,7 @@ const tableLoading = ref(false)
 const dataFormat = ref([
   ['invoiceType', ['parse-enum', invoiceTypeEnum]],
   ['invoiceDate', ['parse-time', '{y}-{m}-{d}']],
-  ['invoiceAmount', ['to-thousand-ck', 'YUAN']],
+  ['invoiceAmount', ['to-thousand', decimalPrecision.contract]],
   ['taxRate', ['to-fixed', 2]]
 ])
 

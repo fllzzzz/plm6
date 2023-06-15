@@ -11,7 +11,7 @@
           class="filter-item"
         />
       </div>
-      <el-tag>合计（单位：元）：{{ toThousand(props.costTypeData?.amount) }}</el-tag>
+      <el-tag>合计（单位：元）：{{ toThousand(props.costTypeData?.amount,decimalPrecision.contract) }}</el-tag>
     </div>
     <common-table
       ref="tableRef"
@@ -49,7 +49,7 @@
       </el-table-column>
       <el-table-column prop="amount" key="amount" label="总价" align="center">
         <template v-slot="scope">
-          <span>{{ toThousand(scope.row.amount) || '月末未加权' }}</span>
+          <span>{{ toThousand(scope.row.amount,decimalPrecision.contract) || '月末未加权' }}</span>
         </template>
       </el-table-column>
       <el-table-column prop="outboundTime" key="outboundTime" label="出库日期" align="center">
@@ -79,9 +79,9 @@ import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { mainAuxiliaryTypeEnum } from '@enum-ms/contract'
 import { toThousand } from '@data-type/number'
 import { tableSummary } from '@/utils/el-extra'
-import { DP } from '@/settings/config'
 import { parseTime } from '@/utils/date'
 import useMaxHeight from '@compos/use-max-height'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
 
 import usePagination from '@compos/use-pagination'
 
@@ -98,6 +98,8 @@ const props = defineProps({
   }
 })
 
+const { decimalPrecision } = useDecimalPrecision()
+
 const tableRef = ref()
 const detailData = ref([])
 
@@ -107,7 +109,7 @@ const { maxHeight } = useMaxHeight({
 
 const dataFormat = ref([
   ['basicClass', ['parse-enum', matClsEnum, { bit: true }]],
-  ['avgPrice', ['to-thousand-ck', 'YUAN']]
+  ['avgPrice', ['to-thousand', decimalPrecision.contract]]
 ])
 
 watch(
@@ -121,7 +123,7 @@ watch(
 // 合计
 function getSummaries(param) {
   return tableSummary(param, {
-    props: ['mete', ['amount', DP.YUAN]],
+    props: ['mete', ['amount', decimalPrecision.contract]],
     toThousandFields: ['mete', 'amount']
   })
 }

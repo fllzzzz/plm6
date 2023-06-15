@@ -142,6 +142,9 @@ import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import pagination from '@crud/Pagination'
 import mHeader from './module/header'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const emit = defineEmits(['resetQuery'])
 
@@ -158,8 +161,8 @@ const dataFormat = ref([
   ['createTime', ['parse-time', '{y}-{m}-{d}']],
   ['totalLength', ['to-thousand', DP.MES_ENCLOSURE_L__M]],
   ['totalArea', ['to-thousand', DP.MES_ENCLOSURE_L__M]],
-  ['unitPrice', ['to-thousand-ck', 'YUAN']],
-  ['totalPrice', ['to-thousand-ck', 'YUAN']],
+  ['unitPrice', ['to-thousand', decimalPrecision.contract]],
+  ['totalPrice', ['to-thousand', decimalPrecision.contract]],
   ['pricingManner', ['parse-enum', enclosurePricingMannerEnum]]
 ])
 

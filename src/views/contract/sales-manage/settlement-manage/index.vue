@@ -52,6 +52,9 @@ import pagination from '@crud/Pagination'
 import mHeader from './module/header'
 import mForm from './module/form'
 import mDetail from './module/detail.vue'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const optShow = {
   add: true,
@@ -66,8 +69,8 @@ const tableRef = ref()
 const dataFormat = ref([
   ['project', 'parse-project'],
   ['status', ['parse-enum', reviewStatusEnum, { f: 'SL' }]],
-  ['contractAmount', ['to-thousand-ck', 'YUAN']],
-  ['amount', ['to-thousand-ck', 'YUAN']],
+  ['contractAmount', ['to-thousand', decimalPrecision.contract]],
+  ['amount', ['to-thousand', decimalPrecision.contract]],
   ['createTime', 'parse-time']
 ])
 const { crud, columns } = useCRUD(

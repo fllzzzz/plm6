@@ -26,6 +26,7 @@ import { unitTypeEnum } from '@enum-ms/common'
 import { matClsEnum } from '@enum-ms/classification'
 import { setEmptyArr2Undefined, tree2list, tree2listForLeaf } from '@/utils/data-type/tree'
 import { isBlank, isNotBlank } from '@/utils/data-type'
+import { DP } from '@/settings/config'
 import { arr2obj } from '@/utils/convert/type'
 import { formatClsTree } from '@/utils/system/classification'
 import { monomerAll } from '@/api/plan/monomer'
@@ -33,6 +34,9 @@ import { getChangeReasonConfig } from '@/api/config/system-config/change-reason'
 import { getSubcontractType } from '@/api/config/project-config/subcontract-config'
 import { getQualityProblemType } from '@/api/config/project-config/quality-problem-config'
 import { getVisaReason } from '@/api/config/project-config/visa-reason-config'
+
+// 获取模块金额配置
+import { getAllDecimal } from '@/api/config/main/module-decimal-precision'
 
 // 桥梁
 import { getProcessAllSimple as getBridgeProcessAllSimple } from '@/api/bridge/common'
@@ -117,6 +121,7 @@ const state = {
   subcontractType: [],
   qualityProblemType: [],
   visaReason: [],
+  decimalPrecision: {},
   loaded: {
     // 接口是否加载
     company: false,
@@ -152,7 +157,8 @@ const state = {
     steelClassifyConf: false,
     subcontractType: false,
     qualityProblemType: false,
-    visaReason: false
+    visaReason: false,
+    decimalPrecision: false
   }
 }
 
@@ -329,6 +335,9 @@ const mutations = {
   },
   SET_VISA_REASON(state, visaReason) {
     state.visaReason = visaReason
+  },
+  SET_DECIMAL_PRECISION(state, decimalPrecision) {
+    state.decimalPrecision = decimalPrecision
   }
 }
 
@@ -799,6 +808,37 @@ const actions = {
     const { content = [] } = await getVisaReason()
     commit('SET_VISA_REASON', content)
     commit('SET_LOADED', { key: 'visaReason' })
+    return content
+  },
+  // 获取金额小数配置
+  async fetchAllDecimal({ commit }) {
+    const moduleMenu = [
+      { name: '合同管理', key: 'contract' },
+      { name: '桥梁MES', key: 'bridge' },
+      { name: '配置管理', key: 'config' },
+      { name: '套料切割', key: 'cutting' },
+      { name: '围护MES', key: 'enclosure' },
+      { name: '建钢MES', key: 'structure' },
+      { name: '运营分析', key: 'operation' },
+      { name: '计划管理', key: 'plan' },
+      { name: '项目管理', key: 'project' },
+      { name: '发运管理', key: 'shipment' },
+      { name: '供应链', key: 'supplyChain' },
+      { name: 'wms', key: 'wms' }
+    ]
+    moduleMenu.forEach(v => {
+      moduleDecimal[v.key] = DP.YUAN
+    })
+    const { content = [] } = await getAllDecimal()
+    const moduleDecimal = {}
+    content.forEach(v => {
+      const val = moduleMenu.find(k => v.name.indexOf(v.menuName) > -1) || {}
+      if (isNotBlank(val)) {
+        moduleDecimal[val.key] = val.scale
+      }
+    })
+    commit('SET_DECIMAL_PRECISION', moduleDecimal)
+    commit('SET_LOADED', { key: 'decimalPrecision' })
     return content
   }
 }

@@ -16,7 +16,7 @@
         <el-tag style="margin-right: 8px">
           装载重量合计（单位:t）： {{ convertUnits(totalAmount?.actualWeight, 'kg', 't', DP.COM_WT__T) }}
         </el-tag>
-        <el-tag type="danger">运输费合计（单位:元）：{{ toThousand(totalAmount?.totalPrice) }}</el-tag>
+        <el-tag type="danger">运输费合计（单位:元）：{{ toThousand(totalAmount?.totalPrice,decimalPrecision.contract) }}</el-tag>
       </div>
     </div>
     <common-table
@@ -84,7 +84,7 @@
       </el-table-column>
       <el-table-column :show-overflow-tooltip="true" prop="price" label="运输单价" align="right" min-width="120">
         <template v-slot="scope">
-          <span>{{ toFixed(scope.row.price, DP.YUAN) }}</span>
+          <span>{{ toFixed(scope.row.price,decimalPrecision.contract) }}</span>
           <span :class="scope.row.priceType === logisticsPriceTypeEnum.WEIGHT.V ? 'blue' : 'orange'" style="margin-left: 3px">{{
             logisticsPriceTypeEnum.V[scope.row.priceType].unit
           }}</span>
@@ -92,7 +92,7 @@
       </el-table-column>
       <el-table-column :show-overflow-tooltip="true" prop="totalPrice" label="运输费(元)" align="right" min-width="120">
         <template v-slot="scope">
-          <span>{{ toFixed(scope.row.totalPrice, DP.YUAN) }}</span>
+          <span>{{ toFixed(scope.row.totalPrice,decimalPrecision.contract) }}</span>
         </template>
       </el-table-column>
     </common-table>
@@ -114,17 +114,19 @@ import { ref, defineProps, watch } from 'vue'
 
 import { packTypeEnum, deliveryStatusEnum, logisticsPriceTypeEnum } from '@enum-ms/mes'
 import { toThousand } from '@data-type/number'
-// import { tableSummary } from '@/utils/el-extra'
 import useMaxHeight from '@compos/use-max-height'
 import { DP } from '@/settings/config'
 import { toFixed } from '@/utils/data-type'
 import { cleanArray } from '@/utils/data-type/array'
 import EO from '@enum'
 import { convertUnits } from '@/utils/convert/unit'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
 
 import usePagination from '@compos/use-pagination'
 
 const { handleSizeChange, handleCurrentChange, total, setTotalPage, queryPage } = usePagination({ fetchHook: fetchShippingFee })
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const props = defineProps({
   costTypeData: {
@@ -195,7 +197,7 @@ function getSummaries(param) {
           }
         }, 0)
       }
-      sums[index] = sums[index]?.toFixed(DP.YUAN)
+      sums[index] = sums[index]?.toFixed(decimalPrecision.contract)
     }
   })
   return sums

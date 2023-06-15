@@ -105,6 +105,9 @@ import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import pagination from '@crud/Pagination'
 import mHeader from './module/header'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const emit = defineEmits(['resetQuery'])
 
@@ -119,8 +122,8 @@ const tableRef = ref()
 const headerRef = ref()
 const dataFormat = ref([
   ['createTime', ['parse-time', '{y}-{m}-{d}']],
-  ['unitPrice', ['to-thousand-ck', 'YUAN']],
-  ['totalPrice', ['to-thousand-ck', 'YUAN']]
+  ['unitPrice', ['to-thousand', decimalPrecision.contract]],
+  ['totalPrice', ['to-thousand', decimalPrecision.contract]]
 ])
 
 const { crud, columns, CRUD } = useCRUD(

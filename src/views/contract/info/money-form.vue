@@ -35,8 +35,8 @@
         </template>
       </el-form-item>
       <el-form-item label="合同金额" prop="serialNumber">
-         <span v-if="!auditStatus">{{ toThousand(detailInfo.contractAmount) }}</span>
-         <span v-else>{{ toThousand(detailInfo.contractAmount) }}</span>
+         <span v-if="!auditStatus">{{ toThousand(detailInfo.contractAmount,decimalPrecision.contract) }}</span>
+         <span v-else>{{ toThousand(detailInfo.contractAmount,decimalPrecision.contract) }}</span>
       </el-form-item>
       <el-form-item label="变更内容" prop="changeContent">
         <el-input
@@ -56,16 +56,16 @@
           :max="9999999999"
           :min="-detailInfo.contractAmount"
           :step="100"
-          :precision="DP.YUAN"
+          :precision="decimalPrecision.contract"
           controls-position="right"
           placeholder="变更金额(元)"
           style="width: 320px;"
         />
-        <span v-else :class="detailInfo.contractAmount>detailInfo.changeAmount?'tip-red':'tip-green'">{{ toThousand(detailInfo.changeAmount-detailInfo.contractAmount) }}</span>
+        <span v-else :class="detailInfo.contractAmount>detailInfo.changeAmount?'tip-red':'tip-green'">{{ toThousand((detailInfo.changeAmount-detailInfo.contractAmount),decimalPrecision.contract) }}</span>
       </el-form-item>
       <el-form-item label="变更后合同金额(元)" prop="newAmount">
-        <span v-if="!auditStatus">{{ isNotBlank(newAmount)?toThousand(newAmount):'' }}</span>
-        <span v-else>{{ toThousand(detailInfo.changeAmount) }}</span>
+        <span v-if="!auditStatus">{{ isNotBlank(newAmount)?toThousand(newAmount,decimalPrecision.contract):'' }}</span>
+        <span v-else>{{ toThousand(detailInfo.changeAmount,decimalPrecision.contract) }}</span>
       </el-form-item>
       <el-form-item label="变更日期" prop="changeDate">
         <el-date-picker
@@ -122,20 +122,24 @@
 
 <script setup>
 import { ref, defineProps, computed, watch, defineEmits, nextTick } from 'vue'
+import { editContract, confirmContract } from '@/api/contract/project'
+
 import { auditTypeEnum, contractChangeTypeEnum } from '@enum-ms/contract'
 import { fileClassifyEnum } from '@enum-ms/file'
 import useVisible from '@compos/use-visible'
-import userDeptCascader from './components/user-dept-cascader'
-import UploadBtn from '@comp/file-upload/UploadBtn'
-import { DP } from '@/settings/config'
-import { editContract, confirmContract } from '@/api/contract/project'
 import { isNotBlank } from '@data-type/index'
 import { ElNotification, ElMessageBox } from 'element-plus'
 import { parseTime } from '@/utils/date'
 import useWatchFormValidate from '@compos/form/use-watch-form-validate'
 import { toThousand } from '@data-type/number'
 import { projectNameFormatter } from '@/utils/project'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
 import ExportButton from '@comp-common/export-button/index.vue'
+import userDeptCascader from './components/user-dept-cascader'
+import UploadBtn from '@comp/file-upload/UploadBtn'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const props = defineProps({
   projectId: [Number, String],

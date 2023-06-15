@@ -31,7 +31,7 @@
       </el-table-column>
       <el-table-column prop="amount" key="amount" label="总额（元）" align="center">
         <template v-slot="scope">
-          <span>{{ toThousand(scope.row.amount) }}</span>
+          <span>{{ toThousand(scope.row.amount,decimalPrecision.contract) }}</span>
         </template>
       </el-table-column>
       <!-- <el-table-column prop="totalProduction" key="totalProduction" label="项目摊销比" align="center">
@@ -53,8 +53,10 @@ import { getManagementList } from '@/api/contract/fortune-report/detail-fee'
 import { ref, defineProps, watch } from 'vue'
 import { toThousand } from '@data-type/number'
 import { tableSummary } from '@/utils/el-extra'
-import { DP } from '@/settings/config'
 import useMaxHeight from '@compos/use-max-height'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const props = defineProps({
   costTypeData: {
@@ -94,7 +96,7 @@ async function fetchWaterElectricFee() {
 // 合计
 function getSummaries(param) {
   return tableSummary(param, {
-    props: [['amount', DP.YUAN]],
+    props: [['amount', decimalPrecision.contract]],
     toThousandFields: ['amount']
   })
 }

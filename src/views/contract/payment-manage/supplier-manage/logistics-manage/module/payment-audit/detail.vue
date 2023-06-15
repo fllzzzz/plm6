@@ -45,17 +45,17 @@
           </el-table-column>
           <el-table-column key="freight" prop="freight" label="运费总额" align="center" min-width="120" :show-overflow-tooltip="true">
             <template v-slot="scope">
-              <div>{{ toThousand(scope.row.freight) }}</div>
+              <div>{{ toThousand(scope.row.freight,decimalPrecision.contract) }}</div>
             </template>
           </el-table-column>
           <el-table-column key="paymentAmount" prop="paymentAmount" label="已支付" align="center" min-width="120" :show-overflow-tooltip="true">
             <template v-slot="scope">
-              <div>{{ toThousand(scope.row.paymentAmount) }}</div>
+              <div>{{ toThousand(scope.row.paymentAmount,decimalPrecision.contract) }}</div>
             </template>
           </el-table-column>
            <el-table-column key="applyAmount" prop="applyAmount" label="本次支付金额(元)" align="center" min-width="120" :show-overflow-tooltip="true">
             <template v-slot="scope">
-              <div>{{ toThousand(scope.row.applyAmount) }}</div>
+              <div>{{ toThousand(scope.row.applyAmount,decimalPrecision.contract) }}</div>
             </template>
           </el-table-column>
         </common-table>
@@ -84,16 +84,19 @@
 
 <script setup>
 import { ref, defineProps, defineEmits } from 'vue'
-import useVisible from '@compos/use-visible'
 import { editStatus } from '@/api/contract/supplier-manage/pay-invoice/pay'
+import { ElNotification } from 'element-plus'
+
+import useVisible from '@compos/use-visible'
 import { tableSummary } from '@/utils/el-extra'
-import { DP } from '@/settings/config'
 import useMaxHeight from '@compos/use-max-height'
 import { logisticsSearchTypeEnum, auditTypeEnum } from '@enum-ms/contract'
 import { toThousand } from '@data-type/number'
-import { ElNotification } from 'element-plus'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
 import showPdfAndImg from '@comp-base/show-pdf-and-img.vue'
 
+const { decimalPrecision } = useDecimalPrecision()
 const formRef = ref()
 const props = defineProps({
   detailInfo: {
@@ -132,7 +135,7 @@ function attachmentView(item) {
 // 合计
 function getSummaries(param) {
   return tableSummary(param, {
-    props: [['freight', DP.YUAN], ['paymentAmount', DP.YUAN], ['applyAmount', DP.YUAN]],
+    props: [['freight', decimalPrecision.contract], ['paymentAmount', decimalPrecision.contract], ['applyAmount', decimalPrecision.contract]],
     toThousandFields: ['freight', 'paymentAmount', 'applyAmount']
   })
 }

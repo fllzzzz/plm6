@@ -98,7 +98,7 @@
                 :min="1"
                 :max="99999999999"
                 :step="10000"
-                :precision="DP.YUAN"
+                :precision="decimalPrecision.contract"
                 size="small"
                 controls-position="right"
                 placeholder="申请金额"
@@ -133,7 +133,7 @@
                 :min="scope.row.applyAmount ? scope.row.applyAmount : 1"
                 :max="99999999999"
                 :step="10000"
-                :precision="DP.YUAN"
+                :precision="decimalPrecision.contract"
                 size="small"
                 controls-position="right"
                 placeholder="发票面额"
@@ -198,7 +198,6 @@
 import { ref, computed, watch } from 'vue'
 import { regForm } from '@compos/use-crud'
 import projectCascader from '@comp-base/project-cascader'
-import { DP } from '@/settings/config'
 import { businessTypeEnum } from '@enum-ms/contract'
 import { invoiceTypeEnum } from '@enum-ms/finance'
 import { contractCollectionInfo } from '@/api/contract/collection-and-invoice/collection'
@@ -208,6 +207,10 @@ import { digitUppercase } from '@/utils/data-type/number'
 import { isNotBlank } from '@data-type/index'
 import Expense from './expense'
 import { ElMessage } from 'element-plus'
+
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const formRef = ref()
 const applyRef = ref()
@@ -327,7 +330,7 @@ function expenseChange(val) {
 
 function invoiceTypeChange(index) {
   if (form.detailList[index].taxRate && form.detailList[index].invoiceAmount) {
-    form.detailList[index].inputTax = ((form.detailList[index].invoiceAmount * form.detailList[index].taxRate) / 100).toFixed(DP.YUAN)
+    form.detailList[index].inputTax = ((form.detailList[index].invoiceAmount * form.detailList[index].taxRate) / 100).toFixed(decimalPrecision.contract)
   } else {
     form.detailList[index].inputTax = undefined
   }

@@ -2,8 +2,8 @@
   <div class="app-container">
     <!--表格渲染-->
     <div>
-      <el-tag type="success" size="medium" v-if="currentRow.amount">{{`合同额:${toThousand(currentRow.amount)}`}}</el-tag>
-      <el-tag type="success" size="medium" v-if="currentRow.settlementAmount" style="margin-left:5px;">{{`结算额:${toThousand(currentRow.settlementAmount)}`}}</el-tag>
+      <el-tag type="success" size="medium" v-if="currentRow.amount">{{`合同额:${toThousand(currentRow.amount,decimalPrecision.contract)}`}}</el-tag>
+      <el-tag type="success" size="medium" v-if="currentRow.settlementAmount" style="margin-left:5px;">{{`结算额:${toThousand(currentRow.settlementAmount,decimalPrecision.contract)}`}}</el-tag>
     </div>
     <common-table
       ref="tableRef"
@@ -28,7 +28,7 @@
       <el-table-column key="applyAmount1" prop="applyAmount1" label="付款金额" align="center" min-width="170" class="money-column">
         <el-table-column key="applyAmount" prop="applyAmount" label="金额" align="center" min-width="85">
           <template v-slot="scope">
-            <div>{{ scope.row.applyAmount && scope.row.applyAmount>0? toThousand(scope.row.applyAmount): scope.row.applyAmount }}</div>
+            <div>{{ scope.row.applyAmount && scope.row.applyAmount>0? toThousand(scope.row.applyAmount,decimalPrecision.contract): scope.row.applyAmount }}</div>
           </template>
         </el-table-column>
         <el-table-column key="applyAmount2" prop="applyAmount2" label="大写" align="center" min-width="85">
@@ -101,7 +101,6 @@ import crudApi from '@/api/contract/supplier-manage/pay-invoice/pay'
 import { ref, defineProps, watch } from 'vue'
 
 import { tableSummary } from '@/utils/el-extra'
-import { DP } from '@/settings/config'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import pagination from '@crud/Pagination'
@@ -111,10 +110,12 @@ import { paymentFineModeEnum } from '@enum-ms/finance'
 import { parseTime } from '@/utils/date'
 import { toThousand, digitUppercase } from '@data-type/number'
 import { contractSupplierSubcontractPM } from '@/page-permission/contract'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
 
 import showPdfAndImg from '@comp-base/show-pdf-and-img.vue'
 
 const permission = contractSupplierSubcontractPM.payment
+const { decimalPrecision } = useDecimalPrecision()
 
 const optShow = {
   add: false,
@@ -184,7 +185,7 @@ function attachmentView(item) {
 // 合计
 function getSummaries(param) {
   return tableSummary(param, {
-    props: [['applyAmount', DP.YUAN]],
+    props: [['applyAmount', decimalPrecision.contract]],
     toThousandFields: ['applyAmount']
   })
 }

@@ -59,6 +59,9 @@ import mHeader from './module/header'
 import mForm from './module/form'
 import mDetail from './module/detail.vue'
 import tableCellTag from '@comp-common/table-cell-tag/index.vue'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const optShow = {
   add: true,
@@ -73,7 +76,7 @@ const tableRef = ref()
 const dataFormat = ref([
   ['project', 'parse-project'],
   ['status', ['parse-enum', reviewStatusEnum, { f: 'SL' }]],
-  ['amount', ['to-thousand-ck', 'YUAN']],
+  ['amount', ['to-thousand', decimalPrecision.contract]],
   ['createTime', 'parse-time']
 ])
 const { crud, columns } = useCRUD(
