@@ -77,15 +77,17 @@ import { paymentRecord } from '@/api/supply-chain/purchase-reconciliation-manage
 import { defineEmits, defineProps, ref, computed, watch } from 'vue'
 
 import { auditTypeEnum, supplierPayTypeEnum } from '@enum-ms/contract'
-import { digitUppercase, getDP, toThousand } from '@/utils/data-type/number'
+import { digitUppercase, toThousand } from '@/utils/data-type/number'
 import { paymentFineModeEnum } from '@enum-ms/finance'
 import { tableSummary } from '@/utils/el-extra'
-import { DP } from '@/settings/config'
 
 import useVisible from '@/composables/use-visible'
 import usePagination from '@compos/use-pagination'
 import useMaxHeight from '@compos/use-max-height'
 import useDict from '@compos/store/use-dict'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const emit = defineEmits(['success', 'update:modelValue'])
 
@@ -159,14 +161,13 @@ const { maxHeight } = useMaxHeight(
 // 合计
 function getSummaries(param) {
   const summary = tableSummary(param, {
-    props: [['applyAmount', DP.YUAN], ['actuallyPaymentAmount', DP.YUAN]],
+    props: [['applyAmount', decimalPrecision.project], ['actuallyPaymentAmount', decimalPrecision.project]],
     toThousandFields: ['applyAmount']
   })
   const num = summary[3]
   if (num) {
-    const dp = getDP(num)
     summary[4] = digitUppercase(num)
-    summary[3] = toThousand(num, dp)
+    summary[3] = toThousand(num, decimalPrecision.project)
   }
   return summary
 }
