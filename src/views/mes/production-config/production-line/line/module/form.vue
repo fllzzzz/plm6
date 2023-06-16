@@ -76,6 +76,8 @@
                   componentTypeEnum.ASSEMBLE.K,
                   componentTypeEnum.ENCLOSURE.K,
                 ]
+              : flag
+              ? [componentTypeEnum.ENCLOSURE.K, componentTypeEnum.AUXILIARY_MATERIAL.K]
               : [componentTypeEnum.AUXILIARY_MATERIAL.K]
           "
           placeholder="请选择产品类型"
@@ -159,7 +161,7 @@ const productionLineList = ref([])
 const configList = ref([])
 const configLoading = ref(false)
 
-const { hasIntelligent } = mapGetters('hasIntelligent')
+const { hasIntelligent, flag } = mapGetters(['hasIntelligent', 'flag'])
 const { crud, CRUD, form } = regForm(defaultForm, formRef)
 const isEdit = computed(() => crud.status.edit >= 1)
 
