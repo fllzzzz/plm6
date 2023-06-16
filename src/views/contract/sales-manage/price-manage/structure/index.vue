@@ -121,7 +121,7 @@
       </el-table-column>
       <el-table-column v-if="columns.visible('totalPrice')" key="totalPrice" prop="totalPrice" align="center" min-width="120" label="金额">
         <template #default="{ row }">
-          <span :class="row.status === 1 ? 'tc-danger' : ''" v-thousand="row.totalPrice" />
+          <span :class="row.status === 1 ? 'tc-danger' : ''" v-thousand="{val:row.totalPrice ||0, dp:decimalPrecision.contract}" />
         </template>
       </el-table-column>
       <!--详情-->
@@ -145,6 +145,7 @@ import { priceManagePM as permission } from '@/page-permission/contract'
 import checkPermission from '@/utils/system/check-permission'
 import { pricingMannerEnum } from '@enum-ms/contract'
 import { ElMessage } from 'element-plus'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
 
 // import useTableChange from '@compos/form/use-table-change'
 import { validate } from '@compos/form/use-table-validate'
@@ -153,7 +154,6 @@ import useCRUD from '@compos/use-crud'
 import pagination from '@crud/Pagination'
 import mHeader from './module/header'
 import mDetail from './module/detail'
-import useDecimalPrecision from '@compos/store/use-decimal-precision'
 
 const { decimalPrecision } = useDecimalPrecision()
 

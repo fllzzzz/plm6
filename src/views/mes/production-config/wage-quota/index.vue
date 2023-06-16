@@ -58,7 +58,7 @@
               <common-input-number
                 v-if="item.V & row.wageQuotaType"
                 v-model="row.priceMap[item.V]"
-                :precision="DP.YUAN"
+                :precision="decimalPrecision.mes"
                 :controls="false"
                 size="mini"
                 style="width: 100%"
@@ -84,7 +84,7 @@ import { getByProductType, editWage } from '@/api/mes/production-config/process'
 import { ref } from 'vue'
 
 import { isBlank } from '@data-type/index'
-import { wageQuotaTypeMap, DP } from '@/settings/config'
+import { wageQuotaTypeMap } from '@/settings/config'
 import { wageQuotaTypeEnum } from '@enum-ms/mes'
 import { configWageQuotaPM as permission } from '@/page-permission/config'
 
@@ -92,6 +92,9 @@ import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import mHeader from './module/header'
 import mPreview from './module/preview'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const optShow = {
   add: false,

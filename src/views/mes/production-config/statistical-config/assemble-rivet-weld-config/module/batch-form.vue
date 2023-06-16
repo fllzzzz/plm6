@@ -119,7 +119,7 @@
                   v-model="row.processObj[item.id].price"
                   :step="1"
                   :min="0"
-                  :precision="DP.YUAN"
+                  :precision="decimalPrecision.mes"
                   clearable
                   class="input-underline"
                   :controls="false"
@@ -159,12 +159,14 @@ import { isNotBlank, deepClone } from '@data-type/index'
 import { createUniqueString } from '@/utils/data-type/string'
 import { wageQuotaTypeEnum } from '@enum-ms/mes'
 import { obj2arr } from '@/utils/convert/type'
-import { DP } from '@/settings/config'
 
 import { regBatchForm } from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
 import useTableValidate from '@compos/form/use-table-validate'
 // import StoreOperation from '@crud/STORE.operation.vue'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 defineProps({
   modelValue: {

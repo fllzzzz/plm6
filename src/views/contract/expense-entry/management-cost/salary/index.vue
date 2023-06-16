@@ -115,7 +115,7 @@ const optShow = {
   download: false
 }
 
-const dataFormat = ref([['averageValue', ['to-fixed', 2]]])
+const dataFormat = ref([['averageValue', ['to-fixed', decimalPrecision.contract]]])
 
 const { crud, CRUD, columns } = useCRUD(
   {

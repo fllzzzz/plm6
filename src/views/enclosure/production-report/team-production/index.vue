@@ -92,12 +92,15 @@ import { enclosureTeamProductionPM as permission } from '@/page-permission/enclo
 import checkPermission from '@/utils/system/check-permission'
 import { tableSummary } from '@/utils/el-extra'
 import { DP } from '@/settings/config'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import pagination from '@crud/Pagination'
 import mHeader from './module/header'
 import MDetail from './module/detail'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const optShow = {
   add: false,
@@ -121,7 +124,7 @@ const dataFormat = ref([
 function getSummaries(param) {
   return tableSummary(param, {
     props: [
-      ['totalAmount', DP.YUAN],
+      ['totalAmount', decimalPrecision.enclosure],
       ['totalLength', DP.MES_ENCLOSURE_L__M]
     ]
   })

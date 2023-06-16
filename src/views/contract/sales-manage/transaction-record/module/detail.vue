@@ -16,11 +16,11 @@
       </el-tag>
       <el-tag type="success" effect="plain" size="medium">
         <span>累计合同额：</span>
-        <span v-thousand="info.totalContractAmount" v-empty-text />
+        <span v-thousand="{val:info.totalContractAmount || 0, dp:decimalPrecision.contract}" v-empty-text />
       </el-tag>
       <el-tag type="success" effect="plain" size="medium">
         <span>累计结算额：</span>
-        <span v-thousand="info.totalSettlementAmount" v-empty-text />
+        <span v-thousand="{val:info.totalSettlementAmount || 0, dp:decimalPrecision.contract}" v-empty-text />
       </el-tag>
     </template>
     <template #titleRight>

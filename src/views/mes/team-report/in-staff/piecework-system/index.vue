@@ -43,7 +43,6 @@ import { teamAttributeEnum } from '@enum-ms/mes'
 // import { inStaffPieceworkSystemPM as permission } from '@/page-permission/mes'
 import { arr2obj } from '@/utils/convert/type'
 import { deepClone } from '@data-type/index'
-import { DP } from '@/settings/config'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
@@ -51,6 +50,9 @@ import useCRUD from '@compos/use-crud'
 import belongingInfoColumns from '@comp-mes/table-columns/belonging-info-columns'
 import mHeader from './module/header'
 import mDetail from './module/detail'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const props = defineProps({
   organizationType: {
@@ -122,7 +124,7 @@ function getSummaries(param) {
             return prev
           }
         }, 0)
-        sums[index] = sums[index].toFixed(DP.YUAN)
+        sums[index] = sums[index].toFixed(decimalPrecision.mes)
       }
     }
   })

@@ -69,6 +69,9 @@ import useMaxHeight from '@compos/use-max-height'
 
 import paintingFeeListETmpl from '@/utils/excel/export-template/operation/painting-fee-list'
 import ExcelExportButton from '@comp-common/excel-export-button/index.vue'
+// import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+// const { decimalPrecision } = useDecimalPrecision()
 
 const year = ref(parseTime(new Date(), '{y}'))
 const paintingList = ref([])

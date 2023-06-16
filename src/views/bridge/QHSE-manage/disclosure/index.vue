@@ -180,6 +180,9 @@ import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import pagination from '@crud/Pagination'
 import mHeader from './module/header'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const optShow = {
   add: false,
@@ -191,7 +194,7 @@ const optShow = {
 const dataFormat = ref([
   ['createTime', 'parse-time'],
   ['rectifyTime', 'parse-time'],
-  ['forfeit', ['to-fixed-ck', 'YUAN']]
+  ['forfeit', ['to-fixed', decimalPrecision.bridge]]
 ])
 
 const tableRef = ref()

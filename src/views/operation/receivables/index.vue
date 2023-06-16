@@ -96,11 +96,13 @@ import { ref } from 'vue'
 import { projectNameFormatter } from '@/utils/project'
 import { tableSummary } from '@/utils/el-extra'
 import { constantize } from '@enum/base'
-import { DP } from '@/settings/config'
 
 import useMaxHeight from '@compos/use-max-height'
 import useChart from '@compos/use-chart'
 import panel from '@/components/Panel'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const { maxHeight } = useMaxHeight({
   extraBox: ['.head-container', '.view-summary']
@@ -118,17 +120,17 @@ const typeEnum = {
 constantize(typeEnum)
 
 const dataFormat = ref([
-  ['contractAmount', ['to-thousand-ck', 'YUAN']],
-  ['invoiceAmount', ['to-thousand-ck', 'YUAN']],
-  ['settlementAmount', ['to-thousand-ck', 'YUAN']],
-  ['collectionAmount', ['to-thousand-ck', 'YUAN']],
-  ['receivableAmount', ['to-thousand-ck', 'YUAN']]
+  ['contractAmount', ['to-thousand', decimalPrecision.operation]],
+  ['invoiceAmount', ['to-thousand', decimalPrecision.operation]],
+  ['settlementAmount', ['to-thousand', decimalPrecision.operation]],
+  ['collectionAmount', ['to-thousand', decimalPrecision.operation]],
+  ['receivableAmount', ['to-thousand', decimalPrecision.operation]]
 ])
 
 // 合计
 function getSummaries(param) {
   return tableSummary(param, {
-    props: [['contractAmount', DP.YUAN], ['invoiceAmount', DP.YUAN], ['settlementAmount', DP.YUAN], ['receivableAmount', DP.YUAN]],
+    props: [['contractAmount', decimalPrecision.operation], ['invoiceAmount', decimalPrecision.operation], ['settlementAmount', decimalPrecision.operation], ['receivableAmount', decimalPrecision.operation]],
     toThousandFields: ['contractAmount', 'invoiceAmount', 'settlementAmount', 'receivableAmount']
   })
 }

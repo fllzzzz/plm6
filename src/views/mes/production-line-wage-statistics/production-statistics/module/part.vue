@@ -53,12 +53,12 @@
     </el-table-column>
     <el-table-column key="unitPrice" prop="unitPrice" :show-overflow-tooltip="true" label="单价" align="center">
       <template v-slot="scope">
-        <span>{{ scope.row.unitPrice ? toThousand(scope.row.unitPrice) : 0 }}</span>
+        <span>{{ scope.row.unitPrice ? toThousand(scope.row.unitPrice,decimalPrecision.mes) : 0 }}</span>
       </template>
     </el-table-column>
     <el-table-column key="totalPrice" prop="totalPrice" :show-overflow-tooltip="true" label="总额（元）" align="center">
       <template v-slot="scope">
-        <span>{{ scope.row.totalPrice ? toThousand(scope.row.totalPrice) : 0 }}</span>
+        <span>{{ scope.row.totalPrice ? toThousand(scope.row.totalPrice,decimalPrecision.mes) : 0 }}</span>
       </template>
     </el-table-column>
     <el-table-column key="productionDate" prop="productionDate" :show-overflow-tooltip="true" label="生产日期" align="center">
@@ -75,7 +75,9 @@ import useMaxHeight from '@compos/use-max-height'
 import { parseTime } from '@/utils/date'
 import { toThousand } from '@data-type/number'
 import { tableSummary } from '@/utils/el-extra'
-import { DP } from '@/settings/config'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const tableData = [
   {
@@ -99,7 +101,7 @@ const { maxHeight } = useMaxHeight({
 // 合计
 function getSummaries(param) {
   return tableSummary(param, {
-    props: ['totalMete', ['totalPrice', DP.YUAN]]
+    props: ['totalMete', ['totalPrice', decimalPrecision.mes]]
   })
 }
 </script>

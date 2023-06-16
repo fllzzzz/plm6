@@ -54,12 +54,13 @@ import { ref } from 'vue'
 import moment from 'moment'
 
 import { tableSummary } from '@/utils/el-extra'
-import { DP } from '@/settings/config'
-
 import useMaxHeight from '@compos/use-max-height'
 import useChart from '@compos/use-chart'
 
 import branchCompanySelect from '@comp-base/branch-company-select.vue'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 function disabledDate(time) {
   return time > new Date()
@@ -79,13 +80,13 @@ const { maxHeight } = useMaxHeight({
 })
 
 const dataFormat = ref([
-  ['income', ['to-thousand-ck', 'YUAN']],
-  ['expend', ['to-thousand-ck', 'YUAN']]
+  ['income', ['to-thousand', decimalPrecision.operation]],
+  ['expend', ['to-thousand', decimalPrecision.operation]]
 ])
 
 // 合计
 function getSummaries(param) {
-  return tableSummary(param, { props: [['income', DP.YUAN], ['expend', DP.YUAN]], toThousandFields: ['income', 'expend'] })
+  return tableSummary(param, { props: [['income', decimalPrecision.operation], ['expend', decimalPrecision.operation]], toThousandFields: ['income', 'expend'] })
 }
 
 const { getMyChart } = useChart({

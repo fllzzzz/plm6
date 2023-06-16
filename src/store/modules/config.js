@@ -812,13 +812,14 @@ const actions = {
   },
   // 获取金额小数配置
   async fetchAllDecimal({ commit }) {
+    const moduleDecimal = {}
     const moduleMenu = [
       { name: '合同管理', key: 'contract' },
       { name: '桥梁MES', key: 'bridge' },
       { name: '配置管理', key: 'config' },
       { name: '套料切割', key: 'cutting' },
       { name: '围护MES', key: 'enclosure' },
-      { name: '建钢MES', key: 'structure' },
+      { name: '建钢MES', key: 'mes' },
       { name: '运营分析', key: 'operation' },
       { name: '计划管理', key: 'plan' },
       { name: '项目管理', key: 'project' },
@@ -830,9 +831,8 @@ const actions = {
       moduleDecimal[v.key] = DP.YUAN
     })
     const { content = [] } = await getAllDecimal()
-    const moduleDecimal = {}
     content.forEach(v => {
-      const val = moduleMenu.find(k => v.name.indexOf(v.menuName) > -1) || {}
+      const val = moduleMenu.find(k => v.menuName.indexOf(v.menuName) > -1) || {}
       if (isNotBlank(val)) {
         moduleDecimal[val.key] = val.scale
       }

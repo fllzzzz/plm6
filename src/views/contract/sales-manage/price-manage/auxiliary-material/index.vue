@@ -59,7 +59,9 @@
       </el-table-column>
       <el-table-column v-if="columns.visible('totalPrice')" key="totalPrice" prop="totalPrice" align="center" min-width="120" label="金额">
         <template #default="{ row }">
-          <span :class="row.status === 1 ? 'tc-danger' : ''" v-thousand="row.totalPrice" />
+          <span :class="row.status === 1 ? 'tc-danger' : ''" >
+            <span>{{row.totalPrice?toThousand(row.totalPrice,decimalPrecision.contract):'-'}}</span>
+          </span>
         </template>
       </el-table-column>
     </common-table>
@@ -75,6 +77,7 @@ import { priceManagePM as permission } from '@/page-permission/contract'
 import { auxiliaryMaterialUseTypeEnum } from '@enum-ms/plan'
 
 import useDecimalPrecision from '@compos/store/use-decimal-precision'
+import { toThousand } from '@data-type/number'
 
 import useTableChange from '@compos/form/use-table-change'
 import useMaxHeight from '@compos/use-max-height'

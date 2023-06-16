@@ -36,7 +36,7 @@
               v-model="row.wage"
               :disabled="!!(row.wageQuotaType & wageQuotaTypeEnum.AREA.V)"
               placeholder="请输入单价"
-              :precision="DP.YUAN"
+              :precision="decimalPrecision.mes"
               :controls="false"
               style="width: 100%"
             />
@@ -50,7 +50,7 @@
           </el-table-column>
           <el-table-column align="center" prop="primerWage" label="定额单价" width="150">
             <template #default="{ row }">
-              <common-input-number v-model="row.primerWage" placeholder="请输入单价" :precision="DP.YUAN" :controls="false" style="width: 100%" />
+              <common-input-number v-model="row.primerWage" placeholder="请输入单价" :precision="decimalPrecision.mes" :controls="false" style="width: 100%" />
             </template>
           </el-table-column>
         </el-table-column>
@@ -65,7 +65,7 @@
               <common-input-number
                 v-model="row.intermediatePaintWage"
                 placeholder="请输入单价"
-                :precision="DP.YUAN"
+                :precision="decimalPrecision.mes"
                 :controls="false"
                 style="width: 100%"
               />
@@ -83,7 +83,7 @@
               <common-input-number
                 v-model="row.topcoatWage"
                 placeholder="请输入单价"
-                :precision="DP.YUAN"
+                :precision="decimalPrecision.mes"
                 :controls="false"
                 style="width: 100%"
               />
@@ -98,7 +98,7 @@
             <common-input-number
               v-model="row.wage"
               placeholder="请输入单价"
-              :precision="DP.YUAN"
+              :precision="decimalPrecision.mes"
               :controls="false"
               :min="0"
               style="width: 100%"
@@ -120,12 +120,14 @@
 import { defineEmits, defineProps, ref, computed, inject } from 'vue'
 
 import { wageQuotaTypeEnum, processCategoryEnum } from '@enum-ms/mes'
-import { DP } from '@/settings/config'
 
 import useTableChange from '@compos/form/use-table-change'
 import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'
 import editPreview from './edit-preview.vue'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const emit = defineEmits(['update:visible', 'refresh'])
 const props = defineProps({

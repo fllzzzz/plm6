@@ -63,7 +63,7 @@
 
           <el-tag effect="plain" type="success" size="medium" class="filter-item">
             散发制品造价(元)：
-            <span v-if="!costLoading" v-thousand="monomerCost.price" />
+            <span v-if="!costLoading" v-thousand="{val:monomerCost.price ||0, dp:decimalPrecision.contract}" />
             <i v-else class="el-icon-loading" />
           </el-tag>
         </span>

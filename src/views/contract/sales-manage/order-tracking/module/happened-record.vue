@@ -16,7 +16,7 @@
       </el-tag>
       <el-tag effect="plain" size="medium">
         <span>累计出库额：</span>
-        <span v-thousand="detailInfo.happenedAmount" v-empty-text />
+        <span v-thousand="{val:detailInfo.happenedAmount ||0, dp:decimalPrecision.contract}" v-empty-text />
       </el-tag>
       <el-tag effect="plain" size="medium">
         <span>运输车次：</span>
@@ -32,8 +32,12 @@
 <script setup>
 import { defineEmits, defineProps } from 'vue'
 
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
 import useVisible from '@/composables/use-visible'
+
 import happenedDetail from './happened-detail'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const emit = defineEmits(['success', 'update:modelValue'])
 

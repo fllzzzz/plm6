@@ -34,12 +34,12 @@
         </el-table-column>
         <el-table-column key="unitPrice" prop="unitPrice" :show-overflow-tooltip="true" label="单价" align="center">
           <template v-slot="scope">
-            <span>{{ scope.row.unitPrice ? toThousand(scope.row.unitPrice) : '/' }}</span>
+            <span>{{ scope.row.unitPrice ? toThousand(scope.row.unitPrice,decimalPrecision.mes) : '/' }}</span>
           </template>
         </el-table-column>
         <el-table-column key="bottomTotalPrice" prop="bottomTotalPrice" :show-overflow-tooltip="true" label="金额（元）" align="center">
           <template v-slot="scope">
-            <span>{{ scope.row.bottomTotalPrice ? toThousand(scope.row.bottomTotalPrice) : '/' }}</span>
+            <span>{{ scope.row.bottomTotalPrice ? toThousand(scope.row.bottomTotalPrice,decimalPrecision.mes) : '/' }}</span>
           </template>
         </el-table-column>
       </el-table-column>
@@ -51,12 +51,12 @@
         </el-table-column>
         <el-table-column key="unitPrice" prop="unitPrice" :show-overflow-tooltip="true" label="单价" align="center">
           <template v-slot="scope">
-            <span>{{ scope.row.unitPrice ? toThousand(scope.row.unitPrice) : '/' }}</span>
+            <span>{{ scope.row.unitPrice ? toThousand(scope.row.unitPrice,decimalPrecision.mes) : '/' }}</span>
           </template>
         </el-table-column>
         <el-table-column key="middleTotalPrice" prop="middleTotalPrice" :show-overflow-tooltip="true" label="金额（元）" align="center">
           <template v-slot="scope">
-            <span>{{ scope.row.middleTotalPrice ? toThousand(scope.row.middleTotalPrice) : '/' }}</span>
+            <span>{{ scope.row.middleTotalPrice ? toThousand(scope.row.middleTotalPrice,decimalPrecision.mes) : '/' }}</span>
           </template>
         </el-table-column>
       </el-table-column>
@@ -68,12 +68,12 @@
         </el-table-column>
         <el-table-column key="unitPrice" prop="unitPrice" :show-overflow-tooltip="true" label="单价" align="center">
           <template v-slot="scope">
-            <span>{{ scope.row.unitPrice ? toThousand(scope.row.unitPrice) : '/' }}</span>
+            <span>{{ scope.row.unitPrice ? toThousand(scope.row.unitPrice,decimalPrecision.mes) : '/' }}</span>
           </template>
         </el-table-column>
         <el-table-column key="topTotalPrice" prop="topTotalPrice" :show-overflow-tooltip="true" label="金额（元）" align="center">
           <template v-slot="scope">
-            <span>{{ scope.row.topTotalPrice ? toThousand(scope.row.topTotalPrice) : '/' }}</span>
+            <span>{{ scope.row.topTotalPrice ? toThousand(scope.row.topTotalPrice,decimalPrecision.mes) : '/' }}</span>
           </template>
         </el-table-column>
       </el-table-column>
@@ -81,7 +81,7 @@
         <template v-slot="scope">
           <span>{{
             scope.row.bottomTotalPrice + scope.row.middleTotalPrice + scope.row.topTotalPrice
-              ? toThousand(scope.row.bottomTotalPrice + scope.row.middleTotalPrice + scope.row.topTotalPrice)
+              ? toThousand((scope.row.bottomTotalPrice + scope.row.middleTotalPrice + scope.row.topTotalPrice),decimalPrecision.mes)
               : '/'
           }}</span>
         </template>
@@ -94,6 +94,9 @@
 import useMaxHeight from '@compos/use-max-height'
 import { toThousand } from '@data-type/number'
 import { tableSummary } from '@/utils/el-extra'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const tableData = [
   {

@@ -70,8 +70,6 @@
 import crudApi from '@/api/mes/team-report/in-staff/piecework-system'
 import { ref, provide, computed } from 'vue'
 
-import { DP } from '@/settings/config'
-
 // import { wageQuotaTypeEnum } from '@enum-ms/mes'
 // import { inStaffPieceworkSystemPM as permission } from '@/page-permission/mes'
 
@@ -82,6 +80,9 @@ import useProductSummaryMeteUnit from '@compos/mes/use-product-summary-mete-unit
 import belongingInfoColumns from '@comp-mes/table-columns/belonging-info-columns'
 import mHeader from './module/header'
 import mDetail from './module/detail'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const optShow = {
   add: false,
@@ -150,7 +151,7 @@ function getSummaries(param) {
             return prev
           }
         }, 0)
-        sums[index] = sums[index].toFixed(DP.YUAN)
+        sums[index] = sums[index].toFixed(decimalPrecision.mes)
       }
     }
   })

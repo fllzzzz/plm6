@@ -72,8 +72,6 @@
 import { detail } from '@/api/mes/team-report/in-staff/piecework-system'
 import { defineProps, defineEmits, ref, watch, inject, computed } from 'vue'
 
-import { DP } from '@/settings/config'
-
 import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'
 import useWageQuotaUnit from '@compos/mes/use-wage-quota-unit'
@@ -82,6 +80,9 @@ import useProductMeteConvert from '@compos/mes/use-product-mete-convert'
 import useProductSummaryMeteUnit from '@compos/mes/use-product-summary-mete-unit'
 import belongingInfoColumns from '@comp-mes/table-columns/belonging-info-columns'
 import productTypeBaseInfoColumns from '@comp-mes/table-columns/productType-base-info-columns'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const drawerRef = ref()
 const emit = defineEmits(['update:visible'])
@@ -176,7 +177,7 @@ function getSummaries(param) {
           }
         }, 0)
         if (column.property === 'price') {
-          sums[index] = sums[index].toFixed(DP.YUAN)
+          sums[index] = sums[index].toFixed(decimalPrecision.mes)
         }
       }
     }
