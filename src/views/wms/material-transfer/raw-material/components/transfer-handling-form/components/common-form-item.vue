@@ -78,7 +78,7 @@ import { defineProps, computed, watchEffect, ref } from 'vue'
 import { transferNormalTypeEnum } from '@/utils/enum/modules/wms'
 
 import ProjectCascader from '@comp-base/project-cascader.vue'
-import WorkshopSelect from '@/components-system/base/workshop-select.vue'
+import WorkshopSelect from '@/components-system/wms/workshop-select.vue'
 import WarehouseSelect from '@/components-system/wms/warehouse-select.vue'
 import useProjectTree from '@compos/store/use-project-tree'
 

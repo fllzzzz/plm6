@@ -20,7 +20,7 @@ import { getApprovalConf } from '@/api/config/approval-config/base'
 import { getCompanyConfig, getLogoConfig } from '@/api/config/main/system-config'
 import { getUnclosedRequisitionsBrief } from '@/api/wms/requisitions'
 import { getPurchasingPurchaseOrderBrief, getPurchaseOrder } from '@/api/supply-chain/purchase-order'
-import { getWarehouseBrief } from '@/api/config/wms/warehouse'
+import { getWarehouseBrief, getWorkshopNameAll } from '@/api/config/wms/warehouse'
 import { getSteelClassifyConfBrief } from '@/api/config/system-config/steel-classic'
 
 import { unitTypeEnum } from '@enum-ms/common'
@@ -81,6 +81,7 @@ const state = {
   factories: [], // 工厂
   factoryKV: {}, // 工厂id:value 格式
   warehouse: [], // 存储仓库
+  workshopName: [], // 存储仓库所属车间
   workshops: [], // 车间
   workshopKV: {}, // 车间id:value 格式
   bridgeWorkshops: [], // 桥梁-车间
@@ -157,7 +158,8 @@ const state = {
     steelClassifyConf: false,
     subcontractType: false,
     qualityProblemType: false,
-    visaReason: false
+    visaReason: false,
+    workshopName: false
   }
 }
 
@@ -223,6 +225,9 @@ const mutations = {
   },
   SET_WAREHOUSE(state, warehouse) {
     state.warehouse = warehouse
+  },
+  SET_WORKSHOP_NAME(state, workshopName) {
+    state.workshopName = workshopName
   },
   SET_PRODUCTION_TEAM(state, productionTeam) {
     state.productionTeam = productionTeam
@@ -463,6 +468,13 @@ const actions = {
     const { content = [] } = await getFactoriesAllSimple()
     commit('SET_FACTORIES', content)
     commit('SET_LOADED', { key: 'factories' })
+    return content
+  },
+  // 仓库所属车间
+  async fetchWorkshopName({ commit }) {
+    const content = (await getWorkshopNameAll()) || []
+    commit('SET_WORKSHOP_NAME', content)
+    commit('SET_LOADED', { key: 'workshopName' })
     return content
   },
   // 仓库

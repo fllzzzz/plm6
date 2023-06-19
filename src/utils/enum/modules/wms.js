@@ -244,6 +244,13 @@ const inspectionDetailStatusEnum = {
 }
 constantize(inspectionDetailStatusEnum)
 
+// 配置仓库类型
+const warehouseTypeEnum = {
+  NORMAL: { L: '普通', K: 'NORMAL', V: 1 << 0 },
+  WORKSHOP: { L: '车间', K: 'WORKSHOP', V: 1 << 1 }
+}
+constantize(warehouseTypeEnum)
+
 export {
   receiptTypeEnum, // 单据类型
   returnStatusEnum,
@@ -274,7 +281,8 @@ export {
   inspectionStatusEnum,
   inspectionDetailStatusEnum,
   materialWeightingWayEnum,
-  materialLabelPrintTypeEnum
+  materialLabelPrintTypeEnum,
+  warehouseTypeEnum
 }
 
 export default {
@@ -307,5 +315,6 @@ export default {
   inspectionStatusEnum,
   inspectionDetailStatusEnum,
   materialWeightingWayEnum,
-  materialLabelPrintTypeEnum
+  materialLabelPrintTypeEnum,
+  warehouseTypeEnum
 }

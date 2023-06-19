@@ -1,8 +1,18 @@
 <template>
   <div class="head-container">
-    <workshop-tabs v-model="query.workshopId" @tab-click="handleTabClick" />
-    <template v-if="query.workshopId">
+      <common-radio-button
+        v-model="query.workshopId"
+        :options="workshopName"
+        showOptionAll
+        type="other"
+        :data-structure="{ key: 'id', label: 'name', value: 'id' }"
+        class="filter-item"
+        @change="crud.toQuery"
+      />
       <crud-operation :disabled="!query.workshopId">
+        <template #optLeft>
+          <common-button type="success" class="filter-item" size="mini" @click="workshopVisible=true">仓库名称</common-button>
+        </template>
         <template #viewLeft>
           <common-radio-button
             v-model="query.enabled"
@@ -14,16 +24,20 @@
           />
         </template>
       </crud-operation>
-    </template>
+      <workshopList v-model="workshopVisible" />
   </div>
 </template>
 
 <script setup>
+import { ref } from 'vue'
+import useWorkshopName from '@compos/store/use-workshop-name'
+
 import { enabledEnum } from '@enum-ms/common'
 
 import { regHeader } from '@compos/use-crud'
-import WorkshopTabs from '@comp-base/workshop-tabs.vue'
 import CrudOperation from '@crud/CRUD.operation.vue'
+import workshopList from './workshop-list'
+
 const defaultQuery = {
   workshopId: undefined, // 车间
   enabled: undefined // 使用状态
@@ -31,8 +45,7 @@ const defaultQuery = {
 
 const { crud, query } = regHeader(defaultQuery)
 
-function handleTabClick(data) {
-  crud.props.workshop = data
-  crud.toQuery()
-}
+const workshopVisible = ref(false)
+
+const { workshopName } = useWorkshopName()
 </script>

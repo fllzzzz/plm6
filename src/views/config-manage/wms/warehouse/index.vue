@@ -89,6 +89,7 @@ import { useStore } from 'vuex'
 import EO from '@enum'
 import { matClsEnum } from '@enum-ms/classification'
 import { enabledEnum } from '@/utils/enum/modules/common'
+import { warehouseTypeEnum } from '@enum-ms/wms'
 import { baseTimeColumns } from '@/utils/columns-format/common'
 import checkPermission from '@/utils/system/check-permission'
 
@@ -136,21 +137,25 @@ CRUD.HOOK.handleRefresh = (crud, { data: { content }}) => {
   content.forEach((v) => {
     const mt = v.materialType
     v.materialTypeName = EO.getBits(matClsEnum.ENUM, mt, 'L')
+    v.type = v.workshopId ? warehouseTypeEnum.WORKSHOP.V : warehouseTypeEnum.NORMAL.V
   })
 }
 
 // 添加之后
 CRUD.HOOK.afterSubmit = () => {
+  store.dispatch('config/fetchWorkshopName')
   store.dispatch('config/fetchWarehouse')
 }
 
 // 批量添加之后
 CRUD.HOOK.afterBatchSubmit = () => {
+  store.dispatch('config/fetchWorkshopName')
   store.dispatch('config/fetchWarehouse')
 }
 
 // 删除后
 CRUD.HOOK.afterDelete = () => {
+  store.dispatch('config/fetchWorkshopName')
   store.dispatch('config/fetchWarehouse')
 }
 </script>

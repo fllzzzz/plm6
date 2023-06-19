@@ -61,6 +61,8 @@ CRUD.HOOK.beforeEditDetailLoaded = async (crud, detail) => {
     toNum: true
   })
   detail.list.forEach((v) => {
+    v.warehouseName = v.workshop?.name || v.warehouseName
+    v.workshopId = v.workshop?.id || v.workshopId
     v.warehouseId = v.warehouse?.id || v.warehouseId
     v.projectId = v.project?.id || v.projectId
   })

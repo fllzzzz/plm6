@@ -26,7 +26,7 @@
 <script setup>
 import { defineProps, computed, watchEffect, ref } from 'vue'
 
-import workshopSelect from '@/components-system/base/workshop-select.vue'
+import workshopSelect from '@/components-system/wms/workshop-select.vue'
 import warehouseSelect from '@/components-system/wms/warehouse-select.vue'
 import useDittoRealVal from '@/composables/form/use-ditto-real-val'
 import { isBlank } from '@/utils/data-type'

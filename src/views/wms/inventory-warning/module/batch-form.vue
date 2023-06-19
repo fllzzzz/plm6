@@ -143,7 +143,7 @@ import useTableValidate from '@compos/form/use-table-validate'
 import useMaxHeight from '@compos/use-max-height'
 import StoreOperation from '@crud/STORE.operation.vue'
 import materialSpecSelect from '@comp-cls/material-spec-select/index.vue'
-import workshopSelect from '@comp-base/workshop-select.vue'
+import workshopSelect from '@/components-system/wms/workshop-select.vue'
 
 // 未进行重复数据校验，目前由后端处理
 const tableRules = {}
