@@ -400,7 +400,7 @@ async function handleOrderInfoChange(order, oldOrder) {
               item.classifyParentFullName = _originInfo?.classifyParentFullName // 父级路径名称
               item.basicClass = _originInfo?.basicClass // 基础类型
               item.specification = _originInfo?.specification // 规格
-              item.specificationMap = _originInfo?.specificationMap // 规格KV格式
+              item.specificationMap = _originInfo?.specKV // 规格KV格式
               item.measureUnit = _originInfo?.measureUnit // 计量单位
               item.accountingUnit = _originInfo?.accountingUnit // 核算单位
               item.measurePrecision = _originInfo?.measurePrecision // 计量精度

@@ -43,7 +43,7 @@
     <el-table-column prop="project" :show-overflow-tooltip="true" label="项目" min-width="100" />
     <el-table-column :show-overflow-tooltip="true" label="零件量（件|kg）" min-width="60" align="center">
       <template #default="{ row }">
-        <span>{{ row.quantity }} | {{ row.totalNetWeight }}</span>
+        <span>{{ row.quantity }} | {{ row.totalNetWeight?.toFixed(2) }}</span>
       </template>
     </el-table-column>
   </common-table>
