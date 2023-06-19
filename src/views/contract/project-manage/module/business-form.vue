@@ -578,10 +578,10 @@ function getShowItem(val) {
         }
       }
     })
-    form.value.structureMeasureMode = AllInfo.findIndex(v => v.categoryType === TechnologyMainTypeEnum.STRUCTURE.V) > -1 ? form.value.structureMeasureMode || engineerSettlementTypeEnumN.THEORY.V : undefined
-    form.value.transportMode = AllInfo.findIndex(v => v.categoryType === TechnologyMainTypeEnum.STRUCTURE.V) > -1 ? form.value.transportMode || transportModeEnum.HOME_DELIVERY.V : undefined
-    form.value.structureStatus = AllInfo.findIndex(v => v.categoryType === TechnologyMainTypeEnum.STRUCTURE.V) > -1 ? form.value.structureStatus : undefined
-    form.value.quantityWork = AllInfo.findIndex(v => v.categoryType === TechnologyMainTypeEnum.STRUCTURE.V) > -1 ? form.value.quantityWork : undefined
+    form.value.structureMeasureMode = AllInfo.findIndex(v => (v.categoryType === TechnologyMainTypeEnum.STRUCTURE.V || v.categoryType === TechnologyMainTypeEnum.BOX.V)) > -1 ? form.value.structureMeasureMode || engineerSettlementTypeEnumN.THEORY.V : undefined
+    form.value.transportMode = AllInfo.findIndex(v => (v.categoryType === TechnologyMainTypeEnum.STRUCTURE.V || v.categoryType === TechnologyMainTypeEnum.BOX.V)) > -1 ? form.value.transportMode || transportModeEnum.HOME_DELIVERY.V : undefined
+    form.value.structureStatus = AllInfo.findIndex(v => (v.categoryType === TechnologyMainTypeEnum.STRUCTURE.V || v.categoryType === TechnologyMainTypeEnum.BOX.V)) > -1 ? form.value.structureStatus : undefined
+    form.value.quantityWork = AllInfo.findIndex(v => (v.categoryType === TechnologyMainTypeEnum.STRUCTURE.V || v.categoryType === TechnologyMainTypeEnum.BOX.V)) > -1 ? form.value.quantityWork : undefined
     if (AllInfo.length > 0) {
       const modeData = []
       AllInfo.map(v => {

@@ -46,7 +46,8 @@ constantize(projectTypeEnum)
 const TechnologyMainTypeEnum = {
   STRUCTURE: { L: '结构', K: 'STRUCTURE', V: 1 << 1 },
   ENCLOSURE: { L: '围护', K: 'ENCLOSURE', V: 1 << 2 },
-  AUXILIARY_MATERIAL: { L: '配套件', K: 'AUXILIARY_MATERIAL', V: 1 << 3 }
+  AUXILIARY_MATERIAL: { L: '配套件', K: 'AUXILIARY_MATERIAL', V: 1 << 3 },
+  BOX: { L: '分段制品', K: 'BOX', V: 1 << 4 }
 }
 constantize(TechnologyMainTypeEnum)
 

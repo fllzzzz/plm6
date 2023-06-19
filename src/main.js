@@ -15,7 +15,8 @@ import useElementIcon from '@/plugins/element-icon'
 import 'element-plus/packages/theme-chalk/src/base.scss'
 
 // 组件：svg-icon
-import useSvgIcon from '@/plugins/svg-icon'
+// import useSvgIcon from '@/plugins/svg-icon'
+import 'virtual:svg-icons-register'
 
 // 设置全局方法(TODO:废弃，或以provide注册到所有组件中)
 import setGlobalFun from '@/plugins/globalFun'
@@ -30,7 +31,7 @@ const app = createApp(App)
 
 useElementPlus(app)
 useElementIcon(app)
-useSvgIcon(app)
+// useSvgIcon(app)
 useGlobalComponents(app)
 useGlobalDirective(app)
 setGlobalFun(app)

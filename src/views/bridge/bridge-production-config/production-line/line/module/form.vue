@@ -19,7 +19,7 @@
           :disabled="isEdit"
           v-model="form.workshopId"
           :factory-id="form.factoryId"
-          placeholder="请先选择工厂"
+          placeholder="请先选择车间"
           style="width: 270px"
         />
       </el-form-item>

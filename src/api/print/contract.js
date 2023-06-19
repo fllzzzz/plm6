@@ -240,12 +240,24 @@ export function saleOrderTracking(params) {
 }
 
 /**
- * 发运跟踪
+ * 建刚发运跟踪
  */
 export function shipmentTracking(params) {
   return request({
     module: 'contract',
     url: 'business/ship/detail/print',
+    method: 'get',
+    params
+  })
+}
+
+/**
+ * 桥梁发运跟踪
+ */
+export function bridgeShipmentTracking(params) {
+  return request({
+    module: 'contract',
+    url: 'business/ship/bridge/detail/print',
     method: 'get',
     params
   })
@@ -459,6 +471,7 @@ export default {
   transactionRecord, // 客户交易记录
   saleOrderTracking, // 订单跟踪列表
   shipmentTracking, // 发运跟踪
+  bridgeShipmentTracking, // 分段发运跟踪
   warehouseRecord, // 入库记录
   industryElectricRecord, // 工业用电电费
   civilElectricRecord, // 民用用电电费

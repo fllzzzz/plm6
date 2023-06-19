@@ -3,13 +3,14 @@ import vue from '@vitejs/plugin-vue'
 // 插件：JSX
 import vueJsx from '@vitejs/plugin-vue-jsx'
 // 插件：按需加载组件样式
-import styleImport from 'vite-plugin-style-import'
+import AutoImport from 'unplugin-auto-import/vite'
+import Components from 'unplugin-vue-components/vite'
+import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 // 插件：SVG
-import viteSvgIcons from 'vite-plugin-svg-icons'
+import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
+import { splitVendorChunkPlugin } from 'vite'
 // mock
-import { viteMockServe } from 'vite-plugin-mock'
-
-import viteCompression from 'vite-plugin-compression'
+// import { viteMockServe } from 'vite-plugin-mock'
 
 const { resolve } = require('path')
 
@@ -37,49 +38,19 @@ export default ({ command }) => {
       vue(),
       // JSX
       vueJsx(),
-      // 按需加载组件
-      styleImport({
-        libs: [{
-          libraryName: 'element-plus',
-          resolveStyle: (name) => {
-            name = name.slice(3) // 官网是用splice的（数组方法）。
-            if (name === 'sub-menu') {
-              return `element-plus/packages/theme-chalk/src/submenu.scss`
-            } else {
-              return `element-plus/packages/theme-chalk/src/${name}.scss`
-            }
-          }
-          // resolveComponent: (name) => {
-          //   return `element-plus/lib/${name}`
-          // }
-        }]
+      AutoImport({
+        resolvers: [ElementPlusResolver()]
+      }),
+      Components({
+        resolvers: [ElementPlusResolver()]
       }),
       // SVG插件
-      viteSvgIcons({
+      createSvgIconsPlugin({
         // 配置路径：svg存放地址
         iconDirs: [resolve(__dirname, 'src/icons/svg')],
         symbolId: 'icon-[dir]-[name]'
       }),
-      // MOCK插件
-      viteMockServe({
-        supportTs: false, // 打开后，可以读取 ts 文件模块。 请注意，打开后将无法监视.js 文件。 默认：true
-        mockPath: 'src/api-mock/',
-        localEnabled: command === 'serve', // 情景配置 是否为开发模式  serve 或 build
-        prodEnabled: command !== 'serve' && import.meta.env && import.meta.env.PROD_MOCK,
-        injectCode: `
-          import { setupProdMockServer } from '/src/plugins/mock-prod-server';
-          setupProdMockServer();
-        `
-      }),
-      // gzip静态资源压缩
-      viteCompression({
-        verbose: true,
-        disable: false,
-        threshold: 1024 * 20, // 启用压缩的文件大小限制，20kb以上压缩
-        deleteOriginFile: true, // 压缩后是否删除原文件
-        algorithm: 'gzip',
-        ext: '.gz'
-      })
+      splitVendorChunkPlugin()
     ],
     resolve: {
       alias: [
@@ -107,28 +78,7 @@ export default ({ command }) => {
         output: {
           chunkFileNames: 'static/js/[name]-[hash].js',
           entryFileNames: 'static/js/[name]-[hash].js',
-          assetFileNames: 'static/[ext]/[name]-[hash].[ext]',
-          // 合并js
-          manualChunks(moduleName) {
-            if (moduleName.includes('node_modules')) {
-              // 按 node_modules 目录拆分
-              return moduleName.toString().split('node_modules/')[1].split('/')[0].toString()
-            } else if (moduleName.includes('views')) {
-              // 按 views 目录拆分
-              return moduleName.toString().split('views/')[1].split('/')[0].toString()
-            } else if (moduleName.includes('utils')) {
-              // 打印模板单独放一个文件
-              if (moduleName.includes('utils/print')) {
-                return 'print'
-              }
-              // 其他放在一起
-              return 'utils'
-            } else if (moduleName.includes('api')) {
-              return 'api'
-            } else {
-              return 'index'
-            }
-          }
+          assetFileNames: 'static/[ext]/[name]-[hash].[ext]'
         }
       }
     }

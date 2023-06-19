@@ -1,14 +1,7 @@
 <template>
   <div class="app-container">
     <div class="head-container common-container">
-      <common-radio-button
-        v-model="productType"
-        :options="installTypeEnumArr"
-        default
-        type="enum"
-        size="small"
-        class="filter-item"
-      />
+      <common-radio-button v-model="productType" :options="productEnum" default type="enum" size="small" class="filter-item" />
       <el-date-picker
         v-model="statisticalTime"
         :default-time="defaultTime"
@@ -62,7 +55,7 @@
                 text-color="#626262"
                 num-color="#1890ff"
                 :end-val="summaryData.cargoQuantity || 0"
-                :show-empty="productType === installProjectTypeEnum.AUXILIARY.V"
+                :show-empty="isAuxiliary"
               />
             </el-col>
             <el-col class="card-panel-col">
@@ -102,11 +95,17 @@
               num-color="#1890ff"
               :end-val="summaryData.shipMet || 0"
               :precision="DP.YUAN"
-              :show-empty="productType === installProjectTypeEnum.AUXILIARY.V"
+              :show-empty="isAuxiliary"
             />
           </el-col>
           <el-col class="card-panel-col">
-            <Panel name="累计发运额（元）" text-color="#626262" num-color="#1890ff" :end-val="summaryData.shipAmount || 0" :precision="DP.YUAN" />
+            <Panel
+              name="累计发运额（元）"
+              text-color="#626262"
+              num-color="#1890ff"
+              :end-val="summaryData.shipAmount || 0"
+              :precision="DP.YUAN"
+            />
           </el-col>
           <el-col class="card-panel-col">
             <Panel
@@ -114,7 +113,7 @@
               text-color="#626262"
               num-color="#1890ff"
               :end-val="summaryData.cargoQuantity || 0"
-              :show-empty="productType === installProjectTypeEnum.AUXILIARY.V"
+              :show-empty="isAuxiliary"
             />
           </el-col>
           <el-col class="card-panel-col">
@@ -124,7 +123,7 @@
               num-color="#1890ff"
               :end-val="summaryData.shipMetTime || 0"
               :precision="2"
-              :show-empty="productType === installProjectTypeEnum.AUXILIARY.V"
+              :show-empty="isAuxiliary"
             />
           </el-col>
           <el-col class="card-panel-col">
@@ -144,18 +143,20 @@
 </template>
 
 <script setup>
-import { shipSummary } from '@/api/contract/sales-manage/shipment-tracking'
+import { shipSummary, bridgeShipSummary } from '@/api/contract/sales-manage/shipment-tracking'
 import { ref, computed, provide, watch } from 'vue'
 import { mapGetters } from '@/store/lib'
 
 import { shipmentTrackingPM as permission } from '@/page-permission/contract'
 import { PICKER_OPTIONS_SHORTCUTS } from '@/settings/config'
 import { installProjectTypeEnum } from '@enum-ms/project'
+import { TechnologyMainTypeEnum } from '@enum-ms/contract'
 import { DP } from '@/settings/config'
 import { isBlank } from '@data-type/index'
 import checkPermission from '@/utils/system/check-permission'
 import moment from 'moment'
 
+import box from './box'
 import structure from './structure'
 import enclosure from './enclosure'
 import auxiliaryMaterial from './auxiliary-material'
@@ -164,6 +165,8 @@ import Panel from '@/components/Panel'
 // 当前显示组件
 const currentView = computed(() => {
   switch (productType.value) {
+    case TechnologyMainTypeEnum.BOX.V:
+      return box
     case installProjectTypeEnum.ENCLOSURE.V:
       return enclosure
     case installProjectTypeEnum.AUXILIARY.V:
@@ -173,7 +176,7 @@ const currentView = computed(() => {
   }
 })
 
-const { globalProjectId, installTypeEnumArr } = mapGetters(['globalProjectId', 'installTypeEnumArr'])
+const { globalProjectId, globalProject, installTypeEnumArr } = mapGetters(['globalProjectId', 'globalProject', 'installTypeEnumArr'])
 
 const productType = ref()
 const summaryLoading = ref(false)
@@ -183,6 +186,25 @@ const times = PICKER_OPTIONS_SHORTCUTS[1]?.value()
 const statisticalTime = ref([moment(times[0]).valueOf(), moment(times[1]).valueOf()])
 
 const defaultTime = ref([new Date(2000, 1, 1, 0, 0, 0), new Date(2000, 2, 1, 23, 59, 59)])
+
+// 产品类型
+const productEnum = computed(() => {
+  // 箱体和建刚不会同时存在
+  if (globalProject.value?.productCategory === TechnologyMainTypeEnum.BOX.V) {
+    return [TechnologyMainTypeEnum.BOX]
+  }
+  return installTypeEnumArr.value
+})
+
+// 是否为箱体
+const isBox = computed(() => {
+  return productType.value === TechnologyMainTypeEnum.BOX.V
+})
+
+// 是否为辅材
+const isAuxiliary = computed(() => {
+  return productType.value === installProjectTypeEnum.AUXILIARY.V
+})
 
 // 公共参数
 const commonParams = computed(() => {
@@ -204,6 +226,20 @@ watch(
   { immediate: true, deep: true }
 )
 
+watch(
+  globalProjectId,
+  (val) => {
+    if (productEnum.value.length) {
+      const flag = productEnum.value.every((row) => row.V !== productType.value)
+      // 未选中时给个默认值
+      if (flag) {
+        productType.value = productEnum.value[0].V
+      }
+    }
+  },
+  { immediate: true }
+)
+
 function disabledDate(time) {
   return time > new Date()
 }
@@ -221,7 +257,11 @@ async function fetchSummary() {
   }
   try {
     summaryLoading.value = true
-    summaryData.value = (await shipSummary(commonParams.value)) || {}
+    if (isBox.value) {
+      summaryData.value = (await bridgeShipSummary(commonParams.value)) || {}
+    } else {
+      summaryData.value = (await shipSummary(commonParams.value)) || {}
+    }
   } catch (error) {
     console.log(error)
   } finally {

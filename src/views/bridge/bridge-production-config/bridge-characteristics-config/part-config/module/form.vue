@@ -303,6 +303,7 @@ CRUD.HOOK.beforeToEdit = () => {
       keyword: v.keyword
     })
   })
+  form.classifyLinks = [...form.classifyIds]
 }
 
 CRUD.HOOK.beforeToCU = () => {
