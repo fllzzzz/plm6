@@ -142,7 +142,7 @@ const validateQuantity = (value, row) => {
 // 金额校验
 const validateAmount = (value, row) => {
   if (isNotBlank(row.mete) && isNotBlank(row.unitPrice)) {
-    return +(row.mete * row.unitPrice).toFixed(2) === +value
+    return +toPrecision(row.mete * row.unitPrice, DP.YUAN) === +value
   }
   return false
 }

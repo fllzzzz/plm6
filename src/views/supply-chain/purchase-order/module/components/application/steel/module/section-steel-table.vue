@@ -154,6 +154,7 @@ import { defineExpose, inject, watchEffect, reactive, watch, computed } from 'vu
 import { matClsEnum } from '@/utils/enum/modules/classification'
 import { weightMeasurementModeEnum } from '@enum-ms/finance'
 import { isBlank, isNotBlank, toPrecision } from '@/utils/data-type'
+import { DP } from '@/settings/config'
 
 import useEditSectionSpec from '@compos/wms/use-edit-section-spec'
 import usePriceSet from '@/composables/wms/use-price-set'
@@ -193,7 +194,7 @@ const { specSelectMaxHeight, specRef, drawerRef, editRow, editList, materialSele
 // 金额校验
 const validateAmount = (value, row) => {
   if (isNotBlank(row.weighingTotalWeight) && isNotBlank(row.unitPrice)) {
-    return +(row.weighingTotalWeight * row.unitPrice).toFixed(2) === +value
+    return +toPrecision(row.weighingTotalWeight * row.unitPrice, DP.YUAN) === +value
   }
   return false
 }
