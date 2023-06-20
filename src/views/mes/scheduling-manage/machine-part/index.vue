@@ -16,6 +16,23 @@
       >
         * 请先选择区域、车间、产线或者生产组进行零件排产
       </el-tag>
+      <common-button
+        v-show="
+          !crud.query?.areaIds?.length &&
+          !crud.query?.workshopIds?.length &&
+          !crud.query.productionLineIds?.length &&
+          !crud.query.groupsIds?.length
+        "
+        v-permission="permission.unProductDelRecord"
+        type="info"
+        class="filter-item"
+        size="mini"
+        icon="el-icon-refresh-left"
+        @click="unProductRecordVisible = true"
+        style="float: right"
+      >
+        剔除记录
+      </common-button>
       <div
         v-show="
           crud.query?.areaIds?.length ||
@@ -26,9 +43,33 @@
       >
         <div class="head-container">
           <mHeader ref="headRef" @load="load" @change="handleChange">
+            <template #searchRight>
+              <span style="float: right">
+                <common-button
+                  v-permission="permission.unProductDel"
+                  :type="isEliminateMode ? 'success' : 'danger'"
+                  class="filter-item"
+                  size="mini"
+                  @click="handleEliminateModeChange"
+                >
+                  {{ isEliminateMode ? '关闭零件剔除' : '开启零件剔除' }}
+                </common-button>
+                <common-button
+                  v-permission="permission.unProductDelRecord"
+                  type="info"
+                  class="filter-item"
+                  size="mini"
+                  icon="el-icon-refresh-left"
+                  @click="unProductRecordVisible = true"
+                >
+                  剔除记录
+                </common-button>
+              </span>
+            </template>
             <template #optLeft>
               <div style="display: flex">
                 <el-checkbox
+                  v-if="!isEliminateMode"
                   v-model="checkAll"
                   size="small"
                   style="margin-right: 5px"
@@ -53,29 +94,31 @@
                   标准零件列表
                 </common-button>
               </el-badge> -->
-              <common-button v-permission="permission.add" type="success" class="filter-item" size="mini" @click="addPadBlock">
-                添加标准零件
-              </common-button>
-              <common-button
-                v-permission="permission.noNestingSave"
-                type="warning"
-                class="filter-item"
-                :disabled="Boolean(!checkedNodes?.length && padBlockData?.length)"
-                size="mini"
-                @click="unPreviewIt"
-              >
-                无需套料保存
-              </common-button>
-              <common-button
-                v-permission="permission.nestingSave"
-                type="success"
-                class="filter-item"
-                size="mini"
-                :disabled="isIncludeDxf"
-                @click="previewIt"
-              >
-                套料保存
-              </common-button>
+              <template v-if="!isEliminateMode">
+                <common-button v-permission="permission.add" type="success" class="filter-item" size="mini" @click="addPadBlock">
+                  添加标准零件
+                </common-button>
+                <common-button
+                  v-permission="permission.noNestingSave"
+                  type="warning"
+                  class="filter-item"
+                  :disabled="Boolean(!checkedNodes?.length && padBlockData?.length)"
+                  size="mini"
+                  @click="unPreviewIt"
+                >
+                  无需套料保存
+                </common-button>
+                <common-button
+                  v-permission="permission.nestingSave"
+                  type="success"
+                  class="filter-item"
+                  size="mini"
+                  :disabled="isIncludeDxf"
+                  @click="previewIt"
+                >
+                  套料保存
+                </common-button>
+              </template>
               <el-tag size="medium" effect="plain" type="danger" style="margin-right: 5px">
                 构件完成时间：{{ summaryInfo.minTime || '' }}~{{ summaryInfo.maxTime || '' }}
               </el-tag>
@@ -126,7 +169,7 @@
                 >
                   <el-checkbox
                     v-model="item.checked"
-                    :disabled="Boolean(!item.imgLoad && item.picturePath)"
+                    :disabled="!isEliminateMode ? Boolean(!item.imgLoad && item.picturePath) : false"
                     @click.stop
                     @change="handleCheckedChange($event, item)"
                   ></el-checkbox>
@@ -176,6 +219,10 @@
         ></m-preview>
         <pad-block-dialog v-model:visible="dialogVisible" :pad-block-data="padBlockData" @addBlock="addBlock" />
         <!-- <pad-block ref="padBlockRef" v-model:visible="drawerVisible" :pad-block-data="padBlockData" /> -->
+        <!-- 剔除操作 -->
+        <eliminate-dialog v-model:visible="eliminateVisible" :info="partInfo" @close="handleEliminateCancel" @success="crud.refresh" />
+        <!-- 剔除记录 -->
+        <un-production-record v-model:visible="unProductRecordVisible" @refresh="crud.refresh" />
       </div>
     </div>
   </div>
@@ -197,13 +244,15 @@ import mPreview from './module/preview'
 import padBlockDialog from './module/pad-block-dialog'
 // import padBlock from './module/pad-block'
 import projectList from './module/project-list'
+import eliminateDialog from './module/eliminate-dialog'
+import unProductionRecord from './un-production-record'
 import { deepClone } from '@/utils/data-type'
 
 const optShow = {
   add: false,
   edit: false,
   del: false,
-  download: false
+  download: false,
 }
 const thickList = ref([])
 const materialList = ref([])
@@ -224,7 +273,7 @@ const { crud, CRUD } = useCRUD(
     crudApi: { ...crudApi },
     queryOnPresenterCreated: false,
     hasPagination: false,
-    requiredQuery: ['monthList', 'material', 'thick']
+    requiredQuery: ['monthList', 'material', 'thick'],
   },
   tableRef
 )
@@ -242,6 +291,10 @@ const { maxHeight } = useMaxHeight()
 
 const boardList = ref([])
 const summaryInfo = ref({ totalNetWeight: 0, quantity: 0, minTime: '', maxTime: '' })
+const partInfo = ref({})
+const isEliminateMode = ref(false)
+const unProductRecordVisible = ref(false)
+const eliminateVisible = ref(false)
 
 CRUD.HOOK.handleRefresh = (crud, res) => {
   // const arr = []
@@ -250,7 +303,7 @@ CRUD.HOOK.handleRefresh = (crud, res) => {
   summaryInfo.value.minTime = parseTime(res.data?.minDate, '{y}-{m}-{d}')
   summaryInfo.value.maxTime = parseTime(res.data?.maxDate, '{y}-{m}-{d}')
   res.data.content = res.data.collect.map((v) => {
-    if (checkedNodes.value.findIndex((k) => k.id === v.id) > -1) {
+    if (checkedNodes.value.findIndex((k) => k.id === v.id) > -1 && !isEliminateMode.value) {
       // arr.push(v)
       v.checked = true
     } else {
@@ -261,6 +314,17 @@ CRUD.HOOK.handleRefresh = (crud, res) => {
     return v
   })
   nestingLoading.value = false
+}
+
+function handleEliminateCancel() {
+  partInfo.value.checked = false
+}
+
+function handleEliminateModeChange() {
+  boardList.value.forEach((v) => {
+    v.checked = false
+  })
+  isEliminateMode.value = !isEliminateMode.value
 }
 
 // --------------------------- start ------------------------------
@@ -280,7 +344,7 @@ const boxStyle = computed(() => {
   return {
     'font-size': `${(16 * boxScale.value).toFixed(0)}px`,
     width: `${(120 * boxScale.value).toFixed(0)}px`,
-    height: `${(120 * boxScale.value).toFixed(0)}px`
+    height: `${(120 * boxScale.value).toFixed(0)}px`,
   }
 })
 
@@ -411,6 +475,10 @@ function boolDxfChange() {
 // function saveCheck() {
 // }
 function handleCheckedChange(value, item) {
+  if (isEliminateMode.value && value) {
+    partInfo.value = item
+    eliminateVisible.value = true
+  }
   // saveCheck()
   const _checkedIndex = checkedNodes.value.findIndex((v) => v.id === item.id)
   if (value) {
@@ -435,7 +503,6 @@ function handleCheckedChange(value, item) {
 }
 function handleCheckedAll(val) {
   checkAll.value = val
-  console.log(isIncludeDxf.value, 'isIncludeDxf')
   boardList.value.forEach((v) => {
     if (v.imgLoad || !v.picturePath) {
       v.checked = val
