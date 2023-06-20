@@ -143,7 +143,7 @@
             v-if="checkPermission(permission.detail)"
             style="color: #ff5600"
             class="pointer"
-            @click="openDetail('availableBalance', row)"
+            @click="openDetail('export', row)"
           >
             {{ row.exportTaxRebate }}
           </span>
@@ -296,6 +296,7 @@
     <pagination />
     <invoice-record v-model="invoiceVisible" :detail-row="detailRow" />
     <collection-record v-model="collectionVisible" :detail-row="detailRow" />
+    <export-record v-model="exportVisible" :detail-row="detailRow" />
     <happened-record v-model="happenedVisible" :detail-row="detailRow" />
     <available-balance v-model="availableBalanceVisible" :detail-row="detailRow" />
     <composite-cost v-model="compositeCostVisible" :detail-row="detailRow" />
@@ -320,6 +321,7 @@ import mHeader from './module/header.vue'
 import costPageDialog from './cost-page-dialog/index'
 import invoiceRecord from './module/invoice-record'
 import collectionRecord from './module/collection-record'
+import exportRecord from './module/export-tax-rebate-record'
 import happenedRecord from './module/happened-record'
 import availableBalance from './module/available-balance'
 import compositeCost from './module/composite-cost'
@@ -335,6 +337,7 @@ const optShow = {
 const tableRef = ref()
 const invoiceVisible = ref(false)
 const collectionVisible = ref(false)
+const exportVisible = ref(false)
 const happenedVisible = ref(false)
 const availableBalanceVisible = ref(false)
 const compositeCostVisible = ref(false)
@@ -385,6 +388,8 @@ function openDetail(type, row) {
     invoiceVisible.value = true
   } else if (type === 'collection') {
     collectionVisible.value = true
+  } else if (type === 'export') {
+    exportVisible.value = true
   } else if (type === 'happened') {
     happenedVisible.value = true
   } else if (type === 'availableBalance') {

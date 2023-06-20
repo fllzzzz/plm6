@@ -276,5 +276,53 @@ export function getOffLineZip(params) {
   })
 }
 
+/**
+ * @description: 根据id获取需排产零件详情
+ */
+export function getNeedDetail(params) {
+  return request({
+    module: 'mes',
+    url: `machine_part/scheduling/need/detail`,
+    method: 'get',
+    params
+  })
+}
+
+/**
+ * @description: 添加不排产零件
+ */
+export function addUnProduct(data) {
+  return request({
+    module: 'mes',
+    url: `machine_part/scheduling/un_production`,
+    method: 'post',
+    data
+  })
+}
+
+/**
+ * @description: 修改不排产零件
+ */
+export function editUnProduct(data) {
+  return request({
+    module: 'mes',
+    url: `machine_part/scheduling/un_production`,
+    method: 'put',
+    data
+  })
+}
+
+/**
+ * @description: 获取不排产零件列表
+ */
+export function getUnProductRecord(params) {
+  return request({
+    module: 'mes',
+    url: `machine_part/scheduling/un_production/page`,
+    method: 'get',
+    params
+  })
+}
+
 export default { get }
 
