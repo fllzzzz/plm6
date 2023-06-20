@@ -21,7 +21,7 @@
       :project-id="query.projectId"
       @change="toQuery"
     />
-    <el-input
+    <!-- <el-input
       v-model="query.material"
       placeholder="按材质搜索"
       class="filter-item"
@@ -39,7 +39,7 @@
       clearable
       @keyup.enter="toQuery"
     />
-    <br />
+    <br /> -->
     <el-input
       v-model="query.artifactSerialNumber"
       placeholder="按构件编号搜索"

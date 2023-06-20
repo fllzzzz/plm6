@@ -31,7 +31,7 @@
           <common-input-number
             v-model="row.quantity"
             :step="1"
-            :min="0"
+            :min="1"
             :max="row.originQuantity"
             :precision="0"
             size="mini"
