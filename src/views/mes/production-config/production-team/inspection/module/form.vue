@@ -26,9 +26,14 @@
         />
       </el-form-item>
       <el-form-item v-if="productType === componentTypeEnum.ARTIFACT.V" label="生产线类型" prop="productionLineTypeEnum">
-        <el-select v-model="form.productionLineTypeEnum" placeholder="请选择生产线类型" :size="'small'" style="width: 270px">
-          <el-option v-for="item in artifactProductLineEnum.ENUM" :key="item.V" :label="item.L" :value="item.V" />
-        </el-select>
+        <common-select
+          v-model="form.productionLineTypeEnum"
+          :options="hasIntelligent ? artifactProductLineEnum.ENUM : traditionLineEnum.ENUM"
+          type="enum"
+          size="small"
+          style="width: 270px"
+          placeholder="请选择生产线类型"
+        />
       </el-form-item>
       <el-form-item label="质检" prop="inspectorIds">
         <user-select
@@ -50,8 +55,10 @@ import { regForm } from '@compos/use-crud'
 import factorySelect from '@comp-base/factory-select.vue'
 import processSelect from '@comp-mes/process-select'
 import userSelect from '@comp-common/user-select'
-import { artifactProductLineEnum, componentTypeEnum } from '@enum-ms/mes'
+import { artifactProductLineEnum, traditionLineEnum, componentTypeEnum } from '@enum-ms/mes'
+import { mapGetters } from '@/store/lib'
 
+const { hasIntelligent } = mapGetters(['hasIntelligent'])
 const formRef = ref()
 const processSelectRef = ref()
 const inspectorSelectRef = ref()

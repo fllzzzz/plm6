@@ -38,7 +38,7 @@
           -->
           <el-tooltip effect="dark" content="备料冻结、套料冻结无法手动解冻" placement="top-start">
             <el-icon color="#909399">
-              <el-question-filled />
+              <el-icon-question-filled />
             </el-icon>
           </el-tooltip>
         </span>

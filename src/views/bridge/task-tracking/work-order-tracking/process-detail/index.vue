@@ -286,7 +286,7 @@ async function processGet() {
       processData.value = content || []
       setTotalPage(totalElements)
     } else {
-      processData.value = data?.BoxList
+      processData.value = data?.boxList
     }
     elementProcessData.value = data?.elementList || []
   } catch (e) {

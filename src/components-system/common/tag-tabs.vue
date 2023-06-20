@@ -2,7 +2,7 @@
   <div class="tag-tabs">
     <div class="tag-tabs-content" ref="tagTabsContentRef">
       <span v-if="isScroll" style="margin-right: 5px; cursor: pointer" @click="handleScroll('left')">
-        <el-icon><el-arrow-left /></el-icon>
+        <el-icon><el-icon-arrow-left /></el-icon>
       </span>
       <div class="tag-scroll" ref="tagScrollRef">
         <div class="tag-list" ref="tagListRef" :style="scrollStyle">
@@ -32,7 +32,7 @@
         </div>
       </div>
       <span v-if="isScroll" style="margin-left: 5px; cursor: pointer" @click="handleScroll('right')">
-        <el-icon><el-arrow-right /></el-icon>
+        <el-icon><el-icon-arrow-right /></el-icon>
       </span>
     </div>
   </div>

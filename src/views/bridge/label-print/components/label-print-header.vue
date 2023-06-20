@@ -356,6 +356,7 @@ const { batchPrint, print } = usePrintLabel({
 
 defineExpose({
   getLine,
+  handleLinesLoaded,
   companyName: user.value && user.value.companyName,
   printConfig: sourcePrintConfig,
   spliceQrCodeUrl,

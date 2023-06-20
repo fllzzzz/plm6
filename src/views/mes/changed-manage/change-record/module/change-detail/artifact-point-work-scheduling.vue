@@ -75,7 +75,7 @@
       <el-table-column width="60">
         <template #default="{ row }">
           <common-button type="danger" size="mini" @click="handleDelRow(row)">
-            <ElDelete />
+            <el-icon-delete />
           </common-button>
         </template>
       </el-table-column>

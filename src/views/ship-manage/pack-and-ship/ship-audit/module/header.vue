@@ -63,9 +63,11 @@
     <crudOperation>
       <template v-slot:optLeft>
         <print-table
-          v-permission="crud.permission.print"
-          api-key="mesShipmentAudit"
-          :params="{ ...query }"
+          v-permission="[...permission.print, ...permission.detailPrint]"
+          v-model:current-key="currentKey"
+          :api-key="query.checkStatus === shipAuditStatusEnum.UNCHECKED.V? apiKey:'mesShipmentAudit'"
+          :params="printParams"
+          :before-print="handleBeforePrint"
           size="mini"
           type="warning"
           class="filter-item"
@@ -77,10 +79,16 @@
 
 <script setup>
 import { packTypeEnum, shipAuditStatusEnum } from '@enum-ms/mes'
-
+import { ref, inject, computed, onMounted } from 'vue'
 import { regHeader } from '@compos/use-crud'
+import { isBlank, isNotBlank } from '@data-type/index'
+import { ElMessage } from 'element-plus'
+import checkPermission from '@/utils/system/check-permission'
 import crudOperation from '@crud/CRUD.operation'
 import rrOperation from '@crud/RR.operation'
+
+const currentKey = ref()
+const apiKey = ref([])
 
 const defaultQuery = {
   serialNumber: undefined,
@@ -92,4 +100,32 @@ const defaultQuery = {
 }
 const { crud, query } = regHeader(defaultQuery)
 
+const permission = inject('permission')
+onMounted(() => {
+  if (checkPermission(permission.print)) {
+    apiKey.value.push('mesShipmentAudit')
+  }
+  if (checkPermission(permission.detailPrint)) {
+    apiKey.value.push('mesShipmentAuditOverWeight')
+  }
+})
+
+const printParams = computed(() => {
+  if (currentKey.value === 'mesShipmentAudit') {
+    return { ...query }
+  }
+  if (currentKey.value === 'mesShipmentAuditOverWeight' && isNotBlank(crud.selections)) {
+    return crud.selections.map((row) => {
+      return row.id
+    })
+  }
+  return undefined
+})
+
+function handleBeforePrint() {
+  if (currentKey.value === 'mesShipmentAuditOverWeight' && isBlank(printParams.value)) {
+    ElMessage.warning('至少选择一条需要打印的过磅信息')
+    return false
+  }
+}
 </script>

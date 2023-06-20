@@ -10,6 +10,15 @@
         class="filter-item"
         @change="crud.toQuery"
       />
+      <common-radio-button
+        type="enumSL"
+        v-model="query.orderSupplyType"
+        :options="orderSupplyTypeEnum.ENUM"
+        show-option-all
+        clearable
+        class="filter-item"
+        @change="crud.toQuery"
+      />
       <material-cascader
         v-model="query.classifyId"
         :basic-class="query.basicClass"
@@ -51,6 +60,7 @@
 import { excel, getSummary } from '@/api/wms/report/raw-material/inventory'
 import { inject, ref } from 'vue'
 import { rawMatClsEnum } from '@enum-ms/classification'
+import { orderSupplyTypeEnum } from '@enum-ms/wms'
 import { STEEL_ENUM, STEEL_BASE_UNIT } from '@/settings/config'
 import { convertUnits } from '@/utils/convert/unit'
 
