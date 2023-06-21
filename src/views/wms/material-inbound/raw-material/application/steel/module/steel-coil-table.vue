@@ -11,7 +11,7 @@
     @select="selectTableChange"
     @select-all="selectAllTableChange"
   >
-    <el-table-column v-if="!props.boolPartyA" type="selection" width="55" align="center" :selectable="selectable" />
+    <el-table-column v-if="!props.boolPartyA && !props.noDetail" type="selection" width="55" align="center" :selectable="selectable" />
     <el-expand-table-column :data="form.steelCoilList" v-model:expand-row-keys="expandRowKeys" row-key="uid" fixed="left">
       <template #default="{ row }">
         <div class="mtb-10" style="margin-left: 30px">
@@ -48,7 +48,7 @@
       </template>
     </el-table-column>
     <el-table-column
-      v-if="props.boolPartyA"
+      v-if="props.boolPartyA || props.noDetail"
       key="weighingTotalWeight"
       prop="weighingTotalWeight"
       align="center"
@@ -69,7 +69,7 @@
         />
       </template>
     </el-table-column>
-    <template v-if="!props.boolPartyA">
+    <template v-if="!props.boolPartyA && !props.noDetail">
       <el-table-column prop="purchaseMete" :label="`采购重量 (${baseUnit.weight.unit})`" align="right" min-width="120px">
         <template #default="{ row }">
           <span>
@@ -109,7 +109,7 @@
     <el-table-column prop="thickness" align="center" min-width="100px" :label="`厚 (${baseUnit.thickness.unit})`">
       <template #default="{ row }">
         <common-input-number
-          v-if="props.boolPartyA || form.selectObj?.[row.mergeId]?.isSelected"
+          v-if="(props.boolPartyA || props.noDetail) || form.selectObj?.[row.mergeId]?.isSelected"
           v-model="row.thickness"
           :min="0"
           :max="999999"
@@ -125,7 +125,7 @@
     <el-table-column prop="width" align="center" min-width="135px" :label="`宽 (${baseUnit.width.unit})`">
       <template #default="{ row }">
         <common-input-number
-          v-if="props.boolPartyA || form.selectObj?.[row.mergeId]?.isSelected"
+          v-if="(props.boolPartyA || props.noDetail) || form.selectObj?.[row.mergeId]?.isSelected"
           v-model="row.width"
           :min="0"
           :max="999999"
@@ -141,7 +141,7 @@
     <el-table-column prop="length" align="center" min-width="135px" :label="`长 (${baseUnit.length.unit})`">
       <template #default="{ row }">
         <common-input-number
-          v-if="props.boolPartyA || form.selectObj?.[row.mergeId]?.isSelected"
+          v-if="(props.boolPartyA || props.noDetail) || form.selectObj?.[row.mergeId]?.isSelected"
           v-model="row.length"
           :min="0"
           :max="999999999"
@@ -171,7 +171,7 @@
     <el-table-column prop="color" label="颜色" align="center" min-width="140px">
       <template #default="{ row }">
         <el-input
-          v-if="props.boolPartyA || (!props.boolPartyA && form.selectObj?.[row.mergeId]?.isSelected)"
+          v-if="(props.boolPartyA || props.noDetail) || ((!props.boolPartyA && !props.noDetail) && form.selectObj?.[row.mergeId]?.isSelected)"
           v-model.trim="row.color"
           maxlength="20"
           size="mini"
@@ -187,7 +187,7 @@
     <el-table-column prop="brand" label="品牌" align="center" min-width="100px">
       <template #default="{ row }">
         <el-input
-          v-if="props.boolPartyA || (!props.boolPartyA && form.selectObj?.[row.mergeId]?.isSelected)"
+          v-if="(props.boolPartyA || props.noDetail) || ((!props.boolPartyA && !props.noDetail) && form.selectObj?.[row.mergeId]?.isSelected)"
           v-model.trim="row.brand"
           maxlength="60"
           size="mini"
@@ -199,7 +199,7 @@
     <el-table-column prop="heatNoAndBatchNo" label="卷号" align="center" min-width="150px">
       <template #default="{ row }">
         <el-input
-          v-if="props.boolPartyA || (!props.boolPartyA && form.selectObj?.[row.mergeId]?.isSelected)"
+          v-if="(props.boolPartyA || props.noDetail) || ((!props.boolPartyA && !props.noDetail) && form.selectObj?.[row.mergeId]?.isSelected)"
           v-model.trim="row.heatNoAndBatchNo"
           size="mini"
           placeholder="卷号"
@@ -209,7 +209,7 @@
       </template>
     </el-table-column>
 
-    <el-table-column v-if="props.boolPartyA" label="操作" width="70" align="center" fixed="right">
+    <el-table-column v-if="props.boolPartyA || props.noDetail" label="操作" width="70" align="center" fixed="right">
       <template #default="{ row, $index }">
         <common-button icon="el-icon-delete" type="danger" size="mini" @click="delRow(row.sn, $index)" />
       </template>
@@ -241,6 +241,10 @@ const props = defineProps({
     default: false
   },
   fillableAmount: {
+    type: Boolean,
+    default: false
+  },
+  noDetail: {
     type: Boolean,
     default: false
   }
@@ -375,7 +379,7 @@ function rowWatch(row) {
   watch(
     () => row,
     () => {
-      if (!props.boolPartyA && form.selectObj?.[row.mergeId]?.isSelected) {
+      if ((!props.boolPartyA && !props.noDetail) && form.selectObj?.[row.mergeId]?.isSelected) {
         const _isSelected = form.selectObj[row.mergeId]?.isSelected
         form.selectObj[row.mergeId] = {
           ...form.selectObj[row.mergeId],
@@ -433,7 +437,7 @@ function delRow(sn, $index) {
 // 校验
 function validate() {
   const _list = form.steelCoilList.filter((v) => {
-    if (props.boolPartyA || form.selectObj[v.mergeId]?.isSelected) {
+    if ((props.boolPartyA || props.noDetail) || form.selectObj[v.mergeId]?.isSelected) {
       return true
     } else {
       return false

@@ -48,7 +48,7 @@
       </el-table-column>
       <el-table-column label="状态" prop="purchaseCreationState" align="center" width="90">
         <template #default="{ row }">
-          <el-tag v-if="row.purchaseCreationState" effect="plain" :type="requisitionStatusEnum.V[row.purchaseCreationState].T">{{
+          <el-tag v-if="row.purchaseCreationState" effect="plain" :type="requisitionStatusEnum.V[row.purchaseCreationState]?.T">{{
             requisitionStatusEnum.VL[row.purchaseCreationState]
           }}</el-tag>
         </template>
@@ -67,7 +67,7 @@ import { requisitionStatusEnum } from '@enum-ms/wms'
 import { materialPurchaseClsEnum } from '@enum-ms/classification'
 import ReceiptSnClickable from '@/components-system/wms/receipt-sn-clickable'
 
-const form = inject('crud')?.form
+const form = inject('cu')?.form
 
 const tableRef = ref()
 const orderLoading = ref(false)

@@ -117,7 +117,7 @@ const emit = defineEmits(['add-purchase'])
 // 当前物料基础类型
 const basicClass = matClsEnum.STEEL_COIL.V
 const bcListObj = inject('bcListObj')
-const form = inject('crud')?.form
+const form = inject('cu')?.form
 
 const { baseUnit } = useMatBaseUnit(basicClass) // 当前分类基础单位
 

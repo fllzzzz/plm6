@@ -153,4 +153,5 @@ const defaultQuery = {
 
 const permission = inject('permission')
 const { crud, query } = regHeader(defaultQuery)
+
 </script>

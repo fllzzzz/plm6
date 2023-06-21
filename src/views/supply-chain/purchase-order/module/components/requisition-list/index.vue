@@ -37,7 +37,7 @@ import AuxMat from './module/auxiliary-material/index.vue'
 import Manufactured from './module/manufactured/index.vue'
 
 const emit = defineEmits('add-purchase')
-const form = inject('crud')?.form
+const form = inject('cu')?.form
 
 const requisitionOrderRef = ref()
 const compRef = ref()

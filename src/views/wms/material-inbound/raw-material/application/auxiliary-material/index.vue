@@ -300,6 +300,7 @@ function rowInit(row) {
 async function handleOrderInfoChange(orderInfo) {
   init()
   order.value = orderInfo
+  console.log(orderInfo)
   cu.props.order = orderInfo
   boolPartyA.value = orderInfo?.supplyType === orderSupplyTypeEnum.PARTY_A.V
   if (!(boolPartyA.value && isDraft.value)) {

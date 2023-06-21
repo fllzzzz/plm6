@@ -150,7 +150,7 @@ const { tableValidate, cleanUpData, wrongCellMask } = useTableValidate({ rules: 
 // const detailVisible = ref(false)
 // const detailList = ref([])
 // const detailRow = ref()
-const form = inject('crud').form
+const form = inject('cu')?.form
 
 // const { maxHeight: dialogMaxHeight } = useMaxHeight(
 //   {

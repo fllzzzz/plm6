@@ -215,7 +215,7 @@ import { ref, computed } from 'vue'
 import { useStore } from 'vuex'
 import EO from '@enum'
 import { invoiceTypeEnum, settlementStatusEnum } from '@enum-ms/finance'
-import { orderSupplyTypeEnum, purchaseStatusEnum } from '@enum-ms/wms'
+import { orderSupplyTypeEnum, purchaseStatusEnum, baseMaterialTypeEnum } from '@enum-ms/wms'
 import { matClsEnum, materialPurchaseClsEnum } from '@/utils/enum/modules/classification'
 import { wmsReceiptColumns } from '@/utils/columns-format/wms'
 import { isNotBlank } from '@/utils/data-type'
@@ -282,10 +282,9 @@ const tableLoading = computed(() => !clsLoaded.value || crud.loading)
 CRUD.HOOK.handleRefresh = (crud, { data }) => {
   data.content = data.content.map((v) => {
     const basicClassArr = EO.getBits(matClsEnum.ENUM, v.basicClass, 'L')
-    v.typeText =
-      v.materialType & materialPurchaseClsEnum.MATERIAL.V
-        ? basicClassArr.join(' | ')
-        : materialPurchaseClsEnum.VL[v.materialType] + ' - ' + basicClassArr.join(' | ')
+    v.typeText = v.materialType ? (v.materialType & materialPurchaseClsEnum.MATERIAL.V
+      ? basicClassArr.join(' | ')
+      : materialPurchaseClsEnum.VL[v.materialType] + ' - ' + basicClassArr.join(' | ')) : baseMaterialTypeEnum.VL[v.purchaseType] + ' - ' + basicClassArr.join(' | ')
     v.branchCompanyId = v.branchCompany ? v.branchCompany.id : undefined
     v.requisitionsSNStr = v.applyPurchaseSN ? v.applyPurchaseSN.join('　、　') : ''
     v.projects = v.project?.id ? [v.project] : v.projects

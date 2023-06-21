@@ -170,7 +170,8 @@ import materialSpecSelect from '@comp-cls/material-spec-select/index.vue'
 const basicClass = matClsEnum.SECTION_STEEL.V
 
 const matSpecRef = inject('matSpecRef') // 调用父组件matSpecRef
-const form = inject('crud')?.form
+const form = inject('cu')?.form
+console.log(form)
 const { baseUnit } = useMatBaseUnit(basicClass) // 当前分类基础单位
 
 const { overDiffTip, weightOverDiff, currentCfg } = useWeightOverDiff(baseUnit, {

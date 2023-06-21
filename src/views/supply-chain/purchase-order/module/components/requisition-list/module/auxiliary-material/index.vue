@@ -121,7 +121,7 @@ import { deepClone } from '@/utils/data-type'
 const { handleMeteChangeCalcPrice } = usePriceSet('mete')
 
 const emit = defineEmits(['add-purchase'])
-const form = inject('crud')?.form
+const form = inject('cu')?.form
 const list = ref([])
 
 // 数量校验方式

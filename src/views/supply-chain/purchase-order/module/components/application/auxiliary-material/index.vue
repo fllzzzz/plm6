@@ -115,7 +115,7 @@ const basicClass = matClsEnum.MATERIAL.V
 
 const { purchaseCfg: currentCfg } = useWmsConfig()
 const matSpecRef = inject('matSpecRef') // 调用父组件matSpecRef
-const form = inject('crud')?.form
+const form = inject('cu')?.form
 
 watchEffect(() => {
   // 辅材不进行核算量合计

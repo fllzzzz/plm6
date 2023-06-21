@@ -14,11 +14,12 @@ import SteelCoilTable from './module/steel-coil-table'
 import { ElMessage } from 'element-plus'
 import { DP } from '@/settings/config'
 
-const form = inject('crud')?.form
+const form = inject('cu')?.form
 const matSpecRef = inject('matSpecRef') // 调用父组件matSpecRef
 const steelRef = ref()
 
 watchEffect(() => {
+  console.log(form)
   let _mete = 0
   let _amount = 0
   const list = ['steelPlateList', 'sectionSteelList', 'steelCoilList']

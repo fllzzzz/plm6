@@ -170,7 +170,7 @@ const rules = {
 }
 
 const matSpecRef = inject('matSpecRef') // 调用父组件matSpecRef
-const form = inject('crud')?.form
+const form = inject('cu')?.form
 const { baseUnit } = useMatBaseUnit(basicClass) // 当前分类基础单位
 
 const { handleMeteChangeCalcPrice } = usePriceSet('weighingTotalWeight')
