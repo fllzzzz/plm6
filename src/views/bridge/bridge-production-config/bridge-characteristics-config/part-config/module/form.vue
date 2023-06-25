@@ -27,7 +27,7 @@
             />
             <br />
             <material-cascader
-              v-model="form.classifyLinks"
+              v-model="form.classifyIds"
               :basic-class="form.boolSectionSteel?matClsEnum.SECTION_STEEL.V:matClsEnum.STEEL_PLATE.V"
               multiple
               :collapse-tags="false"
@@ -182,7 +182,7 @@ const rules = {
     { min: 1, max: 30, message: '长度在 1 到 30 个字符', trigger: 'blur' }
   ],
   sort: [{ required: true, message: '请填写排序值', trigger: 'blur', type: 'number' }],
-  classifyLinks: [{ required: true, message: '请选择科目', trigger: 'change' }]
+  classifyIds: [{ required: true, message: '请选择科目', trigger: 'change' }]
 }
 
 watch(
@@ -197,7 +197,7 @@ watch(
       form.links = []
     }
     if (val && oldVal) {
-      form.classifyLinks = []
+      form.classifyIds = []
     }
   }
 )
@@ -303,14 +303,13 @@ CRUD.HOOK.beforeToEdit = () => {
       keyword: v.keyword
     })
   })
-  form.classifyLinks = [...form.classifyIds]
 }
 
 CRUD.HOOK.beforeToCU = () => {
   nextTick(() => {
     disabledClassifyIds.value = deepClone(props.boundAllClassifyIds)
-    form.classifyLinks &&
-      form.classifyLinks.forEach((v) => {
+    form.classifyIds &&
+      form.classifyIds.forEach((v) => {
         const _index = disabledClassifyIds.value.indexOf(v)
         if (_index !== -1) {
           disabledClassifyIds.value.splice(_index, 1)
