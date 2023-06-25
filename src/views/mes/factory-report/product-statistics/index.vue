@@ -90,13 +90,14 @@
         </template>
       </el-table-column>
       <el-table-column v-if="columns.visible('unit')" prop="unit" label="在制品" align="center">
-        <template v-for="item in process" :key="item.id">
+        <template v-for="item in processSortList" :key="item.id">
           <el-table-column
             v-if="
               item.productType &&
               componentTypeEnum.ARTIFACT.V | item.productType &&
               componentTypeEnum.ASSEMBLE.V &&
-              item.productionLineTypeEnum & artifactProductLineEnum.TRADITION.V
+              item.productionLineTypeEnum & artifactProductLineEnum.TRADITION.V &&
+              item.productType !== componentTypeEnum.ENCLOSURE.V
             "
             :label="item.name"
             align="center"
@@ -177,11 +178,11 @@
     <!-- 本月出库记录详情 -->
     <month-out-bound-detail v-model:visible="monthDrawerVisible" :info="monthInfo" :time-query="commonParams" />
     <!-- 任务量详情 -->
-    <task-detail v-model:visible="taskDrawerVisible" :task-info="taskInfo" />
+    <task-detail v-model:visible="taskDrawerVisible" :task-info="taskInfo" :workshopId="crud.query.workshopId" :query-date="crud.query.date" />
     <!-- 工序详情 -->
-    <process-detail v-model:visible="processDrawerVisible" :process-info="processInfo" :process-data="processData" />
+    <process-detail v-model:visible="processDrawerVisible" :process-info="processInfo" :process-data="processData" :workshopId="crud.query.workshopId" />
     <!-- 制成品详情 -->
-    <ups-detail v-model:visible="upsDrawerVisible" :ups-info="upsInfo" />
+    <ups-detail v-model:visible="upsDrawerVisible" :ups-info="upsInfo" :workshopId="crud.query.workshopId" :query-date="crud.query.date" />
   </div>
 </template>
 
@@ -251,6 +252,14 @@ const { crud, CRUD, columns } = useCRUD(
 )
 
 const { loaded, process } = useProcess()
+
+const processSortList = computed(() => {
+  const partVal = process.value.filter((v) => v.productType === componentTypeEnum.MACHINE_PART.V)
+  const assembleVal = process.value.filter((o) => o.productType === componentTypeEnum.ASSEMBLE.V)
+  const artifactVal = process.value.filter((m) => m.productType === componentTypeEnum.ARTIFACT.V)
+  const val = [...partVal, ...assembleVal, ...artifactVal]
+  return val
+})
 
 const commonParams = computed(() => {
   return {

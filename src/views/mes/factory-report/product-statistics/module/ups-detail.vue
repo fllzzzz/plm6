@@ -46,11 +46,11 @@
         <el-table-column :show-overflow-tooltip="true" align="center" prop="grossWeight" label="单毛重（kg）" />
         <el-table-column :show-overflow-tooltip="true" align="center" prop="totalNetWeight" label="总净重（kg）" />
         <el-table-column :show-overflow-tooltip="true" align="center" prop="totalGrossWeight" label="总毛重（kg）" />
-        <el-table-column :show-overflow-tooltip="true" align="center" prop="completeTime" label="排产日期" width="120">
+        <!-- <el-table-column :show-overflow-tooltip="true" align="center" prop="completeTime" label="排产日期" width="120">
           <template #default="{ row }">
             <span>{{ parseTime(row.completeTime, '{y}-{m}-{d}') }}</span>
           </template>
-        </el-table-column>
+        </el-table-column> -->
       </common-table>
       <!-- 分页 -->
       <el-pagination
@@ -69,7 +69,7 @@
 <script setup>
 import { getUps } from '@/api/mes/factory-report/product-statistics.js'
 import { defineProps, defineEmits, ref, inject, computed } from 'vue'
-import { parseTime } from '@/utils/date'
+// import { parseTime } from '@/utils/date'
 import { tableSummary } from '@/utils/el-extra'
 import usePagination from '@compos/use-pagination'
 import useMaxHeight from '@compos/use-max-height'
@@ -84,6 +84,13 @@ const props = defineProps({
   },
   upsInfo: {
     type: Object
+  },
+  workshopId: {
+    type: Number
+  },
+  queryDate: {
+    type: Array,
+    default: () => []
   }
 })
 
@@ -107,7 +114,10 @@ const tableLoading = ref(false)
 const list = ref([])
 const queryParams = computed(() => {
   return {
-    projectId: props.upsInfo.project?.id
+    projectId: props.upsInfo.project?.id,
+    workshopId: props.workshopId,
+    startDate: props.queryDate[0],
+    endDate: props.queryDate[1]
   }
 })
 

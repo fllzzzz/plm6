@@ -84,6 +84,13 @@ const props = defineProps({
   },
   taskInfo: {
     type: Object
+  },
+  workshopId: {
+    type: Number
+  },
+  queryDate: {
+    type: Array,
+    default: () => []
   }
 })
 
@@ -107,7 +114,10 @@ const tableLoading = ref(false)
 const list = ref([])
 const queryParams = computed(() => {
   return {
-    projectId: props.taskInfo.project?.id
+    projectId: props.taskInfo.project?.id,
+    workshopId: props.workshopId,
+    startDate: props.queryDate[0],
+    endDate: props.queryDate[1]
   }
 })
 

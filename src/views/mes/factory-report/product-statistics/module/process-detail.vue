@@ -85,6 +85,9 @@ const props = defineProps({
   },
   processData: {
     type: Object
+  },
+  workshopId: {
+    type: Number
   }
 })
 
@@ -110,7 +113,8 @@ const queryParams = computed(() => {
   return {
     projectId: props.processData.project?.id,
     processId: props.processInfo?.id,
-    taskTypeEnum: props.processInfo?.productType
+    taskTypeEnum: props.processInfo?.productType,
+    workshopId: props.workshopId
   }
 })
 
