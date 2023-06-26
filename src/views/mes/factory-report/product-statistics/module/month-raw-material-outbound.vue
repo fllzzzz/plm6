@@ -20,7 +20,7 @@
         <div style="width: 300px">
           <print-table
             v-permission="permission.print"
-            api-key="mesOutBoundStatisticsList"
+            :api-key="type === steelOutBoundRecordTypeEnum.OUTBOUND.V ? 'mesOutBoundStatisticsList' : 'mesBackBoundStatisticsList'"
             :params="{ ...queryParams }"
             size="mini"
             type="warning"
@@ -61,7 +61,13 @@
             <span>{{ row.mete }}</span>
           </template>
         </el-table-column>
-        <el-table-column :show-overflow-tooltip="true" align="center" prop="outboundTime" label="出库日期" width="120">
+        <el-table-column
+          :show-overflow-tooltip="true"
+          align="center"
+          prop="outboundTime"
+          :label="`${type === steelOutBoundRecordTypeEnum.OUTBOUND.V ? '出库' : '退库'}日期`"
+          width="120"
+        >
           <template #default="{ row }">
             <span>{{ parseTime(row.outboundTime, '{y}-{m}-{d}') }}</span>
           </template>
@@ -86,6 +92,7 @@ import { getTotalOutBound } from '@/api/mes/factory-report/product-statistics.js
 import { defineProps, defineEmits, ref, inject, computed } from 'vue'
 import { steelOutBoundRecordTypeEnum } from '@enum-ms/mes'
 import { setSpecInfoToList } from '@/utils/wms/spec'
+import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { parseTime } from '@/utils/date'
 // import { specFormat } from '@/utils/wms/spec-format'
 import { matClsEnum } from '@enum-ms/classification'
@@ -149,6 +156,10 @@ async function fetchList() {
       return v
     })
     await setSpecInfoToList(list.value)
+    await numFmtByBasicClass(list.value, {
+      toSmallest: false,
+      accountingUnit: 'kg'
+    })
   } catch (error) {
     console.log('获取当月出库记录详情失败', error)
   } finally {

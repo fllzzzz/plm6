@@ -831,6 +831,14 @@ export function outBoundStatisticsList(params) {
     params
   })
 }
+// 生产统计-钢材退库报表详情
+export function backBoundStatisticsList(params) {
+  return request({
+    url: '/api/mes/building/task/process/produce/statistics/outBound/print',
+    method: 'get',
+    params
+  })
+}
 
 // 项目制造：项目总览
 export function projectOverviewList(params) {
@@ -1036,6 +1044,7 @@ export default {
   taskStatisticsList, // 在制品排产记录详情
   upsStatisticsList, // 制成品详情
   outBoundStatisticsList, // 在制品出库统计详情
+  backBoundStatisticsList, // 在制品退库库统计详情
 
   // 发运管理
   productSendReceiveStorage, // 制成品入发存

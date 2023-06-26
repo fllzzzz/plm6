@@ -1,13 +1,13 @@
 import { dataSourceEnum, alignEnum, verticleAlignEnum, fieldTypeEnum as typeEnum, cssUnitEnum, cssUnitPrecisionEnum, pageFormatEnum } from '@/utils/print/enum'
 // import { projectNameArrangementModeEnum } from '@/utils/enum/modules/contract'
 
-// 在制品出库统计清单
-const mesOutBoundStatisticsList = {
+// 在制品退库统计清单
+const mesBackBoundStatisticsList = {
   fontUnit: 'pt', // 字体单位
   unit: cssUnitEnum.MM.V, // 长度单位
   unitPrecision: cssUnitPrecisionEnum.ZERO.V, // 长度单位精度
-  type: 'mesOutBoundStatisticsList', // 表格类型 KEY
-  name: '在制品出库清单详情（平台）', // 表格名称
+  type: 'mesBackBoundStatisticsList', // 表格类型 KEY
+  name: '在制品退库清单详情（平台）', // 表格名称
   width: 210, // 打印纸的宽度
   height: 297, // 打印纸的高度
   paddingLR: 10, // 左右内边距
@@ -61,7 +61,7 @@ const mesOutBoundStatisticsList = {
   title: {
     show: true,
     allPage: false,
-    title: '在制品出库清单详情',
+    title: '在制品退库清单详情',
     align: alignEnum.CENTER.V,
     verticleAlign: verticleAlignEnum.CENTER.V,
     size: 17,
@@ -206,11 +206,11 @@ const mesOutBoundStatisticsList = {
       { show: true, key: 'quantity', title: '数量', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.QUANTITY.K },
       { show: true, key: 'accountingUnit', title: '核算单位', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.ACCOUNTING_UNIT.K },
       { show: true, key: 'mete', title: '核算量', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 15, type: typeEnum.METE.K, format: { toThousand: false, rowUnit: 'accountingUnit' }},
-      { show: true, key: 'outboundTime', title: '出库日期', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 33, type: typeEnum.DATE.K, format: 'YY/MM/DD' }
+      { show: true, key: 'outboundTime', title: '退库日期', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 33, type: typeEnum.DATE.K, format: 'YY/MM/DD' }
     ]
   }
 }
 
 export default {
-  mesOutBoundStatisticsList //  在制品出库清单详情
+  mesBackBoundStatisticsList //  在制品退库清单详情
 }

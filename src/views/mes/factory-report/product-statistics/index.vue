@@ -99,6 +99,7 @@
               item.productionLineTypeEnum & artifactProductLineEnum.TRADITION.V &&
               item.productType !== componentTypeEnum.ENCLOSURE.V
             "
+            :show-overflow-tooltip="true"
             :label="item.name"
             align="center"
             width="110px"

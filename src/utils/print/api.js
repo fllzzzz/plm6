@@ -140,6 +140,7 @@ const mesProcessStatisticsList = mes.processStatisticsList
 const mesTaskStatisticsList = mes.taskStatisticsList
 const mesUpsStatisticsList = mes.upsStatisticsList
 const mesOutBoundStatisticsList = mes.outBoundStatisticsList
+const mesBackBoundStatisticsList = mes.backBoundStatisticsList
 
 const mesFactoryWorkshopReport = mes.factoryWorkshopReport
 const mesGroupsReport = mes.groupsReport
@@ -407,6 +408,7 @@ export default {
   mesTaskStatisticsList, // 在制品排产记录详情
   mesUpsStatisticsList, // 制成品记录详情
   mesOutBoundStatisticsList, // 在制品出库记录详情
+  mesBackBoundStatisticsList, // 在制品退库记录详情
 
   mesFactoryWorkshopReport, // 车间报表清单详情
   mesGroupsReport, // 班组报表清单详情
