@@ -11,7 +11,7 @@
     @select="selectTableChange"
     @select-all="selectAllTableChange"
   >
-    <el-table-column v-if="!props.boolPartyA" type="selection" width="55" align="center" :selectable="selectable" />
+    <el-table-column v-if="!props.boolPartyA && !props.noDetail" type="selection" width="55" align="center" :selectable="selectable" />
     <el-expand-table-column :data="form.auxMatList" v-model:expand-row-keys="expandRowKeys" row-key="uid" fixed="left">
       <template #default="{ row }">
         <div class="mtb-10" style="margin-left: 30px">
@@ -52,7 +52,7 @@
         <span v-empty-text>{{ row.measureUnit }}</span>
       </template>
     </el-table-column>
-    <template v-if="props.boolPartyA">
+    <template v-if="props.boolPartyA || props.noDetail">
       <el-table-column prop="quantity" label="数量" align="center" min-width="120px">
         <template #default="{ row }">
           <common-input-number
@@ -88,7 +88,7 @@
         <span v-empty-text>{{ row.accountingUnit }}</span>
       </template>
     </el-table-column>
-    <template v-if="props.boolPartyA">
+    <template v-if="props.boolPartyA || props.noDetail">
       <el-table-column prop="mete" label="核算量" align="center" min-width="120px">
         <template #default="{ row }">
           <common-input-number
@@ -123,7 +123,7 @@
     <el-table-column prop="color" label="颜色" align="center" min-width="120px">
       <template #default="{ row }">
         <el-input
-          v-if="props.boolPartyA || (!props.boolPartyA && form.selectObj?.[row.mergeId]?.isSelected)"
+          v-if="(props.boolPartyA || props.noDetail) || (!props.boolPartyA && !props.noDetail && form.selectObj?.[row.mergeId]?.isSelected)"
           v-model.trim="row.color"
           maxlength="20"
           size="mini"
@@ -135,7 +135,7 @@
     <el-table-column prop="brand" label="品牌" align="center" min-width="120px">
       <template #default="{ row }">
         <el-input
-          v-if="props.boolPartyA || (!props.boolPartyA && form.selectObj?.[row.mergeId]?.isSelected)"
+          v-if="(props.boolPartyA || props.noDetail) || (!props.boolPartyA && !props.noDetail && form.selectObj?.[row.mergeId]?.isSelected)"
           v-model.trim="row.brand"
           maxlength="60"
           size="mini"
@@ -144,12 +144,11 @@
         <span v-else v-empty-text>{{ row.brand }}</span>
       </template>
     </el-table-column>
-    <template v-if="!props.boolPartyA">
+    <template v-if="!props.boolPartyA && !props.noDetail">
       <el-table-column prop="quantity" label="本次实收数" align="center" min-width="120px">
         <template #default="{ row }">
           <common-input-number
             v-if="
-              !boolApplyPurchase &&
               row.measureUnit &&
               form.selectObj?.[row.mergeId]?.isSelected &&
               row.outboundUnitType === measureTypeEnum.MEASURE.V
@@ -171,7 +170,7 @@
       <el-table-column prop="mete" label="本次实收量" align="center" min-width="120px">
         <template #default="{ row }">
           <common-input-number
-            v-if="!boolApplyPurchase && form.selectObj?.[row.mergeId]?.isSelected && row.outboundUnitType === measureTypeEnum.ACCOUNTING.V"
+            v-if="form.selectObj?.[row.mergeId]?.isSelected && row.outboundUnitType === measureTypeEnum.ACCOUNTING.V"
             v-model="row.mete"
             :min="0.000001"
             :max="999999999"
@@ -265,7 +264,7 @@
         </template>
       </el-table-column>
     </template>
-    <el-table-column v-if="props.boolPartyA" label="操作" width="70" align="center" fixed="right">
+    <el-table-column v-if="props.boolPartyA || props.noDetail" label="操作" width="70" align="center" fixed="right">
       <template #default="{ row, $index }">
         <common-button icon="el-icon-delete" type="danger" size="mini" @click="delRow(row.sn, $index)" />
       </template>
@@ -308,6 +307,10 @@ const props = defineProps({
   basicClass: {
     type: [String, Number],
     default: matClsEnum.MATERIAL.V
+  },
+  noDetail: {
+    type: Boolean,
+    default: false
   }
 })
 
@@ -437,7 +440,7 @@ function rowWatch(row) {
   watch(
     () => row,
     () => {
-      if (!props.boolPartyA && form.selectObj?.[row.mergeId]?.isSelected) {
+      if (!props.boolPartyA && !props.noDetail && form.selectObj?.[row.mergeId]?.isSelected) {
         const _isSelected = form.selectObj[row.mergeId]?.isSelected
         form.selectObj[row.mergeId] = {
           ...form.selectObj[row.mergeId],
@@ -490,7 +493,7 @@ function handleMeteChange(row, { accountingUnitNet, accountingPrecision }) {
 // 校验
 function validate() {
   const _list = form.auxMatList.filter((v) => {
-    if (props.boolPartyA || form.selectObj[v.mergeId]?.isSelected) {
+    if (props.boolPartyA || props.noDetail || form.selectObj[v.mergeId]?.isSelected) {
       return true
     } else {
       return false

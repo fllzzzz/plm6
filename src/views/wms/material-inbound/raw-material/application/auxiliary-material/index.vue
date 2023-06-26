@@ -14,7 +14,7 @@
           <el-tooltip :disabled="addable" effect="light" content="请先选择采购合同编号" placement="left-start">
             <span>
               <common-button
-                v-if="boolPartyA"
+                v-if="boolPartyA || (!boolPartyA && isBlank(order?.details))"
                 class="filter-item"
                 type="success"
                 @click="materialSelectVisible = true"
@@ -33,6 +33,7 @@
           :bool-party-a="boolPartyA"
           :bool-apply-purchase="boolApplyPurchase"
           :fillableAmount="fillableAmount"
+          :noDetail="noDetail"
         />
       </el-form>
     </common-wrapper>
@@ -70,14 +71,15 @@ import { auxMatInboundApplicationPM as permission } from '@/page-permission/wms'
 
 import { defineProps, defineEmits, ref, watch, provide, nextTick, reactive, computed } from 'vue'
 import { matClsEnum } from '@/utils/enum/modules/classification'
-import { orderSupplyTypeEnum } from '@/utils/enum/modules/wms'
+import { orderSupplyTypeEnum, inboundFillWayEnum } from '@/utils/enum/modules/wms'
 import { isNotBlank, toFixed } from '@/utils/data-type'
 import { createUniqueString } from '@/utils/data-type/string'
 import { DP } from '@/settings/config'
+import { isBlank } from '@/utils/data-type'
 
 import useForm from '@/composables/form/use-form'
 import useMaxHeight from '@compos/use-max-height'
-// import useWmsConfig from '@/composables/store/use-wms-config'
+import useWmsConfig from '@/composables/store/use-wms-config'
 import CommonWrapper from '@/views/wms/material-inbound/raw-material/application/components/common-wrapper.vue'
 import MaterialTableSpecSelect from '@/components-system/classification/material-table-spec-select.vue'
 import AuxMatTable from './module/aux-mat-table.vue'
@@ -110,14 +112,15 @@ const drawerRef = ref()
 const order = ref() // 订单信息
 const orderLoaded = ref(false) // 订单加载状态
 const boolPartyA = ref(false) // 是否“甲供”
+const noDetail = ref(false) // 采购合同是否有明细
 
 const materialSelectVisible = ref(false) // 显示物料选择
 const currentBasicClass = matClsEnum.MATERIAL.V // 当前基础分类
 
-// const { inboundFillWayCfg } = useWmsConfig()
+const { inboundFillWayCfg } = useWmsConfig()
 // 显示金额相关信息（由采购填写的信息）
-// const fillableAmount = computed(() => inboundFillWayCfg.value ? inboundFillWayCfg.value.amountFillWay === inboundFillWayEnum.APPLICATION.V : false)
-const fillableAmount = computed(() => false)
+const fillableAmount = computed(() => inboundFillWayCfg.value ? inboundFillWayCfg.value.amountFillWay === inboundFillWayEnum.APPLICATION.V : false)
+// const fillableAmount = computed(() => false)
 // 是否绑定申购
 const boolApplyPurchase = computed(() => Boolean(order.value?.applyPurchase?.length)) // 是否绑定申购
 
@@ -151,7 +154,7 @@ const setFormCallback = (form) => {
         if (!boolPartyA.value) {
           form.auxMatList.forEach((v) => {
             tableRef.value.rowWatch(v)
-            if (!boolPartyA.value && form.selectObj?.[v.mergeId]?.isSelected) {
+            if (!boolPartyA.value && !noDetail.value && form.selectObj?.[v.mergeId]?.isSelected) {
               tableRef.value.toggleRowSelection(v, true)
             }
           })
@@ -282,7 +285,7 @@ function validate() {
             })
           }
         })
-      } else if (boolPartyA.value || form.selectObj[v.mergeId]?.isSelected) {
+      } else if (boolPartyA.value || noDetail.value || form.selectObj[v.mergeId]?.isSelected) {
         _list.push(v)
       }
     })
@@ -300,9 +303,10 @@ function rowInit(row) {
 async function handleOrderInfoChange(orderInfo) {
   init()
   order.value = orderInfo
-  console.log(orderInfo)
   cu.props.order = orderInfo
   boolPartyA.value = orderInfo?.supplyType === orderSupplyTypeEnum.PARTY_A.V
+  console.log(orderInfo)
+  noDetail.value = isBlank(orderInfo?.details)
   if (!(boolPartyA.value && isDraft.value)) {
     form.auxMatList = []
     const trigger = watch(
@@ -347,7 +351,7 @@ async function handleOrderInfoChange(orderInfo) {
   //     { immediate: true }
   //   )
   // }
-  if (boolPartyA.value && isDraft.value) {
+  if ((boolPartyA.value) && isDraft.value) {
     // 设置监听等
     setFormCallback(form)
   }

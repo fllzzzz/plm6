@@ -24,6 +24,7 @@ import { matClsEnum } from '@/utils/enum/modules/classification'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { setSpecInfoToList } from '@/utils/wms/spec'
 import { deepClone } from '@/utils/data-type'
+import { isNotBlank } from '@/utils/data-type'
 
 import SteelApplication from '@/views/wms/material-inbound/raw-material/application/steel/index.vue'
 import AuxMatApplication from '@/views/wms/material-inbound/raw-material/application/auxiliary-material/index.vue'
@@ -68,7 +69,7 @@ CRUD.HOOK.beforeEditDetailLoaded = async (crud, detail) => {
   })
   // 物流信息
   detail.logistics = detail.logisticsOrder
-  if (detail.supplyType !== orderSupplyTypeEnum.PARTY_A.V) {
+  if (detail.supplyType !== orderSupplyTypeEnum.PARTY_A.V && isNotBlank(detail.purchaseOrder.details)) {
     detail.originList = deepClone(detail.list)
     detail.list = []
     detail.editObj = {}

@@ -14,7 +14,7 @@
           <el-tooltip :disabled="addable" effect="light" content="请先选择采购合同编号" placement="left-start">
             <span>
               <common-button
-                v-if="boolPartyA"
+                v-if="boolPartyA || noDetail"
                 class="filter-item"
                 type="success"
                 @click="materialSelectVisible = true"
@@ -34,6 +34,7 @@
           :bool-apply-purchase="boolApplyPurchase"
           :fillableAmount="fillableAmount"
           :basic-class="currentBasicClass"
+          :noDetail="noDetail"
         />
       </el-form>
     </common-wrapper>
@@ -75,6 +76,7 @@ import { orderSupplyTypeEnum } from '@/utils/enum/modules/wms'
 import { isNotBlank, toFixed } from '@/utils/data-type'
 import { createUniqueString } from '@/utils/data-type/string'
 import { DP } from '@/settings/config'
+import { isBlank } from '@/utils/data-type'
 
 import useForm from '@/composables/form/use-form'
 import useMaxHeight from '@compos/use-max-height'
@@ -111,6 +113,7 @@ const drawerRef = ref()
 const order = ref() // 订单信息
 const orderLoaded = ref(false) // 订单加载状态
 const boolPartyA = ref(false) // 是否“甲供”
+const noDetail = ref(false) // 采购合同是否有明细
 
 const materialSelectVisible = ref(false) // 显示物料选择
 const currentBasicClass = matClsEnum.OTHER.V // 当前基础分类
@@ -152,7 +155,7 @@ const setFormCallback = (form) => {
         if (!boolPartyA.value) {
           form.auxMatList.forEach((v) => {
             tableRef.value.rowWatch(v)
-            if (!boolPartyA.value && form.selectObj?.[v.mergeId]?.isSelected) {
+            if (!boolPartyA.value && !noDetail.value && form.selectObj?.[v.mergeId]?.isSelected) {
               tableRef.value.toggleRowSelection(v, true)
             }
           })
@@ -279,7 +282,7 @@ function validate() {
             })
           }
         })
-      } else if (boolPartyA.value || form.selectObj[v.mergeId]?.isSelected) {
+      } else if (boolPartyA.value || noDetail.value || form.selectObj[v.mergeId]?.isSelected) {
         _list.push(v)
       }
     })
@@ -299,6 +302,7 @@ async function handleOrderInfoChange(orderInfo) {
   order.value = orderInfo
   cu.props.order = orderInfo
   boolPartyA.value = orderInfo?.supplyType === orderSupplyTypeEnum.PARTY_A.V
+  noDetail.value = isBlank(orderInfo?.details)
   form.auxMatList = []
   const trigger = watch(
     matSpecRef,

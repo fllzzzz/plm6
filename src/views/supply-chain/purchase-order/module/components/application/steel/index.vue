@@ -19,7 +19,6 @@ const matSpecRef = inject('matSpecRef') // 调用父组件matSpecRef
 const steelRef = ref()
 
 watchEffect(() => {
-  console.log(form)
   let _mete = 0
   let _amount = 0
   const list = ['steelPlateList', 'sectionSteelList', 'steelCoilList']

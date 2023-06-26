@@ -373,7 +373,7 @@ import { add, edit } from '@/api/supply-chain/purchase-order'
 import { downloadExcelTemplate } from '@/api/wms/common'
 import { ref, computed, provide, nextTick, watchEffect, watch, defineProps, defineEmits } from 'vue'
 import { matClsEnum, steelClsEnum, materialPurchaseClsEnum } from '@enum-ms/classification'
-import { orderSupplyTypeEnum, baseMaterialTypeEnum, purchaseOrderPaymentModeEnum, receiptTypeEnum } from '@enum-ms/wms'
+import { baseMaterialTypeEnum, purchaseOrderPaymentModeEnum, receiptTypeEnum } from '@enum-ms/wms'
 import { logisticsPayerEnum, logisticsTransportTypeEnum } from '@/utils/enum/modules/logistics'
 import { invoiceTypeEnum } from '@enum-ms/finance'
 import { fileClassifyEnum } from '@enum-ms/file'
@@ -417,31 +417,6 @@ import { ElMessage } from 'element-plus'
 const emit = defineEmits('success')
 
 const defaultForm = {
-  useRequisitions: true, // 是否绑定申购单
-  serialNumber: undefined, // 采购合同编号编号
-  supplyType: orderSupplyTypeEnum.SELF.V, // 供货类型
-  materialType: materialPurchaseClsEnum.STEEL.V, // 材料类型
-  purchaseType: baseMaterialTypeEnum.RAW_MATERIAL.V, // 物料种类
-  currentBasicClass: matClsEnum.STEEL_PLATE.V, // 物料类型
-  isAllMaterial: false, // 是否选择全部辅材
-  auxMaterialIds: undefined, // 辅材明细ids
-  isAllOtherMaterial: false, // 是否选择全部其他材料
-  otherMaterialIds: undefined, // 其他材料明细ids
-  projectIds: undefined, // 项目ids
-  projectId: undefined,
-  supplierId: undefined, // 供应商id
-  branchCompanyId: undefined, // 公司签订主体
-  mete: undefined, // 合同量
-  meteUnit: 'kg', // 合同量单位
-  amount: undefined, // 合同金额
-  invoiceType: invoiceTypeEnum.SPECIAL.V, // 发票类型
-  taxRate: undefined, // 税率
-  // weightMeasurementMode: weightMeasurementModeEnum.THEORY.V, // 重量计量方式
-  logisticsTransportType: logisticsTransportTypeEnum.FREIGHT.V, // 物流运输方式
-  logisticsPayerType: logisticsPayerEnum.SUPPLIER.V, // 物流运输方式 90%由供方承担运费
-  purchaseOrderPaymentMode: purchaseOrderPaymentModeEnum.ARRIVAL.V, // 订单类型
-  remark: undefined, // 备注
-  attachments: undefined, // 附件
   attachmentIds: undefined, // 附件ids
   list: [],
   sectionSteelList: [],
@@ -491,6 +466,18 @@ const { cu, form, FORM } = useForm(
   props.detail
 )
 
+watch(
+  () => props.detail,
+  (val = {}) => {
+    form.useRequisitions = val.useRequisitions// 是否绑定申购单
+    form.materialType = props.detail.materialType // 材料类型
+    form.purchaseType = props.detail.purchaseType// 物料种类
+    form.currentBasicClass = props.detail.currentBasicClass // 物料类型
+    form.supplyType = props.detail.supplyType // 供货类型
+  },
+  { deep: true, immediate: true }
+)
+
 provide('cu', cu)
 
 function setFormCallback() {
@@ -500,17 +487,6 @@ function setFormCallback() {
 function init() {
 
 }
-
-// 表格高度处理
-// const { maxHeight, heightStyle } = useMaxHeight(
-//   {
-//     mainBox: '.purchase-order-raw-mat-form',
-//     extraBox: ['.el-drawer__header'],
-//     wrapperBox: ['.el-drawer__body'],
-//     clientHRepMainH: true
-//   },
-//   props.dialogVisible
-// )
 
 // ------------------------- rules start -----------------------------------
 const validateInvoiceType = (rule, value, callback) => {

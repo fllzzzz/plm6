@@ -193,21 +193,21 @@ const formList = computed(() => {
   const list = []
   if (isNotBlank(form.steelPlateList)) {
     form.steelPlateList.forEach((v) => {
-      if (boolPartyA.value || form.selectObj[v.mergeId]?.isSelected || (!boolPartyA.value && isBlank(order.value?.details))) {
+      if (boolPartyA.value || (!boolPartyA.value && isBlank(order.value?.details)) || form.selectObj[v.mergeId]?.isSelected) {
         list.push(v)
       }
     })
   }
   if (isNotBlank(form.sectionSteelList)) {
     form.sectionSteelList.forEach((v) => {
-      if (boolPartyA.value || form.selectObj[v.mergeId]?.isSelected || (!boolPartyA.value && isBlank(order.value?.details))) {
+      if (boolPartyA.value || (!boolPartyA.value && isBlank(order.value?.details)) || form.selectObj[v.mergeId]?.isSelected) {
         list.push(v)
       }
     })
   }
   if (isNotBlank(form.steelCoilList)) {
     form.steelCoilList.forEach((v) => {
-      if (boolPartyA.value || form.selectObj[v.mergeId]?.isSelected || (!boolPartyA.value && isBlank(order.value?.details))) {
+      if (boolPartyA.value || (!boolPartyA.value && isBlank(order.value?.details)) || form.selectObj[v.mergeId]?.isSelected) {
         const _v = { ...v }
         _v.quantity = _v.length
         list.push(_v)
@@ -284,7 +284,7 @@ const setFormCallback = (form) => {
             // 初始化数据监听，执行一次后取消当前监听
             form[key].forEach((v) => {
               ref[key].rowWatch(v)
-              if (!boolPartyA.value && form.selectObj?.[v.mergeId]?.isSelected) {
+              if (!boolPartyA.value && !noDetail.value && form.selectObj?.[v.mergeId]?.isSelected) {
                 ref[key].toggleRowSelection(v, true)
               }
             })
@@ -418,6 +418,7 @@ watch(
 init()
 
 FORM.HOOK.beforeToEdit = async (crud, form) => {
+  console.log(form)
   if (!props.edit) return
   // 采购合同id
   form.purchaseId = form.purchaseOrder?.id
@@ -447,7 +448,6 @@ function validate() {
     return false
   }
   const tableValidateRes = validateTable()
-  console.log(formList.value)
   if (tableValidateRes) {
     const _list = []
     formList.value.forEach((v) => {
@@ -555,12 +555,16 @@ async function handleOrderInfoChange(orderInfo) {
   boolPartyA.value = orderInfo?.supplyType === orderSupplyTypeEnum.PARTY_A.V
   noDetail.value = isBlank(orderInfo?.details)
   Object.keys(steelBasicClassKV).forEach((k) => {
+    if (!noDetail.value && !boolPartyA.value && !isDraft.value) {
+      form[k] = []
+    }
     if (steelBasicClassKV[k].V & orderInfo?.basicClass) {
       if (!currentBasicClass.value) currentBasicClass.value = steelBasicClassKV[k].K // 为空则赋值
       disabledBasicClass.value[k] = false
+    } else {
+      form[k] = []
     }
     if (!(boolPartyA.value && isDraft.value)) {
-      form[k] = []
       const trigger = watch(
         matSpecRef,
         () => {
@@ -579,7 +583,7 @@ async function handleOrderInfoChange(orderInfo) {
     // 默认赋值
     nextTick(() => {
       steelRefList[currentBasicClass.value] = steelRef.value
-      if (boolPartyA.value && isDraft.value) {
+      if ((boolPartyA.value) && isDraft.value) {
       // 设置监听等
         setFormCallback(form)
       }
