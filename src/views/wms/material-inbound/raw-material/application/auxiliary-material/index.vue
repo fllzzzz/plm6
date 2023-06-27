@@ -250,7 +250,7 @@ FORM.HOOK.beforeToEdit = async (crud, form) => {
   form.purchaseId = form.purchaseOrder?.id
   if (!form.logistics) form.logistics = {}
   // 设置监听等
-  if (boolPartyA.value) {
+  if (boolPartyA.value || noDetail.value) {
     form.auxMatList = form.list
     setFormCallback(form)
   }
@@ -305,10 +305,11 @@ async function handleOrderInfoChange(orderInfo) {
   order.value = orderInfo
   cu.props.order = orderInfo
   boolPartyA.value = orderInfo?.supplyType === orderSupplyTypeEnum.PARTY_A.V
-  console.log(orderInfo)
   noDetail.value = isBlank(orderInfo?.details)
-  if (!(boolPartyA.value && isDraft.value)) {
+  if (!noDetail.value && !boolPartyA.value && !isDraft.value) {
     form.auxMatList = []
+  }
+  if (!(boolPartyA.value && isDraft.value)) {
     const trigger = watch(
       matSpecRef,
       () => {

@@ -33,7 +33,7 @@ import { regForm } from '@compos/use-crud'
 
 import { orderSupplyTypeEnum, baseMaterialTypeEnum, purchaseOrderPaymentModeEnum } from '@enum-ms/wms'
 import { logisticsPayerEnum, logisticsTransportTypeEnum } from '@/utils/enum/modules/logistics'
-import { weightMeasurementModeEnum, invoiceTypeEnum } from '@enum-ms/finance'
+import { invoiceTypeEnum } from '@enum-ms/finance'
 import { whetherEnum } from '@enum-ms/common'
 import { matClsEnum, materialPurchaseClsEnum } from '@enum-ms/classification'
 import { steelInboundFormFormat } from '@/utils/wms/measurement-calc'

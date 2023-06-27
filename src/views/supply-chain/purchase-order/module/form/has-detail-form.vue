@@ -474,6 +474,7 @@ watch(
     form.purchaseType = props.detail.purchaseType// 物料种类
     form.currentBasicClass = props.detail.currentBasicClass // 物料类型
     form.supplyType = props.detail.supplyType // 供货类型
+    form.boolUsed = props.detail.boolUsed
   },
   { deep: true, immediate: true }
 )
