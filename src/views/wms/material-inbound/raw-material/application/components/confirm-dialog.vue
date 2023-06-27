@@ -95,7 +95,6 @@ import { tableSummary } from '@/utils/el-extra'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 // import { isBlank, isNotBlank, toFixed } from '@/utils/data-type'
 import { isBlank, isNotBlank } from '@/utils/data-type'
-import { DP } from '@/settings/config'
 import { materialHasAmountColumns } from '@/utils/columns-format/wms'
 
 import { regExtra } from '@/composables/form/use-form'
@@ -116,6 +115,9 @@ import projectSetColumns from '@/views/wms/material-inbound/raw-material/compone
 import warehouseSetColumns from '@/views/wms/material-inbound/raw-material/components/warehouse-set-columns.vue'
 import titleAfterInfo from '@/views/wms/material-inbound/raw-material/components/title-after-info.vue'
 import commonFooter from './common-footer.vue'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 // TODO:处理申购单与项目之间的关联
 // TODO: 标签打印提示
 
@@ -342,7 +344,7 @@ function setDitto(list) {
 // 合计
 function getSummaries(param) {
   return tableSummary(param, {
-    props: ['quantity', 'mete', ['amount', DP.YUAN]],
+    props: ['quantity', 'mete', ['amount', decimalPrecision.wms]],
     toThousandFields: ['mete', 'amount']
   })
 }

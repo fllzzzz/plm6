@@ -18,7 +18,7 @@
           type="text"
           :min="0"
           :max="999999999"
-          :precision="DP.YUAN"
+          :precision="decimalPrecision.wms"
           :controls="false"
           placeholder="运费"
           style="width: 150px"
@@ -30,7 +30,7 @@
           v-model="currentForm.entruckPrice"
           :min="0"
           :max="999999999"
-          :precision="DP.YUAN"
+          :precision="decimalPrecision.wms"
           :controls="false"
           size="mini"
           placeholder="装车费"
@@ -43,7 +43,7 @@
           v-model="currentForm.entruckPrice"
           :min="0"
           :max="999999999"
-          :precision="DP.YUAN"
+          :precision="decimalPrecision.wms"
           :controls="false"
           size="mini"
           placeholder="其他杂费"
@@ -86,7 +86,9 @@ import { supplierTypeEnum, supplierClassEnum } from '@/utils/enum/modules/suppli
 import supplierSelect from '@/components-system/base/supplier-select/index.vue'
 import invoiceTypeSelect from '@/components-system/base/invoice-type-select.vue'
 import { isNotBlank, isBlank } from '@/utils/data-type'
-import { DP } from '@/settings/config'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const props = defineProps({
   disabled: {

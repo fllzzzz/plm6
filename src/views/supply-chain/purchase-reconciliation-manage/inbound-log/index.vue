@@ -56,6 +56,9 @@ import useCRUD from '@compos/use-crud'
 import pagination from '@crud/Pagination'
 import mHeader from './module/header'
 import inboundRecord from '@/views/supply-chain/purchase-reconciliation-manage/payment-ledger/module/inbound-record'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const optShow = {
   add: false,
@@ -68,8 +71,8 @@ const tableRef = ref()
 const headerRef = ref()
 const dataFormat = ref([
   ['createTime', 'parse-time'],
-  ['amount', ['to-thousand-ck', 'YUAN']],
-  ['inboundAmount', ['to-thousand-ck', 'YUAN']],
+  ['amount', ['to-thousand', decimalPrecision.supplyChain]],
+  ['inboundAmount', ['to-thousand', decimalPrecision.supplyChain]],
   ['inboundRate', ['to-fixed', 2]]
 ])
 const { crud, columns, CRUD } = useCRUD(

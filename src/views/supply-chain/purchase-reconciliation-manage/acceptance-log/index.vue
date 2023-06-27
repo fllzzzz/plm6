@@ -74,7 +74,6 @@ import { ref } from 'vue'
 
 import { purchaseAcceptanceLogPM as permission } from '@/page-permission/supply-chain'
 import { tableSummary } from '@/utils/el-extra'
-import { DP } from '@/settings/config'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
@@ -82,6 +81,9 @@ import pagination from '@crud/Pagination'
 import mHeader from './module/header'
 import materialUnitQuantityColumns from '@/components-system/wms/table-columns/material-unit-quantity-columns/index.vue'
 import materialBaseInfoColumns from '@/components-system/wms/table-columns/material-base-info-columns/index.vue'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const optShow = {
   add: false,
@@ -93,7 +95,7 @@ const optShow = {
 const tableRef = ref()
 // 表格列数据格式转换
 const columnsDataFormat = ref([
-  ['amountExcludingVAT', ['to-thousand-ck', 'YUAN']],
+  ['amountExcludingVAT', ['to-thousand', decimalPrecision.supplyChain]],
   ['inboundTime', 'parse-time']
 ])
 
@@ -115,7 +117,7 @@ const { maxHeight } = useMaxHeight({ paginate: true })
 function getSummaries(param) {
   return tableSummary(param, {
     // 此页面钢材默认显示吨，保留3位，金额显示4位
-    props: ['quantity', ['mete', 3], ['amountExcludingVAT', DP.YUAN]],
+    props: ['quantity', ['mete', 3], ['amountExcludingVAT', decimalPrecision.supplyChain]],
     toThousandFields: ['amountExcludingVAT']
   })
 }

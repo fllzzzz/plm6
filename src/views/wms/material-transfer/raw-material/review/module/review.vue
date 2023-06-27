@@ -100,7 +100,6 @@ import { tableSummary } from '@/utils/el-extra'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { setSpecInfoToList } from '@/utils/wms/spec'
 import { deepClone } from '@/utils/data-type'
-import { DP } from '@/settings/config'
 import { partyAMatTransferEnum, transferTypeEnum } from '@/utils/enum/modules/wms'
 import { invoiceTypeEnum } from '@/utils/enum/modules/finance'
 import { materialHasAmountColumns } from '@/utils/columns-format/wms'
@@ -121,6 +120,9 @@ import invoiceTypeSelect from '@/components-system/base/invoice-type-select.vue'
 import unfreezeInfo from '@/views/wms/material-freeze/raw-material/components/unfreeze-info.vue'
 import commonTitleInfo from './common-title-info.vue'
 import setPartyAInfo from './set-party-a-info.vue'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 // import useWmsConfig from '@/composables/store/use-wms-config'
 
 // 物料加权配置
@@ -371,7 +373,7 @@ function closeHook() {
 // 合计
 function getSummaries(param) {
   return tableSummary(param, {
-    props: ['quantity', 'mete', ['amount', DP.YUAN]],
+    props: ['quantity', 'mete', ['amount', decimalPrecision.wms]],
     toThousandFields: ['mete', 'amount']
   })
 }

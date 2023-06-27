@@ -60,7 +60,6 @@ import { defineProps, defineEmits, ref, watch, provide, nextTick, reactive, comp
 import { matClsEnum } from '@/utils/enum/modules/classification'
 import { orderSupplyTypeEnum, inboundFillWayEnum } from '@/utils/enum/modules/wms'
 import { isNotBlank, toFixed } from '@/utils/data-type'
-import { DP } from '@/settings/config'
 
 import useForm from '@/composables/form/use-form'
 import useMaxHeight from '@compos/use-max-height'
@@ -68,6 +67,9 @@ import useWmsConfig from '@/composables/store/use-wms-config'
 import CommonWrapper from '@/views/wms/material-inbound/raw-material/application/components/common-wrapper.vue'
 import MaterialTableSpecSelect from '@/components-system/classification/material-table-spec-select.vue'
 import AuxMatTable from './module/aux-mat-table.vue'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const emit = defineEmits(['success'])
 
@@ -117,7 +119,7 @@ const totalAmount = computed(() => {
       })
     }
   }
-  return toFixed(amount, DP.YUAN)
+  return toFixed(amount, decimalPrecision.wms)
 })
 
 provide('matSpecRef', matSpecRef) // 供兄弟组件调用 删除

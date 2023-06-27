@@ -44,7 +44,7 @@
               :step="10000"
               :min="0"
               :max="detailInfo?.sourceRow?.settlementAmount?detailInfo?.sourceRow?.settlementAmount-detailInfo?.sourceRow?.paymentAmount:999999999999"
-              :precision="DP.YUAN"
+              :precision="decimalPrecision.supplyChain"
               placeholder="本次付款"
               controls-position="right"
               style="width: 220px"
@@ -123,12 +123,14 @@ import moment from 'moment'
 import { fileClassifyEnum } from '@enum-ms/file'
 import { digitUppercase } from '@data-type/number'
 import { parseTime } from '@/utils/date'
-import { DP } from '@/settings/config'
 
 import { regForm } from '@compos/use-crud'
 import useDict from '@compos/store/use-dict'
 import UploadBtn from '@comp/file-upload/UploadBtn'
 import showPdfAndImg from '@comp-base/show-pdf-and-img.vue'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const formRef = ref()
 const dict = useDict(['payment_reason'])

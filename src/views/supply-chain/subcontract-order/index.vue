@@ -56,6 +56,9 @@ import mHeader from './module/header'
 import mForm from './module/form'
 import mDetail from './module/detail'
 import udOperation from '@crud/UD.operation.vue'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const optShow = {
   add: true,
@@ -69,7 +72,7 @@ const headerRef = ref()
 const dataFormat = ref([
   ['signDate', ['parse-time', '{y}-{m}-{d}']],
   ['project', 'parse-project'],
-  ['amount', ['to-thousand-ck', 'YUAN']]
+  ['amount', ['to-thousand', decimalPrecision.supplyChain]]
 ])
 const { crud, columns, CRUD } = useCRUD(
   {

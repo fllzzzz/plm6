@@ -50,7 +50,6 @@
 import { computed, ref, inject } from 'vue'
 import { orderSupplyTypeEnum } from '@enum-ms/wms'
 import { tableSummary } from '@/utils/el-extra'
-import { DP } from '@/settings/config'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { setSpecInfoToList } from '@/utils/wms/spec'
 import { materialHasAmountColumns } from '@/utils/columns-format/wms'
@@ -67,6 +66,9 @@ import purchaseDetailButton from '@/components-system/wms/purchase-detail-button
 
 import titleAfterInfo from '@/views/wms/material-reject/raw-material/components/title-after-info.vue'
 import unfreezeInfo from '@/views/wms/material-freeze/raw-material/components/unfreeze-info.vue'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const permission = inject('permission')
 const drawerRef = ref()
@@ -110,7 +112,7 @@ CRUD.HOOK.beforeDetailLoaded = async (crud, detail) => {
 // 合计
 function getSummaries(param) {
   return tableSummary(param, {
-    props: ['quantity', 'mete', ['amount', DP.YUAN], ['amountExcludingVAT', DP.YUAN], ['inputVAT', DP.YUAN]],
+    props: ['quantity', 'mete', ['amount', decimalPrecision.wms], ['amountExcludingVAT', decimalPrecision.wms], ['inputVAT', decimalPrecision.wms]],
     toThousandFields: ['amount', 'amountExcludingVAT', 'inputVAT']
   })
 }

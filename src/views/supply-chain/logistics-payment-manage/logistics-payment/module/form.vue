@@ -39,12 +39,12 @@
           </el-table-column>
           <el-table-column key="freight" prop="freight" label="运费总额" align="center" min-width="120" :show-overflow-tooltip="true">
             <template v-slot="scope">
-              <div>{{ toThousand(scope.row.freight) }}</div>
+              <div>{{ toThousand(scope.row.freight,decimalPrecision.supplyChain) }}</div>
             </template>
           </el-table-column>
           <el-table-column key="paymentAmount" prop="paymentAmount" label="已支付" align="center" min-width="120" :show-overflow-tooltip="true">
             <template v-slot="scope">
-              <div>{{ toThousand(scope.row.paymentAmount) }}</div>
+              <div>{{ toThousand(scope.row.paymentAmount,decimalPrecision.supplyChain) }}</div>
             </template>
           </el-table-column>
            <el-table-column key="applyAmount" prop="applyAmount" label="本次支付金额(元)" align="center" min-width="120" :show-overflow-tooltip="true">
@@ -56,7 +56,7 @@
                 :min="scope.row.paymentAmount>scope.row.freight?(-(scope.row.paymentAmount-scope.row.freight)):0"
                 :max="scope.row.paymentAmount>scope.row.freight?0:scope.row.freight-scope.row.paymentAmount"
                 :step="100"
-                :precision="DP.YUAN"
+                :precision="decimalPrecision.supplyChain"
                 placeholder="本次支付(元)"
                 controls-position="right"
               />
@@ -125,7 +125,6 @@ import { ref, computed, defineProps } from 'vue'
 import moment from 'moment'
 import { tableSummary } from '@/utils/el-extra'
 import { toThousand } from '@data-type/number'
-import { DP } from '@/settings/config'
 import { fileClassifyEnum } from '@enum-ms/file'
 import { logisticsSearchTypeEnum } from '@enum-ms/contract'
 import { digitUppercase } from '@/utils/data-type/number'
@@ -133,6 +132,9 @@ import { digitUppercase } from '@/utils/data-type/number'
 import { regForm } from '@compos/use-crud'
 import UploadBtn from '@comp/file-upload/UploadBtn'
 import { ElMessage } from 'element-plus'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 // 获取数据源
 const totalAmount = computed(() => {
@@ -198,7 +200,7 @@ async function fetchList() {
 // 合计
 function getSummaries(param) {
   return tableSummary(param, {
-    props: [['freight', DP.YUAN], ['paymentAmount', DP.YUAN], ['applyAmount', DP.YUAN]],
+    props: [['freight', decimalPrecision.supplyChain], ['paymentAmount', decimalPrecision.supplyChain], ['applyAmount', decimalPrecision.supplyChain]],
     toThousandFields: ['freight', 'paymentAmount', 'applyAmount']
   })
 }
@@ -220,7 +222,7 @@ CRUD.HOOK.beforeSubmit = () => {
         projectId: v.projectId,
         purchaseId: v.purchaseId,
         type: v.type,
-        applyAmount: Number(v.applyAmount.toFixed(DP.YUAN))
+        applyAmount: Number(v.applyAmount.toFixed(decimalPrecision.supplyChain))
       })
     }
   })

@@ -24,7 +24,7 @@
         :controls="false"
         :step="1"
         size="mini"
-        :precision="DP.YUAN"
+        :precision="decimalPrecision.wms"
         placeholder="金额"
         @change="handleAmountChange($event, row)"
       />
@@ -37,7 +37,9 @@ import { defineProps } from 'vue'
 
 import { isNotBlank, toPrecision } from '@/utils/data-type'
 import { getDP } from '@/utils/data-type/number'
-import { DP } from '@/settings/config'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const props = defineProps({
   weightAttribute: { // 重量属性
@@ -53,7 +55,7 @@ function handleUnitPriceChange(val, row) {
     row.unitPrice = toPrecision(val, 10)
     val = row.unitPrice
   }
-  row.amount = isNotBlank(val) ? toPrecision(val * row[props.weightAttribute], DP.YUAN) : undefined
+  row.amount = isNotBlank(val) ? toPrecision(val * row[props.weightAttribute], decimalPrecision.wms) : undefined
 }
 
 // 处理金额变化

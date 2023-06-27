@@ -66,7 +66,7 @@ import { ref, defineEmits, defineProps, watch, computed } from 'vue'
 
 import { supplierPayTypeEnum } from '@enum-ms/contract'
 import { invoiceTypeEnum } from '@enum-ms/finance'
-import { digitUppercase, getDP, toThousand } from '@/utils/data-type/number'
+import { digitUppercase, toThousand } from '@/utils/data-type/number'
 import { tableSummary } from '@/utils/el-extra'
 
 import useVisible from '@/composables/use-visible'
@@ -150,9 +150,8 @@ function getSummaries(param) {
   })
   const num = summary[2]
   if (num) {
-    const dp = getDP(num)
     summary[3] = digitUppercase(num)
-    summary[2] = toThousand(num, dp)
+    summary[2] = toThousand(num, decimalPrecision.project)
   }
   return summary
 }

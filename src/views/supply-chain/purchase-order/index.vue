@@ -238,6 +238,9 @@ import mRawMaterialDetail from './module/detail/raw-material.vue'
 import tableCellTag from '@comp-common/table-cell-tag/index.vue'
 import elExpandTableColumn from '@comp-common/el-expand-table-column.vue'
 import useMatClsList from '@/composables/store/use-mat-class-list'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const optShow = {
   add: false,
@@ -253,7 +256,7 @@ const store = useStore()
 const columnsDataFormat = ref([
   ...wmsReceiptColumns,
   ['invoiceType', ['parse-enum', invoiceTypeEnum]],
-  ['amount', ['to-thousand-ck', 'YUAN']],
+  ['amount', ['to-thousand', decimalPrecision.supplyChain]],
   ['requisitionsSNStr', 'empty-text'],
   ['remark', 'empty-text'],
   ['auxMaterialNames', 'split'],

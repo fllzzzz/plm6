@@ -120,6 +120,9 @@ import detail from './module/detail'
 import ExportButton from '@comp-common/export-button/index.vue'
 // import materialUnitQuantityColumns from '@/components-system/wms/table-columns/material-unit-quantity-columns/index.vue'
 import materialBaseInfoColumns from '@/components-system/wms/table-columns/material-base-info-columns/index.vue'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const optShow = {
   add: false,
@@ -133,7 +136,7 @@ const drawerVisible = ref(false)
 const tableRef = ref()
 // 表格列数据格式转换
 const columnsDataFormat = ref([
-  ['amountExcludingVAT', ['to-thousand-ck', 'YUAN']],
+  ['amountExcludingVAT', ['to-thousand', decimalPrecision.wms]],
   ['inboundTime', 'parse-time']
 ])
 

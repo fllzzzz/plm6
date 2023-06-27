@@ -92,7 +92,6 @@ import { materialRejectStatusEnum, measureTypeEnum, orderSupplyTypeEnum } from '
 import { reviewStatusEnum } from '@/utils/enum/modules/common'
 import { materialStatusEnum } from '@/views/wms/material-reject/enum'
 import { tableSummary } from '@/utils/el-extra'
-import { DP } from '@/settings/config'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { setSpecInfoToList } from '@/utils/wms/spec'
 import { deepClone, isNotBlank, toFixed } from '@/utils/data-type'
@@ -113,6 +112,9 @@ import purchaseDetailButton from '@/components-system/wms/purchase-detail-button
 import RejectInfoTable from '@/views/wms/material-reject/raw-material/components/reject-info-table.vue'
 import RejectMatchInfo from '@/views/wms/material-reject/raw-material/components/reject-match-info.vue'
 import Preview from './preview.vue'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const emit = defineEmits(['success', 'update:visible'])
 const props = defineProps({
@@ -307,7 +309,7 @@ function handleSubmitSuccess() {
 // 合计
 function getSummaries(param) {
   return tableSummary(param, {
-    props: ['quantity', 'mete', ['amount', DP.YUAN], ['amountExcludingVAT', DP.YUAN], ['inputVAT', DP.YUAN]],
+    props: ['quantity', 'mete', ['amount', decimalPrecision.wms], ['amountExcludingVAT', decimalPrecision.wms], ['inputVAT', decimalPrecision.wms]],
     toThousandFields: ['amount', 'amountExcludingVAT', 'inputVAT']
   })
 }

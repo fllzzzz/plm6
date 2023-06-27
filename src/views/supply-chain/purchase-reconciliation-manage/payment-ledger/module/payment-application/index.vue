@@ -3,8 +3,8 @@
     <!--表格渲染-->
     <div>
       <common-button type="primary" size="mini" @click="crud.toAdd" style="margin-right:10px;" v-if="checkPermission(permission.add)">添加</common-button>
-      <el-tag type="success" size="medium" v-if="detailInfo.amount">{{'合同金额:'+toThousand(detailInfo.amount)}}</el-tag>
-      <el-tag type="success" size="medium" v-if="detailInfo?.sourceRow?.settlementAmount" style="margin-left:5px;">{{'结算金额:'+toThousand(detailInfo?.sourceRow?.settlementAmount)}}</el-tag>
+      <el-tag type="success" size="medium" v-if="detailInfo.amount">{{'合同金额:'+toThousand(detailInfo.amount,decimalPrecision.supplyChain)}}</el-tag>
+      <el-tag type="success" size="medium" v-if="detailInfo?.sourceRow?.settlementAmount" style="margin-left:5px;">{{'结算金额:'+toThousand(detailInfo?.sourceRow?.settlementAmount,decimalPrecision.supplyChain)}}</el-tag>
     </div>
     <common-table
       ref="tableRef"
@@ -64,6 +64,9 @@ import pagination from '@crud/Pagination'
 import udOperation from '@crud/UD.operation'
 import mForm from './form'
 import mDetail from './detail'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const permission = supplierMaterialPaymentPM.application
 
@@ -88,7 +91,7 @@ const props = defineProps({
 const dataFormat = ref([
   ['paymentDate', ['parse-time', '{y}-{m}-{d}']],
   ['auditTime', 'parse-time'],
-  ['applyAmount', ['to-thousand-ck', 'YUAN']]
+  ['applyAmount', ['to-thousand', decimalPrecision.supplyChain]]
 ])
 
 const tableRef = ref()

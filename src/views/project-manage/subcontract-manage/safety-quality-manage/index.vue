@@ -107,6 +107,9 @@ import useCRUD from '@compos/use-crud'
 import pagination from '@crud/Pagination'
 import mHeader from './module/header'
 import mDetail from './module/detail'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const optShow = {
   add: false,
@@ -118,7 +121,7 @@ const optShow = {
 const dataFormat = ref([
   ['problemDate', ['parse-time', '{y}-{m}-{d}']],
   ['project', 'parse-project'],
-  ['penalty', ['to-thousand-ck', 'YUAN']]
+  ['penalty', ['to-thousand', decimalPrecision.project]]
 ])
 
 const tableRef = ref()

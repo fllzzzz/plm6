@@ -217,6 +217,9 @@ import MDetail from './module/detail.vue'
 import ElExpandTableColumn from '@comp-common/el-expand-table-column.vue'
 import TableCellTag from '@comp-common/table-cell-tag/index.vue'
 import ReceiptSnClickable from '@/components-system/wms/receipt-sn-clickable'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const optShow = {
   add: false,
@@ -229,8 +232,8 @@ const optShow = {
 const columnsDataFormat = ref([
   ...reviewTimeColumns,
   ['inboundTime', 'parse-time'],
-  ['rejectAmountExcludingVAT', ['to-thousand-ck', 'YUAN']],
-  ['inboundAmountExcludingVAT', ['to-thousand-ck', 'YUAN']],
+  ['rejectAmountExcludingVAT', ['to-thousand', decimalPrecision.wms]],
+  ['inboundAmountExcludingVAT', ['to-thousand', decimalPrecision.wms]],
   ['projects', ['parse-project', { onlyShortName: true }]],
   ['projectsFullName', 'parse-project', { source: 'projects' }],
   ['basicClass', ['parse-enum', rawMatClsEnum, { bit: true, split: ' | ' }]]

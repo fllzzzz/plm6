@@ -86,6 +86,9 @@ import { setSpecInfoToList } from '@/utils/wms/spec'
 
 import ReceiptSnClickable from '@/components-system/wms/receipt-sn-clickable'
 import ExportButton from '@comp-common/export-button/index.vue'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const drawerRef = ref()
 const emit = defineEmits(['update:visible'])
@@ -108,12 +111,12 @@ const showAmount = computed(() => checkPermission(permission.showAmount))
 // 表格列数据格式转换
 const dataFormat = ref([
   ['createTime', ['parse-time', '{y}-{m}-{d}']],
-  ['inboundUnitPriceExcludingVat', ['to-thousand-ck', 'YUAN']],
-  ['inboundAmountExcludingVat', ['to-thousand-ck', 'YUAN']],
-  ['outboundUnitPriceExcludingVat', ['to-thousand-ck', 'YUAN']],
-  ['outboundAmountExcludingVat', ['to-thousand-ck', 'YUAN']],
-  ['endUnitPriceExcludingVat', ['to-thousand-ck', 'YUAN']],
-  ['endAmountExcludingVat', ['to-thousand-ck', 'YUAN']]
+  ['inboundUnitPriceExcludingVat', ['to-thousand', decimalPrecision.wms]],
+  ['inboundAmountExcludingVat', ['to-thousand', decimalPrecision.wms]],
+  ['outboundUnitPriceExcludingVat', ['to-thousand', decimalPrecision.wms]],
+  ['outboundAmountExcludingVat', ['to-thousand', decimalPrecision.wms]],
+  ['endUnitPriceExcludingVat', ['to-thousand', decimalPrecision.wms]],
+  ['endAmountExcludingVat', ['to-thousand', decimalPrecision.wms]]
 
 ])
 

@@ -99,6 +99,9 @@ import mHeader from './module/header'
 import invoiceRecord from './module/invoice-record'
 import paymentApplication from './module/payment-application'
 import mForm from './module/form'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const optShow = {
   add: false,
@@ -113,9 +116,9 @@ const applicationVisible = ref(false)
 const dataFormat = ref([
   ['paymentRate', ['to-fixed', 2]],
   ['invoiceRate', ['to-fixed', 2]],
-  ['freight', ['to-thousand-ck', 'YUAN']],
-  ['paymentAmount', ['to-thousand-ck', 'YUAN']],
-  ['invoiceAmount', ['to-thousand-ck', 'YUAN']]
+  ['freight', ['to-thousand', decimalPrecision.supplyChain]],
+  ['paymentAmount', ['to-thousand', decimalPrecision.supplyChain]],
+  ['invoiceAmount', ['to-thousand', decimalPrecision.supplyChain]]
 ])
 const { crud, columns, CRUD } = useCRUD(
   {

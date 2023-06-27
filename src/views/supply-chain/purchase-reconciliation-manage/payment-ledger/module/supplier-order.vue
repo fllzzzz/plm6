@@ -5,7 +5,7 @@
       <el-table-column prop="supplierName" label="供应商" align="center" show-overflow-tooltip />
       <el-table-column prop="amount" label="累计合同额" align="right" show-overflow-tooltip>
         <template #default="{ row }">
-          <span>{{ isNotBlank(row.amount)? toThousand(row.amount): 0 }}</span>
+          <span>{{ isNotBlank(row.amount)? toThousand(row.amount,decimalPrecision.supplyChain): 0 }}</span>
         </template>
       </el-table-column>
       <el-table-column prop="paymentAmount" key="paymentAmount" label="付款额" align="right" min-width="120" show-overflow-tooltip>
@@ -27,12 +27,12 @@
       </el-table-column>
       <el-table-column prop="inboundAmount" label="累计入库额" align="right" show-overflow-tooltip>
         <template #default="{ row }">
-          <span>{{ isNotBlank(row.inboundAmount)? toThousand(row.inboundAmount): 0 }}</span>
+          <span>{{ isNotBlank(row.inboundAmount)? toThousand(row.inboundAmount,decimalPrecision.supplyChain): 0 }}</span>
         </template>
       </el-table-column>
       <el-table-column prop="paymentAmount" label="累计已付款" align="right" show-overflow-tooltip>
         <template #default="{ row }">
-          <span>{{ isNotBlank(row.paymentAmount)? toThousand(row.paymentAmount): 0 }}</span>
+          <span>{{ isNotBlank(row.paymentAmount)? toThousand(row.paymentAmount,decimalPrecision.supplyChain): 0 }}</span>
         </template>
       </el-table-column>
       <el-table-column prop="paymentRate" label="付款比例" align="center" show-overflow-tooltip>
@@ -42,7 +42,7 @@
       </el-table-column>
       <el-table-column prop="invoiceAmount" label="累计已开票" align="right" show-overflow-tooltip>
         <template #default="{ row }">
-          <span>{{ isNotBlank(row.invoiceAmount)? toThousand(row.invoiceAmount): 0 }}</span>
+          <span>{{ isNotBlank(row.invoiceAmount)? toThousand(row.invoiceAmount,decimalPrecision.supplyChain): 0 }}</span>
         </template>
       </el-table-column>
       <el-table-column prop="invoiceRate" label="开票比例" align="center" show-overflow-tooltip>
@@ -74,6 +74,9 @@ import { toThousand } from '@data-type/number'
 
 import useMaxHeight from '@compos/use-max-height'
 import usePagination from '@compos/use-pagination'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const props = defineProps({
   modelValue: {

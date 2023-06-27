@@ -69,16 +69,16 @@
     <template v-if="showAmount">
       <el-row v-loading="crud.loading" :gutter="20" class="panel-group">
         <el-col :span="6" class="card-panel-col">
-          <Panel name="期初总额（当月）" text-color="#626262" num-color="#1890ff" :end-val="totalAmount.beginPeriod || 0" :precision="DP.YUAN" />
+          <Panel name="期初总额（当月）" text-color="#626262" num-color="#1890ff" :end-val="totalAmount.beginPeriod || 0" :precision="decimalPrecision.wms" />
         </el-col>
         <el-col :span="6" class="card-panel-col">
-          <Panel name="入库总额（当月）" text-color="#626262" num-color="#1890ff" :end-val="totalAmount.inbound || 0" :precision="DP.YUAN" />
+          <Panel name="入库总额（当月）" text-color="#626262" num-color="#1890ff" :end-val="totalAmount.inbound || 0" :precision="decimalPrecision.wms" />
         </el-col>
         <el-col :span="6" class="card-panel-col">
-          <Panel name="出库总额（当月）" text-color="#626262" num-color="#1890ff" :end-val="totalAmount.outbound || 0" :precision="DP.YUAN" />
+          <Panel name="出库总额（当月）" text-color="#626262" num-color="#1890ff" :end-val="totalAmount.outbound || 0" :precision="decimalPrecision.wms" />
         </el-col>
         <el-col :span="6" class="card-panel-col">
-          <Panel name="期末结存（当月）" text-color="#626262" num-color="#1890ff" :end-val="totalAmount.endPeriod || 0" :precision="DP.YUAN" />
+          <Panel name="期末结存（当月）" text-color="#626262" num-color="#1890ff" :end-val="totalAmount.endPeriod || 0" :precision="decimalPrecision.wms" />
         </el-col>
       </el-row>
     </template>
@@ -94,7 +94,6 @@ import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { setSpecInfoToList } from '@/utils/wms/spec'
 import { specFormat, specTip } from '@/utils/wms/spec-format'
 import checkPermission from '@/utils/system/check-permission'
-import { DP } from '@/settings/config'
 
 import { regHeader } from '@compos/use-crud'
 import rrOperation from '@crud/RR.operation'
@@ -103,6 +102,9 @@ import MatHeaderQuery from '@/components-system/wms/header-query/raw-mat/index.v
 import Panel from '@/components/Panel'
 import warehouseProjectCascader from '@comp-wms/warehouse-project-cascader'
 import ExportButton from '@comp-common/export-button/index.vue'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const permission = inject('permission')
 const defaultTime = ref([new Date(2000, 1, 1, 0, 0, 0)])

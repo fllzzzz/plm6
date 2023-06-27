@@ -62,7 +62,6 @@ import { tableSummary } from '@/utils/el-extra'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { setSpecInfoToList } from '@/utils/wms/spec'
 import { isNotBlank } from '@/utils/data-type'
-import { DP } from '@/settings/config'
 import { materialHasAmountColumns } from '@/utils/columns-format/wms'
 import checkPermission from '@/utils/system/check-permission'
 
@@ -77,6 +76,9 @@ import warehouseInfoColumns from '@/components-system/wms/table-columns/warehous
 import titleAfterInfo from '@/views/wms/material-reject/raw-material/components/title-after-info.vue'
 import purchaseDetailButton from '@/components-system/wms/purchase-detail-button/index.vue'
 import RejectInfoTable from '@/views/wms/material-reject/raw-material/components/reject-info-table.vue'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const permission = inject('permission')
 // 表格列数据格式转换
@@ -132,7 +134,7 @@ CRUD.HOOK.beforeDetailLoaded = async (crud, detail) => {
 // 合计
 function getSummaries(param) {
   return tableSummary(param, {
-    props: ['quantity', 'mete', ['amount', DP.YUAN], ['amountExcludingVAT', DP.YUAN], ['inputVAT', DP.YUAN]],
+    props: ['quantity', 'mete', ['amount', decimalPrecision.wms], ['amountExcludingVAT', decimalPrecision.wms], ['inputVAT', decimalPrecision.wms]],
     toThousandFields: ['amount', 'amountExcludingVAT', 'inputVAT']
   })
 }

@@ -99,7 +99,6 @@ import { setSpecInfoToList } from '@/utils/wms/spec'
 import { materialHasAmountColumns } from '@/utils/columns-format/wms'
 import { specFormat } from '@/utils/wms/spec-format'
 import { isNotBlank } from '@/utils/data-type'
-import { DP } from '@/settings/config'
 import { formTypeEnum } from '../enum'
 import { rawMatClsEnum } from '@/utils/enum/modules/classification'
 
@@ -114,6 +113,9 @@ import amountInfoColumns from '@/components-system/wms/table-columns/amount-info
 import ExportButton from '@comp-common/export-button/index.vue'
 import ReceiptSnClickable from '@/components-system/wms/receipt-sn-clickable'
 import { receiptTypeEnum } from '@/utils/enum/modules/wms'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const emit = defineEmits(['update:visible'])
 
@@ -250,7 +252,7 @@ function getSummaries(param) {
       ? baseUnit.value[materialInfo.value.basicClass].measure.precision
       : 0
   return tableSummary(param, {
-    props: [['quantity', dp], 'mete', ['amount', DP.YUAN], ['amountExcludingVAT', DP.YUAN], ['inputVAT', DP.YUAN]],
+    props: [['quantity', dp], 'mete', ['amount', decimalPrecision.wms], ['amountExcludingVAT', decimalPrecision.wms], ['inputVAT', decimalPrecision.wms]],
     toThousandFields: ['amount', 'amountExcludingVAT', 'inputVAT']
   })
 }

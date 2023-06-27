@@ -69,6 +69,9 @@ import visaForm from './visa/form'
 import visaDetail from './visa/detail.vue'
 import settlementForm from './settlement/form'
 import settlementDetail from './settlement/detail.vue'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const optShow = {
   add: false,
@@ -95,7 +98,7 @@ const mDetail = computed(() => {
 const dataFormat = ref([
   ['project', ['parse-project', { onlyShortName: true }]],
   ['status', ['parse-enum', reviewStatusEnum, { f: 'SL' }]],
-  ['amount', ['to-thousand-ck', 'YUAN']],
+  ['amount', ['to-thousand', decimalPrecision.project]],
   ['createTime', 'parse-time']
 ])
 const { crud, columns } = useCRUD(

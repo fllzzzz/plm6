@@ -190,6 +190,9 @@ import mHeader from './module/header'
 
 import elExpandTableColumn from '@comp-common/el-expand-table-column.vue'
 import ReceiptSnClickable from '@/components-system/wms/receipt-sn-clickable'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const optShow = {
   batchAdd: false,
@@ -206,10 +209,10 @@ const columnsDataFormat = ref([
   ['loadingWeight', ['to-fixed-ck', 'COM_WT__KG']],
   ['invoiceType', ['parse-enum', invoiceTypeEnum]],
   ['taxRate', ['suffix', '%']],
-  ['inputVAT', ['to-thousand-ck', 'YUAN']],
-  ['amountExcludingVAT', ['to-thousand-ck', 'YUAN']],
-  ['freight', ['to-thousand-ck', 'YUAN']],
-  ['amount', ['to-thousand-ck', 'YUAN']],
+  ['inputVAT', ['to-thousand', decimalPrecision.supplyChain]],
+  ['amountExcludingVAT', ['to-thousand', decimalPrecision.supplyChain]],
+  ['freight', ['to-thousand', decimalPrecision.supplyChain]],
+  ['amount', ['to-thousand', decimalPrecision.supplyChain]],
   ['requisitionsSNStr', 'empty-text'],
   ['remark', 'empty-text'],
   ['auxMaterialNames', 'split']

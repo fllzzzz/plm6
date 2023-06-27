@@ -94,6 +94,9 @@ import { freightChangeTypeEnum } from '@enum-ms/mes'
 import useVisible from '@/composables/use-visible'
 import useMaxHeight from '@compos/use-max-height'
 import usePagination from '@compos/use-pagination'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const emit = defineEmits(['update:modelValue'])
 
@@ -145,7 +148,7 @@ const dataFormat = ref([
   ['shipDate', ['parse-time', '{y}-{m}-{d}']],
   ['type', ['parse-enum', logisticsSearchTypeEnum]],
   ['loadingWeight', ['to-fixed', 2]],
-  ['freight', ['to-thousand-ck', 'YUAN']],
+  ['freight', ['to-thousand', decimalPrecision.supplyChain]],
   ['changeFreight', ['parse-enum', freightChangeTypeEnum, { f: 'SL' }]]
 ])
 

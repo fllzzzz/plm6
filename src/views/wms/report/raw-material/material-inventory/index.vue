@@ -36,7 +36,6 @@ import { ref, computed } from 'vue'
 import { materialHasAmountColumns } from '@/utils/columns-format/wms'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { tableSummary } from '@/utils/el-extra'
-import { DP } from '@/settings/config'
 import { setSpecInfoToList } from '@/utils/wms/spec'
 
 import useCRUD from '@compos/use-crud'
@@ -47,6 +46,9 @@ import materialBaseInfoColumns from '@/components-system/wms/table-columns/mater
 import materialUnitQuantityColumns from '@/components-system/wms/table-columns/material-unit-quantity-columns/index.vue'
 import AmountInfoColumns from '@/components-system/wms/table-columns/amount-info-columns/index.vue'
 import WarehouseInfoColumns from '@/components-system/wms/table-columns/warehouse-info-columns/index.vue'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const optShow = {
   add: false,
@@ -81,7 +83,7 @@ const basicClass = computed(() => (crud.query ? crud.query.basicClass : undefine
 // 合计
 function getSummaries(param) {
   return tableSummary(param, {
-    props: ['quantity', 'mete', ['amount', DP.YUAN], ['amountExcludingVAT', DP.YUAN]],
+    props: ['quantity', 'mete', ['amount', decimalPrecision.wms], ['amountExcludingVAT', decimalPrecision.wms]],
     toThousandFields: ['amount', 'amountExcludingVAT']
   })
 }

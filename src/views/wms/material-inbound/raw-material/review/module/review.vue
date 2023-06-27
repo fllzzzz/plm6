@@ -108,7 +108,7 @@
                     :controls="false"
                     :step="1"
                     size="mini"
-                    :precision="DP.YUAN"
+                    :precision="decimalPrecision.wms"
                     placeholder="金额"
                     @change="handleAmountChange($event, row)"
                   />
@@ -169,7 +169,6 @@ import { setSpecInfoToList } from '@/utils/wms/spec'
 // import { deepClone, isBlank, isNotBlank, toFixed } from '@/utils/data-type'
 import { deepClone, isBlank, toPrecision, isNotBlank } from '@/utils/data-type'
 import { getDP } from '@/utils/data-type/number'
-import { DP } from '@/settings/config'
 import { materialHasAmountColumns } from '@/utils/columns-format/wms'
 
 import { regExtra } from '@compos/use-crud'
@@ -194,6 +193,9 @@ import logisticsForm from '@/views/wms/material-inbound/raw-material/components/
 import warehouseSetColumns from '@/views/wms/material-inbound/raw-material/components/warehouse-set-columns.vue'
 import titleAfterInfo from '@/views/wms/material-inbound/raw-material/components/title-after-info.vue'
 import checkPermission from '@/utils/system/check-permission'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const emit = defineEmits(['refresh', 'update:modelValue'])
 
@@ -526,7 +528,7 @@ function setDitto(list) {
 //         return sum
 //       }
 //     }, 0),
-//     DP.YUAN
+//     decimalPrecision.wms
 //   )
 // }
 
@@ -536,7 +538,7 @@ function handleUnitPriceChange(val, row) {
     row.unitPrice = toPrecision(val, 10)
     val = row.unitPrice
   }
-  row.amount = isNotBlank(val) ? toPrecision(val * row.mete, DP.YUAN) : undefined
+  row.amount = isNotBlank(val) ? toPrecision(val * row.mete, decimalPrecision.wms) : undefined
 }
 
 // 处理金额变化
@@ -547,7 +549,7 @@ function handleAmountChange(val, row) {
 // 合计
 function getSummaries(param) {
   return tableSummary(param, {
-    props: ['quantity', 'mete', ['amount', DP.YUAN]],
+    props: ['quantity', 'mete', ['amount', decimalPrecision.wms]],
     toThousandFields: ['mete', 'amount']
   })
 }

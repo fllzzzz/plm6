@@ -67,6 +67,9 @@ import pagination from '@crud/Pagination'
 import udOperation from '@crud/UD.operation'
 import mForm from './form'
 import mDetail from './detail'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const permission = subcontractOrderPaymentPM.paymentManage
 
@@ -92,7 +95,7 @@ const dataFormat = ref([
   ['applyDate', ['parse-time', '{y}-{m}-{d}']],
   ['paymentDate', ['parse-time', '{y}-{m}-{d}']],
   ['auditTime', ['parse-time', '{y}-{m}-{d}']],
-  ['applyAmount', ['to-thousand-ck', 'YUAN']]
+  ['applyAmount', ['to-thousand', decimalPrecision.project]]
 ])
 
 const tableRef = ref()

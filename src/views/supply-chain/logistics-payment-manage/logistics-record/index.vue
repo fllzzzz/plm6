@@ -52,6 +52,9 @@ import useCRUD from '@compos/use-crud'
 import pagination from '@crud/Pagination'
 import mHeader from './module/header'
 import recordDetail from './module/record-detail'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const optShow = {
   add: false,
@@ -76,7 +79,7 @@ const { crud, columns } = useCRUD(
 )
 
 const dataFormat = ref([
-  ['freight', ['to-thousand-ck', 'YUAN']]
+  ['freight', ['to-thousand', decimalPrecision.supplyChain]]
 ])
 
 const { maxHeight } = useMaxHeight({

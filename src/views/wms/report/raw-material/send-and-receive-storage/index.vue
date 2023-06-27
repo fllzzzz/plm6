@@ -279,6 +279,9 @@ import MDetail from './module/detail'
 
 import MaterialSecondaryInfoColumns from '@/components-system/wms/table-columns/material-secondary-info-columns/index.vue'
 import checkPermission from '@/utils/system/check-permission'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const optShow = {
   batchAdd: false,
@@ -290,14 +293,14 @@ const optShow = {
 
 const dataFormat = ref([
   ['project', ['parse-project', { onlyShortName: true }]],
-  ['beginPeriod.unitPriceExcludingVAT', ['to-thousand-ck', 'YUAN']],
-  ['beginPeriod.amountExcludingVAT', ['to-thousand-ck', 'YUAN']],
-  ['inbound.unitPriceExcludingVAT', ['to-thousand-ck', 'YUAN']],
-  ['inbound.amountExcludingVAT', ['to-thousand-ck', 'YUAN']],
-  ['outbound.unitPriceExcludingVAT', ['to-thousand-ck', 'YUAN']],
-  ['outbound.amountExcludingVAT', ['to-thousand-ck', 'YUAN']],
-  ['endPeriod.unitPriceExcludingVAT', ['to-thousand-ck', 'YUAN']],
-  ['endPeriod.amountExcludingVAT', ['to-thousand-ck', 'YUAN']],
+  ['beginPeriod.unitPriceExcludingVAT', ['to-thousand', decimalPrecision.wms]],
+  ['beginPeriod.amountExcludingVAT', ['to-thousand', decimalPrecision.wms]],
+  ['inbound.unitPriceExcludingVAT', ['to-thousand', decimalPrecision.wms]],
+  ['inbound.amountExcludingVAT', ['to-thousand', decimalPrecision.wms]],
+  ['outbound.unitPriceExcludingVAT', ['to-thousand', decimalPrecision.wms]],
+  ['outbound.amountExcludingVAT', ['to-thousand', decimalPrecision.wms]],
+  ['endPeriod.unitPriceExcludingVAT', ['to-thousand', decimalPrecision.wms]],
+  ['endPeriod.amountExcludingVAT', ['to-thousand', decimalPrecision.wms]],
   ['formatSpecArr', 'split']
 ])
 

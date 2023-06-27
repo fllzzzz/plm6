@@ -140,8 +140,8 @@ const tableLoading = ref(false)
 const dict = useDict(['payment_reason'])
 
 const dataFormat = ref([
-  ['applyAmount', ['to-thousand-ck', 'YUAN']],
-  ['actuallyPaymentAmount', ['to-thousand-ck', 'YUAN']],
+  ['applyAmount', ['to-thousand', decimalPrecision.project]],
+  ['actuallyPaymentAmount', ['to-thousand', decimalPrecision.project]],
   ['paymentDate', ['parse-time', '{y}-{m}-{d}']]
 ])
 

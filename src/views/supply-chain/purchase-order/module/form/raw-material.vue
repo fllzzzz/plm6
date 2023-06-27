@@ -165,7 +165,7 @@
                       <common-input-number
                         v-model="form.amount"
                         :max="999999999999"
-                        :precision="DP.YUAN"
+                        :precision="decimalPrecision.supplyChain"
                         :step="1"
                         :controls="false"
                         placeholder="请填写合同额"
@@ -319,7 +319,6 @@ import { isNotBlank, isBlank, deepClone } from '@/utils/data-type'
 import { clearObject } from '@/utils/data-type/object'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { setSpecInfoToList } from '@/utils/wms/spec'
-import { DP } from '@/settings/config'
 
 import { regForm } from '@compos/use-crud'
 import UnitSelect from '@comp-common/unit-select/index.vue'
@@ -337,6 +336,9 @@ import MaterialBaseInfoColumns from '@/components-system/wms/table-columns/mater
 import MaterialUnitQuantityColumns from '@/components-system/wms/table-columns/material-unit-quantity-columns/index.vue'
 import MaterialSecondaryInfoColumns from '@/components-system/wms/table-columns/material-secondary-info-columns/index.vue'
 import { ElMessage } from 'element-plus'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const defaultForm = {
   serialNumber: undefined, // 采购合同编号编号

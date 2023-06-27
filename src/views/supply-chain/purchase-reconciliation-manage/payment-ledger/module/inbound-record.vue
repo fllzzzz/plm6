@@ -69,6 +69,9 @@ import AmountInfoColumns from '@/components-system/wms/table-columns/amount-info
 import useVisible from '@/composables/use-visible'
 import useMaxHeight from '@compos/use-max-height'
 import usePagination from '@compos/use-pagination'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const emit = defineEmits(['update:modelValue'])
 
@@ -117,11 +120,11 @@ const list = ref([])
 const drawerRef = ref()
 const tableLoading = ref(false)
 const dataFormat = ref([
-  ['unitPrice', ['to-thousand-ck', 'YUAN']],
-  ['amount', ['to-thousand-ck', 'YUAN']],
-  ['unitPriceExcludingVAT', ['to-thousand-ck', 'YUAN']],
-  ['amountExcludingVAT', ['to-thousand-ck', 'YUAN']],
-  ['inputVAT', ['to-thousand-ck', 'YUAN']],
+  ['unitPrice', ['to-thousand', decimalPrecision.supplyChain]],
+  ['amount', ['to-thousand', decimalPrecision.supplyChain]],
+  ['unitPriceExcludingVAT', ['to-thousand', decimalPrecision.supplyChain]],
+  ['amountExcludingVAT', ['to-thousand', decimalPrecision.supplyChain]],
+  ['inputVAT', ['to-thousand', decimalPrecision.supplyChain]],
   ['inboundTime', ['parse-time', '{y}-{m}-{d}']]
 ])
 
@@ -140,7 +143,7 @@ const { maxHeight } = useMaxHeight(
 
 function getSummaries(param) {
   return tableSummary(param, {
-    props: [['amount', DP.YUAN], ['amountExcludingVAT', DP.YUAN], ['inputVAT', DP.YUAN], ['mete', DP.COM_WT__KG]],
+    props: [['amount', decimalPrecision.supplyChain], ['amountExcludingVAT', decimalPrecision.supplyChain], ['inputVAT', decimalPrecision.supplyChain], ['mete', DP.COM_WT__KG]],
     toThousandFields: ['amount', 'amountExcludingVAT', 'inputVAT', 'mete']
   })
 }

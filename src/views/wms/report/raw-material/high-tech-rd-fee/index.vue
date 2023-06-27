@@ -81,6 +81,9 @@ import MaterialSecondaryInfoColumns from '@/components-system/wms/table-columns/
 import WarehouseInfoColumns from '@/components-system/wms/table-columns/warehouse-info-columns/index.vue'
 import MaterialUnitQuantityColumns from '@/components-system/wms/table-columns/material-unit-quantity-columns/index.vue'
 import AmountInfoColumns from '@/components-system/wms/table-columns/amount-info-columns/index.vue'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const optShow = {
   batchAdd: false,
@@ -95,7 +98,7 @@ const columnsDataFormat = ref([
   ...materialHasAmountColumns,
   ['outboundReceipt.outboundTime', ['parse-time', '{y}-{m}-{d}']],
   ['rdRate', ['suffix', ' %']],
-  ['rdFee', ['to-thousand-ck', 'YUAN']]
+  ['rdFee', ['to-thousand', decimalPrecision.wms]]
 ])
 
 // 展开行

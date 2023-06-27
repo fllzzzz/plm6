@@ -152,7 +152,6 @@
 import { defineProps, computed, defineExpose, ref, inject, watchEffect, reactive, watch } from 'vue'
 import { matClsEnum } from '@/utils/enum/modules/classification'
 import { isBlank, isNotBlank, toPrecision } from '@/utils/data-type'
-import { DP } from '@/settings/config'
 
 import { regExtra } from '@/composables/form/use-form'
 import useTableValidate from '@compos/form/use-table-validate'
@@ -164,6 +163,9 @@ import { calcSteelPlateWeight } from '@/utils/wms/measurement-calc'
 import { positiveNumPattern } from '@/utils/validate/pattern'
 
 import priceSetColumns from '@/views/wms/material-inbound/raw-material/components/price-set-columns.vue'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const props = defineProps({
   boolPartyA: {
@@ -214,7 +216,7 @@ const rules = {
 // 金额校验
 const validateAmount = (value, row) => {
   if (isNotBlank(row.weighingTotalWeight) && isNotBlank(row.unitPrice)) {
-    return +toPrecision(row.weighingTotalWeight * row.unitPrice, DP.YUAN) === +value
+    return +toPrecision(row.weighingTotalWeight * row.unitPrice, decimalPrecision.wms) === +value
   }
   return false
 }
@@ -320,7 +322,7 @@ function calcTotalWeight(row) {
 // 处理重量变化
 function handleWeightChange(row) {
   if (isNotBlank(row.unitPrice) && isNotBlank(row.weighingTotalWeight)) {
-    row.amount = toPrecision(row.weighingTotalWeight * row.unitPrice, DP.YUAN)
+    row.amount = toPrecision(row.weighingTotalWeight * row.unitPrice, decimalPrecision.wms)
   }
 }
 
