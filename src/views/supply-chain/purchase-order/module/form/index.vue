@@ -15,9 +15,9 @@
     </template>
     <template #content>
       <div>
-         <component :is="comp" :detail="form" :edit="!!form?.id" @success="handleSuccess" :dialogVisible="dialogVisible" :maxHeight="maxHeight-50">
+         <component v-if="crud.status.cu > CRUD.STATUS.NORMAL" :is="comp" :detail="form" :edit="isEdit" @success="handleSuccess" :dialogVisible="dialogVisible" :maxHeight="maxHeight-50">
           <template #chose>
-            <div class="el-form-item el-form-item--small" v-if="!form?.id">
+            <div class="el-form-item el-form-item--small" v-if="!isEdit">
               <div class="el-form-item__label" style="font-weight:700;font-size:14px;width:110px;"><span style="color:#f56c6c;font-weight:normal;margin-right:4px;">*</span>是否有明细</div><common-radio v-model="type" :options="whetherEnum.ENUM" type="enum" @change="typeChange"/>
             </div>
           </template>
@@ -31,6 +31,9 @@
 import { ref, computed, watch } from 'vue'
 import { regForm } from '@compos/use-crud'
 
+import { orderSupplyTypeEnum, baseMaterialTypeEnum, purchaseOrderPaymentModeEnum } from '@enum-ms/wms'
+import { logisticsPayerEnum, logisticsTransportTypeEnum } from '@/utils/enum/modules/logistics'
+import { weightMeasurementModeEnum, invoiceTypeEnum } from '@enum-ms/finance'
 import { whetherEnum } from '@enum-ms/common'
 import { matClsEnum, materialPurchaseClsEnum } from '@enum-ms/classification'
 import { steelInboundFormFormat } from '@/utils/wms/measurement-calc'
@@ -45,6 +48,41 @@ import hasDetailForm from './has-detail-form'
 import rawMaterial from './raw-material'
 
 const defaultForm = {
+  useRequisitions: true, // 是否绑定申购单
+  serialNumber: undefined, // 采购合同编号编号
+  supplyType: orderSupplyTypeEnum.SELF.V, // 供货类型
+  // materialType: materialPurchaseClsEnum.STEEL.V, // 材料类型
+  purchaseType: baseMaterialTypeEnum.RAW_MATERIAL.V, // 物料种类
+  currentBasicClass: matClsEnum.STEEL_PLATE.V, // 物料类型
+  isAllMaterial: false, // 是否选择全部辅材
+  auxMaterialIds: undefined, // 辅材明细ids
+  isAllOtherMaterial: false, // 是否选择全部其他材料
+  otherMaterialIds: undefined, // 其他材料明细ids
+  projectIds: undefined, // 项目ids
+  projectId: undefined,
+  supplierId: undefined, // 供应商id
+  branchCompanyId: undefined, // 公司签订主体
+  mete: undefined, // 合同量
+  meteUnit: 'kg', // 合同量单位
+  amount: undefined, // 合同金额
+  invoiceType: invoiceTypeEnum.SPECIAL.V, // 发票类型
+  taxRate: undefined, // 税率
+  // weightMeasurementMode: weightMeasurementModeEnum.THEORY.V, // 重量计量方式
+  logisticsTransportType: logisticsTransportTypeEnum.FREIGHT.V, // 物流运输方式
+  logisticsPayerType: logisticsPayerEnum.SUPPLIER.V, // 物流运输方式 90%由供方承担运费
+  purchaseOrderPaymentMode: purchaseOrderPaymentModeEnum.ARRIVAL.V, // 订单类型
+  remark: undefined, // 备注
+  attachments: undefined, // 附件
+  attachmentIds: undefined, // 附件ids
+  list: [],
+  sectionSteelList: [],
+  steelPlateList: [],
+  steelCoilList: [],
+  requisitions: [],
+  requisitionsKV: {},
+  actualRequisitionIds: [],
+  manufListObj: {},
+  manufMergeObj: {}
 }
 
 const { purchaseCfg: currentCfg } = useWmsConfig()
@@ -55,6 +93,10 @@ const type = ref()
 
 const { CRUD, crud, form } = regForm(defaultForm, formRef)
 const dialogVisible = computed(() => crud.status.cu > CRUD.STATUS.NORMAL)
+// 是否是编辑状态
+const isEdit = computed(() => {
+  return crud.status.edit > 0
+})
 
 watch(
   () => dialogVisible.value,
@@ -204,6 +246,7 @@ CRUD.HOOK.beforeEditDetailLoaded = async (crud) => {
       }
     }
   }
+  console.log(form)
 }
 
 function handleSuccess() {
