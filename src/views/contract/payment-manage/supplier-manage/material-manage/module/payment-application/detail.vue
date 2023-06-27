@@ -2,7 +2,7 @@
    <common-drawer
     append-to-body
     :close-on-click-modal="false"
-    :before-close="handleClose"
+    :before-close="closeDialog"
     v-model="visible"
     title="付款申请详情"
     :wrapper-closable="false"
@@ -59,10 +59,23 @@
             </el-form-item>
           </el-col>
         </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="开户行" prop="receiveBank">
+              <span>{{currentRow.receiveBank || '-'}}</span>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="账号" prop="receiveBankAccount">
+              <span>{{currentRow.receiveBankAccount || '-'}}</span>
+            </el-form-item>
+          </el-col>
+        </el-row>
          <el-row>
           <el-col :span="12">
             <el-form-item label="付款日期" prop="paymentDate">
               <span v-if="currentRow.paymentDate" style="margin-left:5px;">{{ parseTime(currentRow.paymentDate,'{y}-{m}-{d}')}}</span>
+              <span v-else>-</span>
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -91,14 +104,17 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="付款行" prop="paymentBank">
-              <span>{{currentRow.paymentBank}}</span>
+              <el-select v-if="showType==='audit' && currentRow.auditStatus===auditTypeEnum.AUDITING.V" v-model="paymentBank" placeholder="付款行" :size="'small'" style="width: 220px" @change="bankChange">
+                <el-option v-for="item in bankList" :key="item.account" :label="item.depositBank" :value="item.depositBank" />
+              </el-select>
+              <span v-else>{{currentRow.paymentBank}}</span>
             </el-form-item>
           </el-col>
         </el-row>
          <el-row>
           <el-col :span="12">
             <el-form-item label="备注" prop="remark">
-              <span>{{currentRow.remark}}</span>
+              <span>{{currentRow.remark || '-'}}</span>
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -152,7 +168,8 @@
 
 <script setup>
 import { audit } from '@/api/contract/supplier-manage/jd-material-payment'
-import { ref, defineProps, defineEmits } from 'vue'
+import { bankData } from '@/api/contract/collection-and-invoice/collection'
+import { ref, defineProps, defineEmits, watch } from 'vue'
 import { ElMessageBox, ElNotification } from 'element-plus'
 
 import { toThousand, digitUppercase } from '@data-type/number'
@@ -184,11 +201,53 @@ const props = defineProps({
 
 const pdfShow = ref(false)
 const currentId = ref()
+const paymentBank = ref()
+const paymentBankAccount = ref()
+const bankList = ref([])
+
+watch(
+  () => props.currentRow,
+  (val) => {
+    if (val) {
+      paymentBank.value = props.currentRow.paymentBank
+      paymentBankAccount.value = props.currentRow.paymentBankAccount
+      fetchBank()
+    }
+  },
+  { deep: true, immediate: true }
+)
+
+async function fetchBank() {
+  bankList.value = []
+  if (!(props.showType === 'audit')) {
+    return
+  }
+  if (!props.currentRow?.paymentUnitId) {
+    return
+  }
+  try {
+    const { content } = await bankData(props.currentRow.paymentUnitId)
+    bankList.value = content || []
+  } catch (e) {
+    console.log('获取银行列表', e)
+  }
+}
+
+function closeDialog() {
+  paymentBank.value = props.currentRow.paymentBank
+  paymentBankAccount.value = props.currentRow.paymentBankAccount
+  handleClose()
+}
 
 // 预览附件
 function attachmentView(item) {
   currentId.value = item.id
   pdfShow.value = true
+}
+
+function bankChange(val) {
+  const findVal = bankList.value.find(v => v.depositBank === val) || {}
+  paymentBankAccount.value = findVal.account
 }
 
 async function passConfirm(val) {
@@ -199,7 +258,7 @@ async function passConfirm(val) {
       cancelButtonText: '否',
       type: 'warning'
     })
-    await audit(props.currentRow.id, val)
+    await audit({ id: props.currentRow.id, auditStatus: val, paymentBank: paymentBank.value, paymentBankAccount: paymentBankAccount.value })
     ElNotification({ title: title + '成功', type: 'success' })
     handleClose()
     emit('success')
