@@ -59,6 +59,9 @@
       <el-form-item label="无申购采购重量误差：" label-width="153px">
         <span style="color: #e6a23cc2;">由【入库-单件钢材重量误差】配置决定</span>
       </el-form-item>
+      <el-form-item label="是否默认采购物料明细：" label-width="153px">
+        <span style="color: #e6a23cc2;">当选择否时，采购订单无需填写物料明细</span>
+      </el-form-item>
     </el-form>
   </el-card>
 </template>
