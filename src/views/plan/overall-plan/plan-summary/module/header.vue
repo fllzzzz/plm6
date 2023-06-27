@@ -37,13 +37,13 @@ import { TechnologyTypeAllEnum, projectTypeEnum } from '@enum-ms/contract'
 const { globalProject } = mapGetters(['globalProject'])
 
 const defaultQuery = {
-  type: globalProject.projectType === projectTypeEnum.STEEL.V ? TechnologyTypeAllEnum.STRUCTURE.V : TechnologyTypeAllEnum.BRIDGE.V,
+  type: globalProject.value.projectType === projectTypeEnum.STEEL.V ? TechnologyTypeAllEnum.STRUCTURE.V : TechnologyTypeAllEnum.BRIDGE.V,
   year: String(new Date().getFullYear())
 }
 
 const { crud, query } = regHeader(defaultQuery)
 
 const typeOptions = computed(() => {
-  return globalProject.projectType === projectTypeEnum.STEEL.V ? [TechnologyTypeAllEnum.STRUCTURE] : [TechnologyTypeAllEnum.BRIDGE]
+  return globalProject.value.projectType === projectTypeEnum.STEEL.V ? [TechnologyTypeAllEnum.STRUCTURE] : [TechnologyTypeAllEnum.BRIDGE]
 })
 </script>
