@@ -154,13 +154,13 @@ async function getBoxDetail(item) {
     item.detailLoading = true
     const _data = await boxDetail({ id: item.id })
     item.hasDetail = true
-    _data.processInfo = `${_data.name} ${_data.serialNumber}\n
+    _data.processInfo = `${_data.name || ''} ${_data.serialNumber}\n
           规格：${_data.specification}\n
           长度：${_data.length} mm\n
           材质：${_data.material}\n
           单净重：${_data.netWeight && _data.netWeight.toFixed(DP.COM_WT__KG)} kg\n
-          单毛重：${_data.grossWeight && _data.grossWeight.toFixed(DP.COM_WT__KG)} kg\n
-          图号：${_data.drawingNumber}\n
+          单毛重：${_data.grossWeight && _data.grossWeight.toFixed(DP.COM_WT__KG) + 'kg' || ''} \n
+          图号：${_data.drawingNumber || ''}\n
           清单数量：${_data.quantity}\n`
     _data.processInfo += '-----------------------\n\n生产上报 / 已质检\n\n'
     const processList = _data.processSummaryDetailsList || []

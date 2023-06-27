@@ -44,7 +44,7 @@ const BOX_COMMON_L_HTML = function ({ component = defComponent, productionLineNa
 <div class="row" style="font-weight:bold;font-size:14pt;">
   <div class="col">长度(mm)：</div>
   <div class="col">宽度(mm)：</div>
-  <div class="col">厚度(mm)：</div>
+  <div class="col">高度(mm)：</div>
 </div>
 <div class="row" style="font-weight:bold;">
   <div class="col">${emptyTextFormatter(component.length)}</div>
