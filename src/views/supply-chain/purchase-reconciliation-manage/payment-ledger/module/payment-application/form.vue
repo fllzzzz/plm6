@@ -42,8 +42,8 @@
           <el-input-number
               v-model="form.applyAmount"
               :step="10000"
-              :min="0"
-              :max="detailInfo?.sourceRow?.settlementAmount?detailInfo?.sourceRow?.settlementAmount-detailInfo?.sourceRow?.paymentAmount:999999999999"
+              :min="-9999999999"
+              :max="detailInfo?.sourceRow?.settlementAmount?detailInfo?.sourceRow?.settlementAmount-detailInfo?.sourceRow?.paymentAmount:9999999999"
               :precision="DP.YUAN"
               placeholder="本次付款"
               controls-position="right"

@@ -64,7 +64,7 @@
           v-if="showType==='audit'"
           v-model.number="actuallyPaymentAmount"
           v-show-thousand
-          :min="0"
+          :min="-9999999999"
           :max="detailInfo.applyAmount"
           :step="100"
           :precision="DP.YUAN"
@@ -224,7 +224,7 @@ function bankChange(val) {
 async function passConfirm(val) {
   if (val === auditTypeEnum.PASS.V) {
     if (!actuallyPaymentAmount.value) {
-      ElMessage.error('本次实付必填且大于0')
+      ElMessage.error('本次实付必填')
       return
     }
     if (!paymentMethod.value) {
