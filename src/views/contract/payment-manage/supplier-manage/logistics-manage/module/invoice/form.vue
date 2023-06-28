@@ -61,8 +61,8 @@
               <el-input-number
                 v-show-thousand
                 v-model.number="form.invoiceAmount"
-                :min="0"
-                :max="999999999999"
+                :min="-9999999999"
+                :max="9999999999"
                 :step="100"
                 :precision="DP.YUAN"
                 placeholder="收票额(元)"
