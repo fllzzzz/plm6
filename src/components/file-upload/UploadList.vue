@@ -40,6 +40,7 @@
         :show-file-list="props.showFileList"
         :on-exceed="handleExceed"
         :disabled="props.disabled"
+        :accept="props.accept"
         multiple
       >
         <common-button :loading="uploadLoading" :size="props.size" :icon="props.icon" :disabled="props.disabled" :type="props.btnType">
@@ -85,6 +86,10 @@ const props = defineProps({
   downloadPerm: {
     type: Array,
     default: undefined
+  },
+  accept: {
+    type: String,
+    default: ''
   },
   downloadParams: {
     type: Object,
