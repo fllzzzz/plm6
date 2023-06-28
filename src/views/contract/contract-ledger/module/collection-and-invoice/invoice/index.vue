@@ -54,8 +54,8 @@
                 v-if="scope.row.isModify"
                 v-show-thousand
                 v-model.number="scope.row.invoiceAmount"
-                :min="0"
-                :max="999999999999"
+                :min="-9999999999"
+                :max="9999999999"
                 :step="100"
                 :precision="DP.YUAN"
                 placeholder="开票额(元)"
