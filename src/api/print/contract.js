@@ -438,6 +438,15 @@ export function fortuneReportList(params) {
   })
 }
 
+// 销售管理 分段制品计价表
+export function contractBoxPrice(params) {
+  return request({
+    url: '/api/business/bridge-box/print',
+    method: 'get',
+    params
+  })
+}
+
 export default {
   contractLedger, // 合同台账（合同登记表）
   collectionLedger, // 收款记录
@@ -478,5 +487,6 @@ export default {
   managementFee, // 管理费
   waterElectricFee, // 水电费
   depreciationFee, // 折旧费
-  fortuneReportList // 业财报表
+  fortuneReportList, // 业财报表
+  contractBoxPrice // 分段制品计价表
 }

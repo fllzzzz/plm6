@@ -92,6 +92,7 @@ const tableType = {
   logisticsPaymentLedger: { L: '物流台账', M: 'supplier_payment', T: mt.contract.L + ' / ' + contract.supplier_payment },
   supplierPayableSummary: { L: '应付汇总', M: 'supplier_payment', T: mt.contract.L + ' / ' + contract.supplier_payment },
 
+  contractBoxPrice: { L: '分段计价表', M: 'sales_manage', T: mt.contract.L + ' / ' + contract.sales_manage },
   contractStructurePrice: { L: '结构计价表', M: 'sales_manage', T: mt.contract.L + ' / ' + contract.sales_manage },
   contractMachinePartPrice: { L: '散发制品计价表', M: 'sales_manage', T: mt.contract.L + ' / ' + contract.sales_manage },
   contractEnclosurePrice: { L: '围护计价表', M: 'sales_manage', T: mt.contract.L + ' / ' + contract.sales_manage },
