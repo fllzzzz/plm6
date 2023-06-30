@@ -53,7 +53,16 @@
           />
           <el-input
             v-model="query.orderNumber"
-            placeholder="输入任务单号搜索搜索"
+            placeholder="输入任务单号搜索"
+            class="filter-item"
+            style="width: 200px"
+            size="small"
+            clearable
+            @keyup.enter="crud.toQuery"
+          />
+          <el-input
+            v-model.trim="query.serialNumber"
+            placeholder="输入编号搜索"
             class="filter-item"
             style="width: 200px"
             size="small"
@@ -89,8 +98,9 @@ const orderComponentTypeEnum = {
 }
 
 const defaultQuery = {
-  productType: componentTypeEnum.ARTIFACT.V
+  productType: componentTypeEnum.ARTIFACT.V,
   // localDateTime: defaultTime.toString()
+  serialNumber: undefined
 }
 
 const { crud, query } = regHeader(defaultQuery)
@@ -103,6 +113,7 @@ function resetQuery() {
   query.productType = componentTypeEnum.ARTIFACT.V
   query.workshopId = undefined
   query.orderNumber = undefined
+  query.serialNumber = undefined
   crud.toQuery()
 }
 </script>

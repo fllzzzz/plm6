@@ -42,6 +42,15 @@
             clearable
             @keyup.enter="crud.toQuery"
           />
+          <el-input
+            v-model.trim="query.serialNumber"
+            placeholder="输入编号搜索"
+            class="filter-item"
+            style="width: 200px"
+            size="small"
+            clearable
+            @keyup.enter="crud.toQuery"
+          />
           <common-button class="filter-item" size="mini" type="success" icon="el-icon-search" @click.stop="searchQuery">搜索</common-button>
           <common-button class="filter-item" size="mini" type="warning" icon="el-icon-refresh-left" @click.stop="resetQuery">
             重置
@@ -64,7 +73,8 @@ const defaultQuery = {
   workshopId: undefined,
   printType: undefined,
   cutNumber: undefined,
-  cutConfigId: undefined
+  cutConfigId: undefined,
+  serialNumber: undefined
 }
 
 const cutTypeList = inject('cutTypeList')
@@ -79,6 +89,7 @@ function resetQuery() {
   query.printType = undefined
   query.cutNumber = undefined
   query.cutConfigId = undefined
+  query.serialNumber = undefined
   crud.toQuery()
 }
 </script>
