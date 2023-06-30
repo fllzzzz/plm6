@@ -311,6 +311,9 @@ const props = defineProps({
   detailData: {
     type: Object,
     default: () => {}
+  },
+  serialNumber: {
+    type: String
   }
 })
 
@@ -362,7 +365,8 @@ const params = computed(() => {
     orderId: props.detailData.orderId,
     processId: processId.value,
     productType: props.detailData.productType,
-    projectId: props.detailData.projectId
+    projectId: props.detailData.projectId,
+    serialNumber: props.serialNumber
   }
 })
 // const apiKey =
