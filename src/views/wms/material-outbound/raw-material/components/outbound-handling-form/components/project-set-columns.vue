@@ -49,7 +49,7 @@
   </el-table-column>
   <el-table-column prop="workshopId" label="车间" width="170px" align="center">
     <template #default="{ row }">
-      <workshop-select v-model="row.workshopId" :factory-id="row.factory?.id" placeholder="可选择车间" style="width: 100%" clearable />
+      <workshop-select v-model="row.workshopId" :type="warehouseTypeEnum.WORKSHOP.V" placeholder="可选择车间" style="width: 100%" clearable />
     </template>
   </el-table-column>
 </template>
@@ -62,7 +62,7 @@ import { isBlank, isNotBlank } from '@/utils/data-type'
 import useDittoRealVal from '@/composables/form/use-ditto-real-val'
 
 import useProjectTree from '@compos/store/use-project-tree'
-import workshopSelect from '@comp-base/workshop-select'
+import workshopSelect from '@/components-system/wms/workshop-select.vue'
 
 const props = defineProps({
   form: {

@@ -349,7 +349,6 @@ const rules = {
   projectId: [{ required: true, message: '请选择出库项目', trigger: 'change' }],
   workshopId: [{ required: true, message: '请选择出库车间', trigger: 'change' }],
   quantity: [{ required: true, validator: validateQuantity, trigger: 'blur' }],
-  projectId: [{ required: true, message: '请选择出库项目', trigger: 'change' }],
   remark: [{ max: 200, message: '不能超过200个字符', trigger: 'blur' }]
 }
 

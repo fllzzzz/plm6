@@ -112,7 +112,7 @@
           <template #default="{ row: { sourceRow: row } }">
             <workshop-select
               v-model="row.workshopId"
-              :factory-id="row.factory?.id"
+              :type="warehouseTypeEnum.WORKSHOP.V"
               placeholder="可选择车间"
               style="width: 100%"
               clearable
@@ -162,6 +162,7 @@ import { isBlank } from '@/utils/data-type'
 import { numFmtByUnitForList } from '@/utils/wms/convert-unit'
 import { materialOperateColumns } from '@/utils/columns-format/wms'
 import { getProjectInfo } from '@/utils/project'
+import { warehouseTypeEnum } from '@enum-ms/wms'
 
 import useVisible from '@compos/use-visible'
 import useTableValidate from '@compos/form/use-table-validate'
@@ -176,7 +177,7 @@ import materialBaseInfoColumns from '@/components-system/wms/table-columns/mater
 import materialUnitOperateQuantityColumns from '@/components-system/wms/table-columns/material-unit-operate-quantity-columns/index.vue'
 import materialSecondaryInfoColumns from '@/components-system/wms/table-columns/material-secondary-info-columns/index.vue'
 import warehouseInfoColumns from '@/components-system/wms/table-columns/warehouse-info-columns/index.vue'
-import workshopSelect from '@/components-system/base/workshop-select.vue'
+import workshopSelect from '@/components-system/wms/workshop-select.vue'
 import { ElMessage } from 'element-plus'
 
 const emit = defineEmits(['success', 'update:visible'])

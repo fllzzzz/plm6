@@ -23,6 +23,19 @@
         align="left"
         min-width="150"
       />
+       <el-table-column
+        v-if="columns.visible('warehouseType')"
+        key="warehouseType"
+        :show-overflow-tooltip="true"
+        prop="warehouseType"
+        label="仓库类型"
+        align="center"
+        width="100"
+      >
+        <template #default="{ row: { sourceRow: row } }">
+         <span>{{row.warehouseType?warehouseTypeEnum.VL[row.warehouseType]:'-'}}</span>
+        </template>
+      </el-table-column>
       <el-table-column
         v-if="columns.visible('materialType')"
         key="materialType"
@@ -125,8 +138,8 @@ const { CRUD, crud, columns } = useCRUD(
     permission: { ...permission },
     optShow: { ...optShow },
     crudApi: { ...crudApi },
-    sort: ['sort.asc'],
-    queryOnPresenterCreated: false
+    sort: ['sort.asc']
+    // queryOnPresenterCreated: false
   },
   tableRef
 )
@@ -137,7 +150,6 @@ CRUD.HOOK.handleRefresh = (crud, { data: { content }}) => {
   content.forEach((v) => {
     const mt = v.materialType
     v.materialTypeName = EO.getBits(matClsEnum.ENUM, mt, 'L')
-    v.type = v.workshopId ? warehouseTypeEnum.WORKSHOP.V : warehouseTypeEnum.NORMAL.V
   })
 }
 

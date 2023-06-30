@@ -37,7 +37,7 @@
   <el-form-item label="车间" prop="workshopId">
     <workshop-select
       v-model="currentForm.workshopId"
-      :factory-id="currentForm.factoryId"
+      :type="warehouseTypeEnum.WORKSHOP.V"
       placeholder="可选择车间"
       style="width: 100%"
       clearable
@@ -69,9 +69,11 @@
 
 <script setup>
 import { defineProps, inject, computed, watchEffect, ref } from 'vue'
+import { warehouseTypeEnum } from '@enum-ms/wms'
+
 import userDeptCascader from '@comp-base/user-dept-cascader.vue'
 import projectCascader from '@comp-base/project-cascader.vue'
-import workshopSelect from '@/components-system/base/workshop-select.vue'
+import workshopSelect from '@/components-system/wms/workshop-select.vue'
 
 import useProjectTree from '@compos/store/use-project-tree'
 

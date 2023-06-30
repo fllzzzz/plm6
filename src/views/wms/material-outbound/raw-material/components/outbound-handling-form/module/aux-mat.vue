@@ -47,7 +47,7 @@ const validateQuantity = (rule, value, callback) => {
 const rules = ref({
   quantity: [{ required: true, validator: validateQuantity, trigger: 'blur' }],
   remark: [{ max: 200, message: '不能超过200个字符', trigger: 'blur' }],
-  workshopId: [{ required: true, message: '请选择出库车间', trigger: 'change' }],
+  workshopId: [{ required: true, message: '请选择出库车间', trigger: 'change' }]
 })
 
 const formRef = ref()

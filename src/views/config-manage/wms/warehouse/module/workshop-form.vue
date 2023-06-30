@@ -10,7 +10,7 @@
     size="800px"
   >
     <template #titleRight>
-      <common-button icon="el-icon-plus" @click="addItem" size="mini"/>
+      <common-button icon="el-icon-plus" type="warning" @click="addItem" size="mini"/>
       <common-button size="mini" type="primary" @click="onSubmit" v-loading="submitLoading">提交</common-button>
     </template>
     <template #content>
@@ -34,6 +34,7 @@
               v-model="scope.row.workshopId"
               placeholder="请选择"
               :choseIndex="scope.$index"
+              :disabledVal="disabledVal"
               @nameChange="workshopChange"
               style="width: 100%"
             />
@@ -52,12 +53,13 @@
 
 <script setup>
 import { addWorkshop } from '@/api/config/wms/warehouse'
-import { ref, defineEmits, defineProps, watch } from 'vue'
+import { ref, defineEmits, defineProps, watch, computed } from 'vue'
 
 import { useStore } from 'vuex'
 import { warehouseTypeEnum } from '@enum-ms/wms'
 import { isNotBlank } from '@data-type/index'
 import useTableValidate from '@compos/form/use-table-validate'
+import useWorkshopName from '@compos/store/use-workshop-name'
 
 import useVisible from '@compos/use-visible'
 import useMaxHeight from '@compos/use-max-height'
@@ -65,6 +67,7 @@ import { ElNotification } from 'element-plus'
 import workshopSelect from '@comp-base/workshop-select.vue'
 
 const emit = defineEmits(['update:modelValue', 'success'])
+const { workshopName } = useWorkshopName()
 
 const props = defineProps({
   modelValue: {
@@ -76,6 +79,21 @@ const props = defineProps({
 const { visible, handleClose } = useVisible({ emit, props })
 const submitLoading = ref(false)
 
+const disabledVal = computed(() => {
+  const arr = []
+  workshopName.value.forEach(v => {
+    if (v.workshopId) {
+      arr.push(v.id)
+    }
+  })
+  list.value.forEach(v => {
+    if (v.workshopId) {
+      arr.push(v.workshopId)
+    }
+  })
+  return arr
+})
+
 watch(
   visible,
   (val) => {
@@ -84,7 +102,7 @@ watch(
 )
 
 const tableRules = {
-  name: [{ required: true, max: 20, message: '不能超过20个字符', trigger: 'blur' }],
+  name: [{ required: true, message: '请输入或选择车间', trigger: ['blur', 'change'] }],
   type: [{ required: true, message: '请选择类型', trigger: 'change' }]
 }
 
@@ -122,13 +140,13 @@ function addItem() {
 }
 
 async function onSubmit(val) {
-  submitLoading.value = true
   const { validResult, dealList } = tableValidate(list.value)
   if (validResult) {
     list.value = dealList
   } else {
     return validResult
   }
+  submitLoading.value = true
   try {
     await addWorkshop(list.value)
     ElNotification({ title: '删除成功', type: 'success' })
@@ -137,7 +155,7 @@ async function onSubmit(val) {
   } catch (error) {
     console.log('审核', error)
   } finally {
-    submitLoading.value = true
+    submitLoading.value = false
   }
 }
 

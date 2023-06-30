@@ -77,6 +77,7 @@ const { CRUD, crud, form } = regForm(defaultForm, formRef)
 
 crud.submitFormFormat = (form) => {
   form.workshopId = crud.query.workshopId
+  form.warehouseType = crud.query.warehouseType
   return form
 }
 </script>
