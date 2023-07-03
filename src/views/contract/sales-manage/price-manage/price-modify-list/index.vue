@@ -16,7 +16,11 @@
       <el-table-column v-if="columns.visible('project')" show-overflow-tooltip key="project" prop="project" label="项目" min-width="140" />
       <el-table-column v-if="columns.visible('monomer.name') && (crud.query.type!==contractSaleTypeEnum.AUXILIARY_MATERIAL.V && crud.query.type!==contractSaleTypeEnum.ENCLOSURE.V)" key="monomer.name" prop="monomer.name" label="单体" align="center" min-width="120" show-overflow-tooltip />
       <el-table-column v-if="columns.visible('enclosurePlan.name') && crud.query.type===contractSaleTypeEnum.ENCLOSURE.V" key="enclosurePlan.name" prop="enclosurePlan.name" label="批次" align="center" min-width="120" show-overflow-tooltip />
-      <el-table-column v-if="columns.visible('type')" show-overflow-tooltip key="type" prop="type" align="center" label="类型" width="90" />
+      <!-- <el-table-column v-if="columns.visible('type')" show-overflow-tooltip key="type" prop="type" align="center" label="类型" width="90">
+        <template  #default="{ row }">
+          <span v-if=""></span>
+        </template>
+      </el-table-column> -->
       <el-table-column v-if="columns.visible('remark')" key="remark" prop="remark" label="事由" align="center" min-width="140" show-overflow-tooltip />
       <el-table-column v-if="columns.visible('createUserName')" key="createUserName" prop="createUserName" label="创建人" align="center" min-width="100" show-overflow-tooltip />
       <el-table-column v-if="columns.visible('createTime')" key="createTime" prop="createTime" label="创建时间"  align="center"  width="130" show-overflow-tooltip />
@@ -69,7 +73,7 @@ const tableRef = ref()
 const detailInfo = ref({})
 const dataFormat = ref([
   ['project', 'parse-project'],
-  ['type', ['parse-enum', contractSaleTypeEnum, { f: 'SL' }]],
+  // ['type', ['parse-enum', contractSaleTypeEnum, { f: 'SL' }]],
   ['status', ['parse-enum', reviewStatusEnum]],
   ['createTime', 'parse-time'],
   ['checkTime', 'parse-time']

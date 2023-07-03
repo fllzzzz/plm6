@@ -143,6 +143,7 @@ export const showProjectSearch = [
   { component: '/contract/collection-ledger/index', type: allPT, required: false },
   { component: '/contract/collection-warn/index', type: allPT, required: false },
   { component: '/contract/sales-manage/shipment-tracking/index', type: allPT, required: true },
+  { component: '/contract/sales-manage/price-manage/index', type: allPT, required: true },
   { component: '/project-manage/progress-manage/project-progress/index', type: allPT, required: true, businessType: businessTypeEnum.INSTALLATION.V },
   { component: '/project-manage/subcontract-manage/subcontract-plan/index', type: allPT, required: true, businessType: businessTypeEnum.INSTALLATION.V },
   { component: '/project-manage/subcontract-manage/subcontract-progress/index', type: allPT, required: true, businessType: businessTypeEnum.INSTALLATION.V },
