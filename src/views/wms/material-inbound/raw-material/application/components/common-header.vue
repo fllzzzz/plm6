@@ -424,6 +424,8 @@ async function handleOrderInfoChange(order, oldOrder) {
               _totalQuantity += _quantity
               item.mete = _mete
               _totalMete += _mete
+              item.theoryWeight = form?.editObj?.[_v.mergeId]?.applyPurchaseObj?.[item.applyPurchaseId]?.theoryWeight
+              item.theoryTotalWeight = form?.editObj?.[_v.mergeId]?.applyPurchaseObj?.[item.applyPurchaseId]?.theoryTotalWeight
             } else {
               _totalQuantity += item.quantity || 0
               _totalMete += item.mete || 0
