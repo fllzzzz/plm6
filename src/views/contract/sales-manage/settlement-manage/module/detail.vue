@@ -130,6 +130,8 @@
           <upload-list
             :uploadable="props.status === reviewStatusEnum.UNREVIEWED.V"
             :file-classify="fileClassifyEnum.CONTRACT_VISA.V"
+            :accept="'.jpg,.png,.pdf,.jpeg'"
+            showView
             showDownload
             v-model:files="detail.files"
             style="padding-bottom: 20px"
