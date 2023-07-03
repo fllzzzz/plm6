@@ -51,15 +51,15 @@
                   v-if="scope.row.isModify"
                   v-show-thousand
                   v-model.number="scope.row.invoiceAmount"
-                  :min="0"
-                  :max="currentRow.settlementAmount?currentRow.settlementAmount-totalAmount:999999999999"
+                  :min="-9999999999"
+                  :max="currentRow.settlementAmount?currentRow.settlementAmount-totalAmount:9999999999"
                   :step="100"
                   :precision="DP.YUAN"
                   placeholder="收票额(元)"
                   controls-position="right"
                   @change="moneyChange(scope.row)"
                 />
-                <div v-else>{{ scope.row.invoiceAmount && scope.row.invoiceAmount>0? toThousand(scope.row.invoiceAmount): scope.row.invoiceAmount }}</div>
+                <div v-else>{{ isNotBlank(scope.row.invoiceAmount)? toThousand(scope.row.invoiceAmount): '-' }}</div>
               </template>
             </el-table-column>
             <el-table-column key="invoiceAmount1" prop="invoiceAmount1" label="大写" align="center" width="330" :show-overflow-tooltip="true">
@@ -132,6 +132,7 @@ import { invoiceTypeEnum } from '@enum-ms/finance'
 import { supplierPayTypeEnum } from '@enum-ms/contract'
 import useTableValidate from '@compos/form/use-table-validate'
 import { fileClassifyEnum } from '@enum-ms/file'
+import { isNotBlank } from '@data-type/index'
 
 import UploadBtn from '@comp/file-upload/UploadBtn'
 
