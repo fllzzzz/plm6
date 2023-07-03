@@ -123,7 +123,7 @@
 <script setup>
 import crudApi from '@/api/ship-manage/pack-and-ship/enclosure-product-receive-send-storage'
 import { ref, nextTick, computed } from 'vue'
-
+import { mapGetters } from '@/store/lib'
 import { enclosureProductSendReceiveStoragePM as permission } from '@/page-permission/ship-manage'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
@@ -144,6 +144,7 @@ const optShow = {
 }
 
 const tableRef = ref()
+const { currentProjectType } = mapGetters(['currentProjectType'])
 const detailVisible = ref(false)
 const showType = ref('detail')
 const currentRow = ref({})
@@ -187,6 +188,7 @@ function openDetail(row, show) {
 
 CRUD.HOOK.beforeToQuery = (crud) => {
   crud.query.productType = packTypeEnum.ENCLOSURE.V
+  crud.query.projectType = currentProjectType.value
 }
 
 function getSummaries(param) {

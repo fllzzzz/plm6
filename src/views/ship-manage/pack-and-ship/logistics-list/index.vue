@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <!--工具栏-->
-    <mHeader />
+      <mHeader />
     <!--表格渲染-->
     <common-table
       ref="tableRef"
@@ -12,9 +12,13 @@
       @sort-change="crud.handleSortChange"
     >
       <el-table-column label="序号" align="center" width="50">
-         <template v-slot="scope">
-          <span>{{scope.$index+1}}</span>
-          <table-cell-tag :show="scope.row.deliveryStatus===deliveryStatusEnum.RETURN.V && scope.row.changeFreight===freightChangeTypeEnum.CANCEL.V" name="已作废" color="#f56c6c"/>
+        <template v-slot="scope">
+          <span>{{ scope.$index + 1 }}</span>
+          <table-cell-tag
+            :show="scope.row.deliveryStatus === deliveryStatusEnum.RETURN.V && scope.row.changeFreight === freightChangeTypeEnum.CANCEL.V"
+            name="已作废"
+            color="#f56c6c"
+          />
         </template>
       </el-table-column>
       <el-table-column
@@ -41,13 +45,7 @@
           <span class="project-name">{{ projectNameFormatter(scope.row.project) }}</span>
         </template>
       </el-table-column>
-      <el-table-column
-        v-if="columns.visible('carModel')"
-        :show-overflow-tooltip="true"
-        prop="carModel"
-        label="车型"
-        align="center"
-      >
+      <el-table-column v-if="columns.visible('carModel')" :show-overflow-tooltip="true" prop="carModel" label="车型" align="center">
         <template v-slot="scope">
           <span>{{ scope.row.carModel }}</span>
         </template>
@@ -80,7 +78,7 @@
         align="center"
         min-width="120"
       />
-       <el-table-column
+      <el-table-column
         v-if="columns.visible('actualWeight')"
         :show-overflow-tooltip="true"
         prop="actualWeight"
@@ -106,7 +104,7 @@
           }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column v-if="columns.visible('productType')" key="productType" prop="productType" label="装载类型" width="165" >
+      <el-table-column v-if="columns.visible('productType')" key="productType" prop="productType" label="装载类型" width="165">
         <template v-slot="scope">
           <el-tag
             v-for="item in cleanArray(EO.getBits(packTypeEnum, scope.row.productType, 'V'))"
@@ -147,7 +145,9 @@
       >
         <template v-slot="scope">
           <span>{{ scope.row.supplier && toFixed(scope.row.supplier.price, DP.YUAN) }}</span>
-          <span :class="scope.row.priceType === logisticsPriceTypeEnum.WEIGHT.V ? 'blue':'orange'" style="margin-left:3px;">{{ logisticsPriceTypeEnum.V[scope.row.priceType].unit }}</span>
+          <span :class="scope.row.priceType === logisticsPriceTypeEnum.WEIGHT.V ? 'blue' : 'orange'" style="margin-left: 3px">{{
+            logisticsPriceTypeEnum.V[scope.row.priceType].unit
+          }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -173,40 +173,41 @@
             size="mini"
             icon="el-icon-edit"
             type="primary"
-            v-if="!(scope.row.deliveryStatus===deliveryStatusEnum.RETURN.V && scope.row.changeFreight===freightChangeTypeEnum.CANCEL.V)"
+            v-if="!(scope.row.deliveryStatus === deliveryStatusEnum.RETURN.V && scope.row.changeFreight === freightChangeTypeEnum.CANCEL.V)"
             v-permission="permission.edit"
-            @click="openForm(scope.row,'edit')"
+            @click="openForm(scope.row, 'edit')"
           />
           <common-button
             size="mini"
             icon="el-icon-view"
             type="primary"
             v-permission="permission.get"
-            @click="openForm(scope.row,'detail')"
+            @click="openForm(scope.row, 'detail')"
           />
         </template>
       </el-table-column>
     </common-table>
     <!--分页组件-->
     <pagination />
-    <priceForm v-model="formVisible" :detailInfo="detailInfo" :showType="showType" @success="crud.toQuery"/>
+    <priceForm v-model="formVisible" :detailInfo="detailInfo" :showType="showType" :projectType="crud.query.projectType" @success="crud.toQuery" />
   </div>
 </template>
 
 <script setup>
-import crudApi from '@/api/ship-manage/pack-and-ship/logistics-list'
-import { ref } from 'vue'
-
+import { get, getBridge } from '@/api/ship-manage/pack-and-ship/logistics-list'
+import { ref, provide } from 'vue'
+import useUserProjects from '@compos/store/use-user-projects'
 import { logisticsPM as permission } from '@/page-permission/ship-manage'
 import { manufactureTypeEnum } from '@enum-ms/production'
 import { packTypeEnum, logisticsPriceTypeEnum, deliveryStatusEnum, freightChangeTypeEnum } from '@enum-ms/mes'
+import { projectTypeEnum } from '@enum-ms/contract'
 import { projectNameFormatter } from '@/utils/project'
 import { DP } from '@/settings/config'
 import { cleanArray } from '@/utils/data-type/array'
 import EO from '@enum'
 import { toFixed } from '@/utils/data-type'
 import { convertUnits } from '@/utils/convert/unit'
-
+import { mapGetters } from '@/store/lib'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import pagination from '@crud/Pagination'
@@ -224,31 +225,41 @@ const tableRef = ref()
 const formVisible = ref(false)
 const detailInfo = ref({})
 const showType = ref()
-const { crud, columns } = useCRUD(
+const { crud, CRUD, columns } = useCRUD(
   {
     title: '物流记录',
     sort: ['auditTime.desc'],
     permission: { ...permission },
-    crudApi: { ...crudApi },
+    crudApi: { get },
     optShow: { ...optShow },
     invisibleColumns: ['manufactureType', 'productType', 'serialNumber']
   },
   tableRef
 )
 
+const { currentProjectType } = mapGetters(['currentProjectType'])
 const { maxHeight } = useMaxHeight({ paginate: true })
+
+const { projects } = useUserProjects()
+
+provide('projects', projects)
 
 function openForm(row, type) {
   showType.value = type
   detailInfo.value = row?.sourceRow
   formVisible.value = true
 }
+
+CRUD.HOOK.beforeToQuery = () => {
+  crud.query.projectType = currentProjectType.value
+  crud.crudApi.get = crud.query.projectType === projectTypeEnum.BRIDGE.V ? getBridge : get
+}
 </script>
 <style lang="scss" scoped>
-  .blue{
-    color:#409eff;
-  }
-  .orange{
-    color:#e6a23c;
-  }
+.blue {
+  color: #409eff;
+}
+.orange {
+  color: #e6a23c;
+}
 </style>

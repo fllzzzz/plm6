@@ -12,7 +12,7 @@
         @change="crud.toQuery"
         style="width: 120px"
       />
-      <project-radio-button size="small" :type="'all'" v-model="query.projectId" class="filter-item" @change="projectChange" />
+      <project-radio-button size="small" v-model="query.projectId" class="filter-item" @change="projectChange" />
       <common-radio-button
         v-if="query.projectId"
         type="other"

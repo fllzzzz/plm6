@@ -135,7 +135,7 @@
 <script setup>
 import crudApi from '@/api/ship-manage/pack-and-ship/product-receive-send-storage'
 import { ref, nextTick, computed } from 'vue'
-
+import { mapGetters } from '@/store/lib'
 import { mesProductSendReceiveStoragePM as permission } from '@/page-permission/ship-manage'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
@@ -155,6 +155,8 @@ const optShow = {
   download: false
 }
 
+const { currentProjectType } = mapGetters(['currentProjectType'])
+
 const tableRef = ref()
 const detailVisible = ref(false)
 const showType = ref('detail')
@@ -165,7 +167,7 @@ const showComponent = computed(() => {
   return showType.value === 'detail' ? mDetail : typeDetail
 })
 
-const { crud, columns } = useCRUD(
+const { crud, CRUD, columns } = useCRUD(
   {
     title: '结构制成品入发存',
     sort: ['id.desc'],
@@ -197,6 +199,10 @@ function openDetail(row, show) {
   nextTick(() => {
     detailVisible.value = true
   })
+}
+
+CRUD.HOOK.beforeToQuery = () => {
+  crud.query.projectType = currentProjectType.value
 }
 
 function getSummaries(param) {

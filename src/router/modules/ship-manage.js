@@ -49,6 +49,17 @@ export default {
                 icon: 'project',
                 noCache: true
               }
+            },
+            {
+              name: 'BridgeShipManageShipSummary',
+              path: 'bridge-ship-summary',
+              hidden: false,
+              component: '/ship-manage/pack-and-ship/ship-summary/bridge-ship-summary/index',
+              meta: {
+                title: '发运统计-桥梁',
+                icon: 'project',
+                noCache: true
+              }
             }
           ]
         },
@@ -165,6 +176,17 @@ export default {
               component: '/ship-manage/pack-and-ship/product-send-receive-storage/enclosure/index',
               meta: {
                 title: '围护制品',
+                icon: 'project',
+                noCache: true
+              }
+            },
+            {
+              name: 'boxProductSendReceiveStorage',
+              path: 'box',
+              hidden: false,
+              component: '/ship-manage/pack-and-ship/product-send-receive-storage/box/index',
+              meta: {
+                title: '分段制品',
                 icon: 'project',
                 noCache: true
               }

@@ -12,8 +12,21 @@
         @change="crud.toQuery"
       />
       <component-radio-button
+        v-if="typeVal !== packEnum.BOX.V"
         v-model="query.productType"
         :options="packTypeEnum.ENUM"
+        :unshowVal="query.projectId?unValOptions:[]"
+        showOptionAll
+        type="enum"
+        size="small"
+        class="filter-item"
+        @change="crud.toQuery"
+      />
+      <component-radio-button
+        v-if="typeVal === packEnum.BOX.V"
+        v-model="query.productType"
+        :options="bridgePackTypeEnum.ENUM"
+        :disabledVal="[bridgePackTypeEnum.AUXILIARY_MATERIAL.V]"
         showOptionAll
         type="enum"
         size="small"
@@ -95,7 +108,7 @@
       <template #optLeft>
         <print-table
           v-permission="permission.print"
-          api-key="mesLogisticsSummary"
+          :api-key="crud.query.projectType === projectTypeEnum.BRIDGE.V ? 'mesBridgeLogisticsSummary' : 'mesLogisticsSummary'"
           :params="{ ...query }"
           size="mini"
           type="warning"
@@ -111,18 +124,21 @@
 </template>
 
 <script setup>
-import { inject, ref } from 'vue'
+import { inject, ref, watch, computed } from 'vue'
 import moment from 'moment'
-
 import { packTypeEnum, logisticsPriceTypeEnum } from '@enum-ms/mes'
+import { bridgePackTypeEnum } from '@enum-ms/bridge'
+import { projectTypeEnum } from '@enum-ms/contract'
+import { packEnum } from '@enum-ms/ship-manage'
+import { mapGetters } from '@/store/lib'
 import { manufactureTypeEnum } from '@enum-ms/production'
 import { PICKER_OPTIONS_SHORTCUTS } from '@/settings/config'
-
 import { regHeader } from '@compos/use-crud'
 import crudOperation from '@crud/CRUD.operation'
 import rrOperation from '@crud/RR.operation'
 import logisticsFeeSetting from './logistics-fee-setting/index'
 
+const typeVal = ref()
 const defaultQuery = {
   serialNumber: undefined,
   licensePlate: undefined,
@@ -140,8 +156,32 @@ const defaultQuery = {
 }
 const { crud, query } = regHeader(defaultQuery)
 
+const { globalProject } = mapGetters(['globalProject'])
 const permission = inject('permission')
 const feeVisible = ref(false)
+
+watch(
+  () => globalProject.value,
+  (val) => {
+    query.productType = undefined
+    typeVal.value = undefined
+    typeVal.value = globalProject.value?.productCategory
+  },
+  { immediate: true, deep: true }
+)
+
+const unValOptions = computed(() => {
+  switch (typeVal.value) {
+    case packTypeEnum.STRUCTURE.V:
+      return [packTypeEnum.ENCLOSURE.V]
+    case packTypeEnum.ENCLOSURE.V:
+      return [packTypeEnum.STRUCTURE.V, packTypeEnum.MACHINE_PART.V]
+    case packTypeEnum.STRUCTURE.V + packTypeEnum.ENCLOSURE.V:
+      return []
+    default:
+      return []
+  }
+})
 
 function handleDeliveryDateChange() {
   if (query.deliveryDate && query.deliveryDate.length > 1) {
