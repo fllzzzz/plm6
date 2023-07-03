@@ -158,7 +158,7 @@
         <pagination />
       </div>
       <!-- 钻孔工单详情 -->
-      <detail v-model:visible="drawerVisible" :process-type="crud.query.processType" :detail-data="detailData" @refresh="crud.toQuery" />
+      <detail v-model:visible="drawerVisible" :process-type="crud.query.processType" :detail-data="detailData" :serialNumber="crud.query.serialNumber" @refresh="crud.toQuery" />
     </div>
   </div>
 </template>

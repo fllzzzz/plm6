@@ -70,6 +70,8 @@ export const machinePartSchedulingPM = {
   detailAdd: ['mes_scheduling_machine_part:detailAdd'], // 标准件详情添加
   noNestingSave: ['mes_scheduling_machine_part:noNestingSave'], // 无需套料保存
   nestingSave: ['mes_scheduling_machine_part:nestingSave'], // 套料保存
+  unProductDel: ['mes_scheduling_machine_part:unProductDel'], // 零件剔除
+  unProductDelRecord: ['mes_scheduling_machine_part:unProductDelRecord'], // 零件剔除
   del: ['mes_scheduling_machine_part:del'] // 删除
 }
 
