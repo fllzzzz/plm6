@@ -111,14 +111,22 @@ const mesStructureTeamWageDetail = mes.teamWageDetail
 const mesEnclosureTeamWageDetail = mes.teamWageDetail
 
 const mesPackingList = mes.packingList
+const mesBridgePackingList = mes.bridgePackingList
 const enclosurePackingList = mes.enclosurePackingList
 const mesShipmentSummary = mes.shipmentSummary
+const mesBridgeShipmentSummary = mes.bridgeShipmentSummary
 const mesShipmentDetail = mes.shipmentDetail
+const mesBridgeShipmentDetail = mes.bridgeShipmentDetail
 const mesReceiptStatusSummary = mes.receiptStatusSummary
 const mesShippingList = mes.shippingList
+const mesBridgeReceiptStatusSummary = mes.mesBridgeReceiptStatusSummary
+const mesBridgeShippingList = mes.mesBridgeShippingList
 const mesShipmentAudit = mes.shipmentAudit
 const mesShipmentAuditOverWeight = mes.shipmentAuditOverWeight
+const mesBridgeShipmentAudit = mes.mesBridgeShipmentAudit
+const mesBridgeShipmentAuditOverWeight = mes.mesBridgeShipmentAuditOverWeight
 const mesLogisticsSummary = mes.logisticsSummary
+const mesBridgeLogisticsSummary = mes.bridgeLogisticsSummary
 
 const mesWarehouseStateStructure = mes.warehouseStateStructure
 const mesWarehouseStateEnclosure = mes.warehouseStateEnclosure
@@ -148,6 +156,7 @@ const mesProductionStatisticsReport = mes.productionStatisticsReport
 
 const mesStudSleeveStatisticsList = mes.studSleeveStatisticsList
 const mesProjectShipDetail = mes.mesProjectShipDetail
+const bridgeProjectDetail = mes.bridgeProjectShipDetail
 const enclosureProjectShipDetail = mes.enclosureProjectShipDetail
 const mesShipMeteDetail = mes.mesShipMeteDetail
 const mesShipTaskMeteDetail = mes.mesShipTaskMeteDetail
@@ -155,6 +164,12 @@ const mesShipInboundMeteDetail = mes.mesShipInboundMeteDetail
 const mesShipTotalMeteDetail = mes.mesShipTotalMeteDetail
 const mesShipMonthMeteDetail = mes.mesShipMonthMeteDetail
 const mesShipStockMeteDetail = mes.mesShipStockMeteDetail
+const bridgeShipMeteDetail = mes.bridgeShipMeteDetail
+const bridgeShipTaskMeteDetail = mes.bridgeShipTaskMeteDetail
+const bridgeShipInboundMeteDetail = mes.bridgeShipInboundMeteDetail
+const bridgeShipTotalMeteDetail = mes.bridgeShipTotalMeteDetail
+const bridgeShipMonthMeteDetail = mes.bridgeShipMonthMeteDetail
+const bridgeShipStockMeteDetail = mes.bridgeShipStockMeteDetail
 const enclosureShipMeteDetail = mes.enclosureShipMeteDetail
 const enclosureShipTaskMeteDetail = mes.enclosureShipTaskMeteDetail
 const enclosureShipInboundMeteDetail = mes.enclosureShipInboundMeteDetail
@@ -163,15 +178,22 @@ const enclosureShipMonthMeteDetail = mes.enclosureShipMonthMeteDetail
 const enclosureShipStockMeteDetail = mes.enclosureShipStockMeteDetail
 const mesShipTrainMeteDetail = mes.mesShipTrainMeteDetail
 const mesAuxMatDetail = mes.mesAuxMatDetail
+const bridgeAuxMatDetail = mes.bridgeAuxMatDetail
 const enclosureAuxMatDetail = mes.enclosureAuxMatDetail
 const mesProductSendReceiveStorage = mes.productSendReceiveStorage
+const boxProductSendReceiveStorage = mes.boxProductSendReceiveStorage
 const enclosureProductSendReceiveStorage = mes.enclosureProductSendReceiveStorage
 const productSendReceiveStorageDetail = mes.productSendReceiveStorageDetail
+const boxProductSendReceiveStorageDetail = mes.boxProductSendReceiveStorageDetail
 const enclosureProductSendReceiveStorageDetail = mes.enclosureProductSendReceiveStorageDetail
 const mesBeginningInventoryDetail = mes.mesBeginningInventoryDetail
 const mesEndInventoryDetail = mes.mesEndInventoryDetail
 const mesInboundInventoryDetail = mes.mesInboundInventoryDetail
 const mesOutboundInventoryDetail = mes.mesOutboundInventoryDetail
+const boxBeginningInventoryDetail = mes.boxBeginningInventoryDetail
+const boxEndInventoryDetail = mes.boxEndInventoryDetail
+const boxInboundInventoryDetail = mes.boxInboundInventoryDetail
+const boxOutboundInventoryDetail = mes.boxOutboundInventoryDetail
 const enclosureBeginningInventoryDetail = mes.enclosureBeginningInventoryDetail
 const enclosureEndInventoryDetail = mes.enclosureEndInventoryDetail
 const enclosureInboundInventoryDetail = mes.enclosureInboundInventoryDetail
@@ -379,14 +401,22 @@ export default {
   mesEnclosureTeamWageDetail, // 围护班组工资详情
 
   mesPackingList, // 打包清单
+  mesBridgePackingList, // 桥梁打包清单
   enclosurePackingList, // 围护打包清单
   mesShipmentSummary, // 发运汇总
+  mesBridgeShipmentSummary, // 桥梁发运汇总
   mesShipmentDetail, // 发运详情
+  mesBridgeShipmentDetail, // 桥梁发运详情
   mesReceiptStatusSummary, // 收货状态汇总
   mesShippingList, // 发货清单
+  mesBridgeReceiptStatusSummary, // 桥梁收货状态汇总
+  mesBridgeShippingList, // 桥梁发货清单
   mesShipmentAudit, // 发运审核
   mesShipmentAuditOverWeight, // 过磅详情
+  mesBridgeShipmentAudit, // 发运审核
+  mesBridgeShipmentAuditOverWeight, // 过磅详情
   mesLogisticsSummary, // 物流汇总
+  mesBridgeLogisticsSummary, // 桥梁物流汇总
 
   mesWarehouseStateStructure, // 结构出入库状态
   mesWarehouseStateEnclosure, // 围护出入库状态
@@ -417,14 +447,21 @@ export default {
   mesStudSleeveStatisticsList, // 栓钉套筒统计清单详情
 
   mesProjectShipDetail, // 发运管理项目发运详情
+  bridgeProjectDetail, // 发运管理桥梁项目发运详情
   enclosureProjectShipDetail, // 发运管理围护项目发运详情
   mesShipMeteDetail, // 发运统计/清单总量详情
-  mesShipTaskMeteDetail, // 发运统计/任务总量详情
+  mesShipTaskMeteDetail, // 发运统计/建钢任务总量详情
   mesShipInboundMeteDetail, // 发运统计/入库量详情
   mesShipTotalMeteDetail, // 发运统计/累计发运详情
   mesShipMonthMeteDetail, // 发运统计/本月发运详情
   mesShipStockMeteDetail, // 发运统计/库存详情
-  enclosureShipMeteDetail, // 发运统计/清单总量详情
+  bridgeShipMeteDetail, // 发运统计/桥梁清单总量详情
+  bridgeShipTaskMeteDetail, // 发运统计/任务总量详情
+  bridgeShipInboundMeteDetail, // 发运统计/入库量详情
+  bridgeShipTotalMeteDetail, // 发运统计/累计发运详情
+  bridgeShipMonthMeteDetail, // 发运统计/本月发运详情
+  bridgeShipStockMeteDetail, // 发运统计/库存详情
+  enclosureShipMeteDetail, // 发运统计/围护清单总量详情
   enclosureShipTaskMeteDetail, // 发运统计/任务总量详情
   enclosureShipInboundMeteDetail, // 发运统计/入库量详情
   enclosureShipTotalMeteDetail, // 发运统计/累计发运详情
@@ -432,15 +469,22 @@ export default {
   enclosureShipStockMeteDetail, // 发运统计/库存详情
   mesShipTrainMeteDetail, // 发运统计/累计车次详情
   mesAuxMatDetail, // 发运统计/配套件详情
+  bridgeAuxMatDetail, // 发运统计/桥梁配套件
   enclosureAuxMatDetail, // 发运统计/围护配套件详情
   mesProductSendReceiveStorage, // 发运管理制成品入发存
+  boxProductSendReceiveStorage, // 分段制品入发存
   enclosureProductSendReceiveStorage, // 围护制品入发存
   productSendReceiveStorageDetail, // 发运管理制成品入发存详情
+  boxProductSendReceiveStorageDetail, // 分段制品入发存详情
   enclosureProductSendReceiveStorageDetail, // 发运管理围护制成品入发存详情
   mesBeginningInventoryDetail, // 期初库存
   mesEndInventoryDetail, // 期末库存
   mesInboundInventoryDetail, // 入库量
   mesOutboundInventoryDetail, // 出库量
+  boxBeginningInventoryDetail, // 分段期初库存
+  boxEndInventoryDetail, // 期末库存
+  boxInboundInventoryDetail, // 入库量
+  boxOutboundInventoryDetail, // 出库量
   enclosureBeginningInventoryDetail, // 围护期初库存
   enclosureEndInventoryDetail, // 围护期末库存
   enclosureInboundInventoryDetail, // 围护入库量

@@ -202,7 +202,12 @@
     </common-table>
     <!--分页组件-->
     <pagination />
-    <m-detail v-model:visible="detailVisible" :detail-info="shipInfo" title="装车详情" :detailFunc="detail">
+    <m-detail
+      v-model:visible="detailVisible"
+      :detail-info="shipInfo"
+      title="装车详情"
+      :detailFunc="crud.query.projectType === projectTypeEnum.BRIDGE.V ? detailBridge : detail"
+    >
       <template #tip>
         <div style="width: 150px; height: 53px; overflow: hidden; position: absolute; top: -18px; left: -20px">
           <table-cell-tag :show="shipInfo.deliveryStatus === deliveryStatusEnum.RETURN.V" name="已取消" color="#f56c6c" />
@@ -216,7 +221,7 @@
 </template>
 
 <script setup>
-import crudApi, { detail } from '@/api/mes/pack-and-ship/ship-list'
+import { get, getBridge, detail, detailBridge } from '@/api/mes/pack-and-ship/ship-list'
 import { ref } from 'vue'
 
 import { mesShipPM as permission } from '@/page-permission/ship-manage'
@@ -228,7 +233,8 @@ import EO from '@enum'
 import { convertUnits } from '@/utils/convert/unit'
 import { projectNameFormatter } from '@/utils/project'
 import checkPermission from '@/utils/system/check-permission'
-
+import { mapGetters } from '@/store/lib'
+import { projectTypeEnum } from '@enum-ms/contract'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import pagination from '@crud/Pagination'
@@ -242,17 +248,23 @@ const optShow = {
   download: false
 }
 
+const { currentProjectType } = mapGetters(['currentProjectType'])
 const tableRef = ref()
-const { crud, columns } = useCRUD(
+const { crud, CRUD, columns } = useCRUD(
   {
     title: '发运记录',
     sort: ['auditTime.desc'],
     permission: { ...permission },
-    crudApi: { ...crudApi },
+    crudApi: { get },
     optShow: { ...optShow }
   },
   tableRef
 )
+
+CRUD.HOOK.beforeToQuery = () => {
+  crud.query.projectType = currentProjectType.value
+  crud.crudApi.get = crud.query.projectType === projectTypeEnum.BRIDGE.V ? getBridge : get
+}
 
 const { maxHeight } = useMaxHeight({ paginate: true })
 

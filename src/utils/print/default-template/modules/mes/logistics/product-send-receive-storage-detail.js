@@ -207,15 +207,15 @@ const productSendReceiveStorageDetail = {
       { show: true, key: 'specification', title: '规格', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 10, type: typeEnum.SPECIFICATION.K },
       { show: true, key: 'length', title: '长度', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 10, type: typeEnum.LENGTH.K },
       { show: true, key: 'quantity', title: '清单数', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 14, type: typeEnum.QUANTITY.K, sum: true },
-      { show: true, key: 'totalNetWeight', title: '清单量(kg)', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 14, type: typeEnum.METE.K, sum: true },
+      { show: true, key: 'totalNetWeight', title: '总净重(kg)', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 14, type: typeEnum.METE.K, sum: true },
       { show: true, key: 'beginningQuantity', title: '期初数', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 10, type: typeEnum.QUANTITY.K, sum: true },
-      { show: true, key: 'beginningNetWeight', title: '期初量(kg)', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 10, type: typeEnum.METE.K, sum: true },
+      { show: true, key: 'beginningNetWeight', title: '总净重(kg)', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 10, type: typeEnum.METE.K, sum: true },
       { show: true, key: 'inboundQuantity', title: '入库数', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 10, type: typeEnum.QUANTITY.K, sum: true },
-      { show: true, key: 'inboundNetWeight', title: '入库量(kg)', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 10, type: typeEnum.METE.K, sum: true },
+      { show: true, key: 'inboundNetWeight', title: '总净重(kg)', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 10, type: typeEnum.METE.K, sum: true },
       { show: true, key: 'outboundQuantity', title: '出库数', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 10, type: typeEnum.QUANTITY.K, sum: true },
-      { show: true, key: 'outboundNetWeight', title: '出库量(kg)', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 10, type: typeEnum.METE.K, sum: true },
+      { show: true, key: 'outboundNetWeight', title: '总净重(kg)', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 10, type: typeEnum.METE.K, sum: true },
       { show: true, key: 'stockQuantity', title: '期末数', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 10, type: typeEnum.QUANTITY.K, sum: true },
-      { show: true, key: 'stockNetWeight', title: '期末量(kg)', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 10, type: typeEnum.METE.K, sum: true }
+      { show: true, key: 'stockNetWeight', title: '总净重(kg)', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 10, type: typeEnum.METE.K, sum: true }
     ]
   }
 }

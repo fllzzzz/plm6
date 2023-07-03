@@ -12,7 +12,7 @@
         @change="crud.toQuery"
         style="width: 120px"
       />
-      <project-radio-button size="small" :type="'all'" v-model="query.projectId" class="filter-item" @change="crud.toQuery" />
+      <project-radio-button size="small" v-model="query.projectId" class="filter-item" @change="crud.toQuery" />
       <!-- <common-radio-button
         v-model="query.productType"
         :options="[packTypeEnum.STRUCTURE, packTypeEnum.MACHINE_PART]"
@@ -43,7 +43,9 @@
             name="期初库存(kg)"
             text-color="#626262"
             num-color="#1890ff"
-            :end-val="query.weightStatus === weightTypeEnum.NET.V? totalAmount.beginningNetWeight || 0 : totalAmount.beginningGrossWeight || 0"
+            :end-val="
+              query.weightStatus === weightTypeEnum.NET.V ? totalAmount?.beginningNetWeight || 0 : totalAmount?.beginningGrossWeight || 0
+            "
             :precision="DP.COM_WT__KG"
           />
         </el-col>
@@ -52,7 +54,9 @@
             name="入库量(kg)"
             text-color="#626262"
             num-color="#1890ff"
-            :endVal="query.weightStatus === weightTypeEnum.NET.V?totalAmount.inboundNetWeight || 0:totalAmount.inboundGrossWeight || 0"
+            :endVal="
+              query.weightStatus === weightTypeEnum.NET.V ? totalAmount?.inboundNetWeight || 0 : totalAmount?.inboundGrossWeight || 0
+            "
             :precision="DP.COM_WT__KG"
           />
         </el-col>
@@ -61,7 +65,9 @@
             name="出库量(kg)"
             text-color="#626262"
             num-color="#1890ff"
-            :endVal="query.weightStatus === weightTypeEnum.NET.V?totalAmount.outboundNetWeight || 0:totalAmount.outboundGrossWeight || 0"
+            :endVal="
+              query.weightStatus === weightTypeEnum.NET.V ? totalAmount?.outboundNetWeight || 0 : totalAmount?.outboundGrossWeight || 0
+            "
             :precision="DP.COM_WT__KG"
           />
         </el-col>
@@ -70,7 +76,7 @@
             name="期末库存(kg)"
             text-color="#626262"
             num-color="#1890ff"
-            :end-val="query.weightStatus === weightTypeEnum.NET.V?totalAmount.stockNetWeight || 0:totalAmount.stockGrossWeight || 0"
+            :end-val="query.weightStatus === weightTypeEnum.NET.V ? totalAmount?.stockNetWeight || 0 : totalAmount?.stockGrossWeight || 0"
             :precision="DP.COM_WT__KG"
           />
         </el-col>
@@ -130,7 +136,7 @@ async function fetchSummaryInfo() {
   summaryLoading.value = true
   try {
     const data = await summaryData(query)
-    totalAmount.value = data
+    totalAmount.value = data || {}
     // totalAmount.value.intoWeight = (totalAmount.value.intoWeight / 1000).toFixed(DP.COM_WT__T)
     // totalAmount.value.outWeight = (totalAmount.value.outWeight / 1000).toFixed(DP.COM_WT__T)
     // totalAmount.value.stockWeight = (totalAmount.value.stockWeight / 1000).toFixed(DP.COM_WT__T)

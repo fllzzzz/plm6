@@ -143,7 +143,7 @@
 </template>
 
 <script setup>
-import crudApi, { getLog } from '@/api/ship-manage/pack-and-ship/logistics-list'
+import crudApi, { getLog, getLogBridge, editBridge } from '@/api/ship-manage/pack-and-ship/logistics-list'
 import { defineProps, defineEmits, ref, watch, nextTick } from 'vue'
 import { ElNotification } from 'element-plus'
 
@@ -152,7 +152,7 @@ import { toFixed } from '@/utils/data-type'
 import { logisticsPriceTypeEnum, deliveryStatusEnum, freightChangeTypeEnum } from '@enum-ms/mes'
 import { projectNameFormatter } from '@/utils/project'
 import { convertUnits } from '@/utils/convert/unit'
-
+import { projectTypeEnum } from '@enum-ms/contract'
 import useVisible from '@compos/use-visible'
 import useWatchFormValidate from '@compos/form/use-watch-form-validate'
 import useMaxHeight from '@compos/use-max-height'
@@ -169,6 +169,9 @@ const props = defineProps({
   detailInfo: {
     type: Object,
     default: () => {}
+  },
+  projectType: {
+    type: Number
   }
 })
 
@@ -229,7 +232,7 @@ watch(
 
 async function fetchLogData() {
   try {
-    logList.value = await getLog(props.detailInfo.id) || []
+    logList.value = props.projectType === projectTypeEnum.BRIDGE.V ? await getLogBridge(props.detailInfo.id) || [] : await getLog(props.detailInfo.id) || []
   } catch (error) {
     console.log('获取价格变更记录', error)
   }
@@ -262,7 +265,7 @@ async function onSubmit() {
     if (!valid) {
       return
     }
-    await crudApi.edit(form.value.id, form.value)
+    props.projectType === projectTypeEnum.BRIDGE.V ? await editBridge(form.value.id, form.value) : await crudApi.edit(form.value.id, form.value)
     ElNotification({ title: '修改成功', type: 'success' })
     emit('success')
     handleClose()
