@@ -38,6 +38,18 @@ export function getSummary(params) {
 }
 
 /**
+ * @description: 获取分段排产汇总气泡
+ */
+export function getBoxNum(params) {
+  return request({
+    module: 'bridge',
+    url: 'scheduling/box/record/count',
+    method: 'get',
+    params
+  })
+}
+
+/**
  * @description: 保存分段排产
  */
 export function save(data) {
