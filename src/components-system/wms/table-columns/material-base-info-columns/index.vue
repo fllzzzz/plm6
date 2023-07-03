@@ -86,7 +86,16 @@
       <span>{{ row.serialNumber }}</span>
     </template>
   </el-table-column>
-  <el-table-column
+   <el-table-column
+    v-if="showClassification && !boolManuf"
+    prop="classification"
+    label="分类"
+    align="center"
+    width="100px"
+    :fixed="fixed"
+    show-overflow-tooltip
+  />
+  <!-- <el-table-column
     v-if="showClassification && !boolManuf"
     prop="classification"
     label="分类"
@@ -95,7 +104,7 @@
     :fixed="fixed"
     show-overflow-tooltip
     :sortable="sortable"
-  />
+  /> -->
   <el-table-column
     v-if="showClassifyName && !boolManuf"
     prop="classifyName"

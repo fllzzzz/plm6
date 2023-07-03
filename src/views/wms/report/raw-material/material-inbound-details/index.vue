@@ -34,10 +34,10 @@
       >
         <template #afterIndex>
           <el-table-column
-            v-if="columns.visible('inboundReceipt.inboundTime')"
-            key="inboundReceipt.inboundTime"
+            v-if="columns.visible('inboundTime')"
+            key="inboundTime"
             :show-overflow-tooltip="true"
-            prop="inboundReceipt.inboundTime"
+            prop="inboundTime"
             label="入库时间"
             align="center"
             width="125"
@@ -203,7 +203,7 @@ const tableRef = ref()
 // 表格列数据格式转换
 const columnsDataFormat = ref([
   ...materialHasAmountColumns,
-  ['inboundReceipt.inboundTime', 'parse-time'],
+  ['inboundTime', 'parse-time'],
   ['inboundReceipt.reviewTime', 'parse-time'],
   ['inboundReceipt.createTime', 'parse-time']
 ])
@@ -251,6 +251,7 @@ CRUD.HOOK.handleRefresh = async (crud, { data }) => {
   data.content.forEach((row) => {
     if (!row.inboundReceipt) row.inboundReceipt = {}
   })
+  console.log(data.content)
   // 退货信息转换
   const rejectList = []
   data.content.forEach((row) => {
