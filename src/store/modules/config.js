@@ -825,18 +825,19 @@ const actions = {
       { name: '项目管理', key: 'project' },
       { name: '发运管理', key: 'shipment' },
       { name: '供应链', key: 'supplyChain' },
-      { name: 'wms', key: 'wms' }
+      { name: 'WMS', key: 'wms' }
     ]
     moduleMenu.forEach(v => {
       moduleDecimal[v.key] = DP.YUAN
     })
     const { content = [] } = await getAllDecimal()
-    content.forEach(v => {
-      const val = moduleMenu.find(k => v.menuName.indexOf(v.menuName) > -1) || {}
+    moduleMenu.forEach(v => {
+      const val = content.find(k => v.name.indexOf(k.menuName) > -1) || {}
       if (isNotBlank(val)) {
-        moduleDecimal[val.key] = val.scale
+        moduleDecimal[v.key] = val.scale
       }
     })
+    console.log(moduleDecimal)
     commit('SET_DECIMAL_PRECISION', moduleDecimal)
     commit('SET_LOADED', { key: 'decimalPrecision' })
     return content
