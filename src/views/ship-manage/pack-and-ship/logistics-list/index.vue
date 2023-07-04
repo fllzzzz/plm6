@@ -58,6 +58,7 @@
         :show-overflow-tooltip="true"
         label="车牌号"
         align="center"
+        width="120"
       />
       <el-table-column
         v-if="columns.visible('driverName')"
@@ -84,6 +85,7 @@
         prop="actualWeight"
         label="装载重量(t)"
         align="center"
+        width="120"
       >
         <template v-slot="scope">
           <span>{{ convertUnits(scope.row.actualWeight, 'kg', 't', DP.COM_WT__T) }}</span>
@@ -162,6 +164,22 @@
           <span>{{ toFixed(scope.row.totalPrice, DP.YUAN) }}</span>
         </template>
       </el-table-column>
+      <el-table-column
+        v-if="columns.visible('userNames')"
+        :show-overflow-tooltip="true"
+        prop="userNames"
+        label="发货人"
+        align="center"
+        width="120"
+      />
+      <el-table-column
+        v-if="columns.visible('auditUserName')"
+        :show-overflow-tooltip="true"
+        prop="auditUserName"
+        label="过磅人"
+        align="center"
+        width="120"
+      />
       <el-table-column v-if="columns.visible('auditTime')" key="auditTime" prop="auditTime" sortable="custom" label="承运日期" width="120">
         <template v-slot="scope">
           <span v-parse-time="{ val: scope.row.auditTime, fmt: '{y}-{m}-{d}' }" />
