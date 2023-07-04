@@ -18,15 +18,16 @@
         <el-input v-model.trim="form.shortName" type="text" placeholder="请填写简称" style="width: 270px" />
       </el-form-item>
       <el-form-item label="车间类型" prop="type">
-          <common-select
-            v-model="form.type"
-            :options="workshopTypeEnum.ENUM"
-            type="enum"
-            size="small"
-            placeholder="车间类型"
-            style="width: 270px"
-          />
-        </el-form-item>
+        <common-select
+          v-model="form.type"
+          :options="workshopTypeEnum.ENUM"
+          :unshowOptions="flag ? [workshopTypeEnum.BRIDGE.K, workshopTypeEnum.ENCLOSURE.K] : [workshopTypeEnum.BRIDGE.K]"
+          type="enum"
+          size="small"
+          placeholder="车间类型"
+          style="width: 270px"
+        />
+      </el-form-item>
       <el-form-item label="排序" prop="sort">
         <el-input-number v-model.number="form.sort" :min="1" :max="999" :step="1" controls-position="right" style="width: 270px" />
       </el-form-item>
@@ -46,9 +47,10 @@
 <script setup>
 import { ref } from 'vue'
 import { regForm } from '@compos/use-crud'
-
+import { mapGetters } from '@/store/lib'
 import { workshopTypeEnum } from '@enum-ms/common'
 
+const { flag } = mapGetters(['flag'])
 const formRef = ref()
 
 const defaultForm = {
@@ -65,9 +67,7 @@ const { crud, form } = regForm(defaultForm, formRef)
 
 const rules = {
   sort: [{ required: true, message: '请填写排序值', trigger: 'blur', type: 'number' }],
-  type: [
-    { required: true, message: '请选择车间类型', trigger: 'change' }
-  ],
+  type: [{ required: true, message: '请选择车间类型', trigger: 'change' }],
   name: [
     { required: true, message: '请填写车间名称', trigger: 'blur' },
     { min: 1, max: 32, message: '长度在 1 到 32 个字符', trigger: 'blur' }

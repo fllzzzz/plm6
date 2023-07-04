@@ -51,7 +51,7 @@ import mReason from './change-detail/reason'
 import mHandleInfo from './change-detail/handle-info'
 // import mChangeSummary from './change-detail/change-summary'
 // import mTaskChangeInfo from './change-detail/task-change-info'
-import artifactRescheduling from './change-detail/artifact-rescheduling.vue'
+// import artifactRescheduling from './change-detail/artifact-rescheduling.vue'
 import assembleRescheduling from './change-detail/assemble-rescheduling.vue'
 // import artifactPointWorkScheduling from './change-detail/artifact-point-work-scheduling.vue'
 import assemblePointWorkScheduling from './change-detail/assemble-point-work-scheduling.vue'
@@ -111,9 +111,9 @@ const stepOptions = computed(() => {
     // { title: '变更文件总览', comp: mTaskChangeInfo }
     // { title: '任务变更总览', comp: mTaskChangeInfo }
   ]
-  if (schedulingInfo.value?.artifactList?.length) {
-    baseOptions.push({ title: '构件任务变更下发', comp: artifactRescheduling })
-  }
+  // if (schedulingInfo.value?.artifactList?.length) {
+  //   baseOptions.push({ title: '构件任务变更下发', comp: artifactRescheduling })
+  // }
   // if (schedulingInfo.value?.pointWorkTaskArtifactList?.length) {
   //   baseOptions.push({ title: '构件点工下发', comp: artifactPointWorkScheduling })
   // }

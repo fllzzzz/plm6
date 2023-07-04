@@ -16,13 +16,11 @@
               <el-tag size="medium" effect="plain" style="margin-right: 10px">
                 重量(kg)：{{ summaryInfo.totalNetWeight?.toFixed(2) || 0 }}
               </el-tag>
-              <common-button
-v-permission="permission.recordGet"
-type="primary"
-size="mini"
-@click="previewRecord"
-                >分段排产记录</common-button
-              >
+              <el-badge :value="totalBadge" :max="99" :hidden="totalBadge < 1" style="margin-right: 20px">
+                <common-button v-permission="permission.recordGet" type="primary" size="mini" @click="previewRecord">
+                  分段排产记录
+                </common-button>
+              </el-badge>
             </template>
           </mHeader>
         </div>
@@ -152,7 +150,7 @@ size="mini"
 </template>
 
 <script setup>
-import crudApi, { getSummary } from '@/api/bridge/scheduling-manage/box'
+import crudApi, { getSummary, getBoxNum } from '@/api/bridge/scheduling-manage/box'
 import { ref, provide, computed } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import moment from 'moment'
@@ -179,6 +177,7 @@ import { debounce } from '@/utils'
 const productType = bridgeComponentTypeEnum.BOX.V
 provide('productType', productType)
 
+const totalBadge = ref()
 const mHeaderRef = ref()
 const curFactoryIds = ref([])
 const curWorkshopIds = ref([])
@@ -269,6 +268,7 @@ const { tableValidate, cleanUpData, wrongCellMask } = useTableValidate({ rules: 
 
 CRUD.HOOK.beforeToQuery = () => {
   fetchSummary()
+  fetchNumGet()
 }
 
 CRUD.HOOK.handleRefresh = (crud, res) => {
@@ -308,11 +308,13 @@ function refresh(isRefreshTypeList = false) {
   if (isRefreshTypeList) {
     mHeaderRef.value?.refreshTypeList()
   }
+  fetchNumGet()
   crud.toQuery()
 }
 
 const handleAreaClick = debounce(function (nodes = []) {
   console.log(nodes, 'handleAreaClick')
+  totalBadge.value = 0
   summaryInfo.value = {}
   const _areaIds = []
   const _areaIdObj = {}
@@ -331,6 +333,7 @@ const handleAreaClick = debounce(function (nodes = []) {
   curAreaIdObj.value = _areaIdObj
   curFactoryIds.value = _factoryIds
   curWorkshopIds.value = _workshopIds
+  fetchNumGet()
   crud.toQuery()
 }, 500)
 
@@ -372,6 +375,15 @@ async function previewIt() {
   }
 
   previewVisible.value = true
+}
+
+async function fetchNumGet() {
+  try {
+    const data = await getBoxNum({ areaIdList: crud.query.areaIdList })
+    totalBadge.value = data
+  } catch (error) {
+    console.log('获取构件排产记录气泡条数失败', error)
+  }
 }
 
 function previewRecord() {

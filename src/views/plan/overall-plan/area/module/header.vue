@@ -35,7 +35,7 @@ import { regHeader } from '@compos/use-crud'
 import crudOperation from '@crud/CRUD.operation'
 import monomerSelect from '@/components-system/plan/monomer-select'
 import { monomerDetail } from '@/api/plan/monomer'
-import { TechnologyTypeAllEnum } from '@enum-ms/contract'
+import { TechnologyTypeAllEnum, projectTypeEnum } from '@enum-ms/contract'
 
 const router = useRouter()
 
@@ -52,6 +52,10 @@ const props = defineProps({
   projectId: {
     type: [Number, String],
     default: undefined
+  },
+  globalProject: {
+    type: Object,
+    default: () => {}
   }
 })
 const emit = defineEmits(['monomerChangeType', 'monomerValChange'])
@@ -98,6 +102,11 @@ async function getTypeInfo() {
 }
 
 function goPlanView() {
-  router.push({ name: 'PlanMakeManage', params: { monomerId: crud.query.monomerId, productType: crud.query.productType }})
+  if (props.globalProject.projectType === projectTypeEnum.STEEL.V) {
+    router.push({ name: 'PlanMakeManage', params: { monomerId: crud.query.monomerId, productType: crud.query.productType }})
+  } else if (props.globalProject.projectType === projectTypeEnum.BRIDGE.V) {
+    router.push({ name: 'BridgeMakeManage', params: { monomerId: crud.query.monomerId, productType: crud.query.productType }})
+  }
 }
+
 </script>

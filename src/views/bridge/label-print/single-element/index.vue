@@ -406,6 +406,7 @@ function openRecordView(row) {
 }
 
 function getLabelInfo(row, num) {
+  headRef.value?.handleLinesLoaded()
   const { getLine, printConfig, spliceQrCodeUrl, QR_SCAN_PATH, requestUrl, companyName, company } = headRef.value
   const companyWebsite = company.website && company.website.includes('://') ? company.website.split('://')[1] : company.website
   // 标签分段信息
