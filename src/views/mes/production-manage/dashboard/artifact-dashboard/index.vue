@@ -41,7 +41,8 @@
           >
             <div
               class="board-box"
-              :style="{ 'background-color': `${item.boxColor}`, ...boxStyle }"
+              :style="{ 'cursor': 'pointer', 'background-color': `${item.boxColor}`, ...boxStyle }"
+              @dblclick="boardDetail(item)"
               @mouseenter="getDetail(item)"
             >
               <div style="width: 120px">
@@ -268,10 +269,10 @@ async function getMachinePartDetail(item) {
   }
 }
 
-// function boardDetail(item) {
-//   detailVisible.value = true
-//   detailRow.value = item
-// }
+function boardDetail(item) {
+  detailVisible.value = true
+  detailRow.value = item
+}
 </script>
 
 <style lang="scss" scoped>
