@@ -250,7 +250,7 @@ const validateTaxRate = (value, row) => {
 
 // 金额校验
 const validateAmount = (value, row) => {
-  if (!value) return false
+  if (!isNotBlank(value)) return false
   return true
 }
 
@@ -321,7 +321,7 @@ function moneyChange(row) {
 }
 
 function taxMoney(row) {
-  if (row.invoiceAmount && row.taxRate) {
+  if (isNotBlank(row.invoiceAmount) && row.taxRate) {
     row.tax = row.invoiceAmount * row.taxRate / 100
   }
 }

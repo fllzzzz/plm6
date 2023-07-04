@@ -198,7 +198,7 @@ const { maxHeight } = useMaxHeight({
 
 // 金额校验
 const validateAmount = (value, row) => {
-  if (!value) return false
+  if (!isNotBlank(value)) return false
   return true
 }
 
@@ -290,7 +290,6 @@ CRUD.HOOK.beforeValidateCU = (crud, form) => {
   }
   const rules = tableRules
   let flag = true
-  let moneyFlag = true
   crud.form.list.map(row => {
     row.verify = {}
     for (const rule in rules) {
@@ -299,16 +298,9 @@ CRUD.HOOK.beforeValidateCU = (crud, form) => {
         flag = false
       }
     }
-    if (row.collectionAmount === 0) {
-      moneyFlag = false
-    }
   })
   if (!flag) {
     ElMessage.error('请填写表格中标红数据')
-    return false
-  }
-  if (!moneyFlag) {
-    ElMessage.error('收款金额必须大于0')
     return false
   }
   crud.form.projectId = props.projectId
