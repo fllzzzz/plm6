@@ -59,7 +59,7 @@
           v-if="showType==='audit'"
           v-model.number="actuallyPaymentAmount"
           v-show-thousand
-          :min="0"
+          :min="-9999999999"
           :max="detailInfo.applyAmount"
           :step="100"
           :precision="DP.YUAN"
@@ -67,7 +67,7 @@
           controls-position="right"
           style="width:220px;"
         />
-        <span v-else>{{currentInfo.actuallyPaymentAmount?toThousand(currentInfo.actuallyPaymentAmount):'-'}}</span>
+        <span v-else>{{isNotBlank(currentInfo.actuallyPaymentAmount)?toThousand(currentInfo.actuallyPaymentAmount):'-'}}</span>
         <template v-if="showType==='audit'">
           <el-tag type="success" style="margin-left:5px;" v-if="actuallyPaymentAmount && currentRow.inboundAmount">{{ ((actuallyPaymentAmount/currentRow.inboundAmount)*100).toFixed(2)+'%' }}</el-tag>
         </template>
@@ -120,6 +120,7 @@
 import { ref, defineProps, watch, defineEmits } from 'vue'
 import { auditTypeEnum } from '@enum-ms/contract'
 
+import { isNotBlank } from '@data-type/index'
 import { projectNameFormatter } from '@/utils/project'
 import useVisible from '@compos/use-visible'
 import { payDetail } from '@/api/contract/supplier-manage/pay-invoice/pay'

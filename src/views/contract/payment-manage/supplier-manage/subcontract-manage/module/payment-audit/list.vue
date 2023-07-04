@@ -38,12 +38,12 @@
       </el-table-column>
       <el-table-column key="applyAmount" prop="applyAmount" label="申请金额" align="center" min-width="85">
         <template v-slot="scope">
-          <div>{{ scope.row.applyAmount && scope.row.applyAmount>0? toThousand(scope.row.applyAmount): scope.row.applyAmount }}</div>
+          <div>{{ isNotBlank(scope.row.applyAmount)? toThousand(scope.row.applyAmount): scope.row.applyAmount }}</div>
         </template>
       </el-table-column>
       <el-table-column key="applyAmount1" prop="applyAmount1" label="大写" align="center" min-width="85">
         <template v-slot="scope">
-          <div>{{ scope.row.applyAmount && scope.row.applyAmount>0? digitUppercase(scope.row.applyAmount): '-' }}</div>
+          <div>{{ isNotBlank(scope.row.applyAmount)? digitUppercase(scope.row.applyAmount): '-' }}</div>
         </template>
       </el-table-column>
       <!-- <el-table-column key="paymentReasonId" prop="paymentReasonId" label="*付款事由" align="center" width="120">
@@ -59,7 +59,7 @@
       </el-table-column>
       <el-table-column key="actuallyPaymentAmount" prop="actuallyPaymentAmount" label="实付金额" align="center" min-width="85">
         <template v-slot="scope">
-          <div>{{ scope.row.actuallyPaymentAmount && scope.row.actuallyPaymentAmount>0? toThousand(scope.row.actuallyPaymentAmount): scope.row.actuallyPaymentAmount }}</div>
+          <div>{{ isNotBlank(scope.row.actuallyPaymentAmount) ? toThousand(scope.row.actuallyPaymentAmount): '-' }}</div>
         </template>
       </el-table-column>
       <el-table-column key="auditUserName" prop="auditUserName" label="审核人" align="center" width="100px">

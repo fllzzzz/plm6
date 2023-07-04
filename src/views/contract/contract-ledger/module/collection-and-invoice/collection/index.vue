@@ -54,8 +54,8 @@
               v-if="scope.row.isModify"
               v-show-thousand
               v-model.number="scope.row.collectionAmount"
-              :min="0"
-              :max="999999999999"
+              :min="-9999999999"
+              :max="9999999999"
               :step="100"
               :precision="DP.YUAN"
               placeholder="收款金额(元)"
@@ -63,7 +63,7 @@
               :key="scope.row.dataIndex?scope.row.dataIndex:scope.row.id"
               @change="moneyChange(scope.row)"
             />
-            <div v-else>{{ scope.row.collectionAmount && scope.row.collectionAmount>0? toThousand(scope.row.collectionAmount): scope.row.collectionAmount }}</div>
+            <div v-else>{{ isNotBlank(scope.row.collectionAmount) ? toThousand(scope.row.collectionAmount): '-' }}</div>
           </template>
         </el-table-column>
         <el-table-column key="collectionAmount1" prop="collectionAmount1" label="大写" align="center" min-width="85" :show-overflow-tooltip="true">
@@ -203,22 +203,24 @@
 <script setup>
 import crudApi, { contractCollectionInfo, bankData, editStatus } from '@/api/contract/collection-and-invoice/collection'
 import { ref, defineEmits, defineProps, watch, provide, nextTick } from 'vue'
+
 import checkPermission from '@/utils/system/check-permission'
 import { tableSummary } from '@/utils/el-extra'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
-import pagination from '@crud/Pagination'
 import { auditTypeEnum } from '@enum-ms/contract'
 import useDict from '@compos/store/use-dict'
 import { paymentFineModeEnum } from '@enum-ms/finance'
 import { parseTime } from '@/utils/date'
 import { DP } from '@/settings/config'
-import { toThousand } from '@data-type/number'
-import { digitUppercase } from '@/utils/data-type/number'
+import { toThousand, digitUppercase } from '@data-type/number'
 import { validate } from '@compos/form/use-table-validate'
 import { ElMessage } from 'element-plus'
-import mForm from './form'
 import { contractLedgerPM } from '@/page-permission/contract'
+import { isNotBlank } from '@data-type/index'
+
+import pagination from '@crud/Pagination'
+import mForm from './form'
 
 const permission = contractLedgerPM.collection
 

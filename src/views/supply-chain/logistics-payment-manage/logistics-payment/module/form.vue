@@ -53,7 +53,7 @@
                 v-if="scope.row.freight!==scope.row.paymentAmount"
                 v-model.number="scope.row.applyAmount"
                 v-show-thousand
-                :min="scope.row.paymentAmount>scope.row.freight?(-(scope.row.paymentAmount-scope.row.freight)):0"
+                :min="-9999999999"
                 :max="scope.row.paymentAmount>scope.row.freight?0:scope.row.freight-scope.row.paymentAmount"
                 :step="100"
                 :precision="DP.YUAN"

@@ -16,6 +16,7 @@ const collectionLedger = contract.collectionLedger
 const invoiceRecord = contract.invoiceLedger
 const invoiceLedger = contract.invoiceLedger
 const arrearsList = contract.arrearsList
+const contractBoxPrice = contract.contractBoxPrice
 const contractStructurePrice = contract.structurePrice
 const contractEnclosurePrice = contract.enclosurePrice
 const contractAuxiliaryMaterialPrice = contract.auxiliaryMaterialPrice
@@ -309,6 +310,7 @@ export default {
   supplierPaymentLedger, // 供应商付款台账
   supplierInvoiceLedger, // 供应商收票台账
 
+  contractBoxPrice, // 分段制品计价表
   contractStructurePrice, // 结构计价表
   contractEnclosurePrice, // 围护计价表
   contractAuxiliaryMaterialPrice, // 配套件计价表

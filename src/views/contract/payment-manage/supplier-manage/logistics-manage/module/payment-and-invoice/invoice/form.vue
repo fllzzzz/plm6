@@ -50,7 +50,7 @@
                   v-if="scope.row.isModify"
                   v-show-thousand
                   v-model.number="scope.row.invoiceAmount"
-                  :min="0"
+                  :min="-9999999999"
                   :max="currentRow.freight-totalAmount"
                   :step="100"
                   :precision="DP.YUAN"
@@ -58,7 +58,7 @@
                   controls-position="right"
                   @change="moneyChange(scope.row)"
                 />
-                <div v-else>{{ scope.row.invoiceAmount && scope.row.invoiceAmount>0? toThousand(scope.row.invoiceAmount): scope.row.invoiceAmount }}</div>
+                <div v-else>{{ isNotBlank(scope.row.invoiceAmount) ? toThousand(scope.row.invoiceAmount): '-' }}</div>
               </template>
             </el-table-column>
             <el-table-column key="invoiceAmount1" prop="invoiceAmount1" label="大写" align="center" width="330" :show-overflow-tooltip="true">
@@ -149,13 +149,15 @@
 import { ref, inject, nextTick, defineProps } from 'vue'
 import { regForm } from '@compos/use-crud'
 import { ElMessage } from 'element-plus'
+
 import { DP } from '@/settings/config'
 import useMaxHeight from '@compos/use-max-height'
-import { digitUppercase } from '@/utils/data-type/number'
-import { toThousand } from '@data-type/number'
+import { digitUppercase, toThousand } from '@/utils/data-type/number'
 import { invoiceTypeEnum } from '@enum-ms/finance'
 import useTableValidate from '@compos/form/use-table-validate'
 import { fileClassifyEnum } from '@enum-ms/file'
+import { isNotBlank } from '@data-type/index'
+
 import UploadBtn from '@comp/file-upload/UploadBtn'
 
 const formRef = ref()

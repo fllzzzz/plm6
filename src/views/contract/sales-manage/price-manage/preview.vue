@@ -1,6 +1,6 @@
 <template>
   <common-dialog
-    :title="`${contractSaleTypeEnum.V[props.params.type]?.SL}价格修改`"
+    :title="`${globalProject?.projectType === projectTypeEnum.BRIDGE.V?'分段':contractSaleTypeEnum.V[props.params.type]?.SL}价格修改`"
     v-model="visible"
     top="10vh"
     append-to-body
@@ -14,7 +14,7 @@
     </template>
     <common-table :data="props.modifiedData" :max-height="maxHeight" empty-text="未做改动" style="width: 100%">
       <el-table-column label="序号" type="index" align="center" width="60" />
-      <template v-if="props.params.type === contractSaleTypeEnum.STRUCTURE.V || props.params.type === contractSaleTypeEnum.MACHINE_PART.V">
+      <template v-if="globalProject?.projectType !== projectTypeEnum.BRIDGE.V && (props.params.type === contractSaleTypeEnum.STRUCTURE.V || props.params.type === contractSaleTypeEnum.MACHINE_PART.V)">
         <el-table-column prop="name" label="名称" align="center" />
         <el-table-column prop="material" label="材质" align="center" />
         <el-table-column prop="totalQuantity" label="数量" align="center" />
@@ -69,11 +69,11 @@
 <script setup>
 import { save } from '@/api/contract/sales-manage/price-manage/common'
 import { saveStandardPart } from '@/api/contract/sales-manage/price-manage/auxiliary-material'
-import { defineEmits, defineProps, ref, useAttrs } from 'vue'
+import { defineEmits, defineProps, ref, useAttrs, inject } from 'vue'
 import { ElNotification } from 'element-plus'
 
 import { contractSaleTypeEnum, mesEnclosureTypeEnum } from '@enum-ms/mes'
-import { enclosureSettlementTypeEnum, pricingMannerEnum } from '@enum-ms/contract'
+import { enclosureSettlementTypeEnum, pricingMannerEnum, projectTypeEnum } from '@enum-ms/contract'
 
 import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'
@@ -97,6 +97,8 @@ const props = defineProps({
     type: Number
   }
 })
+
+const globalProject = inject('globalProject')
 
 const submitLoading = ref(false)
 const remark = ref()
