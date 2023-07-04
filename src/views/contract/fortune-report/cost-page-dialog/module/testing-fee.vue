@@ -29,7 +29,7 @@
 </template>
 <script setup>
 import { getTestingList } from '@/api/contract/fortune-report/detail-fee'
-import { ref, defineProps, watch } from 'vue'
+import { ref, defineProps, watch, computed } from 'vue'
 
 import { toThousand } from '@data-type/number'
 import { tableSummary } from '@/utils/el-extra'
@@ -56,11 +56,13 @@ const { maxHeight } = useMaxHeight({
   paginate: true
 })
 
-const dataFormat = ref([
+const dataFormat = computed(() => {
+  return [
   // ['amount', ['to-thousand-ck', 'YUAN']],
-  ['mete', 'to-thousand'],
-  ['averagePrice', ['to-thousand', decimalPrecision.contract]]
-])
+    ['mete', 'to-thousand'],
+    ['averagePrice', ['to-thousand', decimalPrecision.value.contract]]
+  ]
+})
 
 watch(
   () => props.costTypeData.projectId,
@@ -73,7 +75,7 @@ watch(
 // 合计
 function getSummaries(param) {
   return tableSummary(param, {
-    props: [['amount', decimalPrecision.contract]],
+    props: [['amount', decimalPrecision.value.contract]],
     toThousandFields: ['to-thousand']
   })
 }

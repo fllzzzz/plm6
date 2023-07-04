@@ -176,7 +176,7 @@ const totalAmount = computed(() => {
       }
     })
   }
-  return toFixed(amount, decimalPrecision.wms)
+  return toFixed(amount, decimalPrecision.value.wms)
 })
 
 // 总重

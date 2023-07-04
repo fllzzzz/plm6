@@ -88,7 +88,7 @@
 <script setup>
 import { logisticsPaymentList as get } from '@/api/supply-chain/logistics-payment-manage/logistics-record-ledger'
 import { add } from '@/api/supply-chain/logistics-payment-manage/logistics-payment'
-import { ref, nextTick } from 'vue'
+import { ref, nextTick, computed } from 'vue'
 import { supplierLogisticsPaymentPM as permission } from '@/page-permission/supply-chain'
 import checkPermission from '@/utils/system/check-permission'
 
@@ -113,13 +113,15 @@ const optShow = {
 const tableRef = ref()
 const headerRef = ref()
 const applicationVisible = ref(false)
-const dataFormat = ref([
-  ['paymentRate', ['to-fixed', 2]],
-  ['invoiceRate', ['to-fixed', 2]],
-  ['freight', ['to-thousand', decimalPrecision.supplyChain]],
-  ['paymentAmount', ['to-thousand', decimalPrecision.supplyChain]],
-  ['invoiceAmount', ['to-thousand', decimalPrecision.supplyChain]]
-])
+const dataFormat = computed(() => {
+  return [
+    ['paymentRate', ['to-fixed', 2]],
+    ['invoiceRate', ['to-fixed', 2]],
+    ['freight', ['to-thousand', decimalPrecision.value.supplyChain]],
+    ['paymentAmount', ['to-thousand', decimalPrecision.value.supplyChain]],
+    ['invoiceAmount', ['to-thousand', decimalPrecision.value.supplyChain]]
+  ]
+})
 const { crud, columns, CRUD } = useCRUD(
   {
     title: '物流付款台账',

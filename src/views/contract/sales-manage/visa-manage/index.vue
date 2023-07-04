@@ -46,7 +46,7 @@
 
 <script setup>
 import crudApi from '@/api/contract/sales-manage/visa-manage'
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 
 import { visaManagePM as permission } from '@/page-permission/contract'
 import { settlementStatusEnum } from '@enum-ms/finance'
@@ -73,12 +73,14 @@ const optShow = {
 const visaStatus = ref()
 const tableRef = ref()
 
-const dataFormat = ref([
-  ['project', 'parse-project'],
-  ['status', ['parse-enum', reviewStatusEnum, { f: 'SL' }]],
-  ['amount', ['to-thousand', decimalPrecision.contract]],
-  ['createTime', 'parse-time']
-])
+const dataFormat = computed(() => {
+  return [
+    ['project', 'parse-project'],
+    ['status', ['parse-enum', reviewStatusEnum, { f: 'SL' }]],
+    ['amount', ['to-thousand', decimalPrecision.value.contract]],
+    ['createTime', 'parse-time']
+  ]
+})
 const { crud, columns } = useCRUD(
   {
     title: '签证管理',

@@ -293,7 +293,7 @@ watch(
 
 const managementFee = computed(() => {
   if (form.value.managementFeeRate && form.value.contractAmount) {
-    return ((form.value.managementFeeRate * form.value.contractAmount) / 100).toFixed(decimalPrecision.contract)
+    return ((form.value.managementFeeRate * form.value.contractAmount) / 100).toFixed(decimalPrecision.value.contract)
   }
   return undefined
 })

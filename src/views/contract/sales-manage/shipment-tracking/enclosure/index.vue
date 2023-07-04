@@ -132,7 +132,7 @@
 
 <script setup>
 import { enclosureList as get } from '@/api/contract/sales-manage/shipment-tracking'
-import { ref, defineEmits } from 'vue'
+import { ref, defineEmits, computed } from 'vue'
 
 import { shipmentTrackingPM as permission } from '@/page-permission/contract'
 import { enclosurePricingMannerEnum } from '@enum-ms/enclosure'
@@ -157,14 +157,16 @@ const optShow = {
 
 const tableRef = ref()
 const headerRef = ref()
-const dataFormat = ref([
-  ['createTime', ['parse-time', '{y}-{m}-{d}']],
-  ['totalLength', ['to-thousand', DP.MES_ENCLOSURE_L__M]],
-  ['totalArea', ['to-thousand', DP.MES_ENCLOSURE_L__M]],
-  ['unitPrice', ['to-thousand', decimalPrecision.contract]],
-  ['totalPrice', ['to-thousand', decimalPrecision.contract]],
-  ['pricingManner', ['parse-enum', enclosurePricingMannerEnum]]
-])
+const dataFormat = computed(() => {
+  return [
+    ['createTime', ['parse-time', '{y}-{m}-{d}']],
+    ['totalLength', ['to-thousand', DP.MES_ENCLOSURE_L__M]],
+    ['totalArea', ['to-thousand', DP.MES_ENCLOSURE_L__M]],
+    ['unitPrice', ['to-thousand', decimalPrecision.value.contract]],
+    ['totalPrice', ['to-thousand', decimalPrecision.value.contract]],
+    ['pricingManner', ['parse-enum', enclosurePricingMannerEnum]]
+  ]
+})
 
 const { crud, columns, CRUD } = useCRUD(
   {

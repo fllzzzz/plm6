@@ -49,7 +49,7 @@
 
 <script setup>
 import { detail } from '@/api/wms/report/raw-material/psi'
-import { ref, defineProps, watch, inject } from 'vue'
+import { ref, defineProps, watch, inject, computed } from 'vue'
 
 import { purchaseAcceptanceLogPM as permission } from '@/page-permission/supply-chain'
 import { tableSummary } from '@/utils/el-extra'
@@ -85,10 +85,12 @@ const optShow = {
 const orderDetailEnum = inject('orderDetailEnum')
 const tableRef = ref()
 // 表格列数据格式转换
-const columnsDataFormat = ref([
-  ['amountExcludingVAT', ['to-thousand', decimalPrecision.wms]],
-  ['createTime', 'parse-time']
-])
+const columnsDataFormat = computed(() => {
+  return [
+    ['amountExcludingVAT', ['to-thousand', decimalPrecision.value.wms]],
+    ['createTime', 'parse-time']
+  ]
+})
 
 const { CRUD, crud } = useCRUD(
   {
@@ -134,7 +136,7 @@ CRUD.HOOK.handleRefresh = async (crud, { data }) => {
 function getSummaries(param) {
   return tableSummary(param, {
     // 此页面钢材默认显示吨，保留3位，金额显示4位
-    props: ['quantity', ['mete', 3], ['amountExcludingVAT', decimalPrecision.wms]],
+    props: ['quantity', ['mete', 3], ['amountExcludingVAT', decimalPrecision.value.wms]],
     toThousandFields: ['amountExcludingVAT']
   })
 }

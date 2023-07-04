@@ -239,15 +239,17 @@ const headerRef = ref()
 const applicationVisible = ref(false)
 const settleVisible = ref(false)
 
-const dataFormat = ref([
-  ['createTime', 'parse-time'],
-  ['paymentRate', ['to-fixed', 2]],
-  ['invoiceRate', ['to-fixed', 2]],
-  ['amount', ['to-thousand', decimalPrecision.supplyChain]],
-  ['inboundAmount', ['to-thousand', decimalPrecision.supplyChain]],
-  ['paymentAmount', ['to-thousand', decimalPrecision.supplyChain]],
-  ['invoiceAmount', ['to-thousand', decimalPrecision.supplyChain]]
-])
+const dataFormat = computed(() => {
+  return [
+    ['createTime', 'parse-time'],
+    ['paymentRate', ['to-fixed', 2]],
+    ['invoiceRate', ['to-fixed', 2]],
+    ['amount', ['to-thousand', decimalPrecision.value.supplyChain]],
+    ['inboundAmount', ['to-thousand', decimalPrecision.value.supplyChain]],
+    ['paymentAmount', ['to-thousand', decimalPrecision.value.supplyChain]],
+    ['invoiceAmount', ['to-thousand', decimalPrecision.value.supplyChain]]
+  ]
+})
 
 const { crud, columns, CRUD } = useCRUD(
   {

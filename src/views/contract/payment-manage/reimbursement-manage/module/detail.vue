@@ -609,7 +609,7 @@ function invoiceTypeChange(index) {
     form.value.detailList[index].inputTax = (
       (form.value.detailList[index].invoiceAmount * form.value.detailList[index].taxRate) /
       100
-    ).toFixed(decimalPrecision.contract)
+    ).toFixed(decimalPrecision.value.contract)
   } else {
     form.value.detailList[index].inputTax = undefined
   }

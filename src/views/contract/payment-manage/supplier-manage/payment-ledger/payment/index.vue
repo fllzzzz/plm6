@@ -58,7 +58,7 @@
 
 <script setup>
 import crudApi from '@/api/contract/supplier-manage/payment-ledger/payment'
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 
 import { contractSupplierPaymentLedgerPM } from '@/page-permission/contract'
 import { tableSummary } from '@/utils/el-extra'
@@ -96,10 +96,12 @@ const { crud, columns, CRUD } = useCRUD(
   tableRef
 )
 
-const dataFormat = ref([
-  ['actuallyPaymentAmount', ['to-thousand', decimalPrecision.contract]],
-  ['paymentDate', ['parse-time', '{y}-{m}-{d}']]
-])
+const dataFormat = computed(() => {
+  return [
+    ['actuallyPaymentAmount', ['to-thousand', decimalPrecision.value.contract]],
+    ['paymentDate', ['parse-time', '{y}-{m}-{d}']]
+  ]
+})
 
 const { maxHeight } = useMaxHeight({
   wrapperBox: '.paymentLedger',
@@ -126,7 +128,7 @@ CRUD.HOOK.beforeRefresh = () => {
 // 合计
 function getSummaries(param) {
   return tableSummary(param, {
-    props: [['actuallyPaymentAmount', decimalPrecision.contract]],
+    props: [['actuallyPaymentAmount', decimalPrecision.value.contract]],
     toThousandFields: ['actuallyPaymentAmount']
   })
 }

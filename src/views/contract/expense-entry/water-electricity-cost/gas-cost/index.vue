@@ -160,7 +160,7 @@ function getSummaries(param) {
         }, 0)
       }
       if (column.property === 'totalAmount') {
-        sums[index] = valuesSum.toFixed(decimalPrecision.contract)
+        sums[index] = valuesSum.toFixed(decimalPrecision.value.contract)
       } else {
         sums[index] = valuesSum.toFixed(2)
       }

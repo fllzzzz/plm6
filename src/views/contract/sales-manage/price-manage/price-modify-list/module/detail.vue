@@ -63,7 +63,7 @@
 
 <script setup>
 import { priceModifySave as save } from '@/api/contract/sales-manage/price-manage/common'
-import { ref, defineProps, defineEmits } from 'vue'
+import { ref, defineProps, defineEmits, computed } from 'vue'
 
 import checkPermission from '@/utils/system/check-permission'
 import { contractSaleTypeEnum, mesEnclosureTypeEnum } from '@enum-ms/mes'
@@ -89,10 +89,12 @@ const props = defineProps({
 const { maxHeight } = useMaxHeight({ extraBox: '.el-drawer__header', wrapperBox: '', extraHeight: 4 })
 
 const list = ref([])
-const dataFormat = ref([
-  ['oldUnitPrice', ['to-thousand', decimalPrecision.contract]],
-  ['newUnitPrice', ['to-thousand', decimalPrecision.contract]]
-])
+const dataFormat = computed(() => {
+  return [
+    ['oldUnitPrice', ['to-thousand', decimalPrecision.value.contract]],
+    ['newUnitPrice', ['to-thousand', decimalPrecision.value.contract]]
+  ]
+})
 const { crud, detail, CRUD } = regDetail()
 
 // 详情加载后

@@ -65,8 +65,9 @@ import { orderSupplyTypeEnum, inboundFillWayEnum } from '@enum-ms/wms'
 import { tableSummary } from '@/utils/el-extra'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { setSpecInfoToList } from '@/utils/wms/spec'
-import { materialHasAmountColumns } from '@/utils/columns-format/wms'
+import { materialColumns } from '@/utils/columns-format/wms'
 
+import { invoiceTypeEnum } from '@/utils/enum/modules/finance'
 import { regDetail } from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
 import useWmsConfig from '@/composables/store/use-wms-config'
@@ -86,7 +87,21 @@ const { decimalPrecision } = useDecimalPrecision()
 
 const permission = inject('permission')
 // 表格列数据格式转换
-const columnsDataFormat = ref([...materialHasAmountColumns, ['remark', 'empty-text'], ['monomerName', 'empty-text'], ['areaName', 'empty-text']])
+// const columnsDataFormat = ref([])
+
+const columnsDataFormat = computed(() => {
+  return [
+    ...materialColumns,
+    // 金额相关
+    ['invoiceType', ['parse-enum', invoiceTypeEnum, { f: 'SL' }]],
+    ['taxRate', ['suffix', '%']],
+    ['unitPrice', ['to-thousand', decimalPrecision.value.wms]],
+    ['unitPriceExcludingVAT', ['to-thousand', decimalPrecision.value.wms]],
+    ['amount', ['to-thousand', decimalPrecision.value.wms]],
+    ['amountExcludingVAT', ['to-thousand', decimalPrecision.value.wms]],
+    ['inputVAT', ['to-thousand', decimalPrecision.value.wms]],
+    ['remark', 'empty-text'], ['monomerName', 'empty-text'], ['areaName', 'empty-text']]
+})
 
 const drawerRef = ref()
 const expandRowKeys = ref([])
@@ -145,7 +160,7 @@ CRUD.HOOK.beforeDetailLoaded = async (crud, detail) => {
 // 合计
 function getSummaries(param) {
   return tableSummary(param, {
-    props: ['quantity', 'mete', ['amount', decimalPrecision.wms], ['amountExcludingVAT', decimalPrecision.wms], ['inputVAT', decimalPrecision.wms]],
+    props: ['quantity', 'mete', ['amount', decimalPrecision.value.wms], ['amountExcludingVAT', decimalPrecision.value.wms], ['inputVAT', decimalPrecision.value.wms]],
     toThousandFields: ['amount', 'amountExcludingVAT', 'inputVAT']
   })
 }

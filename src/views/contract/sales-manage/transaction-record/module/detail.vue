@@ -57,7 +57,7 @@
 
 <script setup>
 import { detail } from '@/api/contract/sales-manage/transaction-record'
-import { defineProps, defineEmits, ref, watch, inject } from 'vue'
+import { defineProps, defineEmits, ref, watch, inject, computed } from 'vue'
 
 import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'
@@ -107,12 +107,14 @@ watch(
 
 const tableLoading = ref(false)
 const list = ref([])
-const dataFormat = ref([
-  ['project', ['parse-project']],
-  ['signingDate', ['parse-time', '{y}-{m}-{d}']],
-  ['contractAmount', ['to-thousand', decimalPrecision.contract]],
-  ['settlementAmount', ['to-thousand', decimalPrecision.contract]]
-])
+const dataFormat = computed(() => {
+  return [
+    ['project', ['parse-project']],
+    ['signingDate', ['parse-time', '{y}-{m}-{d}']],
+    ['contractAmount', ['to-thousand', decimalPrecision.value.contract]],
+    ['settlementAmount', ['to-thousand', decimalPrecision.value.contract]]
+  ]
+})
 const permission = inject('permission')
 
 async function fetchList() {

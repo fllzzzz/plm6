@@ -95,7 +95,7 @@
 
 <script setup>
 import crudApi from '@/api/project-manage/quality-problem-manage'
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 
 import checkPermission from '@/utils/system/check-permission'
 import { auditTypeEnum } from '@enum-ms/contract'
@@ -118,11 +118,13 @@ const optShow = {
   download: false
 }
 
-const dataFormat = ref([
-  ['problemDate', ['parse-time', '{y}-{m}-{d}']],
-  ['project', 'parse-project'],
-  ['penalty', ['to-thousand', decimalPrecision.project]]
-])
+const dataFormat = computed(() => {
+  return [
+    ['problemDate', ['parse-time', '{y}-{m}-{d}']],
+    ['project', 'parse-project'],
+    ['penalty', ['to-thousand', decimalPrecision.value.project]]
+  ]
+})
 
 const tableRef = ref()
 const detailVisible = ref(false)

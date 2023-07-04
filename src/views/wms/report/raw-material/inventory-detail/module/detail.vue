@@ -109,16 +109,18 @@ const permission = inject('permission')
 const showAmount = computed(() => checkPermission(permission.showAmount))
 
 // 表格列数据格式转换
-const dataFormat = ref([
-  ['createTime', ['parse-time', '{y}-{m}-{d}']],
-  ['inboundUnitPriceExcludingVat', ['to-thousand', decimalPrecision.wms]],
-  ['inboundAmountExcludingVat', ['to-thousand', decimalPrecision.wms]],
-  ['outboundUnitPriceExcludingVat', ['to-thousand', decimalPrecision.wms]],
-  ['outboundAmountExcludingVat', ['to-thousand', decimalPrecision.wms]],
-  ['endUnitPriceExcludingVat', ['to-thousand', decimalPrecision.wms]],
-  ['endAmountExcludingVat', ['to-thousand', decimalPrecision.wms]]
+const dataFormat = computed(() => {
+  return [
+    ['createTime', ['parse-time', '{y}-{m}-{d}']],
+    ['inboundUnitPriceExcludingVat', ['to-thousand', decimalPrecision.value.wms]],
+    ['inboundAmountExcludingVat', ['to-thousand', decimalPrecision.value.wms]],
+    ['outboundUnitPriceExcludingVat', ['to-thousand', decimalPrecision.value.wms]],
+    ['outboundAmountExcludingVat', ['to-thousand', decimalPrecision.value.wms]],
+    ['endUnitPriceExcludingVat', ['to-thousand', decimalPrecision.value.wms]],
+    ['endAmountExcludingVat', ['to-thousand', decimalPrecision.value.wms]]
 
-])
+  ]
+})
 
 const { visible: drawerVisible, handleClose } = useVisible({ emit, props, field: 'visible' })
 

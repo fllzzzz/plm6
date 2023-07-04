@@ -134,7 +134,7 @@ CRUD.HOOK.beforeDetailLoaded = async (crud, detail) => {
 // 合计
 function getSummaries(param) {
   return tableSummary(param, {
-    props: ['quantity', 'mete', ['amount', decimalPrecision.wms], ['amountExcludingVAT', decimalPrecision.wms], ['inputVAT', decimalPrecision.wms]],
+    props: ['quantity', 'mete', ['amount', decimalPrecision.value.wms], ['amountExcludingVAT', decimalPrecision.value.wms], ['inputVAT', decimalPrecision.value.wms]],
     toThousandFields: ['amount', 'amountExcludingVAT', 'inputVAT']
   })
 }

@@ -200,7 +200,7 @@ async function fetchList() {
 // 合计
 function getSummaries(param) {
   return tableSummary(param, {
-    props: [['freight', decimalPrecision.supplyChain], ['paymentAmount', decimalPrecision.supplyChain], ['applyAmount', decimalPrecision.supplyChain]],
+    props: [['freight', decimalPrecision.value.supplyChain], ['paymentAmount', decimalPrecision.value.supplyChain], ['applyAmount', decimalPrecision.value.supplyChain]],
     toThousandFields: ['freight', 'paymentAmount', 'applyAmount']
   })
 }
@@ -222,7 +222,7 @@ CRUD.HOOK.beforeSubmit = () => {
         projectId: v.projectId,
         purchaseId: v.purchaseId,
         type: v.type,
-        applyAmount: Number(v.applyAmount.toFixed(decimalPrecision.supplyChain))
+        applyAmount: Number(v.applyAmount.toFixed(decimalPrecision.value.supplyChain))
       })
     }
   })

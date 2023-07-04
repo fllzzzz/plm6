@@ -179,7 +179,7 @@ async function fetchAuxiliary() {
         }
       }, 0)
       v.totalAmount = v.gasAmount + v.auxSubtotal
-      v.aveUnitPrice = v.productionMete ? (v.totalAmount / convertUnits(v.productionMete, 'kg', 't')).toFixed(decimalPrecision.operation) : v.totalAmount
+      v.aveUnitPrice = v.productionMete ? (v.totalAmount / convertUnits(v.productionMete, 'kg', 't')).toFixed(decimalPrecision.value.operation) : v.totalAmount
     })
     console.log('list.value', list.value)
     list.value = await numFmtByBasicClass(
@@ -241,7 +241,7 @@ function getSummaries(param) {
           }
         }, 0)
         if (column.property !== 'gasWeight' && column.property.indexOf('mete_') < 0) {
-          sums[index] = sums[index] ? sums[index].toFixed(decimalPrecision.operation) : 0
+          sums[index] = sums[index] ? sums[index].toFixed(decimalPrecision.value.operation) : 0
         } else {
           sums[index] = sums[index] ? sums[index].toFixed(2) : 0
         }

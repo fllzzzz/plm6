@@ -51,7 +51,7 @@
 
 <script setup>
 import crudApi from '@/api/supply-chain/purchase-reconciliation-manage/payment-application'
-import { ref, defineProps, watch, nextTick, inject } from 'vue'
+import { ref, defineProps, watch, nextTick, inject, computed } from 'vue'
 
 import { auditTypeEnum, supplierPayTypeEnum } from '@enum-ms/contract'
 import { toThousand } from '@data-type/number'
@@ -88,11 +88,13 @@ const props = defineProps({
   }
 })
 
-const dataFormat = ref([
-  ['paymentDate', ['parse-time', '{y}-{m}-{d}']],
-  ['auditTime', 'parse-time'],
-  ['applyAmount', ['to-thousand', decimalPrecision.supplyChain]]
-])
+const dataFormat = computed(() => {
+  return [
+    ['paymentDate', ['parse-time', '{y}-{m}-{d}']],
+    ['auditTime', 'parse-time'],
+    ['applyAmount', ['to-thousand', decimalPrecision.value.supplyChain]]
+  ]
+})
 
 const tableRef = ref()
 const orderId = inject('orderId')

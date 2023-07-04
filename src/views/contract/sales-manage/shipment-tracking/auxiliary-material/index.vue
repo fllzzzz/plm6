@@ -97,7 +97,7 @@
 
 <script setup>
 import { auxiliaryMaterialList as get } from '@/api/contract/sales-manage/shipment-tracking'
-import { ref, defineEmits } from 'vue'
+import { ref, defineEmits, computed } from 'vue'
 
 import { shipmentTrackingPM as permission } from '@/page-permission/contract'
 
@@ -120,11 +120,13 @@ const optShow = {
 
 const tableRef = ref()
 const headerRef = ref()
-const dataFormat = ref([
-  ['createTime', ['parse-time', '{y}-{m}-{d}']],
-  ['unitPrice', ['to-thousand', decimalPrecision.contract]],
-  ['totalPrice', ['to-thousand', decimalPrecision.contract]]
-])
+const dataFormat = computed(() => {
+  return [
+    ['createTime', ['parse-time', '{y}-{m}-{d}']],
+    ['unitPrice', ['to-thousand', decimalPrecision.value.contract]],
+    ['totalPrice', ['to-thousand', decimalPrecision.value.contract]]
+  ]
+})
 
 const { crud, columns, CRUD } = useCRUD(
   {

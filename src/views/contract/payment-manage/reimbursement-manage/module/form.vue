@@ -330,7 +330,7 @@ function expenseChange(val) {
 
 function invoiceTypeChange(index) {
   if (form.detailList[index].taxRate && form.detailList[index].invoiceAmount) {
-    form.detailList[index].inputTax = ((form.detailList[index].invoiceAmount * form.detailList[index].taxRate) / 100).toFixed(decimalPrecision.contract)
+    form.detailList[index].inputTax = ((form.detailList[index].invoiceAmount * form.detailList[index].taxRate) / 100).toFixed(decimalPrecision.value.contract)
   } else {
     form.detailList[index].inputTax = undefined
   }

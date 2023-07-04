@@ -176,7 +176,7 @@ CRUD.HOOK.handleRefresh = (crud, { data }) => {
     v.totalWeight = convertUnits(v.totalWeight, 'kg', 't', DP.COM_WT__T)
     v.newUnitPrice = v.unitPrice // number类型的单价（unitPrice可能会有千位符）
     v.originNewUnitPrice = v.newUnitPrice
-    v.originUnitPrice = emptyTextFormatter(toThousand(v.unitPrice, decimalPrecision.contract))
+    v.originUnitPrice = emptyTextFormatter(toThousand(v.unitPrice, decimalPrecision.value.contract))
     v.totalPrice = (v.pricingManner === pricingMannerEnum.WEIGHT.V ? v.totalWeight : v.totalLength) * (v.newUnitPrice || 0)
     v.originPricingManner = v.pricingManner
   })

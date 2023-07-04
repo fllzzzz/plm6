@@ -538,7 +538,7 @@ function handleUnitPriceChange(val, row) {
     row.unitPrice = toPrecision(val, 10)
     val = row.unitPrice
   }
-  row.amount = isNotBlank(val) ? toPrecision(val * row.mete, decimalPrecision.wms) : undefined
+  row.amount = isNotBlank(val) ? toPrecision(val * row.mete, decimalPrecision.value.wms) : undefined
 }
 
 // 处理金额变化
@@ -549,7 +549,7 @@ function handleAmountChange(val, row) {
 // 合计
 function getSummaries(param) {
   return tableSummary(param, {
-    props: ['quantity', 'mete', ['amount', decimalPrecision.wms]],
+    props: ['quantity', 'mete', ['amount', decimalPrecision.value.wms]],
     toThousandFields: ['mete', 'amount']
   })
 }

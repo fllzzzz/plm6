@@ -30,7 +30,7 @@
 
 <script setup>
 import crudApi from '@/api/contract/sales-manage/order-tracking'
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 
 import { projectStatusEnum, orderSourceTypeEnum } from '@enum-ms/contract'
 import { orderTrackingPM as permission } from '@/page-permission/contract'
@@ -65,12 +65,14 @@ const { crud, columns, CRUD } = useCRUD(
 
 const { maxHeight } = useMaxHeight({ paginate: true, extraHeight: 100 })
 
-const dataFormat = ref([
-  ['project', 'parse-project'],
-  ['orderSourceType', ['parse-enum', orderSourceTypeEnum]],
-  ['status', ['parse-enum', projectStatusEnum]],
-  ['contractAmount', ['to-thousand', decimalPrecision.contract]]
-])
+const dataFormat = computed(() => {
+  return [
+    ['project', 'parse-project'],
+    ['orderSourceType', ['parse-enum', orderSourceTypeEnum]],
+    ['status', ['parse-enum', projectStatusEnum]],
+    ['contractAmount', ['to-thousand', decimalPrecision.value.contract]]
+  ]
+})
 
 // 刷新数据后
 CRUD.HOOK.handleRefresh = (crud, { data }) => {

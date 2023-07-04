@@ -123,12 +123,14 @@ watch(
 const list = ref([])
 const drawerRef = ref()
 const tableLoading = ref(false)
-const dataFormat = ref([
-  ['invoiceType', ['parse-enum', invoiceTypeEnum]],
-  ['receiveInvoiceDate', ['parse-time', '{y}-{m}-{d}']],
-  ['invoiceAmount', ['to-thousand', decimalPrecision.supplyChain]],
-  ['taxRate', ['to-fixed', 2]]
-])
+const dataFormat = computed(() => {
+  return [
+    ['invoiceType', ['parse-enum', invoiceTypeEnum]],
+    ['receiveInvoiceDate', ['parse-time', '{y}-{m}-{d}']],
+    ['invoiceAmount', ['to-thousand', decimalPrecision.value.supplyChain]],
+    ['taxRate', ['to-fixed', 2]]
+  ]
+})
 
 const { maxHeight } = useMaxHeight(
   {
@@ -146,7 +148,7 @@ const { maxHeight } = useMaxHeight(
 // 合计
 function getSummaries(param) {
   const summary = tableSummary(param, {
-    props: [['invoiceAmount', decimalPrecision.supplyChain]]
+    props: [['invoiceAmount', decimalPrecision.value.supplyChain]]
   })
   const num = summary[2]
   if (num) {

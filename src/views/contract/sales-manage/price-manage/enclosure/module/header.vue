@@ -150,7 +150,7 @@ CRUD.HOOK.handleRefresh = (crud, { data }) => {
   data.content.forEach((v) => {
     v.newUnitPrice = v.unitPrice // number类型的单价（unitPrice可能会有千位符）
     v.originNewUnitPrice = v.newUnitPrice
-    v.originUnitPrice = emptyTextFormatter(toThousand(v.unitPrice, decimalPrecision.contract))
+    v.originUnitPrice = emptyTextFormatter(toThousand(v.unitPrice, decimalPrecision.value.contract))
     v.totalPrice = (v.pricingManner === enclosureSettlementTypeEnum.LENGTH.V ? v.totalLength : v.totalArea) * (v.newUnitPrice || 0)
   })
   fetchCost()

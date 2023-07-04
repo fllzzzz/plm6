@@ -27,7 +27,7 @@
 </template>
 <script setup>
 import { getLaborFeeList } from '@/api/contract/fortune-report/detail-fee'
-import { ref, defineProps, watch } from 'vue'
+import { ref, defineProps, watch, computed } from 'vue'
 
 import { toThousand } from '@data-type/number'
 import { tableSummary } from '@/utils/el-extra'
@@ -53,11 +53,13 @@ const { maxHeight } = useMaxHeight({
   paginate: true
 })
 
-const dataFormat = ref([
-  ['price', ['to-thousand', decimalPrecision.contract]],
-  ['mete', 'to-thousand'],
-  ['avgPrice', ['to-thousand', decimalPrecision.contract]]
-])
+const dataFormat = computed(() => {
+  return [
+    ['price', ['to-thousand', decimalPrecision.value.contract]],
+    ['mete', 'to-thousand'],
+    ['avgPrice', ['to-thousand', decimalPrecision.value.contract]]
+  ]
+})
 
 watch(
   () => props.costTypeData.projectId,
@@ -70,7 +72,7 @@ watch(
 // 合计
 function getSummaries(param) {
   return tableSummary(param, {
-    props: [['price', decimalPrecision.contract], 'mete'],
+    props: [['price', decimalPrecision.value.contract], 'mete'],
     toThousandFields: ['price', 'mete']
   })
 }

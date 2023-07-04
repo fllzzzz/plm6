@@ -197,7 +197,7 @@ function getSummaries(param) {
           }
         }, 0)
       }
-      sums[index] = sums[index]?.toFixed(decimalPrecision.contract)
+      sums[index] = sums[index]?.toFixed(decimalPrecision.value.contract)
     }
   })
   return sums

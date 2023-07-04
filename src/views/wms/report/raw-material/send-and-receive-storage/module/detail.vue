@@ -252,7 +252,7 @@ function getSummaries(param) {
       ? baseUnit.value[materialInfo.value.basicClass].measure.precision
       : 0
   return tableSummary(param, {
-    props: [['quantity', dp], 'mete', ['amount', decimalPrecision.wms], ['amountExcludingVAT', decimalPrecision.wms], ['inputVAT', decimalPrecision.wms]],
+    props: [['quantity', dp], 'mete', ['amount', decimalPrecision.value.wms], ['amountExcludingVAT', decimalPrecision.value.wms], ['inputVAT', decimalPrecision.value.wms]],
     toThousandFields: ['amount', 'amountExcludingVAT', 'inputVAT']
   })
 }

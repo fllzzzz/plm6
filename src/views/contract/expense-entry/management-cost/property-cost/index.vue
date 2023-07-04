@@ -83,7 +83,7 @@ const { crud, CRUD, columns } = useCRUD(
 // 合计
 function getSummaries(param) {
   return tableSummary(param, {
-    props: [['feeAmount', decimalPrecision.contract]],
+    props: [['feeAmount', decimalPrecision.value.contract]],
     toThousandFields: ['feeAmount']
   })
 }

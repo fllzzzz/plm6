@@ -137,10 +137,12 @@ const props = defineProps({
   }
 })
 
-const dataFormat = ref([
-  ['rate', ['to-fixed', 2]],
-  ['amount', ['to-thousand', decimalPrecision.contract]]
-])
+const dataFormat = computed(() => {
+  return [
+    ['rate', ['to-fixed', 2]],
+    ['amount', ['to-thousand', decimalPrecision.value.contract]]
+  ]
+})
 
 watch(
   () => props.detailRow.id,

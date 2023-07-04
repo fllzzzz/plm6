@@ -88,8 +88,8 @@ async function fetchPaintingFee() {
       year: year.value
     })
     content.forEach((v) => {
-      v.paintingUnitPrice = v.price && v.area ? (v.price / convertUnits(v.area, 'mm2', 'm2', DP.COM_AREA__M2)).toFixed(decimalPrecision.operation) : 0
-      v.averageUnitPrice = (v.price / convertUnits(v.mete, 'kg', 't', DP.COM_WT__T)).toFixed(decimalPrecision.operation)
+      v.paintingUnitPrice = v.price && v.area ? (v.price / convertUnits(v.area, 'mm2', 'm2', DP.COM_AREA__M2)).toFixed(decimalPrecision.value.operation) : 0
+      v.averageUnitPrice = (v.price / convertUnits(v.mete, 'kg', 't', DP.COM_WT__T)).toFixed(decimalPrecision.value.operation)
     })
     paintingList.value = content || []
   } catch (error) {
@@ -173,7 +173,7 @@ function getSummaries(param) {
             return prev
           }
         }, 0)
-        sums[index] = sums[index].toFixed(decimalPrecision.operation)
+        sums[index] = sums[index].toFixed(decimalPrecision.value.operation)
       }
     }
   })

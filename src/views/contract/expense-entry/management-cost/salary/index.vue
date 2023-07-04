@@ -90,7 +90,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import crudApi from '@/api/contract/expense-entry/salary'
 
 import { salaryCostPM as permission } from '@/page-permission/contract'
@@ -115,7 +115,9 @@ const optShow = {
   download: false
 }
 
-const dataFormat = ref([['averageValue', ['to-fixed', decimalPrecision.contract]]])
+const dataFormat = computed(() => {
+  return [['averageValue', ['to-fixed', decimalPrecision.value.contract]]]
+})
 
 const { crud, CRUD, columns } = useCRUD(
   {
@@ -162,7 +164,7 @@ function getSummaries(param) {
           return pre
         }
       }, 0)
-      sums[index] = (totalWageSum / employeeQuantitySum).toFixed(decimalPrecision.contract)
+      sums[index] = (totalWageSum / employeeQuantitySum).toFixed(decimalPrecision.value.contract)
       return
     }
     if (column.property === 'employeeQuantity' || column.property === 'totalWage') {

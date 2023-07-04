@@ -153,7 +153,7 @@ function attachmentView(item) {
 // 合计
 function getSummaries(param) {
   return tableSummary(param, {
-    props: [['freight', decimalPrecision.supplyChain], ['paymentAmount', decimalPrecision.supplyChain], ['applyAmount', decimalPrecision.supplyChain]],
+    props: [['freight', decimalPrecision.value.supplyChain], ['paymentAmount', decimalPrecision.value.supplyChain], ['applyAmount', decimalPrecision.value.supplyChain]],
     toThousandFields: ['freight', 'paymentAmount', 'applyAmount']
   })
 }

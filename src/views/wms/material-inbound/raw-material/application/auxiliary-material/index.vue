@@ -119,7 +119,7 @@ const totalAmount = computed(() => {
       })
     }
   }
-  return toFixed(amount, decimalPrecision.wms)
+  return toFixed(amount, decimalPrecision.value.wms)
 })
 
 provide('matSpecRef', matSpecRef) // 供兄弟组件调用 删除

@@ -116,7 +116,7 @@ function handleUnitPriceChange(val, row) {
     row.unitPrice = toPrecision(val, 10)
     val = row.unitPrice
   }
-  row.amount = isNotBlank(val) ? toPrecision(val * row.mete, decimalPrecision.wms) : undefined
+  row.amount = isNotBlank(val) ? toPrecision(val * row.mete, decimalPrecision.value.wms) : undefined
 }
 
 // 处理金额变化

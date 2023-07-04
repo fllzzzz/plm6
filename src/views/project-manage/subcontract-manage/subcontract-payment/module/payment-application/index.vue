@@ -55,7 +55,7 @@
 
 <script setup>
 import crudApi from '@/api/project-manage/subcontract-payment/payment-application'
-import { ref, defineProps, watch, nextTick, inject } from 'vue'
+import { ref, defineProps, watch, nextTick, inject, computed } from 'vue'
 
 import { auditTypeEnum, supplierPayTypeEnum } from '@enum-ms/contract'
 import { subcontractOrderPaymentPM } from '@/page-permission/project'
@@ -91,12 +91,14 @@ const props = defineProps({
   }
 })
 
-const dataFormat = ref([
-  ['applyDate', ['parse-time', '{y}-{m}-{d}']],
-  ['paymentDate', ['parse-time', '{y}-{m}-{d}']],
-  ['auditTime', ['parse-time', '{y}-{m}-{d}']],
-  ['applyAmount', ['to-thousand', decimalPrecision.project]]
-])
+const dataFormat = computed(() => {
+  return [
+    ['applyDate', ['parse-time', '{y}-{m}-{d}']],
+    ['paymentDate', ['parse-time', '{y}-{m}-{d}']],
+    ['auditTime', ['parse-time', '{y}-{m}-{d}']],
+    ['applyAmount', ['to-thousand', decimalPrecision.value.project]]
+  ]
+})
 
 const tableRef = ref()
 const orderId = inject('orderId')

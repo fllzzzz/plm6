@@ -105,7 +105,7 @@
 
 <script setup>
 import { get, download } from '@/api/wms/report/raw-material/psi'
-import { ref, reactive, provide } from 'vue'
+import { ref, reactive, provide, computed } from 'vue'
 
 import { reportRawMaterialPsiPM as permission } from '@/page-permission/wms'
 import { tableSummary } from '@/utils/el-extra'
@@ -135,10 +135,12 @@ const detailRow = ref({})
 const drawerVisible = ref(false)
 const tableRef = ref()
 // 表格列数据格式转换
-const columnsDataFormat = ref([
-  ['amountExcludingVAT', ['to-thousand', decimalPrecision.wms]],
-  ['inboundTime', 'parse-time']
-])
+const columnsDataFormat = computed(() => {
+  return [
+    ['amountExcludingVAT', ['to-thousand', decimalPrecision.value.wms]],
+    ['inboundTime', 'parse-time']
+  ]
+})
 
 const orderDetailEnum = reactive({
   IN: { L: '入库明细', SL: '入库', K: 'IN', V: 1 },

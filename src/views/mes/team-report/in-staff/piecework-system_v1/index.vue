@@ -151,7 +151,7 @@ function getSummaries(param) {
             return prev
           }
         }, 0)
-        sums[index] = sums[index].toFixed(decimalPrecision.mes)
+        sums[index] = sums[index].toFixed(decimalPrecision.value.mes)
       }
     }
   })

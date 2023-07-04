@@ -200,7 +200,7 @@ function getSummaries(param) {
           }
         }, 0)
         if (column.property === 'price') {
-          sums[index] = sums[index].toFixed(decimalPrecision.mes)
+          sums[index] = sums[index].toFixed(decimalPrecision.value.mes)
         }
       }
     }

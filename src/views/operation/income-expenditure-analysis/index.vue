@@ -50,7 +50,7 @@
 
 <script setup>
 import { getIncomeAnalysis } from '@/api/operation/income-expenditure-analysis'
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import moment from 'moment'
 
 import { tableSummary } from '@/utils/el-extra'
@@ -79,14 +79,16 @@ const { maxHeight } = useMaxHeight({
   extraHeight: 0
 })
 
-const dataFormat = ref([
-  ['income', ['to-thousand', decimalPrecision.operation]],
-  ['expend', ['to-thousand', decimalPrecision.operation]]
-])
+const dataFormat = computed(() => {
+  return [
+    ['income', ['to-thousand', decimalPrecision.value.operation]],
+    ['expend', ['to-thousand', decimalPrecision.value.operation]]
+  ]
+})
 
 // 合计
 function getSummaries(param) {
-  return tableSummary(param, { props: [['income', decimalPrecision.operation], ['expend', decimalPrecision.operation]], toThousandFields: ['income', 'expend'] })
+  return tableSummary(param, { props: [['income', decimalPrecision.value.operation], ['expend', decimalPrecision.value.operation]], toThousandFields: ['income', 'expend'] })
 }
 
 const { getMyChart } = useChart({

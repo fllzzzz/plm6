@@ -95,12 +95,14 @@ const mDetail = computed(() => {
   return visaType.value === visaTypeEnum.VISA.V ? visaDetail : settlementDetail
 })
 
-const dataFormat = ref([
-  ['project', ['parse-project', { onlyShortName: true }]],
-  ['status', ['parse-enum', reviewStatusEnum, { f: 'SL' }]],
-  ['amount', ['to-thousand', decimalPrecision.project]],
-  ['createTime', 'parse-time']
-])
+const dataFormat = computed(() => {
+  return [
+    ['project', ['parse-project', { onlyShortName: true }]],
+    ['status', ['parse-enum', reviewStatusEnum, { f: 'SL' }]],
+    ['amount', ['to-thousand', decimalPrecision.value.project]],
+    ['createTime', 'parse-time']
+  ]
+})
 const { crud, columns } = useCRUD(
   {
     title: '签证结算',

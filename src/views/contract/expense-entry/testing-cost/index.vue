@@ -81,7 +81,7 @@
 </template>
 
 <script setup>
-import { ref, provide } from 'vue'
+import { ref, provide, computed } from 'vue'
 import crudApi from '@/api/contract/expense-entry/testing-cost'
 
 import { expenseTestingCostPM as permission } from '@/page-permission/contract'
@@ -132,10 +132,12 @@ const { crud, CRUD, columns } = useCRUD(
 provide('dict', dict)
 provide('crud', crud)
 
-const dataFormat = ref([
-  ['project', 'parse-project'],
-  ['totalAmount', ['to-thousand', decimalPrecision.contract]]
-])
+const dataFormat = computed(() => {
+  return [
+    ['project', 'parse-project'],
+    ['totalAmount', ['to-thousand', decimalPrecision.value.contract]]
+  ]
+})
 
 const { maxHeight } = useMaxHeight({
   extraBox: ['.head-container'],

@@ -222,7 +222,7 @@ function getSummaries(param) {
           }
         }, 0)
       }
-      sums[index] = (column.property === 'electricityPrice' || column.property === 'waterPrice') ? valuesSum.toFixed(decimalPrecision.operation) : valuesSum.toFixed(2)
+      sums[index] = (column.property === 'electricityPrice' || column.property === 'waterPrice') ? valuesSum.toFixed(decimalPrecision.value.operation) : valuesSum.toFixed(2)
     }
     if (index === 1) {
       sums[index] = convertUnits(sums[index], 'kg', 't', 2)

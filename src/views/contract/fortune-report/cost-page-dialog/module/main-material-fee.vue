@@ -81,7 +81,7 @@
 </template>
 <script setup>
 import { getMainAuxiliaryList } from '@/api/contract/fortune-report/detail-fee'
-import { ref, defineProps, watch } from 'vue'
+import { ref, defineProps, watch, computed } from 'vue'
 
 import { matClsEnum } from '@enum-ms/classification'
 import { mainAuxiliaryTypeEnum } from '@enum-ms/contract'
@@ -118,10 +118,12 @@ const { maxHeight } = useMaxHeight({
   paginate: true
 })
 
-const dataFormat = ref([
-  ['basicClass', ['parse-enum', matClsEnum, { bit: true }]],
-  ['avgPrice', ['to-thousand', decimalPrecision.contract]]
-])
+const dataFormat = computed(() => {
+  return [
+    ['basicClass', ['parse-enum', matClsEnum, { bit: true }]],
+    ['avgPrice', ['to-thousand', decimalPrecision.value.contract]]
+  ]
+})
 
 watch(
   () => props.costTypeData.projectId,
@@ -134,7 +136,7 @@ watch(
 // 合计
 function getSummaries(param) {
   return tableSummary(param, {
-    props: ['mete', ['amount', decimalPrecision.contract]],
+    props: ['mete', ['amount', decimalPrecision.value.contract]],
     toThousandFields: ['mete', 'amount']
   })
 }

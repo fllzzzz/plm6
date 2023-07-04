@@ -200,7 +200,7 @@ const rules = {
 // 金额校验
 const validateAmount = (value, row) => {
   if (isNotBlank(row.weighingTotalWeight) && isNotBlank(row.unitPrice)) {
-    return +toPrecision(row.weighingTotalWeight * row.unitPrice, decimalPrecision.wms) === +value
+    return +toPrecision(row.weighingTotalWeight * row.unitPrice, decimalPrecision.value.wms) === +value
   }
   return false
 }
@@ -302,7 +302,7 @@ function calcTotalLength(row) {
 // 处理重量变化
 function handleWeightChange(val, row) {
   if (isNotBlank(row.unitPrice) && isNotBlank(val)) {
-    row.amount = toPrecision(val * row.unitPrice, decimalPrecision.wms)
+    row.amount = toPrecision(val * row.unitPrice, decimalPrecision.value.wms)
   }
 }
 

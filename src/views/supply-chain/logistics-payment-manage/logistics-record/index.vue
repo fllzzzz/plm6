@@ -41,7 +41,7 @@
 
 <script setup>
 import crudApi from '@/api/supply-chain/logistics-payment-manage/logistics-record-ledger'
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 
 import { supplierLogisticsLogPM as permission } from '@/page-permission/supply-chain'
 import checkPermission from '@/utils/system/check-permission'
@@ -78,9 +78,11 @@ const { crud, columns } = useCRUD(
   tableRef
 )
 
-const dataFormat = ref([
-  ['freight', ['to-thousand', decimalPrecision.supplyChain]]
-])
+const dataFormat = computed(() => {
+  return [
+    ['freight', ['to-thousand', decimalPrecision.value.supplyChain]]
+  ]
+})
 
 const { maxHeight } = useMaxHeight({
   paginate: true

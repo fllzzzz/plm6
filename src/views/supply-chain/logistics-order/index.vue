@@ -204,19 +204,21 @@ const optShow = {
 
 const tableRef = ref()
 // 表格列数据格式转换
-const columnsDataFormat = ref([
-  ...wmsReceiptColumns,
-  ['loadingWeight', ['to-fixed-ck', 'COM_WT__KG']],
-  ['invoiceType', ['parse-enum', invoiceTypeEnum]],
-  ['taxRate', ['suffix', '%']],
-  ['inputVAT', ['to-thousand', decimalPrecision.supplyChain]],
-  ['amountExcludingVAT', ['to-thousand', decimalPrecision.supplyChain]],
-  ['freight', ['to-thousand', decimalPrecision.supplyChain]],
-  ['amount', ['to-thousand', decimalPrecision.supplyChain]],
-  ['requisitionsSNStr', 'empty-text'],
-  ['remark', 'empty-text'],
-  ['auxMaterialNames', 'split']
-])
+const columnsDataFormat = computed(() => {
+  return [
+    ...wmsReceiptColumns,
+    ['loadingWeight', ['to-fixed-ck', 'COM_WT__KG']],
+    ['invoiceType', ['parse-enum', invoiceTypeEnum]],
+    ['taxRate', ['suffix', '%']],
+    ['inputVAT', ['to-thousand', decimalPrecision.value.supplyChain]],
+    ['amountExcludingVAT', ['to-thousand', decimalPrecision.value.supplyChain]],
+    ['freight', ['to-thousand', decimalPrecision.value.supplyChain]],
+    ['amount', ['to-thousand', decimalPrecision.value.supplyChain]],
+    ['requisitionsSNStr', 'empty-text'],
+    ['remark', 'empty-text'],
+    ['auxMaterialNames', 'split']
+  ]
+})
 const { CRUD, crud, columns } = useCRUD(
   {
     title: '物料物流订单',

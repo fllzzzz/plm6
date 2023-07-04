@@ -61,7 +61,7 @@
 
 <script setup>
 import crudApi from '@/api/contract/supplier-manage/payment-ledger/pay-invoice'
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 
 import { contractSupplierPaymentLedgerPM } from '@/page-permission/contract'
 import { supplierPayTypeEnum } from '@enum-ms/contract'
@@ -108,13 +108,15 @@ const { maxHeight } = useMaxHeight({
   extraHeight: 120
 })
 
-const dataFormat = ref([
-  ['invoiceAmount', ['to-thousand', decimalPrecision.contract]],
-  ['createTime', ['parse-time', '{y}-{m}-{d}']],
-  ['propertyType', ['parse-enum', supplierPayTypeEnum]],
-  ['invoiceType', ['parse-enum', invoiceTypeEnum]],
-  ['taxRate', ['suffix', '%']]
-])
+const dataFormat = computed(() => {
+  return [
+    ['invoiceAmount', ['to-thousand', decimalPrecision.value.contract]],
+    ['createTime', ['parse-time', '{y}-{m}-{d}']],
+    ['propertyType', ['parse-enum', supplierPayTypeEnum]],
+    ['invoiceType', ['parse-enum', invoiceTypeEnum]],
+    ['taxRate', ['suffix', '%']]
+  ]
+})
 
 // 预览附件
 function attachmentView(item) {
@@ -151,7 +153,7 @@ function getSummaries(param) {
             return prev
           }
         }, 0)
-        sums[index] = sums[index].toFixed(decimalPrecision.contract)
+        sums[index] = sums[index].toFixed(decimalPrecision.value.contract)
       }
     }
   })

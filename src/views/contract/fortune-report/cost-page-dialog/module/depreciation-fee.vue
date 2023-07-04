@@ -43,7 +43,7 @@
 </template>
 <script setup>
 import { getDepreciationList } from '@/api/contract/fortune-report/detail-fee'
-import { ref, defineProps, watch } from 'vue'
+import { ref, defineProps, watch, computed } from 'vue'
 
 import { toThousand } from '@data-type/number'
 import { tableSummary } from '@/utils/el-extra'
@@ -78,16 +78,18 @@ watch(
   { immediate: true, deep: true }
 )
 
-const dataFormat = ref([
-  ['amount', ['to-thousand', decimalPrecision.contract]],
-  ['mete', 'to-thousand'],
-  ['avgPrice', ['to-thousand', decimalPrecision.contract]]
-])
+const dataFormat = computed(() => {
+  return [
+    ['amount', ['to-thousand', decimalPrecision.value.contract]],
+    ['mete', 'to-thousand'],
+    ['avgPrice', ['to-thousand', decimalPrecision.value.contract]]
+  ]
+})
 
 // 合计
 function getSummaries(param) {
   return tableSummary(param, {
-    props: [['amount', decimalPrecision.contract], 'mete'],
+    props: [['amount', decimalPrecision.value.contract], 'mete'],
     toThousandFields: ['amount', 'mete']
   })
 }

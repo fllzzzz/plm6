@@ -172,7 +172,7 @@ function getSummaries(param) {
   })
   const tIndex = [2, 3, 4, 5, 6, 7]
   tIndex.forEach((index) => {
-    sums[index] = sums[index] ? (index !== 2 ? toThousand(sums[index], decimalPrecision.operation) : toThousand(sums[index])) : 0
+    sums[index] = sums[index] ? (index !== 2 ? toThousand(sums[index], decimalPrecision.value.operation) : toThousand(sums[index])) : 0
   })
   return sums
 }

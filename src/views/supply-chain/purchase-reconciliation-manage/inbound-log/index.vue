@@ -44,7 +44,7 @@
 
 <script setup>
 import crudApi from '@/api/supply-chain/purchase-reconciliation-manage/payment-ledger'
-import { ref, provide, nextTick } from 'vue'
+import { ref, provide, nextTick, computed } from 'vue'
 
 import { supplierMaterialInboundPM as permission } from '@/page-permission/supply-chain'
 import checkPermission from '@/utils/system/check-permission'
@@ -69,12 +69,14 @@ const optShow = {
 
 const tableRef = ref()
 const headerRef = ref()
-const dataFormat = ref([
-  ['createTime', 'parse-time'],
-  ['amount', ['to-thousand', decimalPrecision.supplyChain]],
-  ['inboundAmount', ['to-thousand', decimalPrecision.supplyChain]],
-  ['inboundRate', ['to-fixed', 2]]
-])
+const dataFormat = computed(() => {
+  return [
+    ['createTime', 'parse-time'],
+    ['amount', ['to-thousand', decimalPrecision.value.supplyChain]],
+    ['inboundAmount', ['to-thousand', decimalPrecision.value.supplyChain]],
+    ['inboundRate', ['to-fixed', 2]]
+  ]
+})
 const { crud, columns, CRUD } = useCRUD(
   {
     title: '入库记录',

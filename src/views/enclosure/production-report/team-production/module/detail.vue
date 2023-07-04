@@ -138,7 +138,7 @@ const { maxHeight } = useMaxHeight(
 function getSummaries(param) {
   return tableSummary(param, {
     props: [
-      ['totalAmount', decimalPrecision.enclosure],
+      ['totalAmount', decimalPrecision.value.enclosure],
       ['reportTotalLength', DP.MES_ENCLOSURE_L__M]
     ]
   })

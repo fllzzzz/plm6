@@ -192,21 +192,23 @@ const detailInfo = ref({})
 const productId = ref(undefined)
 const recordType = ref('')
 const recordVisible = ref(false)
-const dataFormat = ref([
-  ['project', 'parse-project'],
-  ['orderSourceType', ['parse-enum', orderSourceTypeEnum]],
-  ['status', ['parse-enum', projectStatusEnum]],
-  ['contractAmount', ['to-thousand', decimalPrecision.contract]],
-  ['settlementAmount', ['to-thousand', decimalPrecision.contract]],
-  ['collectionAmount', ['to-thousand', decimalPrecision.contract]],
-  ['invoiceAmount', ['to-thousand', decimalPrecision.contract]],
-  ['happenedAmount', ['to-thousand', decimalPrecision.contract]],
-  ['warehouseAmount', ['to-thousand', decimalPrecision.contract]],
-  ['warehouseRate', ['to-fixed', 2]],
-  ['collectionRate', ['to-fixed', 2]],
-  ['invoiceRate', ['to-fixed', 2]],
-  ['happenedRate', ['to-fixed', 2]]
-])
+const dataFormat = computed(() => {
+  return [
+    ['project', 'parse-project'],
+    ['orderSourceType', ['parse-enum', orderSourceTypeEnum]],
+    ['status', ['parse-enum', projectStatusEnum]],
+    ['contractAmount', ['to-thousand', decimalPrecision.value.contract]],
+    ['settlementAmount', ['to-thousand', decimalPrecision.value.contract]],
+    ['collectionAmount', ['to-thousand', decimalPrecision.value.contract]],
+    ['invoiceAmount', ['to-thousand', decimalPrecision.value.contract]],
+    ['happenedAmount', ['to-thousand', decimalPrecision.value.contract]],
+    ['warehouseAmount', ['to-thousand', decimalPrecision.value.contract]],
+    ['warehouseRate', ['to-fixed', 2]],
+    ['collectionRate', ['to-fixed', 2]],
+    ['invoiceRate', ['to-fixed', 2]],
+    ['happenedRate', ['to-fixed', 2]]
+  ]
+})
 
 provide('projectId', productId)
 

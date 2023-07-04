@@ -169,7 +169,7 @@
 
 <script setup>
 import crudApi from '@/api/bridge/QHSE-manage/disclosure'
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 
 import { projectNameFormatter } from '@/utils/project'
 import { problemTypeEnum } from '@enum-ms/production'
@@ -191,11 +191,13 @@ const optShow = {
   download: false
 }
 
-const dataFormat = ref([
-  ['createTime', 'parse-time'],
-  ['rectifyTime', 'parse-time'],
-  ['forfeit', ['to-fixed', decimalPrecision.bridge]]
-])
+const dataFormat = computed(() => {
+  return [
+    ['createTime', 'parse-time'],
+    ['rectifyTime', 'parse-time'],
+    ['forfeit', ['to-fixed', decimalPrecision.value.bridge]]
+  ]
+})
 
 const tableRef = ref()
 const { crud, columns, CRUD } = useCRUD(

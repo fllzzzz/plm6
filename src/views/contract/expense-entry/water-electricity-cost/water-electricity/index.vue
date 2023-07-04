@@ -130,7 +130,7 @@ function getSummaries(param) {
           return pre
         }
       }, 0)
-      sums[index] = usedMeteSum ? (totalAmountSum / usedMeteSum).toFixed(decimalPrecision.contract) : 0
+      sums[index] = usedMeteSum ? (totalAmountSum / usedMeteSum).toFixed(decimalPrecision.value.contract) : 0
       return
     }
     if (column.property === 'usedMete' || column.property === 'totalAmount') {
@@ -147,7 +147,7 @@ function getSummaries(param) {
         }, 0)
       }
       if (column.property === 'totalAmount') {
-        sums[index] = valuesSum.toFixed(decimalPrecision.contract)
+        sums[index] = valuesSum.toFixed(decimalPrecision.value.contract)
       } else {
         sums[index] = valuesSum.toFixed(2)
       }
@@ -158,7 +158,7 @@ function getSummaries(param) {
 CRUD.HOOK.beforeToQuery = () => {}
 CRUD.HOOK.handleRefresh = (crud, res) => {
   res.data.content = res.data.content.map((v) => {
-    v.averageValue = v.totalAmount && v.usedMete ? (v.totalAmount / v.usedMete).toFixed(decimalPrecision.contract) : 0
+    v.averageValue = v.totalAmount && v.usedMete ? (v.totalAmount / v.usedMete).toFixed(decimalPrecision.value.contract) : 0
     return v
   })
 }

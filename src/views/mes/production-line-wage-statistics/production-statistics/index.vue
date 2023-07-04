@@ -246,7 +246,7 @@ function getSummaries(param) {
           }
         }, 0)
       }
-      sums[index] = valuesSum?.toFixed(decimalPrecision.mes)
+      sums[index] = valuesSum?.toFixed(decimalPrecision.value.mes)
     }
   })
   return sums

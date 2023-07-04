@@ -189,6 +189,6 @@ async function fetchList() {
 }
 
 function getSummaries(param) {
-  return tableSummary(param, { props: ['completeQuantity', 'completeMete', ['price', decimalPrecision.mes]] })
+  return tableSummary(param, { props: ['completeQuantity', 'completeMete', ['price', decimalPrecision.value.mes]] })
 }
 </script>

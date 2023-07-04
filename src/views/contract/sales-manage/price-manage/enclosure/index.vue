@@ -131,7 +131,7 @@
 
 <script setup>
 import crudApi from '@/api/contract/sales-manage/price-manage/enclosure'
-import { ref, defineExpose, defineProps } from 'vue'
+import { ref, defineExpose, defineProps, computed } from 'vue'
 
 import { priceManagePM as permission } from '@/page-permission/contract'
 import { DP } from '@/settings/config'
@@ -162,10 +162,12 @@ const sourceMap = new Map([['unitPrice', 'originUnitPrice']])
 
 const tableRef = ref()
 const headerRef = ref()
-const dataFormat = ref([
-  ['thickness', ['to-fixed', DP.MES_ENCLOSURE_T__MM]],
-  ['unitPrice', ['to-thousand', decimalPrecision.contract]]
-])
+const dataFormat = computed(() => {
+  return [
+    ['thickness', ['to-fixed', DP.MES_ENCLOSURE_T__MM]],
+    ['unitPrice', ['to-thousand', decimalPrecision.value.contract]]
+  ]
+})
 const { crud, columns } = useCRUD(
   {
     title: '围护价格',

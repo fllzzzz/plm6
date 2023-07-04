@@ -237,7 +237,7 @@ provide('permission', permission)
 // 合计
 function getSummaries(param) {
   return tableSummary(param, {
-    props: ['auxiliaryQuantity', ['wages', decimalPrecision.mes]]
+    props: ['auxiliaryQuantity', ['wages', decimalPrecision.value.mes]]
   })
 }
 </script>

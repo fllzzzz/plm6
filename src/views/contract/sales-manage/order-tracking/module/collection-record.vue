@@ -107,12 +107,14 @@ watch(
 const list = ref([])
 const dialogRef = ref()
 const tableLoading = ref(false)
-const dataFormat = ref([
-  ['collectionDate', ['parse-time', '{y}-{m}-{d}']],
-  ['collectionMode', ['parse-enum', paymentFineModeEnum]],
-  ['collectionAmount', ['to-thousand', decimalPrecision.contract]],
-  ['taxRate', ['to-fixed', 2]]
-])
+const dataFormat = computed(() => {
+  return [
+    ['collectionDate', ['parse-time', '{y}-{m}-{d}']],
+    ['collectionMode', ['parse-enum', paymentFineModeEnum]],
+    ['collectionAmount', ['to-thousand', decimalPrecision.value.contract]],
+    ['taxRate', ['to-fixed', 2]]
+  ]
+})
 
 const { maxHeight } = useMaxHeight(
   {

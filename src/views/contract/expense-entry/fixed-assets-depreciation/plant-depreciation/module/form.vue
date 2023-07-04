@@ -128,7 +128,7 @@ const annualDepreciationRate = computed(() => {
 const annualDepreciationAmount = computed(() => {
   // 原值*（（1-净残值）/ 使用年限）
   return form.originalValue && form.residualValueRate && form.depreciationYear
-    ? (form.originalValue * ((100 - form.residualValueRate) / 100 / form.depreciationYear)).toFixed(decimalPrecision.contract)
+    ? (form.originalValue * ((100 - form.residualValueRate) / 100 / form.depreciationYear)).toFixed(decimalPrecision.value.contract)
     : ''
 })
 const monthValueDepreciationRate = computed(() => {
@@ -141,7 +141,7 @@ const monthValueDepreciationRate = computed(() => {
 const monthValueDepreciationAmount = computed(() => {
   // 原值*（（1-净残值）/ 使用年限 / 12）
   return form.originalValue && form.residualValueRate && form.depreciationYear
-    ? (form.originalValue * ((100 - form.residualValueRate) / 100 / form.depreciationYear / 12)).toFixed(decimalPrecision.contract)
+    ? (form.originalValue * ((100 - form.residualValueRate) / 100 / form.depreciationYear / 12)).toFixed(decimalPrecision.value.contract)
     : ''
 })
 

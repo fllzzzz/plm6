@@ -70,7 +70,7 @@
 
 <script setup>
 import crudApi from '@/api/supply-chain/purchase-reconciliation-manage/acceptance-log'
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 
 import { purchaseAcceptanceLogPM as permission } from '@/page-permission/supply-chain'
 import { tableSummary } from '@/utils/el-extra'
@@ -94,10 +94,12 @@ const optShow = {
 
 const tableRef = ref()
 // 表格列数据格式转换
-const columnsDataFormat = ref([
-  ['amountExcludingVAT', ['to-thousand', decimalPrecision.supplyChain]],
-  ['inboundTime', 'parse-time']
-])
+const columnsDataFormat = computed(() => {
+  return [
+    ['amountExcludingVAT', ['to-thousand', decimalPrecision.value.supplyChain]],
+    ['inboundTime', 'parse-time']
+  ]
+})
 
 const { crud, columns } = useCRUD(
   {
@@ -117,7 +119,7 @@ const { maxHeight } = useMaxHeight({ paginate: true })
 function getSummaries(param) {
   return tableSummary(param, {
     // 此页面钢材默认显示吨，保留3位，金额显示4位
-    props: ['quantity', ['mete', 3], ['amountExcludingVAT', decimalPrecision.supplyChain]],
+    props: ['quantity', ['mete', 3], ['amountExcludingVAT', decimalPrecision.value.supplyChain]],
     toThousandFields: ['amountExcludingVAT']
   })
 }

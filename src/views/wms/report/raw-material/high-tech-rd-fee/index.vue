@@ -66,7 +66,7 @@
 import crudApi from '@/api/wms/report/raw-material/high-tech-rd-fee'
 import { reportRawMaterialHighTechRDFeePM as permission } from '@/page-permission/wms'
 
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { setSpecInfoToList } from '@/utils/wms/spec'
 import { materialHasAmountColumns } from '@/utils/columns-format/wms'
@@ -94,12 +94,14 @@ const optShow = {
 }
 
 // 表格列数据格式转换
-const columnsDataFormat = ref([
-  ...materialHasAmountColumns,
-  ['outboundReceipt.outboundTime', ['parse-time', '{y}-{m}-{d}']],
-  ['rdRate', ['suffix', ' %']],
-  ['rdFee', ['to-thousand', decimalPrecision.wms]]
-])
+const columnsDataFormat = computed(() => {
+  return [
+    ...materialHasAmountColumns,
+    ['outboundReceipt.outboundTime', ['parse-time', '{y}-{m}-{d}']],
+    ['rdRate', ['suffix', ' %']],
+    ['rdFee', ['to-thousand', decimalPrecision.value.wms]]
+  ]
+})
 
 // 展开行
 const expandRowKeys = ref([])

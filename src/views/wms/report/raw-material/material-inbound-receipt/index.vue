@@ -229,15 +229,17 @@ const optShow = {
 }
 
 // 表格列数据格式转换
-const columnsDataFormat = ref([
-  ...reviewTimeColumns,
-  ['inboundTime', 'parse-time'],
-  ['rejectAmountExcludingVAT', ['to-thousand', decimalPrecision.wms]],
-  ['inboundAmountExcludingVAT', ['to-thousand', decimalPrecision.wms]],
-  ['projects', ['parse-project', { onlyShortName: true }]],
-  ['projectsFullName', 'parse-project', { source: 'projects' }],
-  ['basicClass', ['parse-enum', rawMatClsEnum, { bit: true, split: ' | ' }]]
-])
+const columnsDataFormat = computed(() => {
+  return [
+    ...reviewTimeColumns,
+    ['inboundTime', 'parse-time'],
+    ['rejectAmountExcludingVAT', ['to-thousand', decimalPrecision.value.wms]],
+    ['inboundAmountExcludingVAT', ['to-thousand', decimalPrecision.value.wms]],
+    ['projects', ['parse-project', { onlyShortName: true }]],
+    ['projectsFullName', 'parse-project', { source: 'projects' }],
+    ['basicClass', ['parse-enum', rawMatClsEnum, { bit: true, split: ' | ' }]]
+  ]
+})
 
 const expandRowKeys = ref([])
 const tableRef = ref()

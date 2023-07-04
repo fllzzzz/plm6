@@ -103,11 +103,13 @@ watch(
 const list = ref([])
 const drawerRef = ref()
 const tableLoading = ref(false)
-const dataFormat = ref([
-  ['createTime', ['parse-time', '{y}-{m}-{d}']],
-  ['unitPrice', ['to-thousand', decimalPrecision.contract]],
-  ['totalPrice', ['to-thousand', decimalPrecision.contract]]
-])
+const dataFormat = computed(() => {
+  return [
+    ['createTime', ['parse-time', '{y}-{m}-{d}']],
+    ['unitPrice', ['to-thousand', decimalPrecision.value.contract]],
+    ['totalPrice', ['to-thousand', decimalPrecision.value.contract]]
+  ]
+})
 
 const { maxHeight } = useMaxHeight(
   {

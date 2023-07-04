@@ -58,7 +58,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { getProductAnalysis } from '@/api/operation/production-cost-analysis'
 
 import checkPermission from '@/utils/system/check-permission'
@@ -71,18 +71,20 @@ import useDecimalPrecision from '@compos/store/use-decimal-precision'
 
 const { decimalPrecision } = useDecimalPrecision()
 
-const columnsDataFormat = [
-  ['laborFee', ['to-fixed', decimalPrecision.operation]],
-  ['auxiliaryFee', ['to-fixed', decimalPrecision.operation]],
-  ['gasFee', ['to-fixed', decimalPrecision.operation]],
-  ['waterElectricityFee', ['to-fixed', decimalPrecision.operation]],
-  ['plantDepreciationFee', ['to-fixed', decimalPrecision.operation]],
-  ['deviceDepreciationFee', ['to-fixed', decimalPrecision.operation]],
-  ['testingFee', ['to-fixed', decimalPrecision.operation]],
-  ['managementFee', ['to-fixed', decimalPrecision.operation]],
-  ['totalFee', ['to-fixed', decimalPrecision.operation]],
-  ['avgProductionFee', ['to-fixed', decimalPrecision.operation]]
-]
+const columnsDataFormat = computed(() => {
+  return [
+    ['laborFee', ['to-thousand', decimalPrecision.value.operation]],
+    ['auxiliaryFee', ['to-thousand', decimalPrecision.value.operation]],
+    ['gasFee', ['to-thousand', decimalPrecision.value.operation]],
+    ['waterElectricityFee', ['to-thousand', decimalPrecision.value.operation]],
+    ['plantDepreciationFee', ['to-thousand', decimalPrecision.value.operation]],
+    ['deviceDepreciationFee', ['to-thousand', decimalPrecision.value.operation]],
+    ['testingFee', ['to-thousand', decimalPrecision.value.operation]],
+    ['managementFee', ['to-thousand', decimalPrecision.value.operation]],
+    ['totalFee', ['to-thousand', decimalPrecision.value.operation]],
+    ['avgProductionFee', ['to-thousand', decimalPrecision.value.operation]]
+  ]
+})
 
 // import ExportButton from '@comp-common/export-button/index.vue'
 // import ExcelExportButton from '@comp-common/excel-export-button/index.vue'
@@ -178,26 +180,26 @@ async function fetchProductAnalysis() {
     content.push(
       {
         month: '合计',
-        productionMete: (productSum * 1000).toFixed(decimalPrecision.operation),
-        laborFee: laborFeeSum.toFixed(decimalPrecision.operation),
-        auxiliaryFee: auxiliaryFeeSum.toFixed(decimalPrecision.operation),
-        gasFee: gasFeeSum.toFixed(decimalPrecision.operation),
-        waterElectricityFee: waterElectricityFeeSum.toFixed(decimalPrecision.operation),
-        plantDepreciationFee: plantDepreciationFeeSum.toFixed(decimalPrecision.operation),
-        deviceDepreciationFee: deviceDepreciationFeeSum.toFixed(decimalPrecision.operation),
-        testingFee: testingFeeSum.toFixed(decimalPrecision.operation),
-        managementFee: managementFeeSum.toFixed(decimalPrecision.operation)
+        productionMete: (productSum * 1000).toFixed(decimalPrecision.value.operation),
+        laborFee: laborFeeSum.toFixed(decimalPrecision.value.operation),
+        auxiliaryFee: auxiliaryFeeSum.toFixed(decimalPrecision.value.operation),
+        gasFee: gasFeeSum.toFixed(decimalPrecision.value.operation),
+        waterElectricityFee: waterElectricityFeeSum.toFixed(decimalPrecision.value.operation),
+        plantDepreciationFee: plantDepreciationFeeSum.toFixed(decimalPrecision.value.operation),
+        deviceDepreciationFee: deviceDepreciationFeeSum.toFixed(decimalPrecision.value.operation),
+        testingFee: testingFeeSum.toFixed(decimalPrecision.value.operation),
+        managementFee: managementFeeSum.toFixed(decimalPrecision.value.operation)
       },
       {
         month: '单项成本',
-        laborFee: productSum ? (laborFeeSum / productSum).toFixed(decimalPrecision.operation) : laborFeeSum,
-        auxiliaryFee: productSum ? (auxiliaryFeeSum / productSum).toFixed(decimalPrecision.operation) : auxiliaryFeeSum,
-        gasFee: productSum ? (gasFeeSum / productSum).toFixed(decimalPrecision.operation) : gasFeeSum,
-        waterElectricityFee: productSum ? (waterElectricityFeeSum / productSum).toFixed(decimalPrecision.operation) : waterElectricityFeeSum,
-        plantDepreciationFee: productSum ? (plantDepreciationFeeSum / productSum).toFixed(decimalPrecision.operation) : plantDepreciationFeeSum,
-        deviceDepreciationFee: productSum ? (deviceDepreciationFeeSum / productSum).toFixed(decimalPrecision.operation) : deviceDepreciationFeeSum,
-        testingFee: productSum ? (testingFeeSum / productSum).toFixed(decimalPrecision.operation) : testingFeeSum,
-        managementFee: productSum ? (managementFeeSum / productSum).toFixed(decimalPrecision.operation) : managementFeeSum
+        laborFee: productSum ? (laborFeeSum / productSum).toFixed(decimalPrecision.value.operation) : laborFeeSum,
+        auxiliaryFee: productSum ? (auxiliaryFeeSum / productSum).toFixed(decimalPrecision.value.operation) : auxiliaryFeeSum,
+        gasFee: productSum ? (gasFeeSum / productSum).toFixed(decimalPrecision.value.operation) : gasFeeSum,
+        waterElectricityFee: productSum ? (waterElectricityFeeSum / productSum).toFixed(decimalPrecision.value.operation) : waterElectricityFeeSum,
+        plantDepreciationFee: productSum ? (plantDepreciationFeeSum / productSum).toFixed(decimalPrecision.value.operation) : plantDepreciationFeeSum,
+        deviceDepreciationFee: productSum ? (deviceDepreciationFeeSum / productSum).toFixed(decimalPrecision.value.operation) : deviceDepreciationFeeSum,
+        testingFee: productSum ? (testingFeeSum / productSum).toFixed(decimalPrecision.value.operation) : testingFeeSum,
+        managementFee: productSum ? (managementFeeSum / productSum).toFixed(decimalPrecision.value.operation) : managementFeeSum
       },
       {
         month: '占比',

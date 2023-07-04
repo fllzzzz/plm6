@@ -134,7 +134,7 @@ CRUD.HOOK.beforeRefresh = () => {
 // 合计
 function getSummaries(param) {
   return tableSummary(param, {
-    props: [['applyAmount', decimalPrecision.contract]],
+    props: [['applyAmount', decimalPrecision.value.contract]],
     toThousandFields: ['applyAmount']
   })
 }

@@ -83,7 +83,7 @@ const basicClass = computed(() => (crud.query ? crud.query.basicClass : undefine
 // 合计
 function getSummaries(param) {
   return tableSummary(param, {
-    props: ['quantity', 'mete', ['amount', decimalPrecision.wms], ['amountExcludingVAT', decimalPrecision.wms]],
+    props: ['quantity', 'mete', ['amount', decimalPrecision.value.wms], ['amountExcludingVAT', decimalPrecision.value.wms]],
     toThousandFields: ['amount', 'amountExcludingVAT']
   })
 }

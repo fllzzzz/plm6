@@ -52,7 +52,7 @@
 
 <script setup>
 import crudApi from '@/api/project-manage/subcontract-visa-manage'
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 
 import { auditTypeEnum } from '@enum-ms/contract'
 import { subcontractVisaManagePM as permission } from '@/page-permission/project'
@@ -74,13 +74,15 @@ const optShow = {
   download: false
 }
 
-const dataFormat = ref([
-  ['project', ['parse-project', { onlyShortName: true }]],
-  ['applyDate', ['parse-time', '{y}-{m}-{d}']],
-  ['visaAmount', ['to-thousand', decimalPrecision.project]],
-  ['auditTime', ['parse-time', '{y}-{m}-{d}']],
-  ['approveTime', ['parse-time', '{y}-{m}-{d}']]
-])
+const dataFormat = computed(() => {
+  return [
+    ['project', ['parse-project', { onlyShortName: true }]],
+    ['applyDate', ['parse-time', '{y}-{m}-{d}']],
+    ['visaAmount', ['to-thousand', decimalPrecision.value.project]],
+    ['auditTime', ['parse-time', '{y}-{m}-{d}']],
+    ['approveTime', ['parse-time', '{y}-{m}-{d}']]
+  ]
+})
 
 const tableRef = ref()
 const detailVisible = ref(false)

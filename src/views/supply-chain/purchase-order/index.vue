@@ -253,15 +253,17 @@ const tableRef = ref()
 const expandRowKeys = ref([])
 const store = useStore()
 // 表格列数据格式转换
-const columnsDataFormat = ref([
-  ...wmsReceiptColumns,
-  ['invoiceType', ['parse-enum', invoiceTypeEnum]],
-  ['amount', ['to-thousand', decimalPrecision.supplyChain]],
-  ['requisitionsSNStr', 'empty-text'],
-  ['remark', 'empty-text'],
-  ['auxMaterialNames', 'split'],
-  ['otherMaterialNames', 'split']
-])
+const columnsDataFormat = computed(() => {
+  return [
+    ...wmsReceiptColumns,
+    ['invoiceType', ['parse-enum', invoiceTypeEnum]],
+    ['amount', ['to-thousand', decimalPrecision.value.supplyChain]],
+    ['requisitionsSNStr', 'empty-text'],
+    ['remark', 'empty-text'],
+    ['auxMaterialNames', 'split'],
+    ['otherMaterialNames', 'split']
+  ]
+})
 const { CRUD, crud, columns } = useCRUD(
   {
     title: '采购合同',

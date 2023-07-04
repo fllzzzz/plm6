@@ -72,7 +72,7 @@
 
 <script setup>
 import crudApi from '@/api/contract/sales-manage/price-manage/auxiliary-material'
-import { ref, defineExpose } from 'vue'
+import { ref, defineExpose, computed } from 'vue'
 import { priceManagePM as permission } from '@/page-permission/contract'
 import { auxiliaryMaterialUseTypeEnum } from '@enum-ms/plan'
 
@@ -98,7 +98,9 @@ const sourceMap = new Map([['unitPrice', 'originUnitPrice']])
 
 const tableRef = ref()
 const headerRef = ref()
-const dataFormat = ref([['unitPrice', ['to-thousand', decimalPrecision.contract]]])
+const dataFormat = computed(() => {
+  return [['unitPrice', ['to-thousand', decimalPrecision.value.contract]]]
+})
 const { crud, columns } = useCRUD(
   {
     title: '配套件价格',

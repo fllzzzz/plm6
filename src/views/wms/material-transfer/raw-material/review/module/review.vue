@@ -373,7 +373,7 @@ function closeHook() {
 // 合计
 function getSummaries(param) {
   return tableSummary(param, {
-    props: ['quantity', 'mete', ['amount', decimalPrecision.wms]],
+    props: ['quantity', 'mete', ['amount', decimalPrecision.value.wms]],
     toThousandFields: ['mete', 'amount']
   })
 }

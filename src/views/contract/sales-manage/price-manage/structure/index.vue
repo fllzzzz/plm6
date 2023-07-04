@@ -139,7 +139,7 @@
 
 <script setup>
 import crudApi from '@/api/contract/sales-manage/price-manage/structure'
-import { ref, defineExpose } from 'vue'
+import { ref, defineExpose, computed } from 'vue'
 import { priceManagePM as permission } from '@/page-permission/contract'
 
 import checkPermission from '@/utils/system/check-permission'
@@ -173,9 +173,11 @@ const tableRef = ref()
 const headerRef = ref()
 const detailInfo = ref({})
 const showAble = ref(false)
-const dataFormat = ref([
-  ['unitPrice', ['to-thousand', decimalPrecision.contract]]
-])
+const dataFormat = computed(() => {
+  return [
+    ['unitPrice', ['to-thousand', decimalPrecision.value.contract]]
+  ]
+})
 const { crud, columns } = useCRUD(
   {
     title: '结构价格',

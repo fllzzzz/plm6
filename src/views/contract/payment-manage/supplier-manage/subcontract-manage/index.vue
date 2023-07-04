@@ -105,7 +105,7 @@
 
 <script setup>
 import crudApi from '@/api/project-manage/subcontract-payment/payment-list'
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 
 import { contractSupplierSubcontractPM as permission } from '@/page-permission/contract'
 import checkPermission from '@/utils/system/check-permission'
@@ -139,15 +139,17 @@ const currentRow = ref({})
 const activeName = ref('payment')
 const showType = ref('audit')
 
-const dataFormat = ref([
-  ['signDate', ['parse-time', '{y}-{m}-{d}']],
-  ['project', 'parse-project'],
-  ['paymentRate', ['to-fixed', 2]],
-  ['invoiceRate', ['to-fixed', 2]],
-  ['amount', ['to-thousand', decimalPrecision.contract]],
-  ['paymentAmount', ['to-thousand', decimalPrecision.contract]],
-  ['invoiceAmount', ['to-thousand', decimalPrecision.contract]]
-])
+const dataFormat = computed(() => {
+  return [
+    ['signDate', ['parse-time', '{y}-{m}-{d}']],
+    ['project', 'parse-project'],
+    ['paymentRate', ['to-fixed', 2]],
+    ['invoiceRate', ['to-fixed', 2]],
+    ['amount', ['to-thousand', decimalPrecision.value.contract]],
+    ['paymentAmount', ['to-thousand', decimalPrecision.value.contract]],
+    ['invoiceAmount', ['to-thousand', decimalPrecision.value.contract]]
+  ]
+})
 
 const { CRUD, crud, columns } = useCRUD(
   {

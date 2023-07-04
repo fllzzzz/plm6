@@ -92,7 +92,7 @@ const { maxHeight } = useMaxHeight({
 // 合计
 function getSummaries(param) {
   return tableSummary(param, {
-    props: ['apertureQuantity', ['totalPrice', decimalPrecision.mes]]
+    props: ['apertureQuantity', ['totalPrice', decimalPrecision.value.mes]]
   })
 }
 </script>

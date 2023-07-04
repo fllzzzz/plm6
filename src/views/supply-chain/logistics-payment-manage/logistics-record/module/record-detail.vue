@@ -144,13 +144,15 @@ watch(visible, (val) => {
 const list = ref([])
 const dialogRef = ref()
 const tableLoading = ref(false)
-const dataFormat = ref([
-  ['shipDate', ['parse-time', '{y}-{m}-{d}']],
-  ['type', ['parse-enum', logisticsSearchTypeEnum]],
-  ['loadingWeight', ['to-fixed', 2]],
-  ['freight', ['to-thousand', decimalPrecision.supplyChain]],
-  ['changeFreight', ['parse-enum', freightChangeTypeEnum, { f: 'SL' }]]
-])
+const dataFormat = computed(() => {
+  return [
+    ['shipDate', ['parse-time', '{y}-{m}-{d}']],
+    ['type', ['parse-enum', logisticsSearchTypeEnum]],
+    ['loadingWeight', ['to-fixed', 2]],
+    ['freight', ['to-thousand', decimalPrecision.value.supplyChain]],
+    ['changeFreight', ['parse-enum', freightChangeTypeEnum, { f: 'SL' }]]
+  ]
+})
 
 const { maxHeight } = useMaxHeight(
   {

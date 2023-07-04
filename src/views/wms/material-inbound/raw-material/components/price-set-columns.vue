@@ -55,7 +55,7 @@ function handleUnitPriceChange(val, row) {
     row.unitPrice = toPrecision(val, 10)
     val = row.unitPrice
   }
-  row.amount = isNotBlank(val) ? toPrecision(val * row[props.weightAttribute], decimalPrecision.wms) : undefined
+  row.amount = isNotBlank(val) ? toPrecision(val * row[props.weightAttribute], decimalPrecision.value.wms) : undefined
 }
 
 // 处理金额变化

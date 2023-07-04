@@ -82,11 +82,13 @@ const props = defineProps({
   }
 })
 
-const dataFormat = ref([
-  ['paymentDate', ['parse-time', '{y}-{m}-{d}']],
-  ['auditTime', 'parse-time'],
-  ['applyAmount', ['to-thousand', decimalPrecision.project]]
-])
+const dataFormat = computed(() => {
+  return [
+    ['paymentDate', ['parse-time', '{y}-{m}-{d}']],
+    ['auditTime', 'parse-time'],
+    ['applyAmount', ['to-thousand', decimalPrecision.value.project]]
+  ]
+})
 
 const tableRef = ref()
 const confirmVisible = ref(false)

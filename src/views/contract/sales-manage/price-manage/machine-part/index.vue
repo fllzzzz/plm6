@@ -68,7 +68,7 @@
 
 <script setup>
 import crudApi from '@/api/contract/sales-manage/price-manage/machine-part'
-import { ref, defineExpose } from 'vue'
+import { ref, defineExpose, computed } from 'vue'
 import { priceManagePM as permission } from '@/page-permission/contract'
 import { pricingMannerEnum } from '@enum-ms/contract'
 import { ElMessage } from 'element-plus'
@@ -94,9 +94,11 @@ const optShow = {
 const tableRef = ref()
 const headerRef = ref()
 const showAble = ref(false)
-const dataFormat = ref([
-  ['unitPrice', ['to-thousand', decimalPrecision.contract]]
-])
+const dataFormat = computed(() => {
+  return [
+    ['unitPrice', ['to-thousand', decimalPrecision.value.contract]]
+  ]
+})
 const { crud, columns } = useCRUD(
   {
     title: '散发制品价格',

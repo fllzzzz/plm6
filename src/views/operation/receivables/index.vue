@@ -91,7 +91,7 @@
 
 <script setup>
 import { getCollectionAnalysis } from '@/api/operation/receivables'
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 
 import { projectNameFormatter } from '@/utils/project'
 import { tableSummary } from '@/utils/el-extra'
@@ -119,18 +119,20 @@ const typeEnum = {
 }
 constantize(typeEnum)
 
-const dataFormat = ref([
-  ['contractAmount', ['to-thousand', decimalPrecision.operation]],
-  ['invoiceAmount', ['to-thousand', decimalPrecision.operation]],
-  ['settlementAmount', ['to-thousand', decimalPrecision.operation]],
-  ['collectionAmount', ['to-thousand', decimalPrecision.operation]],
-  ['receivableAmount', ['to-thousand', decimalPrecision.operation]]
-])
+const dataFormat = computed(() => {
+  return [
+    ['contractAmount', ['to-thousand', decimalPrecision.value.operation]],
+    ['invoiceAmount', ['to-thousand', decimalPrecision.value.operation]],
+    ['settlementAmount', ['to-thousand', decimalPrecision.value.operation]],
+    ['collectionAmount', ['to-thousand', decimalPrecision.value.operation]],
+    ['receivableAmount', ['to-thousand', decimalPrecision.value.operation]]
+  ]
+})
 
 // 合计
 function getSummaries(param) {
   return tableSummary(param, {
-    props: [['contractAmount', decimalPrecision.operation], ['invoiceAmount', decimalPrecision.operation], ['settlementAmount', decimalPrecision.operation], ['receivableAmount', decimalPrecision.operation]],
+    props: [['contractAmount', decimalPrecision.value.operation], ['invoiceAmount', decimalPrecision.value.operation], ['settlementAmount', decimalPrecision.value.operation], ['receivableAmount', decimalPrecision.value.operation]],
     toThousandFields: ['contractAmount', 'invoiceAmount', 'settlementAmount', 'receivableAmount']
   })
 }

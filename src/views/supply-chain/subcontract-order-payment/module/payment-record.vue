@@ -139,11 +139,13 @@ const drawerRef = ref()
 const tableLoading = ref(false)
 const dict = useDict(['payment_reason'])
 
-const dataFormat = ref([
-  ['applyAmount', ['to-thousand', decimalPrecision.supplyChain]],
-  ['actuallyPaymentAmount', ['to-thousand', decimalPrecision.supplyChain]],
-  ['paymentDate', ['parse-time', '{y}-{m}-{d}']]
-])
+const dataFormat = computed(() => {
+  return [
+    ['applyAmount', ['to-thousand', decimalPrecision.value.supplyChain]],
+    ['actuallyPaymentAmount', ['to-thousand', decimalPrecision.value.supplyChain]],
+    ['paymentDate', ['parse-time', '{y}-{m}-{d}']]
+  ]
+})
 
 const { maxHeight } = useMaxHeight(
   {
@@ -161,7 +163,7 @@ const { maxHeight } = useMaxHeight(
 // 合计
 function getSummaries(param) {
   const summary = tableSummary(param, {
-    props: [['applyAmount', decimalPrecision.supplyChain], ['actuallyPaymentAmount', decimalPrecision.supplyChain]],
+    props: [['applyAmount', decimalPrecision.value.supplyChain], ['actuallyPaymentAmount', decimalPrecision.value.supplyChain]],
     toThousandFields: ['applyAmount']
   })
   const num = summary[3]

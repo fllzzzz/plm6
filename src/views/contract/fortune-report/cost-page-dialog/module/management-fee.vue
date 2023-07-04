@@ -96,7 +96,7 @@ async function fetchWaterElectricFee() {
 // 合计
 function getSummaries(param) {
   return tableSummary(param, {
-    props: [['amount', decimalPrecision.contract]],
+    props: [['amount', decimalPrecision.value.contract]],
     toThousandFields: ['amount']
   })
 }

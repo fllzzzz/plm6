@@ -145,15 +145,17 @@ const applicationVisible = ref(false)
 const settleVisible = ref(false)
 const showType = ref('add')
 
-const dataFormat = ref([
-  ['signDate', ['parse-time', '{y}-{m}-{d}']],
-  ['project', 'parse-project'],
-  ['paymentRate', ['to-fixed', 2]],
-  ['invoiceRate', ['to-fixed', 2]],
-  ['amount', ['to-thousand', decimalPrecision.project]],
-  ['paymentAmount', ['to-thousand', decimalPrecision.project]],
-  ['invoiceAmount', ['to-thousand', decimalPrecision.project]]
-])
+const dataFormat = computed(() => {
+  return [
+    ['signDate', ['parse-time', '{y}-{m}-{d}']],
+    ['project', 'parse-project'],
+    ['paymentRate', ['to-fixed', 2]],
+    ['invoiceRate', ['to-fixed', 2]],
+    ['amount', ['to-thousand', decimalPrecision.value.project]],
+    ['paymentAmount', ['to-thousand', decimalPrecision.value.project]],
+    ['invoiceAmount', ['to-thousand', decimalPrecision.value.project]]
+  ]
+})
 
 const { crud, columns, CRUD } = useCRUD(
   {

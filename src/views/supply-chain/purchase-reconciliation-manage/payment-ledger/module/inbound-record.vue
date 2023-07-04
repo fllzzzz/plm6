@@ -119,14 +119,16 @@ watch(
 const list = ref([])
 const drawerRef = ref()
 const tableLoading = ref(false)
-const dataFormat = ref([
-  ['unitPrice', ['to-thousand', decimalPrecision.supplyChain]],
-  ['amount', ['to-thousand', decimalPrecision.supplyChain]],
-  ['unitPriceExcludingVAT', ['to-thousand', decimalPrecision.supplyChain]],
-  ['amountExcludingVAT', ['to-thousand', decimalPrecision.supplyChain]],
-  ['inputVAT', ['to-thousand', decimalPrecision.supplyChain]],
-  ['inboundTime', ['parse-time', '{y}-{m}-{d}']]
-])
+const dataFormat = computed(() => {
+  return [
+    ['unitPrice', ['to-thousand', decimalPrecision.value.supplyChain]],
+    ['amount', ['to-thousand', decimalPrecision.value.supplyChain]],
+    ['unitPriceExcludingVAT', ['to-thousand', decimalPrecision.value.supplyChain]],
+    ['amountExcludingVAT', ['to-thousand', decimalPrecision.value.supplyChain]],
+    ['inputVAT', ['to-thousand', decimalPrecision.value.supplyChain]],
+    ['inboundTime', ['parse-time', '{y}-{m}-{d}']]
+  ]
+})
 
 const { maxHeight } = useMaxHeight(
   {
@@ -143,7 +145,7 @@ const { maxHeight } = useMaxHeight(
 
 function getSummaries(param) {
   return tableSummary(param, {
-    props: [['amount', decimalPrecision.supplyChain], ['amountExcludingVAT', decimalPrecision.supplyChain], ['inputVAT', decimalPrecision.supplyChain], ['mete', DP.COM_WT__KG]],
+    props: [['amount', decimalPrecision.value.supplyChain], ['amountExcludingVAT', decimalPrecision.value.supplyChain], ['inputVAT', decimalPrecision.value.supplyChain], ['mete', DP.COM_WT__KG]],
     toThousandFields: ['amount', 'amountExcludingVAT', 'inputVAT', 'mete']
   })
 }

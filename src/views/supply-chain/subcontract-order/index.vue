@@ -44,7 +44,7 @@
 
 <script setup>
 import crudApi from '@/api/supply-chain/subcontract-manage/subcontract-order'
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 
 import { subcontractOrderPM as permission } from '@/page-permission/supply-chain'
 import checkPermission from '@/utils/system/check-permission'
@@ -69,11 +69,13 @@ const optShow = {
 
 const tableRef = ref()
 const headerRef = ref()
-const dataFormat = ref([
-  ['signDate', ['parse-time', '{y}-{m}-{d}']],
-  ['project', 'parse-project'],
-  ['amount', ['to-thousand', decimalPrecision.supplyChain]]
-])
+const dataFormat = computed(() => {
+  return [
+    ['signDate', ['parse-time', '{y}-{m}-{d}']],
+    ['project', 'parse-project'],
+    ['amount', ['to-thousand', decimalPrecision.value.supplyChain]]
+  ]
+})
 const { crud, columns, CRUD } = useCRUD(
   {
     title: '分包订单',
