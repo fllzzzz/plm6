@@ -139,6 +139,7 @@ import { regForm } from '@compos/use-crud'
 import { DP } from '@/settings/config'
 import { fileClassifyEnum } from '@enum-ms/file'
 import { supplierClassEnum } from '@enum-ms/supplier'
+import { isNotBlank } from '@/utils/data-type'
 
 import UploadBtn from '@comp/file-upload/UploadBtn'
 import branchCompanySelect from '@comp-base/branch-company-select.vue'
@@ -179,7 +180,7 @@ CRUD.HOOK.afterToAdd = () => {
 
 // 金额校验
 const validateMoney = (value, row) => {
-  if (!value) return false
+  if (!isNotBlank(value)) return false
   return true
 }
 

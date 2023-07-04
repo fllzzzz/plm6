@@ -204,6 +204,7 @@ import { fileClassifyEnum } from '@enum-ms/file'
 import { digitUppercase } from '@data-type/number'
 import { parseTime } from '@/utils/date'
 import { DP } from '@/settings/config'
+import { isNotBlank } from '@/utils/data-type'
 
 import { regForm } from '@compos/use-crud'
 import useDict from '@compos/store/use-dict'
@@ -245,8 +246,8 @@ const currentId = ref()
 const bankList = ref([])
 
 const validateMoney = (rule, value, callback) => {
-  if (!value) {
-    callback(new Error('请填写申请金额并大于0'))
+  if (!isNotBlank(value)) {
+    callback(new Error('请填写申请金额'))
   }
   callback()
 }

@@ -184,6 +184,8 @@ import { DP } from '@/settings/config'
 import { supplierTypeEnum } from '@/utils/enum/modules/supplier'
 import { regForm } from '@compos/use-crud'
 import useDict from '@compos/store/use-dict'
+import { isNotBlank } from '@/utils/data-type'
+
 import UploadBtn from '@comp/file-upload/UploadBtn'
 import showPdfAndImg from '@comp-base/show-pdf-and-img.vue'
 import branchCompanySelect from '@comp-base/branch-company-select.vue'
@@ -220,8 +222,8 @@ const currentId = ref()
 const bankList = ref([])
 
 const validateMoney = (rule, value, callback) => {
-  if (!value) {
-    callback(new Error('请填写申请金额并大于0'))
+  if (!isNotBlank(value)) {
+    callback(new Error('请填写申请金额'))
   }
   callback()
 }
