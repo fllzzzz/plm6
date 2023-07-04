@@ -52,8 +52,8 @@
           <el-input-number
               v-model="form.inputAmount"
               :step="10000"
-              :min="0"
-              :max="detailInfo?.sourceRow?.settlementAmount?detailInfo?.sourceRow?.settlementAmount-detailInfo?.sourceRow?.paymentAmount:999999999999"
+              :min="-9999999999"
+              :max="detailInfo?.sourceRow?.settlementAmount?detailInfo?.sourceRow?.settlementAmount-detailInfo?.sourceRow?.paymentAmount:9999999999"
               :precision="DP.YUAN"
               placeholder="本次付款"
               controls-position="right"
@@ -155,19 +155,19 @@ const payableMoney = computed(() => {
     if (form.notBoolDeduct) {
       return form.inputAmount
     } else {
-      return form.inputAmount ? form.inputAmount - (form.boolUpdateBreachAmount ? (props.detailInfo.penalty ? props.detailInfo.penalty : 0) : (form.breachAmount ? form.breachAmount : 0)) : 0
+      return isNotBlank(form.inputAmount) ? form.inputAmount - (form.boolUpdateBreachAmount ? (props.detailInfo.penalty ? props.detailInfo.penalty : 0) : (form.breachAmount ? form.breachAmount : 0)) : 0
     }
   } else {
     if (form.notBoolDeduct) {
       return form.inputAmount
     } else {
-      return form.inputAmount ? form.inputAmount - (props.detailInfo?.penalty ? props.detailInfo.penalty : 0) : 0
+      return isNotBlank(form.inputAmount) ? form.inputAmount - (props.detailInfo?.penalty ? props.detailInfo.penalty : 0) : 0
     }
   }
 })
 const validateMoney = (rule, value, callback) => {
-  if (!value) {
-    callback(new Error('请填写本次金额并大于0'))
+  if (!isNotBlank(value)) {
+    callback(new Error('请填写本次金额'))
   }
   callback()
 }

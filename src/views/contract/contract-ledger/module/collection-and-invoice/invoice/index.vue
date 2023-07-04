@@ -62,12 +62,12 @@
                 controls-position="right"
                 @change="moneyChange(scope.row)"
               />
-              <div v-else>{{ scope.row.invoiceAmount && scope.row.invoiceAmount>0? toThousand(scope.row.invoiceAmount): scope.row.invoiceAmount }}</div>
+              <div v-else>{{ isNotBlank(scope.row.invoiceAmount) ? toThousand(scope.row.invoiceAmount): '-' }}</div>
           </template>
         </el-table-column>
         <el-table-column key="invoiceAmount1" prop="invoiceAmount1" label="大写" align="center" min-width="110" :show-overflow-tooltip="true">
           <template v-slot="scope">
-            <div>{{scope.row.invoiceAmount?digitUppercase(scope.row.invoiceAmount):''}}</div>
+            <div>{{isNotBlank(scope.row.invoiceAmount)?digitUppercase(scope.row.invoiceAmount):'-'}}</div>
           </template>
         </el-table-column>
       </el-table-column>
@@ -98,7 +98,7 @@
       </el-table-column>
       <el-table-column key="noTaxAmount" prop="noTaxAmount" label="不含税金额" align="center" width="85" show-overflow-tooltip>
         <template v-slot="scope">
-          <span>{{scope.row.noTaxAmount && scope.row.noTaxAmount>0? toThousand(scope.row.noTaxAmount): scope.row.noTaxAmount}}</span>
+          <span>{{isNotBlank(scope.row.noTaxAmount) ? toThousand(scope.row.noTaxAmount): '-'}}</span>
         </template>
       </el-table-column>
       <el-table-column key="invoiceUnit" prop="invoiceUnit" label="开票单位" align="center" min-width="120" :show-overflow-tooltip="true">
@@ -220,6 +220,7 @@ import { toThousand } from '@data-type/number'
 import { digitUppercase } from '@/utils/data-type/number'
 import { validate } from '@compos/form/use-table-validate'
 import { ElMessage } from 'element-plus'
+import { isNotBlank } from '@data-type/index'
 import mForm from './form'
 import { contractLedgerPM } from '@/page-permission/contract'
 
@@ -375,7 +376,7 @@ function moneyChange(row) {
 }
 
 function taxMoney(row) {
-  if (row.invoiceAmount && row.taxRate) {
+  if (isNotBlank(row.invoiceAmount) && row.taxRate) {
     row.tax = row.invoiceAmount * row.taxRate / 100
     row.noTaxAmount = (row.invoiceAmount / (1 + row.taxRate / 100)).toFixed(DP.YUAN)
   } else {
