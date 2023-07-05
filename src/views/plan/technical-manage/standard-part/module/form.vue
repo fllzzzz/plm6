@@ -68,7 +68,28 @@
                 :step="1"
                 size="mini"
                 placeholder="数量"
+                @change="weightChange(scope.row)"
               />
+            </template>
+          </el-table-column>
+          <el-table-column label="单重(kg)" prop="weight" align="center">
+            <template v-slot="scope">
+              <el-input-number
+                v-model.number="scope.row.weight"
+                :min="0"
+                :max="999999999"
+                :step="1"
+                :precision="DP.COM_WT__KG"
+                :controls="false"
+                placeholder="单重"
+                style="width:100%;"
+                @change="weightChange(scope.row)"
+              />
+            </template>
+          </el-table-column>
+          <el-table-column label="总重(kg)" prop="totalWeight">
+            <template v-slot="scope">
+              <span>{{toThousand(scope.row.totalWeight,DP.COM_WT__KG)}}</span>
             </template>
           </el-table-column>
           <el-table-column prop="remark" label="备注" align="center">
@@ -111,6 +132,8 @@ import { auxiliaryMaterialUseTypeEnum } from '@enum-ms/plan'
 import useMaxHeight from '@compos/use-max-height'
 import useTableValidate from '@compos/form/use-table-validate'
 import { ElMessage } from 'element-plus'
+import { DP } from '@/settings/config'
+import { toThousand } from '@/utils/data-type/number'
 
 const currentMonomer = inject('currentMonomer')
 const currentArea = inject('currentArea')
@@ -147,6 +170,10 @@ const tableRules = {
 }
 
 const { tableValidate, wrongCellMask } = useTableValidate({ rules: tableRules })
+
+function weightChange(row) {
+  row.totalWeight = (row.quantity && row.weight) ? row.quantity * row.weight : 0
+}
 
 function deleteRow(index) {
   form.list.splice(index, 1)

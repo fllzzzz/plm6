@@ -189,7 +189,7 @@ const validateTaxRate = (value, row) => {
 
 // 金额校验
 const validateAmount = (value, row) => {
-  if (!value) return false
+  if (!isNotBlank(value)) return false
   return true
 }
 
@@ -258,7 +258,7 @@ function moneyChange(row) {
 }
 
 function taxMoney(row) {
-  if (row.invoiceAmount && row.taxRate && row.invoiceType !== invoiceTypeEnum.RECEIPT.V) {
+  if (isNotBlank(row.invoiceAmount) && row.taxRate && row.invoiceType !== invoiceTypeEnum.RECEIPT.V) {
     row.tax = row.invoiceAmount * row.taxRate / 100
   }
 }
@@ -301,17 +301,9 @@ CRUD.HOOK.beforeValidateCU = (crud, form) => {
   } else {
     return validResult
   }
-  let moneyFlag = true
   crud.form.list.map(row => {
-    if (row.invoiceAmount === 0) {
-      moneyFlag = false
-    }
     row.attachmentIds = row.attachments ? row.attachments.map((v) => v.id) : undefined
   })
-  if (!moneyFlag) {
-    ElMessage.error('收票金额必须大于0')
-    return false
-  }
 }
 
 </script>
