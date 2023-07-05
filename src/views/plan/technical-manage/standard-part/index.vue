@@ -57,7 +57,7 @@
           <span v-else>{{ row.quantity }}</span>
         </template>
       </el-table-column>
-      <el-table-column v-if="columns.visible('quantity')" :show-overflow-tooltip="true" prop="quantity" label="数量" align="center" min-width="120px">
+      <!-- <el-table-column v-if="columns.visible('quantity')" :show-overflow-tooltip="true" prop="quantity" label="数量" align="center" min-width="120px">
         <template #default="{ row }">
           <common-input-number
             v-if="row.isModify"
@@ -94,7 +94,7 @@
         <template v-slot="scope">
           <span>{{toThousand(scope.row.totalWeight,DP.COM_WT__KG)}}</span>
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column v-if="columns.visible('useProperty')" :show-overflow-tooltip="true" prop="useProperty" label="使用范围" align="center" min-width="120px">
       <template #default="{ row }">
         <common-select
@@ -165,8 +165,8 @@ import crudApi from '@/api/plan/technical-manage/standard-part'
 import { provide, ref } from 'vue'
 import { ElMessage } from 'element-plus'
 
-import { DP } from '@/settings/config'
-import { toThousand } from '@/utils/data-type/number'
+// import { DP } from '@/settings/config'
+// import { toThousand } from '@/utils/data-type/number'
 import { isNotBlank } from '@data-type/index'
 import { validate } from '@compos/form/use-table-validate'
 import { auxiliaryMaterialUseTypeEnum } from '@enum-ms/plan'
@@ -212,9 +212,9 @@ const { maxHeight } = useMaxHeight({
   extraHeight: 40
 })
 
-function weightChange(row) {
-  row.totalWeight = (row.quantity && row.weight) ? row.quantity * row.weight : 0
-}
+// function weightChange(row) {
+//   row.totalWeight = (row.quantity && row.weight) ? row.quantity * row.weight : 0
+// }
 
 function currentChange(val) {
   currentMonomer.value = val
