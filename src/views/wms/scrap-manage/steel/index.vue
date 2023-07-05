@@ -43,11 +43,12 @@
 import { getSteelList } from '@/api/wms/scrap-manage/list'
 import { steelScrapPM as permission } from '@/page-permission/wms'
 
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { projectWarehouseTypeEnum } from '@/utils/enum/modules/wms'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { setSpecInfoToList } from '@/utils/wms/spec'
-import { baseTimeColumns, materialHasAmountColumns } from '@/utils/columns-format/wms'
+import { baseTimeColumns, materialColumns } from '@/utils/columns-format/wms'
+import { invoiceTypeEnum } from '@/utils/enum/modules/finance'
 
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
@@ -58,6 +59,9 @@ import MaterialBaseInfoColumns from '@/components-system/wms/table-columns/mater
 import MaterialSecondaryInfoColumns from '@/components-system/wms/table-columns/material-secondary-info-columns/index.vue'
 import WarehouseInfoColumns from '@/components-system/wms/table-columns/warehouse-info-columns/index.vue'
 import MaterialUnitQuantityColumns from '@/components-system/wms/table-columns/material-unit-quantity-columns/index.vue'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const optShow = {
   batchAdd: false,
@@ -67,7 +71,21 @@ const optShow = {
   download: false
 }
 // 表格列数据格式转换
-const columnsDataFormat = ref([...materialHasAmountColumns, ...baseTimeColumns])
+const columnsDataFormat = computed(() => {
+  return [
+    ...materialColumns,
+    // 金额相关
+    ['invoiceType', ['parse-enum', invoiceTypeEnum, { f: 'SL' }]],
+    ['taxRate', ['suffix', '%']],
+    ['unitPrice', ['to-thousand', decimalPrecision.value.wms]],
+    ['unitPriceExcludingVAT', ['to-thousand', decimalPrecision.value.wms]],
+    ['amount', ['to-thousand', decimalPrecision.value.wms]],
+    ['amountExcludingVAT', ['to-thousand', decimalPrecision.value.wms]],
+    ['inputVAT', ['to-thousand', decimalPrecision.value.wms]],
+    ...baseTimeColumns
+  ]
+})
+// const columnsDataFormat = ref([...materialHasAmountColumns, ...baseTimeColumns])
 
 // 展开行
 const expandRowKeys = ref([])

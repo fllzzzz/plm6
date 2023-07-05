@@ -74,8 +74,9 @@ import { computed, ref } from 'vue'
 import { inspectionStatusEnum, inspectionDetailStatusEnum } from '@enum-ms/wms'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { setSpecInfoToList } from '@/utils/wms/spec'
-import { materialHasAmountColumns } from '@/utils/columns-format/wms'
+import { materialColumns } from '@/utils/columns-format/wms'
 
+import { invoiceTypeEnum } from '@/utils/enum/modules/finance'
 import { regDetail } from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
 // import elExpandTableColumn from '@comp-common/el-expand-table-column.vue'
@@ -85,9 +86,27 @@ import materialSecondaryInfoColumns from '@/components-system/wms/table-columns/
 // import warehouseInfoColumns from '@/components-system/wms/table-columns/warehouse-info-columns/index.vue'
 // import expandSecondaryInfo from '@/components-system/wms/table-columns/expand-secondary-info/index.vue'
 import titleAfterInfo from '@/views/wms/material-inbound/raw-material/components/title-after-info.vue'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 // 表格列数据格式转换
-const columnsDataFormat = ref([...materialHasAmountColumns, ['remark', 'empty-text']])
+// const columnsDataFormat = ref([...materialHasAmountColumns, ['remark', 'empty-text']])
+
+const columnsDataFormat = computed(() => {
+  return [
+    ...materialColumns,
+    // 金额相关
+    ['invoiceType', ['parse-enum', invoiceTypeEnum, { f: 'SL' }]],
+    ['taxRate', ['suffix', '%']],
+    ['unitPrice', ['to-thousand', decimalPrecision.value.wms]],
+    ['unitPriceExcludingVAT', ['to-thousand', decimalPrecision.value.wms]],
+    ['amount', ['to-thousand', decimalPrecision.value.wms]],
+    ['amountExcludingVAT', ['to-thousand', decimalPrecision.value.wms]],
+    ['inputVAT', ['to-thousand', decimalPrecision.value.wms]],
+    ['remark', 'empty-text']
+  ]
+})
 
 const drawerRef = ref()
 const expandRowKeys = ref([])

@@ -95,8 +95,9 @@ import { tableSummary } from '@/utils/el-extra'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 // import { isBlank, isNotBlank, toFixed } from '@/utils/data-type'
 import { isBlank, isNotBlank } from '@/utils/data-type'
-import { materialHasAmountColumns } from '@/utils/columns-format/wms'
+import { materialColumns } from '@/utils/columns-format/wms'
 
+import { invoiceTypeEnum } from '@/utils/enum/modules/finance'
 import { regExtra } from '@/composables/form/use-form'
 import useTableValidate from '@/composables/form/use-table-validate'
 import useMaxHeight from '@compos/use-max-height'
@@ -134,12 +135,28 @@ const props = defineProps({
 })
 
 // 表格列数据格式转换
-const columnsDataFormat = ref([
-  ...materialHasAmountColumns,
-  ['brand', 'empty-text'],
-  ['heatNoAndBatchNo', 'empty-text'],
-  ['remark', 'empty-text']
-])
+const columnsDataFormat = computed(() => {
+  return [
+    ...materialColumns,
+    // 金额相关
+    ['invoiceType', ['parse-enum', invoiceTypeEnum, { f: 'SL' }]],
+    ['taxRate', ['suffix', '%']],
+    ['unitPrice', ['to-thousand', decimalPrecision.value.wms]],
+    ['unitPriceExcludingVAT', ['to-thousand', decimalPrecision.value.wms]],
+    ['amount', ['to-thousand', decimalPrecision.value.wms]],
+    ['amountExcludingVAT', ['to-thousand', decimalPrecision.value.wms]],
+    ['inputVAT', ['to-thousand', decimalPrecision.value.wms]],
+    ['brand', 'empty-text'],
+    ['heatNoAndBatchNo', 'empty-text'],
+    ['remark', 'empty-text']
+  ]
+})
+// const columnsDataFormat = ref([
+//   ...materialHasAmountColumns,
+//   ['brand', 'empty-text'],
+//   ['heatNoAndBatchNo', 'empty-text'],
+//   ['remark', 'empty-text']
+// ])
 
 // 仓管填写的信息（工厂及仓库）
 const warehouseRules = {

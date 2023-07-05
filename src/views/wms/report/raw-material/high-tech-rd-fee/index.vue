@@ -69,8 +69,9 @@ import { reportRawMaterialHighTechRDFeePM as permission } from '@/page-permissio
 import { ref, computed } from 'vue'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { setSpecInfoToList } from '@/utils/wms/spec'
-import { materialHasAmountColumns } from '@/utils/columns-format/wms'
+import { materialColumns } from '@/utils/columns-format/wms'
 
+import { invoiceTypeEnum } from '@/utils/enum/modules/finance'
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
 import Pagination from '@crud/Pagination'
@@ -96,12 +97,29 @@ const optShow = {
 // 表格列数据格式转换
 const columnsDataFormat = computed(() => {
   return [
-    ...materialHasAmountColumns,
+    ...materialColumns,
+    // 金额相关
+    ['invoiceType', ['parse-enum', invoiceTypeEnum, { f: 'SL' }]],
+    ['taxRate', ['suffix', '%']],
+    ['unitPrice', ['to-thousand', decimalPrecision.value.wms]],
+    ['unitPriceExcludingVAT', ['to-thousand', decimalPrecision.value.wms]],
+    ['amount', ['to-thousand', decimalPrecision.value.wms]],
+    ['amountExcludingVAT', ['to-thousand', decimalPrecision.value.wms]],
+    ['inputVAT', ['to-thousand', decimalPrecision.value.wms]],
     ['outboundReceipt.outboundTime', ['parse-time', '{y}-{m}-{d}']],
     ['rdRate', ['suffix', ' %']],
     ['rdFee', ['to-thousand', decimalPrecision.value.wms]]
   ]
 })
+
+// const columnsDataFormat = computed(() => {
+//   return [
+//     ...materialHasAmountColumns,
+//     ['outboundReceipt.outboundTime', ['parse-time', '{y}-{m}-{d}']],
+//     ['rdRate', ['suffix', ' %']],
+//     ['rdFee', ['to-thousand', decimalPrecision.value.wms]]
+//   ]
+// })
 
 // 展开行
 const expandRowKeys = ref([])

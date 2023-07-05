@@ -44,8 +44,10 @@
 </template>
 
 <script setup>
-import { ref, defineProps } from 'vue'
-import { materialHasAmountColumns } from '@/utils/columns-format/wms'
+import { ref, defineProps, computed } from 'vue'
+import { materialColumns } from '@/utils/columns-format/wms'
+
+import { invoiceTypeEnum } from '@/utils/enum/modules/finance'
 
 import useMaxHeight from '@compos/use-max-height'
 import elExpandTableColumn from '@comp-common/el-expand-table-column.vue'
@@ -55,6 +57,9 @@ import materialSecondaryInfoColumns from '@/components-system/wms/table-columns/
 import amountInfoColumns from '@/components-system/wms/table-columns/amount-info-columns/index.vue'
 import warehouseInfoColumns from '@/components-system/wms/table-columns/warehouse-info-columns/index.vue'
 import expandSecondaryInfo from '@/components-system/wms/table-columns/expand-secondary-info/index.vue'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 defineProps({
   basicClass: {
@@ -78,7 +83,21 @@ defineProps({
 const dialogVisible = ref()
 const expandRowKeys = ref()
 // 表格列数据格式转换
-const columnsDataFormat = ref([...materialHasAmountColumns, ['remark', 'empty-text']])
+// const columnsDataFormat = ref([...materialHasAmountColumns, ['remark', 'empty-text']])
+const columnsDataFormat = computed(() => {
+  return [
+    ...materialColumns,
+    // 金额相关
+    ['invoiceType', ['parse-enum', invoiceTypeEnum, { f: 'SL' }]],
+    ['taxRate', ['suffix', '%']],
+    ['unitPrice', ['to-thousand', decimalPrecision.value.wms]],
+    ['unitPriceExcludingVAT', ['to-thousand', decimalPrecision.value.wms]],
+    ['amount', ['to-thousand', decimalPrecision.value.wms]],
+    ['amountExcludingVAT', ['to-thousand', decimalPrecision.value.wms]],
+    ['inputVAT', ['to-thousand', decimalPrecision.value.wms]],
+    ['remark', 'empty-text']
+  ]
+})
 
 const { maxHeight } = useMaxHeight(
   {

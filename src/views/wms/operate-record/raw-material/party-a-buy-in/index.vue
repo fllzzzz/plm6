@@ -67,10 +67,11 @@
 import crudApi from '@/api/wms/material-transfer/raw-material/party-a-buy-in'
 import { operateRecordPartyABuyInPM as permission } from '@/page-permission/wms'
 
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { setSpecInfoToList } from '@/utils/wms/spec'
-import { reviewTimeColumns, materialHasAmountColumns } from '@/utils/columns-format/wms'
+import { reviewTimeColumns, materialColumns } from '@/utils/columns-format/wms'
+import { invoiceTypeEnum } from '@/utils/enum/modules/finance'
 
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
@@ -83,6 +84,9 @@ import WarehouseInfoColumns from '@/components-system/wms/table-columns/warehous
 import MaterialUnitQuantityColumns from '@/components-system/wms/table-columns/material-unit-quantity-columns/index.vue'
 import amountInfoColumns from '@/components-system/wms/table-columns/amount-info-columns/index.vue'
 import ReceiptSnClickable from '@/components-system/wms/receipt-sn-clickable'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const optShow = {
   batchAdd: false,
@@ -93,7 +97,21 @@ const optShow = {
 }
 
 // 表格列数据格式转换
-const columnsDataFormat = ref([...materialHasAmountColumns, ...reviewTimeColumns])
+const columnsDataFormat = computed(() => {
+  return [
+    ...materialColumns,
+    // 金额相关
+    ['invoiceType', ['parse-enum', invoiceTypeEnum, { f: 'SL' }]],
+    ['taxRate', ['suffix', '%']],
+    ['unitPrice', ['to-thousand', decimalPrecision.value.wms]],
+    ['unitPriceExcludingVAT', ['to-thousand', decimalPrecision.value.wms]],
+    ['amount', ['to-thousand', decimalPrecision.value.wms]],
+    ['amountExcludingVAT', ['to-thousand', decimalPrecision.value.wms]],
+    ['inputVAT', ['to-thousand', decimalPrecision.value.wms]],
+    ...reviewTimeColumns
+  ]
+})
+// const columnsDataFormat = ref([...materialHasAmountColumns, ...reviewTimeColumns])
 
 // 展开行
 const expandRowKeys = ref([])

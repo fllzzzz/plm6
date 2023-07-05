@@ -74,7 +74,7 @@ import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { setSpecInfoToList } from '@/utils/wms/spec'
 import { isNotBlank } from '@/utils/data-type'
 import { invoiceTypeEnum } from '@/utils/enum/modules/finance'
-import { materialHasAmountColumns } from '@/utils/columns-format/wms'
+import { materialColumns } from '@/utils/columns-format/wms'
 
 import { regDetail } from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
@@ -96,7 +96,21 @@ const expandRowKeys = ref([]) // 展开key
 const showAmount = ref(false) // 显示金额，只有“买入甲供材料才需要填写金额”
 
 // 表格列数据格式转换
-const columnsDataFormat = [...materialHasAmountColumns, ['remark', 'empty-text']]
+// const columnsDataFormat = [...materialHasAmountColumns, ['remark', 'empty-text']]
+const columnsDataFormat = computed(() => {
+  return [
+    ...materialColumns,
+    // 金额相关
+    ['invoiceType', ['parse-enum', invoiceTypeEnum, { f: 'SL' }]],
+    ['taxRate', ['suffix', '%']],
+    ['unitPrice', ['to-thousand', decimalPrecision.value.wms]],
+    ['unitPriceExcludingVAT', ['to-thousand', decimalPrecision.value.wms]],
+    ['amount', ['to-thousand', decimalPrecision.value.wms]],
+    ['amountExcludingVAT', ['to-thousand', decimalPrecision.value.wms]],
+    ['inputVAT', ['to-thousand', decimalPrecision.value.wms]],
+    ['remark', 'empty-text']
+  ]
+})
 const { CRUD, crud, detail } = regDetail()
 
 // 表格高度处理

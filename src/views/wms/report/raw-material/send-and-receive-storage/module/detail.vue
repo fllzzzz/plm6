@@ -96,11 +96,13 @@ import { computed, inject, ref, defineEmits, defineProps } from 'vue'
 import { tableSummary } from '@/utils/el-extra'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { setSpecInfoToList } from '@/utils/wms/spec'
-import { materialHasAmountColumns } from '@/utils/columns-format/wms'
+import { materialColumns } from '@/utils/columns-format/wms'
 import { specFormat } from '@/utils/wms/spec-format'
 import { isNotBlank } from '@/utils/data-type'
 import { formTypeEnum } from '../enum'
 import { rawMatClsEnum } from '@/utils/enum/modules/classification'
+
+import { invoiceTypeEnum } from '@/utils/enum/modules/finance'
 
 import useMaxHeight from '@compos/use-max-height'
 import useMatBaseUnit from '@/composables/store/use-mat-base-unit'
@@ -137,7 +139,21 @@ const props = defineProps({
 })
 
 // 表格列数据格式转换
-const columnsDataFormat = ref([...materialHasAmountColumns, ['receipt.receiptType', ['parse-enum', receiptTypeEnum]]])
+const columnsDataFormat = computed(() => {
+  return [
+    ...materialColumns,
+    // 金额相关
+    ['invoiceType', ['parse-enum', invoiceTypeEnum, { f: 'SL' }]],
+    ['taxRate', ['suffix', '%']],
+    ['unitPrice', ['to-thousand', decimalPrecision.value.wms]],
+    ['unitPriceExcludingVAT', ['to-thousand', decimalPrecision.value.wms]],
+    ['amount', ['to-thousand', decimalPrecision.value.wms]],
+    ['amountExcludingVAT', ['to-thousand', decimalPrecision.value.wms]],
+    ['inputVAT', ['to-thousand', decimalPrecision.value.wms]],
+    ['receipt.receiptType', ['parse-enum', receiptTypeEnum]]
+  ]
+})
+// const columnsDataFormat = ref([...materialHasAmountColumns, ['receipt.receiptType', ['parse-enum', receiptTypeEnum]]])
 
 const permission = inject('permission')
 const detailLoading = ref(false)

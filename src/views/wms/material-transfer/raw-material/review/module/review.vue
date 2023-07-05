@@ -102,7 +102,7 @@ import { setSpecInfoToList } from '@/utils/wms/spec'
 import { deepClone } from '@/utils/data-type'
 import { partyAMatTransferEnum, transferTypeEnum } from '@/utils/enum/modules/wms'
 import { invoiceTypeEnum } from '@/utils/enum/modules/finance'
-import { materialHasAmountColumns } from '@/utils/columns-format/wms'
+import { materialColumns } from '@/utils/columns-format/wms'
 
 import { regExtra } from '@/composables/use-crud'
 import useTableValidate from '../composables/use-table-validate'
@@ -160,7 +160,21 @@ const currentInboundId = ref() // 当前id
 const showAmount = ref(false) // 显示金额，只有“买入甲供材料才需要填写金额”
 
 // 表格列数据格式转换
-const columnsDataFormat = ref([...materialHasAmountColumns])
+// const columnsDataFormat = ref([...materialHasAmountColumns])
+const columnsDataFormat = computed(() => {
+  return [
+    ...materialColumns,
+    // 金额相关
+    ['invoiceType', ['parse-enum', invoiceTypeEnum, { f: 'SL' }]],
+    ['taxRate', ['suffix', '%']],
+    ['unitPrice', ['to-thousand', decimalPrecision.value.wms]],
+    ['unitPriceExcludingVAT', ['to-thousand', decimalPrecision.value.wms]],
+    ['amount', ['to-thousand', decimalPrecision.value.wms]],
+    ['amountExcludingVAT', ['to-thousand', decimalPrecision.value.wms]],
+    ['inputVAT', ['to-thousand', decimalPrecision.value.wms]]
+  ]
+})
+
 // 表单禁止操作
 const formDisabled = computed(() => passedLoading.value || returnedLoading.value)
 // 标题
