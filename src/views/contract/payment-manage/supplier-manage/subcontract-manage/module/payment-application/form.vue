@@ -59,6 +59,30 @@
         </el-row>
         <el-row>
           <el-col :span="12">
+            <el-form-item label="开户行" prop="receiveBank">
+              <el-input
+                v-model.trim="form.receiveBank"
+                type="text"
+                style="width: 280px"
+                maxlength="50"
+                placeholder="请输入开户行"
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="账号" prop="receiveBankAccount">
+              <el-input
+                v-model.trim="form.receiveBankAccount"
+                type="text"
+                style="width: 280px"
+                maxlength="50"
+                placeholder="请输入账号"
+              />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
             <el-form-item label="付款日期" prop="paymentDate">
               <el-date-picker
                 v-model="form.paymentDate"
@@ -232,8 +256,8 @@ const rules = {
   paymentDate: [{ required: true, message: '请选择申请日期', trigger: 'change' }],
   paymentReasonId: [{ required: true, message: '请选择付款事由', trigger: 'change' }],
   applyAmount: [{ required: true, validator: validateMoney, trigger: 'blur' }],
-  paymentUnitId: [{ required: true, message: '请选择付款单位', trigger: 'change' }],
-  paymentBank: [{ required: true, message: '请选择付款银行', trigger: 'change' }]
+  paymentUnitId: [{ required: true, message: '请选择付款单位', trigger: 'change' }]
+  // paymentBank: [{ required: true, message: '请选择付款银行', trigger: 'change' }]
 }
 
 CRUD.HOOK.afterToAdd = () => {
