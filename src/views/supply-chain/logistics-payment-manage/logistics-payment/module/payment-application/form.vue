@@ -51,7 +51,7 @@
               <el-input-number
                 v-model.number="scope.row.applyAmount"
                 v-show-thousand
-                :min="scope.row.paymentAmount>scope.row.freight?(-(scope.row.paymentAmount-scope.row.freight)):0"
+                :min="-9999999999"
                 :max="scope.row.paymentAmount>scope.row.freight?0:scope.row.freight-scope.row.paymentAmount"
                 :step="100"
                 :precision="DP.YUAN"
@@ -98,6 +98,7 @@ import { fileClassifyEnum } from '@enum-ms/file'
 import UploadBtn from '@comp/file-upload/UploadBtn'
 import { ElMessage } from 'element-plus'
 import showPdfAndImg from '@comp-base/show-pdf-and-img.vue'
+import { isNotBlank } from '@data-type/index'
 
 const formRef = ref()
 const props = defineProps({
@@ -127,8 +128,8 @@ const pdfShow = ref(false)
 const currentId = ref()
 
 const validateMoney = (rule, value, callback) => {
-  if (!value) {
-    callback(new Error('请填写申请金额并大于0'))
+  if (!isNotBlank(value)) {
+    callback(new Error('请填写申请金额'))
   }
   callback()
 }
@@ -163,7 +164,7 @@ CRUD.HOOK.beforeSubmit = () => {
   const listData = JSON.parse(JSON.stringify(crud.form.paymentDetails))
   const submitData = []
   listData.map(v => {
-    if (v.applyAmount !== 0) {
+    if (isNotBlank(v.applyAmount)) {
       crud.form.applyAmount += v.applyAmount
       submitData.push(v)
     }

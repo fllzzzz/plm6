@@ -36,7 +36,7 @@
       </el-table-column> -->
       <el-table-column key="applyAmount" prop="applyAmount" label="申请金额" align="center">
         <template v-slot="scope">
-          <div>{{ scope.row.applyAmount && scope.row.applyAmount>0? toThousand(scope.row.applyAmount): scope.row.applyAmount }}</div>
+          <div>{{ isNotBlank(scope.row.applyAmount)? toThousand(scope.row.applyAmount): '-' }}</div>
         </template>
       </el-table-column>
       <el-table-column key="auditUserName" prop="auditUserName" label="审核人" align="center">
@@ -58,15 +58,18 @@
 <script setup>
 import { get } from '@/api/supply-chain/logistics-payment-manage/logistics-payment'
 import { ref, defineProps, watch } from 'vue'
+
+import { isNotBlank } from '@data-type/index'
 import { tableSummary } from '@/utils/el-extra'
 import { DP } from '@/settings/config'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
-import pagination from '@crud/Pagination'
 import { supplierPayTypeEnum, auditTypeEnum } from '@enum-ms/contract'
 import { parseTime } from '@/utils/date'
 import { toThousand } from '@data-type/number'
 import { contractSupplierLogisticsPM } from '@/page-permission/contract'
+
+import pagination from '@crud/Pagination'
 
 const permission = contractSupplierLogisticsPM.payment
 

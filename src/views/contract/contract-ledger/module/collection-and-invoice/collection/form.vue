@@ -50,8 +50,8 @@
                   v-if="scope.row.isModify"
                   v-show-thousand
                   v-model.number="scope.row.collectionAmount"
-                  :min="0"
-                  :max="currentRow.settlementAmount?currentRow.settlementAmount-totalAmount:999999999999"
+                  :min="-9999999999"
+                  :max="currentRow.settlementAmount?currentRow.settlementAmount-totalAmount:9999999999"
                   :step="100"
                   :precision="DP.YUAN"
                   placeholder="收款金额(元)"
@@ -59,7 +59,7 @@
                   :key="scope.row.dataIndex?scope.row.dataIndex:scope.row.id"
                   @change="moneyChange(scope.row)"
                 />
-                <div v-else>{{ scope.row.collectionAmount && scope.row.collectionAmount>0? toThousand(scope.row.collectionAmount): scope.row.collectionAmount }}</div>
+                <div v-else>{{ isNotBlank(scope.row.collectionAmount) ? toThousand(scope.row.collectionAmount): '-' }}</div>
               </template>
             </el-table-column>
             <el-table-column key="collectionAmount1" prop="collectionAmount1" label="大写" align="center" min-width="85" :show-overflow-tooltip="true">
@@ -152,6 +152,7 @@
 
 <script setup>
 import { ref, inject, defineProps, nextTick } from 'vue'
+
 import { regForm } from '@compos/use-crud'
 import { ElMessage } from 'element-plus'
 import { DP } from '@/settings/config'
@@ -159,8 +160,8 @@ import { validate } from '@compos/form/use-table-validate'
 import useMaxHeight from '@compos/use-max-height'
 import useDict from '@compos/store/use-dict'
 import { paymentFineModeEnum } from '@enum-ms/finance'
-import { digitUppercase } from '@/utils/data-type/number'
-import { toThousand } from '@data-type/number'
+import { digitUppercase, toThousand } from '@/utils/data-type/number'
+import { isNotBlank } from '@data-type/index'
 
 const formRef = ref()
 const detailRef = ref()
@@ -197,7 +198,7 @@ const { maxHeight } = useMaxHeight({
 
 // 金额校验
 const validateAmount = (value, row) => {
-  if (!value) return false
+  if (!isNotBlank(value)) return false
   return true
 }
 
@@ -289,7 +290,6 @@ CRUD.HOOK.beforeValidateCU = (crud, form) => {
   }
   const rules = tableRules
   let flag = true
-  let moneyFlag = true
   crud.form.list.map(row => {
     row.verify = {}
     for (const rule in rules) {
@@ -298,16 +298,9 @@ CRUD.HOOK.beforeValidateCU = (crud, form) => {
         flag = false
       }
     }
-    if (row.collectionAmount === 0) {
-      moneyFlag = false
-    }
   })
   if (!flag) {
     ElMessage.error('请填写表格中标红数据')
-    return false
-  }
-  if (!moneyFlag) {
-    ElMessage.error('收款金额必须大于0')
     return false
   }
   crud.form.projectId = props.projectId

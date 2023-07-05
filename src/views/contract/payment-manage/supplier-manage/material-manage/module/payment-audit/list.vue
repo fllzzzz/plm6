@@ -59,7 +59,7 @@
       </el-table-column>
       <el-table-column key="actuallyPaymentAmount" prop="actuallyPaymentAmount" label="实付金额" align="center" min-width="85">
         <template v-slot="scope">
-          <div>{{ scope.row.actuallyPaymentAmount && scope.row.actuallyPaymentAmount>0? toThousand(scope.row.actuallyPaymentAmount): scope.row.actuallyPaymentAmount }}</div>
+          <div>{{ isNotBlank(scope.row.actuallyPaymentAmount)? toThousand(scope.row.actuallyPaymentAmount): '-' }}</div>
         </template>
       </el-table-column>
       <el-table-column key="auditUserName" prop="auditUserName" label="审核人" align="center" width="100px">

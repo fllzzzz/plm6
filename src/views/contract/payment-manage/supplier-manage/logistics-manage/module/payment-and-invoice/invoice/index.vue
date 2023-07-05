@@ -45,7 +45,7 @@
                 v-if="scope.row.isModify"
                 v-show-thousand
                 v-model.number="scope.row.invoiceAmount"
-                :min="0"
+                :min="-9999999999"
                 :max="props.currentRow.freight"
                 :step="100"
                 :precision="DP.YUAN"
@@ -53,12 +53,12 @@
                 controls-position="right"
                 @change="moneyChange(scope.row)"
               />
-              <div v-else>{{ scope.row.invoiceAmount && scope.row.invoiceAmount>0? toThousand(scope.row.invoiceAmount): scope.row.invoiceAmount }}</div>
+              <div v-else>{{ isNotBlank(scope.row.invoiceAmount)? toThousand(scope.row.invoiceAmount): '-' }}</div>
           </template>
         </el-table-column>
         <el-table-column key="invoiceAmount2" prop="invoiceAmount2" label="大写" align="center" width="330" :show-overflow-tooltip="true">
           <template v-slot="scope">
-            <div>{{scope.row.invoiceAmount?digitUppercase(scope.row.invoiceAmount):''}}</div>
+            <div>{{scope.row.invoiceAmount?digitUppercase(scope.row.invoiceAmount):'-'}}</div>
           </template>
         </el-table-column>
       </el-table-column>
@@ -203,6 +203,8 @@
 <script setup>
 import crudApi, { editStatus } from '@/api/contract/supplier-manage/pay-invoice/logistics'
 import { ref, defineProps, watch, nextTick, provide, defineEmits } from 'vue'
+
+import { isNotBlank } from '@data-type/index'
 import checkPermission from '@/utils/system/check-permission'
 import { tableSummary } from '@/utils/el-extra'
 import useMaxHeight from '@compos/use-max-height'
@@ -212,13 +214,13 @@ import { auditTypeEnum } from '@enum-ms/contract'
 import { invoiceTypeEnum } from '@enum-ms/finance'
 import { parseTime } from '@/utils/date'
 import { DP } from '@/settings/config'
-import { toThousand } from '@data-type/number'
-import { digitUppercase } from '@/utils/data-type/number'
+import { toThousand, digitUppercase } from '@data-type/number'
 import { validate } from '@compos/form/use-table-validate'
 import { ElMessage } from 'element-plus'
-import mForm from './form'
 import { contractSupplierLogisticsPM } from '@/page-permission/contract'
 import { fileClassifyEnum } from '@enum-ms/file'
+
+import mForm from './form'
 import UploadBtn from '@comp/file-upload/UploadBtn'
 import showPdfAndImg from '@comp-base/show-pdf-and-img.vue'
 
@@ -272,7 +274,7 @@ const validateTaxRate = (value, row) => {
 
 // 金额校验
 const validateAmount = (value, row) => {
-  if (!value) return false
+  if (!isNotBlank(value)) return false
   return true
 }
 
@@ -350,7 +352,7 @@ function moneyChange(row) {
 }
 
 function taxMoney(row) {
-  if (row.invoiceAmount && row.taxRate) {
+  if (isNotBlank(row.invoiceAmount) && row.taxRate) {
     row.tax = row.invoiceAmount * row.taxRate / 100
   }
 }
