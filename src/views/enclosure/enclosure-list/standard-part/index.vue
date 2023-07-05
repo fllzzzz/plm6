@@ -40,7 +40,7 @@
         </template>
       </el-table-column>
       <el-table-column v-if="columns.visible('measureUnit')" :show-overflow-tooltip="true" prop="measureUnit" label="单位" align="center" min-width="70px" />
-      <el-table-column prop="quantity" label="数量" align="center">
+      <el-table-column v-if="columns.visible('quantity')" :show-overflow-tooltip="true" prop="quantity" label="数量" align="center">
         <template #default="{ row }">
           <common-input-number
             v-if="row.isModify"
@@ -51,12 +51,22 @@
             :step="1"
             size="mini"
             placeholder="数量"
-            @change="weightChange(row)"
           />
+          <!-- <common-input-number
+            v-if="row.isModify"
+            v-model="row.quantity"
+            :min="0"
+            :max="999999999"
+            :controls="false"
+            :step="1"
+            size="mini"
+            placeholder="数量"
+            @change="weightChange(row)"
+          /> -->
           <span v-else>{{ row.quantity }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="单重(kg)" prop="weight">
+      <!-- <el-table-column label="单重(kg)" prop="weight">
         <template #default="{ row }">
           <el-input-number
             v-if="row.isModify"
@@ -77,7 +87,7 @@
         <template #default="{ row }">
           <span>{{toThousand(row.totalWeight,DP.COM_WT__KG)}}</span>
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column v-if="columns.visible('useProperty')" prop="useProperty" label="使用范围" align="center" min-width="120px">
       <template #default="{ row }">
         <common-select
@@ -150,8 +160,8 @@
 import crudApi from '@/api/enclosure/enclosure-plan/standard-part'
 import { watch, provide, ref } from 'vue'
 
-import { DP } from '@/settings/config'
-import { toThousand } from '@/utils/data-type/number'
+// import { DP } from '@/settings/config'
+// import { toThousand } from '@/utils/data-type/number'
 import { isNotBlank } from '@data-type/index'
 import { TechnologyTypeAllEnum } from '@enum-ms/contract'
 import { auxiliaryMaterialUseTypeEnum } from '@enum-ms/plan'
@@ -245,9 +255,9 @@ watch(
 
 provide('globalProject', globalProject)
 
-function weightChange(row) {
-  row.totalWeight = (row.quantity && row.weight) ? row.quantity * row.weight : 0
-}
+// function weightChange(row) {
+//   row.totalWeight = (row.quantity && row.weight) ? row.quantity * row.weight : 0
+// }
 
 const tableRules = {
   useProperty: [{ required: true, message: '请输入选择使用范围', trigger: 'change' }],
