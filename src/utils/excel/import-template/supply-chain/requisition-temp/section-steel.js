@@ -139,7 +139,7 @@ const sectionSteelSpecTmpl = {
         calcTotalLength(row)
         row.mete = row.weighingTotalWeight
       } else {
-        throw new Error(`${row.classifyName}下不存在规格为“${specification}”的材料，请联系初鸣售后人员添加`)
+        throw new Error(`${row.classifyName}下不存在规格为“${specification}”的材料，请联系管理员/仓库人员添加`)
       }
     }
     return list
