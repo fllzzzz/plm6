@@ -133,7 +133,7 @@ const sectionSteelSpecTmpl = {
         }
 
         // 设置过磅重量（即总重量）
-        row.weighingTotalWeight = row.weighingTotalWeight ?? row.theoryTotalWeight
+        row.weighingTotalWeight = row.weighingTotalWeight && !isNaN(row.weighingTotalWeight) ? row.weighingTotalWeight : row.theoryTotalWeight
 
         // 设置总长度
         calcTotalLength(row)

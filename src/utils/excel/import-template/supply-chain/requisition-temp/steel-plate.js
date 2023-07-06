@@ -133,7 +133,7 @@ const sectionSteelSpecTmpl = {
         }
 
         // 设置过磅重量（即总重量）
-        row.weighingTotalWeight = row.weighingTotalWeight ?? row.theoryTotalWeight
+        row.weighingTotalWeight = row.weighingTotalWeight && !isNaN(row.weighingTotalWeight) ? row.weighingTotalWeight : row.theoryTotalWeight
         row.mete = row.weighingTotalWeight
       } else {
         throw new Error(`${row.classifyName}下不存在规格为“${specification}”的材料，请联系初鸣售后人员添加`)
