@@ -89,7 +89,7 @@ import steelPlateTable from './module/steel-plate-table.vue'
 import sectionSteelTable from './module/section-steel-table.vue'
 import steelCoilTable from './module/steel-coil-table.vue'
 import { ElMessage, ElRadioGroup } from 'element-plus'
-import { isBlank, isNotBlank, toFixed } from '@/utils/data-type'
+import { isBlank, isNotBlank, toFixed, toPrecision } from '@/utils/data-type'
 import { steelInboundFormFormat } from '@/utils/wms/measurement-calc'
 
 const emit = defineEmits(['success'])
@@ -521,6 +521,9 @@ cu.props.import = (importList) => {
     if (!fillableAmount.value) {
       form[key][i].amount = undefined
       form[key][i].unitPrice = undefined
+    }
+    if (isNotBlank(form[key][i]?.amount)) {
+      form[key][i].amount = toPrecision(form[key][i].amount, DP.YUAN)
     }
     steelRefList[key].rowWatch(form[key][i])
   }
