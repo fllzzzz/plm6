@@ -138,6 +138,7 @@ const { CRUD, crud, columns } = useCRUD(
     permission: { ...permission },
     optShow: { ...optShow },
     crudApi: { ...crudApi },
+    requiredQuery: ['workshopId'],
     sort: ['sort.asc']
     // queryOnPresenterCreated: false
   },
