@@ -21,7 +21,7 @@
         <el-input-number
           v-model.number="form.scale"
           :min="1"
-          :max="5"
+          :max="10"
           :precision="0"
           :step="1"
           placeholder="小数精度"
