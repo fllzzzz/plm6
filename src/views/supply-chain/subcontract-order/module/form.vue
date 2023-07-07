@@ -62,7 +62,7 @@
           :max="9999999999"
           :min="0"
           :step="100"
-          :precision="DP.YUAN"
+          :precision="decimalPrecision.supplyChain"
           controls-position="right"
           placeholder="合同额(元)"
           style="width:320px;"
@@ -132,7 +132,6 @@ import { ref } from 'vue'
 import { regForm } from '@compos/use-crud'
 import { supplierTypeEnum } from '@enum-ms/supplier'
 import { invoiceTypeEnum } from '@enum-ms/finance'
-import { DP } from '@/settings/config'
 import { fileClassifyEnum } from '@enum-ms/file'
 
 import UploadBtn from '@comp/file-upload/UploadBtn'
@@ -141,6 +140,9 @@ import projectSubcontractSelect from '@/components-system/project/project-subcon
 import monomerSelect from '@/components-system/plan/monomer-select'
 import subcontractType from '@/components-system/project/subcontract-type-select'
 import showPdfAndImg from '@comp-base/show-pdf-and-img.vue'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const formRef = ref()
 const pdfShow = ref(false)

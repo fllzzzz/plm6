@@ -20,7 +20,7 @@
       <div style="flex: 0.55; margin-right: 15px">
         <div v-loading="loading" :gutter="20" class="panel-group">
           <panel name="总产量（吨）" num-color="#1890ff" :end-val="summaryInfo.production || 0" :precision="2" />
-          <panel name="平均辅材费（元/吨）" num-color="#1890ff" :end-val="summaryInfo.average || 0" />
+          <panel name="平均辅材费（元/吨）" num-color="#1890ff" :end-val="summaryInfo.average || 0" :precision="decimalPrecision.operation"/>
         </div>
         <div :style="{ height: maxHeightChart + 'px' }">
           <div id="diffAnalysisChart" style="width: 100%; height: 100%"></div>
@@ -53,6 +53,9 @@ import useMaxHeight from '@compos/use-max-height'
 import useChart from '@compos/use-chart'
 import Panel from '@/components/Panel'
 import factorySelect from '@comp-base/factory-select'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 function disabledDate(time) {
   return time > new Date()

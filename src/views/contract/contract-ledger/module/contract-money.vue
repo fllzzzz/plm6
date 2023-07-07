@@ -26,7 +26,7 @@
       </el-table-column>
       <el-table-column key="amount" prop="amount" :show-overflow-tooltip="true" label="金额" min-width="160px">
         <template v-slot="scope">
-          <span>{{ scope.row.amount? toThousand(scope.row.amount): '-' }}</span>
+          <span>{{ scope.row.amount? toThousand(scope.row.amount,decimalPrecision.contract): '-' }}</span>
         </template>
       </el-table-column>
       <el-table-column key="date" prop="date" :show-overflow-tooltip="true" label="日期" min-width="150px">
@@ -46,11 +46,15 @@
 
 <script setup>
 import { defineProps, defineEmits, watch, ref } from 'vue'
+import { moneyChangeLog } from '@/api/contract/contract-ledger'
+
 import useVisible from '@compos/use-visible'
 import useMaxHeight from '@compos/use-max-height'
-import { moneyChangeLog } from '@/api/contract/contract-ledger'
 import { parseTime } from '@/utils/date'
 import { toThousand } from '@data-type/number'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const props = defineProps({
   modelValue: {

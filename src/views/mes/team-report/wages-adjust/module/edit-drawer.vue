@@ -52,7 +52,7 @@
         <el-table-column align="center" prop="wages" label="定额单价"> </el-table-column>
         <el-table-column align="center" prop="price" label="修改后单价" width="200">
           <template #default="{ row }">
-            <common-input-number v-model="row.price" placeholder="请输入单价" :precision="DP.YUAN" :controls="false" style="width: 100%">
+            <common-input-number v-model="row.price" placeholder="请输入单价" :precision="decimalPrecision.mes" :controls="false" style="width: 100%">
             </common-input-number>
           </template>
         </el-table-column>
@@ -77,13 +77,15 @@ import { process, teamPrice } from '@/api/mes/team-report/wages-adjust/index'
 import { defineProps, defineEmits, ref, watch, computed, inject } from 'vue'
 
 import { isNotBlank } from '@data-type/index'
-import { DP } from '@/settings/config'
 import { wageQuotaTypeEnum } from '@enum-ms/mes'
 
 import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'
 import belongingInfoColumns from '@comp-mes/table-columns/belonging-info-columns'
 import editPreview from './edit-preview.vue'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const drawerRef = ref()
 const emit = defineEmits(['update:visible', 'refresh'])

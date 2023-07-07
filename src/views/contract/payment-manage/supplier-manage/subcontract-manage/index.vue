@@ -126,6 +126,7 @@ import checkPermission from '@/utils/system/check-permission'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
+
 import pagination from '@crud/Pagination'
 import mHeader from './module/header'
 import invoiceRecord from './module/invoice-record'

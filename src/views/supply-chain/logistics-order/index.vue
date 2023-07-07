@@ -190,6 +190,9 @@ import mHeader from './module/header'
 
 import elExpandTableColumn from '@comp-common/el-expand-table-column.vue'
 import ReceiptSnClickable from '@/components-system/wms/receipt-sn-clickable'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const optShow = {
   batchAdd: false,
@@ -201,19 +204,21 @@ const optShow = {
 
 const tableRef = ref()
 // 表格列数据格式转换
-const columnsDataFormat = ref([
-  ...wmsReceiptColumns,
-  ['loadingWeight', ['to-fixed-ck', 'COM_WT__KG']],
-  ['invoiceType', ['parse-enum', invoiceTypeEnum]],
-  ['taxRate', ['suffix', '%']],
-  ['inputVAT', ['to-thousand-ck', 'YUAN']],
-  ['amountExcludingVAT', ['to-thousand-ck', 'YUAN']],
-  ['freight', ['to-thousand-ck', 'YUAN']],
-  ['amount', ['to-thousand-ck', 'YUAN']],
-  ['requisitionsSNStr', 'empty-text'],
-  ['remark', 'empty-text'],
-  ['auxMaterialNames', 'split']
-])
+const columnsDataFormat = computed(() => {
+  return [
+    ...wmsReceiptColumns,
+    ['loadingWeight', ['to-fixed-ck', 'COM_WT__KG']],
+    ['invoiceType', ['parse-enum', invoiceTypeEnum]],
+    ['taxRate', ['suffix', '%']],
+    ['inputVAT', ['to-thousand', decimalPrecision.value.supplyChain]],
+    ['amountExcludingVAT', ['to-thousand', decimalPrecision.value.supplyChain]],
+    ['freight', ['to-thousand', decimalPrecision.value.supplyChain]],
+    ['amount', ['to-thousand', decimalPrecision.value.supplyChain]],
+    ['requisitionsSNStr', 'empty-text'],
+    ['remark', 'empty-text'],
+    ['auxMaterialNames', 'split']
+  ]
+})
 const { CRUD, crud, columns } = useCRUD(
   {
     title: '物料物流订单',

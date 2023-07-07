@@ -105,6 +105,9 @@ import mHeader from './module/header'
 import inboundRecord from './module/inbound-record'
 import invoiceRecord from './module/invoice-record'
 import paymentRecord from './module/payment-record'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const optShow = {
   add: false,
@@ -125,15 +128,17 @@ const currentView = computed(() => {
 const tableRef = ref()
 const headerRef = ref()
 
-const dataFormat = ref([
-  ['createTime', 'parse-time'],
-  ['paymentRate', ['to-fixed', 2]],
-  ['invoiceRate', ['to-fixed', 2]],
-  ['amount', ['to-thousand-ck', 'YUAN']],
-  ['inboundAmount', ['to-thousand-ck', 'YUAN']],
-  ['paymentAmount', ['to-thousand-ck', 'YUAN']],
-  ['invoiceAmount', ['to-thousand-ck', 'YUAN']]
-])
+const dataFormat = computed(() => {
+  return [
+    ['createTime', 'parse-time'],
+    ['paymentRate', ['to-fixed', 2]],
+    ['invoiceRate', ['to-fixed', 2]],
+    ['amount', ['to-thousand', decimalPrecision.value.supplyChain]],
+    ['inboundAmount', ['to-thousand-ck', 'YUAN']],
+    ['paymentAmount', ['to-thousand', decimalPrecision.value.supplyChain]],
+    ['invoiceAmount', ['to-thousand', decimalPrecision.value.supplyChain]]
+  ]
+})
 
 const { crud, CRUD } = useCRUD(
   {

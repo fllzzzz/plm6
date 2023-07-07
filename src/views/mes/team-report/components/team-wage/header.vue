@@ -46,10 +46,10 @@
         />
       </el-col>
       <el-col :span="8" class="card-panel-col">
-        <panel name="工资总额（元）" num-color="#1890ff" :end-val="summaryInfo.price || 0" :precision="DP.YUAN" />
+        <panel name="工资总额（元）" num-color="#1890ff" :end-val="summaryInfo.price || 0" :precision="decimalPrecision.mes" />
       </el-col>
       <el-col :span="8" class="card-panel-col">
-        <panel :name="`平均人工费（元/${showUnit}）`" num-color="#1890ff" :end-val="summaryInfo.per || 0" :precision="DP.YUAN" />
+        <panel :name="`平均人工费（元/${showUnit}）`" num-color="#1890ff" :end-val="summaryInfo.per || 0" :precision="decimalPrecision.mes" />
       </el-col>
     </el-row>
   </div>
@@ -141,6 +141,9 @@ import crudOperation from '@crud/CRUD.operation'
 import rrOperation from '@crud/RR.operation'
 import Panel from '@/components/Panel'
 import factorySelect from '@comp-base/factory-select'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const initProductType = inject('initProductType')
 

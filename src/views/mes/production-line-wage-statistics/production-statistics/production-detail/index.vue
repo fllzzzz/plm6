@@ -110,7 +110,7 @@
           fixed="left"
         >
           <template #default="{ row }">
-            <span>{{ row.totalPrice?.toFixed(DP.YUAN) }}</span>
+            <span>{{ row.totalPrice?.toFixed(decimalPrecision.mes) }}</span>
           </template>
         </el-table-column>
         <el-table-column prop="total" align="center" :key="'_' + item" :show-overflow-tooltip="true" v-for="item in yearList" :label="item">
@@ -127,7 +127,7 @@
                 <div v-if="scope.row.priceList.findIndex((v) => v.dayTime == val) > -1">
                   <template v-for="day in scope.row.priceList" :key="day">
                     <template v-if="day.dayTime == val">
-                      <span>{{ day.price?.toFixed(DP.YUAN) }}</span>
+                      <span>{{ day.price?.toFixed(decimalPrecision.mes) }}</span>
                     </template>
                   </template>
                 </div>
@@ -157,10 +157,12 @@
 import { ref, defineProps, watch, inject } from 'vue'
 import { detail, exportListFn } from '@/api/mes/production-line-wage-statistics/production-statistics'
 import { parseTime } from '@/utils/date'
-import { DP } from '@/settings/config'
 // import usePagination from '@compos/use-pagination'
 import useMaxHeight from '@compos/use-max-height'
 import ExportButton from '@comp-common/export-button/index.vue'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const permission = inject('permission')
 const props = defineProps({

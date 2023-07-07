@@ -45,7 +45,7 @@
             :step="1"
             :min="0"
             :max="99999999"
-            :precision="DP.YUAN"
+            :precision="decimalPrecision.contract"
             size="small"
             style="width: 100%"
             @change="handlePrice(row)"
@@ -57,7 +57,7 @@
       </el-table-column>
       <el-table-column v-if="columns.visible('totalPrice')" key="totalPrice" prop="totalPrice" align="center" min-width="120" label="金额">
         <template #default="{ row }">
-          <span :class="row.status === 1 ? 'tc-danger' : ''" v-thousand="row.totalPrice" />
+          <span :class="row.status === 1 ? 'tc-danger' : ''" v-thousand="{val:row.totalPrice ||0, dp:decimalPrecision.contract}" />
         </template>
       </el-table-column>
     </common-table>
@@ -68,11 +68,12 @@
 
 <script setup>
 import crudApi from '@/api/contract/sales-manage/price-manage/machine-part'
-import { ref, defineExpose } from 'vue'
+import { ref, defineExpose, computed } from 'vue'
 import { priceManagePM as permission } from '@/page-permission/contract'
-import { DP } from '@/settings/config'
 import { pricingMannerEnum } from '@enum-ms/contract'
 import { ElMessage } from 'element-plus'
+
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
 
 // import useTableChange from '@compos/form/use-table-change'
 import { validate } from '@compos/form/use-table-validate'
@@ -80,6 +81,8 @@ import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import pagination from '@crud/Pagination'
 import mHeader from './module/header'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const optShow = {
   add: false,
@@ -91,9 +94,11 @@ const optShow = {
 const tableRef = ref()
 const headerRef = ref()
 const showAble = ref(false)
-const dataFormat = ref([
-  ['unitPrice', ['to-thousand-ck', 'YUAN']]
-])
+const dataFormat = computed(() => {
+  return [
+    ['unitPrice', ['to-thousand', decimalPrecision.value.contract]]
+  ]
+})
 const { crud, columns } = useCRUD(
   {
     title: '散发制品价格',

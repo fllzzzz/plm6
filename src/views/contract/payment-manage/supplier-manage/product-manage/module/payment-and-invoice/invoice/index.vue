@@ -3,8 +3,8 @@
     <!--表格渲染-->
     <div>
       <common-button type="primary" size="mini" @click="crud.toAdd" style="margin-right:10px;" v-permission="permission.add">添加</common-button>
-      <el-tag type="success" size="medium" v-if="currentRow.amount">{{`合同额:${toThousand(currentRow.amount)}`}}</el-tag>
-      <el-tag type="success" size="medium" v-if="currentRow.settlementAmount" style="margin-left:5px;">{{`结算额:${toThousand(currentRow.settlementAmount)}`}}</el-tag>
+      <el-tag type="success" size="medium" v-if="currentRow.amount">{{`合同额:${toThousand(currentRow.amount,decimalPrecision.contract)}`}}</el-tag>
+      <el-tag type="success" size="medium" v-if="currentRow.settlementAmount" style="margin-left:5px;">{{`结算额:${toThousand(currentRow.settlementAmount,decimalPrecision.contract)}`}}</el-tag>
     </div>
     <common-table
       ref="tableRef"
@@ -49,12 +49,12 @@
               :min="0"
               :max="currentRow.settlementAmount?currentRow.settlementAmount:999999999999"
               :step="100"
-              :precision="DP.YUAN"
+              :precision="decimalPrecision.contract"
               placeholder="收票额(元)"
               controls-position="right"
               @change="moneyChange(scope.row)"
             />
-            <div v-else>{{ scope.row.invoiceAmount && scope.row.invoiceAmount>0? toThousand(scope.row.invoiceAmount): scope.row.invoiceAmount }}</div>
+            <div v-else>{{ scope.row.invoiceAmount && scope.row.invoiceAmount>0? toThousand(scope.row.invoiceAmount,decimalPrecision.contract): scope.row.invoiceAmount }}</div>
           </template>
         </el-table-column>
         <el-table-column key="invoiceAmount2" prop="invoiceAmount2" label="大写" align="center" width="330" :show-overflow-tooltip="true">
@@ -177,24 +177,28 @@
 <script setup>
 import crudApi, { editStatus } from '@/api/contract/supplier-manage/pay-invoice/invoice'
 import { ref, defineProps, watch, provide, defineEmits, nextTick } from 'vue'
+
 import { tableSummary } from '@/utils/el-extra'
 import checkPermission from '@/utils/system/check-permission'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
-import pagination from '@crud/Pagination'
 import { auditTypeEnum } from '@enum-ms/contract'
 import { invoiceTypeEnum } from '@enum-ms/finance'
 import { parseTime } from '@/utils/date'
-import { DP } from '@/settings/config'
-import { toThousand } from '@data-type/number'
-import { digitUppercase } from '@/utils/data-type/number'
+import { toThousand, digitUppercase } from '@data-type/number'
 import { validate } from '@compos/form/use-table-validate'
 import { ElMessage } from 'element-plus'
-import mForm from './form'
 import { contractSupplierProductPM } from '@/page-permission/contract'
 import { fileClassifyEnum } from '@enum-ms/file'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+import { DP } from '@/settings/config'
+
 import UploadBtn from '@comp/file-upload/UploadBtn'
 import showPdfAndImg from '@comp-base/show-pdf-and-img.vue'
+import pagination from '@crud/Pagination'
+import mForm from './form'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const permission = contractSupplierProductPM.invoice
 const emit = defineEmits(['success'])

@@ -56,9 +56,9 @@
 import { ref } from 'vue'
 import crudApi from '@/api/contract/expense-entry/water-electricity-cost'
 
+import { DP } from '@/settings/config'
 import { waterElectricityCostPM as permission } from '@/page-permission/contract'
 import { costTypeEnum } from '@enum-ms/contract'
-import { DP } from '@/settings/config'
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
 import moment from 'moment'

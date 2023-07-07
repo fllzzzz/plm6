@@ -84,6 +84,13 @@ export const projectModePM = {
   edit: ['project_mode:edit'] // 修改项目模式
 }
 
+// 基础配置/模块小数精度配置
+export const moduleDecimalPrecisionPM = {
+  get: ['module_decimal_precision:get'], // 列表
+  add: ['module_decimal_precision:add'], // 添加
+  del: ['module_decimal_precision:del'] // 删除
+}
+
 // 基础配置/表格模板
 export const tablePrintTemplatePM = {
   get: ['table_print_template:get'], // 表格模板列表

@@ -68,7 +68,7 @@
               v-model="form.price"
               :max="999999999999"
               class="input-underline"
-              :precision="DP.YUAN"
+              :precision="decimalPrecision.shipment"
               :step="100"
               :controls="false"
               style="width: 100px"
@@ -134,7 +134,7 @@
                 :min="0"
                 :max="999999999999"
                 :step="100"
-                :precision="DP.YUAN"
+                :precision="decimalPrecision.shipment"
                 placeholder="价格"
                 controls-position="right"
                 style="width: 150px; margin-right: 3px"
@@ -160,7 +160,6 @@ import { logisticsPriceTypeEnum } from '@enum-ms/mes'
 import { supplierTypeEnum, supplierClassEnum } from '@/utils/enum/modules/supplier'
 import { invoiceTypeEnum as financeInvoiceTypeEnum } from '@enum-ms/finance'
 import { patternLicensePlate } from '@/utils/validate/pattern'
-import { DP } from '@/settings/config'
 import useTableValidate from '@compos/form/use-table-validate'
 import useMaxHeight from '@compos/use-max-height'
 
@@ -168,6 +167,9 @@ import { regForm } from '@compos/use-crud'
 import projectCascader from '@comp-base/project-cascader.vue'
 import supplierSelect from '@comp-base/supplier-select/index.vue'
 import invoiceTypeSelect from '@comp-base/invoice-type-select.vue'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const formRef = ref()
 const drawerRef = ref()

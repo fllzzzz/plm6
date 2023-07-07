@@ -163,12 +163,14 @@ watch(
 const list = ref([])
 const drawerRef = ref()
 const tableLoading = ref(false)
-const dataFormat = ref([
-  ['invoiceType', ['parse-enum', invoiceTypeEnum]],
-  ['receiveInvoiceDate', ['parse-time', '{y}-{m}-{d}']],
-  ['invoiceAmount', ['to-thousand-ck', 'YUAN']],
-  ['taxRate', ['to-fixed', 2]]
-])
+const dataFormat = computed(() => {
+  return [
+    ['invoiceType', ['parse-enum', invoiceTypeEnum]],
+    ['receiveInvoiceDate', ['parse-time', '{y}-{m}-{d}']],
+    ['invoiceAmount', ['to-thousand-ck', 'YUAN']],
+    ['taxRate', ['to-fixed', 2]]
+  ]
+})
 
 const { maxHeight } = useMaxHeight(
   {

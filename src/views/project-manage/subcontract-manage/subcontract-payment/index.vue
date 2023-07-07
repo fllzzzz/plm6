@@ -121,6 +121,9 @@ import paymentRecord from './module/payment-record'
 import paymentApplication from './module/payment-application'
 import settleForm from './module/settle-form'
 import tableCellTag from '@comp-common/table-cell-tag/index.vue'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const optShow = {
   add: false,
@@ -142,15 +145,17 @@ const applicationVisible = ref(false)
 const settleVisible = ref(false)
 const showType = ref('add')
 
-const dataFormat = ref([
-  ['signDate', ['parse-time', '{y}-{m}-{d}']],
-  ['project', 'parse-project'],
-  ['paymentRate', ['to-fixed', 2]],
-  ['invoiceRate', ['to-fixed', 2]],
-  ['amount', ['to-thousand-ck', 'YUAN']],
-  ['paymentAmount', ['to-thousand-ck', 'YUAN']],
-  ['invoiceAmount', ['to-thousand-ck', 'YUAN']]
-])
+const dataFormat = computed(() => {
+  return [
+    ['signDate', ['parse-time', '{y}-{m}-{d}']],
+    ['project', 'parse-project'],
+    ['paymentRate', ['to-fixed', 2]],
+    ['invoiceRate', ['to-fixed', 2]],
+    ['amount', ['to-thousand', decimalPrecision.value.project]],
+    ['paymentAmount', ['to-thousand', decimalPrecision.value.project]],
+    ['invoiceAmount', ['to-thousand', decimalPrecision.value.project]]
+  ]
+})
 
 const { crud, columns, CRUD } = useCRUD(
   {

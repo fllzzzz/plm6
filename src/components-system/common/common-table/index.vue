@@ -463,6 +463,7 @@ function normalFm(row, field, data) {
 
 //
 function formatDataByType(row, data, field) {
+  // console.log(field)
   const type = Array.isArray(field) ? field[0] : field
   const field1 = Array.isArray(field) && field.length > 1 ? field[1] : void 0
   switch (type) {

@@ -59,7 +59,7 @@
               :min="0"
               :max="99999999999"
               :step="1000"
-              :precision="DP.YUAN"
+              :precision="decimalPrecision.project"
               placeholder="请输入签证额"
               :controls="false"
               style="width: 100%"
@@ -71,7 +71,7 @@
               :min="0"
               :max="99999999999"
               :step="1000"
-              :precision="DP.YUAN"
+              :precision="decimalPrecision.project"
               placeholder="请输入违约金额"
               :controls="false"
               style="width: 100%"
@@ -85,7 +85,7 @@
               :min="0"
               :max="99999999999"
               :step="1000"
-              :precision="DP.YUAN"
+              :precision="decimalPrecision.project"
               placeholder="请输入最终结算额"
               :controls="false"
               style="width: 100%"
@@ -134,7 +134,6 @@ import { ref, computed } from 'vue'
 import { useStore } from 'vuex'
 import { mapGetters } from '@/store/lib'
 
-import { DP } from '@/settings/config'
 import { digitUppercase } from '@data-type/number'
 import { projectNameFormatter } from '@/utils/project'
 import { businessTypeEnum } from '@enum-ms/contract'
@@ -142,6 +141,9 @@ import { businessTypeEnum } from '@enum-ms/contract'
 import { regForm } from '@compos/use-crud'
 import useDict from '@compos/store/use-dict'
 import projectVisaSelect from '@comp-base/project-visa-select.vue'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const { user } = mapGetters('user')
 // 是否是编辑状态

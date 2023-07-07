@@ -109,7 +109,7 @@
               v-model="row.unitPrice"
               :step="1"
               :min="0"
-              :precision="DP.YUAN"
+              :precision="decimalPrecision.mes"
               clearable
               class="input-underline"
               :controls="false"
@@ -138,13 +138,15 @@
 <script setup>
 import { computed, ref, nextTick } from 'vue'
 import { partKeyWordEnum } from '@enum-ms/mes'
-import { DP } from '@/settings/config'
 
 import { regBatchForm } from '@compos/use-crud'
 import useTableOperate from '@compos/form/use-table-operate'
 import useTableValidate from '@compos/form/use-table-validate'
 import useMaxHeight from '@compos/use-max-height'
 import StoreOperation from '@crud/STORE.operation.vue'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const validateNumThickness = (value, row) => {
   if (!row.minThickness || !row.maxThickness || row.maxThickness < row.minThickness) return false

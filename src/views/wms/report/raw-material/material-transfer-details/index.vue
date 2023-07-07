@@ -144,9 +144,11 @@ import { reportRawMaterialTransferDetailsPM as permission } from '@/page-permiss
 import { transferTypeEnum } from '@/utils/enum/modules/wms'
 import { setSpecInfoToList } from '@/utils/wms/spec'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
-import { materialHasAmountColumns } from '@/utils/columns-format/wms'
+import { materialColumns } from '@/utils/columns-format/wms'
 import { isNotBlank } from '@/utils/data-type'
 import checkPermission from '@/utils/system/check-permission'
+import { invoiceTypeEnum } from '@/utils/enum/modules/finance'
+import { DP } from '@/settings/config'
 
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
@@ -162,6 +164,9 @@ import MaterialUnitQuantityColumns from '@/components-system/wms/table-columns/m
 import MaterialSecondaryInfoColumns from '@/components-system/wms/table-columns/material-secondary-info-columns/index.vue'
 import AmountInfoColumns from '@/components-system/wms/table-columns/amount-info-columns/index.vue'
 import ReceiptSnClickable from '@/components-system/wms/receipt-sn-clickable'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const optShow = {
   add: false,
@@ -174,16 +179,36 @@ const expandRowKeys = ref([])
 const tableRef = ref()
 
 // 表格列数据格式转换
-const columnsDataFormat = ref([
-  ...materialHasAmountColumns,
-  ['transferReceipt.transferType', ['parse-enum', transferTypeEnum]],
-  ['transferReceipt.transferTime', 'parse-time'],
-  ['transferReceipt.reviewTime', 'parse-time'],
-  ['transferReceipt.createTime', 'parse-time'],
-  ['transferReceipt.borrowProject', ['parse-project', { onlyShortName: true }]],
-  ['transferReceipt.[source].project', ['parse-project', { onlyShortName: true }]],
-  ['transferReceipt.direction.project', ['parse-project', { onlyShortName: true }]]
-])
+const columnsDataFormat = computed(() => {
+  return [
+    ...materialColumns,
+    // 金额相关
+    ['invoiceType', ['parse-enum', invoiceTypeEnum, { f: 'SL' }]],
+    ['taxRate', ['suffix', '%']],
+    ['unitPrice', ['to-thousand', decimalPrecision.value.wms]],
+    ['unitPriceExcludingVAT', ['to-thousand', decimalPrecision.value.wms]],
+    ['amount', ['to-thousand', DP.YUAN]],
+    ['amountExcludingVAT', ['to-thousand', DP.YUAN]],
+    ['inputVAT', ['to-thousand', DP.YUAN]],
+    ['transferReceipt.transferType', ['parse-enum', transferTypeEnum]],
+    ['transferReceipt.transferTime', 'parse-time'],
+    ['transferReceipt.reviewTime', 'parse-time'],
+    ['transferReceipt.createTime', 'parse-time'],
+    ['transferReceipt.borrowProject', ['parse-project', { onlyShortName: true }]],
+    ['transferReceipt.[source].project', ['parse-project', { onlyShortName: true }]],
+    ['transferReceipt.direction.project', ['parse-project', { onlyShortName: true }]]
+  ]
+})
+// const columnsDataFormat = ref([
+//   ...materialHasAmountColumns,
+//   ['transferReceipt.transferType', ['parse-enum', transferTypeEnum]],
+//   ['transferReceipt.transferTime', 'parse-time'],
+//   ['transferReceipt.reviewTime', 'parse-time'],
+//   ['transferReceipt.createTime', 'parse-time'],
+//   ['transferReceipt.borrowProject', ['parse-project', { onlyShortName: true }]],
+//   ['transferReceipt.[source].project', ['parse-project', { onlyShortName: true }]],
+//   ['transferReceipt.direction.project', ['parse-project', { onlyShortName: true }]]
+// ])
 
 const { CRUD, crud, columns } = useCRUD(
   {

@@ -63,7 +63,7 @@
 
 <script setup>
 import { priceModifySave as save } from '@/api/contract/sales-manage/price-manage/common'
-import { ref, defineProps, defineEmits } from 'vue'
+import { ref, defineProps, defineEmits, computed } from 'vue'
 
 import checkPermission from '@/utils/system/check-permission'
 import { contractSaleTypeEnum, mesEnclosureTypeEnum } from '@enum-ms/mes'
@@ -73,6 +73,9 @@ import { pricingMannerEnum, enclosureSettlementTypeEnum } from '@enum-ms/contrac
 import { regDetail } from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
 import cellChangePreview from '@comp-common/cell-change-preview'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const emit = defineEmits(['success'])
 
@@ -86,10 +89,12 @@ const props = defineProps({
 const { maxHeight } = useMaxHeight({ extraBox: '.el-drawer__header', wrapperBox: '', extraHeight: 4 })
 
 const list = ref([])
-const dataFormat = ref([
-  ['oldUnitPrice', ['to-thousand-ck', 'YUAN']],
-  ['newUnitPrice', ['to-thousand-ck', 'YUAN']]
-])
+const dataFormat = computed(() => {
+  return [
+    ['oldUnitPrice', ['to-thousand', decimalPrecision.value.contract]],
+    ['newUnitPrice', ['to-thousand', decimalPrecision.value.contract]]
+  ]
+})
 const { crud, detail, CRUD } = regDetail()
 
 // 详情加载后

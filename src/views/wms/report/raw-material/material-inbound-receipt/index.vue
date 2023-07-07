@@ -206,6 +206,7 @@ import { receiptRejectStatusEnum } from '@enum-ms/wms'
 import { isNotBlank } from '@/utils/data-type'
 import { reviewTimeColumns } from '@/utils/columns-format/wms'
 import checkPermission from '@/utils/system/check-permission'
+import { DP } from '@/settings/config'
 
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
@@ -226,15 +227,17 @@ const optShow = {
 }
 
 // 表格列数据格式转换
-const columnsDataFormat = ref([
-  ...reviewTimeColumns,
-  ['inboundTime', 'parse-time'],
-  ['rejectAmountExcludingVAT', ['to-thousand-ck', 'YUAN']],
-  ['inboundAmountExcludingVAT', ['to-thousand-ck', 'YUAN']],
-  ['projects', ['parse-project', { onlyShortName: true }]],
-  ['projectsFullName', 'parse-project', { source: 'projects' }],
-  ['basicClass', ['parse-enum', rawMatClsEnum, { bit: true, split: ' | ' }]]
-])
+const columnsDataFormat = computed(() => {
+  return [
+    ...reviewTimeColumns,
+    ['inboundTime', 'parse-time'],
+    ['rejectAmountExcludingVAT', ['to-thousand', DP.YUAN]],
+    ['inboundAmountExcludingVAT', ['to-thousand', DP.YUAN]],
+    ['projects', ['parse-project', { onlyShortName: true }]],
+    ['projectsFullName', 'parse-project', { source: 'projects' }],
+    ['basicClass', ['parse-enum', rawMatClsEnum, { bit: true, split: ' | ' }]]
+  ]
+})
 
 const expandRowKeys = ref([])
 const tableRef = ref()

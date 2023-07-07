@@ -92,7 +92,7 @@
         :label="`合同金额(元)`"
       >
         <template v-slot="scope">
-          <span>{{ scope.row.contractAmount? toThousand(scope.row.contractAmount): '-' }}</span>
+          <span>{{ scope.row.contractAmount? toThousand(scope.row.contractAmount,decimalPrecision.contract): '-' }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -234,13 +234,11 @@
 <script setup>
 import crudApi, { editStatus, downloadProjectInfo } from '@/api/contract/project'
 import { ref } from 'vue'
+import { ElSelect } from 'element-plus'
+
 import checkPermission from '@/utils/system/check-permission'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
-import udOperation from '@crud/UD.operation'
-import pagination from '@crud/Pagination'
-import mHeader from './module/header'
-import mForm from './module/form'
 import { projectTypeEnum, businessTypeEnum, projectStatusEnum, orderSourceTypeEnum, structureTypeEnum } from '@enum-ms/contract'
 import { ElMessageBox } from 'element-plus'
 import contractInfo from '@/views/contract/info/index'
@@ -249,10 +247,17 @@ import { toThousand } from '@data-type/number'
 import { parseTime } from '@/utils/date'
 import { useStore } from 'vuex'
 import { projectListPM as permission } from '@/page-permission/contract'
-import { ElSelect } from 'element-plus'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+import udOperation from '@crud/UD.operation'
+import pagination from '@crud/Pagination'
+import mHeader from './module/header'
+import mForm from './module/form'
 import ExportButton from '@comp-common/export-button/index.vue'
 
 const store = useStore()
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const optShow = {
   add: true,

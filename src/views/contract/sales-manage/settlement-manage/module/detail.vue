@@ -63,56 +63,57 @@
             <div v-parse-time="{ val: detail?.project?.signingDate, fmt: '{y}-{m}-{d}' }" />
           </el-form-item>
           <el-form-item label="合同额" prop="contractAmount">
-            <div><span v-thousand="detail?.project?.contractAmount" />（{{ digitUppercase(detail?.project?.contractAmount || 0) }}）</div>
+            <div><span v-thousand="{val:detail?.project?.contractAmount ||0, dp:decimalPrecision.contract}" />（{{ digitUppercase(detail?.project?.contractAmount || 0) }}）</div>
           </el-form-item>
         </div>
         <div class="rule-row">
           <el-form-item label="保证金额" prop="marginAmount">
             <div v-if="isBlank(detail?.project?.marginAmount)">无</div>
             <div v-else>
-              <span v-thousand="detail?.project?.marginAmount" />
+              <div><span v-thousand="{val:detail?.project?.marginAmount ||0, dp:decimalPrecision.contract}" />（{{ digitUppercase(detail?.project?.marginAmount || 0) }}）</div>
               <span v-if="dict.label['margin_type'] && detail?.project?.marginType">（{{ dict.label['margin_type'][detail?.project?.marginType] }}）</span>
             </div>
           </el-form-item>
           <el-form-item label="累计发运额" prop="happenedAmount">
             <div v-if="isBlank(detail?.project?.happenedAmount)">无</div>
-            <div v-else><span v-thousand="detail?.project?.happenedAmount" />（{{ digitUppercase(detail?.project?.happenedAmount || 0) }}）</div>
+            <div v-else><span v-thousand="{val:detail?.project?.happenedAmount ||0, dp:decimalPrecision.contract}" />（{{ digitUppercase(detail?.project?.happenedAmount || 0) }}）</div>
           </el-form-item>
         </div>
         <div class="rule-row">
           <el-form-item label="违约金额" prop="breachAmount">
             <div v-if="isBlank(detail.breachAmount)">无</div>
-            <div v-else>{{ detail.breachAmount }}（{{ digitUppercase(detail.breachAmount) }}）</div>
+            <div v-else>{{toThousand(detail.breachAmount,decimalPrecision.contract)}}（{{ digitUppercase(detail.breachAmount) }}）</div>
           </el-form-item>
           <el-form-item label="签证额" prop="visaAmount">
             <div v-if="isBlank(detail.visaAmount)">无</div>
-            <div v-else>{{ detail.visaAmount }}（{{ digitUppercase(detail.visaAmount) }}）</div>
+            <div v-else>{{toThousand(detail.visaAmount,decimalPrecision.contract)}}（{{ digitUppercase(detail.visaAmount) }}）</div>
           </el-form-item>
         </div>
         <div class="rule-row">
           <el-form-item label="加工结算额" prop="processingSettlementAmount">
-            <div><span v-thousand="detail.processingSettlementAmount" />（{{ digitUppercase(detail.processingSettlementAmount) }}）</div>
+            <div><span v-thousand="{val:detail.processingSettlementAmount ||0, dp:decimalPrecision.contract}" />（{{ digitUppercase(detail.processingSettlementAmount) }}）</div>
           </el-form-item>
           <el-form-item label="最终结算额" prop="settlementAmount">
-            <div><span v-thousand="detail.settlementAmount" />（{{ digitUppercase(detail.settlementAmount) }}）</div>
+            <div><span v-thousand="{val:detail.settlementAmount ||0, dp:decimalPrecision.contract}" />（{{ digitUppercase(detail.settlementAmount) }}）</div>
           </el-form-item>
         </div>
         <div class="rule-row">
           <el-form-item label="累计收款" prop="collectionAmount">
             <div>
-              <span v-thousand="detail?.project?.collectionAmount" />（{{ digitUppercase(detail?.project?.collectionAmount || 0) }}）
+              <span v-thousand="{val:detail?.project?.collectionAmount ||0, dp:decimalPrecision.contract}" />
+              （{{ digitUppercase(detail?.project?.collectionAmount || 0) }}）
             </div>
           </el-form-item>
           <el-form-item label="结算应收" prop="debitAmount">
-            <div><span v-thousand="debitAmount" />（{{ digitUppercase(debitAmount || 0) }}）</div>
+            <div><span v-thousand="{val:debitAmount ||0, dp:decimalPrecision.contract}" />（{{ digitUppercase(debitAmount || 0) }}）</div>
           </el-form-item>
         </div>
         <div class="rule-row">
           <el-form-item label="累计开票" prop="invoiceAmount">
-            <div><span v-thousand="detail?.project?.invoiceAmount" />（{{ digitUppercase(detail?.project?.invoiceAmount || 0) }}）</div>
+            <div><span v-thousand="{val:detail?.project?.invoiceAmount ||0, dp:decimalPrecision.contract}" />（{{ digitUppercase(detail?.project?.invoiceAmount || 0) }}）</div>
           </el-form-item>
           <el-form-item label="应补发票" prop="debitInvoice">
-            <div v-if="detail?.project?.isTax === isTaxContractEnum.YES.V"><span v-thousand="debitInvoice" />（{{ digitUppercase(debitInvoice || 0) }}）</div>
+            <div v-if="detail?.project?.isTax === isTaxContractEnum.YES.V"><span v-thousand="{val:debitInvoice ||0, dp:decimalPrecision.contract}" />（{{ digitUppercase(debitInvoice || 0) }}）</div>
             <div v-else>无</div>
           </el-form-item>
         </div>
@@ -162,11 +163,15 @@ import { invoiceTypeEnum } from '@/utils/enum/modules/finance'
 import { projectNameFormatter } from '@/utils/project'
 import { reviewStatusEnum } from '@enum-ms/common'
 import { digitUppercase } from '@data-type/number'
+import { toThousand } from '@/utils/data-type/number'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
 
 import { regDetail } from '@compos/use-crud'
 import useDict from '@compos/store/use-dict'
 import uploadList from '@comp/file-upload/UploadList.vue'
 import ExportButton from '@comp-common/export-button/index.vue'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const emit = defineEmits(['success'])
 

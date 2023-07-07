@@ -25,16 +25,16 @@
       <div v-loading="totalLoading" style="margin-bottom: 6px;">
         <el-row :gutter="10" class="panel-group">
           <el-col :span="6" class="card-panel-col">
-            <Panel name="累计合同额：" text-color="#626262" num-color="#1890ff" :end-val="totalSum.contractAmountSum || 0" :precision="2" />
+            <Panel name="累计合同额：" text-color="#626262" num-color="#1890ff" :end-val="totalSum.contractAmountSum || 0" :precision="decimalPrecision.contract" />
           </el-col>
           <el-col :span="6" class="card-panel-col">
-            <Panel name="累计结算额：" text-color="#626262" num-color="#36ae81" :end-val="totalSum.settlementAmountSum || 0" :precision="2" />
+            <Panel name="累计结算额：" text-color="#626262" num-color="#36ae81" :end-val="totalSum.settlementAmountSum || 0" :precision="decimalPrecision.contract" />
           </el-col>
           <el-col :span="6" class="card-panel-col">
-            <Panel name="累计收款额：" text-color="#626262" num-color="#36ae81" :end-val="totalSum.collectionAmountSum || 0" :precision="2" />
+            <Panel name="累计收款额：" text-color="#626262" num-color="#36ae81" :end-val="totalSum.collectionAmountSum || 0" :precision="decimalPrecision.contract" />
           </el-col>
           <el-col :span="6" class="card-panel-col">
-            <Panel name="累计开票额：" text-color="#626262" num-color="#36ae81" :end-val="totalSum.invoiceAmountSum || 0" :precision="2" />
+            <Panel name="累计开票额：" text-color="#626262" num-color="#36ae81" :end-val="totalSum.invoiceAmountSum || 0" :precision="decimalPrecision.contract" />
           </el-col>
         </el-row>
       </div>
@@ -59,6 +59,9 @@ import rrOperation from '@crud/RR.operation'
 import crudOperation from '@crud/CRUD.operation'
 import Panel from '@/components/Panel'
 import timeRangeSelect from '@comp-common/time-range-select/index'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const defaultQuery = {
   projectId: undefined,

@@ -57,11 +57,14 @@ import { ref, defineEmits, defineProps, watch, computed } from 'vue'
 
 import { paymentFineModeEnum } from '@enum-ms/finance'
 import { auditTypeEnum } from '@enum-ms/contract'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
 
 import useVisible from '@/composables/use-visible'
 import useMaxHeight from '@compos/use-max-height'
 import usePagination from '@compos/use-pagination'
 import useDict from '@compos/store/use-dict'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const emit = defineEmits(['update:modelValue'])
 
@@ -104,12 +107,14 @@ watch(
 const list = ref([])
 const dialogRef = ref()
 const tableLoading = ref(false)
-const dataFormat = ref([
-  ['collectionDate', ['parse-time', '{y}-{m}-{d}']],
-  ['collectionMode', ['parse-enum', paymentFineModeEnum]],
-  ['collectionAmount', ['to-thousand-ck', 'YUAN']],
-  ['taxRate', ['to-fixed', 2]]
-])
+const dataFormat = computed(() => {
+  return [
+    ['collectionDate', ['parse-time', '{y}-{m}-{d}']],
+    ['collectionMode', ['parse-enum', paymentFineModeEnum]],
+    ['collectionAmount', ['to-thousand', decimalPrecision.value.contract]],
+    ['taxRate', ['to-fixed', 2]]
+  ]
+})
 
 const { maxHeight } = useMaxHeight(
   {
