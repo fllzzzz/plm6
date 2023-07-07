@@ -50,8 +50,8 @@
                     v-if="scope.row.isModify"
                     v-show-thousand
                     v-model.number="scope.row.invoiceAmount"
-                    :min="0"
-                    :max="currentRow.settlementAmount?currentRow.settlementAmount-totalAmount:999999999999"
+                    :min="-9999999999"
+                    :max="currentRow.settlementAmount?currentRow.settlementAmount-totalAmount:9999999999"
                     :step="100"
                     :precision="decimalPrecision.contract"
                     placeholder="开票额(元)"
@@ -157,6 +157,7 @@ import { ref, inject, defineProps, nextTick } from 'vue'
 import { ElMessage } from 'element-plus'
 
 import { regForm } from '@compos/use-crud'
+import { isNotBlank } from '@data-type/index'
 import useMaxHeight from '@compos/use-max-height'
 import { digitUppercase, toThousand } from '@/utils/data-type/number'
 import { invoiceTypeEnum } from '@enum-ms/finance'
@@ -220,7 +221,7 @@ const validateTaxRate = (value, row) => {
 
 // 金额校验
 const validateAmount = (value, row) => {
-  if (!value) return false
+  if (!isNotBlank(value)) return false
   return true
 }
 
@@ -283,8 +284,7 @@ function moneyChange(row) {
 }
 
 function taxMoney(row) {
-  console.log(row)
-  if (row.invoiceAmount && row.taxRate) {
+  if (isNotBlank(row.invoiceAmount) && row.taxRate) {
     row.tax = row.invoiceAmount * row.taxRate / 100
     row.noTaxAmount = (row.invoiceAmount / (1 + row.taxRate / 100)).toFixed(decimalPrecision.value.contract)
   } else {
@@ -331,16 +331,6 @@ CRUD.HOOK.beforeValidateCU = (crud, form) => {
     crud.form.list = dealList
   } else {
     return validResult
-  }
-  let moneyFlag = true
-  crud.form.list.map(row => {
-    if (row.invoiceAmount === 0) {
-      moneyFlag = false
-    }
-  })
-  if (!moneyFlag) {
-    ElMessage.error('开票金额必须大于0')
-    return false
   }
   crud.form.projectId = props.projectId
 }

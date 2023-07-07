@@ -62,7 +62,7 @@ export default function usePurchaseMaterialFormAdd({ props, basicClass }) {
         }
         return res
       } else {
-        ElMessage.error({ message: `该科目下不存在规格为“${specification}”的材料，请联系初鸣售后人员添加`, duration: 5000 })
+        ElMessage.error({ message: `该科目下不存在规格为“${specification}”的材料，请联系管理员/仓库人员添加`, duration: 5000 })
         return false
       }
     }

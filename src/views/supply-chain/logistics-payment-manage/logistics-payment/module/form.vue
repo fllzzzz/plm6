@@ -53,7 +53,7 @@
                 v-if="scope.row.freight!==scope.row.paymentAmount"
                 v-model.number="scope.row.applyAmount"
                 v-show-thousand
-                :min="scope.row.paymentAmount>scope.row.freight?(-(scope.row.paymentAmount-scope.row.freight)):0"
+                :min="-9999999999"
                 :max="scope.row.paymentAmount>scope.row.freight?0:scope.row.freight-scope.row.paymentAmount"
                 :step="100"
                 :precision="decimalPrecision.supplyChain"
@@ -128,6 +128,7 @@ import { toThousand } from '@data-type/number'
 import { fileClassifyEnum } from '@enum-ms/file'
 import { logisticsSearchTypeEnum } from '@enum-ms/contract'
 import { digitUppercase } from '@/utils/data-type/number'
+import { isNotBlank } from '@data-type/index'
 
 import { regForm } from '@compos/use-crud'
 import UploadBtn from '@comp/file-upload/UploadBtn'
@@ -169,8 +170,8 @@ const defaultForm = {
 const { CRUD, crud, form } = regForm(defaultForm, formRef)
 
 const validateMoney = (rule, value, callback) => {
-  if (!value) {
-    callback(new Error('请填写申请金额并大于0'))
+  if (!isNotBlank(value)) {
+    callback(new Error('请填写申请金额'))
   }
   callback()
 }
@@ -216,7 +217,7 @@ CRUD.HOOK.beforeSubmit = () => {
   crud.form.applyAmount = 0
   crud.form.detailSaveParams = []
   freightDetails.value.map(v => {
-    if (v.applyAmount && v.applyAmount !== 0) {
+    if (isNotBlank(v.applyAmount)) {
       crud.form.applyAmount += v.applyAmount
       crud.form.detailSaveParams.push({
         projectId: v.projectId,

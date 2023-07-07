@@ -46,7 +46,7 @@
               v-if="scope.row.isModify"
               v-show-thousand
               v-model.number="scope.row.invoiceAmount"
-              :min="0"
+              :min="-9999999999"
               :max="currentRow.settlementAmount?currentRow.settlementAmount:999999999999"
               :step="100"
               :precision="decimalPrecision.contract"
@@ -54,7 +54,7 @@
               controls-position="right"
               @change="moneyChange(scope.row)"
             />
-            <div v-else>{{ scope.row.invoiceAmount && scope.row.invoiceAmount>0? toThousand(scope.row.invoiceAmount,decimalPrecision.contract): scope.row.invoiceAmount }}</div>
+            <div v-else>{{ isNotBlank(scope.row.invoiceAmount) ? toThousand(scope.row.invoiceAmount,decimalPrecision.contract): '-' }}</div>
           </template>
         </el-table-column>
         <el-table-column key="invoiceAmount2" prop="invoiceAmount2" label="大写" align="center" width="330" :show-overflow-tooltip="true">
@@ -179,6 +179,7 @@ import crudApi, { editStatus } from '@/api/contract/supplier-manage/pay-invoice/
 import { ref, defineProps, watch, provide, defineEmits, nextTick } from 'vue'
 import { ElMessage } from 'element-plus'
 
+import { isNotBlank } from '@data-type/index'
 import { tableSummary } from '@/utils/el-extra'
 import checkPermission from '@/utils/system/check-permission'
 import useMaxHeight from '@compos/use-max-height'
@@ -251,7 +252,7 @@ const validateTaxRate = (value, row) => {
 
 // 金额校验
 const validateAmount = (value, row) => {
-  if (!value) return false
+  if (!isNotBlank(value)) return false
   return true
 }
 
@@ -322,7 +323,7 @@ function moneyChange(row) {
 }
 
 function taxMoney(row) {
-  if (row.invoiceAmount && row.taxRate) {
+  if (isNotBlank(row.invoiceAmount) && row.taxRate) {
     row.tax = row.invoiceAmount * row.taxRate / 100
   }
 }

@@ -54,8 +54,8 @@
               v-if="scope.row.isModify"
               v-show-thousand
               v-model.number="scope.row.collectionAmount"
-              :min="0"
-              :max="999999999999"
+              :min="-9999999999"
+              :max="9999999999"
               :step="100"
               :precision="decimalPrecision.contract"
               placeholder="收款金额(元)"
@@ -63,12 +63,12 @@
               :key="scope.row.dataIndex?scope.row.dataIndex:scope.row.id"
               @change="moneyChange(scope.row)"
             />
-            <div v-else>{{ scope.row.collectionAmount && scope.row.collectionAmount>0? toThousand(scope.row.collectionAmount,decimalPrecision.contract): scope.row.collectionAmount }}</div>
+            <div v-else>{{ isNotBlank(scope.row.collectionAmount) ? toThousand(scope.row.collectionAmount,decimalPrecision.contract): '-' }}</div>
           </template>
         </el-table-column>
         <el-table-column key="collectionAmount1" prop="collectionAmount1" label="大写" align="center" min-width="85" :show-overflow-tooltip="true">
           <template v-slot="scope">
-            <div>{{scope.row.collectionAmount?digitUppercase(scope.row.collectionAmount):''}}</div>
+            <div>{{isNotBlank(scope.row.collectionAmount)?digitUppercase(scope.row.collectionAmount):''}}</div>
           </template>
         </el-table-column>
       </el-table-column>
@@ -217,6 +217,7 @@ import { digitUppercase, toThousand } from '@/utils/data-type/number'
 import { validate } from '@compos/form/use-table-validate'
 import { contractLedgerPM } from '@/page-permission/contract'
 import useDecimalPrecision from '@compos/store/use-decimal-precision'
+import { isNotBlank } from '@data-type/index'
 
 import pagination from '@crud/Pagination'
 import mForm from './form'

@@ -42,8 +42,8 @@
           <el-input-number
               v-model="form.applyAmount"
               :step="10000"
-              :min="0"
-              :max="detailInfo?.sourceRow?.settlementAmount?detailInfo?.sourceRow?.settlementAmount-detailInfo?.sourceRow?.paymentAmount:999999999999"
+              :min="-9999999999"
+              :max="detailInfo?.sourceRow?.settlementAmount?detailInfo?.sourceRow?.settlementAmount-detailInfo?.sourceRow?.paymentAmount:9999999999"
               :precision="decimalPrecision.supplyChain"
               placeholder="本次付款"
               controls-position="right"
@@ -123,6 +123,7 @@ import moment from 'moment'
 import { fileClassifyEnum } from '@enum-ms/file'
 import { digitUppercase } from '@data-type/number'
 import { parseTime } from '@/utils/date'
+import { isNotBlank } from '@data-type/index'
 
 import { regForm } from '@compos/use-crud'
 import useDict from '@compos/store/use-dict'
@@ -159,8 +160,8 @@ const pdfShow = ref(false)
 const currentId = ref()
 
 const validateMoney = (rule, value, callback) => {
-  if (!value) {
-    callback(new Error('请填写申请金额并大于0'))
+  if (!isNotBlank(value)) {
+    callback(new Error('请填写申请金额'))
   }
   callback()
 }

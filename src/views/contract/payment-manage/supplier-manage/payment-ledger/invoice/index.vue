@@ -15,6 +15,7 @@
     :data-format="dataFormat"
     :showEmptySymbol="false"
     :stripe="false"
+    show-summary
     :summary-method="getSummaries"
   >
     <el-table-column prop="index" label="序号" align="center" width="60" type="index" />
@@ -68,6 +69,7 @@ import { supplierPayTypeEnum } from '@enum-ms/contract'
 import { invoiceTypeEnum } from '@enum-ms/finance'
 import useDecimalPrecision from '@compos/store/use-decimal-precision'
 
+import { tableSummary } from '@/utils/el-extra'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import pagination from '@crud/Pagination'
@@ -134,30 +136,12 @@ CRUD.HOOK.beforeRefresh = () => {
   }
 }
 
+// 合计
 function getSummaries(param) {
-  const { columns, data } = param
-  const sums = []
-  columns.forEach((column, index) => {
-    if (index === 0) {
-      sums[index] = '合计'
-      return
-    }
-    if (column.property === 'invoiceAmount') {
-      const values = data.map((item) => Number(item[column.property]))
-      if (!values.every((value) => isNaN(value))) {
-        sums[index] = values.reduce((prev, curr) => {
-          const value = Number(curr)
-          if (!isNaN(value)) {
-            return prev + curr
-          } else {
-            return prev
-          }
-        }, 0)
-        sums[index] = sums[index].toFixed(decimalPrecision.value.contract)
-      }
-    }
+  return tableSummary(param, {
+    props: [['invoiceAmount', decimalPrecision.value.contract]],
+    toThousandFields: ['invoiceAmount']
   })
-  return sums
 }
 </script>
 

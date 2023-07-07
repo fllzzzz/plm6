@@ -34,7 +34,7 @@
       </el-table-column> -->
       <el-table-column key="applyAmount" prop="applyAmount" label="申请金额" align="center">
         <template v-slot="scope">
-          <div>{{ scope.row.applyAmount && scope.row.applyAmount>0? toThousand(scope.row.applyAmount,decimalPrecision.contract): scope.row.applyAmount }}</div>
+          <div>{{ isNotBlank(scope.row.applyAmount) ? toThousand(scope.row.applyAmount,decimalPrecision.contract): '-' }}</div>
         </template>
       </el-table-column>
       <el-table-column key="auditStatus" prop="auditStatus" label="状态" align="center">
@@ -76,6 +76,7 @@
 import crudApi from '@/api/supply-chain/logistics-payment-manage/logistics-payment'
 import { ref, defineProps, watch, defineEmits } from 'vue'
 
+import { isNotBlank } from '@data-type/index'
 import checkPermission from '@/utils/system/check-permission'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'

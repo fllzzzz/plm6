@@ -42,6 +42,30 @@
         align="center"
       />
       <el-table-column
+        v-if="columns.visible('unfoldedWidth') && props.category === TechnologyTypeAllEnum.BENDING.V"
+        key="unfoldedWidth"
+        prop="unfoldedWidth"
+        show-overflow-tooltip
+        label="展开宽度(mm)"
+        align="center"
+      />
+      <el-table-column
+        v-if="columns.visible('bendTimes') && props.category === TechnologyTypeAllEnum.BENDING.V"
+        key="bendTimes"
+        prop="bendTimes"
+        show-overflow-tooltip
+        label="折弯次数"
+        align="center"
+      />
+      <el-table-column
+        v-if="columns.visible('brand')"
+        key="brand"
+        prop="brand"
+        show-overflow-tooltip
+        label="品牌"
+        align="center"
+      />
+      <el-table-column
         v-if="columns.visible('color')"
         key="color"
         prop="color"
@@ -165,6 +189,7 @@ const headerRef = ref()
 const dataFormat = computed(() => {
   return [
     ['thickness', ['to-fixed', DP.MES_ENCLOSURE_T__MM]],
+    ['unfoldedWidth', ['to-fixed', DP.MES_ENCLOSURE_T__MM]],
     ['unitPrice', ['to-thousand', decimalPrecision.value.contract]]
   ]
 })
