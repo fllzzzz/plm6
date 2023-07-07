@@ -270,6 +270,7 @@ import { computed, ref, watch } from 'vue'
 import { reportRawMaterialSendAndReceiveStoragePM as permission } from '@/page-permission/wms'
 import { measureTypeEnum, materialWeightingWayEnum, unitTypeEnum, projectWarehouseTypeEnum } from '@/utils/enum/modules/wms'
 import { STEEL_ENUM } from '@/settings/config'
+import { DP } from '@/settings/config'
 
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
@@ -296,13 +297,13 @@ const dataFormat = computed(() => {
     // 金额相关
     ['project', ['parse-project', { onlyShortName: true }]],
     ['beginPeriod.unitPriceExcludingVAT', ['to-thousand', decimalPrecision.value.wms]],
-    ['beginPeriod.amountExcludingVAT', ['to-thousand', decimalPrecision.value.wms]],
+    ['beginPeriod.amountExcludingVAT', ['to-thousand', DP.YUAN]],
     ['inbound.unitPriceExcludingVAT', ['to-thousand', decimalPrecision.value.wms]],
-    ['inbound.amountExcludingVAT', ['to-thousand', decimalPrecision.value.wms]],
+    ['inbound.amountExcludingVAT', ['to-thousand', DP.YUAN]],
     ['outbound.unitPriceExcludingVAT', ['to-thousand', decimalPrecision.value.wms]],
-    ['outbound.amountExcludingVAT', ['to-thousand', decimalPrecision.value.wms]],
+    ['outbound.amountExcludingVAT', ['to-thousand', DP.YUAN]],
     ['endPeriod.unitPriceExcludingVAT', ['to-thousand', decimalPrecision.value.wms]],
-    ['endPeriod.amountExcludingVAT', ['to-thousand', decimalPrecision.value.wms]],
+    ['endPeriod.amountExcludingVAT', ['to-thousand', DP.YUAN]],
     ['formatSpecArr', 'split']]
 })
 

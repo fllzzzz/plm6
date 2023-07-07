@@ -105,12 +105,13 @@
 
 <script setup>
 import { get, download } from '@/api/wms/report/raw-material/psi'
-import { ref, reactive, provide, computed } from 'vue'
+import { ref, reactive, provide } from 'vue'
 
 import { reportRawMaterialPsiPM as permission } from '@/page-permission/wms'
 import { tableSummary } from '@/utils/el-extra'
 import checkPermission from '@/utils/system/check-permission'
 import { constantize } from '@/utils/enum/base'
+import { DP } from '@/settings/config'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
@@ -120,9 +121,6 @@ import detail from './module/detail'
 import ExportButton from '@comp-common/export-button/index.vue'
 // import materialUnitQuantityColumns from '@/components-system/wms/table-columns/material-unit-quantity-columns/index.vue'
 import materialBaseInfoColumns from '@/components-system/wms/table-columns/material-base-info-columns/index.vue'
-import useDecimalPrecision from '@compos/store/use-decimal-precision'
-
-const { decimalPrecision } = useDecimalPrecision()
 
 const optShow = {
   add: false,
@@ -135,12 +133,10 @@ const detailRow = ref({})
 const drawerVisible = ref(false)
 const tableRef = ref()
 // 表格列数据格式转换
-const columnsDataFormat = computed(() => {
-  return [
-    ['amountExcludingVAT', ['to-thousand', decimalPrecision.value.wms]],
-    ['inboundTime', 'parse-time']
-  ]
-})
+const columnsDataFormat = ref([
+  ['amountExcludingVAT', ['to-thousand', DP.YUAN]],
+  ['inboundTime', 'parse-time']
+])
 
 const orderDetailEnum = reactive({
   IN: { L: '入库明细', SL: '入库', K: 'IN', V: 1 },

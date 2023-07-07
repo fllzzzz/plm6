@@ -122,6 +122,7 @@ import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import checkPermission from '@/utils/system/check-permission'
 import { materialColumns } from '@/utils/columns-format/wms'
 import { invoiceTypeEnum } from '@/utils/enum/modules/finance'
+import { DP } from '@/settings/config'
 
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
@@ -159,9 +160,9 @@ const columnsDataFormat = computed(() => {
     ['taxRate', ['suffix', '%']],
     ['unitPrice', ['to-thousand', decimalPrecision.value.wms]],
     ['unitPriceExcludingVAT', ['to-thousand', decimalPrecision.value.wms]],
-    ['amount', ['to-thousand', decimalPrecision.value.wms]],
-    ['amountExcludingVAT', ['to-thousand', decimalPrecision.value.wms]],
-    ['inputVAT', ['to-thousand', decimalPrecision.value.wms]],
+    ['amount', ['to-thousand', DP.YUAN]],
+    ['amountExcludingVAT', ['to-thousand', DP.YUAN]],
+    ['inputVAT', ['to-thousand', DP.YUAN]],
     ['returnReceipt.returnTime', 'parse-time'],
     ['returnReceipt.reviewTime', 'parse-time'],
     ['returnReceipt.createTime', 'parse-time']

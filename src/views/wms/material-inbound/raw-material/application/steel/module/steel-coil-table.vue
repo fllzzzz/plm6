@@ -156,11 +156,9 @@ import elExpandTableColumn from '@comp-common/el-expand-table-column.vue'
 import { createUniqueString } from '@/utils/data-type/string'
 import { calcSteelCoilLength } from '@/utils/wms/measurement-calc'
 import { positiveNumPattern } from '@/utils/validate/pattern'
+import { DP } from '@/settings/config'
 
 import priceSetColumns from '@/views/wms/material-inbound/raw-material/components/price-set-columns.vue'
-import useDecimalPrecision from '@compos/store/use-decimal-precision'
-
-const { decimalPrecision } = useDecimalPrecision()
 
 const props = defineProps({
   boolPartyA: {
@@ -200,7 +198,7 @@ const rules = {
 // 金额校验
 const validateAmount = (value, row) => {
   if (isNotBlank(row.weighingTotalWeight) && isNotBlank(row.unitPrice)) {
-    return +toPrecision(row.weighingTotalWeight * row.unitPrice, decimalPrecision.value.wms) === +value
+    return +toPrecision(row.weighingTotalWeight * row.unitPrice, DP.YUAN) === +value
   }
   return false
 }
@@ -302,7 +300,7 @@ function calcTotalLength(row) {
 // 处理重量变化
 function handleWeightChange(val, row) {
   if (isNotBlank(row.unitPrice) && isNotBlank(val)) {
-    row.amount = toPrecision(val * row.unitPrice, decimalPrecision.value.wms)
+    row.amount = toPrecision(val * row.unitPrice, DP.YUAN)
   }
 }
 

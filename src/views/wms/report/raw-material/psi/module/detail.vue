@@ -57,6 +57,7 @@ import { STEEL_ENUM } from '@/settings/config'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { setSpecInfoToList } from '@/utils/wms/spec'
 import { toThousand, getDP } from '@data-type/number'
+import { DP } from '@/settings/config'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
@@ -64,9 +65,6 @@ import pagination from '@crud/Pagination'
 import materialUnitQuantityColumns from '@/components-system/wms/table-columns/material-unit-quantity-columns/index.vue'
 import materialBaseInfoColumns from '@/components-system/wms/table-columns/material-base-info-columns/index.vue'
 import WarehouseInfoColumns from '@/components-system/wms/table-columns/warehouse-info-columns/index.vue'
-import useDecimalPrecision from '@compos/store/use-decimal-precision'
-
-const { decimalPrecision } = useDecimalPrecision()
 
 const props = defineProps({
   detailRow: {
@@ -87,7 +85,7 @@ const tableRef = ref()
 // 表格列数据格式转换
 const columnsDataFormat = computed(() => {
   return [
-    ['amountExcludingVAT', ['to-thousand', decimalPrecision.value.wms]],
+    ['amountExcludingVAT', ['to-thousand', DP.YUAN]],
     ['createTime', 'parse-time']
   ]
 })
@@ -136,7 +134,7 @@ CRUD.HOOK.handleRefresh = async (crud, { data }) => {
 function getSummaries(param) {
   return tableSummary(param, {
     // 此页面钢材默认显示吨，保留3位，金额显示4位
-    props: ['quantity', ['mete', 3], ['amountExcludingVAT', decimalPrecision.value.wms]],
+    props: ['quantity', ['mete', 3], ['amountExcludingVAT', DP.YUAN]],
     toThousandFields: ['amountExcludingVAT']
   })
 }

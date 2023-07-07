@@ -170,6 +170,7 @@ import { setSpecInfoToList } from '@/utils/wms/spec'
 import { deepClone, isBlank, toPrecision, isNotBlank } from '@/utils/data-type'
 import { getDP } from '@/utils/data-type/number'
 import { materialColumns } from '@/utils/columns-format/wms'
+import { DP } from '@/settings/config'
 
 import { invoiceTypeEnum } from '@/utils/enum/modules/finance'
 import { regExtra } from '@compos/use-crud'
@@ -224,9 +225,9 @@ const columnsDataFormat = computed(() => {
     ['taxRate', ['suffix', '%']],
     ['unitPrice', ['to-thousand', decimalPrecision.value.wms]],
     ['unitPriceExcludingVAT', ['to-thousand', decimalPrecision.value.wms]],
-    ['amount', ['to-thousand', decimalPrecision.value.wms]],
-    ['amountExcludingVAT', ['to-thousand', decimalPrecision.value.wms]],
-    ['inputVAT', ['to-thousand', decimalPrecision.value.wms]],
+    ['amount', ['to-thousand', DP.YUAN]],
+    ['amountExcludingVAT', ['to-thousand', DP.YUAN]],
+    ['inputVAT', ['to-thousand', DP.YUAN]],
     ['remark', 'empty-text']
   ]
 })
@@ -543,7 +544,7 @@ function setDitto(list) {
 //         return sum
 //       }
 //     }, 0),
-//     decimalPrecision.wms
+//     DP.YUAN
 //   )
 // }
 
@@ -553,7 +554,7 @@ function handleUnitPriceChange(val, row) {
     row.unitPrice = toPrecision(val, 10)
     val = row.unitPrice
   }
-  row.amount = isNotBlank(val) ? toPrecision(val * row.mete, decimalPrecision.value.wms) : undefined
+  row.amount = isNotBlank(val) ? toPrecision(val * row.mete, DP.YUAN) : undefined
 }
 
 // 处理金额变化
@@ -564,7 +565,7 @@ function handleAmountChange(val, row) {
 // 合计
 function getSummaries(param) {
   return tableSummary(param, {
-    props: ['quantity', 'mete', ['amount', decimalPrecision.value.wms]],
+    props: ['quantity', 'mete', ['amount', DP.YUAN]],
     toThousandFields: ['mete', 'amount']
   })
 }

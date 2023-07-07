@@ -79,6 +79,7 @@ import { STEEL_ENUM } from '@/settings/config'
 import { matClsEnum } from '@/utils/enum/modules/classification'
 import { weightMeasurementModeEnum } from '@/utils/enum/modules/finance'
 import { orderSupplyTypeEnum, inboundFillWayEnum } from '@/utils/enum/modules/wms'
+import { DP } from '@/settings/config'
 
 import useForm from '@/composables/form/use-form'
 import useMaxHeight from '@compos/use-max-height'
@@ -91,9 +92,6 @@ import steelCoilTable from './module/steel-coil-table.vue'
 import { ElMessage, ElRadioGroup } from 'element-plus'
 import { isBlank, isNotBlank, toFixed } from '@/utils/data-type'
 import { steelInboundFormFormat } from '@/utils/wms/measurement-calc'
-import useDecimalPrecision from '@compos/store/use-decimal-precision'
-
-const { decimalPrecision } = useDecimalPrecision()
 
 const emit = defineEmits(['success'])
 
@@ -176,7 +174,7 @@ const totalAmount = computed(() => {
       }
     })
   }
-  return toFixed(amount, decimalPrecision.value.wms)
+  return toFixed(amount, DP.YUAN)
 })
 
 // 总重

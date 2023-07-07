@@ -206,6 +206,7 @@ import { receiptRejectStatusEnum } from '@enum-ms/wms'
 import { isNotBlank } from '@/utils/data-type'
 import { reviewTimeColumns } from '@/utils/columns-format/wms'
 import checkPermission from '@/utils/system/check-permission'
+import { DP } from '@/settings/config'
 
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
@@ -217,9 +218,6 @@ import MDetail from './module/detail.vue'
 import ElExpandTableColumn from '@comp-common/el-expand-table-column.vue'
 import TableCellTag from '@comp-common/table-cell-tag/index.vue'
 import ReceiptSnClickable from '@/components-system/wms/receipt-sn-clickable'
-import useDecimalPrecision from '@compos/store/use-decimal-precision'
-
-const { decimalPrecision } = useDecimalPrecision()
 
 const optShow = {
   add: false,
@@ -233,8 +231,8 @@ const columnsDataFormat = computed(() => {
   return [
     ...reviewTimeColumns,
     ['inboundTime', 'parse-time'],
-    ['rejectAmountExcludingVAT', ['to-thousand', decimalPrecision.value.wms]],
-    ['inboundAmountExcludingVAT', ['to-thousand', decimalPrecision.value.wms]],
+    ['rejectAmountExcludingVAT', ['to-thousand', DP.YUAN]],
+    ['inboundAmountExcludingVAT', ['to-thousand', DP.YUAN]],
     ['projects', ['parse-project', { onlyShortName: true }]],
     ['projectsFullName', 'parse-project', { source: 'projects' }],
     ['basicClass', ['parse-enum', rawMatClsEnum, { bit: true, split: ' | ' }]]

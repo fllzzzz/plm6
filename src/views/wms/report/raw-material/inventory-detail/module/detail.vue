@@ -83,6 +83,7 @@ import useVisible from '@compos/use-visible'
 import checkPermission from '@/utils/system/check-permission'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { setSpecInfoToList } from '@/utils/wms/spec'
+import { DP } from '@/settings/config'
 
 import ReceiptSnClickable from '@/components-system/wms/receipt-sn-clickable'
 import ExportButton from '@comp-common/export-button/index.vue'
@@ -113,11 +114,11 @@ const dataFormat = computed(() => {
   return [
     ['createTime', ['parse-time', '{y}-{m}-{d}']],
     ['inboundUnitPriceExcludingVat', ['to-thousand', decimalPrecision.value.wms]],
-    ['inboundAmountExcludingVat', ['to-thousand', decimalPrecision.value.wms]],
+    ['inboundAmountExcludingVat', ['to-thousand', DP.YUAN]],
     ['outboundUnitPriceExcludingVat', ['to-thousand', decimalPrecision.value.wms]],
-    ['outboundAmountExcludingVat', ['to-thousand', decimalPrecision.value.wms]],
+    ['outboundAmountExcludingVat', ['to-thousand', DP.YUAN]],
     ['endUnitPriceExcludingVat', ['to-thousand', decimalPrecision.value.wms]],
-    ['endAmountExcludingVat', ['to-thousand', decimalPrecision.value.wms]]
+    ['endAmountExcludingVat', ['to-thousand', DP.YUAN]]
 
   ]
 })

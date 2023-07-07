@@ -103,6 +103,7 @@ import { deepClone } from '@/utils/data-type'
 import { partyAMatTransferEnum, transferTypeEnum } from '@/utils/enum/modules/wms'
 import { invoiceTypeEnum } from '@/utils/enum/modules/finance'
 import { materialColumns } from '@/utils/columns-format/wms'
+import { DP } from '@/settings/config'
 
 import { regExtra } from '@/composables/use-crud'
 import useTableValidate from '../composables/use-table-validate'
@@ -169,9 +170,9 @@ const columnsDataFormat = computed(() => {
     ['taxRate', ['suffix', '%']],
     ['unitPrice', ['to-thousand', decimalPrecision.value.wms]],
     ['unitPriceExcludingVAT', ['to-thousand', decimalPrecision.value.wms]],
-    ['amount', ['to-thousand', decimalPrecision.value.wms]],
-    ['amountExcludingVAT', ['to-thousand', decimalPrecision.value.wms]],
-    ['inputVAT', ['to-thousand', decimalPrecision.value.wms]]
+    ['amount', ['to-thousand', DP.YUAN]],
+    ['amountExcludingVAT', ['to-thousand', DP.YUAN]],
+    ['inputVAT', ['to-thousand', DP.YUAN]]
   ]
 })
 
@@ -387,7 +388,7 @@ function closeHook() {
 // 合计
 function getSummaries(param) {
   return tableSummary(param, {
-    props: ['quantity', 'mete', ['amount', decimalPrecision.value.wms]],
+    props: ['quantity', 'mete', ['amount', DP.YUAN]],
     toThousandFields: ['mete', 'amount']
   })
 }

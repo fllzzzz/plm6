@@ -48,6 +48,7 @@ import { ref, defineProps, computed } from 'vue'
 import { materialColumns } from '@/utils/columns-format/wms'
 
 import { invoiceTypeEnum } from '@/utils/enum/modules/finance'
+import { DP } from '@/settings/config'
 
 import useMaxHeight from '@compos/use-max-height'
 import elExpandTableColumn from '@comp-common/el-expand-table-column.vue'
@@ -92,9 +93,9 @@ const columnsDataFormat = computed(() => {
     ['taxRate', ['suffix', '%']],
     ['unitPrice', ['to-thousand', decimalPrecision.value.wms]],
     ['unitPriceExcludingVAT', ['to-thousand', decimalPrecision.value.wms]],
-    ['amount', ['to-thousand', decimalPrecision.value.wms]],
-    ['amountExcludingVAT', ['to-thousand', decimalPrecision.value.wms]],
-    ['inputVAT', ['to-thousand', decimalPrecision.value.wms]],
+    ['amount', ['to-thousand', DP.YUAN]],
+    ['amountExcludingVAT', ['to-thousand', DP.YUAN]],
+    ['inputVAT', ['to-thousand', DP.YUAN]],
     ['remark', 'empty-text']
   ]
 })

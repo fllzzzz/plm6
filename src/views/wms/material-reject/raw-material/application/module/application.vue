@@ -100,6 +100,7 @@ import { materialColumns } from '@/utils/columns-format/wms'
 import checkPermission from '@/utils/system/check-permission'
 
 import { invoiceTypeEnum } from '@/utils/enum/modules/finance'
+import { DP } from '@/settings/config'
 
 import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@/composables/use-visible'
@@ -140,9 +141,9 @@ const columnsDataFormat = computed(() => {
     ['taxRate', ['suffix', '%']],
     ['unitPrice', ['to-thousand', decimalPrecision.value.wms]],
     ['unitPriceExcludingVAT', ['to-thousand', decimalPrecision.value.wms]],
-    ['amount', ['to-thousand', decimalPrecision.value.wms]],
-    ['amountExcludingVAT', ['to-thousand', decimalPrecision.value.wms]],
-    ['inputVAT', ['to-thousand', decimalPrecision.value.wms]]
+    ['amount', ['to-thousand', DP.YUAN]],
+    ['amountExcludingVAT', ['to-thousand', DP.YUAN]],
+    ['inputVAT', ['to-thousand', DP.YUAN]]
   ]
 })
 
@@ -325,7 +326,7 @@ function handleSubmitSuccess() {
 // 合计
 function getSummaries(param) {
   return tableSummary(param, {
-    props: ['quantity', 'mete', ['amount', decimalPrecision.value.wms], ['amountExcludingVAT', decimalPrecision.value.wms], ['inputVAT', decimalPrecision.value.wms]],
+    props: ['quantity', 'mete', ['amount', DP.YUAN], ['amountExcludingVAT', DP.YUAN], ['inputVAT', DP.YUAN]],
     toThousandFields: ['amount', 'amountExcludingVAT', 'inputVAT']
   })
 }

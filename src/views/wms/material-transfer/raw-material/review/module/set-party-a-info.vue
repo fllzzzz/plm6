@@ -47,7 +47,7 @@
           :max="999999999"
           :controls="false"
           :step="1"
-          :precision="decimalPrecision.wms"
+          :precision="DP.YUAN"
           size="mini"
           placeholder="金额"
           @change="handleAmountChange($event, row)"
@@ -63,9 +63,7 @@ import { ref, defineProps, watchEffect, computed } from 'vue'
 import { isNotBlank, toPrecision } from '@/utils/data-type'
 import { partyAMatTransferEnum, transferTypeEnum } from '@/utils/enum/modules/wms'
 import { getDP } from '@/utils/data-type/number'
-import useDecimalPrecision from '@compos/store/use-decimal-precision'
-
-const { decimalPrecision } = useDecimalPrecision()
+import { DP } from '@/settings/config'
 
 const props = defineProps({
   form: {
@@ -116,7 +114,7 @@ function handleUnitPriceChange(val, row) {
     row.unitPrice = toPrecision(val, 10)
     val = row.unitPrice
   }
-  row.amount = isNotBlank(val) ? toPrecision(val * row.mete, decimalPrecision.value.wms) : undefined
+  row.amount = isNotBlank(val) ? toPrecision(val * row.mete, DP.YUAN) : undefined
 }
 
 // 处理金额变化

@@ -103,6 +103,7 @@ import { formTypeEnum } from '../enum'
 import { rawMatClsEnum } from '@/utils/enum/modules/classification'
 
 import { invoiceTypeEnum } from '@/utils/enum/modules/finance'
+import { DP } from '@/settings/config'
 
 import useMaxHeight from '@compos/use-max-height'
 import useMatBaseUnit from '@/composables/store/use-mat-base-unit'
@@ -147,9 +148,9 @@ const columnsDataFormat = computed(() => {
     ['taxRate', ['suffix', '%']],
     ['unitPrice', ['to-thousand', decimalPrecision.value.wms]],
     ['unitPriceExcludingVAT', ['to-thousand', decimalPrecision.value.wms]],
-    ['amount', ['to-thousand', decimalPrecision.value.wms]],
-    ['amountExcludingVAT', ['to-thousand', decimalPrecision.value.wms]],
-    ['inputVAT', ['to-thousand', decimalPrecision.value.wms]],
+    ['amount', ['to-thousand', DP.YUAN]],
+    ['amountExcludingVAT', ['to-thousand', DP.YUAN]],
+    ['inputVAT', ['to-thousand', DP.YUAN]],
     ['receipt.receiptType', ['parse-enum', receiptTypeEnum]]
   ]
 })
@@ -268,7 +269,7 @@ function getSummaries(param) {
       ? baseUnit.value[materialInfo.value.basicClass].measure.precision
       : 0
   return tableSummary(param, {
-    props: [['quantity', dp], 'mete', ['amount', decimalPrecision.value.wms], ['amountExcludingVAT', decimalPrecision.value.wms], ['inputVAT', decimalPrecision.value.wms]],
+    props: [['quantity', dp], 'mete', ['amount', DP.YUAN], ['amountExcludingVAT', DP.YUAN], ['inputVAT', DP.YUAN]],
     toThousandFields: ['amount', 'amountExcludingVAT', 'inputVAT']
   })
 }
