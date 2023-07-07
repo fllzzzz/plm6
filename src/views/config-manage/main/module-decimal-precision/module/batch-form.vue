@@ -48,7 +48,7 @@
           </el-table-column>
           <el-table-column key="type" prop="type" label="小数类型" width="100px">
             <template #default>
-              <span>金额</span>
+              <span>单价</span>
             </template>
           </el-table-column>
           <el-table-column key="scale" prop="scale" label="小数精度" align="center">
@@ -56,7 +56,7 @@
               <el-input-number
                 v-model.number="row.scale"
                 :min="1"
-                :max="10"
+                :max="7"
                 :precision="0"
                 :step="1"
                 placeholder="小数精度"

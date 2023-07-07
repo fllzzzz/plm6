@@ -8,7 +8,7 @@
       </template>
       <div style="margin-bottom:10px;">
         <!-- <common-button type="success" @click="crud.toAdd" v-permission="permission.add">全局配置</common-button> -->
-        <common-button type="primary" @click="crud.toBatchAdd" v-permission="permission.add">添加</common-button>
+        <common-button type="primary" @click="crud.toAdd" v-permission="permission.add">添加</common-button>
       </div>
       <common-table ref="tableRef" v-loading="crud.loading" :max-height="maxHeight" :data="crud.data" row-key="name">
         <el-table-column
@@ -29,7 +29,7 @@
           width="120"
         >
         <template #default>
-          金额
+          单价
         </template>
         </el-table-column>
         <el-table-column
@@ -48,7 +48,7 @@
         </el-table-column>
       </common-table>
     </el-card>
-    <m-form :menuArr="menuArr" />
+    <m-form :menuArr="menuArr" :disabledId="disabledId" />
     <mBatchForm :menuArr="menuArr" :disabledId="disabledId" />
   </div>
 </template>
@@ -59,6 +59,7 @@ import { moduleDecimalPrecisionPM as permission } from '@/page-permission/config
 
 import { ref } from 'vue'
 import useMaxHeight from '@compos/use-max-height'
+import { isNotBlank } from '@data-type/index'
 
 import useCRUD from '@compos/use-crud'
 import udOperation from '@crud/UD.operation'
@@ -93,9 +94,13 @@ const { CRUD, crud, columns } = useCRUD(
 fetchMenuModule()
 
 async function fetchMenuModule() {
+  menuArr.value = []
   try {
     const { content } = await getMenuModule()
-    menuArr.value = content || []
+    const wmsValue = content.find(v => v.name === 'WMS')
+    if (isNotBlank(wmsValue)) {
+      menuArr.value.push(wmsValue)
+    }
   } catch (e) {
     console.log(e)
   }
