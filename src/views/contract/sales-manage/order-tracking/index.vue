@@ -144,6 +144,7 @@ import { projectStatusEnum, orderSourceTypeEnum } from '@enum-ms/contract'
 import { orderTrackingPM as permission } from '@/page-permission/contract'
 import checkPermission from '@/utils/system/check-permission'
 import useDecimalPrecision from '@compos/store/use-decimal-precision'
+import { DP } from '@/settings/config'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
@@ -202,7 +203,7 @@ const dataFormat = computed(() => {
     ['collectionAmount', ['to-thousand', decimalPrecision.value.contract]],
     ['invoiceAmount', ['to-thousand', decimalPrecision.value.contract]],
     ['happenedAmount', ['to-thousand', decimalPrecision.value.contract]],
-    ['warehouseAmount', ['to-thousand', decimalPrecision.value.contract]],
+    ['warehouseAmount', ['to-thousand', DP.YUAN]],
     ['warehouseRate', ['to-fixed', 2]],
     ['collectionRate', ['to-fixed', 2]],
     ['invoiceRate', ['to-fixed', 2]],

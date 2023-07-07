@@ -245,7 +245,7 @@ const dataFormat = computed(() => {
     ['paymentRate', ['to-fixed', 2]],
     ['invoiceRate', ['to-fixed', 2]],
     ['amount', ['to-thousand', decimalPrecision.value.supplyChain]],
-    ['inboundAmount', ['to-thousand', decimalPrecision.value.supplyChain]],
+    ['inboundAmount', ['to-thousand-ck', 'YUAN']],
     ['paymentAmount', ['to-thousand', decimalPrecision.value.supplyChain]],
     ['invoiceAmount', ['to-thousand', decimalPrecision.value.supplyChain]]
   ]

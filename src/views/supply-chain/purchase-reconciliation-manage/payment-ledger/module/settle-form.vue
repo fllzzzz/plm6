@@ -29,10 +29,10 @@
           <span>{{ detailInfo.supplierName }}</span>
         </el-form-item>
         <el-form-item label="合同额">
-          <span  v-thousand="detailInfo.amount" />
+          <span v-thousand="detailInfo.amount" />
         </el-form-item>
         <el-form-item label="入库额">
-          <span  v-thousand="detailInfo.inboundAmount" />
+          <span v-thousand="detailInfo.inboundAmount" />
         </el-form-item>
         <el-form-item label="已付款">
           <span v-thousand="detailInfo.paymentAmount"/>

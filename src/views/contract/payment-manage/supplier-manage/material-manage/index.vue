@@ -58,7 +58,7 @@
     </el-table-column>
     <el-table-column v-if="columns.visible('inboundAmount')" key="inboundAmount" prop="inboundAmount" label="入库额" align="center">
       <template v-slot="scope">
-        <span @click="openStockAmount(scope.row)">{{ scope.row.inboundAmount? toThousand(scope.row.inboundAmount,decimalPrecision.contract): '-' }}</span>
+        <span @click="openStockAmount(scope.row)">{{ scope.row.inboundAmount? toThousand(scope.row.inboundAmount,DP.YUAN): '-' }}</span>
       </template>
     </el-table-column>
     <el-table-column v-if="columns.visible('paymentAmount')" key="paymentAmount" prop="paymentAmount" label="付款额" align="center">
@@ -145,6 +145,7 @@
 import crudApi from '@/api/contract/supplier-manage/material-manage'
 import { ref } from 'vue'
 
+import { DP } from '@/settings/config'
 import { contractSupplierMaterialPM as permission } from '@/page-permission/contract'
 import checkPermission from '@/utils/system/check-permission'
 import useMaxHeight from '@compos/use-max-height'

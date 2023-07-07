@@ -36,7 +36,7 @@
       <el-descriptions-item label-class-name="contractLabel" label="供应商">{{currentRow.supplierName}}</el-descriptions-item>
       <el-descriptions-item label-class-name="contractLabel" label="合同额">
         {{currentRow.amount?toThousand(currentRow.amount,decimalPrecision.contract):'-'}}
-        <span>（入库额:{{currentRow.inboundAmount?toThousand(currentRow.inboundAmount,decimalPrecision.contract):'-'}}）</span>
+        <span>（入库额:{{currentRow.inboundAmount?toThousand(currentRow.inboundAmount,DP.YUAN):'-'}}）</span>
       </el-descriptions-item>
       <el-descriptions-item label-class-name="contractLabel" label="已付款">
         <span>{{ currentRow.paymentAmount?toThousand(currentRow.paymentAmount,decimalPrecision.contract):'-' }}</span>
@@ -127,6 +127,7 @@ import { bankData } from '@/api/contract/collection-and-invoice/collection'
 import { ref, defineProps, watch, defineEmits } from 'vue'
 import { ElNotification, ElMessage } from 'element-plus'
 
+import { DP } from '@/settings/config'
 import { auditTypeEnum } from '@enum-ms/contract'
 import useVisible from '@compos/use-visible'
 import { digitUppercase, toThousand } from '@data-type/number'

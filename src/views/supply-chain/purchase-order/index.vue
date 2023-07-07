@@ -226,6 +226,7 @@ import { matClsEnum } from '@/utils/enum/modules/classification'
 import { wmsReceiptColumns } from '@/utils/columns-format/wms'
 import { isNotBlank } from '@/utils/data-type'
 import checkPermission from '@/utils/system/check-permission'
+import { DP } from '@/settings/config'
 
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
@@ -238,9 +239,6 @@ import mRawMaterialDetail from './module/detail/raw-material.vue'
 import tableCellTag from '@comp-common/table-cell-tag/index.vue'
 import elExpandTableColumn from '@comp-common/el-expand-table-column.vue'
 import useMatClsList from '@/composables/store/use-mat-class-list'
-import useDecimalPrecision from '@compos/store/use-decimal-precision'
-
-const { decimalPrecision } = useDecimalPrecision()
 
 const optShow = {
   add: false,
@@ -257,7 +255,7 @@ const columnsDataFormat = computed(() => {
   return [
     ...wmsReceiptColumns,
     ['invoiceType', ['parse-enum', invoiceTypeEnum]],
-    ['amount', ['to-thousand', decimalPrecision.value.supplyChain]],
+    ['amount', ['to-thousand', DP.YUAN]],
     ['requisitionsSNStr', 'empty-text'],
     ['remark', 'empty-text'],
     ['auxMaterialNames', 'split'],

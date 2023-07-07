@@ -73,7 +73,7 @@ const dataFormat = computed(() => {
   return [
     ['createTime', 'parse-time'],
     ['amount', ['to-thousand', decimalPrecision.value.supplyChain]],
-    ['inboundAmount', ['to-thousand', decimalPrecision.value.supplyChain]],
+    ['inboundAmount', ['to-thousand-ck', 'YUAN']],
     ['inboundRate', ['to-fixed', 2]]
   ]
 })

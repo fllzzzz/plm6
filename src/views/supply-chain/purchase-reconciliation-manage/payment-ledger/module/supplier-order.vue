@@ -27,7 +27,7 @@
       </el-table-column>
       <el-table-column prop="inboundAmount" label="累计入库额" align="right" show-overflow-tooltip>
         <template #default="{ row }">
-          <span>{{ isNotBlank(row.inboundAmount)? toThousand(row.inboundAmount,decimalPrecision.supplyChain): 0 }}</span>
+          <span>{{ isNotBlank(row.inboundAmount)? toThousand(row.inboundAmount,DP.YUAN): 0 }}</span>
         </template>
       </el-table-column>
       <el-table-column prop="paymentAmount" label="累计已付款" align="right" show-overflow-tooltip>
@@ -71,6 +71,7 @@ import { ref, defineProps, watch } from 'vue'
 import checkPermission from '@/utils/system/check-permission'
 import { isNotBlank } from '@data-type/index'
 import { toThousand } from '@data-type/number'
+import { DP } from '@/settings/config'
 
 import useMaxHeight from '@compos/use-max-height'
 import usePagination from '@compos/use-pagination'
