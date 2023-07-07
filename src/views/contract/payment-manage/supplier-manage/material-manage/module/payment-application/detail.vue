@@ -119,7 +119,7 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="账号">
-              <span>{{currentRow.paymentBankAccount}}</span>
+              <span>{{paymentBankAccount}}</span>
             </el-form-item>
           </el-col>
         </el-row>
@@ -219,9 +219,6 @@ watch(
 
 async function fetchBank() {
   bankList.value = []
-  if (!(props.showType === 'audit')) {
-    return
-  }
   if (!props.currentRow?.paymentUnitId) {
     return
   }
