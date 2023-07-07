@@ -173,6 +173,7 @@ import { computed, ref } from 'vue'
 import { rawMatClsEnum } from '@enum-ms/classification'
 import { reviewTimeColumns } from '@/utils/columns-format/wms'
 import checkPermission from '@/utils/system/check-permission'
+import { DP } from '@/settings/config'
 
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
@@ -194,15 +195,17 @@ const expandRowKeys = ref([])
 const tableRef = ref()
 
 // 表格列数据格式转换
-const columnsDataFormat = ref([
-  ...reviewTimeColumns,
-  ['rejectTime', 'parse-time'],
-  ['rejectAmountExcludingVAT', ['to-thousand-ck', 'YUAN']],
-  ['inboundAmountExcludingVAT', ['to-thousand-ck', 'YUAN']],
-  ['projects', ['parse-project', { onlyShortName: true }]],
-  ['projectsFullName', 'parse-project', { source: 'projects' }],
-  ['basicClass', ['parse-enum', rawMatClsEnum, { bit: true, split: ' | ' }]]
-])
+const columnsDataFormat = computed(() => {
+  return [
+    ...reviewTimeColumns,
+    ['rejectTime', 'parse-time'],
+    ['rejectAmountExcludingVAT', ['to-thousand', DP.YUAN]],
+    ['inboundAmountExcludingVAT', ['to-thousand', DP.YUAN]],
+    ['projects', ['parse-project', { onlyShortName: true }]],
+    ['projectsFullName', 'parse-project', { source: 'projects' }],
+    ['basicClass', ['parse-enum', rawMatClsEnum, { bit: true, split: ' | ' }]]
+  ]
+})
 
 const { crud, columns } = useCRUD(
   {

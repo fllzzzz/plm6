@@ -2,7 +2,7 @@
   <div class="app-container">
     <!--表格渲染-->
     <div>
-      <el-tag type="success" size="medium" v-if="currentRow.freight">{{`运输额:${toThousand(currentRow.freight)}`}}</el-tag>
+      <el-tag type="success" size="medium" v-if="currentRow.freight">{{`运输额:${toThousand(currentRow.freight,decimalPrecision.contract)}`}}</el-tag>
     </div>
     <common-table
       ref="tableRef"
@@ -36,7 +36,7 @@
       </el-table-column> -->
       <el-table-column key="applyAmount" prop="applyAmount" label="申请金额" align="center">
         <template v-slot="scope">
-          <div>{{ isNotBlank(scope.row.applyAmount)? toThousand(scope.row.applyAmount): '-' }}</div>
+          <div>{{ isNotBlank(scope.row.applyAmount)? toThousand(scope.row.applyAmount,decimalPrecision.contract): '-' }}</div>
         </template>
       </el-table-column>
       <el-table-column key="auditUserName" prop="auditUserName" label="审核人" align="center">
@@ -61,17 +61,18 @@ import { ref, defineProps, watch } from 'vue'
 
 import { isNotBlank } from '@data-type/index'
 import { tableSummary } from '@/utils/el-extra'
-import { DP } from '@/settings/config'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import { supplierPayTypeEnum, auditTypeEnum } from '@enum-ms/contract'
 import { parseTime } from '@/utils/date'
 import { toThousand } from '@data-type/number'
 import { contractSupplierLogisticsPM } from '@/page-permission/contract'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
 
 import pagination from '@crud/Pagination'
 
 const permission = contractSupplierLogisticsPM.payment
+const { decimalPrecision } = useDecimalPrecision()
 
 const optShow = {
   add: false,
@@ -134,7 +135,7 @@ CRUD.HOOK.beforeRefresh = () => {
 // 合计
 function getSummaries(param) {
   return tableSummary(param, {
-    props: [['applyAmount', DP.YUAN]],
+    props: [['applyAmount', decimalPrecision.value.contract]],
     toThousandFields: ['applyAmount']
   })
 }

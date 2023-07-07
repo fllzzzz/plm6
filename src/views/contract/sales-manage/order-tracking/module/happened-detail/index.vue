@@ -37,9 +37,10 @@
 
 <script setup>
 import { shipRecord as get } from '@/api/contract/sales-manage/order-tracking'
-import { ref, inject, watch, nextTick } from 'vue'
+import { ref, inject, watch, nextTick, computed } from 'vue'
 
 import { orderTrackingPM as permission } from '@/page-permission/contract'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
@@ -47,6 +48,8 @@ import pagination from '@crud/Pagination'
 import mHeader from './module/header'
 
 const projectId = inject('projectId')
+
+const { decimalPrecision } = useDecimalPrecision()
 
 watch(
   projectId,
@@ -67,11 +70,13 @@ const optShow = {
 }
 
 const tableRef = ref()
-const dataFormat = ref([
-  ['auditTime', 'parse-time'],
-  ['unitPrice', ['to-thousand-ck', 'YUAN']],
-  ['totalPrice', ['to-thousand-ck', 'YUAN']]
-])
+const dataFormat = computed(() => {
+  return [
+    ['auditTime', 'parse-time'],
+    ['unitPrice', ['to-thousand', decimalPrecision.value.contract]],
+    ['totalPrice', ['to-thousand', decimalPrecision.value.contract]]
+  ]
+})
 const { crud, columns, CRUD } = useCRUD(
   {
     title: '发运记录',

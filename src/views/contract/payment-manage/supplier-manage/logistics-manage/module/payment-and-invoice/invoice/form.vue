@@ -12,7 +12,7 @@
       <common-button :loading="crud.status.cu === 2" type="primary" size="mini" @click="crud.submitCU">确认</common-button>
     </template>
     <template #content>
-      <el-tag type="success" v-if="currentRow.freight">{{'运输额:'+toThousand(currentRow.freight)}}</el-tag>
+      <el-tag type="success" v-if="currentRow.freight">{{'运输额:'+toThousand(currentRow.freight,decimalPrecision.contract)}}</el-tag>
       <el-form ref="formRef" :model="form" size="small" label-width="140px">
         <common-table
           ref="detailRef"
@@ -53,12 +53,12 @@
                   :min="-9999999999"
                   :max="currentRow.freight-totalAmount"
                   :step="100"
-                  :precision="DP.YUAN"
+                  :precision="decimalPrecision.contract"
                   placeholder="收票额(元)"
                   controls-position="right"
                   @change="moneyChange(scope.row)"
                 />
-                <div v-else>{{ isNotBlank(scope.row.invoiceAmount) ? toThousand(scope.row.invoiceAmount): '-' }}</div>
+                <div v-else>{{ isNotBlank(scope.row.invoiceAmount) ? toThousand(scope.row.invoiceAmount,decimalPrecision.contract): '-' }}</div>
               </template>
             </el-table-column>
             <el-table-column key="invoiceAmount1" prop="invoiceAmount1" label="大写" align="center" width="330" :show-overflow-tooltip="true">
@@ -147,18 +147,20 @@
 
 <script setup>
 import { ref, inject, nextTick, defineProps } from 'vue'
-import { regForm } from '@compos/use-crud'
 import { ElMessage } from 'element-plus'
 
-import { DP } from '@/settings/config'
+import { regForm } from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
-import { digitUppercase, toThousand } from '@/utils/data-type/number'
+import { toThousand, digitUppercase } from '@data-type/number'
 import { invoiceTypeEnum } from '@enum-ms/finance'
 import useTableValidate from '@compos/form/use-table-validate'
 import { fileClassifyEnum } from '@enum-ms/file'
 import { isNotBlank } from '@data-type/index'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
 
 import UploadBtn from '@comp/file-upload/UploadBtn'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const formRef = ref()
 const detailRef = ref()

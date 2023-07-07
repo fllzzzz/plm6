@@ -12,8 +12,8 @@
       <common-button :loading="crud.status.cu === 2" type="primary" size="mini" @click="crud.submitCU">确认</common-button>
     </template>
     <template #content>
-      <el-tag type="success" v-if="contractInfo.contractAmount">{{'合同金额:'+toThousand(contractInfo.contractAmount)}}</el-tag>
-      <el-tag type="success" size="medium" v-if="currentRow.settlementAmount" style="margin-left:5px;">{{'结算金额:'+toThousand(currentRow.settlementAmount)}}</el-tag>
+      <el-tag type="success" v-if="contractInfo.contractAmount">{{'合同金额:'+toThousand(contractInfo.contractAmount,decimalPrecision.contract)}}</el-tag>
+      <el-tag type="success" size="medium" v-if="currentRow.settlementAmount" style="margin-left:5px;">{{'结算金额:'+toThousand(currentRow.settlementAmount,decimalPrecision.contract)}}</el-tag>
       <el-form ref="formRef" :model="form" size="small" label-width="140px">
         <common-table
           ref="detailRef"
@@ -53,13 +53,13 @@
                   :min="-9999999999"
                   :max="currentRow.settlementAmount?currentRow.settlementAmount-totalAmount:9999999999"
                   :step="100"
-                  :precision="DP.YUAN"
+                  :precision="decimalPrecision.contract"
                   placeholder="收款金额(元)"
                   controls-position="right"
                   :key="scope.row.dataIndex?scope.row.dataIndex:scope.row.id"
                   @change="moneyChange(scope.row)"
                 />
-                <div v-else>{{ isNotBlank(scope.row.collectionAmount) ? toThousand(scope.row.collectionAmount): '-' }}</div>
+                <div v-else>{{ isNotBlank(scope.row.collectionAmount) ? toThousand(scope.row.collectionAmount,decimalPrecision.contract): '-' }}</div>
               </template>
             </el-table-column>
             <el-table-column key="collectionAmount1" prop="collectionAmount1" label="大写" align="center" min-width="85" :show-overflow-tooltip="true">
@@ -155,12 +155,15 @@ import { ref, inject, defineProps, nextTick } from 'vue'
 
 import { regForm } from '@compos/use-crud'
 import { ElMessage } from 'element-plus'
-import { DP } from '@/settings/config'
+
 import { validate } from '@compos/form/use-table-validate'
 import useMaxHeight from '@compos/use-max-height'
 import useDict from '@compos/store/use-dict'
 import { paymentFineModeEnum } from '@enum-ms/finance'
 import { digitUppercase, toThousand } from '@/utils/data-type/number'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 import { isNotBlank } from '@data-type/index'
 
 const formRef = ref()

@@ -43,10 +43,10 @@
       <rrOperation/>
       <crudOperation>
         <template #optLeft>
-          <el-tag v-if="totalSum" size="medium" class="filter-item">{{ `累计合同额:${totalSum.contractAmountSum?toThousand(totalSum.contractAmountSum):'-'}元` }}</el-tag>
-          <el-tag type="success" v-if="totalSum" size="medium" class="filter-item">{{ `累计结算额:${totalSum.settlementAmountSum?toThousand(totalSum.settlementAmountSum):'-'}元` }}</el-tag>
-          <el-tag type="success" v-if="totalSum" size="medium" class="filter-item">{{ `累计收款额:${totalSum.collectionAmountSum?toThousand(totalSum.collectionAmountSum):'-'}元` }}</el-tag>
-          <el-tag type="success" v-if="totalSum" size="medium" class="filter-item">{{ `累计开票额:${totalSum.invoiceAmountSum?toThousand(totalSum.invoiceAmountSum):'-'}元` }}</el-tag>
+          <el-tag v-if="totalSum" size="medium" class="filter-item">{{ `累计合同额:${totalSum.contractAmountSum?toThousand(totalSum.contractAmountSum,decimalPrecision.contract):'-'}元` }}</el-tag>
+          <el-tag type="success" v-if="totalSum" size="medium" class="filter-item">{{ `累计结算额:${totalSum.settlementAmountSum?toThousand(totalSum.settlementAmountSum,decimalPrecision.contract):'-'}元` }}</el-tag>
+          <el-tag type="success" v-if="totalSum" size="medium" class="filter-item">{{ `累计收款额:${totalSum.collectionAmountSum?toThousand(totalSum.collectionAmountSum,decimalPrecision.contract):'-'}元` }}</el-tag>
+          <el-tag type="success" v-if="totalSum" size="medium" class="filter-item">{{ `累计开票额:${totalSum.invoiceAmountSum?toThousand(totalSum.invoiceAmountSum,decimalPrecision.contract):'-'}元` }}</el-tag>
         </template>
         <template #viewLeft>
           <print-table
@@ -64,13 +64,18 @@
 </template>
 
 <script setup>
+import { ledgerSum } from '@/api/contract/contract-ledger'
 import { ref, watch } from 'vue'
+
 import { regHeader } from '@compos/use-crud'
+import { settlementStatusEnum } from '@enum-ms/finance'
+import { toThousand } from '@data-type/number'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
 import rrOperation from '@crud/RR.operation'
 import crudOperation from '@crud/CRUD.operation'
-import { settlementStatusEnum } from '@enum-ms/finance'
-import { ledgerSum } from '@/api/contract/contract-ledger'
-import { toThousand } from '@data-type/number'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const defaultQuery = {
   projectId: undefined,

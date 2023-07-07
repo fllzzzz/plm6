@@ -35,7 +35,7 @@
           />
           <el-table-column align="center" key="feeAmount" prop="feeAmount" :show-overflow-tooltip="true" label="费用">
             <template v-slot="scope">
-              <span>{{ toThousand(scope.row.feeAmount) }}</span>
+              <span>{{ toThousand(scope.row.feeAmount,decimalPrecision.contract) }}</span>
             </template>
           </el-table-column>
           <el-table-column align="center" key="attachments" prop="attachments" :show-overflow-tooltip="true" label="附件">
@@ -108,11 +108,12 @@ import useVisible from '@compos/use-visible'
 import usePagination from '@compos/use-pagination'
 import useMaxHeight from '@compos/use-max-height'
 import { projectNameFormatter } from '@/utils/project'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
 
 import showPdfAndImg from '@comp-base/show-pdf-and-img.vue'
 import mForm from './form.vue'
 
-// import projectCascader from '@comp-base/project-cascader.vue'
+const { decimalPrecision } = useDecimalPrecision()
 
 const emit = defineEmits(['update:visible', 'refresh'])
 const detailList = ref([])

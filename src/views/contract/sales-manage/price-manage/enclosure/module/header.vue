@@ -85,6 +85,7 @@ import { contractSaleTypeEnum, mesEnclosureTypeEnum } from '@enum-ms/mes'
 import { enclosureSettlementTypeEnum } from '@enum-ms/contract'
 import { toThousand } from '@/utils/data-type/number'
 import { emptyTextFormatter } from '@/utils/data-type'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
 
 import { regHeader } from '@compos/use-crud'
 import crudOperation from '@crud/CRUD.operation'
@@ -93,6 +94,8 @@ import mPreview from '../../preview'
 
 const projectId = inject('projectId')
 const enclosurePlanId = inject('enclosurePlanId')
+
+const { decimalPrecision } = useDecimalPrecision()
 
 // 有变动的数据
 const modifiedData = computed(() => {
@@ -147,7 +150,7 @@ CRUD.HOOK.handleRefresh = (crud, { data }) => {
   data.content.forEach((v) => {
     v.newUnitPrice = v.unitPrice // number类型的单价（unitPrice可能会有千位符）
     v.originNewUnitPrice = v.newUnitPrice
-    v.originUnitPrice = emptyTextFormatter(toThousand(v.unitPrice))
+    v.originUnitPrice = emptyTextFormatter(toThousand(v.unitPrice, decimalPrecision.value.contract))
     v.totalPrice = (v.pricingManner === enclosureSettlementTypeEnum.LENGTH.V ? v.totalLength : v.totalArea) * (v.newUnitPrice || 0)
   })
   fetchCost()

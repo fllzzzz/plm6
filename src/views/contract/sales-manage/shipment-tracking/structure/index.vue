@@ -115,7 +115,7 @@
 
 <script setup>
 import { structureList as get } from '@/api/contract/sales-manage/shipment-tracking'
-import { ref, defineEmits } from 'vue'
+import { ref, defineEmits, computed } from 'vue'
 
 import { shipmentTrackingPM as permission } from '@/page-permission/contract'
 
@@ -123,6 +123,9 @@ import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import pagination from '@crud/Pagination'
 import mHeader from './module/header'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const emit = defineEmits(['resetQuery'])
 
@@ -135,11 +138,13 @@ const optShow = {
 
 const tableRef = ref()
 const headerRef = ref()
-const dataFormat = ref([
-  ['createTime', ['parse-time', '{y}-{m}-{d}']],
-  ['unitPrice', ['to-thousand-ck', 'YUAN']],
-  ['totalPrice', ['to-thousand-ck', 'YUAN']]
-])
+const dataFormat = computed(() => {
+  return [
+    ['createTime', ['parse-time', '{y}-{m}-{d}']],
+    ['unitPrice', ['to-thousand', decimalPrecision.value.contract]],
+    ['totalPrice', ['to-thousand', decimalPrecision.value.contract]]
+  ]
+})
 
 const { crud, columns, CRUD } = useCRUD(
   {

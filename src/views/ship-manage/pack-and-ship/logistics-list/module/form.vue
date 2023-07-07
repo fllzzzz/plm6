@@ -52,11 +52,11 @@
                   <span>{{ logisticsPriceTypeEnum.VL[detailInfo.priceType] }}</span>
                 </el-form-item>
                 <el-form-item label="运输单价">
-                  <span style="margin-right:3px;">{{ toFixed(detailInfo.supplier.price, DP.YUAN) }}</span>
+                  <span style="margin-right:3px;">{{ toFixed(detailInfo.supplier.price, decimalPrecision.shipment) }}</span>
                   <span :class="detailInfo.priceType === logisticsPriceTypeEnum.WEIGHT.V ? 'blue':'orange'" >{{ logisticsPriceTypeEnum.V[detailInfo.priceType].unit }}</span>
                 </el-form-item>
                 <el-form-item label="运输费">
-                  <span><span style="margin-right:3px;">{{ detailInfo.totalPrice?toFixed(detailInfo.totalPrice, DP.YUAN):'-'}}</span>元</span>
+                  <span><span style="margin-right:3px;">{{ detailInfo.totalPrice?toFixed(detailInfo.totalPrice, decimalPrecision.shipment):'-'}}</span>元</span>
                 </el-form-item>
               </div>
             </div>
@@ -76,7 +76,7 @@
               <el-input-number
                 v-model="form.price"
                 :max="999999999999"
-                :precision="DP.YUAN"
+                :precision="decimalPrecision.shipment"
                 :step="100"
                 :controls="false"
                 style="width: 150px;margin-right:3px;"
@@ -87,7 +87,7 @@
               <span :class="form.priceType === logisticsPriceTypeEnum.WEIGHT.V ? 'blue':'orange'" style="margin-left:3px;">{{ logisticsPriceTypeEnum.V[form.priceType].unit }}</span>
             </el-form-item>
             <el-form-item label="运输费" v-if="form.priceType === logisticsPriceTypeEnum.WEIGHT.V">
-              <span><span style="margin-right:3px;">{{ toFixed(allPrice, DP.YUAN) }}</span>元</span>
+              <span><span style="margin-right:3px;">{{ toFixed(allPrice, decimalPrecision.shipment) }}</span>元</span>
             </el-form-item>
             <el-form-item label="变更原因">
               <el-input
@@ -126,13 +126,13 @@
           </el-table-column>
           <el-table-column prop="price" label="运输单价" align="right">
             <template v-slot="scope">
-              <span style="margin-right:3px;">{{ toFixed(scope.row.price, DP.YUAN) }}</span>
+              <span style="margin-right:3px;">{{ toFixed(scope.row.price, decimalPrecision.shipment) }}</span>
               <span :class="scope.row.priceType === logisticsPriceTypeEnum.WEIGHT.V ? 'blue':'orange'" v-if="scope.row.price">{{ logisticsPriceTypeEnum.V[scope.row.priceType].unit }}</span>
             </template>
           </el-table-column>
           <el-table-column prop="price" label="运输费（元）" align="right">
             <template v-slot="scope">
-              <span style="margin-right:3px;">{{ toFixed(scope.row.totalPrice, DP.YUAN) }}</span>
+              <span style="margin-right:3px;">{{ toFixed(scope.row.totalPrice, decimalPrecision.shipment) }}</span>
             </template>
           </el-table-column>
           <el-table-column prop="changeUserName" label="价格录入人" align="center" />
@@ -156,6 +156,9 @@ import { projectTypeEnum } from '@enum-ms/contract'
 import useVisible from '@compos/use-visible'
 import useWatchFormValidate from '@compos/form/use-watch-form-validate'
 import useMaxHeight from '@compos/use-max-height'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const props = defineProps({
   modelValue: {

@@ -34,7 +34,7 @@
     </el-table-column>
     <el-table-column v-if="columns.visible('contractAmount')" key="contractAmount" prop="contractAmount" :show-overflow-tooltip="true" label="合同金额(元)">
       <template v-slot="scope">
-        <span>{{ scope.row.contractAmount? toThousand(scope.row.contractAmount): '' }}</span>
+        <span>{{ scope.row.contractAmount? toThousand(scope.row.contractAmount,decimalPrecision.contract): '' }}</span>
       </template>
     </el-table-column>
     <el-table-column v-if="columns.visible('invoiceDate')" key="invoiceDate" prop="invoiceDate" label="开票日期" align="center" min-width="120">
@@ -44,7 +44,7 @@
     </el-table-column>
     <el-table-column v-if="columns.visible('invoiceAmount')" key="invoiceAmount" prop="invoiceAmount" label="开票额(元)" align="center" min-width="120">
       <template v-slot="scope">
-        <span>{{ scope.row.invoiceAmount && scope.row.invoiceAmount>0? toThousand(scope.row.invoiceAmount): scope.row.invoiceAmount }}</span>
+        <span>{{ scope.row.invoiceAmount && scope.row.invoiceAmount>0? toThousand(scope.row.invoiceAmount,decimalPrecision.contract): scope.row.invoiceAmount }}</span>
       </template>
     </el-table-column>
     <el-table-column v-if="columns.visible('invoiceNo')" key="invoiceNo" prop="invoiceNo" :show-overflow-tooltip="true" label="发票号码" align="center" min-width="120">
@@ -67,16 +67,21 @@
 <script setup>
 import crudApi from '@/api/contract/collection-and-invoice/invoice'
 import { ref } from 'vue'
+
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
-import pagination from '@crud/Pagination'
-import mHeader from './module/header'
 import { businessTypeEnum } from '@enum-ms/contract'
 import { invoiceTypeEnum } from '@enum-ms/finance'
 import { toThousand } from '@data-type/number'
 import { parseTime } from '@/utils/date'
 import { projectNameFormatter } from '@/utils/project'
 import { collectionLedgerPM } from '@/page-permission/contract'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+import pagination from '@crud/Pagination'
+import mHeader from './module/header'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const permission = collectionLedgerPM.invoice
 

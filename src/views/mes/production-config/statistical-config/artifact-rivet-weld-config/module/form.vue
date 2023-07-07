@@ -80,7 +80,7 @@
             v-model="form.processObj[item.processId].price"
             :step="1"
             :min="0"
-            :precision="DP.YUAN"
+            :precision="decimalPrecision.mes"
             clearable
             class="input-underline"
             :controls="false"
@@ -102,8 +102,10 @@ import { ref, inject, computed } from 'vue'
 import { wageQuotaTypeEnum } from '@enum-ms/mes'
 import { regForm } from '@compos/use-crud'
 import { isNotBlank } from '@/utils/data-type'
-import { DP } from '@/settings/config'
 import { obj2arr } from '@/utils/convert/type'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const formRef = ref()
 const defaultForm = {

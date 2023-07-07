@@ -66,14 +66,14 @@
       </div>
       <div>
         <el-row v-if="checkPermission(permission.cost) && productType!==contractSaleTypeEnum.ENCLOSURE.V" :gutter="20" class="panel-group" style="margin-bottom:10px;">
-          <el-col :span="globalProject?.projectType === projectTypeEnum.BRIDGE.V?12:8">
-            <Panel name="项目造价（元）" text-color="#626262" num-color="#1890ff" :end-val="projectCost || 0" :precision="DP.YUAN" />
+          <el-col :span="8">
+            <Panel name="项目造价（元）" text-color="#626262" num-color="#1890ff" :end-val="projectCost || 0" :precision="decimalPrecision.contract" />
           </el-col>
-          <el-col :span="globalProject?.projectType === projectTypeEnum.BRIDGE.V?12:8">
-            <Panel name="单体造价（元）" text-color="#626262" num-color="#1890ff" :end-val="monomerCost || 0" :precision="DP.YUAN" />
+          <el-col :span="8">
+            <Panel name="单体造价（元）" text-color="#626262" num-color="#1890ff" :end-val="monomerCost || 0" :precision="decimalPrecision.contract" />
           </el-col>
           <el-col :span="globalProject?.projectType === projectTypeEnum.BRIDGE.V?12:8" v-if="globalProject?.projectType !== projectTypeEnum.BRIDGE.V">
-            <Panel name="选定区域造价（元）" text-color="#626262" num-color="#1890ff" :end-val="areaCost || 0" :precision="DP.YUAN" />
+            <Panel name="选定区域造价（元）" text-color="#626262" num-color="#1890ff" :end-val="areaCost || 0" :precision="decimalPrecision.contract" />
           </el-col>
         </el-row>
       </div>
@@ -111,7 +111,6 @@ import { contractSaleTypeEnum } from '@enum-ms/mes'
 import { bridgeComponentTypeEnum } from '@enum-ms/bridge'
 import { debounce } from '@/utils'
 import { isBlank } from '@data-type/index'
-import { DP } from '@/settings/config'
 import checkPermission from '@/utils/system/check-permission'
 import { isNotBlank } from '@data-type/index'
 
@@ -124,6 +123,9 @@ import modifyRecord from './price-modify-list/index'
 import box from './box'
 // import projectVisaSelect from '@comp-base/project-visa-select'
 import Panel from '@/components/Panel'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 // 当前显示组件
 const currentView = computed(() => {

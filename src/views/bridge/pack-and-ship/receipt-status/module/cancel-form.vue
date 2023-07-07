@@ -34,13 +34,13 @@
         </el-col>
         <el-col :span="10">
           <el-form-item label="运输单价">
-            <span style="margin-right:3px;">{{ toFixed(detailInfo?.logisticsDTO?.price, DP.YUAN) }}</span>
+            <span style="margin-right:3px;">{{ toFixed(detailInfo?.logisticsDTO?.price, decimalPrecision.bridge) }}</span>
             <span :class="detailInfo?.logisticsDTO?.priceType === logisticsPriceTypeEnum.WEIGHT.V ? 'blue':'orange'" >{{ detailInfo?.logisticsDTO?.priceType?logisticsPriceTypeEnum.V[detailInfo?.logisticsDTO?.priceType].unit:'' }}</span>
           </el-form-item>
         </el-col>
       </el-row>
       <el-form-item label="运输费">
-        <span><span style="margin-right:3px;">{{ toFixed(detailInfo?.logisticsDTO?.totalPrice, DP.YUAN)}}</span>元</span>
+        <span><span style="margin-right:3px;">{{ toFixed(detailInfo?.logisticsDTO?.totalPrice, decimalPrecision.bridge)}}</span>元</span>
       </el-form-item>
       <el-divider><span class="title">运费变更</span></el-divider>
       <el-form-item label="运费变更" prop="changeFreight">
@@ -61,7 +61,7 @@
           <el-input-number
             v-model="form.price"
             :max="999999999999"
-            :precision="DP.YUAN"
+            :precision="decimalPrecision.bridge"
             :step="100"
             :controls="false"
             style="width: 150px;margin-right:3px;"
@@ -72,7 +72,7 @@
           <span :class="form.priceType === logisticsPriceTypeEnum.WEIGHT.V ? 'blue':'orange'" style="margin-left:3px;">{{ form.priceType?logisticsPriceTypeEnum.V[form.priceType].unit:'' }}</span>
         </el-form-item>
         <el-form-item label="运输费" v-if="form.priceType === logisticsPriceTypeEnum.WEIGHT.V">
-          <span><span style="margin-right:3px;">{{ toFixed(allPrice, DP.YUAN) }}</span>元</span>
+          <span><span style="margin-right:3px;">{{ toFixed(allPrice, decimalPrecision.bridge) }}</span>元</span>
         </el-form-item>
       </template>
       <el-form-item label="变更原因" v-if="form.changeFreight && form.changeFreight!==freightChangeTypeEnum.CONTINUE.V" prop="changeFreightReason">
@@ -107,10 +107,12 @@ import { ref, defineProps, watch, defineEmits, nextTick } from 'vue'
 
 import { logisticsPriceTypeEnum, freightChangeTypeEnum } from '@enum-ms/mes'
 import useVisible from '@compos/use-visible'
-import { DP } from '@/settings/config'
 import { toFixed } from '@/utils/data-type'
 import { ElNotification } from 'element-plus'
 import useWatchFormValidate from '@compos/form/use-watch-form-validate'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const props = defineProps({
   modelValue: {

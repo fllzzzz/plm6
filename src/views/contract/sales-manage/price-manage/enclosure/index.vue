@@ -132,7 +132,7 @@
             :step="1"
             :min="0"
             :max="99999999"
-            :precision="DP.YUAN"
+            :precision="decimalPrecision.contract"
             size="small"
             style="width: 100%"
             @change="handlePrice(row)"
@@ -144,7 +144,7 @@
       </el-table-column>
       <el-table-column v-if="columns.visible('totalPrice')" key="totalPrice" prop="totalPrice" align="center" min-width="120" label="金额">
         <template #default="{ row }">
-          <span :class="row.status === 1 ? 'tc-danger' : ''" v-thousand="row.totalPrice" />
+          <span :class="row.status === 1 ? 'tc-danger' : ''" v-thousand="{val:row.totalPrice ||0, dp:decimalPrecision.contract}" />
         </template>
       </el-table-column>
     </common-table>
@@ -155,17 +155,20 @@
 
 <script setup>
 import crudApi from '@/api/contract/sales-manage/price-manage/enclosure'
-import { ref, defineExpose, defineProps } from 'vue'
+import { ref, defineExpose, defineProps, computed } from 'vue'
 
 import { priceManagePM as permission } from '@/page-permission/contract'
 import { DP } from '@/settings/config'
 import { enclosureSettlementTypeEnum, TechnologyTypeAllEnum } from '@enum-ms/contract'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
 
 import useTableChange from '@compos/form/use-table-change'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import pagination from '@crud/Pagination'
 import mHeader from './module/header'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const props = defineProps({
   category: {
@@ -183,11 +186,13 @@ const sourceMap = new Map([['unitPrice', 'originUnitPrice']])
 
 const tableRef = ref()
 const headerRef = ref()
-const dataFormat = ref([
-  ['thickness', ['to-fixed', DP.MES_ENCLOSURE_T__MM]],
-  ['unfoldedWidth', ['to-fixed', DP.MES_ENCLOSURE_T__MM]],
-  ['unitPrice', ['to-thousand-ck', 'YUAN']]
-])
+const dataFormat = computed(() => {
+  return [
+    ['thickness', ['to-fixed', DP.MES_ENCLOSURE_T__MM]],
+    ['unfoldedWidth', ['to-fixed', DP.MES_ENCLOSURE_T__MM]],
+    ['unitPrice', ['to-thousand', decimalPrecision.value.contract]]
+  ]
+})
 const { crud, columns } = useCRUD(
   {
     title: '围护价格',

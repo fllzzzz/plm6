@@ -41,10 +41,7 @@
           >
             <div
               class="board-box"
-              :style="{
-                'background-color': `${item.serialNumber === routeParams.serialNumber ? matchColor : ''}` || `${item.boxColor}`,
-                ...boxStyle,
-              }"
+              :style="{ 'cursor': 'pointer', 'background-color': `${item.boxColor}`, ...boxStyle }"
               @dblclick="boardDetail(item)"
               @mouseenter="getDetail(item)"
             >

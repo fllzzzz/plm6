@@ -54,7 +54,7 @@
                 :min="-9999999999"
                 :max="scope.row.paymentAmount>scope.row.freight?0:scope.row.freight-scope.row.paymentAmount"
                 :step="100"
-                :precision="DP.YUAN"
+                :precision="decimalPrecision.supplyChain"
                 placeholder="本次支付(元)"
                 controls-position="right"
               />
@@ -93,12 +93,15 @@ import { tableSummary } from '@/utils/el-extra'
 import useMaxHeight from '@compos/use-max-height'
 import { logisticsSearchTypeEnum } from '@enum-ms/contract'
 import { toThousand } from '@data-type/number'
-import { DP } from '@/settings/config'
 import { fileClassifyEnum } from '@enum-ms/file'
 import UploadBtn from '@comp/file-upload/UploadBtn'
 import { ElMessage } from 'element-plus'
 import showPdfAndImg from '@comp-base/show-pdf-and-img.vue'
 import { isNotBlank } from '@data-type/index'
+
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const formRef = ref()
 const props = defineProps({
@@ -151,7 +154,7 @@ function attachmentView(item) {
 // 合计
 function getSummaries(param) {
   return tableSummary(param, {
-    props: [['freight', DP.YUAN], ['paymentAmount', DP.YUAN], ['applyAmount', DP.YUAN]],
+    props: [['freight', decimalPrecision.value.supplyChain], ['paymentAmount', decimalPrecision.value.supplyChain], ['applyAmount', decimalPrecision.value.supplyChain]],
     toThousandFields: ['freight', 'paymentAmount', 'applyAmount']
   })
 }

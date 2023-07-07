@@ -44,6 +44,9 @@ import useCRUD from '@compos/use-crud'
 import mHeader from './header'
 import pagination from '@crud/Pagination'
 import confirmDetail from '../confirm-detail'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const permission = supplierMaterialPaymentPM.application
 
@@ -65,11 +68,13 @@ const props = defineProps({
   }
 })
 
-const dataFormat = ref([
-  ['paymentDate', ['parse-time', '{y}-{m}-{d}']],
-  ['auditTime', 'parse-time'],
-  ['applyAmount', ['to-thousand-ck', 'YUAN']]
-])
+const dataFormat = computed(() => {
+  return [
+    ['paymentDate', ['parse-time', '{y}-{m}-{d}']],
+    ['auditTime', 'parse-time'],
+    ['applyAmount', ['to-thousand', decimalPrecision.value.project]]
+  ]
+})
 
 const tableRef = ref()
 const confirmVisible = ref(false)

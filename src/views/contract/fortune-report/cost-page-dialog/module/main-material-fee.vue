@@ -11,7 +11,7 @@
           class="filter-item"
         />
       </div>
-      <el-tag>合计（单位：元）：{{ toThousand(props.costTypeData?.amount) }}</el-tag>
+      <el-tag>合计（单位：元）：{{ toThousand(props.costTypeData?.amount,decimalPrecision.contract) }}</el-tag>
     </div>
     <common-table
       ref="tableRef"
@@ -53,12 +53,12 @@
       </el-table-column>
       <el-table-column prop="unitPrice" key="unitPrice" label="单价" align="center">
         <template v-slot="scope">
-          <span>{{ scope.row.unitPrice?.toFixed(DP.YUAN) }}</span>
+          <span>{{ scope.row.unitPrice?.toFixed(decimalPrecision.contract) }}</span>
         </template>
       </el-table-column>
       <el-table-column prop="amount" key="amount" label="总价" align="center">
         <template v-slot="scope">
-          <span>{{ scope.row.amount ? toThousand(scope.row.amount) : 0 || '月末未加权' }}</span>
+          <span>{{ scope.row.amount ? toThousand(scope.row.amount,decimalPrecision.contract) : 0 || '月末未加权' }}</span>
         </template>
       </el-table-column>
       <el-table-column prop="outboundTime" key="outboundTime" label="出库日期" align="center" width="140">
@@ -81,7 +81,7 @@
 </template>
 <script setup>
 import { getMainAuxiliaryList } from '@/api/contract/fortune-report/detail-fee'
-import { ref, defineProps, watch } from 'vue'
+import { ref, defineProps, watch, computed } from 'vue'
 
 import { matClsEnum } from '@enum-ms/classification'
 import { mainAuxiliaryTypeEnum } from '@enum-ms/contract'
@@ -89,13 +89,15 @@ import { mainAuxiliaryTypeEnum } from '@enum-ms/contract'
 import { setSpecInfoToList } from '@/utils/wms/spec'
 import { toThousand } from '@data-type/number'
 import { tableSummary } from '@/utils/el-extra'
-import { DP } from '@/settings/config'
 import { parseTime } from '@/utils/date'
 import useMaxHeight from '@compos/use-max-height'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
 
 import usePagination from '@compos/use-pagination'
 
 const { handleSizeChange, handleCurrentChange, total, setTotalPage, queryPage } = usePagination({ fetchHook: fetchMainFee })
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const props = defineProps({
   costTypeData: {
@@ -116,10 +118,12 @@ const { maxHeight } = useMaxHeight({
   paginate: true
 })
 
-const dataFormat = ref([
-  ['basicClass', ['parse-enum', matClsEnum, { bit: true }]],
-  ['avgPrice', ['to-thousand-ck', 'YUAN']]
-])
+const dataFormat = computed(() => {
+  return [
+    ['basicClass', ['parse-enum', matClsEnum, { bit: true }]],
+    ['avgPrice', ['to-thousand', decimalPrecision.value.contract]]
+  ]
+})
 
 watch(
   () => props.costTypeData.projectId,
@@ -132,7 +136,7 @@ watch(
 // 合计
 function getSummaries(param) {
   return tableSummary(param, {
-    props: ['mete', ['amount', DP.YUAN]],
+    props: ['mete', ['amount', decimalPrecision.value.contract]],
     toThousandFields: ['mete', 'amount']
   })
 }

@@ -50,16 +50,17 @@
 
 <script setup>
 import { getIncomeAnalysis } from '@/api/operation/income-expenditure-analysis'
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import moment from 'moment'
 
 import { tableSummary } from '@/utils/el-extra'
-import { DP } from '@/settings/config'
-
 import useMaxHeight from '@compos/use-max-height'
 import useChart from '@compos/use-chart'
 
 import branchCompanySelect from '@comp-base/branch-company-select.vue'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 function disabledDate(time) {
   return time > new Date()
@@ -78,14 +79,16 @@ const { maxHeight } = useMaxHeight({
   extraHeight: 0
 })
 
-const dataFormat = ref([
-  ['income', ['to-thousand-ck', 'YUAN']],
-  ['expend', ['to-thousand-ck', 'YUAN']]
-])
+const dataFormat = computed(() => {
+  return [
+    ['income', ['to-thousand', decimalPrecision.value.operation]],
+    ['expend', ['to-thousand', decimalPrecision.value.operation]]
+  ]
+})
 
 // 合计
 function getSummaries(param) {
-  return tableSummary(param, { props: [['income', DP.YUAN], ['expend', DP.YUAN]], toThousandFields: ['income', 'expend'] })
+  return tableSummary(param, { props: [['income', decimalPrecision.value.operation], ['expend', decimalPrecision.value.operation]], toThousandFields: ['income', 'expend'] })
 }
 
 const { getMyChart } = useChart({

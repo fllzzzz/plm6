@@ -86,6 +86,7 @@ import checkPermission from '@/utils/system/check-permission'
 import { contractSaleTypeEnum } from '@enum-ms/mes'
 import { toThousand } from '@/utils/data-type/number'
 import { emptyTextFormatter } from '@/utils/data-type'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
 
 import { regHeader } from '@compos/use-crud'
 import crudOperation from '@crud/CRUD.operation'
@@ -99,6 +100,8 @@ const projectId = inject('projectId')
 const modifiedData = computed(() => {
   return crud.data.filter((v) => v.unitPrice !== v.originUnitPrice)
 })
+
+const { decimalPrecision } = useDecimalPrecision()
 
 // 预览参数
 const previewParams = computed(() => {
@@ -140,7 +143,7 @@ CRUD.HOOK.handleRefresh = (crud, { data }) => {
   data.content.forEach(v => {
     v.newUnitPrice = v.unitPrice // number类型的单价（unitPrice可能会有千位符）
     v.originNewUnitPrice = v.newUnitPrice
-    v.originUnitPrice = emptyTextFormatter(toThousand(v.unitPrice))
+    v.originUnitPrice = emptyTextFormatter(toThousand(v.unitPrice, decimalPrecision.value.contract))
     v.totalPrice = v.quantity * (v.newUnitPrice || 0)
   })
   // fetchCost()

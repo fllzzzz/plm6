@@ -52,7 +52,7 @@
 
 <script setup>
 import crudApi from '@/api/project-manage/subcontract-visa-manage'
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 
 import { auditTypeEnum } from '@enum-ms/contract'
 import { subcontractVisaManagePM as permission } from '@/page-permission/project'
@@ -63,6 +63,9 @@ import useCRUD from '@compos/use-crud'
 import pagination from '@crud/Pagination'
 import mDetail from './module/detail'
 import mHeader from './module/header'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const optShow = {
   add: false,
@@ -71,13 +74,15 @@ const optShow = {
   download: false
 }
 
-const dataFormat = ref([
-  ['project', ['parse-project', { onlyShortName: true }]],
-  ['applyDate', ['parse-time', '{y}-{m}-{d}']],
-  ['visaAmount', ['to-thousand-ck', 'YUAN']],
-  ['auditTime', ['parse-time', '{y}-{m}-{d}']],
-  ['approveTime', ['parse-time', '{y}-{m}-{d}']]
-])
+const dataFormat = computed(() => {
+  return [
+    ['project', ['parse-project', { onlyShortName: true }]],
+    ['applyDate', ['parse-time', '{y}-{m}-{d}']],
+    ['visaAmount', ['to-thousand', decimalPrecision.value.project]],
+    ['auditTime', ['parse-time', '{y}-{m}-{d}']],
+    ['approveTime', ['parse-time', '{y}-{m}-{d}']]
+  ]
+})
 
 const tableRef = ref()
 const detailVisible = ref(false)

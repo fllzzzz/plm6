@@ -36,7 +36,7 @@
           type="warning"
           class="filter-item"
         />
-        <el-tag type="warning" size="medium" effect="plain">{{`累计付款：${toThousand(totalSum)} 元`}}</el-tag>
+        <el-tag type="warning" size="medium" effect="plain">{{`累计付款：${toThousand(totalSum,decimalPrecision.contract)} 元`}}</el-tag>
       </template>
     </crudOperation>
   </div>
@@ -49,10 +49,13 @@ import { ref, watch } from 'vue'
 import moment from 'moment'
 import { toThousand } from '@data-type/number'
 import { auditTypeEnum } from '@enum-ms/contract'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
 
 import { regHeader } from '@compos/use-crud'
 import rrOperation from '@crud/RR.operation'
 import crudOperation from '@crud/CRUD.operation'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const defaultQuery = {
   createTime: [moment().startOf('month').valueOf(), moment().valueOf()],

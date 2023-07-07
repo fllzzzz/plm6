@@ -39,22 +39,22 @@
     </el-table-column>
     <el-table-column v-if="columns.visible('contractAmount')" key="contractAmount" prop="contractAmount" :show-overflow-tooltip="true" label="合同金额(元)" align="center">
       <template v-slot="scope">
-        <span>{{ scope.row.contractAmount? toThousand(scope.row.contractAmount): '' }}</span>
+        <span>{{ scope.row.contractAmount? toThousand(scope.row.contractAmount,decimalPrecision.contract): '' }}</span>
       </template>
     </el-table-column>
     <el-table-column v-if="columns.visible('collectionAmount')" key="collectionAmount" prop="collectionAmount" label="收款额(元)" align="center">
       <template v-slot="scope">
-        <div>{{ scope.row.collectionAmount? toThousand(scope.row.collectionAmount): '-' }}</div>
+        <div>{{ scope.row.collectionAmount? toThousand(scope.row.collectionAmount,decimalPrecision.contract): '-' }}</div>
       </template>
     </el-table-column>
     <el-table-column v-if="columns.visible('happenedAmount')" key="happenedAmount" prop="happenedAmount" label="发生额(元)" align="center">
       <template v-slot="scope">
-        <div>{{ scope.row.happenedAmount? toThousand(scope.row.happenedAmount): '-' }}</div>
+        <div>{{ scope.row.happenedAmount? toThousand(scope.row.happenedAmount,decimalPrecision.contract): '-' }}</div>
       </template>
     </el-table-column>
     <el-table-column v-if="columns.visible('arrearAmount')" key="arrearAmount" prop="arrearAmount" label="欠款(元)" align="center">
       <template v-slot="scope">
-        <el-tag class="collection-tag" :type="scope.row.arrearAmount<0?'warning':'success'" effect="plain">{{ scope.row.arrearAmount && scope.row.arrearAmount>0? toThousand(scope.row.arrearAmount): scope.row.arrearAmount }}</el-tag>
+        <el-tag class="collection-tag" :type="scope.row.arrearAmount<0?'warning':'success'" effect="plain">{{ scope.row.arrearAmount && scope.row.arrearAmount>0? toThousand(scope.row.arrearAmount,decimalPrecision.contract): scope.row.arrearAmount }}</el-tag>
       </template>
     </el-table-column>
   </common-table>
@@ -66,15 +66,20 @@
 <script setup>
 import crudApi from '@/api/contract/contract-warn'
 import { ref } from 'vue'
+
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
-import pagination from '@crud/Pagination'
-import mHeader from './module/header'
 import { businessTypeEnum } from '@enum-ms/contract'
 import { parseTime } from '@/utils/date'
 import { toThousand } from '@data-type/number'
 import { projectNameFormatter } from '@/utils/project'
 import { collectionWarnPM as permission } from '@/page-permission/contract'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+import pagination from '@crud/Pagination'
+import mHeader from './module/header'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const optShow = {
   add: false,

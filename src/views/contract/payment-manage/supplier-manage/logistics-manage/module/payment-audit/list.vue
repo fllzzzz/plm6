@@ -2,7 +2,7 @@
   <div>
     <!--表格渲染-->
     <div>
-      <el-tag type="success" size="medium" v-if="currentRow.freight">{{'运输额:'+toThousand(currentRow.freight)}}</el-tag>
+      <el-tag type="success" size="medium" v-if="currentRow.freight">{{'运输额:'+toThousand(currentRow.freight,decimalPrecision.contract)}}</el-tag>
     </div>
     <common-table
       ref="tableRef"
@@ -34,7 +34,7 @@
       </el-table-column> -->
       <el-table-column key="applyAmount" prop="applyAmount" label="申请金额" align="center">
         <template v-slot="scope">
-          <div>{{ isNotBlank(scope.row.applyAmount) ? toThousand(scope.row.applyAmount): '-' }}</div>
+          <div>{{ isNotBlank(scope.row.applyAmount) ? toThousand(scope.row.applyAmount,decimalPrecision.contract): '-' }}</div>
         </template>
       </el-table-column>
       <el-table-column key="auditStatus" prop="auditStatus" label="状态" align="center">
@@ -84,10 +84,12 @@ import { auditTypeEnum, supplierPayTypeEnum } from '@enum-ms/contract'
 import { parseTime } from '@/utils/date'
 import { toThousand } from '@data-type/number'
 import { contractSupplierLogisticsPM } from '@/page-permission/contract'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
 
-import detail from './detail'
 import pagination from '@crud/Pagination'
+import detail from './detail'
 
+const { decimalPrecision } = useDecimalPrecision()
 const permission = contractSupplierLogisticsPM.payment
 
 const optShow = {

@@ -37,7 +37,7 @@
       <el-table-column label="用电度数" prop="usedElectricityMete" align="center" />
       <el-table-column label="均价（元/度）" prop="ElectricityAverageUnitPrice" align="center">
         <template #default="{ row }">
-          <span>{{ row.usedElectricityMete ? (row.electricityPrice / row.usedElectricityMete).toFixed(2) : 0 }}</span>
+          <span>{{ row.usedElectricityMete ? (row.electricityPrice / row.usedElectricityMete).toFixed(decimalPrecision.operation) : 0 }}</span>
         </template>
       </el-table-column>
       <el-table-column label="电费（元）" prop="electricityPrice" align="center" />
@@ -45,7 +45,7 @@
         <template #default="{ row }">
           <span>{{
             row.monthOutput
-              ? (row.electricityPrice / convertUnits(row.monthOutput, 'kg', 't', DP.COM_WT__T)).toFixed(2)
+              ? (row.electricityPrice / convertUnits(row.monthOutput, 'kg', 't', DP.COM_WT__T)).toFixed(decimalPrecision.operation)
               : row.electricityPrice
           }}</span>
         </template>
@@ -53,14 +53,14 @@
       <el-table-column label="用水量（吨）" prop="usedWaterMete" align="center" />
       <el-table-column label="均价（元/吨）" prop="waterAverageUnitPrice" align="center">
         <template #default="{ row }">
-          <span>{{ row.usedWaterMete ? (row.waterPrice / row.usedWaterMete).toFixed(2) : 0 }}</span>
+          <span>{{ row.usedWaterMete ? (row.waterPrice / row.usedWaterMete).toFixed(decimalPrecision.operation) : 0 }}</span>
         </template>
       </el-table-column>
       <el-table-column label="水费（元）" prop="waterPrice" align="center" />
       <el-table-column label="折合水费（元/吨）" prop="equivalentWater" align="center">
         <template #default="{ row }">
           <span>{{
-            row.monthOutput ? (row.waterPrice / convertUnits(row.monthOutput, 'kg', 't', DP.COM_WT__T)).toFixed(2) : row.waterPrice
+            row.monthOutput ? (row.waterPrice / convertUnits(row.monthOutput, 'kg', 't', DP.COM_WT__T)).toFixed(decimalPrecision.operation) : row.waterPrice
           }}</span>
         </template>
       </el-table-column>
@@ -80,6 +80,9 @@ import { convertUnits } from '@/utils/convert/unit'
 import { parseTime } from '@/utils/date'
 
 import ExportButton from '@comp-common/export-button/index.vue'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const year = ref(parseTime(new Date(), '{y}'))
 const tableRef = ref()
@@ -219,9 +222,8 @@ function getSummaries(param) {
           }
         }, 0)
       }
-      sums[index] = valuesSum.toFixed(2)
+      sums[index] = (column.property === 'electricityPrice' || column.property === 'waterPrice') ? valuesSum.toFixed(decimalPrecision.value.operation) : valuesSum.toFixed(2)
     }
-
     if (index === 1) {
       sums[index] = convertUnits(sums[index], 'kg', 't', 2)
     }
