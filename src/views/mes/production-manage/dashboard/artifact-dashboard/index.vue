@@ -158,9 +158,9 @@ async function getDetail(item) {
   }
 }
 
-const matchColor = computed(() => {
-  return '#b3e19d'
-})
+// const matchColor = computed(() => {
+//   return '#b3e19d'
+// })
 
 const specList = ref([])
 const specLoading = ref(false)
