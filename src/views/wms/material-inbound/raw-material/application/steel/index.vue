@@ -444,10 +444,14 @@ function automaticAssignWeight() {
   // 为0 则 过磅重量 = 理论重量(无需计算)
   const calc = (row) => {
     row.weighingTotalWeight = assignableWeight
-      ? toFixed((row.theoryTotalWeight / spAndSsTheoryTotalWeight) * assignableWeight + row.theoryTotalWeight, 2, { toNum: true })
+      ? toFixed((row.theoryTotalWeight / spAndSsTheoryTotalWeight) * assignableWeight + row.theoryTotalWeight, row?.accountingPrecision || 0, { toNum: true })
       : row.theoryTotalWeight
     assignableWeight -= row.weighingTotalWeight - row.theoryTotalWeight
     spAndSsTheoryTotalWeight -= row.theoryTotalWeight
+    // 计算金额
+    if (isNotBlank(row.unitPrice) && isNotBlank(row.weighingTotalWeight)) {
+      row.amount = toPrecision(row.weighingTotalWeight * row.unitPrice, DP.YUAN)
+    }
   }
   spList.forEach((v) => calc(v))
   ssList.forEach((v) => calc(v))
