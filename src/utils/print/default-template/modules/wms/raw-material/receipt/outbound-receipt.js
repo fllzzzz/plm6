@@ -386,6 +386,15 @@ const wmsRmOutboundReceipt = {
         align: alignEnum.CENTER.V,
         minWidth: 18,
         type: typeEnum.USER_NAME.K
+      },
+      {
+        show: true,
+        key: 'remark',
+        title: '备注',
+        source: dataSourceEnum.SYSTEM.V,
+        align: alignEnum.CENTER.V,
+        minWidth: 18,
+        type: typeEnum.OTHER.K
       }
     ]
   }
