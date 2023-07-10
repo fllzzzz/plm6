@@ -115,4 +115,16 @@ export function update(data) {
   })
 }
 
+/**
+ * 下载零件DXF压缩包
+ */
+export function dxfZipDownload(params) {
+  return request({
+    url: `/api/plan/drawing/download/dxfzip`,
+    method: 'get',
+    responseType: 'blob',
+    params
+  })
+}
+
 export default { get, del, download }
