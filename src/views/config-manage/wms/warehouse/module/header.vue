@@ -1,6 +1,10 @@
 <template>
   <div class="head-container">
-      <common-radio-button
+    <el-tabs v-if="isNotBlank(workshopName)" v-model="query.workshopId" tab-position="top" @tab-click="tabClick">
+      <el-tab-pane v-for="item in workshopName" :key="item.id" :label="item.name" :name="`${item.id}`" />
+    </el-tabs>
+    <el-tag v-else type="danger" style="margin:15px 0">* 请先添加仓库名称</el-tag>
+      <!-- <common-radio-button
         v-model="query.workshopId"
         :options="workshopName"
         showOptionAll
@@ -8,7 +12,7 @@
         :data-structure="{ key: 'id', label: 'name', value: 'id' }"
         class="filter-item"
         @change="workshopNameChange"
-      />
+      /> -->
       <crud-operation :disabled="!query.workshopId">
         <template #optLeft>
           <common-button icon="el-icon-plus" type="success" class="filter-item" size="mini" @click="workshopVisible=true">仓库名称</common-button>
@@ -29,7 +33,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import useWorkshopName from '@compos/store/use-workshop-name'
 
 import { enabledEnum } from '@enum-ms/common'
@@ -50,8 +54,20 @@ const workshopVisible = ref(false)
 
 const { workshopName } = useWorkshopName()
 
-function workshopNameChange(val) {
-  const findVal = workshopName.value.find(v => v.id === val) || {}
+watch(
+  () => workshopName.value,
+  (val) => {
+    if (val && val.length) {
+      crud.query.workshopId = (crud.query.workshopId || workshopName.value[0]?.id) ? (crud.query.workshopId || workshopName.value[0]?.id) + '' : undefined
+      crud.query.warehouseType = isNotBlank(workshopName.value[0]) ? (workshopName.value[0].workshopId ? warehouseTypeEnum.WORKSHOP.V : warehouseTypeEnum.NORMAL.V) : undefined
+      crud.toQuery()
+    }
+  },
+  { immediate: true, deep: true }
+)
+
+function tabClick() {
+  const findVal = workshopName.value.find(v => v.id === Number(crud.query.workshopId)) || {}
   crud.query.warehouseType = isNotBlank(findVal) ? (findVal.workshopId ? warehouseTypeEnum.WORKSHOP.V : warehouseTypeEnum.NORMAL.V) : undefined
   crud.toQuery()
 }

@@ -15,10 +15,14 @@ import { defineProps, defineExpose, provide, computed, ref, watch } from 'vue'
 import { mapGetters } from '@/store/lib'
 import { deepClone, isBlank } from '@/utils/data-type'
 
+import useWorkshopName from '@compos/store/use-workshop-name'
+
 import useWatchFormValidate from '@/composables/form/use-watch-form-validate'
 import commonFormItem from '../components/common-form-item.vue'
 import commonMaterialInfo from '../components/common-material-info.vue'
 import { numFmtByUnit } from '@/utils/wms/convert-unit'
+
+const { mesWorkShopName } = useWorkshopName()
 
 const props = defineProps({
   basicClass: {
@@ -80,8 +84,7 @@ function formInit(data) {
     materialId: data.id, // 物料id
     monomerId: data?.monomerId, // 单体id
     areaId: data?.areaId, // 区域id
-    workshopId: undefined,
-    // workshopId: data.workshop?.id, // 车间id
+    workshopId: mesWorkShopName.value?.findIndex(v => v.id === data.workshop?.id) > -1 ? data.workshop?.id : undefined, // 车间id
     outboundUnit: data.outboundUnit, // 出库单位
     outboundUnitPrecision: data.outboundUnitPrecision, // 出库单位精度
     projectId: data.project ? data.project.id : undefined, // 项目id

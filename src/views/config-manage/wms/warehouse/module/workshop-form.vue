@@ -38,7 +38,7 @@
               @nameChange="workshopChange"
               style="width: 100%"
             />
-            <el-input v-else v-model.trim="scope.row.name" type="text" clearable placeholder="名称" size="small" style="width: 100%" />
+            <el-input v-else v-model.trim="scope.row.name" type="text" clearable placeholder="名称" size="small" style="width: 100%" maxlength="20"/>
           </template>
         </el-table-column>
         <el-table-column label="操作" width="130px" align="center" fixed="right">
@@ -149,11 +149,11 @@ async function onSubmit(val) {
   submitLoading.value = true
   try {
     await addWorkshop(list.value)
-    ElNotification({ title: '删除成功', type: 'success' })
+    ElNotification({ title: '新增成功', type: 'success' })
     store.dispatch('config/fetchWorkshopName')
     handleClose()
   } catch (error) {
-    console.log('审核', error)
+    console.log('仓库名称', error)
   } finally {
     submitLoading.value = false
   }

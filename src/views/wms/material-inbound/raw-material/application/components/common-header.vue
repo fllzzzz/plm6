@@ -351,7 +351,7 @@ async function handleOrderInfoChange(order, oldOrder) {
         {
           toNum: true
         },
-        { mete: ['mete', 'inboundMete'] }
+        { mete: ['mete', 'inboundMete'], quantity: ['inboundQuantity', 'quantity'] }
       )
       order.details = content?.map((v) => {
         const applyPurchaseObj = {}

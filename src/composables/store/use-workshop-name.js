@@ -29,6 +29,7 @@ const useWorkshopName = (loadedCallBack) => {
   return {
     workshopName: computed(() => store.state.config.workshopName),
     workshopNameKV: computed(() => store.state.config.workshopNameKV),
+    mesWorkShopName: computed(() => store.state.config.mesWorkShopName),
     loaded
   }
 }

@@ -83,6 +83,7 @@ const state = {
   warehouse: [], // 存储仓库
   workshopName: [], // 存储仓库所属车间
   workshopNameKV: {}, // 车间id:value 格式
+  mesWorkShopName: [], // 系统配置车间
   workshops: [], // 车间
   workshopKV: {}, // 车间id:value 格式
   bridgeWorkshops: [], // 桥梁-车间
@@ -230,9 +231,13 @@ const mutations = {
   SET_WORKSHOP_NAME(state, workshopName) {
     state.workshopName = workshopName
     state.workshopNameKV = {}
+    state.mesWorkShopName = []
     workshopName.forEach((v) => {
       v.tagColor = v.workshopId ? '#409eff' : '#e6a23c'
       state.workshopNameKV[v.id] = v
+      if (v.workshopId) {
+        state.mesWorkShopName.push(v)
+      }
     })
   },
   SET_PRODUCTION_TEAM(state, productionTeam) {

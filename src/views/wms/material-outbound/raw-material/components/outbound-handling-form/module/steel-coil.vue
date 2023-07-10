@@ -282,6 +282,7 @@ import { deepClone, isBlank, isNotBlank, toPrecision } from '@/utils/data-type'
 import { calcSteelCoilWeight } from '@/utils/wms/measurement-calc'
 import { positiveNumPattern } from '@/utils/validate/pattern'
 
+import useWorkshopName from '@compos/store/use-workshop-name'
 import useMatBaseUnit from '@/composables/store/use-mat-base-unit'
 import useTableValidate from '@compos/form/use-table-validate'
 import useWatchFormValidate from '@/composables/form/use-watch-form-validate'
@@ -299,6 +300,8 @@ const steelCoilOutboundModeEnum = {
   BY_LENGTH: { L: '按长度出库', K: 'BY_LENGTH ', V: 1 << 0 },
   BY_PLATE: { L: '按条板出库', K: 'BY_PLATE', V: 1 << 1 }
 }
+
+const { mesWorkShopName } = useWorkshopName()
 
 const previewHeight = 260
 
@@ -494,8 +497,7 @@ function rowInit() {
     // projectId: material.value.project ? material.value.project.id : undefined, // 项目id,
     monomerId: material.value?.monomerId,
     areaId: material.value?.areaId,
-    workshopId: undefined,
-    // workshopId: material.value?.workshop?.id,
+    workshopId: mesWorkShopName.value?.findIndex(v => v.id === material.value?.workshop?.id) > -1 ? material.value?.workshop?.id : undefined,
     overWidth: false,
     overLength: false
   })
@@ -563,8 +565,7 @@ function formInit(data) {
     materialId: data.id, // 物料id
     monomerId: data?.monomerId, // 单体id
     areaId: data?.areaId, // 区域id
-    workshopId: undefined,
-    // workshopId: data.workshop?.id, // 车间id
+    workshopId: mesWorkShopName.value?.findIndex(v => v.id === data.workshop?.id) > -1 ? data.workshop?.id : undefined, // 车间id
     outboundUnit: data.outboundUnit, // 出库单位
     outboundUnitPrecision: data.outboundUnitPrecision, // 出库单位精度
     projectId: data.project ? data.project.id : undefined, // 项目id
