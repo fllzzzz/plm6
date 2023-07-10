@@ -1,5 +1,6 @@
 import { isNotBlank, toPrecision } from '@/utils/data-type'
 import { getDP } from '@/utils/data-type/number'
+import { DP } from '@/settings/config'
 
 // 处理金额变化
 export default function usePriceSet(meteField = 'mete') {
@@ -11,7 +12,7 @@ export default function usePriceSet(meteField = 'mete') {
       val = row.unitPrice
     }
     row.priceType = 'unitPrice'
-    row.amount = isNotBlank(val) ? toPrecision(val * row[meteField], 2) : undefined
+    row.amount = isNotBlank(val) ? toPrecision(val * row[meteField], DP.YUAN) : undefined
   }
 
   // 处理金额变化

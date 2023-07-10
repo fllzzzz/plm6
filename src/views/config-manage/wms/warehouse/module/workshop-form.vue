@@ -10,7 +10,7 @@
     size="800px"
   >
     <template #titleRight>
-      <common-button icon="el-icon-plus" @click="addItem" size="mini"/>
+      <common-button icon="el-icon-plus" type="warning" @click="addItem" size="mini"/>
       <common-button size="mini" type="primary" @click="onSubmit" v-loading="submitLoading">提交</common-button>
     </template>
     <template #content>
@@ -78,6 +78,7 @@ const props = defineProps({
 
 const { visible, handleClose } = useVisible({ emit, props })
 const submitLoading = ref(false)
+
 const disabledVal = computed(() => {
   const arr = []
   workshopName.value.forEach(v => {
@@ -92,6 +93,7 @@ const disabledVal = computed(() => {
   })
   return arr
 })
+
 watch(
   visible,
   (val) => {

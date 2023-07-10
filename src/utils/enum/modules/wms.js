@@ -246,8 +246,8 @@ constantize(inspectionDetailStatusEnum)
 
 // 配置仓库类型
 const warehouseTypeEnum = {
-  NORMAL: { L: '普通', K: 'NORMAL', V: 1 << 0 },
-  WORKSHOP: { L: '车间', K: 'WORKSHOP', V: 1 << 1 }
+  WORKSHOP: { L: '车间', K: 'WORKSHOP', V: 1 << 0 },
+  NORMAL: { L: '普通', K: 'NORMAL', V: 1 << 1 }
 }
 constantize(warehouseTypeEnum)
 

@@ -7,7 +7,7 @@
 <script setup>
 import { defineProps, computed } from 'vue'
 
-import useWorkshop from '@compos/store/use-workshops'
+import useWorkshopName from '@compos/store/use-workshop-name'
 import tableCellTag from '@comp-common/table-cell-tag/index.vue'
 
 const props = defineProps({
@@ -20,10 +20,10 @@ const props = defineProps({
   }
 })
 
-const { workshopKV } = useWorkshop()
+const { workshopNameKV } = useWorkshopName()
 
 const cur = computed(() => {
-  return workshopKV.value[props.id]
+  return workshopNameKV.value[props.id]
 })
 
 </script>

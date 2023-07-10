@@ -43,8 +43,19 @@
             @change="crud.toQuery"
           />
         </template>
-        <template #afterWarehouse>
+        <template #beforeWarehouse>
           <workshop-select
+            v-model="query.workshopId"
+            :type="warehouseTypeEnum.WORKSHOP.V"
+            placeholder="车间"
+            class="filter-item"
+            style="width: 200px"
+            clearable
+            @change="crud.toQuery"
+          />
+        </template>
+        <template #afterWarehouse>
+          <!-- <workshop-select
             v-model="query.workshopId"
             :workshop-id="query.workshopId"
             placeholder="车间"
@@ -52,7 +63,7 @@
             style="width: 200px"
             clearable
             @change="crud.toQuery"
-          />
+          /> -->
         </template>
         <template #secondLineFirstItem>
           <warehouse-project-cascader
@@ -139,7 +150,7 @@ import { exportDetailsExcel, getSummary } from '@/api/wms/report/raw-material/ou
 import { ref, inject, watchEffect } from 'vue'
 import { PICKER_OPTIONS_SHORTCUTS } from '@/settings/config'
 import { rawMatClsEnum, manufClsEnum } from '@enum-ms/classification'
-import { orderSupplyTypeEnum, baseMaterialTypeEnum } from '@/utils/enum/modules/wms'
+import { orderSupplyTypeEnum, baseMaterialTypeEnum, warehouseTypeEnum } from '@/utils/enum/modules/wms'
 import { STEEL_ENUM, STEEL_BASE_UNIT } from '@/settings/config'
 import { convertUnits } from '@/utils/convert/unit'
 
@@ -150,7 +161,7 @@ import MatHeaderQuery from '@/components-system/wms/header-query/raw-mat/index.v
 import ExportButton from '@comp-common/export-button/index.vue'
 import warehouseProjectCascader from '@comp-wms/warehouse-project-cascader'
 import monomerSelectAreaSelect from '@comp-base/monomer-select-area-select'
-import workshopSelect from '@/components-system/base/workshop-select.vue'
+import workshopSelect from '@/components-system/wms/workshop-select.vue'
 
 const defaultTime = ref([new Date(2000, 1, 1, 0, 0, 0), new Date(2000, 2, 1, 23, 59, 59)])
 

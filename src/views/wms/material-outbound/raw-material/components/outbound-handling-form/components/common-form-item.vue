@@ -37,8 +37,8 @@
   <el-form-item label="车间" prop="workshopId">
     <workshop-select
       v-model="currentForm.workshopId"
-      placeholder="可选择车间"
       :type="warehouseTypeEnum.WORKSHOP.V"
+      placeholder="可选择车间"
       style="width: 100%"
       clearable
     />

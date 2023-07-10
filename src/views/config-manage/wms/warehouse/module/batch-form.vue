@@ -144,6 +144,10 @@ CRUD.HOOK.beforeValidateBCU = () => {
 // 表单提交数据清理
 crud.submitBatchFormFormat = (form) => {
   cleanUpData(form.list)
+  form.list.map(v => {
+    v.workshopId = crud.query.workshopId
+    v.warehouseType = crud.query.warehouseType
+  })
   form.workshopId = crud.query.workshopId
   return form
 }
