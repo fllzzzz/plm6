@@ -18,28 +18,28 @@
         <el-descriptions-item label-class-name="contractLabel" label="项目名称">{{ contract.name }}</el-descriptions-item>
         <el-descriptions-item label-class-name="contractLabel" label="车牌号">{{ contract.licensePlate }}</el-descriptions-item>
         <el-descriptions-item label-class-name="contractLabel" label="本次发货额">
-          {{ toFixed(contract.deliveryAmount, DP.YUAN) }}
+          {{ toFixed(contract.deliveryAmount, decimalPrecision.bridge) }}
         </el-descriptions-item>
         <el-descriptions-item label-class-name="contractLabel" label="安全余额">
-          {{ toFixed(contract.safeAmount, DP.YUAN) }}
+          {{ toFixed(contract.safeAmount, decimalPrecision.bridge) }}
         </el-descriptions-item>
         <el-descriptions-item label-class-name="contractLabel" label="合同额">
-          {{ toFixed(contract.contractAmount, DP.YUAN) }}
+          {{ toFixed(contract.contractAmount, decimalPrecision.bridge) }}
         </el-descriptions-item>
         <el-descriptions-item label-class-name="contractLabel" label="累计收款">
-          {{ toFixed(contract.totalCollectionAmount, DP.YUAN) }}
+          {{ toFixed(contract.totalCollectionAmount, decimalPrecision.bridge) }}
         </el-descriptions-item>
         <el-descriptions-item label-class-name="contractLabel" label="累计发运">
-          {{ toFixed(contract.totalDeliveryAmount, DP.YUAN) }}
+          {{ toFixed(contract.totalDeliveryAmount, decimalPrecision.bridge) }}
         </el-descriptions-item>
         <el-descriptions-item label-class-name="contractLabel" label="累计发运额">
-          {{ toFixed(contract.totalDeliveryAmount, DP.YUAN) }}
+          {{ toFixed(contract.totalDeliveryAmount, decimalPrecision.bridge) }}
         </el-descriptions-item>
         <el-descriptions-item label-class-name="contractLabel" label="合同应收">
-          {{ toFixed(contract.contractReceivableAmount, DP.YUAN) }}
+          {{ toFixed(contract.contractReceivableAmount, decimalPrecision.bridge) }}
         </el-descriptions-item>
         <el-descriptions-item label-class-name="contractLabel" label="开票应收">
-          {{ toFixed(contract.billingReceivableAmount, DP.YUAN) }}
+          {{ toFixed(contract.billingReceivableAmount, decimalPrecision.bridge) }}
         </el-descriptions-item>
         <el-descriptions-item label-class-name="contractLabel" label="附件">
           <div class="imgs-box">
@@ -105,6 +105,9 @@ import useVisible from '@compos/use-visible'
 import structureTable from './module/structure'
 import enclosureTable from './module/enclosure'
 import auxiliaryMaterialTable from './module/auxiliary-material'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const emit = defineEmits(['update:visible'])
 const props = defineProps({

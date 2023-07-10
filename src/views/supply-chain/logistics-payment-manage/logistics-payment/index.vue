@@ -88,7 +88,7 @@
 <script setup>
 import { logisticsPaymentList as get } from '@/api/supply-chain/logistics-payment-manage/logistics-record-ledger'
 import { add } from '@/api/supply-chain/logistics-payment-manage/logistics-payment'
-import { ref, nextTick } from 'vue'
+import { ref, nextTick, computed } from 'vue'
 import { supplierLogisticsPaymentPM as permission } from '@/page-permission/supply-chain'
 import checkPermission from '@/utils/system/check-permission'
 
@@ -99,6 +99,9 @@ import mHeader from './module/header'
 import invoiceRecord from './module/invoice-record'
 import paymentApplication from './module/payment-application'
 import mForm from './module/form'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const optShow = {
   add: false,
@@ -110,13 +113,15 @@ const optShow = {
 const tableRef = ref()
 const headerRef = ref()
 const applicationVisible = ref(false)
-const dataFormat = ref([
-  ['paymentRate', ['to-fixed', 2]],
-  ['invoiceRate', ['to-fixed', 2]],
-  ['freight', ['to-thousand-ck', 'YUAN']],
-  ['paymentAmount', ['to-thousand-ck', 'YUAN']],
-  ['invoiceAmount', ['to-thousand-ck', 'YUAN']]
-])
+const dataFormat = computed(() => {
+  return [
+    ['paymentRate', ['to-fixed', 2]],
+    ['invoiceRate', ['to-fixed', 2]],
+    ['freight', ['to-thousand', decimalPrecision.value.supplyChain]],
+    ['paymentAmount', ['to-thousand', decimalPrecision.value.supplyChain]],
+    ['invoiceAmount', ['to-thousand', decimalPrecision.value.supplyChain]]
+  ]
+})
 const { crud, columns, CRUD } = useCRUD(
   {
     title: '物流付款台账',

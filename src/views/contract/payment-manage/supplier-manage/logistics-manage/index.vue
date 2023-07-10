@@ -28,7 +28,7 @@
     </el-table-column>
     <el-table-column v-if="columns.visible('freight')" key="freight" prop="freight" label="运输额" align="center" min-width="100">
       <template v-slot="scope">
-        <span @click="openStockAmount(scope.row)" style="cursor:pointer;">{{ isNotBlank(scope.row.freight)? toThousand(scope.row.freight): 0 }}</span>
+        <span @click="openStockAmount(scope.row)" style="cursor:pointer;">{{ isNotBlank(scope.row.freight)? toThousand(scope.row.freight,decimalPrecision.contract): 0 }}</span>
       </template>
     </el-table-column>
     <el-table-column v-if="columns.visible('paymentAmount')" key="paymentAmount" prop="paymentAmount" label="付款额" align="center" min-width="100">
@@ -45,7 +45,7 @@
         </el-tooltip>
       </template>
       <template v-slot="scope">
-        <span style="cursor:pointer;margin-right:10px;" @click="openTab(scope.row,'payment')">{{ isNotBlank(scope.row.paymentAmount)? toThousand(scope.row.paymentAmount): 0 }}</span>
+        <span style="cursor:pointer;margin-right:10px;" @click="openTab(scope.row,'payment')">{{ isNotBlank(scope.row.paymentAmount)? toThousand(scope.row.paymentAmount,decimalPrecision.contract): 0 }}</span>
         <span @click="openPaymentAudit(scope.row)" style="cursor:pointer;" v-if="checkPermission(permission.payment.audit) && scope.row.unCheckPaymentCount>0">
           <el-badge :value="scope.row.unCheckPaymentCount" :max="99" :hidden="scope.row.unCheckPaymentCount < 1">
             <svg-icon icon-class="notify"  style="color:#e6a23c;font-size:15px;"/>
@@ -73,7 +73,7 @@
       </template>
       <template v-slot="scope">
         <div @click="openTab(scope.row,'invoice')" style="cursor:pointer;">
-          <span style="margin-right:10px;">{{ isNotBlank(scope.row.invoiceAmount)? toThousand(scope.row.invoiceAmount): 0 }}</span>
+          <span style="margin-right:10px;">{{ isNotBlank(scope.row.invoiceAmount)? toThousand(scope.row.invoiceAmount,decimalPrecision.contract): 0 }}</span>
           <template v-if="checkPermission(permission.invoice.audit) && scope.row.unCheckInvoiceCount>0">
             <el-badge :value="scope.row.unCheckInvoiceCount" :max="99" :hidden="scope.row.unCheckInvoiceCount < 1">
               <svg-icon icon-class="notify"  style="color:#e6a23c;font-size:15px;"/>
@@ -108,6 +108,7 @@ import { logisticsSearchTypeEnum, supplierPayTypeEnum } from '@enum-ms/contract'
 import checkPermission from '@/utils/system/check-permission'
 import { toThousand } from '@data-type/number'
 import { isNotBlank } from '@data-type/index'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
@@ -116,6 +117,8 @@ import mHeader from './module/header'
 import paymentAndInvoice from './module/payment-and-invoice'
 import recordDetail from '@/views/supply-chain/logistics-payment-manage/logistics-record/module/record-detail'
 import paymentAudit from './module/payment-audit/index'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const optShow = {
   add: false,

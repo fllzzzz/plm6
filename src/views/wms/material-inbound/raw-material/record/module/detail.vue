@@ -63,11 +63,12 @@
 import { inject, computed, ref } from 'vue'
 import { orderSupplyTypeEnum, inboundFillWayEnum } from '@enum-ms/wms'
 import { tableSummary } from '@/utils/el-extra'
-import { DP } from '@/settings/config'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { setSpecInfoToList } from '@/utils/wms/spec'
-import { materialHasAmountColumns } from '@/utils/columns-format/wms'
+import { materialColumns } from '@/utils/columns-format/wms'
 
+import { DP } from '@/settings/config'
+import { invoiceTypeEnum } from '@/utils/enum/modules/finance'
 import { regDetail } from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
 import useWmsConfig from '@/composables/store/use-wms-config'
@@ -81,10 +82,27 @@ import expandSecondaryInfo from '@/components-system/wms/table-columns/expand-se
 import titleAfterInfo from '@/views/wms/material-inbound/raw-material/components/title-after-info.vue'
 import purchaseDetailButton from '@/components-system/wms/purchase-detail-button/index.vue'
 import checkPermission from '@/utils/system/check-permission'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const permission = inject('permission')
 // 表格列数据格式转换
-const columnsDataFormat = ref([...materialHasAmountColumns, ['remark', 'empty-text'], ['monomerName', 'empty-text'], ['areaName', 'empty-text']])
+// const columnsDataFormat = ref([])
+
+const columnsDataFormat = computed(() => {
+  return [
+    ...materialColumns,
+    // 金额相关
+    ['invoiceType', ['parse-enum', invoiceTypeEnum, { f: 'SL' }]],
+    ['taxRate', ['suffix', '%']],
+    ['unitPrice', ['to-thousand', decimalPrecision.value.wms]],
+    ['unitPriceExcludingVAT', ['to-thousand', decimalPrecision.value.wms]],
+    ['amount', ['to-thousand', DP.YUAN]],
+    ['amountExcludingVAT', ['to-thousand', DP.YUAN]],
+    ['inputVAT', ['to-thousand', DP.YUAN]],
+    ['remark', 'empty-text'], ['monomerName', 'empty-text'], ['areaName', 'empty-text']]
+})
 
 const drawerRef = ref()
 const expandRowKeys = ref([])

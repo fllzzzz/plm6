@@ -91,6 +91,9 @@ import mHeader from './module/header'
 import invoiceRecord from './module/invoice-record'
 import paymentRecord from './module/payment-record'
 import tableCellTag from '@comp-common/table-cell-tag/index.vue'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const optShow = {
   add: false,
@@ -109,15 +112,17 @@ const currentView = computed(() => {
 const tableRef = ref()
 const headerRef = ref()
 
-const dataFormat = ref([
-  ['signDate', ['parse-time', '{y}-{m}-{d}']],
-  ['project', 'parse-project'],
-  ['paymentRate', ['to-fixed', 2]],
-  ['invoiceRate', ['to-fixed', 2]],
-  ['amount', ['to-thousand-ck', 'YUAN']],
-  ['paymentAmount', ['to-thousand-ck', 'YUAN']],
-  ['invoiceAmount', ['to-thousand-ck', 'YUAN']]
-])
+const dataFormat = computed(() => {
+  return [
+    ['signDate', ['parse-time', '{y}-{m}-{d}']],
+    ['project', 'parse-project'],
+    ['paymentRate', ['to-fixed', 2]],
+    ['invoiceRate', ['to-fixed', 2]],
+    ['amount', ['to-thousand', decimalPrecision.value.supplyChain]],
+    ['paymentAmount', ['to-thousand', decimalPrecision.value.supplyChain]],
+    ['invoiceAmount', ['to-thousand', decimalPrecision.value.supplyChain]]
+  ]
+})
 
 const { crud, columns, CRUD } = useCRUD(
   {

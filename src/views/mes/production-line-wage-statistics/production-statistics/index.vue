@@ -68,7 +68,7 @@
           </el-table-column>
           <el-table-column align="center" key="price" prop="price" :show-overflow-tooltip="true" label="工资总额（元）" min-width="60px">
             <template v-slot="scope">
-              <span>{{ (scope.row.price)?.toFixed(DP.YUAN) }}</span>
+              <span>{{ (scope.row.price)?.toFixed(decimalPrecision.mes) }}</span>
             </template>
           </el-table-column>
           <el-table-column
@@ -80,7 +80,7 @@
             min-width="60px"
           >
             <template v-slot="scope">
-              <span>{{ scope.row.mete? ((scope.row.price) / (scope.row.mete / 1000)).toFixed(DP.YUAN) : 0 }}</span>
+              <span>{{ scope.row.mete? ((scope.row.price) / (scope.row.mete / 1000)).toFixed(decimalPrecision.mes) : 0 }}</span>
             </template>
           </el-table-column>
         </common-table>
@@ -108,7 +108,6 @@ import checkPermission from '@/utils/system/check-permission'
 import { mesProductionStatisticsPM as permission } from '@/page-permission/mes'
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
-import { DP } from '@/settings/config'
 // import usePagination from '@compos/use-pagination'
 // import { tableSummary } from '@/utils/el-extra'
 import { ElNotification } from 'element-plus'
@@ -119,6 +118,9 @@ import workshopSelect from '@comp-mes/workshop-select'
 import moment from 'moment'
 import mHeader from './module/header'
 import productionDetail from './production-detail/index.vue'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const tableRef = ref()
 const productionData = ref([])
@@ -244,7 +246,7 @@ function getSummaries(param) {
           }
         }, 0)
       }
-      sums[index] = valuesSum?.toFixed(DP.YUAN)
+      sums[index] = valuesSum?.toFixed(decimalPrecision.value.mes)
     }
   })
   return sums

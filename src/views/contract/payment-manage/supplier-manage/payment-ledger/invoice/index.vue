@@ -62,12 +62,12 @@
 
 <script setup>
 import crudApi from '@/api/contract/supplier-manage/payment-ledger/pay-invoice'
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 
 import { contractSupplierPaymentLedgerPM } from '@/page-permission/contract'
 import { supplierPayTypeEnum } from '@enum-ms/contract'
 import { invoiceTypeEnum } from '@enum-ms/finance'
-import { DP } from '@/settings/config'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
 
 import { tableSummary } from '@/utils/el-extra'
 import useMaxHeight from '@compos/use-max-height'
@@ -79,6 +79,7 @@ import showPdfAndImg from '@comp-base/show-pdf-and-img.vue'
 
 // crud交由presenter持有
 const permission = contractSupplierPaymentLedgerPM.invoice
+const { decimalPrecision } = useDecimalPrecision()
 
 const optShow = {
   add: false,
@@ -109,13 +110,15 @@ const { maxHeight } = useMaxHeight({
   extraHeight: 120
 })
 
-const dataFormat = ref([
-  ['invoiceAmount', ['to-thousand-ck', 'YUAN']],
-  ['createTime', ['parse-time', '{y}-{m}-{d}']],
-  ['propertyType', ['parse-enum', supplierPayTypeEnum]],
-  ['invoiceType', ['parse-enum', invoiceTypeEnum]],
-  ['taxRate', ['suffix', '%']]
-])
+const dataFormat = computed(() => {
+  return [
+    ['invoiceAmount', ['to-thousand', decimalPrecision.value.contract]],
+    ['createTime', ['parse-time', '{y}-{m}-{d}']],
+    ['propertyType', ['parse-enum', supplierPayTypeEnum]],
+    ['invoiceType', ['parse-enum', invoiceTypeEnum]],
+    ['taxRate', ['suffix', '%']]
+  ]
+})
 
 // 预览附件
 function attachmentView(item) {
@@ -136,7 +139,7 @@ CRUD.HOOK.beforeRefresh = () => {
 // 合计
 function getSummaries(param) {
   return tableSummary(param, {
-    props: [['invoiceAmount', DP.YUAN]],
+    props: [['invoiceAmount', decimalPrecision.value.contract]],
     toThousandFields: ['invoiceAmount']
   })
 }

@@ -9,6 +9,9 @@
     />
     <span class="text-clickable set-max-text" @click="setMaxQuantity">全部出库</span>
   </el-form-item>
+  <el-form-item v-if="material.accountingUnit" :label="`核算量(${material.accountingUnit})`">
+    <span v-to-fixed="{ val: (currentForm.quantity / material.quantity) * material.mete || 0, dp: material.accountingPrecision }" />
+  </el-form-item>
   <el-form-item v-if="showProjectSelect" label="项目" prop="projectId">
     <project-cascader v-model="currentForm.projectId" clearable style="width: 100%" />
   </el-form-item>

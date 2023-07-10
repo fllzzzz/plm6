@@ -95,7 +95,7 @@
 
 <script setup>
 import crudApi from '@/api/project-manage/quality-problem-manage'
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 
 import checkPermission from '@/utils/system/check-permission'
 import { auditTypeEnum } from '@enum-ms/contract'
@@ -107,6 +107,9 @@ import useCRUD from '@compos/use-crud'
 import pagination from '@crud/Pagination'
 import mHeader from './module/header'
 import mDetail from './module/detail'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const optShow = {
   add: false,
@@ -115,11 +118,13 @@ const optShow = {
   download: false
 }
 
-const dataFormat = ref([
-  ['problemDate', ['parse-time', '{y}-{m}-{d}']],
-  ['project', 'parse-project'],
-  ['penalty', ['to-thousand-ck', 'YUAN']]
-])
+const dataFormat = computed(() => {
+  return [
+    ['problemDate', ['parse-time', '{y}-{m}-{d}']],
+    ['project', 'parse-project'],
+    ['penalty', ['to-thousand', decimalPrecision.value.project]]
+  ]
+})
 
 const tableRef = ref()
 const detailVisible = ref(false)

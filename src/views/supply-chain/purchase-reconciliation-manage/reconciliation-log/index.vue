@@ -101,7 +101,7 @@
 
 <script setup>
 import crudApi from '@/api/supply-chain/purchase-reconciliation-manage/reconciliation-log'
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 
 import { supplierReconciliationLogPM as permission } from '@/page-permission/supply-chain'
 import { tableSummary } from '@/utils/el-extra'
@@ -122,9 +122,11 @@ const optShow = {
 
 const tableRef = ref()
 // 表格列数据格式转换
-const columnsDataFormat = ref([
-  ['amountExcludingVAT', ['to-thousand-ck', 'YUAN']]
-])
+const columnsDataFormat = computed(() => {
+  return [
+    ['amountExcludingVAT', ['to-thousand', DP.YUAN]]
+  ]
+})
 
 const { crud, columns } = useCRUD(
   {

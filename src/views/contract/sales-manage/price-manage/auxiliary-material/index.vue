@@ -47,7 +47,7 @@
             :step="1"
             :min="0"
             :max="99999999"
-            :precision="DP.YUAN"
+            :precision="decimalPrecision.contract"
             size="small"
             style="width: 100%"
             @change="handlePrice(row)"
@@ -59,7 +59,9 @@
       </el-table-column>
       <el-table-column v-if="columns.visible('totalPrice')" key="totalPrice" prop="totalPrice" align="center" min-width="120" label="金额">
         <template #default="{ row }">
-          <span :class="row.status === 1 ? 'tc-danger' : ''" v-thousand="row.totalPrice" />
+          <span :class="row.status === 1 ? 'tc-danger' : ''" >
+            <span>{{row.totalPrice?toThousand(row.totalPrice,decimalPrecision.contract):'-'}}</span>
+          </span>
         </template>
       </el-table-column>
     </common-table>
@@ -70,16 +72,20 @@
 
 <script setup>
 import crudApi from '@/api/contract/sales-manage/price-manage/auxiliary-material'
-import { ref, defineExpose } from 'vue'
+import { ref, defineExpose, computed } from 'vue'
 import { priceManagePM as permission } from '@/page-permission/contract'
-import { DP } from '@/settings/config'
 import { auxiliaryMaterialUseTypeEnum } from '@enum-ms/plan'
+
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+import { toThousand } from '@data-type/number'
 
 import useTableChange from '@compos/form/use-table-change'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import pagination from '@crud/Pagination'
 import mHeader from './module/header'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const optShow = {
   add: false,
@@ -92,7 +98,9 @@ const sourceMap = new Map([['unitPrice', 'originUnitPrice']])
 
 const tableRef = ref()
 const headerRef = ref()
-const dataFormat = ref([['unitPrice', ['to-thousand-ck', 'YUAN']]])
+const dataFormat = computed(() => {
+  return [['unitPrice', ['to-thousand', decimalPrecision.value.contract]]]
+})
 const { crud, columns } = useCRUD(
   {
     title: '配套件价格',

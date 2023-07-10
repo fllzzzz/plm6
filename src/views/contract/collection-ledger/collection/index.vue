@@ -34,7 +34,7 @@
     </el-table-column>
     <el-table-column v-if="columns.visible('contractAmount')" key="contractAmount" prop="contractAmount" :show-overflow-tooltip="true" label="合同金额(元)">
       <template v-slot="scope">
-        <span>{{ scope.row.contractAmount? toThousand(scope.row.contractAmount): '' }}</span>
+        <span>{{ scope.row.contractAmount? toThousand(scope.row.contractAmount,decimalPrecision.contract): '' }}</span>
       </template>
     </el-table-column>
     <el-table-column v-if="columns.visible('collectionDate')" key="collectionDate" prop="collectionDate" label="收款日期" align="center">
@@ -44,7 +44,7 @@
     </el-table-column>
     <el-table-column v-if="columns.visible('collectionAmount')" key="collectionAmount" prop="collectionAmount" label="收款额(元)" align="center">
       <template v-slot="scope">
-        <div>{{ scope.row.collectionAmount && scope.row.collectionAmount>0? toThousand(scope.row.collectionAmount): scope.row.collectionAmount }}</div>
+        <div>{{ scope.row.collectionAmount && scope.row.collectionAmount>0? toThousand(scope.row.collectionAmount,decimalPrecision.contract): scope.row.collectionAmount }}</div>
       </template>
     </el-table-column>
     <el-table-column v-if="columns.visible('collectionReason')" key="collectionReason" prop="collectionReason" label="收款事由" align="center">
@@ -61,15 +61,20 @@
 <script setup>
 import crudApi from '@/api/contract/collection-and-invoice/collection'
 import { ref } from 'vue'
+
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
-import pagination from '@crud/Pagination'
-import mHeader from './module/header'
 import { businessTypeEnum } from '@enum-ms/contract'
 import { parseTime } from '@/utils/date'
 import { toThousand } from '@data-type/number'
 import { projectNameFormatter } from '@/utils/project'
 import { collectionLedgerPM } from '@/page-permission/contract'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+import pagination from '@crud/Pagination'
+import mHeader from './module/header'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const permission = collectionLedgerPM.collection
 

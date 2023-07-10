@@ -51,12 +51,12 @@
     </el-table-column>
     <el-table-column v-if="columns.visible('contractAmount')" key="contractAmount" prop="contractAmount" label="合同额" align="center">
       <template v-slot="scope">
-        <div @click="openContractMoney(scope.row.id)" style="cursor:pointer;color:#409eff;text-align:right;">{{ isNotBlank(scope.row.contractAmount)? toThousand(scope.row.contractAmount): '-' }}</div>
+        <div @click="openContractMoney(scope.row.id)" style="cursor:pointer;color:#409eff;text-align:right;">{{ isNotBlank(scope.row.contractAmount)? toThousand(scope.row.contractAmount,decimalPrecision.contract): '-' }}</div>
       </template>
     </el-table-column>
     <el-table-column v-if="columns.visible('settlementAmount')" key="settlementAmount" prop="settlementAmount" label="结算额" align="center">
       <template v-slot="scope">
-        <div>{{ scope.row.settlementAmount? toThousand(scope.row.settlementAmount): '-' }}</div>
+        <div>{{ scope.row.settlementAmount? toThousand(scope.row.settlementAmount,decimalPrecision.contract): '-' }}</div>
       </template>
     </el-table-column>
     <el-table-column v-if="columns.visible('collectionAmount')" key="collectionAmount" prop="collectionAmount" label="累计收款" align="right">
@@ -67,7 +67,7 @@
               <svg-icon icon-class="notify"  style="color:#e6a23c;font-size:15px;"/>
             </el-badge>
           </span>
-          <span style="color:#409eff;text-align:right;margin-left:8px;">{{ isNotBlank(scope.row.collectionAmount)? toThousand(scope.row.collectionAmount): '-' }}</span>
+          <span style="color:#409eff;text-align:right;margin-left:8px;">{{ isNotBlank(scope.row.collectionAmount)? toThousand(scope.row.collectionAmount,decimalPrecision.contract): '-' }}</span>
         </div>
       </template>
     </el-table-column>
@@ -84,7 +84,7 @@
               <svg-icon icon-class="notify"  style="color:#e6a23c;font-size:15px;"/>
             </el-badge>
           </span>
-          <span style="color:#409eff;text-align:right;margin-left:8px;">{{ isNotBlank(scope.row.invoiceAmount)? toThousand(scope.row.invoiceAmount): '-' }}</span>
+          <span style="color:#409eff;text-align:right;margin-left:8px;">{{ isNotBlank(scope.row.invoiceAmount)? toThousand(scope.row.invoiceAmount,decimalPrecision.contract): '-' }}</span>
         </div>
       </template>
     </el-table-column>
@@ -95,12 +95,12 @@
     </el-table-column>
     <el-table-column v-if="columns.visible('deliverInstallAmount')" key="deliverInstallAmount" prop="deliverInstallAmount" label="累计发生额" align="center">
       <template v-slot="scope">
-        <div @click="openOccurAmount(scope.row.id)" style="cursor:pointer;color:#409eff;text-align:right;">{{ isNotBlank(scope.row.deliverInstallAmount)? toThousand(scope.row.deliverInstallAmount): '-' }}</div>
+        <div @click="openOccurAmount(scope.row.id)" style="cursor:pointer;color:#409eff;text-align:right;">{{ isNotBlank(scope.row.deliverInstallAmount)? toThousand(scope.row.deliverInstallAmount,decimalPrecision.contract): '-' }}</div>
       </template>
     </el-table-column>
     <el-table-column v-if="columns.visible('availableBalance')" key="availableBalance" prop="availableBalance" label="可用余额" align="center">
       <template v-slot="scope">
-        <div>{{ scope.row.availableBalance? toThousand(scope.row.availableBalance): '-' }}</div>
+        <div>{{ scope.row.availableBalance? toThousand(scope.row.availableBalance,decimalPrecision.contract): '-' }}</div>
       </template>
     </el-table-column>
     <el-table-column v-if="columns.visible('status')" key="status" prop="status" label="项目状态" align="center" width="80px">
@@ -123,23 +123,27 @@
 <script setup>
 import crudApi from '@/api/contract/contract-ledger'
 import { ref } from 'vue'
+
 import { contractLedgerPM as permission } from '@/page-permission/contract'
 import checkPermission from '@/utils/system/check-permission'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
-import pagination from '@crud/Pagination'
 import { mapGetters } from '@/store/lib'
-import mHeader from './module/header'
 import { businessTypeEnum, projectTypeEnum, projectStatusEnum } from '@enum-ms/contract'
 import { projectNameFormatter } from '@/utils/project'
-import occurAmount from './module/occur-amount'
-import contractMoney from './module/contract-money'
-import collectionAndInvoice from './module/collection-and-invoice'
 import { parseTime } from '@/utils/date'
 import { toThousand } from '@data-type/number'
 import { isNotBlank } from '@data-type/index'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+import pagination from '@crud/Pagination'
+import mHeader from './module/header'
+import occurAmount from './module/occur-amount'
+import contractMoney from './module/contract-money'
+import collectionAndInvoice from './module/collection-and-invoice'
 
 const { currentProjectType } = mapGetters(['currentProjectType'])
+const { decimalPrecision } = useDecimalPrecision()
 
 const optShow = {
   add: false,

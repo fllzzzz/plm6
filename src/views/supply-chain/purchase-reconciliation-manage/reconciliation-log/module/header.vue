@@ -86,10 +86,10 @@
         <Panel name="合同数（个）" text-color="#626262" num-color="#1890ff" :end-val="supplierSummary.totalOrder || 0" :precision="0" />
       </el-col>
       <el-col :span="8" class="card-panel-col">
-        <Panel name="合同额（万元）" text-color="#626262" num-color="#1890ff" :end-val="(supplierSummary.totalAmount / 10000) || 0" :precision="DP.YUAN" />
+        <Panel name="合同额（万元）" text-color="#626262" num-color="#1890ff" :end-val="(supplierSummary.totalAmount / 10000) || 0" :precision="decimalPrecision.supplyChain" />
       </el-col>
       <el-col :span="8" class="card-panel-col">
-        <Panel name="实际收货额（万元）" text-color="#626262" num-color="#1890ff" :end-val="(supplierSummary.totalActualAmount / 10000) || 0" :precision="DP.YUAN" />
+        <Panel name="实际收货额（万元）" text-color="#626262" num-color="#1890ff" :end-val="(supplierSummary.totalActualAmount / 10000) || 0" :precision="decimalPrecision.supplyChain" />
       </el-col>
     </el-row>
   </div>
@@ -99,7 +99,7 @@
 import { excel, summary } from '@/api/supply-chain/purchase-reconciliation-manage/reconciliation-log'
 import { ref, inject } from 'vue'
 import { supplierTypeEnum } from '@enum-ms/supplier'
-import { PICKER_OPTIONS_SHORTCUTS, STEEL_ENUM, DP } from '@/settings/config'
+import { PICKER_OPTIONS_SHORTCUTS, STEEL_ENUM } from '@/settings/config'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { setSpecInfoToList } from '@/utils/wms/spec'
 import { toThousand, getDP } from '@data-type/number'
@@ -113,6 +113,9 @@ import ExportButton from '@comp-common/export-button/index.vue'
 import purchaseOrderSelect from '@/components-system/wms/purchase-order-select/index.vue'
 import supplierSelect from '@comp-base/supplier-select/index.vue'
 import MaterialCascader from '@comp-cls/material-cascader/index.vue'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const defaultTime = ref([new Date(2000, 1, 1, 0, 0, 0), new Date(2000, 2, 1, 23, 59, 59)])
 

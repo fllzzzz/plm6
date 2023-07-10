@@ -28,7 +28,7 @@
         label="费用"
       >
         <template #default="{ row }">
-          <span>{{ toThousand(row.feeAmount, 0) }}</span>
+          <span>{{ toThousand(row.feeAmount, decimalPrecision.contract) }}</span>
         </template>
       </el-table-column>
       <el-table-column align="center" label="操作" width="300px">
@@ -47,17 +47,19 @@ import { ref } from 'vue'
 import crudApi from '@/api/contract/expense-entry/property-cost'
 
 import { toThousand } from '@data-type/number'
-import { DP } from '@/settings/config'
 import { tableSummary } from '@/utils/el-extra'
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
 import { propertyCostPM as permission } from '@/page-permission/contract'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
 
 import udOperation from '@crud/UD.operation'
 import mHeader from './module/header.vue'
 import mForm from './module/form.vue'
 
 const tableRef = ref()
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const optShow = {
   add: true,
@@ -81,7 +83,7 @@ const { crud, CRUD, columns } = useCRUD(
 // 合计
 function getSummaries(param) {
   return tableSummary(param, {
-    props: [['feeAmount', DP.YUAN]],
+    props: [['feeAmount', decimalPrecision.value.contract]],
     toThousandFields: ['feeAmount']
   })
 }

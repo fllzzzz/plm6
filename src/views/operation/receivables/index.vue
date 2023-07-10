@@ -91,16 +91,18 @@
 
 <script setup>
 import { getCollectionAnalysis } from '@/api/operation/receivables'
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 
 import { projectNameFormatter } from '@/utils/project'
 import { tableSummary } from '@/utils/el-extra'
 import { constantize } from '@enum/base'
-import { DP } from '@/settings/config'
 
 import useMaxHeight from '@compos/use-max-height'
 import useChart from '@compos/use-chart'
 import panel from '@/components/Panel'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const { maxHeight } = useMaxHeight({
   extraBox: ['.head-container', '.view-summary']
@@ -117,18 +119,20 @@ const typeEnum = {
 }
 constantize(typeEnum)
 
-const dataFormat = ref([
-  ['contractAmount', ['to-thousand-ck', 'YUAN']],
-  ['invoiceAmount', ['to-thousand-ck', 'YUAN']],
-  ['settlementAmount', ['to-thousand-ck', 'YUAN']],
-  ['collectionAmount', ['to-thousand-ck', 'YUAN']],
-  ['receivableAmount', ['to-thousand-ck', 'YUAN']]
-])
+const dataFormat = computed(() => {
+  return [
+    ['contractAmount', ['to-thousand', decimalPrecision.value.operation]],
+    ['invoiceAmount', ['to-thousand', decimalPrecision.value.operation]],
+    ['settlementAmount', ['to-thousand', decimalPrecision.value.operation]],
+    ['collectionAmount', ['to-thousand', decimalPrecision.value.operation]],
+    ['receivableAmount', ['to-thousand', decimalPrecision.value.operation]]
+  ]
+})
 
 // 合计
 function getSummaries(param) {
   return tableSummary(param, {
-    props: [['contractAmount', DP.YUAN], ['invoiceAmount', DP.YUAN], ['settlementAmount', DP.YUAN], ['receivableAmount', DP.YUAN]],
+    props: [['contractAmount', decimalPrecision.value.operation], ['invoiceAmount', decimalPrecision.value.operation], ['settlementAmount', decimalPrecision.value.operation], ['receivableAmount', decimalPrecision.value.operation]],
     toThousandFields: ['contractAmount', 'invoiceAmount', 'settlementAmount', 'receivableAmount']
   })
 }

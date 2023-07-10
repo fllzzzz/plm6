@@ -182,8 +182,8 @@ async function fetchInfo(myChart) {
 
 async function refreshStructureInfo(myChart) {
   if (!checkPermission(permission.get)) {
-      return false
-    }
+    return false
+  }
   try {
     const { content } = await getApi({
       dateTime: year.value,
@@ -211,8 +211,8 @@ async function refreshStructureInfo(myChart) {
 
 async function refreshEnclosureInfo(myChart) {
   if (!checkPermission(permission.get)) {
-      return false
-    }
+    return false
+  }
   try {
     const { content } = await getApi({
       dateTime: year.value,

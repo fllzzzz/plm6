@@ -29,21 +29,26 @@
           type="warning"
           class="filter-item"
         />
-        <el-tag type="warning" effect="plain" size="medium">{{ `累计收票：${toThousand(totalSum)}元` }}</el-tag>
+        <el-tag type="warning" effect="plain" size="medium">{{ `累计收票：${toThousand(totalSum,decimalPrecision.contract)}元` }}</el-tag>
       </template>
     </crudOperation>
   </div>
 </template>
 
 <script setup>
+import { invoiceSum } from '@/api/contract/supplier-manage/payment-ledger/pay-invoice'
 import { ref, watch } from 'vue'
 import { regHeader } from '@compos/use-crud'
-import rrOperation from '@crud/RR.operation'
-import { auditTypeEnum } from '@enum-ms/contract'
-import { invoiceSum } from '@/api/contract/supplier-manage/payment-ledger/pay-invoice'
-import { toThousand } from '@data-type/number'
-import crudOperation from '@crud/CRUD.operation'
+
 import moment from 'moment'
+import { auditTypeEnum } from '@enum-ms/contract'
+import { toThousand } from '@data-type/number'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+import rrOperation from '@crud/RR.operation'
+import crudOperation from '@crud/CRUD.operation'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const defaultQuery = {
   createTime: [moment().startOf('month').valueOf(), moment().valueOf()],

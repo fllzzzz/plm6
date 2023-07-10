@@ -18,28 +18,28 @@
         <el-descriptions-item label-class-name="contractLabel" label="项目名称">{{ contract.name }}</el-descriptions-item>
         <el-descriptions-item label-class-name="contractLabel" label="车牌号">{{ contract.licensePlate }}</el-descriptions-item>
         <el-descriptions-item label-class-name="contractLabel" label="本次发货额">
-          {{ toFixed(contract.deliveryAmount, DP.YUAN) }}
+          {{ toFixed(contract.deliveryAmount, decimalPrecision.mes) }}
         </el-descriptions-item>
         <el-descriptions-item label-class-name="contractLabel" label="安全余额">
-          {{ toFixed(contract.safeAmount, DP.YUAN) }}
+          {{ toFixed(contract.safeAmount, decimalPrecision.mes) }}
         </el-descriptions-item>
         <el-descriptions-item label-class-name="contractLabel" label="合同额">
-          {{ toFixed(contract.contractAmount, DP.YUAN) }}
+          {{ toFixed(contract.contractAmount, decimalPrecision.mes) }}
         </el-descriptions-item>
         <el-descriptions-item label-class-name="contractLabel" label="累计收款">
-          {{ toFixed(contract.totalCollectionAmount, DP.YUAN) }}
+          {{ toFixed(contract.totalCollectionAmount, decimalPrecision.mes) }}
         </el-descriptions-item>
         <el-descriptions-item label-class-name="contractLabel" label="累计发运">
-          {{ toFixed(contract.totalDeliveryAmount, DP.YUAN) }}
+          {{ toFixed(contract.totalDeliveryAmount, decimalPrecision.mes) }}
         </el-descriptions-item>
         <el-descriptions-item label-class-name="contractLabel" label="累计发运额">
-          {{ toFixed(contract.totalDeliveryAmount, DP.YUAN) }}
+          {{ toFixed(contract.totalDeliveryAmount, decimalPrecision.mes) }}
         </el-descriptions-item>
         <el-descriptions-item label-class-name="contractLabel" label="合同应收">
-          {{ toFixed(contract.contractReceivableAmount, DP.YUAN) }}
+          {{ toFixed(contract.contractReceivableAmount, decimalPrecision.mes) }}
         </el-descriptions-item>
         <el-descriptions-item label-class-name="contractLabel" label="开票应收">
-          {{ toFixed(contract.billingReceivableAmount, DP.YUAN) }}
+          {{ toFixed(contract.billingReceivableAmount, decimalPrecision.mes) }}
         </el-descriptions-item>
         <el-descriptions-item label-class-name="contractLabel" label="附件">
           <div class="imgs-box">
@@ -101,7 +101,6 @@ import { weightMeasurementModeEnum, enclosureSettlementTypeEnum } from '@enum-ms
 import { pricingMannerEnum } from '@enum-ms/contract'
 import { weightTypeEnum } from '@enum-ms/common'
 import { convertUnits } from '@/utils/convert/unit'
-import { DP } from '@/settings/config'
 import { toFixed } from '@/utils/data-type'
 import EO from '@enum'
 
@@ -111,6 +110,9 @@ import structureTable from './module/structure'
 import partTable from './module/part'
 // import enclosureTable from './module/enclosure'
 import auxiliaryMaterialTable from './module/auxiliary-material'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const emit = defineEmits(['update:visible'])
 const props = defineProps({

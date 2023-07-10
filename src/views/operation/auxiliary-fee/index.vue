@@ -45,30 +45,46 @@
           <el-table-column :label="item.name" align="center">
             <el-table-column label="重量" :prop="'mete_' + item.id" :key="'mete_' + item.id" align="center" />
             <el-table-column label="单位" :prop="'accountingUnit_' + item.id" align="center"> </el-table-column>
-            <el-table-column label="金额" :prop="'amountExcludingVAT_' + item.id" :key="'amountExcludingVAT_' + item.id" align="center" />
+            <el-table-column label="金额" :prop="'amountExcludingVAT_' + item.id" :key="'amountExcludingVAT_' + item.id" align="center">
+              <template #default="{ row }">
+                <span>{{row['amountExcludingVAT_' + item.id]?toThousand(row['amountExcludingVAT_' + item.id],decimalPrecision.operation):'-'}}</span>
+              </template>
+            </el-table-column>
           </el-table-column>
         </template>
         <el-table-column label="小计" prop="gasSubtotal" align="center">
           <el-table-column label="重量" prop="gasWeight" align="center" />
           <el-table-column label="金额" prop="gasAmount" align="center">
             <template #default="{ row }">
-              <span>{{ row.gasAmount }}</span>
+              <span>{{ row.gasAmount?toThousand(row.gasAmount,decimalPrecision.operation):'-' }}</span>
             </template>
           </el-table-column>
         </el-table-column>
       </el-table-column>
       <el-table-column label="辅材" prop="auxiliaryMaterials" align="center">
         <template v-for="aux in auxiliaryList" :key="aux">
-          <el-table-column :label="aux.name" :prop="'amountExcludingVAT_' + aux.id" align="center" />
+          <el-table-column :label="aux.name" :prop="'amountExcludingVAT_' + aux.id" align="center">
+            <template #default="{ row }">
+              <span>{{row['amountExcludingVAT_' + aux.id]?toThousand(row['amountExcludingVAT_' + aux.id],decimalPrecision.operation):'-'}}</span>
+            </template>
+          </el-table-column>
         </template>
         <el-table-column label="小计" prop="auxSubtotal" align="center">
           <template #default="{ row }">
-            <span>{{ row.auxSubtotal }}</span>
+            <span>{{ row.auxSubtotal?toThousand(row.auxSubtotal,decimalPrecision.operation):'-' }}</span>
           </template>
         </el-table-column>
       </el-table-column>
-      <el-table-column label="合计" prop="totalAmount" align="center" width="140px" fixed="right" />
-      <el-table-column label="平均单价（元/吨）" prop="aveUnitPrice" align="center" width="140px" fixed="right" />
+      <el-table-column label="合计" prop="totalAmount" align="center" width="140px" fixed="right">
+        <template #default="{ row }">
+          <span>{{ row.totalAmount?toThousand(row.totalAmount,decimalPrecision.operation):'-' }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="平均单价（元/吨）" prop="aveUnitPrice" align="center" width="140px" fixed="right">
+        <template #default="{ row }">
+          <span>{{ row.aveUnitPrice?toThousand(row.aveUnitPrice,decimalPrecision.operation):'-' }}</span>
+        </template>
+      </el-table-column>
     </common-table>
   </div>
 </template>
@@ -81,9 +97,13 @@ import checkPermission from '@/utils/system/check-permission'
 import { auxiliaryFeeAnalysisPM as permission } from '@/page-permission/operation'
 import useMaxHeight from '@compos/use-max-height'
 import { DP } from '@/settings/config'
+import { toThousand } from '@data-type/number'
 import { convertUnits } from '@/utils/convert/unit'
 import { parseTime } from '@/utils/date'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 // import ExportButton from '@comp-common/export-button/index.vue'
 
@@ -159,7 +179,7 @@ async function fetchAuxiliary() {
         }
       }, 0)
       v.totalAmount = v.gasAmount + v.auxSubtotal
-      v.aveUnitPrice = v.productionMete ? (v.totalAmount / convertUnits(v.productionMete, 'kg', 't')).toFixed(2) : v.totalAmount
+      v.aveUnitPrice = v.productionMete ? (v.totalAmount / convertUnits(v.productionMete, 'kg', 't')).toFixed(decimalPrecision.value.operation) : v.totalAmount
     })
     console.log('list.value', list.value)
     list.value = await numFmtByBasicClass(
@@ -220,7 +240,11 @@ function getSummaries(param) {
             return prev
           }
         }, 0)
-        sums[index] = sums[index] ? sums[index].toFixed(2) : 0
+        if (column.property !== 'gasWeight' && column.property.indexOf('mete_') < 0) {
+          sums[index] = sums[index] ? sums[index].toFixed(decimalPrecision.value.operation) : 0
+        } else {
+          sums[index] = sums[index] ? sums[index].toFixed(2) : 0
+        }
       }
     }
   })

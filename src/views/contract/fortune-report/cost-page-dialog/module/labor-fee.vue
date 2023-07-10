@@ -4,7 +4,7 @@
       <div style="width: 300px">
         <print-table v-permission="permission.print" api-key="manualList" :params="{ projectId: props.costTypeData.projectId }" size="mini" type="warning" class="filter-item" />
       </div>
-      <el-tag>合计（单位：元）：{{ toThousand(props.costTypeData?.amount) }}</el-tag>
+      <el-tag>合计（单位：元）：{{ toThousand(props.costTypeData?.amount,decimalPrecision.contract) }}</el-tag>
     </div>
     <common-table
       ref="tableRef"
@@ -27,12 +27,12 @@
 </template>
 <script setup>
 import { getLaborFeeList } from '@/api/contract/fortune-report/detail-fee'
-import { ref, defineProps, watch } from 'vue'
+import { ref, defineProps, watch, computed } from 'vue'
 
 import { toThousand } from '@data-type/number'
 import { tableSummary } from '@/utils/el-extra'
-import { DP } from '@/settings/config'
 import useMaxHeight from '@compos/use-max-height'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
 
 const props = defineProps({
   costTypeData: {
@@ -47,16 +47,19 @@ const props = defineProps({
 
 const tableRef = ref()
 const detailData = ref([])
+const { decimalPrecision } = useDecimalPrecision()
 
 const { maxHeight } = useMaxHeight({
   paginate: true
 })
 
-const dataFormat = ref([
-  ['price', ['to-thousand-ck', 'YUAN']],
-  ['mete', 'to-thousand'],
-  ['avgPrice', ['to-thousand-ck', 'YUAN']]
-])
+const dataFormat = computed(() => {
+  return [
+    ['price', ['to-thousand', decimalPrecision.value.contract]],
+    ['mete', 'to-thousand'],
+    ['avgPrice', ['to-thousand', decimalPrecision.value.contract]]
+  ]
+})
 
 watch(
   () => props.costTypeData.projectId,
@@ -69,7 +72,7 @@ watch(
 // 合计
 function getSummaries(param) {
   return tableSummary(param, {
-    props: [['price', DP.YUAN], 'mete'],
+    props: [['price', decimalPrecision.value.contract], 'mete'],
     toThousandFields: ['price', 'mete']
   })
 }

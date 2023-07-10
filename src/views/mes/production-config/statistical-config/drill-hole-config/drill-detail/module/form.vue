@@ -42,7 +42,7 @@
           v-model="form.unitPrice"
           :step="1"
           :min="0"
-          :precision="DP.YUAN"
+          :precision="decimalPrecision.mes"
           clearable
           class="input-underline"
           :controls="false"
@@ -60,7 +60,9 @@ import useVisible from '@compos/use-visible'
 import { add, editGet as edit } from '@/api/mes/production-config/drill-detail'
 import { ref, defineProps, defineEmits } from 'vue'
 import { ElNotification } from 'element-plus'
-import { DP } from '@/settings/config'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const emit = defineEmits(['update:visible', 'refresh'])
 

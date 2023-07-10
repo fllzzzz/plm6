@@ -69,6 +69,9 @@ import visaForm from './visa/form'
 import visaDetail from './visa/detail.vue'
 import settlementForm from './settlement/form'
 import settlementDetail from './settlement/detail.vue'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const optShow = {
   add: false,
@@ -92,12 +95,14 @@ const mDetail = computed(() => {
   return visaType.value === visaTypeEnum.VISA.V ? visaDetail : settlementDetail
 })
 
-const dataFormat = ref([
-  ['project', ['parse-project', { onlyShortName: true }]],
-  ['status', ['parse-enum', reviewStatusEnum, { f: 'SL' }]],
-  ['amount', ['to-thousand-ck', 'YUAN']],
-  ['createTime', 'parse-time']
-])
+const dataFormat = computed(() => {
+  return [
+    ['project', ['parse-project', { onlyShortName: true }]],
+    ['status', ['parse-enum', reviewStatusEnum, { f: 'SL' }]],
+    ['amount', ['to-thousand', decimalPrecision.value.project]],
+    ['createTime', 'parse-time']
+  ]
+})
 const { crud, columns } = useCRUD(
   {
     title: '签证结算',
