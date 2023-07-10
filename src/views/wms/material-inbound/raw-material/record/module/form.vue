@@ -89,6 +89,8 @@ CRUD.HOOK.beforeEditDetailLoaded = async (crud, detail) => {
         }
       } else {
         detail.editObj[v.mergeId].applyPurchaseObj[v.applyPurchaseId] = { ...v }
+        detail.editObj[v.mergeId].quantity += v.quantity
+        detail.editObj[v.mergeId].mete += v.mete
       }
     })
   }
