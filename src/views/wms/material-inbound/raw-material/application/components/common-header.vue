@@ -91,7 +91,7 @@
         :disabled="!!form.purchaseId && form.supplyType === orderSupplyTypeEnum.SELF.V"
         placement="bottom"
         effect="light"
-        v-if="boolPartyA"
+        v-if="boolPartyA || isBlank(orderInfo?.details)"
       >
         <excel-resolve-button
           icon="el-icon-upload2"

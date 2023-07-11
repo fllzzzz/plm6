@@ -6,7 +6,7 @@
     :before-close="crud.cancelDetail"
     :title="detailTitle"
     :show-close="true"
-    size="100%"
+    :size="isNotBlank(detail.details)?'100%':'620px'"
     custom-class="purchase-order-raw-mat-detail"
   >
     <template v-if="isNotBlank(detail)" #titleAfter>
@@ -30,7 +30,7 @@
       <div class="main-content">
         <el-form v-if="isNotBlank(detail)" :model="detail" size="small" label-position="left" label-width="100px">
           <div class="form-content" :style="heightStyle">
-            <div class="form-left">
+            <div class="form-left" :style="`width:${isNotBlank(detail.details)?'450px':'100%'}`">
               <el-form-item label="物料种类" prop="basicClass">
                 <div class="flex-rss child-mr-10">
                   <span
@@ -114,25 +114,27 @@
                 empty-text="暂未上传采购合同附件"
               />
             </div>
-            <div class="vertical-dashed-divider" />
-            <div class="form-right">
-              <div class="right-head flex-rbs">
-                <span class="right-head-content">
-                  <span class="label">{{ boolUseRequisitions ? '关联申购单号' : '采购清单' }}</span>
-                  <el-tag v-for="item in detail.applyPurchase" :key="item.id" effect="plain" class="preparation-sn-tag">
-                    {{ item.serialNumber }}
-                  </el-tag>
-                </span>
+            <template v-if="isNotBlank(detail.details)">
+              <div class="vertical-dashed-divider" />
+              <div class="form-right">
+                <div class="right-head flex-rbs">
+                  <span class="right-head-content">
+                    <span class="label">{{ boolUseRequisitions ? '关联申购单号' : '采购清单' }}</span>
+                    <el-tag v-for="item in detail.applyPurchase" :key="item.id" effect="plain" class="preparation-sn-tag">
+                      {{ item.serialNumber }}
+                    </el-tag>
+                  </span>
+                </div>
+                <!-- 清单列表 -->
+                <detail-table :material-type="detail.materialType" :list="detail.details" :max-height="maxHeight - 150" :bool-use-requisitions="boolUseRequisitions"/>
+                <div class="table-remark">
+                  <span class="title">合同量</span>
+                  <span class="con">{{ detail.mete }} {{ detail.meteUnit }}</span>
+                  <span class="title">合同额</span>
+                  <span class="con">{{ detail.amount }} 元</span>
+                </div>
               </div>
-              <!-- 清单列表 -->
-              <detail-table :material-type="detail.materialType" :list="detail.details" :max-height="maxHeight - 150" :bool-use-requisitions="boolUseRequisitions"/>
-              <div class="table-remark">
-                <span class="title">合同量</span>
-                <span class="con">{{ detail.mete }} {{ detail.meteUnit }}</span>
-                <span class="title">合同额</span>
-                <span class="con">{{ detail.amount }} 元</span>
-              </div>
-            </div>
+            </template>
           </div>
         </el-form>
       </div>

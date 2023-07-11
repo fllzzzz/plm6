@@ -118,7 +118,7 @@
     </template>
 
     <!-- 金额设置 -->
-    <price-set-columns v-if="!props.boolPartyA && fillableAmount" weight-attribute="mete" />
+    <price-set-columns v-if="!props.boolPartyA && fillableAmount && noDetail" weight-attribute="mete" />
 
     <el-table-column prop="color" label="颜色" align="center" min-width="120px">
       <template #default="{ row }">

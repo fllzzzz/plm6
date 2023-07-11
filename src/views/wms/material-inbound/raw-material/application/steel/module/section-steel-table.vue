@@ -146,7 +146,7 @@
     </template>
 
     <!-- 金额设置 -->
-    <price-set-columns v-if="!props.boolPartyA && fillableAmount" />
+    <price-set-columns v-if="!props.boolPartyA && fillableAmount && noDetail" />
 
     <el-table-column prop="brand" label="品牌" align="center" min-width="100px">
       <template #default="{ row }">
