@@ -45,7 +45,11 @@
     label="出库车间"
     align="left"
     min-width="100"
-  />
+  >
+  <template #default="{ row }">
+    {{row.workshop?.name || '-'}}
+  </template>
+  </el-table-column>
   <el-table-column
     v-if="showWarehouse"
     key="warehouse"
