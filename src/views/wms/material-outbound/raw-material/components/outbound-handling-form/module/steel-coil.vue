@@ -281,6 +281,7 @@ import { mapGetters } from '@/store/lib'
 import { deepClone, isBlank, isNotBlank, toPrecision } from '@/utils/data-type'
 import { calcSteelCoilWeight } from '@/utils/wms/measurement-calc'
 import { positiveNumPattern } from '@/utils/validate/pattern'
+import { outboundDestinationTypeEnum } from '@/utils/enum/modules/wms'
 
 import useMatBaseUnit from '@/composables/store/use-mat-base-unit'
 import useTableValidate from '@compos/form/use-table-validate'
@@ -346,6 +347,7 @@ const validateQuantity = (rule, value, callback) => {
 }
 
 const rules = {
+  outboundAddress: [{ required: true, message: '出库目的地', trigger: 'change' }],
   quantity: [{ required: true, validator: validateQuantity, trigger: 'blur' }],
   projectId: [{ required: true, message: '请选择出库项目', trigger: 'change' }],
   remark: [{ max: 200, message: '不能超过200个字符', trigger: 'blur' }]
@@ -490,6 +492,7 @@ function rowInit() {
     // length: undefined,
     width: undefined,
     quantity: undefined,
+    outboundAddress: outboundDestinationTypeEnum.FACTORY.V, // 出库目的地
     // projectId: material.value.project ? material.value.project.id : undefined, // 项目id,
     monomerId: material.value?.monomerId,
     areaId: material.value?.areaId,
