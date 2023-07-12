@@ -22,7 +22,8 @@ const supplierTypeEnum = {
   RAW_MATERIAL: { L: '原材料', K: 'RAW_MATERIAL', V: 1 << 0 },
   MANUFACTURED: { L: '制成品', K: 'MANUFACTURED', V: 1 << 1 },
   LOGISTICS: { L: '物流', K: 'LOGISTICS', V: 1 << 2 },
-  SUBCONTRACTING: { L: '分包', K: 'SUBCONTRACTING', V: 1 << 3 }
+  SUBCONTRACTING: { L: '分包', K: 'SUBCONTRACTING', V: 1 << 3 },
+  OTHER: { L: '其他', K: 'OTHER', V: 1 << 4 }
 }
 constantize(supplierTypeEnum)
 
