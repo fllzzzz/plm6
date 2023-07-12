@@ -235,6 +235,13 @@ const inspectionDetailStatusEnum = {
 }
 constantize(inspectionDetailStatusEnum)
 
+// 出库目的地类型
+const outboundDestinationTypeEnum = {
+  FACTORY: { L: '工厂', K: 'FACTORY', V: 1 },
+  CONSTRUCTION_SITE: { L: '工地', K: 'CONSTRUCTION_SITE', V: 2 }
+}
+constantize(outboundDestinationTypeEnum)
+
 export {
   receiptTypeEnum, // 单据类型
   returnStatusEnum,
@@ -264,7 +271,8 @@ export {
   inspectionStatusEnum,
   inspectionDetailStatusEnum,
   materialWeightingWayEnum,
-  materialLabelPrintTypeEnum
+  materialLabelPrintTypeEnum,
+  outboundDestinationTypeEnum
 }
 
 export default {
@@ -296,5 +304,6 @@ export default {
   inspectionStatusEnum,
   inspectionDetailStatusEnum,
   materialWeightingWayEnum,
-  materialLabelPrintTypeEnum
+  materialLabelPrintTypeEnum,
+  outboundDestinationTypeEnum
 }

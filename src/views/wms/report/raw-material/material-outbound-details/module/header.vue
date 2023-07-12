@@ -21,6 +21,15 @@
             class="filter-item"
             @change="crud.toQuery"
           />
+          <common-radio-button
+            v-model="query.outboundAddress"
+            :options="outboundDestinationTypeEnum.ENUM"
+            show-option-all
+            type="enum"
+            size="small"
+            class="filter-item"
+            @change="crud.toQuery"
+          />
         </template>
         <template #afterWarehouse>
           <workshop-select
@@ -118,7 +127,7 @@ import { exportDetailsExcel, getSummary } from '@/api/wms/report/raw-material/ou
 import { ref, inject } from 'vue'
 import { PICKER_OPTIONS_SHORTCUTS } from '@/settings/config'
 import { rawMatClsEnum } from '@enum-ms/classification'
-import { orderSupplyTypeEnum } from '@/utils/enum/modules/wms'
+import { orderSupplyTypeEnum, outboundDestinationTypeEnum } from '@/utils/enum/modules/wms'
 import { STEEL_ENUM, STEEL_BASE_UNIT } from '@/settings/config'
 import { convertUnits } from '@/utils/convert/unit'
 
