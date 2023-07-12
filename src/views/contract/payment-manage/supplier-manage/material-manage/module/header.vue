@@ -33,7 +33,7 @@
       />
       <supplier-select
         v-model="query.supplierId"
-        :type="query.supplierClassification?(query.supplierClassification===materialLedgerClsEnum.MANUFACTURED.V?supplierTypeEnum.MANUFACTURED.V:supplierTypeEnum.RAW_MATERIAL.V):undefined"
+        :type="showType"
         clearable
         class="filter-item"
         placeholder="可选择供应商搜索"
@@ -59,6 +59,7 @@
 </template>
 
 <script setup>
+import { computed } from 'vue'
 import { regHeader } from '@compos/use-crud'
 import crudOperation from '@crud/CRUD.operation'
 import rrOperation from '@crud/RR.operation'
@@ -86,6 +87,18 @@ const { crud, query } = regHeader(defaultQuery)
 //   crud.toQuery()
 // }
 
+const showType = computed(() => {
+  return supplierTypeEnum.RAW_MATERIAL.V | supplierTypeEnum.MANUFACTURED.V | supplierTypeEnum.OTHER.V
+  // switch (query.supplierClassification) {
+  //   case materialLedgerClsEnum.STEEL.V:
+  //   case materialLedgerClsEnum.MATERIAL.V:
+  //     return supplierTypeEnum.RAW_MATERIAL.V
+  //   case materialLedgerClsEnum.MANUFACTURED.V:
+  //     return supplierTypeEnum.MANUFACTURED.V
+  //   default:
+  //     return supplierTypeEnum.RAW_MATERIAL.V | supplierTypeEnum.MANUFACTURED.V | supplierTypeEnum.OTHER.V
+  // }
+})
 // 时间变动
 function handleDateChange() {
   if (query.date && query.date.length > 1) {
