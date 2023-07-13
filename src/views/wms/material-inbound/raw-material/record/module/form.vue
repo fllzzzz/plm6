@@ -25,6 +25,7 @@ import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { calcTheoryWeight } from '@/utils/wms/measurement-calc'
 import { setSpecInfoToList } from '@/utils/wms/spec'
 import { deepClone, toPrecision } from '@/utils/data-type'
+import { isNotBlank } from '@data-type/index'
 
 import useMatBaseUnit from '@/composables/store/use-mat-base-unit'
 import SteelApplication from '@/views/wms/material-inbound/raw-material/application/steel/index.vue'
