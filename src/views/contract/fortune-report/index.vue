@@ -71,7 +71,7 @@
         label="合同额"
       >
         <template v-slot="scope">
-          <span>{{ toThousand(scope.row.contractAmount) }}</span>
+          <span>{{ toThousand(scope.row.contractAmount,decimalPrecision.contract) }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -83,7 +83,7 @@
         label="结算额"
       >
         <template v-slot="scope">
-          <span style="color: #409EFF;cursor: pointer" @click="showSettlementDetail(scope.row)">{{ toThousand(scope.row.settlementAmount) }}</span>
+          <span style="color: #409EFF;cursor: pointer" @click="showSettlementDetail(scope.row)">{{ toThousand(scope.row.settlementAmount,decimalPrecision.contract) }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -95,7 +95,7 @@
         label="综合成本"
       >
         <template v-slot="scope">
-          <span style="color: #F56C6C;cursor: pointer" @click="showCostDetail(scope.row)">{{ toThousand(scope.row.costAmount) }}</span>
+          <span style="color: #F56C6C;cursor: pointer" @click="showCostDetail(scope.row)">{{ toThousand(scope.row.costAmount,decimalPrecision.contract) }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -107,7 +107,7 @@
         label="毛利润"
       >
         <template v-slot="scope">
-          <span>{{ toThousand(scope.row.grossProfit) }}</span>
+          <span>{{ toThousand(scope.row.grossProfit,decimalPrecision.contract) }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -125,17 +125,17 @@
       <el-table-column align="center" v-if="columns.visible('collectionAmount1')" key="collectionAmount1" prop="collectionAmount1" :show-overflow-tooltip="true" label="收款">
         <el-table-column v-if="columns.visible('collectionAmount')" align="center" key="collectionAmount" prop="collectionAmount" :show-overflow-tooltip="true" label="收入">
           <template v-slot="scope">
-            <span>{{ toThousand(scope.row.collectionAmount) }}</span>
+            <span>{{ toThousand(scope.row.collectionAmount,decimalPrecision.contract) }}</span>
           </template>
         </el-table-column>
         <el-table-column v-if="columns.visible('receivableAmount')" align="center" key="receivableAmount" prop="receivableAmount" :show-overflow-tooltip="true" label="应收款">
           <template v-slot="scope">
-            <span>{{ toThousand(scope.row.receivableAmount) }}</span>
+            <span>{{ toThousand(scope.row.receivableAmount,decimalPrecision.contract) }}</span>
           </template>
         </el-table-column>
         <el-table-column v-if="columns.visible('availableBalance')" align="center" key="availableBalance" prop="availableBalance" :show-overflow-tooltip="true" label="可用余额">
           <template v-slot="scope">
-            <span>{{ toThousand(scope.row.availableBalance) }}</span>
+            <span>{{ toThousand(scope.row.availableBalance,decimalPrecision.contract) }}</span>
           </template>
         </el-table-column>
       </el-table-column>
@@ -148,7 +148,7 @@
         label="累计发生额"
       >
         <template v-slot="scope">
-          <span>{{ toThousand(scope.row.happenedAmount) }}</span>
+          <span>{{ toThousand(scope.row.happenedAmount,decimalPrecision.contract) }}</span>
         </template>
       </el-table-column>
     </common-table>
@@ -157,7 +157,7 @@
     <common-dialog title="结算详情" v-model="dialogVisible" width="460px" show-close custom-class="settlement-detail" top="10vh">
       <el-descriptions :column="1" :data="list" border style="cursor: pointer">
         <el-descriptions-item label="结算额" label-align="center" align="center">
-          <span> {{ toThousand(list.settlementAmount) }}</span>
+          <span> {{ toThousand(list.settlementAmount,decimalPrecision.contract) }}</span>
         </el-descriptions-item>
         <el-descriptions-item label="附件" label-align="center" align="center">
           <template v-if="list.settlementAttachments?.length > 0">
@@ -184,6 +184,7 @@ import { settlementStatusEnum } from '@/utils/enum/modules/finance'
 import { toThousand } from '@data-type/number'
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
 
 import ExportButton from '@comp-common/export-button/index.vue'
 import mHeader from './module/header.vue'
@@ -195,6 +196,8 @@ const optShow = {
   del: false,
   download: false
 }
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const tableRef = ref()
 const list = ref({})

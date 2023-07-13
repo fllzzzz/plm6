@@ -166,7 +166,7 @@
         <div class="form-row">
           <el-form-item label="合同金额(元)" prop="contractAmount">
             <div class="input-underline">
-              <span>{{ detail.contractAmount? toThousand(detail.contractAmount): '-' }}</span>
+              <span>{{ detail.contractAmount? toThousand(detail.contractAmount,decimalPrecision.contract): '-' }}</span>
               <div style="color:#82848a">{{ detail.contractAmount? digitUppercase(detail.contractAmount):'' }}</div>
             </div>
           </el-form-item>
@@ -179,14 +179,14 @@
                 :step="1"
                 :min="0"
                 :max="detail.contractAmount?detail.contractAmount:999999999999"
-                :precision="DP.YUAN"
+                :precision="decimalPrecision.contract"
                 :controls="false"
                 controls-position="right"
                 placeholder="预付款(元)"
                 style="width:220px;"
               />
               <template v-else>
-                <span>{{ detail.prepayments? toThousand(detail.prepayments): '' }}</span>
+                <span>{{ detail.prepayments? toThousand(detail.prepayments,decimalPrecision.contract): '' }}</span>
               </template>
             </div>
           </el-form-item>
@@ -214,7 +214,7 @@
               </div>
             </template>
             <template v-else>
-              <span>{{ detail.managementFee? toThousand(detail.managementFee): '-' }}</span>
+              <span>{{ detail.managementFee? toThousand(detail.managementFee,decimalPrecision.contract): '-' }}</span>
               <span>（费率:{{ detail.managementFeeRate ? detail.managementFeeRate.toFixed(DP.ACCOUNTING): '-' }}%）</span>
             </template>
           </el-form-item>
@@ -228,14 +228,14 @@
                 :step="1"
                 :min="0"
                 :max="999999999999"
-                :precision="DP.YUAN"
+                :precision="decimalPrecision.contract"
                 :controls="false"
                 controls-position="right"
                 placeholder="保证金(元)"
                 style="width:220px;"
               />
               <template v-else>
-                <span>{{ detail.marginAmount? toThousand(detail.marginAmount): '-' }}</span>
+                <span>{{ detail.marginAmount? toThousand(detail.marginAmount,decimalPrecision.contract): '-' }}</span>
               </template>
             </div>
           </el-form-item>
@@ -306,20 +306,24 @@
 
 <script setup>
 import { ref, defineProps, watch, computed, defineExpose, nextTick } from 'vue'
+
 import { dateDifference } from '@/utils/date'
 import { cleanArray } from '@data-type/array'
-import regionCascader from '@comp-base/region-cascader'
-import userDeptCascader from '@comp-base/user-dept-cascader.vue'
 import useDict from '@compos/store/use-dict'
 import { fileClassifyEnum } from '@enum-ms/file'
 import { orderSourceTypeEnum } from '@enum-ms/contract'
-import uploadList from '@comp/file-upload/UploadList.vue'
 import useWatchFormValidate from '@compos/form/use-watch-form-validate'
 import { DP } from '@/settings/config'
 import { getContractBase, downloadBaseAttachments } from '@/api/contract/project'
 import { parseTime } from '@/utils/date'
-import { toThousand } from '@data-type/number'
-import { digitUppercase } from '@/utils/data-type/number'
+import { digitUppercase, toThousand } from '@/utils/data-type/number'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+import regionCascader from '@comp-base/region-cascader'
+import userDeptCascader from '@comp-base/user-dept-cascader.vue'
+import uploadList from '@comp/file-upload/UploadList.vue'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const formRef = ref()
 const dict = useDict(['margin_type', 'currency_type'])
@@ -420,7 +424,7 @@ const totalDuration = computed(() => {
 })
 const managementFee = computed(() => {
   if (form.value.managementFeeRate && form.value.contractAmount) {
-    return (form.value.managementFeeRate * form.value.contractAmount / 100).toFixed(DP.YUAN)
+    return (form.value.managementFeeRate * form.value.contractAmount / 100).toFixed(decimalPrecision.value.contract)
   }
   return undefined
 })

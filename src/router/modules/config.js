@@ -69,6 +69,13 @@ export default {
           meta: { title: '项目模式', icon: 'project', noCache: true, permissions: ['projectModePM'] }
         },
         {
+          name: 'moduleDecimalPrecision',
+          path: 'module-decimal-precision',
+          hidden: false,
+          component: '/config-manage/main/module-decimal-precision/index',
+          meta: { title: '模块小数精度配置', icon: 'project', noCache: true }
+        },
+        {
           name: 'TablePrinting',
           path: 'table-printing',
           hidden: false,

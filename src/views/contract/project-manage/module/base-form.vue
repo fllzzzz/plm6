@@ -102,7 +102,7 @@
               :step="1"
               :min="0"
               :max="999999999999"
-              :precision="DP.YUAN"
+              :precision="decimalPrecision.contract"
               :controls="false"
               controls-position="right"
               class="input-underline"
@@ -119,7 +119,7 @@
             :step="1"
             :min="0"
             :max="form.contractAmount?form.contractAmount:999999999999"
-            :precision="DP.YUAN"
+            :precision="decimalPrecision.contract"
             :controls="false"
             controls-position="right"
             class="input-underline"
@@ -151,7 +151,7 @@
               :step="1"
               :min="0"
               :max="999999999999"
-              :precision="DP.YUAN"
+              :precision="decimalPrecision.contract"
               :controls="false"
               controls-position="right"
               class="input-underline"
@@ -211,6 +211,9 @@ import uploadList from '@comp/file-upload/UploadList.vue'
 import useWatchFormValidate from '@compos/form/use-watch-form-validate'
 import { DP } from '@/settings/config'
 import { digitUppercase } from '@/utils/data-type/number'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const formRef = ref()
 const dict = useDict(['margin_type', 'currency_type'])
@@ -290,7 +293,7 @@ watch(
 
 const managementFee = computed(() => {
   if (form.value.managementFeeRate && form.value.contractAmount) {
-    return ((form.value.managementFeeRate * form.value.contractAmount) / 100).toFixed(DP.YUAN)
+    return ((form.value.managementFeeRate * form.value.contractAmount) / 100).toFixed(decimalPrecision.value.contract)
   }
   return undefined
 })

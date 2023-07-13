@@ -29,10 +29,10 @@
           <span>{{ detailInfo.supplierName }}</span>
         </el-form-item>
         <el-form-item label="合同额">
-          <span  v-thousand="detailInfo.amount" />
+          <span v-thousand="detailInfo.amount" />
         </el-form-item>
         <el-form-item label="入库额">
-          <span  v-thousand="detailInfo.inboundAmount" />
+          <span v-thousand="detailInfo.inboundAmount" />
         </el-form-item>
         <el-form-item label="已付款">
           <span v-thousand="detailInfo.paymentAmount"/>
@@ -51,33 +51,33 @@
               :step="1"
               :min="detailInfo?.sourceRow?.paymentAmount?detailInfo?.sourceRow?.paymentAmount:0"
               :max="999999999999"
-              :precision="DP.YUAN"
+              :precision="decimalPrecision.supplyChain"
               placeholder="最终结算额"
               controls-position="right"
               style="width: 220px"
             />
           </template>
           <template v-else>
-            <span v-if="showType==='audit'">{{ detailInfo.unCheckSettlementAmount?toThousand(detailInfo.unCheckSettlementAmount):'-' }}</span>
-            <span v-else>{{ detailInfo.settlementAmount?toThousand(detailInfo.settlementAmount):'-' }}</span>
+            <span v-if="showType==='audit'">{{ detailInfo.unCheckSettlementAmount?toThousand(detailInfo.unCheckSettlementAmount,decimalPrecision.supplyChain):'-' }}</span>
+            <span v-else>{{ detailInfo.settlementAmount?toThousand(detailInfo.settlementAmount,decimalPrecision.supplyChain):'-' }}</span>
           </template>
         </el-form-item>
         <el-form-item label="大写">
           <span style="color:#82848a"  v-if="showType==='add'">{{ form.amount?digitUppercase(form.amount):'' }}</span>
            <template v-else>
-            <span v-if="showType==='audit'">{{ detailInfo.unCheckSettlementAmount?digitUppercase(detailInfo.unCheckSettlementAmount):'-' }}</span>
-            <span style="color:#82848a"  v-else>{{ detailInfo.settlementAmount?digitUppercase( detailInfo.settlementAmount):'' }}</span>
+            <span v-if="showType==='audit'">{{ detailInfo.unCheckSettlementAmount?digitUppercase(detailInfo.unCheckSettlementAmount,decimalPrecision.supplyChain):'-' }}</span>
+            <span style="color:#82848a"  v-else>{{ detailInfo.settlementAmount?digitUppercase( detailInfo.settlementAmount,decimalPrecision.supplyChain):'' }}</span>
           </template>
         </el-form-item>
         <el-form-item label="应付金额">
-          <span v-if="showType==='audit'">{{ toThousand(detailInfo.unCheckSettlementAmount-detailInfo.paymentAmount) }}</span>
-          <span v-else-if="showType==='add'">{{ form.amount?toThousand(form.amount-detailInfo?.sourceRow?.paymentAmount):'' }}</span>
-          <span v-else>{{ toThousand(detailInfo.settlementAmount-detailInfo.paymentAmount) }}</span>
+          <span v-if="showType==='audit'">{{ toThousand((detailInfo.unCheckSettlementAmount-detailInfo.paymentAmount),decimalPrecision.supplyChain) }}</span>
+          <span v-else-if="showType==='add'">{{ form.amount?toThousand((form.amount-detailInfo?.sourceRow?.paymentAmount),decimalPrecision.supplyChain):'' }}</span>
+          <span v-else>{{ toThousand((detailInfo.settlementAmount-detailInfo.paymentAmount),decimalPrecision.supplyChain) }}</span>
         </el-form-item>
         <el-form-item label="应补发票">
-          <span v-if="showType==='audit'">{{ toThousand(detailInfo.unCheckSettlementAmount-detailInfo.invoiceAmount) }}</span>
-          <span v-else-if="showType==='add'">{{ form.amount?toThousand(form.amount-detailInfo?.sourceRow?.invoiceAmount):'' }}</span>
-          <span v-else>{{ toThousand(detailInfo.settlementAmount-detailInfo.invoiceAmount) }}</span>
+          <span v-if="showType==='audit'">{{ toThousand((detailInfo.unCheckSettlementAmount-detailInfo.invoiceAmount),decimalPrecision.supplyChain) }}</span>
+          <span v-else-if="showType==='add'">{{ form.amount?toThousand((form.amount-detailInfo?.sourceRow?.invoiceAmount),decimalPrecision.supplyChain):'' }}</span>
+          <span v-else>{{ toThousand((detailInfo.settlementAmount-detailInfo.invoiceAmount),decimalPrecision.supplyChain) }}</span>
         </el-form-item>
         <el-form-item label="备注" prop="remark">
           <el-input
@@ -124,13 +124,16 @@ import { settleSave, settleConfirm } from '@/api/supply-chain/purchase-reconcili
 import { ref, defineProps, watch, defineEmits, nextTick } from 'vue'
 import useVisible from '@compos/use-visible'
 import UploadBtn from '@comp/file-upload/UploadBtn'
-import { DP } from '@/settings/config'
 import { fileClassifyEnum } from '@enum-ms/file'
 import { auditTypeEnum } from '@enum-ms/contract'
 import { digitUppercase, toThousand } from '@data-type/number'
 import useWatchFormValidate from '@compos/form/use-watch-form-validate'
 import { ElNotification } from 'element-plus'
 import showPdfAndImg from '@comp-base/show-pdf-and-img.vue'
+
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const submitLoading = ref(false)
 const emit = defineEmits(['success', 'update:modelValue'])

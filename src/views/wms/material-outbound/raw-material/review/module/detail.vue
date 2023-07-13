@@ -47,6 +47,7 @@
         <material-unit-quantity-columns />
         <!-- 仓库信息 -->
         <warehouse-info-columns show-project show-monomer show-area show-transfer showOutboundWorkshop />
+        <el-table-column label="出库目的地" width="100px" prop="outboundAddress" align="center"/>
         <el-table-column key="recipient" label="领用人" width="100px" align="center">
           <template #default="{ row }">
             <el-tooltip v-if="row.recipient" placement="top" effect="light" :content="`${row.recipient.deptName}`">
@@ -54,7 +55,7 @@
             </el-tooltip>
           </template>
         </el-table-column>
-        <el-table-column key="outboundTime" prop="outboundTime" label="出库时间" width="125px" align="center" />
+        <el-table-column key="outboundTime" prop="outboundTime" label="出库时间" width="145px" align="center" />
       </common-table>
     </template>
   </common-drawer>
@@ -66,6 +67,7 @@ import { tableSummary } from '@/utils/el-extra'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { setSpecInfoToList } from '@/utils/wms/spec'
 import { parseTime } from '@/utils/date'
+import { outboundDestinationTypeEnum } from '@enum-ms/wms'
 import { materialColumns } from '@/utils/columns-format/wms'
 
 import { regDetail } from '@compos/use-crud'
@@ -82,6 +84,7 @@ const expandRowKeys = ref([])
 // 表格列格式化
 const columnsDataFormat = ref([
   ...materialColumns,
+  ['outboundAddress', ['parse-enum', outboundDestinationTypeEnum]],
   ['remark', 'empty-text'],
   ['project', 'parse-project'],
   ['sourceProject', 'parse-project'],

@@ -51,7 +51,7 @@
                 text-color="#626262"
                 num-color="#1890ff"
                 :end-val="summaryData.shipAmount || 0"
-                :precision="DP.YUAN"
+                :precision="decimalPrecision.contract"
               />
             </el-col>
           </el-row>
@@ -89,7 +89,7 @@
                 text-color="#626262"
                 num-color="#1890ff"
                 :end-val="summaryData.shipAmountTime || 0"
-                :precision="DP.YUAN"
+                :precision="decimalPrecision.contract"
               />
             </el-col>
           </el-row>
@@ -101,12 +101,12 @@
               text-color="#626262"
               num-color="#1890ff"
               :end-val="summaryData.shipMet || 0"
-              :precision="DP.YUAN"
+              :precision="decimalPrecision.contract"
               :show-empty="productType === installProjectTypeEnum.AUXILIARY.V"
             />
           </el-col>
           <el-col class="card-panel-col">
-            <Panel name="累计发运额（元）" text-color="#626262" num-color="#1890ff" :end-val="summaryData.shipAmount || 0" :precision="DP.YUAN" />
+            <Panel name="累计发运额（元）" text-color="#626262" num-color="#1890ff" :end-val="summaryData.shipAmount || 0" :precision="decimalPrecision.contract" />
           </el-col>
           <el-col class="card-panel-col">
             <Panel
@@ -133,7 +133,7 @@
               text-color="#626262"
               num-color="#1890ff"
               :end-val="summaryData.shipAmountTime || 0"
-              :precision="DP.YUAN"
+              :precision="decimalPrecision.contract"
             />
           </el-col>
         </el-row>
@@ -160,6 +160,9 @@ import structure from './structure'
 import enclosure from './enclosure'
 import auxiliaryMaterial from './auxiliary-material'
 import Panel from '@/components/Panel'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 // 当前显示组件
 const currentView = computed(() => {

@@ -2,8 +2,8 @@
   <div class="app-container">
     <!--表格渲染-->
     <div>
-      <el-tag type="success" size="medium" v-if="currentRow.amount">{{`合同额:${toThousand(currentRow.amount)}`}}</el-tag>
-      <el-tag type="success" size="medium" v-if="currentRow.settlementAmount" style="margin-left:5px;">{{`结算额:${toThousand(currentRow.settlementAmount)}`}}</el-tag>
+      <el-tag type="success" size="medium" v-if="currentRow.amount">{{`合同额:${toThousand(currentRow.amount,decimalPrecision.contract)}`}}</el-tag>
+      <el-tag type="success" size="medium" v-if="currentRow.settlementAmount" style="margin-left:5px;">{{`结算额:${toThousand(currentRow.settlementAmount,decimalPrecision.contract)}`}}</el-tag>
     </div>
     <common-table
       ref="tableRef"
@@ -38,12 +38,12 @@
       </el-table-column>
       <el-table-column key="applyAmount" prop="applyAmount" label="申请金额" align="center" min-width="85">
         <template v-slot="scope">
-          <div>{{ scope.row.applyAmount && scope.row.applyAmount>0? toThousand(scope.row.applyAmount): scope.row.applyAmount }}</div>
+          <div>{{ isNotBlank(scope.row.applyAmount)? toThousand(scope.row.applyAmount,decimalPrecision.contract): scope.row.applyAmount }}</div>
         </template>
       </el-table-column>
       <el-table-column key="applyAmount1" prop="applyAmount1" label="大写" align="center" min-width="85">
         <template v-slot="scope">
-          <div>{{ scope.row.applyAmount && scope.row.applyAmount>0? digitUppercase(scope.row.applyAmount): '-' }}</div>
+          <div>{{ isNotBlank(scope.row.applyAmount)? digitUppercase(scope.row.applyAmount): '-' }}</div>
         </template>
       </el-table-column>
       <!-- <el-table-column key="paymentReasonId" prop="paymentReasonId" label="*付款事由" align="center" width="120">
@@ -59,7 +59,7 @@
       </el-table-column>
       <el-table-column key="actuallyPaymentAmount" prop="actuallyPaymentAmount" label="实付金额" align="center" min-width="85">
         <template v-slot="scope">
-          <div>{{ scope.row.actuallyPaymentAmount && scope.row.actuallyPaymentAmount>0? toThousand(scope.row.actuallyPaymentAmount): scope.row.actuallyPaymentAmount }}</div>
+          <div>{{ isNotBlank(scope.row.actuallyPaymentAmount) ? toThousand(scope.row.actuallyPaymentAmount,decimalPrecision.contract): '-' }}</div>
         </template>
       </el-table-column>
       <el-table-column key="auditUserName" prop="auditUserName" label="审核人" align="center" width="100px">
@@ -94,21 +94,24 @@
 <script setup>
 import crudApi from '@/api/contract/supplier-manage/pay-invoice/pay'
 import { ref, defineProps, watch, defineEmits } from 'vue'
+
 import { tableSummary } from '@/utils/el-extra'
 import { contractSupplierSubcontractPM } from '@/page-permission/contract'
 import checkPermission from '@/utils/system/check-permission'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
-import pagination from '@crud/Pagination'
 import { parseTime } from '@/utils/date'
-import { DP } from '@/settings/config'
 import { digitUppercase, toThousand } from '@data-type/number'
 import { validate } from '@compos/form/use-table-validate'
 import { auditTypeEnum, supplierPayTypeEnum } from '@enum-ms/contract'
 import { isNotBlank } from '@data-type/index'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
 import detail from './detail'
+import pagination from '@crud/Pagination'
 
 const permission = contractSupplierSubcontractPM.payment
+const { decimalPrecision } = useDecimalPrecision()
 
 const optShow = {
   add: false,
@@ -204,7 +207,7 @@ function handleSuccess() {
 // 合计
 function getSummaries(param) {
   return tableSummary(param, {
-    props: [['applyAmount', DP.YUAN]],
+    props: [['applyAmount', decimalPrecision.value.contract]],
     toThousandFields: ['applyAmount']
   })
 }

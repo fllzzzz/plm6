@@ -12,8 +12,8 @@
       <common-button :loading="crud.status.cu === 2" type="primary" size="mini" @click="crud.submitCU">确认</common-button>
     </template>
     <template #content>
-      <el-tag type="success" v-if="currentRow.amount">{{'合同金额:'+toThousand(currentRow.amount)}}</el-tag>
-      <el-tag type="success" size="medium" v-if="currentRow.settlementAmount" style="margin-left:5px;">{{`结算额:${toThousand(currentRow.settlementAmount)}`}}</el-tag>
+      <el-tag type="success" v-if="currentRow.amount">{{'合同金额:'+toThousand(currentRow.amount,decimalPrecision.contract)}}</el-tag>
+      <el-tag type="success" size="medium" v-if="currentRow.settlementAmount" style="margin-left:5px;">{{`结算额:${toThousand(currentRow.settlementAmount,decimalPrecision.contract)}`}}</el-tag>
       <el-form ref="formRef" :model="form" size="small" label-width="140px">
         <common-table
           ref="detailRef"
@@ -51,15 +51,15 @@
                   v-if="scope.row.isModify"
                   v-show-thousand
                   v-model.number="scope.row.invoiceAmount"
-                  :min="0"
+                  :min="-9999999999"
                   :max="currentRow.settlementAmount?currentRow.settlementAmount-totalAmount:999999999999"
                   :step="100"
-                  :precision="DP.YUAN"
+                  :precision="decimalPrecision.contract"
                   placeholder="收票额(元)"
                   controls-position="right"
                   @change="moneyChange(scope.row)"
                 />
-                <div v-else>{{ scope.row.invoiceAmount && scope.row.invoiceAmount>0? toThousand(scope.row.invoiceAmount): scope.row.invoiceAmount }}</div>
+                <div v-else>{{ isNotBlank(scope.row.invoiceAmount) ? toThousand(scope.row.invoiceAmount,decimalPrecision.contract): '-' }}</div>
               </template>
             </el-table-column>
             <el-table-column key="invoiceAmount1" prop="invoiceAmount1" label="大写" align="center" width="330" :show-overflow-tooltip="true">
@@ -124,7 +124,7 @@ import { ref, defineProps, inject, nextTick } from 'vue'
 import { regForm } from '@compos/use-crud'
 import { ElMessage } from 'element-plus'
 
-import { DP } from '@/settings/config'
+import { isNotBlank } from '@data-type/index'
 import { digitUppercase } from '@/utils/data-type/number'
 import { toThousand } from '@data-type/number'
 import { invoiceTypeEnum } from '@enum-ms/finance'
@@ -132,8 +132,11 @@ import { supplierPayTypeEnum } from '@enum-ms/contract'
 import useMaxHeight from '@compos/use-max-height'
 import useTableValidate from '@compos/form/use-table-validate'
 import { fileClassifyEnum } from '@enum-ms/file'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
 
 import UploadBtn from '@comp/file-upload/UploadBtn'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const formRef = ref()
 const detailRef = ref()
@@ -188,7 +191,7 @@ const validateTaxRate = (value, row) => {
 
 // 金额校验
 const validateAmount = (value, row) => {
-  if (!value) return false
+  if (!isNotBlank(value)) return false
   return true
 }
 
@@ -257,7 +260,7 @@ function moneyChange(row) {
 }
 
 function taxMoney(row) {
-  if (row.invoiceAmount && row.taxRate && row.invoiceType !== invoiceTypeEnum.RECEIPT.V) {
+  if (isNotBlank(row.invoiceAmount) && row.taxRate && row.invoiceType !== invoiceTypeEnum.RECEIPT.V) {
     row.tax = row.invoiceAmount * row.taxRate / 100
   }
 }
@@ -300,17 +303,9 @@ CRUD.HOOK.beforeValidateCU = (crud, form) => {
   } else {
     return validResult
   }
-  let moneyFlag = true
   crud.form.list.map(row => {
-    if (row.invoiceAmount === 0) {
-      moneyFlag = false
-    }
     row.attachmentIds = row.attachments ? row.attachments.map((v) => v.id) : undefined
   })
-  if (!moneyFlag) {
-    ElMessage.error('收票金额必须大于0')
-    return false
-  }
 }
 
 </script>

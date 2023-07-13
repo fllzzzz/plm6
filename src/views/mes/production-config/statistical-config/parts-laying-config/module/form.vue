@@ -74,7 +74,7 @@
           v-model="form.unitPrice"
           :step="1"
           :min="0"
-          :precision="DP.YUAN"
+          :precision="decimalPrecision.mes"
           clearable
           class="input-underline"
           :controls="false"
@@ -91,8 +91,10 @@
 import { ref, computed } from 'vue'
 import { partKeyWordEnum, wageQuotaTypeEnum } from '@enum-ms/mes'
 import { regForm } from '@compos/use-crud'
-import { DP } from '@/settings/config'
 import cutConfigSelect from '@/components-system/base/cut-config-select.vue'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const formRef = ref()
 const defaultForm = {

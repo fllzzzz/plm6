@@ -68,7 +68,7 @@
           <template v-slot="scope">
             <div style="width: 100%">
               <span :class="scope.row.priceType === logisticsPriceTypeEnum.WEIGHT.V ? 'blue' : 'orange'">
-                <span>{{ toFixed(scope.row.price, DP.YUAN) }}</span>
+                <span>{{ toFixed(scope.row.price, decimalPrecision.bridge) }}</span>
                 <span style="margin-left: 3px">{{ logisticsPriceTypeEnum.V[scope.row.priceType].unit }}</span>
               </span>
               <el-tag
@@ -91,7 +91,7 @@
           min-width="80"
         >
           <template v-slot="scope">
-            <span v-if="scope.row.tax">{{ toFixed(scope.row.tax, DP.YUAN) }}%</span>
+            <span v-if="scope.row.tax">{{ toFixed(scope.row.tax, decimalPrecision.bridge) }}%</span>
             <span v-else>{{ emptyTextFormatter('', '/') }}</span>
           </template>
         </el-table-column>
@@ -142,7 +142,6 @@ import { defineProps, defineEmits, ref, watch } from 'vue'
 
 import { logisticsPriceTypeEnum } from '@enum-ms/mes'
 import { projectNameFormatter } from '@/utils/project'
-import { DP } from '@/settings/config'
 import { toFixed, emptyTextFormatter } from '@/utils/data-type'
 
 import useMaxHeight from '@compos/use-max-height'
@@ -153,6 +152,9 @@ import udOperation from '@crud/UD.operation'
 import mHeader from './module/header'
 import mForm from './module/form'
 import priceAllDetail from './module/price-all-detail'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const drawerRef = ref()
 const emit = defineEmits(['update:visible'])

@@ -38,7 +38,7 @@
 
 <script setup>
 import crudApi from '@/api/contract/sales-manage/transaction-record'
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 
 import { businessTypeEnum } from '@enum-ms/contract'
 import { transactionRecordPM as permission } from '@/page-permission/contract'
@@ -49,6 +49,9 @@ import useCRUD from '@compos/use-crud'
 import pagination from '@crud/Pagination'
 import mHeader from './module/header'
 import mDetail from './module/detail'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const optShow = {
   add: false,
@@ -58,11 +61,13 @@ const optShow = {
 }
 
 const tableRef = ref()
-const dataFormat = ref([
-  ['businessType', ['parse-enum', businessTypeEnum]],
-  ['totalContractAmount', ['to-thousand-ck', 'YUAN']],
-  ['totalSettlementAmount', ['to-thousand-ck', 'YUAN']]
-])
+const dataFormat = computed(() => {
+  return [
+    ['businessType', ['parse-enum', businessTypeEnum]],
+    ['totalContractAmount', ['to-thousand', decimalPrecision.value.contract]],
+    ['totalSettlementAmount', ['to-thousand', decimalPrecision.value.contract]]
+  ]
+})
 const { crud, columns } = useCRUD(
   {
     title: '客户交易记录',

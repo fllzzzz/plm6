@@ -250,6 +250,12 @@ const warehouseTypeEnum = {
   NORMAL: { L: '普通', K: 'NORMAL', V: 1 << 1 }
 }
 constantize(warehouseTypeEnum)
+// 出库目的地类型
+const outboundDestinationTypeEnum = {
+  FACTORY: { L: '工厂', K: 'FACTORY', V: 1 },
+  CONSTRUCTION_SITE: { L: '工地', K: 'CONSTRUCTION_SITE', V: 2 }
+}
+constantize(outboundDestinationTypeEnum)
 
 export {
   receiptTypeEnum, // 单据类型
@@ -282,7 +288,8 @@ export {
   inspectionDetailStatusEnum,
   materialWeightingWayEnum,
   materialLabelPrintTypeEnum,
-  warehouseTypeEnum
+  warehouseTypeEnum,
+  outboundDestinationTypeEnum
 }
 
 export default {
@@ -316,5 +323,6 @@ export default {
   inspectionDetailStatusEnum,
   materialWeightingWayEnum,
   materialLabelPrintTypeEnum,
-  warehouseTypeEnum
+  warehouseTypeEnum,
+  outboundDestinationTypeEnum
 }

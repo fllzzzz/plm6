@@ -15,6 +15,7 @@ import { defineProps, defineExpose, provide, computed, ref, watch } from 'vue'
 import { mapGetters } from '@/store/lib'
 import { deepClone, isBlank } from '@/utils/data-type'
 import { numFmtByUnit } from '@/utils/wms/convert-unit'
+import { outboundDestinationTypeEnum } from '@/utils/enum/modules/wms'
 
 import useWorkshopName from '@compos/store/use-workshop-name'
 
@@ -49,6 +50,7 @@ const validateQuantity = (rule, value, callback) => {
 }
 
 const rules = {
+  outboundAddress: [{ required: true, message: '出库目的地', trigger: 'change' }],
   quantity: [
     { required: true, validator: validateQuantity, trigger: 'blur' }
   ],
@@ -89,6 +91,7 @@ function formInit(data) {
     workshopId: mesWorkShopName.value?.findIndex(v => v.id === data.workshop?.id) > -1 ? data.workshop?.id : undefined, // 车间id
     outboundUnit: data.outboundUnit, // 出库单位
     outboundUnitPrecision: data.outboundUnitPrecision, // 出库单位精度
+    outboundAddress: outboundDestinationTypeEnum.FACTORY.V, // 出库目的地
     projectId: data.project ? data.project.id : undefined, // 项目id
     recipientId: user.value.id, // 领用人id
     quantity: undefined, // 长度

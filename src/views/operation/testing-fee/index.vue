@@ -46,17 +46,17 @@
       </el-table-column>
       <el-table-column v-for="item in itemKeyArr" :label="item.name" :prop="item.key" :key="item.key" align="center">
         <template v-slot="scope">
-          <span>{{ toThousand(scope.row[item.key]) }}</span>
+          <span>{{ toThousand(scope.row[item.key],decimalPrecision.operation) }}</span>
         </template>
       </el-table-column>
       <el-table-column label="合计" prop="totalAmount" align="center">
         <template v-slot="scope">
-          <span>{{ toThousand(scope.row.totalAmount) }}</span>
+          <span>{{ toThousand(scope.row.totalAmount,decimalPrecision.operation) }}</span>
         </template>
       </el-table-column>
       <el-table-column label="平均检测费（元/吨）" prop="averageTestingFee" key="averageTestingFee" align="center">
         <template v-slot="scope">
-          <span>{{ toThousand(scope.row.averageTestingFee) }}</span>
+          <span>{{ toThousand(scope.row.averageTestingFee,decimalPrecision.operation) }}</span>
         </template>
       </el-table-column>
     </common-table>
@@ -88,6 +88,9 @@ import { toThousand } from '@data-type/number'
 // import usePagination from '@compos/use-pagination'
 import projectCascader from '@comp-base/project-cascader'
 import ExportButton from '@comp-common/export-button/index.vue'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const year = ref(parseTime(new Date(), '{y}'))
 const projectId = ref()
@@ -169,7 +172,7 @@ function getSummaries(param) {
   })
   const tIndex = [2, 3, 4, 5, 6, 7]
   tIndex.forEach((index) => {
-    sums[index] = sums[index] ? toThousand(sums[index]) : 0
+    sums[index] = sums[index] ? (index !== 2 ? toThousand(sums[index], decimalPrecision.value.operation) : toThousand(sums[index])) : 0
   })
   return sums
 }

@@ -220,6 +220,7 @@ import { matClsEnum, materialPurchaseClsEnum } from '@/utils/enum/modules/classi
 import { wmsReceiptColumns } from '@/utils/columns-format/wms'
 import { isNotBlank } from '@/utils/data-type'
 import checkPermission from '@/utils/system/check-permission'
+import { DP } from '@/settings/config'
 
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
@@ -244,15 +245,17 @@ const tableRef = ref()
 const expandRowKeys = ref([])
 const store = useStore()
 // 表格列数据格式转换
-const columnsDataFormat = ref([
-  ...wmsReceiptColumns,
-  ['invoiceType', ['parse-enum', invoiceTypeEnum]],
-  ['amount', ['to-thousand-ck', 'YUAN']],
-  ['requisitionsSNStr', 'empty-text'],
-  ['remark', 'empty-text'],
-  ['auxMaterialNames', 'split'],
-  ['otherMaterialNames', 'split']
-])
+const columnsDataFormat = computed(() => {
+  return [
+    ...wmsReceiptColumns,
+    ['invoiceType', ['parse-enum', invoiceTypeEnum]],
+    ['amount', ['to-thousand', DP.YUAN]],
+    ['requisitionsSNStr', 'empty-text'],
+    ['remark', 'empty-text'],
+    ['auxMaterialNames', 'split'],
+    ['otherMaterialNames', 'split']
+  ]
+})
 const { CRUD, crud, columns } = useCRUD(
   {
     title: '采购合同',

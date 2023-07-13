@@ -51,10 +51,10 @@
               <el-input-number
                 v-model.number="scope.row.applyAmount"
                 v-show-thousand
-                :min="scope.row.paymentAmount>scope.row.freight?(-(scope.row.paymentAmount-scope.row.freight)):0"
+                :min="-9999999999"
                 :max="scope.row.paymentAmount>scope.row.freight?0:scope.row.freight-scope.row.paymentAmount"
                 :step="100"
-                :precision="DP.YUAN"
+                :precision="decimalPrecision.supplyChain"
                 placeholder="本次支付(元)"
                 controls-position="right"
               />
@@ -93,11 +93,15 @@ import { tableSummary } from '@/utils/el-extra'
 import useMaxHeight from '@compos/use-max-height'
 import { logisticsSearchTypeEnum } from '@enum-ms/contract'
 import { toThousand } from '@data-type/number'
-import { DP } from '@/settings/config'
 import { fileClassifyEnum } from '@enum-ms/file'
 import UploadBtn from '@comp/file-upload/UploadBtn'
 import { ElMessage } from 'element-plus'
 import showPdfAndImg from '@comp-base/show-pdf-and-img.vue'
+import { isNotBlank } from '@data-type/index'
+
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const formRef = ref()
 const props = defineProps({
@@ -127,8 +131,8 @@ const pdfShow = ref(false)
 const currentId = ref()
 
 const validateMoney = (rule, value, callback) => {
-  if (!value) {
-    callback(new Error('请填写申请金额并大于0'))
+  if (!isNotBlank(value)) {
+    callback(new Error('请填写申请金额'))
   }
   callback()
 }
@@ -150,7 +154,7 @@ function attachmentView(item) {
 // 合计
 function getSummaries(param) {
   return tableSummary(param, {
-    props: [['freight', DP.YUAN], ['paymentAmount', DP.YUAN], ['applyAmount', DP.YUAN]],
+    props: [['freight', decimalPrecision.value.supplyChain], ['paymentAmount', decimalPrecision.value.supplyChain], ['applyAmount', decimalPrecision.value.supplyChain]],
     toThousandFields: ['freight', 'paymentAmount', 'applyAmount']
   })
 }
@@ -163,7 +167,7 @@ CRUD.HOOK.beforeSubmit = () => {
   const listData = JSON.parse(JSON.stringify(crud.form.paymentDetails))
   const submitData = []
   listData.map(v => {
-    if (v.applyAmount !== 0) {
+    if (isNotBlank(v.applyAmount)) {
       crud.form.applyAmount += v.applyAmount
       submitData.push(v)
     }

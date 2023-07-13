@@ -15,6 +15,7 @@
     :data-format="dataFormat"
     :showEmptySymbol="false"
     :stripe="false"
+    show-summary
     :summary-method="getSummaries"
   >
     <el-table-column prop="index" label="序号" align="center" width="60" type="index" />
@@ -26,7 +27,7 @@
     </el-table-column> -->
     <el-table-column v-if="columns.visible('supplierName')" key="supplierName" prop="supplierName" :show-overflow-tooltip="true" label="销售单位" align="center" min-width="140" />
     <el-table-column v-if="columns.visible('branchCompanyName')" key="branchCompanyName" prop="branchCompanyName" :show-overflow-tooltip="true" label="购方单位" align="center" min-width="140" />
-    <el-table-column v-if="columns.visible('createTime')" key="createTime" prop="createTime" label="收票日期" align="center" width="100" />
+    <el-table-column v-if="columns.visible('receiveInvoiceDate')" key="receiveInvoiceDate" prop="receiveInvoiceDate" label="收票日期" align="center" width="100" />
     <el-table-column v-if="columns.visible('invoiceAmount')" key="invoiceAmount" prop="invoiceAmount" label="发票金额" align="right" min-width="100" />
     <el-table-column v-if="columns.visible('invoiceSerialNumber')" key="invoiceSerialNumber" prop="invoiceSerialNumber" :show-overflow-tooltip="true" label="发票号码" align="center" min-width="120">
       <template v-slot="scope">
@@ -61,13 +62,14 @@
 
 <script setup>
 import crudApi from '@/api/contract/supplier-manage/payment-ledger/pay-invoice'
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 
 import { contractSupplierPaymentLedgerPM } from '@/page-permission/contract'
 import { supplierPayTypeEnum } from '@enum-ms/contract'
 import { invoiceTypeEnum } from '@enum-ms/finance'
-import { DP } from '@/settings/config'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
 
+import { tableSummary } from '@/utils/el-extra'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import pagination from '@crud/Pagination'
@@ -77,6 +79,7 @@ import showPdfAndImg from '@comp-base/show-pdf-and-img.vue'
 
 // crud交由presenter持有
 const permission = contractSupplierPaymentLedgerPM.invoice
+const { decimalPrecision } = useDecimalPrecision()
 
 const optShow = {
   add: false,
@@ -107,13 +110,15 @@ const { maxHeight } = useMaxHeight({
   extraHeight: 120
 })
 
-const dataFormat = ref([
-  ['invoiceAmount', ['to-thousand-ck', 'YUAN']],
-  ['createTime', ['parse-time', '{y}-{m}-{d}']],
-  ['propertyType', ['parse-enum', supplierPayTypeEnum]],
-  ['invoiceType', ['parse-enum', invoiceTypeEnum]],
-  ['taxRate', ['suffix', '%']]
-])
+const dataFormat = computed(() => {
+  return [
+    ['invoiceAmount', ['to-thousand', decimalPrecision.value.contract]],
+    ['receiveInvoiceDate', ['parse-time', '{y}-{m}-{d}']],
+    ['propertyType', ['parse-enum', supplierPayTypeEnum]],
+    ['invoiceType', ['parse-enum', invoiceTypeEnum]],
+    ['taxRate', ['suffix', '%']]
+  ]
+})
 
 // 预览附件
 function attachmentView(item) {
@@ -131,30 +136,12 @@ CRUD.HOOK.beforeRefresh = () => {
   }
 }
 
+// 合计
 function getSummaries(param) {
-  const { columns, data } = param
-  const sums = []
-  columns.forEach((column, index) => {
-    if (index === 0) {
-      sums[index] = '合计'
-      return
-    }
-    if (column.property === 'invoiceAmount') {
-      const values = data.map((item) => Number(item[column.property]))
-      if (!values.every((value) => isNaN(value))) {
-        sums[index] = values.reduce((prev, curr) => {
-          const value = Number(curr)
-          if (!isNaN(value)) {
-            return prev + curr
-          } else {
-            return prev
-          }
-        }, 0)
-        sums[index] = sums[index].toFixed(DP.YUAN)
-      }
-    }
+  return tableSummary(param, {
+    props: [['invoiceAmount', decimalPrecision.value.contract]],
+    toThousandFields: ['invoiceAmount']
   })
-  return sums
 }
 </script>
 

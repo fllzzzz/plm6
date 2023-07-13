@@ -79,24 +79,24 @@
         <div class="form-row">
           <el-form-item label="合同金额(元)" prop="contractAmount">
             <div class="input-underline">
-              <span>{{ detail.contractAmount? toThousand(detail.contractAmount): '-' }}</span>
+              <span>{{ detail.contractAmount? toThousand(detail.contractAmount,decimalPrecision.contract): '-' }}</span>
               <div style="color:#82848a">{{ detail.contractAmount? digitUppercase(detail.contractAmount):'' }}</div>
             </div>
           </el-form-item>
           <el-form-item label="预付款(元)" prop="prepayments">
             <div class="input-underline">
-              <span>{{ detail.prepayments? toThousand(detail.prepayments): '' }}</span>
+              <span>{{ detail.prepayments? toThousand(detail.prepayments,decimalPrecision.contract): '' }}</span>
             </div>
           </el-form-item>
           <el-form-item label="管理费(元)" prop="managementFeeRate">
-            <span>{{detail.managementFeeRate && detail.contractAmount ?  toThousand(detail.managementFeeRate * detail.contractAmount / 100) : '-'}}</span>
+            <span>{{detail.managementFeeRate && detail.contractAmount ?  toThousand((detail.managementFeeRate * detail.contractAmount / 100),decimalPrecision.contract) : '-'}}</span>
             <span>（费率:{{ detail.managementFeeRate ? detail.managementFeeRate.toFixed(DP.ACCOUNTING): '-' }}%）</span>
           </el-form-item>
         </div>
         <div class="form-row">
           <el-form-item label="保证金(元)" prop="marginAmount">
             <div class="input-underline">
-              <span>{{ detail.marginAmount? toThousand(detail.marginAmount): '-' }}</span>
+              <span>{{ detail.marginAmount? toThousand(detail.marginAmount,decimalPrecision.contract): '-' }}</span>
             </div>
           </el-form-item>
           <el-form-item label="保证金类型" prop="marginType">
@@ -139,12 +139,15 @@ import { downloadBaseAttachments } from '@/api/contract/project'
 import { parseTime } from '@/utils/date'
 import { toThousand } from '@data-type/number'
 import { digitUppercase } from '@/utils/data-type/number'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
 
 import uploadList from '@comp/file-upload/UploadList.vue'
 
 const formRef = ref()
 const dict = useDict(['margin_type', 'currency_type'])
 const form = ref({})
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const props = defineProps({
   detail: {

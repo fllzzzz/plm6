@@ -146,7 +146,7 @@
         min-width="120"
       >
         <template v-slot="scope">
-          <span>{{ scope.row.supplier && toFixed(scope.row.supplier.price, DP.YUAN) }}</span>
+          <span>{{ scope.row.supplier && toFixed(scope.row.supplier.price, decimalPrecision.shipment) }}</span>
           <span :class="scope.row.priceType === logisticsPriceTypeEnum.WEIGHT.V ? 'blue':'orange'" style="margin-left:3px;">{{ logisticsPriceTypeEnum.V[scope.row.priceType].unit }}</span>
         </template>
       </el-table-column>
@@ -159,7 +159,7 @@
         min-width="120"
       >
         <template v-slot="scope">
-          <span>{{ toFixed(scope.row.totalPrice, DP.YUAN) }}</span>
+          <span>{{ toFixed(scope.row.totalPrice, decimalPrecision.shipment) }}</span>
         </template>
       </el-table-column>
       <el-table-column v-if="columns.visible('auditTime')" key="auditTime" prop="auditTime" sortable="custom" label="承运日期" width="120">
@@ -212,6 +212,9 @@ import useCRUD from '@compos/use-crud'
 import pagination from '@crud/Pagination'
 import mHeader from './module/header'
 import priceForm from './module/form'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const optShow = {
   add: false,

@@ -41,6 +41,7 @@ import { mapGetters } from '@/store/lib'
 import { materialOutboundModeEnum } from '@/utils/enum/modules/wms'
 import { deepClone, isBlank } from '@/utils/data-type'
 import { numFmtByUnit } from '@/utils/wms/convert-unit'
+import { outboundDestinationTypeEnum } from '@/utils/enum/modules/wms'
 
 import useWorkshopName from '@compos/store/use-workshop-name'
 
@@ -89,6 +90,7 @@ const validateHalfSize = (rule, value, callback) => {
 }
 
 const rules = {
+  outboundAddress: [{ required: true, message: '出库目的地', trigger: 'change' }],
   projectId: [{ required: true, message: '请选择出库项目', trigger: 'change' }],
   workshopId: [{ required: true, message: '请选择出库车间', trigger: 'change' }],
   materialOutboundMode: [{ required: true, message: '请选择物料出库方式', trigger: 'change' }],
@@ -134,6 +136,7 @@ function formInit(data) {
     workshopId: mesWorkShopName.value?.findIndex(v => v.id === data.workshop?.id) > -1 ? data.workshop?.id : undefined, // 车间id
     outboundUnit: data.outboundUnit, // 出库单位
     outboundUnitPrecision: data.outboundUnitPrecision, // 出库单位精度
+    outboundAddress: outboundDestinationTypeEnum.FACTORY.V, // 出库目的地
     projectId: data.project ? data.project.id : undefined, // 项目id
     materialOutboundMode: materialOutboundModeEnum.WHOLE.V, // 出库方式 整出/半出
     recipientId: user.value.id, // 领用人id

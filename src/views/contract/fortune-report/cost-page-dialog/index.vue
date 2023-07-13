@@ -18,14 +18,14 @@
                 text-color="#626262"
                 num-color="#1890ff"
                 :end-val="props.settlementStatus === projectStatusEnum.SETTLED.V ? detailRow.settlementAmount : detailRow.contractAmount"
-                :precision="DP.YUAN"
+                :precision="decimalPrecision.contract"
               />
             </el-col>
             <el-col :span="8" class="card-panel-col">
-              <Panel name="综合成本" text-color="#626262" num-color="#F56C6C" :end-val="detailRow.costAmount || 0" :precision="DP.YUAN" />
+              <Panel name="综合成本" text-color="#626262" num-color="#F56C6C" :end-val="detailRow.costAmount || 0" :precision="decimalPrecision.contract" />
             </el-col>
             <el-col :span="8" class="card-panel-col">
-              <Panel name="毛利润" text-color="#626262" num-color="#1890ff" :end-val="detailRow.grossProfit || 0" :precision="DP.YUAN" />
+              <Panel name="毛利润" text-color="#626262" num-color="#1890ff" :end-val="detailRow.grossProfit || 0" :precision="decimalPrecision.contract" />
             </el-col>
           </el-row>
           <el-divider><span class="title">直接费用</span></el-divider>
@@ -85,7 +85,7 @@ import { defineProps, defineEmits, ref, watch, computed } from 'vue'
 
 import checkPermission from '@/utils/system/check-permission'
 import { fortuneReportPM } from '@/page-permission/contract'
-import { DP } from '@/settings/config'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
 
 import mainMaterialFee from './module/main-material-fee.vue'
 import laborFee from './module/labor-fee.vue'
@@ -98,6 +98,8 @@ import testingFee from './module/testing-fee.vue'
 import subcontractingFee from './module/subcontracting-fee.vue'
 import Panel from '@/components/Panel'
 import { projectStatusEnum } from '@enum-ms/contract'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const permission = fortuneReportPM.cost
 const costTypeData = ref({})
@@ -135,10 +137,12 @@ const props = defineProps({
   }
 })
 
-const dataFormat = ref([
-  ['rate', ['to-fixed', 2]],
-  ['amount', ['to-thousand-ck', 'YUAN']]
-])
+const dataFormat = computed(() => {
+  return [
+    ['rate', ['to-fixed', 2]],
+    ['amount', ['to-thousand', decimalPrecision.value.contract]]
+  ]
+})
 
 watch(
   () => props.detailRow.id,

@@ -82,11 +82,11 @@
 <script setup>
 import { ref, defineProps, defineExpose, watchEffect } from 'vue'
 import { supplierTypeEnum, supplierClassEnum } from '@/utils/enum/modules/supplier'
+import { DP } from '@/settings/config'
 
 import supplierSelect from '@/components-system/base/supplier-select/index.vue'
 import invoiceTypeSelect from '@/components-system/base/invoice-type-select.vue'
 import { isNotBlank, isBlank } from '@/utils/data-type'
-import { DP } from '@/settings/config'
 
 const props = defineProps({
   disabled: {

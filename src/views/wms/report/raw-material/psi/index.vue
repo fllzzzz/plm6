@@ -111,6 +111,7 @@ import { reportRawMaterialPsiPM as permission } from '@/page-permission/wms'
 import { tableSummary } from '@/utils/el-extra'
 import checkPermission from '@/utils/system/check-permission'
 import { constantize } from '@/utils/enum/base'
+import { DP } from '@/settings/config'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
@@ -133,7 +134,7 @@ const drawerVisible = ref(false)
 const tableRef = ref()
 // 表格列数据格式转换
 const columnsDataFormat = ref([
-  ['amountExcludingVAT', ['to-thousand-ck', 'YUAN']],
+  ['amountExcludingVAT', ['to-thousand', DP.YUAN]],
   ['inboundTime', 'parse-time']
 ])
 
