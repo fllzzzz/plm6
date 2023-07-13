@@ -47,7 +47,7 @@
         </el-table-column>
       </template>
       <!-- 仓库信息 -->
-      <warehouse-info-columns :columns="columns" show-project show-monomer show-area />
+      <warehouse-info-columns :columns="columns" show-project show-monomer show-area showOutboundWorkshop />
       <el-table-column
         v-if="columns.visible('outboundSN')"
         key="outboundSN"

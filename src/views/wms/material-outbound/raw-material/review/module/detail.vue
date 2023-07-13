@@ -46,7 +46,7 @@
         <!-- 单位及其数量 -->
         <material-unit-quantity-columns />
         <!-- 仓库信息 -->
-        <warehouse-info-columns show-project show-monomer show-area show-transfer />
+        <warehouse-info-columns show-project show-monomer show-area show-transfer showOutboundWorkshop />
         <el-table-column key="recipient" label="领用人" width="100px" align="center">
           <template #default="{ row }">
             <el-tooltip v-if="row.recipient" placement="top" effect="light" :content="`${row.recipient.deptName}`">
