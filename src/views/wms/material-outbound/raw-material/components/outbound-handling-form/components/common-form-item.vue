@@ -1,4 +1,7 @@
 <template>
+  <el-form-item label="出库目的地" prop="outboundAddress">
+    <common-radio v-model="currentForm.outboundAddress" :options="outboundDestinationTypeEnum.ENUM" type="enum" size="small" />
+  </el-form-item>
   <el-form-item :label="`数量(${material.outboundUnit})`" prop="quantity">
     <common-input-number
       v-model="currentForm.quantity"
@@ -18,7 +21,7 @@
   <el-form-item label="单体" prop="monomerId">
     <common-select
       v-model="currentForm.monomerId"
-      :options="currentForm.projectId && projectMap?.[currentForm.projectId]?.children || []"
+      :options="(currentForm.projectId && projectMap?.[currentForm.projectId]?.children) || []"
       :dataStructure="{ key: 'id', label: 'name', value: 'id' }"
       clearable
       type="other"
@@ -29,7 +32,7 @@
   <el-form-item label="区域" prop="areaId">
     <common-select
       v-model="currentForm.areaId"
-      :options="currentForm.monomerId && monomerMap?.[currentForm.monomerId]?.children || []"
+      :options="(currentForm.monomerId && monomerMap?.[currentForm.monomerId]?.children) || []"
       :dataStructure="{ key: 'id', label: 'name', value: 'id' }"
       clearable
       type="other"
@@ -72,6 +75,9 @@
 
 <script setup>
 import { defineProps, inject, computed, watchEffect, ref } from 'vue'
+
+import { outboundDestinationTypeEnum } from '@/utils/enum/modules/wms'
+
 import userDeptCascader from '@comp-base/user-dept-cascader.vue'
 import projectCascader from '@comp-base/project-cascader.vue'
 import workshopSelect from '@comp-mes/workshop-select'
@@ -103,7 +109,9 @@ const currentForm = ref({
   remark: undefined // 备注
 })
 // 监听
-watchEffect(() => { currentForm.value = props.form })
+watchEffect(() => {
+  currentForm.value = props.form
+})
 
 // 出库配置
 const outboundCfg = inject('outboundCfg')
