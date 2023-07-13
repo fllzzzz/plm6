@@ -456,7 +456,7 @@ const { cu, form, FORM } = useForm(
     formStore: !props.edit,
     formStoreKey: 'SUPPLY_CHAIN_PURCHASE_ORDER',
     defaultForm: defaultForm,
-    useDraftCallback: setFormCallback,
+    useDraftCallback: formCallback,
     clearDraftCallback: init,
     api: props.edit ? edit : add
   },
@@ -479,7 +479,7 @@ watch(
 
 provide('cu', cu)
 
-function setFormCallback() {
+function formCallback() {
 
 }
 
@@ -854,6 +854,10 @@ function handleClear() {
   if (matSpecRef.value) {
     matSpecRef.value.clear()
   }
+}
+
+FORM.HOOK.beforeToEdit = async (crud, form) => {
+  compRef.value?.setFormCallback(form)
 }
 
 FORM.HOOK.beforeToCU = () => {
