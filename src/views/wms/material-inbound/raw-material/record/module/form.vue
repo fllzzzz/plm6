@@ -22,10 +22,11 @@ import { STEEL_ENUM } from '@/settings/config'
 import { orderSupplyTypeEnum } from '@enum-ms/wms'
 import { matClsEnum } from '@/utils/enum/modules/classification'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
+import { calcTheoryWeight } from '@/utils/wms/measurement-calc'
 import { setSpecInfoToList } from '@/utils/wms/spec'
-import { deepClone } from '@/utils/data-type'
-import { isNotBlank } from '@/utils/data-type'
+import { deepClone, toPrecision } from '@/utils/data-type'
 
+import useMatBaseUnit from '@/composables/store/use-mat-base-unit'
 import SteelApplication from '@/views/wms/material-inbound/raw-material/application/steel/index.vue'
 import AuxMatApplication from '@/views/wms/material-inbound/raw-material/application/auxiliary-material/index.vue'
 import OtherApplication from '@/views/wms/material-inbound/raw-material/application/other/index.vue'
@@ -33,6 +34,8 @@ import GasApplication from '@/views/wms/material-inbound/raw-material/applicatio
 import ManufApplication from '@/views/wms/material-inbound/manufactured/index.vue'
 
 const { CRUD, crud, form } = regForm()
+
+const { baseUnit } = useMatBaseUnit() // 当前分类基础单位
 
 const comp = computed(() => {
   switch (form.basicClass) {
@@ -71,9 +74,13 @@ CRUD.HOOK.beforeEditDetailLoaded = async (crud, detail) => {
   detail.logistics = detail.logisticsOrder
   if (detail.supplyType !== orderSupplyTypeEnum.PARTY_A.V && isNotBlank(detail.purchaseOrder.details)) {
     detail.originList = deepClone(detail.list)
+    await calcTheoryWeight(detail.originList)
     detail.list = []
     detail.editObj = {}
     detail.originList.forEach((v) => {
+      if (v.basicClass & (matClsEnum.STEEL_PLATE.V | matClsEnum.SECTION_STEEL.V)) {
+        v.theoryTotalWeight = toPrecision(v.theoryWeight * v.quantity, baseUnit.value[v.basicClass].weight.precision)
+      }
       if (!detail.editObj[v.mergeId]) {
         detail.editObj[v.mergeId] = {
           ...v,
@@ -84,6 +91,8 @@ CRUD.HOOK.beforeEditDetailLoaded = async (crud, detail) => {
         }
       } else {
         detail.editObj[v.mergeId].applyPurchaseObj[v.applyPurchaseId] = { ...v }
+        detail.editObj[v.mergeId].quantity += v.quantity
+        detail.editObj[v.mergeId].mete += v.mete
       }
     })
   }

@@ -452,9 +452,15 @@ function validate() {
     const _list = []
     formList.value.forEach((v) => {
       if (v.applyPurchase?.length) {
-        v.applyPurchase.forEach((a) => {
+        // 可分配重量
+        let assignableWeight = v.weighingTotalWeight
+        v.applyPurchase.forEach((a, idx) => {
           if (a.quantity) {
-            const _weight = toPrecision((a.theoryTotalWeight / v.theoryTotalWeight) * v.weighingTotalWeight, baseUnit.value[v.basicClass].weight.precision)
+            let _weight = toFixed((a.theoryTotalWeight / v.theoryTotalWeight) * v.weighingTotalWeight, baseUnit.value[v.basicClass].weight.precision, { toNum: true })
+            assignableWeight -= _weight
+            if (idx === v.applyPurchase.length - 1 && assignableWeight !== 0) {
+              _weight += assignableWeight
+            }
             _list.push({
               ...v,
               ...a,
@@ -586,8 +592,8 @@ async function handleOrderInfoChange(orderInfo) {
     // 默认赋值
     nextTick(() => {
       steelRefList[currentBasicClass.value] = steelRef.value
-      if ((boolPartyA.value) && isDraft.value) {
-      // 设置监听等
+      if (boolPartyA.value && isDraft.value) {
+        // 设置监听等
         setFormCallback(form)
       }
       // if (isDraft.value) {
