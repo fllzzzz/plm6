@@ -33,7 +33,7 @@ import { regForm } from '@compos/use-crud'
 
 import { orderSupplyTypeEnum, baseMaterialTypeEnum, purchaseOrderPaymentModeEnum } from '@enum-ms/wms'
 import { logisticsPayerEnum, logisticsTransportTypeEnum } from '@/utils/enum/modules/logistics'
-import { invoiceTypeEnum } from '@enum-ms/finance'
+import { weightMeasurementModeEnum, invoiceTypeEnum } from '@enum-ms/finance'
 import { whetherEnum } from '@enum-ms/common'
 import { matClsEnum, materialPurchaseClsEnum } from '@enum-ms/classification'
 import { steelInboundFormFormat } from '@/utils/wms/measurement-calc'
@@ -67,7 +67,7 @@ const defaultForm = {
   amount: undefined, // 合同金额
   invoiceType: invoiceTypeEnum.SPECIAL.V, // 发票类型
   taxRate: undefined, // 税率
-  // weightMeasurementMode: weightMeasurementModeEnum.THEORY.V, // 重量计量方式
+  weightMeasurementMode: weightMeasurementModeEnum.THEORY.V, // 重量计量方式
   logisticsTransportType: logisticsTransportTypeEnum.FREIGHT.V, // 物流运输方式
   logisticsPayerType: logisticsPayerEnum.SUPPLIER.V, // 物流运输方式 90%由供方承担运费
   purchaseOrderPaymentMode: purchaseOrderPaymentModeEnum.ARRIVAL.V, // 订单类型
@@ -246,7 +246,6 @@ CRUD.HOOK.beforeEditDetailLoaded = async (crud) => {
       }
     }
   }
-  console.log(form)
 }
 
 function handleSuccess() {

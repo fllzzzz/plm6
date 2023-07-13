@@ -309,7 +309,7 @@ async function handleOrderInfoChange(orderInfo) {
   if (!noDetail.value && !boolPartyA.value && !isDraft.value) {
     form.auxMatList = []
   }
-  if (!(boolPartyA.value && isDraft.value)) {
+  if (isDraft.value) {
     const trigger = watch(
       matSpecRef,
       () => {

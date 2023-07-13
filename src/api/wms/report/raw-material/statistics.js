@@ -12,6 +12,15 @@ export function getSendAndReceiveStorage(params) {
   })
 }
 
+// 手动月末加权
+export function monthWeighting() {
+  return request({
+    module: 'wms',
+    url: `report/test/calculateAveragePrice`,
+    method: 'get'
+  })
+}
+
 /**
  * 收发存excel导出
  */

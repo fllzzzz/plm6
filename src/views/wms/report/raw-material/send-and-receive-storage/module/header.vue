@@ -61,6 +61,7 @@
         <!-- <common-radio-button v-model="query.unitType" :options="unitTypeEnum.ENUM" default text-align="center" type="enum" size="mini" /> -->
       </template>
       <template #viewLeft>
+        <!-- <common-button :loading="submitLoading" type="primary" @click="manualSetting">手动月末加权</common-button> -->
         <export-button v-permission="permission.get" :params="query" :fn="exportSendAndReceiveStorageExcel" response-header-result>
           下载收发存报表（根据查询条件）
         </export-button>
@@ -87,6 +88,7 @@
 
 <script setup>
 import { exportSendAndReceiveStorageExcel } from '@/api/wms/report/raw-material/statistics'
+// import { exportSendAndReceiveStorageExcel, monthWeighting } from '@/api/wms/report/raw-material/statistics'
 import { computed, inject, defineEmits, ref, defineExpose } from 'vue'
 import { rawMatClsEnum } from '@/utils/enum/modules/classification'
 import { unitTypeEnum, orderSupplyTypeEnum } from '@/utils/enum/modules/wms'
@@ -123,6 +125,7 @@ const { CRUD, crud, query } = regHeader(defaultQuery)
 
 const weightedType = ref()
 const totalAmount = ref({})
+// const submitLoading = ref(false)
 
 // 是否有显示金额权限
 const showAmount = computed(() => checkPermission(permission.showAmount))
@@ -131,6 +134,18 @@ function disabledDate(time) {
   return time > new Date()
 }
 
+// async function manualSetting() {
+//   submitLoading.value = true
+//   try {
+//     await monthWeighting()
+//     crud.notify('月末加权成功', CRUD.NOTIFICATION_TYPE.SUCCESS)
+//     crud.toQuery()
+//     submitLoading.value = false
+//   } catch (e) {
+//     console.log('手动月末加权', e)
+//     submitLoading.value = false
+//   }
+// }
 // 加载后数据处理
 CRUD.HOOK.handleRefresh = async (crud, { data }) => {
   const { weightedType: _weightedType, totalAmount: { beginPeriod = 0, endPeriod = 0, inbound = 0, outbound = 0 } = {}} = data

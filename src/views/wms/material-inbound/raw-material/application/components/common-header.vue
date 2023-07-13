@@ -8,6 +8,7 @@
             :options="orderSupplyTypeEnum.ENUM"
             default
             type="enumSL"
+            :disabled="edit"
             :style="!edit ? 'margin-left:10px' : ''"
             style="vertical-align: middle"
           >
@@ -28,6 +29,7 @@
             :basic-class="props.basicClass"
             @change="handlePurchaseIdChange"
             @info-change="handleOrderInfoChange"
+            :disabled="edit"
             style="width: 300px"
           />
         </el-form-item>

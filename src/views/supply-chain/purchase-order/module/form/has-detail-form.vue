@@ -133,9 +133,7 @@
                     v-model:invoiceType="form.invoiceType"
                     v-model:taxRate="form.taxRate"
                     :disabled="Boolean(form.boolUsed)"
-                    :classification="
-                      form.materialType & materialPurchaseClsEnum.OTHER.V ? materialPurchaseClsEnum.MATERIAL.V : form.materialType
-                    "
+                    :classification="form.materialType"
                   />
                 </el-form-item>
                 <el-form-item class="el-form-item-13" label="订单类型" prop="purchaseOrderPaymentMode">
@@ -879,6 +877,7 @@ FORM.HOOK.beforeValidateCU = () => {
 }
 
 FORM.HOOK.beforeSubmit = () => {
+  form.weightMeasurementMode = undefined
   if (!compRef.value?.validate() && !form.boolUsed) return false
 }
 

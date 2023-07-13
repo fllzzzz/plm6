@@ -67,9 +67,9 @@
                 <span v-parse-enum="{ e: purchaseOrderPaymentModeEnum, v: detail.purchaseOrderPaymentMode }" />
               </el-form-item>
 
-              <!-- <el-form-item prop="weightMeasurementMode" label="计量方式">
+              <el-form-item prop="weightMeasurementMode" label="计量方式" v-if="isBlank(detail.details)">
                 <span v-parse-enum="{ e: weightMeasurementModeEnum, v: detail.weightMeasurementMode }" />
-              </el-form-item> -->
+              </el-form-item>
 
               <el-form-item label="物流信息" prop="logistics">
                 <span v-parse-enum="{ e: logisticsTransportTypeEnum, v: detail.logisticsTransportType }" />
@@ -146,11 +146,11 @@
 import { computed } from 'vue'
 import { matClsEnum, materialPurchaseClsEnum } from '@enum-ms/classification'
 import { purchaseOrderPaymentModeEnum, purchaseStatusEnum } from '@enum-ms/wms'
-import { invoiceTypeEnum, settlementStatusEnum } from '@enum-ms/finance'
+import { weightMeasurementModeEnum, invoiceTypeEnum, settlementStatusEnum } from '@enum-ms/finance'
 import { logisticsPayerEnum, logisticsTransportTypeEnum } from '@/utils/enum/modules/logistics'
 import { fileClassifyEnum } from '@enum-ms/file'
 import { projectNameFormatter } from '@/utils/project'
-import { isNotBlank } from '@/utils/data-type'
+import { isBlank, isNotBlank } from '@/utils/data-type'
 import { setSpecInfoToList } from '@/utils/wms/spec'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 

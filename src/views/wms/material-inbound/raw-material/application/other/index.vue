@@ -72,7 +72,7 @@ import { otherInboundApplicationPM as permission } from '@/page-permission/wms'
 
 import { defineProps, defineEmits, ref, watch, provide, nextTick, reactive, computed } from 'vue'
 import { matClsEnum } from '@/utils/enum/modules/classification'
-import { orderSupplyTypeEnum } from '@/utils/enum/modules/wms'
+import { orderSupplyTypeEnum, inboundFillWayEnum } from '@/utils/enum/modules/wms'
 import { isNotBlank, toFixed } from '@/utils/data-type'
 import { createUniqueString } from '@/utils/data-type/string'
 import { DP } from '@/settings/config'
@@ -80,7 +80,7 @@ import { isBlank } from '@/utils/data-type'
 
 import useForm from '@/composables/form/use-form'
 import useMaxHeight from '@compos/use-max-height'
-// import useWmsConfig from '@/composables/store/use-wms-config'
+import useWmsConfig from '@/composables/store/use-wms-config'
 import CommonWrapper from '@/views/wms/material-inbound/raw-material/application/components/common-wrapper.vue'
 import MaterialTableSpecSelect from '@/components-system/classification/material-table-spec-select.vue'
 import AuxMatTable from '../auxiliary-material/module/aux-mat-table.vue'
@@ -118,10 +118,10 @@ const noDetail = ref(false) // 采购合同是否有明细
 const materialSelectVisible = ref(false) // 显示物料选择
 const currentBasicClass = matClsEnum.OTHER.V // 当前基础分类
 
-// const { inboundFillWayCfg } = useWmsConfig()
+const { inboundFillWayCfg } = useWmsConfig()
 // 显示金额相关信息（由采购填写的信息）
-// const fillableAmount = computed(() => inboundFillWayCfg.value ? inboundFillWayCfg.value.amountFillWay === inboundFillWayEnum.APPLICATION.V : false)
-const fillableAmount = computed(() => false)
+const fillableAmount = computed(() => inboundFillWayCfg.value ? inboundFillWayCfg.value.amountFillWay === inboundFillWayEnum.APPLICATION.V : false)
+// const fillableAmount = computed(() => false)
 // 是否绑定申购
 const boolApplyPurchase = computed(() => Boolean(order.value?.applyPurchase?.length)) // 是否绑定申购
 

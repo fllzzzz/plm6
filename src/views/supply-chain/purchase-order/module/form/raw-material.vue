@@ -35,6 +35,7 @@
                       clearable
                       :disabled="form.boolUsed"
                       placeholder="请选择物料种类"
+                      :unshowOptions="[rawMatClsEnum.GAS.K]"
                       class="input-underline"
                       style="flex: auto"
                     />
@@ -304,7 +305,7 @@
 <script setup>
 import { add, edit } from '@/api/supply-chain/purchase-order'
 import { ref, computed, nextTick, watchEffect, defineProps, defineEmits, provide } from 'vue'
-import { matClsEnum } from '@enum-ms/classification'
+import { matClsEnum, rawMatClsEnum } from '@enum-ms/classification'
 import { orderSupplyTypeEnum, baseMaterialTypeEnum, purchaseOrderPaymentModeEnum } from '@enum-ms/wms'
 import { logisticsPayerEnum, logisticsTransportTypeEnum } from '@/utils/enum/modules/logistics'
 import { weightMeasurementModeEnum, invoiceTypeEnum } from '@enum-ms/finance'

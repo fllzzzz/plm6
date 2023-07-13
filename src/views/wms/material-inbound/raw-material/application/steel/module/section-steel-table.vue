@@ -481,9 +481,14 @@ function rowWatch(row) {
     // 计算总重
     watch([() => row.theoryWeight, () => row.quantity], () => {
       calcTotalWeight(row)
-      handleWeightChange(row)
     })
   }
+  watch(
+    () => row.weighingTotalWeight,
+    () => {
+      handleWeightChange(row)
+    }
+  )
   // 计算总长度
   watch([() => row.length, () => row.quantity], () => {
     calcTotalLength(row)
@@ -518,6 +523,7 @@ function calcTotalWeight(row) {
     if (props.boolPartyA || props.noDetail) {
       row.weighingTotalWeight = toPrecision(row.theoryWeight * row.quantity, baseUnit.value.weight.precision)
     }
+    console.log(row.weighingTotalWeight)
   } else {
     row.theoryTotalWeight = undefined
     if (props.boolPartyA || props.noDetail) {
@@ -529,6 +535,7 @@ function calcTotalWeight(row) {
 // 处理重量变化
 function handleWeightChange(row) {
   if (isNotBlank(row.unitPrice) && isNotBlank(row.weighingTotalWeight)) {
+    console.log(row.unitPrice, row.weighingTotalWeight)
     row.amount = toPrecision(row.weighingTotalWeight * row.unitPrice, DP.YUAN)
   }
 }

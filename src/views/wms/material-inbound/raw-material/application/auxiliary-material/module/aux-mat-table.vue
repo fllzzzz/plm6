@@ -149,6 +149,7 @@
         <template #default="{ row }">
           <common-input-number
             v-if="
+              !boolApplyPurchase &&
               row.measureUnit &&
               form.selectObj?.[row.mergeId]?.isSelected &&
               row.outboundUnitType === measureTypeEnum.MEASURE.V
@@ -170,7 +171,7 @@
       <el-table-column prop="mete" label="本次实收量" align="center" min-width="120px">
         <template #default="{ row }">
           <common-input-number
-            v-if="form.selectObj?.[row.mergeId]?.isSelected && row.outboundUnitType === measureTypeEnum.ACCOUNTING.V"
+            v-if="!boolApplyPurchase && form.selectObj?.[row.mergeId]?.isSelected && row.outboundUnitType === measureTypeEnum.ACCOUNTING.V"
             v-model="row.mete"
             :min="0.000001"
             :max="999999999"

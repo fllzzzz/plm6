@@ -537,7 +537,7 @@ function automaticAssignWeight() {
   // 为0 则 过磅重量 = 理论重量(无需计算)
   const calc = (row) => {
     row.weighingTotalWeight = assignableWeight
-      ? toFixed((row.theoryTotalWeight / spAndSsTheoryTotalWeight) * assignableWeight + row.theoryTotalWeight, 2, { toNum: true })
+      ? toFixed((row.theoryTotalWeight / spAndSsTheoryTotalWeight) * assignableWeight + row.theoryTotalWeight, baseUnit.value[row.basicClass].weight.precision, { toNum: true })
       : row.theoryTotalWeight
     assignableWeight -= row.weighingTotalWeight - row.theoryTotalWeight
     spAndSsTheoryTotalWeight -= row.theoryTotalWeight
@@ -554,8 +554,11 @@ async function handleOrderInfoChange(orderInfo) {
   cu.props.order = orderInfo
   boolPartyA.value = orderInfo?.supplyType === orderSupplyTypeEnum.PARTY_A.V
   noDetail.value = isBlank(orderInfo?.details)
+  if (isDraft.value) {
+    form.list = []
+  }
   Object.keys(steelBasicClassKV).forEach((k) => {
-    if (!noDetail.value && !boolPartyA.value && !isDraft.value) {
+    if (isDraft.value) {
       form[k] = []
     }
     if (steelBasicClassKV[k].V & orderInfo?.basicClass) {
@@ -564,7 +567,7 @@ async function handleOrderInfoChange(orderInfo) {
     } else {
       form[k] = []
     }
-    if (!(boolPartyA.value && isDraft.value)) {
+    if (isDraft.value) {
       const trigger = watch(
         matSpecRef,
         () => {
@@ -587,9 +590,9 @@ async function handleOrderInfoChange(orderInfo) {
       // 设置监听等
         setFormCallback(form)
       }
-      if (isDraft.value) {
-        isDraft.value = false
-      }
+      // if (isDraft.value) {
+      //   isDraft.value = false
+      // }
     })
     if (!boolPartyA.value && orderInfo?.details?.length) {
       form.list = orderInfo.details || []
