@@ -223,7 +223,7 @@ const columnsDataFormat = computed(() => {
     ['amount', ['to-thousand', DP.YUAN]],
     ['amountExcludingVAT', ['to-thousand', DP.YUAN]],
     ['inputVAT', ['to-thousand', DP.YUAN]],
-    ['inboundReceipt.inboundTime', 'parse-time'],
+    ['inboundTime', 'parse-time'],
     ['inboundReceipt.reviewTime', 'parse-time'],
     ['inboundReceipt.createTime', 'parse-time']
   ]
