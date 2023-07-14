@@ -14,6 +14,7 @@ import { auxMatOutboundHandling } from '@/api/wms/material-outbound/raw-material
 import { defineProps, defineExpose, provide, computed, ref, watch } from 'vue'
 import { mapGetters } from '@/store/lib'
 import { deepClone, isBlank } from '@/utils/data-type'
+import { outboundDestinationTypeEnum } from '@/utils/enum/modules/wms'
 
 import useWatchFormValidate from '@/composables/form/use-watch-form-validate'
 import commonFormItem from '../components/common-form-item.vue'
@@ -82,6 +83,7 @@ function formInit(data) {
     factoryId: data.factory?.id, // 车间id
     outboundUnit: data.outboundUnit, // 出库单位
     outboundUnitPrecision: data.outboundUnitPrecision, // 出库单位精度
+    outboundAddress: outboundDestinationTypeEnum.FACTORY.V, // 出库目的地
     projectId: data.project ? data.project.id : undefined, // 项目id
     recipientId: user.value.id, // 领用人id
     quantity: undefined, // 数量
@@ -90,6 +92,7 @@ function formInit(data) {
   form.value = newForm
 
   rules.value = {
+    outboundAddress: [{ required: true, message: '出库目的地', trigger: 'change' }],
     quantity: [{ required: true, validator: validateQuantity, trigger: 'blur' }],
     remark: [{ max: 200, message: '不能超过200个字符', trigger: 'blur' }]
   }

@@ -3,7 +3,7 @@
     <template #titleAfter>
       <el-tag>项目：{{ props.detailData.project?.name }}</el-tag>
       <el-tag>产线：{{ props.detailData.workshop?.name }}>{{ props.detailData.productionLine?.name }}</el-tag>
-      <el-tag>总量：{{ totalQuantity }}/{{ totalWeight }}</el-tag>
+      <el-tag>总量：{{ totalQuantity }}/{{ totalWeight?.toFixed(2) }}</el-tag>
       <el-tag>任务单号：{{ props.detailData.scheduleOrder }}</el-tag>
     </template>
     <template #content>
