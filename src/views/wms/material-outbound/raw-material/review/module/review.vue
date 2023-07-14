@@ -77,6 +77,7 @@
           <material-unit-quantity-columns />
           <!-- 仓库信息 -->
           <warehouse-info-columns show-project show-monomer show-area show-transfer />
+          <el-table-column label="出库目的地" width="100px" prop="outboundAddress" align="center"/>
           <el-table-column label="领用人" width="100px" align="center">
             <template #default="{ row }">
               <el-tooltip v-if="row.recipient" placement="top" effect="light" :content="`${row.recipient.deptName}`">
@@ -130,6 +131,7 @@ import { reviewStatusEnum } from '@/utils/enum/modules/common'
 import { tableSummary } from '@/utils/el-extra'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { setSpecInfoToList } from '@/utils/wms/spec'
+import { outboundDestinationTypeEnum } from '@enum-ms/wms'
 import { parseTime } from '@/utils/date'
 import { materialColumns } from '@/utils/columns-format/wms'
 import checkPermission from '@/utils/system/check-permission'
@@ -178,6 +180,7 @@ const batchOutboundTime = ref() // 批量设置时间
 // 表格列格式化
 const columnsDataFormat = ref([
   ...materialColumns,
+  ['outboundAddress', ['parse-enum', outboundDestinationTypeEnum]],
   ['remark', 'empty-text'],
   ['project', 'parse-project'],
   ['sourceProject', 'parse-project'],

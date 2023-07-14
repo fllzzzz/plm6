@@ -90,6 +90,8 @@ const tableType = {
   arrearsList: { L: '欠款清单', M: 'contract_report', T: mt.contract.L + ' / ' + contract.contract_report },
 
   logisticsPaymentLedger: { L: '物流台账', M: 'supplier_payment', T: mt.contract.L + ' / ' + contract.supplier_payment },
+  supplierInvoiceLedger: { L: '供应商收票台账', M: 'supplier_payment', T: mt.contract.L + ' / ' + contract.supplier_payment },
+  supplierPaymentLedger: { L: '供应商付款台账', M: 'supplier_payment', T: mt.contract.L + ' / ' + contract.supplier_payment },
   supplierPayableSummary: { L: '应付汇总', M: 'supplier_payment', T: mt.contract.L + ' / ' + contract.supplier_payment },
 
   contractBoxPrice: { L: '分段计价表', M: 'sales_manage', T: mt.contract.L + ' / ' + contract.sales_manage },
