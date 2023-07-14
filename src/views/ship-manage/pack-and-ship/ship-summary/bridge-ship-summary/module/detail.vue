@@ -21,6 +21,7 @@
       }}</el-tag>
       <div class="filter-item" style="float: right">
         <print-table
+        v-permission="permission.print"
           :api-key="
             showType === 'INVENTORY'
               ? 'bridgeShipMeteDetail'
@@ -118,6 +119,7 @@
 <script setup>
 import { ref, defineProps, watch } from 'vue'
 import { summaryDetail } from '@/api/ship-manage/pack-and-ship/bridge-ship-summary'
+import { bridgeShipSummaryPM as permission } from '@/page-permission/ship-manage'
 import { tableSummary } from '@/utils/el-extra'
 import { projectSearchTypeEnum } from '@enum-ms/mes'
 import { mesShipStatisticsTypeEnum } from '@enum-ms/ship-manage'

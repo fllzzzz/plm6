@@ -85,7 +85,7 @@ import { DP } from '@/settings/config'
 import { tableSummary } from '@/utils/el-extra'
 import { toThousand } from '@/utils/data-type/number'
 import { defineProps, defineEmits, ref } from 'vue'
-import { mesShipSummaryPM as permission } from '@/page-permission/ship-manage'
+import { bridgeShipSummaryPM as permission } from '@/page-permission/ship-manage'
 
 const emit = defineEmits(['update:visible'])
 const list = ref([])
