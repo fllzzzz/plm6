@@ -920,11 +920,13 @@ cu.submitFormFormat = async (form) => {
       })
     }
   }
-  form.list.forEach(v => {
-    if (!v.applyPurchaseDetailId) {
-      v.applyPurchaseDetailId = v.id
-    }
-  })
+  if (form.useRequisitions) {
+    form.list.forEach(v => {
+      if (!v.applyPurchaseDetailId) {
+        v.applyPurchaseDetailId = v.id
+      }
+    })
+  }
   return form
 }
 
