@@ -27,7 +27,7 @@
     </el-table-column> -->
     <el-table-column v-if="columns.visible('supplierName')" key="supplierName" prop="supplierName" :show-overflow-tooltip="true" label="销售单位" align="center" min-width="140" />
     <el-table-column v-if="columns.visible('branchCompanyName')" key="branchCompanyName" prop="branchCompanyName" :show-overflow-tooltip="true" label="购方单位" align="center" min-width="140" />
-    <el-table-column v-if="columns.visible('createTime')" key="createTime" prop="createTime" label="收票日期" align="center" width="100" />
+    <el-table-column v-if="columns.visible('receiveInvoiceDate')" key="receiveInvoiceDate" prop="receiveInvoiceDate" label="收票日期" align="center" width="100" />
     <el-table-column v-if="columns.visible('invoiceAmount')" key="invoiceAmount" prop="invoiceAmount" label="发票金额" align="right" min-width="100" />
     <el-table-column v-if="columns.visible('invoiceSerialNumber')" key="invoiceSerialNumber" prop="invoiceSerialNumber" :show-overflow-tooltip="true" label="发票号码" align="center" min-width="120">
       <template v-slot="scope">
@@ -113,7 +113,7 @@ const { maxHeight } = useMaxHeight({
 const dataFormat = computed(() => {
   return [
     ['invoiceAmount', ['to-thousand', decimalPrecision.value.contract]],
-    ['createTime', ['parse-time', '{y}-{m}-{d}']],
+    ['receiveInvoiceDate', ['parse-time', '{y}-{m}-{d}']],
     ['propertyType', ['parse-enum', supplierPayTypeEnum]],
     ['invoiceType', ['parse-enum', invoiceTypeEnum]],
     ['taxRate', ['suffix', '%']]
