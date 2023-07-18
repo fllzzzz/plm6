@@ -51,7 +51,7 @@ const defaultForm = {
   useRequisitions: true, // 是否绑定申购单
   serialNumber: undefined, // 采购合同编号编号
   supplyType: orderSupplyTypeEnum.SELF.V, // 供货类型
-  // materialType: materialPurchaseClsEnum.STEEL.V, // 材料类型
+  materialType: materialPurchaseClsEnum.STEEL.V, // 材料类型
   purchaseType: baseMaterialTypeEnum.RAW_MATERIAL.V, // 物料种类
   currentBasicClass: matClsEnum.STEEL_PLATE.V, // 物料类型
   isAllMaterial: false, // 是否选择全部辅材

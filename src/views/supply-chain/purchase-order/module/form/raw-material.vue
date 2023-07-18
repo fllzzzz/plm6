@@ -607,7 +607,8 @@ FORM.HOOK.beforeToEdit = async (crud, form) => {
   }
 }
 
-FORM.HOOK.beforeSubmit = (crud, form) => {
+FORM.HOOK.beforeSubmit = () => {
+  form.materialType = undefined
   if (!checkHasSortingEdit()) return false
 }
 

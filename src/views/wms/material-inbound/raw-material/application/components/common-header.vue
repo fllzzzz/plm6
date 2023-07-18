@@ -412,6 +412,13 @@ async function handleOrderInfoChange(order, oldOrder) {
               item.width = _originInfo?.width
               item.thickness = _originInfo?.thickness
             }
+            if (_v.basicClass & (matClsEnum.MATERIAL.V)) {
+              const _originInfo = !props.edit ? _v : form?.editObj?.[_v.mergeId]
+              if (_v.applyPurchase?.length) {
+                item.measureUnit = _originInfo?.measureUnit // 计量单位
+                item.accountingUnit = _originInfo?.accountingUnit // 核算单位
+              }
+            }
             if (!_isSelected || props.edit) {
               item.applyPurchaseId = item.id
               item.purchaseQuantity = item.quantity
@@ -438,6 +445,27 @@ async function handleOrderInfoChange(order, oldOrder) {
               order.projects.push(item?.project)
             }
           })
+          if ((_v.basicClass & (matClsEnum.MATERIAL.V))) {
+            if (!props.edit) {
+              setSpecInfoToList(_v.applyPurchase)
+              numFmtByBasicClass(
+                _v.applyPurchase,
+                {
+                  toNum: true
+                },
+                { mete: ['mete', 'inboundMete', 'purchaseMete'], quantity: ['inboundQuantity', 'quantity', 'purchaseQuantity'] }
+              )
+            } else {
+              setSpecInfoToList(_v.applyPurchase)
+              numFmtByBasicClass(
+                _v.applyPurchase,
+                {
+                  toNum: true
+                },
+                { mete: ['inboundMete', 'purchaseMete'], quantity: ['inboundQuantity', 'purchaseQuantity'] }
+              )
+            }
+          }
           _v.quantity = _totalQuantity
           _v.mete = _totalMete
         } else {
