@@ -162,7 +162,7 @@ export const cncFileListPM = {
   del: ['plan_cnc_file:del'], // 删除
   detail: ['plan_cnc_file:detail'], // 详情
   import: ['plan_cnc_file:import'], // 导入
-  matchImport: ['plan_cnc_file:matchImport'], // 匹配导入
+  // matchImport: ['plan_cnc_file:matchImport'], // 匹配导入
   download: ['plan_cnc_file:download'] // 下载
 }
 
@@ -171,8 +171,8 @@ export const xmlFileListPM = {
   get: ['plan_xml_file:get'], // 列表
   del: ['plan_xml_file:del'], // 删除
   detail: ['plan_xml_file:detail'], // 详情
-  import: ['plan_xml_file:import'], // 导入
-  matchImport: ['plan_xml_file:matchImport'] // 匹配导入
+  import: ['plan_xml_file:import'] // 导入
+  // matchImport: ['plan_xml_file:matchImport'] // 匹配导入
 }
 
 // 技术管理/清单合计列表
