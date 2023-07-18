@@ -47,8 +47,8 @@
         :width="
           (globalProject.projectType === projectTypeEnum.STEEL.V && crud.query.productType === deepenTypeEnum.MACHINE_PART.V) ||
           (globalProject.projectType === projectTypeEnum.BRIDGE.V && crud.query.productType === bridgeProcessTypeEnum.MACHINE_PART.V)
-            ? '250px'
-            : '170px'
+            ? '350px'
+            : '270px'
         "
         align="center"
         fixed="right"
@@ -77,6 +77,18 @@
               type="primary"
               @success="crud.toQuery"
             />
+            <upload-btn
+              :dataType="scope.row.dataType"
+              :uploadFun="uploadChoose"
+              :accept="`.zip`"
+              :data="getParams(scope.row)"
+              :tip="uploadType"
+              btnName="匹配导入"
+              size="mini"
+              btnType="warning"
+              style="margin-right: 6px"
+              @success="crud.toQuery"
+            />
             <common-button
               v-permission="permission.detail"
               type="primary"
@@ -102,7 +114,7 @@
 </template>
 
 <script setup>
-import crudApi, { dxfZipDownload } from '@/api/plan/technical-data-manage/technical-achievement'
+import crudApi, { uploadChoose, dxfZipDownload } from '@/api/plan/technical-data-manage/technical-achievement'
 import { ref, watch, computed } from 'vue'
 import { mapGetters } from '@/store/lib'
 
