@@ -76,6 +76,18 @@
               type="primary"
               @success="crud.toQuery"
             />
+            <upload-btn
+              :dataType="scope.row.dataType"
+              :uploadFun="uploadChoose"
+              :accept="`.zip`"
+              :data="getParams(scope.row)"
+              :tip="uploadType"
+              btnName="匹配导入"
+              size="mini"
+              btnType="warning"
+              style="margin-right: 6px"
+              @success="crud.toQuery"
+            />
             <common-button
               v-permission="permission.detail"
               type="primary"
@@ -101,7 +113,7 @@
 </template>
 
 <script setup>
-import crudApi, { dxfZipDownload } from '@/api/plan/technical-data-manage/technical-achievement'
+import crudApi, { uploadChoose, dxfZipDownload } from '@/api/plan/technical-data-manage/technical-achievement'
 import { ref, watch, computed } from 'vue'
 import { mapGetters } from '@/store/lib'
 
