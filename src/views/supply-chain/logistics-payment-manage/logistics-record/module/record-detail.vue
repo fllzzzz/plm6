@@ -94,6 +94,9 @@ import { freightChangeTypeEnum } from '@enum-ms/mes'
 import useVisible from '@/composables/use-visible'
 import useMaxHeight from '@compos/use-max-height'
 import usePagination from '@compos/use-pagination'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const emit = defineEmits(['update:modelValue'])
 
@@ -141,13 +144,15 @@ watch(visible, (val) => {
 const list = ref([])
 const dialogRef = ref()
 const tableLoading = ref(false)
-const dataFormat = ref([
-  ['shipDate', ['parse-time', '{y}-{m}-{d}']],
-  ['type', ['parse-enum', logisticsSearchTypeEnum]],
-  ['loadingWeight', ['to-fixed', 2]],
-  ['freight', ['to-thousand-ck', 'YUAN']],
-  ['changeFreight', ['parse-enum', freightChangeTypeEnum, { f: 'SL' }]]
-])
+const dataFormat = computed(() => {
+  return [
+    ['shipDate', ['parse-time', '{y}-{m}-{d}']],
+    ['type', ['parse-enum', logisticsSearchTypeEnum]],
+    ['loadingWeight', ['to-fixed', 2]],
+    ['freight', ['to-thousand', decimalPrecision.value.supplyChain]],
+    ['changeFreight', ['parse-enum', freightChangeTypeEnum, { f: 'SL' }]]
+  ]
+})
 
 const { maxHeight } = useMaxHeight(
   {

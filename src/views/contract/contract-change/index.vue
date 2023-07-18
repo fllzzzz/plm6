@@ -68,12 +68,12 @@
         min-width="120"
       >
         <template v-slot="scope">
-          <span v-if="scope.row.type === contractChangeTypeEnum.CONTRACT_INFO.V">{{toThousand(scope.row.contractAmount)}}</span>
+          <span v-if="scope.row.type === contractChangeTypeEnum.CONTRACT_INFO.V">{{toThousand(scope.row.contractAmount,decimalPrecision.contract)}}</span>
           <!-- <span v-if="scope.row.type === contractChangeTypeEnum.CONTRACT_SETTLE.V">{{toThousand(scope.row.settlementAmount)}}</span> -->
           <template v-if="scope.row.type === contractChangeTypeEnum.CONTRACT_AMOUNT.V">
-            <span>{{toThousand(scope.row.contractAmount)}}</span>
+            <span>{{toThousand(scope.row.contractAmount,decimalPrecision.contract)}}</span>
             <span>{{scope.row.contractAmount<scope.row.changeAmount?'<':'>'}}</span>
-            <span :class="scope.row.contractAmount>scope.row.changeAmount?'tip-red':'tip-green'">{{ toThousand(scope.row.changeAmount) }}</span>
+            <span :class="scope.row.contractAmount>scope.row.changeAmount?'tip-red':'tip-green'">{{ toThousand(scope.row.changeAmount,decimalPrecision.contract) }}</span>
           </template>
         </template>
       </el-table-column>
@@ -193,20 +193,23 @@
 <script setup>
 import crudApi from '@/api/contract/change-audit-log'
 import { ref } from 'vue'
+
 import { contractChangePM as permission } from '@/page-permission/contract'
 import checkPermission from '@/utils/system/check-permission'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
-import pagination from '@crud/Pagination'
-import mHeader from './module/header'
 import { auditTypeEnum, contractChangeTypeEnum, systemTypeEnum } from '@enum-ms/contract'
 import { toThousand } from '@data-type/number'
 import { parseTime } from '@/utils/date'
+import { projectNameFormatter } from '@/utils/project'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+import pagination from '@crud/Pagination'
+import mHeader from './module/header'
 import moneyForm from '../info/money-form'
 import variationOrder from '../info/variation-order'
 import settleForm from '../info/settle-form'
 import contractInfo from './module/contractInfo'
-import { projectNameFormatter } from '@/utils/project'
 
 const optShow = {
   add: false,
@@ -214,6 +217,8 @@ const optShow = {
   del: false,
   download: false
 }
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const tableRef = ref()
 const moneyRef = ref()

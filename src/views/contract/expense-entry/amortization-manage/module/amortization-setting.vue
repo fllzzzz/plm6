@@ -26,7 +26,9 @@
                   />
                   <svg-icon v-loading="materialEditLoading" class="icon" icon-class="comp-quit" @click="materialEdit = false" />
                 </template>
-                <el-edit v-else class="icon" @click="edit(true)" />
+                <el-icon v-else @click="edit(true)">
+                  <el-icon-edit style="font-size: 20px; margin-left: -6px" />
+                </el-icon>
               </div>
             </div>
           </template>
@@ -59,7 +61,9 @@
                 <svg-icon v-loading="otherEditLoading" class="icon" icon-class="comp-save" style="fill: #ffac00" @click="saveOther" />
                 <svg-icon v-loading="otherEditLoading" class="icon" icon-class="comp-quit" @click="otherEdit = false" />
               </template>
-              <el-edit v-else class="icon" @click="edit(false)" />
+              <el-icon v-else @click="edit(false)">
+                <el-icon-edit style="font-size: 20px; margin-left: -6px" />
+              </el-icon>
             </div>
           </template>
           <el-tree
@@ -83,7 +87,7 @@
         <el-table-column key="index" type="index" label="序号" align="center" width="60" />
         <el-table-column align="left" key="content" prop="content" label="摊销说明 (以下描述都以月表示摊销时间段)">
           <template #default="{ row }">
-            <span style="white-space: pre-wrap;" v-html="row.content" />
+            <span style="white-space: pre-wrap" v-html="row.content" />
           </template>
         </el-table-column>
       </common-table>

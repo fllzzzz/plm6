@@ -76,7 +76,7 @@
         :label="`合同金额(元)`"
       >
         <template v-slot="scope">
-          <span>{{ scope.row.contractAmount? toThousand(scope.row.contractAmount): '-' }}</span>
+          <span>{{ scope.row.contractAmount? toThousand(scope.row.contractAmount,decimalPrecision.contract): '-' }}</span>
         </template>
       </el-table-column>
       <el-table-column v-if="columns.visible('allDays')" key="allDays" prop="allDays" label="总工期(天)" align="center" width="80">
@@ -136,14 +136,17 @@
 <script setup>
 import crudApi, { editStatus } from '@/api/contract/project'
 import { ref, defineEmits } from 'vue'
+
 import checkPermission from '@/utils/system/check-permission'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
-import pagination from '@crud/Pagination'
 import { projectTypeEnum, businessTypeEnum, projectStatusEnum } from '@enum-ms/contract'
-import contractInfo from '@/views/contract/info/index'
 import { toThousand } from '@data-type/number'
 import { projectListPM } from '@/page-permission/contract'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+import pagination from '@crud/Pagination'
+import contractInfo from '@/views/contract/info/index'
 
 const permission = projectListPM.completeList
 
@@ -153,6 +156,8 @@ const optShow = {
   del: false,
   download: false
 }
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const tableRef = ref()
 const contractInfoRowId = ref()

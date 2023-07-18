@@ -76,7 +76,7 @@
           <el-form-item label="申请金额(元)" prop="applyAmount">
             <div style="width: 460px">
               <el-input v-if="isModify" v-model="form.applyAmount" type="text" placeholder="申请金额" style="width: 320px" disabled />
-              <div v-else>{{ collectionInfo.applyAmount ? toThousand(collectionInfo.applyAmount) : '' }}</div>
+              <div v-else>{{ collectionInfo.applyAmount ? toThousand(collectionInfo.applyAmount,decimalPrecision.contract) : '' }}</div>
               <div v-if="upperYuan" style="margin-left: 5px">{{ `${upperYuan}` }}</div>
             </div>
           </el-form-item>
@@ -201,7 +201,7 @@
           </el-form-item>
           <el-form-item label="实付金额(元)" prop="actuallyPayAmount" v-if="collectionInfo.confirmStatus == reimbursementTypeEnum.PASS.V">
             <div style="width: 360px">
-              <span>{{ form.actuallyPayAmount ? toThousand(form.actuallyPayAmount) : '' }}</span>
+              <span>{{ form.actuallyPayAmount ? toThousand(form.actuallyPayAmount,decimalPrecision.contract) : '' }}</span>
               <span v-if="actuallyUpperYuan" style="margin-left: 5px">{{ `大写:${actuallyUpperYuan}` }}</span>
             </div>
           </el-form-item>
@@ -250,7 +250,7 @@
                 :min="1"
                 :max="99999999999"
                 :step="100"
-                :precision="DP.YUAN"
+                :precision="decimalPrecision.contract"
                 size="small"
                 controls-position="right"
                 placeholder="申请金额"
@@ -290,7 +290,7 @@
                 :min="scope.row.applyAmount ? scope.row.applyAmount : 1"
                 :max="99999999999"
                 :step="100"
-                :precision="DP.YUAN"
+                :precision="decimalPrecision.contract"
                 size="small"
                 controls-position="right"
                 placeholder="发票面额"
@@ -345,7 +345,7 @@
                 :min="1"
                 :max="99999999999"
                 :step="100"
-                :precision="DP.YUAN"
+                :precision="decimalPrecision.contract"
                 size="small"
                 controls-position="right"
                 placeholder="实付金额"
@@ -378,23 +378,26 @@
 </template>
 
 <script setup>
-import { ref, watch, computed, defineProps, defineEmits, nextTick } from 'vue'
-import projectCascader from '@comp-base/project-cascader'
-import { DP } from '@/settings/config'
+import { edit, editStatus } from '@/api/contract/supplier-manage/reimbursement'
 import { contractCollectionInfo } from '@/api/contract/collection-and-invoice/collection'
+import { ref, watch, computed, defineProps, defineEmits, nextTick } from 'vue'
+import { ElNotification, ElMessage } from 'element-plus'
+
 import useWatchFormValidate from '@compos/form/use-watch-form-validate'
 import useVisible from '@compos/use-visible'
 import { invoiceTypeEnum } from '@enum-ms/finance'
 import { reimbursementTypeEnum, businessTypeEnum } from '@enum-ms/contract'
-import { digitUppercase } from '@/utils/data-type/number'
-import { edit, editStatus } from '@/api/contract/supplier-manage/reimbursement'
-import { ElNotification, ElMessage } from 'element-plus'
 import useTableValidate from '@compos/form/use-table-validate'
-import userDeptCascader from '@comp-base/user-dept-cascader.vue'
 import { isNotBlank } from '@data-type/index'
-import Expense from './expense'
-import { toThousand } from '@data-type/number'
+import { toThousand, digitUppercase } from '@data-type/number'
 import { parseTime } from '@/utils/date'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+import projectCascader from '@comp-base/project-cascader'
+import userDeptCascader from '@comp-base/user-dept-cascader.vue'
+import Expense from './expense'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const formRef = ref()
 const defaultForm = {
@@ -606,7 +609,7 @@ function invoiceTypeChange(index) {
     form.value.detailList[index].inputTax = (
       (form.value.detailList[index].invoiceAmount * form.value.detailList[index].taxRate) /
       100
-    ).toFixed(DP.YUAN)
+    ).toFixed(decimalPrecision.value.contract)
   } else {
     form.value.detailList[index].inputTax = undefined
   }

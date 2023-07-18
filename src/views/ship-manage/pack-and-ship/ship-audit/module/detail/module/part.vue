@@ -38,12 +38,12 @@
     </el-table-column>
     <el-table-column :show-overflow-tooltip="true" prop="unitPrice" :label="`单价\n（元）`" align="center">
       <template v-slot="scope">
-        {{ toFixed(scope.row.unitPrice, DP.YUAN) }}
+        {{ toFixed(scope.row.unitPrice, decimalPrecision.shipment) }}
       </template>
     </el-table-column>
     <el-table-column :show-overflow-tooltip="true" prop="totalPrice" :label="`总价\n（元）`" align="center">
       <template v-slot="scope">
-        {{ toFixed(scope.row.totalPrice, DP.YUAN) }}
+        {{ toFixed(scope.row.totalPrice, decimalPrecision.shipment) }}
       </template>
     </el-table-column>
   </common-table>
@@ -54,6 +54,9 @@ import { defineProps } from 'vue'
 import { pricingMannerEnum } from '@enum-ms/contract'
 import { DP } from '@/settings/config'
 import { toFixed } from '@/utils/data-type'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 defineProps({
   list: {

@@ -58,19 +58,19 @@
 
 <script setup>
 import crudApi from '@/api/contract/supplier-manage/payment-ledger/payment'
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 
 import { contractSupplierPaymentLedgerPM } from '@/page-permission/contract'
 import { tableSummary } from '@/utils/el-extra'
-import { DP } from '@/settings/config'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import pagination from '@crud/Pagination'
 import mHeader from './module/header'
 import showPdfAndImg from '@comp-base/show-pdf-and-img.vue'
-// import { projectNameFormatter } from '@/utils/project'
 
+const { decimalPrecision } = useDecimalPrecision()
 const permission = contractSupplierPaymentLedgerPM.payment
 
 const optShow = {
@@ -96,10 +96,12 @@ const { crud, columns, CRUD } = useCRUD(
   tableRef
 )
 
-const dataFormat = ref([
-  ['actuallyPaymentAmount', ['to-thousand-ck', 'YUAN']],
-  ['paymentDate', ['parse-time', '{y}-{m}-{d}']]
-])
+const dataFormat = computed(() => {
+  return [
+    ['actuallyPaymentAmount', ['to-thousand', decimalPrecision.value.contract]],
+    ['paymentDate', ['parse-time', '{y}-{m}-{d}']]
+  ]
+})
 
 const { maxHeight } = useMaxHeight({
   wrapperBox: '.paymentLedger',
@@ -126,7 +128,7 @@ CRUD.HOOK.beforeRefresh = () => {
 // 合计
 function getSummaries(param) {
   return tableSummary(param, {
-    props: [['actuallyPaymentAmount', DP.YUAN]],
+    props: [['actuallyPaymentAmount', decimalPrecision.value.contract]],
     toThousandFields: ['actuallyPaymentAmount']
   })
 }

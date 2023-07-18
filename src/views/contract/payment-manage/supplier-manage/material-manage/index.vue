@@ -43,12 +43,12 @@
     </el-table-column>
     <el-table-column v-if="columns.visible('amount')" key="amount" prop="amount" label="合同额" align="center">
       <template v-slot="scope">
-        <span>{{ scope.row.amount? toThousand(scope.row.amount): '-' }}</span>
+        <span>{{ scope.row.amount? toThousand(scope.row.amount,decimalPrecision.contract): '-' }}</span>
       </template>
     </el-table-column>
     <el-table-column v-if="columns.visible('settlementAmount')" key="settlementAmount" prop="settlementAmount"  :show-overflow-tooltip="true" label="结算额" align="center">
       <template v-slot="scope">
-        <span style="margin-right:10px;" @click="openSettleAudit(scope.row,'detail')">{{ scope.row.settlementAmount? toThousand(scope.row.settlementAmount): '-' }}</span>
+        <span style="margin-right:10px;" @click="openSettleAudit(scope.row,'detail')">{{ scope.row.settlementAmount? toThousand(scope.row.settlementAmount,decimalPrecision.contract): '-' }}</span>
         <span @click="openSettleAudit(scope.row,'audit')" style="cursor:pointer;" v-if="checkPermission(crud.permission.settleAudit) && scope.row.unCheckSettlementCount>0">
           <el-badge :value="1" :max="99" :hidden="scope.row.unCheckSettlementCount < 1">
             <svg-icon icon-class="notify"  style="color:#e6a23c;font-size:15px;"/>
@@ -58,7 +58,7 @@
     </el-table-column>
     <el-table-column v-if="columns.visible('inboundAmount')" key="inboundAmount" prop="inboundAmount" label="入库额" align="center">
       <template v-slot="scope">
-        <span @click="openStockAmount(scope.row)">{{ scope.row.inboundAmount? toThousand(scope.row.inboundAmount): '-' }}</span>
+        <span @click="openStockAmount(scope.row)">{{ scope.row.inboundAmount? toThousand(scope.row.inboundAmount,DP.YUAN): '-' }}</span>
       </template>
     </el-table-column>
     <el-table-column v-if="columns.visible('paymentAmount')" key="paymentAmount" prop="paymentAmount" label="付款额" align="center">
@@ -75,7 +75,7 @@
           </el-tooltip>
         </template>
       <template v-slot="scope">
-        <span style="cursor:pointer;margin-right:10px;" @click="openTab(scope.row,'payment')">{{ scope.row.paymentAmount? toThousand(scope.row.paymentAmount): '-' }}</span>
+        <span style="cursor:pointer;margin-right:10px;" @click="openTab(scope.row,'payment')">{{ scope.row.paymentAmount? toThousand(scope.row.paymentAmount,decimalPrecision.contract): '-' }}</span>
         <span @click="openPaymentAudit(scope.row)" style="cursor:pointer;" v-if="checkPermission(crud.permission.payment.audit) && scope.row.unCheckPaymentCount>0">
           <el-badge :value="scope.row.unCheckPaymentCount" :max="99" :hidden="scope.row.unCheckPaymentCount < 1">
             <svg-icon icon-class="notify"  style="color:#e6a23c;font-size:15px;"/>
@@ -103,7 +103,7 @@
       </template>
       <template v-slot="scope">
         <div @click="openTab(scope.row,'invoice')" style="cursor:pointer;">
-          <span style="cursor:pointer;margin-right:10px;">{{ scope.row.invoiceAmount? toThousand(scope.row.invoiceAmount): '-' }}</span>
+          <span style="cursor:pointer;margin-right:10px;">{{ scope.row.invoiceAmount? toThousand(scope.row.invoiceAmount,decimalPrecision.contract): '-' }}</span>
           <template v-if="checkPermission(crud.permission.invoice.audit) && scope.row.unCheckInvoiceCount>0">
             <el-badge :value="scope.row.unCheckInvoiceCount" :max="99" :hidden="scope.row.unCheckInvoiceCount < 1">
               <svg-icon icon-class="notify"  style="color:#e6a23c;font-size:15px;"/>
@@ -144,12 +144,12 @@
 <script setup>
 import crudApi from '@/api/contract/supplier-manage/material-manage'
 import { ref } from 'vue'
+
+import { DP } from '@/settings/config'
 import { contractSupplierMaterialPM as permission } from '@/page-permission/contract'
 import checkPermission from '@/utils/system/check-permission'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
-import pagination from '@crud/Pagination'
-import mHeader from './module/header'
 import { settlementStatusEnum } from '@enum-ms/finance'
 import inboundRecord from '@/views/supply-chain/purchase-reconciliation-manage/payment-ledger/module/inbound-record'
 import paymentAndInvoice from './module/payment-and-invoice'
@@ -158,9 +158,13 @@ import { toThousand } from '@data-type/number'
 import { isNotBlank } from '@data-type/index'
 import { matClsEnum } from '@/utils/enum/modules/classification'
 import EO from '@enum'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
 import paymentAudit from './module/payment-audit/index'
 import settleForm from '@/views/supply-chain/purchase-reconciliation-manage/payment-ledger/module/settle-form'
 import tableCellTag from '@comp-common/table-cell-tag/index.vue'
+import pagination from '@crud/Pagination'
+import mHeader from './module/header'
 
 const optShow = {
   add: false,
@@ -168,6 +172,8 @@ const optShow = {
   del: false,
   download: false
 }
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const tableRef = ref()
 const stockVisible = ref(false)

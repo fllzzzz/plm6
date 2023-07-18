@@ -61,8 +61,10 @@ import { ref, defineEmits, defineProps, watch, computed } from 'vue'
 import useVisible from '@/composables/use-visible'
 import useMaxHeight from '@compos/use-max-height'
 import usePagination from '@compos/use-pagination'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
 
 const emit = defineEmits(['update:modelValue'])
+const { decimalPrecision } = useDecimalPrecision()
 
 const props = defineProps({
   modelValue: {
@@ -101,11 +103,13 @@ watch(
 const list = ref([])
 const drawerRef = ref()
 const tableLoading = ref(false)
-const dataFormat = ref([
-  ['createTime', ['parse-time', '{y}-{m}-{d}']],
-  ['unitPrice', ['to-thousand-ck', 'YUAN']],
-  ['totalPrice', ['to-thousand-ck', 'YUAN']]
-])
+const dataFormat = computed(() => {
+  return [
+    ['createTime', ['parse-time', '{y}-{m}-{d}']],
+    ['unitPrice', ['to-thousand', decimalPrecision.value.contract]],
+    ['totalPrice', ['to-thousand', decimalPrecision.value.contract]]
+  ]
+})
 
 const { maxHeight } = useMaxHeight(
   {

@@ -62,12 +62,12 @@
       </el-table-column>
       <el-table-column key="unitPrice" prop="unitPrice" :show-overflow-tooltip="true" label="单价">
         <template v-slot="scope">
-          <span>{{ scope.row.unitPrice?toThousand(scope.row.unitPrice):0 }}</span>
+          <span>{{ scope.row.unitPrice?toThousand(scope.row.unitPrice,decimalPrecision.contract):0 }}</span>
         </template>
       </el-table-column>
       <el-table-column key="totalPrice" prop="totalPrice" :show-overflow-tooltip="true" label="总价">
         <template v-slot="scope">
-          <span>{{ scope.row.totalPrice?toThousand(scope.row.totalPrice):0 }}</span>
+          <span>{{ scope.row.totalPrice?toThousand(scope.row.totalPrice,decimalPrecision.contract):0 }}</span>
         </template>
       </el-table-column>
     </common-table>
@@ -77,10 +77,12 @@
 
 <script setup>
 import { defineProps, defineEmits, watch, ref } from 'vue'
+import { occurLog } from '@/api/contract/contract-ledger'
+
 import useVisible from '@compos/use-visible'
 import useMaxHeight from '@compos/use-max-height'
-import { occurLog } from '@/api/contract/contract-ledger'
 import { toThousand } from '@data-type/number'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
 
 const props = defineProps({
   modelValue: {
@@ -92,6 +94,8 @@ const props = defineProps({
     default: undefined
   }
 })
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const tableData = ref([])
 const drawerRef = ref()

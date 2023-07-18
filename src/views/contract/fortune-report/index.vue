@@ -82,6 +82,7 @@
         align="right"
         key="contractAmount"
         prop="contractAmount"
+        HEAD
         show-overflow-tooltip
         label="合同金额"
         min-width="100"
@@ -93,6 +94,7 @@
         prop="settlementAmount"
         show-overflow-tooltip
         label="结算额"
+        HEAD
         min-width="100"
       />
       <el-table-column
@@ -139,12 +141,7 @@
         min-width="100"
       >
         <template #default="{ row }">
-          <span
-            v-if="checkPermission(permission.detail)"
-            style="color: #ff5600"
-            class="pointer"
-            @click="openDetail('export', row)"
-          >
+          <span v-if="checkPermission(permission.detail)" style="color: #ff5600" class="pointer" @click="openDetail('export', row)">
             {{ row.exportTaxRebate }}
           </span>
           <span v-else>{{ row.exportTaxRebate }}</span>

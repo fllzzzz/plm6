@@ -65,10 +65,13 @@ import { defineProps, defineEmits, ref, watch, computed } from 'vue'
 
 import { tableSummary } from '@/utils/el-extra'
 import { DP } from '@/settings/config'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
 
 import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'
 import usePagination from '@compos/use-pagination'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const emit = defineEmits(['update:visible'])
 const props = defineProps({
@@ -135,7 +138,7 @@ const { maxHeight } = useMaxHeight(
 function getSummaries(param) {
   return tableSummary(param, {
     props: [
-      ['totalAmount', DP.YUAN],
+      ['totalAmount', decimalPrecision.value.enclosure],
       ['reportTotalLength', DP.MES_ENCLOSURE_L__M]
     ]
   })

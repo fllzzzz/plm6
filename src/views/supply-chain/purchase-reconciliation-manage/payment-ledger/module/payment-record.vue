@@ -80,12 +80,14 @@ import { auditTypeEnum, supplierPayTypeEnum } from '@enum-ms/contract'
 import { digitUppercase, getDP, toThousand } from '@/utils/data-type/number'
 import { paymentFineModeEnum } from '@enum-ms/finance'
 import { tableSummary } from '@/utils/el-extra'
-import { DP } from '@/settings/config'
 
 import useVisible from '@/composables/use-visible'
 import usePagination from '@compos/use-pagination'
 import useMaxHeight from '@compos/use-max-height'
 import useDict from '@compos/store/use-dict'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const emit = defineEmits(['success', 'update:modelValue'])
 
@@ -137,11 +139,13 @@ const drawerRef = ref()
 const tableLoading = ref(false)
 const dict = useDict(['payment_reason'])
 
-const dataFormat = ref([
-  ['applyAmount', ['to-thousand-ck', 'YUAN']],
-  ['actuallyPaymentAmount', ['to-thousand-ck', 'YUAN']],
-  ['paymentDate', ['parse-time', '{y}-{m}-{d}']]
-])
+const dataFormat = computed(() => {
+  return [
+    ['applyAmount', ['to-thousand', decimalPrecision.value.supplyChain]],
+    ['actuallyPaymentAmount', ['to-thousand', decimalPrecision.value.supplyChain]],
+    ['paymentDate', ['parse-time', '{y}-{m}-{d}']]
+  ]
+})
 
 const { maxHeight } = useMaxHeight(
   {
@@ -159,7 +163,7 @@ const { maxHeight } = useMaxHeight(
 // 合计
 function getSummaries(param) {
   const summary = tableSummary(param, {
-    props: [['applyAmount', DP.YUAN], ['actuallyPaymentAmount', DP.YUAN]],
+    props: [['applyAmount', decimalPrecision.value.supplyChain], ['actuallyPaymentAmount', decimalPrecision.value.supplyChain]],
     toThousandFields: ['applyAmount']
   })
   const num = summary[3]

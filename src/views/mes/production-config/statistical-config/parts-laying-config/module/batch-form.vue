@@ -107,7 +107,7 @@
               v-model="row.unitPrice"
               :step="1"
               :min="0"
-              :precision="DP.YUAN"
+              :precision="decimalPrecision.mes"
               clearable
               class="input-underline"
               :controls="false"
@@ -136,7 +136,6 @@
 <script setup>
 import { computed, ref, nextTick } from 'vue'
 import { partKeyWordEnum, wageQuotaTypeEnum } from '@enum-ms/mes'
-import { DP } from '@/settings/config'
 
 import { regBatchForm } from '@compos/use-crud'
 import useTableOperate from '@compos/form/use-table-operate'
@@ -144,6 +143,9 @@ import useTableValidate from '@compos/form/use-table-validate'
 import useMaxHeight from '@compos/use-max-height'
 import StoreOperation from '@crud/STORE.operation.vue'
 import cutConfigSelect from '@/components-system/base/cut-config-select.vue'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const validateNumerical = (value, row) => {
   if (!row.minNumerical || !row.maxNumerical || row.maxNumerical < row.minNumerical) return false

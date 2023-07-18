@@ -3,8 +3,8 @@
     <!--表格渲染-->
     <div>
       <common-button type="primary" size="mini" @click="crud.toAdd" style="margin-right:10px;" v-permission="permission.add">添加</common-button>
-      <el-tag type="success" size="medium" v-if="contractInfo.contractAmount">{{'合同金额:'+toThousand(contractInfo.contractAmount)}}</el-tag>
-      <el-tag type="success" size="medium" v-if="currentRow.settlementAmount" style="margin-left:5px;">{{'结算金额:'+toThousand(currentRow.settlementAmount)}}</el-tag>
+      <el-tag type="success" size="medium" v-if="contractInfo.contractAmount">{{'合同金额:'+toThousand(contractInfo.contractAmount,decimalPrecision.contract)}}</el-tag>
+      <el-tag type="success" size="medium" v-if="currentRow.settlementAmount" style="margin-left:5px;">{{'结算金额:'+toThousand(currentRow.settlementAmount,decimalPrecision.contract)}}</el-tag>
       <print-table
         v-permission="crud.permission.print"
         api-key="collectionRecord"
@@ -54,21 +54,21 @@
               v-if="scope.row.isModify"
               v-show-thousand
               v-model.number="scope.row.collectionAmount"
-              :min="0"
-              :max="999999999999"
+              :min="-9999999999"
+              :max="9999999999"
               :step="100"
-              :precision="DP.YUAN"
+              :precision="decimalPrecision.contract"
               placeholder="收款金额(元)"
               controls-position="right"
               :key="scope.row.dataIndex?scope.row.dataIndex:scope.row.id"
               @change="moneyChange(scope.row)"
             />
-            <div v-else>{{ scope.row.collectionAmount && scope.row.collectionAmount>0? toThousand(scope.row.collectionAmount): scope.row.collectionAmount }}</div>
+            <div v-else>{{ isNotBlank(scope.row.collectionAmount) ? toThousand(scope.row.collectionAmount,decimalPrecision.contract): '-' }}</div>
           </template>
         </el-table-column>
         <el-table-column key="collectionAmount1" prop="collectionAmount1" label="大写" align="center" min-width="85" :show-overflow-tooltip="true">
           <template v-slot="scope">
-            <div>{{scope.row.collectionAmount?digitUppercase(scope.row.collectionAmount):''}}</div>
+            <div>{{isNotBlank(scope.row.collectionAmount)?digitUppercase(scope.row.collectionAmount):''}}</div>
           </template>
         </el-table-column>
       </el-table-column>
@@ -203,24 +203,28 @@
 <script setup>
 import crudApi, { contractCollectionInfo, bankData, editStatus } from '@/api/contract/collection-and-invoice/collection'
 import { ref, defineEmits, defineProps, watch, provide, nextTick } from 'vue'
+import { ElMessage } from 'element-plus'
+
 import checkPermission from '@/utils/system/check-permission'
 import { tableSummary } from '@/utils/el-extra'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
-import pagination from '@crud/Pagination'
 import { auditTypeEnum } from '@enum-ms/contract'
 import useDict from '@compos/store/use-dict'
 import { paymentFineModeEnum } from '@enum-ms/finance'
 import { parseTime } from '@/utils/date'
-import { DP } from '@/settings/config'
-import { toThousand } from '@data-type/number'
-import { digitUppercase } from '@/utils/data-type/number'
+import { digitUppercase, toThousand } from '@/utils/data-type/number'
 import { validate } from '@compos/form/use-table-validate'
-import { ElMessage } from 'element-plus'
-import mForm from './form'
 import { contractLedgerPM } from '@/page-permission/contract'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+import { isNotBlank } from '@data-type/index'
+
+import pagination from '@crud/Pagination'
+import mForm from './form'
 
 const permission = contractLedgerPM.collection
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const optShow = {
   add: true,
@@ -445,7 +449,7 @@ async function rowSubmit(row) {
 // 合计
 function getSummaries(param) {
   return tableSummary(param, {
-    props: [['collectionAmount', DP.YUAN]],
+    props: [['collectionAmount', decimalPrecision.value.contract]],
     toThousandFields: ['collectionAmount']
   })
 }

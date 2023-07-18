@@ -81,7 +81,6 @@ import { detail } from '@/api/mes/team-report/off-staff-settlement'
 import { defineProps, defineEmits, ref, watch, inject, computed } from 'vue'
 
 import { tableSummary } from '@/utils/el-extra'
-import { DP } from '@/settings/config'
 
 import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'
@@ -91,6 +90,9 @@ import useProductMeteConvert from '@compos/mes/use-product-mete-convert'
 import useProductSummaryMeteUnit from '@compos/mes/use-product-summary-mete-unit'
 import belongingInfoColumns from '@comp-mes/table-columns/belonging-info-columns'
 import productTypeBaseInfoColumns from '@comp-mes/table-columns/productType-base-info-columns'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const drawerRef = ref()
 const emit = defineEmits(['update:visible'])
@@ -187,6 +189,6 @@ async function fetchList() {
 }
 
 function getSummaries(param) {
-  return tableSummary(param, { props: ['completeQuantity', 'completeMete', ['price', DP.YUAN]] })
+  return tableSummary(param, { props: ['completeQuantity', 'completeMete', ['price', decimalPrecision.value.mes]] })
 }
 </script>

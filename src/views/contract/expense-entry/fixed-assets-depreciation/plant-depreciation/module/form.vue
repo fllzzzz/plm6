@@ -110,7 +110,10 @@ import { ref, computed } from 'vue'
 
 import { depreciationTypeEnum } from '@enum-ms/contract'
 import { isBlank, toFixed } from '@/utils/data-type'
-import { DP } from '@/settings/config'
+
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 import { regForm } from '@compos/use-crud'
 import moment from 'moment'
@@ -155,7 +158,7 @@ const annualDepreciationRate = computed(() => {
 const annualDepreciationAmount = computed(() => {
   // 初始价值*（（1-净残值）/ 使用年限）
   return form.originalValue && form.residualValueRate && form.depreciationYear
-    ? (form.originalValue * ((100 - form.residualValueRate) / 100 / form.depreciationYear)).toFixed(DP.YUAN)
+    ? (form.originalValue * ((100 - form.residualValueRate) / 100 / form.depreciationYear)).toFixed(decimalPrecision.value.contract)
     : ''
 })
 
@@ -169,7 +172,7 @@ const monthValueDepreciationRate = computed(() => {
 const monthValueDepreciationAmount = computed(() => {
   // 初始价值*（（1-净残值）/ 使用年限 / 12）
   return form.originalValue && form.residualValueRate && form.depreciationYear
-    ? (form.originalValue * ((100 - form.residualValueRate) / 100 / form.depreciationYear / 12)).toFixed(DP.YUAN)
+    ? (form.originalValue * ((100 - form.residualValueRate) / 100 / form.depreciationYear / 12)).toFixed(decimalPrecision.value.contract)
     : ''
 })
 

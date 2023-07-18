@@ -34,7 +34,7 @@
               </el-table-column>
               <el-table-column key="applyAmount" prop="applyAmount" label="申请金额" align="center">
                 <template v-slot="scope">
-                  <span>{{ scope.row.applyAmount? toThousand(scope.row.applyAmount): '' }}</span>
+                  <span>{{ scope.row.applyAmount? toThousand(scope.row.applyAmount,decimalPrecision.contract): '' }}</span>
                 </template>
               </el-table-column>
               <el-table-column key="invoiceType" prop="invoiceType" label="发票类型" align="center" min-width="100">
@@ -45,12 +45,12 @@
               <el-table-column key="invoiceNo" prop="invoiceNo" label="发票号码" align="center"/>
               <el-table-column prop="invoiceAmount" label="发票面额（元）" align="center" min-width="120">
                 <template v-slot="scope">
-                  <span>{{ scope.row.invoiceAmount? toThousand(scope.row.invoiceAmount): '' }}</span>
+                  <span>{{ scope.row.invoiceAmount? toThousand(scope.row.invoiceAmount,decimalPrecision.contract): '' }}</span>
                 </template>
               </el-table-column>
               <el-table-column key="inputTax" prop="inputTax" label="进项税额" align="center">
                 <template v-slot="scope">
-                  <span>{{ scope.row.inputTax? toThousand(scope.row.inputTax): '' }}</span>
+                  <span>{{ scope.row.inputTax? toThousand(scope.row.inputTax,decimalPrecision.contract): '' }}</span>
                 </template>
               </el-table-column>
               <el-table-column key="taxRate" prop="taxRate" label="税率" align="center" width="70">
@@ -120,7 +120,7 @@
         label="申请金额"
       >
         <template v-slot="scope">
-          <span>{{ scope.row.applyAmount ? toThousand(scope.row.applyAmount) : '' }}</span>
+          <span>{{ scope.row.applyAmount ? toThousand(scope.row.applyAmount,decimalPrecision.contract) : '' }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -132,7 +132,7 @@
         label="实付金额"
       >
         <template v-slot="scope">
-          <span>{{ scope.row.actuallyPayAmount ? toThousand(scope.row.actuallyPayAmount) : '' }}</span>
+          <span>{{ scope.row.actuallyPayAmount ? toThousand(scope.row.actuallyPayAmount,decimalPrecision.contract) : '' }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -248,18 +248,23 @@
 <script setup>
 import crudApi from '@/api/contract/supplier-manage/reimbursement'
 import { ref } from 'vue'
+
 import checkPermission from '@/utils/system/check-permission'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
+import { reimbursementTypeEnum, systemTypeEnum } from '@enum-ms/contract'
+import { invoiceTypeEnum } from '@enum-ms/finance'
+import { toThousand } from '@data-type/number'
+import { parseTime } from '@/utils/date'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
 import pagination from '@crud/Pagination'
 import mHeader from './module/header'
 import mForm from './module/form'
 import mDetail from './module/detail'
 import DetailConfirm from './module/detail-confirm'
-import { reimbursementTypeEnum, systemTypeEnum } from '@enum-ms/contract'
-import { invoiceTypeEnum } from '@enum-ms/finance'
-import { toThousand } from '@data-type/number'
-import { parseTime } from '@/utils/date'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 // crud交由presenter持有
 const permission = {

@@ -124,7 +124,7 @@
           <Panel name="已结算" text-color="#626262" num-color="#1890ff" :end-val="totalAmount.settlementQuantity || 0" :precision="0" />
         </el-col>
         <el-col :span="4" class="card-panel-col">
-          <Panel name="累计合同额" text-color="#626262" num-color="#1890ff" :end-val="totalAmount.contractAmount || 0" :precision="DP.YUAN" />
+          <Panel name="累计合同额" text-color="#626262" num-color="#1890ff" :end-val="totalAmount.contractAmount || 0" :precision="decimalPrecision.contract" />
         </el-col>
       </el-row>
       <crudOperation add-text="合同立项">
@@ -171,19 +171,24 @@
 <script setup>
 import { ref, defineEmits, computed } from 'vue'
 import { regHeader } from '@compos/use-crud'
+
 import checkPermission from '@/utils/system/check-permission'
-import { DP } from '@/settings/config'
-import rrOperation from '@crud/RR.operation'
-import crudOperation from '@crud/CRUD.operation'
+
 import { projectStatusEnum, projectTypeEnum, businessTypeEnum, structureTypeEnum } from '@enum-ms/contract'
 import { settlementStatusEnum } from '@enum-ms/finance'
 import { getContentInfo } from '@/api/contract/project'
 import { ElRadioGroup } from 'element-plus'
-import completeList from './complete-list'
 import { completeData, projectNumData } from '@/api/contract/project'
+import { mapGetters } from '@/store/lib'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+import rrOperation from '@crud/RR.operation'
+import crudOperation from '@crud/CRUD.operation'
 import branchCompanySelect from '@comp-base/branch-company-select.vue'
 import Panel from '@/components/Panel'
-import { mapGetters } from '@/store/lib'
+import completeList from './complete-list'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const { projectTypeEnumArr, flag } = mapGetters([
   'projectTypeEnumArr',

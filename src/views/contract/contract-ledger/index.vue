@@ -51,12 +51,12 @@
     </el-table-column>
     <el-table-column v-if="columns.visible('contractAmount')" key="contractAmount" prop="contractAmount" label="合同额" align="center">
       <template v-slot="scope">
-        <div @click="openContractMoney(scope.row.id)" style="cursor:pointer;color:#409eff;text-align:right;">{{ isNotBlank(scope.row.contractAmount)? toThousand(scope.row.contractAmount): '-' }}</div>
+        <div @click="openContractMoney(scope.row.id)" style="cursor:pointer;color:#409eff;text-align:right;">{{ isNotBlank(scope.row.contractAmount)? toThousand(scope.row.contractAmount,decimalPrecision.contract): '-' }}</div>
       </template>
     </el-table-column>
     <el-table-column v-if="columns.visible('settlementAmount')" key="settlementAmount" prop="settlementAmount" label="结算额" align="right">
       <template v-slot="scope">
-        <div>{{ scope.row.settlementAmount? toThousand(scope.row.settlementAmount): '-' }}</div>
+        <div>{{ scope.row.settlementAmount? toThousand(scope.row.settlementAmount,decimalPrecision.contract): '-' }}</div>
       </template>
     </el-table-column>
     <el-table-column v-if="columns.visible('exportTaxRebate')" key="exportTaxRebate" prop="exportTaxRebate" label="出口退税" align="right">
@@ -79,7 +79,7 @@
               <svg-icon icon-class="notify"  style="color:#e6a23c;font-size:15px;"/>
             </el-badge>
           </span>
-          <span style="color:#409eff;text-align:right;margin-left:8px;">{{ isNotBlank(scope.row.collectionAmount)? toThousand(scope.row.collectionAmount): '-' }}</span>
+          <span style="color:#409eff;text-align:right;margin-left:8px;">{{ isNotBlank(scope.row.collectionAmount)? toThousand(scope.row.collectionAmount,decimalPrecision.contract): '-' }}</span>
         </div>
       </template>
     </el-table-column>
@@ -96,7 +96,7 @@
               <svg-icon icon-class="notify"  style="color:#e6a23c;font-size:15px;"/>
             </el-badge>
           </span>
-          <span style="color:#409eff;text-align:right;margin-left:8px;">{{ isNotBlank(scope.row.invoiceAmount)? toThousand(scope.row.invoiceAmount): '-' }}</span>
+          <span style="color:#409eff;text-align:right;margin-left:8px;">{{ isNotBlank(scope.row.invoiceAmount)? toThousand(scope.row.invoiceAmount,decimalPrecision.contract): '-' }}</span>
         </div>
       </template>
     </el-table-column>
@@ -107,12 +107,12 @@
     </el-table-column>
     <el-table-column v-if="columns.visible('deliverInstallAmount')" key="deliverInstallAmount" prop="deliverInstallAmount" label="累计发货额" align="center">
       <template v-slot="scope">
-        <div @click="openOccurAmount(scope.row.id)" style="cursor:pointer;color:#409eff;text-align:right;">{{ isNotBlank(scope.row.deliverInstallAmount)? toThousand(scope.row.deliverInstallAmount): '-' }}</div>
+        <div @click="openOccurAmount(scope.row.id)" style="cursor:pointer;color:#409eff;text-align:right;">{{ isNotBlank(scope.row.deliverInstallAmount)? toThousand(scope.row.deliverInstallAmount,decimalPrecision.contract): '-' }}</div>
       </template>
     </el-table-column>
     <el-table-column v-if="columns.visible('availableBalance')" key="availableBalance" prop="availableBalance" label="可用余额" align="right">
       <template v-slot="scope">
-        <div>{{ scope.row.availableBalance? toThousand(scope.row.availableBalance): '-' }}</div>
+        <div>{{ scope.row.availableBalance? toThousand(scope.row.availableBalance,decimalPrecision.contract): '-' }}</div>
       </template>
     </el-table-column>
     <el-table-column v-if="columns.visible('status')" key="status" prop="status" label="项目状态" align="center" width="80px">
@@ -147,6 +147,7 @@ import { parseTime } from '@/utils/date'
 import { toThousand } from '@data-type/number'
 import { isNotBlank } from '@data-type/index'
 
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import pagination from '@crud/Pagination'
@@ -157,6 +158,7 @@ import exportTaxRebate from './module/export-tax-rebate'
 import collectionAndInvoice from './module/collection-and-invoice'
 
 const { currentProjectType } = mapGetters(['currentProjectType'])
+const { decimalPrecision } = useDecimalPrecision()
 
 const optShow = {
   add: false,

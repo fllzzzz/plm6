@@ -92,13 +92,15 @@ import { materialRejectStatusEnum, measureTypeEnum, orderSupplyTypeEnum } from '
 import { reviewStatusEnum } from '@/utils/enum/modules/common'
 import { materialStatusEnum } from '@/views/wms/material-reject/enum'
 import { tableSummary } from '@/utils/el-extra'
-import { DP } from '@/settings/config'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { setSpecInfoToList } from '@/utils/wms/spec'
 import { deepClone, isNotBlank, toFixed } from '@/utils/data-type'
 import { obj2arr } from '@/utils/convert/type'
-import { materialHasAmountColumns } from '@/utils/columns-format/wms'
+import { materialColumns } from '@/utils/columns-format/wms'
 import checkPermission from '@/utils/system/check-permission'
+
+import { invoiceTypeEnum } from '@/utils/enum/modules/finance'
+import { DP } from '@/settings/config'
 
 import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@/composables/use-visible'
@@ -113,6 +115,9 @@ import purchaseDetailButton from '@/components-system/wms/purchase-detail-button
 import RejectInfoTable from '@/views/wms/material-reject/raw-material/components/reject-info-table.vue'
 import RejectMatchInfo from '@/views/wms/material-reject/raw-material/components/reject-match-info.vue'
 import Preview from './preview.vue'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const emit = defineEmits(['success', 'update:visible'])
 const props = defineProps({
@@ -127,7 +132,21 @@ const props = defineProps({
 
 const permission = inject('permission')
 // 表格列数据格式转换
-const columnsDataFormat = ref([...materialHasAmountColumns])
+// const columnsDataFormat = ref([...materialHasAmountColumns])
+const columnsDataFormat = computed(() => {
+  return [
+    ...materialColumns,
+    // 金额相关
+    ['invoiceType', ['parse-enum', invoiceTypeEnum, { f: 'SL' }]],
+    ['taxRate', ['suffix', '%']],
+    ['unitPrice', ['to-thousand', decimalPrecision.value.wms]],
+    ['unitPriceExcludingVAT', ['to-thousand', decimalPrecision.value.wms]],
+    ['amount', ['to-thousand', DP.YUAN]],
+    ['amountExcludingVAT', ['to-thousand', DP.YUAN]],
+    ['inputVAT', ['to-thousand', DP.YUAN]]
+  ]
+})
+
 const drawerRef = ref()
 // 展开行
 const expandRowKeys = ref([])

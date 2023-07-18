@@ -49,7 +49,7 @@
 
 <script setup>
 import { detail } from '@/api/wms/report/raw-material/psi'
-import { ref, defineProps, watch, inject } from 'vue'
+import { ref, defineProps, watch, inject, computed } from 'vue'
 
 import { purchaseAcceptanceLogPM as permission } from '@/page-permission/supply-chain'
 import { tableSummary } from '@/utils/el-extra'
@@ -83,10 +83,12 @@ const optShow = {
 const orderDetailEnum = inject('orderDetailEnum')
 const tableRef = ref()
 // 表格列数据格式转换
-const columnsDataFormat = ref([
-  ['amountExcludingVAT', ['to-thousand-ck', 'YUAN']],
-  ['createTime', 'parse-time']
-])
+const columnsDataFormat = computed(() => {
+  return [
+    ['amountExcludingVAT', ['to-thousand', DP.YUAN]],
+    ['createTime', 'parse-time']
+  ]
+})
 
 const { CRUD, crud } = useCRUD(
   {

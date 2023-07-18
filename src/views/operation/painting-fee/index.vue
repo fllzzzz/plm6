@@ -69,6 +69,9 @@ import useMaxHeight from '@compos/use-max-height'
 
 import paintingFeeListETmpl from '@/utils/excel/export-template/operation/painting-fee-list'
 import ExcelExportButton from '@comp-common/excel-export-button/index.vue'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const year = ref(parseTime(new Date(), '{y}'))
 const paintingList = ref([])
@@ -85,8 +88,8 @@ async function fetchPaintingFee() {
       year: year.value
     })
     content.forEach((v) => {
-      v.paintingUnitPrice = v.price && v.area ? (v.price / convertUnits(v.area, 'mm2', 'm2', DP.COM_AREA__M2)).toFixed(2) : 0
-      v.averageUnitPrice = (v.price / convertUnits(v.mete, 'kg', 't', DP.COM_WT__T)).toFixed(2)
+      v.paintingUnitPrice = v.price && v.area ? (v.price / convertUnits(v.area, 'mm2', 'm2', DP.COM_AREA__M2)).toFixed(decimalPrecision.value.operation) : 0
+      v.averageUnitPrice = (v.price / convertUnits(v.mete, 'kg', 't', DP.COM_WT__T)).toFixed(decimalPrecision.value.operation)
     })
     paintingList.value = content || []
   } catch (error) {
@@ -170,7 +173,7 @@ function getSummaries(param) {
             return prev
           }
         }, 0)
-        sums[index] = sums[index].toFixed(2)
+        sums[index] = sums[index].toFixed(decimalPrecision.value.operation)
       }
     }
   })

@@ -22,7 +22,7 @@
       </template>
     </el-table-column>
     <el-table-column key="quantity" prop="quantity" :show-overflow-tooltip="true" label="数量" align="center">
-      <template v-slot="scope" align="center">
+      <template v-slot="scope">
         <span>{{ scope.row.quantity }}</span>
       </template>
     </el-table-column>
@@ -48,12 +48,12 @@
     </el-table-column>
     <el-table-column key="unitPrice" prop="unitPrice" :show-overflow-tooltip="true" label="单价" align="center">
       <template v-slot="scope">
-        <span>{{ scope.row.unitPrice ? toThousand(scope.row.unitPrice) : 0 }}</span>
+        <span>{{ scope.row.unitPrice ? toThousand(scope.row.unitPrice,decimalPrecision.mes) : 0 }}</span>
       </template>
     </el-table-column>
     <el-table-column key="totalPrice" prop="totalPrice" :show-overflow-tooltip="true" label="总额（元）" align="center">
       <template v-slot="scope">
-        <span>{{ scope.row.totalPrice ? toThousand(scope.row.totalPrice) : 0 }}</span>
+        <span>{{ scope.row.totalPrice ? toThousand(scope.row.totalPrice,decimalPrecision.mes) : 0 }}</span>
       </template>
     </el-table-column>
   </common-table>
@@ -63,8 +63,10 @@
 <script setup>
 import useMaxHeight from '@compos/use-max-height'
 import { toThousand } from '@data-type/number'
-import { DP } from '@/settings/config'
 import { tableSummary } from '@/utils/el-extra'
+import useDecimalPrecision from '@compos/store/use-decimal-precision'
+
+const { decimalPrecision } = useDecimalPrecision()
 
 const tableData = [
   {
@@ -90,7 +92,7 @@ const { maxHeight } = useMaxHeight({
 // 合计
 function getSummaries(param) {
   return tableSummary(param, {
-    props: ['apertureQuantity', ['totalPrice', DP.YUAN]]
+    props: ['apertureQuantity', ['totalPrice', decimalPrecision.value.mes]]
   })
 }
 </script>
