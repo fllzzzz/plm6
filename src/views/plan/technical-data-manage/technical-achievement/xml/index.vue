@@ -57,6 +57,7 @@
               @success="crud.toQuery"
             />
              <upload-btn
+              v-permission="permission.matchImport"
               :dataType="scope.row.dataType"
               :uploadFun="uploadChoose"
               :accept="`.zip`"
