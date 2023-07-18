@@ -56,6 +56,7 @@
         <template v-slot="scope">
           <div class="btn">
             <export-button
+              v-permission="permission.download"
               v-if="
                 (globalProject.projectType === projectTypeEnum.STEEL.V && crud.query.productType === deepenTypeEnum.MACHINE_PART.V) ||
                 (globalProject.projectType === projectTypeEnum.BRIDGE.V && crud.query.productType === bridgeProcessTypeEnum.MACHINE_PART.V)

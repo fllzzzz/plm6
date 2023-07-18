@@ -161,7 +161,8 @@ export const cncFileListPM = {
   get: ['plan_cnc_file:get'], // 列表
   del: ['plan_cnc_file:del'], // 删除
   detail: ['plan_cnc_file:detail'], // 详情
-  import: ['plan_cnc_file:import'] // 导入
+  import: ['plan_cnc_file:import'], // 导入
+  download: ['plan_cnc_file:download'] // 下载
 }
 
 // 技术成果/XML文件管理
