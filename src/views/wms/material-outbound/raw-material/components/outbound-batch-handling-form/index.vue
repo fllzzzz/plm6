@@ -112,11 +112,12 @@
         <material-secondary-info-columns :basic-class="basicClass" :show-batch-no="false" />
         <warehouse-info-columns />
         <el-table-column label="车间" width="170px" align="center" fixed="right" prop="workshopId">
-          <template #default="{ row: { sourceRow: row } }">
+          <template #default="{ row: { sourceRow: row }, $index }">
             <workshop-select
               v-model="row.workshopId"
               :type="warehouseTypeEnum.WORKSHOP.V"
               placeholder="可选择车间"
+              :show-extra="$index !== 0"
               style="width: 100%"
               clearable
             />
@@ -215,7 +216,12 @@ const steelRules = {
 const tableRules = {
   workshopId: [{ required: true, message: '请选择出库车间', trigger: 'change' }]
 }
-const { tableValidate, wrongCellMask } = useTableValidate({ rules: tableRules, errorMsg: '请选择出库车间' }) // 表格校验
+const ditto = new Map([
+  ['workshopId', -1]
+])
+
+// 表格校验
+const { tableValidate, cleanUpData, wrongCellMask } = useTableValidate({ rules: tableRules, errorMsg: '请选择出库车间', ditto })
 
 // 校验
 const rules = computed(() => {
@@ -334,8 +340,22 @@ watch(
     materialList.value = props.materialList.filter((v) => v.corOperableQuantity > 0) // 过滤不可操作的列表
     form.value.list = materialList.value
     dataFormat()
+    setDitto(form.value.list)
   }
 )
+
+// 设置同上
+function setDitto(list) {
+  if (isBlank(list)) return
+  for (let i = 1; i < list.length; i++) {
+    const row = list[i]
+    ditto.forEach((value, key) => {
+      if (isBlank(row[key])) {
+        row[key] = value
+      }
+    })
+  }
+}
 
 // 表单初始化
 function formInit() {
@@ -380,6 +400,7 @@ async function submit() {
       outboundAddress: form.value.outboundAddress,
       list: []
     }
+    cleanUpData(form.value.list)
     // 无需进行对列表进行数量是否填写校验，提交时过滤数量为空或为0的数据
     form.value.list.forEach((v) => {
       if (v.batchOutboundQuantity) {
@@ -437,6 +458,7 @@ function handleProjectChange(val) {
     form.value.list = materialList.value
   }
   dataFormat()
+  setDitto(form.value.list)
 }
 
 // 数据格式化
