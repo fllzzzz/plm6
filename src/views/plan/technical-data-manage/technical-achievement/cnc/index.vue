@@ -47,8 +47,8 @@
         :width="
           (globalProject.projectType === projectTypeEnum.STEEL.V && crud.query.productType === deepenTypeEnum.MACHINE_PART.V) ||
           (globalProject.projectType === projectTypeEnum.BRIDGE.V && crud.query.productType === bridgeProcessTypeEnum.MACHINE_PART.V)
-            ? '250px'
-            : '170px'
+            ? '350px'
+            : '270px'
         "
         align="center"
         fixed="right"
